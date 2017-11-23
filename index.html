@@ -20,8 +20,8 @@
 
     <script>
         $(function () {
-            $("nav").load("nav.html");
-            $("footer").load("footer.html");
+            $("nav").load("/nav.html");
+            $("footer").load("/footer.html");
         });
     </script>
 </head>
@@ -30,25 +30,23 @@
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation"></nav>
 
     <main role="main">
-            <div class="container">
-                <div class="jumbotron">
-                    <h1 class="display-3">Hello, world!</h1>
-                </div>
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="display-3">Hello, world!</h1>
             </div>
-    
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-3">
-                        <h2>171123</h2>
-                        <p>Github로 내용 이전.</p>
-                    </div>
-                </div>
-            </div>
-        </main>
-    
-        <hr>
+        </div>
 
-    <footer class="container" w3-include-html="footer.html"></footer>
+        <div class="container">
+            <div class="col-md-3">
+                <h2>171123</h2>
+                <p>Github로 내용 이전.</p>
+            </div>
+        </div>
+    </main>
+
+    <hr>
+
+    <footer class="container"></footer>
 </body>
 
 </html>
