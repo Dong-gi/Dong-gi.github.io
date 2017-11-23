@@ -1,30 +1,4 @@
-﻿<?php
-header('Content-Type: text/html; charset=utf-8');
-setlocale(LC_TIME, "kr_KR.utf8");
-date_default_timezone_set('Asia/Seoul');
-
-$server_root_path = $_SERVER['DOCUMENT_ROOT'];
-include $server_root_path.'/lib/functions.php';
-?>
-
-<!DOCTYPE html>
-<html lang="kor">
-
-<?php
-put_html_head('wiz');
-?>
-
-<body>
-
-<?php
-put_nav();
-?>
-
-    <main role="main">
-        <div class="container">
-
-<pre class="hljs" style="display: block; overflow-x: auto; padding: 0.5em; background: rgb(68, 68, 68); color: rgb(221, 221, 221);"><span class="hljs-string" style="color: rgb(221, 136, 136);">'''
-code0009.py
+﻿<pre class="hljs" style="display: block; overflow-x: auto; padding: 0.5em; background: rgb(68, 68, 68); color: rgb(221, 221, 221);"><span class="hljs-string" style="color: rgb(221, 136, 136);">'''
 함수2
 '''</span>
 
@@ -70,15 +44,3 @@ func7(<span class="hljs-string" style="color: rgb(221, 136, 136);">'wiz'</span>)
 
 print_name(<span class="hljs-string" style="color: rgb(221, 136, 136);">'wiz'</span>)
 </pre>
-        </div>
-    </main>
-
-    <hr>
-
-<?php
-put_default_footer();
-?>
-
-</body>
-
-</html>
