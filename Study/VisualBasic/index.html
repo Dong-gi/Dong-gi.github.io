@@ -22,10 +22,9 @@
         $(function () {
             $("nav").load("/nav.html");
             $("footer").load("/footer.html");
-            showCode(1000);
         });
-        function showCode(fileName) {
-            $("#code-div").load("./" + fileName + ".html");
+        function showCode(divID, fileName) {
+            $("#code-div-" + divID).load("./" + fileName + ".html");
         }
     </script>
 </head>
@@ -40,8 +39,6 @@
                 <p>Basic is not basic.</p>
             </div>
         </div>
-
-        <div class="container" id="code-div"></div>
 
         <div class="container">
             <div class="row">
@@ -69,11 +66,12 @@
                                 <br> 3. 논리 연산자 : And, Or, Xor, Not, AndAlso(Short Circuit), OrElse(Short Circuit)
                                 <br> 4. 문자열 연결 연산자 : &</p>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode('1000');" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 1000);" role="button">View Code &raquo;</a>
                         <br>
                     </p>
                 </div>
             </div>
+            <div class="row" id="code-div-1"></div>
 
             <div class="row">
                 <div class="col-md-4">
