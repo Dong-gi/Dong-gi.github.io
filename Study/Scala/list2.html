@@ -1,29 +1,4 @@
-﻿<?php
-header('Content-Type: text/html; charset=utf-8');
-setlocale(LC_TIME, "kr_KR.utf8");
-date_default_timezone_set('Asia/Seoul');
-
-$server_root_path = $_SERVER['DOCUMENT_ROOT'];
-include $server_root_path.'/lib/functions.php';
-?>
-
-<!DOCTYPE html>
-<html lang="kor">
-
-<?php
-put_html_head('wiz');
-?>
-
-<body>
-
-<?php
-put_nav();
-?>
-
-    <main role="main">
-        <div class="container">
-
-<pre class="hljs" style="display: block; overflow-x: auto; padding: 0.5em; background: rgb(63, 63, 63); color: rgb(220, 220, 220);">
+﻿<pre class="hljs" style="display: block; overflow-x: auto; padding: 0.5em; background: rgb(63, 63, 63); color: rgb(220, 220, 220);">
 <span class="hljs-keyword" style="color: rgb(227, 206, 171);">sealed</span> <span class="hljs-class"><span class="hljs-keyword" style="color: rgb(227, 206, 171);">trait</span> <span class="hljs-title" style="color: rgb(239, 239, 143);">List</span>[+<span class="hljs-type" style="color: rgb(239, 239, 143);">A</span>]</span>
 <span class="hljs-keyword" style="color: rgb(227, 206, 171);">case</span> <span class="hljs-class"><span class="hljs-keyword" style="color: rgb(227, 206, 171);">object</span> <span class="hljs-title" style="color: rgb(239, 239, 143);">Nil</span> <span class="hljs-keyword" style="color: rgb(227, 206, 171);">extends</span> <span class="hljs-title" style="color: rgb(239, 239, 143);">List</span>[<span class="hljs-type" style="color: rgb(239, 239, 143);">Nothing</span>]</span>
 <span class="hljs-keyword" style="color: rgb(227, 206, 171);">case</span> <span class="hljs-class"><span class="hljs-keyword" style="color: rgb(227, 206, 171);">class</span> <span class="hljs-title" style="color: rgb(239, 239, 143);">Cons</span>[+<span class="hljs-type" style="color: rgb(239, 239, 143);">A</span>](<span class="hljs-params">head: <span class="hljs-type" style="color: rgb(239, 239, 143);">A</span>, tail: <span class="hljs-type" style="color: rgb(239, 239, 143);">List</span>[<span class="hljs-type" style="color: rgb(239, 239, 143);">A</span>]</span>) <span class="hljs-keyword" style="color: rgb(227, 206, 171);">extends</span> <span class="hljs-title" style="color: rgb(239, 239, 143);">List</span>[<span class="hljs-type" style="color: rgb(239, 239, 143);">A</span>]</span>
@@ -101,11 +76,12 @@ put_nav();
   }
 }
 
-<span class="hljs-keyword" style="color: rgb(227, 206, 171);">import</span> <span class="hljs-type" style="color: rgb(239, 239, 143);">List</span>._
-
 <span class="hljs-comment" style="color: rgb(127, 159, 127);">/**
  * Main.scala
  */</span>
+
+<span class="hljs-keyword" style="color: rgb(227, 206, 171);">import</span> <span class="hljs-type" style="color: rgb(239, 239, 143);">List</span>._
+
 <span class="hljs-class"><span class="hljs-keyword" style="color: rgb(227, 206, 171);">object</span> <span class="hljs-title" style="color: rgb(239, 239, 143);">Main</span> </span>{
   <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(227, 206, 171);">def</span> <span class="hljs-title" style="color: rgb(239, 239, 143);">main</span></span>(args: <span class="hljs-type" style="color: rgb(239, 239, 143);">Array</span>[<span class="hljs-type" style="color: rgb(239, 239, 143);">String</span>]): <span class="hljs-type" style="color: rgb(239, 239, 143);">Unit</span> = {
     <span class="hljs-keyword" style="color: rgb(227, 206, 171);">var</span> l = <span class="hljs-type" style="color: rgb(239, 239, 143);">List</span>(<span class="hljs-number" style="color: rgb(140, 208, 211);">1</span>, <span class="hljs-number" style="color: rgb(140, 208, 211);">2</span>, <span class="hljs-number" style="color: rgb(140, 208, 211);">3</span>, <span class="hljs-number" style="color: rgb(140, 208, 211);">4</span>, <span class="hljs-number" style="color: rgb(140, 208, 211);">5</span>)
@@ -125,15 +101,3 @@ put_nav();
     println(<span class="hljs-type" style="color: rgb(239, 239, 143);">List</span>.toString(<span class="hljs-type" style="color: rgb(239, 239, 143);">List</span>.flatMap(l)((i) =&gt; <span class="hljs-type" style="color: rgb(239, 239, 143);">List</span>(i, i, i))))
   }
 }</pre>
-        </div>
-    </main>
-
-    <hr>
-
-<?php
-put_default_footer();
-?>
-
-</body>
-
-</html>
