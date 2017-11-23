@@ -189,37 +189,31 @@
                         <br> 2. List 정의 : http://www.scala-lang.org/api/current/scala/collection/immutable/List.html
                         <br> 3. 튜플 : ( ) ~ 요소가 2개인 튜플은 Tuple2[A, B], _n으로 요소에 접근</p>
                     <p>
-                        <a class="btn btn-secondary" href="./1005.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(3, 'list3');" role="button">View Code : List.hasSubsequence(), tuple &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(3, 'tree');" role="button">View Code : Tree &raquo;</a>
                     </p>
                 </div>
             </div>
             <div class="row" id="code-div-3"></div>
 
             <div class="row">
-                <div class="col-md-4">
-                    <h2>기본 문법 13</h2>
-                    <p>1. 가변 길이 매개변수를 갖는 메서드 : (int... nums)와 같이 여러 개의 인자를 배열로 받는다.
-                        <br> 2. 익명 메서드 = Lambda : 인터페이스의 메서드를 조각적으로 구현한 익명 객체를 생성한다.
-                        <br> 3. 스레드의 상태 : new(생성, new), runnable(준비, start), running(실행, run), block, dead
-                        <br> 4. sleep : 명시적 대기, yield : 우선권이 같은 스레드에게 양보, join : 스레드 종료 대기
-                        <br> 5. Thread.setPriority()를 이용해 우선순위 설정 가능. MIN_PRIORITY ~ MAX_PRIORITY
-                        <br> 6. 동기화 : synchronized(객체를 이용한 잠금), volatile(변수에 대한 잠금)</p>
+                <div class="col-md-12">
+                    <h2>문법 9</h2>
                     <p>
-                        <a class="btn btn-secondary" href="./1010.php" role="button">View Code &raquo;</a>
+                        1. 예외는 참조에 투명하지 않을 뿐더러 고차 함수는 가능한 모든 예외들 각각에 대한 처리를 만들어놓을 수 없다. 따라서 예외 대신 오류에 해당하는 값을 돌려준다.
+                        <br>2. Option[+A] : "A가 나올 수도, 나오지 않을 수도 있습니다."
+                        <br>3. trait에 함수를 정의하면 obj.func()처럼 호출 가능.
+                        <br>Option|None.flatMap : Returns the result of applying f to this scala.Option's value if this scala.Option is nonempty.
+                        <br>Option|None.map : Returns a scala.Some containing the result of applying f to this scala.Option's value if this scala.Option is nonempty.
+                        <br>Option|None.getOrElse : Returns the option's value if the option is nonempty, otherwise return the result of evaluating default.
+                        <br>Option|None.orElse : Returns this scala.Option if it is nonempty, otherwise return the result of evaluating alternative.
+                        <br>Option|None.filter : Returns this scala.Option if it is nonempty and applying the predicate p to this scala.Option's value returns true.
+                        <br>4. 일반적으로 돌이킬 수 없는 곳에서만 예외 발생 o.getOrElse(throw new Exception("~"))
+                        <br>여기부터 다시...
                     </p>
-                </div>
-                <div class="col-md-4">
-                    <h2></h2>
-                    <p></p>
                     <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h2></h2>
-                    <p></p>
-                    <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(4, 'exception');" role="button">View Code : throw ~ catch &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(4, 'option');" role="button">View Code : Option &raquo;</a>
                     </p>
                 </div>
             </div>
