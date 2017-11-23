@@ -1,0 +1,100 @@
+<?
+header('Content-Type: text/html; charset=utf-8');
+// $host = $_SERVER['HTTP_HOST'];
+setlocale(LC_TIME, "kr_KR.utf8");
+date_default_timezone_set('Asia/Seoul');
+//phpinfo();
+?>
+
+<html>
+    <head>
+		<style>
+.highlighted { font-size : 15px; }
+.source { visibility : hidden; }
+		</style>
+        
+		<title>wiz</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </head>
+
+	<body>
+		<h2>MainActivity.java</h2>
+			<article class = "highlighted">
+<pre style="background:#0c1021;color:#f8f8f8"><span style="color:#fbde2d">package</span> <span style="color:#fbde2d">hu.pe.wiz.test</span>;
+
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">android.support.v7.app.AppCompatActivity</span>;
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">android.os.Bundle</span>;
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">android.view.View</span>;
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">android.widget.Toast</span>;
+
+<span style="color:#fbde2d">public</span> <span style="color:#fbde2d">class</span> <span style="color:#ff6400">MainActivity</span> <span style="color:#fbde2d">extends</span> <span style="color:#ff6400;font-style:italic">AppCompatActivity</span> {
+
+    <span style="color:#fbde2d">@Override</span>
+    <span style="color:#fbde2d">protected</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">onCreate</span>(<span style="color:#fbde2d">Bundle</span> savedInstanceState) {
+        super<span style="color:#fbde2d">.</span>onCreate(savedInstanceState);
+        setContentView(<span style="color:#fbde2d">R</span><span style="color:#fbde2d">.</span>layout<span style="color:#fbde2d">.</span>activity_main);
+    }
+
+    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">onClickButton1</span>(<span style="color:#fbde2d">View</span> view) {
+        <span style="color:#fbde2d">Toast</span><span style="color:#fbde2d">.</span>makeText(getApplicationContext(), <span style="color:#61ce3c">"Button Pressed"</span>, <span style="color:#fbde2d">Toast</span><span style="color:#d8fa3c"><span style="color:#fbde2d">.</span>LENGTH_SHORT</span>)<span style="color:#fbde2d">.</span>show();
+    }
+}
+
+</pre>
+			</article>
+
+
+			<h2>\app\src\main\res\drawable\my_button.xml</h2>
+			<article class = "highlighted">
+<pre style="background:#0c1021;color:#f8f8f8"><span style="color:#7f90aa">&lt;?<span style="color:#7f90aa">xml</span><span style="color:#7f90aa"> version</span>=<span style="color:#61ce3c">"1.0"</span><span style="color:#7f90aa"> encoding</span>=<span style="color:#61ce3c">"utf-8"</span>?></span>
+<span style="color:#7f90aa">&lt;<span style="color:#7f90aa">selector</span> <span style="color:#7f90aa">xmlns</span>:android=<span style="color:#61ce3c">"http://schemas.android.com/apk/res/android"</span>></span>
+    <span style="color:#aeaeae">&lt;!-- 위에서부터 검사된다. --></span>
+    <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">item</span> <span style="color:#7f90aa">android</span>:drawable=<span style="color:#61ce3c">"@drawable/play_button_1"</span>
+        <span style="color:#7f90aa">android</span>:state_pressed=<span style="color:#61ce3c">"true"</span> /></span>
+    <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">item</span> <span style="color:#7f90aa">android</span>:drawable=<span style="color:#61ce3c">"@drawable/play_button_2"</span>
+        <span style="color:#7f90aa">android</span>:state_focused=<span style="color:#61ce3c">"true"</span> /></span>
+    <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">item</span> <span style="color:#7f90aa">android</span>:drawable=<span style="color:#61ce3c">"@drawable/play_button_3"</span> /></span>
+<span style="color:#7f90aa">&lt;/<span style="color:#7f90aa">selector</span>></span>
+</pre>
+			</article>
+
+			
+			<h2>activity_main.xml</h2>
+			<article class = "highlighted">
+<pre style="background:#0c1021;color:#f8f8f8"><span style="color:#7f90aa">&lt;?<span style="color:#7f90aa">xml</span><span style="color:#7f90aa"> version</span>=<span style="color:#61ce3c">"1.0"</span><span style="color:#7f90aa"> encoding</span>=<span style="color:#61ce3c">"utf-8"</span>?></span>
+<span style="color:#7f90aa">&lt;<span style="color:#7f90aa">LinearLayout</span> <span style="color:#7f90aa">xmlns</span>:android=<span style="color:#61ce3c">"http://schemas.android.com/apk/res/android"</span>
+    <span style="color:#7f90aa">xmlns</span>:app=<span style="color:#61ce3c">"http://schemas.android.com/apk/res-auto"</span>
+    <span style="color:#7f90aa">xmlns</span>:tools=<span style="color:#61ce3c">"http://schemas.android.com/tools"</span>
+    <span style="color:#7f90aa">android</span>:orientation=<span style="color:#61ce3c">"vertical"</span>
+    <span style="color:#7f90aa">android</span>:layout_width=<span style="color:#61ce3c">"match_parent"</span>
+    <span style="color:#7f90aa">android</span>:layout_height=<span style="color:#61ce3c">"match_parent"</span>
+    <span style="color:#7f90aa">tools</span>:context=<span style="color:#61ce3c">"hu.pe.wiz.test.MainActivity"</span>></span>
+
+    <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">Button</span>
+        <span style="color:#7f90aa">android</span>:layout_width=<span style="color:#61ce3c">"wrap_content"</span>
+        <span style="color:#7f90aa">android</span>:layout_height=<span style="color:#61ce3c">"wrap_content"</span>
+        <span style="color:#7f90aa">android</span>:drawableLeft=<span style="color:#61ce3c">"@drawable/my_button"</span>
+        <span style="color:#7f90aa">android</span>:text=<span style="color:#61ce3c">"image button"</span>/></span>
+
+    <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">Button</span>
+        <span style="color:#7f90aa">android</span>:id=<span style="color:#61ce3c">"@+id/button1"</span>
+        <span style="color:#7f90aa">android</span>:layout_width=<span style="color:#61ce3c">"wrap_content"</span>
+        <span style="color:#7f90aa">android</span>:layout_height=<span style="color:#61ce3c">"wrap_content"</span>
+        <span style="color:#7f90aa">android</span>:background=<span style="color:#61ce3c">"@drawable/my_button"</span>
+        <span style="color:#7f90aa">android</span>:onClick=<span style="color:#61ce3c">"onClickButton1"</span>/></span>
+
+    <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">TextView</span>
+        <span style="color:#7f90aa">android</span>:layout_width=<span style="color:#61ce3c">"wrap_content"</span>
+        <span style="color:#7f90aa">android</span>:layout_height=<span style="color:#61ce3c">"wrap_content"</span>
+        <span style="color:#7f90aa">android</span>:text=<span style="color:#61ce3c">"Play button icons are made by Madebyoliver from www.flaticon.com"</span> /></span>
+
+<span style="color:#7f90aa">&lt;/<span style="color:#7f90aa">LinearLayout</span>></span>
+
+</pre>
+			</article>
+		
+		<article class="source">
+
+		</article>
+	</body>
+</html>

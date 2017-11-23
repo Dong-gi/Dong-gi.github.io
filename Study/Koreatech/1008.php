@@ -1,0 +1,73 @@
+﻿<?php
+header('Content-Type: text/html; charset=utf-8');
+setlocale(LC_TIME, "kr_KR.utf8");
+date_default_timezone_set('Asia/Seoul');
+
+$server_root_path = $_SERVER['DOCUMENT_ROOT'];
+include $server_root_path.'/lib/functions.php';
+?>
+
+<!DOCTYPE html>
+<html lang="kor">
+
+<?php
+put_html_head('wiz');
+?>
+
+<body>
+
+<?php
+put_nav();
+?>
+
+    <main role="main">
+        <div class="container">
+
+<pre style="background:#0c1021;color:#f8f8f8"><span style="color:#fbde2d">import</span> <span style="color:#fbde2d">java.util.ArrayList</span>;
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">java.util.Scanner</span>;
+
+<span style="color:#fbde2d">public</span> <span style="color:#fbde2d">class</span> <span style="color:#ff6400">Main</span> {
+    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">static</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">main</span>(<span style="color:#fbde2d">String</span>[] args) {
+        <span style="color:#fbde2d">Scanner</span> scanner <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">Scanner</span>(<span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>in);
+        <span style="color:#fbde2d">int</span> testCase <span style="color:#fbde2d">=</span> scanner<span style="color:#fbde2d">.</span>nextInt();
+        <span style="color:#fbde2d">while</span>(testCase<span style="color:#fbde2d">--</span> <span style="color:#fbde2d">></span> <span style="color:#d8fa3c">0</span>){
+            <span style="color:#fbde2d">int</span> a <span style="color:#fbde2d">=</span> scanner<span style="color:#fbde2d">.</span>nextInt();
+            <span style="color:#fbde2d">int</span> b <span style="color:#fbde2d">=</span> scanner<span style="color:#fbde2d">.</span>nextInt();
+            <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>print(a<span style="color:#fbde2d">/</span>b<span style="color:#fbde2d">+</span><span style="color:#61ce3c">"."</span>);
+            
+            <span style="color:#fbde2d">ArrayList&lt;<span style="color:#fbde2d">Integer</span>></span> remains <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">ArrayList&lt;<span style="color:#fbde2d">Integer</span>></span>();
+            <span style="color:#fbde2d">while</span>(<span style="color:#d8fa3c">true</span>){
+                a <span style="color:#fbde2d">=</span> (a<span style="color:#fbde2d">%</span>b)<span style="color:#fbde2d">*</span><span style="color:#d8fa3c">10</span>;
+                <span style="color:#fbde2d">if</span>(remains<span style="color:#fbde2d">.</span>contains(a)) {
+                    <span style="color:#fbde2d">break</span>;
+                }
+                remains<span style="color:#fbde2d">.</span>add(a);
+            }
+            
+            <span style="color:#fbde2d">int</span> startIdx <span style="color:#fbde2d">=</span> remains<span style="color:#fbde2d">.</span>indexOf(a);
+            <span style="color:#fbde2d">for</span>(<span style="color:#fbde2d">int</span> i<span style="color:#fbde2d">=</span><span style="color:#d8fa3c">0</span>; i<span style="color:#fbde2d">&lt;</span>startIdx; <span style="color:#fbde2d">++</span>i) {
+                <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>print(remains<span style="color:#fbde2d">.</span>get(i)<span style="color:#fbde2d">/</span>b);
+            }
+            <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>print(<span style="color:#61ce3c">"("</span>);
+            
+            <span style="color:#fbde2d">int</span> endIdx <span style="color:#fbde2d">=</span> remains<span style="color:#fbde2d">.</span>size()<span style="color:#fbde2d">-</span><span style="color:#d8fa3c">1</span>;
+            <span style="color:#fbde2d">for</span>(<span style="color:#fbde2d">int</span> i<span style="color:#fbde2d">=</span>startIdx; i<span style="color:#fbde2d">&lt;=</span>endIdx; <span style="color:#fbde2d">++</span>i) {
+                <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>print(remains<span style="color:#fbde2d">.</span>get(i)<span style="color:#fbde2d">/</span>b);
+            }
+            <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(<span style="color:#61ce3c">")"</span>);
+        }
+    }
+}
+</pre>
+        </div>
+    </main>
+
+    <hr>
+
+<?php
+put_default_footer();
+?>
+
+</body>
+
+</html>

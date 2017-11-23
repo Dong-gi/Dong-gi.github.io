@@ -1,0 +1,71 @@
+﻿<?php
+header('Content-Type: text/html; charset=utf-8');
+setlocale(LC_TIME, "kr_KR.utf8");
+date_default_timezone_set('Asia/Seoul');
+
+$server_root_path = $_SERVER['DOCUMENT_ROOT'];
+include $server_root_path.'/lib/functions.php';
+?>
+
+<!DOCTYPE html>
+<html lang="kor">
+
+<?php
+put_html_head('wiz');
+?>
+
+<body>
+
+<?php
+put_nav();
+?>
+
+    <main role="main">
+        <div class="container">
+
+<pre style="background:#0c1021;color:#f8f8f8"><span style="color:#fbde2d">import</span> <span style="color:#fbde2d">java.util.*</span>;
+
+<span style="color:#fbde2d">public</span> <span style="color:#fbde2d">class</span> <span style="color:#ff6400">Main</span> {
+
+    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">static</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">main</span>(<span style="color:#fbde2d">String</span>[] args) {
+        <span style="color:#fbde2d">Scanner</span> scanner <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">Scanner</span>(<span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>in);
+        <span style="color:#fbde2d">int</span> testCase <span style="color:#fbde2d">=</span> scanner<span style="color:#fbde2d">.</span>nextInt();
+        <span style="color:#fbde2d">while</span>(testCase<span style="color:#fbde2d">--</span> <span style="color:#fbde2d">></span> <span style="color:#d8fa3c">0</span>) {
+            <span style="color:#fbde2d">Stack&lt;<span style="color:#fbde2d">Integer</span>></span> rests <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">Stack&lt;></span>();
+            <span style="color:#fbde2d">int</span> num <span style="color:#fbde2d">=</span> scanner<span style="color:#fbde2d">.</span>nextInt();
+            <span style="color:#fbde2d">int</span> radix <span style="color:#fbde2d">=</span> scanner<span style="color:#fbde2d">.</span>nextInt();
+            <span style="color:#fbde2d">while</span>(num <span style="color:#fbde2d">></span> <span style="color:#d8fa3c">0</span>) {
+                rests<span style="color:#fbde2d">.</span>push(num<span style="color:#fbde2d">%</span>radix);
+                num <span style="color:#fbde2d">/=</span> radix;
+            }
+            <span style="color:#fbde2d">StringBuilder</span> builder <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">StringBuilder</span>();
+            <span style="color:#fbde2d">while</span>(<span style="color:#fbde2d">!</span>rests<span style="color:#fbde2d">.</span>isEmpty()) {
+                <span style="color:#fbde2d">int</span> rest <span style="color:#fbde2d">=</span> rests<span style="color:#fbde2d">.</span>pop(); 
+                <span style="color:#fbde2d">switch</span>(rest) {
+                <span style="color:#fbde2d">case</span> <span style="color:#d8fa3c">10</span><span style="color:#fbde2d">:</span> builder<span style="color:#fbde2d">.</span>append(<span style="color:#61ce3c">'A'</span>); <span style="color:#fbde2d">break</span>;
+                <span style="color:#fbde2d">case</span> <span style="color:#d8fa3c">11</span><span style="color:#fbde2d">:</span> builder<span style="color:#fbde2d">.</span>append(<span style="color:#61ce3c">'B'</span>); <span style="color:#fbde2d">break</span>;
+                <span style="color:#fbde2d">case</span> <span style="color:#d8fa3c">12</span><span style="color:#fbde2d">:</span> builder<span style="color:#fbde2d">.</span>append(<span style="color:#61ce3c">'C'</span>); <span style="color:#fbde2d">break</span>;
+                <span style="color:#fbde2d">case</span> <span style="color:#d8fa3c">13</span><span style="color:#fbde2d">:</span> builder<span style="color:#fbde2d">.</span>append(<span style="color:#61ce3c">'D'</span>); <span style="color:#fbde2d">break</span>;
+                <span style="color:#fbde2d">case</span> <span style="color:#d8fa3c">14</span><span style="color:#fbde2d">:</span> builder<span style="color:#fbde2d">.</span>append(<span style="color:#61ce3c">'E'</span>); <span style="color:#fbde2d">break</span>;
+                <span style="color:#fbde2d">case</span> <span style="color:#d8fa3c">15</span><span style="color:#fbde2d">:</span> builder<span style="color:#fbde2d">.</span>append(<span style="color:#61ce3c">'F'</span>); <span style="color:#fbde2d">break</span>;
+                <span style="color:#fbde2d">default</span><span style="color:#fbde2d">:</span> builder<span style="color:#fbde2d">.</span>append(rest);
+                }
+            }
+            <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(builder<span style="color:#fbde2d">.</span>toString());
+        }
+    }
+    
+}
+</pre>
+        </div>
+    </main>
+
+    <hr>
+
+<?php
+put_default_footer();
+?>
+
+</body>
+
+</html>

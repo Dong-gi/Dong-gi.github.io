@@ -1,0 +1,139 @@
+<?
+header('Content-Type: text/html; charset=utf-8');
+// $host = $_SERVER['HTTP_HOST'];
+setlocale(LC_TIME, "kr_KR.utf8");
+date_default_timezone_set('Asia/Seoul');
+//phpinfo();
+?>
+
+<html>
+    <head>
+		<style>
+.highlighted { font-size : 15px; }
+.source { visibility : hidden; }
+		</style>
+        
+		<title>wiz</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </head>
+
+	<body>
+		<h2>MainActivity.java</h2>
+			<article class = "highlighted">
+<pre style="background:#000;color:#f8f8f8"><span style="color:#e28964">package</span> <span style="color:#99cf50">hu.pe.wiz.study</span>;
+
+<span style="color:#e28964">import</span> <span style="color:#99cf50">android.app.Dialog</span>;
+<span style="color:#e28964">import</span> <span style="color:#99cf50">android.content.DialogInterface</span>;
+<span style="color:#e28964">import</span> <span style="color:#99cf50">android.support.v7.app.AlertDialog</span>;
+<span style="color:#e28964">import</span> <span style="color:#99cf50">android.support.v7.app.AppCompatActivity</span>;
+<span style="color:#e28964">import</span> <span style="color:#99cf50">android.os.Bundle</span>;
+<span style="color:#e28964">import</span> <span style="color:#99cf50">android.view.View</span>;
+<span style="color:#e28964">import</span> <span style="color:#99cf50">android.widget.Button</span>;
+<span style="color:#e28964">import</span> <span style="color:#99cf50">android.widget.RadioButton</span>;
+<span style="color:#e28964">import</span> <span style="color:#99cf50">android.widget.Toast</span>;
+
+<span style="color:#99cf50">public</span> <span style="color:#99cf50">class</span> <span style="text-decoration:underline">MainActivity</span> <span style="color:#99cf50">extends</span> <span style="color:#9b5c2e;font-style:italic">AppCompatActivity</span> {
+    <span style="color:#99cf50">private</span> <span style="color:#99cf50">int</span> dialogMode;
+
+    <span style="color:#99cf50">@Override</span>
+    <span style="color:#99cf50">protected</span> <span style="color:#99cf50">void</span> <span style="color:#89bdff">onCreate</span>(<span style="color:#99cf50">Bundle</span> <span style="color:#3e87e3">savedInstanceState</span>) {
+        <span style="color:#3e87e3">super</span><span style="color:#e28964">.</span>onCreate(savedInstanceState);
+        setContentView(<span style="color:#99cf50">R</span><span style="color:#e28964">.</span>layout<span style="color:#e28964">.</span>activity_main);
+
+        <span style="color:#99cf50">Button</span> b <span style="color:#e28964">=</span> (<span style="color:#99cf50">Button</span>) findViewById(<span style="color:#99cf50">R</span><span style="color:#e28964">.</span>id<span style="color:#e28964">.</span>button1);
+        b<span style="color:#e28964">.</span>setOnClickListener(<span style="color:#e28964">new</span> <span style="color:#99cf50">View</span>.<span style="color:#99cf50">OnClickListener</span>() {
+            <span style="color:#99cf50">@Override</span>
+            <span style="color:#99cf50">public</span> <span style="color:#99cf50">void</span> <span style="color:#89bdff">onClick</span>(<span style="color:#99cf50">View</span> <span style="color:#3e87e3">v</span>) {
+                showDialog(dialogMode);
+            }
+        });
+    }
+
+    <span style="color:#99cf50">public</span> <span style="color:#99cf50">void</span> <span style="color:#89bdff">radioButtonTest</span>(<span style="color:#99cf50">View</span> <span style="color:#3e87e3">view</span>) {
+        <span style="color:#e28964">if</span>(((<span style="color:#99cf50">RadioButton</span>) view)<span style="color:#e28964">.</span>isChecked())
+            dialogMode <span style="color:#e28964">=</span> <span style="color:#99cf50">Integer</span><span style="color:#e28964">.</span>parseInt(((<span style="color:#99cf50">RadioButton</span>) view)<span style="color:#e28964">.</span>getText()<span style="color:#e28964">.</span>toString());
+    }
+
+    <span style="color:#99cf50">@Override</span>
+    <span style="color:#99cf50">protected</span> <span style="color:#99cf50">Dialog</span> <span style="color:#89bdff">onCreateDialog</span>(<span style="color:#99cf50">int</span> <span style="color:#3e87e3">id</span>) {
+        <span style="color:#e28964">switch</span> (id) {
+            <span style="color:#e28964">case</span> <span style="color:#3387cc">1</span><span style="color:#e28964">:</span>
+                <span style="color:#99cf50">AlertDialog</span><span style="color:#e28964">.</span><span style="color:#99cf50">Builder</span> builder <span style="color:#e28964">=</span> <span style="color:#e28964">new</span> <span style="color:#99cf50">AlertDialog</span>.<span style="color:#99cf50">Builder</span>(<span style="color:#3e87e3">this</span>);
+                builder<span style="color:#e28964">.</span>setTitle(<span style="color:#65b042">"종료 확인 대화 상자"</span>)
+                        .setMessage(<span style="color:#65b042">"애플리케이션을 종료하시겠습니까?"</span>)
+                        .setPositiveButton(<span style="color:#65b042">"Yes"</span>, <span style="color:#e28964">new</span> <span style="color:#99cf50">DialogInterface</span>.<span style="color:#99cf50">OnClickListener</span>() {
+                            <span style="color:#99cf50">@Override</span>
+                            <span style="color:#99cf50">public</span> <span style="color:#99cf50">void</span> <span style="color:#89bdff">onClick</span>(<span style="color:#99cf50">DialogInterface</span> <span style="color:#3e87e3">dialog</span>, <span style="color:#99cf50">int</span> <span style="color:#3e87e3">which</span>) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(<span style="color:#65b042">"No"</span>, <span style="color:#e28964">new</span> <span style="color:#99cf50">DialogInterface</span>.<span style="color:#99cf50">OnClickListener</span>() {
+                            <span style="color:#99cf50">@Override</span>
+                            <span style="color:#99cf50">public</span> <span style="color:#99cf50">void</span> <span style="color:#89bdff">onClick</span>(<span style="color:#99cf50">DialogInterface</span> <span style="color:#3e87e3">dialog</span>, <span style="color:#99cf50">int</span> <span style="color:#3e87e3">which</span>) {
+                                dialog<span style="color:#e28964">.</span>dismiss();
+                            }
+                        });
+                <span style="color:#99cf50">AlertDialog</span> alert <span style="color:#e28964">=</span> builder<span style="color:#e28964">.</span>create();
+                <span style="color:#e28964">return</span> alert;
+            <span style="color:#e28964">case</span> <span style="color:#3387cc">2</span><span style="color:#e28964">:</span>
+                <span style="color:#99cf50">final</span> <span style="color:#99cf50">CharSequence</span>[] items <span style="color:#e28964">=</span> {<span style="color:#65b042">"Red"</span>, <span style="color:#65b042">"Green"</span>, <span style="color:#65b042">"Blue"</span>};
+                <span style="color:#99cf50">AlertDialog</span><span style="color:#e28964">.</span><span style="color:#99cf50">Builder</span> builderRadio <span style="color:#e28964">=</span> <span style="color:#e28964">new</span> <span style="color:#99cf50">AlertDialog</span>.<span style="color:#99cf50">Builder</span>(<span style="color:#3e87e3">this</span>);
+                builderRadio<span style="color:#e28964">.</span>setTitle(<span style="color:#65b042">"색상 선택"</span>)
+                        .setSingleChoiceItems(items, <span style="color:#e28964">-</span><span style="color:#3387cc">1</span>, <span style="color:#e28964">new</span> <span style="color:#99cf50">DialogInterface</span>.<span style="color:#99cf50">OnClickListener</span>() {
+                            <span style="color:#99cf50">public</span> <span style="color:#99cf50">void</span> <span style="color:#89bdff">onClick</span>(<span style="color:#99cf50">DialogInterface</span> <span style="color:#3e87e3">dialog</span>, <span style="color:#99cf50">int</span> <span style="color:#3e87e3">item</span>) {
+                                <span style="color:#99cf50">Toast</span><span style="color:#e28964">.</span>makeText(getApplicationContext(), items[item], <span style="color:#99cf50">Toast</span><span style="color:#3387cc"><span style="color:#e28964">.</span>LENGTH_SHORT</span>)<span style="color:#e28964">.</span>show();
+                            }
+                        });
+                <span style="color:#99cf50">AlertDialog</span> alertRadio <span style="color:#e28964">=</span> builderRadio<span style="color:#e28964">.</span>create();
+                <span style="color:#e28964">return</span> alertRadio;
+        }
+        <span style="color:#e28964">return</span> <span style="color:#3387cc">null</span>;
+    }
+
+}
+
+</pre>
+			</article>
+
+
+		<h2>activity_main.xml</h2>
+			<article class = "highlighted">
+<pre style="background:#000;color:#f8f8f8"><span style="color:#89bdff">&lt;?<span style="color:#89bdff">xml</span><span style="color:#89bdff"> version</span>=<span style="color:#65b042">"1.0"</span><span style="color:#89bdff"> encoding</span>=<span style="color:#65b042">"utf-8"</span>?></span>
+<span style="color:#89bdff">&lt;<span style="color:#89bdff">LinearLayout</span>
+    <span style="color:#89bdff">xmlns</span>:android=<span style="color:#65b042">"http://schemas.android.com/apk/res/android"</span>
+    <span style="color:#89bdff">xmlns</span>:tools=<span style="color:#65b042">"http://schemas.android.com/tools"</span>
+    <span style="color:#89bdff">android</span>:layout_width=<span style="color:#65b042">"match_parent"</span>
+    <span style="color:#89bdff">android</span>:layout_height=<span style="color:#65b042">"match_parent"</span>
+    <span style="color:#89bdff">android</span>:orientation=<span style="color:#65b042">"vertical"</span>
+    <span style="color:#89bdff">tools</span>:context=<span style="color:#65b042">"hu.pe.wiz.study.MainActivity"</span>></span>
+
+    <span style="color:#89bdff">&lt;<span style="color:#89bdff">RadioGroup</span>
+        <span style="color:#89bdff">android</span>:layout_width=<span style="color:#65b042">"match_parent"</span>
+        <span style="color:#89bdff">android</span>:layout_height=<span style="color:#65b042">"wrap_content"</span>></span>
+
+        <span style="color:#89bdff">&lt;<span style="color:#89bdff">RadioButton</span>
+            <span style="color:#89bdff">android</span>:layout_width=<span style="color:#65b042">"wrap_content"</span>
+            <span style="color:#89bdff">android</span>:layout_height=<span style="color:#65b042">"wrap_content"</span>
+            <span style="color:#89bdff">android</span>:text=<span style="color:#65b042">"1"</span>
+            <span style="color:#89bdff">android</span>:onClick=<span style="color:#65b042">"radioButtonTest"</span>/></span>
+        <span style="color:#89bdff">&lt;<span style="color:#89bdff">RadioButton</span>
+            <span style="color:#89bdff">android</span>:layout_width=<span style="color:#65b042">"wrap_content"</span>
+            <span style="color:#89bdff">android</span>:layout_height=<span style="color:#65b042">"wrap_content"</span>
+            <span style="color:#89bdff">android</span>:text=<span style="color:#65b042">"2"</span>
+            <span style="color:#89bdff">android</span>:onClick=<span style="color:#65b042">"radioButtonTest"</span>/></span>
+
+    <span style="color:#89bdff">&lt;/<span style="color:#89bdff">RadioGroup</span>></span>
+    <span style="color:#89bdff">&lt;<span style="color:#89bdff">Button</span>
+        <span style="color:#89bdff">android</span>:layout_width=<span style="color:#65b042">"wrap_content"</span>
+        <span style="color:#89bdff">android</span>:layout_height=<span style="color:#65b042">"wrap_content"</span>
+        <span style="color:#89bdff">android</span>:text=<span style="color:#65b042">"대화창 생성"</span>
+        <span style="color:#89bdff">android</span>:id=<span style="color:#65b042">"@+id/button1"</span>/></span>
+
+<span style="color:#89bdff">&lt;/<span style="color:#89bdff">LinearLayout</span>></span>
+
+</pre>
+			<article class="source">
+
+		</article>
+	</body>
+</html>

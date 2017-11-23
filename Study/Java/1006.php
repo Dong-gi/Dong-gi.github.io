@@ -1,0 +1,68 @@
+﻿<?php
+header('Content-Type: text/html; charset=utf-8');
+setlocale(LC_TIME, "kr_KR.utf8");
+date_default_timezone_set('Asia/Seoul');
+
+$server_root_path = $_SERVER['DOCUMENT_ROOT'];
+include $server_root_path.'/lib/functions.php';
+?>
+
+<!DOCTYPE html>
+<html lang="kor">
+
+<?php
+put_html_head('wiz');
+?>
+
+<body>
+
+<?php
+put_nav();
+?>
+
+    <main role="main">
+        <div class="container">
+
+<pre style="background:#0c1021;color:#f8f8f8">
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">java.io.IOException</span>;
+
+<span style="color:#fbde2d">public</span> <span style="color:#fbde2d">class</span> <span style="color:#ff6400">Main</span> {
+    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">static</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">main</span>(<span style="color:#fbde2d">String</span>[] args) <span style="color:#fbde2d">throws</span> <span style="color:#fbde2d">Exception</span> {
+        <span style="color:#aeaeae">// 독립적인 예외들이 발생하면 나중에 발생한 예외들은 addSuppressed()에 의해 억제된다.</span>
+        <span style="color:#aeaeae">// 사용자 정의 예외 클래스 이름에 접미사로 Exception을 붙인다.</span>
+        <span style="color:#aeaeae">// 자식은 부모보다 많은 종류의 예외를 발생시킬 수 없다.</span>
+        <span style="color:#fbde2d">try</span> {
+            <span style="color:#fbde2d">throw</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">Exception</span>(<span style="color:#61ce3c">"예외 발생"</span>);
+        }
+        <span style="color:#aeaeae">// catch, finally 문을 생략할 수 있다.</span>
+        <span style="color:#fbde2d">catch</span> (<span style="color:#fbde2d">IOException</span> ioe) {
+            <span style="color:#fbde2d">try</span> {
+                <span style="color:#fbde2d">throw</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">Exception</span>(<span style="color:#61ce3c">"추가 예외"</span>);
+            } <span style="color:#fbde2d">catch</span> (<span style="color:#fbde2d">Exception</span> e) {
+                <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(<span style="color:#61ce3c">"처리 완료"</span>);
+            }
+            <span style="color:#fbde2d">throw</span> ioe; <span style="color:#aeaeae">// parent method에서 예외의 나머지를 처리하도록 할 경우.</span>
+        } <span style="color:#fbde2d">catch</span> (<span style="color:#fbde2d">Exception</span> e) {
+            <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(e<span style="color:#fbde2d">.</span>getMessage());
+        }
+        <span style="color:#aeaeae">// finally가 catch 뒤에 나오면 예외를 처리한 뒤에 실행.</span>
+        <span style="color:#aeaeae">// finally가 catch 전에 나오면 예외를 처리하기 전에 실행.</span>
+        <span style="color:#fbde2d">finally</span> {
+
+        }
+    }
+
+}
+</pre>
+        </div>
+    </main>
+
+    <hr>
+
+<?php
+put_default_footer();
+?>
+
+</body>
+
+</html>

@@ -1,0 +1,192 @@
+﻿<?php
+header('Content-Type: text/html; charset=utf-8');
+setlocale(LC_TIME, "kr_KR.utf8");
+date_default_timezone_set('Asia/Seoul');
+
+$server_root_path = $_SERVER['DOCUMENT_ROOT'];
+include $server_root_path.'/lib/functions.php';
+?>
+
+<!DOCTYPE html>
+<html lang="kor">
+
+<?php
+put_html_head('wiz');
+?>
+
+<body>
+
+<?php
+put_nav();
+?>
+
+    <main role="main">
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="display-3">C</h1>
+                <p>C is strong.</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>기본 자료형</h2>
+                    <p>1. char(1byte), short(2bytes), int(short <= int <= long), long(4bytes) // unsigned<br>
+                    2. float(4bytes), double(8bytes), long double(10bytes)<br>
+                    3. void : 반환 타입 선언 | 매개변수 선언 | void 포인터</p>
+                </div>
+                <div class="col-md-4">
+                    <h2>리터럴</h2>
+                    <p>1. unsigned : 123U, long : 123L, 16진수 : 0x, 8진수 : 0<br>
+                    2. 지수 표기 : E, float : 1.F</p>
+                </div>
+                <div class="col-md-4">
+                    <h2>상수</h2>
+                    <p>1. const float PI = 3.141592F<br>
+                    2. #define PI 3.141592 // 컴파일러가 단순 치환 작업함</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>Storage Classes</h2>
+                    <p>1. auto : 모든 지역변수 기본값. int a; == auto int a;<br>
+                    2. register : RAM이 아닌 레지스터에 변수 생성.<br>
+                    3. static : 처음 호출 시 한번만 초기화되고 프로그램 종료시까지 유지<br>
+                    4. extern : 외부 파일 전역 변수 참조</p>
+                </div>
+                <div class="col-md-4">
+                    <h2>연산자</h2>
+                    <p>1. 산술 : +, -, *, /, %, ++, --<br>
+                    2. 관계 : ==, !=, >, >=, <, <=<br>
+                    3. 논리 : &&, ||, !<br>
+                    4. 비트 : &, |, ^(xor), ~(not), <<, >><br>
+                    5. sizeof(), &(address), *(pointer), ?:(condition), (형변환), [], -></p>
+                    <p>
+                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>문장</h2>
+                    <p>1. if ~ else if ~ else // 0만 아니면 다 true<br>
+                    2. switch : 정수 타입만 가능<br>
+                    3. while, for, do ~ while</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>함수</h2>
+                    <p>1. call by value : 값의 복사에 의한 인자 전달<br>
+                    2. call by reference : 주소 복사에 의한 인자 전달</p>
+                </div>
+                <div class="col-md-4">
+                    <h2>변수</h2>
+                    <p>1. 지역변수는 자동 초기화되지 않는다.<br>
+                    2. 전역변수 초기화값 : 0, '\0', 0.f, 0., NULL</p>
+                </div>
+                <div class="col-md-4">
+                    <h2>배열</h2>
+                    <p>1. type 식별자[size];<br>
+                    2. int arr[] = {1, 2, 3};<br>
+                    3. int arr[3][3];<br>
+                    4. 배열 이름은 그 시작 주소를 가리키는 포인터다.</p>
+                    <p>
+                        <a class="btn btn-secondary" href="./1001.php" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>포인터</h2>
+                    <p>1. 포인터에 대한 ++, -- 연산은 sizeof()값만큼의 주소 이동이다.<br>
+                    2. int *arr[3]; // 포인터의 배열<br>
+                    3. int (*arr)[]; // 배열의 포인터</p>
+                    <p>
+                        <a class="btn btn-secondary" href="./1002.php" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>문자열</h2>
+                    <p>1. 문자열은 '\0'으로 끝난다.<br>
+                    2. char str[] = "Hello World";<br>
+                    3. char *str = "Hello World";<br>
+                    4. string.h :: strcpy(), strcat(), strlen(), strcmp(), strchr() : indexOfChar, strstr() : indexOfString</p>
+                </div>
+                <div class="col-md-4">
+                    <h2>구조체</h2>
+                    <p>1. struct [식별자] { 멤버변수 목록 }<br>
+                    2. 구조체 멤버 접근은 . 또는 ->(포인터)로 이루어진다.<br>
+                    3. 비트필드 : 각 멤버의 비트 수를 제한할 수 있다.<br>
+                    struct { type 식별자 : 비트수; }</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>typedef</h2>
+                    <p>1. 기정의된 타입을 다른 이름으로 이용할 수 있게한다.<br>
+                    typedef unsigned int UINT_32</p>
+                </div>
+                <div class="col-md-4">
+                    <h2>IO</h2>
+                    <p>1. 표준입출력 파일 포인터 : stdin, stdout, stderr<br>
+                    2. int getchar(), int putchar(int c), char* gets(char* s), int puts(const char* s)<br>
+                    3. int scanf(const char* format, ...), int printf(const char* format, ...)<br>
+                    3. fopen_s(FILE** _Stream, const char* _FileName, const char* _Mode); // r, w, a, r+, w+, a+, -b<br>
+                    4. int fclose(FILE* fp), int fgetc(FILE* fp), char* fgets(char* buf, int n, FILE* fp), int fputc(int c, FILE* fp), int fputs(const char* s, FILE* fp)<br>
+                    5. binary : size_t fread(void* _Buffer, size_t _ElementSize, size_t _ElementCount, FILE* _Stream)<br>
+                    size_t fwrite(const void* _Buffer, size_t _ElementSize, size_t _ElementCount, FILE* _Stream)</p>
+                </div>
+                <div class="col-md-4">
+                    <h2>전처리기, 매크로</h2>
+                    <p>1. 전처리기 : #include, #define, #undef, #ifdef, #ifndef, #if, #elif, #else, #endif, #pragma<br>
+                    2. 매크로 : __DATE__, __TIME__, __FILE__, __LINE__<br>
+                    3. 매크로 : #define name(params) (처리)<br>
+                    4. #(stringize), ##(token pasting) : #define STRCAT(str1, str2) \<br>
+                    printf("str1 : " #str1 ", str2 : " #str2 ", result : %s", str1##str2)</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>에러</h2>
+                    <p>1. errno.h :: errno, perror(), string.h :: strerror_s()<br>
+                    2. stdlib.h :: exit(), EXIT_SUCCESS = 0, EXIT_FAILURE = 1</p>
+                    <p>
+                        <a class="btn btn-secondary" href="./1003.php" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>가변길이 매개변수</h2>
+                    <p>1. 함수의 매개변수 목록 정의 : (int size, ...)<br>
+                    2. stdarg.h :: va_list, va_start(va_list, size), va_arg(va_list, type), va_end(va_list)</p>
+                    <p>
+                        <a class="btn btn-secondary" href="./1004.php" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>동적 할당</h2>
+                    <p>stdlib.h<br>
+                    1. void* malloc(int size) : size 바이트만큼 할당<br>
+                    2. void* calloc(int count, int size) : count * size만큼 할당<br>
+                    3. void* realloc(void* _Block, int size) : 새로 할당<br>
+                    4. void free(void* _Block) : 해제</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>커맨드라인 매개변수</h2>
+                    <p>1. 커맨드라인을 통해 프로그램을 실행하면 main()으로 전달된다.<br>
+                    2. int main(int argc, char* argv[])</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <hr>
+
+<?php
+put_default_footer();
+?>
+
+</body>
+
+</html>

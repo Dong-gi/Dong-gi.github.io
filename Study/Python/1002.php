@@ -1,0 +1,65 @@
+﻿<?php
+header('Content-Type: text/html; charset=utf-8');
+setlocale(LC_TIME, "kr_KR.utf8");
+date_default_timezone_set('Asia/Seoul');
+
+$server_root_path = $_SERVER['DOCUMENT_ROOT'];
+include $server_root_path.'/lib/functions.php';
+?>
+
+<!DOCTYPE html>
+<html lang="kor">
+
+<?php
+put_html_head('wiz');
+?>
+
+<body>
+
+<?php
+put_nav();
+?>
+
+    <main role="main">
+        <div class="container">
+
+<pre style="background:#0c1021;color:#f8f8f8"><span style="color:#61ce3c">'''
+code0003.py
+튜플
+'''</span>
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'생성'</span>)
+tuple1 <span style="color:#fbde2d">=</span> (<span style="color:#d8fa3c">1</span>, <span style="color:#d8fa3c">2</span>, <span style="color:#d8fa3c">3</span>, <span style="color:#61ce3c">'hello'</span>)
+<span style="color:#fbde2d">print</span>(tuple1)
+
+tuple1 <span style="color:#fbde2d">=</span> <span style="color:#8da6ce">tuple</span>()
+tuple1 <span style="color:#fbde2d">+=</span> (<span style="color:#d8fa3c">4</span>,) <span style="color:#aeaeae"># 하나일 땐 뒤에 콤마 붙여야 튜플로 인식</span>
+tuple1 <span style="color:#fbde2d">+=</span> (<span style="color:#d8fa3c">5</span>, <span style="color:#d8fa3c">6</span>)
+<span style="color:#aeaeae"># tuple1 += ('world') # 문자열 튜플은 불가능</span>
+<span style="color:#fbde2d">print</span>(tuple1)
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'튜플 언패킹'</span>)
+a, b, c <span style="color:#fbde2d">=</span> tuple1
+<span style="color:#fbde2d">print</span>(a)
+<span style="color:#fbde2d">print</span>(b)
+<span style="color:#fbde2d">print</span>(c)
+
+c, b, a <span style="color:#fbde2d">=</span> a, b, c
+<span style="color:#fbde2d">print</span>(a)
+<span style="color:#fbde2d">print</span>(b)
+<span style="color:#fbde2d">print</span>(c)
+
+</pre>
+        </div>
+    </main>
+
+    <hr>
+
+<?php
+put_default_footer();
+?>
+
+</body>
+
+</html>

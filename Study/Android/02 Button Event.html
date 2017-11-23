@@ -1,0 +1,222 @@
+<?
+header('Content-Type: text/html; charset=utf-8');
+// $host = $_SERVER['HTTP_HOST'];
+setlocale(LC_TIME, "kr_KR.utf8");
+date_default_timezone_set('Asia/Seoul');
+//phpinfo();
+?>
+
+<html>
+    <head>
+		<style>
+.highlighted { font-size : 15px; }
+.source { visibility : hidden; }
+		</style>
+        
+		<title>wiz</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </head>
+
+	<body>
+		<h2>MainActivity.java</h2>
+			<article class = "highlighted">
+<pre style="background:#0c1021;color:#f8f8f8"><span style="color:#fbde2d">package</span> <span style="color:#fbde2d">wiz.pe.hu.test</span>;
+
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">android.support.v7.app.AppCompatActivity</span>;
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">android.os.Bundle</span>;
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">android.view.View</span>;
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">android.widget.Button</span>;
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">android.widget.LinearLayout</span>;
+
+<span style="color:#fbde2d">public</span> <span style="color:#fbde2d">class</span> <span style="color:#ff6400">MainActivity</span> <span style="color:#fbde2d">extends</span> <span style="color:#ff6400;font-style:italic">AppCompatActivity</span> {
+
+    <span style="color:#fbde2d">@Override</span>
+    <span style="color:#fbde2d">protected</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">onCreate</span>(<span style="color:#fbde2d">Bundle</span> savedInstanceState) {
+        super<span style="color:#fbde2d">.</span>onCreate(savedInstanceState);
+        setContentView(<span style="color:#fbde2d">R</span><span style="color:#fbde2d">.</span>layout<span style="color:#fbde2d">.</span>activity_main);
+    }
+
+    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">changeOrietation</span>(<span style="color:#fbde2d">View</span> v) {
+        <span style="color:#fbde2d">LinearLayout</span> layout <span style="color:#fbde2d">=</span> (<span style="color:#fbde2d">LinearLayout</span>)findViewById(<span style="color:#fbde2d">R</span><span style="color:#fbde2d">.</span>id<span style="color:#fbde2d">.</span>layout2);
+        <span style="color:#fbde2d">if</span>(layout<span style="color:#fbde2d">.</span>getOrientation() <span style="color:#fbde2d">==</span> <span style="color:#fbde2d">LinearLayout</span><span style="color:#d8fa3c"><span style="color:#fbde2d">.</span>VERTICAL</span>)
+            layout<span style="color:#fbde2d">.</span>setOrientation(<span style="color:#fbde2d">LinearLayout</span><span style="color:#d8fa3c"><span style="color:#fbde2d">.</span>HORIZONTAL</span>);
+        <span style="color:#fbde2d">else</span>
+            layout<span style="color:#fbde2d">.</span>setOrientation(<span style="color:#fbde2d">LinearLayout</span><span style="color:#d8fa3c"><span style="color:#fbde2d">.</span>VERTICAL</span>);
+    }
+
+    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">addButton</span>(<span style="color:#fbde2d">View</span> v) {
+        <span style="color:#fbde2d">LinearLayout</span> layout <span style="color:#fbde2d">=</span> (<span style="color:#fbde2d">LinearLayout</span>)findViewById(<span style="color:#fbde2d">R</span><span style="color:#fbde2d">.</span>id<span style="color:#fbde2d">.</span>layout2);
+        <span style="color:#fbde2d">Button</span> newButton <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">Button</span>(v<span style="color:#fbde2d">.</span>getContext());
+        newButton<span style="color:#fbde2d">.</span>setText(<span style="color:#61ce3c">"new!"</span>);
+        <span style="color:#fbde2d">LinearLayout</span><span style="color:#fbde2d">.</span><span style="color:#fbde2d">LayoutParams</span> param <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">LinearLayout</span>.<span style="color:#fbde2d">LayoutParams</span>(
+                <span style="color:#fbde2d">LinearLayout</span><span style="color:#fbde2d">.</span><span style="color:#fbde2d">LayoutParams</span><span style="color:#d8fa3c"><span style="color:#fbde2d">.</span>WRAP_CONTENT</span>,
+                <span style="color:#fbde2d">LinearLayout</span><span style="color:#fbde2d">.</span><span style="color:#fbde2d">LayoutParams</span><span style="color:#d8fa3c"><span style="color:#fbde2d">.</span>WRAP_CONTENT</span>
+        );
+        layout<span style="color:#fbde2d">.</span>addView(newButton);
+    }
+}
+
+</pre>
+			</article>
+			
+		<h2>activity_main.xml</h2>
+			<article class = "highlighted">
+<pre style="background:#0c1021;color:#f8f8f8"><span style="color:#7f90aa">&lt;?<span style="color:#7f90aa">xml</span><span style="color:#7f90aa"> version</span>=<span style="color:#61ce3c">"1.0"</span><span style="color:#7f90aa"> encoding</span>=<span style="color:#61ce3c">"utf-8"</span>?></span>
+<span style="color:#7f90aa">&lt;<span style="color:#7f90aa">LinearLayout</span> <span style="color:#7f90aa">xmlns</span>:android=<span style="color:#61ce3c">"http://schemas.android.com/apk/res/android"</span>
+    <span style="color:#7f90aa">xmlns</span>:app=<span style="color:#61ce3c">"http://schemas.android.com/apk/res-auto"</span>
+    <span style="color:#7f90aa">xmlns</span>:tools=<span style="color:#61ce3c">"http://schemas.android.com/tools"</span>
+    <span style="color:#7f90aa">android</span>:id=<span style="color:#61ce3c">"@+id/layout1"</span>
+    <span style="color:#7f90aa">android</span>:layout_width=<span style="color:#61ce3c">"match_parent"</span>
+    <span style="color:#7f90aa">android</span>:layout_height=<span style="color:#61ce3c">"match_parent"</span>
+    <span style="color:#7f90aa">android</span>:orientation=<span style="color:#61ce3c">"vertical"</span>
+    <span style="color:#7f90aa">tools</span>:context=<span style="color:#61ce3c">"wiz.pe.hu.test.MainActivity"</span>></span>
+
+    <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">LinearLayout</span>
+        <span style="color:#7f90aa">android</span>:id=<span style="color:#61ce3c">"@+id/layout2"</span>
+        <span style="color:#7f90aa">android</span>:layout_width=<span style="color:#61ce3c">"match_parent"</span>
+        <span style="color:#7f90aa">android</span>:layout_height=<span style="color:#61ce3c">"wrap_content"</span>
+        <span style="color:#7f90aa">android</span>:orientation=<span style="color:#61ce3c">"horizontal"</span>></span>
+
+        <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">Button</span>
+            <span style="color:#7f90aa">android</span>:id=<span style="color:#61ce3c">"@+id/button"</span>
+            <span style="color:#7f90aa">android</span>:layout_width=<span style="color:#61ce3c">"wrap_content"</span>
+            <span style="color:#7f90aa">android</span>:layout_height=<span style="color:#61ce3c">"wrap_content"</span>
+            <span style="color:#7f90aa">android</span>:layout_weight=<span style="color:#61ce3c">"1"</span>
+            <span style="color:#7f90aa">android</span>:onClick=<span style="color:#61ce3c">"changeOrietation"</span>
+            <span style="color:#7f90aa">android</span>:text=<span style="color:#61ce3c">"W=3"</span> /></span>
+
+        <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">Button</span>
+            <span style="color:#7f90aa">android</span>:id=<span style="color:#61ce3c">"@+id/button2"</span>
+            <span style="color:#7f90aa">android</span>:layout_width=<span style="color:#61ce3c">"wrap_content"</span>
+            <span style="color:#7f90aa">android</span>:layout_height=<span style="color:#61ce3c">"wrap_content"</span>
+            <span style="color:#7f90aa">android</span>:layout_weight=<span style="color:#61ce3c">"1"</span>
+            <span style="color:#7f90aa">android</span>:onClick=<span style="color:#61ce3c">"changeOrietation"</span>
+            <span style="color:#7f90aa">android</span>:text=<span style="color:#61ce3c">"W=2"</span> /></span>
+
+        <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">Button</span>
+            <span style="color:#7f90aa">android</span>:id=<span style="color:#61ce3c">"@+id/button3"</span>
+            <span style="color:#7f90aa">android</span>:layout_width=<span style="color:#61ce3c">"wrap_content"</span>
+            <span style="color:#7f90aa">android</span>:layout_height=<span style="color:#61ce3c">"wrap_content"</span>
+            <span style="color:#7f90aa">android</span>:layout_weight=<span style="color:#61ce3c">"1"</span>
+            <span style="color:#7f90aa">android</span>:onClick=<span style="color:#61ce3c">"changeOrietation"</span>
+            <span style="color:#7f90aa">android</span>:text=<span style="color:#61ce3c">"W=1"</span> /></span>
+    <span style="color:#7f90aa">&lt;/<span style="color:#7f90aa">LinearLayout</span>></span>
+
+    <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">TextView</span>
+        <span style="color:#7f90aa">android</span>:id=<span style="color:#61ce3c">"@+id/textView"</span>
+        <span style="color:#7f90aa">android</span>:layout_width=<span style="color:#61ce3c">"match_parent"</span>
+        <span style="color:#7f90aa">android</span>:layout_height=<span style="color:#61ce3c">"wrap_content"</span>
+        <span style="color:#7f90aa">android</span>:textAlignment=<span style="color:#61ce3c">"center"</span>
+        <span style="color:#7f90aa">android</span>:text=<span style="color:#61ce3c">"위의 버튼을 누르면 배치가 바뀝니다."</span> /></span>
+
+    <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">Button</span>
+        <span style="color:#7f90aa">android</span>:id=<span style="color:#61ce3c">"@+id/button4"</span>
+        <span style="color:#7f90aa">android</span>:layout_width=<span style="color:#61ce3c">"match_parent"</span>
+        <span style="color:#7f90aa">android</span>:layout_height=<span style="color:#61ce3c">"wrap_content"</span>
+        <span style="color:#7f90aa">android</span>:onClick=<span style="color:#61ce3c">"addButton"</span>
+        <span style="color:#7f90aa">android</span>:text=<span style="color:#61ce3c">"버튼 추가"</span>/></span>
+
+<span style="color:#7f90aa">&lt;/<span style="color:#7f90aa">LinearLayout</span>></span>
+
+
+</pre>
+			</article>
+		
+		<article class="source">
+package wiz.pe.hu.test;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+    public void changeOrietation(View v) {
+        LinearLayout layout = (LinearLayout)findViewById(R.id.layout2);
+        if(layout.getOrientation() == LinearLayout.VERTICAL)
+            layout.setOrientation(LinearLayout.HORIZONTAL);
+        else
+            layout.setOrientation(LinearLayout.VERTICAL);
+    }
+
+    public void addButton(View v) {
+        LinearLayout layout = (LinearLayout)findViewById(R.id.layout2);
+        Button newButton = new Button(v.getContext());
+        newButton.setText("new!");
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        layout.addView(newButton);
+    }
+}
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="wiz.pe.hu.test.MainActivity">
+
+    <LinearLayout
+        android:id="@+id/layout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="changeOrietation"
+            android:text="W=3" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="changeOrietation"
+            android:text="W=2" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="changeOrietation"
+            android:text="W=1" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="위의 버튼을 누르면 배치가 바뀝니다." />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="addButton"
+        android:text="버튼 추가"/>
+
+</LinearLayout>
+		</article>
+	</body>
+</html>

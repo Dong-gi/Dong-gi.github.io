@@ -1,0 +1,89 @@
+﻿<?php
+header('Content-Type: text/html; charset=utf-8');
+setlocale(LC_TIME, "kr_KR.utf8");
+date_default_timezone_set('Asia/Seoul');
+
+$server_root_path = $_SERVER['DOCUMENT_ROOT'];
+include $server_root_path.'/lib/functions.php';
+?>
+
+<!DOCTYPE html>
+<html lang="kor">
+
+<?php
+put_html_head('wiz');
+?>
+
+<body>
+
+<?php
+put_nav();
+?>
+
+    <main role="main">
+        <div class="container">
+
+<pre style="background:#0c1021;color:#f8f8f8">
+<span style="color:#fbde2d">class</span> <span style="color:#ff6400">Sub</span> <span style="color:#fbde2d">extends</span> <span style="color:#ff6400;font-style:italic">Main</span> {
+    <span style="color:#fbde2d">public</span> <span style="color:#ff6400">Sub</span>() {
+        super(<span style="color:#d8fa3c">1</span>);
+    }
+    <span style="color:#fbde2d">@Override</span>
+    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">setNum2</span>(<span style="color:#fbde2d">int</span> num2) {
+        super<span style="color:#fbde2d">.</span>setNum2(num2 <span style="color:#fbde2d">+</span> <span style="color:#d8fa3c">1</span>);
+    }
+}
+
+<span style="color:#fbde2d">public</span> <span style="color:#fbde2d">class</span> <span style="color:#ff6400">Main</span> {
+    <span style="color:#fbde2d">private</span> <span style="color:#fbde2d">static</span> <span style="color:#fbde2d">int</span> num;
+    <span style="color:#fbde2d">private</span> <span style="color:#fbde2d">static</span> <span style="color:#fbde2d">final</span> <span style="color:#fbde2d">int</span> <span style="color:#d8fa3c">NUM</span>;
+
+    <span style="color:#fbde2d">private</span> <span style="color:#fbde2d">int</span> num2;
+    <span style="color:#fbde2d">private</span> <span style="color:#fbde2d">final</span> <span style="color:#fbde2d">int</span> <span style="color:#d8fa3c">NUM2</span>;
+
+    <span style="color:#aeaeae">// class initializer</span>
+    <span style="color:#aeaeae">// 클래스 로드시 한번만 실행</span>
+    <span style="color:#aeaeae">// static, static final 멤버 초기화 가능</span>
+    <span style="color:#fbde2d">static</span>
+    {
+        num <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">0</span>;
+        <span style="color:#d8fa3c">NUM</span> <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">10</span>;
+    }
+
+    <span style="color:#aeaeae">// instance initializer</span>
+    <span style="color:#aeaeae">// 객체 생성시 한번만 실행</span>
+    <span style="color:#aeaeae">// final 멤버 초기화 가능</span>
+    {
+        num2 <span style="color:#fbde2d">=</span> num;
+        <span style="color:#d8fa3c">NUM2</span> <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">NUM</span>;
+    }
+
+    <span style="color:#fbde2d">public</span> <span style="color:#ff6400">Main</span>(<span style="color:#fbde2d">int</span> num2) {
+        setNum2(num2);
+    }
+
+    <span style="color:#aeaeae">// setter</span>
+    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">setNum2</span>(<span style="color:#fbde2d">int</span> num2) { this<span style="color:#fbde2d">.</span>num2 <span style="color:#fbde2d">=</span> num2; }
+    <span style="color:#aeaeae">// getter</span>
+    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">int</span> <span style="color:#ff6400">getNum2</span>() { <span style="color:#fbde2d">return</span> num2; }
+    
+    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">static</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">main</span>(<span style="color:#fbde2d">String</span>[] args) {
+        <span style="color:#fbde2d">Main</span> m <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">Sub</span>();
+        <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(m<span style="color:#fbde2d">.</span>getNum2());
+        m<span style="color:#fbde2d">.</span>setNum2(<span style="color:#d8fa3c">3</span>);
+        <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(m<span style="color:#fbde2d">.</span>getNum2());
+    }
+}
+</pre>
+        </div>
+    </main>
+
+    <hr>
+
+<?php
+put_default_footer();
+?>
+
+</body>
+
+</html>

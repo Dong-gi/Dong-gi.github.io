@@ -1,0 +1,37 @@
+<html>
+<header>
+	<title>tmp</title>
+</header>
+
+<body>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script>
+		function sleep(ms) {
+			return new Promise(resolve => setTimeout(resolve, ms));
+		}
+	</script>
+
+	<pre>
+검색 단어 : <input type="text" id="searchKey"/><button onclick="search();">검색</button></pre>
+
+	<ol id='resultList'></ol>
+	<iframe id='dicResult' src='http://dic.naver.com'></iframe>
+
+	<script>
+		var words = 'apple >> 사과\napple pie >> 사과 파이\n';
+		console.log(parseInt(1.7));
+		function search() {
+			ol = jQuery('#resultList');
+			ol.empty();
+			var key = jQuery('#searchKey').val();
+			var list = words.match(new RegExp('.*\n', 'gim'));;
+			for (var i = 0; i < list.length; ++i) {
+				jQuery('<li></li>').text(list[i]).appendTo(ol);
+			}
+			jQuery('#dicResult').attr('src', 'http://dic.naver.com/search.nhn?dicQuery=' + key);
+		}
+	</script>
+</body>
+
+</html>

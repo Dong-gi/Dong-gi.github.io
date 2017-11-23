@@ -1,0 +1,80 @@
+﻿<?php
+header('Content-Type: text/html; charset=utf-8');
+setlocale(LC_TIME, "kr_KR.utf8");
+date_default_timezone_set('Asia/Seoul');
+
+$server_root_path = $_SERVER['DOCUMENT_ROOT'];
+include $server_root_path.'/lib/functions.php';
+?>
+
+<!DOCTYPE html>
+<html lang="kor">
+
+<?php
+put_html_head('wiz');
+?>
+
+<body>
+
+<?php
+put_nav();
+?>
+
+    <main role="main">
+        <div class="container">
+
+<pre style="background:#0c1021;color:#f8f8f8"><span style="color:#fbde2d">public</span> <span style="color:#fbde2d">class</span> <span style="color:#ff6400">Summary</span> {
+
+    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">static</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">main</span>(<span style="color:#fbde2d">String</span>[] args) {
+
+        <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(<span style="color:#61ce3c">"문자열 뒤집기. reverse a string"</span>);
+
+        <span style="color:#fbde2d">String</span> original <span style="color:#fbde2d">=</span> <span style="color:#61ce3c">"reverse a string"</span>;
+        <span style="color:#fbde2d">String</span> reverse <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">StringBuilder</span>(original)<span style="color:#fbde2d">.</span>reverse()<span style="color:#fbde2d">.</span>toString();
+        <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(original <span style="color:#fbde2d">+</span> <span style="color:#61ce3c">"|"</span> <span style="color:#fbde2d">+</span> reverse);
+
+
+        <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(<span style="color:#61ce3c">"소수 구하기. find primes"</span>);
+        <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(<span style="color:#61ce3c">"메모리만 허용된다면, 배열을 크게 만들어놓고 배수를 지워나가는 방식이 더 빠르다"</span>);
+        findPrimesTo(<span style="color:#d8fa3c">10000000</span>);
+
+    }
+
+    <span style="color:#fbde2d">private</span> <span style="color:#fbde2d">static</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">findPrimesTo</span>(<span style="color:#fbde2d">int</span> size) {
+        <span style="color:#fbde2d">boolean</span>[] isPrime <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">boolean</span>[size<span style="color:#fbde2d">+</span><span style="color:#d8fa3c">1</span>];
+        <span style="color:#fbde2d">for</span> (<span style="color:#fbde2d">int</span> i <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">2</span>; i <span style="color:#fbde2d">&lt;=</span> size; i<span style="color:#fbde2d">++</span>) {
+            isPrime[i] <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">true</span>;
+        }
+        <span style="color:#fbde2d">for</span> (<span style="color:#fbde2d">int</span> i <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">3</span>; i<span style="color:#fbde2d">*</span>i <span style="color:#fbde2d">&lt;=</span> size; i <span style="color:#fbde2d">+=</span> <span style="color:#d8fa3c">2</span>) {
+            <span style="color:#fbde2d">try</span> {
+                <span style="color:#fbde2d">if</span> (isPrime[i]) {
+                    <span style="color:#fbde2d">for</span> (<span style="color:#fbde2d">int</span> j <span style="color:#fbde2d">=</span> i; i<span style="color:#fbde2d">*</span>j <span style="color:#fbde2d">&lt;=</span> size; j <span style="color:#fbde2d">+=</span> <span style="color:#d8fa3c">2</span>) {
+                        isPrime[i<span style="color:#fbde2d">*</span>j] <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">false</span>;
+                    }
+                }
+            } <span style="color:#fbde2d">catch</span>(<span style="color:#fbde2d">Exception</span> e) {}
+        }
+        <span style="color:#fbde2d">int</span> count <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">1</span>; <span style="color:#aeaeae">// 2</span>
+        <span style="color:#fbde2d">for</span> (<span style="color:#fbde2d">int</span> i <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">3</span>; i <span style="color:#fbde2d">&lt;=</span> size; i <span style="color:#fbde2d">+=</span> <span style="color:#d8fa3c">2</span>) {
+            <span style="color:#fbde2d">if</span>(isPrime[i]) {
+                count <span style="color:#fbde2d">+=</span> <span style="color:#d8fa3c">1</span>;
+            }
+        }
+        <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(<span style="color:#61ce3c">"Number of primes : "</span> <span style="color:#fbde2d">+</span> count);
+    }
+
+}
+</pre>
+
+        </div>
+    </main>
+
+    <hr>
+
+<?php
+put_default_footer();
+?>
+
+</body>
+
+</html>

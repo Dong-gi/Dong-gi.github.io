@@ -1,0 +1,84 @@
+﻿<?php
+header('Content-Type: text/html; charset=utf-8');
+setlocale(LC_TIME, "kr_KR.utf8");
+date_default_timezone_set('Asia/Seoul');
+
+$server_root_path = $_SERVER['DOCUMENT_ROOT'];
+include $server_root_path.'/lib/functions.php';
+?>
+
+<!DOCTYPE html>
+<html lang="kor">
+
+<?php
+put_html_head('wiz');
+?>
+
+<body>
+
+<?php
+put_nav();
+?>
+
+    <main role="main">
+        <div class="container">
+
+<pre style="background:#0c1021;color:#f8f8f8">
+<span style="color:#fbde2d">public</span> <span style="color:#fbde2d">class</span> <span style="color:#ff6400">Main</span> {
+
+    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">static</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">main</span>(<span style="color:#fbde2d">String</span>[] args) {
+        <span style="color:#fbde2d">boolean</span> var01; <span style="color:#aeaeae">// true, false</span>
+        <span style="color:#fbde2d">char</span> var02; <span style="color:#aeaeae">// 2바이트, '\u0000' ~ '\uFFFF'</span>
+        <span style="color:#fbde2d">byte</span> var03; <span style="color:#aeaeae">// 1바이트, -128 ~ 127</span>
+        <span style="color:#fbde2d">short</span> var04; <span style="color:#aeaeae">// 2바이트, -2^15 ~ 2^15-1</span>
+        <span style="color:#fbde2d">int</span> var05; <span style="color:#aeaeae">// 4바이트, -2^31 ~ 2^31-1</span>
+        <span style="color:#fbde2d">long</span> var06; <span style="color:#aeaeae">// 8바이트, -2^63 ~ 2^63-1</span>
+        <span style="color:#fbde2d">float</span> var07; <span style="color:#aeaeae">// 4바이트, IEEE 754</span>
+        <span style="color:#fbde2d">double</span> var08; <span style="color:#aeaeae">// 8바이트, IEEE 754</span>
+        
+        var05 <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">123</span> <span style="color:#fbde2d">+</span> <span style="color:#d8fa3c">0x123</span> <span style="color:#fbde2d">+</span> <span style="color:#d8fa3c">0123</span> <span style="color:#fbde2d">+</span> 0b101101; <span style="color:#aeaeae">// 10진수, 16진수, 8진수, 2진수</span>
+        var06 <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">123L</span>; <span style="color:#aeaeae">// long 리터럴</span>
+        var07 <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">1.23F</span>; <span style="color:#aeaeae">// float 리터럴</span>
+        var08 <span style="color:#fbde2d">=</span> 123_456_000 <span style="color:#fbde2d">+</span> <span style="color:#d8fa3c">1.</span>234_567 <span style="color:#fbde2d">+</span> (<span style="color:#d8fa3c">1.234E+2</span>);
+        
+        <span style="color:#aeaeae">// 위 8가지 기본 자료형을 제외한 모든 자료형은 참조 자료형으로, 동적할당된다.</span>
+        <span style="color:#fbde2d">int</span>[] arr1;
+        <span style="color:#fbde2d">int</span> arr2[];
+        arr1 <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">int</span>[<span style="color:#d8fa3c">10</span>];
+        arr2 <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">int</span>[] {<span style="color:#d8fa3c">1</span>, <span style="color:#d8fa3c">2</span>, <span style="color:#d8fa3c">3</span>};
+        <span style="color:#fbde2d">int</span>[][] arr3 <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">int</span>[<span style="color:#d8fa3c">2</span>][];
+        arr3[<span style="color:#d8fa3c">0</span>] <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">int</span>[<span style="color:#d8fa3c">10</span>];
+        arr3[<span style="color:#d8fa3c">1</span>] <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">int</span>[<span style="color:#d8fa3c">20</span>];
+        
+        <span style="color:#fbde2d">String</span> str1 <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">123</span> <span style="color:#fbde2d">+</span> <span style="color:#61ce3c">""</span>;
+        <span style="color:#aeaeae">// 3/0 : ArithmeticException</span>
+        <span style="color:#aeaeae">// 3/0. : INF</span>
+        <span style="color:#aeaeae">// 0./0. : NaN(Not a Number)</span>
+        
+        var05 <span style="color:#fbde2d">&lt;&lt;</span><span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">1</span>; <span style="color:#aeaeae">// 빈 비트를 0으로 채운다.</span>
+        var05 <span style="color:#fbde2d">>></span><span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">1</span>; <span style="color:#aeaeae">// 부호 비트를 유지한다.</span>
+        var05 <span style="color:#fbde2d">>>></span><span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">1</span>; <span style="color:#aeaeae">// 비어진 비트를 0으로 채운다.</span>
+        
+        <span style="color:#aeaeae">// Boolean Logical Operators</span>
+        var01 <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">false</span> <span style="color:#fbde2d">&amp;</span> <span style="color:#d8fa3c">true</span>;
+        var01 <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">true</span> <span style="color:#fbde2d">|</span> <span style="color:#d8fa3c">false</span>;
+        var01 <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">true</span> <span style="color:#fbde2d">^</span> <span style="color:#d8fa3c">false</span>; <span style="color:#aeaeae">// xor</span>
+        var01 <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">!</span><span style="color:#d8fa3c">true</span>; <span style="color:#aeaeae">// not</span>
+        var01 <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">false</span> <span style="color:#fbde2d">&amp;&amp;</span> <span style="color:#d8fa3c">true</span>; <span style="color:#aeaeae">// Short Circuit</span>
+        var01 <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">true</span> <span style="color:#fbde2d">||</span> <span style="color:#d8fa3c">false</span>; <span style="color:#aeaeae">// Short Circuit</span>
+    }
+
+}
+</pre>
+        </div>
+    </main>
+
+    <hr>
+
+<?php
+put_default_footer();
+?>
+
+</body>
+
+</html>

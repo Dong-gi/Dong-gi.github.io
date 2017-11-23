@@ -1,0 +1,120 @@
+<?
+header('Content-Type: text/html; charset=utf-8');
+// $host = $_SERVER['HTTP_HOST'];
+setlocale(LC_TIME, "kr_KR.utf8");
+date_default_timezone_set('Asia/Seoul');
+//phpinfo();
+?>
+
+<html>
+    <head>
+		<style>
+.highlighted { font-size : 15px; }
+.source { visibility : hidden; }
+		</style>
+        
+		<title>wiz</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </head>
+
+	<body>
+		<h2>MainActivity.java</h2>
+			<article class = "highlighted">
+<pre style="background:#0c1021;color:#f8f8f8"><span style="color:#fbde2d">package</span> <span style="color:#fbde2d">hu.pe.wiz.myapplication</span>;
+
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">android.app.Dialog</span>;
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">android.os.Bundle</span>;
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">android.support.v7.app.AlertDialog</span>;
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">android.support.v7.app.AppCompatActivity</span>;
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">android.view.LayoutInflater</span>;
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">android.view.View</span>;
+<span style="color:#fbde2d">import</span> <span style="color:#fbde2d">android.widget.Button</span>;
+
+<span style="color:#fbde2d">public</span> <span style="color:#fbde2d">class</span> <span style="color:#ff6400">MainActivity</span> <span style="color:#fbde2d">extends</span> <span style="color:#ff6400;font-style:italic">AppCompatActivity</span> {
+
+    <span style="color:#fbde2d">@Override</span>
+    <span style="color:#fbde2d">protected</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">onCreate</span>(<span style="color:#fbde2d">Bundle</span> savedInstanceState) {
+        super<span style="color:#fbde2d">.</span>onCreate(savedInstanceState);
+        setContentView(<span style="color:#fbde2d">R</span><span style="color:#fbde2d">.</span>layout<span style="color:#fbde2d">.</span>activity_main);
+
+        ((<span style="color:#fbde2d">Button</span>)findViewById(<span style="color:#fbde2d">R</span><span style="color:#fbde2d">.</span>id<span style="color:#fbde2d">.</span>login_button))<span style="color:#fbde2d">.</span>setOnClickListener(<span style="color:#fbde2d">new</span> <span style="color:#fbde2d">View</span>.<span style="color:#fbde2d">OnClickListener</span>() {
+            <span style="color:#fbde2d">@Override</span>
+            <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">onClick</span>(<span style="color:#fbde2d">View</span> v) {
+                <span style="color:#fbde2d">final</span> <span style="color:#fbde2d">Dialog</span> loginDialog <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">Dialog</span>(<span style="color:#fbde2d">MainActivity</span><span style="color:#fbde2d">.</span>this) {
+                    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">Dialog</span> <span style="color:#ff6400">onCreateDialog</span>(<span style="color:#fbde2d">Bundle</span> savedInstanceState) {
+                        <span style="color:#aeaeae">// yourclassname.this.getActivity()</span>
+                        <span style="color:#aeaeae">// yourclassname.this</span>
+                        <span style="color:#fbde2d">AlertDialog</span><span style="color:#fbde2d">.</span><span style="color:#fbde2d">Builder</span> builder <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">AlertDialog</span>.<span style="color:#fbde2d">Builder</span>(<span style="color:#fbde2d">MainActivity</span><span style="color:#fbde2d">.</span>this);
+                        <span style="color:#aeaeae">// Get the layout inflater</span>
+                        <span style="color:#fbde2d">LayoutInflater</span> inflater <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">MainActivity</span><span style="color:#fbde2d">.</span>this<span style="color:#fbde2d">.</span>getLayoutInflater();
+                        <span style="color:#aeaeae">// Inflate and set the layout for the dialog</span>
+                        <span style="color:#aeaeae">// Pass null as the parent view because its going in the dialog layout</span>
+                        <span style="color:#aeaeae">//builder.setView(inflater.inflate(R.layout.dialog_login, null));</span>
+                        <span style="color:#aeaeae">//builder.setTitle("로그인");</span>
+                        <span style="color:#fbde2d">return</span> builder<span style="color:#fbde2d">.</span>create();
+                    }
+                };
+                loginDialog<span style="color:#fbde2d">.</span>setContentView(<span style="color:#fbde2d">R</span><span style="color:#fbde2d">.</span>layout<span style="color:#fbde2d">.</span>dialog_login);
+                loginDialog<span style="color:#fbde2d">.</span>setTitle(<span style="color:#61ce3c">"로그인"</span>);
+                loginDialog<span style="color:#fbde2d">.</span>show();
+                <span style="color:#aeaeae">//loginDialog.dismiss();</span>
+            }
+        });
+    }
+}
+
+</pre>
+			</article>
+
+
+		<h2>activity_main.xml</h2>
+			<article class = "highlighted">
+<pre style="background:#0c1021;color:#f8f8f8"><span style="color:#7f90aa">&lt;?<span style="color:#7f90aa">xml</span><span style="color:#7f90aa"> version</span>=<span style="color:#61ce3c">"1.0"</span><span style="color:#7f90aa"> encoding</span>=<span style="color:#61ce3c">"utf-8"</span>?></span>
+<span style="color:#7f90aa">&lt;<span style="color:#7f90aa">android</span>.support.constraint.ConstraintLayout <span style="color:#7f90aa">xmlns</span>:android=<span style="color:#61ce3c">"http://schemas.android.com/apk/res/android"</span>
+    <span style="color:#7f90aa">xmlns</span>:app=<span style="color:#61ce3c">"http://schemas.android.com/apk/res-auto"</span>
+    <span style="color:#7f90aa">xmlns</span>:tools=<span style="color:#61ce3c">"http://schemas.android.com/tools"</span>
+    <span style="color:#7f90aa">android</span>:layout_width=<span style="color:#61ce3c">"match_parent"</span>
+    <span style="color:#7f90aa">android</span>:layout_height=<span style="color:#61ce3c">"match_parent"</span>
+    <span style="color:#7f90aa">tools</span>:context=<span style="color:#61ce3c">"hu.pe.wiz.myapplication.MainActivity"</span>></span>
+
+    <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">Button</span>
+        <span style="color:#7f90aa">android</span>:id=<span style="color:#61ce3c">"@+id/login_button"</span>
+        <span style="color:#7f90aa">android</span>:text=<span style="color:#61ce3c">"로그인"</span>
+        <span style="color:#7f90aa">android</span>:layout_height=<span style="color:#61ce3c">"wrap_content"</span>
+        <span style="color:#7f90aa">android</span>:layout_width=<span style="color:#61ce3c">"match_parent"</span>/></span>
+
+<span style="color:#7f90aa">&lt;/<span style="color:#7f90aa">android</span>.support.constraint.ConstraintLayout></span>
+
+</pre>
+			</article>
+			
+			
+		<h2>dialog_login.xml</h2>
+			<article class = "highlighted">
+<pre style="background:#0c1021;color:#f8f8f8"><span style="color:#7f90aa">&lt;?<span style="color:#7f90aa">xml</span><span style="color:#7f90aa"> version</span>=<span style="color:#61ce3c">"1.0"</span><span style="color:#7f90aa"> encoding</span>=<span style="color:#61ce3c">"utf-8"</span>?></span>
+<span style="color:#7f90aa">&lt;<span style="color:#7f90aa">TableLayout</span> <span style="color:#7f90aa">xmlns</span>:android=<span style="color:#61ce3c">"http://schemas.android.com/apk/res/android"</span>
+    <span style="color:#7f90aa">android</span>:layout_width=<span style="color:#61ce3c">"match_parent"</span>
+    <span style="color:#7f90aa">android</span>:layout_height=<span style="color:#61ce3c">"match_parent"</span>></span>
+
+    <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">TableRow</span>></span>
+        <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">TextView</span>
+            <span style="color:#7f90aa">android</span>:text=<span style="color:#61ce3c">"ID"</span>/></span>
+        <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">EditText</span> /></span>
+    <span style="color:#7f90aa">&lt;/<span style="color:#7f90aa">TableRow</span>></span>
+    <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">TableRow</span>></span>
+        <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">TextView</span>
+            <span style="color:#7f90aa">android</span>:text=<span style="color:#61ce3c">"PW"</span>/></span>
+        <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">EditText</span> /></span>
+    <span style="color:#7f90aa">&lt;/<span style="color:#7f90aa">TableRow</span>></span>
+    <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">TableRow</span>></span>
+        <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">Button</span>
+            <span style="color:#7f90aa">android</span>:text=<span style="color:#61ce3c">"로그인"</span>/></span>
+        <span style="color:#7f90aa">&lt;<span style="color:#7f90aa">Button</span>
+            <span style="color:#7f90aa">android</span>:text=<span style="color:#61ce3c">"취소"</span>/></span>
+    <span style="color:#7f90aa">&lt;/<span style="color:#7f90aa">TableRow</span>></span>
+<span style="color:#7f90aa">&lt;/<span style="color:#7f90aa">TableLayout</span>></span>
+</pre>
+			</article>
+		</article>
+	</body>
+</html>

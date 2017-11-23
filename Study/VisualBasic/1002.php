@@ -1,0 +1,84 @@
+﻿<?php
+header('Content-Type: text/html; charset=utf-8');
+setlocale(LC_TIME, "kr_KR.utf8");
+date_default_timezone_set('Asia/Seoul');
+
+$server_root_path = $_SERVER['DOCUMENT_ROOT'];
+include $server_root_path.'/lib/functions.php';
+?>
+
+<!DOCTYPE html>
+<html lang="kor">
+
+<?php
+put_html_head('wiz');
+?>
+
+<body>
+
+<?php
+put_nav();
+?>
+
+    <main role="main">
+        <div class="container">
+
+<pre class="hljs" style="display: block; overflow-x: auto; padding: 0.5em; background: rgb(63, 63, 63); color: rgb(220, 220, 220);">Public Class Form1
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        <span class="hljs-keyword" style="color: rgb(227, 206, 171);">Dim</span> sum = <span class="hljs-number" style="color: rgb(140, 208, 211);">0</span>
+        <span class="hljs-keyword" style="color: rgb(227, 206, 171);">For</span> i = <span class="hljs-number" style="color: rgb(140, 208, 211);">0</span> <span class="hljs-keyword" style="color: rgb(227, 206, 171);">To</span> <span class="hljs-number" style="color: rgb(140, 208, 211);">10</span>
+            sum += i
+        <span class="hljs-keyword" style="color: rgb(227, 206, 171);">Next</span> i
+        TextBox1.Text = sum
+    <span class="hljs-keyword" style="color: rgb(227, 206, 171);">End</span> Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        <span class="hljs-keyword" style="color: rgb(227, 206, 171);">Dim</span> arr = <span class="hljs-keyword" style="color: rgb(227, 206, 171);">New</span> Integer() {<span class="hljs-number" style="color: rgb(140, 208, 211);">1</span>, <span class="hljs-number" style="color: rgb(140, 208, 211);">2</span>, <span class="hljs-number" style="color: rgb(140, 208, 211);">4</span>, <span class="hljs-number" style="color: rgb(140, 208, 211);">8</span>, <span class="hljs-number" style="color: rgb(140, 208, 211);">16</span>}
+        <span class="hljs-keyword" style="color: rgb(227, 206, 171);">Dim</span> sum = <span class="hljs-number" style="color: rgb(140, 208, 211);">0</span>
+        <span class="hljs-keyword" style="color: rgb(227, 206, 171);">For</span> Each i In arr
+            sum += i
+        <span class="hljs-keyword" style="color: rgb(227, 206, 171);">Next</span> i
+        TextBox1.Text = sum
+    <span class="hljs-keyword" style="color: rgb(227, 206, 171);">End</span> Sub
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        <span class="hljs-keyword" style="color: rgb(227, 206, 171);">Dim</span> i = <span class="hljs-number" style="color: rgb(140, 208, 211);">0</span>, sum = <span class="hljs-number" style="color: rgb(140, 208, 211);">0</span>
+        Do <span class="hljs-keyword" style="color: rgb(227, 206, 171);">While</span> i &lt; <span class="hljs-number" style="color: rgb(140, 208, 211);">10</span>
+            sum += i
+            i += <span class="hljs-number" style="color: rgb(140, 208, 211);">1</span>
+        Loop
+        TextBox1.Text = sum
+        Do
+            sum += i
+        Loop <span class="hljs-keyword" style="color: rgb(227, 206, 171);">While</span> i &lt; <span class="hljs-number" style="color: rgb(140, 208, 211);">10</span>
+        TextBox1.Text &amp;= <span class="hljs-string" style="color: rgb(204, 147, 147);">" "</span> &amp; sum
+    <span class="hljs-keyword" style="color: rgb(227, 206, 171);">End</span> Sub
+
+    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+        <span class="hljs-keyword" style="color: rgb(227, 206, 171);">Dim</span> i = <span class="hljs-number" style="color: rgb(140, 208, 211);">0</span>, sum = <span class="hljs-number" style="color: rgb(140, 208, 211);">0</span>
+        Do Until i &gt;= <span class="hljs-number" style="color: rgb(140, 208, 211);">10</span>
+            sum += i
+            i += <span class="hljs-number" style="color: rgb(140, 208, 211);">1</span>
+        Loop
+        TextBox1.Text = sum
+        Do
+            sum += i
+        Loop Until i &gt;= <span class="hljs-number" style="color: rgb(140, 208, 211);">10</span>
+        TextBox1.Text &amp;= <span class="hljs-string" style="color: rgb(204, 147, 147);">" "</span> &amp; sum
+    <span class="hljs-keyword" style="color: rgb(227, 206, 171);">End</span> Sub
+
+<span class="hljs-keyword" style="color: rgb(227, 206, 171);">End</span> Class
+</pre>
+        </div>
+    </main>
+
+    <hr>
+
+<?php
+put_default_footer();
+?>
+
+</body>
+
+</html>

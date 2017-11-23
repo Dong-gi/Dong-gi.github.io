@@ -1,0 +1,91 @@
+﻿<?php
+header('Content-Type: text/html; charset=utf-8');
+setlocale(LC_TIME, "kr_KR.utf8");
+date_default_timezone_set('Asia/Seoul');
+
+$server_root_path = $_SERVER['DOCUMENT_ROOT'];
+include $server_root_path.'/lib/functions.php';
+?>
+
+<!DOCTYPE html>
+<html lang="kor">
+
+<?php
+put_html_head('wiz');
+?>
+
+<body>
+
+<?php
+put_nav();
+?>
+
+    <main role="main">
+        <div class="container">
+
+<pre style="background:#0c1021;color:#f8f8f8"><span style="color:#fbde2d">import</span> <span style="color:#fbde2d">java.util.*</span>;
+
+<span style="color:#fbde2d">public</span> <span style="color:#fbde2d">class</span> <span style="color:#ff6400">Main</span> {
+
+    <span style="color:#fbde2d">private</span> <span style="color:#fbde2d">static</span> <span style="color:#fbde2d">Stack&lt;<span style="color:#fbde2d">Character</span>></span> stack <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">Stack&lt;></span>();
+
+    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">static</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">main</span>(<span style="color:#fbde2d">String</span>[] args) {
+        <span style="color:#fbde2d">Scanner</span> scanner <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">Scanner</span>(<span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>in);
+        <span style="color:#fbde2d">int</span> testCase <span style="color:#fbde2d">=</span> scanner<span style="color:#fbde2d">.</span>nextInt();
+        scanner<span style="color:#fbde2d">.</span>nextLine();
+
+        <span style="color:#fbde2d">while</span>(testCase<span style="color:#fbde2d">--</span> <span style="color:#fbde2d">></span> <span style="color:#d8fa3c">0</span>) {
+            <span style="color:#fbde2d">if</span>(test(<span style="color:#fbde2d">new</span> <span style="color:#fbde2d">StringBuilder</span>(scanner<span style="color:#fbde2d">.</span>nextLine()))) {
+                <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(<span style="color:#61ce3c">"yes"</span>);
+            } <span style="color:#fbde2d">else</span> {
+                <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(<span style="color:#61ce3c">"no"</span>);
+            }
+        }
+    }
+
+    <span style="color:#fbde2d">private</span> <span style="color:#fbde2d">static</span> <span style="color:#fbde2d">boolean</span> <span style="color:#ff6400">test</span>(<span style="color:#fbde2d">StringBuilder</span> testString) {
+        <span style="color:#fbde2d">int</span> length <span style="color:#fbde2d">=</span> testString<span style="color:#fbde2d">.</span>length();
+        stack<span style="color:#fbde2d">.</span>clear();
+        <span style="color:#fbde2d">try</span> {
+            <span style="color:#fbde2d">for</span>(<span style="color:#fbde2d">int</span> i <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">0</span>; i <span style="color:#fbde2d">&lt;</span> length; <span style="color:#fbde2d">++</span>i) {
+                <span style="color:#fbde2d">switch</span>(testString<span style="color:#fbde2d">.</span>charAt(i)) {
+                <span style="color:#fbde2d">case</span> <span style="color:#61ce3c">'('</span><span style="color:#fbde2d">:</span> <span style="color:#fbde2d">case</span> <span style="color:#61ce3c">'['</span><span style="color:#fbde2d">:</span> <span style="color:#fbde2d">case</span> <span style="color:#61ce3c">'{'</span><span style="color:#fbde2d">:</span>
+                    stack<span style="color:#fbde2d">.</span>push(testString<span style="color:#fbde2d">.</span>charAt(i));
+                    <span style="color:#fbde2d">break</span>;
+                <span style="color:#fbde2d">case</span> <span style="color:#61ce3c">')'</span><span style="color:#fbde2d">:</span>
+                    <span style="color:#fbde2d">if</span>(stack<span style="color:#fbde2d">.</span>pop() <span style="color:#fbde2d">!=</span> <span style="color:#61ce3c">'('</span>) {
+                        <span style="color:#fbde2d">return</span> <span style="color:#d8fa3c">false</span>;
+                    }
+                    <span style="color:#fbde2d">break</span>;
+                <span style="color:#fbde2d">case</span> <span style="color:#61ce3c">']'</span><span style="color:#fbde2d">:</span>
+                    <span style="color:#fbde2d">if</span>(stack<span style="color:#fbde2d">.</span>pop() <span style="color:#fbde2d">!=</span> <span style="color:#61ce3c">'['</span>) {
+                        <span style="color:#fbde2d">return</span> <span style="color:#d8fa3c">false</span>;
+                    }
+                    <span style="color:#fbde2d">break</span>;
+                <span style="color:#fbde2d">case</span> <span style="color:#61ce3c">'}'</span><span style="color:#fbde2d">:</span>
+                    <span style="color:#fbde2d">if</span>(stack<span style="color:#fbde2d">.</span>pop() <span style="color:#fbde2d">!=</span> <span style="color:#61ce3c">'{'</span>) {
+                        <span style="color:#fbde2d">return</span> <span style="color:#d8fa3c">false</span>;
+                    }
+                    <span style="color:#fbde2d">break</span>;
+                }
+            }
+        } <span style="color:#fbde2d">catch</span>(<span style="color:#fbde2d">Exception</span> e) {
+            <span style="color:#fbde2d">return</span> <span style="color:#d8fa3c">false</span>;
+        }
+        <span style="color:#fbde2d">return</span> stack<span style="color:#fbde2d">.</span>isEmpty();
+    }
+
+}
+</pre>
+        </div>
+    </main>
+
+    <hr>
+
+<?php
+put_default_footer();
+?>
+
+</body>
+
+</html>

@@ -1,0 +1,128 @@
+﻿<?php
+header('Content-Type: text/html; charset=utf-8');
+setlocale(LC_TIME, "kr_KR.utf8");
+date_default_timezone_set('Asia/Seoul');
+
+$server_root_path = $_SERVER['DOCUMENT_ROOT'];
+include $server_root_path.'/lib/functions.php';
+?>
+
+<!DOCTYPE html>
+<html lang="kor">
+
+<?php
+put_html_head('wiz');
+?>
+
+<body>
+
+<?php
+put_nav();
+?>
+
+    <main role="main">
+        <div class="container">
+
+<pre style="background:#0c1021;color:#f8f8f8"><span style="color:#61ce3c">'''
+code0002.py
+리스트
+'''</span>
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'리스트 생성 1 : []'</span>)
+list1 <span style="color:#fbde2d">=</span> [<span style="color:#d8fa3c">1</span>, <span style="color:#d8fa3c">2</span>, <span style="color:#d8fa3c">3</span>, <span style="color:#d8fa3c">4</span>, <span style="color:#d8fa3c">5</span>]
+<span style="color:#fbde2d">print</span>(list1)
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'리스트 생성 2 : list()'</span>)
+list1 <span style="color:#fbde2d">=</span> <span style="color:#8da6ce">list</span>([<span style="color:#d8fa3c">2</span>, <span style="color:#d8fa3c">3</span>, <span style="color:#d8fa3c">4</span>, <span style="color:#d8fa3c">5</span>, <span style="color:#d8fa3c">6</span>])
+<span style="color:#fbde2d">print</span>(list1)
+
+list1 <span style="color:#fbde2d">=</span> <span style="color:#8da6ce">list</span>([<span style="color:#61ce3c">'hello world'</span>])
+<span style="color:#fbde2d">print</span>(list1)
+
+list1 <span style="color:#fbde2d">=</span> <span style="color:#8da6ce">list</span>(<span style="color:#61ce3c">'hello world'</span>)
+<span style="color:#fbde2d">print</span>(list1)
+
+list1 <span style="color:#fbde2d">=</span> <span style="color:#8da6ce">list</span>((<span style="color:#61ce3c">'world hello'</span>))
+<span style="color:#fbde2d">print</span>(list1)
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'리스트 요소 추출'</span>)
+<span style="color:#fbde2d">print</span>(list1[<span style="color:#d8fa3c">3</span>])
+<span style="color:#fbde2d">print</span>(list1[::<span style="color:#fbde2d">-</span><span style="color:#d8fa3c">1</span>])
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'리스트 병합'</span>)
+list1.extend((<span style="color:#61ce3c">'python'</span>))
+<span style="color:#fbde2d">print</span>(list1)
+
+list1 <span style="color:#fbde2d">+=</span> [<span style="color:#61ce3c">'nohtyp'</span>]
+<span style="color:#fbde2d">print</span>(list1)
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'리스트 뒤에 추가'</span>)
+list1.append(<span style="color:#61ce3c">'append'</span>)
+<span style="color:#fbde2d">print</span>(list1)
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'리스트 중간에 추가'</span>)
+list1.insert(<span style="color:#d8fa3c">3</span>, <span style="color:#61ce3c">'third'</span>)
+<span style="color:#fbde2d">print</span>(list1)
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'리스트 요소 삭제'</span>)
+list1.remove(<span style="color:#61ce3c">'l'</span>)
+<span style="color:#fbde2d">print</span>(list1)
+
+<span style="color:#fbde2d">del</span> list1[<span style="color:#d8fa3c">0</span>]
+<span style="color:#fbde2d">del</span> list1[<span style="color:#fbde2d">-</span><span style="color:#d8fa3c">1</span>]
+<span style="color:#fbde2d">print</span>(list1)
+
+<span style="color:#fbde2d">print</span>(list1.pop())
+<span style="color:#fbde2d">print</span>(list1.pop(<span style="color:#d8fa3c">0</span>))
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'리스트 요소 위치 확인'</span>)
+<span style="color:#fbde2d">print</span>(list1.index(<span style="color:#61ce3c">'l'</span>))
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'리스트 요소 포함 여부 확인'</span>)
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'python'</span> <span style="color:#fbde2d">in</span> list1)
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'리스트 요소 개수 확인'</span>)
+<span style="color:#fbde2d">print</span>(list1.count(<span style="color:#61ce3c">'l'</span>))
+<span style="color:#fbde2d">print</span>(<span style="color:#8da6ce">len</span>(list1))
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'리스트 정렬'</span>)
+list1.sort()
+<span style="color:#fbde2d">print</span>(list1)
+list1.sort(reverse<span style="color:#fbde2d">=</span><span style="color:#d8fa3c">True</span>)
+<span style="color:#fbde2d">print</span>(list1)
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'복사'</span>)
+list2 <span style="color:#fbde2d">=</span> list1 <span style="color:#aeaeae"># 얕은 복사</span>
+list3 <span style="color:#fbde2d">=</span> list1.copy() <span style="color:#aeaeae"># 깊은 복사</span>
+list4 <span style="color:#fbde2d">=</span> <span style="color:#8da6ce">list</span>(list1) <span style="color:#aeaeae"># 깊은 복사</span>
+list5 <span style="color:#fbde2d">=</span> list1[::] <span style="color:#aeaeae"># 깊은 복사</span>
+list1[<span style="color:#d8fa3c">1</span>] <span style="color:#fbde2d">=</span> <span style="color:#61ce3c">'First'</span>
+<span style="color:#fbde2d">print</span>(list2)
+<span style="color:#fbde2d">print</span>(list3)
+<span style="color:#fbde2d">print</span>(list4)
+<span style="color:#fbde2d">print</span>(list5)
+
+</pre>
+        </div>
+    </main>
+
+    <hr>
+
+<?php
+put_default_footer();
+?>
+
+</body>
+
+</html>

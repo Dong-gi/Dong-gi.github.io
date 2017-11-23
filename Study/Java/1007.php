@@ -1,0 +1,56 @@
+﻿<?php
+header('Content-Type: text/html; charset=utf-8');
+setlocale(LC_TIME, "kr_KR.utf8");
+date_default_timezone_set('Asia/Seoul');
+
+$server_root_path = $_SERVER['DOCUMENT_ROOT'];
+include $server_root_path.'/lib/functions.php';
+?>
+
+<!DOCTYPE html>
+<html lang="kor">
+
+<?php
+put_html_head('wiz');
+?>
+
+<body>
+
+<?php
+put_nav();
+?>
+
+    <main role="main">
+        <div class="container">
+
+<pre style="background:#0c1021;color:#f8f8f8">
+<span style="color:#fbde2d">class</span> <span style="color:#ff6400">MyList</span>&lt;E> {
+    <span style="color:#fbde2d">private</span> <span style="color:#fbde2d">E</span>[] elements;
+
+    <span style="color:#ff6400">MyList</span>() {
+        elements <span style="color:#fbde2d">=</span> (<span style="color:#fbde2d">E</span>[]) <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">Object</span>[<span style="color:#d8fa3c">0</span>];
+        <span style="color:#aeaeae">// new E[size], new MyList&lt;E>[size], new MyList&lt;Integer>[size] 등은 불가능하다.</span>
+        <span style="color:#aeaeae">// 컴파일러가 런타임으로 타입을 결정하며 이는 배열 내부적으로 저장된다.</span>
+    }
+    
+    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">static</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">myFunc</span>(<span style="color:#fbde2d">MyList&lt;?></span> list1, <span style="color:#fbde2d">MyList&lt;? super <span style="color:#fbde2d">String</span>></span> list2){}
+}
+
+<span style="color:#fbde2d">interface</span> <span style="color:#ff6400">MyInterface</span>&lt;E>{}
+
+<span style="color:#fbde2d">interface</span> <span style="color:#ff6400">MyInterface2</span>&lt;E, V>{}
+
+<span style="color:#fbde2d">class</span> <span style="color:#ff6400">MyClass</span>&lt;K <span style="color:#fbde2d">extends</span> <span style="color:#ff6400;font-style:italic">Object</span>, <span style="color:#ff6400;font-style:italic">V</span> extends <span style="color:#ff6400;font-style:italic">MyList</span> &amp; <span style="color:#ff6400;font-style:italic">MyInterface&lt;<span style="color:#fbde2d">V</span>></span>>{}
+</pre>
+        </div>
+    </main>
+
+    <hr>
+
+<?php
+put_default_footer();
+?>
+
+</body>
+
+</html>
