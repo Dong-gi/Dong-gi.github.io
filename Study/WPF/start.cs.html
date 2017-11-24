@@ -1,0 +1,35 @@
+<pre class="hljs" style="display: block; overflow-x: auto; padding: 0.5em; color: rgb(51, 51, 51); background: rgb(248, 248, 248);"><span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">using</span> System.Windows;
+<span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">using</span> System.Windows.Controls;
+<span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">using</span> System.Windows.Media;
+
+<span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">namespace</span> <span class="hljs-title" style="color: rgb(153, 0, 0); font-weight: 700;">WpfApp1</span>
+{
+    <span class="hljs-comment" style="color: rgb(153, 153, 136); font-style: italic;"><span class="hljs-doctag" style="color: rgb(221, 17, 68);">///</span> <span class="hljs-doctag" style="color: rgb(221, 17, 68);">&lt;summary&gt;</span></span>
+    <span class="hljs-comment" style="color: rgb(153, 153, 136); font-style: italic;"><span class="hljs-doctag" style="color: rgb(221, 17, 68);">///</span> MainWindow.xaml에 대한 상호 작용 논리</span>
+    <span class="hljs-comment" style="color: rgb(153, 153, 136); font-style: italic;"><span class="hljs-doctag" style="color: rgb(221, 17, 68);">///</span> <span class="hljs-doctag" style="color: rgb(221, 17, 68);">&lt;/summary&gt;</span></span>
+    <span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">public</span> <span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">partial</span> <span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">class</span> <span class="hljs-title" style="color: rgb(153, 0, 0); font-weight: 700;">MainWindow</span> : <span class="hljs-title" style="color: rgb(153, 0, 0); font-weight: 700;">Window</span>
+    {
+        <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">public</span> <span class="hljs-title" style="color: rgb(153, 0, 0); font-weight: 700;">MainWindow</span>(<span class="hljs-params"></span>)
+        </span>{
+            InitializeComponent();
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">private</span> <span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">void</span> <span class="hljs-title" style="color: rgb(153, 0, 0); font-weight: 700;">Button_Click</span>(<span class="hljs-params"><span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">object</span> sender, RoutedEventArgs e</span>)
+        </span>{
+            <span class="hljs-comment" style="color: rgb(153, 153, 136); font-style: italic;">// name 속성을 추가하면 이름을 통해 접근할 수 있다.</span>
+            grid1.Background = Brushes.Cyan;
+            (sender <span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">as</span> Button).Content = Application.Current.Properties[<span class="hljs-string" style="color: rgb(221, 17, 68);">"myKey"</span>];
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">private</span> <span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">void</span> <span class="hljs-title" style="color: rgb(153, 0, 0); font-weight: 700;">Window_Loaded</span>(<span class="hljs-params"><span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">object</span> sender, RoutedEventArgs e</span>)
+        </span>{
+            Application.Current.Properties[<span class="hljs-string" style="color: rgb(221, 17, 68);">"myKey"</span>] = <span class="hljs-string" style="color: rgb(221, 17, 68);">"Hello World"</span>;
+            MessageBox.Show(<span class="hljs-string" style="color: rgb(221, 17, 68);">"Window loaded"</span>);
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">private</span> <span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">void</span> <span class="hljs-title" style="color: rgb(153, 0, 0); font-weight: 700;">Window_Closing</span>(<span class="hljs-params"><span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">object</span> sender, System.ComponentModel.CancelEventArgs e</span>)
+        </span>{
+            e.Cancel = MessageBox.Show(<span class="hljs-string" style="color: rgb(221, 17, 68);">"Are you sure?"</span>, <span class="hljs-string" style="color: rgb(221, 17, 68);">"Confirm shut down"</span>, MessageBoxButton.OKCancel) == MessageBoxResult.Cancel;
+        }
+    }
+}</pre>

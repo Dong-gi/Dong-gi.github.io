@@ -1,0 +1,42 @@
+<pre class="hljs" style="display: block; overflow-x: auto; padding: 0.5em; color: rgb(51, 51, 51); background: rgb(248, 248, 248);"><span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">using</span> System.Windows;
+<span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">using</span> System.Windows.Controls;
+<span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">using</span> System.Windows.Media;
+
+<span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">namespace</span> <span class="hljs-title" style="color: rgb(153, 0, 0); font-weight: 700;">WpfApp1</span>
+{
+    <span class="hljs-comment" style="color: rgb(153, 153, 136); font-style: italic;"><span class="hljs-doctag" style="color: rgb(221, 17, 68);">///</span> <span class="hljs-doctag" style="color: rgb(221, 17, 68);">&lt;summary&gt;</span></span>
+    <span class="hljs-comment" style="color: rgb(153, 153, 136); font-style: italic;"><span class="hljs-doctag" style="color: rgb(221, 17, 68);">///</span> MainWindow.xaml에 대한 상호 작용 논리</span>
+    <span class="hljs-comment" style="color: rgb(153, 153, 136); font-style: italic;"><span class="hljs-doctag" style="color: rgb(221, 17, 68);">///</span> <span class="hljs-doctag" style="color: rgb(221, 17, 68);">&lt;/summary&gt;</span></span>
+    <span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">public</span> <span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">partial</span> <span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">class</span> <span class="hljs-title" style="color: rgb(153, 0, 0); font-weight: 700;">MainWindow</span> : <span class="hljs-title" style="color: rgb(153, 0, 0); font-weight: 700;">Window</span>
+    {
+        <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">public</span> <span class="hljs-title" style="color: rgb(153, 0, 0); font-weight: 700;">MainWindow</span>(<span class="hljs-params"></span>)
+        </span>{
+            InitializeComponent();
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">private</span> <span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">void</span> <span class="hljs-title" style="color: rgb(153, 0, 0); font-weight: 700;">Button_Click</span>(<span class="hljs-params"><span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">object</span> sender, RoutedEventArgs e</span>)
+        </span>{
+            <span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">new</span> Window()
+            {
+                Title = <span class="hljs-string" style="color: rgb(221, 17, 68);">"Modal"</span>,
+                Owner = <span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">this</span>,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                ShowInTaskbar = <span class="hljs-literal" style="color: teal;">true</span>,
+                Height = <span class="hljs-number" style="color: teal;">60</span>,
+                MaxWidth = <span class="hljs-number" style="color: teal;">300</span>
+            }.ShowDialog();
+            MessageBox.Show(<span class="hljs-string" style="color: rgb(221, 17, 68);">"Modal"</span>);
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">private</span> <span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">void</span> <span class="hljs-title" style="color: rgb(153, 0, 0); font-weight: 700;">Button_Click_1</span>(<span class="hljs-params"><span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">object</span> sender, RoutedEventArgs e</span>)
+        </span>{
+            <span class="hljs-keyword" style="color: rgb(51, 51, 51); font-weight: 700;">new</span> Window()
+            {
+                Title = <span class="hljs-string" style="color: rgb(221, 17, 68);">"Modeless"</span>,
+                Height = <span class="hljs-number" style="color: teal;">60</span>,
+                MaxWidth = <span class="hljs-number" style="color: teal;">300</span>
+            }.Show();
+
+        }
+    }
+}</pre>

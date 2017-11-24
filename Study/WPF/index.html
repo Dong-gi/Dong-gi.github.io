@@ -35,38 +35,61 @@
     <main role="main">
         <div class="container">
             <div class="jumbotron">
-                <h1 class="display-3">Visual Basic.NET</h1>
-                <p>Basic is not basic.</p>
+                <h1 class="display-3">Windows Presentation Foundation</h1>
             </div>
         </div>
 
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h2>설치 및 실행</h2>
-                    <p>1. Visual Studio Community 설치
-                        <br> 2. Visual Basic - Windows Forms 앱 프로젝트 생성
-                        <br> 3. Ctrl + F5 : 실행, F7 & Shift + F7 : 디자이너와 코드 전환
-                        <br> 4. 닷넷에 관한 설명은 생략한다.</p>
-                </div>
-                <div class="col-md-4">
-                    <h2>자료형/변수</h2>
-                    <p>1. 각 폼 구성 요소의 속성/이벤트를 간단하게 변경 가능.
-                        <br> 2. 자료형(.NET CTS) : Byte, Short, Integer, Long, Single, Double, Decimal, Char, String, Boolean, Object
-                        <br> 3. 변수 선언 : [접근 제한자] 식별자 [As 자료형] // 자료형 기본은 Object
-                        <br> 4. 접근 제한자 : Dim(지역 변수), Public, Private, Protected, Friend, Shared, Static
-                        <br> 5. 상수 선언 : [Public | Private] Const 식별자 [As 자료형] = 식 or 값</p>
-                </div>
-                <div class="col-md-4">
-                    <h2>연산자</h2>
-                    <p>1. 산술 연산자 : +, -, *, /, \(몫), Mod, ^(power)
-                        <br> 2. 관계 연산자 : =,
-                        <>,
-                            <, <=,>, >=, Like(문자열 패턴 비교), Is(참조 비교)
-                                <br> 3. 논리 연산자 : And, Or, Xor, Not, AndAlso(Short Circuit), OrElse(Short Circuit)
-                                <br> 4. 문자열 연결 연산자 : &</p>
+                    <h2>실습 1</h2>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(1, 'operator');" role="button">View Code &raquo;</a>
+                        1. XAML로 컨트롤을 작성하는 것과 코드에서 생성하는 것은 결과적으로 동일하다.
+                        <br> Blend에서 디자인을 따로 할 수 있다. 분업-협업 가능.
+                        <br>2. 참조 -> 참조 추가에서 .NET 어셈블리 or 제작한 프로젝트 참조 추가
+                        <br>3. NuGet 패키지 관리에서 다른 사용자들이 배포하는 프레임워크를 설치할 수 있다.
+                        <br>4. 네임스페이스 접두어 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        <br>5. Window : Initialized -> Activated -> Loaded -> ContentRendered -> 실행 -> Closing -> Unloaded -> Deactivated -> Closed
+                        <br> Activated, Deactivated는 키보드/마우스 포커스를 얻거나 잃는 이벤트를 의미한다.
+                    </p>
+                    <p>
+                        다루는 것 : Grid.Background, Button.Content, Application.Current.Properties, MessageBox.Show(), MessageBoxResult, Button_Click, Window_Loaded, Window_Closing
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'start.xaml');" role="button">View Code : xaml &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'start.cs');" role="button">View Code : cs &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>실습 2</h2>
+                    <p>
+                        1. Modal : 자식 윈도우가 종료되기 전까지 부모 윈도우는 비활성화.
+                        <br>2. Modeless : 자식 윈도우와 부모 윈도우가 별개로 동작.
+                        <br>3. Application.Current.Windows : 실행중인 윈도우들의 컬렉션.
+                        <br>4. 프로젝트, 추가 -> 사용자 정의 컨트롤
+                    </p>
+                    <p>
+                        다루는 것 : Window.Show(), Window.ShowDialog(), Window 속성들
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'window.xaml');" role="button">View Code : xaml &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'window.cs');" role="button">View Code : cs &raquo;</a>
+                        <br>다루는 것 : 사용자 정의 컨트롤
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'userControl.xaml');" role="button">View Code : user control xaml &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'userControl.cs');" role="button">View Code : user control cs &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'window2.xaml');" role="button">View Code : window xaml &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'window2.cs');" role="button">View Code : window cs &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>레이아웃</h2>
+                    <p>
+                        <br>디자인을 할 생각은 없기 때문에, 종류만 알아두고 넘어간다.
+                        <br>1. Canvas : 캔버스 내부의 상대 좌표를 이용해 자식 요소들을 배치한다.
+                        <br>2. DockPanel : 자식 요소들을 수평적, 수직적, 상대적으로 배치한다.
+                        <br>3. Grid : 영역을 행과 열로 나누어 요소들을 배치한다. 나눠진 그리드 하나를 여러 요소가 공유할 수도, 한 요소가 여러 그리드를 차지할 수도 있다.
+                        <br>4. StackPanel : 수직/수평적으로 정렬한 요소들을 하나씩 보여준다.
+                        <br>5. VirtualizingPanel : Panel에 대한 추상 클래스.
+                        <br>6. WrapPanel : 자식 요소들을 좌에서 우로 차례대로 배치하다, 패널의 경계를 넘어서면 다음 줄(바로 아래)로 넘겨 배치한다.
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="https://docs.microsoft.com/en-us/dotnet/framework/wpf/advanced/layout" role="button">MS WPF Docs - Layout &raquo;</a>
                     </p>
                 </div>
             </div>
@@ -74,33 +97,48 @@
 
             <div class="row">
                 <div class="col-md-4">
-                    <h2>조건 분기</h2>
-                    <p>1. If 판별식 Then /* 여러 문장 */ End If
-                        <br> 2. If 판별식 Then // 한 문장
-                        <br> 3. If 판별식 Then ~ ElseIf 판별식 Then ~ [Else ~ ] End If
-                        <br> 4. Select Case 값|식 ~ Case 값1 ~ [Case Else ~ ] End Select</p>
+                    <h2>리소스</h2>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(2, 'condition_statement');" role="button">View Code &raquo;</a>
+                        1. xaml 내부에 정적 리소스 정의 : &lt;Window.Resources&gt;&lt;/Window.Resources&gt;
+                        <br>2. ResourceDictionary : xaml에 리소스들을 정의하고 이를 별개의 파일로 분리.
+                        <br>3. 스타일 : 리소스 영역에 Style 요소를 작성하고, Setter Property="" Value=""를 이용해 값을 할당한다.
+                        <br>4. 스타일 상속 : Style 요소의 BasedOn 속성 이용
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'staticResource.xaml');" role="button">View Code : static resource xaml &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'resourceDictionary.xaml');" role="button">View Code : resource dictionary 정의 xaml &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'resourceDictionary2.xaml');" role="button">View Code : resource dictionary 사용 xaml &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'style.xaml');" role="button">View Code : style xaml &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
-                    <h2>반복</h2>
-                    <p>1. For 변수 = 초기값 To 종료값 [Step 증감값] ~ Next 변수// 종료값 포함, Step 기본값 1
-                        <br> 2. For Each 원소 In 배열|컬렉션 ~ Next 원소
-                        <br> 3. Do While 판별식 ~ Loop, Do ~ Loop While 판별식
-                        <br> 4. Do Until 판별식 ~ Loop, Do ~ Loop Until 판별식</p>
+                    <h2>컨트롤</h2>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(2, 'loop_statement');" role="button">View Code &raquo;</a>
+                        1. (ButtonBase <- Button, (ToggleButton <- CheckBox, RadioButton))
+                        <br>2. ListBox, ComboBox, ListView, TreeView
+                        <br>3. Menu, Toolbar / TabControl, Expander, GroupBox / Slider, ScrollBar
+                        <br>4. TextBox, RichTextBox, PasswordBox
+                    </p>
+                    <h2>이벤트</h2>
+                    <p>
+                        1. Event Tunneling : 부모 컨트롤로부터 자식 컨트롤로 Preview 접두어가 붙은 이벤트가 전달됨.
+                        <br>2. Event Bubbling : 이벤트 센더는 이벤트를 처리하고 이를 다시 부모로 전달
+                        <br>3. 1,2와 같은 이벤트를 RoutedEvent라고 하며, 따라서 이벤트 핸들러의 파라미터로 RoutedEventArgs가 넘겨진다.
                     </p>
                 </div>
                 <div class="col-md-4">
-                    <h2>제어</h2>
-                    <p>1. GoTo 레이블, On Error GoTo 레이블
-                        <br> 2. Exit For|Do|Function|Property|Sub
-                        <br> 3. End : 프로그램 종료
-                        <br> 4. Try ~ [Exit Try] ~ Catch [변수명 [As 형식] [When 예외 판별식]] ~ [Finally ~] End Try</p>
+                    <h2>명령</h2>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(2, 'exception');" role="button">View Code &raquo;</a>
+                        1. 이벤트 핸들러를 xaml과 독립적으로 작성하는 것을 가능하게 해준다.
+                        <br>2. ICommand를 구체화하며 CanExecute(), Execute(), CanExecuteChanged를 정의한다.
+                        <br>3. 내장 명령 : ApplicationCommands, ComponentCommands, MediaCommands, NavigationCommands, EditingCommands
+                        <br>4. 명령 바인딩 : System.Windows.Interactivity.WPF 패키지 설치
+                    </p>
+                    <h2>트리거</h2>
+                    <p>
+                        1. 특정 조건에 따라 스타일을 적용시키는 방법.
+                        <br>2. <a class="btn btn-secondary" href="javascript:showCode(2, 'trigger.xaml');" role="button">View Code : trigger xaml &raquo;</a>
+                        <br>3. <a class="btn btn-secondary" href="javascript:showCode(2, 'style.xaml');" role="button">View Code : multi trigger xaml &raquo;</a>
                     </p>
                 </div>
             </div>
