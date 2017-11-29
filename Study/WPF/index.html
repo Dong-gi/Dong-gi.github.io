@@ -44,7 +44,7 @@
                 <div class="col-md-4">
                     <h2>실습 1</h2>
                     <p>
-                        1. XAML로 컨트롤을 작성하는 것과 코드에서 생성하는 것은 결과적으로 동일하다.
+                        1. XAML(eXtensible Application Markup Language)로 컨트롤을 작성하는 것과 코드에서 생성하는 것은 결과적으로 동일하다.
                         <br> Blend에서 디자인을 따로 할 수 있다. 분업-협업 가능.
                         <br>2. 참조 -> 참조 추가에서 .NET 어셈블리 or 제작한 프로젝트 참조 추가
                         <br>3. NuGet 패키지 관리에서 다른 사용자들이 배포하는 프레임워크를 설치할 수 있다.
@@ -82,9 +82,9 @@
                     <p>
                         <br>디자인을 할 생각은 없기 때문에, 종류만 알아두고 넘어간다.
                         <br>1. Canvas : 캔버스 내부의 상대 좌표를 이용해 자식 요소들을 배치한다.
-                        <br>2. DockPanel : 자식 요소들을 수평적, 수직적, 상대적으로 배치한다.
+                        <br>2. DockPanel : Top, Left, Bottom, Right에 자식 요소들을 배치.
                         <br>3. Grid : 영역을 행과 열로 나누어 요소들을 배치한다. 나눠진 그리드 하나를 여러 요소가 공유할 수도, 한 요소가 여러 그리드를 차지할 수도 있다.
-                        <br>4. StackPanel : 수직/수평적으로 정렬한 요소들을 하나씩 보여준다.
+                        <br>4. StackPanel : 수직/수평적으로 자식 요소들을 나열.
                         <br>5. VirtualizingPanel : Panel에 대한 추상 클래스.
                         <br>6. WrapPanel : 자식 요소들을 좌에서 우로 차례대로 배치하다, 패널의 경계를 넘어서면 다음 줄(바로 아래)로 넘겨 배치한다.
                     </p>
@@ -132,13 +132,13 @@
                         1. 이벤트 핸들러를 xaml과 독립적으로 작성하는 것을 가능하게 해준다.
                         <br>2. ICommand를 구체화하며 CanExecute(), Execute(), CanExecuteChanged를 정의한다.
                         <br>3. 내장 명령 : ApplicationCommands, ComponentCommands, MediaCommands, NavigationCommands, EditingCommands
-                        <br>4. 명령 바인딩 : System.Windows.Interactivity.WPF 패키지 설치
+                        <br>4. 명령 바인딩 : System.Windows.Interactivity.WPF 패키지 설치/이용
                     </p>
                     <h2>트리거</h2>
                     <p>
                         1. 특정 조건에 따라 스타일을 적용시키는 방법.
                         <br>2. <a class="btn btn-secondary" href="javascript:showCode(2, 'trigger.xaml');" role="button">View Code : trigger xaml &raquo;</a>
-                        <br>3. <a class="btn btn-secondary" href="javascript:showCode(2, 'style.xaml');" role="button">View Code : multi trigger xaml &raquo;</a>
+                        <br>3. <a class="btn btn-secondary" href="javascript:showCode(2, 'multiTrigger.xaml');" role="button">View Code : multi trigger xaml &raquo;</a>
                     </p>
                 </div>
             </div>
@@ -146,112 +146,20 @@
 
             <div class="row">
                 <div class="col-md-4">
-                    <h2>프로시저</h2>
-                    <p>1. 서브 프로시저 : 반환 없는 프로시저. 이벤트 프로시저 + 사용자 정의
-                        <br> 2. 서브 프로시저 정의 : [접근 제한자] Sub 식별자([매개변수 목록]) ~ End Sub
-                        <br> 3. 함수 프로시저 : 값을 반환하는 프로시저.
-                        <br> 4. 함수 프로시저 정의 : [접근 제한자] Function 식별자([매개변수 목록]) [As 반환 타입] ~ 함수명 = 리턴값 ~ End Function
-                        <br> 5. 참조 매개변수 키워드 : ByRef</p>
+                    <h2>바인딩</h2>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(3, 'procedure');" role="button">View Code &raquo;</a>
-                    </p>
+                        1. MVVM : Model - View - ViewModel
+                        <br>2. View의 컨트롤들을 ViewModel과 바인딩 : Control의 값 변경 + 이벤트를 ViewModel에 통지, Model의 값 변경을 View에 통지.
+                        <br>3. ViewModel은 INotifyPropertyChanged을 구체화. 프로퍼티 setter에서 변경되었음을 통지.
                 </div>
                 <div class="col-md-4">
-                    <h2>변수 스코프</h2>
-                    <p>1. Dim : 정의된 영역에서만 유효한 지역 변수
-                        <br> 2. Static : 정의된 영역이 최초 실행될 때 한 번 초기화. 프로그램 죵료 시 해제
-                        <br> 3. 프로시저 외부에 정의된 변수를 이용할 수 있다.
-                        <br> 4. Public/Private : 정의된 모듈 외부에서 이용할 수 있/없다.</p>
                 </div>
                 <div class="col-md-4">
-                    <h2>배열</h2>
-                    <p>1. 배열 : {}, 참조 및 선언 : ()
-                        <br> 2. ReDim : 배열 재정의, Preserve : 재정의 전 배열 데이터 유지
-                        <br> 3. 다차원 배열 : (,,)
-                        <br> 4. Jagged Array : ()()</p>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(3, 'array');" role="button">View Code &raquo;</a>
-                    </p>
                 </div>
             </div>
             <div class="row" id="code-div-3"></div>
 
-            <div class="row">
-                <div class="col-md-4">
-                    <h2>클래스</h2>
-                    <p>1. 정의 : [접근 제한자] Class 식별자 ~ End Class
-                        <br> 2. 생성자 : Sub New([매개변수 목록]) // 오버로딩 가능
-                        <br> 3. 상속 : Inherits 상위 클래스 // 다중 상속 불가
-                        <br> 4. 객체 자신 : Me</p>
-                </div>
-                <div class="col-md-4">
-                    <h2>내장 라이브러리</h2>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(4, 'string');" role="button">View Code : String &raquo;</a>
-                        <a class="btn btn-secondary" href="javascript:showCode(4, 'math_time_rand');" role="button">View Code : Math, DateTime, 난수 &raquo;</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h2>컨트롤 1</h2>
-                    <p>1. 마우스 이벤트 : Click, DoubleClick, MouseDown, MouseUp, MouseMove
-                        <br> 2. 키보드 이벤트 : KeyDown, KeyUp, KeyPress ASCII키
-                        <br> 3. Form : Load 이벤트. Form 내부 각 요소들은 TabIndex 속성을 갖는다.
-                        <br> 4. Button : Image 속성을 통해 안에 이미지를 넣을 수 있다.
-                        <br> 5. ImageList : 프로그램 내부에서 사용할 Image들을 관리할 수 있다.</p>
-                </div>
-            </div>
-            <div class="row" id="code-div-4"></div>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <h2>컨트롤 2</h2>
-                    <p>1. Label : 사용자가 직접 편집할 수 없는 텍스트
-                        <br> 2. TextBox : 사용자가 직접 편집할 수 있는 텍스트. MultiLine, MaxLength 등
-                        <br> 3. CheckBox : Checked 속성 등
-                        <br> 4. GroupBox : Form1.Designer.vb 중, Me.GroupBox1.Controls.Add(Me.RadioButton2)
-                        <br> 5. RadioButton : 그룹에 포함되어 있다면 그룹 내의 라디오버튼 중 하나만 선택 가능</p>
-                </div>
-                <div class="col-md-4">
-                    <h2>컨트롤 3</h2>
-                    <p>1. ListBox : 항목들을 리스트로 보여주고 한 개 이상을 동시 선택 가능
-                        <br> ListBox :: Items :: Item, Count, IsReadOnly, Add(), Clear(), IndexOf() 등
-                        <br> 2. ComboBox : 항목들 중 하나만 선택 가능. DropDownStyle 속성 등
-                        <br> 3. ScrollBar : VScrollBar, HScrollBar
-                        <br> LargeChange, SmallChange, Maximum, Minimum, Value 속성 등</p>
-                </div>
-                <div class="col-md-4">
-                    <h2>컨트롤 4</h2>
-                    <p>1. Timer : 주기적인 동작 혹인 일시적인 동작 정의 가능. Enabled 속성, Tick 이벤트 등
-                        <br> 2. ListView : 아이콘과 항목을 함께 표시. View, AutoArrange, Sorting, MultiSelect 속성 등
-                        <br> 3. TreeView : 항목의 계층 구조 표시. Nodes, ShowPlusMinus, SelectedNode 속성 등
-                        <br> 4. MsgBox(메시지, [, MsgBoxStyle] [, 제목]) : 사용자 반응(MsgBoxResult) 리턴
-                        <br> 5. InputBox(메시지, [, 제목] [, 기본값]) : 사용자 입력 문자열 리턴</p>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <h2>컨트롤 5</h2>
-                    <p>1. PictureBox : Image, SizeMode 속성
-                        <br> 2. LineShape : 선분. X1, Y1, X2, Y2, BorderStyle 속성 등
-                        <br> 3. OvalShape : 타원. Location, Size 속성 등
-                        <br> 4. RectangleShape : 사각형. Location, Size 속성 등</p>
-                </div>
-                <div class="col-md-4">
-                    <h2>그래픽</h2>
-                    <p>1. Dim g = Me.CreateGraphics()
-                        <br> 2. Graphics :: DrawLine(), DrawRectangle(), DrawEllipse(), DrawString() 등</p>
-                </div>
-                <div class="col-md-4">
-                    <h2>파일 입출력</h2>
-                    <p>1. FileSystem.FileOpen(FileNumber, FileName, OpenMode) // FileNumber로 파일을 구별하므로 그 값이 고유해야한다.
-                        <br> 2. In : FileSystem :: Input(FileNumber, Value) // Value에 저장, LineInput(FileNumber),
-                        <br> 3. Out : FileSystem ::Print(FileNumber, ParamArray), PrintLine(FileNumber, ParamArray)
-                        <br> 4. FileSystem.EOF(FileNumber) : 파일 끝 판정
-                        <br> 5. FileSystem.FileClose(FileNumber)</p>
-                </div>
-            </div>
-        </div>
+         </div>
     </main>
 
     <hr>
