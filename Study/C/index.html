@@ -1,29 +1,41 @@
-﻿<?php
-header('Content-Type: text/html; charset=utf-8');
-setlocale(LC_TIME, "kr_KR.utf8");
-date_default_timezone_set('Asia/Seoul');
+﻿<!doctype html>
 
-$server_root_path = $_SERVER['DOCUMENT_ROOT'];
-include $server_root_path.'/lib/functions.php';
-?>
+<html lnag="kor">
 
-<!DOCTYPE html>
-<html lang="kor">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<?php
-put_html_head('wiz');
-?>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <title>wiz</title>
+
+    <style>
+        body {
+            padding-top: 4.0rem;
+        }
+    </style>
+
+    <script>
+        $(function () {
+            $("nav").load("/nav.html");
+            $("footer").load("/footer.html");
+        });
+        function showCode(divID, fileName) {
+            $("#code-div-" + divID).load("./" + fileName + ".html");
+        }
+    </script>
+</head>
 
 <body>
-
-<?php
-put_nav();
-?>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation"></nav>
 
     <main role="main">
         <div class="container">
             <div class="jumbotron">
-                <h1 class="display-3">C</h1>
+                <h1 class="display-3">C, C++</h1>
                 <p>C is strong.</p>
             </div>
         </div>
@@ -32,9 +44,11 @@ put_nav();
             <div class="row">
                 <div class="col-md-4">
                     <h2>기본 자료형</h2>
-                    <p>1. char(1byte), short(2bytes), int(short <= int <= long), long(4bytes) // unsigned<br>
-                    2. float(4bytes), double(8bytes), long double(10bytes)<br>
-                    3. void : 반환 타입 선언 | 매개변수 선언 | void 포인터</p>
+                    <p>
+                        1. char(1byte), short(2bytes), int(short <= int <= long), long(4bytes) // unsigned
+                        <br>2. float(4bytes), double(8bytes), long double(10bytes)
+                        <br>3. void : 반환 타입 선언 | 매개변수 선언 | void 포인터
+                    </p>
                 </div>
                 <div class="col-md-4">
                     <h2>리터럴</h2>
@@ -47,6 +61,7 @@ put_nav();
                     2. #define PI 3.141592 // 컴파일러가 단순 치환 작업함</p>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-md-4">
                     <h2>Storage Classes</h2>
@@ -63,7 +78,7 @@ put_nav();
                     4. 비트 : &, |, ^(xor), ~(not), <<, >><br>
                     5. sizeof(), &(address), *(pointer), ?:(condition), (형변환), [], -></p>
                     <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'not');" role="button">View Code : bit-not operator &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
@@ -73,6 +88,8 @@ put_nav();
                     3. while, for, do ~ while</p>
                 </div>
             </div>
+            <div class="row" id="code-div-1"></div>
+
             <div class="row">
                 <div class="col-md-4">
                     <h2>함수</h2>
@@ -91,10 +108,12 @@ put_nav();
                     3. int arr[3][3];<br>
                     4. 배열 이름은 그 시작 주소를 가리키는 포인터다.</p>
                     <p>
-                        <a class="btn btn-secondary" href="./1001.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'array');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
             </div>
+            <div class="row" id="code-div-2"></div>
+
             <div class="row">
                 <div class="col-md-4">
                     <h2>포인터</h2>
@@ -102,7 +121,7 @@ put_nav();
                     2. int *arr[3]; // 포인터의 배열<br>
                     3. int (*arr)[]; // 배열의 포인터</p>
                     <p>
-                        <a class="btn btn-secondary" href="./1002.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(3, 'pointer');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
@@ -120,6 +139,8 @@ put_nav();
                     struct { type 식별자 : 비트수; }</p>
                 </div>
             </div>
+            <div class="row" id="code-div-3"></div>
+
             <div class="row">
                 <div class="col-md-4">
                     <h2>typedef</h2>
@@ -145,13 +166,14 @@ put_nav();
                     printf("str1 : " #str1 ", str2 : " #str2 ", result : %s", str1##str2)</p>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-md-4">
                     <h2>에러</h2>
                     <p>1. errno.h :: errno, perror(), string.h :: strerror_s()<br>
                     2. stdlib.h :: exit(), EXIT_SUCCESS = 0, EXIT_FAILURE = 1</p>
                     <p>
-                        <a class="btn btn-secondary" href="./1003.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(4, 'error');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
@@ -159,7 +181,7 @@ put_nav();
                     <p>1. 함수의 매개변수 목록 정의 : (int size, ...)<br>
                     2. stdarg.h :: va_list, va_start(va_list, size), va_arg(va_list, type), va_end(va_list)</p>
                     <p>
-                        <a class="btn btn-secondary" href="./1004.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(4, 'va_arg');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
@@ -171,6 +193,8 @@ put_nav();
                     4. void free(void* _Block) : 해제</p>
                 </div>
             </div>
+            <div class="row" id="code-div-4"></div>
+
             <div class="row">
                 <div class="col-md-4">
                     <h2>커맨드라인 매개변수</h2>
@@ -183,10 +207,7 @@ put_nav();
 
     <hr>
 
-<?php
-put_default_footer();
-?>
-
+    <footer class="container"></footer>
 </body>
 
 </html>
