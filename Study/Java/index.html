@@ -1,24 +1,36 @@
-﻿<?php
-header('Content-Type: text/html; charset=utf-8');
-setlocale(LC_TIME, "kr_KR.utf8");
-date_default_timezone_set('Asia/Seoul');
+﻿<!doctype html>
 
-$server_root_path = $_SERVER['DOCUMENT_ROOT'];
-include $server_root_path.'/lib/functions.php';
-?>
+<html lnag="kor">
 
-<!DOCTYPE html>
-<html lang="kor">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<?php
-put_html_head('wiz');
-?>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <title>wiz</title>
+
+    <style>
+        body {
+            padding-top: 4.0rem;
+        }
+    </style>
+
+    <script>
+        $(function () {
+            $("nav").load("/nav.html");
+            $("footer").load("/footer.html");
+        });
+        function showCode(divID, fileName) {
+            $("#code-div-" + divID).load("./" + fileName + ".html");
+        }
+    </script>
+</head>
 
 <body>
-
-<?php
-put_nav();
-?>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation"></nav>
 
     <main role="main">
         <div class="container">
@@ -32,216 +44,248 @@ put_nav();
             <div class="row">
                 <div class="col-md-4">
                     <h2>기본 문법 1</h2>
-                    <p>1. // : 한 줄 주석, /* */ : 여러 줄 주석<br>
-                    2. 식별자에 포함할 수 있는 특수문자 : _, $<br>
-                    3. 기본 자료형 : boolean, char, byte, short, int, long, float, double<br>
-                    4. 예제 코드는 자료형, 리터럴, 배열, 연산자에 대해 다룬다.</p>
                     <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
+                        1. // : 한 줄 주석, /* */ : 여러 줄 주석
+                        <br>2. 식별자에 포함할 수 있는 특수문자 : _, $
+                        <br>3. 기본 자료형 : boolean, char, byte, short, int, long, float, double
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'basic');" role="button">View Code : 자료형, 리터럴, 배열, 연산자 &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <h2>기본 문법 2</h2>
-                    <p>1. if ~ else if ~ else<br>
-                    2. switch : 정수형, char, string 가능<br>
-                    3. for : label 설정 가능. Iterable하면 향상된 for문 이용 가능<br>
-                    4. while, do ~ while</p>
                     <p>
-                        <a class="btn btn-secondary" href="./1001.php" role="button">View Code &raquo;</a>
+                        1. if ~ else if ~ else
+                        <br>2. switch : 정수형, char, string 가능
+                        <br>3. for : label 설정 가능. Iterable하면 향상된 for문 이용 가능
+                        <br>4. while, do ~ while
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'basic2');" role="button">View Code : switch, break with label, enhanced for &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
-                    <h2>기본 문법 3 : 접근 제한자</h2>
-                    <p>1. public : 전체 영역에서 접근 가능<br>
-                    2. private : 해당 클래스 내부에서만 접근 가능<br>
-                    3. default = 생략 : 같은 패키지 내부에서만 접근 가능<br>
-                    4. protected : 같은 패키지 or 하위 클래스에서만 접근 가능<br>
-                    5. final : 재정의 or 수정 불가<br>
-                    6. abstract : 인스턴스화 불가. 추상 클래스만 추상 메서드를 가질 수 있다.<br>
-                    7. static : 클래스 로드시 하나만 생성<br>
-                    <hr>
-                    부모의 것보다 접근 범위를 넓힐 수는 있지만, 축소할 수는 없다.
-                    <hr>
-                    Outer Class : abstract, final, public, default<br>
-                    Inner Class : abstract, final, private, protected, public, static, default<br>
-                    Outer Interface : abstract, public, default<br>
-                    Inner Interface : abstract, private, protected, public, static, default<br>
-                    Constructor : private, protected, public, default<br>
-                    Method : All<br>
-                    Variable : final, private, protected, public, static, default</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <h2>기본 문법 4 : 클래스</h2>
-                    <p>0. 객체 지향 원리 : 캡슐화(코드와 데이터를 함께 묶고 외부의 접근/오용을 제한), 상속, 다형성<br>
-                    1. extends 키워드<br>
-                    2. 클래스는 하나의 클래스만 상속할 수 있다. // 인터페이스는 여러 개 가능<br>
-                    3. class initializer, instance initializer : 예제 코드 참조<br>
-                    4. this : 객체 자신을 가리키는 키워드. this()를 통해 다른 생성자 호출<br>
-                    5. super : 부모 클래스를 가리키는 키워드. super()를 통해 부모 메서드 호출<br>
-                    6. 다형성 설명 생략. 자바는 오버라이드를 명시하지 않아도 호출해준다.(Dynamic method dispatch)</p>
+                    <h2>접근 제한자</h2>
                     <p>
-                        <a class="btn btn-secondary" href="./1002.php" role="button">View Code &raquo;</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h2>기본 문법 5 : Object</h2>
-                    <p>1. protected Object clone() : 객체의 복사본을 생성하여 반환한다.(얕은 복사)<br>
-                    2. boolean equals(Object obj) : 현재 객체가 obj와 같은지 검사한다.<br>
-                    3. void finalize() : 객체 폐기. 보통 GC가 알아서 처리해주지만, non-Java resource를 해제할 때 사용.<br>
-                    GC가 언제, 정말로 호출할지 알 수 없으므로, finalize()와 별개의 메서드를 정의하는 것이 낫다.<br>
-                    4. Class&lt;?&gt; getClass() : 객체의 Class를 반환<br>
-                    5. int hashCode() : 객체의 hash code 반환 // HashSet, HashMap 등에서 이용<br>
-                    6. void notify() : 해당 객체에 대해 대기하는 스레드를 깨운다.<br>
-                    7. void notifyAll() : 해당 객체에 대해 대기하는 모든 스레드를 깨운다.<br>
-                    8. String toString() : 객체의 문자열 표현 반환<br>
-                    9. void wait() : 해당 객체에 대해 스레드를 대기.<br>
-                    10. void wait(long timeout) : 깨워질 때까지 최대 timeout ms동안 대기.<br>
-                    11. void wait(long timeout, int nanos) : timeout ms + nanos ns</p>
-                    <p>
-                        <a class="btn btn-secondary" href="./1003.php" role="button">View Code &raquo;</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h2>기본 문법 6 : 인터페이스</h2>
-                    <p>1. 인터페이스 내부의 모든 요소는 public이다.<br>
-                    2. 인터페이스는 final 멤버 변수를 가질 수 있다.<br>
-                    3. 인터페이스의 메서드는 기본적으로 body가 없지만, default method는 가질 수 있다.<br>
-                    4. 인터페이스 구체화 : implements<br>
-                    5. 추상클래스는 인터페이스를 부분적으로 구체화해도 된다.</p>
-                    <p>
-                        <a class="btn btn-secondary" href="./1004.php" role="button">View Code &raquo;</a>
+                        1. public : 전체 영역에서 접근 가능
+                        <br>2. private : 해당 클래스 내부에서만 접근 가능
+                        <br>3. default = 생략 : 같은 패키지 내부에서만 접근 가능
+                        <br>4. protected : 같은 패키지 or 하위 클래스에서만 접근 가능
+                        <br>5. final : 재정의 or 수정 불가
+                        <br>6. abstract : 인스턴스화 불가. 추상 클래스만 추상 메서드를 가질 수 있다.
+                        <br>7. static : 클래스 로드시 하나만 생성
+                        <hr>
+                        부모의 것보다 접근 범위를 넓힐 수는 있지만, 축소할 수는 없다.
+                        <hr>
+                        1. Outer Class : abstract, final, public, default
+                        <br>2. Inner Class : abstract, final, private, protected, public, static, default
+                        <br>3. Outer Interface : abstract, public, default
+                        <br>4. Inner Interface : abstract, private, protected, public, static, default
+                        <br>5. Constructor : private, protected, public, default
+                        <br>6. Method : All
+                        <br>7. Variable : final, private, protected, public, static, default
                     </p>
                 </div>
             </div>
+            <div class="row" id="code-div-1"></div>
+
             <div class="row">
                 <div class="col-md-4">
-                    <h2>기본 문법 7 : 중첩</h2>
-                    <p>1. Static Nested Class : 외부 클래스 이름으로 접근<br>
-                    2. Non-Static Nested Class : 외부 클래스 객체로 접근<br>
-                    3. Inner Interface : 외부 클래스 이름으로 접근<br>
-                    4. Anonymous Class : 외부 클래스 final 멤버 접근 가능<br>
-                    5. Local Class : 외부 클래스 final 멤버 접근 가능</p>
+                    <h2>클래스</h2>
                     <p>
-                        <a class="btn btn-secondary" href="./1005.php" role="button">View Code &raquo;</a>
+                        1. 객체 지향 원리 : 캡슐화(코드와 데이터를 함께 묶고 외부의 접근/오용을 제한), 상속(extends), 다형성
+                        <br>2. 클래스는 하나의 클래스만 상속할 수 있다. // 인터페이스는 여러 개 가능
+                        <br>3. class initializer, instance initializer : 예제 코드 참조
+                        <br>4. this : 객체 자신을 가리키는 키워드. this()를 통해 다른 생성자 호출
+                        <br>5. super : 부모 클래스를 가리키는 키워드. super()를 통해 부모 메서드 호출
+                        <br>6. 다형성 설명 생략. 자바는 오버라이드를 명시하지 않아도 재정의한 메서드를 호출해준다.(Dynamic method dispatch)
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'class');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
-                    <h2>기본 문법 8 : 패키지</h2>
-                    <p>1. 패키지는 네임스페이스와 비슷하게 클래스들을 구분해준다.<br>
-                    2. 일반적으로 패키지 이름은 도메인의 역순으로 구성하고, 소문자만을 이용한다.<br>
-                    3. 패키지 내부에 패키지를 가질 수 있다. package kr.co.donggi.package1.sub1;<br>
-                    4. import 패키지.(타입 or *); 이름 충돌이 발생할 때는 패키지 이름을 명시한다.<br>
-                    5. 정적 멤버 임포트 : import static package . className . ( staticMemberName | * );</p>
+                    <h2>Object</h2>
+                    <p>
+                        1. protected Object clone() : 객체의 복사본을 생성하여 반환한다.(얕은 복사)
+                        <br>2. boolean equals(Object obj) : 현재 객체가 obj와 같은지 검사한다.
+                        <br>3. void finalize() : 객체 폐기. 보통 GC가 알아서 처리해주지만, non-Java resource를 해제할 때 사용.
+                        <br>GC가 언제, 정말로 호출할지 알 수 없으므로, finalize()와 별개의 메서드를 정의하는 것이 낫다.
+                        <br>4. Class&lt;?&gt; getClass() : 객체의 Class를 반환
+                        <br>5. int hashCode() : 객체의 hash code 반환 // HashSet, HashMap 등에서 이용
+                        <br>6. void notify() : 해당 객체에 대해 대기하는 스레드를 깨운다.
+                        <br>7. void notifyAll() : 해당 객체에 대해 대기하는 모든 스레드를 깨운다.
+                        <br>8. String toString() : 객체의 문자열 표현 반환
+                        <br>9. void wait() : 해당 객체에 대해 스레드를 대기.
+                        <br>10. void wait(long timeout) : 깨워질 때까지 최대 timeout ms동안 대기.
+                        <br>11. void wait(long timeout, int nanos) : timeout ms + nanos ns
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'object');" role="button">View Code &raquo;</a>
+                    </p>
                 </div>
                 <div class="col-md-4">
-                    <h2>기본 문법 9 : 예외</h2>
-                    <p>1. Throwable &lt;- Exception(Checked Exception) &lt;- RuntimeException(Unchecked Exception)<br>
-                    2. Error : 프로그램 내부에서 해결할 수 없어 종료됨.<br>
-                    3. Unchecked Exception은 따로 처리하지 않아도 프로그램이 계속 실행됨.<br>
-                    4. Chained Exceptions : 하나의 예외로 인해 다른 예외들이 발생할 수 있다. JDK 1.4부터 근원적인 예외를 알아올 수 있는 방법이 추가되었다.<br>
-                    Throwable(Throwable causeExc), Throwable(String msg, THrowable causeExc) : 보다 근본적인 원인을 인자로 하여 새로운 예외 생성<br>
-                    Throwable initCause(Throwable causeExc) : 예외의 근원을 설정하며, 생성자를 통해 호출되거나 이미 호출된 경우 다시 호출 불가<br>
-                    Throwable getCause() : 현재 예외의 근원을 얻는다. 없으면 null</p>
+                    <h2>인터페이스</h2>
                     <p>
-                        <a class="btn btn-secondary" href="./1006.php" role="button">View Code &raquo;</a>
+                        1. 인터페이스 내부의 모든 요소는 public이다.
+                        <br>2. 인터페이스는 final 멤버 변수를 가질 수 있다.
+                        <br>3. 인터페이스의 메서드는 기본적으로 body가 없지만, default method는 가질 수 있다.
+                        <br>4. 인터페이스 구체화 : implements
+                        <br>5. 추상클래스는 인터페이스를 부분적으로 구체화해도 된다.
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'interface');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
             </div>
+            <div class="row" id="code-div-2"></div>
+
             <div class="row">
                 <div class="col-md-4">
-                    <h2>기본 문법 10 : Generic</h2>
-                    <p>1. 여러 타입을 기본 요소로 할 수 있는 범용 클래스/인터페이스 작성을 위한 문법.<br>
-                    2. Queue, Stack, PriorityQueue, HashSet, HashMap, HashTable(null key 불허) 등이 기본으로 작성됨.<br>
-                    3. A가 B의 서브타입일 때, A[]는 B[]의 서브타입이지만, G&lt;A&gt;는 G&lt;B&gt;의 서브타입이 아니다.</p>
+                    <h2>중첩</h2>
                     <p>
-                        <a class="btn btn-secondary" href="./1007.php" role="button">View Code &raquo;</a>
+                        1. Static Nested Class : 외부 클래스 이름으로 접근
+                        <br>2. Non-Static Nested Class : 외부 클래스 객체로 접근
+                        <br>3. Inner Interface : 외부 클래스 이름으로 접근
+                        <br>4. Anonymous Class : 외부 클래스 final 멤버 접근 가능
+                        <br>5. Local Class : 외부 클래스 final 멤버 접근 가능
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'nested');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
-                    <h2>기본 문법 11 : Enum</h2>
-                    <p>1. 모든 enum은 Enum<E>를 상속하므로, 추가로 다른 클래스를 상속할 수 없다.<br>
-                    2. enum은 여타 클래스와 같이 멤버 변수, 메서드를 가질 수 있으며, private 생성자와 abstract method도 가질 수 있다.<br>
-                    3. enum은 로드 시 한번만 생성되므로 싱글톤을 간단하게 구현할 수 있다.<br>
-                    4. Enum<E> :: name(), toString(), ordinal(), compareTo(), valueOf()</p>
+                    <h2>패키지</h2>
                     <p>
-                        <a class="btn btn-secondary" href="./1008.php" role="button">View Code &raquo;</a>
+                        1. 패키지는 네임스페이스와 비슷하게 클래스들을 구분해준다.
+                        <br>2. 일반적으로 패키지 이름은 도메인의 역순으로 구성하고, 소문자만을 이용한다.
+                        <br>3. 패키지 내부에 패키지를 가질 수 있다. package donggi.package1.sub1;
+                        <br>4. import 패키지.(타입 or *); 이름 충돌이 발생할 때는 패키지 이름을 명시한다.
+                        <br>5. 정적 멤버 임포트 : import static package . className . ( staticMemberName | * );
                     </p>
                 </div>
                 <div class="col-md-4">
-                    <h2>기본 문법 12 : IO</h2>
-                    <p>1. byte 단위 입출력 : Stream<br>
-                    InputStream :: read(), skip(), mark(), reset() &lt;- FileInputStream, ObjectInputStream, ...<br>
-                    OutputStream :: write(), flush() &lt;- FileOutputStream, ...<br>
-                    2. Serialization : ObjectInputStream, ObjectOutputStream를 통해 객체를 직접 IO에 이용<br>
-                    Serializable 마커 인터페이스를 구체화하고, 직렬화하지 않을 멤버는 transient 키워드로 표시한다.<br>
-                    3. File : java.io.File, java.nio.File, ...</p>
+                    <h2>예외</h2>
                     <p>
-                        <a class="btn btn-secondary" href="./1009.php" role="button">View Code &raquo;</a>
+                        1. Throwable &lt;- Exception(Checked Exception) &lt;- RuntimeException(Unchecked Exception)
+                        <br>2. Error : 프로그램 내부에서 해결할 수 없어 종료됨.
+                        <br>3. Unchecked Exception은 따로 처리하지 않아도 프로그램이 계속 실행됨.
+                        <br>4. Chained Exceptions : 하나의 예외로 인해 다른 예외들이 발생할 수 있다. JDK 1.4부터 근원적인 예외를 알아올 수 있는 방법이 추가되었다.
+                        <br>Throwable(Throwable causeExc), Throwable(String msg, Throwable causeExc) : 보다 근본적인 원인을 인자로 하여 새로운 예외 생성
+                        <br>Throwable initCause(Throwable causeExc) : 예외의 근원을 설정하며, 생성자를 통해 호출되거나 이미 호출된 경우 다시 호출 불가
+                        <br>Throwable getCause() : 현재 예외의 근원을 얻는다. 없으면 null
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(3, 'exception');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
             </div>
+            <div class="row" id="code-div-3"></div>
+
             <div class="row">
                 <div class="col-md-4">
-                    <h2>기본 문법 13</h2>
-                    <p>1. 가변 길이 매개변수를 갖는 메서드 : (int... nums)와 같이 여러 개의 인자를 배열로 받는다.<br>
-                    2. 익명 메서드 = Lambda : 인터페이스의 메서드를 조각적으로 구현한 익명 객체를 생성한다.<br>
+                    <h2>Generic</h2>
+                    <p>
+                        1. 여러 타입을 기본 요소로 할 수 있는 범용 클래스/인터페이스 작성을 위한 문법.
+                        <br>2. Queue, Stack, PriorityQueue, HashSet, HashMap, HashTable(null key 불허) 등이 기본으로 작성됨.
+                        <br>3. A가 B의 서브타입일 때, A[]는 B[]의 서브타입이지만, G&lt;A&gt;는 G&lt;B&gt;의 서브타입이 아니다.
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(4, 'generic');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>Enum</h2>
+                    <p>
+                        1. 모든 enum은 Enum&lt;E&gt;를 상속하므로, 추가로 다른 클래스를 상속할 수 없다.
+                        <br>2. enum은 여타 클래스와 같이 멤버 변수, 메서드를 가질 수 있으며, private 생성자와 abstract method도 가질 수 있다.
+                        <br>3. enum은 로드 시 한번만 생성되므로 싱글톤을 간단하게 구현할 수 있다.
+                        <br>4. Enum&lt;E&gt; :: name(), toString(), ordinal(), compareTo(), valueOf()
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(4, 'enum');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>IO</h2>
+                    <p>
+                        1. byte 단위 입출력 : Stream
+                        <br>InputStream :: read(), skip(), mark(), reset() &lt;- FileInputStream, ObjectInputStream, ...
+                        <br>OutputStream :: write(), flush() &lt;- FileOutputStream, ...
+                        <br>2. Serialization : ObjectInputStream, ObjectOutputStream를 통해 객체를 직접 IO에 이용
+                        <br>Serializable 마커 인터페이스를 구체화하고, 직렬화하지 않을 멤버는 transient 키워드로 표시한다.
+                        <br>3. File : java.io.File, java.nio.File, ...
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(4, 'io');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row" id="code-div-4"></div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>스레드</h2>
+                    <p>
+                        1. 가변길이 매개변수를 갖는 메서드 : (int... nums)와 같이 여러 개의 인자를 배열로 받는다.<br>
+                    2. 익명 메서드 = Lambda : 인터페이스의 메서드를 조각적으로 구현한 익명 객체를 생성한다. 메서드를 하나만 정의한 FunctionalInterface만 가능하다.<br>
                     3. 스레드의 상태 : new(생성, new), runnable(준비, start), running(실행, run), block, dead<br>
                     4. sleep : 명시적 대기, yield : 우선권이 같은 스레드에게 양보, join : 스레드 종료 대기<br>
                     5. Thread.setPriority()를 이용해 우선순위 설정 가능. MIN_PRIORITY ~ MAX_PRIORITY<br>
                     6. 동기화 : synchronized(객체를 이용한 잠금), volatile(변수에 대한 잠금)</p>
                     <p>
-                        <a class="btn btn-secondary" href="./1010.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(5, 'thread');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <h2></h2>
                     <p></p>
                     <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(5, 'thread');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <h2></h2>
                     <p></p>
                     <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(5, 'thread');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
             </div>
+            <div class="row" id="code-div-5"></div>
+
             <div class="row">
                 <div class="col-md-4">
                     <h2></h2>
                     <p></p>
                     <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(5, 'thread');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <h2></h2>
                     <p></p>
                     <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(5, 'thread');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <h2></h2>
                     <p></p>
                     <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(5, 'thread');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
             </div>
+            <div class="row" id="code-div-4"></div>
+
         </div>
     </main>
 
     <hr>
 
-<?php
-put_default_footer();
-?>
-
+    <footer class="container"></footer>
 </body>
 
 </html>
