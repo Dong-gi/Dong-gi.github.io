@@ -1,24 +1,36 @@
-﻿<?php
-header('Content-Type: text/html; charset=utf-8');
-setlocale(LC_TIME, "kr_KR.utf8");
-date_default_timezone_set('Asia/Seoul');
+﻿<!doctype html>
 
-$server_root_path = $_SERVER['DOCUMENT_ROOT'];
-include $server_root_path.'/lib/functions.php';
-?>
+<html lnag="kor">
 
-<!DOCTYPE html>
-<html lang="kor">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<?php
-put_html_head('wiz');
-?>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <title>wiz</title>
+
+    <style>
+        body {
+            padding-top: 4.0rem;
+        }
+    </style>
+
+    <script>
+        $(function () {
+            $("nav").load("/nav.html");
+            $("footer").load("/footer.html");
+        });
+        function showCode(divID, fileName) {
+            $("#code-div-" + divID).load("./" + fileName + ".html");
+        }
+    </script>
+</head>
 
 <body>
-
-<?php
-put_nav();
-?>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation"></nav>
 
     <main role="main">
         <div class="container">
@@ -36,7 +48,7 @@ put_nav();
                     2. 필요하면 ~/Go/bin을 PATH에 추가<br>
                     3. go run name.go</p>
                     <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'first');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
@@ -53,6 +65,8 @@ put_nav();
                     4. Derived types</p>
                 </div>
             </div>
+            <div class="row" id="code-div-1"></div>
+
             <div class="row">
                 <div class="col-md-4">
                     <h2>변수</h2>
@@ -61,7 +75,7 @@ put_nav();
                     3. 타입 확인 : %T<br>
                     4. var a, b, c = 1, 2, "a"</p>
                     <p>
-                        <a class="btn btn-secondary" href="./1001.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'type');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
@@ -70,49 +84,50 @@ put_nav();
                     2. \ooo : 8진수(0~255), \xhh... : 16진수<br>
                     3. 상수 : const // 여기부터 다시...</p>
                     <p>
-                        <a class="btn btn-secondary" href="./1002.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'literal');" role="button">View Code : literal &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <h2></h2>
                     <p></p>
                     <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'literal');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
             </div>
+            <div class="row" id="code-div-2"></div>
+
             <div class="row">
                 <div class="col-md-4">
                     <h2></h2>
                     <p></p>
                     <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'literal');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <h2></h2>
                     <p></p>
                     <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'literal');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <h2></h2>
                     <p></p>
                     <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'literal');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
             </div>
+            <div class="row" id="code-div-3"></div>
+
         </div>
     </main>
 
     <hr>
 
-<?php
-put_default_footer();
-?>
-
+    <footer class="container"></footer>
 </body>
 
 </html>
