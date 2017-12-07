@@ -1,0 +1,19 @@
+<pre class="hljs" style="display: block; overflow-x: auto; padding: 0.5em; color: rgb(0, 0, 0); background: rgb(255, 255, 255);"><span class="hljs-keyword" style="font-weight: 700; color: navy;">import</span> java.util.Map.Entry;
+
+<span class="hljs-keyword" style="font-weight: 700; color: navy;">public</span> <span class="hljs-class"><span class="hljs-keyword" style="font-weight: 700; color: navy;">class</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">Test</span></span>{
+	<span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700; color: navy;">public</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">static</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">void</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">main</span><span class="hljs-params">(String[] args)</span> </span>{
+		ProcessBuilder b = <span class="hljs-keyword" style="font-weight: 700; color: navy;">new</span> ProcessBuilder();
+		b.command(<span class="hljs-string" style="font-weight: 700; color: green;">"notepad"</span>); <span class="hljs-comment" style="color: grey; font-style: italic;">// 메서드 get/set 구분이 없다.</span>
+		<span class="hljs-comment" style="color: grey; font-style: italic;">// b.directory() // 실행 위치 설정/반환</span>
+		<span class="hljs-comment" style="color: grey; font-style: italic;">// b.redirect~() // 스트림 조정</span>
+		b.redirectErrorStream(<span class="hljs-keyword" style="font-weight: 700; color: navy;">true</span>); <span class="hljs-comment" style="color: grey; font-style: italic;">// process 입장에서, stdout을 에러 스트림으로도 이용</span>
+		
+		<span class="hljs-keyword" style="font-weight: 700; color: navy;">for</span>(Entry&lt;String, String&gt; e : b.environment().entrySet()) {
+			System.out.printf(<span class="hljs-string" style="font-weight: 700; color: green;">"Key : %s, Val : %s\n"</span>, e.getKey(), e.getValue());
+		}
+		
+		<span class="hljs-keyword" style="font-weight: 700; color: navy;">try</span> {
+			b.start();
+		} <span class="hljs-keyword" style="font-weight: 700; color: navy;">catch</span> (Exception e1) { e1.printStackTrace(); }
+	}
+}</pre>
