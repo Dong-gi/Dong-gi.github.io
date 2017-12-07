@@ -1,19 +1,34 @@
-﻿<pre style="background:#0c1021;color:#f8f8f8">
-<span style="color:#fbde2d">class</span> <span style="color:#ff6400">MyList</span>&lt;E> {
-    <span style="color:#fbde2d">private</span> <span style="color:#fbde2d">E</span>[] elements;
+﻿<pre class="hljs" style="display: block; overflow-x: auto; padding: 0.5em; color: rgb(0, 0, 0); background: rgb(255, 255, 255);"><span class="hljs-comment" style="color: grey; font-style: italic;">// Generic</span>
+<span class="hljs-class"><span class="hljs-keyword" style="font-weight: 700; color: navy;">interface</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">MyInterface</span>&lt;<span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">E</span>&gt;</span>{}
 
-    <span style="color:#ff6400">MyList</span>() {
-        elements <span style="color:#fbde2d">=</span> (<span style="color:#fbde2d">E</span>[]) <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">Object</span>[<span style="color:#d8fa3c">0</span>];
-        <span style="color:#aeaeae">// new E[size], new MyList&lt;E>[size], new MyList&lt;Integer>[size] 등은 불가능하다.</span>
-        <span style="color:#aeaeae">// 컴파일러가 런타임으로 타입을 결정하며 이는 배열 내부적으로 저장된다.</span>
+<span class="hljs-comment" style="color: grey; font-style: italic;">// Multi Type</span>
+<span class="hljs-class"><span class="hljs-keyword" style="font-weight: 700; color: navy;">interface</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">MyInterface2</span>&lt;<span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">E</span>, <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">V</span>&gt;</span>{}
+
+<span class="hljs-comment" style="color: grey; font-style: italic;">// Bounded Generic, 인터페이스도 extends로 검사</span>
+<span class="hljs-class"><span class="hljs-keyword" style="font-weight: 700; color: navy;">class</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">MyClass</span>&lt;<span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">K</span>, <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">V</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">extends</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">MyList</span> &amp; <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">MyInterface</span>&lt;<span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">V</span>&gt;&gt;</span>{}
+
+
+<span class="hljs-class"><span class="hljs-keyword" style="font-weight: 700; color: navy;">class</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">MyList</span>&lt;<span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">E</span>&gt; </span>{
+    <span class="hljs-keyword" style="font-weight: 700; color: navy;">private</span> E[] elements;
+
+    MyList() {
+        elements = (E[]) <span class="hljs-keyword" style="font-weight: 700; color: navy;">new</span> Object[<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">0</span>];
+        <span class="hljs-comment" style="color: grey; font-style: italic;">// elements = new E[10]; // error</span>
+        
+        <span class="hljs-comment" style="color: grey; font-style: italic;">// 단, 와일드카드를 이용한 배열 선언은 가능</span>
+        MyList&lt;?&gt;[] l = <span class="hljs-keyword" style="font-weight: 700; color: navy;">new</span> MyList&lt;?&gt;[<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">3</span>]; 
     }
     
-    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">static</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">myFunc</span>(<span style="color:#fbde2d">MyList&lt;?></span> list1, <span style="color:#fbde2d">MyList&lt;? super <span style="color:#fbde2d">String</span>></span> list2){}
-}
-
-<span style="color:#fbde2d">interface</span> <span style="color:#ff6400">MyInterface</span>&lt;E>{}
-
-<span style="color:#fbde2d">interface</span> <span style="color:#ff6400">MyInterface2</span>&lt;E, V>{}
-
-<span style="color:#fbde2d">class</span> <span style="color:#ff6400">MyClass</span>&lt;K <span style="color:#fbde2d">extends</span> <span style="color:#ff6400;font-style:italic">Object</span>, <span style="color:#ff6400;font-style:italic">V</span> extends <span style="color:#ff6400;font-style:italic">MyList</span> &amp; <span style="color:#ff6400;font-style:italic">MyInterface&lt;<span style="color:#fbde2d">V</span>></span>>{}
-</pre>
+    <span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700; color: navy;">public</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">void</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">error</span><span class="hljs-params">()</span> </span>{
+    	<span class="hljs-comment" style="color: grey; font-style: italic;">// MyList&lt;E&gt;[] l = new MyList&lt;E&gt;[10]; // error</span>
+    	<span class="hljs-comment" style="color: grey; font-style: italic;">// MyList&lt;Integer&gt;[] l = new MyList&lt;Integer&gt;[10]; // error</span>
+    }
+    
+    <span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700; color: navy;">public</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">static</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">void</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">wildcardAndBounded</span><span class="hljs-params">(MyList&lt;?&gt; l1, MyList&lt;? <span class="hljs-keyword" style="font-weight: 700; color: navy;">super</span> String&gt; l2)</span></span>{}
+    
+    <span class="hljs-comment" style="color: grey; font-style: italic;">// private static E e; // error</span>
+    <span class="hljs-comment" style="color: grey; font-style: italic;">// public static E firstElement(MyList&lt;?&gt; list) {} // error</span>
+    <span class="hljs-keyword" style="font-weight: 700; color: navy;">public</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">static</span> &lt;E&gt; <span class="hljs-function">E <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">firstElement</span><span class="hljs-params">(MyList&lt;E&gt; list)</span> </span>{ <span class="hljs-comment" style="color: grey; font-style: italic;">// It's OK</span>
+    	<span class="hljs-keyword" style="font-weight: 700; color: navy;">return</span> list.elements[<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">0</span>];
+    }
+}</pre>

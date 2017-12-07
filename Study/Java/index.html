@@ -100,6 +100,7 @@
                         <br>4. this : 객체 자신을 가리키는 키워드. this()를 통해 다른 생성자 호출
                         <br>5. super : 부모 클래스를 가리키는 키워드. super()를 통해 부모 메서드 호출
                         <br>6. 다형성 설명 생략. 자바는 오버라이드를 명시하지 않아도 재정의한 메서드를 호출해준다.(Dynamic method dispatch)
+                        <br>7. instanceof 연산자로 호환 여부 확인 가능
                     </p>
                     <p>
                         <a class="btn btn-secondary" href="javascript:showCode(2, 'class');" role="button">View Code &raquo;</a>
@@ -152,7 +153,7 @@
                         <br>5. Local Class : 외부 클래스 final 멤버 접근 가능
                     </p>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(2, 'nested');" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(3, 'nested');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
@@ -190,9 +191,13 @@
                         1. 여러 타입을 기본 요소로 할 수 있는 범용 클래스/인터페이스 작성을 위한 문법.
                         <br>2. Queue, Stack, PriorityQueue, HashSet, HashMap, HashTable(null key 불허) 등이 기본으로 작성됨.
                         <br>3. A가 B의 서브타입일 때, A[]는 B[]의 서브타입이지만, G&lt;A&gt;는 G&lt;B&gt;의 서브타입이 아니다.
+                        <br>4. 메서드에서는 와일드카드 '?'를 이용하여 제네릭 타입을 매개변수로 받을 수 있다.
+                        <br>5. Erasure : 컴파일 시 제네릭 타입을 모두 지우고 바운드 타입으로(명시되지 않았다면 Object) 변경한다. javap를 통해 이를 확인할 수 있다. 자식 메서드의 Erasure가 부모와 다를 때 부모 메서드는 bridge 메서드가 되어 자식의 Erasure를 이용하는 메서드를 호출한다. 이 과정에서 리턴 타입만 다른 메서드들이 생성될 수 있지만 바이트 코드 단계기 때문에 에러가 발생되지 않고 잘 처리된다.
+                        <br>6. 제네릭을 통한 객체 생성 불가. 제네릭을 static 요소에서 이용하는 데 제한.
                     </p>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(4, 'generic');" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(4, 'generic');" role="button">View Code1 &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(4, 'generic2');" role="button">View Code2 &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
@@ -210,12 +215,13 @@
                 <div class="col-md-4">
                     <h2>IO</h2>
                     <p>
-                        1. byte 단위 입출력 : Stream
-                        <br>InputStream :: read(), skip(), mark(), reset() &lt;- FileInputStream, ObjectInputStream, ...
-                        <br>OutputStream :: write(), flush() &lt;- FileOutputStream, ...
-                        <br>2. Serialization : ObjectInputStream, ObjectOutputStream를 통해 객체를 직접 IO에 이용
+                        1. byte 단위 입출력 : InputStream/OutputStream
+                        <br>Buffered~, ByteArray~, Data~, File~, Filter~, Object~, Piped~, PrintStream, PushbackInputStream, RandomAccessFile, SequenceInputStream
+                        <br>2. char 단위 입출력 : Reader/Writer
+                        <br>Buffered~, CharArray~, File~, Filter~, InputStreamReader, OutputStreamWriter, LineNumberReader, Piped~, String~, PrintWriter, PushbackReader
+                        <br>3. Serialization : ObjectInputStream, ObjectOutputStream를 통해 객체를 직접 IO에 이용
                         <br>Serializable 마커 인터페이스를 구체화하고, 직렬화하지 않을 멤버는 transient 키워드로 표시한다.
-                        <br>3. File : java.io.File, java.nio.File, ...
+                        <br>4. File : java.io.File, java.nio.File, ...
                     </p>
                     <p>
                         <a class="btn btn-secondary" href="javascript:showCode(4, 'io');" role="button">View Code &raquo;</a>
@@ -228,32 +234,78 @@
                 <div class="col-md-4">
                     <h2>스레드</h2>
                     <p>
-                        1. 가변길이 매개변수를 갖는 메서드 : (int... nums)와 같이 여러 개의 인자를 배열로 받는다.<br>
-                    2. 익명 메서드 = Lambda : 인터페이스의 메서드를 조각적으로 구현한 익명 객체를 생성한다. 메서드를 하나만 정의한 FunctionalInterface만 가능하다.<br>
-                    3. 스레드의 상태 : new(생성, new), runnable(준비, start), running(실행, run), block, dead<br>
-                    4. sleep : 명시적 대기, yield : 우선권이 같은 스레드에게 양보, join : 스레드 종료 대기<br>
-                    5. Thread.setPriority()를 이용해 우선순위 설정 가능. MIN_PRIORITY ~ MAX_PRIORITY<br>
-                    6. 동기화 : synchronized(객체를 이용한 잠금), volatile(변수에 대한 잠금)</p>
+                        1. 가변길이 매개변수를 갖는 메서드 : (int... nums)와 같이 여러 개의 인자를 배열로 받는다.
+                        <br>2. 익명 메서드 = Lambda : 인터페이스의 메서드를 조각적으로 구현한 익명 객체를 생성한다. 메서드를 하나만 정의한 FunctionalInterface만 가능하다.
+                        <br>3. 스레드의 상태 : new(생성, new), runnable(준비, start), running(실행, run), block, dead
+                        <br>4. sleep : 명시적 대기, yield : 우선권이 같은 스레드에게 양보, join : 스레드 종료 대기
+                        <br>5. Thread.setPriority()를 이용해 우선순위 설정 가능. MIN_PRIORITY ~ MAX_PRIORITY
+                        <br>6. 동기화 : synchronized(객체를 이용한 잠금), volatile(변수에 대한 잠금)
+                    </p>
                     <p>
                         <a class="btn btn-secondary" href="javascript:showCode(5, 'thread');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
-                    <h2></h2>
-                    <p></p>
+                    <h2>Annotation</h2>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(5, 'thread');" role="button">View Code &raquo;</a>
+                        1. Annotation 정의 : @interface Name. 모든 Annotation은 java.lang.annotation.Annotation 인터페이스를 상속하며, 별도의 상속은 불가능하다.
+                        <br>2. Retention Poilicy : @Retention(poilicy). Annotation을 어디까지 유지할 지 결정한다. java.lang.annotation.RetentionPolicy
+                        <br>3. 리플렉션을 통해 Annotation 객체를 가져올 수 있다.
+                        <br>4. Marker Annotation : 멤버 없는 Annotation. 그 존재 유무에 의미를 둔다.
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(5, 'annotation');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
-                    <h2></h2>
-                    <p></p>
+                    <h2>JNI</h2>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(5, 'thread');" role="button">View Code &raquo;</a>
+                        1. C 네이티브 코드를 이용할 클래스 컴파일 : javac Test.java -> Test.class 생성
+                        <br>2. C에서 이용할 헤더 파일 생성 : javah -jni Test -> Test.h 생성
+                        <br>3. VS에서 JDK path 추가 : 속성 - 포함 디렉터리 - "$(JAVA_HOME)\include", "$(JAVA_HOME)\include\win32 추가
+                        <br>4. VS에서 dll 빌드 : 속성 - 구성(출력) 형식 - 동적 라이브러리(.dll) 설정
+                        <br>5. 빌드한 dll을 이클립스 프로젝트 폴더 안으로 이동. x86 JRE/JDK를 이용하여 실행(Window - Preference - Installed JREs에 x86 있는지 확인. Run - Run Configurations... - x86 JRE로 설정)
+                        <br>References : https://goo.gl/WqxXTE, https://goo.gl/QJDpRv, https://goo.gl/rrMwdr, https://goo.gl/5R2UMC
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(5, 'jni_java');" role="button">View Code : java &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(5, 'jni_c');" role="button">View Code : c &raquo;</a>
                     </p>
                 </div>
             </div>
             <div class="row" id="code-div-5"></div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>Assertion</h2>
+                    <p>
+                        1. Run Configurations... - Arguments - VM Arguments : -ea // enable assertion
+                        <br> -da:packageName // disable assertion in packageName
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(6, 'assert');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>Library 1</h2>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(6, 'string');" role="button">View Code : String &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(6, 'stringbuffer');" role="button">View Code : StringBuffer &raquo;</a>
+                        <br>StringBuilder는 StringBuffer의 not thread-safe 버전.
+                        <br>Number : 수에 관한 취상위 추상 클래스
+                        <a class="btn btn-secondary" href="javascript:showCode(6, 'float');" role="button">View Code : Float, Double &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(6, 'int');" role="button">View Code : Integer, Long &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>Library 2</h2>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(6, 'char');" role="button">View Code : Character &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(6, 'char');" role="button">View Code : Character &raquo;</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row" id="code-div-6"></div>
 
             <div class="row">
                 <div class="col-md-4">
@@ -278,7 +330,7 @@
                     </p>
                 </div>
             </div>
-            <div class="row" id="code-div-4"></div>
+            <div class="row" id="code-div-7"></div>
 
         </div>
     </main>

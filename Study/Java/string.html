@@ -1,0 +1,22 @@
+<pre class="hljs" style="display: block; overflow-x: auto; padding: 0.5em; color: rgb(0, 0, 0); background: rgb(255, 255, 255);"><span class="hljs-keyword" style="font-weight: 700; color: navy;">import</span> java.util.*;
+
+<span class="hljs-keyword" style="font-weight: 700; color: navy;">public</span> <span class="hljs-class"><span class="hljs-keyword" style="font-weight: 700; color: navy;">class</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">Test</span> </span>{
+	<span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700; color: navy;">public</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">static</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">void</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">main</span><span class="hljs-params">(String[] args)</span> </span>{
+		System.out.println(<span class="hljs-keyword" style="font-weight: 700; color: navy;">new</span> String(<span class="hljs-string" style="font-weight: 700; color: green;">"Hello World"</span>.toCharArray()));
+		System.out.println(<span class="hljs-keyword" style="font-weight: 700; color: navy;">new</span> String(<span class="hljs-string" style="font-weight: 700; color: green;">"Hello World"</span>.getBytes()));
+		System.out.println(<span class="hljs-keyword" style="font-weight: 700; color: navy;">new</span> String(<span class="hljs-keyword" style="font-weight: 700; color: navy;">new</span> StringBuilder(<span class="hljs-string" style="font-weight: 700; color: green;">"Hello"</span>)));
+		
+		<span class="hljs-keyword" style="font-weight: 700; color: navy;">char</span>[] chars = <span class="hljs-keyword" style="font-weight: 700; color: navy;">new</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">char</span>[<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">10</span>];
+		<span class="hljs-string" style="font-weight: 700; color: green;">"Hello World"</span>.getChars(<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">3</span>, <span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">8</span>, chars, <span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">0</span>);
+		System.out.println(<span class="hljs-keyword" style="font-weight: 700; color: navy;">new</span> String(chars));
+		
+		System.out.println(<span class="hljs-string" style="font-weight: 700; color: green;">"HELLO"</span>.equalsIgnoreCase(<span class="hljs-string" style="font-weight: 700; color: green;">"hello"</span>));
+		System.out.println(<span class="hljs-string" style="font-weight: 700; color: green;">"ABCD"</span>.regionMatches(<span class="hljs-keyword" style="font-weight: 700; color: navy;">true</span>, <span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">1</span>, <span class="hljs-string" style="font-weight: 700; color: green;">"bcd"</span>, <span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">0</span>, <span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">3</span>));
+		
+		System.out.println(<span class="hljs-string" style="font-weight: 700; color: green;">"Hello"</span>.startsWith(<span class="hljs-string" style="font-weight: 700; color: green;">"H"</span>));
+		System.out.println(<span class="hljs-string" style="font-weight: 700; color: green;">"Hello"</span>.endsWith(<span class="hljs-string" style="font-weight: 700; color: green;">"o"</span>));
+		System.out.println(<span class="hljs-string" style="font-weight: 700; color: green;">"  Hello  "</span>.trim());
+		
+		System.out.printf(<span class="hljs-string" style="font-weight: 700; color: green;">"%x\n"</span>, <span class="hljs-string" style="font-weight: 700; color: green;">"Hello"</span>.codePointAt(<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">2</span>));
+	}
+}</pre>
