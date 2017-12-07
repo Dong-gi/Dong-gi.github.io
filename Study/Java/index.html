@@ -189,11 +189,10 @@
                     <h2>Generic</h2>
                     <p>
                         1. 여러 타입을 기본 요소로 할 수 있는 범용 클래스/인터페이스 작성을 위한 문법.
-                        <br>2. Queue, Stack, PriorityQueue, HashSet, HashMap, HashTable(null key 불허) 등이 기본으로 작성됨.
-                        <br>3. A가 B의 서브타입일 때, A[]는 B[]의 서브타입이지만, G&lt;A&gt;는 G&lt;B&gt;의 서브타입이 아니다.
-                        <br>4. 메서드에서는 와일드카드 '?'를 이용하여 제네릭 타입을 매개변수로 받을 수 있다.
-                        <br>5. Erasure : 컴파일 시 제네릭 타입을 모두 지우고 바운드 타입으로(명시되지 않았다면 Object) 변경한다. javap를 통해 이를 확인할 수 있다. 자식 메서드의 Erasure가 부모와 다를 때 부모 메서드는 bridge 메서드가 되어 자식의 Erasure를 이용하는 메서드를 호출한다. 이 과정에서 리턴 타입만 다른 메서드들이 생성될 수 있지만 바이트 코드 단계기 때문에 에러가 발생되지 않고 잘 처리된다.
-                        <br>6. 제네릭을 통한 객체 생성 불가. 제네릭을 static 요소에서 이용하는 데 제한.
+                        <br>2. A가 B의 서브타입일 때, A[]는 B[]의 서브타입이지만, G&lt;A&gt;는 G&lt;B&gt;의 서브타입이 아니다.
+                        <br>3. 메서드에서는 와일드카드 '?'를 이용하여 제네릭 타입을 매개변수로 받을 수 있다.
+                        <br>4. Erasure : 컴파일 시 제네릭 타입을 모두 지우고 바운드 타입으로(명시되지 않았다면 Object) 변경한다. javap를 통해 이를 확인할 수 있다. 자식 메서드의 Erasure가 부모와 다를 때 부모 메서드는 bridge 메서드가 되어 자식의 Erasure를 이용하는 메서드를 호출한다. 이 과정에서 리턴 타입만 다른 메서드들이 생성될 수 있지만 바이트 코드 단계기 때문에 에러가 발생되지 않고 잘 처리된다.
+                        <br>5. 제네릭을 통한 객체 생성 불가. 제네릭을 static 요소에서 이용하는 데 제한.
                     </p>
                     <p>
                         <a class="btn btn-secondary" href="javascript:showCode(4, 'generic');" role="button">View Code1 &raquo;</a>
@@ -270,6 +269,7 @@
                     <p>
                         <a class="btn btn-secondary" href="javascript:showCode(5, 'jni_java');" role="button">View Code : java &raquo;</a>
                         <a class="btn btn-secondary" href="javascript:showCode(5, 'jni_c');" role="button">View Code : c &raquo;</a>
+                        <a class="btn btn-secondary" href="https://github.com/Dong-gi/Dong-gi.github.io/releases/download/1/test.dll" role="button">test.dll &raquo;</a>
                     </p>
                 </div>
             </div>
@@ -279,7 +279,8 @@
                 <div class="col-md-4">
                     <h2>Assertion</h2>
                     <p>
-                        1. Run Configurations... - Arguments - VM Arguments : -ea // enable assertion
+                        1. Run Configurations... - Arguments - VM Arguments :
+                        <br> -ea // enable assertion
                         <br> -da:packageName // disable assertion in packageName
                     </p>
                     <p>
@@ -303,7 +304,7 @@
                         <a class="btn btn-secondary" href="javascript:showCode(6, 'char');" role="button">View Code : Character &raquo;</a>
                         <a class="btn btn-secondary" href="javascript:showCode(6, 'process');" role="button">View Code : Process Java &raquo;</a>
                         <a class="btn btn-secondary" href="javascript:showCode(6, 'process_c');" role="button">View Code : Process C &raquo;</a>
-                        <a class="btn btn-secondary" href="./test.exe" role="button">test.exe &raquo;</a>
+                        <a class="btn btn-secondary" href="https://github.com/Dong-gi/Dong-gi.github.io/releases/download/1/test.exe" role="button">test.exe &raquo;</a>
                         <a class="btn btn-secondary" href="javascript:showCode(6, 'runtime');" role="button">View Code : Runtime &raquo;</a>
                         <a class="btn btn-secondary" href="javascript:showCode(6, 'processbuilder');" role="button">View Code : ProcessBuilder &raquo;</a>
                     </p>
@@ -313,28 +314,52 @@
 
             <div class="row">
                 <div class="col-md-4">
-                    <h2></h2>
-                    <p></p>
+                    <h2>Library 3</h2>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(5, 'thread');" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'system');" role="button">View Code : System &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <h2></h2>
                     <p></p>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(5, 'thread');" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <h2></h2>
                     <p></p>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(5, 'thread');" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
             </div>
             <div class="row" id="code-div-7"></div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <h2></h2>
+                    <p></p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2></h2>
+                    <p></p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2></h2>
+                    <p></p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row" id="code-div-8"></div>
 
         </div>
     </main>
