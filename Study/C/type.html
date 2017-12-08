@@ -1,0 +1,47 @@
+<pre class="hljs" style="display: block; overflow-x: auto; padding: 0.5em; color: rgb(0, 0, 0); background: rgb(255, 255, 255);"><span class="hljs-meta" style="color: olive;">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta" style="color: olive;">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;array&gt;</span></span>
+
+<span class="hljs-keyword" style="font-weight: 700; color: navy;">using</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword" style="font-weight: 700; color: navy;">enum</span> Enum1 { A, B, C };
+<span class="hljs-keyword" style="font-weight: 700; color: navy;">enum</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">class</span> Enum2 { A, B, C };
+
+<span class="hljs-keyword" style="font-weight: 700; color: navy;">struct</span> Struct1 {
+	<span class="hljs-keyword" style="font-weight: 700; color: navy;">int</span> field1;
+	<span class="hljs-built_in">string</span> field2;
+};
+
+<span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700; color: navy;">int</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">main</span><span class="hljs-params">(<span class="hljs-keyword" style="font-weight: 700; color: navy;">void</span>)</span>
+</span>{
+	<span class="hljs-keyword" style="font-weight: 700; color: navy;">if</span> (Enum1::A &lt; <span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">3</span>)
+		<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string" style="font-weight: 700; color: green;">"True"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+
+	<span class="hljs-comment" style="color: grey; font-style: italic;">// if(Enum2::A &lt; 3) // error</span>
+	<span class="hljs-keyword" style="font-weight: 700; color: navy;">if</span> (Enum2::A &lt; Enum2::C)
+		<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string" style="font-weight: 700; color: green;">"True"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+
+	<span class="hljs-keyword" style="font-weight: 700; color: navy;">int</span> arr[<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">10</span>] = { <span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">2</span> };
+	<span class="hljs-keyword" style="font-weight: 700; color: navy;">for</span> (<span class="hljs-keyword" style="font-weight: 700; color: navy;">auto</span> i : arr) {
+		<span class="hljs-built_in">cout</span> &lt;&lt; i &lt;&lt; <span class="hljs-string" style="font-weight: 700; color: green;">" "</span>;
+		i += <span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">2</span>;
+	}
+	<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+
+	<span class="hljs-keyword" style="font-weight: 700; color: navy;">for</span> (<span class="hljs-keyword" style="font-weight: 700; color: navy;">auto</span>&amp; i : arr) {
+		<span class="hljs-built_in">cout</span> &lt;&lt; i &lt;&lt; <span class="hljs-string" style="font-weight: 700; color: green;">" "</span>;
+		i += <span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">2</span>;
+	}
+	<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+
+	<span class="hljs-keyword" style="font-weight: 700; color: navy;">for</span> (<span class="hljs-keyword" style="font-weight: 700; color: navy;">auto</span> i : arr)
+		<span class="hljs-built_in">cout</span> &lt;&lt; i &lt;&lt; <span class="hljs-string" style="font-weight: 700; color: green;">" "</span>;
+	<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+
+	<span class="hljs-built_in">array</span>&lt;<span class="hljs-keyword" style="font-weight: 700; color: navy;">int</span>, 10&gt; arr2 = { <span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">2</span> };
+	<span class="hljs-keyword" style="font-weight: 700; color: navy;">for</span> (<span class="hljs-keyword" style="font-weight: 700; color: navy;">auto</span> i : arr2)
+		<span class="hljs-built_in">cout</span> &lt;&lt; i &lt;&lt; <span class="hljs-string" style="font-weight: 700; color: green;">" "</span>;
+
+	<span class="hljs-keyword" style="font-weight: 700; color: navy;">int</span> pls_dont_end;
+	<span class="hljs-built_in">cin</span> &gt;&gt; pls_dont_end;
+	<span class="hljs-keyword" style="font-weight: 700; color: navy;">return</span> <span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">0</span>;
+}</pre>

@@ -201,7 +201,107 @@
                     <p>1. 커맨드라인을 통해 프로그램을 실행하면 main()으로 전달된다.<br>
                     2. int main(int argc, char* argv[])</p>
                 </div>
+                <div class="col-md-4">
+                    <h2>C++ Hello World</h2>
+                    <p>
+                        1. 네임스페이스 특정 이름만 using으로 포함시킬 수 있다.
+                        <br>2. short &lt;= int &lt;= long &lt;= long long, unsigned -
+                        <br>3. float &lt;= double &lt;= long double
+                        <br>4. char(8bits) &lt; char16_t &lt; char32_t, wchar_t
+                        <br>5. bool, auto(c#의 var과 유사), decltype(x) : x와 같은 타입
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(5, 'hello');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>자료형</h2>
+                    <p>
+                        1. enum Name { CONST1, CONST2 = num1, CONST3, ... };
+                        <br>2. enum class Name { CONST1, ... }; // Type Safe
+                        <br>C#과 마찬가지로 enum class는 정수 타입을 상속함으로써 표현된다. enum class Name : long
+                        <br>3. struct Name { [fields] };
+                        <br>4. std::array : vector와 달리 크기가 고정되어 오버헤드가 적다.
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'type');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
             </div>
+            <div class="row" id="code-div-5"></div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>C++ 문법 1</h2>
+                    <p>
+                        1. new ~ delete는 번거로우므로, unique_ptr이 도입되었다. -> 변수가 스코프를 벗어나면 자동으로 해제한다.
+                        <br>2. 물론 정적 할당된 객체는 선언된 영역을 벗어나면 해제된다.
+                        <br>정적 할당된 객체를 전달할 경우 복사생성자가 호출되어 복사본이 전달되며, const를 사용할 경우 참조가 전달된다.
+                        <br>3. 값에 의한 전달 : 주소값에 의한 전달 : 참조에 의한 전달(변수만 가능)
+                        <br>4. try ~ (catch) : catch 생략 가능... 생략한다면 try {}를 쓸 이유가 있을까
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'exception');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>class</h2>
+                    <p>
+                        1. 보통 헤더 파일에 선언, 구현 파일에 정의
+                        <br> class Name { Name() 생성자, ~Name() 소멸자 }
+                        <br>* 명시적 디폴트 생성자 : Name() = default;
+                        <br>* 유틸리티 클래스 : Name() = delete; // 생성자를 가지지 않는다.
+                        <br>2. 접근제한자 : public, protected, private
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'class_h');" role="button">View Code : header &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'class_c');" role="button">View Code : cpp     &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>class 2</h2>
+                    <p>
+                        1. 명시적 대입 연산자 : Name& operator=(const Name& rValue) = default | delete
+                        <br>2. 객체 복제 배제 : 복사생성자와 =연산자를 private으로.
+                        <br>3. 두 클래스가 서로를 필요로 할 때, 일반적인 #include로는 해결할 수 없어 포워드 선언을 한다.
+                        <br>4. const 멤버는 const 메서드만 이용할 수 있다.
+                        <br>5. mutable 멤버의 변경은 메서드의 const 선언을 해치지 않는다고 간주한다.
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row" id="code-div-6"></div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>class 3</h2>
+                    <p>
+                        1. 오버로딩 메서드 시그너쳐에 delete 선언하면 호출할 수 없다.
+                        <br>2. inline 함수는 호출 지점에 코드 자체가 복사되어 메서드 콜 오버헤드를 줄인다.
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2></h2>
+                    <p></p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2></h2>
+                    <p></p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row" id="code-div-7"></div>
+
         </div>
     </main>
 
