@@ -224,7 +224,7 @@
                         <br>4. std::array : vector와 달리 크기가 고정되어 오버헤드가 적다.
                     </p>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(7, 'type');" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(5, 'type');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
             </div>
@@ -241,7 +241,7 @@
                         <br>4. try ~ (catch) : catch 생략 가능... 생략한다면 try {}를 쓸 이유가 있을까
                     </p>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(7, 'exception');" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(6, 'exception');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
@@ -251,11 +251,12 @@
                         <br> class Name { Name() 생성자, ~Name() 소멸자 }
                         <br>* 명시적 디폴트 생성자 : Name() = default;
                         <br>* 유틸리티 클래스 : Name() = delete; // 생성자를 가지지 않는다.
+                        <br>* 멤버 초기화는 선언된 순서대로만 진행된다.
                         <br>2. 접근제한자 : public, protected, private
                     </p>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(7, 'class_h');" role="button">View Code : header &raquo;</a>
-                        <a class="btn btn-secondary" href="javascript:showCode(7, 'class_c');" role="button">View Code : cpp     &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(6, 'class_h');" role="button">View Code : header &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(6, 'class_c');" role="button">View Code : cpp     &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
@@ -268,7 +269,8 @@
                         <br>5. mutable 멤버의 변경은 메서드의 const 선언을 해치지 않는다고 간주한다.
                     </p>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(6, 'class_main');" role="button">View Code : Main Class&raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(6, 'class_sub');" role="button">View Code : Sub Class &raquo;</a>
                     </p>
                 </div>
             </div>
@@ -280,6 +282,37 @@
                     <p>
                         1. 오버로딩 메서드 시그너쳐에 delete 선언하면 호출할 수 없다.
                         <br>2. inline 함수는 호출 지점에 코드 자체가 복사되어 메서드 콜 오버헤드를 줄인다.
+                        <br>클래스 헤더에서 직접 구현하면 inline 키워드 없이도 자동적으로 inline 검사 대상이 된다.
+                        <br>3. friend : 다른 클래스 또는 메서드에서 모든 멤버/메서드에 접근 허용.
+                        <br>4. 연산자 오버로딩 : 타입 A를 갖는 생성자가 존재한다면 타입 A의 인스턴스와 직접 연산 가능.
+                        <br>복합 대입 연산자 오버로딩 : 임시 객체 없이 좌변 객체 변경 -> 객체 참조 리턴.
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'friend');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2></h2>
+                    <p></p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2></h2>
+                    <p></p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row" id="code-div-7"></div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <h2></h2>
+                    <p>
+                        
                     </p>
                     <p>
                         <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
