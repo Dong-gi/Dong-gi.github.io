@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://unpkg.com/smartphoto@1.1.0/js/smartphoto.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/smartphoto@1.1.0/css/smartphoto.min.css">
+</head>
+
+<body>
+    <a href="http://via.placeholder.com/350x150" class="js-smartPhoto" data-caption="caption" data-id="sample" data-group="group1">
+        <img width="100" src="http://via.placeholder.com/350x150" />
+    </a>
+    <a href="http://via.placeholder.com/350x250" class="js-smartPhoto" data-caption="caption2" data-id="sample2" data-group="group1">
+        <img width="100" src="http://via.placeholder.com/350x150" />
+    </a>
+    <a href="http://via.placeholder.com/350x350" class="js-smartPhoto" data-caption="caption3" data-id="sample3" data-group="group1">
+        <img width="100" src="http://via.placeholder.com/350x150" />
+    </a>
+    <a href="http://via.placeholder.com/350x450" class="js-smartPhoto" data-caption="caption4" data-id="sample4" data-group="group2">
+        <img width="100" src="http://via.placeholder.com/350x150" />
+    </a>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            new SmartPhoto(".js-smartPhoto");
+        });
+    </script>
+</body>
+
+</html>
