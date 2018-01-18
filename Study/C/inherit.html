@@ -1,0 +1,72 @@
+<pre class="hljs" style="display: block; overflow-x: auto; padding: 0.5em; color: rgb(0, 0, 0); background: rgb(255, 255, 255);"><span class="hljs-comment" style="color: grey; font-style: italic;">/* Main.h */</span>
+<span class="hljs-meta" style="color: olive;">#<span class="hljs-meta-keyword">pragma</span> once</span>
+<span class="hljs-meta" style="color: olive;">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta" style="color: olive;">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string&gt;</span></span>
+
+<span class="hljs-keyword" style="font-weight: 700; color: navy;">using</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword" style="font-weight: 700; color: navy;">class</span> Main {
+<span class="hljs-keyword" style="font-weight: 700; color: navy;">private</span>:
+	<span class="hljs-built_in">string</span> name = <span class="hljs-string" style="font-weight: 700; color: green;">"Main"</span>;
+
+	<span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700; color: navy;">virtual</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">void</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">privateFunc</span><span class="hljs-params">()</span> </span>{}
+
+<span class="hljs-keyword" style="font-weight: 700; color: navy;">public</span>:
+	Main() = <span class="hljs-keyword" style="font-weight: 700; color: navy;">default</span>;
+	Main(<span class="hljs-built_in">string</span> name) : name(name) {}
+	<span class="hljs-keyword" style="font-weight: 700; color: navy;">virtual</span> ~Main() = <span class="hljs-keyword" style="font-weight: 700; color: navy;">default</span>;
+
+	<span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700; color: navy;">virtual</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">void</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">func</span><span class="hljs-params">()</span> </span>{
+		<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string" style="font-weight: 700; color: green;">"Main func"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+		<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string" style="font-weight: 700; color: green;">"My name : "</span> &lt;&lt; name &lt;&lt; <span class="hljs-built_in">endl</span>;
+	}
+	<span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700; color: navy;">virtual</span> Main&amp; <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">getInstance</span><span class="hljs-params">(<span class="hljs-built_in">string</span> name)</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">const</span> </span>{
+		<span class="hljs-keyword" style="font-weight: 700; color: navy;">return</span> *(<span class="hljs-keyword" style="font-weight: 700; color: navy;">new</span> Main(name));
+	}
+};
+
+<span class="hljs-comment" style="color: grey; font-style: italic;">/* Sub.h */</span>
+<span class="hljs-meta" style="color: olive;">#<span class="hljs-meta-keyword">pragma</span> once</span>
+<span class="hljs-meta" style="color: olive;">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta" style="color: olive;">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string&gt;</span></span>
+<span class="hljs-meta" style="color: olive;">#<span class="hljs-meta-keyword">include</span> <span class="hljs-string" style="font-weight: 700; color: green;">"Main.h"</span></span>
+
+<span class="hljs-keyword" style="font-weight: 700; color: navy;">using</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-keyword" style="font-weight: 700; color: navy;">class</span> Sub : <span class="hljs-keyword" style="font-weight: 700; color: navy;">public</span> Main
+{
+<span class="hljs-keyword" style="font-weight: 700; color: navy;">private</span>:
+	<span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700; color: navy;">virtual</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">void</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">privateFunc</span><span class="hljs-params">()</span> override </span>{}
+	<span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700; color: navy;">virtual</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">void</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">func</span><span class="hljs-params">()</span> override </span>{
+		<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string" style="font-weight: 700; color: green;">"Sub func"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+		Main::func();
+	}
+
+<span class="hljs-keyword" style="font-weight: 700; color: navy;">public</span>:
+	<span class="hljs-keyword" style="font-weight: 700; color: navy;">using</span> Main::Main;
+	Sub() : Sub(<span class="hljs-string" style="font-weight: 700; color: green;">"Sub"</span>) { }
+	Sub(<span class="hljs-built_in">string</span> name) : Main(name) { }
+	Sub(<span class="hljs-keyword" style="font-weight: 700; color: navy;">const</span> Sub&amp; sub) : Main(sub) {}
+	<span class="hljs-keyword" style="font-weight: 700; color: navy;">virtual</span> ~Sub() = <span class="hljs-keyword" style="font-weight: 700; color: navy;">default</span>;
+
+	<span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700; color: navy;">void</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">callFunc</span><span class="hljs-params">()</span> </span>{ func(); }
+	<span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700; color: navy;">virtual</span> Sub&amp; <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">getInstance</span><span class="hljs-params">(<span class="hljs-built_in">string</span> name)</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">const</span> override final </span>{
+		<span class="hljs-keyword" style="font-weight: 700; color: navy;">return</span> *(<span class="hljs-keyword" style="font-weight: 700; color: navy;">new</span> Sub(name));
+	}
+};
+
+<span class="hljs-comment" style="color: grey; font-style: italic;">/* Main.cpp */</span>
+<span class="hljs-meta" style="color: olive;">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta" style="color: olive;">#<span class="hljs-meta-keyword">include</span> <span class="hljs-string" style="font-weight: 700; color: green;">"Sub.h"</span></span>
+
+<span class="hljs-keyword" style="font-weight: 700; color: navy;">using</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">namespace</span> <span class="hljs-built_in">std</span>;
+
+<span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700; color: navy;">int</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">main</span><span class="hljs-params">(<span class="hljs-keyword" style="font-weight: 700; color: navy;">int</span> argc, <span class="hljs-keyword" style="font-weight: 700; color: navy;">char</span> *argv[])</span>
+</span>{
+	Sub().getInstance(<span class="hljs-string" style="font-weight: 700; color: green;">"World"</span>).callFunc();
+	<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-keyword" style="font-weight: 700; color: navy;">typeid</span>(Sub()).name() &lt;&lt; <span class="hljs-built_in">endl</span>;
+
+	<span class="hljs-keyword" style="font-weight: 700; color: navy;">int</span> pls_dont_end;
+	<span class="hljs-built_in">cin</span> &gt;&gt; pls_dont_end;
+	<span class="hljs-keyword" style="font-weight: 700; color: navy;">return</span> <span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">0</span>;
+}</pre>

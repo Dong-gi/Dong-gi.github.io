@@ -238,7 +238,7 @@
                         <br>2. 물론 정적 할당된 객체는 선언된 영역을 벗어나면 해제된다.
                         <br>정적 할당된 객체를 전달할 경우 복사생성자가 호출되어 복사본이 전달되며, const를 사용할 경우 참조가 전달된다.
                         <br>3. 값에 의한 전달 : 주소값에 의한 전달 : 참조에 의한 전달(변수만 가능)
-                        <br>4. try ~ (catch) : catch 생략 가능... 생략한다면 try {}를 쓸 이유가 있을까
+                        <br>4. try ~ (catch) : catch 생략 가능. exception ~ bad_alloc, bad_cast, bad_exception, logic_error, runtime_error ...
                     </p>
                     <p>
                         <a class="btn btn-secondary" href="javascript:showCode(6, 'exception');" role="button">View Code &raquo;</a>
@@ -251,7 +251,7 @@
                         <br> class Name { Name() 생성자, ~Name() 소멸자 }
                         <br>* 명시적 디폴트 생성자 : Name() = default;
                         <br>* 유틸리티 클래스 : Name() = delete; // 생성자를 가지지 않는다.
-                        <br>* 멤버 초기화는 선언된 순서대로만 진행된다.
+                        <br>* 멤버 초기화는 선언된 순서대로만 진행된다. 소멸시 반대 방향으로 소멸된다.
                         <br>2. 접근제한자 : public, protected, private
                     </p>
                     <p>
@@ -292,21 +292,115 @@
                     </p>
                 </div>
                 <div class="col-md-4">
-                    <h2></h2>
-                    <p></p>
+                    <h2>상속</h2>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
+                        1. class Sub : public Main
+                        <br>2. virtual이 없는 경우 발생하는 모호함(다형성 미지원)을 해소하기 위해 소멸자까지 기본적으로 virtual로 선언한다.
+                        <br>3. 재정의, 확장 방지 final : class Name final, type method(param) final
+                        <br>4. 다중 상속 가능. 부모 메서드를 호출하기 위해 단일 키워드 대신 명시적으로 부모 이름을 이용.
+                        <br>5. 공변 리턴 : 메서드 리턴 타입이 클래스에 대한 포인터나 참조면 오버라이딩하면서 그 자식 타입의 것으로 변경 가능.
+                        <br>6. static method는 재정의될 수(virtual할 수) 없다.
+                        <br>7. method를 재정의하면 부모의 모든 오버로딩된 메서드들이 가려진다. 하지만 포인터를 통해(업캐스팅) 호출할 수는 있다.
+                        <br>8. Java와 달리 private method도 재정의할 수 있다. C++에서 접근 제한자는 호출자만을 제한한다. 접근 범위를 강화할수도 있다.
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(7, 'inherit');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>참조 타입</h2>
+                    <p>
+                        1. 참조 타입 변수는 생성과 동시에 초기화되어야만 한다.
+                        <br>2. 참조 타입 변수의 참조 대상은 불변하다. 역참조가 허용되지 않아 안전하다.
+                        <br>3. int*&amp; ref : 포인터에 대한 참조 타입 변수. cf. 참조에 대한 참조, 참조에 대한 포인터는 불가능.
+                        <br>4. 참조 대상을 변경해야 하는 경우, 메모리 해제가 필요한 경우만 포인터 이용.
+                        <br>5. &amp;&amp; : rvalue 참조. 금방 해제될 객체, 지역 변수, 상수 참조 가능.
+                        <br>std::move() : lvalue를 rvalue로 변환
+                        <br>6. move constructor, move assignment operator : rvalue 참조 매개변수로 받은 객체로부터 값을 복사한 후 원본을 null로 변경하여 메모리 소유권 이동.(복사보다 이동이 좋다.)
+                    </p>
+                </div>
+            </div>
+            <div class="row" id="code-div-7"></div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>const</h2>
+                    <p>
+                        1. const 키워드는 왼쪽에 적용된다. 단, 맨 처음 등장하는 "type const"는 "const type"과 같다.
+                        <br>const int * : const int를 가리키는 포인터, int * const : int 포인터 변수 고정
+                        <br>const int * const * const * const ip = nullptr;
+                        <br>2. const method는 mutable 멤버 외의 멤버를 변경할 수 없다.
+                        <br>3. constexpr : 상수표현식으로 사용 가능.
+                        <br>constexpr constructor : 사용자 정의 객체를 상수 표현 변수로 이용 가능.
+                        <br>constexpr를 이용한 함수/메서드/생성자는 매개변수로 상수만 받을 수 있어야 하며, 호출 전에 컴파일러에 의해 body가 해석되어야 한다.
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(8, 'constexpr');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>static</h2>
+                    <p>
+                        1. static 멤버는 객체 유무와 무관하게 클래스 자체에 속한다.
+                        <br>2. static linking : 같은 소스에서의 함수/변수 참조
+                        <br>static void func();는 외부에서 참조 불가.
+                        <br>static 의미 자체와 연관이 없어 anonymous namespace 도입 : namespace { void func(); }
+                        <br>3. extern : external link 명시
+                        <br>4. 함수 내 static 변수 : 해당 함수에서만 이용가능한 전역 변수와 같다.
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>타입</h2>
+                    <p>
+                        1. "typedef int INT32" == "using INT32 = int"
+                        <br>"typedef int (*FuncType)(int, int)" == "using FuncType = int (*)(int, int)"
+                        <br>2. const_cast : const 변수의 상수 속성을 제거. const_cast&lt;int*&gt;(p)
+                        <br>static_cast : 언어 자체에서 허용하는 변환을 명시적으로 수행, 생성자나 변환 연산자가 구현되어 있을 때 명시적으로 변환, 같은 클래스 계층의 두 클래스 간 변환
+                        <br>dynamic_cast : 같은 클래스 계층의 두 클래스 간 변환(타입 검사 수행)
+                        <br>3. 명시적 형 변환 : explicit
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(8, 'explicit');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row" id="code-div-8"></div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>Uniform Initialization</h2>
+                    <p>
+                        1. 클래스에서도 {}로 초기화 가능. public Name(int, int);
+                        <br>Name n(1, 2) -&gt; Name n = {1, 2} 가능, Name n{1, 2} 가능
+                        <br>vector&lt;string&gt; names = {"name1", "name2", "name3"}
+                        <br>2. initializer list를 이용한 단일 타입 가변 길이 매개변수 함수 작성 가능.
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(9, 'uniform_initialization');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>라이브러리</h2>
+                    <p>
+                        1. stl : vector, list, array, forward_list, queue, priority_queue, stack, set, multiset(중복 허용), map, multimap, bitset, unordered_map, unordered_set, unordered_multimap, unordered_multiset
+                        <br>unordered : hash table이 늦게 도입되어 이름 충돌을 피하기 위해 사용
+                        <br>stl은 쓰레드-안전하지 않다.
+                        <br>2. 알고리즘 : www.wrox.com
+                        <br>min(), max(), minmax(), swap(), find(), find_if(), find_if_not()
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(9, 'thread');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <h2></h2>
                     <p></p>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(9, 'thread');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
             </div>
-            <div class="row" id="code-div-7"></div>
+            <div class="row" id="code-div-9"></div>
 
             <div class="row">
                 <div class="col-md-4">
@@ -315,25 +409,25 @@
                         
                     </p>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(10, 'thread');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <h2></h2>
                     <p></p>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(10, 'thread');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
                 <div class="col-md-4">
                     <h2></h2>
                     <p></p>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(7, 'thread');" role="button">View Code &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(10, 'thread');" role="button">View Code &raquo;</a>
                     </p>
                 </div>
             </div>
-            <div class="row" id="code-div-7"></div>
+            <div class="row" id="code-div-10"></div>
 
         </div>
     </main>
