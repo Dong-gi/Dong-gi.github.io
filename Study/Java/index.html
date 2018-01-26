@@ -7,14 +7,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <title>wiz</title>
 
     <style>
-        body {
-            padding-top: 4.0rem;
+        .code-modal .modal-dialog {
+            height: 80%;
+            width: 80%;
+        }
+
+        .code-modal .modal-content {
+            height: 100%;
+            width: 100%;
+        }
+
+        .code-modal .modal-body {
+            max-height: calc(100% - 140px);
+            overflow-y: scroll;
         }
     </style>
 
@@ -23,9 +35,63 @@
             $("nav").load("/nav.html");
             $("footer").load("/footer.html");
         });
-        function showCode(divID, fileName) {
-            $("#code-div-" + divID).load("./" + fileName + ".html");
+        var codeSet = new Set();
+        function showCode(title, fileName) {
+            if (!codeSet.has(fileName)) {
+                $("body").append(
+                    '<div id="code-' + fileName + '" class="modal code-modal" tabindex="-1" role="dialog">\
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">\
+                            <div class="modal-content">\
+                                <div class="modal-header">\
+                                    <h2 class="modal-title">' + title + '\
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+                                        <span aria-hidden="true" style="color: #aaaaaa; font-size: 2em; font-weight: bold;">&times;</span>\
+                                    </button></h2>\
+                                </div>\
+                                <div class="modal-body">\
+                                    <p>Modal body text goes here.</p>\
+                                </div>\
+                                <div class="modal-footer">\
+                                    <button type="button" class="btn btn-primary copy">Copy</button>\
+                                    <button type="button" class="btn btn-primary download">Download</button>\
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
+                                </div>\
+                            </div>\
+                        </div>\
+                    </div>');
+                codeSet.add(fileName);
+                $("div#code-" + fileName + " div.modal-body").load("./" + fileName + ".html");
+                $("div#code-" + fileName + " div.modal-body").on("copy", (event) => {
+                    console.log(4);
+                    event.preventDefault();
+                    console.log(5);
+                    if (event.clipboardData) {
+                        console.log(6);
+                        event.clipboardData.setData("text/plain", this.text());
+                        console.log(event.clipboardData.getData("text"));
+                    }
+                });
+                $("div#code-" + fileName + " button.copy").click(() => {
+                    console.log(1);
+                    $("div#code-" + fileName + " div.modal-body").click(() => {
+                        document.execCommand("copy");
+                        console.log(441);
+                    });
+                    console.log(2);
+                    $("div#code-" + fileName + " div.modal-body").click();
+                    console.log(3);
+                    copyToClipboard($("div#code-" + fileName + " div.modal-body"));
+                });
+            }
+            $("div#code-" + fileName).modal("show");
         }
+        function copyToClipboard(element) {
+  var $temp = $("<input>");
+  $("body").append($temp);
+  $temp.val($(element).text()).select();
+  document.execCommand("copy");
+  $temp.remove();
+}
     </script>
 </head>
 
@@ -35,8 +101,9 @@
     <main role="main">
         <div class="container">
             <div class="jumbotron">
-                <h1 class="display-3">Java</h1>
-                <p>Java is beautiful.</p>
+                <h1 class="display-3">Java
+                    <small>is beautiful.</small>
+                </h1>
             </div>
         </div>
 
@@ -50,7 +117,7 @@
                         <br>3. 기본 자료형 : boolean, char, byte, short, int, long, float, double
                     </p>
                     <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(1, 'basic');" role="button">View Code : 자료형, 리터럴, 배열, 연산자 &raquo;</a>
+                        <button type="button" onclick="javascript:showCode(1, 'basic');" class="btn btn-primary btn-sm">View Code : 자료형, 리터럴, 배열, 연산자 &raquo;</button>
                     </p>
                 </div>
                 <div class="col-md-4">
@@ -75,10 +142,8 @@
                         <br>5. final : 재정의 or 수정 불가
                         <br>6. abstract : 인스턴스화 불가. 추상 클래스만 추상 메서드를 가질 수 있다.
                         <br>7. static : 클래스 로드시 하나만 생성
-                        <hr>
-                        부모의 것보다 접근 범위를 넓힐 수는 있지만, 축소할 수는 없다.
-                        <hr>
-                        1. Outer Class : abstract, final, public, default
+                        <hr> 부모의 것보다 접근 범위를 넓힐 수는 있지만, 축소할 수는 없다.
+                        <hr> 1. Outer Class : abstract, final, public, default
                         <br>2. Inner Class : abstract, final, private, protected, public, static, default
                         <br>3. Outer Interface : abstract, public, default
                         <br>4. Inner Interface : abstract, private, protected, public, static, default
@@ -173,7 +238,8 @@
                         <br>2. Error : 프로그램 내부에서 해결할 수 없어 종료됨.
                         <br>3. Unchecked Exception은 따로 처리하지 않아도 프로그램이 계속 실행됨.
                         <br>4. Chained Exceptions : 하나의 예외로 인해 다른 예외들이 발생할 수 있다. JDK 1.4부터 근원적인 예외를 알아올 수 있는 방법이 추가되었다.
-                        <br>Throwable(Throwable causeExc), Throwable(String msg, Throwable causeExc) : 보다 근본적인 원인을 인자로 하여 새로운 예외 생성
+                        <br>Throwable(Throwable causeExc), Throwable(String msg, Throwable causeExc) : 보다 근본적인 원인을 인자로 하여 새로운
+                        예외 생성
                         <br>Throwable initCause(Throwable causeExc) : 예외의 근원을 설정하며, 생성자를 통해 호출되거나 이미 호출된 경우 다시 호출 불가
                         <br>Throwable getCause() : 현재 예외의 근원을 얻는다. 없으면 null
                     </p>
@@ -191,7 +257,9 @@
                         1. 여러 타입을 기본 요소로 할 수 있는 범용 클래스/인터페이스 작성을 위한 문법.
                         <br>2. A가 B의 서브타입일 때, A[]는 B[]의 서브타입이지만, G&lt;A&gt;는 G&lt;B&gt;의 서브타입이 아니다.
                         <br>3. 메서드에서는 와일드카드 '?'를 이용하여 제네릭 타입을 매개변수로 받을 수 있다.
-                        <br>4. Erasure : 컴파일 시 제네릭 타입을 모두 지우고 바운드 타입으로(명시되지 않았다면 Object) 변경한다. javap를 통해 이를 확인할 수 있다. 자식 메서드의 Erasure가 부모와 다를 때 부모 메서드는 bridge 메서드가 되어 자식의 Erasure를 이용하는 메서드를 호출한다. 이 과정에서 리턴 타입만 다른 메서드들이 생성될 수 있지만 바이트 코드 단계기 때문에 에러가 발생되지 않고 잘 처리된다.
+                        <br>4. Erasure : 컴파일 시 제네릭 타입을 모두 지우고 바운드 타입으로(명시되지 않았다면 Object) 변경한다. javap를 통해 이를 확인할 수 있다. 자식 메서드의
+                        Erasure가 부모와 다를 때 부모 메서드는 bridge 메서드가 되어 자식의 Erasure를 이용하는 메서드를 호출한다. 이 과정에서 리턴 타입만 다른 메서드들이 생성될
+                        수 있지만 바이트 코드 단계기 때문에 에러가 발생되지 않고 잘 처리된다.
                         <br>5. 제네릭을 통한 객체 생성 불가. 제네릭을 static 요소에서 이용하는 데 제한.
                     </p>
                     <p>
@@ -215,9 +283,11 @@
                     <h2>IO</h2>
                     <p>
                         1. byte 단위 입출력 : InputStream/OutputStream
-                        <br>Buffered~, ByteArray~, Data~, File~, Filter~, Object~, Piped~, PrintStream, PushbackInputStream, RandomAccessFile, SequenceInputStream
+                        <br>Buffered~, ByteArray~, Data~, File~, Filter~, Object~, Piped~, PrintStream, PushbackInputStream,
+                        RandomAccessFile, SequenceInputStream
                         <br>2. char 단위 입출력 : Reader/Writer
-                        <br>Buffered~, CharArray~, File~, Filter~, InputStreamReader, OutputStreamWriter, LineNumberReader, Piped~, String~, PrintWriter, PushbackReader
+                        <br>Buffered~, CharArray~, File~, Filter~, InputStreamReader, OutputStreamWriter, LineNumberReader, Piped~,
+                        String~, PrintWriter, PushbackReader
                         <br>3. Serialization : ObjectInputStream, ObjectOutputStream를 통해 객체를 직접 IO에 이용
                         <br>Serializable 마커 인터페이스를 구체화하고, 직렬화하지 않을 멤버는 transient 키워드로 표시한다.
                         <br>4. File : java.io.File, java.nio.File, ...
@@ -263,7 +333,8 @@
                         <br>2. C에서 이용할 헤더 파일 생성 : javah -jni Test -> Test.h 생성
                         <br>3. VS에서 JDK path 추가 : 속성 - 포함 디렉터리 - "$(JAVA_HOME)\include", "$(JAVA_HOME)\include\win32 추가
                         <br>4. VS에서 dll 빌드 : 속성 - 구성(출력) 형식 - 동적 라이브러리(.dll) 설정
-                        <br>5. 빌드한 dll을 이클립스 프로젝트 폴더 안으로 이동. x86 JRE/JDK를 이용하여 실행(Window - Preference - Installed JREs에 x86 있는지 확인. Run - Run Configurations... - x86 JRE로 설정)
+                        <br>5. 빌드한 dll을 이클립스 프로젝트 폴더 안으로 이동. x86 JRE/JDK를 이용하여 실행(Window - Preference - Installed JREs에 x86 있는지
+                        확인. Run - Run Configurations... - x86 JRE로 설정)
                         <br>References : https://goo.gl/WqxXTE, https://goo.gl/QJDpRv, https://goo.gl/rrMwdr, https://goo.gl/5R2UMC
                     </p>
                     <p>
