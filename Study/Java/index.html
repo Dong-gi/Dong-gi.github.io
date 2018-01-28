@@ -6,16 +6,16 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    
     <title>wiz</title>
 
     <style>
         .code-modal .modal-dialog {
-            height: 80%;
+            height: 90%;
             width: 80%;
         }
 
@@ -43,10 +43,12 @@
                         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">\
                             <div class="modal-content">\
                                 <div class="modal-header">\
-                                    <h2 class="modal-title">' + title + '\
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
-                                        <span aria-hidden="true" style="color: #aaaaaa; font-size: 2em; font-weight: bold;">&times;</span>\
-                                    </button></h2>\
+                                    <span>\
+                                        <h2 style="display: inline-block;" class="modal-title">' + title + '</h2>\
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+                                            <span aria-hidden="true" style="color: black; font-size: 2em; font-weight: bold;">&times;</span>\
+                                        </button>\
+                                    </span>\
                                 </div>\
                                 <div class="modal-body">\
                                     <p>Modal body text goes here.</p>\
@@ -54,49 +56,72 @@
                                 <div class="modal-footer">\
                                     <button type="button" class="btn btn-primary copy">Copy</button>\
                                     <button type="button" class="btn btn-primary download">Download</button>\
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>\
                                 </div>\
                             </div>\
                         </div>\
                     </div>');
                 codeSet.add(fileName);
                 $("div#code-" + fileName + " div.modal-body").load("./" + fileName + ".html");
-                $("div#code-" + fileName + " div.modal-body").on("copy", (event) => {
-                    console.log(4);
-                    event.preventDefault();
-                    console.log(5);
-                    if (event.clipboardData) {
-                        console.log(6);
-                        event.clipboardData.setData("text/plain", this.text());
-                        console.log(event.clipboardData.getData("text"));
-                    }
-                });
                 $("div#code-" + fileName + " button.copy").click(() => {
-                    console.log(1);
-                    $("div#code-" + fileName + " div.modal-body").click(() => {
-                        document.execCommand("copy");
-                        console.log(441);
-                    });
-                    console.log(2);
-                    $("div#code-" + fileName + " div.modal-body").click();
-                    console.log(3);
                     copyToClipboard($("div#code-" + fileName + " div.modal-body"));
+                });
+                $("div#code-" + fileName + " button.download").click(() => {
+                    downloadCode($("div#code-" + fileName + " h2.modal-title").text(), $("div#code-" + fileName + " div.modal-body").text());
                 });
             }
             $("div#code-" + fileName).modal("show");
         }
         function copyToClipboard(element) {
-  var $temp = $("<input>");
-  $("body").append($temp);
-  $temp.val($(element).text()).select();
-  document.execCommand("copy");
-  $temp.remove();
-}
+            var hiddenElement = $('<textarea></textarea>');
+            element.append(hiddenElement);
+            hiddenElement.text($(element).text());
+            hiddenElement.select();
+            document.execCommand("copy");
+            hiddenElement.remove();
+        }
+        function downloadCode(title, text) {
+            var hiddenElement = document.createElement('a');
+            hiddenElement.href = 'data:attachment/text,' + encodeURI(text);
+            hiddenElement.target = '_blank';
+            hiddenElement.download = title + '.txt';
+            hiddenElement.click();
+        }
     </script>
 </head>
 
 <body>
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation"></nav>
+
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Handle</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+            </tr>
+            <tr>
+                <th scope="row">3</th>
+                <td colspan="2">Larry the Bird</td>
+                <td>@twitter</td>
+            </tr>
+        </tbody>
+    </table>
 
     <main role="main">
         <div class="container">
