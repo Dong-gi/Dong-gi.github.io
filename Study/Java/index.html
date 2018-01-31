@@ -4,28 +4,126 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-    <script src="/source/highlight.pack.js"></script>
-    <link rel="stylesheet" href="/source/xcode.css">
-    <link rel="stylesheet" href="/source/default.css">
-    <script src="/source/default.js"></script>
-
+    
     <title>wiz</title>
+
+    <style>
+        .code-modal .modal-dialog {
+            height: 90%;
+            width: 80%;
+        }
+
+        .code-modal .modal-content {
+            height: 100%;
+            width: 100%;
+        }
+
+        .code-modal .modal-body {
+            max-height: calc(100% - 140px);
+            overflow-y: scroll;
+        }
+    </style>
+
+    <script>
+        $(function () {
+            $("nav").load("/nav.html");
+            $("footer").load("/footer.html");
+        });
+        var codeSet = new Set();
+        function showCode(title, fileName) {
+            if (!codeSet.has(fileName)) {
+                $("body").append(
+                    '<div id="code-' + fileName + '" class="modal code-modal" tabindex="-1" role="dialog">\
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">\
+                            <div class="modal-content">\
+                                <div class="modal-header">\
+                                    <span>\
+                                        <h2 style="display: inline-block;" class="modal-title">' + title + '</h2>\
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+                                            <span aria-hidden="true" style="color: black; font-size: 2em; font-weight: bold;">&times;</span>\
+                                        </button>\
+                                    </span>\
+                                </div>\
+                                <div class="modal-body">\
+                                    <p>Modal body text goes here.</p>\
+                                </div>\
+                                <div class="modal-footer">\
+                                    <button type="button" class="btn btn-primary copy">Copy</button>\
+                                    <button type="button" class="btn btn-primary download">Download</button>\
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>\
+                                </div>\
+                            </div>\
+                        </div>\
+                    </div>');
+                codeSet.add(fileName);
+                $("div#code-" + fileName + " div.modal-body").load("./" + fileName + ".html");
+                $("div#code-" + fileName + " button.copy").click(() => {
+                    copyToClipboard($("div#code-" + fileName + " div.modal-body"));
+                });
+                $("div#code-" + fileName + " button.download").click(() => {
+                    downloadCode($("div#code-" + fileName + " h2.modal-title").text(), $("div#code-" + fileName + " div.modal-body").text());
+                });
+            }
+            $("div#code-" + fileName).modal("show");
+        }
+        function copyToClipboard(element) {
+            var hiddenElement = $('<textarea></textarea>');
+            element.append(hiddenElement);
+            hiddenElement.text($(element).text());
+            hiddenElement.select();
+            document.execCommand("copy");
+            hiddenElement.remove();
+        }
+        function downloadCode(title, text) {
+            var hiddenElement = document.createElement('a');
+            hiddenElement.href = 'data:attachment/text,' + encodeURI(text);
+            hiddenElement.target = '_blank';
+            hiddenElement.download = title + '.txt';
+            hiddenElement.click();
+        }
+    </script>
 </head>
 
 <body>
-    <nav id="top-nav" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark"></nav>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation"></nav>
 
-    <nav id="bottom-nav" class="navbar fixed-bottom navbar-expand navbar-dark bg-dark"></nav>
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Handle</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+            </tr>
+            <tr>
+                <th scope="row">3</th>
+                <td colspan="2">Larry the Bird</td>
+                <td>@twitter</td>
+            </tr>
+        </tbody>
+    </table>
 
     <main role="main">
-
         <div class="container">
             <div class="jumbotron">
                 <h1 class="display-3">Java
@@ -34,23 +132,9 @@
             </div>
         </div>
 
-        <div class="container con-lv-1">
-            <div class="container-fluid con-lv-2">
-                <div class="row con-lv-3">
-                    <h2>기본 문법 1</h2>
-                    <p>
-                        1. // : 한 줄 주석, /* */ : 여러 줄 주석
-                        <br>2. 식별자에 포함할 수 있는 특수문자 : _, $
-                        <br>3. 기본 자료형 : boolean, char, byte, short, int, long, float, double
-                    </p>
-                    <p>
-                        <button type="button" onclick="javascript:showCode('basic.java', 'java');" class="btn btn-primary btn-sm">View Code : 자료형, 리터럴, 배열, 연산자 &raquo;</button>
-                    </p>
-                </div>
-            </div>
-
-            <div class="row c">
-                <div class="col-md-4 con-lv-1">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
                     <h2>기본 문법 1</h2>
                     <p>
                         1. // : 한 줄 주석, /* */ : 여러 줄 주석
@@ -376,10 +460,9 @@
         </div>
     </main>
 
-
     <hr>
 
-    <footer id="main-footer" class="container"></footer>
+    <footer class="container"></footer>
 </body>
 
 </html>
