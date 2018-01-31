@@ -1,0 +1,185 @@
+<!doctype html>
+
+<html lnag="kor">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <title>wiz</title>
+
+    <style>
+        body {
+            padding-top: 4.0rem;
+        }
+    </style>
+
+    <script>
+        $(function () {
+            $("nav").load("/nav.html");
+            $("footer").load("/footer.html");
+        });
+        function showCode(divID, fileName) {
+            $("#code-div-" + divID).load("./" + fileName + ".html");
+        }
+    </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation"></nav>
+
+    <main role="main">
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="display-3">Android <img class="img-fluid" alt="Andorid Robot" src="./android.png"/></h1>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>컴포넌트</h2>
+                    <p>
+                        1. 액티비티 : 인터페이스를 구성하는 기본 단위.
+                        <br>2. 서비스 : 백그라운드에서 실행
+                        <br>3. Broadcast Receiver(BR) : 시스템 신호 수신
+                        <br>4. Content Provider(CP) : 다른 응용프로그램을 위해 자신의 데이터 제공.
+                        <br>5. Intent : 컴포넌트 간 통신 담당.
+                        <br>6. 컴포넌트들은 매니페스트 파일에 선언되어야 한다.
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>설치</h2>
+                    <p>
+                        1. JDK와 Android Studio 설치
+                        <br>2. SDK Manager, AVD(Android Virtual Device) Manager를 이용해 버전별 SDK, 가상머신 설치
+                        <br>3. File - New - Import Sample
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>리소스</h2>
+                    <p>
+                        1. res 폴더에 포함된 리소스들에 id를 자동으로 부여하며, R.java에 정의된다.
+                        <br>2. 리소스 참조 : @[+][package:]type:name
+                    </p>
+                    <p>
+                        예시 코드는 매니페스트에서 테마를 적용하여 액티비티를 Dialog처럼 이용하는 것과 버튼에 이미 정의된 스타일을 적용하는 것을 보여준다.
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'theme_manifest');" role="button">View Code : AndroidManifest.xml &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'theme_activity_main');" role="button">View Code : activity_main.xml &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'theme_MainActivity');" role="button">View Code : MainActivity.java &raquo;</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row" id="code-div-1"></div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>컨트롤</h2>
+                    <p>
+                        1. TextView : text, textColor, textSize, textStyle, typeface, width, height, lines
+                        <br>2. EditText : autoText(오타 교정), imeOptions, editable, text, singleLine, inputType { none, Text, textMultiLIne, ...},<br/>
+                        <br>3. ImageView : adjustViewBounds, cropToPadding, scaleType, src, tint
+                        <br>4. ImageButton : src
+                        <br>5. Button : text, drawableLeft[Top, Bottom, Right], drawablePadding<br/>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>레이아웃</h2>
+                    <p>
+                        1. LinearLayout : 수직/수평 배치 : orientation, gravity{top, bottom, ...}, layout_weight
+                        <br>2. TableLayout : &lt;TableRow&gt;들로 구성. 다른 뷰로도 행을 구성 가능. : stretchColumns, shrinkColumns, collapseColumns
+                        <br>3. GridLayout : 격자 배치
+                        <br>4. RelativeLayout : 상대적 위치에 따른 배치 : layout_above, layout_below, ...
+                        <br>5. TabLayout : 탭을 이용하여 겹쳐진 자식 뷰 중 하나를 선택
+                        <br>6. AbsoluteLayout : 절대 위치로 배치
+                        <br>7. FrameLayout : 모든 자식들을 좌측 상단에 겹치게 배치. visibility속성으로 보이는 화면을 제어.
+                    </p>
+                    <p>
+                        Import Sample을 통해 다양한 레이아웃들을 자동완성할 수 있다.
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'LinearLayout_activity_main');" role="button">View Code : LinearLayout xml &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>리스너</h2>
+                    <p>
+                        1. View.OnClickListener, View.OnLongClickListener, ...
+                        <br>2. 내부 클래스로 리스너 객체 생성 or 외부 클래스로
+                        <br>3. 익명 클래스로 리스너 객체 생성 or Lambda
+                        <br>4. 리스너 인터페이스를 액티비티 클래스에 직접 구현 or onClick 속성 지정
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'Listener_activity_main');" role="button">View Code : xml &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'Listener_MainActivity');" role="button">View Code : java &raquo;</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row" id="code-div-2"></div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>기타 UI</h2>
+                    <p>
+                        1. 토클 버튼, 스위치, 체크박스, 라디오버튼, 레이팅 바 <a class="btn btn-secondary" href="javascript:showCode(3, 'ui');" role="button">View Code &raquo;</a>
+                        <br>2. Dialog : <a href="https://developer.android.com/guide/topics/ui/dialogs.html">https://developer.android.com/guide/topics/ui/dialogs.html</a>
+                        <br> : AlertDialog, DatePickerDialog, TimePickerDialog
+                        <br>3. Custom Components : View 클래스를 상속받아 재작성. <a href="https://developer.android.com/training/custom-views/index.html">https://developer.android.com/training/custom-views/index.html</a>
+                        <br>4. 알림 : <a href="https://developer.android.com/guide/topics/ui/notifiers/notifications.html">https://developer.android.com/guide/topics/ui/notifiers/notifications.html</a> <a class="btn btn-secondary" href="javascript:showCode(3, 'notification');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>그래픽</h2>
+                    <p>
+                        
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'type');" role="button">View Code : &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2></h2>
+                    <p></p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'type');" role="button">View Code : &raquo;</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row" id="code-div-3"></div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <h2></h2>
+                    <p></p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'type');" role="button">View Code : &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2></h2>
+                    <p></p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'type');" role="button">View Code : &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2></h2>
+                    <p></p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'type');" role="button">View Code : &raquo;</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row" id="code-div-3"></div>
+
+        </div>
+    </main>
+
+    <hr>
+
+    <footer class="container"></footer>
+</body>
+
+</html>

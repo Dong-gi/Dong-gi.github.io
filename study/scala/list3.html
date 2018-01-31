@@ -1,0 +1,54 @@
+<pre class="hljs" style="display: block; overflow-x: auto; padding: 0.5em; background: rgb(240, 240, 240); color: rgb(68, 68, 68);"><span class="hljs-comment" style="color: rgb(136, 136, 136);">/**
+ * List.scala
+ */</span>
+
+<span class="hljs-keyword" style="font-weight: 700;">sealed</span> <span class="hljs-class"><span class="hljs-keyword" style="font-weight: 700;">trait</span> <span class="hljs-title" style="color: rgb(136, 0, 0); font-weight: 700;">List</span>[+<span class="hljs-type" style="color: rgb(136, 0, 0);">A</span>]</span>
+<span class="hljs-keyword" style="font-weight: 700;">case</span> <span class="hljs-class"><span class="hljs-keyword" style="font-weight: 700;">object</span> <span class="hljs-title" style="color: rgb(136, 0, 0); font-weight: 700;">Nil</span> <span class="hljs-keyword" style="font-weight: 700;">extends</span> <span class="hljs-title" style="color: rgb(136, 0, 0); font-weight: 700;">List</span>[<span class="hljs-type" style="color: rgb(136, 0, 0);">Nothing</span>]</span>
+<span class="hljs-keyword" style="font-weight: 700;">case</span> <span class="hljs-class"><span class="hljs-keyword" style="font-weight: 700;">class</span> <span class="hljs-title" style="color: rgb(136, 0, 0); font-weight: 700;">Cons</span>[+<span class="hljs-type" style="color: rgb(136, 0, 0);">A</span>](<span class="hljs-params">head: <span class="hljs-type" style="color: rgb(136, 0, 0);">A</span>, tail: <span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>[<span class="hljs-type" style="color: rgb(136, 0, 0);">A</span>]</span>) <span class="hljs-keyword" style="font-weight: 700;">extends</span> <span class="hljs-title" style="color: rgb(136, 0, 0); font-weight: 700;">List</span>[<span class="hljs-type" style="color: rgb(136, 0, 0);">A</span>]</span>
+
+<span class="hljs-class"><span class="hljs-keyword" style="font-weight: 700;">object</span> <span class="hljs-title" style="color: rgb(136, 0, 0); font-weight: 700;">List</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700;">def</span> <span class="hljs-title" style="color: rgb(136, 0, 0); font-weight: 700;">hasSubsequence</span></span>[<span class="hljs-type" style="color: rgb(136, 0, 0);">A</span>](sup: <span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>[<span class="hljs-type" style="color: rgb(136, 0, 0);">A</span>], sub: <span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>[<span class="hljs-type" style="color: rgb(136, 0, 0);">A</span>]): <span class="hljs-type" style="color: rgb(136, 0, 0);">Boolean</span> = {
+    <span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700;">def</span> <span class="hljs-title" style="color: rgb(136, 0, 0); font-weight: 700;">startsWith</span></span>[<span class="hljs-type" style="color: rgb(136, 0, 0);">A</span>](l1: <span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>[<span class="hljs-type" style="color: rgb(136, 0, 0);">A</span>], l2: <span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>[<span class="hljs-type" style="color: rgb(136, 0, 0);">A</span>]): <span class="hljs-type" style="color: rgb(136, 0, 0);">Boolean</span> = (l1, l2) <span class="hljs-keyword" style="font-weight: 700;">match</span> {
+      <span class="hljs-keyword" style="font-weight: 700;">case</span> (_, <span class="hljs-type" style="color: rgb(136, 0, 0);">Nil</span>) =&gt; <span class="hljs-literal" style="color: rgb(120, 169, 96);">true</span>
+      <span class="hljs-keyword" style="font-weight: 700;">case</span> (<span class="hljs-type" style="color: rgb(136, 0, 0);">Nil</span>, _) =&gt; <span class="hljs-literal" style="color: rgb(120, 169, 96);">false</span>
+      <span class="hljs-keyword" style="font-weight: 700;">case</span> (<span class="hljs-type" style="color: rgb(136, 0, 0);">Cons</span>(h1, t1), <span class="hljs-type" style="color: rgb(136, 0, 0);">Cons</span>(h2, t2)) =&gt; 
+        <span class="hljs-keyword" style="font-weight: 700;">if</span>(h1 == h2) { startsWith(t1, t2) }
+        <span class="hljs-keyword" style="font-weight: 700;">else</span> <span class="hljs-literal" style="color: rgb(120, 169, 96);">false</span>
+    }
+    (sup, sub) <span class="hljs-keyword" style="font-weight: 700;">match</span> {
+      <span class="hljs-keyword" style="font-weight: 700;">case</span> (<span class="hljs-type" style="color: rgb(136, 0, 0);">Nil</span>, _) =&gt; <span class="hljs-literal" style="color: rgb(120, 169, 96);">false</span>
+      <span class="hljs-keyword" style="font-weight: 700;">case</span> (_, <span class="hljs-type" style="color: rgb(136, 0, 0);">Nil</span>) =&gt; <span class="hljs-literal" style="color: rgb(120, 169, 96);">true</span>
+      <span class="hljs-keyword" style="font-weight: 700;">case</span> (<span class="hljs-type" style="color: rgb(136, 0, 0);">Cons</span>(h1, t1), <span class="hljs-type" style="color: rgb(136, 0, 0);">Cons</span>(h2, t2)) =&gt;
+        <span class="hljs-keyword" style="font-weight: 700;">if</span>(startsWith(sup, sub)) { <span class="hljs-literal" style="color: rgb(120, 169, 96);">true</span> }
+        <span class="hljs-keyword" style="font-weight: 700;">else</span> { hasSubsequence(t1, sub) }
+    }
+  }
+  
+  <span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700;">def</span> <span class="hljs-title" style="color: rgb(136, 0, 0); font-weight: 700;">apply</span></span>[<span class="hljs-type" style="color: rgb(136, 0, 0);">A</span>](as: <span class="hljs-type" style="color: rgb(136, 0, 0);">A</span>*): <span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>[<span class="hljs-type" style="color: rgb(136, 0, 0);">A</span>] = {
+    <span class="hljs-keyword" style="font-weight: 700;">if</span>(as.isEmpty) <span class="hljs-type" style="color: rgb(136, 0, 0);">Nil</span>
+    <span class="hljs-keyword" style="font-weight: 700;">else</span> <span class="hljs-type" style="color: rgb(136, 0, 0);">Cons</span>(as.head, apply(as.tail: _*))
+  }
+}
+
+<span class="hljs-comment" style="color: rgb(136, 136, 136);">/**
+ * Main.scala
+ */</span>
+
+<span class="hljs-keyword" style="font-weight: 700;">import</span> <span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>._
+
+<span class="hljs-class"><span class="hljs-keyword" style="font-weight: 700;">object</span> <span class="hljs-title" style="color: rgb(136, 0, 0); font-weight: 700;">Main</span> </span>{
+	<span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700;">def</span> <span class="hljs-title" style="color: rgb(136, 0, 0); font-weight: 700;">main</span></span>(args: <span class="hljs-type" style="color: rgb(136, 0, 0);">Array</span>[<span class="hljs-type" style="color: rgb(136, 0, 0);">String</span>]): <span class="hljs-type" style="color: rgb(136, 0, 0);">Unit</span> = {
+	  <span class="hljs-keyword" style="font-weight: 700;">var</span> l = <span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>(<span class="hljs-number" style="color: rgb(136, 0, 0);">1</span>, <span class="hljs-number" style="color: rgb(136, 0, 0);">2</span>, <span class="hljs-number" style="color: rgb(136, 0, 0);">3</span>, <span class="hljs-number" style="color: rgb(136, 0, 0);">4</span>, <span class="hljs-number" style="color: rgb(136, 0, 0);">5</span>)
+		println(<span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>.hasSubsequence(l, <span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>(<span class="hljs-number" style="color: rgb(136, 0, 0);">1</span>, <span class="hljs-number" style="color: rgb(136, 0, 0);">2</span>, <span class="hljs-number" style="color: rgb(136, 0, 0);">3</span>)))
+		println(<span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>.hasSubsequence(l, <span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>(<span class="hljs-number" style="color: rgb(136, 0, 0);">2</span>, <span class="hljs-number" style="color: rgb(136, 0, 0);">3</span>)))
+		println(<span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>.hasSubsequence(l, <span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>(<span class="hljs-number" style="color: rgb(136, 0, 0);">3</span>)))
+		println(<span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>.hasSubsequence(l, <span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>()))
+		println(<span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>.hasSubsequence(l, <span class="hljs-type" style="color: rgb(136, 0, 0);">List</span>(<span class="hljs-number" style="color: rgb(136, 0, 0);">2</span>, <span class="hljs-number" style="color: rgb(136, 0, 0);">3</span>, <span class="hljs-number" style="color: rgb(136, 0, 0);">5</span>)))
+		
+		<span class="hljs-comment" style="color: rgb(136, 136, 136);">// tuple</span>
+		<span class="hljs-keyword" style="font-weight: 700;">val</span> t = (<span class="hljs-string" style="color: rgb(136, 0, 0);">"Hello"</span>, <span class="hljs-number" style="color: rgb(136, 0, 0);">11</span>)
+		println(t)
+		println(t._1)
+		println(t <span class="hljs-keyword" style="font-weight: 700;">match</span> { <span class="hljs-keyword" style="font-weight: 700;">case</span> (t1, t2) =&gt; t2 })
+	}
+}</pre>

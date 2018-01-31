@@ -1,0 +1,27 @@
+<pre style="background:#2a211c;color:#bdae9d"><span style="color:#43a8ed">&lt;<span style="font-weight:700">Window</span> <span style="font-style:italic">x</span>:Class=<span style="color:#049b0a">"WpfApp1.MainWindow"</span>
+    <span style="font-style:italic">xmlns</span>=<span style="color:#049b0a">"http://schemas.microsoft.com/winfx/2006/xaml/presentation"</span>
+    <span style="font-style:italic">xmlns</span>:x=<span style="color:#049b0a">"http://schemas.microsoft.com/winfx/2006/xaml"</span>
+    <span style="font-style:italic">xmlns</span>:d=<span style="color:#049b0a">"http://schemas.microsoft.com/expression/blend/2008"</span>
+    <span style="font-style:italic">xmlns</span>:mc=<span style="color:#049b0a">"http://schemas.openxmlformats.org/markup-compatibility/2006"</span>
+    <span style="font-style:italic">mc</span>:Ignorable=<span style="color:#049b0a">"d"</span>
+    <span style="font-style:italic">Title</span>=<span style="color:#049b0a">"MainWindow"</span> <span style="font-style:italic">Height</span>=<span style="color:#049b0a">"194.238"</span> <span style="font-style:italic">Width</span>=<span style="color:#049b0a">"428.944"</span>></span>
+<span style="color:#43a8ed">&lt;<span style="font-weight:700">Window</span>.Resources></span>
+    <span style="color:#43a8ed">&lt;<span style="font-weight:700">Style</span> <span style="font-style:italic">TargetType</span>=<span style="color:#049b0a">"{x:Type Button}"</span>></span>
+        <span style="color:#43a8ed">&lt;<span style="font-weight:700">Style</span>.Triggers></span>
+            <span style="color:#43a8ed">&lt;<span style="font-weight:700">Trigger</span> <span style="font-style:italic">Property</span>=<span style="color:#049b0a">"IsFocused"</span> <span style="font-style:italic">Value</span>=<span style="color:#049b0a">"True"</span>></span>
+                <span style="color:#43a8ed">&lt;<span style="font-weight:700">Setter</span> <span style="font-style:italic">Property</span>=<span style="color:#049b0a">"Background"</span> <span style="font-style:italic">Value</span>=<span style="color:#049b0a">"Beige"</span>/></span>
+                <span style="color:#43a8ed">&lt;<span style="font-weight:700">Setter</span> <span style="font-style:italic">Property</span>=<span style="color:#049b0a">"Content"</span> <span style="font-style:italic">Value</span>=<span style="color:#049b0a">"Focused"</span>/></span>
+            <span style="color:#43a8ed">&lt;/<span style="font-weight:700">Trigger</span>></span>
+            <span style="color:#43a8ed">&lt;<span style="font-weight:700">Trigger</span> <span style="font-style:italic">Property</span>=<span style="color:#049b0a">"IsFocused"</span> <span style="font-style:italic">Value</span>=<span style="color:#049b0a">"False"</span>></span>
+                <span style="color:#43a8ed">&lt;<span style="font-weight:700">Setter</span> <span style="font-style:italic">Property</span>=<span style="color:#049b0a">"Background"</span> <span style="font-style:italic">Value</span>=<span style="color:#049b0a">"LightCyan"</span>/></span>
+                <span style="color:#43a8ed">&lt;<span style="font-weight:700">Setter</span> <span style="font-style:italic">Property</span>=<span style="color:#049b0a">"Content"</span> <span style="font-style:italic">Value</span>=<span style="color:#049b0a">"Click Me!"</span>/></span>
+            <span style="color:#43a8ed">&lt;/<span style="font-weight:700">Trigger</span>></span>
+        <span style="color:#43a8ed">&lt;/<span style="font-weight:700">Style</span>.Triggers></span>
+    <span style="color:#43a8ed">&lt;/<span style="font-weight:700">Style</span>></span>
+<span style="color:#43a8ed">&lt;/<span style="font-weight:700">Window</span>.Resources></span>
+<span style="color:#43a8ed">&lt;<span style="font-weight:700">Grid</span>></span>
+    <span style="color:#43a8ed">&lt;<span style="font-weight:700">Button</span> <span style="font-style:italic">x</span>:Name=<span style="color:#049b0a">"button"</span> <span style="font-style:italic">HorizontalAlignment</span>=<span style="color:#049b0a">"Center"</span> <span style="font-style:italic">VerticalAlignment</span>=<span style="color:#049b0a">"Center"</span> <span style="font-style:italic">Width</span>=<span style="color:#049b0a">"116"</span> <span style="font-style:italic">Height</span>=<span style="color:#049b0a">"38"</span> <span style="font-style:italic">Click</span>=<span style="color:#049b0a">"button_Click"</span> <span style="font-style:italic">Margin</span>=<span style="color:#049b0a">"69,60,236,65"</span>/></span>
+    <span style="color:#43a8ed">&lt;<span style="font-weight:700">Button</span> <span style="font-style:italic">x</span>:Name=<span style="color:#049b0a">"button_Copy"</span> <span style="font-style:italic">HorizontalAlignment</span>=<span style="color:#049b0a">"Center"</span> <span style="font-style:italic">VerticalAlignment</span>=<span style="color:#049b0a">"Center"</span> <span style="font-style:italic">Width</span>=<span style="color:#049b0a">"116"</span> <span style="font-style:italic">Height</span>=<span style="color:#049b0a">"38"</span> <span style="font-style:italic">Click</span>=<span style="color:#049b0a">"button_Click"</span> <span style="font-style:italic">Margin</span>=<span style="color:#049b0a">"239,60,66,65"</span>/></span>
+<span style="color:#43a8ed">&lt;/<span style="font-weight:700">Grid</span>></span>
+<span style="color:#43a8ed">&lt;/<span style="font-weight:700">Window</span>></span>
+</pre>

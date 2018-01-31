@@ -1,0 +1,33 @@
+﻿<pre style="background:#0c1021;color:#f8f8f8">
+<span style="color:#fbde2d">enum</span> <span style="color:#ff6400">Weekday</span> {
+    <span style="color:#d8fa3c">SUNDAY</span>(<span style="color:#d8fa3c">0</span>) {
+        <span style="color:#fbde2d">@Override</span>
+        <span style="color:#fbde2d">void</span> <span style="color:#ff6400">method</span>(){};
+    },
+    <span style="color:#d8fa3c">FRIDAY</span>(<span style="color:#d8fa3c">12</span>), <span style="color:#d8fa3c">SATURDAY</span>(<span style="color:#fbde2d">-</span><span style="color:#d8fa3c">1</span>);
+
+    <span style="color:#fbde2d">private</span> <span style="color:#fbde2d">final</span> <span style="color:#fbde2d">int</span> num;
+    <span style="color:#aeaeae">/*private*/</span> <span style="color:#ff6400">Weekday</span>(<span style="color:#fbde2d">int</span> num) {
+        this<span style="color:#fbde2d">.</span>num <span style="color:#fbde2d">=</span> num;
+    }
+    <span style="color:#fbde2d">int</span> <span style="color:#ff6400">getNum</span>() { <span style="color:#fbde2d">return</span> num; }
+    <span style="color:#fbde2d">void</span> <span style="color:#ff6400">method</span>() {}
+}
+
+<span style="color:#fbde2d">public</span> <span style="color:#fbde2d">class</span> <span style="color:#ff6400">Main</span> {
+    
+    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">static</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">main</span>(<span style="color:#fbde2d">String</span>[] args) {
+        <span style="color:#fbde2d">Weekday</span> day <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">Weekday</span><span style="color:#d8fa3c"><span style="color:#fbde2d">.</span>FRIDAY</span>;
+        <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(day<span style="color:#fbde2d">.</span>name());
+        <span style="color:#aeaeae">// toString() : 기본적으로 정의된 상수 이름을 반환한다.</span>
+        <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(day);
+        <span style="color:#aeaeae">// ordinal() : 정의된 순번을 반환한다.</span>
+        <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(day<span style="color:#fbde2d">.</span>ordinal());
+        <span style="color:#aeaeae">// compareTo() : ordinal()값을 비교한다.</span>
+        <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(day<span style="color:#fbde2d">.</span>compareTo(<span style="color:#fbde2d">Weekday</span><span style="color:#d8fa3c"><span style="color:#fbde2d">.</span>SATURDAY</span>));
+        <span style="color:#aeaeae">// valueOf : 정의된 상수를 반환한다.</span>
+        <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(<span style="color:#fbde2d">Enum</span><span style="color:#fbde2d">.</span>valueOf(<span style="color:#fbde2d">Weekday</span><span style="color:#fbde2d">.</span>class, <span style="color:#61ce3c">"SUNDAY"</span>)); 
+    }
+
+}
+</pre>

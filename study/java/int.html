@@ -1,0 +1,21 @@
+<pre class="hljs" style="display: block; overflow-x: auto; padding: 0.5em; color: rgb(0, 0, 0); background: rgb(255, 255, 255);"><span class="hljs-keyword" style="font-weight: 700; color: navy;">import</span> java.util.*;
+
+<span class="hljs-keyword" style="font-weight: 700; color: navy;">public</span> <span class="hljs-class"><span class="hljs-keyword" style="font-weight: 700; color: navy;">class</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">Test</span> </span>{
+	<span class="hljs-function"><span class="hljs-keyword" style="font-weight: 700; color: navy;">public</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">static</span> <span class="hljs-keyword" style="font-weight: 700; color: navy;">void</span> <span class="hljs-title" style="font-weight: 400; color: rgb(0, 0, 0);">main</span><span class="hljs-params">(String[] args)</span> </span>{
+		System.out.println(Integer.highestOneBit(<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">128</span>));
+		System.out.println(Integer.numberOfLeadingZeros(<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">128</span>));
+		System.out.println(Long.numberOfTrailingZeros(<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">128</span>));
+		System.out.println(Integer.bitCount(<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">127</span>));
+		
+		System.out.println(Long.reverse(<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">1L</span>));
+		System.out.println(Long.reverseBytes(<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">1L</span>));
+		
+		System.out.println(Integer.rotateRight(<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">128</span>, <span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">5</span>));
+		
+		System.out.println(Long.signum(-<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">11L</span>)); <span class="hljs-comment" style="color: grey; font-style: italic;">// 0, 1, -1</span>
+		
+		System.out.println(Long.toBinaryString(<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">127L</span>));
+		System.out.println(Integer.toHexString(<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">12387</span>));
+		System.out.println(Long.toOctalString(<span class="hljs-number" style="color: rgb(0, 0, 255); font-weight: 400;">9187241298L</span>));
+	}
+}</pre>

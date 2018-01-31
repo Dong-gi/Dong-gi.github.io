@@ -1,0 +1,78 @@
+﻿<pre style="background:#0c1021;color:#f8f8f8"><span style="color:#61ce3c">'''
+딕셔너리
+'''</span>
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'딕셔너리 : "키-값"쌍 저장'</span>)
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'생성'</span>)
+dic <span style="color:#fbde2d">=</span> {
+    <span style="color:#61ce3c">'key'</span> : <span style="color:#61ce3c">'value'</span>,
+    <span style="color:#61ce3c">'hello'</span> : <span style="color:#61ce3c">'world'</span>
+}
+<span style="color:#fbde2d">print</span>(dic)
+
+dic <span style="color:#fbde2d">=</span> <span style="color:#8da6ce">dict</span>()
+dic[<span style="color:#61ce3c">'key1'</span>] <span style="color:#fbde2d">=</span> <span style="color:#61ce3c">'val1'</span>;
+dic[<span style="color:#61ce3c">'pine'</span>] <span style="color:#fbde2d">=</span> <span style="color:#61ce3c">'apple'</span>;
+<span style="color:#fbde2d">print</span>(dic)
+dic[<span style="color:#61ce3c">'key1'</span>] <span style="color:#fbde2d">=</span> <span style="color:#61ce3c">'val2'</span>;
+<span style="color:#fbde2d">print</span>(dic)
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'형 변환'</span>)
+<span style="color:#fbde2d">print</span>(<span style="color:#8da6ce">dict</span>([[<span style="color:#61ce3c">'a'</span>, <span style="color:#61ce3c">'b'</span>], [<span style="color:#61ce3c">'c'</span>, <span style="color:#61ce3c">'d'</span>]]))
+<span style="color:#aeaeae"># print(dict([['a', 'b', 'c', 'd']])) # error</span>
+<span style="color:#fbde2d">print</span>(<span style="color:#8da6ce">dict</span>([(<span style="color:#61ce3c">'a'</span>, <span style="color:#61ce3c">'b'</span>), (<span style="color:#61ce3c">'c'</span>, <span style="color:#61ce3c">'d'</span>)]))
+<span style="color:#aeaeae"># print(dict([('a', 'b', 'c', 'd')])) # error</span>
+<span style="color:#fbde2d">print</span>(<span style="color:#8da6ce">dict</span>([[<span style="color:#61ce3c">'a'</span>, <span style="color:#61ce3c">'b'</span>], (<span style="color:#61ce3c">'c'</span>, <span style="color:#61ce3c">'d'</span>)]))
+<span style="color:#fbde2d">print</span>(<span style="color:#8da6ce">dict</span>([<span style="color:#61ce3c">'ab'</span>, <span style="color:#61ce3c">'cd'</span>, <span style="color:#61ce3c">'ef'</span>]))
+<span style="color:#fbde2d">print</span>(<span style="color:#8da6ce">dict</span>((<span style="color:#61ce3c">'ab'</span>, <span style="color:#61ce3c">'cd'</span>, <span style="color:#61ce3c">'ef'</span>)))
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'병합 : 기존 값은 갱신'</span>)
+dic.update({
+    <span style="color:#61ce3c">'key1'</span> : <span style="color:#61ce3c">'val3'</span>,
+    <span style="color:#61ce3c">'key2'</span> : <span style="color:#61ce3c">'val4'</span>
+})
+<span style="color:#fbde2d">print</span>(dic)
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'요소 삭제'</span>)
+<span style="color:#fbde2d">del</span> dic[<span style="color:#61ce3c">'key1'</span>]
+<span style="color:#fbde2d">print</span>(dic)
+
+dic.clear()
+<span style="color:#fbde2d">print</span>(dic)
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'키 포함 여부'</span>)
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'key2'</span> <span style="color:#fbde2d">in</span> dic)
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'모든 키 얻기'</span>)
+dic <span style="color:#fbde2d">=</span> {
+    <span style="color:#61ce3c">'a'</span> : <span style="color:#61ce3c">'b'</span>,
+    <span style="color:#61ce3c">'c'</span> : <span style="color:#61ce3c">'d'</span>
+}
+<span style="color:#fbde2d">print</span>(dic.keys()) <span style="color:#aeaeae"># 리스트</span>
+<span style="color:#fbde2d">print</span>(<span style="color:#8da6ce">type</span>(dic.keys()))
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'모든 값 얻기'</span>)
+<span style="color:#fbde2d">print</span>(dic.values()) <span style="color:#aeaeae"># 리스트</span>
+<span style="color:#fbde2d">print</span>(<span style="color:#8da6ce">type</span>(dic.values()))
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'모든 "키-값"쌍 얻기'</span>)
+<span style="color:#fbde2d">print</span>(dic.items()) <span style="color:#aeaeae"># 튜플의 리스트</span>
+<span style="color:#fbde2d">print</span>(<span style="color:#8da6ce">type</span>(dic.items()))
+
+
+<span style="color:#fbde2d">print</span>(<span style="color:#61ce3c">'복사'</span>)
+dic2 <span style="color:#fbde2d">=</span> dic <span style="color:#aeaeae"># 얕은 복사</span>
+dic3 <span style="color:#fbde2d">=</span> dic.copy() <span style="color:#aeaeae"># 깊은 복사</span>
+dic[<span style="color:#61ce3c">'a'</span>] <span style="color:#fbde2d">=</span> <span style="color:#61ce3c">'z'</span>
+<span style="color:#fbde2d">print</span>(dic2)
+<span style="color:#fbde2d">print</span>(dic3)
+
+</pre>

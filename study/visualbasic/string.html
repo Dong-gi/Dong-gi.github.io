@@ -1,0 +1,22 @@
+﻿<pre class="hljs" style="display: block; overflow-x: auto; padding: 0.5em; background: rgb(63, 63, 63); color: rgb(220, 220, 220);">Public Class Form1
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        <span class="hljs-comment" style="color: rgb(127, 159, 127);">' Asc() : 첫 글자의 아스키 코드값 반환</span>
+        <span class="hljs-comment" style="color: rgb(127, 159, 127);">' AscW() : 첫 글자의 유니코드값 반환</span>
+        <span class="hljs-comment" style="color: rgb(127, 159, 127);">' Chr() : 아스키 코드에 대응하는 글자 반환</span>
+        <span class="hljs-comment" style="color: rgb(127, 159, 127);">' ChrW() : 유니코드에 대응하는 글자 반환</span>
+        <span class="hljs-comment" style="color: rgb(127, 159, 127);">' Str() : 수를 문자열로 변환</span>
+        <span class="hljs-comment" style="color: rgb(127, 159, 127);">' Val() : 문자열을 수로 변환</span>
+        <span class="hljs-comment" style="color: rgb(127, 159, 127);">' 위 함수들은 클래스 이름 없이 곧바로 호출 가능</span>
+    <span class="hljs-keyword" style="color: rgb(227, 206, 171);">End</span> Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        <span class="hljs-keyword" style="color: rgb(227, 206, 171);">Dim</span> str = <span class="hljs-string" style="color: rgb(204, 147, 147);">"asdf"</span>
+        <span class="hljs-keyword" style="color: rgb(227, 206, 171);">Dim</span> l = str.Length
+        <span class="hljs-keyword" style="color: rgb(227, 206, 171);">Dim</span> subStr = str.Substring(<span class="hljs-number" style="color: rgb(140, 208, 211);">0</span>)
+        subStr = str.Substring(<span class="hljs-number" style="color: rgb(140, 208, 211);">1</span>, <span class="hljs-number" style="color: rgb(140, 208, 211);">3</span>)
+        str.CompareTo(subStr)
+    <span class="hljs-keyword" style="color: rgb(227, 206, 171);">End</span> Sub
+
+<span class="hljs-keyword" style="color: rgb(227, 206, 171);">End</span> Class
+</pre>

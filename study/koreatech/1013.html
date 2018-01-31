@@ -1,0 +1,43 @@
+﻿<pre style="background:#0c1021;color:#f8f8f8"><span style="color:#fbde2d">import</span> <span style="color:#fbde2d">java.util.*</span>;
+
+<span style="color:#fbde2d">public</span> <span style="color:#fbde2d">class</span> <span style="color:#ff6400">Main</span> {
+
+    <span style="color:#fbde2d">public</span> <span style="color:#fbde2d">static</span> <span style="color:#fbde2d">void</span> <span style="color:#ff6400">main</span>(<span style="color:#fbde2d">String</span>[] args) {
+        <span style="color:#fbde2d">Scanner</span> scanner <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">Scanner</span>(<span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>in);
+        <span style="color:#fbde2d">int</span> testCase <span style="color:#fbde2d">=</span> scanner<span style="color:#fbde2d">.</span>nextInt();
+        <span style="color:#fbde2d">while</span>(testCase<span style="color:#fbde2d">--</span> <span style="color:#fbde2d">></span> <span style="color:#d8fa3c">0</span>) {
+            <span style="color:#fbde2d">int</span> length <span style="color:#fbde2d">=</span> scanner<span style="color:#fbde2d">.</span>nextInt();
+            <span style="color:#fbde2d">int</span>[] sales <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">int</span>[length];
+            <span style="color:#fbde2d">HashSet&lt;<span style="color:#fbde2d">Integer</span>></span> saleSet <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">HashSet&lt;<span style="color:#fbde2d">Integer</span>></span>();
+            <span style="color:#fbde2d">for</span>(<span style="color:#fbde2d">int</span> i <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">0</span>; i <span style="color:#fbde2d">&lt;</span> length; <span style="color:#fbde2d">++</span>i) {
+                saleSet<span style="color:#fbde2d">.</span>add(sales[i] <span style="color:#fbde2d">=</span> scanner<span style="color:#fbde2d">.</span>nextInt());
+            }
+
+            <span style="color:#fbde2d">Integer</span>[] saleValues <span style="color:#fbde2d">=</span> saleSet<span style="color:#fbde2d">.</span>toArray(<span style="color:#fbde2d">new</span> <span style="color:#fbde2d">Integer</span>[<span style="color:#d8fa3c">0</span>]);
+            <span style="color:#fbde2d">Arrays</span><span style="color:#fbde2d">.</span>sort(saleValues);
+            <span style="color:#fbde2d">ArrayList&lt;<span style="color:#fbde2d">Integer</span>[]></span> progressList <span style="color:#fbde2d">=</span> <span style="color:#fbde2d">new</span> <span style="color:#fbde2d">ArrayList&lt;></span>();
+            <span style="color:#fbde2d">for</span>(<span style="color:#fbde2d">int</span> value <span style="color:#fbde2d">:</span> saleValues) {
+                progressList<span style="color:#fbde2d">.</span>add(<span style="color:#fbde2d">new</span> <span style="color:#fbde2d">Integer</span>[] {value, <span style="color:#d8fa3c">0</span>});
+            }
+
+            <span style="color:#fbde2d">int</span> count <span style="color:#fbde2d">=</span> <span style="color:#d8fa3c">0</span>;
+            <span style="color:#fbde2d">for</span>(<span style="color:#fbde2d">int</span> sale <span style="color:#fbde2d">:</span> sales) {
+                <span style="color:#fbde2d">for</span>(<span style="color:#fbde2d">Integer</span>[] item <span style="color:#fbde2d">:</span> progressList) {
+                    <span style="color:#aeaeae">/* progressList는 현재까지 등장한 sale값들의 수를 갖는다.
+                     * progressList는 정렬되어 있으므로,
+                     * 현재 sale값을 만날 때까지 등장한 날들의 총합이 향상일수이다. 
+                     */</span>
+                    <span style="color:#fbde2d">if</span>(item[<span style="color:#d8fa3c">0</span>] <span style="color:#fbde2d">==</span> sale) {
+                        count <span style="color:#fbde2d">+=</span> item[<span style="color:#d8fa3c">1</span>]<span style="color:#fbde2d">++</span>;
+                        <span style="color:#fbde2d">break</span>;
+                    }
+                    count <span style="color:#fbde2d">+=</span> item[<span style="color:#d8fa3c">1</span>];
+                }
+            }
+
+            <span style="color:#fbde2d">System</span><span style="color:#fbde2d">.</span>out<span style="color:#fbde2d">.</span>println(count);
+        }
+    }
+    
+}
+</pre>
