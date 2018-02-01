@@ -1,0 +1,13 @@
+<div id="ConvertNewLine-div" class="container-fluid">
+    <h1>Input Text</h1>
+    <textarea class="form-control" rows="7" id="ConvertNewLine-input"></textarea>
+    <h1>Result</h1>
+    <textarea class="form-control" rows="7" id="ConvertNewLine-output"></textarea>
+    <br>
+    <div align="center">
+        <button onclick="javascript:
+        $('#ConvertNewLine-output').val($('#ConvertNewLine-input').val().replace(/\n/gm, '\\n').trim());" class="btn btn-primary">Convert all line to '\\n'</button>
+        <button onclick="javascript:
+        copyToClipboard($('#ConvertNewLine-output'));" class="btn btn-primary">Copy</button>
+    </div>
+</div>

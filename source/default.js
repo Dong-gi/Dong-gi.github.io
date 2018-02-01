@@ -133,16 +133,18 @@ function setWidthLimit() {
 }
 
 var codeSet = new Set();
-function showCode(fileName, lan) {
-    var original = fileName;
-    fileName = fileName.replace(/\W|\s/g, '');
+function showCode(fileNameOrText, lan) {
+    var nohighlight = lan == "nohighlight";
+    var isPlaneText = (lan == "console" || lan == "shell" || lan == "text");
+    var original = fileNameOrText;
+    fileNameOrText = fileNameOrText.replace(/\W|\s/mg, '');
     if (!codeSet.has(original)) {
         $("body").append(
-            '<div id="code-' + fileName + '" class="modal code-modal" tabindex="-1" role="dialog">\
+            '<div id="code-' + fileNameOrText + '" class="modal code-modal" tabindex="-1" role="dialog">\
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">\
                     <div class="modal-content">\
                         <div class="modal-header">\
-                            <h2 style="display: inline-block;" class="modal-title">' + original + '</h2>\
+                            <h2 style="display: inline-block;" class="modal-title">' + (isPlaneText? lan : original.split('/').pop()) + '</h2>\
                             <button style="float: right;" type="button" class="close" data-dismiss="modal" aria-label="Close">\
                                 <span aria-hidden="true" style="color: black; font-size: 2em; font-weight: bold;">&times;</span>\
                             </button>\
@@ -161,28 +163,44 @@ function showCode(fileName, lan) {
                 </div>\
             </div>');
         codeSet.add(original);
-        $("div#code-" + fileName + " div.modal-body code").load((original.indexOf('/') < 0 ? "./" : "") + original, (response, status, xhr) => {
-            $("div#code-" + fileName + " div.modal-body code").html(hljs.highlight(lan, $("div#code-" + fileName + " div.modal-body code").text())['value'].trim());
-            $("div#code-" + fileName).modal("show");
+        if (nohighlight) {
+            $("div#code-" + fileNameOrText + " div.modal-body").empty();
+            $("div#code-" + fileNameOrText + " div.modal-body").load((original.startsWith('/') ? "" : "./") + original);
+            $("div#code-" + fileNameOrText).modal("show");
+        } else if (isPlaneText && !original.endsWith(".txt")) {
+            $("div#code-" + fileNameOrText + " div.modal-body code").text(hljs.highlight("shell", original)['value'].trim());
+            $("div#code-" + fileNameOrText).modal("show");
+        } else {
+            $("div#code-" + fileNameOrText + " div.modal-body code").load((original.startsWith('/') ? "" : "./") + original, (response, status, xhr) => {
+                $("div#code-" + fileNameOrText + " div.modal-body code").html(hljs.highlight(lan, $("div#code-" + fileNameOrText + " div.modal-body code").text())['value'].trim());
+                $("div#code-" + fileNameOrText).modal("show");
+            });
+        }
+        $("div#code-" + fileNameOrText + " button.copy").click(() => {
+            copyToClipboard($("div#code-" + fileNameOrText + " div.modal-body"));
+            $("div#code-" + fileNameOrText).focus();
         });
-        $("div#code-" + fileName + " button.copy").click(() => {
-            copyToClipboard($("div#code-" + fileName + " div.modal-body"));
-            $("div#code-" + fileName).focus();
-        });
-        $("div#code-" + fileName + " button.download").click(() => {
-            downloadCode(original.split('/').pop(), $("div#code-" + fileName + " div.modal-body").text());
+        $("div#code-" + fileNameOrText + " button.download").click(() => {
+            downloadCode(original.split('/').pop(), $("div#code-" + fileNameOrText + " div.modal-body").text());
         });
     } else {
-        $("div#code-" + fileName).modal("show");
+        $("div#code-" + fileNameOrText).modal("show");
     }
 }
 function copyToClipboard(element) {
+    var notActive = {
+        TEXTAREA: true
+    };
+    var parent = element;
+    while(notActive[parent.prop('tagName')]) {
+        parent = parent.parent();
+    }
     var hiddenElement = $('<textarea></textarea>');
-    element.append(hiddenElement);
-    hiddenElement.text($(element).text().trim());
+    parent.append(hiddenElement);
+    hiddenElement.text($(element).text().trim() || $(element).val().trim());
     hiddenElement.select();
     document.execCommand("copy");
-    showSnackbar("Copied!!", element);
+    showSnackbar("Copied!!", parent);
     hiddenElement.remove();
 }
 function downloadCode(title, text) {

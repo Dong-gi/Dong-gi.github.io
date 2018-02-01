@@ -34,26 +34,66 @@
             </div>
         </div>
 
-        <div class="container con-lv-1">
-            <div class="container-fluid con-lv-2">
-                <div class="row con-lv-3">
-                    <h2>기본 문법 1</h2>
-                    <p>
-                        1. // : 한 줄 주석, /* */ : 여러 줄 주석
-                        <br>2. 식별자에 포함할 수 있는 특수문자 : _, $
-                        <br>3. 기본 자료형 : boolean, char, byte, short, int, long, float, double
-                    </p>
-                    <p>
-                        <button type="button" onclick="javascript:showCode('basic.java', 'java');" class="btn btn-primary btn-sm">View Code : 자료형, 리터럴, 배열, 연산자 &raquo;</button>
-                    </p>
-                </div>
-            </div>
+        <div class="container con-lv-1" con-title="문법">
+            <h2>문법</h2>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Contents</th>
+                    </tr>
+                </thead>
+                <tbody class="con-lv-2" con-title="기초 문법">
+                    <tr class="con-lv-3" con-title="주석">
+                        <th scope="row">주석</th>
+                        <td>
+                            1. 주석(Comment)은 코더를 위한 것으로, 컴파일러는 무시하는 문장들이다.
+                            <br>2. // : '//'부터 줄의 끝까지 무시한다.
+                            <br>3. /* */ : '/*'와 '*/' 사이의 모든 텍스트를 무시한다.
+                            <button type="button" onclick="javascript:showCode('/Basic Concepts/src/Comments.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 주석 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:showCode('1\n5\n', 'console');" class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="식별자">
+                        <th scope="row">식별자</th>
+                        <td>
+                            1. 식별자(Identifier)는 의미 있는 코드에 붙이는 이름을 의미한다. 의미 있는 코드에는 변수(Variable), 상수(Constant), 메서드, 클래스 등이 있다.
+                            <br>2. 자바 식별자는 '_', '$'의 사용을 허용한다.
+                            <br>3. 식별자 관례 : 상수를 제외한 식별자는 CamelCase 이용. 클래스는 대문자로 시작. 상수는 대문자로 이루어진 SNAKE_CASE 이용.
+                            <br><a role="button" class="btn btn-info" href="https://en.wikipedia.org/wiki/Camel_case">카멜 케이스 설명</a>
+                            <a role="button" class="btn btn-info" href="https://en.wikipedia.org/wiki/Snake_case">스네이크 케이스 설명</a>
+                            <button type="button" onclick="javascript:showCode('/Basic Concepts/src/Identifier.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 식별자 및 식별자를 통한 자료형 구분 &raquo;
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="기본 자료형">
+                        <th scope="row">기본 자료형</th>
+                        <td>
+                            1. 기본 자료형은 사용자가 정의하지 않은, 이미 자바 언어에 정의된 자료형을 의미한다.
+                            <br>2. 자료형은 메모리 상에서 변수가 존재하는 형식을 정의한다.
+                            <br>3. 자바의 8가지 기본 자료형 : boolean, char, byte, short, int, long, float, double
+                            <br>4. 식별자 없이 값 자체를 나타내는 코드를 리터럴(Literal)이라 부른다. 각 자료형에 대응하는 리터럴 표기는 코드를 참고.
+                            <button type="button" onclick="javascript:showCode('/Basic Concepts/src/Type.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 자료형 및 리터럴 표기 &raquo;
+                            </button>
+                            <br>5. 자바는 강한 타입 검사를 하며, 이는 자바스크립트와 같이 null, '', 0 등을 false로 간주하거나 하는 일이 결코 없음을 의미한다.
+                            <button type="button" onclick="javascript:showCode('1\n5\n', 'console');" class="btn btn-primary btn-sm">
+                                View Console : 주석 &raquo;
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
             <div class="row c">
                 <div class="col-md-4 con-lv-1">
                     <h2>기본 문법 1</h2>
                     <p>
-                        1. // : 한 줄 주석, /* */ : 여러 줄 주석
                         <br>2. 식별자에 포함할 수 있는 특수문자 : _, $
                         <br>3. 기본 자료형 : boolean, char, byte, short, int, long, float, double
                     </p>
