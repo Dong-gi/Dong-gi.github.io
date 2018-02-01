@@ -168,8 +168,14 @@ function showCode(fileNameOrText, lan) {
             $("div#code-" + fileNameOrText + " div.modal-body").load((original.startsWith('/') ? "" : "./") + original);
             $("div#code-" + fileNameOrText).modal("show");
         } else if (isPlaneText && !original.endsWith(".txt")) {
-            $("div#code-" + fileNameOrText + " div.modal-body code").text(hljs.highlight("shell", original)['value'].trim());
+            $("div#code-" + fileNameOrText + " div.modal-body").empty();
+            $("div#code-" + fileNameOrText + " div.modal-body").text(hljs.highlight("shell", original)['value'].trim());
             $("div#code-" + fileNameOrText).modal("show");
+        } else if (isPlaneText && original.endsWith(".txt")) {
+            $("div#code-" + fileNameOrText + " div.modal-body").load((original.startsWith('/') ? "" : "./") + original, (response, status, xhr) => {
+                $("div#code-" + fileNameOrText + " div.modal-body").html(hljs.highlight(lan, $("div#code-" + fileNameOrText + " div.modal-body").text())['value'].trim());
+                $("div#code-" + fileNameOrText).modal("show");
+            });
         } else {
             $("div#code-" + fileNameOrText + " div.modal-body code").load((original.startsWith('/') ? "" : "./") + original, (response, status, xhr) => {
                 $("div#code-" + fileNameOrText + " div.modal-body code").html(hljs.highlight(lan, $("div#code-" + fileNameOrText + " div.modal-body code").text())['value'].trim());
