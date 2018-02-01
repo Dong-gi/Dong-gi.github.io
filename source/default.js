@@ -208,6 +208,7 @@ function copyToClipboard(element) {
     document.execCommand("copy");
     showSnackbar("Copied!!", parent);
     hiddenElement.remove();
+    parent.focus();
 }
 function downloadCode(title, text) {
     var hiddenElement = document.createElement('a');

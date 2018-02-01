@@ -1,0 +1,10 @@
+num : 11111111111111111111111111111100
+<<  : 11111111111111111111000000000000
+>>  : 11111111111111111111111111111111
+>>> :           1111111111111111111111
+true
+true
+false
+true
+java.lang.ArithmeticException: / by zero
+	at Operator.main(Operator.java:16)

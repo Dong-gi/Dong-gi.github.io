@@ -5,9 +5,33 @@
     <textarea class="form-control" rows="7" id="ConvertNewLine-output"></textarea>
     <br>
     <div align="center">
-        <button onclick="javascript:
-        $('#ConvertNewLine-output').val($('#ConvertNewLine-input').val().replace(/\n/gm, '\\n').trim());" class="btn btn-primary">Convert all line to '\\n'</button>
-        <button onclick="javascript:
-        copyToClipboard($('#ConvertNewLine-output'));" class="btn btn-primary">Copy</button>
+        <button onclick="javascript:ConvertNewLine_Unescape();" class="btn btn-primary">Unescape Input</button>
+        <button onclick="javascript:ConvertNewLine_Convert();" class="btn btn-primary">Convert '\n' to '\\n'</button>
+        <button onclick="javascript:ConvertNewLine_Inverse();" class="btn btn-primary">Convert '\\n' to '\n'</button>
+        <button onclick="javascript:copyToClipboard($('#ConvertNewLine-output'));" class="btn btn-primary">Copy</button>
+        <button onclick="javascript:ConvertNewLine_Reset();" class="btn btn-primary">Reset</button>
     </div>
 </div>
+<script>
+    function ConvertNewLine_Unescape() {
+        $('#ConvertNewLine-input').val(
+            $('#ConvertNewLine-input')
+                .val()
+                .replace(/&gt;/gm, '>')
+                .replace(/&lt;/gm, '<')
+                .replace(/&quot;/gm, '"')
+                .replace(/&amp;/gm, '&')
+                .trim()
+        );
+    }
+    function ConvertNewLine_Convert() {
+        $('#ConvertNewLine-output').val($('#ConvertNewLine-input').val().replace(/\n/gm, '\\n').trim());
+    }
+    function ConvertNewLine_Inverse() {
+        $('#ConvertNewLine-output').val($('#ConvertNewLine-input').val().replace(/\\n/gm, '\n').trim());
+    }
+    function ConvertNewLine_Reset() {
+        $('#ConvertNewLine-input').val("");
+        $('#ConvertNewLine-output').val("");
+    }
+</script>

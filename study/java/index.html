@@ -64,7 +64,8 @@
                             1. 식별자(Identifier)는 의미 있는 코드에 붙이는 이름을 의미한다. 의미 있는 코드에는 변수(Variable), 상수(Constant), 메서드, 클래스 등이 있다.
                             <br>2. 자바 식별자는 '_', '$'의 사용을 허용한다.
                             <br>3. 식별자 관례 : 상수를 제외한 식별자는 CamelCase 이용. 클래스는 대문자로 시작. 상수는 대문자로 이루어진 SNAKE_CASE 이용.
-                            <br><a role="button" class="btn btn-info btn-sm" href="https://en.wikipedia.org/wiki/Camel_case">카멜 케이스 설명</a>
+                            <br>
+                            <a role="button" class="btn btn-info btn-sm" href="https://en.wikipedia.org/wiki/Camel_case">카멜 케이스 설명</a>
                             <a role="button" class="btn btn-info btn-sm" href="https://en.wikipedia.org/wiki/Snake_case">스네이크 케이스 설명</a>
                             <button type="button" onclick="javascript:showCode('BasicConcepts/src/Identifier.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 식별자 및 식별자를 통한 자료형 구분 &raquo;
@@ -74,15 +75,54 @@
                     <tr class="con-lv-3" con-title="자료형">
                         <th scope="row">자료형</th>
                         <td>
-                            1. 기본 자료형(Data Type)은 사용자가 정의하지 않은, 이미 자바 언어에 정의된 자료형을 의미한다.
+                            1. 기본 자료형(Base Type)은 사용자가 정의하지 않은, 이미 자바 언어에 정의된 자료형을 의미한다.
                             <br>2. 자료형은 메모리 상에서 변수가 존재하는 형식을 정의한다.
                             <br>3. 자바의 8가지 기본 자료형 : boolean, char, byte, short, int, long, float, double
-                            <br>4. 식별자 없이 값 자체를 나타내는 코드를 리터럴(Literal)이라 부른다. 각 자료형에 대응하는 리터럴 표기는 코드를 참고.
+                            <br>4. 식별자 없이 값 자체를 나타내는 코드를 리터럴(Literal)이라 부른다. 각 자료형에 대응하는 리터럴 표기는 코드를 참고. 예시에서 '+' 연산자가 기본 자료형
+                            각각에 대해 문자열 연결을 해줌을 볼 수 있다. 하지만 자바는 연산자 재정의를 지원해주지는 않으므로 오해하지 말아야 한다.
                             <button type="button" onclick="javascript:showCode('BasicConcepts/src/Type.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 자료형 및 리터럴 표기 &raquo;
                             </button>
-                            <br>5. 자바는 강한 타입 검사를 하며, 이는 자바스크립트와 같이 null, '', 0 등을 false로 간주하거나 하는 일이 결코 없음을 의미한다.
                             <button type="button" onclick='javascript:showCode("BasicConcepts/console/con2.txt", "console");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <br>5. 자바는 강한 타입 검사를 하며, 이는 자바스크립트와 같이 null, '', 0 등을 false로 간주하거나 하는 일이 결코 없음을 의미한다.
+                            <br>6. 참조 자료형(Reference Type)은 기본 자료형을 제외한 모든 자료형을 포함하며, 메모리의 주소를 통해 값에 접근한다. C/C++의 포인터와 같지만, 자바는
+                            포인터 연산을 지원하지는 않는다.
+                            <br>다음 예시는 자바의 배열에 대해 보인다. 자바의 다차원 배열은 기본적으로 Jagged Array이다.
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Type2.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 배열 &raquo;
+                            </button>
+                            <br>7. 기본 자료형 변수는 정적 할당, 참조 자료형 변수는 동적 할당된다. 동적 할당된 객체들은 자동으로 GC 대상이 된다.
+                            <br>정적 할당이란 컴파일러가 메모리 점유를 정확하게 예측할 수 있는 변수를 생성하는 방법으로, 선언과 동시에 스택 영역에 할당되어 코드 블록이 끝나는 순간 해제된다.
+                            <br>반면 동적 할당되는 객체들은 힙 영역에 생성되며, 그 참조가 유지되는 한 프로그램 종료시까지 유지된다.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="연산자">
+                        <th scope="row">연산자</th>
+                        <td>
+                            1. 다음 예시는 비트 연산자와 0 나누기를 보여준다. 정수 0으로 나누는 것은 허용되지 않지만, 실수 0.으로 나누는 것은 허용된다. 다만, 0.으로 나눈 결과를 비교할 때는 예시와 같이 Double 클래스 메서드를 이용하는 것이 정확하다.
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Operator.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 연산 예시 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("BasicConcepts/console/con3.txt", "console");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="문장">
+                        <th scope="row">문장</th>
+                        <td>
+                            1. if ~ else if ~ else : 조건식에는 boolean 값만 허용된다.
+                            <br>2. switch : 정수(char 포함), String, Enum이 허용된다.
+                            <br>3. for : label을 설정해 중첩된 루프들 중 어느 것이든 중지시킬 수 있다. Iterable하면 향상된 for 구문을 이용할 수 있다.
+                            <br>4. while, do ~ while;
+                            <a role="button" class="btn btn-info btn-sm" href="https://en.wikipedia.org/wiki/Camel_case">카멜 케이스 설명</a>
+                            <a role="button" class="btn btn-info btn-sm" href="https://en.wikipedia.org/wiki/Snake_case">스네이크 케이스 설명</a>
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Identifier.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 식별자 및 식별자를 통한 자료형 구분 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("BasicConcepts/console/con4.txt", "console");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -91,18 +131,6 @@
             </table>
 
             <div class="row">
-                <div class="col-md-4">
-                    <h2>기본 문법 2</h2>
-                    <p>
-                        1. if ~ else if ~ else
-                        <br>2. switch : 정수형, char, string 가능
-                        <br>3. for : label 설정 가능. Iterable하면 향상된 for문 이용 가능
-                        <br>4. while, do ~ while
-                    </p>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(1, 'basic2');" role="button">View Code : switch, break with label, enhanced for &raquo;</a>
-                    </p>
-                </div>
                 <div class="col-md-4">
                     <h2>접근 제한자</h2>
                     <p>
