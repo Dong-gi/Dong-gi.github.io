@@ -144,7 +144,7 @@ function showCode(fileNameOrText, lan) {
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">\
                     <div class="modal-content">\
                         <div class="modal-header">\
-                            <h2 style="display: inline-block;" class="modal-title">' + (isPlaneText? lan : original.split('/').pop()) + '</h2>\
+                            <h2 style="display: inline-block;" class="modal-title">' + (isPlaneText ? lan : original.split('/').pop()) + '</h2>\
                             <button style="float: right;" type="button" class="close" data-dismiss="modal" aria-label="Close">\
                                 <span aria-hidden="true" style="color: black; font-size: 2em; font-weight: bold;">&times;</span>\
                             </button>\
@@ -169,16 +169,11 @@ function showCode(fileNameOrText, lan) {
             $("div#code-" + fileNameOrText).modal("show");
         } else if (isPlaneText && !original.endsWith(".txt")) {
             $("div#code-" + fileNameOrText + " div.modal-body").empty();
-            $("div#code-" + fileNameOrText + " div.modal-body").text(hljs.highlight("shell", original)['value'].trim());
+            $("div#code-" + fileNameOrText + " div.modal-body").text(hljs.highlight("shell", original)['value'].replace(/\t/gm, '    '));
             $("div#code-" + fileNameOrText).modal("show");
-        } else if (isPlaneText && original.endsWith(".txt")) {
-            $("div#code-" + fileNameOrText + " div.modal-body").load((original.startsWith('/') ? "" : "./") + original, (response, status, xhr) => {
-                $("div#code-" + fileNameOrText + " div.modal-body").html(hljs.highlight(lan, $("div#code-" + fileNameOrText + " div.modal-body").text())['value'].trim());
-                $("div#code-" + fileNameOrText).modal("show");
-            });
         } else {
             $("div#code-" + fileNameOrText + " div.modal-body code").load((original.startsWith('/') ? "" : "./") + original, (response, status, xhr) => {
-                $("div#code-" + fileNameOrText + " div.modal-body code").html(hljs.highlight(lan, $("div#code-" + fileNameOrText + " div.modal-body code").text())['value'].trim());
+                $("div#code-" + fileNameOrText + " div.modal-body code").html(hljs.highlight(lan, $("div#code-" + fileNameOrText + " div.modal-body code").text())['value'].replace(/\t/gm, '    '));
                 $("div#code-" + fileNameOrText).modal("show");
             });
         }
@@ -198,7 +193,7 @@ function copyToClipboard(element) {
         TEXTAREA: true
     };
     var parent = element;
-    while(notActive[parent.prop('tagName')]) {
+    while (notActive[parent.prop('tagName')]) {
         parent = parent.parent();
     }
     var hiddenElement = $('<textarea></textarea>');
