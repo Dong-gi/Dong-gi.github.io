@@ -1,5 +1,4 @@
 var index = {};
-var indexInv = {};
 var lv1dropup;
 var lv2dropup;
 var lv3dropup;
@@ -29,7 +28,6 @@ $(function () {
                                     var conLv3s = $(conLv2s[j]).find(".con-lv-3");
                                     for (var k = 0; k < conLv3s.length; ++k) {
                                         index[$(conLv2s[j]).attr('id')].push($(conLv3s[k]).attr('id'));
-                                        indexInv[$(conLv3s[k]).attr('id')] = [$(conLv1s[i]).attr('id'), $(conLv2s[j]).attr('id')];
                                     }
                                 }
                             }
@@ -44,34 +42,39 @@ $(function () {
                             setWidthLimit();
 
                             /* 색인 자동 갱신 */
-                            var conLv3s = $(".con-lv-3");
                             window.onscroll = function () {
                                 var pos = (document.scrollTop || window.pageYOffset) - (document.clientTop || 0) + 52;
-                                var current = conLv3s[0];
-                                for (var i = 0; i < conLv3s.length; ++i) {
-                                    if (pos < $(conLv3s[i]).offset().top) {
-                                        break;
+                                function findCurrentContent(conLvs) {
+                                    var current = conLvs[0];
+                                    for (var i = 0; i < conLvs.length; ++i) {
+                                        if (pos < $(conLvs[i]).offset().top) {
+                                            break;
+                                        }
+                                        current = conLvs[i];
                                     }
-                                    current = conLv3s[i];
+                                    return current;
                                 }
-
-                                var conLv1 = indexInv[$(current).attr('id')][0];
-                                $("#dropup-lv-1 button").text($("#" + conLv1).attr('con-title'));
-                                var subIndex = index[conLv1];
+                                
+                                var conLv1 = findCurrentContent(conLv1s);
+                                $("#dropup-lv-1 button").text($(conLv1).attr('con-title'));
+                                var subIndex = index[$(conLv1).attr('id')];
                                 lv2dropup.empty();
                                 for (var i = 0; i < subIndex.length; ++i) {
                                     lv2dropup.append('<a class="dropdown-item" href="javascript:updateDropupManually(\'' + subIndex[i] + '\');">' + $('#' + subIndex[i]).attr('con-title') + '</a>');
                                 }
 
-                                var conLv2 = indexInv[$(current).attr('id')][1];
-                                $("#dropup-lv-2 button").text($("#" + conLv2).attr('con-title'));
-                                subIndex = index[conLv2];
+                                var conLv2s = $(conLv1).find(".con-lv-2");
+                                var conLv2 = findCurrentContent(conLv2s);
+                                $("#dropup-lv-2 button").text($(conLv2).attr('con-title'));
+                                subIndex = index[$(conLv2).attr('id')];
                                 lv3dropup.empty();
                                 for (var i = 0; i < subIndex.length; ++i) {
                                     lv3dropup.append('<a class="dropdown-item" href="javascript:updateDropupManually(\'' + subIndex[i] + '\');">' + $('#' + subIndex[i]).attr('con-title') + '</a>');
                                 }
 
-                                $("#dropup-lv-3 button").text($(current).attr('con-title'));
+                                var conLv3s = $(conLv2).find(".con-lv-3");
+                                var conLv3 = findCurrentContent(conLv3s);
+                                $("#dropup-lv-3 button").text($(conLv3).attr('con-title'));
                             };
 
                             $(window).resize(function () { setWidthLimit(); });
