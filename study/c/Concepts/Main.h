@@ -12,12 +12,12 @@ public:
 	Main() {
 		cout << "Constructor Called" << endl;
 	}
-	Main(string message) /* const »ı¼ºÀÚ, ¼Ò¸êÀÚ¿¡¼± ºÒ°¡ */ {
+	Main(string message) /* const ìƒì„±ì, ì†Œë©¸ìì—ì„  ë¶ˆê°€ */ {
 		str = message;
 	}
-	/** »ı¼ºÀÚ ÃÊ±âÈ­ ¸®½ºÆ®
-	* Å¬·¡½º¿¡ ¸â¹ö°¡ Á¤ÀÇµÈ ¼ø¼­´ë·Î ÃÊ±âÈ­µÇ¹Ç·Î ¼ø¼­¿¡ À¯ÀÇ.
-	* ÀÌ°ÍÀ» »ç¿ëÇØ¾ß¸¸ ÇÏ´Â °æ¿ì : const ¸â¹ö, ÂüÁ¶ Å¸ÀÔ ¸â¹ö, ±âº» »ı¼ºÀÚ°¡ ¾ø´Â ¸â¹ö
+	/** ìƒì„±ì ì´ˆê¸°í™” ë¦¬ìŠ¤íŠ¸
+	* í´ë˜ìŠ¤ì— ë©¤ë²„ê°€ ì •ì˜ëœ ìˆœì„œëŒ€ë¡œ ì´ˆê¸°í™”ë˜ë¯€ë¡œ ìˆœì„œì— ìœ ì˜.
+	* ì´ê²ƒì„ ì‚¬ìš©í•´ì•¼ë§Œ í•˜ëŠ” ê²½ìš° : const ë©¤ë²„, ì°¸ì¡° íƒ€ì… ë©¤ë²„, ê¸°ë³¸ ìƒì„±ìê°€ ì—†ëŠ” ë©¤ë²„
 	*/
 	Main(const char c) : Main("char : ") {
 		str.append(1, c);
@@ -26,7 +26,7 @@ public:
 		for (auto s : args)
 			str = s;
 	}
-	// º¹»ç»ı¼ºÀÚ
+	// ë³µì‚¬ìƒì„±ì
 	Main(const Main& main) : str(main.str) {}
 	~Main() {
 		cout << "Distructor Called" << endl;
@@ -42,7 +42,7 @@ public:
 
 	void method();
 
-	static void doSomething() /* const << Á¤Àû ¸Ş¼­µå¿¡¼­µµ ºÒ°¡ */ {
+	static void doSomething() /* const << ì •ì  ë©”ì„œë“œì—ì„œë„ ë¶ˆê°€ */ {
 		Main().method();
 
 		Main m("World");
@@ -56,7 +56,7 @@ public:
 		Main m3{ "No", "Yes" };
 		m3.method();
 
-		Main m4 = m3; // º¹»ç»ı¼ºÀÚ È£Ãâ
+		Main m4 = m3; // ë³µì‚¬ìƒì„±ì í˜¸ì¶œ
 
 		printf("\nPress Enter to Exit");
 		getchar();

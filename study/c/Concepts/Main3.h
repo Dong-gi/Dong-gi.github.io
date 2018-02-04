@@ -5,7 +5,7 @@
 
 using namespace std;
 
-class Sub2; // Å¬·¡½º Æ÷¿öµå ¼±¾ğ
+class Sub2; // í´ë˜ìŠ¤ í¬ì›Œë“œ ì„ ì–¸
 
 class Main3 {
 private:
@@ -15,12 +15,12 @@ public:
 	Main3(string name) : name(name) {}
 
 	friend class Sub2;
-	// ÁÂº¯ÀÌ ±»ÀÌ Main ÀÎ½ºÅÏ½º°¡ ¾Æ´Ï¶óµµ Main »ı¼ºÀÚ¿Í È£È¯µÈ´Ù¸é µ¿ÀÛÇÑ´Ù.
+	// ì¢Œë³€ì´ êµ³ì´ Main ì¸ìŠ¤í„´ìŠ¤ê°€ ì•„ë‹ˆë¼ë„ Main ìƒì„±ìì™€ í˜¸í™˜ëœë‹¤ë©´ ë™ì‘í•œë‹¤.
 	friend const Main3 operator+(const Main3& left, const Main3& right) {
 		return Main(left.name + right.name);
 	}
 
-	// ¾Æ·¡´Â ÁÂº¯ÀÌ Main ÀÎ½ºÅÏ½ºÀÏ ¶§¸¸ µ¿ÀÛÇÑ´Ù.
+	// ì•„ë˜ëŠ” ì¢Œë³€ì´ Main ì¸ìŠ¤í„´ìŠ¤ì¼ ë•Œë§Œ ë™ì‘í•œë‹¤.
 	const Main3 operator+(const Main3& m) const {
 		return Main3(name + m.name);
 	}

@@ -5,7 +5,7 @@
 
 using namespace std;
 
-class Sub; // Å¬·¡½º Æ÷¿öµå ¼±¾ğ
+class Sub; // í´ë˜ìŠ¤ í¬ì›Œë“œ ì„ ì–¸
 
 class Main2 {
 private:
