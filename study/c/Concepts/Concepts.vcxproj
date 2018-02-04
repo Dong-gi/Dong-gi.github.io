@@ -111,11 +111,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Main.h" />
+    <ClInclude Include="Main2.h" />
+    <ClInclude Include="Main3.h" />
+    <ClInclude Include="Main4.h" />
     <ClInclude Include="names.h" />
+    <ClInclude Include="Sub.h" />
+    <ClInclude Include="Sub2.h" />
+    <ClInclude Include="Sub3.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="array.c" />
+    <ClCompile Include="constexpr.cpp" />
+    <ClCompile Include="error.c" />
+    <ClCompile Include="exception.cpp" />
+    <ClCompile Include="explicit.cpp" />
+    <ClCompile Include="hello.cpp" />
+    <ClCompile Include="initializer_list.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="not_operator.c" />
-    <ClCompile Include="start.c" />
+    <ClCompile Include="pointer.c" />
+    <ClCompile Include="start.cpp" />
+    <ClCompile Include="type.cpp" />
+    <ClCompile Include="variable_arguments.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

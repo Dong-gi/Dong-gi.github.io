@@ -18,12 +18,66 @@
     <ClInclude Include="names.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Main.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Main2.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Sub.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Main3.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Sub2.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Main4.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Sub3.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="not_operator.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="start.c">
+    <ClCompile Include="array.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="pointer.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="error.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="variable_arguments.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="start.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="hello.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="type.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="exception.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="constexpr.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="explicit.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="initializer_list.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

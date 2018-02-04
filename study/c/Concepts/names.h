@@ -1,2 +1,12 @@
 #pragma once
 void not_operator(void);
+void array(void);
+void pointer(void);
+void error(void);
+void variable_arguments(void);
+void hello(void);
+void type(void);
+void eexception(void);
+void cconstexpr(void);
+void eexplicit(void);
+void iinitializer_list(void);
