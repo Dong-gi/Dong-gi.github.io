@@ -1,34 +1,100 @@
-<?php
-header('Content-Type: text/html; charset=utf-8');
-setlocale(LC_TIME, "kr_KR.utf8");
-date_default_timezone_set('Asia/Seoul');
-?>
+<!doctype html>
 
-<html>
-    <head>
-        <title>wiz</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<style>
-* { font-size: 15px; }
-		</style>
-    </head>
-    <body>
-		<h1>Auto Generated Index Page</h1>
-<?php
-$current_directory = getcwd();
-$files = scandir($current_directory);
+<html lnag="kor">
 
-for($i = 1, $count = 1; $i < count($files); $i++) {
-    $words = explode(".", $files[$i]);
-    $ext = $words[count($words)-1];
-    if (strcmp($ext, "html") == 0 || strcmp($ext, "php") == 0) {
-        echo '<a href="' . $files[$i] . '">' . $count++ . ' : ' . $files[$i] . '</a><br/>';
-    }
-}
-?>
-		<p>The favicon used in this site made by
-		<a href="http://www.flaticon.com/authors/madebyoliver">Madebyoliver</a>
-        from <a href="http://www.flaticon.com">www.flaticon.com</a>
-        is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
-    </body>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <script src="/source/highlight.pack.js"></script>
+    <link rel="stylesheet" href="/source/xcode.css">
+    <link rel="stylesheet" href="/source/default.css">
+    <script src="/source/default.js"></script>
+
+    <title>wiz</title>
+</head>
+
+<body>
+    <nav id="top-nav" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark"></nav>
+
+    <nav id="bottom-nav" class="navbar fixed-bottom navbar-expand navbar-dark bg-dark"></nav>
+
+    <main role="main">
+
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="display-3">JavaScript</h1>
+            </div>
+        </div>
+
+        <div class="container table-responsive con-lv-1" con-title="Front End">
+            <h2>Front End</h2>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Contents</th>
+                    </tr>
+                </thead>
+                <tbody class="con-lv-2" con-title="문법">
+                    <tr>
+                        <th scope="row" colspan="2">문법</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="변수">
+                        <th scope="row">변수</th>
+                        <td>
+                            1. 자바스크립트는 CamelCase 이용. 변수명에 '_'과 '$'가 허용된다.
+                            <br>2. 느슨한 타입 이용. typeof 연산자로 확인.
+                            <br>3. var : 지역변수 선언 키워드
+                            <br>4. 타입 : Object, String, Number, Boolean, Undefined, Null
+                            <br>&raquo; Boolean() : "", 0, NaN, null, undefined => false, 그 외 => true
+                            <br>&raquo; Number(), parseInt(), parseFloat(), number.toString(radix)
+                            <br>&raquo; (null == undefined) === true
+                            <br>&raquo; 문자 리터럴 : \xFF, \uFFFF
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="연산자">
+                        <th scope="row">연산자</th>
+                        <td>
+                            1. 비트 연산자 : ~, &amp;, |, ^, &lt;&lt;, &gt;&gt;, &gt;&gt;&gt;
+                            <br>2. Boolean 연산자 : !, &amp;&amp;, || &lt;- short circuit
+                            <br>3. var n = (1, 2, 3, 4, 5); &raquo; n === 5
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="문장">
+                        <th scope="row">문장</th>
+                        <td>
+                            1. for-in : 객체 프로퍼티 순회
+                            <br>2. labelName: 문장 &raquo; outerLoop: for(){ /*~*/ break outerLoop; /*~*/ continue outerLoop; }
+                            <br>3. with (object) { } : 스코프 고정
+                            <br>4. switch : 모든 타입에 대해 동작, case에 상수가 아닌 표현식도 가능
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="함수">
+                        <th scope="row">함수</th>
+                        <td>
+                            1. 함수는 arguments 객체를 통해 매개변수에 접근.
+                            <br>2. 오버로딩 불가. 매개변수 길이 불일치해도 됨.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="주석">
+                        <th scope="row">주석</th>
+                        <td><noscript> 자바스크립트를 지원하지 않/못하는 경우 출력
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <hr>
+
+    <footer id="main-footer" class="container"></footer>
+</body>
+
 </html>
