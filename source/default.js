@@ -2,6 +2,9 @@ var index = {};
 var lv1dropup;
 var lv2dropup;
 var lv3dropup;
+var buttonMaxWidth;
+var dropupMaxHeight;
+var dropupMaxWidth;
 
 $(function () {
     $("nav#top-nav").load("/source/nav-top.html", (response, status, xhr) => {
@@ -39,7 +42,7 @@ $(function () {
                             for (var i = 0; i < conLv1s.length; ++i) {
                                 lv1dropup.append($('<a class="dropdown-item" href="javascript:updateDropupManually(\'' + $(conLv1s[i]).attr('id') + '\');">' + $(conLv1s[i]).attr('con-title') + '</a>'));
                             }
-                            setWidthLimit();
+                            setIndexSize();
 
                             /* 색인 자동 갱신 */
                             window.onscroll = function () {
@@ -75,9 +78,22 @@ $(function () {
                                 var conLv3s = $(conLv2).find(".con-lv-3");
                                 var conLv3 = findCurrentContent(conLv3s);
                                 $("#dropup-lv-3 button").text($(conLv3).attr('con-title'));
+
+                                $('nav.fixed-bottom button').css({
+                                    "max-width": buttonMaxWidth + "px",
+                                    "overflow": "auto"
+                                });
+                                $('nav.fixed-bottom div.dropdown-menu').css({
+                                    'max-height': dropupMaxHeight + "px",
+                                    'overflow': 'auto'
+                                });
+                                $('nav.fixed-bottom div.dropdown-menu a').css({
+                                    'max-width': dropupMaxWidth + "px",
+                                    'overflow': 'auto'
+                                });
                             };
 
-                            $(window).resize(function () { setWidthLimit(); });
+                            $(window).resize(function () { setIndexSize(); });
                         }
                     });
                 }
@@ -118,20 +134,24 @@ function updateDropupManually(id) {
         scrollTop: tag.offset().top - 52
     }, 500);
 }
-function setWidthLimit() {
+function setIndexSize() {
     try {
-        var tags = $('nav.fixed-bottom button');
-        var newWidth = window.innerWidth / 5;
-        for (var i = 0; i < tags.length; ++i) {
-            $(tags[i]).css('max-width', newWidth);
-            $(tags[i]).css('overflow', 'auto');
-        }
-        tags = $('nav.fixed-bottom div.dropdown-menu a');
-        newWidth = newWidth > 150 ? newWidth : 150;
-        for (var i = 0; i < tags.length; ++i) {
-            $(tags[i]).css('max-width', newWidth);
-            $(tags[i]).css('overflow', 'auto');
-        }
+        buttonMaxWidth = window.innerWidth / 5;
+        dropupMaxHeight = window.innerHeight / 2;
+        dropupMaxWidth = buttonMaxWidth > 150? buttonMaxWidth : 150;
+
+        $('nav.fixed-bottom button').css({
+            "max-width": buttonMaxWidth + "px",
+            "overflow": "auto"
+        });
+        $('nav.fixed-bottom div.dropdown-menu').css({
+            'max-height': dropupMaxHeight + "px",
+            'overflow': 'auto'
+        });
+        $('nav.fixed-bottom div.dropdown-menu a').css({
+            'max-width': dropupMaxWidth + "px",
+            'overflow': 'auto'
+        });
     } catch (err) { console.log(err); }
 }
 

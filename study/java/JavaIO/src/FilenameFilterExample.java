@@ -18,7 +18,7 @@ public class FilenameFilterExample {
 			System.out.print(file.getName() + ", ");
 		}
 		System.out.println("\n\n공백이 있는 목록");
-		for(File file : root.listFiles((dir, name) -> { return name.contains(" "); })) {
+		for(File file : root.listFiles((dir, name) -> name.contains(" "))) {
 			System.out.print(file.getName() + ", ");
 		}
 	}

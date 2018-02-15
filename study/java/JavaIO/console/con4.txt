@@ -1,0 +1,15 @@
+All anchor tag lines>>
+<a href="#news_cast" onclick="document.getElementById('news_cast2').tabIndex = -1;document.getElementById('news_cast2').focus();return false;"><span>뉴스스탠드 바로가기</span></a>
+<a href="#themecast" onclick="document.getElementById('themecast').tabIndex = -1;document.getElementById('themecast').focus();return false;"><span>주제별캐스트 바로가기</span></a>
+<a href="#time_square" onclick="document.getElementById('time_square').tabIndex = -1;document.getElementById('time_square').focus();return false;"><span>타임스퀘어 바로가기</span></a>
+<a href="#shop_cast" onclick="document.getElementById('shop_cast').tabIndex = -1;document.getElementById('shop_cast').focus();return false;"><span>쇼핑캐스트 바로가기</span></a>
+<a href="#account" onclick="document.getElementById('account').tabIndex = -1;document.getElementById('account').focus();return false;"><span>로그인 바로가기</span></a>
+<area data-clk="top.spe" shape="rect" coords="0,0,530,170" alt="건강한 한 해 보내세요!" title="건강한 한 해 보내세요!" href="https://search.naver.com/search.naver?where=nexearch&sm=top_brd&fbm=0&ie=utf8&query=%EC%84%A4%EB%82%A0" >
+<area data-clk="top.spelink" shape="rect" coords="1150,100,1260,170" alt="" title="" href="http://naver_diary.blog.me/221207935409" >
+<a data-clk="top.mkhome" href="http://help.naver.com/support/alias/contents2/naverhome/naverhome_1.naver" class="al_favorite">네이버를 시작페이지로<span class="al_ico_link"></span></a>
+<a data-clk="top.jrnaver" href="http://jr.naver.com" class="al_jr"><span class="blind">쥬니어네이버</span><span class="al_ico"></span></a>
+<a data-clk="top.happybean" href="http://happybean.naver.com/main/SectionMain.nhn" class="al_happybean"><span class="blind">해피빈</span><span class="al_ico"></span></a>
+<a href="javascript:;" role="button" tabindex="2" class="btn_arw _btn_arw fold"><span class="blind _text">자동완성 펼치기</span><span class="ico_arr"></span></a>
+<a href="javascript:;" id="ke_kbd_btn" role="button" class="btn_keyboard" onclick="nx_ime_load(this)" data-clk="sch.ime"><span class="blind">한글 입력기</span><span class="ico_keyboard"></span></a>
+<li class="_item"><a href="#" onclick="return false;">@txt@</a><span style="display:none" id="rank@rank@">@txt@</span></li>
+... 생략

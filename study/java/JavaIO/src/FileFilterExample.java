@@ -11,7 +11,7 @@ public class FileFilterExample {
 		}
 		
 		System.out.println("\n\n공백이 있는 목록");
-		for(File file : root.listFiles((file) -> { return file.getName().contains(" "); })) {
+		for(File file : root.listFiles((file) -> file.getName().contains(" "))) {
 			System.out.print(file.getName() + ", ");
 		}
 	}
