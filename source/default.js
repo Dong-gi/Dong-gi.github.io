@@ -196,7 +196,13 @@ function showCode(fileNameOrText, lan) {
             $("div#code-" + fileNameOrText).modal("show");
         } else {
             $("div#code-" + fileNameOrText + " div.modal-body code").load((original.startsWith('/') ? "" : "./") + original, (response, status, xhr) => {
-                $("div#code-" + fileNameOrText + " div.modal-body code").html(hljs.highlight(lan, $("div#code-" + fileNameOrText + " div.modal-body code").text())['value'].replace(/\t/gm, '    '));
+                $("div#code-" + fileNameOrText + " div.modal-body code").html(
+                    hljs.highlight(lan, $("div#code-" + fileNameOrText + " div.modal-body code").text())['value']
+                    .replace(/>/gm, '&gt;')
+                    .replace(/</gm, '&lt;')
+                    .replace(/"/gm, '&quot;')
+                    .replace(/&/gm, '&amp;')
+                    .replace(/\t/gm, '    '));
                 $("div#code-" + fileNameOrText).modal("show");
             });
         }
