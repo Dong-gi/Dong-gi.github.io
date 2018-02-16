@@ -204,7 +204,7 @@ function showCode(fileNameOrText, lan, alt) {
         } else {
             $("div#code-" + fileNameOrText + " div.modal-body code").load((original.startsWith('/') ? "" : "./") + original, (response, status, xhr) => {
                 if (alt) {
-                    $("div#code-" + fileNameOrText + " div.modal-body code").text(response).replace(/\t/gm, '    ');
+                    $("div#code-" + fileNameOrText + " div.modal-body code").text(response.replace(/\t/gm, '    '));
                 } else {
                     $("div#code-" + fileNameOrText + " div.modal-body code").html(hljs.highlight(lan, $("div#code-" + fileNameOrText + " div.modal-body code").text())['value'].replace(/\t/gm, '    '));
                 }
