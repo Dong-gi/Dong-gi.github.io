@@ -8,8 +8,8 @@ main {
 }
 
 div.row div,
-div.row p {
-    margin: 1rem;
+div.row p{
+    margin: 0.5rem;
 }
 
 /* Overwrite the Bootstrap's settings */
@@ -71,7 +71,7 @@ div.row p {
     border-radius: 2px;
     padding: 16px;
     position: fixed;
-    z-index: 1;
+    z-index: 1000000;
     left: 50%;
     bottom: 30px;
     font-size: 17px;

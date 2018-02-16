@@ -1,5 +1,5 @@
 <div class="container">
-    <a class="navbar-brand" href="javascript:;">Index</a>
+    <a class="navbar-brand" href="javascript:;">Idx</a>
     <div class="collapse navbar-collapse">
         <div class="btn-group dropup" id="dropup-lv-1">
             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -19,5 +19,15 @@
             </button>
             <div class="dropdown-menu"></div>
         </div>
+        <div class="btn-group dropup invisible" id="dropup-result">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                결과
+            </button>
+            <div class="dropdown-menu"></div>
+        </div>
+        <form class="form-inline">
+            <input style="overflow:auto; height:35px; border-radius:4px" type="text" placeholder="title" id="input-title">
+            <a class="btn btn-outline-success my-2" href="javascript:titleSearch();">검색</a>
+        </form>
     </div>
 </div>

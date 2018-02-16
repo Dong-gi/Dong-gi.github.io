@@ -8,97 +8,86 @@ var dropupMaxWidth;
 
 $(function () {
     $("nav#top-nav").load("/source/nav-top.html", (response, status, xhr) => {
-        if (status == "success") {
-            $("footer#main-footer").load("/source/footer.html", (response, status, xhr) => {
-                if (status == "success") {
-                    $("nav#bottom-nav").load("/source/nav-bottom.html", (response, status, xhr) => {
-                        if (status == "success") {
-                            /* 모든 콘텐츠에 id 부여 */
-                            var contentID = 0;
-                            var contents = $(".con-lv-1, .con-lv-2, .con-lv-3");
-                            for (var i = 0; i < contents.length; ++i) {
-                                var id = 'con-id-' + contentID++;
-                                index[id] = [];
-                                $(contents[i]).attr('id', id);
-                            }
-
-                            /* 계층을 이룬 id들에 대해 색인 생성 */
-                            var conLv1s = $(".con-lv-1");
-                            for (var i = 0; i < conLv1s.length; ++i) {
-                                var conLv2s = $(conLv1s[i]).find(".con-lv-2");
-                                for (var j = 0; j < conLv2s.length; ++j) {
-                                    index[$(conLv1s[i]).attr('id')].push($(conLv2s[j]).attr('id'));
-                                    var conLv3s = $(conLv2s[j]).find(".con-lv-3");
-                                    for (var k = 0; k < conLv3s.length; ++k) {
-                                        index[$(conLv2s[j]).attr('id')].push($(conLv3s[k]).attr('id'));
-                                    }
-                                }
-                            }
-
-                            /* 색인 초기 갱신 */
-                            lv1dropup = $("#dropup-lv-1 .dropdown-menu");
-                            lv2dropup = $("#dropup-lv-2 .dropdown-menu");
-                            lv3dropup = $("#dropup-lv-3 .dropdown-menu");
-                            for (var i = 0; i < conLv1s.length; ++i) {
-                                lv1dropup.append($('<a class="dropdown-item" href="javascript:updateDropupManually(\'' + $(conLv1s[i]).attr('id') + '\');">' + $(conLv1s[i]).attr('con-title') + '</a>'));
-                            }
-                            setIndexSize();
-
-                            /* 색인 자동 갱신 */
-                            window.onscroll = function () {
-                                var pos = (document.scrollTop || window.pageYOffset) - (document.clientTop || 0) + 52;
-                                function findCurrentContent(conLvs) {
-                                    var current = conLvs[0];
-                                    for (var i = 0; i < conLvs.length; ++i) {
-                                        if (pos < $(conLvs[i]).offset().top) {
-                                            break;
-                                        }
-                                        current = conLvs[i];
-                                    }
-                                    return current;
-                                }
-                                
-                                var conLv1 = findCurrentContent(conLv1s);
-                                $("#dropup-lv-1 button").text($(conLv1).attr('con-title'));
-                                var subIndex = index[$(conLv1).attr('id')];
-                                lv2dropup.empty();
-                                for (var i = 0; i < subIndex.length; ++i) {
-                                    lv2dropup.append('<a class="dropdown-item" href="javascript:updateDropupManually(\'' + subIndex[i] + '\');">' + $('#' + subIndex[i]).attr('con-title') + '</a>');
-                                }
-
-                                var conLv2s = $(conLv1).find(".con-lv-2");
-                                var conLv2 = findCurrentContent(conLv2s);
-                                $("#dropup-lv-2 button").text($(conLv2).attr('con-title'));
-                                subIndex = index[$(conLv2).attr('id')];
-                                lv3dropup.empty();
-                                for (var i = 0; i < subIndex.length; ++i) {
-                                    lv3dropup.append('<a class="dropdown-item" href="javascript:updateDropupManually(\'' + subIndex[i] + '\');">' + $('#' + subIndex[i]).attr('con-title') + '</a>');
-                                }
-
-                                var conLv3s = $(conLv2).find(".con-lv-3");
-                                var conLv3 = findCurrentContent(conLv3s);
-                                $("#dropup-lv-3 button").text($(conLv3).attr('con-title'));
-
-                                $('nav.fixed-bottom button').css({
-                                    "max-width": buttonMaxWidth + "px",
-                                    "overflow": "auto"
-                                });
-                                $('nav.fixed-bottom div.dropdown-menu').css({
-                                    'max-height': dropupMaxHeight + "px",
-                                    'overflow': 'auto'
-                                });
-                                $('nav.fixed-bottom div.dropdown-menu a').css({
-                                    'max-width': dropupMaxWidth + "px",
-                                    'overflow': 'auto'
-                                });
-                            };
-
-                            $(window).resize(function () { setIndexSize(); });
-                        }
-                    });
+        $("footer#main-footer").load("/source/footer.html", (response, status, xhr) => {
+            $("nav#bottom-nav").load("/source/nav-bottom.html", (response, status, xhr) => {
+                /* 모든 콘텐츠에 id 부여 */
+                var contentID = 0;
+                var contents = $(".con-lv-1, .con-lv-2, .con-lv-3");
+                for (var i = 0; i < contents.length; ++i) {
+                    var id = 'con-id-' + contentID++;
+                    index[id] = [];
+                    $(contents[i]).attr('id', id);
                 }
+
+                /* 계층을 이룬 id들에 대해 색인 생성 */
+                var conLv1s = $(".con-lv-1");
+                for (var i = 0; i < conLv1s.length; ++i) {
+                    var conLv2s = $(conLv1s[i]).find(".con-lv-2");
+                    for (var j = 0; j < conLv2s.length; ++j) {
+                        index[$(conLv1s[i]).attr('id')].push($(conLv2s[j]).attr('id'));
+                        var conLv3s = $(conLv2s[j]).find(".con-lv-3");
+                        for (var k = 0; k < conLv3s.length; ++k) {
+                            index[$(conLv2s[j]).attr('id')].push($(conLv3s[k]).attr('id'));
+                        }
+                    }
+                }
+
+                /* 색인 초기 갱신 */
+                lv1dropup = $("#dropup-lv-1 .dropdown-menu");
+                lv2dropup = $("#dropup-lv-2 .dropdown-menu");
+                lv3dropup = $("#dropup-lv-3 .dropdown-menu");
+                for (var i = 0; i < conLv1s.length; ++i) {
+                    lv1dropup.append($('<a class="dropdown-item" href="javascript:updateDropupManually(\'' + $(conLv1s[i]).attr('id') + '\');">' + $(conLv1s[i]).attr('con-title') + '</a>'));
+                }
+                setIndexSize();
+
+                /* 색인 자동 갱신 */
+                window.onscroll = function () {
+                    var pos = (document.scrollTop || window.pageYOffset) - (document.clientTop || 0) + 52;
+                    function findCurrentContent(conLvs) {
+                        var current = conLvs[0];
+                        for (var i = 0; i < conLvs.length; ++i) {
+                            if (pos < $(conLvs[i]).offset().top) {
+                                break;
+                            }
+                            current = conLvs[i];
+                        }
+                        return current;
+                    }
+
+                    var conLv1 = findCurrentContent(conLv1s);
+                    $("#dropup-lv-1 button").text($(conLv1).attr('con-title'));
+                    var subIndex = index[$(conLv1).attr('id')];
+                    lv2dropup.empty();
+                    for (var i = 0; i < subIndex.length; ++i) {
+                        lv2dropup.append('<a class="dropdown-item" href="javascript:updateDropupManually(\'' + subIndex[i] + '\');">' + $('#' + subIndex[i]).attr('con-title') + '</a>');
+                    }
+
+                    var conLv2s = $(conLv1).find(".con-lv-2");
+                    var conLv2 = findCurrentContent(conLv2s);
+                    $("#dropup-lv-2 button").text($(conLv2).attr('con-title'));
+                    subIndex = index[$(conLv2).attr('id')];
+                    lv3dropup.empty();
+                    for (var i = 0; i < subIndex.length; ++i) {
+                        lv3dropup.append('<a class="dropdown-item" href="javascript:updateDropupManually(\'' + subIndex[i] + '\');">' + $('#' + subIndex[i]).attr('con-title') + '</a>');
+                    }
+
+                    var conLv3s = $(conLv2).find(".con-lv-3");
+                    var conLv3 = findCurrentContent(conLv3s);
+                    $("#dropup-lv-3 button").text($(conLv3).attr('con-title'));
+
+                    adjustIndexSize();
+                };
+                $(window).resize(function () { setIndexSize(); });
+                $('input#input-title').keypress((event) => {
+                    if (event.keyCode == 13) {
+                        event.preventDefault();
+                        titleSearch();
+                    }
+                    return true;
+                });
             });
-        }
+        });
     });
 });
 function updateDropupManually(id) {
@@ -134,29 +123,47 @@ function updateDropupManually(id) {
         scrollTop: tag.offset().top - 52
     }, 500);
 }
+function titleSearch() {
+    var title = $('input#input-title').val();
+    var contents = $(".con-lv-1, .con-lv-2, .con-lv-3");
+    var result = $('div#dropup-result');
+    result.removeClass('invisible');
+    result = $(result).find('.dropdown-menu');
+    result.empty();
+    var count = 0;
+    for (var i = 0; i < contents.length; ++i) {
+        if ($(contents[i]).attr('con-title').match(new RegExp(title, "i")) != null) {
+            result.append('<a class="dropdown-item" href="javascript:updateDropupManually(\'' + $(contents[i]).attr('id') + '\');">' + $(contents[i]).attr('con-title') + '</a>');
+            count += 1;
+        }
+    }
+    showSnackbar("Found " + count + "items", "#bottom-nav");
+    adjustIndexSize();
+}
 function setIndexSize() {
-    try {
-        buttonMaxWidth = window.innerWidth / 5;
-        dropupMaxHeight = window.innerHeight / 2;
-        dropupMaxWidth = buttonMaxWidth > 150? buttonMaxWidth : 150;
-
-        $('nav.fixed-bottom button').css({
-            "max-width": buttonMaxWidth + "px",
-            "overflow": "auto"
-        });
-        $('nav.fixed-bottom div.dropdown-menu').css({
-            'max-height': dropupMaxHeight + "px",
-            'overflow': 'auto'
-        });
-        $('nav.fixed-bottom div.dropdown-menu a').css({
-            'max-width': dropupMaxWidth + "px",
-            'overflow': 'auto'
-        });
-    } catch (err) { console.log(err); }
+    buttonMaxWidth = (window.innerWidth - 75.67) / 6;
+    dropupMaxHeight = window.innerHeight / 2;
+    dropupMaxWidth = buttonMaxWidth > 150 ? buttonMaxWidth : 150;
+    adjustIndexSize();
+}
+function adjustIndexSize() {
+    $('nav.fixed-bottom button').css({
+        "max-width": buttonMaxWidth + "px",
+        "overflow": "auto"
+    });
+    $('nav.fixed-bottom div.dropdown-menu').css({
+        'max-height': dropupMaxHeight + "px",
+        'overflow': 'auto'
+    });
+    $('nav.fixed-bottom div.dropdown-menu a').css({
+        'max-width': dropupMaxWidth + "px",
+        'overflow': 'auto'
+    });
+    $('input#input-title').css('width', buttonMaxWidth + "px")
 }
 
 var codeSet = new Set();
-function showCode(fileNameOrText, lan) {
+function showCode(fileNameOrText, lan, alt) {
     var nohighlight = lan == "nohighlight";
     var isPlaneText = (lan == "console" || lan == "shell" || lan == "text");
     var original = fileNameOrText;
@@ -196,13 +203,11 @@ function showCode(fileNameOrText, lan) {
             $("div#code-" + fileNameOrText).modal("show");
         } else {
             $("div#code-" + fileNameOrText + " div.modal-body code").load((original.startsWith('/') ? "" : "./") + original, (response, status, xhr) => {
-                $("div#code-" + fileNameOrText + " div.modal-body code").html(
-                    hljs.highlight(lan, $("div#code-" + fileNameOrText + " div.modal-body code").text())['value']
-                    .replace(/>/gm, '&gt;')
-                    .replace(/</gm, '&lt;')
-                    .replace(/"/gm, '&quot;')
-                    .replace(/&/gm, '&amp;')
-                    .replace(/\t/gm, '    '));
+                if (alt) {
+                    $("div#code-" + fileNameOrText + " div.modal-body code").text(response).replace(/\t/gm, '    ');
+                } else {
+                    $("div#code-" + fileNameOrText + " div.modal-body code").html(hljs.highlight(lan, $("div#code-" + fileNameOrText + " div.modal-body code").text())['value'].replace(/\t/gm, '    '));
+                }
                 $("div#code-" + fileNameOrText).modal("show");
             });
         }
