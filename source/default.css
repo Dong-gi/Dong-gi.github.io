@@ -12,6 +12,11 @@ div.row p{
     margin: 0.5rem;
 }
 
+tr * {
+    line-height: 1.8;
+}
+
+
 /* Overwrite the Bootstrap's settings */
 
 @media screen and (min-width: 576px) {

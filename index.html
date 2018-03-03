@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="/source/default.css">
     <script src="/source/default.js"></script>
 
-    <title>wiz</title>
+    <title>Main Page</title>
 </head>
 
 <body>
@@ -31,30 +31,30 @@
             </div>
         </div>
 
-        <div class="container table-responsive">
+        <div class="container">
             <table class="table table-hover con-lv-1" con-title="2018년">
-                <thead>
-                    <tr>
-                        <th scope="col">Title</th>
-                        <th scope="col">Contents</th>
-                    </tr>
-                </thead>
                 <tbody class="con-lv-2" con-title="02월">
-                    <tr class="con-lv-3" con-title="16일">
-                        <td colspan="2">2018-02-16</td>
+                    <tr class="con-lv-3" con-title="22일">
+                        <th>2018-02-22</th>
                     </tr>
                     <tr>
-                        <th scope="row">Updates</th>
+                        <td>
+                            1. 컨텐츠 내용이 많아지면서 가독성이 떨어져, 3수준 컨텐츠 내용의 가시성을 토글로 변경하도록 했습니다.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="16일">
+                        <th>2018-02-16</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 컨텐츠 제목을 검색하는 기능을 추가했습니다. 검색어는 new RegExp()의 매개변수로 넘겨집니다.
                             <br>2. 검색 결과를 별개의 목차로 생성하여 쉽게 이동할 수 있습니다.
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="01일">
-                        <td colspan="2">2018-02-01</td>
+                        <th>2018-02-01</th>
                     </tr>
                     <tr>
-                        <th scope="row">Updates</th>
                         <td>
                             1. 컨텐츠를 테이블로 표시하도록 변경했습니다.
                             <br>2. '\n'을 '\\n'으로, 또는 '\\n'을 '\n'으로 변경하는 툴을 작성했습니다.
@@ -64,17 +64,16 @@
                 </tbody>
                 <tbody class="con-lv-2" con-title="01월">
                     <tr class="con-lv-3" con-title="31일">
-                        <td colspan="2">2018-01-31</td>
+                        <th>2018-01-31</th>
                     </tr>
                     <tr>
-                        <th scope="row">Updates</th>
                         <td>
                             1. 디자인을 개선했습니다.
                             <br>2. 하단의 목차를 통해 컨텐츠로 이동할 수 있습니다. 또한, 스크롤 이동이 감지되면 자동으로 목차를 갱신합니다.
                             <br>3. Bootstrap Modal을 이용해 코드를 보도록 수정했습니다. 코드를 클립보드로 복사하거나 로컬로 다운로드가 가능합니다.
                             <br>4. highlight.js를 이용해 코드를 강조하도록 수정했습니다. 다음은 코드 모달 예시입니다.
                             <button type="button" onclick="javascript:showCode('/example/HelloWorld.java', 'java');" class="btn btn-primary btn-sm">View Code : 예시 &raquo;</button>
-                            <br>5. https://www.w3schools.com/howto/howto_js_snackbar.asp를 이용하여 복사되었음을 확인시키도록 했습니다.
+                            <br>5. <a role="button" class="btn btn-info btn-sm" href="https://www.w3schools.com/howto/howto_js_snackbar.asp">스낵바</a>를 이용하여 복사되었음을 확인시키도록 했습니다.
                         </td>
                     </tr>
                 </tbody>

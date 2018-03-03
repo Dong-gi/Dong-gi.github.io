@@ -26,8 +26,19 @@ $(function () {
                     for (var j = 0; j < conLv2s.length; ++j) {
                         index[$(conLv1s[i]).attr('id')].push($(conLv2s[j]).attr('id'));
                         var conLv3s = $(conLv2s[j]).find(".con-lv-3");
+                        conLv3s.css("cursor", "pointer");
                         for (var k = 0; k < conLv3s.length; ++k) {
                             index[$(conLv2s[j]).attr('id')].push($(conLv3s[k]).attr('id'));
+                            /* 레벨 3 콘텐츠 내용 토글 설정 */
+                            $(conLv3s[k]).next().addClass("d-none");
+                            $(conLv3s[k]).click((event) => {
+                                var content = $(event.currentTarget).next();
+                                if($(content).hasClass("d-none")) {
+                                    $(content).removeClass("d-none");
+                                } else {
+                                    $(content).addClass("d-none");
+                                }
+                            });
                         }
                     }
                 }
@@ -127,7 +138,7 @@ function titleSearch() {
     var title = $('input#input-title').val();
     var contents = $(".con-lv-1, .con-lv-2, .con-lv-3");
     var result = $('div#dropup-result');
-    result.removeClass('invisible');
+    result.removeClass('d-none');
     result = $(result).find('.dropdown-menu');
     result.empty();
     var count = 0;

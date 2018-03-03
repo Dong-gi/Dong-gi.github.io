@@ -37,18 +37,14 @@
         <div class="container table-responsive con-lv-1" con-title="C">
             <h2>C</h2>
             <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Title</th>
-                        <th scope="col">Contents</th>
-                    </tr>
-                </thead>
                 <tbody class="con-lv-2" con-title="문법">
-                    <tr>
-                        <th scope="row" colspan="2">문법</th>
+                    <tr style="background-color: #bbb;">
+                        <th>문법</th>
                     </tr>
                     <tr class="con-lv-3" con-title="기본 자료형">
-                        <th scope="row">기본 자료형</th>
+                        <th>기본 자료형</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 정수 char(1byte), short(2bytes), int(short &lt;= int &lt;= long), long(4bytes) // unsigned
                             <br>2. 부동소수 float(4bytes), double(8bytes), long double(10bytes)
@@ -56,21 +52,27 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="리터럴">
-                        <th scope="row">리터럴</th>
+                        <th>리터럴</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. unsigned : 123U, long : 123L, 16진수 : 0x, 8진수 : 0
                             <br>2. 지수 표기 : E, float : 1.F
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="상수">
-                        <th scope="row">상수</th>
+                        <th>상수</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. const float PI = 3.141592F
                             <br>2. #define PI 3.141592 // 컴파일러가 단순 치환 작업함
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="메모리에 따른 변수 종류">
-                        <th scope="row">메모리에 따른 변수 종류</th>
+                        <th>메모리에 따른 변수 종류</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. auto : 모든 지역변수 기본값(int a; == auto int a;). 블록이 끝나면 소멸
                             <br>2. register : RAM이 아닌 레지스터에 변수 생성.
@@ -79,7 +81,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="연산자">
-                        <th scope="row">연산자</th>
+                        <th>연산자</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 산술 : +, -, *, /, %, ++, --
                             <br>2. 관계 : ==, !=, &gt;, &gt;=, &lt;, &lt;=
@@ -92,7 +96,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="구문">
-                        <th scope="row">구문</th>
+                        <th>구문</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. if ~ else if ~ else // 0만 아니면 다 true
                             <br>2. switch : 정수 타입만 가능
@@ -100,21 +106,27 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="매개변수 전달">
-                        <th scope="row">매개변수 전달</th>
+                        <th>매개변수 전달</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. call by value : 값의 복사에 의한 인자 전달
                             <br>2. call by reference : 주소 복사에 의한 인자 전달
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="변수">
-                        <th scope="row">변수</th>
+                        <th>변수</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 지역변수는 자동 초기화되지 않는다.
                             <br>2. 전역변수 초기화값 : 0, '\0', 0.f, 0., NULL
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="배열">
-                        <th scope="row">배열</th>
+                        <th>배열</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. type 식별자[size];
                             <br>2. int arr[] = {1, 2, 3};
@@ -126,7 +138,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="포인터">
-                        <th scope="row">포인터</th>
+                        <th>포인터</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 포인터에 대한 ++, -- 연산은 sizeof()값만큼의 주소 이동이다.
                             <br>2. int *arr[3]; // 포인터의 배열
@@ -137,7 +151,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="문자열">
-                        <th scope="row">문자열</th>
+                        <th>문자열</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 문자열은 '\0'으로 끝난다.
                             <br>2. char str[] = "Hello World";
@@ -147,7 +163,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="구조체">
-                        <th scope="row">구조체</th>
+                        <th>구조체</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. struct [식별자] { 멤버변수 목록 }
                             <br>2. 구조체 멤버 접근은 . 또는 ->(포인터)로 이루어진다.
@@ -156,14 +174,18 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="typedef">
-                        <th scope="row">typedef</th>
+                        <th>typedef</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 기정의된 타입을 다른 이름으로 이용할 수 있게한다.
                             <br>&raquo; typedef unsigned int UINT_32
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="전처리기">
-                        <th scope="row">전처리기</th>
+                        <th>전처리기</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 전처리기 : #include, #define, #undef, #ifdef, #ifndef, #if, #elif, #else, #endif, #pragma
                             <br>2. 매크로 : __DATE__, __TIME__, __FILE__, __LINE__
@@ -174,11 +196,13 @@
                     </tr>
                 </tbody>
                 <tbody class="con-lv-2" con-title="라이브러리">
-                    <tr>
-                        <th scope="row" colspan="2">라이브러리</th>
+                    <tr style="background-color: #bbb;">
+                        <th>라이브러리</th>
                     </tr>
                     <tr class="con-lv-3" con-title="IO">
-                        <th scope="row">IO</th>
+                        <th>IO</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 표준입출력 파일 포인터 : stdin, stdout, stderr
                             <br>2. int getchar(), int putchar(int c), char* gets(char* s), int puts(const char* s)
@@ -192,7 +216,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="error">
-                        <th scope="row">error</th>
+                        <th>error</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. errno.h :: errno, perror(), string.h :: strerror_s()
                             <button type="button" onclick="javascript:showCode('Concepts/error.c', 'c');" class="btn btn-primary btn-sm">
@@ -202,7 +228,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="가변길이 매개변수">
-                        <th scope="row">가변길이 매개변수</th>
+                        <th>가변길이 매개변수</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 함수의 매개변수 목록 정의 : (int size, ...)
                             <br>2. stdarg.h :: va_list, va_start(va_list, size), va_arg(va_list, type), va_end(va_list)
@@ -212,7 +240,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="동적 할당">
-                        <th scope="row">동적 할당</th>
+                        <th>동적 할당</th>
+                    </tr>
+                    <tr>
                         <td>
                             &raquo; stdlib.h
                             <br>1. void* malloc(int size) : size 바이트만큼 할당
@@ -222,7 +252,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="커맨드라인 매개변수">
-                        <th scope="row">커맨드라인 매개변수</th>
+                        <th>커맨드라인 매개변수</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 커맨드라인을 통해 프로그램을 실행하면 main()으로 전달된다.
                             <br>2. int main(int argc, char* argv[])
@@ -235,18 +267,14 @@
         <div class="container table-responsive con-lv-1" con-title="C++">
             <h2>C++</h2>
             <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Title</th>
-                        <th scope="col">Contents</th>
-                    </tr>
-                </thead>
                 <tbody class="con-lv-2" con-title="문법">
-                    <tr>
-                        <th scope="row" colspan="2">문법</th>
+                    <tr style="background-color: #bbb;">
+                        <th>문법</th>
                     </tr>
                     <tr class="con-lv-3" con-title="기본 자료형">
-                        <th scope="row">기본 자료형</th>
+                        <th>기본 자료형</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 네임스페이스 특정 이름만 using으로 포함시킬 수 있다.
                             <br>2. short &lt;= int &lt;= long &lt;= long long, unsigned -
@@ -259,7 +287,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="복합 자료형">
-                        <th scope="row">복합 자료형</th>
+                        <th>복합 자료형</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. enum Name { CONST1, CONST2 = num1, CONST3, ... };
                             <br>2. enum class Name { CONST1, ... }; // Type Safe
@@ -272,7 +302,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="변수">
-                        <th scope="row">변수</th>
+                        <th>변수</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. new ~ delete는 번거로우므로, unique_ptr이 도입되었다. -> 변수가 스코프를 벗어나면 자동으로 해제한다.
                             <br>2. 물론 정적 할당된 객체는 선언된 영역을 벗어나면 해제된다. 정적 할당된 객체를 전달할 경우 복사생성자가 호출되어 복사본이 전달되며, const를 사용할 경우 참조가
@@ -286,7 +318,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="클래스">
-                        <th scope="row">클래스</th>
+                        <th>클래스</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 보통 헤더 파일에 선언, 구현 파일에 정의
                             <br>&raquo; class Name { Name() 생성자, ~Name() 소멸자 }
@@ -303,7 +337,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="클래스 2">
-                        <th scope="row">클래스 2</th>
+                        <th>클래스 2</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 명시적 대입 연산자 : Name&amp; operator=(const Name&amp; rValue) = default | delete
                             <br>2. 객체 복제 배제 : 복사생성자와 =연산자를 private으로.
@@ -320,7 +356,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="클래스 3">
-                        <th scope="row">클래스 3</th>
+                        <th>클래스 3</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 오버로딩 메서드 시그너쳐에 delete 선언하면 호출할 수 없다.
                             <br>2. inline 함수는 호출 지점에 코드 자체가 복사되어 메서드 콜 오버헤드를 줄인다. 클래스 헤더에서 직접 구현하면 inline 키워드 없이도 자동적으로 inline
@@ -337,7 +375,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="상속">
-                        <th scope="row">상속</th>
+                        <th>상속</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. class Sub : public Main
                             <br>2. virtual이 없는 경우 발생하는 모호함(다형성 미지원)을 해소하기 위해 소멸자까지 기본적으로 virtual로 선언한다.
@@ -356,7 +396,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="참조 타입">
-                        <th scope="row">참조 타입</th>
+                        <th>참조 타입</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 참조 타입 변수는 생성과 동시에 초기화되어야만 한다.
                             <br>2. 참조 타입 변수의 참조 대상은 불변하다. 역참조가 허용되지 않아 안전하다.
@@ -369,7 +411,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="const">
-                        <th scope="row">const</th>
+                        <th>const</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. const 키워드는 왼쪽에 적용된다. 단, 맨 처음 등장하는 "type const"는 "const type"과 같다.
                             <br>&raquo; const int * : const int를 가리키는 포인터, int * const : int 포인터 변수 고정
@@ -384,7 +428,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="static">
-                        <th scope="row">static</th>
+                        <th>static</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. static 멤버는 객체 유무와 무관하게 클래스 자체에 속한다.
                             <br>2. static linking : 같은 소스에서의 함수/변수 참조
@@ -395,7 +441,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="형 변환">
-                        <th scope="row">형 변환</th>
+                        <th>형 변환</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. "typedef int INT32" == "using INT32 = int"
                             <br>"typedef int (*FuncType)(int, int)" == "using FuncType = int (*)(int, int)"
@@ -410,7 +458,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="초기화">
-                        <th scope="row">초기화</th>
+                        <th>초기화</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 클래스에서도 {}로 초기화 가능. public Name(int, int);
                             <br>&raquo; Name n(1, 2) -&gt; Name n = {1, 2} 가능, Name n{1, 2} 가능
@@ -423,12 +473,13 @@
                     </tr>
                 </tbody>
                 <tbody class="con-lv-2" con-title="라이브러리">
-                    <tr>
-                        <th scope="row" colspan="2">라이브러리</th>
+                    <tr style="background-color: #bbb;">
+                        <th>라이브러리</th>
                     </tr>
-
                     <tr class="con-lv-3" con-title="라이브러리">
-                        <th scope="row">라이브러리</th>
+                        <th>라이브러리</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. stl : vector, list, array, forward_list, queue, priority_queue, stack, set, multiset(중복 허용), map, multimap, bitset, unordered_map,
                             unordered_set, unordered_multimap, unordered_multiset
