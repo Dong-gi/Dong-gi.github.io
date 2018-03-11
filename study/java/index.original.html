@@ -1399,52 +1399,60 @@
                             <br>2. 이를 구체화한 클래스 객체들의 List, array는 Collections.sort, Arrays.sort로 각각 정렬할 수 있다.
                             <br>이를 구체화한 클래스 객체들은 Comparator 정의 없이 SortedMap, SortedSet의 키로 이용할 수 있다.
                             <br>3. null은 객체가 아니므로 equals(null)이 false를 리턴하는 것과 달리 compareTo(null)은 NullPointerException을 내보내는 것이 바람직하다.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "console");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            <br>4. 다음 성질을 만족하도록 구체화함이 권장된다. A class C is consistent with equals IFF (e1.compareTo(e2) == 0) == e1.equals(e2)
+                            <br>5. int compareTo(T o)
+                            <br>&raquo; o보다 앞서면(작으면) 음수, 같으면 0, 뒤면(크면) 양수 반환.
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="Iterable">
+                        <th>interface Iterable&lt;T&gt; Since 1.5</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                            1. 이를 구체화한 클래스 객체는 enhanced for statement의 순회 대상이 될 수 있다.
+                            <br>2. Iterator&lt;T&gt; iterator() : 구체화한 익명 클래스 객체를 반환하면 된다.
+                            <br>3. default void forEach(Consumer&lt;? super T&gt; action) Since 1.8
+                            <br>&raquo; 순회하면서 action을 적용한다. 기본 구현 : for(T t : this) action.accept(t);
+                            <br>4. default Spliterator&lt;T&gt; spliterator() Since 1.8
+                            <br>&raquo; 기본 구현은 Sliterator의 모든 사항을 구현하지 않으므로 재정의하는 것이 더 좋은 성능을 보인다.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/IterableExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "console");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="ProcessHandle">
+                        <th>interface ProcessHandle extends Comparable&lt;ProcessHandle&gt; Since 9</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                            1. native process들에 대한 제어 제공. 프로세스 생애 모니터링, 자식 프로세스 나열, 프로세스 정보 얻기, 프로세스 종료 등.
+                            <br>2. 프로세스 ID는 OS가 할당한 것으로, 값의 범위는 OS에 의존적이다.
+                            <br>3. ProcessHandle 객체는 다음 팩터리 메서드로 반환된다. current(), of(long), children(), descendants(), parent(), allProcesses()
+                            <br>4. SecurityManager의 RuntimePermission("manageProcess")만큼의 제어 권한을 갖는다.
+                            <br>5. ProcessHandle 객체들을 비교할 때는 equals, compareTo 메서드를 이용해야 한다.
+                            <br>6. long pid()
+                            <br>7. static Optional&lt;ProcessHandle&gt; of(long pid)
+                            <br>static ProcessHandle current()
+                            <br>Optional&lt;ProcessHandle&gt; parent()
+                            <br>&raquo; zombie 상태의 프로세스는 보통 parent가 없다.
+                            <br>Stream&lt;ProcessHandle&gt; children()
+                            <br>Stream&lt;ProcessHandle&gt; descendants()
+                            <br>static Stream&lt;ProcessHandle&gt; allProcesses()
+                            <br>8. ProcessHandle.Info info()
+                            <br>9. CompletableFuture&lt;ProcessHandle&gt; onExit()
+                            <br>&raquo; onExit().get()을 호출하면 프로세스가 종료되는 것을 기다린다. supportsNormalTermination()이 false일 경우 onExit()에 등록한 후처리들이 진행되지 않을 수 있음.
+                            <br>10. boolean supportsNormalTermination()
+                            <br>&raquo; destroy() 메서드가 정상적으로 프로세스를 종료하는지 여부. false면 프로세스를 강제로 즉시 종료함을 의미.
+                            <br>11. boolean destroy()
+                            <br>&raquo; 프로세스 종료에 시간이 걸릴 수 있으므로, isAlive()가 얼마간 true를 반환할 수 있다. 성공적으로 프로세스를 종료하면 true, 아니면 false를 반환한다.
+                            <br>boolean destroyForcibly() : 강제 종료
+                            <br>12. boolean isAlive() : PID가 유효하면 alive로 간주
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/ProcessHandleExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "console");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con2.txt", "console");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="">
@@ -1507,7 +1515,7 @@
                 </tbody>
             </table>
         </div>
-        <div>
+        <!--
                 <div>
                     <h2>스레드</h2>
                     <p>
@@ -1584,7 +1592,7 @@
                         <a class="btn btn-secondary" href="javascript:showCode(6, 'processbuilder');" role="button">View Code : ProcessBuilder &raquo;</a>
                     </p>
                 </div>
-        </div>
+            -->
     </main>
 
     <hr>

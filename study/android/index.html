@@ -4,44 +4,57 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-    <title>wiz</title>
+    <script src="/source/highlight.pack.js"></script>
+    <link rel="stylesheet" href="/source/xcode.css">
+    <link rel="stylesheet" href="/source/default.css">
+    <script src="/source/default.js"></script>
 
-    <style>
-        body {
-            padding-top: 4.0rem;
-        }
-    </style>
-
-    <script>
-        $(function () {
-            $("nav").load("/nav.html");
-            $("footer").load("/footer.html");
-        });
-        function showCode(divID, fileName) {
-            $("#code-div-" + divID).load("./" + fileName + ".html");
-        }
-    </script>
+    <title>Android</title>
 </head>
 
 <body>
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation"></nav>
+    <nav id="top-nav" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark"></nav>
+
+    <nav id="bottom-nav" class="navbar fixed-bottom navbar-expand navbar-dark bg-dark"></nav>
 
     <main role="main">
+
         <div class="container">
             <div class="jumbotron">
-                <h1 class="display-3">Android <img class="img-fluid" alt="Andorid Robot" src="./android.png"/></h1>
+                <h1 class="display-3">Android
+                    <img class="img-fluid" alt="Andorid Robot" src="./android.png" />
+                </h1>
             </div>
         </div>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
+        <div class="container table-responsive con-lv-1" con-title="정리중">
+            <h2>정리중</h2>
+            <table class="table table-hover">
+                <tbody class="con-lv-2" con-title="정리중">
+                    <tr style="background-color: #bbb;">
+                        <th>정리중</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="정리중">
+                        <th>정리중</th>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <!--              <div class="col-md-4">
                     <h2>컴포넌트</h2>
                     <p>
                         1. 액티비티 : 인터페이스를 구성하는 기본 단위.
@@ -132,54 +145,11 @@
                 </div>
                 <div class="col-md-4">
                     <h2>그래픽</h2>
-                    <p>
-                        
-                    </p>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(1, 'type');" role="button">View Code : &raquo;</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h2></h2>
-                    <p></p>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(1, 'type');" role="button">View Code : &raquo;</a>
-                    </p>
-                </div>
-            </div>
-            <div class="row" id="code-div-3"></div>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <h2></h2>
-                    <p></p>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(1, 'type');" role="button">View Code : &raquo;</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h2></h2>
-                    <p></p>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(1, 'type');" role="button">View Code : &raquo;</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h2></h2>
-                    <p></p>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(1, 'type');" role="button">View Code : &raquo;</a>
-                    </p>
-                </div>
-            </div>
-            <div class="row" id="code-div-3"></div>
-
-        </div>
-    </main>
+                -->
 
     <hr>
 
-    <footer class="container"></footer>
+    <footer id="main-footer" class="container"></footer>
 </body>
 
 </html>

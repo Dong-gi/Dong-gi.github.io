@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="/source/default.css">
     <script src="/source/default.js"></script>
 
-    <title>wiz</title>
+    <title>HTML</title>
 </head>
 
 <body>
@@ -37,18 +37,14 @@
         <div class="container table-responsive con-lv-1" con-title="문법">
             <h2>문법</h2>
             <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Title</th>
-                        <th scope="col">Contents</th>
-                    </tr>
-                </thead>
                 <tbody class="con-lv-2" con-title="태그와 속성">
-                    <tr>
-                        <th scope="row" colspan="2">태그와 속성</th>
+                    <tr style="background-color: #bbb;">
+                        <th>태그와 속성</th>
                     </tr>
                     <tr class="con-lv-3" con-title="태그">
-                        <th scope="row">태그</th>
+                        <th>태그</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 문서 요소의 타입을 나타내는 이름으로, 사용자가 임의로 만들 수도 있다.
                             <br>2. 태그는 &lt;과 &gt; 사이에 이름을 적음으로써 표현되며, 여는 태그와 닫는 태그 사이에 내용이 포함될 수 있다.
@@ -61,7 +57,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="속성">
-                        <th scope="row">속성</th>
+                        <th>속성</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 모든 HTML 태그는 속성을 가질 수 있다. 속성은 여는 태그 내부에 이름='값' 쌍으로 표현한다.
                             <br>2. 속성 값을 표현하기 위해 '', "" 모두 이용 가능하다. 아래는 대표적인 속성들이다.
@@ -79,19 +77,25 @@
                     </tr>
                 </tbody>
                 <tbody class="con-lv-2" con-title="기본 태그">
-                    <tr>
-                        <th scope="row" colspan="2">기본 태그</th>
+                    <tr style="background-color: #bbb;">
+                        <th>기본 태그</th>
                     </tr>
                     <tr class="con-lv-3" con-title="heading">
-                        <th scope="row">heading</th>
+                        <th>heading</th>
+                    </tr>
+                    <tr>
                         <td>&lt;h1&gt;&lt;/h1&gt; ~ &lt;h6&gt;&lt;/h6&gt;</td>
                     </tr>
                     <tr class="con-lv-3" con-title="paragraph">
-                        <th scope="row">paragraph</th>
+                        <th>paragraph</th>
+                    </tr>
+                    <tr>
                         <td>&lt;p&gt;&lt;/p&gt;</td>
                     </tr>
                     <tr class="con-lv-3" con-title="link">
-                        <th scope="row">link</th>
+                        <th>link</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. &lt;a&gt;&lt;/a&gt;
                             <br>2. href 속성 : 이동할 위치나 주소
@@ -104,7 +108,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="img">
-                        <th scope="row">img</th>
+                        <th>img</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. &lt;img&gt;
                             <br>&raquo; src 속성 : 이미지 리소스의 위치나 주소
@@ -113,20 +119,28 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="line break">
-                        <th scope="row">line break</th>
+                        <th>line break</th>
+                    </tr>
+                    <tr>
                         <td>&lt;br&gt; : HTML은 기본적으로 빈칸을 무시하므로, 새로운 줄에서 시작하기 위해 별도의 br태그를 이용한다.</td>
                     </tr>
                     <tr class="con-lv-3" con-title="수평선">
-                        <th scope="row">수평선</th>
+                        <th>수평선</th>
+                    </tr>
+                    <tr>
                         <td>&lt;hr&gt;</td>
                     </tr>
                     <tr class="con-lv-3" con-title="pre">
-                        <th scope="row">pre</th>
+                        <th>pre</th>
+                    </tr>
+                    <tr>
                         <td>&lt;pre&gt;&lt;/pre&gt; : 별도 해석 없이 pre 태그 내용을 빈칸을 포함하여 글자 그대로 출력한다.
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="text">
-                        <th scope="row">text</th>
+                        <th>text</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. &lt;b&gt;&lt;/b&gt; : bold
                             <br>2. &lt;strong&gt;&lt;/strong&gt; : bold & important
@@ -140,12 +154,16 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="주석">
-                        <th scope="row">주석</th>
+                        <th>주석</th>
+                    </tr>
+                    <tr>
                         <td>&lt;!-- 주석 --&gt;
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="table">
-                        <th scope="row">table</th>
+                        <th>table</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. table은 thead와 tbody로 이루어진다.
                             <br>2. thead와 tbody는 tr들로 이루어진다.
@@ -154,7 +172,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="list">
-                        <th scope="row">list</th>
+                        <th>list</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. unordered list : &lt;ul&gt;&lt;/ul&gt;
                             <br>2. ordered list : &lt;ol&gt;&lt;/ol&gt;
@@ -163,21 +183,27 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="iframe">
-                        <th scope="row">iframe</th>
+                        <th>iframe</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. &lt;iframe src="", width="", height=""&gt;&lt;/iframe&gt; : iframe을 막는 사이트도 있음에 유의.
                             <br>2. &lt;iframe name="iframe1"&gt;&lt;/iframe&gt;, &lt;a href="" target="iframe1"&gt;&lt;/a&gt;
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="div : span">
-                        <th scope="row">div : span</th>
+                        <th>div : span</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. div : 가로 100%를 점유하는 block element 대표
                             <br>2. span : 가로 공간이 여유롭다면 병렬로 표시되는 inline element 대표
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="script">
-                        <th scope="row">script</th>
+                        <th>script</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. &lt;script&gt;&lt;/script&gt; 사이에 JavaScript 코드 작성
                             <br>2. &lt;noscript&gt;&lt;/noscript&gt; 사이에 지원하지 않는 브라우저에 대한 메시지 작성
@@ -185,7 +211,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="meta">
-                        <th scope="row">meta</th>
+                        <th>meta</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 페이지에 대한 메타데이터를 명시한다.
                             <br>&raquo; 인코딩 명시 : &lt;meta charset="UTF-8"&gt;
@@ -196,7 +224,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="base">
-                        <th scope="row">base</th>
+                        <th>base</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 페이지에서 사용하는 모든 상대주소의 시작점을 설정한다.
                             <br>예. &lt;base href="https://www.w3schools.com/images/" target="_blank"&gt;
@@ -204,11 +234,13 @@
                     </tr>
                 </tbody>
                 <tbody class="con-lv-2" con-title="form">
-                    <tr>
-                        <th scope="row" colspan="2">form</th>
+                    <tr style="background-color: #bbb;">
+                        <th>form</th>
                     </tr>
                     <tr class="con-lv-3" con-title="form tags">
-                        <th scope="row">form tags</th>
+                        <th>form tags</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. form은 HTML 페이지로부터 데이터를 전송하기 위한 정형화된 틀이다. form 내부는 input 태그들로 채워진다.
                             <br>2. &lt;input type=""&gt; : text, password, radio, checkbox, submit, reset...
@@ -237,25 +269,23 @@
         <div class="container table-responsive con-lv-1" con-title="HTML5">
             <h2>HTML5</h2>
             <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Title</th>
-                        <th scope="col">Contents</th>
-                    </tr>
-                </thead>
                 <tbody class="con-lv-2" con-title="시맨틱 웹">
-                    <tr>
-                        <th scope="row" colspan="2">시맨틱 웹</th>
+                    <tr style="background-color: #bbb;">
+                        <th>시맨틱 웹</th>
                     </tr>
                     <tr class="con-lv-3" con-title="시맨틱?">
-                        <th scope="row">Semantic</th>
+                        <th>Semantic</th>
+                    </tr>
+                    <tr>
                         <td>
                             HTML5 이전의 웹페이지들은 요소들을 손쉽게 배치하기 위해 table 태그를 주로 사용하여 디자인했다. 하지만 중첩된 table들로 이루어진 웹페이지는 검색 엔진을 비롯한 프로그램이 기계적으로 의미를 찾기 어려워 HTML5는
                             문서에 대한 의미를 태그가 포함하는 방향을 모색했다.
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="시맨틱 태그">
-                        <th scope="row">시맨틱 태그</th>
+                        <th>시맨틱 태그</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. header, nav, section, article, aside, footer, ...
                             <br>2. 자세한 설명은
@@ -263,7 +293,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="CSS">
-                        <th scope="row">Semantic CSS</th>
+                        <th>Semantic CSS</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. HTML5로 접어들면서 HTML 태그들은 골격만을 정의하고, 디자인은 JavaScript와 CSS로 보다 확실히 분리되었다. 디자인의 특징은 의미 범주가 같은 것들을(class) 비슷하게 표현한다는 것이며, 따라서
                             CSS 선택자들은 문서의 의미 정보를 내포하고 있다고 할 수 있다.
@@ -273,11 +305,13 @@
                     </tr>
                 </tbody>
                 <tbody class="con-lv-2" con-title="반응형 웹">
-                    <tr>
-                        <th scope="row" colspan="2">반응형 웹</th>
+                    <tr style="background-color: #bbb;">
+                        <th>반응형 웹</th>
                     </tr>
                     <tr class="con-lv-3" con-title="반응형?">
-                        <th scope="row">Responsive</th>
+                        <th>Responsive</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 스마트폰 대중화 이전의 일반 사용자 컴퓨팅 환경은 가로 768px 이상의 직사각형 모니터가 대부분이었다.
                             <br>2. 스마트폰이 대중화 되면서 다양한 사용자 웹서핑 환경에 맞춰 알맞게 페이지를 보여줄 필요가 생겼다.
@@ -285,7 +319,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="반응형 태그">
-                        <th scope="row">picture</th>
+                        <th>picture</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 스크린에 따라 다른 이미지 소스를 이용하는 picture태그가 소개되었다.
                             <br>&lt;picture&gt;
@@ -298,18 +334,22 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Responsive CSS">
-                        <th scope="row">Responsize CSS</th>
+                        <th>Responsize CSS</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 마찬가지로 Bootstrap, W3C.CSS과 같은 CSS Framework들을 사용하면 쉽게 반응형 웹을 구현할 수 있다.
                         </td>
                     </tr>
                 </tbody>
                 <tbody class="con-lv-2" con-title="멀티미디어">
-                    <tr>
-                        <th scope="row" colspan="2">멀티미디어</th>
+                    <tr style="background-color: #bbb;">
+                        <th>멀티미디어</th>
                     </tr>
                     <tr class="con-lv-3" con-title="멀티미디어">
-                        <th scope="row">멀티미디어</th>
+                        <th>멀티미디어</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. Audil/Video :
                             <a role="button" class="btn btn-info btn-sm" href="https://www.w3schools.com/tags/ref_av_dom.asp">여기로</a>

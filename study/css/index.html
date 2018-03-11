@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="/source/default.css">
     <script src="/source/default.js"></script>
 
-    <title>wiz</title>
+    <title>CSS</title>
 </head>
 
 <body>
@@ -37,18 +37,14 @@
         <div class="container table-responsive con-lv-1" con-title="CSS">
             <h2>CSS</h2>
             <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Title</th>
-                        <th scope="col">Contents</th>
-                    </tr>
-                </thead>
                 <tbody class="con-lv-2" con-title="문법">
-                    <tr>
-                        <th scope="row" colspan="2">문법</th>
+                    <tr style="background-color: #bbb;">
+                        <th>문법</th>
                     </tr>
                     <tr class="con-lv-3" con-title="기본 선택자">
-                        <th scope="row">기본 선택자</th>
+                        <th>기본 선택자</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. CSS는 HTML 태그 요소를 선택하여 디자인 속성을 정의한다.
                             <br>&raquo; 선택자 { 속성: 값; ... }
@@ -57,7 +53,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="속성 선택자">
-                        <th scope="row">속성 선택자</th>
+                        <th>속성 선택자</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 특정 값과 일치하는 속성 [attr='value']
                             <br>2. 특정 단어를 포함하는 속성 [attr~='word']
@@ -68,7 +66,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="복합 선택자">
-                        <th scope="row">복합 선택자</th>
+                        <th>복합 선택자</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 후손 : ' '(빈칸)
                             <br>2. 자식 : '&gt;'
@@ -77,7 +77,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="가상 클래스">
-                        <th scope="row">가상 클래스</th>
+                        <th>가상 클래스</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 요소들의 상태들을 정의한 Pseudo-Class가 존재한다. 일반 클래스와 달리 ':'으로 구별한다. 예. a:hover
                             <br>2. a: active, hover, link, visited
@@ -88,7 +90,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="가상 요소">
-                        <th scope="row">가상 요소</th>
+                        <th>가상 요소</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 요소의 특정 부분 선택
                             <br>&raquo; 첫 번째 글자 ::first-letter, 첫 번째 줄 ::first-line
@@ -98,25 +102,31 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="변수">
-                        <th scope="row">변수</th>
+                        <th>변수</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 변수 선언 :root { --var1: 12px; --my-var2: blue; }
                             <br>2. 변수 사용 p { color: var(--my-var2); }
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="media">
-                        <th scope="row">media</th>
+                        <th>media</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. Syntax &raquo; @media not|only mediatype and (media feature and|or|not mediafeature) { CSS-Code; } <a role="button" class="btn btn-info btn-sm" href="https://www.w3schools.com/cssref/css3_pr_mediaquery.asp">참고</a>
                         </td>
                     </tr>
                 </tbody>
                 <tbody class="con-lv-2" con-title="디자인">
-                    <tr>
-                        <th scope="row" colspan="2">디자인</th>
+                    <tr style="background-color: #bbb;">
+                        <th>디자인</th>
                     </tr>
                     <tr class="con-lv-3" con-title="공통 속성">
-                        <th scope="row">공통 속성</th>
+                        <th>공통 속성</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 배경색 background-color: color;
                             <br>2. 배경 이미지 background-image: url("url")
@@ -139,7 +149,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="텍스트">
-                        <th scope="row">텍스트</th>
+                        <th>텍스트</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 색상 color: color;
                             <br>2. 정렬 text-align: left | center | right | justify(양쪽정렬)
@@ -156,7 +168,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="리스트">
-                        <th scope="row">리스트</th>
+                        <th>리스트</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. 리스트 아이템 이미지 마크 설정 list-style-image: none|url|initial|inherit;
                             <br>2. 리스트 아이템 마커 타입 list-style-type: value;
@@ -165,7 +179,9 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="보여주기 속성">
-                        <th scope="row">보여주기 속성</th>
+                        <th>보여주기 속성</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. display: none | block | inline | inline-block(너비/높이 속성을 가질 수 있다) | ...
                             <a role="button" class="btn btn-info btn-sm" href="https://www.w3schools.com/cssref/pr_class_display.asp">참고</a>
@@ -184,11 +200,13 @@
                     </tr>
                 </tbody>
                 <tbody class="con-lv-2" con-title="변형">
-                    <tr>
-                        <th scope="row" colspan="2">변형</th>
+                    <tr style="background-color: #bbb;">
+                        <th>변형</th>
                     </tr>
                     <tr class="con-lv-3" con-title="2D 변형">
-                        <th scope="row">2D 변형</th>
+                        <th>2D 변형</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. translate(), rotate(), scale(), skewX(), skewY(), matrix()
                             <a role="button" class="btn btn-info btn-sm"
@@ -196,21 +214,27 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="3D 변형">
-                        <th scope="row">3D 변형</th>
+                        <th>3D 변형</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. rotateX(), rotateY(), rotateZ()
                             <a role="button" class="btn btn-info btn-sm" href="https://www.w3schools.com/css/css3_3dtransforms.asp">참고</a>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="전개">
-                        <th scope="row">전개</th>
+                        <th>전개</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. transition:
                             <a role="button" class="btn btn-info btn-sm" href="https://www.w3schools.com/css/css3_transitions.asp">여기로</a>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="애니메이션">
-                        <th scope="row">애니메이션</th>
+                        <th>애니메이션</th>
+                    </tr>
+                    <tr>
                         <td>
                             1. <a role="button" class="btn btn-info btn-sm" href="https://www.w3schools.com/css/css3_animations.asp">여기로</a>
                         </td>
