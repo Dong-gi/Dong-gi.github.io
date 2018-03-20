@@ -173,6 +173,14 @@ function adjustIndexSize() {
     $('input#input-title').css('width', buttonMaxWidth + "px")
 }
 
+function openAll() {
+    $(".con-lv-3").removeClass("d-none");
+}
+function closeAll() {
+    openAll();
+    $(".con-lv-3").addClass("d-none");
+}
+
 var codeSet = new Set();
 function showCode(fileNameOrText, lan, alt) {
     var nohighlight = lan == "nohighlight";
