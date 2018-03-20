@@ -174,11 +174,17 @@ function adjustIndexSize() {
 }
 
 function openAll() {
-    $(".con-lv-3").removeClass("d-none");
+    var conLv3s = $(".con-lv-3");
+    for(var i = 0; i < conLv3s.length; ++i) {
+        $(conLv3s[i]).next().removeClass("d-none");
+    }
 }
 function closeAll() {
     openAll();
-    $(".con-lv-3").addClass("d-none");
+    var conLv3s = $(".con-lv-3");
+    for(var i = 0; i < conLv3s.length; ++i) {
+        $(conLv3s[i]).next().addClass("d-none");
+    }
 }
 
 var codeSet = new Set();
