@@ -175,16 +175,28 @@ function adjustIndexSize() {
 
 function openAll() {
     var conLv3s = $(".con-lv-3");
+    var current = $(conLv3s[0]);
+    var pos = (document.scrollTop || window.pageYOffset) - (document.clientTop || 0) + 52;
+    for(var i = 0; i < conLv3s.length; ++i) {
+        if(pos < $(conLv3s[i]).offset().top) {
+            break;
+        }
+        current = $(conLv3s[i]);
+    }
     for(var i = 0; i < conLv3s.length; ++i) {
         $(conLv3s[i]).next().removeClass("d-none");
     }
+    updateDropupManually(current.attr('id'));
+    return current;
 }
 function closeAll() {
-    openAll();
+    var current = openAll();
     var conLv3s = $(".con-lv-3");
     for(var i = 0; i < conLv3s.length; ++i) {
         $(conLv3s[i]).next().addClass("d-none");
     }
+    updateDropupManually(current.attr('id'));
+    return current;
 }
 
 var codeSet = new Set();

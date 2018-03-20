@@ -324,9 +324,10 @@
                             <br>2. Error : 프로그램 내부에서 해결할 수 없어 종료됨.
                             <br>3. Unchecked Exception은 따로 처리하지 않아도 프로그램이 계속 실행됨.
                             <br>4. Chained Exceptions : 하나의 예외로 인해 다른 예외들이 발생할 수 있다. JDK 1.4부터 근원적인 예외를 알아올 수 있는 방법이 추가되었다.
-                            <br>&raquo; Throwable(Throwable causeExc), Throwable(String msg, Throwable causeExc) : 보다 근본적인 원인을 인자로 하여
-                            새로운 예외 생성
-                            <br>&raquo; Throwable initCause(Throwable causeExc) : 예외의 근원을 설정하며, 생성자를 통해 호출되거나 이미 호출된 경우 다시 호출 불가
+                            <br>&raquo; Throwable(Throwable causeExc), Throwable(String msg, Throwable causeExc) : 보다 근본적인 원인을
+                            인자로 하여 새로운 예외 생성
+                            <br>&raquo; Throwable initCause(Throwable causeExc) : 예외의 근원을 설정하며, 생성자를 통해 호출되거나 이미 호출된 경우 다시 호출
+                            불가
                             <br>&raquo; Throwable getCause() : 현재 예외의 근원을 얻는다. 없으면 null
                             <button type="button" onclick="javascript:showCode('BasicConcepts/src/Eexception.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예외 &raquo;
@@ -1190,7 +1191,8 @@
                             <br>String getCanonicalPath() throws IOException Since 1.1
                             <br>File getCanonicalFile() throws IOException Since 1.2
                             <br>7. URI toURI() Since 1.4
-                            <br>8. boolean canRead(), canWrite(), exists(), isDirectory(), isFile(), isHidden() Since 1.2, canExecute() Since 1.6
+                            <br>8. boolean canRead(), canWrite(), exists(), isDirectory(), isFile(), isHidden() Since 1.2, canExecute()
+                            Since 1.6
                             <br>9. long lastModified()
                             <br>10. long length()
                             <br>11. boolean createNewFile() throws IOException Since 1.2
@@ -1221,8 +1223,10 @@
                             <br>13. long getTotalSpace() Since 1.6
                             <br>long getFreeSpace() Since 1.6
                             <br>long getUsableSpace() Since 1.6
-                            <br>14. static File createTempFile(String prefix, String suffix, File directory) throws IOException Since 1.2
-                            <br>&raquo; 특정 디렉터리에 새로운 빈 파일을 만들어 반환한다. 이 메서드는 오직 임시 파일 작업을 위해 만들어졌으며, deleteOnExit()을 통해 자동으로 정리되어야 한다.
+                            <br>14. static File createTempFile(String prefix, String suffix, File directory) throws IOException
+                            Since 1.2
+                            <br>&raquo; 특정 디렉터리에 새로운 빈 파일을 만들어 반환한다. 이 메서드는 오직 임시 파일 작업을 위해 만들어졌으며, deleteOnExit()을 통해 자동으로 정리되어야
+                            한다.
                             <br>&raquo; prefix : 의미 있는 접두어, suffix : null이면 ".tmp"
                             <br>static File createTempFile(String prefix, String suffix) throws IOException Since 1.2
                             <br>15. int hashCode() : 추상 경로이름과 1234321 사이의 xor 연산
@@ -1262,7 +1266,8 @@
                             <br>FileOutputStream(FileDescriptor fdObj)
                             <br>2. final FileDescriptor getFD() throws IOException
                             <br>3. FileChannel getChannel() Since 1.4
-                            <br>&raquo; 유니크한 FileChannel을 반환하며, 채널에서의 위치는 스트림에서 쓴 바이트 수와 같다(append 모드가 아닐 경우). append 모드에서는 파일의 크기와 채널의 위치가 동일하다.
+                            <br>&raquo; 유니크한 FileChannel을 반환하며, 채널에서의 위치는 스트림에서 쓴 바이트 수와 같다(append 모드가 아닐 경우). append 모드에서는 파일의
+                            크기와 채널의 위치가 동일하다.
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="FileReader">
@@ -1296,14 +1301,18 @@
                             <br>&raquo; "/*"로 끝나는 경로는 해당 디렉터리 내부 모든 파일 및 디렉터리를 가리킨다. "*"는 현재 디렉터리 내부.
                             <br>&raquo; "/-"로 끝나는 경로는 해당 디렉터리 내부 모든 파일 및 모든 서브디렉터리를 가리킨다. "-"는 현재 디렉터리 내부.
                             <br>&raquo; "&lt;&lt;ALL FILES&gt;&gt;"로 표현된 경로는 임의 파일과 대응한다.
-                            <br>&raquo; 권한 리스트는 콤마로 구분한 문자열로 표현한다. 가능한 키워드는 "read", "write", "execute"(Runtime.exec 메서드 호출 관련), "delete"(File.delete 메서드 호출 관련), "readlink"(java.nio.file.Files.readSymbolicLink 메서드와 관련)
+                            <br>&raquo; 권한 리스트는 콤마로 구분한 문자열로 표현한다. 가능한 키워드는 "read", "write", "execute"(Runtime.exec 메서드 호출 관련),
+                            "delete"(File.delete 메서드 호출 관련), "readlink"(java.nio.file.Files.readSymbolicLink 메서드와 관련)
                             <br>&raquo; 주의 : 임의 파일에 대한 권한은 보안상 위험하다. 기본적으로 코드가 포함된 디렉터리는 읽기가 가능하므로 굳이 권한을 부여할 필요 없다.
                             <br>2. FilePermission(String path, String actions)
-                            <br>&raquo; 시스템 속성 "jdk.io.permissionsUseCanonicalPath"가 매개변수 path의 처리에 대해 기술한다.<a role="button" class="btn btn-info btn-sm" href="https://docs.oracle.com/javase/9/docs/api/java/io/FilePermission.html#FilePermission-java.lang.String-java.lang.String-">자세히</a>
+                            <br>&raquo; 시스템 속성 "jdk.io.permissionsUseCanonicalPath"가 매개변수 path의 처리에 대해 기술한다.
+                            <a role="button"
+                                class="btn btn-info btn-sm" href="https://docs.oracle.com/javase/9/docs/api/java/io/FilePermission.html#FilePermission-java.lang.String-java.lang.String-">자세히</a>
                             <br>3. boolean implies(Permission p) : 객체의 권한이 인자의 권한을 내포하는지 여부 반환
                             <br>4. String getActions()
                             <br>5. PermissionCollection newPermissionCollection()
-                            <br>&raquo; 컬렉션에 다음 두 가지 권한─("/tmp/-", "read"), ("/tmp/scratch/foo", "write")─들이 있을 때, 이에 대한 implies메서드에 권한 ("/tmp/scratch/foo", "read,write")을 넘겨준 결과는 true를 반환해야 한다.
+                            <br>&raquo; 컬렉션에 다음 두 가지 권한─("/tmp/-", "read"), ("/tmp/scratch/foo", "write")─들이 있을 때, 이에 대한 implies메서드에
+                            권한 ("/tmp/scratch/foo", "read,write")을 넘겨준 결과는 true를 반환해야 한다.
                             <button type="button" onclick="javascript:showCode('JavaIO/src/FilePermissionExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
@@ -1330,7 +1339,8 @@
                             <br>void seek(long pos) throws IOException : file pointer 설정
                             <br>7. long length() throws IOException
                             <br>void setLength(long newLength) throws IOException Since 1.2
-                            <br>&raquo; If 기존 크기 &gt; newLength and getFilePointer() &gt; newLength then 자르고, file pointer = newLength
+                            <br>&raquo; If 기존 크기 &gt; newLength and getFilePointer() &gt; newLength then 자르고, file pointer =
+                            newLength
                             <br>&raquo; If 기존 크기 &lt; newLength then 확장. 확장한 영역의 데이터는 초기화되지 않는다.
                         </td>
                     </tr>
@@ -1355,7 +1365,8 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 자동으로 자원을 해제하는 객체를 표현한다. try-with-resources 블록에 사용되면 close()가 자동으로 호출된다. IO 작업이 없는 것들을 try-with-resources 블록에 이용하는 것은 불필요한 일이다.
+                            1. 자동으로 자원을 해제하는 객체를 표현한다. try-with-resources 블록에 사용되면 close()가 자동으로 호출된다. IO 작업이 없는 것들을 try-with-resources 블록에 이용하는 것은 불필요한
+                            일이다.
                             <br>2. void close() throws IOException
                         </td>
                     </tr>
@@ -1364,7 +1375,8 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 일련의 char 값들을 표현한다. 두 CharSequence 객체를 비교하는 결과는 정의되어 있지 않으며, 각 서브 클래스들이 일관적인 결과를 도출할 것이라는 보장은 없다. 따라서 CharSequence를 비교하는 메서드를 만드는 것은 적절하지 않다.
+                            1. 일련의 char 값들을 표현한다. 두 CharSequence 객체를 비교하는 결과는 정의되어 있지 않으며, 각 서브 클래스들이 일관적인 결과를 도출할 것이라는 보장은 없다. 따라서 CharSequence를 비교하는
+                            메서드를 만드는 것은 적절하지 않다.
                             <br>2. int length() : 길이는 16비트 char의 개수
                             <br>3. char charAt(int index)
                             <br>CharSequence subSequence(int start, end)
@@ -1398,8 +1410,10 @@
                             1. 자연스러운 순서로 클래스의 모든 객체를 정렬할 수 있음을 표현.
                             <br>2. 이를 구체화한 클래스 객체들의 List, array는 Collections.sort, Arrays.sort로 각각 정렬할 수 있다.
                             <br>이를 구체화한 클래스 객체들은 Comparator 정의 없이 SortedMap, SortedSet의 키로 이용할 수 있다.
-                            <br>3. null은 객체가 아니므로 equals(null)이 false를 리턴하는 것과 달리 compareTo(null)은 NullPointerException을 내보내는 것이 바람직하다.
-                            <br>4. 다음 성질을 만족하도록 구체화함이 권장된다. A class C is consistent with equals IFF (e1.compareTo(e2) == 0) == e1.equals(e2)
+                            <br>3. null은 객체가 아니므로 equals(null)이 false를 리턴하는 것과 달리 compareTo(null)은 NullPointerException을 내보내는
+                            것이 바람직하다.
+                            <br>4. 다음 성질을 만족하도록 구체화함이 권장된다. A class C is consistent with equals IFF (e1.compareTo(e2) == 0) ==
+                            e1.equals(e2)
                             <br>5. int compareTo(T o)
                             <br>&raquo; o보다 앞서면(작으면) 음수, 같으면 0, 뒤면(크면) 양수 반환.
                         </td>
@@ -1427,32 +1441,89 @@
                         <td>
                             1. native process들에 대한 제어 제공. 프로세스 생애 모니터링, 자식 프로세스 나열, 프로세스 정보 얻기, 프로세스 종료 등.
                             <br>2. 프로세스 ID는 OS가 할당한 것으로, 값의 범위는 OS에 의존적이다.
-                            <br>3. ProcessHandle 객체는 다음 팩터리 메서드로 반환된다. current(), of(long), children(), descendants(), parent(), allProcesses()
+                            <br>3. ProcessHandle 객체는 다음 팩터리 메서드로 반환된다. current(), of(long), children(), descendants(), parent(),
+                            allProcesses()
                             <br>4. SecurityManager의 RuntimePermission("manageProcess")만큼의 제어 권한을 갖는다.
                             <br>5. ProcessHandle 객체들을 비교할 때는 equals, compareTo 메서드를 이용해야 한다.
-                            <br>6. long pid()
-                            <br>7. static Optional&lt;ProcessHandle&gt; of(long pid)
+                            <br>
+                            <b>6. static interface ProcessHandle.Info Since 9</b>
+                            <br>&raquo; Optional&lt;String&gt; command() : 실행가능한 경로 반환
+                            <br>&raquo; Optional&lt;String&gt; commandLine() : command()와 arguments()의 결과를 공백으로 구분한 결과 반환
+                            <br>&raquo; Optional&lt;String[]&gt; arguments() : 프로세스의 인자 반환
+                            <br>&raquo; Optional&lt;Instant&gt; startInstant() : 프로세스의 시작 시각 반환
+                            <br>&raquo; Optional&lt;Duration&gt; totalCpuDuration() : CPU 사용 시간 반환
+                            <br>&raquo; Optional&lt;String&gt; user() : 프로세스 유저 반환
+                            <br>7. long pid()
+                            <br>8. static Optional&lt;ProcessHandle&gt; of(long pid)
                             <br>static ProcessHandle current()
                             <br>Optional&lt;ProcessHandle&gt; parent()
                             <br>&raquo; zombie 상태의 프로세스는 보통 parent가 없다.
                             <br>Stream&lt;ProcessHandle&gt; children()
                             <br>Stream&lt;ProcessHandle&gt; descendants()
                             <br>static Stream&lt;ProcessHandle&gt; allProcesses()
-                            <br>8. ProcessHandle.Info info()
-                            <br>9. CompletableFuture&lt;ProcessHandle&gt; onExit()
-                            <br>&raquo; onExit().get()을 호출하면 프로세스가 종료되는 것을 기다린다. supportsNormalTermination()이 false일 경우 onExit()에 등록한 후처리들이 진행되지 않을 수 있음.
-                            <br>10. boolean supportsNormalTermination()
+                            <br>9. ProcessHandle.Info info()
+                            <br>10. CompletableFuture&lt;ProcessHandle&gt; onExit()
+                            <br>&raquo; onExit().get()을 호출하면 프로세스가 종료되는 것을 기다린다. supportsNormalTermination()이 false일 경우 onExit()에
+                            등록한 후처리들이 진행되지 않을 수 있음.
+                            <br>11. boolean supportsNormalTermination()
                             <br>&raquo; destroy() 메서드가 정상적으로 프로세스를 종료하는지 여부. false면 프로세스를 강제로 즉시 종료함을 의미.
-                            <br>11. boolean destroy()
-                            <br>&raquo; 프로세스 종료에 시간이 걸릴 수 있으므로, isAlive()가 얼마간 true를 반환할 수 있다. 성공적으로 프로세스를 종료하면 true, 아니면 false를 반환한다.
+                            <br>12. boolean destroy()
+                            <br>&raquo; 프로세스 종료에 시간이 걸릴 수 있으므로, isAlive()가 얼마간 true를 반환할 수 있다. 성공적으로 프로세스를 종료하면 true, 아니면 false를
+                            반환한다.
                             <br>boolean destroyForcibly() : 강제 종료
-                            <br>12. boolean isAlive() : PID가 유효하면 alive로 간주
+                            <br>13. boolean isAlive() : PID가 유효하면 alive로 간주
                             <button type="button" onclick="javascript:showCode('JavaLang/src/ProcessHandleExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("JavaLang/console/con2.txt", "console");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Readable">
+                        <th>interface Readable Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. Readable은 문자들에 대한 소스다.
+                            <br>2. int read(CharBuffer cb) throws IOException
+                            <br>&raquo; 문자들을 그대로 cb에 put()을 통해 저장한다. cb에 대한 어떠한 사전처리도 없다. 저장한 char 개수를 반환하며, 소스의 끝이면 -1을 반환한다.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/ReadableExample.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con3.txt", "console");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Runnable">
+                        <th>@FunctionalInterface interface Runnable Since 1.0</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. Runnable은 한 쓰레드로서 실행되도록 구체화돼야 한다. Thread의 run()만을 재정의할 때 사용한다.
+                            <br>2. void run()
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/RunnableExample.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "console");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="">
