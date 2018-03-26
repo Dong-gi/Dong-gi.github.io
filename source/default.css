@@ -16,6 +16,19 @@ tr * {
     line-height: 1.8;
 }
 
+code tr:hover {
+    background-color: antiquewhite;
+}
+
+code tr * {
+    line-height: 0.0;
+}
+
+code th {
+    color: #CCC;
+    background-color: ivory;
+    width: 45px;
+}
 
 /* Overwrite the Bootstrap's settings */
 

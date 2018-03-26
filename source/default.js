@@ -200,13 +200,14 @@ function closeAll() {
 }
 
 var codeIDs = {};
-function showCode(fileName, nohighlight) {
+var codes = {};
+function showCode(fileName, lan) {
     if (codeIDs.hasOwnProperty(fileName)) {
         $("div#" + codeIDs[fileName]).modal("show");
     } else {
-        codeIDs[fileName] = "code-" + new Date().getTime();
+        var id = codeIDs[fileName] = "code-" + new Date().getTime();
         $("body").append(
-            '<div id="' + codeIDs[fileName] + '" class="modal code-modal" tabindex="-1" role="dialog">\
+            '<div id="' + id + '" class="modal code-modal" tabindex="-1" role="dialog">\
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">\
                     <div class="modal-content">\
                         <div class="modal-header">\
@@ -215,7 +216,9 @@ function showCode(fileName, nohighlight) {
                                 <span aria-hidden="true" style="color: black; font-size: 2em; font-weight: bold;">&times;</span>\
                             </button>\
                         </div>\
-                        <div class="modal-body"><pre></pre></div>\
+                        <div class="modal-body">\
+                            <pre><code class="' + lan + '"></code></pre>\
+                        </div>\
                         <div class="modal-footer">\
                             <button type="button" class="btn btn-primary copy">Copy</button>\
                             <button type="button" class="btn btn-primary download">Download</button>\
@@ -224,37 +227,39 @@ function showCode(fileName, nohighlight) {
                     </div>\
                 </div>\
             </div>');
-        if (nohighlight) {
-            $("div#" + codeIDs[fileName] + " div.modal-body").load((fileName.startsWith('/') ? "" : "./") + fileName);
-            $("div#" + codeIDs[fileName]).modal("show");
+        if (lan == "nohighlight") {
+            $("div#" + id + " div.modal-body").load((fileName.startsWith('/') ? "" : "./") + fileName, (response, status, xhr) => {
+                codes[id] = response;
+            });
+            $("div#" + id).modal("show");
         } else {
-            var loc = window.location.pathname;
-            var dir = loc.substring(0, loc.lastIndexOf('/'));
-            $("div#" + codeIDs[fileName] + " div.modal-body").load("https://github.com/Dong-gi/Dong-gi.github.io/blob/master" + (fileName.startsWith('/') ? fileName : dir + "/" + fileName), (response, status, xhr) => {
-                if (!response) {
-                    $("div#" + codeIDs[fileName] + " pre").load((fileName.startsWith('/') ? "" : "./") + fileName);
-                } else {
-                    $("div#" + codeIDs[fileName] + " div.modal-body").html($("div#" + codeIDs[fileName] + " div.file").html());
+            $("<p>").load((fileName.startsWith('/') ? "" : "./") + fileName, (response, status, xhr) => {
+                response = response.replace(/\t/gm, '    ');
+                codes[id] = response;
+                var lines;
+                if (lan == "text")
+                    lines = response.split(/\n/gm);
+                else
+                    lines = hljs.highlight(lan, response)['value'].split(/\n/gm);
+                var table = $('<table class="table"></table>');
+                for (var line = 0; line < lines.length; ++line) {
+                    table.append('<tr><th>' + (line + 1) + '</th><td>' + lines[line] + '</td></tr>');
                 }
-                $("div#" + codeIDs[fileName]).modal("show");
+                $("div#" + id + " code").html(table);
+                $("div#" + id).modal("show");
             });
         }
-        $("div#" + codeIDs[fileName] + " button.copy").click(() => {
-            if ($("div#" + codeIDs[fileName] + " pre").length == 0)
-                copyToClipboard($("div#" + codeIDs[fileName] + " table.highlight"));
-            else
-                copyToClipboard($("div#" + codeIDs[fileName] + " pre"));
-            $("div#" + codeIDs[fileName]).focus();
+        $("div#" + id + " button.copy").click(() => {
+            copyTextToCilpboard(codes[id], $("div#" + id));
+            showSnackbar("Copied!!", $("div#" + id));
+            $("div#" + id).focus();
         });
-        $("div#" + codeIDs[fileName] + " button.download").click(() => {
-            if ($("div#" + codeIDs[fileName] + " pre").length == 0)
-                downloadCode(fileName.split('/').pop(), $("div#" + codeIDs[fileName] + " table.highlight").text());
-            else
-                downloadCode(fileName.split('/').pop(), $("div#" + codeIDs[fileName] + " pre").text());
+        $("div#" + id + " button.download").click(() => {
+            downloadCode(fileName.split('/').pop(), codes[id]);
         });
     }
 }
-function copyToClipboard(element) {
+function copyElementToClipboard(element) {
     var notActive = {
         TEXTAREA: true
     };
@@ -262,14 +267,17 @@ function copyToClipboard(element) {
     while (notActive[parent.prop('tagName')]) {
         parent = parent.parent();
     }
+    copyTextToCilpboard($(element).text() || $(element).val(), parent);
+    showSnackbar("Copied!!", parent);
+    parent.focus();
+}
+function copyTextToCilpboard(text, parent) {
     var hiddenElement = $('<textarea></textarea>');
-    parent.append(hiddenElement);
-    hiddenElement.text($(element).text().trim() || $(element).val().trim());
+    $(parent || 'body').append(hiddenElement);
+    hiddenElement.text(text.trim());
     hiddenElement.select();
     document.execCommand("copy");
-    showSnackbar("Copied!!", parent);
     hiddenElement.remove();
-    parent.focus();
 }
 function downloadCode(title, text) {
     var hiddenElement = document.createElement('a');
@@ -286,4 +294,8 @@ function showSnackbar(text, parent, timeout) {
         hiddenElement.removeClass('show');
         hiddenElement.remove();
     }, timeout || 1000);
+}
+
+function htmlEscape(text) {
+    return text.replace(/&/gm, '&amp;').replace(/</gm, '&lt;').replace(/>/gm, '&gt;').replace(/\t/gm, '    ');
 }

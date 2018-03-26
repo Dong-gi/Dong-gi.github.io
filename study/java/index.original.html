@@ -59,10 +59,10 @@
                             1. 주석(Comment)은 코더를 위한 것으로, 컴파일러는 무시하는 문장들이다.
                             <br>2. // : '//'부터 줄의 끝까지 무시한다.
                             <br>3. /* */ : '/*'와 '*/' 사이의 모든 텍스트를 무시한다.
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Comments.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Comments.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 주석 &raquo;
                             </button>
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/console/con1.txt');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/console/con1.txt', 'text');" class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -78,7 +78,7 @@
                             <br>
                             <a role="button" class="btn btn-info btn-sm" href="https://en.wikipedia.org/wiki/Camel_case">카멜 케이스 설명</a>
                             <a role="button" class="btn btn-info btn-sm" href="https://en.wikipedia.org/wiki/Snake_case">스네이크 케이스 설명</a>
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Identifier.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Identifier.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 식별자 및 식별자를 통한 자료형 구분 &raquo;
                             </button>
                         </td>
@@ -93,16 +93,16 @@
                             <br>3. 자바의 8가지 기본 자료형 : boolean, char, byte, short, int, long, float, double
                             <br>4. 식별자 없이 값 자체를 나타내는 코드를 리터럴(Literal)이라 부른다. 각 자료형에 대응하는 리터럴 표기는 코드를 참고. 예시에서 '+' 연산자가 기본 자료형
                             각각에 대해 문자열 연결을 해줌을 볼 수 있다. 하지만 자바는 연산자 재정의를 지원해주지는 않으므로 오해하지 말아야 한다.
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Type.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Type.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 자료형 및 리터럴 표기 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("BasicConcepts/console/con2.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("BasicConcepts/console/con2.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <br>5. 자바는 강한 타입 검사를 하며, 이는 자바스크립트와 같이 null, '', 0 등을 false로 간주하거나 하는 일이 결코 없음을 의미한다.
                             <br>6. 참조 자료형(Reference Type)은 기본 자료형을 제외한 모든 자료형을 포함하며, 메모리의 주소를 통해 값에 접근한다. C/C++의 포인터와 같지만, 자바는
                             포인터 연산을 지원하지는 않는다. 예시 코드는 자바의 배열에 대해 보인다. 자바의 다차원 배열은 기본적으로 Jagged Array이다.
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Type2.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Type2.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 배열 &raquo;
                             </button>
                             <br>7. 기본 자료형 변수는 정적 할당, 참조 자료형 변수는 동적 할당된다. 동적 할당된 객체들은 자동으로 GC 대상이 된다.
@@ -118,10 +118,10 @@
                         <td>
                             1. 다음 예시는 비트 연산자와 0 나누기를 보여준다. 정수 0으로 나누는 것은 허용되지 않지만, 실수 0.으로 나누는 것은 허용된다. 다만, 0.으로 나눈 결과를 비교할 때는 예시와 같이 Double 클래스 메서드를
                             이용하는 것이 정확하다.
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Operator.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Operator.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 연산 예시 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("BasicConcepts/console/con3.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("BasicConcepts/console/con3.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -135,10 +135,10 @@
                             <br>2. switch : 정수(char 포함), String, Enum이 허용된다.
                             <br>3. for : label을 설정해 중첩된 루프들 중 어느 것이든 중지시킬 수 있다. Iterable하면 향상된 for 구문을 이용할 수 있다.
                             <br>4. while, do ~ while;
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 자바 Syntax &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("BasicConcepts/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("BasicConcepts/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -174,7 +174,7 @@
                         <td>
                             1. 가변 길이 매개변수 선언 : type... 배열명
                             <br>2. 나열된 매개변수들이 하나의 배열로 넘겨질 뿐, 배열 자체를 넘길 수는 없다.
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/VarArgs.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/VarArgs.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : Variable Arguments &raquo;
                             </button>
                         </td>
@@ -215,7 +215,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/JUnitExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/JUnitExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : JUnitExample &raquo;
                             </button>
                         </td>
@@ -242,7 +242,7 @@
                             <br>6. super : 부모 클래스를 가리키는 키워드. super()를 통해 부모 메서드 호출, super.methodName()을 통해 다른 메서드 호출
                             <br>7. 자바는 오버라이드를 명시하지 않아도 재정의한 메서드를 호출해준다.(Dynamic method dispatch)
                             <br>8. instanceof 연산자로 호환 여부 확인 가능
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Class.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Class.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 클래스 &raquo;
                             </button>
                         </td>
@@ -265,10 +265,10 @@
                             <br>10. void wait() : 해당 객체에 대해 스레드를 대기.
                             <br>11. void wait(long timeout) : 깨워질 때까지 최대 timeout ms동안 대기.
                             <br>12. void wait(long timeout, int nanos) : timeout ms + nanos ns
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Oobject.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Oobject.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : clone(), equals(), hashCode(), toString(), compareTo() &raquo;
                             </button>
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Notify.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Notify.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : notify(), wait() &raquo;
                             </button>
                         </td>
@@ -283,7 +283,7 @@
                             <br>3. 인터페이스의 메서드는 기본적으로 body가 없지만, default method는 가질 수 있다.
                             <br>4. 인터페이스 구체화 : implements
                             <br>5. 추상클래스는 인터페이스를 부분적으로 구체화해도 된다.
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Interface.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Interface.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : Interface &raquo;
                             </button>
                         </td>
@@ -298,7 +298,7 @@
                             <br>3. Inner Interface : 외부 클래스 이름으로 접근
                             <br>4. Anonymous Class : 외부 클래스 final 멤버 접근 가능
                             <br>5. Local Class : 외부 클래스 final 멤버 접근 가능
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Nested.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Nested.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : Nested Class &raquo;
                             </button>
                         </td>
@@ -329,7 +329,7 @@
                             <br>&raquo; Throwable initCause(Throwable causeExc) : 예외의 근원을 설정하며, 생성자를 통해 호출되거나 이미 호출된 경우 다시 호출
                             불가
                             <br>&raquo; Throwable getCause() : 현재 예외의 근원을 얻는다. 없으면 null
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Eexception.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Eexception.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예외 &raquo;
                             </button>
                             <br>5. 부모보다 많은 종류의 예외를 공표할 수 없다.
@@ -348,11 +348,11 @@
                             생성될 수 있지만 바이트 코드 단계기 때문에 에러가 발생되지 않고 잘 처리된다.
                             <br>5. 제네릭을 통한 객체 생성 불가. 제네릭을 static 요소에서 이용하는 데 제한.
                             <br>6. 예시 1에서 제네릭 타입의 선언, 제네릭 리스트 일부 구현, 바운드된 타입 매개변수 선언을 보인다.
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Generic.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Generic.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : Generic 1 &raquo;
                             </button>
                             <br>7. 예시 2에서 비제네릭 클래스의 제네릭 생성자 선언, 비제네릭 클래스 - 제네릭 클래스 상속을 보인다.
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Generic2.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Generic2.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : Generic 2 &raquo;
                             </button>
                         </td>
@@ -366,10 +366,10 @@
                             <br>2. enum은 여타 클래스와 같이 멤버 변수, 메서드를 가질 수 있으며, private 생성자와 abstract method도 가질 수 있다.
                             <br>3. enum은 로드시 한번만 생성되므로 싱글톤을 간단하게 구현할 수 있다.
                             <br>4. Enum&lt;E&gt; :: name(), toString(), ordinal(), compareTo(), valueOf()
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Eenum.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Eenum.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : Enum &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("BasicConcepts/console/con5.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("BasicConcepts/console/con5.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -487,10 +487,10 @@
                             <br>&raquo; 객체를 out을 통해 저장한다.
                             <br>3. void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
                             <br>&raquo; out을 통해 객체를 복구한다.
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/ExternalizableExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaIO/src/ExternalizableExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con1.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaIO/console/con1.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -502,10 +502,10 @@
                         <td>
                             1. 파일명 필터링에 사용되며 File::listFiles의 매개변수로 객체가 넘겨진다.
                             <br>2. boolean accept(File pathname)
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/FileFilterExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaIO/src/FileFilterExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con2.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaIO/console/con2.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -517,10 +517,10 @@
                         <td>
                             1. 특정 디렉터리에서의 파일명 필터링에 사용되며 FileDialog::setFilenameFilter, File::list, File::listFiles의 매개변수로 객체가 넘겨진다.
                             <br>2. boolean accept(File dir, String name)
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/FilenameFilterExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaIO/src/FilenameFilterExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con3.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaIO/console/con3.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -603,10 +603,10 @@
                             <br>ANY-ACCESS-MODIFIER Object readResolve() throws ObjectStreamException -0[
                             <br>5. 클래스 버전은 다음과 같은 상수 속성을 통해 명시할 수 있다. 정의되지 않은 경우 기본값을 사용하지만, 반드시 이를 명시할 것을 권장하고 있다.
                             <br>ANY-ACCESS-MODIFIER static final long serialVersionUID = (version number)L;
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/SerializableExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaIO/src/SerializableExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con1.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaIO/console/con1.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -641,7 +641,7 @@
                             <br>10. long transferTo(OutputStream out) throws IOException
                             <br>&raquo; 입력 스트림의 모든 바이트를 읽어들여 out에 쓴다. 총 전송 바이트 수를 반환하며, 스트림을 닫는 작업을 하진 않는다.
                             <br>&raquo; 작업이 끝날 때까지 스레드가 블록되며, 스트림이 비동기적으로 닫히거나, 인터럽트가 발생하는 경우에 대해 대처하지 않는다.
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/InputStreamExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaIO/src/InputStreamExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
                         </td>
@@ -712,10 +712,10 @@
                             <br>public InputStreamReader(InputStream in, Charset cs) Since 1.4
                             <br>public InputStreamReader(InputStream in, CharsetDecoder dec) Since 1.4
                             <br>3. String getEncoding()
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/BufferedReaderExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaIO/src/BufferedReaderExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaIO/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -876,10 +876,10 @@
                             <br>public BufferedReader(Reader in)
                             <br>3. String readLine() throws IOException : EOF도 줄의 끝으로 간주
                             <br>4. Stream&lt;String&gt; lines() Since 1.8
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/BufferedReaderExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaIO/src/BufferedReaderExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaIO/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -986,10 +986,10 @@
                             <br>public PipedInputStream(int pipeSize) Since 1.6
                             <br>3. void connect(PipedOutputStream src) throws IOException
                             <br>4. protected void receive(int b) throws IOException Since 1.1 : 내부적으로 버퍼에 1바이트를 쓰는 메서드로 보인다.
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/PipedStreamExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaIO/src/PipedStreamExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con5.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaIO/console/con5.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -1003,10 +1003,10 @@
                             <br>2. public PipedOutputStream(PipedInpuStream snk) throws IOException
                             <br>public PipedOutputStream()
                             <br>3. void connect(PipedInputStream snk)
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/PipedStreamExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaIO/src/PipedStreamExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con5.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaIO/console/con5.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -1017,10 +1017,10 @@
                     <tr>
                         <td>
                             1. 사용은 PipedInputStream과 유사하다.
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/PipedReaderExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaIO/src/PipedReaderExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con6.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaIO/console/con6.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -1031,10 +1031,10 @@
                     <tr>
                         <td>
                             1. 사용은 PipedOutputStream과 유사하다.
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/PipedReaderExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaIO/src/PipedReaderExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con6.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaIO/console/con6.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -1059,10 +1059,10 @@
                             <br>2. public StreamTokenizer(Reader r) Since 1.1
                             <br>&raquo; 독특하게도 모든 속성들이 public이다.
                             <br>&raquo; 예제를 보면 TT_EOF를 하나의 토큰이 아닌 3개로 분리함을 볼 수 있다.
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/StreamTokenizerExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaIO/src/StreamTokenizerExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con7.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaIO/console/con7.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -1092,10 +1092,10 @@
                             1. 이미 읽은 것을 취소하고 다시 읽을 수 있는 기능을 지원한다. 자동으로 이전에 읽은 내용을 저장하지는 않으므로, 덮어쓰기처럼 이용할 수 있다.
                             <br>2. public PushbackReader(Reader in, int size)
                             <br>public PushbackReader(Reader in) : 1글자 짜리 버퍼를 이용한다.
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/PushBackExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaIO/src/PushBackExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con8.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaIO/console/con8.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -1157,10 +1157,10 @@
                             <br>String readLine()
                             <br>char[] readPassword(String fmt, Object... args)
                             <br>char[] readPassword()
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/ConsoleExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaIO/src/ConsoleExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con9.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaIO/console/con9.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -1231,10 +1231,10 @@
                             <br>static File createTempFile(String prefix, String suffix) throws IOException Since 1.2
                             <br>15. int hashCode() : 추상 경로이름과 1234321 사이의 xor 연산
                             <br>16. Path toPath() Since 1.7 : java.nio.file.Path
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/FileExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaIO/src/FileExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con10.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaIO/console/con10.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -1312,7 +1312,7 @@
                             <br>5. PermissionCollection newPermissionCollection()
                             <br>&raquo; 컬렉션에 다음 두 가지 권한─("/tmp/-", "read"), ("/tmp/scratch/foo", "write")─들이 있을 때, 이에 대한 implies메서드에
                             권한 ("/tmp/scratch/foo", "read,write")을 넘겨준 결과는 true를 반환해야 한다.
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/FilePermissionExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaIO/src/FilePermissionExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
                         </td>
@@ -1385,10 +1385,10 @@
                             <br>&raquo; char들을 int로 0패딩하여 스트림 생성. 두 char로 쪼개진 유니코드 보충 평면의 문자를 하나로 합치진 않는다.
                             <br>default IntStream codePoints() Since 1.8
                             <br>&raquo; 유니코드 값들을 스트림으로 생성. 보충 평면의 문자는 Character.toCodePoint 메서드를 통해 하나의 int 값으로 형성.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/CharSequenceExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/CharSequenceExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con1.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con1.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -1428,7 +1428,7 @@
                             <br>&raquo; 순회하면서 action을 적용한다. 기본 구현 : for(T t : this) action.accept(t);
                             <br>4. default Spliterator&lt;T&gt; spliterator() Since 1.8
                             <br>&raquo; 기본 구현은 Sliterator의 모든 사항을 구현하지 않으므로 재정의하는 것이 더 좋은 성능을 보인다.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/IterableExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/IterableExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
                         </td>
@@ -1471,10 +1471,10 @@
                             반환한다.
                             <br>boolean destroyForcibly() : 강제 종료
                             <br>13. boolean isAlive() : PID가 유효하면 alive로 간주
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/ProcessHandleExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/ProcessHandleExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con2.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con2.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -1487,10 +1487,10 @@
                             1. Readable은 문자들에 대한 소스다.
                             <br>2. int read(CharBuffer cb) throws IOException
                             <br>&raquo; 문자들을 그대로 cb에 put()을 통해 저장한다. cb에 대한 어떠한 사전처리도 없다. 저장한 char 개수를 반환하며, 소스의 끝이면 -1을 반환한다.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/ReadableExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/ReadableExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con3.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con3.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -1502,7 +1502,7 @@
                         <td>
                             1. Runnable은 한 쓰레드로서 실행되도록 구체화돼야 한다. Thread의 run()만을 재정의할 때 사용한다.
                             <br>2. void run()
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/RunnableExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/RunnableExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
                         </td>
@@ -1730,10 +1730,10 @@
                             <br>&raquo; 이름 반환 : Character.UnicodeBlock.of(codePoint).toString().replace('_', ' ') + " " + Integer.toHexString(codePoint).toUpperCase(Locale.ROOT);
                             <br>&raquo; 정의되어 있지 않으면 null 반환
                             <br>static int codePointOf(String name) Since 9 : 정의되어 있지 않으면 예외
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/CharacterExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/CharacterExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -1827,10 +1827,10 @@
                             <br>10. boolean isAnnotationPresent(Class&lt;? extends Annotation&gt; annotationClass) Since 1.5
                             <br>AnnotatedType getAnnotatedSuperclass() Since 1.8
                             <br>AnnotatedType[] getAnnotatedInterfaces() Since 1.8
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/ClassExample.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/ClassExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con5.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con5.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
@@ -1841,28 +1841,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -1877,10 +1859,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -1895,10 +1877,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -1913,10 +1895,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -1931,10 +1913,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -1949,10 +1931,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -1967,10 +1949,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -1985,10 +1967,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2003,10 +1985,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2021,10 +2003,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2039,10 +2021,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2057,10 +2039,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2075,10 +2057,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2093,10 +2075,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2111,10 +2093,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2129,10 +2111,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2147,10 +2129,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2165,10 +2147,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2183,10 +2165,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2201,10 +2183,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2219,10 +2201,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2237,10 +2219,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2255,10 +2237,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2273,10 +2255,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2291,10 +2273,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2309,10 +2291,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2327,10 +2309,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2345,10 +2327,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2363,10 +2345,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2381,10 +2363,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2399,10 +2381,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2417,10 +2399,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2435,10 +2417,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2453,10 +2435,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2471,10 +2453,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2489,10 +2471,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2507,10 +2489,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2525,10 +2507,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2543,10 +2525,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2561,10 +2543,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2579,10 +2561,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2597,10 +2579,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2615,10 +2597,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2633,10 +2615,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2651,10 +2633,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2669,10 +2651,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2687,10 +2669,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2705,10 +2687,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2723,10 +2705,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2741,10 +2723,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2759,10 +2741,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2777,10 +2759,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2795,10 +2777,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2813,10 +2795,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2831,10 +2813,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2849,10 +2831,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2867,10 +2849,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2885,10 +2867,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2903,10 +2885,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2921,10 +2903,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2939,10 +2921,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2957,10 +2939,10 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -2975,10 +2957,28 @@
                     <tr>
                         <td>
                             1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
@@ -3018,10 +3018,10 @@
                     <tr>
                         <td>
                             1. 내용
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Syntax.java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 코드 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("BasicConcepts/console/con4.txt");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("BasicConcepts/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
                         </td>
