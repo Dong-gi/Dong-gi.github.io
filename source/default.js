@@ -33,7 +33,7 @@ $(function () {
                             $(conLv3s[k]).next().addClass("d-none");
                             $(conLv3s[k]).click((event) => {
                                 var content = $(event.currentTarget).next();
-                                if($(content).hasClass("d-none")) {
+                                if ($(content).hasClass("d-none")) {
                                     $(content).removeClass("d-none");
                                 } else {
                                     $(content).addClass("d-none");
@@ -177,13 +177,13 @@ function openAll() {
     var conLv3s = $(".con-lv-3");
     var current = $(conLv3s[0]);
     var pos = (document.scrollTop || window.pageYOffset) - (document.clientTop || 0) + 52;
-    for(var i = 0; i < conLv3s.length; ++i) {
-        if(pos < $(conLv3s[i]).offset().top) {
+    for (var i = 0; i < conLv3s.length; ++i) {
+        if (pos < $(conLv3s[i]).offset().top) {
             break;
         }
         current = $(conLv3s[i]);
     }
-    for(var i = 0; i < conLv3s.length; ++i) {
+    for (var i = 0; i < conLv3s.length; ++i) {
         $(conLv3s[i]).next().removeClass("d-none");
     }
     updateDropupManually(current.attr('id'));
@@ -192,35 +192,30 @@ function openAll() {
 function closeAll() {
     var current = openAll();
     var conLv3s = $(".con-lv-3");
-    for(var i = 0; i < conLv3s.length; ++i) {
+    for (var i = 0; i < conLv3s.length; ++i) {
         $(conLv3s[i]).next().addClass("d-none");
     }
     updateDropupManually(current.attr('id'));
     return current;
 }
 
-var codeSet = new Set();
-function showCode(fileNameOrText, lan, alt) {
-    var nohighlight = lan == "nohighlight";
-    var isPlaneText = (lan == "console" || lan == "shell" || lan == "text");
-    var original = fileNameOrText;
-    fileNameOrText = fileNameOrText.replace(/\W|\s/mg, '');
-    if (!codeSet.has(original)) {
+var codeIDs = {};
+function showCode(fileName, nohighlight) {
+    if (codeIDs.hasOwnProperty(fileName)) {
+        $("div#" + codeIDs[fileName]).modal("show");
+    } else {
+        codeIDs[fileName] = "code-" + new Date().getTime();
         $("body").append(
-            '<div id="code-' + fileNameOrText + '" class="modal code-modal" tabindex="-1" role="dialog">\
+            '<div id="' + codeIDs[fileName] + '" class="modal code-modal" tabindex="-1" role="dialog">\
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">\
                     <div class="modal-content">\
                         <div class="modal-header">\
-                            <h2 style="display: inline-block;" class="modal-title">' + (isPlaneText ? lan : original.split('/').pop()) + '</h2>\
+                            <h2 style="display: inline-block;" class="modal-title">' + fileName.split('/').pop() + '</h2>\
                             <button style="float: right;" type="button" class="close" data-dismiss="modal" aria-label="Close">\
                                 <span aria-hidden="true" style="color: black; font-size: 2em; font-weight: bold;">&times;</span>\
                             </button>\
                         </div>\
-                        <div class="modal-body">\
-                            <pre><code class="' + lan + '">\
-                                <p>Modal body text goes here.</p>\
-                            </code></pre>\
-                        </div>\
+                        <div class="modal-body"><pre></pre></div>\
                         <div class="modal-footer">\
                             <button type="button" class="btn btn-primary copy">Copy</button>\
                             <button type="button" class="btn btn-primary download">Download</button>\
@@ -229,34 +224,34 @@ function showCode(fileNameOrText, lan, alt) {
                     </div>\
                 </div>\
             </div>');
-        codeSet.add(original);
         if (nohighlight) {
-            $("div#code-" + fileNameOrText + " div.modal-body").empty();
-            $("div#code-" + fileNameOrText + " div.modal-body").load((original.startsWith('/') ? "" : "./") + original);
-            $("div#code-" + fileNameOrText).modal("show");
-        } else if (isPlaneText && !original.endsWith(".txt")) {
-            $("div#code-" + fileNameOrText + " div.modal-body").empty();
-            $("div#code-" + fileNameOrText + " div.modal-body").text(hljs.highlight("shell", original)['value'].replace(/\t/gm, '    '));
-            $("div#code-" + fileNameOrText).modal("show");
+            $("div#" + codeIDs[fileName] + " div.modal-body").load((fileName.startsWith('/') ? "" : "./") + fileName);
+            $("div#" + codeIDs[fileName]).modal("show");
         } else {
-            $("div#code-" + fileNameOrText + " div.modal-body code").load((original.startsWith('/') ? "" : "./") + original, (response, status, xhr) => {
-                if (alt) {
-                    $("div#code-" + fileNameOrText + " div.modal-body code").text(response.replace(/\t/gm, '    '));
+            var loc = window.location.pathname;
+            var dir = loc.substring(0, loc.lastIndexOf('/'));
+            $("div#" + codeIDs[fileName] + " div.modal-body").load("https://github.com/Dong-gi/Dong-gi.github.io/blob/master" + (fileName.startsWith('/') ? fileName : dir + "/" + fileName), (response, status, xhr) => {
+                if (!response) {
+                    $("div#" + codeIDs[fileName] + " pre").load((fileName.startsWith('/') ? "" : "./") + fileName);
                 } else {
-                    $("div#code-" + fileNameOrText + " div.modal-body code").html(hljs.highlight(lan, $("div#code-" + fileNameOrText + " div.modal-body code").text())['value'].replace(/\t/gm, '    '));
+                    $("div#" + codeIDs[fileName] + " div.modal-body").html($("div#" + codeIDs[fileName] + " div.file").html());
                 }
-                $("div#code-" + fileNameOrText).modal("show");
+                $("div#" + codeIDs[fileName]).modal("show");
             });
         }
-        $("div#code-" + fileNameOrText + " button.copy").click(() => {
-            copyToClipboard($("div#code-" + fileNameOrText + " div.modal-body"));
-            $("div#code-" + fileNameOrText).focus();
+        $("div#" + codeIDs[fileName] + " button.copy").click(() => {
+            if ($("div#" + codeIDs[fileName] + " pre").length == 0)
+                copyToClipboard($("div#" + codeIDs[fileName] + " table.highlight"));
+            else
+                copyToClipboard($("div#" + codeIDs[fileName] + " pre"));
+            $("div#" + codeIDs[fileName]).focus();
         });
-        $("div#code-" + fileNameOrText + " button.download").click(() => {
-            downloadCode(original.split('/').pop(), $("div#code-" + fileNameOrText + " div.modal-body").text());
+        $("div#" + codeIDs[fileName] + " button.download").click(() => {
+            if ($("div#" + codeIDs[fileName] + " pre").length == 0)
+                downloadCode(fileName.split('/').pop(), $("div#" + codeIDs[fileName] + " table.highlight").text());
+            else
+                downloadCode(fileName.split('/').pop(), $("div#" + codeIDs[fileName] + " pre").text());
         });
-    } else {
-        $("div#code-" + fileNameOrText).modal("show");
     }
 }
 function copyToClipboard(element) {
