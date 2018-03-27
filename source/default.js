@@ -7,6 +7,7 @@ var dropupMaxHeight;
 var dropupMaxWidth;
 
 $(function () {
+    console.log(hljs.listLanguages());
     $("nav#top-nav").load("/source/nav-top.html", (response, status, xhr) => {
         $("footer#main-footer").load("/source/footer.html", (response, status, xhr) => {
             $("nav#bottom-nav").load("/source/nav-bottom.html", (response, status, xhr) => {
