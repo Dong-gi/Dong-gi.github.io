@@ -3,76 +3,723 @@
 <html lnag="kor">
 
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, shrink-to-fit=no">
 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-	<script src="/source/highlight.pack.js"></script>
-	<link rel="stylesheet" href="/source/xcode.css">
-	<link rel="stylesheet" href="/source/default.css">
-	<script src="/source/default.js"></script>
+    <script src="/source/highlight.pack.js"></script>
+    <link rel="stylesheet" href="/source/xcode.css">
+    <link rel="stylesheet" href="/source/default.css">
+    <script src="/source/default.js"></script>
 
-	<title>Python</title>
+    <title>Python</title>
 </head>
 
 <body>
-	<nav id="top-nav" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark"></nav>
+    <nav id="top-nav" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark"></nav>
 
-	<nav id="bottom-nav" class="navbar fixed-bottom navbar-expand navbar-dark bg-dark"></nav>
+    <nav id="bottom-nav" class="navbar fixed-bottom navbar-expand navbar-dark bg-dark"></nav>
 
     <main role="main">
         <div class="container">
             <div class="jumbotron">
                 <h1 class="display-3">Python</h1>
-                <p>Python is concise.</p>
             </div>
         </div>
 
-		<div class="container table-responsive con-lv-1" con-title="정리중">
-			<h2>정리중</h2>
-			<table class="table table-hover">
-				<tbody class="con-lv-2" con-title="정리중">
-					<tr style="background-color: #bbb;">
-						<th>정리중</th>
-					</tr>
-					<tr class="con-lv-3" con-title="정리중">
-						<th>정리중</th>
-					</tr>
-					<tr>
-						<td>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+        <div class="container table-responsive con-lv-1" con-title="Python 3">
+            <h2>Python 3</h2>
+            <table class="table table-hover">
+                <tbody class="con-lv-2" con-title="Basic">
+                    <tr style="background-color: #bbb;">
+                        <th>Basic</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="설치 및 실행">
+                        <th>설치 및 실행</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. Python 2에 대한 지원이 중단되므로 특별한 이유가 없다면 Python 3이상의 최신 버전 설치. https://www.python.org/downloads/
+                            <br>2. 윈도우 Shell에서 파이썬을 곧바로 실행하려면 설치경로(예. C:\Program Files\Python36)를 path 환경변수에 추가.
+                            <br>3. Python Shell은 각 문장을 대화식 인터프리터가 해석하여 결과를 바로 출력해준다.
+                            <br>4. 'hello.py'파일이 저장된 디렉터리에서 셸을 통해 python hello.py를 실행.
+                            <br>5. Python Shell에서 import this를 실행하면 파이썬의 철학을 확인할 수 있다.
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "python");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "shell");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
 
-	</main>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                View Code &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-	<hr>
+    </main>
 
-	<footer id="main-footer" class="container"></footer>
+    <hr>
+
+    <footer id="main-footer" class="container"></footer>
 </body>
 
 </html>
 
 
-        <!--div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h2>설치 및 실행</h2>
-                    <p>
-                        1. Python 2에 대한 지원이 중단되므로 특별한 이유가 없다면 Python 3이상의 최신 버전 설치. https://www.python.org/downloads/
-                        <br>2. 윈도우 Shell에서 파이썬을 곧바로 실행하려면 설치경로(예. C:\Program Files\Python36)를 path 환경변수에 추가.
-                        <br>3. Python Shell은 각 문장을 대화식 인터프리터가 해석하여 결과를 바로 출력해준다.
-                        <br>4. 'hello.py'파일이 저장된 디렉터리에서 셸을 통해 python hello.py를 실행.
-                        <br>5. Python Shell에서 import this를 실행하면 파이썬의 철학을 확인할 수 있다.</p>
-                </div>
-                <div class="col-md-4">
-                    <h2>자료형 1</h2>
+<!--                <h2>자료형 1</h2>
                     <p>
                         1. type() 함수를 통해 인자의 자료형을 확인할 수 있다.
                         <br>2. 파이썬의 변수는 동적 자료형이므로 ─ 실행 도중 자료형이 바뀔 수 있다는 의미 ─ 자바와 같은 강한 타입 검사를 하지 않는다. 또, 변수를 나타내는 키워드 없이 식별자만 있으면 변수로써 이용할 수 있다.
@@ -189,47 +836,5 @@
                     <p>1. 모듈 : 파이썬 파일 하나
                         <br> 2. 패키지 : __init__.py 파일을 포함하는 디렉터리
                         <br> 3. [from package] import module_name1, module_name2</p>
-                    <p>
-                        <a class="btn btn-secondary" href="#" role="button">View Code(No Code) &raquo;</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h2></h2>
-                    <p></p>
-                    <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
-                    </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <h2></h2>
-                    <p></p>
-                    <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h2></h2>
-                    <p></p>
-                    <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h2></h2>
-                    <p></p>
-                    <p>
-                        <a class="btn btn-secondary" href="./1000.php" role="button">View Code &raquo;</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <hr>
-
-    <footer class="container"></footer>
-</body>
 
 </html-->
