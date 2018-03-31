@@ -45,30 +45,202 @@
                             1. Python 2에 대한 지원이 중단되므로 특별한 이유가 없다면 Python 3이상의 최신 버전 설치. https://www.python.org/downloads/
                             <br>2. 윈도우 Shell에서 파이썬을 곧바로 실행하려면 설치경로(예. C:\Program Files\Python36)를 path 환경변수에 추가.
                             <br>3. Python Shell은 각 문장을 대화식 인터프리터가 해석하여 결과를 바로 출력해준다.
-                            <br>4. 'hello.py'파일이 저장된 디렉터리에서 셸을 통해 python hello.py를 실행.
+                            <br>4. hello.py 실행 : 저장된 디렉터리에서 셸을 통해 python hello.py를 실행.
                             <br>5. Python Shell에서 import this를 실행하면 파이썬의 철학을 확인할 수 있다.
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "python");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "shell");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                "import this" &raquo;
                             </button>
 
                         </td>
                     </tr>
+                    <tr class="con-lv-3" con-title="자료형">
+                        <th>자료형</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. type() 함수를 통해 인자의 자료형을 확인할 수 있다.
+                            <br>2. 파이썬의 변수는 동적 자료형(실행 도중 자료형이 바뀔 수 있다)으로, 자바와 같은 강한 타입 검사를 하지 않는다. 또, 변수를 나타내는 키워드 없이 식별자만 있으면
+                            변수로써 이용할 수 있다.
+                            <br>3. 복소수도 이용 가능 : x + yj
+                            <button type="button" onclick='javascript:showCode("samples/con2.txt", "text");' class="btn btn-primary btn-sm">
+                                정수형 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/con3.txt", "text");' class="btn btn-primary btn-sm">
+                                부동소수형 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                문자열 &raquo;
+                            </button>
+                            <br>&raquo; str() : 사람이 읽기 편한 형태, repr() : 인터프리터가 인식하는 형태
+                            <br>4. 파이썬의 강력한 내장 자료형 : 리스트, 튜플, 딕셔너리, 셋
+                            <br>&raquo; 리스트는 변경 가능 &lt;-&gt; 튜플은 변경 불가능
+                            <br>&raquo; 튜플은 불변하므로 딕셔너리의 키로 이용할 수 있다.
+                            <button type="button" onclick='javascript:showCode("samples/con5.txt", "text");' class="btn btn-primary btn-sm">
+                                리스트 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/con6.txt", "text");' class="btn btn-primary btn-sm">
+                                튜플 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/con8.txt", "text");' class="btn btn-primary btn-sm">
+                                딕셔너리 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/con7.txt", "text");' class="btn btn-primary btn-sm">
+                                셋 &raquo;
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="문법">
+                        <th>문법</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 주석 : #
+                            <br>2. 라인 유지 : \
+                            <br>3. 조건 분기 : if ~ elif ~ else
+                            <br>4. bool 연산 : and, or, not
+                            <br>5. False로 간주되는 값 : None, 0, 0.0, '', [], (), {}, set()
+                            <br>6. while 반복 : while + 조건식
+                            <br>7. for 순회 : for + 순회 변수
+                            <br>8. 반복문 제어 : break, continue
+                            <br>9. break 호출 확인 : else
+                            <button type="button" onclick='javascript:showCode("samples/loop_example.py", "python");' class="btn btn-primary btn-sm">
+                                break-else 예시 &raquo;
+                            </button>
+                            <br>10. 콤마로 구분된 값들을 자동으로 튜플로 구성하여 다중 할당, 다중 반환이 가능하다.
+                            <button type="button" onclick='javascript:showCode("samples/fibonacci_example.py", "python");' class="btn btn-primary btn-sm">
+                                다중 할당 예시 : 피보나치 수열 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/gcd_lcm_example.py", "python");' class="btn btn-primary btn-sm">
+                                다중 반환 예시 : 최대공약수/최소공배수 &raquo;
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="순회 대상 생성">
+                        <th>순회 대상 생성</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 수열 생성 : range([start,] stop[, step]). start 기본값 0, step 기본값 1. stop 자체는 미포함
+                            <br>2. 여러 시퀀스 동시 순회 : zip(). 같은 오프셋의 요소들로 튜플을 생성. 시퀀스가 하나라도 끝나면 순회 종료
+                            <br>3. comprehension : 순회를 통해 리스트, 딕셔너리, 셋 생성
+                            <button type="button" onclick='javascript:showCode("samples/comprehension_example.py", "python");' class="btn btn-primary btn-sm">
+                                Comprehension 예시 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/con9.txt", "text");' class="btn btn-primary btn-sm">
+                                콘솔창 &raquo;
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="함수">
+                        <th>함수</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 정의 : def name():
+                            <br>2. return이 없으면 호출자는 None을 얻는다. None 검사 : is None
+                            <br>3. * : 인자를 튜플로. ** : 인자를 딕셔너리로.
+                            <br>4. docstring : 함수 body 첫 줄에 문자열로 함수 설명. help()로 출력된다.
+                            <br>5. 함수 외부 scope에 접근할 수 있다.
+                            <br>6. 함수 내부에 함수 정의 가능.
+                            <br>7. 람다 함수 : lambda
+                            <br>8. Generator : 자료를 순회할 때마다 다음 항목 반환
+                            <br>&raquo; range() : 미리 모든 값을 생성한다.
+                            <br>9. Decorator : 함수 꾸미기. 동적으로 기능 추가.
+                            <br>10. * : 인자 리스트 언패킹, ** : 키워드 인자 딕셔너리 언패킹
+                            <br>11. def f(a: str, b: str = 'hello') -&gt; str: // 타입 명시
+                            <button type="button" onclick='javascript:showCode("samples/function_example.py", "python");' class="btn btn-primary btn-sm">
+                                함수 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/con10.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="네임스페이스">
+                        <th>네임스페이스</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 네임스페이스 : "속성 이름 -&gt; 객체 이름" 매핑
+                            <br>2. 메인 프로그램은 전역 네임스페이스를 정의
+                            <br>3. globals() : 전역 네임스페이스 정보를 담은 딕셔너리
+                            <br>4. 함수는 지역 네임스페이스를 정의
+                            <br>5. locals() : 지역 네임스페이스 정보를 담은 딕셔너리
+                            <br>6. global 키워드로 전역 변수 접근
+                            <br>7. 변경 가능한 속성은 del 키워드를 이용해 객체에서 지울 수 있다.
+                            <button type="button" onclick='javascript:showCode("samples/namespace_example.py", "python");' class="btn btn-primary btn-sm">
+                                naspace 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/con11.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/namespace_example.py", "python");' class="btn btn-primary btn-sm">
+                                scope 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/con11.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                            (출처:
+                            <a role="button" class="btn btn-info btn-sm" href="https://docs.python.org/3/tutorial/classes.html">https://docs.python.org/3/tutorial/classes.html</a>)
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="예외">
+                        <th>예외</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. try:
+                            <br>2. except: 또는 except ExceptionType as name:
+                            <br>3. 사용자 정의 : class MyException(Exception):
+                            <br>4. raise MyException("Don't Worry")
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="모듈">
+                        <th>모듈</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 모듈 : 파이썬 파일 하나
+                            <br>2. 패키지 : __init__.py 파일을 포함하는 디렉터리
+                            <br>3. [from package] import module1, module2
+                            <br>from module import variable, function
+                            <br>import module as alias
+                            <br>from module import *
+                            <br>4. del module, reload(module)
+                            <br>5. 처음 실행되는 모듈의 __name__ 속성은 "__main__"이다.
+                            <button type="button" onclick='javascript:showCode("samples/con12.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/fibonacci_example.py", "python");' class="btn btn-primary btn-sm">
+                                피보나치 예제 &raquo;
+                            </button>
+                            <br>6. 모듈 탐색 경로를 쉽게 추가할 수 있다.
+                            <br>&raquo; sys.path.append('/usr/me/some_directory')
+                            <br>7. dir()을 이용해 모듈에 정의된 것들을 확인할 수 있다.
+                            <br>&raquo; dir(sys)
+                            <br>&raquo; dir()은 내장 함수와 변수를 포함하지 않는다. 이들 내장 요소들은 dir(builtins)를 통해 확인할 수 있다.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="pass">
+                        <th>pass</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 빈 루프를 표현할 때 이용
+                            <br>2. 빈 클래스를 표현할 때 이용
+                            <br>3. 빈 함수를 표현할 때 이용
+                        </td>
+                    </tr>
                     <tr class="con-lv-3" con-title="">
                         <th></th>
                     </tr>
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -82,10 +254,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -99,10 +271,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -116,10 +288,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -133,10 +305,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -150,10 +322,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -167,10 +339,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -184,10 +356,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -201,10 +373,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -218,10 +390,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -235,10 +407,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -252,10 +424,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -269,10 +441,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -286,10 +458,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -303,10 +475,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -320,10 +492,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -337,10 +509,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -354,10 +526,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -371,10 +543,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -388,10 +560,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -405,10 +577,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -422,10 +594,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -439,10 +611,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -456,10 +628,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -473,10 +645,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -490,10 +662,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -507,10 +679,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -524,10 +696,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -541,10 +713,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -558,146 +730,10 @@
                     <tr>
                         <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
+                                Console &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
-                                View Code &raquo;
+                                예제 &raquo;
                             </button>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto Externalizable &raquo;
@@ -717,124 +753,3 @@
 </body>
 
 </html>
-
-
-<!--                <h2>자료형 1</h2>
-                    <p>
-                        1. type() 함수를 통해 인자의 자료형을 확인할 수 있다.
-                        <br>2. 파이썬의 변수는 동적 자료형이므로 ─ 실행 도중 자료형이 바뀔 수 있다는 의미 ─ 자바와 같은 강한 타입 검사를 하지 않는다. 또, 변수를 나타내는 키워드 없이 식별자만 있으면 변수로써 이용할 수 있다.
-                    </p>
-                    <p>
-                            <a class="btn btn-secondary" href="javascript:showCode(1, 'type');" role="button">View Code : Number, Operators, String &raquo;</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h2>자료형 2</h2>
-                    <p>
-                        1. 리스트는 변경 가능 <-> 튜플은 변경 불가능
-                        <br>2. 튜플은 불변하므로 딕셔너리의 키로 이용할 수 있다.
-                    </p>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(1, 'list');" role="button">View Code : List &raquo;</a>
-                        <a class="btn btn-secondary" href="javascript:showCode(1, 'tuple');" role="button">View Code : Tuple &raquo;</a>
-                        <a class="btn btn-secondary" href="javascript:showCode(1, 'dictionary');" role="button">View Code : Dictionary &raquo;</a>
-                        <a class="btn btn-secondary" href="javascript:showCode(1, 'set');" role="button">View Code : Set &raquo;</a>
-                    </p>
-                </div>
-            </div>
-            <div class="row" id="code-div-1"></div>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <h2>문법 1</h2>
-                    <p>
-                        1. 주석 : #
-                        <br>2. 라인 유지 : \
-                        <br>3. 조건 분기 : if ~ elif ~ else
-                        <br>4. bool 연산 : and, or, not
-                        <br>5. False로 간주되는 값 : None, 0, 0.0, '', [], (), {}, set()
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h2>문법 2</h2>
-                    <p>
-                        1. while 반복 : while + 조건식
-                        <br>2. for 순회 : for + 순회 변수
-                        <br>3. 반복문 제어 : break, continue
-                        <br>4. break 호출 확인 : else
-                    </p>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(2, 'loop');" role="button">View Code : Loop statements &raquo;</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h2>순회 대상 생성</h2>
-                    <p>
-                        1. 수열 생성 : range([start,] stop[, step]). start 기본값 0, step 기본값 1. stop 자체는 미포함
-                        <br>2. 여러 시퀀스 동시 순회 : zip(). 같은 오프셋의 요소들로 튜플을 생성. 시퀀스가 하나라도 끝나면 순회 종료
-                        <br>3. comprehension : 순회를 통해 리스트, 딕셔너리, 셋 생성
-                    </p>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(2, 'comprehension');" role="button">View Code : Sequence, Comprehension &raquo;</a>
-                    </p>
-                </div>
-            </div>
-            <div class="row" id="code-div-2"></div>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <h2>함수 1</h2>
-                    <p>
-                        1. 정의 : def name():
-                        <br>2. return이 없으면 호출자는 None을 얻는다. None 검사 : is None
-                        <br>3. * : 인자를 튜플로. ** : 인자를 딕셔너리로.
-                        <br>4. docstring : 함수 body 첫 줄에 문자열로 함수 설명. help()로 출력된다.
-                        <br>5. 외부 scope를 사용할 수 있으므로 유의
-                    </p>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(3, 'function');" role="button">View Code : Function &raquo;</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h2>함수 2</h2>
-                    <p>
-                        1. 함수 내부에 함수 정의 가능.
-                        <br>2. 람다 함수 : lambda
-                        <br>3. Generator : 자료를 순회할 때마다 다음 항목 반환
-                        <br>4. Decorator : 함수 꾸미기
-                    </p>
-                    <p>
-                            <a class="btn btn-secondary" href="javascript:showCode(3, 'function2');" role="button">View Code : Function &raquo;</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h2>네임스페이스</h2>
-                    <p>
-                        1. 메인 프로그램은 전역 네임스페이스를 정의
-                        <br>2. globals() : 전역 네임스페이스 정보를 담은 딕셔너리
-                        <br>3. 함수는 지역 네임스페이스를 정의
-                        <br>4. locals() : 지역 네임스페이스 정보를 담은 딕셔너리
-                        <br>5. global 키워드로 전역 변수 접근
-                    </p>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(3, 'namespace');" role="button">View Code : Namespace &raquo;</a>
-                    </p>
-                </div>
-            </div>
-            <div class="row" id="code-div-3"></div>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <h2>예외</h2>
-                    <p>1. try:
-                        <br> 2. except: or except ExceptionType as name:
-                        <br> 3. 사용자 정의 : class MyException(Exception):
-                        <br> 4. raise MyException("Don't Worry")</p>
-                </div>
-                <div class="col-md-4">
-                    <h2>모듈</h2>
-                    <p>1. 모듈 : 파이썬 파일 하나
-                        <br> 2. 패키지 : __init__.py 파일을 포함하는 디렉터리
-                        <br> 3. [from package] import module_name1, module_name2</p>
-
-</html-->

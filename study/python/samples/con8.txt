@@ -1,0 +1,79 @@
+>>> # 생성
+>>> dic = {
+	'key' : 'value',
+	123 : 456
+	}
+>>> dic
+{'key': 'value', 123: 456}
+>>> 
+>>> dic = dict()
+>>> dic = {}
+>>> dic['key1'] = 'val1'
+>>> dic[12] = 34
+>>> dic
+{'key1': 'val1', 12: 34}
+>>> 
+>>> 
+>>> # 딕셔너리로의 형변환
+>>> dict([['a', 'b'], ['c', 'd']])
+{'a': 'b', 'c': 'd'}
+>>> dict([('a', 'b'), ('c', 'd')])
+{'a': 'b', 'c': 'd'}
+>>> dict((['a', 'b'], ['c', 'd']))
+{'a': 'b', 'c': 'd'}
+>>> dict((('a', 'b'), ('c', 'd')))
+{'a': 'b', 'c': 'd'}
+>>> dict(['a', 'b', 'c', 'd'])
+Traceback (most recent call last):
+  File "<pyshell#274>", line 1, in <module>
+    dict(['a', 'b', 'c', 'd'])
+ValueError: dictionary update sequence element #0 has length 1; 2 is required
+>>> dict(['ab', 'cd'])
+{'a': 'b', 'c': 'd'}
+>>> dict(('ab', 'cd'))
+{'a': 'b', 'c': 'd'}
+>>> dict(['abcd', 'efgh'])
+Traceback (most recent call last):
+  File "<pyshell#277>", line 1, in <module>
+    dict(['abcd', 'efgh'])
+ValueError: dictionary update sequence element #0 has length 4; 2 is required
+>>> 
+>>> # 병합 : 기존 값은 갱신
+>>> dic.update({
+	'key1': 'val3',
+	'key2': 'val4'
+	})
+>>> dic
+{'key1': 'val3', 12: 34, 'key2': 'val4'}
+>>> 
+>>> # 요소 삭제
+>>> del dic['key1']
+>>> dic
+{12: 34, 'key2': 'val4'}
+>>> dic.clear()
+>>> dic
+{}
+>>> 
+>>> # 키 포함 여부
+>>> 'key2' in dic
+False
+>>> 
+>>> # 키-값 얻기
+>>> dic = dict(('ab', 'cd'))
+>>> dic.keys()
+dict_keys(['a', 'c'])
+>>> dic.values()
+dict_values(['b', 'd'])
+>>> dic.items()
+dict_items([('a', 'b'), ('c', 'd')])
+>>> 
+>>> # 복사
+>>> dic2 = dic # 얕은 복사
+>>> dic3 = dic.copy() # 깊은 복사
+>>> dic['a'] = 'z'
+>>> dic
+{'a': 'z', 'c': 'd'}
+>>> dic2
+{'a': 'z', 'c': 'd'}
+>>> dic3
+{'a': 'b', 'c': 'd'}
