@@ -1,0 +1,8 @@
+DK
+KD
+'weight' in dir(p) :  True
+'weight' in dir(p2) :  False
+'height' in dir(p) :  True
+'height' in dir(p2) :  True
+<class '__main__.Person'>
+<class '__main__.Person'>
