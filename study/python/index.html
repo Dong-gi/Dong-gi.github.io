@@ -705,8 +705,8 @@
                             <br>&raquo; encoding, errors 둘 다 없으면 object.__str__() 또는 repr(object) 반환
                             <br>&raquo; encoding, errors 하나라도 있으면 object는 bytes-like object여야 한다. bytes.decode(encoding, errors)를 반환한다.
                             <br>3. String Methods
-                            <br>&raquo; str.capitalize(), str.casefold() : lower()보다 강한 변환, 
-                            <br>&raquo; str.center(width[, fillchar]), 
+                            <br>&raquo; str.capitalize(), str.casefold() : lower()보다 강한 변환, str.lower()
+                            <br>&raquo; str.center(width[, fillchar]), str.ljust(width[, fillchar]), 
                             <br>&raquo; str.count(sub[, start[, end]]), str.endswith(suffix[, start[, end]]) : suffix에 튜플도 가능, str.find(sub[, start[, end]]), str.index(sub[, start[, end]])
                             <br>&raquo; str.encode(encoding="utf-8", errors="strict"),
                             <br>&raquo; str.expandtabs(tabsize=8) : 오피스 문서와 같은 탭 작업. 문자열 끝에 탭이 존재하면 결과적으로 반환된 문자열은 tabsize의 배수 길이가 된다.
@@ -715,7 +715,10 @@
                                 예제 &raquo;
                             </button>
                             <a role="button" class="btn btn-info btn-sm" href="https://docs.python.org/3/library/stdtypes.html#str.format_map">출처: https://docs.python.org/3/library/stdtypes.html#str.format_map</a>
-                            <br>&raquo; str.isalnum(), str.isalpha(), str.isdecimal() : 10진 숫자만, str.isdigit(), str.isidentifier(), str.islower(), str.isnumeric() : digit보다 광범위, str.isprintable(), str.isspace(), str.istitle(), str.isupper(), 
+                            <br>&raquo; str.isalnum(), str.isalpha(), str.isdecimal() : 10진 숫자만, str.isdigit(), str.isidentifier(), str.islower(), str.isnumeric() : digit보다 광범위, str.isprintable(), str.isspace(), str.istitle(), str.isupper()
+                            <br>&raquo; str.join(iterable) : iterable 문자열들을 str로 접합
+                            <br>&raquo; str.lstrip([chars]) : chars에 속하는 연속되는 좌측 문자들을 제거한다. 인자가 없는 경우 연속적인 공백을 제거한다.
+                            
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
                                 Console &raquo;
                             </button>
