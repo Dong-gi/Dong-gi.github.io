@@ -705,10 +705,11 @@
                             <br>&raquo; encoding, errors 둘 다 없으면 object.__str__() 또는 repr(object) 반환
                             <br>&raquo; encoding, errors 하나라도 있으면 object는 bytes-like object여야 한다. bytes.decode(encoding, errors)를 반환한다.
                             <br>3. String Methods
-                            <br>&raquo; str.capitalize(), str.casefold() : lower()보다 강한 변환, str.lower()
-                            <br>&raquo; str.center(width[, fillchar]), str.ljust(width[, fillchar]), 
-                            <br>&raquo; str.count(sub[, start[, end]]), str.endswith(suffix[, start[, end]]) : suffix에 튜플도 가능, str.find(sub[, start[, end]]), str.index(sub[, start[, end]])
-                            <br>&raquo; str.encode(encoding="utf-8", errors="strict"),
+                            <br>&raquo; str.capitalize(), str.casefold() : lower()보다 강한 변환, str.upper(), str.lower(), str.swapcase() : 두 번 적용한 것이 원본과 항상 같지는 않다, str.title() : 제목 문자열(각 단어의 시작만 대문자)을 반환한다
+                            <br>&raquo; str.center(width[, fillchar]), str.ljust(width[, fillchar]), str.rjust(width[, fillchar])
+                            <br>&raquo; str.count(sub[, start[, end]]), str.find(sub[, start[, end]]), str.rfind(sub[, start[, end]]), str.index(sub[, start[, end]]), str.rindex(sub[, start[, end]])
+                            <br>&raquo; str.endswith(suffix[, start[, end]]), str.startswith(prefix[, start[, end]]) : suffix, prefix에 튜플도 가능
+                            <br>&raquo; str.encode(encoding="utf-8", errors="strict")
                             <br>&raquo; str.expandtabs(tabsize=8) : 오피스 문서와 같은 탭 작업. 문자열 끝에 탭이 존재하면 결과적으로 반환된 문자열은 tabsize의 배수 길이가 된다.
                             <br>&raquo; str.format(*args, **kwargs), str.format_map(mapping) : str.format(**mapping)과 유사.
                             <button type="button" onclick='javascript:showCode("samples/format_map_example.py", "python");' class="btn btn-primary btn-sm">
@@ -717,25 +718,39 @@
                             <a role="button" class="btn btn-info btn-sm" href="https://docs.python.org/3/library/stdtypes.html#str.format_map">출처: https://docs.python.org/3/library/stdtypes.html#str.format_map</a>
                             <br>&raquo; str.isalnum(), str.isalpha(), str.isdecimal() : 10진 숫자만, str.isdigit(), str.isidentifier(), str.islower(), str.isnumeric() : digit보다 광범위, str.isprintable(), str.isspace(), str.istitle(), str.isupper()
                             <br>&raquo; str.join(iterable) : iterable 문자열들을 str로 접합
-                            <br>&raquo; str.lstrip([chars]) : chars에 속하는 연속되는 좌측 문자들을 제거한다. 인자가 없는 경우 연속적인 공백을 제거한다.
-                            
-                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                Console &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                            <br>&raquo; str.strip([chars]), str.lstrip([chars]), str.rstrip([chars]) : 연속한 chars에 속하는 문자들을 제거한다. 인자가 없는 경우 연속적인 공백을 제거한다.
+                            <br>&raquo; static str.maketrans(x[, y[, z]]) : str.translate()에 쓰일 번역 테이블을 생성한다. 인자가 하나 주어진 경우 아래 서술한 table이어야 하고, 2개 주어진 경우 같은 길이의 문자열이어야 한다. 3개 주어진 경우 마지막 문자열의 각 문자들은 None에 매핑된다.
+                            <br>&raquo; str.translate(table) : table의 key는 유니코드 정수여야 하고, 대응하는 value는 유니코드 정수값이나 문자열이 가능하다.
+                            <button type="button" onclick='javascript:showCode("samples/translate_example.py", "python");' class="btn btn-primary btn-sm">
                                 예제 &raquo;
                             </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
+                            <button type="button" onclick='javascript:showCode("samples/con17.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
                             </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            <br>&raquo; str.partition(sep), str.rpartition(sep) : 처음 만나는 sep을 기준으로 분리하여, (앞부분, sep, 뒷부분)을 반환. sep이 없을 경우 (sep, '', '')반환.
+                            <br>&raquo; str.split(sep=None, maxsplit=-1), str.rsplit(sep=None, maxsplit=-1) : sep으로 분리한 부분 문자열 리스트 반환. sep이 주어지지 않은 경우 공백문자로 분리하며, 연속적인 공백문자도 하나의 공백으로 처리하고 결과에 빈 문자열은 포함하지 않는다.
+                            <br>&raquo; str.splitlines([keepends]) : keepends=True면 줄바꿈 문자를 결과에 포함한다.
+                            <br>&raquo; str.replace(old, new[, count])
+                            <br>&raquo; str.zfill(width) : '0'을 문자열 앞에 붙인다. 처음 등장하는 '+', '-'는 위치 유지.
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="Binary Sequence Types">
+                        <th>Binary Sequence Types</th>
                     </tr>
                     <tr>
                         <td>
+                            1. bytes, bytearray, memoryview : 핵심 자료형은 bytes, bytearray며, memoryview는 다른 이진 객체를 복사하지 않고 buffer protocol을 통해 접근한다.
+                            <br>2. Bytes Objects : 변경불가.
+                            <br>&raquo; class bytes([source[, encoding[, errors]]])
+                            <br>* b'hello'처럼 b로 시작하는 문자열 리터럴은 bytes 리터럴이다. 단, ASCII 문자만 가능하다.
+                            <br>* 0으로 초기화된 특정 길이 bytes : bytes(size)
+                            <br>* 정수 iterable로부터 생성 : bytes(iterable)
+                            <br>* 기존 이진 객체(buffer protocol)로부터 생성 : bytes(obj)
+                            <br>&raquo;&raquo; classmethod fromhex(string) : 16진수 표기 문자열로부터 생성. string은 반드시 1바이트당 2개 16진수를 포함해야하고, ' '는 무시된다.
+                            <br>&raquo;&raquo; Since 3.5 hex() : 16진수 표기 문자열 반환.
+                            <br>&raquo; 문자열과 달리 bytes 객체 b의 b[0]는 정수, b[0:1]는 길이 1의 bytes 객체다.
+                            <br>&raquo; bytes 객체는 보통 바이너리 문자열로 표현되며, 각 바이트 숫자를 확인하는 데는 list(b)가 유용하다.
+                            <br>3. Bytearray Objects
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
                                 Console &raquo;
                             </button>
