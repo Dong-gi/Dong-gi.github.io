@@ -354,7 +354,7 @@
 
 
         <div class="container table-responsive con-lv-1" con-title="Standard Library">
-            <h2>Standard Library</h2>
+            <h2>Standard Library - Python 3.6</h2>
             <table class="table table-hover">
                 <tbody class="con-lv-2" con-title="Built-in Functions">
                     <tr style="background-color: #bbb;">
@@ -1247,6 +1247,7 @@
                             <br>* \w, \S 등의 character class는 의미를 그대로 갖는다.
                             <br>* ^으로 시작하면, ^ 다음의 집합에 대한 여집합 문자들로 매칭한다. 단, 맨 처음 ^를 제외한 ^는 단순한 리터럴이다.
                             <br>* 리터럴 ']'를 집합에 명시하려면 \를 사용하거나 집합의 맨 처음에 적는다.
+                            <br>* 문자열 리터럴 표준 이스케이프 \a, \b, \f, \n, \r, \t, \u Since 3.3, \U Since 3.3, \v, \x, \\를 이용할 수 있다.
                             <br>&raquo; | : A|B는 A나 B 하나만 만족하면 된다. 판정은 왼쪽부터하며, 하나라도 만족되면 이후는 판정하지 않는다.
                             <br>&raquo; (...) : 내부에 있는 RE 자체. 매칭된 문자열을 나중에 가져올 수 있다.
                             <br>&raquo; (?...) : 확장 표현. ? 뒤의 첫 글자가 의미와 구조를 결정한다. 다음이 지원되는 확장들.
@@ -1280,7 +1281,458 @@
                             <br>&raquo; \D : not \d
                             <br>&raquo; \s : 공백 문자들을 매칭한다.
                             <br>&raquo; \S : not \s
-                            <br>&raquo; \w :
+                            <br>&raquo; \w : Word 문자들을 매칭한다.
+                            <br>&raquo; \W : not \W
+                            <br>&raquo; \Z : 문자열의 끝을 매칭한다.
+                            <br>
+                            <br>2. Module Contents
+                            <br>&raquo; re.compile(pattern, flags=0)
+                            <br>* Since 3.6 : Flag 상수들은 이제 RegexFlag(enum.IntFlag)의 인스턴스다.
+                            <br>&raquo; re.A, re.ASCII : 유니코드 매칭에서 \w, \W, \b, \B, \d, \D, \s, \S가 아스키코드만 매칭하도록 한다.
+                            <br>&raquo; re.DEBUG : 디버그 정보 출력
+                            <br>&raquo; re.I, re.IGNORECASE
+                            <br>&raquo; re.M, re.MULTILINE
+                            <br>&raquo; re.S, re.DOTALL : '.'이 newline을 포함하여 모든 문자를 매칭하도록 한다.
+                            <br>&raquo; re.X, re.VERBOSE : 주석을 달아 보기 편하도록 할 수 있다.
+                            <br>a = re.compile(r"""\d + # the integral part
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\. # the decimal point
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\d * # some fractional digits""", re.X)
+                            <br>&raquo; re.search(pattern, string, flags=0) : 처음 매칭된 것을 match 객체 반환. 없으면 None 반환
+                            <br>&raquo; re.match(pattern, string, flags=0) : 문자열 처음에 매칭되면 match 객체 반환. 없으면 None 반환
+                            <br>&raquo; re.fullmatch(pattern, string, flags=0) Since 3.4 : 문자열 전체가 매칭되면 match 객체 반환. 없으면 None
+                            반환.
+                            <br>&raquo; re.split(pattern, string, maxsplit=0, flags=0) : 매칭된 패턴들로 분리한다. pattern에 ()가 이용되었다면 매칭된
+                            문자열들도 결과에 포함된다. 이때, 매칭이 문자열 시작과 끝에서 이루어졌다면 결과의 각각 앞뒤에 빈 문자열이 포함된다. maxsplit &gt; 0이면, 나머지 부분이
+                            결과의 마지막에 포함된다.
+                            <br>* 빈 문자열 매칭은 지원하지 않는다. Since 3.5 : 빈 문자열 매칭은 ValueError
+                            <br>&raquo; re.findall(pattern, string, flags=0) : 문자열을 좌에서 우로 스캔하며 매칭된 패턴들을 리스트로 반환한다. 여러 그룹이 있는
+                            경우 각 그룹들의 결과는 튜플로 표현된다.
+                            <br>* 현재 빈 문자열 매칭 다음 글자는 결과에 포함되지 않는다. 3.7에서 변경된다.
+                            <br>&raquo; re.finditer(pattern, string, flags=0) : 매칭 결과를 반환하는 iterator를 반환한다. 매칭은 findall()과 같은
+                            방식으로 진행된다.
+                            <br>&raquo; re.sub(pattern, repl, string, count=0, flags=0) : string에서 pattern에 매칭된 문자열들을 repl로 변경하여
+                            반환. repl은 문자열이거나 함수일 수 있다. 문자열의 경우 \2와 같은 backreference가 가능하다.
+                            <br>&gt;&gt;&gt; re.sub(r'def\s+([a-zA-Z_][a-zA-Z_0-9]*)\s*\(\s*\):', r'static PyObject*\npy_\1(void)\n{',
+                            'def myfunc():')
+                            <br>'static PyObject*\npy_myfunc(void)\n{'
+                            <br>* repl이 함수인 경우 패턴 매치마다 호출된다. 함수는 match 객체 하나를 인자로 받고 대체 문자열을 반환한다.
+                            <br>&gt;&gt;&gt; def dashrepl(matchobj):
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if matchobj.group(0) == '-': return ' '
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else: return '-'
+                            <br>&gt;&gt;&gt; re.sub('-{1,2}', dashrepl, 'pro----gram-files')
+                            <br>'pro--gram files'
+                            <br>* 이전 매치와 바로 인접한 곳에서는 교체가 이루어지지 않는다. 예. sub('x*', '-', 'abc') returns '-a-b-c-'
+                            <br>* repl이 문자열일 때, 그룹에 대한 backreference들 \g&lt;name&gt;, \g&lt;number&gt;, \number 모두 가능하나, \g&lt;2&gt;0은
+                            \20과 같음에 유의. \g&lt;0&gt;는 RE에 매치된 전체 부분문자열을 가리킨다.
+                            <br>&raquo; re.subn(pattern, repl, string, count=0, flags=0) : re.sub()와 같은 작업을 하고, (new_string,
+                            number_of_subs_made)를 반환한다.
+                            <br>&raquo; re.escape(pattern) : ASCII 글자, 숫자, '_'를 제외한 pattern 내부 문자를 이스케이프한다. 임의 문자열을 매칭할 때 유용하다.
+                            <br>&raquo; re.purge() : RE 캐시를 삭제한다.
+                            <br>&raquo; exception re.error(msg, pattern=None, pos=None)
+                            <br>
+                            <br>3. Regular Expression Objects
+                            <br>* 컴파일된 RE 객체는 아래의 메서드와 속성을 지원한다.
+                            <br>&raquo; regex.search(string[, pos[, endpos]]) : string에서 처음 매칭되는 부분을 match 객체로 반환. 없으면 None.
+                            pos가 지정되더라도 '^'는 실제 문자열 처음에 매칭된다. endpos가 지정된 경우, rx.search(string, 0, 50)과 rx.search(string[:50],
+                            0)은 동등하다.
+                            <br>&raquo; regex.match(string[, pos[, endpos]]) : string 첫 부분이 매칭되면 match 객체로 반환. 없으면 None. pos와
+                            endpos는 search()에서와 의미가 같다. 따라서 pattern = re.compile("o")에 대하여, pattern.match("dog", 1)은 첫 부분에
+                            "o"가 매칭되지만, 실제 문자열을 자르진 않으므로 &lt;_sre.SRE_Match object; span=(1, 2), match='o'&gt;가 반환된다.
+                            <br>&raquo; regex.fullmatch(string[, pos[, endpos]]) Since 3.4 : string 전체가 매칭될 경우 match 객체를 반환한다.
+                            없으면 None. pos와 endpos는 search()에서와 의미가 같다.
+                            <br>&raquo; regex.split(string, maxsplit=0) : 위 split()과 동일하다.
+                            <br>&raquo; regex.findall(string[, pos[, endpos]]) : 위 findall()과 동일하며, pos와 endpos의 의미는 search()에서와
+                            같다.
+                            <br>&raquo; regex.finditer(string[, pos[, endpos]]) : 위 finditer()와 동일하며, pos와 endpos의 의미는 search()에서와
+                            같다.
+                            <br>&raquo; regex.sub(repl, string, count=0) : 위 sub()와 동일하다.
+                            <br>&raquo; regex.subn(repl, string, count=0) : 위 subn()과 동일하다.
+                            <br>&raquo; regex.flags : compile()에서 전달받은 플래그들과 (?...) 인라인 플래그들.
+                            <br>&raquo; regex.groups : 패턴 내부 capturing group 수
+                            <br>&raquo; regex.groupindex : (?P&lt;id&gt;)로 정의된 symbolic group 이름으로부터 그룹 숫자로의 dictionary 매핑
+                            <br>&raquo; regex.pattern : 패턴 문자열.
+                            <br>
+                            <br>4. Match Objects
+                            <br>* 매칭이 없다면 None을 반환하므로, match 객체는 항상 True로 간주된다.
+                            <br>&raquo; match.expand(template) : sub() 메서드가 하듯이, template 내부의 \ 대체 문자열을 알맞게 변경한다. \1, \g&lt;1&gt;,
+                            \g&lt;name&gt;와 같은 backreference들은 각각 연관된 그룹의 내용으로 대체된다.
+                            <br>* Since 3.5 : 맞는 그룹이 없다면 빈 문자열로 대체된다.
+                            <br>&raquo; match.group([group1, ...]) : 매칭된 그룹(들)을 반환한다.
+                            <br>&gt;&gt;&gt; m = re.match(r"(\w+) (\w+)", "Isaac Newton, physicist")
+                            <br>&gt;&gt;&gt; m.group(0) # The entire match
+                            <br>'Isaac Newton'
+                            <br>&gt;&gt;&gt; m.group(1) # The first parenthesized subgroup.
+                            <br>'Isaac'
+                            <br>&gt;&gt;&gt; m.group(1, 2) # Multiple arguments give us a tuple.
+                            <br>('Isaac', 'Newton')
+                            <br>&gt;&gt;&gt; m = re.match(r"(?P&lt;first_name&gt;\w+) (?P&lt;last_name&gt;\w+)", "Malcolm Reynolds")
+                            <br>&gt;&gt;&gt; m.group('first_name')
+                            <br>'Malcolm'
+                            <br>* 그룹이 여러번 매칭된 경우, 마지막 것만 접근 가능.
+                            <br>&gt;&gt;&gt; m = re.match(r"(..)+", "a1b2c3") # Matches 3 times.
+                            <br>&gt;&gt;&gt; m.group(1) # Returns only the last match.
+                            <br>'c3'
+                            <br>&raquo; match.__getitem__(g) Since 3.6 : m.group(g)와 동일
+                            <br>&gt;&gt;&gt; m = re.match(r"(\w+) (\w+)", "Isaac Newton, physicist")
+                            <br>&gt;&gt;&gt; m[0] # The entire match
+                            <br>'Isaac Newton'
+                            <br>&gt;&gt;&gt; m[1] # The first parenthesized subgroup.
+                            <br>'Isaac'
+                            <br>&raquo; match.groups(default=None) : 각 그룹들이 매칭된 것들을 튜플로 반환한다. 그룹이 매치되지 않았을 경우 default가 대신 이용된다.
+                            <br>&gt;&gt;&gt; m = re.match(r"(\d+)\.?(\d+)?", "24")
+                            <br>&gt;&gt;&gt; m.groups() # Second group defaults to None.
+                            <br>('24', None)
+                            <br>&raquo; match.groupdict(default=None) : groups()가 dictoinary로 표현
+                            <br>&raquo; match.start([group]), match.end([group])
+                            <br>* group이 매칭된 시작/끝 인덱스들을 반환한다. group 기본값은 0(전체), 매칭되지 않았다면 -1 반환.
+                            <br>* 만약 매칭되었다면 m.string[m.start(g):m.end(g)]은 g와 매칭된 문자열을 반환한다.
+                            <br>* 빈 문자열 매칭이라면 start(group)과 end(group)은 같은 값을 반환한다.
+                            <br>&raquo; match.span([group]) : (m.start(group), m.end(group)) 반환
+                            <br>&raquo; match.pos : search(), match()에서 전달받은 값으로, 탐색 시작 위치
+                            <br>&raquo; match.endpos : search(), match()에서 전달받은 탐색 종료 위치
+                            <br>&raquo; match.lastindex : 마지막으로 매칭된 그룹 index. 없으면 None
+                            <br>&raquo; match.lastgroup : 마지막으로 매칭된 그룹 이름. 없으면 None
+                            <br>&raquo; match.re : RE 객체
+                            <br>&raquo; match.string : match(), search()에서 전달받은 탐색 대상 문자열
+                            <br>
+                            <br>5. 예제. https://docs.python.org/3/library/re.html#regular-expression-examples
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="textwrap">
+                        <th>textwrap - Text wrapping and filling</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            &raquo; textwrap.wrap(text, width=70, **kwargs) : text의 모든 라인이 최대 width 길이가 되도록 조정한다. 라인들의 리스트를 반환한다. kwargs는 TextWrapper
+                            객체 메서드와 관련있다.
+                            <br>&raquo; textwrap.fill(text, width=70, **kwargs) : "\n".join(wrap(text, ...))와 동일하다
+                            <br>&raquo; textwrap.shorten(text, width, **kwargs) Since 3.4 : text의 모든 공백들을 단일 스페이스로 변경하고, width길이에
+                            맞게 자른다. width에 넘치는 경우 자른 자리에 placeholder를 넣은 길이가 width가 된다.
+                            <br>&gt;&gt;&gt; textwrap.shorten("Hello world", width=10, placeholder="...")
+                            <br>'Hello...'
+                            <br>&raquo; textwrap.dedent(text) : text 각 라인이 공통 공백으로 시작되는 경우, 이를 제거한다. 3중 인용구를 정렬하는데 유용하다.
+                            <br>&raquo; textwrap.indent(text, prefix, predicate=None) Since 3.3 : 공백 이외의 문자를 포함한 모든 라인 앞에 prefix를
+                            붙인다. predicate 함수는 각 라인을 인자로 받아 prefix를 붙일지 여부를 반환한다.
+                            <br>&raquo; class textwrap.TextWrapper(**kwargs)
+                            <br>* 속성 : width(기본 70), expand_tabs(기본 True), tabsize(기본 8) Since 3.3, replace_whitespace(기본 True),
+                            break_long_words(기본 True), break_on_hyphens(기본 True), max_lines(기본 None) Since 3.4, placeholder(기본
+                            '[...]') Since 3.4 : 잘린 부분 대신
+                            <br>* wrap(text), fill(text)
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="con-lv-2" con-title="Binary Data Services">
+                    <tr style="background-color: #bbb;">
+                        <th>Binary Data Services</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="struct">
+                        <th>struct - Interpret bytes as packed binary data</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. struct는 bytes 객체로 표현된 C 구조체와 Python 값 사이의 변환을 지원한다.
+                            <br>
+                            <br>2. Functions and Exceptions
+                            <br>&raquo; exception struct.error
+                            <br>&raquo; struct.pack(fmt, v1, v2, ...) : 포맷 문자열 fmt에 따라 v1, v2, ... 값들을 포장한 bytes 객체를 반환한다.
+                            <br>&raquo; struct.pack_into(fmt, buffer, offset, v1, v2, ...) : pack과 기능은 동일.
+                            <br>&raquo; struct.unpack(fmt, buffer) : 포맷 문자열 fmt에 따라 기존에 포장된 buffer를 풀어 값들의 튜플로 반환한다.
+                            <br>&raquo; struct.unpack_from(fmt, buffer, offset=0) : unpack과 기능은 동일
+                            <br>&raquo; struct.iter_unpack(fmt, buffer) Since 3.4 : unpack과 비슷하다. 같은 크기의 아이템들을 순회하는 iterator를
+                            반환한다. buffer의 크기는 반드시 fmt의 정수배여야 하며, calcsize(fmt)로 구할 수 있다.
+                            <br>&raquo; struct.calcsize(fmt) : 필요한 struct 바이트 크기
+                            <br>
+                            <br>3. Format Strings
+                            <br>&raquo; Byte Order, Size, and Alignment
+                            <br>* @(default) : native order : native size : native alignment // C 컴파일러의 sizeof로 결정된다.
+                            <br>* = : native : standard : none
+                            <br>* &lt; : little-endian : standard : none
+                            <br>* &gt; : big-endian : standard : none
+                            <br>* ! : network(=big-endian) : standard : none
+                            <br>&raquo; Format Characters
+                            <br>* x : pad byte(in C) : no value(in Python)
+                            <br>* c : char : bytes of length 1 : 1(size)
+                            <br>* b : signed char : integer : 1
+                            <br>* B : unsigned char : integer : 1
+                            <br>* ? : _Bool : bool : 1
+                            <br>* h : short : integer : 2
+                            <br>* H : unsigned short :integer : 2
+                            <br>* i : int : integer : 4
+                            <br>* I : unsigned int : integer : 4
+                            <br>* l : long : integer : 4
+                            <br>* L : unsigned long : integer : 4
+                            <br>* q : long long : integer : 8
+                            <br>* Q : unsigned long long : integer : 8
+                            <br>* n : ssize_t : integer : @에서만 가능
+                            <br>* N : size_t : integer : @에서만 가능
+                            <br>* f : float : float : 4
+                            <br>* d : double : float : 8
+                            <br>* s : char[] : bytes
+                            <br>* p : char[] : bytes
+                            <br>* P : void* : integer : @에서만 가능
+                            <br>** 포맷 문자 앞에 정수가 오면 반복을 의미한다. 포맷 문자 사이의 공백은 무시한다.
+                            <br>** s의 경우 앞에 오는 정수는 반복이 아닌 바이트 크기다. 주어지지 않는다면 기본은 1. 패킹 과정에서 크기를 맞추기 위해 null 바이트가 포함될 수 있다. 언패킹에선
+                            bytes 객체의 크기가 딱 알맞다.
+                            <br>** 0s는 빈 문자열을 의미한다.(0c는 0개 문자)
+                            <br>** p는 "Pascal string"으로, 첫 바이트는 문자열 길이를 담는다.
+                            <br>
+                            <br>4. 예제
+                            <br>&raquo; https://docs.python.org/3/library/struct.html#examples
+                            <br>&gt;&gt;&gt; from struct import *
+                            <br>&gt;&gt;&gt; pack('hhl', 1, 2, 3)
+                            <br>b'\x00\x01\x00\x02\x00\x00\x00\x03'
+                            <br>&gt;&gt;&gt; unpack('hhl', b'\x00\x01\x00\x02\x00\x00\x00\x03')
+                            <br>(1, 2, 3)
+                            <br>&gt;&gt;&gt; calcsize('hhl')
+                            <br>8
+                            <br><br>5. Classes
+                            <br>&raquo; class struct.Struct(format)
+                            <br>* pack(v1, v2, ...), pack_into(buffer, offset, v1, v2, ...), unpack(buffer), unpack_from(buffer, offset=0), iter_unpack(buffer) Since 3.4, format, size
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                예제 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                예제 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                예제 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                예제 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                예제 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                예제 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                예제 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                예제 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                예제 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                예제 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                예제 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                예제 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                예제 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                Console &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("samples/code.py", "python");' class="btn btn-primary btn-sm">
+                                예제 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
                             <button type="button" onclick='javascript:showCode("samples/con1.txt", "text");' class="btn btn-primary btn-sm">
                                 Console &raquo;
                             </button>
