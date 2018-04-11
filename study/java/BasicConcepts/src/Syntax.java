@@ -2,9 +2,8 @@
 public class Syntax {
 
 	public static void main(String[] args) {
-		int var1 = 0;
-		switch(var1)
-		{
+		var var1 = 0;
+		switch(var1) {
 		case 0:
 			System.out.println("Zero");
 			break;
@@ -12,9 +11,8 @@ public class Syntax {
 			System.out.println("Non Zero");
 		}
 
-		char var2 = '0';
-		switch(var2)
-		{
+		var var2 = '0';
+		switch(var2) {
 		case '0':
 			System.out.println("Zero Character");
 			break;
@@ -26,9 +24,8 @@ public class Syntax {
 			break;
 		}
 
-		String var3 = "asdf";
-		switch(var3)
-		{
+		var var3 = "asdf";
+		switch(var3) {
 		case "0":
 			System.out.println("Zero String");
 			break;
@@ -45,8 +42,8 @@ public class Syntax {
 			}
 		System.out.println("이중 반복문 종료");
 
-		int[] arr = new int[] {1, 2, 3, 4};
-		for(int i : arr) {
+		var arr = new int[] {1, 2, 3, 4};
+		for(var i : arr) {
 			System.out.print(" " + i);
 		}
 	}

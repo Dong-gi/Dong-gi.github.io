@@ -4,7 +4,7 @@ public class Notify {
 	private static final Object LOCK = new Object(); 
 
 	public static void main(String[] args) { 
-		Thread th1 = new Thread(()->{ 
+		var th1 = new Thread(()->{ 
 			System.out.println("Thread 1"); 
 			try { 
 				synchronized(LOCK) { 
@@ -20,7 +20,7 @@ public class Notify {
 				e.printStackTrace(); 
 			} 
 		});
-		Thread th2 = new Thread(() -> { 
+		var th2 = new Thread(() -> { 
 			System.out.println("Thread 2"); 
 			try { 
 				synchronized(LOCK) { 

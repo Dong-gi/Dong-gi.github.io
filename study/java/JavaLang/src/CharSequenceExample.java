@@ -3,7 +3,7 @@ import java.util.Arrays;
 public class CharSequenceExample {
 
 	public static void main(String[] args) {
-		String str = "안녕 🀂";
+		var str = "안녕 🀂";
 		System.out.println(str);
 		System.out.println(str.length());
 		System.out.println(Arrays.toString(str.chars().toArray()));

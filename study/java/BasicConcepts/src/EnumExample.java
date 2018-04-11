@@ -13,10 +13,10 @@ enum Weekday {
     void method() {}
 }
 
-public class Eenum {
+public class EnumExample {
     
     public static void main(String[] args) {
-        Weekday day = Weekday.FRIDAY;
+        var day = Weekday.FRIDAY;
         System.out.println(day.name());
         // toString() : 기본적으로 정의된 상수 이름을 반환한다.
         System.out.println(day);

@@ -15,9 +15,9 @@ public class FileExample {
 					return "";
 				}).toArray()));
 		System.out.println(System.getProperty("user.dir"));
-		File file = new File("./");
+		var file = new File("./");
 		System.out.println(Arrays.toString(file.list()));
-		try(FileWriter writer = new FileWriter("string3.data")) {
+		try(var writer = new FileWriter("string3.data")) {
 			writer.append("Hello World!").close();
 		}
 		System.out.println(Arrays.toString(file.list()));

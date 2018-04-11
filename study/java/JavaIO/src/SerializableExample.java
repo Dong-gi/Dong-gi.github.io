@@ -27,10 +27,10 @@ public class SerializableExample {
 	}
 
 	public static void main(String[] args) throws Exception {
-		Student student = new Student("name1", 2014136011);
+		var student = new Student("name1", 2014136011);
 
-		try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("student.data"));
-				ObjectInputStream in = new ObjectInputStream(new FileInputStream("student.data"));) {
+		try(var out = new ObjectOutputStream(new FileOutputStream("student.data"));
+				var in = new ObjectInputStream(new FileInputStream("student.data"));) {
 			out.writeObject(student);
 			student = (Student) in.readObject();
 			System.out.println(student.toString());

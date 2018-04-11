@@ -6,8 +6,8 @@ public class VarArgs {
 	}
 	
 	private static int sum(int... nums) {
-		int result = 0;
-		for(int n : nums) {
+		var result = 0;
+		for(var n : nums) {
 			result += n;
 		}
 		return result;

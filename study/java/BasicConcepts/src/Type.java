@@ -7,7 +7,7 @@ public class Type {
 	}
 
 	public static boolean sayTrue() {
-		boolean result = true;
+		var result = true;
 		System.out.println("Say: " + result);
 		return result;
 	}

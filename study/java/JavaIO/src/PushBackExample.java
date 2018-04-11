@@ -4,11 +4,11 @@ import java.io.StringReader;
 public class PushBackExample {
 
 	public static void main(String[] args) throws Exception {
-		String str = "This is original statement.";
+		var str = "This is original statement.";
 		System.out.println(str);
 		
-		PushbackReader reader = new PushbackReader(new StringReader(str), 100);
-		char[] buf = new char[5];
+		var reader = new PushbackReader(new StringReader(str), 100);
+		var buf = new char[5];
 		reader.read(buf);
 		reader.unread("[Overwrite]".toCharArray());
 		buf = new char[100];

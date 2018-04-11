@@ -12,8 +12,8 @@ public class Generic2 {
 	}
 	
 	public static void main(String[] args) {
-		ArrayList<String> l1 = new ArrayList<>();
-		ArrayList<Integer> l2 = new ArrayList<>();
+		var l1 = new ArrayList<String>();
+		var l2 = new ArrayList<Integer>();
 		l2.add(1);
 		
 		System.out.println(isEmpty(l1));

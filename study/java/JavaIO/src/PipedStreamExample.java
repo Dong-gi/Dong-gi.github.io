@@ -14,7 +14,7 @@ public class PipedStreamExample {
 			while(true) {
 				try {
 					if(in.available() > 0) {
-						byte[] buf = new byte[in.available()];
+						var buf = new byte[in.available()];
 						in.read(buf);
 						System.out.println("Received: " + new String(buf));
 					}
@@ -23,7 +23,7 @@ public class PipedStreamExample {
 			}
 		}).start();
 		
-		Scanner scanner = new Scanner(System.in);
+		var scanner = new Scanner(System.in);
 		while(true) {
 			System.out.print("Write Something: ");
 			out.write(scanner.nextLine().getBytes());

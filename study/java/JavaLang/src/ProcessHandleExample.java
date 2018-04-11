@@ -5,11 +5,11 @@ public class ProcessHandleExample {
 	private static long pid = 0;
 	
 	public static void main(String[] args) throws Exception {
-		ProcessBuilder pb = new ProcessBuilder("notepad", "");
-		ProcessHandle p1 = pb.start().toHandle();
+		var pb = new ProcessBuilder("notepad", "");
+		var p1 = pb.start().toHandle();
 		
 		ProcessHandle.allProcesses().forEach((handle) -> {
-			ProcessHandle.Info info = handle.info();
+			var info = handle.info();
 			System.out.println(
 					new StringBuilder("pid : ")
 					.append(handle.pid())
@@ -22,7 +22,7 @@ public class ProcessHandleExample {
 			}
 		});
 		
-		Optional<ProcessHandle> p2 = ProcessHandle.of(pid);
+		var p2 = ProcessHandle.of(pid);
 		System.out.println("\n\n" + p1.equals(p2.get()));
 		
 		p1.onExit().thenRun(() -> System.out.println("notepad closed"));

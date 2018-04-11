@@ -303,7 +303,7 @@
                             <br>11. void wait(long timeout) : 깨워질 때까지 최대 timeout ms동안 대기.
                             <br>
                             <br>12. void wait(long timeout, int nanos) : timeout ms + nanos ns
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Oobject.java', 'java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/ObjectExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : clone(), equals(), hashCode(), toString(), compareTo() &raquo;
                             </button>
                             <button type="button" onclick="javascript:showCode('BasicConcepts/src/Notify.java', 'java');" class="btn btn-primary btn-sm">
@@ -429,12 +429,71 @@
                             <br>3. enum은 로드시 한번만 생성되므로 싱글톤을 간단하게 구현할 수 있다.
                             <br>
                             <br>4. Enum&lt;E&gt; :: name(), toString(), ordinal(), compareTo(), valueOf()
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Eenum.java', 'java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/EnumExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : Enum &raquo;
                             </button>
                             <button type="button" onclick='javascript:showCode("BasicConcepts/console/con5.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="con-lv-2" con-title="업그레이드">
+                    <tr style="background-color: #bbb;">
+                        <th>업그레이드</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Java 1.8">
+                        <th>Java 1.8</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            &raquo; 이때부터 버전 표기를 "JDK 8"처럼 싱글 넘버로도 표기하기 시작.
+                            <br>&raquo; 람다 표현식 추가
+                            <br>&raquo; Pipeline과 Stream 추가
+                            <br>&raquo; 인터페이스에 Default Method 추가
+                            <br>&raquo; Type Annotation 추가
+                            <br>https://checkerframework.org/
+                            <br>* @NonNull : 컴파일러가 null이 대입되는지 확인
+                            <br>* @ReadOnly : 컴파일러가 쓰기 작업이 있는지 확인
+                            <br>* @Regex : 컴파일러가 정규표현식 검증
+                            <br>* @Untainted : 오염되지 않은(@Untainted) 값임을 명시. 또는 그러한 값만을 받아들임을 명시
+                            <br>* @Tainted : 값이 오염된(@Tainted) 가능성이 있음을 명시. 또는 오염된 값도 받아들임을 명시
+                            <br>* @m : 미터, 초 등의 단위 체크
+                            <br>&raquo; Collection API 강화
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Java 9">
+                        <th>Java 9</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            &raquo; Java Platform Module System(JPMS) 도입
+                            <br>&raquo; Collection factory method 추가 : List.of(...) 등
+                            <br>&raquo; try-with-resources 구문 변동 : final한(final 변수 or 변수 초기화 후 변경 없음) resource는 별개의 선언 없이 그대로
+                            이용할 수 있다.
+                            <br>&raquo; 타입 추론 강화로 diamond 연산자 &lt;&gt;가 익명 클래스도 지원
+                            <br>&raquo; "_"는 더 이상 유효한 식별자가 아니게 되었다.
+                            <br>&raquo; private 인터페이스 메서드 지원
+                            <button type="button" onclick="javascript:showCode('Java9/src/Updates.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("Java9/console/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Java 10">
+                        <th>Java 10</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            &raquo; 타입 추론 강화로 지역 변수의 타입 선언에 var를 이용할 수 있게 되었다.
+                            <br>* 지역변수를 선언하면서 초기화할 때 이용 가능
+                            <br>* 강화된 for 루프 인덱스에 이용 가능
+                            <br>* 기존 for 루프 인덱스에 이용 가능
+                            <br>* try-with-resources 변수에 이용 가능
+                            <br>&raquo; 변경 불가능한 collection 생성 메서드 추가 : toUnmodifiableList 등
+                            <br>&raquo; javadoc 커맨드라인 옵션에 --add-stylesheet 추가 : 여러 css 이용 가능.
                         </td>
                     </tr>
                 </tbody>
@@ -450,8 +509,8 @@
 
 
 
-        <div class="container table-responsive con-lv-1" con-title="Java SE 9">
-            <h2>Java SE 9</h2>
+        <div class="container table-responsive con-lv-1" con-title="Java SE 10">
+            <h2>Java SE 10</h2>
             <table class="table table-hover">
                 <tbody class="con-lv-2" con-title="java.io">
                     <tr style="background-color: #bbb;">
@@ -2024,7 +2083,8 @@
                     </tr>
                     <tr class="con-lv-3" con-title="Class&lt;T&gt;">
                         <th>final class Class&lt;T&gt; implements Serializable, GenericDeclaration, Type, AnnotatedElement Since
-                            1.0</th>
+                            1.0
+                        </th>
                     </tr>
                     <tr>
                         <td>
@@ -3339,8 +3399,8 @@
 
 
 
-        <div class="container table-responsive con-lv-1" con-title="JavaFX 9">
-            <h2>JavaFX 9</h2>
+        <div class="container table-responsive con-lv-1" con-title="JavaFX 10">
+            <h2>JavaFX 10</h2>
             <table class="table table-hover">
                 <tbody class="con-lv-2" con-title="javafx.base">
                     <tr>

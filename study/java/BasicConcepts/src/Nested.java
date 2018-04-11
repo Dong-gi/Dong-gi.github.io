@@ -27,9 +27,9 @@ public class Nested {
     }
 
     public static void main(String[] args) {
-        Inner1 in1 = new Nested.Inner1();
-        Nested nested = new Nested();
-        Inner2 in2 = nested.new Inner2();
+        var in1 = new Nested.Inner1();
+        var nested = new Nested();
+        var in2 = nested.new Inner2();
 
         // anonymous class
         // 자신을 둘러싸고 있는 영역의 final 변수를 이용할 수 있다.

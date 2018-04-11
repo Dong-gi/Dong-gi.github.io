@@ -48,7 +48,7 @@ class MyList<E> {
 public class Generic {
 
 	public static void main(String[] args) {
-		MyList<Integer> list = new MyList<>();
+		var list = new MyList<Integer>();
 		list.add(123);;
 		System.out.println(MyList.firstElement(list));
 	}

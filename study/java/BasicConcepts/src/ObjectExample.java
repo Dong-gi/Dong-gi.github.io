@@ -1,16 +1,16 @@
 
-public class Oobject {
+public class ObjectExample {
 
 	public static void main(String[] args) throws Exception {
-		Main main1 = new Main();
-		Main main2 = main1.clone();
+		var main1 = new Main();
+		var main2 = main1.clone();
 
 		Main main = new Sub(); // 업캐스팅, 부모의 참조 변수로 자손의 객체를 가리킬 수 있다.
 		Main[] mains = {new Main(), new Sub()};
 		Sub[] subs = {new Sub(), new Sub()};
 		mains = subs; // 배열 업캐스팅 : 배열 사이에도 부모-자식 관계가 성립한다.
 
-		for(Main m : mains) {
+		for(var m : mains) {
 			if(m instanceof Sub)
 				System.out.println("Sub 객체 발견");
 		}
@@ -47,7 +47,7 @@ public class Oobject {
 				return true;
 			if(!(o instanceof Main))
 				return false;
-			Main main = (Main) o;
+			var main = (Main) o;
 			return main.num == num && main.string.equals(string);
 		}
 

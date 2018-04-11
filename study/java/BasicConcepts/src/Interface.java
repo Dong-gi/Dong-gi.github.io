@@ -13,7 +13,7 @@ interface Flyable {
 public class Interface implements Flyable {
 
     public static void main(String[] args) {
-        Wing w = new Flyable.Wing();
+        var w = new Flyable.Wing();
         new Interface().fly();
         new Interface().flyFast();
     }

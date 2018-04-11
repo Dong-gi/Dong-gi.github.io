@@ -6,7 +6,7 @@ public class StreamTokenizerExample {
 	public static void main(String[] args) throws Exception {
 		/* Just a comments */
 		// 1 + 1 = 2?
-		StreamTokenizer t = new StreamTokenizer(new FileReader("./src/StreamTokenizerExample.java"));
+		var t = new StreamTokenizer(new FileReader("./src/StreamTokenizerExample.java"));
 		int type;
 		while(true) {
 			type = t.nextToken();

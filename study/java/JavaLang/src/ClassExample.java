@@ -25,7 +25,7 @@ public class ClassExample<T extends Object, V> implements Serializable {
 		System.out.println(Test.class.toGenericString() + "\n");
 		
 		try {
-			Thread th = Thread.class.getDeclaredConstructor(Runnable.class).newInstance(new Runnable() {
+			var th = Thread.class.getDeclaredConstructor(Runnable.class).newInstance(new Runnable() {
 				@Override
 				public void run() {
 					System.out.println("I'm here : " + this.getClass() + "\n");
@@ -39,7 +39,7 @@ public class ClassExample<T extends Object, V> implements Serializable {
 		}
 		
 		System.out.println(int.class.isInstance(0));
-		int[] arr = new int[3];
+		var arr = new int[3];
 		System.out.println(int[].class.isInstance(arr));
 		System.out.println(int[][].class.isInstance(arr) + "\n");
 		

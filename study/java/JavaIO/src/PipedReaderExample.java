@@ -11,7 +11,7 @@ public class PipedReaderExample {
 		out = new PipedWriter(in);
 		
 		new Thread(() -> {
-			char[] buf = new char[1000];
+			var buf = new char[1000];
 			while(true) {
 				try {
 					if(in.ready()) {
@@ -23,10 +23,10 @@ public class PipedReaderExample {
 			}
 		}).start();
 		
-		Scanner scanner = new Scanner(System.in);
+		var scanner = new Scanner(System.in);
 		while(true) {
 			System.out.print("Write Something: ");
-			char[] data = scanner.nextLine().toCharArray();
+			var data = scanner.nextLine().toCharArray();
 			out.write(data, 0, data.length);
 			out.flush();
 			Thread.sleep(200);

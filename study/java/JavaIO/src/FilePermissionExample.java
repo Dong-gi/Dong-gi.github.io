@@ -10,7 +10,7 @@ public class FilePermissionExample {
 	}
 	public static void main(String[] args) {
 		try {
-			File file = new File("test.txt");
+			var file = new File("test.txt");
 			if(check(new FilePermission(file.getCanonicalPath(), "write"))) {
 				new FileWriter(file).append("data").close();
 			} else {
