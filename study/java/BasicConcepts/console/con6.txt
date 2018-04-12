@@ -1,0 +1,7 @@
+new exception
+no file (지정된 파일을 찾을 수 없습니다)
+Suppressed : java.lang.Exception: 추가 예외
+Exception in thread "main" java.io.IOException: 예외 발생
+	at ExceptionExample.main(ExceptionExample.java:25)
+	Suppressed: java.lang.Exception: 추가 예외
+		at ExceptionExample.main(ExceptionExample.java:28)

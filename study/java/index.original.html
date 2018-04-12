@@ -382,8 +382,11 @@
                             <br>&raquo; Throwable initCause(Throwable causeExc) : 예외의 근원을 설정하며, 생성자를 통해 호출되거나 이미 호출된 경우 다시 호출
                             불가
                             <br>&raquo; Throwable getCause() : 현재 예외의 근원을 얻는다. 없으면 null
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Eexception.java', 'java');" class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/ExceptionExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예외 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("BasicConcepts/console/con6.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
                             </button>
                             <br>
                             <br>5. 부모보다 많은 종류의 예외를 공표할 수 없다.
@@ -442,12 +445,12 @@
                     <tr style="background-color: #bbb;">
                         <th>업그레이드</th>
                     </tr>
-                    <tr class="con-lv-3" con-title="Java 1.8">
-                        <th>Java 1.8</th>
+                    <tr class="con-lv-3" con-title="Java 8">
+                        <th>Java 8</th>
                     </tr>
                     <tr>
                         <td>
-                            &raquo; 이때부터 버전 표기를 "JDK 8"처럼 싱글 넘버로도 표기하기 시작.
+                            &raquo; Java 1.8 부터 버전 표기를 싱글 넘버로 표기하기 시작.
                             <br>&raquo; 람다 표현식 추가
                             <br>&raquo; Pipeline과 Stream 추가
                             <br>&raquo; 인터페이스에 Default Method 추가
@@ -468,6 +471,27 @@
                     <tr>
                         <td>
                             &raquo; Java Platform Module System(JPMS) 도입
+                            <br>* 모듈 : 패키지 집합의 응집도가 충분하다면, 모듈로 그룹화될 수 있다.
+                            <br>* 일반 컴파일 단위(일반 .java 파일) : [패키지 정의] {임포트 선언} {타입(클래스, 인터페이스 등) 정의}
+                            <br>- 이름 있는 모듈에 연관되지 않는 ordinary compilation unit들은 모두 하나의 익명 모듈에 연관된다.
+                            <br>* 모듈 컴파일 단위 : {임포트 선언} 모듈 정의
+                            <br>* 모듈 정의 : {Annotation} [open] module ModuleName { {ModuleDirective} }
+                            <br>- 모듈 이름은 패키지처럼 하나 이상의 자바 식별자를 '.'으로 구분하여 나타낸다.
+                            <br>- open 한정자가 없으면 일반 모듈 : 컴파일타임과 런타임에 명시적으로 export된 패키지들에 대한 권한만 외부에 부여
+                            <br>- open 한정자가 있는 열린 모듈 : 컴파일타임엔 명시적으로 export된 것만, 런타임엔 모든 패키지에 대한 권한을 외부에 부여
+                            <br>- Reflection을 통해서도 같은 접근 권한을 얻을 수 있다.
+                            <br>* 모듈 명세 ModuleDirective : 
+                            <br>requires { RequiresModifier } ModuleName; // 모듈 의존성
+                            <br>exports PackageName [to ModuleName {, ModuleName}]; // 외부에서 접근할 수 있는 패키지
+                            <br>opens PackageName [to ModuleName {, ModuleName}]; // 외부에서 접근할 수 있는 패키지
+                            <br>uses TypeName; // 사용하는 서비스
+                            <br>provides TypeName with TypeName {, TypeName}; // 제공하는 서비스
+                            <br>* RequiresModifier : transitive | static
+                            <br>- transitive : 외부에서 의존하는 모듈은 transitive 키워드가 붙은 모듈도 의존한다.
+                            <br>- static : 컴파일 타임엔 항상 의존성을 갖고, 런타임엔 선택적.
+                            <br>* java.base 모듈은 최상의 모듈로, 아무런 의존성이 없다.
+                            <br>&raquo; REPL로 JShell이 추가되었다 : 코드를 한줄씩 실행하면서 검사할 수 있다.
+                            <br>* https://docs.oracle.com/javase/9/jshell/toc.htm
                             <br>&raquo; Collection factory method 추가 : List.of(...) 등
                             <br>&raquo; try-with-resources 구문 변동 : final한(final 변수 or 변수 초기화 후 변경 없음) resource는 별개의 선언 없이 그대로
                             이용할 수 있다.
@@ -492,6 +516,9 @@
                             <br>* 강화된 for 루프 인덱스에 이용 가능
                             <br>* 기존 for 루프 인덱스에 이용 가능
                             <br>* try-with-resources 변수에 이용 가능
+                            <button type="button" onclick="javascript:showCode('Java10/src/Updates.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
                             <br>&raquo; 변경 불가능한 collection 생성 메서드 추가 : toUnmodifiableList 등
                             <br>&raquo; javadoc 커맨드라인 옵션에 --add-stylesheet 추가 : 여러 css 이용 가능.
                         </td>
@@ -810,7 +837,7 @@
                             <br>void mark(int readlimit) : 현재 위치 마킹
                             <br>void reset() throws IOException : 마지막 마킹 위치로 이동
                             <br>
-                            <br>10. long transferTo(OutputStream out) throws IOException
+                            <br>10. long transferTo(OutputStream out) throws IOException Since 9
                             <br>&raquo; 입력 스트림의 모든 바이트를 읽어들여 out에 쓴다. 총 전송 바이트 수를 반환하며, 스트림을 닫는 작업을 하진 않는다.
                             <br>&raquo; 작업이 끝날 때까지 스레드가 블록되며, 스트림이 비동기적으로 닫히거나, 인터럽트가 발생하는 경우에 대해 대처하지 않는다.
                             <button type="button" onclick="javascript:showCode('JavaIO/src/InputStreamExample.java', 'java');" class="btn btn-primary btn-sm">
@@ -861,6 +888,14 @@
                             <br>
                             <br>9. boolean ready() throws IOException
                             <br>&raquo; 다음 read()가 블록되지 않음을 보장하면 true, 보장하지 못하면 false
+                            <br><br>10. boolean markSupported()
+                            <br>void mark(int readAheadLimit) throws IOException
+                            <br>&raquo; readAheadLimit 초과의 글자를 읽으면 reset()은 실패한다.
+                            <br>void reset()
+                            <br>&raquo; 마지막 마킹 위치로 복귀, 또는 다른 적절한 작업 시행. mark() 지원 없이 reset()만 지원하는 서브클래스도 존재한다.
+                            <br><br>11. long transferTo(Writer out) throws IOException Since 10
+                            <br>&raquo; 모든 문자들을 읽어 out에 쓰며, Reader/Writer 둘 모두 리셋하거나 닫지 않는다. 읽기/쓰기 작업 중 Reader나 Writer를 무한히 블록시킬 가능성이 있으며, I/O 에러가 발생한 경우 스트림의 연속적인 상태를 보장하지 못하므로 즉시 닫을 것을 권장.
+                            <br>&raquo; 전달된 문자의 수를 반환한다.
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Writer">
@@ -995,7 +1030,9 @@
                             <br>5. int size()
                             <br>
                             <br>6. String toString() Since 1.1
-                            <br>Strin toString(String charsetName) throws UnsupportedEncodingException Since 1.1
+                            <br>String toString(String charsetName) throws UnsupportedEncodingException Since 1.1
+                            <br>String toString(Charset charset) Since 10
+                            <br>&raquo; 버퍼 내용을 문자열로 반환
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="CharArrayReader">
@@ -1176,13 +1213,16 @@
                             <br>&raquo; 바이트 배열을 다 쓰거나, 새 줄 문자, '\n'을 쓰면 자동으로 flush()
                             <br>public PrintStream(OutputStream out, boolean autoFlush, String encoding) throws UnsupportedEncodingException
                             Since 1.4
+                            <br>public PrintStream(OutputStream out, boolean autoFlush, Charset charset) Since 10
                             <br>public PrintStream(String fileName) throws FileNotFoundException Since 1.5
                             <br>public PrintStream(String fileName, String csn) throws FileNotFoundException, UnsupportedEncodingException
                             Since 1.5
                             <br>&raquo; csn : charset 이름
+                            <br>public PrintStream(String fileName, Charset charset) throws IOException Since 10
                             <br>public PrintStream(File file) throws FileNotFoundException Since 1.5
                             <br>public PrintStream(File file, String csn) throws FileNotFoundException, UnsupportedEncodingException
                             Since 1.5
+                            <br>public PrintStream(File file, Charset charset) throws IOException Since 10
                             <br>
                             <br>3. boolean checkError() : 예외를 던지지 않으므로 이 메서드로 확인해야 한다.
                             <br>protected void setError(), protected void clearError() : 내부적으로 사용
@@ -2225,88 +2265,148 @@
                             <br>8. 파일이 아닌 네트워크 같은 다른 소스로부터 클래스를 로드할 경우, defineClass()를 통해 Class 객체를 얻고 Constructor.newInstance()를
                             통해 클래스 객체를 생성하면 된다.
                             <br>네트워크 클래스 로더는 findClass(), loadClassData() 메서드를 반드시 작성해야 한다.
-                            <br>&raquo; public Class findClass(String name) {
-                            <br>&raquo; &nbsp;&nbsp;&nbsp;&nbsp;byte[] b = loadClassData(name);
-                            <br>&raquo; &nbsp;&nbsp;&nbsp;&nbsp;return defineClass(name, b, 0, b.length);
-                            <br>&raquo; }
-                            <br>&raquo; private byte[] loadClassData(String name) { /**/ }
+                            <br>public Class findClass(String name) {
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;byte[] b = loadClassData(name);
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;return defineClass(name, b, 0, b.length);
+                            <br>}
+                            <br>private byte[] loadClassData(String name) { /**/ }
                             <br>
-                            <br>9. protected ClassLoader(String name, CLassLoader parent) Since 9
+                            <br>9. Binary names : ClassLoader 메서드에 전달하는 String 타입 클래스 이름은 아래와 같은 형식을 따라야 한다.
+                            <br>&raquo; "java.lang.String", "javax.swing.JSpinner$DefaultEditor", "java.security.KeyStore$Builder$FileBuilder$1", "java.net.URLClassLoader$3$1"
+                            <br>
+                            <br>10. protected ClassLoader(String name, CLassLoader parent) Since 9
                             <br>&raquo; parent가 null일 경우, 해당 클래스 로더가 모든 플랫폼 클래스를 볼 수 있다는 보장은 없다.
                             <br>&raquo; name : class loader name; or null if not named
                             <br>protected ClassLoader(ClassLoader parent) Since 1.2
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            <br>protected ClassLoader() : this(getSystemClassLoader())
+                            <br><br>11. String getName() Since 9 : 클래스 로더 이름 반환. 없으면 null
+                            <br><br>12. Class&lt;?&gt; loadClass(String name) throws ClassNotFoundException : loadClass(name false)
+                            <br>protected Class&lt;?&gt; loadClass(String name, boolean resolve) throws ClassNotFoundException
+                            <br>&raquo; findLoadedClass(String)으로 이미 로드됐나 확인
+                            <br>&raquo; 없으면 : parent 혹은 VM의 클래스 로더의 loadClass를 호출
+                            <br>&raquo; 없으면 : findClass(String) 호출
+                            <br>&raquo; 위를 통해 클래스를 찾았고, resolve가 true면 resolveClass(Class) 호출.
+                            <br>&raquo; ClassLoader의 서브클래스들은 이 메서드가 아닌 findClass(String)을 재정의하면 된다.
+                            <br>&raquo; 재정의되지 않은 이상, getClassLoadingLock()을 통해 메서드는 동기화된다.
+                            <br><br>13. protected Object getClassLoadingLock(String className) Since 1.7
+                            <br><br>14. protected Class&lt;?&gt; findClass(String name) throws ClassNotFoundException Since 1.2
+                            <br>protected Class&lt;?&gt; findClass(String moduleName, String name) Since 9
+                            <br>protected final Class&lt;?&gt; findSystemClass(String name) throws ClassNotFoundException : 시스템 클래스 로더에 의해 호출
+                            <br>protected final Class&lt;?&gt; findLoadedClass(String name) Since 1.1 : 없으면 null
+                            <br><br>15. protected final Class&lt;?&gt; defineClass(String name, byte[] b, int off, int len) throws ClassFormatError Since 1.1
+                            <br>&raquo; 기본 ProtectionDomain을 새 클래스에 할당한다. 기본 ProtectionDomain은 Policy.getPolicy().getPermissions(new CodeSource(null, null))과 같은 권한을 부여받는다. 기본 ProtectionDomain은 첫 호출시 생성되고 재사용된다.
+                            <br>protected final Class&lt;?&gt; defineClass(String name, byte[] b, int off, int len, ProtectionDomain protectionDomain) throws ClassFormatError
+                            <br>protected final Class&lt;?&gt; defineClass(String name, ByteBuffer b, ProtectionDomain protectionDomain) throws ClassFormatError Since 1.5
+                            <br><br>16. protected final void resolveClass(Class&lt;?&gt; c) : 클래스를 링크한다.
+                            <br><br>17. protected final void setSigners(Class&lt;?&gt; c, Object[] signers) Since 1.1
+                            <br>&raquo; 상기한 메서드들을 통한 클래스 정의시 SecurityException이 발생하는 경우와 관계 있다.
+                            <br>&raquo; 한 패키지 내부의 클래스들은 동일한 certificate 집합을 가져야 한다. 정의하는 클래스가 어떤 패키지에 추가될 때, 패키지의 certificate 집합과 비교하여 서로 다른 경우 예외가 발생한다.
+                            <br>&raquo; Certificate 집합은 ProtectionDomain의 CodeSource로부터 얻을 수 있다.
+                            <br><br>18. protected URL findResource(String moduleName, String name) throws IOException Since 9
+                            <br>public URL getResource(String name) Since 1.1
+                            <br>public Enumeration&lt;URL&gt; getResources(String name) throws IOException Since 1.2
+                            <br>public Stream&lt;URL&gt; resources(String name) Since 9
+                            <br>protected URL findResource(String name) Since 1.2
+                            <br>protected Enumeration&lt;URL&gt; findResources(String name) throws IOException Since 1.2
+                            <br>public static URL getSystemResource(String name) Since 1.1
+                            <br>public static Enumeration&lt;URL&gt; getSystemResources(String name) Since 1.2
+                            <br>public InputStream getResourceAsStream(String name) Since 1.1
+                            <br>public static InputStream getSystemResourceAsStream(String name) Since 1.1
+                            <br><br>19. protected static boolean registerAsParallelCapable() Since 1.7
+                            <br>&raquo; 호출자의 인스턴스가 만들어지지 않았고, 호출자의 모든 수퍼클래스들이 parallel capable로 등록된 경우
+                            <br>public final boolean isRegisteredAsParallelCapable() Since 9
+                            <br><br>20. public final ClassLoader getParent() Since 1.2
+                            <br>&raquo; Bootstrap class loader를 표현하는 데 null을 사용하는 구현도 있다.
+                            <br>public final Module getUnnamedModule() Since 9 : 이 클래스 로더를 위한 익명 모듈을 반환한다.
+                            <br>public static ClassLoader getPlatformClassLoader() Since 9
+                            <br>public static ClassLoader getSystemClassLoader() : 시스템 클래스 로더를 반환하며, 이는 새롭게 정의되는 클래스 로더들의 default delegation parent다.
+                            <br>public final Package getDefinedPackage(String name) Since 9
+                            <br>public final Package[] getDefinedPackages() Since 9
+                            <br>protected Package[] getPackages() Since 1.2 : 현재 및 조상 클래스 로더들이 정의한 패키지들을 반환.
+                            <br><br>21. protected Package definePackage(String name, String specTitle, String specVersion, String specVendor, String implTitle, String implVersion, String implVendor, URL sealBase) Since 1.2
+                            <br>&raquo; 필요한 경우, defineClass 메서드 전에 호출되어야 한다.
+                            <br><br>22. public void setDefaultAssertionStatus(boolean enabled) Since 1.4
+                            <br>public void setPackageAssertionStatus(String packageName, boolean enabled) Since 1.4
+                            <br>public void setClassAssertionStatus(String className, boolean enabled) Since 1.4
+                            <br>public void clearAssertionStatus() Since 1.4
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="Double">
+                        <th>public final class Double extends Number implements Comparable&lt;Double&gt; Since 1.0</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            1. public static final double POSITIVE_INFINITY : == Double.longBitsToDouble(0x7ff0000000000000L)
+                            <br>public static final double NEGATIVE_INFINITY : == Double.longBitsToDouble(0xfff0000000000000L)
+                            <br>public static final double NaN : == Double.longBitsToDouble(0x7ff8000000000000L)
+                            <br>public static final double MAX_VALUE : == 0x1.fffffffffffffP+1023 == Double.longBitsToDouble(0x7fefffffffffffffL)
+                            <br>public static final double MIN_NORMAL Since 1.6 : 진수가 1 이상인 가장 작은 양수 표현. == 0x1.0p-1022 == Double.longBitsToDouble(0x0010000000000000L)
+                            <br>public static final double MIN_VALUE : 가장 작은 양수 표현 == 0x0.0000000000001P-1022 == Double.longBitsToDouble(0x1L)
+                            <br>public static final int MAX_EXPONENT Since 1.6 : == Math.getExponent(Double.MAX_VALUE)
+                            <br>public static final int MIN_EXPONENT Since 1.6 : == Math.getExponent(Double.MIN_NORMAL)
+                            <br>public static final int SIZE Since 1.5 : 표현에 필요한 비트 수
+                            <br>public static final int BYTES Since 1.8 : 표현에 필요한 바이트 수
+                            <br>public static final Class&lt;Double&gt; TYPE Since 1.1
+                            <br><br>2. public static String toString(double d)
+                            <br>public static String toHexString(double d) Since 1.5
+                            <br>public static Double valueOf(String s) throws NumberFormatException
+                            <br>public static Double valueOf(double d) Since 1.5
+                            <br>public static double parseDouble(String s) throws NumberFormatException Since 1.2
+                            <br><br>3. public static boolean isNaN(double v)
+                            <br>public static boolean isInfinite(double v)
+                            <br>public static boolean isFinite(double d) Since 1.8
+                            <br>public boolean isNaN()
+                            <br>public boolean isInfinite()
+                            <br><br>4. public int hashCode() : (int)(v^(v&gt;&gt;&gt;32)), v = Double.doubleToLongBits(this.doubleValue())
+                            <br>public static int hashCode(double value) Since 1.8
+                            <br><br>5. public static long doubleToLongBits(double value) : double 표현 그대로 long으로 전환. 63번 비트는 부호, 62-52번 비트는 지수, 51-0번 비트는 진수
+                            <br>public static long doubleToRawLongBits(double value) Since 1.3 : NaN의 경우 각각의 NaN에 대응하는 값으로 반환.
+                            <br>public static double longBitsToDouble(long bits)
+                            <br>* range 0x7ff0000000000001L through 0x7fffffffffffffffL or in the range 0xfff0000000000001L through 0xffffffffffffffffL, the result is a NaN
+                            <br><br>6. public int compareTo(Double anotherDouble) Since 1.2
+                            <br>* Double.NaN은 Double.POSITIVE_INFINITY보다 크다고 간주, 0.0d는 -0.0d보다 크다고 간주
+                            <br>public static int compare(double d1, double d2) Since 1.4
+                            <br><br>7. BinaryOperator
+                            <br>public static double sum(double a, double b) Since 1.8
+                            <br>public static double max(double a, double b) Since 1.8
+                            <br>public static double min(double a, double b) Since 1.8
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="Enum">
+                        <th>public abstract class Enum&lt;E extends Enum&lt;E&gt;&gt; implements Comparable&lt;E&gt;, Serializable Since 1.5</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            1. 모든 공용체의 베이스. Enum을 집합이나 맵의 키로 이용하면 효율적인 구현을 얻을 수 있다.
+                            <br><br>2. protected Enum(String name, int ordinal)
+                            <br><br>3. public final String name()
+                            <br>public final int ordinal()
+                            <br>public String toString()
+                            <br>public final boolean equals(Object other)
+                            <br>public final int hashCode()
+                            <br>protected final Object clone() throws CloneNotSupportedException
+                            <br>public final int compareTo(E o)
+                            <br>public final Class&lt;E&gt; getDeclaringClass()
+                            <br>public static &lt;T extends Enum&lt;T&gt;&gt; T valueOf(Class&lt;T&gt; enumType, String name) Since 1.5
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="Float">
+                        <th>public final class Float extends Number implements Comparable&lt;Float&gt; Since 1.0</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
+                            1. public static final float POSITIVE_INFINITY : == Float.intBitsToFloat(0x7f800000)
+                            <br>public static final float NEGATIVE_INFINITY : == Float.intBitsToFloat(0xff800000)
+                            <br>public static final float NaN : == Float.intBitsToFloat(0x7fc00000)
+                            <br>public static final float MAX_VALUE : == 0x1.fffffeP+127f == Float.intBitsToFloat(0x7f7fffff)
+                            <br>public static final float MIN_NORMAL Since 1.6 : 진수가 1이상인 가장 작은 양수 표현 == 0x1.0p-126f == intBitsToFloat(0x00800000)
+                            <br>public static final float MIN_VALUE : == 0x0.000002P-126f == Float.intBitsToFloat(0x1)
+                            <br>public static final int MAX_EXPONENT Since 1.6 : == Math.getExponent(Float.MAX_VALUE)
+                            <br>public static final int MIN_EXPONENT Since 1.6 : == Math.getExponent(Float.MIN_NORMAL)
+                            <br>public static final int SIZE Since 1.5 : 표현하는 데 필요한 비트 수
+                            <br>public static final int BYTES Since 1.8 : 표현하는 데 필요한 바이트 수
+                            <br>public static final Class&lt;Float&gt; TYPE Since 1.1
+                            <br><br>2. public static String toString(float f)
                             <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
@@ -3399,8 +3499,8 @@
 
 
 
-        <div class="container table-responsive con-lv-1" con-title="JavaFX 10">
-            <h2>JavaFX 10</h2>
+        <div class="container table-responsive con-lv-1" con-title="JavaFX">
+            <h2>JavaFX</h2>
             <table class="table table-hover">
                 <tbody class="con-lv-2" con-title="javafx.base">
                     <tr>

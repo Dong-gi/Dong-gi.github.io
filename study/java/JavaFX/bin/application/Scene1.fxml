@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.GridPane?>
+
+
+<GridPane gridLinesVisible="true" hgap="5.0" prefHeight="176.0" prefWidth="282.0" vgap="5.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+   <columnConstraints>
+      <ColumnConstraints />
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+   <children>
+      <Button mnemonicParsing="false" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <TextArea GridPane.rowIndex="0" />
+      <TextField GridPane.rowIndex="1" />
+   </children>
+</GridPane>
