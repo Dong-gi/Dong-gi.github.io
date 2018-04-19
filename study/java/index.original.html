@@ -178,6 +178,10 @@
                             <br>&raquo; Constructor : private, protected, public, default
                             <br>&raquo; Method : All
                             <br>&raquo; Variable : final, private, protected, public, static, default
+                            <br>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Modifier]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Modifier &raquo;
+                            </button>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="가변 인수">
@@ -271,6 +275,11 @@
                             <br>8. instanceof 연산자로 호환 여부 확인 가능
                             <button type="button" onclick="javascript:showCode('BasicConcepts/src/Class.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 클래스 &raquo;
+                            </button>
+                            <br>
+                            <br>9. {}를 이용해 간단하게 익명클래스를 작성할 수 있다.
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Class2.java', 'java');" class="btn btn-primary btn-sm">
+                                예시 &raquo;
                             </button>
                         </td>
                     </tr>
@@ -408,12 +417,12 @@
                             <br>
                             <br>5. 제네릭을 통한 객체 생성 불가. 제네릭을 static 요소에서 이용하는 데 제한.
                             <br>
-                            <br>6. 예시 1에서 제네릭 타입의 선언, 제네릭 리스트 일부 구현, 바운드된 타입 매개변수 선언을 보인다.
+                            <br>6. 다음 예시에서 제네릭 타입의 선언, 제네릭 리스트 일부 구현, 바운드된 타입 매개변수 선언을 보인다.
                             <button type="button" onclick="javascript:showCode('BasicConcepts/src/Generic.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : Generic 1 &raquo;
                             </button>
                             <br>
-                            <br>7. 예시 2에서 비제네릭 클래스의 제네릭 생성자 선언, 비제네릭 클래스 - 제네릭 클래스 상속을 보인다.
+                            <br>7. 다음 예시에서 비제네릭 클래스의 제네릭 생성자 선언, 비제네릭 클래스 - 제네릭 클래스 상속을 보인다.
                             <button type="button" onclick="javascript:showCode('BasicConcepts/src/Generic2.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : Generic 2 &raquo;
                             </button>
@@ -424,7 +433,7 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 모든 enum은 Enum&lt;E&gt;를 상속하므로, 추가로 다른 클래스를 상속할 수 없다.
+                            1. 모든 enum은 Enum&lt;E&gt;를 상속하므로, 추가로 다른 클래스를 상속할 수 없다. 인터페이스를 구체화하는 것은 가능하다.
                             <br>
                             <br>2. enum은 여타 클래스와 같이 멤버 변수, 메서드를 가질 수 있으며, private 생성자와 abstract method도 가질 수 있다.
                             <br>
@@ -479,7 +488,7 @@
                             <br>- open 한정자가 없으면 일반 모듈 : 컴파일타임과 런타임에 명시적으로 export된 패키지들에 대한 권한만 외부에 부여
                             <br>- open 한정자가 있는 열린 모듈 : 컴파일타임엔 명시적으로 export된 것만, 런타임엔 모든 패키지에 대한 권한을 외부에 부여
                             <br>- Reflection을 통해서도 같은 접근 권한을 얻을 수 있다.
-                            <br>* 모듈 명세 ModuleDirective : 
+                            <br>* 모듈 명세 ModuleDirective :
                             <br>requires { RequiresModifier } ModuleName; // 모듈 의존성
                             <br>exports PackageName [to ModuleName {, ModuleName}]; // 외부에서 접근할 수 있는 패키지
                             <br>opens PackageName [to ModuleName {, ModuleName}]; // 외부에서 접근할 수 있는 패키지
@@ -887,13 +896,16 @@
                             <br>
                             <br>9. boolean ready() throws IOException
                             <br>&raquo; 다음 read()가 블록되지 않음을 보장하면 true, 보장하지 못하면 false
-                            <br><br>10. boolean markSupported()
+                            <br>
+                            <br>10. boolean markSupported()
                             <br>void mark(int readAheadLimit) throws IOException
                             <br>&raquo; readAheadLimit 초과의 글자를 읽으면 reset()은 실패한다.
                             <br>void reset()
                             <br>&raquo; 마지막 마킹 위치로 복귀, 또는 다른 적절한 작업 시행. mark() 지원 없이 reset()만 지원하는 서브클래스도 존재한다.
-                            <br><br>11. long transferTo(Writer out) throws IOException Since 10
-                            <br>&raquo; 모든 문자들을 읽어 out에 쓰며, Reader/Writer 둘 모두 리셋하거나 닫지 않는다. 읽기/쓰기 작업 중 Reader나 Writer를 무한히 블록시킬 가능성이 있으며, I/O 에러가 발생한 경우 스트림의 연속적인 상태를 보장하지 못하므로 즉시 닫을 것을 권장.
+                            <br>
+                            <br>11. long transferTo(Writer out) throws IOException Since 10
+                            <br>&raquo; 모든 문자들을 읽어 out에 쓰며, Reader/Writer 둘 모두 리셋하거나 닫지 않는다. 읽기/쓰기 작업 중 Reader나 Writer를 무한히 블록시킬
+                            가능성이 있으며, I/O 에러가 발생한 경우 스트림의 연속적인 상태를 보장하지 못하므로 즉시 닫을 것을 권장.
                             <br>&raquo; 전달된 문자의 수를 반환한다.
                         </td>
                     </tr>
@@ -1728,7 +1740,7 @@
                             1. Object.clone() 메서드를 재정의했음을 나타내는 마커 인터페이스.
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="Comparable&lt;T&gt;">
+                    <tr class="con-lv-3" con-title="Comparable">
                         <th>interface Comparable&lt;T&gt; Since 1.2</th>
                     </tr>
                     <tr>
@@ -2136,26 +2148,34 @@
                             <br>public static final int SIZE Since 1.5 : 표현에 필요한 비트 수
                             <br>public static final int BYTES Since 1.8 : 표현에 필요한 바이트 수
                             <br>public static final Class&lt;Double&gt; TYPE Since 1.1
-                            <br><br>2. static String toString(double d)
+                            <br>
+                            <br>2. static String toString(double d)
                             <br>static String toHexString(double d) Since 1.5
                             <br>static Double valueOf(String s) throws NumberFormatException
                             <br>static Double valueOf(double d) Since 1.5
                             <br>static double parseDouble(String s) throws NumberFormatException Since 1.2
-                            <br><br>3. static boolean isNaN(double v)
+                            <br>
+                            <br>3. static boolean isNaN(double v)
                             <br>static boolean isInfinite(double v)
                             <br>static boolean isFinite(double d) Since 1.8
                             <br>boolean isNaN()
                             <br>boolean isInfinite()
-                            <br><br>4. int hashCode() : (int)(v^(v&gt;&gt;&gt;32)), v = Double.doubleToLongBits(this.doubleValue())
+                            <br>
+                            <br>4. int hashCode() : (int)(v^(v&gt;&gt;&gt;32)), v = Double.doubleToLongBits(this.doubleValue())
                             <br>static int hashCode(double value) Since 1.8
-                            <br><br>5. static long doubleToLongBits(double value) : double 표현 그대로 long으로 전환. 63번 비트는 부호, 62-52번 비트는 지수, 51-0번 비트는 진수
+                            <br>
+                            <br>5. static long doubleToLongBits(double value) : double 표현 그대로 long으로 전환. 63번 비트는 부호, 62-52번 비트는
+                            지수, 51-0번 비트는 진수
                             <br>static long doubleToRawLongBits(double value) Since 1.3 : NaN의 경우 각각의 NaN에 대응하는 값으로 반환.
                             <br>static double longBitsToDouble(long bits)
-                            <br>* range 0x7ff0000000000001L through 0x7fffffffffffffffL or in the range 0xfff0000000000001L through 0xffffffffffffffffL, the result is a NaN
-                            <br><br>6. int compareTo(Double anotherDouble) Since 1.2
+                            <br>* range 0x7ff0000000000001L through 0x7fffffffffffffffL or in the range 0xfff0000000000001L through
+                            0xffffffffffffffffL, the result is a NaN
+                            <br>
+                            <br>6. int compareTo(Double anotherDouble) Since 1.2
                             <br>* Double.NaN은 Double.POSITIVE_INFINITY보다 크다고 간주, 0.0d는 -0.0d보다 크다고 간주
                             <br>static int compare(double d1, double d2) Since 1.4
-                            <br><br>7. BinaryOperator
+                            <br>
+                            <br>7. BinaryOperator
                             <br>static double sum(double a, double b) Since 1.8
                             <br>static double max(double a, double b) Since 1.8
                             <br>static double min(double a, double b) Since 1.8
@@ -2177,24 +2197,31 @@
                             <br>public static final int SIZE Since 1.5 : 표현하는 데 필요한 비트 수
                             <br>public static final int BYTES Since 1.8 : 표현하는 데 필요한 바이트 수
                             <br>public static final Class&lt;Float&gt; TYPE Since 1.1
-                            <br><br>2. static String toString(float f)
+                            <br>
+                            <br>2. static String toString(float f)
                             <br>static String toHexString(float f) Since 1.5
                             <br>static Float valueOf(String s) throws NumberFormatException
                             <br>static Float valueOf(float f) Since 1.5
                             <br>static float parseFloat(String s) throws NumberFormatException Since 1.2
-                            <br><br>3. static boolean isNaN(float v)
+                            <br>
+                            <br>3. static boolean isNaN(float v)
                             <br>static boolean isInfinite(float v)
                             <br>static boolean isFinite(float f) Since 1.8
                             <br>boolean isNaN()
                             <br>boolean isInfinite()
-                            <br><br>4. static int floatToIntBits(float value) : float 표현 그대로 int로 전환. 31번째 비트는 부호, 30-23번 비트는 지수, 22-0번 비트는 진수
+                            <br>
+                            <br>4. static int floatToIntBits(float value) : float 표현 그대로 int로 전환. 31번째 비트는 부호, 30-23번 비트는 지수,
+                            22-0번 비트는 진수
                             <br>static int floatToRawIntBits(float value) Since 1.3 : NoN의 경우 각각에 대응하는 값으로 변환
                             <br>static float intBitsToFloat(int bits)
-                            <br>* range 0x7f800001 through 0x7fffffff or in the range 0xff800001 through 0xffffffff, the result is a NaN
-                            <br><br>5. int compareTo(Float anotherFloat) Since 1.2
+                            <br>* range 0x7f800001 through 0x7fffffff or in the range 0xff800001 through 0xffffffff, the result
+                            is a NaN
+                            <br>
+                            <br>5. int compareTo(Float anotherFloat) Since 1.2
                             <br>* NaN은 POSITIVE_INFINITY보다 크다고 간주. 0.0f는 -0.0f보다 크다고 간주
                             <br>static int compare(float f1, float f2) Since 1.4
-                            <br><br>6. BinaryOperator
+                            <br>
+                            <br>6. BinaryOperator
                             <br>static float sum(float a, float b) Since 1.8
                             <br>static float max(float a, float b) Since 1.8
                             <br>static float min(float a, float b) Since 1.8
@@ -2210,23 +2237,27 @@
                             <br>public static final Class&lt;Integer&gt; TYPE Since 1.1
                             <br>@Native public static final int SIZE Since 1.5 : 표현하는데 필요한 비트 수
                             <br>public static final int BYTES Since 1.8 : 표현하는데 필요한 바이트 수
-                            <br><br>2. static String toString(int i, int radix) : radix in [Character.MIN_RADIX, Character.MAX_RADIX]
+                            <br>
+                            <br>2. static String toString(int i, int radix) : radix in [Character.MIN_RADIX, Character.MAX_RADIX]
                             <br>static String toUnsignedString(int i, int radix) Since 1.8
                             <br>static String toHexString(int i) Since 1.0.2
                             <br>static String toOctalString(int i) Since 1.0.2
                             <br>static String toBinaryString(int i) Since 1.0.2
                             <br>static String toUnsignedString(int i) Since 1.8
                             <br>static int parseInt(String s, int radix) throws NumberFormatException
-                            <br>static int parseInt(CharSequence s, int beginIndex, int endIndex, int radix) throws NumberFormatException Since 9
+                            <br>static int parseInt(CharSequence s, int beginIndex, int endIndex, int radix) throws NumberFormatException
+                            Since 9
                             <br>* [beginIndex, endIndex - 1]. 파싱 중 CharSequence 변경에 대한 조치를 하지 않음
                             <br>static int parseInt(String s) throws NumberFormatException
                             <br>static int parseUnsignedInt(String s, int radix) throws NumberFormatException Since 1.8
-                            <br>static int parseUnsignedInt(CharSequence s, int beginIndex, int endIndex, int radix) throws NumberFormatException Since 9
+                            <br>static int parseUnsignedInt(CharSequence s, int beginIndex, int endIndex, int radix) throws NumberFormatException
+                            Since 9
                             <br>static int parseUnsignedInt(String s) throws NumberFormatException Since 1.8
                             <br>static Integer valueOf(String s, int radix) throws NumberFormatException
                             <br>static Integer valueOf(String s) throws NumberFormatException
                             <br>static Integer valueOf(int i) Since 1.5
-                            <br><br>3. System Property 관련
+                            <br>
+                            <br>3. System Property 관련
                             <br>static Integer getInteger(String nm)
                             <br>&raquo; nm : property name, 속성 값은 decode 메서드를 통해 구한다
                             <br>static Integer getInteger(String nm, int val)
@@ -2234,12 +2265,14 @@
                             <br>static Integer getInteger(String nm, Integer val)
                             <br>static Integer decode(String nm) throws NumberFormatException
                             <br>&raquo; nm : 16진수, 10진수, 8진수 문자열 표기
-                            <br><br>4. unsigned 연산
+                            <br>
+                            <br>4. unsigned 연산
                             <br>static int compareUnsigned(int x, int y) Since 1.8
                             <br>static long toUnsignedLong(int x) Since 1.8
                             <br>static int divideUnsigned(int dividend, int divisor) Since 1.8
                             <br>static int remainderUnsigned(int dividend, int divisor) Since 1.8
-                            <br><br>5. bit 관련
+                            <br>
+                            <br>5. bit 관련
                             <br>static int highestOneBit(int i) Since 1.5
                             <br>static int lowestOneBit(int i) Since 1.5
                             <br>static int numberOfLeadingZeros(int i) Since 1.5
@@ -2250,7 +2283,8 @@
                             <br>static int reverse(int i) Since 1.5
                             <br>static int reverseBytes(int i) Since 1.5 : 바이트 단위로 뒤집기
                             <br>static int signum(int i) Since 1.5 : -1, 0, 1
-                            <br><br>6. BinaryOperator
+                            <br>
+                            <br>6. BinaryOperator
                             <br>static int sum(int a, int b) Since 1.8
                             <br>static int max(int a, int b) Since 1.8
                             <br>static int min(int a, int b) Since 1.8
@@ -2267,23 +2301,27 @@
                             <br>public static final Class&lt;Long&gt; TYPE Since 1.1
                             <br>@Native public static final int SIZE Since 1.5 : 표현하는데 필요한 비트 수
                             <br>public static final int BYTES Since 1.8
-                            <br><br>2. static String toString(long i, int radix)
+                            <br>
+                            <br>2. static String toString(long i, int radix)
                             <br>static String toUnsignedString(long i, int radix) Since 1.8
                             <br>static String toHexString(long i) Since 1.0.2
                             <br>static String toOctalString(long i) Since 1.0.2
                             <br>static String toBinaryString(long i) Since 1.0.2
                             <br>static String toUnsignedString(long i) Since 1.8
                             <br>static long parseLong(String s, int radix) throws NumberFormatException
-                            <br>static long parseLong(CharSequence s, int beginIndex, int endIndex, int radix) throws NumberFormatException Since 9
+                            <br>static long parseLong(CharSequence s, int beginIndex, int endIndex, int radix) throws NumberFormatException
+                            Since 9
                             <br>&raquo; [beginIndex, endIndex - 1]. 파싱 중 CharSequence의 변경에 대처하지 않음
                             <br>static long parseLong(String s) throws NumberFormatException
                             <br>static long parseUnsignedLong(String s, int radix) throws NumberFormatException Since 1.8
-                            <br>static long parseUnsignedLong(CharSequence s, int beginIndex, int endIndex, int radix) throws NumberFormatException Since 9
+                            <br>static long parseUnsignedLong(CharSequence s, int beginIndex, int endIndex, int radix) throws
+                            NumberFormatException Since 9
                             <br>static long parseUnsignedLong(String s) throws NumberFormatException Since 1.8
                             <br>static Long valueOf(String s, int radix) throws NumberFormatException
                             <br>static Long valueOf(String s) throws NumberFormatException
                             <br>static Long valueOf(long l) Since 1.5
-                            <br><br>3. System Property 관련
+                            <br>
+                            <br>3. System Property 관련
                             <br>static Long getLong(String nm)
                             <br>&raquo; nm : property name, 시스템 프로퍼티 값을 decode 메서드를 통해 가져온다.
                             <br>static Long getLong(String nm, long val)
@@ -2291,11 +2329,13 @@
                             <br>static Long getLong(String nm, Long val)
                             <br>static Long decode(String nm) throws NumberFormatException Since 1.2
                             <br>&raquo; nm : 16진수, 8진수, 10진수 문자열 표현
-                            <br><br>4. unsigned 연산
+                            <br>
+                            <br>4. unsigned 연산
                             <br>static int compareUnsigned(long x, long y) Since 1.8
                             <br>static long divideUnsigned(long dividend, long divisor) Since 1.8
                             <br>static long remainderUnsigned(long dividend, long divisor) Since 1.8
-                            <br><br>5. 비트 관련
+                            <br>
+                            <br>5. 비트 관련
                             <br>static long highestOneBit(long i) Since 1.5
                             <br>static long lowestOneBit(long i) Since 1.5
                             <br>static int numberOfLeadingZeros(long i) Since 1.5
@@ -2306,7 +2346,8 @@
                             <br>static long reverse(long i) Since 1.5
                             <br>static long reverseBytes(long i) Since 1.5
                             <br>static int signum(long i) Since 1.5 : -1, 0, 1
-                            <br><br>6. BinaryOperator
+                            <br>
+                            <br>6. BinaryOperator
                             <br>static long sum(long a, long b) Since 1.8
                             <br>static long max(long a, long b) Since 1.8
                             <br>static long min(long a, long b) Since 1.8
@@ -2323,7 +2364,8 @@
                             <br>static final Class&lt;Short&gt; TYPE
                             <br>static final int SIZE Since 1.5 : 표현에 필요한 비트 수
                             <br>static final int BYTES Since 1.8 : 표현에 필요한 바이트 수
-                            <br><br>2. static String toString(short s)
+                            <br>
+                            <br>2. static String toString(short s)
                             <br>static short parseShort(String s, int radix) throws NumberFormatException
                             <br>static short parseShort(String s) throws NumberFormatException
                             <br>static Short valueOf(String s, int radix) throws NumberFormatException
@@ -2331,11 +2373,13 @@
                             <br>static Short valueOf(short s) Since 1.5
                             <br>static Short decode(String nm) throws NumberFormatException
                             <br>&raquo; 16진수, 10진수, 8진수 문자열 표현을 Short로
-                            <br><br>3. unsigned 연산
+                            <br>
+                            <br>3. unsigned 연산
                             <br>static int compareUnsigned(short x, short y) Since 9
                             <br>static int toUnsignedInt(short x) Since 1.8
                             <br>static long toUnsignedLong(short x) Since 1.8
-                            <br><br>4. static short reverseBytes(short i) Since 1.5
+                            <br>
+                            <br>4. static short reverseBytes(short i) Since 1.5
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="String">
@@ -2345,14 +2389,18 @@
                         <td>
                             1. 유니코드 보충 평면 문자는 surrogate pairs로써 2자리를 차지한다.
                             <br>로캐일을 고려한 문자열 비교는 Collator 클래스를 이용.
-                            <br><br>2. static final Comparator&lt;String&gt; CASE_INSENSITIVE_ORDER Since 1.2 : 대소문자 구분없는 비교자. 직렬화 가능.
-                            <br><br>3. 생성자
+                            <br>
+                            <br>2. static final Comparator&lt;String&gt; CASE_INSENSITIVE_ORDER Since 1.2 : 대소문자 구분없는 비교자. 직렬화
+                            가능.
+                            <br>
+                            <br>3. 생성자
                             <br>public String()
                             <br>public String(String original)
                             <br>public String(char[] value)
                             <br>public String(char[] value, int offset, int count) : count == length
                             <br>public String(int[] codePoints, int offset, int count) Since 1.5
-                            <br>public String(byte[] bytes, int offset, int length, String charsetName) throws UnsupportedEncodingException Since 1.1
+                            <br>public String(byte[] bytes, int offset, int length, String charsetName) throws UnsupportedEncodingException
+                            Since 1.1
                             <br>public String(byte[] bytes, int offset, int length, Charset charset) Since 1.6
                             <br>public String(byte[] bytes, String charsetName) throws UnsupportedEncodingException Since 1.1
                             <br>public String(byte[] bytes, Charset charset) Since 1.6
@@ -2360,7 +2408,8 @@
                             <br>public String(byte[] bytes) Since 1.1
                             <br>public String(StringBuffer buffer)
                             <br>public String(StringBuilder builder) Since 1.5
-                            <br><br>4. boolean isEmpty() Since 1.6
+                            <br>
+                            <br>4. boolean isEmpty() Since 1.6
                             <br>int codePointAt(int index) Since 1.5
                             <br>int codePointBefore(int index) Since 1.5
                             <br>int codePointCount(int beginIndex, int endIndex)
@@ -2403,7 +2452,8 @@
                             <br>&raquo; limit이 음수인 경우, 제한 없이 분리. 0인 경우 빈 문자열로 끝나지 않음.
                             <br>String[] split(String regex) Since 1.4 : split(regex, 0)
                             <br>static String join(CharSequence delimiter, CharSequence... elements) Since 1.8
-                            <br>static String join(CharSequence delimiter, Iterable&lt;? extends CharSequence&gt; elements) Since 1.8
+                            <br>static String join(CharSequence delimiter, Iterable&lt;? extends CharSequence&gt; elements) Since
+                            1.8
                             <br>String toLowerCase(Locale locale) Since 1.1
                             <br>String toLowerCase()
                             <br>String toUpperCase(Locale locale) Since 1.1
@@ -2434,11 +2484,13 @@
                     <tr>
                         <td>
                             1. 쓰레드-안전한 변경 가능한 문자열.
-                            <br><br>2. public StringBuffer()
+                            <br>
+                            <br>2. public StringBuffer()
                             <br>public StringBuffer(int capacity)
                             <br>public StringBuffer(String str)
                             <br>public StringBuffer(CharSequence seq) Since 1.5
-                            <br><br>3. void trimToSize() Since 1.5 : 버퍼 크기를 줄여 문자열 크기에 맞춘다.
+                            <br>
+                            <br>3. void trimToSize() Since 1.5 : 버퍼 크기를 줄여 문자열 크기에 맞춘다.
                             <br>void setLength(int newLength) : 새로운 크기의 문자열에 기존 문자열을 복사. 남는 부분은 '\u0000'(null)로 채워진다.
                             <br>int codePointAt(int index) Since 1.5
                             <br>int codePointBefore(int index) Since 1.5
@@ -2453,7 +2505,8 @@
                             <br>int length()
                             <br>int capacity()
                             <br>void ensureCapacity(int minimumCapacity)
-                            <br><br>4. 추가 / 삽입
+                            <br>
+                            <br>4. 추가 / 삽입
                             <br>StringBuffer append(StringBuffer sb) Since 1.4
                             <br>StringBuffer append(char[] str, int offset, int len)
                             <br>StringBuffer appendCodePoint(int codePoint) Since 1.5
@@ -2478,7 +2531,8 @@
                             <br>StringBuffer insert(int offset, long l)
                             <br>StringBuffer insert(int offset, float
                             <br>StringBuffer insert(int offset, double d)
-                            <br><br>5. 삭제 / 변경
+                            <br>
+                            <br>5. 삭제 / 변경
                             <br>StringBuffer delete(int start, int end) Since 1.2
                             <br>StringBuffer deleteCharAt(int index) Since 1.2
                             <br>void setCharAt(int index, char ch)
@@ -2486,7 +2540,8 @@
                             <br>String substring(int start) Since 1.2
                             <br>String substring(int start, int end) Since 1.2
                             <br>StringBuffer reverse() Since 1.0.2
-                            <br><br>6. 탐색
+                            <br>
+                            <br>6. 탐색
                             <br>int indexOf(String str) Since 1.4
                             <br>int indexOf(String str, int fromIndex) Since 1.4
                             <br>int lastIndexOf(String str) Since 1.4
@@ -2507,7 +2562,8 @@
                     <tr>
                         <td>
                             1. 인스턴스화될 수 없다.
-                            <br><br>2. public static final Class&lt;Void&gt; TYPE
+                            <br>
+                            <br>2. public static final Class&lt;Void&gt; TYPE
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Object">
@@ -2521,13 +2577,17 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Enum">
-                        <th>abstract class Enum&lt;E extends Enum&lt;E&gt;&gt; implements Comparable&lt;E&gt;, Serializable Since 1.5</th>
+                        <th>abstract class Enum&lt;E extends Enum&lt;E&gt;&gt; implements Comparable&lt;E&gt;, Serializable Since
+                            1.5
+                        </th>
                     </tr>
                     <tr>
                         <td>
                             1. 모든 공용체의 베이스. Enum을 집합이나 맵의 키로 이용하면 효율적인 구현을 얻을 수 있다.
-                            <br><br>2. protected Enum(String name, int ordinal)
-                            <br><br>3. final String name()
+                            <br>
+                            <br>2. protected Enum(String name, int ordinal)
+                            <br>
+                            <br>3. final String name()
                             <br>final int ordinal()
                             <br>String toString()
                             <br>final boolean equals(Object other)
@@ -2535,10 +2595,11 @@
                             <br>protected final Object clone() throws CloneNotSupportedException
                             <br>final int compareTo(E o)
                             <br>final Class&lt;E&gt; getDeclaringClass()
-                            <br>static &lt;T extends Enum&lt;T&gt;&gt; T valueOf(Class&lt;T&gt; enumType, String name) Since 1.5
+                            <br>static &lt;T extends Enum&lt;T&gt;&gt; T valueOf(Class&lt;T&gt; enumType, String name) Since
+                            1.5
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="Class&lt;T&gt;">
+                    <tr class="con-lv-3" con-title="Class">
                         <th>final class Class&lt;T&gt; implements Serializable, GenericDeclaration, Type, AnnotatedElement Since
                             1.0
                         </th>
@@ -2689,15 +2750,18 @@
                             <br>private byte[] loadClassData(String name) { /**/ }
                             <br>
                             <br>9. Binary names : ClassLoader 메서드에 전달하는 String 타입 클래스 이름은 아래와 같은 형식을 따라야 한다.
-                            <br>&raquo; "java.lang.String", "javax.swing.JSpinner$DefaultEditor", "java.security.KeyStore$Builder$FileBuilder$1", "java.net.URLClassLoader$3$1"
+                            <br>&raquo; "java.lang.String", "javax.swing.JSpinner$DefaultEditor", "java.security.KeyStore$Builder$FileBuilder$1",
+                            "java.net.URLClassLoader$3$1"
                             <br>
-                            <br>10. protected ClassLoader(String name, CLassLoader parent) Since 9
+                            <br>10. protected ClassLoader(String name, ClassLoader parent) Since 9
                             <br>&raquo; parent가 null일 경우, 해당 클래스 로더가 모든 플랫폼 클래스를 볼 수 있다는 보장은 없다.
                             <br>&raquo; name : class loader name; or null if not named
                             <br>protected ClassLoader(ClassLoader parent) Since 1.2
                             <br>protected ClassLoader() : this(getSystemClassLoader())
-                            <br><br>11. String getName() Since 9 : 클래스 로더 이름 반환. 없으면 null
-                            <br><br>12. Class&lt;?&gt; loadClass(String name) throws ClassNotFoundException : loadClass(name false)
+                            <br>
+                            <br>11. String getName() Since 9 : 클래스 로더 이름 반환. 없으면 null
+                            <br>
+                            <br>12. Class&lt;?&gt; loadClass(String name) throws ClassNotFoundException : loadClass(name false)
                             <br>protected Class&lt;?&gt; loadClass(String name, boolean resolve) throws ClassNotFoundException
                             <br>&raquo; findLoadedClass(String)으로 이미 로드됐나 확인
                             <br>&raquo; 없으면 : parent 혹은 VM의 클래스 로더의 loadClass를 호출
@@ -2705,21 +2769,33 @@
                             <br>&raquo; 위를 통해 클래스를 찾았고, resolve가 true면 resolveClass(Class) 호출.
                             <br>&raquo; ClassLoader의 서브클래스들은 이 메서드가 아닌 findClass(String)을 재정의하면 된다.
                             <br>&raquo; 재정의되지 않은 이상, getClassLoadingLock()을 통해 메서드는 동기화된다.
-                            <br><br>13. protected Object getClassLoadingLock(String className) Since 1.7
-                            <br><br>14. protected Class&lt;?&gt; findClass(String name) throws ClassNotFoundException Since 1.2
+                            <br>
+                            <br>13. protected Object getClassLoadingLock(String className) Since 1.7
+                            <br>
+                            <br>14. protected Class&lt;?&gt; findClass(String name) throws ClassNotFoundException Since 1.2
                             <br>protected Class&lt;?&gt; findClass(String moduleName, String name) Since 9
-                            <br>protected final Class&lt;?&gt; findSystemClass(String name) throws ClassNotFoundException : 시스템 클래스 로더에 의해 호출
+                            <br>protected final Class&lt;?&gt; findSystemClass(String name) throws ClassNotFoundException : 시스템
+                            클래스 로더에 의해 호출
                             <br>protected final Class&lt;?&gt; findLoadedClass(String name) Since 1.1 : 없으면 null
-                            <br><br>15. protected final Class&lt;?&gt; defineClass(String name, byte[] b, int off, int len) throws ClassFormatError Since 1.1
-                            <br>&raquo; 기본 ProtectionDomain을 새 클래스에 할당한다. 기본 ProtectionDomain은 Policy.getPolicy().getPermissions(new CodeSource(null, null))과 같은 권한을 부여받는다. 기본 ProtectionDomain은 첫 호출시 생성되고 재사용된다.
-                            <br>protected final Class&lt;?&gt; defineClass(String name, byte[] b, int off, int len, ProtectionDomain protectionDomain) throws ClassFormatError
-                            <br>protected final Class&lt;?&gt; defineClass(String name, ByteBuffer b, ProtectionDomain protectionDomain) throws ClassFormatError Since 1.5
-                            <br><br>16. protected final void resolveClass(Class&lt;?&gt; c) : 클래스를 링크한다.
-                            <br><br>17. protected final void setSigners(Class&lt;?&gt; c, Object[] signers) Since 1.1
+                            <br>
+                            <br>15. protected final Class&lt;?&gt; defineClass(String name, byte[] b, int off, int len) throws
+                            ClassFormatError Since 1.1
+                            <br>&raquo; 기본 ProtectionDomain을 새 클래스에 할당한다. 기본 ProtectionDomain은 Policy.getPolicy().getPermissions(new
+                            CodeSource(null, null))과 같은 권한을 부여받는다. 기본 ProtectionDomain은 첫 호출시 생성되고 재사용된다.
+                            <br>protected final Class&lt;?&gt; defineClass(String name, byte[] b, int off, int len, ProtectionDomain
+                            protectionDomain) throws ClassFormatError
+                            <br>protected final Class&lt;?&gt; defineClass(String name, ByteBuffer b, ProtectionDomain protectionDomain)
+                            throws ClassFormatError Since 1.5
+                            <br>
+                            <br>16. protected final void resolveClass(Class&lt;?&gt; c) : 클래스를 링크한다.
+                            <br>
+                            <br>17. protected final void setSigners(Class&lt;?&gt; c, Object[] signers) Since 1.1
                             <br>&raquo; 상기한 메서드들을 통한 클래스 정의시 SecurityException이 발생하는 경우와 관계 있다.
-                            <br>&raquo; 한 패키지 내부의 클래스들은 동일한 certificate 집합을 가져야 한다. 정의하는 클래스가 어떤 패키지에 추가될 때, 패키지의 certificate 집합과 비교하여 서로 다른 경우 예외가 발생한다.
+                            <br>&raquo; 한 패키지 내부의 클래스들은 동일한 certificate 집합을 가져야 한다. 정의하는 클래스가 어떤 패키지에 추가될 때, 패키지의 certificate
+                            집합과 비교하여 서로 다른 경우 예외가 발생한다.
                             <br>&raquo; Certificate 집합은 ProtectionDomain의 CodeSource로부터 얻을 수 있다.
-                            <br><br>18. protected URL findResource(String moduleName, String name) throws IOException Since 9
+                            <br>
+                            <br>18. protected URL findResource(String moduleName, String name) throws IOException Since 9
                             <br>URL getResource(String name) Since 1.1
                             <br>Enumeration&lt;URL&gt; getResources(String name) throws IOException Since 1.2
                             <br>Stream&lt;URL&gt; resources(String name) Since 9
@@ -2729,20 +2805,26 @@
                             <br>static Enumeration&lt;URL&gt; getSystemResources(String name) Since 1.2
                             <br>InputStream getResourceAsStream(String name) Since 1.1
                             <br>static InputStream getSystemResourceAsStream(String name) Since 1.1
-                            <br><br>19. protected static boolean registerAsParallelCapable() Since 1.7
+                            <br>
+                            <br>19. protected static boolean registerAsParallelCapable() Since 1.7
                             <br>&raquo; 호출자의 인스턴스가 만들어지지 않았고, 호출자의 모든 수퍼클래스들이 parallel capable로 등록된 경우
                             <br>final boolean isRegisteredAsParallelCapable() Since 9
-                            <br><br>20. final ClassLoader getParent() Since 1.2
+                            <br>
+                            <br>20. final ClassLoader getParent() Since 1.2
                             <br>&raquo; Bootstrap class loader를 표현하는 데 null을 사용하는 구현도 있다.
                             <br>final Module getUnnamedModule() Since 9 : 이 클래스 로더를 위한 익명 모듈을 반환한다.
                             <br>static ClassLoader getPlatformClassLoader() Since 9
-                            <br>static ClassLoader getSystemClassLoader() : 시스템 클래스 로더를 반환하며, 이는 새롭게 정의되는 클래스 로더들의 default delegation parent다.
+                            <br>static ClassLoader getSystemClassLoader() : 시스템 클래스 로더를 반환하며, 이는 새롭게 정의되는 클래스 로더들의 default delegation
+                            parent다.
                             <br>final Package getDefinedPackage(String name) Since 9
                             <br>final Package[] getDefinedPackages() Since 9
                             <br>protected Package[] getPackages() Since 1.2 : 현재 및 조상 클래스 로더들이 정의한 패키지들을 반환.
-                            <br><br>21. protected Package definePackage(String name, String specTitle, String specVersion, String specVendor, String implTitle, String implVersion, String implVendor, URL sealBase) Since 1.2
+                            <br>
+                            <br>21. protected Package definePackage(String name, String specTitle, String specVersion, String
+                            specVendor, String implTitle, String implVersion, String implVendor, URL sealBase) Since 1.2
                             <br>&raquo; 필요한 경우, defineClass 메서드 전에 호출되어야 한다.
-                            <br><br>22. void setDefaultAssertionStatus(boolean enabled) Since 1.4
+                            <br>
+                            <br>22. void setDefaultAssertionStatus(boolean enabled) Since 1.4
                             <br>void setPackageAssertionStatus(String packageName, boolean enabled) Since 1.4
                             <br>void setClassAssertionStatus(String className, boolean enabled) Since 1.4
                             <br>void clearAssertionStatus() Since 1.4
@@ -2772,7 +2854,8 @@
                     <tr>
                         <td>
                             1. 이름 있는 모듈에 속하지 않은 모든 타입은 각 클래스 로더의 익명 모듈에 속한다.
-                            <br><br>2. boolena isNamed()
+                            <br>
+                            <br>2. boolena isNamed()
                             <br>String getName() : 없으면 null
                             <br>ClassLoader getClassLoader()
                             <br>ModuleDescriptor getDescriptor()
@@ -2801,17 +2884,25 @@
                             <br>JVM이 시작되면 하나의 non-daemon 쓰레드가 존재하며, 전형적으로 main 메서드를 호출한다. JVM은 다음의 상황 중 하나라도 일어나기 전까지 실행을 계속한다.
                             <br>&raquo; 1. Runtime 클래스의 exit 메서드 호출, 또는 SecurityManager의 exit 허용
                             <br>&raquo; 2. 모든 데몬 쓰레드가 아닌 쓰레드들의 종료 : run 메서드의 반환이든 예외 발생이든 관계없이
-                            <br><br><b>2. static enum Thread.State Since 1.5</b>
+                            <br>
+                            <br>
+                            <b>2. static enum Thread.State Since 1.5</b>
                             <br>&raquo; NEW, RUNNABLE, BLOCKED, WAITING, TIMED_WAITING, TERMINATED
-                            <br><br><b>3. @FunctionalInterface static interface Thread.UncaughtExceptionHandler Since 1.5</b>
-                            <br>&raquo; 처리되지 않은 예외로 인해 쓰레드가 종료되는 상황을 대비한 핸들러. 그러한 상황에서, 먼저 Thread.getUncaughtExceptionHandler()를 통해 얻은 핸들러에 해당 쓰레드와 예외 객체를 전달한다.
-                            <br>&raquo; 만일 쓰레드에 핸드러가 설정되지 않은 경우, ThreadGroup의 핸들러를 이용하며, ThreadGroup에도 없는 경우 default 핸들러를 이용할 수 있다.
+                            <br>
+                            <br>
+                            <b>3. @FunctionalInterface static interface Thread.UncaughtExceptionHandler Since 1.5</b>
+                            <br>&raquo; 처리되지 않은 예외로 인해 쓰레드가 종료되는 상황을 대비한 핸들러. 그러한 상황에서, 먼저 Thread.getUncaughtExceptionHandler()를
+                            통해 얻은 핸들러에 해당 쓰레드와 예외 객체를 전달한다.
+                            <br>&raquo; 만일 쓰레드에 핸드러가 설정되지 않은 경우, ThreadGroup의 핸들러를 이용하며, ThreadGroup에도 없는 경우 default 핸들러를 이용할
+                            수 있다.
                             <br>&raquo; void uncaughtException(Thread t, Throwable e)
-                            <br><br>4. 필드
+                            <br>
+                            <br>4. 필드
                             <br>public static final int MIN_PRIORITY
                             <br>public static final int NORM_PRIORITY
                             <br>public static final int MAX_PRIORITY
-                            <br><br>5. 생성자
+                            <br>
+                            <br>5. 생성자
                             <br>public Thread()
                             <br>public Thread(Runnable target)
                             <br>public Thread(ThreadGroup group, Runnable target)
@@ -2819,9 +2910,12 @@
                             <br>public Thread(ThreadGroup group, String name)
                             <br>public Thread(Runnable target, String name)
                             <br>public Thread(ThreadGroup group, Runnable target, String name)
-                            <br>public Thread(ThreadGroup group, Runnable target, String name, long stackSize) Since 1.4 : stackSize는 쓰레드에 할당하는 바이트 크기를 가리키나, 플랫폼에 따라 그 효과는 다르다.
-                            <br>public Thread(ThreadGroup group, Runnable target, String name, long stackSize, boolean inheritThreadLocals) Since 9
-                            <br><br>6. static Thread currentThread()
+                            <br>public Thread(ThreadGroup group, Runnable target, String name, long stackSize) Since 1.4 : stackSize는
+                            쓰레드에 할당하는 바이트 크기를 가리키나, 플랫폼에 따라 그 효과는 다르다.
+                            <br>public Thread(ThreadGroup group, Runnable target, String name, long stackSize, boolean inheritThreadLocals)
+                            Since 9
+                            <br>
+                            <br>6. static Thread currentThread()
                             <br>static void yield()
                             <br>static void sleep(long millis) throws InterruptedException
                             <br>static void sleep(long millis, int nanos) throws InterruptedException
@@ -2842,11 +2936,14 @@
                             <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; . . .
                             <br>&nbsp;&nbsp;&nbsp;&nbsp;}
                             <br>}
-                            <br><br>void start() : JVM이 run()을 호출. 쓰레드를 재시작하는 것은 허용되지 않는다.
+                            <br>
+                            <br>void start() : JVM이 run()을 호출. 쓰레드를 재시작하는 것은 허용되지 않는다.
                             <br>void run() : 관련된 Runnable의 run() 호출
                             <br>void interrupt()
-                            <br>&raquo; checkAccess()가 호출된다. wait, join, sleep으로 블록된 경우 인터럽트 상태가 초기화되고, InterruptedException 발생.
-                            <br>&raquo; InterruptibleChannel로 I/O 작업 중 블록된 경우, 인터럽트 상태가 설정되고 채널은 닫힌다. ClosedByInterruptException 발생.
+                            <br>&raquo; checkAccess()가 호출된다. wait, join, sleep으로 블록된 경우 인터럽트 상태가 초기화되고, InterruptedException
+                            발생.
+                            <br>&raquo; InterruptibleChannel로 I/O 작업 중 블록된 경우, 인터럽트 상태가 설정되고 채널은 닫힌다. ClosedByInterruptException
+                            발생.
                             <br>&raquo; Selector에서 블록된 경우, 인터럽트 상태가 설정되고 selection 연산에서 즉시 반환된다. 그 외의 경우 인터럽트 상태가 설정된다.
                             <br>static boolean interrupted() : 현재 쓰레드가 인터럽드됐는지 여부. 쓰레드의 인터럽트 상태는 이 메서드로 인해 초기화된다.
                             <br>boolean isInterrupted() : 쓰레드의 인터럽트 상태를 변경하지 않고 반환한다.
@@ -2862,892 +2959,1473 @@
                             <br>final void join(long millis, int nanos) throws InterruptedException
                             <br>final void join() throws InterruptedException : join(0)과 동일
                             <br>static void dumpStack() : 현재 쓰레드의 스택 추적을 표준 에러 출력
-                            <br>final void setDaemon(boolean on) : 쓰레드를 daemon 또는 user 쓰레드로 변경. user 쓰레드가 하나도 없으면 프로그램은 종료된다. 쓰레드가 시작되기 전에 호출돼야한다.
+                            <br>final void setDaemon(boolean on) : 쓰레드를 daemon 또는 user 쓰레드로 변경. user 쓰레드가 하나도 없으면 프로그램은 종료된다.
+                            쓰레드가 시작되기 전에 호출돼야한다.
                             <br>final boolean isDaemon()
                             <br>final void checkAccess() : 현재 쓰레드가 이 쓰레드를 변경할 수 없으면 SecurityException 발생
                             <br>ClassLoader getContextClassLoader() Since 1.2
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            <br>static boolean holdsLock(Object obj) Since 1.4
+                            <br>&raquo; 특정 객체를 lock으로 갖는지 확인하기 위해 만들어짐. assert Thread.holdsLock(obj);
+                            <br>StackTraceElement[] getStackTrace() Since 1.5 : 현재 쓰레드의 스택 추적 반환
+                            <br>static Map&lt;Thread, StackTraceElement[]&gt; getAllstackTraces() Since 1.5 : 전체 쓰레드에 대해 스택 추적
+                            반환
+                            <br>long getId() Since 1.5
+                            <br>Thread.State getState() Since 1.5
+                            <br>static void setDefaultUncaughtExceptionHandler(Thread.UncaughtExceptionHandler eh) Since 1.5
+                            <br>static Thread.uncaughtExceptionHandler getDefaultUncaughtExceptionHandler() Since 1.5
+                            <br>Thread.UncaughtExceptionHandler getUncaughtExceptionHandler() Since 1.5
+                            <br>void setUncaughtExceptionHandler(Thread.UncaughtExceptionHandler eh) Since 1.5
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
+                    <tr class="con-lv-3" con-title="ThreadGroup">
+                        <th>class ThreadGroup implements Thread.UncaughtExceptionHandler Since 1.0</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 생성자
+                            <br>public ThreadGroup(String name) Since 1.0
+                            <br>public ThreadGroup(ThreadGroup parent, String name) Since 1.0
+                            <br>
+                            <br>2. final String getName() Since 1.0
+                            <br>final ThreadGroup getParent() Since 1.0
+                            <br>final int getMaxpriority() Since 1.0
+                            <br>final boolean isDaemon() Since 1.0 : 데몬 쓰레드 그룹은 마지막 쓰레드나 쓰레드 그룹이 파괴되면 자동으로 파괴된다.
+                            <br>boolean isDestroyed() Since 1.1
+                            <br>final void setDaemon(boolean daemon) Since 1.0
+                            <br>final void setMaxPriority(int pri) Since 1.0
+                            <br>final boolean parentOf(ThreadGroup g) Since 1.0
+                            <br>final void checkAccess() Since 1.0
+                            <br>int activeCount()
+                            <br>int enumerate(Thread[] list) : Thread 클래스의 설명과 동일
+                            <br>int enumerate(Thread[] list, boolean recurse) Since 1.0
+                            <br>int activeGroupCount() Since 1.0
+                            <br>int enumerate(ThreadGroup[] list) Since 1.0
+                            <br>int enumerate(ThreadGroup[] list, boolean recurse) Since 1.0
+                            <br>final void interrupt() Since 1.2 : 그룹의 모든 쓰레드에 인터럽트
+                            <br>final void destroy() Since 1.0 : 그룹과 하위 모든 그룹을 파괴
+                            <br>void list() : 표준 출력으로 설명 출력
+                            <br>void uncaughtException(Thread t, THrowable e) Since 1.0 : 처리되지 않은 예외에 대하여 JVM이 호출한다
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="StackWalker">
+                        <th>final class StackWalker Since 9</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 현재 쓰레드의 StackFrame에 대한 스트림을 열고 특정 작업을 수행한다. 스트림은 실행 지점인 맨 위 frame부터 아래로 내려가면서 작업한다.
+                            <br>예. 현재 쓰레드의 상위 10개 스택 프레임 가져오기.
+                            <br>List&lt;StackFrame&gt; stack = StackWalker.getInstance().walk(s -&gt;
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;s.limit(10).collect(Collectors.toList()));
+                            <br>
+                            <br>
+                            <b>2. static enum StackWalker.Option Since 9</b>
+                            <br>&raquo; RETAIN_CLASS_REFERENCE : StackWalker가 작업하는 StackFrame들에 클래스 정보 유지
+                            <br>&raquo; SHOW_HIDDEN_FRAMES : 모든 숨겨진 프레임 표시.
+                            <br>&raquo; SHOW_REFLECT_FRAMES : 모든 reflection 프레임 표시
+                            <br>
+                            <br>
+                            <b>3. static interface StackWalker.StackFrame Since 9</b>
+                            <br>&raquo; 각 StackFrame 객체는 StackWalker로부터 반환된, 메서드 호출을 표현한다.
+                            <br>&raquo; String getClassName() : 이 프레임이 나타내는 메서드가 정의된 클래스를 binary name으로 반환
+                            <br>&raquo; String getMethodName() : 이 프레임이 나타내는 메서드의 이름 반환.
+                            <br>&raquo; Class&lt;?&gt; getDeclaringClass() : 이 프레임이 나타내는 메서드가 정의된 클래스의 객체 반환. Option.RETAIN_CLASS_REFERENCE가
+                            설정되어야 지원된다
+                            <br>&raquo; default MethodType getMethodType() Since 10
+                            <br>&raquo; default String getDescriptor() Since 10 : throw UnsupportedOperationException
+                            <br>&raquo; int getByteCodeIndex() : 실행 지점을 포함하는 Code 속성에서의 인덱스 반환.
+                            <br>&raquo; String getFileName() : 이 프레임이 가리키는 실행 지점이 포함된 소스 파일 이름 반환.
+                            <br>&raquo; int getLineNumber()
+                            <br>&raquo; boolean isNativeMethod()
+                            <br>&raquo; StackStraceElement toStackTraceElement() : 이 프레임에 관한 StackTraceElement 반환.
+                            <br>
+                            <br>4. static StackWalker getInstance() : 숨겨진 프레임을 모두 생략. 클래스 정보 미포함.
+                            <br>static StackWalker getInstance(StackWalker.Option option)
+                            <br>static StackWalker getInstance(Set&lt;StackWalker.Option&gt; options)
+                            <br>static StackWalker getInstance(Set&lt;StackWalker.Option&gt; options, int estimateDepth)
+                            <br>
+                            <br>5. &lt;T&gt; T walk(Function&lt;? super Stream&lt;StackWalker.StackFrame&gt;, ? extends T&gt;
+                            function)
+                            <br>void forEach(Consumer&lt; super StackWalker.StackFrame&gt; action)
+                            <br>
+                            <br>6. Class&lt;&?&gt; getCallerClass()
+                            <br>&raquo; 이 메서드의 호출자의 클래스 객체를 반환.
+                            <br>&raquo; 예를 들어, Util::getResourceBundle 메서드는 이 메서드를 통해 얻은 호출자의 클래스로부터 클래스 로더를 얻고, 클래스 로더를 통해 리소스를
+                            로드한다.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="StackTraceElement">
+                        <th>final class StackTraceElement implements Serializable Since 1.4</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 생성자
+                            <br>public StackTraceElement(String declaringClass, String methodName, String fileName, int lineNumber)
+                            Since 1.5
+                            <br>public StackTraceElement(String classLoaderName, String moduleName, String moduleVersion, String
+                            declaringClass, String methodName, String fileName, int lineNumber) Since 9
+                            <br>
+                            <br>2. String getFileName()
+                            <br>int getLineNumber()
+                            <br>String getModuleName() Since 9
+                            <br>String getModuleVersion() Since 9
+                            <br>String getClassLoaderName() Since 9
+                            <br>String getClassName()
+                            <br>String getMethodName()
+                            <br>boolean isNativeMethod()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Process">
+                        <th>abstract class Process Since 1.0</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. ProcessBuilder.start, Runtime.exec으로 시작된 native process들에 대한 제어 제공.
+                            <br>
+                            <br>2. abstract OutputStream getOutputStream()
+                            <br>abstract InputStream getInputStream()
+                            <br>abstract InputStream getErrorStream()
+                            <br>abstract int waitFor() throws InterruptedException : 현재 쓰레드가 이 프로세스의 종료를 기다림. 프로세스의 종료 값을 반환.
+                            <br>boolean waitFor(long timeout, TimeUnit unit) throws InterruptedException Since 1.8
+                            <br>&raquo; timeout : maximum time to wait. 시간 내에 프로세스가 종료되었다면 true 반환
+                            <br>abstract int exitValue()
+                            <br>abstract void destroy() : 정상 종료.
+                            <br>Process destroyForcibly() Since 1.8 : 강제, 즉시 종료.
+                            <br>boolean supportsNormalTermination() Since 9
+                            <br>boolean isAlive() Since 1.8
+                            <br>long pid() Since 9
+                            <br>CompletableFuture&lt;Process&gt; onExit() Since 9
+                            <br>ProcessHandle toHandle() Since 9
+                            <br>ProcessHandle.Info info() Since 9
+                            <br>Stream&lt;ProcessHandle&gt; children() Since 9
+                            <br>Stream&lt;ProcessHandle&gt; descendants() Since 9
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=ProcessHandle]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto ProcessHandle &raquo;
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="ProcessBuilder">
+                        <th>final class ProcessBuilder Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 이 클래스는 쓰레드-안전하게 구현되지 않았다.
+                            <br>
+                            <br>
+                            <b>2. abstract static class ProcessBuilder.Redirect Since 1.7</b>
+                            <br>&raquo; 서브프로세스의 입력 소스 또는 출력 방향을 표현한다.
+                            <br>&raquo;
+                            <b>static enum ProcessBuilder.Redirect.Type</b>
+                            <br>* APPEND : Redirect.appendTo(File), INHERIT, PIPE, READ : Redirect.from(File), WRITE : Redirect.to(File)
+                            <br>&raquo; 필드
+                            <br>* public static final ProcessBuilder.Redirect PIPE : 현재 프로세스와 파이프로 연결
+                            <br>* public static final ProcessBuilder.Redirect INHERIT : 현재 프로세스의 것과 동일
+                            <br>* public static final ProcessBuilder.Redirect DISCARD Since 9: 출력 버림
+                            <br>&raquo; abstract ProcessBuilder.Redirect.Type type()
+                            <br>&raquo; File file() : 입력 소스 또는 출력지와 관계된 File 반환. 없으면 null.
+                            <br>&raquo; static ProcessBuilder.Redirect from(File file)
+                            <br>&raquo; static ProcessBuilder.Redirect to(File file) : file의 이전 내용은 새로운 쓰기 작업에 의해 버려진다.
+                            <br>&raquo; static ProcessBuilder.Redirect appendTo(File file)
+                            <br>
+                            <br>3. 생성자
+                            <br>public ProcessBuilder(List&lt;String&gt; command)
+                            <br>public ProcessBuilder(String... command)
+                            <br>
+                            <br>4. ProcessBuilder command(List&lt;String&gt; command)
+                            <br>ProcessBuilder command(String... command)
+                            <br>List&lt;String&gt; command()
+                            <br>Map&lt;String, String&gt; environment()
+                            <br>File directory()
+                            <br>ProcessBuilder directory(File directory)
+                            <br>ProcessBuilder redirectInput(ProcessBuilder.Redirect source) Since 1.7
+                            <br>ProcessBuilder redirectOutput(ProcessBuilder.Redirect destination) Since 1.7
+                            <br>ProcessBuilder redirectError(ProcessBuilder.Redirect destination) Since 1.7
+                            <br>ProcessBuilder redirectInput(File file) Since 1.7
+                            <br>ProcessBuilder redirectOutput(File file) Since 1.7
+                            <br>ProcessBuilder redirectError(File file) Since 1.7
+                            <br>ProcessBuilder.Redirect redirectInput() Since 1.7
+                            <br>ProcessBuilder.Redirect redirectOutput() Since 1.7
+                            <br>ProcessBuilder.Redirect redirectError() Since 1.7
+                            <br>ProcessBuilder inheritIO() Since 1.7
+                            <br>boolean redirectErrorStream()
+                            <br>ProcessBuilder redirectErrorStream(boolean redirectErrorStream) : true면 서브프로세스들의 에러 출력이 표준 출력과
+                            함께 나온다.
+                            <br>Process start() throws IOException
+                            <br>static List&lt;Process&gt; startPipeline(List&lt;ProcessBuilder&gt; builders) throws IOException
+                            Since 9
+                            <br>&raquo; 프로세스들의 표준 출력을 다음 프로세스의 표준 입력을 연결한다.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Runtime">
+                        <th>class Runtime Since 1.0</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 모든 Java 애플리케이션은 하나의 Runtime 인스턴스를 가진다.
+                            <br>
+                            <br>
+                            <b>2. static final class Runtime.Version implements Comparable&lt;Runtime.Version&gt; Since 9</b>
+                            <br>&raquo; $VNUM : [1-9][0-9]*((\.0)*\.[1-9][0-9]*)*
+                            <br>* 보통 다음과 같은 의미를 나타낸다. $FEATURE.$INTERIM.$UPDATE.$PATCH
+                            <br>* $FEATURE : Feature-release counter, $INTERIM : Interim-release counter, $UPDATE : Update-release
+                            counter, $PATCH : Emergency patch-release counter
+                            <br>&raquo; Version String : $VNUM(-$PRE)?\+$BUILD(-$OPT)? or $VNUM-$PRE(-$OPT)? or $VNUM(+-$OPT)?
+                            <br>* $PRE : [a-zA-Z0-9]+ : Pre-release identifier, $BUILD : 0|[1-9][0-9]* : Build number, $OPT :
+                            [-a-zA-Z0-9.]+ : Additional build information
+                            <br>
+                            <br>3. static Runtime getRuntime()
+                            <br>void exit(int status) : 현재 실행중인 JVM을 종료
+                            <br>void addShutdownHook(Thread hook) Since 1.3 : JVM이 종료 절차에 진입하면 등록된 모든 hook를 실행
+                            <br>boolean removeShutdownHook(Thread hook) Since 1.3
+                            <br>void halt(int status) Since 1.3 : 강제종료
+                            <br>Process exec(String command) throws IOException
+                            <br>Process exec(String command, String[] envp) throws IOException
+                            <br>Process exec(String command, String[] envp, File dir) throws IOException Since 1.3
+                            <br>Process exec(String[] cmdarray) throws IOException
+                            <br>Process exec(String[] cmdarray, String[] envp) throws IOException
+                            <br>Process exec(String[] cmdarray, String[] envp, File dir) throws IOException Since 1.3
+                            <br>int availableProcessors() Since 1.4
+                            <br>long freeMemory()
+                            <br>long totalMemory()
+                            <br>long maxMemory() Since 1.4
+                            <br>void gc() : Garbage collector 작동.
+                            <br>void runFinalization() : 소멸 대기중인 모든 객체 소멸
+                            <br>void load(String filename) : Native library 로드. JNI에서 사용.
+                            <br>void loadLibrary(String libname)
+                            <br>static Runtime.Version version() Since 9 : JVM 버전 반환.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="RuntimePermission">
+                        <th>final class RuntimePermission extends BasicPermission Since 1.2</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.https://docs.oracle.com/javase/10/docs/api/java/lang/RuntimePermission.html
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="SecurityManager">
+                        <th>class SecurityManager Since 1.0</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 보안 정책을 구현할 수 있는 클래스. 전형적인 확인 절차는 아래와 같다.
+                            <br>SecurityManager security = System.getSecurityManager();
+                            <br>if (security != null) {
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;security.checkXXX(argument, . . . );
+                            <br>}
+                            <br>
+                            <br>2. Object getSecurityContext() : 현재 실행 환경을 캡슐화한 객체 반환.
+                            <br>void checkPermission(Permission perm) Since 1.2
+                            <br>void checkPermission(Permission perm, Object context) Since 1.2
+                            <br>ThreadGroup getThreadGroup() Since 1.1 : 새로운 쓰레드를 생성할 수 있는 쓰레드그룹 반환
+                            <br>...
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="System">
+                        <th>final class System Since 1.0</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>1. static interface System.Logger Since 9</b>
+                            <br>&raquo;
+                            <b>static enum System.Logger.Level Since 9</b>
+                            <br>* ALL(Integer.MIN_VALUE), TRACE(400), DEBUG(500), INFO(800), WARNING(900), ERROR(1000), OFF(Integer.MAX_VALUE)
+                            <br>* final String getName()
+                            <br>* final int getSeverity()
+                            <br>
+                            <br>&raquo; String getName() : 로거 이름 반환.
+                            <br>boolean isLoggable(System.Logger.Level level)
+                            <br>default void log(System.Logger.Level level, String msg)
+                            <br>...
+                            <br>
+                            <br>
+                            <b>2. abstract static class System.LoggerFinder Since 9</b>
+                            <br>&raquo; 로거의 생성, 관리, 구성에 관한 서비스 제공.
+                            <br>&raquo; 기본 구현 : java.logging 모듈이 있는 경우 java.util.logging이용. 없으면 INFO 수준으로 표준 에러 출력
+                            <br>&raquo; static System.LoggerFinder getLoggerFinder()
+                            <br>&raquo; abstract getLogger(String name, Module module)
+                            <br>&raquo; System.Logger getLocalizedLogger(String name, ResourceBundle bundle, Module module)
+                            <br>
+                            <br>3. 필드
+                            <br>public static final InputStream in
+                            <br>public static final PrintStream out
+                            <br>public static final PrintStream err
+                            <br>
+                            <br>4. static void setIn(InputStream in) Since 1.1
+                            <br>static void setOut(PrintStream out) Since 1.1
+                            <br>static void setErr(PrintStream err) Since 1.1
+                            <br>static Console console() Since 1.6
+                            <br>static Channel inheritedChannel() throws IOException Since 1.5
+                            <br>static void setSecurityManager(SecurityManager s)
+                            <br>static SecurityManager getSecurityManager()
+                            <br>static long currentTimeMillis()
+                            <br>static long nanoTime() Since 1.5
+                            <br>static void arraycopy(Object src, int srcPos, Object dest, int destPos, int length)
+                            <br>static int identityHashCode(Object x) Since 1.1
+                            <br>static Properties getProperties()
+                            <br>static String lineSeparator() Since 1.7
+                            <br>static void setProperties(Properties props)
+                            <br>static String getProperty(String key)
+                            <br>static String getProperty(String key, String def)
+                            <br>static String setProperty(String key, String value) Since 1.2
+                            <br>static String clearProperty(String key) Since 1.5
+                            <br>static String getenv(String name) : 환경변수값 반환
+                            <br>static Map&lt;String,String&gt; getenv() Since 1.5
+                            <br>static System.Logger getLogger(String name) Since 9
+                            <br>static System.Logger getLogger(String name, ResourceBundle bundle) Since 9
+                            <br>static void exit(int status)
+                            <br>static void gc() : Runtime의 것을 호출
+                            <br>static void runFinalization() : Runtime의 것을 호출
+                            <br>static void load(String filename) : Runtime의 것을 호출
+                            <br>static void loadLibrary(String libname) : Runtime의 것을 호출
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Throwable">
+                        <th>class Throwable implements Serializable Since 1.0</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 모든 에러와 예외의 조상.
+                            <br>
+                            <br>2. 생성자
+                            <br>public Throwable()
+                            <br>public Throwable(String message)
+                            <br>public Throwable(String message, Throwable cause) Since 1.4
+                            <br>public THrowable(Throwable cause) Since 1.4
+                            <br>protected Throwable(String message, THrowable cause, boolean enableSuppression, boolean writableStackTrace)
+                            Since 1.7
+                            <br>
+                            <br>3. String getMessage()
+                            <br>String getLocalizedMessage() Since 1.1
+                            <br>Throwable getCause() Since 1.4
+                            <br>Throwable initCause(Throwable cause) Since 1.4
+                            <br>void printStackTrace()
+                            <br>void printStackTrace(PrintStream s) Since 1.1
+                            <br>StackTraceElement[] getStackTrace() Since 1.4
+                            <br>void setStackTrace(StackTraceElement[] stackTrace) Since 1.4
+                            <br>final void addSuppressed(Throwable exception) Since 1.7
+                            <br>final Throwable[] getSuppressed() Since 1.7
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Math">
+                        <th>final class Math Since 1.0</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 필드
+                            <br>public static final double E
+                            <br>public static final double PI
+                            <br>
+                            <br>2. static double abs(double a) + float, int, long
+                            <br>static double cos, sin, tan, acos, asin, atan(double a)
+                            <br>static double cbrt(double a) : cube root
+                            <br>static double ceil(double a), floor(double a)
+                            <br>static double exp(double a), log(double a), log10(double a)
+                            <br>static double max(double a, double b) + float, int, long
+                            <br>...
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="con-lv-2" con-title="java.lang.annotation">
+                    <tr style="background-color: #bbb;">
+                        <th>java.base(module) Since 9 &raquo; java.lang.annotation(package) Since 1.5</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Annotation">
+                        <th>interface Annotation Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 이 인터페이스를 사용자가 구체화함으로 새로운 어노테이션을 정의할 순 없다.
+                            <br>
+                            <br>2. Class&lt;? extends Annotation&gt; annotationType()
+                            <br>int hashCode()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="ElementType">
+                        <th>enum ElementType Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 어노테이션이 적용되는 요소를 표현한다.
+                            <br>
+                            <br>2. TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VALIABLE, ANNOTATION_TYPE, PACKAGE, TYPE_PARAMETER
+                            Since 1.8, MODULE Since 9
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="RetentionPolicy">
+                        <th>enum RetentionPolicy Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 어노테이션 유지 정책.
+                            <br>
+                            <br>2. SOURCE : 컴파일러가 제거, CLASS : 컴파일러가 클래스 파일에 기록(default), RUNTIME : 클래스 파일에 기록하고 JVM 런타임에도 유지.
+                            따라서 리플렉션 가능.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Documented">
+                        <th>@Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Documented Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. @Documented가 다른 어노테이션 타입 A에 존재하면, @A로 꾸며진 요소의 공개적인 서명으로 인식하여 JavaDoc에 포함된다.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Inherited">
+                        <th>@Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Inherited Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. Superclass의 어노테이션을 상속함을 표시. 클래스에만 유효한 어노테이션이다.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Native">
+                        <th>@Documented @Target(FIELD) @Retention(SOURCE) @interface Native Since 1.8</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 필드가 네이티브 코드 값을 정의함을 표현.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Repeatable">
+                        <th>@Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Repeatable Since 1.8</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 어노테이션을 반복적으로 정의할 수 있음을 표현.
+                            <br>예. https://docs.oracle.com/javase/tutorial/java/annotations/repeating.html
+                            <br>import java.lang.annotation.Repeatable;
+                            <br>
+                            <br>@Repeatable(Schedules.class)
+                            <br>public @interface Schedule {
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;Schedule[] value(); // 여러 어노테이션 값을 유지하기 위해 꼭 필요
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;String dayOfMonth() default "first";
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;String dayOfWeek() default "Mon";
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;int hour() default 12;
+                            <br>}
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Retention">
+                        <th>@Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Retention Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 어노테이션을 얼마나 유지할 지 표현.
+                            <br>
+                            <br>2. 필요 요소 : RetentionPolicy value
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Target">
+                        <th>@Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Target Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 어노테이션을 적용할 요소들을 표현한다. 여러 개(또는 0개)일 경우 배열 리터럴 표기 {}를 이용한다.
+                            <br>
+                            <br>2. 필요 요소 : ElementType[] value
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="con-lv-2" con-title="java.lang.module">
+                    <tr style="background-color: #bbb;">
+                        <th>java.base(module) Since 9 &raquo; java.lang.module(package) Since 9</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="ModuleFinder">
+                        <th>interface ModuleFinder Since 9</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. Module Resolution : 모듈들의 연관 관계를 계산하는 작업. 각 모듈의 필요(requires) 모듈들을 반복적으로 찾아내고 관계 그래프를 구한다.
+                            <br>ModuleFinder는 module resolution과 service binding(Configuration::resolveAndBind)에서 모듈을 찾는 데 이용된다.
+                            <br>
+                            <br>2. Optional&lt;ModuleReference&gt; find(String name)
+                            <br>Set&lt;ModuleReference&gt; findAll()
+                            <br>
+                            <br>3. static ModuleFinder ofSystem()
+                            <br>static ModuleFinder of(Path... entries)
+                            <br>static ModuleFinder compose(ModuleFinder... finders)
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="ModuleReader">
+                        <th>interface ModuleReader Extends Closeable Since 9</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 모듈 내용에 대한 접근 제공.
+                            <br>
+                            <br>2. Optional&lt;URI&gt; find(String name) throws IOException
+                            <br>default Optional&lt;InputStream&gt; open(String name) throws IOException
+                            <br>default Optional&ByteBuffer&gt; read(String name) throws IOException
+                            <br>default void release(ByteBuffer bb)
+                            <br>Stream&lt;String&gt; list() throws IOException
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="ModuleDescriptor">
+                        <th>class ModuleDescriptor implements Comparable&lt;ModuleDescriptor&gt; Since 9</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            https://docs.oracle.com/javase/10/docs/api/java/lang/module/ModuleDescriptor.html
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="con-lv-2" con-title="java.lang.reflect">
+                    <tr style="background-color: #bbb;">
+                        <th>java.base(module) Since 9 &raquo; java.lang.reflect(package) Since 1.1</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Type">
+                        <th>interface Type Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 모든 타입의 공통 superinterface.
+                            <br>
+                            <br>2. default String getTypeName() Since 1.8
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="GenericArrayType">
+                        <th>interface GenericArrayType extends Type Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 원소 타입이 parameterized type 또는 type 변수인 배열 타입을 표현.
+                            <br>
+                            <br>2. Type getGenericComponentType() : 이 배열의 원소 타입을 Type 객체로 반환.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="ParameterizedType">
+                        <th>interface ParameterizedType extends Type Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. Collection&lt;String&gt;처럼 파라미터화된 타입을 표현.
+                            <br>
+                            <br>2. Type[] getActualTypeArguments() Since 1.5
+                            <br>Type getRawType() Since 1.5
+                            <br>Type getOwnerType() Since 1.5 : 에를 들어 이 타입이 O&lt;T&gt;.I&lt;S&gt;면, O&lt;T&gt;를 반환한다.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="WildcardType">
+                        <th>interface WildcardType extends Type Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. ?, ? extends Number, ? super Integer와 같은 와일드카드 타입을 표현.
+                            <br>
+                            <br>2. Type[] getUpperBounds()
+                            <br>Type[] getLowerBounds()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="AnnotatedElement">
+                        <th>interface AnnotatedElement Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. default boolean isAnnotationPresent(Class&lt;? extends Annotation&gt; annotationClass) Since 1.5
+                            <br>
+                            <br>2. &lt;T extends Annotation&gt; T getAnnotation(Class&lt;T&gt; annotationClass) Since 1.5
+                            <br>Annotation[] getAnnotations() Since 1.5
+                            <br>default &lt;T extends Annotation&gt; T[] getAnnotationsByType(Class&lt;T&gt; annotationClass)
+                            Since 1.8
+                            <br>default &lt;T extends Annotation&gt; T getDeclaredAnnotation(Class&lt;T&gt; annotationClass)
+                            Since 1.8
+                            <br>default &lt;T extends Annotatino&gt; T[] getDeclaredAnnotationsByType(Class&lt;T&gt; annotationClass)
+                            Since 1.8
+                            <br>Annotation[] getDeclaredAnnotations() Since 1.5
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="AnnotatedType">
+                        <th>interface AnnotatedType extends AnnotatedElement Since 1.8</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. default AnnotatedType getAnnotatedOwnerType() Since 9
+                            <br>&raquo; 이 타입이 멤버로 속해있는, 어노테이트된 타입 반환. 예를 들어 이 타입이 @TA O&lt;T&gt;.I&lt;S&gt;라면, @TA O&lt;T&gt;를
+                            반환.
+                            <br>&raquo; null : 이 타입이 top-level이거나 local 클래스, 익명 클래스, 기본 자료형, void인 경우. 이 타입이 AnnotatedArrayType,
+                            AnnotatedTypeVariable, AnnotatedWildcardType의 인스턴스인 경우.
+                            <br>
+                            <br>2. Type getType() : 이 어노테이트된 타입의 기저 타입
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="AnnotatedArrayType">
+                        <th>interface AnnotatedArrayType extends AnnotatedType Since 1.8</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 원소가 어노테이트된 배열을 표현.
+                            <br>
+                            <br>2. AnnotatedType getAnnotatedGenericComponentType() : 이 배열의 어노테이트된 제네릭 타입 반환
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="AnnotatedParameterizedType">
+                        <th>interface AnnotatedParameterizedType extends AnnotatedType Since 1.8</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 타입 인자들이 어노테이트된 parameterized type을 표현.
+                            <br>
+                            <br>2. AnnotatedType[] getAnnotatedActualTypeArguments()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="TypeVariable">
+                        <th>interface TypeVariable&lt;D extends GenericDeclaration&gt; extends Type, AnnotatedElement Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 타입 변수에 관한 공통 superinterface.
+                            <br>
+                            <br>2. Type[] getBounds()
+                            <br>D getGenericDeclaration() Since 1.5
+                            <br>String getName()
+                            <br>AnnotatedType[] getAnnotatedBounds() Since 1.8
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="GenericDeclaration">
+                        <th>interface GenericDeclaration extends AnnotatedElement Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 모든 타입 변수 정의들에 대한 공통 인터페이스.
+                            <br>https://www.programcreek.com/java-api-examples/?api=java.lang.reflect.GenericDeclaration
+                            <br>
+                            <br>2. TypeVariable&lt;?&gt;[] getTypeParameters()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="AnnotatedTypeVariable">
+                        <th>interface AnnotatedTypeVariable extends AnnotatedType Since 1.8</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 어노테이트된 바운드를 가진 타입 변수를 표현.
+                            <br>
+                            <br>2. AnnotatedType[] getAnnotatedBounds()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="AnnotatedWildcardType">
+                        <th>interface AnnotatedWildcardType extends AnnotatedType Since 1.8</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 어노테이트된 upper 또는 lower 바운드들에 대한 와일드카드 타입을 표현
+                            <br>
+                            <br>2. AnnotatedType[] getAnnotatedLowerBounds()
+                            <br>AnnotatedType[] getAnnotatedUpperBounds()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Member">
+                        <th>interface Member Since 1.1</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 하나의 멤버(필드나 메서드) 또는 생성자를 가리킨다.
+                            <br>
+                            <br>2. 필드
+                            <br>static final int PUBLIC
+                            <br>static final int DECLARED : 상속한 것 미포함
+                            <br>
+                            <br>3. Class&lt;?&gt; getDeclaringClass()
+                            <br>String getName()
+                            <br>int getModifiers()
+                            <br>boolean isSynthetic() Since 1.5 : 컴파일러에 의해 만들어진 멤버인지 여부
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="InvocationHandler">
+                        <th>interface InvocationHandler Since 1.3</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. Proxy 인스턴스의 invocation handler에서 구현하는 인터페이스.
+                            <br>
+                            <br>2. Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="AccessibleObject">
+                        <th>class AccessibleObject implements AnnotatedElement Since 1.2</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. Field, Method, Constructor의 base 클래스. 리플렉트된 객체를 사용하기 전에 suppressing check 표시한다.
+                            <br>
+                            <br>2. static void setAccessible(AccessibleObject[] array, boolean flag)
+                            <br>&raquo; 배열의 각 원소들을 setAccessible(boolean)으로 설정할 수 있을 때, 한번에 하기 위한 메서드
+                            <br>void setAccessible(boolean flag)
+                            <br>final boolean trySetAccessible() Since 9
+                            <br>&raquo; 아마도 변경되었을 accessible flag 값을 반환한다. 실패할 경우 예외를 발생하지 않고 false를 반환.
+                            <br>final boolean canAccess(Object obj) Since 9
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Field">
+                        <th>final class Field extends AccessibleObject implements Member Since 1.1</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. boolean isEnumConstant() Since 1.5
+                            <br>boolean isSynthetic() Since 1.5
+                            <br>
+                            <br>2. Class&lt;?&gt; getType()
+                            <br>Type getGenericType() Since 1.5
+                            <br>String toGenericString() Since 1.5
+                            <br>
+                            <br>3. Object get(Object obj) throws IllegalArgumentException, IllegalAccessException
+                            <br>boolean getBoolean(Object obj) throws IllegalArgumentException, IllegalAccessException
+                            <br>byte getByte(Object obj) throws IllegalArgumentException, IllegalAccessException
+                            <br>char getChar(Object obj) throws IllegalArgumentException, IllegalAccessException
+                            <br>short getShort(Object obj) throws IllegalArgumentException, IllegalAccessException
+                            <br>int getInt(Object obj) throws IllegalArgumentException, IllegalAccessException
+                            <br>long getLong(Object obj) throws IllegalArgumentException, IllegalAccessException
+                            <br>float getFloat(Object obj) throws IllegalArgumentException, IllegalAccessException
+                            <br>double getDouble(Object obj) throws IllegalArgumentException, IllegalAccessException
+                            <br>
+                            <br>4. void set(Object obj, Object value) throws IllegalArgumentException, IllegalAccessException
+                            <br>void setBoolean(Object obj, boolean z) throws IllegalArgumentException, IllegalAccessException
+                            <br>void setByte(Object obj, byte b) throws IllegalArgumentException, IllegalAccessException
+                            <br>void setChar(Object obj, char c) throws IllegalArgumentException, IllegalAccessException
+                            <br>void setShort(Object obj, short s) throws IllegalArgumentException, IllegalAccessException
+                            <br>void setInt(Object obj, int i) throws IllegalArgumentException, IllegalAccessException
+                            <br>void setLong(Object obj, long l) throws IllegalArgumentException, IllegalAccessException
+                            <br>void setFloat(Object obj, float f) throws IllegalArgumentException, IllegalAccessException
+                            <br>void setDouble(Object obj, double d) throws IllegalArgumentException, IllegalAccessException
+                            <br>
+                            <br>5. AnnotatedType getAnnotatedType() Since 1.8
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Executable">
+                        <th>abstract class Executable extends AccessibleObject implements Member, GenericDeclaration Since 1.8</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. Method, Constructor의 공통 기능
+                            <br>
+                            <br>2.abstract Class&lt;?&gt;[] getParameterTypes()
+                            <br>int getParameterCount()
+                            <br>Type[] getGenericParameterTypes()
+                            <br>Parameter[] getParameters()
+                            <br>abstract Class&lt;?&gt;[] getExceptionTypes()
+                            <br>Type[] getGenericExceptionTypes()
+                            <br>abstract Annotation[][] getParameterAnnotations()
+                            <br>abstract AnnotatedType getAnnotatedReturnType()
+                            <br>AnnotatedType getAnnotatedReceiverType()
+                            <br>AnnotatedType[] getAnnotatedParameterTypes()
+                            <br>AnnotatedType[] getAnnotatedExceptionTypes()
+                            <br>
+                            <br>3. abstract String toGenericString()
+                            <br>
+                            <br>4. boolean isVarArgs()
+                            <br>boolean isSynthetic()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Method">
+                        <th>final class Method extends Executable Since 1.1</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. Class&lt;&?&gt; getReturnType()
+                            <br>Type getGenericReturnType() Since 1.5
+                            <br>Object getDefaultValue() Since 1.5
+                            <br>
+                            <br>2. Object invoke(Object obj, Object... args) throws IllegalAccessException, IllegalArgumentException,
+                            InvocationTargetException
+                            <br>
+                            <br>3. boolean isBridge()
+                            <br>boolean isDefault() Since 1.8
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Constructor">
+                        <th>final class Constructor&lt;T&gt; extends Executable Since 1.1</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. T newInstance(Object... initargs) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Parameter">
+                        <th>final class Parameter implements AnnotatedElement</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 메서드 인자에 관한 정보.
+                            <br>
+                            <br>2. boolean isNamePresent()
+                            <br>boolean isImplicit()
+                            <br>boolean isSynthetic()
+                            <br>boolean isVarArgs()
+                            <br>
+                            <br>3. Executable getDeclaringExecutable()
+                            <br>int getModifiers()
+                            <br>String getName()
+                            <br>Type getParameterizedType()
+                            <br>Class&lt;?&gt; getType()
+                            <br>AnnotatedType getAnnotatedType()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Array">
+                        <th>final class Array Since 1.1</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 동적으로 자바 배열을 생성하고 접근하는 static 메서드들을 제공.
+                            <br>
+                            <br>2. static Object newInstance(Class&lt;?&gt; componentType, int length) throws NegativeArraySizeException
+                            <br>static Object newInstance(Class&lt;?&gt; componentType, int... dimensions) throws IllegalArgumentException,
+                            NegativeArraySizeException
+                            <br>
+                            <br>3. static int getLength(Object array) throws IllegalArgumentException
+                            <br>static Object get(Object array, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException
+                            <br>static boolean getBoolean(Object array, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException
+                            <br>static byte getByte(Object array, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException
+                            <br>... static double getDouble(Object array, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException
+                            <br>
+                            <br>4. static void set(Object array, int index, Object value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException
+                            <br>static void setBoolean(Object array, int index, boolean z) throws IllegalArgumentException, ArrayIndexOutOfBoundsException
+                            <br>... static void setDouble(Object array, int index, double d) throws IllegalArgumentException,
+                            ArrayIndexOutOfBoundsException
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Modifier">
+                        <th>class Modifier Since 1.1</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 필드
+                            <br>&raquo; public static final int PUBLIC, PRIVATE, PROTECTED, STATIC, FINAL, SYNCHRONIZED, VOLATILE,
+                            TRANSIENT, NATIVE, INTERFACE, ABSTRACT, STRICT
+                            <br>
+                            <br>2. 생성자 : public Modifier()
+                            <br>
+                            <br>3. static boolean isPublic(int mod)
+                            <br>... static boolean isStrict(int mod)
+                            <br>static String toString(int mod)
+                            <br>
+                            <br>4. 사용할 수 있는 한정자들을 OR하여 반환
+                            <br>static int classModifiers() Since 1.7
+                            <br>static int interfaceModifiers() Since 1.7
+                            <br>static int constructorModifiers() Since 1.7
+                            <br>static int methodModifiers() Since 1.7
+                            <br>static int fieldModifiers() Since 1.7
+                            <br>static int parameterModifiers() Since 1.8
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Proxy">
+                        <th>class Proxy implements Serializable Since 1.3</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. Proxy는 인터페이스 익명 객체처럼 행동하면서 사용자 정의 메서드를 호출할 수 있는 객체를 생성하는 static 메서드를 제공한다.
+                            <br>예. 인터페이스 Foo의 프록시 인스턴스 생성 : proxy instanceof Foo == true, (Foo) proxy : ok
+                            <br>InvocationHandler handler = new MyInvocationHandler(...);
+                            <br>Foo f = (Foo) Proxy.newProxyInstance(Foo.class.getClassLoader(), new Class&lt;?&gt;[] { Foo.class
+                            }, handler);
+                            <br>&raquo; 프록시 클래스 속성 : "$Proxy"로 이름이 시작. final and non-abstract. java.lang.reflect.Proxy를 상속. 생성시
+                            주어진 인터페이스들을 차례대로 구체화. ProtectionDomain은 bootstrap 클래스 로더가 로드한 시스템 클래스들과 동일.
+                            <br>
+                            <br>2. 필드 : protected InvocationHandler h
+                            <br>
+                            <br>3. 생성자 : protedtec Proxy(InvocationHandler h)
+                            <br>
+                            <br>4. static Object newProxyInstance(ClassLoader loader, Class&lt;?&gt;[] interfaces, InvocationHandler
+                            h)
+                            <br>static boolean isProxyClass(Class&lt;?&gt; cl)
+                            <br>static InvocationHandler getInvocationHandler(Object proxy) throws IllegalArgumentException
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="con-lv-2" con-title="java.math">
+                    <tr style="background-color: #bbb;">
+                        <th>java.base(module) Since 9 &raquo; java.math(package) Since 1.1</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="BigDecimal">
+                        <th>class BigDecimal extends Number implements Comparable&lt;BigDecimal&gt; Since 1.1</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 임의 정밀도의 변경할 수 없는 10진 정수와 32비트 정수인 지수로 십진수를 표현한다.
+                            <br>
+                            <br>2. 필드
+                            <br>public static final BigDecimal ZERO, ONE, TEN Since 1.5
+                            <br>
+                            <br>3. 생성자
+                            <br>public BigDecimal(char[] in, int offset, int len) Since 1.5
+                            <br>public BigDecimal(char[] in, int offset, int len, MathContext mc) Since 1.5
+                            <br>public BigDecimal(char[] in) Since 1.5
+                            <br>public BigDecimal(char[] in, MathContext mc) Since 1.5
+                            <br>public BigDecimal(String val)
+                            <br>&raquo; (부호)?(진수부)(지수부)?
+                            <br>* 진수부 : 정수부.(소수부) or .소수부 or 정수부
+                            <br>* 지수부: (e|E)정수
+                            <br>public BigDecimal(String val, MathContext mc) Since 1.5
+                            <br>public BigDecimal(double val) : double의 오차 때문에 정확하진 않다.
+                            <br>public BigDecimal(double val, MathContext mc) Since 1.5
+                            <br>public BigDecimal(BigInteger val)
+                            <br>public BigDecimal(BigInteger val, MathContext mc) Since 1.5
+                            <br>public BigDecimal(BigInteger unscaledVal, int scale)
+                            <br>public BigDecimal(BigInteger unscaledVal, int scale, MathContext mc) Since 1.5
+                            <br>public BigDecimal(int val) Since 1.5
+                            <br>public BigDecimal(int val, MathContext mc) Since 1.5
+                            <br>public BigDecimal(long val) Since 1.5
+                            <br>public BigDecimal(long val, MathContext mc) Since 1.5
+                            <br>
+                            <br>4. static BigDecimal valueOf(long unscaledVal, int scale)
+                            <br>static BigDecimal valueOf(long val)
+                            <br>static BigDecimal valueOf(double val) Since 1.5
+                            <br>
+                            <br>BigDecimal add(BigDecimal augend)
+                            <br>BigDecimal add(BigDecimal augend, MathContext mc) Since 1.5
+                            <br>BigDecimal subtract(BigDecimal subtrahend)
+                            <br>BigDecimal subtract(BigDecimal subtrahend, MathContext mc) Since 1.5
+                            <br>BigDecimal multiply(BigDecimal multiplicand)
+                            <br>BigDecimal multiply(BigDecimal multiplicand, MathContext mc) Since 1.5
+                            <br>BigDecimal divide(BigDecimal divisor, int scale, RoundingMode roundingMode) Since 1.5
+                            <br>BigDecimal divide(BigDecimal divisor, RoundingMode roundingMode) Since 1.5
+                            <br>BigDecimal divide(BigDecimal divisor) Since 1.5
+                            <br>BigDecimal divide(BigDecimal divisor, MathContext mc) Since 1.5
+                            <br>BigDecimal divideToIntegralValue(BigDecimal divisor) Since 1.5 : 몫
+                            <br>BigDecimal divideToIntegralValue(BigDecimal divisor, MathContext mc) Since 1.5
+                            <br>BigDecimal remainder(BigDecimal divisor) SInce 1.5 : 나머지
+                            <br>BigDecimal remainder(BigDecimal divisor, MathContext mc) Since 1.5
+                            <br>BigDecimal[] divideAndRemainder(BigDecimal divisor) Since 1.5
+                            <br>sqrt, pow, abs, negate, scale, precision, unscaledValue, round, movePointRight, scaleByPowerOfTen,
+                            ...
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="BigInteger">
+                        <th>class BigInteger extends Number implements Comparable&lt;BigInteger&gt; Since 1.1</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 변경할 수 없는 임의 길이의 정수. -2^(Integer.MAX_VALUE) ~ 2^(Integer.MAX_VALUE)
+                            <br>
+                            <br>2. 필드
+                            <br>public static final BigInteger ZERO Since 1.2, ONE Since 1.2, TWO Since 9, TEN Since 1.5
+                            <br>
+                            <br>3. 생성자
+                            <br>public BigInteger(byte[] val, int off, int len) Since 9
+                            <br>public BigInteger(byte[] val)
+                            <br>public BigInteger(int signum, byte[] magnitude, int off, int len) Since 9
+                            <br>public BigInteger(int signum, byte[] magnitude)
+                            <br>public BigInteger(String val, int radix)
+                            <br>public BigInteger(String val)
+                            <br>public BigInteger(int numBits, Random rnd) : [0 ~ 2^numBits) 사이 난수
+                            <br>public BigInteger(int bitLength, int certainty, Random rnd) : 특정 비트 길이의 양의 정수(아마도 소수) 반환.
+                            <br>
+                            <br>4. static BigInteger probablePrime(int bitLength, Random rnd) Since 1.4 : 합성수일 가능성은 2^(-100)을
+                            넘지 않는다.
+                            <br>BigInteger nextProbablePrime() Since 1.5
+                            <br>static BigInteger valueOf(long val)
+                            <br>BigInteger add(BigInteger val)
+                            <br>BigInteger subract(BigInteger val)
+                            <br>...
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="MathContext">
+                        <th>final class MathContext implements Serializable Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 정밀도, 반올림 모드를 캡슐화한 변경 불가능한 객체.
+                            <br>
+                            <br>2. 필드
+                            <br>public static final MathContext UNLIMITED : precision=0, roundingMode=HALF_UP
+                            <br>public static final MathContext DECIMAL32, DECIMAL64, DECIMAL128 : 7/16/34digits, roundingMode=HALF_EVEN
+                            <br>
+                            <br>3. 생성자
+                            <br>public MathContext(int setPrecision) : HALF_UP
+                            <br>public MathContext(int setPrecision, RoundingMode setRoundingMode)
+                            <br>public MathContext(String val) : MathContext::toString과 같은 포맷
+                            <br>
+                            <br>4. int getPrecision()
+                            <br>RoundingMode getRoundingMode()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="RoundingMode">
+                        <th>enum RoundingMode Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. CEILING, FLOOR, UP(0에서 멀게), DOWN(0에 가깝게)
+                            <br>HALF_UP, HALF_DOWN, HALF_EVEN : 가장 인접한 두 이웃들이 같은 거리에 있는 경우, 각각 큰/작은/짝수 이웃을 선택.
+                            <br>UNNECESSARY : 올림이나 내림이 필요없는 상태. 그 외엔 ArithmeticException 발생.
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="con-lv-2" con-title="java.net">
+                    <tr style="background-color: #bbb;">
+                        <th>java.base(module) Since 9 &raquo; java.net(package) Since 1.0</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="InetAddress">
+                        <th>class InetAddress implements Serializable Since 1.0</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. boolean isMulticastAddress() Since 1.1
+                            <br>boolean isAnyLocalAddress() Since 1.4 ...
+                            <br>boolean isReachable(int timeout) throws IOException Since 1.5
+                            <br>&raquo; ICMP, ECHO, REQUEST로 시도
+                            <br>boolean isReachable(NetworkInterface netif, int ttl, int timeout) throws IOException Since 1.5
+                            <br>
+                            <br>2. String getHostName()
+                            <br>String getCanonicalHostName() Since 1.4
+                            <br>byte[] getAddress()
+                            <br>String getHostAddress() Since 1.0.2
+                            <br>static InetAddress getByAddress(String host, byte[] addr) throws UnknownHostException Since 1.4
+                            <br>static InetAddress getByName(String host) throws UnknownHostException
+                            <br>static InetAddress[] getAllByName(String host) throws UnknownHostException
+                            <br>static InetAddress getLoopbackAddress() Since 1.7 : 127.0.0.1(127.*.*.*) or ::1
+                            <br>static InetAddress getByAddress(byte[] addr) throws UnknownHostException Since 1.4
+                            <br>static InetAddress getLocalHost() throws UnknownHostException
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Inet4Address">
+                        <th>final class Inet4Address extends InetAddress Since 1.4</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 추가사항 없음.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Inet6Address">
+                        <th>final class Inet6Address extends InetAddress Since 1.4</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. static Inet6Address getByAddress(String host, byte[] addr, NetworkInterface nif) throws UnknownHostException Since 1.5
+                            <br>static Inet6Address getByAddress(String host, byte[] addr, int scope_id) throws UnknownHostException
+                            Since 1.5
+                            <br>int getScopeId() Since 1.5
+                            <br>NetworkInterface getScopedInterface() Since 1.5
+                            <br>boolean isIPv4CompatibleAddress()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="SocketAddress">
+                        <th>abstract class SocketAddress implements Serializable Since 1.4</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 프로토콜과 무관한 소켓 주소 정의.
+                            <br>
+                            <br>2. 생성자 : public SocketAddress()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="InetSocketAddress">
+                        <th>class InetSocketAddress extends SocketAddress Since 1.4</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. IP 소켓 주소(IP 주소 or 호스트 이름 + 포트)를 표현.
+                            <br>
+                            <br>2. 생성자
+                            <br>public InetSocketAddress(int port)
+                            <br>&raquo; port가 0이면 바인드시 자동 할당.
+                            <br>public InetSocketAddress(InetAddress addr, int port)
+                            <br>public InetSocketAddress(String hostname, int port)
+                            <br>
+                            <br>3. static InetSocketAddress createUnresolved(String host, int port) Since 1.5
+                            <br>final int getPort()
+                            <br>final InetAddress getAddress()
+                            <br>final String getHostName()
+                            <br>final String getHostString() Since 1.7 : 이름이 없으면 주소로 생성
+                            <br>final boolean isUnresolved()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="InterfaceAddress">
+                        <th>class InterfaceAddress Since 1.6</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. IPv4 : IP 주소, 서브넷 마스크, 브로드캐스트 주소
+                            <br>IPv6 : IP 주소, network prefix length
+                            <br>
+                            <br>2. InetAddress getAddress()
+                            <br>InetAddress getBroadcast()
+                            <br>short getNetworkPrefixLength()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="SocketOptions">
+                        <th>interface SocketOptions Since 1.1</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 필드
+                            <br>@Native static final int TCP_NODELAY : Nagle 알고리즘 작동 중지
+                            <br>@Native static final int SO_BINDADDR : Local 주소 바인딩. SocketImpl, DatagramSocketImpl의 생성자에서 설정해야
+                            한다.
+                            <br>@Native static final int SO_REUSEADDR : MulticastSocket에서만 사용되며, 기본 설정된다.
+                            <br>@Native static final int SO_REUSEPORT Since 9 : 여러 소켓이 같은 주소와 포트를 listen.
+                            <br>@Native static final int SO_BROADCAST Since 1.4 : 프로세스가 브로드캐스트 메시지를 보낼 수 있는지. 브로드캐스트를 지원하는 네트워크에서,
+                            데이터그램 소켓을 통해서만 지원된다. 데이터그램 소켓은 이를 기본으로 설정한다.
+                            <br>@Native static final int IP_MULTICAST_IF : 밖으로 나가는 인터페이스가 멀티캐스트 패킷을 보내는지 여부. 호스트가 여러 네트워크 인터페이스를
+                            가진 경우, 시스템 기본이 아닌 다른 것을 이용할 때 InetAddress를 인자로 설정. DatagramSocketImpl에서 유효.
+                            <br>@Native static final int IP_MULTICAST_IF2 Since 1.4 : IPv6 지원.
+                            <br>@Native static final int IP_MULTICAST_LOOP Since 1.4 : 멀티캐스트 데이터그램 루프백 여부. MulticastSocket은 기본으로
+                            설정.
+                            <br>@Native static final int IP_TOS Since 1.4 : TCP/UDP 소켓의 IP 헤더에 type-of-service 또는 traffic class
+                            field 설정
+                            <br>@Native static final int SO_LINGER : TCP 소켓의 close()와 관련. linger-on-close timeout을 설정하여 close()가
+                            즉시 리턴하도록 할 수 있다.
+                            <br>@Native static final int SO_TIMEOUT : ServerSocket::accept, SocketInputStream::read, DatagramSocket::receive에
+                            대한 timeout 설정
+                            <br>@Native static final int SO_SNDBUF : 전송 버퍼 크기에 대한 힌트
+                            <br>@Native static final int SO_RCVBUF : 수신 버퍼 크기에 대한 힌트
+                            <br>@Native static final int SO_KEEPALIVE : 2시간 동안 아무 교환이 없으면 https://docs.oracle.com/javase/10/docs/api/java/net/SocketOptions.html#SO_KEEPALIVE의
+                            동작을 수행
+                            <br>@Native static final int SO_OOBINLINE : 설정되면 input stream을 통해 긴급 데이터(1바이트)를 받을 수 있다.
+                            <br>
+                            <br>2. void setOption(int optID, Object value) throws SocketException
+                            <br>Object getOption(int optID) throws SocketException
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Socket">
+                        <th>class Socket implements Closeable Since 1.0</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. TCP 클라이언트
+                            <br>
+                            <br>2. 생성자
+                            <br>public Socket() Since 1.1
+                            <br>public Socket(Proxy proxy) Since 1.5
+                            <br>public Socket(SocketImpl impl) throws SocketException Since 1.1
+                            <br>public Socket(String host, int port) throws UnknownHostException, IOException
+                            <br>public Socket(InetAddress address, int port) throws IOException
+                            <br>public Socket(String host, int port, InetAddress localAddr, int localPort) throws IOException
+                            Since 1.1
+                            <br>public Socket(InetAddress address, int port, InetAddress localAddr, int localPort) throws IOException
+                            Since 1.1
+                            <br>
+                            <br>2. void connect(SocketAddress endpoint) throws IOException Since 1.4
+                            <br>void connect(SocketAddress endpoint, int timeout) throws IOException Since 1.4
+                            <br>void bind(SocketAddress bindpoint) throws IOException Since 1.4
+                            <br>void shutdownInput() throws IOException Since 1.3
+                            <br>void shutdownOutput() throws IOException Since 1.3
+                            <br>InetAddress getInetAddress()
+                            <br>InetAddress getLocalAddress() Since 1.1
+                            <br>int getPort()
+                            <br>int getLocalPort()
+                            <br>SocketAddress getRemoteSocketAddress() Since 1.4
+                            <br>SocketAddress getLocalSocketAddress() Since 1.4
+                            <br>SocketChannel getChannel() Since 1.4
+                            <br>&raquo; SocketChannel::open 또는 ServerSocketChannel::accept로 생성된 경우에만 존재.
+                            <br>InputStream getInputStream() throws IOException
+                            <br>OutputStream getOutputStream() throws IOException
+                            <br>
+                            <br>3. 상태
+                            <br>boolean isInputShutdown() Since 1.4
+                            <br>boolean isOutputShutdown() Since 1.4
+                            <br>boolean isClosed() Since 1.4
+                            <br>boolean isBound() Since 1.4
+                            <br>boolean isConnected() Since 1.4
+                            <br>
+                            <br>4. 소켓 옵션
+                            <br>&lt;T&gt; Socket setOption(SocketOption&lt;T&gt; name, T value) throws IOException Since 9
+                            <br>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) throws IOException Since 9
+                            <br>Set&lt;SocketOption&lt;?&gt;&gt; supportedOptions() Since 9
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="ServerSocket">
+                        <th>class ServerSocket implements Closeable Since 1.0</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. TCP 서버
+                            <br>
+                            <br>2. 생성자
+                            <br>public ServerSocket() throws IOException
+                            <br>public ServerSocket(int port) throws IOException
+                            <br>&raquo; port 0은 자동 할당. 들어오는 연결 큐의 크기는 50.
+                            <br>public ServerSocket(int port, int backlog) throws IOException
+                            <br>&raquo; port 0은 자동 할당. backlog는 연결 큐의 크기 설정.
+                            <br>public ServerSocket(int port, int backlog, InetAddress bindAddr) throws IOException Since 1.1
+                            <br>
+                            <br>3. void bind(SocketAddress endpoint) throws IOException Since 1.4
+                            <br>void bind(SOcketAddress endpoint, int backlog) throws IOException Since 1.4
+                            <br>InetAddress getInetAddress()
+                            <br>int getLocalPort()
+                            <br>SocketAddress getLocalSocketAddress() Since 1.4
+                            <br>Socket accept() throws IOException
+                            <br>final void implAccept(Socket s) throws IOException Since 1.1 : ServerSocket의 서브클래스들이 이용
+                            <br>ServerSocketChannel getChannel() Since 1.4
+                            <br>&raquo; ServerSocketChannel::open으로 생성된 경우에만 존재.
+                            <br>boolean isBound() Since 1.4
+                            <br>boolean isClosed() Since 1.4
+                            <br>static void setSocketFactory(SocketImplFactory fac) throws IOException
+                            <br>void setPerformancePreferences(int connectionTime, int latency, int bandwidth) Since 1.5
+                            <br>&lt;T&gt; ServerSocket setOption(SocketOption&lt;T&gt; name, T value) throws IOException Since
+                            9
+                            <br>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) throws IOException Since 9
+                            <br>Set&lt;SocketOption&lt;?&gt;&gt; supportedOptions() Since 9
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="DatagramSocket">
+                        <th>class DatagramSocket implements Closeable Since 1.0</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. UDP 소켓
+                            <br>
+                            <br>2. 생성자
+                            <br>public DatagramSocket() throws SocketException
+                            <br>protected DatagramSocket(DatagramSocketImpl impl) Since 1.4
+                            <br>public DatagramSocket(SocketAddress bindaddr) throws SocketException Since 1.4
+                            <br>public DatagramSocket(int port) throws SocketException
+                            <br>public DatagramSocket(int port, InetAddress laddr) throws SocketException Since 1.1
+                            <br>
+                            <br>3. void bind(SocketAddress addr) throws SocketException Since 1.4
+                            <br>void connect(InetAddress address, int port)
+                            <br>&raquo; 기본적으로 UDP 데이터그램 소켓은 연결이 없다. 원격지에 연결하는순간, 소켓은 해당 원격지와만 통신할 수 있다.
+                            <br>void connect(SocketAddress addr) throws SocketException Since 1.4
+                            <br>void disconnect()
+                            <br>boolean isBound() Since 1.4
+                            <br>boolean isConnected() Since 1.4
+                            <br>boolean isCLosed() Since 1.4
+                            <br>InetAddress getInetAddress() : connect되었을 때만.
+                            <br>int getPort() : connect되었을 때만.
+                            <br>SocketAddress getRemoteSocketAddress() Since 1.4 : connect되었을 때만.
+                            <br>SocketAddress getLocalSocketAddress() Since 1.4
+                            <br>void send(DatagramPacket p) throws IOException
+                            <br>void receive(DatagramPacket p) throws IOException
+                            <br>InetAddress getLocalAddress() Since 1.1
+                            <br>int getLocalPort()
+                            <br>void setTrafficClass(int tc) throws SocketException Since 1.4
+                            <br>&raquo; 0&lt;=tc&lt;=255. IPv4에서, 하위 8개 비트를 IP 패킷의 TOS에 쓴다.
+                            <br>&raquo; RRC 1349의 TOS 값 정의
+                            <br>* IPTOS_LOWCOST(0x02), IPTOS_RELIABILITY(0x04), IPTOS_THROUGHPUT(0x08), IPTOS_LOWDELAY(0x10)
+                            <br>&raquo; IPv6에서, IP 헤더의 sin6_flowinfo 필드에 들어간다.
+                            <br>int getTrafficClass() Since 1.4
+                            <br>DatagramChannel getChannel() Since 1.4
+                            <br>&raquo; DatagramChannel::open으로 생성된 경우에만 존재.
+                            <br>static void setDatagramSocketImplFactory(DatagramSocketImplFactory fac) throws IOException Since
+                            1.3
+                            <br>&lt;T&gt; DatagramSocket setOption(SocketOption&lt;T&gt; name, T value) throws IOException Since
+                            9
+                            <br>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) throws IOException Since 9
+                            <br>Set&lt;SocketOption&lt;?&gt;&gt; supportedOptions() Since 9
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="NetworkInterface">
+                        <th>final class NetworkInterface Since 1.4</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 이름과 할당된 IP 주소들로 구성된 Network Interface 표현.
+                            <br>
+                            <br>2. String getName()
+                            <br>Enumeration&lt;InetAddress&gt; getInetAddresses()
+                            <br>Stream&lt;InetAdress&gt; inetAddresses() Since 9
+                            <br>List&lt;InterfaceAddress&gt; getInterfaceAddresses() Since 1.6
+                            <br>Enumeration&lt;NetoworkInterface&gt; getSubInterfaces() Since 1.6 : subinterface = vertual interface
+                            <br>Stream&lt;NetworkInterface&gt; subInterfaces() Since 9
+                            <br>NetworkInterface getParent() Since 1.6
+                            <br>int getIndex() Since 1.7 : -1 for unknown
+                            <br>String getDisplayName()
+                            <br>static NetworkInteface getByName(String name) throws SocketException
+                            <br>static NetworkInterface getByIndex(int index) throws SocketException Since 1.7
+                            <br>static NetworkInterface getByInetAddress(InetAddress addr) throws SocketException
+                            <br>static Enumeration&lt;NetworkInterface&gt; getNetworkInterfaces() throws SocketException
+                            <br>static Stream&lt;NetworkInterface&gt; networkInterfaces() throws SocketException Since 9
+                            <br>boolean isUp() throws SocketException Since 1.6
+                            <br>boolean isLoopback() throws SocketException Since 1.6
+                            <br>boolean isPointToPoint() throws SocketException Since 1.6
+                            <br>boolean supportsMulticast() throws SocketException Since 1.6
+                            <br>byte[] getHardwareAddress() throws SocketException Since 1.6 : 보통 MAC 주소
+                            <br>int getMTU() throws SocketException Since 1.6
+                            <br>boolean isVirtual() Since 1.6
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="URI">
+                        <th>final class URI implements Comparable&lt;URI&gt;, Serializable Since 1.4</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. URI syntax and components
+                            <br>&raquo; syntax : [scheme:]scheme-specific-part[#fragment]
+                            <br>&raquo; Absolute URI : 스킴을 명시한 URI
+                            <br>&raquo; Relative URI : not absolute URI
+                            <br>&raquo; Opaque URI : scheme-specific-part가 '/'로 시작하지 않는 absolute URI
+                            <br>* 예: "mailto:java-net@java.sun.com", "urn:isbn:096139210x"
+                            <br>&raquo; Hierarchical URI : scheme-specific-part가 '/'로 시작하는 absolute or relative URI
+                            <br>* 예: "http://example.com/languages/java", "sample/a/index.html#28", "../../demo/b/index.html"
+                            <br>* [scheme:][//authority][path][?query][#fragment]
+                            <br>- Server-based authority : [user-info@]host[:port]
+                            <br>- Registry-based authority : not server-based authority
+                            <br>
+                            <br>2. Operations on URI instances
+                            <br>&raquo; Normalization : "."과 ".."을 제거
+                            <br>&raquo; Resolution : 상대 URI와 base URI를 이용해 단일 URI를 찾는 작업
+                            <br>&raquo; Relativization : Resolution의 역. 임의의 정규화된 두 URI u, v에 대하여, u.relativize(u.resolve(v)).equals(v)와
+                            u.resolve(u.relativize(v)).equals(v)는 항상 성립한다.
+                            <br><br>3. 생성자
+                            <br>public URI(String str) throws URISyntaxException
+                            <br>public URI(String scheme, String userInfo, String host, int port, String path, String query, String fragment) throws URISyntaxException
+                            <br>public URI(String scheme, String authority, String path, String query, String fragment) throws URISyntaxException
+                            <br>public URI(String scheme, String host, String path, String fragment) throws URISyntaxException
+                            <br>public URI(String scheme, String ssp, String fragment) throws URISyntaxException // ssp : scheme-specific-part
+                            <br><br>4. static URI create(String str)
+                            <br>URI parseServerAuthority() throws URISyntaxException
+                            <br>URI normalize()
+                            <br>URI resolve(URI uri)
+                            <br>URI resolve(String str)
+                            <br>URI relativize(URI uri)
+                            <br>URL toURL() throws MalformedURLException
+                            <br>String getScheme(), getRawSchemeSpecificPart(), getSchemeSpecificPart(), ...
+                            <br>boolean isAbsolute(), isOpaque()
+                            <br>String toASCIIString() : URI를 US_ASCII 문자열로 반환.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="URL">
+                        <th>final class URL implements Serializable Since 1.0</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 생성자
+                            <br>public URL(String protocol, String host, int port, String file) throws MalformedURLException
+                            <br>public URL(String protocol, String host, String file) throws MalformedURLException
+                            <br>public URL(String protocol, String host, int port, String file, URLStreamHandler handler) throws MalformedURLException
+                            <br>public URL(String spec) throws MalformedURLException
+                            <br>public URL(URL context, String spec) throws MalformedURLException
+                            <br>public URL(URL context, String spec, URLStreamHandler handler) throws MalformedURLException
+                            <br><br>2. String getQuery(), getPath(), getUserInfo(), ...
+                            <br>boolean sameFile(URL other)
+                            <br>String toExternalForm() : Stream protocol handler의 toExternalForm 메서드를 이용해 생성
+                            <br>URI toURI() throws URISyntaxException Since 1.5
+                            <br>URLConnection openConnection() throws IOException Since 1.5
+                            <br>final InputStream openStream() throws IOException : = openConnection().getInputStream()
+                            <br>final Object getContent() throws IOException : = openConnection().getContent()
+                            <br>final Object getContent(Class&lt;?&gt;[] classes) throws IOException Since 1.3
+                            <br>static void setURLStreamHandlerFactory(URLStreamHandlerFactory fac)
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="URLConnection">
+                        <th>abstract class URLConnection Since 1.0</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            https://docs.oracle.com/javase/10/docs/api/java/net/URLConnection.html
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="HttpURLConnection">
                         <th></th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            https://docs.oracle.com/javase/10/docs/api/java/net/HttpURLConnection.html
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                </tbody>
+                <tbody class="con-lv-2" con-title="java.nio">
+                    <tr style="background-color: #bbb;">
+                        <th>java.base(module) Since 9 &raquo; java.nio(package) Since 1.4 : New I/O</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Buffer">
+                        <th>abstract class Bufer Since 1.4</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            1. 버퍼는 일련의 유한한 기본 자료형 원소들의 나열.
+                            <br>&raquo; Capacity : 저장하고 있는 원소들의 개수
+                            <br>&raquo; Limit : 읽거나 쓸 수 없는 최초의 인덱스. 0보다 작거나 capacity보다 클 수 없다.
+                            <br>&raquo; Position : 다음에 읽거나 쓸 대상의 인덱스. 0보다 작거나 limit보다 클 수 없다.
+                            <br>&raquo; 0&lt;=mark&lt;=position&lt;=limit&lt;=capacity // 마킹은 지원되지 않을수도 있다.
+                            <br><br>2. Additional operations
+                            <br>&raquo; clear() : 새로운 채널-읽기 또는 relative put 연산을 준비; limit을 capacity로, position을 0으로.
+                            <br>&raquo; flip() : 새로운 채널-쓰기 또는 relative get 연산을 준비; limit을 position으로, position을 0으로.
+                            <br>&raquo; rewind() : 이미 읽은 것을 다시 읽도록; limit은 그대로, position을 0으로.
+                            <br>&raquo; slice() : 부분 시퀀스 생성.
+                            <br>&raquo; duplicate() : 얕은 복사한 버퍼 생성.
+                            <br><br>3. final int capacity()
+                            <br>final int position()
+                            <br>Buffer position(int newPosition)
+                            <br>final int limit()
+                            <br>Buffer limit(int newLimit)
+                            <br>Buffer mark()
+                            <br>Buffer reset()
+                            <br>Buffer clear()
+                            <br>Buffer flip()
+                            <br>final int remaining()
+                            <br>final boolean hasRemaining()
+                            <br>abstract boolean isReadOnly()
+                            <br>abstract boolean hasArray() Since 1.6 : true면 array()와 arrayOffset() 사용가능
+                            <br>abstract Object array() Since 1.6
+                            <br>abstract int arrayOffset() Since 1.6
+                            <br>abstract boolean isDirect() Since 1.6
+                            <br>abstract Buffer slice() Since 9 : 현재 버퍼의 현재 위치부터 시작하는 부분 버퍼 생성(내용 공유). direct, read-only 속성을 공유.
+                            <br>abstract Buffer duplicate() Since 9 : 복사본(내용 공유) 반환.
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="ByteOrder">
+                        <th>final class ByteOrder Since 1.4</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            1. 필드
+                            <br>public static final ByteOrder BIG_ENDIAN, LITTLE_ENDIAN
+                            <br><br>2. static ByteOrder nativeOrder()
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="ByteBuffer">
+                        <th>abstract class ByteBuffer extends Buffer implements Comparable&lt;ByteBuffer&gt; Since 1.4</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                            1. 다음 6가지 연산을 정의.
+                            <br>&raquo; 바이트 하나에 대한 absolute and relative get and put
+                            <br>&raquo; 현재 바이트 버퍼로부터 연속적인 바이트열을 배열로 저장하는 bulk get
+                            <br>&raquo; 바이트 배열 또는 다른 바이트 버퍼로부터 연속적인 바이트열을 가져오는 bulk put
+                            <br>&raquo; 다른 원시 타입 값에 대하여, 특정 바이트 순으로 absolute and relative get and put
+                            <br>&raquo; 버퍼의 내용을 다른 원시 타입으로 읽기 가능한 view 버퍼를 생성
+                            <br>&raquo; compact()
+                            <br><br>2. Direct 버퍼 : 읽기/쓰기 연산이 직접적으로 이루어지며, 별개의 복사본을 이용하는 non-direct 버퍼에 비해 할당/제거 비용이 크다.
+                            <br>Direct 버퍼는 allocateDirect 팩토리 메서드로 생성된다.
+                            <br><br>3. Access to binary data
+                            <br>&raquo; 처음 버퍼 설정은 BIG_ENDIAN. 바이트 순서는 ByteOrder 클래스의 인스턴스로 표현된다.
+                            <br>&raquo; 인덱스를 지정하는 absolute get과 put의 인덱스는 바이트 단위다.
+                            <br><br>4. static ByteBuffer allocateDirect(int capacity)
+                            <br>static ByteBuffer allocate(int capacity)
+                            <br>static ByteBuffer wrap(byte[] array, int offset, int length)
+                            <br>static ByteBuffer wrap(byte[] array)
+                            <br>abstract ByteBuffer slice()
+                            <br>abstract ByteBuffer duplicate()
+                            <br>abstract ByteBuffer asReadOnlyBuffer()
+                            <br><br>5. get/put
+                            <br>abstract byte get()
+                            <br>abstract ByteBuffer put(byte b)
+                            <br>abstract byte get(int index)
+                            <br>abstract ByteBuffer put(int index, byte b)
+                            <br>ByteBuffer get(byte[] dst, int offset, int length)
+                            <br>ByteBuffer get(byte[] dst)
+                            <br>ByteBuffer put(ByteBuffer src)
+                            <br>ByteBuffer put(byte[] src, int offset, int length)
+                            <br>final ByteBuffer put(byte[] src)
+                            <br>abstract char getChar()
+                            <br>abstract ByteBuffer putChar(char value)
+                            <br>abstract char getChar(int index)
+                            <br>abstract ByteBuffer putChar(int index, char value)
+                            <br>abstract CharBuffer asCharBuffer()
+                            <br>... short, int, long, float, double
+                            <br><br>6. abstract ByteBuffer compact()
+                            <br><br>7. final ByteOrder order()
+                            <br>final ByteBuffer order(ByteOrder bo)
+                            <br>final int alignmentOffset(int index, int unitSize) Since 9
+                            <br>&raquo; index 번째의 바이트가 unitSize만큼 읽을 때의 오프셋. index % unitSize와 같다. unitSize는 2의 거듭제곱이어야 한다.
+                            <br>final ByteBuffer alignedSlice(int unitSize) Since 9
+                            <br>&raquo; 현재 버퍼를 unitSize 크기씩 잘라 view 버퍼를 생성(BIG_ENDIAN)한다. 현재 위치가 unitSize의 배수가 아니라면 바로 다음 배수 위치부터 포함하며, limit도 unitSize 배수에 맞춰 끊는다.
+                            <button type="button" onclick="javascript:showCode('JavaNIO/src/ByteBufferExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaNIO/console/con1.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="CharBuffer">
+                        <th>abstract class CharBuffer extends Buffer implements Comparable&lt;CharBuffer&gt;, Appendable, CharSequence, Readable Since 1.4</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
+                            1. 다음 4가지 연산 정의
+                            <br>&raquo; 단일 char에 대한 absolute and relative get and put
+                            <br>&raquo; 이 버퍼로부터 배열로 연속적인 char를 저장하는 bulk get
+                            <br>&raquo; char 배열, String, 다른 char 버퍼로부터 이 버퍼로 연속적인 char를 저장하는 bulk put
+                            <br>&raquo; compact()
+                            <br><br>2. static CharBuffer allocate(int capacity)
                             <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
