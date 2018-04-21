@@ -4252,13 +4252,17 @@
                             <br>&raquo; Resolution : 상대 URI와 base URI를 이용해 단일 URI를 찾는 작업
                             <br>&raquo; Relativization : Resolution의 역. 임의의 정규화된 두 URI u, v에 대하여, u.relativize(u.resolve(v)).equals(v)와
                             u.resolve(u.relativize(v)).equals(v)는 항상 성립한다.
-                            <br><br>3. 생성자
+                            <br>
+                            <br>3. 생성자
                             <br>public URI(String str) throws URISyntaxException
-                            <br>public URI(String scheme, String userInfo, String host, int port, String path, String query, String fragment) throws URISyntaxException
-                            <br>public URI(String scheme, String authority, String path, String query, String fragment) throws URISyntaxException
+                            <br>public URI(String scheme, String userInfo, String host, int port, String path, String query,
+                            String fragment) throws URISyntaxException
+                            <br>public URI(String scheme, String authority, String path, String query, String fragment) throws
+                            URISyntaxException
                             <br>public URI(String scheme, String host, String path, String fragment) throws URISyntaxException
                             <br>public URI(String scheme, String ssp, String fragment) throws URISyntaxException // ssp : scheme-specific-part
-                            <br><br>4. static URI create(String str)
+                            <br>
+                            <br>4. static URI create(String str)
                             <br>URI parseServerAuthority() throws URISyntaxException
                             <br>URI normalize()
                             <br>URI resolve(URI uri)
@@ -4278,11 +4282,13 @@
                             1. 생성자
                             <br>public URL(String protocol, String host, int port, String file) throws MalformedURLException
                             <br>public URL(String protocol, String host, String file) throws MalformedURLException
-                            <br>public URL(String protocol, String host, int port, String file, URLStreamHandler handler) throws MalformedURLException
+                            <br>public URL(String protocol, String host, int port, String file, URLStreamHandler handler) throws
+                            MalformedURLException
                             <br>public URL(String spec) throws MalformedURLException
                             <br>public URL(URL context, String spec) throws MalformedURLException
                             <br>public URL(URL context, String spec, URLStreamHandler handler) throws MalformedURLException
-                            <br><br>2. String getQuery(), getPath(), getUserInfo(), ...
+                            <br>
+                            <br>2. String getQuery(), getPath(), getUserInfo(), ...
                             <br>boolean sameFile(URL other)
                             <br>String toExternalForm() : Stream protocol handler의 toExternalForm 메서드를 이용해 생성
                             <br>URI toURI() throws URISyntaxException Since 1.5
@@ -4324,13 +4330,15 @@
                             <br>&raquo; Limit : 읽거나 쓸 수 없는 최초의 인덱스. 0보다 작거나 capacity보다 클 수 없다.
                             <br>&raquo; Position : 다음에 읽거나 쓸 대상의 인덱스. 0보다 작거나 limit보다 클 수 없다.
                             <br>&raquo; 0&lt;=mark&lt;=position&lt;=limit&lt;=capacity // 마킹은 지원되지 않을수도 있다.
-                            <br><br>2. Additional operations
+                            <br>
+                            <br>2. Additional operations
                             <br>&raquo; clear() : 새로운 채널-읽기 또는 relative put 연산을 준비; limit을 capacity로, position을 0으로.
                             <br>&raquo; flip() : 새로운 채널-쓰기 또는 relative get 연산을 준비; limit을 position으로, position을 0으로.
                             <br>&raquo; rewind() : 이미 읽은 것을 다시 읽도록; limit은 그대로, position을 0으로.
                             <br>&raquo; slice() : 부분 시퀀스 생성.
                             <br>&raquo; duplicate() : 얕은 복사한 버퍼 생성.
-                            <br><br>3. final int capacity()
+                            <br>
+                            <br>3. final int capacity()
                             <br>final int position()
                             <br>Buffer position(int newPosition)
                             <br>final int limit()
@@ -4346,7 +4354,8 @@
                             <br>abstract Object array() Since 1.6
                             <br>abstract int arrayOffset() Since 1.6
                             <br>abstract boolean isDirect() Since 1.6
-                            <br>abstract Buffer slice() Since 9 : 현재 버퍼의 현재 위치부터 시작하는 부분 버퍼 생성(내용 공유). direct, read-only 속성을 공유.
+                            <br>abstract Buffer slice() Since 9 : 현재 버퍼의 현재 위치부터 시작하는 부분 버퍼 생성(내용 공유). direct, read-only 속성을
+                            공유.
                             <br>abstract Buffer duplicate() Since 9 : 복사본(내용 공유) 반환.
                         </td>
                     </tr>
@@ -4357,7 +4366,8 @@
                         <td>
                             1. 필드
                             <br>public static final ByteOrder BIG_ENDIAN, LITTLE_ENDIAN
-                            <br><br>2. static ByteOrder nativeOrder()
+                            <br>
+                            <br>2. static ByteOrder nativeOrder()
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="ByteBuffer">
@@ -4372,19 +4382,23 @@
                             <br>&raquo; 다른 원시 타입 값에 대하여, 특정 바이트 순으로 absolute and relative get and put
                             <br>&raquo; 버퍼의 내용을 다른 원시 타입으로 읽기 가능한 view 버퍼를 생성
                             <br>&raquo; compact()
-                            <br><br>2. Direct 버퍼 : 읽기/쓰기 연산이 직접적으로 이루어지며, 별개의 복사본을 이용하는 non-direct 버퍼에 비해 할당/제거 비용이 크다.
+                            <br>
+                            <br>2. Direct 버퍼 : 읽기/쓰기 연산이 직접적으로 이루어지며, 별개의 복사본을 이용하는 non-direct 버퍼에 비해 할당/제거 비용이 크다.
                             <br>Direct 버퍼는 allocateDirect 팩토리 메서드로 생성된다.
-                            <br><br>3. Access to binary data
+                            <br>
+                            <br>3. Access to binary data
                             <br>&raquo; 처음 버퍼 설정은 BIG_ENDIAN. 바이트 순서는 ByteOrder 클래스의 인스턴스로 표현된다.
                             <br>&raquo; 인덱스를 지정하는 absolute get과 put의 인덱스는 바이트 단위다.
-                            <br><br>4. static ByteBuffer allocateDirect(int capacity)
+                            <br>
+                            <br>4. static ByteBuffer allocateDirect(int capacity)
                             <br>static ByteBuffer allocate(int capacity)
                             <br>static ByteBuffer wrap(byte[] array, int offset, int length)
                             <br>static ByteBuffer wrap(byte[] array)
                             <br>abstract ByteBuffer slice()
                             <br>abstract ByteBuffer duplicate()
                             <br>abstract ByteBuffer asReadOnlyBuffer()
-                            <br><br>5. get/put
+                            <br>
+                            <br>5. get/put
                             <br>abstract byte get()
                             <br>abstract ByteBuffer put(byte b)
                             <br>abstract byte get(int index)
@@ -4400,13 +4414,16 @@
                             <br>abstract ByteBuffer putChar(int index, char value)
                             <br>abstract CharBuffer asCharBuffer()
                             <br>... short, int, long, float, double
-                            <br><br>6. abstract ByteBuffer compact()
-                            <br><br>7. final ByteOrder order()
+                            <br>
+                            <br>6. abstract ByteBuffer compact()
+                            <br>
+                            <br>7. final ByteOrder order()
                             <br>final ByteBuffer order(ByteOrder bo)
                             <br>final int alignmentOffset(int index, int unitSize) Since 9
                             <br>&raquo; index 번째의 바이트가 unitSize만큼 읽을 때의 오프셋. index % unitSize와 같다. unitSize는 2의 거듭제곱이어야 한다.
                             <br>final ByteBuffer alignedSlice(int unitSize) Since 9
-                            <br>&raquo; 현재 버퍼를 unitSize 크기씩 잘라 view 버퍼를 생성(BIG_ENDIAN)한다. 현재 위치가 unitSize의 배수가 아니라면 바로 다음 배수 위치부터 포함하며, limit도 unitSize 배수에 맞춰 끊는다.
+                            <br>&raquo; 현재 버퍼를 unitSize 크기씩 잘라 view 버퍼를 생성(BIG_ENDIAN)한다. 현재 위치가 unitSize의 배수가 아니라면 바로 다음 배수
+                            위치부터 포함하며, limit도 unitSize 배수에 맞춰 끊는다.
                             <button type="button" onclick="javascript:showCode('JavaNIO/src/ByteBufferExample.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
                             </button>
@@ -4415,8 +4432,21 @@
                             </button>
                         </td>
                     </tr>
+                    <tr class="con-lv-3" con-title="MappedByteBuffer">
+                        <th>abstract class MappedByteBuffer extends ByteBuffer Since 1.4</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. FileChannel::map 메서드로 생성되는 direct 바이트 버퍼.
+                            <br>
+                            <br>2. final boolean isLoaded()
+                            <br>final BappedByteBuffer load()
+                            <br>final MappedByteBuffer force() : 강제로 버퍼 변경 내용을 파일에 쓴다.
+                        </td>
+                    </tr>
                     <tr class="con-lv-3" con-title="CharBuffer">
-                        <th>abstract class CharBuffer extends Buffer implements Comparable&lt;CharBuffer&gt;, Appendable, CharSequence, Readable Since 1.4</th>
+                        <th>abstract class CharBuffer extends Buffer implements Comparable&lt;CharBuffer&gt;, Appendable, CharSequence,
+                            Readable Since 1.4</th>
                     </tr>
                     <tr>
                         <td>
@@ -4425,114 +4455,1269 @@
                             <br>&raquo; 이 버퍼로부터 배열로 연속적인 char를 저장하는 bulk get
                             <br>&raquo; char 배열, String, 다른 char 버퍼로부터 이 버퍼로 연속적인 char를 저장하는 bulk put
                             <br>&raquo; compact()
-                            <br><br>2. static CharBuffer allocate(int capacity)
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            <br>
+                            <br>2. static CharBuffer allocate(int capacity)
+                            <br>static CharBuffer wrap(char[] array, int offset, int length)
+                            <br>static CharBuffer wrap(char[] array)
+                            <br>static CharBuffer wrap(CharSequence csq, int start, int end)
+                            <br>static CharBuffer wrap(CharSequence csq)
+                            <br>abstract CharBuffer slice()
+                            <br>abstract CharBuffer duplicate()
+                            <br>abstract CharBuffer asReadOnlyBuffer()
+                            <br>
+                            <br>3. get/put
+                            <br>abstract char get()
+                            <br>abstract CharBuffer put(char c)
+                            <br>abstract char get(int index)
+                            <br>abstract CharBuffer put(int index, char c)
+                            <br>CharBuffer get(char[] dst, int offset, int length)
+                            <br>CharBuffer get(char[] dst)
+                            <br>CharBuffer put(CharBuffer src)
+                            <br>CharBuffer put(char[] src, int offset, int length)
+                            <br>final CharBuffer put(char[] src)
+                            <br>CharBuffer put(String src, int start, int end)
+                            <br>final CharBuffer put(String src)
+                            <br>abstract CharBuffer compact()
+                            <br>abstract ByteOrder order()
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="DoubleBuffer">
+                        <th>abstract class Doublebuffer extends Buffer implements Comparable&lt;DoubleBuffer&gt; Since 1.4</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
+                            1. 구현은 CharBuffer와 동일하다.
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=CharBuffer]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto CharBuffer &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="FloatBuffer">
+                        <th>abstract class Floatbuffer extends Buffer implements Comparable&lt;FloatBuffer&gt; Since 1.4</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
+                            1. 구현은 CharBuffer와 동일하다.
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=CharBuffer]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto CharBuffer &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="IntBuffer">
+                        <th>abstract class Intbuffer extends Buffer implements Comparable&lt;IntBuffer&gt; Since 1.4</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
+                            1. 구현은 CharBuffer와 동일하다.
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=CharBuffer]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto CharBuffer &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="LongBuffer">
+                        <th>abstract class Longbuffer extends Buffer implements Comparable&lt;LongBuffer&gt; Since 1.4</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
+                            1. 구현은 CharBuffer와 동일하다.
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=CharBuffer]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto CharBuffer &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="ShortBuffer">
+                        <th>abstract class Shortbuffer extends Buffer implements Comparable&lt;ShortBuffer&gt; Since 1.4</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
+                            1. 구현은 CharBuffer와 동일하다.
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=CharBuffer]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto CharBuffer &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
                         </td>
                     </tr>
                 </tbody>
-
-                <tbody class="con-lv-2" con-title="java.nio.file">
+                <tbody class="con-lv-2" con-title="java.nio.channels">
+                    <tr style="background-color: #bbb;">
+                        <th>java.base(module) Since 9 &raquo; java.nio.channels(package) Since 1.4</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Chennel">
+                        <th>interface Channel extends Closeable Since 1.4</th>
+                    </tr>
                     <tr>
-                        <th>java.base(module) &raquo; java.nio.file(package) Since 1.7</th>
+                        <td>
+                            1. 채널이란 IO를 수행할 수 있는 개체에 대한 연결이다.
+                            <br>
+                            <br>2. boolean isOpen()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="ReadableByteChannel">
+                        <th>interface ReadableByteChannel extends Channel Since 1.4</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. int read(ByteBuffer dst) throws IOException
+                            <br>&raquo; dst.remaining()만큼 읽어 dst에 저장. 읽은 바이트 개수를 반환. 스트림의 끝이면 -1.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="ScatteringByteChannel">
+                        <th>interface ScatteringByteChannel extends ReadableByteChannel Since 1.4</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 채널의 바이트들을 여러 버퍼에 순서대로 저장. 네트워크 헤더나 파일 메타데이터처럼 고정 길이의 헤더를 읽는 데 유용.
+                            <br>
+                            <br>2. long read(ByteBuffer[] dsts, int offset, int length) throws IOException
+                            <br>&raquo; dsts[offset]부터 length개의 버퍼가 각각의 remaining()만큼씩 바이트를 읽어 가져간다.
+                            <br>long read(ByteBuffer[] dsts) throws IOException : == read(dsts, 0, dsts.length)
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="WritableByteChannel">
+                        <th>interface WritableByteChannel extends Channel Since 1.4</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. int write(ByteBuffer src) throws IOException)
+                            <br>&raquo; src.remaining() 부분을 채널에 쓴다.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="GatheringByteChannel">
+                        <th>interface GatheringByteChannel extends WritableByteChannel Since 1.4</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 버퍼들의 내용을 순서대로 채널에 쓴다.
+                            <br>
+                            <br>2. long write(ByteBuffer[] srcs, int offset, int length) throws IOException
+                            <br>&raquo; srcs[offset]부터 length개의 버퍼의 remaining() 부분을 채널에 쓴다.
+                            <br>long write(ByteBuffer[] srcs) throws IOException : == write(srcs, 0, srcs.length)
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="ByteChannel">
+                        <th>interface ByteChannel extends ReadableByteChannel, WritableByteChannel Since 1.4</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 바이트 단위로 읽기/쓰기 모두 가능한 채널.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="SeekableByteChanel">
+                        <th>interface SeekableByteChannel extends ByteChannel Since 1.7</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 현재 위치를 기억하는 바이트 채널.
+                            <br>
+                            <br>2. long position() throws IOException
+                            <br>SeekableByteChannel position(long newPosition) throws IOException : position을 변경하고 그대로 반환.
+                            <br>long size() throws IOException : 채널에 연결된 개체의 크기 반환
+                            <br>SeekableByteChannel truncate(long size) throws IOException
+                            <br>&raquo; 채널에 연결된 개체를 size로 크기 조정. size가 현재 크기보다 작은 경우, 나머지는 버려진다. size가 현재 크기 이상인 경우 아무 변경 없다.
+                            <br>&raquo; 현재 position이 size보다 큰 경우 size로 조정된다.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="AsynchronousChannel">
+                        <th>interface AsynchronousChannel extends Channel Since 1.7</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 비동기 IO는 보통 다음의 형태로 일어난다.
+                            <br>&raquo; Future&lt;V&gt; operation(...) // operation : read, write, ...
+                            <br>&raquo; void operation(... A attachment, CompletionHandler&lt;V, ? super A&gt; handler)
+                            <br>
+                            <br>2. 비동기적으로 close()가 수행되며, 이후 발생하는 IO 작업은 AsynchronousCloseException 발생
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="AsynchronousByteChannel">
+                        <th>interface AsynchronousByteChannel extends AsynchronousChannel Since 1.7</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 비동기 IO를 지원하는 바이트 채널. 인자에 이용되는 ByteBuffers는 쓰레드-안전하지 않음에 유의.
+                            <br>
+                            <br>2. &lt;A&gt; void read(ByteBuffer dst, A attachment, CompletionHandler&lt;Integer, ? super A&gt;
+                            handler)
+                            <br>&raquo; handler의 첫 인자는 읽은 바이트 수. 기본 동작은 ReadableByteChannel::read와 동일. 쓰기가 완료(실패)되면 handler가
+                            호출된다.
+                            <br>Future&lt;Integer&gt; read(ByteBuffer dst)
+                            <br>&raquo; Fureture의 get 메서드로 바이트 수를 얻을 수 있다.
+                            <br>&lt;A&gt; void write(ByteBuffer src, A attachment, CompletionHandler&lt;Integer, ? super A&gt;
+                            handler)
+                            <br>Future&lt;Integer&gt; write(ByteBuffer src)
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="NetworkChannel">
+                        <th>interface NetworkChannel extends Channel Since 1.7</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 네트워크 소켓에 대한 채널.
+                            <br>
+                            <br>2. NetworkChannel bind(SocketAddress local) throws IOException
+                            <br>SocketAddress getLocalAddress() throws IOException
+                            <br>&lt;T&gt; NetworkChannel setOption(SocketOption&lt;T&gt; name, T value) throws IOException
+                            <br>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) throws IOException
+                            <br>Set&lt;SocketOption&lt;?&gt;&gt; supportedOptions()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Channels">
+                        <th>final class Channels Since 1.4</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 채널과 스트림에 관한 유틸리티 클래스.
+                            <br>
+                            <br>static InputStream newInputStream(ReadableByteChannel ch)
+                            <br>static OutputStream newOutputStream(WritableByteChannel ch)
+                            <br>static InputStream newInputStream(AsynchronousByteChannel ch) Since 1.7
+                            <br>static OutputStream newOutputStream(AsynchronousByteChannel ch) Since 1.7
+                            <br>static ReadableByteChannel newChannel(InputStream in)
+                            <br>static WritableByteChannel newChannel(OutputStream out)
+                            <br>static Reader newReader(ReadableByteChannel ch, CharsetDecoder dec, int minBufferCap)
+                            <br>static Reader newReader(ReadableByteChannel ch, String csName)
+                            <br>static Reader newReader(ReadableByteChannel ch, Charset charset)
+                            <br>static Writer newWriter(WritableByteChannel ch, CharsetEncoder enc, int minBufferCap)
+                            <br>static Writer newWriter(WritableByteChannel ch, String csName)
+                            <br>static Writer newWriter(WritableByteChannel ch, Charset charset)
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="con-lv-2" con-title="java.nio.charset">
+                    <tr style="background-color: #bbb;">
+                        <th>java.base(module) Since 9 &raquo; java.nio.charset(package) Since 1.4</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Charset">
+                        <th>abstract class Charset implements Comparable&lt;Charset&gt; Since 1.4</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 표준 캐릭터셋 : US-ASCII, ISO-8859-1, UTF-8, UTF-16BE, UTF-16LE, UTF-16
+                            <br>
+                            <br>2. static boolean isSupported(String charsetName)
+                            <br>static Charset forName(String charsetName)
+                            <br>static SortedMap&lt;String, Charset&gt; availableCharsets()
+                            <br>static Charset defaultCharset() Since 1.5
+                            <br>final String name()
+                            <br>final Set&lt;String&gt; aliases()
+                            <br>String displayName()
+                            <br>final boolean isRegistered() : IANA 캐릭터셋에 등록됐는지
+                            <br>String displayName(Locale locale)
+                            <br>abstract boolean contains(Charset cs)
+                            <br>abstract CharsetDecoder newDecoder()
+                            <br>abstract CharsetEncoder newEncoder()
+                            <br>boolean canEncode()
+                            <br>final CharBuffer decode(ByteBuffer bb)
+                            <br>final ByteBuffer encode(CharBuffer cb)
+                            <br>final ByteBuffer encode(String str)
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="CharsetDecoder">
+                        <th>abstract class CharsetDecoder Since 1.4</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 바이트들을 문자들로.
+                            <br>
+                            <br>2. final Charset charset()
+                            <br>final CoderResult decode(ByteBuffer in, CharBuffer out, boolean endOfInput)
+                            <br>final CoderResult flush(CharBuffer out)
+                            <br>final CharsetDecoder reset()
+                            <br>final CharBuffer decode(ByteBuffer in) throws CharacterCodingException
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="CharsetEncoder">
+                        <th>abstract class CharsetEncoder Since 1.4</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 문자들을 바이트들로.
+                            <br>2. final Charset charset()
+                            <br>final CoderResult encode(CharBuffer in, ByteBuffer out, boolean endOfInput)
+                            <br>final CoderResult flush(ByteBuffer out)
+                            <br>final CharsetEncoder reset()
+                            <br>final ByteBuffer encode(CharBuffer in) throws CharacterCodingException
+                            <br>boolean canEncode(char c)
+                            <br>boolean canEncode(CharSequence cs)
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="con-lv-2" con-title="java.nio.file">
+                    <tr style="background-color: #bbb;">
+                        <th>java.base(module) Since 9 &raquo; java.nio.file(package) Since 1.7</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="OpenOption">
+                        <th>interface OpenOption Since 1.7</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 내용 없음.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="StandardOpenOption">
+                        <th>enum StandardOpenOption Since 1.7</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. APPEND, CREATE, CREATE_NEW, DELETE_ON_CLOSE, DSYNC(내용 변경만 싱크), READ, SPARSE, SYNC(내용 또는 메타데이터 변경 싱크), TRUNCATE_EXISTING(파일이
+                            이미 존재하고 WRITE로 열린 경우 길이를 0으로), WRITE
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Watchable">
+                        <th>interface Watchable Since 1.7</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. WatchService에 등록되어 그 변화나 이벤트가 감시될 수 있는 객체. 정의된 register 메서드는 등록되었음을 WatchKey 객체로 반환한다.
+                            <br>
+                            <br>2. WatchKey register(WatchService watcher, WatchEvent.Kind&lt;?&gt;[] events, WatchEvent.Modifier...
+                            modifiers) throws IOException
+                            <br>WatchKey register(WatchService watcher, WatchEvent.Kind&lt;?&gt;... events) throws IOException
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="WatchEvent">
+                        <th>interface WatchEvent&lt;T&gt; Since 1.7</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>1. public static interface WatchEvent.Kind&lt;T&gt; Since 1.7</b>
+                            <br>&raquo; 식별을 위한 이벤트 종류 정의.
+                            <br>&raquo; String name()
+                            <br>&raquo; Class&lt;T&gt; type()
+                            <br>
+                            <br>
+                            <b>2. public static interface WatchEvent.Modifier Since 1.7</b>
+                            <br>&raquo; Watchable 객체가 어떻게 등록되었는지.
+                            <br>&raquo; String name()
+                            <br>
+                            <br>3. WatchEvent.Kind&lt;T&gt; kind()
+                            <br>int count() : 1보다 크면 반복 이벤트
+                            <br>T context()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="WatchKey">
+                        <th>interface WatchKey Since 1.7</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. WatchService에 Watchable 객체가 등록되었음을 표현하는 토큰.
+                            <br>&raquo; 처음 생성되면 ready 상태. 이벤트를 감지하면 reset()되기 전까지 signalled 상태가 되고, WatchService 큐에 진입하여 서비스
+                            처리. reset()되면 다시 ready.
+                            <br>for (;;) {
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;// retrieve key
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;WatchKey key = watcher.take();
+                            <br>
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;// process events
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;for (WatchEvent &lt;?&gt; event: key.pollEvents()) {
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;}
+                            <br>
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;// reset the key
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;boolean valid = key.reset();
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;if (!valid) {
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// object no longer registered
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;}
+                            <br>}
+                            <br><br>2. boolean isValid() : 취소되거나 서비스가 닫힐 때까지 유효
+                            <br>List&lt;WatchEvent&lt;?&gt;&gt; pollEvents()
+                            <br>boolean reset()
+                            <br>void cancel()
+                            <br>Watchable watchable()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="WatchService">
+                        <th>interface WatchService extends Closeable Since 1.7</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. void close() throws IOException
+                            <br>WatchKey poll() : 다음 WatchKey를 제거. 없으면 null.
+                            <br>WatchKey poll(long timeout, TimeUnit unit) : 다음 WatchKey를 제거. 없으면 대기. 후에도 없으면 null.
+                            <br>WatchKey take() throws InterruptedException : 다음 WatchKey를 제거. 없으면 대기.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Path">
+                        <th>interface Path extends Comparable&lt;Path&gt;, Iterable&lt;Path&gt;, Watchable Since 1.7</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 파일 경로를 가리킨다. WARNING : 이 인터페이스는 사용자 정의 파일 시스템을 개발하기 위해서만 만들어짐.
+                            <br>&raquo; Path path = FileSystems.getDefault().getPath(String, String...)
+                            <br><br>2. FileSystem getFileSystem()
+                            <br>boolean isAbsolute()
+                            <br>Path getRoot()
+                            <br>Path getFileName()
+                            <br>Path getParent()
+                            <br>int getNameCount()
+                            <br>Path getName(int index)
+                            <br>Path subpath(int beginIndex, int endIndex)
+                            <br>boolean startsWith(Path other)
+                            <br>default boolean startsWith(String other)
+                            <br>boolean endsWith(Path other)
+                            <br>default boolean endsWith(String other)
+                            <br>Path normalize() : ".", ".." 제거
+                            <br>Path resolve(Path other) : 상대경로 other를 이 객체에 대하여 resolve.
+                            <br>default Path resolve(String other)
+                            <br>default Path resolveSibling(Path other) : 이 객체의 부모에 대하여 resolve.
+                            <br>default Path resolveSibling(String other)
+                            <br>Path relativize(Path other)
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=URI]').attr('id'));" class="btn btn-primary btn-sm">
+                                참고: URI &raquo;
+                            </button>
+                            <br>URI toUri()
+                            <br>Path toAbsolutePath()
+                            <br>Path toRealPath(LinkOption... options) throws IOException
+                            <br>default File toFile()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="StandardWatchEventKinds">
+                        <th>final class StandardWatchEventKinds Since 1.7</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            public static final WatchEvent.Kind&lt;Object&gt; OVERFLOW : 이벤트가 버려짐.
+                            <br>public static final WatchEvent.Kind&lt;Path&gt; ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Files">
+                        <th>final class Files Since 1.7</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            static InputStream newInputStream(Path path, OpenOption... options) throws IOException
+                            <br>static OutputStream newOutputStream(Path path, OpenOption... options) throws IOException
+                            <br>static SeekableByteChannel newByteChannel(Path path, Set&lt;? extends OpenOption&gt; options, FileAttribute&lt;?&gt;... attrs) throws IOException
+                            <br>static SeekableByteChannel newByteChannel(Path path, OpenOption... options) throws IOException
+                            <br>static DirectoryStream&lt;Path&gt; newDirectoryStream(Path dir) throws IOException
+                            <br>static DirectoryStream&lt;Path&gt; newDirectoryStream(Path dir, String glob) throws IOException
+                            <br>예. try (var stream = Files.newDirectoryStream(dir, "*.java")) {...}
+                            <br>static DirectoryStream&lt;Path&gt; newDirectoryStream(Path dir, DirectoryStream.Filter&lt;? super Path&gt; filter) throws IOException
+                            <br>static Path createFile(Path path, FileAttribute&lt;?&gt;... attrs) throws IOException
+                            <br>static Path createDirectory(Path dir, FileAttribute&lt;?&gt;... attrs) throws IOException
+                            <br>static Path createDirectories(Path dir, FileAttribute&lt;?&gt;... attrs) throws IOException
+                            <br>static Path createTempFile(Path dir, String prefix, String suffix, FileAttribute&lt;?&gt;... attrs) throws IOException
+                            <br><button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=File]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto File &raquo;
+                            </button>
+                            <br>static Path createTempFile(String prefix, String suffix, FileAttribute&lt;?&gt;... attrs) throws IOException
+                            <br>static Path createTempDirectory(Path dir, String prefix, FileAttribute&lt;?&gt;... attrs) throws IOException
+                            <br>static Path createTempDirectory(String prefix, FileAttribute&lt;?&gt;... attrs) throws IOException
+                            <br>static Path createSymbolicLink(Path link, Path target, FileAttribute&lt;?&gt;... attrs) throws IOException
+                            <br>static Path createLink(Path link, Path existing) throws IOException
+                            <br>static void delete(Path path) throws IOException
+                            <br>static boolean deleteIfExists(Path path)
+                            <br>static Path copy(Path source, Path target, CopyOption... options) throws IOException
+                            <br>static Path move(Path source, Path target, CopyOption... options) throws IOException
+                            <br>static Path readSymbolicLink(Path link) throws IOException
+                            <br>static FileStore getFileStore(Path path) throws IOException
+                            <br>static bolean isSameFile(Path path, Path path2) throws IOException
+                            <br>... https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="FileSystems">
+                        <th>final class FileSystems Since 1.7</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. FileSYstem에 관한 팩토리.
+                            <br><br>2. static FileSystem getDefault()
+                            <br>static FileSystem getFileSystem(URI uri)
+                            <br>static FileSystem newFileSystem(URI uri, Map&lt;String, ?&gt; env) throws IOException
+                            <br>static FIleSystem newFileSystem(URI uri, Map&lt;String, ?&gt; env, ClassLoader loader) throws IOException
+                            <br>static FileSystem newFileSystem(Path path, ClassLoader loader)
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="FileSystem">
+                        <th>abstract class FileSystem implements Closeable Since 1.7</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            abstract FileSystemProvider provider()
+                            <br>abstract boolean isOpen()
+                            <br>abstract boolean isReadOnly()
+                            <br>abstract String getSeparator()
+                            <br>abstract Iterable&lt;Path&gt; getRootDirectories()
+                            <br>abstract Iterable&lt;FileStore&gt; getFileStores()
+                            <br>abstract Set&lt;String&gt; supportedFIleAttributeViews()
+                            <br>abstract Path getPath(String first, String... more)
+                            <br>abstract PathMatcher getPathMatcher(String syntaxAndPattern)
+                            <br>abstract UserprincipalLookupService getUserPrincipalLookupService()
+                            <br>abstract WatchService newWatchService() throws IOException
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="con-lv-2" con-title="java.text">
+                    <tr style="background-color: #bbb;">
+                        <th>java.base(module) Since 9 &raquo; java.text(package) Since 1.1</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Format">
+                        <th>abstract class Format implements Serializable, CLoneable Since 1.1</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. https://docs.oracle.com/javase/10/docs/api/java/text/Format.html
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="SimpleDateFormat">
+                        <th>class SimpleDateFormat extends DateFormat Since 1.1</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. https://docs.oracle.com/javase/10/docs/api/java/text/SimpleDateFormat.html
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="MessageFormat">
+                        <th>class MessageFormat extends Format Since 1.1</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. https://docs.oracle.com/javase/10/docs/api/java/text/MessageFormat.html
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="con-lv-2" con-title="java.time">
+                    <tr style="background-color: #bbb;">
+                        <th>java.base(module) Since 9 &raquo; java.time(package) Since 1.8
+                            <br>https://docs.oracle.com/javase/10/docs/api/java/time/package-summary.html
+                        </th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Clock">
+                        <th>abstract class Clock Since 1.8</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 시간대(time-zone)을 이용한 현재의 date와 time 제공.
+                            <br>예. LocalDate.now(clock)
+                            <br><br>2. static Clock systemUTC()
+                            <br>static Clock systemDefaultZone()
+                            <br>static Clock system(ZoneId zone)
+                            <br>static Clock tickMillis(ZoneId zone) Since 9
+                            <br>static Clock tickSeconds(ZoneId zone)
+                            <br>static Clock tickMinutes(ZoneId zone)
+                            <br>static Clock tick(Clock baseClock, Duration tickDuration)
+                            <br>static Clock fixed(Instant fixedInstant, ZoneId zone)
+                            <br>static Clock offset(Clock baseClock, Duration offsetDuration)
+                            <br>abstract ZoneId getZone()
+                            <br>abstract Clock withZone(ZoneId zone)
+                            <br>long millis()
+                            <br>abstract Instant instant()
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Duration">
+                        <th>final class Duration implements TemporalAmount, Comparable&lt;Duration&gt;, Serializable Since 1.8</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 필드 : public static final Duration ZERO
+                            <br><br>2. static Duration ofDays(long days)
+                            <br>static Duration ofHours(Long hours)
+                            <br>static Duration ofMinutes(long minutes)
+                            <br>static Duration ofSeconds(long seconds)
+                            <br>static Duration ofSeconds(long seconds, long nanoAdjustment)
+                            <br>static Duration ofMillis(long millis)
+                            <br>static Duration ofNanos(long nanos)
+                            <br>static Duration of(long amount, TemporalUnit unit)
+                            <br>static Duration from(TemporalAmount amount)
+                            <br>static Duration parse(CharSequence text)
+                            <br>static Duration between(Temporal startInclusive, Temporal endExclusive)
+                            <br>long get(TemporalUnit unit)
+                            <br>List&lt;TemporalUnit&gt; getUnits()
+                            <br>boolean isZero()
+                            <br>boolean isNegative()
+                            <br>long getSeconds()
+                            <br>int getNano()
+                            <br>Duration withSeconds(long seconds)
+                            <br>Duration withNanos(int nanoOfSecond)
+                            <br>Duration plus(Duration duration) ...
+                            <br>Duration minus(Duration duration) ...
+                            <br>Duration multipliedBy(long multiplicand)
+                            <br>Duration divideBy(long divisor)
+                            <br>Duration negated()
+                            <br>Duration abs()
+                            <br>long toDays(), toHours() ...
+                            <br>Duration truncatedTo(TemporalUnit unit) Since 9
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="con-lv-2" con-title="java.time.format">
+                    <tr style="background-color: #bbb;">
+                        <th>java.base(module) Since 9 &raquo; java.time.format(package) Since 1.8</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="DateTimeFormatterBuilder">
+                        <th>final class DateTimeFormatterBuilder Since 1.8</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. https://docs.oracle.com/javase/10/docs/api/java/time/format/DateTimeFormatterBuilder.html
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="DateTimeFormatter">
+                        <th>final class DateTimeFormatter Since 1.8</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. https://docs.oracle.com/javase/10/docs/api/java/time/format/DateTimeFormatter.html
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="con-lv-2" con-title="java.util">
+                    <tr style="background-color: #bbb;">
+                        <th>java.base(module) Since 9 &raquo; java.util(package) Since 1.0</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Iterable">
+                        <th>interface Iterable&lt;T&gt; Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            Iterator&lt;T&gt; iterator() : 반복자 반환
+                            <br>default void forEach(Consumer&lt;? super T&gt; action) Since 1.8
+                            <br>default Spliterator&lt;T&gt; spliterator() Since 1.8
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Collection">
+                        <th>interface Collection&lt;E&gt; extends Iterable&lt;E&gt; Since 1.2</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            int size()
+                            <br>boolean isEmpty()
+                            <br>boolean contains(Object o)
+                            <br>Object[] toArray()
+                            <br>&lt;T&gt; T[] toArray(T[] a)
+                            <br>boolean add(E e)
+                            <br>boolean remove(Object o)
+                            <br>boolean containsAll(Collection&lt;?&gt; c)
+                            <br>boolean addAll(Collection&lt;? extends E&gt; c)
+                            <br>boolean removeAll(Collection&lt;?&gt; c)
+                            <br>boolean removeIf(Predicate&lt;? super E&gt; filter) Since 1.8
+                            <br>void clear()
+                            <br>default Stream&lt;E&gt; stream() Since 1.8
+                            <br>default Stream&lt;E&gt; parallelStream() Since 1.8
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Comparator">
+                        <th>@FunctionalInterface interface Comparator&lt;T&gt; Since 1.2</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            int compare(T o1, T o2)
+                            <br>default Comparator&lt;T&gt; reversed() Since 1.8
+                            <br>default Comparator&lt;T&gt; thenComparing(Comparator&lt;? super T&gt; other) Since 1.8
+                            <br>&raquo; 이 비교자가 두 객체를 같다고 판단하면, other가 새로 판단한다.
+                            <br>default &lt;U&gt; Comparator&lt;T&gt; thenComparing(Function&lt;? super T, ? extends U&gt; keyExtractor, Comparator&lt;? super U&gt; keyComparator) Since 1.8
+                            <br>&raquo; thenComparing(comparing(keyExtractor, cmp))와 같이 동작한다. 키를 이용해 비교하는 비교자가 두 객체를 같다고 판단하면, 다른 키를 이용해 비교한다.
+                            <br>default &lt;U extends Comparable&lt;? super U&gt;&gt; Comparator&lt;T&gt; thenComparing(Function&lt;? super T, ? extends U&gt; keyExtractor) Since 1.8
+                            <br>&raquo; thenComparing(comparing(keyExtractor))와 같이 동작한다.
+                            <br>default Comparator&lt;T&gt; thenComparingInt(ToIntFunction&lt;? super T&gt; KeyExtractor)
+                            <br>&raquo; thenComparing(comparingInt(keyExtractor))와 같이 동작한다. 키가 int인 경우. + Long, Double
+                            <br>static &lt;T extends Comparable&lt;? super T&gt;&gt; Comparator&lt;T&gt; reverseOrder() Since 1.8
+                            <br>&raquo; 자연스러운 정렬의 역 비교자를 반환.
+                            <br>static &lt;T extends Comparable&lt;? super T&gt;&gt; Comparator&lt;T&gt; naturalOrder() Since 1.8
+                            <br>static &lt;T&gt; Comparator&lt;T&gt; nullsFirst(Comparator&lt;? super T&gt; comparator) Since 1.8
+                            <br>&raquo; null은 모든 non-null 값보다 작다고 간주한다. null끼리는 서로 같다고 간주한다.
+                            <br>static &lt;T&gt; comparator&lt;T&gt; nullsLast(Comparator&lt;? super T&gt; comparator) Since 1.8
+                            <br>&raquo; null이 모든 non-null 값보다 크다고 간주. null끼리는 서로 같다고 간주.
+                            <br>static &lt;T, U&gt; Comparator&lt;T&gt; comparing(Function&lt;? super T, ? extends U&gt; keyExtractor, Comparator&lt;? super U&gt; keyComparator) Since 1.8
+                            <br>&raquo; 정렬에 이용할 키를 생성하는 함수와, 키를 이용해 비교하는 비교자를 넘기면 둘을 포함하는 T타입 비교자를 반환.
+                            <br>static &lt;T, U extends Comparable&lt;? super U&gt;&gt; Comparator&lt;T&gt; comparing(Function&lt;? super T, ? extends U&gt; keyExtractor) Since 1.8
+                            <br>static &lt;T&gt; Comparator&lt;T&gt; comparingInt(ToIntFunction&lt;? super T&gt; keyExtractor) Since 1.8 + Long, Double
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Queue">
+                        <th>interface Queue&lt;E&gt; extends Collection&lt;E&gt; Since 1.5</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            boolean add(E e) : 용량이 없으면 예외 발생
+                            <br>boolean offer(E e) : 용량 제한 있는 큐에서는 예외만 발생하는 add보다 낫다.
+                            <br>E remove() : 앞쪽 원소 하나 제거. 없으면 예외.
+                            <br>E poll() : 앞쪽 원소 하나 제거. 없으면 null.
+                            <br>E element() : 앞쪽 원소 하나 제거하지 않고 가져오기. 없으면 예외.
+                            <br>E peek() : 앞쪽 원소 하나 제거하지 않고 가져오기. 없으면 null.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Deque">
+                        <th>interface Deque&lt;E&gt; extends Queue&lt;E&gt; Since 1.6</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            void addFirst(E e) : 자리 없으면 예외
+                            <br>void addLast(E e)
+                            <br>boolean offerFirst(E e) : 자리 없으면 false
+                            <br>boolean offerLast(E e)
+                            <br>E removeFirst() : 하나 제거하고 반환. 없으면 예외
+                            <br>E removeLast()
+                            <br>E pollFirst() : 하나 제거하고 반환. 없으면 null
+                            <br>E pollLast()
+                            <br>E getFirst() : 하나 제거하지 않고 반환. 없으면 예외.
+                            <br>E getLast()
+                            <br>E peekFirst() : 하나 제거하지 않고 반환. 없으면 null.
+                            <br>boolean removeFirstOccurrence(Object o)
+                            <br>boolean removeLastOccurrence(Object o)
+                            <br>void push(E e) : 이 deque이 표현하는 스택에 push.
+                            <br>E pop() : 이 deque이 표현하는 스택에서 pop
+                            <br>Iterator&lt;E&gt; descendingIterator() : iterator()와 역순
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Enumeration">
+                        <th>interface Enumeration&lt;E&gt; Since 1.0</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            boolean hasMoreElements()
+                            <br>E nextElement()
+                            <br>default Iterator&lt;E&gt; asIterator() Since 9
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="EventListener">
+                        <th>interface EventListener Since 1.1</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 내용 없음.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Iterator">
+                        <th>interface Iterator&lt;E&gt; Since 1.2</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            boolean hasNext()
+                            <br>E next()
+                            <br>default void remove() : 마지막으로 반환된 원소를 제거. next() 호출 뒤 한 번만 호출 가능.
+                            <br>default void forEachRemaining(Consumer&lt;? super E&gt; action) Since 1.8
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="List">
+                        <th>interface List&lt;E&gt; extends Collection&lt;E&gt; Since 1.2</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. List::of, List::copyOf 팩터리 메서드로 변경 불가능한 리스트를 만들 수 있다. 변경 불가능한 리스트는 null 원소를 허용하지 않으며, 모든 원소가 serializable하면 리스트도 그러하다. 또, value-based이므로 identity-sensitive한 연산은 피해야 된다.
+                            <br><br>2. boolean addAll(int index, Collection&lt;? extends E&gt; c)
+                            <br>default void replaceAll(UnaryOperator&lt;E&gt; operator) Since 1.8
+                            <br>&raquo; 모든 원소를 연산 결과로 대체
+                            <br>default void sort(Comparator&lt;? super E&gt; c) Since 1.8
+                            <br>E get(int index)
+                            <br>E set(int index, E element) : 이전 값은 반환.
+                            <br>void add(int index, E element)
+                            <br>E remove(int index)
+                            <br>int indexOf(Object o)
+                            <br>int lastIndexOf(Object o)
+                            <br>ListIterator&lt;E&gt; listIterator()
+                            <br>ListIterator&lt;E&gt; listIterator(int index)
+                            <br>List&lt;E&gt; subList(int fromIndex, int toIndex)
+                            <br>default Spliterator&lt;E&gt; spliterator() Since 1.8
+                            <br>static &lt;E&gt; List&lt;E&gt; of() Since 9
+                            <br>static &lt;E&gt; List&lt;E&gt; of(E e1) Since 9
+                            <br>static &lt;E&gt; List&lt;E&gt; of(E e1, E e2) Since 9 ...
+                            <br>@SafeVarargs static &lt;E&gt; List&lt;E&gt; of(E... elements) Since 9 : 단일 배열도 허용
+                            <br>static &lt;E&gt; List&lt;E&gt; copyOf(Collection&lt;? extends E&gt; coll) Since 10
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="ListIterator">
+                        <th>interface ListIterator&lt;E&gt; extends Iterator&lt;E&gt; Since 1.2</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 양방향으로 이동 가능한 iterator.
+                            <br><br>2. boolean hasPrevious()
+                            <br>E previous()
+                            <br>int nextIndex()
+                            <br>int previousIndex()
+                            <br>void set(E e) : 마지막으로 반환된 요소를 변경
+                            <br>void add(E e) : next()로 반환될 요소 바로전에 삽입.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Map">
+                        <th>interface Map&lt;K, V&gt; Since 1.2</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. Map::of, Map::ofEntries, Map::copyOf 팩터리 메서드로 변경 불가능한 맵을 만들 수 있다. 변경 불가능한 맵은 키와 값 모두 null을 허용하지 않으며, 모든 키와 값이 serializable하면 맵도 그러하다. 또, value-based므로 identity-sensitive한 연산은 피해야 한다.
+                            <br><br>2. int size()
+                            <br>boolean isEmpty()
+                            <br>boolean containsKey(Object key)
+                            <br>boolean containsValue(Object value)
+                            <br>V get(Object key)
+                            <br>V put(K key, V value) : 이전 값은 반환된다.
+                            <br>V remove(Object key)
+                            <br>void putAll(Map&lt;? extends K, ? extends V&gt; m)
+                            <br>void clear()
+                            <br>Collection&lt;V&gt; values()
+                            <br>Set&lt;Map.Entry&lt;K, V&gt;&gt; entrySet()
+                            <br>default V getOrDefault(Object key, V defaultValue) Since 1.8
+                            <br>default void forEach(BiConsumer&lt;? super K, ? super V&gt; action) Since 1.8
+                            <br>default void replaceAll(BiFunction&lt;? super K, ? super V, ? extends V&gt; function) Since 1.8
+                            <br>&raquo; 모든 값을 연산 결과로 대체한다.
+                            <br>default V putIfAbsent(K key, V value) Since 1.8
+                            <br>default boolean remove(Object key, Object value) Since 1.8
+                            <br>default boolean replace(K key, V oldValue, V newValue) Since 1.8
+                            <br>default V replace(K key, V value) Since 1.8 : key가 있을 때만 대체
+                            <br>default V computeIfAbsent(K key, Function&lt;? super K, ? extends V&gt; mappingFunction) Since 1.8
+                            <br>&raquo; key가 맵에 없거나, 대응하는 값이 null인 경우 새로운 값을 계산하여 넣는다. 단, 새로운 값이 null이거나 도중 예외가 발생하는 경우, 기록되지 않는다.
+                            <br>default V computeIfPresent(K key, BiFunction&lt;? super K, ? super V, ? extends V&gt; remappingFunction) Since 1.8
+                            <br>default V compute(K key, BiFUnction&lt;? super K, ? super V, ? extends V&gt; remappingFunction) Since 1.8
+                            <br>default V merge(K key, V value, BiFunction&lt;? super V, ? super V, ? extends V&gt; remappingFunction) Since 1.8
+                            <br>&raquo; key가 맵에 없거나, 대응하는 값이 null인 경우 null이 아닌 value로 연결. 그 외의 경우 주어진 함수를 통해 새로운 값에 연결하거나, 결과가 null인 경우 맵에서 제거.
+                            <br>* 예: map.merge(key, msg, String::concat)
+                            <br>static &lt;K, V&gt; Map&lt;K, V&gt; of() Since 9
+                            <br>static &lt;K, V&gt; Map&lt;K, V&gt; of(K k1, V v1) Since 9 ...
+                            <br>@SafeVarargs static &lt;K, V&gt; Map&lt;K, V&gt; ofEntries(Map.ENtry&lt;? extends K, ? extends V&gt;... entries) Since 9
+                            <br>&raquo; Map::entry()와 함께 이용하면 맵 초기화를 편리하게 할 수 있다.
+                            <br>static &lt;K, V&gt; Map.Entry&lt;K, V&gt; entry(K k, V v) Since 9
+                            <br>static &lt;K, V&gt; Map&lt;K, V&gt; copyOf(Map&lt;? extends K, ? extends V&gt; map) Since 10
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Map.Entry">
+                        <th>static interface Map.Entry&lt;K, V&gt; Since 1.2</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            K getKey()
+                            <br>V getValue()
+                            <br>V setValue(V value)
+                            <br>static &lt;K extends Comparable&lt;? super K&gt;, V&gt; Comparator&lt;Map.Entry&lt;K, V&gt;&gt; comparingByKey() Since 1.8
+                            <br>&raquo; 키를 자연스러운 순서로 비교하는 비교자 반환.
+                            <br>static &lt;K, V extends Comparable&lt;? super V&gt;&gt; Comparator&lt;Map.Entry&lt;K, V&gt;&vt; comparingByValue() Since 1.8
+                            <br>static &lt;K, V&gt; Comparator&lt;Map.Entry&lt;K, V&gt;&gt; comparingByKey(Comparator&lt;? super K&gt; cmp) Since 1.8
+                            <br>static &lt;K, V&gt; Comparator&lt;Map.Entry&lt;K, V&gt;&gt; comparingByValue(Comparator&lt;? super V&gt; cmp) Since 1.8
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Set">
+                        <th>interface Set&lt;E&gt; extends Collection&lt;E&gt; Since 1.2</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. Set::of, Set::copyOf 팩터리 메서드로 변경 불가능한 집합을 만들 수 있다. 변경 불가능한 집합은 null 원소를 허용하지 않으며, 모든 원소가 serializable하면 집합도 그러하다. value-based므로 identity-sensitive한 연산은 피해야 한다.
+                            <br><br>2. static &lt;E&gt; Set&lt;E&gt; of() Since 9
+                            <br>static &lt;E&gt; Set&lt;E&gt; of(E e1) Since 9 ...
+                            <br>@SafeVarargs static &lt;E&gt; Set&lt;E&gt; of(E... elements) Since 9 : 단일 배열도 인자로 가능하다.
+                            <br>static &lt;E&gt; Set&lt;E&gt; copyOf(Collection&lt;? extends E&gt; coll) Since 10
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
                     </tr>
                 </tbody>
             </table>
