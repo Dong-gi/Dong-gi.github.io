@@ -8,14 +8,30 @@ interface Flyable {
     default void flyFast() {
         System.out.println("빠르게 날기");
     }
+    static int numberOfWings() {
+        return 2;
+    }
+}
+
+interface Flyable3 {
+    Flyable.Wing  BACK_WING = new Flyable.Wing();
+    // @Override : 인터페이스의 static 메서드는 재정의 불가
+    static int numberOfWings() {
+        return 3;
+    }
 }
 
 public class Interface implements Flyable {
+    // @Override : 인터페이스의 static 메서드는 재정의 불가
+    static int numberOfWings() {
+        return 3;
+    }
 
     public static void main(String[] args) {
         var w = new Flyable.Wing();
         new Interface().fly();
         new Interface().flyFast();
+        System.out.println(Flyable.numberOfWings());
     }
 
     @Override
