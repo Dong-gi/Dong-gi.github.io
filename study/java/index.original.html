@@ -4973,7 +4973,7 @@
                         <th>java.base(module) Since 9 &raquo; java.text(package) Since 1.1</th>
                     </tr>
                     <tr class="con-lv-3" con-title="Format">
-                        <th>abstract class Format implements Serializable, CLoneable Since 1.1</th>
+                        <th>abstract class Format implements Serializable, Cloneable Since 1.1</th>
                     </tr>
                     <tr>
                         <td>
@@ -6253,7 +6253,7 @@
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Locale">
-                        <th>final class Locale implements CLoneable, Serializable Since 1.1</th>
+                        <th>final class Locale implements Cloneable, Serializable Since 1.1</th>
                     </tr>
                     <tr>
                         <td>
@@ -8178,472 +8178,308 @@
                             </button>
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="Stream">
+                        <th>interface Stream&lt;T&gt; extends BaseStream&lt;T, Stream&lt;T&gt;&gt; Since 1.8</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
+                            <b>1. static interface Stream.Builder&lt;T&gt; Since 1.8</b>
+                            <br>void accept(T t)
+                            <br>default Stream.Builder&lt;T&gt; add(T t)
+                            <br>Stream&lt;T&gt; build()
+                            <br>
+                            <br>2. IntStream flatMapToInt(Function&lt;? super T, ? extends IntStream&gt; mapper ) + long, double
+                            <br>&lt;A&gt; A[] toArray(IntFunction&lt;A[]&gt; generator)
+                            <br>&raquo; generator는 배열 크기를 먹고 배열을 뱉는 함수. 예: Person[]::new
+                            <br>
+                            <br>&lt;U&gt; U reduce(U identity, BiFunction&lt;U, ? super T, U&gt; accumulator, BinaryOperator&lt;U&gt;
+                            combiner)
+                            <br>&raquo; 아래와 같다.
+                            <br>var result = identity;
+                            <br>for(T element : this stream)
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;result = accumulator.apply(result, element);
+                            <br>return result;
+                            <br>
+                            <br>&lt;R&gt; R collect(Supplier&lt;R&gt; supplier, BiConsumer&lt;R, ? super T&gt; accumulator, BiConsumer&lt;R,
+                            R&gt; combiner)
+                            <br>&raquo; 아래와 같다
+                            <br>var result = supplier.get();
+                            <br>for(T element : this stream)
+                            <br>&nbsp;&nbsp;&nbsp;&nbsp;accumulator.accept(result, element);
+                            <br>return result;
+                            <br>
+                            <br>&lt;R, A&gt; collect(Collector&lt;? super T, A, R&gt; collector)
+                            <br>Optional&lt;T&gt; min(Comparator&lt;? super T&gt; comparator) + max
+                            <br>
+                            <br>3. static &lt;T&gt; Stream&lt;T&gt; ofNullable(T t)
+                            <br>@SafeVarargs static &lt;T&gt; Stream&lt;T&gt; of(T... values)
+                            <br>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=DoubleStream]').attr('id'));"
+                                class="btn btn-primary btn-sm">
+                                참고 : DoubleStream &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
+                    <tr class="con-lv-3" con-title="StreamSupport">
                         <th></th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            static &lt;T&gt; Stream&lt;T&gt; stream(Spliterator&lt;T&gt; spliterator, boolean parallel)
+                            <br>static &lt;T&gt; Stream&lt;T&gt; stream(Supplier&lt;? extends Spliterator&lt;T&gt;&gt; supplier,
+                            int characteristics, boolean parallel)
+                            <br>&raquo; characteristics = supplier.get().characteristics()
+                            <br>static IntStream intStream(Spliterator.OfInt spliterator, boolean parallel) + long, double
+                            <br>static IntStream intStream(Supplier&lt;? extends Spliterator.OfInt&gt; supplier, int characteristics,
+                            boolean parallel)
+                            <br>&raquo; characteristics = supplier.get().characteristics()
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="Collector">
+                        <th>interface Collector&lt;T, A, R&gt; Since 1.8</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            1. 스트림 결과 수집.
+                            <br>&raquo; 새로운 결과 컨테이너 생성 : supplier()
+                            <br>&raquo; 결과 컨테이너에 새 데이터를 축적 : accumulator()
+                            <br>&raquo; 두 결과 컨테이너를 하나로 합치기 : combiner()
+                            <br>&raquo; Optional 최종 변환 : finisher()
+                            <br>
+                            <br>
+                            <b>2. static enum Collector.Characteristics</b>
+                            <br>&raquo; CONCURRENT, IDENTITY_FINISH, UNORDERED
+                            <br>
+                            <br>3. Supplier&lt;A&gt; supplier()
+                            <br>&raquo; 결과 컨테이너인 A를 생성하는 함수 반환.
+                            <br>BiConsumer&lt;A, T&gt; accumulator()
+                            <br>&raquo; A의 결과에 T 타입 데이터를 축적하는 함수
+                            <br>BinaryOperator&lt;A&gt; combiner()
+                            <br>&raquo; 두 결과 컨테이너를 받아 하나로 반환하는 함수
+                            <br>Function&lt;A, R&gt; finisher()
+                            <br>&raquo; 결과 컨테이너로부터 최종 결과 R으로 변환하는 함수 반환
+                            <br>Set&lt;Collector.Characteristics&gt; characteristics()
+                            <br>
+                            <br>4. static &lt;T, A, R&gt; Collector&lt;T, A, R&gt; of(Supplier&lt;A&gt; supplier, BiConsumer&lt;A,
+                            T&gt; accumulator, BinaryOperator&lt;A&gt; combiner, Function&lt;A, R&gt; finisher, Collector.Characteristics...
+                            characteristics) + 1 오버로딩
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="Collectors">
+                        <th>final class Collectors Since 1.8</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            1. 미리 정의된 Collector들
+                            <br>
+                            <br>2. static &lt;T, C extends Collection&lt;T&gt;&gt; Collector&lt;T, ?, C&gt; toCollection(Supplier&lt;C&gt;
+                            collectionFactory)
+                            <br>&raquo; collectionFactory로 생성한 Collection 객체에 원소들을 만나는 순서대로 집어넣는 Collector 반환.
+                            <br>
+                            <br>static &lt;T&gt; Collector&lt;T, ?, List&lt;T&gt;&gt; toList()
+                            <br>&raquo; 새로운 List 객체에 입력 원소들을 모두 담아 반환하는 Collector. 반환된 List의 타입, 변경 가능 여부, 직렬화, 쓰레드-안전 그 무엇도
+                            보장하지 않음.
+                            <br>
+                            <br>static &lt;T&gt; Collector&lt;T, ? Set&lt;T&gt;&gt; toSet()
+                            <br>&raquo; 새로운 Set 객체에 입력 원소들을 모두 담아 반환하는 Collector. 반환된 Set의 타입, 변경 가능 여부, 직렬화, 쓰레드-안전 그 무엇도 보장하지
+                            않음.
+                            <br>
+                            <br>static &lt;T&gt; Collector&lt;T, ?, List&lt;T&gt;&gt; toUnmodifiableList() Since 10
+                            <br>static &lt;T&gt; Collector&lt;T, ?, Set&lt;T&gt;&gt; toUnmodifiableSet() Since 10
+                            <br>
+                            <br>static Collector&lt;CharSequence, ?, String&gt; joining() + 2 오버로딩
+                            <br>&raquo; String에 만나는 순서대로 덧붙이는 Collector.
+                            <br>
+                            <br>static &lt;T, U, A, R&gt; Collector&lt;T, ?, R&gt; mapping(Function&lt;? super T, ? extends U&gt;
+                            mapper, Collector&lt;? super U, A, R&gt; downstream)
+                            <br>&raquo; U 타입 원소에 대한 Collector에 T 타입 원소를 mapper를 통해 U 타입으로 변환하여 받아들이는 Collector.
+                            <br>
+                            <br>static &lt;T, U, A, R&gt; Collector&lt;T, ?, R&gt; flatMapping(Function&lt;? super T, ? extends
+                            Stream&lt;? extends U&gt;&gt; mapper, Collector&lt;? super U, A, R&gt; downstream) Since 9
+                            <br>&raquo; Flat mapper는 입력 요소를 0개 이상의 요소를 담은 stream으로 만들어내며, downstream에 투입되면 해당 stream은 닫힌다.(null인
+                            경우 빈 스트림을 대신 이용한다)
+                            <br>
+                            <br>static &lt;T, A, R&gt; Collector&lt;T, ?, R&gt; filtering(Predicate&lt;? super T&gt; predicate,
+                            Collector&lt;? super T, A, R&gt; downstream) Since 9
+                            <br>&raquo; 동일한 입력 타입 T 원소를 받아 predicate을 만족하면 downstream에 투입하는 Collector.
+                            <br>
+                            <br>static &lt;T, A, R, RR&gt; Collector&lt;T, A, RR&gt; collectingAndThen(Collector&lt;T, A, R&gt;
+                            downstream, Function&lt;R, RR&gt; finisher)
+                            <br>
+                            <br>static &lt;T&gt; Collector&lt;T, ?, Long&gt; counting()
+                            <br>static &lt;T&gt; Collector&lt;T, ?, Optional&lt;T&gt;&gt; minBy(Comparator&lt;? super T&gt; comparator)
+                            <br>static &lt;T&gt; Collector&lt;T, ?, Optional&lt;T&gt;&gt; maxBy(Comparator&lt;? super T&gt; comparator)
+                            <br>static &lt;T&gt; Collector&lt;T, ?, Integer&gt; summingInt(ToIntFunction&lt;? super T&gt; mapper)
+                            + Long, Double
+                            <br>static &lt;T&gt; Collector&lt;T, ?, Double&gt; averagingInt(ToIntFunction&lt;? super T&gt; mapper)
+                            + Long, Double
+                            <br>static &lt;T&gt; Collector&lt;T, ?, IntSummaryStatistics&gt; summarizingInt(ToIntFunction&lt;?
+                            super T&gt; mapper) + Long, Double
+                            <br>
+                            <br>static &lt;T&gt; Collector&lt;T, ? T&gt; reducing(T identity, BInaryOperator&lt;T&gt; op) + 2
+                            오버로딩
+                            <br>&raquo; reducing 설명은
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=DoubleStream]').attr('id'));"
+                                class="btn btn-primary btn-sm">
+                                DoubleStream
+                            </button> 참고
+                            <br>
+                            <br>static &lt;T, K&gt; Collector&lt;T, ?, Map&lt;K, List&lt;T&gt;&gt;&gt; groupingBy(Function&lt;?
+                            super T, ? extends K&gt; classifier) + 2 오버로딩
+                            <br>static &lt;T, K&gt; Collector&lt;T, ?, ConcurrentMap&lt;K, List&lt;T&gt;&gt;&gt; groupingByConcurrent(Function&lt;?
+                            super T, ? extends K&gt; classifier) + 2 오버로딩
+                            <br>static &lt;T&gt; Collector&lt;T, ?, Map&lt;Boolean, List&lt;T&gt;&gt;&gt; partitioningBy(Predicate&lt;?
+                            super T&gt; predicate) + 1 오버로딩
+                            <br>static &lt;T, K, U&gt; Collector&lt;T, ?, Map&lt;K, U&gt;&gt; toMap(Function&lt;? super T, ?
+                            extends K&gt; keyMapper, Function&lt;? super T, ? extends U&gt; valueMapper) + 2 오버로딩
+                            <br>static &lt;T, K, U&gt; Collector&lt;T, ?, Map&lt;K, U&gt;&gt; toUnmodifiableMap(Function&lt;?
+                            super T, ? extends K&gt; keyMapper, Function&lt;? super T, ? extends U&gt; valueMapper) Since
+                            10 + 1 오버로딩
+                            <br>static &lt;T, K, U&gt; Collector&lt;T, ?, ConcurrentMap&lt;K, U&gt;&gt; toConcurrentMap(Function&lt;?
+                            super T, ? extends K&gt; keyMapper, Function&lt;? super T, ? extends U&gt; valueMapper) + 2 오버로딩
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                </tbody>
+                <tbody class="con-lv-2" con-title="java.util.zip">
+                    <tr style="background-color: #bbb;">
+                        <th>java.base(module) Since 9 &raquo; java.util.zip(package) Since 1.1</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Checksum">
+                        <th>interface Checksum Since 1.1</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            void update(int b)
+                            <br>default void update(byte[] b) Since 9
+                            <br>void update(byte[] b, int off, int len)
+                            <br>default void update(ByteBuffer buffer) Since 9
+                            <br>long getValue()
+                            <br>void reset()
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="Adler32">
+                        <th>class Adler32 implements Checksum Since 1.1</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            1. 생성자 : public Adler32()
+                            <br>
+                            <br>2. void update(ByteBuffer buffer) Since 1.8
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="CRC32">
+                        <th>clas CRC32 implements Checksum Since 1.1</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            1. 생성자 : public CRC32()
+                            <br>
+                            <br>2. void update(ByteBuffer buffer) Since 1.8
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="CRC32C">
+                        <th>class CRC32C implements Checksum Since 9</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            1. 생성자 : public CRC32C()
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="ZipInputStream">
+                        <th>class ZipInputStream extends InflaterInputStream Since 1.1</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            1. 생성자
+                            <br>public ZipInputStream(InputStream in)
+                            <br>public ZipInputStream(InputStream in, Charset charset) Since 1.7
+                            <br>
+                            <br>2. ZipEntry getNextEntry() throws IOException
+                            <br>void closeEntry() throws IOException
+                            <br>&raquo; 현재 ZipEntry를 닫고 읽기 위치를 다음 entry로 이동.
+                            <br>int available() throws IOException
+                            <br>&raquo; EOF를 만났으면 0, 아니면 1
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="ZipOutputStream">
+                        <th>class ZipOutputStream extends DeflaterOutputStream Since 1.1</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            1. 생성자
+                            <br>public ZipOutputStream(OutputStream out)
+                            <br>public ZipOutputStream(OutputStream out, Charset charset) Since 1.7
+                            <br>
+                            <br>2. void setComment(String comment)
+                            <br>void setMethod(int method)
+                            <br>&raquo; ZipEntry에 설정되지 않은 경우 사용하는 압축 방법 : DEFLATED(압축, 기본값), STORED(비압축)
+                            <br>
+                            <br>void setLevel(int level)
+                            <br>&raquo; 압축 레벨 : 0(BEST_SPEED) ~ 9(BEST_COMPRESSION). 기본은 DEFAULT_COMPRESSION(-1)이며, 보통 6.
+                            <br>
+                            <br>void putNextEntry(ZipEntry e) throws IOException
+                            <br>void closeEntry()
+                            <br>&raquo; 현재 ZipEntry를 닫고 다음 쓰기 위치로 이동. putNextEntry 메서드는 쓰기 전에 알아서 닫는다.
+                            <br>
+                            <br>void finish() throws IOException
+                            <br>&raquo; 쓰기를 종료하고 스트림을 닫는다. 동일한 출력 스트림에 여러 필터를 적용한 경우에 사용.
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="ZipEntry">
+                        <th>class ZipEntry implements Cloneable Since 1.1</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            1. 생성자
+                            <br>public ZipEntry(String name)
+                            <br>public ZipEntry(ZipEntry e) : e로 필드를 채운다.
+                            <br>
+                            <br>2. String getName()
+                            <br>void setTime(long time) + getter
+                            <br>void setTimeLocal(LocalDateTime time) Since 9 + getter
+                            <br>ZipEntry setLastModifiedTime(FileTime time) Since 1.8 + getter
+                            <br>ZipEntry setLastAccessTime(FileTime time) Since 1.8 + getter
+                            <br>ZipEntry setCreationTime(FileTime time) Since 1.8 + getter
+                            <br>void setSize(long size) : 비압축 크기 설정 + getter
+                            <br>void setCompressedSize(long csize) + getter
+                            <br>void setCrc(long crc) + getter
+                            <br>void setMethod(int method) + getter
+                            <br>&raquo; DEFLATED(압축), STORED(비압축), -1(미설정)
+                            <br>
+                            <br>void setExtra(byte[] extra) + getter
+                            <br>void setComment(String comment) + getter
+                            <br>boolean isDirectory()
+                            <br>&raquo; 이름이 "/"로 끝나면 디렉터리.
+                            <br>
+                            <br>String toString()
+                            <br>int hashCode()
+                            <br>Object clone()
                         </td>
                     </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
+                    <tr class="con-lv-3" con-title="ZipFile">
+                        <th>class ZipFile implements Closeable Since 1.1</th>
                     </tr>
                     <tr>
                         <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="">
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                            1. 생성자
+                            <br>public ZipFile(String name) throws IOException : UTF-8
+                            <br>public ZipFile(File file, int mode) throws IOException Since 1.3 : UTF-8
+                            <br>&raquo; mode : OPEN_READ | OPEN_DELETE(파일이 close 호출 전까지 삭제됨, 내용은 객체를 통해 계속 접근 가능)
+                            <br>
+                            <br>public ZipFile(File file) throws ZipException, IOException : UTF-8
+                            <br>public ZipFile(File file, int mode, Charset charset) throws IOException SInce 1.7
+                            <br>public ZipFile(String name, Charset charset) throws IOException Since 1.7
+                            <br>public ZipFile(File file, Charset charset) throws IOException Since 1.7
+                            <br>
+                            <br>2. String getComment() Since 1.7
+                            <br>ZipEntry getEntry(String name)
+                            <br>InputStream getInputStream(ZipEntry entry) throws IOException
+                            <br>&raquo; ZipFile이 닫히면 이 메서드가 반환한 모든 스트림도 같이 닫힌다.
+                            <br>
+                            <br>String getName()
+                            <br>Enumeration&lt;? extends ZipEntry&gt; entries()
+                            <br>Stream&lt;? extends ZipEntry&gt; stream() Since 1.8
+                            <br>int size() : entry 개수
                         </td>
                     </tr>
                 </tbody>
@@ -8665,18 +8501,220 @@
                     <tr>
                         <th>javafx.base</th>
                     </tr>
-                    <tr class="con-lv-3" con-title="추가">
-                        <th>추가</th>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
                     </tr>
                     <tr>
                         <td>
-                            1. 내용
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 코드 &raquo;
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
                             </button>
-                            <button type="button" onclick='javascript:showCode("BasicConcepts/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
                                 View Console : 콘솔 &raquo;
                             </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="">
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1.
+                            <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
+                                Goto Externalizable &raquo;
+                            </button>
+                            <a role="button" class="btn btn-info btn-sm" href=""></a>
                         </td>
                     </tr>
                 </tbody>
