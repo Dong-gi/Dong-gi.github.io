@@ -1,3 +1,5 @@
+package io.github.donggi;
+
 interface Actable {
     default void act() {
         System.out.println("Outer Interface");

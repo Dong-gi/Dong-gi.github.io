@@ -19,7 +19,7 @@ public class TryWithResources {
 		
 		// 자바 9
 		MyAutoCloseable my2 = new MyAutoCloseable();
-		try(my2) {}
+		try(my2; MyAutoCloseable my3 = new MyAutoCloseable()) {}
 		
 		// 자바 10
 		try(var my3 = new MyAutoCloseable()) {}
