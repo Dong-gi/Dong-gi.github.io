@@ -6,6 +6,11 @@
 						http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
 	version="3.1">
 
+	<context-param>
+		<param-name>name</param-name>
+		<param-value>Context Param</param-value>
+	</context-param>
+
 	<servlet>
 		<servlet-name>hello-servlet</servlet-name>
 		<servlet-class>donggi.HelloWorld</servlet-class>
@@ -14,4 +19,37 @@
 		<servlet-name>hello-servlet</servlet-name>
 		<url-pattern>/hello</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>hello5-servlet</servlet-name>
+		<servlet-class>donggi.Hello2</servlet-class>
+		<init-param>
+			<param-name>name</param-name>
+			<param-value>Default Name</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>hello5-servlet</servlet-name>
+		<url-pattern>/hello5</url-pattern>
+	</servlet-mapping>
+	
+	<filter>
+        <filter-name>hello-filter</filter-name>
+        <filter-class>donggi.HelloFilter</filter-class>
+        <init-param>
+            <param-name>log_file_name</param-name>
+            <param-value>C:/logs/hello_filter.log</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>hello-filter</filter-name>
+        <url-pattern>/*</url-pattern> <!-- 특정 url 패턴에 필터 적용 : 모든 웹컴포넌트 -->
+        <url-pattern>*.jsp</url-pattern> <!-- 계층적인 URL 경로와 *.ext를 함께 쓸 수는 없음 -->
+        <servlet-name>hello-servlet</servlet-name> <!-- 특정 서블릿에 필터 적용 -->
+        <!-- 필터를 적용하는 경우를 설정 가능 -->
+        <dispatcher>REQUEST</dispatcher> <!-- 웹브라우저의 요청 -->
+        <dispatcher>FORWARD</dispatcher> <!-- forward -->
+        <dispatcher>INCLUDE</dispatcher> <!-- include -->
+        <dispatcher>ERROR</dispatcher> <!-- 예외 -->
+    </filter-mapping>
 </web-app>
