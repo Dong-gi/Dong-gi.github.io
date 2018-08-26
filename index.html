@@ -6,16 +6,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-    <script src="/source/highlight.pack.js"></script>
-    <link rel="stylesheet" href="/source/xcode.css">
-    <link rel="stylesheet" href="/source/default.css">
-    <script src="/source/default.js"></script>
-
     <title>Main Page</title>
+
+    <script src="/source/jquery-3.2.1.min.js"></script>
+    <script> 
+        $.get("/source/head.html", function (data) {
+            $("head").append(data);
+        });
+    </script>
 </head>
 
 <body>
@@ -32,6 +30,34 @@
 
         <div class="container">
             <table class="table table-hover con-lv-1" con-title="2018년">
+                <tbody class="con-lv-2" con-title="06월">
+                    <tr class="con-lv-3" con-title="29일">
+                        <th>2018-06-29</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 산업기능요원 편입. 복무 시작
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="15일">
+                        <th>2018-06-15</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. (주)세시소프트 정규직 계약
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="con-lv-2" con-title="05월">
+                    <tr class="con-lv-3" con-title="16일">
+                        <th>2018-05-16</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. (주)세시소프트 인턴 계약 시작
+                        </td>
+                    </tr>
+                </tbody>
                 <tbody class="con-lv-2" con-title="04월">
                     <tr class="con-lv-3" con-title="26일">
                         <th>2018-04-26</th>
@@ -125,7 +151,8 @@
                             <br>3. Bootstrap Modal을 이용해 코드를 보도록 수정했습니다. 코드를 클립보드로 복사하거나 로컬로 다운로드가 가능합니다.
                             <br>4. highlight.js를 이용해 코드를 강조하도록 수정했습니다. 다음은 코드 모달 예시입니다.
                             <button type="button" onclick="javascript:showCode('/example/HelloWorld.java', 'java');" class="btn btn-primary btn-sm">View Code : 예시 &raquo;</button>
-                            <br>5. <a role="button" class="btn btn-info btn-sm" href="https://www.w3schools.com/howto/howto_js_snackbar.asp">스낵바</a>를 이용하여 복사되었음을 확인시키도록 했습니다.
+                            <br>5.
+                            <a role="button" class="btn btn-info btn-sm" href="https://www.w3schools.com/howto/howto_js_snackbar.asp">스낵바</a>를 이용하여 복사되었음을 확인시키도록 했습니다.
                         </td>
                     </tr>
                 </tbody>
