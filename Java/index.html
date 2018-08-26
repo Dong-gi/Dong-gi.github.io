@@ -287,10 +287,17 @@
                     </tr>
                     <tr>
                         <td>
-                            1. Collection, Array &raquo; Stream 생성 &raquo; 중간 연산 &raquo; 최종 연산 또는 결과
-                            <br>2. 요소들을 저장하지 않아 스트림 연산이 끝나면 재사용할 수 없다.
-                            <br>3. Collection.parallelStream &raquo; 멀티 코어 프로세싱 가능
-                            <br>4. lazy evaluation : 최종연산 없이 중간연산을 실행하지 않음.
+                            <ul>
+                                <li>Collection, Array &raquo; Stream 생성 &raquo; 중간 연산 &raquo; 최종 연산 또는 결과</li>
+                                <li>요소들을 저장하지 않아 스트림 연산이 끝나면 재사용할 수 없다.</li>
+                                <li>Collection.parallelStream &raquo; 멀티 코어 프로세싱 가능</li>
+                                <li>lazy evaluation : 최종연산 없이 중간연산을 실행하지 않음.</li>
+                                <li>
+                                    <button type="button" onclick="javascript:showCode('기초/src/io/github/donggi/StreamExample.java', 'java');" class="btn btn-primary btn-sm">
+                                        예시 코드 &raquo;
+                                    </button>
+                                </li>
+                            </ul>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="옵션 타입">
@@ -298,7 +305,10 @@
                     </tr>
                     <tr>
                         <td>
-                            1. Optional&lt;T&gt; : T 타입의 존재 여부를 포함하는 T타입 컨테이너
+                            Optional&lt;T&gt; : T 타입의 존재 여부를 포함하는 T타입 컨테이너
+                            <button type="button" onclick="javascript:showCode('기초/src/io/github/donggi/OptionalExample.java', 'java');" class="btn btn-primary btn-sm">
+                                예시 코드 &raquo;
+                            </button>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="JUnit">
@@ -306,8 +316,9 @@
                     </tr>
                     <tr>
                         <td>
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/JUnitExample.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : JUnitExample &raquo;
+                            단위 테스트에 사용되는 라이브러리
+                            <button type="button" onclick="javascript:showCode('기초/src/io/github/donggi/JUnitExample.java', 'java');" class="btn btn-primary btn-sm">
+                                예시 코드 &raquo;
                             </button>
                         </td>
                     </tr>
