@@ -78,7 +78,8 @@ code th {
 }
 
 .navbar {
-    padding: 0;
+    padding-bottom: 0;
+    padding-top: 0;
 }
 
 /* Snackbar : from https://www.w3schools.com/howto/howto_js_snackbar.asp */
