@@ -42,24 +42,55 @@
                     <tr>
                         <td>
                             <ul>
-                                <li>2019년 1월부로 JDK SE 버전이 전면 유료화되므로, OpenJDK를 설치한다.
+                                <li>
+                                    2019년 1월부로 JDK SE 버전이 전면 유료화되므로, OpenJDK를 설치한다.
                                     <a role="button" class="btn btn-info btn-sm" href="http://openjdk.java.net/install/">OpenJDK로 이동</a>
                                 </li>
-                                <li>C:\Program Files\Java\jdk-10.0.2와 같이 적절히 압축을 풀고, 환경변수를 설정한다.
+                                <li>
+                                    C:\Program Files\Java\jdk-10.0.2와 같이 적절히 압축을 풀고, 환경변수를 설정한다.
                                     <ul>
                                         <li>JAVA_HOME : C:\Program Files\Java\jdk-10.0.2</li>
                                         <li>Path : %JAVA_HOME%\bin</li>
                                     </ul>
                                 </li>
-                                <li>Eclipse, IntelliJ Community 등 적절한 IDE를 설치한다.
+                                <li>
+                                    Eclipse, IntelliJ Community 등 적절한 IDE를 설치한다.
                                     <a role="button" class="btn btn-info btn-sm" href="https://www.eclipse.org/downloads/">Eclipse로 이동</a>
-                                    <ul>Eclipse 환경 설정 : Window &raquo; Preferences
+                                    <br>Eclipse 환경 설정 : Window &raquo; Preferences
+                                    <ul>
                                         <li>General - Appearance - Colors and Fonts : Basic - Text Font 및 기타 폰트를 시력에 맞게 설정</li>
                                         <li>General - Editors - Text Editors : Insert spaces for tabs 체크, Show line numbers 체크</li>
                                         <li>General - Workspace : Text file encoding을 UTF-8로 설정</li>
                                         <li>Java - Installed JREs : jre가 아닌 jdk로 설정</li>
                                         <li>Web - CSS Files, HTML Files, JSP Files : Encoding을 UTF-8로 설정</li>
                                     </ul>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="프로젝트 생성">
+                        <th>프로젝트 생성</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <ul>
+                                <li>
+                                    프로젝트 생성 : "File" 메뉴 클릭, 또는 "Package Explorer"에서 우클릭 - New - Java Project. 없으면 New - Other...
+                                    - Java - Java Project를 선택
+                                    <br>
+                                    <img src="/imgs/20180826_213734.png" />
+                                </li>
+                                <li>
+                                    Main 클래스 생성 : "Package Explorer"의 해당 프로젝트에서 우클릭 - New - Class
+                                    <br>
+                                    <img src="/imgs/20180826_214148.png" />
+                                    <br>Name에는 "HelloWorld"(공백 없음에 유의)를 적고, public static void main(String[] args)를 체크
+                                </li>
+                                <li>
+                                    <button type="button" onclick="javascript:showCode('기초/src/io/github/donggi/HelloWorld.java', 'java');" class="btn btn-primary btn-sm">
+                                        "클릭"
+                                    </button>과 같이 코드를 작성하고 Run.
+                                    <br>아무것도 보이지 않는다면 Window - Show View - Console 선택
                                 </li>
                             </ul>
                         </td>
