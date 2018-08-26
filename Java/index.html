@@ -4,18 +4,16 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-    <script src="/source/highlight.pack.js"></script>
-    <link rel="stylesheet" href="/source/xcode.css">
-    <link rel="stylesheet" href="/source/default.css">
-    <script src="/source/default.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <title>Java</title>
+
+    <script src="/source/jquery-3.2.1.min.js"></script>
+    <script> 
+        $.get("/source/head.html", function (data) {
+            $("head").append(data);
+        });
+    </script>
 </head>
 
 <body>
@@ -29,6 +27,231 @@
             <div class="jumbotron">
                 <h1 class="display-3">Java</h1>
             </div>
+        </div>
+
+        <h2>시작</h2>
+        <div>
+            <table class="table table-hover">
+                <tbody class="con-lv-2" con-title="Hello World">
+                    <tr style="background-color: #bbb;">
+                        <th>Hello World</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="개발 환경">
+                        <th>개발 환경</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <ul>
+                                <li>2019년 1월부로 JDK SE 버전이 전면 유료화되므로, OpenJDK를 설치한다.
+                                    <a role="button" class="btn btn-info btn-sm" href="http://openjdk.java.net/install/">OpenJDK로 이동</a>
+                                </li>
+                                <li>C:\Program Files\Java\jdk-10.0.2와 같이 적절히 압축을 풀고, 환경변수를 설정한다.
+                                    <ul>
+                                        <li>JAVA_HOME : C:\Program Files\Java\jdk-10.0.2</li>
+                                        <li>Path : %JAVA_HOME%\bin</li>
+                                    </ul>
+                                </li>
+                                <li>Eclipse, IntelliJ Community 등 적절한 IDE를 설치한다.
+                                    <a role="button" class="btn btn-info btn-sm" href="https://www.eclipse.org/downloads/">Eclipse로 이동</a>
+                                    <ul>Eclipse 환경 설정 : Window &raquo; Preferences
+                                        <li>General - Appearance - Colors and Fonts : Basic - Text Font 및 기타 폰트를 시력에 맞게 설정</li>
+                                        <li>General - Editors - Text Editors : Insert spaces for tabs 체크, Show line numbers 체크</li>
+                                        <li>General - Workspace : Text file encoding을 UTF-8로 설정</li>
+                                        <li>Java - Installed JREs : jre가 아닌 jdk로 설정</li>
+                                        <li>Web - CSS Files, HTML Files, JSP Files : Encoding을 UTF-8로 설정</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="개발 과정">
+                        <th>개발 과정</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. [.java 소스 코드] &raquo; (컴파일 by 컴파일러) &raquo; [.class 바이트 코드 = 중간 언어] &raquo; (해석 by JVM 인터프리터) &raquo; 기계어 &raquo; (실행
+                            by CPU)
+                            <br>
+                            <br>2. JIT(Just-In-Time) : 한 번 해석한 바이트 코드를 다시 해석하지 않고, 이전에 해석된 기계어를 가져다 이용.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="주석">
+                        <th>주석</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 주석(Comment)은 코더를 위한 것으로, 컴파일러는 무시하는 문장들이다.
+                            <br>
+                            <br>2. // : '//'부터 줄의 끝까지 무시한다.
+                            <br>
+                            <br>3. /* */ : '/*'와 '*/' 사이의 모든 텍스트를 무시한다.
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Comments.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 주석 &raquo;
+                            </button>
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/console/con1.txt', 'text');" class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="식별자">
+                        <th>식별자</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 식별자(Identifier)는 의미 있는 코드에 붙이는 이름을 의미한다. 의미 있는 코드에는 변수(Variable), 상수(Constant), 메서드, 클래스 등이 있다.
+                            <br>
+                            <br>2. 자바 식별자는 '_', '$'의 사용을 허용한다.
+                            <br>
+                            <br>3. 식별자 관례 : 상수를 제외한 식별자는 CamelCase 이용. 클래스는 대문자로 시작. 상수는 대문자로 이루어진 SNAKE_CASE 이용.
+                            <br>
+                            <a role="button" class="btn btn-info btn-sm" href="https://en.wikipedia.org/wiki/Camel_case">카멜 케이스 설명</a>
+                            <a role="button" class="btn btn-info btn-sm" href="https://en.wikipedia.org/wiki/Snake_case">스네이크 케이스 설명</a>
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Identifier.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 식별자 및 식별자를 통한 자료형 구분 &raquo;
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="자료형">
+                        <th>자료형</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 기본 자료형(Base Type)은 사용자가 정의하지 않은, 이미 자바 언어에 정의된 자료형을 의미한다.
+                            <br>
+                            <br>2. 자료형은 메모리 상에서 변수가 존재하는 형식을 정의한다.
+                            <br>
+                            <br>3. 자바의 8가지 기본 자료형 : boolean, char, byte, short, int, long, float, double
+                            <br>
+                            <br>4. 식별자 없이 값 자체를 나타내는 코드를 리터럴(Literal)이라 부른다. 각 자료형에 대응하는 리터럴 표기는 코드를 참고. 예시에서 '+' 연산자가 기본 자료형
+                            각각에 대해 문자열 연결을 해줌을 볼 수 있다. 하지만 자바는 연산자 재정의를 지원해주지는 않으므로 오해하지 말아야 한다.
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Type.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 자료형 및 리터럴 표기 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("BasicConcepts/console/con2.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                            <br>
+                            <br>5. 자바는 강한 타입 검사를 하며, 이는 자바스크립트와 같이 null, '', 0 등을 false로 간주하거나 하는 일이 결코 없음을 의미한다.
+                            <br>
+                            <br>6. 참조 자료형(Reference Type)은 기본 자료형을 제외한 모든 자료형을 포함하며, 메모리의 주소를 통해 값에 접근한다. C/C++의 포인터와 같지만, 자바는
+                            포인터 연산을 지원하지는 않는다. 예시 코드는 자바의 배열에 대해 보인다. 자바의 다차원 배열은 기본적으로 Jagged Array이다.
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Type2.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 배열 &raquo;
+                            </button>
+                            <br>
+                            <br>7. 기본 자료형 변수는 정적 할당, 참조 자료형 변수는 동적 할당된다. 동적 할당된 객체들은 자동으로 GC 대상이 된다.
+                            <br>&raquo; 정적 할당 : 컴파일러가 메모리 점유를 정확하게 예측할 수 있는 (지역)변수를 생성하는 방법으로, 선언과 동시에 스택 영역에 할당되어 코드 블록이 끝나는
+                            순간 해제된다.
+                            <br>&raquo; 동적 할당 : 동적으로 할당되는 객체들은 힙 영역에 생성되며, 그 참조가 유지되는 한 프로그램 종료시까지 유지된다.
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="연산자">
+                        <th>연산자</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 다음 예시는 비트 연산자와 0 나누기를 보여준다. 정수 0으로 나누는 것은 허용되지 않지만, 실수 0.으로 나누는 것은 허용된다. 다만, 0.으로 나눈 결과를 비교할 때는 예시와 같이 Double 클래스 메서드를
+                            이용하는 것이 정확하다.
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Operator.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 연산 예시 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("BasicConcepts/console/con3.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="문장">
+                        <th>문장</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. if ~ else if ~ else : 조건식에는 boolean 값만 허용된다.
+                            <br>
+                            <br>2. switch : 정수(char 포함), String, Enum이 허용된다.
+                            <br>
+                            <br>3. for : label을 설정해 중첩된 루프들 중 어느 것이든 중지시킬 수 있다. Iterable하면 향상된 for 구문을 이용할 수 있다.
+                            <br>
+                            <br>4. while, do ~ while;
+                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 자바 Syntax &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("BasicConcepts/console/con4.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr class="con-lv-3" con-title="접근 제한자">
+                        <th>접근 제한자</th>
+                    </tr>
+                </tbody>
+                <tbody class="con-lv-2" con-title="업그레이드">
+                    <tr style="background-color: #bbb;">
+                        <th>업그레이드</th>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Java 8">
+                        <th>Java 8</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            &raquo; Java 1.8 부터 버전 표기를 싱글 넘버로 표기하기 시작.
+                            <br>&raquo; 람다 표현식 추가
+                            <br>&raquo; Pipeline과 Stream 추가
+                            <br>&raquo; 인터페이스에 Default Method 추가
+                            <br>&raquo; Type Annotation 추가
+                            <br>https://checkerframework.org/
+                            <br>* @NonNull : 컴파일러가 null이 대입되는지 확인
+                            <br>* @ReadOnly : 컴파일러가 쓰기 작업이 있는지 확인
+                            <br>* @Regex : 컴파일러가 정규표현식 검증
+                            <br>* @Untainted : 오염되지 않은(@Untainted) 값임을 명시. 또는 그러한 값만을 받아들임을 명시
+                            <br>* @Tainted : 값이 오염된(@Tainted) 가능성이 있음을 명시. 또는 오염된 값도 받아들임을 명시
+                            <br>* @m : 미터, 초 등의 단위 체크
+                            <br>&raquo; Collection API 강화
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="Java 9">
+                        <th>Java 9</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            &raquo; Java Platform Module System(JPMS) 도입
+                            <br>* 모듈 : 패키지 집합의 응집도가 충분하다면, 모듈로 그룹화될 수 있다.
+                            <br>* 일반 컴파일 단위(일반 .java 파일) : [패키지 정의] {임포트 선언} {타입(클래스, 인터페이스 등) 정의}
+                            <br>- 이름 있는 모듈에 연관되지 않는 ordinary compilation unit들은 모두 하나의 익명 모듈에 연관된다.
+                            <br>* 모듈 컴파일 단위 : {임포트 선언} 모듈 정의
+                            <br>* 모듈 정의 : {Annotation} [open] module ModuleName { {ModuleDirective} }
+                            <br>- 모듈 이름은 패키지처럼 하나 이상의 자바 식별자를 '.'으로 구분하여 나타낸다.
+                            <br>- open 한정자가 없으면 일반 모듈 : 컴파일타임과 런타임에 명시적으로 export된 패키지들에 대한 권한만 외부에 부여
+                            <br>- open 한정자가 있는 열린 모듈 : 컴파일타임엔 명시적으로 export된 것만, 런타임엔 모든 패키지에 대한 권한을 외부에 부여
+                            <br>- Reflection을 통해서도 같은 접근 권한을 얻을 수 있다.
+                            <br>* 모듈 명세 ModuleDirective :
+                            <br>requires { RequiresModifier } ModuleName; // 모듈 의존성
+                            <br>exports PackageName [to ModuleName {, ModuleName}]; // 외부에서 접근할 수 있는 패키지
+                            <br>opens PackageName [to ModuleName {, ModuleName}]; // 외부에서 접근할 수 있는 패키지
+                            <br>uses TypeName; // 사용하는 서비스
+                            <br>provides TypeName with TypeName {, TypeName}; // 제공하는 서비스
+                            <br>* RequiresModifier : transitive | static
+                            <br>- transitive : 외부에서 의존하는 모듈은 transitive 키워드가 붙은 모듈도 의존한다.
+                            <br>- static : 컴파일 타임엔 항상 의존성을 갖고, 런타임엔 선택적.
+                            <br>* java.base 모듈은 최상의 모듈로, 아무런 의존성이 없다.
+                            <br>&raquo; REPL로 JShell이 추가되었다 : 코드를 한줄씩 실행하면서 검사할 수 있다.
+                            <br>* https://docs.oracle.com/javase/9/jshell/toc.htm
+                            <br>&raquo; Collection factory method 추가 : List.of(...) 등
+                            <br>&raquo; try-with-resources 구문 변동 : final한(final 변수 or 변수 초기화 후 변경 없음) resource는 별개의 선언 없이 그대로
+                            이용할 수 있다.
+                            <br>&raquo; 타입 추론 강화로 diamond 연산자 &lt;&gt;가 익명 클래스도 지원
+                            <br>&raquo; "_"는 더 이상 유효한 식별자가 아니게 되었다.
+                            <br>&raquo; private 인터페이스 메서드 지원
+                            <button type="button" onclick="javascript:showCode('Java9/src/Updates.java', 'java');" class="btn btn-primary btn-sm">
+                                View Code : 예제 &raquo;
+                            </button>
+                            <button type="button" onclick='javascript:showCode("Java9/console/con1.txt", "text");' class="btn btn-primary btn-sm">
+                                View Console : 콘솔 &raquo;
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="container table-responsive con-lv-1" con-title="Java SE 10">
@@ -6569,8 +6792,7 @@
                             <br>3. static &lt;T&gt; Stream&lt;T&gt; ofNullable(T t)
                             <br>@SafeVarargs static &lt;T&gt; Stream&lt;T&gt; of(T... values)
                             <br>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=DoubleStream]').attr('id'));"
-                                class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=DoubleStream]').attr('id'));" class="btn btn-primary btn-sm">
                                 참고 : DoubleStream &raquo;
                             </button>
                         </td>
@@ -6674,8 +6896,7 @@
                             <br>static &lt;T&gt; Collector&lt;T, ? T&gt; reducing(T identity, BInaryOperator&lt;T&gt; op) + 2
                             오버로딩
                             <br>&raquo; reducing 설명은
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=DoubleStream]').attr('id'));"
-                                class="btn btn-primary btn-sm">
+                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=DoubleStream]').attr('id'));" class="btn btn-primary btn-sm">
                                 DoubleStream
                             </button> 참고
                             <br>
@@ -6862,7 +7083,8 @@
                     <tr>
                         <td>
                             1. Swing을 대체해 RIP(Rich Internet Application)을 개발하기 위한 GUI 라이브러리
-                            <br><br>2. 프로그램 구조
+                            <br>
+                            <br>2. 프로그램 구조
                             <br>&raquo; javafx.application.Application을 상속
                             <br>&raquo; main 메서드에서 launch 메서드 호출 → init() → start() : UI 구성 → stop()
                         </td>
@@ -6876,9 +7098,11 @@
                             <br>&raquo; 컨테이너 노드 : 다른 노드를 내부에 포함. Stage, Scene, Pane...
                             <br>&raquo; 기본 노드 : Button, Label, Checkbox...
                             <br>1.1 Layout Manager : BorderPane, FlowPane, StackPane, HBox, VBox...
-                            <br><br>2. Stage는 윈도우 창으로, 하나의 Scene을 보여준다. 하나의 Scene은 하나 이상의 Pane으로 구성된다.
+                            <br>
+                            <br>2. Stage는 윈도우 창으로, 하나의 Scene을 보여준다. 하나의 Scene은 하나 이상의 Pane으로 구성된다.
                             <br>2.1 Modal : 해당 윈도우가 종료될 때까지 부모 윈도우와 상호작용 불가. ↔ modaless
-                            <br><br>3. 그리기 : javafx.scene.shape
+                            <br>
+                            <br>3. 그리기 : javafx.scene.shape
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="이벤트">
@@ -6909,7 +7133,7 @@
                             <a role="button" class="btn btn-info btn-sm" href=""></a>
                         </td>
                     </tr>
-                    
+
                 </tbody>
             </table>
         </div>
