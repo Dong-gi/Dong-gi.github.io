@@ -10,10 +10,8 @@
 
     <script src="/source/jquery-3.2.1.min.js"></script>
     <script> 
-        $(() => {
-            $.get("/source/head.html", function(data) {
-                $("head").append(data);
-            });
+        $.get("/source/head.html", function(data) {
+            $("head").append(data);
         });
     </script>
 </head>
