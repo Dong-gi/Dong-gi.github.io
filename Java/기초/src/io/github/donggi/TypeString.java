@@ -2,15 +2,15 @@ package io.github.donggi;
 
 public class TypeString {
 
-	public static void main(String[] args) {
-		String s = "Hello World";
-		
-		s = s + 123 + false;
-		s += 1.23;
-		s += 'H';
-		s += "ello World";
+    public static void main(String[] args) {
+        String s = "Hello World";
+        
+        s = s + 123 + false;
+        s += 1.23;
+        s += 'H';
+        s += "ello World";
 
-		System.out.println(s);
-	}
+        System.out.println(s);
+    }
 
 }
