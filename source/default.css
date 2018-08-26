@@ -77,6 +77,10 @@ code th {
     overflow-y: scroll;
 }
 
+.navbar {
+    padding: 0;
+}
+
 /* Snackbar : from https://www.w3schools.com/howto/howto_js_snackbar.asp */
 
 #snackbar {
