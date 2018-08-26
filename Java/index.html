@@ -219,8 +219,7 @@
                         <td>
                             <ul>
                                 <li>접근 제한자(
-                                    <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));"
-                                        class="btn btn-primary btn-sm">
+                                    <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Modifier]').attr('id'));" class="btn btn-primary btn-sm">
                                         Modifier
                                     </button>)는 해당 코드를 접근/수정할 수 있는 영역을 제한하는 예약어다.
                                     <ul>
@@ -253,11 +252,15 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 가변 길이 매개변수 선언 : type... 배열명
-                            <br>2. 나열된 매개변수들이 하나의 배열로 넘겨질 뿐, 배열 자체를 넘길 수는 없다.
-                            <button type="button" onclick="javascript:showCode('BasicConcepts/src/VarArgs.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : Variable Arguments &raquo;
-                            </button>
+                            <ul>
+                                <li>가변 길이 매개변수 선언 : type... 배열명</li>
+                                <li>나열된 매개변수들이 하나의 배열로 넘겨지며, 배열 자체를 넘길 수 있다.</li>
+                                <li>
+                                    <button type="button" onclick="javascript:showCode('기초/src/io/github/donggi/VarArgs.java', 'java');" class="btn btn-primary btn-sm">
+                                        예시 코드 &raquo;
+                                    </button>
+                                </li>
+                            </ul>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="람다">
@@ -265,11 +268,18 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 익명 메서드 Lambda : 인터페이스의 메서드를 구현한 익명 객체를 생성한다. 메서드를 하나만 정의한 FunctionalInterface만 가능하다.
-                            <br>2. java.util.function 패키지에 유용한 FunctionalInterface들이 정의되어 있다.
-                            <br>기존의 인터페이스에 static 메서드가 추가되었다. 예) Comparator.comparing
-                            <br>3. 메서드 참조를 이용해 기정의된 메서드를 람다로 이용할 수 있다. '::' 연산자를 이용한다.
-                            <br>4. 생성자 참조 &raquo; "::new". 배열 생성자 int[]::new도 가능.
+                            <ul>
+                                <li>익명 메서드 Lambda : 인터페이스의 메서드를 구현한 익명 객체를 생성한다. 메서드를 하나만 정의한 FunctionalInterface만 가능하다.</li>
+                                <li>java.util.function 패키지에 유용한 FunctionalInterface들이 정의되어 있다.
+                                    <br>+ 기존의 인터페이스에 static 메서드가 추가되었다. 예) Comparator.comparing</li>
+                                <li>메서드 참조를 이용해 기정의된 메서드를 람다로 이용할 수 있다. '::' 연산자를 이용한다.</li>
+                                <li>생성자 참조 &raquo; "::new". 배열 생성자 int[]::new도 가능.</li>
+                                <li>
+                                    <button type="button" onclick="javascript:showCode('기초/src/io/github/donggi/Lambda.java', 'java');" class="btn btn-primary btn-sm">
+                                        예시 코드 &raquo;
+                                    </button>
+                                </li>
+                            </ul>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="스트림">
