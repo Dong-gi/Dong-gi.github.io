@@ -203,6 +203,7 @@ function closeAll() {
 var codeIDs = {};
 var codes = {};
 function showCode(fileName, lan) {
+    fileName = fileName.replace(/ /gm, '%20');
     if (codeIDs.hasOwnProperty(fileName)) {
         $("div#" + codeIDs[fileName]).modal("show");
     } else {
