@@ -588,13 +588,15 @@
                                 <li>모듈 예시 코드. 참조 : https://wiki.eclipse.org/Java9/Examples
                                     <ol>
                                         <li>먼저, 결과물의 디렉터리 구조를 보면 src 루트에 module-info.java가 존재함을 볼 수 있다.
+                                            <br>
                                             <img src="/imgs/20180827_230700.png" />
                                             <button type="button" onclick="javascript:showCode('TestModule1/src/module-info.java', 'java');" class="btn btn-primary btn-sm">
                                                 TestModule1/src/module-info.java &raquo;
                                             </button>
                                         </li>
                                         <li>second라는 이름의 모듈이 필요함을 정의했고, second 모듈을 찾기 위해서 TestModule2 프로젝트를 참조하도록 설정해야 한다.
-                                            <img src="20180827_230710.png" />
+                                            <br>
+                                            <img src="/imgs/20180827_230710.png" />
                                         </li>
                                         <li>second 모듈에서는 hello 패키지를 외부에서 사용할 수 있게 정의.
                                             <button type="button" onclick="javascript:showCode('TestModule2/src/module-info.java', 'java');" class="btn btn-primary btn-sm">
@@ -638,8 +640,7 @@
                                         <li>강화된 for 루프 인덱스에 이용 가능</li>
                                         <li>기존 for 루프 인덱스에 이용 가능</li>
                                         <li>try-with-resources 변수에 이용 가능
-                                            <button type="button" onclick="javascript:showCode('기초/src/io/github/donggi/TryWithResources.java', 'java');"
-                                                class="btn btn-primary btn-sm">
+                                            <button type="button" onclick="javascript:showCode('기초/src/io/github/donggi/TryWithResources.java', 'java');" class="btn btn-primary btn-sm">
                                                 try-with-resource 예시 코드 &raquo;
                                             </button>
                                         </li>
@@ -666,10 +667,17 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 데이터의 출발지나 도착지를 닫을 수 있으면 Closeable하다.
-                            <br>2. void close() throws IOException
-                            <br>&raquo; 스트림 및 이와 관련된 시스템 자원을 해제한다. 이미 호출되었다면 아무 일도 하지 않는다.
-                            <br>&raquo; close() 실패했을 때, 예외를 던지는 대신 사용하던 자원을 모두 포기하고 Closeable 객체 내부적으로 '닫혔다(closed)'고 마크하길 권장한다.
+                            <ol>
+                                <li>데이터의 출발지나 도착지를 닫을 수 있으면 Closeable하다.</li>
+                                <li>void close() throws IOException
+                                    <ul>
+                                        <li>스트림 및 이와 관련된 시스템 자원을 해제한다. 이미 호출되었다면 아무 일도 하지 않는다.</li>
+                                        <li>close() 실패했을 때, 예외를 던지는 대신 사용하던 자원을 모두 포기하고 Closeable 객체 내부적으로 '닫혔다(closed)'고 마크하길
+                                            권장한다.
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="DataInput">
@@ -677,41 +685,38 @@
                     </tr>
                     <tr>
                         <td>
-                            1. binary stream으로부터 바이트들을 읽고, 또 이를 자바 기본 타입 또는 String으로 만들어 반환하는 기능을 제공한다.
-                            <br>2. Modified UTF-8 : DataInput과 DataOutput 인터페이스는 수정된 UTF-8을 이용한다.
-                            <br>&raquo; '\u0001' ~ '\u007F'는 1바이트(0???????)로 표현한다.
-                            <br>&raquo; null('\u0000'), '\u0080' ~ '\u07FF'는 2바이트(110????? 10??????)로 표현한다.
-                            <br>&raquo; '\u0800' ~ '\uFFFF'는 3바이트(1110??? 10?????? 10??????)로 표현한다.
-                            <br>3. void readFully(byte[] b) throws IOException
-                            <br>&raquo; b.length만큼의 바이트를 읽어와 b에 저장한다. b가 null이거나, b를 다 채우지 못한 상태에서 스트림 끝(EOF)을 만나면 예외를 던진다.
-                            <br>4. void readFully(byte[] b, int off, int len) throws IOException
-                            <br>&raquo; len만큼의 바이트를 읽어와 b의 off번째 바이트부터 저장한다.
-                            <br>5. int skipBytes(int n) throws IOException
-                            <br>&raquo; 입력 스트림의 n바이트를 무시한다. 실제로 무시한 바이트 길이가 반환된다.
-                            <br>6. boolean readBoolean() throws IOException
-                            <br>&raquo; 1바이트를 읽어 0이면 false, 그 외엔 true 반환
-                            <br>7. byte readByte() throws IOException : 부호 있다고 간주
-                            <br>8. int readUnsignedByte() throws IOException : 0~255
-                            <br>9. short readShort() throws IOException : (short)((a &lt;&lt; 8) | (b &amp; 0xff))
-                            <br>10. int readUnsignedShort() throws IOException : (((a &amp; 0xff) &lt;&lt; 8) | (b &amp; 0xff))
-                            <br>11. char readChar() throws IOException : (char)((a &lt;&lt; 8) | (b &amp; 0xff))
-                            <br>12. int readInt() throws IOException
-                            <br>13. long readLong() throws IOException
-                            <br>14. float readFloat() throws IOException
-                            <br>&raquo; readInt()한 비트 그대로 float으로 변환하여 반환
-                            <br>15. double readDouble() throws IOException
-                            <br>16. String readLine() throws IOException
-                            <br>&raquo; 줄의 끝이나 파일 끝을 만나기까지의 문자열을 반환한다.
-                            <br>&raquo; 각 바이트들을 0 패딩하여 char로 변환하므로, 유니코드를 읽기는 부적합하다.
-                            <br>&raquo; 아무것도 읽지 못한 경우, 빈 문자열이 아닌 null이 반환된다.
-                            <br>17. String readUTF() throws IOException
-                            <br>&raquo; 먼저 readUnsignedShort()와 같은 방법으로 2개 바이트를 읽어와 UTF 길이를 구한다.
-                            <br>&raquo; 구한 길이만큼의 바이트를 읽으면서 상기한 Modified UTF-8에 맞춰 String을 만든다.
-                            <br>&raquo; 길이만큼의 바이트를 다 읽기 전에 EOF를 만나면 예외를 던진다.
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=DataInputStream]').attr('id'));"
-                                class="btn btn-primary btn-sm">
-                                Goto DataInputStream &raquo;
-                            </button>
+                            <ol>
+                                <li>binary stream으로부터 바이트들을 읽고, 또 이를 자바 기본 타입 또는 String으로 만들어 반환하는 기능을 제공한다.</li>
+                                <li>Modified UTF-8 : DataInput과 DataOutput 인터페이스는 수정된 UTF-8을 이용한다.
+                                    <ul>
+                                        <li>'\u0001' ~ '\u007F'는 1바이트(0???????)로 표현한다.</li>
+                                        <li>null('\u0000'), '\u0080' ~ '\u07FF'는 2바이트(110????? 10??????)로 표현한다.</li>
+                                        <li>'\u0800' ~ '\uFFFF'는 3바이트(1110??? 10?????? 10??????)로 표현한다.</li>
+                                    </ul>
+                                </li>
+                                <li>void readFully(byte[] b) &raquo; b.length만큼의 바이트를 읽어와 b에 저장한다.</li>
+                                <li>void readFully(byte[] b, int off, int len) &raquo; len만큼의 바이트를 읽어와 b의 off번째 바이트부터 저장한다.</li>
+                                <li>int skipBytes(int n) &raquo; 입력 스트림의 n바이트를 무시한다. 실제로 무시한 바이트 길이가 반환된다.</li>
+                                <li>boolean readBoolean() &raquo; 1바이트를 읽어 0이면 false, 그 외엔 true 반환</li>
+                                <li>byte readByte(), int readUnsignedByte(), ~ , double readDouble()
+                                    <br>&raquo; readShort() : (short)((a &lt;&lt; 8) | (b &amp; 0xff))
+                                    <br>&raquo; readFloat() : readInt()한 비트 그대로 float으로 변환하여 반환
+                                </li>
+                                <li>String readLine()
+                                    <ul>
+                                        <li>줄의 끝이나 파일 끝을 만나기까지의 문자열을 반환한다.</li>
+                                        <li>각 바이트들을 0 패딩하여 char로 변환하므로, 유니코드를 읽기는 부적합하다.</li>
+                                        <li>아무것도 읽지 못한 경우, 빈 문자열이 아닌 null이 반환된다.</li>
+                                    </ul>
+                                </li>
+                                <li>String readUTF()
+                                    <ul>
+                                        <li>먼저 readUnsignedShort()와 같은 방법으로 2개 바이트를 읽어와 UTF 길이를 구한다.</li>
+                                        <li>구한 길이만큼의 바이트를 읽으면서 상기한 Modified UTF-8에 맞춰 String을 만든다.</li>
+                                        <li>길이만큼의 바이트를 다 읽기 전에 EOF를 만나면 예외를 던진다.</li>
+                                    </ul>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="DataOutput">
@@ -719,29 +724,19 @@
                     </tr>
                     <tr>
                         <td>
-                            1. void write(int b) throws IOException
-                            <br>&raquo; 하위 8개 비트만 스트림에 쓴다. 나머지는 무시한다.
-                            <br>2. void write(byte[] b) throws IOException
-                            <br>3. void write(byte[] b, int off, int len) throws IOException
-                            <br>4. void writeBoolean(boolean v) throws IOException
-                            <br>&raquo; true면 (byte)1, false면 (byte)0을 쓴다.
-                            <br>5. void writeByte(int v) throws IOException
-                            <br>&raquo; write(int b)와 동일. 다만 DataInput::readByte와 짝꿍으로 존재.
-                            <br>6. void writeShort(int v) throws IOException
-                            <br>&raquo; 다음 순으로 2개 바이트를 쓴다. (byte)(0xff &amp; (v &gt;&gt; 8)), (byte)(0xff &amp; v)
-                            <br>7. void writeChar(int v) throws IOException
-                            <br>&raquo; writeShort(int v)와 동일
-                            <br>8. void writeInt(int v) throws IOException
-                            <br>9. void writeLong(long v) throws IOException
-                            <br>10. void writeFloat(float v) throws IOException
-                            <br>&raquo; float 비트 그대로 int로 변환하여 저장
-                            <br>11. void writeDouble(double v) throws IOException
-                            <br>12. void writeBytes(String s) throws IOException
-                            <br>&raquo; s의 각 글자의 하위 8개 비트만 저장한다.
-                            <br>13. void writeChars(String s) throws IOException
-                            <br>&raquo; s의 각 글자를 저장.
-                            <br>14. void writeUTF(String s) throws IOException
-                            <br>&raquo; Modified UTF-8을 이용하여 저장한다. 총 길이 정보를 2바이트로 먼저 기록한다.
+                            <ol>
+                                <li>void write(int b) &raquo; 하위 8개 비트만 스트림에 쓴다. 나머지는 무시한다.</li>
+                                <li>void write(byte[] b), write(byte[] b, int off, int len)</li>
+                                <li>void writeBoolean(boolean v) &raquo; true면 (byte)1, false면 (byte)0.</li>
+                                <li>void writeByte(int v), ~, void writeDouble(double v)
+                                    <br>&raquo; writeShort(int v) : 다음 순으로 2개 바이트를 쓴다. (byte)(0xff &amp; (v &gt;&gt; 8)), (byte)(0xff
+                                    &amp; v)
+                                    <br>&raquo; writeFloat(float v) : float 비트 그대로 int로 변환하여 저장
+                                </li>
+                                <li>void writeBytes(String s) &raquo; s의 각 글자의 하위 8개 비트만 저장한다.</li>
+                                <li>void writeChars(String s) &raquo; s의 각 글자를 저장.</li>
+                                <li>void writeUTF(String s) &raquo; Modified UTF-8을 이용하여 저장한다. 총 길이 정보를 2바이트로 먼저 기록한다.</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Externalizable">
@@ -749,17 +744,16 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 객체 직렬화를 직접 구현하고자 할 때 이를 구체화한다. 객체 직렬화는 빈 객체를 만든 뒤 각 속성의 값을 쓰므로 기본 생성자가 필요하다.
-                            <br>2. void writeExternal(ObjectOutput out) throws IOException
-                            <br>&raquo; 객체를 out을 통해 저장한다.
-                            <br>3. void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
-                            <br>&raquo; out을 통해 객체를 복구한다.
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/ExternalizableExample.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
+                            <ol>
+                                <li>객체 직렬화를 직접 구현하고자 할 때 이를 구체화한다. 객체 직렬화는 빈 객체를 만든 뒤 각 속성의 값을 쓰므로 기본 생성자가 필요하다.</li>
+                                <li>void writeExternal(ObjectOutput out) &raquo; 객체를 out을 통해 저장한다.</li>
+                                <li>void readExternal(ObjectInput in) &raquo; in을 통해 객체를 복구한다.</li>
+                                <li>
+                                    <button type="button" onclick="javascript:showCode('JavaSE 라이브러리/src/io/ExternalizableExample.java', 'java');" class="btn btn-primary btn-sm">
+                                        예시 코드 &raquo;
+                                    </button>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="FileFilter">
@@ -767,14 +761,15 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 파일명 필터링에 사용되며 File::listFiles의 매개변수로 객체가 넘겨진다.
-                            <br>2. boolean accept(File pathname)
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/FileFilterExample.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con2.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
+                            <ol>
+                                <li>파일명 필터링에 사용되며 File::listFiles의 매개변수로 객체가 넘겨진다.</li>
+                                <li>boolean accept(File pathname)</li>
+                                <li>
+                                    <button type="button" onclick="javascript:showCode('JavaSE 라이브러리/src/io/FileFilterExample.java', 'java');" class="btn btn-primary btn-sm">
+                                        예시 코드 &raquo;
+                                    </button>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="FilenameFilter">
@@ -782,14 +777,16 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 특정 디렉터리에서의 파일명 필터링에 사용되며 FileDialog::setFilenameFilter, File::list, File::listFiles의 매개변수로 객체가 넘겨진다.
-                            <br>2. boolean accept(File dir, String name)
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/FilenameFilterExample.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con3.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
+                            <ol>
+                                <li>특정 디렉터리에서의 파일명 필터링에 사용되며 FileDialog::setFilenameFilter, File::list, File::listFiles의 매개변수로
+                                    객체가 넘겨진다.</li>
+                                <li>boolean accept(File dir, String name)</li>
+                                <li>
+                                    <button type="button" onclick="javascript:showCode('JavaSE 라이브러리/src/io/FilenameFilterExample.java', 'java');" class="btn btn-primary btn-sm">
+                                        예시 코드 &raquo;
+                                    </button>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="ObjectInput">
@@ -797,44 +794,10 @@
                     </tr>
                     <tr>
                         <td>
-                            1. DataInput을 통해 기본 자료형을 읽어오고, 추가적으로 객체를 읽어오는 작업을 지원한다.
-                            <br>2. Object readObject() throws ClassNotFoundException, IOException
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Serializable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Serializable &raquo;
-                            </button>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="ObjectInputFilter">
-                        <th>@FunctionalInterface interface ObjectInputFilter Since 9</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1. 역직렬화할 때, 클래스, 배열 길이, 그래프 깊이, 바이트 길이 등을 필터링한다. 이는 ALLOWED, REJECTED 등의 상태(enum)로 반환된다.
-                            <br>&raquo; 개별 ObjectInputStream에 대해 필터 설정 : setObjectInputFilter(), 커스텀 필터를 이용할 경우 전체 필터가 설정되었는지
-                            체크할 필요가 있다.
-                            <br>&raquo; 전체 ObjectInputStream에 대해 필터 설정 : Config.setSerialFilter()
-                            <br>
-
-                            <b>2. static enum ObjectInputFilter.Status Since 9</b>
-                            <br>&raquo; ALLOWED, REJECTED, UNDECIDED
-                            <br>
-
-                            <b>3. static final class ObjectInputFilter.Config Since 9</b>
-                            <br>&raquo; static ObjectInputFilter getSerialFilter()
-                            <br>&raquo; static void setSerialFilter(ObjectInputFilter filter)
-                            <br>&raquo; static ObjectInputFilter createFilter(String pattern)
-                            <br>패턴은 ';'으로 분리하며, 공백도 패턴의 일부로 간주한다.
-                            <a role="button" class="btn btn-info btn-sm" href="https://docs.oracle.com/javase/9/docs/api/java/io/ObjectInputFilter.Config.html#createFilter-java.lang.String-">자세히</a>
-                            <br>
-
-                            <b>4. static interface ObjectInputFilter.FilterInfo Since 9</b>
-                            <br>&raquo; 역직렬화하는 객체 정보에 대한 접근을 제공한다.
-                            <a role="button" class="btn btn-info btn-sm" href="https://docs.oracle.com/javase/9/docs/api/java/io/ObjectInputFilter.FilterInfo.html">자세히</a>
-                            <br>5. OjbectInputFilter.Status checkInput(ObjectInputFilter.FilterInfo filterInfo)
-                            <br>&raquo; 필터링을 수행한다.
+                            <ol>
+                                <li>DataInput을 통해 기본 자료형을 읽어오고, 추가적으로 객체를 읽어오는 작업을 지원한다.</li>
+                                <li>Object readObject()</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="ObjectOutput">
@@ -842,14 +805,10 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 객체 쓰기 작업을 지원한다.
-                            <br>2. close(), flush(), writeObject(Object obj) 등
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Externalizable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Externalizable &raquo;
-                            </button>
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Serializable]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto Serializable &raquo;
-                            </button>
+                            <ol>
+                                <li>객체 쓰기 작업을 지원한다.</li>
+                                <li>close(), flush(), writeObject(Object obj) 등</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Serializable">
@@ -857,25 +816,26 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 직렬화와 역질렬화를 지원하는 마커 인터페이스. ObjectInputStream, ObjectOutputStream의 메서드들을 이용해 알아서 저장/복구한다.
-                            <br>&raquo; 직렬화하지 않을 멤버는 transient 키워드로 표시한다.
-                            <br>2. 직접 구현하고 싶다면 Externalizable 인터페이스를 구체화하거나, 다음의 메서드들을 작성한다.
-                            <br>&raquo; private void writeObject(java.io.ObjectOutputStream out) throws IOException
-                            <br>&raquo; private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
-                            <br>&raquo; private void readObjectNoData() throws ObjectStreamException : 객체들의 버전이 다르거나, 기타의 이유로
-                            객체를 초기화할 필요가 있는 경우 사용
-                            <br>3. 대체 객체를 이용해 저장해야 하는 경우 다음의 메서드를 구현한다.
-                            <br>ANY-ACCESS-MODIFIER Object writeReplace() throws ObjectStreamException
-                            <br>4. 대체 객체를 이용해 복구할 경우 다음의 메서드를 구현한다.
-                            <br>ANY-ACCESS-MODIFIER Object readResolve() throws ObjectStreamException -0[
-                            <br>5. 클래스 버전은 다음과 같은 상수 속성을 통해 명시할 수 있다. 정의되지 않은 경우 기본값을 사용하지만, 반드시 이를 명시할 것을 권장하고 있다.
-                            <br>ANY-ACCESS-MODIFIER static final long serialVersionUID = (version number)L;
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/SerializableExample.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
+                            <ol>
+                                <li>직렬화와 역질렬화를 지원하는 마커 인터페이스. ObjectInputStream, ObjectOutputStream의 메서드들을 이용해 알아서 저장/복구한다.</li>
+                                <li>직렬화하지 않을 멤버는 transient 키워드로 표시한다.</li>
+                                <li>직접 구현하고 싶다면 Externalizable 인터페이스를 구체화하거나, 다음의 메서드들을 작성한다.
+                                    <ul>
+                                        <li>private void writeObject(java.io.ObjectOutputStream out)</li>
+                                        <li>private void readObject(java.io.ObjectInputStream in)</li>
+                                        <li>private void readObjectNoData() : 객체들의 버전이 다르거나, 기타 이유로 객체를 초기화할 필요가 있는 경우 사용</li>
+                                    </ul>
+                                </li>
+                                <li>대체 객체를 이용해 저장 : ANY-ACCESS-MODIFIER Object writeReplace()</li>
+                                <li>대체 객체를 이용해 복구 : ANY-ACCESS-MODIFIER Object readResolve()</li>
+                                <li>클래스 버전은 다음과 같은 상수 속성을 통해 명시할 수 있다. 정의되지 않은 경우 기본값을 사용하지만, 반드시 이를 명시할 것을 권장하고 있다.
+                                    <br>ANY-ACCESS-MODIFIER static final long serialVersionUID = (version number)L;</li>
+                                <li>
+                                    <button type="button" onclick="javascript:showCode('JavaSE 라이브러리/src/io/SerializableExample.java', 'java');" class="btn btn-primary btn-sm">
+                                        View Code : 예제 &raquo;
+                                    </button>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="InputStream">
@@ -883,34 +843,33 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 바이트 단위 읽기에 대한 최상위 추상 클래스
-                            <br>2. abstract int read() throws IOException
-                            <br>&raquo; 다음 바이트를 읽고 int로 반환한다. 스트림 끝인 경우 -1을 반환한다.
-                            <br>&raquo; 스트림이 끝나거나, 예외가 발생하거나, 읽을 데이터가 준비될 때까지 블록한다.
-                            <br>3. int read(byte[] b) throws IOException
-                            <br>4. int read(byte[] b, int off, int len) throws IOException
-                            <br>&raquo; 실제로 읽은 바이트 수를 반환한다. 스트림 끝인 경우 -1을 반환한다. 마찬가지로 실행을 블록한다.
-                            <br>5. byte[] readAllBytes() throws IOException Since 9
-                            <br>6. int readNBytes(byte[] b, int off, int len) throws IOException Since 9
-                            <br>&raquo; 실제로 읽은 바이트 수를 반환한다. len바이트를 모두 읽기 전에 스트림 끝을 만난 경우, 다음 호출부터 0을 반환한다.
-                            <br>&raquo; 비동기적으로 스트림이 닫히거나, 인터럽트가 발생하는 경우에 대해 대처하지 않는다.
-                            <br>
-                            <mark>2018.02.14 byte[] readNBytes(int n)이 맞지 않나...?</mark>
-                            <br>7. long skip(long n) throws IOException
-                            <br>&raquo; 실제로 건너뛴 바이트 수를 반환. 음수 매개변수에 대해 0을 반환한다. 서브클래스들의 구현은 이와 다를 수 있다.
-                            <br>8. int available() throws IOException
-                            <br>&raquo; 막힘 없이 한 번에 읽어올 수 있는 바이트 수 예상값을 반환.
-                            <br>&raquo; InputStream 구현에 따라 전체 바이트 수를 반환하기도, 그렇지 않기도 하다.
-                            <br>&raquo; InputStream 자체는 항상 0을 반환하며, 서브클래스에서 재정의해야 한다.
-                            <br>9. boolean markSupported() : mark, reset 메서드를 지원하는지 여부 반환. 기본 false
-                            <br>void mark(int readlimit) : 현재 위치 마킹
-                            <br>void reset() throws IOException : 마지막 마킹 위치로 이동
-                            <br>10. long transferTo(OutputStream out) throws IOException
-                            <br>&raquo; 입력 스트림의 모든 바이트를 읽어들여 out에 쓴다. 총 전송 바이트 수를 반환하며, 스트림을 닫는 작업을 하진 않는다.
-                            <br>&raquo; 작업이 끝날 때까지 스레드가 블록되며, 스트림이 비동기적으로 닫히거나, 인터럽트가 발생하는 경우에 대해 대처하지 않는다.
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/InputStreamExample.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
+                            <ol>
+                                <li>바이트 단위 읽기에 대한 최상위 추상 클래스</li>
+                                <li>abstract int read()
+                                    <br>&raquo; 다음 바이트를 읽고 int로 반환한다. 스트림 끝인 경우 -1을 반환한다.
+                                    <br>&raquo; 스트림이 끝나거나, 예외가 발생하거나, 읽을 데이터가 준비될 때까지 블록한다.</li>
+                                <li>int read(byte[] b), read(byte[] b, int off, int len)
+                                    <br>&raquo; 실제로 읽은 바이트 수를 반환한다. 스트림 끝인 경우 -1을 반환한다. 실행을 블록한다.</li>
+                                <li>byte[] readAllBytes() Since 9</li>
+                                <li>long skip(long n)
+                                    <br>&raquo; 실제로 건너뛴 바이트 수를 반환. 음수 매개변수에 대해 0을 반환한다. 서브클래스들의 구현은 이와 다를 수 있다.</li>
+                                <li>int available()
+                                    <br>&raquo; 막힘 없이 한 번에 읽어올 수 있는 바이트 수 예상값을 반환.
+                                    <br>&raquo; InputStream 구현에 따라 전체 바이트 수를 반환하기도, 그렇지 않기도 하다.
+                                    <br>&raquo; InputStream 자체는 항상 0을 반환하며, 서브클래스에서 재정의해야 한다.</li>
+                                <li>boolean markSupported() : mark, reset 메서드를 지원하는지 여부 반환. 기본 false
+                                    <br>&raquo; void mark(int readlimit) : 현재 위치 마킹
+                                    <br>&raquo; void reset() : 마지막 마킹 위치로 이동</li>
+                                <li>long transferTo(OutputStream out) Since 9
+                                    <br>&raquo; 입력 스트림의 모든 바이트를 읽어들여 out에 쓴다. 총 전송 바이트 수를 반환하며, 스트림을 닫는 작업을 하진 않는다.
+                                    <br>&raquo; 작업이 끝날 때까지 스레드가 블록되며, 스트림이 비동기적으로 닫히거나, 인터럽트가 발생하는 경우에 대해 대처하지 않는다.
+                                </li>
+                                <li>
+                                    <button type="button" onclick="javascript:showCode('JavaSE 라이브러리/src/io/InputStreamExample.java', 'java');" class="btn btn-primary btn-sm">
+                                        예시 코드 &raquo;
+                                    </button>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="OutputStream">
@@ -918,12 +877,11 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 바이트 단위 쓰기에 대한 최상위 추상 클래스
-                            <br>2. abstract void write(int b) throws IOException
-                            <br>&raquo; 하위 8개 비트만 쓰고 나머지는 무시한다.
-                            <br>3. void write(byte[] b) throws IOException
-                            <br>4. void write(byte[] b, int off, int len) thows IOException
-                            <br>&raquo; 길이만큼의 바이트를 쓴다.
+                            <ol>
+                                <li>바이트 단위 쓰기에 대한 최상위 추상 클래스</li>
+                                <li>abstract void write(int b) &raquo; 하위 8개 비트만 쓰고 나머지는 무시한다.</li>
+                                <li>void write(byte[] b), write(byte[] b, int off, int len)</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Reader">
@@ -931,20 +889,14 @@
                     </tr>
                     <tr>
                         <td>
-                            1. char 단위 읽기에 대한 최상위 추상 클래스
-                            <br>2. 서브클래스들은 read(char[], int, int)와 close()만 구현해도 된다.
-                            <br>3. protected Object lock : 동기화를 위한 객체
-                            <br>4. protected Reader(), protected Readr(Object lock)
-                            <br>5. int read(CharBuffer target) throws IOException Since 1.5
-                            <br>&raquo; 글자들을 target에 쓰고, 글자 수를 반환한다. 소스의 끝이라면 -1을 반환한다.
-                            <br>6. int read() throws IOException
-                            <br>&raquo; char 하나를 읽고 int로 반환한다. 스트림의 끝이라면 -1을 반환한다.
-                            <br>7. int read(char[] cbuf) throws IOException
-                            <br>abstract int read(char[] cbuf, int off, int len) throws IOException
-                            <br>8. long skip(long n) throws IOException
-                            <br>&raquo; 실제로 뛰어넘은 글자 수─바이트 수가 아니라─를 반환한다.
-                            <br>9. boolean ready() throws IOException
-                            <br>&raquo; 다음 read()가 블록되지 않음을 보장하면 true, 보장하지 못하면 false
+                            <ol>
+                                <li>char 단위 읽기에 대한 최상위 추상 클래스</li>
+                                <li>서브클래스들은 read(char[], int, int)와 close()만 구현해도 된다.</li>
+                                <li>int read() &raquo; char 하나를 읽고 int로 반환. 스트림의 끝이라면 -1을 반환한다.</li>
+                                <li>int read(char[] cbuf), abstract int read(char[] cbuf, int off, int len)</li>
+                                <li>long skip(long n) &raquo; 실제로 건너 뛴 글자 수(바이트 수x) 반환</li>
+                                <li>boolean ready() &raquo; 다음 read()가 블록되지 않음을 보장하면 true, 보장하지 못하면 false</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Writer">
@@ -952,20 +904,12 @@
                     </tr>
                     <tr>
                         <td>
-                            1. char 단위 쓰기에 대한 취상위 추상 클래스
-                            <br>2. protected Object lock : 동기화를 위한 객체
-                            <br>3. protected Writer(), protected Writer(Object lock)
-                            <br>4. void write(int c) throws IOException
-                            <br>&raquo; 하위 16비트만 쓴고 나머지는 무시한다.
-                            <br>5. void write(char[] cbuf) throws IOException
-                            <br>abstract void write(char[] cbuf, int off, int len) throws IOException
-                            <br>void write(String str) throws IOException
-                            <br>void write(String str, int off, int len) throws IOException
-                            <br>6. Writer append(CharSequence csq) throws IOException Since 1.5
-                            <br>Writer append(CharSequence csq, int start, int end) throws IOException Since 1.5
-                            <br>&raquo; 연결적인 쓰기를 지원하기 위한 메서드로, out.write(csq.toString())을 호출하는 것과 같다. toString 메서드에 따라 전체 내용을
-                            다 쓰지 못할 수도 있다.
-                            <br>Writer append(char c) throws IOException
+                            <ol>
+                                <li>char 단위 쓰기에 대한 취상위 추상 클래스</li>
+                                <li>void write(int c) &raquo; 하위 16비트만 쓴고 나머지는 무시한다.</li>
+                                <li>void write(char[] cbuf), abstract void write(char[] cbuf, int off, int len)</li>
+                                <li>void write(String str), write(String str, int off, int len)</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="InputStreamReader">
@@ -973,18 +917,19 @@
                     </tr>
                     <tr>
                         <td>
-                            1. InputStream에 대해 Reader 작업을 지원해주는 bridge 클래스.
-                            <br>2. public InputStreamReader(InputStream in)
-                            <br>public InputStreamReader(InputStream in, String charsetName) throws UnsupportedEncodingException
-                            <br>public InputStreamReader(InputStream in, Charset cs) Since 1.4
-                            <br>public InputStreamReader(InputStream in, CharsetDecoder dec) Since 1.4
-                            <br>3. String getEncoding()
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/BufferedReaderExample.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
+                            <ol>
+                                <li>InputStream에 대해 Reader 작업을 지원해주는 bridge 클래스.</li>
+                                <li>public InputStreamReader(InputStream in)</li>
+                                <li>public InputStreamReader(InputStream in, String charsetName)</li>
+                                <li>public InputStreamReader(InputStream in, Charset cs) Since 1.4</li>
+                                <li>public InputStreamReader(InputStream in, CharsetDecoder dec) Since 1.4</li>
+                                <li>String getEncoding()</li>
+                                <li>
+                                    <button type="button" onclick="javascript:showCode('JavaSE 라이브러리/src/io/BufferedReaderExample.java', 'java');" class="btn btn-primary btn-sm">
+                                        예시 코드 &raquo;
+                                    </button>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="OutputStreamWriter">
@@ -992,12 +937,14 @@
                     </tr>
                     <tr>
                         <td>
-                            1. OutputStream에 Writer 작업을 지원해주는 bridge 클래스.
-                            <br>2. public OutputStreamWriter(OutputStream out, String charsetName) throws UnsupportedEncodingException
-                            <br>public OutputStreamWriter9OutputStream out)
-                            <br>public OutputStreamWriter9OutputStream out, Charset cs) Since 1.4
-                            <br>public OutputStreamWriter9OutputStream out, CharsetEncoder enc) Since 1.4
-                            <br>3. String getEncoding()
+                            <ol>
+                                <li>OutputStream에 Writer 작업을 지원해주는 bridge 클래스.</li>
+                                <li>public OutputStreamWriter(OutputStream out, String charsetName)</li>
+                                <li>public OutputStreamWriter9OutputStream out)</li>
+                                <li>public OutputStreamWriter9OutputStream out, Charset cs) Since 1.4</li>
+                                <li>public OutputStreamWriter9OutputStream out, CharsetEncoder enc) Since 1.4</li>
+                                <li>String getEncoding()</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="FilterInputStream">
@@ -1005,8 +952,7 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 다른 입력 스트림에 대한 필터링을 지원하는 장식자 정의 클래스로, 추가적인 특별한 메서드는 없다.
-                            <br>2. protected FilterInputStream(InputStream in)
+                            1. 다른 입력 스트림에 대한 필터 장식자 정의 클래스로, 추가적인 메서드는 없다.
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="FilterOutputStream">
@@ -1014,8 +960,7 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 다른 출력 스트림에 대한 필터링을 지원하는 장식자 정의 클래스로, 추가적인 특별한 메서드는 없다.
-                            <br>2. public FilterOutputStream(OutputStream out)
+                            1. 다른 출력 스트림에 대한 필터 장식자 정의 클래스로, 추가적인 메서드는 없다.
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="FilterReader">
@@ -1023,8 +968,7 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 다른 Reader에 대한 필터링을 지원하는 장식자 정의 추상 클래스로, 추가적인 특별한 메서드는 없다.
-                            <br>2. protected FilterReader(Reader in)
+                            1. 다른 Reader에 대한 필터 장식자 정의 추상 클래스로, 추가적인 메서드는 없다.
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="FilterWriter">
@@ -1032,8 +976,7 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 다른 Writer에 대한 필터링을 지원하는 장식자 정의 추상 클래스로, 추가적인 특별한 메서드는 없다.
-                            <br>2. protected FilterWriter(Writer out)
+                            1. 다른 Writer에 대한 필터 장식자 정의 추상 클래스로, 추가적인 메서드는 없다.
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="ByteArrayInputStream">
@@ -1041,9 +984,11 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 내부 버퍼 byte[] buf에 대한 읽기 연산을 지원하는 InputStream
-                            <br>2. public ByteArrayInputStream(byte[] buf)
-                            <br>public ByteArrayInputStream(byte[] buf, int offset, int length)
+                            <ol>
+                                <li>내부 버퍼 byte[] buf에 대한 읽기 연산을 지원하는 InputStream</li>
+                                <li>public ByteArrayInputStream(byte[] buf)</li>
+                                <li>public ByteArrayInputStream(byte[] buf, int offset, int length)</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="ByteArrayOutputStream">
@@ -1051,16 +996,15 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 내부 버퍼 byte[] buf에 대해 쓰기 연산을 지원하는 OutputStream. 버퍼 크기는 자동으로 확장된다.
-                            <br>2. public ByteArrayOutputStream()
-                            <br>public ByteArrayOutputStream(int size)
-                            <br>3. void writeTo(OutputStream out) throws IOException
-                            <br>&raquo; 버퍼에 담긴 내용을 out에 모두 쓴다. out.write(buf, 0, count)
-                            <br>4. byte[] toByteArray()
-                            <br>&raquo; 버퍼의 복사본을 반환한다.
-                            <br>5. int size()
-                            <br>6. String toString() Since 1.1
-                            <br>Strin toString(String charsetName) throws UnsupportedEncodingException Since 1.1
+                            <ol>
+                                <li>내부 버퍼 byte[] buf에 대해 쓰기 연산을 지원하는 OutputStream. 버퍼 크기는 자동으로 확장된다.</li>
+                                <li>public ByteArrayOutputStream()</li>
+                                <li>public ByteArrayOutputStream(int size)</li>
+                                <li>void writeTo(OutputStream out) &raquo; 버퍼를 out에 모두 쓴다. out.write(buf, 0, count)</li>
+                                <li>byte[] toByteArray() &raquo; 버퍼의 복사본 반환.</li>
+                                <li>int size()</li>
+                                <li>String toString(), toString(String charsetName) Since 1.1</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="CharArrayReader">
@@ -1068,9 +1012,11 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 내부 버퍼 char[] buf에 대한 읽기 연산을 지원하는 Reader
-                            <br>2. public CharArrayReader(char[] buf)
-                            <br>public CharArrayReader(char[] buf, int offset, int length)
+                            <ol>
+                                <li>내부 버퍼 char[] buf에 대한 읽기 연산을 지원하는 Reader</li>
+                                <li>public CharArrayReader(char[] buf)</li>
+                                <li>public CharArrayReader(char[] buf, int offset, int length)</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="CharArrayWriter">
@@ -1078,14 +1024,15 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 내부 버퍼 char[] buf에 대해 쓰기 연산을 지원하는 Writer. 버퍼 크기는 자동으로 확장된다.
-                            <br>2. public CharArrayWriter()
-                            <br>public CharArrayWriter(int initialSize)
-                            <br>3. void writeTo(Writer out) throws IOException
-                            <br>&raquo; out에 버퍼의 모든 내용을 쓴다.
-                            <br>4. char[] toCharArray()
-                            <br>5. int size()
-                            <br>6. String toString()
+                            <ol>
+                                <li>내부 버퍼 char[] buf에 대해 쓰기 연산을 지원하는 Writer. 버퍼 크기는 자동으로 확장된다.</li>
+                                <li>public CharArrayWriter()</li>
+                                <li>public CharArrayWriter(int initialSize)</li>
+                                <li>void writeTo(Writer out) &raquo; out에 버퍼의 모든 내용을 쓴다.</li>
+                                <li>char[] toCharArray()</li>
+                                <li>int size()</li>
+                                <li>String toString()</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="StringReader">
@@ -1093,8 +1040,10 @@
                     </tr>
                     <tr>
                         <td>
-                            1. String에 대해 읽기 연산을 수행하는 Reader.
-                            <br>2. public StringReader(String s)
+                            <ol>
+                                <li>String에 대해 읽기 연산을 수행하는 Reader.</li>
+                                <li>public StringReader(String s)</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="StringWriter">
@@ -1102,10 +1051,12 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 내부 StringBuffer에 쓰기 연산을 지원하는 Writer.
-                            <br>2. public StringWriter()
-                            <br>public StringWriter(int initialSize)
-                            <br>3. StringBuffer getBuffer()
+                            <ol>
+                                <li>내부 StringBuffer에 쓰기 연산을 지원하는 Writer.</li>
+                                <li>public StringWriter()</li>
+                                <li>public StringWriter(int initialSize)</li>
+                                <li>StringBuffer getBuffer()</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="BufferedInputStream">
@@ -1113,12 +1064,15 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 다른 입력 스트림에 대해 버퍼를 제공함으로써 mark와 reset이 가능하게 해준다. 추가적인 특별한 메서드는 없다.
-                            <br>2. protected byte[] buf
-                            <br>protected int count : 마지막 유효 바이트보다 1 큰 인덱스
-                            <br>protected int marklimit, markpos, pos : |pos - markpos| > marklimit면 markpos는 -1(기본값)이 된다.
-                            <br>3. public BuferedInputStream(InputStream in)
-                            <br>public BufferedInputStream(InputStream in, int size) : size는 버퍼 크기를 말한다.
+                            <ol>
+                                <li>다른 입력 스트림에 대해 버퍼를 제공함으로써 mark와 reset이 가능하게 해준다. 추가적인 특별한 메서드는 없다.</li>
+                                <li>protected byte[] buf</li>
+                                <li>protected int count : 마지막 유효 바이트보다 1 큰 인덱스</li>
+                                <li>protected int marklimit, markpos, pos
+                                    <br>&raquo; |pos - markpos| &lt; marklimit면 markpos는 -1(기본값)이 된다.</li>
+                                <li>public BuferedInputStream(InputStream in)</li>
+                                <li>public BufferedInputStream(InputStream in, int size) : size는 버퍼 크기.</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="BufferedOutputStream">
@@ -1126,11 +1080,13 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 다른 출력 스트림에 대해 버퍼를 제공하여, 시스템 쓰기 작업이 빈번하게 일어나지 않게 해준다. 추가적인 특별한 메서드는 없다.
-                            <br>2. protected byte[] buf
-                            <br>protected int count : buf 내부의 유효한 바이트 수
-                            <br>3. public BufferedOutputStream(OutputStream out)
-                            <br>public BufferedOutputStream(OutputStream out, int size)
+                            <ol>
+                                <li>다른 출력 스트림에 대해 버퍼를 제공하여, 시스템 쓰기 작업이 빈번하게 일어나지 않게 해준다. 추가적인 특별한 메서드는 없다.</li>
+                                <li>protected byte[] buf</li>
+                                <li>protected int count : buf 내부의 유효한 바이트 수</li>
+                                <li>public BufferedOutputStream(OutputStream out)</li>
+                                <li>public BufferedOutputStream(OutputStream out, int size)</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="BufferedReader">
@@ -1138,17 +1094,18 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 다른 Reader에 대한 버퍼를 제공하여, 시스템 읽기 작업이 빈번하게 일어나지 않게 해준다.
-                            <br>2. public BufferedReader(Reader in, int sz)
-                            <br>public BufferedReader(Reader in)
-                            <br>3. String readLine() throws IOException : EOF도 줄의 끝으로 간주
-                            <br>4. Stream&lt;String&gt; lines() Since 1.8
-                            <button type="button" onclick="javascript:showCode('JavaIO/src/BufferedReaderExample.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaIO/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
+                            <ol>
+                                <li>다른 Reader에 대한 버퍼를 제공하여, 시스템 읽기 작업이 빈번하게 일어나지 않게 해준다.</li>
+                                <li>public BufferedReader(Reader in, int sz)</li>
+                                <li>public BufferedReader(Reader in)</li>
+                                <li>String readLine() : EOF도 줄의 끝으로 간주</li>
+                                <li>Stream&lt;String&gt; lines() Since 1.8</li>
+                                <li>
+                                    <button type="button" onclick="javascript:showCode('JavaSE 라이브러리/src/io/BufferedReaderExample.java', 'java');" class="btn btn-primary btn-sm">
+                                        예시 코드 &raquo;
+                                    </button>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="BufferedWriter">
@@ -1156,10 +1113,12 @@
                     </tr>
                     <tr>
                         <td>
-                            1. Writer에 버퍼를 제공하여 시스템 쓰기 작업이 빈번하게 일어나지 않도록 한다.
-                            <br>2. public BufferedWriter(Writer out)
-                            <br>public BufferedWriter(Writer out, int sz)
-                            <br>3. void newLine() throws IOException : 줄 바꿈 스트링은 시스템 속성 line.separator로 결정된다.
+                            <ol>
+                                <li>Writer에 버퍼를 제공하여 시스템 쓰기 작업이 빈번하게 일어나지 않도록 한다.</li>
+                                <li>public BufferedWriter(Writer out)</li>
+                                <li>public BufferedWriter(Writer out, int sz)</li>
+                                <li>void newLine() : 줄 바꿈 문자열은 시스템 속성 line.separator로 결정된다.</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="LineNumberReader">
@@ -1167,11 +1126,11 @@
                     </tr>
                     <tr>
                         <td>
-                            1. Reader가 줄 끝을 만날때마다 라인을 카운트하는 클래스. 처음 시작은 0.
-                            <br>2. public LineNumberReader(Reader in)
-                            <br>public LineNumberReader(Reader in, int sz)
-                            <br>3. void setLineNumber(int lineNumber) : 읽기 위치가 이동하는 건 아니다
-                            <br>int getLineNumber()
+                            <ol>
+                                <li>Reader가 줄 끝을 만날때마다 라인을 카운트하는 클래스. 처음 시작은 0.</li>
+                                <li>void setLineNumber(int lineNumber) : 읽기 위치가 이동하는 건 아니다</li>
+                                <li>int getLineNumber()</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="DataInputStream">
@@ -8416,14 +8375,6 @@
             </table>
         </div>
 
-
-
-
-
-
-
-
-
         <div class="container table-responsive con-lv-1" con-title="JavaFX">
             <h2>JavaFX</h2>
             <table class="table table-hover">
@@ -8491,6 +8442,7 @@
                 </tbody>
             </table>
         </div>
+
         <!--
                 <div>
                     <h2>스레드</h2>
