@@ -56,7 +56,10 @@
                                     <br>Eclipse 환경 설정 : Window &raquo; Preferences
                                     <ul>
                                         <li>General - Appearance - Colors and Fonts : Basic - Text Font 및 기타 폰트를 시력에 맞게 설정</li>
-                                        <li>General - Editors - Text Editors : Insert spaces for tabs 체크, Show line numbers 체크</li>
+                                        <li>General - Editors - Text Editors : Insert spaces for tabs 체크, Show line numbers 체크
+                                            <br>Java → Code Style → Formatter → New → Indentation → Tab Policy = Space Only
+                                            <br>적용할 소스 or 프로젝트 우클릭 → Source → Format
+                                        </li>
                                         <li>General - Workspace : Text file encoding을 UTF-8로 설정</li>
                                         <li>Java - Installed JREs : jre가 아닌 jdk로 설정</li>
                                         <li>Web - CSS Files, HTML Files, JSP Files : Encoding을 UTF-8로 설정</li>
@@ -1485,7 +1488,8 @@
                                     <br>&raquo; 읽기로 예정된 바이트들을 모두 읽기 전에 EOF를 만나면 EOFException 발생.</li>
                                 <li>RandomAccessFile(String name, String mode), RandomAccessFile(File file, String mode)
                                     <br>&raquo; mode &raquo; "r", "rw", "rws"(파일 내용 및 메타데이터 변경을 곧바로 반영), "rwd"(파일 내용 변경을 곧바로
-                                    반영)</li>
+                                    반영)
+                                </li>
                                 <li>final FileDescriptor getFD()</li>
                                 <li>final FileChannel getChannel() Since 1.4</li>
                                 <li>int read() : InputStream.read()와 동일</li>
@@ -1512,11 +1516,12 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 유니코드 CharSequence 또는 char 값을 덧붙일 수 있는 객체를 표현한다.
-                            <br>
-                            <br>2. Appendable append(CharSequence csq) throws IOException
-                            <br>Appendable append(CharSequence csq, int start, int end) throws IOException
-                            <br>Appendable append(char c) throws IOException
+                            <ol>
+                                <li>1. 유니코드 CharSequence 또는 char 값을 덧붙일 수 있는 객체를 표현한다.</li>
+                                <li>2. Appendable append(CharSequence csq)
+                                    <br>Appendable append(CharSequence csq, int start, int end)
+                                    <br>Appendable append(char c)</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="AutoCloseable">
@@ -1526,8 +1531,6 @@
                         <td>
                             1. 자동으로 자원을 해제하는 객체를 표현한다. try-with-resources 블록에 사용되면 close()가 자동으로 호출된다. IO 작업이 없는 것들을 try-with-resources 블록에 이용하는 것은 불필요한
                             일이다.
-                            <br>
-                            <br>2. void close() throws IOException
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="CharSequence">
@@ -1535,27 +1538,24 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 일련의 char 값들을 표현한다. 두 CharSequence 객체를 비교하는 결과는 정의되어 있지 않으며, 각 서브 클래스들이 일관적인 결과를 도출할 것이라는 보장은 없다. 따라서 CharSequence를 비교하는
-                            메서드를 만드는 것은 적절하지 않다.
-                            <br>
-                            <br>2. int length() : 길이는 16비트 char의 개수
-                            <br>
-                            <br>3. char charAt(int index)
-                            <br>CharSequence subSequence(int start, end)
-                            <br>&raquo; start부터 end-1까지. start == end일 경우 빈 CharSequence 객체가 반환된다.
-                            <br>
-                            <br>4. String toString()
-                            <br>
-                            <br>5. default IntStream chars() Since 1.8
-                            <br>&raquo; char들을 int로 0패딩하여 스트림 생성. 두 char로 쪼개진 유니코드 보충 평면의 문자를 하나로 합치진 않는다.
-                            <br>default IntStream codePoints() Since 1.8
-                            <br>&raquo; 유니코드 값들을 스트림으로 생성. 보충 평면의 문자는 Character.toCodePoint 메서드를 통해 하나의 int 값으로 형성.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/CharSequenceExample.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con1.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
+                            <ol>
+                                <li>일련의 char 값들을 표현한다. 두 CharSequence 객체를 비교하는 결과는 정의되어 있지 않으며, 각 서브 클래스들이 일관적인 결과를 도출할 것이라는
+                                    보장은 없다. 따라서 CharSequence를 비교하는 메서드를 만드는 것은 적절하지 않다.</li>
+                                <li>int length() : 길이는 16비트 char의 개수</li>
+                                <li>char charAt(int index)</li>
+                                <li>CharSequence subSequence(int start, end)
+                                    <br>&raquo; start부터 end-1까지. start == end일 경우 빈 CharSequence 객체가 반환된다.</li>
+                                <li>String toString()</li>
+                                <li>default IntStream chars() Since 1.8
+                                    <br>&raquo; char들을 int로 0패딩하여 스트림 생성. 두 char로 쪼개진 유니코드 보충 평면의 문자를 하나로 합치진 않는다.</li>
+                                <li>default IntStream codePoints() Since 1.8
+                                    <br>&raquo; 유니코드 값들을 스트림으로 생성. 보충 평면의 문자는 Character.toCodePoint 메서드를 통해 하나의 int 값으로 형성.</li>
+                                <li>
+                                    <button type="button" onclick="javascript:showCode('JavaSE 라이브러리/src/lang/CharSequenceExample.java', 'java');" class="btn btn-primary btn-sm">
+                                        예시 코드 &raquo;
+                                    </button>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Cloneable">
@@ -1571,19 +1571,15 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 자연스러운 순서로 클래스의 모든 객체를 정렬할 수 있음을 표현.
-                            <br>
-                            <br>2. 이를 구체화한 클래스 객체들의 List, array는 Collections.sort, Arrays.sort로 각각 정렬할 수 있다.
-                            <br>이를 구체화한 클래스 객체들은 Comparator 정의 없이 SortedMap, SortedSet의 키로 이용할 수 있다.
-                            <br>
-                            <br>3. null은 객체가 아니므로 equals(null)이 false를 리턴하는 것과 달리 compareTo(null)은 NullPointerException을 내보내는
-                            것이 바람직하다.
-                            <br>
-                            <br>4. 다음 성질을 만족하도록 구체화함이 권장된다. A class C is consistent with equals IFF (e1.compareTo(e2) == 0) ==
-                            e1.equals(e2)
-                            <br>
-                            <br>5. int compareTo(T o)
-                            <br>&raquo; o보다 앞서면(작으면) 음수, 같으면 0, 뒤면(크면) 양수 반환.
+                            <ol>
+                                <li>자연스러운 순서로 클래스의 모든 객체를 정렬할 수 있음을 표현.</li>
+                                <li>이를 구체화한 클래스 객체들의 List, array는 Collections.sort, Arrays.sort로 각각 정렬할 수 있다.</li>
+                                <li>이를 구체화한 클래스 객체들은 Comparator 정의 없이 SortedMap, SortedSet의 키로 이용할 수 있다.</li>
+                                <li>null은 객체가 아니므로 equals(null)이 false를 리턴하는 것과 달리 compareTo(null)은 NullPointerException을 내보내는
+                                    것이 바람직하다.</li>
+                                <li>다음 성질을 만족하도록 구체화함이 권장된다. (e1.compareTo(e2) == 0) == e1.equals(e2)</li>
+                                <li>int compareTo(T o) &raquo; o보다 앞서면(작으면) 음수, 같으면 0, 뒤면(크면) 양수 반환.</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Iterable">
@@ -1591,18 +1587,19 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 이를 구체화한 클래스 객체는 enhanced for statement의 순회 대상이 될 수 있다.
-                            <br>
-                            <br>2. Iterator&lt;T&gt; iterator() : 구체화한 익명 클래스 객체를 반환하면 된다.
-                            <br>
-                            <br>3. default void forEach(Consumer&lt;? super T&gt; action) Since 1.8
-                            <br>&raquo; 순회하면서 action을 적용한다. 기본 구현 : for(T t : this) action.accept(t);
-                            <br>
-                            <br>4. default Spliterator&lt;T&gt; spliterator() Since 1.8
-                            <br>&raquo; 기본 구현은 Sliterator의 모든 사항을 구현하지 않으므로 재정의하는 것이 더 좋은 성능을 보인다.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/IterableExample.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
+                            <ol>
+                                <li>이를 구체화한 클래스 객체는 enhanced for statement의 순회 대상이 될 수 있다.</li>
+                                <li>Iterator&lt;T&gt; iterator() : 구체화한 익명 클래스 객체를 반환하면 된다.</li>
+                                <li>default void forEach(Consumer&lt;? super T&gt; action) Since 1.8
+                                    <br>&raquo; 순회하면서 action을 적용한다. 기본 구현 : for(T t : this) action.accept(t);</li>
+                                <li>default Spliterator&lt;T&gt; spliterator() Since 1.8
+                                    <br>&raquo; 기본 구현은 Sliterator의 모든 사항을 구현하지 않으므로 재정의하는 것이 더 좋은 성능을 보인다.</li>
+                                <li>
+                                    <button type="button" onclick="javascript:showCode('JavaSE 라이브러리/src/lang/IterableExample.java', 'java');" class="btn btn-primary btn-sm">
+                                        예시 코드 &raquo;
+                                    </button>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="ProcessHandle">
@@ -1610,56 +1607,47 @@
                     </tr>
                     <tr>
                         <td>
-                            1. native process들에 대한 제어 제공. 프로세스 생애 모니터링, 자식 프로세스 나열, 프로세스 정보 얻기, 프로세스 종료 등.
-                            <br>
-                            <br>2. 프로세스 ID는 OS가 할당한 것으로, 값의 범위는 OS에 의존적이다.
-                            <br>
-                            <br>3. ProcessHandle 객체는 다음 팩터리 메서드로 반환된다. current(), of(long), children(), descendants(), parent(),
-                            allProcesses()
-                            <br>
-                            <br>4. SecurityManager의 RuntimePermission("manageProcess")만큼의 제어 권한을 갖는다.
-                            <br>
-                            <br>5. ProcessHandle 객체들을 비교할 때는 equals, compareTo 메서드를 이용해야 한다.
-                            <br>
-                            <b>6. static interface ProcessHandle.Info Since 9</b>
-                            <br>&raquo; Optional&lt;String&gt; command() : 실행가능한 경로 반환
-                            <br>&raquo; Optional&lt;String&gt; commandLine() : command()와 arguments()의 결과를 공백으로 구분한 결과 반환
-                            <br>&raquo; Optional&lt;String[]&gt; arguments() : 프로세스의 인자 반환
-                            <br>&raquo; Optional&lt;Instant&gt; startInstant() : 프로세스의 시작 시각 반환
-                            <br>&raquo; Optional&lt;Duration&gt; totalCpuDuration() : CPU 사용 시간 반환
-                            <br>&raquo; Optional&lt;String&gt; user() : 프로세스 유저 반환
-                            <br>
-                            <br>7. long pid()
-                            <br>
-                            <br>8. static Optional&lt;ProcessHandle&gt; of(long pid)
-                            <br>static ProcessHandle current()
-                            <br>Optional&lt;ProcessHandle&gt; parent()
-                            <br>&raquo; zombie 상태의 프로세스는 보통 parent가 없다.
-                            <br>Stream&lt;ProcessHandle&gt; children()
-                            <br>Stream&lt;ProcessHandle&gt; descendants()
-                            <br>static Stream&lt;ProcessHandle&gt; allProcesses()
-                            <br>
-                            <br>9. ProcessHandle.Info info()
-                            <br>
-                            <br>10. CompletableFuture&lt;ProcessHandle&gt; onExit()
-                            <br>&raquo; onExit().get()을 호출하면 프로세스가 종료되는 것을 기다린다. supportsNormalTermination()이 false일 경우 onExit()에
-                            등록한 후처리들이 진행되지 않을 수 있음.
-                            <br>
-                            <br>11. boolean supportsNormalTermination()
-                            <br>&raquo; destroy() 메서드가 정상적으로 프로세스를 종료하는지 여부. false면 프로세스를 강제로 즉시 종료함을 의미.
-                            <br>
-                            <br>12. boolean destroy()
-                            <br>&raquo; 프로세스 종료에 시간이 걸릴 수 있으므로, isAlive()가 얼마간 true를 반환할 수 있다. 성공적으로 프로세스를 종료하면 true, 아니면 false를
-                            반환한다.
-                            <br>boolean destroyForcibly() : 강제 종료
-                            <br>
-                            <br>13. boolean isAlive() : PID가 유효하면 alive로 간주
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/ProcessHandleExample.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con2.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
+                            <ol>
+                                <li>native process들에 대한 제어 제공. 프로세스 생애 모니터링, 자식 프로세스 나열, 프로세스 정보 얻기, 프로세스 종료 등.</li>
+                                <li>프로세스 ID는 OS가 할당한 것으로, 값의 범위는 OS에 의존적이다.</li>
+                                <li>ProcessHandle 객체는 다음 팩터리 메서드로 반환된다. current(), of(long), children(), descendants(), parent(),
+                                    allProcesses()
+                                    <br>parent() &raquo; zombie 상태의 프로세스는 보통 parent가 없다.
+                                </li>
+                                <li>SecurityManager의 RuntimePermission("manageProcess")만큼의 제어 권한을 갖는다.</li>
+                                <li>ProcessHandle 객체들을 비교할 때는 equals, compareTo 메서드를 이용해야 한다.
+                                    <br>
+                                </li>
+                                <li>static interface ProcessHandle.Info Since 9
+                                    <ul>
+                                        <li>Optional&lt;String&gt; command() : 실행가능한 경로 반환</li>
+                                        <li>Optional&lt;String&gt; commandLine() : command()와 arguments()의 결과를 공백으로 구분한 결과 반환</li>
+                                        <li>Optional&lt;String[]&gt; arguments() : 프로세스의 인자 반환</li>
+                                        <li>Optional&lt;Instant&gt; startInstant() : 프로세스의 시작 시각 반환</li>
+                                        <li>Optional&lt;Duration&gt; totalCpuDuration() : CPU 사용 시간 반환</li>
+                                        <li>Optional&lt;String&gt; user() : 프로세스 유저 반환
+                                            <br>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>ProcessHandle.Info info()</li>
+                                <li>boolean supportsNormalTermination()
+                                    <br>&raquo; destroy() 메서드가 정상적으로 프로세스를 종료하는지 여부. false면 프로세스를 강제로 즉시 종료함을 의미.</li>
+                                <li>CompletableFuture&lt;ProcessHandle&gt; onExit()
+                                    <br>&raquo; onExit().get()을 호출하면 프로세스가 종료되는 것을 기다린다. supportsNormalTermination()이 false일
+                                    경우 onExit()에 등록한 후처리들이 진행되지 않을 수 있음.</li>
+                                <li>boolean destroy()
+                                    <br>&raquo; 프로세스 종료에 시간이 걸릴 수 있으므로, isAlive()가 얼마간 true를 반환할 수 있다. 성공적으로 프로세스를 종료하면 true,
+                                    아니면 false를 반환한다.</li>
+                                <li>boolean destroyForcibly() : 강제 종료</li>
+                                <li>long pid()</li>
+                                <li>boolean isAlive() : PID가 유효하면 alive로 간주</li>
+                                <li>
+                                    <button type="button" onclick="javascript:showCode('JavaSE 라이브러리/src/lang/ProcessHandleExample.java', 'java');" class="btn btn-primary btn-sm">
+                                        예시 코드 &raquo;
+                                    </button>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Readable">

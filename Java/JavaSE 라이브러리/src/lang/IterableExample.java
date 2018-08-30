@@ -1,3 +1,5 @@
+package lang;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -18,7 +20,7 @@ public class IterableExample {
 		});
 		
 		var split = nums.spliterator();
-		split.forEachRemaining((i) -> System.out.println("<< " + i));
+		split.forEachRemaining((i) -> System.out.println(i + " <<"));
 	}
 
 }
