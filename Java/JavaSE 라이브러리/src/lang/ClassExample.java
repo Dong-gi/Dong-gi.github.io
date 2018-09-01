@@ -1,3 +1,5 @@
+package lang;
+
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -5,10 +7,7 @@ import java.util.Collection;
 
 public class ClassExample<T extends Object, V> implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
-    private static final class Test extends ClassExample<Integer, Integer> {
-    }
+    private static final class Test extends ClassExample<Integer, Integer> {}
 
     public static void main(String[] args) {
         System.out.println(ClassExample.class);
