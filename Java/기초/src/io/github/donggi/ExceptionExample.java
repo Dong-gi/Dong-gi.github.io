@@ -22,13 +22,14 @@ public class ExceptionExample {
             } catch (Exception e) {
                 ioe.addSuppressed(e); // 추가 예외 억제
                 ioe.initCause(new Exception("예외 원인은 나다"));
-                for(var throwable : ioe.getSuppressed()) {
+                for (var throwable : ioe.getSuppressed()) {
                     System.out.println("Suppressed : " + throwable);
                 }
                 Thread.sleep(1000);
             }
             throw ioe; // 이런 식으로 호출자에게 넘겨 추가 작업을 진행할 수 있다.
-        } finally {}
+        } finally {
+        }
         // finally가 catch 뒤에 나오면 예외를 처리한 뒤에 실행.
         // finally가 catch 전에 나오면 예외를 처리하기 전에 실행.
     }

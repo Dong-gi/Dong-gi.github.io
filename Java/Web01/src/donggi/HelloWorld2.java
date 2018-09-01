@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/hello2")
 public class HelloWorld2 extends HttpServlet {
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.getWriter().println("Hello World!");
-	}
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.getWriter().println("Hello World!");
+    }
 }

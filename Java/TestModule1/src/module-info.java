@@ -2,5 +2,5 @@
  * @author wiz
  */
 module first {
-	requires second;
+    requires second;
 }

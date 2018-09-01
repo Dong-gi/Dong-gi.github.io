@@ -15,7 +15,8 @@ public class ExternalizableExample {
         private String name;
         private int id;
 
-        public Student() {}
+        public Student() {
+        }
 
         public Student(String name, int id) {
             this.name = name;
@@ -44,7 +45,7 @@ public class ExternalizableExample {
     public static void main(String[] args) throws Exception {
         var student = new Student("김동기", 2014136011);
 
-        try(var out = new ObjectOutputStream(new FileOutputStream("student.data"));
+        try (var out = new ObjectOutputStream(new FileOutputStream("student.data"));
                 var in = new ObjectInputStream(new FileInputStream("student.data"));) {
             out.writeObject(student);
             student = (Student) in.readObject();

@@ -9,8 +9,7 @@ public class ConsoleExample {
         console.ifPresentOrElse(c -> System.out.println(c), () -> System.out.println("Run on cmd"));
 
         char[] password;
-        while (console.isPresent() &&
-                (password = console.get().readPassword("Password: ")) != null) {
+        while (console.isPresent() && (password = console.get().readPassword("Password: ")) != null) {
             console.get().printf("Confirm: %s", new String(password)).format("\n").flush();
             java.util.Arrays.fill(password, ' ');
         }

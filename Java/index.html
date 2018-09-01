@@ -672,7 +672,7 @@
                         <td>
                             <ol>
                                 <li>데이터의 출발지나 도착지를 닫을 수 있으면 Closeable하다.</li>
-                                <li>void close() throws IOException
+                                <li>void close()
                                     <ul>
                                         <li>스트림 및 이와 관련된 시스템 자원을 해제한다. 이미 호출되었다면 아무 일도 하지 않는다.</li>
                                         <li>close() 실패했을 때, 예외를 던지는 대신 사용하던 자원을 모두 포기하고 Closeable 객체 내부적으로 '닫혔다(closed)'고 마크하길
@@ -1271,7 +1271,7 @@
                                 <li>이미 읽은 것을 취소하고 다시 읽을 수 있는 기능을 지원한다. 이전에 읽은 내용을 저장하지는 않으므로, 덮어쓰기처럼 이용할 수 있다.</li>
                                 <li>public PushbackInputStream(InputStream in, int size) Since 1.1</li>
                                 <li>public PushbackInputStream(InputStream in) Since 1.1 : 1바이트짜리 버퍼를 이용한다.</li>
-                                <li>void unread(int b) throws IOException : 하위 8비트만 버퍼에 쓴다.</li>
+                                <li>void unread(int b) : 하위 8비트만 버퍼에 쓴다.</li>
                                 <li>void unread(byte[] b), unread(byte[] b, int off, int len) Since 1.1</li>
                                 <li>
                                     <button type="button" onclick="javascript:showCode('JavaSE 라이브러리/src/io/PushBackExample.java', 'java');" class="btn btn-primary btn-sm">
@@ -1517,8 +1517,8 @@
                     <tr>
                         <td>
                             <ol>
-                                <li>1. 유니코드 CharSequence 또는 char 값을 덧붙일 수 있는 객체를 표현한다.</li>
-                                <li>2. Appendable append(CharSequence csq)
+                                <li>유니코드 CharSequence 또는 char 값을 덧붙일 수 있는 객체를 표현한다.</li>
+                                <li>Appendable append(CharSequence csq)
                                     <br>Appendable append(CharSequence csq, int start, int end)
                                     <br>Appendable append(char c)</li>
                             </ol>
@@ -1655,16 +1655,17 @@
                     </tr>
                     <tr>
                         <td>
-                            1. Readable은 문자들에 대한 소스다.
-                            <br>
-                            <br>2. int read(CharBuffer cb) throws IOException
-                            <br>&raquo; 문자들을 그대로 cb에 put()을 통해 저장한다. cb에 대한 어떠한 사전처리도 없다. 저장한 char 개수를 반환하며, 소스의 끝이면 -1을 반환한다.
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/ReadableExample.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con3.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
+                            <ol>
+                                <li>Readable은 문자들에 대한 소스다.</li>
+                                <li>int read(CharBuffer cb)
+                                    <br>&raquo; 문자들을 그대로 cb에 put()을 통해 저장한다. cb에 대한 어떠한 사전처리도 없다. 저장한 char 개수를 반환하며, 소스의 끝이면
+                                    -1을 반환한다.</li>
+                                <li>
+                                    <button type="button" onclick="javascript:showCode('JavaSE 라이브러리/src/lang/ReadableExample.java', 'java');" class="btn btn-primary btn-sm">
+                                        예시 코드 &raquo;
+                                    </button>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Runnable">
@@ -1673,10 +1674,8 @@
                     <tr>
                         <td>
                             1. Runnable은 한 쓰레드로서 실행되도록 구체화돼야 한다. Thread의 run()만을 재정의할 때 사용한다.
-                            <br>
-                            <br>2. void run()
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/RunnableExample.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
+                            <button type="button" onclick="javascript:showCode('JavaSE 라이브러리/src/lang/RunnableExample.java', 'java');" class="btn btn-primary btn-sm">
+                                예시 코드 &raquo;
                             </button>
                         </td>
                     </tr>
@@ -1685,34 +1684,28 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 원시 타입 boolean의 wrapper 클래스
-                            <br>
-                            <br>2. static final Boolean FALSE
-                            <br>static final Boolean TRUE
-                            <br>static Class&lt;Boolean&gt; TYPE Since 1.1
-                            <br>
-                            <br>3. static boolean parseBoolean(String s) Since 1.5
-                            <br>&raquo; s가 null이 아니고 대소문자 구분없이 "true"와 일치하면 true 반환.
-                            <br>boolean booleanValue()
-                            <br>static Boolean valueOf(boolean b) Since 1.4
-                            <br>static Boolean valueOf(String s) : valueOf(parseBoolean(s))와 동일
-                            <br>
-                            <br>4. static String toString(boolean b) Since 1.4 : "true" or "false"
-                            <br>
-                            <br>5. int hashCode() : true면 1231, false면 1237
-                            <br>static int hashCode(boolean value) Since 1.8
-                            <br>
-                            <br>6. static boolean getBoolean(String name)
-                            <br>&raquo; name에 해당하는 system property가 존재하고, 대소문자 구분없이 "true"와 일치하면 true 반환
-                            <br>
-                            <br>7. int compareTo(Boolean b) Since 1.5
-                            <br>&raquo; TRUE.compareTo(FALSE) &gt; 0, FALSE.compareTo(TRUE) &lt; 0
-                            <br>static int compare(boolean x, boolean y) Since 1.7
-                            <br>&raquo; Boolean.valueOf(x).compareTo(Boolean.valueOf(y))
-                            <br>
-                            <br>8. static boolean logicalAnd(boolean a, boolean b) Since 1.8
-                            <br>static boolean logicalOr(boolean a, boolean b) Since 1.8
-                            <br>static boolean logicalXor(boolean a, boolean b) Since 1.8
+                            <ol>
+                                <li>원시 타입 boolean의 wrapper 클래스</li>
+                                <li>static final Boolean FALSE</li>
+                                <li>static final Boolean TRUE</li>
+                                <li>static Class&lt;Boolean&gt; TYPE Since 1.1</li>
+                                <li>static boolean parseBoolean(String s) Since 1.5
+                                    <br>&raquo; s가 null이 아니고 대소문자 구분없이 "true"와 일치하면 true 반환.</li>
+                                <li>boolean booleanValue()</li>
+                                <li>static Boolean valueOf(boolean b) Since 1.4</li>
+                                <li>static Boolean valueOf(String s) : valueOf(parseBoolean(s))와 동일</li>
+                                <li>static String toString(boolean b) Since 1.4 : "true" or "false"</li>
+                                <li>int hashCode() : true면 1231, false면 1237</li>
+                                <li>static int hashCode(boolean value) Since 1.8</li>
+                                <li>static boolean getBoolean(String name)
+                                    <br>&raquo; name에 해당하는 system property가 존재하고, 대소문자 구분없이 "true"와 일치하면 true 반환</li>
+                                <li>int compareTo(Boolean b) Since 1.5
+                                    <br>&raquo; TRUE.compareTo(FALSE) &gt; 0, FALSE.compareTo(TRUE) &lt; 0</li>
+                                <li>static int compare(boolean x, boolean y) Since 1.7</li>
+                                <li>static boolean logicalAnd(boolean a, boolean b) Since 1.8</li>
+                                <li>static boolean logicalOr(boolean a, boolean b) Since 1.8</li>
+                                <li>static boolean logicalXor(boolean a, boolean b) Since 1.8</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Number">
@@ -1720,16 +1713,15 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 수에 관한 최상위 추상 wrapper 클래스
-                            <br>
-                            <br>2. Number()
-                            <br>
-                            <br>3. abstract int intValue()
-                            <br>abstract long longValue()
-                            <br>abstract float floatValue()
-                            <br>abstract double doubleValue()
-                            <br>byte byteValue() Since 1.1 : intValue()를 byte로 변환하여 반환
-                            <br>short shortValue() Since 1.1 : intValue()를 byte로 변환하여 반환
+                            <ol>
+                                <li>수에 관한 최상위 추상 wrapper 클래스</li>
+                                <li>abstract int intValue()</li>
+                                <li>abstract long longValue()</li>
+                                <li>abstract float floatValue()</li>
+                                <li>abstract double doubleValue()</li>
+                                <li>byte byteValue() Since 1.1 : intValue()를 byte로 변환하여 반환</li>
+                                <li>short shortValue() Since 1.1 : intValue()를 byte로 변환하여 반환</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Byte">
@@ -1737,37 +1729,32 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 기본 타입 byte에 대한 wrapper 클래스
-                            <br>
-                            <br>2. static final int BYTES Since 1.8 : 2의 보수 형태로 byte 값을 표현하기 위해 필요한 바이트 수
-                            <br>static final byte MAX_VALUE : 2^7-1
-                            <br>static final byte MIN_VALUE : -2^7
-                            <br>static final int SIZE Since 1.5: 2의 보수 형태로 byte 값을 표현하기 위해 필요한 비트 수
-                            <br>static final Class&lt;Byte&gt; TYPE
-                            <br>
-                            <br>3. static String toString(byte b) : 10진수 표현으로 반환
-                            <br>
-                            <br>4. static Byte valueOf(byte b) Since 1.5
-                            <br>static byte parseByte(String s, int radix) throws NumberFormatException
-                            <br>&raquo; 아래의 경우 예외 발생
-                            <br>&raquo; : s가 null이거나 길이가 0일 때. s에 radix진수가 아닌 문자가 포함될 때(단, s가 2글자 이상일 때 첫 '-', '+'는 가능). radix가
-                            [Character.MIN_RADIX, Character.MAX_RADIX] 범위를 벗어날 때, 값이 byte를 벗어날 때.
-                            <br>static byte parseByte(String s) throws NumberFormatException : 10진수
-                            <br>static Byte valueOf(String s, int radix) throws NumberFormatException
-                            <br>static Byte valueOf(String s) throws NumberFormatException
-                            <br>static Byte decode(String nm) throws NumberFormatException
-                            <br>&raquo; 다음 문법으로 표현된 10진수, 16진수, 8진수를 parseByte()를 이용해 디코딩한다.
-                            <br>&raquo; (Sign?)(10진수), (Sign?)(0x | 0X | #)(16진수), (Sign?)0(8진수), Sign: '-', '+'
-                            <br>&raquo; 공백을 허용하지 않는다.
-                            <br>
-                            <br>5. static int hashCode(byte value) Since 1.8
-                            <br>
-                            <br>6. int compareTo(Byte anotherByte) Since 1.2 : this - anotherByte
-                            <br>static int compare(byte x, byte y) Since 1.7 : x - y
-                            <br>static int compareUnsigned(byte x, byte y) Since 9 : x - y
-                            <br>
-                            <br>7. static int toUnsignedInt(byte x) Since 1.8
-                            <br>static long toUnsignedLong(byte x) Since 1.8
+                            <ol>
+                                <li>기본 타입 byte에 대한 wrapper 클래스</li>
+                                <li>static final int BYTES Since 1.8 : 2의 보수 형태로 byte 값을 표현하기 위해 필요한 바이트 수</li>
+                                <li>static final byte MAX_VALUE : 2^7-1</li>
+                                <li>static final byte MIN_VALUE : -2^7</li>
+                                <li>static final int SIZE Since 1.5: 2의 보수 형태로 byte 값을 표현하기 위해 필요한 비트 수</li>
+                                <li>static final Class&lt;Byte&gt; TYPE</li>
+                                <li>static String toString(byte b) : 10진수 표현으로 반환</li>
+                                <li>static Byte valueOf(byte b) Since 1.5</li>
+                                <li>static byte parseByte(String s, int radix)
+                                    <br>&raquo; 예외 : s가 null이거나 길이가 0일 때. s에 radix진수가 아닌 문자가 포함될 때(단, s가 2글자 이상일 때 첫 '-', '+'는
+                                    가능). radix가 [Character.MIN_RADIX, Character.MAX_RADIX] 범위를 벗어날 때, 값이 byte를 벗어날 때.</li>
+                                <li>static byte parseByte(String s) : 10진수</li>
+                                <li>static Byte valueOf(String s, int radix)</li>
+                                <li>static Byte valueOf(String s)</li>
+                                <li>static Byte decode(String nm)
+                                    <br>&raquo; 다음 문법으로 표현된 10진수, 16진수, 8진수를 parseByte()를 이용해 디코딩한다.
+                                    <br>&raquo; (Sign?)(10진수), (Sign?)(0x | 0X | #)(16진수), (Sign?)0(8진수), Sign: '-', '+'
+                                    <br>&raquo; 공백을 허용하지 않는다.</li>
+                                <li>static int hashCode(byte value) Since 1.8</li>
+                                <li>int compareTo(Byte anotherByte) Since 1.2 : this - anotherByte</li>
+                                <li>static int compare(byte x, byte y) Since 1.7</li>
+                                <li>static int compareUnsigned(byte x, byte y) Since 9</li>
+                                <li>static int toUnsignedInt(byte x) Since 1.8</li>
+                                <li>static long toUnsignedLong(byte x) Since 1.8</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Character">
@@ -1775,175 +1762,180 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 기본타입 char에 대한 wrapper 클래스. 추가적으로 문자 집합(소문자, 숫자 등) 정의, 변환 기능을 갖는다.
-                            <br>
-                            <br>2. 유니코드 표준 8.0.0을 따른다.
-                            <br>&raquo; 16비트 고정폭으로 값을 표현하며, 유효한 범위는 U+0000 부터 U+10FFFF까지(= Unicode scalar value).
-                            <br>&raquo; [U+0000, U+FFFF] == Basic Multilingual Plane(BMP), (U+FFFF, ~) == supplementary characters
-                            <br>&raquo; 자바 플랫폼은 보충 평면의 문자들은 2개의 char의 쌍으로 표현한다.
-                            <br>&raquo; 하위 21개 비트를 이용하여 int 하나로 모든 유니코드 code point를 표현할 수 있다.
-                            <br>
-                            <mark>&raquo; 따라서 int를 받는 메서드는 모든 유니코드를 처리할 수 있지만, char만을 받는 메서드는 보충 평면 문자를 처리하지 못한다.</mark>
-                            <br>
-                            <b>3. static class Character.Subset Since 1.2</b>
-                            <br>&raquo; 이 클래스의 객체는 유니코드 문자 집합을 표현한다. Character 클래스 내부에서 정의한 문자 집합은 Character.UnicodeBlock뿐이다.
-                            <br>&raquo; protected Subset(String name)
-                            <br>&raquo; final boolean equals(Object obj) : 오직 같은 객체일 때만 true를 반환함으로써 모든 부분집합들이 동일함을 보장한다.
-                            <br>&raquo; final int hashCode() : 기본 정의된 Object.hashCode()를 이용한다. final로 정의하여 equals()와 일관성을 유지한다.
-                            <br>&raquo; final String toString() : name 반환
-                            <br>
-                            <b>4. static final class Character.UnicodeBlock extends Character.Subset Since 1.2</b>
-                            <br>&raquo; 유니코드 문자 블록. 각 문자들은 최대 하나의 유니코드 블록에 포함된다.
-                            <br>&raquo; static Character.UnicodeBlock ARABIC, GREEK, HANGUL 등
-                            <br>&raquo; static Character.UnicodeBlock of(char c) : c가 속한 유니코드 블록 반환
-                            <br>&raquo; static Character.UnicodeBlock of(int codePoint) Since 1.5
-                            <br>&raquo; static final Character.UnicodeBlock forName(String blockName) Since 1.5
-                            <br>&raquo;&raquo; 블록 이름이 변경될 경우, 변경 전/후 이름 둘 다 사용할 수 있다.
-                            <br>
-                            <b>5. static enum Character.UnicodeScript Since 1.7</b>
-                            <br>&raquo; 유니코드 표준 스크립트 이름 정의를 표현. 모든 문자는 하나의 스크립트(각 언어|INHERITED|COMMON|UNKNOWN)에 할당된다.
-                            <br>&raquo; ARABIC, GREEK, HANGUL 등
-                            <br>&raquo; static Character.UnicodeScript valueOf(String name)
-                            <br>&raquo; static Character.UnicodeScript of(int codePoint)
-                            <br>&raquo; static final Character.UnicodeScript forName(String scriptName)
-                            <br>
-                            <br>6. static final int MIN_RADIX : 문자열-숫자 간 변환을 지원하는 최소 radix
-                            <br>static final int MAX_RADIX : 문자열-숫자 간 변환을 지원하는 최대 radix
-                            <br>static final char MIN_VALUE Since 1.0.2 : '\u0000'
-                            <br>static final char MAX_VALUE Since 1.0.2 : '\uFFFF'
-                            <br>static final Class&lt;Character&gt; TYPE Since 1.1
-                            <br>static final byte MODIFIER_LETTER, SPACE_SEPARATOR, MATH_SYMBOL 등
-                            <br>static final char MIN_HIGH_SURROGATE Since 1.5 : '\uD800'
-                            <br>static final char MAX_HIGH_SURROGATE Since 1.5 : '\uDBFF'
-                            <br>static final char MIN_LOW_SURROGATE Since 1.5 : '\uDC00'
-                            <br>static final char MAX_LOW_SURROGATE Since 1.5 : '\uDFFF'
-                            <br>static final int MIN_SUPPLEMENTARY_CODE_POINT Since 1.5 : U+10000
-                            <br>static final int MIN_CODE_POINT Since 1.5 : U+0000
-                            <br>static final int MAX_CODE_POINT Since 1.5 : U+10FFFF
-                            <br>static final int SIZE Since 1.5 : 표현에 필요한 비트 수, 16
-                            <br>static final int BYTES Since 1.8 : 표현에 필요한 바이트 수
-                            <br>
-                            <br>7. static Character valueOf(char c) Since 1.5
-                            <br>char charValue()
-                            <br>
-                            <br>8. static int hashCode(char value) Since 1.8 : int로 형변환 한 것과 동일
-                            <br>static String toString(char c) Since 1.4
-                            <br>
-                            <br>9. static boolean isValidCodePoint(int codePoint) Since 1.5
-                            <br>static boolean isBmpCodePoint(int codePoint) Since 1.7
-                            <br>static boolean isSupplementaryCodePoint(int codePoint) Since 1.5
-                            <br>static boolean isHighSurrogate(char ch) Since 1.5
-                            <br>static boolean isLowSurrogate(char ch) Since 1.5
-                            <br>static boolean isSurrogate(char ch) Since 1.7
-                            <br>static boolean isSurrogatePair(char high, char low) Since 1.5
-                            <br>static boolean isLowerCase(char ch) : 'a' ~ 'z'
-                            <br>static boolean isLowerCase(int codePoint) Since 1.5
-                            <br>static boolean isUpperCase(char ch) : 'A' ~ 'Z'
-                            <br>static boolean isUpperCase(int codePoint)
-                            <br>static boolean isTitleCase(char ch) Since 1.0.2 : getType(ch) == TITLECASE_LETTER
-                            <br>static boolean isTitleCase(int codePoint) Since 1.5
-                            <br>static boolean isDigit(char ch) : getType(ch) == DECIMAL_DIGIT_NUMBER
-                            <br>&raquo; '\u0030' through '\u0039', ISO-LATIN-1 digits ('0' through '9')
-                            <br>&raquo; '\u0660' through '\u0669', Arabic-Indic digits
-                            <br>&raquo; '\u06F0' through '\u06F9', Extended Arabic-Indic digits
-                            <br>&raquo; '\u0966' through '\u096F', Devanagari digits
-                            <br>&raquo; '\uFF10' through '\uFF19', Fullwidth digits 등
-                            <br>static boolean isDigit(int codePoint) Since 1.5
-                            <br>static boolean isDefined(char ch) Since 1.0.2 : 유니코드에 정의되었는지 여부
-                            <br>static boolean isDefined(int codePoint) Since 1.5
-                            <br>static boolean isLetter(char ch) : getType(ch) == *_LETTER
-                            <br>static boolean isLetter(int codePoint) Since 1.5
-                            <br>static boolean isLetterOrDigit(char ch) Since 1.0.2
-                            <br>static boolean isLetterOrDigit(int codePoint) Since 1.5
-                            <br>static boolean isAlphabetic(int codePoint) Since 1.7
-                            <br>&raquo; UPPERCASE_LETTER, LOWERCASE_LETTER, TITLECASE_LETTER, MODIFIER_LETTER, OTHER_LETTER,
-                            LETTER_NUMBER, 및 기타 알파벳 문자인지 여부
-                            <br>static boolean isIdeographic(int codePoint) Since 1.7 : CJKV(중국어, 일본어, 한국어, 베트남어) 여부
-                            <br>static boolean isJavaIdentifierStart(char ch) Since 1.1 : 자바 식별자 선두문자
-                            <br>static boolean isJavaIdentifierStart(int codePoint) Since 1.5
-                            <br>static boolean isJavaIdentifierPart(char ch) Since 1.1
-                            <br>static boolean isJavaIdentifierPart(int codePoint) Since 1.5
-                            <br>static boolean isUnicodeIdentifierStart(char ch) Since 1.1
-                            <br>&raquo; isLetter(ch) == true or getType(ch) == LETTER_NUMBER
-                            <br>static boolean isUnicodeIdentifierStart(int codePoint) Since 1.5
-                            <br>static boolean isUnicodeIdentifierPart(char ch) Since 1.1
-                            <br>static boolean isUnicodeIdentifierPart(int codePoint) Since 1.5
-                            <br>static boolean isIdentifierIgnorable(char ch) Since 1.1 : 제어문자, FORMAT 카테고리 문자
-                            <br>static boolean isIdentifierIgnorable(int codePoint) Since 1.5
-                            <br>static boolean isSpaceChar(char ch) Since 1.1 : getType(ch) == *_SEPARATOR
-                            <br>static boolean isSpaceChar(int codePoint) Since 1.5
-                            <br>static boolean isWhitespace(char ch) Since 1.1
-                            <br>&raquo; 공백 문자(단, non-breaking space('\u00A0', '\u2007', '\u202F') 제외), '\t', '\n', 'u000B', '\f',
-                            '\r', '\u001C', '\u001D', '\u001E', '\u001F'
-                            <br>static boolean isWhitespace(int codePoint) Since 1.5
-                            <br>static boolean isISOControl(char ch) Since 1.1
-                            <br>&raquo; '\u0000' ~ '\u001F', '\u007F' ~ '\u009F'
-                            <br>static boolean isISOControl(int codePoint) Since 1.5
-                            <br>
-                            <br>10. static int charCount(int codePoint) Since 1.5 : 표현에 필요한 char 수(1 or 2)
-                            <br>static int toCodePoint(char high, char low) Since 1.5
-                            <br>static int codePointAt(CharSequence seq, int index) Since 1.5
-                            <br>static int codePointAt(char[] a, int index) Since 1.5
-                            <br>static int codePointAt(char[] a, int index, int limit) Since 1.5 : index &lt; limit
-                            <br>static int codePointBefore(CharSequence seq, int index) Since 1.5
-                            <br>static int codePointBefore(char[] a, int index) Since 1.5
-                            <br>static int codePointBefore(char[] a, int index, int start) : index &gt; start
-                            <br>static char highSurrogate(int codePoint) Since 1.7
-                            <br>static char lowSurrogate(int codePoint) Since 1.7
-                            <br>static int toChars(int codePoint, char[] dst, int dstIndex) Since 1.5 : 저장한 char 수 반환
-                            <br>static char[] toChars(int codePoint) Since 1.5
-                            <br>static int codePointCount(CharSequence seq, int beginIndex, int endIndex) Since 1.5
-                            <br>&raquo; [beginIndex, endIndex) 사이의 유니코드 문자 수 반환
-                            <br>static int codePointCount(char[] a, int offset, int count) Since 1.5
-                            <br>&raquo; count : 검사할 char 개수
-                            <br>static int offsetByCodePoints(CharSequence seq, int index, int codePointOffset) Since 1.5
-                            <br>&raquo; 지정된 index로부터 offset 개수만큼 유니코드를 건너뛴 위치. +일 경우 index 포함, -인 경우 index 미포함(예제 참고)
-                            <br>static int offsetByCodePoints(char[] a, int start, int count, int index, int codePointOffset)
-                            Since 1.5
-                            <br>&raquo; start : 유효한 문자열 시작 위치, count : 유효한 문자열 길이
-                            <br>
-                            <br>11. static char toLowerCase(char ch)
-                            <br>static int toLowerCase(int codePoint) Since 1.5
-                            <br>&raquo; isLowerCase(toLowerCase(x))가 항상 true는 아니다.
-                            <br>&raquo; String.toLowerCase()가 사용 언어에 따른 효과적인 변환을 수행한다.
-                            <br>static char toUpperCase(char ch)
-                            <br>static int toUpperCase(int codePoint) Since 1.5
-                            <br>&raquo; isUpperCase(toUpperCase(x))가 항상 true를 반환하진 않는다.
-                            <br>&raquo; String.toUpperCase()가 사용 언어에 따른 효과적인 변환을 수행한다.
-                            <br>static char toTitleCase(char ch) Since 1.0.2
-                            <br>static int toTitleCase(int codePoint) Since 1.5
-                            <br>&raquo; isTitleCase(toTitleCase(x))가 항상 true를 반환하진 않는다.
-                            <br>static int digit(char ch, int radix)
-                            <br>static int digit(int codePoint, int radix) : 예제 참조
-                            <br>static int getNumericValue(char ch) Since 1.1
-                            <br>&raquo; 로마 숫자, a~z 등을 10진법 수로 반환한다. 음수일 경우 -2, 숫자가 아닐 경우 -1 반환.
-                            <br>static char forDigit(int digit, int radix)
-                            <br>static int getNumericValue(int codePoint) Since 1.5
-                            <br>
-                            <br>12. static int getType(char ch) Since 1.1
-                            <br>static int getType(int codePoint) Since 1.5
-                            <br>
-                            <br>13. static byte getDirectionality(char ch) Since 1.4
-                            <br>&raquo; 문자 표시 순서를 반환한다. DIRECTIONALITY_UNDEFINED, DIRECTIONALITY_LEFT_TO_RIGHT 등
-                            <br>static byte getDirectionality(int codePoint) Since 1.5
-                            <br>static boolean isMirrored(char ch) Since 1.4
-                            <br>&raquo; 예: 좌-우 표기에서 여는 소괄호는 '(', 우-좌 표기에서는 ')'
-                            <br>static boolean isMirrored(int codePoint) Since 1.5
-                            <br>
-                            <br>14. static int compare(char x, char y) Since 1.7 : x - y
-                            <br>
-                            <br>15. static char reverseBytes(char ch) Since 1.5
-                            <br>
-                            <br>16. static String getName(int codePoint) Since 1.7
-                            <br>&raquo; 이름 반환 : Character.UnicodeBlock.of(codePoint).toString().replace('_', ' ') + " " + Integer.toHexString(codePoint).toUpperCase(Locale.ROOT);
-                            <br>&raquo; 정의되어 있지 않으면 null 반환
-                            <br>static int codePointOf(String name) Since 9 : 정의되어 있지 않으면 예외
-                            <button type="button" onclick="javascript:showCode('JavaLang/src/CharacterExample.java', 'java');" class="btn btn-primary btn-sm">
-                                View Code : 예제 &raquo;
-                            </button>
-                            <button type="button" onclick='javascript:showCode("JavaLang/console/con4.txt", "text");' class="btn btn-primary btn-sm">
-                                View Console : 콘솔 &raquo;
-                            </button>
+                            <ol>
+                                <li>기본타입 char에 대한 wrapper 클래스. 추가적으로 문자 집합(소문자, 숫자 등) 정의, 변환 기능을 갖는다.</li>
+                                <li>2. 유니코드 표준 8.0.0을 따른다.
+                                    <ul>
+                                        <li>16비트 고정폭으로 값을 표현하며, 유효한 범위는 U+0000 부터 U+10FFFF까지(= Unicode scalar value).</li>
+                                        <li>[U+0000, U+FFFF] == Basic Multilingual Plane(BMP), (U+FFFF, ~) == supplementary characters</li>
+                                        <li>자바 플랫폼은 보충 평면의 문자들은 2개의 char의 쌍으로 표현한다.</li>
+                                        <li>하위 21개 비트를 이용하여 int 하나로 모든 유니코드 code point를 표현할 수 있다.</li>
+                                    </ul>
+                                </li>
+                                <li>int를 받는 메서드는 모든 유니코드를 처리할 수 있지만, char만을 받는 메서드는 보충 평면 문자를 처리하지 못한다.</li>
+                                <li>static class Character.Subset Since 1.2
+                                    <ul>
+                                        <li>이 클래스의 객체는 유니코드 문자 집합을 표현한다. Character 클래스 내부에서 정의한 문자 집합은 Character.UnicodeBlock뿐이다.</li>
+                                        <li>protected Subset(String name)</li>
+                                        <li>final boolean equals(Object obj) : 오직 같은 객체일 때만 true를 반환함으로써 모든 부분집합들이 동일함을 보장한다.</li>
+                                        <li>final int hashCode() : 기본 정의된 Object.hashCode()를 이용한다. final로 정의하여 equals()와 일관성을
+                                            유지한다.
+                                        </li>
+                                        <li>final String toString() : name 반환</li>
+                                    </ul>
+                                </li>
+                                <li>static final class Character.UnicodeBlock extends Character.Subset Since 1.2
+                                    <ul>
+                                        <li>유니코드 문자 블록. 각 문자들은 최대 하나의 유니코드 블록에 포함된다.</li>
+                                        <li>static Character.UnicodeBlock ARABIC, GREEK, HANGUL 등</li>
+                                        <li>static Character.UnicodeBlock of(char c) : c가 속한 유니코드 블록 반환</li>
+                                        <li>static Character.UnicodeBlock of(int codePoint) Since 1.5</li>
+                                        <li>static final Character.UnicodeBlock forName(String blockName) Since 1.5
+                                            <br>&raquo; 블록 이름이 변경될 경우, 변경 전/후 이름 둘 다 사용할 수 있다.</li>
+                                    </ul>
+                                </li>
+                                <li>static enum Character.UnicodeScript Since 1.7
+                                    <ul>
+                                        <li>유니코드 표준 스크립트 이름 정의를 표현. 모든 문자는 하나의 스크립트(각 언어|INHERITED|COMMON|UNKNOWN)에 할당된다.</li>
+                                        <li>ARABIC, GREEK, HANGUL 등</li>
+                                        <li>static Character.UnicodeScript valueOf(String name)</li>
+                                        <li>static Character.UnicodeScript of(int codePoint)</li>
+                                        <li>static final Character.UnicodeScript forName(String scriptName)</li>
+                                    </ul>
+                                </li>
+                                <li>static final int MIN_RADIX : 문자열-숫자 간 변환을 지원하는 최소 radix</li>
+                                <li>static final int MAX_RADIX : 문자열-숫자 간 변환을 지원하는 최대 radix</li>
+                                <li>static final char MIN_VALUE Since 1.0.2 : '\u0000'</li>
+                                <li>static final char MAX_VALUE Since 1.0.2 : '\uFFFF'</li>
+                                <li>static final Class&lt;Character&gt; TYPE Since 1.1</li>
+                                <li>static final byte MODIFIER_LETTER, SPACE_SEPARATOR, MATH_SYMBOL 등</li>
+                                <li>static final char MIN_HIGH_SURROGATE Since 1.5 : '\uD800'</li>
+                                <li>static final char MAX_HIGH_SURROGATE Since 1.5 : '\uDBFF'</li>
+                                <li>static final char MIN_LOW_SURROGATE Since 1.5 : '\uDC00'</li>
+                                <li>static final char MAX_LOW_SURROGATE Since 1.5 : '\uDFFF'</li>
+                                <li>static final int MIN_SUPPLEMENTARY_CODE_POINT Since 1.5 : U+10000</li>
+                                <li>static final int MIN_CODE_POINT Since 1.5 : U+0000</li>
+                                <li>static final int MAX_CODE_POINT Since 1.5 : U+10FFFF</li>
+                                <li>static final int SIZE Since 1.5 : 표현에 필요한 비트 수, 16</li>
+                                <li>static final int BYTES Since 1.8 : 표현에 필요한 바이트 수</li>
+                                <li>static Character valueOf(char c) Since 1.5</li>
+                                <li>char charValue()</li>
+                                <li>static int hashCode(char value) Since 1.8 : int로 형변환 한 것과 동일</li>
+                                <li>static String toString(char c) Since 1.4</li>
+                                <li>static boolean isValidCodePoint(int codePoint) Since 1.5</li>
+                                <li>static boolean isBmpCodePoint(int codePoint) Since 1.7</li>
+                                <li>static boolean isSupplementaryCodePoint(int codePoint) Since 1.5</li>
+                                <li>static boolean isHighSurrogate(char ch) Since 1.5</li>
+                                <li>static boolean isLowSurrogate(char ch) Since 1.5</li>
+                                <li>static boolean isSurrogate(char ch) Since 1.7</li>
+                                <li>static boolean isSurrogatePair(char high, char low) Since 1.5</li>
+                                <li>static boolean isLowerCase(char ch) : 'a' ~ 'z'</li>
+                                <li>static boolean isLowerCase(int codePoint) Since 1.5</li>
+                                <li>static boolean isUpperCase(char ch) : 'A' ~ 'Z'</li>
+                                <li>static boolean isUpperCase(int codePoint)</li>
+                                <li>static boolean isTitleCase(char ch) Since 1.0.2 : getType(ch) == TITLECASE_LETTER</li>
+                                <li>static boolean isTitleCase(int codePoint) Since 1.5</li>
+                                <li>static boolean isDigit(char ch) : getType(ch) == DECIMAL_DIGIT_NUMBER
+                                    <ul>
+                                        <li>'\u0030' through '\u0039', ISO-LATIN-1 digits ('0' through '9')</li>
+                                        <li>'\u0660' through '\u0669', Arabic-Indic digits</li>
+                                        <li>'\u06F0' through '\u06F9', Extended Arabic-Indic digits</li>
+                                        <li>'\u0966' through '\u096F', Devanagari digits</li>
+                                        <li>'\uFF10' through '\uFF19', Fullwidth digits 등</li>
+                                    </ul>
+                                </li>
+                                <li>static boolean isDigit(int codePoint) Since 1.5</li>
+                                <li>static boolean isDefined(char ch) Since 1.0.2 : 유니코드에 정의되었는지 여부</li>
+                                <li>static boolean isDefined(int codePoint) Since 1.5</li>
+                                <li>static boolean isLetter(char ch) : getType(ch) == *_LETTER</li>
+                                <li>static boolean isLetter(int codePoint) Since 1.5</li>
+                                <li>static boolean isLetterOrDigit(char ch) Since 1.0.2</li>
+                                <li>static boolean isLetterOrDigit(int codePoint) Since 1.5</li>
+                                <li>static boolean isAlphabetic(int codePoint) Since 1.7
+                                    <br>&raquo; UPPERCASE_LETTER, LOWERCASE_LETTER, TITLECASE_LETTER, MODIFIER_LETTER, OTHER_LETTER,
+                                    LETTER_NUMBER, 및 기타 알파벳 문자인지 여부</li>
+                                <li>static boolean isIdeographic(int codePoint) Since 1.7 : CJKV(중국어, 일본어, 한국어, 베트남어) 여부</li>
+                                <li>static boolean isJavaIdentifierStart(char ch) Since 1.1 : 자바 식별자 선두문자</li>
+                                <li>static boolean isJavaIdentifierStart(int codePoint) Since 1.5</li>
+                                <li>static boolean isJavaIdentifierPart(char ch) Since 1.1</li>
+                                <li>static boolean isJavaIdentifierPart(int codePoint) Since 1.5</li>
+                                <li>static boolean isUnicodeIdentifierStart(char ch) Since 1.1
+                                    <br>&raquo; isLetter(ch) == true or getType(ch) == LETTER_NUMBER</li>
+                                <li>static boolean isUnicodeIdentifierStart(int codePoint) Since 1.5</li>
+                                <li>static boolean isUnicodeIdentifierPart(char ch) Since 1.1</li>
+                                <li>static boolean isUnicodeIdentifierPart(int codePoint) Since 1.5</li>
+                                <li>static boolean isIdentifierIgnorable(char ch) Since 1.1 : 제어문자, FORMAT 카테고리 문자</li>
+                                <li>static boolean isIdentifierIgnorable(int codePoint) Since 1.5</li>
+                                <li>static boolean isSpaceChar(char ch) Since 1.1 : getType(ch) == *_SEPARATOR</li>
+                                <li>static boolean isSpaceChar(int codePoint) Since 1.5</li>
+                                <li>static boolean isWhitespace(char ch) Since 1.1
+                                    <br>&raquo; 공백 문자(단, non-breaking space('\u00A0', '\u2007', '\u202F') 제외), '\t', '\n', 'u000B',
+                                    '\f', '\r', '\u001C', '\u001D', '\u001E', '\u001F'</li>
+                                <li>static boolean isWhitespace(int codePoint) Since 1.5</li>
+                                <li>static boolean isISOControl(char ch) Since 1.1
+                                    <br>&raquo; '\u0000' ~ '\u001F', '\u007F' ~ '\u009F'</li>
+                                <br>static boolean isISOControl(int codePoint) Since 1.5
+                                <li>static int charCount(int codePoint) Since 1.5 : 표현에 필요한 char 수(1 or 2)</li>
+                                <li>static int toCodePoint(char high, char low) Since 1.5</li>
+                                <li>static int codePointAt(CharSequence seq, int index) Since 1.5</li>
+                                <li>static int codePointAt(char[] a, int index) Since 1.5</li>
+                                <li>static int codePointAt(char[] a, int index, int limit) Since 1.5 : index &lt; limit</li>
+                                <li>static int codePointBefore(CharSequence seq, int index) Since 1.5</li>
+                                <li>static int codePointBefore(char[] a, int index) Since 1.5</li>
+                                <li>static int codePointBefore(char[] a, int index, int start) : index &gt; start</li>
+                                <li>static char highSurrogate(int codePoint) Since 1.7</li>
+                                <li>static char lowSurrogate(int codePoint) Since 1.7</li>
+                                <li>static int toChars(int codePoint, char[] dst, int dstIndex) Since 1.5 : 저장한 char 수 반환</li>
+                                <li>static char[] toChars(int codePoint) Since 1.5</li>
+                                <li>static int codePointCount(CharSequence seq, int beginIndex, int endIndex) Since 1.5
+                                    <br>&raquo; [beginIndex, endIndex) 사이의 유니코드 문자 수 반환</li>
+                                <li>static int codePointCount(char[] a, int offset, int count) Since 1.5 &raquo; count : 검사할
+                                    char 개수</li>
+                                <li>static int offsetByCodePoints(CharSequence seq, int index, int codePointOffset) Since 1.5
+                                    <br>&raquo; 지정된 index로부터 offset 개수만큼 유니코드를 건너뛴 위치. +일 경우 index 포함, -인 경우 index 미포함(예시 코드
+                                    참고)
+                                </li>
+                                <li>static int offsetByCodePoints(char[] a, int start, int count, int index, int codePointOffset)
+                                    Since 1.5
+                                    <br>&raquo; start : 유효한 문자열 시작 위치, count : 유효한 문자열 길이</li>
+                                <li>static char toLowerCase(char ch)</li>
+                                <li>static int toLowerCase(int codePoint) Since 1.5
+                                    <br>&raquo; isLowerCase(toLowerCase(x))가 항상 true는 아니다.
+                                    <br>&raquo; String.toLowerCase()가 사용 언어에 따른 효과적인 변환을 수행한다.</li>
+                                <li>static char toUpperCase(char ch)</li>
+                                <li>static int toUpperCase(int codePoint) Since 1.5
+                                    <br>&raquo; isUpperCase(toUpperCase(x))가 항상 true를 반환하진 않는다.
+                                    <br>&raquo; String.toUpperCase()가 사용 언어에 따른 효과적인 변환을 수행한다.</li>
+                                <li>static char toTitleCase(char ch) Since 1.0.2</li>
+                                <li>static int toTitleCase(int codePoint) Since 1.5
+                                    <br>&raquo; isTitleCase(toTitleCase(x))가 항상 true를 반환하진 않는다.</li>
+                                <li>static int digit(char ch, int radix)</li>
+                                <li>static int digit(int codePoint, int radix) : 예제 참조</li>
+                                <li>static int getNumericValue(char ch) Since 1.1
+                                    <br>&raquo; 로마 숫자, a~z 등을 10진법 수로 반환한다. 음수일 경우 -2, 숫자가 아닐 경우 -1 반환.</li>
+                                <li>static char forDigit(int digit, int radix)</li>
+                                <li>static int getNumericValue(int codePoint) Since 1.5</li>
+                                <li>static int getType(char ch) Since 1.1</li>
+                                <li>static int getType(int codePoint) Since 1.5</li>
+                                <li>static byte getDirectionality(char ch) Since 1.4
+                                    <br>&raquo; 문자 표시 순서를 반환한다. DIRECTIONALITY_UNDEFINED, DIRECTIONALITY_LEFT_TO_RIGHT 등</li>
+                                <li>static byte getDirectionality(int codePoint) Since 1.5</li>
+                                <li>static boolean isMirrored(char ch) Since 1.4
+                                    <br>&raquo; 예: 좌-우 표기에서 여는 소괄호는 '(', 우-좌 표기에서는 ')'</li>
+                                <li>static boolean isMirrored(int codePoint) Since 1.5</li>
+                                <li>static int compare(char x, char y) Since 1.7 : x - y</li>
+                                <li>static char reverseBytes(char ch) Since 1.5</li>
+                                <li>static String getName(int codePoint) Since 1.7
+                                    <br>&raquo; 이름 반환 : Character.UnicodeBlock.of(codePoint).toString().replace('_', ' ') + "
+                                    " + Integer.toHexString(codePoint).toUpperCase(Locale.ROOT);
+                                    <br>&raquo; 정의되어 있지 않으면 null 반환</li>
+                                <li>static int codePointOf(String name) Since 9 : 정의되어 있지 않으면 예외</li>
+                                <li>
+                                    <button type="button" onclick="javascript:showCode('JavaSE 라이브러리/src/lang/CharacterExample.java', 'java');" class="btn btn-primary btn-sm">
+                                        예시 코드 &raquo;
+                                    </button>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Double">
@@ -1951,48 +1943,49 @@
                     </tr>
                     <tr>
                         <td>
-                            1. public static final double POSITIVE_INFINITY : == Double.longBitsToDouble(0x7ff0000000000000L)
-                            <br>public static final double NEGATIVE_INFINITY : == Double.longBitsToDouble(0xfff0000000000000L)
-                            <br>public static final double NaN : == Double.longBitsToDouble(0x7ff8000000000000L)
-                            <br>public static final double MAX_VALUE : == 0x1.fffffffffffffP+1023 == Double.longBitsToDouble(0x7fefffffffffffffL)
-                            <br>public static final double MIN_NORMAL Since 1.6 : 진수가 1 이상인 가장 작은 양수 표현. == 0x1.0p-1022 == Double.longBitsToDouble(0x0010000000000000L)
-                            <br>public static final double MIN_VALUE : 가장 작은 양수 표현 == 0x0.0000000000001P-1022 == Double.longBitsToDouble(0x1L)
-                            <br>public static final int MAX_EXPONENT Since 1.6 : == Math.getExponent(Double.MAX_VALUE)
-                            <br>public static final int MIN_EXPONENT Since 1.6 : == Math.getExponent(Double.MIN_NORMAL)
-                            <br>public static final int SIZE Since 1.5 : 표현에 필요한 비트 수
-                            <br>public static final int BYTES Since 1.8 : 표현에 필요한 바이트 수
-                            <br>public static final Class&lt;Double&gt; TYPE Since 1.1
-                            <br>
-                            <br>2. static String toString(double d)
-                            <br>static String toHexString(double d) Since 1.5
-                            <br>static Double valueOf(String s) throws NumberFormatException
-                            <br>static Double valueOf(double d) Since 1.5
-                            <br>static double parseDouble(String s) throws NumberFormatException Since 1.2
-                            <br>
-                            <br>3. static boolean isNaN(double v)
-                            <br>static boolean isInfinite(double v)
-                            <br>static boolean isFinite(double d) Since 1.8
-                            <br>boolean isNaN()
-                            <br>boolean isInfinite()
-                            <br>
-                            <br>4. int hashCode() : (int)(v^(v&gt;&gt;&gt;32)), v = Double.doubleToLongBits(this.doubleValue())
-                            <br>static int hashCode(double value) Since 1.8
-                            <br>
-                            <br>5. static long doubleToLongBits(double value) : double 표현 그대로 long으로 전환. 63번 비트는 부호, 62-52번 비트는
-                            지수, 51-0번 비트는 진수
-                            <br>static long doubleToRawLongBits(double value) Since 1.3 : NaN의 경우 각각의 NaN에 대응하는 값으로 반환.
-                            <br>static double longBitsToDouble(long bits)
-                            <br>* range 0x7ff0000000000001L through 0x7fffffffffffffffL or in the range 0xfff0000000000001L through
-                            0xffffffffffffffffL, the result is a NaN
-                            <br>
-                            <br>6. int compareTo(Double anotherDouble) Since 1.2
-                            <br>* Double.NaN은 Double.POSITIVE_INFINITY보다 크다고 간주, 0.0d는 -0.0d보다 크다고 간주
-                            <br>static int compare(double d1, double d2) Since 1.4
-                            <br>
-                            <br>7. BinaryOperator
-                            <br>static double sum(double a, double b) Since 1.8
-                            <br>static double max(double a, double b) Since 1.8
-                            <br>static double min(double a, double b) Since 1.8
+                            <ol>
+                                <li>public static final double POSITIVE_INFINITY : == Double.longBitsToDouble(0x7ff0000000000000L)</li>
+                                <li>public static final double NEGATIVE_INFINITY : == Double.longBitsToDouble(0xfff0000000000000L)</li>
+                                <li>public static final double NaN : == Double.longBitsToDouble(0x7ff8000000000000L)</li>
+                                <li>public static final double MAX_VALUE : == 0x1.fffffffffffffP+1023 == Double.longBitsToDouble(0x7fefffffffffffffL)</li>
+                                <li>public static final double MIN_NORMAL Since 1.6 : 진수가 1 이상인 가장 작은 양수 표현. == 0x1.0p-1022 ==
+                                    Double.longBitsToDouble(0x0010000000000000L)
+                                </li>
+                                <li>public static final double MIN_VALUE : 가장 작은 양수 표현 == 0x0.0000000000001P-1022 == Double.longBitsToDouble(0x1L)</li>
+                                <li>public static final int MAX_EXPONENT Since 1.6 : == Math.getExponent(Double.MAX_VALUE)</li>
+                                <li>public static final int MIN_EXPONENT Since 1.6 : == Math.getExponent(Double.MIN_NORMAL)</li>
+                                <li>public static final int SIZE Since 1.5 : 표현에 필요한 비트 수</li>
+                                <li>public static final int BYTES Since 1.8 : 표현에 필요한 바이트 수</li>
+                                <li>public static final Class&lt;Double&gt; TYPE Since 1.1</li>
+                                <li>static String toString(double d)</li>
+                                <li>static String toHexString(double d) Since 1.5</li>
+                                <li>static Double valueOf(String s)</li>
+                                <li>static Double valueOf(double d) Since 1.5</li>
+                                <li>static double parseDouble(String s) Since 1.2</li>
+                                <li>static boolean isNaN(double v)</li>
+                                <li>static boolean isInfinite(double v)</li>
+                                <li>static boolean isFinite(double d) Since 1.8</li>
+                                <li>boolean isNaN()</li>
+                                <li>boolean isInfinite()</li>
+                                <li>int hashCode() : (int)(v^(v&gt;&gt;&gt;32)), v = Double.doubleToLongBits(this.doubleValue())</li>
+                                <li>static int hashCode(double value) Since 1.8</li>
+                                <li>static long doubleToLongBits(double value) : double 표현 그대로 long으로 전환. 63번 비트는 부호, 62-52번
+                                    비트는 지수, 51-0번 비트는 진수</li>
+                                <li>static long doubleToRawLongBits(double value) Since 1.3 : NaN의 경우 각각의 NaN에 대응하는 값으로 반환.</li>
+                                <li>static double longBitsToDouble(long bits)
+                                    <br>&raquo; range 0x7ff0000000000001L through 0x7fffffffffffffffL or in the range 0xfff0000000000001L
+                                    through 0xffffffffffffffffL, the result is a NaN</li>
+                                <li>int compareTo(Double anotherDouble) Since 1.2
+                                    <br>&raquo; Double.NaN은 Double.POSITIVE_INFINITY보다 크다고 간주, 0.0d는 -0.0d보다 크다고 간주</li>
+                                <li>static int compare(double d1, double d2) Since 1.4</li>
+                                <li>BinaryOperator
+                                    <ul>
+                                        <li>static double sum(double a, double b) Since 1.8</li>
+                                        <li>static double max(double a, double b) Since 1.8</li>
+                                        <li>static double min(double a, double b) Since 1.8</li>
+                                    </ul>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Float">
@@ -2000,45 +1993,7 @@
                     </tr>
                     <tr>
                         <td>
-                            1. public static final float POSITIVE_INFINITY : == Float.intBitsToFloat(0x7f800000)
-                            <br>public static final float NEGATIVE_INFINITY : == Float.intBitsToFloat(0xff800000)
-                            <br>public static final float NaN : == Float.intBitsToFloat(0x7fc00000)
-                            <br>public static final float MAX_VALUE : == 0x1.fffffeP+127f == Float.intBitsToFloat(0x7f7fffff)
-                            <br>public static final float MIN_NORMAL Since 1.6 : 진수가 1이상인 가장 작은 양수 표현 == 0x1.0p-126f == intBitsToFloat(0x00800000)
-                            <br>public static final float MIN_VALUE : == 0x0.000002P-126f == Float.intBitsToFloat(0x1)
-                            <br>public static final int MAX_EXPONENT Since 1.6 : == Math.getExponent(Float.MAX_VALUE)
-                            <br>public static final int MIN_EXPONENT Since 1.6 : == Math.getExponent(Float.MIN_NORMAL)
-                            <br>public static final int SIZE Since 1.5 : 표현하는 데 필요한 비트 수
-                            <br>public static final int BYTES Since 1.8 : 표현하는 데 필요한 바이트 수
-                            <br>public static final Class&lt;Float&gt; TYPE Since 1.1
-                            <br>
-                            <br>2. static String toString(float f)
-                            <br>static String toHexString(float f) Since 1.5
-                            <br>static Float valueOf(String s) throws NumberFormatException
-                            <br>static Float valueOf(float f) Since 1.5
-                            <br>static float parseFloat(String s) throws NumberFormatException Since 1.2
-                            <br>
-                            <br>3. static boolean isNaN(float v)
-                            <br>static boolean isInfinite(float v)
-                            <br>static boolean isFinite(float f) Since 1.8
-                            <br>boolean isNaN()
-                            <br>boolean isInfinite()
-                            <br>
-                            <br>4. static int floatToIntBits(float value) : float 표현 그대로 int로 전환. 31번째 비트는 부호, 30-23번 비트는 지수,
-                            22-0번 비트는 진수
-                            <br>static int floatToRawIntBits(float value) Since 1.3 : NoN의 경우 각각에 대응하는 값으로 변환
-                            <br>static float intBitsToFloat(int bits)
-                            <br>* range 0x7f800001 through 0x7fffffff or in the range 0xff800001 through 0xffffffff, the result
-                            is a NaN
-                            <br>
-                            <br>5. int compareTo(Float anotherFloat) Since 1.2
-                            <br>* NaN은 POSITIVE_INFINITY보다 크다고 간주. 0.0f는 -0.0f보다 크다고 간주
-                            <br>static int compare(float f1, float f2) Since 1.4
-                            <br>
-                            <br>6. BinaryOperator
-                            <br>static float sum(float a, float b) Since 1.8
-                            <br>static float max(float a, float b) Since 1.8
-                            <br>static float min(float a, float b) Since 1.8
+                            1. Double과 유사
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Integer">
@@ -2046,62 +2001,69 @@
                     </tr>
                     <tr>
                         <td>
-                            1. @Native public static final int MIN_VALUE : -2^31
-                            <br>@Native public static final int MAX_VALUE : 2^31-1
-                            <br>public static final Class&lt;Integer&gt; TYPE Since 1.1
-                            <br>@Native public static final int SIZE Since 1.5 : 표현하는데 필요한 비트 수
-                            <br>public static final int BYTES Since 1.8 : 표현하는데 필요한 바이트 수
-                            <br>
-                            <br>2. static String toString(int i, int radix) : radix in [Character.MIN_RADIX, Character.MAX_RADIX]
-                            <br>static String toUnsignedString(int i, int radix) Since 1.8
-                            <br>static String toHexString(int i) Since 1.0.2
-                            <br>static String toOctalString(int i) Since 1.0.2
-                            <br>static String toBinaryString(int i) Since 1.0.2
-                            <br>static String toUnsignedString(int i) Since 1.8
-                            <br>static int parseInt(String s, int radix) throws NumberFormatException
-                            <br>static int parseInt(CharSequence s, int beginIndex, int endIndex, int radix) throws NumberFormatException
-                            Since 9
-                            <br>* [beginIndex, endIndex - 1]. 파싱 중 CharSequence 변경에 대한 조치를 하지 않음
-                            <br>static int parseInt(String s) throws NumberFormatException
-                            <br>static int parseUnsignedInt(String s, int radix) throws NumberFormatException Since 1.8
-                            <br>static int parseUnsignedInt(CharSequence s, int beginIndex, int endIndex, int radix) throws NumberFormatException
-                            Since 9
-                            <br>static int parseUnsignedInt(String s) throws NumberFormatException Since 1.8
-                            <br>static Integer valueOf(String s, int radix) throws NumberFormatException
-                            <br>static Integer valueOf(String s) throws NumberFormatException
-                            <br>static Integer valueOf(int i) Since 1.5
-                            <br>
-                            <br>3. System Property 관련
-                            <br>static Integer getInteger(String nm)
-                            <br>&raquo; nm : property name, 속성 값은 decode 메서드를 통해 구한다
-                            <br>static Integer getInteger(String nm, int val)
-                            <br>&raquo; val : 기본값
-                            <br>static Integer getInteger(String nm, Integer val)
-                            <br>static Integer decode(String nm) throws NumberFormatException
-                            <br>&raquo; nm : 16진수, 10진수, 8진수 문자열 표기
-                            <br>
-                            <br>4. unsigned 연산
-                            <br>static int compareUnsigned(int x, int y) Since 1.8
-                            <br>static long toUnsignedLong(int x) Since 1.8
-                            <br>static int divideUnsigned(int dividend, int divisor) Since 1.8
-                            <br>static int remainderUnsigned(int dividend, int divisor) Since 1.8
-                            <br>
-                            <br>5. bit 관련
-                            <br>static int highestOneBit(int i) Since 1.5
-                            <br>static int lowestOneBit(int i) Since 1.5
-                            <br>static int numberOfLeadingZeros(int i) Since 1.5
-                            <br>static int numberOfTrailingZeros(int i) Since 1.5
-                            <br>static int bitCount(int i) Since 1.5
-                            <br>static int rotateLeft(int i, int distance) Since 1.5
-                            <br>static int rotateRight(int i, int distance) Since 1.5
-                            <br>static int reverse(int i) Since 1.5
-                            <br>static int reverseBytes(int i) Since 1.5 : 바이트 단위로 뒤집기
-                            <br>static int signum(int i) Since 1.5 : -1, 0, 1
-                            <br>
-                            <br>6. BinaryOperator
-                            <br>static int sum(int a, int b) Since 1.8
-                            <br>static int max(int a, int b) Since 1.8
-                            <br>static int min(int a, int b) Since 1.8
+                            <ol>
+                                <li>@Native public static final int MIN_VALUE : -2^31</li>
+                                <li>@Native public static final int MAX_VALUE : 2^31-1</li>
+                                <li>public static final Class&lt;Integer&gt; TYPE Since 1.1</li>
+                                <li>@Native public static final int SIZE Since 1.5 : 표현하는데 필요한 비트 수</li>
+                                <li>public static final int BYTES Since 1.8 : 표현하는데 필요한 바이트 수</li>
+                                <li>static String toString(int i, int radix) : radix in [Character.MIN_RADIX, Character.MAX_RADIX]</li>
+                                <li>static String toUnsignedString(int i, int radix) Since 1.8</li>
+                                <li>static String toHexString(int i) Since 1.0.2</li>
+                                <li>static String toOctalString(int i) Since 1.0.2</li>
+                                <li>static String toBinaryString(int i) Since 1.0.2</li>
+                                <li>static String toUnsignedString(int i) Since 1.8</li>
+                                <li>static int parseInt(String s, int radix)</li>
+                                <li>static int parseInt(CharSequence s, int beginIndex, int endIndex, int radix) Since 9
+                                    <br>&raquo; [beginIndex, endIndex - 1]. 파싱 중 CharSequence 변경에 대한 조치를 하지 않음</li>
+                                <li>static int parseInt(String s)</li>
+                                <li>static int parseUnsignedInt(String s, int radix) Since 1.8</li>
+                                <li>static int parseUnsignedInt(CharSequence s, int beginIndex, int endIndex, int radix) Since
+                                    9</li>
+                                <li>static int parseUnsignedInt(String s) Since 1.8</li>
+                                <li>static Integer valueOf(String s, int radix)</li>
+                                <li>static Integer valueOf(String s)</li>
+                                <li>static Integer valueOf(int i) Since 1.5</li>
+                                <li>System Property 관련
+                                    <ul>
+                                        <li>static Integer getInteger(String nm) &raquo; nm : property name, 속성 값은 decode 메서드를
+                                            통해 구한다
+                                        </li>
+                                        <li>static Integer getInteger(String nm, int val) &raquo; val : 기본값</li>
+                                        <li>static Integer getInteger(String nm, Integer val)</li>
+                                        <li>static Integer decode(String nm) &raquo; nm : 16진수, 10진수, 8진수 문자열 표기</li>
+                                    </ul>
+                                </li>
+                                <li>unsigned 연산
+                                    <ul>
+                                        <li>static int compareUnsigned(int x, int y) Since 1.8</li>
+                                        <li>static long toUnsignedLong(int x) Since 1.8</li>
+                                        <li>static int divideUnsigned(int dividend, int divisor) Since 1.8</li>
+                                        <li>static int remainderUnsigned(int dividend, int divisor) Since 1.8</li>
+                                    </ul>
+                                </li>
+                                <li>bit 관련
+                                    <ul>
+                                        <li>static int highestOneBit(int i) Since 1.5</li>
+                                        <li>static int lowestOneBit(int i) Since 1.5</li>
+                                        <li>static int numberOfLeadingZeros(int i) Since 1.5</li>
+                                        <li>static int numberOfTrailingZeros(int i) Since 1.5</li>
+                                        <li>static int bitCount(int i) Since 1.5</li>
+                                        <li>static int rotateLeft(int i, int distance) Since 1.5</li>
+                                        <li>static int rotateRight(int i, int distance) Since 1.5</li>
+                                        <li>static int reverse(int i) Since 1.5</li>
+                                        <li>static int reverseBytes(int i) Since 1.5 : 바이트 단위로 뒤집기</li>
+                                        <li>static int signum(int i) Since 1.5 : -1, 0, 1</li>
+                                    </ul>
+                                </li>
+                                <li>BinaryOperator
+                                    <ul>
+                                        <li>static int sum(int a, int b) Since 1.8</li>
+                                        <li>static int max(int a, int b) Since 1.8</li>
+                                        <li>static int min(int a, int b) Since 1.8</li>
+                                    </ul>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Long">
@@ -2109,62 +2071,7 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 필드
-                            <br>@Native public static final long MIN_VALUE
-                            <br>@Native public static final long MAX_VALUE
-                            <br>public static final Class&lt;Long&gt; TYPE Since 1.1
-                            <br>@Native public static final int SIZE Since 1.5 : 표현하는데 필요한 비트 수
-                            <br>public static final int BYTES Since 1.8
-                            <br>
-                            <br>2. static String toString(long i, int radix)
-                            <br>static String toUnsignedString(long i, int radix) Since 1.8
-                            <br>static String toHexString(long i) Since 1.0.2
-                            <br>static String toOctalString(long i) Since 1.0.2
-                            <br>static String toBinaryString(long i) Since 1.0.2
-                            <br>static String toUnsignedString(long i) Since 1.8
-                            <br>static long parseLong(String s, int radix) throws NumberFormatException
-                            <br>static long parseLong(CharSequence s, int beginIndex, int endIndex, int radix) throws NumberFormatException
-                            Since 9
-                            <br>&raquo; [beginIndex, endIndex - 1]. 파싱 중 CharSequence의 변경에 대처하지 않음
-                            <br>static long parseLong(String s) throws NumberFormatException
-                            <br>static long parseUnsignedLong(String s, int radix) throws NumberFormatException Since 1.8
-                            <br>static long parseUnsignedLong(CharSequence s, int beginIndex, int endIndex, int radix) throws
-                            NumberFormatException Since 9
-                            <br>static long parseUnsignedLong(String s) throws NumberFormatException Since 1.8
-                            <br>static Long valueOf(String s, int radix) throws NumberFormatException
-                            <br>static Long valueOf(String s) throws NumberFormatException
-                            <br>static Long valueOf(long l) Since 1.5
-                            <br>
-                            <br>3. System Property 관련
-                            <br>static Long getLong(String nm)
-                            <br>&raquo; nm : property name, 시스템 프로퍼티 값을 decode 메서드를 통해 가져온다.
-                            <br>static Long getLong(String nm, long val)
-                            <br>&raquo; val : 기본값
-                            <br>static Long getLong(String nm, Long val)
-                            <br>static Long decode(String nm) throws NumberFormatException Since 1.2
-                            <br>&raquo; nm : 16진수, 8진수, 10진수 문자열 표현
-                            <br>
-                            <br>4. unsigned 연산
-                            <br>static int compareUnsigned(long x, long y) Since 1.8
-                            <br>static long divideUnsigned(long dividend, long divisor) Since 1.8
-                            <br>static long remainderUnsigned(long dividend, long divisor) Since 1.8
-                            <br>
-                            <br>5. 비트 관련
-                            <br>static long highestOneBit(long i) Since 1.5
-                            <br>static long lowestOneBit(long i) Since 1.5
-                            <br>static int numberOfLeadingZeros(long i) Since 1.5
-                            <br>static int numberOfTrailingZeros(long i) Since 1.5
-                            <br>static int bitCount(long i) Since 1.5
-                            <br>static long rotateLeft(long i, int distance) Since 1.5
-                            <br>static long rotateRight(long i, int distance) Since 1.5
-                            <br>static long reverse(long i) Since 1.5
-                            <br>static long reverseBytes(long i) Since 1.5
-                            <br>static int signum(long i) Since 1.5 : -1, 0, 1
-                            <br>
-                            <br>6. BinaryOperator
-                            <br>static long sum(long a, long b) Since 1.8
-                            <br>static long max(long a, long b) Since 1.8
-                            <br>static long min(long a, long b) Since 1.8
+                            1. Integer와 유사
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Short">
@@ -2172,28 +2079,7 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 필드
-                            <br>static final short MIN_VALUE
-                            <br>static final short MAX_VALUE
-                            <br>static final Class&lt;Short&gt; TYPE
-                            <br>static final int SIZE Since 1.5 : 표현에 필요한 비트 수
-                            <br>static final int BYTES Since 1.8 : 표현에 필요한 바이트 수
-                            <br>
-                            <br>2. static String toString(short s)
-                            <br>static short parseShort(String s, int radix) throws NumberFormatException
-                            <br>static short parseShort(String s) throws NumberFormatException
-                            <br>static Short valueOf(String s, int radix) throws NumberFormatException
-                            <br>static Short valueOf(String s) throws NumberFormatException
-                            <br>static Short valueOf(short s) Since 1.5
-                            <br>static Short decode(String nm) throws NumberFormatException
-                            <br>&raquo; 16진수, 10진수, 8진수 문자열 표현을 Short로
-                            <br>
-                            <br>3. unsigned 연산
-                            <br>static int compareUnsigned(short x, short y) Since 9
-                            <br>static int toUnsignedInt(short x) Since 1.8
-                            <br>static long toUnsignedLong(short x) Since 1.8
-                            <br>
-                            <br>4. static short reverseBytes(short i) Since 1.5
+                            1. Integer와 유사
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="String">
@@ -2201,95 +2087,97 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 유니코드 보충 평면 문자는 surrogate pairs로써 2자리를 차지한다.
-                            <br>로캐일을 고려한 문자열 비교는 Collator 클래스를 이용.
-                            <br>
-                            <br>2. static final Comparator&lt;String&gt; CASE_INSENSITIVE_ORDER Since 1.2 : 대소문자 구분없는 비교자. 직렬화
-                            가능.
-                            <br>
-                            <br>3. 생성자
-                            <br>public String()
-                            <br>public String(String original)
-                            <br>public String(char[] value)
-                            <br>public String(char[] value, int offset, int count) : count == length
-                            <br>public String(int[] codePoints, int offset, int count) Since 1.5
-                            <br>public String(byte[] bytes, int offset, int length, String charsetName) throws UnsupportedEncodingException
-                            Since 1.1
-                            <br>public String(byte[] bytes, int offset, int length, Charset charset) Since 1.6
-                            <br>public String(byte[] bytes, String charsetName) throws UnsupportedEncodingException Since 1.1
-                            <br>public String(byte[] bytes, Charset charset) Since 1.6
-                            <br>public String(byte[] bytes, int offset, int length) Since 1.1
-                            <br>public String(byte[] bytes) Since 1.1
-                            <br>public String(StringBuffer buffer)
-                            <br>public String(StringBuilder builder) Since 1.5
-                            <br>
-                            <br>4. boolean isEmpty() Since 1.6
-                            <br>int codePointAt(int index) Since 1.5
-                            <br>int codePointBefore(int index) Since 1.5
-                            <br>int codePointCount(int beginIndex, int endIndex)
-                            <br>int offsetByCodePoints(int index, int codePointOffset) Since 1.5
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Character]').attr('id'));" class="btn btn-primary btn-sm">
-                                참고: Character &raquo;
-                            </button>
-                            <br>void getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)
-                            <br>byte[] getBytes(String charsetName) throws UnsupportedEncodingException Since 1.1
-                            <br>byte[] getBytes(Charset charset) Since 1.6
-                            <br>byte[] getBytes() Since 1.1
-                            <br>boolean contentEquals(StringBuffer sb) Since 1.4
-                            <br>boolean contentEquals(CharSequence cs) Since 1.5
-                            <br>boolean equalsIgnoreCase(String anotherString)
-                            <br>int compareToIgnoreCase(String str) Since 1.2
-                            <br>boolean regionMatches(int tooffset, String other, int ooffset, int len)
-                            <br>&raquo; 부분 문자열이 일치하는지 여부 반환. t(his's)offset, o(ther's)offset
-                            <br>boolean regionMatches(boolean ignoreCase, int toffset, String other, int ooffset, int len)
-                            <br>boolean startsWith(String prefix, int toffset) : 부분 문자열의 시작 일치 여부 반환
-                            <br>boolean startsWith(String prefix) Since 1.0
-                            <br>boolean endsWith(String suffix)
-                            <br>int indexOf(int ch)
-                            <br>int indexOf(int ch, int fromIndex)
-                            <br>int lastIndexOf(int ch)
-                            <br>int lastIndexOf(int ch, int fromIndex)
-                            <br>int indexOf(String str)
-                            <br>int indexOf(String str, int fromIndex)
-                            <br>int lastIndexOf(String str)
-                            <br>int lastIndexOf(String str, int fromIndex)
-                            <br>String substring(int beginIndex)
-                            <br>String substring(int beginIndex, int endIndex)
-                            <br>String concat(String str)
-                            <br>String replace(char oldChar, char newChar)
-                            <br>boolean matches(String regex) Since 1.4 : Pattern.matches(regex, str)과 같은 결과
-                            <br>boolean contains(CharSequence s) Since 1.5
-                            <br>String replaceFirst(String regex, String replacement) Since 1.4
-                            <br>String replaceAll(String regex, String replacement) Since 1.4
-                            <br>String replace(CharSequence target, CharSequence replacement) Since 1.5
-                            <br>String[] split(String regex, int limit) Since 1.4
-                            <br>&raquo; limit이 음수인 경우, 제한 없이 분리. 0인 경우 빈 문자열로 끝나지 않음.
-                            <br>String[] split(String regex) Since 1.4 : split(regex, 0)
-                            <br>static String join(CharSequence delimiter, CharSequence... elements) Since 1.8
-                            <br>static String join(CharSequence delimiter, Iterable&lt;? extends CharSequence&gt; elements) Since
-                            1.8
-                            <br>String toLowerCase(Locale locale) Since 1.1
-                            <br>String toLowerCase()
-                            <br>String toUpperCase(Locale locale) Since 1.1
-                            <br>String toUpperCase()
-                            <br>String trim() : 시작과 끝의 공백 제거
-                            <br>IntStream chars() Since 9
-                            <br>IntStream codePoints() Since 9
-                            <br>char[] toCharArray()
-                            <br>static String format(String format, Object... args) Since 1.5
-                            <br>static String format(Locale l, String format, Object... args) Since 1.5
-                            <br>static String valueOf(Object obj) : obj.toString()
-                            <br>static String valueOf(char[] data)
-                            <br>static String valueOf(char[] data, int offset, int count)
-                            <br>static String copyValueOf(char[] data, int offset, int count)
-                            <br>static String copyValueOf(char[] data)
-                            <br>static String valueOf(boolean b)
-                            <br>static String valueOf(char c)
-                            <br>static String valueOf(int i)
-                            <br>static String valueOf(long l)
-                            <br>static String valueOf(float f)
-                            <br>static String valueOf(double d)
-                            <br>String intern() : 문자열 객체에 대한 내부 표현 반환
+                            <ol>
+                                <li>유니코드 보충 평면 문자는 surrogate pairs로써 2자리를 차지한다.</li>
+                                <li>로캐일을 고려한 문자열 비교는 Collator 클래스를 이용.</li>
+                                <li>static final Comparator&lt;String&gt; CASE_INSENSITIVE_ORDER Since 1.2 : 대소문자 구분없는 비교자. 직렬화
+                                    가능.</li>
+                                <li>생성자
+                                    <ul>
+                                        <li>public String()</li>
+                                        <li>public String(String original)</li>
+                                        <li>public String(char[] value)</li>
+                                        <li>public String(char[] value, int offset, int count) : count == length</li>
+                                        <li>public String(int[] codePoints, int offset, int count) Since 1.5</li>
+                                        <li>public String(byte[] bytes, int offset, int length, String charsetName) Since 1.1</li>
+                                        <li>public String(byte[] bytes, int offset, int length, Charset charset) Since 1.6</li>
+                                        <li>public String(byte[] bytes, String charsetName) Since 1.1</li>
+                                        <li>public String(byte[] bytes, Charset charset) Since 1.6</li>
+                                        <li>public String(byte[] bytes, int offset, int length) Since 1.1</li>
+                                        <li>public String(byte[] bytes) Since 1.1</li>
+                                        <li>public String(StringBuffer buffer)</li>
+                                        <li>public String(StringBuilder builder) Since 1.5</li>
+                                    </ul>
+                                    <li>boolean isEmpty() Since 1.6</li>
+                                    <li>int codePointAt(int index) Since 1.5</li>
+                                    <li>int codePointBefore(int index) Since 1.5</li>
+                                    <li>int codePointCount(int beginIndex, int endIndex)</li>
+                                    <li>int offsetByCodePoints(int index, int codePointOffset) Since 1.5
+                                        <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Character]').attr('id'));" class="btn btn-primary btn-sm">
+                                            참고: Character &raquo;
+                                        </button>
+                                    </li>
+                                    <li>void getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)</li>
+                                    <li>byte[] getBytes(String charsetName)Since 1.1</li>
+                                    <li>byte[] getBytes(Charset charset) Since 1.6</li>
+                                    <li>byte[] getBytes() Since 1.1</li>
+                                    <li>boolean contentEquals(StringBuffer sb) Since 1.4</li>
+                                    <li>boolean contentEquals(CharSequence cs) Since 1.5</li>
+                                    <li>boolean equalsIgnoreCase(String anotherString)</li>
+                                    <li>int compareToIgnoreCase(String str) Since 1.2</li>
+                                    <li>boolean regionMatches(int tooffset, String other, int ooffset, int len)
+                                        <br>&raquo; 부분 문자열이 일치하는지 여부 반환. t(his's)offset, o(ther's)offset</li>
+                                    <li>boolean regionMatches(boolean ignoreCase, int toffset, String other, int ooffset, int
+                                        len)</li>
+                                    <li>boolean startsWith(String prefix, int toffset) : 부분 문자열의 시작 일치 여부 반환</li>
+                                    <li>boolean startsWith(String prefix) Since 1.0</li>
+                                    <li>boolean endsWith(String suffix)</li>
+                                    <li>int indexOf(int ch)</li>
+                                    <li>int indexOf(int ch, int fromIndex)</li>
+                                    <li>int lastIndexOf(int ch)</li>
+                                    <li>int lastIndexOf(int ch, int fromIndex)</li>
+                                    <li>int indexOf(String str)</li>
+                                    <li>int indexOf(String str, int fromIndex)</li>
+                                    <li>int lastIndexOf(String str)</li>
+                                    <li>int lastIndexOf(String str, int fromIndex)</li>
+                                    <li>String substring(int beginIndex)</li>
+                                    <li>String substring(int beginIndex, int endIndex)</li>
+                                    <li>String concat(String str)</li>
+                                    <li>String replace(char oldChar, char newChar)</li>
+                                    <li>boolean matches(String regex) Since 1.4 : Pattern.matches(regex, str)과 같은 결과</li>
+                                    <li>boolean contains(CharSequence s) Since 1.5</li>
+                                    <li>String replaceFirst(String regex, String replacement) Since 1.4</li>
+                                    <li>String replaceAll(String regex, String replacement) Since 1.4</li>
+                                    <li>String replace(CharSequence target, CharSequence replacement) Since 1.5</li>
+                                    <li>String[] split(String regex, int limit) Since 1.4
+                                        <br>&raquo; limit이 음수인 경우, 제한 없이 분리. 0인 경우 빈 문자열로 끝나지 않음.</li>
+                                    <li>String[] split(String regex) Since 1.4 : split(regex, 0)</li>
+                                    <li>static String join(CharSequence delimiter, CharSequence... elements) Since 1.8</li>
+                                    <li>static String join(CharSequence delimiter, Iterable&lt;? extends CharSequence&gt; elements)
+                                        Since 1.8</li>
+                                    <li>String toLowerCase(Locale locale) Since 1.1</li>
+                                    <li>String toLowerCase()</li>
+                                    <li>String toUpperCase(Locale locale) Since 1.1</li>
+                                    <li>String toUpperCase()</li>
+                                    <li>String trim() : 시작과 끝의 공백 제거</li>
+                                    <li>IntStream chars() Since 9</li>
+                                    <li>IntStream codePoints() Since 9</li>
+                                    <li>char[] toCharArray()</li>
+                                    <li>static String format(String format, Object... args) Since 1.5</li>
+                                    <li>static String format(Locale l, String format, Object... args) Since 1.5</li>
+                                    <li>static String valueOf(Object obj) : obj.toString()</li>
+                                    <li>static String valueOf(char[] data)</li>
+                                    <li>static String valueOf(char[] data, int offset, int count)</li>
+                                    <li>static String copyValueOf(char[] data, int offset, int count)</li>
+                                    <li>static String copyValueOf(char[] data)</li>
+                                    <li>static String valueOf(boolean b)</li>
+                                    <li>static String valueOf(char c)</li>
+                                    <li>static String valueOf(int i)</li>
+                                    <li>static String valueOf(long l)</li>
+                                    <li>static String valueOf(float f)</li>
+                                    <li>static String valueOf(double d)</li>
+                                    <li>String intern() : 문자열 객체에 대한 내부 표현 반환</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="StringBuffer">
@@ -2297,69 +2185,35 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 쓰레드-안전한 변경 가능한 문자열.
-                            <br>
-                            <br>2. public StringBuffer()
-                            <br>public StringBuffer(int capacity)
-                            <br>public StringBuffer(String str)
-                            <br>public StringBuffer(CharSequence seq) Since 1.5
-                            <br>
-                            <br>3. void trimToSize() Since 1.5 : 버퍼 크기를 줄여 문자열 크기에 맞춘다.
-                            <br>void setLength(int newLength) : 새로운 크기의 문자열에 기존 문자열을 복사. 남는 부분은 '\u0000'(null)로 채워진다.
-                            <br>int codePointAt(int index) Since 1.5
-                            <br>int codePointBefore(int index) Since 1.5
-                            <br>int codePointCount(int beginIndex, int endIndex) Since 1.5
-                            <br>int offsetByCodePoints(int index, int codePointOffset) Since 1.5
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Character]').attr('id'));" class="btn btn-primary btn-sm">
-                                참고: Character &raquo;
-                            </button>
-                            <br>void getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)
-                            <br>IntStream chars() Since 9
-                            <br>IntStream codePoints() Since 9
-                            <br>int length()
-                            <br>int capacity()
-                            <br>void ensureCapacity(int minimumCapacity)
-                            <br>
-                            <br>4. 추가 / 삽입
-                            <br>StringBuffer append(StringBuffer sb) Since 1.4
-                            <br>StringBuffer append(char[] str, int offset, int len)
-                            <br>StringBuffer appendCodePoint(int codePoint) Since 1.5
-                            <br>java.lang.AbstractStringBuilder append(Object obj)
-                            <br>java.lang.AbstractStringBuilder append(String str)
-                            <br>java.lang.AbstractStringBuilder append(char[] str)
-                            <br>java.lang.AbstractStringBuilder append(boolean b)
-                            <br>java.lang.AbstractStringBuilder append(char c)
-                            <br>java.lang.AbstractStringBuilder append(int i)
-                            <br>java.lang.AbstractStringBuilder append(long l)
-                            <br>java.lang.AbstractStringBuilder append(float f)
-                            <br>java.lang.AbstractStringBuilder append(double d)
-                            <br>StringBuffer insert(int index, char[] str, int offset, int len) Since 1.2
-                            <br>StringBuffer insert(int offset, Object obj) : insert(offset, String.valueOf(obj))
-                            <br>StringBuffer insert(int offset, String str)
-                            <br>StringBuffer insert(int offset, char[] str)
-                            <br>StringBuffer insert(int dstOffset, CharSequence s) Since 1.5 : null인 경우 "null" 네 글자 삽입
-                            <br>StringBuffer insert(int dstOffset, CharSequence s, int start, int end) Since 1.5
-                            <br>StringBuffer insert(int offset, boolean b)
-                            <br>StringBuffer insert(int offset, char c)
-                            <br>StringBuffer insert(int offset, int i)
-                            <br>StringBuffer insert(int offset, long l)
-                            <br>StringBuffer insert(int offset, float
-                            <br>StringBuffer insert(int offset, double d)
-                            <br>
-                            <br>5. 삭제 / 변경
-                            <br>StringBuffer delete(int start, int end) Since 1.2
-                            <br>StringBuffer deleteCharAt(int index) Since 1.2
-                            <br>void setCharAt(int index, char ch)
-                            <br>StringBuffer replace(int start, int end, String str) Since 1.2
-                            <br>String substring(int start) Since 1.2
-                            <br>String substring(int start, int end) Since 1.2
-                            <br>StringBuffer reverse() Since 1.0.2
-                            <br>
-                            <br>6. 탐색
-                            <br>int indexOf(String str) Since 1.4
-                            <br>int indexOf(String str, int fromIndex) Since 1.4
-                            <br>int lastIndexOf(String str) Since 1.4
-                            <br>int lastIndexOf(String str, int fromIndex) Since 1.4
+                            <ol>
+                                <li>쓰레드-안전한 변경 가능한 문자열.</li>
+                                <li>public StringBuffer()</li>
+                                <li>public StringBuffer(int capacity)</li>
+                                <li>public StringBuffer(String str)</li>
+                                <li>public StringBuffer(CharSequence seq) Since 1.5</li>
+                                <li>void trimToSize() Since 1.5 : 버퍼 크기를 줄여 문자열 크기에 맞춘다.</li>
+                                <li>void setLength(int newLength) : 새로운 크기의 문자열에 기존 문자열을 복사. 남는 부분은 '\u0000'(null)로 채워진다.</li>
+                                <li>int codePointAt(int index) Since 1.5</li>
+                                <li>int codePointBefore(int index) Since 1.5</li>
+                                <li>int codePointCount(int beginIndex, int endIndex) Since 1.5</li>
+                                <li>int offsetByCodePoints(int index, int codePointOffset) Since 1.5
+                                    <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=Character]').attr('id'));" class="btn btn-primary btn-sm">
+                                        참고: Character &raquo;
+                                    </button>
+                                </li>
+                                <li>void getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)</li>
+                                <li>IntStream chars() Since 9</li>
+                                <li>IntStream codePoints() Since 9</li>
+                                <li>int length()</li>
+                                <li>int capacity()</li>
+                                <li>void ensureCapacity(int minimumCapacity)</li>
+                                <li>추가 / 삽입 &raquo; append, insert</li>
+                                <li>삭제 / 변경 &raquo; delete, set~, replace</li>
+                                <li>String substring(int start) Since 1.2</li>
+                                <li>String substring(int start, int end) Since 1.2</li>
+                                <li>StringBuffer reverse() Since 1.0.2</li>
+                                <li>탐색 &raquo; indexOf, lastIndexOf</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="StringBuilder">

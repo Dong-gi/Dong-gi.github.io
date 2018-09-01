@@ -10,11 +10,12 @@ public class StreamTokenizerExample {
         // 1 + 1 = 2?
         var t = new StreamTokenizer(new FileReader("./src/io/StreamTokenizerExample.java"));
         int type;
-        while(true) {
+        while (true) {
             type = t.nextToken();
-            if(type == StreamTokenizer.TT_EOF) break;
+            if (type == StreamTokenizer.TT_EOF)
+                break;
             System.out.printf("type: %3d, line: %3d", type, t.lineno());
-            switch(type) {
+            switch (type) {
             case StreamTokenizer.TT_EOL:
                 System.out.println(", line end");
                 break;
@@ -25,7 +26,7 @@ public class StreamTokenizerExample {
                 System.out.println(", string :" + t.sval);
                 break;
             default:
-                System.out.println(", special:" + (char)type);
+                System.out.println(", special:" + (char) type);
             }
         }
     }

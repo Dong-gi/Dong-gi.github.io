@@ -6,6 +6,7 @@ public class Lambda {
     public interface DoSomething {
         void doSomething();
     }
+
     @FunctionalInterface
     public interface DoSomething2 {
         static DoSomething2 getInstance() {
@@ -17,17 +18,19 @@ public class Lambda {
                 }
             };
         }
+
         Object doSomething();
-        
-        int NUM=1; // final 변수도 가질 수 있다.
+
+        int NUM = 1; // final 변수도 가질 수 있다.
+
         private void doSomething2() {
             System.out.println("private 메서드도 가질 수 있다. 밖에서는 못부르징~");
         }
+
         public default void doSomething3() {
             doSomething2();
         }
     }
-
 
     private Lambda() {
         System.out.println("시그너쳐만 맞으면 다 보낼 수 있다.");
@@ -57,9 +60,10 @@ public class Lambda {
     public static void doSomething(DoSomething doSomething) {
         doSomething.doSomething();
     }
+
     public static void doSomething2(DoSomething2 doSomething) {
         Object obj = doSomething.doSomething();
-        if(obj instanceof Lambda) {
+        if (obj instanceof Lambda) {
             Lambda.main(null);
         }
     }

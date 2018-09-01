@@ -6,7 +6,7 @@ public class TypeBoolean {
         boolean b1;
         b1 = true; // true literal
         b1 = false; // false literal
-        
+
         System.out.println(sayFalse() & sayTrue());
         System.out.println(sayFalse() && sayTrue());
 

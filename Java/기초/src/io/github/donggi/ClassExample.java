@@ -10,8 +10,7 @@ class Main {
     // class initializer
     // 클래스 로드시 한번만 실행
     // static, static final 멤버 초기화 가능
-    static
-    {
+    static {
         num = 0;
         NUM = 10;
     }
@@ -29,15 +28,21 @@ class Main {
     }
 
     // setter
-    public void setNum2(int num2) { this.num2 = num2; }
+    public void setNum2(int num2) {
+        this.num2 = num2;
+    }
+
     // getter
-    public int getNum2() { return num2; }
+    public int getNum2() {
+        return num2;
+    }
 }
 
 class Sub extends Main {
     public Sub() {
         super(1);
     }
+
     @Override
     public void setNum2(int num2) {
         super.setNum2(num2 + 1);

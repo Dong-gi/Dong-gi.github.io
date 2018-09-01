@@ -6,10 +6,9 @@ public class Comment {
         HelloWorld.main(null);
 
         // HelloWorld.main(null);
-        
+
         /*
-         * HelloWorld.main(null);
-         * HelloWorld.main(null);
+         * HelloWorld.main(null); HelloWorld.main(null);
          */
     }
 

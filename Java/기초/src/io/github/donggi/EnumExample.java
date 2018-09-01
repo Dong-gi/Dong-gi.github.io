@@ -3,15 +3,19 @@ package io.github.donggi;
 enum Weekday {
     SUNDAY(0) {
         @Override
-        void method(){};
+        void method() {
+        };
     },
     FRIDAY(12), SATURDAY(-1);
 
     private final int num;
-    /*private*/ Weekday(int num) {
+
+    /* private */ Weekday(int num) {
         this.num = num;
     }
+
     int getNum() { return num; }
+
     void method() {}
 }
 
@@ -27,7 +31,7 @@ public class EnumExample {
         // compareTo() : ordinal()값을 비교한다.
         System.out.println(day.compareTo(Weekday.SATURDAY));
         // valueOf : 정의된 상수를 반환한다.
-        System.out.println(Enum.valueOf(Weekday.class, "SUNDAY")); 
+        System.out.println(Enum.valueOf(Weekday.class, "SUNDAY"));
     }
 
 }

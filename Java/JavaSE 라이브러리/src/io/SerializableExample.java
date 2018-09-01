@@ -31,7 +31,7 @@ public class SerializableExample {
     public static void main(String[] args) throws Exception {
         var student = new Student("김동기", 2014136011);
 
-        try(var out = new ObjectOutputStream(new FileOutputStream("student.data"));
+        try (var out = new ObjectOutputStream(new FileOutputStream("student.data"));
                 var in = new ObjectInputStream(new FileInputStream("student.data"));) {
             out.writeObject(student);
             student = (Student) in.readObject();
