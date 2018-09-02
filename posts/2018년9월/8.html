@@ -1,0 +1,27 @@
+<ul>
+    <li>접근 제한자(Modifier)는 해당 코드를 접근/수정할 수 있는 영역을 제한하는 예약어다.
+        <ul>
+            <li>public : 어디서든지 접근 가능</li>
+            <li>private : 해당 클래스 내부에서만 접근 가능</li>
+            <li>생략(default) : 같은 패키지 내부에서만 접근 가능</li>
+            <li>protected : 같은 패키지 or 하위 클래스에서만 접근 가능</li>
+            <li>final : 재정의 불가, 수정 불가</li>
+            <li>abstract : 인스턴스화 불가. 추상 클래스만 추상 메서드를 정의할 수 있다.</li>
+            <li>static : 클래스 로드시 하나만 생성. 클래스 이름을 통해 접근.</li>
+        </ul>
+    </li>
+    <li>부모의 것보다 접근 범위를 넓힐 수는 있지만, 축소할 수는 없다.</li>
+    <li>요소별 가능한 접근 제한자 목록
+        <ul>
+            <li>Outer Class : abstract, final, public, default</li>
+            <li>Inner Class : abstract, final, private, protected, public, static, default</li>
+            <li>Outer Interface : abstract, public, default</li>
+            <li>Inner Interface : abstract, private, protected, public, static, default</li>
+            <li>Constructor : private, protected, public, default</li>
+            <li>Method : All</li>
+            <li>Variable : final, private, protected, public, static, default
+                <br>메서드의 매개변수도 final일 수 있다.
+            </li>
+        </ul>
+    </li>
+</ul>

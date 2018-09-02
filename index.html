@@ -1,168 +1,76 @@
 <!doctype html>
 
-<html lnag="kor">
+<html lnag="ko">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Main Page</title>
+    <title>한 걸음씩...</title>
 
-    <script src="/source/jquery-3.2.1.min.js"></script>
-    <script> 
-        $.get("/source/head.html", function (data) {
-            $("head").append(data);
-        });
-    </script>
+    <script src="source/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="source/bootstrap-4.0.0.min.css">
+    <script src="source/popper-1.14.3.min.js"></script>
+    <script src="source/bootstrap-4.0.0.min.js"></script>
+
+    <script src="source/highlight.pack.js"></script>
+    <link rel="stylesheet" href="source/xcode.css">
+    <link rel="stylesheet" href="source/default.css">
+    <script src="posts.js"></script>
+    <script src="source/default.js"></script>
 </head>
 
 <body>
-    <nav id="top-nav" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark"></nav>
-
-    <nav id="bottom-nav" class="navbar fixed-bottom navbar-expand navbar-dark bg-dark"></nav>
-
     <main role="main">
+        <div class="container" id="contents"></div>
+    </main>
+
+    <nav id="bottom-nav" class="navbar fixed-bottom navbar-expand navbar-dark bg-dark">
         <div class="container">
-            <div class="jumbotron">
-                <h1 class="display-3">Hello World!</h1>
+            <div class="collapse navbar-collapse">
+                <div class="btn-group dropup" id="dropup-lv-1">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">최신 글</button>
+                    <div class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group dropup d-none" id="dropup-lv-2">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                    <div class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group dropup d-none" id="dropup-lv-3">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                    <div class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group dropup d-none" id="dropup-lv-4">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                    <div class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group dropup d-none" id="dropup-lv-5">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                    <div class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group dropup" id="dropup-posts">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">컨텐츠</button>
+                    <div class="dropdown-menu"></div>
+                </div>
+                <span style="display: inline-block; width: 0.5em"></span>
+                <div class="btn-group dropup d-none" id="dropup-result">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">검색결과</button>
+                    <div class="dropdown-menu"></div>
+                </div>
+                <form class="form-inline">
+                    <input style="overflow:auto; height:35px; border-radius:4px" type="text" placeholder=" title" id="input-title">
+                    <a class="btn btn-outline-success my-2" href="javascript:internalSearch();">검색</a>
+                </form>
             </div>
         </div>
-
-        <div class="container">
-            <table class="table table-hover con-lv-1" con-title="2018년">
-                <tbody class="con-lv-2" con-title="06월">
-                    <tr class="con-lv-3" con-title="29일">
-                        <th>2018-06-29</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1. 산업기능요원 편입. 복무 시작
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="15일">
-                        <th>2018-06-15</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1. (주)세시소프트 정규직 계약
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody class="con-lv-2" con-title="05월">
-                    <tr class="con-lv-3" con-title="16일">
-                        <th>2018-05-16</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1. (주)세시소프트 인턴 계약 시작
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody class="con-lv-2" con-title="04월">
-                    <tr class="con-lv-3" con-title="26일">
-                        <th>2018-04-26</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1. 중앙신체검사 &raquo; 수핵돌출 4급
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody class="con-lv-2" con-title="03월">
-                    <tr class="con-lv-3" con-title="29일">
-                        <th>2018-03-29</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1. 재신체검사 &raquo; 중앙신체검사
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="26일">
-                        <th>2018-03-26</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1. code view를 보기 좋게 수정함.
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="20일">
-                        <th>2018-03-20</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1. 위쪽 nav에 'Functions' 메뉴 추가.
-                            <br>2. 모든 3수준 컨텐츠를 열거나 닫는 기능을 Functions 메뉴의 아이템으로 추가.
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="17일">
-                        <th>2018-03-17</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1. 귀가조치 &raquo; 재신체검사
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="11일">
-                        <th>2018-03-11</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1. 내일 군대 감.
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody class="con-lv-2" con-title="02월">
-                    <tr class="con-lv-3" con-title="22일">
-                        <th>2018-02-22</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1. 컨텐츠 내용이 많아지면서 가독성이 떨어져, 3수준 컨텐츠 내용의 가시성을 토글로 변경하도록 했습니다.
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="16일">
-                        <th>2018-02-16</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1. 컨텐츠 제목을 검색하는 기능을 추가했습니다. 검색어는 new RegExp()의 매개변수로 넘겨집니다.
-                            <br>2. 검색 결과를 별개의 목차로 생성하여 쉽게 이동할 수 있습니다.
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="01일">
-                        <th>2018-02-01</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1. 컨텐츠를 테이블로 표시하도록 변경했습니다.
-                            <br>2. '\n'을 '\\n'으로, 또는 '\\n'을 '\n'으로 변경하는 툴을 작성했습니다.
-                            <button type="button" onclick="javascript:showCode('/source/ConvertNewLine.html', 'nohighlight');" class="btn btn-primary btn-sm">Use Tool &raquo;</button>
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody class="con-lv-2" con-title="01월">
-                    <tr class="con-lv-3" con-title="31일">
-                        <th>2018-01-31</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            1. 디자인을 개선했습니다.
-                            <br>2. 하단의 목차를 통해 컨텐츠로 이동할 수 있습니다. 또한, 스크롤 이동이 감지되면 자동으로 목차를 갱신합니다.
-                            <br>3. Bootstrap Modal을 이용해 코드를 보도록 수정했습니다. 코드를 클립보드로 복사하거나 로컬로 다운로드가 가능합니다.
-                            <br>4. highlight.js를 이용해 코드를 강조하도록 수정했습니다. 다음은 코드 모달 예시입니다.
-                            <button type="button" onclick="javascript:showCode('/example/HelloWorld.java', 'java');" class="btn btn-primary btn-sm">View Code : 예시 &raquo;</button>
-                            <br>5.
-                            <a role="button" class="btn btn-info btn-sm" href="https://www.w3schools.com/howto/howto_js_snackbar.asp">스낵바</a>를 이용하여 복사되었음을 확인시키도록 했습니다.
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </main>
+    </nav>
 
     <hr>
 
-    <footer id="main-footer" class="container"></footer>
+    <footer id="main-footer" class="container">
+        &copy; Donggi Kim 2017-2018, hi.donggi@gmail.com,
+        <a role="button" class="btn btn-info btn-sm" target="_blank" href="LICENSE">LICENSE</a>
+    </footer>
 </body>
 
 </html>

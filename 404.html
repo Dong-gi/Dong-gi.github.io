@@ -1,37 +1,16 @@
 <!doctype html>
 
-<html lnag="kor">
+<html lnag="ko">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <title>404</title>
-
-    <script src="/source/jquery-3.2.1.min.js"></script>
     <script> 
-        $.get("/source/head.html", function(data) {
-            $("head").append(data);
-        });
+        setTimeout(()=>window.open("./index.html", '_self'), 2000);
     </script>
 </head>
 
 <body>
-    <nav id="top-nav" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark"></nav>
-
-    <nav id="bottom-nav" class="navbar fixed-bottom navbar-expand navbar-dark bg-dark"></nav>
-
-    <main role="main">
-        <div class="container">
-            <div class="jumbotron">
-                <h1 class="display-3">404 NOT FOUND!!</h1>
-            </div>
-        </div>
-    </main>
-
-    <hr>
-
-    <footer id="main-footer" class="container"></footer>
+    <h1>404 NOT FOUND!!</h1>
 </body>
 
 </html>

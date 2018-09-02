@@ -1,197 +1,4 @@
-<!doctype html>
 
-<html lnag="kor">
-
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <title>Java</title>
-
-    <script src="/source/jquery-3.2.1.min.js"></script>
-    <script> 
-        $.get("/source/head.html", function (data) {
-            $("head").append(data);
-        });
-    </script>
-</head>
-
-<body>
-    <nav id="top-nav" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark"></nav>
-
-    <nav id="bottom-nav" class="navbar fixed-bottom navbar-expand navbar-dark bg-dark"></nav>
-
-    <main role="main">
-
-        <div class="container">
-            <div class="jumbotron">
-                <h1 class="display-3">Java</h1>
-            </div>
-        </div>
-
-        <div class="container table-responsive con-lv-1" con-title="시작">
-            <h2>시작</h2>
-            <table class="table table-hover">
-                <tbody class="con-lv-2" con-title="Hello World">
-                    <tr style="background-color: #bbb;">
-                        <th>Hello World</th>
-                    </tr>
-                    <tr class="con-lv-3" con-title="개발 환경">
-                        <th>개발 환경</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <ul>
-                                <li>2019년 1월부로 JDK SE 버전이 전면 유료화되므로, OpenJDK를 설치한다.
-                                    <a role="button" class="btn btn-info btn-sm" href="http://openjdk.java.net/install/">OpenJDK로 이동</a>
-                                </li>
-                                <li>C:\Program Files\Java\jdk-10.0.2와 같이 적절히 압축을 풀고, 환경변수를 설정한다.
-                                    <ul>
-                                        <li>JAVA_HOME : C:\Program Files\Java\jdk-10.0.2</li>
-                                        <li>Path : %JAVA_HOME%\bin</li>
-                                    </ul>
-                                </li>
-                                <li>Eclipse, IntelliJ Community 등 적절한 IDE를 설치한다.
-                                    <a role="button" class="btn btn-info btn-sm" href="https://www.eclipse.org/downloads/">Eclipse로 이동</a>
-                                    <br>Eclipse 환경 설정 : Window &raquo; Preferences
-                                    <ul>
-                                        <li>General - Appearance - Colors and Fonts : Basic - Text Font 및 기타 폰트를 시력에 맞게 설정</li>
-                                        <li>General - Editors - Text Editors : Insert spaces for tabs 체크, Show line numbers 체크
-                                            <br>Java → Code Style → Formatter → New → Indentation → Tab Policy = Space Only
-                                            <br>적용할 소스 or 프로젝트 우클릭 → Source → Format
-                                        </li>
-                                        <li>General - Workspace : Text file encoding을 UTF-8로 설정</li>
-                                        <li>Java - Installed JREs : jre가 아닌 jdk로 설정</li>
-                                        <li>Web - CSS Files, HTML Files, JSP Files : Encoding을 UTF-8로 설정</li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="프로젝트 생성">
-                        <th>프로젝트 생성</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <ul>
-                                <li>프로젝트 생성 : "File" 메뉴 클릭, 또는 "Package Explorer"에서 우클릭 - New - Java Project. 없으면 New - Other...
-                                    - Java - Java Project를 선택
-                                    <br>
-                                    <img src="/imgs/20180826_213734.png" />
-                                </li>
-                                <li>Main 클래스 생성 : "Package Explorer"의 해당 프로젝트에서 우클릭 - New - Class
-                                    <br>
-                                    <img src="/imgs/20180826_214148.png" />
-                                    <br>Name에는 "HelloWorld"(공백 없음에 유의)를 적고, public static void main(String[] args)를 체크
-                                </li>
-                                <li>
-                                    <button type="button" onclick="javascript:showCode('기초/src/io/github/donggi/HelloWorld.java', 'java');" class="btn btn-primary btn-sm">
-                                        "클릭"
-                                    </button>과 같이 코드를 작성하고 Run.
-                                    <br>아무것도 보이지 않는다면 Window - Show View - Console 선택
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="개발 과정">
-                        <th>개발 과정</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <ol>
-                                <li>코딩 &raquo; [.java 소스 코드]</li>
-                                <li>컴파일 by 컴파일러 &raquo; [.class 바이트 코드 = 중간 언어]</li>
-                                <li>해석 by JVM 인터프리터 &raquo; 기계어</li>
-                                <li>실행 by CPU</li>
-                            </ol>
-                            * JIT(Just-In-Time) : 한 번 해석한 바이트 코드를 다시 해석하지 않고, 이전에 해석된 기계어를 가져다 이용.
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody class="con-lv-2" con-title="문법">
-                    <tr style="background-color: #bbb;">
-                        <th>문법</th>
-                    </tr>
-                    <tr class="con-lv-3" con-title="주석">
-                        <th>주석</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <ol>
-                                <li>주석(Comment)은 프로그래머를 위한 것으로, 컴파일러는 무시하는 문장들이다.</li>
-                                <li>// : '//'부터 줄의 끝까지 무시한다.</li>
-                                <li>/* */ : '/*'와 '*/' 사이의 모든 텍스트를 무시한다.</li>
-                                <li>
-                                    <button type="button" onclick="javascript:showCode('기초/src/io/github/donggi/Comment.java', 'java');" class="btn btn-primary btn-sm">
-                                        예시 코드 &raquo;
-                                    </button>
-                                </li>
-                            </ol>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="식별자">
-                        <th>식별자</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <ul>
-                                <li>식별자(Identifier)는 의미 있는 코드에 붙이는 이름을 의미한다. 의미 있는 코드에는 변수(Variable), 상수(Constant), 메서드, 클래스
-                                    등이 있다.</li>
-                                <li>자바 식별자는 '_', '$'의 사용을 허용한다. 단, '_' 단독으로는 사용할 수 없다.</li>
-                                <li>식별자 관례 : 상수를 제외한 식별자는 CamelCase 이용. 클래스는 대문자로 시작. 상수는 대문자로 이루어진 SNAKE_CASE 이용.</li>
-                                <li>
-                                    <a role="button" class="btn btn-info btn-sm" href="https://en.wikipedia.org/wiki/Camel_case">카멜 케이스 설명</a>
-                                    <a role="button" class="btn btn-info btn-sm" href="https://en.wikipedia.org/wiki/Snake_case">스네이크 케이스 설명</a>
-                                    <button type="button" onclick="javascript:showCode('기초/src/io/github/donggi/Identifier.java', 'java');" class="btn btn-primary btn-sm">
-                                        예시 코드 &raquo;
-                                    </button>
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr class="con-lv-3" con-title="자료형과 연산자">
-                        <th>자료형과 연산자</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <ul>
-                                <li>자료형은 메모리 상에서 변수가 존재하는 형식을 정의한다.</li>
-                                <li>기본 자료형(Base Type; Primitive Type)은 사용자가 정의하지 않은, 이미 자바 언어에 정의된 자료형을 의미한다.</li>
-                                <li>자바의 8가지 기본 자료형 : boolean, char, byte, short, int, long, float, double</li>
-                                <li>정수 0으로 나누는 것은 허용되지 않지만, 실수 0.으로 나누는 것은 허용된다. 다만, 0.으로 나눈 결과를 비교할 때는 예시와 같이 Double 클래스 메서드를
-                                    이용하는 것이 정확하다.</li>
-                                <li>식별자 없이 값 자체를 나타내는 코드를 리터럴(Literal)이라 부른다. 각 자료형에 대응하는 리터럴 표기는 예시 코드를 참고.
-                                    <br>예시에서 '+' 연산자가 기본 자료형 각각에 대해 문자열 연결을 해줌을 볼 수 있다. 하지만 자바는 연산자 재정의를 지원해주지는 않으므로 오해하지 말아야
-                                    한다.
-                                </li>
-                                <li>
-                                    <button type="button" onclick="javascript:showCode('기초/src/io/github/donggi/TypeNumber.java', 'java');" class="btn btn-primary btn-sm">
-                                        숫자 자료형 &raquo;
-                                    </button>
-                                    <button type="button" onclick="javascript:showCode('기초/src/io/github/donggi/TypeCharacter.java', 'java');" class="btn btn-primary btn-sm">
-                                        문자 자료형 &raquo;
-                                    </button>
-                                    <button type="button" onclick="javascript:showCode('기초/src/io/github/donggi/TypeBoolean.java', 'java');" class="btn btn-primary btn-sm">
-                                        불린 자료형 &raquo;
-                                    </button>
-                                    <button type="button" onclick="javascript:showCode('기초/src/io/github/donggi/TypeString.java', 'java');" class="btn btn-primary btn-sm">
-                                        문자열 자료형 &raquo;
-                                    </button>
-                                </li>
-                                <li>자바는 강한 타입 검사를 하며, 자바스크립트와 같이 null, '', 0 등을 false로 간주하거나 하는 일도 없다.</li>
-                                <li>참조 자료형(Reference Type)은 기본 자료형을 제외한 모든 자료형을 포함하며, 메모리의 주소를 통해 값에 접근한다. C/C++의 포인터와 같지만, 자바는
-                                    포인터 연산을 지원하지는 않는다. 예시 코드는 자바의 배열에 대해 보인다. 자바의 다차원 배열은 기본적으로 Jagged Array이다.
-                                    <button type="button" onclick="javascript:showCode('기초/src/io/github/donggi/TypeArray.java', 'java');" class="btn btn-primary btn-sm">
-                                        배열 자료형 &raquo;
-                                    </button>
-                                </li>
-                                <li>기본 자료형 변수는 정적 할당, 참조 자료형 변수는 동적 할당된다. 동적 할당된 객체들은 자동으로 GC 대상이 된다.
-                                    <br>&raquo; 정적 할당 : 컴파일러가 메모리 점유를 정확하게 예측할 수 있는 (지역)변수를 생성하는 방법으로, 선언과 동시에 스택 영역에 할당되어 코드
-                                    블록이 끝나는 순간 해제된다.
-                                    <br>&raquo; 동적 할당 : 동적으로 할당되는 객체들은 힙 영역에 생성되며, 그 참조가 유지되는 한 프로그램 종료시까지 유지된다.</li>
-                            </ul>
-                        </td>
-                    </tr>
                     <tr class="con-lv-3" con-title="구문">
                         <th>구문</th>
                     </tr>
@@ -325,6 +132,40 @@
                             <button type="button" onclick="javascript:showCode('기초/src/io/github/donggi/JUnitExample.java', 'java');" class="btn btn-primary btn-sm">
                                 예시 코드 &raquo;
                             </button>
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="동기화">
+                        <th>동기화</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            1. 교착상태를 방지하기 위한 기법.
+                            <br>2. 스레드 단위 동기화 : synchronized, 변수 단위 동기화 : volatile
+                        </td>
+                    </tr>
+                    <tr class="con-lv-3" con-title="JNI">
+                        <th>JNI</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <ol>
+                                <li>C 네이티브 코드를 이용할 클래스 컴파일 : javac Test.java -> Test.class 생성</li>
+                                <li>C에서 이용할 헤더 파일 생성 : javah -jni Test -> Test.h 생성</li>
+                                <li>VS에서 JDK path 추가 : 속성 - 포함 디렉터리 - "$(JAVA_HOME)\include", "$(JAVA_HOME)\include\win32 추가</li>
+                                <li>VS에서 dll 빌드 : 속성 - 구성(출력) 형식 - 동적 라이브러리(.dll) 설정</li>
+                                <li>빌드한 dll을 이클립스 프로젝트 폴더 안으로 이동. x86 JRE/JDK를 이용하여 실행(Window - Preference - Installed JREs에
+                                    x86 있는지 확인. Run - Run Configurations... - x86 JRE로 설정)</li>
+                                <li>References : https://goo.gl/WqxXTE, https://goo.gl/QJDpRv, https://goo.gl/rrMwdr, https://goo.gl/5R2UMC</li>
+                                <li>
+                                    <button type="button" onclick="javascript:showCode('기초/jni/Test.java', 'java');" class="btn btn-primary btn-sm">
+                                        자바 코드 &raquo;
+                                    </button>
+                                    <button type="button" onclick="javascript:showCode('기초/jni/test.c', 'c');" class="btn btn-primary btn-sm">
+                                        C 코드 &raquo;
+                                    </button>
+                                    <a class="btn btn-secondary" href="https://github.com/Dong-gi/Dong-gi.github.io/releases/download/1/test.dll" role="button">test.dll &raquo;</a>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                 </tbody>
@@ -1921,7 +1762,7 @@
                                     <br>&raquo; 문자 표시 순서를 반환한다. DIRECTIONALITY_UNDEFINED, DIRECTIONALITY_LEFT_TO_RIGHT 등</li>
                                 <li>static byte getDirectionality(int codePoint) Since 1.5</li>
                                 <li>static boolean isMirrored(char ch) Since 1.4
-                                    <br>&raquo; 예: 좌-우 표기에서 여는 소괄호는 '(', 우-좌 표기에서는 ')'</li>
+                                    <br>&raquo; 우→좌 표기하는 문자</li>
                                 <li>static boolean isMirrored(int codePoint) Since 1.5</li>
                                 <li>static int compare(char x, char y) Since 1.7 : x - y</li>
                                 <li>static char reverseBytes(char ch) Since 1.5</li>
@@ -2694,7 +2535,7 @@
                                         <li>Class&lt;?&gt; getDeclaringClass() : 이 프레임이 나타내는 메서드가 정의된 클래스의 객체 반환. Option.RETAIN_CLASS_REFERENCE가
                                             설정되어야 지원된다</li>
                                         <li>default MethodType getMethodType() Since 10</li>
-                                        <li>default String getDescriptor() Since 10 : throw UnsupportedOperationException</li>
+                                        <li>default String getDescriptor() Since 10</li>
                                         <li>int getByteCodeIndex() : 실행 지점을 포함하는 Code 속성에서의 인덱스 반환.</li>
                                         <li>String getFileName() : 이 프레임이 가리키는 실행 지점이 포함된 소스 파일 이름 반환.</li>
                                         <li>int getLineNumber()</li>
@@ -2707,7 +2548,8 @@
                                 <li>static StackWalker getInstance(Set&lt;StackWalker.Option&gt; options)</li>
                                 <li>static StackWalker getInstance(Set&lt;StackWalker.Option&gt; options, int estimateDepth)</li>
                                 <li>&lt;T&gt; T walk(Function&lt;? super Stream&lt;StackWalker.StackFrame&gt;, ? extends T&gt;
-                                    function)</li>
+                                    function)
+                                </li>
                                 <li>void forEach(Consumer&lt; super StackWalker.StackFrame&gt; action)</li>
                                 <li>Class&lt;&?&gt; getCallerClass()
                                     <br>&raquo; 이 메서드의 호출자의 클래스 객체를 반환.
@@ -2722,20 +2564,20 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 생성자
-                            <br>public StackTraceElement(String declaringClass, String methodName, String fileName, int lineNumber)
-                            Since 1.5
-                            <br>public StackTraceElement(String classLoaderName, String moduleName, String moduleVersion, String
-                            declaringClass, String methodName, String fileName, int lineNumber) Since 9
-                            <br>
-                            <br>2. String getFileName()
-                            <br>int getLineNumber()
-                            <br>String getModuleName() Since 9
-                            <br>String getModuleVersion() Since 9
-                            <br>String getClassLoaderName() Since 9
-                            <br>String getClassName()
-                            <br>String getMethodName()
-                            <br>boolean isNativeMethod()
+                            <ol>
+                                <li>public StackTraceElement(String declaringClass, String methodName, String fileName, int lineNumber)
+                                    Since 1.5</li>
+                                <li>public StackTraceElement(String classLoaderName, String moduleName, String moduleVersion,
+                                    String declaringClass, String methodName, String fileName, int lineNumber) Since 9</li>
+                                <li>String getFileName()</li>
+                                <li>int getLineNumber()</li>
+                                <li>String getModuleName() Since 9</li>
+                                <li>String getModuleVersion() Since 9</li>
+                                <li>String getClassLoaderName() Since 9</li>
+                                <li>String getClassName()</li>
+                                <li>String getMethodName()</li>
+                                <li>boolean isNativeMethod()</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Process">
@@ -2743,28 +2585,31 @@
                     </tr>
                     <tr>
                         <td>
-                            1. ProcessBuilder.start, Runtime.exec으로 시작된 native process들에 대한 제어 제공.
-                            <br>
-                            <br>2. abstract OutputStream getOutputStream()
-                            <br>abstract InputStream getInputStream()
-                            <br>abstract InputStream getErrorStream()
-                            <br>abstract int waitFor() throws InterruptedException : 현재 쓰레드가 이 프로세스의 종료를 기다림. 프로세스의 종료 값을 반환.
-                            <br>boolean waitFor(long timeout, TimeUnit unit) throws InterruptedException Since 1.8
-                            <br>&raquo; timeout : maximum time to wait. 시간 내에 프로세스가 종료되었다면 true 반환
-                            <br>abstract int exitValue()
-                            <br>abstract void destroy() : 정상 종료.
-                            <br>Process destroyForcibly() Since 1.8 : 강제, 즉시 종료.
-                            <br>boolean supportsNormalTermination() Since 9
-                            <br>boolean isAlive() Since 1.8
-                            <br>long pid() Since 9
-                            <br>CompletableFuture&lt;Process&gt; onExit() Since 9
-                            <br>ProcessHandle toHandle() Since 9
-                            <br>ProcessHandle.Info info() Since 9
-                            <br>Stream&lt;ProcessHandle&gt; children() Since 9
-                            <br>Stream&lt;ProcessHandle&gt; descendants() Since 9
-                            <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=ProcessHandle]').attr('id'));" class="btn btn-primary btn-sm">
-                                Goto ProcessHandle &raquo;
-                            </button>
+                            <ol>
+                                <li>ProcessBuilder.start, Runtime.exec으로 시작된 native process들에 대한 제어 제공.</li>
+                                <li>abstract OutputStream getOutputStream()</li>
+                                <li>abstract InputStream getInputStream()</li>
+                                <li>abstract InputStream getErrorStream()</li>
+                                <li>abstract int waitFor() : 현재 쓰레드가 이 프로세스의 종료를 기다림. 프로세스의 종료 값을 반환.</li>
+                                <li>boolean waitFor(long timeout, TimeUnit unit) Since 1.8
+                                    <br>&raquo; timeout : maximum time to wait. 시간 내에 프로세스가 종료되었다면 true 반환</li>
+                                <li>abstract int exitValue()</li>
+                                <li>abstract void destroy() : 정상 종료.</li>
+                                <li>Process destroyForcibly() Since 1.8 : 강제, 즉시 종료.</li>
+                                <li>boolean supportsNormalTermination() Since 9</li>
+                                <li>boolean isAlive() Since 1.8</li>
+                                <li>long pid() Since 9</li>
+                                <li>CompletableFuture&lt;Process&gt; onExit() Since 9</li>
+                                <li>ProcessHandle toHandle() Since 9</li>
+                                <li>ProcessHandle.Info info() Since 9</li>
+                                <li>Stream&lt;ProcessHandle&gt; children() Since 9</li>
+                                <li>Stream&lt;ProcessHandle&gt; descendants() Since 9</li>
+                                <li>
+                                    <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=ProcessHandle]').attr('id'));" class="btn btn-primary btn-sm">
+                                        Goto ProcessHandle &raquo;
+                                    </button>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="ProcessBuilder">
@@ -2772,51 +2617,49 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 이 클래스는 쓰레드-안전하게 구현되지 않았다.
-                            <br>
-                            <br>
-                            <b>2. abstract static class ProcessBuilder.Redirect Since 1.7</b>
-                            <br>&raquo; 서브프로세스의 입력 소스 또는 출력 방향을 표현한다.
-                            <br>&raquo;
-                            <b>static enum ProcessBuilder.Redirect.Type</b>
-                            <br>* APPEND : Redirect.appendTo(File), INHERIT, PIPE, READ : Redirect.from(File), WRITE : Redirect.to(File)
-                            <br>&raquo; 필드
-                            <br>* public static final ProcessBuilder.Redirect PIPE : 현재 프로세스와 파이프로 연결
-                            <br>* public static final ProcessBuilder.Redirect INHERIT : 현재 프로세스의 것과 동일
-                            <br>* public static final ProcessBuilder.Redirect DISCARD Since 9: 출력 버림
-                            <br>&raquo; abstract ProcessBuilder.Redirect.Type type()
-                            <br>&raquo; File file() : 입력 소스 또는 출력지와 관계된 File 반환. 없으면 null.
-                            <br>&raquo; static ProcessBuilder.Redirect from(File file)
-                            <br>&raquo; static ProcessBuilder.Redirect to(File file) : file의 이전 내용은 새로운 쓰기 작업에 의해 버려진다.
-                            <br>&raquo; static ProcessBuilder.Redirect appendTo(File file)
-                            <br>
-                            <br>3. 생성자
-                            <br>public ProcessBuilder(List&lt;String&gt; command)
-                            <br>public ProcessBuilder(String... command)
-                            <br>
-                            <br>4. ProcessBuilder command(List&lt;String&gt; command)
-                            <br>ProcessBuilder command(String... command)
-                            <br>List&lt;String&gt; command()
-                            <br>Map&lt;String, String&gt; environment()
-                            <br>File directory()
-                            <br>ProcessBuilder directory(File directory)
-                            <br>ProcessBuilder redirectInput(ProcessBuilder.Redirect source) Since 1.7
-                            <br>ProcessBuilder redirectOutput(ProcessBuilder.Redirect destination) Since 1.7
-                            <br>ProcessBuilder redirectError(ProcessBuilder.Redirect destination) Since 1.7
-                            <br>ProcessBuilder redirectInput(File file) Since 1.7
-                            <br>ProcessBuilder redirectOutput(File file) Since 1.7
-                            <br>ProcessBuilder redirectError(File file) Since 1.7
-                            <br>ProcessBuilder.Redirect redirectInput() Since 1.7
-                            <br>ProcessBuilder.Redirect redirectOutput() Since 1.7
-                            <br>ProcessBuilder.Redirect redirectError() Since 1.7
-                            <br>ProcessBuilder inheritIO() Since 1.7
-                            <br>boolean redirectErrorStream()
-                            <br>ProcessBuilder redirectErrorStream(boolean redirectErrorStream) : true면 서브프로세스들의 에러 출력이 표준 출력과
-                            함께 나온다.
-                            <br>Process start() throws IOException
-                            <br>static List&lt;Process&gt; startPipeline(List&lt;ProcessBuilder&gt; builders) throws IOException
-                            Since 9
-                            <br>&raquo; 프로세스들의 표준 출력을 다음 프로세스의 표준 입력을 연결한다.
+                            <ol>
+                                <li>이 클래스는 쓰레드-안전하게 구현되지 않았다.</li>
+                                <li>abstract static class ProcessBuilder.Redirect Since 1.7
+                                    <ul>
+                                        <li>서브프로세스의 입력 소스 또는 출력 방향을 표현한다.</li>
+                                        <li>static enum ProcessBuilder.Redirect.Type
+                                            <br>&raquo; APPEND : Redirect.appendTo(File), INHERIT, PIPE, READ : Redirect.from(File),
+                                            WRITE : Redirect.to(File)</li>
+                                        <li>public static final ProcessBuilder.Redirect PIPE : 현재 프로세스와 파이프로 연결</li>
+                                        <li>public static final ProcessBuilder.Redirect INHERIT : 현재 프로세스의 것과 동일</li>
+                                        <li>public static final ProcessBuilder.Redirect DISCARD Since 9: 출력 버림</li>
+                                        <li>abstract ProcessBuilder.Redirect.Type type()</li>
+                                        <li>File file() : 입력 소스 또는 출력지와 관계된 File 반환. 없으면 null.</li>
+                                        <li>static ProcessBuilder.Redirect from(File file)</li>
+                                        <li>static ProcessBuilder.Redirect to(File file) : file의 이전 내용은 새로운 쓰기 작업에 의해 버려진다.</li>
+                                        <li>static ProcessBuilder.Redirect appendTo(File file)</li>
+                                    </ul>
+                                </li>
+                                <li>public ProcessBuilder(List&lt;String&gt; command)</li>
+                                <li>public ProcessBuilder(String... command)</li>
+                                <li>ProcessBuilder command(List&lt;String&gt; command)</li>
+                                <li>ProcessBuilder command(String... command)</li>
+                                <li>List&lt;String&gt; command()</li>
+                                <li>Map&lt;String, String&gt; environment()</li>
+                                <li>File directory()</li>
+                                <li>ProcessBuilder directory(File directory)</li>
+                                <li>ProcessBuilder redirectInput(ProcessBuilder.Redirect source) Since 1.7</li>
+                                <li>ProcessBuilder redirectOutput(ProcessBuilder.Redirect destination) Since 1.7</li>
+                                <li>ProcessBuilder redirectError(ProcessBuilder.Redirect destination) Since 1.7</li>
+                                <li>ProcessBuilder redirectInput(File file) Since 1.7</li>
+                                <li>ProcessBuilder redirectOutput(File file) Since 1.7</li>
+                                <li>ProcessBuilder redirectError(File file) Since 1.7</li>
+                                <li>ProcessBuilder.Redirect redirectInput() Since 1.7</li>
+                                <li>ProcessBuilder.Redirect redirectOutput() Since 1.7</li>
+                                <li>ProcessBuilder.Redirect redirectError() Since 1.7</li>
+                                <li>ProcessBuilder inheritIO() Since 1.7</li>
+                                <li>boolean redirectErrorStream()</li>
+                                <li>ProcessBuilder redirectErrorStream(boolean redirectErrorStream) : true면 서브프로세스들의 에러 출력이 표준
+                                    출력과 함께 나온다.</li>
+                                <li>Process start()</li>
+                                <li>static List&lt;Process&gt; startPipeline(List&lt;ProcessBuilder&gt; builders) Since 9
+                                    <br>&raquo; 프로세스들의 표준 출력을 다음 프로세스의 표준 입력을 연결한다.</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Runtime">
@@ -2824,38 +2667,40 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 모든 Java 애플리케이션은 하나의 Runtime 인스턴스를 가진다.
-                            <br>
-                            <br>
-                            <b>2. static final class Runtime.Version implements Comparable&lt;Runtime.Version&gt; Since 9</b>
-                            <br>&raquo; $VNUM : [1-9][0-9]*((\.0)*\.[1-9][0-9]*)*
-                            <br>* 보통 다음과 같은 의미를 나타낸다. $FEATURE.$INTERIM.$UPDATE.$PATCH
-                            <br>* $FEATURE : Feature-release counter, $INTERIM : Interim-release counter, $UPDATE : Update-release
-                            counter, $PATCH : Emergency patch-release counter
-                            <br>&raquo; Version String : $VNUM(-$PRE)?\+$BUILD(-$OPT)? or $VNUM-$PRE(-$OPT)? or $VNUM(+-$OPT)?
-                            <br>* $PRE : [a-zA-Z0-9]+ : Pre-release identifier, $BUILD : 0|[1-9][0-9]* : Build number, $OPT :
-                            [-a-zA-Z0-9.]+ : Additional build information
-                            <br>
-                            <br>3. static Runtime getRuntime()
-                            <br>void exit(int status) : 현재 실행중인 JVM을 종료
-                            <br>void addShutdownHook(Thread hook) Since 1.3 : JVM이 종료 절차에 진입하면 등록된 모든 hook를 실행
-                            <br>boolean removeShutdownHook(Thread hook) Since 1.3
-                            <br>void halt(int status) Since 1.3 : 강제종료
-                            <br>Process exec(String command) throws IOException
-                            <br>Process exec(String command, String[] envp) throws IOException
-                            <br>Process exec(String command, String[] envp, File dir) throws IOException Since 1.3
-                            <br>Process exec(String[] cmdarray) throws IOException
-                            <br>Process exec(String[] cmdarray, String[] envp) throws IOException
-                            <br>Process exec(String[] cmdarray, String[] envp, File dir) throws IOException Since 1.3
-                            <br>int availableProcessors() Since 1.4
-                            <br>long freeMemory()
-                            <br>long totalMemory()
-                            <br>long maxMemory() Since 1.4
-                            <br>void gc() : Garbage collector 작동.
-                            <br>void runFinalization() : 소멸 대기중인 모든 객체 소멸
-                            <br>void load(String filename) : Native library 로드. JNI에서 사용.
-                            <br>void loadLibrary(String libname)
-                            <br>static Runtime.Version version() Since 9 : JVM 버전 반환.
+                            <ol>
+                                <li>모든 Java 애플리케이션은 하나의 Runtime 인스턴스를 가진다.</li>
+                                <li>static final class Runtime.Version implements Comparable&lt;Runtime.Version&gt; Since 9
+                                    <ul>
+                                        <li>$VNUM : [1-9][0-9]*((\.0)*\.[1-9][0-9]*)*</li>
+                                        <li>보통 다음과 같은 의미를 나타낸다. $FEATURE.$INTERIM.$UPDATE.$PATCH</li>
+                                        <li>$FEATURE : Feature-release counter, $INTERIM : Interim-release counter, $UPDATE :
+                                            Update-release counter, $PATCH : Emergency patch-release counter</li>
+                                        <li>Version String : $VNUM(-$PRE)?\+$BUILD(-$OPT)? or $VNUM-$PRE(-$OPT)? or $VNUM(+-$OPT)?</li>
+                                        <li>$PRE : [a-zA-Z0-9]+ : Pre-release identifier, $BUILD : 0|[1-9][0-9]* : Build number,
+                                            $OPT : [-a-zA-Z0-9.]+ : Additional build information</li>
+                                    </ul>
+                                </li>
+                                <li>static Runtime getRuntime()</li>
+                                <li>void exit(int status) : 현재 실행중인 JVM을 종료</li>
+                                <li>void addShutdownHook(Thread hook) Since 1.3 : JVM이 종료 절차에 진입하면 등록된 모든 hook를 실행</li>
+                                <li>boolean removeShutdownHook(Thread hook) Since 1.3</li>
+                                <li>void halt(int status) Since 1.3 : 강제종료</li>
+                                <li>Process exec(String command)</li>
+                                <li>Process exec(String command, String[] envp)</li>
+                                <li>Process exec(String command, String[] envp, File dir) Since 1.3</li>
+                                <li>Process exec(String[] cmdarray)</li>
+                                <li>Process exec(String[] cmdarray, String[] envp)</li>
+                                <li>Process exec(String[] cmdarray, String[] envp, File dir) Since 1.3</li>
+                                <li>int availableProcessors() Since 1.4</li>
+                                <li>long freeMemory()</li>
+                                <li>long totalMemory()</li>
+                                <li>long maxMemory() Since 1.4</li>
+                                <li>void gc() : Garbage collector 작동.</li>
+                                <li>void runFinalization() : 소멸 대기중인 모든 객체 소멸</li>
+                                <li>void load(String filename) : Native library 로드. JNI에서 사용.</li>
+                                <li>void loadLibrary(String libname)</li>
+                                <li>static Runtime.Version version() Since 9 : JVM 버전 반환.</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="RuntimePermission">
@@ -2871,17 +2716,18 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 보안 정책을 구현할 수 있는 클래스. 전형적인 확인 절차는 아래와 같다.
-                            <br>SecurityManager security = System.getSecurityManager();
-                            <br>if (security != null) {
-                            <br>&nbsp;&nbsp;&nbsp;&nbsp;security.checkXXX(argument, . . . );
-                            <br>}
-                            <br>
-                            <br>2. Object getSecurityContext() : 현재 실행 환경을 캡슐화한 객체 반환.
-                            <br>void checkPermission(Permission perm) Since 1.2
-                            <br>void checkPermission(Permission perm, Object context) Since 1.2
-                            <br>ThreadGroup getThreadGroup() Since 1.1 : 새로운 쓰레드를 생성할 수 있는 쓰레드그룹 반환
-                            <br>...
+                            <ol>
+                                <li>보안 정책을 구현할 수 있는 클래스. 전형적인 확인 절차는 아래와 같다.
+                                    <br>SecurityManager security = System.getSecurityManager();
+                                    <br>if (security != null) {
+                                    <br>&nbsp;&nbsp;&nbsp;&nbsp;security.checkXXX(argument, . . . );
+                                    <br>}</li>
+                                <li>Object getSecurityContext() : 현재 실행 환경을 캡슐화한 객체 반환.</li>
+                                <li>void checkPermission(Permission perm) Since 1.2</li>
+                                <li>void checkPermission(Permission perm, Object context) Since 1.2</li>
+                                <li>ThreadGroup getThreadGroup() Since 1.1 : 새로운 쓰레드를 생성할 수 있는 쓰레드그룹 반환</li>
+                                <li>...</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="System">
@@ -2889,58 +2735,63 @@
                     </tr>
                     <tr>
                         <td>
-                            <b>1. static interface System.Logger Since 9</b>
-                            <br>&raquo;
-                            <b>static enum System.Logger.Level Since 9</b>
-                            <br>* ALL(Integer.MIN_VALUE), TRACE(400), DEBUG(500), INFO(800), WARNING(900), ERROR(1000), OFF(Integer.MAX_VALUE)
-                            <br>* final String getName()
-                            <br>* final int getSeverity()
-                            <br>
-                            <br>&raquo; String getName() : 로거 이름 반환.
-                            <br>boolean isLoggable(System.Logger.Level level)
-                            <br>default void log(System.Logger.Level level, String msg)
-                            <br>...
-                            <br>
-                            <br>
-                            <b>2. abstract static class System.LoggerFinder Since 9</b>
-                            <br>&raquo; 로거의 생성, 관리, 구성에 관한 서비스 제공.
-                            <br>&raquo; 기본 구현 : java.logging 모듈이 있는 경우 java.util.logging이용. 없으면 INFO 수준으로 표준 에러 출력
-                            <br>&raquo; static System.LoggerFinder getLoggerFinder()
-                            <br>&raquo; abstract getLogger(String name, Module module)
-                            <br>&raquo; System.Logger getLocalizedLogger(String name, ResourceBundle bundle, Module module)
-                            <br>
-                            <br>3. 필드
-                            <br>public static final InputStream in
-                            <br>public static final PrintStream out
-                            <br>public static final PrintStream err
-                            <br>
-                            <br>4. static void setIn(InputStream in) Since 1.1
-                            <br>static void setOut(PrintStream out) Since 1.1
-                            <br>static void setErr(PrintStream err) Since 1.1
-                            <br>static Console console() Since 1.6
-                            <br>static Channel inheritedChannel() throws IOException Since 1.5
-                            <br>static void setSecurityManager(SecurityManager s)
-                            <br>static SecurityManager getSecurityManager()
-                            <br>static long currentTimeMillis()
-                            <br>static long nanoTime() Since 1.5
-                            <br>static void arraycopy(Object src, int srcPos, Object dest, int destPos, int length)
-                            <br>static int identityHashCode(Object x) Since 1.1
-                            <br>static Properties getProperties()
-                            <br>static String lineSeparator() Since 1.7
-                            <br>static void setProperties(Properties props)
-                            <br>static String getProperty(String key)
-                            <br>static String getProperty(String key, String def)
-                            <br>static String setProperty(String key, String value) Since 1.2
-                            <br>static String clearProperty(String key) Since 1.5
-                            <br>static String getenv(String name) : 환경변수값 반환
-                            <br>static Map&lt;String,String&gt; getenv() Since 1.5
-                            <br>static System.Logger getLogger(String name) Since 9
-                            <br>static System.Logger getLogger(String name, ResourceBundle bundle) Since 9
-                            <br>static void exit(int status)
-                            <br>static void gc() : Runtime의 것을 호출
-                            <br>static void runFinalization() : Runtime의 것을 호출
-                            <br>static void load(String filename) : Runtime의 것을 호출
-                            <br>static void loadLibrary(String libname) : Runtime의 것을 호출
+                            <ol>
+                                <li>static interface System.Logger Since 9
+                                    <ul>
+                                        <li>static enum System.Logger.Level Since 9
+                                            <ul>
+                                                <li>ALL(Integer.MIN_VALUE), TRACE(400), DEBUG(500), INFO(800), WARNING(900),
+                                                    ERROR(1000), OFF(Integer.MAX_VALUE)</li>
+                                                <li>final String getName()</li>
+                                                <li>final int getSeverity()</li>
+                                            </ul>
+                                        </li>
+                                        <li>String getName() : 로거 이름 반환.</li>
+                                        <li>boolean isLoggable(System.Logger.Level level)</li>
+                                        <li>default void log(System.Logger.Level level, String msg)</li>
+                                        <li>...</li>
+                                    </ul>
+                                </li>
+                                <li>abstract static class System.LoggerFinder Since 9
+                                    <ul>
+                                        <li>로거의 생성, 관리, 구성에 관한 서비스 제공.</li>
+                                        <li>기본 구현 : java.logging 모듈이 있는 경우 java.util.logging이용. 없으면 INFO 수준으로 표준 에러 출력</li>
+                                        <li>static System.LoggerFinder getLoggerFinder()</li>
+                                        <li>abstract getLogger(String name, Module module)</li>
+                                        <li>System.Logger getLocalizedLogger(String name, ResourceBundle bundle, Module module)</li>
+                                    </ul>
+                                </li>
+                                <li>public static final InputStream in</li>
+                                <li>public static final PrintStream out</li>
+                                <li>public static final PrintStream err</li>
+                                <li>static void setIn(InputStream in) Since 1.1</li>
+                                <li>static void setOut(PrintStream out) Since 1.1</li>
+                                <li>static void setErr(PrintStream err) Since 1.1</li>
+                                <li>static Console console() Since 1.6</li>
+                                <li>static Channel inheritedChannel() Since 1.5</li>
+                                <li>static void setSecurityManager(SecurityManager s)</li>
+                                <li>static SecurityManager getSecurityManager()</li>
+                                <li>static long currentTimeMillis()</li>
+                                <li>static long nanoTime() Since 1.5</li>
+                                <li>static void arraycopy(Object src, int srcPos, Object dest, int destPos, int length)</li>
+                                <li>static int identityHashCode(Object x) Since 1.1</li>
+                                <li>static Properties getProperties()</li>
+                                <li>static String lineSeparator() Since 1.7</li>
+                                <li>static void setProperties(Properties props)</li>
+                                <li>static String getProperty(String key)</li>
+                                <li>static String getProperty(String key, String def)</li>
+                                <li>static String setProperty(String key, String value) Since 1.2</li>
+                                <li>static String clearProperty(String key) Since 1.5</li>
+                                <li>static String getenv(String name) : 환경변수값 반환</li>
+                                <li>static Map&lt;String,String&gt; getenv() Since 1.5</li>
+                                <li>static System.Logger getLogger(String name) Since 9</li>
+                                <li>static System.Logger getLogger(String name, ResourceBundle bundle) Since 9</li>
+                                <li>static void exit(int status)</li>
+                                <li>static void gc() : Runtime의 것을 호출</li>
+                                <li>static void runFinalization() : Runtime의 것을 호출</li>
+                                <li>static void load(String filename) : Runtime의 것을 호출</li>
+                                <li>static void loadLibrary(String libname) : Runtime의 것을 호출</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Throwable">
@@ -2948,26 +2799,25 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 모든 에러와 예외의 조상.
-                            <br>
-                            <br>2. 생성자
-                            <br>public Throwable()
-                            <br>public Throwable(String message)
-                            <br>public Throwable(String message, Throwable cause) Since 1.4
-                            <br>public THrowable(Throwable cause) Since 1.4
-                            <br>protected Throwable(String message, THrowable cause, boolean enableSuppression, boolean writableStackTrace)
-                            Since 1.7
-                            <br>
-                            <br>3. String getMessage()
-                            <br>String getLocalizedMessage() Since 1.1
-                            <br>Throwable getCause() Since 1.4
-                            <br>Throwable initCause(Throwable cause) Since 1.4
-                            <br>void printStackTrace()
-                            <br>void printStackTrace(PrintStream s) Since 1.1
-                            <br>StackTraceElement[] getStackTrace() Since 1.4
-                            <br>void setStackTrace(StackTraceElement[] stackTrace) Since 1.4
-                            <br>final void addSuppressed(Throwable exception) Since 1.7
-                            <br>final Throwable[] getSuppressed() Since 1.7
+                            <ol>
+                                <li>모든 에러와 예외의 조상.</li>
+                                <li>public Throwable()</li>
+                                <li>public Throwable(String message)</li>
+                                <li>public Throwable(String message, Throwable cause) Since 1.4</li>
+                                <li>public THrowable(Throwable cause) Since 1.4</li>
+                                <li>protected Throwable(String message, THrowable cause, boolean enableSuppression, boolean writableStackTrace)
+                                    Since 1.7</li>
+                                <li>String getMessage()</li>
+                                <li>String getLocalizedMessage() Since 1.1</li>
+                                <li>Throwable getCause() Since 1.4</li>
+                                <li>Throwable initCause(Throwable cause) Since 1.4</li>
+                                <li>void printStackTrace()</li>
+                                <li>void printStackTrace(PrintStream s) Since 1.1</li>
+                                <li>StackTraceElement[] getStackTrace() Since 1.4</li>
+                                <li>void setStackTrace(StackTraceElement[] stackTrace) Since 1.4</li>
+                                <li>final void addSuppressed(Throwable exception) Since 1.7</li>
+                                <li>final Throwable[] getSuppressed() Since 1.7</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Math">
@@ -2975,17 +2825,17 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 필드
-                            <br>public static final double E
-                            <br>public static final double PI
-                            <br>
-                            <br>2. static double abs(double a) + float, int, long
-                            <br>static double cos, sin, tan, acos, asin, atan(double a)
-                            <br>static double cbrt(double a) : cube root
-                            <br>static double ceil(double a), floor(double a)
-                            <br>static double exp(double a), log(double a), log10(double a)
-                            <br>static double max(double a, double b) + float, int, long
-                            <br>...
+                            <ol>
+                                <li>public static final double E</li>
+                                <li>public static final double PI</li>
+                                <li>static double abs(double a) + float, int, long</li>
+                                <li>static double cos, sin, tan, acos, asin, atan(double a)</li>
+                                <li>static double cbrt(double a) : cube root</li>
+                                <li>static double ceil(double a), floor(double a)</li>
+                                <li>static double exp(double a), log(double a), log10(double a)</li>
+                                <li>static double max(double a, double b) + float, int, long</li>
+                                <li>...</li>
+                            </ol>
                         </td>
                     </tr>
                 </tbody>
@@ -2998,10 +2848,11 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 이 인터페이스를 사용자가 구체화함으로 새로운 어노테이션을 정의할 순 없다.
-                            <br>
-                            <br>2. Class&lt;? extends Annotation&gt; annotationType()
-                            <br>int hashCode()
+                            <ol>
+                                <li>이 인터페이스를 사용자가 구체화함으로 새로운 어노테이션을 정의할 순 없다.</li>
+                                <li>Class&lt;? extends Annotation&gt; annotationType()</li>
+                                <li>int hashCode()</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="ElementType">
@@ -3009,10 +2860,11 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 어노테이션이 적용되는 요소를 표현한다.
-                            <br>
-                            <br>2. TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VALIABLE, ANNOTATION_TYPE, PACKAGE, TYPE_PARAMETER
-                            Since 1.8, MODULE Since 9
+                            <ol>
+                                <li>어노테이션이 적용되는 요소를 표현한다.</li>
+                                <li>TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VALIABLE, ANNOTATION_TYPE, PACKAGE, TYPE_PARAMETER
+                                    Since 1.8, MODULE Since 9</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="RetentionPolicy">
@@ -3020,10 +2872,11 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 어노테이션 유지 정책.
-                            <br>
-                            <br>2. SOURCE : 컴파일러가 제거, CLASS : 컴파일러가 클래스 파일에 기록(default), RUNTIME : 클래스 파일에 기록하고 JVM 런타임에도 유지.
-                            따라서 리플렉션 가능.
+                            <ol>
+                                <li>어노테이션 유지 정책.</li>
+                                <li>SOURCE : 컴파일러가 제거, CLASS : 컴파일러가 클래스 파일에 기록(default), RUNTIME : 클래스 파일에 기록하고 JVM 런타임에도 유지.
+                                    따라서 리플렉션 가능.</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Documented">
@@ -3074,7 +2927,6 @@
                     <tr>
                         <td>
                             1. 어노테이션을 얼마나 유지할 지 표현.
-                            <br>
                             <br>2. 필요 요소 : RetentionPolicy value
                         </td>
                     </tr>
@@ -3084,7 +2936,6 @@
                     <tr>
                         <td>
                             1. 어노테이션을 적용할 요소들을 표현한다. 여러 개(또는 0개)일 경우 배열 리터럴 표기 {}를 이용한다.
-                            <br>
                             <br>2. 필요 요소 : ElementType[] value
                         </td>
                     </tr>
@@ -3098,15 +2949,16 @@
                     </tr>
                     <tr>
                         <td>
-                            1. Module Resolution : 모듈들의 연관 관계를 계산하는 작업. 각 모듈의 필요(requires) 모듈들을 반복적으로 찾아내고 관계 그래프를 구한다.
-                            <br>ModuleFinder는 module resolution과 service binding(Configuration::resolveAndBind)에서 모듈을 찾는 데 이용된다.
-                            <br>
-                            <br>2. Optional&lt;ModuleReference&gt; find(String name)
-                            <br>Set&lt;ModuleReference&gt; findAll()
-                            <br>
-                            <br>3. static ModuleFinder ofSystem()
-                            <br>static ModuleFinder of(Path... entries)
-                            <br>static ModuleFinder compose(ModuleFinder... finders)
+                            <ol>
+                                <li>Module Resolution : 모듈들의 연관 관계를 계산하는 작업. 각 모듈의 필요(requires) 모듈들을 반복적으로 찾아내고 관계 그래프를 구한다.</li>
+                                <li>ModuleFinder는 module resolution과 service binding(Configuration::resolveAndBind)에서 모듈을 찾는
+                                    데 이용된다.</li>
+                                <li>Optional&lt;ModuleReference&gt; find(String name)</li>
+                                <li>Set&lt;ModuleReference&gt; findAll()</li>
+                                <li>static ModuleFinder ofSystem()</li>
+                                <li>static ModuleFinder of(Path... entries)</li>
+                                <li>static ModuleFinder compose(ModuleFinder... finders)</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="ModuleReader">
@@ -3114,13 +2966,14 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 모듈 내용에 대한 접근 제공.
-                            <br>
-                            <br>2. Optional&lt;URI&gt; find(String name) throws IOException
-                            <br>default Optional&lt;InputStream&gt; open(String name) throws IOException
-                            <br>default Optional&ByteBuffer&gt; read(String name) throws IOException
-                            <br>default void release(ByteBuffer bb)
-                            <br>Stream&lt;String&gt; list() throws IOException
+                            <ol>
+                                <li>모듈 내용에 대한 접근 제공.</li>
+                                <li>Optional&lt;URI&gt; find(String name)</li>
+                                <li>default Optional&lt;InputStream&gt; open(String name)</li>
+                                <li>default Optional&ByteBuffer&gt; read(String name)</li>
+                                <li>default void release(ByteBuffer bb)</li>
+                                <li>Stream&lt;String&gt; list()</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="ModuleDescriptor">
@@ -3142,7 +2995,6 @@
                     <tr>
                         <td>
                             1. 모든 타입의 공통 superinterface.
-                            <br>
                             <br>2. default String getTypeName() Since 1.8
                         </td>
                     </tr>
@@ -3152,7 +3004,6 @@
                     <tr>
                         <td>
                             1. 원소 타입이 parameterized type 또는 type 변수인 배열 타입을 표현.
-                            <br>
                             <br>2. Type getGenericComponentType() : 이 배열의 원소 타입을 Type 객체로 반환.
                         </td>
                     </tr>
@@ -3161,11 +3012,12 @@
                     </tr>
                     <tr>
                         <td>
-                            1. Collection&lt;String&gt;처럼 파라미터화된 타입을 표현.
-                            <br>
-                            <br>2. Type[] getActualTypeArguments() Since 1.5
-                            <br>Type getRawType() Since 1.5
-                            <br>Type getOwnerType() Since 1.5 : 에를 들어 이 타입이 O&lt;T&gt;.I&lt;S&gt;면, O&lt;T&gt;를 반환한다.
+                            <ol>
+                                <li>Collection&lt;String&gt;처럼 파라미터화된 타입을 표현.</li>
+                                <li>Type[] getActualTypeArguments() Since 1.5</li>
+                                <li>Type getRawType() Since 1.5</li>
+                                <li>Type getOwnerType() Since 1.5 : 에를 들어 이 타입이 O&lt;T&gt;.I&lt;S&gt;면, O&lt;T&gt;를 반환한다.</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="WildcardType">
@@ -3173,10 +3025,11 @@
                     </tr>
                     <tr>
                         <td>
-                            1. ?, ? extends Number, ? super Integer와 같은 와일드카드 타입을 표현.
-                            <br>
-                            <br>2. Type[] getUpperBounds()
-                            <br>Type[] getLowerBounds()
+                            <ol>
+                                <li>?, ? extends Number, ? super Integer와 같은 와일드카드 타입을 표현.</li>
+                                <li>Type[] getUpperBounds()</li>
+                                <li>Type[] getLowerBounds()</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="AnnotatedElement">
@@ -3184,17 +3037,20 @@
                     </tr>
                     <tr>
                         <td>
-                            1. default boolean isAnnotationPresent(Class&lt;? extends Annotation&gt; annotationClass) Since 1.5
-                            <br>
-                            <br>2. &lt;T extends Annotation&gt; T getAnnotation(Class&lt;T&gt; annotationClass) Since 1.5
-                            <br>Annotation[] getAnnotations() Since 1.5
-                            <br>default &lt;T extends Annotation&gt; T[] getAnnotationsByType(Class&lt;T&gt; annotationClass)
-                            Since 1.8
-                            <br>default &lt;T extends Annotation&gt; T getDeclaredAnnotation(Class&lt;T&gt; annotationClass)
-                            Since 1.8
-                            <br>default &lt;T extends Annotatino&gt; T[] getDeclaredAnnotationsByType(Class&lt;T&gt; annotationClass)
-                            Since 1.8
-                            <br>Annotation[] getDeclaredAnnotations() Since 1.5
+                            <ol>
+                                <li>default boolean isAnnotationPresent(Class&lt;? extends Annotation&gt; annotationClass) Since
+                                    1.5
+                                </li>
+                                <li>&lt;T extends Annotation&gt; T getAnnotation(Class&lt;T&gt; annotationClass) Since 1.5</li>
+                                <li>Annotation[] getAnnotations() Since 1.5</li>
+                                <li>default &lt;T extends Annotation&gt; T[] getAnnotationsByType(Class&lt;T&gt; annotationClass)
+                                    Since 1.8</li>
+                                <li>default &lt;T extends Annotation&gt; T getDeclaredAnnotation(Class&lt;T&gt; annotationClass)
+                                    Since 1.8</li>
+                                <li>default &lt;T extends Annotatino&gt; T[] getDeclaredAnnotationsByType(Class&lt;T&gt; annotationClass)
+                                    Since 1.8</li>
+                                <li>Annotation[] getDeclaredAnnotations() Since 1.5</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="AnnotatedType">
@@ -3202,13 +3058,14 @@
                     </tr>
                     <tr>
                         <td>
-                            1. default AnnotatedType getAnnotatedOwnerType() Since 9
-                            <br>&raquo; 이 타입이 멤버로 속해있는, 어노테이트된 타입 반환. 예를 들어 이 타입이 @TA O&lt;T&gt;.I&lt;S&gt;라면, @TA O&lt;T&gt;를
-                            반환.
-                            <br>&raquo; null : 이 타입이 top-level이거나 local 클래스, 익명 클래스, 기본 자료형, void인 경우. 이 타입이 AnnotatedArrayType,
-                            AnnotatedTypeVariable, AnnotatedWildcardType의 인스턴스인 경우.
-                            <br>
-                            <br>2. Type getType() : 이 어노테이트된 타입의 기저 타입
+                            <ol>
+                                <li>default AnnotatedType getAnnotatedOwnerType() Since 9
+                                    <br>&raquo; 이 타입이 멤버로 속해있는, 어노테이트된 타입 반환. 예를 들어 이 타입이 @TA O&lt;T&gt;.I&lt;S&gt;라면, @TA O&lt;T&gt;를
+                                    반환.
+                                    <br>&raquo; null : 이 타입이 top-level이거나 local 클래스, 익명 클래스, 기본 자료형, void인 경우. 이 타입이 AnnotatedArrayType,
+                                    AnnotatedTypeVariable, AnnotatedWildcardType의 인스턴스인 경우.</li>
+                                <li>Type getType() : 이 어노테이트된 타입의 기저 타입</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="AnnotatedArrayType">
@@ -3217,7 +3074,6 @@
                     <tr>
                         <td>
                             1. 원소가 어노테이트된 배열을 표현.
-                            <br>
                             <br>2. AnnotatedType getAnnotatedGenericComponentType() : 이 배열의 어노테이트된 제네릭 타입 반환
                         </td>
                     </tr>
@@ -3227,7 +3083,6 @@
                     <tr>
                         <td>
                             1. 타입 인자들이 어노테이트된 parameterized type을 표현.
-                            <br>
                             <br>2. AnnotatedType[] getAnnotatedActualTypeArguments()
                         </td>
                     </tr>
@@ -3236,12 +3091,13 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 타입 변수에 관한 공통 superinterface.
-                            <br>
-                            <br>2. Type[] getBounds()
-                            <br>D getGenericDeclaration() Since 1.5
-                            <br>String getName()
-                            <br>AnnotatedType[] getAnnotatedBounds() Since 1.8
+                            <ol>
+                                <li>타입 변수에 관한 공통 superinterface.</li>
+                                <li>Type[] getBounds()</li>
+                                <li>D getGenericDeclaration() Since 1.5</li>
+                                <li>String getName()</li>
+                                <li>AnnotatedType[] getAnnotatedBounds() Since 1.8</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="GenericDeclaration">
@@ -3251,7 +3107,6 @@
                         <td>
                             1. 모든 타입 변수 정의들에 대한 공통 인터페이스.
                             <br>https://www.programcreek.com/java-api-examples/?api=java.lang.reflect.GenericDeclaration
-                            <br>
                             <br>2. TypeVariable&lt;?&gt;[] getTypeParameters()
                         </td>
                     </tr>
@@ -3261,7 +3116,6 @@
                     <tr>
                         <td>
                             1. 어노테이트된 바운드를 가진 타입 변수를 표현.
-                            <br>
                             <br>2. AnnotatedType[] getAnnotatedBounds()
                         </td>
                     </tr>
@@ -3270,10 +3124,11 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 어노테이트된 upper 또는 lower 바운드들에 대한 와일드카드 타입을 표현
-                            <br>
-                            <br>2. AnnotatedType[] getAnnotatedLowerBounds()
-                            <br>AnnotatedType[] getAnnotatedUpperBounds()
+                            <ol>
+                                <li>어노테이트된 upper 또는 lower 바운드들에 대한 와일드카드 타입을 표현</li>
+                                <li>AnnotatedType[] getAnnotatedLowerBounds()</li>
+                                <li>AnnotatedType[] getAnnotatedUpperBounds()</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Member">
@@ -3281,16 +3136,15 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 하나의 멤버(필드나 메서드) 또는 생성자를 가리킨다.
-                            <br>
-                            <br>2. 필드
-                            <br>static final int PUBLIC
-                            <br>static final int DECLARED : 상속한 것 미포함
-                            <br>
-                            <br>3. Class&lt;?&gt; getDeclaringClass()
-                            <br>String getName()
-                            <br>int getModifiers()
-                            <br>boolean isSynthetic() Since 1.5 : 컴파일러에 의해 만들어진 멤버인지 여부
+                            <ol>
+                                <li>하나의 멤버(필드나 메서드) 또는 생성자를 가리킨다.</li>
+                                <li>static final int PUBLIC</li>
+                                <li>static final int DECLARED : 상속한 것 미포함</li>
+                                <li>Class&lt;?&gt; getDeclaringClass()</li>
+                                <li>String getName()</li>
+                                <li>int getModifiers()</li>
+                                <li>boolean isSynthetic() Since 1.5 : 컴파일러에 의해 만들어진 멤버인지 여부</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="InvocationHandler">
@@ -3299,8 +3153,7 @@
                     <tr>
                         <td>
                             1. Proxy 인스턴스의 invocation handler에서 구현하는 인터페이스.
-                            <br>
-                            <br>2. Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+                            <br>2. Object invoke(Object proxy, Method method, Object[] args)
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="AccessibleObject">
@@ -3323,34 +3176,32 @@
                     </tr>
                     <tr>
                         <td>
-                            1. boolean isEnumConstant() Since 1.5
-                            <br>boolean isSynthetic() Since 1.5
-                            <br>
-                            <br>2. Class&lt;?&gt; getType()
-                            <br>Type getGenericType() Since 1.5
-                            <br>String toGenericString() Since 1.5
-                            <br>
-                            <br>3. Object get(Object obj) throws IllegalArgumentException, IllegalAccessException
-                            <br>boolean getBoolean(Object obj) throws IllegalArgumentException, IllegalAccessException
-                            <br>byte getByte(Object obj) throws IllegalArgumentException, IllegalAccessException
-                            <br>char getChar(Object obj) throws IllegalArgumentException, IllegalAccessException
-                            <br>short getShort(Object obj) throws IllegalArgumentException, IllegalAccessException
-                            <br>int getInt(Object obj) throws IllegalArgumentException, IllegalAccessException
-                            <br>long getLong(Object obj) throws IllegalArgumentException, IllegalAccessException
-                            <br>float getFloat(Object obj) throws IllegalArgumentException, IllegalAccessException
-                            <br>double getDouble(Object obj) throws IllegalArgumentException, IllegalAccessException
-                            <br>
-                            <br>4. void set(Object obj, Object value) throws IllegalArgumentException, IllegalAccessException
-                            <br>void setBoolean(Object obj, boolean z) throws IllegalArgumentException, IllegalAccessException
-                            <br>void setByte(Object obj, byte b) throws IllegalArgumentException, IllegalAccessException
-                            <br>void setChar(Object obj, char c) throws IllegalArgumentException, IllegalAccessException
-                            <br>void setShort(Object obj, short s) throws IllegalArgumentException, IllegalAccessException
-                            <br>void setInt(Object obj, int i) throws IllegalArgumentException, IllegalAccessException
-                            <br>void setLong(Object obj, long l) throws IllegalArgumentException, IllegalAccessException
-                            <br>void setFloat(Object obj, float f) throws IllegalArgumentException, IllegalAccessException
-                            <br>void setDouble(Object obj, double d) throws IllegalArgumentException, IllegalAccessException
-                            <br>
-                            <br>5. AnnotatedType getAnnotatedType() Since 1.8
+                            <ol>
+                                <li>boolean isEnumConstant() Since 1.5</li>
+                                <li>boolean isSynthetic() Since 1.5</li>
+                                <li>Class&lt;?&gt; getType()</li>
+                                <li>Type getGenericType() Since 1.5</li>
+                                <li>String toGenericString() Since 1.5</li>
+                                <li>Object get(Object obj)</li>
+                                <li>boolean getBoolean(Object obj)</li>
+                                <li>byte getByte(Object obj)</li>
+                                <li>char getChar(Object obj)</li>
+                                <li>short getShort(Object obj)</li>
+                                <li>int getInt(Object obj)</li>
+                                <li>long getLong(Object obj)</li>
+                                <li>float getFloat(Object obj)</li>
+                                <li>double getDouble(Object obj)</li>
+                                <li>void set(Object obj, Object value)</li>
+                                <li>void setBoolean(Object obj, boolean z)</li>
+                                <li>void setByte(Object obj, byte b)</li>
+                                <li>void setChar(Object obj, char c)</li>
+                                <li>void setShort(Object obj, short s)</li>
+                                <li>void setInt(Object obj, int i)</li>
+                                <li>void setLong(Object obj, long l)</li>
+                                <li>void setFloat(Object obj, float f)</li>
+                                <li>void setDouble(Object obj, double d)</li>
+                                <li>AnnotatedType getAnnotatedType() Since 1.8</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Executable">
@@ -3358,24 +3209,23 @@
                     </tr>
                     <tr>
                         <td>
-                            1. Method, Constructor의 공통 기능
-                            <br>
-                            <br>2.abstract Class&lt;?&gt;[] getParameterTypes()
-                            <br>int getParameterCount()
-                            <br>Type[] getGenericParameterTypes()
-                            <br>Parameter[] getParameters()
-                            <br>abstract Class&lt;?&gt;[] getExceptionTypes()
-                            <br>Type[] getGenericExceptionTypes()
-                            <br>abstract Annotation[][] getParameterAnnotations()
-                            <br>abstract AnnotatedType getAnnotatedReturnType()
-                            <br>AnnotatedType getAnnotatedReceiverType()
-                            <br>AnnotatedType[] getAnnotatedParameterTypes()
-                            <br>AnnotatedType[] getAnnotatedExceptionTypes()
-                            <br>
-                            <br>3. abstract String toGenericString()
-                            <br>
-                            <br>4. boolean isVarArgs()
-                            <br>boolean isSynthetic()
+                            <ol>
+                                <li>Method, Constructor의 공통 기능</li>
+                                <li>abstract Class&lt;?&gt;[] getParameterTypes()</li>
+                                <li>int getParameterCount()</li>
+                                <li>Type[] getGenericParameterTypes()</li>
+                                <li>Parameter[] getParameters()</li>
+                                <li>abstract Class&lt;?&gt;[] getExceptionTypes()</li>
+                                <li>Type[] getGenericExceptionTypes()</li>
+                                <li>abstract Annotation[][] getParameterAnnotations()</li>
+                                <li>abstract AnnotatedType getAnnotatedReturnType()</li>
+                                <li>AnnotatedType getAnnotatedReceiverType()</li>
+                                <li>AnnotatedType[] getAnnotatedParameterTypes()</li>
+                                <li>AnnotatedType[] getAnnotatedExceptionTypes()</li>
+                                <li>abstract String toGenericString()</li>
+                                <li>boolean isVarArgs()</li>
+                                <li>boolean isSynthetic()</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Method">
@@ -3383,15 +3233,14 @@
                     </tr>
                     <tr>
                         <td>
-                            1. Class&lt;&?&gt; getReturnType()
-                            <br>Type getGenericReturnType() Since 1.5
-                            <br>Object getDefaultValue() Since 1.5
-                            <br>
-                            <br>2. Object invoke(Object obj, Object... args) throws IllegalAccessException, IllegalArgumentException,
-                            InvocationTargetException
-                            <br>
-                            <br>3. boolean isBridge()
-                            <br>boolean isDefault() Since 1.8
+                            <ol>
+                                <li>Class&lt;&?&gt; getReturnType()</li>
+                                <li>Type getGenericReturnType() Since 1.5</li>
+                                <li>Object getDefaultValue() Since 1.5</li>
+                                <li>Object invoke(Object obj, Object... args)</li>
+                                <li>boolean isBridge()</li>
+                                <li>boolean isDefault() Since 1.8</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Constructor">
@@ -3399,7 +3248,7 @@
                     </tr>
                     <tr>
                         <td>
-                            1. T newInstance(Object... initargs) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+                            1. T newInstance(Object... initargs)
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Parameter">
@@ -3407,19 +3256,19 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 메서드 인자에 관한 정보.
-                            <br>
-                            <br>2. boolean isNamePresent()
-                            <br>boolean isImplicit()
-                            <br>boolean isSynthetic()
-                            <br>boolean isVarArgs()
-                            <br>
-                            <br>3. Executable getDeclaringExecutable()
-                            <br>int getModifiers()
-                            <br>String getName()
-                            <br>Type getParameterizedType()
-                            <br>Class&lt;?&gt; getType()
-                            <br>AnnotatedType getAnnotatedType()
+                            <ol>
+                                <li>메서드 인자에 관한 정보.</li>
+                                <li>boolean isNamePresent()</li>
+                                <li>boolean isImplicit()</li>
+                                <li>boolean isSynthetic()</li>
+                                <li>boolean isVarArgs()</li>
+                                <li>Executable getDeclaringExecutable()</li>
+                                <li>int getModifiers()</li>
+                                <li>String getName()</li>
+                                <li>Type getParameterizedType()</li>
+                                <li>Class&lt;?&gt; getType()</li>
+                                <li>AnnotatedType getAnnotatedType()</li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Array">
@@ -3428,21 +3277,16 @@
                     <tr>
                         <td>
                             1. 동적으로 자바 배열을 생성하고 접근하는 static 메서드들을 제공.
-                            <br>
-                            <br>2. static Object newInstance(Class&lt;?&gt; componentType, int length) throws NegativeArraySizeException
-                            <br>static Object newInstance(Class&lt;?&gt; componentType, int... dimensions) throws IllegalArgumentException,
-                            NegativeArraySizeException
-                            <br>
-                            <br>3. static int getLength(Object array) throws IllegalArgumentException
-                            <br>static Object get(Object array, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException
-                            <br>static boolean getBoolean(Object array, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException
-                            <br>static byte getByte(Object array, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException
-                            <br>... static double getDouble(Object array, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException
-                            <br>
-                            <br>4. static void set(Object array, int index, Object value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException
-                            <br>static void setBoolean(Object array, int index, boolean z) throws IllegalArgumentException, ArrayIndexOutOfBoundsException
-                            <br>... static void setDouble(Object array, int index, double d) throws IllegalArgumentException,
-                            ArrayIndexOutOfBoundsException
+                            <br>static Object newInstance(Class&lt;?&gt; componentType, int length)
+                            <br>static Object newInstance(Class&lt;?&gt; componentType, int... dimensions)
+                            <br>static int getLength(Object array)
+                            <br>static Object get(Object array, int index)
+                            <br>static boolean getBoolean(Object array, int index)
+                            <br>static byte getByte(Object array, int index)
+                            <br>... static double getDouble(Object array, int index)
+                            <br>static void set(Object array, int index, Object value)
+                            <br>static void setBoolean(Object array, int index, boolean z)
+                            <br>... static void setDouble(Object array, int index, double d)
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Modifier">
@@ -3450,23 +3294,25 @@
                     </tr>
                     <tr>
                         <td>
-                            1. 필드
-                            <br>&raquo; public static final int PUBLIC, PRIVATE, PROTECTED, STATIC, FINAL, SYNCHRONIZED, VOLATILE,
-                            TRANSIENT, NATIVE, INTERFACE, ABSTRACT, STRICT
-                            <br>
-                            <br>2. 생성자 : public Modifier()
-                            <br>
-                            <br>3. static boolean isPublic(int mod)
-                            <br>... static boolean isStrict(int mod)
-                            <br>static String toString(int mod)
-                            <br>
-                            <br>4. 사용할 수 있는 한정자들을 OR하여 반환
-                            <br>static int classModifiers() Since 1.7
-                            <br>static int interfaceModifiers() Since 1.7
-                            <br>static int constructorModifiers() Since 1.7
-                            <br>static int methodModifiers() Since 1.7
-                            <br>static int fieldModifiers() Since 1.7
-                            <br>static int parameterModifiers() Since 1.8
+                            <ol>
+                                <li>필드
+                                    <br>&raquo; public static final int PUBLIC, PRIVATE, PROTECTED, STATIC, FINAL, SYNCHRONIZED,
+                                    VOLATILE, TRANSIENT, NATIVE, INTERFACE, ABSTRACT, STRICT</li>
+                                <li>생성자 : public Modifier()</li>
+                                <li>static boolean isPublic(int mod)</li>
+                                <li>... static boolean isStrict(int mod)</li>
+                                <li>static String toString(int mod)</li>
+                                <li>사용할 수 있는 한정자들을 OR하여 반환
+                                    <ul>
+                                        <li>static int classModifiers() Since 1.7</li>
+                                        <li>static int interfaceModifiers() Since 1.7</li>
+                                        <li>static int constructorModifiers() Since 1.7</li>
+                                        <li>static int methodModifiers() Since 1.7</li>
+                                        <li>static int fieldModifiers() Since 1.7</li>
+                                        <li>static int parameterModifiers() Since 1.8</li>
+                                    </ul>
+                                </li>
+                            </ol>
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Proxy">
@@ -3474,22 +3320,22 @@
                     </tr>
                     <tr>
                         <td>
-                            1. Proxy는 인터페이스 익명 객체처럼 행동하면서 사용자 정의 메서드를 호출할 수 있는 객체를 생성하는 static 메서드를 제공한다.
-                            <br>예. 인터페이스 Foo의 프록시 인스턴스 생성 : proxy instanceof Foo == true, (Foo) proxy : ok
-                            <br>InvocationHandler handler = new MyInvocationHandler(...);
-                            <br>Foo f = (Foo) Proxy.newProxyInstance(Foo.class.getClassLoader(), new Class&lt;?&gt;[] { Foo.class
-                            }, handler);
-                            <br>&raquo; 프록시 클래스 속성 : "$Proxy"로 이름이 시작. final and non-abstract. java.lang.reflect.Proxy를 상속. 생성시
-                            주어진 인터페이스들을 차례대로 구체화. ProtectionDomain은 bootstrap 클래스 로더가 로드한 시스템 클래스들과 동일.
-                            <br>
-                            <br>2. 필드 : protected InvocationHandler h
-                            <br>
-                            <br>3. 생성자 : protedtec Proxy(InvocationHandler h)
-                            <br>
-                            <br>4. static Object newProxyInstance(ClassLoader loader, Class&lt;?&gt;[] interfaces, InvocationHandler
-                            h)
-                            <br>static boolean isProxyClass(Class&lt;?&gt; cl)
-                            <br>static InvocationHandler getInvocationHandler(Object proxy) throws IllegalArgumentException
+                            <ol>
+                                <li>Proxy는 인터페이스 익명 객체처럼 행동하면서 사용자 정의 메서드를 호출할 수 있는 객체를 생성하는 static 메서드를 제공한다.
+                                    <br>예. 인터페이스 Foo의 프록시 인스턴스 생성 : proxy instanceof Foo == true, (Foo) proxy : ok
+                                    <br>InvocationHandler handler = new MyInvocationHandler(...);
+                                    <br>Foo f = (Foo) Proxy.newProxyInstance(Foo.class.getClassLoader(), new Class&lt;?&gt;[]
+                                    { Foo.class }, handler);
+                                    <li>프록시 클래스 속성 : "$Proxy"로 이름이 시작. final and non-abstract. java.lang.reflect.Proxy를 상속. 생성시
+                                        주어진 인터페이스들을 차례대로 구체화. ProtectionDomain은 bootstrap 클래스 로더가 로드한 시스템 클래스들과 동일.</li>
+                                    <li>필드 : protected InvocationHandler h</li>
+                                    <li>생성자 : protedtec Proxy(InvocationHandler h)</li>
+                                    <li>static Object newProxyInstance(ClassLoader loader, Class&lt;?&gt;[] interfaces, InvocationHandler
+                                        h)
+                                    </li>
+                                    <li>static boolean isProxyClass(Class&lt;?&gt; cl)</li>
+                                    <li>static InvocationHandler getInvocationHandler(Object proxy)</li>
+                                </li>
                         </td>
                     </tr>
                 </tbody>
@@ -3622,20 +3468,20 @@
                         <td>
                             1. boolean isMulticastAddress() Since 1.1
                             <br>boolean isAnyLocalAddress() Since 1.4 ...
-                            <br>boolean isReachable(int timeout) throws IOException Since 1.5
+                            <br>boolean isReachable(int timeout) Since 1.5
                             <br>&raquo; ICMP, ECHO, REQUEST로 시도
-                            <br>boolean isReachable(NetworkInterface netif, int ttl, int timeout) throws IOException Since 1.5
+                            <br>boolean isReachable(NetworkInterface netif, int ttl, int timeout) Since 1.5
                             <br>
                             <br>2. String getHostName()
                             <br>String getCanonicalHostName() Since 1.4
                             <br>byte[] getAddress()
                             <br>String getHostAddress() Since 1.0.2
-                            <br>static InetAddress getByAddress(String host, byte[] addr) throws UnknownHostException Since 1.4
-                            <br>static InetAddress getByName(String host) throws UnknownHostException
-                            <br>static InetAddress[] getAllByName(String host) throws UnknownHostException
+                            <br>static InetAddress getByAddress(String host, byte[] addr) Since 1.4
+                            <br>static InetAddress getByName(String host UnknownHostException
+                            <br>static InetAddress[] getAllByName(String host)
                             <br>static InetAddress getLoopbackAddress() Since 1.7 : 127.0.0.1(127.*.*.*) or ::1
-                            <br>static InetAddress getByAddress(byte[] addr) throws UnknownHostException Since 1.4
-                            <br>static InetAddress getLocalHost() throws UnknownHostException
+                            <br>static InetAddress getByAddress(byte[] addr) Since 1.4
+                            <br>static InetAddress getLocalHost()
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Inet4Address">
@@ -3651,9 +3497,8 @@
                     </tr>
                     <tr>
                         <td>
-                            1. static Inet6Address getByAddress(String host, byte[] addr, NetworkInterface nif) throws UnknownHostException Since 1.5
-                            <br>static Inet6Address getByAddress(String host, byte[] addr, int scope_id) throws UnknownHostException
-                            Since 1.5
+                            1. static Inet6Address getByAddress(String host, byte[] addr, NetworkInterface nif) Since 1.5
+                            <br>static Inet6Address getByAddress(String host, byte[] addr, int scope_id) Since 1.5
                             <br>int getScopeId() Since 1.5
                             <br>NetworkInterface getScopedInterface() Since 1.5
                             <br>boolean isIPv4CompatibleAddress()
@@ -3733,8 +3578,8 @@
                             동작을 수행
                             <br>@Native static final int SO_OOBINLINE : 설정되면 input stream을 통해 긴급 데이터(1바이트)를 받을 수 있다.
                             <br>
-                            <br>2. void setOption(int optID, Object value) throws SocketException
-                            <br>Object getOption(int optID) throws SocketException
+                            <br>2. void setOption(int optID, Object value)
+                            <br>Object getOption(int optID)
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Socket">
@@ -3747,19 +3592,17 @@
                             <br>2. 생성자
                             <br>public Socket() Since 1.1
                             <br>public Socket(Proxy proxy) Since 1.5
-                            <br>public Socket(SocketImpl impl) throws SocketException Since 1.1
-                            <br>public Socket(String host, int port) throws UnknownHostException, IOException
-                            <br>public Socket(InetAddress address, int port) throws IOException
-                            <br>public Socket(String host, int port, InetAddress localAddr, int localPort) throws IOException
-                            Since 1.1
-                            <br>public Socket(InetAddress address, int port, InetAddress localAddr, int localPort) throws IOException
-                            Since 1.1
+                            <br>public Socket(SocketImpl impl) Since 1.1
+                            <br>public Socket(String host, int port)
+                            <br>public Socket(InetAddress address, int port)
+                            <br>public Socket(String host, int port, InetAddress localAddr, int localPort) Since 1.1
+                            <br>public Socket(InetAddress address, int port, InetAddress localAddr, int localPort) Since 1.1
                             <br>
-                            <br>2. void connect(SocketAddress endpoint) throws IOException Since 1.4
-                            <br>void connect(SocketAddress endpoint, int timeout) throws IOException Since 1.4
-                            <br>void bind(SocketAddress bindpoint) throws IOException Since 1.4
-                            <br>void shutdownInput() throws IOException Since 1.3
-                            <br>void shutdownOutput() throws IOException Since 1.3
+                            <br>2. void connect(SocketAddress endpoint) Since 1.4
+                            <br>void connect(SocketAddress endpoint, int timeout) Since 1.4
+                            <br>void bind(SocketAddress bindpoint) Since 1.4
+                            <br>void shutdownInput() Since 1.3
+                            <br>void shutdownOutput() Since 1.3
                             <br>InetAddress getInetAddress()
                             <br>InetAddress getLocalAddress() Since 1.1
                             <br>int getPort()
@@ -3768,8 +3611,8 @@
                             <br>SocketAddress getLocalSocketAddress() Since 1.4
                             <br>SocketChannel getChannel() Since 1.4
                             <br>&raquo; SocketChannel::open 또는 ServerSocketChannel::accept로 생성된 경우에만 존재.
-                            <br>InputStream getInputStream() throws IOException
-                            <br>OutputStream getOutputStream() throws IOException
+                            <br>InputStream getInputStream()
+                            <br>OutputStream getOutputStream()
                             <br>
                             <br>3. 상태
                             <br>boolean isInputShutdown() Since 1.4
@@ -3779,8 +3622,8 @@
                             <br>boolean isConnected() Since 1.4
                             <br>
                             <br>4. 소켓 옵션
-                            <br>&lt;T&gt; Socket setOption(SocketOption&lt;T&gt; name, T value) throws IOException Since 9
-                            <br>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) throws IOException Since 9
+                            <br>&lt;T&gt; Socket setOption(SocketOption&lt;T&gt; name, T value) Since 9
+                            <br>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) Since 9
                             <br>Set&lt;SocketOption&lt;?&gt;&gt; supportedOptions() Since 9
                         </td>
                     </tr>
@@ -3792,29 +3635,28 @@
                             1. TCP 서버
                             <br>
                             <br>2. 생성자
-                            <br>public ServerSocket() throws IOException
-                            <br>public ServerSocket(int port) throws IOException
+                            <br>public ServerSocket()
+                            <br>public ServerSocket(int port)
                             <br>&raquo; port 0은 자동 할당. 들어오는 연결 큐의 크기는 50.
-                            <br>public ServerSocket(int port, int backlog) throws IOException
+                            <br>public ServerSocket(int port, int backlog)
                             <br>&raquo; port 0은 자동 할당. backlog는 연결 큐의 크기 설정.
-                            <br>public ServerSocket(int port, int backlog, InetAddress bindAddr) throws IOException Since 1.1
+                            <br>public ServerSocket(int port, int backlog, InetAddress bindAddr) Since 1.1
                             <br>
-                            <br>3. void bind(SocketAddress endpoint) throws IOException Since 1.4
-                            <br>void bind(SOcketAddress endpoint, int backlog) throws IOException Since 1.4
+                            <br>3. void bind(SocketAddress endpoint) Since 1.4
+                            <br>void bind(SOcketAddress endpoint, int backlog) Since 1.4
                             <br>InetAddress getInetAddress()
                             <br>int getLocalPort()
                             <br>SocketAddress getLocalSocketAddress() Since 1.4
-                            <br>Socket accept() throws IOException
-                            <br>final void implAccept(Socket s) throws IOException Since 1.1 : ServerSocket의 서브클래스들이 이용
+                            <br>Socket accept()
+                            <br>final void implAccept(Socket s) Since 1.1 : ServerSocket의 서브클래스들이 이용
                             <br>ServerSocketChannel getChannel() Since 1.4
                             <br>&raquo; ServerSocketChannel::open으로 생성된 경우에만 존재.
                             <br>boolean isBound() Since 1.4
                             <br>boolean isClosed() Since 1.4
-                            <br>static void setSocketFactory(SocketImplFactory fac) throws IOException
+                            <br>static void setSocketFactory(SocketImplFactory fac)
                             <br>void setPerformancePreferences(int connectionTime, int latency, int bandwidth) Since 1.5
-                            <br>&lt;T&gt; ServerSocket setOption(SocketOption&lt;T&gt; name, T value) throws IOException Since
-                            9
-                            <br>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) throws IOException Since 9
+                            <br>&lt;T&gt; ServerSocket setOption(SocketOption&lt;T&gt; name, T value) Since 9
+                            <br>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) Since 9
                             <br>Set&lt;SocketOption&lt;?&gt;&gt; supportedOptions() Since 9
                         </td>
                     </tr>
@@ -3826,16 +3668,16 @@
                             1. UDP 소켓
                             <br>
                             <br>2. 생성자
-                            <br>public DatagramSocket() throws SocketException
+                            <br>public DatagramSocket()
                             <br>protected DatagramSocket(DatagramSocketImpl impl) Since 1.4
-                            <br>public DatagramSocket(SocketAddress bindaddr) throws SocketException Since 1.4
-                            <br>public DatagramSocket(int port) throws SocketException
-                            <br>public DatagramSocket(int port, InetAddress laddr) throws SocketException Since 1.1
+                            <br>public DatagramSocket(SocketAddress bindaddr) Since 1.4
+                            <br>public DatagramSocket(int port)
+                            <br>public DatagramSocket(int port, InetAddress laddr) Since 1.1
                             <br>
-                            <br>3. void bind(SocketAddress addr) throws SocketException Since 1.4
+                            <br>3. void bind(SocketAddress addr) Since 1.4
                             <br>void connect(InetAddress address, int port)
                             <br>&raquo; 기본적으로 UDP 데이터그램 소켓은 연결이 없다. 원격지에 연결하는순간, 소켓은 해당 원격지와만 통신할 수 있다.
-                            <br>void connect(SocketAddress addr) throws SocketException Since 1.4
+                            <br>void connect(SocketAddress addr) Since 1.4
                             <br>void disconnect()
                             <br>boolean isBound() Since 1.4
                             <br>boolean isConnected() Since 1.4
@@ -3844,11 +3686,11 @@
                             <br>int getPort() : connect되었을 때만.
                             <br>SocketAddress getRemoteSocketAddress() Since 1.4 : connect되었을 때만.
                             <br>SocketAddress getLocalSocketAddress() Since 1.4
-                            <br>void send(DatagramPacket p) throws IOException
-                            <br>void receive(DatagramPacket p) throws IOException
+                            <br>void send(DatagramPacket p)
+                            <br>void receive(DatagramPacket p)
                             <br>InetAddress getLocalAddress() Since 1.1
                             <br>int getLocalPort()
-                            <br>void setTrafficClass(int tc) throws SocketException Since 1.4
+                            <br>void setTrafficClass(int tc) Since 1.4
                             <br>&raquo; 0&lt;=tc&lt;=255. IPv4에서, 하위 8개 비트를 IP 패킷의 TOS에 쓴다.
                             <br>&raquo; RRC 1349의 TOS 값 정의
                             <br>* IPTOS_LOWCOST(0x02), IPTOS_RELIABILITY(0x04), IPTOS_THROUGHPUT(0x08), IPTOS_LOWDELAY(0x10)
@@ -3856,11 +3698,9 @@
                             <br>int getTrafficClass() Since 1.4
                             <br>DatagramChannel getChannel() Since 1.4
                             <br>&raquo; DatagramChannel::open으로 생성된 경우에만 존재.
-                            <br>static void setDatagramSocketImplFactory(DatagramSocketImplFactory fac) throws IOException Since
-                            1.3
-                            <br>&lt;T&gt; DatagramSocket setOption(SocketOption&lt;T&gt; name, T value) throws IOException Since
-                            9
-                            <br>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) throws IOException Since 9
+                            <br>static void setDatagramSocketImplFactory(DatagramSocketImplFactory fac) Since 1.3
+                            <br>&lt;T&gt; DatagramSocket setOption(SocketOption&lt;T&gt; name, T value) Since 9
+                            <br>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) Since 9
                             <br>Set&lt;SocketOption&lt;?&gt;&gt; supportedOptions() Since 9
                         </td>
                     </tr>
@@ -3880,17 +3720,17 @@
                             <br>NetworkInterface getParent() Since 1.6
                             <br>int getIndex() Since 1.7 : -1 for unknown
                             <br>String getDisplayName()
-                            <br>static NetworkInteface getByName(String name) throws SocketException
-                            <br>static NetworkInterface getByIndex(int index) throws SocketException Since 1.7
-                            <br>static NetworkInterface getByInetAddress(InetAddress addr) throws SocketException
-                            <br>static Enumeration&lt;NetworkInterface&gt; getNetworkInterfaces() throws SocketException
-                            <br>static Stream&lt;NetworkInterface&gt; networkInterfaces() throws SocketException Since 9
-                            <br>boolean isUp() throws SocketException Since 1.6
-                            <br>boolean isLoopback() throws SocketException Since 1.6
-                            <br>boolean isPointToPoint() throws SocketException Since 1.6
-                            <br>boolean supportsMulticast() throws SocketException Since 1.6
-                            <br>byte[] getHardwareAddress() throws SocketException Since 1.6 : 보통 MAC 주소
-                            <br>int getMTU() throws SocketException Since 1.6
+                            <br>static NetworkInteface getByName(String name)
+                            <br>static NetworkInterface getByIndex(int index) Since 1.7
+                            <br>static NetworkInterface getByInetAddress(InetAddress addr)
+                            <br>static Enumeration&lt;NetworkInterface&gt; getNetworkInterfaces()
+                            <br>static Stream&lt;NetworkInterface&gt; networkInterfaces() Since 9
+                            <br>boolean isUp() Since 1.6
+                            <br>boolean isLoopback() Since 1.6
+                            <br>boolean isPointToPoint() Since 1.6
+                            <br>boolean supportsMulticast() Since 1.6
+                            <br>byte[] getHardwareAddress() Since 1.6 : 보통 MAC 주소
+                            <br>int getMTU() Since 1.6
                             <br>boolean isVirtual() Since 1.6
                         </td>
                     </tr>
@@ -3918,21 +3758,20 @@
                             u.resolve(u.relativize(v)).equals(v)는 항상 성립한다.
                             <br>
                             <br>3. 생성자
-                            <br>public URI(String str) throws URISyntaxException
+                            <br>public URI(String str)
                             <br>public URI(String scheme, String userInfo, String host, int port, String path, String query,
-                            String fragment) throws URISyntaxException
-                            <br>public URI(String scheme, String authority, String path, String query, String fragment) throws
-                            URISyntaxException
-                            <br>public URI(String scheme, String host, String path, String fragment) throws URISyntaxException
-                            <br>public URI(String scheme, String ssp, String fragment) throws URISyntaxException // ssp : scheme-specific-part
+                            String fragment)
+                            <br>public URI(String scheme, String authority, String path, String query, String fragment)
+                            <br>public URI(String scheme, String host, String path, String fragment)
+                            <br>public URI(String scheme, String ssp, String fragment) // ssp : scheme-specific-part
                             <br>
                             <br>4. static URI create(String str)
-                            <br>URI parseServerAuthority() throws URISyntaxException
+                            <br>URI parseServerAuthority()
                             <br>URI normalize()
                             <br>URI resolve(URI uri)
                             <br>URI resolve(String str)
                             <br>URI relativize(URI uri)
-                            <br>URL toURL() throws MalformedURLException
+                            <br>URL toURL()
                             <br>String getScheme(), getRawSchemeSpecificPart(), getSchemeSpecificPart(), ...
                             <br>boolean isAbsolute(), isOpaque()
                             <br>String toASCIIString() : URI를 US_ASCII 문자열로 반환.
@@ -3944,22 +3783,21 @@
                     <tr>
                         <td>
                             1. 생성자
-                            <br>public URL(String protocol, String host, int port, String file) throws MalformedURLException
-                            <br>public URL(String protocol, String host, String file) throws MalformedURLException
-                            <br>public URL(String protocol, String host, int port, String file, URLStreamHandler handler) throws
-                            MalformedURLException
-                            <br>public URL(String spec) throws MalformedURLException
-                            <br>public URL(URL context, String spec) throws MalformedURLException
-                            <br>public URL(URL context, String spec, URLStreamHandler handler) throws MalformedURLException
+                            <br>public URL(String protocol, String host, int port, String file)
+                            <br>public URL(String protocol, String host, String file)
+                            <br>public URL(String protocol, String host, int port, String file, URLStreamHandler handler)
+                            <br>public URL(String spec)
+                            <br>public URL(URL context, String spec)
+                            <br>public URL(URL context, String spec, URLStreamHandler handler)
                             <br>
                             <br>2. String getQuery(), getPath(), getUserInfo(), ...
                             <br>boolean sameFile(URL other)
                             <br>String toExternalForm() : Stream protocol handler의 toExternalForm 메서드를 이용해 생성
-                            <br>URI toURI() throws URISyntaxException Since 1.5
-                            <br>URLConnection openConnection() throws IOException Since 1.5
-                            <br>final InputStream openStream() throws IOException : = openConnection().getInputStream()
-                            <br>final Object getContent() throws IOException : = openConnection().getContent()
-                            <br>final Object getContent(Class&lt;?&gt;[] classes) throws IOException Since 1.3
+                            <br>URI toURI() Since 1.5
+                            <br>URLConnection openConnection() Since 1.5
+                            <br>final InputStream openStream() : = openConnection().getInputStream()
+                            <br>final Object getContent() : = openConnection().getContent()
+                            <br>final Object getContent(Class&lt;?&gt;[] classes) Since 1.3
                             <br>static void setURLStreamHandlerFactory(URLStreamHandlerFactory fac)
                         </td>
                     </tr>
@@ -4220,7 +4058,7 @@
                     </tr>
                     <tr>
                         <td>
-                            1. int read(ByteBuffer dst) throws IOException
+                            1. int read(ByteBuffer dst)
                             <br>&raquo; dst.remaining()만큼 읽어 dst에 저장. 읽은 바이트 개수를 반환. 스트림의 끝이면 -1.
                         </td>
                     </tr>
@@ -4231,9 +4069,9 @@
                         <td>
                             1. 채널의 바이트들을 여러 버퍼에 순서대로 저장. 네트워크 헤더나 파일 메타데이터처럼 고정 길이의 헤더를 읽는 데 유용.
                             <br>
-                            <br>2. long read(ByteBuffer[] dsts, int offset, int length) throws IOException
+                            <br>2. long read(ByteBuffer[] dsts, int offset, int length)
                             <br>&raquo; dsts[offset]부터 length개의 버퍼가 각각의 remaining()만큼씩 바이트를 읽어 가져간다.
-                            <br>long read(ByteBuffer[] dsts) throws IOException : == read(dsts, 0, dsts.length)
+                            <br>long read(ByteBuffer[] dsts) : == read(dsts, 0, dsts.length)
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="WritableByteChannel">
@@ -4241,7 +4079,7 @@
                     </tr>
                     <tr>
                         <td>
-                            1. int write(ByteBuffer src) throws IOException)
+                            1. int write(ByteBuffer src)
                             <br>&raquo; src.remaining() 부분을 채널에 쓴다.
                             <button type="button" onclick="javascript:showCode('JavaLang/src/Syntax.java', 'java');" class="btn btn-primary btn-sm">
                                 View Code : 예제 &raquo;
@@ -4262,9 +4100,9 @@
                         <td>
                             1. 버퍼들의 내용을 순서대로 채널에 쓴다.
                             <br>
-                            <br>2. long write(ByteBuffer[] srcs, int offset, int length) throws IOException
+                            <br>2. long write(ByteBuffer[] srcs, int offset, int length)
                             <br>&raquo; srcs[offset]부터 length개의 버퍼의 remaining() 부분을 채널에 쓴다.
-                            <br>long write(ByteBuffer[] srcs) throws IOException : == write(srcs, 0, srcs.length)
+                            <br>long write(ByteBuffer[] srcs) : == write(srcs, 0, srcs.length)
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="ByteChannel">
@@ -4282,10 +4120,10 @@
                         <td>
                             1. 현재 위치를 기억하는 바이트 채널.
                             <br>
-                            <br>2. long position() throws IOException
-                            <br>SeekableByteChannel position(long newPosition) throws IOException : position을 변경하고 그대로 반환.
-                            <br>long size() throws IOException : 채널에 연결된 개체의 크기 반환
-                            <br>SeekableByteChannel truncate(long size) throws IOException
+                            <br>2. long position()
+                            <br>SeekableByteChannel position(long newPosition) : position을 변경하고 그대로 반환.
+                            <br>long size() : 채널에 연결된 개체의 크기 반환
+                            <br>SeekableByteChannel truncate(long size)
                             <br>&raquo; 채널에 연결된 개체를 size로 크기 조정. size가 현재 크기보다 작은 경우, 나머지는 버려진다. size가 현재 크기 이상인 경우 아무 변경 없다.
                             <br>&raquo; 현재 position이 size보다 큰 경우 size로 조정된다.
                         </td>
@@ -4327,10 +4165,10 @@
                         <td>
                             1. 네트워크 소켓에 대한 채널.
                             <br>
-                            <br>2. NetworkChannel bind(SocketAddress local) throws IOException
-                            <br>SocketAddress getLocalAddress() throws IOException
-                            <br>&lt;T&gt; NetworkChannel setOption(SocketOption&lt;T&gt; name, T value) throws IOException
-                            <br>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) throws IOException
+                            <br>2. NetworkChannel bind(SocketAddress local)
+                            <br>SocketAddress getLocalAddress()
+                            <br>&lt;T&gt; NetworkChannel setOption(SocketOption&lt;T&gt; name, T value)
+                            <br>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name)
                             <br>Set&lt;SocketOption&lt;?&gt;&gt; supportedOptions()
                         </td>
                     </tr>
@@ -4396,7 +4234,7 @@
                             <br>final CoderResult decode(ByteBuffer in, CharBuffer out, boolean endOfInput)
                             <br>final CoderResult flush(CharBuffer out)
                             <br>final CharsetDecoder reset()
-                            <br>final CharBuffer decode(ByteBuffer in) throws CharacterCodingException
+                            <br>final CharBuffer decode(ByteBuffer in)
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="CharsetEncoder">
@@ -4409,7 +4247,7 @@
                             <br>final CoderResult encode(CharBuffer in, ByteBuffer out, boolean endOfInput)
                             <br>final CoderResult flush(ByteBuffer out)
                             <br>final CharsetEncoder reset()
-                            <br>final ByteBuffer encode(CharBuffer in) throws CharacterCodingException
+                            <br>final ByteBuffer encode(CharBuffer in)
                             <br>boolean canEncode(char c)
                             <br>boolean canEncode(CharSequence cs)
                         </td>
@@ -4444,8 +4282,8 @@
                             1. WatchService에 등록되어 그 변화나 이벤트가 감시될 수 있는 객체. 정의된 register 메서드는 등록되었음을 WatchKey 객체로 반환한다.
                             <br>
                             <br>2. WatchKey register(WatchService watcher, WatchEvent.Kind&lt;?&gt;[] events, WatchEvent.Modifier...
-                            modifiers) throws IOException
-                            <br>WatchKey register(WatchService watcher, WatchEvent.Kind&lt;?&gt;... events) throws IOException
+                            modifiers)
+                            <br>WatchKey register(WatchService watcher, WatchEvent.Kind&lt;?&gt;... events)
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="WatchEvent">
@@ -4504,10 +4342,10 @@
                     </tr>
                     <tr>
                         <td>
-                            1. void close() throws IOException
+                            1. void close()
                             <br>WatchKey poll() : 다음 WatchKey를 제거. 없으면 null.
                             <br>WatchKey poll(long timeout, TimeUnit unit) : 다음 WatchKey를 제거. 없으면 대기. 후에도 없으면 null.
-                            <br>WatchKey take() throws InterruptedException : 다음 WatchKey를 제거. 없으면 대기.
+                            <br>WatchKey take() : 다음 WatchKey를 제거. 없으면 대기.
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Path">
@@ -4541,7 +4379,7 @@
                             </button>
                             <br>URI toUri()
                             <br>Path toAbsolutePath()
-                            <br>Path toRealPath(LinkOption... options) throws IOException
+                            <br>Path toRealPath(LinkOption... options)
                             <br>default File toFile()
                         </td>
                     </tr>
@@ -4559,40 +4397,37 @@
                     </tr>
                     <tr>
                         <td>
-                            static InputStream newInputStream(Path path, OpenOption... options) throws IOException
-                            <br>static OutputStream newOutputStream(Path path, OpenOption... options) throws IOException
+                            static InputStream newInputStream(Path path, OpenOption... options)
+                            <br>static OutputStream newOutputStream(Path path, OpenOption... options)
                             <br>static SeekableByteChannel newByteChannel(Path path, Set&lt;? extends OpenOption&gt; options,
-                            FileAttribute&lt;?&gt;... attrs) throws IOException
-                            <br>static SeekableByteChannel newByteChannel(Path path, OpenOption... options) throws IOException
-                            <br>static DirectoryStream&lt;Path&gt; newDirectoryStream(Path dir) throws IOException
-                            <br>static DirectoryStream&lt;Path&gt; newDirectoryStream(Path dir, String glob) throws IOException
+                            FileAttribute&lt;?&gt;... attrs)
+                            <br>static SeekableByteChannel newByteChannel(Path path, OpenOption... options)
+                            <br>static DirectoryStream&lt;Path&gt; newDirectoryStream(Path dir)
+                            <br>static DirectoryStream&lt;Path&gt; newDirectoryStream(Path dir, String glob)
                             <br>예. try (var stream = Files.newDirectoryStream(dir, "*.java")) {...}
                             <br>static DirectoryStream&lt;Path&gt; newDirectoryStream(Path dir, DirectoryStream.Filter&lt;? super
-                            Path&gt; filter) throws IOException
-                            <br>static Path createFile(Path path, FileAttribute&lt;?&gt;... attrs) throws IOException
-                            <br>static Path createDirectory(Path dir, FileAttribute&lt;?&gt;... attrs) throws IOException
-                            <br>static Path createDirectories(Path dir, FileAttribute&lt;?&gt;... attrs) throws IOException
+                            Path&gt; filter)
+                            <br>static Path createFile(Path path, FileAttribute&lt;?&gt;... attrs)
+                            <br>static Path createDirectory(Path dir, FileAttribute&lt;?&gt;... attrs)
+                            <br>static Path createDirectories(Path dir, FileAttribute&lt;?&gt;... attrs)
                             <br>static Path createTempFile(Path dir, String prefix, String suffix, FileAttribute&lt;?&gt;...
-                            attrs) throws IOException
+                            attrs)
                             <br>
                             <button type="button" onclick="javascript:updateDropupManually($('tr.con-lv-3[con-title=File]').attr('id'));" class="btn btn-primary btn-sm">
                                 Goto File &raquo;
                             </button>
-                            <br>static Path createTempFile(String prefix, String suffix, FileAttribute&lt;?&gt;... attrs) throws
-                            IOException
-                            <br>static Path createTempDirectory(Path dir, String prefix, FileAttribute&lt;?&gt;... attrs) throws
-                            IOException
-                            <br>static Path createTempDirectory(String prefix, FileAttribute&lt;?&gt;... attrs) throws IOException
-                            <br>static Path createSymbolicLink(Path link, Path target, FileAttribute&lt;?&gt;... attrs) throws
-                            IOException
-                            <br>static Path createLink(Path link, Path existing) throws IOException
-                            <br>static void delete(Path path) throws IOException
+                            <br>static Path createTempFile(String prefix, String suffix, FileAttribute&lt;?&gt;... attrs)
+                            <br>static Path createTempDirectory(Path dir, String prefix, FileAttribute&lt;?&gt;... attrs)
+                            <br>static Path createTempDirectory(String prefix, FileAttribute&lt;?&gt;... attrs)
+                            <br>static Path createSymbolicLink(Path link, Path target, FileAttribute&lt;?&gt;... attrs)
+                            <br>static Path createLink(Path link, Path existing)
+                            <br>static void delete(Path path)
                             <br>static boolean deleteIfExists(Path path)
-                            <br>static Path copy(Path source, Path target, CopyOption... options) throws IOException
-                            <br>static Path move(Path source, Path target, CopyOption... options) throws IOException
-                            <br>static Path readSymbolicLink(Path link) throws IOException
-                            <br>static FileStore getFileStore(Path path) throws IOException
-                            <br>static bolean isSameFile(Path path, Path path2) throws IOException
+                            <br>static Path copy(Path source, Path target, CopyOption... options)
+                            <br>static Path move(Path source, Path target, CopyOption... options)
+                            <br>static Path readSymbolicLink(Path link)
+                            <br>static FileStore getFileStore(Path path)
+                            <br>static bolean isSameFile(Path path, Path path2)
                             <br>... https://docs.oracle.com/javase/10/docs/api/java/nio/file/Files.html
                         </td>
                     </tr>
@@ -4605,9 +4440,8 @@
                             <br>
                             <br>2. static FileSystem getDefault()
                             <br>static FileSystem getFileSystem(URI uri)
-                            <br>static FileSystem newFileSystem(URI uri, Map&lt;String, ?&gt; env) throws IOException
-                            <br>static FIleSystem newFileSystem(URI uri, Map&lt;String, ?&gt; env, ClassLoader loader) throws
-                            IOException
+                            <br>static FileSystem newFileSystem(URI uri, Map&lt;String, ?&gt; env)
+                            <br>static FIleSystem newFileSystem(URI uri, Map&lt;String, ?&gt; env, ClassLoader loader)
                             <br>static FileSystem newFileSystem(Path path, ClassLoader loader)
                         </td>
                     </tr>
@@ -4626,7 +4460,7 @@
                             <br>abstract Path getPath(String first, String... more)
                             <br>abstract PathMatcher getPathMatcher(String syntaxAndPattern)
                             <br>abstract UserprincipalLookupService getUserPrincipalLookupService()
-                            <br>abstract WatchService newWatchService() throws IOException
+                            <br>abstract WatchService newWatchService()
                         </td>
                     </tr>
                 </tbody>
@@ -6015,8 +5849,7 @@
                             <br>2. 생성자
                             <br>DoubleSummaryStatistics() : 갯수 0, 합계 0, 최솟값 Double.POSITIVE_INFINITY, 최댓값 Double.NEGATIVE_INFINITY,
                             평균 0인 객체 생성.
-                            <br>DoubleSummaryStatistics(long count, double min, double max, double sum) throws IllegalArgumentException
-                            Since 10
+                            <br>DoubleSummaryStatistics(long count, double min, double max, double sum) Since 10
                             <br>
                             <br>3. void accept(double value) : 요약 정보에 value를 추가해 기록
                             <br>void combine(DoubleSummaryStatistics other) : other를 호출자에 추가
@@ -6069,14 +5902,14 @@
                             <br>String getProperty(String key, String defaultValue)
                             <br>Enumeration&lt;?&gt; propertyNames()
                             <br>Set&lt;String&gt; stringPropertyNames() Since 1.6
-                            <br>void load(Reader reader) throws IOException Since 1.6
-                            <br>void load(InputStream inStream) throws IOException Since 1.2
-                            <br>void store(Writer writer, String comments) throws IOException Since 1.6
-                            <br>void store(OutputStream out, String comments) throws IOException Since 1.2
-                            <br>void loadFromXML(InputStream in) throws IOException, InvalidPropertiesFormatException Since 1.5
-                            <br>void storeToXML(OutputStream os, String comment) throws IOException Since 1.5
-                            <br>void storeToXML(OutputStream os, String comment, String encoding) throws IOException Since 1.5
-                            <br>void storeToXML(OutputStream os, String comment, Charset charset) throws IOException Since 10
+                            <br>void load(Reader reader) Since 1.6
+                            <br>void load(InputStream inStream) Since 1.2
+                            <br>void store(Writer writer, String comments) Since 1.6
+                            <br>void store(OutputStream out, String comments) Since 1.2
+                            <br>void loadFromXML(InputStream in) Since 1.5
+                            <br>void storeToXML(OutputStream os, String comment) Since 1.5
+                            <br>void storeToXML(OutputStream os, String comment, String encoding) Since 1.5
+                            <br>void storeToXML(OutputStream os, String comment, Charset charset) Since 10
                             <br>void list(PrintStream out) : 디버깅에 유용
                             <br>void list(PrintWriter out) Since 1.1 : 디버깅에 유용
                         </td>
@@ -6146,12 +5979,12 @@
                             <br>public Scanner(InputStream source)
                             <br>public Scanner(InputStream source, String charsetName)
                             <br>public Scanner(InputStream source, Charset charset) Since 10
-                            <br>public Scanner(File source) throws FileNotFoundException
-                            <br>public Scanner(File source, String charsetName) throws FileNotFoundException
-                            <br>public Scanner(File source, Charset charset) throws IOException Since 10
-                            <br>public Scanner(Path source) throws IOException Since 1.7
-                            <br>public Scanner(Path source, String charsetName) throws IOException Snice 1.7
-                            <br>public Scanner(Path source, Charset charset) throws IOException SInce 10
+                            <br>public Scanner(File source)
+                            <br>public Scanner(File source, String charsetName)
+                            <br>public Scanner(File source, Charset charset) Since 10
+                            <br>public Scanner(Path source) Since 1.7
+                            <br>public Scanner(Path source, String charsetName) Snice 1.7
+                            <br>public Scanner(Path source, Charset charset) SInce 10
                             <br>public Scanner(String source)
                             <br>public Scanner(ReadableByteChannel source)
                             <br>public Scanner(ReadableByteChannel source, String charsetName)
@@ -6256,7 +6089,7 @@
                             <br>&raquo; 진행중인 모든 작업을 중지. 실행 대기중인 일들은 반환.
                             <br>boolean isShutdown()
                             <br>boolean isTerminated() : 모든 일들이 끝났는지 여부
-                            <br>boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException
+                            <br>boolean awaitTermination(long timeout, TimeUnit unit)
                             <br>&raquo; shutdown 요청 후 모든 작업이 종료되기를 기다리며 블록한다. timeout 발생한 경우 false 반환.
                             <br>&lt;T&gt; Future&lt;T&gt; submit(Callable&lt;T&gt; task)
                             <br>&raquo; 결과를 반환하는 작업을 등록한다. 작업이 성공적으로 종료되면 Future::get으로 결과를 확인할 수 있다.
@@ -6265,17 +6098,16 @@
                             <br>Futur&lt;?&gt; submit(Runnable task)
                             <br>&raquo; 작업을 등록한다. 작업이 성공적으로 종료되면 Future::get은 null을 반환한다.
                             <br>&lt;T&gt; List&lt;Future&lt;T&gt;&gt; invokeAll(Collection&lt;? extends Callable&lt;T&gt;&gt;
-                            tasks) throws InterruptedException
+                            tasks)
                             <br>&raquo; 모든 작업이 종료되면 Future 리스트를 반환한다. 따라서 리스트 안의 각 Future::isDone은 true다.
                             <br>&lt;T&gt; List&lt;Future&lt;T&gt;&gt; invokeAll(Collection&lt;? extends Callable&lt;T&gt;&gt;
-                            tasks, long timout, TimeUnit unit) throws InterruptedException
+                            tasks, long timout, TimeUnit unit)
                             <br>&raquo; 모든 작업이 종료되거나 timeout이 발생하면 반환. 리스트 안의 각 Future::isDone은 true. timeout 발생 시 완료되지 않은 작업들은
                             취소된다.
-                            <br>&lt;T&gt; T invokeAny(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks) throws InterruptedException,
-                            ExecutionException
+                            <br>&lt;T&gt; T invokeAny(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks)
                             <br>&raquo; 성공적으로 완료된 첫 작업의 결과를 반환한다. 완료되지 않은 작업들은 취소된다.
                             <br>&lt;T&gt; T invokeAny(Collection&lt;? extends Callable&lt;&gt;&gt; tasks, long timeout, TimeUnit
-                            unit) throws InterruptedException, ExecutionException, TimeoutException
+                            unit)
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="ScheduledExecutorService">
@@ -6308,9 +6140,9 @@
                             <br>2. long convert(long sourceDuration, TimeUnit sourceUnit)
                             <br>long toNanos(long duration) : == NANOSECONDS.convert(duration, this)
                             <br>long toMicros(long duration) + toMillis, toSeconds, toMinutes, toHours, toDays
-                            <br>void timeWait(Object obj, long timeout) throws InterruptedException
+                            <br>void timeWait(Object obj, long timeout)
                             <br>&raquo; timeout만큼 obj.wait()
-                            <br>void timedJoin(Thread thread, long timeout) throws InterruptedException
+                            <br>void timedJoin(Thread thread, long timeout)
                             <br>&raquo; timeout만큼 Thread.join()
                             <br>void sleep(long timeout)
                             <br>ChronoUnit toChronoUnit() Since 9
@@ -6332,7 +6164,7 @@
                         <td>
                             1. 매개변수 없는, 결과를 반환하는 작업을 정의. Runnable과 달리 checked 예외를 던져도 된다.
                             <br>
-                            <br>2. V call() throws Exception
+                            <br>2. V call()
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="Executors">
@@ -6406,8 +6238,8 @@
                             <br>&gt; 이 메서드가 종료된 후의 isDone()은 항상 true.
                             <br>boolean isCancelled()
                             <br>boolean isDone()
-                            <br>V get() throws InterruptedException, ExecutionException
-                            <br>V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException
+                            <br>V get()
+                            <br>V get(long timeout, TimeUnit unit)
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="RunnableFuture">
@@ -6684,11 +6516,11 @@
                             <br>
                             <br>2. Future&lt;V&gt; submit(Callable&lt;V&gt; task)
                             <br>Future&lt;V&gt; submit(Runnable task, V result)
-                            <br>Future&lt;V&gt; take() throws InterruptedException
+                            <br>Future&lt;V&gt; take()
                             <br>&raquo; 완료된 작업을 가져온다. 없으면 대기한다.
                             <br>Future&lt;V&gt; poll()
                             <br>&raquo; 완료된 작업을 가져온다. 없으면 null.
-                            <br>Futur&lt;V&gt; poll(long timeout, TimeUnit unit) throws InterruptedException
+                            <br>Futur&lt;V&gt; poll(long timeout, TimeUnit unit)
                         </td>
                     </tr>
                     <tr class="con-lv-3" con-title="ExecutorCompletionService">
@@ -6740,15 +6572,15 @@
                             <br>public Semaphore(int permits) : nonfair
                             <br>public Semaphore(int permits, boolean fair)
                             <br>
-                            <br>3. void acquire() throws InterruptedException()
+                            <br>3. void acquire()
                             <br>void acquireUninterruptibly()
                             <br>boolean tryAcquire()
-                            <br>boolean tryAcquire(long timeout, TimeUnit unit) throws InterruptedException
+                            <br>boolean tryAcquire(long timeout, TimeUnit unit)
                             <br>void release()
-                            <br>void acquire(int permits) throws InterruptedException
+                            <br>void acquire(int permits)
                             <br>void acquireUninterruptibly(int permits)
                             <br>boolean tryAcquire(int permits)
-                            <br>boolean tryAcquire(int permits, long timeout, TimeUnit unit) throws InterruptedException
+                            <br>boolean tryAcquire(int permits, long timeout, TimeUnit unit)
                             <br>void release(int permits)
                             <br>int availablePermits()
                             <br>int drainPermits() : 가용한 모든 권한을 얻는다. 만약 음수라면 release하여 0으로 맞춘다.
@@ -6767,8 +6599,8 @@
                             <br>
                             <br>2. 생성자 : public CountDownLatch(int count)
                             <br>
-                            <br>3. void await() throws InterruptedException
-                            <br>boolean await(long timeout, TimeUnit unit) throws InterruptedException
+                            <br>3. void await()
+                            <br>boolean await(long timeout, TimeUnit unit)
                             <br>void countDown()
                             <br>long getCount()
                     </tr>
@@ -6785,9 +6617,9 @@
                             <br>public CyclicBarrier(int parties)
                             <br>
                             <br>3. int getParties()
-                            <br>int await() throws InterruptedException, BrokenBarrierException
+                            <br>int await()
                             <br>&raquo; 반환값 : 현재 쓰레드의 대기 순번. getParties() - 1이 첫 번째, 0이 마지막 쓰레드.
-                            <br>int await(long timeout, TimeUnit unit) throws InterruptedException, BrokenBarrierException, TimeoutException
+                            <br>int await(long timeout, TimeUnit unit)
                             <br>boolean isBroken()
                             <br>void reset()
                             <br>int getNumberWaiting()
@@ -8054,10 +7886,10 @@
                             <br>public ZipInputStream(InputStream in)
                             <br>public ZipInputStream(InputStream in, Charset charset) Since 1.7
                             <br>
-                            <br>2. ZipEntry getNextEntry() throws IOException
-                            <br>void closeEntry() throws IOException
+                            <br>2. ZipEntry getNextEntry()
+                            <br>void closeEntry()
                             <br>&raquo; 현재 ZipEntry를 닫고 읽기 위치를 다음 entry로 이동.
-                            <br>int available() throws IOException
+                            <br>int available()
                             <br>&raquo; EOF를 만났으면 0, 아니면 1
                         </td>
                     </tr>
@@ -8077,11 +7909,11 @@
                             <br>void setLevel(int level)
                             <br>&raquo; 압축 레벨 : 0(BEST_SPEED) ~ 9(BEST_COMPRESSION). 기본은 DEFAULT_COMPRESSION(-1)이며, 보통 6.
                             <br>
-                            <br>void putNextEntry(ZipEntry e) throws IOException
+                            <br>void putNextEntry(ZipEntry e)
                             <br>void closeEntry()
                             <br>&raquo; 현재 ZipEntry를 닫고 다음 쓰기 위치로 이동. putNextEntry 메서드는 쓰기 전에 알아서 닫는다.
                             <br>
-                            <br>void finish() throws IOException
+                            <br>void finish()
                             <br>&raquo; 쓰기를 종료하고 스트림을 닫는다. 동일한 출력 스트림에 여러 필터를 적용한 경우에 사용.
                         </td>
                     </tr>
@@ -8122,18 +7954,18 @@
                     <tr>
                         <td>
                             1. 생성자
-                            <br>public ZipFile(String name) throws IOException : UTF-8
-                            <br>public ZipFile(File file, int mode) throws IOException Since 1.3 : UTF-8
+                            <br>public ZipFile(String name) : UTF-8
+                            <br>public ZipFile(File file, int mode) Since 1.3 : UTF-8
                             <br>&raquo; mode : OPEN_READ | OPEN_DELETE(파일이 close 호출 전까지 삭제됨, 내용은 객체를 통해 계속 접근 가능)
                             <br>
-                            <br>public ZipFile(File file) throws ZipException, IOException : UTF-8
-                            <br>public ZipFile(File file, int mode, Charset charset) throws IOException SInce 1.7
-                            <br>public ZipFile(String name, Charset charset) throws IOException Since 1.7
-                            <br>public ZipFile(File file, Charset charset) throws IOException Since 1.7
+                            <br>public ZipFile(File file) : UTF-8
+                            <br>public ZipFile(File file, int mode, Charset charset) SInce 1.7
+                            <br>public ZipFile(String name, Charset charset) Since 1.7
+                            <br>public ZipFile(File file, Charset charset) Since 1.7
                             <br>
                             <br>2. String getComment() Since 1.7
                             <br>ZipEntry getEntry(String name)
-                            <br>InputStream getInputStream(ZipEntry entry) throws IOException
+                            <br>InputStream getInputStream(ZipEntry entry)
                             <br>&raquo; ZipFile이 닫히면 이 메서드가 반환한 모든 스트림도 같이 닫힌다.
                             <br>
                             <br>String getName()
@@ -8213,85 +8045,6 @@
                 </tbody>
             </table>
         </div>
-
-        <!--
-                <div>
-                    <h2>스레드</h2>
-                    <p>
-                        1. 가변길이 매개변수를 갖는 메서드 : (int... nums)와 같이 여러 개의 인자를 배열로 받는다.
-                        <br><br>2.
-                        <br><br>3. 스레드의 상태 : new(생성, new), runnable(준비, start), running(실행, run), block, dead
-                        <br><br>4. sleep : 명시적 대기, yield : 우선권이 같은 스레드에게 양보, join : 스레드 종료 대기
-                        <br><br>5. Thread.setPriority()를 이용해 우선순위 설정 가능. MIN_PRIORITY ~ MAX_PRIORITY
-                        <br><br>6. 동기화 : synchronized(객체를 이용한 잠금), volatile(변수에 대한 잠금)
-                    </p>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(5, 'thread');" role="button">View Code &raquo;</a>
-                    </p>
-                </div>
-                <div>
-                    <h2>Annotation</h2>
-                    <p>
-                        1. Annotation 정의 : @interface Name. 모든 Annotation은 java.lang.annotation.Annotation 인터페이스를 상속하며, 별도의 상속은 불가능하다.
-                        <br><br>2. Retention Poilicy : @Retention(poilicy). Annotation을 어디까지 유지할 지 결정한다. java.lang.annotation.RetentionPolicy
-                        <br><br>3. 리플렉션을 통해 Annotation 객체를 가져올 수 있다.
-                        <br><br>4. Marker Annotation : 멤버 없는 Annotation. 그 존재 유무에 의미를 둔다.
-                    </p>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(5, 'annotation');" role="button">View Code &raquo;</a>
-                    </p>
-                </div>
-                <div>
-                    <h2>JNI</h2>
-                    <p>
-                        1. C 네이티브 코드를 이용할 클래스 컴파일 : javac Test.java -> Test.class 생성
-                        <br><br>2. C에서 이용할 헤더 파일 생성 : javah -jni Test -> Test.h 생성
-                        <br><br>3. VS에서 JDK path 추가 : 속성 - 포함 디렉터리 - "$(JAVA_HOME)\include", "$(JAVA_HOME)\include\win32 추가
-                        <br><br>4. VS에서 dll 빌드 : 속성 - 구성(출력) 형식 - 동적 라이브러리(.dll) 설정
-                        <br><br>5. 빌드한 dll을 이클립스 프로젝트 폴더 안으로 이동. x86 JRE/JDK를 이용하여 실행(Window - Preference - Installed JREs에 x86 있는지
-                        확인. Run - Run Configurations... - x86 JRE로 설정)
-                        <br>References : https://goo.gl/WqxXTE, https://goo.gl/QJDpRv, https://goo.gl/rrMwdr, https://goo.gl/5R2UMC
-                    </p>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(5, 'jni_java');" role="button">View Code : java &raquo;</a>
-                        <a class="btn btn-secondary" href="javascript:showCode(5, 'jni_c');" role="button">View Code : c &raquo;</a>
-                        <a class="btn btn-secondary" href="https://github.com/Dong-gi/Dong-gi.github.io/releases/download/1/test.dll" role="button">test.dll &raquo;</a>
-                    </p>
-                </div>
-                <div>
-                    <h2>Assertion</h2>
-                    <p>
-                        1. Run Configurations... - Arguments - VM Arguments :
-                        <br>-ea // enable assertion
-                        <br>-da:packageName // disable assertion in packageName
-                    </p>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(6, 'assert');" role="button">View Code &raquo;</a>
-                    </p>
-                </div>
-                <div>
-                    <h2>Library 1</h2>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(6, 'string');" role="button">View Code : String &raquo;</a>
-                        <a class="btn btn-secondary" href="javascript:showCode(6, 'stringbuffer');" role="button">View Code : StringBuffer &raquo;</a>
-                        <br>StringBuilder는 StringBuffer의 not thread-safe 버전.
-                        <br>Number : 수에 관한 취상위 추상 클래스
-                        <a class="btn btn-secondary" href="javascript:showCode(6, 'float');" role="button">View Code : Float, Double &raquo;</a>
-                        <a class="btn btn-secondary" href="javascript:showCode(6, 'int');" role="button">View Code : Integer, Long &raquo;</a>
-                    </p>
-                </div>
-                <div>
-                    <h2>Library 2</h2>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(6, 'char');" role="button">View Code : Character &raquo;</a>
-                        <a class="btn btn-secondary" href="javascript:showCode(6, 'process');" role="button">View Code : Process Java &raquo;</a>
-                        <a class="btn btn-secondary" href="javascript:showCode(6, 'process_c');" role="button">View Code : Process C &raquo;</a>
-                        <a class="btn btn-secondary" href="https://github.com/Dong-gi/Dong-gi.github.io/releases/download/1/test.exe" role="button">test.exe &raquo;</a>
-                        <a class="btn btn-secondary" href="javascript:showCode(6, 'runtime');" role="button">View Code : Runtime &raquo;</a>
-                        <a class="btn btn-secondary" href="javascript:showCode(6, 'processbuilder');" role="button">View Code : ProcessBuilder &raquo;</a>
-                    </p>
-                </div>
-            -->
     </main>
 
     <hr>

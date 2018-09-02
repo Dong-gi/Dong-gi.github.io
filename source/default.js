@@ -1,164 +1,192 @@
-var index = {};
-var lv1dropup;
-var lv2dropup;
-var lv3dropup;
-var buttonMaxWidth;
-var dropupMaxHeight;
-var dropupMaxWidth;
-
-$(function () {
+$(() => {
+    // 코드 하이라이팅 가능한 언어 목록
     console.log(hljs.listLanguages());
-    $("nav#top-nav").load("/source/nav-top.html", (response, status, xhr) => {
-        $("footer#main-footer").load("/source/footer.html", (response, status, xhr) => {
-            $("nav#bottom-nav").load("/source/nav-bottom.html", (response, status, xhr) => {
-                /* 모든 콘텐츠에 id 부여 */
-                var contentID = 0;
-                var contents = $(".con-lv-1, .con-lv-2, .con-lv-3");
-                for (var i = 0; i < contents.length; ++i) {
-                    var id = 'con-id-' + contentID++;
-                    index[id] = [];
-                    $(contents[i]).attr('id', id);
-                }
 
-                /* 계층을 이룬 id들에 대해 색인 생성 */
-                var conLv1s = $(".con-lv-1");
-                for (var i = 0; i < conLv1s.length; ++i) {
-                    var conLv2s = $(conLv1s[i]).find(".con-lv-2");
-                    for (var j = 0; j < conLv2s.length; ++j) {
-                        index[$(conLv1s[i]).attr('id')].push($(conLv2s[j]).attr('id'));
-                        var conLv3s = $(conLv2s[j]).find(".con-lv-3");
-                        conLv3s.css("cursor", "pointer");
-                        for (var k = 0; k < conLv3s.length; ++k) {
-                            index[$(conLv2s[j]).attr('id')].push($(conLv3s[k]).attr('id'));
-                            /* 레벨 3 콘텐츠 내용 토글 설정 */
-                            $(conLv3s[k]).next().addClass("d-none");
-                            $(conLv3s[k]).click((event) => {
-                                var content = $(event.currentTarget).next();
-                                if ($(content).hasClass("d-none")) {
-                                    $(content).removeClass("d-none");
-                                } else {
-                                    $(content).addClass("d-none");
-                                }
-                            });
-                        }
-                    }
-                }
+    // 카테고리 초기화하고 포스트 등록, 포스트는 순서대로 아이디를 가짐
+    {
+        let id = 0;
+        for (post of posts.list) {
+            post.id = id++;
 
-                /* 색인 초기 갱신 */
-                lv1dropup = $("#dropup-lv-1 .dropdown-menu");
-                lv2dropup = $("#dropup-lv-2 .dropdown-menu");
-                lv3dropup = $("#dropup-lv-3 .dropdown-menu");
-                for (var i = 0; i < conLv1s.length; ++i) {
-                    lv1dropup.append($('<a class="dropdown-item" href="javascript:updateDropupManually(\'' + $(conLv1s[i]).attr('id') + '\');">' + $(conLv1s[i]).attr('con-title') + '</a>'));
-                }
-                setIndexSize();
+            let category = posts.tree;
+            for (cate of post.category.split("/")) {
+                if (!category.hasOwnProperty(cate))
+                    category[cate] = {};
+                category = category[cate];
+            }
+            if (!category.hasOwnProperty("posts"))
+                category.posts = [];
+            post.internalId = category.length;
+            category.posts.push(post);
 
-                /* 색인 자동 갱신 */
-                window.onscroll = function () {
-                    var pos = (document.scrollTop || window.pageYOffset) - (document.clientTop || 0) + 52;
-                    function findCurrentContent(conLvs) {
-                        var current = conLvs[0];
-                        for (var i = 0; i < conLvs.length; ++i) {
-                            if (pos < $(conLvs[i]).offset().top) {
-                                break;
-                            }
-                            current = conLvs[i];
-                        }
-                        return current;
-                    }
+            // 모든 컨텐츠 골격 생성
+            let content = $('<div></div>').addClass('jumbotron').attr('id', post.id);
+            $(content).html('<details><summary><a href="javascript:;" data-toggle="popover" data-trigger="hover" title="' +
+                (post.category + '@' + post.date.substring(0,10)) + '" data-content="' + post.description + '"><h2>' + post.title + '</h2>' +
+                ((new Date().getTime() - new Date(post.date).getTime()) <= 604800000 ?
+                    '<span class="badge badge-pill badge-primary">New</span>' : '') +
+                '</a></summary></details>');
+            posts.contents.push(content);
 
-                    var conLv1 = findCurrentContent(conLv1s);
-                    $("#dropup-lv-1 button").text($(conLv1).attr('con-title'));
-                    var subIndex = index[$(conLv1).attr('id')];
-                    lv2dropup.empty();
-                    for (var i = 0; i < subIndex.length; ++i) {
-                        lv2dropup.append('<a class="dropdown-item" href="javascript:updateDropupManually(\'' + subIndex[i] + '\');">' + $('#' + subIndex[i]).attr('con-title') + '</a>');
-                    }
+            $(content).find('summary').click(loadContent(post.id, post.filename));
+        }
+    }
 
-                    var conLv2s = $(conLv1).find(".con-lv-2");
-                    var conLv2 = findCurrentContent(conLv2s);
-                    $("#dropup-lv-2 button").text($(conLv2).attr('con-title'));
-                    subIndex = index[$(conLv2).attr('id')];
-                    lv3dropup.empty();
-                    for (var i = 0; i < subIndex.length; ++i) {
-                        lv3dropup.append('<a class="dropdown-item" href="javascript:updateDropupManually(\'' + subIndex[i] + '\');">' + $('#' + subIndex[i]).attr('con-title') + '</a>');
-                    }
+    // 최초로 전체 콘텐츠 붙이기
+    for (content of posts.contents) {
+        $('div#contents').prepend(content);
+    }
 
-                    var conLv3s = $(conLv2).find(".con-lv-3");
-                    var conLv3 = findCurrentContent(conLv3s);
-                    $("#dropup-lv-3 button").text($(conLv3).attr('con-title'));
+    // 부트스트랩 popover 작동
+    $('[data-toggle="popover"]').popover();
 
-                    adjustIndexSize();
-                };
-                $(window).resize(function () { setIndexSize(); });
-                $('input#input-title').keypress((event) => {
-                    if (event.keyCode == 13) {
-                        event.preventDefault();
-                        titleSearch();
-                    }
-                    return true;
-                });
-            });
-        });
+    // 최초로 1수준 드롭업 생성
+    updateDropupManually(0, "");
+
+    // 드롭업 width 조정
+    adjustIndexSize();
+    $(window).resize(() => adjustIndexSize());
+
+    // 드롭업 자동 갱신 등록
+    window.onscroll = updateDropupAuto;
+
+    // 엔터로 검색 가능
+    $('input#input-title').keypress((event) => {
+        if (event.keyCode == 13) {
+            event.preventDefault();
+            internalSearch();
+        }
+        return true;
     });
 });
-function updateDropupManually(id) {
-    var tag = $("#" + id);
-    var cls = tag.attr('class');
-    var lv = cls.indexOf('lv-1') >= 0 ? 1 : (cls.indexOf('lv-2') >= 0 ? 2 : 3);
-    switch (lv) {
-        case 1:
-            $("#dropup-lv-1 button").text(tag.attr('con-title'));
-            $("#dropup-lv-2 button").text('개요 2');
-            $("#dropup-lv-3 button").text('개요 3');
-            lv2dropup.empty();
-            lv3dropup.empty();
-            var subIndex = index[id];
-            for (var i = 0; i < subIndex.length; ++i) {
-                lv2dropup.append('<a class="dropdown-item" href="javascript:updateDropupManually(\'' + subIndex[i] + '\');">' + $('#' + subIndex[i]).attr('con-title') + '</a>');
-            }
-            break;
-        case 2:
-            $("#dropup-lv-2 button").text(tag.attr('con-title'));
-            $("#dropup-lv-3 button").text('개요 3');
-            lv3dropup.empty();
-            var subIndex = index[id];
-            for (var i = 0; i < subIndex.length; ++i) {
-                lv3dropup.append('<a class="dropdown-item" href="javascript:updateDropupManually(\'' + subIndex[i] + '\');">' + $('#' + subIndex[i]).attr('con-title') + '</a>');
-            }
-            break;
-        case 3:
-            $("#dropup-lv-3 button").text(tag.attr('con-title'));
-            break;
+
+function loadContent(id, filename) {
+    return () => {
+        if ($(posts.contents[id]).find('details p').length == 0) {
+            let content = $("<p>");
+            $(content).load(filename.replace(/ /gm, '%20'), (response, status, xhr) => {
+                $(content).find('.btn-code').each((idx) => {
+                    let button = $(content).find('.btn-code')[idx];
+                    let id = new Date().getTime() + ('' + Math.random()).substring(2);
+                    $(button).attr('id', 'code' + id);
+                    $(button).click(insertCode($(button).attr('id')));
+                });
+                $(posts.contents[id]).find('details').append(content);
+            });
+        }
+    };
+}
+
+/**
+ * path에 따라서 드롭업 메뉴를 갱신
+ * @param {Integer} level 갱신 레벨
+ * @param {String} path 카테고리{/카테고리}
+ */
+function updateDropupManually(level, path) {
+    let paths = path.split("/");
+    // level 수준 드롭업에 이름 설정
+    $("#dropup-lv-" + level + " button").text(paths[paths.length - 1]);
+    // level + 1 수준 드롭업 갱신
+    $("#dropup-lv-" + (level + 1) + " button").text("개요" + (level + 1));
+    let menu = $("#dropup-lv-" + (level + 1) + " .dropdown-menu");
+    menu.empty();
+
+    let category = posts.tree;
+    for (let l = 1; l <= level; ++l)
+        category = category[paths[l - 1]];
+    for (cate of Object.getOwnPropertyNames(category)) {
+        if (cate !== 'posts')
+            menu.append(
+                $('<a></a>')
+                    .addClass('dropdown-item')
+                    .attr('href', 'javascript:updateDropupManually(' + (level + 1) + ',"' + ((path.length > 0 ? path + '/' : '') + cate) + '");')
+                    .text(cate)
+            );
     }
+    if ($(menu).children().length != 0)
+        $("#dropup-lv-" + (level + 1)).removeClass("d-none");
+
+    // level + 2 ~ 수준 드롭업 숨기기
+    for (let l = level + 2; l <= 5; ++l)
+        if (!$("#dropup-lv-" + l).hasClass("d-none"))
+            $("#dropup-lv-" + l).addClass("d-none");
+
+    // 컨텐츠 보이기/숨기기
+    menu = $("#dropup-posts .dropdown-menu");
+    menu.empty();
+    posts.visible = [];
+    for (let i = 0; i < posts.list.length; ++i) {
+        if (posts.list[i].category.startsWith(path)) {
+            if ($(posts.contents[i]).hasClass("d-none"))
+                $(posts.contents[i]).removeClass("d-none")
+            menu.append(
+                $('<a></a>')
+                    .addClass('dropdown-item')
+                    .attr('href', 'javascript:updateScrollManually(' + posts.list[i].id + ');')
+                    .text(posts.list[i].title)
+            );
+            posts.visible.push(i);
+        } else {
+            if (!$(posts.contents[i]).hasClass("d-none"))
+                $(posts.contents[i]).addClass("d-none")
+        }
+    }
+}
+
+function updateDropupAuto() {
+    let pos = (document.scrollTop || window.pageYOffset) - (document.clientTop || 0);
+    for (let i = posts.visible.length - 1; i >= 0; --i) {
+        if (pos <= $(posts.contents[i]).offset().top) {
+            $('#dropup-posts button').text(posts.list[i].title);
+            let paths = posts.list[i].category.split("/");
+            for (let level = 1; level < paths.length; ++level)
+                $("#dropup-lv-" + level + " button").text(paths[level - 1]);
+            return;
+        }
+    }
+}
+
+/**
+ * 해당 컨텐츠로 스크롤 이동
+ * @param {Integer} id 전체 컨텐츠중 순번
+ */
+function updateScrollManually(id) {
     $('html, body').animate({
-        scrollTop: tag.offset().top - 52
+        scrollTop: $(posts.contents[id]).offset().top
     }, 500);
 }
-function titleSearch() {
-    var title = $('input#input-title').val();
-    var contents = $(".con-lv-1, .con-lv-2, .con-lv-3");
-    var result = $('div#dropup-result');
+
+/**
+ * 보여지는 컨텐츠의 title과 description에서 검색
+ */
+function internalSearch() {
+    let query = $('input#input-title').val();
+    let result = $('#dropup-result');
     result.removeClass('d-none');
     result = $(result).find('.dropdown-menu');
     result.empty();
-    var count = 0;
-    for (var i = 0; i < contents.length; ++i) {
-        if ($(contents[i]).attr('con-title').match(new RegExp(title, "i")) != null) {
-            result.append('<a class="dropdown-item" href="javascript:updateDropupManually(\'' + $(contents[i]).attr('id') + '\');">' + $(contents[i]).attr('con-title') + '</a>');
+
+    let count = 0;
+    for (id of posts.visible) {
+        if (posts.list[id].title.match(new RegExp(query, "i")) != null
+            || posts.list[id].description.match(new RegExp(query, "i")) != null) {
+            result.append(
+                $('<a></a>')
+                    .addClass('dropdown-item')
+                    .attr('href', 'javascript:updateScrollManually(' + id + ');')
+                    .text(posts.list[id].title)
+            );
             count += 1;
         }
     }
-    showSnackbar("Found " + count + "items", "#bottom-nav");
-    adjustIndexSize();
+    showSnackbar(count + "개의 포스트를 찾았습니다.", "#bottom-nav");
 }
-function setIndexSize() {
-    buttonMaxWidth = (window.innerWidth - 75.67) / 6;
-    dropupMaxHeight = window.innerHeight / 2;
-    dropupMaxWidth = buttonMaxWidth > 150 ? buttonMaxWidth : 150;
-    adjustIndexSize();
-}
+
 function adjustIndexSize() {
+    let buttonMaxWidth = (window.innerWidth - 75.67) / 6;
+    let dropupMaxHeight = window.innerHeight / 2;
+    let dropupMaxWidth = buttonMaxWidth > 150 ? buttonMaxWidth : 150;
+
     $('nav.fixed-bottom button').css({
         "max-width": buttonMaxWidth + "px",
         "overflow": "auto"
@@ -171,56 +199,72 @@ function adjustIndexSize() {
         'max-width': dropupMaxWidth + "px",
         'overflow': 'auto'
     });
-    $('input#input-title').css('width', buttonMaxWidth + "px")
+    $('input#input-title').css('width', dropupMaxWidth/2 + "px")
 }
 
-function openAll() {
-    var conLv3s = $(".con-lv-3");
-    var current = $(conLv3s[0]);
-    var pos = (document.scrollTop || window.pageYOffset) - (document.clientTop || 0) + 52;
-    for (var i = 0; i < conLv3s.length; ++i) {
-        if (pos < $(conLv3s[i]).offset().top) {
-            break;
+function insertCode(buttonId) {
+    return () => {
+        if ($('div#' + buttonId).length == 0) {
+            let button = $('button#' + buttonId);
+            let lan = $(button).attr('lan');
+            let div = $('<div>').addClass('my-code').attr('id', buttonId);
+            let path = $(button).attr('path');
+            $(div).load((path.startsWith('/') ? "" : "./") + path.replace(/ /gm, '%20'), (response, status, xhr) => {
+                posts.codes[buttonId] = response;
+
+                if (lan !== 'nohighlight') {
+                    response = response.replace(/\t/gm, '    ');
+                    response = response.replace(/ /gm, '  ');
+
+                    let lines;
+                    if (lan === "text")
+                        lines = response.split(/\n/gm);
+                    else
+                        lines = hljs.highlight(lan, response)['value'].split(/\n/gm);
+
+                    let ol = $('<ol>');
+                    for (line of lines)
+                        ol.append($('<li>').html(line.replace(/  /gm, '&nbsp;')));
+
+                    $(div).html(ol);
+                }
+
+                let modal = $('<button>').addClass('btn btn-info btn-sm btn-code').text('모달로 보기');
+                $(modal).click(showCode(buttonId));
+
+                $(button).after(modal);
+                $(modal).after(div);
+                $('div#' + buttonId).css('max-height', window.innerHeight / 3);
+            });
+        } else {
+            if ($('div#' + buttonId).hasClass('d-none'))
+                $('div#' + buttonId).removeClass('d-none')
+            else
+                $('div#' + buttonId).addClass('d-none')
+            $('div#' + buttonId).css('max-height', window.innerHeight / 3);
         }
-        current = $(conLv3s[i]);
-    }
-    for (var i = 0; i < conLv3s.length; ++i) {
-        $(conLv3s[i]).next().removeClass("d-none");
-    }
-    updateDropupManually(current.attr('id'));
-    return current;
-}
-function closeAll() {
-    var current = openAll();
-    var conLv3s = $(".con-lv-3");
-    for (var i = 0; i < conLv3s.length; ++i) {
-        $(conLv3s[i]).next().addClass("d-none");
-    }
-    updateDropupManually(current.attr('id'));
-    return current;
+    };
 }
 
-var codeIDs = {};
-var codes = {};
-function showCode(fileName, lan) {
-    fileName = fileName.replace(/ /gm, '%20');
-    if (codeIDs.hasOwnProperty(fileName)) {
-        $("div#" + codeIDs[fileName]).modal("show");
-    } else {
-        var id = codeIDs[fileName] = "code-" + new Date().getTime();
-        $("body").append(
-            '<div id="' + id + '" class="modal code-modal" tabindex="-1" role="dialog">\
+function showCode(buttonId) {
+    return () => {
+        let code = $('.code-modal#modal' + buttonId);
+        if (code.length > 0) {
+            $(code).modal('show');
+            return;
+        }
+        // 골격 생성
+        code = $(
+            '<div id="modal' + buttonId + '" class="modal code-modal" tabindex="-1" role="dialog">\
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">\
                     <div class="modal-content">\
                         <div class="modal-header">\
-                            <h2 style="display: inline-block;" class="modal-title">' + fileName.split('/').pop() + '</h2>\
+                            <h2 style="display: inline-block;" class="modal-title">' + $('button#' + buttonId).attr('path').split('/').pop() + '</h2>\
                             <button style="float: right;" type="button" class="close" data-dismiss="modal" aria-label="Close">\
                                 <span aria-hidden="true" style="color: black; font-size: 2em; font-weight: bold;">&times;</span>\
                             </button>\
                         </div>\
-                        <div class="modal-body">\
-                            <pre><code class="' + lan + '"></code></pre>\
-                        </div>\
+                        <div class="modal-body"></div>\
                         <div class="modal-footer">\
                             <button type="button" class="btn btn-primary copy">Copy</button>\
                             <button type="button" class="btn btn-primary download">Download</button>\
@@ -229,38 +273,23 @@ function showCode(fileName, lan) {
                     </div>\
                 </div>\
             </div>');
-        if (lan == "nohighlight") {
-            $("div#" + id + " div.modal-body").load((fileName.startsWith('/') ? "" : "./") + fileName, (response, status, xhr) => {
-                codes[id] = response;
-            });
-            $("div#" + id).modal("show");
-        } else {
-            $("<p>").load((fileName.startsWith('/') ? "" : "./") + fileName, (response, status, xhr) => {
-                response = response.replace(/\t/gm, '    ');
-                codes[id] = response;
-                var lines;
-                if (lan == "text")
-                    lines = response.split(/\n/gm);
-                else
-                    lines = hljs.highlight(lan, response)['value'].split(/\n/gm);
-                var table = $('<table class="table"></table>');
-                for (var line = 0; line < lines.length; ++line) {
-                    table.append('<tr><th>' + (line + 1) + '</th><td>' + lines[line] + '</td></tr>');
-                }
-                $("div#" + id + " code").html(table);
-                $("div#" + id).modal("show");
-            });
-        }
-        $("div#" + id + " button.copy").click(() => {
-            copyTextToCilpboard(codes[id], $("div#" + id));
-            showSnackbar("Copied!!", $("div#" + id));
-            $("div#" + id).focus();
+        // 내용 추가
+        $(code).find('.modal-body').html($('.my-code#' + buttonId).html());
+        // 복사 버튼
+        $(code).find("button.copy").click(() => {
+            copyTextToCilpboard(posts.codes[buttonId], code);
+            showSnackbar("복사 완료", code);
+            $(code).focus();
         });
-        $("div#" + id + " button.download").click(() => {
-            downloadCode(fileName.split('/').pop(), codes[id]);
+        // 다운로드 버튼
+        $(code).find("button.download").click(() => {
+            downloadCode($('button#' + buttonId).attr('path').split('/').pop(), posts.codes[buttonId]);
         });
-    }
+        $('body').append(code);
+        $(code).modal('show');
+    };
 }
+
 function copyElementToClipboard(element) {
     var notActive = {
         TEXTAREA: true
@@ -273,6 +302,7 @@ function copyElementToClipboard(element) {
     showSnackbar("Copied!!", parent);
     parent.focus();
 }
+
 function copyTextToCilpboard(text, parent) {
     var hiddenElement = $('<textarea></textarea>');
     $(parent || 'body').append(hiddenElement);
@@ -281,6 +311,7 @@ function copyTextToCilpboard(text, parent) {
     document.execCommand("copy");
     hiddenElement.remove();
 }
+
 function downloadCode(title, text) {
     var hiddenElement = document.createElement('a');
     hiddenElement.href = 'data:attachment/text,' + encodeURI(text.trim());
@@ -288,6 +319,7 @@ function downloadCode(title, text) {
     hiddenElement.download = title;
     hiddenElement.click();
 }
+
 function showSnackbar(text, parent, timeout) {
     var hiddenElement = $('<div id="snackbar">' + text + '</div>');
     $(parent || 'body').append(hiddenElement);
@@ -296,8 +328,4 @@ function showSnackbar(text, parent, timeout) {
         hiddenElement.removeClass('show');
         hiddenElement.remove();
     }, timeout || 1000);
-}
-
-function htmlEscape(text) {
-    return text.replace(/&/gm, '&amp;').replace(/</gm, '&lt;').replace(/>/gm, '&gt;').replace(/\t/gm, '    ');
 }
