@@ -22,10 +22,14 @@ $(() => {
             // 모든 컨텐츠 골격 생성
             let content = $('<div></div>').addClass('jumbotron').attr('id', post.id);
             $(content).html('<details><summary><a href="javascript:;" data-toggle="popover" data-trigger="hover" title="' +
-                (post.category + '@' + post.date.substring(0,10)) + '" data-content="' + post.description + '"><h2>' + post.title + '</h2>' +
+                (post.category + '@' + post.date.substring(0, 10)) + '" data-content="' + post.description + '"><h2>' + post.title + '</h2>' +
                 ((new Date().getTime() - new Date(post.date).getTime()) <= 604800000 ?
-                    '<span class="badge badge-pill badge-primary">New</span>' : '') +
-                '</a></summary></details>');
+                    '<span class="badge badge-pill badge-primary">New</span>' : '') + '</a></summary>' +
+                '<form><div class="input-group mb-3">' +
+                '<input type="text" class="form-control" placeholder="최대 100자까지 가능" aria-describedby="basic-addon2">' +
+                '<div class="input-group-append">' +
+                '<button class="btn btn-outline-secondary" type="button" onClick="javascript:addComment(' + post.id + ');">등록</button></div></div>' +
+                '<ol class="comments"></ol></form></details>');
             posts.contents.push(content);
 
             $(content).find('summary').click(loadContent(post.id, post.filename));
@@ -50,6 +54,14 @@ $(() => {
     // 드롭업 자동 갱신 등록
     window.onscroll = updateDropupAuto;
 
+    // 엔터 동작 없음
+    $('input.form-control').keypress((event) => {
+        if (event.keyCode == 13) {
+            event.preventDefault();
+        }
+        return true;
+    });
+
     // 엔터로 검색 가능
     $('input#input-title').keypress((event) => {
         if (event.keyCode == 13) {
@@ -71,7 +83,8 @@ function loadContent(id, filename) {
                     $(button).attr('id', 'code' + id);
                     $(button).click(insertCode($(button).attr('id')));
                 });
-                $(posts.contents[id]).find('details').append(content);
+                $(posts.contents[id]).find('summary').after(content);
+                getComment(posts.list[id].filename);
             });
         }
     };
@@ -199,7 +212,7 @@ function adjustIndexSize() {
         'max-width': dropupMaxWidth + "px",
         'overflow': 'auto'
     });
-    $('input#input-title').css('width', dropupMaxWidth/2 + "px")
+    $('input#input-title').css('width', dropupMaxWidth / 2 + "px")
 }
 
 function insertCode(buttonId) {
@@ -328,4 +341,67 @@ function showSnackbar(text, parent, timeout) {
         hiddenElement.removeClass('show');
         hiddenElement.remove();
     }, timeout || 1000);
+}
+
+function addComment(id) {
+    let path = posts.list[id].filename;
+    let comment = $(posts.contents[id]).find('input.form-control').val();
+    comment = comment.substring(0, 100).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    
+    if (comment.length === 0) {
+        showSnackbar("댓글을 입력하세요.", $('body'));
+        return;
+    }
+    $.ajax({
+        type: 'post',
+        dataType: 'json',
+        url: 'http://donggi.dothome.co.kr/add_comment.php',
+        data: { path: path, comment: comment },
+        success: (data) => {
+            if (data === "OK") {
+                showSnackbar("등록 성공", $('body'));
+                $(posts.contents[id]).find('input.form-control').val('');
+                getComment(path);
+            } else {
+                showSnackbar("10초당 1번씩 등록 가능", $('body'));
+            }
+        },
+        error: (request, status, error) => {
+            showSnackbar("등록 실패.", $('body'));
+        }
+    });
+}
+
+function getComment(path) {
+    console.log(path);
+    $.ajax({
+        type: 'post',
+        dataType: 'json',
+        url: 'http://donggi.dothome.co.kr/get_comment.php',
+        data: { path: path },
+        success: (data) => {
+            let ol = $('<ol>').addClass('comments');
+            for (comment of data) {
+                $(ol).prepend($('<li>').html(
+                    '<a href="javascript:;" data-toggle="popover" data-trigger="hover" title="작성자: ' +
+                    comment.ip + '" data-content="작성 시각: ' + comment.add_date + '">' + comment.comment +
+                    ((new Date().getTime() - new Date(comment.add_date).getTime()) <= 604800000 ? '<span class="badge badge-pill badge-primary">New</span>' : '') +
+                    '</a>'));
+            }
+
+            if (data.length === 0)
+                $(ol).prepend($('<li>').text('등록된 댓글이 없습니다.'));
+
+            for (post of posts.list) {
+                if (post.filename === path) {
+                    $(posts.contents[post.id]).find('ol.comments').html(ol.html());
+                }
+            }
+
+            $('[data-toggle="popover"]').popover();
+        },
+        error: (request, status, error) => {
+            showSnackbar("댓글 로딩 실패", $('body'));
+        }
+    });
 }

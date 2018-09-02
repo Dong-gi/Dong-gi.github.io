@@ -1,0 +1,22 @@
+<ul>
+    <li>자바 코드의 기본 단위는 클래스이며, 파일 이름과 클래스 이름이 일치해야 한다. 이 일치하는 클래스만이 파일 내부에서 public으로 정의될 수 있다.</li>
+    <li>객체 지향 3원리
+        <ul>
+            <li>캡슐화 : 코드와 데이터를 함께 묶고 외부의 접근/오용을 제한</li>
+            <li>상속 : 상위 클래스의 속성들을 하위 클래스에서 그대로 이용</li>
+            <li>다형성 : 상위 타입 참조 변수로 하위 타입 객체를 참조할 수 있고, 이를 통해 호출하는 메서드는 실제로 참조하는 객체의 타입에 따라 나중에 결정된다.</li>
+        </ul>
+    </li>
+    <li>자바는 C++와 같은 다중상속을 근본적으로 제한했지만, 인터페이스로 인해 원칙이 깨졌다.</li>
+    <li>class initializer : 클래스 내의 static {} 블록으로, 클래스 로드시 한 번 호출된다.
+        <br>instance initializer : 클래스 내의 {} 블록으로, 객체 생성시 한 번 호출된다.</li>
+    <li>this : 객체 자신을 가리키는 키워드. this()를 통해 다른 생성자 호출, this.methodName()을 통해 다른 메서드 호출, ClassName.this를 통해 가려진 영역의 객체 참조.</li>
+    <li>super : 부모 클래스를 가리키는 키워드. super()를 통해 부모 메서드 호출, super.methodName()을 통해 다른 메서드 호출</li>
+    <li>자바는 오버라이드를 명시하지 않아도 재정의한 메서드를 호출해준다.(Dynamic method dispatch)</li>
+    <li>instanceof 연산자로 호환 여부 확인 가능</li>
+    <li>{}를 이용해 간단하게 익명클래스를 작성할 수 있다.</li>
+    <li>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/기초/src/io/github/donggi/AnonymousClass.java" lan="java">예시 : 익명클래스 객체 »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/기초/src/io/github/donggi/ClassExample.java" lan="java">예시 : 초기화 블록, 상속, 다형성 »</button>
+    </li>
+</ul>
