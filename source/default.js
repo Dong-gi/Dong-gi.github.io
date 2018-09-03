@@ -132,7 +132,7 @@ function updateDropupManually(level, path) {
         if (posts.list[i].category.startsWith(path)) {
             if ($(posts.contents[i]).hasClass("d-none"))
                 $(posts.contents[i]).removeClass("d-none")
-            menu.append(
+            menu.prepend(
                 $('<a></a>')
                     .addClass('dropdown-item')
                     .attr('href', 'javascript:updateScrollManually(' + posts.list[i].id + ');')
