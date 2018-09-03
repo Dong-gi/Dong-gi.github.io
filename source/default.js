@@ -347,7 +347,7 @@ function addComment(id) {
     let path = posts.list[id].filename;
     let comment = $(posts.contents[id]).find('input.form-control').val();
     comment = comment.substring(0, 100).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    
+
     if (comment.length === 0) {
         showSnackbar("댓글을 입력하세요.", $('body'));
         return;
@@ -401,8 +401,12 @@ function getComment(path) {
             $('[data-toggle="popover"]').popover();
         },
         error: (request, status, error) => {
-            showSnackbar("댓글 로딩 실패", $('body'));
-            $(posts.contents[post.id]).find('ol.comments').append('<li>http프로토콜이라... 댓글은 donggi.dothome.co.kr에서만 작동합니다</li>');
+            showSnackbar("댓글은 donggi.dothome.co.kr에서만 작동합니다.", $('body'), 2000);
+            for (post of posts.list) {
+                if (post.filename === path) {
+                    $(posts.contents[post.id]).find('form').addClass('d-none');
+                }
+            }
         }
     });
 }
