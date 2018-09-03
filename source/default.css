@@ -1,31 +1,21 @@
-body {
-    padding-bottom: 4rem;
-}
+body { padding-bottom: 4rem; }
 
-main {
-    width: 100%;
-}
+main { width: 100%; }
 
-a {
-    color: black;
-}
+a { color: black; }
 
-summary * {
-    display: inline;
-}
+img { max-width: 100%; }
 
-details > p {
-    margin-top: 1rem;
-}
+summary * { display: inline; }
+
+details > p { margin-top: 1rem; }
 
 div.my-code {
     background-color: white;
     overflow-y: scroll;
 }
 
-li:hover {
-    background-color: antiquewhite;
-}
+li:hover { background-color: antiquewhite; }
 
 /* Overwrite the Bootstrap's settings */
 
