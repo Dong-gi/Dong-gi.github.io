@@ -402,6 +402,7 @@ function getComment(path) {
         },
         error: (request, status, error) => {
             showSnackbar("댓글 로딩 실패", $('body'));
+            $(posts.contents[post.id]).find('ol.comments').append('<li>http프로토콜이라... 댓글은 donggi.dothome.co.kr에서만 작동합니다</li>');
         }
     });
 }
