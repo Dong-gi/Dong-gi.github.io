@@ -18,6 +18,7 @@ const posts = {
         { "filename": "posts/2018년9월/15.html", "category": "Java/JNI", "title": "Java Native Interface", "description": "간단한 JNI 예시", "date": "2018-09-02 20:15:27" },
         { "filename": "posts/2018년9월/16.html", "category": "Java/Basic", "title": "클래스", "description": "Java Class", "date": "2018-09-02 20:22:35" },
         { "filename": "posts/2018년9월/17.html", "category": "무분류", "title": "댓글 기능 추가", "description": "", "date": "2018-09-02 23:49:42" },
+        { "filename": "posts/2018년9월/18.html", "category": "Java/Basic", "title": "Object", "description": "Java Object", "date": "2018-09-03 23:01:14" },
         //{ "filename": "posts/2018년9월/.html", "category": "", "title": "", "description": "", "date": "" },
     ],
     "tree": {},
@@ -37,7 +38,5 @@ const posts = {
 <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/기초/src/io/github/donggi/Generic2.java" lan="java">예시 코드 »</button>
 <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/기초/src/io/github/donggi/Interface.java" lan="java">예시 코드 »</button>
 <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/기초/src/io/github/donggi/Nested.java" lan="java">예시 코드 »</button>
-<button type="button" class="btn btn-primary btn-sm btn-code" path="Java/기초/src/io/github/donggi/Notify.java" lan="java">예시 코드 »</button>
-<button type="button" class="btn btn-primary btn-sm btn-code" path="Java/기초/src/io/github/donggi/ObjectExample.java" lan="java">예시 코드 »</button>
 <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/기초/src/io/github/donggi/TryWithResources.java" lan="java">예시 코드 »</button>
  */
