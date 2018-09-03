@@ -1,10 +1,10 @@
 <ul>
-    <li>익명 메서드 Lambda : 인터페이스의 메서드를 구현한 익명 객체를 생성한다. 메서드를 하나만 정의한 FunctionalInterface만 가능하다.</li>
-    <li>java.util.function 패키지에 유용한 FunctionalInterface들이 정의되어 있다.
-        <br>+ 기존의 인터페이스에 static 메서드가 추가되었다. 예) Comparator.comparing</li>
-    <li>메서드 참조를 이용해 기정의된 메서드를 람다로 이용할 수 있다. '::' 연산자를 이용한다.</li>
-    <li>생성자 참조 &raquo; "::new". 배열 생성자 int[]::new도 가능.</li>
+    <li>인터페이스 내부의 모든 요소는 public이다.(자바 9에서 private 메서드 지원 추가)</li>
+    <li>인터페이스는 final 멤버 변수를 가질 수 있다.</li>
+    <li>인터페이스의 메서드는 기본적으로 body가 없지만, default method는 가질 수 있다.</li>
+    <li>인터페이스 구체화 : implements</li>
+    <li>추상클래스는 인터페이스를 부분적으로 구체화해도 된다.</li>
     <li>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/기초/src/io/github/donggi/Lambda.java" lan="java">예시 코드 »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/기초/src/io/github/donggi/Interface.java" lan="java">예시 코드 »</button>
     </li>
 </ul>

@@ -1,0 +1,14 @@
+<ul>
+    <li>Throwable &laquo; Exception(Checked Exception) &laquo; RuntimeException(Unchecked Exception)</li>
+    <li>Error : 프로그램 내부에서 해결할 수 없어 종료됨.</li>
+    <li>Unchecked Exception은 따로 처리하지 않아도 프로그램이 계속 실행됨.</li>
+    <li>Chained Exceptions : 하나의 예외로 인해 다른 예외들이 발생할 수 있다. JDK 1.4부터 근원적인 예외를 알아올 수 있는 방법이 추가되었다.
+        <br>&raquo; Throwable(Throwable causeExc), Throwable(String msg, Throwable causeExc) : 보다 근본적인 원인을 인자로 하여 새로운 예외 생성
+        <br>&raquo; Throwable initCause(Throwable causeExc) : 예외의 근원을 설정하며, 생성자를 통해 호출되거나 이미 호출된 경우 다시 호출 불가
+        <br>&raquo; Throwable getCause() : 현재 예외의 근원을 얻는다. 없으면 null
+    </li>
+    <li>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/기초/src/io/github/donggi/ExceptionExample.java" lan="java">예시 코드 »</button>
+    </li>
+    <li>부모보다 많은 종류의 예외를 공표할 수 없다.</li>
+</ul>
