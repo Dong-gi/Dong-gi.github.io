@@ -235,7 +235,7 @@ function insertCode(buttonId) {
                     else
                         lines = hljs.highlight(lan, response)['value'].split(/\n/gm);
 
-                    let ol = $('<ol>');
+                    let ol = $('<ol>').css('font-family', 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New');
                     for (line of lines)
                         ol.append($('<li>').html(line.replace(/  /gm, '&nbsp;')));
 
@@ -373,7 +373,6 @@ function addComment(id) {
 }
 
 function getComment(path) {
-    console.log(path);
     $.ajax({
         type: 'post',
         dataType: 'json',
@@ -382,7 +381,7 @@ function getComment(path) {
         success: (data) => {
             let ol = $('<ol>').addClass('comments');
             for (comment of data) {
-                $(ol).prepend($('<li>').html(
+                $(ol).append($('<li>').html(
                     '<a href="javascript:;" data-toggle="popover" data-trigger="hover" title="작성자: ' +
                     comment.ip + '" data-content="작성 시각: ' + comment.add_date + '">' + comment.comment +
                     ((new Date().getTime() - new Date(comment.add_date).getTime()) <= 604800000 ? '<span class="badge badge-pill badge-primary">New</span>' : '') +
