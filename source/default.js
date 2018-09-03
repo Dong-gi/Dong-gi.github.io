@@ -363,7 +363,7 @@ function addComment(id) {
                 $(posts.contents[id]).find('input.form-control').val('');
                 getComment(path);
             } else {
-                showSnackbar("10초당 1번씩 등록 가능", $('body'));
+                showSnackbar("60초당 1번씩 등록 가능", $('body'));
             }
         },
         error: (request, status, error) => {
