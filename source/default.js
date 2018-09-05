@@ -148,10 +148,11 @@ function updateDropupManually(level, path) {
 
 function updateDropupAuto() {
     let pos = (document.scrollTop || window.pageYOffset) - (document.clientTop || 0);
+    $('#dropup-posts button').text(posts.list[posts.visible.length - 1].title);
     for (let i = posts.visible.length - 1; i >= 0; --i) {
-        if (pos <= $(posts.contents[i]).offset().top) {
-            $('#dropup-posts button').text(posts.list[i].title);
-            let paths = posts.list[i].category.split("/");
+        if (pos <= $(posts.contents[posts.visible[i]]).offset().top) {
+            $('#dropup-posts button').text(posts.list[posts.visible[i]].title);
+            let paths = posts.list[posts.visible[i]].category.split("/");
             for (let level = 1; level < paths.length; ++level)
                 $("#dropup-lv-" + level + " button").text(paths[level - 1]);
             return;
@@ -400,7 +401,7 @@ function getComment(path) {
             $('[data-toggle="popover"]').popover();
         },
         error: (request, status, error) => {
-            showSnackbar("댓글은 donggi.dothome.co.kr에서만 작동합니다.", $('body'), 2000);
+            showSnackbar("댓글은 http에서만 작동합니다.", $('body'), 2000);
             for (post of posts.list) {
                 if (post.filename === path) {
                     $(posts.contents[post.id]).find('form').addClass('d-none');
