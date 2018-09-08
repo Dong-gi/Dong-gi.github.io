@@ -1,0 +1,12 @@
+<ol>
+    <li>void write(int b) » 하위 8개 비트만 스트림에 쓴다. 나머지는 무시한다.</li>
+    <li>void write(byte[] b), write(byte[] b, int off, int len)</li>
+    <li>void writeBoolean(boolean v) » true면 (byte)1, false면 (byte)0.</li>
+    <li>void writeByte(int v), ~, void writeDouble(double v)
+        <br>» writeShort(int v) : 다음 순으로 2개 바이트를 쓴다. (byte)(0xff &amp; (v &gt;&gt; 8)), (byte)(0xff &amp; v)
+        <br>» writeFloat(float v) : float 비트 그대로 int로 변환하여 저장
+    </li>
+    <li>void writeBytes(String s) » s의 각 글자의 하위 8개 비트만 저장한다.</li>
+    <li>void writeChars(String s) » s의 각 글자를 저장.</li>
+    <li>void writeUTF(String s) » Modified UTF-8을 이용하여 저장한다. 총 길이 정보를 2바이트로 먼저 기록한다.</li>
+</ol>

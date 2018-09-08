@@ -1,0 +1,29 @@
+1. 필드 : public static final Duration ZERO
+<br>
+<br>2. static Duration ofDays(long days)
+<br>static Duration ofHours(Long hours)
+<br>static Duration ofMinutes(long minutes)
+<br>static Duration ofSeconds(long seconds)
+<br>static Duration ofSeconds(long seconds, long nanoAdjustment)
+<br>static Duration ofMillis(long millis)
+<br>static Duration ofNanos(long nanos)
+<br>static Duration of(long amount, TemporalUnit unit)
+<br>static Duration from(TemporalAmount amount)
+<br>static Duration parse(CharSequence text)
+<br>static Duration between(Temporal startInclusive, Temporal endExclusive)
+<br>long get(TemporalUnit unit)
+<br>List&lt;TemporalUnit&gt; getUnits()
+<br>boolean isZero()
+<br>boolean isNegative()
+<br>long getSeconds()
+<br>int getNano()
+<br>Duration withSeconds(long seconds)
+<br>Duration withNanos(int nanoOfSecond)
+<br>Duration plus(Duration duration) ...
+<br>Duration minus(Duration duration) ...
+<br>Duration multipliedBy(long multiplicand)
+<br>Duration divideBy(long divisor)
+<br>Duration negated()
+<br>Duration abs()
+<br>long toDays(), toHours() ...
+<br>Duration truncatedTo(TemporalUnit unit) Since 9

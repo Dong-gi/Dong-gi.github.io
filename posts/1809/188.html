@@ -1,0 +1,14 @@
+1. 채널과 스트림에 관한 유틸리티 클래스.
+<br>
+<br>static InputStream newInputStream(ReadableByteChannel ch)
+<br>static OutputStream newOutputStream(WritableByteChannel ch)
+<br>static InputStream newInputStream(AsynchronousByteChannel ch) Since 1.7
+<br>static OutputStream newOutputStream(AsynchronousByteChannel ch) Since 1.7
+<br>static ReadableByteChannel newChannel(InputStream in)
+<br>static WritableByteChannel newChannel(OutputStream out)
+<br>static Reader newReader(ReadableByteChannel ch, CharsetDecoder dec, int minBufferCap)
+<br>static Reader newReader(ReadableByteChannel ch, String csName)
+<br>static Reader newReader(ReadableByteChannel ch, Charset charset)
+<br>static Writer newWriter(WritableByteChannel ch, CharsetEncoder enc, int minBufferCap)
+<br>static Writer newWriter(WritableByteChannel ch, String csName)
+<br>static Writer newWriter(WritableByteChannel ch, Charset charset)

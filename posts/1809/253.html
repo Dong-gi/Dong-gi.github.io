@@ -1,0 +1,27 @@
+1. Base64 인코더와 디코더를 반환하는 유틸리티. RFC 2045, 4648
+<br>
+<br>
+<b>2. static class Base64.Encoder Since 1.8</b>
+<br>» byte[] encode(byte[] src)
+<br>» int encode(byte[] src, byte[] dst) : 쓴 바이트 수 반환
+<br>» String encodeToString(byte[] src) : new String(encode(src), StandardCHarsets.ISO_8859_1)
+<br>» ByteBuffer encode(ByteBuffer buffer)
+<br>» OutputStream wrap(OutputStream os)
+<br>» Base64.Encoder withoutPadding()
+<br>
+<br>
+<b>3. static class Base64.Decoder Since 1.8</b>
+<br>» byte[] decode(byte[] src)
+<br>» byte[] decode(String src)
+<br>» int decode(byte[] src, byte[] dst)
+<br>» ByteBuffer decode(ByteBuffer buffer)
+<br>» InputStream wrap(InputStream is)
+<br>
+<br>4. 유틸리티
+<br>static Base64.Encoder getEncoder()
+<br>static Base64.Encoder getUrlEncoder()
+<br>static Base64.Encoder getMimeEncoder()
+<br>static Base64.Encoder getMimeEncoder(int lineLength, byte[] lineSeparator)
+<br>static Base64.Decoder getDecoder()
+<br>static Base64.Decoder getUrlDecoder()
+<br>static Base64.Decoder getMimeDecoder()

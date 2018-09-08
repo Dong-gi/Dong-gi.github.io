@@ -1,0 +1,76 @@
+1. 관대함(Leniency) : 범위를 벗어나는 값도 받아들이며, 나중에 정규화한다. 예를 들어 1월 32일은 2월 1일이 된다.
+<br>
+<br>
+<b>2. static class Calendar.Builder Since 1.8</b>
+<br>» 생성자 : public Builder()
+<br>» Calendar.Builder setInstant(long instant) // 밀리초
+<br>» Calendar.Builder setInstant(Date instant)
+<br>» Calendar.Builder set(int field, int value)
+<br>» Calendar.Builder setFields(int... fieldValuePairs)
+<br>* 예: setFields(Calendar.YEAR, 2013, Calendar.MONTH, Calendar.DECEMBER, Calendar.DAY_OF_MONTH, 23)
+<br>» Calendar.Builder setDate(int year, int month, int dayOfMonth)
+<br>» Calendar.Builder setTimeOfDay(int hourOfDay, int minute, int second)
+<br>» Calendar.Builder setTimeOfDay(int hourOfDay, int minute, int second, int millis)
+<br>» Calendar.Builder setWeekDate(int weekYear, int weekOfYear, int dayOfWeek)
+<br>» Calendar.Builder setTimeZone(TimeZone zone)
+<br>» Calendar.Builder setLenient(boolean lenient)
+<br>» Calendar.Builder setCalendarType(String type) : Calendar.getAvailableCalendarTypes()
+<br>» Calendar.Builder setLocale(Locale locale)
+<br>» Calendar.Builder setWeekDefinition(int fistDayOfWeek, int minimalDaysInFirstWeek)
+<br>» Calendar build()
+<br>
+<br>3. add와 roll : add는 오버플로되면 다음 단위가 변하지만, roll은 modulo연산처럼 해당 단위만 변한다.
+<br>
+<br>4. 필드
+<br>public static final int YEAR, MONTH, WEEK_OF_YEAR, WEEK_OF_MONTH_, DATE, ...
+<br>
+<br>5. 팩터리
+<br>static Calendar getInstance()
+<br>static Calendar getInstance(TimeZone zone)
+<br>static Calendar getInstance(Locale aLocale)
+<br>static Calendar getInstance(TimeZone zone, Locale aLocale)
+<br>static Locale[] getAvailableLocales()
+<br>static Set&lt;String&gt; getAvailableCalendarTypes() Since 1.8
+<br>
+<br>6. final Date getTime()
+<br>final void setTime(Date date)
+<br>long getTimeInMillis()
+<br>void setTimeInMillis(long millis)
+<br>int get(int field)
+<br>void set(int field, int value)
+<br>final void set(int year, int month, int date)
+<br>final void set(int year, month, int date, int hourOfDay, int minute, int second)
+<br>final void clear() : 기본값으로 변경. isSet()이 false를 반환
+<br>final void clear(int field) : 기본값으로 변경. isSet(field)가 false를 반환
+<br>final boolean isSet(int field)
+<br>String getDisplayName(int field, int style, Locale locale) Since 1.6
+<br>» style : SHORT_FORMAT, SHORT_STANDALONE, LONG_FORMAT, LONG_STANDALONE, NARROW_FORMAT, NARROW_STANDALONE
+<br>Map&lt;String, Integer&gt; getDIsplayNames(int field, int style, Locale locale) Since 1.6
+<br>String getCalendarType() Since 1.8
+<br>void setTimeZone(TimeZone value)
+<br>TimeZone getTimeZone()
+<br>void setLenient(boolean lenient)
+<br>boolean isLenient()
+<br>void setFirstDayOfWeek(int value) : SUNDAY ~ SATURDAY
+<br>int getFirstDayOfWeek()
+<br>void setMinimalDaysInFirstWeek(int value) : 첫 주의 시작이 1월 1일인 경우 1, 그 외의 경우 7
+<br>int getMinimalDaysInFirstWeek()
+<br>boolean isWeekDateSupported() Since 1.7 : default return == false
+<br>
+<b>» GregorianCalendar는 이를 지원한다.</b>
+<br>int getWeekYear() Since 1.7
+<br>void setWeekDate(int weekYear, int weekOfYear, int dayOfWeek) Since 1.7
+<br>int getWeeksInWeekYear()
+<br>final Instant toInstant() Since 1.8
+<br>int getActualMaximum(int field)
+<br>int getActualMinimum(int field)
+<br>
+<br>7. 비교
+<br>boolean equals(Object obj)
+<br>boolean before(Object when)
+<br>boolean after(Object when)
+<br>
+<br>8. 연산
+<br>abstract void add(int field, int amount)
+<br>abstract void roll(int field, boolean up) : 1 기본단위만큼 up/down
+<br>void roll(int field, int amount) Since 1.2

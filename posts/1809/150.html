@@ -1,0 +1,46 @@
+1. 임의 정밀도의 변경할 수 없는 10진 정수와 32비트 정수인 지수로 십진수를 표현한다.
+<br>
+<br>2. 필드
+<br>public static final BigDecimal ZERO, ONE, TEN Since 1.5
+<br>
+<br>3. 생성자
+<br>public BigDecimal(char[] in, int offset, int len) Since 1.5
+<br>public BigDecimal(char[] in, int offset, int len, MathContext mc) Since 1.5
+<br>public BigDecimal(char[] in) Since 1.5
+<br>public BigDecimal(char[] in, MathContext mc) Since 1.5
+<br>public BigDecimal(String val)
+<br>» (부호)?(진수부)(지수부)?
+<br>* 진수부 : 정수부.(소수부) or .소수부 or 정수부
+<br>* 지수부: (e|E)정수
+<br>public BigDecimal(String val, MathContext mc) Since 1.5
+<br>public BigDecimal(double val) : double의 오차 때문에 정확하진 않다.
+<br>public BigDecimal(double val, MathContext mc) Since 1.5
+<br>public BigDecimal(BigInteger val)
+<br>public BigDecimal(BigInteger val, MathContext mc) Since 1.5
+<br>public BigDecimal(BigInteger unscaledVal, int scale)
+<br>public BigDecimal(BigInteger unscaledVal, int scale, MathContext mc) Since 1.5
+<br>public BigDecimal(int val) Since 1.5
+<br>public BigDecimal(int val, MathContext mc) Since 1.5
+<br>public BigDecimal(long val) Since 1.5
+<br>public BigDecimal(long val, MathContext mc) Since 1.5
+<br>
+<br>4. static BigDecimal valueOf(long unscaledVal, int scale)
+<br>static BigDecimal valueOf(long val)
+<br>static BigDecimal valueOf(double val) Since 1.5
+<br>
+<br>BigDecimal add(BigDecimal augend)
+<br>BigDecimal add(BigDecimal augend, MathContext mc) Since 1.5
+<br>BigDecimal subtract(BigDecimal subtrahend)
+<br>BigDecimal subtract(BigDecimal subtrahend, MathContext mc) Since 1.5
+<br>BigDecimal multiply(BigDecimal multiplicand)
+<br>BigDecimal multiply(BigDecimal multiplicand, MathContext mc) Since 1.5
+<br>BigDecimal divide(BigDecimal divisor, int scale, RoundingMode roundingMode) Since 1.5
+<br>BigDecimal divide(BigDecimal divisor, RoundingMode roundingMode) Since 1.5
+<br>BigDecimal divide(BigDecimal divisor) Since 1.5
+<br>BigDecimal divide(BigDecimal divisor, MathContext mc) Since 1.5
+<br>BigDecimal divideToIntegralValue(BigDecimal divisor) Since 1.5 : 몫
+<br>BigDecimal divideToIntegralValue(BigDecimal divisor, MathContext mc) Since 1.5
+<br>BigDecimal remainder(BigDecimal divisor) SInce 1.5 : 나머지
+<br>BigDecimal remainder(BigDecimal divisor, MathContext mc) Since 1.5
+<br>BigDecimal[] divideAndRemainder(BigDecimal divisor) Since 1.5
+<br>sqrt, pow, abs, negate, scale, precision, unscaledValue, round, movePointRight, scaleByPowerOfTen, ...

@@ -1,0 +1,25 @@
+1. 파일 경로를 가리킨다. WARNING : 이 인터페이스는 사용자 정의 파일 시스템을 개발하기 위해서만 만들어짐.
+<br>» Path path = FileSystems.getDefault().getPath(String, String...)
+<br>
+<br>2. FileSystem getFileSystem()
+<br>boolean isAbsolute()
+<br>Path getRoot()
+<br>Path getFileName()
+<br>Path getParent()
+<br>int getNameCount()
+<br>Path getName(int index)
+<br>Path subpath(int beginIndex, int endIndex)
+<br>boolean startsWith(Path other)
+<br>default boolean startsWith(String other)
+<br>boolean endsWith(Path other)
+<br>default boolean endsWith(String other)
+<br>Path normalize() : ".", ".." 제거
+<br>Path resolve(Path other) : 상대경로 other를 이 객체에 대하여 resolve.
+<br>default Path resolve(String other)
+<br>default Path resolveSibling(Path other) : 이 객체의 부모에 대하여 resolve.
+<br>default Path resolveSibling(String other)
+<br>Path relativize(Path other) : URI 참고
+<br>URI toUri()
+<br>Path toAbsolutePath()
+<br>Path toRealPath(LinkOption... options)
+<br>default File toFile()

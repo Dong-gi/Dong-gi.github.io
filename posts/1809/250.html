@@ -1,0 +1,130 @@
+<ol>
+    <li>배열에 관한 유틸리티.</li>
+    <li>정렬
+        <ul>
+            <li>static void sort(int[] a) + long, short, char, byte, float, double, Object</li>
+            <li>static void sort(int[] a, int fromIndex, int toIndex)</li>
+            <li>static void parallelSort(byte[] a) Since 1.8 + char, short, int, long, float, double</li>
+            <li>static void parallelSOrt(byte[] a, int fromIndex, int toIndex) Since 1.8
+                <br>» 합병 정렬을 병렬로 수행한다. 모든 병렬 작업은 ForkJoin common pool을 이용해 이루어진다.</li>
+            <li>static &lt;T extends Comparable&lt;? super T&gt;&gt; void parallelSort(T[] a) Since 1.8</li>
+            <li>static &lt;T extends Comparable&lt;? super T&gt;&gt; void parallelSort(T[] a, int fromIndex, int toIndex)
+                Since 1.8
+                <br>» 자연스러운 방향으로 오름차순 정렬. 모든 원소는 Comparable을 구체화해야 한다.
+                <br>» 정렬은 stable(안정적)이다 : 같은 순위의 원소들은 이전과 전후관계가 일치</li>
+            <li>static &lt;T&gt; void parallelSort(T[] a, Comparator&lt;? super T&gt; cmp) Since 1.8</li>
+            <li>static &lt;T&gt; void parallelSort(T[] a, int fromIndex, int toIndex, Comparator&lt;? super T&gt; cmp) Since
+                1.8
+            </li>
+            <li>static &lt;T&gt; void sort(T[] a, Comparator&lt;? super T&gt; c)</li>
+            <li>static &lt;T&gt; void sort(T[] a, int fromIndex, int toIndex, Comparator&lt;? super T&gt; c)</li>
+        </ul>
+    </li>
+    <li>원소 변경
+        <ul>
+            <li>static &lt;T&gt; void parallelPrefix(T[] array, BinaryOperator&lt;T&gt; op) Since 1.8
+                <br>» 전체 원소에 순차적으로 연산 적용하여 값 변경. 큰 배열은 루프보다 이게 더 빠르다.</li>
+            <li>static &lt;T&gt; void parallelPrefix(T[] array, int fromIndex, int toIndex, BinaryOperator&lt;T&gt; op) Since
+                1.8
+            </li>
+            <li>static void parallelPrefix(long[] array, LongBinaryOperator op) Since 1.8 + double, int</li>
+            <li>static void parallelPrefix(long[] array, int fromIndex, int toIndex, LongBinaryOperator op) Since 1.8</li>
+        </ul>
+    </li>
+    <li>탐색
+        <ul>
+            <li>static int binarySearch(long[] a, long key) + int, short, char, byte, double, float, Object</li>
+            <li>static int binarySearch(long[] a, int fromIndex, int toIndex, long key) Since 1.6</li>
+            <li>static &lt;T&gt; int binarySearch(T[] a, T key, Comparator&lt;? super T&gt; c)</li>
+            <li>static &lt;T&gt; int binarySearch(T[] a, int fromIndex, int toIndex, T key, Comparator&lt;? super T&gt; c)
+                Since 1.6</li>
+        </ul>
+    </li>
+    <li>동등 비교
+        <ul>
+            <li>static boolean equals(long[] a, long[] a2) + int, short, char, byte, boolean, double, float, Object</li>
+            <li>static boolean equals(long[] a, int aFromIndex, int aToIndex, long[] b, int bFromIndex, int bToIndex) Since
+                9
+                <br>» Object의 경우, Objects.equals(e1, e2)일 때 같다고 간주한다.</li>
+            <li>static boolean deepEquals(Object[] a1, Object[] a2) Since 1.5
+                <br>» null일 수 있는 각 배열의 두 원소 e1, e2에 대하여, 다음 4가지 경우에 대해 둘이 같다고 판단한다.
+                <br>* e1 == e2
+                <br>* 둘 모두 참조변수에 대한 배열이고, Arrays.deepEquals(e1, e2)가 true
+                <br>* 둘 모두 원시타입에 대한 배열이고, Arrays.equals(e1, e2)가 true
+                <br>* e1.equals(e2)가 true</li>
+            <li>static &lt;T&gt; boolean equals(T[] a, T[] a2, Comparator&lt;? super T&gt; cmp) Since 9</li>
+            <li>static &lt;T&gt; boolean equals(T[] a, int aFromIndex, int aToIndex, T[] b, int bFromIndex, int bToIndex,
+                Comparator&lt;? super T&gt; cmp) Since 9</li>
+        </ul>
+    </li>
+    <li>초기화
+        <ul>
+            <li>static void fill(long[] a, long val) + int, short, char, byte, bolean, double, float, Object</li>
+            <li>static void fill(long[] a, int fromIndex, int toIndex, long val)</li>
+            <li>static &lt;T&gt; void setAll(T[] array, IntFunction&lt;? extends T&gt; generator) Since 1.8</li>
+            <li>static &lt;T&gt; void parallelSetAll(T[] array, IntFunction&lt;? extends T&gt; generator) SInce 1.8</li>
+            <li>static void setAll(int[] array, IntUnaryOperator generator) Since 1.8 + long, double</li>
+            <li>static void parallelSetAll(int[] array, IntUnaryOperator generator) Since 1.8</li>
+        </ul>
+    </li>
+    <li>복제
+        <ul>
+            <li>static &lt;T&gt; T[] copyOf(T[] original, int newLength) Since 1.6</li>
+            <li>static &lt;T, U&gt; T[] copyOf(U[] original, int newLength, Class&lt;? extends T[]&gt; newType) Since 1.6</li>
+            <li>static byte[] copyOf(byte[] original, int newLength) Since 1.6 + short, int, long, char, float, double, boolean</li>
+            <li>static &lt;T&gt; T[] copyOfRange(T[] original, int from, int to) Since 1.6</li>
+            <li>static &lt;T, U&gt; T[] copyOfRange(U[] original, int from, int to, Class&lt;? extends T[]&gt; newType) Since
+                1.6
+            </li>
+            <li>static byte[] copyOfRange(byte[] original, int from, int to) Since 1.6 + short, int, long, char, float, double,
+                boolean
+            </li>
+        </ul>
+    </li>
+    <li>리스트
+        <br>@SafeVarargs static &lt;T&gt; List&lt;T&gt; asList(T... a)</li>
+    <li>hash
+        <ul>
+            <li>static int hashCode(long[] a) Since 1.5 + int, short, char, byte, boolean, float, double, Object
+                <br>» 동일 원소를 가진 List의 해시코드와 동일. null이면 0 반환</li>
+            <li>static int deepHashCode(Object[] a) Since 1.5
+                <br>» 원소가 배열인 경우, 해당 배열의 모든 원소의 해시를 별도로 구한다. 따라서 자기 자신을 포함하는 배열 등은 적합하지 않다.</li>
+        </ul>
+    </li>
+    <li>toString
+        <br>static String toString(long[] a) Since 1.5 + int, short, char, byte, boolean, float, double, Object
+        <br>static String deepToString(Object[] a) Since 1.5
+        <br>» toString(Object[])가 o.toString()을 이용한다면, 여기서는 String.valueOf(Object)가 이용되고, 원소가 배열인 경우 "[]"를 추가하고 해당 배열의 원소들에
+        대해 같은 작업을 한다.</li>
+    <li>Stream
+        <ul>
+            <li>static &lt;T&gt; Stream&lt;T&gt; stream(T[] array) Since 1.8</li>
+            <li>static &lt;T&gt; Stream&lt;T&gt; stream(T[] array, int startInclusive, int endExclusive) Since 1.8</li>
+            <li>static IntStream stream(int[] array) Since 1.8 + long, double</li>
+            <li>static IntStream stream(int[] array, int startInclusive, int endExclusive) Since 1.8</li>
+        </ul>
+    </li>
+    <li>비교
+        <ul>
+            <li>static int compare(boolean[] a, boolean[] b) Since 9 + byte, short, char, int, long, float, double</li>
+            <li>static int compare(boolean[] a, int aFromIndex, int aToIndex, boolean[] b, int bFromIndex, int bToIndex)
+                Since 9</li>
+            <li>static int compareUnsigned(byte[] a, byte[] b) Since 9 + short, int, long</li>
+            <li>static int compareUnsigned(byte[] a, int aFromIndex, int aToIndex, byte[] b, int bFromIndex, int bToIndex)
+                Since 9</li>
+            <li>static &lt;T extends Comparable&lt;? super T&gt;&gt; int compare(T[] a, T[] b) Since 9</li>
+            <li>static &lt;T extends Comparable&lt;? super T&gt;&gt; int compare(T[] a, int aFromIndex, int aToIndex, T[]
+                b, int bFromIndex, int bToIndex) Since 9</li>
+            <li>static &lt;T&gt; int compare(T[] a, T[] b, Comparator&lt;? super T&gt; cmp) Since 9</li>
+            <li>static &lt;T&gt; int compare(T[] a, int aFromIndex, int aToIndex, T[] b, int bFromIndex, int bToIndex, Comparator&lt;?
+                super T&gt; cmp) Since 9</li>
+            <li>static int mismatch(boolean[] a, boolean[] b) Since 9 + byte, char, short, int, long, float, double, Object
+                <br>» 처음으로 일치하지 않는 인덱스 반환.</li>
+            <li>static int mismatch(boolean[] a, int aFromIndex, int aToIndex, boolean[] b, int bFromIndex, int bToIndex)
+                Since 9</li>
+            <li>static &lt;T&gt; int mismatch(T[] a, T[] b, Comparator&lt;? super T&gt; cmp) Since 9</li>
+            <li>static &lt;T&gt; int mismatch(T[] a, int aFromIndex, int aToIndex, T[] b, int bFromIndex, int bToIndex, Comparator&lt;?
+                super T&gt; cmp) Since 9</li>
+        </ul>
+    </li>
+</ol>

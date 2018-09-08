@@ -1,0 +1,11 @@
+<ol>
+    <li>이를 구체화한 클래스 객체는 enhanced for statement의 순회 대상이 될 수 있다.</li>
+    <li>Iterator&lt;T&gt; iterator() : 구체화한 익명 클래스 객체를 반환하면 된다.</li>
+    <li>default void forEach(Consumer&lt;? super T&gt; action) Since 1.8
+        <br>» 순회하면서 action을 적용한다. 기본 구현 : for(T t : this) action.accept(t);</li>
+    <li>default Spliterator&lt;T&gt; spliterator() Since 1.8
+        <br>» 기본 구현은 Sliterator의 모든 사항을 구현하지 않으므로 재정의하는 것이 더 좋은 성능을 보인다.</li>
+    <li><button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/lang/IterableExample.java" lan="java">예시
+            코드 »</button>
+    </li>
+</ol>

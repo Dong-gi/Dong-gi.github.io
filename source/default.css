@@ -6,7 +6,7 @@ a { color: black; }
 
 img { max-width: 100%; }
 
-summary * { display: inline; }
+summary a { font-size: 1.5em; }
 
 details > p { margin-top: 1rem; }
 

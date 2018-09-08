@@ -1,0 +1,21 @@
+1. null을 허용하지 않는 객체에 대한 컨테이너. value-based므로 identity-sensitive한 연산은 피해야 한다.
+<br>
+<br>2. static &lt;T&gt; Optional&lt;T&gt; empty() : 빈 컨테이너 반환
+<br>static &lt;T&gt; Optional&lt;T&gt; of(T value)
+<br>static &lt;T&gt; Optional&lt;T&gt; ofNullable(T value) : null이면 empty(), 아니면 of(value)
+<br>T get()
+<br>boolean isPresent()
+<br>void ifPresent(Consumer&lt;? super T&gt; action)
+<br>void ifPresentOrElse(Consumer&lt;? super T&gt; action, Runnable emptyAction) Since 9
+<br>Optional&lt;T&gt; filter(Predicate&lt;? super T&gt; predicate) : 값이 존재하고 필터를 통과하면 그대로 반환. 아니면 빈 컨테이너 반환
+<br>&lt;U&gt; Optional&lt;U&gt; map(Function&lt;? super T, ? extends U&gt; mapper)
+<br>&lt;U&gt; Optional&lt;U&gt; flatMap(Function&lt;? super T, ? extends Optional&lt;? extends U&gt;&gt; mapper)
+<br>» mapper가 반환하는 값 자체가 Optional이므로 map()과 달리 추가적인 Optional로 감싸지 않는다.
+<br>Optional&lt;T&gt; or(Supplier&lt;? extends Optional&lt;? extends T&gt;&gt; supplier) Since 9
+<br>» 값이 존재하면 그대로 반환. 없으면 제공되는 값 반환.
+<br>Stream&lt;T&gt; stream() Since 9
+<br>» 값이 존재하면 해당 값 하나만 포함하는 스트림 반환. 없으면 빈 스트림 반환.
+<br>T orElse(T other)
+<br>T orElseGet(Supplier&lt;? extends T&gt; supplier)
+<br>T orELseThrow() Since 10 : 값이 없으면 예외
+<br>&lt;X extends Throwable&gt; T orELseThrow(Supplier&lt;? extends X&gt; exceptionSupplier) throws X extends Throwable

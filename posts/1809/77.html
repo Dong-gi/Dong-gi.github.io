@@ -1,0 +1,24 @@
+<ol>
+    <li>파일 및 디렉터리에 관한 권한을 표현하는 클래스.
+        <ul>
+            <li>"/*"로 끝나는 경로는 해당 디렉터리 내부 모든 파일 및 디렉터리를 가리킨다. "*"는 현재 디렉터리 내부.</li>
+            <li>"/-"로 끝나는 경로는 해당 디렉터리 내부 모든 파일 및 모든 서브디렉터리를 가리킨다. "-"는 현재 디렉터리 내부.</li>
+            <li>"&lt;&lt;ALL FILES&gt;&gt;"로 표현된 경로는 임의 파일과 대응한다.</li>
+            <li>권한 리스트는 콤마로 구분한 문자열로 표현한다. 가능한 키워드는 "read", "write", "execute"(Runtime.exec 메서드 호출 관련), "delete"(File.delete
+                메서드 호출 관련), "readlink"(java.nio.file.Files.readSymbolicLink 메서드와 관련)</li>
+            <li>주의 : 임의 파일에 대한 권한은 보안상 위험하다. 기본적으로 코드가 포함된 디렉터리는 읽기가 가능하므로 굳이 권한을 부여할 필요 없다.</li>
+        </ul>
+    </li>
+    <li>FilePermission(String path, String actions)
+        <br>» 시스템 속성 "jdk.io.permissionsUseCanonicalPath"가 매개변수 path의 처리에 대해 기술한다.
+        <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.oracle.com/javase/9/docs/api/java/io/FilePermission.html#FilePermission-java.lang.String-java.lang.String-">자세히</a>
+    </li>
+    <li>boolean implies(Permission p) : 객체의 권한이 인자의 권한을 내포하는지 여부 반환</li>
+    <li>String getActions()</li>
+    <li>PermissionCollection newPermissionCollection()
+        <br>» 예. 컬렉션에 다음 두 가지 권한─("/tmp/-", "read"), ("/tmp/scratch/foo", "write")─들이 있을 때, 이에 대한 implies메서드에 권한 ("/tmp/scratch/foo",
+        "read,write")을 넘겨준 결과는 true를 반환해야 한다.</li>
+    <li><button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/FilePermissionExample.java"
+            lan="java">예시 코드 »</button>
+    </li>
+</ol>

@@ -1,0 +1,56 @@
+<ol>
+    <li>static interface System.Logger Since 9
+        <ul>
+            <li>static enum System.Logger.Level Since 9
+                <ul>
+                    <li>ALL(Integer.MIN_VALUE), TRACE(400), DEBUG(500), INFO(800), WARNING(900), ERROR(1000), OFF(Integer.MAX_VALUE)</li>
+                    <li>final String getName()</li>
+                    <li>final int getSeverity()</li>
+                </ul>
+            </li>
+            <li>String getName() : 로거 이름 반환.</li>
+            <li>boolean isLoggable(System.Logger.Level level)</li>
+            <li>default void log(System.Logger.Level level, String msg)</li>
+            <li>...</li>
+        </ul>
+    </li>
+    <li>abstract static class System.LoggerFinder Since 9
+        <ul>
+            <li>로거의 생성, 관리, 구성에 관한 서비스 제공.</li>
+            <li>기본 구현 : java.logging 모듈이 있는 경우 java.util.logging이용. 없으면 INFO 수준으로 표준 에러 출력</li>
+            <li>static System.LoggerFinder getLoggerFinder()</li>
+            <li>abstract getLogger(String name, Module module)</li>
+            <li>System.Logger getLocalizedLogger(String name, ResourceBundle bundle, Module module)</li>
+        </ul>
+    </li>
+    <li>public static final InputStream in</li>
+    <li>public static final PrintStream out</li>
+    <li>public static final PrintStream err</li>
+    <li>static void setIn(InputStream in) Since 1.1</li>
+    <li>static void setOut(PrintStream out) Since 1.1</li>
+    <li>static void setErr(PrintStream err) Since 1.1</li>
+    <li>static Console console() Since 1.6</li>
+    <li>static Channel inheritedChannel() Since 1.5</li>
+    <li>static void setSecurityManager(SecurityManager s)</li>
+    <li>static SecurityManager getSecurityManager()</li>
+    <li>static long currentTimeMillis()</li>
+    <li>static long nanoTime() Since 1.5</li>
+    <li>static void arraycopy(Object src, int srcPos, Object dest, int destPos, int length)</li>
+    <li>static int identityHashCode(Object x) Since 1.1</li>
+    <li>static Properties getProperties()</li>
+    <li>static String lineSeparator() Since 1.7</li>
+    <li>static void setProperties(Properties props)</li>
+    <li>static String getProperty(String key)</li>
+    <li>static String getProperty(String key, String def)</li>
+    <li>static String setProperty(String key, String value) Since 1.2</li>
+    <li>static String clearProperty(String key) Since 1.5</li>
+    <li>static String getenv(String name) : 환경변수값 반환</li>
+    <li>static Map&lt;String,String&gt; getenv() Since 1.5</li>
+    <li>static System.Logger getLogger(String name) Since 9</li>
+    <li>static System.Logger getLogger(String name, ResourceBundle bundle) Since 9</li>
+    <li>static void exit(int status)</li>
+    <li>static void gc() : Runtime의 것을 호출</li>
+    <li>static void runFinalization() : Runtime의 것을 호출</li>
+    <li>static void load(String filename) : Runtime의 것을 호출</li>
+    <li>static void loadLibrary(String libname) : Runtime의 것을 호출</li>
+</ol>

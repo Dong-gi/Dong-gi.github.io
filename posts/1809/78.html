@@ -1,0 +1,19 @@
+<ol>
+    <li>읽기/쓰기 가능한 임의 접근 파일. 읽기/쓰기의 기준 위치 file pointer가 존재.
+        <br>» 읽기로 예정된 바이트들을 모두 읽기 전에 EOF를 만나면 EOFException 발생.</li>
+    <li>RandomAccessFile(String name, String mode), RandomAccessFile(File file, String mode)
+        <br>» mode » "r", "rw", "rws"(파일 내용 및 메타데이터 변경을 곧바로 반영), "rwd"(파일 내용 변경을 곧바로 반영)
+    </li>
+    <li>final FileDescriptor getFD()</li>
+    <li>final FileChannel getChannel() Since 1.4</li>
+    <li>int read() : InputStream.read()와 동일</li>
+    <li>int read(byte[] b, int off, int len), read(byte[] b)</li>
+    <li>final void readFully(byte[] b), readFully(byte[] b, int off, int len)</li>
+    <li>long getFilePointer()</li>
+    <li>void seek(long pos) : file pointer 설정</li>
+    <li>long length()</li>
+    <li>void setLength(long newLength) Since 1.2
+        <br>» If 기존 크기 &gt; newLength and getFilePointer() &gt; newLength then 자르고, file pointer = newLength
+        <br>» If 기존 크기 &lt; newLength then 확장. 확장한 영역의 데이터는 초기화되지 않는다.
+    </li>
+</ol>

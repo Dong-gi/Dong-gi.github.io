@@ -1,0 +1,8 @@
+<ol>
+    <li>Set::of, Set::copyOf 팩터리 메서드로 변경 불가능한 집합을 만들 수 있다. 변경 불가능한 집합은 null 원소를 허용하지 않으며, 모든 원소가 serializable하면 집합도 그러하다.
+        value-based므로 identity-sensitive한 연산은 피해야 한다.</li>
+    <li>static &lt;E&gt; Set&lt;E&gt; of() Since 9</li>
+    <li>static &lt;E&gt; Set&lt;E&gt; of(E e1) Since 9 ...</li>
+    <li>@SafeVarargs static &lt;E&gt; Set&lt;E&gt; of(E... elements) Since 9 : 단일 배열도 인자로 가능하다.</li>
+    <li>static &lt;E&gt; Set&lt;E&gt; copyOf(Collection&lt;? extends E&gt; coll) Since 10</li>
+</ol>

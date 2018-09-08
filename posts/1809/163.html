@@ -1,0 +1,23 @@
+1. 이름과 할당된 IP 주소들로 구성된 Network Interface 표현.
+<br>
+<br>2. String getName()
+<br>Enumeration&lt;InetAddress&gt; getInetAddresses()
+<br>Stream&lt;InetAdress&gt; inetAddresses() Since 9
+<br>List&lt;InterfaceAddress&gt; getInterfaceAddresses() Since 1.6
+<br>Enumeration&lt;NetoworkInterface&gt; getSubInterfaces() Since 1.6 : subinterface = vertual interface
+<br>Stream&lt;NetworkInterface&gt; subInterfaces() Since 9
+<br>NetworkInterface getParent() Since 1.6
+<br>int getIndex() Since 1.7 : -1 for unknown
+<br>String getDisplayName()
+<br>static NetworkInteface getByName(String name)
+<br>static NetworkInterface getByIndex(int index) Since 1.7
+<br>static NetworkInterface getByInetAddress(InetAddress addr)
+<br>static Enumeration&lt;NetworkInterface&gt; getNetworkInterfaces()
+<br>static Stream&lt;NetworkInterface&gt; networkInterfaces() Since 9
+<br>boolean isUp() Since 1.6
+<br>boolean isLoopback() Since 1.6
+<br>boolean isPointToPoint() Since 1.6
+<br>boolean supportsMulticast() Since 1.6
+<br>byte[] getHardwareAddress() Since 1.6 : 보통 MAC 주소
+<br>int getMTU() Since 1.6
+<br>boolean isVirtual() Since 1.6

@@ -1,0 +1,38 @@
+1. TCP 클라이언트
+<br>
+<br>2. 생성자
+<br>public Socket() Since 1.1
+<br>public Socket(Proxy proxy) Since 1.5
+<br>public Socket(SocketImpl impl) Since 1.1
+<br>public Socket(String host, int port)
+<br>public Socket(InetAddress address, int port)
+<br>public Socket(String host, int port, InetAddress localAddr, int localPort) Since 1.1
+<br>public Socket(InetAddress address, int port, InetAddress localAddr, int localPort) Since 1.1
+<br>
+<br>2. void connect(SocketAddress endpoint) Since 1.4
+<br>void connect(SocketAddress endpoint, int timeout) Since 1.4
+<br>void bind(SocketAddress bindpoint) Since 1.4
+<br>void shutdownInput() Since 1.3
+<br>void shutdownOutput() Since 1.3
+<br>InetAddress getInetAddress()
+<br>InetAddress getLocalAddress() Since 1.1
+<br>int getPort()
+<br>int getLocalPort()
+<br>SocketAddress getRemoteSocketAddress() Since 1.4
+<br>SocketAddress getLocalSocketAddress() Since 1.4
+<br>SocketChannel getChannel() Since 1.4
+<br>» SocketChannel::open 또는 ServerSocketChannel::accept로 생성된 경우에만 존재.
+<br>InputStream getInputStream()
+<br>OutputStream getOutputStream()
+<br>
+<br>3. 상태
+<br>boolean isInputShutdown() Since 1.4
+<br>boolean isOutputShutdown() Since 1.4
+<br>boolean isClosed() Since 1.4
+<br>boolean isBound() Since 1.4
+<br>boolean isConnected() Since 1.4
+<br>
+<br>4. 소켓 옵션
+<br>&lt;T&gt; Socket setOption(SocketOption&lt;T&gt; name, T value) Since 9
+<br>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) Since 9
+<br>Set&lt;SocketOption&lt;?&gt;&gt; supportedOptions() Since 9

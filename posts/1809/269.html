@@ -1,0 +1,16 @@
+1. 분열하는 의사난수 생성기. 쓰레드-안전하지 않으며, 분열하여 쓰레드들이 각자 하나씩 갖도록 설계되었다.
+<br>
+<br>2. 생성자
+<br>public SplittableRandom(long seed)
+<br>public SplittableRandom()
+<br>
+<br>SplittableRandom split() : 분열. 상태를 공유하진 않지만, 발생한 난수들은 통계적으로 유사한 속성을 갖는다.
+<br>void nextBytes(byte[] bytes) Since 10
+<br>int nextInt() + long, double
+<br>int nextInt(int bound) : [0, bound) + long, double
+<br>int nextInt(origin, int bound) : [origin, bound) + long, double
+<br>boolean nextBoolean()
+<br>IntStream ints(long streamSize) + long, double
+<br>IntStream ints() + long, double
+<br>IntStream ints(long streamSize, int randomNumberOrigin, int randomNumberBound) + long, double
+<br>IntStream ints(int randomNumberOrigin, int randomNumberBound) + long, double

@@ -1,0 +1,27 @@
+<ol>
+    <li>생성자
+        <ul>
+            <li>public ThreadGroup(String name) Since 1.0</li>
+            <li>public ThreadGroup(ThreadGroup parent, String name) Since 1.0</li>
+        </ul>
+    </li>
+    <li>final String getName() Since 1.0</li>
+    <li>final ThreadGroup getParent() Since 1.0</li>
+    <li>final int getMaxpriority() Since 1.0</li>
+    <li>final boolean isDaemon() Since 1.0 : 데몬 쓰레드 그룹은 마지막 쓰레드나 쓰레드 그룹이 파괴되면 자동으로 파괴된다.</li>
+    <li>boolean isDestroyed() Since 1.1</li>
+    <li>final void setDaemon(boolean daemon) Since 1.0</li>
+    <li>final void setMaxPriority(int pri) Since 1.0</li>
+    <li>final boolean parentOf(ThreadGroup g) Since 1.0</li>
+    <li>final void checkAccess() Since 1.0</li>
+    <li>int activeCount()</li>
+    <li>int enumerate(Thread[] list) : Thread 클래스의 설명과 동일</li>
+    <li>int enumerate(Thread[] list, boolean recurse) Since 1.0</li>
+    <li>int activeGroupCount() Since 1.0</li>
+    <li>int enumerate(ThreadGroup[] list) Since 1.0</li>
+    <li>int enumerate(ThreadGroup[] list, boolean recurse) Since 1.0</li>
+    <li>final void interrupt() Since 1.2 : 그룹의 모든 쓰레드에 인터럽트</li>
+    <li>final void destroy() Since 1.0 : 그룹과 하위 모든 그룹을 파괴</li>
+    <li>void list() : 표준 출력으로 설명 출력</li>
+    <li>void uncaughtException(Thread t, THrowable e) Since 1.0 : 처리되지 않은 예외에 대하여 JVM이 호출한다</li>
+</ol>

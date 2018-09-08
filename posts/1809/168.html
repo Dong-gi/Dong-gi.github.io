@@ -1,0 +1,31 @@
+1. 버퍼는 일련의 유한한 기본 자료형 원소들의 나열.
+<br>» Capacity : 저장하고 있는 원소들의 개수
+<br>» Limit : 읽거나 쓸 수 없는 최초의 인덱스. 0보다 작거나 capacity보다 클 수 없다.
+<br>» Position : 다음에 읽거나 쓸 대상의 인덱스. 0보다 작거나 limit보다 클 수 없다.
+<br>» 0&lt;=mark&lt;=position&lt;=limit&lt;=capacity // 마킹은 지원되지 않을수도 있다.
+<br>
+<br>2. Additional operations
+<br>» clear() : 새로운 채널-읽기 또는 relative put 연산을 준비; limit을 capacity로, position을 0으로.
+<br>» flip() : 새로운 채널-쓰기 또는 relative get 연산을 준비; limit을 position으로, position을 0으로.
+<br>» rewind() : 이미 읽은 것을 다시 읽도록; limit은 그대로, position을 0으로.
+<br>» slice() : 부분 시퀀스 생성.
+<br>» duplicate() : 얕은 복사한 버퍼 생성.
+<br>
+<br>3. final int capacity()
+<br>final int position()
+<br>Buffer position(int newPosition)
+<br>final int limit()
+<br>Buffer limit(int newLimit)
+<br>Buffer mark()
+<br>Buffer reset()
+<br>Buffer clear()
+<br>Buffer flip()
+<br>final int remaining()
+<br>final boolean hasRemaining()
+<br>abstract boolean isReadOnly()
+<br>abstract boolean hasArray() Since 1.6 : true면 array()와 arrayOffset() 사용가능
+<br>abstract Object array() Since 1.6
+<br>abstract int arrayOffset() Since 1.6
+<br>abstract boolean isDirect() Since 1.6
+<br>abstract Buffer slice() Since 9 : 현재 버퍼의 현재 위치부터 시작하는 부분 버퍼 생성(내용 공유). direct, read-only 속성을 공유.
+<br>abstract Buffer duplicate() Since 9 : 복사본(내용 공유) 반환.

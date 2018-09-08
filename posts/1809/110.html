@@ -1,0 +1,20 @@
+<ol>
+    <li>ProcessBuilder.start, Runtime.exec으로 시작된 native process들에 대한 제어 제공.</li>
+    <li>abstract OutputStream getOutputStream()</li>
+    <li>abstract InputStream getInputStream()</li>
+    <li>abstract InputStream getErrorStream()</li>
+    <li>abstract int waitFor() : 현재 쓰레드가 이 프로세스의 종료를 기다림. 프로세스의 종료 값을 반환.</li>
+    <li>boolean waitFor(long timeout, TimeUnit unit) Since 1.8
+        <br>» timeout : maximum time to wait. 시간 내에 프로세스가 종료되었다면 true 반환</li>
+    <li>abstract int exitValue()</li>
+    <li>abstract void destroy() : 정상 종료.</li>
+    <li>Process destroyForcibly() Since 1.8 : 강제, 즉시 종료.</li>
+    <li>boolean supportsNormalTermination() Since 9</li>
+    <li>boolean isAlive() Since 1.8</li>
+    <li>long pid() Since 9</li>
+    <li>CompletableFuture&lt;Process&gt; onExit() Since 9</li>
+    <li>ProcessHandle toHandle() Since 9</li>
+    <li>ProcessHandle.Info info() Since 9</li>
+    <li>Stream&lt;ProcessHandle&gt; children() Since 9</li>
+    <li>Stream&lt;ProcessHandle&gt; descendants() Since 9</li>
+</ol>

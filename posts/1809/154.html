@@ -1,0 +1,16 @@
+1. boolean isMulticastAddress() Since 1.1
+<br>boolean isAnyLocalAddress() Since 1.4 ...
+<br>boolean isReachable(int timeout) Since 1.5
+<br>» ICMP, ECHO, REQUEST로 시도
+<br>boolean isReachable(NetworkInterface netif, int ttl, int timeout) Since 1.5
+<br>
+<br>2. String getHostName()
+<br>String getCanonicalHostName() Since 1.4
+<br>byte[] getAddress()
+<br>String getHostAddress() Since 1.0.2
+<br>static InetAddress getByAddress(String host, byte[] addr) Since 1.4
+<br>static InetAddress getByName(String host UnknownHostException
+<br>static InetAddress[] getAllByName(String host)
+<br>static InetAddress getLoopbackAddress() Since 1.7 : 127.0.0.1(127.*.*.*) or ::1
+<br>static InetAddress getByAddress(byte[] addr) Since 1.4
+<br>static InetAddress getLocalHost()

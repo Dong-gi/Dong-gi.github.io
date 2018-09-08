@@ -1,0 +1,21 @@
+1. 변경할 수 없는 임의 길이의 정수. -2^(Integer.MAX_VALUE) ~ 2^(Integer.MAX_VALUE)
+<br>
+<br>2. 필드
+<br>public static final BigInteger ZERO Since 1.2, ONE Since 1.2, TWO Since 9, TEN Since 1.5
+<br>
+<br>3. 생성자
+<br>public BigInteger(byte[] val, int off, int len) Since 9
+<br>public BigInteger(byte[] val)
+<br>public BigInteger(int signum, byte[] magnitude, int off, int len) Since 9
+<br>public BigInteger(int signum, byte[] magnitude)
+<br>public BigInteger(String val, int radix)
+<br>public BigInteger(String val)
+<br>public BigInteger(int numBits, Random rnd) : [0 ~ 2^numBits) 사이 난수
+<br>public BigInteger(int bitLength, int certainty, Random rnd) : 특정 비트 길이의 양의 정수(아마도 소수) 반환.
+<br>
+<br>4. static BigInteger probablePrime(int bitLength, Random rnd) Since 1.4 : 합성수일 가능성은 2^(-100)을 넘지 않는다.
+<br>BigInteger nextProbablePrime() Since 1.5
+<br>static BigInteger valueOf(long val)
+<br>BigInteger add(BigInteger val)
+<br>BigInteger subract(BigInteger val)
+<br>...

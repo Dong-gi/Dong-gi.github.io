@@ -1,0 +1,9 @@
+<ol>
+    <li>다른 입력 스트림에 대해 버퍼를 제공함으로써 mark와 reset이 가능하게 해준다. 추가적인 특별한 메서드는 없다.</li>
+    <li>protected byte[] buf</li>
+    <li>protected int count : 마지막 유효 바이트보다 1 큰 인덱스</li>
+    <li>protected int marklimit, markpos, pos
+        <br>» |pos - markpos| &lt; marklimit면 markpos는 -1(기본값)이 된다.</li>
+    <li>public BuferedInputStream(InputStream in)</li>
+    <li>public BufferedInputStream(InputStream in, int size) : size는 버퍼 크기.</li>
+</ol>

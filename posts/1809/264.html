@@ -1,0 +1,16 @@
+1. double에 관한 통계를 모은 상태 객체. 스트림과 함께 사용되도록 설계되었다.
+<br>예. DoubleSummaryStatistics stats = doubleStream.collect(DoubleSummaryStatistics::new, DoubleSummaryStatistics::accept,
+DoubleSummaryStatistics::combine);
+<br>stats = people.stream().collect(Collectors.summarizingDouble(Person::getWeight));
+<br>
+<br>2. 생성자
+<br>DoubleSummaryStatistics() : 갯수 0, 합계 0, 최솟값 Double.POSITIVE_INFINITY, 최댓값 Double.NEGATIVE_INFINITY, 평균 0인 객체 생성.
+<br>DoubleSummaryStatistics(long count, double min, double max, double sum) Since 10
+<br>
+<br>3. void accept(double value) : 요약 정보에 value를 추가해 기록
+<br>void combine(DoubleSummaryStatistics other) : other를 호출자에 추가
+<br>final long getCount()
+<br>final double getSum()
+<br>final double getMin()
+<br>final double getMax()
+<br>final double getAverage()

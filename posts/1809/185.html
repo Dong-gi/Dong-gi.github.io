@@ -1,0 +1,5 @@
+1. 비동기 IO는 보통 다음의 형태로 일어난다.
+<br>» Future&lt;V&gt; operation(...) // operation : read, write, ...
+<br>» void operation(... A attachment, CompletionHandler&lt;V, ? super A&gt; handler)
+<br>
+<br>2. 비동기적으로 close()가 수행되며, 이후 발생하는 IO 작업은 AsynchronousCloseException 발생

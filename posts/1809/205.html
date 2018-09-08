@@ -1,0 +1,16 @@
+1. 시간대(time-zone)을 이용한 현재의 date와 time 제공.
+<br>예. LocalDate.now(clock)
+<br>
+<br>2. static Clock systemUTC()
+<br>static Clock systemDefaultZone()
+<br>static Clock system(ZoneId zone)
+<br>static Clock tickMillis(ZoneId zone) Since 9
+<br>static Clock tickSeconds(ZoneId zone)
+<br>static Clock tickMinutes(ZoneId zone)
+<br>static Clock tick(Clock baseClock, Duration tickDuration)
+<br>static Clock fixed(Instant fixedInstant, ZoneId zone)
+<br>static Clock offset(Clock baseClock, Duration offsetDuration)
+<br>abstract ZoneId getZone()
+<br>abstract Clock withZone(ZoneId zone)
+<br>long millis()
+<br>abstract Instant instant()

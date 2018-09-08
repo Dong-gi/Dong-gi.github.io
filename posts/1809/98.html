@@ -1,0 +1,26 @@
+<ol>
+    <li>쓰레드-안전한 변경 가능한 문자열.</li>
+    <li>public StringBuffer()</li>
+    <li>public StringBuffer(int capacity)</li>
+    <li>public StringBuffer(String str)</li>
+    <li>public StringBuffer(CharSequence seq) Since 1.5</li>
+    <li>void trimToSize() Since 1.5 : 버퍼 크기를 줄여 문자열 크기에 맞춘다.</li>
+    <li>void setLength(int newLength) : 새로운 크기의 문자열에 기존 문자열을 복사. 남는 부분은 '\u0000'(null)로 채워진다.</li>
+    <li>int codePointAt(int index) Since 1.5</li>
+    <li>int codePointBefore(int index) Since 1.5</li>
+    <li>int codePointCount(int beginIndex, int endIndex) Since 1.5</li>
+    <li>int offsetByCodePoints(int index, int codePointOffset) Since 1.5
+    </li>
+    <li>void getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)</li>
+    <li>IntStream chars() Since 9</li>
+    <li>IntStream codePoints() Since 9</li>
+    <li>int length()</li>
+    <li>int capacity()</li>
+    <li>void ensureCapacity(int minimumCapacity)</li>
+    <li>추가 / 삽입 » append, insert</li>
+    <li>삭제 / 변경 » delete, set~, replace</li>
+    <li>String substring(int start) Since 1.2</li>
+    <li>String substring(int start, int end) Since 1.2</li>
+    <li>StringBuffer reverse() Since 1.0.2</li>
+    <li>탐색 » indexOf, lastIndexOf</li>
+</ol>

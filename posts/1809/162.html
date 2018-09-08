@@ -1,0 +1,37 @@
+1. UDP 소켓
+<br>
+<br>2. 생성자
+<br>public DatagramSocket()
+<br>protected DatagramSocket(DatagramSocketImpl impl) Since 1.4
+<br>public DatagramSocket(SocketAddress bindaddr) Since 1.4
+<br>public DatagramSocket(int port)
+<br>public DatagramSocket(int port, InetAddress laddr) Since 1.1
+<br>
+<br>3. void bind(SocketAddress addr) Since 1.4
+<br>void connect(InetAddress address, int port)
+<br>» 기본적으로 UDP 데이터그램 소켓은 연결이 없다. 원격지에 연결하는순간, 소켓은 해당 원격지와만 통신할 수 있다.
+<br>void connect(SocketAddress addr) Since 1.4
+<br>void disconnect()
+<br>boolean isBound() Since 1.4
+<br>boolean isConnected() Since 1.4
+<br>boolean isCLosed() Since 1.4
+<br>InetAddress getInetAddress() : connect되었을 때만.
+<br>int getPort() : connect되었을 때만.
+<br>SocketAddress getRemoteSocketAddress() Since 1.4 : connect되었을 때만.
+<br>SocketAddress getLocalSocketAddress() Since 1.4
+<br>void send(DatagramPacket p)
+<br>void receive(DatagramPacket p)
+<br>InetAddress getLocalAddress() Since 1.1
+<br>int getLocalPort()
+<br>void setTrafficClass(int tc) Since 1.4
+<br>» 0&lt;=tc&lt;=255. IPv4에서, 하위 8개 비트를 IP 패킷의 TOS에 쓴다.
+<br>» RRC 1349의 TOS 값 정의
+<br>* IPTOS_LOWCOST(0x02), IPTOS_RELIABILITY(0x04), IPTOS_THROUGHPUT(0x08), IPTOS_LOWDELAY(0x10)
+<br>» IPv6에서, IP 헤더의 sin6_flowinfo 필드에 들어간다.
+<br>int getTrafficClass() Since 1.4
+<br>DatagramChannel getChannel() Since 1.4
+<br>» DatagramChannel::open으로 생성된 경우에만 존재.
+<br>static void setDatagramSocketImplFactory(DatagramSocketImplFactory fac) Since 1.3
+<br>&lt;T&gt; DatagramSocket setOption(SocketOption&lt;T&gt; name, T value) Since 9
+<br>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) Since 9
+<br>Set&lt;SocketOption&lt;?&gt;&gt; supportedOptions() Since 9

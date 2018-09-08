@@ -1,0 +1,8 @@
+<ol>
+    <li>자연스러운 순서로 클래스의 모든 객체를 정렬할 수 있음을 표현.</li>
+    <li>이를 구체화한 클래스 객체들의 List, array는 Collections.sort, Arrays.sort로 각각 정렬할 수 있다.</li>
+    <li>이를 구체화한 클래스 객체들은 Comparator 정의 없이 SortedMap, SortedSet의 키로 이용할 수 있다.</li>
+    <li>null은 객체가 아니므로 equals(null)이 false를 리턴하는 것과 달리 compareTo(null)은 NullPointerException을 내보내는 것이 바람직하다.</li>
+    <li>다음 성질을 만족하도록 구체화함이 권장된다. (e1.compareTo(e2) == 0) == e1.equals(e2)</li>
+    <li>int compareTo(T o) » o보다 앞서면(작으면) 음수, 같으면 0, 뒤면(크면) 양수 반환.</li>
+</ol>

@@ -21,8 +21,8 @@ $(() => {
 
             // 모든 컨텐츠 골격 생성
             let content = $('<div></div>').addClass('jumbotron').attr('id', post.id);
-            $(content).html('<details><summary><a href="javascript:;" data-toggle="popover" data-trigger="hover" title="' +
-                (post.category + '@' + post.date.substring(0, 10)) + '" data-content="' + post.description + '"><h2>' + post.title + '</h2>' +
+            $(content).html('<details><summary><a data-toggle="popover" data-trigger="hover" title="' +
+                (post.category + '@' + post.date.substring(0, 10)) + '" data-content="' + post.description + '">' + post.title +
                 ((new Date().getTime() - new Date(post.date).getTime()) <= 604800000 ?
                     '<span class="badge badge-pill badge-primary">New</span>' : '') + '</a></summary>' +
                 '<form><div class="input-group mb-3">' +
@@ -47,8 +47,7 @@ $(() => {
     // 최초로 1수준 드롭업 생성
     updateDropupManually(0, "");
 
-    // 드롭업 width 조정
-    adjustIndexSize();
+    // 드롭업 width 자동 조정
     $(window).resize(() => adjustIndexSize());
 
     // 드롭업 자동 갱신 등록
@@ -144,6 +143,8 @@ function updateDropupManually(level, path) {
                 $(posts.contents[i]).addClass("d-none")
         }
     }
+
+    adjustIndexSize();
 }
 
 function updateDropupAuto() {

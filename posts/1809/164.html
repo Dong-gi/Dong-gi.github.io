@@ -1,0 +1,35 @@
+1. URI syntax and components
+<br>» syntax : [scheme:]scheme-specific-part[#fragment]
+<br>» Absolute URI : 스킴을 명시한 URI
+<br>» Relative URI : not absolute URI
+<br>» Opaque URI : scheme-specific-part가 '/'로 시작하지 않는 absolute URI
+<br>* 예: "mailto:java-net@java.sun.com", "urn:isbn:096139210x"
+<br>» Hierarchical URI : scheme-specific-part가 '/'로 시작하는 absolute or relative URI
+<br>* 예: "http://example.com/languages/java", "sample/a/index.html#28", "../../demo/b/index.html"
+<br>* [scheme:][//authority][path][?query][#fragment]
+<br>- Server-based authority : [user-info@]host[:port]
+<br>- Registry-based authority : not server-based authority
+<br>
+<br>2. Operations on URI instances
+<br>» Normalization : "."과 ".."을 제거
+<br>» Resolution : 상대 URI와 base URI를 이용해 단일 URI를 찾는 작업
+<br>» Relativization : Resolution의 역. 임의의 정규화된 두 URI u, v에 대하여, u.relativize(u.resolve(v)).equals(v)와 u.resolve(u.relativize(v)).equals(v)는
+항상 성립한다.
+<br>
+<br>3. 생성자
+<br>public URI(String str)
+<br>public URI(String scheme, String userInfo, String host, int port, String path, String query, String fragment)
+<br>public URI(String scheme, String authority, String path, String query, String fragment)
+<br>public URI(String scheme, String host, String path, String fragment)
+<br>public URI(String scheme, String ssp, String fragment) // ssp : scheme-specific-part
+<br>
+<br>4. static URI create(String str)
+<br>URI parseServerAuthority()
+<br>URI normalize()
+<br>URI resolve(URI uri)
+<br>URI resolve(String str)
+<br>URI relativize(URI uri)
+<br>URL toURL()
+<br>String getScheme(), getRawSchemeSpecificPart(), getSchemeSpecificPart(), ...
+<br>boolean isAbsolute(), isOpaque()
+<br>String toASCIIString() : URI를 US_ASCII 문자열로 반환.

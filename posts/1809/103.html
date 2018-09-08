@@ -1,0 +1,90 @@
+<ol>
+    <li>전형적으로, 로드할 클래스 이름을 파일명으로 변환하여 ".class"파일을 읽어온다.</li>
+    <li>모든 Class 객체들은 ClassLoader에 대한 참조를 갖고 있다.</li>
+    <li>배열의 경우 런타임에 Class 객체가 생성되며, 이때 Class.getClassLoader()는 원소의 것과 동일하다.</li>
+    <li>클래스를 로드하는 것 외에, 자원(.class 파일, 구성 파일, 이미지 등)을 배치하는 책임도 진다.</li>
+    <li>Delegation model : ClassLoader 객체들은 각기 parent class loader를 갖는다. 클래스나 자원을 찾기 전에 parent를 먼저 조사하게 된다.</li>
+    <li>동시 로딩을 지원하는 parallel capable class loader들은 클래스 초기화 시 registerAsParallelCapable()를 통해 등록해야 한다. ClassLoader 클래스는 기본적으로
+        등록되나, 서브클래스들도 자신을 등록해야 한다.</li>
+    <li>계층구조가 약한 delegation model의 경우 클래스 로더들이 parallel capable하지 않으면 deadlock 발생 가능성이 있다.</li>
+    <li>Run-time Built-in Class Loaders
+        <ul>
+            <li>Bootstrap class loader : JVM 내장 클래스 로더. 보통 null이며, parent가 없다.</li>
+            <li>Platform class loader : Java SE APIs, JDK-specific run-time classes</li>
+            <li>System class loader, a.k.a Application class loader : Used to define classes on the application class path,
+                module path, and JDK-specific tools</li>
+        </ul>
+    </li>
+    <li>파일이 아닌 네트워크 같은 다른 소스로부터 클래스를 로드할 경우, defineClass()를 통해 Class 객체를 얻고 Constructor.newInstance()를 통해 클래스 객체를 생성하면 된다.</li>
+    <li>네트워크 클래스 로더는 findClass(), loadClassData() 메서드를 반드시 작성해야 한다.
+        <br>public Class findClass(String name) {
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;byte[] b = loadClassData(name);
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;return defineClass(name, b, 0, b.length);
+        <br>}
+        <br>private byte[] loadClassData(String name) { /**/ }</li>
+    <li>Binary names : ClassLoader 메서드에 전달하는 String 타입 클래스 이름은 아래와 같은 형식을 따라야 한다.
+        <br>» "java.lang.String", "javax.swing.JSpinner$DefaultEditor", "java.security.KeyStore$Builder$FileBuilder$1", "java.net.URLClassLoader$3$1"
+    </li>
+    <li>protected ClassLoader(String name, ClassLoader parent) Since 9
+        <br>» parent가 null일 경우, 해당 클래스 로더가 모든 플랫폼 클래스를 볼 수 있다는 보장은 없다.
+        <br>» name : class loader name; or null if not named</li>
+    <li>protected ClassLoader(ClassLoader parent) Since 1.2</li>
+    <li>protected ClassLoader() : this(getSystemClassLoader())</li>
+    <li>String getName() Since 9 : 클래스 로더 이름 반환. 없으면 null</li>
+    <li>Class&lt;?&gt; loadClass(String name) : loadClass(name, false)</li>
+    <li>protected Class&lt;?&gt; loadClass(String name, boolean resolve)
+        <ul>
+            <li>findLoadedClass(String)으로 이미 로드됐나 확인</li>
+            <li>없으면 : parent 혹은 VM의 클래스 로더의 loadClass를 호출</li>
+            <li>없으면 : findClass(String) 호출</li>
+            <li>위를 통해 클래스를 찾았고, resolve가 true면 resolveClass(Class) 호출.</li>
+            <li>ClassLoader의 서브클래스들은 이 메서드가 아닌 findClass(String)을 재정의하면 된다.</li>
+            <li>재정의되지 않은 이상, getClassLoadingLock()을 통해 메서드는 동기화된다.</li>
+        </ul>
+    </li>
+    <li>protected Object getClassLoadingLock(String className) Since 1.7</li>
+    <li>protected Class&lt;?&gt; findClass(String name) Since 1.2</li>
+    <li>protected Class&lt;?&gt; findClass(String moduleName, String name) Since 9</li>
+    <li>protected final Class&lt;?&gt; findSystemClass(String name) : 시스템 클래스 로더에 의해 호출</li>
+    <li>protected final Class&lt;?&gt; findLoadedClass(String name) Since 1.1 : 없으면 null</li>
+    <li>protected final Class&lt;?&gt; defineClass(String name, byte[] b, int off, int len) Since 1.1
+        <br>» 기본 ProtectionDomain을 새 클래스에 할당한다. 기본 ProtectionDomain은 Policy.getPolicy().getPermissions(new CodeSource(null,
+        null))과 같은 권한을 부여받는다. 기본 ProtectionDomain은 첫 호출시 생성되고 재사용된다.</li>
+    <li>protected final Class&lt;?&gt; defineClass(String name, byte[] b, int off, int len, ProtectionDomain protectionDomain)
+    </li>
+    <li>protected final Class&lt;?&gt; defineClass(String name, ByteBuffer b, ProtectionDomain protectionDomain) Since 1.5</li>
+    <li>protected final void resolveClass(Class&lt;?&gt; c) : 클래스를 링크한다.</li>
+    <li>protected final void setSigners(Class&lt;?&gt; c, Object[] signers) Since 1.1
+        <br>» 상기한 메서드들을 통한 클래스 정의시 SecurityException이 발생하는 경우와 관계 있다.
+        <br>» 한 패키지 내부의 클래스들은 동일한 certificate 집합을 가져야 한다. 정의하는 클래스가 어떤 패키지에 추가될 때, 패키지의 certificate 집합과 비교하여 서로 다른 경우 예외가
+        발생한다.
+        <br>» Certificate 집합은 ProtectionDomain의 CodeSource로부터 얻을 수 있다.</li>
+    <li>protected URL findResource(String moduleName, String name) Since 9</li>
+    <li>URL getResource(String name) Since 1.1</li>
+    <li>Enumeration&lt;URL&gt; getResources(String name) Since 1.2</li>
+    <li>Stream&lt;URL&gt; resources(String name) Since 9</li>
+    <li>protected URL findResource(String name) Since 1.2</li>
+    <li>protected Enumeration&lt;URL&gt; findResources(String name) Since 1.2</li>
+    <li>static URL getSystemResource(String name) Since 1.1</li>
+    <li>static Enumeration&lt;URL&gt; getSystemResources(String name) Since 1.2</li>
+    <li>InputStream getResourceAsStream(String name) Since 1.1</li>
+    <li>static InputStream getSystemResourceAsStream(String name) Since 1.1</li>
+    <li>protected static boolean registerAsParallelCapable() Since 1.7
+        <br>» 호출자의 인스턴스가 만들어지지 않았고, 호출자의 모든 수퍼클래스들이 parallel capable로 등록된 경우</li>
+    <li>final boolean isRegisteredAsParallelCapable() Since 9</li>
+    <li>final ClassLoader getParent() Since 1.2
+        <br>» Bootstrap class loader를 표현하는 데 null을 사용하는 구현도 있다.</li>
+    <li>final Module getUnnamedModule() Since 9 : 이 클래스 로더를 위한 익명 모듈을 반환한다.</li>
+    <li>static ClassLoader getPlatformClassLoader() Since 9</li>
+    <li>static ClassLoader getSystemClassLoader() : 시스템 클래스 로더를 반환하며, 이는 새롭게 정의되는 클래스 로더들의 default delegation parent다.</li>
+    <li>final Package getDefinedPackage(String name) Since 9</li>
+    <li>final Package[] getDefinedPackages() Since 9</li>
+    <li>protected Package[] getPackages() Since 1.2 : 현재 및 조상 클래스 로더들이 정의한 패키지들을 반환.</li>
+    <li>protected Package definePackage(String name, String specTitle, String specVersion, String specVendor, String implTitle,
+        String implVersion, String implVendor, URL sealBase) Since 1.2
+        <br>» 필요한 경우, defineClass 메서드 전에 호출되어야 한다.</li>
+    <li>void setDefaultAssertionStatus(boolean enabled) Since 1.4</li>
+    <li>void setPackageAssertionStatus(String packageName, boolean enabled) Since 1.4</li>
+    <li>void setClassAssertionStatus(String className, boolean enabled) Since 1.4</li>
+    <li>void clearAssertionStatus() Since 1.4</li>
+</ol>

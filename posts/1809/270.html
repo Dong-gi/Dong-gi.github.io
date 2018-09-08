@@ -1,0 +1,54 @@
+<ol>
+    <li>정규 표현식을 통해 원시 타입과 String을 분리해내는 간단한 text scanner.
+        <br>https://docs.oracle.com/javase/10/docs/api/java/util/Scanner.html
+    </li>
+    <li>생성자
+        <ul>
+            <li>public Scanner(Readable source)</li>
+            <li>public Scanner(InputStream source)</li>
+            <li>public Scanner(InputStream source, String charsetName)</li>
+            <li>public Scanner(InputStream source, Charset charset) Since 10</li>
+            <li>public Scanner(File source)</li>
+            <li>public Scanner(File source, String charsetName)</li>
+            <li>public Scanner(File source, Charset charset) Since 10</li>
+            <li>public Scanner(Path source) Since 1.7</li>
+            <li>public Scanner(Path source, String charsetName) Snice 1.7</li>
+            <li>public Scanner(Path source, Charset charset) SInce 10</li>
+            <li>public Scanner(String source)</li>
+            <li>public Scanner(ReadableByteChannel source)</li>
+            <li>public Scanner(ReadableByteChannel source, String charsetName)</li>
+            <li>public Scanner(ReadableByteChannel source, Charset charset) Since 10</li>
+        </ul>
+    </li>
+    <li>IOException ioException() : 마지막으로 던진 예외를 반환</li>
+    <li>Pattern delimiter() : 구분자 반환</li>
+    <li>Scanner useDelimiter(Pattern pattern)</li>
+    <li>Scanner useDelimiter(String pattern)</li>
+    <li>Locale locale()</li>
+    <li>Scanner useLocale(Locale locale)</li>
+    <li>int radix()</li>
+    <li>Scanner useRadix(int radix)</li>
+    <li>MatchResult match()</li>
+    <li>boolean hasNext()</li>
+    <li>String next()</li>
+    <li>boolean hasNext(String pattern)</li>
+    <li>String next(String pattern)</li>
+    <li>boolean hasNext(Pattern pattern)</li>
+    <li>String next(Pattern pattern)</li>
+    <li>boolean hasNextLine()</li>
+    <li>String nextLine()</li>
+    <li>String findInLine(String pattern)</li>
+    <li>String findInLine(Pattern pattern)</li>
+    <li>String findWithinHorizon(String pattern, int horizon)</li>
+    <li>String findWIthinHorizon(Pattern pattern, int horizon)</li>
+    <li>Scanner skip(Pattern pattern)</li>
+    <li>Scanner skip(String pattern)</li>
+    <li>boolean hasNextBoolean() + byte, short, int, long, float, double, BigInteger, BigDecimal</li>
+    <li>boolean hasNextByte(int radix) + short, int, long, BigInteger</li>
+    <li>boolean nextBoolean() + byte, short, int, long, float, double, BigInteger, BigDecimal</li>
+    <li>byte nextByte(int radix) + short, int, long, BigInteger</li>
+    <li>Scanner reset() Since 1.6 : 초기 설정 Scanner</li>
+    <li>Stream&lt;String&gt; tokens() Since 9</li>
+    <li>Stream&lt;MatchResult&gt; findAll(Pattern pattern) Since 9</li>
+    <li>Stream&lt;MatchResult&gt; findAll(String patString) Since 9</li>
+</ol>

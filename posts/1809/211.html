@@ -1,0 +1,28 @@
+<ol>
+    <li>int compare(T o1, T o2)</li>
+    <li>default Comparator&lt;T&gt; reversed() Since 1.8</li>
+    <li>default Comparator&lt;T&gt; thenComparing(Comparator&lt;? super T&gt; other) Since 1.8
+        <br>» 이 비교자가 두 객체를 같다고 판단하면, other가 새로 판단한다.</li>
+    <li>default &lt;U&gt; Comparator&lt;T&gt; thenComparing(Function&lt;? super T, ? extends U&gt; keyExtractor, Comparator&lt;?
+        super U&gt; keyComparator) Since 1.8
+        <br>» thenComparing(comparing(keyExtractor, cmp))와 같이 동작한다. 키를 이용해 비교하는 비교자가 두 객체를 같다고 판단하면, 다른 키를 이용해 비교한다.</li>
+    <li>default &lt;U extends Comparable&lt;? super U&gt;&gt; Comparator&lt;T&gt; thenComparing(Function&lt;? super T, ?
+        extends U&gt; keyExtractor) Since 1.8
+        <br>» thenComparing(comparing(keyExtractor))와 같이 동작한다.</li>
+    <li>default Comparator&lt;T&gt; thenComparingInt(ToIntFunction&lt;? super T&gt; KeyExtractor)
+        <br>» thenComparing(comparingInt(keyExtractor))와 같이 동작한다. 키가 int인 경우. + Long, Double</li>
+    <li>static &lt;T extends Comparable&lt;? super T&gt;&gt; Comparator&lt;T&gt; reverseOrder() Since 1.8
+        <br>» 자연스러운 정렬의 역 비교자를 반환.</li>
+    <li>static &lt;T extends Comparable&lt;? super T&gt;&gt; Comparator&lt;T&gt; naturalOrder() Since 1.8</li>
+    <li>static &lt;T&gt; Comparator&lt;T&gt; nullsFirst(Comparator&lt;? super T&gt; comparator) Since 1.8
+        <br>» null은 모든 non-null 값보다 작다고 간주한다. null끼리는 서로 같다고 간주한다.</li>
+    <li>static &lt;T&gt; comparator&lt;T&gt; nullsLast(Comparator&lt;? super T&gt; comparator) Since 1.8
+        <br>» null이 모든 non-null 값보다 크다고 간주. null끼리는 서로 같다고 간주.</li>
+    <li>static &lt;T, U&gt; Comparator&lt;T&gt; comparing(Function&lt;? super T, ? extends U&gt; keyExtractor, Comparator&lt;?
+        super U&gt; keyComparator) Since 1.8
+        <br>» 정렬에 이용할 키를 생성하는 함수와, 키를 이용해 비교하는 비교자를 넘기면 둘을 포함하는 T타입 비교자를 반환.</li>
+    <li>static &lt;T, U extends Comparable&lt;? super U&gt;&gt; Comparator&lt;T&gt; comparing(Function&lt;? super T, ? extends
+        U&gt; keyExtractor) Since 1.8</li>
+    <li>static &lt;T&gt; Comparator&lt;T&gt; comparingInt(ToIntFunction&lt;? super T&gt; keyExtractor) Since 1.8 + Long,
+        Double</li>
+</ol>

@@ -1,0 +1,23 @@
+<ol>
+    <li>List::of, List::copyOf 팩터리 메서드로 변경 불가능한 리스트를 만들 수 있다. 변경 불가능한 리스트는 null 원소를 허용하지 않으며, 모든 원소가 serializable하면 리스트도
+        그러하다. 또, value-based이므로 identity-sensitive한 연산은 피해야 된다.</li>
+    <li>boolean addAll(int index, Collection&lt;? extends E&gt; c)</li>
+    <li>default void replaceAll(UnaryOperator&lt;E&gt; operator) Since 1.8
+        <br>» 모든 원소를 연산 결과로 대체</li>
+    <li>default void sort(Comparator&lt;? super E&gt; c) Since 1.8</li>
+    <li>E get(int index)</li>
+    <li>E set(int index, E element) : 이전 값은 반환.</li>
+    <li>void add(int index, E element)</li>
+    <li>E remove(int index)</li>
+    <li>int indexOf(Object o)</li>
+    <li>int lastIndexOf(Object o)</li>
+    <li>ListIterator&lt;E&gt; listIterator()</li>
+    <li>ListIterator&lt;E&gt; listIterator(int index)</li>
+    <li>List&lt;E&gt; subList(int fromIndex, int toIndex)</li>
+    <li>default Spliterator&lt;E&gt; spliterator() Since 1.8</li>
+    <li>static &lt;E&gt; List&lt;E&gt; of() Since 9</li>
+    <li>static &lt;E&gt; List&lt;E&gt; of(E e1) Since 9</li>
+    <li>static &lt;E&gt; List&lt;E&gt; of(E e1, E e2) Since 9 ...</li>
+    <li>@SafeVarargs static &lt;E&gt; List&lt;E&gt; of(E... elements) Since 9 : 단일 배열도 허용</li>
+    <li>static &lt;E&gt; List&lt;E&gt; copyOf(Collection&lt;? extends E&gt; coll) Since 10</li>
+</ol>

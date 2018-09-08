@@ -1,0 +1,22 @@
+<ol>
+    <li>원시 타입 boolean의 wrapper 클래스</li>
+    <li>static final Boolean FALSE</li>
+    <li>static final Boolean TRUE</li>
+    <li>static Class&lt;Boolean&gt; TYPE Since 1.1</li>
+    <li>static boolean parseBoolean(String s) Since 1.5
+        <br>» s가 null이 아니고 대소문자 구분없이 "true"와 일치하면 true 반환.</li>
+    <li>boolean booleanValue()</li>
+    <li>static Boolean valueOf(boolean b) Since 1.4</li>
+    <li>static Boolean valueOf(String s) : valueOf(parseBoolean(s))와 동일</li>
+    <li>static String toString(boolean b) Since 1.4 : "true" or "false"</li>
+    <li>int hashCode() : true면 1231, false면 1237</li>
+    <li>static int hashCode(boolean value) Since 1.8</li>
+    <li>static boolean getBoolean(String name)
+        <br>» name에 해당하는 system property가 존재하고, 대소문자 구분없이 "true"와 일치하면 true 반환</li>
+    <li>int compareTo(Boolean b) Since 1.5
+        <br>» TRUE.compareTo(FALSE) &gt; 0, FALSE.compareTo(TRUE) &lt; 0</li>
+    <li>static int compare(boolean x, boolean y) Since 1.7</li>
+    <li>static boolean logicalAnd(boolean a, boolean b) Since 1.8</li>
+    <li>static boolean logicalOr(boolean a, boolean b) Since 1.8</li>
+    <li>static boolean logicalXor(boolean a, boolean b) Since 1.8</li>
+</ol>

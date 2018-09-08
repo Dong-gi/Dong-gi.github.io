@@ -1,0 +1,167 @@
+<ol>
+    <li>기본타입 char에 대한 wrapper 클래스. 추가적으로 문자 집합(소문자, 숫자 등) 정의, 변환 기능을 갖는다.</li>
+    <li>유니코드 표준 8.0.0을 따른다.
+        <ul>
+            <li>16비트 고정폭으로 값을 표현하며, 유효한 범위는 U+0000 부터 U+10FFFF까지(= Unicode scalar value).</li>
+            <li>[U+0000, U+FFFF] == Basic Multilingual Plane(BMP), (U+FFFF, ~) == supplementary characters</li>
+            <li>자바 플랫폼은 보충 평면의 문자들은 2개의 char의 쌍으로 표현한다.</li>
+            <li>하위 21개 비트를 이용하여 int 하나로 모든 유니코드 code point를 표현할 수 있다.</li>
+        </ul>
+    </li>
+    <li>int를 받는 메서드는 모든 유니코드를 처리할 수 있지만, char만을 받는 메서드는 보충 평면 문자를 처리하지 못한다.</li>
+    <li>static class Character.Subset Since 1.2
+        <ul>
+            <li>이 클래스의 객체는 유니코드 문자 집합을 표현한다. Character 클래스 내부에서 정의한 문자 집합은 Character.UnicodeBlock뿐이다.</li>
+            <li>protected Subset(String name)</li>
+            <li>final boolean equals(Object obj) : 오직 같은 객체일 때만 true를 반환함으로써 모든 부분집합들이 동일함을 보장한다.</li>
+            <li>final int hashCode() : 기본 정의된 Object.hashCode()를 이용한다. final로 정의하여 equals()와 일관성을 유지한다.
+            </li>
+            <li>final String toString() : name 반환</li>
+        </ul>
+    </li>
+    <li>static final class Character.UnicodeBlock extends Character.Subset Since 1.2
+        <ul>
+            <li>유니코드 문자 블록. 각 문자들은 최대 하나의 유니코드 블록에 포함된다.</li>
+            <li>static Character.UnicodeBlock ARABIC, GREEK, HANGUL 등</li>
+            <li>static Character.UnicodeBlock of(char c) : c가 속한 유니코드 블록 반환</li>
+            <li>static Character.UnicodeBlock of(int codePoint) Since 1.5</li>
+            <li>static final Character.UnicodeBlock forName(String blockName) Since 1.5
+                <br>» 블록 이름이 변경될 경우, 변경 전/후 이름 둘 다 사용할 수 있다.</li>
+        </ul>
+    </li>
+    <li>static enum Character.UnicodeScript Since 1.7
+        <ul>
+            <li>유니코드 표준 스크립트 이름 정의를 표현. 모든 문자는 하나의 스크립트(각 언어|INHERITED|COMMON|UNKNOWN)에 할당된다.</li>
+            <li>ARABIC, GREEK, HANGUL 등</li>
+            <li>static Character.UnicodeScript valueOf(String name)</li>
+            <li>static Character.UnicodeScript of(int codePoint)</li>
+            <li>static final Character.UnicodeScript forName(String scriptName)</li>
+        </ul>
+    </li>
+    <li>static final int MIN_RADIX : 문자열-숫자 간 변환을 지원하는 최소 radix</li>
+    <li>static final int MAX_RADIX : 문자열-숫자 간 변환을 지원하는 최대 radix</li>
+    <li>static final char MIN_VALUE Since 1.0.2 : '\u0000'</li>
+    <li>static final char MAX_VALUE Since 1.0.2 : '\uFFFF'</li>
+    <li>static final Class&lt;Character&gt; TYPE Since 1.1</li>
+    <li>static final byte MODIFIER_LETTER, SPACE_SEPARATOR, MATH_SYMBOL 등</li>
+    <li>static final char MIN_HIGH_SURROGATE Since 1.5 : '\uD800'</li>
+    <li>static final char MAX_HIGH_SURROGATE Since 1.5 : '\uDBFF'</li>
+    <li>static final char MIN_LOW_SURROGATE Since 1.5 : '\uDC00'</li>
+    <li>static final char MAX_LOW_SURROGATE Since 1.5 : '\uDFFF'</li>
+    <li>static final int MIN_SUPPLEMENTARY_CODE_POINT Since 1.5 : U+10000</li>
+    <li>static final int MIN_CODE_POINT Since 1.5 : U+0000</li>
+    <li>static final int MAX_CODE_POINT Since 1.5 : U+10FFFF</li>
+    <li>static final int SIZE Since 1.5 : 표현에 필요한 비트 수, 16</li>
+    <li>static final int BYTES Since 1.8 : 표현에 필요한 바이트 수</li>
+    <li>static Character valueOf(char c) Since 1.5</li>
+    <li>char charValue()</li>
+    <li>static int hashCode(char value) Since 1.8 : int로 형변환 한 것과 동일</li>
+    <li>static String toString(char c) Since 1.4</li>
+    <li>static boolean isValidCodePoint(int codePoint) Since 1.5</li>
+    <li>static boolean isBmpCodePoint(int codePoint) Since 1.7</li>
+    <li>static boolean isSupplementaryCodePoint(int codePoint) Since 1.5</li>
+    <li>static boolean isHighSurrogate(char ch) Since 1.5</li>
+    <li>static boolean isLowSurrogate(char ch) Since 1.5</li>
+    <li>static boolean isSurrogate(char ch) Since 1.7</li>
+    <li>static boolean isSurrogatePair(char high, char low) Since 1.5</li>
+    <li>static boolean isLowerCase(char ch) : 'a' ~ 'z'</li>
+    <li>static boolean isLowerCase(int codePoint) Since 1.5</li>
+    <li>static boolean isUpperCase(char ch) : 'A' ~ 'Z'</li>
+    <li>static boolean isUpperCase(int codePoint)</li>
+    <li>static boolean isTitleCase(char ch) Since 1.0.2 : getType(ch) == TITLECASE_LETTER</li>
+    <li>static boolean isTitleCase(int codePoint) Since 1.5</li>
+    <li>static boolean isDigit(char ch) : getType(ch) == DECIMAL_DIGIT_NUMBER
+        <ul>
+            <li>'\u0030' through '\u0039', ISO-LATIN-1 digits ('0' through '9')</li>
+            <li>'\u0660' through '\u0669', Arabic-Indic digits</li>
+            <li>'\u06F0' through '\u06F9', Extended Arabic-Indic digits</li>
+            <li>'\u0966' through '\u096F', Devanagari digits</li>
+            <li>'\uFF10' through '\uFF19', Fullwidth digits 등</li>
+        </ul>
+    </li>
+    <li>static boolean isDigit(int codePoint) Since 1.5</li>
+    <li>static boolean isDefined(char ch) Since 1.0.2 : 유니코드에 정의되었는지 여부</li>
+    <li>static boolean isDefined(int codePoint) Since 1.5</li>
+    <li>static boolean isLetter(char ch) : getType(ch) == *_LETTER</li>
+    <li>static boolean isLetter(int codePoint) Since 1.5</li>
+    <li>static boolean isLetterOrDigit(char ch) Since 1.0.2</li>
+    <li>static boolean isLetterOrDigit(int codePoint) Since 1.5</li>
+    <li>static boolean isAlphabetic(int codePoint) Since 1.7
+        <br>» UPPERCASE_LETTER, LOWERCASE_LETTER, TITLECASE_LETTER, MODIFIER_LETTER, OTHER_LETTER, LETTER_NUMBER, 및 기타 알파벳
+        문자인지 여부</li>
+    <li>static boolean isIdeographic(int codePoint) Since 1.7 : CJKV(중국어, 일본어, 한국어, 베트남어) 여부</li>
+    <li>static boolean isJavaIdentifierStart(char ch) Since 1.1 : 자바 식별자 선두문자</li>
+    <li>static boolean isJavaIdentifierStart(int codePoint) Since 1.5</li>
+    <li>static boolean isJavaIdentifierPart(char ch) Since 1.1</li>
+    <li>static boolean isJavaIdentifierPart(int codePoint) Since 1.5</li>
+    <li>static boolean isUnicodeIdentifierStart(char ch) Since 1.1
+        <br>» isLetter(ch) == true or getType(ch) == LETTER_NUMBER</li>
+    <li>static boolean isUnicodeIdentifierStart(int codePoint) Since 1.5</li>
+    <li>static boolean isUnicodeIdentifierPart(char ch) Since 1.1</li>
+    <li>static boolean isUnicodeIdentifierPart(int codePoint) Since 1.5</li>
+    <li>static boolean isIdentifierIgnorable(char ch) Since 1.1 : 제어문자, FORMAT 카테고리 문자</li>
+    <li>static boolean isIdentifierIgnorable(int codePoint) Since 1.5</li>
+    <li>static boolean isSpaceChar(char ch) Since 1.1 : getType(ch) == *_SEPARATOR</li>
+    <li>static boolean isSpaceChar(int codePoint) Since 1.5</li>
+    <li>static boolean isWhitespace(char ch) Since 1.1
+        <br>» 공백 문자(단, non-breaking space('\u00A0', '\u2007', '\u202F') 제외), '\t', '\n', 'u000B', '\f', '\r', '\u001C', '\u001D',
+        '\u001E', '\u001F'</li>
+    <li>static boolean isWhitespace(int codePoint) Since 1.5</li>
+    <li>static boolean isISOControl(char ch) Since 1.1
+        <br>» '\u0000' ~ '\u001F', '\u007F' ~ '\u009F'</li>
+    <li>static boolean isISOControl(int codePoint) Since 1.5</li>
+    <li>static int charCount(int codePoint) Since 1.5 : 표현에 필요한 char 수(1 or 2)</li>
+    <li>static int toCodePoint(char high, char low) Since 1.5</li>
+    <li>static int codePointAt(CharSequence seq, int index) Since 1.5</li>
+    <li>static int codePointAt(char[] a, int index) Since 1.5</li>
+    <li>static int codePointAt(char[] a, int index, int limit) Since 1.5 : index &lt; limit</li>
+    <li>static int codePointBefore(CharSequence seq, int index) Since 1.5</li>
+    <li>static int codePointBefore(char[] a, int index) Since 1.5</li>
+    <li>static int codePointBefore(char[] a, int index, int start) : index &gt; start</li>
+    <li>static char highSurrogate(int codePoint) Since 1.7</li>
+    <li>static char lowSurrogate(int codePoint) Since 1.7</li>
+    <li>static int toChars(int codePoint, char[] dst, int dstIndex) Since 1.5 : 저장한 char 수 반환</li>
+    <li>static char[] toChars(int codePoint) Since 1.5</li>
+    <li>static int codePointCount(CharSequence seq, int beginIndex, int endIndex) Since 1.5
+        <br>» [beginIndex, endIndex) 사이의 유니코드 문자 수 반환</li>
+    <li>static int codePointCount(char[] a, int offset, int count) Since 1.5 » count : 검사할 char 개수</li>
+    <li>static int offsetByCodePoints(CharSequence seq, int index, int codePointOffset) Since 1.5
+        <br>» 지정된 index로부터 offset 개수만큼 유니코드를 건너뛴 위치. +일 경우 index 포함, -인 경우 index 미포함(예시 코드 참고)
+    </li>
+    <li>static int offsetByCodePoints(char[] a, int start, int count, int index, int codePointOffset) Since 1.5
+        <br>» start : 유효한 문자열 시작 위치, count : 유효한 문자열 길이</li>
+    <li>static char toLowerCase(char ch)</li>
+    <li>static int toLowerCase(int codePoint) Since 1.5
+        <br>» isLowerCase(toLowerCase(x))가 항상 true는 아니다.
+        <br>» String.toLowerCase()가 사용 언어에 따른 효과적인 변환을 수행한다.</li>
+    <li>static char toUpperCase(char ch)</li>
+    <li>static int toUpperCase(int codePoint) Since 1.5
+        <br>» isUpperCase(toUpperCase(x))가 항상 true를 반환하진 않는다.
+        <br>» String.toUpperCase()가 사용 언어에 따른 효과적인 변환을 수행한다.</li>
+    <li>static char toTitleCase(char ch) Since 1.0.2</li>
+    <li>static int toTitleCase(int codePoint) Since 1.5
+        <br>» isTitleCase(toTitleCase(x))가 항상 true를 반환하진 않는다.</li>
+    <li>static int digit(char ch, int radix)</li>
+    <li>static int digit(int codePoint, int radix) : 예제 참조</li>
+    <li>static int getNumericValue(char ch) Since 1.1
+        <br>» 로마 숫자, a~z 등을 10진법 수로 반환한다. 음수일 경우 -2, 숫자가 아닐 경우 -1 반환.</li>
+    <li>static char forDigit(int digit, int radix)</li>
+    <li>static int getNumericValue(int codePoint) Since 1.5</li>
+    <li>static int getType(char ch) Since 1.1</li>
+    <li>static int getType(int codePoint) Since 1.5</li>
+    <li>static byte getDirectionality(char ch) Since 1.4
+        <br>» 문자 표시 순서를 반환한다. DIRECTIONALITY_UNDEFINED, DIRECTIONALITY_LEFT_TO_RIGHT 등</li>
+    <li>static byte getDirectionality(int codePoint) Since 1.5</li>
+    <li>static boolean isMirrored(char ch) Since 1.4
+        <br>» 우→좌 표기하는 문자</li>
+    <li>static boolean isMirrored(int codePoint) Since 1.5</li>
+    <li>static int compare(char x, char y) Since 1.7 : x - y</li>
+    <li>static char reverseBytes(char ch) Since 1.5</li>
+    <li>static String getName(int codePoint) Since 1.7
+        <br>» 이름 반환 : Character.UnicodeBlock.of(codePoint).toString().replace('_', ' ') + " " + Integer.toHexString(codePoint).toUpperCase(Locale.ROOT);
+        <br>» 정의되어 있지 않으면 null 반환</li>
+    <li>static int codePointOf(String name) Since 9 : 정의되어 있지 않으면 예외</li>
+    <li><button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/lang/CharacterExample.java" lan="java">예시
+            코드 »</button>
+    </li>
+</ol>

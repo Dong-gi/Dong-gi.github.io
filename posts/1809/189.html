@@ -1,0 +1,18 @@
+1. 표준 캐릭터셋 : US-ASCII, ISO-8859-1, UTF-8, UTF-16BE, UTF-16LE, UTF-16
+<br>
+<br>2. static boolean isSupported(String charsetName)
+<br>static Charset forName(String charsetName)
+<br>static SortedMap&lt;String, Charset&gt; availableCharsets()
+<br>static Charset defaultCharset() Since 1.5
+<br>final String name()
+<br>final Set&lt;String&gt; aliases()
+<br>String displayName()
+<br>final boolean isRegistered() : IANA 캐릭터셋에 등록됐는지
+<br>String displayName(Locale locale)
+<br>abstract boolean contains(Charset cs)
+<br>abstract CharsetDecoder newDecoder()
+<br>abstract CharsetEncoder newEncoder()
+<br>boolean canEncode()
+<br>final CharBuffer decode(ByteBuffer bb)
+<br>final ByteBuffer encode(CharBuffer cb)
+<br>final ByteBuffer encode(String str)

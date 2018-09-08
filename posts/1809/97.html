@@ -1,0 +1,87 @@
+<ol>
+    <li>유니코드 보충 평면 문자는 surrogate pairs로써 2자리를 차지한다.</li>
+    <li>로캐일을 고려한 문자열 비교는 Collator 클래스를 이용.</li>
+    <li>static final Comparator&lt;String&gt; CASE_INSENSITIVE_ORDER Since 1.2 : 대소문자 구분없는 비교자. 직렬화 가능.
+    </li>
+    <li>생성자
+        <ul>
+            <li>public String()</li>
+            <li>public String(String original)</li>
+            <li>public String(char[] value)</li>
+            <li>public String(char[] value, int offset, int count) : count == length</li>
+            <li>public String(int[] codePoints, int offset, int count) Since 1.5</li>
+            <li>public String(byte[] bytes, int offset, int length, String charsetName) Since 1.1</li>
+            <li>public String(byte[] bytes, int offset, int length, Charset charset) Since 1.6</li>
+            <li>public String(byte[] bytes, String charsetName) Since 1.1</li>
+            <li>public String(byte[] bytes, Charset charset) Since 1.6</li>
+            <li>public String(byte[] bytes, int offset, int length) Since 1.1</li>
+            <li>public String(byte[] bytes) Since 1.1</li>
+            <li>public String(StringBuffer buffer)</li>
+            <li>public String(StringBuilder builder) Since 1.5</li>
+        </ul>
+        <li>boolean isEmpty() Since 1.6</li>
+        <li>int codePointAt(int index) Since 1.5</li>
+        <li>int codePointBefore(int index) Since 1.5</li>
+        <li>int codePointCount(int beginIndex, int endIndex)</li>
+        <li>int offsetByCodePoints(int index, int codePointOffset) Since 1.5
+        </li>
+        <li>void getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)</li>
+        <li>byte[] getBytes(String charsetName)Since 1.1</li>
+        <li>byte[] getBytes(Charset charset) Since 1.6</li>
+        <li>byte[] getBytes() Since 1.1</li>
+        <li>boolean contentEquals(StringBuffer sb) Since 1.4</li>
+        <li>boolean contentEquals(CharSequence cs) Since 1.5</li>
+        <li>boolean equalsIgnoreCase(String anotherString)</li>
+        <li>int compareToIgnoreCase(String str) Since 1.2</li>
+        <li>boolean regionMatches(int tooffset, String other, int ooffset, int len)
+            <br>» 부분 문자열이 일치하는지 여부 반환. t(his's)offset, o(ther's)offset</li>
+        <li>boolean regionMatches(boolean ignoreCase, int toffset, String other, int ooffset, int len)
+        </li>
+        <li>boolean startsWith(String prefix, int toffset) : 부분 문자열의 시작 일치 여부 반환</li>
+        <li>boolean startsWith(String prefix) Since 1.0</li>
+        <li>boolean endsWith(String suffix)</li>
+        <li>int indexOf(int ch)</li>
+        <li>int indexOf(int ch, int fromIndex)</li>
+        <li>int lastIndexOf(int ch)</li>
+        <li>int lastIndexOf(int ch, int fromIndex)</li>
+        <li>int indexOf(String str)</li>
+        <li>int indexOf(String str, int fromIndex)</li>
+        <li>int lastIndexOf(String str)</li>
+        <li>int lastIndexOf(String str, int fromIndex)</li>
+        <li>String substring(int beginIndex)</li>
+        <li>String substring(int beginIndex, int endIndex)</li>
+        <li>String concat(String str)</li>
+        <li>String replace(char oldChar, char newChar)</li>
+        <li>boolean matches(String regex) Since 1.4 : Pattern.matches(regex, str)과 같은 결과</li>
+        <li>boolean contains(CharSequence s) Since 1.5</li>
+        <li>String replaceFirst(String regex, String replacement) Since 1.4</li>
+        <li>String replaceAll(String regex, String replacement) Since 1.4</li>
+        <li>String replace(CharSequence target, CharSequence replacement) Since 1.5</li>
+        <li>String[] split(String regex, int limit) Since 1.4
+            <br>» limit이 음수인 경우, 제한 없이 분리. 0인 경우 빈 문자열로 끝나지 않음.</li>
+        <li>String[] split(String regex) Since 1.4 : split(regex, 0)</li>
+        <li>static String join(CharSequence delimiter, CharSequence... elements) Since 1.8</li>
+        <li>static String join(CharSequence delimiter, Iterable&lt;? extends CharSequence&gt; elements) Since 1.8</li>
+        <li>String toLowerCase(Locale locale) Since 1.1</li>
+        <li>String toLowerCase()</li>
+        <li>String toUpperCase(Locale locale) Since 1.1</li>
+        <li>String toUpperCase()</li>
+        <li>String trim() : 시작과 끝의 공백 제거</li>
+        <li>IntStream chars() Since 9</li>
+        <li>IntStream codePoints() Since 9</li>
+        <li>char[] toCharArray()</li>
+        <li>static String format(String format, Object... args) Since 1.5</li>
+        <li>static String format(Locale l, String format, Object... args) Since 1.5</li>
+        <li>static String valueOf(Object obj) : obj.toString()</li>
+        <li>static String valueOf(char[] data)</li>
+        <li>static String valueOf(char[] data, int offset, int count)</li>
+        <li>static String copyValueOf(char[] data, int offset, int count)</li>
+        <li>static String copyValueOf(char[] data)</li>
+        <li>static String valueOf(boolean b)</li>
+        <li>static String valueOf(char c)</li>
+        <li>static String valueOf(int i)</li>
+        <li>static String valueOf(long l)</li>
+        <li>static String valueOf(float f)</li>
+        <li>static String valueOf(double d)</li>
+        <li>String intern() : 문자열 객체에 대한 내부 표현 반환</li>
+</ol>

@@ -1,0 +1,17 @@
+<ol>
+    <li>OutputStream에 기본 타입 및 각종 문자열을 쓰는 기능을 제공한다.</li>
+    <li>public PrintStream(OutputStream out)</li>
+    <li>public PrintStream(OutputStream out, boolean autoFlush)
+        <br>» 바이트 배열을 다 쓰거나, 새 줄 문자, '\n'을 쓰면 자동으로 flush()</li>
+    <li>public PrintStream(OutputStream out, boolean autoFlush, String encoding) Since 1.4</li>
+    <li>public PrintStream(String fileName) Since 1.5</li>
+    <li>public PrintStream(String fileName, String csn) Since 1.5 » csn = charset 이름</li>
+    <li>public PrintStream(File file) Since 1.5</li>
+    <li>public PrintStream(File file, String csn) Since 1.5</li>
+    <li>boolean checkError() : 예외를 던지지 않으므로 이 메서드로 확인해야 한다.</li>
+    <li>각종 print(), println(), append()</li>
+    <li>void print(Object obj) : String.valueOf(Object) 메서드를 사용한다.</li>
+    <li>PrintStream printf(String format, Object... args) Since 1.5</li>
+    <li>PrintStream printf(Locale l, String format, Object... args) Since 1.5</li>
+    <li>PrintStream format(String format, Object... args) Since 1.5</li>
+</ol>

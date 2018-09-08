@@ -1,0 +1,22 @@
+<ol>
+    <li>바이트 단위 읽기에 대한 최상위 추상 클래스</li>
+    <li>abstract int read()
+        <br>» 다음 바이트를 읽고 int로 반환한다. 스트림 끝인 경우 -1을 반환한다.
+        <br>» 스트림이 끝나거나, 예외가 발생하거나, 읽을 데이터가 준비될 때까지 블록한다.</li>
+    <li>int read(byte[] b), read(byte[] b, int off, int len)
+        <br>» 실제로 읽은 바이트 수를 반환한다. 스트림 끝인 경우 -1을 반환한다. 실행을 블록한다.</li>
+    <li>byte[] readAllBytes() Since 9</li>
+    <li>long skip(long n)
+        <br>» 실제로 건너뛴 바이트 수를 반환. 음수 매개변수에 대해 0을 반환한다. 서브클래스들의 구현은 이와 다를 수 있다.</li>
+    <li>int available()
+        <br>» 막힘 없이 한 번에 읽어올 수 있는 바이트 수 예상값을 반환.
+        <br>» InputStream 구현에 따라 전체 바이트 수를 반환하기도, 그렇지 않기도 하다.
+        <br>» InputStream 자체는 항상 0을 반환하며, 서브클래스에서 재정의해야 한다.</li>
+    <li>boolean markSupported() : mark, reset 메서드를 지원하는지 여부 반환. 기본 false
+        <br>» void mark(int readlimit) : 현재 위치 마킹
+        <br>» void reset() : 마지막 마킹 위치로 이동</li>
+    <li>long transferTo(OutputStream out) Since 9
+        <br>» 입력 스트림의 모든 바이트를 읽어들여 out에 쓴다. 총 전송 바이트 수를 반환하며, 스트림을 닫는 작업을 하진 않는다.
+        <br>» 작업이 끝날 때까지 스레드가 블록되며, 스트림이 비동기적으로 닫히거나, 인터럽트가 발생하는 경우에 대해 대처하지 않는다.
+    </li>
+</ol>

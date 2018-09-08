@@ -1,0 +1,25 @@
+1. stream을 통해 로드/저장되는 영구적인 속성값들을 표현. 기본값으로 이용하기 위해 다른 Properties를 포함할 수 있다.
+<br>» 쓰레드-안전하다.
+<br>
+<br>2. 필드 protected Properties defaults
+<br>
+<br>3. 생성자
+<br>public Properties()
+<br>public Properties(int initialCapacity)
+<br>public Properties(Properties defaults)
+<br>
+<br>4. Object setProperty(String key, String value) Since 1.2
+<br>String getProperty(String key)
+<br>String getProperty(String key, String defaultValue)
+<br>Enumeration&lt;?&gt; propertyNames()
+<br>Set&lt;String&gt; stringPropertyNames() Since 1.6
+<br>void load(Reader reader) Since 1.6
+<br>void load(InputStream inStream) Since 1.2
+<br>void store(Writer writer, String comments) Since 1.6
+<br>void store(OutputStream out, String comments) Since 1.2
+<br>void loadFromXML(InputStream in) Since 1.5
+<br>void storeToXML(OutputStream os, String comment) Since 1.5
+<br>void storeToXML(OutputStream os, String comment, String encoding) Since 1.5
+<br>void storeToXML(OutputStream os, String comment, Charset charset) Since 10
+<br>void list(PrintStream out) : 디버깅에 유용
+<br>void list(PrintWriter out) Since 1.1 : 디버깅에 유용

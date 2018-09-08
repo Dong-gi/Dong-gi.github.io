@@ -1,0 +1,29 @@
+1. 다음 4가지 연산 정의
+<br>» 단일 char에 대한 absolute and relative get and put
+<br>» 이 버퍼로부터 배열로 연속적인 char를 저장하는 bulk get
+<br>» char 배열, String, 다른 char 버퍼로부터 이 버퍼로 연속적인 char를 저장하는 bulk put
+<br>» compact()
+<br>
+<br>2. static CharBuffer allocate(int capacity)
+<br>static CharBuffer wrap(char[] array, int offset, int length)
+<br>static CharBuffer wrap(char[] array)
+<br>static CharBuffer wrap(CharSequence csq, int start, int end)
+<br>static CharBuffer wrap(CharSequence csq)
+<br>abstract CharBuffer slice()
+<br>abstract CharBuffer duplicate()
+<br>abstract CharBuffer asReadOnlyBuffer()
+<br>
+<br>3. get/put
+<br>abstract char get()
+<br>abstract CharBuffer put(char c)
+<br>abstract char get(int index)
+<br>abstract CharBuffer put(int index, char c)
+<br>CharBuffer get(char[] dst, int offset, int length)
+<br>CharBuffer get(char[] dst)
+<br>CharBuffer put(CharBuffer src)
+<br>CharBuffer put(char[] src, int offset, int length)
+<br>final CharBuffer put(char[] src)
+<br>CharBuffer put(String src, int start, int end)
+<br>final CharBuffer put(String src)
+<br>abstract CharBuffer compact()
+<br>abstract ByteOrder order()

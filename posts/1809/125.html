@@ -1,0 +1,9 @@
+<ol>
+    <li>Module Resolution : 모듈들의 연관 관계를 계산하는 작업. 각 모듈의 필요(requires) 모듈들을 반복적으로 찾아내고 관계 그래프를 구한다.</li>
+    <li>ModuleFinder는 module resolution과 service binding(Configuration::resolveAndBind)에서 모듈을 찾는 데 이용된다.</li>
+    <li>Optional&lt;ModuleReference&gt; find(String name)</li>
+    <li>Set&lt;ModuleReference&gt; findAll()</li>
+    <li>static ModuleFinder ofSystem()</li>
+    <li>static ModuleFinder of(Path... entries)</li>
+    <li>static ModuleFinder compose(ModuleFinder... finders)</li>
+</ol>

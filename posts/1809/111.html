@@ -1,0 +1,41 @@
+<ol>
+    <li>이 클래스는 쓰레드-안전하게 구현되지 않았다.</li>
+    <li>abstract static class ProcessBuilder.Redirect Since 1.7
+        <ul>
+            <li>서브프로세스의 입력 소스 또는 출력 방향을 표현한다.</li>
+            <li>static enum ProcessBuilder.Redirect.Type
+                <br>» APPEND : Redirect.appendTo(File), INHERIT, PIPE, READ : Redirect.from(File), WRITE : Redirect.to(File)</li>
+            <li>public static final ProcessBuilder.Redirect PIPE : 현재 프로세스와 파이프로 연결</li>
+            <li>public static final ProcessBuilder.Redirect INHERIT : 현재 프로세스의 것과 동일</li>
+            <li>public static final ProcessBuilder.Redirect DISCARD Since 9: 출력 버림</li>
+            <li>abstract ProcessBuilder.Redirect.Type type()</li>
+            <li>File file() : 입력 소스 또는 출력지와 관계된 File 반환. 없으면 null.</li>
+            <li>static ProcessBuilder.Redirect from(File file)</li>
+            <li>static ProcessBuilder.Redirect to(File file) : file의 이전 내용은 새로운 쓰기 작업에 의해 버려진다.</li>
+            <li>static ProcessBuilder.Redirect appendTo(File file)</li>
+        </ul>
+    </li>
+    <li>public ProcessBuilder(List&lt;String&gt; command)</li>
+    <li>public ProcessBuilder(String... command)</li>
+    <li>ProcessBuilder command(List&lt;String&gt; command)</li>
+    <li>ProcessBuilder command(String... command)</li>
+    <li>List&lt;String&gt; command()</li>
+    <li>Map&lt;String, String&gt; environment()</li>
+    <li>File directory()</li>
+    <li>ProcessBuilder directory(File directory)</li>
+    <li>ProcessBuilder redirectInput(ProcessBuilder.Redirect source) Since 1.7</li>
+    <li>ProcessBuilder redirectOutput(ProcessBuilder.Redirect destination) Since 1.7</li>
+    <li>ProcessBuilder redirectError(ProcessBuilder.Redirect destination) Since 1.7</li>
+    <li>ProcessBuilder redirectInput(File file) Since 1.7</li>
+    <li>ProcessBuilder redirectOutput(File file) Since 1.7</li>
+    <li>ProcessBuilder redirectError(File file) Since 1.7</li>
+    <li>ProcessBuilder.Redirect redirectInput() Since 1.7</li>
+    <li>ProcessBuilder.Redirect redirectOutput() Since 1.7</li>
+    <li>ProcessBuilder.Redirect redirectError() Since 1.7</li>
+    <li>ProcessBuilder inheritIO() Since 1.7</li>
+    <li>boolean redirectErrorStream()</li>
+    <li>ProcessBuilder redirectErrorStream(boolean redirectErrorStream) : true면 서브프로세스들의 에러 출력이 표준 출력과 함께 나온다.</li>
+    <li>Process start()</li>
+    <li>static List&lt;Process&gt; startPipeline(List&lt;ProcessBuilder&gt; builders) Since 9
+        <br>» 프로세스들의 표준 출력을 다음 프로세스의 표준 입력을 연결한다.</li>
+</ol>
