@@ -194,6 +194,7 @@ function internalSearch() {
             count += 1;
         }
     }
+    adjustIndexSize();
     showSnackbar(count + "개의 포스트를 찾았습니다.", "#bottom-nav");
 }
 

@@ -1,0 +1,42 @@
+1. Pattern으로부터 만들어지는 매칭 엔진으로, 아래 세 가지 작업을 수행한다.
+<br>» matches() : 전체 입력에 대해 패턴 매칭
+<br>» lookingAt() : 입력 시작부분 패턴 매칭
+<br>» find() : 입력의 다음 부분 패턴 매칭
+<br>
+<br>2. Pattern pattern()
+<br>MatchResult toMatchResult() Since 1.5
+<br>Matcher usePattern(Pattern newPattern) Since 1.5
+<br>Matcher reset() + 1오버로딩
+<br>
+<br>3. int start(String name) Since 1.8
+<br>» 주어진 식별자에 해당하는 그룹의 시작 인덱스 반환
+<br>int end(String name) Since 1.8
+<br>String group(String name) Since 1.7
+<br>
+<br>4. boolean mathes()
+<br>boolean find() + 1 오버로딩
+<br>boolean lookingAt()
+<br>
+<br>5. static String quoteReplacement(String s) Since 1.5
+<br>» appendReplacement 메서드의 replacement로 사용될 s의 리터럴 표기를 반환.
+<br>Matcher appendReplacement(StringBuffer sb, String replacement) + 1 오버로딩
+<br>» 입력 소스의 append position부터 start() 전까지 sb에 추가.
+<br>» replacement를 sb에 추가. 현재 matcher의 append position을 end()로 설정.
+<br>StringBuffer appendTail(StringBuffer sb) + 1 오버로딩
+<br>» 입력 소스의 append position부터를 sb에 추가.
+<br>» appendReplacement 메서드를 호출한 뒤에 이를 호출하여 남머지 부분을 복사할 목적으로 만들어짐.
+<br>String replaceAll(String replacement)
+<br>» 입력 소스의 모든 매칭되는 부분을 replacement로 변경.
+<br>String replaceAll(Function&lt;MatchResult, String&gt; replacer) Since 9
+<br>String replaceFirst(String replacement) + 1 오버로딩
+<br>Stream&lt;MatchResult&gt; results() Since 9
+<br>
+<br>6. Matcher region(int start, int end) Since 1.5
+<br>» 입력 소스의 특정 구간을 매칭 대상으로 하도록 초기화한다. transparency, anchoring 속성에 따라 동작이 다르다.
+<br>int regionStart(), regionEnd() Since 1.5
+<br>boolean hasTransparentBounds() Since 1.5
+<br>Matcher useTransparentBounds(boolean b) Since 1.5
+<br>» region의 경계 너머를 패턴 매칭에 보이도록 할지 여부
+<br>boolean hasAnchoringBounds() Since 1.5
+<br>Matcher useAnchoringBounds(boolean b) Since 1.5
+<br>» region의 경계에서 ^, $를 작동하게 할지 여부

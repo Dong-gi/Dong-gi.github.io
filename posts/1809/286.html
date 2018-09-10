@@ -1,0 +1,32 @@
+<ol>
+    <li>비동기적일 수 있는 계산 단계. 다른 CompletionStage가 완료된 뒤 어떠한 동작을 수행하거나 값을 계산한다.
+        <br>» Stage에서 수행되는 연산은 Function, Consumer, Runnable로 표현되어야 한다. 각각은 apply, accept, run 메서드로 stage에 제공된다. 연산에 넘겨지는
+        인자는 트리거 stage의 결과이며, 이를 통해 연산의 pipeline을 만들 수 있다.</li>
+    <li>&lt;U&gt; CompletionStage&lt;U&gt; thenApply(Function&lt;? super T, ? extends U&gt; fn) + thenApplyAsync
+        <br>» Optional::map, Stream::map과 유사하다.</li>
+    <li>CompletionStage&lt;Void&gt; thenAccept(Consumer&lt;? super T&gt; action) + thenAcceptAsync</li>
+    <li>CompletionStage&lt;Void&gt; thenRun(Runnable action) + thenRunAsync</li>
+    <li>&lt;U, V&gt; CompletionStage&lt;V&gt; thenCombine(CompletionStage&lt;? extends U&gt; other, BiFunction&lt;? super
+        T, ? super U, ? extends V&gt; fn)
+        <br>» other와 이 stage 모두가 종료되면 fn을 실행하는 CompletionStage를 반환. + thenCombineAsync</li>
+    <li>&lt;U&gt; CompletionStage&lt;Void&gt; thenAcceptBoth(CompletionStage&lt;? extends U&gt; other, BiConsumer&lt;? super
+        T, ? super U&gt; action) + thenAcceptBothAsync</li>
+    <li>CompletionStage&lt;Void&gt; runAfterBoth(CompletionStage&lt;?&gt; other, Runnable action) + runAfterBothAsync</li>
+    <li>&lt;U&gt; CompletionStage&lt;U&gt; applyToEither(CompletionStage&lt;? extends T&gt; other, Function&lt;? super T,
+        U&gt; fn)
+        <br>» other나 이 stage 둘 중 하나라도 종료되면 fn을 실행하는 CompletionStage를 반환. + applyToEitherAsync</li>
+    <li>CompletionStage&lt;Void&gt; acceptEither(CompletionStage&lt;? extends T&gt; other, Consumer&lt;? super T&gt; action)
+        + acceptEitherAsync</li>
+    <li>CompletionStage&lt;Void&gt; runAfterEither(CompletionStage&lt;?&gt; other, Runnable action) + runAfterEitherAsync</li>
+    <li>&lt;U&gt; CompletionStage&lt;U&gt; thenCompose(Function&lt;? super T, ? extends CompletionStage&lt;U&gt;&gt; fn)
+        + thenComposeAsync
+        <br>» 이 stage가 종료되면 결과를 인자로 하여 fn이 호출되고, 다른 CompletionStage가 반환된다. 반환된 stage가 종료되면, 이 메서드가 반환한 CompletionStage가 같은
+        값으로 종료된다. Optional::flatMap, Stream::flatMap과 비슷하다.</li>
+    <li>&lt;U&gt; CompletionStage&lt;U&gt; handle(BiFunction&lt;? super T, Throwable, ? extends U&gt; fn) + handleAsync
+        <br>» 이 stage가 종료되면 결과와 예외를 인자로 fn을 실행하고, fn의 결과로 반환된 stage를 종료한다.</li>
+    <li>CompletionStage&lt;T&gt; whenComplete(BiConsumer&lt;? super T, ? super Throwable&gt; action) + whenCompleteAsync
+        <br>» 이 stage가 종료되면 결과와 예외를 인자로 action을 실행하고, action이 종료되면 반환된 stage도 종료된다.</li>
+    <li>CompletionStage&lt;T&gt; exceptionally(Function&lt;Throwable, ? extends T&gt; fn)
+        <br>» 이 stage가 예외를 발생하면 그것을 인자로 fn 실행하는 CompletionStage 반환. 예외 발생이 없는 경우, 이 stage의 결과와 같은 값으로 반환된 stage가 종료된다.</li>
+    <li>CompletableFuture&lt;T&gt; toCompletableFuture()</li>
+</ol>

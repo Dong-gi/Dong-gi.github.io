@@ -1,0 +1,17 @@
+1. 생성자
+<br>public ZipOutputStream(OutputStream out)
+<br>public ZipOutputStream(OutputStream out, Charset charset) Since 1.7
+<br>
+<br>2. void setComment(String comment)
+<br>void setMethod(int method)
+<br>» ZipEntry에 설정되지 않은 경우 사용하는 압축 방법 : DEFLATED(압축, 기본값), STORED(비압축)
+<br>
+<br>void setLevel(int level)
+<br>» 압축 레벨 : 0(BEST_SPEED) ~ 9(BEST_COMPRESSION). 기본은 DEFAULT_COMPRESSION(-1)이며, 보통 6.
+<br>
+<br>void putNextEntry(ZipEntry e)
+<br>void closeEntry()
+<br>» 현재 ZipEntry를 닫고 다음 쓰기 위치로 이동. putNextEntry 메서드는 쓰기 전에 알아서 닫는다.
+<br>
+<br>void finish()
+<br>» 쓰기를 종료하고 스트림을 닫는다. 동일한 출력 스트림에 여러 필터를 적용한 경우에 사용.

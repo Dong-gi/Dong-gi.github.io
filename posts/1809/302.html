@@ -1,0 +1,7 @@
+1. 지정된 volatile int 필드를 atomic 연산으로 갱신.
+<br>
+<br>2. static &lt;U&gt; AtomicIntegerFieldUpdater&lt;U&gt; newUpdater(Class&lt;U&gt; tclass, String fieldName)
+<br>
+<br>3. abstract boolean compareAndSet(T obj, int expect, int update)
+<br>abstract boolean weakCompareAndSet(T obj, int expect, int update) ...
+<br>» 지원하는 함수들의 종류는 AtomicInteger와 유사하다.

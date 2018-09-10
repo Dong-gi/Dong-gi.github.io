@@ -1,0 +1,58 @@
+ 1. CompletionStage로 이용될 수 있는, 명시적으로 종료(값과 상태를 설정)되는 Future. 둘 이상의 쓰레드가 complete, completeExceptionally, cancel을 호출할 경우,
+하나만 성공한다.
+<br>» non-async 메서드로 등록된 작업은 현재 CompletableFuture가 완료된 쓰레드 또는 호출자에서 실행된다.
+<br>» 명시적인 Executor 없이 async 메서드로 등록된 작업은 ForkJoinPool::commonPool에서 수행.
+<br>» CompletionStage의 메서드들은 독립적으로 구현되어, 하나를 재정의해도 다른 메서드에 영향이 없다.
+<br>» CompletionStage의 메서드들만 이용하도록 하려면 minimalCompletionStage()를, future를 변경하지 못하도록 하려면 copy()를 이용.
+<br>
+<br>
+<b>2. static interface CompletableFuture.AsynchronousCompletionTask Since 1.8</b>
+<br>» 비동기 메서드에서 생성된 비동기 작업을 나타내는 마커 인터페이스
+<br>
+<br>3. 생성자 : public CompletableFuture()
+<br>
+<br>4. 팩터리
+<br>static &lt;U&gt; CompletableFuture&lt;U&gt; supplyAsync(Supplier&lt;U&gt; supplier) + 1 오버로드
+<br>» supplier의 결과를 가지고 ForkJoinPool::commonPool에서 실행되는 작업에 의해 비동기 종료되는 새로운 CompletableFuture 객체 반환.
+<br>static CompletableFuture&lt;Void&gt; runAsync(Runnable runnable) + 1 오버로드
+<br>» 주어진 동작을 수행한 뒤 ForkJoinPool::commonPool에서 실행되는 작업에 의해 비동기 종료되는 새로운 CompletableFuture 객체 반환
+<br>static &lt;U&gt; CompletableFuture&lt;U&gt; completedFuture(U value)
+<br>» 이미 특정 값으로 종료된 CompletableFuture 객체 반환.
+<br>static CompletableFuture&lt;Void&gt; allOf(CompletableFuture&lt;?&gt;... cfs)
+<br>» 모든 cfs가 종료되면 완료되는 새로운 CompletableFuture 객체 반환.
+<br>static CompletableFuture&lt;Object&gt; anyOf(CompletableFuture&lt;?&gt;... cfs)
+<br>» 하나라도 종료되면, 그 결과와 같은 값으로 종료되는 CompletableFuture 객체 반환.
+<br>
+<br>5. T join() : 종료되면 결과 값 반환, 또는 발생한 예외 던지기. 예외의 형태는 CompletionException으로 하고 기저 예외를 cause로 설정한 것이 좋다.
+<br>T getNow(T valueIfAbsent) : 종료되었다면 결과 값 반환, 또는 발생한 예외 던지기. 아니면 valueIfAbsent 반환.
+<br>boolean complete(T value) : 종료되지 않았다면 get()과 연관 메서드들의 반환값을 value로 설정. 이 호출로 CompletableFuture가 완료 상태로 이행되었다면 true 반환.
+<br>boolean completeExceptionally(Throwable ex) : 종료되지 않았다면 get()과 연관 메서드들이 주어진 예외를 던지도록 한다. 이 호출로 CompletableFuture가 완료
+상태로 이행되었다면 true 반환.
+<br>boolean isCompletedExeptionally()
+<br>void obtrudeValue(T value) : 강제로 get()과 연관 메서드들의 반환값 설정. 에러 복구를 위해 설계됨.
+<br>void obtrudeException(Throwable ex)
+<br>int getNumberOfDependents() : 종료 대기중인 CompletableFuture의 개수 추정. 동기화가 아닌 시스템 모니터링을 위해 설계됨.
+<br>
+<br>6. Since 9
+<br>&lt;U&gt; CompletableFuture&lt;U&gt; newIncompletableFuture()
+<br>» 완료되지 않은 새로운 CompletableFuture 객체를 반환한다. 타입 U는 CompletionStage 메서드로부터 얻어진다. 서브클래스들은 이를 재정의하여 CompletableFuture 객체를 반환해야
+한다.
+<br>Executor defaultExecutor()
+<br>CompletableFuture&lt;T&gt; copy() : 정상적으로 종료되었다면, 같은 값을 갖는 종료된 CompletableFuture 반환. 예외 종료되었다면, 해당 예외를 원인으로 한 CompletionException으로
+예외 종료된 CompletableFuture 반환. 동작은 thenApply(x -> x)와 같다.
+<br>CompletionStage&lt;T&gt; minimalCompletionStage() : CompletionStage에 정의된 메서드만 이용 가능. 재정의되지 않았다면 toCompletableFuture()
+메서드를 통해 그 외의 메서드에 접근 가능하다.
+<br>CompletableFuture&lt;T&gt; completeAsync(Supplier&lt;? extends T&gt; supplier) + 1 오버로딩
+<br>» 이 CompletableFuture를 supplier의 결과값으로 종료한다.
+<br>CompletableFuture&lt;T&gt; orTimeout(long timeout, TimeUnit unit)
+<br>» 이 CompletableFuture가 주어진 시간 내에 종료되지 않은 경우, TimeoutException으로 예외 종료한다.
+<br>CompletableFuture&lt;T&gt; completeOnTimeout(T value, long timeout, TimeUnit unit)
+<br>» 이 CompletableFuture가 주어진 시간 내에 종료되지 않은 경우, value로 종료한다.
+<br>static Executor delayedExecutor(long delay, TimeUnit unit) + 1 오버로딩
+<br>» 주어진 딜레이 이후에 executor로 작업을 제출하는 새로운 Executor 반환.
+<br>static &lt;U&gt; CompletionStage&lt;U&gt; completedStage(U value)
+<br>» 주어진 value로 이미 종료된 새로운 CompletionStage 반환.
+<br>static &lt;U&gt; CompletableFuture&lt;U&gt; failedFuture(Throwable ex)
+<br>» 주어진 예외로 이미 종료된 새로운 CompletableFuture 객체 반환.
+<br>static &lt;U&gt; CompletionStage&lt;U&gt; failedStage(Throwable ex)
+<br>» 주어진 예외로 이미 종료된 새로운 CompletionStage 반환.

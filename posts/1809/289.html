@@ -1,0 +1,39 @@
+1. https://docs.oracle.com/javase/10/docs/api/java/util/concurrent/ThreadPoolExecutor.html
+<br>
+<br>2. 생성자
+<br>public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt;
+workQueue)
+<br>public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt;
+workQueue, ThreadFactory threadFactory)
+<br>public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt;
+workQueue, RejectedExecutionHandler handler)
+<br>public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt;
+workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler)
+<br>
+<br>3. void execute(Runnable command)
+<br>void shutdown()
+<br>List&lt;Runnable&gt; shutdownNow()
+<br>boolean isTerminating()
+<br>void setThreadFactory(ThreadFactory threadFactory) + getter
+<br>void setRejectedExecutionHandler(RejectedExecutionHandler handler) + getter
+<br>void setCorePoolSize(int corePoolSize) + getter
+<br>boolean prestartCoreThread()
+<br>» 코어(워커) 쓰레드를 시작시켜 작업을 대기시킨다. 새 작업을 시작할 때 코어 쓰레드를 실행하는 기본 설정을 재정의한 것. 모든 코어 쓰레드가 이미 시작되었다면 false 반환.
+<br>int prestartAllCoreThreads()
+<br>boolean allowsCoreThreadTimeOut() Since 1.6
+<br>void allowCoreThreadTimeOut(boolean value) Since 1.6
+<br>void setMaximumPoolSize(int maximumPoolSize) + getter
+<br>void setKeepAliveTime(long time, TimeUnit unit) + getter
+<br>BlockingQueue&lt;Runnable&gt; getQueue()
+<br>boolean remove(Runnable task)
+<br>void purge() : 취소된 Future 작업들을 큐에서 제거
+<br>int getPoolSize()
+<br>int getActiveCount()
+<br>int getLargestPoolSize()
+<br>long getTaskCount()
+<br>long getCompletedTaskCount()
+<br>
+<br>4. 사용자 정의
+<br>protected void beforeExecute(Thread t, Runnable r)
+<br>protected void afterExecute(Runnable r, Throwable t)
+<br>protected void terminated() : Executor가 종료되면 호출

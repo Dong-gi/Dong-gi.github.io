@@ -1,0 +1,8 @@
+1. 비동기적 계산의 결과를 표현. 결과는 오직 get 메서드로만 얻을 수 있으며, 필요하다면 결과가 준비될 때까지 블록시킨다.
+<br>
+<br>2. boolean cancel(boolean mayInterruptIfRunning)
+<br>&gt; 이 메서드가 종료된 후의 isDone()은 항상 true.
+<br>boolean isCancelled()
+<br>boolean isDone()
+<br>V get()
+<br>V get(long timeout, TimeUnit unit)

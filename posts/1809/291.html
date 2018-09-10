@@ -1,0 +1,16 @@
+1. 생성자
+<br>public ScheduledThreadPoolExecutor(int corePoolSize)
+<br>public ScheduledThreadPoolExecutor(int corePoolSize, ThreadFactory threadFactory)
+<br>public ScheduledThreadPoolExecutor(int corePoolSize, RejectedExecutionHandler handler)
+<br>public ScheduledThreadPoolExecutor(int corePoolSize, ThreadFactory threadFactory, RejectedExecutionHandler handler)
+<br>
+<br>2. void setContinueExistingPeriodicTasksAfterShutdownPolicy(boolean value) + getter
+<br>void setExecuteExistingDelayedTasksAfterShutdownPolicy(boolean value) + getter
+<br>void setRemoveOnCancelPolicy(boolean value) Since 1.7 + getter
+<br>» 취소된 작업을 즉시 큐에서 제거할 것인지 설정. 기본값은 false.
+<br>
+<br>3. 사용자 정의
+<br>protected &lt;V&gt; RunnableScheduledFuture&lt;V&gt; decorateTask(Runnable runnable, RunnableScheduledFuture&lt;V&gt;
+task) Since 1.6
+<br>protected &lt;V&gt; RunnableScheduledFuture&lt;V&gt; decorateTask(Callable&lt;V&gt; callable, RunnableScheduledFuture&lt;V&gt;
+task) Since 1.6

@@ -1,0 +1,51 @@
+1. Boolean을 대신할 순 없다.
+<br>
+<br>2. 생성자
+<br>public AtomicBoolean(boolean initialValue)
+<br>public AtomicBoolean() : false
+<br>
+<br>2. final boolean get()
+<br>» 현재 값을 반환한다. 메모리 영향은 VarHandle.getVolatile(Object...)와 같다 : 변수가 volatile인 것처럼 읽어 반환.
+<br>final void set(boolean newValue)
+<br>» newValue로 값 설정. 메모리 영향은 VarHandle.setVolatile(Object...)와 같다 : 변수가 volatile인 것처럼 값을 새로 설정한다.
+<br>final boolean compareAndSet(boolean expectedValue, boolean newValue)
+<br>» 현재 값이 expectedValue와 같다면, atomic 연산으로 newValue로 변경하고 true를 반환한다. 메모리 영향은 VarHandle.compareAndSet(Object...)와 같다 : setVolatile(Object...)로
+값 설정, 현재 값은 getVolatile(Object...)로 가져온다.
+<br>boolean weakCompareAndSetPlain(boolean expectedValue, boolean newValue) Since 9
+<br>» 현재 값이 expectedValue와 같다면, 아마도 atomic 연산으로 newValue로 변경하고 true를 반환한다. 메모리 영향은 VarHandle.weakCompareAndSetPlain(Object...)와
+같다 : 변수가 non-volatile, non-final하다고 간주하는 set(Object...), get(Object...)이용.
+<br>final void lazySet(boolean newValue) Since 1.6
+<br>» newValue로 값 설정. 메모리 영향은 VarHandle.setRelease(Object...)와 같다 : 값을 새로 설정하며, 이전의 읽기/쓰기들이 재배치되지 않도록 보장한다.
+<br>final boolean getAndSet(boolean newValue)
+<br>» atomic 연산으로 newValue로 설정하고, 이전 값을 반환한다. 메모리 영향은 VarHandle.getAndSet(Object...)와 같다 : 이전 값은 getVolatile(Object...)로
+가져오고, setVolatile(Object...)로 값 설정.
+<br>final boolean getPlain() Since 9
+<br>» 변수가 non-volatile인 것처럼 가져온다.
+<br>final void setPlain(boolean newValue) Since 9
+<br>» 변수가 non-volatile, non-final인 것처럼 쓴다.
+<br>final boolean getOpaque() Since 9
+<br>» 현재 값을 반환한다. 메모리 영향은 VarHandle.getOpaque(Object...)와 같다 : 프로그램 순서에 따라 접근하여 반환. 다른 쓰레드들 사이의 접근 순서는 정해지지 않는다.
+<br>final void setOpaque(boolean newValue) Since 9
+<br>» newValue로 쓴다. 메모리 영향은 VarHandle.setOpaque(Object...)와 같다 : 프로그램 순서에 따라 접근하여 쓰기. 다른 쓰레드들 사이의 접근 순서는 정해지지 않는다.
+<br>final boolean getAcquire() Since 9
+<br>» 현재 값을 반환한다. 메모리 영향은 VarHandle.getAcquire(Object...)와 같다 : 변수의 값을 반환한다. 이후의 읽기/쓰기는 이전에 실행되지 않는다.
+<br>final void setRelease(boolean newValue) Since 9
+<br>» newValue로 설정. 메모리 영향은 VarHandle.setRelease(Object...)와 같다. : 변수의 값을 설정한다. 이전의 읽기/쓰기는 이후에 실행되지 않는다.
+<br>final boolean compareAndExchange(boolean expectedValue, boolean newValue) Since 9
+<br>» 현재 값이 expectedValue와 같다면 atomic 연산으로 newValue로 설정하고 이전 값 반환. 메모리 영향은 VarHandle.compareAndExchange(Object...)와 같다 :
+expectedValue와 같다면 atomic 연산으로 newValue로 설정. 이전 값은 getVolatile(Object...)로 접근.
+<br>final boolean compareAndExchangeAcquire(boolean expectedValue, boolean newValue) Since 9
+<br>» 현재 값이 expectedValue와 같다면 atomic 연산으로 newValue로 설정하고 이전 값 반환. 메모리 영향은 VarHandle.compareAndExchangeAcquire(Object...)와
+같다 : expectedValue와 같다면 set(Object...)로 newValue 설정. 이전 값은 getAcquire(Object...)로 접근.
+<br>final boolean compareAndExchangeRelease(boolean expectedValue, boolean newValue) Since 9
+<br>» 현재 값이 expectedValue와 같다면 atomic 연산으로 newValue로 설정하고 이전 값 반환. 메모리 영향은 VarHandle.compareAndExchangeRelease(Object...)와
+같다 : expectedValue와 같다면 setRelease(Object...)로 newValue 설정. 이전 값은 get(Object...)로 접근.
+<br>final boolean weakCompareAndSetVolatile(boolean expectedValue, boolean newValue) Since 9
+<br>» 현재 값이 expectedValue와 같다면, 아마도 atomic 연산으로 newvalue 설정하고 true 반환. 메모리 영향은 VarHandle.weakCompareAndSet(Object...)와 같다
+: expectedValue와 같다면 setVolatile(Object...)로 newValue 설정. 이전 값은 getVolatile(Object...)로 접근.
+<br>final boolean weakCompareAndSetAcquire(boolean expectedValue, boolean newValue) Since 9
+<br>» 현재 값이 expectedValue와 같다면, 아마도 atomic 연산으로 newValue 설정하고 true 반환. 메모리 영향은 VarHandle.weakCompareAndSetAcquire(Object...)와
+같다 : expectedValue와 같다면 set(Object...)로 newValue 설정. 이전 값은 getAcquire(Object...)로 접근
+<br>final boolean weakCompareAndSetRelease(boolean expectedValue, boolean newValue) Since 9
+<br>» 현재 값이 expectedValue와 같다면, 아마도 atomic 연산으로 newValue 설정하고 true 반환. 메모리 영향은 VarHandle.weakCompareAndSetRelease(Object...)와
+같다 : expectedValue와 같다면 setRelease(Object...)로 newValue 설정. 이전 값은 get(Object...)로 접근.

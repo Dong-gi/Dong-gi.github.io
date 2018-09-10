@@ -1,0 +1,29 @@
+<b>1. static interface Stream.Builder&lt;T&gt; Since 1.8</b>
+<br>void accept(T t)
+<br>default Stream.Builder&lt;T&gt; add(T t)
+<br>Stream&lt;T&gt; build()
+<br>
+<br>2. IntStream flatMapToInt(Function&lt;? super T, ? extends IntStream&gt; mapper ) + long, double
+<br>&lt;A&gt; A[] toArray(IntFunction&lt;A[]&gt; generator)
+<br>» generator는 배열 크기를 먹고 배열을 뱉는 함수. 예: Person[]::new
+<br>
+<br>&lt;U&gt; U reduce(U identity, BiFunction&lt;U, ? super T, U&gt; accumulator, BinaryOperator&lt;U&gt; combiner)
+<br>» 아래와 같다.
+<br>var result = identity;
+<br>for(T element : this stream)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;result = accumulator.apply(result, element);
+<br>return result;
+<br>
+<br>&lt;R&gt; R collect(Supplier&lt;R&gt; supplier, BiConsumer&lt;R, ? super T&gt; accumulator, BiConsumer&lt;R, R&gt; combiner)
+<br>» 아래와 같다
+<br>var result = supplier.get();
+<br>for(T element : this stream)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;accumulator.accept(result, element);
+<br>return result;
+<br>
+<br>&lt;R, A&gt; collect(Collector&lt;? super T, A, R&gt; collector)
+<br>Optional&lt;T&gt; min(Comparator&lt;? super T&gt; comparator) + max
+<br>
+<br>3. static &lt;T&gt; Stream&lt;T&gt; ofNullable(T t)
+<br>@SafeVarargs static &lt;T&gt; Stream&lt;T&gt; of(T... values)
+<br>참고 : DoubleStream »

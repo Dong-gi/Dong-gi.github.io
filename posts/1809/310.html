@@ -1,0 +1,6 @@
+1. 인자 두개를 먹고 아무것도 뱉지 않는 소비자.
+<br>
+<br>2. void accept(T t, U u) : 적당한 동작 수행
+<br>
+<br>3. default BiConsumer&lt;T, U&gt; andThen(BiConsumer&lt;? super T, ? super U&gt; after) : 현재 소비자가 작업을 마치면 after가 실행되는
+새로운 소비자 반환.

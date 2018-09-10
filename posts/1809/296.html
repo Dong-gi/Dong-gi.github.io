@@ -1,0 +1,23 @@
+1. 제한된 수의 접근 권한을 acquire()로 획득, release()로 반환.
+<br>» fairness : acquire()호출 순서대로 권한 획득.
+<br>
+<br>2. 생성자
+<br>public Semaphore(int permits) : nonfair
+<br>public Semaphore(int permits, boolean fair)
+<br>
+<br>3. void acquire()
+<br>void acquireUninterruptibly()
+<br>boolean tryAcquire()
+<br>boolean tryAcquire(long timeout, TimeUnit unit)
+<br>void release()
+<br>void acquire(int permits)
+<br>void acquireUninterruptibly(int permits)
+<br>boolean tryAcquire(int permits)
+<br>boolean tryAcquire(int permits, long timeout, TimeUnit unit)
+<br>void release(int permits)
+<br>int availablePermits()
+<br>int drainPermits() : 가용한 모든 권한을 얻는다. 만약 음수라면 release하여 0으로 맞춘다.
+<br>boolean isFair()
+<br>final int getQueueLength()
+<br>protected Collection&lt;Thread&gt; getQueuedThreads()
+<br>protected void reducePermits(int recudtion)

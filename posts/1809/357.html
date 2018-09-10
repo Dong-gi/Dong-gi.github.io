@@ -1,0 +1,62 @@
+<b>1. static interface DoubleStream.Builder extends DoubleConsumer Since 1.8</b>
+<br>default DoubleStream.Builder add(double t)
+<br>DoubleStream build()
+<br>
+<br>2. DoubleStream filter(DoublePredicate predicate) : 솎아내기
+<br>DoubleStream map(DoubleUnaryOperator mapper) : 각 원소에 연산 적용
+<br>&lt;U&gt; Stream&lt;U&gt; mapToObj(DoubleFunction&lt;? extends U&gt; mapper)
+<br>IntStream mapToInt(DoubleToIntFunction maper)
+<br>LongStream mapToLong(DoubleToLongFunction mapper)
+<br>DoubleStream flatMap(DoubleFunction&lt;? extends DoubleStream&gt; mapper)
+<br>» map + each mapped stream is closed after its contents have been placed into this stream
+<br>DoubleStream distinct() : 중복 원소 제거
+<br>DoubleStream sorted() : 정렬
+<br>DoubleStream peek(DoubleConsumer action) : 각 원소를 소비하고 그대로 반환. 디버그용.
+<br>DoubleStream limit(long maxSize) : 뒷부분 자르기
+<br>DoubleStream skip(long n) : 처음 n개 제거
+<br>default DoubleStream takeWhile(DoublePredicate predicate) Since 9
+<br>» 정렬된 스트림의 경우 조건을 만족하는 최장 길이 접두 부분을 반환.
+<br>» 정렬되지 않은 경우, 조건을 만족하는 원소들의 부분 집합 반환. 반환되는 부분 집합은 해당 원소들을 모두 포함할수도, 공집합일수도 있다.
+<br>default DoubleStream dropWhile(DoublePredicate predicate) Since 9
+<br>void forEach(DoubleConsumer action) : 스트림 원소 순서와 실행 순서 다를 수 있음.
+<br>void forEachOrdered(DoubleConsumer action) : 스트림 원소 순서와 실행 순서가 같음을 보장.
+<br>double[] toArray()
+<br>double reduce(double identity, DoubleBinaryOperator op)
+<br>» 아래와 같다.
+<br>var result = identity;
+<br>for(var element : this stream)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;result = op.applyAsDouble(result, element);
+<br>return result;
+<br>OptionalDouble reduce(DoubleBinaryOperator op)
+<br>» 아래와 같다.
+<br>var foundAny = false;
+<br>double result = null;
+<br>for(var element : this stream) {
+<br>&nbsp;&nbsp;&nbsp;&nbsp;if(!foundAny) {
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;foundAny = true;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result = element;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;} else
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result = op.applyAsDouble(result, element);
+<br>}
+<br>return foundAny? OptionalDouble.of(result) : OptionalDouble.empty();
+<br>&lt;R&gt; R collect(Supplier&lt;R&gt; supplier, ObjDoubleConsumer&lt;R&gt; accumulator, BiConsumer&lt;R, R&gt; combiner)
+<br>» Collection, StringBuilder처럼 가변적인 컨테이너에 자료를 담을 때 사용.
+<br>예. 전체 원소의 문자열 표현을 하나로 모으기.
+<br>var strings = stream.collect(() -&gt; new ArrayList&lt;String&gt;(), (c, e) -&gt; c.add(e.toString()), (c1, c2) -&gt;
+c1.addAll(c2));
+<br>var strings = stream.map(Object::toString).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+<br>double sum()
+<br>OptionalDouble min(), max(), average(), findFirst(), findAny()
+<br>long count()
+<br>DoubleSummaryStatistics summaryStatistics()
+<br>boolean anyMatch(DoublePredicate predicate), allMatch(DoublePredicate predicate), noneMatch(DoublePredicate predicate)
+<br>Stream&lt;Double&gt; boxed()
+<br>
+<br>3. static DoubleStream.Builder builder()
+<br>static DoubleStream empty()
+<br>static DoubleStream of(double t)
+<br>static DoubleStream of(double... values)
+<br>static DoubleStream iterate(double seed, DoubleUnaryOperator f) : 무한 스트림 생성; seed, f(seed), f(f(seed)), ...
+<br>static DoubleStream iterate(double seed, DoublePredicate hasNext, DoubleUnaryOperator next) Since 9
+<br>static DoubleStream generate(DoubleSupplier s)
+<br>static DoubleStream concat(DoubleStream a, DoubleStream b)

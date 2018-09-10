@@ -1,0 +1,25 @@
+<ol>
+    <li>java.util.concurrent 패키지의 기본적인 Executor 구현.</li>
+    <li>void shutdown()
+        <br>» 추가적인 Runnable을 받지 않는다. 이전에 추가된 것은 마저 실행한다.</li>
+    <li>List&lt;&Runnable&gt; shutdownNow()
+        <br>» 진행중인 모든 작업을 중지. 실행 대기중인 일들은 반환.</li>
+    <li>boolean isShutdown()</li>
+    <li>boolean isTerminated() : 모든 일들이 끝났는지 여부</li>
+    <li>boolean awaitTermination(long timeout, TimeUnit unit)
+        <br>» shutdown 요청 후 모든 작업이 종료되기를 기다리며 블록한다. timeout 발생한 경우 false 반환.</li>
+    <li>&lt;T&gt; Future&lt;T&gt; submit(Callable&lt;T&gt; task)
+        <br>» 결과를 반환하는 작업을 등록한다. 작업이 성공적으로 종료되면 Future::get으로 결과를 확인할 수 있다.</li>
+    <li>&lt;T&gt; Future&lt;T&gt; submit(Runnable atask, T result)
+        <br>» 작업을 등록한다. 작업이 성공적으로 종료되면 Future::get으로 result를 얻을 수 있다.</li>
+    <li>Futur&lt;?&gt; submit(Runnable task)
+        <br>» 작업을 등록한다. 작업이 성공적으로 종료되면 Future::get은 null을 반환한다.</li>
+    <li>&lt;T&gt; List&lt;Future&lt;T&gt;&gt; invokeAll(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks)
+        <br>» 모든 작업이 종료되면 Future 리스트를 반환한다. 따라서 리스트 안의 각 Future::isDone은 true다.</li>
+    <li>&lt;T&gt; List&lt;Future&lt;T&gt;&gt; invokeAll(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks, long timout,
+        TimeUnit unit)
+        <br>» 모든 작업이 종료되거나 timeout이 발생하면 반환. 리스트 안의 각 Future::isDone은 true. timeout 발생 시 완료되지 않은 작업들은 취소된다.</li>
+    <li>&lt;T&gt; T invokeAny(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks)
+        <br>» 성공적으로 완료된 첫 작업의 결과를 반환한다. 완료되지 않은 작업들은 취소된다.</li>
+    <li>&lt;T&gt; T invokeAny(Collection&lt;? extends Callable&lt;&gt;&gt; tasks, long timeout, TimeUnit unit)</li>
+</ol>
