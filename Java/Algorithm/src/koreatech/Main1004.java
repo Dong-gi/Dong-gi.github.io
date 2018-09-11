@@ -11,12 +11,9 @@ public class Main1004 {
         while(testCase-- > 0) {
             String numberString = scanner.nextLine();
             int reverse = Integer.parseInt(new StringBuilder(numberString).reverse().toString());
-            String sumString = "" + (Integer.parseInt(numberString) + reverse);
-            if(sumString.equals(new StringBuilder(sumString).reverse().toString())) {
-                System.out.println("yes");
-            } else {
-                System.out.println("no");
-            }
+            String sumString = String.valueOf(Integer.parseInt(numberString) + reverse);
+            System.out.println(sumString.equals(new StringBuilder(sumString).reverse().toString())?
+                                    "yes" : "no");
         }
     }
 

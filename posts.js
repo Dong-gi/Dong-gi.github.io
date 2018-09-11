@@ -373,7 +373,19 @@ const posts = {
         { "filename": "posts/1809/371.html", "category": "Java/JavaSE/java.util.zip", "title": "class ZipFile implements Closeable Since 1.1", "description": "Java » JavaSE » java.base(module) Since 9 » java.util.zip(package) Since 1.1", "date": "2018-09-09 12:15:31" },
         { "filename": "posts/1809/372.html", "category": "Front/CSS", "title": "CSS", "description": "Front » CSS : Cascading Style Sheets", "date": "2018-09-09 15:26:56" },
         { "filename": "posts/1809/373.html", "category": "Front/HTML", "title": "HTML", "description": "Front » HTML : Hyper Text Markup Language", "date": "2018-09-09 15:47:25" },
-        { "filename": "posts/1809/372.html", "category": "Front/CSS", "title": "", "description": "Java » JavaSE » java.base(module) Since 9 » java.util.zip(package) Since 1.1", "date": "2018-09-08 21:24:58" },
+        { "filename": "posts/1809/374.html", "category": "Algorithm/koreatech", "title": "1000 : a+b", "description": "Algorithm » http://judge.koreatech.ac.kr", "date": "2018-09-11 22:25:52" },
+        { "filename": "posts/1809/375.html", "category": "Algorithm/koreatech", "title": "1001 : KOREATECH", "description": "Algorithm » http://judge.koreatech.ac.kr", "date": "2018-09-11 22:31:37" },
+        { "filename": "posts/1809/376.html", "category": "Algorithm/koreatech", "title": "1002 : 너의 학번을 알려주마", "description": "Algorithm » http://judge.koreatech.ac.kr", "date": "2018-09-11 22:35:08" },
+        { "filename": "posts/1809/377.html", "category": "Algorithm/koreatech", "title": "1003 : 0을 만들자 - Small", "description": "Algorithm » http://judge.koreatech.ac.kr", "date": "2018-09-11 22:40:54" },
+        { "filename": "posts/1809/378.html", "category": "Algorithm/koreatech", "title": "1004 : 뒤집어 더하기", "description": "Algorithm » http://judge.koreatech.ac.kr", "date": "2018-09-11 22:50:08" },
+        { "filename": "posts/1809/379.html", "category": "Algorithm/koreatech", "title": "1005 : 0을 만들자 - Large", "description": "Algorithm » http://judge.koreatech.ac.kr", "date": "2018-09-11 22:54:08" },
+        { "filename": "posts/1809/380.html", "category": "Algorithm/koreatech", "title": "1006 : 거스름돈", "description": "Algorithm » http://judge.koreatech.ac.kr", "date": "2018-09-11 22:56:35" },
+        { "filename": "posts/1809/381.html", "category": "Algorithm/koreatech", "title": "1007 : 유일한 수", "description": "Algorithm » http://judge.koreatech.ac.kr", "date": "2018-09-11 22:59:41" },
+        { "filename": "posts/1809/382.html", "category": "Algorithm/koreatech", "title": "1008 : 순환 소수", "description": "Algorithm » http://judge.koreatech.ac.kr", "date": "2018-09-11 23:01:12" },
+        { "filename": "posts/1809/383.html", "category": "Algorithm/koreatech", "title": "1009 : Endian", "description": "Algorithm » http://judge.koreatech.ac.kr", "date": "2018-09-11 23:04:06" },
+        { "filename": "posts/1809/384.html", "category": "Algorithm/koreatech", "title": "1010 : 접두 소수", "description": "Algorithm » http://judge.koreatech.ac.kr", "date": "2018-09-11 23:20:44" },
+        { "filename": "posts/1809/385.html", "category": "Algorithm/koreatech", "title": "1011 : 징검다리", "description": "Algorithm » http://judge.koreatech.ac.kr", "date": "2018-09-11 23:32:16" },
+        { "filename": "posts/1809/38.html", "category": "Algorithm/koreatech", "title": "", "description": "Algorithm » http://judge.koreatech.ac.kr", "date": "" },
     ],
     "tree": {},
     "contents": [],
@@ -383,7 +395,7 @@ const posts = {
 
 /*
         <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/concurrent/.java" lan="java">예시 코드 »</button>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Algorithm/src/koreatech/.java" lan="java">예시 코드 »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Algorithm/src/koreatech/Main10.java" lan="java">예시 코드 »</button>
         <a role="button" target="_blank" class="btn btn-info btn-sm" href=""></a>
         <img class="rounded mx-auto d-block" alt="" src="imgs">
  */
