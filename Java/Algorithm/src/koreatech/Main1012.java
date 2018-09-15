@@ -1,8 +1,6 @@
 package koreatech;
 
-import java.util.Scanner;
-import java.util.stream.Collectors;
-import java.util.Arrays;
+import java.util.*;
 
 public class Main1012 {
 

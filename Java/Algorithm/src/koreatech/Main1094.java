@@ -1,6 +1,6 @@
 package koreatech;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class Main1094 {
     public static void main(String[] args) {
