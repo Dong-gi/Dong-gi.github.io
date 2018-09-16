@@ -24,8 +24,7 @@ public class Main1010 {
 
     private static void findPrimesTo(int size) {
         isPrime = new boolean[size+1];
-        for (int i = 2; i <= size; i++)
-            isPrime[i] = true;
+        Arrays.fill(isPrime, 2, isPrime.length-1, true);
         for (int i = 3; i*i <= size; i += 2) {
             try {
                 if (isPrime[i])
