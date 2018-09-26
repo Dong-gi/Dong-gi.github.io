@@ -1,6 +1,7 @@
 package koreatech;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main1012 {
 
