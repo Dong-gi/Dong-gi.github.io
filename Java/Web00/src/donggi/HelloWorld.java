@@ -12,12 +12,10 @@ public class HelloWorld extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=utf-8");
         var w = resp.getWriter();
-        w.println("<html lnag=\"ko\">");
-        w.println("<head>");
-        w.println("    <meta charset=\"utf-8\">");
-        w.println("</head>");
+        w.println("<html lnag=\"kor\">");
+        w.println("<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/></head>");
         w.println("<body>");
-        w.println("    <p>Hello World!</p>");
+        w.println("<p>Hello World!</p>");
         w.println("</body>");
         w.println("</html>");
     }

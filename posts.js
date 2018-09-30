@@ -450,9 +450,9 @@ const posts = {
         { "filename": "posts/1809/449.html", "category": "Book", "title": "인생의 모든 의미", "description": "Book", "date": "2018-09-16 23:49:00" },
         { "filename": "posts/1809/450.html", "category": "Book", "title": "쇼펜하우어, 돌이 별이 되는 철학", "description": "Book", "date": "2018-09-20 22:25:32" },
         { "filename": "posts/1809/451.html", "category": "Java/JavaFX", "title": "JavaFX", "description": "Java » JavaFX", "date": "2018-09-25 14:18:07" },
-        { "filename": "posts/1809/45.html", "category": "Java/JavaFX", "title": "", "description": "Java » JavaFX", "date": "" },
+        { "filename": "posts/1809/452.html", "category": "Java/JavaFX", "title": "", "description": "Java » JavaFX", "date": "" },
         { "filename": "posts/1809/45.html", "category": "Java/Servlet", "title": "", "description": "Java » Servlet", "date": "" },
-        { "filename": "posts/1809/446.html", "category": "Java/Servlet", "title": "개발환경", "description": "Java » Servlet", "date": "2018-09-16 22:27:21" },
+        { "filename": "posts/1809/446.html", "category": "Java/Servlet", "title": "JSP&Servlet", "description": "Java » Servlet", "date": "2018-09-16 22:27:21" },
     ],
     "tree": {},
     "contents": [],
@@ -463,6 +463,7 @@ const posts = {
 /*
         <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/concurrent/.java" lan="java">예시 코드 »</button>
         <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Algorithm/src/koreatech/Main10.java" lan="java">예시 코드 »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Web00/src/donggi/.java" lan="java"> »</button>
         <a role="button" target="_blank" class="btn btn-info btn-sm" href=""></a>
-        <img class="rounded mx-auto d-block" alt="" src="imgs">
+        <img class="rounded mx-auto d-block" alt="" src="imgs/">
  */

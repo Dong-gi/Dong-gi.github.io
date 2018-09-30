@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
+  <context-param>
+    <param-name>name</param-name>
+    <param-value>Context Param</param-value>
+  </context-param>
+  <servlet>
+    <servlet-name>hello-servlet</servlet-name>
+    <servlet-class>donggi.HelloWorld</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>hello-servlet</servlet-name>
+    <url-pattern>/hello</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>hello5-servlet</servlet-name>
+    <servlet-class>donggi.Hello2</servlet-class>
+    <init-param>
+      <param-name>name</param-name>
+      <param-value>Default Name</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>hello5-servlet</servlet-name>
+    <url-pattern>/hello5</url-pattern>
+  </servlet-mapping>
+  <filter>
+    <filter-name>hello-filter</filter-name>
+    <filter-class>donggi.HelloFilter</filter-class>
+    <init-param>
+      <param-name>log_file_name</param-name>
+      <param-value>C:/logs/hello_filter.log</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>hello-filter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <url-pattern>*.jsp</url-pattern>
+    <servlet-name>hello-servlet</servlet-name>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>ERROR</dispatcher>
+  </filter-mapping>
+</web-app>
