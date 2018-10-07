@@ -1,0 +1,23 @@
+WebServlet 애너테이션으로 배포설명자 web.xml 대신 간결하게 서블릿을 기술할 수 있다.
+<button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Web01/src/donggi/WebServletExample.java" lan="java">value 속성 예시 »</button>
+<button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Web01/src/donggi/WebServletExample2.java" lan="java">initParams 예시 »</button><br>
+* name : 배포설명자의 servlet-name에 해당.<br>
+* urlPatterns : 배포설명자의 url-pattern들의 배열에 해당.<br>
+* value : urlPatterns 요소와 동일하게 동작하기 때문에, 서블릿 매핑만을 기술할 거라면 편하게 WebServlet("/hello")처럼 기술할 수 있다.<br>
+* initParams : 배포설명자의 init-param들의 배열에 해당. GenericServlet::getInitParameter로 참조할 수 있으며, 이 메서드는 ServletConfig::getInitParameter를 호출한다. ServletConfig는 getServletContext 메서드로 참조할 수 있다.<br><br>
+
+아래는 비교를 위한 배포설명자 예시.
+<pre>
+&lt;servlet&gt;
+    &lt;servlet-name&gt;hello5-servlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;donggi.Hello2&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;name&lt;/param-name&gt;
+        &lt;param-value&gt;Default Name&lt;/param-value&gt;
+    &lt;/init-param&gt;
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;hello5-servlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/hello5&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+</pre>

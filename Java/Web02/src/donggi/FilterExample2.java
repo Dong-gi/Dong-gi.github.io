@@ -11,15 +11,19 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
 
-@WebFilter(filterName = "hello-filter2", urlPatterns = { "/*" }, initParams = {
-        @WebInitParam(name = "log_file_name", value = "C:/logs/hello_filter2.log") })
-public class HelloFilter2 implements Filter {
+@WebFilter(
+        filterName = "filter-example2",
+        urlPatterns = { "/*" },
+        initParams = {
+                @WebInitParam(name = "name2", value = "value2")
+        })
+public class FilterExample2 implements Filter {
 
-    public static final String CLASS_NAME = HelloFilter2.class.getCanonicalName();
+    public static final String CLASS_NAME = FilterExample2.class.getCanonicalName();
 
     @Override
     public void init(FilterConfig config) throws ServletException {
-        System.out.println(CLASS_NAME + " >> " + config.getInitParameter("log_file_name"));
+        System.out.println(CLASS_NAME + " >> " + config.getInitParameter("name2"));
     }
 
     @Override

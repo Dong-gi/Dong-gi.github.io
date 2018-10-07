@@ -2,14 +2,18 @@ package donggi;
 
 import java.io.IOException;
 
-import javax.servlet.*;
+import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
-public class ServletLifeCycle implements Servlet {
+public class LifeCycle implements Servlet {
 
     @Override
     public void destroy() {
         // TODO Auto-generated method stub
-
+        
     }
 
     @Override
@@ -25,15 +29,15 @@ public class ServletLifeCycle implements Servlet {
     }
 
     @Override
-    public void init(ServletConfig arg0) throws ServletException {
+    public void init(ServletConfig config) throws ServletException {
         // TODO Auto-generated method stub
-
+        
     }
 
     @Override
-    public void service(ServletRequest arg0, ServletResponse arg1) throws ServletException, IOException {
+    public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
         // TODO Auto-generated method stub
-
+        
     }
 
 }

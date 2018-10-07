@@ -1,0 +1,18 @@
+<button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Web01/src/donggi/CallOther.java" lan="java">CallOther »</button><br>
+1. 다른 페이지로 이동<br>
+1-1. Refresh는 응답 페이지를 보여준 뒤 클라이언트가 나중에 다시 요청하도록 한다.<br>
+1-2. Redirect는 응답 페이지 없이 바로 다른 url을 요청하도록 한다.<br>
+따라서 redirect의 경우에는 getWriter()를 이용하지 말아야 한다.<br>
+» Redirect에 매개변수를 보내려면 URLEncoder.encode("value", "utf-8")를 이용<br><br>
+
+2. 다른 페이지 호출<br>
+2-1. Forward<br>
+호출된 페이지로 제어를 넘기기 때문에 해당 페이지가 종료되도 제어가 되돌아오지 않는다.<br>
+따라서 forward를 호출하는 측은 getWriter()를 이용하지 말아야 한다.<br>
++ 때문에 호출자 자신과 동일한 페이지/서블릿을 호출할 수 있다.<br>
+forward는 서버 내에서 요청/응답 객체를 넘겨주므로 별도의 인코딩 없이 텍스트나 다른 객체를 추가하여 넘겨줄 수 있다.<br><br>
+
+2-2. Include<br>
+Forward와 달리 호출된 페이지가 종료되면 제어가 돌아온다.<br>
++ 때문에 호출자와 동일한 페이지/서블릿을 호출할 수 없다.<br>
+호출된 페이지와 호출한 페이지 사이의 출력 HTML 코드 조각 순서를 맞추기 위해 flush()를 적절히 호출해줘야 한다.<br>
