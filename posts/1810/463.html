@@ -1,0 +1,25 @@
+1. if문, while문, do-while문, for문, switch문<br>
+- switch 조건으로 변수가 아닌 일반 표현식도 가능<br>
+<pre>
+outerLoop:
+for(let i=0; ; ++i) {
+    console.log(i);
+    if(i > 10)
+        break outerLoop;
+    else
+        continue outerLoop;
+}
+</pre><br>
+
+2. for-in문<br>
+- 객체 프로퍼티 순회<br>
+for(let attr in obj) {}<br><br>
+
+3. for-of문<br>
+- 배열, Iterable 객체의 각 요소 순회<br>
+for(name of obj) {}<br><br>
+
+4. 제어문<br>
+- continue, break, return<br><br>
+
+5. with(obj) : 스코프 고정

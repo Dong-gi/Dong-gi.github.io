@@ -1,0 +1,38 @@
+<ul>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/Type.js" lan="javascript">Type.js »</button>
+    <li>식별자 : '_', '$' 허용.</li>
+
+    <li>변수 선언</li>
+    - 자바스크립트의 변수는 타입 체크 대상이 아니다.<br>
+    - 하지만 typeof 연산자로 타입을 가져와 이용할 수는 있다.
+    <ul>
+        <li>let 식별자;</li>
+        - 일반적인 지역변수와 동일. 선언된 순간부터 해당 코드 블록이 끝날때까지 유효.<br>
+        - 중첩된 코드 블록에서 같은 식별자의 변수를 선언하여 밖의 변수를 가릴 수 있다.
+
+        <li>var 식별자;</li>
+        - 선언 전에 참조하는 경우, 선언을 끌어올려 undefined를 할당해준다.<br>
+        - 함수 스코프에서 동작하지만, 중첩된 코드 블록에서 재정의하여 가릴 수 없다.
+    </ul>
+
+    <li>상수 선언 : const 식별자;</li>
+
+    <li>타입</li>
+    - Object, String, Number, Boolean, Undefined, Null, Symbol<br>
+    » Boolean() : "", 0, NaN, null, undefined == false, 그 외 == true<br>
+    따라서 (null == undefined) === true<br>
+    » Number(), parseInt(), parseFloat(), number.toString(radix)<br>
+    » 문자 리터럴 : \xFF, \uFFFF<br>
+    » 문자열 템플릿 ``<br>
+    » Symbol<br>
+    ES6부터 도입된 타입. 그 무엇과도 같지 않은 유일한 토큰을 나타낸다.<br>
+    const SYMBOL = Symbol();<br>
+    » Object : {}<br>
+    - 객체는 SIZE 심볼을 갖는다.<br>
+    - delete 키워드로 프로퍼티 제거 가능.
+
+    <li>배열 : []</li>
+    - 자바스크립트는 모두 동적 배열. 또, 변수와 마찬가지로 타입을 가리지 않는다.
+    - length 프로퍼티에 개수 저장.
+
+</ul>

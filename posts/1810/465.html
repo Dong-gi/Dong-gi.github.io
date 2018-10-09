@@ -1,0 +1,22 @@
+1. 함수는 arguments 객체를 통해 매개변수에 접근.(람다는 불가능)<br>
+<br>
+2. 오버로딩 불가. 매개변수 길이 불일치해도 됨.<br>
+<br>
+3. 함수의 기본 반환값은 undefined<br>
+<br>
+4. 매개변수에 기본값 설정 가능.<br>
+<pre>
+// 함수를 사용하기 전으로 함수 선언이 위로 끌어올려져 사용 가능.
+hello.call({name: "Donggi"}, "2018-08-08"); // call(호출자, 매개변수)
+
+hello.apply({name: "Donggi"}, ["2018-08-08"]); // apply(호출자, 매개변수 배열)
+
+// 확산 연산자 ...을 이용하면 call로 apply와 같은 효과를 낼 수 있다.
+
+let helloKim = hello.bind({name: "Kim"}); // 함수 호출자 영구 고정
+helloKim();
+
+function hello(d = "2018-08-12") {
+    console.log(`[${d}]Hello, ${this.name}.`);
+}
+</pre>

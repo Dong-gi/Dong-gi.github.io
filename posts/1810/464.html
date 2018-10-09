@@ -1,0 +1,28 @@
+1. 비트 연산자 : ~, &amp;, |, ^, &lt;&lt;, &gt;&gt;, &gt;&gt;&gt;<br><br>
+
+2. Boolean 연산자 : !, &amp;&amp;, ||<br>
+- &amp;&amp;, ||는 short circuit 연산.<br>
+var n = (1, 2, 3, 4, 5); // ,연산자 : 순서대로 평가하여 마지막 표현식의 결과가 할당됨<br>
+n === 5; // 일치 연산자. ture<br>
+NaN === NaN; // false. NaN은 특이함<br>
+<br>
+typeof null === "object" // 특이함<br>
+typeof Symbol() === "symbol"<br><br>
+
+3. python과 비슷한 기능을 하는 Destructuring Assignment<br>
+<pre>
+const obj = { a:1, b:2 };
+let {a, b, c} = obj;
+console.log([a, b, c]);
+console.log(({c, b, a} = obj) === obj);
+
+function doSomething({a, b, arr}) {
+    console.log([a, b, arr]);
+}
+
+let arr = [1, 2, 3, 4, 5];
+let a, b;
+[a, b, ...arr] = arr;
+[a, b] = [b, a];
+doSomething({a: a, b: b, arr: arr});
+</pre>

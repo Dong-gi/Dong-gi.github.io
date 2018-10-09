@@ -22,7 +22,8 @@ $(() => {
             // 모든 컨텐츠 골격 생성
             let content = $('<div></div>').addClass('jumbotron').attr('id', post.id);
             $(content).html('<details><summary><a data-toggle="popover" data-trigger="hover" title="' +
-                (post.category + '@' + post.date.substring(0, 10)) + '" data-content="' + post.description + '">' + post.title +
+                (post.category + '@' + post.date.substring(0, 10)) + '" data-content="' + post.description + '">' +
+                post.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') +
                 ((new Date().getTime() - new Date(post.date).getTime()) <= 604800000 ?
                     '<span class="badge badge-pill badge-primary">New</span>' : '') + '</a></summary>' +
                 '<form><div class="input-group mb-3">' +

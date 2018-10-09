@@ -1,0 +1,8 @@
+<ul>
+    두 쓰레드가 같은 시점에 값을 서로 교환하도록 해준다.
+    <li>public Exchanger()</li>
+    <li>V exchange(V x) throws InterruptedException</li>
+    다른 쓰레드가 같은 지점에 도달하기까지 기다렸다가, 서로 값을 교환한다.
+    <li>V exchange(V x, long timeout, TimeUnit unit) throws InterruptedException, TimeoutException</li>
+    timeout : 최대 대기 시간.
+</ul>
