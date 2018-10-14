@@ -21,11 +21,10 @@ $(() => {
 
             // 모든 컨텐츠 골격 생성
             let content = $('<div></div>').addClass('jumbotron').attr('id', post.id);
-            $(content).html('<details><summary><a data-toggle="popover" data-trigger="hover" title="' +
-                (post.category + '@' + post.date.substring(0, 10)) + '" data-content="' + post.description + '">' +
-                post.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') +
+            $(content).html('<details><summary>' +
+                post.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '@' + post.date +
                 ((new Date().getTime() - new Date(post.date).getTime()) <= 604800000 ?
-                    '<span class="badge badge-pill badge-primary">New</span>' : '') + '</a></summary>' +
+                    '<span class="badge badge-pill badge-primary">New</span>' : '') + '</summary>' +
                 '<form><div class="input-group mb-3">' +
                 '<input type="text" class="form-control" placeholder="최대 100자까지 가능" aria-describedby="basic-addon2">' +
                 '<div class="input-group-append">' +

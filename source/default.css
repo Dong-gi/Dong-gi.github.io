@@ -6,7 +6,10 @@ a { color: black; }
 
 img { max-width: 100%; }
 
-summary a { font-size: 1.5em; }
+summary {
+    font-size: 1.1em;
+    font-weight: 500;
+}
 
 details > p { margin-top: 1rem; }
 

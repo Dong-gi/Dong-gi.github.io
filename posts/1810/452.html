@@ -1,0 +1,149 @@
+<ul>
+    <li>기본 자료형</li>
+    1. 정수 char(1byte), short(2bytes), int(short &lt;= int &lt;= long), long(4bytes) // unsigned 키워드로 non-negative 변수로 이용 가능.<br>
+    2. 부동소수 float(4bytes), double(8bytes), long double(10bytes)<br>
+    3. void : 반환 타입 선언 | 매개변수 선언 | void 포인터<br>
+    
+    <li>리터럴</li>
+    1. unsigned : 123U, long : 123L, 16진수 : 0xFFFF, 8진수 : 07777<br>
+    2. 지수 표기 : 1.23E, float : 1.F
+
+    <li>상수</li>
+    1. const float PI = 3.141592F<br>
+    2. #define PI 3.141592 // 컴파일러가 단순 치환 작업함
+    
+    <li>메모리에 따른 변수 종류</li>
+    1. auto : 모든 지역변수 기본값("int a;"와 "auto int a;"는 같다). 블록이 끝나면 소멸<br>
+    2. register : RAM이 아닌 레지스터에 변수 생성.<br>
+    3. static : 처음 호출 시 한번만 초기화되고 프로그램 종료시까지 유지<br>
+    4. extern : 외부 파일 전역 변수 참조
+    
+    <li>연산자</li>
+    1. 산술 : +, -, *, /, %, ++, --<br>
+    2. 관계 : ==, !=, &gt;, &gt;=, &lt;, &lt;=<br>
+    3. 논리 : &amp;&amp;, ||, !<br>
+    4. 비트 : &amp;, |, ^(xor), ~(not), &lt;&lt;, &gt;&gt;
+    <button type="button" onclick="javascript:showCode('Concepts/not_operator.c', 'c');" class="btn btn-primary btn-sm">
+                View Code : not 연산자 &raquo;
+            </button>
+            <br>
+            <br>5. sizeof(), &amp;(address), *(pointer), ?:(condition), (형변환), [], -&gt;
+        </td>
+    </tr>
+    <tr class="con-lv-3" con-title="구문">
+        <li>구문</li>
+    </tr>
+    <tr>
+        <td>
+            1. if ~ else if ~ else // 0만 아니면 다 true
+            <br>
+            <br>2. switch : 정수 타입만 가능
+            <br>
+            <br>3. while, for, do ~ while
+        </td>
+    </tr>
+    <tr class="con-lv-3" con-title="매개변수 전달">
+        <li>매개변수 전달</li>
+    </tr>
+    <tr>
+        <td>
+            1. call by value : 값의 복사에 의한 인자 전달
+            <br>
+            <br>2. call by reference : 주소 복사에 의한 인자 전달
+        </td>
+    </tr>
+    <tr class="con-lv-3" con-title="변수">
+        <li>변수</li>
+    </tr>
+    <tr>
+        <td>
+            1. 지역변수는 자동 초기화되지 않는다.
+            <br>
+            <br>2. 전역변수 초기화값 : 0, '\0', 0.f, 0., NULL
+        </td>
+    </tr>
+    <tr class="con-lv-3" con-title="배열">
+        <li>배열</li>
+    </tr>
+    <tr>
+        <td>
+            1. type 식별자[size];
+            <br>
+            <br>2. int arr[] = {1, 2, 3};
+            <br>
+            <br>3. int arr[3][3];
+            <br>
+            <br>4. 배열 이름은 그 시작 주소를 가리키는 포인터다.
+            <button type="button" onclick="javascript:showCode('Concepts/array.c', 'c');" class="btn btn-primary btn-sm">
+                View Code : 배열 &raquo;
+            </button>
+        </td>
+    </tr>
+    <tr class="con-lv-3" con-title="포인터">
+        <li>포인터</li>
+    </tr>
+    <tr>
+        <td>
+            1. 포인터에 대한 ++, -- 연산은 sizeof()값만큼의 주소 이동이다.
+            <br>
+            <br>2. int *arr[3]; // 포인터의 배열
+            <br>
+            <br>3. int (*arr)[]; // 배열의 포인터
+            <button type="button" onclick="javascript:showCode('Concepts/pointer.c', 'c');" class="btn btn-primary btn-sm">
+                View Code : 포인터 &raquo;
+            </button>
+        </td>
+    </tr>
+    <tr class="con-lv-3" con-title="문자열">
+        <li>문자열</li>
+    </tr>
+    <tr>
+        <td>
+            1. 문자열은 '\0'으로 끝난다.
+            <br>
+            <br>2. char str[] = "Hello World";
+            <br>
+            <br>3. char *str = "Hello World";
+            <br>
+            <br>4. string.h :: strcpy(), strcat(), strlen(), strcmp(), strchr() : index of a char, strstr() :
+            index of a string
+        </td>
+    </tr>
+    <tr class="con-lv-3" con-title="구조체">
+        <li>구조체</li>
+    </tr>
+    <tr>
+        <td>
+            1. struct [식별자] { 멤버변수 목록 }
+            <br>
+            <br>2. 구조체 멤버 접근은 . 또는 ->(포인터)로 이루어진다.
+            <br>
+            <br>3. 비트필드 : 각 멤버의 비트 수를 제한할 수 있다.
+            <br>&raquo; struct { type 식별자 : 비트수; }
+        </td>
+    </tr>
+    <tr class="con-lv-3" con-title="typedef">
+        <li>typedef</li>
+    </tr>
+    <tr>
+        <td>
+            1. 기정의된 타입을 다른 이름으로 이용할 수 있게한다.
+            <br>&raquo; typedef unsigned int UINT_32
+        </td>
+    </tr>
+    <tr class="con-lv-3" con-title="전처리기">
+        <li>전처리기</li>
+    </tr>
+    <tr>
+        <td>
+            1. 전처리기 : #include, #define, #undef, #ifdef, #ifndef, #if, #elif, #else, #endif, #pragma
+            <br>
+            <br>2. 매크로 : __DATE__, __TIME__, __FILE__, __LINE__
+            <br>
+            <br>3. 매크로 : #define name(params) (처리)
+            <br>
+            <br>4. #(stringize), ##(token pasting) : #define STRCAT(str1, str2) \
+            <br>printf("str1 : " #str1 ", str2 : " #str2 ", result : %s", str1##str2)
+        </td>
+    </tr>
+</ul>
