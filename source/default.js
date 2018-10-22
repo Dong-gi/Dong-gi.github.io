@@ -151,9 +151,9 @@ function updateDropupAuto() {
     let pos = (document.scrollTop || window.pageYOffset) - (document.clientTop || 0);
     $('#dropup-posts button').text(posts.list[posts.visible.length - 1].title);
     for (let i = posts.visible.length - 1; i >= 0; --i) {
-        if (pos <= $(posts.contents[posts.visible[i]]).offset().top) {
-            $('#dropup-posts button').text(posts.list[posts.visible[i]].title);
-            let paths = posts.list[posts.visible[i]].category.split("/");
+        if (pos < $(posts.contents[posts.visible[i]]).offset().top) {
+            $('#dropup-posts button').text(posts.list[posts.visible[i+1]].title);
+            let paths = posts.list[posts.visible[i+1]].category.split("/");
             for (let level = 1; level < paths.length; ++level)
                 $("#dropup-lv-" + level + " button").text(paths[level - 1]);
             return;
@@ -183,8 +183,7 @@ function internalSearch() {
 
     let count = 0;
     for (id of posts.visible) {
-        if (posts.list[id].title.match(new RegExp(query, "i")) != null
-            || posts.list[id].description.match(new RegExp(query, "i")) != null) {
+        if (posts.list[id].title.match(new RegExp(query, "i")) != null) {
             result.append(
                 $('<a></a>')
                     .addClass('dropdown-item')

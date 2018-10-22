@@ -471,6 +471,8 @@ const posts = {
         { "filename": "posts/1810/470.html", "category": "JavaScript/Basic", "title": "Callback", "date": "2018-10-08 23:19:17" },
         { "filename": "posts/1810/471.html", "category": "Java/JavaSE/java.util.concurrent", "title": "class Exchanger<V> Since 1.5", "date": "2018-10-09 15:45:45" },
         { "filename": "posts/1810/452.html", "category": "C*/C/Basic", "title": "문법", "date": "2018-10-14 18:18:24" },
+        { "filename": "posts/1810/472.html", "category": "C*/C/Library", "title": "라이브러리", "date": "2018-10-19 22:57:05" },
+        { "filename": "posts/1810/473.html", "category": "C*/C++/Basic", "title": "문법", "date": "2018-10-21 21:46:39" },
         //{ "filename": "posts/1810/.html", "category": "JavaScript/Basic", "title": "", "date": "" },
     ],
     "tree": {},
@@ -486,7 +488,7 @@ const posts = {
         
         <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/.js" lan="javascript">.js »</button>
         
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++/.cpp" lan="cpp">.js »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/.cpp" lan="cpp">. »</button>
         
         <a role="button" target="_blank" class="btn btn-info btn-sm" href=""></a>
         <img class="rounded mx-auto d-block" alt="" src="imgs/">

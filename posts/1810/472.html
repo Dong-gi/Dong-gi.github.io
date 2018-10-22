@@ -1,0 +1,29 @@
+<ul>
+    <li>IO</li>
+    1. 표준입출력 파일 포인터 : stdin, stdout, stderr<br>
+    2. int getchar(), int putchar(int c), char* gets(char* s), int puts(const char* s)<br>
+    3. int scanf(const char* format, ...), int printf(const char* format, ...)<br>
+    3. fopen_s(FILE** _Stream, const char* _FileName, const char* _Mode); // r, w, a, r+, w+, a+, -b<br>
+    4. int fclose(FILE* fp), int fgetc(FILE* fp), char* fgets(char* buf, int n, FILE* fp), int fputc(int c, FILE* fp), int fputs(const char* s, FILE* fp)<br>
+    5. binary : size_t fread(void* _Buffer, size_t _ElementSize, size_t _ElementCount, FILE* _Stream)<br>
+    size_t fwrite(const void* _Buffer, size_t _ElementSize, size_t _ElementCount, FILE* _Stream)
+
+    <li>error</li>
+    1. errno.h :: errno, perror(), string.h :: strerror_s()<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C Library/Error.c" lan="cpp">Error.c »</button><br>
+    2. stdlib.h :: exit(), EXIT_SUCCESS = 0, EXIT_FAILURE = 1
+    
+    <li>가변길이 매개변수</li>
+    1. 함수의 매개변수 목록 정의 : (int size, ...)<br>
+    2. stdarg.h :: va_list, va_start(va_list, size), va_arg(va_list, type), va_end(va_list)<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C Library/VariableArguments.c" lan="cpp">VariableArguments.c »</button>
+
+    <li>동적 할당</li>
+    &raquo; stdlib.h<br>
+    1. void* malloc(int size) : size 바이트만큼 할당<br>
+    2. void* calloc(int count, int size) : count * size만큼 할당<br>
+    3. void* realloc(void* _Block, int size) : 새로 할당<br>
+    4. void free(void* _Block) : 해제
+    
+    <li>커맨드라인 매개변수</li>
+    1. 커맨드라인을 통해 프로그램을 실행하면 main()으로 전달된다.<br>
+    2. int main(int argc, char* argv[])
+</ul>
