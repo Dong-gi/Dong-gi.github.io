@@ -473,6 +473,8 @@ const posts = {
         { "filename": "posts/1810/452.html", "category": "C*/C/Basic", "title": "문법", "date": "2018-10-14 18:18:24" },
         { "filename": "posts/1810/472.html", "category": "C*/C/Library", "title": "라이브러리", "date": "2018-10-19 22:57:05" },
         { "filename": "posts/1810/473.html", "category": "C*/C++/Basic", "title": "문법", "date": "2018-10-21 21:46:39" },
+        { "filename": "posts/1810/474.html", "category": "C*/C++/Library", "title": "라이브러리", "date": "2018-10-23 23:01:25" },
+        { "filename": "posts/1810/475.html", "category": "Book", "title": "마음의 탄생", "date": "2018-10-24 22:11:48" },
         //{ "filename": "posts/1810/.html", "category": "JavaScript/Basic", "title": "", "date": "" },
     ],
     "tree": {},

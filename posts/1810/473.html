@@ -27,6 +27,13 @@
     » class Name { Name() 생성자, ~Name() 소멸자 }<br>
     » 명시적 디폴트 생성자 : Name() = default;<br>
     » 유틸리티 클래스 : Name() = delete; // 생성자를 가지지 않는다.<br>
+    Car c1; // default constructor<br>
+    Car c2(123, "white"); // constructor<br>
+    Car c3 = Car(321, "black"); // 임시 객체 생성 후 복사<br>
+    Car c4 = Car(c3); // 복사 생성<br>
+    » Car(Car&amp; c){} // 복사 생성자 정의<br>
+    Car *c5 = new Car(); // 포인터 이용 시<br>
+    c5-&gt;color; // 포인터 이용 시<br>
     2. 멤버 초기화는 선언된 순서대로만 진행된다. 소멸시 반대 방향으로 소멸된다.<br>
     3. 접근제한자 : public, protected, private
     <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/Class.h" lan="cpp">Class.h »</button>
@@ -63,11 +70,14 @@
     2. 참조 타입 변수의 참조 대상은 불변하다. 역참조가 허용되지 않아 안전하다.<br>
     3. int*&amp; ref : 포인터에 대한 참조 타입 변수. cf. 참조에 대한 참조, 참조에 대한 포인터는 불가능.<br>
     4. 참조 대상을 변경해야 하는 경우, 메모리 해제가 필요한 경우만 포인터 이용.<br>
-    5. &amp;&amp; : rvalue 참조. 금방 해제될 객체, 지역 변수, 상수 참조 가능.
+    5. &amp;&amp; : rvalue 참조. 금방 해제될 객체, 지역 변수, 상수 참조 가능.<br>
     » std::move() : lvalue를 rvalue로 변환<br>
     6. move constructor, move assignment operator : rvalue 참조 매개변수로 받은 객체로부터 값을 복사한 후 원본을 null로 변경하여 메모리 소유권 이동.(복사보다 이동이 좋다.)
 
     <li>const</li>
+    const int a; // 변경 불가<br>
+    void func() const {} // 멤버 변수 변경 불가<br>
+    const Car c6(); // 변경 불가<br>
     1. const 키워드는 왼쪽에 적용된다. 단, 맨 처음 등장하는 "type const"는 "const type"과 같다.<br>
     » const int * : const int를 가리키는 포인터, int * const : int 포인터 변수 고정<br>
     » const int * const * const * const ip = nullptr;<br>
@@ -75,9 +85,7 @@
     3. constexpr : 상수표현식으로 사용 가능.<br>
     » constexpr constructor : 사용자 정의 객체를 상수 표현 변수로 이용 가능.<br>
     » constexpr를 이용한 함수/메서드/생성자는 매개변수로 상수만 받을 수 있어야 하며, 호출 전에 컴파일러에 의해 body가 해석되어야 한다.
-    <button type="button" onclick="javascript:showCode('Concepts/constexpr.cpp', 'cpp');" class="btn btn-primary btn-sm">
-        View Code : constexpr »
-    </button>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/Constexpr.cpp" lan="cpp">Constexpr.cpp »</button>
 
     <li>static</li>
     1. static 멤버는 객체 유무와 무관하게 클래스 자체에 속한다.<br>
@@ -88,26 +96,18 @@
     4. 함수 내 static 변수 : 해당 함수에서만 이용가능한 전역 변수와 같다.
 
     <li>형 변환</li>
-    1. "typedef int INT32" == "using INT32 = int"
-    <br>"typedef int (*FuncType)(int, int)" == "using FuncType = int (*)(int, int)"
-    <br>
-    <br>2. const_cast : const 변수의 상수 속성을 제거. const_cast&lt;int*&gt;(p)
-    <br>static_cast : 언어 자체에서 허용하는 변환을 명시적으로 수행, 생성자나 변환 연산자가 구현되어 있을 때 명시적으로 변환, 같은 클래스 계층의 두 클래스 간
-    변환
-    <br>dynamic_cast : 같은 클래스 계층의 두 클래스 간 변환(타입 검사 수행)
-    <br>
-    <br>3. 명시적 형 변환 : explicit
-    <button type="button" onclick="javascript:showCode('Concepts/explicit.cpp', 'cpp');" class="btn btn-primary btn-sm">
-        View Code : explicit »
-    </button>
+    1. "typedef int INT32" == "using INT32 = int"<br>
+    "typedef int (*FuncType)(int, int)" == "using FuncType = int (*)(int, int)"<br>
+    2. const_cast : const 변수의 상수 속성을 제거. const_cast&lt;int*&gt;(p)<br>
+    static_cast : 언어 자체에서 허용하는 변환을 명시적으로 수행, 생성자나 변환 연산자가 구현되어 있을 때 명시적으로 변환, 같은 클래스 계층의 두 클래스 간 변환<br>
+    dynamic_cast : 같은 클래스 계층의 두 클래스 간 변환(타입 검사 수행)<br>
+    3. 명시적 형 변환 : explicit
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/Explicit.cpp" lan="cpp">Explicit.cpp »</button>
 
     <li>초기화</li>
-    1. 클래스에서도 {}로 초기화 가능. public Name(int, int);
-    <br>» Name n(1, 2) -&gt; Name n = {1, 2} 가능, Name n{1, 2} 가능
-    <br>» vector&lt;string&gt; names = {"name1", "name2", "name3"}
-    <br>
-    <br>2. initializer list를 이용한 단일 타입 가변 길이 매개변수 함수 작성 가능.
-    <button type="button" onclick="javascript:showCode('Concepts/initializer_list.cpp', 'cpp');" class="btn btn-primary btn-sm">
-        View Code : initializer_list »
-    </button>
+    1. 클래스에서도 {}로 초기화 가능. public Name(int, int);<br>
+    » Name n(1, 2) → Name n = {1, 2} 가능, Name n{1, 2} 가능<br>
+    » vector&lt;string&gt; names = {"name1", "name2", "name3"}<br>
+    2. initializer list를 이용한 단일 타입 가변 길이 매개변수 함수 작성 가능.
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/Explicit.cpp" lan="cpp">Explicit.cpp »</button>
 </ul>
