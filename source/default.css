@@ -20,8 +20,9 @@ div.my-code {
 
 li:hover { background-color: antiquewhite; }
 
-/* Overwrite the Bootstrap's settings */
+li { margin: 0.5rem 0; }
 
+/* Overwrite the Bootstrap's settings */
 @media screen and (min-width: 576px) {
     .modal-dialog {
         max-width: 1366px;
