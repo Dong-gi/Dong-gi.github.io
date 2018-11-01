@@ -1,0 +1,32 @@
+<ul>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1811/479.html" lan="html">479.html »</button><br>
+    브라우저와 관련된 객체 : window, location, navigator, history, screen, document
+
+    <li>window.open()</li>
+    새 window 객체 생성.<br>
+    (method) Window.open(url?: string, target?: string, features?: string, replace?: boolean): Window<br>
+    <a role="button" target="#" class="btn btn-info btn-sm" href="javascript:windowOpenExample1();">빈 창 생성 예제</a>
+    <script>
+        function windowOpenExample1() {
+            let newWindow = window.open("about:Blank", 'newWindow', 'width=480, height=272, resizable=1', true);
+            if (newWindow) {
+                let countDown = (newWindow, count) => {
+                    let tick = () => {
+                        let node = document.createElement('h1');
+                        node.appendChild(document.createTextNode("Wait a minute..."));
+                        newWindow.document.getElementsByTagName('body')[0].appendChild(node);
+                        console.log(count);
+                        if (count-- <= 0) {
+                            return;
+                        }
+                        setTimeout(tick, 1000);
+                    };
+                    setTimeout(tick, 1000);
+                };
+                countDown(newWindow, 3);
+            } else {
+                window.alert('팝업 차단으로 창 생성 불가');
+            }
+        }
+    </script>
+</ul>

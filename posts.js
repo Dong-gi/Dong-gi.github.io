@@ -477,7 +477,9 @@ const posts = {
         { "filename": "posts/1810/475.html", "category": "Book", "title": "마음의 탄생", "date": "2018-10-24 22:11:48" },
         { "filename": "posts/1810/476.html", "category": "Book", "title": "키르케고르 실존 극장", "date": "2018-10-27 10:59:43" },
         { "filename": "posts/1810/477.html", "category": "Book", "title": "생각하는 삶을 위한 철학의 역사", "date": "2018-10-27 21:25:58" },
-        //{ "filename": "posts/1810/.html", "category": "", "title": "", "date": "" },
+        { "filename": "posts/1810/478.html", "category": "JavaScript/Browser", "title": "HelloWorld", "date": "2018-10-31 22:12:37" },
+        { "filename": "posts/1811/479.html", "category": "JavaScript/Browser", "title": "BOM(Browser Object Model)", "date": "2018-11-01 21:59:53" },
+        //{ "filename": "posts/1811/.html", "category": "", "title": "", "date": "" },
     ],
     "tree": {},
     "contents": [],
@@ -492,8 +494,11 @@ const posts = {
         
         <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/.js" lan="javascript">.js »</button>
         
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1811/479.html" lan="html">479.html »</button>
+        
         <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/.cpp" lan="cpp">. »</button>
         
         <a role="button" target="_blank" class="btn btn-info btn-sm" href=""></a>
+        <a role="button" target="#" class="btn btn-info btn-sm" href="javascript:;"></a>
         <img class="rounded mx-auto d-block" alt="" src="imgs/">
  */

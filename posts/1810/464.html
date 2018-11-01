@@ -9,7 +9,14 @@ NaN === NaN; // false. NaN은 특이함<br>
 typeof null === "object" // 특이함<br>
 typeof Symbol() === "symbol"<br><br>
 
-3. python과 비슷한 기능을 하는 Destructuring Assignment<br>
+3. in 연산자 : 객체에 해당 프로퍼티가 존재하는지 여부 반환.<br>
+console.log('alert' in window);<br><br>
+
+객체에 직접 정의된 프로퍼티는 hasOwnProperty() 메서드 이용<br><br>
+
+instanceof 연산자 : 객체 호환 여부 반환.<br><br>
+
+4. python과 비슷한 기능을 하는 Destructuring Assignment<br>
 <pre>
 const obj = { a:1, b:2 };
 let {a, b, c} = obj;

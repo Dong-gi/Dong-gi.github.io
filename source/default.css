@@ -22,6 +22,10 @@ li:hover { background-color: antiquewhite; }
 
 li { margin: 0.5rem 0; }
 
+.my-code li { margin: 0; }
+
+.code-modal li { margin: 0; }
+
 /* Overwrite the Bootstrap's settings */
 @media screen and (min-width: 576px) {
     .modal-dialog {
