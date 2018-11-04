@@ -1,24 +1,31 @@
 <ul>
     <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1811/479.html" lan="html">479.html »</button><br>
-    브라우저와 관련된 객체 : window, location, navigator, history, screen, document
+    브라우저와 관련된 객체 : window, screen, location, history, navigator, document<br><br>
+
+    window : 브라우저 윈도우를 가리키는 객체<br>
+    screen : window.screen과 동일. 표시되는 화면과 연관<br>
+    location : window.location과 동일. 현재 페이지 URL과 연관<br>
+    history : window.history와 동일. 페이지 기록과 연관<br>
+    navigator : window.navigator와 동일. 브라우저 자체와 연관<br>
+    document : window.document와 동일. 표시되는 페이지 내용과 연관
 
     <li>window.open()</li>
     새 window 객체 생성.<br>
     (method) Window.open(url?: string, target?: string, features?: string, replace?: boolean): Window<br>
-    <a role="button" target="#" class="btn btn-info btn-sm" href="javascript:windowOpenExample1();">빈 창 생성 예제</a>
+    <a role="button" target="#" class="btn btn-info btn-sm" href="javascript:example479x1();">빈 창 생성 예제</a>
     <script>
-        function windowOpenExample1() {
+        function example479x1() {
             let newWindow = window.open("about:Blank", 'newWindow', 'width=480, height=272, resizable=1', true);
             if (newWindow) {
                 let countDown = (newWindow, count) => {
                     let tick = () => {
+                        if (count-- <= 0) {
+                            return;
+                        }
                         let node = document.createElement('h1');
                         node.appendChild(document.createTextNode("Wait a minute..."));
                         newWindow.document.getElementsByTagName('body')[0].appendChild(node);
                         console.log(count);
-                        if (count-- <= 0) {
-                            return;
-                        }
                         setTimeout(tick, 1000);
                     };
                     setTimeout(tick, 1000);
@@ -27,6 +34,48 @@
             } else {
                 window.alert('팝업 차단으로 창 생성 불가');
             }
+        }
+    </script>
+
+    <li>window.moveTo()</li>
+    좌상단점 기준 위치 이동<br>
+    (method) Window.moveTo(x: number, y: number): void
+
+    <li>window.resizeTo()</li>
+    사이즈 조절<br>
+    (method) Window.resizeTo(x: number, y: number): void
+    <a role="button" target="#" class="btn btn-info btn-sm" href="javascript:example479x2();">윈도우 조절 예제</a>
+    <script>
+        async function example479x2() {
+            let newWindow = window.open('', '', 'width=480, height=272, resizable=1', true);
+            await sleep(1000);
+            newWindow.moveTo(100, 200);
+            await sleep(1000);
+            newWindow.resizeTo(800, 600);
+            await sleep(1000);
+            console.log(screen.width + ', ' + screen.height);
+            newWindow.resizeTo(screen.width, screen.height);
+        }
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+
+    <li><a role="button" target="#" class="btn btn-info btn-sm" href="javascript:example479x3();">location 예제</a></li>
+    <script>
+        async function example479x3() {
+            console.log(location.href);
+            console.log(location.protocol);
+            console.log(location.host);
+            console.log(location.hostname);
+            console.log(location.port);
+            console.log(location.pathname);
+            console.log(location.search);
+            //location.href = 'http://www.google.com';
+            //location.assign(location.href);
+            //location.replace(location.href);
+            await sleep(3000);
+            location.reload();
         }
     </script>
 </ul>
