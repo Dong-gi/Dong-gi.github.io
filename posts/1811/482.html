@@ -1,0 +1,48 @@
+<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1811/482.html" lan="html">482.html »</button><br>
+<form action="/" id="form482-1">
+    <input type="text" name="message" value="message 1" />
+    <input type="submit" value="전송" />
+</form>
+
+return false; // 이벤트 기본 동작 취소 + 이벤트 전파 방지<br>
+== e.preventDefault(); e.stopPropagation();<br>
+
+<form action="/" id="form482-2">
+    <input type="text" name="message" value="message 2" />
+    <input type="submit" value="전송" />
+</form>
+
+<script>
+    document.getElementById('form482-2').onsubmit = () => {
+        console.log('내용 : ' + document.getElementById('form482-2').message.value);
+        return false;
+    };
+</script>
+
+<form action="/" id="form482-3">
+    <input type="text" name="message" value="message 3" />
+    <input type="submit" value="전송" />
+</form>
+
+<script>
+    document.getElementById('form482-3').onsubmit = (e) => {
+        console.log('내용 : ' + document.getElementById('form482-3').message.value);
+        e.preventDefault();
+    };
+</script>
+
+<form onsubmit="console.log(this.message.value); return false;">
+    <input type="text" name="message" value="message 4" />
+    <input type="submit" value="전송" />
+</form>
+
+<form id="form482-4">
+    <input type="text" name="message" value="message 5" />
+    <input type="button" onclick="func482_2()" value="전송" />
+</form>
+
+<script>
+    function func482_2() {
+        console.log('내용 : ' + document.getElementById('form482-4').message.value);
+    };
+</script>
