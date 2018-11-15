@@ -26,7 +26,7 @@ $(() => {
                 ((new Date().getTime() - new Date(post.date).getTime()) <= 604800000 ?
                     '<span class="badge badge-pill badge-primary">New</span>' : '') + '</summary>' +
                 '<form><div class="input-group mb-3">' +
-                '<input type="text" class="form-control" placeholder="최대 100자까지 가능" aria-describedby="basic-addon2">' +
+                '<input type="text" class="form-control" placeholder="최대 100자까지 가능"">' +
                 '<div class="input-group-append">' +
                 '<button class="btn btn-outline-secondary" type="button" onClick="javascript:addComment(' + post.id + ');">등록</button></div></div>' +
                 '<ol class="comments"></ol></form></details>');
@@ -405,7 +405,7 @@ function getComment(path) {
             showSnackbar("댓글은 http에서만 작동합니다.", $('body'), 2000);
             for (post of posts.list) {
                 if (post.filename === path) {
-                    $(posts.contents[post.id]).find('form').addClass('d-none');
+                    $(posts.contents[post.id]).find('div.input-group > input.form-control').attr('value', 'http://donggi.dothome.co.kr');
                 }
             }
         }
