@@ -283,6 +283,7 @@ function showCode(buttonId) {
                         <div class="modal-footer">\
                             <button type="button" class="btn btn-primary copy">Copy</button>\
                             <button type="button" class="btn btn-primary download">Download</button>\
+                            <button type="button" class="btn btn-primary print">Print</button>\
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>\
                         </div>\
                     </div>\
@@ -299,6 +300,10 @@ function showCode(buttonId) {
         // 다운로드 버튼
         $(code).find("button.download").click(() => {
             downloadCode($('button#' + buttonId).attr('path').split('/').pop(), posts.codes[buttonId]);
+        });
+        // 출력 버튼
+        $(code).find("button.print").click(() => {
+            printElement($(code).find('div.modal-body'));
         });
         $('body').append(code);
         $(code).modal('show');
@@ -333,6 +338,16 @@ function downloadCode(title, text) {
     hiddenElement.target = '_blank';
     hiddenElement.download = title;
     hiddenElement.click();
+}
+
+function printElement(node) {
+    const html = $('html');
+    let printDiv = $('<div></div>').html($(node).html()).css({});
+    html.append(printDiv);
+    document.body.style.display = 'none';
+    window.print();
+    document.body.style.display = 'block';
+    $(printDiv).html('');
 }
 
 function showSnackbar(text, parent, timeout) {
