@@ -252,10 +252,7 @@ function insertCode(buttonId) {
                 $('div#' + buttonId).css('max-height', window.innerHeight / 3);
             });
         } else {
-            if ($('div#' + buttonId).hasClass('d-none'))
-                $('div#' + buttonId).removeClass('d-none')
-            else
-                $('div#' + buttonId).addClass('d-none')
+            $('div#' + buttonId).toggleClass('d-none')
             $('div#' + buttonId).css('max-height', window.innerHeight / 3);
         }
     };
@@ -341,6 +338,7 @@ function downloadCode(title, text) {
 }
 
 function printElement(node) {
+    const y = window.scrollY;
     const html = $('html');
     let printDiv = $('<div></div>').html($(node).html()).css({});
     html.append(printDiv);
@@ -348,6 +346,7 @@ function printElement(node) {
     window.print();
     document.body.style.display = 'block';
     $(printDiv).html('');
+    window.scrollTo(0,y);
 }
 
 function showSnackbar(text, parent, timeout) {
