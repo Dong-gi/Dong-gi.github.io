@@ -488,6 +488,8 @@ const posts = {
         { "filename": "posts/1811/486.html", "category": "JavaScript/Browser", "title": "jQuery Basic", "date": "2018-11-25 21:23:14" },
         { "filename": "posts/1812/487.html", "category": "JavaScript/Browser", "title": "jQuery DOM", "date": "2018-12-14 21:47:07" },
         { "filename": "posts/1812/488.html", "category": "JavaScript/Browser", "title": "jQuery Event", "date": "2018-12-14 21:49:09" },
+        { "filename": "posts/1812/489.html", "category": "C*/C#.NET/Basic", "title": "C# Basic", "date": "2018-12-16 14:12:53" },
+        { "filename": "posts/1812/490.html", "category": "C*/C#.NET/OO", "title": "C# 객체 지향 문법", "date": "2018-12-16 17:31:45" },
         //{ "filename": "posts/1812/.html", "category": "", "title": "", "date": "" },
     ],
     "tree": {},

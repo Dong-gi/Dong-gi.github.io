@@ -1,0 +1,50 @@
+<ul>
+    <li>클래스</li>
+    ● 필드 + 메서드<br>
+    ● 정적 생성자 : 자바의 정적 초기화 필드와 같은 의미<br>
+    static 클래스이름() { /* 문장 */ }<br>
+    ● namespace : 자바의 패키지와 비슷<br>
+    namespace MyProgram.Model { }<br>
+    using System.Collections.Generic;
+
+    <li>접근 제한자</li>
+    public, protected(파생 클래스까지), private, internal(같은 어셈블리), protected internal
+
+    <li>상속</li>
+    * SubClass : SuperClass<br>
+    * sealed : 상속/재정의 불가<br>
+    * 부모 클래스 인스턴스를 자식 클래스로 다운캐스팅 불가.<br>
+    * 모든 자료형의 조상은 System.Object, 모든 값 형식의 조상은 System.ValueType, 모든 배열의 조상은 System.Array<br>
+    Object : ToString(), GetType() == typeof, Equals(), GetHashCode()<br>
+    Array : Rank, Length, Sort(), Copy()<br>
+    * this, base // 자바와 같이 클래스명.this 불가
+
+    <li>다형성</li>
+    * virtual, override 키워드를 사용해 명시한다. virtual 메서드는 body를 정의해야 한다.<br>
+    * abstract class : 인스턴스화 불가. 생성자는 가질 수 있음.<br>
+    abstract method : 자식 클래스에서 반드시 override. body를 가질 수 없음.
+    * 연산자 오버로딩<br>
+    public static 타입 operator 연산자(타입1 변수1, 타입2 변수2) {}<br>
+    오버로딩 가능 연산자 : +, -, !, ~, ++, --, true, false, *, /, %, &amp;, |, ^, &lt;&lt;, &gt;&gt;, ==, !=, &lt;, &gt;, &lt;=, &gt;=<br>
+    +, - 등을 오버로딩하면 복합 대입 연산자도 사용 가능.<br>
+    * 형 변환 정의<br>
+    public static implicit operator 타입2(타입1 변수1) {};<br>
+    public static explicit operator 타입2(타입1 변수1) {};<br>
+
+    <li>델리게이터 Delegater</li>
+    * 메서드를 참조하는 자료형<br>
+    * 선언 : 접근제한자 delegate 반환타입 식별자(매개변수);<br>
+    * 익명 델리게이터<br>
+    delegate(타입1 변수1, ...) { /* 문장 */ }<br>
+    * 람다<br>
+    (변수1, ...) => { /* 문장 */ }<br><br>
+    
+    delegate void VoidDelegate();<br>
+    var voidDelegate = new VoidDelegate(() => { Console.WriteLine("1"); });<br>
+    voidDelegate += obj.Func;<br>
+    voidDelegate();<br>
+    voidDelegate -= obj.Func;<br>
+    
+
+
+</ul>
