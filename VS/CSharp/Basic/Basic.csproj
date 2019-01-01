@@ -68,6 +68,8 @@
   <ItemGroup>
     <Compile Include="AttributeExample.cs" />
     <Compile Include="EventExample.cs" />
+    <Compile Include="ExtensionExample.cs" />
+    <Compile Include="IndexerExample.cs" />
     <Compile Include="NullableExample.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

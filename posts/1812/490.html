@@ -5,7 +5,8 @@
     static 클래스이름() { /* 문장 */ }<br>
     ● namespace : 자바의 패키지와 비슷<br>
     namespace MyProgram.Model { }<br>
-    using System.Collections.Generic;
+    using System.Collections.Generic;<br>
+    ● Partial class : 여러 파일에 걸쳐 클래스 작성 가능.
 
     <li>접근 제한자</li>
     public, protected(파생 클래스까지), private, internal(같은 어셈블리), protected internal
@@ -21,6 +22,7 @@
 
     <li>다형성</li>
     ● virtual, override 키워드를 사용해 명시한다. virtual 메서드는 body를 정의해야 한다.<br>
+    // new : 부모 메서드 숨기기. override와 달리 형 변환을 통해 부모 메서드에 접근 가능.<br>
     ● abstract class : 인스턴스화 불가. 생성자는 가질 수 있음.<br>
     abstract method : 자식 클래스에서 반드시 override. body를 가질 수 없음.
     ● 연산자 오버로딩<br>
@@ -61,11 +63,14 @@
     </ul>
 
     <li>인터페이스</li>
+    ● 인터페이스도 프로퍼티를 가질 수 있다. 그 형태는 Auto-Implemented Property와 같아야 한다. 구현 클래스에서 프로퍼티를 구현한다.<br>
     class SubClass : SuperClass, Interface1, Interface2, ...<br>
     interface Interface1 : Interface2<br><br>
 
     int IComparer.Compare(object x, object y);<br>
-    void IDisposable.Dispose();<br>
+    void IDisposable.Dispose();<br><br>
+
+    ● foreach에는 IEnumerable, IEnumerator 사용 가능.<br>
     IEnumerator IEnumerable.GetEnumerator();<br>
     object IEnumerator.Current { get; }<br>
     bool IEnumerator.MoveNext();<br>
@@ -83,4 +88,16 @@
     enum Days { SUN = 1, MON = 2, TUE = 4, WED = 8, THU = 16, FRI = 32, SAT = 64}<br>
     Days weekends = Days.SUN | Days.SAT;<br>
     Console.WriteLine(weekends.HasFlag(Days.SUN));
+
+    <li>제네릭</li>
+    ● Generic Method : modifier ReturnType name&lt;Type&gt; (args)<br>
+    ● Generic Class : class Name&lt;Type&gt;<br>
+    ● 형식 제한<br>
+    where T : struct // 값 형식<br>
+    where T : class // 참조 형식<br>
+    where T : new() // 매개 변수 없는 생성자가 있어야<br>
+    where T : BaseClassName | InterfaceName | U // 호환 여부, U는 다른 형식 매개 변수<br><br>
+
+    class MyGenereic&lt;T, U&gt; where T : struct where U : class {}<br>
+    List → List&lt;T&gt;, Queue → Queue&lt;T&gt;, Stack → Stack&lt;T&gt;Hashtable → Dictioniary&lt;TKey, TValue&gt;
 </ul>

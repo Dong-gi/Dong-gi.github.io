@@ -1,7 +1,20 @@
 <ol>
+    <li>var</li>
+    ● 지역변수 초기화시에만 사용 가능한 자동형식
+
+    <li>params</li>
+    ● 가변길이 매개변수<br>
+    static int Sum(params int[] args) => args.Sum();<br>
+    Sum(1, 2, 3);
+
     <li>메서드 매개변수 제어</li>
     ● ref : 참조에 의한 호출.<br>
-    ● out : 쓰기 전용 매개변수. 호출 전에 초기화되지 않아도 되며, 종료 전에 할당이 이루어져야 한다.
+    ● out : 쓰기 전용 매개변수. 호출 전에 초기화되지 않아도 되며, 종료 전에 할당이 이루어져야 한다.<br>
+    ● 매개변수 명시 : Divide(a: 10, b: 3, q: out q, r: out r);<br>
+    ● 선택적 매개변수 : Method(int a = 0, int b = 0) {}
+
+    <li>확장 메서드</li>
+    ● 기존 클래스에 static method 추가.<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/ExtensionExample.cs" lan="cs">ExtensionExample.cs »</button>
 
     <li>readonly</li>
     ● 읽기 전용 필드 선언<br>
@@ -9,6 +22,10 @@
     ● ref readonly : 메서드에서 반환된 참조를 읽기만 가능
 
     <li>인덱서</li>
+    ● 오버로딩 가능.<br>
+    ● 접근제한자 리턴_타입 this[인덱스_타입 인덱스_식별자] { get {} set {} }<br>
+    ● 읽기 전용 : 리턴_타입 this[인덱스_타입 인덱스_식별자] => {}<br>
+    ● string은 인덱서를 구현함.<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/IndexerExample.cs" lan="cs">IndexerExample.cs »</button>
 
     <li>전처리 지시문</li>
     ● #define, #undef, #if, #elif, #else, #endif...<br>
@@ -18,5 +35,62 @@
     ● 메타데이터<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/AttributeExample.cs" lan="cs">AttributeExample.cs »</button>
 
     <li>nullable</li>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/NullableExample.cs" lan="cs">NullableExample.cs »</button>
+
+    <li>System.Array</li>
+    ● Sort(), BinarySearch&lt;T&gt;(), IndexOf(), TrueForAll&lt;T&gt;(), FindIndex&lt;T&gt;()Resize&lt;T&gt;(), Clear(), ForEach&lt;T&gt;(), GetLength(), Length, Rank
+
+    <li>ICollection</li>
+    ● ArrayList : Add(), RemoveAt(), Insert()<br>
+    ● Queue : Enqueue(), Dequeue()<br>
+    ● Stack : Push(), Pop()<br>
+    ● Hashtable<br>
+    var hash = new Hashtable();<br>
+    hash["one"] = 1;<br>
+    hash[2] = true;
+
+    <li>무명 형식</li>
+    ● 초기화 이후 읽기만 가능한 일회용 객체. LINQ에 유용하게 쓰임.<br>
+    var instance = new { Name = "name", Age = 10 };
+
+    <li>LINQ</li>
+    ● LINQ; Language INtegrated Query<br>
+    ● from // LINQ query는 from으로 시작한다. from의 대상은 IEnumarable&lt;T&gt;<br>
+    ● where + bool 판정식<br>
+    ● orderby + 정렬 기준 [(ascending) | descending]<br>
+    ● select + 결과<br>
+    ● LINQ query 결과는 IEnumerable&lt;T&gt;<br><br>
+
+    var xElement = XElement.Load(url); // URL로부터 XML 로드<br>
+    var xmlQuery =<br>
+    　　from item in xElement.Descendants("data") // 태그 추출<br>
+    　　select new {<br>
+    　　　　Hour = item.Element("hour").Value,<br>
+    　　　　Minute = item.Element("minute").Value<br>
+    　　};<br>
+    // 속성 추출 : item.Attribute("속성명").Value or item.Attribute["속성명"].Value<br><br>
+
+    ● 중첩 질의<br>
+    from student in students<br>
+    　　from score in student.Scores<br><br>
+
+    ● Grouping<br>
+    결과는 IGrouping&lt;T&gt; 형식<br>
+    from p in profiles<br>
+    group p by p.Height &lt; 160 into lowGroup<br>
+    select new { Key = lowGroup.Key, Profiles = lowGroup };<br><br>
+
+    ● Inner Join<br>
+    from a in A<br>
+    join b in B<br>
+    on a.X equals b.Y<br><br>
+
+    ● Outer Join<br>
+    inner join 결과를 임시 컬렉션으로 치환하고, 임시 컬렉션의 빈 항목을 기본 값으로<br>
+    from profile in profiles<br>
+    join product in products<br>
+    on profile.Name equals product.Name into result<br>
+    from product in result.DefaultIfEmpty( new Product() { Title = "없음” } )<br>
+    select new { Name = profile.Name, Work = product.Title };
 
 </ol>

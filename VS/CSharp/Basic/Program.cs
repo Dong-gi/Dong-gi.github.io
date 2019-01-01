@@ -12,7 +12,9 @@ namespace Basic
         {
             // EventExample.Example();
             // AttributeExample.Example();
-            NullableExample.Example();
+            // NullableExample.Example();
+            // IndexerExample.Example();
+            ExtensionExample.Example();
             Console.ReadLine();
         }
     }
