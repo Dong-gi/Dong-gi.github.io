@@ -491,6 +491,7 @@ const posts = {
         { "filename": "posts/1812/489.html", "category": "C*/C#.NET/Basic", "title": "C# Basic", "date": "2018-12-16 14:12:53" },
         { "filename": "posts/1812/490.html", "category": "C*/C#.NET/Basic", "title": "C# 객체 지향 문법", "date": "2018-12-16 17:31:45" },
         { "filename": "posts/1812/491.html", "category": "C*/C#.NET/Basic", "title": "C# 기타 문법", "date": "2018-12-29 17:42:52" },
+        { "filename": "posts/1901/492.html", "category": "JavaScript/Basic", "title": "Etc", "date": "2019-01-12 23:08:26" },
         //{ "filename": "posts/1812/.html", "category": "", "title": "", "date": "" },
     ],
     "tree": {},

@@ -2,6 +2,10 @@
     <li>var</li>
     ● 지역변수 초기화시에만 사용 가능한 자동형식
 
+    <li>dynamic</li>
+    ● 타입 검사를 런타임에 한다.<br>
+    ● COM 컴포넌트와 .NET 사이의 상호 운용을 위해, 동적 언어와의 상호 운용을 위해 추가.
+
     <li>params</li>
     ● 가변길이 매개변수<br>
     static int Sum(params int[] args) => args.Sum();<br>
@@ -14,7 +18,8 @@
     ● 선택적 매개변수 : Method(int a = 0, int b = 0) {}
 
     <li>확장 메서드</li>
-    ● 기존 클래스에 static method 추가.<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/ExtensionExample.cs" lan="cs">ExtensionExample.cs »</button>
+    ● 기존 클래스에 static method 추가.<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/ExtensionExample.cs"
+        lan="cs">ExtensionExample.cs »</button>
 
     <li>readonly</li>
     ● 읽기 전용 필드 선언<br>
@@ -25,20 +30,24 @@
     ● 오버로딩 가능.<br>
     ● 접근제한자 리턴_타입 this[인덱스_타입 인덱스_식별자] { get {} set {} }<br>
     ● 읽기 전용 : 리턴_타입 this[인덱스_타입 인덱스_식별자] => {}<br>
-    ● string은 인덱서를 구현함.<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/IndexerExample.cs" lan="cs">IndexerExample.cs »</button>
+    ● string은 인덱서를 구현함.<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/IndexerExample.cs"
+        lan="cs">IndexerExample.cs »</button>
 
     <li>전처리 지시문</li>
     ● #define, #undef, #if, #elif, #else, #endif...<br>
     ● #region, #endregion...
 
     <li>attribute</li>
-    ● 메타데이터<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/AttributeExample.cs" lan="cs">AttributeExample.cs »</button>
+    ● 메타데이터<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/AttributeExample.cs" lan="cs">AttributeExample.cs
+        »</button>
 
     <li>nullable</li>
-    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/NullableExample.cs" lan="cs">NullableExample.cs »</button>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/NullableExample.cs" lan="cs">NullableExample.cs
+        »</button>
 
     <li>System.Array</li>
-    ● Sort(), BinarySearch&lt;T&gt;(), IndexOf(), TrueForAll&lt;T&gt;(), FindIndex&lt;T&gt;()Resize&lt;T&gt;(), Clear(), ForEach&lt;T&gt;(), GetLength(), Length, Rank
+    ● Sort(), BinarySearch&lt;T&gt;(), IndexOf(), TrueForAll&lt;T&gt;(), FindIndex&lt;T&gt;()Resize&lt;T&gt;(),
+    Clear(), ForEach&lt;T&gt;(), GetLength(), Length, Rank
 
     <li>ICollection</li>
     ● ArrayList : Add(), RemoveAt(), Insert()<br>
@@ -59,6 +68,7 @@
     ● where + bool 판정식<br>
     ● orderby + 정렬 기준 [(ascending) | descending]<br>
     ● select + 결과<br>
+    ● let : LINQ 내에서 변수 선언. let x = 10
     ● LINQ query 결과는 IEnumerable&lt;T&gt;<br><br>
 
     var xElement = XElement.Load(url); // URL로부터 XML 로드<br>
@@ -93,4 +103,117 @@
     from product in result.DefaultIfEmpty( new Product() { Title = "없음” } )<br>
     select new { Name = profile.Name, Work = product.Title };
 
+    <li>Expression Tree</li>
+    ● System.Linq.Expressions 네임스페이스의 Expression 클래스 및 파생 클래스들<br><br>
+
+    var const1 = Expression.Constant(1);<br>
+    var param1 = Expression.Parameter(typeof(int), "x");<br>
+    var exp = Expression.Add(const1, param1);<br>
+    var lambda = Expression&lt;Func&lt;int, int&gt;&gt;.Lambda&lt;Func&lt;int, int&gt;&gt;(exp, new
+    ParameterExpression[] { (ParameterExpression)param1 });<br>
+    var compiledFunc = lambda.Compile();<br>
+    Console.WriteLine(compiledFunc(3));
+
+    <li>리플렉션 Reflection</li>
+    ● Object.getType() or typeof 연산자<br>
+    ● Type :: GetConstructors(), GetEvents(), GetFields(), GetMethods(), ...<br>
+    ● 동적 생성 : System.Activator.CreateInstance(Type);<br>
+    ● 동적 정의 : System.Reflection.Emit<br>
+    1. System.AppDomain.DefineDynamicAssembly()로 AssemblyBuilder 객체 획득<br>
+    2. AssemblyBuilder.DefineDynamicModule()로 ModuleBuilder 획득<br>
+    3. ModuleBuilder.DefineType()으로 클래스 생성(TypeBuilder)<br>
+    4. TypeBuilder.DefineMethod()로 MethodBuilder 획득<br>
+    5. MethodBuilder.GetILGenerator()로 ILGenerator 객체 획득<br>
+    6. ILGenerator.Emit()으로 메서드 내용 추가<br>
+    7. TypeBuilder.CrateType()으로 인스턴스 생성 가능
+
+    <li>Caller Information</li>
+    ● 메서드 매개변수 정의시 사용 가능.<br>
+    [CallerFilePath] string filePath = "", [CallerLineNumber] int line = 0, [CallerMemberName] string member = ""
+
+    <li>System.IO</li>
+    ● File : 클래스 메서드<br>
+    FileInfo : 객체 메서드<br>
+    Directory : 클래스 메서드<br>
+    DirectoryInfo : 객체 메서드<br><br>
+
+    ● System.IO.Stream<br>
+    FileStream, NetworkStream, GZipStream, BufferedStream, ...<br><br>
+
+    ● 바이트<br>
+    자료를 바이트 배열로 : BitConverter.GetBytes()<br>
+    바이트 배열을 long으로 : BitConverter.ToInt64()<br>
+    Little Endian인지 Big Endian인지 고려 필요<br><br>
+
+    ● IO<br>
+    new BinaryWriter(new FileStream("a.txt", FileMode.Create));<br>
+    new BinaryReader(new FileStream("a.txt", FileMode.Open));<br>
+    Text : StreamWriter, StreamReader<br><br>
+
+    ● 직렬화<br>
+    class MyClass { [NonSerialized] int a; }<br>
+    var bf = new BinaryFormatter();<br>
+    bf.Serialize(/* stream */, new MyClass());<br>
+    // bf.Deserialize(/* stream */);
+
+    <li>System.Threading</li>
+    ● var t = new Thread(new ThreadStart(DoSomething));<br>
+    t.Start();<br>
+    // t.Abort(); 스레드 상태와 관계없이 종료. 지양<br>
+    // t.Join();<br>
+    // t.Interrupt(); 스레드가 WaitJoinSleep 상태일 때 종료<br><br>
+
+    ● 스레드 간 동기화<br>
+    lock (/* object */) { /* 블록이 끝날 때까지 다른 스레드는 접근 불가 */ }<br><br>
+    
+    Monitor.Enter(/* ojbect */);<br>
+    try {} finally{ Monitor.Exit(/* object */); } // lock 블록과 동일<br>
+    - Monitor.Wait() : 스레드를 WaitSleepJoin 상태로 만들고 lock을 해제한 뒤 Waiting Queue에 들어간다.<br>
+    - Monitor.Pulse() : Waiting Queue의 첫 요소를 Ready Queue로 입력.<br>
+    위 두 메서드는 lock 블록 안에서 호출되어야 한다.<br><br>
+
+    readonly object myLock = new object();<br>
+    bool isDone = false;<br>
+    lock (myLock)<br>
+    {<br>
+    　　while(!isDone) { Monitor.Wait(myLock); }<br>
+    　　isDone = false;<br>
+    　　// ToDo<br>
+    　　isDone = true;<br>
+    　　Monitor.Pulse(myLock);<br>
+    }<br><br>
+
+    ● 비동기 처리 System.Threading.Tasks.Task<br>
+    Action action = () => { Thread.Sleep(1000); Console.WriteLine("Async"); };<br>
+    Task task = new Task(action);<br>
+    task.start();<br>
+    Console.WriteLine("Hello");<br>
+    task.Wait();<br>
+    Console.WriteLine("World");<br><br>
+    
+    var task = Task.Run(() => { Thread.Sleep(1000); Console.WriteLine("Async"); });<br>
+    Console.WriteLine("Hello");<br>
+    task.Wait();<br>
+    Console.WriteLine("World");<br><br>
+
+    ● 비동기 실행 결과 취합 Task&lt;TResult&gt:<br>
+    var task = Task&lt;List&lt;int&gt;&gt;.Run(() => {<br>
+    　　Thread.Sleep(1000);<br>
+    　　var list = new List&lt;int&gt;();<br>
+    　　list.Add(3);<br>
+    　　return list;<br>
+    });<br>
+    var myList = new List&lt;int&gt;(new int[] { 1 });<br>
+    task.Wait();<br>
+    myList.AddRange(task.Result);<br><br>
+
+    ● 병렬 처리 System.Threading.Tasks.Parallel<br>
+    void DoSomething(int i) =&gt; Console.WriteLine(i);<br>
+    Parallel.For(0, 100, DoSomething);<br><br>
+
+    ● asyne 한정자 + await 연산자<br>
+    - async로 한정한 void 리턴 메서드는 await없이 비동기 실행<br>
+    - async로 한정한 Task 또는 Task&lt;TResult&gt; 반환 메서드/태스크/람다식은 await 연산자를 만나는 곳에서 호출자에게 제어를 넘겨주며, await 연산자가 없으면 동기적으로 실행된다.<br>
+    - await Task.Delay() : 입력시간 후 태스크 반환. 스레드를 블록시키지 않음<br>
+    - .NET Framework 4.5에 ~Async() API 추가
 </ol>

@@ -19,7 +19,12 @@
 </script>
 
 <ul>
-    <li>이벤트 객체 속성 : pageX, pageY, preventDefault(), stopPropagation()...</li>
+	<li>이벤트 모델</li>
+	이벤트 캡처링 : 중복된 요소 중 가장 위에 있는 요소에 이벤트 전달. 이후 자식 요소로 전달.<br>
+	이벤트 버블링 : 중복된 요소 중 가장 아래에 있는 요소에 이벤트 전다. 이후 부모 요소로 전달.<br>
+	JavaScript는 이벤트 버블링 방식을 채택.
+
+	<li>이벤트 객체 속성 : pageX, pageY, preventDefault(), stopPropagation()...</li>
 	JavsScript 이벤트에서 false를 반환할 경우 기본 이벤트만 제거하는 데 반해, jQuery 이벤트에서 false를 반환할 경우 stopPropagation() 효과도 적용된다.
     
     <li>이벤트 강제 발생</li>
