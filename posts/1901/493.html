@@ -1,0 +1,71 @@
+<ul>
+    <li>실습 1</li>
+    1. XAML(eXtensible Application Markup Language)로 컨트롤을 작성하는 것과 코드에서 생성하는 것은 결과적으로 동일하다.<br>
+    Blend에서 디자인을 따로 할 수 있다. 분업-협업 가능.<br>
+    2. 참조 → 참조 추가에서 .NET 어셈블리 or 제작한 프로젝트 참조 추가<br>
+    3. NuGet 패키지 관리에서 다른 사용자들이 배포하는 프레임워크를 설치할 수 있다.<br>
+    4. 네임스페이스 접두어 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"<br>
+    5. Window : Initialized → Activated → Loaded → ContentRendered → 실행 → Closing → Unloaded → Deactivated → Closed<br>
+    Activated, Deactivated는 키보드/마우스 포커스를 얻거나 잃는 이벤트를 의미한다.<br>
+    6. 다루는 것 : Grid.Background, Button.Content, Application.Current.Properties, MessageBox.Show(), MessageBoxResult, Button_Click, Window_Loaded, Window_Closing
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp1/MainWindow.xaml" lan="xml">MainWindow.xaml »</button>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp1/MainWindow.xaml.cs" lan="cs">MainWindow.xaml.cs »</button>
+    
+    <li>실습 2</li>
+    1. Modal : 자식 윈도우가 종료되기 전까지 부모 윈도우는 비활성화.<br>
+    2. Modeless : 자식 윈도우와 부모 윈도우가 별개로 동작.<br>
+    3. Application.Current.Windows : 실행중인 윈도우들의 컬렉션.<br>
+    4. 프로젝트, 추가 → 사용자 정의 컨트롤<br>
+    5. 다루는 것 : Window.Show(), Window.ShowDialog(), Window 속성들
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp2/MainWindow.xaml" lan="xml">MainWindow.xaml »</button>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp2/MainWindow.xaml.cs" lan="cs">MainWindow.xaml.cs »</button><br>
+    6. 다루는 것 : 사용자 정의 컨트롤
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp3/UserControl1.xaml" lan="xml">UserControl1.xaml »</button>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp3/UserControl1.xaml.cs" lan="cs">UserControl1.xaml.cs »</button>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp3/MainWindow.xaml" lan="xml">MainWindow.xaml »</button>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp3/MainWindow.xaml.cs" lan="cs">MainWindow.xaml.cs »</button>
+
+    <li>레이아웃</li>
+    디자인을 할 생각은 없기 때문에, 종류만 알아두고 넘어간다.<br>
+    1. Canvas : 캔버스 내부의 상대 좌표를 이용해 자식 요소들을 배치한다.<br>
+    2. DockPanel : Top, Left, Bottom, Right에 자식 요소들을 배치.<br>
+    3. Grid : 영역을 행과 열로 나누어 요소들을 배치한다. 나눠진 그리드 하나를 여러 요소가 공유할 수도, 한 요소가 여러 그리드를 차지할 수도 있다.<br>
+    4. StackPanel : 수직/수평적으로 자식 요소들을 나열.<br>
+    5. VirtualizingPanel : Panel에 대한 추상 클래스.<br>
+    6. WrapPanel : 자식 요소들을 좌에서 우로 차례대로 배치하다, 패널의 경계를 넘어서면 다음 줄(바로 아래)로 넘겨 배치한다.<br>
+    <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.microsoft.com/en-us/dotnet/framework/wpf/advanced/layout">MS WPF Docs - Layout &raquo;</a>
+    
+    <li>리소스</li>
+    1. xaml 내부에 정적 리소스 정의 : &lt;Window.Resources&gt;&lt;/Window.Resources&gt;<br>
+    2. ResourceDictionary : xaml에 리소스들을 정의하고 이를 별개의 파일로 분리.<br>
+    3. 스타일 : 리소스 영역에 Style 요소를 작성하고, Setter Property="" Value=""를 이용해 값을 할당한다.<br>
+    4. 스타일 상속 : Style 요소의 BasedOn 속성 이용<br>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp4/Dictionary1.xaml" lan="xml">Dictionary1.xaml »</button>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp4/MainWindow.xaml" lan="xml">MainWindow.xaml »</button>
+
+    <li>컨트롤</li>
+    1. (ButtonBase ← Button, (ToggleButton ← CheckBox, RadioButton))<br>
+    2. ListBox, ComboBox, ListView, TreeView<br>
+    3. Menu, Toolbar / TabControl, Expander, GroupBox / Slider, ScrollBar<br>
+    4. TextBox, RichTextBox, PasswordBox
+
+    <li>이벤트</li>
+    1. Event Tunneling : 부모 컨트롤로부터 자식 컨트롤로 Preview 접두어가 붙은 이벤트가 전달됨.<br>
+    2. Event Bubbling : 이벤트 센더는 이벤트를 처리하고 이를 다시 부모로 전달<br>
+    3. 1,2와 같은 이벤트를 RoutedEvent라고 하며, 따라서 이벤트 핸들러의 파라미터로 RoutedEventArgs가 넘겨진다.
+
+    <li>명령</li>
+    1. 이벤트 핸들러를 xaml과 독립적으로 작성하는 것을 가능하게 해준다.<br>
+    2. ICommand를 구체화하며 CanExecute(), Execute(), CanExecuteChanged를 정의한다.<br>
+    3. 내장 명령 : ApplicationCommands, ComponentCommands, MediaCommands, NavigationCommands, EditingCommands<br>
+    4. 명령 바인딩 : System.Windows.Interactivity.WPF 패키지 설치/이용
+
+    <li>트리거</li>
+    1. 특정 조건에 따라 스타일을 적용시키는 방법.
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp5/MainWindow.xaml" lan="xml">MainWindow.xaml »</button>
+
+    <li>바인딩</li>
+    1. MVVM : Model - View - ViewModel<br>
+    2. View의 컨트롤들을 ViewModel과 바인딩 : Control의 값 변경 + 이벤트를 ViewModel에 통지, Model의 값 변경을 View에 통지.<br>
+    3. ViewModel은 INotifyPropertyChanged을 구체화. 프로퍼티 setter에서 변경되었음을 통지.
+</ul>

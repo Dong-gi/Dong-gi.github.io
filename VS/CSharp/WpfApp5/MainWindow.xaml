@@ -1,0 +1,41 @@
+﻿<Window x:Class="WpfApp5.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp5"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="194.238" Width="428.944">
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Background" Value="Beige"/>
+                    <Setter Property="Content" Value="Focused"/>
+                </Trigger>
+                <Trigger Property="IsFocused" Value="False">
+                    <Setter Property="Background" Value="LightCyan"/>
+                    <Setter Property="Content" Value="Click Me!"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsFocused" Value="True"/>
+                        <Condition Property="IsMouseOver" Value="True"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="FontSize" Value="24"/>
+                    <Setter Property="Text" Value="Hello"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Button HorizontalAlignment="Center" VerticalAlignment="Center" Width="116" Height="38" Margin="68,25,237,100"/>
+        <Button HorizontalAlignment="Center" VerticalAlignment="Center" Width="116" Height="38" Margin="238,25,67,100"/>
+        <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Width="116" Height="38" Margin="68,83,237,42" Background="#FFDDDDDD"/>
+        <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Width="116" Height="38" Margin="238,83,67,42" Background="#FFDDDDDD"/>
+    </Grid>
+</Window>

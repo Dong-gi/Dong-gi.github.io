@@ -492,6 +492,7 @@ const posts = {
         { "filename": "posts/1812/490.html", "category": "C*/C#.NET/Basic", "title": "C# 객체 지향 문법", "date": "2018-12-16 17:31:45" },
         { "filename": "posts/1812/491.html", "category": "C*/C#.NET/Basic", "title": "C# 기타 문법", "date": "2018-12-29 17:42:52" },
         { "filename": "posts/1901/492.html", "category": "JavaScript/Basic", "title": "Etc", "date": "2019-01-12 23:08:26" },
+        { "filename": "posts/1901/493.html", "category": "C*/C#.NET/WPF", "title": "WPF", "date": "2019-01-12 23:08:26" },
         //{ "filename": "posts/1812/.html", "category": "", "title": "", "date": "" },
     ],
     "tree": {},
@@ -511,7 +512,8 @@ const posts = {
 <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1811/479.html" lan="html">479.html »</button>
         
 <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/.cpp" lan="cpp">. »</button>
-<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/.cs" lan="cs">.cs »</button>
+<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp1/.xaml" lan="xml">.xaml »</button>
+<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp1/.xaml.cs" lan="cs">.xaml.cs »</button>
         
 <a role="button" target="_blank" class="btn btn-info btn-sm" href=""></a>
 <a role="button" target="#" class="btn btn-info btn-sm" href="javascript:;"></a>
