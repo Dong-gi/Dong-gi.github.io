@@ -1,32 +1,70 @@
-body { padding-bottom: 4rem; }
+body {
+    padding-bottom: 4rem;
+}
 
-main { width: 100%; }
+main {
+    width: 100%;
+}
 
-a { color: black; }
+a {
+    color: black;
+}
 
-img { max-width: 100%; }
+img {
+    max-width: 100%;
+}
+
+summary::-webkit-details-marker {
+    display: none
+}
+
+summary:before {
+    content: "+";
+    font-size: 1.1em;
+    line-height: 1.1em;
+    margin-left: 1em;
+}
+
+details[open] summary:before {
+    content: "-";
+}
 
 summary {
     font-size: 1.1em;
     font-weight: 500;
 }
 
-details > p { margin-top: 1rem; }
+details>p {
+    margin-top: 1rem;
+}
 
 div.my-code {
     background-color: white;
     overflow-y: scroll;
 }
 
-li:hover { background-color: antiquewhite; }
+dl, ol, ul {
+    margin-left: -1em;
+}
 
-li { margin: 0.5rem 0; }
+li:hover {
+    background-color: antiquewhite;
+}
 
-.my-code li { margin: 0; }
+li {
+    margin: 0.5rem 0;
+}
 
-.code-modal li { margin: 0; }
+.my-code li {
+    margin: 0;
+}
+
+.code-modal li {
+    margin: 0;
+}
 
 /* Overwrite the Bootstrap's settings */
+
 @media screen and (min-width: 576px) {
     .modal-dialog {
         max-width: 1366px;
@@ -102,21 +140,45 @@ li { margin: 0.5rem 0; }
 }
 
 @-webkit-keyframes fadein {
-    from {bottom: 0; opacity: 0;} 
-    to {bottom: 30px; opacity: 1;}
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
 }
 
 @keyframes fadein {
-    from {bottom: 0; opacity: 0;}
-    to {bottom: 30px; opacity: 1;}
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
 }
 
 @-webkit-keyframes fadeout {
-    from {bottom: 30px; opacity: 1;} 
-    to {bottom: 0; opacity: 0;}
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
 }
 
 @keyframes fadeout {
-    from {bottom: 30px; opacity: 1;}
-    to {bottom: 0; opacity: 0;}
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
 }

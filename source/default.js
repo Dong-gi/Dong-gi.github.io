@@ -3,63 +3,30 @@ $(() => {
     console.log(hljs.listLanguages());
 
     // 카테고리 초기화하고 포스트 등록, 포스트는 순서대로 아이디를 가짐
-    {
-        let id = 0;
-        for (post of posts.list) {
-            post.id = id++;
+    let id = 0;
+    for (post of posts.list) {
+        post.id = id++;
 
-            let category = posts.tree;
-            for (cate of post.category.split("/")) {
-                if (!category.hasOwnProperty(cate))
-                    category[cate] = {};
-                category = category[cate];
-            }
-            if (!category.hasOwnProperty("posts"))
-                category.posts = [];
-            post.internalId = category.length;
-            category.posts.push(post);
-
-            // 모든 컨텐츠 골격 생성
-            let content = $('<div></div>').addClass('jumbotron').attr('id', post.id);
-            $(content).html('<details><summary>' +
-                post.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '@' + post.date +
-                ((new Date().getTime() - new Date(post.date).getTime()) <= 604800000 ?
-                    '<span class="badge badge-pill badge-primary">New</span>' : '') + '</summary>' +
-                '<form><div class="input-group mb-3">' +
-                '<input type="text" class="form-control" placeholder="최대 100자까지 가능"">' +
-                '<div class="input-group-append">' +
-                '<button class="btn btn-outline-secondary" type="button" onClick="javascript:addComment(' + post.id + ');">등록</button></div></div>' +
-                '<ol class="comments"></ol></form></details>');
-            posts.contents.push(content);
-
-            $(content).find('summary').click(loadContent(post.id, post.filename));
+        let category = posts.tree;
+        for (cate of post.category.split("/")) {
+            if (!category.hasOwnProperty(cate))
+                category[cate] = {};
+            category = category[cate];
         }
-    }
+        if (!category.hasOwnProperty("posts"))
+            category.posts = [];
+        category.posts.push(post);
 
-    // 최초로 전체 콘텐츠 붙이기
-    for (content of posts.contents) {
+        // 모든 컨텐츠 골격 생성
+        let content = $(getContentHTML(post));
+        posts.contents.push(content);
         $('div#contents').prepend(content);
+        $('summary', content).click(loadContent(post.id, post.filename));
     }
 
-    // 부트스트랩 popover 작동
-    $('[data-toggle="popover"]').popover();
-
-    // 최초로 1수준 드롭업 생성
     updateDropupManually(0, "");
-
-    // 드롭업 width 자동 조정
-    $(window).resize(() => adjustIndexSize());
-
-    // 드롭업 자동 갱신 등록
+    $(window).resize(() => adjustDropupWidth());
     window.onscroll = updateDropupAuto;
-
-    // 엔터 동작 없음
-    $('input.form-control').keypress((event) => {
-        if (event.keyCode == 13) {
-            event.preventDefault();
-        }
-        return true;
-    });
 
     // 엔터로 검색 가능
     $('input#input-title').keypress((event) => {
@@ -71,36 +38,38 @@ $(() => {
     });
 });
 
+/**
+ * filename 경로의 문서를 읽어와 id번째 글에 내용 삽입
+ * @param {*} id "posts.js"에 정의된 post의 순번
+ * @param {*} filename "posts.js"에 정의된 post의 본문 문서
+ */
 function loadContent(id, filename) {
     return () => {
-        if ($(posts.contents[id]).find('details p').length == 0) {
-            let content = $("<p>");
-            $(content).load(filename.replace(/ /gm, '%20'), (response, status, xhr) => {
-                $(content).find('.btn-code').each((idx) => {
-                    let button = $(content).find('.btn-code')[idx];
-                    let id = new Date().getTime() + ('' + Math.random()).substring(2);
-                    $(button).attr('id', 'code' + id);
-                    $(button).click(insertCode($(button).attr('id')));
-                });
-                $(posts.contents[id]).find('summary').after(content);
-                getComment(posts.list[id].filename);
+        if ($('details p', posts.contents[id]).length > 0) return;
+        let content = $("<p>");
+        $(content).load(filename.replace(/ /gm, '%20'), (response, status, xhr) => {
+            $.each($('.btn-code', content), (idx, node) => {
+                let id = new Date().getTime() + idx;
+                $(node).attr('id', 'code' + id);
+                $(node).click(insertCode($(node).attr('id')));
             });
-        }
+            $('summary', posts.contents[id]).after(content);
+        });
     };
 }
 
 /**
- * path에 따라서 드롭업 메뉴를 갱신
+ * path에 따라서 카테고리 드롭업 수동 갱신
  * @param {Integer} level 갱신 레벨
  * @param {String} path 카테고리{/카테고리}
  */
 function updateDropupManually(level, path) {
     let paths = path.split("/");
     // level 수준 드롭업에 이름 설정
-    $("#dropup-lv-" + level + " button").text(paths[paths.length - 1]);
+    $(`#dropup-lv-${level} button`).text(paths[paths.length - 1]);
     // level + 1 수준 드롭업 갱신
-    $("#dropup-lv-" + (level + 1) + " button").text("개요" + (level + 1));
-    let menu = $("#dropup-lv-" + (level + 1) + " .dropdown-menu");
+    $(`#dropup-lv-${level + 1} button`).text(`개요 ${level + 1}`);
+    let menu = $(`#dropup-lv-${level + 1} .dropdown-menu`);
     menu.empty();
 
     let category = posts.tree;
@@ -108,15 +77,10 @@ function updateDropupManually(level, path) {
         category = category[paths[l - 1]];
     for (cate of Object.getOwnPropertyNames(category)) {
         if (cate !== 'posts')
-            menu.append(
-                $('<a></a>')
-                    .addClass('dropdown-item')
-                    .attr('href', 'javascript:updateDropupManually(' + (level + 1) + ',"' + ((path.length > 0 ? path + '/' : '') + cate) + '");')
-                    .text(cate)
-            );
+            menu.append($(`<a class="dropdown-item" href="javascript:updateDropupManually(${level + 1},&quot;${path.length > 0 ? path + '/' : ''}${cate}&quot;);">${cate}</a>`));
     }
     if ($(menu).children().length != 0)
-        $("#dropup-lv-" + (level + 1)).removeClass("d-none");
+        $(`#dropup-lv-${level + 1}`).removeClass("d-none");
 
     // level + 2 ~ 수준 드롭업 숨기기
     for (let l = level + 2; l <= 5; ++l)
@@ -131,29 +95,26 @@ function updateDropupManually(level, path) {
         if (posts.list[i].category.startsWith(path)) {
             if ($(posts.contents[i]).hasClass("d-none"))
                 $(posts.contents[i]).removeClass("d-none")
-            menu.prepend(
-                $('<a></a>')
-                    .addClass('dropdown-item')
-                    .attr('href', 'javascript:updateScrollManually(' + posts.list[i].id + ');')
-                    .text(posts.list[i].title)
-            );
+            menu.prepend($(`<a class="dropdown-item" href="javascript:updateScrollManually(${posts.list[i].id});">${posts.list[i].title}</a>`));
             posts.visible.push(i);
         } else {
             if (!$(posts.contents[i]).hasClass("d-none"))
                 $(posts.contents[i]).addClass("d-none")
         }
     }
-
-    adjustIndexSize();
+    adjustDropupWidth();
 }
 
+/**
+ * 스크롤 이동에 따른 드롭업 자동 갱신
+ */
 function updateDropupAuto() {
     let pos = (document.scrollTop || window.pageYOffset) - (document.clientTop || 0);
     $('#dropup-posts button').text(posts.list[posts.visible.length - 1].title);
     for (let i = posts.visible.length - 1; i >= 0; --i) {
         if (pos < $(posts.contents[posts.visible[i]]).offset().top) {
-            $('#dropup-posts button').text(posts.list[posts.visible[i+1]].title);
-            let paths = posts.list[posts.visible[i+1]].category.split("/");
+            $('#dropup-posts button').text(posts.list[posts.visible[i + 1]].title);
+            let paths = posts.list[posts.visible[i + 1]].category.split("/");
             for (let level = 1; level <= paths.length; ++level)
                 $("#dropup-lv-" + level + " button").text(paths[level - 1]);
             return;
@@ -172,32 +133,27 @@ function updateScrollManually(id) {
 }
 
 /**
- * 보여지는 컨텐츠의 title과 description에서 검색
+ * 보여지는 컨텐츠의 title에서 검색
  */
 function internalSearch() {
     let query = $('input#input-title').val();
     let result = $('#dropup-result');
     result.removeClass('d-none');
-    result = $(result).find('.dropdown-menu');
+    result = $('.dropdown-menu', result);
     result.empty();
 
     let count = 0;
     for (id of posts.visible) {
         if (posts.list[id].title.match(new RegExp(query, "i")) != null) {
-            result.append(
-                $('<a></a>')
-                    .addClass('dropdown-item')
-                    .attr('href', 'javascript:updateScrollManually(' + id + ');')
-                    .text(posts.list[id].title)
-            );
+            result.append($(`<a class="dropdown-item" href="javascript:updateScrollManually(${id});">${posts.list[id].title}</a>`));
             count += 1;
         }
     }
-    adjustIndexSize();
+    adjustDropupWidth();
     showSnackbar(count + "개의 포스트를 찾았습니다.", "#bottom-nav");
 }
 
-function adjustIndexSize() {
+function adjustDropupWidth() {
     let buttonMaxWidth = (window.innerWidth - 75.67) / 6;
     let dropupMaxHeight = window.innerHeight / 2;
     let dropupMaxWidth = buttonMaxWidth > 150 ? buttonMaxWidth : 150;
@@ -266,41 +222,22 @@ function showCode(buttonId) {
             return;
         }
         // 골격 생성
-        code = $(
-            '<div id="modal' + buttonId + '" class="modal code-modal" tabindex="-1" role="dialog">\
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">\
-                    <div class="modal-content">\
-                        <div class="modal-header">\
-                            <h2 style="display: inline-block;" class="modal-title">' + $('button#' + buttonId).attr('path').split('/').pop() + '</h2>\
-                            <button style="float: right;" type="button" class="close" data-dismiss="modal" aria-label="Close">\
-                                <span aria-hidden="true" style="color: black; font-size: 2em; font-weight: bold;">&times;</span>\
-                            </button>\
-                        </div>\
-                        <div class="modal-body"></div>\
-                        <div class="modal-footer">\
-                            <button type="button" class="btn btn-primary copy">Copy</button>\
-                            <button type="button" class="btn btn-primary download">Download</button>\
-                            <button type="button" class="btn btn-primary print">Print</button>\
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>\
-                        </div>\
-                    </div>\
-                </div>\
-            </div>');
+        code = $(getCodeModalHTML(buttonId, $('button#' + buttonId).attr('path').split('/').pop()));
         // 내용 추가
-        $(code).find('.modal-body').html($('.my-code#' + buttonId).html());
+        $('.modal-body', code).html($('.my-code#' + buttonId).html());
         // 복사 버튼
-        $(code).find("button.copy").click(() => {
+        $("button.copy", code).click(() => {
             copyTextToCilpboard(posts.codes[buttonId], code);
             showSnackbar("복사 완료", code);
             $(code).focus();
         });
         // 다운로드 버튼
-        $(code).find("button.download").click(() => {
+        $("button.download", code).click(() => {
             downloadCode($('button#' + buttonId).attr('path').split('/').pop(), posts.codes[buttonId]);
         });
         // 출력 버튼
-        $(code).find("button.print").click(() => {
-            printElement($(code).find('div.modal-body'));
+        $("button.print", code).click(() => {
+            printElement($('div.modal-body', code));
         });
         $('body').append(code);
         $(code).modal('show');
@@ -346,7 +283,7 @@ function printElement(node) {
     window.print();
     document.body.style.display = 'block';
     $(printDiv).html('');
-    window.scrollTo(0,y);
+    window.scrollTo(0, y);
 }
 
 function showSnackbar(text, parent, timeout) {
@@ -359,69 +296,44 @@ function showSnackbar(text, parent, timeout) {
     }, timeout || 1000);
 }
 
-function addComment(id) {
-    let path = posts.list[id].filename;
-    let comment = $(posts.contents[id]).find('input.form-control').val();
-    comment = comment.substring(0, 100).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-    if (comment.length === 0) {
-        showSnackbar("댓글을 입력하세요.", $('body'));
-        return;
-    }
-    $.ajax({
-        type: 'post',
-        dataType: 'json',
-        url: 'http://donggi.dothome.co.kr/add_comment.php',
-        data: { path: path, comment: comment },
-        success: (data) => {
-            if (data === "OK") {
-                showSnackbar("등록 성공", $('body'));
-                $(posts.contents[id]).find('input.form-control').val('');
-                getComment(path);
-            } else {
-                showSnackbar("60초당 1번씩 등록 가능", $('body'));
-            }
-        },
-        error: (request, status, error) => {
-            showSnackbar("등록 실패.", $('body'));
-        }
-    });
+///////////////////////////////////////////////////////// 유틸리티 메서드
+/**
+ * 컨텐츠 HTML 골격을 반환
+ * @param {*} post "posts.js"에 정의된 객체.
+ */
+function getContentHTML(post) {
+    let title = post.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    let newBadge = (new Date().getTime() - new Date(post.date).getTime()) <= 3 * 86400 * 1000 ? '<span class="badge badge-pill badge-primary">New</span>' : '';
+    return `<div class="jumbotron" id="${post.id}"><details><summary class="row">
+    <div class="col-6">${title}${newBadge}</div>
+    <div class="col d-none d-md-block">${post.date}</div>
+    <div class="col d-none d-lg-block">${post.filename}</div>
+    </summary></details></div>`;
 }
 
-function getComment(path) {
-    $.ajax({
-        type: 'post',
-        dataType: 'json',
-        url: 'http://donggi.dothome.co.kr/get_comment.php',
-        data: { path: path },
-        success: (data) => {
-            let ol = $('<ol>').addClass('comments');
-            for (comment of data) {
-                $(ol).append($('<li>').html(
-                    '<a href="javascript:;" data-toggle="popover" data-trigger="hover" title="작성자: ' +
-                    comment.ip + '" data-content="작성 시각: ' + comment.add_date + '">' + comment.comment +
-                    ((new Date().getTime() - new Date(comment.add_date).getTime()) <= 604800000 ? '<span class="badge badge-pill badge-primary">New</span>' : '') +
-                    '</a>'));
-            }
-
-            if (data.length === 0)
-                $(ol).prepend($('<li>').text('등록된 댓글이 없습니다.'));
-
-            for (post of posts.list) {
-                if (post.filename === path) {
-                    $(posts.contents[post.id]).find('ol.comments').html(ol.html());
-                }
-            }
-
-            $('[data-toggle="popover"]').popover();
-        },
-        error: (request, status, error) => {
-            showSnackbar("댓글은 http에서만 작동합니다.", $('body'), 2000);
-            for (post of posts.list) {
-                if (post.filename === path) {
-                    $(posts.contents[post.id]).find('div.input-group > input.form-control').attr('value', 'http://donggi.dothome.co.kr');
-                }
-            }
-        }
-    });
+/**
+ * 코드 모달 HTML 골격을 반환
+ * @param {*} buttonId 
+ * @param {*} filename 
+ */
+function getCodeModalHTML(buttonId, filename) {
+    return `<div id="modal'${buttonId}" class="modal code-modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 style="display: inline-block;" class="modal-title">${filename}</h2>
+                            <button style="float: right;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true" style="color: black; font-size: 2em; font-weight: bold;">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary copy">Copy</button>
+                            <button type="button" class="btn btn-primary download">Download</button>
+                            <button type="button" class="btn btn-primary print">Print</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
 }
