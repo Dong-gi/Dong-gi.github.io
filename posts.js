@@ -1,6 +1,6 @@
 const posts = {
     "list": [
-        { "filename": "posts/1809/0.html", "category": "무분류", "title": "새로운 시작", "date": "2018-09-02 18:12:01" },
+        { "filename": "posts/1809/0.html", "category": "분류전", "title": "새로운 시작", "date": "2019-03-28 11:20:13" },
         { "filename": "posts/1809/1.html", "category": "Tools/VS Code", "title": "날짜 입력하기", "date": "2018-09-02 18:15:08" },
         { "filename": "posts/1809/2.html", "category": "Java/Basic", "title": "개발 환경", "date": "2018-09-02 19:24:36" },
         { "filename": "posts/1809/3.html", "category": "Java/Basic", "title": "개발 과정", "date": "2018-09-02 19:37:46" },
@@ -17,7 +17,7 @@ const posts = {
         { "filename": "posts/1809/14.html", "category": "Java/Basic", "title": "동기화", "date": "2018-09-02 20:13:03" },
         { "filename": "posts/1809/15.html", "category": "Java/JNI", "title": "Java Native Interface", "date": "2018-09-02 20:15:27" },
         { "filename": "posts/1809/16.html", "category": "Java/Basic", "title": "클래스", "date": "2018-09-02 20:22:35" },
-        { "filename": "posts/1809/17.html", "category": "무분류", "title": "댓글 기능 추가", "date": "2018-09-02 23:49:42" },
+        { "filename": "posts/1809/17.html", "category": "분류전", "title": "댓글 기능 추가", "date": "2018-09-02 23:49:42" },
         { "filename": "posts/1809/18.html", "category": "Java/Basic", "title": "Object 클래스", "date": "2018-09-03 23:01:14" },
         { "filename": "posts/1809/19.html", "category": "Java/Basic", "title": "인터페이스", "date": "2018-09-03 23:20:50" },
         { "filename": "posts/1809/20.html", "category": "Java/Basic", "title": "중첩 클래스", "date": "2018-09-03 23:22:43" },

@@ -14,6 +14,11 @@ img {
     max-width: 100%;
 }
 
+summary {
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
 summary::-webkit-details-marker {
     display: none
 }
@@ -29,30 +34,28 @@ details[open] summary:before {
     content: "-";
 }
 
-summary {
-    font-size: 1.1em;
-    font-weight: 500;
-}
-
 details>p {
-    margin-top: 1rem;
-}
-
-div.my-code {
     background-color: white;
-    overflow-y: scroll;
+    border-radius: 0.6em;
+    margin-top: 1rem;
+    padding: 0.2em;
 }
 
 dl, ol, ul {
     margin-left: -1em;
 }
 
+li {
+    margin: 0.5rem 0;
+}
+
 li:hover {
     background-color: antiquewhite;
 }
 
-li {
-    margin: 0.5rem 0;
+.my-code {
+    background-color: white;
+    overflow-y: scroll;
 }
 
 .my-code li {
