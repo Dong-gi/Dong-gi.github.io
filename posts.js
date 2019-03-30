@@ -1,7 +1,7 @@
 const posts = {
     "list": [
         { "filename": "posts/1809/0.html", "category": "분류전", "title": "새로운 시작", "date": "2019-03-28 11:20:13" },
-        { "filename": "posts/1809/1.html", "category": "Tools/VS Code", "title": "날짜 입력하기", "date": "2018-09-02 18:15:08" },
+        { "filename": "posts/1809/1.html", "category": "Tool/VS Code", "title": "날짜 입력하기 : Insert Date String", "date": "2018-09-02 18:15:08" },
         { "filename": "posts/1809/2.html", "category": "Java/Basic", "title": "개발 환경", "date": "2018-09-02 19:24:36" },
         { "filename": "posts/1809/3.html", "category": "Java/Basic", "title": "개발 과정", "date": "2018-09-02 19:37:46" },
         { "filename": "posts/1809/4.html", "category": "Java/Basic", "title": "주석", "date": "2018-09-02 19:44:42" },
@@ -493,6 +493,7 @@ const posts = {
         { "filename": "posts/1812/491.html", "category": "C*/C#.NET/Basic", "title": "C# 기타 문법", "date": "2018-12-29 17:42:52" },
         { "filename": "posts/1901/492.html", "category": "JavaScript/Basic", "title": "Etc", "date": "2019-01-12 23:08:26" },
         { "filename": "posts/1901/493.html", "category": "C*/C#.NET/WPF", "title": "WPF", "date": "2019-01-12 23:08:26" },
+        { "filename": "posts/1903/494.html", "category": "Tool/VS Code", "title": "파일 탐색 뷰에서 현재 문서 자동 추적 중지", "date": "2019-03-30 21:52:15" },
         //{ "filename": "posts/1812/.html", "category": "", "title": "", "date": "" },
     ],
     "tree": {},

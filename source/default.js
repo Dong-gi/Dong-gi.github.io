@@ -4,6 +4,7 @@ $(() => {
 
     // 카테고리 초기화하고 포스트 등록, 포스트는 순서대로 아이디를 가짐
     let id = 0;
+    posts.list.sort((post1, post2) => post1.date.localeCompare(post2.date));
     for (post of posts.list) {
         post.id = id++;
 
