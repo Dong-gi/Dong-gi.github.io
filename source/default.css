@@ -59,7 +59,7 @@ li:hover {
 
 .my-code {
     background-color: white;
-    overflow: scroll;
+    overflow: auto;
     border: solid #eeeeee;
     border-radius: 1em;
 }
