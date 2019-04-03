@@ -1,6 +1,6 @@
 const posts = {
     "list": [
-        { "filename": "posts/1809/0.html", "category": "분류전", "title": "새로운 시작", "date": "2019-03-28 11:20:13" },
+        { "filename": "posts/1809/0.html", "category": "분류전", "title": "새로운 시작", "date": "2019-04-02 09:33:24" },
         { "filename": "posts/1809/17.html", "category": "분류전", "title": "댓글 기능 추가", "date": "2018-09-02 23:49:42" },
         
         { "filename": "posts/1809/1.html", "category": "Tool/VS Code", "title": "날짜 입력하기 : Insert Date String", "date": "2018-09-02 18:15:08" },
@@ -507,6 +507,8 @@ const posts = {
         { "filename": "posts/1810/475.html", "category": "Book", "title": "마음의 탄생", "date": "2018-10-24 22:11:48" },
         { "filename": "posts/1810/476.html", "category": "Book", "title": "키르케고르 실존 극장", "date": "2018-10-27 10:59:43" },
         { "filename": "posts/1810/477.html", "category": "Book", "title": "생각하는 삶을 위한 철학의 역사", "date": "2018-10-27 21:25:58" },
+
+        { "filename": "posts/1904/495.html", "category": "Linux", "title": "리눅스 시간 동기화", "date": "2019-04-02 10:42:07" },
     ],
     "tree": {},
     "contents": [],

@@ -208,8 +208,10 @@ function insertCode(buttonId) {
                         lines = hljs.highlight(lan, response)['value'].split(/\n/gm);
 
                     let ol = $('<ol>').css('font-family', 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New');
-                    for (line of lines)
-                        ol.append($('<li>').html(line.replace(/  /gm, '&nbsp;')));
+                    let start = $(button).attr('displayStart') - 1;
+                    let end = $(button).attr('displayEnd') - 1;
+                    for (let idx = (start || 0); idx < (end || lines.length); ++idx)
+                        ol.append($('<li>').html(lines[idx].replace(/  /gm, '&nbsp;')));
 
                     $(div).html(ol);
                 }
