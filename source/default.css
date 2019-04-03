@@ -6,10 +6,6 @@ main {
     width: 100%;
 }
 
-a {
-    color: black;
-}
-
 img {
     max-width: 100%;
 }
@@ -36,17 +32,25 @@ details[open] summary:before {
 
 details>p {
     background-color: white;
-    border-radius: 0.6em;
+    border-radius: 1em;
     margin-top: 1rem;
-    padding: 0.2em;
+    padding: 0.5em 1em;
 }
 
 dl, ol, ul {
-    margin-left: -1em;
+    margin-left: -1.5em;
+}
+
+.my-code ol, .modal-body ol {
+    margin-left: 0;
 }
 
 li {
     margin: 0.5rem 0;
+}
+
+.my-code li, .code-modal li {
+    margin: 0;
 }
 
 li:hover {
@@ -55,15 +59,9 @@ li:hover {
 
 .my-code {
     background-color: white;
-    overflow-y: scroll;
-}
-
-.my-code li {
-    margin: 0;
-}
-
-.code-modal li {
-    margin: 0;
+    overflow: scroll;
+    border: solid #eeeeee;
+    border-radius: 1em;
 }
 
 /* Overwrite the Bootstrap's settings */
@@ -101,6 +99,10 @@ li:hover {
     .modal-dialog {
         height: 100%;
     }
+}
+
+hr {
+    border-top: 3px solid rgba(0,0,0,.1);
 }
 
 .modal-content {

@@ -3,13 +3,12 @@ package io.github.donggi;
 public class Comment {
 
     public static void main(String[] args) {
-        HelloWorld.main(null);
+        System.out.println("Hello World");
 
-        // HelloWorld.main(null);
+        // System.out.println("Hello World");
 
-        /*
-         * HelloWorld.main(null); HelloWorld.main(null);
-         */
+        /*System.out.println("Hello World");
+        System.out.println("Hello World");*/
     }
 
 }

@@ -7,9 +7,6 @@ const posts = {
         { "filename": "posts/1903/494.html", "category": "Tool/VS Code", "title": "파일 탐색 뷰에서 현재 문서 자동 추적 중지", "date": "2019-03-30 21:52:15" },
         
         { "filename": "posts/1809/2.html", "category": "Java/Basic", "title": "시작하기", "date": "2019-04-02 22:46:23" },
-        { "filename": "posts/1809/4.html", "category": "Java/Basic", "title": "주석", "date": "2018-09-02 19:44:42" },
-        { "filename": "posts/1809/5.html", "category": "Java/Basic", "title": "식별자", "date": "2018-09-02 19:50:55" },
-        { "filename": "posts/1809/6.html", "category": "Java/Basic", "title": "자료형과 연산자", "date": "2018-09-02 19:52:13" },
         { "filename": "posts/1809/7.html", "category": "Java/Basic", "title": "구문", "date": "2018-09-02 20:00:25" },
         { "filename": "posts/1809/8.html", "category": "Java/Basic", "title": "접근 한정자", "date": "2018-09-02 20:03:02" },
         { "filename": "posts/1809/9.html", "category": "Java/Basic", "title": "가변인수 함수", "date": "2018-09-02 20:03:45" },
