@@ -34,12 +34,11 @@ public class Syntax {
             System.out.println("What's This? : " + var3);
         }
 
-        outer: for (;;) {
-            inner: for (;;) {
-                break outer;
-            }
-        }
-        System.out.println("이중 반복문 종료");
+        outer: for (;;)
+            middle: while(true)
+                inner: for (;;)
+                    break outer;
+        System.out.println("중첩 반복문 종료");
 
         var arr = new int[] { 1, 2, 3, 4 };
         for (var i : arr) {

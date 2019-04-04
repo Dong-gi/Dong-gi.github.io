@@ -1,14 +1,12 @@
 const posts = {
     "list": [
         { "filename": "posts/1809/0.html", "category": "분류전", "title": "새로운 시작", "date": "2019-04-02 09:33:24" },
-        { "filename": "posts/1809/17.html", "category": "분류전", "title": "댓글 기능 추가", "date": "2018-09-02 23:49:42" },
         
-        { "filename": "posts/1809/1.html", "category": "Tool/VS Code", "title": "날짜 입력하기 : Insert Date String", "date": "2018-09-02 18:15:08" },
-        { "filename": "posts/1903/494.html", "category": "Tool/VS Code", "title": "파일 탐색 뷰에서 현재 문서 자동 추적 중지", "date": "2019-03-30 21:52:15" },
+        { "filename": "posts/1809/1.html", "category": "Tip/VS Code", "title": "날짜 입력하기 : Insert Date String", "date": "2018-09-02 18:15:08" },
+        { "filename": "posts/1903/494.html", "category": "Tip/VS Code", "title": "파일 탐색 뷰에서 현재 문서 자동 추적 중지", "date": "2019-03-30 21:52:15" },
         
         { "filename": "posts/1809/2.html", "category": "Java/Basic", "title": "시작하기", "date": "2019-04-02 22:46:23" },
-        { "filename": "posts/1809/7.html", "category": "Java/Basic", "title": "구문", "date": "2018-09-02 20:00:25" },
-        { "filename": "posts/1809/8.html", "category": "Java/Basic", "title": "접근 한정자", "date": "2018-09-02 20:03:02" },
+        { "filename": "posts/1809/8.html", "category": "Java/Basic", "title": "객체지향", "date": "2019-04-04 22:44:14" },
         { "filename": "posts/1809/9.html", "category": "Java/Basic", "title": "가변인수 함수", "date": "2018-09-02 20:03:45" },
         { "filename": "posts/1809/10.html", "category": "Java/Basic", "title": "람다. 인터페이스 익명객체의 대안", "date": "2018-09-02 20:05:23" },
         { "filename": "posts/1809/11.html", "category": "Java/Basic", "title": "스트림", "date": "2018-09-02 20:09:39" },

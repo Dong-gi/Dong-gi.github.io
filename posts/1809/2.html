@@ -103,29 +103,50 @@ jar.exe : Java ARchive. 프로그램 실행에 관련된 파일들을 .jar파일
 <strong>자료형, 연산</strong>
 <ul>
     <li>자료형은 메모리 상에서 변수가 존재하는 형식을 정의한다.</li>
-    <li>기본 자료형(Base Type; Primitive Type)은 사용자가 정의하지 않은, 이미 자바 언어에 정의된 자료형을 의미한다.</li>
-    <li>자바의 8가지 기본 자료형 : boolean, char, byte, short, int, long, float, double</li>
-    <li>정수 0으로 나누는 것은 허용되지 않지만, 실수 0.으로 나누는 것은 허용된다. 다만, 0.으로 나눈 결과를 비교할 때는 예시와 같이 Double 클래스 메서드를 이용하는 것이 정확하다.</li>
-    <li>식별자 없이 값 자체를 나타내는 코드를 리터럴(Literal)이라 부른다. 각 자료형에 대응하는 리터럴 표기는 예시 코드를 참고.
-        <br>예시에서 '+' 연산자가 기본 자료형 각각에 대해 문자열 연결을 해줌을 볼 수 있다. 하지만 자바는 연산자 재정의를 지원해주지는 않으므로 오해하지 말아야 한다.
-    </li>
-    <li>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/TypeBoolean.java" lan="java">불린 예시 코드 »</button>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/TypeCharacter.java" lan="java">문자 예시 코드 »</button>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/TypeNumber.java" lan="java">숫자 예시 코드 »</button>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/TypeString.java" lan="java">문자열 예시 코드 »</button>
-    </li>
-    <li>자바는 강한 타입 검사를 하며, 자바스크립트와 같이 null, '', 0 등을 false로 간주하거나 하는 일도 없다.</li>
-    <li>참조 자료형(Reference Type)은 기본 자료형을 제외한 모든 자료형을 포함하며, 메모리의 주소를 통해 값에 접근한다. C/C++의 포인터와 같지만, 자바는 포인터 연산을 지원하지는 않는다. 예시 코드는
-        자바의 배열에 대해 보인다. 자바의 다차원 배열은 기본적으로 Jagged Array이다.
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/TypeArray.java" lan="java">예시 코드 »</button>
-    </li>
-    <li>기본 자료형 변수는 정적 할당, 참조 자료형 변수는 동적 할당된다. 동적 할당된 객체들은 자동으로 GC 대상이 된다.
-        <br>&raquo; 정적 할당 : 컴파일러가 메모리 점유를 정확하게 예측할 수 있는 (지역)변수를 생성하는 방법으로, 선언과 동시에 스택 영역에 할당되어 코드 블록이 끝나는 순간 해제된다.
-        <br>&raquo; 동적 할당 : 동적으로 할당되는 객체들은 힙 영역에 생성되며, 그 참조가 유지되는 한 프로그램 종료시까지 유지된다.</li>
-
-        형변환
-        묵시적 형변환 : 자식 타입 변수는 부모 타입 변수에 그냥 할당 가능. 산술 연산시에도 자동으로 이루어진다.
-        명시적 형변환 : 부모 타입 변수를 자식 타입 변수에 할당하는 경우, 명시 필요.
-        Checked
+    <li>기본 자료형(Base Type; Primitive Type)</li>
+    참조 자료형이 아닌 자바의 8가지 기본 자료형은 메모리 상에 값이 그대로 존재한다. boolean, char, byte, short, int, long, float, double<br>
+    식별자 없이 값 자체를 나타내는 코드를 리터럴(Literal)이라 부른다. 각 자료형의 리터럴과 적용되는 연산은 아래의 예시 코드 참고.<br>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/TypeExample.java" lan="java" displayStart="5" displayEnd="26">boolean 예시 코드 »</button>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/TypeExample.java" lan="java" displayStart="38" displayEnd="44">char 예시 코드 »</button>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/TypeExample.java" lan="java" displayStart="45" displayEnd="87">number 예시 코드 »</button>
+        
+    <li>참조 자료형(Reference Type)</li>
+    메모리의 주소를 통해 값에 접근한다. C/C++의 포인터와 같지만, 자바는 포인터 연산을 지원하지는 않는다.<br>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/TypeExample.java" lan="java" displayStart="27" displayEnd="37">문자열 예시 코드 »</button>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/TypeExample.java" lan="java" displayStart="88" displayEnd="101">배열 예시 코드 »</button>
+    
+    <li>변수 할당</li>
+    기본 자료형 변수는 정적 할당, 참조 자료형 변수는 동적 할당된다. 동적 할당된 객체들은 자동으로 GC 대상이 된다.
+    <ul>
+        <li>정적 할당</li>
+        컴파일러가 메모리 점유를 정확하게 예측할 수 있는 (지역)변수를 생성하는 방법으로, 선언과 동시에 스택 영역에 할당되어 코드 블록이 끝나는 순간 해제된다.<br>
+        클로저 Closure : 동적 할당되어 유지되는 객체 안에 정적 할당되는 변수를 선언하여 정적 변수의 소멸 시기를 스코프 밖으로 지연시키는 것.
+        <li>동적 할당</li>
+        동적으로 할당되는 객체들은 힙 영역에 생성되며, 그 참조가 유지되는 한 프로그램 종료시까지 유지된다.
+    </ul>
+        
+    <li>형변환 Type Casting</li>
+    <ul>
+        <li>묵시적 형변환</li>
+        자식 타입 변수는 부모 타입 변수에 그냥 할당 가능. 산술 연산시에도 자동으로 이루어진다.
+        <li>명시적 형변환 - (clazz)</li>
+        부모 타입 변수를 자식 타입 변수에 할당하는 경우, (clazz) 명시 필요. 경우에 따라 경고가 표시된다.
+        <li>Checked Casting</li>
+        경고 없이 명시적으로 형변환하는 것. clazz.cast(object)를 이용한다.
+    </ul>
 </ul>
+
+<hr>
+
+<strong>구문</strong>
+<ul>
+    if, for, while, do-while, switch, try-catch, try-with-resource
+    <li>switch 조건식에 정수(char 포함), String, Enum이 허용된다.</li>
+    <li>반복문에 label을 설정해 중첩된 루프들 중 어느 것이든 break/continue시킬 수 있다.</li>
+    <li>Iterable하면 향상된 for 구문을 이용할 수 있다.</li>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/Syntax.java" lan="java" displayStart="6" displayEnd="36">switch 예시 코드 »</button>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/Syntax.java" lan="java" displayStart="37" displayEnd="42">labeled 반복문 예시 코드 »</button>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/Syntax.java" lan="java" displayStart="43" displayEnd="47">enhanced for 예시 코드 »</button>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/TryWithResources.java" lan="java">try-with-resource 예시 코드 »</button>
+</ul>
+    
