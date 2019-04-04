@@ -7,7 +7,6 @@ const posts = {
         
         { "filename": "posts/1809/2.html", "category": "Java/Basic", "title": "시작하기", "date": "2019-04-02 22:46:23" },
         { "filename": "posts/1809/8.html", "category": "Java/Basic", "title": "객체지향", "date": "2019-04-04 22:44:14" },
-        { "filename": "posts/1809/9.html", "category": "Java/Basic", "title": "가변인수 함수", "date": "2018-09-02 20:03:45" },
         { "filename": "posts/1809/10.html", "category": "Java/Basic", "title": "람다. 인터페이스 익명객체의 대안", "date": "2018-09-02 20:05:23" },
         { "filename": "posts/1809/11.html", "category": "Java/Basic", "title": "스트림", "date": "2018-09-02 20:09:39" },
         { "filename": "posts/1809/12.html", "category": "Java/Basic", "title": "옵션 타입", "date": "2018-09-02 20:11:00" },
