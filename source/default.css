@@ -2,6 +2,14 @@ body {
     padding-bottom: 4rem;
 }
 
+div {
+    word-wrap: break-word;
+}
+
+.my-code ol, .modal-body {
+    word-wrap: normal;
+}
+
 main {
     width: 100%;
 }
@@ -15,6 +23,11 @@ summary {
     font-weight: 500;
 }
 
+summary>div.col-12 {
+    margin-left: -2em;
+    padding-left: 2em;
+}
+
 summary::-webkit-details-marker {
     display: none
 }
@@ -23,7 +36,7 @@ summary:before {
     content: "+";
     font-size: 1.1em;
     line-height: 1.1em;
-    margin-left: 1em;
+    padding: 0 0.5em;
 }
 
 details[open] summary:before {

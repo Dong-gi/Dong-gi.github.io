@@ -505,7 +505,11 @@ const posts = {
         { "filename": "posts/1810/476.html", "category": "Book", "title": "키르케고르 실존 극장", "date": "2018-10-27 10:59:43" },
         { "filename": "posts/1810/477.html", "category": "Book", "title": "생각하는 삶을 위한 철학의 역사", "date": "2018-10-27 21:25:58" },
 
+
         { "filename": "posts/1904/495.html", "category": "Linux", "title": "리눅스 시간 동기화", "date": "2019-04-02 10:42:07" },
+
+
+        { "filename": "posts/1904/496.html", "category": "FreeMarker/매뉴얼/2.3.28", "title": "템플릿 작성 가이드", "date": "2019-04-04 17:14:37" },
     ],
     "tree": {},
     "contents": [],
