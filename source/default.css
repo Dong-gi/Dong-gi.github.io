@@ -6,7 +6,7 @@ div {
     word-wrap: break-word;
 }
 
-.my-code ol, .modal-body {
+.my-code, .modal-body {
     word-wrap: normal;
 }
 
@@ -39,7 +39,7 @@ summary:before {
     padding: 0 0.5em;
 }
 
-details[open] summary:before {
+details[open]>summary:before {
     content: "-";
 }
 
