@@ -7,32 +7,17 @@ const posts = {
         
         { "filename": "posts/1809/2.html", "category": "Java/Basic", "title": "시작하기", "date": "2019-04-02 22:46:23" },
         { "filename": "posts/1809/8.html", "category": "Java/Basic", "title": "객체지향", "date": "2019-04-04 22:44:14" },
-        { "filename": "posts/1809/10.html", "category": "Java/Basic", "title": "람다. 인터페이스 익명객체의 대안", "date": "2018-09-02 20:05:23" },
         { "filename": "posts/1809/11.html", "category": "Java/Basic", "title": "스트림", "date": "2018-09-02 20:09:39" },
         { "filename": "posts/1809/12.html", "category": "Java/Basic", "title": "옵션 타입", "date": "2018-09-02 20:11:00" },
         { "filename": "posts/1809/13.html", "category": "Java/Basic", "title": "JUnit", "date": "2018-09-02 20:12:00" },
-        { "filename": "posts/1809/14.html", "category": "Java/Basic", "title": "동기화", "date": "2018-09-02 20:13:03" },
-        { "filename": "posts/1809/15.html", "category": "Java/JNI", "title": "Java Native Interface", "date": "2018-09-02 20:15:27" },
-        { "filename": "posts/1809/16.html", "category": "Java/Basic", "title": "클래스", "date": "2018-09-02 20:22:35" },
-        { "filename": "posts/1809/18.html", "category": "Java/Basic", "title": "Object 클래스", "date": "2018-09-03 23:01:14" },
-        { "filename": "posts/1809/19.html", "category": "Java/Basic", "title": "인터페이스", "date": "2018-09-03 23:20:50" },
-        { "filename": "posts/1809/20.html", "category": "Java/Basic", "title": "중첩 클래스", "date": "2018-09-03 23:22:43" },
-        { "filename": "posts/1809/21.html", "category": "Java/Basic", "title": "패키지", "date": "2018-09-03 23:23:46" },
         { "filename": "posts/1809/22.html", "category": "Java/Basic", "title": "예외", "date": "2018-09-03 23:25:36" },
         { "filename": "posts/1809/23.html", "category": "Java/Basic", "title": "제네릭", "date": "2018-09-03 23:26:39" },
-        { "filename": "posts/1809/24.html", "category": "Java/Basic", "title": "공용체", "date": "2018-09-03 23:27:22" },
         { "filename": "posts/1809/25.html", "category": "Java/Basic", "title": "Java 8 추가사항", "date": "2018-09-03 23:28:17" },
         { "filename": "posts/1809/26.html", "category": "Java/Basic", "title": "Java 9 추가사항", "date": "2018-09-03 23:40:39" },
         { "filename": "posts/1809/27.html", "category": "Java/Basic", "title": "Java 10 추가사항", "date": "2018-09-03 23:42:01" },
-        { "filename": "posts/1809/28.html", "category": "Java/JavaSE/java.io", "title": "interface Closeable extends AutoCloseable Since 1.5", "date": "2018-09-08 16:09:58" },
-        { "filename": "posts/1809/29.html", "category": "Java/JavaSE/java.io", "title": "interface DataInput Since 1.0", "date": "2018-09-08 16:19:41" },
-        { "filename": "posts/1809/30.html", "category": "Java/JavaSE/java.io", "title": "interface DataOutput Since 1.0", "date": "2018-09-08 16:22:19" },
-        { "filename": "posts/1809/31.html", "category": "Java/JavaSE/java.io", "title": "interface Externalizable extends Serializable Since 1.1", "date": "2018-09-08 16:23:34" },
-        { "filename": "posts/1809/32.html", "category": "Java/JavaSE/java.io", "title": "@FunctionalInterface interface FileFilter Since 1.2", "date": "2018-09-08 16:26:27" },
-        { "filename": "posts/1809/33.html", "category": "Java/JavaSE/java.io", "title": "@FunctionalInterface interface FilenameFilter Since 1.0", "date": "2018-09-08 16:38:42" },
-        { "filename": "posts/1809/34.html", "category": "Java/JavaSE/java.io", "title": "interface ObjectInput extends DataInput, AutoCloseable Since 1.1", "date": "2018-09-08 16:39:54" },
-        { "filename": "posts/1809/35.html", "category": "Java/JavaSE/java.io", "title": "interface ObjectOutput extends DataOutput, AutoCloseable Since 1.1", "date": "2018-09-08 16:48:10" },
-        { "filename": "posts/1809/36.html", "category": "Java/JavaSE/java.io", "title": "interface Serializable Since 1.1", "date": "2018-09-08 16:49:03" },
+        { "filename": "posts/1809/15.html", "category": "Java/JNI", "title": "Java Native Interface", "date": "2018-09-02 20:15:27" },
+        
+        { "filename": "posts/1809/28.html", "category": "Java/java.base/java.io", "title": "Interface", "date": "2019-04-06 23:08:55" },
         { "filename": "posts/1809/37.html", "category": "Java/JavaSE/java.io", "title": "abstract class InputStream implements Closeable Since 1.0", "date": "2018-09-08 16:50:15" },
         { "filename": "posts/1809/38.html", "category": "Java/JavaSE/java.io", "title": "abstract class OutputStream implements Closeable, Flushable Since 1.0", "date": "2018-09-08 16:51:23" },
         { "filename": "posts/1809/39.html", "category": "Java/JavaSE/java.io", "title": "abstract class Reader implements Readable, Closeable Since 1.1", "date": "2018-09-08 16:52:21" },
@@ -531,4 +516,12 @@ const posts = {
 <a role="button" target="_blank" class="btn btn-info btn-sm" href=""></a>
 <a role="button" target="#" class="btn btn-info btn-sm" href="javascript:;"></a>
 <img class="rounded mx-auto d-block" alt="" src="imgs/">
+
+<details>
+    <summary></summary>
+
+</details>
+
+<hr>
+
  */

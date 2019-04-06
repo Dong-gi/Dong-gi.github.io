@@ -21,10 +21,10 @@ public class Lambda {
 
         Object doSomething();
 
-        int NUM = 1; // final 변수도 가질 수 있다.
+        int NUM = 1; // 당연히 final 변수도 가질 수 있다.
 
         private void doSomething2() {
-            System.out.println("private 메서드도 가질 수 있다. 밖에서는 못부르징~");
+            System.out.println("당연히 private 메서드도 가질 수 있다. 밖에서는 못부르징~");
         }
 
         public default void doSomething3() {

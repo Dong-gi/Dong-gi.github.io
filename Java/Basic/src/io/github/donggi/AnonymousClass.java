@@ -4,15 +4,16 @@ import java.util.ArrayList;
 
 public class AnonymousClass {
 
+    static class C {}
     static interface I {}
 
     public static void main(String[] args) {
-        var class2 = new AnonymousClass() {
+        var anonymousClassInstance1 = new C() {
             int newField;
             void newMethod() {}
         };
 
-        var i = new I() {
+        var anonymousClassInstance2 = new I() {
             int newField;
             void newMethod() {}
         };

@@ -37,6 +37,7 @@ public class Interface implements Flyable {
         new Interface().fly();
         new Interface().flyFast();
         System.out.println(Flyable.numberOfWings());
+        System.out.println(Flyable2.numberOfWings());
     }
 
     @Override

@@ -55,8 +55,7 @@ public class Nested {
 
         // local class
         // 자신을 둘러싸고 있는 영역의 final 변수를 이용할 수 있다.
-        final class LocalClass implements Actable {
-        }
+        final class LocalClass implements Actable {}
         new LocalClass().act();
     }
 }
