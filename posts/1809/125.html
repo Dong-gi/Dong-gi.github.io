@@ -1,12 +1,30 @@
-<ol>
-    <li>Module Resolution : 모듈들의 연관 관계를 계산하는 작업. 각 모듈의 필요(requires) 모듈들을 반복적으로 찾아내고 관계 그래프를 구한다.</li>
-    <li>ModuleFinder는 module resolution과 service binding(Configuration::resolveAndBind)에서 모듈을 찾는 데 이용된다.</li>
-    <li>Optional&lt;ModuleReference&gt; find(String name)</li>
-    <li>Set&lt;ModuleReference&gt; findAll()</li>
-    <li>static ModuleFinder ofSystem()</li>
-    <li>static ModuleFinder of(Path... entries)</li>
-    <li>static ModuleFinder compose(ModuleFinder... finders)</li>
-</ol>
+<hr>
 
-{ "filename": "posts/1809/125.html", "category": "Java/JavaSE/java.lang.module", "title": "interface ModuleFinder Since 9", "date": "2018-09-08 20:18:49" },
-{ "filename": "posts/1809/126.html", "category": "Java/JavaSE/java.lang.module", "title": "interface ModuleReader Extends Closeable Since 9", "date": "2018-09-08 20:19:25" },
+<details>
+    <summary>interface ModuleFinder Since 9</summary>
+    <ol>
+        <li>Module Resolution : 모듈들의 연관 관계를 계산하는 작업. 각 모듈의 필요(requires) 모듈들을 반복적으로 찾아내고 관계 그래프를 구한다.</li>
+        <li>ModuleFinder는 module resolution과 service binding(Configuration::resolveAndBind)에서 모듈을 찾는 데 이용된다.</li>
+        <li>Optional&lt;ModuleReference&gt; find(String name)</li>
+        <li>Set&lt;ModuleReference&gt; findAll()</li>
+        <li>static ModuleFinder ofSystem()</li>
+        <li>static ModuleFinder of(Path... entries)</li>
+        <li>static ModuleFinder compose(ModuleFinder... finders)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>interface ModuleReader Extends Closeable Since 9</summary>
+    <ol>
+        <li>모듈 내용에 대한 접근 제공.</li>
+        <li>Optional&lt;URI&gt; find(String name)</li>
+        <li>default Optional&lt;InputStream&gt; open(String name)</li>
+        <li>default Optional&ByteBuffer&gt; read(String name)</li>
+        <li>default void release(ByteBuffer bb)</li>
+        <li>Stream&lt;String&gt; list()</li>
+    </ol>
+</details>
+
+<hr>

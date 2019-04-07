@@ -1,14 +1,74 @@
-<ol>
-    <li>이 인터페이스를 구체화하는 것으로 새로운 어노테이션을 정의할 순 없다.</li>
-    <li>Class&lt;? extends Annotation&gt; annotationType()</li>
-    <li>int hashCode()</li>
-</ol>
+<hr>
 
-{ "filename": "posts/1809/116.html", "category": "Java/JavaSE/java.lang.annotation", "title": "interface Annotation Since 1.5", "date": "2018-09-08 20:13:24" },
-{ "filename": "posts/1809/117.html", "category": "Java/JavaSE/java.lang.annotation", "title": "enum ElementType Since 1.5", "date": "2018-09-08 20:14:30" },
-{ "filename": "posts/1809/119.html", "category": "Java/JavaSE/java.lang.annotation", "title": "@Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Documented Since 1.5", "date": "2018-09-08 20:15:23" },
-{ "filename": "posts/1809/120.html", "category": "Java/JavaSE/java.lang.annotation", "title": "@Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Inherited Since 1.5", "date": "2018-09-08 20:15:37" },
-{ "filename": "posts/1809/121.html", "category": "Java/JavaSE/java.lang.annotation", "title": "@Documented @Target(FIELD) @Retention(SOURCE) @interface Native Since 1.8", "date": "2018-09-08 20:16:23" },
-{ "filename": "posts/1809/122.html", "category": "Java/JavaSE/java.lang.annotation", "title": "@Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Repeatable Since 1.8", "date": "2018-09-08 20:16:55" },
-{ "filename": "posts/1809/123.html", "category": "Java/JavaSE/java.lang.annotation", "title": "@Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Retention Since 1.5", "date": "2018-09-08 20:17:10" },
-{ "filename": "posts/1809/124.html", "category": "Java/JavaSE/java.lang.annotation", "title": "@Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Target Since 1.5", "date": "2018-09-08 20:17:54" },
+<details>
+    <summary>interface Annotation Since 1.5</summary>
+    <ol>
+        <li>이 인터페이스를 구체화하는 것으로 새로운 어노테이션을 정의할 순 없다.</li>
+        <li>Class&lt;? extends Annotation&gt; annotationType()</li>
+        <li>int hashCode()</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>enum ElementType Since 1.5</summary>
+    <ol>
+        <li>어노테이션이 적용되는 요소를 표현한다.</li>
+        <li>TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VALIABLE, ANNOTATION_TYPE, PACKAGE, TYPE_PARAMETER Since 1.8, MODULE Since 9</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>enum RetentionPolicy Since 1.5</summary>
+    <ol>
+        <li>어노테이션 유지 정책.</li>
+        <li>SOURCE : 컴파일러가 제거, CLASS : 컴파일러가 클래스 파일에 기록(default), RUNTIME : 클래스 파일에 기록하고 JVM 런타임에도 유지. 따라서 리플렉션 가능.</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>@Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Documented Since 1.5</summary>
+    @Documented가 다른 어노테이션 타입 A에 존재하면, @A로 꾸며진 요소의 공개적인 서명으로 인식하여 JavaDoc에 포함된다.
+</details>
+
+<hr>
+
+<details>
+    <summary>@Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Inherited Since 1.5</summary>
+    Superclass의 어노테이션을 상속함을 표시. 클래스에만 유효한 어노테이션이다.
+</details>
+
+<hr>
+
+<details>
+    <summary>@Documented @Target(FIELD) @Retention(SOURCE) @interface Native Since 1.8</summary>
+    필드가 네이티브 코드 값을 정의함을 표현.
+</details>
+
+<hr>
+
+<details>
+    <summary>@Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Repeatable Since 1.8</summary>
+    어노테이션을 반복적으로 정의할 수 있음을 표현. <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.oracle.com/javase/tutorial/java/annotations/repeating.html">튜토리얼</a>
+</details>
+
+<hr>
+
+<details>
+    <summary>@Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Retention Since 1.5</summary>
+    어노테이션을 얼마나 유지할 지 표현. value ← RetentionPolicy
+</details>
+
+<hr>
+
+<details>
+    <summary>@Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Target Since 1.5</summary>
+    어노테이션을 적용할 요소들을 표현한다. 여러 개(또는 0개)일 경우 배열 리터럴 표기 {}를 이용한다. value ← ElementType[]
+</details>
+
+<hr>
