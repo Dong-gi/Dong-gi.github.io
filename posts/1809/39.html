@@ -1,8 +1,0 @@
-<ol>
-    <li>char 단위 읽기에 대한 최상위 추상 클래스</li>
-    <li>서브클래스들은 read(char[], int, int)와 close()만 구현해도 된다.</li>
-    <li>int read() » char 하나를 읽고 int로 반환. 스트림의 끝이라면 -1을 반환한다.</li>
-    <li>int read(char[] cbuf), abstract int read(char[] cbuf, int off, int len)</li>
-    <li>long skip(long n) » 실제로 건너 뛴 글자 수(바이트 수x) 반환</li>
-    <li>boolean ready() » 다음 read()가 블록되지 않음을 보장하면 true, 보장하지 못하면 false</li>
-</ol>
