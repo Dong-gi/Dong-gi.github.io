@@ -1,5 +1,0 @@
-1. 채널의 바이트들을 여러 버퍼에 순서대로 저장. 네트워크 헤더나 파일 메타데이터처럼 고정 길이의 헤더를 읽는 데 유용.
-<br>
-<br>2. long read(ByteBuffer[] dsts, int offset, int length)
-<br>» dsts[offset]부터 length개의 버퍼가 각각의 remaining()만큼씩 바이트를 읽어 가져간다.
-<br>long read(ByteBuffer[] dsts) : == read(dsts, 0, dsts.length)

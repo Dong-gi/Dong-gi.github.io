@@ -1,8 +1,0 @@
-1. 현재 위치를 기억하는 바이트 채널.
-<br>
-<br>2. long position()
-<br>SeekableByteChannel position(long newPosition) : position을 변경하고 그대로 반환.
-<br>long size() : 채널에 연결된 개체의 크기 반환
-<br>SeekableByteChannel truncate(long size)
-<br>» 채널에 연결된 개체를 size로 크기 조정. size가 현재 크기보다 작은 경우, 나머지는 버려진다. size가 현재 크기 이상인 경우 아무 변경 없다.
-<br>» 현재 position이 size보다 큰 경우 size로 조정된다.

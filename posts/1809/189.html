@@ -1,22 +1,62 @@
-1. 표준 캐릭터셋 : US-ASCII, ISO-8859-1, UTF-8, UTF-16BE, UTF-16LE, UTF-16
-<br>
-<br>2. static boolean isSupported(String charsetName)
-<br>static Charset forName(String charsetName)
-<br>static SortedMap&lt;String, Charset&gt; availableCharsets()
-<br>static Charset defaultCharset() Since 1.5
-<br>final String name()
-<br>final Set&lt;String&gt; aliases()
-<br>String displayName()
-<br>final boolean isRegistered() : IANA 캐릭터셋에 등록됐는지
-<br>String displayName(Locale locale)
-<br>abstract boolean contains(Charset cs)
-<br>abstract CharsetDecoder newDecoder()
-<br>abstract CharsetEncoder newEncoder()
-<br>boolean canEncode()
-<br>final CharBuffer decode(ByteBuffer bb)
-<br>final ByteBuffer encode(CharBuffer cb)
-<br>final ByteBuffer encode(String str)
+<hr>
 
-{ "filename": "posts/1809/189.html", "category": "Java/java.base/java.nio.charset", "title": "abstract class Charset implements Comparable&lt;Charset&gt; Since 1.4", "date": "2018-09-08 21:33:09" },
-{ "filename": "posts/1809/190.html", "category": "Java/java.base/java.nio.charset", "title": "abstract class CharsetDecoder Since 1.4", "date": "2018-09-08 21:33:27" },
-{ "filename": "posts/1809/191.html", "category": "Java/java.base/java.nio.charset", "title": "abstract class CharsetEncoder Since 1.4", "date": "2018-09-08 21:33:48" },
+<details>
+    <summary>abstract class Charset implements Comparable&lt;Charset&gt; Since 1.4</summary>
+    <ol>
+        <li>static boolean isSupported(String charsetName)</li>
+        <li>static Charset forName(String charsetName)</li>
+        <li>static SortedMap&lt;String, Charset&gt; availableCharsets()</li>
+        <li>static Charset defaultCharset() Since 1.5</li>
+        <li>final String name()</li>
+        <li>final Set&lt;String&gt; aliases()</li>
+        <li>String displayName()</li>
+        <li>final boolean isRegistered() : IANA 캐릭터셋에 등록됐는지</li>
+        <li>String displayName(Locale locale)</li>
+        <li>abstract boolean contains(Charset cs)</li>
+        <li>abstract CharsetDecoder newDecoder()</li>
+        <li>abstract CharsetEncoder newEncoder()</li>
+        <li>boolean canEncode()</li>
+        <li>final CharBuffer decode(ByteBuffer bb)</li>
+        <li>final ByteBuffer encode(CharBuffer cb)</li>
+        <li>final ByteBuffer encode(String str)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>abstract class CharsetDecoder Since 1.4</summary>
+    <ol>
+        <li>바이트들을 문자들로.</li>
+        <li>final Charset charset()</li>
+        <li>final CoderResult decode(ByteBuffer in, CharBuffer out, boolean endOfInput)</li>
+        <li>final CoderResult flush(CharBuffer out)</li>
+        <li>final CharsetDecoder reset()</li>
+        <li>final CharBuffer decode(ByteBuffer in)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>abstract class CharsetEncoder Since 1.4</summary>
+    <ol>
+        <li>문자들을 바이트들로.</li>
+        <li>final Charset charset()</li>
+        <li>final CoderResult encode(CharBuffer in, ByteBuffer out, boolean endOfInput)</li>
+        <li>final CoderResult flush(ByteBuffer out)</li>
+        <li>final CharsetEncoder reset()</li>
+        <li>final ByteBuffer encode(CharBuffer in)</li>
+        <li>boolean canEncode(char c)</li>
+        <li>boolean canEncode(CharSequence cs)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>final class StandardCharsets Since 1.7</summary>
+    표준 캐릭터셋 : US-ASCII, ISO-8859-1, UTF-8, UTF-16BE, UTF-16LE, UTF-16
+</details>
+
+<hr>

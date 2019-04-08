@@ -1,8 +1,0 @@
-1. 비동기 IO를 지원하는 바이트 채널. 인자에 이용되는 ByteBuffers는 쓰레드-안전하지 않음에 유의.
-<br>
-<br>2. &lt;A&gt; void read(ByteBuffer dst, A attachment, CompletionHandler&lt;Integer, ? super A&gt; handler)
-<br>» handler의 첫 인자는 읽은 바이트 수. 기본 동작은 ReadableByteChannel::read와 동일. 쓰기가 완료(실패)되면 handler가 호출된다.
-<br>Future&lt;Integer&gt; read(ByteBuffer dst)
-<br>» Fureture의 get 메서드로 바이트 수를 얻을 수 있다.
-<br>&lt;A&gt; void write(ByteBuffer src, A attachment, CompletionHandler&lt;Integer, ? super A&gt; handler)
-<br>Future&lt;Integer&gt; write(ByteBuffer src)

@@ -1,15 +1,141 @@
-1. 채널이란 IO를 수행할 수 있는 개체에 대한 연결이다.
-<br>
-<br>2. boolean isOpen()
+<hr>
 
-{ "filename": "posts/1809/178.html", "category": "Java/java.base/java.nio.channels", "title": "interface Channel extends Closeable Since 1.4", "date": "2018-09-08 21:26:59" },
-{ "filename": "posts/1809/179.html", "category": "Java/java.base/java.nio.channels", "title": "interface ReadableByteChannel extends Channel Since 1.4", "date": "2018-09-08 21:27:17" },
-{ "filename": "posts/1809/180.html", "category": "Java/java.base/java.nio.channels", "title": "interface ScatteringByteChannel extends ReadableByteChannel Since 1.4", "date": "2018-09-08 21:27:44" },
-{ "filename": "posts/1809/181.html", "category": "Java/java.base/java.nio.channels", "title": "interface WritableByteChannel extends Channel Since 1.4", "date": "2018-09-08 21:29:21" },
-{ "filename": "posts/1809/182.html", "category": "Java/java.base/java.nio.channels", "title": "interface GatheringByteChannel extends WritableByteChannel Since 1.4", "date": "2018-09-08 21:29:40" },
-{ "filename": "posts/1809/183.html", "category": "Java/java.base/java.nio.channels", "title": "interface ByteChannel extends ReadableByteChannel, WritableByteChannel Since 1.4", "date": "2018-09-08 21:29:58" },
-{ "filename": "posts/1809/184.html", "category": "Java/java.base/java.nio.channels", "title": "interface SeekableByteChannel extends ByteChannel Since 1.7", "date": "2018-09-08 21:30:14" },
-{ "filename": "posts/1809/185.html", "category": "Java/java.base/java.nio.channels", "title": "interface AsynchronousChannel extends Channel Since 1.7", "date": "2018-09-08 21:30:31" },
-{ "filename": "posts/1809/186.html", "category": "Java/java.base/java.nio.channels", "title": "interface AsynchronousByteChannel extends AsynchronousChannel Since 1.7", "date": "2018-09-08 21:30:52" },
-{ "filename": "posts/1809/187.html", "category": "Java/java.base/java.nio.channels", "title": "interface NetworkChannel extends Channel Since 1.7", "date": "2018-09-08 21:31:08" },
-{ "filename": "posts/1809/188.html", "category": "Java/java.base/java.nio.channels", "title": "final class Channels Since 1.4", "date": "2018-09-08 21:31:19" },
+<details>
+    <summary>interface Channel extends Closeable Since 1.4</summary>
+    <ol>
+        <li>채널이란 IO를 수행할 수 있는 개체에 대한 연결이다.</li>
+        <li>boolean isOpen()</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>interface ReadableByteChannel extends Channel Since 1.4</summary>
+    <ol>
+        <li>int read(ByteBuffer dst)</li>
+        dst.remaining()만큼 읽어 dst에 저장. 읽은 바이트 개수를 반환. 스트림의 끝이면 -1.
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>interface ScatteringByteChannel extends ReadableByteChannel Since 1.4</summary>
+    <ol>
+        <li>채널의 바이트들을 여러 버퍼에 순서대로 저장. 네트워크 헤더나 파일 메타데이터처럼 고정 길이의 헤더를 읽는 데 유용.</li>
+        <li>long read(ByteBuffer[] dsts, int offset, int length)</li>
+        » dsts[offset]부터 length개의 버퍼가 각각의 remaining()만큼씩 바이트를 읽어 가져간다.
+        <li>long read(ByteBuffer[] dsts) : == read(dsts, 0, dsts.length)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>interface WritableByteChannel extends Channel Since 1.4</summary>
+    <ol>
+        <li>int write(ByteBuffer src)</li>
+        src.remaining() 부분을 채널에 쓴다.
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>interface GatheringByteChannel extends WritableByteChannel Since 1.4</summary>
+    <ol>
+        <li>버퍼들의 내용을 순서대로 채널에 쓴다.</srcs>
+        <li>long write(ByteBuffer[] srcs, int offset, int length)</srcs>
+        srcs[offset]부터 length개의 버퍼의 remaining() 부분을 채널에 쓴다.
+        <li>long write(ByteBuffer[] srcs) : == write(srcs, 0, srcs.length)</srcs>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>interface ByteChannel extends ReadableByteChannel, WritableByteChannel Since 1.4</summary>
+    <ol>
+        <li>바이트 단위로 읽기/쓰기 모두 가능한 채널.</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>interface SeekableByteChannel extends ByteChannel Since 1.7</summary>
+    <ol>
+        <li>현재 위치를 기억하는 바이트 채널.</li>
+        <li>long position()</li>
+        <li>SeekableByteChannel position(long newPosition) : position을 변경하고 그대로 반환.</li>
+        <li>long size() : 채널에 연결된 개체의 크기 반환</li>
+        <li>SeekableByteChannel truncate(long size)</li>
+        » 채널에 연결된 개체를 size로 크기 조정. size가 현재 크기보다 작은 경우, 나머지는 버려진다. size가 현재 크기 이상인 경우 아무 변경 없다.<br>
+        » 현재 position이 size보다 큰 경우 size로 조정된다.
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>interface AsynchronousChannel extends Channel Since 1.7</summary>
+    <ol>
+        <li>비동기 IO는 보통 다음의 형태로 일어난다.</li>
+        » Future&lt;V&gt; operation(...) // operation : read, write, ...<br>
+        » void operation(... A attachment, CompletionHandler&lt;V, ? super A&gt; handler)
+        <li>비동기적으로 close()가 수행되며, 이후 발생하는 IO 작업은 AsynchronousCloseException 발생</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>interface AsynchronousByteChannel extends AsynchronousChannel Since 1.7</summary>
+    <ol>
+        <li>비동기 IO를 지원하는 바이트 채널. 인자에 이용되는 ByteBuffers는 쓰레드-안전하지 않음에 유의.</li>
+        <li>&lt;A&gt; void read(ByteBuffer dst, A attachment, CompletionHandler&lt;Integer, ? super A&gt; handler)</li>
+        » handler의 첫 인자는 읽은 바이트 수. 기본 동작은 ReadableByteChannel::read와 동일. 쓰기가 완료(실패)되면 handler가 호출된다.
+        <li>Future&lt;Integer&gt; read(ByteBuffer dst)</li>
+        » Fureture의 get 메서드로 바이트 수를 얻을 수 있다.
+        <li>&lt;A&gt; void write(ByteBuffer src, A attachment, CompletionHandler&lt;Integer, ? super A&gt; handler)</li>
+        <li>Future&lt;Integer&gt; write(ByteBuffer src)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>interface NetworkChannel extends Channel Since 1.7</summary>
+    <ol>
+        <li>네트워크 소켓에 대한 채널.</li>
+        <li>NetworkChannel bind(SocketAddress local)</li>
+        <li>SocketAddress getLocalAddress()</li>
+        <li>&lt;T&gt; NetworkChannel setOption(SocketOption&lt;T&gt; name, T value)</li>
+        <li>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name)</li>
+        <li>Set&lt;SocketOption&lt;?&gt;&gt; supportedOptions()</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>final class Channels Since 1.4</summary>
+    <ol>
+        채널과 스트림에 관한 유틸리티 클래스.
+        <li>static InputStream newInputStream(ReadableByteChannel ch)</li>
+        <li>static OutputStream newOutputStream(WritableByteChannel ch)</li>
+        <li>static InputStream newInputStream(AsynchronousByteChannel ch) Since 1.7</li>
+        <li>static OutputStream newOutputStream(AsynchronousByteChannel ch) Since 1.7</li>
+        <li>static ReadableByteChannel newChannel(InputStream in)</li>
+        <li>static WritableByteChannel newChannel(OutputStream out)</li>
+        <li>static Reader newReader(ReadableByteChannel ch, CharsetDecoder dec, int minBufferCap)</li>
+        <li>static Reader newReader(ReadableByteChannel ch, String csName)</li>
+        <li>static Reader newReader(ReadableByteChannel ch, Charset charset)</li>
+        <li>static Writer newWriter(WritableByteChannel ch, CharsetEncoder enc, int minBufferCap)</li>
+        <li>static Writer newWriter(WritableByteChannel ch, String csName)</li>
+        <li>static Writer newWriter(WritableByteChannel ch, Charset charset)</li>
+    </ol>
+</details>
+
+<hr>
