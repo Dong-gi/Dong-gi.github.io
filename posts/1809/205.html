@@ -1,19 +1,60 @@
-1. 시간대(time-zone)을 이용한 현재의 date와 time 제공.
-<br>예. LocalDate.now(clock)
-<br>
-<br>2. static Clock systemUTC()
-<br>static Clock systemDefaultZone()
-<br>static Clock system(ZoneId zone)
-<br>static Clock tickMillis(ZoneId zone) Since 9
-<br>static Clock tickSeconds(ZoneId zone)
-<br>static Clock tickMinutes(ZoneId zone)
-<br>static Clock tick(Clock baseClock, Duration tickDuration)
-<br>static Clock fixed(Instant fixedInstant, ZoneId zone)
-<br>static Clock offset(Clock baseClock, Duration offsetDuration)
-<br>abstract ZoneId getZone()
-<br>abstract Clock withZone(ZoneId zone)
-<br>long millis()
-<br>abstract Instant instant()
+<hr>
 
-{ "filename": "posts/1809/205.html", "category": "Java/java.base/java.time", "title": "abstract class Clock Since 1.8", "date": "2018-09-08 22:08:57" },
-{ "filename": "posts/1809/206.html", "category": "Java/java.base/java.time", "title": "final class Duration implements TemporalAmount, Comparable&lt;Duration&gt;, Serializable Since 1.8", "date": "2018-09-08 22:09:18" },
+<details>
+    <summary>abstract class Clock Since 1.8</summary>
+    <ol>
+        시간대(time-zone)을 이용한 현재의 date와 time 제공. 예. LocalDate.now(clock)
+        
+        <li>static Clock systemUTC()</li>
+        <li>static Clock systemDefaultZone()</li>
+        <li>static Clock system(ZoneId zone)</li>
+        <li>static Clock tickMillis(ZoneId zone) Since 9</li>
+        <li>static Clock tickSeconds(ZoneId zone)</li>
+        <li>static Clock tickMinutes(ZoneId zone)</li>
+        <li>static Clock tick(Clock baseClock, Duration tickDuration)</li>
+        <li>static Clock fixed(Instant fixedInstant, ZoneId zone)</li>
+        <li>static Clock offset(Clock baseClock, Duration offsetDuration)</li>
+        <li>abstract ZoneId getZone()</li>
+        <li>abstract Clock withZone(ZoneId zone)</li>
+        <li>long millis()</li>
+        <li>abstract Instant instant()</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>final class Duration implements TemporalAmount, Comparable&lt;Duration&gt;, Serializable Since 1.8</summary>
+    <ol>
+        <li>public static final Duration ZERO</li>
+        <li>static Duration ofDays(long days)</li>
+        <li>static Duration ofHours(Long hours)</li>
+        <li>static Duration ofMinutes(long minutes)</li>
+        <li>static Duration ofSeconds(long seconds)</li>
+        <li>static Duration ofSeconds(long seconds, long nanoAdjustment)</li>
+        <li>static Duration ofMillis(long millis)</li>
+        <li>static Duration ofNanos(long nanos)</li>
+        <li>static Duration of(long amount, TemporalUnit unit)</li>
+        <li>static Duration from(TemporalAmount amount)</li>
+        <li>static Duration parse(CharSequence text)</li>
+        <li>static Duration between(Temporal startInclusive, Temporal endExclusive)</li>
+        <li>long get(TemporalUnit unit)</li>
+        <li>List&lt;TemporalUnit&gt; getUnits()</li>
+        <li>boolean isZero()</li>
+        <li>boolean isNegative()</li>
+        <li>long getSeconds()</li>
+        <li>int getNano()</li>
+        <li>Duration withSeconds(long seconds)</li>
+        <li>Duration withNanos(int nanoOfSecond)</li>
+        <li>Duration plus(Duration duration) ...</li>
+        <li>Duration minus(Duration duration) ...</li>
+        <li>Duration multipliedBy(long multiplicand)</li>
+        <li>Duration divideBy(long divisor)</li>
+        <li>Duration negated()</li>
+        <li>Duration abs()</li>
+        <li>long toDays(), toHours() ...</li>
+        <li>Duration truncatedTo(TemporalUnit unit) Since 9</li>
+    </ol>
+</details>
+
+<hr>

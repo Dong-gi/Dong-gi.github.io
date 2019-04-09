@@ -1,6 +1,0 @@
-(a, b, c)의 조합은 순서와 상관이 없으므로, a &lt;= b &lt;= c인 조합만 고려하면 된다. 이를 (small, center, big)으로 표현하면, big = -(small+center)가 성립한다.<br>
-1. small &lt; center &lt; big인 경우 : 전체 수열에서 big이 적어도 한번 등장하는지 체크한다. (-1, 0, 1)과 같은 경우.<br>
-2. small &lt; center = big인 경우 : 전체 수열에서 big이 적어도 두번 등장하는지 체크한다. (-2, 1, 1)과 같은 경우.<br>
-3. small = center = big인 경우 : 전체 수열에서 big이 적어도 세번 등장하는지 체크한다. (0, 0, 0)의 경우<br>
-4. small = center &lt; big인 경우 : 전체 수열에서 big이 적어도 한번 등장하는지 체크한다. (-1, -1, 2)와 같은 경우.<br>
-<button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Algorithm/src/koreatech/Main1003.java" lan="java">예시 코드 »</button>
