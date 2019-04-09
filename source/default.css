@@ -115,7 +115,7 @@ li:hover {
 }
 
 hr {
-    border-top: 3px solid rgba(0,0,0,.1);
+    border-top: 3px solid rgba(0, 0, 0, .1);
 }
 
 .modal-content {
@@ -199,4 +199,31 @@ hr {
         bottom: 0;
         opacity: 0;
     }
+}
+
+/* 스크롤바 */
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    margin: 0;
+    padding: 0;
+}
+
+/* Track */
+
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+}
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+    background: #777777;
+}
+
+/* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover {
+    background: #000000;
 }

@@ -30,7 +30,7 @@ $(() => {
     window.onscroll = updateDropupAuto;
 
     // 엔터로 검색 가능
-    $('input#input-title').keypress((event) => {
+    $('input#input-query').keypress((event) => {
         if (event.keyCode == 13) {
             event.preventDefault();
             internalSearch();
@@ -146,25 +146,12 @@ function updateScrollManually(id) {
     }, 500);
 }
 
-/**
- * 보여지는 컨텐츠의 title에서 검색
- */
 function internalSearch() {
-    let query = $('input#input-title').val();
-    let result = $('#dropup-result');
-    result.removeClass('d-none');
-    result = $('.dropdown-menu', result);
-    result.empty();
-
-    let count = 0;
-    for (id of posts.visible) {
-        if (posts.list[id].title.match(new RegExp(query, "i")) != null) {
-            result.append($(`<a class="dropdown-item" href="javascript:updateScrollManually(${id});">${posts.list[id].title}</a>`));
-            count += 1;
-        }
-    }
-    adjustDropupWidth();
-    showSnackbar(count + "개의 포스트를 찾았습니다.", "#bottom-nav");
+    let query = $('input#input-query').val();
+    var hiddenElement = document.createElement('a');
+    hiddenElement.href = `https://github.com/Dong-gi/Dong-gi.github.io/search?q=${query}`;
+    hiddenElement.target = '_blank';
+    hiddenElement.click();
 }
 
 function adjustDropupWidth() {
@@ -184,7 +171,7 @@ function adjustDropupWidth() {
         'max-width': dropupMaxWidth + "px",
         'overflow': 'auto'
     });
-    $('input#input-title').css('width', dropupMaxWidth / 2 + "px")
+    $('input#input-query').css('width', dropupMaxWidth / 2 + "px")
 }
 
 function insertCode(buttonId) {
