@@ -1,9 +1,0 @@
-1. key의 존재 여부는 key가 GC 대상이 되는 것에 영향이 없다. key 객체가 유효하지 않게 되면 자동으로 맵에서 삭제한다. key, value 모두에 null을 허용한다. 단, value가 key의 참조를
-가지지 않도록 유의해야 한다.
-<br>» 쓰레드-안전하지 않다.
-<br>
-<br>2. 생성자
-<br>public WeakHashMap(int initialCapacity, float loadFactor)
-<br>public WeakHashMap(int initialCapacity)
-<br>public WeakHashMap()
-<br>public WeakHashMap(Map&lt;? extends K, ? extends V&gt; m) Since 1.3

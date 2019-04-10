@@ -1,8 +1,0 @@
-1. 생성자
-<br>public FutureTask(Callable&lt;V&gt; callable)
-<br>public FutureTask(Runnable runnable, V result)
-<br>
-<br>2. protected void done() : 완료 상태가 될때 호출된다
-<br>protected void set(V v) : 결과 설정
-<br>protected void setException(Throwable t) : t를 ExecutionException 원인으로 설정
-<br>protected boolean runAndReset() : 반복 실행 목적

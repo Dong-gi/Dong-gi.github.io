@@ -1,8 +1,0 @@
-1. 실행 전에 딜레이를 두거나, 주기적으로 실행을 반복할 수 있는 ExecutorService
-<br>
-<br>2. ScheduledFuture&lt;?&gt; schedule(Runnable command, long delay, TimeUnit unit)
-<br>&lt;V&gt; ScheduledFuture&lt;V&gt; schedule(Callable&lt;V&gt; callable, long delay, TimeUnit unit)
-<br>ScheduledFuture&lt;?&gt; scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit)
-<br>» 반복되는 작업은 반환된 Future를 통해 취소할 수 있다.
-<br>ScheduledFuture&lt;?&gt; scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit)
-<br>» scheduleAtFixedRate와 달리, 이전 작업이 완료된 후 다음 작업이 시작된다.

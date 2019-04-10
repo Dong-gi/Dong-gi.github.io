@@ -1,63 +1,224 @@
-1. Boolean을 대신할 순 없다.
-<br>
-<br>2. 생성자
-<br>public AtomicBoolean(boolean initialValue)
-<br>public AtomicBoolean() : false
-<br>
-<br>2. final boolean get()
-<br>» 현재 값을 반환한다. 메모리 영향은 VarHandle.getVolatile(Object...)와 같다 : 변수가 volatile인 것처럼 읽어 반환.
-<br>final void set(boolean newValue)
-<br>» newValue로 값 설정. 메모리 영향은 VarHandle.setVolatile(Object...)와 같다 : 변수가 volatile인 것처럼 값을 새로 설정한다.
-<br>final boolean compareAndSet(boolean expectedValue, boolean newValue)
-<br>» 현재 값이 expectedValue와 같다면, atomic 연산으로 newValue로 변경하고 true를 반환한다. 메모리 영향은 VarHandle.compareAndSet(Object...)와 같다 : setVolatile(Object...)로
-값 설정, 현재 값은 getVolatile(Object...)로 가져온다.
-<br>boolean weakCompareAndSetPlain(boolean expectedValue, boolean newValue) Since 9
-<br>» 현재 값이 expectedValue와 같다면, 아마도 atomic 연산으로 newValue로 변경하고 true를 반환한다. 메모리 영향은 VarHandle.weakCompareAndSetPlain(Object...)와
-같다 : 변수가 non-volatile, non-final하다고 간주하는 set(Object...), get(Object...)이용.
-<br>final void lazySet(boolean newValue) Since 1.6
-<br>» newValue로 값 설정. 메모리 영향은 VarHandle.setRelease(Object...)와 같다 : 값을 새로 설정하며, 이전의 읽기/쓰기들이 재배치되지 않도록 보장한다.
-<br>final boolean getAndSet(boolean newValue)
-<br>» atomic 연산으로 newValue로 설정하고, 이전 값을 반환한다. 메모리 영향은 VarHandle.getAndSet(Object...)와 같다 : 이전 값은 getVolatile(Object...)로
-가져오고, setVolatile(Object...)로 값 설정.
-<br>final boolean getPlain() Since 9
-<br>» 변수가 non-volatile인 것처럼 가져온다.
-<br>final void setPlain(boolean newValue) Since 9
-<br>» 변수가 non-volatile, non-final인 것처럼 쓴다.
-<br>final boolean getOpaque() Since 9
-<br>» 현재 값을 반환한다. 메모리 영향은 VarHandle.getOpaque(Object...)와 같다 : 프로그램 순서에 따라 접근하여 반환. 다른 쓰레드들 사이의 접근 순서는 정해지지 않는다.
-<br>final void setOpaque(boolean newValue) Since 9
-<br>» newValue로 쓴다. 메모리 영향은 VarHandle.setOpaque(Object...)와 같다 : 프로그램 순서에 따라 접근하여 쓰기. 다른 쓰레드들 사이의 접근 순서는 정해지지 않는다.
-<br>final boolean getAcquire() Since 9
-<br>» 현재 값을 반환한다. 메모리 영향은 VarHandle.getAcquire(Object...)와 같다 : 변수의 값을 반환한다. 이후의 읽기/쓰기는 이전에 실행되지 않는다.
-<br>final void setRelease(boolean newValue) Since 9
-<br>» newValue로 설정. 메모리 영향은 VarHandle.setRelease(Object...)와 같다. : 변수의 값을 설정한다. 이전의 읽기/쓰기는 이후에 실행되지 않는다.
-<br>final boolean compareAndExchange(boolean expectedValue, boolean newValue) Since 9
-<br>» 현재 값이 expectedValue와 같다면 atomic 연산으로 newValue로 설정하고 이전 값 반환. 메모리 영향은 VarHandle.compareAndExchange(Object...)와 같다 :
-expectedValue와 같다면 atomic 연산으로 newValue로 설정. 이전 값은 getVolatile(Object...)로 접근.
-<br>final boolean compareAndExchangeAcquire(boolean expectedValue, boolean newValue) Since 9
-<br>» 현재 값이 expectedValue와 같다면 atomic 연산으로 newValue로 설정하고 이전 값 반환. 메모리 영향은 VarHandle.compareAndExchangeAcquire(Object...)와
-같다 : expectedValue와 같다면 set(Object...)로 newValue 설정. 이전 값은 getAcquire(Object...)로 접근.
-<br>final boolean compareAndExchangeRelease(boolean expectedValue, boolean newValue) Since 9
-<br>» 현재 값이 expectedValue와 같다면 atomic 연산으로 newValue로 설정하고 이전 값 반환. 메모리 영향은 VarHandle.compareAndExchangeRelease(Object...)와
-같다 : expectedValue와 같다면 setRelease(Object...)로 newValue 설정. 이전 값은 get(Object...)로 접근.
-<br>final boolean weakCompareAndSetVolatile(boolean expectedValue, boolean newValue) Since 9
-<br>» 현재 값이 expectedValue와 같다면, 아마도 atomic 연산으로 newvalue 설정하고 true 반환. 메모리 영향은 VarHandle.weakCompareAndSet(Object...)와 같다
-: expectedValue와 같다면 setVolatile(Object...)로 newValue 설정. 이전 값은 getVolatile(Object...)로 접근.
-<br>final boolean weakCompareAndSetAcquire(boolean expectedValue, boolean newValue) Since 9
-<br>» 현재 값이 expectedValue와 같다면, 아마도 atomic 연산으로 newValue 설정하고 true 반환. 메모리 영향은 VarHandle.weakCompareAndSetAcquire(Object...)와
-같다 : expectedValue와 같다면 set(Object...)로 newValue 설정. 이전 값은 getAcquire(Object...)로 접근
-<br>final boolean weakCompareAndSetRelease(boolean expectedValue, boolean newValue) Since 9
-<br>» 현재 값이 expectedValue와 같다면, 아마도 atomic 연산으로 newValue 설정하고 true 반환. 메모리 영향은 VarHandle.weakCompareAndSetRelease(Object...)와
-같다 : expectedValue와 같다면 setRelease(Object...)로 newValue 설정. 이전 값은 get(Object...)로 접근.
+<hr>
 
-{ "filename": "posts/1809/299.html", "category": "Java/java.base/java.util.concurrent.atomic", "title": "class AtomicBoolean implements Serializable Since 1.5", "date": "2018-09-09 11:47:55" },
-{ "filename": "posts/1809/300.html", "category": "Java/java.base/java.util.concurrent.atomic", "title": "class AtomicInteger extends Number implements Serializable Since 1.5", "date": "2018-09-09 11:49:45" },
-{ "filename": "posts/1809/301.html", "category": "Java/java.base/java.util.concurrent.atomic", "title": "class AtomicIntegerArray implements Serializable Since 1.5", "date": "2018-09-09 11:50:15" },
-{ "filename": "posts/1809/302.html", "category": "Java/java.base/java.util.concurrent.atomic", "title": "abstract class AtomicIntegerFieldUpdater&lt;T&gt; Since 1.5", "date": "2018-09-09 11:50:38" },
-{ "filename": "posts/1809/303.html", "category": "Java/java.base/java.util.concurrent.atomic", "title": "class AtomicReference&lt;V&gt; implements Serializable Since 1.5", "date": "2018-09-09 11:51:01" },
-{ "filename": "posts/1809/304.html", "category": "Java/java.base/java.util.concurrent.atomic", "title": "class AtomicReferenceArray&lt;E&gt; implements Serializable Since 1.5", "date": "2018-09-09 11:51:22" },
-{ "filename": "posts/1809/305.html", "category": "Java/java.base/java.util.concurrent.atomic", "title": "abstract class AtomicReferenceFieldUpdater&lt;T, V&gt; Since 1.5", "date": "2018-09-09 11:51:42" },
-{ "filename": "posts/1809/306.html", "category": "Java/java.base/java.util.concurrent.atomic", "title": "class LongAdder extends Number implements Serializable Since 1.8", "date": "2018-09-09 11:51:57" },
-{ "filename": "posts/1809/307.html", "category": "Java/java.base/java.util.concurrent.atomic", "title": "class LongAccumulator extends Number implements Serializable Since 1.8", "date": "2018-09-09 11:52:14" },
-{ "filename": "posts/1809/308.html", "category": "Java/java.base/java.util.concurrent.atomic", "title": "class DoubleAdder extends Number implements Serializable Since 1.8", "date": "2018-09-09 11:52:43" },
-{ "filename": "posts/1809/309.html", "category": "Java/java.base/java.util.concurrent.atomic", "title": "class DoubleAccumulator extends Number implements Serializable Since 1.8", "date": "2018-09-09 11:53:01" },
+<details>
+    <summary>class AtomicBoolean implements Serializable Since 1.5</summary>
+    <ol>
+            1. Boolean을 대신할 순 없다.
+            <br>
+            <br>2. 생성자
+            <br>public AtomicBoolean(boolean initialValue)
+            <br>public AtomicBoolean() : false
+            <br>
+            <br>2. final boolean get()
+            <br>» 현재 값을 반환한다. 메모리 영향은 VarHandle.getVolatile(Object...)와 같다 : 변수가 volatile인 것처럼 읽어 반환.
+            <br>final void set(boolean newValue)
+            <br>» newValue로 값 설정. 메모리 영향은 VarHandle.setVolatile(Object...)와 같다 : 변수가 volatile인 것처럼 값을 새로 설정한다.
+            <br>final boolean compareAndSet(boolean expectedValue, boolean newValue)
+            <br>» 현재 값이 expectedValue와 같다면, atomic 연산으로 newValue로 변경하고 true를 반환한다. 메모리 영향은 VarHandle.compareAndSet(Object...)와 같다 : setVolatile(Object...)로
+            값 설정, 현재 값은 getVolatile(Object...)로 가져온다.
+            <br>boolean weakCompareAndSetPlain(boolean expectedValue, boolean newValue) Since 9
+            <br>» 현재 값이 expectedValue와 같다면, 아마도 atomic 연산으로 newValue로 변경하고 true를 반환한다. 메모리 영향은 VarHandle.weakCompareAndSetPlain(Object...)와
+            같다 : 변수가 non-volatile, non-final하다고 간주하는 set(Object...), get(Object...)이용.
+            <br>final void lazySet(boolean newValue) Since 1.6
+            <br>» newValue로 값 설정. 메모리 영향은 VarHandle.setRelease(Object...)와 같다 : 값을 새로 설정하며, 이전의 읽기/쓰기들이 재배치되지 않도록 보장한다.
+            <br>final boolean getAndSet(boolean newValue)
+            <br>» atomic 연산으로 newValue로 설정하고, 이전 값을 반환한다. 메모리 영향은 VarHandle.getAndSet(Object...)와 같다 : 이전 값은 getVolatile(Object...)로
+            가져오고, setVolatile(Object...)로 값 설정.
+            <br>final boolean getPlain() Since 9
+            <br>» 변수가 non-volatile인 것처럼 가져온다.
+            <br>final void setPlain(boolean newValue) Since 9
+            <br>» 변수가 non-volatile, non-final인 것처럼 쓴다.
+            <br>final boolean getOpaque() Since 9
+            <br>» 현재 값을 반환한다. 메모리 영향은 VarHandle.getOpaque(Object...)와 같다 : 프로그램 순서에 따라 접근하여 반환. 다른 쓰레드들 사이의 접근 순서는 정해지지 않는다.
+            <br>final void setOpaque(boolean newValue) Since 9
+            <br>» newValue로 쓴다. 메모리 영향은 VarHandle.setOpaque(Object...)와 같다 : 프로그램 순서에 따라 접근하여 쓰기. 다른 쓰레드들 사이의 접근 순서는 정해지지 않는다.
+            <br>final boolean getAcquire() Since 9
+            <br>» 현재 값을 반환한다. 메모리 영향은 VarHandle.getAcquire(Object...)와 같다 : 변수의 값을 반환한다. 이후의 읽기/쓰기는 이전에 실행되지 않는다.
+            <br>final void setRelease(boolean newValue) Since 9
+            <br>» newValue로 설정. 메모리 영향은 VarHandle.setRelease(Object...)와 같다. : 변수의 값을 설정한다. 이전의 읽기/쓰기는 이후에 실행되지 않는다.
+            <br>final boolean compareAndExchange(boolean expectedValue, boolean newValue) Since 9
+            <br>» 현재 값이 expectedValue와 같다면 atomic 연산으로 newValue로 설정하고 이전 값 반환. 메모리 영향은 VarHandle.compareAndExchange(Object...)와 같다 :
+            expectedValue와 같다면 atomic 연산으로 newValue로 설정. 이전 값은 getVolatile(Object...)로 접근.
+            <br>final boolean compareAndExchangeAcquire(boolean expectedValue, boolean newValue) Since 9
+            <br>» 현재 값이 expectedValue와 같다면 atomic 연산으로 newValue로 설정하고 이전 값 반환. 메모리 영향은 VarHandle.compareAndExchangeAcquire(Object...)와
+            같다 : expectedValue와 같다면 set(Object...)로 newValue 설정. 이전 값은 getAcquire(Object...)로 접근.
+            <br>final boolean compareAndExchangeRelease(boolean expectedValue, boolean newValue) Since 9
+            <br>» 현재 값이 expectedValue와 같다면 atomic 연산으로 newValue로 설정하고 이전 값 반환. 메모리 영향은 VarHandle.compareAndExchangeRelease(Object...)와
+            같다 : expectedValue와 같다면 setRelease(Object...)로 newValue 설정. 이전 값은 get(Object...)로 접근.
+            <br>final boolean weakCompareAndSetVolatile(boolean expectedValue, boolean newValue) Since 9
+            <br>» 현재 값이 expectedValue와 같다면, 아마도 atomic 연산으로 newvalue 설정하고 true 반환. 메모리 영향은 VarHandle.weakCompareAndSet(Object...)와 같다
+            : expectedValue와 같다면 setVolatile(Object...)로 newValue 설정. 이전 값은 getVolatile(Object...)로 접근.
+            <br>final boolean weakCompareAndSetAcquire(boolean expectedValue, boolean newValue) Since 9
+            <br>» 현재 값이 expectedValue와 같다면, 아마도 atomic 연산으로 newValue 설정하고 true 반환. 메모리 영향은 VarHandle.weakCompareAndSetAcquire(Object...)와
+            같다 : expectedValue와 같다면 set(Object...)로 newValue 설정. 이전 값은 getAcquire(Object...)로 접근
+            <br>final boolean weakCompareAndSetRelease(boolean expectedValue, boolean newValue) Since 9
+            <br>» 현재 값이 expectedValue와 같다면, 아마도 atomic 연산으로 newValue 설정하고 true 반환. 메모리 영향은 VarHandle.weakCompareAndSetRelease(Object...)와
+            같다 : expectedValue와 같다면 setRelease(Object...)로 newValue 설정. 이전 값은 get(Object...)로 접근.
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class AtomicInteger extends Number implements Serializable Since 1.5</summary>
+    <ol>
+            1. 생성자
+            <br>public AtomicInteger(int initialValue)
+            <br>public AtomicInteger() : 0
+            <br>
+            <br>2. final int get()
+            <br>final void set(int newValue)
+            <br>final void lazySet(int newValue) Since 1.6
+            <br>final int getAndSet(int newValue)
+            <br>final boolean compareAndSet(int expectedValue, int newValue)
+            <br>final boolean weakCompareAndSetPlain(int expectedValue) Since 9
+            <br>
+            <br>final int getAndIncrement()
+            <br>» atomic 연산으로 1 증가한다. 이전 값을 반환하며, 메모리 영향은 VarHandle.getAndAdd(Object...)와 같다 : getVolatile(Object...)로 값을 가져오고, setVolatile(Object...)로
+            값을 설정
+            <br>final int getAndDecrement()
+            <br>final int getAndAdd(int delta)
+            <br>final int incrementAndGet()
+            <br>» atomic 연산으로 1 증가한다. 이후 값을 반환하며, 메모리 영향은 VarHandle.getAndAdd(Object...)와 같다.
+            <br>final int decrementAndGet()
+            <br>final int addAndGet(int delta)
+            <br>final int getPlain() Since 9
+            <br>final void setPlain(int newValue) Since 9
+            <br>final int getOpaque() Since 9
+            <br>final void setOpaque(int newValue) Since 9
+            <br>final int getAcquire() Since 9
+            <br>final void setRelease(int newValue) Since 9
+            <br>final int compareAndExchange(int expectedValue, int newValue) Since 9
+            <br>final int compareAndExchangeAcquire(int expectedValue, int newValue) Since 9
+            <br>final int compareAndExchangeRelease(int expectedValue, int newValue) Since 9
+            <br>final boolean weakCompareAndSetVolatile​(int expectedValue, int newValue) Since 9
+            <br>final boolean weakCompareAndSetAcquire​(int expectedValue, int newValue) Since 9
+            <br>final boolean weakCompareAndSetRelease​(int expectedValue, int newValue) Since 9
+            <br>» 위 함수들의 설명은 AtomicBoolean과 같다.
+            <br>
+            <br>final int getAndUpdate(IntUnaryOperator updateFunction) Since 1.8
+            <br>» atomic 연산으로 값을 갱신한다. 이전 값을 반환하며, 메모리 영향은 VarHandle.compareAndSet(Object...)와 같다. 이용되는 함수는 재실행될 수 있으므로, 부작용이 없어야 한다.
+            <br>final int updateAndGet(IntUnaryOperator updateFunction) Since 1.8
+            <br>» 갱신 이후 값을 반환.
+            <br>final int getAndAccumulate(int x, IntBinaryOperator accumulatorFunction) Since 1.8
+            <br>» atomic 연산으로 값을 갱신한다. 이전 값을 반환하며, 메모리 영향은 VarHandle.compareAndSet(Object...)와 같다. 이용되는 함수는 재실행될 수 있으므로, 부작용이 없어야 한다.
+            <br>final int accumulateAndGet(int x, IntBinaryOperator accumulatorFunction) Since 1.8
+            <br>» 갱신 이후 값을 반환.
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class AtomicIntegerArray implements Serializable Since 1.5</summary>
+    <ol>
+            1. 생성자
+            <br>public AtomicIntegerArray(int length) : 각 원소는 0으로 초기화.
+            <br>public AtomicIntegerArray(int[] array)
+            <br>
+            <br>2. final int get(int i)
+            <br>final void set(int i, int newValue) ...
+            <br>» 지원하는 함수들의 설명은 AtomicInteger와 같다.
+            <br>
+            <br>final int length()
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>abstract class AtomicIntegerFieldUpdater&lt;T&gt; Since 1.5</summary>
+    <ol>
+            1. 지정된 volatile int 필드를 atomic 연산으로 갱신.
+            <br>
+            <br>2. static &lt;U&gt; AtomicIntegerFieldUpdater&lt;U&gt; newUpdater(Class&lt;U&gt; tclass, String fieldName)
+            <br>
+            <br>3. abstract boolean compareAndSet(T obj, int expect, int update)
+            <br>abstract boolean weakCompareAndSet(T obj, int expect, int update) ...
+            <br>» 지원하는 함수들의 종류는 AtomicInteger와 유사하다.
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class AtomicReference&lt;V&gt; implements Serializable Since 1.5</summary>
+    <ol>
+            1. 아마도 atomic 연산으로 변경되는 객체 참조를 정의.
+            <br>» 지원하는 함수들의 종류는 AtomicInteger와 유사하다.
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class AtomicReferenceArray&lt;E&gt; implements Serializable Since 1.5</summary>
+    <ol>
+            1. 아마도 atomic 연산으로 변경되는 객체 참조들의 배열을 정의.
+            <br>» 지원하는 함수들의 종류는 AtomicIntegerArray와 유사하다.
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>abstract class AtomicReferenceFieldUpdater&lt;T, V&gt; Since 1.5</summary>
+    <ol>
+            1. 지정된 클래스의 지정된 volatile 참조 필드를 atomic 연산으로 변경.
+            <br>» 지원하는 함수들의 종류는 AtomicIntegerFieldUpdater와 유사하다.
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class LongAdder extends Number implements Serializable Since 1.8</summary>
+    <ol>
+            1. 초깃값 0으로 시작하는 쓰레드-안전한 합계. 단, 합의 순서는 정의되지 않으므로 순서에 상관 없는 경우에 이용해야 한다. 또, 주어진 accumulatorFunction은 부작용이 없어야 한다.
+            <br>
+            <br>2. 생성자 : public LongAdder()
+            <br>
+            <br>3. void add(long x)
+            <br>void increment()
+            <br>void decrement()
+            <br>long sum() : 현재 합계 반환
+            <br>void reset()
+            <br>long sumThenReset()
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class LongAccumulator extends Number implements Serializable Since 1.8</summary>
+    <ol>
+            1. 특정 값과 특정 함수로 갱신되는 long 값 유지.
+            <br>
+            <br>2. 생성자 : public LongAccumulator(LongBinaryOperator accumulatorFunction, long identity)
+            <br>
+            <br>3. void accumulate(long x)
+            <br>long get()
+            <br>void reset()
+            <br>long getThenReset()
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class DoubleAdder extends Number implements Serializable Since 1.8</summary>
+    <ol>
+            LongAdder와 유사
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class DoubleAccumulator extends Number implements Serializable Since 1.8</summary>
+    <ol>
+            LongAccumulator와 유사
+    </ol>
+</details>
+
+<hr>

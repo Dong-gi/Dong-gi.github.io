@@ -1,13 +1,242 @@
-1. 정규표현식 매칭 결과. group의 의미에 대해선 Pattern 참고.
-<br>
-<br>2. int start() : 매치된 결과의 시작 인덱스 반환
-<br>int start(int group) : group번째 매치된 결과의 시작 인덱스 반환
-<br>int end() : 매치된 결과의 마지막 글자 다음 인덱스 반환
-<br>int end(int group) : group번째 매치된 결과의 마지막 글자 다음 인덱스 반환
-<br>String group() : 이전 매치된 결과 반환
-<br>String group(int group) : group번째 매치된 결과 반환
-<br>int groupCount() : 매치된 group 개수 반환<button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/regex/MatchResultExample.java" lan="java">예시 코드 »</button>
+<hr>
 
-{ "filename": "posts/1809/353.html", "category": "Java/java.base/java.util.regex", "title": "interface MatchResult Since 1.5", "date": "2018-09-09 12:07:00" },
-{ "filename": "posts/1809/354.html", "category": "Java/java.base/java.util.regex", "title": "final class Pattern implements Serializable Since 1.4", "date": "2018-09-09 12:07:49" },
-{ "filename": "posts/1809/355.html", "category": "Java/java.base/java.util.regex", "title": "final class Matcher implements MatchResult Since 1.4", "date": "2018-09-09 12:08:06" },
+<details>
+    <summary>interface MatchResult Since 1.5</summary>
+    1. 정규표현식 매칭 결과. group의 의미에 대해선 Pattern 참고.
+    <br>
+    <br>2. int start() : 매치된 결과의 시작 인덱스 반환
+    <br>int start(int group) : group번째 매치된 결과의 시작 인덱스 반환
+    <br>int end() : 매치된 결과의 마지막 글자 다음 인덱스 반환
+    <br>int end(int group) : group번째 매치된 결과의 마지막 글자 다음 인덱스 반환
+    <br>String group() : 이전 매치된 결과 반환
+    <br>String group(int group) : group번째 매치된 결과 반환
+    <br>int groupCount() : 매치된 group 개수 반환<button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/regex/MatchResultExample.java" lan="java">예시 코드 »</button>
+</details>
+
+<hr>
+
+<details>
+    <summary>final class Pattern implements Serializable Since 1.4</summary>
+    1. 정규표현식의 컴파일된 표현.
+    <br>
+    <br>
+    <b>2. 정규표현식 상수</b>
+    <br>x » 문자 x 자체
+    <br>\\ » 백슬래시 문자
+    <br>\0n 또는 \0nn 또는 \0mnn» » 8진수 표현 문자
+    <br>\xhh 또는 \uhhhh 또는 \u{h...h} » 16진수 표현 문자
+    <br>\N{name} » 유니코드 이름으로 표현된 문자
+    <br>\t » 탭 \u0009
+    <br>\n » newline \u000A
+    <br>\r » carriage-return \u000D
+    <br>\f » form-feed \u000C
+    <br>\a » alert \u0007
+    <br>\e » escape \u001B
+    <br>\cx » x에 관한 제어 문자
+    <br>
+    <br>[abc] » a, b, or c(단순 집합)
+    <br>[^abc] » a, b, c를 제외한 임의 문자(여집합)
+    <br>[a-zA-Z] » a ~ z or A ~ Z, inclusive(범위)
+    <br>[a-d[m-p]] » a ~ d or m ~ p : [a-dm-p](합집합)
+    <br>[a-z&amp;&amp;[def]] » d, e, or f(교집합)
+    <br>[a-z&amp;&amp;[^bc]] » a ~ z, b와 c는 제외(차집합)
+    <br>[a-z&amp;&amp;[^m-p]] » a ~ z, m ~ p는 제외 : [a-lq-z](차집합)
+    <br>
+    <br>. » 임의 문자(줄 끝은 매치되지 않을수도 있음)
+    <br>\d » [0-9]
+    <br>\D » [^0-9]
+    <br>\h » 수평 공백 문자: [ \t\xA0\u1680\u180e\u2000-\u200a\u202f\u205f\u3000]
+    <br>\H » [^\h]
+    <br>\s » 공백 문자: [ \t\n\x0B\f\r]
+    <br>\S » [^\s]
+    <br>\v » 수직 공백 문자: [\n\x0B\f\r\x85\u2028\u2029]
+    <br>\V » [^\v]
+    <br>\w » [a-zA-Z_0-9]
+    <br>\W » [^w]
+    <br>
+    <br>\p{Lower} » [a-z]
+    <br>\p{Upper} » [A-Z]
+    <br>\p{ASCII} » All ASCII:[\x00-\x7F]
+    <br>\p{Alpha} » [\p{Lower}\p{Upper}]
+    <br>\p{Digit} » [0-9]
+    <br>\p{Alnum} » [\p{Alpha}\p{Digit}]
+    <br>\p{Punct} » Punctuation: One of !"#$%&amp;'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~
+    <br>\p{Graph} » A visible character: [\p{Alnum}\p{Punct}]
+    <br>\p{Print} » A printable character: [\p{Graph}\x20]
+    <br>\p{Blank} » A space or a tab: [ \t]
+    <br>\p{Cntrl} » A control character: [\x00-\x1F\x7F]
+    <br>\p{XDigit} » A hexadecimal digit: [0-9a-fA-F]
+    <br>\p{Space} » A whitespace character: [ \t\n\x0B\f\r]
+    <br>
+    <br>\p{javaLowerCase} » Equivalent to java.lang.Character.isLowerCase()
+    <br>\p{javaUpperCase} » Equivalent to java.lang.Character.isUpperCase()
+    <br>\p{javaWhitespace} » Equivalent to java.lang.Character.isWhitespace()
+    <br>\p{javaMirrored} » Equivalent to java.lang.Character.isMirrored()
+    <br>
+    <br>\p{IsLatin} » A Latin script character (script)
+    <br>\p{InGreek} » A character in the Greek block (block)
+    <br>\p{Lu} » An uppercase letter (category)
+    <br>\p{IsAlphabetic} » An alphabetic character (binary property)
+    <br>\p{Sc} » A currency symbol
+    <br>\P{InGreek} » Any character except one in the Greek block (negation)
+    <br>[\p{L}&amp;&amp;[^\p{Lu}]] » Any letter except an uppercase letter (subtraction)
+    <br>
+    <br>^ » The beginning of a line
+    <br>$ » The end of a line
+    <br>\b » A word boundary
+    <br>\b{g} » A Unicode extended grapheme cluster boundary
+    <br>\B » A non-word boundary
+    <br>\A » The beginning of the input
+    <br>\G » The end of the previous match
+    <br>\Z » The end of the input but for the final terminator, if any
+    <br>\z » The end of the input
+    <br>\R » Any Unicode linebreak sequence, is equivalent to \u000D\u000A|[\u000A\u000B\u000C\u000D\u0085\u2028\u2029]
+    <br>
+    <br>
+    <b>Greedy quantifiers
+        <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://stackoverflow.com/questions/5319840/greedy-vs-reluctant-vs-possessive-quantifiers">참고자료</a>
+    </b>
+    <br>» 처음에 매치할 수 있는 만큼 최대한 매치. 그 다음 요소의 매칭이 없으면 백트래킹.
+    <br>X? » X, once or not at all
+    <br>X* » X, zero or more times
+    <br>X+ » X, one or more times
+    <br>X{n} » X, exactly n times
+    <br>X{n,} » X, at least n times
+    <br>X{n,m} » X, at least n but not more than m times
+    <br>
+    <br>
+    <b>Reluctant quantifiers</b>
+    <br>» non-greedy. 처음에 최소한만 매치. 그 다음 요소의 매칭이 없으면 백트래킹.
+    <br>X?? » X, once or not at all
+    <br>X*? » X, zero or more times
+    <br>X+? » X, one or more times
+    <br>X{n}? » X, exactly n times
+    <br>X{n,}? » X, at least n times
+    <br>X{n,m}? » X, at least n but not more than m times
+    <br>
+    <br>
+    <b>Possessive quantifiers</b>
+    <br>» Greedy quantifier와 같지만, 백트래킹은 없다.
+    <br>X?+ » X, once or not at all
+    <br>X*+ » X, zero or more times
+    <br>X++ » X, one or more times
+    <br>X{n}+ » X, exactly n times
+    <br>X{n,}+ » X, at least n times
+    <br>X{n,m}+ » X, at least n but not more than m times
+    <br>
+    <br>
+    <b>Logical operations</b>
+    <br>XY » X followed by Y
+    <br>X|Y » Either X or Y
+    <br>(X) » X, as a capturing group
+    <br>
+    <br>
+    <b>Back references</b>
+    <br>\n » Whatever the n-th capturing group matched
+    <br>\k&lt;name&gt; » Whatever the named-capturing group "name" matched
+    <br>
+    <br>
+    <b>Quotation</b>
+    <br>\ » Nothing, but quotes the following character
+    <br>\Q » Nothing, but quotes all characters until \E
+    <br>\E » Nothing, but ends quoting started by \Q
+    <br>
+    <br>
+    <b>Special constructs</b>
+    <br>(?&lt;name&gt;X) » X, as a named-capturing group
+    <br>(?:X) » X, as a non-capturing group
+    <br>(?idmsuxU-idmsuxU) » Nothing, but turns match flags i d m s u x U on - off
+    <br>(?idmsux-idmsux:X) » X, as a non-capturing group with the given flags i d m s u x on - off
+    <br>(?=X) » X, via zero-width positive lookahead
+    <br>(?!X) » X, via zero-width negative lookahead
+    <br>(?&lt;=X) » X, via zero-width positive lookbehind
+    <br>(?&lt;!X) » X, via zero-width negative lookbehind
+    <br>(?&gt;X) » X, as an independent, non-capturing group
+    <br>
+    <br>
+    <b>3. Groups and capturing</b>
+    <br>» 괄호 여는 순서에 따라 capturing group의 숫자가 매겨진다.
+    <br>» ((A)(B(C)))에 대하여, 0: ((A)(B(C))), 1: (A), 2: (B(C)), 3: (C)의 4가지 그룹이 존재하며, 0번 그룹은 항상 전체 표현을 가리킨다.
+    <br>
+    <br>4. 필드
+    <br>public static final int UNIX_LINES
+    <br>» 줄끝 '\n'만 ., ^, $에서 동작. (?d) 플래그도 같은 의미.
+    <br>public static final int CASE_INSENSITIVE
+    <br>» 대소문자 구분 없음. (?i) 플래그도 같은 의미.
+    <br>public static final int COMMENTS
+    <br>» 공백과 주석 허용 » 공백과 #부터 줄 끝까지의 주석이 무시된다. (?x) 플래그도 같은 의미.
+    <br>public static final int MULTILINE
+    <br>» ^, $이 각 줄의 끝을 기준으로도 작동; 기본 동작은 입력 시작과 끝에서만 작동. (?m) 플래그도 같은 의미.
+    <br>public static final int LITERAL Since 1.5
+    <br>» 표현식 전체를 상수 문자열 취급.
+    <br>public static final int DOTALL
+    <br>» .이 줄 끝도 포함하여 매치; 기본 동작은 줄 끝 문자는 미포함. (?s) 플래그도 같은 의미.
+    <br>public static final int UNICODE_CASE
+    <br>» CASE_INSENSITIVE 플래그가 유니코드 표준 상에서 동작한다; 기본은 US-ASCII에서만 동작. (?u) 플래그도 같은 의미.
+    <br>2개 생략
+    <br>
+    <br>5. static Pattern compile(String regex) + 1 오버로딩
+    <br>static boolean matches(String regex, CharSequence input) : 1회용
+    <br>String pattern()
+    <br>String toString() Since 1.5
+    <br>static String quote(String s) Since 1.5
+    <br>» s를 매칭할 수 있는 정규표현식 리터럴 문자열 표현을 반환.
+    <br>int flags()
+    <br>
+    <br>6. Matcher matcher(CharSequence input)
+    <br>String[] split(CharSequence input) + 1 오버로딩
+    <br>
+    <br>7. Since 1.8
+    <br>Predicate&lt;String&gt; asPredicate()
+    <br>Stream&lt;String&gt; splitAsStream(CharSequence nput)
+</details>
+
+<hr>
+
+<details>
+    <summary>final class Matcher implements MatchResult Since 1.4</summary>
+    1. Pattern으로부터 만들어지는 매칭 엔진으로, 아래 세 가지 작업을 수행한다.
+    <br>» matches() : 전체 입력에 대해 패턴 매칭
+    <br>» lookingAt() : 입력 시작부분 패턴 매칭
+    <br>» find() : 입력의 다음 부분 패턴 매칭
+    <br>
+    <br>2. Pattern pattern()
+    <br>MatchResult toMatchResult() Since 1.5
+    <br>Matcher usePattern(Pattern newPattern) Since 1.5
+    <br>Matcher reset() + 1오버로딩
+    <br>
+    <br>3. int start(String name) Since 1.8
+    <br>» 주어진 식별자에 해당하는 그룹의 시작 인덱스 반환
+    <br>int end(String name) Since 1.8
+    <br>String group(String name) Since 1.7
+    <br>
+    <br>4. boolean mathes()
+    <br>boolean find() + 1 오버로딩
+    <br>boolean lookingAt()
+    <br>
+    <br>5. static String quoteReplacement(String s) Since 1.5
+    <br>» appendReplacement 메서드의 replacement로 사용될 s의 리터럴 표기를 반환.
+    <br>Matcher appendReplacement(StringBuffer sb, String replacement) + 1 오버로딩
+    <br>» 입력 소스의 append position부터 start() 전까지 sb에 추가.
+    <br>» replacement를 sb에 추가. 현재 matcher의 append position을 end()로 설정.
+    <br>StringBuffer appendTail(StringBuffer sb) + 1 오버로딩
+    <br>» 입력 소스의 append position부터를 sb에 추가.
+    <br>» appendReplacement 메서드를 호출한 뒤에 이를 호출하여 남머지 부분을 복사할 목적으로 만들어짐.
+    <br>String replaceAll(String replacement)
+    <br>» 입력 소스의 모든 매칭되는 부분을 replacement로 변경.
+    <br>String replaceAll(Function&lt;MatchResult, String&gt; replacer) Since 9
+    <br>String replaceFirst(String replacement) + 1 오버로딩
+    <br>Stream&lt;MatchResult&gt; results() Since 9
+    <br>
+    <br>6. Matcher region(int start, int end) Since 1.5
+    <br>» 입력 소스의 특정 구간을 매칭 대상으로 하도록 초기화한다. transparency, anchoring 속성에 따라 동작이 다르다.
+    <br>int regionStart(), regionEnd() Since 1.5
+    <br>boolean hasTransparentBounds() Since 1.5
+    <br>Matcher useTransparentBounds(boolean b) Since 1.5
+    <br>» region의 경계 너머를 패턴 매칭에 보이도록 할지 여부
+    <br>boolean hasAnchoringBounds() Since 1.5
+    <br>Matcher useAnchoringBounds(boolean b) Since 1.5
+    <br>» region의 경계에서 ^, $를 작동하게 할지 여부
+</details>
+
+<hr>

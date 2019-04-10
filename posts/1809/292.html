@@ -1,9 +1,0 @@
-1. 생산자가 작업들을 추가하면, 소비자는 그것이 완료된 순서대로 이용할 수 있다.
-<br>
-<br>2. Future&lt;V&gt; submit(Callable&lt;V&gt; task)
-<br>Future&lt;V&gt; submit(Runnable task, V result)
-<br>Future&lt;V&gt; take()
-<br>» 완료된 작업을 가져온다. 없으면 대기한다.
-<br>Future&lt;V&gt; poll()
-<br>» 완료된 작업을 가져온다. 없으면 null.
-<br>Futur&lt;V&gt; poll(long timeout, TimeUnit unit)
