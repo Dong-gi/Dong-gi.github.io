@@ -195,10 +195,17 @@ function insertCode(buttonId) {
                         lines = hljs.highlight(lan, response)['value'].split(/\n/gm);
 
                     let ol = $('<ol>').css('font-family', 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New');
-                    let start = $(button).attr('displayStart') - 1;
-                    let end = $(button).attr('displayEnd') - 1;
-                    for (let idx = (start || 0); idx < (end || lines.length); ++idx)
-                        ol.append($('<li>').html(lines[idx].replace(/  /gm, '&nbsp;')));
+                    let displayRange = JSON.parse($(button).attr('displayRange') || '[1, 100000000]');
+                    displayRange = displayRange.reverse();
+                    
+                    while(displayRange.length > 0) {
+                        let displayStart = displayRange.pop() - 1;
+                        let displayEnd = displayRange.pop();
+                        for (let idx = displayStart; idx < displayEnd && idx < lines.length; ++idx)
+                            ol.append($('<li>').html(lines[idx].replace(/  /gm, '&nbsp;')));
+                        if(displayRange.length > 0)
+                            ol.append($('<hr>'));                            
+                    }
 
                     $(div).html(ol);
                 }

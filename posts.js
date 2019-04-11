@@ -109,7 +109,7 @@ const posts = {
         { "filename": "posts/1904/495.html", "category": "Linux", "title": "리눅스 시간 동기화", "date": "2019-04-02 10:42:07" },
 
 
-        { "filename": "posts/1904/496.html", "category": "FreeMarker/매뉴얼/2.3.28", "title": "템플릿 작성 가이드", "date": "2019-04-04 17:14:37" },
+        { "filename": "posts/1904/496.html", "category": "FreeMarker/매뉴얼/2.3.28", "title": "템플릿 작성 가이드", "date": "2019-04-11 12:52:15" },
     ],
     "tree": {},
     "contents": [],
@@ -118,13 +118,15 @@ const posts = {
 };
 
 /*
-●
+<button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/src/io/github/donggi/Basic.java" lan="java">Java »</button>
+<button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/resource/template/.ftl" lan="xml">FTL + 결과 »</button>
+
 <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/concurrent/.java" lan="java">예시 코드 »</button>
 <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Algorithm/src/koreatech/Main10.java" lan="java">예시 코드 »</button>
 <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Web02/src/donggi/.java" lan="java"> »</button>
         
 <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/.js" lan="javascript">.js »</button>
-        
+      
 <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1811/479.html" lan="html">479.html »</button>
         
 <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/.cpp" lan="cpp">. »</button>
