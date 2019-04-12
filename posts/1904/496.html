@@ -88,6 +88,8 @@
     <ul>
         <li>리터럴</li>
         <ul>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/src/io/github/donggi/Basic.java" displayRange="[60, 65]" lan="java">Java »</button>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/resource/template/t_006_syntax.ftl" displayRange="[9, 31, 44, 67]" lan="xml">FTL + 결과 »</button>
             <li>문자열 : "", '' 모두 가능. 이스케이핑 가능(유니코드 : \xXXXX). Raw string 표현을 위해 접두 문자 'r' 사용 가능.</li>
             <li>숫자 : 10진수 표현만 가능. 지수 표현 불가능. 소수점 앞 '0' 생략 불가능.</li>
             <li>Boolean : true, false</li>
@@ -96,19 +98,9 @@
             Range 표현식 자체가 []를 포함하지는 않는다. 할당하고자 할 때는 [] 안에 range 표현식을 작성해야 한다.
             <ul>
                 <li>start .. end</li>
-                1..4 → [1, 2, 3, 4]<br>
-                4..1 → [4, 3, 2, 1]
-
                 <li>start ..&lt; end or start ..! end</li>
-                1..&lt;4 → [1, 2, 3]<br>
-                4..&lt;1 → [4, 3, 2]
-
                 <li>start ..* length Since 2.3.21</li>
-                10..*4 → [10, 11, 12, 13]<br>
-                10..*-4 → [10, 9, 8, 7]
-
                 <li>start ..</li>
-                1.. → [1, 2, 3, ...]
             </ul>
             <li>Hash : {"key": "value", keyStringExpression: valueExpression}</li>
         </ul>
@@ -161,12 +153,43 @@
 <hr>
 
 <details>
+    <summary>사용자 정의 directive</summary>
+    <ol>
+        <li>기본 정의 : macro</li>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/src/io/github/donggi/Basic.java" displayRange="[67, 72]" lan="java">Java »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/resource/template/t_007_macro.ftl" displayRange="[1, 15, 19, 28]" lan="xml">FTL + 결과 »</button>
+        <li>매개변수</li>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/src/io/github/donggi/Basic.java" displayRange="[74, 79]" lan="java">Java »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/resource/template/t_008_macro.ftl" displayRange="[1, 16, 20, 30]" lan="xml">FTL + 결과 »</button>
+        <li>Nested content</li>
+        매크로 매개변수는 nested content에서 참조할 수 없다.
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/src/io/github/donggi/Basic.java" displayRange="[81, 86]" lan="java">Java »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/resource/template/t_009_macro.ftl" displayRange="[1, 16, 20, 30]" lan="xml">FTL + 결과 »</button>
+        <li>Nested content with 출력 전용 변수</li>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/src/io/github/donggi/Basic.java" displayRange="[88, 93]" lan="java">Java »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/resource/template/t_010_macro.ftl" displayRange="[1, 37, 41, 58]" lan="xml">FTL + 결과 »</button>
+    </ol>
+</details>
+
+<hr>
+
+<details>
     <summary>변수</summary>
-    값을 변경할 수 없는 FreeMarker 데이터 모델과 다르게, 값을 변경할 수 있는 데이터 모델 밖의 변수를 이용할 수 있다.
+    값을 변경할 수 없는 FreeMarker 데이터 모델과 다르게, 값을 변경할 수 있는 변수를 이용할 수 있다.
     <ul>
-        <li>"plain" variable : 템플릿 내에 선언되어 해당 템플릿 안에서 참조 가능</li>
-        <li>Local variable : 매크로나 함수 안에서 선언되어 그 안에서만 참조 가능</li>
+        <li>"plain" variable : 템플릿 내에 선언되어 해당 템플릿 안에서 참조 가능. &lt;#assign x = 1&gt;</li>
+        <li>Local variable : 매크로나 함수 안에서 선언되어 그 안에서만 참조 가능. &lt;#local x = 1&gt;</li>
         <li>Loop variable : list와 같은 directive에 의해 자동으로 만들어지는 변수</li>
-        <li>Global variable : Global directive로 선언하여 어느 템플릿에서든 참조 가능. Global 변수는 같은 이름의 데이터 모델을 가린다.</li>
+        <li>Global variable : Global directive로 선언하여 어느 템플릿에서든 참조 가능. Global 변수는 같은 이름의 데이터 모델을 가린다. &lt;#global x = 1&gt;</li>
     </ul>
 </details>
+
+<hr>
+
+<details>
+    <summary>Namespace</summary>
+    include된 템플릿 내의 변수에는 접근 불가. 반대의 경우도 불가.<br>
+    import된 템플릿은 속해진 영역의 데이터 모델에 접근할 수 있다.
+</details>
+
+<hr>
