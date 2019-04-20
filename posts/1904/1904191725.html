@@ -1,0 +1,4 @@
+
+docker-machine scp /root/kamutora/zipang-admin.war kamuvm:/home/docker/
+docker cp zipang-admin.war devweb:/usr/local/tomcat/
+docker container start devweb

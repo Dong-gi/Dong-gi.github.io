@@ -2,8 +2,9 @@ const posts = {
     "list": [
         { "filename": "posts/1809/0.html", "category": "분류전", "title": "새로운 시작", "date": "2019-04-02 09:33:24" },
         
-        { "filename": "posts/1809/1.html", "category": "Tip/VS Code", "title": "날짜 입력하기 : Insert Date String", "date": "2018-09-02 18:15:08" },
-        { "filename": "posts/1903/494.html", "category": "Tip/VS Code", "title": "파일 탐색 뷰에서 현재 문서 자동 추적 중지", "date": "2019-03-30 21:52:15" },
+        { "filename": "posts/1809/1.html", "category": "Tip", "title": "VS Code", "date": "2019-04-19 17:29:03" },
+        { "filename": "posts/1904/1904191501.html", "category": "Tip", "title": "Linux", "date": "2019-04-19 15:01:56" },
+        { "filename": "posts/1904/1904191725.html", "category": "Tip", "title": "Docker", "date": "2019-04-19 17:24:22" },
         
         { "filename": "posts/1809/2.html", "category": "Java/Basic", "title": "시작하기", "date": "2019-04-02 22:46:23" },
         { "filename": "posts/1809/8.html", "category": "Java/Basic", "title": "객체지향", "date": "2019-04-04 22:44:14" },
@@ -65,9 +66,12 @@ const posts = {
         { "filename": "posts/1809/448.html", "category": "Book", "title": "지식의 착각", "date": "2018-09-16 23:43:34" },
         { "filename": "posts/1809/449.html", "category": "Book", "title": "인생의 모든 의미", "date": "2018-09-16 23:49:00" },
         { "filename": "posts/1809/450.html", "category": "Book", "title": "쇼펜하우어, 돌이 별이 되는 철학", "date": "2018-09-20 22:25:32" },
+        { "filename": "posts/1810/475.html", "category": "Book", "title": "마음의 탄생", "date": "2018-10-24 22:11:48" },
+        { "filename": "posts/1810/476.html", "category": "Book", "title": "키르케고르 실존 극장", "date": "2018-10-27 10:59:43" },
+        { "filename": "posts/1810/477.html", "category": "Book", "title": "생각하는 삶을 위한 철학의 역사", "date": "2018-10-27 21:25:58" },
+
         
-        
-        { "filename": "posts/1810/461.html", "category": "JavaScript/Basic", "title": "HelloWorld", "date": "2018-10-08 20:37:52" },
+        { "filename": "posts/1810/461.html", "category": "JavaScript/Basic", "title": "Hello World", "date": "2018-10-08 20:37:52" },
         { "filename": "posts/1810/462.html", "category": "JavaScript/Basic", "title": "자료형, 변수, 식별자", "date": "2018-10-08 21:28:19" },
         { "filename": "posts/1810/463.html", "category": "JavaScript/Basic", "title": "Syntax", "date": "2018-10-08 21:40:26" },
         { "filename": "posts/1810/464.html", "category": "JavaScript/Basic", "title": "연산자", "date": "2018-10-08 21:47:01" },
@@ -100,14 +104,6 @@ const posts = {
         { "filename": "posts/1812/491.html", "category": "C*/C#.NET/Basic", "title": "C# 기타 문법", "date": "2018-12-29 17:42:52" },
         { "filename": "posts/1901/493.html", "category": "C*/C#.NET/WPF", "title": "WPF", "date": "2019-01-12 23:08:26" },
         
-        
-        { "filename": "posts/1810/475.html", "category": "Book", "title": "마음의 탄생", "date": "2018-10-24 22:11:48" },
-        { "filename": "posts/1810/476.html", "category": "Book", "title": "키르케고르 실존 극장", "date": "2018-10-27 10:59:43" },
-        { "filename": "posts/1810/477.html", "category": "Book", "title": "생각하는 삶을 위한 철학의 역사", "date": "2018-10-27 21:25:58" },
-
-
-        { "filename": "posts/1904/495.html", "category": "Linux", "title": "리눅스 시간 동기화", "date": "2019-04-02 10:42:07" },
-
 
         { "filename": "posts/1904/496.html", "category": "FreeMarker/매뉴얼/2.3.28", "title": "템플릿 작성 가이드", "date": "2019-04-11 12:52:15" },
         
