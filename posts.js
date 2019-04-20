@@ -110,6 +110,10 @@ const posts = {
 
 
         { "filename": "posts/1904/496.html", "category": "FreeMarker/매뉴얼/2.3.28", "title": "템플릿 작성 가이드", "date": "2019-04-11 12:52:15" },
+        
+        
+        { "filename": "posts/1904/497.html", "category": "Python/Basic", "title": "입문", "date": "2019-04-19 07:39:59" },
+        
     ],
     "tree": {},
     "contents": [],
