@@ -1,0 +1,239 @@
+<hr>
+
+<details>
+    <summary>설치</summary>
+    <ol>
+        <li>https://www.python.org/</li>
+        <li>설치경로(예. C:\Program Files\Python36)를 path 환경변수에 추가</li>
+        <li>Python Shell은 각 문장을 대화식 인터프리터가 해석하여 결과를 바로 출력해준다.</li>
+        <li>.py 실행 : 저장된 디렉터리에서 셸을 통해 python <i>name</i>.py 실행</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>자료형</summary>
+    <ol>
+        파이썬의 변수는 동적 자료형(실행 도중 변경 가능)으로, 자바와 같은 강한 타입 검사를 하지 않는다. 또, 변수를 나타내는 키워드 없이 식별자만 있으면 변수로써 이용할 수 있다.<br>
+        type() 함수를 통해 인자의 자료형을 확인할 수 있다.
+
+        <li>bool</li>
+        <ol>
+            <li>True, False</li>
+            <li>bool 연산 : and, or, not</li>
+            <li>False로 간주되는 값 : None, 0, 0.0, '', [], (), {}, set()</li>
+        </ol>
+
+        <li>int</li>
+        <ol>
+            모든 정수는 int형이며, 크기 제한은 없다.
+            <li>정수는 0으로 시작할 수 없다.
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211429.txt" displayRange="[1,5]" lan="text">예시 »</button></li>
+            <li>2진수 0b, 8진수 0o, 16진수 0x
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211429.txt" displayRange="[6,7]" lan="text">예시 »</button></li>
+            <li>/ : 부동소수 몫, // : 정수 몫, divmod() : (정수 몫, 나머지)
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211429.txt" displayRange="[8,13]" lan="text">예시 »</button></li>
+            <li>** : 거듭제곱
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211429.txt" displayRange="[14,17]" lan="text">예시 »</button></li>
+            <li>int() : 형변환, 소수점이나 지수가 표현된 문자열은 정수로 변환 불가
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211429.txt" displayRange="[18,40]" lan="text">예시 »</button></li>
+        </ol>
+
+        <li>float</li>
+        <ol>
+            <li>부동소수도 +, -, *, /, //, **, %, divmod() 모두 가능하다.
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211512.txt" displayRange="[1,2]" lan="text">예시 »</button></li>
+            <li>float 정밀도는 그대로 가진다.
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211512.txt" displayRange="[3,4]" lan="text">예시 »</button></li>
+            <li>float() : 형변환, 소수점이나 지수가 표현된 문자열은 정수로 변환 불가
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211512.txt" displayRange="[4,12]" lan="text">예시 »</button></li>
+        </ol>
+
+        <li>complex</li>
+        복소수. a + bj
+
+        <li>str</li>
+        <ol>
+            파이썬의 문자열은 상수(불변)다. ''와 ""모두 사용 가능하다.
+            <li>+ : 문자열 결합 연산자, * : 문자열 복제 연산자<br>
+                문자열 리터럴은 단순히 공백을 기준으로 나열만 해도 연결된다.
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211529.txt" displayRange="[1,6]" lan="text">예시 »</button></li>
+            <li>''' 또는 """로 열고 닫음으로써 여러 줄의 문자열 리터럴을 작성할 수 있다.
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211529.txt" displayRange="[7,9]" lan="text">예시 »</button></li>
+            <li>Raw String 작성
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211529.txt" displayRange="[10,12]" lan="text">예시 »</button></li>
+            <li>str() : 형변환.<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211529.txt" displayRange="[13,16]" lan="text">예시 »</button>
+                str() : 사람이 읽기 편한 형태, repr() : 인터프리터가 인식하는 형태</li>
+            <li>슬라이스([start : end : step], end는 미포함)를 통한 문자열 추출
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211529.txt" displayRange="[13,28]" lan="text">예시 »</button></li>
+            <li>str은 텍스트 시퀀스이므로, len()을 통해 길이를 구할 수 있다.
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211529.txt" displayRange="[29,30]" lan="text">예시 »</button></li>
+            <li>split() : 분리. 기본은 공백 문자
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211529.txt" displayRange="[31,36]" lan="text">예시 »</button></li>
+            <li>join() : 문자열 접합
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211529.txt" displayRange="[37,38]" lan="text">예시 »</button></li>
+            <li>strip() : 앞뒤 문자열 제거. 기본은 공백 제거
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211529.txt" displayRange="[39,42]" lan="text">예시 »</button></li>
+            <li>정렬
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211529.txt" displayRange="[40,48]" lan="text">예시 »</button></li>
+            <li>replace() : 부분 문자열 대체
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211529.txt" displayRange="[49,52]" lan="text">예시 »</button></li>
+            <li>endswith(), startswith(), find(), rfind(), count(), isalnum()...</li>
+            <li>capitalize(), title(), upper(), lower(), swapcase(), ...</li>
+        </ol>
+
+        <li>list</li>
+        <ol>
+            각 요소를 변경할 수 있는 시퀀스.
+            <li>생성 : [], list()
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211649.txt" displayRange="[1,10]" lan="text">예시 »</button></li>
+            <li>슬라이스를 통한 리스트 추출
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211649.txt" displayRange="[11,15]" lan="text">예시 »</button></li>
+            <li>리스트 병합 : +, extend()
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211649.txt" displayRange="[16,22]" lan="text">예시 »</button></li>
+            <li>요소 추가/삭제
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211649.txt" displayRange="[23,42]" lan="text">예시 »</button></li>
+            <li>검색
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211649.txt" displayRange="[43,49]" lan="text">예시 »</button></li>
+            <li>정렬
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211649.txt" displayRange="[50,56]" lan="text">예시 »</button></li>
+            <li>복사
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211649.txt" displayRange="[57,82]" lan="text">예시 »</button></li>
+        </ol>
+
+        <li>tuple</li>
+        <ol>
+            각 요소를 변경할 수 없는 시퀀스. 불변하므로 딕셔너리의 키로 사용할 수 있다.
+            <li>생성, 병합
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211659.txt" displayRange="[1,7]" lan="text">예시 »</button></li>
+            <li>튜플 언패킹
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211659.txt" displayRange="[8,12]" lan="text">예시 »</button></li>
+        </ol>
+
+        <li>set</li>
+        <ol>
+            <li>생성, 요소 추가
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211703.txt" displayRange="[1,10]" lan="text">예시 »</button></li>
+            <li>원소 포함 여부
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211703.txt" displayRange="[11,22]" lan="text">예시 »</button></li>
+            <li>집합 연산
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211703.txt" displayRange="[23,43]" lan="text">예시 »</button></li>
+        </ol>
+
+        <li>dict</li>
+        <ol>
+            <li>생성, 병합
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211731.txt" displayRange="[1,27]" lan="text">예시 »</button></li>
+            <li>키 포함 여부 : <i>key_name</i> in <i>dict</i></li>
+            <li>키-값 얻기
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211731.txt" displayRange="[28,34]" lan="text">예시 »</button></li>
+            <li>복사
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211731.txt" displayRange="[35,44]" lan="text">예시 »</button></li>
+        </ol>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>구문</summary>
+    <ol>
+        <li>주석 : #<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[1,1]" lan="python">예시 »</button></li>
+        <li>라인 유지 : \<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[2,4]" lan="python">예시 »</button></li>
+        <li>조건 분기 : if ~ elif ~ else<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[6,14]" lan="python">예시 »</button></li>
+        <li>while 반복 <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[6,14]" lan="python">예시 »</button></li>
+        <li>for 순회 <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[16,21]" lan="python">예시 »</button></li>
+        for문은 순회 객체에 대하여 iter()를 호출한다. iter()는 __next__() 메서드를 정의한 iterator 객체를 반환하며, __next__()가 전달하는 값을 하나씩 루프에 사용한다.<br>
+        더 이상 요소가 없을 때 __next__()는 StopIteration 예외를 발생시키고, for 루프는 이때 종료한다. 클래스 자체에 __next__()가 정의되어 있다면, iter()는 self를 반환하는 것으로 충분하다.
+        <li>반복문 제어 : break, continue<br>
+            break 호출 확인 : else <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[6,21]" lan="python">예시 »</button></li>
+        <li>콤마로 구분된 값들을 자동으로 튜플로 구성하여 다중 할당, 다중 반환이 가능하다.</li>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[23,28]" lan="python">다중 할당 예시 : 피보나치 수열 »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[31,40]" lan="python">다중 반환 예시 : 최대공약수/최소공배수 »</button>
+        <li>순회 대상 생성</li>
+        <ul>
+            <li>수열 생성 : range([start,] stop[, step])</li>
+            start 기본값 0. step 기본값 1. stop 자체는 미포함
+            <li>여러 시퀀스 동시 순회 : zip()</li>
+            같은 오프셋의 요소들로 튜플을 생성. 시퀀스가 하나라도 끝나면 순회 종료.
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[42,48]" lan="python">예시 »</button>
+            <li>comprehension : 순회를 통해 리스트, 딕셔너리, 셋 등 생성
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[50,87]" lan="python">예시 »</button></li>
+        </ul>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>함수</summary>
+    <ol>
+        파이썬의 함수는 일급 객체다.
+        <li>함수 정의 def <i>func_name</i>(): <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[89,93]" lan="python">예시 »</button></li>
+        <li>return이 없으면 호출자는 None을 얻는다. None 검사 : is None</li>
+        <li>docstring : 함수 body 첫 줄에 문자열로 함수 설명. help()로 출력된다.</li>
+        <li>함수 외부 scope에 접근할 수 있다.
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[95,98]" lan="python">예시 »</button></li>
+        <li>디폴트 매개변수, 키워드 매개변수, 매개변수 타입 바운딩
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[100,112]" lan="python">예시 »</button></li>
+        <li>* : 인자를 튜플로. ** : 인자를 딕셔너리로.
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[114,124]" lan="python">예시 »</button></li>
+        <li>함수 내부에 함수 정의 가능
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[126,131]" lan="python">예시 »</button></li>
+        <li>람다 함수 : lambda
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[126,129,133,134]" lan="python">예시 »</button></li>
+        <li>Generator</li>
+        자료를 순회할 때마다 다음 항목 반환. __iter__()와 __next__()를 자동으로 생성하고, StopIteration 예외도 자동으로 발생시킨다. cf. range() : 미리 모든 값을 생성한다.
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[136,143]" lan="python">예시 »</button>
+        <li>Decorator</li>
+        함수 꾸미기. 동적으로 기능 추가.<br>
+        * : 인자 리스트 언패킹, ** : 키워드 인자 딕셔너리 언패킹
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211517.py" displayRange="[145,157]" lan="python">예시 »</button>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>namespace</summary>
+    <ol>
+        네임스페이스 : "속성 이름 - 객체 이름" 매핑
+        <li>메인 프로그램은 전역 네임스페이스를 정의</li>
+        globals() : 전역 네임스페이스 정보를 담은 딕셔너리
+        <li>함수는 지역 네임스페이스를 정의</li>
+        locals() : 지역 네임스페이스 정보를 담은 딕셔너리
+        <li>global 키워드로 전역 변수 접근</li>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/scope_example.py" lan="python">예시 »</button>
+        출처: <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.python.org/3/tutorial/classes.html#scopes-and-namespaces-example">Python 3 튜토리얼</a>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary></summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary></summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary></summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>

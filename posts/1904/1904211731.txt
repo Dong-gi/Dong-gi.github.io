@@ -1,0 +1,44 @@
+>>> {}
+{}
+>>> {'key' : 'value', 123 : 456}
+{'key': 'value', 123: 456}
+>>> dic = dict()
+>>> dic['key1'] = 'val1'
+>>> dic[12] = 34
+>>> dic
+{'key1': 'val1', 12: 34}
+>>> dic.update({'key1': 'val3', 'key2': 'val4'})
+>>> dic
+{'key1': 'val3', 12: 34, 'key2': 'val4'}
+>>> del dic['key1']
+>>> dic
+{12: 34, 'key2': 'val4'}
+>>> dic.clear()
+>>> dic
+{}
+>>>
+>>> dict([['a', 'b'], ('c', 'd')])
+{'a': 'b', 'c': 'd'}
+>>> dict(('ab', 'cd'))
+{'a': 'b', 'c': 'd'}
+>>> dict(['a', 'b', 'c', 'd'])
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: dictionary update sequence element #0 has length 1; 2 is required
+>>> dic = dict(('ab', 'cd'))
+>>> dic.keys()
+dict_keys(['a', 'c'])
+>>> dic.values()
+dict_values(['b', 'd'])
+>>> dic.items()
+dict_items([('a', 'b'), ('c', 'd')])
+>>> dic = dict(('ab', 'cd'))
+>>> dic2 = dic # 얕은 복사
+>>> dic3 = dic.copy() # 깊은 복사
+>>> dic['a'] = 'z'
+>>> dic
+{'a': 'z', 'c': 'd'}
+>>> dic2
+{'a': 'z', 'c': 'd'}
+>>> dic3
+{'a': 'b', 'c': 'd'}
