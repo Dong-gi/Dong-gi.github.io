@@ -212,18 +212,38 @@
 <hr>
 
 <details>
-    <summary></summary>
+    <summary>예외</summary>
     <ol>
-
+        <li>try:<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904222222.py" displayRange="[1,4]" lan="python">예시 »</button></li>
+        <li>except: 또는 except ExceptionType as name:<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904222222.py" displayRange="[6, 9]" lan="python">예시 »</button></li>
+        <li>사용자 정의 → class MyException(Exception):</li>
+        <li>raise MyException("Don't Worry")<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904222222.py" displayRange="[11,17]" lan="python">예시 »</button></li>
     </ol>
 </details>
 
 <hr>
 
 <details>
-    <summary></summary>
+    <summary>모듈</summary>
     <ol>
-
+        <li>모듈 : 파이썬 파일 하나</li>
+        <li>패키지 : __init__.py 파일을 포함하는 디렉터리</li>
+        <li>import</li>
+        [from package] import module1, module2<br>
+        from module import variable, function<br>
+        import module as alias<br>
+        from module import *
+        
+        <li>del module, reload(module)</li>
+        <li>처음 실행되는 모듈의 __name__ 속성은 "__main__"이다.</li>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/fibonacci_example.py" lan="python">fibonacci_example.py »</button><br>
+        C:\apache-tomcat-9.0.17\webapps\github.io\posts\1904&gt;python fibonacci_example.py 100<br>
+        1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89,
+        
+        <li>모듈 탐색 경로 추가</li>
+        sys.path.append('/usr/me/some_directory')
+        
+        <li>dir()을 이용해 모듈에 정의된 것들을 확인할 수 있다.</li>
     </ol>
 </details>
 
