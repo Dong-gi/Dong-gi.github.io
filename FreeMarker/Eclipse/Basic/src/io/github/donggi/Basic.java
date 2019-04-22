@@ -84,9 +84,25 @@ public class Basic {	// 15 라인 고정
 			put("title", path);
 		}});
 	}
-	@org.junit.jupiter.api.Test
+
 	public void example_t_010() throws Exception {
 		var path = "t_010_macro.ftl";
+		process(path, new HashMap<String, Object>() {{
+			put("title", path);
+		}});
+	}
+
+	public void example_t_011() throws Exception {
+		var path = "t_011_main.ftl";
+		process(path, new HashMap<String, Object>() {{
+			put("title", path);
+		}});
+	}
+	@org.junit.jupiter.api.Test
+	public void example_t_012() throws Exception {
+		config.addAutoImport("footer", "t_012_footer.ftl"); 
+		config.setLazyAutoImports(true);
+		var path = "t_012_main.ftl";
 		process(path, new HashMap<String, Object>() {{
 			put("title", path);
 		}});
