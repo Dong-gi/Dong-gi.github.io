@@ -57,6 +57,7 @@ const posts = {
 
         { "filename": "posts/1809/372.html", "category": "Front/CSS", "title": "CSS", "date": "2018-09-09 15:26:56" },
         { "filename": "posts/1809/373.html", "category": "Front/HTML", "title": "HTML", "date": "2018-09-09 15:47:25" },
+        { "filename": "posts/1904/1904252139.html", "category": "Front/HTTP", "title": "HTTP 1.1", "date": "2019-04-25 21:48:26" },
         
 
         { "filename": "posts/1809/374.html", "category": "Algorithm", "title": "jduge.koreatech.ac.kr", "date": "2019-04-09 20:29:50" },
@@ -107,8 +108,15 @@ const posts = {
 
         { "filename": "posts/1904/496.html", "category": "FreeMarker/매뉴얼/2.3.28", "title": "템플릿 작성 가이드", "date": "2019-04-11 12:52:15" },
         
-        
+
         { "filename": "posts/1904/497.html", "category": "Python/Basic", "title": "입문", "date": "2019-04-21 14:32:28" },
+        { "filename": "posts/1904/1904252127.html", "category": "Python/Document", "title": "Built-in Functions", "date": "2019-04-25 21:28:06" },
+        { "filename": "posts/1904/1904252130.html", "category": "Python/Document", "title": "Built-in Constants", "date": "2019-04-25 21:30:09" },
+        { "filename": "posts/1904/1904252131.html", "category": "Python/Document", "title": "Built-in Types", "date": "2019-04-25 21:30:58" },
+        { "filename": "posts/1904/1904252133.html", "category": "Python/Document", "title": "Built-in Exceptions", "date": "2019-04-25 21:32:58" },
+        { "filename": "posts/1904/1904252134.html", "category": "Python/Document", "title": "Text Processing Services", "date": "2019-04-25 21:33:43" },
+        { "filename": "posts/1904/1904252135.html", "category": "Python/Document", "title": "Binary Data Services", "date": "2019-04-25 21:34:47" },
+        { "filename": "posts/1904/1904252136.html", "category": "Python/Document", "title": "Data Types", "date": "2019-04-25 21:35:27" },
         
     ],
     "tree": {},

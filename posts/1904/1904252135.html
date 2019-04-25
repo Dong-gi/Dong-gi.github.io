@@ -1,0 +1,61 @@
+        <th>struct - Interpret bytes as packed binary data</th>
+            1. struct는 bytes 객체로 표현된 C 구조체와 Python 값 사이의 변환을 지원한다.
+            <br>
+            <br>2. Functions and Exceptions
+            <br>&raquo; exception struct.error
+            <br>&raquo; struct.pack(fmt, v1, v2, ...) : 포맷 문자열 fmt에 따라 v1, v2, ... 값들을 포장한 bytes 객체를 반환한다.
+            <br>&raquo; struct.pack_into(fmt, buffer, offset, v1, v2, ...) : pack과 기능은 동일.
+            <br>&raquo; struct.unpack(fmt, buffer) : 포맷 문자열 fmt에 따라 기존에 포장된 buffer를 풀어 값들의 튜플로 반환한다.
+            <br>&raquo; struct.unpack_from(fmt, buffer, offset=0) : unpack과 기능은 동일
+            <br>&raquo; struct.iter_unpack(fmt, buffer) Since 3.4 : unpack과 비슷하다. 같은 크기의 아이템들을 순회하는 iterator를
+            반환한다. buffer의 크기는 반드시 fmt의 정수배여야 하며, calcsize(fmt)로 구할 수 있다.
+            <br>&raquo; struct.calcsize(fmt) : 필요한 struct 바이트 크기
+            <br>
+            <br>3. Format Strings
+            <br>&raquo; Byte Order, Size, and Alignment
+            <br>* @(default) : native order : native size : native alignment // C 컴파일러의 sizeof로 결정된다.
+            <br>* = : native : standard : none
+            <br>* &lt; : little-endian : standard : none
+            <br>* &gt; : big-endian : standard : none
+            <br>* ! : network(=big-endian) : standard : none
+            <br>&raquo; Format Characters
+            <br>* x : pad byte(in C) : no value(in Python)
+            <br>* c : char : bytes of length 1 : 1(size)
+            <br>* b : signed char : integer : 1
+            <br>* B : unsigned char : integer : 1
+            <br>* ? : _Bool : bool : 1
+            <br>* h : short : integer : 2
+            <br>* H : unsigned short :integer : 2
+            <br>* i : int : integer : 4
+            <br>* I : unsigned int : integer : 4
+            <br>* l : long : integer : 4
+            <br>* L : unsigned long : integer : 4
+            <br>* q : long long : integer : 8
+            <br>* Q : unsigned long long : integer : 8
+            <br>* n : ssize_t : integer : @에서만 가능
+            <br>* N : size_t : integer : @에서만 가능
+            <br>* f : float : float : 4
+            <br>* d : double : float : 8
+            <br>* s : char[] : bytes
+            <br>* p : char[] : bytes
+            <br>* P : void* : integer : @에서만 가능
+            <br>** 포맷 문자 앞에 정수가 오면 반복을 의미한다. 포맷 문자 사이의 공백은 무시한다.
+            <br>** s의 경우 앞에 오는 정수는 반복이 아닌 바이트 크기다. 주어지지 않는다면 기본은 1. 패킹 과정에서 크기를 맞추기 위해 null 바이트가 포함될 수 있다. 언패킹에선
+            bytes 객체의 크기가 딱 알맞다.
+            <br>** 0s는 빈 문자열을 의미한다.(0c는 0개 문자)
+            <br>** p는 "Pascal string"으로, 첫 바이트는 문자열 길이를 담는다.
+            <br>
+            <br>4. 예제
+            <br>&raquo; https://docs.python.org/3/library/struct.html#examples
+            <br>&gt;&gt;&gt; from struct import *
+            <br>&gt;&gt;&gt; pack('hhl', 1, 2, 3)
+            <br>b'\x00\x01\x00\x02\x00\x00\x00\x03'
+            <br>&gt;&gt;&gt; unpack('hhl', b'\x00\x01\x00\x02\x00\x00\x00\x03')
+            <br>(1, 2, 3)
+            <br>&gt;&gt;&gt; calcsize('hhl')
+            <br>8
+            <br>
+            <br>5. Classes
+            <br>&raquo; class struct.Struct(format)
+            <br>* pack(v1, v2, ...), pack_into(buffer, offset, v1, v2, ...), unpack(buffer), unpack_from(buffer,
+            offset=0), iter_unpack(buffer) Since 3.4, format, size
