@@ -107,7 +107,7 @@ public class Basic {	// 15 라인 고정
 			put("title", path);
 		}});
 	}
-	
+	// 끝. 그만 추가.
 	
 	public static Configuration config;
 	public static File templateRootFile;

@@ -1,6 +1,6 @@
 const posts = {
     "list": [
-        { "filename": "posts/1809/0.html", "category": "분류전", "title": "새로운 시작", "date": "2019-04-02 09:33:24" },
+        { "filename": "posts/1809/0.html", "category": "Message", "title": "새로운 시작", "date": "2019-04-02 09:33:24" },
         
         { "filename": "posts/1809/1.html", "category": "Tip", "title": "VS Code", "date": "2019-04-19 17:29:03" },
         { "filename": "posts/1904/1904191501.html", "category": "Tip", "title": "Linux", "date": "2019-04-19 15:01:56" },
@@ -106,6 +106,8 @@ const posts = {
         
 
         { "filename": "posts/1904/496.html", "category": "FreeMarker/매뉴얼/2.3.28", "title": "템플릿 작성 가이드", "date": "2019-04-11 12:52:15" },
+        { "filename": "posts/1904/1904231056.html", "category": "FreeMarker/매뉴얼/2.3.28", "title": "프로그래밍 가이드", "date": "2019-04-23 10:57:10" },
+        { "filename": "posts/1904/1904251509.html", "category": "FreeMarker/매뉴얼/2.3.28", "title": "XML 처리 가이드", "date": "2019-04-25 15:52:30" },
         
         
         { "filename": "posts/1904/497.html", "category": "Python/Basic", "title": "입문", "date": "2019-04-21 14:32:28" },

@@ -1,0 +1,205 @@
+<hr>
+
+<details>
+    <summary>시작</summary>
+    <ol>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/src/io/github/donggi/Basic.java" displayRange="[112, 142, 17, 23]" lan="java">Java »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/resource/template/t_001_hello_world.ftl" displayRange="[1, 12, 15, 26]" lan="xml">FTL + 결과 »</button>
+        <li>Configuration 인스턴스 생성</li>
+        <li>Data-model 생성</li>
+        <ul>
+            <li>java.lang.String</li>
+            <li>java.lang.Number</li>
+            <li>java.lang.Boolean</li>
+            <li>java.util.Date</li>
+            <li>java.util.Map</li>
+            <li>Custom Beans</li>
+        </ul>
+        <li>Template 인스턴스 얻기</li>
+        <li>Template과 data-model 머지</li>
+    </ol>
+</details>
+
+<hr>
+<details>
+    <summary>Data-model</summary>
+    <ol>
+        <li>Scalar</li>
+        각 스칼라 타입은 Template<i>TypeName</i>Model 인터페이스에 해당한다.<br>
+        Boolean, Number, String, Date-like(Date, Time, Date-time)
+
+        <li>Container</li>
+        <ul>
+            <li>Hash</li>
+            <details>
+                <summary>interface TemplateHashModel extends TemplateModel</summary>
+                <ol>
+                    <li>TemplateModel get(java.lang.String key)</li>
+                    <li>boolean isEmpty()</li>
+                </ol>
+            </details>
+
+            <details>
+                <summary>interface TemplateHashModelEx extends TemplateHashModel</summary>
+                <ol>
+                    <li>int size()</li>
+                    <li>TemplateCollectionModel keys()</li>
+                    <li>TemplateCollectionModel values()</li>
+                </ol>
+            </details>
+
+            <details>
+                <summary>interface TemplateHashModelEx2 extends TemplateHashModelEx</summary>
+                <ol>
+                    <li>static interface TemplateHashModelEx2.KeyValuePair</li>
+                    <li>static interface TemplateHashModelEx2.KeyValuePairIterator</li>
+                    <li>TemplateHashModelEx2.KeyValuePairIterator keyValuePairIterator()</li>
+                </ol>
+            </details>
+
+            <details>
+                <summary>class SimpleHash extends WrappingTemplateModel implements TemplateHashModelEx2, java.io.Serializable</summary>
+                <ol>
+                    <li>public SimpleHash(ObjectWrapper wrapper)</li>
+                    <li>public SimpleHash(java.util.Map map, ObjectWrapper wrapper)</li>
+                    <li>protected java.util.Map copyMap(java.util.Map map)</li>
+                    <li>void put(java.lang.String key, java.lang.Object value)</li>
+                    <li>boolean containsKey(java.lang.String key)</li>
+                    <li>void remove(java.lang.String key)</li>
+                    <li>void putAll(java.util.Map m)</li>
+                    <li>java.util.Map toMap()</li>
+                </ol>
+            </details>
+
+
+            <li>Sequence</li>
+            <details>
+                <summary>interface TemplateSequenceModel extends TemplateModel</summary>
+                <ol>
+                    <li>TemplateModel get(int index)</li>
+                    <li>int size()</li>
+                </ol>
+            </details>
+
+            <details>
+                <summary>class SimpleSequence extends WrappingTemplateModel implements TemplateSequenceModel, java.io.Serializable</summary>
+                <ol>
+                    <li>public SimpleSequence(TemplateCollectionModel tcm)</li>
+                    <li>public SimpleSequence(ObjectWrapper wrapper)</li>
+                    <li>public SimpleSequence(int capacity, ObjectWrapper wrapper) Since 2.3.21</li>
+                    <li>public SimpleSequence(java.util.Collection collection, ObjectWrapper wrapper)</li>
+                    <li>void add(java.lang.Object obj)</li>
+                    <li>SimpleSequence synchronizedWrapper()</li>
+                </ol>
+            </details>
+
+
+            <li>Collection</li>
+            <details>
+                <summary>interface TemplateCollectionModel extends TemplateModel</summary>
+                <ol>
+                    <li>TemplateModelIterator iterator()</li>
+                </ol>
+            </details>
+
+            <details>
+                <summary>class SimpleCollection extends WrappingTemplateModel implements TemplateCollectionModel, java.io.Serializable</summary>
+                <ol>
+                    <li><strong>public SimpleCollection(java.util.Collection collection, ObjectWrapper wrapper)</strong></li>
+                    <li><strong>public SimpleCollection(java.util.Iterator iterator, ObjectWrapper wrapper)</strong></li>
+                    <li>public SimpleCollection(java.lang.Iterable iterable, ObjectWrapper wrapper)</li>
+                </ol>
+            </details>
+        </ul>
+
+        <li>Method</li>
+        <strong>interface TemplateMethodModelEx extends TemplateMethodModel</strong><br>
+        » java.lang.Object exec(java.util.List arguments)
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/src/io/github/donggi/ProgrammerGuilde.java" displayRange="[18, 26]" lan="java">Java »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/resource/template/t_013_method.ftl" displayRange="[1, 1, 3, 3]" lan="xml">FTL + 결과 »</button>
+
+        <li>Object Wrapper</li>
+        <ul>
+            <details>
+                <summary>interface ObjectWrapper</summary>
+                TemplateModel wrap(java.lang.Object obj)
+            </details>
+
+            <details>
+                <summary>interface ObjectWrapperAndUnwrapper extends ObjectWrapper</summary>
+                <ol>
+                    <li>static final java.lang.Object CANT_UNWRAP_TO_TARGET_CLASS</li>
+                    unwrap은 가능하지만, 결과물이 타깃 클래스 인스턴스가 아닐 수 있음을 표시. 아니면 null
+                    <li>java.lang.Object unwrap(TemplateModel tm)</li>
+                    unwrap 실패의 의미로 null을 반환하지 말 것.
+                    <li>java.lang.Object tryUnwrapTo(TemplateModel tm, java.lang.Class<?> targetClass)</li>
+                    targetClass가 Object.class가 아닌 경우, 변환이 안 될 것 같으면 CANT_UNWRAP_TO_TARGET_CLASS 반환.
+                </ol>
+            </details>
+
+            <details>
+                <summary>class DefaultObjectWrapper extends BeansWrapper</summary>
+                FreeMarker에서 기본으로 사용하는 ObjectWrapper. Configuration::getDefaultObjectWrapper 또는 DefaultObjectWrapperBuilder::build로 획득.
+            </details>
+        </ul>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Configuration</summary>
+    <ol>
+        <li>Shared variable</li>
+        모든 템플릿이 공유하는 변수(함수와 directive도 변수임을 상기) 설정. Configuration::setSharedVariable
+        
+        <li>Setting</li>
+        locale, number_format, default_encoding, template_exception_handler, date_format, time_format, datetime_format, time_zone, url_escaping_charset 등<br>
+        https://freemarker.apache.org/docs/api/freemarker/template/Configuration.html#setSetting-java.lang.String-java.lang.String-
+
+        <li>Template loading</li>
+        <ul>
+            <li>템플릿 로더 설정</li>
+            <ul>
+                <li>Configuration::setDirectoryForTemplate : 파일 시스템 상의 기본 디렉터리 지정</li>
+                <li>Configuration::setClassForTemplateLoading<br>
+                    Configuration::setServletContextForTemplateLoading</li>
+                클래스 로딩과 같은 매커니즘으로 템플릿을 가져오고자 할 때 사용. jar로 웹앱을 배치한 경우 유용<br>
+                setServletContextForTemplateLoading(servletContext, path) == setTemplateLoader(new WebappTemplateLoader(sctxt, path))
+                <li>Configuration::setServletContextForTemplateLoading</li>
+                ServletContext::getResource를 이용해 템플릿 로드. 압축 상태의 war에서도 잘 동작. WEB-INF/web.xml에 *.ftl등 템플릿 확장자 설정해야 함.
+                <li>Configuration::setTemplateLoader</li>
+                직접 TemplateLoader를 구현했거나, 템플릿 로더의 설정을 변경하여 이용해야 하는 경우 이용.<br>
+                * 이미 URLTemplateLoader이 구현돼있으니 괜한 뻘짓할 필요 없다.
+            </ul>
+
+            <li>여러 장소에서 로드</li>
+            Configuration::setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[] { loader1, loader2, ... }))
+        </ul>
+
+        <li>Template caching</li>
+        로드된 템플릿은 캐시된다. 기본 갱신 주기는 5초며, Configuration으로 설정 가능. 클래스 로더를 이용하는 경우 갱신 파악에 문제가 있을 수 있다.<br>
+        getTemplate을 호출하면 캐시에 저장되고, 템플릿 파일이 삭제되면 캐시에서도 삭제된다.<br>
+        기본적으로 MruCacheStorage가 이용된다.
+        <ul>
+            <li>MruCacheStorage : strong part + soft part 2단계 캐싱</li>
+            <li>Strong part : JVM에 의해 정리되지 않는 캐시</li>
+            <li>Soft part : JVM에 의해 정리될 수 있는 캐시</li>
+            <li>디폴트 옵션은 strong 0, soft Integer.MAX_VALUE.</li>
+            변경하려면 Configuration::setCacheStorage(new freemarker.cache.MruCacheStorage(20, 250)) 또는 Configuration::setSetting(Configuration.CACHE_STORAGE_KEY, "strong:20, soft:250")
+        </ul>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>보안 권한</summary>
+    <ol>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904251455.txt" lan="text">
+            보안 설정한 JVM으로 실행하는 경우 권한을 부여해야 한다.
+        </button>
+    </ol>
+</details>
+
+<hr>

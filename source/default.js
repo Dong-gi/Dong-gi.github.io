@@ -106,7 +106,7 @@ function updateDropupManually(level, path) {
     menu.empty();
     posts.visible = [];
     for (let i = 0; i < posts.list.length; ++i) {
-        if (posts.list[i].category.startsWith(path)) {
+        if (posts.list[i].category.startsWith(path + "/") || posts.list[i].category.endsWith(path)) {
             if ($(posts.contents[i]).hasClass("d-none"))
                 $(posts.contents[i]).removeClass("d-none")
             menu.prepend($(`<a class="dropdown-item" href="javascript:updateScrollManually(${posts.list[i].id});">${posts.list[i].title}</a>`));
@@ -116,6 +116,7 @@ function updateDropupManually(level, path) {
                 $(posts.contents[i]).addClass("d-none")
         }
     }
+    updateDropupAuto();
     adjustDropupWidth();
 }
 
@@ -124,16 +125,18 @@ function updateDropupManually(level, path) {
  */
 function updateDropupAuto() {
     let pos = (document.scrollTop || window.pageYOffset) - (document.clientTop || 0);
-    $('#dropup-posts button').text(posts.list[posts.visible.length - 1].title);
-    for (let i = posts.visible.length - 1; i >= 0; --i) {
-        if (pos < $(posts.contents[posts.visible[i]]).offset().top) {
-            $('#dropup-posts button').text(posts.list[posts.visible[i + 1]].title);
-            let paths = posts.list[posts.visible[i + 1]].category.split("/");
-            for (let level = 1; level <= paths.length; ++level)
-                $("#dropup-lv-" + level + " button").text(paths[level - 1]);
-            return;
-        }
+    let currentContentIdx = posts.visible.length - 1;
+    while (currentContentIdx > 0) {
+        if (pos >= $(posts.contents[posts.visible[currentContentIdx - 1]]).offset().top)
+            --currentContentIdx;
+        else
+            break;
     }
+    $('#dropup-posts button').text(posts.list[posts.visible[currentContentIdx]].title);
+    let paths = posts.list[posts.visible[currentContentIdx]].category.split("/");
+    for (let level = 1; level <= paths.length; ++level)
+        $("#dropup-lv-" + level + " button").text(paths[level - 1]);
+    return currentContentIdx;
 }
 
 /**
@@ -315,9 +318,8 @@ function getContentHTML(post) {
     let title = post.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     let newBadge = (new Date().getTime() - new Date(post.date).getTime()) <= 3 * 86400 * 1000 ? '<span class="badge badge-pill badge-primary">New</span>' : '';
     return `<div class="jumbotron" id="${post.id}"><details><summary class="row">
-    <div class="col-12 col-md-8 col-lg-6" title="Category : ${post.category}">${title}${newBadge}</div>
-    <div class="col d-none d-md-block">${post.date}</div>
-    <div class="col d-none d-lg-block">${post.filename}</div>
+    <div class="col-12 col-md-9 col-lg-7" title="${post.filename}@${post.date}">${title}${newBadge}</div>
+    <div class="col d-none d-md-block">${post.category}</div>
     </summary></details></div>`;
 }
 

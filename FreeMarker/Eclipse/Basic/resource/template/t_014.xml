@@ -1,0 +1,116 @@
+<bookshelf
+    xmlns:my="http://www.12345678.org/my"
+    xmlns:me="http://www.12345678.org/me">
+
+    <owner>
+        <name>Donggi Kim</name>
+    </owner>
+
+    <book category = "문학">
+        <title>제목1</title>
+        <author>저자1</author>
+        <isbn>ISBN1</isbn>
+        <summary>요약1</summary>
+
+        <text>
+            <chapter>
+                <title>1장</title>
+                <p>문단 1-1</p>
+                <p>문단 1-2</p>
+            </chapter>
+            <chapter>
+                <title>2장</title>
+                <p>문단 2-1</p>
+                <p>문단 2-2</p>
+            </chapter>
+        </text>
+    </book>
+
+    <book category = "금서" reason = "그냥">
+        <title>제목2</title>
+        <author>저자2</author>
+        <isbn>ISBN2</isbn>
+        <summary>요약2</summary>
+
+        <text>
+            <chapter>
+                <title>3장</title>
+                <p>문단 3-1</p>
+                <p>문단 3-2</p>
+            </chapter>
+            <chapter>
+                <title>4장</title>
+                <p>문단 4-1</p>
+                <p>문단 4-2</p>
+            </chapter>
+        </text>
+    </book>
+
+    <my:box>
+        <my:item>알 수 없는 무언가</my:item>
+        <my:item>ㅂㄹㄹㅋ</my:item>
+    </my:box>
+
+    <me:music>
+        <me:title>-レクイエム・オブ・レッド-.flac</me:title>
+        <me:title>Agape.mp3</me:title>
+        <me:title>Bonetrousle.mp3</me:title>
+        <me:title>Chant de Verite.mp3</me:title>
+        <me:title>Cras numquam scire.m4a</me:title>
+        <me:title>crystal heart.m4a</me:title>
+        <me:title>disillusion.m4a</me:title>
+        <me:title>FLIP FLAP FLIP FLAP.mp3</me:title>
+        <me:title>God only knows.mp3</me:title>
+        <me:title>Golden Time Lover.mp3</me:title>
+        <me:title>goodnight.mp3</me:title>
+        <me:title>HANABI.mp3</me:title>
+        <me:title>Honesty.m4a</me:title>
+        <me:title>I sing...m4a</me:title>
+        <me:title>It's only the fairy tale.m4a</me:title>
+        <me:title>Puzzle.mp3</me:title>
+        <me:title>Resuscitated Hope.m4a</me:title>
+        <me:title>ROCK OVER JAPAN.mp3</me:title>
+        <me:title>The Summer Wars.mp3</me:title>
+        <me:title>unity.m4a</me:title>
+        <me:title>とある竜の恋の歌.m4a</me:title>
+        <me:title>どこまでも響くハラショー.mp3</me:title>
+        <me:title>ひつじ雲の空に.mp3</me:title>
+        <me:title>もどかしい世界の上で.mp3</me:title>
+        <me:title>アシンメトリー.m4a</me:title>
+        <me:title>ウソと真実.mp3</me:title>
+        <me:title>エルの天秤.mp3</me:title>
+        <me:title>セキレイ.mp3</me:title>
+        <me:title>ダークサイドについてきて.mp3</me:title>
+        <me:title>ビビッドカラー・ビューティフルカンバス.mp3</me:title>
+        <me:title>ファールプレーにくらり.mp3</me:title>
+        <me:title>ブルーバード.mp3</me:title>
+        <me:title>レクイエム.m4a</me:title>
+        <me:title>与我共鸣 -NENTEN-.mp3</me:title>
+        <me:title>五月雨が過ぎた頃に.m4a</me:title>
+        <me:title>千の翼.mp3</me:title>
+        <me:title>君の中の英雄.mp3</me:title>
+        <me:title>君の神話~アクエリオン 第二章.mp3</me:title>
+        <me:title>吹雪.m4a</me:title>
+        <me:title>四月は君の嘘～PianoSolo.mp3</me:title>
+        <me:title>愛の陽.mp3</me:title>
+        <me:title>断罪の花 〜Guilty Sky〜.m4a</me:title>
+        <me:title>時をつかまえて.mp3</me:title>
+        <me:title>暁の車.m4a</me:title>
+        <me:title>月光シンフォニア.mp3</me:title>
+        <me:title>深愛.mp3</me:title>
+        <me:title>深海少女.mp3</me:title>
+        <me:title>満天.mp3</me:title>
+        <me:title>熱情のスペクトラム.m4a</me:title>
+        <me:title>破滅の純情.m4a</me:title>
+        <me:title>祝祭のエレメンタリア.flac</me:title>
+        <me:title>絶望性：ヒーロー治療薬.flac</me:title>
+        <me:title>美しき残酷な世界.flac</me:title>
+        <me:title>自由の翼 - TV Ver.flac</me:title>
+        <me:title>見つけなくちゃ!乙女心!!.mp3</me:title>
+        <me:title>誰もいない場所.m4a</me:title>
+        <me:title>雫.mp3</me:title>
+        <me:title>響け.mp3</me:title>
+        <me:title>齧りかけの林檎.mp3</me:title>
+    </me:music>
+
+</bookshelf>
