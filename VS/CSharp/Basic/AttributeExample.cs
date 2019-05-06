@@ -12,25 +12,23 @@ namespace Basic
         [System.AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]
         public sealed class MyAttribute : Attribute
         {
-            public MyAttribute(string arg = "", String namedArg = "") => (Arg, NamedArg) = (arg, namedArg);
+            public MyAttribute(string arg = "") => (Arg, NamedArg) = (arg, "");
 
             public string Arg { get; }
             public string NamedArg { get; set; }
         }
 
+        [My("arg1")]
+        [My("arg2", NamedArg = "namedArg2")]
+        [field: My("arg3", NamedArg = "namedArg3")]
+        public int field = 0;
+
         public static void Example()
         {
-            var example = new AttributeExample();
             typeof(AttributeExample)
                 .GetField("field")
                 .GetCustomAttributes(false)
                 .ForEach(x => Console.WriteLine("{0}, {1}", (x as MyAttribute).Arg, (x as MyAttribute).NamedArg));
         }
-
-        [My("arg1", NamedArg = "namedArg1")]
-        [My("arg2", NamedArg = "namedArg2")]
-        [My("arg3", NamedArg = "namedArg3")]
-        [My("arg4", NamedArg = "namedArg4")]
-        public int field = 0;
     }
 }

@@ -11,10 +11,10 @@ namespace Basic
         static void Main(string[] args)
         {
             // EventExample.Example();
-            // AttributeExample.Example();
+             AttributeExample.Example();
             // NullableExample.Example();
             // IndexerExample.Example();
-            ExtensionExample.Example();
+            // ExtensionExample.Example();
             Console.ReadLine();
         }
     }
