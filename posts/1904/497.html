@@ -250,9 +250,59 @@
 <hr>
 
 <details>
-    <summary></summary>
+    <summary>pass</summary>
     <ol>
+        <li>빈 루프를 표현할 때 이용</li>
+        <li>빈 클래스를 표현할 때 이용</li>
+        <li>빈 함수를 표현할 때 이용</li>
+    </ol>
+</details>
 
+<hr>
+<details>
+    <summary>클래스</summary>
+    <ol>
+        <li>변경 가능한 속성은 del 키워드를 이용해 지울 수 있다.
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904242218.py" displayRange="[1, 12, 14, 15]" lan="python">속성 삭제 예시 »</button>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904242218.py" displayRange="[1, 8, 34, 39, 41, 44]" lan="python">속성 추가 예시 »</button>
+        </li>
+        <li>객체 메서드를 표현하는 객체도 속성들을 갖는다.
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904242218.py" displayRange="[1, 8, 18, 25, 27, 31]" lan="python">예시 »</button>
+        </li>
+        <li>Name mangling : 파이썬은 기본적으로 접근 한정자가 없다. 다른 언어의 private과 같은 사용과 함께 이름 충돌을 회피하기 위해 2개 이상의 '_'로 시작하는 식별자는 내부적으로 앞에 '_classname'이 덧붙여 구분된다.
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904242218.py" displayRange="[47, 61, 63, 65, 68, 80, 82, 85]" lan="python">예시 »</button>
+        </li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>가상 환경</summary>
+    <ol>
+        <li>서로 다른 프로젝트들이 서로 다른 버전의 패키지 의존성을 가질 수 있다. 이를 유연하게 지원하도록 가상 환경을 만들 수 있다.</li>
+        <li>최신 파이썬 버전에는 venv 모듈이 포함되어 있다.</li>
+        python3 -m venv my-env1 : my-env1 디렉터리가 존재하지 않으면 생성한다. 이 디렉터리에 파이썬 인터프리터, 표준 라이브러리 등이 복사된다.<br>
+        » Windows에서 실행 : my-env1\Scripts\activate.bat<br>
+        » Unix에서 실행 : source my-env1/bin/activate
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>pip</summary>
+    <ol>
+        <li>pip : 파이썬 패키지 설치, 제거에 관한 프로그램</li>
+        <li>기본적으로 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://pypi.org/">https://pypi.org/</a>의 패키지들이 대상이다.</li>
+        
+        <li>pip install requests</li>
+        <li>pip install requests==2.6.0</li>
+        <li>pip install --upgrade requests</li>
+        <li>pip show requests</li>
+        <li>pip list</li>
+        <li>pip freeze &gt; requirements.txt</li>
+        <li>pip install -r requirements.txt</li>
     </ol>
 </details>
 

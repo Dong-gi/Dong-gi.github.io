@@ -1,0 +1,54 @@
+    <th>Base classes</th>
+            1. 모든 예외는 BaseException의 인스턴스. 프로그래머가 BaseException을 직접 상속할 수는 없다.
+            <br>* 마지막으로 발생한 예외가 자동으로 __context__에 설정된다.
+            <br>* 추가 예외 : raise new_exc from original_exc &raquo; __cause__에 original_exc이 등록된다. from None을 하면
+            간단하게 이전 예외를 새로운 것으로 교체한다.
+            <br>
+            <br>2. exception BaseException
+            <br>&raquo; args : 생성자에서 받은 인자들로 구성된 튜플
+            <br>&raquo; with_traceback(tb) : tb를 예외의 traceback으로 설정하고 예외를 반환한다.
+            <br>except SomeException:
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;tb = sys.exc_info()[2]
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;raise OtherException(...).with_traceback(tb)
+            <br>
+            <br>3. exception Exception : 시스템을 종료하지 않는 예외들, 사용자 정의 예외들의 조상
+            <br>
+            <br>4. exception ArithmeticError : OverflowError, ZeroDivisionError, FloatingPointError 등의 조상
+            <br>
+            <br>5. exception BufferError
+            <br>
+            <br>6. exception LookupError : IndexError, KeyError
+
+            <th>Concrete exceptions</th>
+            &raquo; exception AttributeError
+            <br>&raquo; exception EOFError
+            <br>&raquo; exception GeneratorExit : generator나 coroutine이 닫혔을 때 발생. 기술적인 에러가 아니므로 BaseExceptoin을
+            직접 상속.
+            <br>&raquo; exception ImportError
+            <br>&raquo; exception ModuleNotFoundError Since 3.6
+            <br>&raquo; exception KeyError
+            <br>&raquo; exception KeyboardInterrupt : Exception에 잡히는 불상사를 방지하기 위해 BaseException을 직접 상속한다.
+            <br>&raquo; exception MemoryError
+            <br>&raquo; exception NameError
+            <br>&raquo; exception NotImplementedError : 메서드를 지원하지 않는다는 의미로 사용하지 말 것. 그러한 경우엔 메서드를 지우거나 None으로
+            바꿀 것
+            <br>&raquo; exception OSError([arg]), exception OSError(errno, strerror[, filename[, winerror[, filename2]]])
+            <br>&raquo; exception RecursionError : 최대 재귀 횟수 초과
+            <br>&raquo; exception RuntimeError
+            <br>&raquo; exception StopIteration
+            <br>&raquo; exception StopAsyncIteration Since 3.5
+            <br>&raquo; exception IndentationError
+            <br>&raquo; exception SystemError : 직접 발생시킬 경우 sys.version을 포함할 것.
+            <br>&raquo; exception SystemExit : sys.exit()으로 발생
+            <br>&raquo; exception TypeError
+            <br>&raquo; exception UnicodeError
+            <br>&raquo; exception ValueError
+            <br>&raquo; exception IOError
+            <br>&raquo; exception WindowsError : 윈도우 OS에서만 발생
+            <br>&raquo; 기타등등
+
+            <th>Warnings</th>
+            &raquo; exception Warning
+            <br>&raquo; exception UserWarning : user code에 의한 경고
+            <br>&raquo; exception DeprecationWarning
+            <br>&raquo; exception SyntaxWarning 등

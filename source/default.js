@@ -4,7 +4,6 @@ $(() => {
 
     // 카테고리 초기화하고 포스트 등록, 포스트는 순서대로 아이디를 가짐
     let id = 0;
-    posts.list.sort((post1, post2) => post1.date.localeCompare(post2.date));
     for (post of posts.list) {
         post.id = id++;
 
@@ -318,7 +317,7 @@ function getContentHTML(post) {
     let title = post.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     let newBadge = (new Date().getTime() - new Date(post.date).getTime()) <= 3 * 86400 * 1000 ? '<span class="badge badge-pill badge-primary">New</span>' : '';
     return `<div class="jumbotron" id="${post.id}"><details><summary class="row">
-    <div class="col-12 col-md-9 col-lg-7" title="${post.filename}@${post.date}">${title}${newBadge}</div>
+    <div class="col-12 col-md-9 col-lg-7" title="${post.filename}">${title}${newBadge}</div>
     <div class="col d-none d-md-block">${post.category}</div>
     </summary></details></div>`;
 }

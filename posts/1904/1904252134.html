@@ -1,0 +1,242 @@
+        <th>string - Common string operations</th>
+            1. String constants
+            <br>* string.ascii_letters : 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+            <br>* string.ascii_lowercase : 'abcdefghijklmnopqrstuvwxyz'
+            <br>* string.ascii_uppercase : 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+            <br>* string.digits : '0123456789'
+            <br>* string.hexdigits : '0123456789abcdefABCDEF'
+            <br>* string.octdigits : '01234567'
+            <br>* string.punctuation : '!"#$%&amp;\'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~'
+            <br>* string.printable : '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&amp;\'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~
+            \t\n\r\x0b\x0c'
+            <br>* string.whitespace : ' \t\n\r\x0b\x0c'
+            <br>
+            <br>2. Custom String Formatting
+            <br>* string.Formatter 클래스를 상속해 원하는 대로 정의할 수 있다. https://docs.python.org/3/library/string.html#custom-string-formatting
+            <br>* 예. '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime(2010, 7, 4, 12, 15, 58))
+            <br>
+            <br>3. Format String Syntax
+            <br>* https://docs.python.org/3/library/string.html#format-string-syntax
+            <br>* replacement_field ::= "{" [field_name] ["!" conversion] [":" format_spec] "}"
+            <br>* field_name ::= arg_name ("." attribute_name | "[" element_index "]")*
+            <br>* arg_name ::= [identifier | digit+]
+            <br>* attribute_name ::= identifier
+            <br>* element_index ::= digit+ | index_string
+            <br>* index_string ::= &lt;any source character except "]"&gt; +
+            <br>* conversion ::= "r" | "s" | "a" // 각각 repr(), str(), ascii()
+            <br>* format_spec ::= [[fill]align][sign][#][0][width][grouping_option][.precision][type]
+            <br>* fill ::= &lt;any character&gt;
+            <br>* align ::= "&lt;" | "&gt;" | "=" | "^"
+            <br>* sign ::= "+" | "-" | " "
+            <br>* '#' 옵션이 있으면 2, 8, 16진수 앞에 '0b', '0o', '0x'를 각각 붙인다.
+            <br>* width ::= digit+
+            <br>* grouping_option "_" Since 3.6 | "," Since 3.1 // 십진수 1000단위 구분, 그외 4자리 구분
+            <br>* precision ::= digit+
+            <br>* type ::= "b" | "c" | "d" | "e" | "E" | "f" | "F" | "g" | "G" | "n" | "o" | "s" | "x" | "X"
+            | "%"
+            <br>** type이 주어지지 않은(None) 경우 : 문자열은 's', 정수는 'd', 실수는 'g'로 간주
+            <br>** '%'의 경우 100을 곱하고 %를 붙인다.
+            <br>
+            <br>4. Template strings
+            <br>&raquo; class string.Template(template)
+            <br>* substitute(mapping, **kwds)
+            <br>* safe_substitute(mapping, **kwds)
+            <br>* template : 생성자에 넘겼던 인자
+            <br>* 예. https://docs.python.org/3/library/string.html#template-strings
+            <br>&gt;&gt;&gt; from string import Template
+            <br>&gt;&gt;&gt; s = Template('$who likes $what')
+            <br>&gt;&gt;&gt; s.substitute(who='tim', what='kung pao')
+            <br>'tim likes kung pao'
+            <br>&gt;&gt;&gt; Template('Give $who $100').substitute(dict(who='tim'))
+            <br>ValueError: Invalid placeholder in string: line 1, col 11
+            <br>&gt;&gt;&gt; Template('$who likes $what').substitute(dict(who='tim'))
+            <br>KeyError: 'what'
+            <br>&gt;&gt;&gt; Template('$who likes $what').safe_substitute(dict(who='tim'))
+            <br>'tim likes $what'
+
+            <th>re - Regular expression operations</th>
+            1. str과 bytes모두 지원하지만, 찾는 패턴과 대상의 타입은 하나로 일치해야 한다.
+            <br>&raquo; . : newline을 제외한 모든 문자. DOTALL 플래그가 있으면 newline도 포함
+            <br>&raquo; ^ : 문자열 시작이 일치하는지. MULTILINE 플래그가 있으면 각 newline 바로 다음들을 검사
+            <br>&raquo; $ : 문자열 끝 또는 newline 직전이 일치하는지. MULTILINE 플래그가 있으면 각 newline 바로 앞을 검사
+            <br>&raquo; * : RE가 0번 이상 반복.
+            <br>&raquo; + : RE가 1번 이상 반복.
+            <br>&raquo; ? : RE가 0번 또는 1번.
+            <br>&raquo; *?, +?, ?? : *, +, ?는 greedy 기법으로, 가장 큰 문자열 매칭을 찾는다. 이들 뒤에 ?를 붙임으로써 가장 짧은 문자열 매칭을 찾는다.
+            <br>&raquo; {m} : RE가 정확히 m번 반복
+            <br>&raquo; {m, n} : RE가 [m, n]번 반복. m이 없으면 0, n이 없으면 무한대
+            <br>&raquo; {m, n}? : 가장 최소 반복의 매칭을 찾는다.
+            <br>&raquo; \ : *, ? 등의 특수 문자를 이스케이프하거나 특수 구문을 만들기 위해 사용. 문자열에서도 \를 이스케이프하므로 자칫 \\\\처럼 4번 써야하는 수가
+            있으므로, raw 문자열을 이용하는 것이 편하다.
+            <br>&raquo; [] : 문자 집합을 표현한다.
+            <br>* '(', '+', '*', ')'는 []안에서 특별하지 않다.
+            <br>* '-' 자체를 나타내려면 \-로 표기.
+            <br>* \w, \S 등의 character class는 의미를 그대로 갖는다.
+            <br>* ^으로 시작하면, ^ 다음의 집합에 대한 여집합 문자들로 매칭한다. 단, 맨 처음 ^를 제외한 ^는 단순한 리터럴이다.
+            <br>* 리터럴 ']'를 집합에 명시하려면 \를 사용하거나 집합의 맨 처음에 적는다.
+            <br>* 문자열 리터럴 표준 이스케이프 \a, \b, \f, \n, \r, \t, \u Since 3.3, \U Since 3.3, \v, \x, \\를 이용할 수 있다.
+            <br>&raquo; | : A|B는 A나 B 하나만 만족하면 된다. 판정은 왼쪽부터하며, 하나라도 만족되면 이후는 판정하지 않는다.
+            <br>&raquo; (...) : 내부에 있는 RE 자체. 매칭된 문자열을 나중에 가져올 수 있다.
+            <br>&raquo; (?...) : 확장 표현. ? 뒤의 첫 글자가 의미와 구조를 결정한다. 다음이 지원되는 확장들.
+            <br>* (?aiLmsux) : 'a', 'i', 'L', 'm', 's', 'u', 'x'중 하나 이상을 이용. 이 자체로는 빈 문자열을 매칭하며, re.compile()에
+            인자로 넘기는 것을 대신해 각각은 re.A, re.I, re.L, re.M, re.S, re.U, re.X 플래그와 관계된다.
+            <br>* (?:...) : (...)와 같지만, 매칭된 문자열을 가져오거나 참조할 수 없다.
+            <br>* (?imsx-imsx:...) Since 3.6 : 'i', 'm', 's', 'x'중 하나 이상을 사용. '-'와 이어지는 하나 이상의 문자들은 선택적이다. 이들
+            각각은 관계된 플래그를 설정하거나 제거한다.
+            <br>* (?P&lt;name&gt;...) : 이 그룹에 의해 매칭된 문자열은 name으로 접근할 수 있다. name은 Python 식별자 규칙을 따라야 하며, 각 그룹에
+            순서가 매겨지므로 숫자로도 접근할 수 있다.
+            <br>** 예를 들어 (?P&lt;quote&gt;['"]).*?(?P=quote)는 ''또는 ""로 감싸진 문자열을 매칭한다. quote가 가리키는 그룹은 다음 3가지 문맥에서
+            접근 가능하다.
+            <br>** - 같은 패턴 내부에서, (?P=quote) 또는 \1
+            <br>** - 객체 m에 대한 매칭, m.group('quote'), m.end('quote') 등
+            <br>** - re.sub()의 repl 인자로서, \g&lt;quote&gt;, \g&lt;1&gt;, \1
+            <br>* (?#...) : 주석. 무시된다.
+            <br>* (?=...) : 바로 다음에 ...이 매칭되는 경우. 예를 들어 Isaac (?=Asimov)는 'Issac ' 뒤에 'Asimov'이 붙은 경우만 매칭된다.
+            <br>* (?!...) : 바로 다음에 ...이 매칭되지 않는 경우.
+            <br>* (?&lt;=...) : ... 다음에 매칭되는 경우. 예를 들어 (?&lt;=abc)def는 'abcdef'를 매칭한다.
+            <br>** Since 3.5 group 참조 가능.
+            <br>* (?&lt;!...) :... 다음에 매칭되지 않는 경우.
+            <br>* (?(id/name)yes-pattern|no-pattern) : id or name이 있는 그룹이 주어지면 yes-pattern을, 아니면 no-pattern을
+            매칭. 예를 들어 (&lt;)?(\w+@\w+(?:\.\w+)+)(?(1)&gt;|$)는 '&lt;user@host.com&gt;'과 'user@host.com'은 매칭하지만,
+            '&lt;user@host.com'과 'user@host.com&gt;'는 그렇지 않다.
+            <br>&raquo; \number : 해당 순번의 그룹에 해당하는 내용을 매칭한다. 그룹은 1번부터 99번까지만 허용된다. 예를 들어, (.+) \1은 'the the'나
+            '55 55'는 매칭하지만 'thethe'는 그렇지 않다.
+            <br>&raquo; \A : 문자열의 시작만 매칭
+            <br>&raquo; \b : Word의 시작이나 끝 빈 문자열을 매칭한다. \b는 \w와 \W 사이의 경계로 정의된다.
+            <br>&raquo; \B : \b의 반대 상황에서 빈 문자열을 매칭한다. r'py\B'는 'python', 'py3'은 매칭하지만, 'py', 'py.', 'py!'는 아니다.
+            <br>&raquo; \d : 유니코드 패턴에서는 유니코드 십진 숫자들을, 바이트 패턴에서는 [0-9]들을 매칭한다.
+            <br>&raquo; \D : not \d
+            <br>&raquo; \s : 공백 문자들을 매칭한다.
+            <br>&raquo; \S : not \s
+            <br>&raquo; \w : Word 문자들을 매칭한다.
+            <br>&raquo; \W : not \W
+            <br>&raquo; \Z : 문자열의 끝을 매칭한다.
+            <br>
+            <br>2. Module Contents
+            <br>&raquo; re.compile(pattern, flags=0)
+            <br>* Since 3.6 : Flag 상수들은 이제 RegexFlag(enum.IntFlag)의 인스턴스다.
+            <br>&raquo; re.A, re.ASCII : 유니코드 매칭에서 \w, \W, \b, \B, \d, \D, \s, \S가 아스키코드만 매칭하도록 한다.
+            <br>&raquo; re.DEBUG : 디버그 정보 출력
+            <br>&raquo; re.I, re.IGNORECASE
+            <br>&raquo; re.M, re.MULTILINE
+            <br>&raquo; re.S, re.DOTALL : '.'이 newline을 포함하여 모든 문자를 매칭하도록 한다.
+            <br>&raquo; re.X, re.VERBOSE : 주석을 달아 보기 편하도록 할 수 있다.
+            <br>a = re.compile(r"""\d + # the integral part
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\. # the decimal point
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\d * # some fractional digits""", re.X)
+            <br>&raquo; re.search(pattern, string, flags=0) : 처음 매칭된 것을 match 객체 반환. 없으면 None 반환
+            <br>&raquo; re.match(pattern, string, flags=0) : 문자열 처음에 매칭되면 match 객체 반환. 없으면 None 반환
+            <br>&raquo; re.fullmatch(pattern, string, flags=0) Since 3.4 : 문자열 전체가 매칭되면 match 객체 반환. 없으면 None
+            반환.
+            <br>&raquo; re.split(pattern, string, maxsplit=0, flags=0) : 매칭된 패턴들로 분리한다. pattern에 ()가 이용되었다면 매칭된
+            문자열들도 결과에 포함된다. 이때, 매칭이 문자열 시작과 끝에서 이루어졌다면 결과의 각각 앞뒤에 빈 문자열이 포함된다. maxsplit &gt; 0이면, 나머지 부분이
+            결과의 마지막에 포함된다.
+            <br>* 빈 문자열 매칭은 지원하지 않는다. Since 3.5 : 빈 문자열 매칭은 ValueError
+            <br>&raquo; re.findall(pattern, string, flags=0) : 문자열을 좌에서 우로 스캔하며 매칭된 패턴들을 리스트로 반환한다. 여러 그룹이 있는
+            경우 각 그룹들의 결과는 튜플로 표현된다.
+            <br>* 현재 빈 문자열 매칭 다음 글자는 결과에 포함되지 않는다. 3.7에서 변경된다.
+            <br>&raquo; re.finditer(pattern, string, flags=0) : 매칭 결과를 반환하는 iterator를 반환한다. 매칭은 findall()과 같은
+            방식으로 진행된다.
+            <br>&raquo; re.sub(pattern, repl, string, count=0, flags=0) : string에서 pattern에 매칭된 문자열들을 repl로 변경하여
+            반환. repl은 문자열이거나 함수일 수 있다. 문자열의 경우 \2와 같은 backreference가 가능하다.
+            <br>&gt;&gt;&gt; re.sub(r'def\s+([a-zA-Z_][a-zA-Z_0-9]*)\s*\(\s*\):', r'static PyObject*\npy_\1(void)\n{',
+            'def myfunc():')
+            <br>'static PyObject*\npy_myfunc(void)\n{'
+            <br>* repl이 함수인 경우 패턴 매치마다 호출된다. 함수는 match 객체 하나를 인자로 받고 대체 문자열을 반환한다.
+            <br>&gt;&gt;&gt; def dashrepl(matchobj):
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if matchobj.group(0) == '-': return ' '
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else: return '-'
+            <br>&gt;&gt;&gt; re.sub('-{1,2}', dashrepl, 'pro----gram-files')
+            <br>'pro--gram files'
+            <br>* 이전 매치와 바로 인접한 곳에서는 교체가 이루어지지 않는다. 예. sub('x*', '-', 'abc') returns '-a-b-c-'
+            <br>* repl이 문자열일 때, 그룹에 대한 backreference들 \g&lt;name&gt;, \g&lt;number&gt;, \number 모두 가능하나, \g&lt;2&gt;0은
+            \20과 같음에 유의. \g&lt;0&gt;는 RE에 매치된 전체 부분문자열을 가리킨다.
+            <br>&raquo; re.subn(pattern, repl, string, count=0, flags=0) : re.sub()와 같은 작업을 하고, (new_string,
+            number_of_subs_made)를 반환한다.
+            <br>&raquo; re.escape(pattern) : ASCII 글자, 숫자, '_'를 제외한 pattern 내부 문자를 이스케이프한다. 임의 문자열을 매칭할 때 유용하다.
+            <br>&raquo; re.purge() : RE 캐시를 삭제한다.
+            <br>&raquo; exception re.error(msg, pattern=None, pos=None)
+            <br>
+            <br>3. Regular Expression Objects
+            <br>* 컴파일된 RE 객체는 아래의 메서드와 속성을 지원한다.
+            <br>&raquo; regex.search(string[, pos[, endpos]]) : string에서 처음 매칭되는 부분을 match 객체로 반환. 없으면 None.
+            pos가 지정되더라도 '^'는 실제 문자열 처음에 매칭된다. endpos가 지정된 경우, rx.search(string, 0, 50)과 rx.search(string[:50],
+            0)은 동등하다.
+            <br>&raquo; regex.match(string[, pos[, endpos]]) : string 첫 부분이 매칭되면 match 객체로 반환. 없으면 None. pos와
+            endpos는 search()에서와 의미가 같다. 따라서 pattern = re.compile("o")에 대하여, pattern.match("dog", 1)은 첫 부분에
+            "o"가 매칭되지만, 실제 문자열을 자르진 않으므로 &lt;_sre.SRE_Match object; span=(1, 2), match='o'&gt;가 반환된다.
+            <br>&raquo; regex.fullmatch(string[, pos[, endpos]]) Since 3.4 : string 전체가 매칭될 경우 match 객체를 반환한다.
+            없으면 None. pos와 endpos는 search()에서와 의미가 같다.
+            <br>&raquo; regex.split(string, maxsplit=0) : 위 split()과 동일하다.
+            <br>&raquo; regex.findall(string[, pos[, endpos]]) : 위 findall()과 동일하며, pos와 endpos의 의미는 search()에서와
+            같다.
+            <br>&raquo; regex.finditer(string[, pos[, endpos]]) : 위 finditer()와 동일하며, pos와 endpos의 의미는 search()에서와
+            같다.
+            <br>&raquo; regex.sub(repl, string, count=0) : 위 sub()와 동일하다.
+            <br>&raquo; regex.subn(repl, string, count=0) : 위 subn()과 동일하다.
+            <br>&raquo; regex.flags : compile()에서 전달받은 플래그들과 (?...) 인라인 플래그들.
+            <br>&raquo; regex.groups : 패턴 내부 capturing group 수
+            <br>&raquo; regex.groupindex : (?P&lt;id&gt;)로 정의된 symbolic group 이름으로부터 그룹 숫자로의 dictionary 매핑
+            <br>&raquo; regex.pattern : 패턴 문자열.
+            <br>
+            <br>4. Match Objects
+            <br>* 매칭이 없다면 None을 반환하므로, match 객체는 항상 True로 간주된다.
+            <br>&raquo; match.expand(template) : sub() 메서드가 하듯이, template 내부의 \ 대체 문자열을 알맞게 변경한다. \1, \g&lt;1&gt;,
+            \g&lt;name&gt;와 같은 backreference들은 각각 연관된 그룹의 내용으로 대체된다.
+            <br>* Since 3.5 : 맞는 그룹이 없다면 빈 문자열로 대체된다.
+            <br>&raquo; match.group([group1, ...]) : 매칭된 그룹(들)을 반환한다.
+            <br>&gt;&gt;&gt; m = re.match(r"(\w+) (\w+)", "Isaac Newton, physicist")
+            <br>&gt;&gt;&gt; m.group(0) # The entire match
+            <br>'Isaac Newton'
+            <br>&gt;&gt;&gt; m.group(1) # The first parenthesized subgroup.
+            <br>'Isaac'
+            <br>&gt;&gt;&gt; m.group(1, 2) # Multiple arguments give us a tuple.
+            <br>('Isaac', 'Newton')
+            <br>&gt;&gt;&gt; m = re.match(r"(?P&lt;first_name&gt;\w+) (?P&lt;last_name&gt;\w+)", "Malcolm Reynolds")
+            <br>&gt;&gt;&gt; m.group('first_name')
+            <br>'Malcolm'
+            <br>* 그룹이 여러번 매칭된 경우, 마지막 것만 접근 가능.
+            <br>&gt;&gt;&gt; m = re.match(r"(..)+", "a1b2c3") # Matches 3 times.
+            <br>&gt;&gt;&gt; m.group(1) # Returns only the last match.
+            <br>'c3'
+            <br>&raquo; match.__getitem__(g) Since 3.6 : m.group(g)와 동일
+            <br>&gt;&gt;&gt; m = re.match(r"(\w+) (\w+)", "Isaac Newton, physicist")
+            <br>&gt;&gt;&gt; m[0] # The entire match
+            <br>'Isaac Newton'
+            <br>&gt;&gt;&gt; m[1] # The first parenthesized subgroup.
+            <br>'Isaac'
+            <br>&raquo; match.groups(default=None) : 각 그룹들이 매칭된 것들을 튜플로 반환한다. 그룹이 매치되지 않았을 경우 default가 대신 이용된다.
+            <br>&gt;&gt;&gt; m = re.match(r"(\d+)\.?(\d+)?", "24")
+            <br>&gt;&gt;&gt; m.groups() # Second group defaults to None.
+            <br>('24', None)
+            <br>&raquo; match.groupdict(default=None) : groups()가 dictoinary로 표현
+            <br>&raquo; match.start([group]), match.end([group])
+            <br>* group이 매칭된 시작/끝 인덱스들을 반환한다. group 기본값은 0(전체), 매칭되지 않았다면 -1 반환.
+            <br>* 만약 매칭되었다면 m.string[m.start(g):m.end(g)]은 g와 매칭된 문자열을 반환한다.
+            <br>* 빈 문자열 매칭이라면 start(group)과 end(group)은 같은 값을 반환한다.
+            <br>&raquo; match.span([group]) : (m.start(group), m.end(group)) 반환
+            <br>&raquo; match.pos : search(), match()에서 전달받은 값으로, 탐색 시작 위치
+            <br>&raquo; match.endpos : search(), match()에서 전달받은 탐색 종료 위치
+            <br>&raquo; match.lastindex : 마지막으로 매칭된 그룹 index. 없으면 None
+            <br>&raquo; match.lastgroup : 마지막으로 매칭된 그룹 이름. 없으면 None
+            <br>&raquo; match.re : RE 객체
+            <br>&raquo; match.string : match(), search()에서 전달받은 탐색 대상 문자열
+            <br>
+            <br>5. 예제. https://docs.python.org/3/library/re.html#regular-expression-examples
+
+            <th>textwrap - Text wrapping and filling</th>
+            &raquo; textwrap.wrap(text, width=70, **kwargs) : text의 모든 라인이 최대 width 길이가 되도록 조정한다. 라인들의 리스트를 반환한다. kwargs는 TextWrapper
+            객체 메서드와 관련있다.
+            <br>&raquo; textwrap.fill(text, width=70, **kwargs) : "\n".join(wrap(text, ...))와 동일하다
+            <br>&raquo; textwrap.shorten(text, width, **kwargs) Since 3.4 : text의 모든 공백들을 단일 스페이스로 변경하고, width길이에
+            맞게 자른다. width에 넘치는 경우 자른 자리에 placeholder를 넣은 길이가 width가 된다.
+            <br>&gt;&gt;&gt; textwrap.shorten("Hello world", width=10, placeholder="...")
+            <br>'Hello...'
+            <br>&raquo; textwrap.dedent(text) : text 각 라인이 공통 공백으로 시작되는 경우, 이를 제거한다. 3중 인용구를 정렬하는데 유용하다.
+            <br>&raquo; textwrap.indent(text, prefix, predicate=None) Since 3.3 : 공백 이외의 문자를 포함한 모든 라인 앞에 prefix를
+            붙인다. predicate 함수는 각 라인을 인자로 받아 prefix를 붙일지 여부를 반환한다.
+            <br>&raquo; class textwrap.TextWrapper(**kwargs)
+            <br>* 속성 : width(기본 70), expand_tabs(기본 True), tabsize(기본 8) Since 3.3, replace_whitespace(기본 True),
+            break_long_words(기본 True), break_on_hyphens(기본 True), max_lines(기본 None) Since 3.4, placeholder(기본
+            '[...]') Since 3.4 : 잘린 부분 대신
+            <br>* wrap(text), fill(text)

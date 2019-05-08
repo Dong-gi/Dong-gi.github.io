@@ -1,3 +1,32 @@
+<hr>
+
+<details>
+    <summary>Attribute</summary>
+    <ol>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/AttributeExample.cs" lan="cs">AttributeExample.cs 전체 코드 »</button>
+        <li>사용자 정의 특성은 System.Attribute를 상속하여 만든다.</li>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/AttributeExample.cs" displayRange="[12, 19]" lan="cs">AttributeExample.cs »</button>
+        <li>명명시 Attribute를 접미하고, 실제 사용시에는 "Attribute"는 생략 가능하다.</li>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/AttributeExample.cs" displayRange="[21, 24]" lan="cs">AttributeExample.cs »</button>
+        <li>특성을 적용할 수 있는 대상 제한</li>
+        System.AttributeUsage 생성자에 AttributeTargets 전달. 생략시 기본값은 AttributeTargets.All. 여러 대상에 적용된다면 AttributeTargets.Field | AttributeTargets.Method처럼 |를 이용.
+        <li>적용하는 대상 명시</li>
+        어셈블리에 적용하는 경우(AttributeTargets.Assembly), 반환값에 적용하는 경우(AttributeTargets.ReturnValue)와 같이, 특성이 적용될 대상을 자동으로 특정해내지 못하는 경우엔 이를 명시해줄 수 있다.<br>
+        assembly, module, type, method, property, field, event, param, return, typevar
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>checked/unchecked 블록</summary>
+    <ol>
+        <li>기본적으로는 프로그램 실행 시 오버플로/언더플로를 무시한다.</li>
+    </ol>
+</details>
+
+<hr>
+
 <ol>
     <li>var</li>
     ● 지역변수 초기화시에만 사용 가능한 자동형식
@@ -36,10 +65,6 @@
     <li>전처리 지시문</li>
     ● #define, #undef, #if, #elif, #else, #endif...<br>
     ● #region, #endregion...
-
-    <li>attribute</li>
-    ● 메타데이터<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/AttributeExample.cs" lan="cs">AttributeExample.cs
-        »</button>
 
     <li>nullable</li>
     <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/NullableExample.cs" lan="cs">NullableExample.cs

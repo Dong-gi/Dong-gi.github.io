@@ -1,0 +1,312 @@
+
+<th>datetime - Basic date and time types</th>
+            1. 시간 연산이 가능.
+            <br>* datetime.MINYEAR : 1, datetime.MAXYEAR : 9999
+            <br>
+            <br>2. Available Types
+            <br>&raquo; class datetime.date : year, month, day
+            <br>&raquo; class datetime.time : hour, minute, second, microsecond, tzinfo
+            <br>&raquo; class datetime.datetime : year, month, day, hour, minute, second, microsecond, tzinfo
+            <br>&raquo; class datetime.timedelta : 두 date, time, datetime 객체 간의 microsecond 차이
+            <br>&raquo; class datetime.tzinfo : Abstract base class for time zone information
+            <br>&raquo; class datetime.timezone Since 3.2 : tzinfo 구현
+            <br>
+            <br>3. timedelta Objects
+            <br>&raquo; class datetime.timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0,
+            hours=0, weeks=0)
+            <br>* microseconds : [0, 1000000), seconds : [0, 86400)
+            <br>&raquo; timedelta.min : timedelta(-999999999), timedelta.max : timedelta(days=999999999, hours=23,
+            minutes=59, seconds=59, microseconds=999999)
+            <br>* timedelta.max &gt; -timedelta.min이므로, -timedelta.max는 존재할 수 없다.
+            <br>&raquo; Operation : t1 = t2 + t3, t1 = t2 - t3, t1 = t2 * i or t1= i * t2, t1 = t2 * f or t1
+            = f * t2, f = t2 / t3, t1 = t2 / f or t1 = t2 / i, t1 = t2 // i or t1 = t2 // t3, t1 = t2 % t3,
+            q, r = divmod(t1, t2), +t1, -t1, abs(t), str(t), repr(t)
+            <br>&raquo; timedelta.total_seconds() Since 3.2 : td / timedelta(seconds=1)과 동일.
+            <br>
+            <br>4. date Objects
+            <br>&raquo; class datetime.date(year, month, day)
+            <br>* year : [MINYEAR, MAXYEAR], month : [1, 12], day : [1, 해당 연월의 일수]
+            <br>&raquo; classmethod date.today() : date.fromtimestamp(time.time())과 동일
+            <br>&raquo; classmethod date.fromtimestamp(timestamp) : 1970 ~ 2038년 외의 경우 에러발생 가능.
+            <br>&raquo; classmethod date.fromordinal(ordinal) : 1년 1월은 ordinal 1. ordinal : [1, date.max.toordinal()]
+            <br>&raquo; date.min, date.max, date.resolution : timedelta(days=1), date.year, date.month, date.day
+            <br>&raquo; Operation : date2 = date1 + timedelta, date2 = date1 - timedelta, timedelta = date1 -
+            date2, date1 &lt; date2
+            <br>* seconds와 microseconds는 무시
+            <br>&raquo; date.replace(year=self.year, month=self.month, day=self.day)
+            <br>&raquo; date.timetuple() : time.struct_time을 반환한다.
+            <br>&raquo; date.toordinal()
+            <br>&raquo; date.weekday() : 월요일(0) ~ 일요일(6)
+            <br>&raquo; date.isoweekday() : 월요일(1) ~ 일요일(7)
+            <br>&raquo; date.isocalendar() : (ISO year, ISO week number, ISO weekday)
+            <br>&raquo; date.isoformat() : 'YYYY-MM-DD' 반환
+            <br>&raquo; date.__str__() : str(d) == d.isoformat()
+            <br>&raquo; date.ctime() : date(2002, 12, 4).ctime() == 'Wed Dec 4 00:00:00 2002'
+            <br>&raquo; date.strftime(format) : 명시적인 포맷 문자열 format에 따라 변환.
+            <br>&raquo; date.__format__(format) : strftime(format)과 동일
+            <br>
+            <br>5. datetime Objects
+            <br>&raquo; class datetime.datetime(year, month, day, hour=0, minute=0, second=0, microsecond=0,
+            tzinfo=None, *, fold=0)
+            <br>* fold Since 3.6 : [0, 1]
+            <br>&raquo; datetime은 date를 상속하므로 date의 메서드를 갖는다.
+            <br>&raquo; classmethod datetime.today() : datetime.fromtimestamp(time.time())과 동일
+            <br>&raquo; classmethod datetime.now(tz=None) : 현재 날짜와 시각 반환. tz가 지정되지 않으면 today()와 동일.
+            <br>&raquo; classmethod datetime.fromordinal(ordinal)
+            <br>&raquo; classmethod datetime.combine(date, time, tzinfo=self.tzinfo)
+            <br>&raquo; classmethod datetime.strptime(date_string, format) : datetime(*(time.strptime(date_string,
+            format)[0:6]))과 동일
+            <br>&raquo; datetime.min, datetime.max, datetime.resolution : timedelta(microseconds=1), datetime.year,
+            datetime.month, datetime.day, datetime.hour, datetime.minute, datetime.second, datetime.microsecond,
+            datetime.tzinfo, datetime.fold
+            <br>&raquo; Operation : datetime2 = datetime1 + timedelta, datetime2 = datetime1 - timedelta, timedelta
+            = datetime1 - datetime2, datetime1 &lt; datetime2
+            <br>&raquo; datetime.date(), datetime.time(), datetime.timetz(), datetime.utcoffset(), datetime.tzname()
+            <br>&raquo; datetime.replace(year=self.year, month=self.month, day=self.day, hour=self.hour, minute=self.minute,
+            second=self.second, microsecond=self.microsecond, tzinfo=self.tzinfo, * fold=0)
+            <br>&raquo; datetime.timetuple() : time.struct_time((d.year, d.month, d.day, d.hour, d.minute, d.second,
+            d.weekday(), yday, dst)), where yday = d.toordinal() - date(d.year, 1, 1).toordinal() + 1
+            <br>&raquo; datetime.astimezone(tz=None)
+            <br>
+            <br>6. time objects
+            <br>&raquo; class datetime.time(hour=0, minute=0, second=0, microsecond=0, tzinfo=None, *, fold=0)
+            <br>* 하루 중의 시각을 나타낸다.
+            <br>&raquo; 두 time 객체 간 비교가 가능하다.
+            <br>&raquo; time.replace(hour=self.hour, minute=self.minute, second=self.second, microsecond=self.microsecond,
+            tzinfo=self.tzinfo, * fold=0)
+            <br>&raquo; time.isoformat(timespec='auto') : 'HH:MM:SS.mmmmmm'
+            <br>* timespec : 'auto'(마이크로초가 0이면 'seconds', 아니면 'microseconds'), 'hours'(HH), 'minutes'(HH:MM),
+            'seconds'(HH:MM:SS), 'milliseconds'(HH:MM:SS:sss), 'microseconds'(HH:MM:SS:mmmmmm)
+            <br>&raquo; time.__str__() : str(t) == t.isoformat()
+            <br>&raquo; time.strftime(format)
+            <br>&raquo; time.__format__(format) : time.strftime()과 동일
+            <br>
+            <br>7. tzinfo Objects
+            <br>&raquo; class datetime.tzinfo
+            <br>&raquo; tzinfo.utcoffset(dt) : UTC와 현지 시각의 차이 반환 // dt = 'd'ate't'ime
+            <br>&raquo; tzinfo.dst(dt) : DST(daylight saving time)을 반환한다.
+            <br>&raquo; tzinfo.tzname(dt) : timezone 이름 반환
+            <br>&raquo; tzinfo.fromutc(dt) : datetime.astimezone()에서 호출한다. 변경된 timezone에서의 datetime을 반환한다.
+            <br>
+            <br>8. timezone Objects
+            <br>&raquo; timezone 클래스는 tzinfo의 서브클래스다.
+            <br>&raquo; class datetime.timezone(offset, name=None)
+            <br>
+            <br>9. strftime(), strptime()
+            <br>&raquo; strftime(fmt)는 time.strftime(fmt, d.timetuple())처럼 동작한다.
+            <br>* %a : 요일명 - 약어 - 로캐일 적용
+            <br>* %A : 요일명 - 풀네임 - 로캐일 적용
+            <br>* %w : 요일 - 0(일요일) ~ 6(토요일)
+            <br>* %d : 요일 - zero-pad : 01 ~ 31
+            <br>* %b : 월 - 약어 - 로캐일 적용
+            <br>* %B : 월 - 풀네임 - 로캐일 적용
+            <br>* %m : 월 - zero-pad : 01 ~ 12
+            <br>* %y : 년 - 세기 제외, zero-pad : 00 ~ 99
+            <br>* %Y : 년 - 세기 포함, zero-pad : 0001 ~ 9999
+            <br>* %H : 시(24h) - zero-pad : 00 ~ 23
+            <br>* %I : 시(12h) - zero-pad : 01 ~ 12
+            <br>* %p : AM or PM - 로캐일 적용
+            <br>* %M : 분 - zero-pad : 00 ~ 59
+            <br>* %S : 초 - zero-pad : 00 ~ 59
+            <br>* %f : 마이크로초 - zero-pad : 000000 ~ 999999
+            <br>* %z : UTC 차이 : +HHMM or -HHMM
+            <br>* %Z : Timezone 이름
+            <br>* %j : 일 - 연중 n번째, zero-pad : 001 ~ 366
+            <br>* %U : 주(일요일 기준) - 연중 n번째, zero-pad : 00 ~ 53
+            <br>* %W : 주(월요일 기준) - 연중 n번째, zero-pad : 00 ~ 53
+            <br>* %c : 날짜와 시각 표현 - 로캐일 적용
+            <br>* %x : 날짜 표현 - 로캐일 적용
+            <br>* %X : 시각 표현 - 로캐일 적용
+            <br>* %% : 리터럴 '%'
+            <br>* %G : 년 - 세기 포함, ISO 8601 : 0001 ~ 9999
+            <br>* %u : 요일 - 1(월요일) ~ 7(일요일), ISO 8601
+            <br>* %V : 주(월요일 기준) - 연중 n번째, ISO 8601 : 01 ~ 53 // 01번째 주는 1월 4일을 포함
+
+            <th>calendar - General calendar-related functions</th>
+            1. class calendar.Calendar(firstweekday=0)
+            <br>&raquo; 월요일(0)이 첫번째. setfirstweekday()로 변경 가능.
+            <br>&raquo; iterweekdays()
+            <br>&raquo; itermonthdates(year, month) : 1~12월에 관한 iterator 반환. 각 반복자는 해당 월의 1일부터 말일까지 datetime.date
+            객체들로 반환
+            <br>&raquo; itermonthdays(year, month) : itermonthdates()와 비슷. 날짜들은 숫자로 반환된다.
+            <br>&raquo; itermonthdays2(year, month) : itermonthdates()와 비슷. 날짜들은 (일, 요일)의 정수 튜플들로 반환된다.
+            <br>&raquo; monthdatescalendar(year, month) : 해당 년월의 주들을 반환한다. 각 주는 datetime.date 객체의 리스트.
+            <br>&raquo; monthdayscalendar(year, month) : 해당 년월의 주들을 반환한다. 각 주는 일 숫자들의 리스트.
+            <br>&raquo; monthdays2calendar(year, month) : 해당 년월의 주들을 반환한다. 각 주는 (일, 요일)의 정수 튜플들의 리스트.
+            <br>&raquo; yeardatescalendar(year, width=3) : 가공하기 쉬운 형태로 1년을 반환한다. 예를 들어 c.yeardatescalendar(2017)은
+            4(=12/width) x 3(=width) x ? x 7의 리스트로 반환된다. 전체 12개월을 4행 3열로 표현한 것으로, 각 월은 ?개 주로 구성되고, 각 주는 7개의
+            datetime.date 객체 리스트로 구성된다.
+            <br>&raquo; yeardayscalendar(year, width=3) : yeardatescalendar()와 비슷. 각 주는 날짜 숫자들의 리스트.
+            <br>&raquo; yeardays2calendar(year, width=3) : yeardatescalendar()와 비슷. 각 주는 (일, 요일)의 정수 튜플들의 리스트.
+            각 주에서, 해당 월을 벗어난 일들은 0.
+            <br>
+            <br>2. class calendar.TextCalendar(firstweekday=0)
+            <br>&raquo; formatmonth(theyear, themonth, w=0, l=0) : 해당 년월의 문자열 달력 반환. w는 각 일의 너비(가운데 정렬), l은 각
+            주의 라인 수.
+            <br>&raquo; prmonth(theyear, themonth, w=0, l=0) : print(formatmonth())
+            <br>&raquo; formatyear(theyear, w=2, l=1, c=6, m=3) : m열의 달력을 반환한다. w는 각 일의 너비(가운데 정렬), l은 각 주의 라인
+            수, c는 month column 사이의 공백 수
+            <br>&raquo; pryear(theyear, w=2, l=1, c=6, m=3) : print(formatyear())
+            <br>
+            <br>3. class calendar.HTMLCalendar(firstweekday=0)
+            <br>&raquo; formatmonth(theyear, themonth, withyear=True) : 해당 년월의 달력을 HTML table로 반환. withyear가
+            True면 헤더에 포함.
+            <br>&raquo; formatyear(theyear, width=3) : 해당 년의 달력을 HTML table로 반환. width는 각 행의 월 수.
+            <br>&raquo; formatyearpage(theyear, width=3, css='calendar.css', encoding=None) : formatyear()와 유사.
+            이용할 css와 encoding을 지정.
+            <br>
+            <br>4. class calendar.LocaleTextCalendar(firstweekday=0, locale=None)
+            <br>&raquo; TextCalendar의 서브클래스. 로캐일 이름을 지정한다.
+            <br>
+            <br>5. class calendar.LocaleHTMLCalendar(firstweekday=0, locale=None)
+            <br>&raquo; HTMLCalendar의 서브클래스. 로캐일 이름을 지정한다.
+            <br>* 4, 5의 formatweekday(), formatmonthname()은 현재 로캐일을 지정된 로캐일로 잠시 변경한다. 이는 전체 프로세스가 공유하므로, 쓰레드-안전하지
+            않다.
+            <br>
+            <br>6. 텍스트 달력들에 대해 아래의 함수들이 지원된다.
+            <br>&raquo; calendar.setfirstweekday(weekday) : 0 = calendar.MONDAY ~ 6 = calendar.SUNDAY
+            <br>&raquo; calendar.isleap(year) : 윤년인지 여부 반환
+            <br>&raquo; calendar.leapdays(y1, y2) : [y1, y2) 중, 윤년들의 수를 반환.
+            <br>&raquo; calendar.weekday(year, month, day) : 0 ~ 6 반환
+            <br>&raquo; calendar.weekheader(n) : 주의 요일명들을 n글자씩 자른 헤더를 반환.
+            <br>&raquo; calendar.monthrange(year, month) : 해당 년월의 첫번째 일(0~6)과 일수를 반환.
+            <br>&raquo; calendar.monthcalendar(year, month) : 해당 년월을 행렬로 반환한다. 각 행은 firstweekday부터 시작하는 한 주.
+            해당 월을 벗어난 일들은 0.
+            <br>&raquo; calendar.month(theyear, themonth, w=0, l=0) : 해당 년월의 달력을 TextCalendar의 formatmonth()를
+            통해 문자열로 반환.
+            <br>&raquo; calendar.prmonth(theyear, themonth, w=0, l=0) : print(month())
+            <br>&raquo; calendar.calendar(year, w=2, l=1, c=6, m=3) : TextCalendar의 formatyear()를 이용해 반환.
+            <br>&raquo; calendar.prcal(year, w=0, l=0, c=6, m=3) : print(calendar())
+            <br>&raquo; calendar.timegm(tuple) : calendar와 관계있지는 않다. time.gmtime()의 역함수로, time.gmtime()을 인자로
+            넘기면 POSIX 인코딩된 Unix timestamp 값이 반환된다.
+            <br>
+            <br>7. data attributes
+            <br>&raquo; calendar.day_name : 현재 로캐일의 요일명 배열
+            <br>&raquo; calendar.day_abbr : 현재 로캐일의 축약 요일명 배열
+            <br>&raquo; calendar.month_name : 현재 로캐일의 월명 배열. 길이 13이며, 1부터 12까지 이용
+            <br>&raquo; calendar.month_abbr : 현재 로캐일의 축약 월명 배열. 길이 13이며, 1부터 12까지 이용
+
+            <th>collections - Container datatypes</th>
+            1. ChainMap objects Since 3.3
+            <br>&raquo; 여러 매핑을 하나처럼 이용.
+            <br>&raquo; class collections.ChainMap(*maps)
+            <br>* 여러 매핑을 한데 모아 갱신 가능한 view를 만든다.
+            <br>* maps : 매핑들의 리스트. 리스트 순서가 탐색 순서. 변경 가능.
+            <br>* new_child(m=None) : 새로운 매핑 m을 포함하는 새로운 ChainMap을 반환한다. m은 새로운 ChainMap의 첫번째 매핑이 된다. 이렇게 함으로써
+            부모의 매핑을 나중에 접근하는 효과가 있다.
+            <br>* parents : maps의 첫번째 매핑을 제외한 것들로 새로운 ChainMap을 만들어 반환한다. ChainMap(*d.maps[1:])와 동일
+            <br>
+            <br>&raquo; 예시 : https://docs.python.org/3/library/collections.html#chainmap-examples-and-recipes
+            <br>* 사용 패턴
+            <br>c = ChainMap() # Create root context
+            <br>d = c.new_child() # Create nested child context
+            <br>e = c.new_child() # Child of c, independent from d
+            <br>e.maps[0] # Current context dictionary -- like Python's locals()
+            <br>e.maps[-1] # Root context -- like Python's globals()
+            <br>e.parents # Enclosing context chain -- like Python's nonlocals
+            <br>
+            <br>d['x'] # Get first key in the chain of contexts
+            <br>d['x'] = 1 # Set value in current context
+            <br>del d['x'] # Delete from current context
+            <br>list(d) # All nested values
+            <br>k in d # Check all nested values
+            <br>len(d) # Number of nested values
+            <br>d.items() # All nested items
+            <br>dict(d) # Flatten into a regular dictionary
+            <br>
+            <br>
+            <br>2. Counter objects
+            <br>&raquo; 편리하고 빠른 계수를 지원한다.
+            <br>&raquo; class collections.Counter([iterable-or-mapping])
+            <br>* Counter는 dict의 서브클래스다. Counter는 없는 키에 대하여 KeyError를 발생하지 않고, 새로운 키를 추가하고 0을 반환한다. 카운트를 0으로
+            설정하는 것으로 원소가 제거되지 않는다. 카운터 원소를 제거하려면 del 키워드를 사용.
+            <br> c = Counter() # a new, empty counter
+            <br> c = Counter('gallahad') # a new counter from an iterable
+            <br> c = Counter({'red': 4, 'blue': 2}) # a new counter from a mapping
+            <br> c = Counter(cats=4, dogs=8) # a new counter from keyword args
+            <br>* elements() : 각 원소들을 각 카운트만큼 반복하는 iterator를 반환한다.
+            <br>&gt;&gt;&gt; c = Counter(a=4, b=2, c=0, d=-2)
+            <br>&gt;&gt;&gt; sorted(c.elements())
+            <br>['a', 'a', 'a', 'a', 'b', 'b']
+            <br>* most_common([n]) : 가장 많은 n개의 원소들을 그 갯수와 함께 반환한다.
+            <br>&gt;&gt;&gt; Counter('abracadabra').most_common(3)
+            <br>[('a', 5), ('r', 2), ('b', 2)]
+            <br>* subtract([iterable-or-mapping]) : 카운트를 뺀다.
+            <br>* fromkeys(iterable) : not implemented
+            <br>* update([iterable-or-mapping]) : 카운트를 더한다.
+            <br>
+            <br>* 사용 패턴
+            <br>sum(c.values()) # total of all counts
+            <br>c.clear() # reset all counts
+            <br>list(c) # list unique elements
+            <br>set(c) # convert to a set
+            <br>dict(c) # convert to a regular dictionary
+            <br>c.items() # convert to a list of (elem, cnt) pairs
+            <br>Counter(dict(list_of_pairs)) # convert from a list of (elem, cnt) pairs
+            <br>c.most_common()[:-n-1:-1] # n least common elements
+            <br>+c # remove zero and negative counts
+            <br>
+            <br>
+            <br>3. deque objects
+            <br>&raquo; class collections.deque([iterable[, maxlen]])
+            <br>* iterable이 존재하면 좌에서 우로 append()를 통해 초기화한다.
+            <br>* 쓰레드-안전, 메모리 효율적인 O(1)에 근접한 기능을 제공.
+            <br>* list도 비슷한 기능을 제공하나, 고정 길이 연산에 적합하며, 길이가 바뀌는 연산은 O(n) 메모리 이동이 발생
+            <br>* maxlen이 주어졌다면 추가적인 삽입은 반대쪽 원소의 제거와 동시에 일어난다. 최근 n개만 관심 있는 경우 등에 유용.
+            <br>&raquo; append(x), appendleft(x), clear(), copy() Since 3.5 : 얕은 복사
+            <br>&raquo; count(x), extend(iterable), extendleft(iterable)
+            <br>&raquo; index(x[, start[, stop]]) Since 3.5, insert(i, x) Since 3.5 : i번째에 삽입
+            <br>&raquo; pop(), popleft(), remove(value), reverse() Since 3.2
+            <br>&raquo; rotate(n=1) : n번 우로 이동(d.appendleft(d.pop())). 음수면 좌로 이동.
+            <br>&raquo; maxlen : 없으면 None
+            <br>&raquo; 이외에 iteration, pickling(Python 객체 직렬화), len(d), reversed(d), copy.copy(d), copy.deepcopy(d),
+            in 연산자, index 접근 지원.
+            <br>* 단, index 접근은 느리므로, 대신 리스트를 이용할 것.
+            <br>&raquo; Since 3.5 : __add__(), __mul__(), __imul__() 지원
+            <br>
+            <br>4. defaultdict objects
+            <br>&raquo; class collections.defaultdict([default_factory[, ...]])
+            <br>* dict의 서브클래스로 메서드 하나를 재정의하고, 변경 가능한 인스턴스 변수를 하나 갖는다.
+            <br>* default_factory 함수로 기본값을 제공한다. 나머지 인자는 dict의 생성자에서 받아들이는 것과 동일하다.
+            <br>&raquo; __missing__(key) : default_factory가 None이면 KeyError, 아니면 default_factory 호출.
+            <br>&raquo; default_factory : 없으면 None
+            <br>&raquo; 예시 : https://docs.python.org/3/library/collections.html#defaultdict-examples
+            <br>
+            <br>5. namedtuple()
+            <br>&raquo; collections.namedtuple(typename, field_names, *, verbose=False, rename=False, module=None)
+            <br>* 튜플 각 위치에 의미를 부여하여 읽기 쉬게 한다. 기존 튜플이 이용되는 곳에 모두 사용될 수 있고, 인덱스 접근 대신 이름 접근이 가능하다.
+            <br>* 이름이 typename인 tuple의 서브클래스를 반환한다. 인스턴스들은 유용한 docstring과 __repr__()을 갖는다.
+            <br>* filed_names는 문자열 시퀀스거나, 'x y'또는 'x, y'처럼 분리한 단일 문자열일 수 있다.
+            <br>* 필드명은 Python 식별자 모두 사용할 수 있지만, '_'로 시작할 수 없다.
+            <br>* rename이 True면 유효하지 않은 필드명은 '_1'처럼 인덱스가 이용된다.
+            <br>* verbose가 True면 클래스 정의가 출력된다. 이는 구식 옵션으로, _source 속성을 출력하는 것이 더 간단하다.
+            <br>* Named tuple은 인스턴스 딕셔너리가 없어, 보통의 tuple보다 더 많은 메모리를 사용하지 않는다.
+            <br>* Since 3.6 : verbose, rename은 키워드로만 사용 가능, module 인자 추가
+            <br>* csv, sqlite3 모듈의 결과를 저장하기에 적합.
+            <br>** 예.
+            <br>EmployeeRecord = namedtuple('EmployeeRecord', 'name, age, title, department, paygrade')
+            <br>import csv
+            <br>for emp in map(EmployeeRecord._make, csv.reader(open("employees.csv", "rb"))):
+            <br>&nbsp;&nbsp;&nbsp;&nbsp;print(emp.name, emp.title)
+            <br>&raquo; classmethod somenamedtuple._make(iterable) : iterable로 튜플 생성
+            <br>&raquo; somenamedtuple._asdict() : OrderedDict 반환
+            <br>&raquo; somenamedtuple._replace(**kwargs) : 값을 변경한 새 튜플 반환. 따라서 기본값 튜플 하나를 이용해 다른 튜플들을 생성하는 것도
+            좋은 방법이다.
+            <br>&raquo; somenamedtuple._source : namedtuple Python 코드. 파일에 저장하거나 다른데서 exec() 가능
+            <br>&raquo; somenamedtuple._fields : 필드명들의 튜플 반환. 예. Pixel = namedtuple('Pixel', Point._fields +
+            Color._fields)
+            <br>* getattr()로 필드 접근 가능.
+            <br>* dictionary를 언패킹(**)하면 생성자에 이용 가능. 예. Point(**{'x':1, 'y':2})
+            <br>* 생성된 namedtuple은 Python 정규 클래스므로, 함수나 서브클래스를 쉽게 추가할 수 있다.
+            <br>** 예. class Point(namedtuple('Point', 'x, y')): ...
+            <br>* Since 3.5 : namedtuple 클래스의 docstring 속성들이 쓰기 가능해짐.
+            <br><br><br>6. OrderedDict objects
+            <br>&raquo; class collections.OrderedDict([items])
+            <br>* dict + 추가된 키들의 순서 기억
+            <br>&raquo; popitem(last=True)
+            <br>&raquo; move_to_end(key, last=True)
+            <br>* Since 3.5 : OrderedDict의 items, keys, values view들이 reversed() 지원.
+            <br>* OrderedDict 객체끼리의 비교는 순서가 중요하지만, 다른 Mapping 객체와의 비교에서는 순서 상관없다.
+            <br><br>7. UserDict objects : dict 객체를 data 속성으로 갖는다.
+            <br>8. UserList objects : list 객체를 data 속성으로 갖는다.
+            <br>9. UserString objects : str 객체를 data 속성으로 갖는다.
