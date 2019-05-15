@@ -1,0 +1,20 @@
+<#assign seq = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']>
+
+<#list seq?chunk(4) as row>
+  <#list row as cell>${cell} </#list>
+</#list>
+
+<#list seq?chunk(4, '-') as row>
+  <#list row as cell>${cell} </#list>
+</#list>
+<#--
+
+  a b c d 
+  e f g h 
+  i j 
+
+  a b c d 
+  e f g h 
+  i j - - 
+
+-->

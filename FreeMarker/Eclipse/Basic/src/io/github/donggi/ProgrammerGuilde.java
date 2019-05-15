@@ -33,9 +33,37 @@ public class ProgrammerGuilde {	// 15 라인 고정
 			put("root", freemarker.ext.dom.NodeModel.parse(new File(System.getProperty("user.dir"), "resource/template/t_014.xml")));
 		}});
 	}
-	@org.junit.jupiter.api.Test
+
 	public void example_t_015() throws Exception {
 		var path = "t_015.ftl";
+		process(path, new HashMap<String, Object>() {{
+			put("title", path);
+		}});
+	}
+
+	public void example_t_016() throws Exception {
+		var path = "t_016.html";
+		process(path, new HashMap<String, Object>() {{
+			put("title", path);
+		}});
+	}
+
+	public void example_t_017() throws Exception {
+		var path = "t_017.html";
+		process(path, new HashMap<String, Object>() {{
+			put("title", path);
+		}});
+	}
+
+	public void example_t_018() throws Exception {
+		var path = "t_018.html";
+		process(path, new HashMap<String, Object>() {{
+			put("title", path);
+		}});
+	}
+	@org.junit.jupiter.api.Test
+	public void example_t_019() throws Exception {
+		var path = "t_019.html";
 		process(path, new HashMap<String, Object>() {{
 			put("title", path);
 		}});

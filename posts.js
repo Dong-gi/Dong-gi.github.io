@@ -4,7 +4,6 @@ const posts = {
         { "filename": "posts/1904/1904191501.html", "category": "Tip", "title": "Linux" },
         { "filename": "posts/1904/1904191725.html", "category": "Tip", "title": "Docker" },
         { "filename": "posts/1905/1905101417.html", "category": "Tip", "title": "vi" },
-        { "filename": "posts/1905/1905131839.html", "category": "Tip", "title": "PostgreSQL to SQLite3" },
         
         { "filename": "posts/1809/2.html", "category": "Java/Basic", "title": "시작하기" },
         { "filename": "posts/1809/8.html", "category": "Java/Basic", "title": "객체지향" },
@@ -123,6 +122,7 @@ const posts = {
         
 
         { "filename": "posts/1904/1904271734.html", "category": "DB", "title": "Concepts" },
+        { "filename": "posts/1905/1905131839.html", "category": "DB", "title": "PostgreSQL to SQLite3" },
     ],
     "tree": {},
     "contents": [],

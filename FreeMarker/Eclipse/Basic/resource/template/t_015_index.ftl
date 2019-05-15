@@ -5,8 +5,8 @@
 <#include "t_015_contains.ftl">
 <#include "t_015_datetime.ftl">
 <#include "t_015_esc.ftl">
-<#include "t_015_tmp_1.tfl">
-<#include "t_015_index_of.tfl">
-<#include "t_015_keep.tfl">
-<#include "t_015_matches.tfl">
-<#include "t_015_replace.tfl">
+<#include "t_015_tmp_1.html">
+<#include "t_015_index_of.html">
+<#include "t_015_keep.html">
+<#include "t_015_matches.html">
+<#include "t_015_replace.html">
