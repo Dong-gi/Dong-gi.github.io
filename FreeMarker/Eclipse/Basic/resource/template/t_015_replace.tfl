@@ -1,0 +1,22 @@
+<#assign s = r' user_card_id | account_id | card_id |                                                    skill_json                                                    
+--------------+------------+---------+------------------------------------------------------------------------------------------------------------------
+     31738776 |  735796500 |     152 | {"l":[{"i":"1","a":"735796500","s":"200152","l":1,"d":1},{"i":"2","a":"735796500","s":"100152","l":1,"d":2}]}
+     73721796 | 1260915920 |     175 | {"l":[{"i":"1","a":"1260915920","s":"200175","l":1,"d":1},{"i":"2","a":"1260915920","s":"100175","l":1,"d":2}]}
+     31521526 |  873613350 |     157 | {"l":[{"i":"1","a":"873613350","s":"200157","l":1,"d":1},{"i":"2","a":"873613350","s":"100157","l":1,"d":2}]}
+     32034081 | 1247691604 |     157 | {"l":[{"i":"1","a":"1247691604","s":"200157","l":1,"d":1},{"i":"2","a":"1247691604","s":"100157","l":1,"d":2}]}'>
+
+<#assign pattern = r'(\D+)(\d+)(\D+)(\d+)(\D+)(\d+)(\D+)(\{"l.+\"s\"\:\")(\d)(\d{5})(.+)(\]\})'>
+<#assign tableNamePattern = r't_user_card_(\d+)'>
+<#assign replacement = 'update t_user_card_$4 set skill_json=\'$8$9$10$11,{"i":"3","a":"$4","s":"3$10","l":1,"d":3}$12\' where user_card_id=$2 and account_id=$4;'>
+
+<#list s?matches(pattern, "rim") as line>
+    <#assign str = line?trim>
+    step1 : ${str}
+    <#assign str = str?replace(pattern, replacement, 'rim')>
+    step2 : ${str?replace(pattern, replacement, 'rim')}
+    <#list str?matches(tableNamePattern, 'rim') as tableName>
+        <#assign newTableName = 't_user_card_' + (tableName?groups[1]?number % 100)>
+        <#assign str = str?replace(tableNamePattern, newTableName, 'rim')>
+    </#list>
+    step3 : ${str}
+</#list>

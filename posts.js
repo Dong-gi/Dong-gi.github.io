@@ -1,10 +1,10 @@
 const posts = {
     "list": [
-        { "filename": "posts/1809/0.html", "category": "Message", "title": "새로운 시작" },
-        
         { "filename": "posts/1809/1.html", "category": "Tip", "title": "VS Code" },
         { "filename": "posts/1904/1904191501.html", "category": "Tip", "title": "Linux" },
         { "filename": "posts/1904/1904191725.html", "category": "Tip", "title": "Docker" },
+        { "filename": "posts/1905/1905101417.html", "category": "Tip", "title": "vi" },
+        { "filename": "posts/1905/1905131839.html", "category": "Tip", "title": "PostgreSQL to SQLite3" },
         
         { "filename": "posts/1809/2.html", "category": "Java/Basic", "title": "시작하기" },
         { "filename": "posts/1809/8.html", "category": "Java/Basic", "title": "객체지향" },
@@ -109,6 +109,7 @@ const posts = {
         { "filename": "posts/1904/496.html", "category": "FreeMarker/매뉴얼/2.3.28", "title": "템플릿 작성 가이드" },
         { "filename": "posts/1904/1904231056.html", "category": "FreeMarker/매뉴얼/2.3.28", "title": "프로그래밍 가이드" },
         { "filename": "posts/1904/1904251509.html", "category": "FreeMarker/매뉴얼/2.3.28", "title": "XML 처리 가이드" },
+        { "filename": "posts/1905/1905101401.html", "category": "FreeMarker/매뉴얼/2.3.28", "title": "Built-in 목록" },
         
 
         { "filename": "posts/1904/497.html", "category": "Python/Basic", "title": "입문" },
@@ -130,22 +131,10 @@ const posts = {
 };
 
 /*
-<button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/src/io/github/donggi/Basic.java" lan="java">Java »</button>
-<button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/resource/template/.ftl" lan="xml">FTL + 결과 »</button>
+lan 속성 : nohighlight, text, java, javascript, cpp, matlab, xml, css, ruby, sql, bash, shell, php, go, python, cs
+displayRange="[]"
 
 <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/concurrent/.java" lan="java">예시 코드 »</button>
-<button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Algorithm/src/koreatech/Main10.java" lan="java">예시 코드 »</button>
-<button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Web02/src/donggi/.java" lan="java"> »</button>
-        
-<button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/.js" lan="javascript">.js »</button>
-      
-<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1811/479.html" lan="html">479.html »</button>
-<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1811/479.html" lan="nohighlight">479.html »</button>
-<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1904/1904211429.txt" displayRange="[]" lan="text">예시 »</button>
-        
-<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/.cpp" lan="cpp">. »</button>
-<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp1/.xaml" lan="xml">.xaml »</button>
-<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp1/.xaml.cs" lan="cs">.xaml.cs »</button>
         
 <a role="button" target="_blank" class="btn btn-info btn-sm" href=""></a>
 <a role="button" target="#" class="btn btn-info btn-sm" href="javascript:;"></a>

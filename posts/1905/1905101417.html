@@ -1,0 +1,82 @@
+<hr>
+
+<details>
+    <summary>모드</summary>
+    <ol>
+        <li>처음 vim을 실행하면 normal mode(command mode)</li>
+        insert mode와 visual mode에서 esc를 누르면 normal mode로 회귀.
+        <li>i를 누르면 insert mode</li>
+        <li>v를 누르면 visual mode</li>
+        <li>:를 누르고 명령어 실행</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>저장</summary>
+    <ol>
+        <li>:w</li>
+        <li>:w! 덮어쓰기</li>
+        <li>:w 파일명 // 새 파일인 경우</li>
+        <li>:saveas 파일명</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>종료</summary>
+    <ol>
+        <li>:q</li>
+        <li>:wq : 저장 후 종료</li>
+        <li>:q! : 저장하지 않고 종료</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>이동</summary>
+    <ol>
+        <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://vim.rtorr.com/lang/ko/">Vim Cheat Sheet »</a>
+        <img class="rounded mx-auto d-block" alt="Vim 이동 단축키" src="http://cfile8.uf.tistory.com/image/141F57474F4732890DE706">
+        <img class="rounded mx-auto d-block" alt="Vim 이동 단축키" src="https://bitbucket.org/tednaleid/vim-shortcut-wallpaper/raw/6f25ec82f84640e991a08345e6a28ec12f1d16a2/vim-shortcuts.png">
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>vim</summary>
+    <ol>
+        <li>열기</li>
+        <ul>
+            <li>:edit 파일명</li>
+            <li>:tabnew 파일명</li>
+            <li>$ vim 파일명1 파일명2 ...</li>
+            :n으로 열린 파일 선택. 파일을 탭으로 열고 싶다면 -p 옵션
+        </ul>
+
+        <li>복사/붙여넣기</li>
+        <ul>
+            <li>복사 : Ctrl + Insert</li>
+            <li>붙여넣기 : Shift + Insert</li>
+            ~/.vimrc 에서<br>
+            set mouse=a 로 되어있던게 문제였습니다. set mouse=c 로 변경하니까 vim 에서 텍스트의 복사하기 붙여넣기 잘 되는군요.<br>
+            a 는 마우스를 사용하겠다는 것이고 c 는 마우스를 사용치 않겠다는 것 같은데, c 로 해놔도 마우스로 커서 옮기고 스크롤하는 것 등은 잘 되더군요.. 출처 : https://kldp.org/node/129456
+        </ul>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>전체 지우기</summary>
+    <ol>
+        <li>gg    첫줄로 이동</li>
+        <li>dG    현재 줄부터 마지막 줄 까지 삭제</li>
+    </ol>
+</details>
+
+<hr>

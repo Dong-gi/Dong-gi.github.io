@@ -6,9 +6,10 @@
         <li>ps -ef</li>
         ps : process snapshot<br>
         -e : -A와 동일. all processes<br>
-        -f : full-format.
+        -f : full-format.<br>
+        예. ps -ef | grep tomcat
 
-        <li>kill <i>pid</i> -9</li>
+        <li>kill -9 <i>pid</i></li>
         프로세스 종료.
 
         <li>top</li>
@@ -42,6 +43,20 @@
         NTP : Network Time Protocol. 시간 동기화를 위한 프로토콜.<br>
         동기화 : ntpdate 서버주소<br>
         시간 비교 : ntpdate -d 서버주소<a role="button" target="_blank" class="btn btn-info btn-sm" href="https://zetawiki.com/wiki/공용_NTP_서버_목록">공용 NTP 서버 목록</a>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>시각 확인/변경</summary>
+    <ol>
+        <li>date</li>
+        현재 시각 반환
+
+        <li>date -s "time string"</li>
+        예. date -s "2019-01-01 12:34:56"<br>
+        date --set "time string"과 동일.
     </ol>
 </details>
 

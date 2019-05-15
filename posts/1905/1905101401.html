@@ -1,0 +1,312 @@
+<hr>
+
+<details>
+    <summary>Built-ins for strings</summary>
+    <ol>
+        <li>length</li>
+        길이 반환
+
+        <li>boolean</li>
+        "true", "false" 문자열에 대해 true, false 반환
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015_boolean.ftl" lan="xml">FTL »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015.ftl" displayRange="[4, 4]" lan="xml">결과 »</button>
+
+        <li>number</li>
+        문자열을 숫자로 변환. 지수형 표기 인식. NaN, INF, -INF, Infinity, -Infinity 인식
+
+        <li>string</li>
+        문자열 값을 반환한다. multi-type인 경우 쓸 일이 있을지도
+
+        <li>word_list</li>
+        FreeMarker 단어 정의의 기준. 공백 문자를 제외한 문자들의 연속
+
+        <li>대소문자</li>
+        <ul>
+            <li>cap_first</li>
+            첫 번째 단어의 첫번째 글자를 대문자로 변환하여 반환 ↔ <strong>uncap_first</strong>
+            <button type="button" class="btn btn-primary btn-sm btn-code"
+                path="FreeMarker/Eclipse/Basic/resource/template/t_015_cap_first.ftl" lan="xml">FTL »</button>
+            <button type="button" class="btn btn-primary btn-sm btn-code"
+                path="FreeMarker/Eclipse/Basic/resource/template/t_015.ftl" displayRange="[5, 7]" lan="xml">결과
+                »</button>
+
+            <li>capitalize</li>
+            각 단어의 첫글자만 대문자가 되도록 변환하여 반환
+            <button type="button" class="btn btn-primary btn-sm btn-code"
+                path="FreeMarker/Eclipse/Basic/resource/template/t_015_capitalize.ftl" lan="xml">FTL »</button>
+            <button type="button" class="btn btn-primary btn-sm btn-code"
+                path="FreeMarker/Eclipse/Basic/resource/template/t_015.ftl" displayRange="[8, 10]" lan="xml">결과
+                »</button>
+
+            <li>lower_case</li>
+            전부 소문자로 ↔ <strong>upper_case</strong>
+        </ul>
+
+        <li>chop_linebreak</li>
+        마지막 line-break를 제거. 없으면 그대로 반환. \n만 없애준다... \r은 그대로 남는다...
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015_chop_linebreak.ftl" lan="xml">FTL »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015.ftl" displayRange="[11, 15]" lan="xml">결과 »</button>
+
+        <li>trim</li>
+        전후의 연속적인 공백 문자를 제거한다.
+
+        <li>index_of</li>
+        <li>last_index_of</li>
+        정규표현식은 지원하지 않는다.
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015_index_of.ftl" lan="xml">FTL »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015.ftl" displayRange="[25, 28]" lan="xml">결과 »</button>
+
+        <li>contains</li>
+        부분 문자열을 포함하는지 여부 반환. contains는 정규표현식 사용 불가
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015_contains.ftl" lan="xml">FTL »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015.ftl" displayRange="[16, 16]" lan="xml">결과 »</button>
+
+        <li>date</li>
+        <li>time</li>
+        <li>datetime</li>
+        문자열을 date, time, date-time 값으로 변환. 매개변수 없이 호출하는 경우 기본 로캐일의 기본 포맷만 인식한다
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015_datetime.ftl" lan="xml">FTL »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015.ftl" displayRange="[17, 23]" lan="xml">결과 »</button>
+
+        <li>starts_with</li>
+        <li>ends_with</li>
+        <li>ensure_starts_with</li>
+        <li>ensure_ends_with</li>
+        ensure : 없으면 concat해서 반환
+
+        <li>remove_beginning</li>
+        <li>remove_ending</li>
+        해당 부분 문자열로 시작/끝나지 않음을 보장한다
+
+        <li>keep</li>
+        일치하는 부분 문자열 전/후의 나머지 문자열 반환. 정규표현식 가능
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015_keep.ftl" lan="xml">FTL »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015.ftl" displayRange="[29, 32]" lan="xml">결과 »</button>
+        <ul>
+            <li>keep_after</li>
+            처음 부분 문자열과 일치하는 부분까지 제거한 나머지 반환. 일치하는 부분이 없으면 빈 문자열, 부분 문자열 길이가 0이면 원본 그대로 반환.
+
+            <li>keep_after_last</li>
+            마지막으로 부분 문자열과 일치하는 부분까지 제거한 나머지 반환
+
+            <li>keep_before</li>
+            처음 부분 문자열과 일치하는 위치 전까지 반환. 일치하는 부분이 없으면 원본 그대로, 부분 문자열 길이가 0이면 빈 문자열 반환.
+
+            <li>keep_before_last</li>
+            마지막으로 부분 문자열과 일치하는 위치 전까지 반환
+        </ul>
+
+        <li>left_pad</li>
+        <li>right_pad</li>
+        기본적으로 공백으로 채운다
+
+        <li>esc</li>
+        output_format이 이스케이핑 대상인 동시에 auto_esc가 꺼져있는 경우, ?esc를 호출하면 이스케이프된 문자열로 반환한다. ↔ <strong>no_esc</strong>
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015_esc.ftl" lan="xml">FTL »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015.ftl" displayRange="[24, 24]" lan="xml">결과 »</button>
+
+        <li>j_string</li>
+        <li>js_string</li>
+        <li>json_string</li>
+        <li>url, url_path</li>
+        각각 Java, JavaScript, JSON, url 문자열 표현에 맞게 이스케이프한다.<br>
+        url_path는 '/'를 이스케이프하지 않는다.
+
+        <li>matches</li>
+        <li>groups</li>
+        반환 값은 multi-type.<br>
+        boolean : 전체 문자열이 매칭되는지 여부<br>
+        sequence : 길이 0 이상의, 매칭되는 부분 문자열 시퀀스. 기대하는 바와는 다르게, 매칭되는 부분 문자열 전후의 다른 문자열이 포함될 수 있다.
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015_matches.ftl" lan="xml">FTL »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015.ftl" displayRange="[34, 62]" lan="xml">결과 »</button>
+
+        <li>replace</li>
+        정규표현식 가능
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015_replace.ftl" lan="xml">FTL »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code"
+            path="FreeMarker/Eclipse/Basic/resource/template/t_015.ftl" displayRange="[65, 78]" lan="xml">결과 »</button>
+
+        <li>split</li>
+        정규표현식 가능. 반환된 시퀀스의 첫 번째 문자열은 빈 문자열이 되지 않는다. 정규표현식을 사용한 경우 마지막 문자열도 빈 문자열이 되지 않는다. 빈 문자열로 분리하는 경우 각 문자들이 분리된다
+
+        <li>Common Flags</li>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Built-in</th>
+                    <th>i(ignore case)</th>
+                    <th>r(reg. exp.)</th>
+                    <th>m(multi-line mode)</th>
+                    <th>s(dot-all mode)</th>
+                    <th>c(whitesp. and comments)</th>
+                    <th>f(first only)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>replace</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Only with r</td>
+                    <td>Only with r</td>
+                    <td>Only with r</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>split</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Only with r</td>
+                    <td>Only with r</td>
+                    <td>Only with r</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>matches</td>
+                    <td>Yes</td>
+                    <td>Ignored</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>keep_after</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Ignored</td>
+                </tr>
+                <tr>
+                    <td>keep_after_last</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Ignored</td>
+                </tr>
+                <tr>
+                    <td>keep_before</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Ignored</td>
+                </tr>
+                <tr>
+                    <td>keep_before_last</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Ignored</td>
+                </tr>
+                <tr>
+                    <td>ensure_starts_with</td>
+                    <td>Yes</td>
+                    <td>Ignored</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Ignored</td>
+                </tr>
+            </tbody>
+        </table>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Built-ins for numbers</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Built-ins for date(time)</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Built-ins for booleans</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Built-ins for sequences</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Built-ins for hashes</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Built-ins for XML nodes</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Built-ins for loop variable</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Etc built-ins</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>

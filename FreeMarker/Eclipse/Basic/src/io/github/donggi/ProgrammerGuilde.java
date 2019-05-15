@@ -24,13 +24,20 @@ public class ProgrammerGuilde {	// 15 라인 고정
 			});
 		}});
 	}
-	@org.junit.jupiter.api.Test
+	
 	public void example_t_014() throws Exception {
 		config.setWhitespaceStripping(true);
 		var path = "t_014.ftl";
 		process(path, new HashMap<String, Object>() {{
 			put("title", path);
 			put("root", freemarker.ext.dom.NodeModel.parse(new File(System.getProperty("user.dir"), "resource/template/t_014.xml")));
+		}});
+	}
+	@org.junit.jupiter.api.Test
+	public void example_t_015() throws Exception {
+		var path = "t_015.ftl";
+		process(path, new HashMap<String, Object>() {{
+			put("title", path);
 		}});
 	}
 	

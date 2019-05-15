@@ -1,0 +1,52 @@
+PostgreSQL 덤프로부터 SQLite3으로 마이그레이션하는 과정 정리
+
+<ol>    
+    <li>SQLite에 테이블 생성</li>
+    PostgreSQL DDL Dump에서 아래 사항들을 수정하면 SQLite에서 그대로 테이블 생성에 이용할 수 있다.
+    <ul>
+        <li>true → t</li>
+        <li>false → f</li>
+        <li>now\(\), DEFAULT \('now'::text\)::date → '2000-01-01 00:00:00'</li>
+        <li>timestamp\(0\) with time zone → timestamp with time zone</li>
+        <li>DEFAULT '(\w)*'::text → DEFAULT '$1'</li>
+    </ul>
+
+    sql파일 로드 : .read dump.sql
+
+    <li>PostgreSQL 데이터 덤프</li>
+    <ol>
+        <li>\copy table_name to 'file_name.csv' delimiter ',' csv;</li>
+        뒤에 header 옵션도 붙일 수 있지만... 나중에 SQLite에서 임포트하면 헤더 행도 데이터로 들어가버린다..
+        
+        <li>csv 편집</li>
+        csv에서는 null을 빈칸으로밖에 표현할 수 없는데... SQLite 임포트 시 이를 지원해주지 않는다. 때문에 null을 ""이나 기타 문자열로 변경...
+    </ol>
+
+    <li>SQLite에서 import</li>
+    .mode csv<br>
+    .import file_name.csv table_name
+
+    <li>기타 사항</li>
+    <ul>
+        <li>SQLite Studio 프로그램은 import/export 기능을 UI로 지원.</li>
+        <li>SQLite에서 csv 출력</li>
+        .headers on<br>
+        .mode csv<br>
+        .output file_name.csv<br>
+        [SELECT 쿼리]<br>
+        .quit
+    </ul>
+</ol>
+
+
+<!--
+* master.sql로부터 db 생성, 덤프 임포트
+
+변경 대상 : ([a-z]+)_master.sql
+
+변경문 :
+create database yume_1_33_$1;
+grant all privileges on database yume_1_33_$1 to dgkim;
+\\c yume_1_33_$1
+\\i $1_master.sql\n
+-->

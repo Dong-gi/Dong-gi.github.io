@@ -1,0 +1,28 @@
+<#assign s = r' user_card_id | account_id | card_id |                                                    skill_json                                                    
+--------------+------------+---------+------------------------------------------------------------------------------------------------------------------
+     31738776 |  735796500 |     152 | {"l":[{"i":"1","a":"735796500","s":"200152","l":1,"d":1},{"i":"2","a":"735796500","s":"100152","l":1,"d":2}]}
+     32034081 | 1247691620 |     157 | {"l":[{"i":"1","a":"1247691620","s":"200157","l":1,"d":1},{"i":"2","a":"1247691620","s":"100157","l":1,"d":2}]}'>
+
+<#assign pattern = r'(\D+)(\d+)(\D+)(\d+)(\D+)(\d+)(\D+)(\{"l.+\"s\"\:\")(\d)(\d{5})(.+)(\]\})'>
+
+<#list s?split("\r?\n", "rim") as line>
+    <#assign result = line?matches(pattern)>
+    match : ${result?c} // ${line}
+    <#if result>
+        $2 : user_card_id : ${result?groups[2]}
+        $4 : account_id : ${result?groups[4]}
+        $6 : card_id : ${result?groups[6]}
+    </#if>
+</#list>
+
+<#list s?matches(pattern, "rim") as line>
+    (line == line?groups[0])?c : ${(line == line?groups[0])?c} // ${line?groups[0]?trim}
+    $2 : user_card_id : ${line?groups[2]}
+    $4 : account_id : ${line?groups[4]}
+    $6 : card_id : ${line?groups[6]}
+    $8 : skill_json 스킬 앞부분 : ${line?groups[8]}
+    $10 : skill_json 접두 제외한 스킬 ID : ${line?groups[10]}
+    $11 : skill_json 2번 스킬 뒷부분 : ${line?groups[11]}
+    $12 : skill_json 닫는 부분 : ${line?groups[12]}
+</#list>
+

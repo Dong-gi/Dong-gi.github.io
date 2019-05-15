@@ -1,0 +1,5 @@
+<#assign s = "abc abc">
+${s?index_of("b")}
+${s?index_of("b", 2)}
+${s?last_index_of("b")}
+${s?last_index_of("b", 2)}
