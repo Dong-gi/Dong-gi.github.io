@@ -54,8 +54,7 @@
         <li>trim</li>
         전후의 연속적인 공백 문자를 제거한다.
 
-        <li>index_of</li>
-        <li>last_index_of</li>
+        <li>index_of, last_index_of</li>
         정규표현식은 지원하지 않는다.
         <button type="button" class="btn btn-primary btn-sm btn-code"
             path="FreeMarker/Eclipse/Basic/resource/template/t_015_index_of.html" lan="xml">FTL »</button>
@@ -69,23 +68,17 @@
         <button type="button" class="btn btn-primary btn-sm btn-code"
             path="FreeMarker/Eclipse/Basic/resource/template/t_015.ftl" displayRange="[16, 16]" lan="xml">결과 »</button>
 
-        <li>date</li>
-        <li>time</li>
-        <li>datetime</li>
+        <li>date, time, datetime</li>
         문자열을 date, time, date-time 값으로 변환. 매개변수 없이 호출하는 경우 기본 로캐일의 기본 포맷만 인식한다
         <button type="button" class="btn btn-primary btn-sm btn-code"
             path="FreeMarker/Eclipse/Basic/resource/template/t_015_datetime.ftl" lan="xml">FTL »</button>
         <button type="button" class="btn btn-primary btn-sm btn-code"
             path="FreeMarker/Eclipse/Basic/resource/template/t_015.ftl" displayRange="[17, 23]" lan="xml">결과 »</button>
 
-        <li>starts_with</li>
-        <li>ends_with</li>
-        <li>ensure_starts_with</li>
-        <li>ensure_ends_with</li>
+        <li>starts_with, ends_with, ensure_starts_with, ensure_ends_with</li>
         ensure : 없으면 concat해서 반환
 
-        <li>remove_beginning</li>
-        <li>remove_ending</li>
+        <li>remove_beginning, remove_ending</li>
         해당 부분 문자열로 시작/끝나지 않음을 보장한다
 
         <li>keep</li>
@@ -108,8 +101,7 @@
             마지막으로 부분 문자열과 일치하는 위치 전까지 반환
         </ul>
 
-        <li>left_pad</li>
-        <li>right_pad</li>
+        <li>left_pad, right_pad</li>
         기본적으로 공백으로 채운다
 
         <li>esc</li>
@@ -119,15 +111,11 @@
         <button type="button" class="btn btn-primary btn-sm btn-code"
             path="FreeMarker/Eclipse/Basic/resource/template/t_015.ftl" displayRange="[24, 24]" lan="xml">결과 »</button>
 
-        <li>j_string</li>
-        <li>js_string</li>
-        <li>json_string</li>
-        <li>url, url_path</li>
+        <li>j_string, js_string, json_string, url, url_path</li>
         각각 Java, JavaScript, JSON, url 문자열 표현에 맞게 이스케이프한다.<br>
         url_path는 '/'를 이스케이프하지 않는다.
 
-        <li>matches</li>
-        <li>groups</li>
+        <li>matches, groups</li>
         반환 값은 multi-type.<br>
         boolean : 전체 문자열이 매칭되는지 여부<br>
         sequence : 길이 0 이상의, 매칭되는 부분 문자열 시퀀스. 기대하는 바와는 다르게, 매칭되는 부분 문자열 전후의 다른 문자열이 포함될 수 있다.
@@ -244,16 +232,12 @@
     <ol>
         <li>abs</li>
 
-        <li>is_infinite</li>
-        <li>is_nan</li>
+        <li>is_infinite, is_nan</li>
 
-        <li>lower_abc</li>
-        <li>upper_abc</li>
+        <li>lower_abc, upper_abc</li>
         엑셀 열 표기처럼 1, 2, 3, ..., 27, ... 순서대로 a, b, c, ..., aa, ... 로 매핑한다
 
-        <li>round</li>
-        <li>floor</li>
-        <li>ceiling</li>
+        <li>round, floor, ceiling</li>
         round : 끝자리가 5인 경우 올림한다
 
         <li>string</li>
@@ -291,12 +275,10 @@
     <summary>Built-ins for sequences</summary>
     <ol>
         <li>size</li>
-        <li>first</li>
-        <li>last</li>
+        <li>first, last</li>
         <li>reverse</li>
         
-        <li>min</li>
-        <li>max</li>
+        <li>min, max</li>
         min/max는 모든 요소가 숫자 | date-(time)일 때만 작동
         
         <li>join</li>
@@ -313,8 +295,7 @@
         <li>seq_contains</li>
         시퀀스가 해당 요소를 포함하는지 여부. Objects::equals가 아닌 == 이용
         
-        <li>seq_index_of</li>
-        <li>seq_last_index_of</li>
+        <li>seq_index_of, seq_last_index_of</li>
         요소의 순번. 없으면 -1
         
         <li>chunk</li>
@@ -347,11 +328,7 @@
         <li>item_cycle</li>
         <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/resource/template/t_019.html" displayRange="[1, 3, 5, 11]" lan="xml">FTL + 결과 »</button>
 
-        <li>has_next</li>
-        <li>is_first</li>
-        <li>is_last</li>
-        <li>is_even_item</li>
-        <li>is_odd_item</li>
+        <li>has_next, is_first, is_last, is_even_item, is_odd_item</li>
     </ol>
 </details>
 
@@ -362,7 +339,25 @@
     <ol>
         <li>switch</li>
         switch directive의 인라인 버전. 모든 타입에 대해 작동한다.
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/resource/template/t_019.html" displayRange="[1, 3, 5, 11]" lan="xml">FTL + 결과 »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/resource/template/t_020_switch.html" lan="xml">FTL »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/resource/template/t_020.html" displayRange="[4, 7]" lan="xml">결과 »</button>
+
+        <li>byte, double, float, int, long, short</li>
+        <li>number_to_date, number_to_time, number_to_datetime</li>
+        숫자 변수에 대한 변환값을 반환한다. date-(time) 변수에 대해서 long을 지원한다
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/resource/template/t_020_number.html" lan="xml">FTL »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/resource/template/t_020.html" displayRange="[8, 15]" lan="xml">결과 »</button>
+
+        <li>eval</li>
+        FTL을 동적으로 실행하여 문자열로 반환. 따라서 평가될 문장의 결과가 자동으로 string으로 변환될 수 있어야 한다
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/resource/template/t_020_eval.html" lan="xml">FTL »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="FreeMarker/Eclipse/Basic/resource/template/t_020.html" displayRange="[16, 16]" lan="xml">결과 »</button>
+
+        <li>타입 체크</li>
+        is_string, is_number, is_boolean, is_date_only, is_date_like, is_time, ...
+
+        <li>sequence</li>
+        list directive에 이용할 수 있는 값을 sequence 값으로 변환. seq[index], seq?size 등을 이용할 수 있게 된다
     </ol>
 </details>
 

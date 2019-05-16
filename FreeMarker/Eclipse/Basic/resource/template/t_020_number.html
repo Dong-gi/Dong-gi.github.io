@@ -1,0 +1,13 @@
+<#setting locale="en_US">
+
+<#assign n = 1234.5678>
+${n?byte} // 1234 == 0100 1101 0010 → 1101 0010 == -(0010 1110) == -46
+${n?long}
+${n?double}
+
+<#assign d = '2019-05-16 09:13:26'?datetime('yyyy-MM-dd HH:mm:ss')>
+<#assign n = d?long>
+${n}
+${n?number_to_date}
+${n?number_to_time}
+${n?number_to_datetime}

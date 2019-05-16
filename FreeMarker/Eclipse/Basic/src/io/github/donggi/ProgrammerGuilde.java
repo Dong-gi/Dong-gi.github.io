@@ -61,9 +61,16 @@ public class ProgrammerGuilde {	// 15 라인 고정
 			put("title", path);
 		}});
 	}
-	@org.junit.jupiter.api.Test
+
 	public void example_t_019() throws Exception {
 		var path = "t_019.html";
+		process(path, new HashMap<String, Object>() {{
+			put("title", path);
+		}});
+	}
+	@org.junit.jupiter.api.Test
+	public void example_t_020() throws Exception {
+		var path = "t_020.html";
 		process(path, new HashMap<String, Object>() {{
 			put("title", path);
 		}});
