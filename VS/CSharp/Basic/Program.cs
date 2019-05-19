@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Basic
@@ -10,11 +12,8 @@ namespace Basic
     {
         static void Main(string[] args)
         {
-            // EventExample.Example();
-             AttributeExample.Example();
-            // NullableExample.Example();
-            // IndexerExample.Example();
-            // ExtensionExample.Example();
+            Console.WriteLine(ConfigurationManager.AppSettings["author"]);
+            ParamsExample.Example();
             Console.ReadLine();
         }
     }

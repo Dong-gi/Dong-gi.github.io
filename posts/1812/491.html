@@ -3,15 +3,20 @@
 <details>
     <summary>Attribute</summary>
     <ol>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/AttributeExample.cs" lan="cs">AttributeExample.cs 전체 코드 »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/AttributeExample.cs"
+            lan="cs">AttributeExample.cs 전체 코드 »</button>
         <li>사용자 정의 특성은 System.Attribute를 상속하여 만든다.</li>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/AttributeExample.cs" displayRange="[12, 19]" lan="cs">AttributeExample.cs »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/AttributeExample.cs"
+            displayRange="[12, 19]" lan="cs">AttributeExample.cs »</button>
         <li>명명시 Attribute를 접미하고, 실제 사용시에는 "Attribute"는 생략 가능하다.</li>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/AttributeExample.cs" displayRange="[21, 24]" lan="cs">AttributeExample.cs »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/AttributeExample.cs"
+            displayRange="[21, 24]" lan="cs">AttributeExample.cs »</button>
         <li>특성을 적용할 수 있는 대상 제한</li>
-        System.AttributeUsage 생성자에 AttributeTargets 전달. 생략시 기본값은 AttributeTargets.All. 여러 대상에 적용된다면 AttributeTargets.Field | AttributeTargets.Method처럼 |를 이용.
+        System.AttributeUsage 생성자에 AttributeTargets 전달. 생략시 기본값은 AttributeTargets.All. 여러 대상에 적용된다면
+        AttributeTargets.Field | AttributeTargets.Method처럼 |를 이용.
         <li>적용하는 대상 명시</li>
-        어셈블리에 적용하는 경우(AttributeTargets.Assembly), 반환값에 적용하는 경우(AttributeTargets.ReturnValue)와 같이, 특성이 적용될 대상을 자동으로 특정해내지 못하는 경우엔 이를 명시해줄 수 있다.<br>
+        어셈블리에 적용하는 경우(AttributeTargets.Assembly), 반환값에 적용하는 경우(AttributeTargets.ReturnValue)와 같이, 특성이 적용될 대상을 자동으로 특정해내지
+        못하는 경우엔 이를 명시해줄 수 있다.<br>
         assembly, module, type, method, property, field, event, param, return, typevar
     </ol>
 </details>
@@ -22,10 +27,125 @@
     <summary>checked/unchecked 블록</summary>
     <ol>
         <li>기본적으로는 프로그램 실행 시 오버플로/언더플로를 무시한다.</li>
+        <li>checked/unchecked 블록은 이를 각각 명시적인 예외로 처리/비처리 하도록 한다.</li>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/CheckedExample.cs"
+            displayRange="[13, 39]" lan="cs">예시 코드 »</button>
     </ol>
 </details>
 
 <hr>
+
+<details>
+    <summary>가변 길이 매개변수 params</summary>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/ParamsExample.cs"
+        displayRange="[11, 17]" lan="cs">예시 코드 »</button>
+</details>
+
+<hr>
+
+<details>
+    <summary>extern</summary>
+    <ol>
+        <li>메서드의 body가 없어도 컴파일 되도록 한다.</li>
+        <li>호출할 메서드가 있는 dll을 DllImport 특성으로 지정해주면 해당 메서드를 호출한다</li>
+        <li>http://www.pinvoke.net/</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>unsafe</summary>
+    <ol>
+        <li>unsafe를 지정한 블록, 클래스에서는 포인터를 사용할 수 있다.</li>
+        <li>컴파일 시 /unsafe 옵션을 지정해야 한다. 비주얼 스튜디오는 프로젝트 속성 - 빌드 - 안전하지 않은 코드 허용</li>
+        <li>System.Runtime.InteropServices.Marshal</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>fixed</summary>
+    <ol>
+        <li>unsafe한 코드에 참조 변수(의 일부)를 보내야 하는 경우, 블록이 끝날 때까지 힙 영역에서 해당 객체의 주소를 고정시킨다.</li>
+        <li>참조 변수 자체에 fixed를 적용할 수는 없고, 필드의 일부를 "int* pValue = &obj.field"처럼 지정하여 사용</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>stackalloc</summary>
+    값 형식의 배열을 스택에 할당하도록 한다<br>
+    int* pArray = stackalloc int[12];
+</details>
+
+<hr>
+
+<details>
+    <summary>app.config</summary>
+    <ol>
+        <li>supportedRuntime</li>
+        실행에 필요한 닷넷 버전 지정. 비주얼 스튜디오가 자동으로 추가해주는듯
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/App.config"
+            lan="xml">App.config »</button>
+
+        <li>appSettings</li>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/App.config"
+            lan="xml">App.config »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/Program.cs"
+            lan="cs">Program.cs »</button>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>디버그 모드에서만 실행되는 코드</summary>
+    <ol>
+        <li>전처리 상수</li>
+        #if DEBUG ... #endif
+
+        <li>Conditional 특성</li>
+        [Conditional("DEBUG")] : 적용된 클래스, 메서드는 릴리스 빌드 시 포함되지 않는다
+
+        <li>System.Diagnostics.Debug</li>
+        Debug.WriteLine() : 디버그 출력 창에 출력된다
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>서명</summary>
+    <ol>
+        <li>Strong-named Assembly</li>
+        어셈블리 이름 + 버전 + 문화권 + 공개키 토큰
+
+        <li>서명 절차</li>
+        비주얼 스튜디오 프로젝트 속성 - 서명
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>예외</summary>
+    <ol>
+        <li>try {} catch {} finally {}</li>
+        <li>try {} catch (ExceptionType) {}</li>
+        <li>try {} catch (ExceptionType) { throw; }</li>
+        <li>try {} catch (ExceptionType e) {}</li>
+        <li>try {} finally { iDisposable.Dispose(); } == using(var iDisposable = ~)</li>
+        https://docs.microsoft.com/ko-kr/dotnet/api/system.idisposable?view=netframework-4.8
+    </ol>
+</details>
+
+<hr>
+
+
+
 
 <ol>
     <li>var</li>
@@ -35,10 +155,6 @@
     ● 타입 검사를 런타임에 한다.<br>
     ● COM 컴포넌트와 .NET 사이의 상호 운용을 위해, 동적 언어와의 상호 운용을 위해 추가.
 
-    <li>params</li>
-    ● 가변길이 매개변수<br>
-    static int Sum(params int[] args) => args.Sum();<br>
-    Sum(1, 2, 3);
 
     <li>메서드 매개변수 제어</li>
     ● ref : 참조에 의한 호출.<br>
@@ -47,8 +163,8 @@
     ● 선택적 매개변수 : Method(int a = 0, int b = 0) {}
 
     <li>확장 메서드</li>
-    ● 기존 클래스에 static method 추가.<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/ExtensionExample.cs"
-        lan="cs">ExtensionExample.cs »</button>
+    ● 기존 클래스에 static method 추가.<button type="button" class="btn btn-primary btn-sm btn-code"
+        path="VS/CSharp/Basic/ExtensionExample.cs" lan="cs">ExtensionExample.cs »</button>
 
     <li>readonly</li>
     ● 읽기 전용 필드 선언<br>
@@ -59,15 +175,16 @@
     ● 오버로딩 가능.<br>
     ● 접근제한자 리턴_타입 this[인덱스_타입 인덱스_식별자] { get {} set {} }<br>
     ● 읽기 전용 : 리턴_타입 this[인덱스_타입 인덱스_식별자] => {}<br>
-    ● string은 인덱서를 구현함.<button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/IndexerExample.cs"
-        lan="cs">IndexerExample.cs »</button>
+    ● string은 인덱서를 구현함.<button type="button" class="btn btn-primary btn-sm btn-code"
+        path="VS/CSharp/Basic/IndexerExample.cs" lan="cs">IndexerExample.cs »</button>
 
     <li>전처리 지시문</li>
     ● #define, #undef, #if, #elif, #else, #endif...<br>
     ● #region, #endregion...
 
     <li>nullable</li>
-    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/NullableExample.cs" lan="cs">NullableExample.cs
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/Basic/NullableExample.cs"
+        lan="cs">NullableExample.cs
         »</button>
 
     <li>System.Array</li>
@@ -190,7 +307,7 @@
 
     ● 스레드 간 동기화<br>
     lock (/* object */) { /* 블록이 끝날 때까지 다른 스레드는 접근 불가 */ }<br><br>
-    
+
     Monitor.Enter(/* ojbect */);<br>
     try {} finally{ Monitor.Exit(/* object */); } // lock 블록과 동일<br>
     - Monitor.Wait() : 스레드를 WaitSleepJoin 상태로 만들고 lock을 해제한 뒤 Waiting Queue에 들어간다.<br>
@@ -215,7 +332,7 @@
     Console.WriteLine("Hello");<br>
     task.Wait();<br>
     Console.WriteLine("World");<br><br>
-    
+
     var task = Task.Run(() => { Thread.Sleep(1000); Console.WriteLine("Async"); });<br>
     Console.WriteLine("Hello");<br>
     task.Wait();<br>
@@ -238,7 +355,8 @@
 
     ● asyne 한정자 + await 연산자<br>
     - async로 한정한 void 리턴 메서드는 await없이 비동기 실행<br>
-    - async로 한정한 Task 또는 Task&lt;TResult&gt; 반환 메서드/태스크/람다식은 await 연산자를 만나는 곳에서 호출자에게 제어를 넘겨주며, await 연산자가 없으면 동기적으로 실행된다.<br>
+    - async로 한정한 Task 또는 Task&lt;TResult&gt; 반환 메서드/태스크/람다식은 await 연산자를 만나는 곳에서 호출자에게 제어를 넘겨주며, await 연산자가 없으면 동기적으로
+    실행된다.<br>
     - await Task.Delay() : 입력시간 후 태스크 반환. 스레드를 블록시키지 않음<br>
     - .NET Framework 4.5에 ~Async() API 추가
 </ol>

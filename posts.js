@@ -102,6 +102,7 @@ const posts = {
         { "filename": "posts/1812/489.html", "category": "C*/C#.NET/Basic", "title": "C# Basic" },
         { "filename": "posts/1812/490.html", "category": "C*/C#.NET/Basic", "title": "C# 객체 지향 문법" },
         { "filename": "posts/1812/491.html", "category": "C*/C#.NET/Basic", "title": "C# 기타 문법" },
+        { "filename": "posts/1905/1905191745.html", "category": "C*/C#.NET/Library", "title": "기본 라이브러리" },
         { "filename": "posts/1901/493.html", "category": "C*/C#.NET/WPF", "title": "WPF" },
         
 

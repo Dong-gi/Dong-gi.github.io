@@ -38,6 +38,18 @@
     ● 선언 : 접근제한자 delegate 반환타입 식별자(매개변수);<br>
     ● 익명 델리게이트<br>
     식별자 = delegate(타입1 변수1, ...) { /* 문장 */ }<br>
+    * 델리게이트 비동기 호출
+    IAsyncResult result = delegate1.BeginInvoke(~);
+    result.AsyncWaitHandle.WaitOne();
+    delegate1.EndInvoke(result);
+
+    or
+
+    delegate1.BeginInvoke(~, CallBackFunction)
+
+    void CallBackFunction(IAsyncResult result) {
+        var rValue = (result.AsyncState as DelegateName).EndInvoke(result);
+    }
     ● 람다<br>
     (변수1, ...) => { /* 문장 */ }<br><br>
     
