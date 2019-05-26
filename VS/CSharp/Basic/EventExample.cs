@@ -8,6 +8,9 @@ namespace Basic
 {
     public class EventExample
     {
+        // 이벤트 구독자가 없을 때 Invoke시 예외 발생되는 것 방지
+        public event EventHandler SomeEvent = delegate { };
+
         public class SomeEventArgs : EventArgs
         {
             public string Text { get; set; }
@@ -21,7 +24,5 @@ namespace Basic
             };
             example.SomeEvent.Invoke(example, new SomeEventArgs { Text = "Event Argument" });
         }
-
-        public event EventHandler SomeEvent;
     }
 }

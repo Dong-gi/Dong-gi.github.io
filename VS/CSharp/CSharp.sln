@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp5", "WpfApp5\WpfApp5.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notifycation", "Notifycation\Notifycation.csproj", "{1872F15D-39C4-422B-9E99-0B86AFAB99CF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp6", "WpfApp6\WpfApp6.csproj", "{0FAA9401-D84A-4DE5-A9FD-0E4069E1D565}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{1872F15D-39C4-422B-9E99-0B86AFAB99CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1872F15D-39C4-422B-9E99-0B86AFAB99CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1872F15D-39C4-422B-9E99-0B86AFAB99CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FAA9401-D84A-4DE5-A9FD-0E4069E1D565}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FAA9401-D84A-4DE5-A9FD-0E4069E1D565}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FAA9401-D84A-4DE5-A9FD-0E4069E1D565}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FAA9401-D84A-4DE5-A9FD-0E4069E1D565}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

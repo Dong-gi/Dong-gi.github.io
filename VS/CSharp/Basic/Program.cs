@@ -13,7 +13,8 @@ namespace Basic
         static void Main(string[] args)
         {
             Console.WriteLine(ConfigurationManager.AppSettings["author"]);
-            ParamsExample.Example();
+
+            LinqExample.Example();
             Console.ReadLine();
         }
     }

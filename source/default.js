@@ -318,7 +318,7 @@ function getContentHTML(post) {
     let title = post.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     let newBadge = (new Date().getTime() - new Date(post.date).getTime()) <= 3 * 86400 * 1000 ? '<span class="badge badge-pill badge-primary">New</span>' : '';
     return `<div class="jumbotron" id="${post.id}"><details><summary class="row">
-    <div class="col-12 col-md-9 col-lg-7" title="${post.filename}">${title}${newBadge}</div>
+    <div class="col-12 col-md-8 col-lg-6" title="${post.filename}">${title}${newBadge}</div>
     <div class="col d-none d-md-block">${post.category}</div>
     </summary></details></div>`;
 }

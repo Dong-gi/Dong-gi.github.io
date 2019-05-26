@@ -1,5 +1,7 @@
-<ul>
-    <li>실습 1</li>
+<hr>
+
+<details>
+    <summary>실습 1</summary>
     1. XAML(eXtensible Application Markup Language)로 컨트롤을 작성하는 것과 코드에서 생성하는 것은 결과적으로 동일하다.<br>
     Blend에서 디자인을 따로 할 수 있다. 분업-협업 가능.<br>
     2. 참조 → 참조 추가에서 .NET 어셈블리 or 제작한 프로젝트 참조 추가<br>
@@ -10,8 +12,12 @@
     6. 다루는 것 : Grid.Background, Button.Content, Application.Current.Properties, MessageBox.Show(), MessageBoxResult, Button_Click, Window_Loaded, Window_Closing
     <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp1/MainWindow.xaml" lan="xml">MainWindow.xaml »</button>
     <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp1/MainWindow.xaml.cs" lan="cs">MainWindow.xaml.cs »</button>
-    
-    <li>실습 2</li>
+</details>
+
+<hr>
+
+<details>
+    <summary>실습 2</summary>
     1. Modal : 자식 윈도우가 종료되기 전까지 부모 윈도우는 비활성화.<br>
     2. Modeless : 자식 윈도우와 부모 윈도우가 별개로 동작.<br>
     3. Application.Current.Windows : 실행중인 윈도우들의 컬렉션.<br>
@@ -24,8 +30,12 @@
     <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp3/UserControl1.xaml.cs" lan="cs">UserControl1.xaml.cs »</button>
     <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp3/MainWindow.xaml" lan="xml">MainWindow.xaml »</button>
     <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp3/MainWindow.xaml.cs" lan="cs">MainWindow.xaml.cs »</button>
+</details>
+    
+<hr>
 
-    <li>레이아웃</li>
+<details>
+    <summary>레이아웃</summary>
     디자인을 할 생각은 없기 때문에, 종류만 알아두고 넘어간다.<br>
     1. Canvas : 캔버스 내부의 상대 좌표를 이용해 자식 요소들을 배치한다.<br>
     2. DockPanel : Top, Left, Bottom, Right에 자식 요소들을 배치.<br>
@@ -34,38 +44,144 @@
     5. VirtualizingPanel : Panel에 대한 추상 클래스.<br>
     6. WrapPanel : 자식 요소들을 좌에서 우로 차례대로 배치하다, 패널의 경계를 넘어서면 다음 줄(바로 아래)로 넘겨 배치한다.<br>
     <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.microsoft.com/en-us/dotnet/framework/wpf/advanced/layout">MS WPF Docs - Layout &raquo;</a>
-    
-    <li>리소스</li>
+</details>
+
+<hr>
+
+<details>
+    <summary>리소스</summary>
     1. xaml 내부에 정적 리소스 정의 : &lt;Window.Resources&gt;&lt;/Window.Resources&gt;<br>
     2. ResourceDictionary : xaml에 리소스들을 정의하고 이를 별개의 파일로 분리.<br>
     3. 스타일 : 리소스 영역에 Style 요소를 작성하고, Setter Property="" Value=""를 이용해 값을 할당한다.<br>
     4. 스타일 상속 : Style 요소의 BasedOn 속성 이용<br>
     <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp4/Dictionary1.xaml" lan="xml">Dictionary1.xaml »</button>
     <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp4/MainWindow.xaml" lan="xml">MainWindow.xaml »</button>
+</details>
 
-    <li>컨트롤</li>
+<hr>
+
+<details>
+    <summary>컨트롤</summary>
     1. (ButtonBase ← Button, (ToggleButton ← CheckBox, RadioButton))<br>
     2. ListBox, ComboBox, ListView, TreeView<br>
     3. Menu, Toolbar / TabControl, Expander, GroupBox / Slider, ScrollBar<br>
     4. TextBox, RichTextBox, PasswordBox
+</details>
 
-    <li>이벤트</li>
+<hr>
+
+<details>
+    <summary>이벤트</summary>
     1. Event Tunneling : 부모 컨트롤로부터 자식 컨트롤로 Preview 접두어가 붙은 이벤트가 전달됨.<br>
     2. Event Bubbling : 이벤트 센더는 이벤트를 처리하고 이를 다시 부모로 전달<br>
     3. 1,2와 같은 이벤트를 RoutedEvent라고 하며, 따라서 이벤트 핸들러의 파라미터로 RoutedEventArgs가 넘겨진다.
+</details>
 
-    <li>명령</li>
+<hr>
+
+<details>
+    <summary>명령</summary>
     1. 이벤트 핸들러를 xaml과 독립적으로 작성하는 것을 가능하게 해준다.<br>
     2. ICommand를 구체화하며 CanExecute(), Execute(), CanExecuteChanged를 정의한다.<br>
     3. 내장 명령 : ApplicationCommands, ComponentCommands, MediaCommands, NavigationCommands, EditingCommands<br>
     4. 명령 바인딩 : System.Windows.Interactivity.WPF 패키지 설치/이용
+</details>
 
-    <li>트리거</li>
+<hr>
+
+<details>
+    <summary>트리거</summary>
     1. 특정 조건에 따라 스타일을 적용시키는 방법.
     <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp5/MainWindow.xaml" lan="xml">MainWindow.xaml »</button>
+</details>
 
-    <li>바인딩</li>
+<hr>
+
+<details>
+    <summary>바인딩</summary>
     1. MVVM : Model - View - ViewModel<br>
     2. View의 컨트롤들을 ViewModel과 바인딩 : Control의 값 변경 + 이벤트를 ViewModel에 통지, Model의 값 변경을 View에 통지.<br>
-    3. ViewModel은 INotifyPropertyChanged을 구체화. 프로퍼티 setter에서 변경되었음을 통지.
-</ul>
+    3. ViewModel은 INotifyPropertyChanged을 구체화. 프로퍼티 setter에서 변경되었음을 통지.<br>
+    public event PropertyChangedEventHandler PropertyChanged;<br>
+    PropertyChanged(this, new PropertyChangedEventArgs("DateTime"));
+
+    <ol>
+        <li>바인딩이랑 바인딩 소스로부터 바인딩 타깃으로 프로퍼티 값을 전달하는 것</li>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp6/MainWindow.xaml" lan="xml">MainWindow.xaml »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp6/MainWindow.xaml.cs" lan="cs">MainWindow.xaml.cs »</button>
+        
+        <li>BindingMode : OneWay, TwoWay, OneTime, OneWayToSource</li>
+        &lt;ListBox<br>
+        　　xmlns:g="clr-namespace:System.Globalization;assembly=mscorlib"<br>
+        　　ItemsSource="{Binding Source={x:Static g:DateTimeFormatInfo.CurrentInfo}, Path=DayNames, Mode=OneTime}"/&gt;<br>
+        <br>
+        TwoWay 바인딩의 바인딩 소스는 타깃이 입력 포커스를 잃을 때까지 값이 갱신되지 않는다. 설정을 변경하려면 Binding의 UpdateSourceTrigger를 변경하면 된다.<br>
+        UpdateSourceTrigger : LostFocus(TextBox의 Text를 위한 기본값), PropertyChanged(대부분의 피로퍼티에 기본), Explicit<br>
+        <br>
+        Explicit의 경우 해당 엘리먼트로부터 BindingExpression 인스턴스를 얻고 UpdateSource()를 호출해야 한다.<br>
+        var bindExp = textBox.GetBindingExpression(TextBox.TextProperty);<br>
+        bindExp.UpdateSource();
+
+        <li>DataContext는 자식 요소에까지 적용된다</li>
+
+        <li>데이터바인딩으로 사용자 정의 클래스 사용</li>
+        <ol>
+            <li>코드에서 DataContext 설정</li>
+            DataContext 프로퍼티에 할당
+
+            <li>클래스 이름을 ElementName으로 사용</li>
+            FrameworkElement를 상속해야 한다
+
+            <li>Resources에 객체 생성 후 참조</li>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp6/MyClock.cs" lan="cs">예시 코드 »</button>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp6/MainWindow.xaml" lan="xml">MainWindow.xaml »</button>
+        </ol>
+         
+        <li>코드에서 바인딩 설정</li>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp6/MainWindow.xaml.cs" lan="cs">예시 코드 »</button>
+
+        <li>IValueConverter</li>
+        데이터가 바인딩 소스에서 타깃으로 전달될 때 변환을 거치게 할 수 있다.<br>
+        public class MyConverter : IValueConverter {<br>
+        　　public object Convert(object value, Type typeTarget, object param, CultureInfo culture) {<br>
+        　　　　// value : 변환할 객체<br>
+        　　　　// typeTarget ; 변환 대상 타입; 변환할 수 없으면 null 반환<br>
+        　　　　// param : Binding의 ConvertParameter 프로퍼티가 가리키는 객체<br>
+        　　}<br>
+        　　public object ConvertBack(object value, Type typeTarget, object param, CultureInfo culture) { }<br>
+        <br>
+        　　public string MyProperty {get;set;}<br>
+        }<br>
+        <br>
+        코드에서 컨버터 연결 : binding.Convert = new MyConverter();<br>
+        XAML에서 컨버터 연결 : Resources 절에 객체 생성 후 요소에서 참조<br>
+        &lt;Window.Resources&gt;<br>
+        　　&lt;!-- src는 프로젝트 네임스페이스와 연결 --&gt;<br>
+        　　&lt;src:MyConverter x:Key="conv" MyProperty="Hello"/&gt;<br>
+        　　&lt;/Window.Resources&gt;<br>
+        <br>
+        &lt;StackPanel&gt;<br>
+        　　&lt;ScrollBar Name="scroll" Maximum="100"/&gt;<br>
+        　　&lt;Label Content="{Binding ElementName=scroll, Path=Value, Converter={StaticResource conv}, ConverterParameter=2}"/&gt;<br>
+        &lt;/StackPanel&gt;
+        
+        <li>IMultiValueConverter</li>
+        멀티 바인딩 : 여러 소스로부터 얻어진 객체들을 하나의 타깃 객체로 변환. IMultiValueConverter 인터페이스 구체화
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp6/RgbToColorConverter.cs" lan="cs">예시 코드 »</button>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>기타</summary>
+    <ol>
+        <li>Invokes method on main UI thread</li>
+        Dispatcher.Invoke(DispatcherPriority.Normal, new WaitCallback(func), parameter)
+                
+        <li>타이머 작업</li>
+        DispatcherTimer. <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/CSharp/WpfApp6/MyClock.cs" lan="cs">예시 코드 »</button>
+    </ol>
+</details>
+
+<hr>

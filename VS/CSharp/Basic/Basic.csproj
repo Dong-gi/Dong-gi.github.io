@@ -72,9 +72,11 @@
   <ItemGroup>
     <Compile Include="AttributeExample.cs" />
     <Compile Include="CheckedExample.cs" />
+    <Compile Include="DelegateExample.cs" />
     <Compile Include="EventExample.cs" />
     <Compile Include="ExtensionExample.cs" />
     <Compile Include="IndexerExample.cs" />
+    <Compile Include="LinqExample.cs" />
     <Compile Include="NullableExample.cs" />
     <Compile Include="ParamsExample.cs" />
     <Compile Include="Program.cs" />
