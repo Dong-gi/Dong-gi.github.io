@@ -1,0 +1,89 @@
+<hr>
+
+<details>
+    <summary>시작하기</summary>
+    
+    <details>
+        <summary>설치</summary>
+        <ul>
+            <li><a role="button" target="_blank" class="btn btn-info btn-sm" href="https://www.postgresql.org/download/">https://www.postgresql.org/download/</a></li>
+            <li><a role="button" target="_blank" class="btn btn-info btn-sm" href="https://wiki.postgresql.org/wiki/Frequently_Asked_Questions">https://wiki.postgresql.org/wiki/Frequently_Asked_Questions</a></li>
+
+            <li><strong>PostgreSQL 9.6 on CentOS 6.9</strong></li>
+            <ol>
+                <li>Install the repository RPM</li>
+                $ yum install https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/pgdg-centos96-9.6-3.noarch.rpm
+        
+                <li>Install the client packages</li>
+                $ yum install postgresql96
+        
+                <li>Install the server packages</li>
+                $ yum install postgresql96-server
+        
+                <li>Initialize the database</li>
+                $ service postgresql-9.6 initdb
+        
+                <li>서비스 시작</li>
+                $ service postgresql-9.6 start<br>
+                $ service postgresql-9.6 restart // 재시작하는 경우
+        
+                <li>자동 구동 설정</li>
+                $ chkconfig postgresql-9.6 on
+            </ol>
+
+            <li><strong>PostgreSQL 10 on CentOS 7</strong></li>
+            <ol>
+                <li>패키지 설치</li>
+                rpm -Uvh https://yum.postgresql.org/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm<br>
+                yum install -y postgresql10-server postgresql10
+
+                <li>DB 초기화</li>
+                /usr/pgsql-10/bin/postgresql-10-setup initdb
+
+                <li>서비스 시작</li>
+                systemctl start postgresql-10<br>
+                systemctl status postgresql-10 // 상태 확인
+
+                <li>자동 구동 설정</li>
+                systemctl enable postgresql-10
+            </ol>
+
+            <li>서비스 시작 후, 실행 위치 확인</li>
+            $ ps aux | grep postgres
+        </ul>
+    </details>
+            
+    <details>
+        <summary>기본 구조</summary>
+        postgres라는 이름의 서버 프로세스가 항시 실행되면서 클라이언트의 연결 요청 시 이를 처리하고, 연결 수립 시 하위 프로세스를 생성하여 할당한다.
+    </details>
+
+    <details>
+        <summary>데이터베이스 사용하기</summary>
+        <ul>
+            <li>데이터베이스 사용 방법</li>
+            <ol>
+                <li>psql : PostgreSQL 대화형 터미널 프로그램</li>
+                <li>pgAdmin : PostgreSQL GUI 클라이언트 프로그램</li>
+            </ol>
+
+            <li>psql을 이용한 데이터베이스 사용</li>
+        </ul>
+    </details>
+</details>
+
+<hr>
+
+<details>
+    <summary>SQL 언어</summary>
+    
+</details>
+
+<hr>
+
+<details>
+    <summary>고급 기능</summary>
+    
+</details>
+
+<hr>

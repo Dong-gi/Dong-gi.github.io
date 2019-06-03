@@ -1,0 +1,31 @@
+<hr>
+
+<details>
+    <summary>간단 명령어</summary>
+    <ol>
+        <li>docker ps</li>
+        실행 중인 컨테이너 목록
+
+        <li>docker [container] start container_name</li>
+        컨테이너 시작
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>파일 복사</summary>
+    <ol>
+        <li>docker-machine scp</li>
+        <strong>docker-machine scp source destination</strong><br>
+        예. 로컬 파일을 "kamuvm" 머신으로 복사<br>
+        docker-machine scp /root/kamutora/zipang-admin.war kamuvm:/home/docker/
+
+        <li>docker cp</li>
+        <strong>docker cp source destination</strong><br>
+        예. 로컬 파일을 "devweb" 컨테이너로 복사<br>
+        docker cp zipang-admin.war devweb:/usr/local/tomcat/webapps/
+    </ol>
+</details>
+
+<hr>
