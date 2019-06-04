@@ -1,0 +1,341 @@
+<hr>
+
+<details>
+    <summary>SQL Syntax</summary>
+    <details>
+        <summary>Lexical Structure</summary>
+        <ol>
+            <li>식별자와 키워드</li>
+            select라는 이름의 컬럼을 가져오려면 select "select" from table_name;처럼 이용한다.
+            <ul>
+                <li>select, from : 키워드</li>
+                <li>"select" : ""로 감싼 식별자. U&"d\0061t\+000061"처럼 유니코드 코드 포인트를 이용할 수 있다.</li>
+                <li>table_name : Unquoted 식별자. 대소문자를 구별하지 않는다.</li>
+            </ul>
+
+            <li>상수</li>
+            문자열 상수 : '[문자열]'<br>
+            달러 인용 문자열 상수 : 달러 인용 문자열은 이스케이프되지 않는다.<br>
+            예. $$Dianne's horse$$, $SomeTag$Dianne's horse$SomeTag$<br>
+            <br>
+            함수 바디를 감싸는 예.<br>
+            CREATE OR REPLACE FUNCTION change_inaba_name() RETURNS TRIGGER AS $$<br>
+            BEGIN<br>
+            　　NEW.status_text = REPLACE(NEW.status_text, 'イナバ', '이나바');<br>
+            　　RETURN NEW;<br>
+            END;<br>
+            $$ LANGUAGE plpgsql;
+        </ol>
+    </details>
+
+    <details>
+        <summary>Value Expressions</summary>
+        <ol>
+            <li>열 참조</li>
+            correlation.columnname // correlation은 테이블 이름이나 alias
+
+            <li>위치 매개변수</li>
+            함수 정의의 매개변수 위치를 이용해 변수 참조<br>
+            예. 문자열을 2번 반복해서 반환하는 함수<br>
+            CREATE OR REPLACE FUNCTION test(text) RETURNS text AS $body$ SELECT $1 || $1 $body$ LANGUAGE sql;<br>
+            <br>
+            dgkim=# select test('hello ');<br>
+             test    <br>
+            ------------<br>
+             hello hello <br>
+            (1 row)
+        
+            <li></li>
+
+            <li></li>
+
+            <li></li>
+
+            <li></li>
+
+            <li></li>
+
+            <li></li>
+            
+            <li></li>
+
+            <li></li>
+        </ol>
+    </details>
+            5.2 
+            5.2.1 
+            -  : 열 참조 
+            
+            5.2.2 
+            - 
+            
+            
+            5.2.3 배열 요소 참조
+            - expression[subscript] // subscript는 integer 값을 내는 표현식
+            - expression[lower_subscript:upper_subscript]
+            
+            5.2.4 필드 선택
+            - expression.fieldname : 특정 행의 열 참조 // expression은 row type 또는 열집합
+            - 일반적으로 expression은 괄호로 감싸져야 하지만, 테이블이나 위치 매개변수의 경우 생략할 수 있다.
+            - .*로 모든 필드를 얻을 수 있다.
+            
+            5.2.5 연산자 호출
+            5.2.6 함수 호출
+            
+            5.2.7 집계 함수 호출
+            - 집계 함수 aggregate function이란 여러 입력 행들을 하나의 결과행으로 줄이는 함수.
+            - 집계 함수의 형태
+            aggregate_name (expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ] -- default로 ALL이므로 2번째와 동일
+            aggregate_name (ALL expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]
+            aggregate_name (DISTINCT expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]
+            aggregate_name ( * ) [ FILTER ( WHERE filter_clause ) ] -- 보통 count에서만 사용되는 형태
+            aggregate_name ( [ expression [ , ... ] ] ) WITHIN GROUP ( order_by_clause ) [ FILTER ( WHERE filter_clause ) ]
+            
+            - 위에서 expression은 집계 함수나 윈도우 함수 호출을 포함하지 않아야 한다.
+            - 복수의 인자를 받는 집계 함수에서는 ORDER BY 절이 전체 인자가 끝나고 등장해야 한다.
+            SELECT string_agg(a, ',' ORDER BY a) FROM table;
+            
+            SELECT
+                count(*) AS unfiltered,
+                count(*) FILTER (WHERE i < 5) AS filtered
+            FROM generate_series(1,10) AS s(i);
+             unfiltered | filtered
+            ------------+----------
+                     10 |        4
+            (1 row)
+            
+            - 내장 집계 함수 : http://postgresql.kr/docs/9.6/functions-aggregate.html
+            
+            5.2.8 윈도우 함수 호출
+            - 윈도우 함수는 집계 함수와 비슷하지만, 입력 행들이 결과에 그대로 나타난다.
+            - 윈도우 함수의 형태
+            function_name ([expression [, expression ... ]]) [ FILTER ( WHERE filter_clause ) ] OVER window_name
+            function_name ([expression [, expression ... ]]) [ FILTER ( WHERE filter_clause ) ] OVER ( window_definition )
+            function_name ( * ) [ FILTER ( WHERE filter_clause ) ] OVER window_name
+            function_name ( * ) [ FILTER ( WHERE filter_clause ) ] OVER ( window_definition )
+            
+            - window_definition의 형태
+            [ existing_window_name ]
+            [ PARTITION BY expression [, ...] ]
+            [ ORDER BY expression [ ASC | DESC | USING operator ] [ NULLS { FIRST | LAST } ] [, ...] ]
+            [ frame_clause ]
+            
+            - frame_clause의 형태
+            { RANGE | ROWS } frame_start -- default로 frame_end는 CURRENT ROW
+            { RANGE | ROWS } BETWEEN frame_start AND frame_end
+            
+            - frame_start, frame_end의 형태
+            UNBOUNDED PRECEDING
+            value PRECEDING
+            CURRENT ROW
+            value FOLLOWING
+            UNBOUNDED FOLLOWING
+            
+            - 위에서 expression은 윈도우 함수 호출을 포함하지 않아야 한다.
+            - window_name은 WINDOW 절로 정의된 윈도우 이름.
+            - OVER window_name과 OVER (window_name)은 다르다. 후자의 경우 윈도우 정의를 복사하여 적용하며, frame 절을 포함하는 경우 수행되지 않는다.
+            - PARTITION BY 옵션은 행 그룹을 만든다. GROUP BY와 달리 출력-열이나 숫자를 지정할 수 없다.
+            - ORDER BY 절도 마찬가지로 출력-열이나 숫자를 지정할 수 없다.
+            - frame_clause는 윈도우 함수가 전체 파티션이 아닌, 현재까지의 파티션을 대상으로 계산을 수행하게 한다.
+                - UNBOUNDED PRECEDING으로 지정된 frame_start는 파티션의 첫 행, UNBOUNDED FOLLOWING으로 지정된 frame_end는 파티션 마지막 행을 의미한다.
+                - value PRECEDING, FOLLOWING은 ROWS 모드에서만 사용 가능하고, 현재 행을 전후로 하여 프레임 크기를 설정한다.
+            
+            - 내장 윈도우 함수 : http://postgresql.kr/docs/9.6/functions-window.html#FUNCTIONS-WINDOW-TABLE
+            
+            5.2.9 형 변환
+            5.2.10 Collation Expressions
+            예. 로캐일에 따른 정렬
+            SELECT * FROM tbl WHERE ... ORDER BY a COLLATE "C"; // 결과 정렬
+            SELECT * FROM tbl WHERE a > 'foo' COLLATE "C"; // 입력 정렬
+            SELECT * FROM tbl WHERE a COLLATE "C" > 'foo'; // 위와 같음
+            SELECT * FROM tbl WHERE (a > 'foo') COLLATE "C"; // 에러. > 연산의 결과인 boolean은 non-collatable
+            
+            * 한글 정렬
+            - 데이터베이스 최초 생성 시 LC_COLLATE 변수 값을 'C'로 설정
+            - 기존 데이터베이스를 dump하고, LC_COLLATE를 'C'로 설정한 데이터베이스를 만들어 복구
+                1. postgres 설치 경로의 pg_dump로 백업
+                2. 기존 데이터베이스를 삭제하고 새로 데이터베이스 생성.
+            db_name=> DROP DATABASE [db_name];
+            db_name=> CREATE DATABASE [db_name] LC_COLLATE 'C';
+                    - 데이터베이스는 생성될 때 기본적으로 template1 데이터베이스를 복제하여 생성된다. 하지만 이는 로캐일이 이미 설정되어 충돌하여 에러가 발생할 수 있다.
+            db_name=> CREATE DATABASE [db_name] TEMPLATE template0 LC_COLLATE 'C';
+                3. 백업 내용 복구
+            
+            
+            5.2.11 Scalar Subqueries
+            SELECT name, (SELECT max(pop) FROM cities WHERE cities.state = states.name)
+                FROM states;
+            
+            5.2.12 배열 생성자
+            SELECT ARRAY[1,2,3+4];
+            SELECT ARRAY[1,2,22.7]::integer[];
+            SELECT ARRAY[]::integer[]; // 빈 배열도 형식은 필요
+            SELECT ARRAY[ARRAY[1,2], ARRAY[3,4]];
+            SELECT ARRAY(SELECT oid FROM pg_proc WHERE proname LIKE 'bytea%');
+            
+            CREATE TABLE arr(f1 int[], f2 int[]);
+            INSERT INTO arr VALUES (ARRAY[[1,2],[3,4]], ARRAY[[5,6],[7,8]]);
+            
+            5.2.13 행 생성자
+            SELECT ROW(1,2.5,'this is a test');
+            SELECT ROW(t.*, 42) FROM t; // t는 행 값
+            
+            CREATE TABLE mytable(f1 int, f2 float, f3 text);
+            CREATE FUNCTION getf1(mytable) RETURNS int AS 'SELECT $1.f1' LANGUAGE SQL;
+            
+            -- No cast needed since only one getf1() exists
+            SELECT getf1(ROW(1,2.5,'this is a test'));
+             getf1
+            -------
+                 1
+            (1 row)
+            
+            CREATE TYPE myrowtype AS (f1 int, f2 text, f3 numeric);
+            CREATE FUNCTION getf1(myrowtype) RETURNS int AS 'SELECT $1.f1' LANGUAGE SQL;
+            
+            -- Now we need a cast to indicate which function to call:
+            SELECT getf1(ROW(1,2.5,'this is a test'));
+            ERROR:  function getf1(record) is not unique
+            
+            SELECT getf1(ROW(1,2.5,'this is a test')::mytable);
+             getf1
+            -------
+                 1
+            (1 row)
+            
+            SELECT getf1(CAST(ROW(11,'this is a test',2.5) AS myrowtype));
+             getf1
+            -------
+                11
+            (1 row)
+            
+            
+            5.2.14 Expression Evaluation Rules
+            SELECT true OR somefunc();와 SELECT somefunc() OR ture; 모두 somefunc()가 호출되지 않는다. short-circuit 연산과 다르다.
+            
+            
+            5.3 함수 호출
+            - PostgreSQL의 함수의 인자는 이름과 위치 둘 다로 참조할 수 있다.
+            CREATE FUNCTION concat_lower_or_upper(a text, b text, uppercase boolean DEFAULT false)
+            RETURNS text
+            AS
+            $$
+             SELECT CASE
+                    WHEN $3 THEN UPPER($1 || ' ' || $2)
+                    ELSE LOWER($1 || ' ' || $2)
+                    END;
+            $$
+            LANGUAGE SQL IMMUTABLE STRICT;
+            
+            5.3.1 Using Positional Notation
+            SELECT concat_lower_or_upper('Hello', 'World');
+            
+            5.3.2 Using Named Notation
+            SELECT concat_lower_or_upper(a => 'Hello', b => 'World');
+            
+            5.3.3 Using Mixed Notation
+            - 키워드 인자는 나머지보다 뒤에 위치해야 한다.
+            SELECT concat_lower_or_upper('Hello', 'World', uppercase => true);
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Data Definition</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Data Manipulation</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Queries</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Data Types</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Functions and Operations</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Type Conversion</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Indexes</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Full Text Search</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>동시성 제어</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Performance Tips</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>병렬 쿼리</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>

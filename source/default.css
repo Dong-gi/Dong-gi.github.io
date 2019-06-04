@@ -50,6 +50,10 @@ details>p {
     padding: 0.5em 1em;
 }
 
+details details {
+    margin: 0.5rem 0;
+}
+
 dl, ol, ul {
     margin-left: -1.5em;
 }

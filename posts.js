@@ -120,9 +120,10 @@ const posts = {
         { "filename": "posts/1904/1904252136.html", "category": "Programming/Python/Document", "title": "Data Types" },
         
 
-        { "filename": "posts/db/concept.html", "category": "DB", "title": "Concepts" },
-        { "filename": "posts/db/psql_tutorial.html", "category": "DB", "title": "PostgreSQL Tutorial" },
-        { "filename": "posts/db/psql_to_sqlite.html", "category": "DB", "title": "PostgreSQL to SQLite3" },
+        { "filename": "posts/db/concept.html", "category": "DB", "title": "기본 개념" },
+        { "filename": "posts/db/psql_tutorial.html", "category": "DB", "title": "PostgreSQL 시작하기" },
+        { "filename": "posts/db/psql_sql.html", "category": "DB", "title": "PostgreSQL SQL 언어" },
+        { "filename": "posts/db/psql_to_sqlite.html", "category": "DB", "title": "PostgreSQL → SQLite3 마이그레이션" },
     ],
     "tree": {},
     "contents": [],
