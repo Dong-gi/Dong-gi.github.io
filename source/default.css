@@ -54,6 +54,10 @@ details details {
     margin: 0.5rem 0;
 }
 
+details details details {
+    padding-left: 1rem;
+}
+
 dl, ol, ul {
     margin-left: -1.5em;
 }
