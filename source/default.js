@@ -6,6 +6,7 @@ $(() => {
     let id = 0;
     posts.list.sort((post1, post2) => post2.title.localeCompare(post1.title));
     posts.list.sort((post1, post2) => post2.category.localeCompare(post1.category));
+    posts.list.sort((post1, post2) => post1.top? 1 : post2.top? -1 : 0);
     for (post of posts.list) {
         post.id = id++;
 
