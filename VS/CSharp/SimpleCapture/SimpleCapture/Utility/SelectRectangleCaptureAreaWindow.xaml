@@ -1,0 +1,21 @@
+﻿<Window x:Class="SimpleCapture.Utility.SelectRectangleCaptureAreaWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SimpleCapture.Utility"
+        mc:Ignorable="d"
+        Title="SelectRectangleCaptureAreaWindow" AllowsTransparency="True" Opacity="0.3" Background="White" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True" WindowState="Maximized" WindowStyle="None" Closed="Window_Closed">
+    <Grid>
+        <Canvas x:Name="canvas" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" Background="Transparent">
+            <Canvas.ToolTip>
+                <ToolTip>
+                    <StackPanel>
+                        <TextBlock FontWeight="Bold">Make Capture Area</TextBlock>
+                        <TextBlock>Click and Drag-and-Drop, or Press 'ESC' to exit.</TextBlock>
+                    </StackPanel>
+                </ToolTip>
+            </Canvas.ToolTip>
+        </Canvas>
+    </Grid>
+</Window>
