@@ -1,9 +1,9 @@
 const posts = {
     "list": [
-        { "filename": "posts/1809/1.html", "category": "Tip", "title": "VS Code" },
-        { "filename": "posts/1904/1904191501.html", "category": "Tip", "title": "Linux" },
-        { "filename": "posts/1904/1904191725.html", "category": "Tip", "title": "Docker" },
-        { "filename": "posts/1905/1905101417.html", "category": "Tip", "title": "vi" },
+        { "filename": "posts/tip/vs_code.html", "category": "Tip", "title": "VS Code" },
+        { "filename": "posts/tip/linux.html", "category": "Tip", "title": "Linux" },
+        { "filename": "posts/tip/docker.html", "category": "Tip", "title": "Docker" },
+        { "filename": "posts/tip/vi.html", "category": "Tip", "title": "vi" },
         
         { "filename": "posts/1809/2.html", "category": "Programming/Java/Basic", "title": "시작하기" },
         { "filename": "posts/1809/8.html", "category": "Programming/Java/Basic", "title": "객체지향" },
@@ -120,8 +120,10 @@ const posts = {
         { "filename": "posts/1904/1904252136.html", "category": "Programming/Python/Document", "title": "Data Types" },
         
 
-        { "filename": "posts/1904/1904271734.html", "category": "DB", "title": "Concepts" },
-        { "filename": "posts/1905/1905131839.html", "category": "DB", "title": "PostgreSQL to SQLite3" },
+        { "filename": "posts/db/concept.html", "category": "DB", "title": "기본 개념" },
+        { "filename": "posts/db/psql_tutorial.html", "category": "DB", "title": "PostgreSQL 시작하기" },
+        { "filename": "posts/db/psql_sql.html", "category": "DB", "title": "PostgreSQL SQL 언어" },
+        { "filename": "posts/db/psql_to_sqlite.html", "category": "DB", "title": "PostgreSQL → SQLite3 마이그레이션" },
     ],
     "tree": {},
     "contents": [],

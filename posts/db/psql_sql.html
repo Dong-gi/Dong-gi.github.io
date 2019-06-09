@@ -1,0 +1,626 @@
+<hr>
+
+<details>
+    <summary>SQL Syntax</summary>
+    <details>
+        <summary>Lexical Structure</summary>
+        <ol>
+            <li>식별자와 키워드</li>
+            select라는 이름의 컬럼을 가져오려면 select "select" from table_name;처럼 이용한다.
+            <ul>
+                <li>select, from : 키워드</li>
+                <li>"select" : ""로 감싼 식별자. U&"d\0061t\+000061"처럼 유니코드 코드 포인트를 이용할 수 있다.</li>
+                <li>table_name : Unquoted 식별자. 대소문자를 구별하지 않는다.</li>
+            </ul>
+
+            <li>상수</li>
+            문자열 상수 : '[문자열]'<br>
+            달러 인용 문자열 상수 : 달러 인용 문자열은 이스케이프되지 않는다.<br>
+            예. $$Dianne's horse$$, $SomeTag$Dianne's horse$SomeTag$<br>
+            <br>
+            함수 바디를 감싸는 예.<br>
+            CREATE OR REPLACE FUNCTION change_inaba_name() RETURNS TRIGGER AS $$<br>
+            BEGIN<br>
+            　　NEW.status_text = REPLACE(NEW.status_text, 'イナバ', '이나바');<br>
+            　　RETURN NEW;<br>
+            END;<br>
+            $$ LANGUAGE plpgsql;
+        </ol>
+    </details>
+
+    <details>
+        <summary>Value Expressions</summary>
+        <ol>
+            <li>열 참조</li>
+            correlation.columnname // correlation은 테이블 이름이나 alias
+
+            <li>위치 매개변수</li>
+            함수 정의의 매개변수 위치를 이용해 변수 참조<br>
+            예. 문자열을 2번 반복해서 반환하는 함수<br>
+            CREATE OR REPLACE FUNCTION test(text) RETURNS text AS $body$ SELECT $1 || $1 $body$ LANGUAGE sql;<br>
+            <br>
+            dgkim=# select test('hello ');<br>
+             test    <br>
+            ------------<br>
+             hello hello <br>
+            (1 row)
+        
+            <li>배열 요소 참조</li>
+            expression[subscript] // subscript는 integer 값을 내는 표현식
+            expression[lower_subscript:upper_subscript]
+
+            <li>필드 선택</li>
+            expression.fieldname : 특정 행의 열 참조 // expression은 row type 또는 열집합<br>
+            일반적으로 expression은 괄호로 감싸져야 하지만, 테이블이나 위치 매개변수의 경우 생략할 수 있다.<br>
+            .*로 모든 필드를 얻을 수 있다.
+
+            <li>집계 함수 호출</li>
+            <ul>
+                <li>집계 함수(aggregate function)란 여러 입력 행들을 하나의 결과행으로 줄이는 함수.</li>
+                <li>집계 함수의 형태</li>
+                <ul>
+                    <li>aggregate_name (expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ] -- default로 ALL이므로 2번째와 동일</li>
+                    <li>aggregate_name (ALL expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]</li>
+                    <li>aggregate_name (DISTINCT expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]</li>
+                    <li>aggregate_name ( * ) [ FILTER ( WHERE filter_clause ) ] -- 보통 count에서만 사용되는 형태</li>
+                    <li>aggregate_name ( [ expression [ , ... ] ] ) WITHIN GROUP ( order_by_clause ) [ FILTER ( WHERE filter_clause ) ]</li>
+                    <li>위의 expression은 집계 함수나 윈도우 함수 호출을 포함하지 않아야 한다.</li>
+                    <li>복수의 인자를 받는 집계 함수에서는 ORDER BY 절이 전체 인자가 끝나고 등장해야 한다.</li>
+                    SELECT string_agg(str, ',' ORDER BY str) FROM table;
+                </ul>
+                <li>SELECT count(*) AS unfiltered, count(*) FILTER (WHERE num < 5) AS filtered FROM generate_series(1,10) AS num;</li>
+                <li>내장 집계 함수 : <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/9.6/functions-aggregate.html">http://postgresql.kr/docs/9.6/functions-aggregate.html</a></li>
+            </ul>
+            
+            <li>윈도우 함수 호출</li>
+            <ul>
+                <li>윈도우 함수는 집계 함수와 비슷하지만, 입력 행들이 결과에 그대로 나타난다.</li>
+                <li>윈도우 함수의 형태</li>
+                <ul>
+                    <li>function_name ([expression [, expression ... ]]) [ FILTER ( WHERE filter_clause ) ] OVER window_name</li>
+                    <li>function_name ([expression [, expression ... ]]) [ FILTER ( WHERE filter_clause ) ] OVER ( window_definition )</li>
+                    <li>function_name ( * ) [ FILTER ( WHERE filter_clause ) ] OVER window_name</li>
+                    <li>function_name ( * ) [ FILTER ( WHERE filter_clause ) ] OVER ( window_definition )</li>
+              
+                    <li>window_name은 WINDOW 절로 정의된 윈도우 이름.</li>
+                    OVER window_name과 OVER (window_name)은 다르다. 후자의 경우 윈도우 정의를 복사하여 적용하며, frame 절을 포함하는 경우 수행되지 않는다.
+
+                    <li>window_definition</li>
+                    [ existing_window_name ]<br>
+                    [ PARTITION BY expression [, ...] ]<br>
+                    [ ORDER BY expression [ ASC | DESC | USING operator ] [ NULLS { FIRST | LAST } ] [, ...] ]<br>
+                    [ frame_clause ]<br>
+                    <br>
+                    PARTITION BY 옵션은 행 그룹을 만든다. GROUP BY와 달리 출력-열이나 숫자를 지정할 수 없다.<br>
+                    ORDER BY 절도 마찬가지로 출력-열이나 숫자를 지정할 수 없다.
+    
+                    <li>frame_clause</li>
+                    <ol>
+                        <li>{ RANGE | ROWS } frame_start -- default로 frame_end는 CURRENT ROW</li>
+                        <li>{ RANGE | ROWS } BETWEEN frame_start AND frame_end</li>
+                    </ol>
+                    frame_clause는 윈도우 함수가 전체 파티션이 아닌, 현재까지의 파티션을 대상으로 계산을 수행하게 한다.<br>
+                    UNBOUNDED PRECEDING으로 지정된 frame_start는 파티션의 첫 행, UNBOUNDED FOLLOWING으로 지정된 frame_end는 파티션 마지막 행을 의미한다.
+    
+                    <li>frame_start, frame_end</li>
+                    <ol>
+                        <li>UNBOUNDED PRECEDING</li>
+                        <li>value PRECEDING</li>
+                        <li>CURRENT ROW</li>
+                        <li>value FOLLOWING</li>
+                        <li>UNBOUNDED FOLLOWING</li>
+                    </ol>
+                    value PRECEDING, FOLLOWING은 ROWS 모드에서만 사용 가능하고, 현재 행을 전후로 하여 프레임 크기를 설정한다.
+
+                    <li>frame_exclusion</li>
+                    <ol>
+                        <li>EXCLUDE CURRENT ROW</li>
+                        <li>EXCLUDE GROUP</li>
+                        <li>EXCLUDE TIES</li>
+                        <li>EXCLUDE NO OTHERS</li>
+                    </ol>
+
+                    <li>expression은 윈도우 함수 호출을 포함하지 않아야 한다.</li>
+                </ul>
+
+                <li>내장 윈도우 함수 : <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/9.6/functions-window.html#FUNCTIONS-WINDOW-TABLE">http://postgresql.kr/docs/9.6/functions-window.html#FUNCTIONS-WINDOW-TABLE</a></li>
+            </ul>
+            
+            <li>Collation Expressions</li>
+            예. 로캐일에 따른 정렬
+            <ul>
+                <li>SELECT * FROM tbl WHERE ... ORDER BY a COLLATE "C"; // 결과 정렬</li>
+                <li>SELECT * FROM tbl WHERE a &gt; 'foo' COLLATE "C"; // 입력 정렬</li>
+                <li>SELECT * FROM tbl WHERE a COLLATE "C" &gt; 'foo'; // 입력 정렬</li>
+                <li>SELECT * FROM tbl WHERE (a &gt; 'foo') COLLATE "C"; // 에러. 연산 결과인 boolean은 non-collatable</li>
+            </ul>
+            
+            LC_COLLATE를 설정하여 기본적으로 로캐일에 따른 정렬을 수행
+            <ol>
+                <li>데이터베이스 최초 생성 시 LC_COLLATE 변수 값을 'C'로 설정</li>
+                <li>기존 데이터베이스를 dump하고, LC_COLLATE를 'C'로 설정한 데이터베이스를 만들어 복구</li>
+                db_name=# DROP DATABASE [db_name];<br>
+                db_name=# CREATE DATABASE [db_name] LC_COLLATE 'C';<br>
+                -- 데이터베이스는 생성될 때 기본적으로 template1 데이터베이스를 복제하여 생성된다. 하지만 이는 로캐일이 이미 설정되어 충돌하여 에러가 발생할 수 있다.<br>
+                db_name=# CREATE DATABASE [db_name] TEMPLATE template0 LC_COLLATE 'C';
+            </ol>
+
+            <li>Scalar Subqueries</li>
+            한 행, 한 컬럼을 반환하는 괄호에 감싸인 SELECT 쿼리<br>
+            SELECT name, (SELECT max(pop) FROM cities WHERE cities.state = states.name) FROM states;
+            
+            <li>배열 생성자</li>
+            SELECT ARRAY[1,2,3+4];<br>
+            SELECT ARRAY[1,2,22.7]::integer[];<br>
+            SELECT ARRAY[]::integer[]; // 빈 배열도 형식은 필요<br>
+            SELECT ARRAY[ARRAY[1,2], ARRAY[3,4]];<br>
+            SELECT ARRAY(SELECT oid FROM pg_proc WHERE proname LIKE 'bytea%');<br>
+            <br>
+            CREATE TABLE arr(f1 int[], f2 int[]);<br>
+            INSERT INTO arr VALUES (ARRAY[[1,2],[3,4]], ARRAY[[5,6],[7,8]]);
+
+            <li>행 생성자</li>
+            SELECT ROW(1,2.5,'this is a test');<br>
+            SELECT ROW(t.*, 42) FROM t; // t는 행 값<br>
+            예. SELECT ROW(t.*, 42) FROM (SELECT ROW(1,2.5,'this is a test')) as t;<br>
+            <br>
+            CREATE TABLE mytable(f1 int, f2 float, f3 text);<br>
+            CREATE OR REPLACE FUNCTION getf1(mytable) RETURNS int AS 'SELECT $1.f1' LANGUAGE SQL;<br>
+            -- No cast needed since only one getf1() exists<br>
+            SELECT getf1(ROW(1,2.5,'this is a test'));<br>
+            CREATE TYPE myrowtype AS (f1 int, f2 text, f3 numeric);<br>
+            CREATE OR REPLACE FUNCTION getf1(myrowtype) RETURNS int AS 'SELECT $1.f1' LANGUAGE SQL;<br>
+            -- Now we need a cast to indicate which function to call:<br>
+            SELECT getf1(ROW(1,2.5,'this is a test')::mytable);<br>
+            SELECT getf1(CAST(ROW(11,'this is a test',2.5) AS myrowtype));
+
+            <li>Expression Evaluation Rules</li>
+            <ul>
+                <li>SELECT true OR somefunc();와 SELECT somefunc() OR ture; 모두 somefunc()가 호출되지 않는다. short-circuit 연산과 다르다.</li>
+                <li>SELECT ... WHERE CASE WHEN x &gr; 0 THEN y/x &gt; 1.5 ELSE false END;</li>
+                <li>SELECT CASE WHEN x &gt; 0 THEN x ELSE 1/0 END FROM tab;</li>
+                주의. IMMUTABLE 함수는 값이 먼저 평가되기 때문에, 실제로 x가 항상 0보다 크더라도 1/0이 미리 평가되어 에러가 발생한다.
+                <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/xfunc-volatility.html">http://postgresql.kr/docs/current/xfunc-volatility.html</a>
+            </ul>
+        </ol>
+    </details>
+            
+    <details>
+        <summary>함수 호출</summary>
+        PostgreSQL의 함수의 인자는 이름과 위치 둘 다로 참조할 수 있다.<br>
+        CREATE FUNCTION concat_lower_or_upper(a text, b text, uppercase boolean DEFAULT false) RETURNS text AS $$<br>
+        　　SELECT CASE<br>
+        　　　　WHEN $3 THEN UPPER($1 || ' ' || $2)<br>
+        　　　　ELSE LOWER($1 || ' ' || $2)<br>
+        　　END;<br>
+        $$ LANGUAGE SQL IMMUTABLE STRICT;
+        
+        <ul>
+            <li>Using Positional Notation</li>
+            SELECT concat_lower_or_upper('Hello', 'World');
+            
+            <li>Using Named Notation</li>
+            SELECT concat_lower_or_upper(a =&gt; 'Hello', b =&gt; 'World');
+            
+            <il>Using Mixed Notation</il>
+            키워드 인자는 나머지보다 뒤에 위치해야 한다.<br>
+            SELECT concat_lower_or_upper('Hello', 'World', uppercase =&gt; true);
+        </ul>
+    </details>
+</details>
+
+<hr>
+
+<details>
+    <summary>Data Definition</summary>
+    <details>
+        <summary>Default Values</summary>
+        기본값으로 표현식을 사용할 수 있다. 가장 흔히 쓰이는 것은 timestamp 열이 CURRENT_TIMESTAMP 값을 갖게 하는 것.<br>
+        CREATE TABLE products (<br>
+        　　product_no integer DEFAULT nextval('products_product_no_seq'),<br>
+        　　...<br>
+        );<br>
+    </details>
+
+    <details>
+        <summary>Constraints</summary>
+        <ol>
+            <li>Check Constraints</li>
+            CREATE TABLE products ( product_no integer, price numeric CHECK (price &gt; 0) );<br>
+            <br>
+            식별자를 줄 수 있다.<br>
+            CREATE TABLE products ( product_no integer, price numeric CONSTRAINT positive_price CHECK (price &gt; 0) );<br>
+            <br>
+            여러 열을 체크할 수 있다.<br>
+            CREATE TABLE products (<br>
+            　　product_no integer,<br>
+            　　name text,<br>
+            　　price numeric CHECK (price &gt; 0),<br>
+            　　discounted_price numeric CHECK (discounted_price &gt; 0), CHECK (price &gt; discounted_price)<br>
+            );<br>
+            <br>
+            열 삽입 제약 조건을 테이블 제약 조건으로 사용할 수 있다.<br>
+            CREATE TABLE products (<br>
+            　　product_no integer,<br>
+            　　name text,<br>
+            　　price numeric CHECK (price &gt; 0),<br>
+            　　discounted_price numeric,<br>
+            　　CHECK (discounted_price &gt; 0 AND price &gt; discounted_price)<br>
+            );
+
+            <li>Not-Null Constraints</li>
+            CREATE TABLE products ( product_no integer NOT NULL, price numeric );
+
+            <li>Unique Constraints</li>
+            CREATE TABLE products ( product_no integer UNIQUE, price numeric );<br>
+            CREATE TABLE products ( product_no integer, price numeric, UNIQUE (product_no) );<br>
+            CREATE TABLE example ( a integer, b integer, c integer, UNIQUE (a, c) );<br>
+            <br>
+            식별자를 부여할 수 있다.<br>
+            CREATE TABLE products ( product_no integer CONSTRAINT must_be_different UNIQUE, price numeric );
+
+            <li>Primary Keys</li>
+            CREATE TABLE example ( a integer, b integer, c integer, PRIMARY KEY (a, c) );
+
+            <li>Foreign Keys</li>
+            CREATE TABLE orders (<br>
+            　　order_id integer PRIMARY KEY,<br>
+            　　product_no integer REFERENCES products (product_no),<br>
+            　　quantity integer<br>
+            );<br>
+            <br>
+            CREATE TABLE t1 (<br>
+            　　a integer PRIMARY KEY,<br>
+            　　b integer,<br>
+            　　c integer,<br>
+            　　FOREIGN KEY (b, c) REFERENCES other_table (c1, c2)<br>
+            );<br>
+            <br>
+            외래키와 기본키 혼용<br>
+            CREATE TABLE order_items (<br>
+            　　product_no integer REFERENCES products,<br>
+            　　order_id integer REFERENCES orders,<br>
+            　　quantity integer,<br>
+            　　PRIMARY KEY (product_no, order_id)<br>
+            );
+
+            <li>무결성 제약 : ON DELETE, ON UPDATE에 사용</li>
+            CREATE TABLE order_items (<br>
+            　　product_no integer REFERENCES products ON DELETE RESTRICT, -- 참조하는 행이 삭제되지 않음.<br>
+            　　order_id integer REFERENCES orders ON DELETE CASCADE, -- 참조하는 행이 삭제되면 같이 삭제됨.<br>
+            　　quantity integer,<br>
+            　　PRIMARY KEY (product_no, order_id)<br>
+            );
+        </ol>
+    </details>
+    
+    <details>
+        <summary>System Columns</summary>
+        oid : object_id. 테이블을 WITH OIDS로 생성하거나, default with oids이 설정된 경우 생성되는 열. 타입 이름도 oid.<br>
+        <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/9.6/ddl-system-columns.html">http://postgresql.kr/docs/9.6/ddl-system-columns.html</a>
+    </details>
+    
+    <details>
+        <summary>Modifying Tables</summary>
+        <ol>
+            <li>Adding a Column</li>
+            ALTER TABLE products ADD COLUMN description text;<br>
+            ALTER TABLE products ADD COLUMN description text CHECK (description != '');
+
+            <li>Removing a Column</li>
+            ALTER TABLE products DROP COLUMN description;<br>
+            <br>
+            외래키로 참조중인 경우, 제약을 명시해줘야 반영된다.<br>
+            ALTER TABLE products DROP COLUMN description CASCADE;
+
+            <li>Adding a Constraint</li>
+            ALTER TABLE products ADD CHECK (name != '');<br>
+            ALTER TABLE products ADD CONSTRAINT some_name UNIQUE (product_no);<br>
+            ALTER TABLE products ADD FOREIGN KEY (product_group_id) REFERENCES product_groups;<br>
+            ALTER TABLE products ALTER COLUMN product_no SET NOT NULL;
+
+            <li>Removing a Constraint</li>
+            ALTER TABLE products DROP CONSTRAINT some_name;<br>
+            ALTER TABLE products ALTER COLUMN product_no DROP NOT NULL;
+
+            <li>Changing a Column's Default Valu</li>
+            ALTER TABLE products ALTER COLUMN price SET DEFAULT 7.77;<br>
+            ALTER TABLE products ALTER COLUMN price DROP DEFAULT;
+
+            <li>Changing a Column's Data Type</li>
+            ALTER TABLE products ALTER COLUMN price TYPE numeric(10,2);<br>
+            기존 값이 새로운 타입으로 암묵적으로 변환된다면 위의 것으로 충분. 복잡한 변환을 명시하려면 USING 절을 추가 사용.
+
+            <li>Renaming a Column</li>
+            ALTER TABLE products RENAME COLUMN product_no TO product_number;
+
+            <li>Renaming a Table</li>
+            ALTER TABLE products RENAME TO items;
+        </ol>
+    </details>
+    
+    <details>
+        <summary>Privileges</summary>
+        권한 : SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER, CREATE, CONNECT, TEMPORARY, EXECUTE, USAGE &lt;&lt; ALL<br>
+        GRANT UPDATE ON table_name TO username;<br>
+        REVOKE ALL ON table_name FROM username;
+    </details>
+    
+    <details>
+        <summary>Row Security Policies</summary>
+        예. 관리자 그룹에 속한 사용자가, 자신과 관련한 행만 접근<br>
+        CREATE TABLE accounts (manager text, company text, contact_email text);<br>
+        ALTER TABLE accounts ENABLE ROW LEVEL SECURITY;<br>
+        CREATE POLICY account_managers ON accounts TO managers USING (manager = current_user);<br>
+        <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/ddl-rowsecurity.html">http://postgresql.kr/docs/current/ddl-rowsecurity.html</a>
+    </details>
+    
+    <details>
+        <summary>Schemas</summary>
+        CREATE SCHEMA myschema; -- Schema의 테이블은 schema.table 또는 database.schema.table로 접근<br>
+        CREATE TABLE myschema.mytable ( ... );<br>
+        <br>    
+        DROP SCHEMA myschema;<br>
+        DROP SCHEMA myschema CASCADE; -- 포함된 내용도 삭제<br>
+        <br>
+        모든 새 데이터베이스는 public이라는 스키마를 갖고 있다. 따라서 아래 두 문장은 서로 같다.<br>
+        CREATE TABLE products ( ... );<br>
+        CREATE TABLE public.products ( ... );
+    </details>
+
+    <details>
+        <summary>Table Partitioning</summary>
+        <ol>
+            <li>개요</li>
+            Table partitioning : 논리적으로 하나인 거대한 테이블을 물리적으로 여러 개로 쪼개 저장하는 것.<br>
+            Range partitioning : 중복되지 않는 열 집합의 구간들로 분할<br>
+            List partitioning : 명시적인 키값 리스트로 분할<br>
+            Hash partitioning : 모듈로 n 공간에서 키값의 나머지가 같은 것들로 분할
+
+            <li>파티셔닝</li>
+            CHECK, NOT NULL 제약 조건은 파티션 테이블에 상속된다. NO INHERIT 마킹된 CHECK 제약조건은 제외.<br>
+            <br>
+            예. 
+        </ol>
+    </details>
+</details>
+
+<hr>
+
+<details>
+    <summary>Data Manipulation</summary>
+    <ol>
+        <li>Inserting Data</li>
+        DB - PostgreSQL 시작하기 - SQL 언어 - 테이블에 자료 입력하기 참고
+            
+        <li>Updating Data</li>
+        UPDATE products SET price = 10 WHERE price = 5;<br>
+        UPDATE products SET price = price * 1.10;<br>
+        UPDATE mytable SET a = 5, b = 3, c = 1 WHERE a &gt; 0;
+            
+        <li>Deleting Data</li>
+        DELETE FROM products WHERE price = 10;<br>
+        DELETE FROM products;
+            
+        <li>Returning Data From Modified Rows</li>
+        CREATE TABLE users (firstname text, lastname text, id serial primary key);<br>
+        INSERT INTO users (firstname, lastname) VALUES ('Joe', 'Cool') RETURNING id;<br>
+        <br>
+        UPDATE products SET price = price * 1.10 WHERE price <= 99.99 RETURNING name, price AS new_price;<br>
+        <br>
+        DELETE FROM products WHERE obsoletion_date = 'today' RETURNING *;
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Queries</summary>
+    <ol>
+        <li>WHERE 절</li>
+        SELECT ... FROM fdt WHERE c1 IN (1, 2, 3)<br>
+        SELECT ... FROM fdt WHERE c1 IN (SELECT c3 FROM t2 WHERE c2 = fdt.c1 + 10)<br>
+        SELECT ... FROM fdt WHERE EXISTS (SELECT c1 FROM t2 WHERE c2 &gt; fdt.c1)
+            
+        <li>GROUPING SETS, CUBE, ROLLUP</li>
+        SELECT brand, size, sum(sales) FROM items_sold GROUP BY GROUPING SETS ((brand), (size), ());
+             brand | size | sum
+            -------+------+-----
+             Foo   |      |  30
+             Bar   |      |  20
+                   | L    |  15
+                   | M    |  35
+                   |      |  50
+            (5 rows)
+            
+            CUBE ( a, b, c ) -- is equivalent to // power set
+            GROUPING SETS (
+                ( a, b, c ),
+                ( a, b    ),
+                ( a,    c ),
+                ( a       ),
+                (    b, c ),
+                (    b    ),
+                (       c ),
+                (         )
+            )
+            
+            ROLLUP ( a, (b, c), d ) -- is equivalent to
+            GROUPING SETS (
+                ( a, b, c, d ),
+                ( a, b, c    ),
+                ( a          ),
+                (            )
+            )
+            
+            8.3 Combining Queries
+            query1 UNION [ALL] query2
+            query1 INTERSECT [ALL] query2
+            query1 EXCEPT [ALL] query2
+            
+            
+            8.4 LIMIT and OFFSET
+            SELECT select_list
+                FROM table_expression
+                [ ORDER BY ... ]
+                [ LIMIT { number | ALL } ] [ OFFSET number ]
+            
+            8.5 VALUES Lists
+            - 실제 디스크 상에 테이블을 만들지 않으면서 상수 테이블을 만드는 방법.
+            VALUES ( expression [, ...] ) [, ...]
+            - 문법적으로 "SELECT select_list FROM table_expression"과 동일하게 취급된다.
+            
+            => SELECT * FROM (VALUES (1, 'one'), (2, 'two'), (3, 'three')) AS t (num,letter);
+             num | letter
+            -----+--------
+               1 | one
+               2 | two
+               3 | three
+            (3 rows)
+            
+            8.6 WITH Queries
+            8.6.1 SELECT in WITH
+            - 여러 개의 SELECT 서브 쿼리를 날리는 대신 WITH을 이용하여 분리할 수 있다.
+            WITH regional_sales AS (
+                    SELECT region, SUM(amount) AS total_sales
+                    FROM orders
+                    GROUP BY region
+                 ), top_regions AS (
+                    SELECT region
+                    FROM regional_sales
+                    WHERE total_sales > (SELECT SUM(total_sales)/10 FROM regional_sales)
+                 )
+            SELECT region,
+                   product,
+                   SUM(quantity) AS product_units,
+                   SUM(amount) AS product_sales
+            FROM orders
+            WHERE region IN (SELECT region FROM top_regions)
+            GROUP BY region, product;
+            
+            - RECURSIVE를 이용하여 iteration 연산이 가능하다. 아래는 1~100의 합계.
+            WITH RECURSIVE t(n) AS (
+                    VALUES (1)
+                UNION ALL
+                    SELECT n+1 FROM t WHERE n < 100
+            )
+            SELECT sum(n) FROM t;
+            
+                - RECURSIVE 연산은 아래의 순으로 이루어진다.
+                1. non-recursive 부분을 계산한다. UNION을 위해 (not UNION ALL) 중복되는 행을 제거한다. 남은 행들을 결과에 포함시키고, 임시 작업 테이블로 설정한다.
+                2. 작업 테이블이 빌 때까지 아래를 반복한다.
+                    1. recursive 부분을 계산하고, 작업 테이블 내용을 덮어쓴다. UNION을 위해 (not UNION ALL) 중복된 행(이전 결과와도 비교)들을 제거한다. 남은 행들을 결과에 포함시키고, 임시 중간 테이블로 설정한다.
+                    2. 작업 테이블의 내용을 중간 테이블 내용으로 대체한다. 중간 테이블은 비운다.
+            
+                - 계산 순서
+            time    working_table   t(n)
+            init                    1
+            1       2               1, 2
+            2       3               1, 2, 3
+            ...
+            99      100             1, 2, 3, ..., 100
+            100     empty           1, 2, 3, ..., 100
+            end
+            
+                - RECURSIVE 연산은 계층 구조나 트리 형태의 데이터에 유용하다.
+            WITH RECURSIVE included_parts(sub_part, part, quantity) AS (
+                SELECT sub_part, part, quantity FROM parts WHERE part = 'our_product'
+              UNION ALL
+                SELECT p.sub_part, p.part, p.quantity
+                FROM included_parts pr, parts p
+                WHERE p.part = pr.sub_part
+              )
+            SELECT sub_part, SUM(quantity) as total_quantity
+            FROM included_parts
+            GROUP BY sub_part
+            
+            8.6.2 Data-Modifying Statements in WITH
+            - INSERT, UPDATE, DELETE를 WITH과 함께 사용할 수 있다.
+            WITH moved_rows AS (
+                DELETE FROM products
+                WHERE
+                    "date" >= '2010-10-01' AND
+                    "date" < '2010-11-01'
+                RETURNING *
+            )
+            INSERT INTO products_log
+            SELECT * FROM moved_rows;
+            
+            
+            
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Data Types</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Functions and Operations</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Type Conversion</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Indexes</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Full Text Search</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>동시성 제어</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Performance Tips</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>병렬 쿼리</summary>
+    <ol>
+
+    </ol>
+</details>
+
+<hr>

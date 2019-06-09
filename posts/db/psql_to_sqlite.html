@@ -10,8 +10,7 @@ PostgreSQL 덤프로부터 SQLite3으로 마이그레이션하는 과정 정리
         <li>timestamp\(0\) with time zone → timestamp with time zone</li>
         <li>DEFAULT '(\w)*'::text → DEFAULT '$1'</li>
     </ul>
-
-    sql파일 로드 : .read dump.sql
+    * sqlite에서 sql파일 로드 : .read dump.sql
 
     <li>PostgreSQL 데이터 덤프</li>
     <ol>
@@ -37,16 +36,3 @@ PostgreSQL 덤프로부터 SQLite3으로 마이그레이션하는 과정 정리
         .quit
     </ul>
 </ol>
-
-
-<!--
-* master.sql로부터 db 생성, 덤프 임포트
-
-변경 대상 : ([a-z]+)_master.sql
-
-변경문 :
-create database yume_1_33_$1;
-grant all privileges on database yume_1_33_$1 to dgkim;
-\\c yume_1_33_$1
-\\i $1_master.sql\n
--->
