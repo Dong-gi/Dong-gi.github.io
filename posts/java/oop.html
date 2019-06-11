@@ -137,3 +137,48 @@
 </details>
 
 <hr>
+
+<details>
+    <summary>예외</summary>
+    <ul>
+        <li>Throwable &laquo; Exception(Checked Exception) &laquo; RuntimeException(Unchecked Exception)</li>
+        <li>Error : 프로그램 내부에서 해결할 수 없어 종료됨.</li>
+        <li>Unchecked Exception은 따로 처리하지 않아도 프로그램이 계속 실행된다.</li>
+        <li>Chained Exceptions : 하나의 예외로 인해 다른 예외들이 발생할 수 있다. JDK 1.4부터 근원적인 예외를 알아올 수 있는 방법이 추가되었다.</li>
+        <ol>
+            <li>Throwable(Throwable causeExc), Throwable(String msg, Throwable causeExc) : 보다 근본적인 원인을 인자로 하여 새로운 예외 생성</li>
+            <li>Throwable initCause(Throwable causeExc) : 예외의 근원을 설정하며, 생성자를 통해 호출되거나 이미 호출된 경우 다시 호출 불가</li>
+            <li>Throwable getCause() : 현재 예외의 근원을 얻는다. 없으면 null</li>
+        </ol>
+        <li>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/ExceptionExample.java" lan="java">예시 코드 »</button>
+        </li>
+        <li>부모보다 많은 종류의 예외를 공표할 수 없다.</li>
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>옵션 타입</summary>
+    Optional&lt;T&gt; : T 타입의 존재 여부를 포함하는 T타입 컨테이너
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/OptionalExample.java" lan="java">예시 코드 »</button>
+</details>
+
+<hr>
+
+<details>
+    <summary>제네릭</summary>
+    <ul>
+        <li>여러 타입을 기본 요소로 할 수 있는 범용 클래스/인터페이스 작성을 위한 문법.</li>
+        <li>A가 B의 서브타입일 때, A[]는 B[]의 서브타입이지만, G&lt;A&gt;는 G&lt;B&gt;의 서브타입이 아니다.</li>
+        Erasure : 컴파일 시 제네릭 타입을 모두 지우고 바운드 타입으로(명시되지 않았다면 Object) 변경한다. javap를 통해 이를 확인할 수 있다.<br>
+        자식 메서드의 Erasure가 부모와 다를 때 부모 메서드는 bridge 메서드가 되어 자식의 Erasure를 이용하는 메서드를 호출한다. 이 과정에서 리턴 타입만 다른 메서드들이 생성될 수 있지만, 바이트 코드 단계기 때문에 에러가 발생되지 않고 잘 처리된다.
+        <li>메서드에서는 와일드카드 '?'를 이용하여 제네릭 타입을 매개변수로 받을 수 있다.</li>
+        <li>제네릭을 통한 객체 생성 불가. 제네릭을 static 요소에서 이용하는 데 제한.</li>
+        <li><button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/Generic.java" lan="java">예시 : 제네릭 타입의 선언, 제네릭 리스트 일부 구현, 바운드된 타입 매개변수 선언 »</button></li>
+        <li><button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/Generic2.java" lan="java">예시 : 비제네릭 클래스의 제네릭 생성자 선언, 비제네릭 클래스 - 제네릭 클래스 상속 »</button></li>
+    </ul>
+</details>
+
+<hr>

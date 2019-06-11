@@ -1,0 +1,21 @@
+<ol>
+    <li>C 네이티브 코드를 이용할 클래스 컴파일 : javac Test.java → Test.class 생성</li>
+    <li>C에서 이용할 헤더 파일 생성 : javah -jni Test → Test.h 생성</li>
+    <li>VS에서 JDK path 추가 : 속성 - 포함 디렉터리 - "$(JAVA_HOME)\include", "$(JAVA_HOME)\include\win32 추가</li>
+    <li>VS에서 dll 빌드 : 속성 - 구성(출력) 형식 - 동적 라이브러리(.dll) 설정</li>
+    <li>빌드한 dll을 이클립스 프로젝트 폴더 안으로 이동. x86 JRE/JDK를 이용하여 실행</li>
+    Window - Preference - Installed JREs에 x86 있는지 확인.<br>
+    Run - Run Configurations...- x86 JRE로 설정
+    
+    <li>References</li>
+    <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://goo.gl/WqxXTE">https://goo.gl/WqxXTE</a>
+    <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://goo.gl/QJDpRv">https://goo.gl/QJDpRv</a>
+    <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://goo.gl/rrMwdr">https://goo.gl/rrMwdr</a>
+    <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://goo.gl/5R2UMC">https://goo.gl/5R2UMC</a>
+
+    <li>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/jni/Test.java" lan="java">Java 예시 코드 »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/jni/test.c" lan="c">C 예시 코드 »</button>
+        <a class="btn btn-secondary" target="_blank" href="https://github.com/Dong-gi/Dong-gi.github.io/releases/download/1/test.dll" role="button">test.dll &raquo;</a>
+    </li>
+</ol>

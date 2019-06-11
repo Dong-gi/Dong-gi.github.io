@@ -44,8 +44,8 @@ class MyList<E> {
 
     // private static E e; // error
     // public static E firstElement(MyList<?> list) {} // error
-    public static <E> E firstElement(MyList<E> list) { // It's OK
-        return (E) list.elements[0];
+    public static <T> T firstElement(MyList<T> list) { // It's OK
+        return (T) list.elements[0];
     }
 }
 
