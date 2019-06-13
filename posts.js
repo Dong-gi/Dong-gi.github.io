@@ -8,7 +8,7 @@ const posts = {
         { "filename": "posts/java/basic.html", "category": "Programming/Java/Tutorial", "title": "Java 시작하기" },
         { "filename": "posts/java/oop.html", "category": "Programming/Java/Tutorial", "title": "Java 객체지향" },
         { "filename": "posts/java/version.html", "category": "Programming/Java/Tutorial", "title": "Java 버전별 추가사항", "top": true },
-        { "filename": "posts/java/jni.html", "category": "Programming/Java/Tutorial", "title": "Java Native Interface", "top": true },
+        { "filename": "posts/java/jni.html", "category": "Programming/Java/Tutorial", "title": "Java Native Interface" },
         
         { "filename": "posts/1809/28.html", "category": "Programming/Java/java.base", "title": "java.io interface" },
         { "filename": "posts/1809/37.html", "category": "Programming/Java/java.base", "title": "java.io class" },
