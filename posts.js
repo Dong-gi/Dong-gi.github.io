@@ -4,6 +4,7 @@ const posts = {
         { "filename": "posts/tip/linux.html", "category": "Tip", "title": "Linux" },
         { "filename": "posts/tip/docker.html", "category": "Tip", "title": "Docker" },
         { "filename": "posts/tip/vi.html", "category": "Tip", "title": "vi" },
+        { "filename": "posts/tip/hangul.html", "category": "Tip", "title": "한글 유니코드" },
         
         { "filename": "posts/java/basic.html", "category": "Programming/Java/Tutorial", "title": "Java 시작하기" },
         { "filename": "posts/java/oop.html", "category": "Programming/Java/Tutorial", "title": "Java 객체지향" },

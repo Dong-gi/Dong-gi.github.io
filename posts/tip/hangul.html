@@ -1,0 +1,13 @@
+<ol>
+    <li>한글은 0xAC00('가')부터 0xD7A3('힣')까지 총 11,172자가 정의</li>
+    
+    <li>11,172 = 초성 19 * 중성 21 * 종성 28(종성 없는 경우 포함)</li>
+    <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://www.unicode.org/Public/UNIDATA/EastAsianWidth.txt">http://www.unicode.org/Public/UNIDATA/EastAsianWidth.txt</a>
+    
+    <li>코드 포인트 = (초성 인덱스 * 21 + 중성 인덱스) * 28 + 종성 인덱스 + 0xAC00</li>
+    (코드 포인트 - 0xAC00) % 28 = 종성 인덱스<br>
+    (코드 포인트 - 0xAC00) / 28 % 21 = 중성 인덱스<br>
+    (코드 포인트 - 0xAC00 - 종성 인덱스) / 28 - 중성 인덱스 = 초성 인덱스
+
+    <li>은/는, 이/가, 을/를 처리 <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/HangulUtility.java" lan="java">예시 코드 »</button></li>
+</ol>
