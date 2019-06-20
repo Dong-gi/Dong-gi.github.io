@@ -1,6 +1,138 @@
 <hr>
 
 <details>
+    <summary>interface Appendable Since 1.5</summary>
+    <ol>
+        <li>유니코드 CharSequence 또는 char 값을 덧붙일 수 있는 객체를 표현한다.</li>
+        <li>Appendable append(CharSequence csq)<br>
+            Appendable append(CharSequence csq, int start, int end)<br>
+            Appendable append(char c)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>interface AutoCloseable Since 1.7</summary>
+    자동으로 자원을 해제하는 객체를 표현한다. try-with-resources 블록에 사용되면 close()가 자동으로 호출된다. IO 작업이 없는 것들을 try-with-resources 블록에 이용하는 것은 불필요한 일이다.
+</details>
+
+<hr>
+
+<details>
+    <summary>interface CharSequence Since 1.4</summary>
+    <ol>
+        <li>일련의 char 값들을 표현한다. equals(), hashCode()에 대한 규약이 없어서 두 CharSequence 객체를 비교하는 결과는 정의되어 있지 않으며, 따라서 set이나 map의 키로 이용하기에 부적절하다.</li>
+        <li>static int compare(CharSequence cs1, CharSequence cs2) Since 11</li>
+        두 CharSequence를 사전순으로 비교한다.
+        <li>int length() : 길이는 16비트 char의 개수</li>
+        <li>char charAt(int index)</li>
+        <li>CharSequence subSequence(int start, end)</li>
+        start부터 end-1까지. start == end일 경우 빈 CharSequence 객체가 반환된다.
+        <li>String toString()</li>
+        <li>default IntStream chars() Since 1.8</li>
+        char들을 int로 0패딩하여 스트림 생성. 두 char로 쪼개진 유니코드 보충 평면의 문자를 하나로 합치진 않는다.
+        <li>default IntStream codePoints() Since 1.8</li>
+        유니코드 값들을 스트림으로 생성. 보충 평면의 문자는 Character.toCodePoint 메서드를 통해 하나의 int 값으로 형성.
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/lang/CharSequenceExample.java" lan="java">예시 코드 »</button>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>interface Cloneable Since 1.0</summary>
+    Object.clone() 메서드를 재정의했음을 나타내는 마커 인터페이스.
+</details>
+
+<hr>
+
+<details>
+    <summary>interface Comparable&lt;T&gt; Since 1.2</summary>
+    <ol>
+        <li>자연스러운 순서로 클래스의 모든 객체를 정렬할 수 있음을 표현.</li>
+        <li>이를 구체화한 클래스 객체들의 List, array는 Collections.sort, Arrays.sort로 각각 정렬할 수 있다.</li>
+        <li>이를 구체화한 클래스 객체들은 Comparator 정의 없이 SortedMap, SortedSet의 키로 이용할 수 있다.</li>
+        <li>null은 객체가 아니므로 equals(null)이 false를 리턴하는 것과 달리 compareTo(null)은 NullPointerException을 내보내는 것이 바람직하다.</li>
+        <li>다음 성질을 만족하도록 구체화함이 권장된다. (e1.compareTo(e2) == 0) == e1.equals(e2)</li>
+        <li>int compareTo(T o) » o보다 앞서면(작으면) 음수, 같으면 0, 뒤면(크면) 양수 반환.</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>interface Iterable&lt;T&gt; Since 1.5</summary>
+    <ol>
+        <li>이를 구체화한 클래스 객체는 enhanced for statement의 순회 대상이 될 수 있다.</li>
+        <li>Iterator&lt;T&gt; iterator() : 구체화한 익명 클래스 객체를 반환하면 된다.</li>
+        <li>default void forEach(Consumer&lt;? super T&gt; action) Since 1.8</li>
+        순회하면서 action을 적용한다. 기본 구현 : for(T t : this) action.accept(t);
+        <li>default Spliterator&lt;T&gt; spliterator() Since 1.8</li>
+        기본 구현은 Sliterator의 모든 사항을 구현하지 않으므로 재정의하는 것이 더 좋은 성능을 보인다.
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/lang/IterableExample.java" lan="java">예시 코드 »</button>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>interface ProcessHandle extends Comparable<ProcessHandle> Since 9</summary>
+    <ol>
+        <li>native process들에 대한 제어 제공. 프로세스 생애 모니터링, 자식 프로세스 나열, 프로세스 정보 얻기, 프로세스 종료 등.
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/lang/ProcessHandleExample.java" lan="java">예시 코드 »</button></li>
+        <li>프로세스 ID는 OS가 할당한 것으로, 값의 범위는 OS에 의존적이다.</li>
+        <li>ProcessHandle 객체는 다음 팩터리 메서드로 반환된다.</li>
+        current(), of(long), children(), descendants(), parent(), allProcesses()<br>
+        parent() » zombie 상태의 프로세스는 보통 parent가 없다.
+        <li>SecurityManager의 RuntimePermission("manageProcess")만큼의 제어 권한을 갖는다.</li>
+        <li>ProcessHandle 객체들을 비교할 때는 equals, compareTo 메서드를 이용해야 한다.</li>
+        <details>
+            <summary>static interface ProcessHandle.Info Since 9</summary>
+            <ul>
+                <li>Optional&lt;String&gt; command() : 실행가능한 경로 반환</li>
+                <li>Optional&lt;String&gt; commandLine() : command()와 arguments()의 결과를 공백으로 구분한 결과 반환</li>
+                <li>Optional&lt;String[]&gt; arguments() : 프로세스의 인자 반환</li>
+                <li>Optional&lt;Instant&gt; startInstant() : 프로세스의 시작 시각 반환</li>
+                <li>Optional&lt;Duration&gt; totalCpuDuration() : CPU 사용 시간 반환</li>
+                <li>Optional&lt;String&gt; user() : 프로세스 유저 반환</li>
+            </ul>
+        </details>
+        <li>ProcessHandle.Info info()</li>
+        <li>boolean supportsNormalTermination()</li>
+        destroy() 메서드가 정상적으로 프로세스를 종료하는지 여부. false면 프로세스를 강제로 즉시 종료함을 의미.
+        <li>CompletableFuture&lt;ProcessHandle&gt; onExit()</li>
+        onExit().get()을 호출하면 프로세스가 종료되는 것을 기다린다. supportsNormalTermination()이 false일 경우 onExit()에 등록한 후처리들이 진행되지 않을 수 있음.
+        <li>boolean destroy()</li>
+        프로세스 종료에 시간이 걸릴 수 있으므로, isAlive()가 얼마간 true를 반환할 수 있다. 성공적으로 프로세스를 종료하면 true, 아니면 false를 반환한다.
+        <li>boolean destroyForcibly() : 강제 종료</li>
+        <li>long pid()</li>
+        <li>boolean isAlive() : PID가 유효하면 alive로 간주</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>interface Readable Since 1.5</summary>
+    <ol>
+        <li>Readable은 문자들에 대한 소스다.
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/lang/ReadableExample.java" lan="java">예시 코드 »</button></li>
+        <li>int read(CharBuffer cb)</li>
+        문자들을 그대로 cb에 put()을 통해 저장한다. cb에 대한 어떠한 사전처리도 없다. 저장한 char 개수를 반환하며, 소스의 끝이면 -1을 반환한다.
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>@FunctionalInterface interface Runnable Since 1.0</summary>
+    Runnable은 한 쓰레드로서 실행되도록 구체화돼야 한다. Thread의 run()만을 재정의할 때 사용한다.<button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/lang/RunnableExample.java" lan="java">예시 코드 »</button>
+</details>
+
+<hr>
+
+<details>
     <summary>final class Boolean implements Serializable, Comparable&lt;Boolean&gt; Since 1.0</summary>
     <ol>
         <li>원시 타입 boolean의 wrapper 클래스</li>

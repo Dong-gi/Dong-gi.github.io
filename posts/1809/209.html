@@ -315,6 +315,1120 @@
 
 <hr>
 
+<details>
+    <summary>abstract class AbstractCollection&lt;E&gt; implements Collection&lt;E&gt; Since 1.2</summary>
+    Collection 인터페이스 골격 정의.
+</details>
+
+<hr>
+
+<details>
+    <summary>abstract class AbstractList&lt;E&gt; extends AbstractCollection&lt;E&gt; implements List&lt;E&gt; Since 1.2</summary>
+    protected void removeRange(int fromIndex, int toIndex) : toIndex는 미포함
+</details>
+
+<hr>
+
+<details>
+    <summary>abstract class AbstractMap&lt;K, V&gt; implements Map&lt;K, V&gt; Since 1.2</summary>
+    <ol>
+        <li>static class AbstractMap.SimpleEntry&lt;K, V&gt; implements Map.Entry&lt;K, V&gt;, Serializable Since 1.6</li>
+        <ol>
+            <li>public SimpleEntry(K key, V value)</li>
+            <li>public SimpleEntry(Map.Entry&lt;? extends K, ? extends V&gt; entry)</li>
+        </ol>
+        <li>static class AbstractMap.SimpleImmutableEntry&lt;K, V&gt; implements Map.Entry&lt;K, V&gt;, Serializable Since 1.6</li>
+        <ol>
+            <li>public SimpleImmutableEntry(K key, V value)</li>
+            <li>public SimpleImmutableEntry(Map.Entry&lt;? extends K, ? extends V&gt; entry)</li>
+        </ol>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>abstract class AbstractQueue&lt;E&gt; extends AbstractCollection&lt;E&gt; implements Queue&lt;E&gt; Since 1.5</summary>
+    추가 없음.
+</details>
+
+<hr>
+
+<details>
+    <summary>abstract class AbstractSequentialList&lt;E&gt; extends AbstractList&lt;E&gt; Since 1.2</summary>
+    LinkedList와 같이 연결된 리스트가 List 인터페이스를 효율적으로 구체화하도록 스켈레톤을 정의. 임의 접근이 필요한 리스트는 AbstractList를 이용할 것.
+</details>
+
+<hr>
+
+<details>
+    <summary>abstract class AbstractSet&lt;E&gt; extends AbstractCollection&lt;E&gt; implements Set&lt;E&gt; Since 1.2</summary>
+    스켈레톤 제공.
+</details>
+
+<hr>
+
+<details>
+    <summary>class ArrayDeque&lt;E&gt; extends AbstractCollection&lt;E&gt; implements Deque&lt;E&gt;, Cloneable, Serializable Since 1.6</summary>
+    <ol>
+        가변 길이 배열로 구현한 Deque. 쓰레드-안전하지 않음.
+        <li>public ArrayDeque()</li>
+        <li>public ArrayDeque(int numElements)</li>
+        <li>public ArrayDeque(Collection&lt;? extends E&gt; c)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class ArrayList&lt;E&gt; extends AbstractList&lt;E&gt; implements List&lt;E&gt;, RandomAccess, Cloneable, Serializable Since 1.2</summary>
+    <ol>
+        가변 길이 배열로 구현한 List. 쓰레드-안전하지 않음.
+        <li>public ArrayList()</li>
+        <li>public ArrayList(int initialCapacity)</li>
+        <li>public ArrayList(Collection&lt;? extends E&gt; c)</li>
+        <li>void trimToSize()</li>
+        <li>void ensureCapacity(int minCapacity)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class BitSet implements Cloneable, Serializable Since 1.0</summary>
+    <ol>
+        <li>각 비트의 기본값은 false. 쓰레드-안전하지 않음.</li>
+        <li>public BitSet()</li>
+        <li>public BitSet(int nbits)</li>
+        <li>static BitSet valueOf(long[] longs) Since 1.7 + LongBuffer, byte[], ByteBuffer</li>
+        <li>byte[] toByteArray() Since 1.7</li>
+        <li>long[] toLongArray() Since 1.7</li>
+        <li>void flip(int bitIndex) Since 1.4</li>
+        <li>void flip(int fromIndex, int toIndex) Since 1.4</li>
+        <li>void set(int bitIndex) Since 1.0</li>
+        <li>void set(int bitIndex, boolean value) Since 1.4</li>
+        <li>void set(int fromIndex, int toIndex) Since 1.4</li>
+        <li>void set(int fromIndex, int toIndex, boolean value) Since 1.4</li>
+        <li>void clear(int bitIndex) Since 1.0</li>
+        <li>void clear(int fromIndex, int toIndex) Since 1.4</li>
+        <li>void clear() Since 1.4</li>
+        <li>boolean get(int bitIndex)</li>
+        <li>BitSet get(int fromIndex, int toIndex) Since 1.4</li>
+        <li>int nextSetBit(int fromIndex) Since 1.4</li>
+        <li>int nextClearBit(int fromIndex) Since 1.4</li>
+        <li>int previousSetBit(int fromIndex) Since 1.7</li>
+        <li>int previousClearBit(int fromIndex) Since 1.7</li>
+        <li>int length() Since 1.7</li>
+        <li>boolean imEmpty() Since 1.4</li>
+        <li>boolean intersects(BitSet set) Since 1.4 : 하나라도 true로 일치하는 경우</li>
+        <li>int cardinality() Since 1.4 : true의 수</li>
+        <li>void and(BitSet set)</li>
+        <li>void or(BitSet set)</li>
+        <li>void xor(BitSet set)</li>
+        <li>void andNot(BitSet set) Since 1.2</li>
+        <li>int size() : 실제로 사용중인 비트 수</li>
+        <li>IntStream stream() Since 1.8</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class EnumMap&lt;K extends Enum&lt;K&gt;, V&gt; extends AbstractMap&lt;K, V&gt; implements Serializable, Cloneable Since 1.5</summary>
+    <ol>
+        <li>Enum을 키로 이용.</li>
+        <li>public EnumMap(Class&lt;K&gt; keyType)</li>
+        <li>public EnumMap(EnumMap&lt;K, ? extends V&gt; m)</li>
+        <li>public EnumMap(Map&lt;K, ? extends V&gt; m)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>abstract class EnumSet&lt;E extends Enum&lt;E&gt;&gt; extends AbstractSet&lt;E&gt; implements Cloneable, Serializable Since 1.5</summary>
+    <ol>
+        <li>static &lt;E extends Enum&lt;E&gt;&gt; EnumSet&lt;E&gt; noneOf(Class&lt;E&gt; elementType) : 공집합 반환</li>
+        <li>static &lt;E extends Enum&lt;E&gt;&gt; EnumSet&lt;E&gt; allOf(Class&lt;E&gt; elementType) : 전체 집합 반환</li>
+        <li>static &lt;E extends Enum&lt;E&gt;&gt; EnumSet&lt;E&gt; copyOf(EnumSet&lt;E&gt; s)</li>
+        <li>static &lt;E extends Enum&lt;E&gt;&gt; EnumSet&lt;E&gt; copyOf(Collection&lt;E&gt; c)</li>
+        <li>static &lt;E extends Enum&lt;E&gt;&gt; EnumSet&lt;E&gt; complementOf(EnumSet&lt;E&gt; s) : 여집합 반환</li>
+        <li>static &lt;E extends Enum&lt;E&gt;&gt; EnumSet&lt;E&gt; of(E e) ...</li>
+        <li>@SafeVarargs static &lt;E extends Enum&lt;E&gt;&gt; EnumSet&lt;E&gt; of(E first, E...rest)</li>
+        <li>static &lt;E extends Enum&lt;E&gt;&gt; EnumSet&lt;E&gt; range(E from, E to)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class HashMap&lt;K, V&gt; extends AbstractMap&lt;K, V&gt; implements Map&lt;K, V&gt;, Cloneable, Serializable Since 1.2</summary>
+    <ol>
+        쓰레드-안전하지 않음.
+        <li>public HashMap(int initialCapacity, float</li>
+        <li>public HashMap(int initialCapacity)</li>
+        <li>public HashMap()</li>
+        <li>public HashMap(Map&lt;? extends K, ? extends V&gt; m)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class HashSet&lt;E&gt; extends AbstractSet&lt;E&gt; implements Set&lt;E&gt;, Cloneable, Serializable Since 1.2</summary>
+    <ol>
+        레드-안전하지 않음.
+        <li>public HashSet()</li>
+        <li>public HashSet(Collection&lt;? extends E&gt; c)</li>
+        <li>public HashSet(int initialCapacity, float loadFactor)</li>
+        <li>public HashSet(int initialCapacity)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class IdentityHashMap&lt;K, V&gt; extends AbstractMap&lt;K, V&gt; implements Map&lt;K, V&gt;, Serializable, Cloneable Since 1.4</summary>
+    <ol>
+        쓰레드-안전하지 않다. 일반적으로 (k1==null ? k2==null : k1.equals(k2))로 키를 비교하는 것과 달리 (k1==k2)로 비교한다.<br>
+        » keySet()으로 반환되는 Set&lt;K&gt;, values()로 반환되는 Collection&lt;V&gt;, entrySet()으로 반환되는 Set&lt;Map.Entry&lt;K, V&gt;&gt; 모두 원소의 비교를 == 연산으로 한다.
+        <li>public IdentityHashMap()</li>
+        <li>public IdentityHashMap(int expectedMaxSize)</li>
+        <li>public IdentityHashMap(Map&lt;? extends K, ? extends V&gt; m)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class LinkedHashMap&lt;K, V&gt; extends HashMap&lt;K, V&gt; implements Map&lt;K, V&gt; Since 1.4</summary>
+    <ol>
+        키가 삽입된 순서대로 원소를 유지하는 이중 연결 리스트를 가진다. 키가 존재하는 상황에서의 put() 호출은 순서에 영향이 없다.<br>
+        » HashMap과 마찬가지로 쓰레드-안전하지 않다.<br>
+        » 접근 빈도로 정렬하는 것을 지원하는 생성자도 제공된다.
+        <li>public LinkedHashMap(int initialCapacity, float loadFactor)</li>
+        <li>public LinkedHashMap(int initialCapacity) : factor=0.75</li>
+        <li>public LinkedHashMap()</li>
+        <li>public LinkedHashMap(Map&lt;? extends K, ? extends V&gt; m)</li>
+        <li>public LinkedHashMap(int initialCapacity, float loadFactor, boolean accessOrder)</li>
+        <li>protected boolean removeEldestEntry(Map.Entry&lt;K, V&gt; eldest) : 캐시 구현에 적합</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class LinkedHashSet extends HashSet&lt;E&gt; implements Set&lt;E&gt;, Cloneable, Serializable Since 1.4</summary>
+    <ol>
+        삽입된 순서대로 원소를 유지하는 이중 연결 리스트를 가진다. 원소가 존재하는 상황에서의 add() 호출은 순서에 영향 없다.<br>
+        » HashSet과 마찬가지로 쓰레드-안전하지 않다.
+        <li>public LinkedHashSet(int initialCapacity, float loadFactor)</li>
+        <li>public LinkedHashSet(int initialCapacity) : factor=0.75</li>
+        <li>pulbic LinkedHashSet()</li>
+        <li>public LinkedHashSet(Collection&lt;? extends E&gt; c)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class LinkedList&lt;E&gt; entends AbstractSequentialList&lt;E&gt; implements List&lt;E&gt;, Deque&lt;E&gt;, Cloneable, Serializable Since 1.2</summary>
+    <ol>
+        List와 Deque을 모두 구현. 쓰레드-안전하지 않음.
+        <li>public LinkedList()</li>
+        <li>public LinkedList(Collection&lt;? extends E&gt; c)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class PriorityQueue&lt;E&gt; extends AbstractQueue&lt;E&gt; implements Serializable Since 1.5</summary>
+    <ol>
+        우선순위 힙에 기반한 unbounded 우선순위 큐. head가 가장 우선순위가 작은 원소.
+        <li>public PriorityQueue()</li>
+        <li>public PriorityQueue(int initialCapacity)</li>
+        <li>public PriorityQueue(Comparator&lt;? super E&gt; comparator) Since 1.8</li>
+        <li>public PriorityQueue(int initialCapacity, Comparator&lt;? super E&gt; comparator)</li>
+        <li>public PriorityQueue(Collection&lt;? extends E&gt; c)</li>
+        <li>public PriorityQueue(PriorityQueue&lt;? extends E&gt; c) : c와 정렬 방향 같음</li>
+        <li>public PriorityQueue(SortedSet&lt;? extends E&gt; c) : c와 정렬 방향 같음</li>
+        <li>Comparator&lt;? super E&gt; comparator()</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class Vector&lt;E&gt; extends AbstractList&lt;E&gt; implements List&lt;E&gt;, RandomAccess, Cloneable, Serializable Since 1.0</summary>
+    <ol>
+        ArrayList와 달리 쓰레드-안전하다.
+        <li>public Vector(int initialCapacity, int capacityIncrement)</li>
+        <li>public Vector(int initialCapacity)</li>
+        <li>public Vector()</li>
+        <li>public Vector(Collection&lt;? extends E&gt; c) Since 1.2</li>
+        <li>void copyInto(Object[] anArray)</li>
+        <li>void trimToSize()</li>
+        <li>void ensureCapacity(int minCapacity)</li>
+        <li>void setSize(int newSize)</li>
+        <li>int capacity()</li>
+        <li>Enumeration&lt;E&gt; elements()</li>
+        <li>int indexOf(Object o, int index)</li>
+        <li>int lastIndexOf(Object o, int index)</li>
+        <li>E elementAt(int index)</li>
+        <li>E firstElement()</li>
+        <li>E lastElement()</li>
+        <li>void setElementAt(E obj, int index)</li>
+        <li>void removeElementAt(int index)</li>
+        <li>void insertElementAt(E obj, int index)</li>
+        <li>void addElement(E obj)</li>
+        <li>boolean removeElement(Object obj)</li>
+        <li>void removeAllElements()</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class Stack&lt;E&gt; extends Vector&lt;E&gt; Since 1.0</summary>
+    <ol>
+        LIFO 스택.
+        <li>생성자 public Stack()</li>
+        <li>E push(E item)</li>
+        <li>E pop()</li>
+        <li>E peek()</li>
+        <li>boolean empty()</li>
+        <li>int search(Object o)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class TreeMap&lt;K, V&gt; extends AbstractMap&lt;K, V&gt; implements NavigableMap&lt;K, V&gt;, Cloneable, Serializable Since 1.2</summary>
+    <ol>
+        Red-Black tree(이진 탐색 트리의 일종) 기반의 NavigableMap 구현. log(n) 시간의 작업을 보장한다.<br>
+        » 쓰레드-안전하지 않다.
+        <li>public TreeMap()</li>
+        <li>public TreeMap(Comparator&lt;? super K&gt; comparator)</li>
+        <li>public TreeMap(Map&lt;? extends K, ? extends V&gt; m)</li>
+        <li>public TreeMap(SortedMap&lt;K, ? extends V&gt; m)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class TreeSet&lt;E&gt; extends AbstractSet&lt;E&gt; implements NavigableSet&lt;E&gt;, Cloneable, Serializable Since 1.2</summary>
+    <ol>
+        TreeMap 기반의 NavigableSet 구현. 쓰레드-안전하지 않다.
+        <li>public TreeSet()</li>
+        <li>public TreeSet(Comparator&lt;? super E&gt; comparator)</li>
+        <li>public TreeSet(Collection&lt;? extends E&gt; c)</li>
+        <li>public TreeSet(SortedSet&lt;E&gt; s)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class WeakHashMap&lt;K, V&gt; extends AbstractMap&lt;K, V&gt; implements Map&lt;K, V&gt; Since 1.2</summary>
+    <ol>
+        key의 존재 여부는 key가 GC 대상이 되는 것에 영향이 없다. key 객체가 유효하지 않게 되면 자동으로 맵에서 삭제한다. key, value 모두에 null을 허용한다. 단, value가 key의 참조를 가지지 않도록 유의해야 한다. 쓰레드-안전하지 않다.
+        <li>public WeakHashMap(int initialCapacity, float loadFactor)</li>
+        <li>public WeakHashMap(int initialCapacity)</li>
+        <li>public WeakHashMap()</li>
+        <li>public WeakHashMap(Map&lt;? extends K, ? extends V&gt; m) Since 1.3</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class Arrays Since 1.2</summary>
+    <ol>
+        <li>정렬</li>
+            <ul>
+                <li>static void sort(int[] a) + long, short, char, byte, float, double, Object</li>
+                <li>static void sort(int[] a, int fromIndex, int toIndex)</li>
+                <li>static void parallelSort(byte[] a) Since 1.8 + char, short, int, long, float, double</li>
+                <li>static void parallelSOrt(byte[] a, int fromIndex, int toIndex) Since 1.8</li>
+                » 합병 정렬을 병렬로 수행한다. 모든 병렬 작업은 ForkJoin common pool을 이용해 이루어진다.
+                <li>static &lt;T extends Comparable&lt;? super T&gt;&gt; void parallelSort(T[] a) Since 1.8</li>
+                <li>static &lt;T extends Comparable&lt;? super T&gt;&gt; void parallelSort(T[] a, int fromIndex, int toIndex) Since 1.8</li>
+                » 자연스러운 방향으로 오름차순 정렬. 모든 원소는 Comparable을 구체화해야 한다.<br>
+                » 정렬은 stable(안정적)이다 : 같은 순위의 원소들은 이전과 전후관계가 일치
+                <li>static &lt;T&gt; void parallelSort(T[] a, Comparator&lt;? super T&gt; cmp) Since 1.8</li>
+                <li>static &lt;T&gt; void parallelSort(T[] a, int fromIndex, int toIndex, Comparator&lt;? super T&gt; cmp) Since 1.8</li>
+                <li>static &lt;T&gt; void sort(T[] a, Comparator&lt;? super T&gt; c)</li>
+                <li>static &lt;T&gt; void sort(T[] a, int fromIndex, int toIndex, Comparator&lt;? super T&gt; c)</li>
+            </ul>
+
+        <li>원소 변경</li>
+            <ul>
+                <li>static &lt;T&gt; void parallelPrefix(T[] array, BinaryOperator&lt;T&gt; op) Since 1.8</li>
+                » 전체 원소에 순차적으로 연산 적용하여 값 변경. 큰 배열은 루프보다 이게 더 빠르다.
+                <li>static &lt;T&gt; void parallelPrefix(T[] array, int fromIndex, int toIndex, BinaryOperator&lt;T&gt; op) Since 1.8</li>
+                <li>static void parallelPrefix(long[] array, LongBinaryOperator op) Since 1.8 + double, int</li>
+                <li>static void parallelPrefix(long[] array, int fromIndex, int toIndex, LongBinaryOperator op) Since 1.8</li>
+            </ul>
+
+        <li>탐색</li>
+            <ul>
+                <li>static int binarySearch(long[] a, long key) + int, short, char, byte, double, float, Object</li>
+                <li>static int binarySearch(long[] a, int fromIndex, int toIndex, long key) Since 1.6</li>
+                <li>static &lt;T&gt; int binarySearch(T[] a, T key, Comparator&lt;? super T&gt; c)</li>
+                <li>static &lt;T&gt; int binarySearch(T[] a, int fromIndex, int toIndex, T key, Comparator&lt;? super T&gt; c)Since 1.6</li>
+            </ul>
+
+        <li>동등 비교</li>
+            <ul>
+                <li>static boolean equals(long[] a, long[] a2) + int, short, char, byte, boolean, double, float, Object</li>
+                <li>static boolean equals(long[] a, int aFromIndex, int aToIndex, long[] b, int bFromIndex, int bToIndex) Since 9</li>
+                » Object의 경우, Objects.equals(e1, e2)일 때 같다고 간주한다.
+                <li>static boolean deepEquals(Object[] a1, Object[] a2) Since 1.5</li>
+                » null일 수 있는 각 배열의 두 원소 e1, e2에 대하여, 다음 4가지 경우에 대해 둘이 같다고 판단한다.<br>
+                * e1 == e2<br>
+                * 둘 모두 참조변수에 대한 배열이고, Arrays.deepEquals(e1, e2)가 true<br>
+                * 둘 모두 원시타입에 대한 배열이고, Arrays.equals(e1, e2)가 true<br>
+                * e1.equals(e2)가 true
+                <li>static &lt;T&gt; boolean equals(T[] a, T[] a2, Comparator&lt;? super T&gt; cmp) Since 9</li>
+                <li>static &lt;T&gt; boolean equals(T[] a, int aFromIndex, int aToIndex, T[] b, int bFromIndex, int bToIndex, Comparator&lt;? super T&gt; cmp) Since 9</li>
+            </ul>
+        
+        <li>초기화</li>
+            <ul>
+                <li>static void fill(long[] a, long val) + int, short, char, byte, bolean, double, float, Object</li>
+                <li>static void fill(long[] a, int fromIndex, int toIndex, long val)</li>
+                <li>static &lt;T&gt; void setAll(T[] array, IntFunction&lt;? extends T&gt; generator) Since 1.8</li>
+                <li>static &lt;T&gt; void parallelSetAll(T[] array, IntFunction&lt;? extends T&gt; generator) SInce 1.8</li>
+                <li>static void setAll(int[] array, IntUnaryOperator generator) Since 1.8 + long, double</li>
+                <li>static void parallelSetAll(int[] array, IntUnaryOperator generator) Since 1.8</li>
+            </ul>
+        
+        <li>복제</li>
+            <ul>
+                <li>static &lt;T&gt; T[] copyOf(T[] original, int newLength) Since 1.6</li>
+                <li>static &lt;T, U&gt; T[] copyOf(U[] original, int newLength, Class&lt;? extends T[]&gt; newType) Since 1.6</li>
+                <li>static byte[] copyOf(byte[] original, int newLength) Since 1.6 + short, int, long, char, float, double, boolean</li>
+                <li>static &lt;T&gt; T[] copyOfRange(T[] original, int from, int to) Since 1.6</li>
+                <li>static &lt;T, U&gt; T[] copyOfRange(U[] original, int from, int to, Class&lt;? extends T[]&gt; newType) Since 1.6 </li>
+                <li>static byte[] copyOfRange(byte[] original, int from, int to) Since 1.6 + short, int, long, char, float, double, boolean</li>
+            </ul>
+        
+        <li>리스트</li>
+            <br>@SafeVarargs static &lt;T&gt; List&lt;T&gt; asList(T... a)</li>
+
+        <li>hash</li>
+            <ul>
+                <li>static int hashCode(long[] a) Since 1.5 + int, short, char, byte, boolean, float, double, Object</li>
+                » 동일 원소를 가진 List의 해시코드와 동일. null이면 0 반환
+                <li>static int deepHashCode(Object[] a) Since 1.5</li>
+                » 원소가 배열인 경우, 해당 배열의 모든 원소의 해시를 별도로 구한다. 따라서 자기 자신을 포함하는 배열 등은 적합하지 않다.
+            </ul>
+        
+        <li>toString</li>
+            <ul>
+                <li>static String toString(long[] a) Since 1.5 + int, short, char, byte, boolean, float, double, Object</li>
+                <li>static String deepToString(Object[] a) Since 1.5</li>
+                » toString(Object[])가 o.toString()을 이용한다면, 여기서는 String.valueOf(Object)가 이용되고, 원소가 배열인 경우 "[]"를 추가하고 해당 배열의 원소들에 대해 같은 작업을 한다.
+            </ul>
+
+        <li>Stream</li>
+            <ul>
+                <li>static &lt;T&gt; Stream&lt;T&gt; stream(T[] array) Since 1.8</li>
+                <li>static &lt;T&gt; Stream&lt;T&gt; stream(T[] array, int startInclusive, int endExclusive) Since 1.8</li>
+                <li>static IntStream stream(int[] array) Since 1.8 + long, double</li>
+                <li>static IntStream stream(int[] array, int startInclusive, int endExclusive) Since 1.8</li>
+            </ul>
+        
+        <li>비교</li>
+            <ul>
+                <li>static int compare(boolean[] a, boolean[] b) Since 9 + byte, short, char, int, long, float, double</li>
+                <li>static int compare(boolean[] a, int aFromIndex, int aToIndex, boolean[] b, int bFromIndex, int bToIndex) Since 9</li>
+                <li>static int compareUnsigned(byte[] a, byte[] b) Since 9 + short, int, long</li>
+                <li>static int compareUnsigned(byte[] a, int aFromIndex, int aToIndex, byte[] b, int bFromIndex, int bToIndex) Since 9</li>
+                <li>static &lt;T extends Comparable&lt;? super T&gt;&gt; int compare(T[] a, T[] b) Since 9</li>
+                <li>static &lt;T extends Comparable&lt;? super T&gt;&gt; int compare(T[] a, int aFromIndex, int aToIndex, T[] b, int bFromIndex, int bToIndex) Since 9</li>
+                <li>static &lt;T&gt; int compare(T[] a, T[] b, Comparator&lt;? super T&gt; cmp) Since 9</li>
+                <li>static &lt;T&gt; int compare(T[] a, int aFromIndex, int aToIndex, T[] b, int bFromIndex, int bToIndex, Comparator&lt;? super T&gt; cmp) Since 9</li>
+                <li>static int mismatch(boolean[] a, boolean[] b) Since 9 + byte, char, short, int, long, float, double, Object</li>
+                » 처음으로 일치하지 않는 인덱스 반환.
+                <li>static int mismatch(boolean[] a, int aFromIndex, int aToIndex, boolean[] b, int bFromIndex, int bToIndex) Since 9</li>
+                <li>static &lt;T&gt; int mismatch(T[] a, T[] b, Comparator&lt;? super T&gt; cmp) Since 9</li>
+                <li>static &lt;T&gt; int mismatch(T[] a, int aFromIndex, int aToIndex, T[] b, int bFromIndex, int bToIndex, Comparator&lt;? super T&gt; cmp) Since 9</li>
+            </ul>
+        </li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class Collections Since 1.2</summary>
+    <ol>
+        <li>필드</li>
+        <ul>
+            <li>public static final Set EMPTY_SET : 변경 불가</li>
+            <li>public static final List EMPTY_LIST : 변경 불가</li>
+            <li>public static final Map EMPTY_MAP Since 1.3 : 변경 불가</li>
+        </ul>
+
+        <li>리스트 연산</li>
+        <ul>
+            <li>static &lt;T extends Comparable&lt;? super T&gt;&gt; void sort(List&lt;T&gt; list)</li>
+            <li>static &lt;T&gt; void sort(List&lt;T&gt; list, Comparator&lt;? super t&gt; c)</li>
+            <li>static &lt;T&gt; int binarySearch(List&lt;? extends Comparable&lt;? super T&gt;&gt; list, T key)</li>
+            <li>static &lt;T&gt; int binarySearch(List&lt;? extends T&gt; list, T key, T key, Comparator&lt;? super T&gt; c)</li>
+            <li>static void reverse(List&lt;?&gt; list)</li>
+            <li>static void shuffle(List&lt;?&gt; list)</li>
+            <li>static void shuffle(List&lt;?&gt; list, Random rnd)</li>
+            <li>static void swap(List&lt;?&gt; list, int i, int j) Since 1.4</li>
+            <li>static &lt;T&gt; void fill(List&lt;? super T&gt; list, T obj)</li>
+            <li>static &lt;T&gt; void copy(List&lt;? super T&gt; dest, List&lt;? extends T&gt; src)</li>
+            <li>static void rotate(List&lt;?&gt; list, int distance) Since 1.4</li>
+            <li>static &lt;T&gt; boolean replaceAll(List&lt;T&gt; list, T oldVal, T newVal) Since 1.4</li>
+            <li>static int indexOfSubList(List&lt;?&gt; source, List&lt;?&gt; target) Since 1.4</li>
+            <li>static int lastIndexOfSubList(List&lt;?&gt; source, List&lt;?&gt; target) Since 1.4</li>
+            <li>static &lt;T&gt; ArrayList&lt;T&gt; list(Enumeration&lt;T&gt; e) Since 1.4</li>
+        </ul>
+        
+        <li>Collection 연산</li>
+        <ul>
+            <li>static &lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt; T min(Collection&lt;? extends T&gt; coll)</li>
+            <li>static &lt;T&gt; T min(Collection&lt;? extends T&gt; coll, Comparator&lt;? super T&gt; comp)</li>
+            <li>static &lt;T extends Object & Comparable&lt;? super T&gt;&gt; T max(Collection&lt;? extends T&gt; coll)</li>
+            <li>static &lt;T&gt; T max(Collection&lt;? extends T&gt; coll, Comparator&lt;? super T&gt; comp)</li>
+            <li>static int frequency(Collection&lt;?&gt; c, Object o) Since 1.5</li>
+            <li>static boolean disjoint(Collection&lt;?&gt; c1, Collection&lt;?&gt; c2) Since 1.5 : 공통 원소가 없는지 여부.</li>
+            <li>@SafeVarargs static &lt;T&gt; boolean addAll(Collection&lt;? super T&gt; c, T... elements) Since 1.5</li>
+        </ul>
+
+        <li>변경 불가능한 Collection</li>
+        <ul>
+            <li>static &lt;T&gt; Collection&lt;T&gt; unmodifiableCollection(Collection&lt;? extends T&gt; c)</li>
+            <li>static &lt;T&gt; Set&lt;T&gt; unmodifiableSet(Set&lt;? extends T&gt; s)</li>
+            <li>static &lt;T&gt; SortedSet&lt;T&gt; unmodifiableSortedSet(SortedSet&lt;T&gt; s)</li>
+            <li>static &lt;T&gt; NavigableSet&lt;T&gt; unmodifiableNavigableSet(NavigableSet&lt;T&gt; s) Since 1.8</li>
+            <li>static &lt;T&gt; List&lt;T&gt; unmodifiableList(List&lt;? extends T&gt; list)</li>
+            <li>static &lt;K, V&gt; Map&lt;K, V&gt; unmodifiableMap(Map&lt;? extends K, ? extends V&gt; m)</li>
+            <li>static &lt;K, V&gt; SortedMap&lt;K, V&gt; unmodifiableSortedMap(SortedMap&lt;K, ? extends V&gt; m)</li>
+            <li>static &lt;K, V&gt; NavigableMap&lt;K, V&gt; unmodifiableNavigableMap(NavigableMap&lt;K, ? extends V&gt; m) Since 1.8</li>
+        </ul>
+
+        <li>Synchronization</li>
+        <ul>
+            <li>static &lt;T&gt; Collection&lt;T&gt; synchronizedCollection(Collection&lt;T&gt; c)</li>
+            <li>static &lt;T&gt; Set&lt;T&gt; synchronizedSet(Set&lt;T&gt; s)</li>
+            <li>static &lt;T&gt; SortedSet&lt;T&gt; sychronizedSortedSet(SortedSet&lt;T&gt; s)</li>
+            <li>static &lt;T&gt; NavigableSet&lt;T&gt; synchronizedNavigableSet(NavigableSet&lt;T&bt; s) Since 1.8</li>
+            <li>static &lt;T&gt; List&lt;T&gt; synchronizedList(List&lt;T&gt; list)</li>
+            <li>static &lt;K, V&gt; Map&lt;K, V&gt; synchronizedMap(Map&lt;K, V&gt; m)</li>
+            <li>static &lt;K, V&gt; SortedMap&lt;K, V&gt; synchronizedSortedMap(SortedMap&lt;K, V&gt; m)</li>
+            <li>static &lt;K, V&gt; NavigableMap&lt;K, V&gt; synchronizedNavigableMap(NavigableMap&lt;K, V&gt; m) Since 1.8</li>
+        </ul>
+        
+        <li>타입 체킹 추가</li>
+        <ul>
+            <li>static &lt;E&gt; Collection&lt;E&gt; checkedCollection(Collection&lt;E&gt; c, Class&lt;E&gt; type) Since 1.5</li>
+            <li>static &lt;E&gt; Queue&lt;E&gt; checkedQueue(Queue&lt;E&gt;, Class&lt;E&gt; type) Since 1.8</li>
+            <li>static &lt;E&gt; Set&lt;E&gt; checkedSet(Set&lt;E&gt; s, Class&lt;E&gt; type) Since 1.5</li>
+            <li>static &lt;E&gt; SortedSet&lt;E&gt; checkedSortedSet(SortedSet&lt;E&gt; s, Class&lt;E&gt; type) Since 1.5</li>
+            <li>static &lt;E&gt; NavigableSet&lt;E&gt; checkedNavigableSet(NavigableSet&lt;E&gt; s, Class&lt;E&gt; type) Since 1.8</li>
+            <li>static &lt;E&lt; List&lt;E&gt; checkedList(List&lt;E&gt; list, Class&lt;E&gt; type) Since 1.5</li>
+            <li>static &lt;K, V&gt; Map&lt;K, V&gt; checkedMap(Map&lt;K, V&gt; m, Class&lt;K&gt; keyType, Class&lt;V&gt; valueType) Since 1.5</li>
+            <li>static &lt;K, V&gt; sortedMap&lt;K, V&gt; checkedSortedMap(SortedMap&lt;K, V&gt; m, Class&lt;K&gt; keyType, Class&lt;V&gt; valueType) Since 1.5</li>
+            <li>static &lt;K, V&gt; NavigableMap&lt;K, V&gt; checkedNavigableMap(NavigableMap&lt;K, V&gt; m, Class&lt;K&gt; keyType, Class&lt;V&gt; valueType) Since 1.8</li>
+        </ul>
+        
+        <li>Empty Collection(변경 불가)</li>
+        <ul>
+            <li>static &lt;T&gt; Iterator&lt;T&gt; emptyIterator() Since 1.7</li>
+            <li>static &lt;T&gt; ListIterator&lt;T&gt; emptyListIterator() Since 1.7</li>
+            <li>static &lt;T&gt; Enumeration&lt;T&gt; emptyEnumeration() Since 1.7</li>
+            <li>static final &lt;T&gt; Set&lt;T&gt; emptySet() Since 1.5</li>
+            <li>static &lt;E&gt; SortedSet&lt;E&gt; emptySortedSet() Since 1.8</li>
+            <li>static &lt;E&gt; NavigableSet&lt;E&gt; emptyNavigableSet() Since 1.8</li>
+            <li>static final &lt;T&gt; List&lt;T&gt; emptyList() Since 1.5</li>
+            <li>static final &lt;K, V&gt; Map&lt;K, V&gt; emptyMap() Since 1.5</li>
+            <li>static final &lt;K, V&gt; SortedMap&lt;K, V&gt; emptySortedMap() Since 1.8</li>
+            <li>static final &lt;K, V&gt; NavigableMap&lt;K, V&gt; emptyNavigableMap() Since 1.8</li>
+        </ul>
+
+        <li>Singleton Collection(변경 불가)</li>
+        <ul>
+            <li>static &lt;T&gt; Set&lt;T&gt; singleton(T o)</li>
+            <li>static &lt;T&gt; List&lt;T&gt; singletonList(T o) Since 1.3</li>
+            <li>static &lt;K, V&gt; Map&lt;K, V&gt; singletonMap(K key, V value) Since 1.3</li>
+            <li>static &lt;T&gt; List&lt;T&gt; nCopies(int n, T o)</li>
+        </ul>
+
+        <li>기타</li>
+        <ul>
+            <li>static &lt;T&gt; Comparator&lt;T&gt; reverseOrder()</li>
+            » 자연스러운 정렬의 역 비교자 반환.
+            <li>static &lt;T&gt; Comparator&lt;T&gt; reverseOrder(Comparator&lt;T&gt; cmp) Since 1.5</li>
+            <li>static &lt;T&gt; Enumeration&lt;T&gt; enumeration(Collection&lt;T&gt; c)</li>
+            <li>static &lt;E&gt; Set&lt;E&gt; newSetFromMap(Map&lt;E, Boolean&lt; map) Since 1.6</li>
+            » map은 반드시 비어있어야 하며, 호출 뒤 map을 직접 접근하지 말아야 한다.
+            <li>static &lt;T&gt; Queue&lt;T&gt; asLifoQueue(Deque&lt;T&gt; deque) Since 1.6</li>
+            » deque에 대한 LIFO view를 Queue로 반환한다.
+        </ul>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>final class Objects Since 1.7</summary>
+    <ol>
+        <li>비교</li>
+        <ul>
+            <li>static boolean equals(Object a, Object b)</li>
+            <li>static boolean deepEquals(Object a, Object b)</li>
+            » 둘 다 null이면 true. 둘 다 배열이면 Arrays.deepEquals(), 나머진 a.equals(b)
+            <li>static &lt;T&gt; int compare(T a, T b, Comparator&lt;? super T&gt; c)</li>
+        </ul>
+
+        <li>hashCode</li>
+        <ul>
+            <li>static int hashCode(Object o)</li>
+            <li>static int hash(Object... values)</li>
+            » values가 하나의 배열에 든 것처럼 Arrays.hashCode(Object[])를 이용한다. Object.hashCode()의 간편한 구현으로 이용할 수 있다.<br>
+            » Warning: 객체 하나만 넘긴 경우, 객체 자체의 hashCode()와 값이 다르다.
+        </ul>
+
+        <li>toString</li>
+        <ul>
+            <li>static String toString(Object o)</li>
+            <li>static String toString(Object o, String nullDefault)</li>
+        </ul>
+        
+        <li>null</li>
+        <ul>
+            <li>static &lt;T&gt; T requireNonNull(T obj)</li>
+            » 메서드나 생성자에서 null검사를 하도록 설계되었다.
+            <li>static &lt;T&gt; T requireNonNull(T obj, String message)</li>
+            » message는 예외 메시지
+            <li>static boolean isNull(Object obj) Since 1.8</li>
+            » Predicate, filter(Objects::isNull)에 이용
+            <li>static boolean nonNull(Object obj) Since 1.8</li>
+            <li>static &lt;T&gt; T requireNonNullElse(T obj, T defaultObj) Since 9</li>
+            <li>static &lt;T&gt; T requireNonNullElseGet(T obj, Supplier&lt;? extends T&gt; supplier) Since 9</li>
+            <li>static &lt;T&gt; T requireNonNull(T obj, Supplier&lt;String&gt; messageSupplier) Since 1.8</li>
+            » messageSupplier는 에러 메시지에 이용
+        </ul>
+        
+        <li>index</li>
+        <ul>
+            <li>static int checkIndex(int index, int length) Since 9</li>
+            » index가 [0, length)에 존재하면 그대로 반환. 아니면 예외 발생.
+            <li>static int checkFromToIndex(int fromIndex, int toIndex, int length) Since 9</li>
+            » subrange [fromIndex, toIndex)가 [0, length)에 포함되면 fromIndex 반환. 아니면 예외 발생.
+            <li>static int checkFromIndexSize(int fromIndex, int size, int length) Since 9</li>
+            » subrange [fromIndex, fromIndex + size)가 [0, length)에 포함되면 fromIndex 반환. 아니면 예외 발생.
+        </ul>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class Base64 Since 1.8</summary>
+    <ol>
+        Base64 인코더와 디코더를 반환하는 유틸리티. RFC 2045, 4648
+        <li>static class Base64.Encoder Since 1.8</li>
+        <ol>
+            <li>byte[] encode(byte[] src)</li>
+            <li>int encode(byte[] src, byte[] dst) : 쓴 바이트 수 반환</li>
+            <li>String encodeToString(byte[] src) : new String(encode(src), StandardCHarsets.ISO_8859_1)</li>
+            <li>ByteBuffer encode(ByteBuffer buffer)</li>
+            <li>OutputStream wrap(OutputStream os)</li>
+            <li>Base64.Encoder withoutPadding()</li>
+        </ol>
+            
+        <li>static class Base64.Decoder Since 1.8</li>
+        <ol>
+            <li>byte[] decode(byte[] src)</li>
+            <li>byte[] decode(String src)</li>
+            <li>int decode(byte[] src, byte[] dst)</li>
+            <li>ByteBuffer decode(ByteBuffer buffer)</li>
+            <li>InputStream wrap(InputStream is)</li>
+        </ol>
+
+        <li>static Base64.Encoder getEncoder()</li>
+        <li>static Base64.Encoder getUrlEncoder()</li>
+        <li>static Base64.Encoder getMimeEncoder()</li>
+        <li>static Base64.Encoder getMimeEncoder(int lineLength, byte[] lineSeparator)</li>
+        <li>static Base64.Decoder getDecoder()</li>
+        <li>static Base64.Decoder getUrlDecoder()</li>
+        <li>static Base64.Decoder getMimeDecoder()</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>abstract class Calendar implements Serializable, Cloneable, Comparable&lt;Calendar&gt; Since 1.1</summary>
+    <ol>
+        관대함(Leniency) : 범위를 벗어나는 값도 받아들이며, 나중에 정규화한다. 예를 들어 1월 32일은 2월 1일이 된다.<br>
+        add와 roll : add는 오버플로되면 다음 단위가 변하지만, roll은 modulo연산처럼 해당 단위만 변한다.
+        
+        <details>
+            <summary>static class Calendar.Builder Since 1.8</summary>
+            <ol>
+                <li>생성자 : public Builder()</li>
+                <li>Calendar.Builder setInstant(long instant) // 밀리초</li>
+                <li>Calendar.Builder setInstant(Date instant)</li>
+                <li>Calendar.Builder set(int field, int value)</li>
+                <li>Calendar.Builder setFields(int... fieldValuePairs)</li>
+                예: setFields(Calendar.YEAR, 2013, Calendar.MONTH, Calendar.DECEMBER, Calendar.DAY_OF_MONTH, 23)
+                <li>Calendar.Builder setDate(int year, int month, int dayOfMonth)</li>
+                <li>Calendar.Builder setTimeOfDay(int hourOfDay, int minute, int second)</li>
+                <li>Calendar.Builder setTimeOfDay(int hourOfDay, int minute, int second, int millis)</li>
+                <li>Calendar.Builder setWeekDate(int weekYear, int weekOfYear, int dayOfWeek)</li>
+                <li>Calendar.Builder setTimeZone(TimeZone zone)</li>
+                <li>Calendar.Builder setLenient(boolean lenient)</li>
+                <li>Calendar.Builder setCalendarType(String type) : Calendar.getAvailableCalendarTypes()</li>
+                <li>Calendar.Builder setLocale(Locale locale)</li>
+                <li>Calendar.Builder setWeekDefinition(int fistDayOfWeek, int minimalDaysInFirstWeek)</li>
+                <li>Calendar build()</li>
+            </ol>
+        </details>
+
+        <li>public static final int YEAR, MONTH, WEEK_OF_YEAR, WEEK_OF_MONTH_, DATE, ...</li>
+        <li>static Calendar getInstance()</li>
+        <li>static Calendar getInstance(TimeZone zone)</li>
+        <li>static Calendar getInstance(Locale aLocale)</li>
+        <li>static Calendar getInstance(TimeZone zone, Locale aLocale)</li>
+        <li>static Locale[] getAvailableLocales()</li>
+        <li>static Set&lt;String&gt; getAvailableCalendarTypes() Since 1.8</li>
+        <li>final Date getTime()</li>
+        <li>final void setTime(Date date)</li>
+        <li>long getTimeInMillis()</li>
+        <li>void setTimeInMillis(long millis)</li>
+        <li>int get(int field)</li>
+        <li>void set(int field, int value)</li>
+        <li>final void set(int year, int month, int date)</li>
+        <li>final void set(int year, month, int date, int hourOfDay, int minute, int second)</li>
+        <li>final void clear() : 기본값으로 변경. isSet()이 false를 반환</li>
+        <li>final void clear(int field) : 기본값으로 변경. isSet(field)가 false를 반환</li>
+        <li>final boolean isSet(int field)</li>
+        <li>String getDisplayName(int field, int style, Locale locale) Since 1.6</li>
+        <li>» style : SHORT_FORMAT, SHORT_STANDALONE, LONG_FORMAT, LONG_STANDALONE, NARROW_FORMAT, NARROW_STANDALONE</li>
+        <li>Map&lt;String, Integer&gt; getDIsplayNames(int field, int style, Locale locale) Since 1.6</li>
+        <li>String getCalendarType() Since 1.8</li>
+        <li>void setTimeZone(TimeZone value)</li>
+        <li>TimeZone getTimeZone()</li>
+        <li>void setLenient(boolean lenient)</li>
+        <li>boolean isLenient()</li>
+        <li>void setFirstDayOfWeek(int value) : SUNDAY ~ SATURDAY</li>
+        <li>int getFirstDayOfWeek()</li>
+        <li>void setMinimalDaysInFirstWeek(int value) : 첫 주의 시작이 1월 1일인 경우 1, 그 외의 경우 7</li>
+        <li>int getMinimalDaysInFirstWeek()</li>
+        <li>boolean isWeekDateSupported() Since 1.7 : default return == false</li>
+        <li>boolean equals(Object obj)</li>
+        <li>boolean before(Object when)</li>
+        <li>boolean after(Object when)</li>
+        <li>abstract void add(int field, int amount)</li>
+        <li>abstract void roll(int field, boolean up) : 1 기본단위만큼 up/down</li>
+        <li>void roll(int field, int amount) Since 1.2</li>
+
+        <li>GregorianCalendar는 이를 지원한다.</li>
+        <ul>
+            <li>int getWeekYear() Since 1.7</li>
+            <li>void setWeekDate(int weekYear, int weekOfYear, int dayOfWeek) Since 1.7</li>
+            <li>int getWeeksInWeekYear()</li>
+            <li>final Instant toInstant() Since 1.8</li>
+            <li>int getActualMaximum(int field)</li>
+            <li>int getActualMinimum(int field)</li>
+        </ul>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class Date implements Serializable, Cloneable, Comparable&lt;Date&gt; Since 1.0</summary>
+    <ol>
+        <li>public Date()</li>
+        <li>pulbic Date(long date)</li>
+        <li>long getTime()</li>
+        <li>void setTime(long time)</li>
+        <li>boolean before(Date when)</li>
+        <li>boolean after(Date when)</li>
+        <li>static Date from(Instant instant) Since 1.8</li>
+        <li>Instant toInstant() Since 1.8</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class EventObject implements Serializable Since 1.1</summary>
+    <ol>
+        <li>protected transient Object source</li>
+        <li>public EventObject(Object source)</li>
+        <li>Object getSource()</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>abstract class EventListenerProxy&lt;T extends EventListener&gt; implements EventListener Since 1.4</summary>
+    <ol>
+        <li>EventListener의 추상 랩퍼</li>
+        <li>public EventListenerProxy(T listener)</li>
+        <li>T getListener()</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>final class Formatter implements Closeable, Flushable Since 1.5</summary>
+    <ol>
+        https://docs.oracle.com/javase/10/docs/api/java/util/Formatter.html
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>final class Locale implements Cloneable, Serializable Since 1.1</summary>
+    <ol>
+        https://docs.oracle.com/javase/10/docs/api/java/util/Locale.html<br>
+        public static final Locale ENGLISH, FRENCH, KOREAN, ..., US, FRANCE, KOREA, ...
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>final class Optional&lt;T&gt; Since 1.8</summary>
+    <ol>
+        <li>null을 허용하지 않는 객체에 대한 컨테이너. value-based므로 identity-sensitive한 연산은 피해야 한다.</li>
+        <li>static &lt;T&gt; Optional&lt;T&gt; empty() : 빈 컨테이너 반환</li>
+        <li>static &lt;T&gt; Optional&lt;T&gt; of(T value)</li>
+        <li>static &lt;T&gt; Optional&lt;T&gt; ofNullable(T value) : null이면 empty(), 아니면 of(value)</li>
+        <li>T get()</li>
+        <li>boolean isPresent()</li>
+        <li>boolean isEmpty() Since 11</li>
+        <li>void ifPresent(Consumer&lt;? super T&gt; action)</li>
+        <li>void ifPresentOrElse(Consumer&lt;? super T&gt; action, Runnable emptyAction) Since 9</li>
+        <li>Optional&lt;T&gt; filter(Predicate&lt;? super T&gt; predicate) : 값이 존재하고 필터를 통과하면 그대로 반환. 아니면 빈 컨테이너 반환</li>
+        <li>&lt;U&gt; Optional&lt;U&gt; map(Function&lt;? super T, ? extends U&gt; mapper)</li>
+        <li>&lt;U&gt; Optional&lt;U&gt; flatMap(Function&lt;? super T, ? extends Optional&lt;? extends U&gt;&gt; mapper)</li>
+        » mapper가 반환하는 값 자체가 Optional이므로 map()과 달리 추가적인 Optional로 감싸지 않는다.
+        <li>Optional&lt;T&gt; or(Supplier&lt;? extends Optional&lt;? extends T&gt;&gt; supplier) Since 9</li>
+        » 값이 존재하면 그대로 반환. 없으면 제공되는 값 반환.
+        <li>Stream&lt;T&gt; stream() Since 9</li>
+        » 값이 존재하면 해당 값 하나만 포함하는 스트림 반환. 없으면 빈 스트림 반환.
+        <li>T orElse(T other)</li>
+        <li>T orElseGet(Supplier&lt;? extends T&gt; supplier)</li>
+        <li>T orELseThrow() Since 10 : 값이 없으면 예외</li>
+        <li>&lt;X extends Throwable&gt; T orELseThrow(Supplier&lt;? extends X&gt; exceptionSupplier) throws X extends Throwable</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>final class OptionalDouble Since 1.8</summary>
+    <ol>
+        <li>static OptionalDouble empty()</li>
+        <li>static OptionalDouble of(double value)</li>
+        <li>double getAsDouble()</li>
+        <li>boolean isPresent()</li>
+        <li>boolean isEmpty()</li>
+        <li>void ifPresent(DoubleConsumer action)</li>
+        <li>void ifPresentOrElse(DoubleConsumer action, Runnable emptyAction) Since 9</li>
+        <li>DoubleStream stream() Since 9</li>
+        <li>double orElse(double other)</li>
+        <li>double orElseGet(DoubleSupplier supplier)</li>
+        <li>double orElseThrow() Since 10</li>
+        <li>&lt;X extends Throwable&gt; double orElseThrow(Supplier&lt;? extends X&gt; exceptionSupplier) throws X extends Throwable</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>final class OptionalInt Since 1.8</summary>
+    참고: OptionalDouble
+</details>
+
+<hr>
+
+<details>
+    <summary>final class OptionalLong Since 1.8</summary>
+    참고: OptionalDouble
+</details>
+
+<hr>
+
+<details>
+    <summary>class DoubleSummaryStatistics implements DoubleConsumer Since 1.8</summary>
+    <ol>
+        double에 관한 통계를 모은 상태 객체. 스트림과 함께 사용되도록 설계되었다.<br>
+        예. DoubleSummaryStatistics stats = doubleStream.collect(DoubleSummaryStatistics::new, DoubleSummaryStatistics::accept, DoubleSummaryStatistics::combine);<br>
+        stats = people.stream().collect(Collectors.summarizingDouble(Person::getWeight));
+        
+        <li>DoubleSummaryStatistics() : 갯수 0, 합계 0, 최솟값 Double.POSITIVE_INFINITY, 최댓값 Double.NEGATIVE_INFINITY, 평균 0인 객체 생성.</li>
+        <li>DoubleSummaryStatistics(long count, double min, double max, double sum) Since 10</li>
+        <li>void accept(double value) : 요약 정보에 value를 추가해 기록</li>
+        <li>void combine(DoubleSummaryStatistics other) : other를 호출자에 추가</li>
+        <li>final long getCount()</li>
+        <li>final double getSum()</li>
+        <li>final double getMin()</li>
+        <li>final double getMax()</li>
+        <li>final double getAverage()</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class IntSummaryStatistics implements IntConsumer Since 1.8</summary>
+    참고: DoubleSummaryStatistics
+</details>
+
+<hr>
+
+<details>
+    <summary>class LongSummaryStatistics imlements LongConsumer, IntConsumer Since 1.8</summary>
+    참고: DoubleSummaryStatistics
+</details>
+
+<hr>
+
+<details>
+    <summary>class Properties extends Hashtable&lt;Object, Object&gt; Since 1.0</summary>
+    <ol>
+        stream을 통해 로드/저장되는 영구적인 속성값들을 표현. 기본값으로 이용하기 위해 다른 Properties를 포함할 수 있다. 쓰레드-안전하다.
+            
+        <li>protected Properties defaults</li>
+        <li>public Properties()</li>
+        <li>public Properties(int initialCapacity)</li>
+        <li>public Properties(Properties defaults)</li>
+        <li>Object setProperty(String key, String value) Since 1.2</li>
+        <li>String getProperty(String key)</li>
+        <li>String getProperty(String key, String defaultValue)</li>
+        <li>Enumeration&lt;?&gt; propertyNames()</li>
+        <li>Set&lt;String&gt; stringPropertyNames() Since 1.6</li>
+        <li>void load(Reader reader) Since 1.6</li>
+        <li>void load(InputStream inStream) Since 1.2</li>
+        <li>void store(Writer writer, String comments) Since 1.6</li>
+        <li>void store(OutputStream out, String comments) Since 1.2</li>
+        <li>void loadFromXML(InputStream in) Since 1.5</li>
+        <li>void storeToXML(OutputStream os, String comment) Since 1.5</li>
+        <li>void storeToXML(OutputStream os, String comment, String encoding) Since 1.5</li>
+        <li>void storeToXML(OutputStream os, String comment, Charset charset) Since 10</li>
+        <li>void list(PrintStream out) : 디버깅에 유용</li>
+        <li>void list(PrintWriter out) Since 1.1 : 디버깅에 유용</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class Random implements Serializable Since 1.0</summary>
+    <ol>
+        의사난수 생성. 쓰레드-안전하지만 성능 저하 가능성이 있으므로 ThreadLocalRandom을 고려할 것.
+        <li>public Random()</li>
+        <li>public Random(long seed)</li>
+        <li>void setSeed(long seed)</li>
+        <li>int next(int bits) Since 1.1</li>
+        <li>void nextBytes(byte[] bytes) Since 1.1</li>
+        <li>int nextInt()</li>
+        <li>int nextInt(int bound) Since 1.2 : upperbound</li>
+        <li>long nextLong()</li>
+        <li>boolean nextBoolean() Since 1.2</li>
+        <li>float nextFloat()</li>
+        <li>double nextDouble()</li>
+        <li>double nextGaussian()</li>
+        <li>IntStream ints(long streamSize) Since 1.8</li>
+        <li>IntStream ints() Sine 1.8 : ints(Long.MAX_VALUE)</li>
+        <li>IntStream ints(long streamSize, int randomNumberOrigin, int randomNumberBound) Since 1.8 : [origin, bound)</li>
+        <li>IntStream ints(int randomNumberOrigin, int randomNumberBound) Since 1.8</li>
+        <li>LongStream longs(long streamSize) Since 1.8 ... + double</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>final class SplittableRandom Since 1.8</summary>
+    <ol>
+        <li>분열하는 의사난수 생성기. 쓰레드-안전하지 않으며, 분열하여 쓰레드들이 각자 하나씩 갖도록 설계되었다.</li>
+        <li>public SplittableRandom(long seed)</li>
+        <li>public SplittableRandom()</li>
+        <li>SplittableRandom split() : 분열. 상태를 공유하진 않지만, 발생한 난수들은 통계적으로 유사한 속성을 갖는다.</li>
+        <li>void nextBytes(byte[] bytes) Since 10</li>
+        <li>int nextInt() + long, double</li>
+        <li>int nextInt(int bound) : [0, bound) + long, double</li>
+        <li>int nextInt(origin, int bound) : [origin, bound) + long, double</li>
+        <li>boolean nextBoolean()</li>
+        <li>IntStream ints(long streamSize) + long, double</li>
+        <li>IntStream ints() + long, double</li>
+        <li>IntStream ints(long streamSize, int randomNumberOrigin, int randomNumberBound) + long, double</li>
+        <li>IntStream ints(int randomNumberOrigin, int randomNumberBound) + long, double</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>final class Scanner implements Iterator&lt;String&gt;, Closeable Since 1.5</summary>
+    <ol>
+        정규 표현식을 통해 원시 타입과 String을 분리해내는 간단한 text scanner.
+        <br>https://docs.oracle.com/javase/10/docs/api/java/util/Scanner.html
+        
+        <li>public Scanner(Readable source)</li>
+        <li>public Scanner(InputStream source)</li>
+        <li>public Scanner(InputStream source, String charsetName)</li>
+        <li>public Scanner(InputStream source, Charset charset) Since 10</li>
+        <li>public Scanner(File source)</li>
+        <li>public Scanner(File source, String charsetName)</li>
+        <li>public Scanner(File source, Charset charset) Since 10</li>
+        <li>public Scanner(Path source) Since 1.7</li>
+        <li>public Scanner(Path source, String charsetName) Snice 1.7</li>
+        <li>public Scanner(Path source, Charset charset) SInce 10</li>
+        <li>public Scanner(String source)</li>
+        <li>public Scanner(ReadableByteChannel source)</li>
+        <li>public Scanner(ReadableByteChannel source, String charsetName)</li>
+        <li>public Scanner(ReadableByteChannel source, Charset charset) Since 10</li>
+
+        <li>IOException ioException() : 마지막으로 던진 예외를 반환</li>
+        <li>Pattern delimiter() : 구분자 반환</li>
+        <li>Scanner useDelimiter(Pattern pattern)</li>
+        <li>Scanner useDelimiter(String pattern)</li>
+        <li>Locale locale()</li>
+        <li>Scanner useLocale(Locale locale)</li>
+        <li>int radix()</li>
+        <li>Scanner useRadix(int radix)</li>
+        <li>MatchResult match()</li>
+        <li>boolean hasNext()</li>
+        <li>String next()</li>
+        <li>boolean hasNext(String pattern)</li>
+        <li>String next(String pattern)</li>
+        <li>boolean hasNext(Pattern pattern)</li>
+        <li>String next(Pattern pattern)</li>
+        <li>boolean hasNextLine()</li>
+        <li>String nextLine()</li>
+        <li>String findInLine(String pattern)</li>
+        <li>String findInLine(Pattern pattern)</li>
+        <li>String findWithinHorizon(String pattern, int horizon)</li>
+        <li>String findWIthinHorizon(Pattern pattern, int horizon)</li>
+        <li>Scanner skip(Pattern pattern)</li>
+        <li>Scanner skip(String pattern)</li>
+        <li>boolean hasNextBoolean() + byte, short, int, long, float, double, BigInteger, BigDecimal</li>
+        <li>boolean hasNextByte(int radix) + short, int, long, BigInteger</li>
+        <li>boolean nextBoolean() + byte, short, int, long, float, double, BigInteger, BigDecimal</li>
+        <li>byte nextByte(int radix) + short, int, long, BigInteger</li>
+        <li>Scanner reset() Since 1.6 : 초기 설정 Scanner</li>
+        <li>Stream&lt;String&gt; tokens() Since 9</li>
+        <li>Stream&lt;MatchResult&gt; findAll(Pattern pattern) Since 9</li>
+        <li>Stream&lt;MatchResult&gt; findAll(String patString) Since 9</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class StringTokenizer implements Enumberation&lt;Object&gt; Since 1.0</summary>
+    <ol>
+        <li>public StringTokenizer(String str, String delim, boolean returnDelims)</li>
+        <li>public StringTokenizer(String str, String delim)</li>
+        <li>public StringTokenizer(String str)</li>
+        <li>boolean hasMoreTokens()</li>
+        <li>String nextToken()</li>
+        <li>String nextToken(String delim)</li>
+        <li>int countTokens()</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>final class StringJoiner Since 1.8</summary>
+    <ol>
+        <li>public StringJoiner(CharSequence delimiter)</li>
+        <li>public StringJoiner(CharSequence delimiter, CharSequence prefix, CharSequence suffix)</li>
+        <li>StringJoiner setEmptyValue(CharSequence emptyValue)</li>
+        <li>String toString()</li>
+        <li>StringJoiner add(CharSequence newElement)</li>
+        <li>StringJoiner merge(StringJoiner other)</li>
+        <li>int length()</li>
+    </ol>
+</details>
+
+<hr>
+<details>
+    <summary>abstract class TimerTask implements Runnable Since 1.3</summary>
+    <ol>
+        <li>protected TimerTask()</li>
+        파생 클래스의 객체 생성을 위한 빈 생성자
+        <li>abstract void run()</li>
+        파생 클래스에서 정의해야 하는 Runnable 인터페이스의 메서드
+        <li>boolean cancel()</li>
+        이 시간 작업을 취소한다. 작업이 1회용으로 스케쥴되었지만 아직 실행되지 않은 경우, 또는 아직 스케쥴되지 않은 경우 작업은 결코 실행되지 않는다. 반복 작업으로 스케쥴된 경우, 작업은 결코 반복되지 않는다. 만약 이 호출이 작업 도중에 호출되더라도, 작업은 마무리까지 실행된다.<br>
+        반복 호출 가능하며, 이 경우 2회째 호출부터는 아무런 영향이 없다.<br>
+        * true 반환 : 1회용으로 스케쥴되었지만 아직 실행되지 않은 경우, 반복 작업으로 스케쥴된 경우<br>
+        * false 반환 : 1회용으로 스케쥴되어 이미 실행된 경우, 아직 스케쥴되지 않은 경우, 이미 취소된 경우
+        <li>long scheduledExecutionTime()</li>
+        이 작업의 가장 최근 실행이 스케쥴된 시점을 반환한다. 전형적으로 작업 내부의 run 메서드 안에서, 작업이 너무 길어지는 것을 방지하기 위해 사용된다.
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>class Timer Since 1.3</summary>
+    <ol>
+        백그라운드 쓰레드에서 미래에 실행될 작업들을 스케쥴링하는 기능을 제공한다. 작업은 일회용일수도, 일정한 주기를 가지고 반복될 수도 있다. 한 타이머의 모든 작업들은 하나의 백그라운드 쓰레드를 공유하기 때문에, 작업의 실행은 직렬적이며, 따라서 각 작업들은 가능한 한 빠르게 종료되어야 한다. 그렇지 않은 경우, 뒤에 대기하는 모든 작업이 밀려 제대로 실행되지 않을 수 있다.<br>
+        기본적으로 타이머의 백그라운드 쓰레드는 데몬 쓰레드가 아니다. 따라서 타이머의 작업이 전체 프로그램의 종료를 지연시킬 수 있다. 백그라운드 쓰레드는 타이머 임의의 생성자에 의해 시작된다.<br>
+        * 이 클래스는 쓰레드-안전하다.<br>
+        * 이 클래스는 정시성을 보장하지 않는다. 스케쥴은 Object.wait(long) 메서드를 통해 이루어진다.<br>
+        java.util.concurrent 패키지의 ScheduledThreadPoolExecutor가 더 나은 대안으로 이용될 수 있다.
+        <li>public Timer()</li>
+        <li>public Timer(boolean isDaemon)</li>
+        기본적으로 백그라운드 쓰레드는 데몬으로 실행되지 않지만, 이를 변경할 수 있다.
+        <li>public Timer(String name) Since 1.5</li>
+        <li>public Timer(String name, boolean isDaemon) Since 1.5</li>
+        <li>void schedule(TimerTask task, long delay)</li>
+        delay밀리초 이후 task가 실행되도록 스케쥴.
+        <li>void schedule(TimerTask task, Date time)</li>
+        time에 task가 실행되도록 스케쥴. time이 과거라면 즉시 실행
+        <li>void schedule(TimerTask task, long delay, long period)</li>
+        delay밀리초 이후 period 주기를 갖고 task가 실행되도록 스케쥴.
+        <li>void schedule(TimerTask task, Date firstTime, long period)</li>
+        <li>void scheduleAtFixedRate(TimerTask task, long delay, long period)</li>
+        period가 이전 task 종료가 아닌 최초 실행 시점을 기준으로 작동한다. 따라서 어떤 이유로 이전 작업이 지연된 경우, 시간당 작업률을 맞추기 위해 이후 작업이 연속적으로 실행될 수 있다.
+        <li>void scheduleAtFixedRate(TimerTask task, Date firstTime, long period)</li>
+        <li>void cancel()</li>
+        타이머를 종료한다. 스케쥴된 모든 작업을 버리고, 현재 실행중인 작업에는 간섭하지 않는다. 타이머 종료 후 백그라운드 쓰레드도 우아하게 종료되어 GC 대상이 된다. 이후 더 이상의 스케쥴은 불가능하다.
+        <li>int purge() Since 1.5</li>
+        호출할 일이 거의 없는 메서드. 많은 작업을 한번에 취소한 경우, 취소한 작업들을 제거하여 참조가 없는 경우 GC 대상이 되도록 한다.
+    </ol>
+</details>
+
+<hr>
+
+GregorianCalendar
+Hashtable&lt;K,​V&gt;
+ListResourceBundle
+Observable
+PropertyPermission
+PropertyResourceBundle
+ResourceBundle
+ServiceLoader&lt;S&gt;
+SimpleTimeZone
+Spliterators
+SplittableRandom
+TimeZone
+UUI
 Formattable	
 Observer
 PrimitiveIterator
