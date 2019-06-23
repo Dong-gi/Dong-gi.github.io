@@ -6,10 +6,13 @@ const posts = {
         { "filename": "posts/tip/vi.html", "category": "Tip", "title": "vi" },
         { "filename": "posts/tip/hangul.html", "category": "Tip", "title": "한글 유니코드" },
         
+
         { "filename": "posts/java/basic.html", "category": "Programming/Java/Tutorial", "title": "Java 시작하기" },
         { "filename": "posts/java/oop.html", "category": "Programming/Java/Tutorial", "title": "Java 객체지향" },
         { "filename": "posts/java/version.html", "category": "Programming/Java/Tutorial", "title": "Java 버전별 추가사항" },
         { "filename": "posts/java/jni.html", "category": "Programming/Java/Tutorial", "title": "Java Native Interface" },
+        { "filename": "posts/java/javafx.html", "category": "Programming/Java/Tutorial", "title": "JavaFX", "top": true },
+
         { "filename": "posts/java/java.io.html", "category": "Programming/Java/java.base", "title": "java.io" },
         { "filename": "posts/java/java.lang.html", "category": "Programming/Java/java.base", "title": "java.lang" },
         { "filename": "posts/java/java.lang.annotation.html", "category": "Programming/Java/java.base", "title": "java.lang.annotation" },
@@ -24,16 +27,14 @@ const posts = {
         { "filename": "posts/java/java.text.html", "category": "Programming/Java/java.base", "title": "java.text" },
         { "filename": "posts/java/java.time.html", "category": "Programming/Java/java.base", "title": "java.time" },
         { "filename": "posts/java/java.time.format.html", "category": "Programming/Java/java.base", "title": "java.time.format" },
-        { "filename": "posts/java/209.html", "category": "Programming/Java/java.base", "title": "java.util", "top": true },
-        { "filename": "posts/java/273.html", "category": "Programming/Java/java.base", "title": "java.util.concurrent", "top": true },
-        { "filename": "posts/java/299.html", "category": "Programming/Java/java.base", "title": "java.util.concurrent.atomic", "top": true },
-        { "filename": "posts/java/310.html", "category": "Programming/Java/java.base", "title": "java.util.function", "top": true },
+        { "filename": "posts/java/java.util.html", "category": "Programming/Java/java.base", "title": "java.util" },
+        { "filename": "posts/java/java.util.concurrent.html", "category": "Programming/Java/java.base", "title": "java.util.concurrent" },
+        { "filename": "posts/java/java.util.concurrent.atomic.html", "category": "Programming/Java/java.base", "title": "java.util.concurrent.atomic" },
+        { "filename": "posts/java/java.util.function.html", "category": "Programming/Java/java.base", "title": "java.util.function" },
         { "filename": "posts/java/java.util.regex.html", "category": "Programming/Java/java.base", "title": "java.util.regex" },
         { "filename": "posts/java/java.util.stream.html", "category": "Programming/Java/java.base", "title": "java.util.stream" },
         { "filename": "posts/java/java.util.zip.html", "category": "Programming/Java/java.base", "title": "java.util.zip" },
-        
-        
-        { "filename": "posts/1809/451.html", "category": "Programming/Java/JavaFX", "title": "JavaFX" },
+
         { "filename": "posts/1810/458.html", "category": "Programming/Java/Servlet", "title": "필터와 래퍼" },
         { "filename": "posts/1810/457.html", "category": "Programming/Java/Servlet", "title": "컨텍스트 초기화 매개변수" },
         { "filename": "posts/1810/456.html", "category": "Programming/Java/Servlet", "title": "다른 페이지 이동/호출" },
@@ -41,6 +42,11 @@ const posts = {
         { "filename": "posts/1810/454.html", "category": "Programming/Java/Servlet", "title": "web.xml 대신 애너테이션으로 서블릿 기술하기" },
         { "filename": "posts/1810/453.html", "category": "Programming/Java/Servlet", "title": "서블릿 생애주기" },
         { "filename": "posts/1809/446.html", "category": "Programming/Java/Servlet", "title": "JSP&Servlet" },
+        
+        { "filename": "posts/freemarker/template_guide.html", "category": "Programming/Java/FreeMarker/매뉴얼", "title": "템플릿 작성 가이드 2.3.28" },
+        { "filename": "posts/freemarker/programming_guide.html", "category": "Programming/Java/FreeMarker/매뉴얼", "title": "프로그래밍 가이드 2.3.28" },
+        { "filename": "posts/freemarker/xml_guide.html", "category": "Programming/Java/FreeMarker/매뉴얼", "title": "XML 처리 가이드 2.3.28" },
+        { "filename": "posts/freemarker/built_in.html", "category": "Programming/Java/FreeMarker/매뉴얼", "title": "Built-in 목록 2.3.28" },
         
 
         { "filename": "posts/1809/372.html", "category": "Programming/CSS", "title": "CSS" },
@@ -51,13 +57,13 @@ const posts = {
         { "filename": "posts/1809/374.html", "category": "Algorithm", "title": "jduge.koreatech.ac.kr" },
 
         
-        { "filename": "posts/1809/447.html", "category": "Book", "title": "1만 시간의 재발견" },
-        { "filename": "posts/1809/448.html", "category": "Book", "title": "지식의 착각" },
-        { "filename": "posts/1809/449.html", "category": "Book", "title": "인생의 모든 의미" },
-        { "filename": "posts/1809/450.html", "category": "Book", "title": "쇼펜하우어, 돌이 별이 되는 철학" },
-        { "filename": "posts/1810/475.html", "category": "Book", "title": "마음의 탄생" },
-        { "filename": "posts/1810/476.html", "category": "Book", "title": "키르케고르 실존 극장" },
-        { "filename": "posts/1810/477.html", "category": "Book", "title": "생각하는 삶을 위한 철학의 역사" },
+        { "filename": "posts/book/447.html", "category": "Book", "title": "1만 시간의 재발견" },
+        { "filename": "posts/book/448.html", "category": "Book", "title": "지식의 착각" },
+        { "filename": "posts/book/449.html", "category": "Book", "title": "인생의 모든 의미" },
+        { "filename": "posts/book/450.html", "category": "Book", "title": "쇼펜하우어, 돌이 별이 되는 철학" },
+        { "filename": "posts/book/475.html", "category": "Book", "title": "마음의 탄생" },
+        { "filename": "posts/book/476.html", "category": "Book", "title": "키르케고르 실존 극장" },
+        { "filename": "posts/book/477.html", "category": "Book", "title": "생각하는 삶을 위한 철학의 역사" },
 
         
         { "filename": "posts/1810/461.html", "category": "Programming/JavaScript/Basic", "title": "Hello World" },
@@ -91,12 +97,6 @@ const posts = {
         { "filename": "posts/1812/489.html", "category": "Programming/C#.NET/Basic", "title": "C# 기본" },
         { "filename": "posts/1812/491.html", "category": "Programming/C#.NET/Library", "title": "C# 라이브러리" },
         { "filename": "posts/1901/493.html", "category": "Programming/C#.NET/WPF", "title": "WPF" },
-        
-
-        { "filename": "posts/1904/496.html", "category": "Programming/FreeMarker/매뉴얼/2.3.28", "title": "템플릿 작성 가이드" },
-        { "filename": "posts/1904/1904231056.html", "category": "Programming/FreeMarker/매뉴얼/2.3.28", "title": "프로그래밍 가이드" },
-        { "filename": "posts/1904/1904251509.html", "category": "Programming/FreeMarker/매뉴얼/2.3.28", "title": "XML 처리 가이드" },
-        { "filename": "posts/1905/1905101401.html", "category": "Programming/FreeMarker/매뉴얼/2.3.28", "title": "Built-in 목록" },
         
 
         { "filename": "posts/1904/497.html", "category": "Programming/Python/Basic", "title": "Python 기본" },
