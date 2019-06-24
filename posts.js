@@ -115,7 +115,7 @@ const posts = {
 
         { "filename": "posts/db/concept.html", "category": "DB", "title": "기본 개념" },
         { "filename": "posts/db/psql_tutorial.html", "category": "DB", "title": "PostgreSQL 시작하기" },
-        { "filename": "posts/db/psql_sql.html", "category": "DB", "title": "PostgreSQL SQL 언어" },
+        { "filename": "posts/db/psql_sql.html", "category": "DB", "title": "PostgreSQL SQL 언어", "top": true },
         { "filename": "posts/db/psql_to_sqlite.html", "category": "DB", "title": "PostgreSQL → SQLite3 마이그레이션" },
     ],
     "tree": {},

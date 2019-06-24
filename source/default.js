@@ -50,7 +50,7 @@ function loadContent(id, filename) {
     return () => {
         if ($('details p', posts.contents[id]).length > 0) return;
         let content = $("<p>");
-        $(content).load(filename.replace(/ /gm, '%20'), (response, status, xhr) => {
+        $(content).load(filename.replace(/ /gm, '%20') + "?" + new Date().getTime(), (response, status, xhr) => {
             $.each($('.btn-code', content), (idx, node) => {
                 let id = new Date().getTime() + idx;
                 $(node).attr('id', 'code' + id);

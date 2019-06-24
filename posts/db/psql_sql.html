@@ -6,7 +6,7 @@
         <summary>Lexical Structure</summary>
         <ol>
             <li>식별자와 키워드</li>
-            select라는 이름의 컬럼을 가져오려면 select "select" from table_name;처럼 이용한다.
+            select라는 이름의 컬럼을 가져오려면 select "select" from table_name;처럼 이용한다. 그로지 말자...
             <ul>
                 <li>select, from : 키워드</li>
                 <li>"select" : ""로 감싼 식별자. U&"d\0061t\+000061"처럼 유니코드 코드 포인트를 이용할 수 있다.</li>
@@ -372,15 +372,32 @@
         <summary>Table Partitioning</summary>
         <ol>
             <li>개요</li>
-            Table partitioning : 논리적으로 하나인 거대한 테이블을 물리적으로 여러 개로 쪼개 저장하는 것.<br>
-            Range partitioning : 중복되지 않는 열 집합의 구간들로 분할<br>
-            List partitioning : 명시적인 키값 리스트로 분할<br>
-            Hash partitioning : 모듈로 n 공간에서 키값의 나머지가 같은 것들로 분할
+            <ul>
+                <li>Table partitioning : 논리적으로 하나인 거대한 테이블을 물리적으로 여러 개로 쪼개 저장하는 것.</li>
+                <li>Range partitioning : 중복되지 않는 열 집합의 구간들로 분할</li>
+                <li>List partitioning : 명시적인 키값 리스트로 분할</li>
+                <li>Hash partitioning : 모듈로 n 공간에서 키값의 나머지가 같은 것들로 분할</li>
+                <li>상속을 이용한 파티셔닝 : 자식 테이블은 추가적인 컬럼을 가질 수 있으며, 다중 상속도 가능하다.</li>
+            </ul>
 
             <li>파티셔닝</li>
             CHECK, NOT NULL 제약 조건은 파티션 테이블에 상속된다. NO INHERIT 마킹된 CHECK 제약조건은 제외.<br>
             <br>
-            예. 
+            예. create table api_access_log ( account_id int, access_time datetime, request_uri text ) partition by range(access_time);<br>
+            create table api_access_log_201901 partition of api_access_log for values from ('2019-01-01') to ('2019-02-01');<br>
+            <br>
+            파티션 테이블을 파티셔닝할 수 있다.<br>
+            create table api_access_log_201901 partition of api_access_log for values from ('2019-01-01') to ('2019-02-01') partition by range(account_id % 100);
+
+            <li>주의</li>
+            <ul>
+                <li>값 변경으로 인해 행이 한 파티션에서 다른 파티션으로 이동되는 경우, 예약된 UPDATE, DELETE 작업이 실패할 수 있다.</li>
+                <li>BEFORE ROW 트리거는 각 파티션 테이블에 따로 정의해야 한다.</li>
+            </ul>
+
+            <li>Partition Pruning</li>
+            SET enable_partition_pruning = on;을 통해 옵션을 켤 수 있다. 켜 있는 게 디폴트.<br>
+            가지치기 옵션이 켜있는 경우, 쿼리를 실행하기 전에 파티셔닝된 테이블의 정의를 살펴 스캔하지 않아도 되는 테이블들은 제외한다.
         </ol>
     </details>
 </details>
