@@ -14,22 +14,22 @@ public class ByteBufferExample {
 
 		System.out.println(byteBuf.limit() + "->" + intSizedBuf.limit());
 		while(intSizedBuf.hasRemaining())
-			System.out.print(intSizedBuf.get() + " ");
+			System.out.printf("%3d", intSizedBuf.get());
 		System.out.println();
 
 		for(var i = 0; i < bytes.length; ++i)
-			System.out.print(intSizedBuf.alignmentOffset(i, Integer.BYTES) + " ");
+			System.out.printf("%3d", intSizedBuf.alignmentOffset(i, Integer.BYTES));
 		System.out.println();
 
 		byteBuf.get();
 		intSizedBuf = byteBuf.alignedSlice(Integer.BYTES);
 		while(intSizedBuf.hasRemaining())
-			System.out.print(intSizedBuf.get() + " ");
+			System.out.printf("%3d", intSizedBuf.get());
 		System.out.println();
 
 		for(var i = 0; i < bytes.length; ++i)
-			System.out.print(intSizedBuf.alignmentOffset(i, Integer.BYTES) + " ");
-		System.out.println("<- No upper bounds check.");
+			System.out.printf("%3d", intSizedBuf.alignmentOffset(i, Integer.BYTES));
+		System.out.println(" <- No upper bounds check.");
 	}
 
 }
