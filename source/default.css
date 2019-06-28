@@ -6,16 +6,16 @@ div {
     word-wrap: break-word;
 }
 
-.my-code, .modal-body {
-    word-wrap: normal;
+img {
+    max-width: 100%;
 }
 
 main {
     width: 100%;
 }
 
-img {
-    max-width: 100%;
+.jumbotron {
+    padding: 1.2rem 0.5rem;
 }
 
 summary {
@@ -24,8 +24,8 @@ summary {
 }
 
 summary>div.col-12 {
-    margin-left: -2em;
-    padding-left: 2em;
+    margin-left: -3em;
+    padding-left: 3em;
 }
 
 summary::-webkit-details-marker {
@@ -33,14 +33,11 @@ summary::-webkit-details-marker {
 }
 
 summary:before {
-    content: "+";
-    font-size: 1.1em;
-    line-height: 1.1em;
-    padding: 0 0.5em;
+    content: "　+　";
 }
 
 details[open]>summary:before {
-    content: "-";
+    content: "　-　";
 }
 
 details>p {
@@ -50,32 +47,48 @@ details>p {
     padding: 0.5em 1em;
 }
 
-details details {
-    margin: 0.5rem 0;
+p>details>summary {
+    margin-left: -0.7;
 }
 
 details details details {
-    padding-left: 1rem;
+    padding: 0.25em 0 0.25em 2.0rem;
+    margin: 0.25em 0;
 }
 
-dl, ol, ul {
+details details details[open] {
+    border: solid 1.5px #eee;
+    border-radius: 0.5em;
+}
+
+details details details>summary {
+    margin-left: -1.0rem;
+}
+
+details details details dl,
+details details details ol,
+details details details ul {
     margin-left: -1.5em;
-}
-
-.my-code ol, .modal-body ol {
-    margin-left: 0;
 }
 
 li {
     margin: 0.5rem 0;
 }
 
-.my-code li, .code-modal li {
-    margin: 0;
-}
-
 li:hover {
     background-color: antiquewhite;
+}
+
+.my-code, .modal-body {
+    word-wrap: normal;
+}
+
+.my-code ol, .modal-body ol {
+    margin-left: 0;
+}
+
+.my-code li, .code-modal li {
+    margin: 0;
 }
 
 .my-code {
@@ -91,9 +104,6 @@ li:hover {
     .modal-dialog {
         max-width: 1366px;
         width: 80%;
-    }
-    .jumbotron {
-        padding: 2rem 1rem;
     }
 }
 

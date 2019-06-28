@@ -397,7 +397,8 @@
 
             <li>Partition Pruning</li>
             SET enable_partition_pruning = on;을 통해 옵션을 켤 수 있다. 켜 있는 게 디폴트.<br>
-            가지치기 옵션이 켜있는 경우, 쿼리를 실행하기 전에 파티셔닝된 테이블의 정의를 살펴 스캔하지 않아도 되는 테이블들은 제외한다.
+            가지치기 옵션이 켜있는 경우, 파티셔닝된 테이블의 정의(인덱스의 정의가 아니라)를 살펴, 스캔하지 않아도 되는 테이블들은 제외한다.<br>
+            가지치기 시점 : 쿼리 플랜 초기화 시, 쿼리 플랜 실행 중(Append 노드 타입에 한하여)
         </ol>
     </details>
 </details>
@@ -408,23 +409,15 @@
     <summary>Data Manipulation</summary>
     <ol>
         <li>Inserting Data</li>
-        DB - PostgreSQL 시작하기 - SQL 언어 - 테이블에 자료 입력하기 참고
-            
         <li>Updating Data</li>
-        UPDATE products SET price = 10 WHERE price = 5;<br>
-        UPDATE products SET price = price * 1.10;<br>
-        UPDATE mytable SET a = 5, b = 3, c = 1 WHERE a &gt; 0;
-            
         <li>Deleting Data</li>
-        DELETE FROM products WHERE price = 10;<br>
-        DELETE FROM products;
+        DB - PostgreSQL 시작하기 - SQL 언어 참고
             
         <li>Returning Data From Modified Rows</li>
         CREATE TABLE users (firstname text, lastname text, id serial primary key);<br>
+        <br>
         INSERT INTO users (firstname, lastname) VALUES ('Joe', 'Cool') RETURNING id;<br>
-        <br>
         UPDATE products SET price = price * 1.10 WHERE price <= 99.99 RETURNING name, price AS new_price;<br>
-        <br>
         DELETE FROM products WHERE obsoletion_date = 'today' RETURNING *;
     </ol>
 </details>
@@ -433,69 +426,107 @@
 
 <details>
     <summary>Queries</summary>
-    <ol>
-        <li>WHERE 절</li>
-        SELECT ... FROM fdt WHERE c1 IN (1, 2, 3)<br>
-        SELECT ... FROM fdt WHERE c1 IN (SELECT c3 FROM t2 WHERE c2 = fdt.c1 + 10)<br>
-        SELECT ... FROM fdt WHERE EXISTS (SELECT c1 FROM t2 WHERE c2 &gt; fdt.c1)
-            
-        <li>GROUPING SETS, CUBE, ROLLUP</li>
-        SELECT brand, size, sum(sales) FROM items_sold GROUP BY GROUPING SETS ((brand), (size), ());
-             brand | size | sum
-            -------+------+-----
-             Foo   |      |  30
-             Bar   |      |  20
-                   | L    |  15
-                   | M    |  35
-                   |      |  50
-            (5 rows)
-            
-            CUBE ( a, b, c ) -- is equivalent to // power set
-            GROUPING SETS (
-                ( a, b, c ),
-                ( a, b    ),
-                ( a,    c ),
-                ( a       ),
-                (    b, c ),
-                (    b    ),
-                (       c ),
-                (         )
-            )
-            
-            ROLLUP ( a, (b, c), d ) -- is equivalent to
-            GROUPING SETS (
-                ( a, b, c, d ),
-                ( a, b, c    ),
-                ( a          ),
-                (            )
-            )
-            
-            8.3 Combining Queries
-            query1 UNION [ALL] query2
-            query1 INTERSECT [ALL] query2
-            query1 EXCEPT [ALL] query2
-            
-            
-            8.4 LIMIT and OFFSET
-            SELECT select_list
+    <details>
+        <summary>Table Expressions</summary>
+        <details>
+            <summary>FROM 절</summary>
+            <ol>
+                <li>일반 : FROM table_reference [, table_reference [, ...]]</li>
+
+                <li>Cartesian product(Cross join) : FROM T1 CROSS JOIN T2</li>
+
+                <li>판별식을 이용한 조인 : FROM T1 { [INNER] | { LEFT | RIGHT | FULL } [OUTER] } JOIN T2 ON boolean_expression</li>
+
+                <li>컬럼 셋을 이용한 조인 : FROM T1 { [INNER] | { LEFT | RIGHT | FULL } [OUTER] } JOIN T2 USING ( join column list )</li>
+
+                <li>자연 조인 : FROM T1 NATURAL { [INNER] | { LEFT | RIGHT | FULL } [OUTER] } JOIN T2</li>
+                두 테이블의 공통된 컬럼 리스트를 USING한 것과 동일한 결과를 산출한다.
+
+                <li>테이블 별명 : FROM table_reference [AS] alias</li>
+                셀프 조인을 위해선 필수적으로 사용된다. 모호함을 피하기 위해 괄호를 이용할 수도 있다. SELECT * FROM (my_table AS a CROSS JOIN my_table) AS b ...<br>
+                컬럼에도 별명을 붙일 수 있다. FROM table_reference [AS] alias ( column1 [, column2 [, ...]] )
+
+                <li>서브쿼리 사용을 위한 별명 : FROM (SELECT * FROM table1) AS alias</li>
+
+                <li>Table function에 별명 사용</li>
+                Table function : 행 집합을 반환하는 함수.<br>
+                <br>
+                CREATE TABLE foo (fooid int, foosubid int, fooname text);<br>
+                CREATE FUNCTION getfoo(int) RETURNS SETOF foo AS $$ SELECT * FROM foo WHERE fooid = $1; $$ LANGUAGE SQL;<br>
+                SELECT * FROM getfoo(1) AS t1;
+
+                <li>LATERAL 서브쿼리 : 키워드 좌측의 테이블들을 참조할 수 있다</li>
+                예, unknown_log 테이블로부터 각 로그의 첫 30글자, 삽입 시각, 로그 길이를 가져오기<br>
+                SELECT substring(log.log, 1, 30), log.insert_datetime, len FROM unknown_log log LEFT JOIN LATERAL LENGTH(log.log) len ON true;<br>
+                LEFT JOIN ON true == CROSS JOIN. 사실 LATERAL 빼도 잘 동작하며, 실제로 사용할 일이 있을진 모르겠음...<br>
+            </ol>
+        </details>
+
+        <details>
+            <summary>WHERE 절</summary>
+            <li>GROUPING SETS, CUBE, ROLLUP</li>
+            한 테이블에 대해 같은 조건으로 여러 그룹에 대해 SELECT해야하는 경우, 이를 한 번에 질의할 수 있다.
+            SELECT brand, size, sum(sales) FROM items_sold GROUP BY GROUPING SETS ((brand), (size), ());
+            → 브랜드별 판매량, 사이즈별 판매량, 전체 판매량 각각이 한 테이블에 모두 표시된다
+                
+            GROUP BY CUBE ( a, b ) : a, b, c의 파워 셋에 대해 질의한 것과 같다. ((), (a), (b), (a, b))
+            GROUP BY ROLLUP ( a, b ) : 공집합부터 a, b, c를 순서대로 추가한 집합들에 대해 질의한 것과 같다. ((), (a), (a, b))
+            CUBE, ROLLUP의 요소로 리스트가 올 수 있다. ROLLUP(a, (b, c)) == ((), (a), (a, b, c))
+
+            여러 그루핑 조건을 같이 쓰는 경우, 마지막 조건에 대해 cross product가 이루어진다
+            GROUP BY a, CUBE (b, c), GROUPING SETS (d, e) → ((a, d), (a, e), (a, b, d), (a, b, e), ..., (a, b, c, e))
+
+            GROUP BY 절에서 행 생성자의 이용은 ROW(a, b)를 통해 할 수 있다
+        </details>
+    </details>
+    
+    <details>
+        <summary>Select Lists</summary>
+        SELECT DISTINCT select_list ... : 각 열집합에 대해 고유한 행들만 선택한다
+        SELECT DISTINCT ON (expression [, expression ...]) select_list ... : 모든 행에 대해 expression이 평가된다. 두 행의 모든 평가값이 같은 경우 두 행은 같다고 간주한다
+
+    </details>
+    
+    <details>
+        <summary>Combining Queries</summary>
+        query1 UNION [ALL] query2
+        query1 INTERSECT [ALL] query2
+        query1 EXCEPT [ALL] query2
+    </details>
+    
+    <details>
+        <summary>Sorting Rows</summary>
+        
+    </details>
+    
+    <details>
+        <summary>LIMIT and OFFSET</summary>
+        LIMIT : 출력 행의 개수 제한<br>
+        OFFSET : 산출된 순서대로 n개 행을 출력하지 않고 무시
+        SELECT select_list
                 FROM table_expression
                 [ ORDER BY ... ]
                 [ LIMIT { number | ALL } ] [ OFFSET number ]
-            
-            8.5 VALUES Lists
-            - 실제 디스크 상에 테이블을 만들지 않으면서 상수 테이블을 만드는 방법.
-            VALUES ( expression [, ...] ) [, ...]
-            - 문법적으로 "SELECT select_list FROM table_expression"과 동일하게 취급된다.
-            
-            => SELECT * FROM (VALUES (1, 'one'), (2, 'two'), (3, 'three')) AS t (num,letter);
-             num | letter
-            -----+--------
-               1 | one
-               2 | two
-               3 | three
-            (3 rows)
-            
-            8.6 WITH Queries
+    </details>
+    
+    <details>
+        <summary>VALUES Lists</summary>
+        - 실제 디스크 상에 테이블을 만들지 않으면서 상수 테이블을 만드는 방법.
+        VALUES ( expression [, ...] ) [, ...]
+        - 문법적으로 "SELECT select_list FROM table_expression"과 동일하게 취급된다.
+        
+        => SELECT * FROM (VALUES (1, 'one'), (2, 'two'), (3, 'three')) AS t (num,letter);
+         num | letter
+        -----+--------
+           1 | one
+           2 | two
+           3 | three
+        (3 rows)
+    </details>
+    
+    <details>
+        <summary>WITH Queries</summary>
+        8.6 WITH Queries
             8.6.1 SELECT in WITH
             - 여러 개의 SELECT 서브 쿼리를 날리는 대신 WITH을 이용하여 분리할 수 있다.
             WITH regional_sales AS (
@@ -530,14 +561,14 @@
                     2. 작업 테이블의 내용을 중간 테이블 내용으로 대체한다. 중간 테이블은 비운다.
             
                 - 계산 순서
-            time    working_table   t(n)
-            init                    1
+            time    working_table(n)   t
+            0                    1
             1       2               1, 2
             2       3               1, 2, 3
             ...
             99      100             1, 2, 3, ..., 100
             100     empty           1, 2, 3, ..., 100
-            end
+            
             
                 - RECURSIVE 연산은 계층 구조나 트리 형태의 데이터에 유용하다.
             WITH RECURSIVE included_parts(sub_part, part, quantity) AS (
@@ -562,10 +593,7 @@
             )
             INSERT INTO products_log
             SELECT * FROM moved_rows;
-            
-            
-            
-    </ol>
+    </details>
 </details>
 
 <hr>
@@ -573,7 +601,116 @@
 <details>
     <summary>Data Types</summary>
     <ol>
-
+            9. Data Type
+            9.1 Numeric Types
+            smallint            2bytes
+            smallserial         2bytes : 1 ~ 2^15-1
+            integer             4bytes
+            serial              4bytes : 1 ~ 2^31-1
+            bigint              8bytes
+            bigserial           8bytes : 1 ~ 2^63-1
+            
+            decimal             variable : user-specified precision, exact
+            numeric             variable : decimal과 동일
+            
+            real                4bytes
+            double precision    8bytes
+            
+            9.2 Character Types
+            varchar(n)  variable-length with limit
+            char(n)     fixed-length, blank padded
+            text        variable unlimited length
+            
+            9.3 Date/Time Types
+            timestamp   8bytes  date and time | 4713 BC ~ 294276AD | 1ms
+            date        4bytes  date, no time | 4713 BC ~ 5874897AD | 1day
+            time        8bytes  time, no date | 00:00:00 ~ 24:00:00 | 1ms
+            time with time zone 12bytes       | 00:00:00+1459 ~ 24:00:00-1459 | 1ms
+            interval    16bytes time interval | -178000000years ~ 178000000years | 1ms
+            
+            - Recommended date format : 1999-01-08
+            - Time :
+                04:05
+                04:05:06
+                040506
+                04:05:06.789
+            
+                04:05-08:00
+                04:05:06-08:00
+                040506-08
+                04:05:06.789-8
+            
+            - Time Zone :
+                -8
+                -800
+                -8:00
+            
+            - Time Stamp : date + time
+                1999-01-08 04:05:06
+                1999-01-08 04:05:06 -8:00
+            
+            - Special Date/Time
+                string      valid type              description
+                epoch       date, timestamp         1970-01-01 00:00:00+00 (Unix system time zero)
+                infinity	date, timestamp	        later than all other time stamps
+                -infinity	date, timestamp	        earlier than all other time stamps
+                now	        date, time, timestamp	current transaction's start time
+                today	    date, timestamp	        midnight today
+                tomorrow	date, timestamp	        midnight tomorrow
+                yesterday	date, timestamp	        midnight yesterday
+                allballs	time	                00:00:00.00 UTC
+            
+            9.4 boolean
+            
+            9.5 Enumerated Types
+            CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy');
+            
+            9.6 Geometric Types
+            point	16 bytes	    Point on a plane	(x,y)
+            line	32 bytes	    Infinite line	    {A,B,C} // Ax + By + C = 0
+            lseg	32 bytes	    Finite line segment	((x1,y1),(x2,y2))
+            box	    32 bytes	    Rectangular box	    ((x1,y1),(x2,y2))
+            path	16+16n bytes	Closed path         ((x1,y1),...)
+            path	16+16n bytes	Open path	        [(x1,y1),...]
+            polygon	40+16n bytes	Polygon             ((x1,y1),...)
+            circle	24 bytes	    Circle	            <(x,y),r>
+            
+            9.7 Declaration of Composite Types
+            CREATE TYPE complex AS (
+                r       double precision,
+                i       double precision
+            );
+            
+            - 테이블을 만들면 그와 동일한 이름의 타입이 생성된다.
+            CREATE TABLE inventory_item (
+                name            text,
+                supplier_id     integer REFERENCES suppliers,
+                price           numeric CHECK (price > 0)
+            );
+            
+            CREATE TABLE on_hand (
+                item      inventory_item,
+                count     integer
+            );
+            
+            INSERT INTO on_hand VALUES (ROW('fuzzy dice', 42, 1.99), 1000);
+            
+            - Literal Composite CONSTRAINT
+            '( val1 , val2 , ... )'
+            
+            - 갱신
+            INSERT INTO mytab (complex_col) VALUES((1.1,2.2));
+            
+                - SET 바로 다음엔 괄호가 없어도 되지만, 등호 다음엔 필요하다.
+            UPDATE mytab SET complex_col.r = (complex_col).r + 1 WHERE ...;
+            
+            9.8 Range Types
+            int4range — Range of integer
+            int8range — Range of bigint
+            numrange — Range of numeric
+            tsrange — Range of timestamp without time zone
+            tstzrange — Range of timestamp with time zone
+            daterange — Range of date
     </ol>
 </details>
 
