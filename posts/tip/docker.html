@@ -29,3 +29,18 @@
 </details>
 
 <hr>
+
+<details>
+    <summary>에러 종료 후 재시작 불가 현상 해결</summary>
+    예외 종료된 도커 컨테이너가 아래와 같이 실행되지 않을 때<br>
+    Error response from daemon: container "83a7208d6b68d3d97be501b47d6a4bb28245b086f25eda819dec93a8d40320a3": already exists<br>
+    <br>
+    아래 명령으로 컨테이너의 잔존 메타데이터를 지우면 다시 시작할 수 있다.<br>
+    docker-containerd-ctr --namespace moby --address /var/run/docker/containerd/docker-containerd.sock c rm [container_id]<br>
+    <br>
+    container_id는 전체를 넘겨줘야 하고, address 옵션값은 정확한 경로로 넘겨줘야 한다.<br>
+    <br>
+    도커 컨테이너를 --restart always 옵션으로 만들면 의도치 않게 예외 종료되어 재실행 불가되는 현상을 방지할 수 있다고 한다.
+</details>
+
+<hr>
