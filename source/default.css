@@ -100,35 +100,12 @@ li:hover {
 
 /* Overwrite the Bootstrap's settings */
 
-@media screen and (min-width: 576px) {
+@media screen and (min-width: 0px) {
     .modal-dialog {
-        max-width: 1366px;
-        width: 80%;
-    }
-}
-
-@media screen and (max-width: 576px) {
-    .modal-dialog {
+        max-width: 1920px;
         width: 100%;
-        margin: 0;
-    }
-}
-
-@media screen and (min-height: 1400px) {
-    .modal-dialog {
-        height: 50%;
-    }
-}
-
-@media screen and (min-height: 700px) and (max-height: 1400px) {
-    .modal-dialog {
-        height: 70%;
-    }
-}
-
-@media screen and (max-height: 700px) {
-    .modal-dialog {
         height: 100%;
+        margin: 0;
     }
 }
 
