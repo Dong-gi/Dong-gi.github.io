@@ -7,6 +7,7 @@ const posts = {
         { "filename": "posts/tip/playstore.html", "category": "Tip", "title": "Google Play Store" },
         { "filename": "posts/tip/vi.html", "category": "Tip", "title": "vi" },
         { "filename": "posts/tip/vs_code.html", "category": "Tip", "title": "VS Code" },
+        { "filename": "posts/tip/windows.html", "category": "Tip", "title": "Windows", "top": true },
         
 
         { "filename": "posts/java/basic.html", "category": "Programming/Java/Tutorial", "title": "Java 시작하기", "top": true },

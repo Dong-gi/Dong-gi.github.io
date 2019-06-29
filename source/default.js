@@ -48,7 +48,11 @@ $(() => {
  */
 function loadContent(id, filename) {
     return () => {
-        if ($('details p', posts.contents[id]).length > 0) return;
+        if ($('details>p', posts.contents[id]).length > 0) {
+            if (!($('div#disqus_thread', posts.contents[id]).length > 0))
+                insertDisqusThread(id, filename);
+            return;
+        }
         let content = $("<p>");
         $(content).load(filename.replace(/ /gm, '%20') + '?' + new Date().getTime(), (response, status, xhr) => {
             $.each($('.btn-code', content), (idx, node) => {
@@ -58,20 +62,30 @@ function loadContent(id, filename) {
             });
             $('summary', posts.contents[id]).after(content);
 
-            $(content).after($(`<p id="gitment-${id}"></p>`));
-            new Gitment({
-                id: filename,
-                title: filename,
-                owner: 'Dong-gi',
-                repo: 'Dong-gi.github.io',
-                perPage: 10,
-                oauth: {
-                    client_id: '321d6719464196fdc4ab',
-                    client_secret: '17c39c654ed5d257c5057fe89c10a9284d4694e4',
-                },
-            }).render(document.getElementById(`gitment-${id}`));
+            insertDisqusThread(id, filename);
         });
     };
+}
+
+function insertDisqusThread(id, filename) {
+    $('div#disqus_thread').empty();
+    $('div#disqus_thread').remove();
+
+    let content = $('details>p', posts.contents[id]);
+    $(content).after($(`<div id="disqus_thread">
+    <script>
+        var disqus_config = function () {
+            this.page.url = 'https://dong-gi.github.io/${filename}';
+            this.page.identifier = '${filename}';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');
+            s.src = 'https://donggi.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            $('div#disqus_thread').append(s);
+        })();
+    </script>
+</div>`));
 }
 
 /**
