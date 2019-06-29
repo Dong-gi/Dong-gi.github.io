@@ -1,17 +1,20 @@
 const posts = {
     "list": [
-        { "filename": "posts/tip/vs_code.html", "category": "Tip", "title": "VS Code" },
-        { "filename": "posts/tip/linux.html", "category": "Tip", "title": "Linux" },
         { "filename": "posts/tip/docker.html", "category": "Tip", "title": "Docker" },
-        { "filename": "posts/tip/vi.html", "category": "Tip", "title": "vi" },
+        { "filename": "posts/tip/giregi.html", "category": "Tip", "title": "기레기 고소 방법" },
         { "filename": "posts/tip/hangul.html", "category": "Tip", "title": "한글 유니코드" },
+        { "filename": "posts/tip/linux.html", "category": "Tip", "title": "Linux" },
+        { "filename": "posts/tip/playstore.html", "category": "Tip", "title": "Google Play Store" },
+        { "filename": "posts/tip/vi.html", "category": "Tip", "title": "vi" },
+        { "filename": "posts/tip/vs_code.html", "category": "Tip", "title": "VS Code" },
+        { "filename": "posts/tip/windows.html", "category": "Tip", "title": "Windows", "top": true },
         
 
-        { "filename": "posts/java/basic.html", "category": "Programming/Java/Tutorial", "title": "Java 시작하기" },
+        { "filename": "posts/java/basic.html", "category": "Programming/Java/Tutorial", "title": "Java 시작하기", "top": true },
+        { "filename": "posts/java/javafx.html", "category": "Programming/Java/Tutorial", "title": "JavaFX", "top": true },
+        { "filename": "posts/java/jni.html", "category": "Programming/Java/Tutorial", "title": "Java Native Interface" },
         { "filename": "posts/java/oop.html", "category": "Programming/Java/Tutorial", "title": "Java 객체지향" },
         { "filename": "posts/java/version.html", "category": "Programming/Java/Tutorial", "title": "Java 버전별 추가사항" },
-        { "filename": "posts/java/jni.html", "category": "Programming/Java/Tutorial", "title": "Java Native Interface" },
-        { "filename": "posts/java/javafx.html", "category": "Programming/Java/Tutorial", "title": "JavaFX", "top": true },
 
         { "filename": "posts/java/java.io.html", "category": "Programming/Java/java.base", "title": "java.io" },
         { "filename": "posts/java/java.lang.html", "category": "Programming/Java/java.base", "title": "java.lang" },
