@@ -10,13 +10,13 @@ const posts = {
         { "filename": "posts/tip/windows.html", "category": "Tip", "title": "Windows" },
         
 
-        { "filename": "posts/java/basic.html", "category": "Programming/Java/Tutorial", "title": "Java 시작하기", "top": true },
-        { "filename": "posts/java/javafx.html", "category": "Programming/Java/Tutorial", "title": "JavaFX", "top": true },
+        { "filename": "posts/java/basic.html", "category": "Programming/Java/Tutorial", "title": "Java 시작하기" },
+        { "filename": "posts/java/javafx.html", "category": "Programming/Java/Tutorial", "title": "JavaFX" },
         { "filename": "posts/java/jni.html", "category": "Programming/Java/Tutorial", "title": "Java Native Interface" },
         { "filename": "posts/java/oop.html", "category": "Programming/Java/Tutorial", "title": "Java 객체지향" },
         { "filename": "posts/java/version.html", "category": "Programming/Java/Tutorial", "title": "Java 버전별 추가사항" },
 
-        { "filename": "posts/java/java.io.html", "category": "Programming/Java/java.base", "title": "java.io" },
+        { "filename": "posts/java/java.io.html", "category": "Programming/Java/java.base", "title": "java.io", "top": true },
         { "filename": "posts/java/java.lang.html", "category": "Programming/Java/java.base", "title": "java.lang" },
         { "filename": "posts/java/java.lang.annotation.html", "category": "Programming/Java/java.base", "title": "java.lang.annotation" },
         { "filename": "posts/java/java.lang.module.html", "category": "Programming/Java/java.base", "title": "java.lang.module" },
@@ -142,4 +142,10 @@ displayRange="[]"
 
 <hr>
 
+<details>
+    <summary>Method Detail</summary>
+    <ol>
+
+    </ol>
+</details>
  */

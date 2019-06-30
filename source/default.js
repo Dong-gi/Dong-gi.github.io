@@ -30,6 +30,7 @@ $(() => {
     updateDropupManually(0, "");
     $(window).resize(() => adjustDropupWidth());
     window.onscroll = updateDropupAuto;
+    updateScrollManually(localStorage.lastContentId);
 
     // 엔터로 검색 가능
     $('input#input-query').keypress((event) => {
@@ -86,6 +87,8 @@ function insertDisqusThread(id, filename) {
         })();
     </script>
 </div>`));
+
+    localStorage.lastContentId = id;
 }
 
 /**
