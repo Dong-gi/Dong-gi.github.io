@@ -33,10 +33,10 @@ $(() => {
     updateScrollManually(localStorage.lastContentId);
 
     // 엔터로 검색 가능
-    $('input#input-query').keypress((event) => {
+    $('input#input-query').keydown((event) => {
         if (event.keyCode == 13) {
-            event.preventDefault();
             internalSearch();
+            event.stopPropagation();
         }
         return true;
     });
@@ -164,16 +164,17 @@ function updateDropupAuto() {
  */
 function updateScrollManually(id) {
     $('html, body').animate({
-        scrollTop: $(posts.contents[id]).offset().top
+        scrollTop: !id? 0 : $(posts.contents[id]).offset().top
     }, 500);
 }
 
 function internalSearch() {
     let query = $('input#input-query').val();
-    var hiddenElement = document.createElement('a');
-    hiddenElement.href = `https://github.com/Dong-gi/Dong-gi.github.io/search?q=${query}`;
-    hiddenElement.target = '_blank';
+    let beforeHref = $('#searchAnchor').attr('href');
+    $('#searchAnchor').attr('href', `https://github.com/Dong-gi/Dong-gi.github.io/search?q=${query}`);
+    let hiddenElement = document.getElementById('searchAnchor');
     hiddenElement.click();
+    $('#searchAnchor').attr('href', beforeHref);
 }
 
 function adjustDropupWidth() {
@@ -336,8 +337,10 @@ function showSnackbar(text, parent, timeout) {
 function getContentHTML(post) {
     let title = post.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     let newBadge = (new Date().getTime() - new Date(post.date).getTime()) <= 3 * 86400 * 1000 ? '<span class="badge badge-pill badge-primary">New</span>' : '';
+    let location = `https://dong-gi.github.io/${post.filename}`;
+    console.log(location);
     return `<div class="jumbotron" id="${post.id}"><details><summary class="row">
-    <div class="col-12 col-md-8 col-lg-6" title="${post.filename}">${title}${newBadge}</div>
+    <div class="col-12 col-md-8 col-lg-6" title="${location}">${title}${newBadge}</div>
     <div class="col d-none d-md-block">${post.category}</div>
     </summary></details></div>`;
 }

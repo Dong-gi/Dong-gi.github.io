@@ -1,0 +1,21 @@
+<hr>
+
+<details>
+    <summary>postgres 유저 비밀번호를 모를 때</summary>
+    <ol>
+        <li>pg_hba.conf 파일을 비밀번호 없이 접속할 수 있도록 trust로 변경 후 접속(서비스 재시작 필요)</li>
+        <li>비밀번호 설정 후 pg_hba.conf 다시 원복</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>모든 테이블에 대한 권한 부여</summary>
+    <ul>
+        <li>GRANT SELECT ON ALL TABLES IN SCHEMA public TO user;</li>
+        <li>GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO user;</li>
+    </ul>
+</details>
+
+<hr>

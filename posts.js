@@ -13,6 +13,7 @@ const posts = {
         { "filename": "posts/tip/hangul.html", "category": "Tip", "title": "한글 유니코드", "top": false },
         { "filename": "posts/tip/linux.html", "category": "Tip", "title": "Linux", "top": false },
         { "filename": "posts/tip/playstore.html", "category": "Tip", "title": "Google Play Store", "top": false },
+        { "filename": "posts/tip/psql.html", "category": "Tip", "title": "psql", "top": false },
         { "filename": "posts/tip/vi.html", "category": "Tip", "title": "vi", "top": false },
         { "filename": "posts/tip/vs_code.html", "category": "Tip", "title": "VS Code", "top": false },
         { "filename": "posts/tip/windows.html", "category": "Tip", "title": "Windows", "top": false },
@@ -110,7 +111,7 @@ const posts = {
         
 
         { "filename": "posts/db/concept.html", "category": "DB", "title": "기본 개념", "top": false },
-        { "filename": "posts/db/psql_tutorial.html", "category": "DB", "title": "PostgreSQL 시작하기", "top": true },
+        { "filename": "posts/db/psql_tutorial.html", "category": "DB", "title": "PostgreSQL 시작하기", "top": false },
         { "filename": "posts/db/psql_sql.html", "category": "DB", "title": "PostgreSQL SQL 언어", "top": true },
         { "filename": "posts/db/psql_to_sqlite.html", "category": "DB", "title": "PostgreSQL → SQLite3 마이그레이션", "top": false },
     ],
