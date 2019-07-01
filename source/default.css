@@ -79,6 +79,10 @@ li:hover {
     background-color: antiquewhite;
 }
 
+li li:hover {
+    background-color: white;
+}
+
 .my-code, .modal-body {
     word-wrap: normal;
 }

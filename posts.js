@@ -1,20 +1,27 @@
 const posts = {
     "list": [
-        { "filename": "posts/tip/docker.html", "category": "Tip", "title": "Docker" },
-        { "filename": "posts/tip/giregi.html", "category": "Tip", "title": "기레기 고소 방법" },
-        { "filename": "posts/tip/hangul.html", "category": "Tip", "title": "한글 유니코드" },
-        { "filename": "posts/tip/linux.html", "category": "Tip", "title": "Linux" },
-        { "filename": "posts/tip/playstore.html", "category": "Tip", "title": "Google Play Store" },
-        { "filename": "posts/tip/vi.html", "category": "Tip", "title": "vi" },
-        { "filename": "posts/tip/vs_code.html", "category": "Tip", "title": "VS Code" },
-        { "filename": "posts/tip/windows.html", "category": "Tip", "title": "Windows" },
-        
+        { "filename": "posts/book/001.html", "category": "Book", "title": "1만 시간의 재발견", "top": false },
+        { "filename": "posts/book/002.html", "category": "Book", "title": "마음의 탄생", "top": false },
+        { "filename": "posts/book/003.html", "category": "Book", "title": "생각하는 삶을 위한 철학의 역사", "top": false },
+        { "filename": "posts/book/004.html", "category": "Book", "title": "쇼펜하우어, 돌이 별이 되는 철학", "top": false },
+        { "filename": "posts/book/005.html", "category": "Book", "title": "인생의 모든 의미", "top": false },
+        { "filename": "posts/book/006.html", "category": "Book", "title": "지식의 착각", "top": false },
+        { "filename": "posts/book/007.html", "category": "Book", "title": "키르케고르 실존 극장", "top": false },
 
-        { "filename": "posts/java/basic.html", "category": "Programming/Java/Tutorial", "title": "Java 시작하기" },
-        { "filename": "posts/java/javafx.html", "category": "Programming/Java/Tutorial", "title": "JavaFX" },
-        { "filename": "posts/java/jni.html", "category": "Programming/Java/Tutorial", "title": "Java Native Interface" },
-        { "filename": "posts/java/oop.html", "category": "Programming/Java/Tutorial", "title": "Java 객체지향" },
-        { "filename": "posts/java/version.html", "category": "Programming/Java/Tutorial", "title": "Java 버전별 추가사항" },
+        { "filename": "posts/tip/docker.html", "category": "Tip", "title": "Docker", "top": false },
+        { "filename": "posts/tip/giregi.html", "category": "Tip", "title": "기레기 고소 방법", "top": false },
+        { "filename": "posts/tip/hangul.html", "category": "Tip", "title": "한글 유니코드", "top": false },
+        { "filename": "posts/tip/linux.html", "category": "Tip", "title": "Linux", "top": false },
+        { "filename": "posts/tip/playstore.html", "category": "Tip", "title": "Google Play Store", "top": false },
+        { "filename": "posts/tip/vi.html", "category": "Tip", "title": "vi", "top": false },
+        { "filename": "posts/tip/vs_code.html", "category": "Tip", "title": "VS Code", "top": false },
+        { "filename": "posts/tip/windows.html", "category": "Tip", "title": "Windows", "top": false },
+
+        { "filename": "posts/java/basic.html", "category": "Programming/Java/Tutorial", "title": "Java 시작하기", "top": false },
+        { "filename": "posts/java/javafx.html", "category": "Programming/Java/Tutorial", "title": "JavaFX", "top": false },
+        { "filename": "posts/java/jni.html", "category": "Programming/Java/Tutorial", "title": "Java Native Interface", "top": false },
+        { "filename": "posts/java/oop.html", "category": "Programming/Java/Tutorial", "title": "Java 객체지향", "top": false },
+        { "filename": "posts/java/version.html", "category": "Programming/Java/Tutorial", "title": "Java 버전별 추가사항", "top": false },
 
         { "filename": "posts/java/java.io.html", "category": "Programming/Java/java.base", "title": "java.io", "top": true },
         { "filename": "posts/java/java.lang.html", "category": "Programming/Java/java.base", "title": "java.lang" },
@@ -59,16 +66,6 @@ const posts = {
 
         { "filename": "posts/1809/374.html", "category": "Algorithm", "title": "jduge.koreatech.ac.kr" },
 
-        
-        { "filename": "posts/book/447.html", "category": "Book", "title": "1만 시간의 재발견" },
-        { "filename": "posts/book/448.html", "category": "Book", "title": "지식의 착각" },
-        { "filename": "posts/book/449.html", "category": "Book", "title": "인생의 모든 의미" },
-        { "filename": "posts/book/450.html", "category": "Book", "title": "쇼펜하우어, 돌이 별이 되는 철학" },
-        { "filename": "posts/book/475.html", "category": "Book", "title": "마음의 탄생" },
-        { "filename": "posts/book/476.html", "category": "Book", "title": "키르케고르 실존 극장" },
-        { "filename": "posts/book/477.html", "category": "Book", "title": "생각하는 삶을 위한 철학의 역사" },
-
-        
         { "filename": "posts/1810/461.html", "category": "Programming/JavaScript/Basic", "title": "Hello World" },
         { "filename": "posts/1810/462.html", "category": "Programming/JavaScript/Basic", "title": "자료형, 변수, 식별자" },
         { "filename": "posts/1810/463.html", "category": "Programming/JavaScript/Basic", "title": "Syntax" },
@@ -112,10 +109,10 @@ const posts = {
         { "filename": "posts/1904/1904252136.html", "category": "Programming/Python/Document", "title": "Data Types" },
         
 
-        { "filename": "posts/db/concept.html", "category": "DB", "title": "기본 개념" },
-        { "filename": "posts/db/psql_tutorial.html", "category": "DB", "title": "PostgreSQL 시작하기" },
+        { "filename": "posts/db/concept.html", "category": "DB", "title": "기본 개념", "top": false },
+        { "filename": "posts/db/psql_tutorial.html", "category": "DB", "title": "PostgreSQL 시작하기", "top": true },
         { "filename": "posts/db/psql_sql.html", "category": "DB", "title": "PostgreSQL SQL 언어", "top": true },
-        { "filename": "posts/db/psql_to_sqlite.html", "category": "DB", "title": "PostgreSQL → SQLite3 마이그레이션" },
+        { "filename": "posts/db/psql_to_sqlite.html", "category": "DB", "title": "PostgreSQL → SQLite3 마이그레이션", "top": false },
     ],
     "tree": {},
     "contents": [],

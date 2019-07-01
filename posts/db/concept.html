@@ -3,22 +3,35 @@
 <details>
 	<summary>DB</summary>
 	<ol>
-		<li>DB에 저장되는 데이터의 특징</li>
-		Integrated Data, Stored Data, Operational Data, Shared Data
-
-		<li>DB의 특징</li>
-		Real Time Accessibility, Continuous Evolution, Concurrent Sharing, Content Reference
-		<ul>
-			Independence
-			<li>논리적 독립</li>
-			External schema(View)의 변경 없이 conceptual schema를 변경할 수 있다
-
-			<li>물리적 독립</li>
-			Conceptual schema 변경 없이 internal schema(물리 장치에 기록되는 형식)을 변경할 수 있다
-		</ul>
-
-		<li>DBMS</li>
-		DataBase Management System.<br>
+		<details>
+			<summary>DB에 저장되는 데이터의 특징</summary>
+			<ul>
+				<li>Integrated Data</li>
+				<li>Stored Data</li>
+				<li>Operational Data</li>
+				<li>Shared Data</li>
+			</ul>
+		</details>
+		
+		<details>
+			<summary>DB의 특징</summary>
+			<ul>
+				<li>Real Time Accessibility</li>
+				<li>Continuous Evolution</li>
+				<li>Concurrent Sharing</li>
+				<li>Content Reference</li>
+				<li>Independence</li>
+				<ul>
+					<li>논리적 독립</li>
+					External schema(View)의 변경 없이 conceptual schema를 변경할 수 있다
+			
+					<li>물리적 독립</li>
+					Conceptual schema 변경 없이 internal schema(물리 장치에 기록되는 형식)을 변경할 수 있다
+				</ul>
+			</ul>
+		</details>
+		
+		<li>DBMS; DataBase Management System</li>
 		데이터 정의/조작/제어 기능 지원. 각각은 DDL(Data Definition Language), DML(Data Manipulation Language), DCL(Data Control Language)을 통해 이루어진다.
 
 		<li>Schema</li>
@@ -90,7 +103,7 @@
 <hr>
 
 <details>
-	<summary>이상</summary>
+	<summary>이상; Anomaly</summary>
 	<ul>
 		<li>삽입 이상 : 의도치 않게 삽입 불가</li>
 		<li>삭제 이상 : 의도치 않게 다른 값들도 삭제</li>
@@ -104,10 +117,13 @@
 	<summary>정규화</summary>
 	<ol>
 		<li>함수적 종속</li>
-		X → Y : 릴레이션 R의 속성 부분 집합 X, Y에 대하여, 시간에 관계없이 항상 X의 값 각각에 대해 Y의 값 하나만 연관되는 경우. 이때 X를 결정자, Y를 종속자라 부른다.<br>
-		완전 함수 종속 : 기본키 전체로 튜플이 결정되는 경우
-		부분적 함수 종속 : 기본키의 부분만으로 튜플이 결정되는 경우
-
+		<ul>
+			<li>X → Y : 릴레이션 R의 속성 부분 집합 X, Y에 대하여, 시간에 관계없이 항상 X의 값 각각에 대해 Y의 값 하나만 연관되는 경우.</li>
+			<li>이때 X를 결정자, Y를 종속자라 부른다.</li>
+			<li>완전 함수 종속 : 기본키 전체로 튜플이 결정되는 경우</li>
+			<li>부분적 함수 종속 : 기본키의 부분만으로 튜플이 결정되는 경우</li>
+		</ul>
+		
 		<li>정규화</li>
 		테이블을 무손실 분해하여 가능한 한 중복을 제거하여 이상 발생을 줄이는 것. 정규화로 생성된 릴레이션 R1, R2가 NATURAL JOIN으로 손실 없이 R로 복귀되는 경우, R은 R1, R2로 무손실 분해되었다고 한다.
 		<ol>
@@ -159,10 +175,12 @@
 
 <details>
 	<summary>병행 제어</summary>
-	동시에 여러 개의 트랜잭션을 병행 수행할 때 실행되는 트랜잭션들이 일관성을 파괴하지 않도록 트랜잭션 간 상호 작용을 제어.<br>
-	잠금(Lock) : 한 트랜잭션에 사용되는 데이터를 다른 트랜잭션이 접근하지 못하게 함.<br>
-	* 2-단계 잠금 규약 : 확장 단계(잠금만 가능), 축소 단계(잠금 해제만 가능)<br>
-	* 타임스탬프 순서 기법 : 트랜잭션 발생 시각 순서대로 실행.
+	<ul>
+		<li>동시에 여러 개의 트랜잭션을 병행 수행할 때 실행되는 트랜잭션들이 일관성을 파괴하지 않도록 트랜잭션 간 상호 작용을 제어.</li>
+		<li>잠금(Lock) : 한 트랜잭션에 사용되는 데이터를 다른 트랜잭션이 접근하지 못하게 함.</li>
+		<li>2-단계 잠금 규약 : 확장 단계(잠금만 가능), 축소 단계(잠금 해제만 가능)</li>
+		<li>타임스탬프 순서 기법 : 트랜잭션 발생 시각 순서대로 실행.</li>
+	</ul>
 </details>
 
 <hr>

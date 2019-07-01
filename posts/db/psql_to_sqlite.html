@@ -10,7 +10,7 @@ PostgreSQL 덤프로부터 SQLite3으로 마이그레이션하는 과정 정리
         <li>timestamp\(0\) with time zone → timestamp with time zone</li>
         <li>DEFAULT '(\w)*'::text → DEFAULT '$1'</li>
     </ul>
-    * sqlite에서 sql파일 로드 : .read dump.sql
+    sqlite에서 sql파일 로드 명령 : .read dump.sql
 
     <li>PostgreSQL 데이터 덤프</li>
     <ol>
@@ -21,11 +21,11 @@ PostgreSQL 덤프로부터 SQLite3으로 마이그레이션하는 과정 정리
         csv에서는 null을 빈칸으로밖에 표현할 수 없는데... SQLite 임포트 시 이를 지원해주지 않는다. 때문에 null을 ""이나 기타 문자열로 변경...
     </ol>
 
-    <li>SQLite에서 import</li>
+    <li>SQLite에서 csv파일 import</li>
     .mode csv<br>
     .import file_name.csv table_name
 
-    <li>기타 사항</li>
+    <li>기타</li>
     <ul>
         <li>SQLite Studio 프로그램은 import/export 기능을 UI로 지원.</li>
         <li>SQLite에서 csv 출력</li>
