@@ -35,38 +35,6 @@
 <hr>
 
 <details>
-    <summary>@FunctionalInterface interface FileFilter Since 1.2</summary>
-    <ol>
-        <li>파일 패스 필터링에 사용되며 File::listFiles의 매개변수로 객체가 넘겨진다.
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/FileFilterExample.java" lan="java">예시 코드 »</button></li>
-    </ol>
-    <details>
-        <summary>Method Detail</summary>
-        <ol>
-            <li>boolean accept(File pathname)</li>
-        </ol>
-    </details>
-</details>
-
-<hr>
-
-<details>
-    <summary>@FunctionalInterface interface FilenameFilter Since 1.0</summary>
-    <ol>
-        <li>특정 디렉터리에서의 파일명 필터링에 사용되며 FileDialog::setFilenameFilter, File::list, File::listFiles의 매개변수로 객체가 넘겨진다.
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/FilenameFilterExample.java" lan="java">예시 코드 »</button></li>
-    </ol>
-    <details>
-        <summary>Method Detail</summary>
-        <ol>
-            <li>boolean accept(File dir, String name)</li>
-        </ol>
-    </details>
-</details>
-
-<hr>
-
-<details>
     <summary>바이트 단위 IO 관련</summary>
     <details>
         <summary>interface DataInput Since 1.0</summary>
@@ -230,6 +198,152 @@
             </ol>
         </details>
     </details>
+
+    <details>
+        <summary>class FilterInputStream extends InputStream Since 1.0</summary>
+        다른 InputStream에 대한 필터 장식자 정의 클래스로, 추가적인 메서드는 없다.
+    </details>
+    
+    <details>
+        <summary>class FilterOutputStream extends OutputStream Since 1.0</summary>
+        다른 OutputStream에 대한 필터 장식자 정의 클래스로, 추가적인 메서드는 없다.
+    </details>
+
+    <details>
+        <summary>class ByteArrayInputStream extends InputStream Since 1.0</summary>
+        <ol>
+            <li>내부 버퍼 byte[] buf에 대한 읽기 연산을 지원하는 InputStream</li>
+        </ol>
+        <details>
+            <summary>Constructor Detail</summary>
+            <ol>
+                <li>public ByteArrayInputStream(byte[] buf)</li>
+                <li>public ByteArrayInputStream(byte[] buf, int offset, int length)</li>
+            </ol>
+        </details>
+    </details>
+    
+    <details>
+        <summary>class ByteArrayOutputStream extends OutputStream Since 1.0</summary>
+        <ol>
+            <li>내부 버퍼 byte[] buf에 대해 쓰기 연산을 지원하는 OutputStream. 버퍼 크기는 자동으로 확장된다.</li>                
+        </ol>
+        <details>
+            <summary>Constructor Detail</summary>
+            <ol>
+                <li>public ByteArrayOutputStream()</li>
+                <li>public ByteArrayOutputStream(int size)</li>
+            </ol>
+        </details>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>void writeBytes(byte[] b) since 11 == write(b, 0, b.length)</li>
+                <li>void writeTo(OutputStream out)</li>
+                버퍼를 out에 모두 쓴다. == out.write(buf, 0, count)
+                <li>byte[] toByteArray()</li>
+                buf 복사본 반환.
+                <li>void reset()</li>
+                지금까지 쓴 것을 무시하고 처음부터 재활용.
+                <li>int size()</li>
+                <li>String toString(String charsetName) Since 1.1<br>
+                    String toString(Charset charset) Since 10</li>
+            </ol>
+        </details>
+    </details>
+
+    <details>
+        <summary>class BufferedInputStream extends FilterInputStream Since 1.0</summary>
+        <ol>
+            <li>다른 입력 스트림에 대해 버퍼를 제공함으로써 mark와 reset이 가능하게 해준다. 추가적인 특별한 메서드는 없다.</li>
+        </ol>            
+        <details>
+            <summary>Field Detail</summary>
+            <ol>
+                <li>protected byte[] buf</li>
+                <li>protected int count</li>
+                마지막 유효 바이트 인덱스 + 1
+                <li>protected int marklimit, markpos, pos</li>
+                |pos - markpos| &lt; marklimit면 markpos는 -1(기본값)이 된다.
+            </ol>
+        </details>
+            <details>
+            <summary>Constructor Detail</summary>
+            <ol>
+                <li>public BuferedInputStream(InputStream in)</li>
+                <li>public BufferedInputStream(InputStream in, int size) : size는 버퍼 크기.</li>
+            </ol>
+        </details>
+    </details>
+    
+    <details>
+        <summary>class BufferedOutputStream extends FilterOutputStream Since 1.0</summary>
+        <ol>
+            <li>다른 출력 스트림에 대해 버퍼를 제공하여, 시스템 쓰기 작업이 빈번하게 일어나지 않게 해준다. 추가적인 특별한 메서드는 없다.</li>
+        </ol>
+        <details>
+            <summary>Field Detail</summary>
+            <ol>
+                <li>protected byte[] buf</li>
+                <li>protected int count : buf 내부의 유효한 바이트 수</li>
+            </ol>
+        </details>
+            <details>
+                <summary>Constructor Detail</summary>
+                <ol>
+                    <li>public BufferedOutputStream(OutputStream out)</li>
+                    <li>public BufferedOutputStream(OutputStream out, int size)</li>
+                </ol>
+            </details>
+    </details>
+        
+    <details>
+        <summary>class DataInputStream extends FilterInputStream implements DataInput Since 1.0</summary>
+        <ol>
+            <li>플랫폼 독립적인 자바 기본 타입 읽기를 정의한 DataInput을 구체화한 장식자 클래스(FilterInputStream).</li>
+        </ol>
+        <details>
+            <summary>Constructor Detail</summary>
+            <ol>
+                <li>public DataInputStream(InputStream in)</li>
+            </ol>
+        </details>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>static final String readUTF(DataInput in)</li>
+                Modified UTF-8을 이용하여 in 스트림으로부터 String을 해석해 반환한다.
+            </ol>
+        </details>
+    </details>
+        
+    <details>
+        <summary>class DataOutputStream extends FilterOutputStream implements DataOutput Since 1.0</summary>
+        <ol>
+            <li>플랫폼 독립적인 자바 기본 타입 쓰기를 정의한 DataOutput을 구체화한 장식자 클래스(FilterOutputStream)</li>
+        </ol>
+        <details>
+            <summary>Field Detail</summary>
+            <ol>
+                <li>protected int written</li>
+                현재까지 쓴 바이트 수. 오버플로될 경우 Integer.MAX_VALUE로 설정된다.
+            </ol>
+        </details>
+        <details>
+            <summary>Constructor Detail</summary>
+            <ol>
+                <li>public DataOutputStream(OutputStream out)</li>
+            </ol>
+        </details>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>final int size() == return written;</li>
+            </ol>
+        </details>
+    </details>
+        
+        
 </details>
 
 <hr>
@@ -306,6 +420,8 @@
             </ol>
         </details>
     </details>
+        
+        
 </details>
 
 <hr>
@@ -381,234 +497,233 @@
             </ol>
         </details>
     </details>
+
+    <details>
+        <summary>class InputStreamReader extends Reader Since 1.1</summary>
+        <ol>
+            <li>InputStream에 대해 Reader 작업을 지원해주는 bridge 클래스.
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/BufferedReaderExample.java" lan="java">예시 코드 »</button></li>
+        </ol>
+        <details>
+            <summary>Constructor Detail</summary>
+            <ol>
+                <li>public InputStreamReader(InputStream in)</li>
+                <li>public InputStreamReader(InputStream in, String charsetName)</li>
+                <li>public InputStreamReader(InputStream in, Charset cs) Since 1.4</li>
+                <li>public InputStreamReader(InputStream in, CharsetDecoder dec) Since 1.4</li>
+            </ol>
+        </details>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>String getEncoding()</li>
+            </ol>
+        </details>
+    </details>
+    
+    <details>
+        <summary>class OutputStreamWriter extends Writer Since 1.1</summary>
+        <ol>
+            <li>OutputStream에 Writer 작업을 지원해주는 bridge 클래스.</li>
+        </ol>
+        <details>
+            <summary>Constructor Detail</summary>
+            <ol>
+                <li>public OutputStreamWriter(OutputStream out, String charsetName)</li>
+                <li>public OutputStreamWriter9OutputStream out)</li>
+                <li>public OutputStreamWriter9OutputStream out, Charset cs) Since 1.4</li>
+                <li>public OutputStreamWriter9OutputStream out, CharsetEncoder enc) Since 1.4</li>
+            </ol>
+        </details>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>String getEncoding()</li>
+            </ol>
+        </details>
+    </details>
+    
+    <details>
+        <summary>abstract class FilterReader extends Reader Since 1.1</summary>
+        다른 Reader에 대한 필터 장식자 정의 클래스로, 추가적인 메서드는 없다.
+    </details>
+    
+    <details>
+        <summary>abstract class FilterWriter extends Writer Since 1.1</summary>
+        다른 Writer에 대한 필터 장식자 정의 클래스로, 추가적인 메서드는 없다.
+    </details>
+    
+    <details>
+        <summary>class CharArrayReader extends Reader Since 1.1</summary>
+        <ol>
+            <li>내부 버퍼 char[] buf에 대한 읽기 연산을 지원하는 Reader</li>
+        </ol>
+        <details>
+            <summary>Constructor Detail</summary>
+            <ol>
+                <li>public CharArrayReader(char[] buf)</li>
+                <li>public CharArrayReader(char[] buf, int offset, int length)</li>
+            </ol>
+        </details>
+    </details>
+    
+    <details>
+        <summary>class CharArrayWriter extends Writer Since 1.1</summary>
+        <ol>
+            <li>내부 버퍼 char[] buf에 대해 쓰기 연산을 지원하는 Writer. 버퍼 크기는 자동으로 확장된다.</li>
+        </ol>
+        <details>
+            <summary>Constructor Detail</summary>
+            <ol>
+                <li>public CharArrayWriter()</li>
+                <li>public CharArrayWriter(int initialSize)</li>
+            </ol>
+        </details>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>void writeTo(Writer out)</li>
+                out에 버퍼의 모든 내용을 쓴다.
+                <li>void reset()</li>
+                버퍼를 비우고 재활용한다.
+                <li>char[] toCharArray()</li>
+                <li>int size()</li>
+            </ol>
+        </details>
+    </details>
+        
+    <details>
+        <summary>class StringReader extends Reader Since 1.1</summary>
+        <ol>
+            <li>String에 대해 읽기 연산을 수행하는 Reader.</li>
+        </ol>
+        <details>
+            <summary>Constructor Detail</summary>
+            <ol>
+                <li>public StringReader(String s)</li>
+            </ol>
+        </details>
+    </details>
+    
+    <details>
+        <summary>class StringWriter extends Writer Since 1.1</summary>
+        <ol>
+            <li>내부 StringBuffer에 쓰기 연산을 지원하는 Writer.</li>
+        </ol>
+        <details>
+            <summary>Constructor Detail</summary>
+            <ol>
+                <li>public StringWriter()</li>
+                <li>public StringWriter(int initialSize)</li>
+            </ol>
+        </details>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>StringBuffer getBuffer()</li>
+            </ol>
+        </details>
+    </details>
+        
+    <details>
+        <summary>class BufferedReader extends Reader Since 1.1</summary>
+        <ol>
+            <li>다른 Reader에 대한 버퍼를 제공하여, 시스템 읽기 작업이 빈번하게 일어나지 않게 해준다.
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/BufferedReaderExample.java" lan="java">예시 코드 »</button></li>
+        </ol>
+        <details>
+            <summary>Constructor Detail</summary>
+            <ol>
+                <li>public BufferedReader(Reader in, int sz)</li>
+                <li>public BufferedReader(Reader in)</li>
+            </ol>
+        </details>
+            <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>String readLine() : EOF도 줄의 끝으로 간주</li>
+                <li>Stream&lt;String&gt; lines() Since 1.8</li>
+            </ol>
+        </details>
+    </details>
+    
+    <details>
+        <summary>class BufferedWriter extends Writer Since 1.1</summary>
+        <ol>
+            <li>Writer에 버퍼를 제공하여 시스템 쓰기 작업이 빈번하게 일어나지 않도록 한다.</li>
+        </ol>
+        <details>
+            <summary>Constructor Detail</summary>
+            <ol>
+                <li>public BufferedWriter(Writer out)</li>
+                <li>public BufferedWriter(Writer out, int sz)</li>
+            </ol>
+        </details>
+            <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>void newLine() : 줄 바꿈 문자열은 시스템 속성 line.separator로 결정된다.</li>
+            </ol>
+        </details>
+    </details>
+        
+    <details>
+        <summary>class LineNumberReader extends BufferedReader Since 1.1</summary>
+        <ol>
+            <li>Reader가 줄 끝을 만날때마다 라인을 카운트하는 클래스. 처음 시작은 0.</li>
+        </ol>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>void setLineNumber(int lineNumber)</li>
+                읽기 위치가 이동하는 건 아니다
+
+                <li>int getLineNumber()</li>
+            </ol>
+        </details>
+    </details>
+        
+    <details>
+        <summary>class PrintWriter extends Writer Since 1.1</summary>
+        PrintStream의 Writer 버전. 텍스트 출력 스트림에 객체들을 정형화된 텍스트로 쓰는 기능을 제공한다.
+    </details>
+            
+            
 </details>
 
 <hr>
 
 <details>
-    <summary>class InputStreamReader extends Reader Since 1.1</summary>
-    <ol>
-        <li>InputStream에 대해 Reader 작업을 지원해주는 bridge 클래스.
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/BufferedReaderExample.java" lan="java">예시 코드 »</button></li>
-        <li>public InputStreamReader(InputStream in)</li>
-        <li>public InputStreamReader(InputStream in, String charsetName)</li>
-        <li>public InputStreamReader(InputStream in, Charset cs) Since 1.4</li>
-        <li>public InputStreamReader(InputStream in, CharsetDecoder dec) Since 1.4</li>
-        <li>String getEncoding()</li>
-    </ol>
-</details>
+    <summary>파일 관련</summary>
+    <details>
+        <summary>@FunctionalInterface interface FileFilter Since 1.2</summary>
+        <ol>
+            <li>파일 패스 필터링에 사용되며 File::listFiles의 매개변수로 객체가 넘겨진다.
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/FileFilterExample.java" lan="java">예시 코드 »</button></li>
+        </ol>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>boolean accept(File pathname)</li>
+            </ol>
+        </details>
+    </details>
+    
+    <details>
+        <summary>@FunctionalInterface interface FilenameFilter Since 1.0</summary>
+        <ol>
+            <li>특정 디렉터리에서의 파일명 필터링에 사용되며 FileDialog::setFilenameFilter, File::list, File::listFiles의 매개변수로 객체가 넘겨진다.
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/FilenameFilterExample.java" lan="java">예시 코드 »</button></li>
+        </ol>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>boolean accept(File dir, String name)</li>
+            </ol>
+        </details>
+    </details>
 
-<hr>
 
-<details>
-    <summary>class OutputStreamWriter extends Writer Since 1.1</summary>
-    <ol>
-        <li>OutputStream에 Writer 작업을 지원해주는 bridge 클래스.</li>
-        <li>public OutputStreamWriter(OutputStream out, String charsetName)</li>
-        <li>public OutputStreamWriter9OutputStream out)</li>
-        <li>public OutputStreamWriter9OutputStream out, Charset cs) Since 1.4</li>
-        <li>public OutputStreamWriter9OutputStream out, CharsetEncoder enc) Since 1.4</li>
-        <li>String getEncoding()</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class FilterInputStream extends InputStream Since 1.0</summary>
-    다른 InputStream에 대한 필터 장식자 정의 클래스로, 추가적인 메서드는 없다.
-</details>
-
-<hr>
-
-<details>
-    <summary>class FilterOutputStream extends OutputStream Since 1.0</summary>
-    다른 OutputStream에 대한 필터 장식자 정의 클래스로, 추가적인 메서드는 없다.
-</details>
-
-<hr>
-
-<details>
-    <summary>abstract class FilterReader extends Reader Since 1.1</summary>
-    다른 Reader에 대한 필터 장식자 정의 클래스로, 추가적인 메서드는 없다.
-</details>
-
-<hr>
-
-<details>
-    <summary>abstract class FilterWriter extends Writer Since 1.1</summary>
-    다른 Writer에 대한 필터 장식자 정의 클래스로, 추가적인 메서드는 없다.
-</details>
-
-<hr>
-
-<details>
-    <summary>class ByteArrayInputStream extends InputStream Since 1.0</summary>
-    <ol>
-        <li>내부 버퍼 byte[] buf에 대한 읽기 연산을 지원하는 InputStream</li>
-        <li>public ByteArrayInputStream(byte[] buf)</li>
-        <li>public ByteArrayInputStream(byte[] buf, int offset, int length)</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class ByteArrayOutputStream extends OutputStream Since 1.0</summary>
-    <ol>
-        <li>내부 버퍼 byte[] buf에 대해 쓰기 연산을 지원하는 OutputStream. 버퍼 크기는 자동으로 확장된다.</li>
-        <li>public ByteArrayOutputStream()</li>
-        <li>public ByteArrayOutputStream(int size)</li>
-        <li>void writeBytes(byte[] b) since 11 == write(b, 0, b.length)</li>
-        <li>void writeTo(OutputStream out)</li>
-        버퍼를 out에 모두 쓴다. == out.write(buf, 0, count)
-        <li>byte[] toByteArray()</li>
-        buf 복사본 반환.
-        <li>void reset()</li>
-        지금까지 쓴 것을 무시하고 처음부터 재활용.
-        <li>int size()</li>
-        <li>String toString(String charsetName) Since 1.1<br>
-            String toString(Charset charset) Since 10</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class CharArrayReader extends Reader Since 1.1</summary>
-    <ol>
-        <li>내부 버퍼 char[] buf에 대한 읽기 연산을 지원하는 Reader</li>
-        <li>public CharArrayReader(char[] buf)</li>
-        <li>public CharArrayReader(char[] buf, int offset, int length)</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class CharArrayWriter extends Writer Since 1.1</summary>
-    <ol>
-        <li>내부 버퍼 char[] buf에 대해 쓰기 연산을 지원하는 Writer. 버퍼 크기는 자동으로 확장된다.</li>
-        <li>public CharArrayWriter()</li>
-        <li>public CharArrayWriter(int initialSize)</li>
-        <li>void writeTo(Writer out)</li>
-        out에 버퍼의 모든 내용을 쓴다.
-        <li>void reset()</li>
-        버퍼를 비우고 재활용한다.
-        <li>char[] toCharArray()</li>
-        <li>int size()</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class StringReader extends Reader Since 1.1</summary>
-    <ol>
-        <li>String에 대해 읽기 연산을 수행하는 Reader.</li>
-        <li>public StringReader(String s)</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class StringWriter extends Writer Since 1.1</summary>
-    <ol>
-        <li>내부 StringBuffer에 쓰기 연산을 지원하는 Writer.</li>
-        <li>public StringWriter()</li>
-        <li>public StringWriter(int initialSize)</li>
-        <li>StringBuffer getBuffer()</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class BufferedInputStream extends FilterInputStream Since 1.0</summary>
-    <ol>
-        <li>다른 입력 스트림에 대해 버퍼를 제공함으로써 mark와 reset이 가능하게 해준다. 추가적인 특별한 메서드는 없다.</li>
-        <li>protected byte[] buf</li>
-        <li>protected int count : 마지막 유효 바이트보다 1 큰 인덱스</li>
-        <li>protected int marklimit, markpos, pos</li>
-        |pos - markpos| &lt; marklimit면 markpos는 -1(기본값)이 된다.
-        <li>public BuferedInputStream(InputStream in)</li>
-        <li>public BufferedInputStream(InputStream in, int size) : size는 버퍼 크기.</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class BufferedOutputStream extends FilterOutputStream Since 1.0</summary>
-    <ol>
-        <li>다른 출력 스트림에 대해 버퍼를 제공하여, 시스템 쓰기 작업이 빈번하게 일어나지 않게 해준다. 추가적인 특별한 메서드는 없다.</li>
-        <li>protected byte[] buf</li>
-        <li>protected int count : buf 내부의 유효한 바이트 수</li>
-        <li>public BufferedOutputStream(OutputStream out)</li>
-        <li>public BufferedOutputStream(OutputStream out, int size)</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class BufferedReader extends Reader Since 1.1</summary>
-    <ol>
-        <li>다른 Reader에 대한 버퍼를 제공하여, 시스템 읽기 작업이 빈번하게 일어나지 않게 해준다.
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/BufferedReaderExample.java" lan="java">예시 코드 »</button></li>
-        <li>public BufferedReader(Reader in, int sz)</li>
-        <li>public BufferedReader(Reader in)</li>
-        <li>String readLine() : EOF도 줄의 끝으로 간주</li>
-        <li>Stream&lt;String&gt; lines() Since 1.8</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class BufferedWriter extends Writer Since 1.1</summary>
-    <ol>
-        <li>Writer에 버퍼를 제공하여 시스템 쓰기 작업이 빈번하게 일어나지 않도록 한다.</li>
-        <li>public BufferedWriter(Writer out)</li>
-        <li>public BufferedWriter(Writer out, int sz)</li>
-        <li>void newLine() : 줄 바꿈 문자열은 시스템 속성 line.separator로 결정된다.</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class LineNumberReader extends BufferedReader Since 1.1</summary>
-    <ol>
-        <li>Reader가 줄 끝을 만날때마다 라인을 카운트하는 클래스. 처음 시작은 0.</li>
-        <li>void setLineNumber(int lineNumber) : 읽기 위치가 이동하는 건 아니다</li>
-        <li>int getLineNumber()</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class DataInputStream extends FilterInputStream implements DataInput Since 1.0</summary>
-    <ol>
-        <li>플랫폼 독립적인 자바 기본 타입 읽기를 정의한 DataInput을 구체화한 장식자 클래스(FilterInputStream).</li>
-        <li>public DataInputStream(InputStream in)</li>
-        <li>static final String readUTF(DataInput in)</li>
-        Modified UTF-8을 이용하여 in 스트림으로부터 String을 해석해 반환한다.
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class DataOutputStream extends FilterOutputStream implements DataOutput Since 1.0</summary>
-    <ol>
-        <li>플랫폼 독립적인 자바 기본 타입 쓰기를 정의한 DataOutput을 구체화한 장식자 클래스(FilterOutputStream)</li>
-        <li>protected int written : 현재까지 쓴 바이트 수. 오버플로될 경우 Integer.MAX_VALUE로 설정된다.</li>
-        <li>public DataOutputStream(OutputStream out)</li>
-        <li>final int size() == return written;</li>
-    </ol>
 </details>
 
 <hr>
@@ -641,13 +756,6 @@
         <li>PrintStream format(String format, Object... args) Since 1.5</li>
         <li>PrintStream format(Locale l, String format, Object... args) Since 1.5</li>
     </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class PrintWriter extends Writer Since 1.1</summary>
-    텍스트 출력 스트림에 객체들을 정형화된 텍스트로 쓰는 기능을 제공한다. PrintStream의 모든 print 메서드들을 마찬가지로 구현했다.
 </details>
 
 <hr>
