@@ -238,11 +238,11 @@ function insertCode(buttonId) {
 
                 $(button).after(modal);
                 $(modal).after(div);
-                $('div#' + buttonId).css('max-height', window.innerHeight / 3);
+                $('div#' + buttonId).css('max-height', window.innerHeight / 2);
             });
         } else {
             $('div#' + buttonId).toggleClass('d-none')
-            $('div#' + buttonId).css('max-height', window.innerHeight / 3);
+            $('div#' + buttonId).css('max-height', window.innerHeight / 2);
         }
     };
 }
