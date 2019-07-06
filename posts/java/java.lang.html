@@ -55,8 +55,8 @@
 <details>
     <summary>interface Iterable&lt;T&gt; Since 1.5</summary>
     <ol>
-        <li>이를 구체화한 클래스 객체는 enhanced for statement의 순회 대상이 될 수 있다.</li>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/lang/IterableExample.java" lan="java">예시 코드 »</button>
+        <li>이를 구체화한 클래스 객체는 enhanced for statement의 순회 대상이 될 수 있다.
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/lang/IterableExample.java" lan="java">예시 코드 »</button></li>
     </ol>
     <details>
         <summary>Method Detail</summary>
@@ -154,12 +154,124 @@
 <hr>
 
 <details>
+    <summary>class SecurityManager Since 1.0</summary>
+    <ol>
+        <li>보안 정책을 구현할 수 있는 클래스. 전형적인 확인 절차는 아래와 같다.</li>
+        SecurityManager security = System.getSecurityManager();<br>
+        if (security != null) {<br>
+        　　security.checkXXX(argument, . . . );<br>
+        }
+    </ol>
+    <details>
+        <summary>Method Detail</summary>
+        <ol>
+            <li>Object getSecurityContext() : 현재 실행 환경을 캡슐화한 객체 반환.</li>
+            <li>ThreadGroup getThreadGroup() Since 1.1 : 새로운 쓰레드를 생성할 수 있는 쓰레드그룹 반환</li>
+            <li>void checkPermission(Permission perm) Since 1.2 + checkXXX()</li>
+            <li>void checkPermission(Permission perm, Object context) Since 1.2</li>
+        </ol>
+    </details>
+</details>
+
+<hr>
+
+<details>
+    <summary>final class Math Since 1.0, StrictMath Since 1.3</summary>
+    <details>
+        <summary>Field Detail</summary>
+        <ol>
+            <li>static double E, PI</li>
+        </ol>
+    </details>
+    <details>
+        <summary>Method Detail</summary>
+        <ol>
+            <li>삼각함수, 쌍곡선 함수, 라디안-육십분법 변환, 지수-로그, 제곱/3제곱/제곱근/3제곱근/pow</li>
+            <li>static double IEEEremainder(double f1, double f2)</li>
+            <li>ceil, floor, rint, round</li>
+            rint : round to even이 이용된다.
+            <li>static double random()</li>
+            <li>abs, max, min, signum</li>
+        </ol>
+        <details>
+            <summary>사칙연산</summary>
+            <ul>
+                <li>오버플로우되면 예외 : addExact, substractExact, multiplyExact, incrementExact, decrementExact, negateExact, toIntExact</li>
+                <li>static long multiplyFull(int x, int y) Since 9<br>
+                    static long multiplyHigh(long x, long y) Since 9 : 상위 64개 비트를 반환</li>
+                <li>floorDiv(x, y)</li>
+                floor(x/y)를 반환한다. Integer/Long.MIN_VALUE를 -1로 나누는 경우는 오버플로우가 발생하고 Integer/Long.MIN_VALUE를 반환한다.
+                <li>floorMod(x, y)</li>
+                x - (floorDiv(x, y) * y)를 반환한다. 부호는 y와 같다.
+                <li>static double fma(double a, double b, double c) Since 9 // + float : a * b + c</li>
+            </ul>
+        </details>
+    </details>
+</details>
+
+<hr>
+
+<details>
+    <summary>공유 변수 관련</summary>
+    <details>
+        <summary>abstract class ClassValue&lt;T&gt; Since 1.7</summary>
+        <ol>
+            임의의 타입에 대하여, 필요할 때에 연산된 값을 가져오도록 지원. 해당 값은 해당 타입에 대해 일관성을 갖는다.
+        </ol>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>protected abstract T computeValue(Class&lt;?&gt; type)</li>
+                해당 type에 대하여, 최초 get 메서드 호출 시 한 번만 호출되며, 이후 remove 메서드 호출이 없으면 더 이상 불리지 않는다.
+                <li>T get(Class&lt;?&gt; type)</li>
+                값이 계산되지 않은 상태에서 여러 쓰레드들이 경합을 벌일 경우, 임의 쓰레드의 결과값을 모두에 반환한다.
+                <li>void remove(Class&lt;?&gt; type)</li>
+            </ol>
+        </details>
+    </details>
+    
+    <details>
+        <summary>class ThreadLocal&lt;T&gt; Since 1.2</summary>
+        <ol>
+            쓰레드 단위의 지역 변수를 제공한다. 호출 지점과 관계없이 한 쓰레드 내부에서 변수를 공유한다.
+        </ol>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>protected T initialValue()</li>
+                초기값이 설정되지 않은 상태에서 최초 get() 호출에 의해 불린다. remove() 호출 후의 get() 요청으로 다시 불린다.
+                <li>static &lt;S&gt; ThreadLocal&lt;S&gt; withInitial(Supplier&lt;? extends S&gt; supplier) Since 1.8</li>
+                supplier로 초기값이 설정되는 ThreadLocal 반환.
+                <li>T get()</li>
+                <li>void set(T value)</li>
+                <li>void remove() Since 1.5</li>
+            </ol>
+        </details>
+    </details>
+    
+    <details>
+        <summary>class InheritableThreadLocal&lt;T&gt; extends ThreadLocal&lt;T&gt; Since 1.2</summary>
+        <ol>
+            ThreadLocal에 상속성을 부여. 자식 쓰레드는 부모의 thread-local 변수들을 모두 상속받고 시작한다. childValue 메서드를 재정의함으로써 부모의 값과 다르게 설정할 수도 있다.
+        </ol>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>protected T childValue(T parentValue)</li>
+            </ol>
+        </details>
+    </details>
+</details>
+
+<hr>
+
+<details>
     <summary>타입 관련</summary>
     <details>
         <summary>interface CharSequence Since 1.4</summary>
         <ol>
-            <li>일련의 char 값들을 표현한다. equals(), hashCode()에 대한 규약이 없어서 두 CharSequence 객체를 비교하는 결과는 정의되어 있지 않으며, 따라서 set이나 map의 키로 이용하기에 부적절하다.</li>
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/lang/CharSequenceExample.java" lan="java">예시 코드 »</button>
+            <li>일련의 char 값들을 표현한다. equals(), hashCode()에 대한 규약이 없어서 두 CharSequence 객체를 비교하는 결과는 정의되어 있지 않으며, 따라서 set이나 map의 키로 이용하기에 부적절하다.
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/lang/CharSequenceExample.java" lan="java">예시 코드 »</button></li>
         </ol>
         <details>
             <summary>Method Detail</summary>
@@ -789,6 +901,38 @@
             </ol>
         </details>
     </details>
+
+    <details>
+        <summary>class Throwable implements Serializable Since 1.0</summary>
+        <ol>
+            <li>모든 에러와 예외의 조상.</li>
+        </ol>
+        <details>
+            <summary>Constructor Detail</summary>
+            <ol>
+                <li>public Throwable()</li>
+                <li>public Throwable(String message)</li>
+                <li>public Throwable(String message, Throwable cause) Since 1.4</li>
+                <li>public Throwable(Throwable cause) Since 1.4</li>
+                <li>protected Throwable(String message, THrowable cause, boolean enableSuppression, boolean writableStackTrace) Since 1.7</li>
+            </ol>
+        </details>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>String getMessage()</li>
+                <li>String getLocalizedMessage() Since 1.1</li>
+                <li>Throwable getCause() Since 1.4</li>
+                <li>Throwable initCause(Throwable cause) Since 1.4</li>
+                <li>void printStackTrace()</li>
+                <li>void printStackTrace(PrintStream s) Since 1.1</li>
+                <li>StackTraceElement[] getStackTrace() Since 1.4</li>
+                <li>void setStackTrace(StackTraceElement[] stackTrace) Since 1.4</li>
+                <li>final void addSuppressed(Throwable exception) Since 1.7</li>
+                <li>final Throwable[] getSuppressed() Since 1.7</li>
+            </ol>
+        </details>
+    </details>
 </details>
 
 <hr>
@@ -1303,16 +1447,139 @@
             </ol>
         </details>
     </details>
-</details>
 
-<hr>
+    <details>
+        <summary>class Runtime Since 1.0</summary>
+        <ol>
+            <li>모든 Java 애플리케이션은 하나의 Runtime 인스턴스를 가진다.</li>
+        </ol>
+        <details>
+            <summary>static final class Runtime.Version implements Comparable&lt;Runtime.Version&gt; Since 9</summary>
+            <ul>
+                <li>$VNUM : $FEATURE.$INTERIM.$UPDATE.$PATCH == [1-9][0-9]*((\.0)*\.[1-9][0-9]*)*</li>
+                $FEATURE : Feature-release counter<br>
+                $INTERIM : Interim-release counter<br>
+                $UPDATE : Update-release counter<br>
+                $PATCH : Emergency patch-release counter
 
-<details>
-    <summary>final class StackWalker Since 9</summary>
-    <ol>
-        <li>현재 쓰레드의 StackFrame에 대한 스트림을 열고 특정 작업을 수행한다. 스트림은 실행 지점인 맨 위 frame부터 아래로 내려가면서 작업한다.</li>
-        예. 현재 쓰레드의 상위 10개 스택 프레임 가져오기.<br>
-        List&lt;StackFrame&gt; stack = StackWalker.getInstance().walk(s -&gt; s.limit(10).collect(Collectors.toList()));
+                <li>Version String : $VNUM(-$PRE)?\+$BUILD(-$OPT)? or $VNUM-$PRE(-$OPT)? or $VNUM(+-$OPT)?</li>
+                $PRE : [a-zA-Z0-9]+ : Pre-release identifier<br>
+                $BUILD : 0|[1-9][0-9]* : Build number<br>
+                $OPT : [-a-zA-Z0-9.]+ : Additional build information
+            </ul>
+        </details>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>static Runtime getRuntime()</li>
+                <li>void exit(int status) : 현재 실행중인 JVM을 종료</li>
+                <li>void addShutdownHook(Thread hook) Since 1.3 : JVM이 종료 절차에 진입하면 등록된 모든 hook를 실행</li>
+                <li>boolean removeShutdownHook(Thread hook) Since 1.3</li>
+                <li>void halt(int status) Since 1.3 : 강제종료</li>
+                <li>Process exec(String command)</li>
+                <li>Process exec(String command, String[] envp)</li>
+                <li>Process exec(String command, String[] envp, File dir) Since 1.3</li>
+                <li>Process exec(String[] cmdarray)</li>
+                <li>Process exec(String[] cmdarray, String[] envp)</li>
+                <li>Process exec(String[] cmdarray, String[] envp, File dir) Since 1.3</li>
+                <li>int availableProcessors() Since 1.4</li>
+                <li>long freeMemory()</li>
+                <li>long totalMemory()</li>
+                <li>long maxMemory() Since 1.4</li>
+                <li>void gc() : Garbage collector 작동.</li>
+                <li>void runFinalization() : 소멸 대기중인 모든 객체 소멸</li>
+                <li>void load(String filename) : Native library 로드. JNI에서 사용.</li>
+                <li>void loadLibrary(String libname)</li>
+                <li>static Runtime.Version version() Since 9 : JVM 버전 반환.</li>
+            </ol>
+        </details>
+    </details>
+
+    <details>
+        <summary>final class System Since 1.0</summary>
+        <details>
+            <summary>static interface System.Logger Since 9</summary>
+            <details>
+                <summary>static enum System.Logger.Level Since 9</summary>
+                <ol>
+                    <li>ALL(Integer.MIN_VALUE), TRACE(400), DEBUG(500), INFO(800), WARNING(900), ERROR(1000), OFF(Integer.MAX_VALUE)</li>
+                    <li>final String getName()</li>
+                    <li>final int getSeverity()</li>
+                </ol>
+            </details>
+            <details>
+                <summary>Method Detail</summary>
+                <ol>
+                    <li>String getName() : 로거 이름 반환.</li>
+                    <li>boolean isLoggable(System.Logger.Level level)</li>
+                    <li>default void log(System.Logger.Level level, String msg) + 오버로딩</li>
+                </ol>
+            </details>
+        </details>
+        <details>
+            <summary>abstract static class System.LoggerFinder Since 9</summary>
+            <ul>
+                <li>로거의 생성, 관리, 구성에 관한 서비스 제공.</li>
+                <li>기본 구현 : java.logging 모듈이 있는 경우 java.util.logging이용. 없으면 INFO 수준으로 표준 에러 출력</li>
+            </ul>
+            <details>
+                <summary>Method Detail</summary>
+                <ol>
+                    <li>static System.LoggerFinder getLoggerFinder()</li>
+                    <li>abstract getLogger(String name, Module module)</li>
+                    <li>System.Logger getLocalizedLogger(String name, ResourceBundle bundle, Module module)</li>        
+                </ol>
+            </details>
+        </details>
+        <details>
+            <summary>Field Detail</summary>
+            <ol>
+                <li>public static final InputStream in</li>
+                <li>public static final PrintStream out</li>
+                <li>public static final PrintStream err</li>
+            </ol>
+        </details>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>static void setIn(InputStream in) Since 1.1</li>
+                <li>static void setOut(PrintStream out) Since 1.1</li>
+                <li>static void setErr(PrintStream err) Since 1.1</li>
+                <li>static Console console() Since 1.6</li>
+                <li>static Channel inheritedChannel() Since 1.5</li>
+                <li>static void setSecurityManager(SecurityManager s)</li>
+                <li>static SecurityManager getSecurityManager()</li>
+                <li>static long currentTimeMillis()</li>
+                <li>static long nanoTime() Since 1.5</li>
+                <li>static void arraycopy(Object src, int srcPos, Object dest, int destPos, int length)</li>
+                <li>static int identityHashCode(Object x) Since 1.1</li>
+                <li>static Properties getProperties()</li>
+                <li>static String lineSeparator() Since 1.7</li>
+                <li>static void setProperties(Properties props)</li>
+                <li>static String getProperty(String key)</li>
+                <li>static String getProperty(String key, String def)</li>
+                <li>static String setProperty(String key, String value) Since 1.2</li>
+                <li>static String clearProperty(String key) Since 1.5</li>
+                <li>static String getenv(String name) : 환경변수값 반환</li>
+                <li>static Map&lt;String,String&gt; getenv() Since 1.5</li>
+                <li>static System.Logger getLogger(String name) Since 9</li>
+                <li>static System.Logger getLogger(String name, ResourceBundle bundle) Since 9</li>
+                <li>static void exit(int status)</li>
+                <li>static void gc() : Runtime의 것을 호출</li>
+                <li>static void runFinalization() : Runtime의 것을 호출</li>
+                <li>static void load(String filename) : Runtime의 것을 호출</li>
+                <li>static void loadLibrary(String libname) : Runtime의 것을 호출</li>
+            </ol>
+        </details>
+    </details>
+
+    <details>
+        <summary>final class StackWalker Since 9</summary>
+        <ol>
+            <li>현재 쓰레드의 StackFrame에 대한 스트림을 열고 특정 작업을 수행한다. 스트림은 실행 지점인 맨 위 frame부터 아래로 내려가면서 작업한다.</li>
+            예. 현재 쓰레드의 상위 10개 스택 프레임 가져오기.<br>
+            List&lt;StackFrame&gt; stack = StackWalker.getInstance().walk(s -&gt; s.limit(10).collect(Collectors.toList()));
+        </ol>
         <details>
             <summary>static enum StackWalker.Option Since 9</summary>
             <ul>
@@ -1321,271 +1588,65 @@
                 <li>SHOW_REFLECT_FRAMES : 모든 reflection 프레임 표시</li>
             </ul>
         </details>
-
         <details>
             <summary>static interface StackWalker.StackFrame Since 9</summary>
             <ul>
                 <li>각 StackFrame 객체는 StackWalker로부터 반환된, 메서드 호출을 표현한다.</li>
-                <li>String getClassName() : 이 프레임이 나타내는 메서드가 정의된 클래스를 binary name으로 반환</li>
-                <li>String getMethodName() : 이 프레임이 나타내는 메서드의 이름 반환.</li>
-                <li>Class&lt;?&gt; getDeclaringClass() : 이 프레임이 나타내는 메서드가 정의된 클래스의 객체 반환. Option.RETAIN_CLASS_REFERENCE가 설정되어야 지원된다</li>
-                <li>default MethodType getMethodType() Since 10</li>
-                <li>default String getDescriptor() Since 10</li>
-                <li>int getByteCodeIndex() : 실행 지점을 포함하는 Code 속성에서의 인덱스 반환.</li>
-                <li>String getFileName() : 이 프레임이 가리키는 실행 지점이 포함된 소스 파일 이름 반환.</li>
+            </ul>
+            <details>
+                <summary>Method Detail</summary>
+                <ol>
+                    <li>String getClassName() : 이 프레임이 나타내는 메서드가 정의된 클래스를 binary name으로 반환</li>
+                    <li>String getMethodName() : 이 프레임이 나타내는 메서드의 이름 반환.</li>
+                    <li>Class&lt;?&gt; getDeclaringClass() : 이 프레임이 나타내는 메서드가 정의된 클래스의 객체 반환. Option.RETAIN_CLASS_REFERENCE가 설정되어야 지원된다</li>
+                    <li>default MethodType getMethodType() Since 10</li>
+                    <li>default String getDescriptor() Since 10</li>
+                    <li>int getByteCodeIndex() : 실행 지점을 포함하는 Code 속성에서의 인덱스 반환.</li>
+                    <li>String getFileName() : 이 프레임이 가리키는 실행 지점이 포함된 소스 파일 이름 반환.</li>
+                    <li>int getLineNumber()</li>
+                    <li>boolean isNativeMethod()</li>
+                    <li>StackStraceElement toStackTraceElement() : 이 프레임에 관한 StackTraceElement 반환.</li>
+                </ol>
+            </details>
+        </details>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>static StackWalker getInstance() : 숨겨진 프레임을 모두 생략. 클래스 정보 미포함.</li>
+                <li>static StackWalker getInstance(StackWalker.Option option)</li>
+                <li>static StackWalker getInstance(Set&lt;StackWalker.Option&gt; options)</li>
+                <li>static StackWalker getInstance(Set&lt;StackWalker.Option&gt; options, int estimateDepth)</li>
+                <li>&lt;T&gt; T walk(Function&lt;? super Stream&lt;StackWalker.StackFrame&gt;, ? extends T&gt; function)</li>
+                <li>void forEach(Consumer&lt; super StackWalker.StackFrame&gt; action)</li>
+                <li>Class&lt;&?&gt; getCallerClass()</li>
+                이 메서드의 호출자의 클래스 객체를 반환. 예를 들어, Util::getResourceBundle 메서드는 이 메서드를 통해 얻은 호출자의 클래스로부터 클래스 로더를 얻고, 클래스 로더를 통해 리소스를 로드한다.
+            </ol>
+        </details>
+    </details>
+    
+    <details>
+        <summary>final class StackTraceElement implements Serializable Since 1.4</summary>
+        <details>
+            <summary>Constructor Detail</summary>
+            <ol>
+                <li>public StackTraceElement(String declaringClass, String methodName, String fileName, int lineNumber) Since 1.5</li>
+                <li>public StackTraceElement(String classLoaderName, String moduleName, String moduleVersion, String declaringClass, String methodName, String fileName, int lineNumber) Since 9</li>    
+            </ol>
+        </details>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>String getFileName()</li>
                 <li>int getLineNumber()</li>
+                <li>String getModuleName() Since 9</li>
+                <li>String getModuleVersion() Since 9</li>
+                <li>String getClassLoaderName() Since 9</li>
+                <li>String getClassName()</li>
+                <li>String getMethodName()</li>
                 <li>boolean isNativeMethod()</li>
-                <li>StackStraceElement toStackTraceElement() : 이 프레임에 관한 StackTraceElement 반환.</li>
-            </ul>
+            </ol>
         </details>
-
-        <li>static StackWalker getInstance() : 숨겨진 프레임을 모두 생략. 클래스 정보 미포함.</li>
-        <li>static StackWalker getInstance(StackWalker.Option option)</li>
-        <li>static StackWalker getInstance(Set&lt;StackWalker.Option&gt; options)</li>
-        <li>static StackWalker getInstance(Set&lt;StackWalker.Option&gt; options, int estimateDepth)</li>
-        <li>&lt;T&gt; T walk(Function&lt;? super Stream&lt;StackWalker.StackFrame&gt;, ? extends T&gt; function)</li>
-        <li>void forEach(Consumer&lt; super StackWalker.StackFrame&gt; action)</li>
-        <li>Class&lt;&?&gt; getCallerClass()</li>
-        이 메서드의 호출자의 클래스 객체를 반환. 예를 들어, Util::getResourceBundle 메서드는 이 메서드를 통해 얻은 호출자의 클래스로부터 클래스 로더를 얻고, 클래스 로더를 통해 리소스를 로드한다.
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>final class StackTraceElement implements Serializable Since 1.4</summary>
-    <ol>
-        <li>public StackTraceElement(String declaringClass, String methodName, String fileName, int lineNumber) Since 1.5</li>
-        <li>public StackTraceElement(String classLoaderName, String moduleName, String moduleVersion, String declaringClass, String methodName, String fileName, int lineNumber) Since 9</li>
-        <li>String getFileName()</li>
-        <li>int getLineNumber()</li>
-        <li>String getModuleName() Since 9</li>
-        <li>String getModuleVersion() Since 9</li>
-        <li>String getClassLoaderName() Since 9</li>
-        <li>String getClassName()</li>
-        <li>String getMethodName()</li>
-        <li>boolean isNativeMethod()</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class Runtime Since 1.0</summary>
-    <ol>
-        <li>모든 Java 애플리케이션은 하나의 Runtime 인스턴스를 가진다.</li>
-        <details>
-            <summary>static final class Runtime.Version implements Comparable&lt;Runtime.Version&gt; Since 9</summary>
-            <ul>
-                <li>$VNUM : [1-9][0-9]*((\.0)*\.[1-9][0-9]*)*</li>
-                $FEATURE : Feature-release counter<br>
-                $INTERIM : Interim-release counter<br>
-                $UPDATE : Update-release counter<br>
-                $PATCH : Emergency patch-release counter
-                <li>Version String : $VNUM(-$PRE)?\+$BUILD(-$OPT)? or $VNUM-$PRE(-$OPT)? or $VNUM(+-$OPT)?</li>
-                $PRE : [a-zA-Z0-9]+ : Pre-release identifier<br>
-                $BUILD : 0|[1-9][0-9]* : Build number<br>
-                $OPT : [-a-zA-Z0-9.]+ : Additional build information
-            </ul>
-        </details>
-
-        <li>static Runtime getRuntime()</li>
-        <li>void exit(int status) : 현재 실행중인 JVM을 종료</li>
-        <li>void addShutdownHook(Thread hook) Since 1.3 : JVM이 종료 절차에 진입하면 등록된 모든 hook를 실행</li>
-        <li>boolean removeShutdownHook(Thread hook) Since 1.3</li>
-        <li>void halt(int status) Since 1.3 : 강제종료</li>
-        <li>Process exec(String command)</li>
-        <li>Process exec(String command, String[] envp)</li>
-        <li>Process exec(String command, String[] envp, File dir) Since 1.3</li>
-        <li>Process exec(String[] cmdarray)</li>
-        <li>Process exec(String[] cmdarray, String[] envp)</li>
-        <li>Process exec(String[] cmdarray, String[] envp, File dir) Since 1.3</li>
-        <li>int availableProcessors() Since 1.4</li>
-        <li>long freeMemory()</li>
-        <li>long totalMemory()</li>
-        <li>long maxMemory() Since 1.4</li>
-        <li>void gc() : Garbage collector 작동.</li>
-        <li>void runFinalization() : 소멸 대기중인 모든 객체 소멸</li>
-        <li>void load(String filename) : Native library 로드. JNI에서 사용.</li>
-        <li>void loadLibrary(String libname)</li>
-        <li>static Runtime.Version version() Since 9 : JVM 버전 반환.</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class SecurityManager Since 1.0</summary>
-    <ol>
-        <li>보안 정책을 구현할 수 있는 클래스. 전형적인 확인 절차는 아래와 같다.</li>
-        SecurityManager security = System.getSecurityManager();<br>
-        if (security != null) {<br>
-        　　security.checkXXX(argument, . . . );<br>
-        }
-        <li>Object getSecurityContext() : 현재 실행 환경을 캡슐화한 객체 반환.</li>
-        <li>void checkPermission(Permission perm) Since 1.2</li>
-        <li>void checkPermission(Permission perm, Object context) Since 1.2</li>
-        <li>ThreadGroup getThreadGroup() Since 1.1 : 새로운 쓰레드를 생성할 수 있는 쓰레드그룹 반환</li>
-        <li>...</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>final class System Since 1.0</summary>
-    <ol>
-        <details>
-            <summary>static interface System.Logger Since 9</summary>
-            <ul>
-                <li>static enum System.Logger.Level Since 9</li>
-                <ul>
-                    <li>ALL(Integer.MIN_VALUE), TRACE(400), DEBUG(500), INFO(800), WARNING(900), ERROR(1000), OFF(Integer.MAX_VALUE)</li>
-                    <li>final String getName()</li>
-                    <li>final int getSeverity()</li>
-                </ul>
-                <li>String getName() : 로거 이름 반환.</li>
-                <li>boolean isLoggable(System.Logger.Level level)</li>
-                <li>default void log(System.Logger.Level level, String msg)</li>
-                <li>...</li>
-            </ul>
-        </details>
-
-        <details>
-            <summary>abstract static class System.LoggerFinder Since 9</summary>
-            <ul>
-                <li>로거의 생성, 관리, 구성에 관한 서비스 제공.</li>
-                <li>기본 구현 : java.logging 모듈이 있는 경우 java.util.logging이용. 없으면 INFO 수준으로 표준 에러 출력</li>
-                <li>static System.LoggerFinder getLoggerFinder()</li>
-                <li>abstract getLogger(String name, Module module)</li>
-                <li>System.Logger getLocalizedLogger(String name, ResourceBundle bundle, Module module)</li>
-            </ul>
-        </details>
-
-        <li>public static final InputStream in</li>
-        <li>public static final PrintStream out</li>
-        <li>public static final PrintStream err</li>
-
-        <li>static void setIn(InputStream in) Since 1.1</li>
-        <li>static void setOut(PrintStream out) Since 1.1</li>
-        <li>static void setErr(PrintStream err) Since 1.1</li>
-        <li>static Console console() Since 1.6</li>
-        <li>static Channel inheritedChannel() Since 1.5</li>
-        <li>static void setSecurityManager(SecurityManager s)</li>
-        <li>static SecurityManager getSecurityManager()</li>
-        <li>static long currentTimeMillis()</li>
-        <li>static long nanoTime() Since 1.5</li>
-        <li>static void arraycopy(Object src, int srcPos, Object dest, int destPos, int length)</li>
-        <li>static int identityHashCode(Object x) Since 1.1</li>
-        <li>static Properties getProperties()</li>
-        <li>static String lineSeparator() Since 1.7</li>
-        <li>static void setProperties(Properties props)</li>
-        <li>static String getProperty(String key)</li>
-        <li>static String getProperty(String key, String def)</li>
-        <li>static String setProperty(String key, String value) Since 1.2</li>
-        <li>static String clearProperty(String key) Since 1.5</li>
-        <li>static String getenv(String name) : 환경변수값 반환</li>
-        <li>static Map&lt;String,String&gt; getenv() Since 1.5</li>
-        <li>static System.Logger getLogger(String name) Since 9</li>
-        <li>static System.Logger getLogger(String name, ResourceBundle bundle) Since 9</li>
-        <li>static void exit(int status)</li>
-        <li>static void gc() : Runtime의 것을 호출</li>
-        <li>static void runFinalization() : Runtime의 것을 호출</li>
-        <li>static void load(String filename) : Runtime의 것을 호출</li>
-        <li>static void loadLibrary(String libname) : Runtime의 것을 호출</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class Throwable implements Serializable Since 1.0</summary>
-    <ol>
-        <li>모든 에러와 예외의 조상.</li>
-        <li>public Throwable()</li>
-        <li>public Throwable(String message)</li>
-        <li>public Throwable(String message, Throwable cause) Since 1.4</li>
-        <li>public THrowable(Throwable cause) Since 1.4</li>
-        <li>protected Throwable(String message, THrowable cause, boolean enableSuppression, boolean writableStackTrace) Since 1.7</li>
-        <li>String getMessage()</li>
-        <li>String getLocalizedMessage() Since 1.1</li>
-        <li>Throwable getCause() Since 1.4</li>
-        <li>Throwable initCause(Throwable cause) Since 1.4</li>
-        <li>void printStackTrace()</li>
-        <li>void printStackTrace(PrintStream s) Since 1.1</li>
-        <li>StackTraceElement[] getStackTrace() Since 1.4</li>
-        <li>void setStackTrace(StackTraceElement[] stackTrace) Since 1.4</li>
-        <li>final void addSuppressed(Throwable exception) Since 1.7</li>
-        <li>final Throwable[] getSuppressed() Since 1.7</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>abstract class ClassValue&lt;T&gt; Since 1.7</summary>
-    <ol>
-        임의의 타입에 대하여, 필요할 때에 연산된 값을 가져오도록 지원. 해당 값은 해당 타입에 대해 일관성을 갖는다.
-        <li>protected abstract T computeValue(Class&lt;?&gt; type)</li>
-        해당 type에 대하여, 최초 get 메서드 호출 시 한 번만 호출되며, 이후 remove 메서드 호출이 없으면 더 이상 불리지 않는다.
-        <li>T get(Class&lt;?&gt; type)</li>
-        값이 계산되지 않은 상태에서 여러 쓰레드들이 경합을 벌일 경우, 임의 쓰레드의 결과값을 모두에 반환한다.
-        <li>void remove(Class&lt;?&gt; type)</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class ThreadLocal&lt;T&gt; Since 1.2</summary>
-    <ol>
-        쓰레드 단위의 지역 변수를 제공한다. 호출 지점과 관계없이 한 쓰레드 내부에서 변수를 공유한다.
-        <li>protected T initialValue()</li>
-        초기값이 설정되지 않은 상태에서 최초 get() 호출에 의해 불린다. remove() 호출 후의 get() 요청으로 다시 불린다.
-        <li>static &lt;S&gt; ThreadLocal&lt;S&gt; withInitial(Supplier&lt;? extends S&gt; supplier) Since 1.8</li>
-        supplier로 초기값이 설정되는 ThreadLocal 반환.
-        <li>T get()</li>
-        <li>void set(T value)</li>
-        <li>void remove() Since 1.5</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>class InheritableThreadLocal&lt;T&gt; extends ThreadLocal&lt;T&gt; Since 1.2</summary>
-    <ol>
-        ThreadLocal에 상속성을 부여. 자식 쓰레드는 부모의 thread-local 변수들을 모두 상속받고 시작한다. childValue 메서드를 재정의함으로써 부모의 값과 다르게 설정할 수도 있다.
-        <li>protected T childValue(T parentValue)</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>final class Math Since 1.0, StrictMath Since 1.3</summary>
-    <ol>
-        <li>static double E, PI</li>
-        <li>삼각함수, 쌍곡선 함수, 라디안-육십분법 변환, 지수-로그, 제곱/3제곱/제곱근/3제곱근/pow</li>
-        <li>static double IEEEremainder(double f1, double f2)</li>
-        <li>ceil, floor, rint, round</li>
-        rint : round to even이 이용된다.
-        <li>static double random()</li>
-        <li>abs, max, min, signum</li>        
-        <details>
-            <summary>사칙연산</summary>
-            <ul>
-                <li>오버플로우되면 예외 : addExact, substractExact, multiplyExact, incrementExact, decrementExact, negateExact, toIntExact</li>
-                <li>static long multiplyFull(int x, int y) Since 9<br>
-                    static long multiplyHigh(long x, long y) Since 9 : 상위 64개 비트를 반환</li>
-                <li>floorDiv(x, y)</li>
-                floor(x/y)를 반환한다. Integer/Long.MIN_VALUE를 -1로 나누는 경우는 오버플로우가 발생하고 Integer/Long.MIN_VALUE를 반환한다.
-                <li>floorMod(x, y)</li>
-                x - (floorDiv(x, y) * y)를 반환한다. 부호는 y와 같다.
-                <li>static double fma(double a, double b, double c) Since 9 // + float : a * b + c</li>
-            </ul>
-        </details>
-    </ol>
+    </details>
 </details>
 
 <hr>
