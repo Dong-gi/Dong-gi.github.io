@@ -4,46 +4,61 @@
     <summary>class BigDecimal extends Number implements Comparable&lt;BigDecimal&gt; Since 1.1</summary>
     <ol>
         임의 정밀도의 변경할 수 없는 10진 정수와 32비트 정수인 지수로 십진수를 표현한다.
-        <li>public static final BigDecimal ZERO, ONE, TEN Since 1.5</li>
-        <li>public BigDecimal(char[] in, int offset, int len) Since 1.5</li>
-        <li>public BigDecimal(char[] in, int offset, int len, MathContext mc) Since 1.5</li>
-        <li>public BigDecimal(char[] in) Since 1.5</li>
-        <li>public BigDecimal(char[] in, MathContext mc) Since 1.5</li>
-        <li>public BigDecimal(String val)</li>
-        » (부호)?(진수부)(지수부)?<br>
-        * 진수부 : 정수부.(소수부) or .소수부 or 정수부<br>
-        * 지수부: (e|E)정수
-        <li>public BigDecimal(String val, MathContext mc) Since 1.5</li>
-        <li>public BigDecimal(double val) : double의 오차 때문에 정확하진 않다.</li>
-        <li>public BigDecimal(double val, MathContext mc) Since 1.5</li>
-        <li>public BigDecimal(BigInteger val)</li>
-        <li>public BigDecimal(BigInteger val, MathContext mc) Since 1.5</li>
-        <li>public BigDecimal(BigInteger unscaledVal, int scale)</li>
-        <li>public BigDecimal(BigInteger unscaledVal, int scale, MathContext mc) Since 1.5</li>
-        <li>public BigDecimal(int val) Since 1.5</li>
-        <li>public BigDecimal(int val, MathContext mc) Since 1.5</li>
-        <li>public BigDecimal(long val) Since 1.5</li>
-        <li>public BigDecimal(long val, MathContext mc) Since 1.5</li>
-        <li>static BigDecimal valueOf(long unscaledVal, int scale)</li>
-        <li>static BigDecimal valueOf(long val)</li>
-        <li>static BigDecimal valueOf(double val) Since 1.5</li>
-        <li>BigDecimal add(BigDecimal augend)</li>
-        <li>BigDecimal add(BigDecimal augend, MathContext mc) Since 1.5</li>
-        <li>BigDecimal subtract(BigDecimal subtrahend)</li>
-        <li>BigDecimal subtract(BigDecimal subtrahend, MathContext mc) Since 1.5</li>
-        <li>BigDecimal multiply(BigDecimal multiplicand)</li>
-        <li>BigDecimal multiply(BigDecimal multiplicand, MathContext mc) Since 1.5</li>
-        <li>BigDecimal divide(BigDecimal divisor, int scale, RoundingMode roundingMode) Since 1.5</li>
-        <li>BigDecimal divide(BigDecimal divisor, RoundingMode roundingMode) Since 1.5</li>
-        <li>BigDecimal divide(BigDecimal divisor) Since 1.5</li>
-        <li>BigDecimal divide(BigDecimal divisor, MathContext mc) Since 1.5</li>
-        <li>BigDecimal divideToIntegralValue(BigDecimal divisor) Since 1.5 : 몫</li>
-        <li>BigDecimal divideToIntegralValue(BigDecimal divisor, MathContext mc) Since 1.5</li>
-        <li>BigDecimal remainder(BigDecimal divisor) SInce 1.5 : 나머지</li>
-        <li>BigDecimal remainder(BigDecimal divisor, MathContext mc) Since 1.5</li>
-        <li>BigDecimal[] divideAndRemainder(BigDecimal divisor) Since 1.5</li>
-        <li>sqrt, pow, abs, negate, scale, precision, unscaledValue, round, movePointRight, scaleByPowerOfTen, ...    </li>
     </ol>
+    <details>
+        <summary>Field Detail</summary>
+        <ol>
+            <li>public static final BigDecimal ZERO, ONE, TEN Since 1.5</li>
+        </ol>
+    </details>
+    <details>
+        <summary>Constructor Detail</summary>
+        <ol>
+            <li>public BigDecimal(char[] in, int offset, int len) Since 1.5</li>
+            <li>public BigDecimal(char[] in, int offset, int len, MathContext mc) Since 1.5</li>
+            <li>public BigDecimal(char[] in) Since 1.5</li>
+            <li>public BigDecimal(char[] in, MathContext mc) Since 1.5</li>
+            <li>public BigDecimal(String val)</li>
+            » (부호)?(진수부)(지수부)?<br>
+            * 진수부 : 정수부.(소수부) or .소수부 or 정수부<br>
+            * 지수부: (e|E)정수
+            <li>public BigDecimal(String val, MathContext mc) Since 1.5</li>
+            <li>public BigDecimal(double val) : double의 오차 때문에 정확하진 않다.</li>
+            <li>public BigDecimal(double val, MathContext mc) Since 1.5</li>
+            <li>public BigDecimal(BigInteger val)</li>
+            <li>public BigDecimal(BigInteger val, MathContext mc) Since 1.5</li>
+            <li>public BigDecimal(BigInteger unscaledVal, int scale)</li>
+            <li>public BigDecimal(BigInteger unscaledVal, int scale, MathContext mc) Since 1.5</li>
+            <li>public BigDecimal(int val) Since 1.5</li>
+            <li>public BigDecimal(int val, MathContext mc) Since 1.5</li>
+            <li>public BigDecimal(long val) Since 1.5</li>
+            <li>public BigDecimal(long val, MathContext mc) Since 1.5</li>
+        </ol>
+    </details>
+    <details>
+        <summary>Method Detail</summary>
+        <ol>
+            <li>static BigDecimal valueOf(long unscaledVal, int scale)</li>
+            <li>static BigDecimal valueOf(long val)</li>
+            <li>static BigDecimal valueOf(double val) Since 1.5</li>
+            <li>BigDecimal add(BigDecimal augend)</li>
+            <li>BigDecimal add(BigDecimal augend, MathContext mc) Since 1.5</li>
+            <li>BigDecimal subtract(BigDecimal subtrahend)</li>
+            <li>BigDecimal subtract(BigDecimal subtrahend, MathContext mc) Since 1.5</li>
+            <li>BigDecimal multiply(BigDecimal multiplicand)</li>
+            <li>BigDecimal multiply(BigDecimal multiplicand, MathContext mc) Since 1.5</li>
+            <li>BigDecimal divide(BigDecimal divisor, int scale, RoundingMode roundingMode) Since 1.5</li>
+            <li>BigDecimal divide(BigDecimal divisor, RoundingMode roundingMode) Since 1.5</li>
+            <li>BigDecimal divide(BigDecimal divisor) Since 1.5</li>
+            <li>BigDecimal divide(BigDecimal divisor, MathContext mc) Since 1.5</li>
+            <li>BigDecimal divideToIntegralValue(BigDecimal divisor) Since 1.5 : 몫</li>
+            <li>BigDecimal divideToIntegralValue(BigDecimal divisor, MathContext mc) Since 1.5</li>
+            <li>BigDecimal remainder(BigDecimal divisor) SInce 1.5 : 나머지</li>
+            <li>BigDecimal remainder(BigDecimal divisor, MathContext mc) Since 1.5</li>
+            <li>BigDecimal[] divideAndRemainder(BigDecimal divisor) Since 1.5</li>
+            <li>sqrt, pow, abs, negate, scale, precision, unscaledValue, round, movePointRight, scaleByPowerOfTen, ...</li>
+        </ol>
+    </details>
 </details>
 
 <hr>
@@ -52,22 +67,37 @@
     <summary>class BigInteger extends Number implements Comparable&lt;BigInteger&gt; Since 1.1</summary>
     <ol>
         <li>변경할 수 없는 임의 길이의 정수. -2^(Integer.MAX_VALUE) ~ 2^(Integer.MAX_VALUE)</li>
-        <li>public static final BigInteger ZERO Since 1.2, ONE Since 1.2, TWO Since 9, TEN Since 1.5</li>
-        <li>public BigInteger(byte[] val, int off, int len) Since 9</li>
-        <li>public BigInteger(byte[] val)</li>
-        <li>public BigInteger(int signum, byte[] magnitude, int off, int len) Since 9</li>
-        <li>public BigInteger(int signum, byte[] magnitude)</li>
-        <li>public BigInteger(String val, int radix)</li>
-        <li>public BigInteger(String val)</li>
-        <li>public BigInteger(int numBits, Random rnd) : [0 ~ 2^numBits) 사이 난수</li>
-        <li>public BigInteger(int bitLength, int certainty, Random rnd) : 특정 비트 길이의 양의 정수(아마도 소수) 반환.</li>
-        <li>static BigInteger probablePrime(int bitLength, Random rnd) Since 1.4 : 합성수일 가능성은 2^(-100)을 넘지 않는다.</li>
-        <li>BigInteger nextProbablePrime() Since 1.5</li>
-        <li>static BigInteger valueOf(long val)</li>
-        <li>BigInteger add(BigInteger val)</li>
-        <li>BigInteger subract(BigInteger val)</li>
-        <li>...</li>
     </ol>
+    <details>
+        <summary>Field Detail</summary>
+        <ol>
+            <li>public static final BigInteger ZERO Since 1.2, ONE Since 1.2, TWO Since 9, TEN Since 1.5</li>
+        </ol>
+    </details>
+    <details>
+        <summary>Constructor Detail</summary>
+        <ol>
+            <li>public BigInteger(byte[] val, int off, int len) Since 9</li>
+            <li>public BigInteger(byte[] val)</li>
+            <li>public BigInteger(int signum, byte[] magnitude, int off, int len) Since 9</li>
+            <li>public BigInteger(int signum, byte[] magnitude)</li>
+            <li>public BigInteger(String val, int radix)</li>
+            <li>public BigInteger(String val)</li>
+            <li>public BigInteger(int numBits, Random rnd) : [0 ~ 2^numBits) 사이 난수</li>
+            <li>public BigInteger(int bitLength, int certainty, Random rnd) : 특정 비트 길이의 양의 정수(아마도 소수) 반환.</li>
+        </ol>
+    </details>
+    <details>
+        <summary>Method Detail</summary>
+        <ol>
+            <li>static BigInteger probablePrime(int bitLength, Random rnd) Since 1.4 : 합성수일 가능성은 2^(-100)을 넘지 않는다.</li>
+            <li>BigInteger nextProbablePrime() Since 1.5</li>
+            <li>static BigInteger valueOf(long val)</li>
+            <li>BigInteger add(BigInteger val)</li>
+            <li>BigInteger subract(BigInteger val)</li>
+            <li>...</li>
+        </ol>
+    </details>
 </details>
 
 <hr>
@@ -76,14 +106,29 @@
     <summary>final class MathContext implements Serializable Since 1.5</summary>
     <ol>
         <li>정밀도, 반올림 모드를 캡슐화한 변경 불가능한 객체.</li>
-        <li>public static final MathContext UNLIMITED : precision=0, roundingMode=HALF_UP</li>
-        <li>public static final MathContext DECIMAL32, DECIMAL64, DECIMAL128 : 7/16/34digits, roundingMode=HALF_EVEN</li>
-        <li>public MathContext(int setPrecision) : HALF_UP</li>
-        <li>public MathContext(int setPrecision, RoundingMode setRoundingMode)</li>
-        <li>public MathContext(String val) : MathContext::toString과 같은 포맷</li>
-        <li>int getPrecision()</li>
-        <li>RoundingMode getRoundingMode()</li>
     </ol>
+    <details>
+        <summary>Field Detail</summary>
+        <ol>
+            <li>public static final MathContext UNLIMITED : precision=0, roundingMode=HALF_UP</li>
+            <li>public static final MathContext DECIMAL32, DECIMAL64, DECIMAL128 : 7/16/34digits, roundingMode=HALF_EVEN</li>
+        </ol>
+    </details>
+    <details>
+        <summary>Constructor Detail</summary>
+        <ol>
+            <li>public MathContext(int setPrecision) : HALF_UP</li>
+            <li>public MathContext(int setPrecision, RoundingMode setRoundingMode)</li>
+            <li>public MathContext(String val) : MathContext::toString과 같은 포맷</li>
+        </ol>
+    </details>
+    <details>
+        <summary>Method Detail</summary>
+        <ol>
+            <li>int getPrecision()</li>
+            <li>RoundingMode getRoundingMode()</li>
+        </ol>
+    </details>
 </details>
 
 <hr>
