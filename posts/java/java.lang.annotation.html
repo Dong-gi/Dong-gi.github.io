@@ -4,9 +4,14 @@
     <summary>interface Annotation Since 1.5</summary>
     <ol>
         <li>이 인터페이스를 구체화하는 것으로 새로운 애너테이션을 정의할 순 없다.</li>
-        <li>Class&lt;? extends Annotation&gt; annotationType()</li>
-        <li>int hashCode()</li>
     </ol>
+    <details>
+        <summary>Method Detail</summary>
+        <ol>
+            <li>Class&lt;? extends Annotation&gt; annotationType()</li>
+            <li>int hashCode()</li>
+        </ol>
+    </details>
 </details>
 
 <hr>
@@ -15,8 +20,15 @@
     <summary>enum ElementType Since 1.5</summary>
     <ol>
         <li>애너테이션이 적용되는 요소를 표현한다.</li>
-        <li>TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VALIABLE, ANNOTATION_TYPE, PACKAGE, TYPE_PARAMETER Since 1.8, MODULE Since 9</li>
     </ol>
+    <details>
+        <summary>Enum Constants</summary>
+        <ol>
+            <li>TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VALIABLE, ANNOTATION_TYPE, PACKAGE</li>
+            <li>TYPE_PARAMETER Since 1.8</li>
+            <li>MODULE Since 9</li>
+        </ol>
+    </details>
 </details>
 
 <hr>
@@ -25,8 +37,15 @@
     <summary>enum RetentionPolicy Since 1.5</summary>
     <ol>
         <li>애너테이션 유지 정책.</li>
-        <li>SOURCE : 컴파일러가 제거, CLASS : 컴파일러가 클래스 파일에 기록(default), RUNTIME : 클래스 파일에 기록하고 JVM 런타임에도 유지. 따라서 리플렉션 가능.</li>
     </ol>
+    <details>
+        <summary>Enum Constants</summary>
+        <ol>
+            <li>SOURCE : 컴파일러가 제거</li>
+            <li>CLASS : 컴파일러가 클래스 파일에 기록(default)</li>
+            <li>RUNTIME : 클래스 파일에 기록하고 JVM 런타임에도 유지. 따라서 리플렉션 가능.</li>
+        </ol>
+    </details>
 </details>
 
 <hr>

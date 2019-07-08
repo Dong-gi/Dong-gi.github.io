@@ -238,11 +238,11 @@ function insertCode(buttonId) {
 
                 $(button).after(modal);
                 $(modal).after(div);
-                $('div#' + buttonId).css('max-height', window.innerHeight / 3);
+                $('div#' + buttonId).css('max-height', window.innerHeight / 2);
             });
         } else {
             $('div#' + buttonId).toggleClass('d-none')
-            $('div#' + buttonId).css('max-height', window.innerHeight / 3);
+            $('div#' + buttonId).css('max-height', window.innerHeight / 2);
         }
     };
 }
@@ -339,10 +339,15 @@ function getContentHTML(post) {
     let newBadge = (new Date().getTime() - new Date(post.date).getTime()) <= 3 * 86400 * 1000 ? '<span class="badge badge-pill badge-primary">New</span>' : '';
     let location = `https://dong-gi.github.io/${post.filename}`;
     console.log(location);
-    return `<div class="jumbotron" id="${post.id}"><details><summary class="row">
-    <div class="col-12 col-md-8 col-lg-6" title="${location}">${title}${newBadge}</div>
-    <div class="col d-none d-md-block">${post.category}</div>
-    </summary></details></div>`;
+    return `<div class="jumbotron" id="${post.id}">
+                <a class="d-none" href="${location}">${title}</a>
+                <details>
+                    <summary class="row">
+                        <div class="col-12 col-md-8 col-lg-6" title="${location}">${title}${newBadge}</div>
+                        <div class="col d-none d-md-block">${post.category}</div>
+                    </summary>
+                </details>
+            </div>`;
 }
 
 /**
