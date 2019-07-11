@@ -42,19 +42,19 @@
         <li>WatchService에 Watchable 객체가 등록되었음을 표현하는 토큰.</li>
         » 처음 생성되면 ready 상태. 이벤트를 감지하면 reset()되기 전까지 signalled 상태가 되고, WatchService 큐에 진입하여 서비스 처리. reset()되면 다시 ready.<br>
         for (;;) {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;// retrieve key<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;WatchKey key = watcher.take();<br>
+        　　// retrieve key<br>
+        　　WatchKey key = watcher.take();<br>
         <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;// process events<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;for (WatchEvent &lt;?&gt; event: key.pollEvents()) {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+        　　// process events<br>
+        　　for (WatchEvent &lt;?&gt; event: key.pollEvents()) {<br>
+        　　　　:<br>
+        　　}<br>
         <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;// reset the key<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;boolean valid = key.reset();<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;if (!valid) {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// object no longer registered<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+        　　// reset the key<br>
+        　　boolean valid = key.reset();<br>
+        　　if (!valid) {<br>
+        　　　　// object no longer registered<br>
+        　　}<br>
         }
         
         <li>boolean isValid() : 취소되거나 서비스가 닫힐 때까지 유효</li>

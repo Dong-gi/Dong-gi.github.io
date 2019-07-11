@@ -38,10 +38,7 @@
 
 <details>
     <summary>abstract class SocketAddress implements Serializable Since 1.4</summary>
-    <ol>
-        <li>프로토콜과 무관한 소켓 주소 정의.</li>
-        <li>public SocketAddress()</li>
-    </ol>
+    프로토콜과 무관한 소켓 주소 정의.
 </details>
 
 <hr>
@@ -50,17 +47,28 @@
     <summary>class InetSocketAddress extends SocketAddress Since 1.4</summary>
     <ol>
         <li>IP 소켓 주소(IP 주소 or 호스트 이름 + 포트)를 표현.</li>
-        <li>public InetSocketAddress(int port)</li>
-        » port가 0이면 바인드시 자동 할당.
-        <li>public InetSocketAddress(InetAddress addr, int port)</li>
-        <li>public InetSocketAddress(String hostname, int port)</li>
-        <li>static InetSocketAddress createUnresolved(String host, int port) Since 1.5</li>
-        <li>final int getPort()</li>
-        <li>final InetAddress getAddress()</li>
-        <li>final String getHostName()</li>
-        <li>final String getHostString() Since 1.7 : 이름이 없으면 주소로 생성</li>
-        <li>final boolean isUnresolved()</li>
     </ol>
+    <details>
+        <summary>Constructor Detail</summary>
+        <ol>
+            <li>public InetSocketAddress(int port)</li>
+            » port가 0이면 바인드시 자동 할당.
+            <li>public InetSocketAddress(InetAddress addr, int port)</li>
+            <li>public InetSocketAddress(String hostname, int port)</li>
+        </ol>
+    </details>
+    <details>
+        <summary>Method Detail</summary>
+        <ol>
+            <li>static InetSocketAddress createUnresolved(String host, int port) Since 1.5</li>
+            <li>final int getPort()</li>
+            <li>final InetAddress getAddress()</li>
+            <li>final String getHostName()</li>
+            <li>final String getHostString() Since 1.7 : 이름이 없으면 주소로 생성</li>
+            <li>final boolean isUnresolved()</li>
+            resolved : 텍스트로된 호스트 문자열에 대응하는 IP 주소를 찾았는지
+        </ol>
+    </details>
 </details>
 
 <hr>
@@ -70,10 +78,15 @@
     <ol>
         <li>IPv4 : IP 주소, 서브넷 마스크, 브로드캐스트 주소</li>
         <li>IPv6 : IP 주소, network prefix length</li>
-        <li>InetAddress getAddress()</li>
-        <li>InetAddress getBroadcast()</li>
-        <li>short getNetworkPrefixLength()</li>
     </ol>
+    <details>
+        <summary>Method Detail</summary>
+        <ol>
+            <li>InetAddress getAddress()</li>
+            <li>InetAddress getBroadcast()</li>
+            <li>short getNetworkPrefixLength()</li>
+        </ol>
+    </details>
 </details>
 
 <hr>
@@ -107,37 +120,47 @@
     <summary>class Socket implements Closeable Since 1.0</summary>
     <ol>
         <li>TCP 클라이언트</li>
-        <li>public Socket() Since 1.1</li>
-        <li>public Socket(Proxy proxy) Since 1.5</li>
-        <li>public Socket(SocketImpl impl) Since 1.1</li>
-        <li>public Socket(String host, int port)</li>
-        <li>public Socket(InetAddress address, int port)</li>
-        <li>public Socket(String host, int port, InetAddress localAddr, int localPort) Since 1.1</li>
-        <li>public Socket(InetAddress address, int port, InetAddress localAddr, int localPort) Since 1.1</li>
-        <li>void connect(SocketAddress endpoint) Since 1.4</li>
-        <li>void connect(SocketAddress endpoint, int timeout) Since 1.4</li>
-        <li>void bind(SocketAddress bindpoint) Since 1.4</li>
-        <li>void shutdownInput() Since 1.3</li>
-        <li>void shutdownOutput() Since 1.3</li>
-        <li>InetAddress getInetAddress()</li>
-        <li>InetAddress getLocalAddress() Since 1.1</li>
-        <li>int getPort()</li>
-        <li>int getLocalPort()</li>
-        <li>SocketAddress getRemoteSocketAddress() Since 1.4</li>
-        <li>SocketAddress getLocalSocketAddress() Since 1.4</li>
-        <li>SocketChannel getChannel() Since 1.4</li>
-        » SocketChannel::open 또는 ServerSocketChannel::accept로 생성된 경우에만 존재.
-        <li>InputStream getInputStream()</li>
-        <li>OutputStream getOutputStream()</li>
-        <li>boolean isInputShutdown() Since 1.4</li>
-        <li>boolean isOutputShutdown() Since 1.4</li>
-        <li>boolean isClosed() Since 1.4</li>
-        <li>boolean isBound() Since 1.4</li>
-        <li>boolean isConnected() Since 1.4</li>
-        <li>&lt;T&gt; Socket setOption(SocketOption&lt;T&gt; name, T value) Since 9</li>
-        <li>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) Since 9</li>
-        <li>Set&lt;SocketOption&lt;?&gt;&gt; supportedOptions() Since 9</li>
     </ol>
+    <details>
+        <summary>Constructor Detail</summary>
+        <ol>
+            <li>public Socket() Since 1.1</li>
+            <li>public Socket(Proxy proxy) Since 1.5</li>
+            <li>public Socket(SocketImpl impl) Since 1.1</li>
+            <li>public Socket(String host, int port)</li>
+            <li>public Socket(InetAddress address, int port)</li>
+            <li>public Socket(String host, int port, InetAddress localAddr, int localPort) Since 1.1</li>
+            <li>public Socket(InetAddress address, int port, InetAddress localAddr, int localPort) Since 1.1</li>
+        </ol>
+    </details>
+    <details>
+        <summary>Method Detail</summary>
+        <ol>
+            <li>void connect(SocketAddress endpoint) Since 1.4</li>
+            <li>void connect(SocketAddress endpoint, int timeout) Since 1.4</li>
+            <li>void bind(SocketAddress bindpoint) Since 1.4</li>
+            <li>void shutdownInput() Since 1.3</li>
+            <li>void shutdownOutput() Since 1.3</li>
+            <li>InetAddress getInetAddress()</li>
+            <li>InetAddress getLocalAddress() Since 1.1</li>
+            <li>int getPort()</li>
+            <li>int getLocalPort()</li>
+            <li>SocketAddress getRemoteSocketAddress() Since 1.4</li>
+            <li>SocketAddress getLocalSocketAddress() Since 1.4</li>
+            <li>SocketChannel getChannel() Since 1.4</li>
+            » SocketChannel::open 또는 ServerSocketChannel::accept로 생성된 경우에만 존재.
+            <li>InputStream getInputStream()</li>
+            <li>OutputStream getOutputStream()</li>
+            <li>boolean isInputShutdown() Since 1.4</li>
+            <li>boolean isOutputShutdown() Since 1.4</li>
+            <li>boolean isClosed() Since 1.4</li>
+            <li>boolean isBound() Since 1.4</li>
+            <li>boolean isConnected() Since 1.4</li>
+            <li>&lt;T&gt; Socket setOption(SocketOption&lt;T&gt; name, T value) Since 9</li>
+            <li>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) Since 9</li>
+            <li>Set&lt;SocketOption&lt;?&gt;&gt; supportedOptions() Since 9</li>
+        </ol>
+    </details>
 </details>
 
 <hr>
@@ -146,29 +169,39 @@
     <summary>class ServerSocket implements Closeable Since 1.0</summary>
     <ol>
         <li>TCP 서버</li>
-        <li>public ServerSocket()</li>
-        <li>public ServerSocket(int port)</li>
-        » port 0은 자동 할당. 들어오는 연결 큐의 크기는 50.
-        <li>public ServerSocket(int port, int backlog)</li>
-        » port 0은 자동 할당. backlog는 연결 큐의 크기 설정.
-        <li>public ServerSocket(int port, int backlog, InetAddress bindAddr) Since 1.1</li>
-        <li>void bind(SocketAddress endpoint) Since 1.4</li>
-        <li>void bind(SOcketAddress endpoint, int backlog) Since 1.4</li>
-        <li>InetAddress getInetAddress()</li>
-        <li>int getLocalPort()</li>
-        <li>SocketAddress getLocalSocketAddress() Since 1.4</li>
-        <li>Socket accept()</li>
-        <li>final void implAccept(Socket s) Since 1.1 : ServerSocket의 서브클래스들이 이용</li>
-        <li>ServerSocketChannel getChannel() Since 1.4</li>
-        » ServerSocketChannel::open으로 생성된 경우에만 존재.
-        <li>boolean isBound() Since 1.4</li>
-        <li>boolean isClosed() Since 1.4</li>
-        <li>static void setSocketFactory(SocketImplFactory fac)</li>
-        <li>void setPerformancePreferences(int connectionTime, int latency, int bandwidth) Since 1.5</li>
-        <li>&lt;T&gt; ServerSocket setOption(SocketOption&lt;T&gt; name, T value) Since 9</li>
-        <li>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) Since 9</li>
-        <li>Set&lt;SocketOption&lt;?&gt;&gt; supportedOptions() Since 9</li>
     </ol>
+    <details>
+        <summary>Constructor Detail</summary>
+        <ol>
+            <li>public ServerSocket()</li>
+            <li>public ServerSocket(int port)</li>
+            » port 0은 자동 할당. 들어오는 연결 큐의 크기는 50.
+            <li>public ServerSocket(int port, int backlog)</li>
+            » port 0은 자동 할당. backlog는 연결 큐의 크기 설정.
+            <li>public ServerSocket(int port, int backlog, InetAddress bindAddr) Since 1.1</li>
+        </ol>
+    </details>
+    <details>
+        <summary>Method Detail</summary>
+        <ol>
+            <li>void bind(SocketAddress endpoint) Since 1.4</li>
+            <li>void bind(SOcketAddress endpoint, int backlog) Since 1.4</li>
+            <li>InetAddress getInetAddress()</li>
+            <li>int getLocalPort()</li>
+            <li>SocketAddress getLocalSocketAddress() Since 1.4</li>
+            <li>Socket accept()</li>
+            <li>final void implAccept(Socket s) Since 1.1 : ServerSocket의 서브클래스들이 이용</li>
+            <li>ServerSocketChannel getChannel() Since 1.4</li>
+            » ServerSocketChannel::open으로 생성된 경우에만 존재.
+            <li>boolean isBound() Since 1.4</li>
+            <li>boolean isClosed() Since 1.4</li>
+            <li>static void setSocketFactory(SocketImplFactory fac)</li>
+            <li>void setPerformancePreferences(int connectionTime, int latency, int bandwidth) Since 1.5</li>
+            <li>&lt;T&gt; ServerSocket setOption(SocketOption&lt;T&gt; name, T value) Since 9</li>
+            <li>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) Since 9</li>
+            <li>Set&lt;SocketOption&lt;?&gt;&gt; supportedOptions() Since 9</li>
+        </ol>
+    </details>
 </details>
 
 <hr>
@@ -177,40 +210,50 @@
     <summary>class DatagramSocket implements Closeable Since 1.0</summary>
     <ol>
         <li>UDP 소켓</li>
-        <li>public DatagramSocket()</li>
-        <li>protected DatagramSocket(DatagramSocketImpl impl) Since 1.4</li>
-        <li>public DatagramSocket(SocketAddress bindaddr) Since 1.4</li>
-        <li>public DatagramSocket(int port)</li>
-        <li>public DatagramSocket(int port, InetAddress laddr) Since 1.1</li>
-        <li>void bind(SocketAddress addr) Since 1.4</li>
-        <li>void connect(InetAddress address, int port)</li>
-        » 기본적으로 UDP 데이터그램 소켓은 연결이 없다. 원격지에 연결하는순간, 소켓은 해당 원격지와만 통신할 수 있다.
-        <li>void connect(SocketAddress addr) Since 1.4</li>
-        <li>void disconnect()</li>
-        <li>boolean isBound() Since 1.4</li>
-        <li>boolean isConnected() Since 1.4</li>
-        <li>boolean isCLosed() Since 1.4</li>
-        <li>InetAddress getInetAddress() : connect되었을 때만.</li>
-        <li>int getPort() : connect되었을 때만.</li>
-        <li>SocketAddress getRemoteSocketAddress() Since 1.4 : connect되었을 때만.</li>
-        <li>SocketAddress getLocalSocketAddress() Since 1.4</li>
-        <li>void send(DatagramPacket p)</li>
-        <li>void receive(DatagramPacket p)</li>
-        <li>InetAddress getLocalAddress() Since 1.1</li>
-        <li>int getLocalPort()</li>
-        <li>void setTrafficClass(int tc) Since 1.4</li>
-        » 0&lt;=tc&lt;=255. IPv4에서, 하위 8개 비트를 IP 패킷의 TOS에 쓴다.<br>
-        » RRC 1349의 TOS 값 정의<br>
-        * IPTOS_LOWCOST(0x02), IPTOS_RELIABILITY(0x04), IPTOS_THROUGHPUT(0x08), IPTOS_LOWDELAY(0x10)<br>
-        » IPv6에서, IP 헤더의 sin6_flowinfo 필드에 들어간다.
-        <li>int getTrafficClass() Since 1.4</li>
-        <li>DatagramChannel getChannel() Since 1.4</li>
-        » DatagramChannel::open으로 생성된 경우에만 존재.
-        <li>static void setDatagramSocketImplFactory(DatagramSocketImplFactory fac) Since 1.3</li>
-        <li>&lt;T&gt; DatagramSocket setOption(SocketOption&lt;T&gt; name, T value) Since 9</li>
-        <li>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) Since 9</li>
-        <li>Set&lt;SocketOption&lt;?&gt;&gt; supportedOptions() Since 9</li>
     </ol>
+    <details>
+        <summary>Constructor Detail</summary>
+        <ol>
+            <li>public DatagramSocket()</li>
+            <li>protected DatagramSocket(DatagramSocketImpl impl) Since 1.4</li>
+            <li>public DatagramSocket(SocketAddress bindaddr) Since 1.4</li>
+            <li>public DatagramSocket(int port)</li>
+            <li>public DatagramSocket(int port, InetAddress laddr) Since 1.1</li>
+        </ol>
+    </details>
+    <details>
+        <summary>Method Detail</summary>
+        <ol>
+            <li>void bind(SocketAddress addr) Since 1.4</li>
+            <li>void connect(InetAddress address, int port)</li>
+            » 기본적으로 UDP 데이터그램 소켓은 연결이 없다. 원격지에 연결하는순간, 소켓은 해당 원격지와만 통신할 수 있다.
+            <li>void connect(SocketAddress addr) Since 1.4</li>
+            <li>void disconnect()</li>
+            <li>boolean isBound() Since 1.4</li>
+            <li>boolean isConnected() Since 1.4</li>
+            <li>boolean isCLosed() Since 1.4</li>
+            <li>InetAddress getInetAddress() : connect되었을 때만.</li>
+            <li>int getPort() : connect되었을 때만.</li>
+            <li>SocketAddress getRemoteSocketAddress() Since 1.4 : connect되었을 때만.</li>
+            <li>SocketAddress getLocalSocketAddress() Since 1.4</li>
+            <li>void send(DatagramPacket p)</li>
+            <li>void receive(DatagramPacket p)</li>
+            <li>InetAddress getLocalAddress() Since 1.1</li>
+            <li>int getLocalPort()</li>
+            <li>void setTrafficClass(int tc) Since 1.4</li>
+            » 0&lt;=tc&lt;=255. IPv4에서, 하위 8개 비트를 IP 패킷의 TOS에 쓴다.<br>
+            » RRC 1349의 TOS 값 정의<br>
+            * IPTOS_LOWCOST(0x02), IPTOS_RELIABILITY(0x04), IPTOS_THROUGHPUT(0x08), IPTOS_LOWDELAY(0x10)<br>
+            » IPv6에서, IP 헤더의 sin6_flowinfo 필드에 들어간다.
+            <li>int getTrafficClass() Since 1.4</li>
+            <li>DatagramChannel getChannel() Since 1.4</li>
+            » DatagramChannel::open으로 생성된 경우에만 존재.
+            <li>static void setDatagramSocketImplFactory(DatagramSocketImplFactory fac) Since 1.3</li>
+            <li>&lt;T&gt; DatagramSocket setOption(SocketOption&lt;T&gt; name, T value) Since 9</li>
+            <li>&lt;T&gt; T getOption(SocketOption&lt;T&gt; name) Since 9</li>
+            <li>Set&lt;SocketOption&lt;?&gt;&gt; supportedOptions() Since 9</li>
+        </ol>
+    </details>
 </details>
 
 <hr>
@@ -219,28 +262,33 @@
     <summary>final class NetworkInterface Since 1.4</summary>
     <ol>
         <li>이름과 할당된 IP 주소들로 구성된 Network Interface 표현.</li>
-        <li>String getName()</li>
-        <li>Enumeration&lt;InetAddress&gt; getInetAddresses()</li>
-        <li>Stream&lt;InetAdress&gt; inetAddresses() Since 9</li>
-        <li>List&lt;InterfaceAddress&gt; getInterfaceAddresses() Since 1.6</li>
-        <li>Enumeration&lt;NetoworkInterface&gt; getSubInterfaces() Since 1.6 : subinterface = vertual interface</li>
-        <li>Stream&lt;NetworkInterface&gt; subInterfaces() Since 9</li>
-        <li>NetworkInterface getParent() Since 1.6</li>
-        <li>int getIndex() Since 1.7 : -1 for unknown</li>
-        <li>String getDisplayName()</li>
-        <li>static NetworkInteface getByName(String name)</li>
-        <li>static NetworkInterface getByIndex(int index) Since 1.7</li>
-        <li>static NetworkInterface getByInetAddress(InetAddress addr)</li>
-        <li>static Enumeration&lt;NetworkInterface&gt; getNetworkInterfaces()</li>
-        <li>static Stream&lt;NetworkInterface&gt; networkInterfaces() Since 9</li>
-        <li>boolean isUp() Since 1.6</li>
-        <li>boolean isLoopback() Since 1.6</li>
-        <li>boolean isPointToPoint() Since 1.6</li>
-        <li>boolean supportsMulticast() Since 1.6</li>
-        <li>byte[] getHardwareAddress() Since 1.6 : 보통 MAC 주소</li>
-        <li>int getMTU() Since 1.6</li>
-        <li>boolean isVirtual() Since 1.6</li>
     </ol>
+    <details>
+        <summary>Method Detail</summary>
+        <ol>
+            <li>String getName()</li>
+            <li>Enumeration&lt;InetAddress&gt; getInetAddresses()</li>
+            <li>Stream&lt;InetAdress&gt; inetAddresses() Since 9</li>
+            <li>List&lt;InterfaceAddress&gt; getInterfaceAddresses() Since 1.6</li>
+            <li>Enumeration&lt;NetoworkInterface&gt; getSubInterfaces() Since 1.6 : subinterface = vertual interface</li>
+            <li>Stream&lt;NetworkInterface&gt; subInterfaces() Since 9</li>
+            <li>NetworkInterface getParent() Since 1.6</li>
+            <li>int getIndex() Since 1.7 : -1 for unknown</li>
+            <li>String getDisplayName()</li>
+            <li>static NetworkInteface getByName(String name)</li>
+            <li>static NetworkInterface getByIndex(int index) Since 1.7</li>
+            <li>static NetworkInterface getByInetAddress(InetAddress addr)</li>
+            <li>static Enumeration&lt;NetworkInterface&gt; getNetworkInterfaces()</li>
+            <li>static Stream&lt;NetworkInterface&gt; networkInterfaces() Since 9</li>
+            <li>boolean isUp() Since 1.6</li>
+            <li>boolean isLoopback() Since 1.6</li>
+            <li>boolean isPointToPoint() Since 1.6</li>
+            <li>boolean supportsMulticast() Since 1.6</li>
+            <li>byte[] getHardwareAddress() Since 1.6 : 보통 MAC 주소</li>
+            <li>int getMTU() Since 1.6</li>
+            <li>boolean isVirtual() Since 1.6</li>
+        </ol>
+    </details>
 </details>
 
 <hr>
@@ -264,46 +312,63 @@
         » Normalization : "."과 ".."을 제거<br>
         » Resolution : 상대 URI와 base URI를 이용해 단일 URI를 찾는 작업<br>
         » Relativization : Resolution의 역. 임의의 정규화된 두 URI u, v에 대하여, u.relativize(u.resolve(v)).equals(v)와 u.resolve(u.relativize(v)).equals(v)는 항상 성립한다.
-        
-        <li>public URI(String str)</li>
-        <li>public URI(String scheme, String userInfo, String host, int port, String path, String query, String fragment)</li>
-        <li>public URI(String scheme, String authority, String path, String query, String fragment)</li>
-        <li>public URI(String scheme, String host, String path, String fragment)</li>
-        <li>public URI(String scheme, String ssp, String fragment) // ssp : scheme-specific-part</li>
-        <li>static URI create(String str)</li>
-        <li>URI parseServerAuthority()</li>
-        <li>URI normalize()</li>
-        <li>URI resolve(URI uri)</li>
-        <li>URI resolve(String str)</li>
-        <li>URI relativize(URI uri)</li>
-        <li>URL toURL()</li>
-        <li>String getScheme(), getRawSchemeSpecificPart(), getSchemeSpecificPart(), ...</li>
-        <li>boolean isAbsolute(), isOpaque()</li>
-        <li>String toASCIIString() : URI를 US_ASCII 문자열로 반환.</li>
     </ol>
+    <details>
+        <summary>Constructor Detail</summary>
+        <ol>
+            <li>public URI(String str)</li>
+            <li>public URI(String scheme, String userInfo, String host, int port, String path, String query, String fragment)</li>
+            <li>public URI(String scheme, String authority, String path, String query, String fragment)</li>
+            <li>public URI(String scheme, String host, String path, String fragment)</li>
+            <li>public URI(String scheme, String ssp, String fragment) // ssp : scheme-specific-part</li>
+            <li>static URI create(String str)</li>
+        </ol>
+    </details>
+    <details>
+        <summary>Method Detail</summary>
+        <ol>
+            <li>URI parseServerAuthority()</li>
+            <li>URI normalize()</li>
+            <li>URI resolve(URI uri)</li>
+            <li>URI resolve(String str)</li>
+            <li>URI relativize(URI uri)</li>
+            <li>URL toURL()</li>
+            <li>String getScheme(), getRawSchemeSpecificPart(), getSchemeSpecificPart(), ...</li>
+            <li>boolean isAbsolute(), isOpaque()</li>
+            <li>String toASCIIString() : URI를 US_ASCII 문자열로 반환.</li>
+        </ol>
+    </details>
 </details>
 
 <hr>
 
 <details>
     <summary>final class URL implements Serializable Since 1.0</summary>
-    <ol>
-        <li>public URL(String protocol, String host, int port, String file)</li>
-        <li>public URL(String protocol, String host, String file)</li>
-        <li>public URL(String protocol, String host, int port, String file, URLStreamHandler handler)</li>
-        <li>public URL(String spec)</li>
-        <li>public URL(URL context, String spec)</li>
-        <li>public URL(URL context, String spec, URLStreamHandler handler)</li>
-        <li>String getQuery(), getPath(), getUserInfo(), ...</li>
-        <li>boolean sameFile(URL other)</li>
-        <li>String toExternalForm() : Stream protocol handler의 toExternalForm 메서드를 이용해 생성</li>
-        <li>URI toURI() Since 1.5</li>
-        <li>URLConnection openConnection() Since 1.5</li>
-        <li>final InputStream openStream() : = openConnection().getInputStream()</li>
-        <li>final Object getContent() : = openConnection().getContent()</li>
-        <li>final Object getContent(Class&lt;?&gt;[] classes) Since 1.3</li>
-        <li>static void setURLStreamHandlerFactory(URLStreamHandlerFactory fac)</li>
-    </ol>
+    <details>
+        <summary>Constructor Detail</summary>
+        <ol>
+            <li>public URL(String protocol, String host, int port, String file)</li>
+            <li>public URL(String protocol, String host, String file)</li>
+            <li>public URL(String protocol, String host, int port, String file, URLStreamHandler handler)</li>
+            <li>public URL(String spec)</li>
+            <li>public URL(URL context, String spec)</li>
+            <li>public URL(URL context, String spec, URLStreamHandler handler)</li>
+        </ol>
+    </details>
+    <details>
+        <summary>Method Detail</summary>
+        <ol>
+            <li>String getQuery(), getPath(), getUserInfo(), ...</li>
+            <li>boolean sameFile(URL other)</li>
+            <li>String toExternalForm() : Stream protocol handler의 toExternalForm 메서드를 이용해 생성</li>
+            <li>URI toURI() Since 1.5</li>
+            <li>URLConnection openConnection() Since 1.5</li>
+            <li>final InputStream openStream() : = openConnection().getInputStream()</li>
+            <li>final Object getContent() : = openConnection().getContent()</li>
+            <li>final Object getContent(Class&lt;?&gt;[] classes) Since 1.3</li>
+            <li>static void setURLStreamHandlerFactory(URLStreamHandlerFactory fac)</li>
+        </ol>
+    </details>
 </details>
 
 <hr>
