@@ -111,8 +111,10 @@ const posts = {
         
 
         { "filename": "posts/db/concept.html", "category": "DB", "title": "기본 개념", "top": false },
+        { "filename": "posts/db/psql_admin.html", "category": "DB", "title": "PostgreSQL 서버 관리", "top": false },
+        { "filename": "posts/db/psql_programming.html", "category": "DB", "title": "PostgreSQL 서버 프로그래밍", "top": true },
+        { "filename": "posts/db/psql_sql.html", "category": "DB", "title": "PostgreSQL SQL 언어", "top": false },
         { "filename": "posts/db/psql_tutorial.html", "category": "DB", "title": "PostgreSQL 시작하기", "top": false },
-        { "filename": "posts/db/psql_sql.html", "category": "DB", "title": "PostgreSQL SQL 언어", "top": true },
         { "filename": "posts/db/psql_to_sqlite.html", "category": "DB", "title": "PostgreSQL → SQLite3 마이그레이션", "top": false },
     ],
     "tree": {},

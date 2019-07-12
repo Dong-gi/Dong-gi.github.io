@@ -235,7 +235,9 @@
 
             <li>insert into t_account_old select * from t_account_0;</li>
 
-            <li>COPY weather FROM ‘/home/user/weather.txt;</li>
+            <li>COPY weather FROM '/home/user/weather.txt';</li>
+            
+            <li>COPY weather FROM '/home/user/weather.txt' WITH csv;</li>
 
             <li>COPY t_account_0 (account_id, lv, nickname, start_game_date) FROM stdin;<br>
             1	1	'test'	2017-03-31 12:06:06.446+09<br></li>
