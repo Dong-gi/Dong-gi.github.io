@@ -1,0 +1,107 @@
+<hr>
+
+<details>
+    <summary>General Information</summary>
+    GNU 하의 무료 라이선스 or Oracle 상용 라이선스 중 선택
+</details>
+
+<hr>
+
+<details>
+    <summary>프로시저 호출</summary>
+    <ol>
+        <li>CREATE PROCEDURE로 정의된 내장 프로시저를 호출한다.</li>
+        CALL sp_name([parameter[, ...]])
+
+        <li>매개변수가 없다면 괄호를 생략할 수 있다.</li>
+        CALL sp_name[()]
+
+        <li>OUT, INOUT 매개변수를 출력으로 이용할 수 있다. 이는 프로시저 내부에서의 호출에서도 유효하다.</li>
+        PREPARE와 EXECUTE를 이용한 prepared CALL 구문에서는 IN, OUT, INOUT 인자에 placeholder를 이용할 수 있다.<br>
+        mysql&gt; SET @increment = 10;<br>
+        mysql&gt; PREPARE s FROM 'CALL p(?, ?)';<br>
+        mysql&gt; EXECUTE s USING @version, @increment;<br>
+        mysql&gt; SELECT @version, @increment;<br>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>프로시저 작성</summary>
+    <ol>
+        <li>분산 저장된 DB와 테이블들을 한꺼번에 검색하는 프로시저 예시</li>
+        <ul>
+            상황 가정
+            <li>유저 데이터를 4개 DB(user_1 ~ suer_4), 총 32개의 테이블(_1 ~ _32)로 분산 저장</li>
+            예. 유저의 소지 아이템과 관련된 i_user_item 테이블에 대하여, user_1에는 i_user_item_1, i_user_item_5, ..., i_user_item_29까지 존재
+            <li>각 테이블에 데이터 입력 시, 테이블 suffix는 user_id % 32 + 1로 결정된다</li>
+            <li><button type="button" class="btn btn-primary btn-sm btn-code" path="posts/db/example/mysql_select_all_table.sql" lan="sql">전체 검색 프로시저</button></li>
+        </ul>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Event</summary>
+    <ol>
+        <li>서버 실행 중 이벤트 사용 설정</li>
+        mysql&gt; SET GLOBAL event_scheduler = on;<br>
+        mysql&gt; SET @@global.event_scheduler = on;<br>
+        mysql&gt; SET GLOBAL event_scheduler = 1;<br>
+        mysql&gt; SET @@global.event_scheduler = 1;
+
+        <li>서버 종료 중 이벤트 사용 설정</li>
+        my.cnf or my.ini 에 옵션(event_scheduler=On)을 추가하고 mysql 을 시작한다.
+
+        <li>이벤트 생성</li>
+        SET GLOBAL event_scheduler = ON;<br>
+        delimiter $$<br>
+        create event if not exists reset_quest_clear_count_daily_event<br>
+        　　on schedule every 0 DAY_HOUR<br>
+        　　do<br>
+        　　　　begin<br>
+        　　　　　　update user.i_user_quest_status set clear_count = 0;<br>
+        　　　　end<br>
+        $$ delimiter;
+
+        <li>이벤트 확인</li>
+        SHOW PROCESSLIST;<br>
+        SHOW EVENTS;
+    </ol>    
+</details>
+
+<hr>
+
+<details>
+    <summary>파일로부터 테이블 데이터 로드</summary>
+    mysql&gt; LOAD DATA LOCAL INFILE "/~.csv" replace into table {tableName} fields terminated by ',' enclosed by '\"' IGNORE 1 LINES;
+</details>
+
+<hr>
+
+<details>
+    <summary>로그 확인</summary>
+    mysql&gt; show variables where variable_name like '%log%';
+    <table class="table">
+        <tbody>
+            <tr><td>general_log_file</td><td>/var/lib/mysql/e5b7c25145a2.log</td></tr>
+            <tr><td>relay_log_basename</td><td>/var/lib/mysql/e5b7c25145a2-relay-bin</td></tr>
+            <tr><td>relay_log_index</td><td>/var/lib/mysql/e5b7c25145a2-relay-bin.index</td></tr>
+            <tr><td>slow_query_log_file</td><td>/var/lib/mysql/e5b7c25145a2-slow.log</td></tr>
+        </tbody>
+    </table>
+    mysql&gt; SET GLOBAL general_log = 1;<br>
+    <br>
+    $ tail /var/lib/mysql/e5b7c25145a2.log -f
+</details>
+
+<hr>
+
+<details>
+    <summary>입출력 내역 파일로 기록</summary>
+    tee file_name.log;
+</details>
+
+<hr>
