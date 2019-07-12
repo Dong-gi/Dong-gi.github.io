@@ -32,7 +32,7 @@
 <hr>
 
 <details>
-    <summary>interface IntStream extends BaseStream&lt;Integer, Integer&gt; Since 1.8</summary>
+    <summary>interface IntStream extends BaseStream&lt;Integer, Integer&gt; Since 1.8 + LongStream</summary>
     <ol>
         <li><b>static interface IntStream.Builder</b></li>
         <li>static IntStream range(int startInclusive, int endExclusive)</li>
@@ -43,30 +43,25 @@
 <hr>
 
 <details>
-    <summary>interface LongStream extends BaseStream&lt;Long, LongStream&gt; Since 1.8</summary>
-    static interface LongStream.Builder
-</details>
-
-<hr>
-
-<details>
     <summary>interface Stream&lt;T&gt; extends BaseStream&lt;T, Stream&lt;T&gt;&gt; Since 1.8</summary>
-    <ul>
-        스트림 연산은 2가지로 나뉜다.
-        <li>Terminal Operation</li>
-        종결 연산. 스트림 연산 파이프라인의 마지막으로, 더 이상 스트림 연산을 수행할 수 없다.
-        <li>Intermediate Operation</li>
-        중간 연산. 새로운 스트림을 반환한다.
-    </ul>
+    <ol>
+        <li>2가지 스트림 연산</li>
+        <ul>
+            <li>Terminal Operation</li>
+            종결 연산. 스트림 연산 파이프라인의 마지막으로, 더 이상 스트림 연산을 수행할 수 없다.
+            <li>Intermediate Operation</li>
+            중간 연산. 새로운 스트림을 반환한다.
+        </ul>
     
-    <ul>
-        중간 연산은 다시 2가지로 나뉜다.
-        <li>Stateless Operation</li>
-        요소의 연산 과정에 상태의 보존이 필요 없는 경우. filter, map 등
-        <li>Stateful Operation</li>
-        요소의 연산 과정에 상태의 보존이 필요한 경우. sorted, distinct 등.<br>
-        이러한 연산을 사용하기 위해선 스트림 전체 인풋이 필요할 수 있으며, 병렬 스트림에서는 요구되는 버퍼의 크기가 늘어나게 된다.
-    </ul>
+        <li>2가지 중간 연산</li>
+        <ul>
+            <li>Stateless Operation</li>
+            요소의 연산 과정에 상태의 보존이 필요 없는 경우. filter, map 등
+            <li>Stateful Operation</li>
+            요소의 연산 과정에 상태의 보존이 필요한 경우. sorted, distinct 등.<br>
+            이러한 연산을 사용하기 위해선 스트림 전체 인풋이 필요할 수 있으며, 병렬 스트림에서는 요구되는 버퍼의 크기가 늘어나게 된다.
+        </ul>
+    </ol>
     
     <details>
         <summary>static interface Stream.Builder&lt;T&gt; Since 1.8</summary>
