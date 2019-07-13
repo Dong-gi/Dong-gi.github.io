@@ -611,347 +611,302 @@
 <details>
     <summary>Data Types</summary>
     <details>
-        <summary>내장 자료형 표</summary>
+        <summary>Numeric Types</summary>
         <table class="table">
             <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Aliases</th>
-                    <th>Description</th>
-                </tr>
+                <tr><th>Name</th><th>Size</th><th>Description</th></tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><code class="type">bigint</code></td>
-                    <td><code class="type">int8</code></td>
-                    <td>signed eight-byte integer</td>
-                </tr>
-                <tr>
-                    <td><code class="type">bigserial</code></td>
-                    <td><code class="type">serial8</code></td>
-                    <td>autoincrementing eight-byte integer</td>
-                </tr>
-                <tr>
-                    <td><code class="type">bit [ (<em class="replaceable"><code>n</code></em>) ]</code></td>
-                    <td>&nbsp;</td>
-                    <td>fixed-length bit string</td>
-                </tr>
-                <tr>
-                    <td><code class="type">bit varying [ (<em class="replaceable"><code>n</code></em>) ]</code></td>
-                    <td><code class="type">varbit [ (<em class="replaceable"><code>n</code></em>) ]</code></td>
-                    <td>variable-length bit string</td>
-                </tr>
-                <tr>
-                    <td><code class="type">boolean</code></td>
-                    <td><code class="type">bool</code></td>
-                    <td>logical Boolean (true/false)</td>
-                </tr>
-                <tr>
-                    <td><code class="type">box</code></td>
-                    <td>&nbsp;</td>
-                    <td>rectangular box on a plane</td>
-                </tr>
-                <tr>
-                    <td><code class="type">bytea</code></td>
-                    <td>&nbsp;</td>
-                    <td>binary data (<span class="quote">“<span class="quote">byte array</span>”</span>)</td>
-                </tr>
-                <tr>
-                    <td><code class="type">character [ (<em class="replaceable"><code>n</code></em>) ]</code></td>
-                    <td><code class="type">char [ (<em class="replaceable"><code>n</code></em>) ]</code></td>
-                    <td>fixed-length character string</td>
-                </tr>
-                <tr>
-                    <td><code class="type">character varying [ (<em class="replaceable"><code>n</code></em>) ]</code></td>
-                    <td><code class="type">varchar [ (<em class="replaceable"><code>n</code></em>) ]</code></td>
-                    <td>variable-length character string</td>
-                </tr>
-                <tr>
-                    <td><code class="type">cidr</code></td>
-                    <td>&nbsp;</td>
-                    <td>IPv4 or IPv6 network address</td>
-                </tr>
-                <tr>
-                    <td><code class="type">circle</code></td>
-                    <td>&nbsp;</td>
-                    <td>circle on a plane</td>
-                </tr>
-                <tr>
-                    <td><code class="type">date</code></td>
-                    <td>&nbsp;</td>
-                    <td>calendar date (year, month, day)</td>
-                </tr>
-                <tr>
-                    <td><code class="type">double precision</code></td>
-                    <td><code class="type">float8</code></td>
-                    <td>double precision floating-point number (8 bytes)</td>
-                </tr>
-                <tr>
-                    <td><code class="type">inet</code></td>
-                    <td>&nbsp;</td>
-                    <td>IPv4 or IPv6 host address</td>
-                </tr>
-                <tr>
-                    <td><code class="type">integer</code></td>
-                    <td><code class="type">int</code>, <code class="type">int4</code></td>
-                    <td>signed four-byte integer</td>
-                </tr>
-                <tr>
-                    <td><code class="type">interval [ <em class="replaceable"><code>fields</code></em> ] [ (<em
-                            class="replaceable"><code>p</code></em>) ]</code></td>
-                    <td>&nbsp;</td>
-                    <td>time span</td>
-                </tr>
-                <tr>
-                    <td><code class="type">json</code></td>
-                    <td>&nbsp;</td>
-                    <td>textual JSON data</td>
-                </tr>
-                <tr>
-                    <td><code class="type">jsonb</code></td>
-                    <td>&nbsp;</td>
-                    <td>binary JSON data, decomposed</td>
-                </tr>
-                <tr>
-                    <td><code class="type">line</code></td>
-                    <td>&nbsp;</td>
-                    <td>infinite line on a plane</td>
-                </tr>
-                <tr>
-                    <td><code class="type">lseg</code></td>
-                    <td>&nbsp;</td>
-                    <td>line segment on a plane</td>
-                </tr>
-                <tr>
-                    <td><code class="type">macaddr</code></td>
-                    <td>&nbsp;</td>
-                    <td>MAC (Media Access Control) address</td>
-                </tr>
-                <tr>
-                    <td><code class="type">macaddr8</code></td>
-                    <td>&nbsp;</td>
-                    <td>MAC (Media Access Control) address (EUI-64 format)</td>
-                </tr>
-                <tr>
-                    <td><code class="type">money</code></td>
-                    <td>&nbsp;</td>
-                    <td>currency amount</td>
-                </tr>
-                <tr>
-                    <td><code class="type">numeric [ (<em class="replaceable"><code>p</code></em>,
-                        <em class="replaceable"><code>s</code></em>) ]</code></td>
-                    <td><code class="type">decimal [ (<em class="replaceable"><code>p</code></em>,
-                        <em class="replaceable"><code>s</code></em>) ]</code></td>
-                    <td>exact numeric of selectable precision</td>
-                </tr>
-                <tr>
-                    <td><code class="type">path</code></td>
-                    <td>&nbsp;</td>
-                    <td>geometric path on a plane</td>
-                </tr>
-                <tr>
-                    <td><code class="type">pg_lsn</code></td>
-                    <td>&nbsp;</td>
-                    <td><span class="productname">PostgreSQL</span> Log Sequence Number</td>
-                </tr>
-                <tr>
-                    <td><code class="type">point</code></td>
-                    <td>&nbsp;</td>
-                    <td>geometric point on a plane</td>
-                </tr>
-                <tr>
-                    <td><code class="type">polygon</code></td>
-                    <td>&nbsp;</td>
-                    <td>closed geometric path on a plane</td>
-                </tr>
-                <tr>
-                    <td><code class="type">real</code></td>
-                    <td><code class="type">float4</code></td>
-                    <td>single precision floating-point number (4 bytes)</td>
-                </tr>
-                <tr>
-                    <td><code class="type">smallint</code></td>
-                    <td><code class="type">int2</code></td>
-                    <td>signed two-byte integer</td>
-                </tr>
-                <tr>
-                    <td><code class="type">smallserial</code></td>
-                    <td><code class="type">serial2</code></td>
-                    <td>autoincrementing two-byte integer</td>
-                </tr>
-                <tr>
-                    <td><code class="type">serial</code></td>
-                    <td><code class="type">serial4</code></td>
-                    <td>autoincrementing four-byte integer</td>
-                </tr>
-                <tr>
-                    <td><code class="type">text</code></td>
-                    <td>&nbsp;</td>
-                    <td>variable-length character string</td>
-                </tr>
-                <tr>
-                    <td><code class="type">time [ (<em class="replaceable"><code>p</code></em>) ] [ without time zone ]</code>
-                    </td>
-                    <td>&nbsp;</td>
-                    <td>time of day (no time zone)</td>
-                </tr>
-                <tr>
-                    <td><code class="type">time [ (<em class="replaceable"><code>p</code></em>) ] with time zone</code></td>
-                    <td><code class="type">timetz</code></td>
-                    <td>time of day, including time zone</td>
-                </tr>
-                <tr>
-                    <td><code class="type">timestamp [ (<em class="replaceable"><code>p</code></em>) ] [ without time zone
-                        ]</code></td>
-                    <td>&nbsp;</td>
-                    <td>date and time (no time zone)</td>
-                </tr>
-                <tr>
-                    <td><code class="type">timestamp [ (<em class="replaceable"><code>p</code></em>) ] with time zone</code>
-                    </td>
-                    <td><code class="type">timestamptz</code></td>
-                    <td>date and time, including time zone</td>
-                </tr>
-                <tr>
-                    <td><code class="type">tsquery</code></td>
-                    <td>&nbsp;</td>
-                    <td>text search query</td>
-                </tr>
-                <tr>
-                    <td><code class="type">tsvector</code></td>
-                    <td>&nbsp;</td>
-                    <td>text search document</td>
-                </tr>
-                <tr>
-                    <td><code class="type">txid_snapshot</code></td>
-                    <td>&nbsp;</td>
-                    <td>user-level transaction ID snapshot</td>
-                </tr>
-                <tr>
-                    <td><code class="type">uuid</code></td>
-                    <td>&nbsp;</td>
-                    <td>universally unique identifier</td>
-                </tr>
-                <tr>
-                    <td><code class="type">xml</code></td>
-                    <td>&nbsp;</td>
-                    <td>XML data</td>
-                </tr>
+                <tr><td>smallint, int2</td><td>2 bytes</td><td>signed integer</td></tr>
+                <tr><td>integer, int, int4</td><td>4 bytes</td><td>signed integer</td></tr>
+                <tr><td>bigint, int8</td><td>8 bytes</td><td>signed integer</td></tr>
+                <tr><td>decimal(p, s), numeric(p, s)</td><td>variable</td><td>임의 개수의 유효숫자와 소수 정밀도를 가진 10진수</td></tr>
+                <tr><td>real, float4</td><td>4 bytes</td><td>IEEE 754 단일 정밀도 부동소수(최소 유효숫자 6자리)</td></tr>
+                <tr><td>double precision, float8</td><td>8 bytes</td><td>IEEE 754 배 정밀도 부동소수(최소 유효숫자 15자리)</td></tr>
+                <tr><td>smallserial, serial2</td><td>2 bytes</td><td>자동 증가 정수</td></tr>
+                <tr><td>serial, serial4</td><td>4 bytes</td><td>자동 증가 정수</td></tr>
+                <tr><td>bigserial, serial8</td><td>8 bytes</td><td>자동 증가 정수</td></tr>
+            </tbody>
+        </table>
+        <ul>
+            <li>decimal, numeric</li>
+            <ol>
+                <li>p(precision) : 유효숫자 수</li>
+                
+                <li>s(scale) : 소수 정밀도</li>
+                예. 3.141592의 precision = 7, scale = 6.<br>
+                정수는 scale = 0인 numeric으로 간주해도 무방
+                
+                <li>NUMERIC(precision) : scale = 0</li>
+                
+                <li>NUMERIC : 임의 유효숫자, 소수 정밀도의 10진수 모두 저장 가능</li>
+                무한히 큰 수를 지원하진 않는다. 소수점 전 131072 자리, 소수점 후 16383 자리까지 지원.
+
+                <li>'NaN' 상수 지원</li>
+                'NaN'에 대한 연산 결과는 'NaN'
+
+                <li>Rounding mode</li>
+                numeric 타입의 반올림은 0에서 멀어지는 방향으로 이루어진다.
+            </ol>
+
+            <li>real, double precision</li>
+            'NaN', 'Infinity', '-Infinity' 상수 지원
+
+            <li>serial</li>
+            serial 타입은 1부터 시작하여 자동으로 1씩 증가하는 정수에 대한 표현 편의를 제공한다. 9.6 버전에서는 sequence를 이용함으로써 구현한다.
+        </ul>
+    </details>
+
+    <details>
+        <summary>Character Types</summary>
+        <table class="table">
+            <thead>
+                <tr><th>Name</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>character [ (n) ], char [ (n) ]</td><td>고정 길이(n) 문자열. 스페이스가 덧붙여진다.</td></tr>
+                <tr><td>character varying [ (n) ], varchar [ (n) ]</td><td>가변 길이(최대 n) 문자열</td></tr>
+                <tr><td>text</td><td>가변 길이 문자열</td></tr>        
             </tbody>
         </table>
     </details>
 
     <details>
-        <summary></summary>
-        9.1 Numeric Types
-        smallint            2bytes
-        smallserial         2bytes : 1 ~ 2^15-1
-        integer             4bytes
-        serial              4bytes : 1 ~ 2^31-1
-        bigint              8bytes
-        bigserial           8bytes : 1 ~ 2^63-1
-        
-        decimal             variable : user-specified precision, exact
-        numeric             variable : decimal과 동일
-        
-        real                4bytes
-        double precision    8bytes
-        
-        9.2 Character Types
-        varchar(n)  variable-length with limit
-        char(n)     fixed-length, blank padded
-        text        variable unlimited length
-        
-        9.3 Date/Time Types
-        timestamp   8bytes  date and time | 4713 BC ~ 294276AD | 1ms
-        date        4bytes  date, no time | 4713 BC ~ 5874897AD | 1day
-        time        8bytes  time, no date | 00:00:00 ~ 24:00:00 | 1ms
-        time with time zone 12bytes       | 00:00:00+1459 ~ 24:00:00-1459 | 1ms
-        interval    16bytes time interval | -178000000years ~ 178000000years | 1ms
-        
-        - Recommended date format : 1999-01-08
-        - Time :
-            04:05
-            04:05:06
-            040506
-            04:05:06.789
-        
-            04:05-08:00
-            04:05:06-08:00
-            040506-08
-            04:05:06.789-8
-        
-        - Time Zone :
-            -8
-            -800
-            -8:00
-        
-        - Time Stamp : date + time
-            1999-01-08 04:05:06
-            1999-01-08 04:05:06 -8:00
-        
-        - Special Date/Time
-            string      valid type              description
-            epoch       date, timestamp         1970-01-01 00:00:00+00 (Unix system time zero)
-            infinity	date, timestamp	        later than all other time stamps
-            -infinity	date, timestamp	        earlier than all other time stamps
-            now	        date, time, timestamp	current transaction's start time
-            today	    date, timestamp	        midnight today
-            tomorrow	date, timestamp	        midnight tomorrow
-            yesterday	date, timestamp	        midnight yesterday
-            allballs	time	                00:00:00.00 UTC
-        
-        9.4 boolean
-        
-        9.5 Enumerated Types
-        CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy');
-        
-        9.6 Geometric Types
-        point	16 bytes	    Point on a plane	(x,y)
-        line	32 bytes	    Infinite line	    {A,B,C} // Ax + By + C = 0
-        lseg	32 bytes	    Finite line segment	((x1,y1),(x2,y2))
-        box	    32 bytes	    Rectangular box	    ((x1,y1),(x2,y2))
-        path	16+16n bytes	Closed path         ((x1,y1),...)
-        path	16+16n bytes	Open path	        [(x1,y1),...]
-        polygon	40+16n bytes	Polygon             ((x1,y1),...)
-        circle	24 bytes	    Circle	            <(x,y),r>
-        
-        9.7 Declaration of Composite Types
-        CREATE TYPE complex AS (
-            r       double precision,
-            i       double precision
-        );
-        
-        - 테이블을 만들면 그와 동일한 이름의 타입이 생성된다.
-        CREATE TABLE inventory_item (
-            name            text,
-            supplier_id     integer REFERENCES suppliers,
-            price           numeric CHECK (price > 0)
-        );
-        
-        CREATE TABLE on_hand (
-            item      inventory_item,
-            count     integer
-        );
-        
-        INSERT INTO on_hand VALUES (ROW('fuzzy dice', 42, 1.99), 1000);
-        
-        - Literal Composite CONSTRAINT
-        '( val1 , val2 , ... )'
-        
-        - 갱신
-        INSERT INTO mytab (complex_col) VALUES((1.1,2.2));
-        
-            - SET 바로 다음엔 괄호가 없어도 되지만, 등호 다음엔 필요하다.
-        UPDATE mytab SET complex_col.r = (complex_col).r + 1 WHERE ...;
-        
-        9.8 Range Types
-        int4range — Range of integer
-        int8range — Range of bigint
-        numrange — Range of numeric
-        tsrange — Range of timestamp without time zone
-        tstzrange — Range of timestamp with time zone
-        daterange — Range of date
+        <summary>Binary Data Type : bytea</summary>
+        <ol>
+            <li>로캐일에 의존하지 않는 이진 문자열을 표현한다</li>
+            <li>bytea의 출력에는 'hex', 'escape' 두 가지 방식(bytea_output)이 있으며, 기본값은 'hex'로 설정되어 있다.</li>
+            hex : 각 바이트를 16진수 2자리로 표현. 예. '\xDEADBEEF'<br>
+            escape : 출력 가능 아스키 문자(32 ~ 126)는 있는 그대로, 백슬래시는 \\, 그 외는 \xxx로 표현한다. 예. 'abc klm *\251T'
+        </ol>
+    </details>
+
+    <details>
+        <summary>Date/Time Types</summary>
+        <table class="table">
+            <thead>
+                <tr><th>Name</th><th>Size</th><th>Description</th><td>Range</td><td>Resolution</td></tr>
+            </thead>
+            <tbody>
+                <tr><td>timestamp [ (p) ] [ without time zone ]</td><td>8 bytes</td><td>date and time (no time zone)</td><td>4713 BC ~ 294276 AD</td><td>1μs</td></tr>
+                <tr><td>timestamp [ (p) ] with time zone, timestamptz</td><td>8 bytes</td><td>date and time, including time zone</td><td>4713 BC ~ 294276 AD</td><td>1μs</td></tr>
+                <tr><td>date</td><td>4 bytes</td><td>date</td><td>4713 BC ~ 5874897 AD</td><td>1 day</td></tr>
+                <tr><td>interval [ fields ] [ (p) ]</td><td>16 bytes</td><td>time span</td><td>-178000000 years ~ 178000000 years</td><td>1μs</td></tr>
+                <tr><td>time [ (p) ] [ without time zone ]</td><td>8 bytes</td><td>time of day (no time zone)</td><td>00:00:00 ~ 24:00:00</td><td>1μs</td></tr>
+                <tr><td>time [ (p) ] with time zone, timetz</td><td>12 bytes</td><td>time of day, with time zone</td><td>00:00:00+1459 ~ 24:00:00-1459</td><td>1μs</td></tr>
+            </tbody>
+        </table>
+        <ul>
+            <li>p</li>
+            초 단위 소수 precision. 0 ~ 6까지 가능하며, 기본값은 없다(설정되지 않은 상태).
+
+            <li>interval field</li>
+            YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, YEAR TO MONTH, DAY TO HOUR, DAY TO MINUTE, DAY TO SECOND, HOUR TO MINUTE, HOUR TO SECOND, MINUTE TO SECOND
+
+            <li>Special Date/Time Input String</li>
+            <table class="table">
+                <thead>
+                    <tr><th>String</th><th>Valid Types</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>epoch</td><td>date, timestamp</td><td>1970-01-01 00:00:00+00 (Unix system time zero)</td></tr>
+                    <tr><td>infinity</td><td>date, timestamp</td><td>later than all other time stamps</td></tr>
+                    <tr><td>-infinity</td><td>date, timestamp</td><td>earlier than all other time stamps</td></tr>
+                    <tr><td>now</td><td>date, time, timestamp</td><td>	current transaction's start time</td></tr>
+                    <tr><td>today</td><td>date, timestamp</td><td>midnight today</td></tr>
+                    <tr><td>tomorrow</td><td>date, timestamp</td><td>midnight tomorrow</td></tr>
+                    <tr><td>yesterday</td><td>date, timestamp</td><td>midnight yesterday</td></tr>
+                    <tr><td>allballs</td><td>time</td><td>00:00:00.00 UTC</td></tr>
+                </tbody>
+            </table>
+        </ul>
+    </details>
+    
+    <details>
+        <summary>boolean, bool</summary>    
+        <ol>
+            <li>TRUE, 't', 'true', 'y', 'yes', 'on', '1'</li>
+            <li>FALSE, 'f', 'false', 'n', 'no', 'off', '0'</li>
+        </ol>
+    </details>
+
+    <details>
+        <summary>Enumerated Types</summary>
+        CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy'); // 대소문자 구분한다
+    </details>
+
+    <details>
+        <summary>Geometric Types</summary>
+        <table class="table">
+            <thead><th>Name</th><th>Size</th><th>Description</th><th>Representation</th></thead>
+            <tbody>
+                <tr><td>point</td><td>16 bytes</td><td>xy 좌표계 상의 점</td><td>(x, y)</td></tr>
+                <tr><td>line</td><td>32 bytes</td><td>직선</td><td>{A, B, C} // Ax + By + C = 0<br>또는 직선 상의 두 점을 콤마로 구분하여 제공</td></tr>
+                <tr><td>lseg</td><td>32 bytes</td><td>선분</td><td>((x1, y1), (x2, y2))</td></tr>
+                <tr><td>box</td><td>32 bytes</td><td>모든 변이 축과 평행한 직사각형</td><td>((x1, y1), (x2, y2))</td></tr>
+                <tr><td>path</td><td>16n bytes</td><td>Closed path</td><td>((x1, y1), ...)</td></tr>
+                <tr><td>path</td><td>16n bytes</td><td>Open path</td><td>[(x1, y1), ...]</td></tr>
+                <tr><td>polygon</td><td>40+16n bytes</td><td>Polygon</td><td>((x1, y1), ...)</td></tr>
+                <tr><td>circle</td><td>24 bytes</td><td>Circle</td><td>&lt;(x, y), r&gt;</td></tr>
+            </tbody>
+        </table>
+    </details>
+
+    <details>
+        <summary>JSON Types : json, jsonb</summary>
+        <ul>
+            <li>jsonb : 이진 포맷으로 저장하여 입력 시 조금 느리지만, 처리는 json보다 빠르다.</li>
+            <li>배열 포함 여부 확인 예. SELECT '[1, 2, 3]'::jsonb @> '[3, 1]'::jsonb;</li>
+            <li>배열 원소 존재 유무 확인 예. SELECT '["foo", "bar", "baz"]'::jsonb ? 'bar';</li>
+            <li>key의 존재 유무 확인 예. SELECT '{"foo": "bar"}'::jsonb ? 'foo';</li>
+            <li>key로 접근 예. select '{"key":"value"}'::jsonb -> 'key';</li>
+        </ul>
+    </details>
+
+    <details>
+        <summary>Array</summary>
+        <ol>
+            <li>배열 타입 정의</li>
+            PostgreSQL은 배열 크기를 제한하지 않는다.<br>
+            create table test( nums integer[] );<br>
+            create table test( nums integer ARRAY );<br>
+            create table test( matrix integer[][] );
+
+            <li>배열 표현</li>
+            insert into test values( '{1, 2, 3, 4}'::int[] ); // insert시엔 ::int[]같은 캐스팅 생략 가능<br>
+            insert into test values( ARRAY[[1, 2], [3, 4]] ); // 배열 생성자는 애초에 배열을 반환하므로 캐스팅 불필요
+
+            <li>배열 참조</li>
+            <ul>
+                <li>원소 참조 arr[idx]</li>
+
+                <li>슬라이스 arr[start : end]</li>
+                슬라이스의 경우 모든 차원이 슬라이스한다고 간주된다. arr[1:2][2]는 arr[1:2][1:2]와 같다.
+                
+                <li>배열 차원 반환 array_dims()</li>
+
+                <li>지정된 차원에 대해 배열 크기 반환 array_length()</li>
+
+                <li>전체 원소 수 반환 cardinality()</li>
+
+                <li>현재 배열 크기보다 큰 인덱스에 값을 할당하는 경우, 중간은 null로 채워진다.</li>
+
+                <li>배열 연결</li>
+                연산자 || : n차원 배열과 n차원 배열의 연결 또는 n차원 배열에 n-1차원 배열(값)을 추가해준다.<br>
+                array_prepend() : 1차원 배열 앞에 원소를 추가한다.<br>
+                array_append() : 1차원 배열 뒤에 원소를 추가한다.<br>
+                array_cat() : 다차원 배열들에 대해 || 연산과 같은 작업을 한다. 단, 배열만 인자로 사용 가능하다. 0차원 값은 안 된다.
+            </ul>
+
+            <li>배열 검색</li>
+            <ul>
+                <li>배열의 원소 중 하나라도 100 : SELECT ... WHERE 100 = ANY(arr);</li>
+                <li>배열의 원소 모두가 100 : SELECT ... WHERE 100 = ALL(arr);</li>
+                <li>generate_subscripts() : 주어진 배열과 차원에 대해 subscript의 집합을 반환한다</li>
+                <ul>
+                    <li>SELECT generate_subscripts('{{"1,1","1,2"},{"2,1","2,2"},{"3,1","3,2"}}'::text[][], 1) AS s;</li>
+                    1차원 subscripts → 1, 2, 3
+                    <li>SELECT generate_subscripts('{{"1,1","1,2"},{"2,1","2,2"},{"3,1","3,2"}}'::text[][], 2) AS s;</li>
+                    2차원 subscripts → 1, 2
+                    <li>WITH arr AS (SELECT '{{"1,1","1,2"},{"2,1","2,2"},{"3,1","3,2"}}'::text[][] AS arr),<br>
+                        dims AS (SELECT arr, s1, s2, arr[s1][s2] FROM arr, generate_subscripts(arr, 1) AS s1, generate_subscripts(arr, 2) AS s2)<br>
+                        SELECT * FROM dims;</li>
+                    배열 펼치기
+                </ul>
+            </ul>
+        </ol>
+    </details>
+
+    <details>
+        <summary>Composite Types</summary>
+        <ol>
+            <li>CREATE TYPE complex AS ( r float4, i float4 );</li>
+            
+            <li>테이블을 만들면 그와 동일한 이름의 타입이 생성된다.</li>
+            CREATE TABLE m_item ( item_id int, name text );<br>
+            CREATE TABLE t_user_item ( user_id bigint, item m_item, count int );
+            
+            <li>Literal composite value</li>
+            포맷 : '( val1 , val2 , ... )'<br>
+            INSERT INTO table_name (complex_column_name) VALUES((1.1,2.2));<br>
+
+            <li>SET 바로 다음엔 괄호가 없어도 되지만, 등호 다음엔 필요하다.</li>
+            UPDATE table_name SET complex_column.r = (complex_column).r + 1 WHERE ...;
+        </ol>
+    </details>
+
+    <details>    
+        <summary>Range Types</summary>
+        <ol>
+            <li>int4range — Range of integer</li>
+            <li>int8range — Range of bigint</li>
+            <li>numrange — Range of numeric</li>
+            <li>tsrange — Range of timestamp without time zone</li>
+            <li>tstzrange — Range of timestamp with time zone</li>
+            <li>daterange — Range of date</li>
+            <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/functions-range.html#RANGE-OPERATORS-TABLE">http://postgresql.kr/docs/current/functions-range.html#RANGE-OPERATORS-TABLE</a>
+            <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/functions-range.html#RANGE-FUNCTIONS-TABLE">http://postgresql.kr/docs/current/functions-range.html#RANGE-FUNCTIONS-TABLE</a>
+        </ol>
+    </details>
+
+    <details>
+        <summary>Domain Types</summary>
+        <ol>
+            <li>기저 타입을 토대로 제약을 추가하여 새로 정의하는 타입</li>
+            <li>CREATE DOMAIN non_negative_int AS integer CHECK (VALUE &gt;= 0);</li>
+        </ol>
+    </details>
+
+    <details>
+        <summary>Pseudo Types</summary>
+        <table class="table">
+            <thead>
+                <tr><th>Name</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>any</td><td>Indicates that a function accepts any input data type.</td></tr>
+                <tr><td>anyelement</td><td>Indicates that a function accepts any data type</td></tr>
+                <tr><td>anyarray</td><td>Indicates that a function accepts any array data type</td></tr>
+                <tr><td>anynonarray</td><td>Indicates that a function accepts any non-array data type</td></tr>
+                <tr><td>anyenum</td><td>Indicates that a function accepts any enum data type</td></tr>
+                <tr><td>anyrange</td><td>Indicates that a function accepts any range data type</td></tr>
+                <tr><td>cstring</td><td>Indicates that a function accepts or returns a null-terminated C string.</td></tr>
+                <tr><td>internal</td><td>Indicates that a function accepts or returns a server-internal data type.</td></tr>
+                <tr><td>language_handler</td><td>A procedural language call handler is declared to return language_handler.</td></tr>
+                <tr><td>fdw_handler</td><td>A foreign-data wrapper handler is declared to return fdw_handler.</td></tr>
+                <tr><td>index_am_handler</td><td>An index access method handler is declared to return index_am_handler.</td></tr>
+                <tr><td>tsm_handler</td><td>A tablesample method handler is declared to return tsm_handler.</td></tr>
+                <tr><td>record</td><td>Identifies a function taking or returning an unspecified row type.</td></tr>
+                <tr><td>trigger</td><td>A trigger function is declared to return trigger.</td></tr>
+                <tr><td>event_trigger</td><td>An event trigger function is declared to return event_trigger.</td></tr>
+                <tr><td>pg_ddl_command</td><td>Identifies a representation of DDL commands that is available to event triggers.</td></tr>
+                <tr><td>void</td><td>Indicates that a function returns no value.</td></tr>
+                <tr><td>unknown</td><td>Identifies a not-yet-resolved type, e.g. of an undecorated string literal.</td></tr>
+                <tr><td>opaque</td><td>An obsolete type name that formerly served many of the above purposes.</td></tr>
+            </tbody>
+        </table>
+    </details>
+
+    <details>
+        <summary>기타 내장 자료형 표</summary>
+        <table class="table">
+            <thead>
+                <tr><th>Name</th><th>Size</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>money</td><td>8 bytes</td><td>고정 소수 표현을 이용하며, lc_monetary 설정에 따라 조정된다.</td></tr>
+                <tr><td>cidr</td><td>7 or 19 bytes</td><td>IPv4 or IPv6 network address</td></tr>
+                <tr><td>inet</td><td>7 or 19 bytes</td><td>IPv4 or IPv6 host address</td></tr>
+                <tr><td>macaddr</td><td>6 bytes</td><td>MAC (Media Access Control) address</td></tr>
+                <tr><td>macaddr8</td><td>8 bytes</td><td>MAC (Media Access Control) address (EUI-64 format)</td></tr>
+                <tr><td>bit [ (n) ]</td><td>variable</td><td>fixed-length bit string</td></tr>
+                <tr><td>bit varying [ (n) ], varbit [ (n) ]</td><td>variable</td><td>variable-length bit string</td></tr>
+                <tr><td>tsquery</td><td>variable</td><td>text search query</td></tr>
+                <tr><td>tsvector</td><td>variable</td><td>text search document</td></tr>
+                <tr><td>uuid</td><td>variable</td><td>universally unique identifier; RFC 4122, ISO/IEC 9834-8:2005</td></tr>
+                <tr><td>xml</td><td>variable</td><td>XML data</td></tr>
+            </tbody>
+        </table>
     </details>
 </details>
 
@@ -959,9 +914,606 @@
 
 <details>
     <summary>Functions and Operations</summary>
-    <ol>
+    <details>
+        <summary>Logical Operators</summary>
+        <ol>
+            <li>AND, OR, NOT</li>
+            <li>TRUE, FALSE외에 NULL도 논리 상태로 이용한다</li>
+            TRUE AND NULL = NULL, FALSE AND NULL = FALSE<br>
+            TRUE OR NULL = TRUE, FALSE OR NULL = NULL<br>
+            NULL AND NULL = NULL OR NULL = NOT NULL = NULL
+        </ol>
+    </details>
 
-    </ol>
+    <details>
+        <summary>Comparison Functions and Operators</summary>
+        <ol>
+            <li>&lt;, &gt;, &lt;=, &gt;=, =, &lt;&gt; or !=</li>
+            
+            <li>a [NOT] BETWEEN x AND y</li>
+            a [NOT] BETWEEN SYMMETRIC x AND y : x, y 대소관계를 판별하여 적절히 비교한다
+
+            <li>a IS DISTINCT FROM b</li>
+            a != b과 같지만 null을 일반적인 값으로 취급한다는 차이가 있다
+
+            <li>expression IS [NOT] NULL</li>
+
+            <li>boolean_expression IS [NOT] TRUE // FALSE, UNKNOWN</li>
+        </ol>
+    </details>
+
+    <details>
+        <summary>Mathematical Functions and Operators</summary>
+        <ol>
+            <li>+, -, *, /, %, @(절댓값)</li>
+            <li>^(거듭제곱), |/(제곱근), ||/(삼중근), !(팩토리얼, 후위), !!(팩토리얼, 전위)</li>
+            <li>비트 연산자 &, |, #(XOR), ~, &lt;&lt;, &gt;&gt;</li>
+            <li>abs(x), sqrt(x), cbrt(x), ceil(x), floor(x), exp(x), div(x, y), round(x, y), ...</li>
+            <li>random() : x ∈ [0.0, 1.0), setseed(dp) : dp ∈ [-1.0, 1.0]</li>
+        </ol>
+    </details>
+
+    <details>
+        <summary>String Functions and Operators</summary>
+        <ol>
+            <li>문자열 연결 연산자 ||</li>
+            비문자열도 피연산자 중 한쪽이 될 수 있다
+
+            <li>lower(<i>string</i>) : 소문자 문자열로 변환</li>
+            <li>upper(<i>string</i>) : 대문자 문자열로 변환</li>
+            <li>initcap(<i>string</i>) : 각 단어의 첫 글자만 대문자가 되도록 변환</li>
+            <li>split_part(<i>string</i>, <i>delimiter</i>, <i>n</i>)</li>
+            구분자로 문자열을 분할하여 n번째 문자열 반환
+            <li>concat(param1 [, param2 [,...]]) : 각 인자들을 한 문자열로 합쳐 반환한다. null은 무시한다.</li>
+            <li>concat_ws(<i>sep</i>, param1 [, param2 [,...]]) : sep를 구분자로 하여 접합한다.</li>
+            <li>format(<i>formatstr</i> [, formatarg [,...]]) : C의 printf와 유사</li>
+            <li>left(<i>string</i>, <i>n</i>), right(<i>string</i>, <i>n</i>)</li>
+            <li>lpad(<i>string</i>, <i>length</i> [, <i>fill_string</i>]), rpad(<i>string</i>, <i>length</i> [, <i>fill_string</i>])</li>
+            fill_string 기본값은 스페이스
+            <li>quote_ident(<i>string</i>) : ""로 감싼 문자열 표현 반환</li>
+            <li>quote_literal(param), quote_nullable(param) : ''로 감싼 문자열 표현 반환</li>
+            <li>repeat(<i>string</i>, <i>number</i>)</li>
+            <li>reverse(<i>string</i>)</li>
+
+            <li>
+                <details>
+                    <summary>문자열 길이 관련</summary>
+                    <ol>
+                        <li>bit_length(<i>string</i>) : 문자열 비트 수</li>
+                        <li>octet_length(<i>string</i>) : 문자열 바이트 수</li>
+                        <li>char_length(<i>string</i>) : 문자열 문자 수</li>
+                        <li>character_length(<i>string</i>) : 문자열 문자 수</li>
+                        <li>length(<i>string</i>) : 문자열 문자 수</li>
+                        <li>length(<i>string</i> bytea, <i>encoding</i>) : 문자열 문자 수</li>
+                    </ol>
+                </details>
+            </li>
+
+            <li>
+                <details>
+                    <summary>검색 및 수정 관련</summary>
+                    <ol>
+                        <li>overlay(<i>src_string</i> placing <i>replacement_string</i> from int [for int]</li>
+                        src_string i번째 글자부터 n개를 replacement_string로 교체
+                        <li>replace(<i>src_string</i>, <i>target_string</i>, <i>dest_string</i>)</li>
+
+                        <li>position(<i>substring</i> in <i>string</i>) : substring의 위치 반환</li>
+                        <li>substring(<i>string</i> [from int] [for int]</li>
+                        <li>substring(<i>string</i> from <i>pattern</i>) : POSIX 정규표현식</li>
+                        <li>substring(<i>string</i> from <i>pattern</i> for <i>escape</i>) : SQL 정규표현식</li>
+                        <li>trim([leading | trailing | both] [<i>characters</i>] from <i>string</i>)</li>
+                        <li>trim([leading | trailing | both] [from] <i>string</i> [, <i>characters</i>])</li>
+                        <li>btrim(<i>string</i> [, <i>characters</i>])</li>
+                        trim(both ...)를 수행한다. characters의 기본값은 스페이스
+                        <li>ltrim(<i>string</i>[, <i>characters</i>]), rtrim(<i>string</i>[, <i>characters</i>])</li>
+
+                        <li>regexp_match(<i>string</i>, <i>pattern</i>[, <i>flags</i>]) Since PostgreSQL 10 : POSIX 정규표현식</li>
+                        첫 번째 매칭 문자열 배열 반환. 패턴에 그룹이 없으면 전체 매칭 문자열이, 그룹이 있으면 각 그룹에 매칭되는 부분 문자열들이 배열의 원소가 된다.
+                        <li>regexp_matches(<i>string</i>, <i>pattern</i>[, <i>flags</i>]) : POSIX 정규표현식</li>
+                        매칭 문자열 배열로 이루어진 행집합을 반환한다. 전체 문자열 매칭을 위해 'g' 플래그를 이용해야 한다.<br>
+                        PostgreSQL 10 이전 버전에서 regexp_match와 같은 결과를 얻기 위한 서브쿼리 트릭 : (SELECT ..., (SELECT regexp_matches(str, pattern)) FROM table...)
+                        <li>regexp_split_to_array(<i>string</i>, <i>pattern</i>[, <i>flags</i>]) : POSIX 정규표현식</li>
+                        매칭 문자열을 구분자로 하여 분리한 부분 문자열들로 구성된 배열 반환. 문자열 시작, 끝의 길이 0 매칭 문자열은 무시된다.
+                        <li>regexp_split_to_table(<i>string</i>, <i>pattern</i>[, <i>flags</i>]) : POSIX 정규표현식</li>
+                        매칭 문자열을 구분자로 하여 분리한 부분 문자열들로 구성된 테이블 반환. 문자열 시작, 끝의 길이 0 매칭 문자열은 무시된다.
+                        <li>regexp_replace(<i>string</i>, <i>pattern</i>, <i>replacement</i> [, <i>flags</i>]) : POSIX 정규표현식</li>
+
+                        <li>starts_with(<i>string</i>, <i>prefix</i>)</li>
+                        <li>translate(<i>string</i>, <i>from</i>, <i>to</i>)</li>
+                        문자열 각 문자에 대하여, from[i]에 일치하는 문자를 to[i]로 교체한다.
+                    </ol>
+                </details>
+            </li>
+
+            <li>
+                <details>
+                    <summary>인코딩 관련</summary>
+                    <ol>
+                        <li>pg_client_encoding() : 현재 인코딩 이름 반환</li>
+
+                        <li>ascii(<i>string</i>)</li>
+                        첫 글자의 아스키 코드값을 반환한다. UTF8 문자열의 경우 유니코드 코드 포인트를 반환한다.
+
+                        <li>chr(int)</li>
+                        주어진 코드값에 대한 문자를 반환한다. UTF8 문자에 대해서는 유니코드 코드 포인트를 인자로 전달하고, 그 외의 경우엔 아스키 코드를 인자로 전달해야 한다. 0은 입력으로 허용되지 않는다.
+
+                        <li>convert(<i>string</i> bytea, <i>src_encoding</i>, <i>dest_encoding</i>)</li>
+                        가능한 빌트인 변환 목록 : <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/functions-string.html#CONVERSION-NAMES">http://postgresql.kr/docs/current/functions-string.html#CONVERSION-NAMES</a>
+
+                        <li>convert_from(<i>string</i> bytea, src_encoding) : dest_encoding = DB 인코딩</li>
+
+                        <li>convert_to(<i>string</i> bytea, dest_encoding) : src_encoding = DB 인코딩</li>
+
+                        <li>to_ascii(<i>string</i> [, <i>encoding</i>]</li>
+                        LATIN1, LATIN2, LATIN9, WIN1250문자열을 아스키 문자열로 변환
+
+                        <li>to_hex(<i>number</i>) : 16진수 표현 문자열 반환</li>
+
+                        <li>decode(<i>string</i>, <i>format</i>), encode(<i>string</i>, <i>format</i>)</li>
+                        지원 format : base64, hex, escape<br>
+                        Data Types - Binary Data Types - escape 참고
+
+                        <li>set_bit(string, offset, newvalue), set_byte(string, offset, newvalue)</li>
+                        <li>md5(<i>string</i>), sha256(bytea), sha512(bytea)</li>
+                    </ol>
+                </details>
+            </li>
+        </ol>
+    </details>
+
+    <details>
+        <summary>Bit String Operators</summary>
+        <table class="table">
+            <thead>
+                <tr><th>Operator</th><th>Description</th><th>Example</th><th>Result</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>||</td><td>concatenation</td><td>B'10001' || B'011'</td><td>10001011</td></tr>
+                <tr><td>&amp;</td><td>bitwise AND</td><td>B'10001' &amp; B'01101'</td><td>00001</td></tr>
+                <tr><td>|</td><td>bitwise OR</td><td>B'10001' | B'01101'</td><td>11101</td></tr>
+                <tr><td>#</td><td>bitwise XOR</td><td>B'10001' # B'01101'</td><td>11100</td></tr>
+                <tr><td>~</td><td>bitwise NOT</td><td>~ B'10001'</td><td>01110</td></tr>
+                <tr><td>&lt;&lt;</td><td>bitwise shift left</td><td>B'10001' &lt;&lt; 3</td><td>01000</td></tr>
+                <tr><td>&gt;&gt;</td><td>bitwise shift right</td><td>B'10001' &gt;&gt; 2</td><td>00100</td></tr>
+            </tbody>
+        </table>
+    </details>
+
+    <details>
+        <summary>Pattern matching</summary>
+        <details>
+            <summary>LIKE</summary>
+            <ol>
+                <li>전체 문자열이 패턴과 일치하는지 여부를 판별한다</li>
+
+                <li>Syntax</li>
+                <i>string</i> [NOT] LIKE <i>pattern</i> [ESCAPE <i>escape-character</i>]
+
+                <li>pattern</li>
+                <ul>
+                    <li>'_' : 임의의 1글자</li>
+                    <li>'%' : 연속적인 임의의 0개 이상 글자</li>
+                    <li>'string' : 'string' 자체</li>
+                </ul>
+
+                <li>ESCAPE</li>
+                '%', '_'의 이스케이핑을 끄고 싶을 때 : ESCAPE ''
+
+                <li>기타</li>
+                PostgreSQL 고유의 ILIKE : 대소문자 구별없는 LIKE<br>
+                LIKE = ~~, ILIKE = ~~*, NOT LIKE = !~~, NOT ILIKE = !~~*
+            </ol>
+        </details>
+        
+        <details>
+            <summary>SIMILAR TO 정규표현식</summary>
+            <ol>
+                <li>LIKE와 비슷하나, 패턴으로 SQL 표준 정규표현식을 이용한다</li>
+                LIKE와 마찬가지로 전체 문자열이 패턴과 일치해야 한다.
+
+                <li>Syntax</li>
+                <i>string</i> [NOT] SIMILAR TO <i>pattern</i> [ESCAPE <i>escape-character</i>]
+
+                <li>
+                    <details>
+                        <summary>pattern</summary>
+                        <ol>
+                            <li>'_'와 '%'는 LIKE와 같은 의미를 지닌다</li>
+                            <li><i>sub1</i> | <i>sub2</i> : sub1 또는 sub2</li>
+                            <li>* : 0 or more</li>
+                            <li>+ : 1 or more</li>
+                            <li>? : 0 or 1</li>
+                            <li>{m} : exactly m times</li>
+                            <li>{m, } : m or more</li>
+                            <li>{m, n} : m~n times</li>
+                            <li>() : 그루핑</li>
+                            <li>[] : 글자 집합</li>
+                        </ol>
+                    </details>
+                </li>
+            </ol>
+        </details>
+            
+        <details>
+            <summary>POSIX 정규표현식</summary>
+            <details>
+                <summary>용어</summary>
+                <ol>
+                    <li>RE; 정규표현식 : 정규표현식은 |로 구분되는 브랜치들로 구성된다. 임의의 브랜치와 일치하는 부분 문자열은 매칭 결과가 된다</li>
+                    <li>Branch : 브랜치는 quantified atom 또는 constraint들로 구성된다. 구성요소 순서대로 매칭을 시도하며, 빈 브랜치는 빈 문자열과 매칭된다.</li>
+                    <li>Quantified atom : quantifier가 붙은 atom</li>
+                    <li>Constraint : 길이 0인 문자열이 매칭되지만, 특별한 위치와 의미를 지닌다.</li>
+                </ol>
+            </details>
+            <details>
+                <summary>정규표현식 연산자</summary>
+                <ol>
+                    <li>~ : case sensitive match</li>
+                    <li>~* : case insensitive match</li>
+                    <li>!~ : case sensitive 'not' match</li>
+                    <li>!~* : case insensitive 'not' match</li>
+                </ol>
+            </details>
+            <details>
+                <summary>정규표현식 Atom</summary>
+                <ol>
+                    <li>(<i>re</i>) : 정규표현식 re를 매칭하며, 그루핑 번호가 붙는다</li>
+                    <li>(?:<i>re</i>) : re에 대해 매칭은 하지만, 그루핑 번호는 붙지 않는다(non-capturing set)</li>
+                    <li>. : 임의의 문자에 매칭</li>
+                    <li>[<i>chars</i>] : 문자 집합 임의의 문자에 매칭</li>
+                    <li>\k : k는 non-alphanumeric 문자. 예. \\는 백슬래시 문자 자체에 매칭된다.</li>
+                    <li>\c : c는 alphanumeric 문자. 이스케이핑된다.</li>
+                    <li>{ : 뒤에 숫자가 오는 경우 정규표현식 quantifier가 된다.</li>
+                    <li>x : 문자 x 자체에 매칭된다</li>
+                </ol>
+            </details>
+            <details>
+                <summary>정규표현식 Quantifier</summary>
+                <ol>
+                    <li>* : 0 or more</li>
+                    <li>+ : 1 or more</li>
+                    <li>? : 0 or 1</li>
+                    <li>{m} : exactly m times</li>
+                    <li>{m, } : m or more</li>
+                    <li>{m, n} : m~n times</li>
+                    <li>*? : non-greedy version of *</li>
+                    <li>+? : non-greedy version of +</li>
+                    <li>?? : non-greedy version of ?</li>
+                    <li>{m}? : non-greedy version of {m}</li>
+                    <li>{m,}? : non-greedy version of {m,}</li>
+                    <li>{m,n}? : non-greedy version of {m,n}</li>
+                </ol>
+            </details>
+            <details>
+                <summary>정규표현식 Constraint</summary>
+                <ol>
+                    <li>^ : 문자열의 시작에 매칭된다.</li>
+                    <li>$ : 문자열의 끝에 매칭된다.</li>
+                    <li>(?=re) : positive lookahead. 매칭된 부분문자열의 시작부터 재탐색한다</li>
+                    예. 아이디는 영문 대소문자와 숫자로만 구성할 수 있으며, 첫 글자는 숫자가 될 수 없다<br>
+                    SELECT 'awef79' ~ '(?=^[a-zA-Z])(?=^[a-zA-Z0-9]+$)'; // t<br>
+                    SELECT '79awef' ~ '(?=^[a-zA-Z])(?=^[a-zA-Z0-9]+$)'; // f
+                    <li>(?!re) : negative lookahead. 매칭된 부분문자열의 시작이 아닌 위치부터 재탐색한다</li>
+                    <li>(?&lt;=re) : positive lookahead. 매칭된 부분문자열의 끝부터 재탐색한다</li>
+                    <li>(?&lt;!re) : negative lookahead. 매칭된 부분문자열의 끝이 아닌 위치부터 재탐색한다</li>
+                </ol>
+                Lookahead와 lookbehind는 back reference를 포함할 수 없으며, 모든 괄호는 non-capturing으로 간주된다.
+            </details>
+            <details>
+                <summary>정규표현식 문자 이스케이프</summary>
+                <ol>
+                    <li>\a(alert character), \b(backspace), \f, \n, \r, \t, \v(수직 탭), \0</li>
+                    <li>\B : \\</li>
+                    <li>\c<i>X</i> : X는 임의 문자. 하위 5개 비트가 같고 나머지 비트가 모두 0</li>
+                    <li>\u<i>FFFF</i>, \U<i>FFFFFFFF</i> : 유니코드 코드포인트. DB 인코딩에 따라 달라진다...</li>
+                    <li>\x<i>FFF</i>, \<i>xy</i>(8진수 2개), \<i>xyz</i>(8진수 3개)</li>
+                </ol>
+            </details>
+            <details>
+                <summary>정규표현식 클래스 약어 이스케이프</summary>
+                alnum, alpha, blank, cntrl, digit, graph, lower, print, punct, space, upper, xdigit
+                <ol>
+                    <li>\d : [[:digit:]]</li>
+                    <li>\s : [[:space:]]</li>
+                    <li>\w : [[:alnum:]_] // underscore included</li>
+                    <li>\D : [^[:digit:]]</li>
+                    <li>\S : [^[:space:]]</li>
+                    <li>\W : [^[alnum:]_] // underscore included</li>
+                </ol>
+            </details>
+            <details>
+                <summary>정규표현식 constraint 이스케이프</summary>
+                <ol>
+                    <li>\A : 문자열 시작, \Z : 문자열 끝</li>
+                    ^, $와 다르게 멀티 라인 처리 지원 x
+                    <li>\m : 단어 시작</li>
+                    <li>\M : 단어 끝</li>
+                    <li>\y : 단어 시작 또는 끝</li>
+                    <li>\Y : not \y</li>
+                </ol>
+            </details>
+            <details>
+                <summary>정규표현식 back reference</summary>
+                \m[nn] : m은 nonzero digit. n은 추가적인 자릿수
+            </details>
+            <details>
+                <summary>정규표현식 option letter</summary>
+                정규표현식 플래그에 사용되는 문자들은 아래와 같다
+                <ol>
+                    <li>c : 대소문자 구분 (overrides operator type)</li>
+                    <li>i : 대소문자 구분 x (overrides operator type)</li>
+                    <li>s : 멀티 라인 처리 x. (default)</li>
+                    <li>n, m : 멀티 라인 처리</li>
+                    <li>p : 부분적 멀티 라인 처리. ^와 $는 멀티 라인 처리 x</li>
+                    <li>w : 부분적 멀티 라인 처리. ^와 $는 멀티 라인 처리 o</li>
+                </ol>
+            </details>
+        </details>
+    </details>
+
+    <details>
+        <summary>Formatting Functions</summary>
+        <ol>
+            <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/functions-formatting.html">http://postgresql.kr/docs/current/functions-formatting.html</a>
+            <li>to_char()</li>
+            <li>to_date()</li>
+            <li>to_number()</li>
+            <li>to_timestamp()</li>
+        </ol>
+    </details>
+
+    <details>
+        <summary>Date/Time Functions and Operators</summary>
+        <details>
+            <summary>Date/Time Operators</summary>
+            <table class="table">
+                <thead><tr><th>Operator</th><th>Example</th><th>Result</th></tr></thead>
+                <tbody>
+                    <tr><td>+</td><td>date '2001-09-28' + integer '7'</td><td>date '2001-10-05'</td></tr>
+                    <tr><td>+</td><td>date '2001-09-28' + interval '1 hour'</td><td>timestamp '2001-09-28 01:00:00'</td></tr>
+                    <tr><td>+</td><td>date '2001-09-28' + time '03:00'</td><td>timestamp '2001-09-28 03:00:00'</td></tr>
+                    <tr><td>+</td><td>interval '1 day' + interval '1 hour'</td><td>interval '1 day 01:00:00'</td></tr>
+                    <tr><td>+</td><td>timestamp '2001-09-28 01:00' + interval '23 hours'</td><td>timestamp '2001-09-29 00:00:00'</td></tr>
+                    <tr><td>+</td><td>time '01:00' + interval '3 hours'</td><td>time '04:00:00'</td></tr>
+                    <tr><td>-</td><td>- interval '23 hours'</td><td>interval '-23:00:00'</td></tr>
+                    <tr><td>-</td><td>date '2001-10-01' - date '2001-09-28'</td><td>integer 3</td></tr>
+                    <tr><td>-</td><td>date '2001-10-01' - integer '7'</td><td>date '2001-09-24'</td></tr>
+                    <tr><td>-</td><td>date '2001-09-28' - interval '1 hour'</td><td>timestamp '2001-09-27 23:00:00'</td></tr>
+                    <tr><td>-</td><td>time '05:00' - time '03:00'</td><td>interval '02:00:00'</td></tr>
+                    <tr><td>-</td><td>time '05:00' - interval '2 hours'</td><td>time '03:00:00'</td></tr>
+                    <tr><td>-</td><td>timestamp '2001-09-28 23:00' - interval '23 hours'</td><td>timestamp '2001-09-28 00:00:00'</td></tr>
+                    <tr><td>-</td><td>interval '1 day' - interval '1 hour'</td><td>interval '1 day -01:00:00'</td></tr>
+                    <tr><td>-</td><td>timestamp '2001-09-29 03:00' - timestamp '2001-09-27 12:00'</td><td>interval '1 day 15:00:00'</td></tr>
+                    <tr><td>*</td><td>900 * interval '1 second'</td><td>interval '00:15:00'</td></tr>
+                    <tr><td>*</td><td>21 * interval '1 day'</td><td>interval '21 days'</td></tr>
+                    <tr><td>*</td><td>double precision '3.5' * interval '1 hour'</td><td>interval '03:30:00'</td></tr>
+                    <tr><td>/</td><td>interval '1 hour' / double precision '1.5'</td><td>interval '00:40:00'</td></tr>
+                </tbody>
+            </table>
+        </details>
+        <details>
+            <summary>Date/Time Functions</summary>
+            <table class="table">
+                <thead><tr><th>Function</th><th>Return Type</th><th>Description</th><th>Example</th><th>Result</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>clock_timestamp()</td>
+                        <td>timestamp with time zone</td>
+                        <td>현재 timestamp. 클록 기준.</td>
+                        <td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>timeofday()</td>
+                        <td>text</td>
+                        <td>clock_timestamp()값을 문자열로 반환</td>
+                        <td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>current_date</td>
+                        <td>date</td>
+                        <td>오늘 날짜. 트랜잭션 시작 기준</td>
+                        <td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>current_time</td>
+                        <td>time with time zone</td>
+                        <td>현재 시각. 트랜잭션 시작 기준. CURRENT_TIME(precision) 가능</td>
+                        <td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>current_timestamp</td>
+                        <td>timestamp with time zone</td>
+                        <td>오늘 날짜 + 현재 시각. 트랜잭션 시작 기준. CURRENT_TIMESTAMP(precision) 가능</td>
+                        <td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>localtime</td>
+                        <td>time</td>
+                        <td>현재 시각. 트랜잭션 시작 기준. LOCALTIME(precision) 가능</td>
+                        <td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>localtimestamp</td>
+                        <td>timestamp</td>
+                        <td>오늘 날짜 + 현재 시각. 트랜잭션 시작 기준. LOCALTIMESTAMP(precision) 가능</td>
+                        <td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>now()</td>
+                        <td>timestamp with time zone</td>
+                        <td>오늘 날짜 + 현재 시각. 트랜잭션 시작 기준</td>
+                        <td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>statement_timestamp()</td>
+                        <td>timestamp with time zone</td>
+                        <td>오늘 날짜 + 현재 시각. 현재 문장 실행 기준</td>
+                        <td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>transaction_timestamp()</td>
+                        <td>timestamp with time zone</td>
+                        <td>오늘 날짜 + 현재 시각. 트랜잭션 시작 기준</td>
+                        <td></td><td></td>
+                    </tr>
+                    <tr>
+                        <td>make_date(year int, month int, day int)</td>
+                        <td>date</td>
+                        <td>date 생성</td>
+                        <td>make_date(2013, 7, 15)</td>
+                        <td>2013-07-15</td>
+                    </tr>
+                    <tr>
+                        <td>make_interval(years int DEFAULT 0, months int DEFAULT 0, weeks int DEFAULT 0, days int DEFAULT 0, hours int DEFAULT 0, mins int DEFAULT 0, secs double precision DEFAULT 0.0)</td>
+                        <td>interval</td>
+                        <td>interval 생성</td>
+                        <td>make_interval(days =&gt; 10)</td>
+                        <td>10 days</td>
+                    </tr>
+                    <tr>
+                        <td>make_time(hour int, min int, sec double precision)</td>
+                        <td>time</td>
+                        <td>time 생성</td>
+                        <td>make_time(8, 15, 23.5)</td>
+                        <td>08:15:23.5</td>
+                    </tr>
+                    <tr>
+                        <td>make_timestamp(year int, month int, day int, hour int, min int, sec double precision)</td>
+                        <td>timestamp</td>
+                        <td>timestamp 생성</td>
+                        <td>make_timestamp(2013, 7, 15, 8, 15, 23.5)</td>
+                        <td>2013-07-15 08:15:23.5</td>
+                    </tr>
+                    <tr>
+                        <td>make_timestamptz(year int, month int, day int, hour int, min int, sec double precision, [timezone text])</td>
+                        <td>timestamp with time zone</td>
+                        <td>timestamp with time zone 생성. timezone 생략시 현재 설정 사용</td>
+                        <td>make_timestamptz(2013, 7, 15, 8, 15, 23.5)</td>
+                        <td>2013-07-15 08:15:23.5+01</td>
+                    </tr>
+                    <tr>
+                        <td>to_timestamp(double precision)</td>
+                        <td>timestamp with time zone</td>
+                        <td>Convert Unix epoch (seconds since 1970-01-01 00:00:00+00) to timestamp</td>
+                        <td>to_timestamp(1284352323)</td>
+                        <td>2010-09-13 04:32:03+00</td>
+                    </tr>
+
+                    <tr>
+                        <td>age(timestamp,timestamp)</td>
+                        <td>interval</td>
+                        <td>연월일로 표기되는 두 시각 사이의 차이</td>
+                        <td>age(timestamp '2001-04-10', timestamp '1957-06-13')</td>
+                        <td>43 years 9 mons 27 days</td>
+                    </tr>
+                    <tr>
+                        <td>age(timestamp)</td>
+                        <td>interval</td>
+                        <td>현재 시각으로부터 뺀다. == age(current_date::timestamp, from)</td>
+                        <td>age(timestamp '1957-06-13')</td>
+                        <td>43 years 8 mons 3 days</td>
+                    </tr>
+                    <tr>
+                        <td>date_part(text,timestamp)</td>
+                        <td>double precision</td>
+                        <td>Get subfield (equivalent toextract)</td>
+                        <td>date_part('hour', timestamp '2001-02-16 20:38:40')</td>
+                        <td>20</td>
+                    </tr>
+                    <tr>
+                        <td>date_part(text,interval)</td>
+                        <td>double precision</td>
+                        <td>Get subfield (equivalent to extract);</td>
+                        <td>date_part('month', interval '2 years 3 months')</td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td>date_trunc(text,timestamp)</td>
+                        <td>timestamp</td>
+                        <td>Truncate to specified precision;</td>
+                        <td>date_trunc('hour', timestamp '2001-02-16 20:38:40')</td>
+                        <td>2001-02-16 20:00:00</td>
+                    </tr>
+                    <tr>
+                        <td>date_trunc(text,interval)</td>
+                        <td>interval</td>
+                        <td>Truncate to specified precision;</td>
+                        <td>date_trunc('hour', interval '2 days 3 hours 40 minutes')</td>
+                        <td>2 days 03:00:00</td>
+                    </tr>
+                    <tr>
+                        <td>extract(field from timestamp)</td>
+                        <td>double precision</td>
+                        <td>Get subfield;</td>
+                        <td>extract(hour from timestamp '2001-02-16 20:38:40')</td>
+                        <td>20</td>
+                    </tr>
+                    <tr>
+                        <td>extract(field from interval)</td>
+                        <td>double precision</td>
+                        <td>Get subfield;</td>
+                        <td>extract(month from interval '2 years 3 months')</td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td>isfinite(date)</td>
+                        <td>boolean</td>
+                        <td>Test for finite date (not +/-infinity)</td>
+                        <td>isfinite(date '2001-02-16')</td>
+                        <td>true</td>
+                    </tr>
+                    <tr>
+                        <td>isfinite(timestamp)</td>
+                        <td>boolean</td>
+                        <td>Test for finite time stamp (not +/-infinity)</td>
+                        <td>isfinite(timestamp '2001-02-16 21:28:30')</td>
+                        <td>true</td>
+                    </tr>
+                    <tr>
+                        <td>isfinite(interval)</td>
+                        <td>boolean</td>
+                        <td>Test for finite interval</td>
+                        <td>isfinite(interval '4 hours')</td>
+                        <td>true</td>
+                    </tr>
+                    <tr>
+                        <td>justify_days(interval)</td>
+                        <td>interval</td>
+                        <td>Adjust interval so 30-day time periods are represented as months</td>
+                        <td>justify_days(interval '35 days')</td>
+                        <td>1 mon 5 days</td>
+                    </tr>
+                    <tr>
+                        <td>justify_hours(interval)</td>
+                        <td>interval</td>
+                        <td>Adjust interval so 24-hour time periods are represented as days</td>
+                        <td>justify_hours(interval '27 hours')</td>
+                        <td>1 day 03:00:00</td>
+                    </tr>
+                    <tr>
+                        <td>justify_interval(interval)</td>
+                        <td>interval</td>
+                        <td>Adjust interval usingjustify_daysandjustify_hours, with additional sign adjustments</td>
+                        <td>justify_interval(interval '1 mon -1 hour')</td>
+                        <td>29 days 23:00:00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </details>
+    </details>
+
+    <details>
+        <summary></summary>
+            10.6 JSON Functions and Operators
+            Operator	Right Operand Type	Description	                                                                        Example	                                            Example Result
+            ->	        int	                Get JSON array element (indexed from zero, negative integers count from the end)	'[{"a":"foo"},{"b":"bar"},{"c":"baz"}]'::json->2	{"c":"baz"}
+            ->	        text	            Get JSON object field by key	                                                    '{"a": {"b":"foo"}}'::json->'a'	                    {"b":"foo"}
+            ->>	        int	                Get JSON array element as text	                                                    '[1,2,3]'::json->>2	                                3
+            ->>	        text	            Get JSON object field as text	                                                    '{"a":1,"b":2}'::json->>'b'	                        2
+            #>	        text[]	            Get JSON object at specified path	                                                '{"a": {"b":{"c": "foo"}}}'::json#>'{a,b}'	        {"c": "foo"}
+            #>>	        text[]	            Get JSON object at specified path as text	                                        '{"a":[1,2,3],"b":[4,5,6]}'::json#>>'{a,2}'	        3
+            http://postgresql.kr/docs/9.6/functions-json.html
+    </details>
 </details>
 
 <hr>
