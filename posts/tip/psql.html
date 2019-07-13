@@ -1,6 +1,13 @@
 <hr>
 
 <details>
+    <summary>명령어 목록</summary>
+    <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/sql-commands.html">http://postgresql.kr/docs/current/sql-commands.html</a>
+</details>
+
+<hr>
+
+<details>
     <summary>postgres 유저 비밀번호를 모를 때</summary>
     <ol>
         <li>pg_hba.conf 파일을 비밀번호 없이 접속할 수 있도록 trust로 변경 후 접속(서비스 재시작 필요)</li>
@@ -16,6 +23,23 @@
         <li>GRANT SELECT ON ALL TABLES IN SCHEMA public TO user;</li>
         <li>GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO user;</li>
     </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>dblink 재활용</summary>
+    SELECT dblink_connect('myconn', 'hostaddr=1.2.3.4, port=5432 dbname=history user=readonly password=password');<br>
+    (SELECT account_id, last_login_date FROM v_account WHERE account_id IN<br>
+    　　(SELECT r.account_id FROM dblink('myconn', 'SELECT account_id, sum(amount) as total_amount FROM v_payment_history WHERE status=2 GROUP BY account_id HAVING sum(amount) &gt;= 10000') AS r(account_id BIGINT, total_amount BIGINT))<br>
+    ) UNION ...
+</details>
+
+<hr>
+
+<details>
+    <summary>시각 차이 획득</summary>
+    select abs(extract (epoch from (insert_datetime - '2019-07-04 19:39:55'::timestamp)));
 </details>
 
 <hr>

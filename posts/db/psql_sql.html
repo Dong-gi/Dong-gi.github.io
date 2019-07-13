@@ -574,7 +574,7 @@
                         WITH RECURSIVE t(n) AS ( VALUES (10) UNION SELECT n+1 FROM t WHERE n &lt; 100 )<br>
                         SELECT sum(n) FROM t;
 
-                        <table class="table">
+                        <table class="table table-sm table-hover">
                             <tr><th>t</th><th>working_table</th></tr>
                             <tr><td>empty</td><td>empty</td></tr>
                             <tr><td>10</td><td>10</td></tr>
@@ -612,7 +612,7 @@
     <summary>Data Types</summary>
     <details>
         <summary>Numeric Types</summary>
-        <table class="table">
+        <table class="table table-sm table-hover">
             <thead>
                 <tr><th>Name</th><th>Size</th><th>Description</th></tr>
             </thead>
@@ -659,7 +659,7 @@
 
     <details>
         <summary>Character Types</summary>
-        <table class="table">
+        <table class="table table-sm table-hover">
             <thead>
                 <tr><th>Name</th><th>Description</th></tr>
             </thead>
@@ -683,7 +683,7 @@
 
     <details>
         <summary>Date/Time Types</summary>
-        <table class="table">
+        <table class="table table-sm table-hover">
             <thead>
                 <tr><th>Name</th><th>Size</th><th>Description</th><td>Range</td><td>Resolution</td></tr>
             </thead>
@@ -704,7 +704,7 @@
             YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, YEAR TO MONTH, DAY TO HOUR, DAY TO MINUTE, DAY TO SECOND, HOUR TO MINUTE, HOUR TO SECOND, MINUTE TO SECOND
 
             <li>Special Date/Time Input String</li>
-            <table class="table">
+            <table class="table table-sm table-hover">
                 <thead>
                     <tr><th>String</th><th>Valid Types</th><th>Description</th></tr>
                 </thead>
@@ -737,7 +737,7 @@
 
     <details>
         <summary>Geometric Types</summary>
-        <table class="table">
+        <table class="table table-sm table-hover">
             <thead><th>Name</th><th>Size</th><th>Description</th><th>Representation</th></thead>
             <tbody>
                 <tr><td>point</td><td>16 bytes</td><td>xy 좌표계 상의 점</td><td>(x, y)</td></tr>
@@ -814,6 +814,8 @@
                     배열 펼치기
                 </ul>
             </ul>
+
+            <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/functions-array.html">http://postgresql.kr/docs/current/functions-array.html</a>
         </ol>
     </details>
 
@@ -859,7 +861,7 @@
 
     <details>
         <summary>Pseudo Types</summary>
-        <table class="table">
+        <table class="table table-sm table-hover">
             <thead>
                 <tr><th>Name</th><th>Description</th></tr>
             </thead>
@@ -889,7 +891,7 @@
 
     <details>
         <summary>기타 내장 자료형 표</summary>
-        <table class="table">
+        <table class="table table-sm table-hover">
             <thead>
                 <tr><th>Name</th><th>Size</th><th>Description</th></tr>
             </thead>
@@ -1063,7 +1065,7 @@
 
     <details>
         <summary>Bit String Operators</summary>
-        <table class="table">
+        <table class="table table-sm table-hover">
             <thead>
                 <tr><th>Operator</th><th>Description</th><th>Example</th><th>Result</th></tr>
             </thead>
@@ -1266,7 +1268,7 @@
         <summary>Date/Time Functions and Operators</summary>
         <details>
             <summary>Date/Time Operators</summary>
-            <table class="table">
+            <table class="table table-sm table-hover">
                 <thead><tr><th>Operator</th><th>Example</th><th>Result</th></tr></thead>
                 <tbody>
                     <tr><td>+</td><td>date '2001-09-28' + integer '7'</td><td>date '2001-10-05'</td></tr>
@@ -1288,73 +1290,65 @@
                     <tr><td>*</td><td>21 * interval '1 day'</td><td>interval '21 days'</td></tr>
                     <tr><td>*</td><td>double precision '3.5' * interval '1 hour'</td><td>interval '03:30:00'</td></tr>
                     <tr><td>/</td><td>interval '1 hour' / double precision '1.5'</td><td>interval '00:40:00'</td></tr>
+                    <tr><td>overlaps</td><td>(date '2000-01-01', date '2000-12-31')<br> overlaps (date '2000-07-07', date '2000-08-08')</td><td>t</td></tr>
+                    <tr><td>overlaps</td><td>(date '2000-01-01', make_interval(years =&gt; 1))<br> overlaps (date '2000-07-07', date '2000-08-08')</td><td>t</td></tr>
                 </tbody>
             </table>
         </details>
         <details>
             <summary>Date/Time Functions</summary>
-            <table class="table">
+            <table class="table table-sm table-hover">
                 <thead><tr><th>Function</th><th>Return Type</th><th>Description</th><th>Example</th><th>Result</th></tr></thead>
                 <tbody>
                     <tr>
                         <td>clock_timestamp()</td>
-                        <td>timestamp with time zone</td>
-                        <td>현재 timestamp. 클록 기준.</td>
-                        <td></td><td></td>
+                        <td>timestamptz</td>
+                        <td colspan="3">현재 timestamp. 클록 기준.</td>
                     </tr>
                     <tr>
                         <td>timeofday()</td>
                         <td>text</td>
-                        <td>clock_timestamp()값을 문자열로 반환</td>
-                        <td></td><td></td>
+                        <td colspan="3">현재 시각(clock_timestamp)을 문자열로 반환</td>
                     </tr>
                     <tr>
                         <td>current_date</td>
                         <td>date</td>
-                        <td>오늘 날짜. 트랜잭션 시작 기준</td>
-                        <td></td><td></td>
+                        <td colspan="3">현재 date. 트랜잭션 시작 기준</td>
                     </tr>
                     <tr>
                         <td>current_time</td>
-                        <td>time with time zone</td>
-                        <td>현재 시각. 트랜잭션 시작 기준. CURRENT_TIME(precision) 가능</td>
-                        <td></td><td></td>
+                        <td>timetz</td>
+                        <td colspan="3">현재 time. 트랜잭션 시작 기준. CURRENT_TIME(precision) 가능</td>
                     </tr>
                     <tr>
                         <td>current_timestamp</td>
-                        <td>timestamp with time zone</td>
-                        <td>오늘 날짜 + 현재 시각. 트랜잭션 시작 기준. CURRENT_TIMESTAMP(precision) 가능</td>
-                        <td></td><td></td>
+                        <td>timestamptz</td>
+                        <td colspan="3">현재 timestamp. 트랜잭션 시작 기준. CURRENT_TIMESTAMP(precision) 가능</td>
                     </tr>
                     <tr>
                         <td>localtime</td>
                         <td>time</td>
-                        <td>현재 시각. 트랜잭션 시작 기준. LOCALTIME(precision) 가능</td>
-                        <td></td><td></td>
+                        <td colspan="3">현재 time. 트랜잭션 시작 기준. LOCALTIME(precision) 가능</td>
                     </tr>
                     <tr>
                         <td>localtimestamp</td>
                         <td>timestamp</td>
-                        <td>오늘 날짜 + 현재 시각. 트랜잭션 시작 기준. LOCALTIMESTAMP(precision) 가능</td>
-                        <td></td><td></td>
+                        <td colspan="3">현재 timestamp. 트랜잭션 시작 기준. LOCALTIMESTAMP(precision) 가능</td>
                     </tr>
                     <tr>
                         <td>now()</td>
-                        <td>timestamp with time zone</td>
-                        <td>오늘 날짜 + 현재 시각. 트랜잭션 시작 기준</td>
-                        <td></td><td></td>
+                        <td>timestamptz</td>
+                        <td colspan="3">현재 timestamp. 트랜잭션 시작 기준</td>
                     </tr>
                     <tr>
                         <td>statement_timestamp()</td>
-                        <td>timestamp with time zone</td>
-                        <td>오늘 날짜 + 현재 시각. 현재 문장 실행 기준</td>
-                        <td></td><td></td>
+                        <td>timestamptz</td>
+                        <td colspan="3">현재 timestamp. 현재 문장 실행 기준</td>
                     </tr>
                     <tr>
                         <td>transaction_timestamp()</td>
-                        <td>timestamp with time zone</td>
-                        <td>오늘 날짜 + 현재 시각. 트랜잭션 시작 기준</td>
-                        <td></td><td></td>
+                        <td>timestamptz</td>
+                        <td colspan="3">현재 timestamp. 트랜잭션 시작 기준</td>
                     </tr>
                     <tr>
                         <td>make_date(year int, month int, day int)</td>
@@ -1386,74 +1380,70 @@
                     </tr>
                     <tr>
                         <td>make_timestamptz(year int, month int, day int, hour int, min int, sec double precision, [timezone text])</td>
-                        <td>timestamp with time zone</td>
-                        <td>timestamp with time zone 생성. timezone 생략시 현재 설정 사용</td>
+                        <td>timestamptz</td>
+                        <td>timestamp 생성. timezone 생략시 현재 설정 사용</td>
                         <td>make_timestamptz(2013, 7, 15, 8, 15, 23.5)</td>
                         <td>2013-07-15 08:15:23.5+01</td>
                     </tr>
                     <tr>
                         <td>to_timestamp(double precision)</td>
-                        <td>timestamp with time zone</td>
+                        <td>timestamptz</td>
                         <td>Convert Unix epoch (seconds since 1970-01-01 00:00:00+00) to timestamp</td>
                         <td>to_timestamp(1284352323)</td>
                         <td>2010-09-13 04:32:03+00</td>
                     </tr>
-
+                    <tr>
+                        <td>at time zone</td>
+                        <td>timestamptz</td>
+                        <td>Convert timestamp to timestamptz<a role="button" target="_blank" class="btn btn-info btn-sm" href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">wiki/List_of_tz</a></td>
+                        <td>timestamp '2000-01-01 00:00:00' at time zone 'Asia/Seoul'</td>
+                        <td>1999-12-31 07:00:00-08</td>
+                    </tr>
                     <tr>
                         <td>age(timestamp,timestamp)</td>
                         <td>interval</td>
-                        <td>연월일로 표기되는 두 시각 사이의 차이</td>
+                        <td>연월일로 표기되는 두 시각 사이의 차이. 부정확</td>
                         <td>age(timestamp '2001-04-10', timestamp '1957-06-13')</td>
                         <td>43 years 9 mons 27 days</td>
                     </tr>
                     <tr>
                         <td>age(timestamp)</td>
                         <td>interval</td>
-                        <td>현재 시각으로부터 뺀다. == age(current_date::timestamp, from)</td>
+                        <td>현재 date로부터 뺀다. = age(current_date::timestamp, from)</td>
                         <td>age(timestamp '1957-06-13')</td>
                         <td>43 years 8 mons 3 days</td>
                     </tr>
                     <tr>
                         <td>date_part(text,timestamp)</td>
-                        <td>double precision</td>
-                        <td>Get subfield (equivalent toextract)</td>
+                        <td>float8</td>
+                        <td>= extract</td>
                         <td>date_part('hour', timestamp '2001-02-16 20:38:40')</td>
                         <td>20</td>
                     </tr>
                     <tr>
                         <td>date_part(text,interval)</td>
-                        <td>double precision</td>
-                        <td>Get subfield (equivalent to extract);</td>
+                        <td>float8</td>
+                        <td>= extract</td>
                         <td>date_part('month', interval '2 years 3 months')</td>
                         <td>3</td>
                     </tr>
                     <tr>
-                        <td>date_trunc(text,timestamp)</td>
-                        <td>timestamp</td>
-                        <td>Truncate to specified precision;</td>
-                        <td>date_trunc('hour', timestamp '2001-02-16 20:38:40')</td>
-                        <td>2001-02-16 20:00:00</td>
-                    </tr>
-                    <tr>
-                        <td>date_trunc(text,interval)</td>
-                        <td>interval</td>
-                        <td>Truncate to specified precision;</td>
-                        <td>date_trunc('hour', interval '2 days 3 hours 40 minutes')</td>
-                        <td>2 days 03:00:00</td>
-                    </tr>
-                    <tr>
                         <td>extract(field from timestamp)</td>
-                        <td>double precision</td>
-                        <td>Get subfield;</td>
+                        <td>float8</td>
+                        <td>Get subfield</td>
                         <td>extract(hour from timestamp '2001-02-16 20:38:40')</td>
                         <td>20</td>
                     </tr>
                     <tr>
                         <td>extract(field from interval)</td>
-                        <td>double precision</td>
-                        <td>Get subfield;</td>
+                        <td>float8</td>
+                        <td>Get subfield</td>
                         <td>extract(month from interval '2 years 3 months')</td>
                         <td>3</td>
+                    </tr>
+                    <tr>
+                        <td>extract, date_part field</td>
+                        <td colspan="4">century, day, decade, dow(day of the week), doy(day of the year), epoch(number of seconds sinse 1970-01-01 00:00:00 UTC), hour, isodow(day of the week), isoyear(ISO 8601 week-numbering), microseconds, millenium, milliseconds, minute, month, quarter, second, timezone, timezone_hour, timezone_minute, week(ISO 8601 week-numbering), year</td>
                     </tr>
                     <tr>
                         <td>isfinite(date)</td>
@@ -1477,6 +1467,24 @@
                         <td>true</td>
                     </tr>
                     <tr>
+                        <td>date_trunc(text,timestamp)</td>
+                        <td>timestamp</td>
+                        <td>Truncate to specified precision</td>
+                        <td>date_trunc('hour', timestamp '2001-02-16 20:38:40')</td>
+                        <td>2001-02-16 20:00:00</td>
+                    </tr>
+                    <tr>
+                        <td>date_trunc(text,interval)</td>
+                        <td>interval</td>
+                        <td>Truncate to specified precision</td>
+                        <td>date_trunc('hour', interval '2 days 3 hours 40 minutes')</td>
+                        <td>2 days 03:00:00</td>
+                    </tr>
+                    <tr>
+                        <td>date_trunc field</td>
+                        <td colspan="4">microseconds, milliseconds, second, minute, hour, day, week, month, quarter, year, decade, century, millenium</td>
+                    </tr>
+                    <tr>
                         <td>justify_days(interval)</td>
                         <td>interval</td>
                         <td>Adjust interval so 30-day time periods are represented as months</td>
@@ -1493,7 +1501,7 @@
                     <tr>
                         <td>justify_interval(interval)</td>
                         <td>interval</td>
-                        <td>Adjust interval usingjustify_daysandjustify_hours, with additional sign adjustments</td>
+                        <td>Adjust interval using justify_days and justify_hours, with additional sign adjustments</td>
                         <td>justify_interval(interval '1 mon -1 hour')</td>
                         <td>29 days 23:00:00</td>
                     </tr>
@@ -1503,53 +1511,341 @@
     </details>
 
     <details>
-        <summary></summary>
-            10.6 JSON Functions and Operators
-            Operator	Right Operand Type	Description	                                                                        Example	                                            Example Result
-            ->	        int	                Get JSON array element (indexed from zero, negative integers count from the end)	'[{"a":"foo"},{"b":"bar"},{"c":"baz"}]'::json->2	{"c":"baz"}
-            ->	        text	            Get JSON object field by key	                                                    '{"a": {"b":"foo"}}'::json->'a'	                    {"b":"foo"}
-            ->>	        int	                Get JSON array element as text	                                                    '[1,2,3]'::json->>2	                                3
-            ->>	        text	            Get JSON object field as text	                                                    '{"a":1,"b":2}'::json->>'b'	                        2
-            #>	        text[]	            Get JSON object at specified path	                                                '{"a": {"b":{"c": "foo"}}}'::json#>'{a,b}'	        {"c": "foo"}
-            #>>	        text[]	            Get JSON object at specified path as text	                                        '{"a":[1,2,3],"b":[4,5,6]}'::json#>>'{a,2}'	        3
-            http://postgresql.kr/docs/9.6/functions-json.html
+        <summary>JSON Functions and Operators</summary>
+        <details>
+            <summary>json and jsonb Operators</summary>
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Right Operand Type</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                        <th>Example Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>-&gt;</td>
+                        <td>int</td>
+                        <td>Get JSON array element<br>(인덱스는 0부터 시작. 음수면 뒤에서부터)</td>
+                        <td>'[{"a":"foo"},{"b":"bar"},{"c":"baz"}]'::json-&gt;2</td>
+                        <td>{"c":"baz"}</td>
+                    </tr>
+                    <tr>
+                        <td>-&gt;</td>
+                        <td>text</td>
+                        <td>Get JSON object field by key</td>
+                        <td>'{"a": {"b":"foo"}}'::json-&gt;'a'</td>
+                        <td>{"b":"foo"}</td>
+                    </tr>
+                    <tr>
+                        <td>-&gt;&gt;</td>
+                        <td>int</td>
+                        <td>Get JSON array element as text</td>
+                        <td>'[1,2,3]'::json-&gt;&gt;2</td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td>-&gt;&gt;</td>
+                        <td>text</td>
+                        <td>Get JSON object field as text</td>
+                        <td>'{"a":1,"b":2}'::json-&gt;&gt;'b'</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>#&gt;</td>
+                        <td>text[]</td>
+                        <td>Get JSON object at specified path</td>
+                        <td>'{"a": {"b":{"c": "foo"}}}'::json#&gt;'{a,b}'</td>
+                        <td>{"c": "foo"}</td>
+                    </tr>
+                    <tr>
+                        <td>#&gt;&gt;</td>
+                        <td>text[]</td>
+                        <td>Get JSON object at specified path as text</td>
+                        <td>'{"a":[1,2,3],"b":[4,5,6]}'::json#&gt;&gt;'{a,2}'</td>
+                        <td>3</td>
+                    </tr>
+                </tbody>
+            </table>
+        </details>
+        <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/functions-json.html">http://postgresql.kr/docs/current/functions-json.html</a>
+    </details>
+
+    <details>
+        <summary>Sequence Manipulation Functions</summary>
+        <ol>
+            <li>currval(regclass) : 지정된 sequence의 가장 최근 반환된 nextval</li>
+            <li>lastval() : 가장 최근 반환된 임의 sequence의 nextval</li>
+            <li>nextval(regclass) : sequence를 증가시키고 반환</li>
+            <li>setval(regclass, bigint) : sequence의 현재값 설정</li>
+        </ol>
+        regclass는 pg_class 시스템 카탈로그에 저장된 sequence의 OID며, 이를 직접 찾을 필요는 없다. '' 사이에 식별자를 넣어주면 알아서 변환해준다.
+    </details>
+
+    <details>
+        <summary>Conditional Expressions</summary>
+        <ol>
+            <li>case</li>
+            case when <i>condition</i> then <i>result</i> [when ...] [else <i>result</i>]
+            <li>coalesce</li>
+            coalesce(value [, ...]) : 처음으로 등장하는 non-null값을 반환한다. 모두 null이면 최종적으로 null이 반환된다.
+            <li>nullif</li>
+            nullif(value1, value2) : value1과 value2가 같으면 null 반환. 다르면 value1 반환
+            <li>greatest</li>
+            greatest(value [, ...])
+            <li>least</li>
+            least(value [, ...])
+        </ol>
+    </details>
+
+    <details>
+        <summary>Subquery Expressions</summary>
+        <ol>
+            <li>exists</li>
+            exists(subquery) : 서브쿼리가 한 행 이상 반환하면 true, 아니면 false
+            
+            <li>in</li>
+            expression in (subquery) : expression 판별값이 subquery 결과 중에 있으면 true, 아니면 false
+            <li>not in</li>
+            
+            <li>any, some</li>
+            expression operator any (subquery), expression operator some (subquery)<br>
+            subquery는 하나의 컬럼만 반환해야 한다. expression 판별값이 subquery 결과 중에 하나라도 operator를 만족하면 true
+            
+            <li>all</li>
+            expression operator all (subquery)
+
+            <li>Single-row Comparison</li>
+            row_constructor operator (subquery) : subquery는 row_constructor와 같은 개수의 컬럼을 반환해야 한다.
+        </ol>
+    </details>
+
+    <details>
+        <summary>Series Generating Functions</summary>
+        <ol>
+            <li>generate_series(start, stop)</li>
+            <li>generate_series(start, stop, step)</li>
+            <li>generate_series(start, stop interval)</li>
+        </ol>
+    </details>
+
+    <details>
+        <summary>System Information Functions</summary>
+        <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/functions-info.html">http://postgresql.kr/docs/current/functions-info.html</a>
     </details>
 </details>
 
 <hr>
 
 <details>
-    <summary>Type Conversion</summary>
-    <ol>
-
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>Indexes</summary>
-    <ol>
-
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>Full Text Search</summary>
-    <ol>
-
-    </ol>
-</details>
-
-<hr>
-
-<details>
     <summary>동시성 제어</summary>
-    <ol>
+    <details>
+        <summary>소개</summary>
+        <ol>
+            <li>PostgreSQL은 다중버전 모델 MVCC(Multiversion Concurrency Control)을 이용해서 동시성 처리를 관리한다</li>
+            각 트랜잭션의 시작을 기점으로 자료를 각각의 스냅샷(데이터베이스 버전)으로 처리해서 세션이 사용한다. 이렇게 하면 최소한의 잠금을 사용하여 트랜잭션 격리가 이루어진다.
+            <li>MVCC와 별개로 개발자가 이용할 수 있는 테이블, 행 단위 잠금 기능을 제공한다</li>
+        </ol>
+    </details>
+    <details>
+        <summary>트랜잭션 격리</summary>
+        <ol>
+            <li>SQL 표준 트랜잭션 격리 수준; Transaction Isolation Level</li>
+            <ul>
+                <li>dirty read : 다른 트랜잭션이 아직 커밋하지 않은 자료도 읽을 수 있다</li>
+                <li>nonrepeatable read : 다른 트랜잭션이 커밋한 자료를 읽을 수 있다. 다음 읽기 시도시 해당 트랜잭션이 값을 변경했다면 변경된 값을 읽는다.</li>
+                <li>phantom read : 다른 트랜잭션이 커밋한 자료를 읽을 수 있다. 다음 읽기 시도 시, 최초 읽은 값 그대로 보여준다.</li>
+                <li>serialization anomaly</li>
+                let result = 트랜잭션 그룹에 대한 최종 실행 성공 상태<br>
+                let possibleResults = 각 트랜잭션을 하나씩 순서대로 실행하는 모든 경우에 대해, 각 실행 성공 상태 리스트<br>
+                직렬화 이상 == result not in possibleResults.
+            </ul>
 
-    </ol>
+            <li>PostgreSQL 트랜잭션 격리 수준</li>
+            트랜잭션 격리 수준을 설정하려면 SET TRANSACTION 명령을 이용한다. PostgreSQL은 MVCC 모델을 이용하기 때문에, Read uncommitted는 Read committed처럼 작동한다
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr><th>격리 수준</th><th>Dirty Read</th><th>Nonrepeatable Read</th><th>Phantom Read</th><th>Serialization Anomaly</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Read uncommitted</td><td>허용, PG에서는 없음</td><td>가능</td><td>가능</td><td>가능</td></tr>
+                    <tr><td>Read committed</td><td>불가능</td><td>가능</td><td>가능</td><td>가능</td></tr>
+                    <tr><td>Repeatable read</td><td>불가능</td><td>불가능</td><td>허용, PG에서는 없음</td><td>가능</td></tr>
+                    <tr><td>Serializable</td><td>불가능</td><td>불가능</td><td>불가능</td><td>불가능</td></tr>
+                </tbody>
+            </table>
+        </ol>
+        <details>
+            <summary>Read Committed 격리 수준</summary>
+            <ol>
+                <li>PostgreSQL 기본 격리 수준</li>
+                <li>for update/share 절 없는 select 쿼리는 쿼리 실행 전 마지막으로 커밋된 자료를 읽는다.</li>
+                다른 트랜잭션과 분리된 스냅샷을 이용하므로, select 쿼리 실행 중 다른 트랜잭션이 변경하여 커밋한 자료는 읽을 수 없다. 이때, 같은 select 쿼리가 다시 호출되는 경우 변경 커밋된 자료를 가져온다.<br>
+                현재 트랜잭션에서 업데이트한 자료는 커밋되지 않았더라도 다시 읽을 때 갱신된 값으로 가져온다.
+                <li>update, delete, select for update/share 쿼리는 타깃 행을 찾는 것까지는 select 쿼리와 동일하다</li>
+                실행 시각을 기준으로 발견한 타깃 행이 변경/삭제/잠금 중인 경우 커밋이나 롤백되기를 기다린다. 행이 변경된 경우 where 절이 재평가되고 갱신된 행을 대상으로 쿼리 실행, 삭제된 경우 무시, 롤백된 경우 기존 행을 대상으로 쿼리가 실행된다.
+            </ol>
+        </details>
+        <details>
+            <summary>Repeatable Read 격리 수준</summary>
+            <ol>
+                <li>트랜잭션 실행 전 마지막으로 커밋된 자료만을 본다.</li>
+                물론 현재 트랜잭션에서 업데이트한 자료는 커밋되지 않았더라도 다시 읽을 때 갱신된 값으로 가져온다.
+                <li>update, delete, select for update/share 쿼리는 타깃 행을 찾는 것까지는 select 쿼리와 동일하다</li>
+                실행 시각을 기준으로 발견한 타깃 행이 변경/삭제/잠금 중인 경우 커밋이나 롤백되기를 기다린다. 롤백된 경우 기존 행에 대해 쿼리가 실행되고, 변동이 있다면 에러를 발생하고 롤백한다.<br>
+                ← Repeatable Read 트랜잭션은 트랜잭션 시작 이후 다른 트랜잭션에 의해 변경된 행을 갱신하거나 잠글 수 없다.
+                <li>따라서 update 트랜잭션은 응용 수준에서 트랜잭션 직렬화 실패에 대한 대응이 필요하다</li>
+                읽기만 하는 트랜잭션은 직렬화 실패가 일어날 수 없다.
+                <li>트랜잭션 시작 시각을 기준으로 DB에 대한 엄격한 정적 뷰를 보장하지만, 동시 실행되는 트랜잭션에 의해 일부 불일치가 발생할 수 있다.</li>
+                예를 들어 다른 트랜잭션에서 여러 연관 테이블의 행들을 순차적으로 업데이트하는 와중에 읽기를 수행하는 경우, 시간적으로는 일관적이지만, 논리적으로는 일관적이지 않은 데이터를 읽게될 수 있다.
+            </ol>
+        </details>
+        <details>
+            <summary>Serializable 격리 수준</summary>
+            <ol>
+                <li>커밋된 모든 트랜잭션들을 하나씩 순차적으로 실행한다.</li>
+                <li>이걸로 모든 이상 발생 가능성이 차단되는 것이 아니기 떄문에, 여전히 트랜잭션 직렬화 실패에 대한 대응이 필요하다</li>
+                <li>성능을 위한 유의사항</li>
+                <ul>
+                    <li>가능한 경우 READ ONLY 명시</li>
+                    <li>기본으로 잠금을 제공하므로 select for update/share 구문은 필요없다</li>
+                    <li>페이지 수준 predicate 잠금이 여러 개 필요하지만 메모리 부족으로 릴레이션 수준의 잠금이 걸리는 경우, 최대 잠금 수 설정을 조정한다</li>
+                    http://postgresql.kr/docs/current/runtime-config-locks.html#GUC-MAX-PRED-LOCKS-PER-TRANSACTION
+                    <li>릴레이션 수준 잠금이 설정되는 것을 방지하기 위해 인덱스 스캔을 이용한다.</li>
+                </ul>
+            </ol>
+        </details>
+    </details>
+    <details>
+        <summary>Explicit Locking</summary>
+        <ol>
+            <li>Table-level Locks</li>
+            아래 표는 테이블 수준 잠금의 종류와, 각 요청된 잠금 수준에 대해 이미 설정된 잠금으로 인해 요청이 처리되지 않는 경우를 보여준다. 테이블 잠금은 LOCK 명령어로 획득할 수 있다
+            <table class="table table-sm table-hover text-center">
+                <thead>
+                    <tr>
+                        <th rowspan="2">Requested Lock Mode</th>
+                        <th colspan="8">Current Lock Mode</th>
+                    </tr>
+                    <tr>
+                        <th>ACCESS SHARE</th>
+                        <th>ROW SHARE</th>
+                        <th>ROW EXCLUSIVE</th>
+                        <th>SHARE UPDATE EXCLUSIVE</th>
+                        <th>SHARE</th>
+                        <th>SHARE ROW EXCLUSIVE</th>
+                        <th>EXCLUSIVE</th>
+                        <th>ACCESS EXCLUSIVE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ACCESS SHARE</td>
+                        <td colspan="7"></td>
+                        <td>X</td>
+                    </tr>
+                    <tr>
+                        <td>ROW SHARE</td>
+                        <td colspan="6"></td>
+                        <td>X</td>
+                        <td>X</td>
+                    </tr>
+                    <tr>
+                        <td>ROW EXCLUSIVE</td>
+                        <td colspan="4"></td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                    </tr>
+                    <tr>
+                        <td>SHARE UPDATE EXCLUSIVE</td>
+                        <td colspan="3"></td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                    </tr>
+                    <tr>
+                        <td>SHARE</td>
+                        <td colspan="2"></td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td></td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                    </tr>
+                    <tr>
+                        <td>SHARE ROW EXCLUSIVE</td>
+                        <td colspan="2"></td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                    </tr>
+                    <tr>
+                        <td>EXCLUSIVE</td>
+                        <td></td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                    </tr>
+                    <tr>
+                        <td>ACCESS EXCLUSIVE</td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                        <td>X</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ol>
+                <li>ACCESS SHARE</li>
+                select 명령이 이 잠금을 필요로 한다. 테이블을 읽기만 하는 쿼리들은 보통 이 잠금 수준에서 동작한다.
+                <li>ROW SHARE</li>
+                select for update, select for share 명령이 이 잠금을 필요로 한다.
+                <li>ROW EXCLUSIVE</li>
+                update, delete, insert 명령이 이 잠금을 필요로 한다. 테이블 데이터를 수정하는 쿼리들은 보통 이 잠금 수준에서 동작한다
+                <li>SHARE UPDATE EXCLUSIVE</li>
+                Acquired by VACUUM (without FULL), ANALYZE, CREATE INDEX CONCURRENTLY, CREATE STATISTICS and ALTER TABLE VALIDATE and other ALTER TABLE variants
+                <li>SHARE</li>
+                Acquired by CREATE INDEX (without CONCURRENTLY)
+                <li>SHARE ROW EXCLUSIVE</li>
+                Acquired by CREATE COLLATION, CREATE TRIGGER, and many forms of ALTER TABLE
+                <li>EXCLUSIVE</li>
+                Acquired by REFRESH MATERIALIZED VIEW CONCURRENTLY
+                <li>ACCESS EXCLUSIVE</li>
+                Acquired by the DROP TABLE, TRUNCATE, REINDEX, CLUSTER, VACUUM FULL, and REFRESH MATERIALIZED VIEW (without CONCURRENTLY) commands
+            </ol>
+
+            <li>Row-level Lock Modes</li>
+            행 수준 잠금은 자동적으로 설정되고 해제된다.
+            <ol>
+                <li>FOR UPDATE</li>
+                select한 행들을 변경을 위해 잠근다. 다른 트랜잭션의 잠금, 변경, 삭제를 막는다
+                <li>FOR NO KEY UPDATE</li>
+                FOR UPDATE와 비슷. select for key share 명령은 막지 않는다
+                <li>FOR SHARE</li>
+                FOR NO KEY UPDATE와 비슷. 공유된 잠금을 설정하며, select for share, select for key share 명령은 막지 않는다
+                <li>FOR KEY SHARE</li>
+                FOR SHARE와 비슷. select for no key update 명령은 막지 않는다
+            </ol>
+        </ol>
+    </details>                        
 </details>
 
 <hr>
@@ -1557,16 +1853,24 @@
 <details>
     <summary>Performance Tips</summary>
     <ol>
+        <li>Populating a Database</li>
+        <ol>
+            <li>여러 insert 명령이 순차적으로 실행되는 경우, autocommit 기능을 끄고 마지막에 한꺼번에 커밋하는 것이 좋다</li>
+            SQL 명령문에서 BEGIN, COMMIT 명령으로 트랜잭션을 수행하는 것과 동일하다.
+            <li>여러 행 데이터를 입력하는 경우, COPY 명령을 이용하는 것이 좋다</li>
+            <li>테이블을 최초로 생성하면서 데이터를 입력하는 경우, 인덱스를 제거하고 나중에 다시 만드는 것이 좋다</li>
+            <li>일시적으로 maintenance_work_mem, max_wal_size 설정을 높인다</li>
+            <li>pg_dump는 위에 적힌 것을 비롯한 여러 성능 향상 기법들을 이용한다</li>
+        </ol>
 
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>병렬 쿼리</summary>
-    <ol>
-
+        <li>Non-Durable Settings</li>
+        데이터베이스의 안정성이 필요없는 경우 아래와 같이 성능 위주의 설정이 가능하다
+        <ol>
+            <li>DB 클러스터를 RAM 디스크에 둔다.</li>
+            <li>fsync, synchronous commit, full page writes 설정을 끈다</li>
+            <li>max_wal_size, checkpoint_timeout 설정을 높인다</li>
+            <li>테이블 생성 시 UNLOGGED를 설정한다</li>
+        </ol>
     </ol>
 </details>
 

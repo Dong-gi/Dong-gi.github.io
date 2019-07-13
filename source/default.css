@@ -83,6 +83,14 @@ li li:hover {
     background-color: white;
 }
 
+li li li:hover {
+    background-color: antiquewhite;
+}
+
+li li li li:hover {
+    background-color: white;
+}
+
 .my-code, .modal-body {
     word-wrap: normal;
 }
@@ -93,6 +101,10 @@ li li:hover {
 
 .my-code li, .code-modal li {
     margin: 0;
+}
+
+.my-code li:hover, .code-modal li:hover {
+    background-color: antiquewhite;
 }
 
 .my-code {
