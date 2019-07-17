@@ -1,0 +1,349 @@
+<hr>
+
+<details>
+    <summary>식별자, 자료형</summary>
+    <ol>
+        <li>식별자 : '_', '$' 허용.
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/type.js" displayRange="[1,1]" lan="javascript">예시 코드 »</button></li>
+    
+        <li>변수 선언</li>
+        <ul>
+            <li>let 식별자;</li>
+            일반적인 지역변수와 동일. 선언된 순간부터 해당 코드 블록이 끝날때까지 유효. 중첩된 코드 블록에서 같은 식별자의 변수를 선언하여 밖의 변수를 가릴 수 있다.
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/type.js" displayRange="[2,2]" lan="javascript">예시 코드 »</button>
+    
+            <li>var 식별자;</li>
+            선언 전에 참조하는 경우, 선언을 끌어올려 undefined를 할당해준다. 함수 스코프에서 동작하지만, 중첩된 코드 블록에서 재정의하여 가릴 수 없다.
+        </ul>
+    
+        <li>상수 선언 : const 식별자;
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/type.js" displayRange="[4,4]" lan="javascript">예시 코드 »</button></li>
+    
+        <li>
+            <details>
+                <summary>자료형</summary>
+                <ul>
+                    <li>Object</li>
+                    객체 리터럴 : {}<br>
+                    delete 키워드로 프로퍼티 제거 가능.<br>
+                    JSON.stringify(), JSON.parse(), Object.keys()
+                    <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/type.js" displayRange="[11,15]" lan="javascript">예시 코드 »</button>
+                
+                    <li>String</li>
+                    문자 리터럴 : \xFF, \uFFFF<br>
+                    문자열 리터럴 : '', "", ``(문자열 템플릿)
+                    <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/type.js" displayRange="[4,5]" lan="javascript">예시 코드 »</button>
+                
+                    <li>Number</li>
+                    IEEE-764 double-precision 부동소수<br>
+                    숫자 리터럴 : 999, 0o777, 0xFFF, 0.999, 0.999E-9<br>
+                    숫자 상수 : Infinity, -Infinity, NaN, Number.EPSILON, Number.MAX_VALUE, Number.MAX_SAFE_INTEGER<br>
+                    Number(), parseInt(), parseFloat(), number.toString(radix)
+                
+                    <li>Boolean</li>
+                    Boolean() : "", 0, NaN, null, undefined == false, 그 외 == true<br>
+                    따라서 (null == undefined) === true
+                
+                    <li>Undefined</li>
+                
+                    <li>Null</li>
+                
+                    <li>Symbol</li>
+                    ES6부터 도입된 타입. 그 무엇과도 같지 않은 유일한 토큰을 나타낸다.
+                    <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/type.js" displayRange="[7,9]" lan="javascript">예시 코드 »</button>
+                
+                    <li>배열 : []</li>
+                    자바스크립트의 배열은 모두 동적 배열. 변수와 마찬가지로 타입을 가리지 않는다.
+                    <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/array.js" lan="javascript">예시 코드 »</button>
+
+                    <li>
+                        <details>
+                            <summary>Map</summary>
+                            <ol>
+                                <li>new Map()</li>
+                                <li>new Map(iterable: Iterable&lt;readonly [K, V]&gt;)</li>
+                                <li>new Map(entries?: readonly (readonly [K, V])[])</li>
+                                <li>set(key, value), get(key), has(key)</li>
+                                <li>delete(key), clear()</li>
+                                <li>size, keys(), values(), entries()</li>
+                            </ol>
+                        </details>
+                    </li>
+
+                    <li>WeakMap</li>
+                    키는 반드시 객체여야 하며, 키는 GC 대상이 된다. 따라서 객체가 살아있는 동안에 참조해야 하는 고유값들을 저장하기에 좋다
+
+                    <li>
+                        <details>
+                            <summary>Set</summary>
+                            <ol>
+                                <li>new Set(iterable?: Iterable&lt;any&gt;)</li>
+                                <li>new Set(values?: readonly T[])</li>
+                                <li>add(value), has(value), ...</li>
+                            </ol>
+                        </details>
+                    </li>
+
+                    <li>WeakSet</li>
+                    값은 반드시 객체여야 하며, GC 대상이 된다.
+                </ul>
+            </details>
+        </li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Syntax</summary>
+    <ul>
+        <li>if...[else if...][else...]</li>
+
+        <li>while, do...while</li>
+
+        <li>for <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/syntax.js" displayRange="[1,7]" lan="javascript">예시 코드 »</button></li>
+
+        <li>switch : 조건으로 변수가 아닌 일반 표현식도 가능</li>
+    
+        <li>for(let attr in obj) {} : 객체 프로퍼티 순회</li>
+    
+        <li>for(let name of iterable) {} : 배열, Iterable 객체 순회</li>
+    
+        <li>with(obj) : 스코프 고정</li>
+    
+        <li>try ~ catch ~ finally</li>
+        예외 처리. throw는 임의의 타입을 던질 수 있다. try 뒤에 catch 또는 finally가 하나라도 있어야 한다.
+
+        <li>
+            <details>
+                <summary>연산자</summary>
+                <ul>
+                    <li>Boolean 연산자 : !, &amp;&amp;, ||</li>
+                    &amp;&amp;, ||는 short circuit 연산.
+
+                    <li>비트 연산자 : ~, &amp;, |, ^, &lt;&lt;, &gt;&gt;, &gt;&gt;&gt;</li>
+
+                    <li>,연산자 : 순서대로 평가하여 마지막 표현식의 결과가 할당됨
+                        <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/syntax.js" displayRange="[9,10]" lan="javascript">예시 코드 »</button></li>
+
+                    <li>in 연산자 : 객체에 해당 프로퍼티가 존재하는지 여부 반환.
+                        <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/syntax.js" displayRange="[12,12]" lan="javascript">예시 코드 »</button></li>
+                    객체에 직접 정의된 프로퍼티는 hasOwnProperty() 메서드 이용
+
+                    <li>instanceof 연산자 : 객체 호환 여부 반환.</li>
+
+                    <li>해체 할당; Destructuring Assignment</li>
+                    <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/syntax.js" displayRange="[15,22]" lan="javascript">배열 해체 할당 »</button>
+                    <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/syntax.js" displayRange="[26,29]" lan="javascript">배열 연속 해체 »</button>
+                    <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/syntax.js" displayRange="[33,36]" lan="javascript">다차원 배열 해체 »</button>
+                    <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/syntax.js" displayRange="[40,47]" lan="javascript">확산 연산자 »</button>
+                    <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/syntax.js" displayRange="[51,65]" lan="javascript">객체 해체 할당 »</button>
+                    <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/syntax.js" displayRange="[69,71]" lan="javascript">객체 메서드 해체 할당 »</button>
+                </ul>
+            </details>
+        </li>
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>Function</summary>
+    <ol>
+        <li>오버로딩 불가. 함수 호출 시 매개변수 길이 불일치해도 됨.</li>
+        <li>arguments 객체를 통해 매개변수에 접근.(람다는 불가능)</li>
+        <li>매개변수에 기본값 설정 가능.</li>
+        <li>매개변수도 해체, 확산 연산자 사용 가능</li>
+        <li>명시하지 않은 경우, 함수의 기본 반환값은 undefined</li>
+        <li>함수가 호출하는 지점보다 나중에 정의되어 있는 경우, 함수 선언이 위로 끌어올려진다.</li>
+
+        <li>함수의 컨텍스트(this) 지정</li>
+        <ul>
+            <li>hello.apply({name: "Donggi"}, ["2018-08-08"]); // apply(호출자, 매개변수 배열)</li>
+            <li>hello.call({name: "Donggi"}, "2018-08-08"); // call(호출자, 매개변수)</li>
+            확산 연산자 ...을 이용하면 call로 apply와 같은 효과를 낼 수 있다.
+            <li>let helloKim = hello.bind({name: "Kim"}); // 함수 호출자 영구 고정</li>
+        </ul>
+
+        <li>함수 표현식 let f = function functionName() {}</li>
+        <li>익명 함수 let f = function () {}</li>
+        <li>화살표 표기법 let f = () => {}</li>
+
+        <li>클로저 Closure</li>
+        함수 할당에 의해 접근할 수 있는 스코프가 늘어나는 것.
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/function.js" displayRange="[2,8]" lan="javascript">예시 코드 »</button>
+
+        <li>즉시 실행 함수 표현 IIFE; Immediately Invoked Function Expression
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/function.js" displayRange="[12,17]" lan="javascript">예시 코드 »</button></li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Class</summary>
+    <ol>
+        <li>클래스는 본질적으로 함수다. 단순히 문법적 편의성이 더해졌을 뿐.</li>
+        <li>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/class.js" displayRange="[1,15]" lan="javascript">클래스 정의 예 »</button>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/class.js" displayRange="[18,19]" lan="javascript">상속 예 »</button>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/class.js" displayRange="[22,39]" lan="javascript">믹스인 예 »</button>
+        </li>
+
+        <li>전역 객체</li>
+        Object, Array, String, Global, Math<br>
+        Global 객체를 직접 획득하는 건 불가능 : isNaN(), isFinite(), parseInt(), parseFloat(), encodeURI(), encodeURIComponent(), eval()
+
+        <li>객체 보호</li>
+        Object.freeze() : 객체 동결. 읽기만 가능<br>
+        Object.seal() : 객체 봉인. 기존 프로퍼티 값은 수정 가능<br>
+        Object.preventExtensions() : 객체 확장 금지. 새 프로퍼티 추가만 금지
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/class.js" displayRange="[42,70]" lan="javascript">접근자 프로퍼티 + 객체 보호 예 »</button>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Iterator, Generator</summary>
+    <ol>
+        <li>해체 할당과 마찬가지로 파이썬에서 가져온 아이디어들 중 하나</li>
+        <li><button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/iterator.js" lan="javascript">이터레이션 프로토콜 예 »</button></li>
+        <li><button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/generator.js" lan="javascript">제너레이터 예 »</button></li>
+        <ul>
+            <li>파이썬과 마찬가지로 제어권을 주고받는 데 제너레이터를 사용한다.</li>
+            <li>yield 키워드를 사용하는 모든 함수는 제너레이터 함수다.</li>
+            <li>제너레이터 함수를 호출하면 제너레이터 객체를 받는다.</li>
+            <li>제너레이터의 실행을 재개하는 3가지 메서드 : next(), send(), throw()</li>
+        </ul>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>비동기 처리</summary>
+    <ol>
+        <li>전통적 방식 : 콜백</li>
+        setTimeout(), setInterval(), clearInterval()<br>
+        Error-first Callback : 콜백 첫번째 매개변수를 err로 사용하는 것.<br>
+        Callback Hell : 연속적으로 콜백이 다른 콜백을 호출하여 관리하기 어려워지는 상황
+
+        <li>Promise</li>
+        실행의 종료를 보장. 실행 상태(성공, 실패)에 따라 다른 콜백을 적절히 호출. 적절한 예외 처리도 지원 가능.<br>
+        Promise의 생성은 resolve, reject 콜백을 매개변수로 받는 함수를 작성하기만 하면 된다.
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/promise.js" lan="javascript">promise.js »</button><br>
+        Promise.all(), Promise.race(), ...
+
+        <li>async, await</li>
+        함수 정의 앞에 async 키워드를 사용하면 함수 내에서 await를 사용할 수 있다. 이때, 함수는 Promise가 결정될 때까지 일시 중지.
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/async.js" lan="javascript">async.js »</button>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>정규표현식</summary>
+    <ol>
+        <li>/~/ instanceof RegExp</li>
+        flags : g(global), i(ignoreCase), m(multiline)<br>
+        (/123/gm)과 (new RegExp('123', 'gm'))는 의미적으로 동일하다
+    
+        <details>
+            <summary>문자 리터럴</summary>
+            <ul>  
+                <li>x 그 자체</li>
+                <li>\0, \t, \n, \v, \f, \r</li>
+                <li>\xFF 아스키 코드, \uFFFF 유니코드</li>
+            </ul>
+        </details>
+
+        <details>
+            <summary>문자 집합</summary>
+            <ul>
+                <li>\w, \W, \s, \S, \d, \D</li>
+                <li>[xyz..]</li>
+                '유니코드도 가능합니다.'.replace(/[가-힣]/g, '[$&amp;]') → "[유][니][코][드][도] [가][능][합][니][다]."
+                <li>[^xyz..]</li>
+                <li>. 줄바꿈, 라인 종료 문자를 제외한 모든 문자</li>
+            </ul>
+        </details>
+
+        <li>Greedy 수량사</li>
+        ?, *, +, {n}, {n, }, {n, m}
+            
+        <li>Non-Greedy 수량사</li>
+        [Greedy 수량사]?
+            
+        <details>
+            <summary>Logical operations</summary>
+            <ul>
+                <li>XY » X followed by Y</li>
+                <li>X|Y » Either X or Y</li>
+                <li>(X) » X, as a capturing group</li>
+                <li>(?:X) » X, as a non-capturing group</li>
+            </ul>
+        </details>
+
+        <details>
+            <summary>경계 매칭</summary>
+            <ul>
+                <li>^ » 시작</li>
+                <li>$ » 끝</li>
+                <li>\b » 단어 경계 ↔ \B</li>
+                <li>(?=p) » positive lookahead</li>
+                <li>(?!p) » negative lookbehind</li>
+                <li>\n  » n번째 그룹 매칭 시작 위치</li>
+            </ul>
+        </details>
+
+        <details>
+            <summary>매칭 문자열 자체 및 그 앞뒤 매칭</summary>
+            <ol>
+                <li>$&amp; 일치 문자열</li>
+                '1 12 123 1234'.replace(/1/gm, '[$&amp;]') → "[1] [1]2 [1]23 [1]234"
+
+                <li>$` 앞부분</li>
+                '1 12 123 1234'.replace(/1/gm, '[$`]') → "[] [1 ]2 [1 12 ]23 [1 12 123 ]234"
+
+                <li>$' 뒷부분</li>
+                '1 12 123 1234'.replace(/1/gm, "[$']") → "[ 12 123 1234] [2 123 1234]2 [23 1234]23 [234]234"
+
+                <li>$n 캡처 그룹</li>
+                'novel@koreatech.ac.kr'.replace(/([\w\.]+)@((\w+\.\w+)(\.\w+)*)/, 'ID : [$1], DOMAIN : [$2], ETC : [$3], [$4]')<br>
+                → "ID : [novel], DOMAIN : [koreatech.ac.kr], ETC : [koreatech.ac], [.kr]"
+            </ol>
+        </details>
+        
+        <details>
+            <summary>관련 메서드</summary>
+            <ul>
+                <li>RegExp#test()</li>
+                패턴이 검색되는지 여부 반환<br>
+                /1/gm.test('234567890') → false
+            
+                <li>RegExp#exec()</li>
+                패턴을 검색하여 일치하는 인덱스들을 배열로 반환한다.<br>
+                매칭 시작 위치 index, 검색 텍스트 input 프로퍼티를 가진다. [i] 접근으로 캡처 그룹을 가져올 수 있다.<br>
+                /1/gm.exec('1 12 123') → ["1", index: 0, input: "1 12 123", groups: undefined]
+            
+                <li>String#search(regexp)</li>
+                패턴을 검색하여 가장 처음 일치하는 인덱스를 반환<br>
+                '1 12 123'.search(/2/gm) → 3
+            
+                <li>String#match(regexp)</li>
+                패턴과 일치하는 모든 부분문자열 반환
+            
+                <li>String#replace(regexp, replaceValue)</li>
+                패턴과 일치하는 부분문자열을 replaceValue로 치환
+            
+                <li>String#split(regexp, limit)</li>
+                패턴을 기준으로 문자열을 자른 결과를 반환<br>
+                '1 12 123 1234'.split(/1/gm, 4) → ["", " ", "2 ", "23 "]
+            </ul>
+        </details>
+    </ol>
+</details>
+
+<hr>

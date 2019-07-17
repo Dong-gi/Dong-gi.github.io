@@ -1,4 +1,3 @@
-<pre>
 class IterableClass {
     constructor() {
         this.data = [];
@@ -29,4 +28,3 @@ for(let n of new Squares()) {
     console.log(n);
     if(n > 10000000) break;
 }
-</pre>
