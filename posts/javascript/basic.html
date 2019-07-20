@@ -32,7 +32,7 @@
                     <li>String</li>
                     문자 리터럴 : \xFF, \uFFFF<br>
                     문자열 리터럴 : '', "", ``(문자열 템플릿)
-                    <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/type.js" displayRange="[4,5]" lan="javascript">예시 코드 »</button>
+                    <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/type.js" displayRange="[4,5,17,17]" lan="javascript">예시 코드 »</button>
                 
                     <li>Number</li>
                     IEEE-764 double-precision 부동소수<br>
@@ -184,12 +184,10 @@
     <summary>Class</summary>
     <ol>
         <li>클래스는 본질적으로 함수다. 단순히 문법적 편의성이 더해졌을 뿐.</li>
-        <li>
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/class.js" displayRange="[1,15]" lan="javascript">클래스 정의 예 »</button>
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/class.js" displayRange="[18,19]" lan="javascript">상속 예 »</button>
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/class.js" displayRange="[22,39]" lan="javascript">믹스인 예 »</button>
-        </li>
-
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/class.js" displayRange="[1,15]" lan="javascript">클래스 정의 예 »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/class.js" displayRange="[18,19]" lan="javascript">상속 예 »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/class.js" displayRange="[22,39]" lan="javascript">믹스인 예 »</button>
+        
         <li>전역 객체</li>
         Object, Array, String, Global, Math<br>
         Global 객체를 직접 획득하는 건 불가능 : isNaN(), isFinite(), parseInt(), parseFloat(), encodeURI(), encodeURIComponent(), eval()
@@ -199,6 +197,30 @@
         Object.seal() : 객체 봉인. 기존 프로퍼티 값은 수정 가능<br>
         Object.preventExtensions() : 객체 확장 금지. 새 프로퍼티 추가만 금지
         <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/class.js" displayRange="[42,70]" lan="javascript">접근자 프로퍼티 + 객체 보호 예 »</button>
+
+        <li>
+            <details>
+                <summary>프락시</summary>
+                <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler#Methods">Proxy handler 출처</a>
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="JavaScript/Basic/class.js" displayRange="[73,85]" lan="javascript">프락시 예 »</button>        <table class="table">
+                    <tbody>
+                        <tr><th>getPrototypeOf()</th><td>A trap for Object.getPrototypeOf.</td></tr>
+                        <tr><th>setPrototypeOf()</th><td>A trap for Object.setPrototypeOf.</td></tr>
+                        <tr><th>isExtensible()</th><td>A trap for Object.isExtensible.</td></tr>
+                        <tr><th>preventExtensions()</th><td>A trap for Object.preventExtensions.</td></tr>
+                        <tr><th>getOwnPropertyDescriptor()</th><td>A trap for Object.getOwnPropertyDescriptor.</td></tr>
+                        <tr><th>defineProperty()</th><td>A trap for Object.defineProperty.</td></tr>
+                        <tr><th>has()</th><td>A trap for the in operator.</td></tr>
+                        <tr><th>get()</th><td>A trap for getting property values.</td></tr>
+                        <tr><th>set()</th><td>A trap for setting property values.</td></tr>
+                        <tr><th>deleteProperty()</th><td>A trap for the delete operator.</td></tr>
+                        <tr><th>ownKeys()</th><td>A trap for Object.getOwnPropertyNames and Object.getOwnPropertySymbols.</td></tr>
+                        <tr><th>apply()</th><td>A trap for a function call.</td></tr>
+                        <tr><th>construct()</th><td>A trap for the new operator.</td></tr>
+                    </tbody>
+                </table>
+            </details>
+        </li>
     </ol>
 </details>
 

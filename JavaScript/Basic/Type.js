@@ -13,3 +13,5 @@ obj.attr2 = 'value2';
 obj['attr3'] = 'value3';
 delete obj.attr;
 console.log(JSON.stringify(obj));
+
+console.log(String.fromCodePoint('햨'.charCodeAt(0)));

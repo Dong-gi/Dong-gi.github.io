@@ -28,8 +28,8 @@ $(() => {
     }
 
     updateDropupManually(0, "");
-    $(window).resize(() => adjustDropupWidth());
-    window.onscroll = updateDropupAuto;
+    $(window).on('resize', () => throttle(adjustDropupWidth));
+    $(window).on('scroll', () => throttle(updateDropupAuto));
     updateScrollManually(localStorage.lastContentId);
 
     // 엔터로 검색 가능
@@ -204,7 +204,7 @@ function insertCode(buttonId) {
             let lan = $(button).attr('lan');
             let div = $('<div>').addClass('my-code').attr('id', buttonId);
             let path = $(button).attr('path');
-            $(div).load((path.startsWith('/') ? "" : "./") + path.replace(/ /gm, '%20'), (response, status, xhr) => {
+            $(div).load((path.startsWith('/') ? "" : "./") + path.replace(/ /gm, '%20') + '?' + new Date().getTime(), (response, status, xhr) => {
                 posts.codes[buttonId] = response;
 
                 if (lan !== 'nohighlight') {
@@ -233,12 +233,22 @@ function insertCode(buttonId) {
                     $(div).html(ol);
                 }
 
-                let modal = $('<button>').addClass('btn btn-info btn-sm btn-code').text('모달로 보기');
-                $(modal).click(showCode(buttonId));
-
-                $(button).after(modal);
-                $(modal).after(div);
+                if(lan !== 'nohighlight') {
+                    let modal = $('<button>').addClass('btn btn-info btn-sm btn-code').text('모달로 보기');
+                    $(modal).click(showCode(buttonId));
+                    $(button).after(modal);
+                    $(modal).after(div);
+                } else {
+                    $(button).after(div);
+                }
+                
                 $('div#' + buttonId).css('max-height', window.innerHeight / 2);
+
+                if(lan === 'javascript') {
+                    let script = $('<button>').addClass('btn btn-info btn-sm btn-code').text('실행');
+                    $(script).click(() => eval(posts.codes[buttonId]));
+                    $(button).after(script);
+                }
             });
         } else {
             $('div#' + buttonId).toggleClass('d-none')
@@ -329,7 +339,7 @@ function showSnackbar(text, parent, timeout) {
     }, timeout || 1000);
 }
 
-///////////////////////////////////////////////////////// 유틸리티 메서드
+// 유틸리티 메서드
 /**
  * 컨텐츠 HTML 골격을 반환
  * @param {*} post "posts.js"에 정의된 객체.
@@ -375,4 +385,10 @@ function getCodeModalHTML(buttonId, filename) {
                     </div>
                 </div>
             </div>`;
+}
+
+// 함수 감속
+function throttle(func, context) {
+    clearTimeout(func.tId);
+    func.tId = setTimeout(() => func.call(context), 100);
 }

@@ -1,11 +1,9 @@
-<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/1811/485.html" lan="html">485.html »</button><br>
-
 <input type="text" id="cookieName485" placeholder="쿠키 이름"/>
 <input type="text" id="cookieValue485" placeholder="쿠키 값"/>
 <input type="text" id="millis485" placeholder="유효 기간(ms)"/>
 <button onclick="setCookie($('#cookieName485').val(), $('#cookieValue485').val(), $('#millis485').val())">쿠키 생성</button>
 <button onclick="setCookie($('#cookieName485').val(), null, -1)">쿠키 제거</button>
-<button onclick="alert(getCookie(jQuery('#cookieName485').val()))">쿠키 확인</button>
+<button onclick="alert(getCookie($('#cookieName485').val()))">쿠키 확인</button>
 <button onclick="alert(document.cookie)">전체 쿠키</button>
 <script>
 	function setCookie(key, value, millis) {
@@ -21,8 +19,8 @@
         }
 	}
 </script>
-
-<br><br>
+<br>
+<br>
 sessionStorage : 브라우저 종료 시 초기화<br>
 <input type="text" id="key485" placeholder="키"/>
 <input type="text" id="value485" placeholder="값"/>
@@ -37,11 +35,11 @@ sessionStorage : 브라우저 종료 시 초기화<br>
 		}
 	});
 	function func485_1() {
-		window.localStorage.setItem(jQuery('#key485').val(), jQuery('#value485').val());
+		window.localStorage.setItem($('#key485').val(), $('#value485').val());
 		alert(JSON.stringify(window.localStorage));
 	}
 	function func485_2() {
-		window.localStorage.removeItem(jQuery('#key485').val());
+		window.localStorage.removeItem($('#key485').val());
 		alert(JSON.stringify(window.localStorage));
 	}
 	function func485_3() {

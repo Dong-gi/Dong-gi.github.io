@@ -68,3 +68,18 @@ console.log(tAccount.toString());
 Object.freeze(tAccount);
 tAccount.tmp = 'hello';
 console.log(tAccount.tmp);
+
+
+function getOrIfAbsentProxyHandler(value) {
+    return {
+        get(o, key) {
+            return o[key] === undefined? value : o[key];
+        }
+    };
+}
+
+{
+    let obj = {a: 123, b: 456};
+    obj = new Proxy(obj, getOrIfAbsentProxyHandler(false));
+    console.log(obj.c);
+}
