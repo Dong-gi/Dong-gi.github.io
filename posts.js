@@ -77,7 +77,7 @@ const posts = {
         { filename: "posts/javascript/basic2.html", category: "Programming/JavaScript/Browser", title: "브라우저 JavaScript" },
         { filename: "posts/javascript/jquery.html", category: "Programming/JavaScript/Browser", title: "jQuery" },
         
-        { filename: "posts/python/497.html", category: "Programming/Python/Basic", title: "Python 기본" },//, top: true
+        { filename: "posts/python/basic.html", category: "Programming/Python/Basic", title: "Python 시작하기", top: true },
         { filename: "posts/python/1904252127.html", category: "Programming/Python/Document", title: "Built-in Functions" },//, top: true
         { filename: "posts/python/1904252130.html", category: "Programming/Python/Document", title: "Built-in Constants" },//, top: true
         { filename: "posts/python/1904252131.html", category: "Programming/Python/Document", title: "Built-in Types" },//, top: true

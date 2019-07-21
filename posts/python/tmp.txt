@@ -983,6 +983,6 @@ def func(a, b, *, c = None) # * 뒷부분은 명시적으로만 받는다
 
 
 
-// linux : crul
+// linux : curl
 
 Scott Meyers : All non-leaf classes should be abstract
