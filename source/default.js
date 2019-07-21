@@ -288,10 +288,10 @@ function showCode(buttonId) {
 }
 
 function copyElementToClipboard(element) {
-    var notActive = {
+    let notActive = {
         TEXTAREA: true
     };
-    var parent = element;
+    let parent = element;
     while (notActive[parent.prop('tagName')]) {
         parent = parent.parent();
     }
@@ -301,20 +301,25 @@ function copyElementToClipboard(element) {
 }
 
 function copyTextToCilpboard(text, parent) {
-    var hiddenElement = $('<textarea></textarea>');
-    $(parent || 'body').append(hiddenElement);
-    hiddenElement.text(text.trim());
-    hiddenElement.select();
+    let textarea = $('<textarea></textarea>');
+    $(parent || 'body').append(textarea);
+    textarea.text(text.trim());
+    textarea.select();
     document.execCommand("copy");
-    hiddenElement.remove();
+    textarea.remove();
 }
 
-function downloadCode(title, text) {
-    var hiddenElement = document.createElement('a');
-    hiddenElement.href = 'data:attachment/text,' + encodeURI(text.trim());
-    hiddenElement.target = '_blank';
-    hiddenElement.download = title;
-    hiddenElement.click();
+function downloadCode(fileName, text) {
+    let a = document.createElement('a');
+    let url = URL.createObjectURL(new Blob([text.trim()], {
+        type: 'text/plain;charset=utf-8;'
+    }));
+    a.href = url;
+    // location.href = a.href;
+    a.target = '_blank';
+    a.download = fileName;
+    document.getElementsByTagName('body')[0].append(a);
+    a.click();
 }
 
 function printElement(node) {
@@ -330,7 +335,7 @@ function printElement(node) {
 }
 
 function showSnackbar(text, parent, timeout) {
-    var hiddenElement = $('<div id="snackbar">' + text + '</div>');
+    let hiddenElement = $('<div id="snackbar">' + text + '</div>');
     $(parent || 'body').append(hiddenElement);
     hiddenElement.addClass('show');
     setTimeout(function () {

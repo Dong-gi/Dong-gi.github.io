@@ -1,6 +1,7 @@
 const posts = {
     list: [
         { filename: "posts/algorithm/koreatech.html", category: "Algorithm", title: "jduge.koreatech.ac.kr" },
+        { filename: "posts/algorithm/book01.html", category: "Algorithm", title: "『알고리즘 도감』" },
 
         { filename: "posts/book/001.html", category: "Book", title: "1만 시간의 재발견" },
         { filename: "posts/book/002.html", category: "Book", title: "마음의 탄생" },
@@ -9,6 +10,7 @@ const posts = {
         { filename: "posts/book/005.html", category: "Book", title: "인생의 모든 의미" },
         { filename: "posts/book/006.html", category: "Book", title: "지식의 착각" },
         { filename: "posts/book/007.html", category: "Book", title: "키르케고르 실존 극장" },
+        { filename: "posts/book/008.html", category: "Book", title: "Gamification by Design" },
 
         { filename: "posts/db/concept.html", category: "DB", title: "기본 개념" },
         { filename: "posts/db/mysql.html", category: "DB", title: "MySQL" },
@@ -24,17 +26,18 @@ const posts = {
         { filename: "posts/front/freemarker/xml_guide.html", category: "Programming/Front/FreeMarker", title: "XML 처리 가이드 2.3.28" },
         { filename: "posts/front/css.html", category: "Programming/Front/CSS", title: "CSS" },
         { filename: "posts/front/html.html", category: "Programming/Front/HTML", title: "HTML" },
-        { filename: "posts/front/http.html", category: "Programming/Front/HTTP", title: "HTTP 1.1", "top": true },
+        { filename: "posts/front/http.html", category: "Programming/Front/HTTP", title: "HTTP 1.1" },
 
-        { filename: "posts/1810/452.html", category: "Programming/C/Basic", title: "문법", "top": true },
-        { filename: "posts/1810/472.html", category: "Programming/C/Library", title: "라이브러리", "top": true },
-        { filename: "posts/1810/473.html", category: "Programming/C++/Basic", title: "문법", "top": true },
-        { filename: "posts/1810/474.html", category: "Programming/C++/Library", title: "라이브러리", "top": true },
-        { filename: "posts/1812/489.html", category: "Programming/C#.NET/Basic", title: "C# 기본", "top": true },
-        { filename: "posts/1812/491.html", category: "Programming/C#.NET/Library", title: "C# 라이브러리", "top": true },
-        { filename: "posts/1901/493.html", category: "Programming/C#.NET/WPF", title: "WPF", "top": true },
+        { filename: "posts/c/452.html", category: "Programming/C/Basic", title: "문법", top: true },
+        { filename: "posts/c/472.html", category: "Programming/C/Library", title: "라이브러리", top: true },
+        { filename: "posts/c/473.html", category: "Programming/C++/Basic", title: "문법", top: true },
+        { filename: "posts/c/474.html", category: "Programming/C++/Library", title: "라이브러리", top: true },
+        { filename: "posts/c/489.html", category: "Programming/C#.NET/Basic", title: "C# 기본", top: true },
+        { filename: "posts/c/491.html", category: "Programming/C#.NET/Library", title: "C# 라이브러리", top: true },
+        { filename: "posts/c/493.html", category: "Programming/C#.NET/WPF", title: "WPF", top: true },
 
         { filename: "posts/java/basic.html", category: "Programming/Java/Tutorial", title: "Java 시작하기" },
+        { filename: "posts/java/effective_java.html", category: "Programming/Java/Tutorial", title: "『Effective Java』" },
         { filename: "posts/java/javafx.html", category: "Programming/Java/Tutorial", title: "JavaFX" },
         { filename: "posts/java/jni.html", category: "Programming/Java/Tutorial", title: "Java Native Interface" },
         { filename: "posts/java/oop.html", category: "Programming/Java/Tutorial", title: "Java 객체지향" },
@@ -54,36 +57,34 @@ const posts = {
         { filename: "posts/java/java.text.html", category: "Programming/Java/java.base", title: "java.text" },
         { filename: "posts/java/java.time.html", category: "Programming/Java/java.base", title: "java.time" },
         { filename: "posts/java/java.time.format.html", category: "Programming/Java/java.base", title: "java.time.format" },
-        { filename: "posts/java/java.util.html", category: "Programming/Java/java.base", title: "java.util", "top": true },
-        { filename: "posts/java/java.util.concurrent.html", category: "Programming/Java/java.base", title: "java.util.concurrent", "top": true },
+        { filename: "posts/java/java.util.html", category: "Programming/Java/java.base", title: "java.util", top: true },
+        { filename: "posts/java/java.util.concurrent.html", category: "Programming/Java/java.base", title: "java.util.concurrent", top: true },
         { filename: "posts/java/java.util.concurrent.atomic.html", category: "Programming/Java/java.base", title: "java.util.concurrent.atomic" },
         { filename: "posts/java/java.util.function.html", category: "Programming/Java/java.base", title: "java.util.function" },
         { filename: "posts/java/java.util.regex.html", category: "Programming/Java/java.base", title: "java.util.regex" },
         { filename: "posts/java/java.util.stream.html", category: "Programming/Java/java.base", title: "java.util.stream" },
         { filename: "posts/java/java.util.zip.html", category: "Programming/Java/java.base", title: "java.util.zip" },
 
-        { filename: "posts/1810/458.html", category: "Programming/Java/Servlet", title: "필터와 래퍼", "top": true },
-        { filename: "posts/1810/457.html", category: "Programming/Java/Servlet", title: "컨텍스트 초기화 매개변수", "top": true },
-        { filename: "posts/1810/456.html", category: "Programming/Java/Servlet", title: "다른 페이지 이동/호출", "top": true },
-        { filename: "posts/1810/455.html", category: "Programming/Java/Servlet", title: "MySQL 테스트", "top": true },
-        { filename: "posts/1810/454.html", category: "Programming/Java/Servlet", title: "web.xml 대신 애너테이션으로 서블릿 기술하기", "top": true },
-        { filename: "posts/1810/453.html", category: "Programming/Java/Servlet", title: "서블릿 생애주기", "top": true },
-        { filename: "posts/1809/446.html", category: "Programming/Java/Servlet", title: "JSP&Servlet", "top": true },
+        { filename: "posts/java/java_ee/458.html", category: "Programming/Java/Servlet", title: "필터와 래퍼", top: true },
+        { filename: "posts/java/java_ee/457.html", category: "Programming/Java/Servlet", title: "컨텍스트 초기화 매개변수", top: true },
+        { filename: "posts/java/java_ee/456.html", category: "Programming/Java/Servlet", title: "다른 페이지 이동/호출", top: true },
+        { filename: "posts/java/java_ee/455.html", category: "Programming/Java/Servlet", title: "MySQL 테스트", top: true },
+        { filename: "posts/java/java_ee/454.html", category: "Programming/Java/Servlet", title: "web.xml 대신 애너테이션으로 서블릿 기술하기", top: true },
+        { filename: "posts/java/java_ee/453.html", category: "Programming/Java/Servlet", title: "서블릿 생애주기", top: true },
+        { filename: "posts/java/java_ee/446.html", category: "Programming/Java/Servlet", title: "JSP&Servlet", top: true },
         
         { filename: "posts/javascript/basic.html", category: "Programming/JavaScript/Core", title: "코어 JavaScript" },
-        { filename: "posts/javascript/basic2.html", category: "Programming/JavaScript/Browser", title: "브라우저 JavaScript", top: true },
-        { filename: "posts/javascript/jquery.html", category: "Programming/JavaScript/Browser", title: "jQuery", "top": true },
-        { filename: "posts/javascript/487.html", category: "Programming/JavaScript/Browser", title: "jQuery DOM", "top": true },
-        { filename: "posts/javascript/488.html", category: "Programming/JavaScript/Browser", title: "jQuery Event", "top": true },
+        { filename: "posts/javascript/basic2.html", category: "Programming/JavaScript/Browser", title: "브라우저 JavaScript" },
+        { filename: "posts/javascript/jquery.html", category: "Programming/JavaScript/Browser", title: "jQuery" },
         
-        { filename: "posts/1904/497.html", category: "Programming/Python/Basic", title: "Python 기본", "top": true },
-        { filename: "posts/1904/1904252127.html", category: "Programming/Python/Document", title: "Built-in Functions", "top": true },
-        { filename: "posts/1904/1904252130.html", category: "Programming/Python/Document", title: "Built-in Constants", "top": true },
-        { filename: "posts/1904/1904252131.html", category: "Programming/Python/Document", title: "Built-in Types", "top": true },
-        { filename: "posts/1904/1904252133.html", category: "Programming/Python/Document", title: "Built-in Exceptions", "top": true },
-        { filename: "posts/1904/1904252134.html", category: "Programming/Python/Document", title: "Text Processing Services", "top": true },
-        { filename: "posts/1904/1904252135.html", category: "Programming/Python/Document", title: "Binary Data Services", "top": true },
-        { filename: "posts/1904/1904252136.html", category: "Programming/Python/Document", title: "Data Types", "top": true },
+        { filename: "posts/python/497.html", category: "Programming/Python/Basic", title: "Python 기본", top: true },
+        { filename: "posts/python/1904252127.html", category: "Programming/Python/Document", title: "Built-in Functions", top: true },
+        { filename: "posts/python/1904252130.html", category: "Programming/Python/Document", title: "Built-in Constants", top: true },
+        { filename: "posts/python/1904252131.html", category: "Programming/Python/Document", title: "Built-in Types", top: true },
+        { filename: "posts/python/1904252133.html", category: "Programming/Python/Document", title: "Built-in Exceptions", top: true },
+        { filename: "posts/python/1904252134.html", category: "Programming/Python/Document", title: "Text Processing Services", top: true },
+        { filename: "posts/python/1904252135.html", category: "Programming/Python/Document", title: "Binary Data Services", top: true },
+        { filename: "posts/python/1904252136.html", category: "Programming/Python/Document", title: "Data Types", top: true },
 
         { filename: "posts/tip/docker.html", category: "Tip", title: "Docker" },
         { filename: "posts/tip/giregi.html", category: "Tip", title: "기레기 고소 방법" },
@@ -93,6 +94,8 @@ const posts = {
         { filename: "posts/tip/playstore.html", category: "Tip", title: "Google Play Store" },
         { filename: "posts/tip/psql.html", category: "Tip", title: "psql" },
         { filename: "posts/tip/regex.html", category: "Tip", title: "정규표현식" },
+        { filename: "posts/tip/special_characters.html", category: "Tip", title: "특수문자 영문 이름" },
+        { filename: "posts/tip/svg.html", category: "Tip", title: "SVG" },
         { filename: "posts/tip/vi.html", category: "Tip", title: "vi" },
         { filename: "posts/tip/vs_code.html", category: "Tip", title: "VS Code" },
         { filename: "posts/tip/windows.html", category: "Tip", title: "Windows" },
@@ -110,7 +113,7 @@ displayRange="[]"
 <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/concurrent/.java" lan="java">예시 코드 »</button>
         
 <a role="button" target="_blank" class="btn btn-info btn-sm" href=""></a>
-<a role="button" target="#" class="btn btn-info btn-sm" href="javascript:;"></a>
+<a role="button" class="btn btn-info btn-sm" href="javascript:;"></a>
 <img class="rounded mx-auto d-block" alt="" src="imgs/">
 
 <details>

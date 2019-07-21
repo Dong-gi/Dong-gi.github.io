@@ -15,12 +15,26 @@ files.addEventListener('change', () => {
         // 0 아무것도 읽지 않음, 1 데이터 읽음, 2 읽기 완료
         reader.onprogress = (e) => console.log(`${e.loaded}/${e.total}`);
         reader.onload = () => {
+            let result = reader.result;
+            let url = URL.createObjectURL(file);
+
             if(isImage) {
                 let img = document.createElement('img');
-                img.src = reader.result;
+                img.src = result;
+                files.after(img);
+                
+                img = document.createElement('img');
+                img.src = url;
                 files.after(img);
             }
-            console.log(reader.result);
+            console.log(result);
+
+            let a = document.createElement('a');
+            a.href = url;
+            a.target = '_blank';
+            a.download = file.name;
+            document.getElementsByTagName('body')[0].append(a);
+            a.click();
         }
     }
 });
