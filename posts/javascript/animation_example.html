@@ -1,0 +1,14 @@
+<button class="btn btn-primary btn-sm" onclick="javascript:$('p.class488_1').stop(true)">이벤트 중지</button>
+<p class="class488_1">나를 클릭해봐!</p>
+<p class="class488_1">나를 클릭해봐!</p>
+<p class="class488_1">나를 클릭해봐!</p>
+<p class="class488_1">나를 클릭해봐!</p>
+<script>
+	$(() => {
+		$('p.class488_1').click((event) => {
+			$(event.currentTarget).toggle('slow', ((node) => {
+				return () => $(node).click();
+			})(event.currentTarget));
+		});
+	});
+</script>

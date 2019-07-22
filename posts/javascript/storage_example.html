@@ -1,0 +1,49 @@
+<input type="text" id="cookieName485" placeholder="쿠키 이름"/>
+<input type="text" id="cookieValue485" placeholder="쿠키 값"/>
+<input type="text" id="millis485" placeholder="유효 기간(ms)"/>
+<button onclick="setCookie($('#cookieName485').val(), $('#cookieValue485').val(), $('#millis485').val())">쿠키 생성</button>
+<button onclick="setCookie($('#cookieName485').val(), null, -1)">쿠키 제거</button>
+<button onclick="alert(getCookie($('#cookieName485').val()))">쿠키 확인</button>
+<button onclick="alert(document.cookie)">전체 쿠키</button>
+<script>
+	function setCookie(key, value, millis) {
+        let expires = new Date();
+        expires.setTime(new Date().getTime() + Number.parseInt(millis));
+        document.cookie = key + "=" + value + ";expires=" + expires.toUTCString() + ";path=/";
+	}
+	function getCookie(key) {
+        let regex = new RegExp(key + '=(.*);?', 'gm');
+        let value = document.cookie.match(regex);
+        if(!!value) {
+			return value['0'].replace(regex, '$1');
+        }
+	}
+</script>
+<br>
+<br>
+sessionStorage : 브라우저 종료 시 초기화<br>
+<input type="text" id="key485" placeholder="키"/>
+<input type="text" id="value485" placeholder="값"/>
+<button onclick="func485_1()">저장</button>
+<button onclick="func485_2()">삭제</button>
+<button onclick="func485_3()">초기화</button>
+
+<script>
+	$(() => {
+		if(!window.localStorage) {
+			alert('로컬저장소를 사용할 수 없음');
+		}
+	});
+	function func485_1() {
+		window.localStorage.setItem($('#key485').val(), $('#value485').val());
+		alert(JSON.stringify(window.localStorage));
+	}
+	function func485_2() {
+		window.localStorage.removeItem($('#key485').val());
+		alert(JSON.stringify(window.localStorage));
+	}
+	function func485_3() {
+		window.localStorage.clear();
+		alert(JSON.stringify(window.localStorage));
+	}
+</script>

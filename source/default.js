@@ -28,8 +28,8 @@ $(() => {
     }
 
     updateDropupManually(0, "");
-    $(window).resize(() => adjustDropupWidth());
-    window.onscroll = updateDropupAuto;
+    $(window).on('resize', () => throttle(adjustDropupWidth));
+    $(window).on('scroll', () => throttle(updateDropupAuto));
     updateScrollManually(localStorage.lastContentId);
 
     // 엔터로 검색 가능
@@ -204,7 +204,7 @@ function insertCode(buttonId) {
             let lan = $(button).attr('lan');
             let div = $('<div>').addClass('my-code').attr('id', buttonId);
             let path = $(button).attr('path');
-            $(div).load((path.startsWith('/') ? "" : "./") + path.replace(/ /gm, '%20'), (response, status, xhr) => {
+            $(div).load((path.startsWith('/') ? "" : "./") + path.replace(/ /gm, '%20') + '?' + new Date().getTime(), (response, status, xhr) => {
                 posts.codes[buttonId] = response;
 
                 if (lan !== 'nohighlight') {
@@ -233,12 +233,22 @@ function insertCode(buttonId) {
                     $(div).html(ol);
                 }
 
-                let modal = $('<button>').addClass('btn btn-info btn-sm btn-code').text('모달로 보기');
-                $(modal).click(showCode(buttonId));
-
-                $(button).after(modal);
-                $(modal).after(div);
+                if(lan !== 'nohighlight') {
+                    let modal = $('<button>').addClass('btn btn-info btn-sm btn-code').text('모달로 보기');
+                    $(modal).click(showCode(buttonId));
+                    $(button).after(modal);
+                    $(modal).after(div);
+                } else {
+                    $(button).after(div);
+                }
+                
                 $('div#' + buttonId).css('max-height', window.innerHeight / 2);
+
+                if(lan === 'javascript') {
+                    let script = $('<button>').addClass('btn btn-info btn-sm btn-code').text('실행');
+                    $(script).click(() => eval(posts.codes[buttonId]));
+                    $(button).after(script);
+                }
             });
         } else {
             $('div#' + buttonId).toggleClass('d-none')
@@ -278,10 +288,10 @@ function showCode(buttonId) {
 }
 
 function copyElementToClipboard(element) {
-    var notActive = {
+    let notActive = {
         TEXTAREA: true
     };
-    var parent = element;
+    let parent = element;
     while (notActive[parent.prop('tagName')]) {
         parent = parent.parent();
     }
@@ -291,20 +301,25 @@ function copyElementToClipboard(element) {
 }
 
 function copyTextToCilpboard(text, parent) {
-    var hiddenElement = $('<textarea></textarea>');
-    $(parent || 'body').append(hiddenElement);
-    hiddenElement.text(text.trim());
-    hiddenElement.select();
+    let textarea = $('<textarea></textarea>');
+    $(parent || 'body').append(textarea);
+    textarea.text(text.trim());
+    textarea.select();
     document.execCommand("copy");
-    hiddenElement.remove();
+    textarea.remove();
 }
 
-function downloadCode(title, text) {
-    var hiddenElement = document.createElement('a');
-    hiddenElement.href = 'data:attachment/text,' + encodeURI(text.trim());
-    hiddenElement.target = '_blank';
-    hiddenElement.download = title;
-    hiddenElement.click();
+function downloadCode(fileName, text) {
+    let a = document.createElement('a');
+    let url = URL.createObjectURL(new Blob([text.trim()], {
+        type: 'text/plain;charset=utf-8;'
+    }));
+    a.href = url;
+    // location.href = a.href;
+    a.target = '_blank';
+    a.download = fileName;
+    document.getElementsByTagName('body')[0].append(a);
+    a.click();
 }
 
 function printElement(node) {
@@ -320,7 +335,7 @@ function printElement(node) {
 }
 
 function showSnackbar(text, parent, timeout) {
-    var hiddenElement = $('<div id="snackbar">' + text + '</div>');
+    let hiddenElement = $('<div id="snackbar">' + text + '</div>');
     $(parent || 'body').append(hiddenElement);
     hiddenElement.addClass('show');
     setTimeout(function () {
@@ -329,7 +344,7 @@ function showSnackbar(text, parent, timeout) {
     }, timeout || 1000);
 }
 
-///////////////////////////////////////////////////////// 유틸리티 메서드
+// 유틸리티 메서드
 /**
  * 컨텐츠 HTML 골격을 반환
  * @param {*} post "posts.js"에 정의된 객체.
@@ -375,4 +390,10 @@ function getCodeModalHTML(buttonId, filename) {
                     </div>
                 </div>
             </div>`;
+}
+
+// 함수 감속
+function throttle(func, context) {
+    clearTimeout(func.tId);
+    func.tId = setTimeout(() => func.call(context), 100);
 }
