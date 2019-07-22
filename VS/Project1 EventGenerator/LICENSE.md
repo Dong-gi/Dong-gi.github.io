@@ -1,5 +1,5 @@
 이 프로젝트는 https://github.com/Dong-gi/Dong-gi.github.io 저장소 하위의 프로젝트로서,
-https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE를 자동으로 따르게 됩니다.
+https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE 를 자동으로 따르게 됩니다.
 
 하지만 이 프로젝트의 일부 의존 바이너리는 별도의 라이선스를 적용받기 때문에,
 현재 LICENSE 문서와, 이 프로젝트의 빌드 시 로그 창에 해당 라이선스를 기록합니다.
@@ -12,7 +12,8 @@ https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE를 자동으로
 https://github.com/mozilla/mozjpeg/blob/master/LICENSE.md 라이선스를 따릅니다.
 
 <details>
-<summary>라이선스의 전문</summary>
+<summary>라이선스 전문</summary>
+
 libjpeg-turbo Licenses
 ======================
 

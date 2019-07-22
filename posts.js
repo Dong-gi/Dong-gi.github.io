@@ -10,6 +10,8 @@ const posts = {
         { "filename": "posts/book/006.html", "category": "Book", "title": "지식의 착각" },
         { "filename": "posts/book/007.html", "category": "Book", "title": "키르케고르 실존 극장" },
 
+        { "filename": "posts/career/at_sesisoft_from_201806.html", "category": "Career", "title": "데이터 툴 개발@SESISOFT", "top": true },
+
         { "filename": "posts/db/concept.html", "category": "DB", "title": "기본 개념" },
         { "filename": "posts/db/mysql.html", "category": "DB", "title": "MySQL" },
         { "filename": "posts/db/psql_admin.html", "category": "DB", "title": "PostgreSQL 서버 관리" },
