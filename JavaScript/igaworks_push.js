@@ -96,6 +96,6 @@ sendNomalReservedPush('테스트 푸시', '푸시 타이틀', '푸시 메시지'
 
 /*
 let customScript = document.createElement('script');
-customScript.src = "https://down.dream100kr.com/igaworks_push.js";
+customScript.src = "https://cdn/igaworks_push.js";
 document.getElementsByTagName('head')[0].appendChild(customScript);
 */
