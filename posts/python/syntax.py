@@ -1,24 +1,30 @@
-# 주석은 인터프리터의 처리 대상이 아님.
 print("Hello \
-World!")
-# → Hello World!
+World!") # Hello World!
+
+i = 1
+if(i < 0):
+    print('< 0')
+elif(i > 0):
+    print('> 0')
+else:
+    print(0)
 
 i = 1
 while i < 10:
-    print(i)
+    print(i, end=', ')
     i += 2
     if(i%2 == 0):
         print('found an even number')
         break
-else:
-    print('no even number')
+else: # break 호출 확인
+    print('no even number') # 1, 3, 5, 7, 9, no even number
 
 for i in range(1, 5):
     if(i == 11):
         break
-    print(i)
-else:
-    print("didn't meet 11")
+    print(i, end=', ')
+else: # break 호출 확인
+    print("didn't meet 11") # 1, 2, 3, 4, didn't meet 11
 
 def fibo(limit):
     a, b = 0, 1
@@ -40,12 +46,8 @@ def gcd_lcm(a, b):
 print(gcd_lcm(30, 50)) # (10, 150)
 
 for i in zip((1, 2, 3), (4, 5, 6, 7)):
-    print(i)
-''' result ↓
-(1, 4)
-(2, 5)
-(3, 6)
-'''
+    print(i, end=', ') # (1, 4), (2, 5), (3, 6),
+print()
 
 # List Comprehension
 print('even nums : ' + str([2*n for n in range(1, 10)]))
@@ -67,14 +69,14 @@ print({key for key in string})
 
 # Generator Comprehension
 # 이터레이터에 데이터를 제공하는 한 방법. 데이터를 하나씩 소모하며, 저장하지 않아 재사용할 수 없다.
-print((key for key in string))
-# result : <generator object <genexpr> at 0x03759770>
-for k in (key for key in string):
-    print(k, end=' ')
-# result : q o i w n e f o q i   w e n f o i q 
+generator = (key for key in string)
+print(generator) # <generator object <genexpr> at 0x04B52BF0>
+for k in generator:
+    print(k, end=' ') # q o i w n e f o q i   w e n f o i q
+print()
 
 # Advanced List Comprehension
-print('\n(x, y) : ' + str([(x, 2*y) for x in range(1, 3) for y in range(1, 4) if x != y]))
+print('(x, y) : ' + str([(x, 2*y) for x in range(1, 3) for y in range(1, 4) if x != y]))
 # select (x, 2*y) | where x in range(1, 3) | where y in range(1, 4) and x != y
 # result : (x, y) : [(1, 4), (1, 6), (2, 2), (2, 6)]
 
@@ -90,26 +92,31 @@ def func1():
     'func1() does nothing.'
     pass # return 없이 함수 종료
 help(func1)
-print(func1() is None)
+#Help on function func1 in module __main__:
+#
+#func1()
+#    func1() does nothing.
+#
+print(func1() is None) # True
 
 a = 'Hello World!'
 def func2():
     print(a) # 외부 스코프 접근 가능
-func2()
+func2() # Hello World!
 
 def func3(a, b = None, c : str = None):
     print(a, b, c)
-func3(1)
+func3(1) # 1 None None
 
 def func4(a, *, b, c): # 키워드 강제
     print(a, b, c)
-func4(1, c = 2, b = 3)
+func4(1, c = 2, b = 3) # 1 3 2
 
 def func5(n, l = []): # 기본 매개변수는 함수가 정의될 때 한번만 계산된다.
     l.append(n)
     print(l)
-func5(1)
-func5((2, 3))
+func5(1) # [1]
+func5((2, 3)) # [1, (2, 3)]
 
 def func6(*args):
     print(args)
@@ -128,10 +135,10 @@ def func8(name):
         print("Hello " + name)
     return print_hello
 f = func8("World")
-f()
+f() # Hello World
 
 f = lambda name : func8(name)()
-f("dlroW")
+f("dlroW") # Hello dlroW
 
 def even_gen(max):
     num = 2
@@ -140,7 +147,8 @@ def even_gen(max):
         num += 2
 
 for n in even_gen(10):
-    print(n)
+    print(n, end = ', ') # 2, 4, 6, 8, 10, 
+print()
 
 def my_deco(f):
     def print_args(*args, **kwargs):
@@ -152,6 +160,10 @@ def my_deco(f):
 def print_name(name):
     print(name)
 print_name('Name')
+# ('Name',) {}
+# Name
 
 f = my_deco(lambda name : print(name))
 f(name = "Name")
+# () {'name': 'Name'}
+# Name

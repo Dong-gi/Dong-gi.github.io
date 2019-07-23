@@ -112,16 +112,10 @@
             <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/type_example.py" displayRange="[133,143]" lan="python">원소 포함 여부</button>
             <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/type_example.py" displayRange="[145,158]" lan="python">집합 연산</button></li>
         
-        <li>dict</li>
-        <ol>
-            <li>생성, 병합
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211731.txt" displayRange="[1,27]" lan="python">예시 »</button></li>
-            <li>키 포함 여부 : <i>key_name</i> in <i>dict</i></li>
-            <li>키-값 얻기
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211731.txt" displayRange="[28,34]" lan="python">예시 »</button></li>
-            <li>복사
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211731.txt" displayRange="[35,44]" lan="python">예시 »</button></li>
-        </ol>
+        <li>dict
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/type_example.py" displayRange="[161,178]" lan="python">생성, 병합</button>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/type_example.py" displayRange="[180,183]" lan="python">키-값 얻기</button>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/type_example.py" displayRange="[185,189]" lan="python">복사</button></li>
     </ol>
 </details>
 
@@ -130,27 +124,26 @@
 <details>
     <summary>구문</summary>
     <ol>
-        <li>주석 : #<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[1,1]" lan="python">예시 »</button></li>
-        <li>라인 유지 : \<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[2,4]" lan="python">예시 »</button></li>
-        <li>조건 분기 : if ~ elif ~ else<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[6,14]" lan="python">예시 »</button></li>
-        <li>while 반복 <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[6,14]" lan="python">예시 »</button></li>
-        <li>for 순회 <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[16,21]" lan="python">예시 »</button></li>
-        for문은 순회 객체에 대하여 iter()를 호출한다. iter()는 __next__() 메서드를 정의한 iterator 객체를 반환하며, __next__()가 전달하는 값을 하나씩 루프에 사용한다.<br>
-        더 이상 요소가 없을 때 __next__()는 StopIteration 예외를 발생시키고, for 루프는 이때 종료한다. 클래스 자체에 __next__()가 정의되어 있다면, iter()는 self를 반환하는 것으로 충분하다.
-        <li>반복문 제어 : break, continue<br>
-            break 호출 확인 : else <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[6,21]" lan="python">예시 »</button></li>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/syntax.py" displayRange="[1,2]" lan="python">라인 유지 \</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/syntax.py" displayRange="[4,10]" lan="python">if ~ elif ~ else</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/syntax.py" displayRange="[12,20]" lan="python">while</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/syntax.py" displayRange="[22,27]" lan="python">for</button><br>
+        <li>for문은 순회 객체에 대하여 iter()를 호출한다. iter()는 __next__() 메서드를 정의한 iterator 객체를 반환하며, __next__()가 전달하는 값을 하나씩 루프에 사용한다.
+            더 이상 요소가 없을 때 __next__()는 StopIteration 예외를 발생시키고, for 루프는 종료된다. 클래스 자체에 __next__()가 정의되어 있다면, iter()는 self를 반환하는 것으로 충분하다.</li>
+        
         <li>콤마로 구분된 값들을 자동으로 튜플로 구성하여 다중 할당, 다중 반환이 가능하다.</li>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[23,28]" lan="python">다중 할당 예시 : 피보나치 수열 »</button>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[31,40]" lan="python">다중 반환 예시 : 최대공약수/최소공배수 »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/syntax.py" displayRange="[29,34]" lan="python">다중 할당 예시 : 피보나치 수열 »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/syntax.py" displayRange="[37,46]" lan="python">다중 반환 예시 : 최대공약수/최소공배수 »</button>
+        
         <li>순회 대상 생성</li>
         <ul>
             <li>수열 생성 : range([start,] stop[, step])</li>
             start 기본값 0. step 기본값 1. stop 자체는 미포함
             <li>여러 시퀀스 동시 순회 : zip()</li>
             같은 오프셋의 요소들로 튜플을 생성. 시퀀스가 하나라도 끝나면 순회 종료.
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[42,48]" lan="python">예시 »</button>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/syntax.py" displayRange="[48,49]" lan="python">예시 »</button>
             <li>comprehension : 순회를 통해 리스트, 딕셔너리, 셋 등 생성
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[50,87]" lan="python">예시 »</button></li>
+                <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/syntax.py" displayRange="[52,89]" lan="python">예시 »</button></li>
         </ul>
     </ol>
 </details>
@@ -160,27 +153,27 @@
 <details>
     <summary>함수</summary>
     <ol>
-        파이썬의 함수는 일급 객체다.
-        <li>함수 정의 def <i>func_name</i>(): <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[89,93]" lan="python">예시 »</button></li>
+        <li>파이썬의 함수는 일급 객체다.</li>
+        <li>함수 정의 def <i>func_name</i>(): <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/syntax.py" displayRange="[91,100]" lan="python">예시 »</button></li>
         <li>return이 없으면 호출자는 None을 얻는다. None 검사 : is None</li>
         <li>docstring : 함수 body 첫 줄에 문자열로 함수 설명. help()로 출력된다.</li>
         <li>함수 외부 scope에 접근할 수 있다.
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[95,98]" lan="python">예시 »</button></li>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/syntax.py" displayRange="[102,105]" lan="python">예시 »</button></li>
         <li>디폴트 매개변수, 키워드 매개변수, 매개변수 타입 바운딩
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[100,112]" lan="python">예시 »</button></li>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/syntax.py" displayRange="[107,119]" lan="python">예시 »</button></li>
         <li>* : 인자를 튜플로. ** : 인자를 딕셔너리로.
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[114,124]" lan="python">예시 »</button></li>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/syntax.py" displayRange="[121,131]" lan="python">예시 »</button></li>
         <li>함수 내부에 함수 정의 가능
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[126,131]" lan="python">예시 »</button></li>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/syntax.py" displayRange="[133,138]" lan="python">예시 »</button></li>
         <li>람다 함수 : lambda
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[126,129,133,134]" lan="python">예시 »</button></li>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/syntax.py" displayRange="[133,136,140,141]" lan="python">예시 »</button></li>
         <li>Generator</li>
         자료를 순회할 때마다 다음 항목 반환. __iter__()와 __next__()를 자동으로 생성하고, StopIteration 예외도 자동으로 발생시킨다. cf. range() : 미리 모든 값을 생성한다.
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[136,143]" lan="python">예시 »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/syntax.py" displayRange="[143,150]" lan="python">예시 »</button>
         <li>Decorator</li>
         함수 꾸미기. 동적으로 기능 추가.<br>
         * : 인자 리스트 언패킹, ** : 키워드 인자 딕셔너리 언패킹
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904211517.py" displayRange="[145,157]" lan="python">예시 »</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/syntax.py" displayRange="[153,169]" lan="python">예시 »</button>
     </ol>
 </details>
 
@@ -189,14 +182,14 @@
 <details>
     <summary>namespace</summary>
     <ol>
-        네임스페이스 : "속성 이름 - 객체 이름" 매핑
+        <li>네임스페이스 : "속성 이름 - 객체 이름" 매핑</li>
         <li>메인 프로그램은 전역 네임스페이스를 정의</li>
         globals() : 전역 네임스페이스 정보를 담은 딕셔너리
         <li>함수는 지역 네임스페이스를 정의</li>
         locals() : 지역 네임스페이스 정보를 담은 딕셔너리
         <li>global 키워드로 전역 변수 접근</li>
         <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/scope_example.py" lan="python">예시 »</button>
-        출처: <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.python.org/3/tutorial/classes.html#scopes-and-namespaces-example">Python 3 튜토리얼</a>
+        <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.python.org/3/tutorial/classes.html#scopes-and-namespaces-example">출처: Python 3 튜토리얼</a>
     </ol>
 </details>
 
@@ -204,12 +197,9 @@
 
 <details>
     <summary>예외</summary>
-    <ol>
-        <li>try:<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904222222.py" displayRange="[1,4]" lan="python">예시 »</button></li>
-        <li>except: 또는 except ExceptionType as name:<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904222222.py" displayRange="[6, 9]" lan="python">예시 »</button></li>
-        <li>사용자 정의 → class MyException(Exception):</li>
-        <li>raise MyException("Don't Worry")<button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904222222.py" displayRange="[11,17]" lan="python">예시 »</button></li>
-    </ol>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/try_except.py" displayRange="[1,5]" lan="python">try: ~ except:</button>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/try_except.py" displayRange="[7,11]" lan="python">except ExceptionType as name:</button>
+    <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/try_except.py" displayRange="[13,20]" lan="python">raise MyException("Don't Worry")</button>
 </details>
 
 <hr>
@@ -220,19 +210,18 @@
         <li>모듈 : 파이썬 파일 하나</li>
         <li>패키지 : __init__.py 파일을 포함하는 디렉터리</li>
         <li>import</li>
-        [from package] import module1, module2<br>
-        from module import variable, function<br>
-        import module as alias<br>
-        from module import *
+        <ul>
+            <li>[from package] import module1, module2</li>
+            <li>from module import variable, function</li>
+            <li>import module as alias</li>
+            <li>from module import *</li>
+        </ul>
         
         <li>del module, reload(module)</li>
-        <li>처음 실행되는 모듈의 __name__ 속성은 "__main__"이다.</li>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/fibonacci_example.py" lan="python">fibonacci_example.py »</button><br>
-        C:\apache-tomcat-9.0.17\webapps\github.io\posts\1904&gt;python fibonacci_example.py 100<br>
-        1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89,
+        <li>처음 실행되는 모듈의 __name__ 속성은 "__main__"이다.
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/fibonacci_example.py" lan="python">fibonacci_example.py »</button></li>
         
-        <li>모듈 탐색 경로 추가</li>
-        sys.path.append('/usr/me/some_directory')
+        <li>모듈 탐색 경로 추가 sys.path.append('/usr/me/some_directory')</li>
         
         <li>dir()을 이용해 모듈에 정의된 것들을 확인할 수 있다.</li>
     </ol>
@@ -253,16 +242,15 @@
 <details>
     <summary>클래스</summary>
     <ol>
-        <li>변경 가능한 속성은 del 키워드를 이용해 지울 수 있다.
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904242218.py" displayRange="[1, 12, 14, 15]" lan="python">속성 삭제 예시 »</button>
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904242218.py" displayRange="[1, 8, 34, 39, 41, 44]" lan="python">속성 추가 예시 »</button>
-        </li>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/class_example.py" displayRange="[1,8]" lan="python">클래스 예</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/class_example.py" displayRange="[10,12]" lan="python">속성 삭제 del</button>
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/class_example.py" displayRange="[25,30]" lan="python">속성 추가 예시 »</button>
+
         <li>객체 메서드를 표현하는 객체도 속성들을 갖는다.
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904242218.py" displayRange="[1, 8, 18, 25, 27, 31]" lan="python">예시 »</button>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/class_example.py" displayRange="[15,22]" lan="python">예시 »</button>
         </li>
         <li>Name mangling : 파이썬은 기본적으로 접근 한정자가 없다. 다른 언어의 private과 같은 사용과 함께 이름 충돌을 회피하기 위해 2개 이상의 '_'로 시작하는 식별자는 내부적으로 앞에 '_classname'이 덧붙여 구분된다.
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/1904242218.py" displayRange="[47, 61, 63, 65, 68, 80, 82, 85]" lan="python">예시 »</button>
-        </li>
+            <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/class_example.py" displayRange="[33,48,51,67]" lan="python">예시 »</button></li>
     </ol>
 </details>
 
@@ -273,9 +261,10 @@
     <ol>
         <li>서로 다른 프로젝트들이 서로 다른 버전의 패키지 의존성을 가질 수 있다. 이를 유연하게 지원하도록 가상 환경을 만들 수 있다.</li>
         <li>최신 파이썬 버전에는 venv 모듈이 포함되어 있다.</li>
-        python3 -m venv my-env1 : my-env1 디렉터리가 존재하지 않으면 생성한다. 이 디렉터리에 파이썬 인터프리터, 표준 라이브러리 등이 복사된다.<br>
-        » Windows에서 실행 : my-env1\Scripts\activate.bat<br>
-        » Unix에서 실행 : source my-env1/bin/activate
+        <li><strong>python3 -m venv my-env1</strong></li>
+        my-env1 디렉터리가 존재하지 않으면 생성한다. 이 디렉터리에 파이썬 인터프리터, 표준 라이브러리 등이 복사된다.<br>
+        <li>Windows에서 실행 : my-env1\Scripts\activate.bat</li>
+        <li>Unix에서 실행 : source my-env1/bin/activate</li>
     </ol>
 </details>
 

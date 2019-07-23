@@ -156,3 +156,34 @@ print(menus['menu1'] ^ menus['menu2']) # {'재료1', '재료2', '재료4'} # 대
 # 부분집합 판정
 print({1, 2, 3} < {1, 2, 3}) # False # 진부분집합
 print({1, 2, 3} <= {1, 2, 3}) # True # >, >=도 가능
+
+
+print({'key' : 'value', 123 : 456}) # {'key': 'value', 123: 456}
+
+dic = dict()
+dic['key1'] = 'val1'
+print('key1' in dic)
+dic[12] = 34
+print(dic) # {'key1': 'val1', 12: 34}
+
+dic.update({'key1': 'val3', 'key2': 'val4'})
+print(dic) # {'key1': 'val3', 12: 34, 'key2': 'val4'}
+del dic['key1']
+print(dic) # {12: 34, 'key2': 'val4'}
+dic.clear()
+print(dic) # {}
+
+print(dict([['a', 'b'], ('c', 'd')])) # {'a': 'b', 'c': 'd'}
+print(dict(('ab', 'cd'))) # {'a': 'b', 'c': 'd'}
+# dict(['a', 'b', 'c', 'd']) # ValueError: dictionary update sequence element #0 has length 1; 2 is required
+
+dic = dict(('ab', 'cd'))
+print(dic.keys()) # dict_keys(['a', 'c'])
+print(dic.values()) # dict_values(['b', 'd'])
+print(dic.items()) # dict_items([('a', 'b'), ('c', 'd')])
+
+dic1 = dict(('ab', 'cd'))
+dic2 = dic1.copy() # 깊은 복사
+dic1['a'] = 'z'
+print(dic1) # {'a': 'z', 'c': 'd'}
+print(dic2) # {'a': 'b', 'c': 'd'}
