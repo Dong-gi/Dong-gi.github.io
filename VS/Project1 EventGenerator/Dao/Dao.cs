@@ -36,11 +36,8 @@ namespace EventGenerator.Dao
         /// <summary>
         /// "SELECT * FROM ${table} WHERE ${column} IN (${ids})
         /// </summary>
-        public Dao SelectAllWhereIdIn(string table, string column, IEnumerable<string> rawIds)
-        {
-            var ids = rawIds.Where(x => !string.IsNullOrWhiteSpace(x));
-            return ids.Count() > 0 ? SelectAll().From(table).Where().In(column, ids) : new GaraDao(DB.DB1);
-        }
+        public Dao SelectAllWhereIdIn(string table, string column, IEnumerable<string> ids) =>
+            ids.Count() > 0 ? SelectAll().From(table).Where().In(column, ids) : new GaraDao(DB.DB1);
 
         /// <summary>
         /// "SELECT * FROM ${table} WHERE (${column} IN ${from} AND ${to})"
