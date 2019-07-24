@@ -1,0 +1,41 @@
+<hr>
+
+<details>
+    <summary>Objects, values, and types</summary>
+    <ol>
+        <li>모든 객체는 id, type, value를 갖는다.</li>
+        <li>id는 생성된 후에는 불변하며, CPython의 경우 id(obj)는 obj의 메모리 주소다.</li>
+        <li>type(obj)으로 obj의 타입을 얻을 수 있으며, id와 마찬가지로 불변하다.</li>
+        <li>Container : 다른 객체에 대한 참조를 포함하는 객체</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>The standard type hierarchy</summary>
+    <ol>
+        <li>None</li>
+        None 식별자로 이 타입의 싱글톤 객체를 얻을 수 있다. 값이 없음을 알리기 위해 사용된다.
+
+        <li>NotImplemented</li>
+        NotImplemented 식별자로 이 타입의 싱글톤 객체를 얻을 수 있다. 산수 메서드, 비교 메서드는 연산이 구현되지 않은 경우 이를 반환해야 한다.
+
+        <li>Ellipsis</li>
+        리터럴 ... 이나 Ellipsis 식별자로 이 타입의 싱글톤 객체를 얻을 수 있다. 다음은 NumPy에서 "전체 차원"을 의미하는 ...
+        <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/data_model.py" displayRange="[1,1,10,39]" lan="python">예시</button>
+
+        <li>numbers.Number; 수</li>
+        <ol>
+            <li>numbers.Integral; 정수</li>
+            <ol>
+                <li>int; 크기 제약 없는 정수</li>
+                <li>bool; <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/data_model.py" displayRange="[42,45]" lan="python">int의 subtype</button>이며, True, False는 대부분 상황에서 <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/data_model.py" displayRange="[46,47]" lan="python">1, 0처럼 동작</button>한다.</li>
+            </ol>
+            <li>numbers.Real (float); double precision 부동 소수</li>
+            <li>numbers.Complex (complex); 실수부, 허수부 모두 float인 복소수.</li>
+        </ol>
+
+        <li>시퀀스; 음이 아닌 정수로 인덱싱될 수 있는 유한 길이의 순서 있는 집합</li>
+    </ol>
+</details>

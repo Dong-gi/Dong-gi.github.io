@@ -12,7 +12,8 @@ const posts = {
         { filename: "posts/book/007.html", category: "Book", title: "키르케고르 실존 극장" },
         { filename: "posts/book/008.html", category: "Book", title: "Gamification by Design" },
 
-        { filename: "posts/career/at_sesisoft_from_201806.html", category: "Career", title: "C#.NET, WPF - 데이터 툴 개발@SESISOFT" },
+        { filename: "posts/career/at_home_at_20190724.html", category: "Career", title: "JavaScript - https://www.steamgifts.com/ 스크립트" },
+        { filename: "posts/career/at_sesisoft_from_201806.html", category: "Career", title: "C#.NET, WPF - 데이터 작업 툴" },
         { filename: "posts/career/at_sesisoft_at_20190715.html", category: "Career", title: "JavaScript - IGA Works 푸시 등록 절차 개선" },
         { filename: "posts/career/at_sesisoft_at_20190626.html", category: "Career", title: "JavaScript - 자연스러운 테이블 정렬" },
 
@@ -81,7 +82,8 @@ const posts = {
         { filename: "posts/javascript/basic2.html", category: "Programming/JavaScript/Browser", title: "브라우저 JavaScript" },
         { filename: "posts/javascript/jquery.html", category: "Programming/JavaScript/Browser", title: "jQuery" },
         
-        { filename: "posts/python/basic.html", category: "Programming/Python/Basic", title: "Python 시작하기", top: true },
+        { filename: "posts/python/basic.html", category: "Programming/Python/Basic", title: "Python 시작하기" },
+        { filename: "posts/python/data_model.html", category: "Programming/Python/Basic", title: "Python 데이터 모델", top: true },
         { filename: "posts/python/1904252127.html", category: "Programming/Python/Document", title: "Built-in Functions" },//, top: true
         { filename: "posts/python/1904252130.html", category: "Programming/Python/Document", title: "Built-in Constants" },//, top: true
         { filename: "posts/python/1904252131.html", category: "Programming/Python/Document", title: "Built-in Types" },//, top: true
@@ -119,20 +121,4 @@ displayRange="[]"
 <a role="button" target="_blank" class="btn btn-info btn-sm" href=""></a>
 <a role="button" class="btn btn-info btn-sm" href="javascript:;"></a>
 <img class="rounded mx-auto d-block" alt="" src="imgs/">
-
-<details>
-    <summary></summary>
-    <ol>
-
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>Method Detail</summary>
-    <ol>
-
-    </ol>
-</details>
  */
