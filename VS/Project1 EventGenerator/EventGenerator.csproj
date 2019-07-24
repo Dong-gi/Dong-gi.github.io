@@ -163,7 +163,7 @@
     <Compile Include="Service\Game1Service.cs" />
     <Compile Include="Utility\ConsoleRedirectWriter.cs" />
     <Compile Include="Utility\CustomCommand.cs" />
-    <Compile Include="Utility\Game1tConvert.cs" />
+    <Compile Include="Utility\CustomExcelDataUtility.cs" />
     <Compile Include="Utility\CustomExcel.cs" />
     <Compile Include="Utility\Connection.cs" />
     <Compile Include="Utility\ImageOptimizer.cs" />

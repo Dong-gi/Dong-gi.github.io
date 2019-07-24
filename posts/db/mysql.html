@@ -8,6 +8,13 @@
 <hr>
 
 <details>
+    <summary>테이블 구조 복사 생성</summary>
+    create table new_table_name like base_table_name;
+</details>
+
+<hr>
+
+<details>
     <summary>프로시저 호출</summary>
     <ol>
         <li>CREATE PROCEDURE로 정의된 내장 프로시저를 호출한다.</li>
@@ -75,8 +82,32 @@
 <hr>
 
 <details>
-    <summary>파일로부터 테이블 데이터 로드</summary>
-    mysql&gt; LOAD DATA LOCAL INFILE "/~.csv" replace into table {tableName} fields terminated by ',' enclosed by '\"' IGNORE 1 LINES;
+    <summary>CSV 입출력</summary>
+    <ol>
+        <li>CSV로부터 입력</li>
+        LOAD DATA LOCAL INFILE "/~.csv" replace into table <i>table_name</i> fields terminated by ',' enclosed by '\"' IGNORE 1 LINES;
+
+        <li>CSV로 출력</li>
+        기본 명령 : SELECT <i>select_clause</i> FROM <i>table_expression</i> INTO OUTFILE "~.csv" FIELDS TERMINATED BY "," LINES TERMINATED BY "\n";<br>
+        출력 가능 경로 확인 : SHOW VARIABLES LIKE 'secure_file%';<br>
+        기본 출력은 멀티 라인 텍스트를 \로 연결하여 출력하고, null값을 \N로 출력한다. 아래 툴을 이용하면, 멀티 라인 문자열과 빈 문자열만 ""로 감싸고, null값은 비워서 표현하는 select_clause를 얻을 수 있다.
+        <textarea style="width: 100%" id="mysql-csv-column-convert-in-textarea"/>
+        <textarea style="width: 100%" id="mysql-csv-column-convert-out-textarea"/>
+        <script>
+            let columnClause = `CASE
+                                    WHEN $1 is null THEN ""
+                                    WHEN CAST($1 AS CHAR) = "" THEN "\\"\\""
+                                    WHEN (INSTR(IFNULL(CAST($1 AS CHAR), ""), "\\n") = 0 AND INSTR(IFNULL(CAST($1 AS CHAR), ""), ",") = 0) THEN IFNULL($1, "")
+                                    ELSE CONCAT("\\"", $1, "\\"")
+                                END AS $1`.replace("\n", "").replace(/\s{2,}/gm, ' ');
+            $('#mysql-csv-column-convert-in-textarea').on('input', () => {
+                let columnClauses = [];
+                for(let column of $('#mysql-csv-column-convert-in-textarea')[0].value.match(/\w+/gm))
+                    columnClauses.push(column.replace(/(\w+)/, columnClause));
+                $('#mysql-csv-column-convert-out-textarea')[0].value = columnClauses.join(',\n');
+            });
+        </script>
+    </ol>
 </details>
 
 <hr>

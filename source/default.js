@@ -353,7 +353,6 @@ function getContentHTML(post) {
     let title = post.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     let newBadge = (new Date().getTime() - new Date(post.date).getTime()) <= 3 * 86400 * 1000 ? '<span class="badge badge-pill badge-primary">New</span>' : '';
     let location = `https://dong-gi.github.io/${post.filename}`;
-    console.log(location);
     return `<div class="jumbotron" id="${post.id}">
                 <a class="d-none" href="${location}">${title}</a>
                 <details>

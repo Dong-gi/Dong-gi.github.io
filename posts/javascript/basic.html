@@ -269,8 +269,9 @@
     <summary>정규표현식</summary>
     <ol>
         <li>/~/ instanceof RegExp</li>
+        (/123/gm)과 (new RegExp('123', 'gm'))는 의미적으로 동일하다<br>
         flags : g(global), i(ignoreCase), m(multiline)<br>
-        (/123/gm)과 (new RegExp('123', 'gm'))는 의미적으로 동일하다
+        global 플래그를 이용하는 경우, RegExp의 lastIndex가 검색 위치를 기억하여, 해당 위치부터 재탐색한다. 따라서 global RegExp에 동일한 문자열을 반복적으로 test()하는 경우 true, false가 토글되는 현상을 경험할 수도 있으며, lastIndex를 직접 0 이하로 조정하거나, global 플래그를 빼는 등의 주의가 필요하다.
     
         <details>
             <summary>문자 리터럴</summary>

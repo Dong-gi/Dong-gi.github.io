@@ -12,8 +12,9 @@ const posts = {
         { filename: "posts/book/007.html", category: "Book", title: "키르케고르 실존 극장" },
         { filename: "posts/book/008.html", category: "Book", title: "Gamification by Design" },
 
-        { filename: "posts/career/at_sesisoft_at_20190715.html", category: "Career", title: "IGA Works 푸시 등록 절차 개선@SESISOFT", top: true },
-        { filename: "posts/career/at_sesisoft_from_201806.html", category: "Career", title: "데이터 툴 개발@SESISOFT", top: true },
+        { filename: "posts/career/at_sesisoft_from_201806.html", category: "Career", title: "C#.NET, WPF - 데이터 툴 개발@SESISOFT" },
+        { filename: "posts/career/at_sesisoft_at_20190715.html", category: "Career", title: "JavaScript - IGA Works 푸시 등록 절차 개선" },
+        { filename: "posts/career/at_sesisoft_at_20190626.html", category: "Career", title: "JavaScript - 자연스러운 테이블 정렬" },
 
         { filename: "posts/db/concept.html", category: "DB", title: "기본 개념" },
         { filename: "posts/db/mysql.html", category: "DB", title: "MySQL" },

@@ -37,7 +37,7 @@ namespace EventGenerator.Service
                     ViewModel.MainViewModel.Toast("주의", "SSH 연결 실패...");
                     return;
                 }
-                var result = await Task.Factory.StartNew(() => client.CreateCommand("bin/clearcash.sh").Execute());
+                var result = await Task.Factory.StartNew(() => client.CreateCommand("bin/command.sh").Execute());
                 ViewModel.MainViewModel.Toast("성공", result);
                 client.Disconnect();
             }
