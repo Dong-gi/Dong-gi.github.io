@@ -118,6 +118,11 @@ li li li li:hover {
     margin-right: 5px;
 }
 
+td.sorting-table-head:after,
+th.sorting-table-head:after {
+    content: attr(sort-order);
+}
+
 /* Overwrite the Bootstrap's settings */
 
 @media screen and (min-width: 0px) {
