@@ -90,7 +90,7 @@ function getNumberOnly(str) {
 
 function filterFunc(title, numOfEntries, numOfCopies, point) {
     console.log(title, numOfEntries, numOfCopies, point);
-    return numOfEntries / numOfCopies < 300;
+    return numOfEntries / numOfCopies < 400;
 }
 
 await analyzeGiveawayList();
