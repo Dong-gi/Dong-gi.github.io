@@ -45,3 +45,15 @@ print(isinstance(True, int)) # True
 print(isinstance(True, bool)) # True
 print((True + True) * (True + True)) # 4
 print(False == 0) # True
+
+
+t = ()
+print(type(t)) # <class 'tuple'>
+t = 1,
+print(type(t)) # <class 'tuple'>
+t = 1, 2
+print(type(t)) # <class 'tuple'>
+
+
+s = slice(1, 10, 2)
+print(s.indices(5))
