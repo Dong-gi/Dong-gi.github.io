@@ -6,7 +6,7 @@
         <li>float &lt;= double &lt;= long double</li>
         <li>char(8bits) &lt; char16_t &lt; char32_t, wchar_t</li>
         <li>bool, auto(c#의 var과 유사), decltype(x) : x와 같은 타입
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/Type.cpp" lan="cpp">Type.cpp »</button></li>
+            <button class="btn-code" path="Repositories/VisualStudio/C++ Basic/Type.cpp" lan="cpp">Type.cpp »</button></li>
     </ul>
 
     <li>복합 자료형</li>
@@ -16,7 +16,7 @@
         C#과 마찬가지로 enum class는 정수 타입을 상속함으로써 표현된다. enum class Name : long
         <li>struct Name { [fields] };</li>
         <li>std::array : vector와 달리 크기가 고정되어 오버헤드가 적다.
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/Type.cpp" lan="cpp">Type.cpp »</button></li>
+            <button class="btn-code" path="Repositories/VisualStudio/C++ Basic/Type.cpp" lan="cpp">Type.cpp »</button></li>
     </ul>
 
     <li>변수</li>
@@ -25,7 +25,7 @@
         <li>물론 정적 할당된 객체는 선언된 영역을 벗어나면 해제된다. 정적 할당된 객체를 전달할 경우 복사생성자가 호출되어 복사본이 전달되며, const를 사용할 경우 참조가 전달된다.</li>
         <li>값에 의한 전달 : 주소값에 의한 전달 : 참조에 의한 전달(변수만 가능)</li>
         <li>try ~ (catch) : catch 생략 가능. exception ~ bad_alloc, bad_cast, bad_exception, logic_error, runtime_error 등
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/Exception.cpp" lan="cpp">Exception.cpp »</button></li>
+            <button class="btn-code" path="Repositories/VisualStudio/C++ Basic/Exception.cpp" lan="cpp">Exception.cpp »</button></li>
     </ul>
 
     <details>
@@ -48,8 +48,8 @@
             <li>멤버 초기화는 선언된 순서대로만 진행된다. 소멸시 반대 방향으로 소멸된다.</li>
 
             <li>접근제한자 : public, protected, private</li>
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/Class.h" lan="cpp">Class.h »</button>
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/Class.cpp" lan="cpp">Class.cpp »</button>
+            <button class="btn-code" path="Repositories/VisualStudio/C++ Basic/Class.h" lan="cpp">Class.h »</button>
+            <button class="btn-code" path="Repositories/VisualStudio/C++ Basic/Class.cpp" lan="cpp">Class.cpp »</button>
 
             <li>명시적 대입 연산자</li>
             Name&amp; operator=(const Name&amp; rValue) = default | delete
@@ -61,8 +61,8 @@
             <li>const 멤버는 const 메서드만 이용할 수 있다.</li>
 
             <li>mutable 멤버의 변경은 메서드의 const 선언을 해치지 않는다고 간주한다.</li>
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/ClassA.h" lan="cpp">ClassA.h »</button>
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/ClassB.h" lan="cpp">ClassB.h »</button>
+            <button class="btn-code" path="Repositories/VisualStudio/C++ Basic/ClassA.h" lan="cpp">ClassA.h »</button>
+            <button class="btn-code" path="Repositories/VisualStudio/C++ Basic/ClassB.h" lan="cpp">ClassB.h »</button>
 
             <li>오버로딩 메서드 시그너쳐에 delete 선언하면 호출할 수 없다.</li>
 
@@ -73,7 +73,7 @@
             <li>연산자 오버로딩 : 타입 A를 갖는 생성자가 존재한다면 타입 A의 인스턴스와 직접 연산 가능.</li>
 
             <li>복합 대입 연산자 오버로딩 : 임시 객체 없이 좌변 객체 변경후 객체 참조 리턴.
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/ClassC.h" lan="cpp">ClassC.h »</button></li>
+                <button class="btn-code" path="Repositories/VisualStudio/C++ Basic/ClassC.h" lan="cpp">ClassC.h »</button></li>
         </ol>
     </details>
 
@@ -89,8 +89,8 @@
             <li>static method는 재정의될 수(virtual할 수) 없다.</li>
             <li>method를 재정의하면 부모의 모든 오버로딩된 메서드들이 가려진다. 하지만 포인터를 통해(업캐스팅) 호출할 수는 있다.</li>
             <li>Java와 달리 private method도 재정의할 수 있다. C++에서 접근 제한자는 호출자만을 제한한다. 접근 범위를 강화할수도 있다.</li>
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/SuperClass.h" lan="cpp">SuperClass.h »</button>
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/SubClass.h" lan="cpp">SubClass.h »</button>
+            <button class="btn-code" path="Repositories/VisualStudio/C++ Basic/SuperClass.h" lan="cpp">SuperClass.h »</button>
+            <button class="btn-code" path="Repositories/VisualStudio/C++ Basic/SubClass.h" lan="cpp">SubClass.h »</button>
         </ul>
     </details>
 
@@ -123,7 +123,7 @@
             <li>constexpr : 상수표현식으로 사용 가능.</li>
             constexpr constructor : 사용자 정의 객체를 상수 표현 변수로 이용 가능.<br>
             constexpr를 이용한 함수/메서드/생성자는 매개변수로 상수만 받을 수 있어야 하며, 호출 전에 컴파일러에 의해 body가 해석되어야 한다.
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/Constexpr.cpp" lan="cpp">Constexpr.cpp »</button>
+            <button class="btn-code" path="Repositories/VisualStudio/C++ Basic/Constexpr.cpp" lan="cpp">Constexpr.cpp »</button>
         </ol>
     </details>
     
@@ -149,7 +149,7 @@
         <li>dynamic_cast : 같은 클래스 계층의 두 클래스 간 변환(타입 검사 수행)</li>
 
         <li>명시적 형 변환 : explicit
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="VS/C++ Basic/Explicit.cpp" lan="cpp">Explicit.cpp »</button></li>
+            <button class="btn-code" path="Repositories/VisualStudio/C++ Basic/Explicit.cpp" lan="cpp">Explicit.cpp »</button></li>
     </ul>
 
     <li>초기화</li>
