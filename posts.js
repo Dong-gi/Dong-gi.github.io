@@ -1,7 +1,7 @@
 const posts = {
     list: [
-        { filename: "posts/algorithm/koreatech.html", category: "Algorithm", title: "jduge.koreatech.ac.kr" },
         { filename: "posts/algorithm/book01.html", category: "Algorithm", title: "『알고리즘 도감』" },
+        { filename: "posts/algorithm/koreatech.html", category: "Algorithm", title: "jduge.koreatech.ac.kr" },
 
         { filename: "posts/book/001.html", category: "Book", title: "1만 시간의 재발견" },
         { filename: "posts/book/002.html", category: "Book", title: "마음의 탄생" },
@@ -70,13 +70,13 @@ const posts = {
         { filename: "posts/java/java.util.stream.html", category: "Programming/Java/java.base", title: "java.util.stream" },
         { filename: "posts/java/java.util.zip.html", category: "Programming/Java/java.base", title: "java.util.zip" },
 
-        { filename: "posts/java/java_ee/458.html", category: "Programming/Java/Servlet", title: "필터와 래퍼" },//, top: true
-        { filename: "posts/java/java_ee/457.html", category: "Programming/Java/Servlet", title: "컨텍스트 초기화 매개변수" },//, top: true
-        { filename: "posts/java/java_ee/456.html", category: "Programming/Java/Servlet", title: "다른 페이지 이동/호출" },//, top: true
-        { filename: "posts/java/java_ee/455.html", category: "Programming/Java/Servlet", title: "MySQL 테스트" },//, top: true
-        { filename: "posts/java/java_ee/454.html", category: "Programming/Java/Servlet", title: "web.xml 대신 애너테이션으로 서블릿 기술하기" },//, top: true
-        { filename: "posts/java/java_ee/453.html", category: "Programming/Java/Servlet", title: "서블릿 생애주기" },//, top: true
-        { filename: "posts/java/java_ee/446.html", category: "Programming/Java/Servlet", title: "JSP&Servlet" },//, top: true
+        { filename: "posts/java/java_ee/458.html", category: "Programming/Java/JavaEE", title: "필터와 래퍼" },//, top: true
+        { filename: "posts/java/java_ee/457.html", category: "Programming/Java/JavaEE", title: "컨텍스트 초기화 매개변수" },//, top: true
+        { filename: "posts/java/java_ee/456.html", category: "Programming/Java/JavaEE", title: "다른 페이지 이동/호출" },//, top: true
+        { filename: "posts/java/java_ee/455.html", category: "Programming/Java/JavaEE", title: "MySQL 테스트" },//, top: true
+        { filename: "posts/java/java_ee/454.html", category: "Programming/Java/JavaEE", title: "web.xml 대신 애너테이션으로 서블릿 기술하기" },//, top: true
+        { filename: "posts/java/java_ee/453.html", category: "Programming/Java/JavaEE", title: "서블릿 생애주기" },//, top: true
+        { filename: "posts/java/java_ee/446.html", category: "Programming/Java/JavaEE", title: "JSP&Servlet" },//, top: true
         
         { filename: "posts/javascript/basic.html", category: "Programming/JavaScript/Core", title: "코어 JavaScript" },
         { filename: "posts/javascript/basic2.html", category: "Programming/JavaScript/Browser", title: "브라우저 JavaScript" },
@@ -116,7 +116,8 @@ const posts = {
 lan 속성 : nohighlight, text, java, javascript, cpp, matlab, xml, css, ruby, sql, bash, shell, php, go, python, cs
 displayRange="[]"
 
-<button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/concurrent/.java" lan="java">예시 코드 »</button>
+<button class="btn-code" path="Java/JavaSE/src/concurrent/.java" lan="java">예시 코드 »</button>
+<button type="button" class="btn btn-primary btn-sm" onclick="">실행 »</button>
         
 <a role="button" target="_blank" class="btn btn-info btn-sm" href=""></a>
 <a role="button" class="btn btn-info btn-sm" href="javascript:;"></a>

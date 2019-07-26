@@ -1,4 +1,7 @@
 $.each($('table'), (idx, table) => {
+    if($(table).hasClass('ordered-table')) return;
+    $(table).addClass('ordered-table');
+    
     let hasDataColumnIdxSet = new Set(); // 모든 행의 x번째 열이 비어있다면, 삭제하기 위한 인덱스 집합
     let headRow = $('tr:first', table); // 테이블의 1번째 행을 테이블 헤더 행으로 간주
     headRow.addClass('table-head-row');

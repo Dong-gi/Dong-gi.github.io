@@ -14,7 +14,7 @@ public class Main1003 {
         int numberCount = scanner.nextInt();
         while(numberCount-- > 0) {
             int current = scanner.nextInt();
-            boolean _no_use = one.add(current) || two.add(current) ||three.add(current);
+            boolean noUse = one.add(current) || two.add(current) || three.add(current);
             numbers.add(current);
         }
 

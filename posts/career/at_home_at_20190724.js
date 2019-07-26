@@ -1,48 +1,40 @@
 let ownPoint = parseInt($('span.nav__points').text());
 
-async function analyzeGiveawayList() {
-    for(let giveawayItem of $('div.giveaway__summary')) {
-        procesGiveawayItem(giveawayItem);
-        await partialCustomSleep();
-        if(ownPoint === 0) {
-            console.log('No more points....');
+class GiveawayContext {
+    constructor(node) {
+        let giveawayHeading = $('.giveaway__heading', node);
+        let a = $('a.giveaway__heading__name', giveawayHeading);
+        this.url = $(a).attr('href');
+        this.title = $(a).text();
+
+        this.numOfCopies = 1;
+        this.point = parseInt(getNumberOnly($($('span.giveaway__heading__thin', giveawayHeading)[0]).text()));
+
+        let isMultiCopies = $('span.giveaway__heading__thin', giveawayHeading).length > 1;
+        if (isMultiCopies) {
+            this.numOfCopies = this.point;
+            this.point = parseInt(getNumberOnly($($('span.giveaway__heading__thin', giveawayHeading)[1]).text()));
         }
+
+        let giveawayLinks = $('.giveaway__links', node);
+        this.numOfEntries = parseInt(getNumberOnly(/(\d+(,\d+)*(\.\d+)?)\s*entries/gmi.exec($(giveawayLinks).text())[1]));
+
+        Object.seal(this);
     }
 }
 
-async function procesGiveawayItem(node) {
-    let giveawayHeading = $('.giveaway__heading', node);
-    let a = $('a.giveaway__heading__name', giveawayHeading);
-    let url = $(a).attr('href');
-    let title = $(a).text();
-    console.log('Current game : ', title);
+async function procesGiveawayItems() {
+    for (let giveawayItem of $('div.giveaway__summary')) {
+        let context = new GiveawayContext(giveawayItem);
+        if (!filterFunc(context) || context.point > ownPoint)
+            continue;
 
-    let numOfCopies = 1;
-    let point = parseInt(getNumberOnly($($('span.giveaway__heading__thin', giveawayHeading)[0]).text()));
-
-    let isMultiCopies = $('span.giveaway__heading__thin', giveawayHeading).length > 1;
-    if (isMultiCopies) {
-        numOfCopies = point;
-        point = parseInt(getNumberOnly($($('span.giveaway__heading__thin', giveawayHeading)[1]).text()));
-    }
-
-    let giveawayLinks = $('.giveaway__links', node);
-    let numOfEntries = parseInt(getNumberOnly(/(\d+(,\d+)*(\.\d+)?)\s*entries/gmi.exec($(giveawayLinks).text())[1]));
-
-    if (filterFunc(title, numOfEntries, numOfCopies, point)) {
-        if (ownPoint < point) {
-            console.log(`Not enough points... ${ownPoint} < ${point}`);
-            return;
+        if (await enterGiveaway(context.url)) {
+            console.log('성공!');
+            ownPoint -= context.point;
+            console.log(`남은 포인트 : ${ownPoint}`);
         }
-        let result = await enterGiveaway(url);
-        if(result) {
-            console.log('Success!');
-            ownPoint -= point;
-        } else {
-            console.log('Failed...');
-        }
-    } else {
-        console.log('Not filtered');
+        await partialCustomSleep();
     }
 }
 
@@ -53,13 +45,13 @@ async function enterGiveaway(url) {
 
     let gamePage = $(data);
     if ($('.sidebar__entry-insert', gamePage).length < 1) {
-        console.log('No target button...', url);
+        console.log('버튼이 없음...', url);
         return;
     }
 
     let target = $('.sidebar__entry-insert', gamePage)[0];
-    if($(target).hasClass('is-hidden')) {
-        console.log('Already added an entry');
+    if ($(target).hasClass('is-hidden')) {
+        console.log('이미 추가함...');
         return false;
     }
 
@@ -88,9 +80,11 @@ function getNumberOnly(str) {
 }
 
 
-function filterFunc(title, numOfEntries, numOfCopies, point) {
-    console.log(title, numOfEntries, numOfCopies, point);
-    return numOfEntries / numOfCopies < 400;
+function filterFunc(giveawayContext) {
+    let result = giveawayContext.numOfEntries / giveawayContext.numOfCopies < 400;
+    if (result)
+        console.log(giveawayContext);
+    return result;
 }
 
-await analyzeGiveawayList();
+await procesGiveawayItems();

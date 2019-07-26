@@ -14,14 +14,14 @@
         <ul>
             <li>class initializer : 클래스 내의 static {} 블록으로, 클래스 로드시 한 번 호출된다.</li>
             <li>instance initializer : 클래스 내의 {} 블록으로, 객체 생성시 한 번 호출된다.
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/ClassExample.java" lan="java">초기화 블록, 상속, 다형성 예시 »</button></li>
+                <button class="btn-code" path="Repositories/Eclipse/Basic/src/io/github/donggi/ClassExample.java" lan="java">초기화 블록, 상속, 다형성 예시 »</button></li>
         </ul>
         <li>this : 객체 자신을 가리키는 키워드. this()를 통해 다른 생성자 호출, this.methodName()을 통해 다른 메서드 호출, ClassName.this를 통해 가려진 영역의 객체 참조.</li>
         <li>super : 부모 클래스를 가리키는 키워드. super()를 통해 부모 메서드 호출, super.methodName()을 통해 다른 메서드 호출</li>
         <li>자바는 오버라이드를 명시하지 않아도 재정의한 메서드를 호출해준다.(= Dynamic method dispatch)</li>
         <li>instanceof 연산자로 호환 여부 확인 가능</li>
         <li>{}를 이용해 간단하게 익명클래스를 작성할 수 있다.
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/AnonymousClass.java" lan="java">익명클래스 객체 예시 »</button></li>
+            <button class="btn-code" path="Repositories/Eclipse/Basic/src/io/github/donggi/AnonymousClass.java" lan="java">익명클래스 객체 예시 »</button></li>
     </ul>
 </details>
 
@@ -35,7 +35,7 @@
         <li>인터페이스의 메서드는 기본적으로 body가 없지만, default method는 가질 수 있다.</li>
         <li>인터페이스 구체화 : implements</li>
         <li>추상클래스는 인터페이스를 부분적으로 구체화해도 된다.</li>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/Interface.java" lan="java">예시 코드 »</button>
+        <button class="btn-code" path="Repositories/Eclipse/Basic/src/io/github/donggi/Interface.java" lan="java">예시 코드 »</button>
     </ul>
 </details>
 
@@ -49,7 +49,7 @@
         <li>Inner Interface : 외부 클래스 이름으로 접근</li>
         <li>Anonymous Class : 외부 클래스 final 멤버 접근 가능</li>
         <li>Local Class : 외부 클래스 final 멤버 접근 가능</li>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/Nested.java" lan="java">예시 코드 »</button>
+        <button class="btn-code" path="Repositories/Eclipse/Basic/src/io/github/donggi/Nested.java" lan="java">예시 코드 »</button>
     </ul>
 </details>
 
@@ -65,10 +65,10 @@
             <li>기존의 인터페이스에 static 메서드가 추가되었다. 예) Comparator.comparing</li>
         </ul>
         <li>익명 메서드 Lambda : FunctionalInterface의 메서드만을 명시함으로써 익명 객체를 생성한다.</li>
-        시그니처를 간소화하는 것은 어디까지나 정의가 분명할 때뿐이다. <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/Lambda2.java" lan="java">예시 코드 »</button>
+        시그니처를 간소화하는 것은 어디까지나 정의가 분명할 때뿐이다. <button class="btn-code" path="Repositories/Eclipse/Basic/src/io/github/donggi/Lambda2.java" lan="java">예시 코드 »</button>
         <li>메서드 참조를 이용해 기정의된 메서드를 람다로 이용할 수 있다. '::' 연산자를 이용한다.</li>
         <li>생성자 참조 &raquo; "::new". 배열 생성자 int[]::new도 가능.
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/Lambda.java" lan="java">예시 코드 »</button></li>
+            <button class="btn-code" path="Repositories/Eclipse/Basic/src/io/github/donggi/Lambda.java" lan="java">예시 코드 »</button></li>
     </ul>
 </details>
 
@@ -102,8 +102,8 @@
         <li>void wait() : 해당 객체에 대해 스레드를 대기.</li>
         <li>void wait(long timeout) : 깨워질 때까지 최대 timeout ms동안 대기.</li>
         <li>void wait(long timeout, int nanos) : timeout ms + nanos ns</li>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/ObjectExample.java" lan="java">예시 : clone, equals, hashCode, toString, compareTo »</button>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/Notify.java" lan="java">예시 : notify, wait »</button>
+        <button class="btn-code" path="Repositories/Eclipse/Basic/src/io/github/donggi/ObjectExample.java" lan="java">예시 : clone, equals, hashCode, toString, compareTo »</button>
+        <button class="btn-code" path="Repositories/Eclipse/Basic/src/io/github/donggi/Notify.java" lan="java">예시 : notify, wait »</button>
         <li>@Deprecated(since="9") protected void finalize()</li>
         객체 폐기 메서드였던 것.<br>
         대안 : Non-heap 리소스를 갖는 객체들에 대하여 명시적인 자원 해제 메서드를 지원해야 하며, 가능하면 AutoCloseable을 구체화한다. java.lang.ref.Cleaner, java.lang.ref.PhantomReference는 참조되지 않는 객체를 해제하는 데 유연한 방법을 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/lang/ref/Cleaner.html">제공한다.</a>
@@ -132,7 +132,7 @@
         <li>enum은 여타 클래스와 같이 멤버 변수, 메서드를 가질 수 있으며, private 생성자와 abstract method도 가질 수 있다.</li>
         <li>enum은 로드시 한번만 생성되므로 싱글톤을 간단하게 구현할 수 있다.</li>
         <li>Enum&lt;E&gt; :: name, toString, ordinal, compareTo, valueOf</li>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/EnumExample.java" lan="java">예시 코드 »</button>
+        <button class="btn-code" path="Repositories/Eclipse/Basic/src/io/github/donggi/EnumExample.java" lan="java">예시 코드 »</button>
     </ul>
 </details>
 
@@ -151,7 +151,7 @@
             <li>Throwable getCause() : 현재 예외의 근원을 얻는다. 없으면 null</li>
         </ol>
         <li>
-            <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/ExceptionExample.java" lan="java">예시 코드 »</button>
+            <button class="btn-code" path="Repositories/Eclipse/Basic/src/io/github/donggi/ExceptionExample.java" lan="java">예시 코드 »</button>
         </li>
         <li>부모보다 많은 종류의 예외를 공표할 수 없다.</li>
     </ul>
@@ -162,7 +162,7 @@
 <details>
     <summary>옵션 타입</summary>
     Optional&lt;T&gt; : T 타입의 존재 여부를 포함하는 T타입 컨테이너
-    <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/OptionalExample.java" lan="java">예시 코드 »</button>
+    <button class="btn-code" path="Repositories/Eclipse/Basic/src/io/github/donggi/OptionalExample.java" lan="java">예시 코드 »</button>
 </details>
 
 <hr>
@@ -176,8 +176,8 @@
         자식 메서드의 Erasure가 부모와 다를 때 부모 메서드는 bridge 메서드가 되어 자식의 Erasure를 이용하는 메서드를 호출한다. 이 과정에서 리턴 타입만 다른 메서드들이 생성될 수 있지만, 바이트 코드 단계기 때문에 에러가 발생되지 않고 잘 처리된다.
         <li>메서드에서는 와일드카드 '?'를 이용하여 제네릭 타입을 매개변수로 받을 수 있다.</li>
         <li>제네릭을 통한 객체 생성 불가. 제네릭을 static 요소에서 이용하는 데 제한.</li>
-        <li><button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/Generic.java" lan="java">예시 : 제네릭 타입의 선언, 제네릭 리스트 일부 구현, 바운드된 타입 매개변수 선언 »</button></li>
-        <li><button type="button" class="btn btn-primary btn-sm btn-code" path="Java/Basic/src/io/github/donggi/Generic2.java" lan="java">예시 : 비제네릭 클래스의 제네릭 생성자 선언, 비제네릭 클래스 - 제네릭 클래스 상속 »</button></li>
+        <li><button class="btn-code" path="Repositories/Eclipse/Basic/src/io/github/donggi/Generic.java" lan="java">예시 : 제네릭 타입의 선언, 제네릭 리스트 일부 구현, 바운드된 타입 매개변수 선언 »</button></li>
+        <li><button class="btn-code" path="Repositories/Eclipse/Basic/src/io/github/donggi/Generic2.java" lan="java">예시 : 비제네릭 클래스의 제네릭 생성자 선언, 비제네릭 클래스 - 제네릭 클래스 상속 »</button></li>
     </ul>
 </details>
 

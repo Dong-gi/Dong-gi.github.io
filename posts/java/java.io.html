@@ -41,7 +41,7 @@
         <li>콘솔에 대한 close()는 실제로 아무런 영향을 미치지 않는다.</li>
         <li>유닉스의 Ctrl+D, 윈도우의 Ctrl+Z와 같은 종료 문자를 만나면 읽기 메서드는 null을 반환한다.</li>
         <li>보안 유의 : 패스워드와 같은 중요한 데이터를 읽어들일 때, readPassword(), readPassword(String, Object...) 메서드를 이용하고, 반환된 char[]를 수동으로 0 초기화한다.</li>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/ConsoleExample.java" lan="java">예시 코드 »</button>
+        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/ConsoleExample.java" lan="java">예시 코드 »</button>
     </ol>
     <details>
         <summary>Method Detail</summary>
@@ -413,7 +413,7 @@
         <summary>class PipedInputStream extends InputStream Since 1.0</summary>
         <ol>
             <li>PipedOutputStream과 연결되어 바이트들을 받는 InputStream. PipedOutputStream과 별개의 스레드에서 동작해야 한다.
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/PipedStreamExample.java" lan="java">예시 코드 »</button></li>
+                <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/PipedStreamExample.java" lan="java">예시 코드 »</button></li>
         </ol>
         <details>
             <summary>Constructor Detail</summary>
@@ -436,7 +436,7 @@
         <summary>class PipedOutputStream extends OutputStream Since 1.0</summary>
         <ol>
             <li>연결된 PipedInputStream으로 바이트들을 보내는 OutputStream. PipedInputStream과 별개의 스레드에서 동작해야 한다.
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/PipedStreamExample.java" lan="java">예시 코드 »</button></li>
+                <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/PipedStreamExample.java" lan="java">예시 코드 »</button></li>
         </ol>
         <details>
             <summary>Constructor Detail</summary>
@@ -471,7 +471,7 @@
         <summary>class PushbackInputStream extends FilterInputStream Since 1.0</summary>
         <ol>
             <li>이미 읽은 것을 취소하고 다시 읽을 수 있는 기능을 지원한다. 이전에 읽은 내용을 저장하지는 않으므로, 덮어쓰기처럼 이용할 수 있다.
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/PushBackExample.java" lan="java">예시 코드 »</button></li>
+                <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/PushBackExample.java" lan="java">예시 코드 »</button></li>
         </ol>
         <details>
             <summary>Constructor Detail</summary>
@@ -491,7 +491,7 @@
     
     <details>
         <summary>class FileInputStream extends InputStream Since 1.0</summary>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/SerializableExample.java" lan="java">예시 코드 »</button>
+        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/SerializableExample.java" lan="java">예시 코드 »</button>
         <details>
             <summary>Constructor Detail</summary>
             <ol>
@@ -512,7 +512,7 @@
     
     <details>
         <summary>class FileOutputStream extends OutputStream Since 1.0</summary>
-        <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/SerializableExample.java" lan="java">예시 코드 »</button>
+        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/SerializableExample.java" lan="java">예시 코드 »</button>
         <details>
             <summary>Constructor Detail</summary>
             <ol>
@@ -570,7 +570,7 @@
         <summary>interface Serializable Since 1.1</summary>
         <ol>
             <li>직렬화와 역질렬화를 지원하는 마커 인터페이스. ObjectInputStream, ObjectOutputStream의 메서드들을 이용해 알아서 저장/복구한다.
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/SerializableExample.java" lan="java">예시 코드 »</button></li>
+                <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/SerializableExample.java" lan="java">예시 코드 »</button></li>
             <li>직렬화하지 않을 멤버는 transient 키워드로 표시한다.</li>
             <li>직접 구현하고 싶다면 Externalizable 인터페이스를 구체화하거나, 다음의 메서드들을 작성한다.</li>
             <ul>
@@ -597,7 +597,7 @@
         <summary>interface Externalizable extends Serializable Since 1.1</summary>
         <ol>
             <li>객체 직렬화를 직접 구현하고자 할 때 이를 구체화한다. 객체 직렬화는 빈 객체를 만든 뒤 각 속성의 값을 쓰므로 기본 생성자가 필요하다.
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/ExternalizableExample.java" lan="java">예시 코드 »</button></li>
+                <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/ExternalizableExample.java" lan="java">예시 코드 »</button></li>
         </ol>
         <details>
             <summary>Method Detail</summary>
@@ -613,12 +613,12 @@
         
     <details>
         <summary>class ObjectInputStream extends InputStream implements ObjectInput, ObjectStreamConstants Since 1.1</summary>
-        객체 읽기에 관한 InputStream. <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/SerializableExample.java" lan="java">예시 코드 »</button>
+        객체 읽기에 관한 InputStream. <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/SerializableExample.java" lan="java">예시 코드 »</button>
     </details>
     
     <details>
         <summary>class ObjectOutputStream extends OutputStream implements OjbectOutput, ObjectStreamConstants Since 1.1</summary>
-        객체 쓰기에 관한 OutputStream. <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/SerializableExample.java" lan="java">예시 코드 »</button>
+        객체 쓰기에 관한 OutputStream. <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/SerializableExample.java" lan="java">예시 코드 »</button>
     </details>
 </details>
 
@@ -700,7 +700,7 @@
         <summary>class InputStreamReader extends Reader Since 1.1</summary>
         <ol>
             <li>InputStream에 대해 Reader 작업을 지원해주는 bridge 클래스.
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/BufferedReaderExample.java" lan="java">예시 코드 »</button></li>
+                <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/BufferedReaderExample.java" lan="java">예시 코드 »</button></li>
         </ol>
         <details>
             <summary>Constructor Detail</summary>
@@ -827,7 +827,7 @@
         <summary>class BufferedReader extends Reader Since 1.1</summary>
         <ol>
             <li>다른 Reader에 대한 버퍼를 제공하여, 시스템 읽기 작업이 빈번하게 일어나지 않게 해준다.
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/BufferedReaderExample.java" lan="java">예시 코드 »</button></li>
+                <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/BufferedReaderExample.java" lan="java">예시 코드 »</button></li>
         </ol>
         <details>
             <summary>Constructor Detail</summary>
@@ -888,17 +888,17 @@
             
     <details>
         <summary>class PipedReader extends Reader Since 1.1</summary>
-        PipedInputStream과 유사. <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/PipedReaderExample.java" lan="java">예시 코드 »</button>
+        PipedInputStream과 유사. <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/PipedReaderExample.java" lan="java">예시 코드 »</button>
     </details>
     
     <details>
         <summary>class PipedWriter extends Writer Since 1.1</summary>
-        PipedOutputStream과 유사. <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/PipedReaderExample.java" lan="java">예시 코드 »</button>
+        PipedOutputStream과 유사. <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/PipedReaderExample.java" lan="java">예시 코드 »</button>
     </details>
     
     <details>
         <summary>class PushbackReader extends FilterReader Since 1.1</summary>
-        PushbackInputStream과 비슷.<button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/PushBackExample.java" lan="java">예시 코드 »</button>
+        PushbackInputStream과 비슷.<button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/PushBackExample.java" lan="java">예시 코드 »</button>
     </details>
     
     <details>
@@ -942,7 +942,7 @@
         <summary>@FunctionalInterface interface FileFilter Since 1.2</summary>
         <ol>
             <li>파일 패스 필터링에 사용되며 File::listFiles의 매개변수로 객체가 넘겨진다.
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/FileFilterExample.java" lan="java">예시 코드 »</button></li>
+                <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/FileFilterExample.java" lan="java">예시 코드 »</button></li>
         </ol>
         <details>
             <summary>Method Detail</summary>
@@ -956,7 +956,7 @@
         <summary>@FunctionalInterface interface FilenameFilter Since 1.0</summary>
         <ol>
             <li>특정 디렉터리에서의 파일명 필터링에 사용되며 FileDialog::setFilenameFilter, File::list, File::listFiles의 매개변수로 객체가 넘겨진다.
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/FilenameFilterExample.java" lan="java">예시 코드 »</button></li>
+                <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/FilenameFilterExample.java" lan="java">예시 코드 »</button></li>
         </ol>
         <details>
             <summary>Method Detail</summary>
@@ -1002,8 +1002,8 @@
                 <li>boolean setReadOnly(), setWritable(~), setReadable(~), setExecutable(~) Since 1.6</li>
                 <li>String[] list(), list(FilenameFilter filter)</li>
                 <li>File[] listFiles(), listFiles(FilenameFilter filter), listFiles(FileFilter filter) Since 1.2</li>
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/FileFilterExample.java" lan="java">FileFilter 예시 코드 »</button>
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/FilenameFilterExample.java" lan="java">FilenameFilter 예시 코드 »</button>
+                <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/FileFilterExample.java" lan="java">FileFilter 예시 코드 »</button>
+                <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/FilenameFilterExample.java" lan="java">FilenameFilter 예시 코드 »</button>
                 <li>static File[] listRoots() Since 1.2</li>
                 <li>long getTotalSpace(), getFreeSpace(), getUsableSpace() Since 1.6</li>
                 <li>static File createTempFile(String prefix, String suffix, File directory) Since 1.2</li>
@@ -1013,7 +1013,7 @@
                 <li>void deleteOnExit() Since 1.2</li>
                 <li>int hashCode() : 추상 경로이름과 1234321 사이의 xor 연산</li>
                 <li>URI toURI() Since 1.4, java.nio.file.Path toPath() Since 1.7</li>
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/FileExample.java" lan="java">File 예시 코드 »</button>
+                <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/FileExample.java" lan="java">File 예시 코드 »</button>
             </ol>
         </details>
     </details>
@@ -1022,7 +1022,7 @@
         <summary>final class FilePermission extends Permission implements Serializable Since 1.2</summary>
         <ol>
             <li>파일 및 디렉터리에 관한 권한을 표현하는 클래스.
-                <button type="button" class="btn btn-primary btn-sm btn-code" path="Java/JavaSE/src/io/FilePermissionExample.java" lan="java">예시 코드 »</button></li>
+                <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/FilePermissionExample.java" lan="java">예시 코드 »</button></li>
             <ul>
                 <li>"/*"로 끝나는 경로는 해당 디렉터리 내부 모든 파일 및 디렉터리를 가리킨다. "*"는 현재 디렉터리 내부.</li>
                 <li>"/-"로 끝나는 경로는 해당 디렉터리 내부 모든 파일 및 모든 서브디렉터리를 가리킨다. "-"는 현재 디렉터리 내부.</li>
