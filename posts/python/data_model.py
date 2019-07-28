@@ -55,5 +55,12 @@ t = 1, 2
 print(type(t)) # <class 'tuple'>
 
 
-s = slice(1, 10, 2)
-print(s.indices(5))
+s = slice(10, 0, -2)
+l = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+print(s.indices(0)) # (-1, -1, -2)
+print(s.indices(5)) # (4, 0, -2)
+print(s.indices(10)) # (9, 0, -2)
+print(l[s]) # [10, 8, 6, 4, 2]
+print(l[9 : 0 : -2]) # [10, 8, 6, 4, 2]
+print(s.indices(15)) # (10, 0, -2)
+
