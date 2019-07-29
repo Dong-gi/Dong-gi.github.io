@@ -11,7 +11,7 @@ public class Main1068 {
         // 1: 1 ~ 9 : 9개
         // 2: 10 ~ 99 : 90개
         // 3: 100 ~ 999 : 900개
-        HashMap<Integer, Long> levels = new HashMap<>() {{ put(1, 9L); }};
+        HashMap<Integer, Long> levels = new HashMap<Integer, Long>() {{ put(1, 9L); }};
         int level = 2;
         int num = 90;
         while(true) {

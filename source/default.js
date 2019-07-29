@@ -227,8 +227,12 @@ function mutationCallback(mutations, observer) {
     for (let mutation of mutations) {
         if (mutation.type !== 'childList') return;
         
+        $.each($('table', $(mutation.target)), (idx, table) => {
+            if($(table).hasClass('table')) return;
+            $(table).addClass('table table-sm table-hover');
+        });
+
         $.each($('button.btn-code', $(mutation.target)), (idx, button) => {
-            console.log(button);
             let id = `code-${new Date().getTime()}-${Math.random().toString().replace(/\./g, '')}`;
             $(button).attr('id', id);
             $(button).attr('type', 'button');

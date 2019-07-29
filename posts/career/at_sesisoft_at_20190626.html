@@ -2,7 +2,7 @@
 <button class="btn-code" path="posts/career/at_sesisoft_at_20190626.js" lan="javascript">전체 테이블 정렬 코드 »</button><br>
 이미 잘 만들어진 오픈소스가 있으므로, 내가 작성한 코드에서 null 컬럼을 모두 지우는 부분만 적용한 뒤 DataTable를 이용하는 것도 괜찮을듯.
 
-<table class="table">
+<table>
     <thead>
         <tr>
             <th>Name</th>
@@ -11,8 +11,8 @@
             <th>Age</th>
             <td>Null Column</td>
             <th>Start date</th>
-            <th>File</th>
-            <th>Salary</th>
+            <th style="background-color: black; color: white;">File</th>
+            <th style="background-color: rgba(100, 175, 250, 0.7)">Salary</th>
         </tr>
     </thead>
     <tbody>
@@ -64,7 +64,7 @@
             <th>null</th>
             <td>2011/6/7</td>
             <td>mt_4_55.jpg</td>
-            <td>$206,850</td>
+            <td>$-206,850</td>
         </tr>
         <tr>
             <td>Brielle Williamson</td>
@@ -80,7 +80,7 @@
             <td>Bruno Nash</td>
             <td>Software Engineer</td>
             <td>London</td>
-            <td>38</td>
+            <td>-38</td>
             <th>null</th>
             <td>2011/5/3</td>
             <td>pic-9_9_3:55.jpg</td>
@@ -104,13 +104,13 @@
             <th>null</th>
             <td>2011/12/6</td>
             <td>pic-9_10_23:5.jpg</td>
-            <td>$145,600</td>
+            <td>$-145,600</td>
         </tr>
         <tr>
             <td>Cedric Kelly</td>
             <td>Senior Javascript Developer</td>
             <td>Edinburgh</td>
-            <td>22</td>
+            <td>-22</td>
             <th></th>
             <td>2012/3/29</td>
             <td>photo_1.jpg</td>

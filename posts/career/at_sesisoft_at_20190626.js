@@ -24,7 +24,11 @@ $.each($('table'), (idx, table) => {
 });
 
 function customTableSort(idx, node, table) {
-    $(node).addClass('sorting-table-head').attr('sort-order', '●');
+    let rgba = getRgba(node);
+    if(rgba[0] + rgba[1] + rgba[2] < 255 * rgba[3])
+        $(node).addClass('sorting-table-head-white').attr('sort-order', '●');
+    else
+        $(node).addClass('sorting-table-head-black').attr('sort-order', '●');
     return () => {
         // order : true(기본), false(역순)
         let order = !($(node).attr('sort-order') === '▲');
@@ -37,8 +41,15 @@ function customTableSort(idx, node, table) {
     };
 }
 
+function getRgba(node) {
+    let rgbaRegex = /(\d+)\D*(\d+)\D*(\d+)\D*(\d*\.?\d*)/;
+    let backgroundColor = window.getComputedStyle(node).getPropertyValue("background-color");
+    let rgba = rgbaRegex.exec(backgroundColor);
+    return [parseInt(rgba[1]), parseInt(rgba[2]), parseInt(rgba[3]), /rgba/.test(backgroundColor)? parseFloat(rgba[3]) : 1];
+}
+
 function customTextCompare(str1, str2) {
-    let numPartRegex = /((\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/;
+    let numPartRegex = /(-?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/;
     let startWithNumberRegex = new RegExp(`^${numPartRegex.source}`);
     let strPartRegex = new RegExp(`^((?!${numPartRegex.source})[\\d\\D])+`, 'm');
     

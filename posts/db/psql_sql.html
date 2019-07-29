@@ -574,7 +574,7 @@
                         WITH RECURSIVE t(n) AS ( VALUES (10) UNION SELECT n+1 FROM t WHERE n &lt; 100 )<br>
                         SELECT sum(n) FROM t;
 
-                        <table class="table table-sm table-hover">
+                        <table>
                             <tr><th>t</th><th>working_table</th></tr>
                             <tr><td>empty</td><td>empty</td></tr>
                             <tr><td>10</td><td>10</td></tr>
@@ -612,7 +612,7 @@
     <summary>Data Types</summary>
     <details>
         <summary>Numeric Types</summary>
-        <table class="table table-sm table-hover">
+        <table>
             <thead>
                 <tr><th>Name</th><th>Size</th><th>Description</th></tr>
             </thead>
@@ -659,7 +659,7 @@
 
     <details>
         <summary>Character Types</summary>
-        <table class="table table-sm table-hover">
+        <table>
             <thead>
                 <tr><th>Name</th><th>Description</th></tr>
             </thead>
@@ -683,7 +683,7 @@
 
     <details>
         <summary>Date/Time Types</summary>
-        <table class="table table-sm table-hover">
+        <table>
             <thead>
                 <tr><th>Name</th><th>Size</th><th>Description</th><td>Range</td><td>Resolution</td></tr>
             </thead>
@@ -704,7 +704,7 @@
             YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, YEAR TO MONTH, DAY TO HOUR, DAY TO MINUTE, DAY TO SECOND, HOUR TO MINUTE, HOUR TO SECOND, MINUTE TO SECOND
 
             <li>Special Date/Time Input String</li>
-            <table class="table table-sm table-hover">
+            <table>
                 <thead>
                     <tr><th>String</th><th>Valid Types</th><th>Description</th></tr>
                 </thead>
@@ -737,7 +737,7 @@
 
     <details>
         <summary>Geometric Types</summary>
-        <table class="table table-sm table-hover">
+        <table>
             <thead><th>Name</th><th>Size</th><th>Description</th><th>Representation</th></thead>
             <tbody>
                 <tr><td>point</td><td>16 bytes</td><td>xy 좌표계 상의 점</td><td>(x, y)</td></tr>
@@ -861,7 +861,7 @@
 
     <details>
         <summary>Pseudo Types</summary>
-        <table class="table table-sm table-hover">
+        <table>
             <thead>
                 <tr><th>Name</th><th>Description</th></tr>
             </thead>
@@ -891,7 +891,7 @@
 
     <details>
         <summary>기타 내장 자료형 표</summary>
-        <table class="table table-sm table-hover">
+        <table>
             <thead>
                 <tr><th>Name</th><th>Size</th><th>Description</th></tr>
             </thead>
@@ -1065,7 +1065,7 @@
 
     <details>
         <summary>Bit String Operators</summary>
-        <table class="table table-sm table-hover">
+        <table>
             <thead>
                 <tr><th>Operator</th><th>Description</th><th>Example</th><th>Result</th></tr>
             </thead>
@@ -1268,7 +1268,7 @@
         <summary>Date/Time Functions and Operators</summary>
         <details>
             <summary>Date/Time Operators</summary>
-            <table class="table table-sm table-hover">
+            <table>
                 <thead><tr><th>Operator</th><th>Example</th><th>Result</th></tr></thead>
                 <tbody>
                     <tr><td>+</td><td>date '2001-09-28' + integer '7'</td><td>date '2001-10-05'</td></tr>
@@ -1297,7 +1297,7 @@
         </details>
         <details>
             <summary>Date/Time Functions</summary>
-            <table class="table table-sm table-hover">
+            <table>
                 <thead><tr><th>Function</th><th>Return Type</th><th>Description</th><th>Example</th><th>Result</th></tr></thead>
                 <tbody>
                     <tr>
@@ -1514,7 +1514,7 @@
         <summary>JSON Functions and Operators</summary>
         <details>
             <summary>json and jsonb Operators</summary>
-            <table class="table table-sm table-hover">
+            <table>
                 <thead>
                     <tr>
                         <th>Operator</th>
@@ -1665,7 +1665,7 @@
 
             <li>PostgreSQL 트랜잭션 격리 수준</li>
             트랜잭션 격리 수준을 설정하려면 SET TRANSACTION 명령을 이용한다. PostgreSQL은 MVCC 모델을 이용하기 때문에, Read uncommitted는 Read committed처럼 작동한다
-            <table class="table table-sm table-hover">
+            <table>
                 <thead>
                     <tr><th>격리 수준</th><th>Dirty Read</th><th>Nonrepeatable Read</th><th>Phantom Read</th><th>Serialization Anomaly</th></tr>
                 </thead>
@@ -1723,7 +1723,7 @@
         <ol>
             <li>Table-level Locks</li>
             아래 표는 테이블 수준 잠금의 종류와, 각 요청된 잠금 수준에 대해 이미 설정된 잠금으로 인해 요청이 처리되지 않는 경우를 보여준다. 테이블 잠금은 LOCK 명령어로 획득할 수 있다
-            <table class="table table-sm table-hover text-center">
+            <table class="text-center">
                 <thead>
                     <tr>
                         <th rowspan="2">Requested Lock Mode</th>
