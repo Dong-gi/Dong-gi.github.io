@@ -1,0 +1,60 @@
+<hr>
+
+<details>
+    <summary>톰캣 JVM 실행 인코딩/문자셋 설정</summary>
+    <ol>
+        <li>catalina.bat</li>
+        set "JAVA_OPTS=%JAVA_OPTS% -Dfile.encoding=UTF-8 -Dfile.client.encoding=UTF-8 -Dclient.encoding.override=UTF-8"
+        
+        <li>catalina.sh</li>
+        JAVA_OPTS="$JAVA_OPTS -Dfile.encoding=UTF-8 -Dfile.client.encoding=UTF-8 -Dclient.encoding.override=UTF-8"
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>톰캣 리모트 디버깅 설정</summary>
+    <ol>
+        <li>catalina.bat</li>
+        set "JAVA_OPTS=-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=54433,server=y,suspend=n"
+
+        <li>catalina.sh</li>
+        JAVA_OPTS="-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=54433,server=y,suspend=n"
+
+        <li>Eclipse - Debug Configuration - Remote Java Application</li>
+        <img class="rounded mx-auto d-block" alt="" src="imgs/20190731_143749.png">
+        <img class="rounded mx-auto d-block" alt="" src="imgs/20190731_143815.png">
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>서버 URI 인코딩 설정 : conf/server.xml</summary>
+    &lt;Connector port="8080" protocol="HTTP/1.1" connectionTimeout="20000" redirectPort="8443" URIEncoding="UTF-8" /&gt;<br>
+    &lt;Connector port="8009" protocol="AJP/1.3" redirectPort="8443" URIEncoding="UTF-8" /&gt;
+</details>
+
+<hr>
+
+<details>
+    <summary>톰캣 utf8 필터 설정 : {APP_NAME}/web.xml</summary>
+    &lt;filter&gt;<br>
+    　　&lt;filter-name&gt;setCharacterEncodingFilter&lt;/filter-name&gt;<br>
+    　　&lt;filter-class&gt;org.apache.catalina.filters.SetCharacterEncodingFilter&lt;/filter-class&gt;<br>
+    　　&lt;init-param&gt;<br>
+    　　　　&lt;param-name&gt;encoding&lt;/param-name&gt;<br>
+    　　　　&lt;param-value&gt;UTF-8&lt;/param-value&gt;<br>
+    　　&lt;/init-param&gt;<br>
+    　　&lt;async-supported&gt;true&lt;/async-supported&gt;<br>
+    &lt;/filter&gt;<br>
+    <br>
+    &lt;filter-mapping&gt;<br>
+    　　&lt;filter-name&gt;setCharacterEncodingFilter&lt;/filter-name&gt;<br>
+    　　&lt;url-pattern&gt;/*&lt;/url-pattern&gt;<br>
+    &lt;/filter-mapping&gt;
+</details>
+
+<hr>
+
