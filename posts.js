@@ -118,11 +118,8 @@ const posts = {
 
 /*
 lan 속성 : nohighlight, text, java, javascript, cpp, matlab, xml, css, ruby, sql, bash, shell, php, go, python, cs
-displayRange="[]"
-
-<button class="btn-code" path="Java/JavaSE/src/concurrent/.java" lan="java">예시 코드 »</button>
+<button class="btn-code" path="Repositories/Eclipse/.java" lan="java">예시 코드 »</button>
 <button type="button" class="btn btn-primary btn-sm" onclick="">실행 »</button>
-        
 <a role="button" target="_blank" class="btn btn-info btn-sm" href=""></a>
 <a role="button" class="btn btn-info btn-sm" href="javascript:;"></a>
 <img class="rounded mx-auto d-block" alt="" src="imgs/">

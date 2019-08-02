@@ -1,0 +1,293 @@
+<hr>
+
+<details>
+    <summary>개요; org.apache.commons.collections4</summary>
+    <details>
+        <summary>컬렉션 자료형 인터페이스</summary>
+        <details>
+            <summary>interface BoundedCollection&lt;E&gt; extends Collection&lt;E&gt; Since 3.0</summary>
+            <ol>
+                <li>크기 제한을 갖는 컬렉션</li>
+                <li>isFull(), maxSize()</li>
+            </ol>
+        </details>
+        <details>
+            <summary>interface Bag&lt;E&gt; extends Collection&lt;E&gt; Since 2.0</summary>
+            <ol>
+                <li>컬렉션이 보유한 객체에 대한 갯수를 유지한다.</li>
+                <li>예를 들어, Bag {a, b, c, a} 인스턴스에 대해 getCount(a) == 2, uniqueSet() == Set {a, b, c}</li>
+                <li>Bag의 메서드는 Collection API와 다르게 작동하므로, Collection으로 참조하지 않는 것이 바람직하다</li>
+            </ol>
+            <details>
+                <summary>Method Summary</summary>
+                <ol>
+                    <li>int getCount(Object object) : object 보유 갯수 반환. 없으면 0</li>
+
+                    <li>boolean add(E object)</li>
+                    object의 사본이 uniqueSet()에 있다면 카운트만 1 증가하고 false 반환. uniqueSet()에 없다면 사본 추가 → 카운트 1 설정 → true 반환.
+
+                    <li>boolean add(E object, int nCopies) : add(E)와 유사</li>
+
+                    <li>boolean remove(Object object) : object를 모두 제거하고, 컬렉션의 변동이 있다면 true를 반환한다.</li>
+
+                    <li>boolean remove(Object object, int nCopies) : remove(Object)와 유사</li>
+
+                    <li>Set&lt;E&gt; uniqueSet()</li>
+
+                    <li>boolean containsAll(Collection&lt;?&gt; coll)</li>
+                    coll의 모든 요소가 uniqueSet()에 존재하고, 각 요소에 대한 getCount(Object)가 coll에 존재하는 개수보다 크거나 같은 경우 true 반환
+
+                    <li>boolean removeAll(Collection&lt;?&gt; coll)</li>
+                    coll의 모든 요소에 대해 한 번씩 remove(Object)를 호출한 것과 같다.
+
+                    <li>boolean retainAll(Collection&lt;?&gt; coll)</li>
+                    coll에 포함된 요소만 Bag에 유지하되, coll에 존재하는 개수만큼만 최대로 유지한다.
+                </ol>
+            </details>
+        </details>
+        <details>
+            <summary>interface SortedBag&lt;E&gt; extends Bag&lt;E&gt; Since 2.0</summary>
+            <ol>
+                <li>Comparator&lt;? super E&gt; comparator()</li>
+                <li>E first(), last()</li>
+            </ol>
+        </details>
+        <details>
+            <summary>interface MultiSet&lt;E&gt; extends Collection&lt;E&gt; Since 4.1</summary>
+            <ol>
+                <li>Bag과 유사하지만, Collection API를 좀 더 적절하게 따른다.</li>
+            </ol>
+            <details>
+                <summary>static interface MultiSet.Entry&lt;E&gt;</summary>
+                <ol>
+                    <li>MultiSet의 변경 불가능한 원소를 표현한다</li>
+                </ol>
+                <details>
+                    <summary>Method Summary</summary>
+                    <ol>
+                        <li>E getElement()</li>
+                        <li>int getCount()</li>
+                        <li>boolean equals(Object o) : 둘 다 null이거나, 개수까지 일치할 때 true</li>
+                        <li>int hashCode()</li>
+                    </ol>
+                </details>
+            </details>
+            <details>
+                <summary>Method Detail</summary>
+                <ol>
+                    <li>int getCount(Object object)</li>
+                    <li>int setCount(E object, int count) : 변경 전 개수 반환</li>
+                    <li>boolean add(E object) : 항상 true</li>
+                    <li>Set&lt;MultiSet.Entry&lt;E&gt;&gt; entrySet()</li>
+                </ol>
+            </details>
+        </details>
+        <details>
+            <summary>interface IterableMap&lt;K, V&gt; extends Map&lt;K, V&gt;, Put&lt;K, V&gt;, IterableGet&lt;K, V&gt; Since 3.0</summary>
+            MapIterator를 지원하는 Map
+        </details>
+        <details>
+            <summary>interface IterableSortedMap&lt;K, V&gt; extends SortedMap&lt;K, V&gt;, OrderedMap&lt;K, V&gt; Since 4.0</summary>
+            추가 메서드는 없다.
+        </details>
+        <details>
+            <summary>interface BoundedMap&lt;K, V&gt; extends IterableMap&lt;K, V&gt; Since 3.0</summary>
+            추가 메서드는 없다.
+        </details>
+        <details>
+            <summary>interface BidiMap&lt;K, V&gt; extends IterableMap&lt;K, V&gt; Since 3.0</summary>
+            <ol>
+                <li>키와 값이 일대일 대응을 만족하도록 강제하여, 값을 통한 키의 탐색이 가능하게 한다.</li>
+                <li>값을 통한 키의 탐색은 키를 통한 값의 탐색과 동일한 성능으로 이루어져야 한다.</li>
+                <li>키와 값의 위치를 뒤집은 BidiMap을 반환하는 inverseBidiMap() 연산도 지원한다</li>
+            </ol>
+            <details>
+                <summary>Method Summary</summary>
+                <ol>
+                    <li>V put(K key, V value)</li>
+                    value가 이미 맵에 존재하는 경우, 기존 매핑을 제거하고 삽입한다.
+                    <li>K getKey(Object value)</li>
+                    <li>K removeValue(Object value) : 값을 통한 매핑 제거. 지원하지 않을 수 있다.</li>
+                    <li>BidiMap&lt;V, K&gt; inverseBidiMap()</li>
+                </ol>
+            </details>
+        </details>
+        <details>
+            <summary>interface SortedBidiMap&lt;K, V&gt; extends OrderedBidiMap&lt;K, V&gt;, SortedMap&lt;K, V&gt; Since 3.0</summary>
+            <ol>
+                <li>Comparator&lt;? super V&gt; valueComparator()</li>
+            </ol>
+        </details>
+        <details>
+            <summary>interface MultiValuedMap&lt;K, V&gt; Since 4.1</summary>
+            <ol>
+                <li>각 키에 대한 값을 컬렉션에 보관하는 맵을 정의한다</li>
+                <li>키를 통해 얻은 컬렉션의 변경 가능 여부는 정해지지 않는다.</li>
+            </ol>
+            <details>
+                <summary>Method Detail</summary>
+                <ol>
+                    <li>Collection, Map을 직접 상속하진 않지만, 동일한 메서드들은 생략</li>
+                    <li>boolean containsValue(Object value)
+                        <button class="btn-code" path="Repositories/Eclipse/apache-commons-collections-example/src/test/java/MultiValuedMapTest.java" displayRange="[17,24]" lan="java">예시 코드 »</button></li>
+                    <li>Collection&lt;V&gt; get(K key), remove(Object key)</li>
+                    <li>boolean putAll(K key, Iterable&lt;? extends V&gt; values) : 맵이 변경되면 true</li>
+                    <li>boolean removeMapping(Object Key, Object item)</li>
+                    <li>Map&lt;K, Collection&lt;V&gt;&gt; asMap()</li>
+                    <li>MapIterator&lt;K, V&gt; mapIterator()
+                        <button class="btn-code" path="Repositories/Eclipse/apache-commons-collections-example/src/test/java/MultiValuedMapTest.java" displayRange="[27,45]" lan="java">예시 코드 »</button></li>
+                </ol>
+            </details>
+        </details>
+        <details>
+            <summary>interface ListValuedMap&lt;K, V&gt; extends MultiValuedMap&lt;K, V&gt; Since 4.1 + SetValuedMap</summary>
+            List를 컨테이너로 이용하는 것 외의 변경은 없다.
+        </details>
+        <details>
+            <summary>interface OrderedMap&lt;K, V&gt; extends IterableMap&lt;K, V&gt; Since 3.0</summary>
+            K firstKey(), lastKey(), nextKey(K key), previousKey(K key)
+        </details>
+        <details>
+            <summary>interface OrderedBidiMap&lt;K, V&gt; extends BidiMap&lt;K, V&gt;, OrderedMap&lt;K, V&gt; Since 3.0</summary>
+            OrderedBidiMap&lt;V, K&gt; inverseBidiMap()
+        </details>
+        <details>
+            <summary>interface KeyValue&lt;K, V&gt; Since 3.0</summary>
+            <ol>
+                <li>K getKey()</li>
+                <li>V getValue()</li>
+            </ol>
+        </details>
+        <details>
+            <summary>interface Trie&lt;K, V&gt; extends IterableSortedMap&lt;K, V&gt; Since 4.0</summary>
+            Prefix tree에 대해 정의한다.
+            <img style="max-height: 300px" class="rounded mx-auto d-block" alt="" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Trie_example.svg/1024px-Trie_example.svg.png">
+            <button class="btn-code" path="Repositories/Eclipse/apache-commons-collections-example/src/test/java/TrieTest.java" displayRange="[13,32]" lan="java">예시 코드 »</button>
+        </details>
+    </details>
+
+    <details>
+        <summary>컬렉션 연산 인터페이스</summary>
+        <details>
+            <summary>interface Unmodifiable Since 3.0</summary>
+            컬렉션 변경 연산이 제공되지 않음을 표시하는 마커 인터페이스
+        </details>
+        <details>
+            <summary>interface Get&lt;K, V&gt; Since 4.0</summary>
+            Map 인터페이스의 읽기 기능에 대한 정의를 담고 있다. 라고 적혀있지만 remove(Object) 메서드는 여기에 있다.
+        </details>
+        <details>
+            <summary>interface IterableGet&lt;K, V&gt; extends Get&lt;K, V&gt; Since 4.0</summary>
+            이 인터페이스를 구현한 Map은 mapIterator() 메서드를 통해 MapIterator&lt;K, V&gt;를 제공한다.
+        </details>
+        <details>
+            <summary>interface Put&lt;K, V&gt; Since 4.0</summary>
+            Map 인터페이스의 쓰기 기능에 대한 정의를 담고 있다.  Put(K, V)는 V가 아닌 Object를 반환함에 유의.
+        </details>
+        <details>
+            <summary>interface OrderedIterator&lt;E&gt; extends Iterator&lt;E&gt; Since 3.0</summary>
+            <ol>
+                <li>역방향 순회를 추가로 지원한다</li>
+                <li>boolean hasPrevious(), E previous()</li>
+            </ol>
+        </details>
+        <details>
+            <summary>interface MapIterator&lt;K, V&gt; extends Iterator&lt;K&gt; Since 3.0</summary>
+            <ol>
+                <li>Map에 대한 이터레이터를 정의한다.</li>
+                <li>이 인터페이스를 구현한 Map은 내부에서 데이터를 Entry 객체로 유지하지 않는다(불필요한 객체 생성 방지).</li>
+                <li>Entry 대신 키를 이용해 순회하며, getValue(), setValue() 연산을 지원한다.</li>
+            </ol>
+            <details>
+                <summary>Method Summary</summary>
+                <ol>
+                    <li>K getKey()</li>
+                    <li>V getValue()</li>
+                    <li>void remove() : 지원하지 않을 수 있다.</li>
+                    <li>V setValue() : 지원하지 않을 수 있다.</li>
+                </ol>
+            </details>
+        </details>
+        <details>
+            <summary>interface OrderedMapIterator&lt;K, V&gt; extends MapIterator&lt;K, V&gt;, OrderedIterator&lt;K&gt;</summary>
+            추가 메서드는 없다.
+        </details>
+        <details>
+            <summary>interface ResettableIterator&lt;E&gt; extends Iterator&lt;E&gt; Since 3.0</summary>
+            void reset() : 이너레이터가 생성됐을 때 초기 위치로 돌아간다.
+        </details>
+        <details>
+            <summary>interface ResettableListIterator&lt;E&gt; extends ListIterator&lt;E&gt;, ResettableIterator&lt;E&gt;, OrderedIterator&lt;E&gt; Since 3.0</summary>
+            추가 메서드는 없다. 이 타입의 이터레이터는 재사용할 수 있다.
+        </details>
+    </details>
+
+    <details>
+        <summary>함수 인터페이스</summary>
+        <details>
+            <summary>@FunctionalInterface interface Closure&lt;T&gt; Since 1.0</summary>
+            <ol>
+                <li>void execute(T input)</li>
+                <li>ClosureUtils 클래스에서 이에 관한 유틸리티를 제공한다.</li>
+            </ol>
+        </details>
+        <details>
+            <summary>interface Equator&lt;T&gt; Since 4.0</summary>
+            <ol>
+                <li>boolean equate(T o1, T o2) : 두 인스턴스가 같은지 여부를 반환</li>
+                <li>int hash(T o) : equate() 메서드에서 이용하는 로직을 이용해 해시값 반환</li>
+            </ol>
+        </details>
+        <details>
+            <summary>@FunctionalInterface interface Factory&lt;T&gt; Since 2.1</summary>
+            <ol>
+                <li>T create()</li>
+                <li>인스턴스 생성에 인자가 필요하다면 Transformer를 이용</li>
+                <li>FactoryUtils에서 이에 관한 유틸리티를 제공한다.</li>
+            </ol>
+        </details>
+        <details>
+            <summary>@FunctionalInterface interface Predicate&lt;T&gt; Since 1.0</summary>
+            <ol>
+                <li>인자 하나에 대한 가부를 결정하는 함수</li>
+                <li>boolean evaluate(T object)</li>
+                <li>PredicateUtils에서 관련된 유틸리티를 제공한다.</li>
+            </ol>
+        </details>
+        <details>
+            <summary>@FunctionalInterface interface Transformer&lt;I, O&gt; Since 1.0</summary>
+            <ol>
+                <li>인스턴스를 다른 타입으로 변환하는 함수를 정의한다.</li>
+                <li>입력 인스턴스는 변경되지 않아야 한다.</li>
+                <li>O transform(I input)</li>
+                <li>TransformerUtils에서 관련된 유틸리티를 제공한다.</li>
+            </ol>
+        </details>
+    </details>
+
+    <details>
+        <summary>유틸리티 클래스</summary>
+        <details>
+            <summary>class BagUtils Since 2.1</summary>
+            <details>
+                <summary>Field Detail</summary>
+                <ol>
+                    <li>static final Bag EMPTY_BAG : 변경 불가</li>
+                    <li>static final Bag EMPTY_SORTED_BAG : 변경 불가</li>
+                </ol>
+            </details>
+            <details>
+                <summary>Method Detail</summary>
+                <ol>
+                    <li>static &lt;E&gt; Bag&lt;E&gt; synchronizedBag(Bag&lt;E&gt; bag)</li>
+                </ol>
+            </details>
+        </details>
+    </details>
+</details>
+
+<hr>
+
+<details>
+    <summary></summary>
+</details>
