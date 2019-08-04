@@ -23,7 +23,7 @@
 
         <li>Ellipsis</li>
         리터럴 ... 이나 Ellipsis 식별자로 이 타입의 싱글톤 객체를 얻을 수 있다. 다음은 NumPy에서 "전체 차원"을 의미하는 ...
-        <button class="btn-code" path="posts/python/data_model.py" displayRange="[1,1,10,39]" lan="python">예시</button>
+        <button class="btn-code" path="Repositories/Python/Basic/data_model.py" displayRange="[1,1,10,39]" lan="python">예시</button>
     </ul>
 
     <details>
@@ -32,7 +32,7 @@
             <li>numbers.Integral; 정수</li>
             <ol>
                 <li>int; 크기 제약 없는 정수</li>
-                <li>bool; <button class="btn-code" path="posts/python/data_model.py" displayRange="[42,45]" lan="python">int의 subtype</button>이며, True, False는 대부분 상황에서 <button class="btn-code" path="posts/python/data_model.py" displayRange="[46,47]" lan="python">1, 0처럼 동작</button>한다.</li>
+                <li>bool; <button class="btn-code" path="Repositories/Python/Basic/data_model.py" displayRange="[42,45]" lan="python">int의 subtype</button>이며, True, False는 대부분 상황에서 <button class="btn-code" path="Repositories/Python/Basic/data_model.py" displayRange="[46,47]" lan="python">1, 0처럼 동작</button>한다.</li>
             </ol>
             <li>numbers.Real (float); double precision 부동 소수</li>
             <li>numbers.Complex (complex); 실수부, 허수부 모두 float인 복소수.</li>
@@ -61,7 +61,7 @@
                     <li>임의 객체들로 이루어진 시퀀스.</li>
                     <li>항목이 2개 이상 : 콤마로 분리한 표현식의 나열로 튜플 생성</li>
                     <li>항목이 1개 : 표현식이 콤마를 붙여서 생성</li>
-                    <li>항목이 0개 : 한 쌍의 빈 괄호로 <button type="button" class="btn btn-primary btn-sm btn-code" path="posts/python/data_model.py" displayRange="[50,55]" lan="python">생성</button></li>
+                    <li>항목이 0개 : 한 쌍의 빈 괄호로 <button type="button" class="btn btn-primary btn-sm btn-code" path="Repositories/Python/Basic/data_model.py" displayRange="[50,55]" lan="python">생성</button></li>
                 </ul>
 
                 <li>bytes</li>
@@ -202,7 +202,7 @@
     <ul>
         <li>Internal type - Slice object</li>
         __getitem__() 메서드를 위한 슬라이스 객체. 내장 함수 slice()로도 생성 가능. 읽기 전용 속성 start, stop, step과 메서드
-        <button class="btn-code" path="posts/python/data_model.py" displayRange="[58,65]" lan="python">indices()</button>를 가진다.
+        <button class="btn-code" path="Repositories/Python/Basic/data_model.py" displayRange="[58,65]" lan="python">indices()</button>를 가진다.
     </ul>
 </details>
 
@@ -211,6 +211,8 @@
 <details>
     <summary>특별 메서드</summary>
     특별 메서드를 구현하면 사용자 정의 객체도 내장형 객체처럼 작동하게 된다.
+    사용자 정의 클래스의 묵시적인 특수 메서드 호출은 메서드가 인스턴스 딕셔너리가 아닌 객체의 형에 정의되어 있을 때만 올바르게 작동함이
+    <button class="btn-code" path="Repositories/Python/Basic/special_method.py" lan="python">보장된다</button>
     <details>
         <summary>Basic customization</summary>
         <ol>
@@ -376,14 +378,123 @@
 
             <li>metaclass</li>
             <ol>
-                <li><a role="button" target="_blank" class="btn btn-info btn-sm" href="https://stackoverflow.com/a/6581949/7369515">https://stackoverflow.com/a/6581949/7369515</a></li>
+                <li><a role="button" target="_blank" class="btn btn-info btn-sm" href="https://stackoverflow.com/a/6581949/7369515">https://stackoverflow.com/a/6581949/7369515</a>
+                    <button class="btn-code" path="Repositories/Python/Basic/metaclass_example.py" displayRange="[1,48,50,62]" lan="python">예시 코드 »</button></li>
                 <li>기본적으로 클래스는 type(name, bases, dict)을 사용해서 만들어진다.</li>
                 <li>메타클래스는 type(name, bases, dict)의 동작을 대신 수행할 수 있는 함수/클래스다. __new__, __init__, __call__을 후킹하여 복잡한 작업을 뒤에서 처리할 수 있게 해준다.</li>
             </ol>
+
+            <li>클래스 및 인스턴스 검사</li>
+            <ol>
+                <li>ABC; Abstract Base Class 도입을 위해 추가되었다</li>
+                
+                <li>class.__instancecheck__(self, instance)</li>
+                isinstance(instance, class)에서 호출된다
+                
+                <li>class.__subclasscheck__(self, subclass)</li>
+                issubclass(subclass, class)에서 호출된다
+            </ol>
+
+            <li>제네릭 흉내내기 <i>classmethod</i> object.__class_getitem__(cls, key)</li>
+            <li>콜러블 흉내내기 object.__call__(self[, args...])</li>
+            <li>컨테이너 흉내내기</li>
+            <ol>
+                <li>매핑 : keys(), values(), items(), get(), clear(), setdefault(), pop(), popitem(), copy(), update()</li>
+                collections.abc 모듈의 추상 베이스 클래스 MutableMapping을 이용하면 쉽다
+                <li>가변 시퀀스 : append(), count(), index(), extend(), insert(), pop(), remove(), reverse(), sort()</li>
+                <li>시퀀스 : __add__(), __radd__(), __iadd__(), __mul__(), __rmul__(), __imul__()</li>
+                <li>in 연산자를 위해 매핑, 시퀀스 모두 __contains__()를 구현하도록 권장</li>
+                <li>이터레이션을 위해 매핑, 시퀀스 모두 __iter__()를 구현하도록 권장</li>
+                <details>
+                    <summary>메서드 목록</summary>
+                    <ol>
+                        <li>object.__len__(self) : 내장함수 len()에서 호출. __bool__()을 정의하지 않은 경우 이를 이용한다</li>
+                        <li>object.__length_hist__(self) Since 3.4 : operator.length_hint()에서 호출. 추정값을 반환하면 된다</li>
+                        <li>슬라이싱</li>
+                        <ol>
+                            <li>object.__getitem__(self, key)</li>
+                            self[key]. 시퀀스 타입의 경우 정수와 슬라이스 객체만 key로 허용. 음수 인덱스를 어떻게 해석할 지를 여기서 구현한다. key가 적절하지 않은 타입이면 TypeError, 시퀀스의 범위 밖이면 IndexError(특히 for 루프가 이에 의존), 매핑의 key가 없으면 KeyError
+                            <li>object.__setitem__(self, key, value)</li>
+                            <li>object.__delitem__(self, key)</li>
+                        </ol>
+                        <li>object.__missing__(self, key) : dict.__getitem__()이 못찾은 경우 이를 통해 기본값을 반환</li>
+                        <li>object.__iter__(self) : 이터레이터가 필요한 경우 호출된다</li>
+                        <li>object.__reversed__(self)</li>
+                        역순으로 탐색하는 이터레이터를 반환하면 된다. reversed() 내장함수는 기본적으로 시퀀스 프로토콜 ─ __len__(), __getitem__()을 이용하므로 이보다 효율적인 구현을 제공할 수 있을때만 구현한다
+                        <li>object.__contains__(self, item)</li>
+                        in, not in에서 호출되며, 기본적으로 __iter__()를 이용하고, 없으면 __getitem__()을 이용한다.
+                    </ol>
+                </details>
+            </ol>
+
+            <li>숫자 흉내내기</li>
+            <ul>
+                <li>+, -, *, @, /, //, %, divmod(), pow(), **, &lt;&lt;, &gt;&gt;, &amp;, ^, |</li>
+                object.__add__(self, other), __sub__, __mul__, __matmul__, __truediv__, __floordiv__, __mod__, __divmod__, __pow__, __lshift__, __rshift__, __and__, __xor__, __or__<br>
+                연산자 우측에 있을 때도 동작하도록 하려면 object.__radd__(self, other), __rsub__, ...
+            
+                <li>+=, -=, *=, @=, ...</li>
+                object.__iadd__(self, other), __isub__, ...
+
+                <li>일항 연산 +, -, abs(), ~</li>
+                object.__neg__(self), __pos__, __abs__, __invert__
+
+                <li>내장 함수 complex(), int(), float()</li>
+                object.__complex__(self), __int__, __float__
+
+                <li>인덱스 반환</li>
+                object.__index__(self). 반드시 정수를 반환해야 하며, 정수형이라면 __int__()와 값이 동일해야 한다
+
+                <li>내장 함수 round(), math 모듈 trunc(), floor(), ceil()</li>
+                object.__round__(self[, ndigits]), __trunc__(self), __floor__, __ceil__<br>
+                __int__()가 정의되지 않은 경우, 내장 함수 int()는 __trunc__()를 사용한다
+            </ul>
+            
+            <li>with문</li>
+            <ol>
+                <li>object.__enter__(self)</li>
+                as 절로 지정된 대상은 이 메서드의 반환값을 가리킨다
+                <li>object.__exit__(self, exc_type, exc_value, traceback)</li>
+                예외 없이 종료된 경우 self외 모든 인자는 None 
+            </ol>
         </ol>
     </details>
-        <li>__getitem__() : 이 메서드를 구현한 클래스의 인스턴스 x에 대하여, x[i] == type(x).__getitem__(x, i)</li>
-    
+
+    <hr>
+
+    <details>
+        <summary>Coroutine</summary>
+        <ol>
+            <li>Awaitable Object</li>
+            object.__await__(self) Since 3.5 : 어웨이터블 구현을 위한 이터레이터 반환
+            
+            <li>Coroutine Object</li>
+            코루틴 객체는 어웨이터블 객체다. 코루틴의 실행은 __await__()의 호출 결과를 이터레이트함으로써 제어된다.
+            <ul>
+                <li>coroutine.send(value)</li>
+                코루틴의 실행을 시작하거나 재개. value가 None이면 __await__()의 이터레이터를 전진, None이 아니면 이터레이터의 send() 메서드로 위임
+                <li>coroutine.throw(type[, value[, traceback]])</li>
+                코루틴에서 예외가 처리되지 않으면 호출자에게 되돌아온다
+                <li>coroutine.close()</li>
+            </ul>
+
+            <li>Asynchronous Iterator Since 3.5</li>
+            <ul>
+                <li>object.__aiter__(self)</li>
+                비동기 제너레이터 반환
+                <li>object.__anext__(self)</li>
+                비동기 제너레이터는 여기서 비동기 코드를 호출할 수 있다. 이터레이터의 다음 값을 반환하는 어웨이터블을 반환해야 한다. 이터레이션이 끝났다면 StopAsyncIteration을 발생해야 한다
+            </ul>
+
+            <li>async with문 Since 3.5</li>
+            <ul>
+                <li>object.__aenter__(self)</li>
+                __enter__()와 유사하며, 어웨이터블을 반환한다
+                <li>object.__aexit__(self, exc_type, exc_value, traceback)</li>
+                __exit__()과 유사하며, 어웨이터블을 반환한다
+            </ul>
+        </ol>
+    </details>
 </details>
 
 <hr>
