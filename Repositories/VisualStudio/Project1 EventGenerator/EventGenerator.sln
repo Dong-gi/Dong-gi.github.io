@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator", "EventGene
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{8E887281-81AC-459E-B6FF-DF26111379C3}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "EventGeneratorSetup", "..\EventGeneratorSetup\EventGeneratorSetup.vdproj", "{04298F26-DFF1-481B-8093-E0530DFEC2E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,8 @@ Global
 		{8E887281-81AC-459E-B6FF-DF26111379C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E887281-81AC-459E-B6FF-DF26111379C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E887281-81AC-459E-B6FF-DF26111379C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04298F26-DFF1-481B-8093-E0530DFEC2E7}.Debug|Any CPU.ActiveCfg = Debug
+		{04298F26-DFF1-481B-8093-E0530DFEC2E7}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

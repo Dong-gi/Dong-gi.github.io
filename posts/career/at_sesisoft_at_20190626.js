@@ -21,14 +21,22 @@ $.each($('table'), (idx, table) => {
     });
 
     $.each($('td, th', headRow), (idx, node) => $(node).click(customTableSort(idx, node, table)));
+
+    let preSort = $('td[pre-sort], th[pre-sort]', headRow);
+    preSort.sort((head1, head2) => parseFloat($(head1).attr('pre-sort')) - parseFloat($(head2).attr('pre-sort')));
+    $.each(preSort, (idx, node) => $(node).click());
 });
 
 function customTableSort(idx, node, table) {
     let rgba = getRgba(node);
     if(rgba[0] + rgba[1] + rgba[2] < 255 * rgba[3])
-        $(node).addClass('sorting-table-head-white').attr('sort-order', '●');
+        $(node).addClass('sorting-table-head-white');
     else
-        $(node).addClass('sorting-table-head-black').attr('sort-order', '●');
+        $(node).addClass('sorting-table-head-black');
+    
+    if(!$(node).attr('sort-order'))
+        $(node).attr('sort-order', '●');
+    
     return () => {
         // order : true(기본), false(역순)
         let order = !($(node).attr('sort-order') === '▲');

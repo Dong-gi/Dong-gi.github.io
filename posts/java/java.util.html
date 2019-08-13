@@ -847,6 +847,7 @@
     <details>
         <summary>Synchronization</summary>
         <ul>
+            <li>비결정 상태에 빠지는 것을 방지하기 위해, 반환된 컬렉션에 대해 synchronized 제약을 걸고 이용하는 것이 좋다.</li>
             <li>static &lt;T&gt; Collection&lt;T&gt; synchronizedCollection(Collection&lt;T&gt; c)</li>
             <li>static &lt;T&gt; Set&lt;T&gt; synchronizedSet(Set&lt;T&gt; s)</li>
             <li>static &lt;T&gt; SortedSet&lt;T&gt; sychronizedSortedSet(SortedSet&lt;T&gt; s)</li>
