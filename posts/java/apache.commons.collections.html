@@ -739,7 +739,7 @@
 <hr>
 
 <details>
-    <summary>org.apache.commons.collections4.bag 콘크리트 클래스</summary>
+    <summary>org.apache.commons.collections4.bag</summary>
     <ol>
         <li>class HashBag&lt;E&gt; extends AbstractMapBag&lt;E&gt; implements Serializable Since 3.0</li>
         저장소로 HashMap을 이용하는 표준 Bag 구현을 제공한다.
@@ -784,7 +784,7 @@
     <summary>org.apache.commons.collections4.collection</summary>
     <ol>
         <li>class CompositeCollection&lt;E&gt; implements Collection&lt;E&gt;, Serializable Since 3.0</li>
-        다른 컬렉션(들)에 대해 하나의 뷰를 제공하는 장식자 컬렉션 구현. CompositeCollection.CollectionMutator를 구현한 컬렉션(들)로 뷰를 구성한 경우, 뷰에 대한 add/remove 연산이 실제로 적용된다.
+        다른 컬렉션(들)에 대해 하나의 뷰를 제공하는 장식자 컬렉션 구현. 뷰에 대한 add/remove 연산이 기저 컬렉션에 적용돼야 한다면 CompositeCollection.CollectionMutator를 제공해야 한다.
 
         <li>class IndexedCollection&lt;K, C&gt; extends AbstractCollectionDecorator&lt;C&gt; Since 4.0</li>
         컬렉션에 대해 맵과 비슷한 뷰를 제공하는 장식자 컬렉션 구현. 뷰에 대한 변경은 키와 기저 컬렉션의 갱신이 자동으로 이루어지지만, 기저 컬렉션이 직접 변경된 경우 reindex()를 통해 직접 동기화해야 한다.
@@ -930,7 +930,7 @@
 
         <li>class SingletonIterator&lt;E&gt; Since 2.0 + SingletonListIterator</li>
 
-        <li>class ReverseListIterator&lt;E&gt; implmene  ResettableListIterator&lt;E&gt; Since 3.2</li>
+        <li>class ReverseListIterator&lt;E&gt; implements  ResettableListIterator&lt;E&gt; Since 3.2</li>
 
         <li>class PushbackIterator&lt;E&gt; implements Iterator&lt;E&gt; Since 4.0</li>
         next()를 취소할 수 있다. next()에서 반환하지 않은 객체도 pushback()으로 넣을 수 있으며, 래핑된 실제 iterator에는 영향을 끼치지 않는다.
@@ -1002,6 +1002,138 @@
         <li>class PredicatedList&lt;E&gt; extends PredicatedCollection&lt;E&gt; implements List&lt;E&gt; Since 3.0</li>
         + TransformedList
 
+        <li>class SetUniqueList&lt;E&gt; extends AbstractSerializableListDecorator&lt;E&gt; Since 3.0</li>
+
+        <li>class TreeList&lt;E&gt; extends AbstractList&lt;E&gt; Since 3.1</li>
+        임의 인덱스 삽입/제거에 최적화된 리스트 구현 제공.add, get, iterator만 이용한다면 ArrayList가 좋다
+
+        <li>final class UnmodifiableList&lt;E&gt; extends AbstractSerializableListDecorator&lt;E&gt; implements Unmodifiable Since 3.0</li>
     </ol>
 </details>
-<button class="btn-code" path="Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java" displayRange="[17,32,]" lan="java">예시</button>
+
+<hr>
+
+<details>
+    <summary>org.apache.commons.collections4.map</summary>
+    <ol>
+        <li>class CaseInsensitiveMap&lt;K, V&gt; extends AbstractHashedMap&lt;K, V&gt; implements Serializable, Cloneable Since 3.0</li>
+        키의 삽입, 비교 시 모두 소문자로 변환된다. keySet() 역시 소문자로 변환된 키를 반환한다
+
+        <li>class CompositeMap&lt;K, V&gt; extends AbstractIterableMap&lt;K, V&gt; implements Serializable Since 3.0</li>
+
+        <li>class CompositeMap&lt;K, V&gt; extends AbstractIterableMap&lt;K, V&gt; implements Serializable Since 3.0</li>
+        여러 맵들에 대해 하나의 뷰를 제공하는 장식자 맵 제공. 뷰에 대한 삽입/삭제 연산이 기저 맵에 적용되야 한다면 CompositeMap.MapMutator를 제공하면 된다.
+
+        <li>class DefaultedMap&lt;K, V&gt; extends AbstractMapDecorator&lt;K, V&gt; implements Serializable Since 3.2</li>
+        + LazyMap, LazySortedMap
+        
+        <li>class FixedSizeMap&lt;K, V&gt; extends AbstractMapDecorator&lt;K, V&gt; implements BoundedMap&lt;K, V&gt;, Serializable Since 3.2</li>
+        + FixedSizeSortedMap
+
+        <li>class Flat3Map&lt;K, V&gt; implements IterableMap&lt;K, V&gt;, Serializable, Cloneable Since 3.0</li>
+        요소가 3개 이하일 때 최적으로 동작하는 맵 제공
+
+        <li>class HashedMap&lt;K, V&gt; extends AbstractHashedMap&lt;K, V&gt; implements Serializable, Cloneable Since 3.0</li>
+        JDK HashMap + MapIterator + Cloneable
+
+        <li>class LinkedMap&lt;K, V&gt; extends AbstractLinkedMap&lt;K, V&gt; implements Serializable, Cloneable Since 3.0</li>
+        JDK LinkedHashMap + MapIterator + Cloneable<br>
+        + ListOrderedMap : 삽입 순서를 List에 저장
+
+        <li>class LRUMap&lt;K, V&gt; extends AbstractLinkedMap&lt;K, V&gt; implements BoundedMap&lt;K, V&gt;, Serializable, Cloneable Since 3.0</li>
+        임계 크기를 초과하면 가장 마지막으로 사용(get/put)된 entry 제거. DEFAULT_MAX_SIZE == 100
+
+        <li>class MultiKeyMap&lt;K, V&gt; extends AbstractMapDecorator&lt;MultiKey&lt;? extends K&gt;, V&gt; implements Serializable, Cloneable Since 3.1</li>
+        
+        <li>class PassiveExpiringMap&lt;K, V&gt; extends AbstractMapDecorator&lt;K, V&gt; implements Serializable Since 4.0</li>
+        맵에 entry를 유지할 시간을 정의. 각 시간이 지나면 맵에서 제거된다.
+
+        <li>class PredicatedMap&lt;K, V&gt; extends AbstractMapDecorator&lt;K, V&gt; implements Serializable Since 3.0</li>
+        + PredicatedSortedMap, TransformedMap, TransformedSortedMap
+
+        <li>class ReferenceIdentityMap&lt;K, V&gt; extends AbstractReferenceMap&lt;K, V&gt; implements Serializable Since 3.0</li>
+        키, 값의 GC를 허용하고, equals() 대신 ==로 일치를 판별하는 맵을 제공한다. + ReferenceMap
+
+        <li>final class StaticBucketMap&lt;K, V&gt; extends AbstractIterableMap&lt;K, V&gt; Since 3.0</li>
+        주어진 한도 내에서는 고성능의 스레드-안전한 java.util.Map 구현을 제공한다. 크기가 한도를 벗어나면 O(n)에 가까워진다.
+
+        <li>class SingletonMap&lt;K, V&gt; implements OrderedMap&lt;K, V&gt;, BoundedMap&lt;K, V&gt;, KeyValue&lt;K, V&gt;, Serializable, Cloneable Since 3.1</li>
+
+        <li>class UnmodifiableEntrySet&lt;K, V&gt; extends AbstractSetDecorator&lt;Map.Entry&lt;K, V&gt;&gt; implements Unmodifiable Since 3.0</li>
+        변결할 수 없는 entry 집합을 반환하는 팩터리 메서드 제공 + UnmodifiableMap, UnmodifiableOrderedMap, UnmodifiableSortedMap
+
+        <li>class EntrySetToMapIteratorAdapter&lt;K, V&gt; implements MapIterator&lt;K, V&gt;, ResettableIterator Since 4.0</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>org.apache.commons.collections4.multimap</summary>
+    <ol>
+        <li>class ArrayListValuedHashMap&lt;K, V&gt; extends AbstractListValuedMap&lt;K, V&gt; implements Serializable SInce 4.1</li>
+        + HashSetValuedHashMap
+
+        <li>class TransformedMultiValuedMap&lt;K, V&gt; extends AbstractMultiValuedMapDecorator&lt;K, V&gt; Since 4.1</li>
+
+        <li>final class UnmodifiableMultiValuedMap&lt;K, V&gt; extends AbstractMultiValuedMapDecorator&lt;K, V&gt; implements Unmodifiable Since 4.1</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>org.apache.commons.collections4.multiset</summary>
+    <ol>
+        <li>class HashMultiSet&lt;E&gt; extends AbstractMapMultiSet&lt;E&gt; implements Serializable Since 4.1</li>
+
+        <li>class PredicatedMultiSet&lt;E&gt; extends PredicatedCollection&lt;E&gt; implements MultiSet&lt;E&gt; Since 4.1</li>
+
+        <li>class SynchronizedMultiSet&lt;E&gt; extends SynchronizedCollection&lt;E&gt; implements MultiSet&lt;E&gt; Since 4.1</li>
+
+        <li>final class UnmodifiableMultiSet&lt;E&gt; extends AbstractMultiSetDecorator&lt;E&gt; implements Unmodifiable Since 4.1</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>org.apache.commons.collections4.properties</summary>
+    <ol>
+        <li>class SortedProperties extends Properties Since 4.2</li>
+        <li>class PropertiesFactory extends AbstractPropertiesFactory&lt;Properties&gt; Since 4.4</li>
+        + SortedPropertiesFactory
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>org.apache.commons.collections4.queue</summary>
+    <ol>
+        <li>class CircularFifoQueue&lt;E&gt; extends AbstractCollection&lt;E&gt; implements Queue&lt;E&gt;, BoundedCollection&lt;E&gt;, Serializable Since 4.0</li>
+        고정 크기의 큐로써 가장 마지막 요소가 null이면 덮어쓴다
+
+        <li>PredicatedQueue, SynchronizedQueue, TransformedQueue, UnmodifiableQueue</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>org.apache.commons.collections4.set</summary>
+    <ol>
+        <li>class CompositeSet&lt;E&gt; implements Set&lt;E&gt;, Serializable Since 3.0</li>
+        여러 셋에 대한 하나의 뷰를 제공. 뷰에 대한 연산이 기저 셋에 적용돼야 한다면 CompositeSet.SetMutator를 제공해야 한다
+
+        <li>class ListOrderedSet&lt;E&gt; extends AbstractSerializableSetDecorator&lt;E&gt; Since 3.0</li>
+        같은 요소에 대해 2번째 add 호출이 있는 경우, 1번째 위치를 유지한다
+
+        <li>final class MapBackedSet&lt;E, V&gt; implements Set&lt;E&gt;, Serializable Since 3.1</li>
+        Map을 Set처럼 이용하게 해준다
+
+        <li>PredicatedSet, PredicatedSortedSet, PredicatedNavigableSet, TransformedSet, TransformedSortedSet, TrnasformedNavigableSet, UnmodifiableSet, UnmodifiableSortedSet, UnmodifiableNavigableSet</li>
+    </ol>
+</details>
+
+<hr>
