@@ -16,6 +16,7 @@ const posts = {
         { filename: "posts/career/at_sesisoft_from_201806.html", category: "Career", title: "C#.NET, WPF - 데이터 작업 툴" },
         { filename: "posts/career/at_sesisoft_at_20190715.html", category: "Career", title: "JavaScript - IGA Works 푸시 등록 절차 개선" },
         { filename: "posts/career/at_sesisoft_at_20190626.html", category: "Career", title: "JavaScript - 자연스러운 테이블 정렬" },
+        { filename: "posts/career/at_sesisoft_at_20190808.html", category: "Career", title: "JavaScript - 구글 스프레드시트 스크립트" },
 
         { filename: "posts/db/concept.html", category: "DB", title: "기본 개념" },
         { filename: "posts/db/mysql.html", category: "DB", title: "MySQL" },
