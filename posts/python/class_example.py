@@ -65,3 +65,22 @@ Main2().f()
 Sub2().f('Name')
 # main
 # sub Name
+
+class A():
+    def func(self):
+        print('A method')
+
+class B():
+    def func(self):
+        print('B method')
+
+class C(A, B):
+    def func2(self):
+        super().func()
+    def func3(self):
+        B.func(self)
+
+c = C()
+c.func()  # A method
+c.func2() # A method
+c.func3() # B method

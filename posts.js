@@ -85,9 +85,9 @@ const posts = {
         { filename: "posts/javascript/basic2.html", category: "Programming/JavaScript/Browser", title: "브라우저 JavaScript" },
         { filename: "posts/javascript/jquery.html", category: "Programming/JavaScript/Browser", title: "jQuery" },
         
-        { filename: "posts/python/basic.html", category: "Programming/Python/Basic", title: "Python 시작하기" },
+        { filename: "posts/python/basic.html", category: "Programming/Python/Basic", title: "Python 시작하기", top: true },
         { filename: "posts/python/data_model.html", category: "Programming/Python/Basic", title: "Python 데이터 모델", top: true },
-        { filename: "posts/python/1904252127.html", category: "Programming/Python/Document", title: "Built-in Functions" },//, top: true
+        { filename: "posts/python/built_in_function.html", category: "Programming/Python/Document", title: "Built-in Functions", top: true },
         { filename: "posts/python/1904252130.html", category: "Programming/Python/Document", title: "Built-in Constants" },//, top: true
         { filename: "posts/python/1904252131.html", category: "Programming/Python/Document", title: "Built-in Types" },//, top: true
         { filename: "posts/python/1904252133.html", category: "Programming/Python/Document", title: "Built-in Exceptions" },//, top: true

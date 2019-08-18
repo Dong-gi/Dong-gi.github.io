@@ -27,3 +27,19 @@ After nonlocal assignment: nonlocal spam
 After global assignment: nonlocal spam
 In global scope: global spam
 '''
+
+def averager():
+    count = 0
+    total = 0
+
+    def averager(value):
+        nonlocal count, total
+        count += 1
+        total += value
+        return total / count
+    return averager
+
+avg = averager()
+print(avg(10)) # 10.0
+print(avg(20)) # 15.0
+print(avg(30)) # 20.0
