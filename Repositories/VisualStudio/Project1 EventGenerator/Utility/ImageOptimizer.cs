@@ -39,22 +39,31 @@ namespace EventGenerator.Utility
                         process.StartInfo.CreateNoWindow = true;
 
                         var fileInfo = new FileInfo(fileOrDirPath);
+                        FileService.Download(fileOrDirPath, savePath: @"ImageOptimizer\");
                         if (fileOrDirPath.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
                         {
-                            FileService.Download(fileOrDirPath, savePath: @"ImageOptimizer\img\" + additionalSavePath);
                             process.StartInfo.FileName = @"ImageOptimizer\pngquant.exe";
-                            process.StartInfo.Arguments = $"--ext .png --force ImageOptimizer\\img\\{additionalSavePath}{fileInfo.Name}";
-                            process.Start();
+                            process.StartInfo.Arguments = $"--force --output ImageOptimizer\\img\\{additionalSavePath}{fileInfo.Name} ImageOptimizer\\{fileInfo.Name}";
                         }
                         else if (fileOrDirPath.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || fileOrDirPath.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
                         {
-                            FileService.Download(fileOrDirPath, savePath: @"ImageOptimizer\");
                             process.StartInfo.FileName = @"ImageOptimizer\cjpeg.exe";
                             process.StartInfo.Arguments = $"-outfile \"ImageOptimizer\\img\\{additionalSavePath}{fileInfo.Name}\" \"ImageOptimizer\\{fileInfo.Name}\"";
-                            process.Start();
-                            process.WaitForExit();
-                            Directory.EnumerateFiles(@"ImageOptimizer\").Where(x => x.Contains(fileInfo.Name)).ForEach(File.Delete);
                         }
+                        process.Start();
+                        process.WaitForExit();
+                        Directory.EnumerateFiles(@"ImageOptimizer\").Where(x => x.Contains(fileInfo.Name)).ForEach(filePath =>
+                        {
+                            var original = new FileInfo(filePath);
+                            var compressed = new FileInfo($"ImageOptimizer\\img\\{additionalSavePath}{fileInfo.Name}");
+                            if (original.Length < compressed.Length)
+                            {
+                                compressed.Delete();
+                                original.MoveTo(compressed.FullName);
+                            }
+                            else
+                                original.Delete();
+                        });
                     }
                 });
             }

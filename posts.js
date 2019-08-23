@@ -63,7 +63,7 @@ const posts = {
         { filename: "posts/java/java.text.html", category: "Programming/Java/java.base", title: "java.text" },
         { filename: "posts/java/java.time.html", category: "Programming/Java/java.base", title: "java.time" },
         { filename: "posts/java/java.time.format.html", category: "Programming/Java/java.base", title: "java.time.format" },
-        { filename: "posts/java/java.util.html", category: "Programming/Java/java.base", title: "java.util" }, //, top: true
+        { filename: "posts/java/java.util.html", category: "Programming/Java/java.base", title: "java.util Since 1.0", top: true },
         { filename: "posts/java/java.util.concurrent.html", category: "Programming/Java/java.base", title: "java.util.concurrent" }, //, top: true
         { filename: "posts/java/java.util.concurrent.atomic.html", category: "Programming/Java/java.base", title: "java.util.concurrent.atomic" },
         { filename: "posts/java/java.util.function.html", category: "Programming/Java/java.base", title: "java.util.function" },
@@ -79,7 +79,7 @@ const posts = {
         { filename: "posts/java/java_ee/453.html", category: "Programming/Java/JavaEE", title: "서블릿 생애주기" },//, top: true
         { filename: "posts/java/java_ee/446.html", category: "Programming/Java/JavaEE", title: "JSP&Servlet" },//, top: true
         
-        { filename: "posts/java/apache.commons.collections.html", category: "Programming/Java/Library", title: "Apache Commons Collections", top: true },
+        { filename: "posts/java/apache.commons.collections.html", category: "Programming/Java/Library", title: "Apache Commons Collections" },
 
         { filename: "posts/javascript/basic.html", category: "Programming/JavaScript/Core", title: "코어 JavaScript" },
         { filename: "posts/javascript/basic2.html", category: "Programming/JavaScript/Browser", title: "브라우저 JavaScript" },

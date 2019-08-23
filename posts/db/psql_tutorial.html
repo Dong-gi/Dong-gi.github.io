@@ -235,6 +235,8 @@
 
             <li>insert into t_account_old select * from t_account_0;</li>
 
+            <li>with tmp as (delete from test returning *) insert into test select * from tmp order by v;</li>
+
             <li>COPY weather FROM '/home/user/weather.txt';</li>
             
             <li>COPY weather FROM '/home/user/weather.txt' WITH csv;</li>
