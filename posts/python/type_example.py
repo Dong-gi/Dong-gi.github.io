@@ -57,8 +57,8 @@ print([1, 2, 3, 4, 5]) # [1, 2, 3, 4, 5]
 print(list('Hello World!')) # ['H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!']
 
 list1 = list('Hello World!')
-print(list1[3]) # l
-print(list1[::-1]) # ['!', 'd', 'l', 'r', 'o', 'W', ' ', 'o', 'l', 'l', 'e', 'H']
+list1[3::2] = range(5) # 할당문의 대상이 슬라이스인 경우, 우측 피연산자는 반복 가능한 객체여야 한다.
+print(list1[-1], list1[::-1]) # 4 [4, 'd', 3, 'r', 2, 'W', 1, 'o', 0, 'l', 'e', 'H']
 
 list1 = list('Hello ')
 list1 += ('!@#$%')
@@ -187,3 +187,12 @@ dic2 = dic1.copy() # 깊은 복사
 dic1['a'] = 'z'
 print(dic1) # {'a': 'z', 'c': 'd'}
 print(dic2) # {'a': 'b', 'c': 'd'}
+
+a, b, *c = range(5)
+print(a, b, c) # 0 1 [2, 3, 4]
+a, *b, c = range(5)
+print(a, b, c) # 0 [1, 2, 3] 4
+*a, b, c = range(5)
+print(a, b, c) # [0, 1, 2] 3 4
+a, (b, c) = (1, (2, 3))
+print(a, b, c) # 1 2 3

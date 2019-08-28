@@ -60,7 +60,7 @@ print('even nums : ' + str([n for n in range(1, 20) if n%2 == 0]))
 
 # Dictionary Comprehension
 string = "qoiwnefoqi wenfoiq"
-print({key: string.count(key) for key in set(string)})
+print({key: string.count(key) for key in set(string)}) # {key: value for key, value in KEY_VALUE_SEQUENCE}
 # result : {'o': 3, 'q': 3, 'w': 2, 'e': 2, ' ': 1, 'f': 2, 'i': 3, 'n': 2}
 
 # Set Comprehension
@@ -153,7 +153,7 @@ print()
 def my_deco(f):
     def print_args(*args, **kwargs):
         print(args, kwargs)
-        return f(*args, **kwargs) # *, **을 통해 언패킹이 이루어진다.
+        return f(*args, **kwargs) # * : 인자 리스트 언패킹, ** : 키워드 인자 딕셔너리 언패킹
     return print_args
 
 @my_deco
@@ -167,3 +167,18 @@ f = my_deco(lambda name : print(name))
 f(name = "Name")
 # () {'name': 'Name'}
 # Name
+
+def bar(cls):
+    for name, value in cls.__dict__.items():
+        if not name.startswith('__'):
+            print(f'Class : {cls.__name__}, Attr name : {name}, Attr value : {value}')
+    return cls
+
+@bar
+class Foo:
+    foo = 'foo'
+    bar = 'bar'
+'''
+Class : Foo, Attr name : foo, Attr value : foo
+Class : Foo, Attr name : bar, Attr value : bar
+'''
