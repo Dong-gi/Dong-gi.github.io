@@ -4,15 +4,10 @@
     <summary>interface Closeable extends AutoCloseable Since 1.5</summary>
     <ol>
         <li>데이터의 출발지나 목적지를 닫을 수 있으면 Closeable하다.</li>
+        <li>void close()</li>
+        스트림 및 이와 관련된 시스템 자원을 해제한다. 이미 호출되었다면 아무 일도 하지 않는다.<br>
+        close() 실패했을 때, 예외를 던지는 대신 사용하던 자원을 모두 포기하고 Closeable 객체 내부적으로 '닫혔다(closed)'고 마크하길 권장한다.
     </ol>
-    <details>
-        <summary>Method Detail</summary>
-        <ol>
-            <li>void close()</li>
-            스트림 및 이와 관련된 시스템 자원을 해제한다. 이미 호출되었다면 아무 일도 하지 않는다.<br>
-            close() 실패했을 때, 예외를 던지는 대신 사용하던 자원을 모두 포기하고 Closeable 객체 내부적으로 '닫혔다(closed)'고 마크하길 권장한다.
-        </ol>
-    </details>
 </details>
 
 <hr>
@@ -21,14 +16,9 @@
     <summary>interface Flushable Since 1.5</summary>
     <ol>
         <li>Flush할 수 있는 데이터 목적지는 Flushable하다.</li>
+        <li>void flush()</li>
+        버퍼에 저장된 데이터를 스트림에 모두 써 보낸다.
     </ol>
-    <details>
-        <summary>Method Detail</summary>
-        <ol>
-            <li>void flush()</li>
-            버퍼에 저장된 데이터를 스트림에 모두 써 보낸다.
-        </ol>
-    </details>
 </details>
 
 <hr>
@@ -36,12 +26,12 @@
 <details>
     <summary>final class Console implements Flushable Since 1.6</summary>
     <ol>
-        <li>JVM이 컨트롤할 수 있는 문자 기반 콘솔에 대한 접근 제공. 콘솔 존재 여부는 하위 플랫폼에 의존적이며, 싱글톤으로 System.console()을 통해 얻을 수 있다. 만일 가용한 콘솔이 없다면 null이 넘겨진다.</li>
+        <li>JVM이 컨트롤할 수 있는 문자 기반 콘솔에 대한 접근 제공. 콘솔 존재 여부는 하위 플랫폼에 의존적이며, 싱글톤으로 System.console()을 통해 얻을 수 있다. 만일 가용한 콘솔이 없다면 null이 넘겨진다.
+            <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/ConsoleExample.java" lan="java">예시 코드 »</button></li>
         <li>콘솔에 대한 읽기/쓰기 작업은 모두 원자 단위로 이루어지며, 따라서 다른 스레드가 대기할 가능성이 있다.</li>
         <li>콘솔에 대한 close()는 실제로 아무런 영향을 미치지 않는다.</li>
         <li>유닉스의 Ctrl+D, 윈도우의 Ctrl+Z와 같은 종료 문자를 만나면 읽기 메서드는 null을 반환한다.</li>
         <li>보안 유의 : 패스워드와 같은 중요한 데이터를 읽어들일 때, readPassword(), readPassword(String, Object...) 메서드를 이용하고, 반환된 char[]를 수동으로 0 초기화한다.</li>
-        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/ConsoleExample.java" lan="java">예시 코드 »</button>
     </ol>
     <details>
         <summary>Method Detail</summary>
@@ -83,34 +73,6 @@
 
                 <li>int skipBytes(int n)</li>
                 입력 스트림의 n바이트를 무시한다. 실제로 무시한 바이트 길이가 반환된다.
-
-                <details>
-                    <summary>기본 자료형 읽기</summary>
-                    <ol>
-                        <li>boolean readBoolean()</li>
-                        readByte() != 0 // 1바이트를 읽어 0이면 false, 그 외엔 true 반환
-        
-                        <li>byte readByte()</li>
-                        1바이트를 읽어 그대로 반환
-        
-                        <li>int readUnsignedByte()</li>
-                        1바이트를 읽어 int로 반환
-        
-                        <li>short readShort()</li>
-                        1바이트씩 순서대로 읽은 a, b에 대하여 (short)((a &lt;&lt; 8) | (b &amp; 0xff)) 반환
-        
-                        <li>int readUnsignedShort()</li>
-                        ((a & 0xff) &lt;&lt; 8) | (b &amp; 0xff)
-                        
-                        <li>생략</li>
-
-                        <li>float readFloat()</li>
-                        readInt()한 비트 순서 그대로 float으로 변환하여 반환
-
-                        <li>double readDouble()</li>
-                        readLong()한 비트 순서 그대로 double로 변환하여 반환
-                    </ol>
-                </details>
                 
                 <li>String readLine()</li>
                 <ul>
@@ -126,6 +88,33 @@
                     <li>길이만큼의 바이트를 다 읽기 전에 EOF를 만나면 예외를 던진다.</li>
                 </ul>
             </ol>
+            <details>
+                <summary>기본 자료형 읽기</summary>
+                <ol>
+                    <li>boolean readBoolean()</li>
+                    readByte() != 0 // 1바이트를 읽어 0이면 false, 그 외엔 true 반환
+        
+                    <li>byte readByte()</li>
+                    1바이트를 읽어 그대로 반환
+        
+                    <li>int readUnsignedByte()</li>
+                    1바이트를 읽어 int로 반환
+        
+                    <li>short readShort()</li>
+                    1바이트씩 순서대로 읽은 a, b에 대하여 (short)((a &lt;&lt; 8) | (b &amp; 0xff)) 반환
+        
+                    <li>int readUnsignedShort()</li>
+                    ((a & 0xff) &lt;&lt; 8) | (b &amp; 0xff)
+                    
+                    <li>생략</li>
+
+                    <li>float readFloat()</li>
+                    readInt()한 비트 순서 그대로 float으로 변환하여 반환
+
+                    <li>double readDouble()</li>
+                    readLong()한 비트 순서 그대로 double로 변환하여 반환
+                </ol>
+            </details>
         </details>
     </details>
 
@@ -133,29 +122,25 @@
         <summary>interface DataOutput Since 1.0</summary>
         <ol>
             <li>DataInput과 대칭</li>
+        
+            <li>void write(int b)</li>
+            하위 8개 비트만 스트림에 쓴다. 나머지는 무시한다.
+
+            <li>void writeBoolean(boolean v)</li>
+            true면 write(1), false면 write(0)
+
+            <li>void writeShort(int v)</li>
+            다음 순으로 2개 바이트를 쓴다. (byte)(0xff &amp; (v &gt;&gt; 8)), (byte)(0xff &amp; v)
+
+            <li>void writeBytes(String s)</li>
+            s의 각 글자의 하위 8개 비트만 쓴다.
+
+            <li>void writeChars(String s)</li>
+            s의 각 글자를 쓴다.
+
+            <li>void writeUTF(String s)</li>
+            Modified UTF-8을 이용하여 저장한다. 총 길이 정보를 2바이트로 먼저 기록한다.
         </ol>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>void write(int b)</li>
-                하위 8개 비트만 스트림에 쓴다. 나머지는 무시한다.
-
-                <li>void writeBoolean(boolean v)</li>
-                true면 write(1), false면 write(0)
-
-                <li>void writeShort(int v)</li>
-                다음 순으로 2개 바이트를 쓴다. (byte)(0xff &amp; (v &gt;&gt; 8)), (byte)(0xff &amp; v)
-
-                <li>void writeBytes(String s)</li>
-                s의 각 글자의 하위 8개 비트만 쓴다.
-
-                <li>void writeChars(String s)</li>
-                s의 각 글자를 저장.
-
-                <li>void writeUTF(String s)</li>
-                Modified UTF-8을 이용하여 저장한다. 총 길이 정보를 2바이트로 먼저 기록한다.
-            </ol>
-        </details>
     </details>
 
     <details>
@@ -174,11 +159,10 @@
                 입력 스트림의 모든 바이트를 읽어들여 out에 쓴다. 총 전송 바이트 수를 반환하며, 스트림을 닫는 작업을 하진 않는다.
 
                 <li>abstract int read()</li>
-                다음 바이트를 읽고 int로 반환한다. 스트림 끝인 경우 -1을 반환한다. 스트림이 끝나거나, 예외가 발생하거나, 읽을 데이터가 준비될 때까지 쓰레드를 블록한다.
+                다음 바이트를 읽고 int로 반환한다. 스트림 끝인 경우 -1을 반환한다. 스트림이 끝나거나, 예외가 발생하거나, 읽을 데이터가 준비될 때까지 스레드를 블록한다.
 
-                <li>int read(byte[] b) == read(b, 0, b.length)<br>
-                    int read(byte[] b, int off, int len)</li>
-                실제로 읽은 바이트 수를 반환한다. 스트림 끝인 경우 -1을 반환한다. 쓰레드를 블록한다.
+                <li>int read(byte[] b, int off, int len) + 1 오버로딩</li>
+                실제로 읽은 바이트 수를 반환한다. 스트림 끝인 경우 -1을 반환한다. 스레드를 블록한다.
 
                 <li>byte[] readAllBytes() Since 9</li>
                 
@@ -189,21 +173,20 @@
 
                 <li>int available()</li>
                 막힘 없이 한 번에 읽어올 수 있는 바이트 수 예상값을 반환. InputStream 구현에 따라 전체 바이트 수를 반환하기도, 그렇지 않기도 하다. InputStream 자체는 항상 0을 반환하며, 서브클래스에서 재정의해야 한다.
-
-                <details>
-                    <summary>마킹 관련</summary>
-                    <ol>
-                        <li>boolean markSupported()</li>
-                        mark, reset 메서드를 지원하는지 여부 반환. 기본 false
-
-                        <li>void mark(int readlimit)</li>
-                        현재 위치 마킹
-
-                        <li>void reset()</li>
-                        마지막 마킹 위치로 이동
-                    </ol>
-                </details>
             </ol>
+            <details>
+                <summary>마킹 관련</summary>
+                <ol>
+                    <li>boolean markSupported()</li>
+                    mark, reset 메서드를 지원하는지 여부 반환. 기본 false
+
+                    <li>void mark(int readlimit)</li>
+                    현재 위치 마킹
+
+                    <li>void reset()</li>
+                    마지막 마킹 위치로 이동
+                </ol>
+            </details>
         </details>
     </details>
     
@@ -211,18 +194,13 @@
         <summary>abstract class OutputStream implements Closeable, Flushable Since 1.0</summary>
         <ol>
             <li>바이트 단위 쓰기에 대한 최상위 추상 클래스</li>
+        
+            <li>static OutputStream nullOutputStream() Since 11</li>
+            실제로 데이터를 쓰지는 않는 OutputStream 객체를 반환한다.
+            <li>abstract void write(int b)</li>
+            하위 8개 비트만 쓰고 나머지는 무시한다.
+            <li>void write(byte[] b, int off, int len) + 1 오버로딩</li>
         </ol>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>static OutputStream nullOutputStream() Since 11</li>
-                실제로 데이터를 쓰지는 않는 OutputStream 객체를 반환한다.
-                <li>abstract void write(int b)</li>
-                하위 8개 비트만 쓰고 나머지는 무시한다.
-                <li>void write(byte[] b)<br>
-                    void write(byte[] b, int off, int len)</li>
-            </ol>
-        </details>
     </details>
 
     <details>
@@ -239,134 +217,80 @@
         <summary>class ByteArrayInputStream extends InputStream Since 1.0</summary>
         <ol>
             <li>내부 버퍼 byte[] buf에 대한 읽기 연산을 지원하는 InputStream</li>
+            <li>public ByteArrayInputStream(byte[] buf, int offset, int length) + 1 오버로딩</li>
         </ol>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public ByteArrayInputStream(byte[] buf)</li>
-                <li>public ByteArrayInputStream(byte[] buf, int offset, int length)</li>
-            </ol>
-        </details>
     </details>
     
     <details>
         <summary>class ByteArrayOutputStream extends OutputStream Since 1.0</summary>
         <ol>
             <li>내부 버퍼 byte[] buf에 대해 쓰기 연산을 지원하는 OutputStream. 버퍼 크기는 자동으로 확장된다.</li>                
+        
+            <li>public ByteArrayOutputStream(int size) + 1 오버로딩</li>
+
+            <li>void writeBytes(byte[] b) since 11 == write(b, 0, b.length)</li>
+            <li>void writeTo(OutputStream out)</li>
+            버퍼를 out에 모두 쓴다. == out.write(buf, 0, count)
+            <li>byte[] toByteArray()</li>
+            buf 복사본 반환.
+            <li>void reset()</li>
+            지금까지 쓴 것을 무시하고 처음부터 재활용.
+            <li>int size()</li>
+            <li>String toString(String charsetName) Since 1.1 + 1 오버로딩</li>
         </ol>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public ByteArrayOutputStream()</li>
-                <li>public ByteArrayOutputStream(int size)</li>
-            </ol>
-        </details>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>void writeBytes(byte[] b) since 11 == write(b, 0, b.length)</li>
-                <li>void writeTo(OutputStream out)</li>
-                버퍼를 out에 모두 쓴다. == out.write(buf, 0, count)
-                <li>byte[] toByteArray()</li>
-                buf 복사본 반환.
-                <li>void reset()</li>
-                지금까지 쓴 것을 무시하고 처음부터 재활용.
-                <li>int size()</li>
-                <li>String toString(String charsetName) Since 1.1<br>
-                    String toString(Charset charset) Since 10</li>
-            </ol>
-        </details>
     </details>
 
     <details>
         <summary>class BufferedInputStream extends FilterInputStream Since 1.0</summary>
         <ol>
             <li>다른 입력 스트림에 대해 버퍼를 제공함으로써 mark와 reset이 가능하게 해준다. 추가적인 특별한 메서드는 없다.</li>
-        </ol>            
-        <details>
-            <summary>Field Detail</summary>
-            <ol>
-                <li>protected byte[] buf</li>
-                <li>protected int count</li>
-                마지막 유효 바이트 인덱스 + 1
-                <li>protected int marklimit, markpos, pos</li>
-                |pos - markpos| &lt; marklimit면 markpos는 -1(기본값)이 된다.
-            </ol>
-        </details>
-            <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public BuferedInputStream(InputStream in)</li>
-                <li>public BufferedInputStream(InputStream in, int size) : size는 버퍼 크기.</li>
-            </ol>
-        </details>
+        
+            <li>protected byte[] buf</li>
+            <li>protected int count</li>
+            마지막 유효 바이트 인덱스 + 1
+            <li>protected int marklimit, markpos, pos</li>
+            |pos - markpos| &lt; marklimit면 markpos는 -1(기본값)이 된다.
+            
+            <li>public BufferedInputStream(InputStream in, int size) : size는 버퍼 크기. + 1 오버로딩</li>
+        </ol>
     </details>
     
     <details>
         <summary>class BufferedOutputStream extends FilterOutputStream Since 1.0</summary>
         <ol>
             <li>다른 출력 스트림에 대해 버퍼를 제공하여, 시스템 쓰기 작업이 빈번하게 일어나지 않게 해준다. 추가적인 특별한 메서드는 없다.</li>
+        
+            <li>protected byte[] buf</li>
+            <li>protected int count : buf 내부의 유효한 바이트 수</li>
+    
+            <li>public BufferedOutputStream(OutputStream out, int size) + 1 오버로딩</li>
         </ol>
-        <details>
-            <summary>Field Detail</summary>
-            <ol>
-                <li>protected byte[] buf</li>
-                <li>protected int count : buf 내부의 유효한 바이트 수</li>
-            </ol>
-        </details>
-            <details>
-                <summary>Constructor Detail</summary>
-                <ol>
-                    <li>public BufferedOutputStream(OutputStream out)</li>
-                    <li>public BufferedOutputStream(OutputStream out, int size)</li>
-                </ol>
-            </details>
     </details>
         
     <details>
         <summary>class DataInputStream extends FilterInputStream implements DataInput Since 1.0</summary>
         <ol>
             <li>플랫폼 독립적인 자바 기본 타입 읽기를 정의한 DataInput을 구체화한 장식자 클래스(FilterInputStream).</li>
+            
+            <li>public DataInputStream(InputStream in)</li>
+            
+            <li>static final String readUTF(DataInput in)</li>
+            Modified UTF-8을 이용하여 in 스트림으로부터 String을 해석해 반환한다.
         </ol>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public DataInputStream(InputStream in)</li>
-            </ol>
-        </details>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>static final String readUTF(DataInput in)</li>
-                Modified UTF-8을 이용하여 in 스트림으로부터 String을 해석해 반환한다.
-            </ol>
-        </details>
     </details>
         
     <details>
         <summary>class DataOutputStream extends FilterOutputStream implements DataOutput Since 1.0</summary>
         <ol>
             <li>플랫폼 독립적인 자바 기본 타입 쓰기를 정의한 DataOutput을 구체화한 장식자 클래스(FilterOutputStream)</li>
+        
+            <li>protected int written</li>
+            현재까지 쓴 바이트 수. 오버플로될 경우 Integer.MAX_VALUE로 설정된다.
+            
+            <li>public DataOutputStream(OutputStream out)</li>
+            
+            <li>final int size() == return written;</li>
         </ol>
-        <details>
-            <summary>Field Detail</summary>
-            <ol>
-                <li>protected int written</li>
-                현재까지 쓴 바이트 수. 오버플로될 경우 Integer.MAX_VALUE로 설정된다.
-            </ol>
-        </details>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public DataOutputStream(OutputStream out)</li>
-            </ol>
-        </details>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>final int size() == return written;</li>
-            </ol>
-        </details>
     </details>
         
     <details>
@@ -377,17 +301,12 @@
         <details>
             <summary>Constructor Detail</summary>
             <ol>
-                <li>public PrintStream(OutputStream out)</li>
-                <li>public PrintStream(OutputStream out, boolean autoFlush)</li>
+                <li>public PrintStream(OutputStream out, boolean autoFlush) + 1 오버로딩</li>
                 바이트 배열을 다 쓰거나, 새 줄 문자, '\n'을 쓰면 자동으로 flush()
-                <li>public PrintStream(OutputStream out, boolean autoFlush, String encoding) Since 1.4</li>
-                <li>public PrintStream(OutputStream out, boolean autoFlush, Charset charset) Since 10</li>
-                <li>public PrintStream(String fileName) Since 1.5</li>
-                <li>public PrintStream(String fileName, String csn) Since 1.5 » csn = charset 이름</li>
-                <li>public PrintStream(String fileName, Charset charset) Since 10</li>
-                <li>public PrintStream(File file) Since 1.5</li>
-                <li>public PrintStream(File file, String csn) Since 1.5</li>
-                <li>public PrintStream(File file, Charset charset) Since 10</li>
+                <li>public PrintStream(OutputStream out, boolean autoFlush, String encoding) Since 1.4 + 1 오버로딩</li>
+                <li>public PrintStream(String fileName, String csn) Since 1.5 + 2 오버로딩</li>
+                csn : Characterset Name
+                <li>public PrintStream(File file, String csn) Since 1.5 + 2 오버로딩</li>
             </ol>
         </details>
         <details>
@@ -401,10 +320,8 @@
                 에러 상태를 초기화한다.
                 <li>각종 print(), println(), append()</li>
                 void print(Object obj) == print(String.valueOf(Object))
-                <li>PrintStream printf(String format, Object... args) Since 1.5</li>
-                <li>PrintStream printf(Locale l, String format, Object... args) Since 1.5</li>
-                <li>PrintStream format(String format, Object... args) Since 1.5</li>
-                <li>PrintStream format(Locale l, String format, Object... args) Since 1.5</li>
+                <li>PrintStream printf(String format, Object... args) Since 1.5 + 1 오버로딩</li>
+                <li>PrintStream format(String format, Object... args) Since 1.5 + 1 오버로딩</li>
             </ol>
         </details>
     </details>
@@ -414,22 +331,12 @@
         <ol>
             <li>PipedOutputStream과 연결되어 바이트들을 받는 InputStream. PipedOutputStream과 별개의 스레드에서 동작해야 한다.
                 <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/PipedStreamExample.java" lan="java">예시 코드 »</button></li>
+        
+            <li>public PipedInputStream(PipedOutputStream src, int pipeSize) Since 1.6 + 3 오버로딩</li>
+            pipeSize : 내부 버퍼 크기. 지정되지 않으면 기본값 PIPE_SIZE 이용
+            
+            <li>void connect(PipedOutputStream src)</li>
         </ol>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public PipedInputStream(PipedOutputStream src)</li>
-                <li>public PipedInputStream(PipedOutputStream src, int pipeSize) Since 1.6</li>
-                <li>public PipedInputStream()</li>
-                <li>public PipedInputStream(int pipeSize) Since 1.6</li>
-            </ol>
-        </details>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>void connect(PipedOutputStream src)</li>
-            </ol>
-        </details>
     </details>
     
     <details>
@@ -437,34 +344,21 @@
         <ol>
             <li>연결된 PipedInputStream으로 바이트들을 보내는 OutputStream. PipedInputStream과 별개의 스레드에서 동작해야 한다.
                 <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/PipedStreamExample.java" lan="java">예시 코드 »</button></li>
+        
+            <li>public PipedOutputStream(PipedInpuStream snk) + 1 오버로딩</li>
+
+            <li>void connect(PipedInputStream snk)</li>
         </ol>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public PipedOutputStream(PipedInpuStream snk)</li>
-                <li>public PipedOutputStream()</li>
-            </ol>
-        </details>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>void connect(PipedInputStream snk)</li>
-            </ol>
-        </details>
     </details>
     
     <details>
         <summary>class SequenceInputStream extends InputStream Since 1.0</summary>
         <ol>
             <li>여러 InputStream을 이어붙인듯이 활용하는 InputStream.</li>
+        
+            <li>public SequenceInputStream(InputStream s1, InputStream s2)</li>
+            <li>public SequenceInputStream(Enumeration&lt;? extends InputStream&gt; e)</li>
         </ol>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public SequenceInputStream(Enumeration&lt;? extends InputStream&gt; e)</li>
-                <li>public SequenceInputStream(InputStream s1, InputStream s2)</li>
-            </ol>
-        </details>
     </details>
     
     <details>
@@ -472,67 +366,40 @@
         <ol>
             <li>이미 읽은 것을 취소하고 다시 읽을 수 있는 기능을 지원한다. 이전에 읽은 내용을 저장하지는 않으므로, 덮어쓰기처럼 이용할 수 있다.
                 <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/PushBackExample.java" lan="java">예시 코드 »</button></li>
+        
+            <li>public PushbackInputStream(InputStream in, int size) Since 1.1</li>
+            <li>public PushbackInputStream(InputStream in) Since 1.1 : 1바이트짜리 버퍼를 이용한다.</li>
+            
+            <li>void unread(int b) : 하위 8비트만 버퍼에 쓴다.</li>
+            <li>void unread(byte[] b), unread(byte[] b, int off, int len) Since 1.1</li>
         </ol>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public PushbackInputStream(InputStream in, int size) Since 1.1</li>
-                <li>public PushbackInputStream(InputStream in) Since 1.1 : 1바이트짜리 버퍼를 이용한다.</li>
-            </ol>
-        </details>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>void unread(int b) : 하위 8비트만 버퍼에 쓴다.</li>
-                <li>void unread(byte[] b), unread(byte[] b, int off, int len) Since 1.1</li>
-            </ol>
-        </details>
     </details>
     
     <details>
         <summary>class FileInputStream extends InputStream Since 1.0</summary>
-        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/SerializableExample.java" lan="java">예시 코드 »</button>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>FileInputStream(String name)</li>
-                <li>FileInputStream(File file)</li>
-                <li>FileInputStream(FileDescriptor fdObj)</li>
-            </ol>
-        </details>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>FileChannel getChannel() Since 1.4</li>
-                유니크한 FileChannel을 반환하며, 채널에서의 위치는 스트림에서 읽어들인 만큼과 같다.
-                <li>final FileDescriptor getFD()</li>
-            </ol>
-        </details>
+        <ol>
+            <li>FileInputStream(File file) + 2 오버로딩
+                <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/SerializableExample.java" lan="java">예시 코드 »</button></li>
+            
+            <li>FileChannel getChannel() Since 1.4</li>
+            유니크한 FileChannel을 반환하며, 채널에서의 위치는 스트림에서 읽어들인 만큼과 같다.
+            <li>final FileDescriptor getFD()</li>
+        </ol>
     </details>
     
     <details>
         <summary>class FileOutputStream extends OutputStream Since 1.0</summary>
-        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/SerializableExample.java" lan="java">예시 코드 »</button>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>FileOutputStream(String name)</li>
-                <li>FileOutputStream(String name, boolean append)</li>
-                <li>FileOutputStream(File file)</li>
-                <li>FileOutputStream(File file, boolean append)</li>
-                <li>FileOutputStream(FileDescriptor fdObj)</li>
-                파일에 대한 새로운 OutputStream을 생성한다. 파일과의 연결에 대한 새 FileDescriptor 객체가 생성되고, 파일의 처음부터 쓰기 시작한다.<br>
-                Security manager가 있으면 checkWrite 메서드로 권한을 검사한다.
-            </ol>
-        </details>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>final FileDescriptor getFD()</li>
-                <li>FileChannel getChannel() Since 1.4</li>
-                유니크한 FileChannel을 반환하며, 채널에서의 위치는 스트림에서 쓴 바이트 수와 같다(append 모드가 아닐 경우). append 모드에서는 파일의 크기와 채널의 위치가 동일하다.
-            </ol>
-        </details>
+        <ol>
+            <li>FileOutputStream(File file, boolean append) + 3 오버로딩
+                <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/SerializableExample.java" lan="java">예시 코드 »</button></li>
+            <li>FileOutputStream(FileDescriptor fdObj)</li>
+            파일에 대한 새로운 OutputStream을 생성한다. 파일과의 연결에 대한 새 FileDescriptor 객체가 생성되고, 파일의 처음부터 쓰기 시작한다.
+            Security manager가 있으면 checkWrite 메서드로 권한을 검사한다.
+            
+            <li>final FileDescriptor getFD()</li>
+            <li>FileChannel getChannel() Since 1.4</li>
+            유니크한 FileChannel을 반환하며, 채널에서의 위치는 스트림에서 쓴 바이트 수와 같다(append 모드가 아닐 경우). append 모드에서는 파일의 크기와 채널의 위치가 동일하다.
+        </ol>
     </details>
 </details>
 
@@ -544,26 +411,18 @@
         <summary>interface ObjectInput extends DataInput, AutoCloseable Since 1.1</summary>
         <ol>
             <li>DataInput을 통해 기본 자료형을 읽어오고, 추가적으로 객체를 읽어오는 작업을 지원한다.</li>
+        
+            <li>Object readObject()</li>
         </ol>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>Object readObject()</li>
-            </ol>
-        </details>
     </details>
     
     <details>
         <summary>interface ObjectOutput extends DataOutput, AutoCloseable Since 1.1</summary>
         <ol>
             <li>DataOutput에 추가로 객체 쓰기 작업을 지원한다.</li>
+    
+            <li>void writeObject(Object obj)</li>
         </ol>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>void writeObject(Object obj)</li>
-            </ol>
-        </details>
     </details>
     
     <details>
@@ -598,17 +457,13 @@
         <ol>
             <li>객체 직렬화를 직접 구현하고자 할 때 이를 구체화한다. 객체 직렬화는 빈 객체를 만든 뒤 각 속성의 값을 쓰므로 기본 생성자가 필요하다.
                 <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/ExternalizableExample.java" lan="java">예시 코드 »</button></li>
-        </ol>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>void writeExternal(ObjectOutput out)</li>
-                객체를 out에 쓴다.
+        
+            <li>void writeExternal(ObjectOutput out)</li>
+            객체를 out에 쓴다.
 
-                <li>void readExternal(ObjectInput in)</li>
-                in으로 객체를 생성한다.
-            </ol>
-        </details>
+            <li>void readExternal(ObjectInput in)</li>
+            in으로 객체를 생성한다.
+        </ol>
     </details>
         
     <details>
@@ -701,44 +556,22 @@
         <ol>
             <li>InputStream에 대해 Reader 작업을 지원해주는 bridge 클래스.
                 <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/BufferedReaderExample.java" lan="java">예시 코드 »</button></li>
+        
+            <li>public InputStreamReader(InputStream in, String charsetName) + 3 오버로딩</li>
+            
+            <li>String getEncoding()</li>
         </ol>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public InputStreamReader(InputStream in)</li>
-                <li>public InputStreamReader(InputStream in, String charsetName)</li>
-                <li>public InputStreamReader(InputStream in, Charset cs) Since 1.4</li>
-                <li>public InputStreamReader(InputStream in, CharsetDecoder dec) Since 1.4</li>
-            </ol>
-        </details>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>String getEncoding()</li>
-            </ol>
-        </details>
     </details>
     
     <details>
         <summary>class OutputStreamWriter extends Writer Since 1.1</summary>
         <ol>
             <li>OutputStream에 Writer 작업을 지원해주는 bridge 클래스.</li>
+
+            <li>public OutputStreamWriter(OutputStream out, String charsetName) + 3 오버로딩</li>
+
+            <li>String getEncoding()</li>
         </ol>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public OutputStreamWriter(OutputStream out, String charsetName)</li>
-                <li>public OutputStreamWriter9OutputStream out)</li>
-                <li>public OutputStreamWriter9OutputStream out, Charset cs) Since 1.4</li>
-                <li>public OutputStreamWriter9OutputStream out, CharsetEncoder enc) Since 1.4</li>
-            </ol>
-        </details>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>String getEncoding()</li>
-            </ol>
-        </details>
     </details>
     
     <details>
@@ -755,72 +588,45 @@
         <summary>class CharArrayReader extends Reader Since 1.1</summary>
         <ol>
             <li>내부 버퍼 char[] buf에 대한 읽기 연산을 지원하는 Reader</li>
+        
+            <li>public CharArrayReader(char[] buf, int offset, int length) + 1 오버로딩</li>
         </ol>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public CharArrayReader(char[] buf)</li>
-                <li>public CharArrayReader(char[] buf, int offset, int length)</li>
-            </ol>
-        </details>
     </details>
     
     <details>
         <summary>class CharArrayWriter extends Writer Since 1.1</summary>
         <ol>
             <li>내부 버퍼 char[] buf에 대해 쓰기 연산을 지원하는 Writer. 버퍼 크기는 자동으로 확장된다.</li>
+
+            <li>public CharArrayWriter(int initialSize) + 1 오버로딩</li>
+        
+            <li>void writeTo(Writer out)</li>
+            out에 버퍼의 모든 내용을 쓴다.
+            <li>void reset()</li>
+            버퍼를 비우고 재활용한다.
+            <li>char[] toCharArray()</li>
+            <li>int size()</li>
         </ol>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public CharArrayWriter()</li>
-                <li>public CharArrayWriter(int initialSize)</li>
-            </ol>
-        </details>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>void writeTo(Writer out)</li>
-                out에 버퍼의 모든 내용을 쓴다.
-                <li>void reset()</li>
-                버퍼를 비우고 재활용한다.
-                <li>char[] toCharArray()</li>
-                <li>int size()</li>
-            </ol>
-        </details>
     </details>
         
     <details>
         <summary>class StringReader extends Reader Since 1.1</summary>
         <ol>
             <li>String에 대해 읽기 연산을 수행하는 Reader.</li>
+
+            <li>public StringReader(String s)</li>
         </ol>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public StringReader(String s)</li>
-            </ol>
-        </details>
     </details>
     
     <details>
         <summary>class StringWriter extends Writer Since 1.1</summary>
         <ol>
             <li>내부 StringBuffer에 쓰기 연산을 지원하는 Writer.</li>
+
+            <li>public StringWriter(int initialSize) + 1 오버로딩</li>
+    
+            <li>StringBuffer getBuffer()</li>
         </ol>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public StringWriter()</li>
-                <li>public StringWriter(int initialSize)</li>
-            </ol>
-        </details>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>StringBuffer getBuffer()</li>
-            </ol>
-        </details>
     </details>
         
     <details>
@@ -828,57 +634,35 @@
         <ol>
             <li>다른 Reader에 대한 버퍼를 제공하여, 시스템 읽기 작업이 빈번하게 일어나지 않게 해준다.
                 <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/BufferedReaderExample.java" lan="java">예시 코드 »</button></li>
+
+            <li>public BufferedReader(Reader in, int sz) + 1 오버로딩</li>
+            
+            <li>String readLine() : EOF도 줄의 끝으로 간주</li>
+            <li>Stream&lt;String&gt; lines() Since 1.8</li>
         </ol>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public BufferedReader(Reader in, int sz)</li>
-                <li>public BufferedReader(Reader in)</li>
-            </ol>
-        </details>
-            <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>String readLine() : EOF도 줄의 끝으로 간주</li>
-                <li>Stream&lt;String&gt; lines() Since 1.8</li>
-            </ol>
-        </details>
     </details>
     
     <details>
         <summary>class BufferedWriter extends Writer Since 1.1</summary>
         <ol>
             <li>Writer에 버퍼를 제공하여 시스템 쓰기 작업이 빈번하게 일어나지 않도록 한다.</li>
+
+            <li>public BufferedWriter(Writer out, int sz) + 1 오버로딩</li>
+        
+            <li>void newLine() : 줄 바꿈 문자열은 시스템 속성 line.separator로 결정된다.</li>
         </ol>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public BufferedWriter(Writer out)</li>
-                <li>public BufferedWriter(Writer out, int sz)</li>
-            </ol>
-        </details>
-            <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>void newLine() : 줄 바꿈 문자열은 시스템 속성 line.separator로 결정된다.</li>
-            </ol>
-        </details>
     </details>
         
     <details>
         <summary>class LineNumberReader extends BufferedReader Since 1.1</summary>
         <ol>
             <li>Reader가 줄 끝을 만날때마다 라인을 카운트하는 클래스. 처음 시작은 0.</li>
-        </ol>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>void setLineNumber(int lineNumber)</li>
-                읽기 위치가 이동하는 건 아니다
+        
+            <li>void setLineNumber(int lineNumber)</li>
+            읽기 위치가 이동하는 건 아니다
 
-                <li>int getLineNumber()</li>
-            </ol>
-        </details>
+            <li>int getLineNumber()</li>
+        </ol>
     </details>
         
     <details>
@@ -903,34 +687,18 @@
     
     <details>
         <summary>class FileReader extends InputStreamReader Since 1.1</summary>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public FileReader(String fileName)</li>
-                <li>public FileReader(File file)</li>
-                <li>public FileReader(FileDescriptor fd)</li>
-                <li>public FileReader(String fileName, Charset charset) Since 11</li>
-                <li>public FileReader(File file, Charset charset) Since 11</li>
-            </ol>
-        </details>
+        <ol>
+            <li>public FileReader(File file, Charset charset) Since 11 + 3 오버로딩</li>
+            <li>public FileReader(FileDescriptor fd)</li>
+        </ol>
     </details>
     
     <details>
         <summary>class FileWriter extends OutputStreamWriter Since 1.1</summary>
-        <details>
-            <summary>Constructor Detail</summary>
-            <ol>
-                <li>public FileWriter(String fileName)</li>
-                <li>public FileWriter(String fileName, boolean append)</li>
-                <li>public FileWriter(File file)</li>
-                <li>public FileWriter(File file, boolean append) Since 1.4</li>
-                <li>public FileWriter(FileDescriptor fd)</li>
-                <li>public FileWriter(String fileName, Charset charset) Since 11</li>
-                <li>public FileWriter(String fileName, Charset charset, boolean appedn) Since 11</li>
-                <li>public FileWirter(File file, Charset charset) Since 11</li>
-                <li>public FileWriter(File file, Charset charset, boolean append) Since 11</li>
-            </ol>
-        </details>
+        <ol>
+            <li>public FileWriter(FileDescriptor fd)</li>
+            <li>public FileWriter(File file, Charset charset, boolean append) Since 11 + 7 오버로딩</li>
+        </ol>
     </details>
 </details>
 
@@ -943,13 +711,9 @@
         <ol>
             <li>파일 패스 필터링에 사용되며 File::listFiles의 매개변수로 객체가 넘겨진다.
                 <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/FileFilterExample.java" lan="java">예시 코드 »</button></li>
+
+            <li>boolean accept(File pathname)</li>
         </ol>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>boolean accept(File pathname)</li>
-            </ol>
-        </details>
     </details>
     
     <details>
@@ -957,13 +721,9 @@
         <ol>
             <li>특정 디렉터리에서의 파일명 필터링에 사용되며 FileDialog::setFilenameFilter, File::list, File::listFiles의 매개변수로 객체가 넘겨진다.
                 <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/io/FilenameFilterExample.java" lan="java">예시 코드 »</button></li>
+
+            <li>boolean accept(File dir, String name)</li>
         </ol>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>boolean accept(File dir, String name)</li>
-            </ol>
-        </details>
     </details>
 
     <details>

@@ -215,15 +215,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ImageOptimizer\cjpeg.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ImageOptimizer\pngquant.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ImageOptimizer\libjpeg-62.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="ImageOptimizer\cjpeg.exe" />
+    <Content Include="ImageOptimizer\pngquant.exe" />
+    <Content Include="ImageOptimizer\libjpeg-62.dll" />
     <Resource Include="Resources\blue.ico" />
     <Resource Include="Resources\blue.png" />
     <Resource Include="Resources\yellow.ico" />

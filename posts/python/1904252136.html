@@ -160,7 +160,7 @@
             <br>
             <br>5. class calendar.LocaleHTMLCalendar(firstweekday=0, locale=None)
             <br>&raquo; HTMLCalendar의 서브클래스. 로캐일 이름을 지정한다.
-            <br>* 4, 5의 formatweekday(), formatmonthname()은 현재 로캐일을 지정된 로캐일로 잠시 변경한다. 이는 전체 프로세스가 공유하므로, 쓰레드-안전하지
+            <br>* 4, 5의 formatweekday(), formatmonthname()은 현재 로캐일을 지정된 로캐일로 잠시 변경한다. 이는 전체 프로세스가 공유하므로, 스레드-안전하지
             않다.
             <br>
             <br>6. 텍스트 달력들에 대해 아래의 함수들이 지원된다.
@@ -250,7 +250,7 @@
             <br>3. deque objects
             <br>&raquo; class collections.deque([iterable[, maxlen]])
             <br>* iterable이 존재하면 좌에서 우로 append()를 통해 초기화한다.
-            <br>* 쓰레드-안전, 메모리 효율적인 O(1)에 근접한 기능을 제공.
+            <br>* 스레드-안전, 메모리 효율적인 O(1)에 근접한 기능을 제공.
             <br>* list도 비슷한 기능을 제공하나, 고정 길이 연산에 적합하며, 길이가 바뀌는 연산은 O(n) 메모리 이동이 발생
             <br>* maxlen이 주어졌다면 추가적인 삽입은 반대쪽 원소의 제거와 동시에 일어난다. 최근 n개만 관심 있는 경우 등에 유용.
             <br>&raquo; append(x), appendleft(x), clear(), copy() Since 3.5 : 얕은 복사

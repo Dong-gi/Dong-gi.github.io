@@ -3,7 +3,7 @@
 <details>
     <summary>interface Executor Since 1.5</summary>
     <ol>
-        <li>전달받은 Runnable task를 실행하는 객체. Executor 자체가 쓰레드의 병행성을 부여하진 않는다. Executor의 구현에서 호출자와 다른 쓰레드 공간을 마련해주어야 한다.</li>
+        <li>전달받은 Runnable task를 실행하는 객체. Executor 자체가 스레드의 병행성을 부여하진 않는다. Executor의 구현에서 호출자와 다른 스레드 공간을 마련해주어야 한다.</li>
         <li>void execute(Runnable command) <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/concurrent/ExecutorExample.java" lan="java">예시 코드 »</button></li>
     </ol>
 </details>
@@ -113,26 +113,26 @@
             <summary>ExecutorService</summary>
             <ul>
                 <li>static ExecutorService newFixedThreadPool(int nThreads)</li>
-                최대 동시 실행 가능한 쓰레드 수가 제한. 나머지 쓰레드는 큐에서 대기. 쓰레드들은 명시적으로 shutdown되기 전까지 풀에 존재한다.
+                최대 동시 실행 가능한 스레드 수가 제한. 나머지 스레드는 큐에서 대기. 스레드들은 명시적으로 shutdown되기 전까지 풀에 존재한다.
 
                 <li>static ExecutorService newWorkStealingPool(int parallelism) Since 1.8</li>
-                parallelism : 병행 레벨. 동시 실행 가능한 최대 쓰레드 수.<br>
-                풀 내부의 쓰레드 수는 가변적이다. 여러 큐를 이용할 수 있기 때문에, 쓰레드 실행 순서를 예측할 수 없다.
+                parallelism : 병행 레벨. 동시 실행 가능한 최대 스레드 수.<br>
+                풀 내부의 스레드 수는 가변적이다. 여러 큐를 이용할 수 있기 때문에, 스레드 실행 순서를 예측할 수 없다.
 
                 <li>static ExecutorService newWorkStealingPool() Since 1.8</li>
                 사용 가능한 프로세서 수를 parallelism level로 이용.
 
                 <li>static ExecutorService newFixedThreadPool(int nThreads, ThreadFactory threadFactory)</li>
-                새 쓰레드를 생성하는 데 threadFactory를 이용.
+                새 스레드를 생성하는 데 threadFactory를 이용.
 
                 <li>static ExecutorService newSingleThreadExecutor()</li>
-                하나의 워커 쓰레드만 사용한다. 예기지 않게 워커가 종료되면 새로운 쓰레드가 나머지 작업을 위해 그 자리를 대신할 수 있다.<br>
-                같은 특징을 갖는 newFixedThreadPool(1)과 다르게, 반환된 Executor로 추가적인 워커 쓰레드를 이용하도록 설정할 수 없다.
+                하나의 워커 스레드만 사용한다. 예기지 않게 워커가 종료되면 새로운 스레드가 나머지 작업을 위해 그 자리를 대신할 수 있다.<br>
+                같은 특징을 갖는 newFixedThreadPool(1)과 다르게, 반환된 Executor로 추가적인 워커 스레드를 이용하도록 설정할 수 없다.
 
                 <li>static ExecutorService newSingleThreadExecutor(ThreadFactory threadFactory)</li>
                 
                 <li>static ExecutorService newCachedThreadPool()</li>
-                이전에 종료된 쓰레드를 재사용. 60초 동안 이용되지 않으면 풀에서 삭제된다.
+                이전에 종료된 스레드를 재사용. 60초 동안 이용되지 않으면 풀에서 삭제된다.
 
                 <li>static ExecutorService newCachedThreadPool(ThreadFactory threadFactory)</li>
                 
@@ -148,7 +148,7 @@
                 특징은 ExecutorService와 같다.
                 <li>static ScheduledExecutorService newSingleThreadScheduledExecutor(ThreadFactory threadFactory)</li>
                 <li>static ScheduledExecutorService newScheduledThreadPool(int corePoolSize)</li>
-                corePoolSize : 풀에 유지할 쓰레드 수
+                corePoolSize : 풀에 유지할 스레드 수
                 <li>static ScheduledExecutorService newScheduledThreadPool(int corePoolSize, ThreadFactory threadFactory)</li>
                 <li>static ScheduledExecutorService unconfigurableScheduledExecutorService(ScheduledExecutorService executor)</li>
                 ScheduledExecutorService에 정의된 메서드들은 executor에 연결하고, 그 외 캐스트를 통해 이용할 수 있는 메서드들은 호출하지 못하도록 한다.
@@ -159,11 +159,11 @@
             <summary>ThreadFactory</summary>
             <ul>
                 <li>static ThreadFactory defaultThreadFactory()</li>
-                모든 쓰레드들을 같은 ThreadGroup으로 생성한다. 쓰레드의 우선순위는 Threa.NORM_PRIORITY와 그룹의 최대 허용치 중 작은 것으로 설정된다.<br>
-                각 쓰레드들은 non-daemon으로 생성되며, Thread.getName()을 통해 얻을 수 있는 "pool-N-thread-M" 꼴의 이름으로 접근할 수 있다.
+                모든 스레드들을 같은 ThreadGroup으로 생성한다. 스레드의 우선순위는 Threa.NORM_PRIORITY와 그룹의 최대 허용치 중 작은 것으로 설정된다.<br>
+                각 스레드들은 non-daemon으로 생성되며, Thread.getName()을 통해 얻을 수 있는 "pool-N-thread-M" 꼴의 이름으로 접근할 수 있다.
                 
                 <li>static ThreadFactory privilegedThreadFactory()</li>
-                호출하는 쓰레드와 같은 권한으로 새로운 쓰레드를 생성하는 ThreadFactory 반환.
+                호출하는 스레드와 같은 권한으로 새로운 스레드를 생성하는 ThreadFactory 반환.
             </ul>
         </details>
         
@@ -311,8 +311,8 @@
     <ol>
         <li>CompletionStage로 이용될 수 있는, 명시적으로 종료(값과 상태를 설정)되는 Future.</li>
         <ul>
-            <li>둘 이상의 쓰레드가 complete, completeExceptionally, cancel을 호출할 경우, 하나만 성공한다.</li>
-            <li>non-async 메서드로 등록된 작업은 현재 CompletableFuture가 완료된 쓰레드 또는 호출자에서 실행된다.</li>
+            <li>둘 이상의 스레드가 complete, completeExceptionally, cancel을 호출할 경우, 하나만 성공한다.</li>
+            <li>non-async 메서드로 등록된 작업은 현재 CompletableFuture가 완료된 스레드 또는 호출자에서 실행된다.</li>
             <li>명시적인 Executor 없이 async 메서드로 등록된 작업은 ForkJoinPool::commonPool에서 수행.</li>
             <li>CompletionStage의 메서드들은 독립적으로 구현되어, 하나를 재정의해도 다른 메서드에 영향이 없다.</li>
             <li>CompletionStage의 메서드들만 이용하도록 하려면 minimalCompletionStage()를, future를 변경하지 못하도록 하려면 copy()를 이용.</li>
@@ -432,7 +432,7 @@
         <li>void setRejectedExecutionHandler(RejectedExecutionHandler handler) + getter</li>
         <li>void setCorePoolSize(int corePoolSize) + getter</li>
         <li>boolean prestartCoreThread()</li>
-        코어(워커) 쓰레드를 시작시켜 작업을 대기시킨다. 새 작업을 시작할 때 코어 쓰레드를 실행하는 기본 설정을 재정의한 것. 모든 코어 쓰레드가 이미 시작되었다면 false 반환.
+        코어(워커) 스레드를 시작시켜 작업을 대기시킨다. 새 작업을 시작할 때 코어 스레드를 실행하는 기본 설정을 재정의한 것. 모든 코어 스레드가 이미 시작되었다면 false 반환.
         <li>int prestartAllCoreThreads()</li>
         <li>boolean allowsCoreThreadTimeOut() Since 1.6</li>
         <li>void allowCoreThreadTimeOut(boolean value) Since 1.6</li>
@@ -516,8 +516,8 @@
 <details>
     <summary>java.util.concurrent에서 지원하는 큐들</summary>
     <ol>
-        <li>ConcurrentLinkedQueue : 가변 길이, 쓰레드-안전한 non-blocking FIFO 큐</li>
-        <li>ConcurrentlinkedDeque : 가변 길이, 쓰레드-안전한 non-blocking 덱</li>
+        <li>ConcurrentLinkedQueue : 가변 길이, 스레드-안전한 non-blocking FIFO 큐</li>
+        <li>ConcurrentlinkedDeque : 가변 길이, 스레드-안전한 non-blocking 덱</li>
         <li>BlockingQueue : put(), take()를 블록하는 큐</li>
         LinkedBlockingQueue, ArrayBlockingQueue, SynchronousQueue, PriorityBlockingQueue, DelayQueue
     </ol>
@@ -528,7 +528,7 @@
 <details>
     <summary>java.util.concurrent에서 지원하는 맵들</summary>
     <ol>
-        <li>ConcurrentMap&lt;K, V&gt; : 쓰레드-안전, 작업의 원자성 보장.</li>
+        <li>ConcurrentMap&lt;K, V&gt; : 스레드-안전, 작업의 원자성 보장.</li>
         ConcurrentHashMap&lt;K, V&gt;
         <li>ConcurrentNavigableMap&lt;K, V&gt; : NavigableMap 연산을 지원하는 ConcurrentMap</li>
         ConcurrentSkipListMap&lt;K, V&gt; (ConcurrentSkipListSet도 존재)
@@ -586,7 +586,7 @@
 <details>
     <summary>class CyclicBarrier Since 1.5</summary>
     <ol>
-        <li>쓰레드들이 공통의 목적이 달성되기까지 함께 대기. 이를 barrier라고 하며, barrier가 재사용될 수 있어 cyclic하다.</li>
+        <li>스레드들이 공통의 목적이 달성되기까지 함께 대기. 이를 barrier라고 하며, barrier가 재사용될 수 있어 cyclic하다.</li>
         
         <li>public CyclicBarrier(int parties, Runnable barrierAction)</li>
         barrierAction : barrier를 넘을 때 실행.
@@ -594,7 +594,7 @@
         
         <li>int getParties()</li>
         <li>int await()</li>
-        반환값 : 현재 쓰레드의 대기 순번. getParties() - 1이 첫 번째, 0이 마지막 쓰레드.
+        반환값 : 현재 스레드의 대기 순번. getParties() - 1이 첫 번째, 0이 마지막 스레드.
         <li>int await(long timeout, TimeUnit unit)</li>
         <li>boolean isBroken()</li>
         <li>void reset()</li>
@@ -607,12 +607,12 @@
 <details>
     <summary>class Exchanger&lt;V&gt; Since 1.5</summary>
     <ol>
-        <li>두 쓰레드가 같은 시점에 값을 서로 교환하도록 해준다.</li>
+        <li>두 스레드가 같은 시점에 값을 서로 교환하도록 해준다.</li>
         
         <li>public Exchanger()</li>
         
         <li>V exchange(V x) throws InterruptedException</li>
-        다른 쓰레드가 같은 지점에 도달하기까지 기다렸다가, 서로 값을 교환한다.
+        다른 스레드가 같은 지점에 도달하기까지 기다렸다가, 서로 값을 교환한다.
         
         <li>V exchange(V x, long timeout, TimeUnit unit) throws InterruptedException, TimeoutException</li>
         timeout : 최대 대기 시간.

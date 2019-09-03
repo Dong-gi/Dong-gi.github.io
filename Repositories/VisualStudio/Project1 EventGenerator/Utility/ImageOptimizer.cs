@@ -43,7 +43,7 @@ namespace EventGenerator.Utility
                         if (fileOrDirPath.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
                         {
                             process.StartInfo.FileName = @"ImageOptimizer\pngquant.exe";
-                            process.StartInfo.Arguments = $"--force --output ImageOptimizer\\img\\{additionalSavePath}{fileInfo.Name} ImageOptimizer\\{fileInfo.Name}";
+                            process.StartInfo.Arguments = $"--quality=90 --force --output ImageOptimizer\\img\\{additionalSavePath}{fileInfo.Name} ImageOptimizer\\{fileInfo.Name}";
                         }
                         else if (fileOrDirPath.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || fileOrDirPath.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
                         {
