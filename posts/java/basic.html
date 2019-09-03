@@ -195,7 +195,7 @@
             <li>native : JNI로 구현한 메서드.</li>
             <li>transient : 직렬화 제외</li>
             <li>synchronized : LOCK 객체에 동기화</li>
-            <li>volatile : 값을 CPU 캐시를 사용하지 않고 메인 메모리에 직접 읽고/쓴다. 컴파일러에 의해 volatile 변수가 이용되는 문장의 실행 순서가 재배치되지 않는다; 해당 문장 전/후의 문장들은 실제로 전/후에 실행됨이 보장된다. 변수에 대한 쓰기 작업이 항상 한 쓰레드에서만 이루어진다면, synchronized 대신 동기화를 위해 이용할 수 있다.</li>
+            <li>volatile : 값을 CPU 캐시를 사용하지 않고 메인 메모리에 직접 읽고/쓴다. 컴파일러에 의해 volatile 변수가 이용되는 문장의 실행 순서가 재배치되지 않는다; 해당 문장 전/후의 문장들은 실제로 전/후에 실행됨이 보장된다. 변수에 대한 쓰기 작업이 항상 한 스레드에서만 이루어진다면, synchronized 대신 동기화를 위해 이용할 수 있다.</li>
         </ul>
         <li>요소별 접근 제한자 목록 : java.lang.reflect.Modifier</li>
         <ul>

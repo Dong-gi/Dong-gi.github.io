@@ -112,8 +112,8 @@ namespace EventGenerator.ViewModel
             Commands[OPEN_EXECUTING_FORDER_COMMAND] = new CustomCommand(FileService.OpenExecutingFolder);
 
             RedirectConsoleWrite();
-            Console.Write(File.ReadAllText("LICENSE.md"));
-            Console.Write($"실행 위치 : {System.AppDomain.CurrentDomain.BaseDirectory}");
+            Console.Write(File.ReadAllText("./LICENSE.md"));
+            Toast("실행 위치", System.AppDomain.CurrentDomain.BaseDirectory);
         }
 
         #region INotifyPropertyChanged 구현 관련
@@ -209,11 +209,15 @@ namespace EventGenerator.ViewModel
         {
             Log($"Toast │ {title} │ {msg}");
             
-            if (IsGame1Tab)
-                Current.TaskbarIcon.Icon = new System.Drawing.Icon(System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/Resources/yellow.ico")).Stream);
-            else if (IsGame2Tab)
-                Current.TaskbarIcon.Icon = new System.Drawing.Icon(System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/Resources/blue.ico")).Stream);
-            await ActionUtility.UI(() => Current.TaskbarIcon.ShowBalloonTip(title, msg, Current.TaskbarIcon.Icon));
+            await ActionUtility.UI(() =>
+            {
+                if (IsGame1Tab)
+                    Current.TaskbarIcon.Icon = new System.Drawing.Icon(System.Windows.Application.GetResourceStream(new Uri((System.Windows.Application.Current.MainWindow.FindResource("yellowIcon") as dynamic).Source.Decoder.ToString())).Stream);
+                else if (IsGame2Tab)
+                    Current.TaskbarIcon.Icon = new System.Drawing.Icon(System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/통합 이벤트 생성기;component/Resources/blue.ico")).Stream);
+
+                Current.TaskbarIcon.ShowBalloonTip(title, msg, Current.TaskbarIcon.Icon);
+            });
         }
         #endregion
     }

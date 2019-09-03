@@ -33,10 +33,10 @@
         변수가 non-volatile, non-final인 것처럼 쓴다.
 
         <li>final boolean getOpaque() Since 9</li>
-        현재 값을 반환한다. 메모리 영향은 VarHandle.getOpaque(Object...)와 같다 » 프로그램 순서에 따라 접근하여 반환. 다른 쓰레드들 사이의 접근 순서는 정해지지 않는다.
+        현재 값을 반환한다. 메모리 영향은 VarHandle.getOpaque(Object...)와 같다 » 프로그램 순서에 따라 접근하여 반환. 다른 스레드들 사이의 접근 순서는 정해지지 않는다.
 
         <li>final void setOpaque(boolean newValue) Since 9</li>
-        newValue로 쓴다. 메모리 영향은 VarHandle.setOpaque(Object...)와 같다 » 프로그램 순서에 따라 접근하여 쓰기. 다른 쓰레드들 사이의 접근 순서는 정해지지 않는다.
+        newValue로 쓴다. 메모리 영향은 VarHandle.setOpaque(Object...)와 같다 » 프로그램 순서에 따라 접근하여 쓰기. 다른 스레드들 사이의 접근 순서는 정해지지 않는다.
 
         <li>final boolean getAcquire() Since 9</li>
         현재 값을 반환한다. 메모리 영향은 VarHandle.getAcquire(Object...)와 같다 » 변수의 값을 반환한다. 이후의 읽기/쓰기는 이전에 실행되지 않는다.
@@ -165,7 +165,7 @@
 <details>
     <summary>class LongAdder extends Number implements Serializable Since 1.8 + DoubleAdder</summary>
     <ol>
-        <li>초깃값 0으로 시작하는 쓰레드-안전한 합계. 단, 합의 순서는 정의되지 않으므로 순서에 상관 없는 경우에 이용해야 한다. 또, 주어진 accumulatorFunction은 부작용이 없어야 한다.</li>
+        <li>초깃값 0으로 시작하는 스레드-안전한 합계. 단, 합의 순서는 정의되지 않으므로 순서에 상관 없는 경우에 이용해야 한다. 또, 주어진 accumulatorFunction은 부작용이 없어야 한다.</li>
         
         <li>public LongAdder()</li>
         

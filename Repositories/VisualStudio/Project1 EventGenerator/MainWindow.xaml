@@ -66,6 +66,9 @@
             </Setter>
         </Style>
 
+        <Image x:Key="blueIcon" Source="Resources/blue.ico" />
+        <Image x:Key="yellowIcon" Source="Resources/yellow.ico" />
+        
         <viewmodel:MainViewModel x:Key="mainViewModel"/>
     </Window.Resources>
 

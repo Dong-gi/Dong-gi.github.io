@@ -49,9 +49,9 @@ const posts = {
         { filename: "posts/java/oop.html", category: "Programming/Java/Tutorial", title: "Java 객체지향" },
         { filename: "posts/java/version.html", category: "Programming/Java/Tutorial", title: "Java 버전별 추가사항" },
 
-        { filename: "posts/java/java.io.html", category: "Programming/Java/java.base", title: "java.io" },
-        { filename: "posts/java/java.lang.html", category: "Programming/Java/java.base", title: "java.lang" },
-        { filename: "posts/java/java.lang.annotation.html", category: "Programming/Java/java.base", title: "java.lang.annotation" },
+        { filename: "posts/java/java.io.html", category: "Programming/Java/java.base", title: "java.io Since 1.0" },
+        { filename: "posts/java/java.lang.html", category: "Programming/Java/java.base", title: "java.lang Since 1.0" },
+        { filename: "posts/java/java.lang.annotation.html", category: "Programming/Java/java.base", title: "java.lang.annotation Since 1.5", top: true },
         { filename: "posts/java/java.lang.module.html", category: "Programming/Java/java.base", title: "java.lang.module" },
         { filename: "posts/java/java.lang.reflect.html", category: "Programming/Java/java.base", title: "java.lang.reflect" },
         { filename: "posts/java/java.math.html", category: "Programming/Java/java.base", title: "java.math" },
@@ -63,7 +63,7 @@ const posts = {
         { filename: "posts/java/java.text.html", category: "Programming/Java/java.base", title: "java.text" },
         { filename: "posts/java/java.time.html", category: "Programming/Java/java.base", title: "java.time" },
         { filename: "posts/java/java.time.format.html", category: "Programming/Java/java.base", title: "java.time.format" },
-        { filename: "posts/java/java.util.html", category: "Programming/Java/java.base", title: "java.util" }, //, top: true
+        { filename: "posts/java/java.util.html", category: "Programming/Java/java.base", title: "java.util Since 1.0" },
         { filename: "posts/java/java.util.concurrent.html", category: "Programming/Java/java.base", title: "java.util.concurrent" }, //, top: true
         { filename: "posts/java/java.util.concurrent.atomic.html", category: "Programming/Java/java.base", title: "java.util.concurrent.atomic" },
         { filename: "posts/java/java.util.function.html", category: "Programming/Java/java.base", title: "java.util.function" },
@@ -79,7 +79,7 @@ const posts = {
         { filename: "posts/java/java_ee/453.html", category: "Programming/Java/JavaEE", title: "서블릿 생애주기" },//, top: true
         { filename: "posts/java/java_ee/446.html", category: "Programming/Java/JavaEE", title: "JSP&Servlet" },//, top: true
         
-        { filename: "posts/java/apache.commons.collections.html", category: "Programming/Java/Library", title: "Apache Commons Collections", top: true },
+        { filename: "posts/java/apache.commons.collections.html", category: "Programming/Java/Library", title: "Apache Commons Collections" },
 
         { filename: "posts/javascript/basic.html", category: "Programming/JavaScript/Core", title: "코어 JavaScript" },
         { filename: "posts/javascript/basic2.html", category: "Programming/JavaScript/Browser", title: "브라우저 JavaScript" },
