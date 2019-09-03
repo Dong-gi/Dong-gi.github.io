@@ -129,16 +129,16 @@
 <details>
     <summary>구문</summary>
     <ol>
-        <button class="btn-code" path="posts/python/syntax.py" displayRange="[1,2]" lan="python">라인 유지 \</button>
-        <button class="btn-code" path="posts/python/syntax.py" displayRange="[4,10]" lan="python">if ~ elif ~ else</button>
-        <button class="btn-code" path="posts/python/syntax.py" displayRange="[12,20]" lan="python">while</button>
-        <button class="btn-code" path="posts/python/syntax.py" displayRange="[22,27]" lan="python">for</button><br>
+        <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[1,2]" lan="python">라인 유지 \</button>
+        <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[4,10]" lan="python">if ~ elif ~ else</button>
+        <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[12,20]" lan="python">while</button>
+        <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[22,27]" lan="python">for</button><br>
         <li>for문은 순회 객체에 대하여 iter()를 호출한다. iter()는 __next__() 메서드를 정의한 iterator 객체를 반환하며, __next__()가 전달하는 값을 하나씩 루프에 사용한다.
             더 이상 요소가 없을 때 __next__()는 StopIteration 예외를 발생시키고, for 루프는 종료된다. 클래스 자체에 __next__()가 정의되어 있다면, iter()는 self를 반환하는 것으로 충분하다.</li>
         
         <li>콤마로 구분된 값들을 자동으로 튜플로 구성하여 다중 할당, 다중 반환이 가능하다.</li>
-        <button class="btn-code" path="posts/python/syntax.py" displayRange="[29,34]" lan="python">다중 할당 예시 : 피보나치 수열 »</button>
-        <button class="btn-code" path="posts/python/syntax.py" displayRange="[37,46]" lan="python">다중 반환 예시 : 최대공약수/최소공배수 »</button>
+        <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[29,34]" lan="python">다중 할당 예시 : 피보나치 수열 »</button>
+        <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[37,46]" lan="python">다중 반환 예시 : 최대공약수/최소공배수 »</button>
         
         <li>else</li>
         <ul>
@@ -153,10 +153,10 @@
             start 기본값 0. step 기본값 1. stop 자체는 미포함
             <li>여러 시퀀스 동시 순회 : zip()</li>
             같은 오프셋의 요소들로 튜플을 생성. 시퀀스가 하나라도 끝나면 순회 종료.
-            <button class="btn-code" path="posts/python/syntax.py" displayRange="[48,49]" lan="python">예시 »</button><br>
+            <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[48,49]" lan="python">예시 »</button><br>
             길이가 긴 시퀀스를 기준으로 하는 itertools.zip_longest()도 존재
             <li>comprehension : 순회를 통해 리스트, 딕셔너리, 셋 등 생성
-                <button class="btn-code" path="posts/python/syntax.py" displayRange="[52,89]" lan="python">예시 »</button></li>
+                <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[52,89]" lan="python">예시 »</button></li>
             파이썬 3에서 comprehension은 함수처럼 고유한 지역 범위를 가진다.
         </ul>
 
@@ -171,26 +171,27 @@
     <summary>함수</summary>
     <ol>
         <li>파이썬의 함수는 일급 객체다.</li>
-        <li>함수 정의 def <i>func_name</i>(): <button class="btn-code" path="posts/python/syntax.py" displayRange="[91,100]" lan="python">예시 »</button></li>
+        <li>함수 정의 def <i>func_name</i>(): <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[91,100]" lan="python">예시 »</button></li>
         def func(a, b, *, c = None): * 뒷부분은 명시적으로만 받는다
         <li>return이 없으면 호출자는 None을 얻는다. None 검사 : is None</li>
         <li>docstring : 함수 body 첫 줄에 문자열로 함수 설명. help()로 출력된다.</li>
         <li>함수 외부 scope에 접근할 수 있다.
-            <button class="btn-code" path="posts/python/syntax.py" displayRange="[102,105]" lan="python">예시 »</button></li>
+            <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[102,105]" lan="python">예시 »</button></li>
         <li>디폴트 매개변수, 키워드 매개변수, 매개변수 타입 바운딩
-            <button class="btn-code" path="posts/python/syntax.py" displayRange="[107,119]" lan="python">예시 »</button></li>
+            <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[107,119]" lan="python">예시 »</button></li>
         <li>* : 인자를 튜플로. ** : 인자를 딕셔너리로.
-            <button class="btn-code" path="posts/python/syntax.py" displayRange="[121,131]" lan="python">예시 »</button></li>
+            <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[121,131]" lan="python">예시 »</button></li>
         <li>함수 내부에 함수 정의 가능
-            <button class="btn-code" path="posts/python/syntax.py" displayRange="[133,138]" lan="python">예시 »</button></li>
+            <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[133,138]" lan="python">예시 »</button></li>
         <li>람다 함수 : lambda
-            <button class="btn-code" path="posts/python/syntax.py" displayRange="[133,136,140,141]" lan="python">예시 »</button></li>
+            <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[133,136,140,141]" lan="python">예시 »</button></li>
         <li>Generator</li>
         자료를 순회할 때마다 다음 항목 반환. __iter__()와 __next__()를 자동으로 생성하고, StopIteration 예외도 자동으로 발생시킨다. cf. range() : 미리 모든 값을 생성한다.
-        <button class="btn-code" path="posts/python/syntax.py" displayRange="[143,150]" lan="python">예시 »</button>
+        <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[143,150]" lan="python">예시 »</button><br>
+        다중 반복을 지원하려면 동일 객체에 대해 iter()를 호출할 때마다 독립적인 반복자가 새로 만들어져야 한다. 이를 파이썬스럽게 구현하려면 새로운 Iterator 인스턴스 대신 제너레이터(특히 Generator Comprehension)를 반환하면 된다.
         <li>Decorator</li>
-        <button class="btn-code" path="posts/python/syntax.py" displayRange="[153,169]" lan="python">함수 데커레이터 예시 »</button>
-        <button class="btn-code" path="posts/python/syntax.py" displayRange="[171,184]" lan="python">클래스 데커레이터 예시 »</button>
+        <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[153,169]" lan="python">함수 데커레이터 예시 »</button>
+        <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[171,184]" lan="python">클래스 데커레이터 예시 »</button>
     </ol>
 </details>
 
@@ -321,6 +322,18 @@
         <li>assert expression1, expression2</li>
         if __debug__:<br>
         　　if not expression1: raise AssertionError(expression2)
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>weakref</summary>
+    <ol>
+        <li>약한 참조 : 캐시와 같이 객체 카운트를 증가시키지 않고 객체를 참조.
+            <button class="btn-code" path="Repositories/Python/Basic/weakref_example.py" lan="python">예시 코드</button></li>
+        <li>WeakValueDictionary : 약한 참조를 값으로 가지는 가변 매핑. 객체가 GC 수집되면 키가 자동으로 제거된다. + WeakSet</li>
+        <li>weakref.finalize(참조변수, 콜백) # 객체 소멸시 실행될 콜백 등록</li>
     </ol>
 </details>
 
