@@ -16,7 +16,7 @@ namespace EventGenerator.Utility
 
         public ImageOptimizer(IEnumerable<string> fileOrDirPaths) =>
             InitWorkers(fileOrDirPaths);
-        
+
         public static List<System.Action> GetWorkers(string fileOrDirPath, string additionalSavePath = "")
         {
             Directory.CreateDirectory(@"ImageOptimizer\img\" + additionalSavePath);
@@ -34,7 +34,7 @@ namespace EventGenerator.Utility
                     using (var process = new System.Diagnostics.Process())
                     {
                         Console.Write($"Current file : {fileOrDirPath}");
-                        process.StartInfo.RedirectStandardOutput = true;
+                        process.StartInfo.WorkingDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
                         process.StartInfo.UseShellExecute = false;
                         process.StartInfo.CreateNoWindow = true;
 
@@ -43,7 +43,7 @@ namespace EventGenerator.Utility
                         if (fileOrDirPath.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
                         {
                             process.StartInfo.FileName = @"ImageOptimizer\pngquant.exe";
-                            process.StartInfo.Arguments = $"--quality=90 --force --output ImageOptimizer\\img\\{additionalSavePath}{fileInfo.Name} ImageOptimizer\\{fileInfo.Name}";
+                            process.StartInfo.Arguments = $"-f -o ImageOptimizer\\img\\{additionalSavePath}{fileInfo.Name} ImageOptimizer\\{fileInfo.Name}";
                         }
                         else if (fileOrDirPath.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || fileOrDirPath.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
                         {
@@ -56,7 +56,9 @@ namespace EventGenerator.Utility
                         {
                             var original = new FileInfo(filePath);
                             var compressed = new FileInfo($"ImageOptimizer\\img\\{additionalSavePath}{fileInfo.Name}");
-                            if (original.Length < compressed.Length)
+                            if (!compressed.Exists)
+                                original.MoveTo(compressed.FullName);
+                            else if (original.Length < compressed.Length)
                             {
                                 compressed.Delete();
                                 original.MoveTo(compressed.FullName);

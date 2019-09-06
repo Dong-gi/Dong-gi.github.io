@@ -1,11 +1,13 @@
 <hr>
 
-<details>
+<details open>
     <summary>자바 제네릭의 제약사항</summary>
-    자바의 제네릭은 컴파일 과정에서 모두 Object 또는 바운드된 클래스로 교체된다.<br>
-    → 따라서 List&lt;T&gt;에 대하여 실제로 런타임에서 T가 어떤 타입인지 직접 알아내는 방법은 없다.<br>
-    → 따라서 제네릭 타입에 대한 직접적인 연산은 모두 무효하다.<br>
-    * instanceof, Class::isInstanse, Class::isAssignableFrom을 이용한 판별은 가능하다.
+    <ol>
+        <li>자바의 제네릭은 컴파일 과정에서 모두 Object 또는 바운드된 클래스로 교체된다.</li>
+        <li>따라서 List&lt;T&gt; 참조 변수만 가지고 T가 어떤 타입인지 런타임에 알아내는 방법은 없다.</li>
+        다만, 원소가 존재한다면 instanceof, Class::isInstanse, Class::isAssignableFrom을 이용한 판별은 가능하다.
+        <li>따라서 제네릭 타입에 대한 직접적인 연산은 모두 무효하다.</li>
+    </ol>
 </details>
 
 <hr>
@@ -14,49 +16,24 @@
     <summary>final class Array Since 1.1</summary>
     <ol>
         <li>동적으로 자바 배열을 생성하고 접근하는 static 메서드들을 제공.</li>
+        <li>static Object newInstance(Class&lt;?&gt; componentType, int length) + 1 오버로딩</li>
+        <li>static int getLength(Object array)</li>
+        <li>static Object get(Object array, int index) + getBoolean, getByte, ...</li>
+        <li>static void set(Object array, int index, Object value) + setBollean, setByte, ...</li>
     </ol>
-    <details>
-        <summary>Method Detail</summary>
-        <ol>
-            <li>static Object newInstance(Class&lt;?&gt; componentType, int length)</li>
-            <li>static Object newInstance(Class&lt;?&gt; componentType, int... dimensions)</li>
-            <li>static int getLength(Object array)</li>
-            <li>static Object get(Object array, int index)</li>
-            <li>static boolean getBoolean(Object array, int index)</li>
-            <li>static byte getByte(Object array, int index) + ...</li>
-            <li>static void set(Object array, int index, Object value)</li>
-            <li>static void setBoolean(Object array, int index, boolean z) + ...</li>
-        </ol>
-    </details>
 </details>
 
 <hr>
 
 <details>
     <summary>class Modifier Since 1.1</summary>
-    <details>
-        <summary>Field Detail</summary>
-        <ol>
-            <li>public static final int PUBLIC, PRIVATE, PROTECTED, STATIC, FINAL, SYNCHRONIZED, VOLATILE, TRANSIENT, NATIVE, INTERFACE, ABSTRACT, STRICT</li>
-        </ol>
-    </details>
-    <details>
-        <summary>Method Detail</summary>
-        <ol>
-            <li>public Modifier()</li>
-            <li>static boolean isPublic(int mod) ~ isStrict(int mod)</li>
-            <li>static String toString(int mod)</li>
-            <li>사용할 수 있는 제한자들을 OR하여 반환</li>
-            <ul>
-                <li>static int classModifiers() Since 1.7</li>
-                <li>static int interfaceModifiers() Since 1.7</li>
-                <li>static int constructorModifiers() Since 1.7</li>
-                <li>static int methodModifiers() Since 1.7</li>
-                <li>static int fieldModifiers() Since 1.7</li>
-                <li>static int parameterModifiers() Since 1.8</li>
-            </ul>
-        </ol>
-    </details>
+    <ol>
+        <li>public static final int PUBLIC, PRIVATE, PROTECTED, STATIC, FINAL, SYNCHRONIZED, VOLATILE, TRANSIENT, NATIVE, INTERFACE, ABSTRACT, STRICT</li>
+        <li>static boolean isPublic(int mod) ~ isStrict(int mod)</li>
+        <li>static String toString(int mod)</li>
+        <li>static int classModifiers() Since 1.7 + interfaceModifiers, constructorModifiers, ...</li>
+        사용할 수 있는 제한자들을 OR하여 반환
+    </ol>
 </details>
 
 <hr>
@@ -65,7 +42,7 @@
     <summary>지원 타입 종류</summary>
     <ol>
         <li>interface Type Since 1.5</li>
-        모든 타입의 공통 superinterface.
+        모든 타입의 공통 super interface.
         
         <li>interface ParameterizedType extends Type Since 1.5</li>
         Collection&lt;String&gt;처럼 파라미터화된 타입을 표현.
@@ -79,18 +56,16 @@
         <li>interface AnnotatedElement Since 1.5</li>
         애너테이트된 요소를 표현
 
-        <li>
-            <details>
-                <summary>interface AnnotatedType extends AnnotatedElement Since 1.8</summary>
-                <ol>
-                    <li>default AnnotatedType getAnnotatedOwnerType() Since 9</li>
-                    이 타입이 멤버로 속해있는, 어노테이트된 타입 반환. 예를 들어 이 타입이 @TA O&lt;T&gt;.I&lt;S&gt;라면, @TA O&lt;T&gt;를 반환.<br>
-                    null : 이 타입이 top-level이거나 local 클래스, 익명 클래스, 기본 자료형, void인 경우. 이 타입이 AnnotatedArrayType, AnnotatedTypeVariable, AnnotatedWildcardType의 인스턴스인 경우.
-                    <li>Type getType() : 이 어노테이트된 타입의 기저 타입</li>
-                </ol>
-            </details>
-        </li>
-
+        <details>
+            <summary>interface AnnotatedType extends AnnotatedElement Since 1.8</summary>
+            <ol>
+                <li>default AnnotatedType getAnnotatedOwnerType() Since 9</li>
+                이 타입이 멤버로 속해있는, 애너테이트된 타입 반환. 예를 들어 이 타입이 @TA O&lt;T&gt;.I&lt;S&gt;라면, @TA O&lt;T&gt;를 반환.<br>
+                null : 이 타입이 top-level이거나 local 클래스, 익명 클래스, 기본 자료형, void인 경우. 이 타입이 AnnotatedArrayType, AnnotatedTypeVariable, AnnotatedWildcardType의 인스턴스인 경우.
+                <li>Type getType() : 이 애너테이트된 타입의 기저 타입</li>
+            </ol>
+        </details>
+        
         <li>interface AnnotatedArrayType extends AnnotatedType Since 1.8</li>
         원소가 애너테이트된 배열을 표현.
 
@@ -119,101 +94,73 @@
         <summary>interface Member Since 1.1</summary>
         <ol>
             <li>하나의 멤버(필드나 메서드) 또는 생성자를 가리킨다.</li>
+            <li>Class&lt;?&gt; getDeclaringClass()</li>
+            <li>String getName()</li>
+            <li>int getModifiers()</li>
+            <li>boolean isSynthetic() Since 1.5 : 컴파일러에 의해 만들어진 멤버인지 여부</li>
         </ol>
-        <details>
-            <summary>Field Detail</summary>
-            <ol>
-                <li>static final int PUBLIC</li>
-                <li>static final int DECLARED : 상속 받은 것 미포함</li>
-            </ol>
-        </details>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>Class&lt;?&gt; getDeclaringClass()</li>
-                <li>String getName()</li>
-                <li>int getModifiers()</li>
-                <li>boolean isSynthetic() Since 1.5 : 컴파일러에 의해 만들어진 멤버인지 여부</li>
-            </ol>
-        </details>
     </details>
 
     <details>
         <summary>class AccessibleObject implements AnnotatedElement Since 1.2</summary>
         <ol>
             <li>Field, Method, Constructor의 base 클래스. 리플렉트된 객체를 사용하기 전에 suppressing check 표시한다.</li>
+            <li>static void setAccessible(AccessibleObject[] array, boolean flag)</li>
+            배열의 각 원소들을 setAccessible(boolean)으로 설정할 수 있을 때, 한번에 하기 위한 메서드
+            <li>void setAccessible(boolean flag)</li>
+            <li>final boolean trySetAccessible() Since 9</li>
+            아마도 변경되었을 accessible flag 값을 반환한다. 실패할 경우 예외를 발생하지 않고 false를 반환.
+            <li>final boolean canAccess(Object obj) Since 9</li>
         </ol>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>static void setAccessible(AccessibleObject[] array, boolean flag)</li>
-                배열의 각 원소들을 setAccessible(boolean)으로 설정할 수 있을 때, 한번에 하기 위한 메서드
-                <li>void setAccessible(boolean flag)</li>
-                <li>final boolean trySetAccessible() Since 9</li>
-                아마도 변경되었을 accessible flag 값을 반환한다. 실패할 경우 예외를 발생하지 않고 false를 반환.
-                <li>final boolean canAccess(Object obj) Since 9</li>
-            </ol>
-        </details>
     </details>
 
     <details>
         <summary>final class Field extends AccessibleObject implements Member Since 1.1</summary>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>boolean isEnumConstant() Since 1.5</li>
-                <li>boolean isSynthetic() Since 1.5 : 컴파일러에 의해 만들어진 멤버인지 여부</li>
-                <li>Class&lt;?&gt; getType()</li>
-                <li>Type getGenericType() Since 1.5</li>
-                <li>String toGenericString() Since 1.5</li>
-                <li>Object get(Object obj)</li>
-                <li>boolean getBoolean(Object obj) + ...</li>
-                <li>void set(Object obj, Object value)</li>
-                <li>void setBoolean(Object obj, boolean z) + ...</li>
-                <li>AnnotatedType getAnnotatedType() Since 1.8</li>
-            </ol>
-        </details>
+        <ol>
+            <li>boolean isEnumConstant() Since 1.5</li>
+            <li>boolean isSynthetic() Since 1.5 : 컴파일러에 의해 만들어진 멤버인지 여부</li>
+            <li>Class&lt;?&gt; getType()</li>
+            <li>Type getGenericType() Since 1.5</li>
+            <li>String toGenericString() Since 1.5</li>
+            <li>Object get(Object obj)</li>
+            <li>boolean getBoolean(Object obj) + ...</li>
+            <li>void set(Object obj, Object value)</li>
+            <li>void setBoolean(Object obj, boolean z) + ...</li>
+            <li>AnnotatedType getAnnotatedType() Since 1.8</li>
+        </ol>
     </details>
 
     <details>
         <summary>abstract class Executable extends AccessibleObject implements Member, GenericDeclaration Since 1.8</summary>
         <ol>
             <li>Method, Constructor의 공통 기능</li>
+            <li>abstract Class&lt;?&gt;[] getParameterTypes()</li>
+            <li>int getParameterCount()</li>
+            <li>Type[] getGenericParameterTypes()</li>
+            <li>Parameter[] getParameters()</li>
+            <li>abstract Class&lt;?&gt;[] getExceptionTypes()</li>
+            <li>Type[] getGenericExceptionTypes()</li>
+            <li>abstract Annotation[][] getParameterAnnotations()</li>
+            <li>abstract AnnotatedType getAnnotatedReturnType()</li>
+            <li>AnnotatedType getAnnotatedReceiverType()</li>
+            <li>AnnotatedType[] getAnnotatedParameterTypes()</li>
+            <li>AnnotatedType[] getAnnotatedExceptionTypes()</li>
+            <li>abstract String toGenericString()</li>
+            <li>boolean isVarArgs()</li>
+            <li>boolean isSynthetic()</li>
         </ol>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>abstract Class&lt;?&gt;[] getParameterTypes()</li>
-                <li>int getParameterCount()</li>
-                <li>Type[] getGenericParameterTypes()</li>
-                <li>Parameter[] getParameters()</li>
-                <li>abstract Class&lt;?&gt;[] getExceptionTypes()</li>
-                <li>Type[] getGenericExceptionTypes()</li>
-                <li>abstract Annotation[][] getParameterAnnotations()</li>
-                <li>abstract AnnotatedType getAnnotatedReturnType()</li>
-                <li>AnnotatedType getAnnotatedReceiverType()</li>
-                <li>AnnotatedType[] getAnnotatedParameterTypes()</li>
-                <li>AnnotatedType[] getAnnotatedExceptionTypes()</li>
-                <li>abstract String toGenericString()</li>
-                <li>boolean isVarArgs()</li>
-                <li>boolean isSynthetic()</li>
-            </ol>
-        </details>
     </details>
 
     <details>
         <summary>final class Method extends Executable Since 1.1</summary>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>Class&lt;&?&gt; getReturnType()</li>
-                <li>Type getGenericReturnType() Since 1.5</li>
-                <li>Object getDefaultValue() Since 1.5</li>
-                <li>Object invoke(Object obj, Object... args)</li>
-                <li>boolean isBridge()</li>
-                <li>boolean isDefault() Since 1.8</li>
-            </ol>
-        </details>
+        <ol>
+            <li>Class&lt;&?&gt; getReturnType()</li>
+            <li>Type getGenericReturnType() Since 1.5</li>
+            <li>Object getDefaultValue() Since 1.5</li>
+            <li>Object invoke(Object obj, Object... args)</li>
+            <li>boolean isBridge()</li>
+            <li>boolean isDefault() Since 1.8</li>
+        </ol>
     </details>
     
     <details>
@@ -225,28 +172,25 @@
         <summary>final class Parameter implements AnnotatedElement</summary>
         <ol>
             <li>메서드 인자에 관한 정보.</li>
+            <li>boolean isNamePresent()</li>
+            <li>boolean isImplicit()</li>
+            <li>boolean isSynthetic()</li>
+            <li>boolean isVarArgs()</li>
+            <li>Executable getDeclaringExecutable()</li>
+            <li>int getModifiers()</li>
+            <li>String getName()</li>
+            <li>Type getParameterizedType()</li>
+            <li>Class&lt;?&gt; getType()</li>
+            <li>AnnotatedType getAnnotatedType()</li>
         </ol>
-        <details>
-            <summary>Method Detail</summary>
-            <ol>
-                <li>boolean isNamePresent()</li>
-                <li>boolean isImplicit()</li>
-                <li>boolean isSynthetic()</li>
-                <li>boolean isVarArgs()</li>
-                <li>Executable getDeclaringExecutable()</li>
-                <li>int getModifiers()</li>
-                <li>String getName()</li>
-                <li>Type getParameterizedType()</li>
-                <li>Class&lt;?&gt; getType()</li>
-                <li>AnnotatedType getAnnotatedType()</li>
-            </ol>
-        </details>
     </details>
 
     <details>
         <summary>interface InvocationHandler Since 1.3</summary>
-        1. Proxy 인스턴스의 invocation handler에서 구현하는 인터페이스.<br>
-        2. Object invoke(Object proxy, Method method, Object[] args)
+        <ol>
+            <li>Proxy 인스턴스의 invocation handler에서 구현하는 인터페이스.</li>
+            <li>Object invoke(Object proxy, Method method, Object[] args)</li>
+        </ol>
     </details>
 
     <details>

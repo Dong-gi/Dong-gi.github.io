@@ -10,49 +10,37 @@ using Dapper;
 using System.Reflection;
 using EventGenerator.Model.CustomAttribute;
 using MoreLinq;
+using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace EventGenerator.Utility
 {
     public class Connection
     {
         private DB db;
-        
+
         public Connection(DB db) => this.db = db;
 
-        public IEnumerable<T> Query<T>(string query, DBServer dbServer = null, int retryCount = 2)
+        public IEnumerable<T> Query<T>(string query, DBServer dbServer = null, int retryCount = 3)
         {
-            if (query.Contains("in ()"))
+            if (new Regex(@"in\s*\((\s*,?)*\)", RegexOptions.IgnoreCase).IsMatch(query))
                 return new List<T>();
 
             dbServer = dbServer ?? ViewModel.MainViewModel.Current.CurrentDBServer;
 
             try
             {
-                if (dbServer.IsSQLite)
-                {
-                    var columns = new List<string>();
-                    typeof(T).GetRuntimeProperties().ForEach(propertyInfo =>
-                    {
-                        if (!(System.Attribute.GetCustomAttribute(propertyInfo, typeof(CustomVersionAttribute)) is CustomVersionAttribute version) ||
-                            version.Active(ViewModel.MainViewModel.Current.CurrentDBServer.Version))
-                            columns.Add(string.Format("NULLIF({0}, '') AS {0}", propertyInfo.Name));
-                    });
-                    query = query.Replace("SELECT *", "SELECT " + string.Join(",", columns));
-                    using (var connection = new System.Data.SQLite.SQLiteConnection(GetConnectionString(dbServer)))
-                    {
-                        connection.Open();
-                        return connection.Query<T>(query);
-                    }
-                }
-                using (var connection = new NpgsqlConnection(GetConnectionString(dbServer)))
-                {
-                    connection.Open();
-                    return connection.Query<T>(query);
-                }
+                var tokenSource = new CancellationTokenSource();
+                var task = Task.Run<IEnumerable<T>>(() => InnerQuery<T>(query, dbServer), tokenSource.Token);
+                var timer = Task.Run(() => { Thread.Sleep(5000); tokenSource.Cancel(); });
+                Task.WaitAny(task, timer);
+                if (tokenSource.IsCancellationRequested)
+                    throw new TimeoutException("시간 초과!!");
+                return task.Result;
             }
             catch (Exception e)
             {
-                Console.Write("\n\n예외 발생 쿼리 : " + query);
+                Console.Write("\n예외 발생 쿼리 : " + query);
                 if (retryCount > 0)
                 {
                     Console.Write(e.Message);
@@ -64,6 +52,31 @@ namespace EventGenerator.Utility
                     Console.Write(e);
                     return new List<T>();
                 }
+            }
+        }
+
+        private IEnumerable<T> InnerQuery<T>(string query, DBServer dbServer)
+        {
+            if (dbServer.IsSQLite)
+            {
+                var columns = new List<string>();
+                typeof(T).GetRuntimeProperties().ForEach(propertyInfo =>
+                {
+                    if (!(System.Attribute.GetCustomAttribute(propertyInfo, typeof(CustomVersionAttribute)) is CustomVersionAttribute version) ||
+                        version.Active(ViewModel.MainViewModel.Current.CurrentDBServer.Version))
+                        columns.Add(string.Format("NULLIF({0}, '') AS {0}", propertyInfo.Name));
+                });
+                query = query.Replace("SELECT *", "SELECT " + string.Join(",", columns));
+                using (var connection = new System.Data.SQLite.SQLiteConnection(GetConnectionString(dbServer)))
+                {
+                    connection.Open();
+                    return connection.Query<T>(query);
+                }
+            }
+            using (var connection = new NpgsqlConnection(GetConnectionString(dbServer)))
+            {
+                connection.Open();
+                return connection.Query<T>(query);
             }
         }
 
