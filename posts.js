@@ -49,11 +49,6 @@ const posts = {
         { filename: "posts/java/oop.html", category: "Programming/Java", title: "Java 객체지향" },
         { filename: "posts/java/version.html", category: "Programming/Java", title: "Java 버전별 추가사항" },
         { filename: "posts/java/jsp_and_servlet.html", category: "Programming/Java", title: "JSP&Servlet", top: true },
-        { filename: "posts/java/java_ee/458.html", category: "Programming/Java/JavaEE", title: "필터와 래퍼", top: true },
-        { filename: "posts/java/java_ee/457.html", category: "Programming/Java/JavaEE", title: "컨텍스트 초기화 매개변수", top: true },
-        { filename: "posts/java/java_ee/456.html", category: "Programming/Java/JavaEE", title: "다른 페이지 이동/호출", top: true },
-        { filename: "posts/java/java_ee/455.html", category: "Programming/Java/JavaEE", title: "MySQL 테스트", top: true },
-        { filename: "posts/java/java_ee/454.html", category: "Programming/Java/JavaEE", title: "web.xml 대신 애너테이션으로 서블릿 기술하기", top: true },
         
         { filename: "posts/java/apache.commons.collections.html", category: "Programming/Java/apache.commons", title: "Apache Commons Collections" },
         { filename: "posts/java/java.io.html", category: "Programming/Java/java.base", title: "java.io Since 1.0" },

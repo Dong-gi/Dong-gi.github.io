@@ -138,3 +138,101 @@
 </details>
 
 <hr>
+
+<details>
+    <summary>web.xml 대신 애너테이션으로 서블릿 기술하기</summary>
+    <ol>
+        <li>WebServlet 애너테이션으로 배포설명자 web.xml 대신 간결하게 서블릿을 기술할 수 있다.</li>
+        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/servlet/Hello2.java" lan="java">value 예시 »</button>
+        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/servlet/Hello3.java" lan="java">initParams 예시 »</button>
+        <li>name : 배포설명자의 servlet-name에 해당.</li>
+        <li>urlPatterns : 배포설명자의 url-pattern들의 배열에 해당.</li>
+        <li>value : urlPatterns 요소와 동일하게 동작하기 때문에, 서블릿 매핑만을 기술할 거라면 편하게 WebServlet("/hello")처럼 기술할 수 있다.</li>
+        <li>initParams : 배포설명자의 init-param들의 배열에 해당.</li>
+        GenericServlet::getInitParameter로 참조할 수 있으며, 이 메서드는 ServletConfig::getInitParameter를 호출한다. ServletConfig는 getServletContext 메서드로 참조할 수 있다.
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>JDBC 예시</summary>
+    <ol>
+        <li>드라이버 설치</li>
+        톰캣 lib(C:\apache-tomcat-8.0.52\lib)에 복사<br>
+        또는, 웹 애플리케이션 lib(프로젝트 경로\WebContent\WEB-INF\lib)에 복사<br>
+        또는, 프로젝트에서 직접 포함
+
+        <li>사용하기 전에 드라이버 클래스 로드</li>
+        로드할 JDBC 클래스 이름은 다운로드 받은 압축파일의 html 문서에 있음
+
+        <li>사용하기 <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/servlet/Hello4.java" lan="java">JDBC Test »</button></li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>다른 페이지로 이동/호출</summary>
+    <ol>
+        <li>다른 페이지로 이동</li>
+        <ul>
+            <li>Refresh : 응답 페이지를 보여준 뒤 클라이언트가 나중에 다시 요청하도록 한다.</li>
+            <li>Redirect : 응답 페이지 없이 바로 다른 url을 요청하도록 한다.</li>
+            따라서 redirect의 경우에는 getWriter()를 이용하지 말아야 한다.
+        </ul>
+
+        <li>다른 페이지 호출</li>
+        <ul>
+            <li>Forward</li>
+            호출된 페이지로 제어를 넘기기 때문에 해당 페이지가 종료되도 제어가 되돌아오지 않는다.
+            따라서 forward를 호출하는 측은 getWriter()를 이용하지 말아야 한다.
+            + 때문에 호출자 자신과 동일한 페이지/서블릿을 호출할 수 있다.<br>
+            forward는 서버 내에서 요청/응답 객체를 넘겨주므로 별도의 인코딩 없이 텍스트나 다른 객체를 추가하여 넘겨줄 수 있다.
+
+            <li>Include</li>
+            Forward와 달리 호출된 페이지가 종료되면 제어가 돌아온다.
+            + 때문에 호출자와 동일한 페이지/서블릿을 호출할 수 없다.<br>
+            호출된 페이지와 호출한 페이지 사이의 출력 HTML 코드 조각 순서를 맞추기 위해 flush()를 적절히 호출해줘야 한다.
+        </ul>
+
+        <li><button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/servlet/CallOther.java" lan="java">예시 코드 »</button><br></li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>컨텍스트 초기화 매개변수</summary>
+    <ol>
+        <li>애플리케이션 수준 초기화 매개변수. 애플리케이션의 모든 서블릿이 ServletContext::getInitParameter로 참조할 수 있다.</li>
+        ServletContext는 GenericServlet::getServletContext로 참조할 수 있다.
+        <li>web.xml 예시</li>
+<pre>
+&lt;context-param&gt;
+    &lt;param-name&gt;name&lt;/param-name&gt;
+    &lt;param-value&gt;Context Param&lt;/param-value&gt;
+&lt;/context-param&gt;</pre>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>필터와 래퍼</summary>
+    1. Filter<br>
+- 웹 브라우저가 웹 컴포넌트를 호출하면, 필터가 사전작업을 수행하고 웹 컴포넌트를 호출.<br>
+- 필터 체인 : 하나의 페이지에 대해 여러 필터가 정의된 경우, 정의된 순서대로 필터가 호출된다.<br>
+1-1. 배포 설명자에 명시 : <button class="btn-code" path="Repositories/Eclipse/Web02/WebContent/WEB-INF/web.xml" lan="xml">web.xml »</button>
+<button class="btn-code" path="Repositories/Eclipse/Web02/src/donggi/FilterExample.java" lan="java">FilterExample.java »</button><br>
+1-2. 애너테이션으로 명시 : <button class="btn-code" path="Repositories/Eclipse/Web02/src/donggi/FilterExample2.java" lan="java">FilterExample2.java »</button><br><br>
+
+2. Wrapper<br>
+- Http 요청/응답을 감싸는 사용자 정의 객체<br>
+- 각각 HttpServletRequestWrapper, HttpServletResponseWrapper를 상속하면 된다.
+<button class="btn-code" path="Repositories/Eclipse/Web02/src/donggi/MyRequestWrapper.java" lan="java">MyRequestWrapper.java »</button>
+<button class="btn-code" path="Repositories/Eclipse/Web02/src/donggi/MyResponseWrapper.java" lan="java">MyResponseWrapper.java »</button>
+
+</details>
+
+<hr>
