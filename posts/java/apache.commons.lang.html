@@ -1,0 +1,89 @@
+<hr>
+
+<details>
+    <summary>org.apache.commons.lang3</summary>
+    <details>
+        <summary>class AnotationUtils Since 3.0</summary>
+        <ol>
+            <li>스레드-안전. 애너테이션 (프록시) 인스턴스에 관한 유틸리티를 제공한다</li>
+            <li>static boolean equals(Annotation a1, Annotation a2) : Annotation.equals(Object)의 문서대로 처리해준다</li>
+            <li>static int hashCode(Annotation a) : Annotation.hashCode()의 문서대로 처리해준다</li>
+            <li>static String toString(Annotation a) : Annotation.toString()의 문서대로 처리해준다</li>
+            <li>static boolean isValidAnnotationMemberType(Class&lt;?&gt; type)</li>
+        </ol>
+    </details>
+    <details>
+        <summary>class ArchUtils Since 3.6</summary>
+        <ol>
+            <li>java.lang.System "os.arch" 프로퍼티에 관한 유틸리티를 제공한다</li>
+            <li>static Processor getProcessor() : 현재 JVM의 프로세서 정보를 반환</li>
+            <li>static Processor getProcessor(String value) : value는 "os.arch" 프로퍼티의 반환값과 유사해야 한다</li>
+        </ol>
+    </details>
+    <details>
+        <summary>class ArrayUtils Since 2.0</summary>
+        <ol>
+            <li>스레드-안전. null에 관대한 배열 유틸리티를 제공한다.</li>
+            <li>public static final Object[] EMPTY_OBJECT_ARRAY</li>
+            <li>public static final Class&lt;?&gt;[] EMPTY_CLASS_ARRAY</li>
+            <li>public static final long[] EMPTY_LONG_ARRAY</li>
+            <li>public static final Long[] EMPTY_LONG_OBJECT_ARRAY + 이하 생략</li>
+        </ol>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>static &lt;T&gt; boolean isArrayIndexValid(T[] array, int index) Since 3.8</li>
+                <li>static String toString(Object array, String stringIfNull) + 1 오버로딩 + toStringArray</li>
+                <li>static int hashCode(Object array)</li>
+                <li>static Map&lt;Object, Object&gt; toMap(Object[] array)</li>
+                각 원소는 Map.Entry거나 배열이여야 하며, 배열인 경우 원소가 2개 이상 있어야 한다(1번째는 키, 2번째는 값)
+                <li>static &lt;T&gt; T[] toArray(T... items) Since 3.0</li>
+                <li>static &lt;T&gt; T[] clone(T[] array) : 얕은 복사 수행 + 8 오버로딩</li>
+                <li>static &lt;T&gt; T[] nullToEmpty(T[] array, Class&lt;T[]&gt; type) Since 3.5 + 19 오버로딩</li>
+                방어적 프로그래밍 기법 : array가 null이면 같은 타입의 빈 배열을 반환한다. null이 아니면 그대로 반환.
+                <li>static &lt;T&gt; T[] subarray(T[] array, int startIndexInclusive, int endIndexExclusive) Since 2.1 + 8 오버로딩</li>
+                <li>static boolean isSameLength(Object[] array1, Object[] array2) : null은 카운트 제외 + 8 오버로딩</li>
+                <li>static int getLength(Object array) Since 2.1 : null이면 0</li>
+                <li>static boolean isSameType(Object array1, Object array2)</li>
+                배열이 같은 타입인지 반환한다. 다차원 배열 타입도 처리된다
+                <li>static void shuffle(Object[] array) Since 3.6 + 오버로딩</li>
+                <li>static void reverse(Object[] array, int startIndexInclusive, int endIndexExclusive) + 17 오버로딩</li>
+                <li>static void swap(Object[] array, int offset1, int offset2, int len) Since 3.5 + 17 오버로딩</li>
+                array가 null이거나, 인덱스가 오버플로된 경우 작업을 하지 않는다. 음수 인덱스는 0으로 간주한다
+                <li>static void shift(Object[] array, int startIndexInclusive, int endIndexExclusive, int offset) Since 3.5 + 17 오버로딩</li>
+                <li>static int indexOf(Object[] array, Object objectToFind, int startIndex) + 19 오버로딩 + lastIndexOf, contains</li>
+                null에 대하여 INDEX_NOT_FOUND(-1)를 반환한다
+                <li>static char[] toPrimitive(Character[] array, char valueForNull) + 오버로딩</li>
+                <li>static Character[] toObject(char[] array) + 오버로딩</li>
+                <li>static boolean isEmpty(Object[] array) Since 2.1 : null이면 true + 오버로딩 + isNotEmpty</li>
+                <li>static &lt;T&gt; T[] addAll(T[] array1, T... array2) Since 2.1 + 오버로딩</li>
+                + add, remove, removeElement, removeAll, removeElements, removeAllOccurences, insert
+                <li>static &lt;T&gt; boolean isSorted(T[] array, Comparator&lt;T&gt; comparator) Since 3.4 + 오버로딩</li>
+            </ol>
+        </details>
+    </details>
+    <details>
+        <summary>class BitField Since 2.0</summary>
+        <ol>
+            <li>클래스 인스턴스 내부에 비트값들을 저장하지 않고, 외부 int, short, byte에 대한 마스킹 연산을 지원한다</li>
+            <li>public BitField(int mask)</li>
+            /apache-commons-lang-example/src/test/java/BitFieldTest.java
+        </ol>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>int getValue(int holder)</li>
+                마스크 비트에 해당하는 비트들을 우측으로 시프트하여 값 반환
+                <li>int getRawValue(int holder)</li>
+                마스크 비트에 해당하는 비트들의 위치 그대로 값 반환
+                <li>int set(int holder) + clear</li>
+                <li>int setValue(int holder, int value)</li>
+                마스크 비트에 value를 설정한 후의 값을 반환
+                <li>boolean isSet(int holder) + isAllSet</li>
+                마스크 비트에 해당하는 비트들 중 하나라도 설정되었다면 true
+            </ol>
+        </details>
+    </details>
+</details>
+
+<hr>
