@@ -1,6 +1,28 @@
 <hr>
 
 <details>
+    <summary>기본 명령어</summary>
+    <ol>
+        <li>실행 : bin\startup.bat</li>
+        <li>종료 : bin\shotdown.bat</li>
+        <li>webapps</li>
+        webapps 디렉터리의 서브디렉터리들을 웹 애플리케이션 디렉터리라 하며, 각각이 하나의 프로젝트 산출물이라 보면 된다. 기본 웹 애플리케이션 디렉터리는 webapps/ROOT
+        <li>기본 설치 예제</li>
+        http://localhost:8080/examples/
+        <li>관리자 페이지</li>
+        http://localhost:8080/manager/html<br>
+        계정 추가 : conf/tomcat-users.xml 수정<br>
+        &lt;user username="admin" password="admin" roles="manager-gui,admin-gui"/&gt;
+        <li>JSP 버전 설정</li>
+        conf/web.xml에서 compilerSourceVM, compilerTargetVM 값 변경
+        <li>애플리케이션 배포 및 취소</li>
+        webapps 디렉터리에 war 파일을 옮기면 자동으로 압축을 푼다. 반대로 삭제하면 자동으로 정리한다. 또는 관리자 페이지의 deploy/undeploy를 이용.
+    </ol>
+</details>
+
+<hr>
+
+<details>
     <summary>JVM 타임존 설정</summary>
     -Duser.timezone=Asia/Seoul
 </details>

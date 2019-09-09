@@ -1,0 +1,238 @@
+<hr>
+
+<details>
+    <summary>JavaEE</summary>
+    <ol>
+        <li>Java Enterprise Edition은 동적 웹 애플리케이션 개발을 위한 자바 플랫폼이다.</li>
+        JavaSE와 다른 문서 페이지를 참조해야 한다. <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://javaee.github.io/javaee-spec/javadocs/">https://javaee.github.io/javaee-spec/javadocs/</a>
+        
+        <li>WAR(Web Application Archive) : JavaEE 웹 애플리케이션을 위한 압축 파일</li>
+<pre>웹 애플리케이션 루트
+ㄴ META-INF
+    ㄴ MANIFEST.MF
+    ㄴ 컨테이너 지원
+ㄴ WEB-INF : 웹에서 접근 불가
+    ㄴ classes
+        ㄴ META-INF
+            ㄴ 애플리케이션 자원
+        ㄴ 자바 .class 파일 및 자원
+    ㄴ i88n
+        ㄴ 국제화 파일
+    ㄴ lib
+        ㄴ 번들 jar 파일
+    ㄴ tags
+        ㄴ JSP 태그 파일
+    ㄴ tld
+        ㄴ JSP 태그 라이브러리 설명자
+ㄴ 기타 웹에서 접근 가능한 파일</pre>
+
+        <li>서블릿</li>
+        자바로 구현된 CGI(Common Gateway Interface; 웹 서버와 프로그램 사이의 통신 규약).
+        JCP(Java Community Process)에서 제정한 Servlet Specification을 따라야 한다.
+        
+        <li>서블릿 컨테이너</li>
+        서블릿의 생애를 관리하는 프로그램(예. 톰캣)
+        
+        <li>JSP</li>
+        전용 태그 "&lt;% %&gt;"를 이용해 HTML 문서에 자바 코드를 삽입.
+        서블릿 클래스와 달리 컴파일 과정이 필요 없다.(컨테이너에 의해 자동 생성)
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>개발환경</summary>
+    <ol>
+        <li><a role="button" target="_blank" class="btn btn-info btn-sm" href="http://openjdk.java.net/install/">OpenJDK</a> 설치</li>
+
+        <li><a role="button" target="_blank" class="btn btn-info btn-sm" href="https://tomcat.apache.org/">톰캣</a> 설치</li>
+        + posts/tip/tomcat.html 참고
+        
+        <li>IDE(이클립스, STS 등) 설치</li>
+    
+        <li>이클립스에 톰캣 추가</li>
+        Windows » Preferences » Server » Runtime Environments » Add » Apache
+        
+        <li>이클립스 프로젝트에 톰캣 구성 추가</li>
+        프로젝트 Server 속성에 추가.
+        
+        <li>IntelliJ에 톰캣 추가</li>
+        Settings » Application Servers » + » 톰캣 홈 디렉터리 추가
+        
+        <li>IntelliJ 프로젝트에 톰캣 구성 추가</li>
+        도구 모음에서 Run/Debug Configurations 아이콘(아래방향 화살표)을 누른 다음 Edit Configurations 클릭<br>
+        옵션. 대화상자가 열리면 + 버튼 클릭 후 Tomcat Server를 Local로 추가.<br>
+        옵션. 배포할 아티팩트를 선택하지 않았다는 경고가 표시되면 Deployment 탭을 누르고 "Deploy atthe server setup" 머리글 아래의 + 버튼 클릭. Artifact를 누르고
+        확장된 war 파일 아티팩트를 누른 다음 OK. 배포를 위한 "Application context"이름을 서버를 기준으로 한 상대 주소로 변경(예. /my-app)
+    </ol>
+</details>
+
+<hr>    
+
+<details>
+    <summary>Hello World 프로젝트</summary>
+    <details>
+        <summary>이클립스 Dynamic Web Project</summary>
+        <ol>
+            <li>New Project » Web » Dynamic Web Project » Target runtime에 톰캣 설정</li>
+            <img class="rounded mx-auto d-block" alt="" src="imgs/20180929_220300.png">
+        
+            <li>코드 작성</li>
+            <img class="rounded mx-auto d-block" alt="" src="imgs/20180929_220301.png"><br>
+            <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/servlet/Hello1.java" lan="java">Hello1.java »</button>
+            <button class="btn-code" path="Repositories/Eclipse/app1/src/main/webapp/WEB-INF/web.xml" lan="xml">web.xml »</button><br>
+            web.xml은 배포 설명자로, 서블릿 및 서블릿 매핑, 필터 등을 정의한다.
+            이클립스 프로젝트 생성 마법사로 web.xml을 생성하면 자동으로 welcome-file-list를 구성해주는데, welcome-file-list에 정의된 welcome-file을 순서대로 찾아 기본 페이지로 보여준다.
+            
+            <li>실행</li>
+            <img class="rounded mx-auto d-block" alt="" src="imgs/20180929_220302.png"><br>
+            또는 Export » WAR file를 선택하여 webapps 디렉터리에 추가하여 배치되기를 기다린 뒤 브라우저에서 실행.
+        
+            <li>이클립스 내부에서 실행하는 경우 웹 애플리케이션 배포 위치</li>
+            %이클립스 프로젝트 디렉터리%\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Web01\WEB-INF
+        </ol>
+    </details>
+    
+    <details>
+        <summary>톰캣에 직접 배치</summary>
+        <ol>
+            <li>위와 동일하게 HelloWorld.java 작성</li>
+            <li>컴파일</li>
+            <ul>
+                <li>톰캣 lib를 클래스패스로 넘기는 경우</li>
+                javac -encoding UTF-8 -cp "C:\apache-tomcat-8.0.52\lib\servlet-api.jar" HelloWorld.java
+
+                <li>JDK의 jre/lib/ext에 servlet-api.jar를 붙여넣은 경우</li>
+                javac -encoding UTF-8 HelloWorld.java
+            </ul>
+            <li>컴파일된 클래스 파일을 webapps/"웹모듈명"/WEB-INF/classes/"패키지 경로"/ 에 저장</li>
+            <li>동일한 배포 설명자 web.xml을 WEB-INF에 작성하고 실행</li>
+        </ol>
+    </details>
+    
+    <details>
+        <summary>이클립스 Maven 프로젝트</summary>
+        <ol>
+            <li>New Project » Maven » Maven Project » maven-archetype-webapp</li>
+            <img class="rounded mx-auto d-block" alt="" src="imgs/20180930_154849.png"><br>
+            webapp 아티팩트로 프로젝트를 만들면 Hello World를 출력하는 index.jsp가 생성된다.
+            
+            <li>Maven Install, 빌드하여 war 파일이 생성되면 톰캣 webapps 디렉터리에 붙여넣고 배치되기를 기다린 뒤 브라우저에서 실행</li>
+            maven이 pom.xml에 정의된 라이브러리를 /users/유저이름/.m2 폴더에 다운로드한다.
+        </ol>
+    </details>
+</details>
+
+<hr>
+
+<details>
+    <summary>서블릿 생애 주기</summary>
+    <ol>
+        <li>서블릿 컨테이너에 의해 최초로 로드되어 인스턴스 생성</li>
+        <li>init()</li>
+        <li>각 요청마다 service() 호출</li>
+        <li>destroy()
+            <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/servlet/LifeCycle.java" lan="java">예시 코드 »</button></li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>web.xml 대신 애너테이션으로 서블릿 기술하기</summary>
+    <ol>
+        <li>WebServlet 애너테이션으로 배포설명자 web.xml 대신 간결하게 서블릿을 기술할 수 있다.</li>
+        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/servlet/Hello2.java" lan="java">value 예시 »</button>
+        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/servlet/Hello3.java" lan="java">initParams 예시 »</button>
+        <li>name : 배포설명자의 servlet-name에 해당.</li>
+        <li>urlPatterns : 배포설명자의 url-pattern들의 배열에 해당.</li>
+        <li>value : urlPatterns 요소와 동일하게 동작하기 때문에, 서블릿 매핑만을 기술할 거라면 편하게 WebServlet("/hello")처럼 기술할 수 있다.</li>
+        <li>initParams : 배포설명자의 init-param들의 배열에 해당.</li>
+        GenericServlet::getInitParameter로 참조할 수 있으며, 이 메서드는 ServletConfig::getInitParameter를 호출한다. ServletConfig는 getServletContext 메서드로 참조할 수 있다.
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>JDBC 예시</summary>
+    <ol>
+        <li>드라이버 설치</li>
+        톰캣 lib(C:\apache-tomcat-8.0.52\lib)에 복사<br>
+        또는, 웹 애플리케이션 lib(프로젝트 경로\WebContent\WEB-INF\lib)에 복사<br>
+        또는, 프로젝트에서 직접 포함
+
+        <li>사용하기 전에 드라이버 클래스 로드</li>
+        로드할 JDBC 클래스 이름은 다운로드 받은 압축파일의 html 문서에 있음
+
+        <li>사용하기 <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/servlet/Hello4.java" lan="java">JDBC Test »</button></li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>다른 페이지로 이동/호출</summary>
+    <ol>
+        <li>다른 페이지로 이동</li>
+        <ul>
+            <li>Refresh : 응답 페이지를 보여준 뒤 클라이언트가 나중에 다시 요청하도록 한다.</li>
+            <li>Redirect : 응답 페이지 없이 바로 다른 url을 요청하도록 한다.</li>
+            따라서 redirect의 경우에는 getWriter()를 이용하지 말아야 한다.
+        </ul>
+
+        <li>다른 페이지 호출</li>
+        <ul>
+            <li>Forward</li>
+            호출된 페이지로 제어를 넘기기 때문에 해당 페이지가 종료되도 제어가 되돌아오지 않는다.
+            따라서 forward를 호출하는 측은 getWriter()를 이용하지 말아야 한다.
+            + 때문에 호출자 자신과 동일한 페이지/서블릿을 호출할 수 있다.<br>
+            forward는 서버 내에서 요청/응답 객체를 넘겨주므로 별도의 인코딩 없이 텍스트나 다른 객체를 추가하여 넘겨줄 수 있다.
+
+            <li>Include</li>
+            Forward와 달리 호출된 페이지가 종료되면 제어가 돌아온다.
+            + 때문에 호출자와 동일한 페이지/서블릿을 호출할 수 없다.<br>
+            호출된 페이지와 호출한 페이지 사이의 출력 HTML 코드 조각 순서를 맞추기 위해 flush()를 적절히 호출해줘야 한다.
+        </ul>
+
+        <li><button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/servlet/CallOther.java" lan="java">예시 코드 »</button><br></li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>컨텍스트 초기화 매개변수</summary>
+    <ol>
+        <li>애플리케이션 수준 초기화 매개변수. 애플리케이션의 모든 서블릿이 ServletContext::getInitParameter로 참조할 수 있다.</li>
+        ServletContext는 GenericServlet::getServletContext로 참조할 수 있다.
+        <li>web.xml 예시</li>
+<pre>
+&lt;context-param&gt;
+    &lt;param-name&gt;name&lt;/param-name&gt;
+    &lt;param-value&gt;Context Param&lt;/param-value&gt;
+&lt;/context-param&gt;</pre>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>필터와 래퍼</summary>
+    1. Filter<br>
+- 웹 브라우저가 웹 컴포넌트를 호출하면, 필터가 사전작업을 수행하고 웹 컴포넌트를 호출.<br>
+- 필터 체인 : 하나의 페이지에 대해 여러 필터가 정의된 경우, 정의된 순서대로 필터가 호출된다.<br>
+1-1. 배포 설명자에 명시 : <button class="btn-code" path="Repositories/Eclipse/Web02/WebContent/WEB-INF/web.xml" lan="xml">web.xml »</button>
+<button class="btn-code" path="Repositories/Eclipse/Web02/src/donggi/FilterExample.java" lan="java">FilterExample.java »</button><br>
+1-2. 애너테이션으로 명시 : <button class="btn-code" path="Repositories/Eclipse/Web02/src/donggi/FilterExample2.java" lan="java">FilterExample2.java »</button><br><br>
+
+2. Wrapper<br>
+- Http 요청/응답을 감싸는 사용자 정의 객체<br>
+- 각각 HttpServletRequestWrapper, HttpServletResponseWrapper를 상속하면 된다.
+<button class="btn-code" path="Repositories/Eclipse/Web02/src/donggi/MyRequestWrapper.java" lan="java">MyRequestWrapper.java »</button>
+<button class="btn-code" path="Repositories/Eclipse/Web02/src/donggi/MyResponseWrapper.java" lan="java">MyResponseWrapper.java »</button>
+
+</details>
+
+<hr>
