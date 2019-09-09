@@ -219,20 +219,26 @@
 <hr>
 
 <details>
-    <summary>필터와 래퍼</summary>
-    1. Filter<br>
-- 웹 브라우저가 웹 컴포넌트를 호출하면, 필터가 사전작업을 수행하고 웹 컴포넌트를 호출.<br>
-- 필터 체인 : 하나의 페이지에 대해 여러 필터가 정의된 경우, 정의된 순서대로 필터가 호출된다.<br>
-1-1. 배포 설명자에 명시 : <button class="btn-code" path="Repositories/Eclipse/Web02/WebContent/WEB-INF/web.xml" lan="xml">web.xml »</button>
-<button class="btn-code" path="Repositories/Eclipse/Web02/src/donggi/FilterExample.java" lan="java">FilterExample.java »</button><br>
-1-2. 애너테이션으로 명시 : <button class="btn-code" path="Repositories/Eclipse/Web02/src/donggi/FilterExample2.java" lan="java">FilterExample2.java »</button><br><br>
+    <summary>필터 Filter</summary>
+    <ol>
+        <li>웹 브라우저가 웹 컴포넌트를 호출하면, 필터가 사전작업을 수행하고 웹 컴포넌트를 호출.</li>
+        <li>필터 체인 : 하나의 페이지에 대해 여러 필터가 정의된 경우, 정의된 순서대로 필터가 호출된다.</li>
+        <li>배포 설명자에 명시 : <button class="btn-code" path="Repositories/Eclipse/app1/src/main/webapp/WEB-INF/web.xml" lan="xml">web.xml »</button>
+            <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/filter/DoNothing.java" lan="java">예시 코드 »</button></li>
+        <li>애너테이션으로 명시 : <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/filter/DoNothing2.java" lan="java">예시 코드 »</button></li>
+    </ol>
+</details>
 
-2. Wrapper<br>
-- Http 요청/응답을 감싸는 사용자 정의 객체<br>
-- 각각 HttpServletRequestWrapper, HttpServletResponseWrapper를 상속하면 된다.
-<button class="btn-code" path="Repositories/Eclipse/Web02/src/donggi/MyRequestWrapper.java" lan="java">MyRequestWrapper.java »</button>
-<button class="btn-code" path="Repositories/Eclipse/Web02/src/donggi/MyResponseWrapper.java" lan="java">MyResponseWrapper.java »</button>
+<hr>
 
+<details>
+    <summary>래퍼 Wrapper</summary>
+    <ol>
+        <li>Http 요청/응답을 감싸는 사용자 정의 객체</li>
+        <li>각각 HttpServletRequestWrapper, HttpServletResponseWrapper를 상속하면 된다.</li>
+        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/request/RequestWrapper.java" lan="java">MyRequestWrapper.java »</button>
+        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/response/ResponseWrapper.java" lan="java">MyResponseWrapper.java »</button>
+    </ol>
 </details>
 
 <hr>
