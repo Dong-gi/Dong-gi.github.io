@@ -50,8 +50,8 @@ const posts = {
         { filename: "posts/java/version.html", category: "Programming/Java", title: "Java 버전별 추가사항" },
         { filename: "posts/java/jsp_and_servlet.html", category: "Programming/Java", title: "JSP&Servlet", top: true },
         
-        { filename: "posts/java/apache.commons.collections.html", category: "Programming/Java/apache.commons", title: "Apache Commons Collections" },
-        { filename: "posts/java/apache.commons.lang.html", category: "Programming/Java/apache.commons", title: "Apache Commons Lang", top: true },
+        { filename: "posts/java/apache.commons.collections.html", category: "Programming/Java/apache.commons", title: "Apache Commons Collections 4.4" },
+        { filename: "posts/java/apache.commons.lang.html", category: "Programming/Java/apache.commons", title: "Apache Commons Lang 3.9", top: true },
         { filename: "posts/java/java.io.html", category: "Programming/Java/java.base", title: "java.io Since 1.0" },
         { filename: "posts/java/java.lang.html", category: "Programming/Java/java.base", title: "java.lang Since 1.0" },
         { filename: "posts/java/java.lang.annotation.html", category: "Programming/Java/java.base", title: "java.lang.annotation Since 1.5" },
