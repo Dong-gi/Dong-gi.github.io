@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <html lnag="ko">
     <head>
@@ -17,12 +17,13 @@
     	['./hello2', '@WebServlet Hello2 서블릿'],
     	['./hello3', '@WebServlet Hello3 서블릿'],
     	['./hello4', 'MySQL 테스트 서블릿'],
+    	['./hello6', 'Context 리소스 정의를 통한 MySQL 테스트 서블릿'],
     	['./callOther/refreshHeader', '다른 페이지 이동/호출 : HTTP 응답 헤더에 Refresh 설정'],
     	['./callOther/refreshMeta', '다른 페이지 이동/호출 : HTML <meta> 태그에 Refresh 설정'],
     	['./callOther/redirect', '다른 페이지 이동/호출 : 서블릿 Redirect 호출'],
     	['./callOther/forward', '다른 페이지 이동/호출 : 서블릿 Forward 호출'],
     	['./callOther/include', '다른 페이지 이동/호출 : 서블릿 include 호출'],
-    	['./', '서블릿'],
+    	['./jsp/Hello.jsp', '튜토리얼 Hello.jsp'],
     ];
 
     for(let page of pages) {

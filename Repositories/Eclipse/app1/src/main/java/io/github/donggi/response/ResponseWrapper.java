@@ -1,4 +1,4 @@
-package response;
+package io.github.donggi.response;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;

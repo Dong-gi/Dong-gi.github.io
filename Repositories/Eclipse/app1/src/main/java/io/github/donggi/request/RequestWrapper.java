@@ -1,4 +1,4 @@
-package request;
+package io.github.donggi.request;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;

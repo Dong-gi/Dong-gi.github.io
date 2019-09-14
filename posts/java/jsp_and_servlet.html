@@ -80,7 +80,7 @@
         
             <li>코드 작성</li>
             <img class="rounded mx-auto d-block" alt="" src="imgs/20180929_220301.png"><br>
-            <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/servlet/Hello1.java" lan="java">Hello1.java »</button>
+            <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello1.java" lan="java">Hello1.java »</button>
             <button class="btn-code" path="Repositories/Eclipse/app1/src/main/webapp/WEB-INF/web.xml" lan="xml">web.xml »</button><br>
             web.xml은 배포 설명자로, 서블릿 및 서블릿 매핑, 필터 등을 정의한다.
             이클립스 프로젝트 생성 마법사로 web.xml을 생성하면 자동으로 welcome-file-list를 구성해주는데, welcome-file-list에 정의된 welcome-file을 순서대로 찾아 기본 페이지로 보여준다.
@@ -133,7 +133,7 @@
         <li>init()</li>
         <li>각 요청마다 service() 호출</li>
         <li>destroy()
-            <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/servlet/LifeCycle.java" lan="java">예시 코드 »</button></li>
+            <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/LifeCycle.java" lan="java">예시 코드 »</button></li>
     </ol>
 </details>
 
@@ -143,13 +143,16 @@
     <summary>web.xml 대신 애너테이션으로 서블릿 기술하기</summary>
     <ol>
         <li>WebServlet 애너테이션으로 배포설명자 web.xml 대신 간결하게 서블릿을 기술할 수 있다.</li>
-        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/servlet/Hello2.java" lan="java">value 예시 »</button>
-        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/servlet/Hello3.java" lan="java">initParams 예시 »</button>
+        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello2.java" lan="java">value 예시 »</button>
+        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello3.java" lan="java">initParams 예시 »</button>
         <li>name : 배포설명자의 servlet-name에 해당.</li>
         <li>urlPatterns : 배포설명자의 url-pattern들의 배열에 해당.</li>
         <li>value : urlPatterns 요소와 동일하게 동작하기 때문에, 서블릿 매핑만을 기술할 거라면 편하게 WebServlet("/hello")처럼 기술할 수 있다.</li>
         <li>initParams : 배포설명자의 init-param들의 배열에 해당.</li>
-        GenericServlet::getInitParameter로 참조할 수 있으며, 이 메서드는 ServletConfig::getInitParameter를 호출한다. ServletConfig는 getServletContext 메서드로 참조할 수 있다.
+        GenericServlet::getInitParameter로 참조할 수 있으며, 이 메서드는 ServletConfig::getInitParameter를 호출한다. ServletConfig는 getServletConfig 메서드로 참조할 수 있다.
+        <li>loadOnStartup : 컨테이너가 애플리케이션을 시작할 때, 클라이언트의 요청이 없어도 자동으로 초기화를 진행한다.</li>
+        Non-negative 정수로 설정하며, 0에 가까울수록 우선 초기화
+        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello5.java" lan="java">loadOnStartup 예시 »</button>
     </ol>
 </details>
 
@@ -166,7 +169,12 @@
         <li>사용하기 전에 드라이버 클래스 로드</li>
         로드할 JDBC 클래스 이름은 다운로드 받은 압축파일의 html 문서에 있음
 
-        <li>사용하기 <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/servlet/Hello4.java" lan="java">JDBC Test »</button></li>
+        <li>사용하기 <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello4.java" lan="java">JDBC Test »</button></li>
+
+        <li>Context.xml 리소스로 DataSource 정의하기</li>
+        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/webapp/META-INF/context.xml" lan="xml">context.xml »</button>
+        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/webapp/WEB-INF/web.xml" lan="xml">web.xml » resource-ref</button>
+        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello6.java" lan="java">서블릿 »</button>
     </ol>
 </details>
 
@@ -196,23 +204,7 @@
             호출된 페이지와 호출한 페이지 사이의 출력 HTML 코드 조각 순서를 맞추기 위해 flush()를 적절히 호출해줘야 한다.
         </ul>
 
-        <li><button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/servlet/CallOther.java" lan="java">예시 코드 »</button><br></li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>컨텍스트 초기화 매개변수</summary>
-    <ol>
-        <li>애플리케이션 수준 초기화 매개변수. 애플리케이션의 모든 서블릿이 ServletContext::getInitParameter로 참조할 수 있다.</li>
-        ServletContext는 GenericServlet::getServletContext로 참조할 수 있다.
-        <li>web.xml 예시</li>
-<pre>
-&lt;context-param&gt;
-    &lt;param-name&gt;name&lt;/param-name&gt;
-    &lt;param-value&gt;Context Param&lt;/param-value&gt;
-&lt;/context-param&gt;</pre>
+        <li><button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/CallOther.java" lan="java">예시 코드 »</button><br></li>
     </ol>
 </details>
 
@@ -224,8 +216,8 @@
         <li>웹 브라우저가 웹 컴포넌트를 호출하면, 필터가 사전작업을 수행하고 웹 컴포넌트를 호출.</li>
         <li>필터 체인 : 하나의 페이지에 대해 여러 필터가 정의된 경우, 정의된 순서대로 필터가 호출된다.</li>
         <li>배포 설명자에 명시 : <button class="btn-code" path="Repositories/Eclipse/app1/src/main/webapp/WEB-INF/web.xml" lan="xml">web.xml »</button>
-            <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/filter/DoNothing.java" lan="java">예시 코드 »</button></li>
-        <li>애너테이션으로 명시 : <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/filter/DoNothing2.java" lan="java">예시 코드 »</button></li>
+            <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/io/github/donggi/filter/DoNothing.java" lan="java">예시 코드 »</button></li>
+        <li>애너테이션으로 명시 : <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/io/github/donggi/filter/DoNothing2.java" lan="java">예시 코드 »</button></li>
     </ol>
 </details>
 
@@ -236,8 +228,8 @@
     <ol>
         <li>Http 요청/응답을 감싸는 사용자 정의 객체</li>
         <li>각각 HttpServletRequestWrapper, HttpServletResponseWrapper를 상속하면 된다.</li>
-        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/request/RequestWrapper.java" lan="java">MyRequestWrapper.java »</button>
-        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/response/ResponseWrapper.java" lan="java">MyResponseWrapper.java »</button>
+        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/io/github/donggi/request/RequestWrapper.java" lan="java">MyRequestWrapper.java »</button>
+        <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/io/github/donggi/response/ResponseWrapper.java" lan="java">MyResponseWrapper.java »</button>
     </ol>
 </details>
 
@@ -250,5 +242,141 @@
         <li>JSP 파일의 본문은 HttpJspPage::_jspService 메서드의 본문이 된다.</li>
         <li>HttpJspPage → JspPage → Servlet</li>
         JspPage 인터페이스는 jspInit(), jspDestroy()를 정의한다
+        <li>JSP 태그
+            <button class="btn-code" path="Repositories/Eclipse/app1/src/main/webapp/jsp/Hello.jsp" lan="xml">Hello.jsp »</button></li>
+        <ul>
+            <li>&lt;%@ %&gt; : 지시자; Directive : page, taglib, include 3종류가 있다</li>
+            <li>&lt;% %&gt; : Scriptlet : 일반 자바 코드를 작성하면 된다. _jspService 메서드 안의 코드로, 매개변수를 포함한 아래의 변수들을 참조할 수 있다.</li>
+            <img class="rounded mx-auto d-block" alt="" src="imgs/20190912_191500.png">
+            <li>&lt;%! %&gt; : 선언문; Declaration : 서블릿 클래스의 멤버 정의</li>
+            <li>&lt;%= %&gt; : Expression : out::print 또는 out::write에 들어갈 값을 반환하는 문장을 작성하면 된다</li>
+        </ul>
     </ol>
 </details>
+
+<hr>
+
+<details>
+    <summary>데이터 저장소</summary>
+    <ol>
+        <li>ServletContext</li>
+        애플리케이션 수준 공유 데이터. GenericServlet::getServletContext로 참조할 수 있다. JSP에서는 application 변수.<br>
+        initParams : 앱 초기화 매개변수. 모든 서블릿이 ServletContext::getInitParameter로 참조할 수 있다.
+        <details>
+            <summary>web.xml 예시</summary>
+            &lt;context-param&gt;<br>
+            　　&lt;param-name&gt;name&lt;/param-name&gt;<br>
+            　　&lt;param-value&gt;Context Param&lt;/param-value&gt;<br>
+            &lt;/context-param&gt;
+        </details>
+        
+        <li>ServletConfig</li>
+        서블릿 수준 공유 데이터. GenericServlet::getServletConfig로 참조할 수 있다. JSP에서는 config 변수.<br>
+        initParams : 서블릿 초기화 매개변수. 서블릿 내에서 GenericServlet::getInitParameter로 참조할 수 있다.
+
+        <li>당연하지만, 서블릿 static 멤버도 서블릿 수준 공유 가능</li>
+
+        <li>HttpSession</li>
+        세션 수준 공유 데이터. HttpServletRequest::getSession으로 참조할 수 있다. JSP에서는 session 변수
+
+        <li>ServletRequest</li>
+        (클라이언트 요청 처리) 스레드 수준 공유 데이터. 서블릿마다 자동으로 공유되지는 않으며, 직접 전달해야 한다
+        
+        <li>각 클라이언트의 요청이 별개의 스레드에서 실행되므로, ThreadLocal이 유용할 수 있다</li>
+
+        <li>JspContext</li>
+        _jspService()에서 자동 선언하는 pageContext 지역변수(). JSP 실행하는 동안 유효.
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>javax.servlet 이벤트 리스너</summary>
+    <ol>
+        <li>이벤트 리스너 구현 클래스는 배포 설명자에 서술되거나, @WebListener를 표기하거나, ServletContext::addListener로 등록돼야 한다</li>
+        @WebListener 표기 가능 리스너 : ServletContextListener, ServletContextAttributeListener, ServletRequestListener, ServletRequestAttributeListener, HttpSessionListener, HttpSessionAttributeListener, HttpSessionIdListener<br>
+        ServletContext::addListener 등록 가능 리스너 : ServletContextAttributeListener, ServletRequestListener, ServletRequestAttributeListener, HttpSessionAttributeListener, HttpSessionIdListener, HttpSessionListener. ServletContext 인스턴스가 ServletContainerInitializer::onStartup()으로 설정됐다면 ServletContextListener도 등록 가능
+
+        <li>interface ServletContextListener extends EventListener Since Servlet 2.3</li>
+        default void contextInitialized(ServletContextEvent sce) : 웹 앱 초기화 이벤트<br>
+        default void contextDestroyed(ServletContextEvent sce) : ServletContext 종료 이벤트
+
+        <li>interface ServletContextAttributeListener extends EventListener Since Servlet 2.3</li>
+        default void attributeAdded(ServletContextAttributeEvent event) + attributeRemoved, attributeReplaced : ServletContext 속성 추가/제거/변경 이벤트
+
+        <li>interface ServletRequestListener extends EventListener Since Servlet 2.4</li>
+        default void requestInitialized(ServletRequestEvent sre) : 요청이 웹앱 스코프에 진입하면 발생<br>
+        default void requestDestroyed(ServletRequestEvent sre) : 요청이 웹앱 스코프를 벗어나면 발생
+
+        <li>interface ServletRequestAttributeListener extends EventListener Since Servlet 2.4</li>
+        default void attributeAdded(ServletRequestAttributeEvent srae) + attributeRemoved, attributeReplaced : ServletRequest 속성 추가/제거/변경 이벤트
+
+        <li>interface HttpSessionListener extends EventListener Since Servlet 2.3</li>
+        default void sessionCreated(HttpSessionEvent se) : 세션 생성 이벤트<br>
+        default void sessionDestroyed(HttpSessionEvent se) : 세션 폐기 이벤트
+
+        <li>interface HttpSessionAttributeListener extends EventListener Since Servlet 2.3</li>
+        default void attributeAdded(HttpSessionBindingEvent event) + attributeRemoved, attributeReplaced : 세션 속성 추가/제거/변경 이벤트
+
+        <li>interface HttpSessionIdListener extends EventListener Since Servlet 3.1</li>
+        void sessionIdChanged(HttpSessionEvent event, String oldSessionId) : 세션 ID 변경 이벤트
+
+        <li>interface HttpSessionBindingListener extends EventListener</li>
+        default void valueBound(HttpSessionBindingEvent event) : 이 인터페이스를 구현한 클래스의 인스턴스가 세션의 setAttribute()로 추가되면 호출된다<br>
+        default void valueUnbound(HttpSessionBindingEvent event) : 이 인터페이스를 구현한 클래스의 인스턴스가 세션의 removeAttribute()로 제거된 경우, invalidate()로 세션이 만료된 경우, 시간 초과로 세션이 만료된 경우 호출된다.
+
+        <li>interface ReadListener extends EventListener Since Servlet 3.1</li>
+        ServerRequest::getInputStream → ServerInputStream::setReadListener<br>
+        void onDataAvailable() : HTTP 요청 데이터 읽기가 가능해지는 시점에 한 번 호출된다<br>
+        void onAllDataRead() : 블로킹 없이 모든 요청 데이터를 읽을 수 있을 때 호출된다<br>
+        void onError(Throwable t) : 요청 처리에 예외가 발생한 경우 호출된다
+
+        <li>interface WriteListener extends EventListener Since Servlet 3.1</li>
+        ServerResponse::getOutputStream → ServerOutputStream::setWriteListener<br>
+        void onWritePossible() : 응답 쓰기가 가능해지는 시점에 한 번 호출된다<br>
+        void onError(Throwable t) : non-blocking 쓰기 중 발생한 예외를 처리한다
+
+        <li>interface AsyncListener extends EventListener Since Servlet 3.0</li>
+        ServletRequest::startAsync → AsyncContext::addListener<br>
+        void onComplete(AsyncEvent event) : 비동기 작업이 완료되었을 때 호출한다<br>
+        void onTimeout(AsyncEvent event) : 비동기 작업이 시간초과된 경우 호출한다<br>
+        void onError(AsyncEvent event) : 비동기 작업 중 예외가 발생했을 때 호출한다<br>
+        void onStartAsync(AsyncEvent event) : 비동기 작업 시작시 호출한다
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>MyBatis</summary>
+    <details>
+        <summary>mybatis-config.xml</summary>
+        <ol>
+            <li>DTD : &lt;!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd"&gt;</li>
+            <li>ELEMENT configuration (properties?, settings?, typeAliases?, typeHandlers?, objectFactory?, objectWrapperFactory?, reflectorFactory?, plugins?, environments?, databaseIdProvider?, mappers?)</li>
+            <li>properties 예 : &lt;properties url="mybatis.properties"/&gt;</li>
+            resource : 파일이 클래스 패스에 있는 경우. url : 다른 경로에 있는 경우
+            <li>settings</li>
+            로깅 : &lt;setting name="logImpl" value=""/&gt; // value : SLF4J, LOG4J, LOG4J2, JDK_LOGGING, COMMONS_LOGGING, STDOUT_LOGGING, NO_LOGGING, Qualified class path
+            <li>typeAliases : SQL 매퍼 파일의 매개변수/리턴 타입의 별명을 지정</li>
+            built-in 별명 : _int(int), int(java.lang.Integer), date(java.util.Date) 등
+            <li>environments : 실행 환경(environment) 정의.</li>
+            environment » transactionManager » type 속성 : JDBC(MyBatis에서 트랜잭션 관리), MANAGED(서버나 서블릿 컨테이너에서 트랜잭션 관리)<br>
+            environment » dataSource » type 속성 : UNPOOLED(매 요청마다 새 커넥션 생성), POOLED(커넥션 풀링), JNDI(서버나 서블릿 컨테이너의 데이터 소스 사용)<br>
+            type="JNDI" 예 : &lt;property name="data_source" value="jdbc/MySQL/localhost/test"
+            <li>mappers : 각 매퍼(mapper) 파일 정의</li>
+            resource : 파일이 클래스 패스에 있는 경우. url : 다른 경로에 있는 경우
+        </ol>
+    </details>
+    <details>
+        <summary>mapper.xml</summary>
+        &lt;if test="condition"&gt;sql&lt;/if&gt;
+        &lt;choose&gt; &lt;when test="condition"&gt;sql&lt;/when&gt; &lt;otherwise&gt;sql&lt;/otherwise&gt;
+        &lt;where&gt; &lt;if test="condition"&gt;sql&lt;/when&gt; &lt;/where&gt;
+        &lt;set&gt; &lt;if test="condition"&gt;sql&lt;/if&gt; &lt;/set&gt;
+        &lt;foreach item="item" index...
+    </details>
+</details>
+
+<hr>

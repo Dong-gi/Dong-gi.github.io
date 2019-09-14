@@ -1,4 +1,4 @@
-package filter;
+package io.github.donggi.filter;
 
 import java.io.IOException;
 import java.util.logging.Logger;
