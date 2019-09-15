@@ -6,14 +6,14 @@
 .vscode
 
 bin
+build
 debug
-out
-obj
-packages
-target
-
 Library
 Logs
-Servers
-Temp
+obj
+out
+packages
 RemoteSystemsTempFiles
+Servers
+target
+Temp
