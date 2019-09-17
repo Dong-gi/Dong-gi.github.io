@@ -361,12 +361,15 @@
                     <li>n분 동안 m개 이상의 실패가 발생하면 l분간 상태를 OPEN으로 천이.</li>
                     <li>분당 요청이 n개 이하로 떨어지면 상태를 CLOSED로 천이</li>
                 </ul>
-                <li>public EventCountCircuitBreaker(int openingThreshold, long openingInterval, TimeUnit openingUnit, int closingThreshold, long closingInterval, TimeUnit closingUnit)</li>
-                (5, 2, TimeUnit.MINUTE, 5, 10, TimeUnit.MINUTE) : 2분 간 5ㄱ
-                <li>public EventCountCircuitBreaker(int openingThreshold, long checkInterval, TimeUnit checkUnit, int closingThreshold)</li>
-                기준 인터벌을 공유. new EventCountCircuitBreaker(1000, 1, TimeUnit.MINUTE, 800) : 분당 1000개 이상의 요청이 발생하면 OPEN, 분당 800개 이하로 떨어지면 
                 <li>public EventCountCircuitBreaker(int threshold, long checkInterval, TimeUnit checkUnit)</li>
-                기준 이벤트 카운트/인터벌 모두 공유
+                기준 이벤트 카운트/인터벌 모두 공유. 초당 최대 5개의 처리를 하는
+                <button class="btn-code" path="Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java" displayRange="[11,32]" lan="java">예시 »</button>
+                <li>public EventCountCircuitBreaker(int openingThreshold, long checkInterval, TimeUnit checkUnit, int closingThreshold)</li>
+                기준 인터벌을 공유. 초당 5개 이상의 요청이 발생하면 OPEN, 초당 2개 이하로 떨어지면(부정확) CLOSE하는
+                <button class="btn-code" path="Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java" displayRange="[34,61]" lan="java">예시 »</button>
+                <li>public EventCountCircuitBreaker(int openingThreshold, long openingInterval, TimeUnit openingUnit, int closingThreshold, long closingInterval, TimeUnit closingUnit)</li>
+                초당 5번 이상 실패하면 2초간 OPEN하는
+                <button class="btn-code" path="Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java" displayRange="[63,90]" lan="java">예시 »</button>
             </ol>
         </details>
     </details>
