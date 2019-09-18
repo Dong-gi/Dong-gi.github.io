@@ -1,0 +1,62 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:c="http://www.springframework.org/schema/c"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/util
+   http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+    <bean
+        id="list"
+        class="java.util.Arrays"
+        factory-method="asList">
+        <constructor-arg>
+            <array>
+                <value>메시지 1</value>
+                <value>메시지 1</value>
+                <value/>
+                <value>메시지 2</value>
+            </array>
+        </constructor-arg>
+    </bean>
+
+    <bean
+        id="array"
+        factory-bean="list"
+        factory-method="toArray" />
+
+    <bean
+        id="set"
+        class="org.apache.commons.collections4.SetUtils"
+        factory-method="hashSet"
+        c:items-ref="array" />
+
+    <util:map id="map">
+        <entry
+            key="key1"
+            value="value1" />
+        <entry
+            key="key2"
+            value="value2" />
+    </util:map>
+
+    <bean
+        id="props"
+        class="org.apache.commons.collections4.MapUtils"
+        factory-method="toProperties"
+        c:map-ref="map" />
+
+    <bean
+        id="hello5"
+        class="io.github.donggi.bean.Hello5"
+        p:messageArr-ref="array"
+        p:messageList-ref="list"
+        p:messageSet-ref="set"
+        p:messageMap-ref="map"
+        p:messageProps-ref="props" />
+</beans> 

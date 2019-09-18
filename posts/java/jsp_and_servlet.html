@@ -390,6 +390,13 @@
             <li>FileSystemXmlApplicationContext : 파일 시스템 상의 빈 구성 파일로 빈 생성</li>
             <li>WebApplicationContext : web.xml 빈 구성으로 빈 생성</li>
         </ul>
+        <li>빈 Scope</li>
+        <ul>
+            <li>singleton : 하나만 생성. 기본</li>
+            <li>prototype : getBean() 호출 시마다 생성</li>
+            <li>request : HTTP 요청마다 생성. 웹 앱에서만 설정 가능</li>
+            <li>session : HTTP 세션마다 생성. 웹 앱에서만 설정 가능</li>
+        </ul>
         <li>빈 생성 + 세터 주입 예</li>
         <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java" lan="java">Hello1 빈 클래스</button>
         <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans1.xml" lan="xml"">빈 구성 파일</button>
@@ -419,22 +426,22 @@
         <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello4.java" lan="java">Hello4 빈 클래스</button>
         <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans7.xml" lan="xml"">빈 구성 파일</button>
         <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test3.java" lan="java">빈 사용 클래스</button>
-        
-
-        <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xmlns:util="http://www.springframework.org/schema/util"
-xsi:schemaLocation="http://www.springframework.org/schema/beans
-                    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-                    http://www.springframework.org/schema/util
-                    http://www.springframework.org/schema/util/spring-util-2.5.xsd">
-
-
-<util:list id="myList" value-type="java.lang.String">
-    <value>foo</value>
-    <value>bar</value>
-</util:list>
+        <li>의존 컬렉션 주입 예</li>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello5.java" lan="java">Hello5 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans8.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello5Test.java" lan="java">빈 사용 클래스</button>
+        <li>util xmlns를 이용한 의존 컬렉션 주입 예</li>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello5.java" lan="java">Hello5 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans9.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello5Test2.java" lan="java">빈 사용 클래스</button>
+        <li>팩터리 설정을 통한 의존 컬렉션 주입 예</li>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello5.java" lan="java">Hello5 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans10.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello5Test3.java" lan="java">빈 사용 클래스</button>
+        <li>parent 속성 사용 예</li>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java" lan="java">Hello1 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans11.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello1Test3.java" lan="java">빈 사용 클래스</button>
     </ol>
 </details>
 

@@ -47,5 +47,12 @@
                     value="value1" />
             </map>
         </property>
+        <property name="messageProps">
+            <props>
+                <prop key="key1">value1</prop>
+                <prop key="key1">value2</prop>
+                <prop key="key2">value2</prop>
+            </props>
+        </property>
     </bean>
 </beans> 
