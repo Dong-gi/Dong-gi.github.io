@@ -1,0 +1,45 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:c="http://www.springframework.org/schema/c"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean
+        id="message"
+        class="java.lang.String"
+        c:original="빈 메시지 1" />
+
+    <bean
+        id="hello1-1"
+        class="io.github.donggi.bean.Hello1"
+        p:message-ref="message" />
+
+    <bean
+        id="hello1-2"
+        class="io.github.donggi.bean.Hello1">
+        <property name="message">
+            <bean
+                class="java.lang.String"
+                c:original="빈 메시지 2" />
+        </property>
+    </bean>
+
+    <bean
+        id="hello4-1"
+        class="io.github.donggi.bean.Hello4"
+        c:message-ref="message" />
+
+    <bean
+        id="hello4-2"
+        class="io.github.donggi.bean.Hello4">
+        <constructor-arg>
+            <bean
+                class="java.lang.String"
+                c:original="빈 메시지 3" />
+        </constructor-arg>
+    </bean>
+</beans> 

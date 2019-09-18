@@ -380,3 +380,62 @@
 </details>
 
 <hr>
+
+<details>
+    <summary>Spring IoC Container</summary>
+    <ol>
+        <li>자바 빈의 자동 생성을 지원한다</li>
+        <ul>
+            <li>ClassPathXmlApplicationContext : 클래스 패스 상의 빈 구성 파일로 빈 생성</li>
+            <li>FileSystemXmlApplicationContext : 파일 시스템 상의 빈 구성 파일로 빈 생성</li>
+            <li>WebApplicationContext : web.xml 빈 구성으로 빈 생성</li>
+        </ul>
+        <li>빈 생성 + 세터 주입 예</li>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java" lan="java">Hello1 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans1.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello1Test.java" lan="java">빈 사용 클래스</button>
+        <li>p(property) xmlns를 이용한 세터 주입 예</li>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java" lan="java">Hello1 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans5.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello1Test2.java" lan="java">빈 사용 클래스</button>
+        <li>빈 초기화/소멸 로직 InitializingBean, DisposableBean 예</li>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello2.java" lan="java">Hello2 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans2.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello2Test.java" lan="java">빈 사용 클래스</button>
+        <li>빈 초기화/소멸 로직 init/destroy-method 예</li>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello3.java" lan="java">Hello3 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans3.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello3Test.java" lan="java">빈 사용 클래스</button>
+        <li>익명 빈 + 생성자 주입 + 초기화 전/후 로직 BeanPostProcessor 예</li>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello4.java" lan="java">Hello4 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans4.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test.java" lan="java">빈 사용 클래스</button>
+        <li>c(constructor) xmlns를 이용한 생성자 주입 예</li>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello4.java" lan="java">Hello4 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans6.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test2.java" lan="java">빈 사용 클래스</button>
+        <li>의존 객체 주입 예</li>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java" lan="java">Hello1 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello4.java" lan="java">Hello4 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans7.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test3.java" lan="java">빈 사용 클래스</button>
+        
+
+        <?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:util="http://www.springframework.org/schema/util"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                    http://www.springframework.org/schema/util
+                    http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+
+<util:list id="myList" value-type="java.lang.String">
+    <value>foo</value>
+    <value>bar</value>
+</util:list>
+    </ol>
+</details>
+
+<hr>

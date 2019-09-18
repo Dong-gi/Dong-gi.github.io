@@ -7,10 +7,12 @@
    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <bean
-        id="hello1"
-        class="io.github.donggi.bean.Hello1">
+        id="hello3"
+        class="io.github.donggi.bean.Hello3"
+        init-method="init"
+        destroy-method="destroy">
         <property
             name="message"
-            value="Hello1 - 메시지" />
+            value="Hello3 - 메시지" />
     </bean>
 </beans> 
