@@ -126,7 +126,7 @@
                 <li>static &lt;T extends Throwable&gt; void run(Functions.FailableRunnable&lt;T&gt; pRunnable)</li>
                 + call(Callable), accept(Consumer), apply(Function), test(Predicate)
 
-                <li>@SafeVarargs static void tryWithResources(Functions.FailableRunnable&lt;? extends THrowable&gt; pAction, Functions.FailableRunnable&lt;? extends Throwable&gt;... pResources) + 1 오버로딩</li>
+                <li>@SafeVarargs static void tryWithResources(Functions.FailableRunnable&lt;? extends Throwable&gt; pAction, Functions.FailableRunnable&lt;? extends Throwable&gt;... pResources) + 1 오버로딩</li>
                 AutoCloseable하지 않은 객체들에 대해, pAction 실행 후 성공/실패 여부와 무관하게 pResources가 제공된 순서대로 실행됨을 보장한다.
 
                 <li>static RuntimeException rethrow(Throwable pThrowable)</li>
@@ -353,6 +353,14 @@
             </ol>
         </details>
         <details>
+            <summary>class ThresholdCircuitBreaker extends AbstractCircuitBreaker&lt;Long&gt; Since 3.5</summary>
+            <ol>
+                <li>스레드-안전. 1회용 CircuitBreaker를 제공한다. 물론 close()로 강제로 천이시킬 수 있다</li>
+                <li>public ThresholdCircuitBreaker(long threshold)</li>
+                <li>long getThreshold()</li>
+            </ol>
+        </details>
+        <details>
             <summary>class EventCountCircuitBreaker extends AbstractCircuitBreaker&lt;Integer&gt; Since 3.5</summary>
             <ol>
                 <li>카운트와 인터벌을 가지고 아래와 같은 서비스를 제공할 수 있다. 카운팅은 외부에서 직접해야함에 유의</li>
@@ -380,14 +388,14 @@
             <summary>interface ConcurrentInitializer&lt;T&gt; Since 3.0</summary>
             <ol>
                 <li>스레드-안전한 초기화 로직을 의미한다</li>
-                <li>T get() throws ConcurrentException</li>
+                <li>T get()</li>
             </ol>
         </details>
         <details>
             <summary>abstract class AtomicInitializer&lt;T&gt; implements ConcurrentInitializer&lt;T&gt; Since 3.0</summary>
             <ol>
                 <li>『Effective Java』에서 소개하는 <button class="btn-code" path="posts/java/effective_java.html" lan="nohighlight">객체 필드 초기화 지연</button>과 유사한 형태의 로직으로, AtomicReference를 이용해 단 한 번만 객체가 초기화됨을 보장한다</li>
-                <li>protected abstrct T initialize() throws ConcurrentException</li>
+                <li>protected abstrct T initialize()</li>
             </ol>
         </details>
         <details>
@@ -408,18 +416,42 @@
             </ol>
         </details>
         <details>
-            <summary>class CallableBackgroundInitializer&lt;T&gt; extends BackgroundInitializer&lt;T&gt; Since 3.0</summary>
-            Callable을 이용한 BackgroundInitializer 콘크리트 클래스
+            <summary>abstract class LazyInitializer&lt;T&gt; implements ConcurrentInitializer&lt;T&gt; Since 3.0</summary>
+            <ol>
+                <li>『Effective Java』에서 소개하는 <button class="btn-code" path="posts/java/effective_java.html" lan="nohighlight">객체 필드 초기화 지연</button> 로직을 이용해 늦은 초기화를 지원한다</li>
+                <li>protected abstract T initialize()</li>
+            </ol>
         </details>
         <details>
             <summary>class ConstantInitializer&lt;T&gt; implements ConcurrentInitializer&lt;T&gt; Since 3.0</summary>
             항상 같은 객체/값을 반환하는 ConcurrentInitializer 콘크리트 클래스
         </details>
+        <details>
+            <summary>class CallableBackgroundInitializer&lt;T&gt; extends BackgroundInitializer&lt;T&gt; Since 3.0</summary>
+            Callable을 이용한 BackgroundInitializer 콘크리트 클래스
+        </details>
+        <details>
+            <summary>class MultiBackgroundInitializer extends BackgroundInitializer&lt;MultiBackgroundInitializer.MultiBackgroundInitializerResults&gt; Since 3.0</summary>
+            <details>
+                <summary>static class MultiBackgroundInitializer.MultiBackgroundInitializerResults</summary>
+                <ol>
+                    <li>BackgroundInitializer&lt;?&gt; getInitializer(String name)</li>
+                    <li>boolean isException(String name) + isSuccessful, getResultObject, getException</li>
+                    <li>Set&lt;String&gt; initializerNames()</li>
+                </ol>
+            </details>
+            <ol>
+                <li>병렬로 초기화 작업을 진행한다</li>
+                <li>public MultiBackgroundInitializer(ExecutorService exec)</li>
+                명시하지 않으면 내부 ExecutorService 사용
+                <li>void addInitializer(String name, BackgroundInitializer&lt;?&gt; init)</li>
+            </ol>
+        </details>
     </details>
 
     <details>
         <summary>ThreadFactory</summary>
-        <details>
+        <details open>
             <summary>class BasicThreadFactory implements ThreadFactory Since 3.0</summary>
             <ol>
                 <li>내부 ThreadFactory가 생성한 스레드에 특정 속성들을 설정하여 관리하기 편하게 해준다.</li>
@@ -441,11 +473,345 @@
     </details>
 
     <details>
-        <summary>interface Computable&lt;I, O&gt; Since 3.6</summary>
-        O compute(I arg) throws InterruptedException
+        <summary>class ConcurrentUtils Since 3.0</summary>
+        <ol>
+            <li>static ConcurrentException extractCause(ExecutionException ex) + extractCauseUnchecked</li>
+            <ul>
+                <li>ex == null || ex.getCause() == null 이면 null 반환</li>
+                <li>ex.getCause()가 RuntimeException, Error면 rethrow</li>
+                <li>그 외의 경우 새 ConcurrentException의 cause로 설정되어 반환된다; extractCauseUnchecked의 경우 ConcurrentRuntimeException을 반환</li>
+            </ul>
+            
+            <li>static void handleCause(ExecutionException ex) + handleCauseUnchecked</li>
+            각각 extractCause와 extractCauseUnchecked를 호출하여 그 반환값이 null이 아니면 throw한다. 명시적으로 예외를 처리하기 위해 try 구문에서 호출하면 된다.
+
+            <li>static &lt;K, V&gt; V putIfAbsent(ConcurrentMap&lt;K, V&gt; map, K key, V value) + createIfAbsent</li>
+
+            <li>static &lt;T&gt; initialize(ConcurrentInitializer&lt;T&gt; initializer) + initializeUnchecked</li>
+
+            <li>static &lt;T&gt; Future&lt;T&gt; constantFuture(T value)</li>
+        </ol>
     </details>
 
     <details>
-        <summary>class ConcurrentUtils Since 3.0</summary>
+        <summary>interface Computable&lt;I, O&gt; Since 3.6</summary>
+        O compute(I arg)
+    </details>
+
+    <details>
+        <summary>class Memoizer&lt;I, O&gt; implements Computable&lt;I, O&gt; Since 3.6</summary>
+        <ol>
+            <li>이전 연산 결과를 내부 맵에 저장한다. 맵의 크기를 제한하거나, 내용을 삭제할 수는 없다.</li>
+            <li>public Memoizer(Computable&lt;I, O&gt; computable, boolean recalculate)</li>
+            recalculate : 이전 compute가 실패한 경우, 다음 compute 호출 시 다시 계산할 지 여부. 지정하지 않으면 false
+        </ol>
+    </details>
+
+    <details>
+        <summary>class TimedSemaphore Since 3.0</summary>
+        <ol>
+            <li>시간 당 소비자 수를 제한하는 세마포어를 제공한다</li>
+            <li>public static final int NO_LIMIT</li>
+            <li>public TimedSemaphore(ScheduledExecutorService service, long timePeriod, TimeUnit timeUnit, int limit)</li>
+            service가 제공되지 않으면 내부적으로 하나 생성하여 사용한다
+        </ol>
+        <details>
+            <summary>Metho Detail</summary>
+            <ol>
+                <li>final void setLimit(int limit) + getLimit</li>
+                <li>void shutdown() + isShutdown</li>
+                <li>void acquire()</li>
+                순번을 얻기까지 스레드를 블록한다
+                <li>boolean tryAcquire() Since 3.5</li>
+                순번을 얻을 수 있다면 얻은 뒤 true를 반환하고, 아니면 false를 반환한다. true를 받았다면 즉시 다음으로 진행하면 된다
+                <li>int getLastAcquiresPerPeriod()</li>
+                + getAcquireCount, getAvailablePermits, getAverageCallsPerPeriod, getPeriod, getUnit
+            </ol>
+        </details>
     </details>
 </details>
+
+<hr>
+
+<details>
+    <summary>org.apache.commons.lang3.event Since 3.0</summary>
+    <details>
+        <summary>class EventListenerSupport&lt;L&gt; implements Serializable Since 3.0</summary>
+        <ol>
+            <li>이벤트 리스터들을 관리하고, 일괄 통지하는 기능을 제공한다</li>
+            <li>public EventListenerSupport(Class&lt;L&gt; listenerInterface, ClassLoader classLoader)</li>
+            classLoader가 지정되지 않은 경우, 현재 스레드의 것을 이용한다
+        </ol>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>static &lt;T&gt; EventListenerSupport&lt;T&gt; create(Class&lt;T&gt; listenerInterface)</li>
+                <li>L fire()</li>
+                프록시 객체를 반환한다. 프록시 메서드는 등록된 모든 이벤트 리스너에 포워딩된다
+                <li>void addListener(L listener, boolean allowDuplicate) Since 3.5 + 1 오버로딩</li>
+                allowDuplicate는 지정되지 않은 경우 true
+                <li>void removeListener(L listener)</li>
+                <li>L[] getListeners()</li>
+            </ol>
+        </details>
+    </details>
+    <details>
+        <summary>class EventUtils Since 3.0</summary>
+        <ol>
+            <li>static &lt;L&gt; void addEventListener(Object eventSource, Class&lt;L&gt; listenerType, L listener)</li>
+            eventSource의 "add" + listenerType.getSimpleName()에 해당하는 메서드로 listener 등록
+
+            <li>static &lt;L&gt; void bindEventsToMethod(Object target, String methodName, Object eventSource, Class&lt;L&gt; listenerType, String... eventTypes)</li>
+            addEventListener를 호출한다. 이때 listener는 target의 methodName 메서드를 호출하는 프록시다. eventTypes는 listenerType 인터페이스 중 어떤 메서드들에 대해 동작할 지를 의미하며, 비어 있는 경우 모든 메서드에 대해 동작한다.
+        </ol>
+    </details>
+</details>
+
+<hr>
+
+<details>
+    <summary>org.apache.commons.lang3.exception Since 1.0</summary>
+    <details open>
+        <summary>class ExceptionUtils Since 1.0</summary>
+        <ol>
+            <li>static Throwable getRootCause(Throwable throwable)</li>
+            <li>static void printRootCauseStackTrace(Throwable throwable, PrintWriter writer) Since 2.0 + 오버로딩</li>
+            <li>static &lt;R&gt; R rethrow(Throwable throwable)</li>
+            R은 장식. throwable을 즉시 throw한다. 아래와 같이 제네릭을 이용하여 CheckedException을 컴파일러로부터 숨긴다. 메서드 시그니처의 불필요한 throws 절과 예외 체인의 불필요한 "Caused by" 항목을 제거할 수 있다. 자바의 예외 처리 방법에 벗어나는 감이 있지만, 라이브러리 개발에는 유용하다.<br>
+            <br>
+            @SuppressWarnings("unchecked")<br>
+            private static &lt;R, T extends Throwable&gt; R typeErasure(final Throwable throwable) throws T {<br>
+            　　throw (T) throwable;<br>
+            }
+
+            <li>static &lt;R&gt; R wrapAndThrow(Throwable throwable)</li>
+            throwable이 RuntimeException, Error의 인스턴스면 각각 해당 타입으로 throw하고, 나머지는 UndeclaredThrowableException로 throw한다. 결과적으로 Error를 제외하면 모두 RuntimeException으로 throw하는 셈
+        </ol>
+    </details>
+</details>
+
+<hr>
+
+<details>
+    <summary>org.apache.commons.lang3.math Since 2.0</summary>
+    <details>
+        <summary>final class Fraction extends Number implements Comparable&lt;Fraction&gt; Since 2.0</summary>
+        <ol>
+            <li>int 분자/분모를 이용한다. BigInteger 구현은 Commons Math BigFraction을 이용</li>
+            <li>public static final Fraction ZERO, ONE, ONE_HALF, ONE_THIRD, ...</li>
+            <li>static Fraction getFraction(int numerator, int denominator) : 분수</li>
+            <li>static Fraction getFraction(int whole, int numerator, int denominator) : 대분수</li>
+            <li>static Fraction getReducedFraction(int numerator, int denominator) : 기약분수</li>
+            <li>static Fraction getFraction(double value) + 오버로딩</li>
+            <li>Fraction reduce()</li>
+            + invert, negate, abs, pow, add, subtract, multiplyBy, divideBy
+        </ol>
+    </details>
+
+    <details>
+        <summary>class NumberUtils Since 2.0</summary>
+        <ol>
+            <li>static int toInt(String str, int defaultValue) Since 2.1 + 오버로딩</li>
+            null과 빈 문자열은 defaultValue를 반환. 지정되지 않은 경우 0
+            + toLong, toFloat, toDouble, toByte, toShort
+
+            <li>static BigDecimal toScaledBigDecimal(String value) Since 3.8 + 오버로딩</li>
+            RoundingMode.HALF_EVEN으로 소수점 2째자리까지만 남긴다
+
+            <li>static Number createNumber(String str)</li>
+            0x, -0x, #, -#로 시작하면 16진수로 간주. 타입 정보를 명시하지 않은 경우, 정수는 Integer, Long(8자 이상), BigInteger(16자 이상)로 변환, 소수는 Float, Double, BigDecimal로 변환된다<br>
+            + createFloat, createDouble, createInteger, ...
+
+            <li>static int min(int... array) + 오버로딩 + max</li>
+        </ol>
+    </details>
+</details>
+
+<hr>
+
+<details>
+    <summary>org.apache.commons.lang3.mutable Since 2.1</summary>
+    <details>
+        <summary>interface Mutable&lt;T&gt; Since 2.1</summary>
+        <ol>
+            <li>java.lang에서 제공하는 기본 타입의 래퍼들이 변경할 수 없는 것에 반해, 변경할 수 있는 T 타입 래퍼를 제공한다.</li>
+            <li>T getValue() + setValue</li>
+        </ol>
+    </details>
+
+    <details>
+        <summary>class MutableBoolean implements Mutable&lt;Boolean&gt;, Serializable, Comparable&lt;MutableBoolean&gt; Since 2.2</summary>
+        <ol>
+            <li>boolean booleanValue()</li>
+            <li>boolean isTrue()</li>
+        </ol>
+    </details>
+
+    <details>
+        <summary>class MutableInt extends Number implements Comparable&lt;MutableInt&gt;, Mutable&lt;Number&gt; Since 2.1</summary>
+        <ol>
+            <li>+ MutableByte, MutableDouble, MutableFloat, MutableLong, MutaleShort</li>
+            <li>void increment() + decrement</li>
+            <li>int getAndIncrement() Since 3.5 + incrementAndGet, ...</li>
+            스레드-안전하지 않다
+            <li>void add(Number operand) Since 2.2 + 오버로딩 + subtract, ...</li>
+        </ol>
+    </details>
+
+    <details>
+        <summary>class MutableObject&lt;T&gt; implements Mutable&lt;T&gt;, Serializable Since 2.1</summary>
+        추가 메서드 없음.
+    </details>
+</details>
+
+<hr>
+
+<details>
+    <summary>org.apache.commons.lang3.reflect Since 3.0</summary>
+    <details>
+        <summary>interface Typed&lt;T&gt; Since 3.2</summary>
+        <ol>
+            <li>"타입을 가짐"에 대한 일반화</li>
+            <li>Type getType()</li>
+        </ol>
+    </details>
+
+    <details>
+        <summary>abstract class TypeLiteral&lt;T&gt; implements Typed&lt;T&gt; Since 3.2</summary>
+        <ol>
+            <li>JavaDoc에서는 유용하다고 하는데... 런타임에서 제네릭 정보가 남아있지 않기 때문에 그게 그거일듯... Type에서 Class로 변환하는 방법도 딱히 없으니...</li>
+            이거 쓸 바엔 <button class="btn-code" path="Repositories/Eclipse/apache-commons-lang-example/src/test/java/TypeTest.java" lan="java">예시 코드</button>를 사용하는 게 나을듯
+        </ol>
+    </details>
+
+    사용할 일 생기면 정리 : TypeUtils, FieldUtils, ConstructorUtils, MethodUtils
+</details>
+
+<hr>
+
+<details>
+    <summary>org.apache.commons.lang3.time Since 2.0</summary>
+    <details>
+        <summary>interface DateParser Since 3.2</summary>
+        <ol>
+            <li>Date parse(String source) + 오버로딩</li>
+            <li>String getPattern()</li>
+            + getTimeZone, getLocale
+        </ol>
+    </details>
+
+    <details>
+        <summary>interface DatePrinter Since 3.2</summary>
+        <ol>
+            <li>String format(long millis) + 오버로딩</li>
+            <li>&lt;B extends Appendable&gt; B format(long millis, B buf) Since 3.5 + 오버로딩</li>
+            <li>String getPattern()</li>
+            + getTimeZone, getLocale
+        </ol>
+    </details>
+    
+    <details>
+        <summary>class FastDateFormat extends Format implements DateParser, DatePrinter Since 2.0</summary>
+        <ol>
+            <li>SimpleDateFormat의 고속, 스레드-안전한 버전</li>
+            <li>static FastDateFormat getInstance(String pattern) + 오버로딩</li>
+            pattern : SimpleDateFormat에 맞는 포맷 문자열
+            <li>static FastDateFormat getDateTimeInstance(int dateStyle, int timeStyle, TimeZone timeZone) Since 2.1 + 오버로딩</li>
+            스타일 : FULL, LONG, MEDIUM, SHORT
+        </ol>
+    </details>
+
+    <details>
+        <summary>class DateFormatUtils Since 2.0</summary>
+        <ol>
+            <li>public static final FastDateFormat ISO_8601_EXTENDED_DATETIME_FORMAT Since 3.5 : yyyy-MM-dd'T'HH:mm:ss</li>
+            <li>public static final FastDateFormat ISO_8601_EXTENDED_DATETIME_TIME_ZONE_FORMAT Since 3.5 : yyyy-MM-dd'T'HH:mm:ssZZ</li>
+            <li>public static final FastDateFormat ISO_8601_EXTENDED_DATE_FORMAT Since 3.5 : yyyy-MM-dd</li>
+            <li>public static final FastDateFormat ISO_8601_EXTENDED_TIME_FORMAT Since 3.5 : HH:mm:ss</li>
+            <li>public static final FastDateFormat ISO_8601_EXTENDED_TIME_TIME_ZONE_FORMAT Since 3.5 : HH:mm:ssZZ</li>
+            <li>public static final FastDateFormat SMTP_DATETIME_FORMAT : EEE, dd MMM yyyy HH:mm:ss Z</li>
+        </ol>
+        <details open>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>static String format(Date date, String pattern, Locale locale) + 오버로딩</li>
+                <li>static String formatUTC(Date date, String pattern, Locale locale) + 오버로딩</li>
+            </ol>
+        </details>
+    </details>
+
+    <details>
+        <summary>class DateUtils Since 2.0</summary>
+        <ol>
+            <li>static boolean isSameDay(Calendar cal1, Calendar cal2) Since 2.1 + 오버로딩</li>
+            <li>static boolean isSameInstant(Calendar cal1, Calendar cal2) Since 2.1 + 오버로딩</li>
+            <li>static boolean truncatedEquals(Calendar cal1, Calendar cal2, int field) Since 3.0 + 오버로딩</li>
+            <li>static boolean truncatedCompareTo(Calendar cal1, Calendar cal2, int field) Since 3.0 + 오버로딩</li>
+            <li>static Date addYears(Date date, int amount)</li>
+            + addMonths, addWeeks, addDays, addHours, addMinutes, addSeconds, addMilliseconds
+            <li>static Date setYears(Date date, int amount) Since 2.4</li>
+            + setMonths, setDays, setHours, setMinutes, setSeconds, setMilliseconds
+            <li>static Calendar toCalendar(Date date, TimeZone tz)</li>
+            <li>static Date round(Calendar date, int field) + 오버로딩</li>
+            + truncate, ceiling
+        </ol>
+    </details>
+
+    <details>
+        <summary>class StopWatch Since 2.0</summary>
+        <ol>
+            <li>static StopWatch createStarted() Since 3.5</li>
+            <li>void start() + stop, reset, split, unsplit, suspend, resume</li>
+            + isStarted, isSuspended, isStopped Since 3.2
+            <li>long getTime(TimeUnit timeUnit) Since 3.5 + 오버로딩</li>
+            <li>long getNanoTime() Since 3.0</li>
+            <li>long getSplitTime() Since 2.1 + getSplitNanoTime Since 3.0</li>
+            <li>long getStartTime() Since 2.4</li>
+            <li>String toString()</li>
+        </ol>
+    </details>
+</details>
+
+<hr>
+
+<details>
+    <summary>org.apache.commons.lang3.tuple Since 3.0</summary>
+    <details>
+        <summary>abstract class Pair&lt;L, R&gt; implements Map.Entry&lt;L, R&gt;, Comparable&lt;Pare&lt;L, R&gt;&gt;, Serializable Since 3.0</summary>
+        static &lt;L, R&gt; Pair&lt;L, R&gt; of(L left, R right)
+    </details>
+    <details>
+        <summary>final class ImmutablePair&lt;L, R&gt; extends Pair&lt;L, R&gt; Since 3.0</summary>
+        <ol>
+            <li>public final L left + right</li>
+            <li>static &lt;L, R&gt; ImmutablePair&lt;L, R&gt; of(L left, R right)</li>
+        </ol>
+    </details>
+    <details>
+        <summary>class MutablePair&lt;L, R&gt; extends Pair&lt;L, R&gt; Since 3.0</summary>
+        <ol>
+            <li>public L left + right</li>
+            <li>static &lt;L, R&gt; MutablePair&lt;L, R&gt; of(L left, R right)</li>
+        </ol>
+    </details>
+    <details>
+        <summary>abstract class Triple&lt;L, M, R&gt; implements Comparable&lt;Triple&lt;L, M, R&gt;&gt;, Serializable Since 3.2</summary>
+        static &lt;L, M, R&gt; Triple&lt;L, M, R&gt; of(L left, M middle, R right)
+    </details>
+    <details>
+        <summary>final class ImmutableTriple&lt;L, M, R&gt; extends Triple&lt;L, M, R&gt; Since 3.2</summary>
+        <ol>
+            <li>public final L left + middle, right</li>
+            <li>static &lt;L, M, R&gt; ImmutableTriple&lt;L, M, R&gt; of(L left, M middle, R right)</li>
+        </ol>
+    </details>
+    <details>
+        <summary>class MutableTriple&lt;L, M, R&gt; extends Triple&lt;L, M, R&gt; Since 3.2</summary>
+        <ol>
+            <li>public final L left + middle, right</li>
+            <li>static &lt;L, M, R&gt; MutableTriple&lt;L, M, R&gt; of(L left, M middle, R right)</li>
+        </ol>
+    </details>
+</details>
+
+<hr>
