@@ -17,6 +17,9 @@ namespace EventGenerator.Service
 {
     public class FileService
     {
+        public static readonly List<string> imageExts = new List<string>(new string[] { ".jpg", ".png", ".gif", ".bmp", ".jpeg" });
+
+
         public static void OpenFolder(string path) => System.Diagnostics.Process.Start(path);
         public static void OpenExecutingFolder() => OpenFolder(".\\");
         public static string FileName(string filePath) => filePath.Trim().Split(new char[] { '/', '\\' }).Last();
@@ -39,21 +42,27 @@ namespace EventGenerator.Service
             }
             return false;
         }
-        
-        public static bool ProcessCsvFiles(IEnumerable<string> filePaths) {
+
+        public static bool ProcessCsvFiles(IEnumerable<string> filePaths)
+        {
             var regex1 = new Regex(@"(\s)(\d:\d\d:\d\d)", RegexOptions.Compiled | RegexOptions.Multiline);
             var regex2 = new Regex("빈문자열", RegexOptions.Compiled | RegexOptions.Multiline);
-            var regex3 = new Regex(@"(.+?)(\.csv).+");
+            var regex3 = new Regex(@"(^((?!\.csv).)*).+");
             var processed = false;
 
             filePaths.Where(x => x.EndsWith(".csv", StringComparison.OrdinalIgnoreCase)).ForEach(filePath =>
             {
                 processed = true;
                 var text = File.ReadAllText(filePath);
-                using (var writer = new StreamWriter(regex3.Replace(filePath, "$0$1")))
+                var newFilePath = regex3.Replace(filePath, "$1.csv");
+                using (var writer = new StreamWriter(newFilePath))
                     writer.Write(regex2.Replace(regex1.Replace(text, " 0$2"), "\"\""));
+                if (!newFilePath.Equals(filePath))
+                    File.Delete(filePath);
                 Console.Write("CSV 처리 완료 : " + filePath);
             });
+            if (processed)
+                MainViewModel.Toast("완료", "CSV 처리");
             return processed;
         }
 
@@ -71,8 +80,10 @@ namespace EventGenerator.Service
                         newText[i] = (Char.IsLetterOrDigit(text[i]) ? text[i] : ' ');
                     writer.Write(newText);
                 }
-                Console.Write("ACB 처리 완료 : " + filePath);
+                Console.Write($"ACB 처리 완료 : {filePath}");
             });
+            if (processed)
+                MainViewModel.Toast("완료", "ACB 처리");
             return processed;
         }
 

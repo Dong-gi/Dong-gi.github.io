@@ -36,5 +36,7 @@ namespace EventGenerator.Utility
         }
 
         public static List<string> AsList(this string item) => new List<string> { item };
+
+        public static string Copy(this string str) => new string(str.ToCharArray());
     }
 }

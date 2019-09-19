@@ -17,7 +17,11 @@ class GiveawayContext {
         }
 
         let giveawayLinks = $('.giveaway__links', node);
-        this.numOfEntries = parseInt(getNumberOnly(/(\d+(,\d+)*(\.\d+)?)\s*entries/gmi.exec($(giveawayLinks).text())[1]));
+        try {
+            this.numOfEntries = parseInt(getNumberOnly(/(\d+(,\d+)*(\.\d+)?)\s*entries/gmi.exec($(giveawayLinks).text())[1]));
+        } catch {
+            this.numOfEntries = 0;
+        }
 
         Object.seal(this);
     }

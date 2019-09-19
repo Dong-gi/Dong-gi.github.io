@@ -25,83 +25,74 @@ namespace EventGenerator.ViewModel
 {
     class MainViewModel : INotifyPropertyChanged
     {
+        public Dictionary<string, ICommand> Commands { get; private set; } = new Dictionary<string, ICommand>();
+        private readonly Dictionary<string, object> Properties = new Dictionary<string, object>();
+        public T Get<T>(string propertyName) => (T)Properties[propertyName];
+        public T Get<T>(string propertyName, T defaultValue)
+        {
+            try
+            {
+                return Get<T>(propertyName);
+            }
+            catch (Exception)
+            {
+                Set<T>(propertyName, defaultValue);
+                return defaultValue;
+            }
+        }
+        private T Set<T>(string propertyName, T value, bool noRaise = false)
+        {
+            Properties[propertyName] = value;
+            if (!noRaise)
+                RaisePropertyChanged(propertyName);
+            return value;
+        }
+
+        #region ViewModel 프로퍼티
         public static MainViewModel Current { get; private set; }
 
-        public TaskbarIcon TaskbarIcon { get; } = new TaskbarIcon();
-        public Dictionary<string, ICommand> Commands { get; private set; } = new Dictionary<string, ICommand>();
-        public MainWindow MainWindow { get; private set; }
-        public Game1ViewModel Game1 { get; private set; }
-        public Game2ViewModel Game2 { get; private set; }
+        public Game1ViewModel Game1 { get; private set; } = new Game1ViewModel();
+        public Game2ViewModel Game2 { get; private set; } = new Game2ViewModel();
+        #endregion
 
-        #region 입력 요소
-        private string _textParam1 = "";
+        #region UI 입력 텍스트 프로퍼티
         public string TextParam1
         {
-            get => new string(_textParam1.ToCharArray());
-            set
-            {
-                _textParam1 = value;
-                RaisePropertyChanged("TextParam1");
-            }
+            get => Get<string>("TextParam1", "").Copy();
+            set => Set<string>("TextParam1", value);
         }
-        private string _textParam2 = "";
         public string TextParam2
         {
-            get => new string(_textParam2.ToCharArray());
-            set
-            {
-                _textParam2 = value;
-                RaisePropertyChanged("TextParam2");
-            }
+            get => Get<string>("TextParam2", "").Copy();
+            set => Set<string>("TextParam2", value);
         }
-        private string _intParam1 = "";
         public string IntParam1
         {
-            get => new string(_intParam1.ToCharArray());
-            set
-            {
-                _intParam1 = value;
-                RaisePropertyChanged("IntParam1");
-            }
+            get => Get<string>("IntParam1", "").Copy();
+            set => Set<string>("IntParam1", value);
         }
-        private string _intParam2 = "";
         public string IntParam2
         {
-            get => new string(_intParam2.ToCharArray());
-            set
-            {
-                _intParam2 = value;
-                RaisePropertyChanged("IntParam2");
-            }
+            get => Get<string>("IntParam2", "").Copy();
+            set => Set<string>("IntParam2", value);
         }
-        private string _dateParam1 = "";
         public string DateParam1
         {
-            get => new string(_dateParam1.ToCharArray());
-            set
-            {
-                _dateParam1 = value;
-                RaisePropertyChanged("DateParam1");
-            }
+            get => Get<string>("DateParam1", "").Copy();
+            set => Set<string>("DateParam1", value);
         }
-        private string _dateParam2 = "";
         public string DateParam2
         {
-            get => new string(_dateParam2.ToCharArray());
-            set
-            {
-                _dateParam2 = value;
-                RaisePropertyChanged("DateParam2");
-            }
+            get => Get<string>("DateParam2", "").Copy();
+            set => Set<string>("DateParam2", value);
         }
         #endregion
 
         public MainViewModel()
         {
+            RedirectConsoleWrite();
             Current = this;
-            Game1 = new Game1ViewModel();
-            Game2 = new Game2ViewModel();
-
+            
             DBServers = Game1.DBServers;
             CurrentDBServer = DBServers[0];
 
@@ -111,7 +102,6 @@ namespace EventGenerator.ViewModel
             Commands[UPDATE_COMMAND] = new CustomCommand(UpdateService.Update);
             Commands[OPEN_EXECUTING_FORDER_COMMAND] = new CustomCommand(FileService.OpenExecutingFolder);
 
-            RedirectConsoleWrite();
             Console.Write(File.ReadAllText("./LICENSE.md"));
             Toast("실행 위치", System.AppDomain.CurrentDomain.BaseDirectory);
         }
@@ -125,7 +115,7 @@ namespace EventGenerator.ViewModel
         #region 파일 드롭 관련
         public void FileDroped(string[] filePaths)
         {
-            Log(string.Join("\n", filePaths));
+            Console.Write(string.Join("\n", filePaths));
 
             if (filePaths == null || filePaths.Count() == 0) return;
 
@@ -135,68 +125,60 @@ namespace EventGenerator.ViewModel
                 return;
             }
 
-            #region 이미지 처리
             Task.Factory.StartNew(() =>
             {
-                var imageExts = new List<string>(new string[] { ".jpg", ".png", ".gif", ".bmp", ".jpeg" });
-                var imgPaths = filePaths.Where(x => imageExts.Find(ext => x.EndsWith(ext, StringComparison.OrdinalIgnoreCase)) != null);
+                var imgPaths = filePaths.Where(x => FileService.imageExts.Find(ext => x.EndsWith(ext, StringComparison.OrdinalIgnoreCase)) != null);
                 if (imgPaths.Count() < 1) return;
 
                 imgPaths.ForEach(filePath => FileService.Download(filePath));
                 Toast("완료", "이미지 처리");
             });
-            #endregion
-
-            #region CSV 처리
-            Task.Factory.StartNew(() =>
-            {
-                if (FileService.ProcessCsvFiles(filePaths))
-                    Toast("완료", "CSV 처리");
-            });
-            #endregion
-
-            #region ACB 처리
-            Task.Factory.StartNew(() =>
-            {
-                if (FileService.ProcessAcbFiles(filePaths))
-                    Toast("완료", "ACB 처리");
-            });
-            #endregion
+            Task.Factory.StartNew(() => FileService.ProcessCsvFiles(filePaths));
+            Task.Factory.StartNew(() => FileService.ProcessAcbFiles(filePaths));
         }
         #endregion
 
         #region 메인 탭 관련
-        public static int CurrentTabIndex { get; private set; } = 0;
+        public static int LastTabIndex { get; private set; } = -1;
         public static bool IsGame1Tab { get; private set; } = true;
         public static bool IsGame2Tab { get; private set; }
         private void TabChanged(object tabControl)
         {
-            if (CurrentTabIndex == (tabControl as TabControl).SelectedIndex)
+            if (LastTabIndex == (tabControl as TabControl).SelectedIndex)
                 return;
-            Log("탭 변경 " + CurrentTabIndex + " → " + (tabControl as TabControl).SelectedIndex);
 
-            CurrentTabIndex = (tabControl as TabControl).SelectedIndex;
-            IsGame1Tab = CurrentTabIndex == 0;
-            IsGame2Tab = CurrentTabIndex == 1;
+            Console.Write($"탭 변경 {LastTabIndex} → {(tabControl as TabControl).SelectedIndex}");
+            LastTabIndex = (tabControl as TabControl).SelectedIndex;
+            IsGame1Tab = LastTabIndex == 0;
+            IsGame2Tab = LastTabIndex == 1;
 
             if (IsGame1Tab)
                 DBServers = Game1.DBServers;
             else if (IsGame2Tab)
                 DBServers = Game2.DBServers;
-            RaisePropertyChanged("DBServers");
             CurrentDBServer = DBServers[0];
-            RaisePropertyChanged("CurrentDBServer");
         }
         #endregion
 
         #region DB 서버 목록 관련
-        public Model.DBServer[] DBServers { get; set; }
-        public Model.DBServer CurrentDBServer { get; set; }
-        private void DBSererChanged() => Log("DB 변경 : → " + CurrentDBServer);
+        public DBServer[] DBServers
+        {
+            get => Get<DBServer[]>("DBServers", new DBServer[] { });
+            set => Set<DBServer[]>("DBServers", value);
+        }
+        public DBServer CurrentDBServer
+        {
+            get => Get<DBServer>("CurrentDBServer", DBServer.GAME1_NOW);
+            set => Set<DBServer>("CurrentDBServer", value);
+        }
+
+        private void DBSererChanged() => Console.Write("DB 변경 : → " + CurrentDBServer);
         #endregion
 
         #region 로그 관련
         public string LogText { get; set; }
+        public TaskbarIcon TaskbarIcon { get; } = new TaskbarIcon();
+
         private static void RedirectConsoleWrite() => Utility.ConsoleRedirectWriter.WRITER.OnWrite += (message) => Log(message);
         private static void Log(string log)
         {
@@ -207,7 +189,7 @@ namespace EventGenerator.ViewModel
 
         public static async void Toast(string title, string msg)
         {
-            Log($"Toast │ {title} │ {msg}");
+            Console.Write($"Toast │ {title} │ {msg}");
             
             await ActionUtility.UI(() =>
             {
