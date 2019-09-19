@@ -1,6 +1,5 @@
 package io.github.donggi.bean;
 
-import java.io.File;
 import java.util.Arrays;
 
 import org.apache.commons.collections4.MapUtils;
@@ -13,8 +12,6 @@ public class Hello5Test3 {
 
     @Test
     public void test() {
-        System.out.println(new Integer[] {}.getClass());
-        System.out.println(new File("").getAbsolutePath());
         ApplicationContext context = new FileSystemXmlApplicationContext("src/main/resource/Beans10.xml");
         ((AbstractApplicationContext) context).registerShutdownHook();
         var hello5 = (Hello5) context.getBean("hello5");

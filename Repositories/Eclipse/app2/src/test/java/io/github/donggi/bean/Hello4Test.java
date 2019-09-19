@@ -1,25 +1,17 @@
 package io.github.donggi.bean;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class Hello4Test {
 
     @Test
     public void test() {
-        System.out.println(new File("").getAbsolutePath());
         ApplicationContext context = new FileSystemXmlApplicationContext("src/main/resource/Beans4.xml");
         ((AbstractApplicationContext) context).registerShutdownHook();
-        var message = ((Hello4) context.getBean(Hello4.class.getCanonicalName() + "#0")).getMessage();
-        System.out.println(message);
-        assertTrue(message != null);
+        System.out.println(((Hello4) context.getBean(Hello4.class.getCanonicalName() + "#0")).getMessage());
     }
 /*
 20:44:46.049 [main] DEBUG org.springframework.context.support.FileSystemXmlApplicationContext - Refreshing org.springframework.context.support.FileSystemXmlApplicationContext@6ad82709
