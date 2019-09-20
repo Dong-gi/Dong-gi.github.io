@@ -44,11 +44,11 @@ const posts = {
 
         { filename: "posts/java/basic.html", category: "Programming/Java", title: "Java 시작하기" },
         { filename: "posts/java/effective_java.html", category: "Programming/Java", title: "『Effective Java』" },
+        { filename: "posts/java/java_ee.html", category: "Programming/Java", title: "JavaEE", top: true },
         { filename: "posts/java/javafx.html", category: "Programming/Java", title: "JavaFX" },
         { filename: "posts/java/jni.html", category: "Programming/Java", title: "Java Native Interface" },
         { filename: "posts/java/oop.html", category: "Programming/Java", title: "Java 객체지향" },
         { filename: "posts/java/version.html", category: "Programming/Java", title: "Java 버전별 추가사항" },
-        { filename: "posts/java/jsp_and_servlet.html", category: "Programming/Java", title: "JSP&Servlet", top: true },
         
         { filename: "posts/java/apache.commons.collections.html", category: "Programming/Java/apache.commons", title: "Apache Commons Collections 4.4" },
         { filename: "posts/java/apache.commons.lang.html", category: "Programming/Java/apache.commons", title: "Apache Commons Lang 3.9" },
