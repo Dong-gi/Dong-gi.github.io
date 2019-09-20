@@ -1,43 +1,147 @@
 <hr>
 
 <details>
-    <summary>abstract class Buffer Since 1.4</summary>
-    <ol>
-        <li>버퍼는 일련의 유한한 기본 자료형 원소들의 나열.</li>
-        » Capacity : 저장하고 있는 원소들의 개수<br>
-        » Limit : 읽거나 쓸 수 없는 최초의 인덱스. 0보다 작거나 capacity보다 클 수 없다.<br>
-        » Position : 다음에 읽거나 쓸 대상의 인덱스. 0보다 작거나 limit보다 클 수 없다.<br>
-        » 0&lt;=mark&lt;=position&lt;=limit&lt;=capacity // 마킹은 지원되지 않을수도 있다.
-        
-        <li>Additional operations</li>
-        » clear() : 새로운 채널-읽기 또는 relative put 연산을 준비; limit을 capacity로, position을 0으로.<br>
-        » flip() : 새로운 채널-쓰기 또는 relative get 연산을 준비; limit을 position으로, position을 0으로.<br>
-        » rewind() : 이미 읽은 것을 다시 읽도록; limit은 그대로, position을 0으로.<br>
-        » slice() : 부분 시퀀스 생성.<br>
-        » duplicate() : 얕은 복사한 버퍼 생성.
-    </ol>
+    <summary>버퍼 관련</summary>
     <details>
-        <summary>Method Detail</summary>
+        <summary>abstract class Buffer Since 1.4</summary>
         <ol>
-            <li>final int capacity()</li>
-            <li>final int position()</li>
-            <li>Buffer position(int newPosition)</li>
-            <li>final int limit()</li>
-            <li>Buffer limit(int newLimit)</li>
-            <li>Buffer mark()</li>
-            <li>Buffer reset()</li>
-            <li>Buffer clear()</li>
-            <li>Buffer flip()</li>
-            <li>final int remaining()</li>
-            <li>final boolean hasRemaining()</li>
-            <li>abstract boolean isReadOnly()</li>
-            <li>abstract boolean hasArray() Since 1.6 : true면 array()와 arrayOffset() 사용가능</li>
-            <li>abstract Object array() Since 1.6</li>
-            <li>abstract int arrayOffset() Since 1.6</li>
-            <li>abstract boolean isDirect() Since 1.6</li>
-            <li>abstract Buffer slice() Since 9 : 현재 버퍼의 현재 위치부터 시작하는 부분 버퍼 생성(내용 공유). direct, read-only 속성을 공유.</li>
-            <li>abstract Buffer duplicate() Since 9 : 복사본(내용 공유) 반환.</li>
+            <li>버퍼는 일련의 유한한 기본 자료형 원소들의 나열.</li>
+            <ul>
+                <li>Capacity : 저장하고 있는 원소들의 개수</li>
+                <li>Limit : 읽거나 쓸 수 없는 최초의 인덱스. 0보다 작거나 capacity보다 클 수 없다.</li>
+                <li>Position : 다음에 읽거나 쓸 대상의 인덱스. 0보다 작거나 limit보다 클 수 없다.</li>
+                <li>0&lt;=mark&lt;=position&lt;=limit&lt;=capacity // 마킹은 지원되지 않을수도 있다.</li>
+            </ul>
+    
+            <li>get/put 연산의 Relative/Absolute 구분</li>
+            <ul>
+                <li>Relative : 버퍼의 현재 Position에 대한 연산</li>
+                <li>Absolute : 버퍼의 특정 위치를 지정한 연산</li>
+            </ul>
+            
+            <li>Additional operations</li>
+            <ul>
+                <li>clear() : 새로운 채널-읽기 또는 relative put 연산을 준비; limit을 capacity로, position을 0으로.</li>
+                <li>flip() : 새로운 채널-쓰기 또는 relative get 연산을 준비; limit을 position으로, position을 0으로.</li>
+                <li>rewind() : 이미 읽은 것을 다시 읽도록; limit은 그대로, position을 0으로.</li>
+                <li>slice() : 기존 버퍼의 부분 시퀀스 생성.</li>
+                <li>duplicate() : 기존 버퍼의 얕은 복사본 생성.</li>
+            </ul>
         </ol>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>final int capacity() + position, limit</li>
+                <li>Buffer position(int newPosition)</li>
+                <li>Buffer limit(int newLimit)</li>
+                <li>Buffer mark() + reset</li>
+                <li>Buffer clear() + flip, rewind</li>
+                
+                <li>final int remaining() + hasRemaining</li>
+                <li>abstract boolean isReadOnly()</li>
+                <li>abstract boolean hasArray() Since 1.6</li>
+                기저 배열의 존재 유무. true면 array()와 arrayOffset() 사용가능
+                <li>abstract Object array() Since 1.6</li>
+                <li>abstract int arrayOffset() Since 1.6</li>
+                <li>abstract boolean isDirect() Since 1.6</li>
+                Direct 버퍼인지 여부
+                <li>abstract Buffer slice() Since 9</li>
+                현재 버퍼의 현재 위치부터 시작하는 부분 버퍼 생성(내용 공유). direct, read-only 속성을 공유.
+                <li>abstract Buffer duplicate() Since 9</li>
+                복사본(내용 공유) 반환.
+            </ol>
+        </details>
+    </details>
+
+    <details>
+        <summary>abstract class ByteBuffer extends Buffer implements Comparable&lt;ByteBuffer&gt; Since 1.4</summary>
+        <ol>
+            <li>다음 연산을 정의.</li>
+            <ul>
+                <li>바이트 하나에 대한 absolute/relative get/put</li>
+                <li>바이트 시퀀스에 대한 bulk get/put</li>
+                <li>다른 원시 타입에 대한 absolute/relative get/put</li>
+                <li>다른 원시 타입으로 읽기 가능한 view 버퍼 생성</li>
+                <li>compact : 인덱스 [0, position) 사이의 데이터가 버려진다(Optional operation)</li>
+            </ul>
+            
+            <li>Direct 버퍼</li>
+            읽기/쓰기 연산이 직접적으로 이루어지며, 별개의 복사본을 이용하는 non-direct 버퍼에 비해 할당/제거 비용이 크다. Direct 버퍼는 allocateDirect 팩토리 메서드로 생성된다.
+            
+            <li>Access to binary data</li>
+            버퍼의 byte order는 해당 버퍼에 대한 연산의 기준이 된다. 기본값은 ByteOrder.BIG_ENDIAN.
+            
+            <li>인덱싱</li>
+            ByteBuffer인덱스를 지정하는 absolute get/put의 인덱스는 바이트 단위다. 뷰 버퍼의 인덱스는 해당 타입 크기 단위다.
+        </ol>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>static ByteBuffer allocateDirect(int capacity)<br>
+                    static ByteBuffer allocate(int capacity)<br>
+                    static ByteBuffer wrap(byte[] array, int offset, int length) + 오버로딩</li>
+                <li>abstract ByteBuffer asReadOnlyBuffer()</li>
+                <li>abstract ByteBuffer compact() : 위 설명 참고</li>
+                
+                <li>abstract byte get(int index) + 오버로딩 + put<br>
+                    ByteBuffer get(byte[] dst, int offset, int length) + 오버로딩 + put<br>
+                    ByteBuffer put(ByteBuffer src)</li>
+                <li>abstract char getChar(int index) + 오버로딩 + putChar<br>
+                    abstract CharBuffer asCharBuffer()</li>
+                + short, int, long, float, double
+                
+                <li>final ByteBuffer order(ByteOrder bo) + getter 오버로딩</li>
+                <li>final int alignmentOffset(int index, int unitSize) Since 9</li>
+                index % unitSize를 반환한다. 0이 아니면 unitSize 단위로 자르기 부적합하다는 의미. unitSize는 2의 거듭제곱이어야 한다.
+                <li>final ByteBuffer alignedSlice(int unitSize) Since 9</li>
+                현재 버퍼를 unitSize 크기씩 잘라 view 버퍼를 생성(BIG_ENDIAN)한다.
+                현재 위치가 unitSize의 배수가 아니라면 바로 다음 배수 위치부터 포함하며, limit도 unitSize 배수에 맞춰 끊는다.
+                <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/nio/ByteBufferExample.java" lan="java">예시 코드 »</button>
+                <li>int mismatch(ByteBuffer that) Since 11</li>
+                두 바이트 버퍼의 현재 읽기 위치들을 시작 위치로 하여, 바이트 값이 다른 최초 index를 반환한다.
+            </ol>
+        </details>
+    </details>
+
+    <details>
+        <summary>abstract class MappedByteBuffer extends ByteBuffer Since 1.4</summary>
+        <ol>
+            <li>FileChannel::map 메서드로 생성되는 direct 바이트 버퍼. 기저 파일이 (외부에서) 변경되면 버퍼 내용도 변경된다; vice versa</li>
+            <li>final BappedByteBuffer load() + isLoaded</li>
+            파일 내용을 메모리에 적재한다
+            <li>final MappedByteBuffer force()</li>
+            강제로 버퍼 변경 내용을 파일에 쓴다.
+        </ol>
+    </details>
+
+    <details>
+        <summary>abstract class CharBuffer extends Buffer implements Comparable&lt;CharBuffer&gt;, Appendable, CharSequence, Readable Since 1.4</summary>
+        <ol>
+            <li>+ ShortBuffer, DoubleBuffer</li>
+            <li>다음 연산을 정의</li>
+            <ul>
+                <li>단일 char에 대한 absolute/relative get/put</li>
+                <li>char 시퀀스에 대한 bulk get/set</li>
+                <li>compact : ByteBuffer의 설명과 동일</li>
+            </ul>
+        </ol>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>static CharBuffer allocate(int capacity)<br>
+                    static CharBuffer wrap(char[] array, int offset, int length) + 오버로딩<br>
+                    static CharBuffer wrap(CharSequence csq, int start, int end) + 오버로딩</li>
+                <li>abstract CharBuffer asReadOnlyBuffer()</li>
+                <li>abstract CharBuffer compact()</li>
+                
+                <li>abstract char get(int index) + 오버로딩 + put<br>
+                    CharBuffer get(char[] dst, int offset, int length) + 오버로딩 + put<br>
+                    CharBuffer put(CharBuffer src)<br>
+                    CharBuffer put(String src, int start, int end) + 오버로딩</li>
+                <li>abstract ByteOrder order()</li>
+                <li>int mismatch(CharBuffer that) Since 11 : ByteBuffer의 설명과 동일</li>
+            </ol>
+        </details>
     </details>
 </details>
 
@@ -49,115 +153,6 @@
         <li>public static final ByteOrder BIG_ENDIAN, LITTLE_ENDIAN</li>
         <li>static ByteOrder nativeOrder()</li>
     </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>abstract class ByteBuffer extends Buffer implements Comparable&lt;ByteBuffer&gt; Since 1.4</summary>
-    <ol>
-        <li>다음 6가지 연산을 정의.</li>
-        » 바이트 하나에 대한 absolute and relative get and put<br>
-        » 현재 바이트 버퍼로부터 연속적인 바이트열을 배열로 저장하는 bulk get<br>
-        » 바이트 배열 또는 다른 바이트 버퍼로부터 연속적인 바이트열을 가져오는 bulk put<br>
-        » 다른 원시 타입 값에 대하여, 특정 바이트 순으로 absolute and relative get and put<br>
-        » 버퍼의 내용을 다른 원시 타입으로 읽기 가능한 view 버퍼를 생성<br>
-        » compact()
-        
-        <li>Direct 버퍼</li>
-        읽기/쓰기 연산이 직접적으로 이루어지며, 별개의 복사본을 이용하는 non-direct 버퍼에 비해 할당/제거 비용이 크다. Direct 버퍼는 allocateDirect 팩토리 메서드로 생성된다.
-        
-        <li>Access to binary data</li>
-        » 처음 버퍼 설정은 BIG_ENDIAN. 바이트 순서는 ByteOrder 클래스의 인스턴스로 표현된다.<br>
-        » 인덱스를 지정하는 absolute get과 put의 인덱스는 바이트 단위다.
-    </ol>
-    <details>
-        <summary>Method Detail</summary>
-        <ol>
-            <li>static ByteBuffer allocateDirect(int capacity)</li>
-            <li>static ByteBuffer allocate(int capacity)</li>
-            <li>static ByteBuffer wrap(byte[] array, int offset, int length)</li>
-            <li>static ByteBuffer wrap(byte[] array)</li>
-            <li>abstract ByteBuffer slice()</li>
-            <li>abstract ByteBuffer duplicate()</li>
-            <li>abstract ByteBuffer asReadOnlyBuffer()</li>
-            
-            <li>abstract byte get()</li>
-            <li>abstract ByteBuffer put(byte b)</li>
-            <li>abstract byte get(int index)</li>
-            <li>abstract ByteBuffer put(int index, byte b)</li>
-            <li>ByteBuffer get(byte[] dst, int offset, int length)</li>
-            <li>ByteBuffer get(byte[] dst)</li>
-            <li>ByteBuffer put(ByteBuffer src)</li>
-            <li>ByteBuffer put(byte[] src, int offset, int length)</li>
-            <li>final ByteBuffer put(byte[] src)</li>
-            <li>abstract char getChar()<br>
-                abstract ByteBuffer putChar(char value)<br>
-                abstract char getChar(int index)<br>
-                abstract ByteBuffer putChar(int index, char value)<br>
-                abstract CharBuffer asCharBuffer() ... </li>
-            <li>abstract ByteBuffer compact()</li>
-            <li>final ByteOrder order()</li>
-            <li>final ByteBuffer order(ByteOrder bo)</li>
-            <li>final int alignmentOffset(int index, int unitSize) Since 9</li>
-            » index 번째의 바이트가 unitSize만큼 읽을 때의 오프셋. index % unitSize와 같다. unitSize는 2의 거듭제곱이어야 한다.<br>
-            <li>final ByteBuffer alignedSlice(int unitSize) Since 9</li>
-            » 현재 버퍼를 unitSize 크기씩 잘라 view 버퍼를 생성(BIG_ENDIAN)한다. 현재 위치가 unitSize의 배수가 아니라면 바로 다음 배수 위치부터 포함하며, limit도 unitSize 배수에 맞춰 끊는다.
-            <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/nio/ByteBufferExample.java" lan="java">예시 코드 »</button>
-        </ol>
-    </details>
-</details>
-
-<hr>
-
-<details>
-    <summary>abstract class MappedByteBuffer extends ByteBuffer Since 1.4</summary>
-    <ol>
-        <li>FileChannel::map 메서드로 생성되는 direct 바이트 버퍼.</li>
-        <li>final boolean isLoaded()</li>
-        <li>final BappedByteBuffer load()</li>
-        <li>final MappedByteBuffer force() : 강제로 버퍼 변경 내용을 파일에 쓴다.</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>abstract class CharBuffer extends Buffer implements Comparable&lt;CharBuffer&gt;, Appendable, CharSequence, Readable Since 1.4 + ShortBuffer ~ DoubleBuffer</summary>
-    <ol>
-        <li>다음 4가지 연산 정의</li>
-        » 단일 char에 대한 absolute and relative get and put<br>
-        » 이 버퍼로부터 배열로 연속적인 char를 저장하는 bulk get<br>
-        » char 배열, String, 다른 char 버퍼로부터 이 버퍼로 연속적인 char를 저장하는 bulk put<br>
-        » compact()
-    </ol>
-    <details>
-        <summary>Method Detail</summary>
-        <ol>
-            <li>static CharBuffer allocate(int capacity)</li>
-            <li>static CharBuffer wrap(char[] array, int offset, int length)</li>
-            <li>static CharBuffer wrap(char[] array)</li>
-            <li>static CharBuffer wrap(CharSequence csq, int start, int end)</li>
-            <li>static CharBuffer wrap(CharSequence csq)</li>
-            <li>abstract CharBuffer slice()</li>
-            <li>abstract CharBuffer duplicate()</li>
-            <li>abstract CharBuffer asReadOnlyBuffer()</li>
-            
-            <li>abstract char get()</li>
-            <li>abstract CharBuffer put(char c)</li>
-            <li>abstract char get(int index)</li>
-            <li>abstract CharBuffer put(int index, char c)</li>
-            <li>CharBuffer get(char[] dst, int offset, int length)</li>
-            <li>CharBuffer get(char[] dst)</li>
-            <li>CharBuffer put(CharBuffer src)</li>
-            <li>CharBuffer put(char[] src, int offset, int length)</li>
-            <li>final CharBuffer put(char[] src)</li>
-            <li>CharBuffer put(String src, int start, int end)</li>
-            <li>final CharBuffer put(String src)</li>
-            <li>abstract CharBuffer compact()</li>
-            <li>abstract ByteOrder order()</li>
-        </ol>
-    </details>
 </details>
 
 <hr>
