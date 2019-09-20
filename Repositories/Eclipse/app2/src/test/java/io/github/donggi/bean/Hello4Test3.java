@@ -1,20 +1,14 @@
 package io.github.donggi.bean;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class Hello4Test3 {
 
     @Test
     public void test() {
-        System.out.println(new File("").getAbsolutePath());
         ApplicationContext context = new FileSystemXmlApplicationContext("src/main/resource/Beans7.xml");
         ((AbstractApplicationContext) context).registerShutdownHook();
         System.out.println(((Hello1) context.getBean("hello1-1")).getMessage());

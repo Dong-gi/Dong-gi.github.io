@@ -383,7 +383,7 @@
 
 <details>
     <summary>Spring IoC Container</summary>
-    <ol>
+    <ul>
         <li>자바 빈의 자동 생성을 지원한다</li>
         <ul>
             <li>ClassPathXmlApplicationContext : 클래스 패스 상의 빈 구성 파일로 빈 생성</li>
@@ -394,9 +394,14 @@
         <ul>
             <li>singleton : 하나만 생성. 기본</li>
             <li>prototype : getBean() 호출 시마다 생성</li>
-            <li>request : HTTP 요청마다 생성. 웹 앱에서만 설정 가능</li>
-            <li>session : HTTP 세션마다 생성. 웹 앱에서만 설정 가능</li>
+            <li>request : HTTP 요청마다 생성. WebApplicationContext에서만 설정 가능</li>
+            <li>session : HTTP 세션마다 생성. WebApplicationContext에서만 설정 가능</li>
         </ul>
+        singleton 빈이 prototype 빈을 참조할 때, 기본적으로는 최초 설정된 prototype 빈 인스턴스만 이용한다. aop:scoped-proxy를 이용하면 singleton 빈이 호출할 때마다 prototype 빈을 다시 생성할 수 있다.
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello15.java" lan="java">Hello15 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello16.java" lan="java">Hello16 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans21.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello15Test.java" lan="java">빈 사용 클래스</button>
         <li>빈 생성 + 세터 주입 예</li>
         <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java" lan="java">Hello1 빈 클래스</button>
         <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans1.xml" lan="xml"">빈 구성 파일</button>
@@ -438,11 +443,61 @@
         <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello5.java" lan="java">Hello5 빈 클래스</button>
         <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans10.xml" lan="xml"">빈 구성 파일</button>
         <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello5Test3.java" lan="java">빈 사용 클래스</button>
-        <li>parent 속성 사용 예</li>
+        <li>parent 속성을 통한 상속 예</li>
         <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java" lan="java">Hello1 빈 클래스</button>
         <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans11.xml" lan="xml"">빈 구성 파일</button>
         <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello1Test3.java" lan="java">빈 사용 클래스</button>
-    </ol>
+        <li>lookup-method 태그를 통한 상속 예</li>
+        <ul>
+            <li>lookup-method name : 재정의할 메서드 이름 → private X, void 반환 X, 메서드 매개변수 X, final X</li>
+            <li>lookup-method bean : 재정의한 메서드에서 반환할 객체</li>
+        </ul>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans19.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Beans19Test.java" lan="java">빈 사용 클래스</button>
+        <li>autowire 속성을 통한 생성자 자동 주입 예</li>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello4.java" lan="java">Hello4 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans12.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test4.java" lan="java">빈 사용 클래스</button>
+        <li>@Autowired를 이용한 세터 자동 주입 예 1</li>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello6.java" lan="java">Hello6 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans13.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello6Test.java" lan="java">빈 사용 클래스</button>
+        <li>@Autowired를 이용한 세터 자동 주입 예 2</li>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello6.java" lan="java">Hello6 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans14.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello6Test2.java" lan="java">빈 사용 클래스</button>
+        <li>@Autowired(required = false)를 이용한 선택적 세터 자동 주입 예</li>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello6.java" lan="java">Hello6 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello7.java" lan="java">Hello7 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans15.xml" lan="xml"">Hello6 빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans16.xml" lan="xml"">Hello7 빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello6Test3.java" lan="java">빈 사용 클래스</button>
+        <li>@Autowired + @Qualifier = @Resource</li>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello8.java" lan="java">Hello8 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello9.java" lan="java">Hello9 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans17.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello8Test.java" lan="java">빈 사용 클래스</button>
+        <li>빈 자동 등록</li>
+        <ul>
+            <li>@Component : 빈 생성 대상 클래스</li>
+            <li>@Repository : DAO. 퍼시스턴스 클래스</li>
+            <li>@Service : 서비스 클래스</li>
+            <li>@Controller : 컨트롤러 클래스</li>
+            <li>스코프 설정을 해주고 싶다면 @Scope를 추가로 이용</li>
+            <li>aop:scoped-proxy 설정을 해주고 싶다면 @Scope의 proxyMode 변수를 설정</li>
+            DEFAULT == NO : 프록시 없음, INTERFACES : 인터페이스 프록시 생성. JDK 동적 프록시 이용, TARGET_CLASS : 클래스 프록시 생성. CGLIB 이용<br>
+            context:component-scan 태그의 scoped-proxy 속성을 변경하면 DEFAULT 동작을 변경할 수 있다
+            <li>context:include-filter, context:exclude-filter로 포함할/하지 않을 클래스를 구체적으로 명시할 수 있다</li>
+            type 속성 : annotation - 클래스 애너테이션 필터링, assignable - 할당 가능한 타입 필터링, regex - 정규표현식 필터링, aspectj - AspectJ 표현식 필터링
+        </ul>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello10.java" lan="java">Hello10 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello11.java" lan="java">Hello11 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello12.java" lan="java">Hello12 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello13.java" lan="java">Hello13 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello14.java" lan="java">Hello14 빈 클래스</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans18.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello10Test.java" lan="java">빈 사용 클래스</button>
+    </ul>
 </details>
 
 <hr>
