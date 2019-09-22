@@ -560,3 +560,189 @@
 </details>
 
 <hr>
+
+<details>
+    <summary>Spring AOP</summary>
+    <details>
+        <summary>AOP 개념</summary>
+        <ol>
+            <li>Aspect : 횡단 관심사. 로깅/보안 등, 여러 객체를 가로질러 공통적으로 사용되는 모듈/기능</li>
+            <li>Join Point : Aspect 실행 지점</li>
+            <li>Advice : Join Point에서 실행되는 코드</li>
+            <li>Pointcut : 일치하는 Join Point에 대한 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://www.eclipse.org/aspectj/doc/next/progguide/semantics-pointcuts.html">정규 표현식</a>.</li>
+            Advice는 Pointcut과 연관되며, 일치하는 모든 Join Point에서 실행된다.
+            <li>Weaving : Advice 코드를 삽입</li>
+            세 가지 Weaving 방식 : 컴파일 타임 위빙, 클래스 로드 타임 위빙, 런타임 위빙
+        </ol>
+    </details>
+    
+    <details>
+        <summary>Spring AOP</summary>
+        <ul>
+            <li>스프링은 인터페이스의 프록시를 만들어 Aspect의 실행을 삽입한다</li>
+            따라서 final이거나, 인터페이스에 정의되지 않은 메서드는 Aspect 삽입이 불가능하다
+        </ul>
+
+        <details>
+            <summary>지원하는 Advice 종류</summary>
+            <table>
+                <thead>
+                    <tr>
+                        <th>종류</th>
+                        <th>aop 태그</th>
+                        <th>적용 시점</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Before</td>
+                        <td>aop:before</td>
+                        <td>메서드 실행 전</td>
+                    </tr>
+                    <tr>
+                        <td>After Returning</td>
+                        <td>aop:after-returning</td>
+                        <td>메서드 정상 종료 후</td>
+                    </tr>
+                    <tr>
+                        <td>After Throwing</td>
+                        <td>aop:after-throwing</td>
+                        <td>메서드 예외 throw시 적용</td>
+                    </tr>
+                    <tr>
+                        <td>After</td>
+                        <td>aop:after</td>
+                        <td>after-returning + after-throwing</td>
+                    </tr>
+                    <tr>
+                        <td>Around</td>
+                        <td>aop:around</td>
+                        <td>before + after</td>
+                    </tr>
+                </tbody>
+            </table>
+        </details>
+
+        <details>
+            <summary>각 Advice별 예시 코드</summary>
+            <ul>
+                <li>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice/BeforeAdvice.java" lan="java">Before Advice 클래스</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans2.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/BeforeAdviceTest.java" lan="java">테스트 클래스</button>
+                </li>
+                Before Advice에서 예외를 던지면 실제 메서드는 호출되지 않는 효과가 있다.
+                <li>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice/AfterAdvice.java" lan="java">After Returning Advice 클래스</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans3.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/AfterAdviceTest.java" lan="java">테스트 클래스</button>
+                </li>
+                <li>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice/AfterAdvice2.java" lan="java">After Throwing Advice 클래스</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans4.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/AfterAdviceTest2.java" lan="java">테스트 클래스</button>
+                </li>
+                <li>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice/AfterAdvice3.java" lan="java">After Advice 클래스</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans5.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/AfterAdviceTest3.java" lan="java">테스트 클래스</button>
+                </li>
+                <li>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice/AfterAdvice2.java" lan="java">Around Advice 클래스</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans1.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/TimerAdviceTest.java" lan="java">테스트 클래스</button>
+                </li>
+            </ul>
+        </details>
+
+        <details>
+            <summary>@Aspect를 이용한 위빙</summary>
+            <ul>
+                <li>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/BeforeAspect.java" lan="java">Before Aspect 클래스</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans7.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/BeforeAdviceTest2.java" lan="java">테스트 클래스</button>
+                </li>
+                <li>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/AfterAspect.java" lan="java">After Returning Aspect 클래스</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans8.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/AfterAdviceTest4.java" lan="java">테스트 클래스</button>
+                </li>
+                <li>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/AfterAspect2.java" lan="java">After Throwing Aspect 클래스</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans9.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/AfterAdviceTest5.java" lan="java">테스트 클래스</button>
+                </li>
+                <li>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/AfterAspect3.java" lan="java">After Aspect 클래스</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans10.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/AfterAdviceTest6.java" lan="java">테스트 클래스</button>
+                </li>
+                <li>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/AroundAspect.java" lan="java">Around Aspect 클래스</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans6.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/TimerAdviceTest2.java" lan="java">테스트 클래스</button>
+                </li>
+            </ul>
+        </details>
+
+        <details>
+            <summary>JoinPoint::getArgs 대신 Pointcut 정의로 매개변수 직접 받기</summary>
+            <ul>
+                <li>
+                    xml 설정
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice/BeforeAdvice2.java" lan="java">Before Advice 클래스</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans11.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/BeforeAdviceTest3.java" lan="java">테스트 클래스</button>
+                </li>
+                <li>
+                    애너테이션 설정
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/BeforeAspect2.java" lan="java">Before Aspect 클래스</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans12.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/BeforeAdviceTest4.java" lan="java">테스트 클래스</button>
+                </li>
+            </ul>
+        </details>
+
+        <details>
+            <summary>AspectJ Pointcut 표기법</summary>
+            <ol>
+                <li>execution : 특정 메서드에 대해 호출 시점 정의</li>
+                [접근한정자]? [리턴_타입_패턴] [클래스_이름_패턴]?[메서드_이름_패턴]([매개변수_패턴])<br>
+                execution(* set*(..)) : 모든 세터 메서드 호출
+                <li>within : 특정 타입에 대해 호출 시점 정의</li>
+                within(io.github.donggi.service.PrintService) : 해당 인터페이스의 모든 메서드 호출<br>
+                within(io.github.donggi.service.*) : 해당 패키지의 모든 메서드 호출
+                <li>bean : 특정 빈에 대해 호출 시점 정의</li>
+                <li>* ::= 각 패턴에 대해 모든 값을 허용함을 의미</li>
+                <li>.. ::= 0개 이상 반복에 대응함을 의미</li>
+                <li>&amp;&amp; ::= 패턴 AND</li>
+                <li>|| ::= 패턴 OR</li>
+            </ol>
+        </details>
+
+        <ul>
+            <li>Aspect 적용 순서 정의</li>
+            @Order(xml에서는 order 속성)를 적용하거나 Ordered 인터페이스 구현
+        </ul>
+    </details>
+</details>
+
+<hr>
+
+<details>
+    <summary>Spring MVC</summary>
+    <details>
+        <summary>Spring MVC 구성</summary>
+        <ol>
+            <li>DispatcherServlet : 클라이언트 요청을 받아 컨트롤러에 처리를 넘긴다.</li>
+            <li>HandlerMapping : 클라이언트의 요청 URL을 어떤 컨트롤러가 처리할 지 결정한다.</li>
+            <li>Controller : 클라이언트의 요청을 처리한 뒤 결과를 DispatcherServlet에 넘긴다.</li>
+            <li>ModelAndView : 컨트롤러의 처리 결과와 뷰 생성에 필요한 정보</li>
+            <li>ViewResolver : 생성할 뷰를 결정한다.</li>
+            <li>View : 컨트롤러의 처리 결과를 클라이언트에 보낼 형태로 생성한다</li>
+        </ol>
+    </details>
+</details>
+
+<hr>
