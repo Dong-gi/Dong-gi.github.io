@@ -64,8 +64,8 @@ const posts = {
         { filename: "posts/java/java.math.html", category: "Programming/Java/java.base", title: "java.math 12 Since 1.1" },
         { filename: "posts/java/java.net.html", category: "Programming/Java/java.base", title: "java.net 12 Since 1.0" },
         { filename: "posts/java/java.nio.html", category: "Programming/Java/java.base", title: "java.nio 12 Since 1.4" },
-        { filename: "posts/java/java.nio.channels.html", category: "Programming/Java/java.base", title: "java.nio.channels 12 Since 1.4", top: true },
-        { filename: "posts/java/java.nio.charset.html", category: "Programming/Java/java.base", title: "java.nio.charset" },
+        { filename: "posts/java/java.nio.channels.html", category: "Programming/Java/java.base", title: "java.nio.channels 12 Since 1.4" },
+        { filename: "posts/java/java.nio.charset.html", category: "Programming/Java/java.base", title: "java.nio.charset 12", top: true },
         { filename: "posts/java/java.nio.file.html", category: "Programming/Java/java.base", title: "java.nio.file" },
         { filename: "posts/java/java.text.html", category: "Programming/Java/java.base", title: "java.text" },
         { filename: "posts/java/java.time.html", category: "Programming/Java/java.base", title: "java.time" },
@@ -77,6 +77,7 @@ const posts = {
         { filename: "posts/java/java.util.regex.html", category: "Programming/Java/java.base", title: "java.util.regex" },
         { filename: "posts/java/java.util.stream.html", category: "Programming/Java/java.base", title: "java.util.stream" },
         { filename: "posts/java/java.util.zip.html", category: "Programming/Java/java.base", title: "java.util.zip" },
+        { filename: "posts/java/com.sun.nio.sctp.html", category: "Programming/Java/jdk.sctp", title: "com.sun.nio.sctp 12 Since 1.7", top: true },
 
         { filename: "posts/javascript/basic.html", category: "Programming/JavaScript", title: "코어 JavaScript" },
         { filename: "posts/javascript/basic2.html", category: "Programming/JavaScript", title: "브라우저 JavaScript" },

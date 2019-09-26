@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 class SocketTest {
 
     static ServerSocket echoServer;
-    static int port = 35001;
+    static int port = 36001;
 
     @BeforeAll
     static void before() throws IOException {
@@ -43,10 +43,9 @@ class SocketTest {
         var in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         var out = new PrintWriter(client.getOutputStream(), true);
 
-        for(var i = 0; i < 3; ++i) {
-            Thread.sleep(100);
-            System.out.print("[client] Write Something : ");
-            var msg = scanner.nextLine();
+        final var messages = new String[] { "안녕 세상!", "메시지 2", "메시지 3" };
+        for(var msg : messages) {
+            Thread.sleep(1000);
             System.out.println("[client] Sending... : " + msg);
             out.println(msg);
             for(var j = 0; j < 10; ++j) {

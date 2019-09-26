@@ -3,6 +3,15 @@
 <details>
     <summary>enum StandardOpenOption Since 1.7</summary>
     APPEND, CREATE, CREATE_NEW, DELETE_ON_CLOSE, DSYNC(내용 변경만 싱크), READ, SPARSE, SYNC(내용 또는 메타데이터 변경 싱크), TRUNCATE_EXISTING(파일이 이미 존재하고 WRITE로 열린 경우 길이를 0으로), WRITE
+
+    <li>APPEND : TRUNCATE_EXISTING 옵션이 있거나 읽기 전용일 때는 적용되지 않는다</li>
+<li>TRUNCATE_EXISTING : 파일을 열 때 크기를 0바이트로 줄인다. 읽기 전용으로 열 때는 적용되지 않는다.</li>
+                <li>CREATE_NEW : 신규 파일을 생성한다. 기존 파일이 존재하면 실패한다.</li>
+                <li>CREATE : 기존 파일이 존재하면 열고, 없으면 새로 생성한다.</li>
+                <li>DELETE_ON_CLOSE : close() 호출 시 파일을 지운다(best effort)</li>
+                <li>SPARSE : 파일이 sparse임을 OS에 알려준다. 신규 파일을 생성하는 경우에만 유효하다.</li>
+                <li>SYNC : 파일 내용 및 메타데이터의 변경을 동기적으로 물리 장치에 기록한다</li>
+                <li>DSYNC : 파일 내용 변경을 동기적으로 물리 장치에 기록한다</li>
 </details>
 
 <hr>

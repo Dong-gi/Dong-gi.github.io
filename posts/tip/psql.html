@@ -22,6 +22,10 @@
     <ul>
         <li>GRANT SELECT ON ALL TABLES IN SCHEMA public TO user;</li>
         <li>GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO user;</li>
+        <li>이후 추가되는 테이블에도 적용하려면 기본 권한을 변경</li>
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO user;
+        <li>실제로 적용됐는지 확인</li>
+        select * from information_schema.role_table_grants where table_name = 'table_name';
     </ul>
 </details>
 
