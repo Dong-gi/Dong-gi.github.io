@@ -7,18 +7,12 @@
         <li>static Charset forName(String charsetName)</li>
         <li>static SortedMap&lt;String, Charset&gt; availableCharsets()</li>
         <li>static Charset defaultCharset() Since 1.5</li>
-        <li>final String name()</li>
-        <li>final Set&lt;String&gt; aliases()</li>
-        <li>String displayName()</li>
-        <li>final boolean isRegistered() : IANA 캐릭터셋에 등록됐는지</li>
-        <li>String displayName(Locale locale)</li>
+        <li>final String name() + aliases, displayName</li>
+        <li>final boolean isRegistered() : IANA 문자집합에 등록됐는지</li>
         <li>abstract boolean contains(Charset cs)</li>
-        <li>abstract CharsetDecoder newDecoder()</li>
-        <li>abstract CharsetEncoder newEncoder()</li>
         <li>boolean canEncode()</li>
-        <li>final CharBuffer decode(ByteBuffer bb)</li>
-        <li>final ByteBuffer encode(CharBuffer cb)</li>
-        <li>final ByteBuffer encode(String str)</li>
+        <li>abstract CharsetDecoder newDecoder() + newEncoder</li>
+        <li>final CharBuffer decode(ByteBuffer bb) + encodie</li>
     </ol>
 </details>
 
@@ -27,12 +21,16 @@
 <details>
     <summary>abstract class CharsetDecoder Since 1.4</summary>
     <ol>
-        <li>바이트들을 문자들로.</li>
+        <li>바이트열을 문자열로 변환.</li>
         <li>final Charset charset()</li>
         <li>final CoderResult decode(ByteBuffer in, CharBuffer out, boolean endOfInput)</li>
         <li>final CoderResult flush(CharBuffer out)</li>
+        일부 디코더들은 내부적으로 flush가 필요할 수 있다
         <li>final CharsetDecoder reset()</li>
         <li>final CharBuffer decode(ByteBuffer in)</li>
+        <li>final float averageCharsPerByte() + maxCharsPerByte</li>
+        <li>final CharsetDecoder onMalformedInput(CodingErrorAction newAction) + getter 메서드 + onUnmappableCharacter</li>
+        <li>boolean isAutoDetecting() + isCharsetDetected, detectedCharset</li>
     </ol>
 </details>
 
@@ -41,14 +39,16 @@
 <details>
     <summary>abstract class CharsetEncoder Since 1.4</summary>
     <ol>
-        <li>문자들을 바이트들로.</li>
+        <li>문자열을 바이트열로 변환.</li>
         <li>final Charset charset()</li>
         <li>final CoderResult encode(CharBuffer in, ByteBuffer out, boolean endOfInput)</li>
         <li>final CoderResult flush(ByteBuffer out)</li>
+        일부 인코더들은 내부적으로 flush가 필요할 수 있다
         <li>final CharsetEncoder reset()</li>
         <li>final ByteBuffer encode(CharBuffer in)</li>
-        <li>boolean canEncode(char c)</li>
-        <li>boolean canEncode(CharSequence cs)</li>
+        <li>boolean canEncode(CharSequence cs) + 오버로딩</li>
+        <li>final float averageBytesPerChar() + maxBytesPerChar</li>
+        <li>final CharsetDecoder onMalformedInput(CodingErrorAction newAction) + getter 메서드 + onUnmappableCharacter</li>
     </ol>
 </details>
 
@@ -56,7 +56,7 @@
 
 <details>
     <summary>final class StandardCharsets Since 1.7</summary>
-    표준 캐릭터셋 : US-ASCII, ISO-8859-1, UTF-8, UTF-16BE, UTF-16LE, UTF-16
+    표준 문자집합 : US-ASCII(= ISO646-US), ISO-8859-1(= ISO-LATIN-1), UTF-8, UTF-16BE, UTF-16LE, UTF-16
 </details>
 
 <hr>

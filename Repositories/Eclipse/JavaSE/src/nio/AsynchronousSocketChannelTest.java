@@ -8,7 +8,6 @@ import java.nio.CharBuffer;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
-import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
 import org.junit.jupiter.api.Test;
