@@ -744,7 +744,54 @@
             여러 DispatcherServlet을 이용하면서도 두 WebApplicationContext이 공통적으로 가져야 하는 빈이 있다면 ContextLoaderListener를 설정하면 된다
             <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/applicationContext.xml" lan="xml"">WEB-INF/applicationContext.xml</button>
             <li>HandlerMapping : 클라이언트의 요청 URL을 어떤 컨트롤러가 처리할 지 결정한다.</li>
-            <li>Controller : 클라이언트의 요청을 처리한 뒤 결과를 DispatcherServlet에 넘긴다.</li>
+            <ul>
+                <li>요청 URL의 매핑을 항상 전체 경로로만 하려는 경우</li>
+                스프링 설정에서 아래 2개의 기본 구현체의 alwaysUseFullPath 설정을 변경<br>
+                &lt;bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" p:alwaysUseFullPath="true" /&gt;<br>
+                &lt;bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" p:alwaysUseFullPath="true" /&gt;
+
+                <li>REST</li>
+            </ul>
+        </ol>
+        <details>
+            <summary>@RequestMapping 사용 시 가능한 파라미터 타입</summary>
+            <ol>
+                <li>서블릿 API 관련 : (Http)ServletRequest, (Http)ServletResponse, HttpSession
+                    <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/HelloController.java" lan="java"">예시</button></li>
+                <li>요청 Locale : java.util.Locale</li>
+                <li>요청/응답 직접 액세스 : InputStream, Reader, OutputStream, Writer</li>
+                <li>URI 템플릿 변수 : @PathVariable</li>
+                <li>HTTP 요청 파라미터 : @RequestParam</li>
+                <li>HTTP 요청 헤더 : @RequestHeader</li>
+                <li>HTTP 쿠키 : @CookieValue</li>
+                <li>HTTP 요청 : @RequestBody</li>
+                <li>뷰에 전달할 모델 : Map, Model, ModelMap</li>
+                <li>POJO : 각 POJO 클래스
+                    <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/LoginController.java" lan="java"">예시1</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view/login.jsp" lan="xml"">login.jsp</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/BulkLoginController.java" lan="java"">예시2</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view/bulkLogin.jsp" lan="xml"">bulkLogin.jsp</button></li>
+                <li>POJO로의 바인딩 결과 : Errors, BindingResult</li>
+                <li>SessionStatus</li>
+            </ol>
+        </details>
+        <ol>
+            <li>Controller : 클라이언트의 요청을 처리한 뒤 결과를 DispatcherServlet에 넘긴다.
+                <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/HelloController.java" lan="java"">예시</button></li>
+        </ol>
+        <details>
+            <summary>컨트롤러 메서드의 반환 타입</summary>
+            <ol>
+                <li>ModelAndView : 뷰 정보 + 모델 정보</li>
+                <li>Model, Map : 모델 정보. 뷰 이름은 요청 URL로부터 결정(RequestToViewNameTranslator)된다.</li>
+                <li>String : 뷰 이름</li>
+                <li>View : 뷰 인스턴스</li>
+                <li>void : 메서드가 (Http)ServletRequest를 매개변수로 받는다면 직접 응답을 처리한다고 가정한다. 그 외의 경우, 뷰 이름은 요청 URL로부터 결정.</li>
+                <li>메서드에 @ResponseBody가 적용된 경우 반환 객체를 HTTP 응답으로(HttpMessageConverter) 전송한다.</li>
+                <li>뷰 이름을 통한 리다이렉트 : "redirect:" 접두어 활용. 상대 경로, 절대 경로 모두 가능</li>
+            </ol>
+        </details>
+        <ol>
             <li>ModelAndView : 컨트롤러의 처리 결과와 뷰 생성에 필요한 정보</li>
             <li>ViewResolver : 생성할 뷰를 결정한다.</li>
             <li>View : 컨트롤러의 처리 결과를 클라이언트에 보낼 형태로 생성한다</li>

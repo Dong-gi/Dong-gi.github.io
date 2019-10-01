@@ -9,8 +9,8 @@
 </head>
 <body>
     <form method="post">
-        email : <input type="text" name="email"/><br>
-        password : <input type="text" name="password"/>
+        email : <input type="email" name="email" value="test@test.com"/><br>
+        password : <input type="password" name="password" value="password"/>
         <input type="submit"/>
     </form>
 </body>

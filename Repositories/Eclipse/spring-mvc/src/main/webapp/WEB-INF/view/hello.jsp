@@ -8,6 +8,11 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%= request.getAttribute("message") %>
+<%
+Object message = request.getAttribute("message");
+if(message == null)
+    message = "안녕 세상!";
+%>
+<%= message %>
 </body>
 </html>

@@ -13,8 +13,10 @@
     <script>
     let pages = [
     	['./hello.do', 'HelloController::hello'],
+    	['./simple-hello.do', 'HelloController::simpleHello'],
     	['./common-hello.do', 'HelloController::commonHello'],
     	['./login.do', 'LoginController::login'],
+    	['./bulkLogin.do', 'BulkLoginController::login'],
     ];
 
     for(let page of pages) {
