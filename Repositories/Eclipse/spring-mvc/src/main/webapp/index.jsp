@@ -12,7 +12,9 @@
     
     <script>
     let pages = [
-    	['./hello.do', 'Hello World 컨트롤러'],
+    	['./hello.do', 'HelloController::hello'],
+    	['./common-hello.do', 'HelloController::commonHello'],
+    	['./login.do', 'LoginController::login'],
     ];
 
     for(let page of pages) {
