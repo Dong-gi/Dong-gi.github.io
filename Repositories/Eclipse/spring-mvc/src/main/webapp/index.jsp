@@ -12,11 +12,18 @@
     
     <script>
     let pages = [
-    	['./hello.do', 'HelloController::hello'],
-    	['./simple-hello.do', 'HelloController::simpleHello'],
-    	['./common-hello.do', 'HelloController::commonHello'],
-    	['./login.do', 'LoginController::login'],
-    	['./bulkLogin.do', 'BulkLoginController::login'],
+    	['./app/hello/', 'HelloController::hello'],
+    	['./app/hello/simpleHello', 'HelloController::simpleHello'],
+    	['./app/hello/commonHello', 'HelloController::commonHello'],
+    	['./app/hello/Donggi/a/b/c/Hello', 'HelloController::restHello'],
+    	['./app/hello/fail', 'HelloController::failHello'],
+    	['./app/hello/fail2', 'HelloController::failHello2'],
+    	['./app/login', 'LoginController::login'],
+    	['./app/bulkLogin', 'BulkLoginController::login'],
+    	['./app/file/upload', 'FileController::upload'],
+    	['./app/file/download', 'FileController::download'],
+    	['./app/etc/date', 'EtcController::date'],
+    	['./app/etc/json', 'EtcController::json'],
     ];
 
     for(let page of pages) {
