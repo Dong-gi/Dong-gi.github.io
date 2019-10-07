@@ -122,5 +122,5 @@ lan 속성 : nohighlight, text, java, javascript, cpp, matlab, xml, css, ruby, s
 <button type="button" class="btn btn-primary btn-sm" onclick="">실행 »</button>
 <a role="button" target="_blank" class="btn btn-info btn-sm" href=""></a>
 <a role="button" class="btn btn-info btn-sm" href="javascript:;"></a>
-<img class="rounded mx-auto d-block" alt="" src="imgs/">
+<img class="rounded mx-auto d-block" src="imgs/">
  */

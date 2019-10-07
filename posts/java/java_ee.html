@@ -170,11 +170,32 @@
         로드할 JDBC 클래스 이름은 다운로드 받은 압축파일의 html 문서에 있음
 
         <li>사용하기 <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello4.java" lan="java">JDBC Test »</button></li>
-
+        <ul>
+            <li>url : JDBC 연결 문자열로, 옵션은 각 JDBC마다 제공하는 것이 다르다</li>
+            <li>https://commons.apache.org/proper/commons-dbcp/guide/index.html</li>
+            <li>BasicDataSource.initialSize : 최초 커넥션 수</li>
+            + maxActive, maxIdle, minIdle
+            <li>BasicDataSource.maxWait : 풀에 커넥션이 없을 때 대기하는 최대 시간(ms). 음수면 무기한</li>
+            <li>BasicDataSource.minEvictableIdleTimeMillis : 설정된 것 이상 비활성 상태인 커넥션은 정리될 수 있다</li>
+            + timeBetweenEvictionRunsMillis, numTestsPerEvictionRun
+            <li>BasicDataSource.testOnBorrow : 커넥션을 가져올 때, 유효한 지 검사할 지 여부</li>
+            + testOnReturn, testWhileIdle
+        </ul>
         <li>Context.xml 리소스로 DataSource 정의하기</li>
         <button class="btn-code" path="Repositories/Eclipse/app1/src/main/webapp/META-INF/context.xml" lan="xml">context.xml »</button>
         <button class="btn-code" path="Repositories/Eclipse/app1/src/main/webapp/WEB-INF/web.xml" lan="xml">web.xml » resource-ref</button>
         <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello6.java" lan="java">서블릿 »</button>
+
+        <li>트랜잭션</li>
+        <ul>
+            <li>관련 클래스</li>
+            AbstractPlatformTransactionManager ← DataSourceTransactionManager(JDBC), HibernateTransactionManager, JtaTransactionManager
+            <li>예시 코드</li>
+            <button class="btn-code" path="Repositories/Eclipse/spring-transaction/pom.xml" lan="xml">pom.xml »</button>
+            <button class="btn-code" path="Repositories/Eclipse/spring-transaction/src/main/resources/applicationContext.xml" lan="xml">applicationContext.xml »</button>
+            <button class="btn-code" path="Repositories/Eclipse/spring-transaction/src/main/java/io/github/donggi/service/NameService.java" lan="java">NameService.java »</button>
+            <button class="btn-code" path="Repositories/Eclipse/spring-transaction/src/test/java/Test.java" lan="java">Test.java »</button>
+        </ul>
     </ol>
 </details>
 
@@ -400,73 +421,73 @@
         singleton 빈이 prototype 빈을 참조할 때, 기본적으로는 최초 설정된 prototype 빈 인스턴스만 이용한다. aop:scoped-proxy를 이용하면 singleton 빈이 호출할 때마다 prototype 빈을 다시 생성할 수 있다.
         <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello15.java" lan="java">Hello15 빈 클래스</button>
         <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello16.java" lan="java">Hello16 빈 클래스</button>
-        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans21.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans21.xml" lan="xml">빈 구성 파일</button>
         <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello15Test.java" lan="java">빈 사용 클래스</button>
         <li>
             빈 생성 + 세터 주입 예
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java" lan="java">Hello1 빈 클래스</button>
-            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans1.xml" lan="xml"">빈 구성 파일</button>
+            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans1.xml" lan="xml">빈 구성 파일</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello1Test.java" lan="java">빈 사용 클래스</button>
         </li>
         <li>
             p(property) xmlns를 이용한 세터 주입 예
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java" lan="java">Hello1 빈 클래스</button>
-            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans5.xml" lan="xml"">빈 구성 파일</button>
+            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans5.xml" lan="xml">빈 구성 파일</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello1Test2.java" lan="java">빈 사용 클래스</button>
         </li>
         <li>
             빈 초기화/소멸 로직 InitializingBean, DisposableBean 예
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello2.java" lan="java">Hello2 빈 클래스</button>
-            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans2.xml" lan="xml"">빈 구성 파일</button>
+            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans2.xml" lan="xml">빈 구성 파일</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello2Test.java" lan="java">빈 사용 클래스</button>
         </li>
         <li>
             빈 초기화/소멸 로직 init/destroy-method 예
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello3.java" lan="java">Hello3 빈 클래스</button>
-            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans3.xml" lan="xml"">빈 구성 파일</button>
+            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans3.xml" lan="xml">빈 구성 파일</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello3Test.java" lan="java">빈 사용 클래스</button>
         </li>
         <li>
             익명 빈 + 생성자 주입 + 초기화 전/후 로직 BeanPostProcessor 예
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello4.java" lan="java">Hello4 빈 클래스</button>
-            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans4.xml" lan="xml"">빈 구성 파일</button>
+            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans4.xml" lan="xml">빈 구성 파일</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test.java" lan="java">빈 사용 클래스</button>
         </li>
         <li>
             c(constructor) xmlns를 이용한 생성자 주입 예
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello4.java" lan="java">Hello4 빈 클래스</button>
-            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans6.xml" lan="xml"">빈 구성 파일</button>
+            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans6.xml" lan="xml">빈 구성 파일</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test2.java" lan="java">빈 사용 클래스</button>
         </li>
         <li>
             의존 객체 주입 예
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java" lan="java">Hello1 빈 클래스</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello4.java" lan="java">Hello4 빈 클래스</button>
-            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans7.xml" lan="xml"">빈 구성 파일</button>
+            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans7.xml" lan="xml">빈 구성 파일</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test3.java" lan="java">빈 사용 클래스</button>
         </li>
         <li>
             의존 컬렉션 주입 예
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello5.java" lan="java">Hello5 빈 클래스</button>
-            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans8.xml" lan="xml"">빈 구성 파일</button>
+            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans8.xml" lan="xml">빈 구성 파일</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello5Test.java" lan="java">빈 사용 클래스</button>
         </li>
         <li>
             util xmlns를 이용한 의존 컬렉션 주입 예
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello5.java" lan="java">Hello5 빈 클래스</button>
-            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans9.xml" lan="xml"">빈 구성 파일</button>
+            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans9.xml" lan="xml">빈 구성 파일</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello5Test2.java" lan="java">빈 사용 클래스</button>
         </li>
         <li>
             팩터리 설정을 통한 의존 컬렉션 주입 예
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello5.java" lan="java">Hello5 빈 클래스</button>
-            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans10.xml" lan="xml"">빈 구성 파일</button>
+            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans10.xml" lan="xml">빈 구성 파일</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello5Test3.java" lan="java">빈 사용 클래스</button>
         </li>
         <li>
             parent 속성을 통한 상속 예
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java" lan="java">Hello1 빈 클래스</button>
-            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans11.xml" lan="xml"">빈 구성 파일</button>
+            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans11.xml" lan="xml">빈 구성 파일</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello1Test3.java" lan="java">빈 사용 클래스</button>
         </li>
         <li>lookup-method 태그를 통한 상속 예</li>
@@ -474,39 +495,39 @@
             <li>lookup-method name : 재정의할 메서드 이름 → private X, void 반환 X, 메서드 매개변수 X, final X</li>
             <li>lookup-method bean : 재정의한 메서드에서 반환할 객체</li>
         </ul>
-        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans19.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans19.xml" lan="xml">빈 구성 파일</button>
         <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Beans19Test.java" lan="java">빈 사용 클래스</button>
         <li>
             autowire 속성을 통한 생성자 자동 주입 예
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello4.java" lan="java">Hello4 빈 클래스</button>
-            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans12.xml" lan="xml"">빈 구성 파일</button>
+            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans12.xml" lan="xml">빈 구성 파일</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test4.java" lan="java">빈 사용 클래스</button>
         </li>
         <li>
             @Autowired를 이용한 세터 자동 주입 예 1
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello6.java" lan="java">Hello6 빈 클래스</button>
-            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans13.xml" lan="xml"">빈 구성 파일</button>
+            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans13.xml" lan="xml">빈 구성 파일</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello6Test.java" lan="java">빈 사용 클래스</button>
         </li>
         <li>
             @Autowired를 이용한 세터 자동 주입 예 2
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello6.java" lan="java">Hello6 빈 클래스</button>
-            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans14.xml" lan="xml"">빈 구성 파일</button>
+            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans14.xml" lan="xml">빈 구성 파일</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello6Test2.java" lan="java">빈 사용 클래스</button>
         </li>
         <li>
             @Autowired(required = false)를 이용한 선택적 세터 자동 주입 예
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello6.java" lan="java">Hello6 빈 클래스</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello7.java" lan="java">Hello7 빈 클래스</button>
-            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans15.xml" lan="xml"">Hello6 빈 구성 파일</button>
-            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans16.xml" lan="xml"">Hello7 빈 구성 파일</button>
+            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans15.xml" lan="xml">Hello6 빈 구성 파일</button>
+            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans16.xml" lan="xml">Hello7 빈 구성 파일</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello6Test3.java" lan="java">빈 사용 클래스</button>
         </li>
         <li>
             @Autowired + @Qualifier = @Resource
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello8.java" lan="java">Hello8 빈 클래스</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello9.java" lan="java">Hello9 빈 클래스</button>
-            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans17.xml" lan="xml"">빈 구성 파일</button>
+            <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans17.xml" lan="xml">빈 구성 파일</button>
             <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello8Test.java" lan="java">빈 사용 클래스</button>
         </li>
         <li>빈 자동 등록</li>
@@ -527,7 +548,7 @@
         <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello12.java" lan="java">Hello12 빈 클래스</button>
         <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello13.java" lan="java">Hello13 빈 클래스</button>
         <button class="btn-code" path="Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello14.java" lan="java">Hello14 빈 클래스</button>
-        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans18.xml" lan="xml"">빈 구성 파일</button>
+        <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans18.xml" lan="xml">빈 구성 파일</button>
         <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello10Test.java" lan="java">빈 사용 클래스</button>
         <li>JavaConfig 예</li>
         <ul>
@@ -539,7 +560,7 @@
             </li>
             <li>
                 xml에서 @Configuration 임포트 예
-                <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans22.xml" lan="xml"">빈 구성 파일</button>
+                <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans22.xml" lan="xml">빈 구성 파일</button>
                 <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/ConfigTest2.java" lan="java">JavaConfig 클래스</button>
             </li>
             <li>
@@ -552,7 +573,7 @@
             </li>
             <li>
                 xml에서 @Configuration 자동 생성 예
-                <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans23.xml" lan="xml"">빈 구성 파일</button>
+                <button class="btn-code" path="Repositories/Eclipse/app2/src/main/resource/Beans23.xml" lan="xml">빈 구성 파일</button>
                 <button class="btn-code" path="Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/ConfigTest5.java" lan="java">JavaConfig 클래스</button>
             </li>
         </ul>
@@ -628,28 +649,28 @@
             <ul>
                 <li>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice/BeforeAdvice.java" lan="java">Before Advice 클래스</button>
-                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans2.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans2.xml" lan="xml">빈 구성 파일</button>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/BeforeAdviceTest.java" lan="java">테스트 클래스</button>
                 </li>
                 Before Advice에서 예외를 던지면 실제 메서드는 호출되지 않는 효과가 있다.
                 <li>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice/AfterAdvice.java" lan="java">After Returning Advice 클래스</button>
-                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans3.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans3.xml" lan="xml">빈 구성 파일</button>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/AfterAdviceTest.java" lan="java">테스트 클래스</button>
                 </li>
                 <li>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice/AfterAdvice2.java" lan="java">After Throwing Advice 클래스</button>
-                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans4.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans4.xml" lan="xml">빈 구성 파일</button>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/AfterAdviceTest2.java" lan="java">테스트 클래스</button>
                 </li>
                 <li>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice/AfterAdvice3.java" lan="java">After Advice 클래스</button>
-                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans5.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans5.xml" lan="xml">빈 구성 파일</button>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/AfterAdviceTest3.java" lan="java">테스트 클래스</button>
                 </li>
                 <li>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice/AfterAdvice2.java" lan="java">Around Advice 클래스</button>
-                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans1.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans1.xml" lan="xml">빈 구성 파일</button>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/TimerAdviceTest.java" lan="java">테스트 클래스</button>
                 </li>
             </ul>
@@ -660,27 +681,27 @@
             <ul>
                 <li>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/BeforeAspect.java" lan="java">Before Aspect 클래스</button>
-                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans7.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans7.xml" lan="xml">빈 구성 파일</button>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/BeforeAdviceTest2.java" lan="java">테스트 클래스</button>
                 </li>
                 <li>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/AfterAspect.java" lan="java">After Returning Aspect 클래스</button>
-                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans8.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans8.xml" lan="xml">빈 구성 파일</button>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/AfterAdviceTest4.java" lan="java">테스트 클래스</button>
                 </li>
                 <li>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/AfterAspect2.java" lan="java">After Throwing Aspect 클래스</button>
-                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans9.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans9.xml" lan="xml">빈 구성 파일</button>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/AfterAdviceTest5.java" lan="java">테스트 클래스</button>
                 </li>
                 <li>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/AfterAspect3.java" lan="java">After Aspect 클래스</button>
-                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans10.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans10.xml" lan="xml">빈 구성 파일</button>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/AfterAdviceTest6.java" lan="java">테스트 클래스</button>
                 </li>
                 <li>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/AroundAspect.java" lan="java">Around Aspect 클래스</button>
-                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans6.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans6.xml" lan="xml">빈 구성 파일</button>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/TimerAdviceTest2.java" lan="java">테스트 클래스</button>
                 </li>
             </ul>
@@ -692,13 +713,13 @@
                 <li>
                     xml 설정
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice/BeforeAdvice2.java" lan="java">Before Advice 클래스</button>
-                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans11.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans11.xml" lan="xml">빈 구성 파일</button>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/BeforeAdviceTest3.java" lan="java">테스트 클래스</button>
                 </li>
                 <li>
                     애너테이션 설정
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/BeforeAspect2.java" lan="java">Before Aspect 클래스</button>
-                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans12.xml" lan="xml"">빈 구성 파일</button>
+                    <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans12.xml" lan="xml">빈 구성 파일</button>
                     <button class="btn-code" path="Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/BeforeAdviceTest4.java" lan="java">테스트 클래스</button>
                 </li>
             </ul>
@@ -732,71 +753,111 @@
 
 <details>
     <summary>Spring MVC</summary>
-    <details>
-        <summary>Spring MVC 구성</summary>
-        <ol>
-            <li>DispatcherServlet : 클라이언트 요청을 받아 컨트롤러에 처리를 넘긴다.</li>
-            각 DispatcherServlet은 하나의 WebApplicationContext를 갖는다
-            <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/web.xml" lan="xml"">WEB-INF/web.xml</button><br>
-            기본적으로 {서블릿_이름}-servlet.xml 설정을 읽어온다
-            <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/dispatcher-servlet.xml" lan="xml"">WEB-INF/dispatcher-servlet.xml</button><br>
-            설정 파일을 직접 지정하려면 DispatcherServlet의 "contextConfigLocation" init-param을 지정하면 된다. 각 경로들은 ',', ' ', '\n' 등으로 구분하면 된다. 클래스패스에 있는 파일은 classpath:conf.xml처럼 지정하면 된다<br>
-            여러 DispatcherServlet을 이용하면서도 두 WebApplicationContext이 공통적으로 가져야 하는 빈이 있다면 ContextLoaderListener를 설정하면 된다
-            <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/applicationContext.xml" lan="xml"">WEB-INF/applicationContext.xml</button>
-            <li>HandlerMapping : 클라이언트의 요청 URL을 어떤 컨트롤러가 처리할 지 결정한다.</li>
-            <ul>
-                <li>요청 URL의 매핑을 항상 전체 경로로만 하려는 경우</li>
-                스프링 설정에서 아래 2개의 기본 구현체의 alwaysUseFullPath 설정을 변경<br>
-                &lt;bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" p:alwaysUseFullPath="true" /&gt;<br>
-                &lt;bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" p:alwaysUseFullPath="true" /&gt;
+    <ol>
+        <li>DispatcherServlet : 클라이언트 요청을 받아 컨트롤러에 처리를 넘긴다.</li>
+        각 DispatcherServlet은 하나의 WebApplicationContext를 갖는다
+        <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/web.xml" lan="xml">WEB-INF/web.xml</button><br>
+        기본적으로 {서블릿_이름}-servlet.xml 설정을 읽어온다
+        <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/dispatcher-servlet.xml" lan="xml">WEB-INF/dispatcher-servlet.xml</button><br>
+        설정 파일을 직접 지정하려면 DispatcherServlet의 "contextConfigLocation" init-param을 지정하면 된다. 각 경로들은 ',', ' ', '\n' 등으로 구분하면 된다. 클래스패스에 있는 파일은 classpath:conf.xml처럼 지정하면 된다<br>
+        여러 DispatcherServlet을 이용하면서도 두 WebApplicationContext이 공통적으로 가져야 하는 빈이 있다면 ContextLoaderListener를 설정하면 된다
+        <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/applicationContext.xml" lan="xml">WEB-INF/applicationContext.xml</button>
+        <li>HandlerMapping : 클라이언트의 요청 URL을 어떤 컨트롤러가 처리할 지 결정한다.</li>
+        <ul>
+            <li>요청 URL의 매핑을 항상 전체 경로로만 하려는 경우</li>
+            스프링 설정에서 아래 2개의 기본 구현체의 alwaysUseFullPath 설정을 변경<br>
+            &lt;bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" p:alwaysUseFullPath="true" /&gt;<br>
+            &lt;bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" p:alwaysUseFullPath="true" /&gt;
 
-                <li>REST</li>
-            </ul>
-        </ol>
-        <details>
-            <summary>@RequestMapping 사용 시 가능한 파라미터 타입</summary>
-            <ol>
-                <li>서블릿 API 관련 : (Http)ServletRequest, (Http)ServletResponse, HttpSession
-                    <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/HelloController.java" lan="java"">예시</button></li>
-                <li>요청 Locale : java.util.Locale</li>
-                <li>요청/응답 직접 액세스 : InputStream, Reader, OutputStream, Writer</li>
-                <li>URI 템플릿 변수 : @PathVariable</li>
-                <li>HTTP 요청 파라미터 : @RequestParam</li>
-                <li>HTTP 요청 헤더 : @RequestHeader</li>
-                <li>HTTP 쿠키 : @CookieValue</li>
-                <li>HTTP 요청 : @RequestBody</li>
-                <li>뷰에 전달할 모델 : Map, Model, ModelMap</li>
-                <li>POJO : 각 POJO 클래스
-                    <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/LoginController.java" lan="java"">예시1</button>
-                    <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view/login.jsp" lan="xml"">login.jsp</button>
-                    <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/BulkLoginController.java" lan="java"">예시2</button>
-                    <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view/bulkLogin.jsp" lan="xml"">bulkLogin.jsp</button></li>
-                <li>POJO로의 바인딩 결과 : Errors, BindingResult</li>
-                <li>SessionStatus</li>
-            </ol>
-        </details>
+            <li>RESTful URI
+                <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/HelloController.java" lan="java">예시</button></li>
+        </ul>
+    </ol>
+    <details>
+        <summary>@RequestMapping 사용 시 가능한 파라미터 타입</summary>
         <ol>
-            <li>Controller : 클라이언트의 요청을 처리한 뒤 결과를 DispatcherServlet에 넘긴다.
-                <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/HelloController.java" lan="java"">예시</button></li>
-        </ol>
-        <details>
-            <summary>컨트롤러 메서드의 반환 타입</summary>
-            <ol>
-                <li>ModelAndView : 뷰 정보 + 모델 정보</li>
-                <li>Model, Map : 모델 정보. 뷰 이름은 요청 URL로부터 결정(RequestToViewNameTranslator)된다.</li>
-                <li>String : 뷰 이름</li>
-                <li>View : 뷰 인스턴스</li>
-                <li>void : 메서드가 (Http)ServletRequest를 매개변수로 받는다면 직접 응답을 처리한다고 가정한다. 그 외의 경우, 뷰 이름은 요청 URL로부터 결정.</li>
-                <li>메서드에 @ResponseBody가 적용된 경우 반환 객체를 HTTP 응답으로(HttpMessageConverter) 전송한다.</li>
-                <li>뷰 이름을 통한 리다이렉트 : "redirect:" 접두어 활용. 상대 경로, 절대 경로 모두 가능</li>
-            </ol>
-        </details>
-        <ol>
-            <li>ModelAndView : 컨트롤러의 처리 결과와 뷰 생성에 필요한 정보</li>
-            <li>ViewResolver : 생성할 뷰를 결정한다.</li>
-            <li>View : 컨트롤러의 처리 결과를 클라이언트에 보낼 형태로 생성한다</li>
+            <li>서블릿 API 관련 : (Http)ServletRequest, (Http)ServletResponse, HttpSession
+                <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/HelloController.java" lan="java">예시</button></li>
+            <li>요청 Locale : java.util.Locale</li>
+            <li>요청/응답 직접 액세스 : InputStream, Reader, OutputStream, Writer</li>
+            <li>URI 템플릿 변수 : @PathVariable</li>
+            <li>HTTP 요청 파라미터 : @RequestParam</li>
+            <li>HTTP 요청 헤더 : @RequestHeader</li>
+            <li>HTTP 쿠키 : @CookieValue</li>
+            <li>HTTP 요청 : @RequestBody</li>
+            <li>뷰에 전달할 모델 : Map, Model, ModelMap</li>
+            <li>POJO : 각 POJO 클래스
+                <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/LoginController.java" lan="java">예시1</button>
+                <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view/login.jsp" lan="xml">login.jsp</button>
+                <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/BulkLoginController.java" lan="java">예시2</button>
+                <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view/bulkLogin.jsp" lan="xml">bulkLogin.jsp</button></li>
+            <li>Multipart 폼 데이터 예시</li>
+            CommonsMultipartResolver 이용(commons-fileupload 패키지 의존)
+            <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/dispatcher-servlet.xml" lan="xml">WEB-INF/dispatcher-servlet.xml</button>
+            <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view/upload.jsp" lan="xml">upload.jsp</button>
+            <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/FileController.java" lan="java">FileController</button>
+            <li>POJO로의 바인딩 결과 : Errors, BindingResult</li>
+                <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/LoginController.java" lan="java">@Valid, @InitBinder 예시</button>
+                <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/validator/LoginRequestValidator.java" lan="java">Validator 예시</button>
+            <li>SessionStatus</li>
         </ol>
     </details>
+    <ol>
+        <li>Controller : 클라이언트의 요청을 처리한 뒤 결과를 DispatcherServlet에 넘긴다.
+            <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/HelloController.java" lan="java">예시</button></li>
+    </ol>
+    <details>
+        <summary>컨트롤러 메서드의 반환 타입</summary>
+        <ol>
+            <li>ModelAndView : 뷰 정보 + 모델 정보</li>
+            <li>Model, Map : 모델 정보. 뷰 이름은 요청 URL로부터 결정(RequestToViewNameTranslator)된다.</li>
+            <li>String : 뷰 이름</li>
+            <li>View : 뷰 인스턴스(org.springframework.web.servlet.View)</li>
+            <li>void : 메서드가 (Http)ServletRequest를 매개변수로 받는다면 직접 응답을 처리한다고 가정한다. 그 외의 경우, 뷰 이름은 요청 URL로부터 결정.</li>
+            <li>메서드에 @ResponseBody가 적용된 경우 반환 객체를 HTTP 응답으로(HttpMessageConverter) 전송한다.
+                AJAX에 유용. <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/EtcController.java" lan="java">예시</button></li>
+            <li>뷰 이름을 통한 리다이렉트 : "redirect:" 접두어 활용. 상대 경로, 절대 경로 모두 가능</li>
+        </ol>
+    </details>
+    <ol>
+        <li>ModelAndView : 컨트롤러의 처리 결과와 뷰 생성에 필요한 정보</li>
+        <li>ViewResolver : 생성할 뷰를 결정한다.</li>
+        <li>View : 컨트롤러의 처리 결과를 클라이언트에 보낼 형태로 생성한다</li>
+        <li>예외 처리</li>
+        <ul>
+            <li>기본 예외 페이지 설정 :
+                <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/web.xml" lan="xml">WEB-INF/web.xml</button>
+                <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view/error.jsp" lan="xml">error.jsp</button></li>
+            <li>컨트롤러 내부 @ExceptionHandler 메서드 선언 : <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/HelloController.java" lan="java">예시</button></li>
+            <li>컨트롤러 HandlerExceptionResolver 인터페이스 구현 : <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/FileController.java" lan="java">예시</button></li>
+            <li>SimpleMappingExceptionResolver로 전체 컨트롤러 특정 예외를 특정 뷰로 연결 : <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/dispatcher-servlet.xml" lan="xml">WEB-INF/dispatcher-servlet.xml</button></li>
+            <li>@ControllerAdvice를 이요한 특정 패키지/클래스/인터페이스 예외 처리 : <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/advice/UnhandledExceptionAdvice.java" lan="java">예시</button></li>
+        </ul>
+        <li>사용자 정의 PropertyEditor
+            <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/advice/InitAdvice.java" lan="java">예시</button></li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Spring JUnit</summary>
+    <button class="btn-code" path="Repositories/Eclipse/spring-transaction/src/test/java/Test.java" lan="java">예시 코드 1 »</button>
+    <button class="btn-code" path="Repositories/Eclipse/spring-mvc/src/test/java/Test.java" lan="java">예시 코드 2 »</button>
+</details>
+
+<hr>
+
+<details>
+    <summary>Spring Boot Microservice</summary>
+    <ol>
+        <li>스프링 부트 마이크로서비스는 실행에 필요한 모든 의존 라이브러리, HTTP 리스너 등을 하나의 jar로 패키징한다</li>
+        <img class="rounded mx-auto d-block" src="imgs/20191006_180335.png">
+        <img class="rounded mx-auto d-block" src="imgs/20191006_180348.png">
+        <img class="rounded mx-auto d-block" src="imgs/20191006_180401.png">
+        <li>$ mvn install<br>
+            java -jar target/rest-microservice-0.0.1-SNAPSHOT.jar</li>
+    </ol>
 </details>
 
 <hr>

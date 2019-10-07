@@ -18,7 +18,7 @@
    http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
     <context:component-scan
-        base-package="io.github.donggi.controller" />
+        base-package="io.github.donggi.advice, io.github.donggi.controller, io.github.donggi.service" />
 
     <bean
         class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -28,5 +28,26 @@
         <property
             name="suffix"
             value=".jsp" />
+    </bean>
+
+    <bean
+        id="multipartResolver"
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+        p:maxUploadSize="5242880" />
+        
+    <!-- maxUploadSize를 사용하는 경우, 추가로 톰캣 설정도 변경 필요
+    conf/server.xml
+        <Connector 
+            port="8080" protocol="HTTP/1.1" connectionTimeout="20000" redirectPort="8443" 
+            maxSwallowSize="-1" /> // -1은 무제한. 적당히 바이트 단위로 설정하면 된다. -->
+    <bean
+        id="exceptionResolver"
+        class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop
+                    key="MaxUploadSizeExceededException"> error </prop>
+            </props>
+        </property>
     </bean>
 </beans>

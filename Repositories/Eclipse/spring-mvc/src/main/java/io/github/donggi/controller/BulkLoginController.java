@@ -10,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import io.github.donggi.request.BulkLoginRequest;
 
 @Controller
-@RequestMapping("/bulkLogin.do")
+@RequestMapping("/bulkLogin")
 public class BulkLoginController {
 
     @RequestMapping(method = RequestMethod.GET)
