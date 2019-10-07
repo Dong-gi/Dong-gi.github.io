@@ -67,9 +67,9 @@ const posts = {
         { filename: "posts/java/java.nio.channels.html", category: "Programming/Java/java.base", title: "java.nio.channels 12 Since 1.4" },
         { filename: "posts/java/java.nio.charset.html", category: "Programming/Java/java.base", title: "java.nio.charset 12 Since 1.4" },
         { filename: "posts/java/java.nio.file.html", category: "Programming/Java/java.base", title: "java.nio.file 12 Since 1.7" },
-        { filename: "posts/java/java.text.html", category: "Programming/Java/java.base", title: "java.text 12 Since ", top: true },
-        { filename: "posts/java/java.time.html", category: "Programming/Java/java.base", title: "java.time" },
-        { filename: "posts/java/java.time.format.html", category: "Programming/Java/java.base", title: "java.time.format" },
+        { filename: "posts/java/java.text.html", category: "Programming/Java/java.base", title: "java.text 12 Since 1.1" },
+        { filename: "posts/java/java.time.html", category: "Programming/Java/java.base", title: "java.time 12 Since 1.8", top: true },
+        { filename: "posts/java/java.time.format.html", category: "Programming/Java/java.base", title: "java.time.format 12 Since 1.8" },
         { filename: "posts/java/java.util.html", category: "Programming/Java/java.base", title: "java.util Since 1.0" },
         { filename: "posts/java/java.util.concurrent.html", category: "Programming/Java/java.base", title: "java.util.concurrent" }, //, top: true
         { filename: "posts/java/java.util.concurrent.atomic.html", category: "Programming/Java/java.base", title: "java.util.concurrent.atomic" },

@@ -14,28 +14,286 @@
 <details>
     <summary>final class Normalizer Since 1.6</summary>
     <ol>
-        <li>유니코드 정규화/역정규화 관련 기능을 제공한다.</li>
+        <li>유니코드 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://ko.wikipedia.org/wiki/유니코드_정규화">정규화/역정규화</a> 관련 기능을 제공한다.</li>
+        <li>static enum Normalizer.Form Since 1.6</li>
+        NFC, NFD, NFKC, NFKD
+        <li>static String normalize(CharSequence src, Normalizer.Form form) + isNormalized</li>
     </ol>
 </details>
 
 <hr>
 
 <details>
-    <summary>NumberFormat</summary>
+    <summary>abstract class NumberFormat extends Format Since 1.1</summary>
+    <ol>
+        <li>static enum NumberFormat.Style Since 12</li>
+        SHORT, LONG
+        <li>static class NumberFormat.Field extends Format.Field Since 1.4</li>
+        INTEGER(정수부), FRACTION(분수), EXPONENT(지수부), DECIMAL_SEPARATOR(소수 구분 기호), SIGN(부호), GROUPING_SEPARATOR(단위 구분 문자), EXPONENT_SYMBOL, PERCENT, PERMILLE, CURRENCY, EXPONENT_SIGN, PREFIX Since 12, SUFFIX Since 12
+        <li>static final NumberFormat getInstance(Locale inLocale) + 오버로딩</li>
+        + getNumberInstance : 범용 <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/text/NumberFormatTest.java" lan="java">예시 코드 »</button>
+        , getIntegerInstance Since 1.4 : 포맷에 HALF_EVEN을 이용하고, 파싱은 정수부만, getCurrencyInstance, getPercentInstance, getCompactNumberInstance Since 12 : 기본값은 NumberFormat.Style.SHORT 스타일
+        <li>static Locale[] getAvailableLocales()</li>
+        <li>void setParseIntegerOnly(boolean value)</li>
+        + groupingUsed, maximumIntegerDigits, minimumIntegerDigits, maximumFractionDigits, minimumFractionDigits, currency Since 1.4, roundingMode Since 1.6
+    </ol>
 </details>
 
 <hr>
 
 <details>
     <summary>class SimpleDateFormat extends DateFormat Since 1.1</summary>
-    https://docs.oracle.com/javase/10/docs/api/java/text/SimpleDateFormat.html
+    <ol>
+        <li>패턴</li>
+        <table>
+            <thead>
+                <tr>
+                    <th>문자</th>
+                    <th>표현요소</th>
+                    <th>예</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>G</th>
+                    <td>기원 전/후</td>
+                    <td>AD
+                        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java" displayRange="[18,23]" lan="java">예</button></td>
+                </tr>
+                <tr>
+                    <th>y</th>
+                    <td>년</td>
+                    <td>1996; 96
+                        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java" displayRange="[26,31]" lan="java">예</button></td>
+                </tr>
+                <tr>
+                    <th>Y</th>
+                    <td>Week year</td>
+                    <td>2009; 09
+                        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java" displayRange="[34,43]" lan="java">예</button></td>
+                </tr>
+                <tr>
+                    <th>M</th>
+                    <td>월(context sensitive)</td>
+                    <td>July; Jul; 07
+                        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java" displayRange="[26,31]" lan="java">예</button></td>
+                </tr>
+                <tr>
+                    <th>L</th>
+                    <td>월 (standalone form)</td>
+                    <td>July; Jul; 07</td>
+                </tr>
+                <tr>
+                    <th>w</th>
+                    <td>Week in year</td>
+                    <td>27
+                        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java" displayRange="[34,43]" lan="java">예</button></td>
+                </tr>
+                <tr>
+                    <th>W</th>
+                    <td>Week in month</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <th>D</th>
+                    <td>Day in year</td>
+                    <td>189</td>
+                </tr>
+                <tr>
+                    <th>d</th>
+                    <td>Day in month</td>
+                    <td>10
+                        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java" displayRange="[26,31]" lan="java">예</button></td>
+                </tr>
+                <tr>
+                    <th>F</th>
+                    <td>Day of week in month</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <th>E</th>
+                    <td>Day name in week</td>
+                    <td>Tuesday; Tue
+                        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java" displayRange="[34,43]" lan="java">예</button></td>
+                </tr>
+                <tr>
+                    <th>u</th>
+                    <td>Day number of week</td>
+                    <td>1 = Monday, ..., 7 = Sunday
+                        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java" displayRange="[34,43]" lan="java">예</button></td>
+                </tr>
+                <tr>
+                    <th>a</th>
+                    <td>Am/pm</td>
+                    <td>PM
+                        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java" displayRange="[46,51]" lan="java">예</button></td>
+                </tr>
+                <tr>
+                    <th>H</th>
+                    <td>Hour in day (0-23)</td>
+                    <td>0
+                        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java" displayRange="[26,31]" lan="java">예</button></td>
+                </tr>
+                <tr>
+                    <th>k</th>
+                    <td>Hour in day (1-24)</td>
+                    <td>24</td>
+                </tr>
+                <tr>
+                    <th>K</th>
+                    <td>Hour in am/pm (0-11)</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <th>h</th>
+                    <td>Hour in am/pm (1-12)</td>
+                    <td>12
+                        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java" displayRange="[46,51]" lan="java">예</button></td>
+                </tr>
+                <tr>
+                    <th>m</th>
+                    <td>Minute in hour</td>
+                    <td>30
+                        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java" displayRange="[26,31]" lan="java">예</button></td>
+                </tr>
+                <tr>
+                    <th>s</th>
+                    <td>Second in minute</td>
+                    <td>55
+                        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java" displayRange="[26,31]" lan="java">예</button></td>
+                </tr>
+                <tr>
+                    <th>S</th>
+                    <td>Millisecond</td>
+                    <td>978
+                        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java" displayRange="[46,51]" lan="java">예</button></td>
+                </tr>
+                <tr>
+                    <th>z</th>
+                    <td>General time zone</td>
+                    <td>Pacific Standard Time; PST; GMT-08:00</td>
+                </tr>
+                <tr>
+                    <th>Z</th>
+                    <td>RFC 822 time zone</td>
+                    <td>-0800
+                        <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java" displayRange="[46,51]" lan="java">예</button></td>
+                </tr>
+                <tr>
+                    <th>X</th>
+                    <td>ISO 8601 time zone</td>
+                    <td>-08; -0800; -08:00</td>
+                </tr>
+            </tbody>
+        </table>
+    </ol>
 </details>
 
 <hr>
 
 <details>
     <summary>class MessageFormat extends Format Since 1.1</summary>
-    https://docs.oracle.com/javase/10/docs/api/java/text/MessageFormat.html
+    <ol>
+        <li>MessageFormatPattern ::= String | MessageFormatPattern FormatElement String</li>
+        <li>FormatElement ::= { ArgumentIndex[, FormatType[, FormatStyle]] }</li>
+        <li>FormatType ::= number | date | time | choice</li>
+        <li>FormatStyle ::= short | medium | long | full | integer | currency | percent | SubformatPattern</li>
+        <li>'' 안의 포맷 문자열은 이스케이프된다</li>
+        <li>동일 요소에 대한 반복적인 파싱은 마지막 파싱 결과만 유효하다
+            <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/text/MessageFormatTest.java" lan="java">예시 코드 »</button></li>
+        <table>
+            <thead>
+                <tr>
+                    <th>FormatType</th>
+                    <th>FormatStyle</th>
+                    <th>Subformat Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>(none)</th>
+                    <th>(none)</th>
+                    <td>null</td>
+                </tr>
+                <tr>
+                    <th rowspan="5">number</th>
+                    <th>(none)</th>
+                    <td>NumberFormat.getInstance(getLocale())</td>
+                </tr>
+                <tr>
+                    <th>integer</th>
+                    <td>NumberFormat.getIntegerInstance(getLocale())</td>
+                </tr>
+                <tr>
+                    <th>currency</th>
+                    <td>NumberFormat.getCurrencyInstance(getLocale())</td>
+                </tr>
+                <tr>
+                    <th>percent</th>
+                    <td>NumberFormat.getPercentInstance(getLocale())</td>
+                </tr>
+                <tr>
+                    <th>SubformatPattern</th>
+                    <td>new DecimalFormat(subformatPattern, DecimalFormatSymbols.getInstance(getLocale()))</td>
+                </tr>
+                <tr>
+                    <th rowspan="6">date</th>
+                    <th>(none)</th>
+                    <td>DateFormat.getDateInstance(DateFormat.DEFAULT, getLocale())</td>
+                </tr>
+                <tr>
+                    <th>short</th>
+                    <td>DateFormat.getDateInstance(DateFormat.SHORT, getLocale())</td>
+                </tr>
+                <tr>
+                    <th>medium</th>
+                    <td>DateFormat.getDateInstance(DateFormat.DEFAULT, getLocale())</td>
+                </tr>
+                <tr>
+                    <th>long</th>
+                    <td>DateFormat.getDateInstance(DateFormat.LONG, getLocale())</td>
+                </tr>
+                <tr>
+                    <th>full</th>
+                    <td>DateFormat.getDateInstance(DateFormat.FULL, getLocale())</td>
+                </tr>
+                <tr>
+                    <th>SubformatPattern</th>
+                    <td>new SimpleDateFormat(subformatPattern, getLocale())</td>
+                </tr>
+                <tr>
+                    <th rowspan="6">time</th>
+                    <th>(none)</th>
+                    <td>DateFormat.getTimeInstance(DateFormat.DEFAULT, getLocale())</td>
+                </tr>
+                <tr>
+                    <th>short</th>
+                    <td>DateFormat.getTimeInstance(DateFormat.SHORT, getLocale())</td>
+                </tr>
+                <tr>
+                    <th>medium</th>
+                    <td>DateFormat.getTimeInstance(DateFormat.DEFAULT, getLocale())</td>
+                </tr>
+                <tr>
+                    <th>long</th>
+                    <td>DateFormat.getTimeInstance(DateFormat.LONG, getLocale())</td>
+                </tr>
+                <tr>
+                    <th>full</th>
+                    <td>DateFormat.getTimeInstance(DateFormat.FULL, getLocale())</td>
+                </tr>
+                <tr>
+                    <th>SubformatPattern</th>
+                    <td>new SimpleDateFormat(subformatPattern, getLocale())</td>
+                </tr>
+                <tr>
+                    <th>choice</th>
+                    <th>SubformatPattern</th>
+                    <td>new ChoiceFormat(subformatPattern)</td>
+                </tr>
+            </tbody>
+        </table>
+    </ol>
 </details>
 
 <hr>

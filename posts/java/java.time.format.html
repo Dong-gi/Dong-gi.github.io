@@ -1,19 +1,115 @@
 <hr>
 
-<details>
-    <summary>final class DateTimeFormatterBuilder Since 1.8</summary>
-    <ol>
-        https://docs.oracle.com/javase/10/docs/api/java/time/format/DateTimeFormatterBuilder.html
-    </ol>
-</details>
-
-<hr>
-
-<details>
+<details open>
     <summary>final class DateTimeFormatter Since 1.8</summary>
-    <ol>
-        https://docs.oracle.com/javase/10/docs/api/java/time/format/DateTimeFormatter.html
-    </ol>
+    <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/time/format/DateTimeFormatter.html#predefined">https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/time/format/DateTimeFormatter.html#predefined</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Formatter</th>
+                <th>Description</th>
+                <th>Example</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>ofLocalizedDate(dateStyle)</th>
+                <td>Formatter with date style from the locale</td>
+                <td>'2011-12-03'</td>
+            </tr>
+            <tr>
+                <th>ofLocalizedTime(timeStyle)</th>
+                <td>Formatter with time style from the locale</td>
+                <td>'10:15:30'</td>
+            </tr>
+            <tr>
+                <th>ofLocalizedDateTime(dateTimeStyle)</th>
+                <td>Formatter with a style for date and time from the locale</td>
+                <td>'3 Jun 2008 11:05:30'</td>
+            </tr>
+            <tr>
+                <th>ofLocalizedDateTime(dateStyle,timeStyle)</th>
+                <td>Formatter with date and time styles from the locale</td>
+                <td>'3 Jun 2008 11:05'</td>
+            </tr>
+            <tr>
+                <th>BASIC_ISO_DATE</th>
+                <td>Basic ISO date</td>
+                <td>'20111203'</td>
+            </tr>
+            <tr>
+                <th>ISO_LOCAL_DATE</th>
+                <td>ISO Local Date</td>
+                <td>'2011-12-03'</td>
+            </tr>
+            <tr>
+                <th>ISO_OFFSET_DATE</th>
+                <td>ISO Date with offset</td>
+                <td>'2011-12-03+01:00'</td>
+            </tr>
+            <tr>
+                <th>ISO_DATE</th>
+                <td>ISO Date with or without offset</td>
+                <td>'2011-12-03+01:00'; '2011-12-03'</td>
+            </tr>
+            <tr>
+                <th>ISO_LOCAL_TIME</th>
+                <td>Time without offset</td>
+                <td>'10:15:30'</td>
+            </tr>
+            <tr>
+                <th>ISO_OFFSET_TIME</th>
+                <td>Time with offset</td>
+                <td>'10:15:30+01:00'</td>
+            </tr>
+            <tr>
+                <th>ISO_TIME</th>
+                <td>Time with or without offset</td>
+                <td>'10:15:30+01:00'; '10:15:30'</td>
+            </tr>
+            <tr>
+                <th>ISO_LOCAL_DATE_TIME</th>
+                <td>ISO Local Date and Time</td>
+                <td>'2011-12-03T10:15:30'</td>
+            </tr>
+            <tr>
+                <th>ISO_OFFSET_DATE_TIME</th>
+                <td>Date Time with Offset
+                </td>
+                <td>'2011-12-03T10:15:30+01:00'</td>
+            </tr>
+            <tr>
+                <th>ISO_ZONED_DATE_TIME</th>
+                <td>Zoned Date Time</td>
+                <td>'2011-12-03T10:15:30+01:00[Europe/Paris]'</td>
+            </tr>
+            <tr>
+                <th>ISO_DATE_TIME</th>
+                <td>Date and time with ZoneId</td>
+                <td>'2011-12-03T10:15:30+01:00[Europe/Paris]'</td>
+            </tr>
+            <tr>
+                <th>ISO_ORDINAL_DATE</th>
+                <td>Year and day of year</td>
+                <td>'2012-337'</td>
+            </tr>
+            <tr>
+                <th>ISO_WEEK_DATE</th>
+                <td>Year and Week</td>
+                <td>'2012-W48-6'</td>
+            </tr>
+            <tr>
+                <th>ISO_INSTANT</th>
+                <td>Date and Time of an Instant</td>
+                <td>'2011-12-03T10:15:30Z'</td>
+            </tr>
+            <tr>
+                <th>RFC_1123_DATE_TIME</th>
+                <td>RFC 1123 / RFC 822</td>
+                <td>'Tue, 3 Jun 2008 11:05:30 GMT'</td>
+            </tr>
+        </tbody>
+    </table>
 </details>
 
 <hr>
