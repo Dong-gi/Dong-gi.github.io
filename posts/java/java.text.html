@@ -2,7 +2,26 @@
 
 <details>
     <summary>abstract class Format implements Serializable, Cloneable Since 1.1</summary>
-    https://docs.oracle.com/javase/10/docs/api/java/text/Format.html
+    <ol>
+        <li>자바에서 제공하는 주요 Format 서브 클래스는 DateFormat, MessageFormat, NumberFormat</li>
+        <li>콘크리트 서브 클래스는 아래 3개 메서드를 반드시 구현해야 한다</li>
+        format(Object, StringBuffer, FieldPosition), formatToCharacterIterator(Object), parseObject(String, ParsePosition)
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>final class Normalizer Since 1.6</summary>
+    <ol>
+        <li>유니코드 정규화/역정규화 관련 기능을 제공한다.</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>NumberFormat</summary>
 </details>
 
 <hr>

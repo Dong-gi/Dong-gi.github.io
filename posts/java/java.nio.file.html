@@ -112,6 +112,15 @@
         </ol>
     </details>
     <details>
+        <summary>class SimpleFileVisitor&lt;T&gt; implements FileVisitor&lt;T&gt; SInce 1.7</summary>
+        <ol>
+            <li>preVisitDirectory  : CONTINUE 반환</li>
+            <li>visitFile : CONTINUE 반환</li>
+            <li>visitFileFailed : rethrow</li>
+            <li>postVisitDirectory : 예외없으면 CONTINUE, 있으면 rethrows</li>
+        </ol>
+    </details>
+    <details>
         <summary>enum FileVisitResult Since 1.7</summary>
         <ol>
             <li>CONTINUE : 순회 계속.</li>
@@ -199,68 +208,42 @@
         <summary>final class Files Since 1.7</summary>
         <ol>
             <li>static InputStream newInputStream(Path path, OpenOption... options)</li>
-            <li>static OutputStream newOutputStream(Path path, OpenOption... options)</li>
-            <li>static SeekableByteChannel newByteChannel(Path path, Set&lt;? extends OpenOption&gt; options, FileAttribute&lt;?&gt;... attrs)</li>
-            <li>static SeekableByteChannel newByteChannel(Path path, OpenOption... options)</li>
-            <li>static DirectoryStream&lt;Path&gt; newDirectoryStream(Path dir)</li>
-            <li>static DirectoryStream&lt;Path&gt; newDirectoryStream(Path dir, String glob)</li>
-            예. try (var stream = Files.newDirectoryStream(dir, "*.java")) {...}
-            Files.newDirectoryStream(dir, "*.{c,h,cpp,hpp,java}"))
-            <li>static DirectoryStream&lt;Path&gt; newDirectoryStream(Path dir, DirectoryStream.Filter&lt;? super Path&gt; filter)</li>
+            + newOutputStream, newByteChannel, newBufferedReader, newBufferedWriter
+            <li>static DirectoryStream&lt;Path&gt; newDirectoryStream(Path dir, String glob) + 오버로딩</li>
+            예. Files.newDirectoryStream(dir, "*.java")); Files.newDirectoryStream(dir, "*.{c,h,cpp,hpp,java}"));
             <li>static Path createFile(Path path, FileAttribute&lt;?&gt;... attrs)</li>
-            <li>static Path createDirectory(Path dir, FileAttribute&lt;?&gt;... attrs)</li>
-            <li>static Path createDirectories(Path dir, FileAttribute&lt;?&gt;... attrs)</li>
-            <li>static Path createTempFile(Path dir, String prefix, String suffix, FileAttribute&lt;?&gt;... attrs)</li>
-            <li>static Path createTempFile(String prefix, String suffix, FileAttribute&lt;?&gt;... attrs)</li>
-            <li>static Path createTempDirectory(Path dir, String prefix, FileAttribute&lt;?&gt;... attrs)</li>
-            <li>static Path createTempDirectory(String prefix, FileAttribute&lt;?&gt;... attrs)</li>
-            <li>static Path createSymbolicLink(Path link, Path target, FileAttribute&lt;?&gt;... attrs)</li>
-            <li>static Path createLink(Path link, Path existing)</li>
+            + createDirectory, createDirectories(경로 상의 모든 디렉터리 생성), createTempFile, createTempDirectory, createSymbolicLink, createLink(하드 링크)
             <li>static void delete(Path path)</li>
-            <li>static boolean deleteIfExists(Path path)</li>
-            <li>static Path copy(Path source, Path target, CopyOption... options)</li>
-            <li>static Path move(Path source, Path target, CopyOption... options)</li>
+            + deleteIfExists, copy, move
             <li>static Path readSymbolicLink(Path link)</li>
             <li>static FileStore getFileStore(Path path)</li>
             <li>static bolean isSameFile(Path path, Path path2)</li>
             <li>static long mismatch(Path path, Path path2) Since 12</li>
             두 파일이 불일치하는 최초의 바이트 위치를 반환한다. 같으면 -1L.
-            <li>static byte[] readAllBytes(Path path)</li>
-            <li>static String readString(Path path) Since 11</li>
-            == readString(path, StandardCharsets.UTF_8)
-            <li>static String readString(Path path, Charset cs) Since 11</li>
-            <li>static List&lt;String&gt; readAllLines(Path path, Charset cs)</li>
-            <li>static List&lt;String&gt; readAllLines(Path path) Since 1.8</li>
-            == readAllLines(path, StandardCharsets.UTF_8)
-            <li>static Stream&lt;String&gt; lines(Path path, Charset cs) Since 1.8</li>
-            <li>static Path write(Path path, byte[] bytes, OpenOption... options)</li>
-            <li>static Path write(Path path, Iterable&lt;? extends CharSequence&gt; lines, Charset cs, OpenOption... options)</li>
-            <li>static Path write(Path path, Iterable&lt;? extends CharSequence&gt; lines, OpenOption... options) Since 1.8</li>
-            <li>static Path writeString(Path path, CharSequence csq, OpenOption... options) Since 11</li>
-            <li>static Path writeString(Path path, CharSequence csq, Charset cs, OpenOption... options) Since 11</li>
+            
+            <li>static byte[] readAllBytes(Path path) + readString Since 11, lines, readAllLines Since 1.8</li>
+            <li>static Path write(Path path, Iterable&lt;? extends CharSequence&gt; lines, OpenOption... options) Since 1.8 + 오버로딩</li>
+            <li>static Path writeString(Path path, CharSequence csq, Charset cs, OpenOption... options) Since 11 + 오버로딩</li>
+            
+            <li>static boolean isHidden(Path path)</li>
+            + isDirectory, isSymbolicLink, isRegularFile, exists, notExists, isReadable, isWritable, isExecutable
+            <li>static String probeContentType(Path path)</li>
+            + getFileAttributeView, readAttributes, getAttribute, setAttribute, getLastModifiedTime, setLastModifiedTime, size
+            <li>static Set&lt;PosixFilePermission&gt; getPosixFilePermissions(Path path, LinkOption... options)</li>
+            + setPosixFilePermissions, getOwner, setOwner
+
             <li>static Stream&lt;Path&gt; list(Path dir) Since 1.8</li>
-            <li>static Stream&lt;Path&gt; walk(Path start, int maxDepth, FIleVisitOption... options) Since 1.8</li>
+            <li>static Stream&lt;Path&gt; walk(Path start, int maxDepth, FIleVisitOption... options) Since 1.8 + 오버로딩 + walkFileTree</li>
             <li>static Stream&lt;Path&gt; find(Path start, int maxDepth, BiPredicate&lt;Path, BasicFileAttributes&gt; matcher, FIleVisitOption... options) Since 1.8</li>
-            <li>... https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/nio/file/Files.html</li>
         </ol>
     </details>
-    
-    <hr>
-    
     <details>
-        <summary>final class FileSystems Since 1.7</summary>
+        <summary>abstract class FileStore Since 1.7</summary>
         <ol>
-            FileSystem에 관한 팩토리.
-            <li>static FileSystem getDefault()</li>
-            <li>static FileSystem getFileSystem(URI uri)</li>
-            <li>static FileSystem newFileSystem(URI uri, Map&lt;String, ?&gt; env)</li>
-            <li>static FIleSystem newFileSystem(URI uri, Map&lt;String, ?&gt; env, ClassLoader loader)</li>
-            <li>static FileSystem newFileSystem(Path path, ClassLoader loader)</li>
+            <li>abstract String name()</li>
+            + type, isReadonly, getTotalSpace, getUsableSpace, getBlockSize, getUnallocatedSpace, supportsFileAttributeView, getFileStoreAttributeView, getAttribute
         </ol>
     </details>
-    
-    <hr>
-    
     <details>
         <summary>abstract class FileSystem implements Closeable Since 1.7</summary>
         <ol>
@@ -275,6 +258,15 @@
             <li>abstract PathMatcher getPathMatcher(String syntaxAndPattern)</li>
             <li>abstract UserprincipalLookupService getUserPrincipalLookupService()</li>
             <li>abstract WatchService newWatchService()</li>
+        </ol>
+    </details>
+    <details>
+        <summary>final class FileSystems Since 1.7</summary>
+        <ol>
+            <li>FileSystem 팩터리</li>
+            <li>static FileSystem getDefault()</li>
+            <li>static FileSystem getFileSystem(URI uri) + 오버로딩</li>
+            <li>static FileSystem newFileSystem(Path path, ClassLoader loader)</li>
         </ol>
     </details>
 </details>
