@@ -854,9 +854,9 @@
         <summary>Spring Boot Web Microservice</summary>
         <ol>
             <li>예시 코드</li>
-            <button class="btn-code" path="Repositories/Eclipse/rest-microservice/pom.xml" lan="xml">pom.xml</button>
-            <button class="btn-code" path="Repositories/Eclipse/rest-microservice/src/main/java/io/github/donggi/controller/HelloController.java" lan="java">HelloController.java</button>
-            <button class="btn-code" path="Repositories/Eclipse/rest-microservice/src/test/java/io/github/donggi/controller/HelloControllerTest.java" lan="java">HelloControllerTest.java</button>
+            <button class="btn-code" path="Repositories/STS/rest-microservice/pom.xml" lan="xml">pom.xml</button>
+            <button class="btn-code" path="Repositories/STS/rest-microservice/src/main/java/io/github/donggi/controller/HelloController.java" lan="java">HelloController.java</button>
+            <button class="btn-code" path="Repositories/STS/rest-microservice/src/test/java/io/github/donggi/controller/HelloControllerTest.java" lan="java">HelloControllerTest.java</button>
             <li>스프링 부트 마이크로서비스는 실행에 필요한 모든 의존 라이브러리, HTTP 리스너 등을 하나의 jar로 패키징한다</li>
             <img class="rounded mx-auto d-block" src="imgs/20191006_180335.png">
             <img class="rounded mx-auto d-block" src="imgs/20191006_180348.png">
@@ -869,9 +869,9 @@
         <summary>Spring Boot Reactive Web Microservice</summary>
         <ol>
             <li>예시 코드</li>
-            <button class="btn-code" path="Repositories/Eclipse/reactive-webflux/pom.xml" lan="xml">pom.xml</button>
-            <button class="btn-code" path="Repositories/Eclipse/reactive-webflux/src/main/java/io/github/donggi/controller/HelloController.java" lan="java">HelloController.java</button>
-            <button class="btn-code" path="Repositories/Eclipse/reactive-webflux/src/test/java/io/github/donggi/controller/HelloControllerTest.java" lan="java">HelloControllerTest.java</button>
+            <button class="btn-code" path="Repositories/STS/reactive-webflux/pom.xml" lan="xml">pom.xml</button>
+            <button class="btn-code" path="Repositories/STS/reactive-webflux/src/main/java/io/github/donggi/controller/HelloController.java" lan="java">HelloController.java</button>
+            <button class="btn-code" path="Repositories/STS/reactive-webflux/src/test/java/io/github/donggi/controller/HelloControllerTest.java" lan="java">HelloControllerTest.java</button>
             <img class="rounded mx-auto d-block" src="imgs/20191008_110029.png">
             <li>리액티브 스트림 : java.util.concurrent.Flow</li>
             <ul>
@@ -897,8 +897,41 @@
     <details>
         <summary>Spring Config Server</summary>
         <ol>
+            <li>Config Server 선택</li>
             <img class="rounded mx-auto d-block" src="imgs/20191009_095724.png">
-            <li></li>
+            <li>예시 코드</li>
+            <button class="btn-code" path="Repositories/STS/config-server/src/main/resources/bootstrap.properties" lan="text">bootstrap.properties</button>
+            <button class="btn-code" path="Repositories/STS/config-server/src/main/java/io/github/donggi/ConfigServerApplication.java" lan="java">@EnableConfigServer</button>
+            <button class="btn-code" path="Repositories/Config/webapp.properties" lan="text">webapp.properties</button><br>
+            <li>접근 예</li>
+            http://localhost:28888/webapp/default<br>
+            http://localhost:28888/webapp/default/master/test.xml
+            <ul>
+                <li>/{application}/{profile}[/{label}]</li>
+                <li>/{application}-{profile}.yml</li>
+                <li>/{label}/{application}-{profile}.yml</li>
+                <li>/{application}-{profile}.properties</li>
+                <li>/{label}/{application}-{profile}.properties</li>
+                <img class="rounded mx-auto d-block" src="imgs/20191009_115402.png">
+            </ul>
+            <li>갱신 : http://localhost:28888/actuator/refresh</li>
+        </ol>
+    </details>
+    <details>
+        <summary>Spring Config Client</summary>
+        <ol>
+            <li>Config Client, Actuator 선택</li>
+            <img class="rounded mx-auto d-block" src="imgs/20191009_124833.png">
+            <li>예시 코드</li>
+            <button class="btn-code" path="Repositories/Config/config-client.properties" lan="text">config-client.properties</button>
+            <button class="btn-code" path="Repositories/STS/config-client/src/main/resources/bootstrap.properties" lan="text">bootstrap.properties</button>
+            <button class="btn-code" path="Repositories/STS/config-client/src/main/java/io/github/donggi/controller/HelloController.java" lan="java">HelloController.java</button>
+            <li>접근 예 http://localhost:18888/hello</li>
+            <img class="rounded mx-auto d-block" src="imgs/20191009_122755.png">
+            <li>갱신 : POST http://localhost:18888/actuator/refresh</li>
+            http://localhost:18888/actuator/에 접속했을 때 /refresh가 보이지 않는다면 management.security.enabled=false, management.endpoints.web.exposure.include=* 2개 설정 확인
+            <img class="rounded mx-auto d-block" src="imgs/20191009_124710.png">
+            <img class="rounded mx-auto d-block" src="imgs/20191009_124647.png">
         </ol>
     </details>
 </details>

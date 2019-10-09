@@ -44,7 +44,7 @@ const posts = {
 
         { filename: "posts/java/basic.html", category: "Programming/Java", title: "Java 시작하기" },
         { filename: "posts/java/effective_java.html", category: "Programming/Java", title: "『Effective Java』" },
-        { filename: "posts/java/java_ee.html", category: "Programming/Java", title: "JavaEE", top: true },
+        { filename: "posts/java/java_ee.html", category: "Programming/Java", title: "JavaEE" },
         { filename: "posts/java/javafx.html", category: "Programming/Java", title: "JavaFX" },
         { filename: "posts/java/jni.html", category: "Programming/Java", title: "Java Native Interface" },
         { filename: "posts/java/oop.html", category: "Programming/Java", title: "Java 객체지향" },
@@ -78,6 +78,7 @@ const posts = {
         { filename: "posts/java/java.util.stream.html", category: "Programming/Java/java.base", title: "java.util.stream" },
         { filename: "posts/java/java.util.zip.html", category: "Programming/Java/java.base", title: "java.util.zip" },
         { filename: "posts/java/com.sun.nio.sctp.html", category: "Programming/Java/jdk.sctp", title: "com.sun.nio.sctp 12 Since 1.7" },
+        { filename: "posts/java/lombok.html", category: "Programming/Java/lombok", title: "lombok 1.18.10" },
 
         { filename: "posts/javascript/basic.html", category: "Programming/JavaScript", title: "코어 JavaScript" },
         { filename: "posts/javascript/basic2.html", category: "Programming/JavaScript", title: "브라우저 JavaScript" },
