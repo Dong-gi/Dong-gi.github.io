@@ -849,15 +849,58 @@
 <hr>
 
 <details>
-    <summary>Spring Boot Microservice</summary>
-    <ol>
-        <li>스프링 부트 마이크로서비스는 실행에 필요한 모든 의존 라이브러리, HTTP 리스너 등을 하나의 jar로 패키징한다</li>
-        <img class="rounded mx-auto d-block" src="imgs/20191006_180335.png">
-        <img class="rounded mx-auto d-block" src="imgs/20191006_180348.png">
-        <img class="rounded mx-auto d-block" src="imgs/20191006_180401.png">
-        <li>$ mvn install<br>
-            java -jar target/rest-microservice-0.0.1-SNAPSHOT.jar</li>
-    </ol>
+    <summary>Spring Boot</summary>
+    <details>
+        <summary>Spring Boot Web Microservice</summary>
+        <ol>
+            <li>예시 코드</li>
+            <button class="btn-code" path="Repositories/Eclipse/rest-microservice/pom.xml" lan="xml">pom.xml</button>
+            <button class="btn-code" path="Repositories/Eclipse/rest-microservice/src/main/java/io/github/donggi/controller/HelloController.java" lan="java">HelloController.java</button>
+            <button class="btn-code" path="Repositories/Eclipse/rest-microservice/src/test/java/io/github/donggi/controller/HelloControllerTest.java" lan="java">HelloControllerTest.java</button>
+            <li>스프링 부트 마이크로서비스는 실행에 필요한 모든 의존 라이브러리, HTTP 리스너 등을 하나의 jar로 패키징한다</li>
+            <img class="rounded mx-auto d-block" src="imgs/20191006_180335.png">
+            <img class="rounded mx-auto d-block" src="imgs/20191006_180348.png">
+            <img class="rounded mx-auto d-block" src="imgs/20191006_180401.png">
+            <li>$ mvn install<br>
+                java -jar target/rest-microservice-0.0.1-SNAPSHOT.jar</li>
+        </ol>
+    </details>
+    <details>
+        <summary>Spring Boot Reactive Web Microservice</summary>
+        <ol>
+            <li>예시 코드</li>
+            <button class="btn-code" path="Repositories/Eclipse/reactive-webflux/pom.xml" lan="xml">pom.xml</button>
+            <button class="btn-code" path="Repositories/Eclipse/reactive-webflux/src/main/java/io/github/donggi/controller/HelloController.java" lan="java">HelloController.java</button>
+            <button class="btn-code" path="Repositories/Eclipse/reactive-webflux/src/test/java/io/github/donggi/controller/HelloControllerTest.java" lan="java">HelloControllerTest.java</button>
+            <img class="rounded mx-auto d-block" src="imgs/20191008_110029.png">
+            <li>리액티브 스트림 : java.util.concurrent.Flow</li>
+            <ul>
+                <li>Publisher : 발행자. subscribe​(Subscriber)</li>
+                <li>Subscriber : 구독자. onSubscribe(Subscription), onNext(T), onError(Throwable), onComplete(Void)</li>
+                <li>Subscription : 구독. request(long), cancel(Void)</li>
+                <li>Processor extends Subscriber, Publisher : 발행자 + 구독자</li>
+            </ul>
+            <li>리액터의 발행자 Processor</li>
+            <ul>
+                <li>reactor.core.publisher.Mono : 0 또는 1개의 이벤트 발행</li>
+                <li>reactor.core.publisher.Flux : 0 또는 n개의 이벤트 발행</li>
+            </ul>
+        </ol>
+    </details>
+    <details>
+        <summary>CORS 허용</summary>
+        <ol>
+            <li>컨트롤러 클래스 또는 메서드에 @CrossOrigin 설정</li>
+            <li>WebMvcConfigurer 빈의 addCorsMappings(CorsRegistry)를 재정의하여 앱 전체 설정 변경</li>
+        </ol>
+    </details>
+    <details>
+        <summary>Spring Config Server</summary>
+        <ol>
+            <img class="rounded mx-auto d-block" src="imgs/20191009_095724.png">
+            <li></li>
+        </ol>
+    </details>
 </details>
 
 <hr>
