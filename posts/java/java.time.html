@@ -3,19 +3,19 @@
 <details>
     <summary>abstract class Clock Since 1.8</summary>
     <ol>
-        시간대(time-zone)을 이용한 현재의 date와 time 제공. 예. LocalDate.now(clock)
+        <li>시간대(time-zone)을 이용한 현재의 date와 time 제공. 지정하지 않는 이상, 시계 내부의 시각은 계속 변한다.
+            <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/time/ClockTest.java" lan="java">예시 코드 »</button></li>
         
-        <li>static Clock systemUTC()</li>
-        <li>static Clock systemDefaultZone()</li>
-        <li>static Clock system(ZoneId zone)</li>
-        <li>static Clock tickMillis(ZoneId zone) Since 9</li>
-        <li>static Clock tickSeconds(ZoneId zone)</li>
-        <li>static Clock tickMinutes(ZoneId zone)</li>
+        <li>static Clock system(ZoneId zone) : 특정 시간대의 시계 반환</li>
+        + systemUTC() == system(ZoneOffset.UTC), systemDefaultZone() == system(ZoneId.systemDefault())
         <li>static Clock tick(Clock baseClock, Duration tickDuration)</li>
-        <li>static Clock fixed(Instant fixedInstant, ZoneId zone)</li>
-        <li>static Clock offset(Clock baseClock, Duration offsetDuration)</li>
+        지정된 시계의 tick 단위를 조정. 예를 들어 1분이 지정된 경우, 1분 미만의 값은 버려진다.
+        + tickMillis(ZoneId zone) Since 9 == tick(system(zone), Duration.ofMillis(1)), tickSeconds, tickMinutes
+        <li>static Clock fixed(Instant fixedInstant, ZoneId zone) : 현재 시각으로 멈춘 시계 반환</li>
+        <li>static Clock offset(Clock baseClock, Duration offsetDuration) : 시각을 조정한 새로운 시계 반환</li>
         <li>abstract ZoneId getZone()</li>
         <li>abstract Clock withZone(ZoneId zone)</li>
+        지정된 시간대에 현재 시계의 복사본을 생성하여 반환한다. 따라서 시각 자체는 조정하지 않는다.
         <li>long millis()</li>
         <li>abstract Instant instant()</li>
     </ol>
@@ -26,35 +26,43 @@
 <details>
     <summary>final class Duration implements TemporalAmount, Comparable&lt;Duration&gt;, Serializable Since 1.8</summary>
     <ol>
+        <li><button class="btn-code" path="Repositories/Eclipse/JavaSE/src/time/DurationTest.java" lan="java">예시 코드 »</button></li>
         <li>public static final Duration ZERO</li>
-        <li>static Duration ofDays(long days)</li>
-        <li>static Duration ofHours(Long hours)</li>
-        <li>static Duration ofMinutes(long minutes)</li>
-        <li>static Duration ofSeconds(long seconds)</li>
-        <li>static Duration ofSeconds(long seconds, long nanoAdjustment)</li>
-        <li>static Duration ofMillis(long millis)</li>
-        <li>static Duration ofNanos(long nanos)</li>
         <li>static Duration of(long amount, TemporalUnit unit)</li>
+        + ofDays, ofHours, ofMinutes, ofSeconds, ofMillis, ofNanos
         <li>static Duration from(TemporalAmount amount)</li>
+        amount 그대로 Duration으로 변환
         <li>static Duration parse(CharSequence text)</li>
+        ISO-8601 duration format PnDTnHnMn.nS // 추가로 접두 부호 가능
         <li>static Duration between(Temporal startInclusive, Temporal endExclusive)</li>
         <li>long get(TemporalUnit unit)</li>
-        <li>List&lt;TemporalUnit&gt; getUnits()</li>
-        <li>boolean isZero()</li>
-        <li>boolean isNegative()</li>
-        <li>long getSeconds()</li>
-        <li>int getNano()</li>
+        + getUnits, getSeconds, getNano
+        <li>boolean isZero() + isNegative()</li>
         <li>Duration withSeconds(long seconds)</li>
+        나노초 단위만 남기고 seconds로 변경
         <li>Duration withNanos(int nanoOfSecond)</li>
-        <li>Duration plus(Duration duration) ...</li>
-        <li>Duration minus(Duration duration) ...</li>
-        <li>Duration multipliedBy(long multiplicand)</li>
-        <li>Duration divideBy(long divisor)</li>
-        <li>Duration negated()</li>
-        <li>Duration abs()</li>
-        <li>long toDays(), toHours() ...</li>
+        나노초 단위만 nanoOfSecond로 변경
+        <li>Duration plus(Duration duration) + 오버로딩 + minus</li>
+        <li>Duration multipliedBy(long multiplicand) + divideBy</li>
+        <li>Duration negated() + abs</li>
+        <li>Temporal addTo(Temporal temporal) + subtractFrom</li>
+        <li>long toDays()</li>
+        + toHours, toMinutes, toSeconds Since 9, toMillis, toNanos, toDaysPart Since 9, toHoursPart Since 9, toMinutesPart Since 9, toSecondsPart Since 9, toMillisPart Since 9, toNanosPart Since 9
         <li>Duration truncatedTo(TemporalUnit unit) Since 9</li>
     </ol>
 </details>
 
 <hr>
+
+<details>
+    <summary>final class Instant implements Temporal, TemporalAdjuster, Comparable&lt;Instant&gt;, Serializable Since 1.8</summary>
+    <ol>
+        <li>Epoch(1970-01-01 00:00:00)를 기준으로 한 초(long)와 나노초(int)로 시각을 표현한다. 음수면 epoch 이전</li>
+        <li>public static final Instant EPOCH, MIN(아주 먼 옛날), MAX(아주 먼 미래)</li>
+        <li>static Instant now() + 오버로딩</li>
+        + ofEpochSecond, ofEpochMilli, from, parse(DateTimeFormatter.ISO_INSTANT; 예. 2007-12-03T10:15:30.00Z)
+        <li>ValudRange range(TemporalField field)</li>
+        <li>boolean isAfter(Instant otherInstant) + isBefore</li>
+        <li>이하 생략</li>
+    </ol>
+</details>
