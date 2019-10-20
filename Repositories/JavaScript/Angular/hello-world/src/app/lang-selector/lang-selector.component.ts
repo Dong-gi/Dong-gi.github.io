@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { I18nService } from '../i18n.service';
 
 @Component({
   selector: 'app-lang-selector',
@@ -8,12 +9,13 @@ import { Component, OnInit } from '@angular/core';
 export class LangSelectorComponent implements OnInit {
   lang = ''
 
-  constructor() { }
+  constructor(private i18nService: I18nService) { }
 
   ngOnInit() {
   }
 
   setLang(lang: string) {
-    this.lang = lang;
+    this.i18nService.setLang(lang);
+    this.lang = this.i18nService.getLang();
   }
 }
