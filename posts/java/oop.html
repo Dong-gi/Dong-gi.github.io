@@ -33,8 +33,8 @@
         <li>인터페이스 내부의 모든 요소는 기본적으로 public이다. JDK 9에서 private 메서드 지원 추가.</li>
         <li>인터페이스는 final 멤버 변수를 가질 수 있다.</li>
         <li>인터페이스의 메서드는 기본적으로 body가 없지만, default method는 가질 수 있다.</li>
-        <li>인터페이스 구체화 : implements</li>
-        <li>추상클래스는 인터페이스를 부분적으로 구체화해도 된다.</li>
+        <li>인터페이스 구현 : implements</li>
+        <li>추상클래스는 인터페이스를 부분적으로 구현해도 된다.</li>
         <button class="btn-code" path="Repositories/Eclipse/Basic/src/io/github/donggi/Interface.java" lan="java">예시 코드 »</button>
     </ul>
 </details>
@@ -82,7 +82,7 @@
         <ol>
             <li>객체의 복사본을 생성하여 반환한다.(얕은 복사)</li>
             <li>Object.clone()의 접근제한자는 protected이다. 이는 얕은 복사본의 이용으로 원본 객체까지 변경되는 것을 막기 위함이다.</li>
-            <li>clone()을 재정의할 때, Cloneable 마커 인터페이스를 구체화하는데, 마커 인터페이스는 추상 메소드 없이, 클래스가 단순히 해당 기능을 가짐을 나타낸다.</li>
+            <li>clone()을 재정의할 때, Cloneable 마커 인터페이스를 구현하는데, 마커 인터페이스는 추상 메소드 없이, 클래스가 단순히 해당 기능을 가짐을 나타낸다.</li>
         </ol>
         <li>boolean equals(Object obj)</li>
         Object 클래스의 equals 구현 : return this == obj;<br>
@@ -106,7 +106,7 @@
         <button class="btn-code" path="Repositories/Eclipse/Basic/src/io/github/donggi/Notify.java" lan="java">예시 : notify, wait »</button>
         <li>@Deprecated(since="9") protected void finalize()</li>
         객체 폐기 메서드였던 것.<br>
-        대안 : Non-heap 리소스를 갖는 객체들에 대하여 명시적인 자원 해제 메서드를 지원해야 하며, 가능하면 AutoCloseable을 구체화한다. java.lang.ref.Cleaner, java.lang.ref.PhantomReference는 참조되지 않는 객체를 해제하는 데 유연한 방법을 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/lang/ref/Cleaner.html">제공한다.</a>
+        대안 : Non-heap 리소스를 갖는 객체들에 대하여 명시적인 자원 해제 메서드를 지원해야 하며, 가능하면 AutoCloseable을 구현한다. java.lang.ref.Cleaner, java.lang.ref.PhantomReference는 참조되지 않는 객체를 해제하는 데 유연한 방법을 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/lang/ref/Cleaner.html">제공한다.</a>
     </ol>
 </details>
 

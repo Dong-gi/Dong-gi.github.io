@@ -202,7 +202,7 @@
             Foo f = (Foo) Proxy.newProxyInstance(Foo.class.getClassLoader(), new Class&lt;?&gt;[] { Foo.class }, handler);
 
             <li>프록시 클래스 속성</li>
-            "$Proxy"로 이름이 시작. final and non-abstract. java.lang.reflect.Proxy를 상속. 생성시 주어진 인터페이스들을 차례대로 구체화. ProtectionDomain은 bootstrap 클래스 로더가 로드한 시스템 클래스들과 동일.
+            "$Proxy"로 이름이 시작. final and non-abstract. java.lang.reflect.Proxy를 상속. 생성시 주어진 인터페이스들을 차례대로 구현. ProtectionDomain은 bootstrap 클래스 로더가 로드한 시스템 클래스들과 동일.
         </ol>
         <details>
             <summary>Method Detail</summary>

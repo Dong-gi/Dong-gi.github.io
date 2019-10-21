@@ -66,3 +66,60 @@
         <li>이하 생략</li>
     </ol>
 </details>
+
+<hr>
+
+<details>
+    <summary>abstract class ZoneId implements Serializable Since 1.8</summary>
+    <ol>
+        <li>public static final Map&lt;String, String&gt; SHORT_IDS</li>
+        <li>static ZoneId systemDefault()</li>
+        <li>static Set&lt;String&gt; getAvailaleZoneIds()</li>
+        <li>static ZoneId of(String zoneId)</li>
+        <li>static ZoneId ofOffset(String prefix, ZoneOffset offset)</li>
+        prefix : "GMT", "UTC", "UT", ""
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>final class ZoneOffset extends ZoneId implements TemporalAccessor, TemporalAdjuster, Comparable&lt;ZoneOffset&gt;, Serializable Since 1.8</summary>
+    <ol>
+        <li>public static final ZoneOffset UTC, MIN, MAX</li>
+        <li>static ZoneOffset of(String offsetId)</li>
+        -18:00 ~ +18:00
+        <li>static ZoneOffset ofHours(int hours)</li>
+        + ofHoursMinutes, ofHoursMinutesSeconds, ofTotalSeconds
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>enum DayOfWeek implements TemporalAccessor, TemporalAdjuster Since 1.8</summary>
+    <ol>
+        <li>public static final DayOfWeek MONDAY ~ SUNDAY</li>
+        <li>int getValue()</li>
+        ISO-8601. 1(MONDAY) ~ 7(SUNDAY)
+        <li>static DayOfWeek of(int dayOfWeek)</li>
+        <li>DayOfWeek plus(long days) + minus</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>enum Month implements TemporalAccessor, TemporalAdjuster Since 1.8</summary>
+    <ol>
+        <li>public static final Month JANUARY ~ DECEMBER</li>
+        <li>int getValue()</li>
+        ISO-8601. 1(JANUARY) ~ 12(DECEMBER)
+        <li>static Month of(int month)</li>
+        <li>Month plus(long months) + minus</li>
+        <li>int length(boolean leapYear)</li>
+        <li>int firstDayOfYear(boolean leapYear)</li>
+    </ol>
+</details>
+
+<hr>

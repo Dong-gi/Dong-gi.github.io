@@ -319,7 +319,7 @@
 
     <details>
         <summary>인터페이스</summary>
-        인터페이스도 프로퍼티를 가질 수 있다. 그 형태는 Auto-Implemented Property와 같아야 한다. 구체화하는 클래스에서 프로퍼티를 구현한다.<br>
+        인터페이스도 프로퍼티를 가질 수 있다. 그 형태는 Auto-Implemented Property와 같아야 한다. 구현하는 클래스에서 프로퍼티를 구현한다.<br>
         class SubClass : SuperClass, Interface1, Interface2, ...<br>
         interface Interface1 : Interface2
     </details>
@@ -684,7 +684,7 @@
 
             <li>ref struct</li>
             구조체가 항상 스택에 할당됨. 힙에 할당될 수 없으므로 클래스의 멤버가 될 수 없음<br>
-            인터페이스(IDisposable...)를 구체화할 수 없으므로, 삭제를 가능해지려면 액세스 가능한 void Dispose()를 가져야 한다.
+            인터페이스(IDisposable...)를 구현할 수 없으므로, 삭제를 가능해지려면 액세스 가능한 void Dispose()를 가져야 한다.
 
             <li>private protected</li>
             동일 어셈블리 내의 클래스 및 파생 클래스에서 엑세스 가능

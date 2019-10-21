@@ -82,7 +82,7 @@
 <details>
     <summary>명령</summary>
     1. 이벤트 핸들러를 xaml과 독립적으로 작성하는 것을 가능하게 해준다.<br>
-    2. ICommand를 구체화하며 CanExecute(), Execute(), CanExecuteChanged를 정의한다.<br>
+    2. ICommand를 구현하며 CanExecute(), Execute(), CanExecuteChanged를 정의한다.<br>
     3. 내장 명령 : ApplicationCommands, ComponentCommands, MediaCommands, NavigationCommands, EditingCommands<br>
     4. 명령 바인딩 : System.Windows.Interactivity.WPF 패키지 설치/이용
 </details>
@@ -101,7 +101,7 @@
     <summary>바인딩</summary>
     1. MVVM : Model - View - ViewModel<br>
     2. View의 컨트롤들을 ViewModel과 바인딩 : Control의 값 변경 + 이벤트를 ViewModel에 통지, Model의 값 변경을 View에 통지.<br>
-    3. ViewModel은 INotifyPropertyChanged을 구체화. 프로퍼티 setter에서 변경되었음을 통지.<br>
+    3. ViewModel은 INotifyPropertyChanged을 구현. 프로퍼티 setter에서 변경되었음을 통지.<br>
     public event PropertyChangedEventHandler PropertyChanged;<br>
     PropertyChanged(this, new PropertyChangedEventArgs("DateTime"));
 
@@ -166,7 +166,7 @@
         &lt;/StackPanel&gt;
         
         <li>IMultiValueConverter</li>
-        멀티 바인딩 : 여러 소스로부터 얻어진 객체들을 하나의 타깃 객체로 변환. IMultiValueConverter 인터페이스 구체화
+        멀티 바인딩 : 여러 소스로부터 얻어진 객체들을 하나의 타깃 객체로 변환. IMultiValueConverter 인터페이스 구현
         <button class="btn-code" path="Repositories/VisualStudio/CSharp/WpfApp6/RgbToColorConverter.cs" lan="cs">예시 코드 »</button>
     </ol>
 </details>

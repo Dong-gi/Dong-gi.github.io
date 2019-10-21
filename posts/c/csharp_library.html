@@ -130,7 +130,7 @@
         <li>System.Collections.Stack, Queue</li>
 
         <li>컬렉션 초기화 구문</li>
-        ICollection&lt;T&gt; 타입은 {}로 초기화 가능. C# 6.0부터는 인터페이스를 구체화하지 않은 경우라도 확장 메서드로 Add()가 정의됐는지 확인한다.<br>
+        ICollection&lt;T&gt; 타입은 {}로 초기화 가능. C# 6.0부터는 인터페이스를 구현하지 않은 경우라도 확장 메서드로 Add()가 정의됐는지 확인한다.<br>
         예. new List&lt;int&gt; {0, 1, 2}<br>
         new Dictionary&lt;int, string&gt; { {0, "Sunday"}, {6, "Saturday"} };<br>
         new Dictionary&lt;int, string&gt; { [0] = "Sunday", [6] = "Saturday" };
@@ -252,7 +252,7 @@
 <details>
     <summary>DB : ADO.NET</summary>
     <ul>
-        ADO.NET : DBMS 통신 닷넷 구현 라이브러리. 각 DBMS마다 만들어진 걸 이용하면 된다. 아래의 공통 인터페이스를 구체화한다.
+        ADO.NET : DBMS 통신 닷넷 구현 라이브러리. 각 DBMS마다 만들어진 걸 이용하면 된다. 아래의 공통 인터페이스를 구현한다.
         
         <li>System.Data.IDbConnection</li>
         DB 서버와의 연결 담당<br>
