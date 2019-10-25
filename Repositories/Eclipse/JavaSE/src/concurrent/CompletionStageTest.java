@@ -16,12 +16,13 @@ class CompletionStageTest {
     
     static <T> T asIsEx(T t) {
         System.out.printf("%d(Exception) : %s\n", System.currentTimeMillis(), t);
-        rethrow(new RuntimeException("그냥 던짐"));
+        rethrow(new Exception("그냥 던짐"));
         return t;
     }
     
-    static <T extends Throwable> void rethrow(T t) {
-        throw new RuntimeException(t);
+    @SuppressWarnings("unchecked")
+    static <T extends Throwable> void rethrow(Throwable t) throws T {
+        throw (T) t;
     }
 
     @Test
