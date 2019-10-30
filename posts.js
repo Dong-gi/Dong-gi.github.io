@@ -94,12 +94,12 @@ const posts = {
         { filename: "posts/python/1904252135.html", category: "Programming/Python", title: "Binary Data Services" },//, top: true
         { filename: "posts/python/1904252136.html", category: "Programming/Python", title: "Data Types" },//, top: true
 
+        { filename: "posts/tip/centos.html", category: "Tip", title: "CentOS" },
         { filename: "posts/tip/docker.html", category: "Tip", title: "Docker" },
         { filename: "posts/tip/eclipse.html", category: "Tip", title: "Eclipse" },
         { filename: "posts/tip/giregi.html", category: "Tip", title: "기레기 고소 방법" },
         { filename: "posts/tip/hangul.html", category: "Tip", title: "한글 유니코드" },
         { filename: "posts/tip/tomcat.html", category: "Tip", title: "tomcat" },
-        { filename: "posts/tip/linux.html", category: "Tip", title: "Linux" },
         { filename: "posts/tip/macro.html", category: "Tip", title: "macro" },
         { filename: "posts/tip/playstore.html", category: "Tip", title: "Google Play Store" },
         { filename: "posts/tip/psql.html", category: "Tip", title: "psql" },
