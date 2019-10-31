@@ -524,155 +524,343 @@
             java.util.concurrent.ForkJoinPool.common.exceptionHandler : class name of a Thread.UncaughtExceptionHandler<br>
             java.util.concurrent.ForkJoinPool.common.maximumSpares : maximum number of allowed extra threads to maintain target parallelism (default 256).
         </ol>
-    </details>
-    <details>
-        <summary>static interface ForkJoinPool.ForkJoinWorkerThreadFactory</summary>
-        ForkJoinWorkerThread newThread(ForkJoinPool pool)
-    </details>
-    <details>
-        <summary>static interface ForkJoinPool.ManagedBlocker</summary>
-        <ol>
+        <details>
+            <summary>static interface ForkJoinPool.ForkJoinWorkerThreadFactory</summary>
+            ForkJoinWorkerThread newThread(ForkJoinPool pool)
+        </details>
+        <details>
+            <summary>static interface ForkJoinPool.ManagedBlocker</summary>
+            <ol>
             <li>boolean block()</li>
             필요한 만큼 현재 스레드를 블록시킨다. 추가적인 블로킹이 필요하지 않으면 true 반환
             <li>boolean isReleasable</li>
             블로킹이 필요없으면 true 반환
-        </ol>
-    </details>
-    <details>
-        <summary>Field, Constructor Detail</summary>
-        <ol>
-            <li>public static final ForkJoinPool.ForkJoinWorkerThreadFactory defaultForkJoinWorkerThreadFactory</li>
-            <li>public ForkJoinPool() == this(Runtime.availableProcessors())</li>
-            <li>public ForkJoinPool(int parallelism)</li>
-            <li>public ForkJoinPool(int parallelism, ForkJoinPool.ForkJoinWorkerThreadFactory factory, Thread.UncaughtExceptionHandler handler, boolean asyncMode)</li>
-            <li>public ForkJoinPool(int parallelism, ForkJoinPool.ForkJoinWorkerThreadFactory factory, Thread.UncaughtExceptionHandler handler, boolean asyncMode, int corePoolSize, int maximumPoolSize, int minimumRunnable, Predicate&lt;? super ForkJoinPool&gt; saturate, long keepAliveTime, TimeUnit unit) Since 9</li>
-        </ol>
-    </details>
-    <details>
-        <summary>Method Detail</summary>
-        <ol>
-            <li>static ForkJoinPool commonPool() Since 1.8</li>
-            <li>static void managedBlock(ForkJoinPool.ManagedBlocker blocker)</li>
-            <li>&lt;T&gt; T invoke(ForkJoinTask&lt;T&gt; task)<br>
-                void execute(ForkJoinTask&lt;?&gt; task) + 오버로딩<br>
-                &lt;T&gt; ForkJoinTask&lt;T&gt; submit(ForkJoinTask&lt;T&gt; task) + 오버로딩</li>
-            <li>void shutdown()</li>
-            + shutdownNow(), isTerminated, isTerminating, isShutdown, awaitTermination, awaitQuiescence
-            <li>ForkJoinPool.ForkJoinWorkerThreadFactory getFactory()</li>
-            + getUncaughtExceptionHandler, getParallelism, getPoolSize, getAsyncMode, getRunningThreadCount, getActiveThreadCount, isQuiescent, getStealCount, getQueuedTaskCount, getQueuedSubmissionCount, hasQueuedSubmissions
-        </ol>
-    </details>
-</details>
-
-<hr>
-
-<details>
-    <summary>class Executors Since 1.5</summary>
-    <ol>
-        <li>Executor, ExecutorService, ScheduledExecutorService, ThreadFactory, Callable에 관한 팩터리 및 유틸리티.</li>
-        
+            </ol>
+        </details>
         <details>
-            <summary>ExecutorService</summary>
+            <summary>Field, Constructor Detail</summary>
+            <ol>
+                <li>public static final ForkJoinPool.ForkJoinWorkerThreadFactory defaultForkJoinWorkerThreadFactory</li>
+                <li>public ForkJoinPool() == this(Runtime.availableProcessors())</li>
+                <li>public ForkJoinPool(int parallelism)</li>
+                <li>public ForkJoinPool(int parallelism, ForkJoinPool.ForkJoinWorkerThreadFactory factory, Thread.UncaughtExceptionHandler handler, boolean asyncMode)</li>
+                <li>public ForkJoinPool(int parallelism, ForkJoinPool.ForkJoinWorkerThreadFactory factory, Thread.UncaughtExceptionHandler handler, boolean asyncMode, int corePoolSize, int maximumPoolSize, int minimumRunnable, Predicate&lt;? super ForkJoinPool&gt; saturate, long keepAliveTime, TimeUnit unit) Since 9</li>
+            </ol>
+        </details>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>static ForkJoinPool commonPool() Since 1.8</li>
+                <li>static void managedBlock(ForkJoinPool.ManagedBlocker blocker)</li>
+                <li>&lt;T&gt; T invoke(ForkJoinTask&lt;T&gt; task)<br>
+                    void execute(ForkJoinTask&lt;?&gt; task) + 오버로딩<br>
+                    &lt;T&gt; ForkJoinTask&lt;T&gt; submit(ForkJoinTask&lt;T&gt; task) + 오버로딩</li>
+                <li>void shutdown()</li>
+                + shutdownNow(), isTerminated, isTerminating, isShutdown, awaitTermination, awaitQuiescence
+                <li>ForkJoinPool.ForkJoinWorkerThreadFactory getFactory()</li>
+                + getUncaughtExceptionHandler, getParallelism, getPoolSize, getAsyncMode, getRunningThreadCount, getActiveThreadCount, isQuiescent, getStealCount, getQueuedTaskCount, getQueuedSubmissionCount, hasQueuedSubmissions
+            </ol>
+        </details>
+    </details>
+    <details>
+        <summary>class Executors Since 1.5</summary>
+        <details>
+            <summary>ExecutorService 관련</summary>
             <ul>
-                <li>static ExecutorService newFixedThreadPool(int nThreads)</li>
+                <li>static ExecutorService newFixedThreadPool(int nThreads) + 오버로딩</li>
                 최대 동시 실행 가능한 스레드 수가 제한. 나머지 스레드는 큐에서 대기. 스레드들은 명시적으로 shutdown되기 전까지 풀에 존재한다.
-
-                <li>static ExecutorService newWorkStealingPool(int parallelism) Since 1.8</li>
-                parallelism : 병행 레벨. 동시 실행 가능한 최대 스레드 수.<br>
-                풀 내부의 스레드 수는 가변적이다. 여러 큐를 이용할 수 있기 때문에, 스레드 실행 순서를 예측할 수 없다.
-
-                <li>static ExecutorService newWorkStealingPool() Since 1.8</li>
-                사용 가능한 프로세서 수를 parallelism level로 이용.
-
-                <li>static ExecutorService newFixedThreadPool(int nThreads, ThreadFactory threadFactory)</li>
-                새 스레드를 생성하는 데 threadFactory를 이용.
-
-                <li>static ExecutorService newSingleThreadExecutor()</li>
+                <li>static ExecutorService newWorkStealingPool() Since 1.8 + 오버로딩</li>
+                사용 가능한 프로세서 수를 parallelism level로 이용. 반환되는 객체는 ForkJoinPool 인스턴스
+                <li>static ExecutorService newSingleThreadExecutor() + 오버로딩</li>
                 하나의 워커 스레드만 사용한다. 예기지 않게 워커가 종료되면 새로운 스레드가 나머지 작업을 위해 그 자리를 대신할 수 있다.<br>
-                같은 특징을 갖는 newFixedThreadPool(1)과 다르게, 반환된 Executor로 추가적인 워커 스레드를 이용하도록 설정할 수 없다.
-
-                <li>static ExecutorService newSingleThreadExecutor(ThreadFactory threadFactory)</li>
-                
-                <li>static ExecutorService newCachedThreadPool()</li>
+                같은 특징을 갖는 newFixedThreadPool(1)과 다르게, 반환된 ExecutorService가 추가적인 워커 스레드를 이용하도록 설정할 수 없다.
+                <li>static ExecutorService newCachedThreadPool() + 오버로딩</li>
                 이전에 종료된 스레드를 재사용. 60초 동안 이용되지 않으면 풀에서 삭제된다.
-
-                <li>static ExecutorService newCachedThreadPool(ThreadFactory threadFactory)</li>
-                
                 <li>static ExecutorService unconfigurableExecutorService(ExecutorService executor)</li>
                 ExecutorService에 정의된 메서드들은 executor에 연결하고, 그 외 캐스트를 통해 이용할 수 있는 메서드들은 호출하지 못하도록 한다.
             </ul>
         </details>
-        
         <details>
-            <summary>ScheduledExecutorService</summary>
+            <summary>ScheduledExecutorService 관련</summary>
             <ul>
-                <li>static ScheduledExecutorService newSingleThreadScheduledExecutor()</li>
-                특징은 ExecutorService와 같다.
-                <li>static ScheduledExecutorService newSingleThreadScheduledExecutor(ThreadFactory threadFactory)</li>
-                <li>static ScheduledExecutorService newScheduledThreadPool(int corePoolSize)</li>
-                corePoolSize : 풀에 유지할 스레드 수
-                <li>static ScheduledExecutorService newScheduledThreadPool(int corePoolSize, ThreadFactory threadFactory)</li>
+                <li>static ScheduledExecutorService newSingleThreadScheduledExecutor() + 오버로딩</li>
+                <li>static ScheduledExecutorService newScheduledThreadPool(int corePoolSize) + 오버로딩</li>
                 <li>static ScheduledExecutorService unconfigurableScheduledExecutorService(ScheduledExecutorService executor)</li>
                 ScheduledExecutorService에 정의된 메서드들은 executor에 연결하고, 그 외 캐스트를 통해 이용할 수 있는 메서드들은 호출하지 못하도록 한다.
             </ul>
         </details>
-        
         <details>
-            <summary>ThreadFactory</summary>
+            <summary>ThreadFactory 관련</summary>
             <ul>
                 <li>static ThreadFactory defaultThreadFactory()</li>
                 모든 스레드들을 같은 ThreadGroup으로 생성한다. 스레드의 우선순위는 Threa.NORM_PRIORITY와 그룹의 최대 허용치 중 작은 것으로 설정된다.<br>
                 각 스레드들은 non-daemon으로 생성되며, Thread.getName()을 통해 얻을 수 있는 "pool-N-thread-M" 꼴의 이름으로 접근할 수 있다.
-                
                 <li>static ThreadFactory privilegedThreadFactory()</li>
                 호출하는 스레드와 같은 권한으로 새로운 스레드를 생성하는 ThreadFactory 반환.
             </ul>
         </details>
-        
         <details>
-            <summary>Callable</summary>
+            <summary>Callable 관련</summary>
             <ul>
                 <li>static &lt;T&gt; Callable&lt;T&gt; callable(Runnable task, T result)</li>
-                
                 <li>static Callable&lt;Object&gt; callable(Runnable task)</li>
                 작업이 완료되면 null을 반환하는 Callable 반환
-
                 <li>static Callable&lt;Object&gt; callable(PrivilegedAction&lt;?&gt; action)</li>
                 호출되면 action::run을 실행하고 그 결과를 반환하는 Callable 반환
-
                 <li>static Callable&lt;Object&gt; callable(PrivilegedExceptionAction&lt;?&gt; action)</li>
-
                 <li>static &lt;T&gt; Callable&lt;T&gt; privilegedCallable(Callable&lt;T&gt; callable)</li>
                 호출되면 callable을 현재 access control context에서 실행. AccessController.doPrivileged에서 호출되어야 한다.
-
                 <li>static &lt;T&gt; Callable&lt;T&gt; privilegedCallableUsingCurrentClassLoader(Callable&lt;T&gt; callable)</li>
             </ul>
         </details>
-    </ol>
+    </details>
 </details>
 
 <hr>
 
 <details>
-    <summary>java.util.concurrent에서 지원하는 큐들</summary>
+    <summary>리액티브 스트림</summary>
     <ol>
-        <li>ConcurrentLinkedQueue : 가변 길이, 스레드-안전한 non-blocking FIFO 큐</li>
-        <li>ConcurrentlinkedDeque : 가변 길이, 스레드-안전한 non-blocking 덱</li>
-        <li>BlockingQueue : put(), take()를 블록하는 큐</li>
-        LinkedBlockingQueue, ArrayBlockingQueue, SynchronousQueue, PriorityBlockingQueue, DelayQueue
+        <li>https://github.com/reactive-streams/reactive-streams-jvm</li>
+        <li>final class Flow Since 9</li>
+        static int defaultBufferSize() : 256
+        <li>@FunctionalInterface static interface Flow.Publisher&lt;T&gt;</li>
+        void subscribe(Flow.Subscriber&lt;? super T&gt; subscriber)
+        <details>
+            <summary>규칙</summary>
+            <ol>
+                <li>Publisher가 Subscriber에 onNext로 신호를 보낸 횟수 &lt;= Subscriber가 Subscription으로 보낸 request의 횟수</li>
+                이 규칙은 onNext의 호출에 대하여, 선행되는 request가 항상 존재함을 함의한다
+                <li>Publisher가 onNext로 신호를 보낸 횟수가 request보다 적은 경우, Subscription을 onComplete 또는 onError로 종결한다</li>
+                이 규칙은 request에 대한 onNext가 항상 존재하지는 않음을 명시한다
+                <li>onSubscribe, onNext, onError, onComplete 신호는 직렬적이어야 한다</li>
+                결코 다른 신호와 중첩되는 시점이 있어서는 안 된다
+                <li>Publisher의 실패는 반드시 onError로 보내야 한다</li>
+                <li>스트림이 정상적으로 종결된 경우 Publisher는 반드시 onComplete 신호를 보내야 한다</li>
+                <li>Publisher가 onError, onComplete 신호를 보낸 경우, Subscription은 반드시 취소된 것으로 간주되야 한다</li>
+                <li>종료 상태(onError, onCompletion)에서 추가적인 신호의 발생은 절대 없다</li>
+                <li>Subscription이 취소된 경우, 추가적인 신호 전달은 절대 없다</li>
+                <li>Publisher.subscribe 안에서 onSubscribe를 반드시 호출해야 하며, 반드시 다른 신호를 보내기 전에 선행되어야 한다. 또, 이 경우 메서드는 반드시 정상 종결되어야 한다</li>
+                Subscriber.onSubscribe 호출 시 null 검사는 필요없다. NullPointerException이 발생하게 내버려두면 된다.
+                <li>Publisher.subscribe는 여러 번 호출될 수 있지만, 하나의 Subscriber로부터는 최대 한 번만 호출되어야 한다</li>
+                <li>Publisher는 여러 Subscriber들에 대한 멀티캐스트를 지원할 수 있다</li>
+            </ol>
+        </details>
+        <li>static interface Flow.Subsbriber&lt;T&gt;</li>
+        void onSubscribe(Flow.Subscription), onNext(T), onError(Throwable), onComplete(Void)
+        <details>
+            <summary>규칙</summary>
+            <ol>
+                <li>Subscriber는 onNext 신호를 받고 싶다면 반드시 먼저 request 신호를 보내야 한다</li>
+                <li>신호를 보낼 때, Publisher의 완료를 기다리지 말고 비동기적으로 전달함이 권장된다</li>
+                <li>onComplete, onError 메서드는 절대 Subscription, Publisher 어느쪽의 메서드도 호출해선 안 된다</li>
+                <li>onComplete, onError 신호를 받은 이후부터, Subscription은 반드시 취소로 간주되어야 한다</li>
+                <li>유효한 Subscription이 존재한다면, 추가적인 onSubscribe 신호에 대해 반드시 cancel을 호출해야 한다</li>
+                하나의 Subscriber는 둘 이상의 Publisher를 동시에 구독하지 않아야 한다
+                <li>더 이상 필요없다면 반드시 Subscription.cancel을 호출해야 한다</li>
+                <li>Subscription으로 보내는 신호들은 반드시 직렬적이어야 한다</li>
+                결코 동시에 두 신호를 보내는 순간은 없어야 한다
+                <li>cancel의 호출은 대기 중인 작업의 취소를 보장하지 않는다. cancel 이후 추가적인 onNext 신호에 대해 준비되어야 한다</li>
+                <li>아무런 request를 보내지 않았더라도, onComplete, onError 신호에 대해 준비되어야 한다</li>
+                <li>onSubscribe, onNext, onError, onComplete는 인자가 null이 아닌 이상 반드시 정상 종료되어야 한다</li>
+                Subscriber의 실패는 Subscription.cancel로만 통지할 수 있다. 이 규칙이 지켜지지 않은 경우, Subscription은 반드시 취소로 간주되어야 한다
+            </ol>
+        </details>
+        <li>static interface Flow.Subscription</li>
+        void request(long) , cancel(Void)
+        <details>
+            <summary>규칙</summary>
+            <ol>
+                <li>request, cancel은 반드시 Subscriber가 호출해야 한다</li>
+                <li>onNext, onSubscribe 안에서 동기적으로 request를 호출하는 것은 허용된다</li>
+                <li>cancel의 호출은 멱등이어야 하고, 그 실행은 스레드-안전해야 한다</li>
+                <li>Subscription이 취소됐다면, 이후의 request, cancel의 호출은 아무 작업도 하지 않아야 한다</li>
+                <li>0이하에 대한 request 호출은 onError로 IllegalArgumentException을 보내야 한다</li>
+                <li>Subscription이 취소됐다면, Publisher는 Subscriber에 대한 모든 참조를 제거해야 한다</li>
+                <li>request, cancel은 항상 정상 종료되어야 한다</li>
+                <li>Subscription은 반드시 무제한적인 request 호출을 허용해야 한다. n == Long.MAX_VALUE</li>
+            </ol>
+        </details>
+        <li>static interface Flow.Processor&lt;T, R&gt; extends Flow.Subscriber&lt;T&gt;, Flow.Publisher&lt;R&gt;</li>
     </ol>
+    <details>
+        <summary>class SubmissionPublisher&lt;T&gt; implements Flow.Publisher&lt;T&gt;, AutoCloseable Since 9</summary>
+        <details>
+            <summary>Constructor Detail</summary>
+            <ol>
+                <li>public SubmissionPublisher(Executor executor, int maxBufferCapacity, BiConsumer&lt;? super Flow.Subscriber&lt;? super T&gt;, ? super Throwable&gt; handler) + 오버로딩</li>
+                executor : 비동기적으로 구독자에게 전달하는 데 쓰일 Executor<br>
+                maxBufferCapacity : 각 구독자에 대한 버퍼의 한도. 실제 한도는 getMaxBufferCapacity()로 확인<br>
+                handler : null이 아니면 onNext에서 발생한 예외를 처리
+                <li>public SubmissionPublisher()</li>
+                executor = ForkJoinPool.commonPool(), maxBufferCapacity = Flow.defaultBufferSize(), handler = null
+            </ol>
+        </details>
+        <details>
+            <summary>Method Detail</summary>
+            <ol>
+                <li>int submit(T item)</li>
+                각 구독자에게 비동기적으로 item을 보낸다(onNext). lag(배포된 item 중에 아직 소비되지 않은 개수) 추정치를 반환한다.
+                <li>int offer(T item, BiPredicate&lt;Flow.Subscriber&lt;? super T&gt;, ? super T&gt; onDrop) + 오버로딩</li>
+                가능하다면 각 구독자에게 비동기적으로 item을 보낸다(onNext). 리소스 초과(버퍼가 가득 찼다던지)로 실패한 경우 onDrop이 실행된다. onDrop이 true를 반환하면 onNext를 다시 시도한다.<br>
+                반환값이 음수인 경우 drop된 구독자 수를 의미하고, 그 외의 경우 lag(배포된 item 중에 아직 소비되지 않은 개수) 추정치를 의미한다
+                <li>void closeExceptionally(Throwable error) + getClosedException</li>
+                <li>boolean isClosed()</li>
+                <li>boolean hasSubscribers()</li>
+                + getNumberOfSubscribers(), getExecutor(), getMaxBufferCapacity(), getSubscribers(), isSubscribed(Flow.Subscriber&lt;? super T&gt; subscriber)
+                <li>long estimateMinimumDemand()</li>
+                각 구독자들이 요청한 아이템 수 중, 아직 공급되지 않은 수의 최소값(추정치) 반환
+                <li>int estimateMaximumLag()</li>
+                각 구독자들에 보낸 아이템 중 아직 소비되지 않은 수의 최대값(추정치) 반환
+                <li>CompletableFuture&lt;Void&gt; consume(Consumer&lt;? super T&gt; consumer)</li>
+                배포된 모든 아이템에 대해 consumer 실행. 정상적으로 모두 실행되면 onComplete가 호출되고, CompletableFuture도 정상 종료된다
+            </ol>
+        </details>
+    </details>
 </details>
 
 <hr>
 
 <details>
-    <summary>java.util.concurrent에서 지원하는 맵들</summary>
-    <ol>
-        <li>ConcurrentMap&lt;K, V&gt; : 스레드-안전, 작업의 원자성 보장.</li>
-        ConcurrentHashMap&lt;K, V&gt;
-        <li>ConcurrentNavigableMap&lt;K, V&gt; : NavigableMap 연산을 지원하는 ConcurrentMap</li>
-        ConcurrentSkipListMap&lt;K, V&gt; (ConcurrentSkipListSet도 존재)
-    </ol>
+    <summary>Blocking 컬렉션</summary>
+    <details>
+        <summary>interface BlockingQueue&lt;E&gt; extends Queue&lt;E&gt; Since 1.5</summary>
+        <ol>
+            <li>기본적으로 스레드-안전하지만, addAll 따위의 bulk 연산은 특별히 표시되지 않는 한 그렇지 않다.</li>
+            <li>요소를 획득할 때, 큐가 비어있는 경우 블로킹. 요소를 추가할 때, 큐에 빈 자리가 있을 때까지 블로킹</li>
+            <table>
+                <tbody>
+                    <tr><th></th><th>예외 발생</th><th>특별값 반환</th><th>블로킹</th><th>시간 제한</th></tr>
+                    <tr><th>Insert</th><td>add(E)</td><td>offer(E)</td><td>put(E)</td><td>offer(E,long,TimeUnit)</td></tr>
+                    <tr><th>Remove</th><td>remove()</td><td>poll()</td><td>take()</td><td>poll(long,TimeUnit)</td></tr>
+                    <tr><th>Examine</th><td>element()</td><td>peek()</td><td>-</td><td>-</td></tr>
+                </tbody>
+            </table>
+            <li>int remainingCapacity()</li>
+            블로킹없이 삽입 가능한 요소의 수. 오차가 있을 수 있다
+            <li>int drainTo(Collection&lt;? super E&gt; c) + 오버로딩</li>
+            모든 원소를 c로 옮긴다
+        </ol>
+    </details>
+    <details>
+        <summary>class ArrayBlockingQueue&lt;E&gt; extends AbstractQueue&lt;E&gt; implements BlockingQueue&lt;E&gt;, Serializable Since 1.5</summary>
+        <ol>
+            <li>크기가 고정된 기저 배열을 이용한 BlockingQueue</li>
+            <li>기본적으로 삽입을 기다리는 스레드들 사이의 처리 순서는 보장되지 않지만, fairness를 설정하면 FIFO 순으로 처리된다</li>
+            <li>Collection, Iterator의 모든 선택적 연산을 구현했다.</li>
+            <li>public ArrayBlockingQueue(int capacity, boolean fair) + 오버로딩</li>
+        </ol>
+    </details>
+    <details>
+        <summary>class LinkedBlockingQueue&lt;E&gt; extends AbstractQueue&lt;E&gt; implements BlockingQueue&lt;E&gt;, Serializable Since 1.5</summary>
+        <ol>
+            <li>크기를 고정할 수 있는 연결된 BlockingQueue</li>
+            <li>Collection, Iterator의 모든 선택적 연산을 구현했다</li>
+            <li>public LinkedBlockingQueue(int capacity) + 오버로딩</li>
+            지정하지 않은 경우, 기본 크기는 Integer.MAX_VALUE
+        </ol>
+    </details>
+    <details>
+        <summary>class PriorityBlockingQueue&lt;E&gt; extends AbstractQueue&lt;E&gt; implements BlockingQueue&lt;E&gt;, Serializable Since 1.5</summary>
+        <ol>
+            <li>크기 제한 없고, PriorityQueue와 비슷한 정렬을 이용한 BlockingQueue</li>
+            <li>Collection, Iterator의 모든 선택적 연산을 구현했다</li>
+            다만 iterator(), spliterator()로 제공되는 인스턴스들은 순회하는 순서를 보장하지 않는다. 순차적인 순회를 원한다면 Arrays.sort(queue.toArray())를 고려할 것
+            <li>같은 우선순위의 원소 사이의 정렬은 정의되지 않았다</li>
+            <li>public PriorityBlockingQueue(int initialCapacity, Comparator&lt;? super E&gt; comperator) + 오버로딩</li>
+            initialCapacity는 지정되지 않은 경우 11, comperator는 지정되지 않은 경우 자연스러운 정렬을 이용
+            <li>Comparator&lt;? super E&gt; comparator()</li>
+        </ol>
+    </details>
+    <details>
+        <summary>class SynchronousQueue&lt;E&gt; extends AbstractQueue&lt;E&gt; implements BlockingQueue&lt;E&gt;, Serializable Since 1.5</summary>
+        <ol>
+            <li>서로 연관된 삽입 연산과 삭제 연산 한 쌍이 동시에 존재할 때까지 연산을 블로킹한다</li>
+            <li>Collection, Iterator의 모든 선택적 연산을 구현했지만, 빈 컬렉션처럼 동작한다</li>
+            <li>public SynchronousQueue(boolean fair) + 오버로딩</li>
+            fair : 대기하는 스레드들이 순서대로 처리된다. 지정되지 않으면 false
+        </ol>
+    </details>
+    <details>
+        <summary>class DelayQueue&lt;E extends Delayed&gt; extends AbstractQueue&lt;E&gt; implements BlockingQueue&lt;E&gt; Since 1.5</summary>
+        <ol>
+            <li>Delayed 요소들로 구성된, 크기 제한없는 BlockingQueue. 요소의 지연 시간이 만료되어야 큐로부터 획득 가능하다</li>
+            요소가 만료됐음은 getDelay(TimeUnit.NANOSECONDS) 리턴값이 0 이하일 때로 판정
+            <li>Collection, Iterator의 모든 선택적 연산을 구현했다</li>
+            <li>public DelayQueue() + 오버로딩</li>
+        </ol>
+    </details>
+    <details>
+        <summary>interface BlockingDeque&lt;E&gt; extends BlockingQueue&lt;E&gt;, Deque&lt;E&gt; Since 1.6</summary>
+        요소를 획득할 때, 덱이 비어있는 경우 블로킹. 요소를 추가할 때, 덱에 빈 자리가 있을 때까지 블로킹
+        <table>
+            <tbody>
+                <tr><th></th><th>예외 발생</th><th>특별값 반환</th><th>블로킹</th><th>시간 제한</th></tr>
+                <tr><th>Insert</th><td>addFirst(E)<br>addLast(E)</td><td>offerFirst(E)<br>offerLast(E)</td><td>putFirst(E)<br>putLast(E)</td><td>offerFirst(E,long,TimeUnit)<br>offerLast(E,long,TimeUnit)</td></tr>
+                <tr><th>Remove</th><td>removeFirst()<br>removeLast()</td><td>pollFirst()<br>pollLast()</td><td>takeFirst()<br>takeLast()</td><td>pollFirst(long,TimeUnit)<br>pollLast(long,TimeUnit)</td></tr>
+                <tr><th>Examine</th><td>getFirst()<br>getLast()</td><td>peekFirst()<br>peekLast()</td><td>-</td><td>-</td></tr>
+            </tbody>
+        </table>
+    </details>
+    <details>
+        <summary>class LinkedBlockingDeque&lt;E&gt; extends AbstractQueue&lt;E&gt; implements BlockingDeque&lt;E&gt;, Serializable Since 1.6</summary>
+        <ol>
+            <li>크기를 제한할 수 있는 BlockingDeque.</li>
+            <li>Collection, Iterator의 모든 선택적 연산을 구현했다</li>
+            <li>public LinkedBlockingDeque(int capacity) + 오버로딩</li>
+            지정하지 않은 경우 Integer.MAX_VALUE가 사용된다
+        </ol>
+    </details>
+    <details>
+        <summary>interface TransferQueue&lt;E&gt; extends BlockingQueue&lt;E&gt; Since 1.7</summary>
+        <ol>
+            <li>생산자가 소비자가 소비할 때까지 대기할 수 있는 BlockingQueue.</li>
+            기존의 BlockingQueue와 SynchronousQueue 기능 모두를 선택적으로 이용할 수 있다
+            <li>void transfer(E e)</li>
+            소비자에게 e를 전달한다. 소비자가 소비할 때까지 대기한다
+            <li>boolean tryTransfer(E e)</li>
+            대기 중인 소비자에게 e를 전달한다. 대기 중인 소비자가 없다면 즉시 false를 반환한다
+            <li>boolean tryTransfer(E e, long timeout, TimeUnit unit)</li>
+            timeout이 지나도록 대기 중인 소비자가 없다면 false를 반환한다
+            <li>boolean hasWaitingConsumer()</li>
+            <li>int getWaitingConsumerCount()</li>
+        </ol>
+    </details>
+    <details>
+        <summary>class LinkedTransferQueue&lt;E&gt; extends AbstractQueue&lt;E&gt; implements TransferQueue&lt;E&gt;, Serializable Since 1.7</summary>
+        <ol>
+            <li>크기 제한없고 연결된 TransferQueue.</li>
+            <li>size 계산에 순회가 필요하므로 정확하지 않을 수 있다</li>
+            <li>addAll 따위의 bulk 연산은 원자적으로 실행되지 않을 수 있다</li>
+            <li>Collection, Iterator의 모든 선택적 연산을 구현했다</li>
+            <li>public LinkedTransferQueue() + 오버로딩</li>
+        </ol>
+    </details>
+</details>
+
+<hr>
+
+<details>
+    <summary>Non-Blocking 컬렉션</summary>
+    <details>
+        <summary>class CopyOnWriteArrayList&lt;E&gt; implements List&lt;E&gt;, RandomAccess, Cloneable, Serializable Since 1.5</summary>
+        <ol>
+            <li>스레드-안전한 ArrayList</li>
+        </ol>
+    </details>
+    <li>ConcurrentLinkedQueue : 가변 길이, 스레드-안전한 non-blocking FIFO 큐</li>
+    <li>ConcurrentlinkedDeque : 가변 길이, 스레드-안전한 non-blocking 덱</li>
+    <li>ConcurrentMap&lt;K, V&gt; : 스레드-안전, 작업의 원자성 보장.</li>
+    <li>ConcurrentNavigableMap&lt;K, V&gt; : NavigableMap 연산을 지원하는 ConcurrentMap</li>
+        ConcurrentHashMap
+        ConcurrentHashMap.KeySetView
+        ConcurrentSkipListMap
+        ConcurrentSkipListSet
+        
+        
+        
+        CopyOnWriteArraySet
+        
 </details>
 
 <hr>
@@ -761,40 +949,11 @@
 
 <hr>
 
-BlockingDeque
-BlockingQueue
-ConcurrentMap
-ConcurrentNavigableMap
-TransferQueue
-ArrayBlockingQueue
-ConcurrentHashMap
-ConcurrentHashMap.KeySetView
-ConcurrentLinkedDeque
-ConcurrentLinkedQueue
-ConcurrentSkipListMap
-ConcurrentSkipListSet
-CopyOnWriteArrayList
-CopyOnWriteArraySet
-DelayQueue
-LinkedBlockingDeque
-LinkedBlockingQueue
-LinkedTransferQueue
-PriorityBlockingQueue
-SynchronousQueue
-
 Semaphore
 CountDownLatch
 CyclicBarrier
 Exchanger
 Phaser
-
-Flow
-Flow.Processor
-Flow.Subscriber
-Flow.Subscription
-SubmissionPublisher
-
-Executors
 
 ThreadLocalRandom
 

@@ -861,9 +861,26 @@
             <img class="rounded mx-auto d-block" src="imgs/20191006_180335.png">
             <img class="rounded mx-auto d-block" src="imgs/20191006_180348.png">
             <img class="rounded mx-auto d-block" src="imgs/20191006_180401.png">
-            <li>$ mvn install<br>
+            <li>mvn install하면 bootJar가 빌드된다<br>
                 java -jar target/rest-microservice-0.0.1-SNAPSHOT.jar</li>
         </ol>
+    </details>
+    <details>
+        <summary>Gradle 프로젝트 빌드 및 실행</summary>
+        <ol>
+            <li>bootRun 실행</li>
+            gradle app-name:bootRun -Pprofile=dev
+            <li>bootJar 빌드</li>
+            gradle app-name:bootJar -x test
+            <li>bootJar 실행</li>
+            java -jar -Dspring.profiles.active=dev app-name.jar
+        </ol>
+    </details>
+    <details open>
+        <summary>application.properties 서버 포트 지정</summary>
+        server.port=18080<br>
+        tomcatPort=18009<br>
+        tomcatRedirectPort=18443
     </details>
     <details>
         <summary>Spring Boot Reactive Web Microservice</summary>
