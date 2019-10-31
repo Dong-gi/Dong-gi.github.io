@@ -1,0 +1,6 @@
+<h1>{{message}}!</h1>
+<div>
+  <label for="name">이름 : </label>
+  <input type="text" name="name" id="name" #nameInput/>
+  <button type="button" (click)="setName(nameInput.value)">이름 설정</button>
+</div>

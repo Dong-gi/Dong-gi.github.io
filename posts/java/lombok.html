@@ -102,9 +102,32 @@
 <hr>
 
 <details>
-    <summary>@Builder <button class="btn-code" path="Repositories/Eclipse" lan="java">예시 »</button></summary>
+    <summary>@Builder <button class="btn-code" path="Repositories/Eclipse/lombok-example/src/main/java/LombokBuilderExample.java" lan="java">예시 »</button></summary>
     <ol>
+        <li>메서드에 @Builder가 붙으면 아래의 7가지가 생성된다.</li>
+        <ul>
+            <li>(클래스 내부) 클래스명 + "Builder"를 이름으로 갖는 static inner class</li>
+            <li>(클래스 내부) builder() 메서드</li>
+            <li>(Builder 클래스 내부) 타깃 메서드 인자들과 같은 non-static, non-final 필드</li>
+            <li>(Builder 클래스 내부) 기본 생성자(AccessLevel.PACKAGE)</li>
+            <li>(Builder 클래스 내부) 각 필드의 이름으로 한 setter 메서드. 반환은 Builder 객체 자체</li>
+            <li>(Builder 클래스 내부) 타깃 메서드를 호출하는 build() 메서드</li>
+            <li>(Builder 클래스 내부) toString() 메서드</li>
+        </ul>
+        <li>클래스에 @Builder가 붙으면, @AllArgsConstructor(access = AccessLevel.PACKAGE)를 클래스에 붙이고 생성된 생성자에 @Builder를 붙이는 것과 같다.</li>
+        명시적으로 작성된 생성자가 없을 때만 유효하다. 그러한 생성자가 있다면 생성자에 @Builder를 붙이면 된다
+        <li>컬렉션 필드에 @Singular를 적용하면 원소를 하나씩 추가하여 최종적으로 변경 불가능한 Collection 객체로 초기화할 수 있다.</li>
+        원소는 필드의 단수명을 이름으로 하는 메서드를 이용해 추가할 수 있으며, 일반적인 단수명은 자동으로 추론하지만, 그 외의 경우에는 @Singuler("axis")처럼 value로 넘겨줘야 한다.
+        <ul>
+            <li>지원하는 Collection</li>
+            <li>java.util : Iterable, Collection, List, Set, SortedSet, NavigableSet, Map, SortedMap, NavigableMap</li>
+            <li>com.google.common.collect : ImmutableCollection, ImmutableList, ImmutableSet, ImmutableSortedSet, ImmutableMap, ImmutableBiMap, ImmutableSortedMap, ImmutableTable</li>
+        </ul>
         
+        <li>toBuilder 옵션을 이용해 기존 객체로부터 시작하는 toBuilder 메서드를 생성할 수 있다.</li>
+        <li>@Builder.ObtainVia를 필드/매개변수에 적용하면 해당 메서드로부터 값을 얻는다</li>
+        <li>기타 옵션 : builderClassName, buildMethodName, builderMethodName</li>
+        <li>Since 1.16.16 : @Builder.Default를 필드/매개변수에 붙이면 빌드 세션에서 초기화하지 않아도 기본값으로 설정한다</li>
     </ol>
 </details>
 
