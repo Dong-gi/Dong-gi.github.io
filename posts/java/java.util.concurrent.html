@@ -846,20 +846,60 @@
         <summary>class CopyOnWriteArrayList&lt;E&gt; implements List&lt;E&gt;, RandomAccess, Cloneable, Serializable Since 1.5</summary>
         <ol>
             <li>스레드-안전한 ArrayList</li>
+            <li>add, set 등의 연산마다 새로운 배열을 만든다. 따라서 일반적인 용도로는 매우 나쁘다</li>
+            <li>iterator는 생성된 시점의 snapshot을 순회함이 보장되지만, iterator를 통한 요소의 변경은 불가하다</li>
+            <li>public CopyOnWriteArrayList() + 오버로딩</li>
+            <li>int indexOf(E e, int index) + lastIndexOf</li>
+            <li>boolean addIfAbsent(E e) + addAllAbsent</li>
         </ol>
     </details>
-    <li>ConcurrentLinkedQueue : 가변 길이, 스레드-안전한 non-blocking FIFO 큐</li>
-    <li>ConcurrentlinkedDeque : 가변 길이, 스레드-안전한 non-blocking 덱</li>
-    <li>ConcurrentMap&lt;K, V&gt; : 스레드-안전, 작업의 원자성 보장.</li>
-    <li>ConcurrentNavigableMap&lt;K, V&gt; : NavigableMap 연산을 지원하는 ConcurrentMap</li>
-        ConcurrentHashMap
+    <details>
+        <summary>class CopyOnWriteArraySet&lt;E&gt; extends AbstractSet&lt;E&gt; implements Serializable Since 1.5</summary>
+        모든 연산에 CopyOnWriteArrayList를 사용하는 Set
+    </details>
+    <details>
+        <summary>class ConcurrentLinkedQueue&lt;E&gt; extends AbstractQueue&lt;E&gt; implements Queue&lt;E&gt;, Serializable Since 1.5</summary>
+        <ol>
+            <li>크기 제한 없고, 스레드-안전한 연결된 Queue</li>
+            <li>size 계산에 순회가 필요하므로, 오차가 있을 수 있다</li>
+            <li>addAll 따위의 bulk 연산은 원자적으로 실행되지 않을 수 있다</li>
+            <li>Collection, Iterator의 모든 선택적 연산을 구현했다.</li>
+        </ol>
+    </details>
+    <details>
+        <summary>class ConcurrentlinkedDeque&lt;E&gt; extends AbstractCollection&lt;E&gt; implements Deque&lt;E&gt;, Serializable Since 1.7</summary>
+        <ol>
+            <li>크기 제한 없고, 스레드-안전한 연결된 Deque</li>
+            <li>size 계산에 순회가 필요하므로, 오차가 있을 수 있다</li>
+            <li>addAll 따위의 bulk 연산은 원자적으로 실행되지 않을 수 있다</li>
+            <li>Collection, Iterator의 모든 선택적 연산을 구현했다.</li>
+        </ol>
+    </details>
+    <details>
+        <summary>interface ConcurrentMap&lt;K, V&gt; extends Map&lt;K, V&gt; Since 1.5</summary>
+        <ol>
+            <li>스레드-안전, 작업의 원자성 보장</li>
+            Map의 각 연산, Map이 반환하는 컬렉션들의 연산 모두 재정의해야 한다
+        </ol>
+    </details>
+    <details>
+        <summary>interface ConcurrentNavigableMap&lt;K, V&gt; extends ConcurrentMap&lt;K, V&gt;, NavigableMap&lt;K, V&gt; Since 1.6</summary>
+        NavigableMap 연산을 지원하는 ConcurrentMap
+    </details>
+    <details>
+        <summary>class ConcurrentHashMap&lt;K, V&gt; extends AbstractMap&lt;K, V&gt; implements ConcurrentMap&lt;K, V&gt;, Serializable Since 1.5</summary>
+        <ol>
+            <li></li>
+        </ol>
+    </details>
+    
         ConcurrentHashMap.KeySetView
         ConcurrentSkipListMap
         ConcurrentSkipListSet
         
         
         
-        CopyOnWriteArraySet
+        
         
 </details>
 
