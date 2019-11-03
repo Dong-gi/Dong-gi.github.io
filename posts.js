@@ -94,16 +94,21 @@ const posts = {
         { filename: "posts/python/1904252135.html", category: "Programming/Python", title: "Binary Data Services" },//, top: true
         { filename: "posts/python/1904252136.html", category: "Programming/Python", title: "Data Types" },//, top: true
 
+        { filename: "posts/tip/aws.html", category: "Tip", title: "AWS" },
         { filename: "posts/tip/centos.html", category: "Tip", title: "CentOS" },
         { filename: "posts/tip/docker.html", category: "Tip", title: "Docker" },
         { filename: "posts/tip/eclipse.html", category: "Tip", title: "Eclipse" },
+        { filename: "posts/tip/error.html", category: "Tip", title: "오류 목록" },
+        { filename: "posts/tip/fp.html", category: "Tip", title: "FP; Functional Programming" },
         { filename: "posts/tip/giregi.html", category: "Tip", title: "기레기 고소 방법" },
         { filename: "posts/tip/hangul.html", category: "Tip", title: "한글 유니코드" },
         { filename: "posts/tip/tomcat.html", category: "Tip", title: "tomcat" },
         { filename: "posts/tip/macro.html", category: "Tip", title: "macro" },
         { filename: "posts/tip/playstore.html", category: "Tip", title: "Google Play Store" },
         { filename: "posts/tip/psql.html", category: "Tip", title: "psql" },
+        { filename: "posts/tip/refactoring.html", category: "Tip", title: "디자인 패턴 + 리팩터링" },
         { filename: "posts/tip/regex.html", category: "Tip", title: "정규표현식" },
+        { filename: "posts/tip/rpi.html", category: "Tip", title: "Raspberry Pi 3 + OpenCV(python)" },
         { filename: "posts/tip/special_characters.html", category: "Tip", title: "특수문자 영문 이름" },
         { filename: "posts/tip/svg.html", category: "Tip", title: "SVG" },
         { filename: "posts/tip/unity.html", category: "Tip", title: "Unity : 작성 중지" },

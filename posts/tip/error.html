@@ -1,0 +1,16 @@
+<hr>
+
+<details open>
+    <summary>이클립스 APT 에러</summary>
+    <ol>
+        <li>예외 : DOMA4011, javax.annotation.processing.FilterException: Source file already created</li>
+        <li>원인 : 이클립스 배치 모드에서 특정 파일 수(2000)를 초과하면 애너테이션 처리에 버그 발생</li>
+        <li>해결 : eclipse.ini vmargs 섹션에 아래처럼 추가</li>
+        -vmargs<br>
+        -DmaxCompiledUnitsAtOnce=20000
+        <li>자료 : https://bugs.eclipse.org/bugs/show_bug.cgi?id=367599</li>
+        <li>자료 : https://github.com/palantir/gradle-processors/issues/5</li>
+    </ol>
+</details>
+
+<hr>

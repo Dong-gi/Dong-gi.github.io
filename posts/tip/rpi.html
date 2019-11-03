@@ -1,0 +1,365 @@
+<hr>
+
+<details open>
+    <summary>개요</summary>
+    <ol>
+        <li>Raspberry Pi 3 + Raspbian + OpenCV 3.3(python) 실습 내용 정리</li>
+        <li>https://www.pyimagesearch.com/2017/09/04/raspbian-stretch-install-opencv-3-python-on-your-raspberry-pi/</li>
+        <li>http://www.nitc.ac.in/electrical/ipg/python/opencv-python-tutroals.pdf</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Python PiCamera 라이브러리 이용 예</summary>
+    <ol>
+        <li><button class="btn-code" path="Repositories/Raspbian/start01.py" lan="python">start01.py »</button> : start_preview(), stop_preview()</li>
+        <li><button class="btn-code" path="Repositories/Raspbian/start02.py" lan="python">start02.py »</button> : brightness</li>
+        <li><button class="btn-code" path="Repositories/Raspbian/start03.py" lan="python">start03.py »</button> : resolution, start_recording(), wait_recording(), stop_recording()</li>
+        <li><button class="btn-code" path="Repositories/Raspbian/start04.py" lan="python">start04.py »</button> : capture(), exposure_compensation, exposure_mode, meter_mode, image_effect</li>
+        <li><button class="btn-code" path="Repositories/Raspbian/start05.py" lan="python">start05.py »</button> : exif_tags</li>
+        <li><button class="btn-code" path="Repositories/Raspbian/start06.py" lan="python">start06.py »</button> : capture_continuous()</li>
+        <li><button class="btn-code" path="Repositories/Raspbian/start07.py" lan="python">start07.py »</button> : capture_sequence(use_video_port=True)</li>
+        <li><button class="btn-code" path="Repositories/Raspbian/start08.py" lan="python">start08.py »</button> : capture to an OpenCV object</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Picamera with OpenCV 예</summary>
+    <ol>
+        <li><button class="btn-code" path="Repositories/Raspbian/cam01.py" lan="python">cam01.py »</button> : fps change by resolution</li>
+        <details>
+            <summary>테스트 결과</summary>
+            // jpeg quality [0, 100] default 85<br>
+            // resolution can not changed in running<br>
+            (320x240) : 14.05fps<br>
+            (480x272) : 12.78fps<br>
+            (600x400) : 10.94fps<br>
+            (800x600) : 7.72fps<br>
+            (1024x768) : 5.68fps<br>
+            (1280x960) : 4.22fps<br>
+            (1366x768) : 4.88fps<br>
+            (1440x900) : 4.11fps<br>
+            (1600x900) : 3.81fps<br>
+            (1920x1080) : 2.56fps
+        </details>
+        
+        <li><button class="btn-code" path="Repositories/Raspbian/cam02.py" lan="python">cam02.py »</button> : fps change by ISO(sensitivity to light), default 0</li>
+        <details>
+            <summary>테스트 결과</summary>
+            // ISO can not changed in running<br>
+            // if ISO > 0 : exposure_mode property becomes non-functional<br>
+            (600x400, ISO:0) : 10.35fps<br>
+            (600x400, ISO:100) : 11.20fps<br>
+            (600x400, ISO:200) : 10.55fps<br>
+            (600x400, ISO:400) : 11.04fps<br>
+            (600x400, ISO:800) : 11.03fps<br>
+            (600x400, ISO:1600) : 10.20fps<br>
+            (1600x900, ISO:0) : 3.80fps<br>
+            (1600x900, ISO:100) : 3.77fps<br>
+            (1600x900, ISO:200) : 3.81fps<br>
+            (1600x900, ISO:400) : 3.73fps<br>
+            (1600x900, ISO:800) : 3.68fps<br>
+            (1600x900, ISO:1600) : 3.54fps
+        </details>
+        
+        <li><button class="btn-code" path="Repositories/Raspbian/cam03.py" lan="python">cam03.py »</button> : awb_mode(auto-white-balance), default 'auto'</li>
+        <details>
+            <summary>테스트 결과</summary>
+            // awb_mode can changed in running<br>
+            // possible values can be obtained from PiCamera.AWB_MODES<br>
+            // {'cloudy': 3, 'auto': 1, 'tungsten': 5, 'flash': 8, 'horizon': 9, 'fluorescent': 6, 'incandescent': 7, 'shade': 4, 'off': 0, 'sunlight': 2}<br>
+            (600x400, awb_mode:horizon) : 10.28fps<br>
+            (600x400, awb_mode:off) : 11.97fps<br>
+            (600x400, awb_mode:cloudy) : 10.19fps<br>
+            (600x400, awb_mode:shade) : 10.86fps<br>
+            (600x400, awb_mode:fluorescent) : 10.55fps<br>
+            (600x400, awb_mode:tungsten) : 10.63fps<br>
+            (600x400, awb_mode:auto) : 10.71fps<br>
+            (600x400, awb_mode:flash) : 10.46fps<br>
+            (600x400, awb_mode:sunlight) : 10.57fps<br>
+            (600x400, awb_mode:incandescent) : 10.42fps
+        </details>
+    </ol>
+    <details>
+        <summary>카메라 동작 중에 변경할 수 있는 picamera 인자들</summary>
+        <ol>
+            <li>brightness // [0, 100], default 50</li>
+            <li>color_effects // (u, v) tuple where u, v are in [0, 255] // ex. (128, 128) => black and white</li>
+            <li>contrast // [-100, 100], default 0</li>
+            <li>crop // (x, y, w, h) where in [0.0, 1.0], default (0., 0., 1., 1.)</li>
+            <li>exposure_compensation : [-25, 25], default 0</li>
+            <li>exposure_mode : PiCamera.EXPOSURE_MODES, default 'auto'</li>
+            <li>image_effect : PiCamera.IMAGE_EFFECTS, default 'none'</li>
+            <li>meter_mode : PiCamera.METER_MODES, default 'average'</li>
+            <li>preview_alpha : alpha of preview window, [0, 255], default 255</li>
+            <li>rotation : {0, 90, 180, 270}, default 0</li>
+            <li>saturation : [-100, 100], default 0</li>
+            <li>sharpness : [-100, 100], default 0 // a measure of the amount of post-processing to reduce or increase image sharpness</li>
+            <li>shutter_speed : in microseconds, default 0(auto)</li>
+            <li>hflip : default False</li>
+            <li>vflip : default False</li>
+        </ol>
+    </details>
+</details>
+
+<hr>
+
+<details>
+    <summary>영상처리 이론</summary>
+    <ol>
+        <li>Image Operation : [0, 255]의 값만 사용된다.</li>
+        <ul>
+            <li>덧셈 : 교환법칙이 성립한다. ROI를 얻는 데 이용할 수 있다.</li>
+            <li>뺄셈 : 연산 순서에 따라 다른 결과가 나타난다. 움직이는 물체 검출에 이용할 수 있다.</li>
+            <li>평균 : 잡음 제거에 이용할 수 있다.</li>
+            <li>AND : img &amp; 1000 0000 → 128미만은 모두 0으로, 128이상은 모두 128로</li>
+            <li>OR : img | 0111 1111 → 128미만은 모두 127로, 128이상은 모두 255로</li>
+        </ul>
+        
+        <li>감마 : 입출력 신호에 대한 비선형적 지수 관계(y =  cx^γ) // c, γ는 상수</li>
+        <li>감마 보정 : 인간의 지각은 비선형적으로 이루어진다; 작은 자극의 변화에 더 민감</li>
+        이를 선형적으로 부호화할 경우 사람의 눈에는 어두운 부분의 변화가 커지는 Posterization이 발생한다.<br>
+        y =  cx^γ 연산을 통해 차후 발생하는 왜곡의 역을 미리 수행하여 결과를 보정할 수 있다.
+        
+        <li>Image Histogram : 전체 픽셀 중, 각 값에 해당하는 픽셀의 수를 그래프로 표시</li>
+        <ul>
+            <li>Histogram Stretching</li>
+            영상의 히스토그램 분포가 특정 구간에 집중될 때, 이를 펼쳐 명암비를 높이면 보기 좋아진다.
+            ← 가장 작은 값을 0으로, 가장 큰 값을 255로 비례적으로 보정<br>
+            ← 잡음을 피하기 위해 위아래 일정 구간을 버리고 전체의 95%만을 이용할 수도 있다.
+            <li>Histogram Equalization</li>
+            [0, 255] 값이 균등하게 나타나도록 조정. contrast 증가 효과<br>
+            ← 극단적으로 밝은/어두운 영역은 따로따로 처리 : adaptive histogram equalization
+            <li>두 컬러 히스토그램이 유사하면 실제 이미지도 유사하다.</li>
+        </ul>
+
+        <li>비트 평면 분할 : 8개의 비트들 각각에 대해 AND하여 영상 분할.</li>
+        보통 최상위 비트 평면이 가장 유의미하고, 최하위 비트 평면이 가장 무의미
+        
+        <li>등방성 필터링 : 필터링 후 회전한 것과 회전 후 필터링한 것이 동일</li>
+        비등방성 필터링 : NOT 등방성 필터링
+        
+        <li>마스크를 이용한 필터링</li>
+        예. 3x3 마스크 [[m(-1, -1), m(-1, 0), m(-1, 1)], [m(0, -1), m(0, 0), m(0, 1)], [m(1, -1), m(1, 0), m(1, 1)]]에 대하여,<br>
+        (r, c) 픽셀의 변화 : after(r, c) = sum_i(sum_j(m(i, j) * before(r + i, c + j))) ← convolution과 동일
+        <ul>
+            <li>평균 필터 : 1/9 * [[1, 1, 1], [1, 1, 1], [1, 1, 1]]</li>
+            <li>가중 평균 필터 : 1/16 * [[1, 2, 1], [2, 4, 2], [1, 2, 1]]</li>
+            <li>Gaussian Filter : 가우시안 분포를 가중치로 한 마스크 필터. 엣지가 모호해진다.</li>
+            <li>가로 세로 방향만 고려한 3x3 라플라시안 마스크 : [[0, 1, 0], [1, -4, 1], [0, 1, 0]]</li>
+            언샤프 마스크 : [[0, -1, 0], [-1, 5, -1], [0, -1, 0]]
+            <li>대각선도 고려한 3x3 라플라시안 마스크 : [[1, 1, 1], [1, -8, 1], [1, 1, 1]]</li>
+            언샤프 마스크 : [[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]]
+        </ul>
+        
+        <li>잡음 생성</li>
+        가우시안 잡음 : 잡음이 영상 전체에 분포되고, 그 분포가 가우스 분포를 따르는 경우<br>
+        소금&amp;후추 잡음 : 잡음이 영상 임의의 위치에, 0 또는 255 값으로 분포하는 경우
+        
+        <li>잡음 제거를 위한 비등방성 필터</li>
+        Median Filter : 주변 픽셀 중 중앙값으로 대체
+        
+        <li>영상의 기하학적 변환</li>
+        <ul>
+            <li>확대 : 보간법</li>
+            <ul>
+                <li>Nearest neighbor interpolation : 가장 가까운 위치의 픽셀 그대로 참조</li>
+                <li>Bilinear interpolation : 인접한 4개의 픽셀의 내분을 통해 계산</li>
+                <li>고차다항식을 이용한 보간 : 가중치 함수를 정의하고 주변 픽셀값에 곱하여 계산</li>
+            </ul>
+            <li>축소</li>
+            한두 픽셀로 이루어진 점이나 선이 소실될 수 있으므로, 평균값 필터 등을 거친 후 축소하는 것이 좋다.
+        </ul>
+        
+        <li>엣지 검출</li>
+        <ul>
+            <li>로버츠 마스크 : [[0, 1], [-1, 0]], [[1, 0], [0, -1]]</li>
+            <li>프리윗 마스크 : [[-1, 0, 1], [-1, 0, 1], [-1, 0, 1]], [[-1, -1, -1], [0, 0, 0], [1, 1, 1]]</li>
+            <li>소벨 마스크 : [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], [[-1, -2, -1], [0, 0, 0], [1, 2, 1]]</li>
+            가로/세로 방향의 두 필터링 결과에 대해 RMS(또는 제곱합평균 등..) 구하여 전체 엣지를 검출할 수 있다.
+            <li>캐니 엣지 검출</li>
+            <ol>
+                <li>가우시안 필터링을 통한 백색 잡음 제거</li>
+                <li>소벨 마스크를 통한 가로/세로 방향 그래디언트 계산 → 크기와 방향 계산</li>
+                <li>비최대 억제 : 극대값만을 엣지 픽셀로 설정</li>
+                그래디언트가 큰 픽셀들의 방향이 엣지의 방향. 엣지의 방향과 수직한 두 픽셀의 그래디언트 크기를 비교.
+                <li>이중 임계값을 이용한 히스테리시스 엣지 트래킹</li>
+                Th_low보다 작은 픽셀은 엣지가 아니다. Th_high보다 큰 픽셀은 엣지다. 엣지와 인접한 [Th_low, Th_high] 사이의 픽셀은 엣지다.
+            </ol>
+        </ul>
+        
+        <li>허프 변환을 이용한 직선 검출</li>
+        xy공간에서의 y = ax + b를, ab공간으로 이동시키면, 점이 직선이 되고, 직선이 점이 된다.
+        ab공간에서 가장 많은 직선이 교차하는 지점이 바로 xy공간에서의 직선이 된다.
+        y = ax + b 꼴은 x = c 꼴의 직선을 표현하지 못하므로, ax + by = c 꼴을 이용하며,
+        값을 한정시키기 위해 xsinθ + ycosθ = ρ 꼴을 이용한다. 0&lt;=θ&lt;=π, |ρ| &lt;= RMS(width, height)
+        
+        <li>해리스 코너 포인트 검출</li>
+        영상이 회전하거나 크기가 다소 변해도 코너는 동일한 위치에서 검출되기 때문에, 영상의 유사점을 찾는 데도 이용된다.<br>
+        * 코너는 사물과 사물, 사물과 배경 사이에 위치한다.<br>
+        → 영상에서 윈도우를 움직이며 픽셀값 변화를 관찰한다.
+        → 변화가 없으면 사물/배경 내부, 한쪽 방향으로만 변화가 있으면 엣지, 여러 방향에서 변화하면 코너
+        
+        <li>색공간</li>
+        RBG to Gray : Y = 0.299R + 0.587G + 0.114B // (4988*R + 9617*G + 1868*B)&gt;&gt;14<br>
+        HSI model : Hue 색상[0, 360], Saturation 채도[0.0, 1.0], Intensity 명도[0.0, 1.0]<br>
+        YUV model : Y 밝기, U 파란색, V 빨간색
+        
+        <li>이진화 임계값 결정</li>
+        임의의 T 설정. T보다 작은 픽셀값 평균 μ1과 T보다 큰 픽셀 평균 μ2에 대해,
+        T = (μ1 + μ2) / 2 ← T의 변화가 없을 때까지 반복
+        
+        <li>외곽선 추적</li>
+        주변 8개 이웃을 모두 고려한다.
+        <ol>
+            <li>픽셀을 위에서 아래로, 좌에서 우로 검사한다. 객체 픽셀을 만나면 추적을 시작한다. 초기 방향은 0(좌->우)</li>
+            <li>추적 방향에 픽셀이 있으면 이동한 후 추적 방향 -= 2</li>
+            <li>추적 방향에 픽셀이 없으면 d += 1. 한 바퀴 다 돌아도 없으면 끝</li>
+            <li>현재 픽셀의 위치가 초기 검사 위치와 같고 방향이 0이면 끝</li>
+        </ol>
+        
+        <li>이진 영상의 모폴로지 연산</li>
+        <ul>
+            <li>침식 : 기준 윈도우의 모든 픽셀이 설정되어 있지 않으면 0으로</li>
+            <li>팽창 : 기준 윈도우 중 한 픽셀이라도 설정되어 있으면 255로</li>
+            <li>Open : 침식 후 팽창</li>
+            <li>Close : 팽창 후 침식</li>
+            <li>Gradient : 팽창 - 침식</li>
+            <li>Top Hat : Open - 원본</li>
+            <li>Black Hat : Closing - 원본</li>
+        </ul>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>영상처리 관련 Python 라이브러리</summary>
+    <ol>
+        <li>NumPy : 다차원 배열 처리</li>
+        <li>SciPy : 다양한 거리 계산 함수, kd-tree 지원</li>
+        <li>matpotlib : 함수 그리기</li>
+        <li>PIL, Pillow : 간단한 이미지 조작</li>
+        <li>OpenCV : 실시간 영상 처리를 목표로 하는 라이브러리</li>
+        <li>SimpleCV : 쉬운 영상 처리를 목표로 하는 라이브러리</li>
+        <li>mahotas : 영상 처리 라이브러리</li>
+        <li>scikit-learn : 머신 러닝 라이브러리</li>
+        <li>ilastik, pprocess</li>
+        <li>h5py : NumPy array 저장 지원</li>
+        <li>scikit-image : 신기술이 곧잘 지원된다.(효율적이라곤 단정할 수 없음)</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>OpenCV for Python 실습</summary>
+    <ol>
+        <li>cv 전체 속성 출력 : help(cv2.Attr)</li>
+        <li><button class="btn-code" path="Repositories/Raspbian/cv01.py" lan="python">cv01.py »</button> : imread(), imshow(), waitKey(), namedWindow(), destroyWindow(), destroyAllWindows(), imwrite()</li>
+        mode : IMREAD_ANYCOLOR, IMREAD_ANYDEPTH, IMREAD_COLOR, IMREAD_GRAYSCALE, IMREAD_IGNORE_ORIENTATION, IMREAD_LOAD_GDAL, IMREAD_REDUCED_COLOR_2, IMREAD_REDUCED_COLOR_4, IMREAD_REDUCED_COLOR_8, IMREAD_REDUCED_GRAYSCALE_2, IMREAD_REDUCED_GRAYSCALE_4, IMREAD_REDUCED_GRAYSCALE_8, IMREAD_UNCHANGED
+        <li><button class="btn-code" path="Repositories/Raspbian/cv02.py" lan="python">cv02.py »</button> : pyplot::imshow(), xticks(), yticks(), show()</li>
+        Matplotlib : https://matplotlib.org/api/pyplot_api.html
+        <li><button class="btn-code" path="Repositories/Raspbian/cv03.py" lan="python">cv03.py »</button> : VideoWriter(), VideoCapture()</li>
+        <li><button class="btn-code" path="Repositories/Raspbian/cv04.py" lan="python">cv04.py »</button> : line(), rectangle(), circle(), ellipse(), polylines(), putText()</li>
+        <li><button class="btn-code" path="Repositories/Raspbian/cv05.py" lan="python">cv05.py »</button> : mouse event</li>
+        <li><button class="btn-code" path="Repositories/Raspbian/cv06.py" lan="python">cv06.py »</button> : numpy 이용한 ROI 설정, 컬러 추출, border 설정</li>
+        <li><button class="btn-code" path="Repositories/Raspbian/cv07.py" lan="python">cv07.py »</button> : cv2::add(), addWeighted() ← Blending, cvtColor(), bitwise_and|or|not|xor()</li>
+        <li><button class="btn-code" path="Repositories/Raspbian/cv08.py" lan="python">cv08.py »</button> : HSV</li>
+        OpenCV의 HSV 색공간은 [0, 179], [0, 255], [0, 255]이므로 다른 범위를 쓰는 프로그램은 정규화 필요<br>
+        <details>
+            <summary>HSV에서의 색상 추출</summary>
+            <ul>
+                <li>green = np.uint8([[[0, 255, 0]]])</li>
+                <li>hsv_green = cv2.cvtColor(green, cv2.COLOR_BGR2HSV)</li>
+                <li>hue, saturation, value = hsv_green</li>
+                <li>low_green = np.array([hue-10, 100, 100])</li>
+                <li>high_green = np.array([hue+10, 255, 255])</li>
+            </ul>
+        </details>
+        <li><button class="btn-code" path="Repositories/Raspbian/cv09.py" lan="python">cv09.py »</button> : Image Thresholding</li>
+        cv2::threshold() : THRESH_BINARY, THRESH_BINARY_INV, THRESH_MASK, *THRESH_OTSU, THRESH_TOZERO, THRESH_TOZERO_INV, THRESH_TRIANGLE, THRESH_TRUNC<br>
+        cv2::adaptiveThreshold() : ADAPTIVE_THRESH_GAUSSIAN_C, ADAPTIVE_THRESH_MEAN_C
+        <li><button class="btn-code" path="Repositories/Raspbian/cv10.py" lan="python">cv10.py »</button> : Geometric Transformations of Images</li>
+        <ul>
+            <li>cv2::warpAffine() takes a 2x3 transformation matrix</li>
+            <ol>
+                <li>(0, 0)을 (x, y)로 평행이동할 때의 행렬 : [[1, 0, x], [0, 1, y]]</li>
+                <li>원점을 기준으로 θ 회전 : [[cosθ, -sinθ], [sinθ, cosθ]]</li>
+                <li>(x, y)를 기준으로 θ 회전 &amp; scaling : [[a, b, (1-a)x - b*y], [-b, a, b*x + (1-a)y]</li>
+                a = scale * cosθ, b = scale * sinθ → cv2::getRotationMatrix2D()
+                <li>3개 점(삼각형)의 이동만 알면 변환 행렬을 구할 수 있다.</li>
+                → cv2::getAffineTransform()
+            </ol>
+            <li>cv2::warpPerspective() takes a 3x3 transformation matrix</li>
+            원근이 적용된 변환에는 4개 점(면)의 변화가 필요. → cv2::getPerspectiveTransform()
+            <li>cv2::resize()</li>
+            interpolation 보간 : INTER_AREA for shrinking, INTER_CUBIC (slow) &amp; INTER_LINEAR for zooming, INTER_LINEAR for default<br>
+            크기를 지정하거나 배율을 지정 : resize(img, None, fx=2, fy=3) == resize(img, (2*width, 2*height))
+        </ul>
+        <li><button class="btn-code" path="Repositories/Raspbian/cv11.py" lan="python">cv11.py »</button> : filter</li>
+        LPF(low-pass filter) : 노이즈 제거, blurring<br>
+        HPF(high-pass filter) : edge 검출
+        <li><button class="btn-code" path="Repositories/Raspbian/cv12.py" lan="python">cv12.py »</button> : Morphological Transformations</li>
+        <li><button class="btn-code" path="Repositories/Raspbian/cv13.py" lan="python">cv13.py »</button> : Image Gradients</li>
+        <li><button class="btn-code" path="Repositories/Raspbian/cv14.py" lan="python">cv14.py »</button> : Image Pyramids</li>
+        <li><button class="btn-code" path="Repositories/Raspbian/cv15.py" lan="python">cv15.py »</button> : cv2::findContours</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>테스트용 이미지 수집</summary>
+    <ol>
+        <li>웹브라우저 콘솔에서 jQuery 추가</li>
+        let script = document.createElement('script');<br>
+        script.src = "https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js";<br>
+        document.getElementsByTagName('head')[0].appendChild(script);
+
+        <li>구글 이미지 url 모으기</li>
+        let urls = $('.rg_di .rg_meta').map(function() { return JSON.parse($(this).text()).ou; });
+
+        <li>url 저장하기</li>
+        let textToSave = urls.toArray().join('\n');<br>
+        let hiddenElement = document.createElement('a');<br>
+        hiddenElement.href = 'data:attachment/text,' + encodeURI(textToSave);<br>
+        hiddenElement.target = '_blank';<br>
+        hiddenElement.download = 'urls.txt';<br>
+        hiddenElement.click();
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>실습 과제</summary>
+    <ol>
+        <li><button class="btn-code" path="Repositories/Raspbian/cctv01.py" lan="python">cctv01.py »</button> : 정면 얼굴 및 눈 검출 시도</li>
+        <li><button class="btn-code" path="Repositories/Raspbian/cctv02.py" lan="python">cctv02.py »</button> : 화재 검출 시도</li>
+        <button class="btn-code" path="Repositories/Raspbian/cctv02-2.py" lan="python">cctv02-2.py »</button>
+        <button class="btn-code" path="Repositories/Raspbian/cctv02-3.py" lan="python">cctv02-3.py »</button>
+        <button class="btn-code" path="Repositories/Raspbian/cctv02-4.py" lan="python">cctv02-4.py»</button>
+        <details>
+            <summary>화재 검출?</summary>
+            <ol>
+                <li>CCTV → 가시광선 영역</li>
+                <li>화재 특성</li>
+                1. 고온(+ 급격한 온도 상승), CO2를 비롯한 가스 방출<br>
+                https://www.kfpa.or.kr/pdf_file/D/1/D1_1-1.pdf<br>
+                2. 실내온도 역시 덩달아 상승. 550 전후에서 플래시오버 발생 → 복사열로 인해 화재 확산
+                <li>화재의 종류</li>
+                A급 화재 : 일반가연물 화재, B급 화재 : 유류 및 가스화재, C급 화재 : 전기화재, D급 화재 : 금속화재, F급/K급 화재 : 식용유화재
+            </ol>
+        </details>
+        <li>소켓 전송</li>
+        <button class="btn-code" path="Repositories/Raspbian/sender.py" lan="python">sender.py »</button>
+        <button class="btn-code" path="Repositories/Raspbian/socket02.py" lan="python">socket02.py »</button>
+    </ol>
+</details>
+
+<hr>
