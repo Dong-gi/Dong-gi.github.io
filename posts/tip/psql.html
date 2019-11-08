@@ -33,7 +33,7 @@
 
 <details>
     <summary>dblink 재활용</summary>
-    SELECT dblink_connect('myconn', 'hostaddr=1.2.3.4, port=5432 dbname=history user=readonly password=password');<br>
+    SELECT dblink_connect('myconn', 'hostaddr=1.2.3.4 port=5432 dbname=history user=readonly password=password');<br>
     (SELECT account_id, last_login_date FROM v_account WHERE account_id IN<br>
     　　(SELECT r.account_id FROM dblink('myconn', 'SELECT account_id, sum(amount) as total_amount FROM v_payment_history WHERE status=2 GROUP BY account_id HAVING sum(amount) &gt;= 10000') AS r(account_id BIGINT, total_amount BIGINT))<br>
     ) UNION ...

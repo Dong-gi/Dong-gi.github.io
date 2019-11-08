@@ -18,13 +18,17 @@
     <ol>
         <li>docker-machine scp</li>
         <strong>docker-machine scp source destination</strong><br>
-        예. 로컬 파일을 "kamuvm" 머신으로 복사<br>
-        docker-machine scp /root/kamutora/zipang-admin.war kamuvm:/home/docker/
+        예. 파일을 가상 머신으로 복사<br>
+        docker-machine scp /root/file.war devvm:/home/docker/<br>
+        예. 디렉터리 복사<br>
+        docker-machine scp -r /root/directory/ devvm:/home/docker/
 
         <li>docker cp</li>
         <strong>docker cp source destination</strong><br>
-        예. 로컬 파일을 "devweb" 컨테이너로 복사<br>
-        docker cp zipang-admin.war devweb:/usr/local/tomcat/webapps/
+        예. 파일을 컨테이너로 복사<br>
+        docker cp file.war web:/usr/local/tomcat/webapps/<br>
+        예. 디렉터리 복사<br>
+        docker cp directory/ web:/root/
     </ol>
 </details>
 

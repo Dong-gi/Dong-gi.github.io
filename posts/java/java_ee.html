@@ -874,6 +874,9 @@
             gradle app-name:bootJar -x test
             <li>bootJar 실행</li>
             java -jar -Dspring.profiles.active=dev app-name.jar
+            <li>디버그 포트 열기</li>
+            -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=55555,suspend=n<br>
+            suspend=y로 하는 경우, 디버그 연결까지 실행을 대기한다
         </ol>
     </details>
     <details open>
