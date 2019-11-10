@@ -1,0 +1,221 @@
+<hr>
+
+<details>
+    <summary>시작하기</summary>
+    <details>
+        <summary>Hello World</summary>
+        <ol>
+            <li>기본 설정대로 프로젝트를 생성하면 아래의 4개 주요 파일을 볼 수 있다.</li>
+            <li>MainActivity.java</li>
+            앱을 실행하면 이 클래스의 인스턴스가 실행되고 layout을 로드한다.
+            <button class="btn-code" path="Repositories/Android/Project01/app/src/main/java/io/github/donggi/project01/MainActivity.java" lan="java">MainActivity.java »</button>
+            <li>activity_main.xml</li>                    
+            액티비티의 UI를 정의한다.
+            <button class="btn-code" path="Repositories/Android/Project01/app/src/main/res/layout/activity_main.xml" lan="xml">activity_main.xml »</button>
+            <li>AndroidManifest.xml</li>
+            앱의 기본적인 특성을 기술하고, 각 컴포넌트를 정의한다.
+            <button class="btn-code" path="Repositories/Android/Project01/app/src/main/AndroidManifest.xml" lan="xml">AndroidManifest.xml »</button>
+            <li>build.gradle</li>
+            앱의 컴파일과 빌드에 관한 구성 설정.
+            <button class="btn-code" path="Repositories/Android/Project01/build.gradle" lan="text">Project Gradle »</button>
+            <button class="btn-code" path="Repositories/Android/Project01/app/build.gradle" lan="text">"app" module Gradle »</button>
+        </ol>
+    </details>
+    <details>
+        <summary>안드로이드 앱</summary>
+        <ol>
+            <li>Android는 멀티유저 Linux 시스템으로, 각 앱은 각기 다른 사용자와 같다.</li>
+            <li>시스템은 각 앱에 고유한 ID를 할당하며, 앱 안의 모든 파일에 대해 할당된 ID의 사용자만 액세스할 수 있게 한다.</li>
+            두 앱에 같은 ID를 공유하도록 만든 경우, 서로의 파일에 접근할 수 있다.
+            <li>각 프로세스는 다른 앱과 격리되어 실행된다.</li>
+        </ol>
+    </details>
+    <details>
+        <summary>앱 컴포넌트</summary>
+        <ol>
+            <li>액티비티 : UI가 있는 단일 화면. 액티비티는 한 번에 하나만 실행할 수 있다.</li>
+            Activity : startActivity() or startActivityForResult()
+            <li>서비스 : 백그라운드에서 실행되는 요소.</li>
+            Service : startService() or bindService()
+            <li>ContentProvider : 외부로 공유하는 데이터 집합 관리.</li>
+            ContentProvider : ContentResolver.query()
+            <li>BroadcastReceiver : 각 브로드캐스트는 Intent 객체로 전달된다.</li>
+            Broadcast : sendBroadcast(), sendOrderedBroadcast(), sendStickyBroadcast()
+            <li>Activity, Service, BroadcastReceiver는 Intent로 활성화되고, ContentProvider는 ContentResolver의 요청으로 활성화된다.</li>
+
+
+            1. Intent : 컴포넌트 간의 데이터 전달.
+            » public Intent(Context packageContext, Class<?> cls)
+            » intent.putExtra(String name, ? value)
+
+            2. startActivity(intent)
+
+            3. Project window » 우클릭 » New » Activity : 자동으로 매니페스트에도 추가된다.
+
+            4. 매니페스트에 논리적인 부모 액티비티를 정의하면 "app bar"에 네비게이션이 추가된다.
+<!--                예시 코드는 매니페스트에서 테마를 적용하여 액티비티를 Dialog처럼 이용하는 것과 버튼에 이미 정의된 스타일을 적용하는 것을 보여준다.
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'theme_manifest');" role="button">View Code : AndroidManifest.xml &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'theme_activity_main');" role="button">View Code : activity_main.xml &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(1, 'theme_MainActivity');" role="button">View Code : MainActivity.java &raquo;</a>
+                <div class="col-md-4">
+                    <h2>리스너</h2>
+                    <p>
+                        1. View.OnClickListener, View.OnLongClickListener, ...
+                        <br><br>2. 내부 클래스로 리스너 객체 생성 or 외부 클래스로
+                        <br><br>3. 익명 클래스로 리스너 객체 생성 or Lambda
+                        <br><br>4. 리스너 인터페이스를 액티비티 클래스에 직접 구현 or onClick 속성 지정
+                    </p>
+                    <p>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'Listener_activity_main');" role="button">View Code : xml &raquo;</a>
+                        <a class="btn btn-secondary" href="javascript:showCode(2, 'Listener_MainActivity');" role="button">View Code : java &raquo;</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row" id="code-div-2"></div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>기타 UI</h2>
+                    <p>
+                        1. 토클 버튼, 스위치, 체크박스, 라디오버튼, 레이팅 바 <a class="btn btn-secondary" href="javascript:showCode(3, 'ui');" role="button">View Code &raquo;</a>
+                        <br><br>2. Dialog : <a href="https://developer.android.com/guide/topics/ui/dialogs.html">https://developer.android.com/guide/topics/ui/dialogs.html</a>
+                        <br> : AlertDialog, DatePickerDialog, TimePickerDialog
+                        <br><br>3. Custom Components : View 클래스를 상속받아 재작성. <a href="https://developer.android.com/training/custom-views/index.html">https://developer.android.com/training/custom-views/index.html</a>
+                        <br><br>4. 알림 : <a href="https://developer.android.com/guide/topics/ui/notifiers/notifications.html">https://developer.android.com/guide/topics/ui/notifiers/notifications.html</a> <a class="btn btn-secondary" href="javascript:showCode(3, 'notification');" role="button">View Code &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h2>그래픽</h2>
+                -->
+        </ol>
+    </details>
+    <details>
+        <summary>매니페스트</summary>
+        <ol>
+            <li>구성 요소 선언, 요구 권한 식별, 최소 API 레벨 선언 등</li>
+            &lt;activity&gt;, &lt;service&gt;, &lt;receiver&gt;, &lt;provider&gt;<br>
+            BroadcastReceiver는 registerReceiver()를 통해 동적으로 등록할 수 있다.
+            <li>다른 앱의 intent에 응답하기 위해 &lt;intent-filter&gt;요소를 해당 요소의 하위에 추가한다.</li>
+            <li>요구사항 선언</li>
+            예. 카메라 필수 : &lt;uses-feature android:name="android.hardware.camera.any" android:required="true"/&gt;<br>
+            예. API 7이상 : &lt;uses-sdk android:minSdkVersion="7" android:targetSdkVersion="19" /&gt;
+        </ol>
+    </details>
+    <details>
+        <summary>UI</summary>
+        <ol>
+            <li>안드로이드 UI는 layout(ViewGroup 객체)들과 widget(View 객체)들의 계층으로 이루어진다.</li>
+            
+            <li>길이 단위</li>
+            <ul>
+                <li>px : 픽셀. 장치마다 밀도가 달라 제각기로 표현된다.</li>
+                <li>dp : Density-independent pixels. 160dp는 밀도와 관계없이 1인치로 표시된다.</li>
+                <li>mm : 밀리미터</li>
+                <li>in : 인치</li>
+                <li>pt : 포인트 = 1/72 인치</li>
+            </ul>
+
+            <li>View</li>
+            <ul>
+                <li>버튼, 텍스트 박스 등의 UI 요소</li>
+                TextView, EditText, Button, ImageView, Switch, ...
+                <li>id 속성 : @[+]id/ID</li>
+                ID를 할당할 때는 +를 앞에 붙여 R 클래스의 상수로 등록되도록 한다.
+                <li>layout_width, layout_height : 너비, 높이</li>
+                match_parent : 부모 요소의 크기만큼 할당, wrap_content : 내용물만큼 할당, 상수 지정 : 크기 고정
+                <li>background : 배경. 지정하지 않으면 각 뷰의 기본값이 사용된다</li>
+                <li>visibility : 가시성. visible | invisible | gone</li>
+                <li>padding, layout_margin</li>
+            </ul>
+
+            <li>ViewGroup</li>
+            <ul>
+                <li>자식 요소들을 어디에 위치시킬 지 조정한다.</li>
+                <li>ConstraintLayout</li>
+                형제 요소들과 부모 레이아웃에 대한 거리를 통해 뷰를 조정한다.
+                여러 요소들을 선택하여 우클릭한 뒤 chain으로 연결하면 한 번에 가로/세로로 배치할 수 있다.
+                <li>LinearLayout</li>
+                orientation 속성으로 horizontal | vertical 지정<br>
+                gravity 속성으로 정렬 가능. center_horizontal(0x01), left(0x03), right(0x05), fill_horizontal(0x07), center_vertical(0x10), top(0x30), bottom(0x50), fill_vertical(0x70), center(0x11), fill(0x77)<br>
+                baselineAligned 속성으로 요소들의 아래 줄을 일치시킬 지 여부를 지정할 수 있다<br>
+                요소의 layout_weight 속성으로 너비/높이를 일정 비율씩 나눠가질 수 있다.
+                <li>GridLayout</li>
+                화면의 가로/세로(columnCount/rowCount)를 잘라 만든 격자를 이용해 배치.
+            </ul>
+        </ol>
+    </details>
+</details>
+
+<hr>
+
+<details>
+    <summary></summary>
+</details>
+
+<hr>
+
+<details>
+    <summary></summary>
+</details>
+
+<hr>
+
+<details>
+    <summary></summary>
+</details>
+
+<hr>
+
+<details>
+    <summary></summary>
+</details>
+
+<hr>
+
+<details>
+    <summary></summary>
+</details>
+
+<hr>
+
+<details>
+    <summary></summary>
+</details>
+
+<hr>
+
+<details>
+    <summary></summary>
+</details>
+
+<hr>
+
+<details>
+    <summary></summary>
+</details>
+
+<hr>
+
+<details>
+    <summary></summary>
+</details>
+
+<hr>
+
+<details>
+    <summary></summary>
+</details>
+
+<hr>
+
+<details>
+    <summary></summary>
+</details>
+
+<hr>
+
+<details>
+    <summary></summary>
+</details>
+
+<hr>

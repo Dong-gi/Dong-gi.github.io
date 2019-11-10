@@ -42,6 +42,7 @@ const posts = {
         { filename: "posts/c/csharp_library.html", category: "Programming/C#.NET", title: "C# 라이브러리" },
         { filename: "posts/c/wpf_basic.html", category: "Programming/C#.NET", title: "WPF 시작하기" },
 
+        { filename: "posts/java/android.html", category: "Programming/Java", title: "Android", top: true },
         { filename: "posts/java/basic.html", category: "Programming/Java", title: "Java 시작하기" },
         { filename: "posts/java/effective_java.html", category: "Programming/Java", title: "『Effective Java』" },
         { filename: "posts/java/java_ee.html", category: "Programming/Java", title: "JavaEE" },
