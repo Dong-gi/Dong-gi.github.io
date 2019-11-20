@@ -123,7 +123,7 @@
             메시지 파편화를 사용할 지 여부. 파편화를 사용하지 않으면 PMTU보다 큰 메시지의 송신에는 에러가 발생한다<br>
             PMTU : Path MTU : 경로 중 가장 작은 MTU값
             <li>static final SctpSocketOption&lt;Boolean&gt; SCTP_EXPLICIT_COMPLETE</li>
-            메시지 종결을 명시적으로 할 지 여부. 사용하는 경우, 메시지의 마지막 송신은 MessageInfo::isComplete가 true를 반환해야 한다.
+            메시지 종결을 명시적으로 할 지 여부. 사용하는 경우, 메시지의 마지막 송신은 MessageInfo#isComplete가 true를 반환해야 한다.
             기본값은 false며 이는 각 전송을 완결로 간주된다. 옵션의 지원 여부는 자바 구현체에 달렸다
             <li>static final SctpSocketOption&lt;Integer&gt; SCTP_FRAGMENT_INTERLEAVE</li>
             <ul>
@@ -133,7 +133,7 @@
                 <li>Level 2 : Association + 스트림 당 하나의 메시지 파편화를 허용한다. 즉, "association X 스트림 Y", "association X 스트림 Z"를 동시에 수신할 수 있다</li>
             </ul>
             <li>static final SctpSocketOption&lt;SctpStandardSocketOptions.InitMaxStreams&gt; SCTP_INIT_MAXSTREAMS</li>
-            실제 협상 결과는 연관된 Association 객체로부터 알아낼 수 있다. Association 객체는 AssociationChangeEvent::COMM_UP 이벤트의 AssociationChangeNotification으로부터 얻을 수 있다.
+            실제 협상 결과는 연관된 Association 객체로부터 알아낼 수 있다. Association 객체는 AssociationChangeEvent#COMM_UP 이벤트의 AssociationChangeNotification으로부터 얻을 수 있다.
             <li>static final SctpSocketOption&lt;Boolean&gt; SCTP_NODELAY</li>
             지연없이 송신할 지 여부. 기본적으로 SCTP는 TCP의 Nagle 알고리즘과 유사한 기법을 이용한다.
             <li>static final SctpSocketOption&lt;SocketAddress&gt; SCTP_PRIMARY_ADDR</li>
@@ -207,7 +207,7 @@
         <ol>
             <li>스레드-안전. 메시지-지향 SCTP 소켓 selectable 채널</li>
             <li>채널이 연결됐는지 여부는 getRemoteAddresses()로 확인할 수 있다</li>
-            <li>논-블로킹 모드로 동작할 수 있다. 연결하기 전에 AbstractSelectableChannel::configureBlocking으로 설정</li>
+            <li>논-블로킹 모드로 동작할 수 있다. 연결하기 전에 AbstractSelectableChannel#configureBlocking으로 설정</li>
             논-블로킹 모드에서 connect 메서드로 연결을 시작하면 즉시 반환되며, 연결 대기 중인지는 isConnectionPending 메서드로, 완료됐는지는 finishConnect 메서드로 확인 가능
             <li>지원하는 소켓 옵션 : SCTP_DISABLE_FRAGMENTS, SCTP_EXPLICIT_COMPLETE, SCTP_FRAGMENT_INTERLEAVE, SCTP_INIT_MAXSTREAMS, SCTP_NODELAY, SCTP_PRIMARY_ADDR, SCTP_SET_PEER_PRIMARY_ADDR, SO_SNDBUF, SO_RCVBUF, SO_LINGER</li>
         </ol>

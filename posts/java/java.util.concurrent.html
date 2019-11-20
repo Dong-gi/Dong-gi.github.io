@@ -111,7 +111,7 @@
             <li>CompletionStage로 이용될 수 있는, 명시적으로 종료(값과 상태를 설정)되는 Future.</li>
             <li>둘 이상의 스레드가 complete, completeExceptionally, cancel을 호출할 경우, 하나만 성공한다.</li>
             <li>non-async 메서드로 등록된 작업은 현재 CompletableFuture가 완료된 스레드 또는 호출자에서 실행된다.</li>
-            <li>명시적인 Executor 없이 async 메서드로 등록된 작업은 ForkJoinPool::commonPool에서 수행.</li>
+            <li>명시적인 Executor 없이 async 메서드로 등록된 작업은 ForkJoinPool#commonPool에서 수행.</li>
             <li>CompletionStage 메서드들을 독립적으로 구현했기 때문에, 하나를 재정의해도 다른 메서드에 영향이 없다.</li>
             <li>CompletionStage 메서드들만 이용하도록 하려면 minimalCompletionStage()를, future를 변경하지 못하도록 하려면 copy()를 이용.</li>
             <li>전반적인 계산에 대한 직접적인 제어를 할 수 없어서 cancel()의 호출은 completeExceptionally(new CancellationException()) 호출과 동일하다</li>
@@ -281,7 +281,7 @@
                 <li>void onCompletion(CountedCompleter&lt;?&gt; caller)</li>
                 tryComplete()이 호출되고, 남은 pendingCount가 0이면 호출된다. 또는 complete(T)가 호출된 경우에도 실행된다
                 <li>boolean onExceptionalCompletion(Throwable ex, CountedCompleter&lt;?&gt; caller)</li>
-                compute()에서 예외가 발생했거나, ForkJoinTask::completeExceptionally가 호출된 경우 실행된다. 기본 구현은 return true;<br>
+                compute()에서 예외가 발생했거나, ForkJoinTask#completeExceptionally가 호출된 경우 실행된다. 기본 구현은 return true;<br>
                 true를 반환하였고, caller가 아직 완료되지 않은 경우, caller도 같은 예외로 종료된다
                 <li>final CountedCompleter&lt;?&gt; getCompleter() : 생성자에서 지정한 부모 completer 반환 + getRoot</li>
                 <li>final int getPendingCount()</li>
@@ -293,7 +293,7 @@
                 <li>final CountedCompleter&lt;?&gt; firstComplete()<br>
                     final CountedCompleter&lt;?&gt; nextComplete()</li>
                 firstComplete() : pendingCount가 0이면 return this; 그 외엔 pendingCount를 감소시키고 return null;<br>
-                nextComplete() : parent completer가 없는 경우, ForkJoinTask::quietlyComplete 호출하고 return null; pendingCount가 0이 아니면 감소시키고 return null; 그 외엔 parent completer 반환<br>
+                nextComplete() : parent completer가 없는 경우, ForkJoinTask#quietlyComplete 호출하고 return null; pendingCount가 0이 아니면 감소시키고 return null; 그 외엔 parent completer 반환<br>
                 for(var c = firstComplete(); c != null; c = c.nextComplete()) { ... }
                 <li>final void quietlyCompleteRoot() == getRoot().quietlyComplete()</li>
                 <li>final void helpComplete(int maxTasks)</li>
@@ -334,19 +334,19 @@
             shutdown 요청 후 모든 작업이 종료되기를 기다리며 블록한다. timeout 발생한 경우 false 반환.
             
             <li>&lt;T&gt; Future&lt;T&gt; submit(Callable&lt;T&gt; task)</li>
-            결과를 반환하는 작업을 등록한다. 작업이 성공적으로 종료되면 Future::get으로 결과를 확인할 수 있다.
+            결과를 반환하는 작업을 등록한다. 작업이 성공적으로 종료되면 Future#get으로 결과를 확인할 수 있다.
             
             <li>&lt;T&gt; Future&lt;T&gt; submit(Runnable atask, T result)</li>
-            작업을 등록한다. 작업이 성공적으로 종료되면 Future::get으로 result를 얻을 수 있다.
+            작업을 등록한다. 작업이 성공적으로 종료되면 Future#get으로 result를 얻을 수 있다.
             
             <li>Futur&lt;?&gt; submit(Runnable task)</li>
-            작업을 등록한다. 작업이 성공적으로 종료되면 Future::get은 null을 반환한다.
+            작업을 등록한다. 작업이 성공적으로 종료되면 Future#get은 null을 반환한다.
             
             <li>&lt;T&gt; List&lt;Future&lt;T&gt;&gt; invokeAll(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks)</li>
-            모든 작업이 종료되면 Future 리스트를 반환한다. 따라서 리스트 안의 각 Future::isDone은 true다.
+            모든 작업이 종료되면 Future 리스트를 반환한다. 따라서 리스트 안의 각 Future#isDone은 true다.
             
             <li>&lt;T&gt; List&lt;Future&lt;T&gt;&gt; invokeAll(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks, long timout, TimeUnit unit)</li>
-            모든 작업이 종료되거나 timeout이 발생하면 반환. 리스트 안의 각 Future::isDone은 true. timeout 발생 시 완료되지 않은 작업들은 취소된다.
+            모든 작업이 종료되거나 timeout이 발생하면 반환. 리스트 안의 각 Future#isDone은 true. timeout 발생 시 완료되지 않은 작업들은 취소된다.
             
             <li>&lt;T&gt; T invokeAny(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks)</li>
             성공적으로 완료된 첫 작업의 결과를 반환한다. 완료되지 않은 작업들은 취소된다.
@@ -386,7 +386,7 @@
             <li>On-demand construction</li>
             처음부터 corePoolSize만큼의 스레드를 만들어놓을 지를 설정할 수 있다
             <li>Creating new threads</li>
-            지정되지 않으면 Executors::defaultThreadFactory로부터 신규 스레드를 생성한다. 동일 스레드그룹 + NORM_PRIORITY + non-daemon
+            지정되지 않으면 Executors#defaultThreadFactory로부터 신규 스레드를 생성한다. 동일 스레드그룹 + NORM_PRIORITY + non-daemon
             <li>Keep-alive times</li>
             corePoolSize를 초과한 스레드들은 대기 상태가 keepAliveTime을 초과하면 종료된다. allowCoreThreadTimeOut 메서드로 코어 스레드에도 적용할 지 설정 가능
             <li>Queuing</li>
@@ -403,7 +403,7 @@
             </ul>
             <li>Rejected tasks</li>
             <ul>
-                <li>거부된 작업에 대하여 RejectedExecutionHandler::rejectedExecution 메서드가 실행된다</li>
+                <li>거부된 작업에 대하여 RejectedExecutionHandler#rejectedExecution 메서드가 실행된다</li>
                 <li>기본 정책. ThreadPoolExecutor.AbortPolicy : 핸들러가 RejectedExecutionException 발생</li>
                 <li>ThreadPoolExecutor.CallerRunsPolicy : 작업을 제출한 스레드가 직접 작업을 실행한다</li>
                 <li>ThreadPoolExecutor.DiscardPolicy : 거부된 작업은 버려진다</li>
@@ -440,7 +440,7 @@
                 <li>void shutdown()</li>
                 순차적 종료 절차에 진입한다. 추가 작업은 받지 않고, 이미 제출된 작업들은 마저 처리한다
                 <li>List&lt;Runnable&gt; shutdownNow()</li>
-                대기 중인 작업에 더해 실행 중인 작업들도 모두 중지한다. 대기중이었던 작업들은 리스트로 반환한다. 실행 중인 작업들에 유예 시간을 주고 싶다면 ExecutorService::awaitTermination 이용
+                대기 중인 작업에 더해 실행 중인 작업들도 모두 중지한다. 대기중이었던 작업들은 리스트로 반환한다. 실행 중인 작업들에 유예 시간을 주고 싶다면 ExecutorService#awaitTermination 이용
                 <li>boolean isTerminating()</li>
                 shutdown 또는 shutdownNow 메서드가 호출되었지만, 아직 중지가 완료되지는 않았다면 true
                 <li>void setThreadFactory(ThreadFactory threadFactory) + getter 메서드</li>
@@ -606,7 +606,7 @@
                 <li>static Callable&lt;Object&gt; callable(Runnable task)</li>
                 작업이 완료되면 null을 반환하는 Callable 반환
                 <li>static Callable&lt;Object&gt; callable(PrivilegedAction&lt;?&gt; action)</li>
-                호출되면 action::run을 실행하고 그 결과를 반환하는 Callable 반환
+                호출되면 action#run을 실행하고 그 결과를 반환하는 Callable 반환
                 <li>static Callable&lt;Object&gt; callable(PrivilegedExceptionAction&lt;?&gt; action)</li>
                 <li>static &lt;T&gt; Callable&lt;T&gt; privilegedCallable(Callable&lt;T&gt; callable)</li>
                 호출되면 callable을 현재 access control context에서 실행. AccessController.doPrivileged에서 호출되어야 한다.

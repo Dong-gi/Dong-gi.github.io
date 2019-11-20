@@ -17,7 +17,7 @@ public class SwitchExpression {
     public static void printDay(Day day) {
         switch(day) {
         case SATURDAY, SUNDAY -> System.out.println(day.name() + " : Weekends");
-        default -> System.out.println(day.name() + "Weekdays");
+        default -> System.out.println(day.name() + " : Weekdays");
         }
     }
     
@@ -30,7 +30,7 @@ public class SwitchExpression {
         case THURSDAY: break 4;
         case FRIDAY: break 5;
         case SATURDAY: break 6;
-        }
+        };
     }
     
     public static int nthDayFromMonday(Day day) {
@@ -42,6 +42,6 @@ public class SwitchExpression {
         case THURSDAY -> 3;
         case FRIDAY -> 4;
         case SATURDAY -> 5;
-        }
+        };
     }
 }

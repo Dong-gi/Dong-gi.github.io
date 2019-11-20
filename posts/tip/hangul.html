@@ -4,10 +4,12 @@
     <li>11,172 = 초성 19 * 중성 21 * 종성 28(종성 없는 경우 포함)</li>
     <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://www.unicode.org/Public/UNIDATA/EastAsianWidth.txt">http://www.unicode.org/Public/UNIDATA/EastAsianWidth.txt</a>
     
-    <li>코드 포인트 = (초성 인덱스 * 21 + 중성 인덱스) * 28 + 종성 인덱스 + 0xAC00</li>
-    (코드 포인트 - 0xAC00) % 28 = 종성 인덱스<br>
-    (코드 포인트 - 0xAC00) / 28 % 21 = 중성 인덱스<br>
-    (코드 포인트 - 0xAC00 - 종성 인덱스) / 28 - 중성 인덱스 = 초성 인덱스
+    <li>코드 포인트 = (초성 인덱스 * 21 + 중성 인덱스) * 28 + 종성 인덱스 + '가'0xAC00</li>
+    <ul>
+        <li>(코드 포인트 - '가'0xAC00) % 28 = 종성 인덱스</li>
+        <li>(코드 포인트 - 종성 인덱스 - '가'0xAC00) / 28 % 21 = 중성 인덱스</li>
+        <li>((코드 포인트 - 종성 인덱스 - '가'0xAC00) / 28 - 중성 인덱스) / 21 = 초성 인덱스 </li>
+    </ul>
 
     <li>조사 처리 <button class="btn-code" path="Repositories/Eclipse/Basic/src/io/github/donggi/HangulUtility.java" lan="java">예시 코드 »</button></li>
 </ol>

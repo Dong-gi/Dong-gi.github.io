@@ -1,7 +1,7 @@
 <hr>
 
 <details>
-    <summary>식별자, 자료형</summary>
+    <summary>식별자</summary>
     <ol>
         <li>식별자 : '_', '$' 허용.
             <button class="btn-code" path="Repositories/JavaScript/Basic/type.js" displayRange="[1,1]" lan="javascript">예시 코드 »</button></li>
@@ -18,78 +18,78 @@
     
         <li>상수 선언 : const 식별자;
             <button class="btn-code" path="Repositories/JavaScript/Basic/type.js" displayRange="[4,4]" lan="javascript">예시 코드 »</button></li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>자료형</summary>
+    <ul>
+        <li>Object</li>
+        객체 리터럴 : {}<br>
+        delete 키워드로 프로퍼티 제거 가능.<br>
+        JSON.stringify(), JSON.parse(), Object.keys()
+        <button class="btn-code" path="Repositories/JavaScript/Basic/type.js" displayRange="[11,15]" lan="javascript">예시 코드 »</button>
     
+        <li>String</li>
+        문자 리터럴 : \xFF, \uFFFF<br>
+        문자열 리터럴 : '', "", ``(문자열 템플릿)
+        <button class="btn-code" path="Repositories/JavaScript/Basic/type.js" displayRange="[4,5,17,17]" lan="javascript">예시 코드 »</button>
+    
+        <li>Number</li>
+        IEEE-764 double-precision 부동소수<br>
+        숫자 리터럴 : 999, 0o777, 0xFFF, 0.999, 0.999E-9<br>
+        숫자 상수 : Infinity, -Infinity, NaN, Number.EPSILON, Number.MAX_VALUE, Number.MAX_SAFE_INTEGER<br>
+        Number(), parseInt(), parseFloat(), number.toString(radix)
+    
+        <li>Boolean</li>
+        Boolean() : "", 0, NaN, null, undefined == false, 그 외 == true<br>
+        따라서 (null == undefined) === true
+    
+        <li>Undefined</li>
+    
+        <li>Null</li>
+    
+        <li>Symbol</li>
+        ES6부터 도입된 타입. 그 무엇과도 같지 않은 유일한 토큰을 나타낸다.
+        <button class="btn-code" path="Repositories/JavaScript/Basic/type.js" displayRange="[7,9]" lan="javascript">예시 코드 »</button>
+    
+        <li>배열 : []</li>
+        자바스크립트의 배열은 모두 동적 배열. 변수와 마찬가지로 타입을 가리지 않는다.
+        <button class="btn-code" path="Repositories/JavaScript/Basic/array.js" lan="javascript">예시 코드 »</button>
+
         <li>
             <details>
-                <summary>자료형</summary>
-                <ul>
-                    <li>Object</li>
-                    객체 리터럴 : {}<br>
-                    delete 키워드로 프로퍼티 제거 가능.<br>
-                    JSON.stringify(), JSON.parse(), Object.keys()
-                    <button class="btn-code" path="Repositories/JavaScript/Basic/type.js" displayRange="[11,15]" lan="javascript">예시 코드 »</button>
-                
-                    <li>String</li>
-                    문자 리터럴 : \xFF, \uFFFF<br>
-                    문자열 리터럴 : '', "", ``(문자열 템플릿)
-                    <button class="btn-code" path="Repositories/JavaScript/Basic/type.js" displayRange="[4,5,17,17]" lan="javascript">예시 코드 »</button>
-                
-                    <li>Number</li>
-                    IEEE-764 double-precision 부동소수<br>
-                    숫자 리터럴 : 999, 0o777, 0xFFF, 0.999, 0.999E-9<br>
-                    숫자 상수 : Infinity, -Infinity, NaN, Number.EPSILON, Number.MAX_VALUE, Number.MAX_SAFE_INTEGER<br>
-                    Number(), parseInt(), parseFloat(), number.toString(radix)
-                
-                    <li>Boolean</li>
-                    Boolean() : "", 0, NaN, null, undefined == false, 그 외 == true<br>
-                    따라서 (null == undefined) === true
-                
-                    <li>Undefined</li>
-                
-                    <li>Null</li>
-                
-                    <li>Symbol</li>
-                    ES6부터 도입된 타입. 그 무엇과도 같지 않은 유일한 토큰을 나타낸다.
-                    <button class="btn-code" path="Repositories/JavaScript/Basic/type.js" displayRange="[7,9]" lan="javascript">예시 코드 »</button>
-                
-                    <li>배열 : []</li>
-                    자바스크립트의 배열은 모두 동적 배열. 변수와 마찬가지로 타입을 가리지 않는다.
-                    <button class="btn-code" path="Repositories/JavaScript/Basic/array.js" lan="javascript">예시 코드 »</button>
-
-                    <li>
-                        <details>
-                            <summary>Map</summary>
-                            <ol>
-                                <li>new Map()</li>
-                                <li>new Map(iterable: Iterable&lt;readonly [K, V]&gt;)</li>
-                                <li>new Map(entries?: readonly (readonly [K, V])[])</li>
-                                <li>set(key, value), get(key), has(key)</li>
-                                <li>delete(key), clear()</li>
-                                <li>size, keys(), values(), entries()</li>
-                            </ol>
-                        </details>
-                    </li>
-
-                    <li>WeakMap</li>
-                    키는 반드시 객체여야 하며, 키는 GC 대상이 된다. 따라서 객체가 살아있는 동안에 참조해야 하는 고유값들을 저장하기에 좋다
-
-                    <li>
-                        <details>
-                            <summary>Set</summary>
-                            <ol>
-                                <li>new Set(iterable?: Iterable&lt;any&gt;)</li>
-                                <li>new Set(values?: readonly T[])</li>
-                                <li>add(value), has(value), ...</li>
-                            </ol>
-                        </details>
-                    </li>
-
-                    <li>WeakSet</li>
-                    값은 반드시 객체여야 하며, GC 대상이 된다.
-                </ul>
+                <summary>Map</summary>
+                <ol>
+                    <li>new Map()</li>
+                    <li>new Map(iterable: Iterable&lt;readonly [K, V]&gt;)</li>
+                    <li>new Map(entries?: readonly (readonly [K, V])[])</li>
+                    <li>set(key, value), get(key), has(key)</li>
+                    <li>delete(key), clear()</li>
+                    <li>size, keys(), values(), entries()</li>
+                </ol>
             </details>
         </li>
-    </ol>
+
+        <li>WeakMap</li>
+        키는 반드시 객체여야 하며, 키는 GC 대상이 된다. 따라서 객체가 살아있는 동안에 참조해야 하는 고유값들을 저장하기에 좋다
+
+        <li>
+            <details>
+                <summary>Set</summary>
+                <ol>
+                    <li>new Set(iterable?: Iterable&lt;any&gt;)</li>
+                    <li>new Set(values?: readonly T[])</li>
+                    <li>add(value), has(value), ...</li>
+                </ol>
+            </details>
+        </li>
+
+        <li>WeakSet</li>
+        값은 반드시 객체여야 하며, GC 대상이 된다.
+    </ul>
 </details>
 
 <hr>

@@ -139,7 +139,7 @@
 
             <details>
                 <summary>class DefaultObjectWrapper extends BeansWrapper</summary>
-                FreeMarker에서 기본으로 사용하는 ObjectWrapper. Configuration::getDefaultObjectWrapper 또는 DefaultObjectWrapperBuilder::build로 획득.
+                FreeMarker에서 기본으로 사용하는 ObjectWrapper. Configuration#getDefaultObjectWrapper 또는 DefaultObjectWrapperBuilder#build로 획득.
             </details>
         </ul>
     </ol>
@@ -151,7 +151,7 @@
     <summary>Configuration</summary>
     <ol>
         <li>Shared variable</li>
-        모든 템플릿이 공유하는 변수(함수와 directive도 변수임을 상기) 설정. Configuration::setSharedVariable
+        모든 템플릿이 공유하는 변수(함수와 directive도 변수임을 상기) 설정. Configuration#setSharedVariable
         
         <li>Setting</li>
         locale, number_format, default_encoding, template_exception_handler, date_format, time_format, datetime_format, time_zone, url_escaping_charset 등<br>
@@ -161,20 +161,20 @@
         <ul>
             <li>템플릿 로더 설정</li>
             <ul>
-                <li>Configuration::setDirectoryForTemplate : 파일 시스템 상의 기본 디렉터리 지정</li>
-                <li>Configuration::setClassForTemplateLoading<br>
-                    Configuration::setServletContextForTemplateLoading</li>
+                <li>Configuration#setDirectoryForTemplate : 파일 시스템 상의 기본 디렉터리 지정</li>
+                <li>Configuration#setClassForTemplateLoading<br>
+                    Configuration#setServletContextForTemplateLoading</li>
                 클래스 로딩과 같은 매커니즘으로 템플릿을 가져오고자 할 때 사용. jar로 웹앱을 배치한 경우 유용<br>
                 setServletContextForTemplateLoading(servletContext, path) == setTemplateLoader(new WebappTemplateLoader(sctxt, path))
-                <li>Configuration::setServletContextForTemplateLoading</li>
-                ServletContext::getResource를 이용해 템플릿 로드. 압축 상태의 war에서도 잘 동작. WEB-INF/web.xml에 *.ftl등 템플릿 확장자 설정해야 함.
-                <li>Configuration::setTemplateLoader</li>
+                <li>Configuration#setServletContextForTemplateLoading</li>
+                ServletContext#getResource를 이용해 템플릿 로드. 압축 상태의 war에서도 잘 동작. WEB-INF/web.xml에 *.ftl등 템플릿 확장자 설정해야 함.
+                <li>Configuration#setTemplateLoader</li>
                 직접 TemplateLoader를 구현했거나, 템플릿 로더의 설정을 변경하여 이용해야 하는 경우 이용.<br>
                 * 이미 URLTemplateLoader이 구현돼있으니 괜한 뻘짓할 필요 없다.
             </ul>
 
             <li>여러 장소에서 로드</li>
-            Configuration::setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[] { loader1, loader2, ... }))
+            Configuration#setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[] { loader1, loader2, ... }))
         </ul>
 
         <li>Template caching</li>
@@ -186,7 +186,7 @@
             <li>Strong part : JVM에 의해 정리되지 않는 캐시</li>
             <li>Soft part : JVM에 의해 정리될 수 있는 캐시</li>
             <li>디폴트 옵션은 strong 0, soft Integer.MAX_VALUE.</li>
-            변경하려면 Configuration::setCacheStorage(new freemarker.cache.MruCacheStorage(20, 250)) 또는 Configuration::setSetting(Configuration.CACHE_STORAGE_KEY, "strong:20, soft:250")
+            변경하려면 Configuration#setCacheStorage(new freemarker.cache.MruCacheStorage(20, 250)) 또는 Configuration#setSetting(Configuration.CACHE_STORAGE_KEY, "strong:20, soft:250")
         </ul>
     </ol>
 </details>

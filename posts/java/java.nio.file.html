@@ -55,7 +55,7 @@
     <details>
         <summary>interface WatchService extends Closeable Since 1.7</summary>
         <ol>
-            <li>스레드-안전. FileSystem::newWatchService 메서드로 획득한다</li>
+            <li>스레드-안전. FileSystem#newWatchService 메서드로 획득한다</li>
             <li>WatchKey poll() : 다음 WatchKey를 제거. 없으면 null.</li>
             <li>WatchKey poll(long timeout, TimeUnit unit) : 다음 WatchKey를 제거. 없으면 대기. timeout 후에도 없으면 null.</li>
             <li>WatchKey take() : 다음 WatchKey를 제거. 없으면 대기.</li>
@@ -70,7 +70,7 @@
     <details>
         <summary>interface DirectoryStream&lt;T&gt; extends Closeable, Iterable&lt;T&gt; Since 1.7</summary>
         <ol>
-            <li>Files::newDirectoryStream 메서드로 획득</li>
+            <li>Files#newDirectoryStream 메서드로 획득</li>
             <li>일회용 이터러블이다. 2번째 호출부터는 IllegalStateException 발생</li>
         </ol>
         <details open>
@@ -82,17 +82,17 @@
         <summary>interface SecureDirectoryStream&lt;T&gt; extends DirectoryStream&lt;T&gt; Since 1.7</summary>
         <ol>
             <li>열린 디렉터리에 대한 상대 경로를 이용한 연산들을 추가로 지원한다</li>
-            <li>OS에서 이를 지원한다면, Files::newDirectoryStream 메서드로 획득한 DirectoryStream은 SecureDirectoryStream이다</li>
+            <li>OS에서 이를 지원한다면, Files#newDirectoryStream 메서드로 획득한 DirectoryStream은 SecureDirectoryStream이다</li>
             <li>SecureDirectoryStream&lt;T&gt; newDirectoryStream(T path, LinkOption... options)</li>
-            path가 절대 경로면 Files::newDirectoryStream과 동일.
+            path가 절대 경로면 Files#newDirectoryStream과 동일.
             <li>SeekableByteChannel newByteChannel(T path, Set&lt;? extends OpenOption&gt; options, FileAttribute&lt;?&gt;... attrs)</li>
-            path가 절대 경로면 Files::newByteChannel과 동일. path에 해당하는 파일을 열거나 만든 뒤, 파일에 대한 채널을 반환한다
+            path가 절대 경로면 Files#newByteChannel과 동일. path에 해당하는 파일을 열거나 만든 뒤, 파일에 대한 채널을 반환한다
             <li>void deleteFile(T path)</li>
-            Files::delete와 다르게 path가 디렉터리인지 확인하지 않는다. 이로써 디렉터리가 실제로 지워지는 지는 시스템에 의존적이다. 심볼릭 링크의 경우 링크 자체만 지운다.
+            Files#delete와 다르게 path가 디렉터리인지 확인하지 않는다. 이로써 디렉터리가 실제로 지워지는 지는 시스템에 의존적이다. 심볼릭 링크의 경우 링크 자체만 지운다.
             <li>void deleteDirectory(T path)</li>
-            Files::delete와 다르게 path가 디렉터리인지 확인하지 않는다. 이로써 일반 파일이 지워지는 지는 시스템에 의존적이다.
+            Files#delete와 다르게 path가 디렉터리인지 확인하지 않는다. 이로써 일반 파일이 지워지는 지는 시스템에 의존적이다.
             <li>void move(T srcpath, SecureDirectoryStream&lt;T&gt; targetdir, T targetpath)</li>
-            ATOMIC_MOVE 옵션이 적용된 Files::move와 비슷하게 작업한다. 현재 디렉터리를 기준으로, 파일 하나를 다른 디렉터리에 대한 상대경로가 지정하는 위치에 원자적으로 옮긴다
+            ATOMIC_MOVE 옵션이 적용된 Files#move와 비슷하게 작업한다. 현재 디렉터리를 기준으로, 파일 하나를 다른 디렉터리에 대한 상대경로가 지정하는 위치에 원자적으로 옮긴다
             <li>&lt;V extends FileAttributeView&gt; V getFileAttributeView(Class&lt;V&gt; type)</li>
             현재 디렉터리에 대한 FileAttributeView를 반환한다. BasicFileAttributeView를 요청하면 항상 BasicFileAttributeView 인스턴스를 반환한다.
             <li>&lt;V extends FileAttributeView&gt; V getFileAttributeView(T path, Class&lt;V&gt; type, LinkOption... options)</li>
@@ -102,7 +102,7 @@
     <details>
         <summary>interface FileVisitor&lt;T&gt; Since 1.7</summary>
         <ol>
-            <li>Files::walkFileTree 메서드에 사용</li>
+            <li>Files#walkFileTree 메서드에 사용</li>
             <li>FileVisitResult preVisitDirectory(T dir, BasicFileAttributes attrs)</li>
             디렉터리 방문 시, 내부 요소들을 처리하기 전에 해당 디렉터리에 대한 처리를 담당
             <li>FileVisitResult visitFile(T file, BasicFileAttributes attrs)</li>
@@ -125,9 +125,9 @@
         <ol>
             <li>CONTINUE : 순회 계속.</li>
             <li>TERMINATE : 순회 종료</li>
-            <li>SKIP_SUBTREE : FileVIsitor::preVisitDirectory에서 반환된 경우, 하위 레벨 트리는 순회하지 않는다</li>
+            <li>SKIP_SUBTREE : FileVIsitor#preVisitDirectory에서 반환된 경우, 하위 레벨 트리는 순회하지 않는다</li>
             <li>SKIP_SIBLINGS : 현재 요소가 포함된 디렉터리 내부에서, 현재 요소와 동일한 레벨의 요소들은 더 이상 순회하지 않는다.</li>
-            FileVIsitor::preVisitDirectory에서 반환된 경우, 현재 디렉터리의 내부 요소들과 postVisitDirectory 모두 건너뛴다
+            FileVIsitor#preVisitDirectory에서 반환된 경우, 현재 디렉터리의 내부 요소들과 postVisitDirectory 모두 건너뛴다
         </ol>
     </details>
 </details>
@@ -182,7 +182,7 @@
                 <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/nio/PathTest.java" lan="java">예시 코드 »</button></li>
             
             <li>static Path of(String first, String... more) Since 11</li>
-            예. of("/foo", "bar", "gus") → "/foo/bar/gus" // FileSystem::getSeparator == "/"
+            예. of("/foo", "bar", "gus") → "/foo/bar/gus" // FileSystem#getSeparator == "/"
             <li>static Path of(URI uri) Since 11 ↔ toUri</li>
             
             <li>FileSystem getFileSystem() : 이 Path를 만든 FileSystem 반환</li>

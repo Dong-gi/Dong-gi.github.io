@@ -118,22 +118,22 @@
         <li>public AtomicBoolean(boolean initialValue) + 오버로딩</li>
         지정하지 않으면 false
         
-        <li>final boolean get() : VarHandle::getVolatile</li>
-        <li>final boolean compareAndSet(boolean expectedValue, boolean newValue) : VarHandle::compareAndSet</li>
-        <li>boolean weakCompareAndSetPlain(boolean expectedValue, boolean newValue) Since 9 + VarHandle::weakCompareAndSetPlain</li>
-        <li>final void set(boolean newValue) : VarHandle::setVolatile</li>
-        <li>final void lazySet(boolean newValue) Since 1.6 : VarHandle::setRelease</li>
-        <li>final boolean getAndSet(boolean newValue) : VarHandle::getAndSet</li>
-        <li>final boolean getPlain() Since 9 : VarHandle::get</li>
-        <li>final void setPlain(boolean newValue) Since 9 : VarHandle::set</li>
-        <li>final boolean getOpaque() Since 9 : VarHandle::getOpaque</li>
-        <li>final void setOpaque(boolean newValue) Since 9 : VarHandle::setOpaque</li>
-        <li>final boolean getAcquire() Since 9 : VarHandle::getAcquire</li>
-        <li>final void setRelease(boolean newValue) Since 9 : VarHandle::setRelease</li>
+        <li>final boolean get() : VarHandle#getVolatile</li>
+        <li>final boolean compareAndSet(boolean expectedValue, boolean newValue) : VarHandle#compareAndSet</li>
+        <li>boolean weakCompareAndSetPlain(boolean expectedValue, boolean newValue) Since 9 + VarHandle#weakCompareAndSetPlain</li>
+        <li>final void set(boolean newValue) : VarHandle#setVolatile</li>
+        <li>final void lazySet(boolean newValue) Since 1.6 : VarHandle#setRelease</li>
+        <li>final boolean getAndSet(boolean newValue) : VarHandle#getAndSet</li>
+        <li>final boolean getPlain() Since 9 : VarHandle#get</li>
+        <li>final void setPlain(boolean newValue) Since 9 : VarHandle#set</li>
+        <li>final boolean getOpaque() Since 9 : VarHandle#getOpaque</li>
+        <li>final void setOpaque(boolean newValue) Since 9 : VarHandle#setOpaque</li>
+        <li>final boolean getAcquire() Since 9 : VarHandle#getAcquire</li>
+        <li>final void setRelease(boolean newValue) Since 9 : VarHandle#setRelease</li>
         <li>final boolean compareAndExchange(boolean expectedValue, boolean newValue) Since 9 + ~Acquire, ~Release</li>
-        메모리 영향은 VarHandle::compareAndExchange와 같다.
+        메모리 영향은 VarHandle#compareAndExchange와 같다.
         <li>final boolean weakCompareAndSetVolatile(boolean expectedValue, boolean newValue) Since 9 + ~Acquire, ~Release</li>
-        메모리 영향은 VarHandle::weakCompareAndSet와 같다
+        메모리 영향은 VarHandle#weakCompareAndSet와 같다
     </ol>
 </details>
 
@@ -145,14 +145,14 @@
         <li>public AtomicInteger(int initialValue) + 오버로딩</li>
         지정하지 않은 경우 0
         
-        <li>final int get() : VarHandle::getVolatile</li>
-        <li>final void set(int newValue) : VarHandle::setVolatile</li>
-        <li>final void lazySet(int newValue) Since 1.6 : VarHandle::setRelease</li>
-        <li>final int getAndSet(int newValue) : VarHandle::getAndSet</li>
-        <li>final boolean weakCompareAndSetPlain(int expectedValue) Since 9 : VarHandle::weakCompareAndSetPlain</li>        
-        <li>VarHandle::getAndAdd</li>
+        <li>final int get() : VarHandle#getVolatile</li>
+        <li>final void set(int newValue) : VarHandle#setVolatile</li>
+        <li>final void lazySet(int newValue) Since 1.6 : VarHandle#setRelease</li>
+        <li>final int getAndSet(int newValue) : VarHandle#getAndSet</li>
+        <li>final boolean weakCompareAndSetPlain(int expectedValue) Since 9 : VarHandle#weakCompareAndSetPlain</li>        
+        <li>VarHandle#getAndAdd</li>
         final int getAndIncrement() + getAndDecrement, getAndAdd, incrementAndGet, decrementAndGet, addAndGet
-        <li>VarHandle::compareAndSet</li>
+        <li>VarHandle#compareAndSet</li>
         final boolean compareAndSet(int expectedValue, int newValue) + getAndUpdate, updateAndGet, getAndAccumulate, accumulateAndGet
         <li>getPlain ~ weakCompareAndSetRelease​ : AtomicBoolean과 동일</li>
     </ol>

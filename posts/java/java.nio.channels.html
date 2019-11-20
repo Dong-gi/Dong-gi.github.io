@@ -31,9 +31,9 @@
         <ol>
             <li>비동기 IO를 지원하는 바이트 채널</li>
             <li>&lt;A&gt; void read(ByteBuffer dst, A attachment, CompletionHandler&lt;Integer, ? super A&gt; handler)</li>
-            기본 동작은 ReadableByteChannel::read와 동일. 쓰기가 완료(실패)되면 handler가 호출된다. handler에 전달될 첫 인자는 읽은 바이트 수.
+            기본 동작은 ReadableByteChannel#read와 동일. 쓰기가 완료(실패)되면 handler가 호출된다. handler에 전달될 첫 인자는 읽은 바이트 수.
             <li>Future&lt;Integer&gt; read(ByteBuffer dst)</li>
-            반환된 Future::get 메서드로 읽은 바이트 수를 얻을 수 있다.
+            반환된 Future#get 메서드로 읽은 바이트 수를 얻을 수 있다.
             <li>&lt;A&gt; void write(ByteBuffer src, A attachment, CompletionHandler&lt;Integer, ? super A&gt; handler)</li>
             <li>Future&lt;Integer&gt; write(ByteBuffer src)</li>
         </ol>
@@ -162,7 +162,7 @@
     <details>
         <summary>abstract class AsynchronousSocketChannel implements AsynchronousByteChannel, NetworkChannel Since 1.7</summary>
         <ol>
-            <li>스트림 지향 소켓 채널. open 팩터리 메서드로 직접 열거나(Unbound), AsynchronousServerSocketChannel::accept로 열 수(Bound) 있다.
+            <li>스트림 지향 소켓 채널. open 팩터리 메서드로 직접 열거나(Unbound), AsynchronousServerSocketChannel#accept로 열 수(Bound) 있다.
                 <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/nio/AsynchronousSocketChannelTest.java" lan="java">예시 코드 »</button></li>
             <li>스레드-안전하지만 최대 하나의 읽기/쓰기만 각각 동시에 존재할 수 있다.</li>
             도중에 중복되는 요청은 각각 ReadPendingException, WritePendinException 발생
@@ -177,9 +177,9 @@
             채널을 더 이상 쓸 수 없게 한다. 이후의 쓰기는 모두 ClosedChannelException ─ 읽기는 가능할 수 있다 ─ 으로 종료된다.
             <li>abstract &lt;A&gt; void connect(SocketAddress remote, A attachment, CompletionHandler&lt;Void, ? super A&gt; handler) + 오버로딩</li>
             <li>abstract &lt;A&gt; void read(ByteBuffer dst, long timeout, TimeUnit unit, A attachment, CompletionHandler&lt;Integer, ? super A&gt; handler) + 오버로딩</li>
-            ScatteringByteChannel::read와 유사한 메서드도 지원한다
+            ScatteringByteChannel#read와 유사한 메서드도 지원한다
             <li>abstract &lt;A&gt; void write(ByteBuffer src, long timeout, TimeUnit unit, A attachment, CompletionHandler&lt;Integer, ? super A&gt; handler) + 오버로딩</li>
-            GatheringByteChannel::write와 유사한 메서드도 지원한다
+            GatheringByteChannel#write와 유사한 메서드도 지원한다
             <li>abstract SocketAddress getRemoteAddress() + getLocalAddress</li>
         </ol>
     </details>
@@ -316,7 +316,7 @@
         <li>Adivisory Lock : 응용 프로그램이 잠금을 직접 확인하고, 알아서 읽기/쓰기를 수행할 지 결정한다.</li>
         <li>Mandatory Lock : 커널이 잠금을 관리하기 때문에, 관련되지 않은 프로세스는 접근 불가</li>
         모든 잠금을 Adivisory Lock으로 간주하여 관리함이 바람직하다
-        <li>On some systems, 잠금의 존재로 인해 매핑(FileChannel::map)이 불가능할 수 있음에 유의</li>
+        <li>On some systems, 잠금의 존재로 인해 매핑(FileChannel#map)이 불가능할 수 있음에 유의</li>
         <li>On some systems, 채널을 닫으면 해당 파일에 대한 모든 잠금이 해제될 수 있음에 유의</li>
         <li>Some network filesystems, 잠금 영역 크기가 하드웨어 페이지 크기의 배수인 경우에만 매핑을 지원함에 유의</li>
         <li>Some network filesystems, 2^30 또는 2^31 이상 크기에 대한 잠금을 지원하지 않음에 유의</li>
@@ -357,7 +357,7 @@
         <li>SelectableChannel에 대한 멀티플렉서. 스레드-안전</li>
         <li>SelectableChannel을 등록하면 SelectionKey가 발행되며, 3가지 집합으로 관리된다</li>
         <ul>
-            <li>Key set : 현재 등록된 채널들에 관한 키. SelectableChannel::register 메서드로 등록. Selector::keys 메서드로 획득.</li>
+            <li>Key set : 현재 등록된 채널들에 관한 키. SelectableChannel#register 메서드로 등록. Selector#keys 메서드로 획득.</li>
             <li>Selected-key set : 선택 연산에 의해, 최소 하나의 연산에 대해 ready 상태로 파악된 키. 자동 등록(수동 삭제만 가능). selectedKeys 메서드로 획득</li>
             <li>Cancelled-key set : 취소되었지만 채널은 아직 등록되어 있는 키</li>
         </ul>
