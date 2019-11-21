@@ -94,4 +94,4 @@ function filterFunc(giveawayContext) {
     return result;
 }
 
-await procesGiveawayItems();
+procesGiveawayItems();

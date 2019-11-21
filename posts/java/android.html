@@ -22,71 +22,32 @@
         </ol>
     </details>
     <details>
-        <summary>안드로이드 앱</summary>
-        <ol>
-            <li>Android는 멀티유저 Linux 시스템으로, 각 앱은 각기 다른 사용자와 같다.</li>
-            <li>시스템은 각 앱에 고유한 ID를 할당하며, 앱 안의 모든 파일에 대해 할당된 ID의 사용자만 액세스할 수 있게 한다.</li>
-            두 앱에 같은 ID를 공유하도록 만든 경우, 서로의 파일에 접근할 수 있다.
-            <li>각 프로세스는 다른 앱과 격리되어 실행된다.</li>
-        </ol>
-    </details>
-    <details>
         <summary>앱 컴포넌트</summary>
         <ol>
-            <li>액티비티 : UI가 있는 단일 화면. 액티비티는 한 번에 하나만 실행할 수 있다.</li>
-            Activity : startActivity() or startActivityForResult()
-            <li>서비스 : 백그라운드에서 실행되는 요소.</li>
-            Service : startService() or bindService()
+            <li>Activity : UI가 있는 단일 화면. 액티비티는 한 번에 하나만 실행할 수 있다.</li>
+            Project window » 우클릭 » New » Activity : 자동으로 매니페스트에도 추가된다.<br>
+            액티비티 시작 : startActivity() or startActivityForResult()<br>
+            액티비티 생애주기 : onCreate(인스턴스 생성 시), onRestart(재시작), onStart(onCreate, onRestart 후), onResume(포그라운드), onPause(백그라운드), onStop(비가시영역 진입), onDestroy(소멸)<br>
+            xml에서 saveEnabled 속성을 true로 하면 onSaveInstanceState, onRestoreInstanceState 메서드를 재정의하여 사용할 수 있다.
+            
+            <li>Service : 백그라운드에서 실행되는 요소.</li>
+            서비스 시작 : startService() or bindService()
+            
             <li>ContentProvider : 외부로 공유하는 데이터 집합 관리.</li>
-            ContentProvider : ContentResolver.query()
+            ContentProvider 이용 : ContentResolver.query()
+            
             <li>BroadcastReceiver : 각 브로드캐스트는 Intent 객체로 전달된다.</li>
-            Broadcast : sendBroadcast(), sendOrderedBroadcast(), sendStickyBroadcast()
-            <li>Activity, Service, BroadcastReceiver는 Intent로 활성화되고, ContentProvider는 ContentResolver의 요청으로 활성화된다.</li>
-
-
-            1. Intent : 컴포넌트 간의 데이터 전달.
-            » public Intent(Context packageContext, Class<?> cls)
-            » intent.putExtra(String name, ? value)
-
-            2. startActivity(intent)
-
-            3. Project window » 우클릭 » New » Activity : 자동으로 매니페스트에도 추가된다.
-
-            4. 매니페스트에 논리적인 부모 액티비티를 정의하면 "app bar"에 네비게이션이 추가된다.
-<!--                예시 코드는 매니페스트에서 테마를 적용하여 액티비티를 Dialog처럼 이용하는 것과 버튼에 이미 정의된 스타일을 적용하는 것을 보여준다.
-                        <a class="btn btn-secondary" href="javascript:showCode(1, 'theme_manifest');" role="button">View Code : AndroidManifest.xml &raquo;</a>
-                        <a class="btn btn-secondary" href="javascript:showCode(1, 'theme_activity_main');" role="button">View Code : activity_main.xml &raquo;</a>
-                        <a class="btn btn-secondary" href="javascript:showCode(1, 'theme_MainActivity');" role="button">View Code : MainActivity.java &raquo;</a>
-                <div class="col-md-4">
-                    <h2>리스너</h2>
-                    <p>
-                        1. View.OnClickListener, View.OnLongClickListener, ...
-                        <br><br>2. 내부 클래스로 리스너 객체 생성 or 외부 클래스로
-                        <br><br>3. 익명 클래스로 리스너 객체 생성 or Lambda
-                        <br><br>4. 리스너 인터페이스를 액티비티 클래스에 직접 구현 or onClick 속성 지정
-                    </p>
-                    <p>
-                        <a class="btn btn-secondary" href="javascript:showCode(2, 'Listener_activity_main');" role="button">View Code : xml &raquo;</a>
-                        <a class="btn btn-secondary" href="javascript:showCode(2, 'Listener_MainActivity');" role="button">View Code : java &raquo;</a>
-                    </p>
-                </div>
-            </div>
-            <div class="row" id="code-div-2"></div>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <h2>기타 UI</h2>
-                    <p>
-                        1. 토클 버튼, 스위치, 체크박스, 라디오버튼, 레이팅 바 <a class="btn btn-secondary" href="javascript:showCode(3, 'ui');" role="button">View Code &raquo;</a>
-                        <br><br>2. Dialog : <a href="https://developer.android.com/guide/topics/ui/dialogs.html">https://developer.android.com/guide/topics/ui/dialogs.html</a>
-                        <br> : AlertDialog, DatePickerDialog, TimePickerDialog
-                        <br><br>3. Custom Components : View 클래스를 상속받아 재작성. <a href="https://developer.android.com/training/custom-views/index.html">https://developer.android.com/training/custom-views/index.html</a>
-                        <br><br>4. 알림 : <a href="https://developer.android.com/guide/topics/ui/notifiers/notifications.html">https://developer.android.com/guide/topics/ui/notifiers/notifications.html</a> <a class="btn btn-secondary" href="javascript:showCode(3, 'notification');" role="button">View Code &raquo;</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h2>그래픽</h2>
-                -->
+            브로드캐스트 송신 : sendBroadcast(), sendOrderedBroadcast(), sendStickyBroadcast()
+            
+            <li>Intent : 컴포넌트 간의 데이터 전달.</li>
+            <ul>
+                <li>Activity, Service, BroadcastReceiver는 Intent로 활성화되고, ContentProvider는 ContentResolver의 요청으로 활성화된다.</li>
+                <li>public Intent(Context packageContext, Class<?> cls)</li>
+                <li>Intent putExtra(String name, ? value)</li>
+                <li>명시적 인텐트 : 수신 클래스 지정</li>
+                <li>암시적 인텐트 : 작업을 처리할 수 있는 컴포넌트로 안드로이드가 연결</li>
+                <li>브로드캐스트 인텐트 : 브로드캐스트 리시버로 등록된 모든 수신자에게 전송</li>
+            </ul>
         </ol>
     </details>
     <details>
@@ -119,6 +80,7 @@
             <ul>
                 <li>버튼, 텍스트 박스 등의 UI 요소</li>
                 TextView, EditText, Button, ImageView, Switch, ...
+                <button class="btn-code" path="Repositories/Android/Project04/app/src/main/res/layout/activity_main2.xml" lan="xml">예 »</button>
                 <li>id 속성 : @[+]id/ID</li>
                 ID를 할당할 때는 +를 앞에 붙여 R 클래스의 상수로 등록되도록 한다.
                 <li>layout_width, layout_height : 너비, 높이</li>
@@ -139,9 +101,27 @@
                 gravity 속성으로 정렬 가능. center_horizontal(0x01), left(0x03), right(0x05), fill_horizontal(0x07), center_vertical(0x10), top(0x30), bottom(0x50), fill_vertical(0x70), center(0x11), fill(0x77)<br>
                 baselineAligned 속성으로 요소들의 아래 줄을 일치시킬 지 여부를 지정할 수 있다<br>
                 요소의 layout_weight 속성으로 너비/높이를 일정 비율씩 나눠가질 수 있다.
+                <button class="btn-code" path="Repositories/Android/Project04/app/src/main/res/layout/activity_main.xml" lan="xml">예 »</button>
                 <li>GridLayout</li>
                 화면의 가로/세로(columnCount/rowCount)를 잘라 만든 격자를 이용해 배치.
             </ul>
+
+            <li>EventListener</li>
+            <button class="btn-code" path="Repositories/Android/Project04/app/src/main/res/layout/activity_main3.xml" lan="xml">xml »</button>
+            <button class="btn-code" path="Repositories/Android/Project04/app/src/main/java/io/github/donggi/project04/Main3Activity.java" lan="java">java »</button>
+
+            <li>테마 적용 예</li>
+            <button class="btn-code" path="Repositories/Android/Project05/app/src/main/AndroidManifest.xml" lan="xml">AndroidManifest.xml »</button>
+            <button class="btn-code" path="Repositories/Android/Project05/app/src/main/res/layout/activity_main.xml" lan="xml">activity_main.xml »</button>
+            <button class="btn-code" path="Repositories/Android/Project05/app/src/main/java/io/github/donggi/project05/MainActivity.java" lan="java">MainActivity.java »</button>
+
+            <li>BottomNavigationView</li>
+            com.google.android.material:material 포함.
+            <button class="btn-code" path="Repositories/Android/Project04/app/build.gradle" lan="text">"app" module Gradle »</button>
+            <button class="btn-code" path="Repositories/Android/Project04/app/src/main/res/layout/activity_main4.xml" lan="xml">activity xml »</button>
+            <button class="btn-code" path="Repositories/Android/Project04/app/src/main/res/layout/navigator.xml" lan="xml">navigator xml »</button>
+            <button class="btn-code" path="Repositories/Android/Project04/app/src/main/res/menu/navigation.xml" lan="xml">navigation xml »</button><br>
+            Used icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
         </ol>
     </details>
 </details>
@@ -149,13 +129,25 @@
 <hr>
 
 <details>
-    <summary></summary>
+    <summary>권한 요청</summary>
+    <button class="btn-code" path="Repositories/Android/Project03/app/src/main/java/io/github/donggi/project03/MainActivity.java" lan="java">MainActivity.java »</button>
+    <button class="btn-code" path="Repositories/Android/Project03/app/src/main/AndroidManifest.xml" lan="xml">AndroidManifest.xml »</button>
 </details>
 
 <hr>
 
 <details>
-    <summary></summary>
+    <summary>알림 보내기</summary>
+    매니페스트 설정 불필요
+    <button class="btn-code" path="Repositories/Android/Project02/app/src/main/res/layout/activity_main.xml" lan="xml">activity_main.xml »</button>
+    <button class="btn-code" path="Repositories/Android/Project02/app/src/main/java/io/github/donggi/project02/MainActivity.java" lan="java">MainActivity.java »</button>
+</details>
+
+<hr>
+
+<details>
+    <summary>ProGuard</summary>
+    코드 최적화 및 난독화
 </details>
 
 <hr>
