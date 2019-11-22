@@ -8,6 +8,24 @@
 <hr>
 
 <details>
+    <summary>테이블 컬럼 순서 변경</summary>
+    <ul>
+        <li>ALTER TABLE table_name MODIFY COLUMN col_name1 TYPE AFTER col_name2;</li>
+        <li>ALTER TABLE table_name CHANGE COLUMN before_col_name after_col_name TYPE AFTER col_name;</li>
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>테이블 정의 확인</summary>
+    <ul>
+        <li>DESC table_name;</li>
+        <li>SHOW [FULL] COLUMNS FROM table_name [WHERE...];</li>
+    </ul>
+</details>
+
+<details>
     <summary>테이블 구조 복사 생성</summary>
     create table new_table_name like base_table_name;
 </details>
