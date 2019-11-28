@@ -85,6 +85,7 @@ const posts = {
         { filename: "posts/java/javax.crypto.html", category: "Programming/Java/java.base", title: "javax.crypto 12 Since 1.4" },
         { filename: "posts/java/javax.net.html", category: "Programming/Java/java.base", title: "javax.net 12 Since 1.4" },
         { filename: "posts/java/javax.net.ssl.html", category: "Programming/Java/java.base", title: "javax.net.ssl 12 Since 1.4" },
+        { filename: "posts/java/javax.annotation.processing.html", category: "Programming/Java/java.compiler", title: "Annotation Processing API" },
         { filename: "posts/java/lombok.html", category: "Programming/Java/lombok", title: "lombok 1.18.10" },
 
         { filename: "posts/javascript/basic.html", category: "Programming/JavaScript", title: "코어 JavaScript" },

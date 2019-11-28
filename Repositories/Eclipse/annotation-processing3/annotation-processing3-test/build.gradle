@@ -1,0 +1,27 @@
+
+apply plugin: 'java'
+apply plugin:'application'
+
+mainClassName = 'io.github.donggi.annotation.test.User'
+version = '1.0'
+ 
+jar {
+    manifest {
+        attributes  'Title': 'Test', 'Version': version, 'Main-Class': mainClassName
+    }
+    archiveName 'test.jar'
+    dependsOn configurations.runtime
+    from {
+        configurations.compile.collect {it.isDirectory()? it: zipTree(it)}
+    }
+}
+
+dependencies {
+    implementation 'com.google.auto.service:auto-service:1.0-rc6'
+
+    implementation project(":annotation-processing3-definition")
+    compileOnly project(":annotation-processing3-processor")
+    testCompileOnly project(":annotation-processing3-processor")
+    annotationProcessor project(":annotation-processing3-processor")
+    testAnnotationProcessor project(":annotation-processing3-processor")
+}
