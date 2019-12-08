@@ -1,0 +1,17 @@
+
+dependencies {
+    implementation project(":annotation-processing3-definition")
+}
+
+/*
+sourceSets {
+    main {
+        java {
+            srcDir "${rootDir}/annotation-processing-definition/src/main/java"
+        }
+        resources {
+            srcDir "${rootDir}/annotation-processing-definition/src/main/resources"
+        }
+    }
+}
+*/

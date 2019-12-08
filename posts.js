@@ -86,7 +86,9 @@ const posts = {
         { filename: "posts/java/javax.crypto.html", category: "Programming/Java/java.base", title: "javax.crypto 12 Since 1.4" },
         { filename: "posts/java/javax.net.html", category: "Programming/Java/java.base", title: "javax.net 12 Since 1.4" },
         { filename: "posts/java/javax.net.ssl.html", category: "Programming/Java/java.base", title: "javax.net.ssl 12 Since 1.4" },
-        { filename: "posts/java/lombok.html", category: "Programming/Java/lombok", title: "lombok 1.18.10" },
+        { filename: "posts/java/javax.annotation.processing.html", category: "Programming/Java/java.compiler", title: "Annotation Processing API" },
+        { filename: "posts/java/lombok.html", category: "Programming/Java", title: "lombok 1.18.10" },
+        { filename: "posts/java/logback.html", category: "Programming/Java", title: "Logback with SLF4J" },
 
         { filename: "posts/javascript/basic.html", category: "Programming/JavaScript", title: "코어 JavaScript" },
         { filename: "posts/javascript/basic2.html", category: "Programming/JavaScript", title: "브라우저 JavaScript" },
@@ -133,7 +135,6 @@ const posts = {
 };
 
 /*
-lan 속성 : nohighlight, text, java, javascript, cpp, matlab, xml, css, ruby, sql, bash, shell, php, go, python, cs
 <button class="btn-code" path="Repositories/Eclipse" lan="java">예시 코드 »</button>
 <button type="button" class="btn btn-primary btn-sm" onclick="">실행 »</button>
 <a role="button" target="_blank" class="btn btn-info btn-sm" href=""></a>
