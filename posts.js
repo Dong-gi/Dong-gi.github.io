@@ -1,5 +1,6 @@
 const posts = {
     list: [
+        { filename: "posts/algorithm/algo.html", category: "Algorithm", title: "Algorithm" },
         { filename: "posts/algorithm/book01.html", category: "Algorithm", title: "『알고리즘 도감』" },
         { filename: "posts/algorithm/koreatech.html", category: "Algorithm", title: "jduge.koreatech.ac.kr" },
 
