@@ -1,13 +1,15 @@
 <hr>
 
 <details>
-    <summary>타입</summary>
+    <summary>타입 관련</summary>
     <ul>
         <li>class bool([x])</li>
-        True, False 중 하나를 반환한다. int의 서브클래스로, 더 상속할 수 없다.
-    </ul>
-    <details>
-        <summary>class bytearray([source[, encoding[, errors]]])</summary>
+        <ul>
+            <li>True, False 중 하나를 반환한다. int의 서브클래스로, 더 상속할 수 없다.</li>
+            <li>Since 3.7 : x는 키워드 인자로 전달할 수 없다</li>
+        </ul>
+    
+        <li>class bytearray([source[, encoding[, errors]]])</li>
         <ol>
             <li>변경할 수 있는 바이트 배열. 생성자에 인자가 없으면 크기가 0인 바이트 배열을 반환한다.</li>
             <li>source가 문자열인 경우 : encoding이 반드시 설정되어야 하며, str.encode()를 통해 변환된다.</li>
@@ -15,10 +17,141 @@
             <li>source가 buffer 인터페이스와 호환되는 객체일 경우, 객체의 읽기 전용 버퍼로 배열을 초기화한다.</li>
             <li>source가 iterable인 경우 : 반복자 모든 요소가 [0, 255] 사이의 정수여야 한다.</li>
         </ol>
-    </details>
-    <ul>
+    
         <li>class bytes([source[, encoding[, errors]]])</li>
         bytearray의 변경 불가 버전. b"Hello World"처럼 리터럴 표기를 통해 객체를 생성할 수도 있다.
+
+        <li>class complex([real[, imag]])</li>
+        <ol>
+            <li>'1+2j'와 같이 문자열을 넘길 수도 있다.</li>
+            <li>아무 인자도 넘기지 않으면 0j를 반환한다</li>
+            <li>complex(x)의 대리자 호출 순서 : __complex__() → __float__() → __index__()</li>
+            <li>Since 3.6 : '_'이 포함된 숫자 리터럴도 허용된다.</li>
+            <li>Since 3.8 : __complex__(), __float__() 둘 다 없으면 __index__() 호출</li>
+        </ol>
+
+        <li>class float([x])</li>
+        <ul>
+            <li>"nan", "inf", "infinity"도 인자로 가능하다.</li>
+            <li>일반 객체의 경우 __float__() 메서드를 호출한다.</li>
+            <li>Since 3.6 : 숫자 리터럴에 '_' 허용</li>
+            <li>Since 3.7 : x는 키워드 인자로 전달할 수 없다</li>
+            <li>Since 3.8 : __float__()이 없는 경우 __index__()를 찾는다</li>
+        </ul>
+
+        <li>class int([x])<br>
+            class int(x, base=10)</li>
+        <ul>
+            <li>무인자 : 0</li>
+            <li>x.__int__() → 없으면 x.__index__() Since 3.8 → x.__trunc__()</li>
+            <li>문자열 : base에 따라 파싱</li>
+            <li>Since 3.6 : 숫자 리터럴에 '_' 허용</li>
+        </ul>
+
+        <li>class str(object=")<br>
+            class str(object=b", encoding='utf-8', errors='strict')</li>
+        <ul>
+            <li>encoding, errors 둘 다 없으면 object.__str__() 또는 repr(object) 반환</li>
+            <li>encoding, errors 하나라도 있으면 object는 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.python.org/3/glossary.html#term-bytes-like-object">bytes-like object</a>여야 한다. bytes.decode(encoding, errors)를 반환</li>
+        </ul>
+
+        <li>class dict(**kwarg)<br>
+            class dict(maping, **kwarg)<br>
+            class dict(iterable, **kwarg)</li>
+
+        <li>class set([iterable])<br>
+            class frozenset([iterable])<br>
+            class list([iterable])</li>
+
+        <li>class object</li>
+        object는 __dict__이 없으므로 임의로 속성을 할당할 수 없다.
+
+        <li>class property(fget=None, fset=None, fdel=None, doc=None)</li>
+        <ul>
+            <li>property 속성을 반환한다. fget은 getter, fset은 setter, fdel은 속성 소멸자, doc은 도움말로써, 없으면 fget의 docstring을 복사해온다.</li>
+            <li>@property 데커레이터를 통해 쉽게 읽기전용 property를 만들 수 있다.</li>
+            <li>property 객체의 getter, setter, deleter 메서드 각각을 데커레이터로 정의할 수 있다.
+                <button class="btn-code" path="Repositories/Python/Basic/property_example.py" displayRange="[1,17,20,35]" lan="python">property_example.py »</button></li>
+        </ul>
+
+        <li>class slice(stop)<br>
+            class slice(start, stop[, step])</li>
+        
+        <li>class type(object)<br>
+            class type(name, bases, dict)</li>
+        <ul>
+            <li>인자 하나만 전달됐을 경우 : 객체의 타입을 반환한다. 보통 object.__class__와 같다.</li>
+            Since 3.6 type.__new__를 재정의하지 않은 type의 서브클래스들은 type(object)를 이용할 수 없다.
+            <li>세 인자 모두 전달됐을 경우 : 동적으로 타입 객체를 생성한다.</li>
+            name : 클래스 이름, bases : 상속할 타입들의 튜플, dict : 클래스 내부 네임스페이스
+        </ul>
+
+        <li>@classmethod : 메서드를 클래스 메서드로 변경한다.<br>
+            @staticmethod : static method는 클래스 메서드나 객체 메서드와 달리 명시된 인자가 없다.</li>
+
+
+        <li>range(stop)<br>
+            range(start, stop[, step])</li>
+        불변 시퀀스 반환
+        
+        <li>tuple([iterable])</li>
+        불변 시퀀스 반환
+
+        <li>memoryview(obj) : obj에 대한 memoryview 객체를 반환한다.</li>
+
+        <li>isinstance(object, classinfo)</li>
+        호환 여부 반환. classinfo는 여러 타입 객체들로 구성된 튜플일 수 있으며, 하나라도 만족하면 True를 반환한다.
+
+        <li>issubclass(class, classinfo)</li>
+        클래스 호환 여부 반환. classinfo는 여러 클래스 객체로 구성된 튜플일 수 있으며, 모두를 만족해야 True를 반환한다.
+
+        <li>super([type[, object-or-type]])</li>
+        <ul>
+            <li>메서드 호출을 상위 클래스로 연결하는 프록시 객체를 반환한다.</li>
+            예. type(obj).__mro__의 순서가 D → C → B → A → object일 때, super(C, obj)의 탐색 순서는 B → A → object.
+            <button class="btn-code" path="Repositories/Python/Basic/super_example.py" lan="python">super_example.py »</button>
+            <li>object-or-type이 객체인 경우 isinstance(obj, type) == True, 타입인 경우 issubclass(type2, type) == True를 만족해야 한다</li>
+        </ul>
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>객체 관련</summary>
+    <ul>
+        <li>dir([object])</li>
+        <ol>
+            <li>인자가 없으면 현재 local scope의 이름들을 나열한다. 인자가 있으면 객체의 속성들을 알파벳순으로 나열한다.</li>
+            <li>객체에 __dir__()이 정의되었다면 그것을 이용한다.</li>
+            __getattr__() 또는 __getattribute__()를 정의하여 dir()의 출력을 조정할 수 있다
+            <li>__dir__()이 정의되지 않았다면 __dict__ 속성을 이용한다.</li>
+            이 경우 dir()의 결과는 완전하지 않을 수 있으며, __getattr__()과 다를 수도 있다
+        </ol>
+
+        <li>help([object])</li>
+        <ul>
+            <li>무인자 : 대화형 도움말 콘솔을 시작한다</li>
+            <li>문자열 : 일치하는 모듈, 함수, 클래스, 메서드, 키워드, 문서 토픽을 출력한다.</li>
+            <li>객체 : 객체에 대한 도움말 생성</li>
+        </ul>
+
+        <li>vars([object])</li>
+        <ul>
+            <li>무인자 : locals()와 유사</li>
+            <li>모듈, 클래스, 인스턴스, 다른 객체의 __dict__ 속성을 반환한다.</li>
+        </ul>
+
+        <li>hash(object)</li>
+        사용자 정의 __hash__() 메서드를 작성할 때, hash()가 호스트 머신의 비트수에 따라 결과를 자름에 유의.
+
+        <li>delattr(object, name) : del object.name<br>
+            getattr(object, name[, default]) : object.name<br>
+            hasattr(object, name)<br>
+            setattr(object, name, value)</li>
+
+        <li>id(object)</li>
+        객체가 살아있는 동안 갖는 유일한 정수
     </ul>
 </details>
 
@@ -26,294 +159,201 @@
 
 <details>
     <summary>문자열 관련</summary>
-    <ol>
+    <ul>
+        <li>input([prompt])</li>
+        <ul>
+            <li>prompt가 존재한다면 newline 없이 표준 출력된다.</li>
+            <li>한 줄을 표준입력 받으며, EOF를 만나면 EOFError가 발생한다.</li>
+            <li>이벤트 builtins.input/result 발생</li>
+        </ul>
+
+        <li>print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)</li>
+        <ul>
+            <li>objects의 요소들을 sep로 구분하여 file에 쓰고, end로 끝맺는다.</li>
+            <li>file : write(string) 메서드를 가진 객체</li>
+            <li>Since 3.3 flush 추가 : 강제 flush 여부</li>
+        </ul>
+
         <li>ascii(object)</li>
-        repr()처럼 객체의 문자열 표현을 반환한다. ASCII 문자가 아닌 경우 이스케이프된다.
+        객체의 문자열 표현(repr())을 반환한다. ASCII 문자가 아닌 경우 이스케이프된다.
         <button class="btn-code" path="Repositories/Python/Basic/built_in_function_example.py" displayRange="[1,1]" lan="python">예시 »</button>
 
-        <li>chr(i)</li>
-        유니코드 i에 해당하는 문자를 문자열로 반환. 가능한 i 값의 범위는 [0, 0x10FFFF]
-    </ol>
+        <li>repr(object)</li>
+        object에 대한 문자열 표현을 반환한다. 여러 타입들이 object == eval(repr(object))를 만족하며, 그 외의 경우 &lt;&gt; 사이에 객체 정보가 담긴다. __repr__()를 재정의하여 결과를 변경할 수 있다.
+
+        <li>ord(c) : 유니코드 코드포인트 반환</li>
+
+        <li>chr(i) : 유니코드 문자 반환. 가능한 i 값의 범위는 [0, 0x10FFFF]</li>
+
+        <li>bin(x)</li>
+        정수를 "0b"로 시작하는 2진 문자열로 변환한다. int 타입이 아니라도, 정수를 반환하는 __index__()가 있으면 그것을 이용한다.
+        <button class="btn-code" path="Repositories/Python/Basic/built_in_function_example.py" displayRange="[3,4]" lan="python">예시 »</button>
+
+        <li>oct(x)</li>
+        "0o"로 시작하는 8진수 표기의 문자열을 반환한다. 정수가 아니라면 __index__()의 리턴값을 이용한다.
+<pre>&gt;&gt;&gt; oct(9), format(9, '#o'), f'{9:#o}'
+('0o11', '0o11', '0o11')</pre>
+
+        <li>hex(x)</li>
+        <ul>
+            <li>x에 대한 소문자 16진수 표기를 반환한다. x가 int 객체가 아니라면, __index__()의 결과를 이용한다.</li>
+<pre>&gt;&gt;&gt; hex(15), format(15, '#X'), format(15, 'x'), f'{15:#x}'
+('0xf', '0XF', 'f', '0xf')</pre>
+            <li>실수의 경우 float.hex()를 이용하면 된다</li>
+        </ul>
+
+        <li>format(value[, format_spec])</li>
+        type(value).__format__(value, format_spec)과 같으며, 빌트인 자료형들에 쓰이는 표준 format_spec이 https://docs.python.org/3/library/string.html#formatspec에 정의되어 있다.
+    </ul>
 </details>
 
 <hr>
 
 <details>
     <summary>iterable 관련</summary>
-    <ol>
+    <ul>
         <li>all(iterable)</li>
         iterable 모든 요소가 True면 True 반환. iterable이 빈 경우도 True 반환.
 
         <li>any(iterable)</li>
         iterable 하나의 요소라도 True면 True 반환. iterable이 빈 경우 False 반환.
-    </ol>
+
+        <li>enumerate(iterable, start=0)</li>
+        iterable 요소에 숫자를 붙인 튜플들로 구성된 enumerate 객체를 반환한다.
+<pre>&gt;&gt;&gt; list(enumerate('abcde', start=4))
+[(4, 'a'), (5, 'b'), (6, 'c'), (7, 'd'), (8, 'e')]</pre>
+
+        <li>filter(function, iterable)</li>
+        <ol>
+            <li>참을 만족하는 요소들로 반복자를 구성한다.</li>
+            itertools.filterfalse()는 정반대의 작업을 한다.
+            <li>(item for item in iterable if function(item)) if function is not None</li>
+            <li>(item for item in iterable if item) if function is None</li>
+        </ol>
+
+        <li>iter(object[, sentinel])</li>
+        <ul>
+            <li>iterator 객체를 반환한다. object는 sentinel의 유무에 따라 다르게 해석된다</li>
+            <li>sentinel 없는 경우 : object는 __iter__() 또는 0부터 시작하는 정수를 받는 __getitem__()을 구현해야 한다.</li>
+            <li>sentinel 있는 경우 : object는 callable이어야 한다. 매 __next__() 호출마다 object를 인자 없이 호출하며, 그 결과가 sentinel과 같으면 StopIteration 발생</li>
+        </ul>
+
+        <li>len(s) : s는 sequence 또는 collection</li>
+
+        <li>map(function, iterable, ...)</li>
+        iterable에 대한 function 결과를 생산하는 iterator 반환
+<pre>&gt;&gt;&gt; list(map(lambda x: x + 1, [1, 2, 3, 4]))
+[2, 3, 4, 5]
+&gt;&gt;&gt; list(map(lambda x, y: (x + 1, y + 1), [1, 2, 3, 4], [2, 3, 4, 5]))
+[(2, 3), (3, 4), (4, 5), (5, 6)]</pre>
+
+        <li>max(iterable, *[, key, default])<br>
+            max(arg1, arg2, *args[, key])<br>
+            min(iterable, *[, key, default])<br>
+            min(arg1, arg2, *args[, key])<br>
+            sorted(iterable, *, key=None, reverse=False) : 정렬된 새 리스트 반환</li>
+        key : 원소로부터 정렬 키를 뽑아내는 함수.
+
+        <li>next(iterator[, default]) : iterator.__next__()</li>
+
+        <li>reversed(seq)</li>
+        seq에 대한 뒤집힌 iterator를 반환한다. seq는 __reversed__()를 구현했거나 sequence protocol(__len__()과 0부터 시작하는 __getitem__())을 지원해야 한다.
+
+        <li>sum(iterable, /, start=0)</li>
+        문자열 접합에는 ''.join(sequence), 확장 정밀도 float 합에는 math.fsum(), iterable 접합에는 itertools.chain()이 더 빠르다.
+
+        <li>zip(*iterables)</li>
+        <ul>
+            <li>iterable들의 같은 offset의 요소들을 튜플로 묶어 yield한다. 전치행렬과 유사한 효과</li>
+            <li>iterable들은 좌에서 우로 검사되며, 하나라도 끝나면 종료된다.</li>
+            <li>간단하게 zip(*[iter(s)]*n)으로 같은 것을 n개 중복시킬 수 있다.</li>
+            <li>zip(*zip())은 원래의 것으로 원복하는 효과가 있다.</li>
+        </ul>
+    </ul>
 </details>
 
 <hr>
 
 <details>
     <summary>산수 관련</summary>
-    <ol>
+    <ul>
         <li>abs(x)</li>
         절댓값을 반환한다. 복소수의 경우 절댓값으로 magnitude(= sqrt(a^2+b^2))가 반환된다.
 
-        <li>bin(x)</li>
-        정수를 "0b"로 시작하는 2진 문자열로 변환한다. int 타입이 아니라도, 정수를 반환하는 __index__()가 있으면 그것을 이용한다.
-        <button class="btn-code" path="Repositories/Python/Basic/built_in_function_example.py" displayRange="[3,4]" lan="python">예시 »</button>
-    
-    </ol>
+        <li>divmod(a, b)</li>
+        <ul>
+            <li>정수 연산 : (a // b, a % b)</li>
+            <li>실수 연산 : (q, a % b) where q = math.floor(a/b) or math.floor(a/b) - 1</li>
+            a % b는 b의 부호를 따르며 0 &lt;= abs(a % b) &lt; abs(b)를 만족한다.
+        </ul>
+
+        <li>pow(x, y[, z])</li>
+        <ul>
+            <li>modulo z에서의 거듭제곱값을 반환하며, 그 값은 (x**y)%z와 같지만 처리속도는 더 빠르다.</li>
+            <li>Since 3.8 : x가 z와 relatively prime(gcd(x, z) == 1)일 때 y = -1이 허용되며, 반환값은 modulo z에서 x의 곱셈에 대한 역원이다 → pow(x, -1, z) * x % z == 1</li>
+            예를 들어 디오판토스 방정식 4258x + 147y = 369에서, y를 소거한 4258x ≡ 369(mod 147)의 해 x = 369 * pow(4258, -1, 147) % 147
+            <li>Since 3.9 : 키워드 인자 허용</li>
+        </ul>
+
+        <li>round(number[, ndigits]) : Round even. 일부 float에 대해 기대와 다른 결과가 나올 수 있다(round(2.675, 2))</li>
+    </ul>
 </details>    
 
 <hr>
 
-<ol>
-    <li>breakpoint(*args, **kws)</li>
-    디버거 진입. sys.breakpointhook()를 호출하면서 args와 kws를 그대로 전달한다. sys.breakpointhook()는 무인자 함수이므로 타입 에러가 발생하면서 중단된다.
+<details>
+    <summary>기타</summary>
+    <ol>
+        <li>breakpoint(*args, **kws) Since 3.7</li>
+        디버거 진입. sys.breakpointhook()를 호출하면서 args와 kws를 그대로 전달한다. sys.breakpointhook()는 무인자 함수이므로 타입 에러가 발생하면서 중단된다.
 
-    <li>callable(object)</li>
-    콜러블처럼 보이는지 여부를 반환한다. True를 반환해도 호출 실패할 가능성이 있음에 유의. 클래스 자체도 콜러블임에 유의.
+        <li>callable(object) Removed 3.0, Since 3.2</li>
+        콜러블처럼 보이는지 여부를 반환한다. True를 반환해도 호출 실패할 가능성이 있음에 유의. 클래스 자체도 콜러블임에 유의.
 
-    <li>@classmethod</li>
-    메서드를 클래스 메서드로 꾸민다. 클래스 메서드는 명시적으로 클래스를 첫번째 인자로 받으며, 호출한 클래스 객체가 전달된다.
+        <li>compile(source, filename, mode, flags=0, dont_inherit=False, optimize=-1)</li>
+        <ul>
+        <li>source(문자열, 바이트 문자열, AST 객체)를 code나 AST 객체로 컴파일한다. Code 객체는 exec()나 eval()을 통해 실행할 수 있다.</li>
+        <li>filename : 코드를 읽어온 파일. 파일로부터 읽은 것이 아니라면 '&lt;string&gt;'를 보통 대신 넘긴다.</li>
+        <li>mode : 'exec'(여러 문장 실행), 'eval'(표현식 하나 계산), 'single'(한 줄 실행)</li>
+        <pre>exec(compile("a = 1\nb = 2\nprint(a+b)", "&lt;string&gt;", "exec"))</pre>
+        <li>optimize Since 3.2 : 0(최적화 없음, __debug__ is true), 1(asserts 제거, __debug__ is false), 2(docstring도 제거)</li>
+        <li>Since 3.8 : 플래그로 ast.PyCF_ALLOW_TOP_LEVEL_AWAIT 가능</li>
+        최상위 레벨 await, async for, async with 사용 가능
+        </ul>
 
-    <li>compile(source, filename, mode, flags=0, dont_inherit=False, optimize=-1)</li>
-<br>&raquo; source를 code나 AST 객체로 컴파일한다. Code 객체는 exec()나 eval()을 통해 실행할 수 있다.
-<br>&raquo; source로는 문자열, 바이트 문자열, AST 객체가 가능하다.
-<br>&raquo; filename : 코드를 읽어온 파일. 파일로부터 읽은 것이 아니라면 '&lt;string&gt;'를 보통 대신 넘긴다.
-<br>&raquo; mode : 'exec'(여러 문장들 실행), 'eval'(하나의 표현식 계산), 'single'(한 줄 실행)
-<br>&raquo; optimize : 0(최적화 없음, __debug__ is true), 1(asserts 제거, __debug__ is false), 2(docstring도
-제거)
-<br>&gt;&gt;&gt; exec(compile("a = 1\nb = 2\nprint(a+b)", "&lt;string&gt;", "exec"))
-<br>3
-<br>
+        <li>eval(expression[, globals[, locals]])</li>
+        <ul>
+        <li>표현식 하나를 평가하여 반환한다</li>
+        <li>expression : 표현식 문자열 또는 컴파일된 Code 객체</li>
+        <li>globals : dictionary</li>
+        <li>locals : mapping object</li>
+        <li>globals, locals모두 생략하면 실행 시점 스코프의 것이 사용된다</li>
+        </ul>
 
-https://docs.python.org/ko/3/library/functions.html#complex
-<br>12. class complex([real[, imag]])
-<br>&raquo; string을 넘길 수도 있다. '1+2j'와 같이 허수부를 구분하는 '+', '-'를 공백으로 감싸면 안 된다.
-<br>&raquo; Since 3.6 : '_'이 포함된 숫자 리터럴도 허용된다.
-<br>&gt;&gt;&gt; complex(1_234.123_4, 1)
-<br>(1234.1234+1j)
+        <li>exec(object[, globals[, locals]])</li>
+        eval()과 유사하지만, 여러 문장을 실행할 수 있다는 차이가 있다
 
-1. delattr(object, name) : setattr()에 대응하는 함수. del object.name과 같다.
-<br>
-<br>2. class dict(**kwarg)
-<br>class dict(maping, **kwarg)
-<br>class dict(iterable, **kwarg)
-<br>
-<br>3. dir([object])
-<br>&raquo; 인자가 없으면 현재 local scope의 이름들을 나열한다. 인자가 있으면 객체의 속성들을 알파벳순으로 나열한다.
-<br>&raquo; 객체에 __dir__()이 정의되었다면 그것을 이용한다. __getattr__() 또는 __getattribute__()를 정의하여 dir()의 출력을
-정의할 수 있다.
-<br>&raquo; __dir__()이 정의되지 않았다면 __dict__ 속성을 이용한다. dir()의 결과는 완성되지 않을 수 있으며, __getattr__()이 정의되었다면
-정확하지 않을 수도 있다.
-<br>
-<br>4. divmod(a, b)
-<br>&raquo; 정수 연산 : (a // b, a % b)와 같다.
-<br>&raquo; 실수 연산 : (q, a % b) where q는 math.floor(a / b)이거나 이보다 1 작은 값, a % b는 b의 부호를 따르며 0 &lt;=
-abs(a % b) &lt; abs(b)를 만족한다. 어떤 경우든 q * b + a % b는 a에 가깝다.
-<br>
-<br>5. enumerate(iterable, start=0)
-<br>&raquo; iterable 요소에 숫자를 붙인 튜플들로 구성된 enumerate 객체를 반환한다.
-<br>&gt;&gt;&gt; list(enumerate('abcde', start=4))
-<br>[(4, 'a'), (5, 'b'), (6, 'c'), (7, 'd'), (8, 'e')]
-<br>
-<br>6. eval(expression, globals=None, locals=None)
-<br>&raquo; expression : 표현식 문자열 또는 code 객체, globals : dictionary, locals : mapping object
-<br>&raquo; globals(), locals() 함수로 현재 global, local dictionary를 쉽게 얻을 수 있다.
-<br>
-<br>7. exec(object[, globals[, locals]])
-<br>
-<br>8. filter(function, iterable)
-<br>&raquo; 참을 만족하는 요소들로 반복자를 구성한다.
-<br>&raquo; (item for item in iterable if function(item)) if function is not None
-<br>&raquo; (item for item in iterable if item) if function is None
-<br>&raquo; itertools.filterfalse()는 정반대의 작업을 한다.
-<br>
-<br>9. class float([x])
-<br>&raquo; "nan", "inf", "infinity"도 가능하다. 일반 객체의 경우 __float__() 메서드를 호출한다.
-<br>
-<br>10. format()
-<br>&raquo; type(value).__format__(value, format_spec)과 같으며, 빌트인 자료형들에 쓰이는
-<a role="button" class="btn btn-info btn-sm" href="https://docs.python.org/3/library/string.html#formatspec">표준
-    format_spec</a>이 정의되어 있다.
-<br>
-<br>11. class frozenset([iterable])
-<br>
-<br>12. getattr(object, name[, default])
-<br>
-<br>13. globals() : 현재 모듈(함수나 메서드는 그것이 정의된 모듈)의 global symbol table(dictionary)을 반환한다.
+        <li>globals()</li>
+        현재 모듈(함수나 메서드는 그것이 정의된 모듈)의 global symbol table(dictionary)을 반환한다.
 
-1. hasattr(object, name)
-<br>
-<br>2. hash(object)
-<br>&raquo; 사용자 정의 __hash__() 메서드를 작성할 때, hash()가 호스트 머신의 비트수에 따라 결과를 자름에 유의.
-<br>
-<br>3. help([object])
-<br>&raquo; 문자열 인자 : 일치하는 모듈, 함수, 클래스, 메서드, 키워드, 문서 토픽을 찾고 콘솔에 출력한다.
-<br>&raquo; 일반 객체 : 객체에 대한 도움말 생성
-<br>
-<br>4. hex(x)
-<br>&raquo; x에 대한 소문자 16진수 표기를 반환한다. x가 int 객체가 아니라면, __index__()의 결과를 이용한다.
-<br>&raquo; 실수의 경우 float.hex()를 이용한다.
-<br>&gt;&gt;&gt; hex(15), format(15, '#X'), format(15, 'x'), f'{15:#x}'
-<br>('0xf', '0XF', 'f', '0xf')
-<br>
-<br>5. id(object) : 객체가 살아있는 동안 갖는 유일한 정수
-<br>
-<br>6. input([prompt])
-<br>&raquo; prompt가 존재한다면 newline 없이 표준 출력된다.
-<br>&raquo; 한 줄을 표준입력 받으며, EOF를 만나면 EOFError가 발생한다.
-<br>
-<br>7. class int(x=0)
-<br>class int(x, base=10)
-<br>&raquo; x가 숫자면 x.__int__()을 반환한다. x가 __int__()대신 __trunc__()을 정의했다면 이를 호출한다. 부동소수의 경우 소수를 0으로
-잘라낸다.
-<br>&raquo; base가 0일 경우 정수 리터럴 문자열을 그대로 반환한다. 결과적으로 2, 8, 10, 16진수를 해석하고, '0'으로 시작하는 경우 여러가지로 해석되므로
-ValueError가 발생한다.
-<br>&raquo; Since 3.4 base가 int가 아닐 때, base.__int__를 이용하던 것에서 base.__index__를 이용하도록 변경
-<br>&raquo; Since 3.6 '_'로 그루핑된 정수 리터럴이 허용
-<br>
-<br>8. isinstance(object, classinfo)
-<br>&raquo; 호환 가능 여부 반환. classinfo는 여러 타입 객체들로 구성된 튜플일 수 있으며, 하나라도 만족하면 True를 반환한다.
-<br>
-<br>9. issubclass(class, classinfo)
-<br>&raquo; 클래스 호환 여부 반환. 클래스는 자기 자신의 서브클래스로 간주한다. classinfo는 여러 클래스 객체로 구성된 튜플일 수 있으며, 모두를 만족해야
-True를 반환한다.
-<br>
-<br>10. iter(object[, sentinel])
-<br>&raquo; sentinel이 없는 경우 : object는 __iter__() 또는 0부터 시작하는 정수를 받는 __getitem__()을 구현해야 한다.
-<br>&raquo; sentinel이 주어진 경우 : object는 callable이어야 한다. object를 인자 없이 호출하며, 그 결과가 sentinel과 같으면 StopIteration
-예외가 발생한다.
-<br>
-<br>11. len(s) : s는 sequence 또는 collection
-<br>
-<br>12. class list([iterable])
-<br>
-<br>13. locals() : 현재 local symbol table에 대한 스냅샷(변경 불가) dictionary를 반환한다.
-<br>
-<br>14. map(function, iterable, ...)
-<br>&raquo; iterable에 대한 function 결과를 생산하는 iterator 반환
-<br>&gt;&gt;&gt; list(map(lambda x: x + 1, [1, 2, 3, 4]))
-<br>[2, 3, 4, 5]
-<br>&gt;&gt;&gt; list(map(lambda x, y: (x + 1, y + 1), [1, 2, 3, 4], [2, 3, 4, 5]))
-<br>[(2, 3), (3, 4), (4, 5), (5, 6)]
-<br>
-<br>15. max(iterable, *[, key, default])
-<br>max(arg1, arg2, *args[, key])
-<br>&raquo; key : 정렬 함수. 이를 각 원소마다 적용시킨 결과값을 이용해 최댓값을 구한다.
-<br>&gt;&gt;&gt; max('z', 'yy', 'xxx', key=lambda s: len(s))
-<br>'xxx'
-<br>
-<br>16. memoryview(obj) : obj에 대한 memoryview 객체를 반환한다.
-<br>
-<br>17. min(iterable, *[key, default])
-<br>min(arg1, arg2, *args[, key])
+        <li>locals()</li>
+        현재 스코프의 local symbol table에 대한 스냅샷(변경 불가, 하지도 말고) dictionary를 반환한다.
 
-1. next(iterator[, default]) : iterator.__next__()
-<br>
-<br>2. class object : object는 __dict__이 없으므로 임의로 속성을 할당할 수 없다.
-<br>
-<br>3. oct(x)
-<br>&raquo; "0o"로 시작하는 8진수 표기의 문자열을 반환한다. 정수가 아니라면 __index__()의 리턴값을 이용한다.
-<br>&gt;&gt;&gt; oct(9), format(9, '#o'), f'{9:#o}'
-<br>('0o11', '0o11', '0o11')
-<br>
-<br>4. open(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True,
-opener=None)
-<br>&raquo; 파일을 열고 file 객체를 반환한다.
-<br>&raquo; file : pathname 또는 file descriptor. closefd가 True인 경우, 반환된 file 객체가 닫히면 file descriptor도
-닫힌다. filename이 주어진 경우 closefd는 True여야만 한다.
-<br>&raquo; mode : r(reading, default), w(writing, 파일 처음부터), x(파일이 없으면 생성), a(appeding), b(binary),
-t(text, default)
-<br>&raquo; encoding : 텍스트 모드에서만 사용. 주어지지 않은 경우 locale.getpreferredencoding()를 이용. 가능한 인코딩 목록은 codecs
-모듈에 정의됨.
-<br>파이썬은 텍스트 IO와 이진 IO를 구별하며, 전자의 경우 str을, 후자의 경우 bytes를 반환한다.
-<br>&raquo; buffering : 0(이진모드만, 버퍼링 없음), 1(텍스트모드만, 라인 단위), &gt; 1(바이트 사이즈 버퍼링)
-<br>&raquo; errors : 'surrogateescape'(보충 평면 문자 처리), 'xmlcharrefreplace'(&amp;#nnn으로 대체, 쓰기모드만),
-Since 3.5 'namereplace'(\N{...}로 대체, 쓰기모드만)
-<br>&raquo; Since 3.3 opener : custom opener
-<br>&raquo; 반환값 : file 객체. 텍스트모드의 경우 io.TextIOBase의 후손, 이진모드의 경우 io.BufferedIOBase의 후손이다.
-<br>&raquo; Since 3.4 반환된 file 객체는 상속 불가능하다.
-<br>
-<br>5. ord(c) : 유니코드 한 글자에 대하여 코드값을 반환.
-<br>
-<br>6. pow(x, y[, z]) : modulo z에서의 거듭제곱값을 반환하며, 그 값은 (x**y)%z와 같지만 처리속도는 더 빠르다.
-<br>
-<br>7. print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)
-<br>&raquo; objects의 요소들을 sep로 구분하여 file에 쓰고, end로 끝맺는다.
-<br>&raquo; file : write(string) 메서드를 가진 객체
-<br>&raquo; Since 3.3 flush 추가 : 강제 flush 여부
-<br>
-<br>8. class property(fget=None, fset=None, fdel=None, doc=None)
-<br>&raquo; property 속성을 반환한다. fget은 getter, fset은 setter, fdel은 속성 소멸자, doc은 도움말로써 없으면 fget의 docstring을
-복사해온다.
-<br>&raquo; decorator(@property)를 통해 쉽게 읽기전용 property를 만들 수 있다.
-<br>&raquo; property 객체의 getter, setter, deleter 메서드는 decorator로 이용할 수 있다.
-<button onclick='javascript:showCode("samples/property_example.py", "python");' class="btn btn-primary btn-sm">
-    예제 &raquo;
-</button>
-<button onclick='javascript:showCode("samples/con16.txt", "text");' class="btn btn-primary btn-sm">
-    Console &raquo;
-</button>
-<a role="button" class="btn btn-info btn-sm" href="https://docs.python.org/3/library/functions.html#property">출처:
-    https://docs.python.org/3/library/functions.html#property</a>
-<br>
-<br>9. range(stop)
-<br>range(start, stop[, step])
-<br>&raquo; 변경할 수 없는 sequence를 반환한다.
-<br>
-<br>10. repr(object)
-<br>&raquo; object에 대한 문자열 표현을 반환한다. 많은 경우, 그 결과를 eval()에 넘긴 결과와 object는 동일하며, 그 외의 경우 &lt;&gt; 사이에
-객체 정보가 담긴다.
-<br>&raquo; __repr__()를 재정의하여 결과를 변경할 수 있다.
-<br>
-<br>11. reversed(seq)
-<br>&raquo; seq에 대한 뒤집힌 iterator를 반환한다. seq는 __reversed__()를 구현했거나 sequence protocol(__len__()과 0부터
-시작하는 __getitem__())을 지원해야 한다.
-<br>
-<br>12. round(number[, ndigits]) : float에 대해 부정확한 결과가 나올 수 있다.
+        <li>open(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None)</li>
+        <ul>
+        <li>파일을 열고 file 객체를 반환한다. 텍스트 모드의 경우 io.TextIOBase, 이진 모드의 경우 io.BufferedIOBase</li>
+        <li>file : <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.python.org/3/glossary.html#term-path-like-object">path-like object</a></li>
+        file이 file descriptor인 경우, closefd가 False면 반환된 객체가 닫혀도 descriptor를 닫지 않는다
+        <li>mode : r(읽기, default), w(쓰기, 파일 처음부터), x(없으면 생성), a(이어 쓰기), b(이진), t(텍스트, default), +(읽기+쓰기)</li>
+        <li>encoding : 텍스트 모드에서만 사용. 주어지지 않은 경우 locale.getpreferredencoding(False) 이용.</li>
+        가능한 인코딩 목록은 codecs 모듈에 정의됨.
+        <li>텍스트 IO와 이진 IO를 구별하며, 전자의 경우 str을, 후자의 경우 bytes를 반환한다.</li>
+        <li>buffering : 0(이진모드, 버퍼링 없음), 1(텍스트 모드, 라인 단위), &gt; 1(바이트 사이즈 버퍼링)</li>
+        </ul>
 
-1. class set([iterable])
-<br>
-<br>2. setattr(object, name, value)
-<br>
-<br>3. class slice(stop)
-<br>class slice(start, stop[, step])
-<br>
-<br>4. sorted(iterable, *, key=None, reverse=False)
-<br>&raquo; 정렬된 리스트를 반환한다. key는 정렬 함수로써 각 원소들이 함수를 거친 결과값들이 정렬에 이용된다.
-<br>
-<br>5. @staticmethod : static method는 클래스 메서드나 객체 메서드와 달리 명시된 인자가 없다.
-<br>
-<br>6. class str(object=")
-<br>class str(object=b", encoding='utf-8', errors='strict')
-<br>
-<br>7. sum(iterable[, start])
-<br>&raquo; 문자열 접합에는 ''.join(sequence), 확장 정밀도 float 합에는 math.fsum(), iterable 접합에는 itertools.chain()이
-더 빠르다.
-<br>
-<br>8. super([type[, object-or-type]])
-<br>&raquo; 단일 상속 관계에서, 부모 클래스명을 명시하지 않고 이용할 수 있다.
-<br>&raquo; 다중 상속 관계에서, 모호성을 제거할 수 있다.
-<br>&raquo; 두 번째 인자가 존재할 경우, isinstance(obj, type) 또는 issubclass(type2, type)는 항상 True다.
-<br>
-<br>9. tuple([iterable])
-<br>
-<br>10. class type(object)
-<br>class type(name, bases, dict)
-<br>&raquo; 인자 하나만 전달됐을 경우 : 객체의 타입을 반환한다. 보통 object.__class__와 같다.
-<br>&raquo; 세 인자 모두 전달됐을 경우 : 동적으로 타입 객체를 생성한다.
-<br>&raquo; name : 클래스 이름, bases : 상속할 타입들의 튜플, dict : 클래스 내부 네임스페이스
-<br>&raquo; Since 3.6 type.__new__를 재정의하지 않은 type의 서브클래스들은 type(object)를 이용할 수 없다.
-<br>
-<br>11. vars([object]) : 모듈, 클래스, 인스턴스, 다른 객체의 __dict__ 속성을 반환한다.
-<br>
-<br>12. zip(*iterables)
-<br>&raquo; iterable들의 같은 offset의 요소들을 튜플로 묶어 yield한다.
-<br>&raquo; iterable들은 좌에서 우로 검사되며, 하나라도 끝나면 종료된다.
-<br>&raquo; 간단하게 zip(*[iter(s)]*n)으로 같은 것을 n개 중복시킬 수 있다.
-<br>&raquo; zip(*zip())은 원래의 것으로 원복하는 효과가 있다.
-<br>
-<br>13. __import__(name, globals=None, locals=None, fromlist=(), level=0)
-<br>&raquo; importlib.import_module()과 다르게 보통 사용할 일 없는 함수. import 문을 통해 호출된다.
-</ol>
+        <li>__import__(name, globals=None, locals=None, fromlist=(), level=0)</li>
+        importlib.import_module()과 다르게 보통 직접 사용할 일 없는 함수. import 문을 통해 호출된다.
+    </ol>
+</details>
+
+<hr>

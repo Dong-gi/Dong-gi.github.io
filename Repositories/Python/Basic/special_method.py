@@ -13,6 +13,17 @@ class C(object, metaclass=Meta):
         return object.__getattribute__(*args)
 
 c = C()
+
 print(c.__len__())                 # Explicit lookup via instance
+# Class getattribute invoked
+# Special method invoked
+# 10
+
 print(type(c).__len__(c))          # Explicit lookup via type
+# Metaclass getattribute invoked
+# Special method invoked
+# 10
+
 print(len(c))                      # Implicit lookup
+# Special method invoked
+# 10

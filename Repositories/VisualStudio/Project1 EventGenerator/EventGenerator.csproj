@@ -167,6 +167,7 @@
     <Compile Include="Utility\CustomExcel.cs" />
     <Compile Include="Utility\Connection.cs" />
     <Compile Include="Utility\ImageOptimizer.cs" />
+    <Compile Include="Utility\ShellStreamDeligater.cs" />
     <Compile Include="Utility\StringUtility.cs" />
     <Compile Include="ViewModel\Game2ViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
