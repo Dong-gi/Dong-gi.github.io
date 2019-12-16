@@ -1,14 +1,10 @@
 <hr>
 
 <details>
-    <summary>개요</summary>
+    <summary>.NET Framework 개요</summary>
     <ul>
-        <li>플랫폼</li>
-        응용 프로그램들을 실행하는 데 사용되는 하드웨어와 소프트웨어의 집합<br>
-        소프트웨어 플랫폼 : 운영체제와 무관하게 한 언어로 작성한 프로그램을 실행할 수 있게 해주는 소프트웨어적 플랫폼
-
         <li>프레임워크</li>
-        제어 역전이 있는 대규모 라이브러리. 프로그램의 초기화부터 종료까지 직접 관리하며, 개발자는 일부분만을 작성.
+        제어 역전이 있는 대규모 라이브러리. 프로그램의 초기화부터 종료까지 직접 관리하며, 개발자는 일부분만 작성.
 
         <li>CLI; Common Language Infrastructure</li>
         닷넷 표준 규약. 자바와 마찬가지로 CLI 사양을 준수한 구현체에서 동작하는 파일은 다른 구현체에서도 실행된다.
@@ -39,13 +35,12 @@
         <li>닷넷 구현체</li>
         <ul>
             <li>.NET Framework</li>
-            CLR; Common Language Runtime : CLI를 구현한 가상 머신. 중간 언어를 JIT 컴파일러를 이용해 기계어로 변환하고, GC(Garbage Collector)를
-            운용한다.<br>
-            + BCL; Base Class Library
+            CLR; Common Language Runtime + BCL; Base Class Library<br>
+            CLR : CLI를 구현한 가상 머신. 중간 언어를 JIT 컴파일러를 이용해 기계어로 변환하고, GC를 운용한다.
 
             <li>.NET Core</li>
-            CoreCLR : 윈도우, macOS, 리눅스에서 실행 가능<br>
-            + Core Library // BCL과 Core Library의 공통 표준 라이브러리 == .NET Standard Library
+            CoreCLR + Core Library<br>
+            윈도우, macOS, 리눅스에서 실행 가능
 
             <li>Mono</li>
             현재는 자마린에서 개발 중. 윈도우, macOS, 리눅스, 솔라리스, 안드로이드, 엑스박스 360 등에서 실행 가능
@@ -57,10 +52,12 @@
 
 <details>
     <summary>개발 환경</summary>
-    윈도우에는 기본적으로 닷넷 프레임워크가 설치된다. 또는 비주얼 스튜디오 설치 시 같이 설치된다.<br>
-    C# 컴파일러 : C:\Windows\Microsoft.NET\...\csc.exe<br>
-    닷넷 역컴파일러 : .NET Reflector(유료), JustDecompile(무료) 등<br>
-    IDE : Visual Studio, Visual Studio for Mac, Visual Studio Code, Xamarin Studio, Rider
+    <ol>
+        <li>윈도우에는 기본적으로 닷넷 프레임워크가 설치돼있다. 또는 비주얼 스튜디오 설치 시 같이 설치된다.</li>
+        <li>C# 컴파일러 : C:\Windows\Microsoft.NET\...\csc.exe</li>
+        <li>닷넷 역컴파일러 : .NET Reflector(유료), JustDecompile(무료) 등</li>
+        <li>IDE : Visual Studio, Visual Studio for Mac, Visual Studio Code, Xamarin Studio, Rider</li>
+    </ol>
 </details>
 
 <hr>
@@ -71,7 +68,6 @@
         <summary>기본 자료형</summary>
         <ul>
             <li>정수형</li>
-            리터럴 : 16진수 0x, 2진수 0b, 구분 문자 _
             <table>
                 <tr>
                     <td>sbyte</td>
@@ -134,6 +130,9 @@
                 </tr>
             </table>
 
+            <li>숫자 리터럴</li>
+            16진수 표현 0xFFFF, 2진수 표현 0b1010, 구분 문자 '_' 사용 가능
+
             <li>문자형</li>
             <table>
                 <tr>
@@ -148,6 +147,14 @@
                 </tr>
             </table>
 
+            <li>문자열 리터럴</li>
+            <ul>
+                <li>@"" : \ 이스케이프를 하지 않는다. ""로 일반 문자열의 \"를 대신할 수 있다</li>
+                <li>$"" Since C# 6 : 간편한 포맷 문자열을 제공한다. {<i>표현식</i>[, <i>alignment</i>][: <i>formatString</i>]}
+                    <button class="btn-code" path="Repositories/VisualStudio/csharp_interpolated_string.cs" lan="java">예시 코드 »</button></li>
+                <li>Since C# 8 : @$"", $@"" 모두 유효. 이전에는 $@""만 가능</li>
+            </ul>
+
             <li>Boolean</li>
             <table>
                 <tr>
@@ -156,7 +163,8 @@
                     <td>System.Boolean</td>
                 </tr>
             </table>
-            Short-circuit operator : true || ?, false && ? // 뒷부분 판정 생략
+
+            <li>Boolean 연산 &&, ||는 Short-circuit</li>
         </ul>
     </details>
 
@@ -164,13 +172,13 @@
         <summary>배열</summary>
         <ul>
             <li>배열 초기화시 기본값으로 채워진다.</li>
-            <li>다차원 배열 : [,](배열의 차원이 고정). 메모리 상에서는 일차원 배열처럼 존재한다.</li>
-            <li>Jagged Array : [][](배열의 차원이 가변적)</li>
-            int[] arr1 = new int[3];<br>
-            int[] arr2 = new int[] { 1, 2, 3 };<br>
-            int[] arr3 = { 1, 2, 3 };<br>
-            int[,] arr4 = new int[2, 2];<br>
-            int[,] arr5 = new int[,] { { 1, 2 }, { 3, 4 } };
+            <li>다차원 배열 [,] : 배열 차원 고정. 메모리 상에서는 일차원 배열처럼 존재.</li>
+            <li>Jagged Array [][] : 배열의 차원이 가변적</li>
+<pre>int[] arr1 = new int[3];
+int[] arr2 = new int[] { 1, 2, 3 };
+int[] arr3 = { 1, 2, 3 };
+int[,] arr4 = new int[2, 2];
+int[,] arr5 = new int[,] { { 1, 2 }, { 3, 4 } };</pre>
         </ul>
     </details>
 
@@ -189,24 +197,25 @@
         <summary>구문</summary>
         <ul>
             <li>if ~ else if ~ else</li>
-    
             <li>switch</li>
             정수, bool, char, string, enum에 대해 동작. case문 다음이 빈 문장일 때만 break 생략 가능
-    
             <li>while, do ~ while</li>
-    
             <li>for(초기식; 조건식; 증감식)</li>
-    
             <li>foreach(var obj in IEnumerable)</li>
-    
             <li>점프</li>
             break, continue, goto(관례상 레이블은 대문자로만), return, throw
-
             <li>checked/unchecked 블록</li>
             기본적으로는 프로그램 실행 시 오버플로/언더플로를 무시한다.<br>
             checked/unchecked 블록은 이를 각각 명시적인 예외로 처리/비처리 하도록 한다.
             <button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/CheckedExample.cs" displayRange="[13, 39]" lan="cs">예시 코드 »</button>
         </ul>
+    </details>
+
+    <details>
+        <summary>네임스페이스</summary>
+<pre>namespace MyProgram.Model { }
+using System.Collections.Generic;
+using static MyProgram.Model.Constants;</pre>
     </details>
 </details>
 
@@ -216,147 +225,131 @@
     <summary>객체지향</summary>
     <details>
         <summary>클래스</summary>
-        <ol>
-            <li>필드/프로퍼티 + 메서드</li>
-            프로퍼티가 get만 이용하는 경우 간략하게 할수 있다.<br>
-            public double size =&gt; w * h;
-            
-            <li>익명 객체</li>
-            초기화 이후 읽기만 가능한 일회용 객체. new { PropertyName = value };
+        <ul>
+            <li>프로퍼티 → 히든 필드 + getter/setter
+                <button class="btn-code" path="Repositories/VisualStudio/csharp_property.cs" lan="java">ViewModel에서의 사용 예 »</button></li>
 
-            <li>정적 생성자</li>
-            자바의 정적 초기화 필드와 비슷<br>
-            static 클래스이름() { /* 문장 */ }<br>
-            
-            <li>namespace</li>
-            자바의 패키지와 비슷<br>
-            namespace MyProgram.Model { }<br>
-            using System.Collections.Generic;
-            using static MyProgram.Model.Constants;
-            
-            <li>Partial class</li>
-            한 프로젝트 내의 여러 파일에 걸쳐 클래스 작성 가능.
+            <li>익명 객체 → new { PropertyName = value } : 생성 후 읽기만 가능</li>
 
-            <li>접근 제한자</li>
-            public, protected(파생 클래스까지), private, internal(같은 어셈블리), protected internal
+            <li>정적 생성자 → static 클래스이름() { }</li>
+            첫 번째 인스턴스가 만들어지거나 정적 멤버가 참조되기 전에 자동으로 호출된다.
+
+            <li>partial class ClassName {} : 프로젝트 내 여러 파일에 걸쳐 클래스 작성 가능</li>
+
+            <li>접근 제한자 → public, protected(파생 클래스까지), private, internal(같은 어셈블리), protected internal</li>
 
             <li>상속</li>
             <ul>
-                <li>SubClass : SuperClass</li>
-                <li>sealed : 상속/재정의 불가</li>
-                <li>부모 클래스 인스턴스를 자식 클래스로 다운캐스팅 불가.</li>
-                <li>모든 자료형의 조상은 System.Object, 모든 값 형식의 조상은 System.ValueType, 모든 배열의 조상은 System.Array</li>
-                Object : ToString(), GetType() == typeof, Equals(), GetHashCode()<br>
-                Array : Sort(), BinarySearch&lt;T&gt;(), IndexOf(), TrueForAll&lt;T&gt;(), FindIndex&lt;T&gt;()Resize&lt;T&gt;(), Clear(), ForEach&lt;T&gt;(), GetLength(), Length, Rank
-                
-                <li>this, base</li>
-                자바와 같은 "클래스명.this" 참조는 불가
+                <li>class SubClass : BaseClass</li>
                 <li>is 연산자로 호환 여부 확인 가능</li>
+                <li>this 키워드 : 클래스의 현재 인스턴스<br>
+                    base 키워드 : 부모 클래스 메서드 또는 생성자 호출
+                    <button class="btn-code" path="Repositories/VisualStudio/csharp_base_keyword.cs" lan="java">예 »</button></li>
+                <li>sealed 키워드 → 상속/재정의 불가</li>
+                <li>부모 클래스 인스턴스를 자식 클래스로 다운캐스팅 불가.</li>
+                <li>모든 자료형의 조상은 System.Object : ToString(), GetType(), Equals(), GetHashCode()<br>
+                    모든 값 형식의 조상은 System.ValueType<br>
+                    모든 배열의 조상은 System.Array : Sort(), BinarySearch&lt;T&gt;(), IndexOf(), ..., Length, Rank</li>
             </ul>
 
             <li>다형성</li>
             <ul>
                 <li>virtual, override 키워드를 사용해 명시한다. virtual 메서드는 body를 정의해야 한다.</li>
                 <li>new : 부모 메서드 숨기기. override와 달리 형 변환을 통해 부모 메서드에 접근 가능.</li>
-                <li>abstract class : 자바와 유사</li>
-                abstract method : 자식 클래스에서 반드시 override. body를 가질 수 없음.
+                <li>abstract class : 인스턴스화 불가능<br>
+                    abstract method : 서브 클래스에서 반드시 override</li>
                 <li>연산자 오버로딩</li>
-                public static 반환타입 operator 연산자(타입1 변수1, 타입2 변수2) {}<br>
-                +, - 등을 오버로딩하면 복합 대입 연산자도 사용 가능.<br>
+                <pre>public static 반환타입 operator 연산자(타입1 변수1, 타입2 변수2) {}</pre>
                 <li>형 변환 정의</li>
-                public static implicit operator 타입2(타입1 변수1) {};<br>
-                public static explicit operator 타입2(타입1 변수1) {};
+<pre>public static implicit operator 타입2(타입1 변수1) {};
+public static explicit operator 타입2(타입1 변수1) {};</pre>
             </ul>
-        </ol>
+        </ul>
     </details>
 
     <details>
         <summary>델리게이트</summary>
-        <ol>
-            <li>메서드를 참조하는 자료형</li>
-            
-            <li>선언</li>
-            접근제한자 delegate 반환타입 식별자(매개변수)
+        <ul>
+            <li>메서드를 참조하는 자료형
+                <button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/DelegateExample.cs" displayRange="[12, 47]" lan="cs">예시 »</button></li>
 
-            <li>인스턴스화</li>
-            var myDelegate = new MyDelegate(FuncName);<br>
-            MyDelegate myDelegate = FuncName;
+            <li>델리게이트로 변환될 수 있는 익명 메서드 생성</li>
+            <ol>
+                <li>delegate 연산자 → delegate (int a, int b) { return a + b; }</li>
+                <li>람다 Since C# 3 → (a, b) => a + b;</li> 
+            </ol>
 
-            <li>익명 델리게이트</li>
-            [식별자 =] delegate(타입1 변수1, ...) { /* body */ }
-            
-            <li>델리게이트 비동기 호출</li>
-            <ul>
-                <li>호출자에서 종료를 대기하는 예</li>
-                <button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/DelegateExample.cs" displayRange="[12, 36]" lan="cs">에시 코드 »</button>
-                
-                <li>호출자에서 종료를 대기하지 않는 예</li>
-                <button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/DelegateExample.cs" displayRange="[12, 12, 38, 51]" lan="cs">에시 코드 »</button>
-            </ul>
-            
-            <li>람다</li>
-            (변수1, ...) =&gt; { /* body */ }
-            
+            <li>델리게이트에는 BeginInvoke 및 EndInvoke 메서드가 자동으로 추가되며, 이를 통해 임의 메서드를 비동기 호출할 수 있다</li>
+            <button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/DelegateExample.cs" displayRange="[12, 22, 49, 64]" lan="cs">비동기 호출 예 »</button>
+            <button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/DelegateExample.cs" displayRange="[12, 22, 66, 86]" lan="cs">비동기 호출 대기 예 »</button>
+
             <li>델리게이트 체인</li>
             myDelegate += obj.Func;<br>
-            myDelegate();<br>
-            myDelegate -= obj.Func;<br>
-        
+            myDelegate -= obj.Func;
+
             <li>Func</li>
-            결과를 반환하는 메서드를 참조하는, 미리 정의된 델리게이트.<br>
-            매개변수 0 ~ 16개, 총 17가지가 있다.
-        
+            결과를 반환하는 메서드를 참조하는, 미리 정의된 델리게이트. 매개변수 0 ~ 16개, 총 17가지.
+
             <li>Action</li>
-            결과를 반환하지 않는 메서드를 참조하는, 미리 정의된 델리게이트.<br>
-            매개변수 0 ~ 16개, 총 17가지가 있다.
-        
+            void 리턴 메서드를 참조하는, 미리 정의된 델리게이트. 매개변수 0 ~ 16개, 총 17가지.
+
             <li>이벤트</li>
-            일반화된 델리게이트. 간단하게 구독/해지 가능. 클래스 밖에서 호출 불가.<br>
-            이벤트의 첫 번째 인자는 이벤트 발생 객체. 두 번째 인자는 EventArgs 호환 객체.<br>
-            선언 : 접근제한자 event EventHandler 식별자;<button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/EventExample.cs" lan="cs">예시 코드 »</button>
-        </ol>
+            <ol>
+                <li>일반화된 델리게이트. 간단하게 구독/해지 가능. 클래스 밖에서 호출 불가.</li>
+                <li>이벤트의 첫 번째 인자는 이벤트 발생 객체. 두 번째 인자는 EventArgs 호환 객체.</li>
+                <li>public event EventHandler SomeEvent = delegate { };<button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/EventExample.cs" lan="cs">예시 코드 »</button></li>
+            </ol>
+        </ul>
     </details>
 
     <details>
         <summary>인터페이스</summary>
-        인터페이스도 프로퍼티를 가질 수 있다. 그 형태는 Auto-Implemented Property와 같아야 한다. 구현하는 클래스에서 프로퍼티를 구현한다.<br>
-        class SubClass : SuperClass, Interface1, Interface2, ...<br>
-        interface Interface1 : Interface2
+        <ol>
+            <li>인터페이스도 프로퍼티를 가질 수 있다(get/set 지정만 가능). 구현하는 클래스에서 프로퍼티를 구현한다.</li>
+            <li>class SubClass : BaseClass, Interface1, Interface2, ...</li>
+            <li>interface Interface1 : Interface2</li>
+        </ol>
     </details>
 
     <details>
         <summary>구조체 struct</summary>
-        사용자 정의 ValueType. ValueType이므로 생성자 호출 없이 선언만으로 초기화가 진행된다. 이때 사용되는 기본 생성자는 컴파일러가 자동으로 추가하며, 재정의할 수 없다.<br>
-        모든 타입은 Object의 파생 클래스이므로, 구조체도 new 키워드로 인스턴스를 생성할 수 있다. 인자를 받는 생성자는 모든 필드를 초기화해야 한다.<br>
-        ValueType이므로 할당 시 깊은 복사가 이루어진다.
+        <ol>
+            <li>사용자 정의 ValueType.</li>
+            <li>ValueType이므로 생성자 호출 없이 선언만으로 초기화가 진행된다. 사용되는 기본 생성자는 컴파일러가 자동으로 추가하며, 재정의할 수 없다.</li>
+            <li>모든 타입은 Object의 파생 클래스이므로, 구조체도 new 키워드로 인스턴스를 생성할 수 있다. 인자를 받는 생성자는 모든 필드를 초기화해야 한다.</li>
+            <li>ValueType이므로 할당 시 깊은 복사가 이루어진다.</li>
+        </ol>
     </details>
 
     <details>
         <summary>열거형 enum</summary>
-        정수형을 상속받아 정의할 수 있는 ValueType. 기본 int<br>
-        [Flags] // 열거형을 비트필드로 이용하는 애트리뷰트<br>
-        예. enum Authority { READ = 1, WRITE = 2, EXECUTE = 4 }<br>
-        var authority = READ | WRITE;<br>
-        Console.WriteLine(authority.HasFlag(WRITE));
+        <ol>
+            <li>정수형을 상속받아 정의할 수 있는 ValueType. 기본 int</li>
+            <li>[Flags] // 열거형을 비트필드로 이용하는 애트리뷰트</li>
+<pre>[Flags] enum Authority { READ = 1, WRITE = 2, EXECUTE = 4 }
+var authority = READ | WRITE;
+Console.WriteLine(authority.HasFlag(WRITE));</pre>
+        </ol>
     </details>
 
     <details>
         <summary>제네릭</summary>
         <ul>
             <li>Generic Method</li>
-            접근제한자 반환타입 식별자&lt;Type&gt; (매개변수)
-            
+            public void Write&lt;T&gt;(T value) =&gt; OnWrite(value?.ToString() ?? "");
+
             <li>Generic Class</li>
-            class 식별자&lt;Type&gt;
+            public class List&lt;T&gt; : IList&lt;T&gt;, ICollection&lt;T&gt;, IEnumerable&lt;T&gt;, (생략)
 
             <li>Type Bound</li>
-            where T : struct // 값 형식<br>
-            where T : class // 참조 형식<br>
-            where T : new() // 매개 변수 없는 생성자가 있어야<br>
-            where T : BaseClassName | InterfaceName | U // 호환 여부 검사. U는 다른 형식 매개 변수<br>
-            where T : A[, B[, C[...]]]<br>
-            <br>
-            예. class MyGenereic&lt;T, U&gt; where T : struct where U : class {}
+            <ol>
+                <li>where T : struct // 값 형식</li>
+                <li>where T : class // 참조 형식</li>
+                <li>where T : new() // 기본 생성자 보유</li>
+                <li>where T : BaseClassName | InterfaceName | U // 호환 여부 검사. U는 다른 형식 매개 변수</li>
+                <li>where T : A[, B[, C[...]]]</li>
+                class MyGenereic&lt;T, U&gt; where T : struct where U : class { }
+            </ol>
         </ul>
     </details>
 </details>
@@ -364,7 +357,7 @@
 <hr>
 
 <details>
-    <summary>C# 버전별 기능</summary>
+    <summary>C# 버전별 추가 기능</summary>
     <details>
         <summary> ~ C# 6</summary>
         <details>
@@ -411,7 +404,7 @@
             <summary>가변 길이 매개변수 params</summary>
             <button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/ParamsExample.cs" displayRange="[11, 17]" lan="cs">예시 코드 »</button>
         </details>
-        
+
         <details>
             <summary>확장 메서드</summary>
             기존 클래스에 static method 추가.<button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/ExtensionExample.cs" lan="cs">ExtensionExample.cs »</button>
@@ -426,16 +419,16 @@
             <summary>Attribute</summary>
             <ol>
                 <button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs" lan="cs">AttributeExample.cs 전체 코드 »</button>
-                
+
                 <li>사용자 정의 특성은 System.Attribute를 상속하여 만든다.</li>
                 <button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs" displayRange="[12, 19]" lan="cs">AttributeExample.cs »</button>
-                
+
                 <li>명명시 Attribute를 접미하고, 실제 사용시에는 "Attribute"는 생략 가능하다.</li>
                 <button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs" displayRange="[21, 24]" lan="cs">AttributeExample.cs »</button>
-                
+
                 <li>특성을 적용할 수 있는 대상 제한</li>
                 System.AttributeUsage 생성자에 AttributeTargets 전달. 생략시 기본값은 AttributeTargets.All. 여러 대상에 적용된다면 "AttributeTargets.Field | AttributeTargets.Method"처럼 |를 이용.
-                
+
                 <li>적용하는 대상 명시</li>
                 어셈블리에 적용하는 경우(AttributeTargets.Assembly), 반환값에 적용하는 경우(AttributeTargets.ReturnValue)와 같이, 특성이 적용될 대상을 자동으로 특정해내지 못하는 경우엔 이를 명시해줄 수 있다.<br>
                 assembly, module, type, method, property, field, event, param, return, typevar
@@ -467,7 +460,7 @@
                 <li>참조 변수 자체에 fixed를 적용할 수는 없고, 필드의 일부를 "int* pValue = &obj.field"처럼 지정하여 사용</li>
             </ol>
         </details>
-        
+
         <details>
             <summary>stackalloc</summary>
             값 형식의 배열을 스택에 할당하도록 한다<br>
@@ -480,7 +473,7 @@
                 <li>supportedRuntime</li>
                 실행에 필요한 닷넷 버전 지정. 비주얼 스튜디오가 자동으로 추가해주는듯
                 <button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/App.config" lan="xml">App.config »</button>
-        
+
                 <li>appSettings</li>
                 <button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/App.config" lan="xml">App.config »</button>
                 <button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/Program.cs" lan="cs">Program.cs »</button>
@@ -492,10 +485,10 @@
             <ol>
                 <li>전처리 상수</li>
                 #if DEBUG ... #endif
-        
+
                 <li>Conditional 특성</li>
                 [Conditional("DEBUG")] : 적용된 클래스, 메서드는 릴리스 빌드 시 포함되지 않는다
-        
+
                 <li>System.Diagnostics.Debug</li>
                 Debug.WriteLine() : 디버그 출력 창에 출력된다
             </ol>
@@ -506,7 +499,7 @@
             <ol>
                 <li>Strong-named Assembly</li>
                 어셈블리 이름 + 버전 + 문화권 + 공개키 토큰
-        
+
                 <li>서명 절차</li>
                 비주얼 스튜디오 프로젝트 속성 - 서명
             </ol>
@@ -544,12 +537,12 @@
             <ul>
                 <li>Nullable&lt;T&gt;</li>
                 null을 허용하는 래퍼 클래스를 제공해준다. int?는 Nullable&lt;int&gt;와 동일하다.
-                
+
                 <li>Null 조건부 연산자 ?. 및 ?[]</li>
                 피연산자가 null이 아닌 것으로 평가되었을 때만 멤버 액세스 ?., 또는 요소 액세스 ?[] 연산을 피연산자에게 적용. null이면 그대로 null 반환<br>
                 null 조건부 연산자를 연쇄적으로 이용할 때, 중간에 한 곳에서 null이 반환된 경우, 나머지는 처리되지 않는다.
                 <button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/NullableExample.cs" lan="cs">NullableExample.cs »</button>
-            
+
                 <li>?? 연산자</li>
                 좌측 피연산자가 null이면 우측 피연산자를 반환<br>
                 return setsOfNumbers?[indexOfSetToSum]?.Sum() ?? double.NaN;
@@ -562,17 +555,17 @@
                 <button class="btn-code" path="Repositories/VisualStudio/CSharp/Basic/LinqExample.cs" lan="cs">에시코드 »</button>
 
                 <li>MoreLinq 패키지에서 추가적인 편의성을 제공한다.</li>
-    
+
                 <li>from : LINQ query는 from으로 시작한다. from의 대상은 IEnumarable&lt;T&gt;</li>
-                
+
                 <li>where + bool 판정식</li>
-    
+
                 <li>orderby + 정렬 기준 [(ascending) | descending]</li>
-    
+
                 <li>select + 결과</li>
-    
+
                 <li>let : LINQ 내에서의 변수 선언. let x = 10</li>
-    
+
                 <li>LINQ query 결과는 IEnumerable&lt;T&gt;</li>
 
                 <li>중첩 질의</li>
@@ -622,11 +615,11 @@
                 AppDomain.Unload(appDomain);
 
                 <li>Object.getType() or typeof 연산자</li>
-            
+
                 <li>Type :: GetConstructors(), GetEvents(), GetFields(), GetMethods(), ...</li>
-            
+
                 <li>동적 생성 : System.Activator.CreateInstance(Type);</li>
-            
+
                 <li>동적 타입 정의 : System.Reflection.Emit</li>
                 <ol>
                     <li>System.AppDomain.DefineDynamicAssembly()로 AssemblyBuilder 객체 획득</li>
@@ -688,7 +681,7 @@
 
             <li>private protected</li>
             동일 어셈블리 내의 클래스 및 파생 클래스에서 엑세스 가능
-                
+
             <li>지역변수, 반환값 ref 사용 가능</li>
             ref readonly 반환 : 반환된 개체에 대한 쓰기는 허용하지 않음<br>
             public ref int Next() =&gt; ref list[idx++]; // 지역 변수의 ref 반환은 불가<br>
@@ -698,7 +691,7 @@
             }<br>
             <br>
             ref var r = ref (ref arr?[0] ?? ref otherArr[0]);
-                
+
             <li>튜플</li>
             ==, != 가능<br>
             public (타입1 [식별자], 타입2 [식별자], ...) MethodName() {}<br>
@@ -718,15 +711,15 @@
             }
             (var _, var y) = rectangle;
             (var _, var _, var _, var h) = rectangle;
-                
+
             <li>람다 식 사용 확장</li>
             생성자, 소멸자, 이벤트 add/remove, 속성 set, 인덱서 set
-                
+
             <li>메서드 안에 지역 함수 정의 가능</li>
-                
+
             <li>throw 가능 위치 확장</li>
             name ?? throw new ArgumentNullException(nameof(name));
-                
+
             <li>is 연산자 기능 확장</li>
             if(obj is List&lt;string&gt; list) { list... }<br>
             if(item is 100) {}<br>
@@ -740,16 +733,16 @@
             　　case int i when i &gt; 300:<br>
             　　case var i when i.어쩌구저쩌구():<br>
             }
-                
+
             <li>Main 메서드에 async 허용</li>
-            
+
             <li>default 리터럴</li>
             default(Type) 대신 default 리터럴 사용 가능
-                
+
             <li>튜플 자동 네이밍</li>
             var t = (age, name);<br>
             t.age, t.name;;;
-                
+
             <li>제네릭 타입 패턴 매칭 가능</li>
             public void MethodName&lt;T&gt;(T item) {<br>
             　　if(item is DateTime time) ...<br>

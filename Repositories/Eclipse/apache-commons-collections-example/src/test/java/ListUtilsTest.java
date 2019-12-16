@@ -18,13 +18,13 @@ public class ListUtilsTest {
 		Integer userId;
 		Date birthday;
 	}
-	
+
 	@Test
 	public void lazyListTest() {
 		var birthdays = ListUtils.lazyList(new ArrayList<Date>(), () -> new Date());
 		var user0 = IUser.builder().userId(0).birthday(birthdays.get(0)).build();
 		var user4 = IUser.builder().userId(4).birthday(birthdays.get(4)).build();
-		
+
 		System.out.println(user0);
 		System.out.println(user4);
 		assertTrue(!user0.getBirthday().after(user4.getBirthday())); // OK

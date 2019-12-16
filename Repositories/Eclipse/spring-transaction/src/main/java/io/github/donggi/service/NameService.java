@@ -17,26 +17,26 @@ public class NameService extends JdbcDaoSupport {
 
     @Autowired
     private DataSource dataSource;
-    
+
     @PostConstruct
     private void initialize() {
         setDataSource(dataSource);
     }
-    
+
     @Transactional
     public void success() throws SQLException {
         getJdbcTemplate().execute("insert into name (name) values ('valid name 1'), ('valid name 2')");
     }
-    
+
     @Transactional
     public void fail() throws SQLException {
         getJdbcTemplate().execute("insert into name (name) values ('invalid name 1'), ('invalid name 2')");
         justThrow();
     }
-    
+
     @Transactional(propagation = Propagation.MANDATORY)
     public void justThrow() {
         ExceptionUtils.rethrow(new RuntimeException("그냥 던짐"));
     }
-    
+
 }

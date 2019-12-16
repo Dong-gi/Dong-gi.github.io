@@ -92,7 +92,7 @@ namespace EventGenerator.ViewModel
         {
             RedirectConsoleWrite();
             Current = this;
-            
+
             DBServers = Game1.DBServers;
             CurrentDBServer = DBServers[0];
 
@@ -190,7 +190,7 @@ namespace EventGenerator.ViewModel
         public static async void Toast(string title, string msg)
         {
             Console.Write($"Toast │ {title} │ {msg}");
-            
+
             await ActionUtility.UI(() =>
             {
                 if (IsGame1Tab)

@@ -10,7 +10,7 @@ public class AroundAspect {
 
     @Pointcut("execution(public * io.github.donggi..*(..))")
     public void aroundTarget() {}
-    
+
     @Around("aroundTarget()")
     public Object timer(ProceedingJoinPoint joinPoint) throws Throwable {
         var start = System.currentTimeMillis();
@@ -25,5 +25,5 @@ public class AroundAspect {
             System.out.printf("%s 실행 시간 : %d\n", signature, System.currentTimeMillis() - start);
         }
     }
-    
+
 }

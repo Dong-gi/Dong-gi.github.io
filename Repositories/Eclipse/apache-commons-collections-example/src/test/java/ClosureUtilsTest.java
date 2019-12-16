@@ -45,7 +45,7 @@ public class ClosureUtilsTest { // 15 고정
 		 * Hello
 		 */
 	}
-	
+
 	@Test
 	public void chainedClosureTest() {
 		Closure<Integer> plus1 = i -> i += 1,
@@ -57,18 +57,18 @@ public class ClosureUtilsTest { // 15 고정
 		assertTrue(String.format("%d = 6?", i), i == 6);
 		// java.lang.AssertionError: 0 = 6?
 	}
-	
+
 	@Test
 	public void switchClosureTest() {
 		Predicate<Integer> alwaysTrue = x -> true;
 		Predicate<Integer> alwaysFalse = x -> false;
 		Closure<Integer> sayTrue = x -> System.out.println(true);
 		Closure<Integer> sayFalse = x -> System.out.println(false);
-		
+
 		Predicate<Integer>[] predicates = new Predicate[] { alwaysFalse, alwaysTrue, alwaysFalse, alwaysTrue };
 		Closure<Integer>[] closures = new Closure[] { sayFalse, sayTrue, sayFalse, sayTrue };
 		ClosureUtils.switchClosure(predicates, closures, System.out::println).execute(0);
-		
+
 		ClosureUtils.switchMapClosure(new HashMap<Integer, Closure<Integer>>() {{
 			put(0, sayFalse); put(1, sayTrue); put(null, x -> System.out.println("No entry"));
 		}}).execute(10);

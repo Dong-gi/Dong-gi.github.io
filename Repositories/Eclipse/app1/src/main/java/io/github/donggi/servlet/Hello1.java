@@ -22,5 +22,5 @@ public class Hello1 extends HttpServlet {
         w.println("</body>");
         w.println("</html>"); 
     }
-    
+
 }

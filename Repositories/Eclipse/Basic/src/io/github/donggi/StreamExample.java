@@ -14,7 +14,7 @@ public class StreamExample {
                     .mapToObj(String::valueOf)
                     .collect(Collectors.joining(", "))
                 );
-        
+
         System.out.println(
                 Arrays.toString(
                         Stream.iterate(0, i -> i+2).limit(20).toArray()

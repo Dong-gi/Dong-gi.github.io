@@ -16,5 +16,5 @@ export class I18nService {
   getLang(): string {
     return this.lang;
   }
-  
+
 }

@@ -23,10 +23,10 @@ with picamera.PiCamera() as cam:
     background = None
     thresh = np.full((480, 640), 30, np.uint8)
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
-    
+
     start = time.time()
     count = 0
-    
+
     for _ in cam.capture_continuous(img[0], format='bgr', use_video_port=True):
         img = np.reshape(img, (480, 640, 3))
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)

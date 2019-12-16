@@ -12,11 +12,15 @@ const posts = {
         { filename: "posts/book/007.html", category: "Book", title: "키르케고르 실존 극장" },
         { filename: "posts/book/008.html", category: "Book", title: "Gamification by Design" },
 
-        { filename: "posts/career/at_home_at_20190724.html", category: "Career", title: "JavaScript - https://www.steamgifts.com/ 스크립트" },
         { filename: "posts/career/at_sesisoft_from_201806.html", category: "Career", title: "C#.NET, WPF - 데이터 작업 툴" },
-        { filename: "posts/career/at_sesisoft_at_20190715.html", category: "Career", title: "JavaScript - IGA Works 푸시 등록 절차 개선" },
-        { filename: "posts/career/at_sesisoft_at_20190626.html", category: "Career", title: "JavaScript - 자연스러운 테이블 정렬" },
         { filename: "posts/career/at_sesisoft_at_20190808.html", category: "Career", title: "JavaScript - 구글 스프레드시트 스크립트" },
+        { filename: "posts/career/at_sesisoft_at_20190626.html", category: "Career", title: "JavaScript - 자연스러운 테이블 정렬" },
+        { filename: "posts/career/at_home_at_20190724.html", category: "Career", title: "JavaScript - https://www.steamgifts.com/ 스크립트" },
+        { filename: "posts/career/at_sesisoft_at_20190715.html", category: "Career", title: "JavaScript - IGA Works 푸시 등록 절차 개선" },
+
+        { filename: "posts/c/csharp_basic.html", category: "Programming/C#.NET", title: "C# 시작하기" },
+        { filename: "posts/c/csharp_library.html", category: "Programming/C#.NET", title: "C# 라이브러리" },
+        { filename: "posts/c/wpf_basic.html", category: "Programming/C#.NET", title: "WPF 시작하기" },
 
         { filename: "posts/db/concept.html", category: "Programming/DB", title: "기본 개념" },
         { filename: "posts/db/mysql.html", category: "Programming/DB", title: "MySQL" },
@@ -34,15 +38,7 @@ const posts = {
         { filename: "posts/front/freemarker/template_guide.html", category: "Programming/Front/FreeMarker", title: "템플릿 작성 가이드 2.3.28" },
         { filename: "posts/front/freemarker/xml_guide.html", category: "Programming/Front/FreeMarker", title: "XML 처리 가이드 2.3.28" },
 
-        { filename: "posts/c/c_basic.html", category: "Programming/C", title: "C 시작하기" },
-        { filename: "posts/c/c_library.html", category: "Programming/C", title: "C 라이브러리" },
-        { filename: "posts/c/cpp_basic.html", category: "Programming/C++", title: "C++ 시작하기" },
-        { filename: "posts/c/cpp_library.html", category: "Programming/C++", title: "C++ 라이브러리" },
-        { filename: "posts/c/csharp_basic.html", category: "Programming/C#.NET", title: "C# 시작하기" },
-        { filename: "posts/c/csharp_library.html", category: "Programming/C#.NET", title: "C# 라이브러리" },
-        { filename: "posts/c/wpf_basic.html", category: "Programming/C#.NET", title: "WPF 시작하기" },
-
-        { filename: "posts/java/android.html", category: "Programming/Java", title: "Android", top: true },
+        { filename: "posts/java/android.html", category: "Programming/Java", title: "Android" },
         { filename: "posts/java/basic.html", category: "Programming/Java", title: "Java 시작하기" },
         { filename: "posts/java/effective_java.html", category: "Programming/Java", title: "『Effective Java』" },
         { filename: "posts/java/java_ee.html", category: "Programming/Java", title: "JavaEE" },
@@ -50,7 +46,7 @@ const posts = {
         { filename: "posts/java/jni.html", category: "Programming/Java", title: "Java Native Interface" },
         { filename: "posts/java/oop.html", category: "Programming/Java", title: "Java 객체지향" },
         { filename: "posts/java/version.html", category: "Programming/Java", title: "Java 버전별 추가사항" },
-        
+
         { filename: "posts/java/apache.commons.collections.html", category: "Programming/Java/apache.commons", title: "Apache Commons Collections 4.4" },
         { filename: "posts/java/apache.commons.lang.html", category: "Programming/Java/apache.commons", title: "Apache Commons Lang 3.9" },
         { filename: "posts/java/apache.commons.math.html", category: "Programming/Java/apache.commons", title: "Apache Commons Math 3.6.1" },
@@ -92,7 +88,7 @@ const posts = {
         { filename: "posts/javascript/basic.html", category: "Programming/JavaScript", title: "코어 JavaScript" },
         { filename: "posts/javascript/basic2.html", category: "Programming/JavaScript", title: "브라우저 JavaScript" },
         { filename: "posts/javascript/jquery.html", category: "Programming/JavaScript", title: "jQuery" },
-        
+
         { filename: "posts/python/basic.html", category: "Programming/Python", title: "Python 3.8 시작하기" },
         { filename: "posts/python/data_model.html", category: "Programming/Python", title: "Python 3.8 데이터 모델" },
         { filename: "posts/python/built_in_function.html", category: "Programming/Python", title: "Built-in Functions 3.8" },

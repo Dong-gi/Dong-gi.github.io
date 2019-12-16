@@ -14,7 +14,7 @@ namespace SimpleCapture
     public partial class MainWindow : Window
     {
         private static readonly string INI_FILE_PATH = "settings.ini";
-        
+
         public MainWindow()
         {
             InitializeComponent();
@@ -115,5 +115,5 @@ namespace SimpleCapture
             }
         }
     }
-    
+
 }

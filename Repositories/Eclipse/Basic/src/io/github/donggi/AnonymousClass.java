@@ -22,13 +22,13 @@ public class AnonymousClass {
                         add(1);
                         add(2);
                     }};
-                    
+
         var list2 = new ArrayList<Integer>() {
                         {
                             add(1);
                             add(2);
                         }
-                    
+
                         @Override
                         public boolean add(Integer i) {
                             System.out.println("You added " + i);

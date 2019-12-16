@@ -216,13 +216,13 @@
             <li>static String normalizeSpace(String str) Since 3.0</li>
             <li>static String repeat(String str, String separator, int repeat) Since 2.5 + 오버로딩</li>
             <li>static String rightPad(String str, int size) + leftPad</li>
-            
+
             <li>static boolean isEmpty(CharSequence cs) Since 3.0 + 오버로딩</li>
             + isNotEmpty, isAnyEmpty, isNoneEmpty, isAllEmpty, isBlank(isEmpty 포함), isNotBlank, isAnyBlank, isNoneBlank, isAllBlank
-            
+
             <li>static String trim(String str) : heading, trailing 제어 문자(ASCII &lt;= 32) 제거</li>
             + trimToNull(결과가 isBlank면 null), trimToEmpty, strip(공백 문자; Character#isWhitespace 또는 사용자 지정 문자 제거), stripToNull, stripToEmpty, stripStart, stripEnd, stripAll, stripAccents
-            
+
             <li>static String truncate(String str, int maxWidth) Since 3.5 + 오버로딩</li>
 
             <li>static int compare(String str1, String str2, boolean nullIsLess) Since 3.5 + 오버로딩</li>
@@ -481,7 +481,7 @@
                 <li>ex.getCause()가 RuntimeException, Error면 rethrow</li>
                 <li>그 외의 경우 새 ConcurrentException의 cause로 설정되어 반환된다; extractCauseUnchecked의 경우 ConcurrentRuntimeException을 반환</li>
             </ul>
-            
+
             <li>static void handleCause(ExecutionException ex) + handleCauseUnchecked</li>
             각각 extractCause와 extractCauseUnchecked를 호출하여 그 반환값이 null이 아니면 throw한다. 명시적으로 예외를 처리하기 위해 try 구문에서 호출하면 된다.
 
@@ -709,7 +709,7 @@
             + getTimeZone, getLocale
         </ol>
     </details>
-    
+
     <details>
         <summary>class FastDateFormat extends Format implements DateParser, DatePrinter Since 2.0</summary>
         <ol>

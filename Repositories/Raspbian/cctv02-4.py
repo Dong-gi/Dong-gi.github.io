@@ -22,16 +22,16 @@ while video.isOpened():
         current = 0
         continue
     current = current + 1
-    
+
     img = cv2.resize(img, (640, 360))
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    
+
     lower = np.array([0, 50, 100], dtype="uint8")
     upper = np.array([50, 255, 255], dtype="uint8")
     mask = cv2.inRange(hsv, lower, upper)
     mask = cv2.equalizeHist(mask)
     gray = cv2.cvtColor(cv2.bitwise_and(img, hsv, mask=mask), cv2.COLOR_BGR2GRAY)
-    
+
     frames.append(img)
     grays.append(gray)
     if len(frames) < 3:
@@ -41,7 +41,7 @@ while video.isOpened():
     else:
         frames.remove(frames[0])
         grays.remove(grays[0])
-            
+
     diff1 = cv2.absdiff(grays[2], grays[1])
     diff1 = cv2.subtract(diff1, thresh)
     _, diff1 = cv2.threshold(diff1, 0, 255, cv2.THRESH_BINARY)
@@ -49,7 +49,7 @@ while video.isOpened():
     diff2 = cv2.subtract(diff2, thresh)
     _, diff2 = cv2.threshold(diff2, 0, 255, cv2.THRESH_BINARY)
     mask = cv2.bitwise_and(diff1, diff2)
-        
+
     alpha = 0.95
     moving = cv2.countNonZero(mask)
     diff = cv2.absdiff(grays[2], background)
@@ -72,7 +72,7 @@ while video.isOpened():
             #hull = cv2.convexHull(contour)
             cv2.drawContours(result, [approx], 0, (0, 0, 255), 3)
         background = grays[2]
-        
+
     cv2.imshow('original', img)
     cv2.imshow('background', background)
     cv2.imshow('result', result)

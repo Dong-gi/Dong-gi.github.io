@@ -117,7 +117,7 @@
     <ol>
         <li>public AtomicBoolean(boolean initialValue) + 오버로딩</li>
         지정하지 않으면 false
-        
+
         <li>final boolean get() : VarHandle#getVolatile</li>
         <li>final boolean compareAndSet(boolean expectedValue, boolean newValue) : VarHandle#compareAndSet</li>
         <li>boolean weakCompareAndSetPlain(boolean expectedValue, boolean newValue) Since 9 + VarHandle#weakCompareAndSetPlain</li>
@@ -144,7 +144,7 @@
     <ol>
         <li>public AtomicInteger(int initialValue) + 오버로딩</li>
         지정하지 않은 경우 0
-        
+
         <li>final int get() : VarHandle#getVolatile</li>
         <li>final void set(int newValue) : VarHandle#setVolatile</li>
         <li>final void lazySet(int newValue) Since 1.6 : VarHandle#setRelease</li>
@@ -225,9 +225,9 @@
     <ol>
         <li>초깃값 0으로 시작하는 스레드-안전한 합계.</li>
         합의 순서는 정의되지 않으므로 순서에 상관 없는 경우에 이용해야 한다.
-        
+
         <li>public LongAdder()</li>
-        
+
         <li>void add(long x)</li>
         <li>void increment()</li>
         <li>void decrement()</li>
@@ -246,7 +246,7 @@
         주어진 accumulatorFunction은 부작용이 없어야 한다.
 
         <li>public LongAccumulator(LongBinaryOperator accumulatorFunction, long identity)</li>
-        
+
         <li>void accumulate(long x)</li>
         <li>long get()</li>
         <li>void reset()</li>

@@ -15,9 +15,9 @@ import org.apache.commons.dbcp2.BasicDataSourceFactory;
 
 @WebServlet("/hello4")
 public class Hello4 extends HttpServlet {
-    
+
     private static DataSource testDataSource; 
-    
+
     static {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -31,7 +31,7 @@ public class Hello4 extends HttpServlet {
             e.printStackTrace();
         }
     }
-    
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=utf-8");

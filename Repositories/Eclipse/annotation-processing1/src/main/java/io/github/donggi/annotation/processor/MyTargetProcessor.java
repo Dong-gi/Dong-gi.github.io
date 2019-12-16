@@ -21,7 +21,7 @@ import io.github.donggi.annotation.MyTarget;
 public class MyTargetProcessor extends AbstractProcessor {
 
     private int round = 1;
-    
+
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         var processed = false;

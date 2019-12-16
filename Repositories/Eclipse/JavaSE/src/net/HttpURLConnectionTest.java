@@ -11,20 +11,20 @@ import org.junit.jupiter.api.Test;
 class HttpURLConnectionTest {
     static URL url;
     static HttpURLConnection conn;
- 
+
     @BeforeAll
     static void beforeAll() throws Exception {
         url = new URL("https://dong-gi.github.io/posts/tip/regex.html");
         conn = (HttpURLConnection) url.openConnection();
     }
-    
+
     @Test
     void getResponseMessageTest() throws IOException {
         System.out.println(conn.getHeaderField(null));  // HTTP/1.1 200 OK
         System.out.println(conn.getResponseCode());     // 200
         System.out.println(conn.getResponseMessage());  // OK
     }
-    
+
     @Test
     void getHeaderFieldsTest() {
         MapUtils.verbosePrint(System.out, null, conn.getHeaderFields());
@@ -44,7 +44,7 @@ class HttpURLConnectionTest {
         }
          */
     }
-    
+
     @Test
     void getInputStreamTest() throws Exception {
         System.out.println(new String(conn.getInputStream().readAllBytes()));

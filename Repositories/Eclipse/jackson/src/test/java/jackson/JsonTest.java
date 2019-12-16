@@ -160,10 +160,10 @@ public class JsonTest {
         }
         Thread.sleep(1000);
     }
-    
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     static class Data3 extends Data2 {}
-    
+
     @Test
     public void includeTest() throws JsonProcessingException {
         var mapper = new ObjectMapper();

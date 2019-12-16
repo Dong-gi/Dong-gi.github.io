@@ -5,17 +5,17 @@
     <ol>
         <li>식별자 : '_', '$' 허용.
             <button class="btn-code" path="Repositories/JavaScript/Basic/type.js" displayRange="[1,1]" lan="javascript">예시 코드 »</button></li>
-    
+
         <li>변수 선언</li>
         <ul>
             <li>let 식별자;</li>
             일반적인 지역변수와 동일. 선언된 순간부터 해당 코드 블록이 끝날때까지 유효. 중첩된 코드 블록에서 같은 식별자의 변수를 선언하여 밖의 변수를 가릴 수 있다.
             <button class="btn-code" path="Repositories/JavaScript/Basic/type.js" displayRange="[2,2]" lan="javascript">예시 코드 »</button>
-    
+
             <li>var 식별자;</li>
             선언 전에 참조하는 경우, 선언을 끌어올려 undefined를 할당해준다. 함수 스코프에서 동작하지만, 중첩된 코드 블록에서 재정의하여 가릴 수 없다.
         </ul>
-    
+
         <li>상수 선언 : const 식별자;
             <button class="btn-code" path="Repositories/JavaScript/Basic/type.js" displayRange="[4,4]" lan="javascript">예시 코드 »</button></li>
     </ol>
@@ -31,30 +31,30 @@
         delete 키워드로 프로퍼티 제거 가능.<br>
         JSON.stringify(), JSON.parse(), Object.keys()
         <button class="btn-code" path="Repositories/JavaScript/Basic/type.js" displayRange="[11,15]" lan="javascript">예시 코드 »</button>
-    
+
         <li>String</li>
         문자 리터럴 : \xFF, \uFFFF<br>
         문자열 리터럴 : '', "", ``(문자열 템플릿)
         <button class="btn-code" path="Repositories/JavaScript/Basic/type.js" displayRange="[4,5,17,17]" lan="javascript">예시 코드 »</button>
-    
+
         <li>Number</li>
         IEEE-764 double-precision 부동소수<br>
         숫자 리터럴 : 999, 0o777, 0xFFF, 0.999, 0.999E-9<br>
         숫자 상수 : Infinity, -Infinity, NaN, Number.EPSILON, Number.MAX_VALUE, Number.MAX_SAFE_INTEGER<br>
         Number(), parseInt(), parseFloat(), number.toString(radix)
-    
+
         <li>Boolean</li>
         Boolean() : "", 0, NaN, null, undefined == false, 그 외 == true<br>
         따라서 (null == undefined) === true
-    
+
         <li>Undefined</li>
-    
+
         <li>Null</li>
-    
+
         <li>Symbol</li>
         ES6부터 도입된 타입. 그 무엇과도 같지 않은 유일한 토큰을 나타낸다.
         <button class="btn-code" path="Repositories/JavaScript/Basic/type.js" displayRange="[7,9]" lan="javascript">예시 코드 »</button>
-    
+
         <li>배열 : []</li>
         자바스크립트의 배열은 모두 동적 배열. 변수와 마찬가지로 타입을 가리지 않는다.
         <button class="btn-code" path="Repositories/JavaScript/Basic/array.js" lan="javascript">예시 코드 »</button>
@@ -104,13 +104,13 @@
         <li>for <button class="btn-code" path="Repositories/JavaScript/Basic/syntax.js" displayRange="[1,7]" lan="javascript">예시 코드 »</button></li>
 
         <li>switch : 조건으로 변수가 아닌 일반 표현식도 가능</li>
-    
+
         <li>for(let attr in obj) {} : 객체 프로퍼티 순회</li>
-    
+
         <li>for(let name of iterable) {} : 배열, Iterable 객체 순회</li>
-    
+
         <li>with(obj) : 스코프 고정</li>
-    
+
         <li>try ~ catch ~ finally</li>
         예외 처리. throw는 임의의 타입을 던질 수 있다. try 뒤에 catch 또는 finally가 하나라도 있어야 한다.
 
@@ -187,7 +187,7 @@
         <button class="btn-code" path="Repositories/JavaScript/Basic/class.js" displayRange="[1,15]" lan="javascript">클래스 정의 예 »</button>
         <button class="btn-code" path="Repositories/JavaScript/Basic/class.js" displayRange="[18,19]" lan="javascript">상속 예 »</button>
         <button class="btn-code" path="Repositories/JavaScript/Basic/class.js" displayRange="[22,39]" lan="javascript">믹스인 예 »</button>
-        
+
         <li>전역 객체</li>
         Object, Array, String, Global, Math<br>
         Global 객체를 직접 획득하는 건 불가능 : isNaN(), isFinite(), parseInt(), parseFloat(), encodeURI(), encodeURIComponent(), eval()
@@ -273,7 +273,7 @@
         (/123/gm)과 (new RegExp('123', 'gm'))는 의미적으로 동일하다<br>
         flags : g(global), i(ignoreCase), m(multiline)<br>
         global 플래그를 이용하는 경우, RegExp의 lastIndex가 검색 위치를 기억하여, 해당 위치부터 재탐색한다. 따라서 global RegExp에 동일한 문자열을 반복적으로 test()하는 경우 true, false가 토글되는 현상을 경험할 수도 있으며, lastIndex를 직접 0 이하로 조정하거나, global 플래그를 빼는 등의 주의가 필요하다.
-    
+
         <details>
             <summary>문자 리터럴</summary>
             <ul>  
@@ -296,10 +296,10 @@
 
         <li>Greedy 수량사</li>
         ?, *, +, {n}, {n, }, {n, m}
-            
+
         <li>Non-Greedy 수량사</li>
         [Greedy 수량사]?
-            
+
         <details>
             <summary>Logical operations</summary>
             <ul>
@@ -339,29 +339,29 @@
                 → "ID : [novel], DOMAIN : [koreatech.ac.kr], ETC : [koreatech.ac], [.kr]"
             </ol>
         </details>
-        
+
         <details>
             <summary>관련 메서드</summary>
             <ul>
                 <li>RegExp#test()</li>
                 패턴이 검색되는지 여부 반환<br>
                 /1/gm.test('234567890') → false
-            
+
                 <li>RegExp#exec()</li>
                 패턴을 검색하여 일치하는 인덱스들을 배열로 반환한다.<br>
                 매칭 시작 위치 index, 검색 텍스트 input 프로퍼티를 가진다. [i] 접근으로 캡처 그룹을 가져올 수 있다.<br>
                 /1/gm.exec('1 12 123') → ["1", index: 0, input: "1 12 123", groups: undefined]
-            
+
                 <li>String#search(regexp)</li>
                 패턴을 검색하여 가장 처음 일치하는 인덱스를 반환<br>
                 '1 12 123'.search(/2/gm) → 3
-            
+
                 <li>String#match(regexp)</li>
                 패턴과 일치하는 모든 부분문자열 반환
-            
+
                 <li>String#replace(regexp, replaceValue)</li>
                 패턴과 일치하는 부분문자열을 replaceValue로 치환
-            
+
                 <li>String#split(regexp, limit)</li>
                 패턴을 기준으로 문자열을 자른 결과를 반환<br>
                 '1 12 123 1234'.split(/1/gm, 4) → ["", " ", "2 ", "23 "]

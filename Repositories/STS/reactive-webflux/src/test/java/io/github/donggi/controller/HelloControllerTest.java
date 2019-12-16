@@ -14,11 +14,11 @@ import io.github.donggi.response.HelloResponse;
 public class HelloControllerTest {
 
     private WebTestClient client = WebTestClient.bindToServer().baseUrl("http://localhost:18888").build();
-    
+
     @Test
     public void helloTest() {
         var result = client.get().uri("/hello").exchange().expectBody(HelloResponse.class).returnResult();
         System.out.println(result);
     }
-    
+
 }

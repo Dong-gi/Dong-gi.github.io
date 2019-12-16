@@ -26,17 +26,17 @@ class RecursiveActionTest {
 class MergeSortAction<T extends Comparable<T>> extends RecursiveAction {
     private final T[] arr;
     final int low, high; // low(inclusive index), high(exclusive index)
-    
+
     MergeSortAction(T... arr) {
         this(0, arr.length, arr);
     }
-    
+
     MergeSortAction(int low, int high, T... arr) {
         this.arr = arr;
         this.low = low;
         this.high = high;
     }
-    
+
     @Override
     protected void compute() {
         if(high - low < 5) {

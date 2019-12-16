@@ -21,7 +21,7 @@ public class CollectionUtilsTest { // 15 고정
 						new HashSet<Integer>() {{ add(1); add(1); add(2); }},
 						new HashSet<Integer>() {{ add(1); add(3); }}
 				).toArray())); // [1, 2, 3]
-		
+
 		System.out.println(Arrays.toString(
 				CollectionUtils.union(
 						new LinkedList<Integer>() {{ add(1); add(1); add(2); }},

@@ -29,7 +29,7 @@
     <bean
         id="hello8"
         class="io.github.donggi.bean.Hello8" />
-        
+
     <bean
         id="hello9"
         class="io.github.donggi.bean.Hello9" />

@@ -14,10 +14,10 @@ class JUnitExample {
     static void beforeAll() {
         System.out.println("사전 작업 실행");
     }
-    
+
     @BeforeEach
     void beforeEach() {}
-    
+
     @Test
     void asserts() {
         assertTrue(true);
@@ -25,21 +25,21 @@ class JUnitExample {
         assertEquals(1, 1);
         assertArrayEquals(new int[] {1}, new int[] {1});
     }
-    
+
     @Test
     void timeout() {
         assertTimeoutPreemptively(Duration.ofSeconds(1), () -> {
             while(true);
         });
     }
-    
+
     @Test
     void exception() {
         assertThrows(NullPointerException.class, () -> {
             throw new NullPointerException();
         });
     }
-    
+
     @AfterAll
     static void afterAll() {
         System.out.println("사후 작업 실행");

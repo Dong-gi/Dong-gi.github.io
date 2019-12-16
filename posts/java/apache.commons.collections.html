@@ -377,38 +377,38 @@
                     coll1이 coll2의 모든 원소를 포함하는지 여부를 반환한다. 각 원소에 대한 cardinality는 고려 대상이 아니다.
                     <li>static boolean containsAny(Collection&lt;?&gt; coll1, Collection&lt;?&gt; coll2) Since 2.1
                         static boolean containsAny(Collection&lt;?&gt; coll1, T... coll2) Since 4.2</li>
-                    
+
                     <li>static &lt;?O&gt; Map&lt;O, Integer&gt; getCardinalityMap(Iterable&lt;? extends O&gt; coll)</li>
-                    
+
                     <li>static boolean isSubCollection(Collection&lt;?&gt; a, Collection&lt;?&gt; b)</li>
                     a가 b의 부분 컬렉션인지(cardinality 고려) 여부 반환
-                    
+
                     <li>static boolean isProperSubCollection(Collection&lt;?&gt; a, Collection&lt;?&gt; b)</li>
                     isSubCollection() && cardinality_of_b > cardinality_of_a를 만족하는 원소가 적어도 하나 존재
 
                     <li>static boolean isEqualCollection(Collection&lt;?&gt; a, Collection&lt;?&gt; b)<br>
                         static &lt;E&gt; boolean isEqualCollection(Collection&lt;? extends E&gt; a, Collection&lt;? extends E&gt; b, Equator&lt;? super E&gt; equator) Since 4.0</li>
-                    
+
                     <li>static &lt;T&gt; boolean filter(Iterable&lt;T&gt; collection, Predicate&lt;? super T&gt; predicate)<br>
                         static &lt;T&gt; boolean filterInverse(Iterable&lt;T&gt; collection, Predicate&lt;? super T&gt; predicate)</li>
                     필터 조건에 만족되지 않는 원소들은 collection에서 제거된다.
 
                     <li>static &lt;C&gt; void transform(Collection&lt;C&gt; collection, Transformer&lt;? super C, ? extends C&gt; transformer)</li>
-                    
+
                     <li>static &lt;O&gt; Collection&lt;O&gt; select(Iterable&lt;? extends O&gt; inputCollection, Predicate&lt;? super O&gt; predicate)<br>
                         static &lt;O&gt; Collection&lt;O&gt; selectRejected(Iterable&lt;? extends O&gt; inputCollection, Predicate&lt;? super O&gt; predicate)<br>
                         static &lt;O, R extends Collection&lt;? super O&gt;&gt; R select(Iterable&lt;? extends O&gt; inputCollection, Predicate&lt;? super O&gt; predicate, R outputCollection)<br>
                         static &lt;O, R extends Collection&lt;? super O&gt;&gt; R selectRejected(Iterable&lt;? extends O&gt; inputCollection, Predicate&lt;? super O&gt; predicate, R outputCollection)<br>
                         static &lt;O, R extends Collection&lt;? super O&gt;&gt; R select(Iterable&lt;? extends O&gt; inputCollection, Predicate&lt;? super O&gt; predicate, R outputCollection, R rejectedCollection) Since 4.1</li>
-                    
+
                     <li>static &lt;I, O&gt; Collection&lt;O&gt; collect(Iterable&lt;I&gt; inputCollection, Transformer&lt;? super I, ? extends O&gt; transformer)<br>
                         static &lt;I, O&gt; Collection&lt;O&gt; collect(Iterator&lt;I&gt; inputIterator, Transformer&lt;? super I, ? extends O&gt; transformer)<br>
                         static &lt;I, O, R extends Collection&lt;? super O&gt;&gt; R collect(Iterable&lt;I&gt; inputCollection, Transformer&lt;? super I, ? extends O&gt; transformer, R outputCollection)<br>
                         static &lt;I, O, R extends Collection&lt;? super O&gt;&gt; R collect(Iterator&lt;I&gt; inputIterator, Transformer&lt;? super I, ? extends O&gt; transformer, R outputCollection)</li>
-                    
+
                     <li>static &lt;T&gt; boolean addIgnoreNull(Collection&lt;T&gt; collection, T object) Since 3.2<br>
                         static &lt;C&gt; boolean addAll(Collection&lt;C&gt; collection, Iterable&lt;? extends C&gt; iterable) + Iterator, Enumeration, C...</li>
-                    
+
                     <li>static int size(Object object) Since 3.1<br>
                         static boolean sizeIsEmpty(Object object) Since 3.2</li>
                     Collection, Map, Array, Iterator, Enumeration 지원
@@ -746,7 +746,7 @@
 
         <li>class TreeBag&lt;E&gt; extends AbstractMapBag&lt;E&gt; implements SortedBag&lt;E&gt;, Serializable Since 3.0</li>
         저장소로 TreeMap을 이용하는 표준 SortedBag 구현을 제공한다.
-            
+
         <li>final class CollectionBag&lt;E&gt; extends AbstractBagDecorator&lt;E&gt; Since 4.0 + CollectionSortedBag</li>
         Bag 인스턴스가 Collection API에 맞게 동작하도록 래핑하는 생성자 CollectionBag(Bag&lt;E&gt; bag)를 제공한다
 
@@ -755,10 +755,10 @@
 
         <li>class PredicatedBag&lt;E&gt; extends PredicatedCollection&lt;E&gt; implements Bag&lt;E&gt; Since 3.0 + PredicatedSortedBag</li>
         Bag 인스턴스에 요소 추가 제약을 거는 팩터리 메서드 predicatedBag(Bag&lt;E&gt; bag, Predicate&lt;? super E&gt; predicate) Since 4.0을 제공한다. 요소 추가에 실패하는 경우 IllegalArgumentException 발생.
-        
+
         <li>class SynchronizedBag&lt;E&gt; extends SynchronizedCollection&lt;E&gt; implements Bag&lt;E&gt; Since 3.0 + SynchronizedSortedBag</li>
         Bag 인스턴스가 스레드-안전하도록 래핑하는 팩터리 메서드 synchronizedBag(Bag&lt;E&gt; bag) Since 4.0을 제공한다.
-        
+
         <li>class TransformedBag&lt;E&gt; extends TransformedCollection&lt;E&gt; implements Bag&lt;E&gt; Since 3.0 + TransformedSortedBag</li>
         Bag 인스턴스의 요소 변환 제약을 거는 팩터리 메서드를 제공한다. 기존 요소를 포함하여 변환하는 경우 transformedBag(...) Since 4.0, 신규 요소들만 변환하는 경우 transformingBag(...) Since 4.0
     </ol>
@@ -873,12 +873,12 @@
         <summary>Tansformer</summary>
         <ol>
             <li>class ChainedTransformer&lt;T&gt; implements Transformer&lt;T, T&gt;, Serializable Since 3.0</li>
-            
+
             <li>class CloneTransformer&lt;T&gt; implements Transformer&lt;T, T&gt; Since 3.0</li>
-            
+
             <li>class ClosureTransformer&lt;T&gt; implements Transformer&lt;T, T&gt;, Serializable Since 3.0</li>
             + PredicateTransformer, NOPTransformer
-            
+
             <li>class ConstantTransformer&lt;I, O&gt; implements Transformer&lt;I, O&gt;, Serializable Since 3.0</li>
 
             <li>class FactoryTransformer&lt;I, O&gt; implements Transformer&lt;I, O&gt;, Serializable Since 3.0</li>
@@ -1026,7 +1026,7 @@
 
         <li>class DefaultedMap&lt;K, V&gt; extends AbstractMapDecorator&lt;K, V&gt; implements Serializable Since 3.2</li>
         + LazyMap, LazySortedMap
-        
+
         <li>class FixedSizeMap&lt;K, V&gt; extends AbstractMapDecorator&lt;K, V&gt; implements BoundedMap&lt;K, V&gt;, Serializable Since 3.2</li>
         + FixedSizeSortedMap
 
@@ -1044,7 +1044,7 @@
         임계 크기를 초과하면 가장 마지막으로 사용(get/put)된 entry 제거. DEFAULT_MAX_SIZE == 100
 
         <li>class MultiKeyMap&lt;K, V&gt; extends AbstractMapDecorator&lt;MultiKey&lt;? extends K&gt;, V&gt; implements Serializable, Cloneable Since 3.1</li>
-        
+
         <li>class PassiveExpiringMap&lt;K, V&gt; extends AbstractMapDecorator&lt;K, V&gt; implements Serializable Since 4.0</li>
         맵에 entry를 유지할 시간을 정의. 각 시간이 지나면 맵에서 제거된다.
 

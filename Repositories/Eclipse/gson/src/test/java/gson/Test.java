@@ -32,7 +32,7 @@ public class Test {
             name = RandomStringUtils.randomGraph(32);
         }
     }
-    
+
     public void pojoTest1() {
         var data = new Data1();
         var gson = new Gson();
@@ -51,7 +51,7 @@ public class Test {
             name = RandomStringUtils.randomGraph(32);
         }
     }
-    
+
     public void pojoTest2() {
         var data = new Data2();
         var gson = new Gson();
@@ -60,7 +60,7 @@ public class Test {
         assertTrue(data.equals(gson.fromJson(json, Data2.class)));
     }
 
-    
+
     public void listTest() {
         var list = Arrays.asList(
                 Arrays.asList(new Data1(), new Data1()),
@@ -69,7 +69,7 @@ public class Test {
         System.out.println(new Gson().toJson(list));
     }
 
-    
+
     public void nodeTest() {
         var data = new Data1();
         var gson = new Gson();
@@ -88,7 +88,7 @@ public class Test {
         // {"id":2116601366,"name":"[P[)\\;RC-(\u003e/q6daw:u4NThjs\u0027G5Am%E","extended":true,"moreData":{"arr":[0,1,2,3,4]}}
     }
 
-    
+
     public void writerTest() throws IOException {
         var strWriter = new StringWriter();
         try(var writer = new JsonWriter(strWriter)) {
@@ -100,38 +100,38 @@ public class Test {
         System.out.println(strWriter); // {"id":12345,"name":null}
     }
 
-    
+
     public void parserTest() {
         var json = "{\"id\":628016310,\"name\":\"FBwfi_&ezLbxupF2EZYftTOYGa_/NYan\",\"extended\":true,\"moreData\":{\"arr\":[1,2,3]}}";
         var obj = JsonParser.parseString(json).getAsJsonObject();        
         for(var entry : obj.entrySet())
             System.out.printf("entry : %d, name : %s, value : %s\n", entry.hashCode(), entry.getKey(), entry.getValue());
     }
-    
+
     public static class Data3 extends Data2 {
         @Expose public int something = 0;
     }
-    
+
     @org.junit.Test
     public void optionTest() {
         var gson = new Gson();
-        
+
         var newGson = new GsonBuilder().excludeFieldsWithModifiers(Modifier.PRIVATE).create();
         var data = new Data2();
         System.out.println(gson.toJson(data)); // {"id":1055887029,"name":"}$zM/1f)}3|A9r%sc*b:g\u003dV4}#}?^SM^"}
         System.out.println(newGson.toJson(data)); // {"id":1055887029}
-        
+
         data = new Data3();
         newGson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         System.out.println(gson.toJson(data)); // {"something":0,"id":1232551903,"name":"*m|xN*Ey5vnOB\\klN0h0emNV\u0026*\u003ef4C\u0026Z"}
         System.out.println(newGson.toJson(data)); // {"something":0}
-        
+
         data.name = null;
         newGson = new GsonBuilder().serializeNulls().create();
         System.out.println(gson.toJson(data)); // {"something":0,"id":193973836}
         System.out.println(newGson.toJson(data)); // {"something":0,"id":193973836,"name":null}
     }
-    
+
     @org.junit.Test
     public void dateTest() throws InterruptedException {
         var gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();

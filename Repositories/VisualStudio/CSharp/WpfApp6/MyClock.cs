@@ -13,7 +13,7 @@ namespace WpfApp6
         public string DateTime { get; set; } = "Not Allocated";
 
         public event PropertyChangedEventHandler PropertyChanged;
-    
+
         public MyClock()
         {
             var timer = new DispatcherTimer();

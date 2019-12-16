@@ -16,7 +16,7 @@ PostgreSQL 덤프로부터 SQLite3으로 마이그레이션하는 과정 정리
     <ol>
         <li>\copy table_name to 'file_name.csv' delimiter ',' csv;</li>
         뒤에 header 옵션도 붙일 수 있지만... 나중에 SQLite에서 임포트하면 헤더 행도 데이터로 들어가버린다..
-        
+
         <li>csv 편집</li>
         csv에서는 null을 빈칸으로밖에 표현할 수 없는데... SQLite 임포트 시 이를 지원해주지 않는다. 때문에 null을 ""이나 기타 문자열로 변경...
     </ol>

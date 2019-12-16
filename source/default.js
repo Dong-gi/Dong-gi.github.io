@@ -226,7 +226,7 @@ function adjustDropupWidth() {
 function mutationCallback(mutations, observer) {
     for (let mutation of mutations) {
         if (mutation.type !== 'childList') return;
-        
+
         $.each($('table', $(mutation.target)), (idx, table) => {
             if($(table).hasClass('table')) return;
             $(table).addClass('table table-sm table-hover');
@@ -308,7 +308,7 @@ function insertCode(buttonId) {
  * 코드 모달 HTML 골격 반환
  */
 function getCodeModalHTML(buttonId, filename) {
-    return `<div id="modal'${buttonId}" class="modal code-modal" tabindex="-1" role="dialog">
+    return `<div id="modal-${buttonId}" class="modal code-modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -356,6 +356,8 @@ function showModal(buttonId) {
         });
         $('body').append(code);
         $(code).modal('show');
+        $(code).css('margin', '0');
+        $(code).css('padding', '0');
     };
 }
 

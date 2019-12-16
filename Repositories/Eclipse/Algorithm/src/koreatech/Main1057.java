@@ -25,7 +25,7 @@ public class Main1057 {
              for(int j = 1; j < 10; ++j)
                  results[i][j] %= 1_000_000_007;
         }
-        
+
         for (int testCase = 0; testCase < numOfTestCase; ++testCase) {
             long sum = 0;
             for(long n : results[Integer.parseInt(in.nextLine().trim())])

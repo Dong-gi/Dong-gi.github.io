@@ -18,7 +18,7 @@ public class IteratorTest {
 				Arrays.<Object>asList(6, 7),
 				8
 			};
-		
+
 		var iterator = new ObjectGraphIterator<Object>(graph, node -> {
 			if(node == null) return null;
 			var subIterator = new ListIteratorWrapper<Object>(IteratorUtils.getIterator(node));

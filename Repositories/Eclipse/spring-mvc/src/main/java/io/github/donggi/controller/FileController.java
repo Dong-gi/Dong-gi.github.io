@@ -18,7 +18,7 @@ import io.github.donggi.service.FileService;
 @Controller
 @RequestMapping("/file/*")
 public class FileController {
-    
+
     @Autowired
     private FileService fileService;
 
@@ -47,12 +47,12 @@ public class FileController {
         return mv;
     }
 */
-    
+
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     public String download() {
         return "file/download";
     }
-    
+
     @RequestMapping(value = "/download", method = RequestMethod.POST)
     public void download(HttpServletRequest request,
             HttpServletResponse response, List<MultipartFile> files) throws IOException {
@@ -61,7 +61,7 @@ public class FileController {
         else if(files.size() > 0)
             fileService.download(request, response, files.get(0));
     }
-    
+
     @RequestMapping(value = "/downloadZip", method = RequestMethod.POST)
     public void downloadZip(HttpServletRequest request,
             HttpServletResponse response, List<MultipartFile> files) throws IOException {

@@ -20,9 +20,9 @@ public class MapUtilsTest {
 		Integer itemId;
 		String itemName;
 	}
-	
+
 	static Map<Integer, MItem> items = new HashMap<>();
-	
+
 	@Before
 	public void before() {
 		for(var id = 1; id < 3; ++id) {
@@ -30,7 +30,7 @@ public class MapUtilsTest {
 			items.put(mItem.getItemId(), mItem);
 		}
 	}
-	
+
 	@Test
 	public void getStringTest() {
 		for(var id = 2; id < 4; ++id)
@@ -40,7 +40,7 @@ public class MapUtilsTest {
 		 * null
 		 */
 	}
-	
+
 	@Test
 	public void printTest() {
 		MapUtils.verbosePrint(System.out, "MItem", items);
@@ -60,7 +60,7 @@ public class MapUtilsTest {
 		 * } java.util.HashMap
 		 */
 	}
-	
+
 	@Test
 	public void invertMapTest() {
 		assertTrue(MapUtils.invertMap(items).get(items.get(1)) == 1); // OK
@@ -70,17 +70,17 @@ public class MapUtilsTest {
 	public void populateMapTest() {
 		var out1 = new ByteArrayOutputStream();
 		var out2 = new ByteArrayOutputStream();
-		
+
 		var items2 = new HashMap<Integer, MItem>();
 		MapUtils.populateMap(
 				items2,
 				Arrays.asList(1, 2),
 				id -> id,
 				id -> new MItem(id, "item" + id));
-		
+
 		MapUtils.verbosePrint(new PrintStream(new ByteArrayOutputStream()), null, items);
 		MapUtils.verbosePrint(new PrintStream(new ByteArrayOutputStream()), null, items2);
-		
+
 		assertTrue(out1.toString().contentEquals(out2.toString())); // OK
 	}
 }

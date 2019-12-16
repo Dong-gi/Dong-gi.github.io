@@ -10,7 +10,7 @@
             <li>default Consumer&lt;T&gt; andThen(Consumer&lt;? super T&gt; after) : 이 소비자 다음에 after가 소비하는 병합된 소비자 반환.</li>
         </ol>
     </details>
-    
+
     <details>
         <summary>@FunctionalInterface interface DoubleConsumer Since 1.8 + int, long</summary>
         <ol>
@@ -18,7 +18,7 @@
             <li>default DoubleConsumer andThen(DoubleConsumer after)</li>
         </ol>
     </details>
-    
+
     <details>
         <summary>@FunctionalInterface interface BiConsumer&lt;T, U&gt; Since 1.8</summary>
         <ol>
@@ -27,7 +27,7 @@
             <li>default BiConsumer&lt;T, U&gt; andThen(BiConsumer&lt;? super T, ? super U&gt; after) : 현재 소비자가 작업을 마치면 after가 실행되는 새로운 소비자 반환.</li>
         </ol>
     </details>
-    
+
     <details>
         <summary>@FunctionalInterface interface ObjDoubleConsumer&lt;T&gt; Since 1.8</summary>
         void accept(T t, double value) + int, long
@@ -42,7 +42,7 @@
         <summary>@FunctionalInterface interface Supplier&lt;T&gt; Since 1.8</summary>
         T get()
     </details>
-    
+
     <details>
         <summary>@FunctionalInterface interface BooleanSupplier Since 1.8</summary>
         boolean getAsBoolean() : boolean 값을 공급하는 생산자. + int, double, long
@@ -63,22 +63,22 @@
             <li>static &lt;T&gt; Function&lt;T, T&gt; identity() : 입력 인자 그대로 반환하는 함수.</li>
         </ol>
     </details>
-    
+
     <details>
         <summary>@FunctionalInterface interface IntFunction&lt;R&gt; Since 1.8</summary>
         R apply(int value) + double, long
     </details>
-    
+
     <details>
         <summary>@FunctionalInterface interface DoubleToIntFunction Since 1.8</summary>
         int applyAsInt(double value) + double, int, long 간의 상호 변환 함수들이 모두 정의됨
     </details>
-    
+
     <details>
         <summary>@FunctionalInterface interface UnaryOperator&lt;T&gt; extends Function&lt;T, T&gt; Since 1.8</summary>
         static &lt;T&gt; UnaryOperator&lt;T&gt; identity()
     </details>
-    
+
     <details>
         <summary>@FunctionalInterface interface DoubleUnaryOperator Since 1.8 + int, long</summary>
         <ol>
@@ -88,12 +88,12 @@
             <li>static DoubleUnaryOperator identity() : 항상 입력값 그대로 반환하는 단항 연산자 반환.</li>
         </ol>
     </details>
-    
+
     <details>
         <summary>@FunctionalInterface interface ToDoubleFunction&lt;T&gt; Since 1.8</summary>
         double applyAsDouble(T value) + int, long
     </details>
-    
+
     <details>
         <summary>@FunctionalInterface interface BiFunction&lt;T, U, R&gt; Since 1.8</summary>
         <ol>
@@ -102,12 +102,12 @@
             <li>default &lt;V&gt; BiFunction&lt;T, U, V&gt; andThen(Function&lt;? super R, ? extends V&gt; after) : 함수가 실행되고 난 결과를 after가 처리하는 새로운 함수 반환.</li>
         </ol>
     </details>
-    
+
     <details>
         <summary>@FunctionalInterface interface ToDoubleBiFunction&lt;T, U&gt; Since 1.8</summary>
         double applyAsDouble(T t, U u) + int, long
     </details>
-    
+
     <details>
         <summary>@FunctionalInterface interface BinaryOperator extends BiFunction&lt;T, T, T&gt; Since 1.8</summary>
         <ol>
@@ -116,7 +116,7 @@
             <li>static &lt;T&gt; BinaryOperator&lt;T&gt; maxBy(Comparator&lt;? super T&gt; comparator) : 주어진 comparator에 따라 둘 중 큰 것을 반환하는 함수 생성.</li>
         </ol>
     </details>
-    
+
     <details>
         <summary>@FunctionalInterface interface DoubleBinaryOperator Since 1.8</summary>
         double applyAsDouble(double left, double right) : double 두개를 먹고 double 하나를 반환하는 함수. + int, long
@@ -136,7 +136,7 @@
             <li>static &lt;T&gt; Predicate&lt;T&gt; isEqual(Object targetRef) : Object.equals(Object, Object)를 이용해 비교하는 Predicate 반환</li>
         </ol>
     </details>
-    
+
     <details>
         <summary>@FunctionalInterface interface DoublePredicate Since 1.8 + int, long</summary>
         <ol>
@@ -146,7 +146,7 @@
             <li>default DoublePredicate negate()</li>
         </ol>
     </details>
-    
+
     <details>
         <summary>@FunctionalInterface interface BiPredicate&lt;T, U&gt; Since 1.8</summary>
         <ol>

@@ -28,7 +28,7 @@ public class Main1034 {
                 numOfRightPoints = 0;
             else
                 numOfRightPoints = size - positions.indexOf(values.get(checkIdx+1));
-            
+
             if(numOfLeftPoints > size - numOfLeftPoints) {
                 checkPoint = values.get(--checkIdx);
                 continue;
@@ -40,11 +40,11 @@ public class Main1034 {
             hasFound = true;
         }
         //System.out.println(checkPoint);
-        
+
         int distance = 0;
         for(int item : positions)
             distance += Math.abs(item - checkPoint);
         System.out.println(distance);
     }
-    
+
 }

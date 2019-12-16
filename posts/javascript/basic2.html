@@ -64,7 +64,7 @@
         worker.terminate(); // 즉시 종료<br>
         worker.onmesage = ...<br>
         worker.onerror ...
-    
+
         <li>웹 워커 내부에서 전역 객체는 worker 자체</li>
         페이지에서 보낸 메시지를 알기 위해서 onmesage 이벤트 핸들러를 등록한다.<br>
         self.onmessage = ...
@@ -131,7 +131,7 @@
         let data = new FormData(document.forms[0]);<br>
         request.send(data);<br>
         // Blob, BufferSource, FormData, URLSearchParams, ReadableStream, USVString 전송 가능
-    
+
         <li>jQuery Ajax 구문</li>
         Ajax 간편 표기 : $.get(), $.post(), $.getJSON(), $.getScript(), $(selector).load()<br>
         $.ajax({ type: 'get', url: './index.html', success: (data) => console.log(data) });<br>

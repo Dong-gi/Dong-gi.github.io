@@ -6,12 +6,12 @@
         템플릿은 임의의 텍스트 파일이 될 수 있으며, HTML로 한정되지 않는다.<br>
         출력 텍스트의 아래 요소들은 FreeMarker에서 처리되고, 나머지는 있는 그대로 출력된다.
         <li>${...} : FreeMarker는 출력 텍스트에서 이 부분을 중괄호 안 표현식의 값으로 치환한다. Interpolation이라고 부른다.</li>
-        
+
         <li>FTL(FreeMarker Template Language) 태그 = directive : HTML 태그와 유사하지만, #으로 시작한다. 사용자 정의 태그는 @으로 시작한다. 출력에 포함되지 않는다.</li>
         Directive 예 : &lt;#if&gt;, &lt;#elseif&gt;, &lt;#else&gt;, ...
-        
+
         <li>주석 : &lt;#-- --&gt;. HTML 주석과 다르게 출력에 포함되지 않는다.</li>
-        
+
         <li>Built-in : FreeMarker 데이터 모델이 지원하는 메서드.</li>
         Built-in 예 : ?upper_case, ?length, ?size, ...
         <button class="btn-code" path="Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java" displayRange="[17, 23]" lan="java">Java »</button>
@@ -210,7 +210,7 @@
         템플릿 처리 후 불필요한 공백이 많이 발생하기 때문에, 이를 다루는 방법을 몇 가지 제공한다.
         <li>설정 변경</li>
         Configuration#setWhitespaceStripping()
-        
+
         <li>Directive 사용</li>
         compress directive는 템플릿 처리 결과를 직접 가공한다. single_line 매개변수에 true를 보내면 결과를 한 줄로 요약한다.
     </ol>

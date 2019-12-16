@@ -13,7 +13,7 @@ class SctpChannelTest {
 
     static final int BUF_SIZE = 1024;
     static final int PORT = 35003;
-    
+
     @Test
     void test() throws IOException {
         try (

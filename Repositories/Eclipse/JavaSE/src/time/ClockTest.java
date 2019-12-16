@@ -31,5 +31,5 @@ class ClockTest {
         System.out.printf("NewYork tz : %s, time : %s\n", newYorkClock.getZone(), newYorkClock.instant());
         // NewYork tz : America/New_York, time : 2019-10-10T07:51:32.299557200Z
     }
-    
+
 }

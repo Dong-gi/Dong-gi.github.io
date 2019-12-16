@@ -35,7 +35,7 @@ public class DoNothing2 implements Filter {
         chain.doFilter(req, resp);          // 필터 체인에 속하는 필터들의 순서는 기본적으로 web.xml의 <filter-mapping> 순서
         logger.info("사후 작업 진행");
     } 
-    
+
     /*
 9월 09, 2019 10:24:23 오후 filter.DoNothing doFilter
 INFO: 사전 작업 진행

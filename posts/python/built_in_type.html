@@ -47,7 +47,7 @@
 
         <li>비트 연산</li>
         x | y, x ^ y, x &amp; y, x &lt;&lt; n, x &gt;&gt; n, ~x
-        
+
         <li>int(numbers.Integral 구현체) 확장 연산</li>
         <ul>
             <li>Since 3.1 int.bit_length() : 비트 길이</li>
@@ -71,7 +71,7 @@
 </details>
 
 <hr>
-        
+
 <details>
     <summary>Iterator Types</summary>
     <ol>
@@ -95,7 +95,7 @@
     <ul>
         <li>list, tuple, range</li>
         3가지 기본 시퀀스 타입
-        
+
         <li>Common Sequence Operations</li>
         <ul>
             <li>collections.abc.Sequence는 사용자 정의 sequence 타입의 연산 정의를 도와준다.</li>
@@ -113,9 +113,9 @@
                 <li>tuple : list를 대신 이용</li>
             </ul>
         </ul>
-        
+
         <li>Immutable Sequence Types : hash()를 지원할 수 있다</li>
-        
+
         <li>Mutable Sequence Types</li>
         <ul>
             <li>collections.abc.MutableSequence는 사용자 정의 sequence 타입의 연산 정의를 도와준다.</li>
@@ -131,7 +131,24 @@
     <summary>Text Sequence Type</summary>
     <ul>
         <li>str 객체 또는 유니코드 시퀀스 strings로 표현하며, 모두 내용은 변경 불가능하다.</li>
-        
+        <li>Formatted string literal(aka. f-string) Since 3.6</li>
+        <ul>
+            <li>f_string ::= ( <i>literal_char</i> | "{{" | "}}" | <i>replacement_field</i> )*</li>
+            {{, }}는 각각 {, }를 표시하기 위한 리터럴
+            <li>replacement_field ::= "{" <i>f_expression</i> [! <i>conversion</i>] [: <i>format_spec</i>] }</li>
+            <li>f_expression : 값을 산출하는 표현식</li>
+            <li>conversion ::= "s" | "r" | "a"</li>
+            각각 해당하는 함수를 호출한다 : !s → str(), !r → repr(), !a → ascii()
+            <li>f_expression이 산출한 값이 conversion을 거쳐 __format__(format_spec)으로 포매팅된다</li>
+            <li>format_spec ::= [[<i>fill</i>]<i>align</i>][<i>sign</i>][#][0][<i>width</i>][<i>grouping_option</i>][.<i>precision</i>][<i>type</i>]</li>
+            <li>fill ::= 임의_문자</li>
+            <li>align ::= "&lt;" | "&gt;" | "=" | "^"</li>
+            <li>sign ::= "+" | "-" | " "</li>
+            <li>width ::= digit+</li>
+            <li>grouping_option ::= "_" | ","</li>
+            <li>precision ::= digit+</li>
+            <li>type ::= "b" | "c" | "d" | "e" | "E" | "f" | "F" | "g" | "G" | "n" | "o" | "s" | "x" | "X" | "%"</li>
+        </ul>
         <li>str.capitalize(), str.casefold() # lower()보다 강한 변환, str.upper(), str.lower(), str.swapcase() # 두 번 적용한 것이 원본과 항상 같지는 않다, str.title()</li>
         <li>str.center(width[, fillchar]), str.ljust(width[, fillchar]), str.rjust(width[, fillchar])</li>
         <li>str.count(sub[, start[, end]]), str.find(sub[, start[, end]]), str.rfind(sub[, start[, end]]), str.index(sub[, start[, end]]), str.rindex(sub[, start[, end]])</li>
@@ -163,11 +180,11 @@
     </ul>
 </details>
 
-            
+
 
             <th>Binary Sequence Types</th>
             1. bytes, bytearray, memoryview : 핵심 자료형은 bytes, bytearray며, memoryview는 다른 이진 객체를 복사하지 않고 buffer protocol을 통해 접근한다.
-            
+
             2. Bytes Objects : 변경불가.
             &raquo; class bytes([source[, encoding[, errors]]])
             * b'hello'처럼 b로 시작하는 문자열 리터럴은 bytes 리터럴이다. 단, ASCII 문자만 가능하다.
@@ -179,7 +196,7 @@
             &raquo;&raquo; Since 3.5 hex() : 16진수 표기 문자열 반환.
             &raquo; 문자열과 달리 bytes 객체 b의 b[0]는 정수, b[0:1]는 길이 1의 bytes 객체다.
             &raquo; bytes 객체는 보통 바이너리 문자열로 표현되며, 각 바이트 숫자를 확인하는 데는 list(b)가 유용하다.
-            
+
             3. Bytearray Objects
             &raquo; class bytearray([source[, encoding[, errors]]])
             * 빈 bytearray 객체 : bytearray()
@@ -188,7 +205,7 @@
             * 기존 이진 객체(buffer protocol)로부터 생성 : bytearray(buf)
             &raquo;&raquo; classmethod fromhex(string) : bytes와 비슷한 동작을 한다.
             &raquo;&raquo; Since 3.5 hex() : bytes와 비슷한 동작을 한다.
-            
+
             4. Bytes and Bytearray Operations
             &raquo; bytes.count(sub[, start[, end]]), bytearray.count(sub[, start[, end]])
             * sub는 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.python.org/3/glossary.html#term-bytes-like-object">bytes-like object</a> 거나 (Since 3.3) [0, 255] 사이의 정수여야 한다.
@@ -235,7 +252,7 @@
             bytes.istitle(), bytearray.istitle(), bytes.isupper(), bytearray.isupper()
             &raquo; bytes.zfill(width), bytearray.zfill(width)
             * width가 될 때까지 b'0'을 앞에 채운다. 맨 처음 등장하는 b'+', b'-'는 위치를 유지한다.
-            
+
             5. printf-style Bytes Formatting Since 3.5
             &raquo; % 연산자 : (format 문자열) % 인자
             &raquo; '%' + opt. (key) + opt. flags + opt. min field width + opt. precision + type
@@ -244,7 +261,7 @@
             &raquo; type : 'd'|'i'|'u'(10진 정수), 'o'(8진수), 'x'|'X'(16진수), 'e'|'E'(지수 표기), 'f'|'F'(10진 부동소수),
             'g'|'G', 'c'(single byte), 'b'(bytes), 's', 'a'|'r'(bytes: repr(obj).encode('ascii', 'backslashreplace')),
             '%'(변환 없이 '%' 삽입)
-            
+
             6. Memory Views
             &raquo; class memoryview(obj)
             * obj가 수정 가능할 경우, 1차원 slice 할당이 가능하다. 단, 크기 변경은 불가능하다.
@@ -267,7 +284,7 @@
 
             <th>Set Types</th>
             1. set, frozenset : 해쉬 가능한 순서 없는 collection. frozenset은 불변이며, 다른 set의 원소가 될 수 있다.
-            
+
             2. class set([iterable])
             class frozenset([iterable])
             * 연산자 버전이 있는 메서드들은 인자로 iterable도 받을 수 있다.
@@ -290,7 +307,7 @@
 
             <th>Mapping Types</th>
             1. dict : mapping 객체는 해쉬가능한 값을 임의의 객체로 매핑한다.
-            
+
             2. class dict(**kwarg)
             class dict(mapping, **kwarg)
             class dict(iterable, **kwarg)
@@ -300,7 +317,7 @@
             &nbsp;&nbsp;&nbsp;&nbsp;d = dict([('two', 2), ('one', 1), ('three', 3)])
             &nbsp;&nbsp;&nbsp;&nbsp;e = dict({'three': 3, 'one': 1, 'two': 2})
             &nbsp;&nbsp;&nbsp;&nbsp;a == b == c == d == e
-            
+
             3. Dictionary Operations
             &raquo; len(d), d[key], d[key] = value, del d[key], key in d, key not in d, iter(d)
             &raquo; copy(), clear()
@@ -312,7 +329,7 @@
             &raquo; setdefault(key[, default]) : key가 있으면 value 반환, 없으면 default로 추가하고 defualt 반환. 둘 다 없으면
             KeyError
             &raquo; update([other]) : other에는 dict 생성 인자들 모두 허용된다.
-            
+
             4. Dictionary view objects
             * dict의 변화는 view에도 반영된다.
             &raquo; len(dictview), iter(dictview) : dict 수정 중엔 RuntimeError 가능성, x in dictview

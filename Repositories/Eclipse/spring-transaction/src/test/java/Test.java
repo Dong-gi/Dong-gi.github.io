@@ -18,7 +18,7 @@ public class Test {
     private DataSource dataSource;
     @Autowired
     private NameService nameService;
-    
+
     @org.junit.Test
     public void connectionTest() throws SQLException {
         try(var conn = dataSource.getConnection()) {
@@ -30,12 +30,12 @@ public class Test {
     public void successTest() throws SQLException {
         nameService.success();
     }
-    
+
     @org.junit.Test
     public void failTest() throws SQLException {
         nameService.fail();
     }
-    
+
 /*
 53  valid name 1
 54  valid name 2
@@ -48,5 +48,5 @@ public class Test {
 69  valid name 1
 70  valid name 2
  */
-    
+
 }

@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'hello-world';
-  
+
   ngAfterViewInit() {
     console.log('컴포넌트 초기화 완료');
   }

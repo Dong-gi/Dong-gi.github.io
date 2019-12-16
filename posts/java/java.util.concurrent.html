@@ -71,34 +71,34 @@
             Stage에서 수행되는 연산은 Function, Consumer, Runnable로 표현되어야 한다. 각각은 apply, accept, run 메서드로 stage에 제공된다.
             연산에 넘겨지는 인자는 트리거 stage의 결과이며, 이를 통해 연산의 pipeline을 만들 수 있다.
             <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/concurrent/CompletionStageTest.java" lan="java">예시 코드 »</button>
-    
+
             <li>&lt;U&gt; CompletionStage&lt;U&gt; thenApply(Function&lt;? super T, ? extends U&gt; fn) + thenApplyAsync<br>
                 CompletionStage&lt;Void&gt; thenAccept(Consumer&lt;? super T&gt; action) + thenAcceptAsync<br>
                 CompletionStage&lt;Void&gt; thenRun(Runnable action) + thenRunAsync</li>
             이전 연산이 완료되면 그 결과로 fn, action 호출
-    
+
             <li>&lt;U, V&gt; CompletionStage&lt;V&gt; thenCombine(CompletionStage&lt;? extends U&gt; other, BiFunction&lt;? super T, ? super U, ? extends V&gt; fn) + thenCombineAsync<br>
                 &lt;U&gt; CompletionStage&lt;Void&gt; thenAcceptBoth(CompletionStage&lt;? extends U&gt; other, BiConsumer&lt;? super T, ? super U&gt; action) + thenAcceptBothAsync<br>
                 CompletionStage&lt;Void&gt; runAfterBoth(CompletionStage&lt;?&gt; other, Runnable action) + runAfterBothAsync</li>
             this와 other 모두가 종료되면 그 결과로 fn, action 호출
-    
+
             <li>&lt;U&gt; CompletionStage&lt;U&gt; applyToEither(CompletionStage&lt;? extends T&gt; other, Function&lt;? super T, U&gt; fn) + applyToEitherAsync<br>
                 CompletionStage&lt;Void&gt; acceptEither(CompletionStage&lt;? extends T&gt; other, Consumer&lt;? super T&gt; action) + acceptEitherAsync<br>
                 CompletionStage&lt;Void&gt; runAfterEither(CompletionStage&lt;?&gt; other, Runnable action) + runAfterEitherAsync</li>
             this나 other 둘 중 하나라도 종료되면 그 결과로 fn, action 호출
-    
+
             <li>&lt;U&gt; CompletionStage&lt;U&gt; thenCompose(Function&lt;? super T, ? extends CompletionStage&lt;U&gt;&gt; fn) + thenComposeAsync</li>
             this의 결과를 인자로 fn이 반환하는 CompletionStage가 실행되고, 실행된 결과와 같은 값으로 종료되는 CompletionStage를 반환한다
-    
+
             <li>&lt;U&gt; CompletionStage&lt;U&gt; handle(BiFunction&lt;? super T, Throwable, ? extends U&gt; fn) + handleAsync</li>
             this가 종료되면 결과와 예외를 인자로 fn을 실행하고, fn의 결과로 반환된 stage를 종료한다.
-    
+
             <li>CompletionStage&lt;T&gt; whenComplete(BiConsumer&lt;? super T, ? super Throwable&gt; action) + whenCompleteAsync</li>
             this가 종료되면 결과와 예외를 인자로 action을 실행하고, action이 종료되면 반환된 stage도 종료된다.
-    
+
             <li>CompletionStage&lt;T&gt; exceptionally(Function&lt;Throwable, ? extends T&gt; fn) + exceptionallyAsync Since 12</li>
             this가 예외를 발생하면 그것을 인자로 fn 실행하는 CompletionStage 반환. 예외 발생이 없는 경우, this의 결과와 같은 값으로 반환된 stage가 종료된다.
-    
+
             <li>default CompletionStage&lt;T&gt; exceptionallyCompose(Function&lt;Throwable, ? extends CompletionStage&lt;T&gt;&gt; fn) Since 12 + exceptionallyComposeAsync</li>
             this가 예외를 발생하면 fn이 반환하는 CompletionStage로 구성된다.
 
@@ -126,36 +126,36 @@
             <ol>
                 <li>static &lt;U&gt; CompletableFuture&lt;U&gt; supplyAsync(Supplier&lt;U&gt; supplier) + 1 오버로드</li>
                 supplier의 결과를 가지고 비동기 종료되는 CompletableFuture 반환
-    
+
                 <li>static CompletableFuture&lt;Void&gt; runAsync(Runnable runnable) + 1 오버로드</li>
                 runnable을 실행하고 비동기 종료되는 CompletableFuture 반환
-            
+
                 <li>static &lt;U&gt; CompletableFuture&lt;U&gt; completedFuture(U value)</li>
                 이미 특정 값으로 종료된 CompletableFuture 반환
-    
+
                 <li>static CompletableFuture&lt;Void&gt; allOf(CompletableFuture&lt;?&gt;... cfs)</li>
                 모든 cfs가 종료되면 완료되는 새로운 CompletableFuture 객체 반환. 하나라도 예외 종료되면 반환된 CompletableFuture도 그러하다. cfs가 빈 경우, null로 종료된다
-            
+
                 <li>static CompletableFuture&lt;Object&gt; anyOf(CompletableFuture&lt;?&gt;... cfs)</li>
                 하나라도 종료되면, 그 결과와 같은 값으로 종료되는 CompletableFuture 객체 반환. cfs가 빈 경우, 완료되지 않는다
-    
+
                 <li>T join()</li>
                 종료되면 결과 값 반환, 또는 발생한 예외 던지기. 예외는 CompletionException이고, 기저 예외를 cause로 설정한다
-    
+
                 <li>T getNow(T valueIfAbsent)</li>
                 종료되었다면 결과 값 반환, 또는 발생한 예외 던지기. 아니면 valueIfAbsent 반환.
-    
+
                 <li>boolean complete(T value)</li>
                 종료되지 않았다면 get()과 연관 메서드들의 반환값을 value로 설정. 이 호출로 CompletableFuture가 완료 상태로 천이되었다면 true 반환.
-    
+
                 <li>boolean completeExceptionally(Throwable ex)</li>
                 종료되지 않았다면 get()과 연관 메서드들이 주어진 예외를 던지도록 한다. 이 호출로 CompletableFuture가 완료 상태로 천이되었다면 true 반환.
-    
+
                 <li>boolean isCompletedExeptionally()</li>
-            
+
                 <li>void obtrudeValue(T value) + obtrudeException</li>
                 강제로 get()과 연관 메서드들의 반환값 설정. 에러 복구를 위해 설계됨.
-    
+
                 <li>int getNumberOfDependents()</li>
                 종료 대기중인 CompletableFuture의 개수 추정. 동기화가 아닌 시스템 모니터링을 위해 설계됨.
             </ol>
@@ -168,30 +168,30 @@
 
                 <li>static &lt;U&gt; CompletionStage&lt;U&gt; completedStage(U value)</li>
                 주어진 value로 이미 종료된 새로운 CompletionStage 반환.
-        
+
                 <li>static &lt;U&gt; CompletableFuture&lt;U&gt; failedFuture(Throwable ex)</li>
                 주어진 예외로 이미 종료된 새로운 CompletableFuture 객체 반환.
-        
+
                 <li>static &lt;U&gt; CompletionStage&lt;U&gt; failedStage(Throwable ex)</li>
                 주어진 예외로 이미 종료된 새로운 CompletionStage 반환.
 
                 <li>&lt;U&gt; CompletableFuture&lt;U&gt; newIncompletableFuture()</li>
                 완료되지 않은 새로운 CompletableFuture 객체를 반환한다. 서브클래스들은 각자의 클래스 인스턴스를 반환하도록 newIncompletableFuture 메서드를 재정의해야 한다
-    
+
                 <li>Executor defaultExecutor()</li>
-                
+
                 <li>CompletableFuture&lt;T&gt; copy()</li>
                 정상적으로 종료되었다면, 같은 값을 갖는 종료된 CompletableFuture 반환. 예외 종료되었다면, 해당 예외를 원인으로 한 CompletionException으로 예외 종료된 CompletableFuture 반환. 동작은 thenApply(x -&gt; x)와 같다.
-                
+
                 <li>CompletionStage&lt;T&gt; minimalCompletionStage()</li>
                 CompletionStage에 정의된 메서드만 이용 가능. 재정의되지 않았다면 toCompletableFuture() 메서드를 통해 그 외의 메서드에 접근 가능하다.
-    
+
                 <li>CompletableFuture&lt;T&gt; completeAsync(Supplier&lt;? extends T&gt; supplier) + 1 오버로딩</li>
                 이 CompletableFuture를 supplier의 결과값으로 종료한다.
-    
+
                 <li>CompletableFuture&lt;T&gt; orTimeout(long timeout, TimeUnit unit)</li>
                 이 CompletableFuture가 주어진 시간 내에 종료되지 않은 경우, TimeoutException으로 예외 종료한다.
-                
+
                 <li>CompletableFuture&lt;T&gt; completeOnTimeout(T value, long timeout, TimeUnit unit)</li>
                 이 CompletableFuture가 주어진 시간 내에 종료되지 않은 경우, value로 종료한다.    
             </ol>
@@ -319,38 +319,38 @@
         <ol>
             <li>java.util.concurrent 패키지의 기본적인 Executor 구현.
                 <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/concurrent/ExecutorServiceTest.java" lan="java">예시 코드 »</button></li>
-            
+
             <li>void shutdown()</li>
             추가적인 Runnable을 받지 않는다. 이전에 추가된 것은 마저 실행한다.
-    
+
             <li>List&lt;&Runnable&gt; shutdownNow()</li>
             실행중인 모든 작업을 중지. 실행 대기중이었던 작업들은 반환.
-    
+
             <li>boolean isShutdown()</li>
             <li>boolean isTerminated()</li>
             shutdown, shutdownNow 호출 이후 모든 작업이 끝났는지 여부
 
             <li>boolean awaitTermination(long timeout, TimeUnit unit)</li>
             shutdown 요청 후 모든 작업이 종료되기를 기다리며 블록한다. timeout 발생한 경우 false 반환.
-            
+
             <li>&lt;T&gt; Future&lt;T&gt; submit(Callable&lt;T&gt; task)</li>
             결과를 반환하는 작업을 등록한다. 작업이 성공적으로 종료되면 Future#get으로 결과를 확인할 수 있다.
-            
+
             <li>&lt;T&gt; Future&lt;T&gt; submit(Runnable atask, T result)</li>
             작업을 등록한다. 작업이 성공적으로 종료되면 Future#get으로 result를 얻을 수 있다.
-            
+
             <li>Futur&lt;?&gt; submit(Runnable task)</li>
             작업을 등록한다. 작업이 성공적으로 종료되면 Future#get은 null을 반환한다.
-            
+
             <li>&lt;T&gt; List&lt;Future&lt;T&gt;&gt; invokeAll(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks)</li>
             모든 작업이 종료되면 Future 리스트를 반환한다. 따라서 리스트 안의 각 Future#isDone은 true다.
-            
+
             <li>&lt;T&gt; List&lt;Future&lt;T&gt;&gt; invokeAll(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks, long timout, TimeUnit unit)</li>
             모든 작업이 종료되거나 timeout이 발생하면 반환. 리스트 안의 각 Future#isDone은 true. timeout 발생 시 완료되지 않은 작업들은 취소된다.
-            
+
             <li>&lt;T&gt; T invokeAny(Collection&lt;? extends Callable&lt;T&gt;&gt; tasks)</li>
             성공적으로 완료된 첫 작업의 결과를 반환한다. 완료되지 않은 작업들은 취소된다.
-            
+
             <li>&lt;T&gt; T invokeAny(Collection&lt;? extends Callable&lt;&gt;&gt; tasks, long timeout, TimeUnit unit)</li>
             timeout되면 TimeoutException 발생
         </ol>
@@ -359,13 +359,13 @@
         <summary>interface ScheduledExecutorService extends ExecutorService Since 1.5</summary>
         <ol>
             <li>실행 전에 딜레이를 두거나, 주기적으로 실행을 반복할 수 있는 ExecutorService</li>
-            
+
             <li>ScheduledFuture&lt;?&gt; schedule(Runnable command, long delay, TimeUnit unit) + 오버로딩</li>
             주어진 delay 이후 command가 1회 실행되도록 한다
-            
+
             <li>ScheduledFuture&lt;?&gt; scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit)</li>
             반복되는 작업은 반환된 Future를 통해 취소할 수 있다.
-            
+
             <li>ScheduledFuture&lt;?&gt; scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit)</li>
             scheduleAtFixedRate와 달리, 이전 작업이 완료된 후 다음 작업이 시작된다.
         </ol>
@@ -472,7 +472,7 @@
         <ol>
             <li>생성자는 ThreadPoolExecutor와 유사</li>
             <li>protected &lt;V&gt; RunnableScheduledFuture&lt;V&gt; decorateTask(Runnable runnable, RunnableScheduledFuture&lt;V&gt; task) Since 1.6 + 오버로딩</li>
-            
+
             <li>void setContinueExistingPeriodicTasksAfterShutdownPolicy(boolean value) + getter</li>
             기본값 false. true면 shutdownNow가 호출되거나 이 정책이 false가 될 때까지 주기 작업을 계속 실행한다
             <li>void setExecuteExistingDelayedTasksAfterShutdownPolicy(boolean value) + getter</li>
@@ -485,7 +485,7 @@
         <summary>interface CompletionService&lt;V&gt; Since 1.5</summary>
         <ol>
             <li>생산자가 작업들을 추가하면, 소비자는 그것이 완료된 순서대로 이용할 수 있다.</li>
-            
+
             <li>Future&lt;V&gt; submit(Callable&lt;V&gt; task)</li>
             <li>Future&lt;V&gt; submit(Runnable task, V result)</li>
             <li>Future&lt;V&gt; take()</li>
@@ -1066,12 +1066,12 @@
         <li>long convert(long sourceDuration, TimeUnit sourceUnit)</li>
         <li>long toNanos(long duration) == NANOSECONDS.convert(duration, this)</li>
         + toMicros, toMillis, toSeconds, toMinutes, toHours, toDays</li>
-        
+
         <li>void timeWait(Object obj, long timeout)</li>
         timeout만큼 obj.wait()
         <li>void timedJoin(Thread thread, long timeout)</li>
         timeout만큼 Thread.join()
-        
+
         <li>void sleep(long timeout)</li>
         <li>ChronoUnit toChronoUnit() Since 9</li>
         <li>static TimeUnit of(ChronoUnit chronoUnit) Since 9</li>

@@ -43,7 +43,7 @@ console.log('alert' in window || {});
     console.log(a, b, arr);
     doSomething(a, b, ...arr);
     doSomething(1, 2, 3, 4, 5);
-    
+
     function doSomething(n1, n2, ...rest) { console.log(n1, n2, rest); }
 }
 

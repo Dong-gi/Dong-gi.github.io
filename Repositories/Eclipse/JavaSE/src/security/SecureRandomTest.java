@@ -17,7 +17,7 @@ class SecureRandomTest {
             }
         }
     }
-    
+
     @Test
     void random() throws NoSuchAlgorithmException {
         SecureRandom.getInstanceStrong().longs(10).forEach(System.out::println);

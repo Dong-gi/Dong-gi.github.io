@@ -10,22 +10,22 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 public class MultipleDateEditor extends CustomDateEditor {
 
     private List<CustomDateEditor> editors = new LinkedList<>();
-    
+
     private MultipleDateEditor(DateFormat dateFormat, boolean allowEmpty) {
         super(dateFormat, allowEmpty);
     }
-    
+
     public static MultipleDateEditor of(boolean allowEmpty, String... formats) {
         return of(allowEmpty, -1, formats);
     }
-    
+
     public static MultipleDateEditor of(boolean allowEmpty, int exactDateLength, String... formats) {
         var o = new MultipleDateEditor(null, false);
         for(var format : formats)
             o.editors.add(new CustomDateEditor(new SimpleDateFormat(format), allowEmpty, exactDateLength));
         return o;
     }
-    
+
     @Override
     public void setAsText(String text) throws IllegalArgumentException {
         var iter = editors.iterator();

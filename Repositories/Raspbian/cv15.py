@@ -22,4 +22,4 @@ for contour in contours:
     cv2.imshow('img', img)
     cv2.waitKey(100)
 cv2.waitKey(0)
-    
+

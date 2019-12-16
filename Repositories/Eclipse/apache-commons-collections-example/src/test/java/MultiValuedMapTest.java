@@ -13,7 +13,7 @@ import org.junit.Test;
 
 
 public class MultiValuedMapTest { // 15 고정
-	
+
 	@Test
 	public void containsValueTest() {
 		var map = new ArrayListValuedHashMap<Integer, String>();
@@ -22,7 +22,7 @@ public class MultiValuedMapTest { // 15 고정
 		map.put(2, "banana");
 		assertTrue(map.containsValue("ananas")); // OK
 	}
-	
+
 	@Test
 	public void mapIteratorTest() {
 		var map = new ArrayListValuedHashMap<Integer, Integer>();

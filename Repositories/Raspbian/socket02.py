@@ -11,7 +11,7 @@ resolutions = [\
     ]
 start = time.time()
 count = 0
-    
+
 def send(img):
     if send.count > 5:
         return
@@ -23,11 +23,11 @@ def send(img):
     send.count -= 1
 send.count = 0
 send.name = 0
-    
+
 with picamera.PiCamera() as cam:
     cam.resolution = resolutions[9]
     stream = io.BytesIO()
-    
+
     for _ in cam.capture_continuous(stream, format='jpeg', quality=100, use_video_port=True):
         stream.seek(0)
         threading.Thread(target=send, args=(stream.getvalue(),)).start()

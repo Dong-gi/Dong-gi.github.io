@@ -36,7 +36,7 @@
             함수 정의의 매개변수 위치를 이용해 변수 참조<br>
             예. 문자열을 2번 반복해서 반환하는 함수<br>
             CREATE OR REPLACE FUNCTION test(text) RETURNS text AS $body$ SELECT $1 || $1 $body$ LANGUAGE sql;
-        
+
             <li>배열 요소 참조</li>
             expression[subscript] // subscript는 integer 값을 내는 표현식
             expression[lower_subscript:upper_subscript]
@@ -67,7 +67,7 @@
                     </ul>            
                 </details>
             </li>
-            
+
             <li>
                 <details>
                     <summary>윈도우 함수 호출</summary>
@@ -79,10 +79,10 @@
                             <li>function_name ([expression [, expression ... ]]) [ FILTER ( WHERE filter_clause ) ] OVER ( window_definition )</li>
                             <li>function_name ( * ) [ FILTER ( WHERE filter_clause ) ] OVER window_name</li>
                             <li>function_name ( * ) [ FILTER ( WHERE filter_clause ) ] OVER ( window_definition )</li>
-                        
+
                             <li>window_name은 WINDOW 절로 정의된 윈도우 이름.</li>
                             OVER window_name과 OVER (window_name)은 다르다. 후자의 경우 윈도우 정의를 복사하여 적용하며, frame 절을 포함하는 경우 수행되지 않는다.
-                        
+
                             <li>window_definition</li>
                             [ existing_window_name ]<br>
                             [ PARTITION BY expression [, ...] ]<br>
@@ -91,7 +91,7 @@
                             <br>
                             PARTITION BY 옵션은 행 그룹을 만든다. GROUP BY와 달리 출력-열이나 숫자를 지정할 수 없다.<br>
                             ORDER BY 절도 마찬가지로 출력-열이나 숫자를 지정할 수 없다.
-                        
+
                             <li>frame_clause</li>
                             <ol>
                                 <li>{ RANGE | ROWS } frame_start -- default로 frame_end는 CURRENT ROW</li>
@@ -99,7 +99,7 @@
                             </ol>
                             frame_clause는 윈도우 함수가 전체 파티션이 아닌, 현재까지의 파티션을 대상으로 계산을 수행하게 한다.<br>
                             UNBOUNDED PRECEDING으로 지정된 frame_start는 파티션의 첫 행, UNBOUNDED FOLLOWING으로 지정된 frame_end는 파티션 마지막 행을 의미한다.
-                        
+
                             <li>frame_start, frame_end</li>
                             <ol>
                                 <li>UNBOUNDED PRECEDING</li>
@@ -109,7 +109,7 @@
                                 <li>UNBOUNDED FOLLOWING</li>
                             </ol>
                             value PRECEDING, FOLLOWING은 ROWS 모드에서만 사용 가능하고, 현재 행을 전후로 하여 프레임 크기를 설정한다.
-                        
+
                             <li>frame_exclusion</li>
                             <ol>
                                 <li>EXCLUDE CURRENT ROW</li>
@@ -117,15 +117,15 @@
                                 <li>EXCLUDE TIES</li>
                                 <li>EXCLUDE NO OTHERS</li>
                             </ol>
-                        
+
                             <li>expression은 윈도우 함수 호출을 포함하지 않아야 한다.</li>
                         </ul>
-                    
+
                         <li>내장 윈도우 함수 : <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/9.6/functions-window.html#FUNCTIONS-WINDOW-TABLE">http://postgresql.kr/docs/9.6/functions-window.html#FUNCTIONS-WINDOW-TABLE</a></li>
                     </ul>
                 </details>
             </li>
-            
+
             <li>
                 <details>
                     <summary>Collation Expressions</summary>
@@ -152,7 +152,7 @@
             <li>Scalar Subqueries</li>
             한 행 또는 한 컬럼을 반환하는, 괄호에 감싸인 SELECT 쿼리<br>
             SELECT name, (SELECT max(pop) FROM cities WHERE cities.state = states.name) FROM states;
-            
+
             <li>
                 <details>
                     <summary>배열 생성자</summary>
@@ -196,7 +196,7 @@
             </ul>
         </ol>
     </details>
-            
+
     <details>
         <summary>함수 호출</summary>
         PostgreSQL의 함수의 인자는 이름과 위치 둘 다로 참조할 수 있다.<br>
@@ -206,14 +206,14 @@
         　　　　ELSE LOWER($1 || ' ' || $2)<br>
         　　END;<br>
         $$ LANGUAGE SQL IMMUTABLE STRICT;
-        
+
         <ul>
             <li>Using Positional Notation</li>
             SELECT concat_lower_or_upper('Hello', 'World');
-            
+
             <li>Using Named Notation</li>
             SELECT concat_lower_or_upper(a =&gt; 'Hello', b =&gt; 'World');
-            
+
             <li>Using Mixed Notation</li>
             키워드 인자는 나머지보다 뒤에 위치해야 한다.<br>
             SELECT concat_lower_or_upper('Hello', 'World', uppercase =&gt; true);
@@ -313,13 +313,13 @@
             );
         </ol>
     </details>
-    
+
     <details>
         <summary>System Columns</summary>
         oid : object_id. 테이블을 WITH OIDS로 생성하거나, default with oids이 설정된 경우 생성되는 열. 타입 이름도 oid.<br>
         <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/9.6/ddl-system-columns.html">http://postgresql.kr/docs/9.6/ddl-system-columns.html</a>
     </details>
-    
+
     <details>
         <summary>Modifying Tables</summary>
         <ol>
@@ -358,7 +358,7 @@
             ALTER TABLE products RENAME TO items;
         </ol>
     </details>
-    
+
     <details>
         <summary>Privileges</summary>
         권한 : SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER, CREATE, CONNECT, TEMPORARY, EXECUTE, USAGE &lt;&lt; ALL
@@ -369,7 +369,7 @@
             <li>GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO user;</li>
         </ul>
     </details>
-    
+
     <details>
         <summary>Row Security Policies</summary>
         예. 관리자 그룹에 속한 사용자가, 자신과 관련한 행만 접근<br>
@@ -378,7 +378,7 @@
         CREATE POLICY account_managers ON accounts TO managers USING (manager = current_user);<br>
         <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/ddl-rowsecurity.html">http://postgresql.kr/docs/current/ddl-rowsecurity.html</a>
     </details>
-    
+
     <details>
         <summary>Schemas</summary>
         CREATE SCHEMA myschema; -- Schema의 테이블은 schema.table 또는 database.schema.table로 접근<br>
@@ -436,7 +436,7 @@
             Updating Data<br>
             Deleting Data</li>
         DB - PostgreSQL 시작하기 - SQL 언어 참고
-            
+
         <li>Returning Data From Modified Rows</li>
         INSERT INTO users (firstname, lastname) VALUES ('Joe', 'Cool') RETURNING id;<br>
         UPDATE products SET price = price * 1.10 WHERE price <= 99.99 RETURNING name, price AS new_price;<br>
@@ -506,20 +506,20 @@
             GROUP BY 절에서 행 생성자의 이용은 ROW(a, b)를 통해 할 수 있다
         </details>
     </details>
-    
+
     <details>
         <summary>Select Lists</summary>
         SELECT DISTINCT select_list ... : 각 열집합에 대해 고유한 행들만 선택한다<br>
         SELECT DISTINCT ON (expression [, expression ...]) select_list ... : 모든 행에 대해 expression이 평가된다. 두 행의 모든 평가값이 같은 경우 두 행은 같다고 간주한다.
     </details>
-    
+
     <details>
         <summary>Combining Queries</summary>
         query1 UNION [ALL] query2
         query1 INTERSECT [ALL] query2
         query1 EXCEPT [ALL] query2
     </details>
-    
+
     <details>
         <summary>Sorting Rows</summary>
         <ul>
@@ -528,7 +528,7 @@
             <li>NULLS FIRST, NULLS LAST : null값에 대한 정렬 순서를 의미하며, 기본값은 ASC의 경우 NULLS LAST, DESC의 경우 NULLS FIRST</li>
         </ul>
     </details>
-    
+
     <details>
         <summary>LIMIT and OFFSET</summary>
         <ul>
@@ -537,7 +537,7 @@
             <li>OFFSET : 산출된 순서대로 n개 행을 출력하지 않고 무시</li>
         </ul>
     </details>
-    
+
     <details>
         <summary>VALUES Lists</summary>
         <ul>
@@ -545,11 +545,11 @@
             SELECT * FROM (VALUES (1, 'one'), (2, 'two'), (3, 'three')) AS t (num,letter);
 
             <li>실제 디스크 상에 테이블을 만들지 않으면서 상수 테이블을 만드는 방법.</li>
-            
+
             <li>문법적으로 "SELECT select_list FROM table_expression"과 동일하게 취급된다.</li>
         </ul>
     </details>
-    
+
     <details>
         <summary>WITH Queries</summary>
         <details>
@@ -567,7 +567,7 @@
                         <li>recursive 부분을 계산하고, 작업 테이블 내용을 덮어쓴다. UNION을 위해 (not UNION ALL) 중복된 행(이전 결과와도 비교)들을 제거한다. 남은 행들을 결과에 포함시키고, 임시 중간 테이블로 설정한다.</li>
                         <li>작업 테이블의 내용을 중간 테이블 내용으로 대체한다. 중간 테이블은 비운다.</li>
                 </ol>
-                
+
                 <li>
                     <details>
                         <summary>예. 10~100의 합계.</summary>
@@ -632,13 +632,13 @@
             <li>decimal, numeric</li>
             <ol>
                 <li>p(precision) : 유효숫자 수</li>
-                
+
                 <li>s(scale) : 소수 정밀도</li>
                 예. 3.141592의 precision = 7, scale = 6.<br>
                 정수는 scale = 0인 numeric으로 간주해도 무방
-                
+
                 <li>NUMERIC(precision) : scale = 0</li>
-                
+
                 <li>NUMERIC : 임의 유효숫자, 소수 정밀도의 10진수 모두 저장 가능</li>
                 무한히 큰 수를 지원하진 않는다. 소수점 전 131072 자리, 소수점 후 16383 자리까지 지원.
 
@@ -721,7 +721,7 @@
             </table>
         </ul>
     </details>
-    
+
     <details>
         <summary>boolean, bool</summary>    
         <ol>
@@ -782,7 +782,7 @@
 
                 <li>슬라이스 arr[start : end]</li>
                 슬라이스의 경우 모든 차원이 슬라이스한다고 간주된다. arr[1:2][2]는 arr[1:2][1:2]와 같다.
-                
+
                 <li>배열 차원 반환 array_dims()</li>
 
                 <li>지정된 차원에 대해 배열 크기 반환 array_length()</li>
@@ -823,11 +823,11 @@
         <summary>Composite Types</summary>
         <ol>
             <li>CREATE TYPE complex AS ( r float4, i float4 );</li>
-            
+
             <li>테이블을 만들면 그와 동일한 이름의 타입이 생성된다.</li>
             CREATE TABLE m_item ( item_id int, name text );<br>
             CREATE TABLE t_user_item ( user_id bigint, item m_item, count int );
-            
+
             <li>Literal composite value</li>
             포맷 : '( val1 , val2 , ... )'<br>
             INSERT INTO table_name (complex_column_name) VALUES((1.1,2.2));<br>
@@ -931,7 +931,7 @@
         <summary>Comparison Functions and Operators</summary>
         <ol>
             <li>&lt;, &gt;, &lt;=, &gt;=, =, &lt;&gt; or !=</li>
-            
+
             <li>a [NOT] BETWEEN x AND y</li>
             a [NOT] BETWEEN SYMMETRIC x AND y : x, y 대소관계를 판별하여 적절히 비교한다
 
@@ -1106,7 +1106,7 @@
                 LIKE = ~~, ILIKE = ~~*, NOT LIKE = !~~, NOT ILIKE = !~~*
             </ol>
         </details>
-        
+
         <details>
             <summary>SIMILAR TO 정규표현식</summary>
             <ol>
@@ -1135,7 +1135,7 @@
                 </li>
             </ol>
         </details>
-            
+
         <details>
             <summary>POSIX 정규표현식</summary>
             <details>
@@ -1605,15 +1605,15 @@
         <ol>
             <li>exists</li>
             exists(subquery) : 서브쿼리가 한 행 이상 반환하면 true, 아니면 false
-            
+
             <li>in</li>
             expression in (subquery) : expression 판별값이 subquery 결과 중에 있으면 true, 아니면 false
             <li>not in</li>
-            
+
             <li>any, some</li>
             expression operator any (subquery), expression operator some (subquery)<br>
             subquery는 하나의 컬럼만 반환해야 한다. expression 판별값이 subquery 결과 중에 하나라도 operator를 만족하면 true
-            
+
             <li>all</li>
             expression operator all (subquery)
 

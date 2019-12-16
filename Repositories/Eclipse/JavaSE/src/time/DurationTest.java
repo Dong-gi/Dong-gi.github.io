@@ -21,5 +21,5 @@ class DurationTest {
         System.out.println(Duration.parse("PT1H2M3.004S").withNanos(999_999_999)); // PT1H2M3.999999999S
         System.out.println(Duration.parse("PT1H2M3.004S").withSeconds(33).withNanos(999_999_999)); // PT33.999999999S
     }
-    
+
 }

@@ -12,7 +12,7 @@
             <i:InvokeCommandAction Command="{Binding CloseCommand}" CommandParameter="{x:Reference window}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>

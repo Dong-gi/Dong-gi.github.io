@@ -11,7 +11,7 @@ class Main {
         NUM = 10;
     }
 
-    
+
     private int num2;
     private final int NUM2;
 

@@ -15,7 +15,7 @@ public class TypeTest {
         public Factory(Supplier<T> supplier) {
             this.supplier = supplier;
         }
-        
+
         @SuppressWarnings("unchecked")
         public T newInstance() {
             var result = supplier.get();
@@ -32,11 +32,11 @@ public class TypeTest {
             return type;
         }
     }
-    
+
     @Test
     public void factoryTest() {
         var factory = new Factory<List<Integer>>(() -> Arrays.asList(1));        
-        
+
         List<Integer> list = factory.newInstance();
         assertTrue(list.get(0) == 1);
 

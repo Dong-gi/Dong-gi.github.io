@@ -48,17 +48,17 @@ public class HelloController {
         mv.addObject("message", message + "@" + name);
         return mv;
     }
-    
+
     @RequestMapping("/fail")
     public void failHello() {
         ExceptionUtils.rethrow(new Exception("그냥 던져봤어@" + new Date()));
     }
-    
+
     @RequestMapping("/fail2")
     public void failHello2() {
         ExceptionUtils.rethrow(new NullPointerException("그냥 던져봤어2@" + new Date()));
     }
-    
+
     @ExceptionHandler(NullPointerException.class)
     public ModelAndView nullPointerExceptionHandler(NullPointerException e) {
         var mv = new ModelAndView();
@@ -66,5 +66,5 @@ public class HelloController {
         mv.addObject("message", e.getMessage() + "@HelloContoroller::nullPointerExceptionHandler");
         return mv;
     }
-    
+
 }

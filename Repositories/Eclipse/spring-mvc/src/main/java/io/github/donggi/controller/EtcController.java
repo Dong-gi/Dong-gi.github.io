@@ -36,7 +36,7 @@ public class EtcController {
         mv.addObject("message", String.format("date1 : %s, date2 : %s", format.format(date1), format.format(date2)));
         return mv;
     }
-    
+
     @RequestMapping(value = "/json", method = RequestMethod.GET)
     public String json() {
         return "etc/json";
@@ -47,5 +47,5 @@ public class EtcController {
     public String json(@RequestBody String body) {
         return String.format("{\"status\":200,\"echo\":\"%s\"}", body);
     }
-    
+
 }

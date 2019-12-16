@@ -9,7 +9,7 @@ class B(A):
 class C(B):
     def m(self):
         print('c')
-        
+
 class D(C):
     def m(self):
         super().m()
