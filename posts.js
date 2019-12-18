@@ -8,6 +8,7 @@ const posts = {
         { filename: "posts/book/003.html", category: "Book", title: "생각하는 삶을 위한 철학의 역사" },
         { filename: "posts/book/004.html", category: "Book", title: "쇼펜하우어, 돌이 별이 되는 철학" },
         { filename: "posts/book/005.html", category: "Book", title: "인생의 모든 의미" },
+        { filename: "posts/book/009.html", category: "Book", title: "인지 편향" },
         { filename: "posts/book/006.html", category: "Book", title: "지식의 착각" },
         { filename: "posts/book/007.html", category: "Book", title: "키르케고르 실존 극장" },
         { filename: "posts/book/008.html", category: "Book", title: "Gamification by Design" },
