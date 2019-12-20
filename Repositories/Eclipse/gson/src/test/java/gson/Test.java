@@ -103,7 +103,7 @@ public class Test {
 
     public void parserTest() {
         var json = "{\"id\":628016310,\"name\":\"FBwfi_&ezLbxupF2EZYftTOYGa_/NYan\",\"extended\":true,\"moreData\":{\"arr\":[1,2,3]}}";
-        var obj = JsonParser.parseString(json).getAsJsonObject();        
+        var obj = JsonParser.parseString(json).getAsJsonObject();
         for(var entry : obj.entrySet())
             System.out.printf("entry : %d, name : %s, value : %s\n", entry.hashCode(), entry.getKey(), entry.getValue());
     }

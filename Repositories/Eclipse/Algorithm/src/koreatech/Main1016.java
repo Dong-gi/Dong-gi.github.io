@@ -16,7 +16,7 @@ public class Main1016 {
         sums[0][0] = 1; // 기저 : 0개의 소수로 0을 만드는 경우의 수
 
         for(int prime : primes)
-            for(int n = 10000; n >= prime; --n) 
+            for(int n = 10000; n >= prime; --n)
                 for(int k = 1; k <= 66; ++k)
                     sums[n][k] = (sums[n][k] + sums[n-prime][k-1]) % 123456789;
 

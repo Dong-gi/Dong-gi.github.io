@@ -147,7 +147,7 @@ def even_gen(max):
         num += 2
 
 for n in even_gen(10):
-    print(n, end = ', ') # 2, 4, 6, 8, 10, 
+    print(n, end = ', ') # 2, 4, 6, 8, 10,
 print()
 
 def my_deco(f):

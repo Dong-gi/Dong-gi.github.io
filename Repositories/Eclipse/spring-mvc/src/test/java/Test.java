@@ -39,6 +39,6 @@ public class Test {
         request.setMethod("POST");
         final var fileName = "src/main/webapp/WEB-INF/applicationContext.xml";
         request.addFile(new MockMultipartFile("files", fileName, null, Files.newInputStream(Path.of(fileName))));
-    }    
+    }
 
 }

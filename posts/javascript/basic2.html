@@ -59,11 +59,11 @@
     <summary>웹 워커</summary>
     <ol>
         <li>메인 페이지와 별개의 스코프에서 백그라운드에서 실행되는 작업자</li>
-        let worker = new Worker("filename.js");<br>
-        worker.postMessage("start!"); // 작업 시작. JSON 구조로 직렬화 가능한 값은 모두 전달 가능<br>
-        worker.terminate(); // 즉시 종료<br>
-        worker.onmesage = ...<br>
-        worker.onerror ...
+<pre>let worker = new Worker("filename.js");
+worker.postMessage("start!"); // 작업 시작. JSON 구조로 직렬화 가능한 값은 모두 전달 가능
+worker.terminate(); // 즉시 종료
+worker.onmesage = ...
+worker.onerror ...</pre>
 
         <li>웹 워커 내부에서 전역 객체는 worker 자체</li>
         페이지에서 보낸 메시지를 알기 위해서 onmesage 이벤트 핸들러를 등록한다.<br>
@@ -80,10 +80,10 @@
         <li>프로토콜은 ws(비보안), wss(보안)</li>
         <li>웹 소켓은 동일 소스 정책이 적용되지 않으므로, 연결을 수락할지는 완전히 서버의 권한</li>
         <li>이벤트 종류 : open, message, error, close</li>
-        let socket = new WebSocket("ws://host-address/page_or_function_name");<br>
-        socket.send("Hello World");<br>
-        socket.onmessage = function(event) { event.data ... }<br>
-        socket.close(); // close 이벤트 객체는 wasClean, code, reason 프로퍼티 존재
+<pre>let socket = new WebSocket("ws://host-address/page_or_function_name");
+socket.send("Hello World");
+socket.onmessage = function(event) { event.data ... }
+socket.close(); // close 이벤트 객체는 wasClean, code, reason 프로퍼티 존재</pre>
     </ol>
 </details>
 
@@ -92,10 +92,10 @@
 <details>
     <summary>함수 감속</summary>
     윈도우 resize, scroll 이벤트처럼 연속적으로 발생하지만 연속적으로 처리할 필요가 없는 경우, 타이머를 등록한 뒤 로직이 실행되도록 하고, 로직이 실행되기 전에 재호출되면 기존 타이머를 제거하고 타이머를 재등록하는 기법<br>
-    function throttle(func, context) {<br>
-    　　clearTimeout(func.tId);<br>
-    　　func.tId = setTimeout(() => func.call(context), 100);<br>
-    }
+<pre>function throttle(func, context) {
+    clearTimeout(func.tId);
+    func.tId = setTimeout(() => func.call(context), 100);
+}</pre>
 </details>
 
 <hr>
@@ -118,45 +118,41 @@
         </details>
 
         <li>XMLHttpRequest 예</li>
-        let request = new XMLHttpRequest();<br>
-        // XMLHttpRequest.open(method, url, async, user, password)<br>
-        request.open('GET', './index.html', false);<br>
-        request.send();<br>
-        console.log(request.responseText);
+<pre>let request = new XMLHttpRequest();
+// XMLHttpRequest.open(method, url, async, user, password)
+request.open('GET', './index.html', false);
+request.send();
+console.log(request.responseText);</pre>
 
         <li>FormData를 보낼 수 있다</li>
-        let data = new FormData();<br>
-        data.append("key", "value");<br>
-        <br>
-        let data = new FormData(document.forms[0]);<br>
-        request.send(data);<br>
-        // Blob, BufferSource, FormData, URLSearchParams, ReadableStream, USVString 전송 가능
+<pre>let data = new FormData();
+data.append("key", "value");        
+let data = new FormData(document.forms[0]);
+request.send(data);
+// Blob, BufferSource, FormData, URLSearchParams, ReadableStream, USVString 전송 가능</pre>
 
         <li>jQuery Ajax 구문</li>
-        Ajax 간편 표기 : $.get(), $.post(), $.getJSON(), $.getScript(), $(selector).load()<br>
-        $.ajax({ type: 'get', url: './index.html', success: (data) => console.log(data) });<br>
-        <details>
-            <summary>예시 코드 2</summary>
-            $.ajax({<br>
-            　　type: 'post',<br>
-            　　dataType: 'json',<br>
-            　　url: 'http://donggi.dothome.co.kr/add_comment.php',<br>
-            　　data: { path: path, comment: comment },<br>
-            　　success: (data) => {<br>
-            　　　　if (data === "OK") {<br>
-            　　　　　　showSnackbar("등록 성공", $('body'));<br>
-            　　　　　　$(posts.contents[id]).find('input.form-control').val('');<br>
-            　　　　　　getComment(path);<br>
-            　　　　} else {<br>
-            　　　　　　showSnackbar("60초당 1번씩 등록 가능", $('body'));<br>
-            　　　　}<br>
-            　　},<br>
-            　　error: (request, status, error) => {<br>
-            　　　　showSnackbar("등록 실패.", $('body'));<br>
-            　　}<br>
-            });            
-        </details>
+        Ajax 간편 표기 : $.get(), $.post(), $.getJSON(), $.getScript(), $(selector).load()
+<pre>$.ajax({ type: 'get', url: './index.html', success: (data) => console.log(data) });
 
+$.ajax({
+    type: 'post',
+    dataType: 'json',
+    url: 'http://donggi.dothome.co.kr/add_comment.php',
+    data: { path: path, comment: comment },
+    success: (data) => {
+        if (data === "OK") {
+            showSnackbar("등록 성공", $('body'));
+            $(posts.contents[id]).find('input.form-control').val('');
+            getComment(path);
+        } else {
+            showSnackbar("60초당 1번씩 등록 가능", $('body'));
+        }
+    },
+    error: (request, status, error) => {
+        showSnackbar("등록 실패.", $('body'));
+    }
+});</pre>        
         <li>jQuery Ajax 옵션</li>
         async, complete(xhr, status), data, error(xhr, status, error), jsonp, jsonpCallback, success(data, status, xhr), timeout, type, url
 
@@ -199,9 +195,9 @@
 
 <details>
     <summary>브라우저 콘솔에서 jQuery 추가</summary>
-    let script = document.createElement('script');<br>
-    script.src = "https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js";<br>
-    document.getElementsByTagName('head')[0].appendChild(script);
+<pre>let script = document.createElement('script');
+script.src = "https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js";
+document.getElementsByTagName('head')[0].appendChild(script);</pre>
 </details>
 
 <hr>

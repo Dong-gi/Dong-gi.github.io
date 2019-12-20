@@ -1,4 +1,15 @@
 
+# Assume that input was "May 5 1992"
+day (d) = 5        # It is the 5th day
+month (m) = 3      # (*** Count starts at March i.e March = 1, April = 2, ... January = 11, February = 12)
+century (c) = 19   # the first two characters of the century
+year (y) = 92      # Year is 1992 (*** if month is January or february decrease one year)
+# Formula and calculation
+day of the week (w) = (d + floor(2.6m - 0.2) - 2c + y + floor(y/4) + floor(c/4)) modulo 7
+after calculation we get, (w) = 2
+Count for the day of the week starts at Sunday, i.e Sunday = 0, Monday = 1, Tuesday = 2, ... Saturday = 6
+
+
 <th>datetime - Basic date and time types</th>
             1. 시간 연산이 가능.
             <br>* datetime.MINYEAR : 1, datetime.MAXYEAR : 9999

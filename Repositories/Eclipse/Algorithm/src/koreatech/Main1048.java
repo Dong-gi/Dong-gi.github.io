@@ -11,7 +11,7 @@ public class Main1048 {
         AP(int idx, float nextNumOfServe) {
             this.idx = idx;
             this.numOfServe = nextNumOfServe;
-        }        
+        }
     }
 
     public static void main(String[] args) {

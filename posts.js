@@ -19,17 +19,17 @@ const posts = {
         { filename: "posts/career/at_home_at_20190724.html", category: "Career", title: "JavaScript - https://www.steamgifts.com/ 스크립트" },
         { filename: "posts/career/at_sesisoft_at_20190715.html", category: "Career", title: "JavaScript - IGA Works 푸시 등록 절차 개선" },
 
-        { filename: "posts/c/csharp_basic.html", category: "Programming/C#.NET", title: "C# 시작하기" },
         { filename: "posts/c/csharp_library.html", category: "Programming/C#.NET", title: "C# 라이브러리" },
+        { filename: "posts/c/csharp_basic.html", category: "Programming/C#.NET", title: "C# 시작하기" },
         { filename: "posts/c/wpf_basic.html", category: "Programming/C#.NET", title: "WPF 시작하기" },
 
         { filename: "posts/db/concept.html", category: "Programming/DB", title: "기본 개념" },
         { filename: "posts/db/mysql.html", category: "Programming/DB", title: "MySQL" },
+        { filename: "posts/db/psql_to_sqlite.html", category: "Programming/DB", title: "PostgreSQL → SQLite3 마이그레이션" },
         { filename: "posts/db/psql_admin.html", category: "Programming/DB", title: "PostgreSQL 서버 관리" },
         { filename: "posts/db/psql_programming.html", category: "Programming/DB", title: "PostgreSQL 서버 프로그래밍" },
-        { filename: "posts/db/psql_sql.html", category: "Programming/DB", title: "PostgreSQL SQL 언어" },
         { filename: "posts/db/psql_tutorial.html", category: "Programming/DB", title: "PostgreSQL 시작하기" },
-        { filename: "posts/db/psql_to_sqlite.html", category: "Programming/DB", title: "PostgreSQL → SQLite3 마이그레이션" },
+        { filename: "posts/db/psql_sql.html", category: "Programming/DB", title: "PostgreSQL SQL 언어" },
 
         { filename: "posts/front/css.html", category: "Programming/Front", title: "CSS" },
         { filename: "posts/front/html.html", category: "Programming/Front", title: "HTML" },
@@ -92,13 +92,13 @@ const posts = {
 
         { filename: "posts/python/basic.html", category: "Programming/Python", title: "Python 3.8 시작하기" },
         { filename: "posts/python/data_model.html", category: "Programming/Python", title: "Python 3.8 데이터 모델" },
-        { filename: "posts/python/built_in_function.html", category: "Programming/Python", title: "Built-in Functions 3.8" },
-        { filename: "posts/python/built_in_constant.html", category: "Programming/Python", title: "Built-in Constants 3.8" },
-        { filename: "posts/python/built_in_type.html", category: "Programming/Python", title: "Built-in Types 3.8" },
-        { filename: "posts/python/1904252133.html", category: "Programming/Python", title: "Built-in Exceptions" },//, top: true
-        { filename: "posts/python/1904252134.html", category: "Programming/Python", title: "Text Processing Services" },//, top: true
-        { filename: "posts/python/1904252135.html", category: "Programming/Python", title: "Binary Data Services" },//, top: true
-        { filename: "posts/python/1904252136.html", category: "Programming/Python", title: "Data Types" },//, top: true
+        { filename: "posts/python/built_in_function.html", category: "Programming/Python", title: "Python Built-in Functions 3.8" },
+        { filename: "posts/python/built_in_constant.html", category: "Programming/Python", title: "Python Built-in Constants 3.8" },
+        { filename: "posts/python/built_in_type.html", category: "Programming/Python", title: "Python Built-in Types 3.8" },
+        { filename: "posts/python/1904252133.html", category: "Programming/Python", title: "Python Built-in Exceptions" },//, top: true
+        { filename: "posts/python/1904252134.html", category: "Programming/Python", title: "Python Text Processing Services" },//, top: true
+        { filename: "posts/python/1904252135.html", category: "Programming/Python", title: "Python Binary Data Services" },//, top: true
+        { filename: "posts/python/1904252136.html", category: "Programming/Python", title: "Python Data Types" },//, top: true
 
         { filename: "posts/tip/aws.html", category: "Tip", title: "AWS" },
         { filename: "posts/tip/centos.html", category: "Tip", title: "CentOS" },

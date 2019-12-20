@@ -1,6 +1,6 @@
 /**
  * {@link lombok.Log} 예제
- * 
+ *
  * <p>
  * 클래스에 붙이면, 지원하는 로거 클래스의 static final 객체를 자동 생성. 이름은 "log"<br>
  * <br>

@@ -6,7 +6,7 @@ import lombok.ToString;
 
 /**
  * {@link lombok.Builder} 예제
- * 
+ *
  * <p>
  * </p>
  */

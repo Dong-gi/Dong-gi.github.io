@@ -21,7 +21,7 @@ public class FileService {
         var browser = request.getHeader("User-Agent");
         if (browser.contains("MSIE") || browser.contains("Trident") || browser.contains("Chrome"))
             return URLEncoder.encode(fileName, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
-        else 
+        else
             return new String(fileName.getBytes(), "ISO-8859-1");
     }
 

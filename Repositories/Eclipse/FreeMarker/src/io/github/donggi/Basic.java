@@ -100,7 +100,7 @@ public class Basic {	// 15 라인 고정
 	}
 	@org.junit.jupiter.api.Test
 	public void example_t_012() throws Exception {
-		config.addAutoImport("footer", "t_012_footer.ftl"); 
+		config.addAutoImport("footer", "t_012_footer.ftl");
 		config.setLazyAutoImports(true);
 		var path = "t_012_main.ftl";
 		process(path, new HashMap<String, Object>() {{

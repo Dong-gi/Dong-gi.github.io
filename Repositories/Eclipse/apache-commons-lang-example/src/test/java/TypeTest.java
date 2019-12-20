@@ -35,7 +35,7 @@ public class TypeTest {
 
     @Test
     public void factoryTest() {
-        var factory = new Factory<List<Integer>>(() -> Arrays.asList(1));        
+        var factory = new Factory<List<Integer>>(() -> Arrays.asList(1));
 
         List<Integer> list = factory.newInstance();
         assertTrue(list.get(0) == 1);

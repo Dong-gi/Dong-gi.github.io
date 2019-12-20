@@ -21,7 +21,7 @@ public class Main1058 {
             cases[0][0] = 1; // 기저 : 0개의 동전으로 0을 만드는 경우의 수
 
             for(int coin : coins)
-                for(int n = cost; n >= coin; --n) 
+                for(int n = cost; n >= coin; --n)
                     for(int i = 1; i < cases[0].length; ++i)
                         for(int j = 1; ; ++j)
                             try {

@@ -88,6 +88,26 @@
             <li>capitalize(), title(), upper(), lower(), swapcase(), ...</li>
         </ol>
     </details>
+    <details>
+        <summary>Formatted string literal(aka. f-string) Since 3.6</summary>
+        <ul>
+            <li>f_string ::= ( <i>literal_char</i> | "{{" | "}}" | <i>replacement_field</i> )*</li>
+            {{, }}는 각각 {, }를 표시하기 위한 리터럴
+            <li>replacement_field ::= "{" <i>f_expression</i> [! <i>conversion</i>] [: <i>format_spec</i>] }</li>
+            <li>f_expression : 값을 산출하는 표현식</li>
+            <li>conversion ::= "s" | "r" | "a"</li>
+            각각 해당하는 함수를 호출한다 : !s → str(), !r → repr(), !a → ascii()
+            <li>f_expression이 산출한 값이 conversion을 거쳐 __format__(format_spec)으로 포매팅된다</li>
+            <li>format_spec ::= [[<i>fill</i>]<i>align</i>][<i>sign</i>][#][0][<i>width</i>][<i>grouping_option</i>][.<i>precision</i>][<i>type</i>]</li>
+            <li>fill ::= 임의_문자</li>
+            <li>align ::= "&lt;" | "&gt;" | "=" | "^"</li>
+            <li>sign ::= "+" | "-" | " "</li>
+            <li>width ::= digit+</li>
+            <li>grouping_option ::= "_" | ","</li>
+            <li>precision ::= digit+</li>
+            <li>type ::= "b" | "c" | "d" | "e" | "E" | "f" | "F" | "g" | "G" | "n" | "o" | "s" | "x" | "X" | "%"</li>
+        </ul>
+    </details>
     <ul>
         <li>list : 가변 시퀀스
             <button class="btn-code" path="Repositories/Python/Basic/type_example.py" displayRange="[56,57]" lan="python">생성 : [], list()</button>

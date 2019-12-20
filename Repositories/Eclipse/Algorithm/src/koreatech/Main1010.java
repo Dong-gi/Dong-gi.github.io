@@ -15,7 +15,7 @@ public class Main1010 {
             throw new Exception("original size = " + size0 + ", pow size = " + size);
         }
 
-        Integer[] primes = {2, 3, 5, 7}; 
+        Integer[] primes = {2, 3, 5, 7};
         primes = getAnswer(primes, size/10);
         for(Integer prime : primes) {
             System.out.println(prime);

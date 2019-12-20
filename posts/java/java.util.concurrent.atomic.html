@@ -64,7 +64,7 @@
             <li>final void set(Object... args)</li>
             변수가 non-volatile, non-final인 것처럼 쓴다(= plain write). 메서드 시그니처는 (CT1 ct1, ..., CTn ctn, T newValue)void.
             <li>final Object getVolatile(Object... args)</li>
-            변수가 volatile인 것처럼 읽는다. 
+            변수가 volatile인 것처럼 읽는다.
             <li>final void setVolatile(Object... args)</li>
             변수가 volatile인 것처럼 쓴다. 메서드 시그니처는 (CT1 ct1, ..., CTn ctn, T newValue)void.
             <li>final Object getOpaque(Object... args) + setOpaque</li>
@@ -149,7 +149,7 @@
         <li>final void set(int newValue) : VarHandle#setVolatile</li>
         <li>final void lazySet(int newValue) Since 1.6 : VarHandle#setRelease</li>
         <li>final int getAndSet(int newValue) : VarHandle#getAndSet</li>
-        <li>final boolean weakCompareAndSetPlain(int expectedValue) Since 9 : VarHandle#weakCompareAndSetPlain</li>        
+        <li>final boolean weakCompareAndSetPlain(int expectedValue) Since 9 : VarHandle#weakCompareAndSetPlain</li>
         <li>VarHandle#getAndAdd</li>
         final int getAndIncrement() + getAndDecrement, getAndAdd, incrementAndGet, decrementAndGet, addAndGet
         <li>VarHandle#compareAndSet</li>
@@ -178,7 +178,7 @@
         <li>지정된 volatile int 필드를 atomic 연산으로 갱신.</li>
         해당 필드를 단일 업데이터로만 접근한다면, compareAndSet 메서드들이 원자적으로 작동됨이 보장된다
         <li>지원하는 메서드는 AtomicInteger와 유사하다.</li>
-        <li>static &lt;U&gt; AtomicIntegerFieldUpdater&lt;U&gt; newUpdater(Class&lt;U&gt; tclass, String fieldName)</li>        
+        <li>static &lt;U&gt; AtomicIntegerFieldUpdater&lt;U&gt; newUpdater(Class&lt;U&gt; tclass, String fieldName)</li>
     </ol>
 </details>
 

@@ -53,7 +53,7 @@ public class MapUtilsTest {
 		 */
 		MapUtils.debugPrint(System.out, "MItem", items);
 		/**
-		 * MItem = 
+		 * MItem =
 		 * {
 		 *     1 = MapUtilsTest.MItem(itemId=1, itemName=item1) MapUtilsTest$MItem
 		 *     2 = MapUtilsTest.MItem(itemId=2, itemName=item2) MapUtilsTest$MItem

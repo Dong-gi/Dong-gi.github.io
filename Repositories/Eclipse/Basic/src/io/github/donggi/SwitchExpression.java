@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class SwitchExpression {
 
     private static enum Day {
-        MONDAY, FRIDAY, SUNDAY, TUESDAY, THURSDAY, SATURDAY, WEDNESDAY,       
+        MONDAY, FRIDAY, SUNDAY, TUESDAY, THURSDAY, SATURDAY, WEDNESDAY,
     }
 
     public static void main(String[] args) {
