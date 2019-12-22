@@ -8,7 +8,7 @@ class LowerMetaclass(type):
                 lowercase_attr[name] = val
         print('meta new'.ljust(15), lowercase_attr)
         return super(LowerMetaclass, cls).__new__(cls, clsname, bases, lowercase_attr)
-        
+
     def __init__(cls, name, bases, dct):
         print('meta init'.ljust(15), dct)
         super().__init__(name, bases, dct)

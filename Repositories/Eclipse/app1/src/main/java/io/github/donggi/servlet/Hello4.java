@@ -15,9 +15,9 @@ import org.apache.commons.dbcp2.BasicDataSourceFactory;
 
 @WebServlet("/hello4")
 public class Hello4 extends HttpServlet {
-    
-    private static DataSource testDataSource; 
-    
+
+    private static DataSource testDataSource;
+
     static {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -26,12 +26,12 @@ public class Hello4 extends HttpServlet {
                 setProperty("url", "jdbc:mysql://127.0.0.1:3306/test?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true");
                 setProperty("username","root");
                 setProperty("password","root");
-            }});        
+            }});
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=utf-8");
@@ -46,4 +46,4 @@ public class Hello4 extends HttpServlet {
             e.printStackTrace(resp.getWriter());
         }
     }
-} 
+}

@@ -56,7 +56,7 @@ public class Basic {	// 15 라인 고정
 			put("sequence", new Object[] {1, 3.14, "world"});
 		}});
 	}
-	
+
 	public void example_t_006() throws Exception {
 		var path = "t_006_syntax.ftl";
 		process(path, new HashMap<String, Object>() {{
@@ -100,7 +100,7 @@ public class Basic {	// 15 라인 고정
 	}
 	@org.junit.jupiter.api.Test
 	public void example_t_012() throws Exception {
-		config.addAutoImport("footer", "t_012_footer.ftl"); 
+		config.addAutoImport("footer", "t_012_footer.ftl");
 		config.setLazyAutoImports(true);
 		var path = "t_012_main.ftl";
 		process(path, new HashMap<String, Object>() {{
@@ -108,7 +108,7 @@ public class Basic {	// 15 라인 고정
 		}});
 	}
 	// 끝. 그만 추가.
-	
+
 	public static Configuration config;
 	public static File templateRootFile;
 

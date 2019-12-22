@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 
 @WebServlet("/hello6")
 public class Hello6 extends HttpServlet {
-    
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=utf-8");
@@ -33,4 +33,4 @@ public class Hello6 extends HttpServlet {
             e.printStackTrace(resp.getWriter());
         }
     }
-} 
+}

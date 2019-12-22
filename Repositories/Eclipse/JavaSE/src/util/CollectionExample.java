@@ -14,7 +14,7 @@ public class CollectionExample {
 	void retainAllTest() {
 		var list3 = make(3);
 		var list5 = make(5);
-		
+
 		assertTrue(list5.size() == 5);			// OK
 		assertTrue(list5.containsAll(list3));	// OK
 		assertTrue(list5.retainAll(list3));		// OK

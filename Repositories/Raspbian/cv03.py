@@ -26,6 +26,6 @@ while video.isOpened():
     ret, frame = video.read()
     cv2.imshow('frame', frame)
     time.sleep(1/15)
-    
+
 video.release()
 cv2.destroyAllWindows()

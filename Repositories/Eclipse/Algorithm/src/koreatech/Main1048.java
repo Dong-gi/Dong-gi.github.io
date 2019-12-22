@@ -11,9 +11,9 @@ public class Main1048 {
         AP(int idx, float nextNumOfServe) {
             this.idx = idx;
             this.numOfServe = nextNumOfServe;
-        }        
+        }
     }
-    
+
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         int testCase = in.nextInt();
@@ -32,7 +32,7 @@ public class Main1048 {
 
             int[] numOfAPinDorms = new int[numOfDorms];
             PriorityQueue<AP> aps = new PriorityQueue<>((ap1, ap2) -> Float.compare(ap2.numOfServe, ap1.numOfServe));
-            
+
             // 일단 하나씩 분배
             Arrays.fill(numOfAPinDorms, 1);
             for(int i = 0; i < numOfDorms; ++i)

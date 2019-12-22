@@ -46,13 +46,13 @@
         <br>
         Sequence literal :
                 foo
-            , 
+            ,
                         bar
-            , 
+            ,
                         123.45
-            , 
+            ,
                         t_006_syntax.ftl, 2
-            
+
         <br>
         <br>
         Range literal :

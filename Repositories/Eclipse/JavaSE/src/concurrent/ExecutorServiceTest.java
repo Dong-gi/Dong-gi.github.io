@@ -16,7 +16,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 class SimpleTask implements Callable<Integer> {
     final int seconds;
-    
+
     @Override
     public Integer call() {
         try {
@@ -48,7 +48,7 @@ isDone : true, result : , isCancelled : true
 isDone : true, result : , isCancelled : true
  */
     }
-    
+
     @Test()
     void invokeAnyTest() throws InterruptedException, ExecutionException, TimeoutException {
         var es = Executors.newSingleThreadExecutor();

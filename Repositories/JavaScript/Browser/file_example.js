@@ -22,7 +22,7 @@ files.addEventListener('change', () => {
                 let img = document.createElement('img');
                 img.src = result;
                 files.after(img);
-                
+
                 img = document.createElement('img');
                 img.src = url;
                 files.after(img);

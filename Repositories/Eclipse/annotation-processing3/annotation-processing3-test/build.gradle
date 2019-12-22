@@ -4,7 +4,7 @@ apply plugin:'application'
 
 mainClassName = 'io.github.donggi.annotation.test.User'
 version = '1.0'
- 
+
 jar {
     manifest {
         attributes  'Title': 'Test', 'Version': version, 'Main-Class': mainClassName

@@ -14,7 +14,7 @@ import freemarker.template.*;
 @SuppressWarnings({"unused", "serial"})
 public class ProgrammerGuilde {	// 15 라인 고정
 	// 예제 영역
-	
+
 	public void example_t_013() throws Exception {
 		var path = "t_013_method.ftl";
 		process(path, new HashMap<String, Object>() {{
@@ -24,7 +24,7 @@ public class ProgrammerGuilde {	// 15 라인 고정
 			});
 		}});
 	}
-	
+
 	public void example_t_014() throws Exception {
 		config.setWhitespaceStripping(true);
 		var path = "t_014.ftl";
@@ -75,7 +75,7 @@ public class ProgrammerGuilde {	// 15 라인 고정
 			put("title", path);
 		}});
 	}
-	
+
 	public static Configuration config;
 	public static File templateRootFile;
 

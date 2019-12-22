@@ -18,18 +18,18 @@ class PathTest {
         var basePath = Path.of("hello");
         System.out.println(basePath.resolve(Path.of("../world"))); // hello\..\world
     }
-    
+
     void relativizeTest() {
         var basePath = Path.of("hello");
         System.out.println(basePath.relativize(Path.of("world")));          // ..\world
         System.out.println(basePath.relativize(Path.of("hello/../world"))); // ..\world
     }
-    
+
     void toUriTest() {
         System.out.println(Path.of("hello").toUri());
         // file:///C:/tomcat/webapps/github/Repositories/Eclipse/JavaSE/hello
     }
-    
+
     @Test
     void toAbsolutePathTest() {
         System.out.println(Path.of("hello").toAbsolutePath());

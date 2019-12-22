@@ -10,7 +10,7 @@ import javax.servlet.annotation.WebListener;
 public class ContextListener implements ServletContextListener {
 
     private static final Logger logger = Logger.getLogger(ContextListener.class.getCanonicalName());
-            
+
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         logger.info("웹 앱 시작! loadOnStartup 서블릿 초기화보다 당연히 먼저 실행");
@@ -21,7 +21,7 @@ INFO: 서버 엔진을 시작합니다: [Apache Tomcat/9.0.17]
 9월 13, 2019 10:04:39 오후 listener.ContextListener contextInitialized
 INFO: 웹 앱 시작! loadOnStartup 서블릿 초기화보다 당연히 먼저 실행
  */
-    
+
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         logger.info("웹 앱 종료!");

@@ -20,7 +20,7 @@ public class Hello1 extends HttpServlet {
         w.println("<body>");
         w.println("    <p>안녕하세요!</p>");
         w.println("</body>");
-        w.println("</html>"); 
+        w.println("</html>");
     }
-    
+
 }

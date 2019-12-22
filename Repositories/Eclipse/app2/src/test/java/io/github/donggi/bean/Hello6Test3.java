@@ -16,8 +16,8 @@ public class Hello6Test3 {
 No qualifying bean of type 'java.lang.String' available: expected at least 1 bean which qualifies as autowire candidate.
 Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
  */
-    
-    @Test    
+
+    @Test
     public void test2() {
         ApplicationContext context = new FileSystemXmlApplicationContext("src/main/resource/Beans16.xml");
         ((AbstractApplicationContext) context).registerShutdownHook();

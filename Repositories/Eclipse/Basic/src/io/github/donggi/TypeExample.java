@@ -23,7 +23,7 @@ public class TypeExample {
         System.out.print("참말입니다. ");
         return true;
     }
-    
+
     public static void stringExample() {
         String s = "Hello World";
 
@@ -34,14 +34,14 @@ public class TypeExample {
 
         System.out.println(s);
     }
-    
+
     public static void charExample() {
         char c; // 2bytes 유니코드.
         c = '\u0000'; // == Character.MIN_CODE_POINT
         System.out.println("char은 내부적으로 정수로 다뤄진다. " + ('d' - 'a'));
         c = '\uFFFF'; // != Character.MAX_CODE_POINT
     }
-    
+
     public static void numberExample() {
         short s; // 2bytes, -2^15 ~ 2^15-1
         s = 012;
@@ -84,7 +84,7 @@ public class TypeExample {
             e.printStackTrace();
         }
     }
-    
+
     public static void arrayExample() {
         int[] arr1;
         int arr2[];

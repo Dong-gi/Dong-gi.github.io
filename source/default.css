@@ -141,6 +141,10 @@ th.sorting-table-head-white:after {
     }
 }
 
+pre {
+    margin : 0.5rem 0;
+}
+
 hr {
     margin: 0;
     border-top: 3px solid rgba(0, 0, 0, .1);

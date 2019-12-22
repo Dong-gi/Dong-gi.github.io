@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootApplication
 public class LogbackGradleApplication {
     private static final Logger ERROR_LOG = LoggerFactory.getLogger("ERROR_LOG");
-    
+
 	public static void main(String[] args) {
 		SpringApplication.run(LogbackGradleApplication.class, args);
 		log.debug("Application really well started");

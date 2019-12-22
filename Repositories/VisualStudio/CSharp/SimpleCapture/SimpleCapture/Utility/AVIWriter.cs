@@ -31,7 +31,7 @@ namespace SimpleCapture.Utility
             var encoder = new MotionJpegVideoEncoderWpf(width, height, 70);
             var stream = writer.AddEncodingVideoStream(encoder, width: width, height: height);
             videoStreamList.Add(stream);
-            
+
             return writerList.Count - 1;
         }
 

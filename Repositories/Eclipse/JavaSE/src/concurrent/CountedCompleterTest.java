@@ -71,7 +71,7 @@ class CountedCompleterTest {
         new Task(null, 0, arr.length).invoke();
         System.out.println(">> Complted");
     }
-    
+
     @Test
     void forEachTest() {
         forEach1((i) -> System.out.printf("%d ", i), 1, 10, 2, 9, 3, 8, 4, 7, 5, 6);
@@ -83,7 +83,7 @@ class CountedCompleterTest {
 1 7 5 4 8 2 6 10 3 9 >> Complted
 1 10 2 9 3 5 7 8 4 6 >> Complted
  */
-    
+
     static <T> boolean contains(final T item, T... arr) {
         final AtomicReference<T> ref = new AtomicReference<T>();
         class Searcher extends CountedCompleter<Boolean> {
@@ -112,13 +112,13 @@ class CountedCompleterTest {
                 }
                 tryComplete();
             }
-            
+
         }
         var result = new Searcher(null, 0, arr.length).invoke();
         System.out.printf("%s in %s : %s\n", item, Arrays.deepToString(arr), result);
         return result;
     }
-    
+
     @Test
     void containsTest() {
         contains(7, new Integer[] {1, 10, 2, 9, 3, 8, 4, 7, 5, 6});
@@ -128,7 +128,7 @@ class CountedCompleterTest {
 7 in [1, 10, 2, 9, 3, 8, 4, 7, 5, 6] : true
 0 in [1, 10, 2, 9, 3, 8, 4, 7, 5, 6] : false
  */
-    
+
     static void runAfter(final ForkJoinTask<?>[] tasks, ForkJoinTask<?> allAfter) {
         class RunAfter extends CountedCompleter<Void> {
             RunAfter() {
@@ -152,7 +152,7 @@ class CountedCompleterTest {
             }.fork();
         after.join();
     }
-    
+
     @Test
     void runAfterTest() {
         var tasks = new ForkJoinTask<?>[77];

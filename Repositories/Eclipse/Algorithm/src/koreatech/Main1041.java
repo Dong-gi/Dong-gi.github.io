@@ -87,5 +87,5 @@ public class Main1041 {
         }
         System.out.println(distance);
     }
-    
+
 }

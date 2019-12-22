@@ -5,9 +5,9 @@ import java.util.Arrays;
 public class SwitchExpression {
 
     private static enum Day {
-        MONDAY, FRIDAY, SUNDAY, TUESDAY, THURSDAY, SATURDAY, WEDNESDAY,       
+        MONDAY, FRIDAY, SUNDAY, TUESDAY, THURSDAY, SATURDAY, WEDNESDAY,
     }
-    
+
     public static void main(String[] args) {
         Arrays.stream(Day.values()).forEach(SwitchExpression::printDay);
         int n = nthDayFromSunday(Day.MONDAY);
@@ -20,7 +20,7 @@ public class SwitchExpression {
         default -> System.out.println(day.name() + " : Weekdays");
         }
     }
-    
+
     public static int nthDayFromSunday(Day day) {
         return switch(day) {
         case SUNDAY: break 0;
@@ -32,7 +32,7 @@ public class SwitchExpression {
         case SATURDAY: break 6;
         };
     }
-    
+
     public static int nthDayFromMonday(Day day) {
         return switch(day) {
         case SUNDAY -> 6;

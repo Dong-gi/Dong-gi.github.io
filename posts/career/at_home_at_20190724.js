@@ -31,7 +31,7 @@ async function procesGiveawayItems() {
     for (let giveawayItem of $('div.giveaway__summary')) {
         if($(giveawayItem).parent().hasClass('is-faded'))
             continue;
-            
+
         let context = new GiveawayContext(giveawayItem);
         if (!filterFunc(context) || context.point > ownPoint)
             continue;

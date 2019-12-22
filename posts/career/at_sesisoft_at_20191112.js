@@ -2,14 +2,14 @@ function generateId() {
     var targetSheetName = '대상';
     var currentSheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     var currentSheetName = currentSheet.getName();
-    
+
     if(currentSheetName === targetSheetName) {
       var codes = {};
       var allRange = currentSheet.getRange(1, 1, currentSheet.getMaxRows(), 13);
       var targetRange = currentSheet.getRange(1, 11, currentSheet.getMaxRows(), 3);
       var allValues = allRange.getValues();
       var targetValues = targetRange.getValues();
-      
+
       for(var row = 0; row < currentSheet.getMaxRows(); ++row) {
         // 작업 코드가 이미 존재하는 경우, 중복 체크
         if(new String(allValues[row][10]).length > 0 && new String(allValues[row][1]).length > 0) {
@@ -29,11 +29,11 @@ function generateId() {
           codes[code] = true;
         }
       }
-      
+
       targetRange.setValues(targetValues);
     }
   }
-  
+
   function getWorkStatus(code) {
     switch(parseInt(code)) {
       case 1: return '추출 완료';

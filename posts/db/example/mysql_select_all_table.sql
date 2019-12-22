@@ -13,7 +13,7 @@ BEGIN
 
     SET @_db_suffix = 1;
     SET @_query = '';
-    
+
     WHILE @_db_suffix <= 4 DO
         SET @_num = 0;
         WHILE @_num < 8 DO
@@ -26,7 +26,7 @@ BEGIN
 
     SET @_query = CONCAT('select * from (', SUBSTRING(@_query, 7), ') ', ' AS result ', _all_after);
     /*select @_query; 출력한다*/
-    
+
     PREPARE stmt1 FROM @_query;
     EXECUTE stmt1;
     DEALLOCATE PREPARE stmt1;

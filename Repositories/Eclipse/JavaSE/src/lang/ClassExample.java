@@ -50,13 +50,13 @@ public class ClassExample<T extends Object, V> implements Serializable {
         Class<?> c = new ArrayList<String>().getClass();
         System.out.println(c.getSuperclass());          // class java.util.AbstractList
         System.out.println(c.getGenericSuperclass());   // java.util.AbstractList<E>
-        
+
         c = Test.class;
         System.out.println(c.getSuperclass());          // class lang.ClassExample
         System.out.println(c.getGenericSuperclass());   // lang.ClassExample<java.lang.Integer, java.lang.Integer>
         System.out.println(c.getDeclaringClass());      // class lang.ClassExample
         System.out.println(c.getEnclosingClass());      // class lang.ClassExample
-        
+
         c = InterruptedException.class;
         System.out.println(c.getSuperclass());          // class java.lang.Exception
         System.out.println(c.getGenericSuperclass());   // class java.lang.Exception

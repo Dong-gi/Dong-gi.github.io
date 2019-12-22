@@ -20,7 +20,7 @@ public class TrieTest { // 10 고정
 		trie.put("i", 11);
 		trie.put("in", 5);
 		trie.put("inn", 9);
-		
+
 		var subMap = trie.prefixMap("t");
 		subMap.forEach((key, value) -> System.out.printf("key : %s, value : %d\n", key, value));
 		/**

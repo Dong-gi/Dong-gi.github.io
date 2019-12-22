@@ -1,0 +1,328 @@
+<hr>
+
+<details>
+    <summary>진리값 판별</summary>
+    <ul>
+        <li>모든 객체는 if 조건, while 조건, Boolean 연산에 이용하기 위한 진리값 판별이 가능하다.</li>
+        기본적으로 __bool__() 메서드가 false를 반환하거나 __len__() 메서드가 0을 반환하지 않는 객체는 참이다.
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>논리 연산</summary>
+    and(short-circuit), or(short-circuit), not
+</details>
+
+<hr>
+
+<details>
+    <summary>비교 연산</summary>
+    <ol>
+        <li>&lt;, &lt;=, &gt;, &gt;=, ==, !=, is(object identity), is not</li>
+        <li>연속적인 비교가 가능하다.</li>
+        x &lt; y &lt;= z는 y가 한번만 계산된다는 것만 빼곤 x &lt; y and y &lt;= z와 동일하다.
+        <li>__eq__() 메서드를 정의하지 않는 이상 인스턴스들은 보통 같지 않다고 판별된다</li>
+        <li>__lt__(), __le__(), __gt__(), __ge__() 등을 충분히 정의하지 않으면 정렬이 불가능하다. 보통 __lt__()와 __eq__()로 충분하다.</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>숫자 타입</summary>
+    <ul>
+        <li>int, float, complex</li>
+        <ul>
+            <li>int 정밀도는 제한이 없다.</li>
+            <li>정밀도 등 float에 관한 정보는 sys.float_info를 통해 확인할 수 있다.</li>
+            <li>complex의 실수부(z.real) 허수부(z.imag)는 각각 float이다.</li>
+        </ul>
+
+        <li>fractions.Fraction : 유리수, decimal.Decimal : 사용자 정의 정밀도 부동소수</li>
+
+        <li>산술 연산</li>
+        x + y, x - y, x * y, x / y, x // y, x % y, -x, +x, abs(x), int(x), float(x), complex(re, im), c.conjugate() 켤레복소수, divmod(x, y), pow(x, y), x ** y
+
+        <li>비트 연산</li>
+        x | y, x ^ y, x &amp; y, x &lt;&lt; n, x &gt;&gt; n, ~x
+
+        <li>int(numbers.Integral 구현체) 확장 연산</li>
+        <ul>
+            <li>Since 3.1 int.bit_length() : 비트 길이</li>
+            <li>Since 3.2 int.to_bytes(length, byteorder, *, signed=False)</li>
+            byteorder : "big" | "little" | sys.byteorder
+            <li>Since 3.2 classmethod int.from_bytes(bytes, byteorder, *, signed=False)</li>
+            bytes는 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.python.org/3/glossary.html#term-bytes-like-object">bytes-like object</a>거나 byte iterable이어야 한다
+            <li>Since 3.8 int.as_integer_ratio() : float과의 호환성을 위해 추가되었다. 분모는 1로 고정</li>
+        </ul>
+
+        <li>float(numbers.Real 구현체) 확장 연산</li>
+        <ul>
+            <li>float.as_integer_ratio() : (분자, 분모) 튜플을 반환한다. 분모는 양수.</li>
+            <li>float.is_integer()</li>
+            <li>float.hex() : 0x로 시작하고 p로 끝난뒤 지수가 붙는다. 지수의 base는 2</li>
+            <li>classmethod float.fromhex(s) : C의 %a 포맷과 Java의 Double.toHexString()의 결과를 받아들일 수 있다.</li>
+        </ul>
+
+        <li>Hashing : 해시값은 modulo P 안에서 선택된다. P는 고정된 소수로, sys.hash_info에서 확인 가능</li>
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>Iterator Types</summary>
+    <ol>
+        <li>container.__iter__()</li>
+        container가 iteration을 지원하려면 정의해야 한다. 반환하는 객체는 iterator protocol(아래의 2개 특별 메서드)을 지원해야 된다.
+        <li>iterator.__iter__()</li>
+        iterator 자기 자신을 반환하면 된다
+        <li>iterator.__next__()</li>
+        다음 요소 반환. 없으면 StopIteration 발생.
+        <li>Generator Types</li>
+        generator는 iterator protocol을 쉽게 제공한다. container의 __iter__()가 generator로 정의된 경우, 자동으로 __iter__()와 __next__()를 지원하는 iterator 객체를 반환한다.
+        <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[143,150]" lan="python">예시 1 »</button>
+        <button class="btn-code" path="Repositories/Python/Basic/syntax.py" displayRange="[70,76]" lan="python">예시 2»</button>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Sequence Types</summary>
+    <ul>
+        <li>list, tuple, range</li>
+        3가지 기본 시퀀스 타입
+
+        <li>Common Sequence Operations</li>
+        <ul>
+            <li>collections.abc.Sequence는 사용자 정의 sequence 타입의 연산 정의를 도와준다.</li>
+            <li>x in s, x not in s, s + t 접합, s * n or n * s 셀프 접합, s[i], s[i:j], s[i:j:k], len(s), min(s), max(s), s.count(x)<br>
+                s.index(x[, i[, j]]) : s[i:j]중 처음 등장하는 x의 위치</li>
+            <li>str, bytes, bytearray도 subsequence 검사에 in을 이용할 수 있다.</li>
+            <li>s * n은 s를 n번 복제하는 것이 아니라 s를 n번 접근하는 것이다.</li>
+            복제하려면 list comprehension을 이용.
+            <li>index가 음수일 경우 len(s) + i가 대신 쓰인다. 단, -0 == 0</li>
+            <li>불변 sequence들의 접합은 항상 새로운 객체를 생성하며, 시간 비용은 n^2</li>
+            <ul>
+                보다 빠른 접합
+                <li>str : str.join() 이용, io.StringIO 객체에 쓰기</li>
+                <li>bytes : bytes.join() 이용, io.BytesIO 객체에 쓰기, bytearray 이용</li>
+                <li>tuple : list를 대신 이용</li>
+            </ul>
+        </ul>
+
+        <li>Immutable Sequence Types : hash()를 지원할 수 있다</li>
+
+        <li>Mutable Sequence Types</li>
+        <ul>
+            <li>collections.abc.MutableSequence는 사용자 정의 sequence 타입의 연산 정의를 도와준다.</li>
+            <li>s[i] = x, x[i:j] = t, del s[i:j], del s[i:j:k], s.append(x), s.clear(), s.copy(), s.extend(t) or s += t, s *= n, s.insert(i, x), s.pop([i]), s.remove(x), s.reverse()<br>
+                s[i:j:k] = t # 길이가 일치해야 한다</li>
+        </ul>
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>Text Sequence Type</summary>
+    <ul>
+        <li>str 객체 또는 유니코드 시퀀스 strings로 표현하며, 모두 내용은 변경 불가능하다.</li>
+        <li>str.capitalize(), str.casefold() # lower()보다 강한 변환, str.upper(), str.lower(), str.swapcase() # 두 번 적용한 것이 원본과 항상 같지는 않다, str.title()</li>
+        <li>str.center(width[, fillchar]), str.ljust(width[, fillchar]), str.rjust(width[, fillchar])</li>
+        <li>str.count(sub[, start[, end]]), str.find(sub[, start[, end]]), str.rfind(sub[, start[, end]]), str.index(sub[, start[, end]]), str.rindex(sub[, start[, end]])</li>
+        find : 처음 등장하는 위치를 반환한다. 없으면 -1. 단순 포함 여부 확인은 in 연산자를 이용하면 된다<br>
+        index : find와 같으나 없으면 ValueError 발생.
+        <li>str.endswith(suffix[, start[, end]]), str.startswith(prefix[, start[, end]]) # suffix, prefix에 튜플도 가능</li>
+        <li>str.encode(encoding="utf-8", errors="strict")</li>
+        <li>str.expandtabs(tabsize=8)</li>
+        오피스 문서와 같은 탭 작업. 문자열 끝에 탭이 존재하면 결과적으로 반환된 문자열은 tabsize의 배수 길이가 된다.
+        <li>str.format(*args, **kwargs), str.format_map(mapping) # str.format(**mapping)과 유사
+            <button class="btn-code" path="Repositories/Python/Basic/format_map_example.py" lan="python">예시 »</button></li>
+        <li>str.isalnum(), str.isalpha(), str.isdecimal() # [0-9]만, str.isdigit(), str.isidentifier(),
+            str.islower(), str.isnumeric() # digit보다 광범위, str.isprintable(), str.isspace(), str.istitle(), str.isupper()</li>
+        <li>str.join(iterable) # iterable 문자열들을 str로 접합</li>
+        <li>str.strip([chars]), str.lstrip([chars]), str.rstrip([chars])</li>
+        연속한 chars에 속하는 문자들을 제거한다. 인자가 없는 경우 연속적인 공백을 제거한다.
+        <li>static str.maketrans(x[, y[, z]])</li>
+        str.translate()에 쓰일 번역 테이블을 생성한다. 인자가 하나 주어진 경우 아래 서술한 table이어야 하고, 2개 주어진 경우 같은 길이의 문자열이어야 한다. 3개 주어진 경우 마지막 문자열의 각 문자들은 None에 매핑된다.
+        <li>str.translate(table)</li>
+        table의 key는 유니코드 정수여야 하고, 대응하는 value는 유니코드 정수값이나 문자열이 가능하다.
+        <button class="btn-code" path="Repositories/Python/Basic/translate_example.py" lan="python">예시 »</button>
+        <li>str.partition(sep), str.rpartition(sep)</li>
+        처음 만나는 sep을 기준으로 분리하여, (앞부분, sep, 뒷부분)을 반환. sep이 없을 경우 (sep, '', '')반환.
+        <li>str.split(sep=None, maxsplit=-1), str.rsplit(sep=None, maxsplit=-1)</li>
+        sep으로 분리한 부분 문자열 리스트 반환. sep이 주어지지 않은 경우 공백문자로 분리하며, 연속적인 공백문자도 하나의 공백으로 처리하고 결과에 빈 문자열은 포함하지 않는다.
+        <li>str.splitlines([keepends]) # keepends=True면 줄바꿈 문자를 결과에 포함한다.</li>
+        <li>str.replace(old, new[, count])</li>
+        <li>str.zfill(width) # '0'을 문자열 앞에 붙인다. 처음 등장하는 '+', '-'는 위치 유지.</li>
+    </ul>
+</details>
+
+
+
+            <th>Binary Sequence Types</th>
+            1. bytes, bytearray, memoryview : 핵심 자료형은 bytes, bytearray며, memoryview는 다른 이진 객체를 복사하지 않고 buffer protocol을 통해 접근한다.
+
+            2. Bytes Objects : 변경불가.
+            &raquo; class bytes([source[, encoding[, errors]]])
+            * b'hello'처럼 b로 시작하는 문자열 리터럴은 bytes 리터럴이다. 단, ASCII 문자만 가능하다.
+            * 0으로 초기화된 특정 길이 bytes : bytes(size)
+            * 정수 iterable로부터 생성 : bytes(iterable)
+            * 기존 이진 객체(buffer protocol)로부터 생성 : bytes(obj)
+            &raquo;&raquo; classmethod fromhex(string) : 16진수 표기 문자열로부터 생성. string은 반드시 1바이트당 2개 16진수를 포함해야하고,
+            ' '는 무시된다.
+            &raquo;&raquo; Since 3.5 hex() : 16진수 표기 문자열 반환.
+            &raquo; 문자열과 달리 bytes 객체 b의 b[0]는 정수, b[0:1]는 길이 1의 bytes 객체다.
+            &raquo; bytes 객체는 보통 바이너리 문자열로 표현되며, 각 바이트 숫자를 확인하는 데는 list(b)가 유용하다.
+
+            3. Bytearray Objects
+            &raquo; class bytearray([source[, encoding[, errors]]])
+            * 빈 bytearray 객체 : bytearray()
+            * 0으로 초기화된 특정 길이 bytearray 객체 : bytearray(size)
+            * 정수 iterable로부터 생성 : bytearray(iterable)
+            * 기존 이진 객체(buffer protocol)로부터 생성 : bytearray(buf)
+            &raquo;&raquo; classmethod fromhex(string) : bytes와 비슷한 동작을 한다.
+            &raquo;&raquo; Since 3.5 hex() : bytes와 비슷한 동작을 한다.
+
+            4. Bytes and Bytearray Operations
+            &raquo; bytes.count(sub[, start[, end]]), bytearray.count(sub[, start[, end]])
+            * sub는 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.python.org/3/glossary.html#term-bytes-like-object">bytes-like object</a> 거나 (Since 3.3) [0, 255] 사이의 정수여야 한다.
+            &raquo; bytes.decode(encoding="utf-8", errors="strict"), bytearray.decode(encoding="utf-8", errors="strict")
+            &raquo; bytes.endswith(suffix[, start[, end]]), bytearray.endswith(suffix[, start[, end]]), bytes.startswith(prefix[,
+            start[, end]]), bytearray.startswith(prefix[, start[, end]])
+            * suffix, prefix는 찾고자 하는 것들의 튜플일 수 있다.
+            &raquo; bytes.find(sub[, start[, end]]), bytearray.find(sub[, start[, end]]), bytes.rfind(sub[,
+            start[, end]]), bytearray.rfind(sub[, start[, end]])
+            * 처음 등장하는 위치를 반환한다. 없으면 -1. 단순히 포함 여부는 in 연산자를 사용한다.
+            * Since 3.3 sub로 [0, 255] 사이의 정수도 가능
+            &raquo; bytes.index(sub[, start[, end]]), bytearray.index(sub[, start[, end]]), bytes.rindex(sub[,
+            start[, end]]), bytearray.rindex(sub[, start[, end]])
+            * find와 같지만 포함하지 않으면 ValueError를 발생한다.
+            * Since 3.3 sub로 [0, 255] 사이의 정수도 가능
+            &raquo; bytes.join(iterable), bytearray.join(iterable)
+            &raquo; Since 3.1 static bytes.maketrans(from, to), Since 3.1 static bytearray.maketrans(from,
+            to)
+            * from, to는 같은 길이의 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.python.org/3/glossary.html#term-bytes-like-object">bytes-like object</a>여야 한다. translate()에 이용할 테이블을 생성한다.
+            &raquo; bytes.translate(table, delete=b''), bytearray.translate(table, delete=b'')
+            * 포함하는 delete 안의 바이트들을 모두 제거한 뒤 table에 따라 변환한다. table은 길이 256의 bytes 객체여야 한다.
+            &raquo; bytes.partition(sep), bytearray.partition(sep), bytes.rpartition(sep), bytearray.rpartition(sep)
+            * sep으로 구분하여 (before, sep, after)를 반환한다. 없으면 (sep, b'' | bytearray(b''), b'' | bytearray(b''))
+            반환
+            * Since 3.6 delete가 키워드 인자로 변경.
+            &raquo; bytes.center(width[, fillbyte]), bytearray.center(width[, fillbyte]), bytes.ljust(width[,
+            fillbyte]), bytearray.ljust(width[, fillbyte]), bytes.rjust(width[, fillbyte]), bytearray.rjust(width[,
+            fillbyte])
+            &raquo; bytes.strip([chars]), bytearray.strip([chars]), bytes.lstrip([chars]), bytearray.lstrip([chars]),
+            bytes.rstrip([chars]), bytearray.rstrip([chars])
+            * 연속한 chars에 속하는 문자들을 제거한다. 인자가 없는 경우 연속적인 공백을 제거한다.
+            &raquo; bytes.split(sep=None, maxsplit=-1), bytearray.split(sep=None, maxsplit=-1), bytes.rsplit(sep=None,
+            maxsplit=-1), bytearray.rsplit(sep=None, maxsplit=-1)
+            * sep으로 분리한 부분 이진 문자열 리스트 반환. sep이 주어지지 않은 경우 공백문자로 분리하며, 연속적인 공백문자도 하나의 공백으로 처리하고 결과에 빈 이진 문자열은
+            포함하지 않는다.
+            &raquo; bytes.expandtabs(tabsize=8), bytearray.expandtabs(tabsize=8)
+            * 오피스 문서와 같은 탭 작업. 문자열 끝에 탭이 존재하면 결과적으로 반환된 문자열은 tabsize의 배수 길이가 된다.
+            &raquo; bytes.splitlines(keepends=False), bytearray.splitlines(keepends=False)
+            * 줄 바꿈 문자를 기준으로 나누며, 결과에 줄 바꿈 문자를 포함할지는 keepends로 결정한다.
+            &raquo; bytes.capitalize(), bytearray.capitalize(), bytes.lower(), bytearray.lower(), bytes.swapcase(),
+            bytearray.swapcase(), bytes.title(), bytearray.title(), bytes.upper(), bytearray.upper()
+            &raquo; bytes.isalnum(), bytearray.isalnum(), bytes.imalpha(), bytearray.isalpha(), bytes.isdigit(),
+            bytearray.isdigit(), bytes.islower(), bytearray.islower(), bytes.isspace(), bytearray.isspace(),
+            bytes.istitle(), bytearray.istitle(), bytes.isupper(), bytearray.isupper()
+            &raquo; bytes.zfill(width), bytearray.zfill(width)
+            * width가 될 때까지 b'0'을 앞에 채운다. 맨 처음 등장하는 b'+', b'-'는 위치를 유지한다.
+
+            5. printf-style Bytes Formatting Since 3.5
+            &raquo; % 연산자 : (format 문자열) % 인자
+            &raquo; '%' + opt. (key) + opt. flags + opt. min field width + opt. precision + type
+            &raquo; 인자가 dictionary 또는 다른 mapping 타입인 경우, format 문자열은 반드시 key를 포함해야 한다.
+            &raquo; flag : '0'(zero pad), '-'(왼쪽정렬), ' '(양수 앞에 공백 추가), '+'(양수 앞에 부호 표기)
+            &raquo; type : 'd'|'i'|'u'(10진 정수), 'o'(8진수), 'x'|'X'(16진수), 'e'|'E'(지수 표기), 'f'|'F'(10진 부동소수),
+            'g'|'G', 'c'(single byte), 'b'(bytes), 's', 'a'|'r'(bytes: repr(obj).encode('ascii', 'backslashreplace')),
+            '%'(변환 없이 '%' 삽입)
+
+            6. Memory Views
+            &raquo; class memoryview(obj)
+            * obj가 수정 가능할 경우, 1차원 slice 할당이 가능하다. 단, 크기 변경은 불가능하다.
+            * Since 3.3 1차원 memoryview는 slicing 가능
+            * Since 3.4 memoryview는 자동으로 collections.abc.Sequence
+            * Since 3.5 정수 tuple로 indexing 가능
+            &raquo; __eq__(exporter) : struct 모듈이 지원하지 않는 객체의 비교는 False
+            &raquo; tobytes() : bytes 생성자 호출과 같은 결과
+            &raquo; hex() Since 3.5 : 16진수 문자열(not binary) 반환
+            &raquo; tolist() : 버퍼 데이터를 리스트로 반환
+            &raquo; release() Since 3.2 : memoryview가 더 이상 buffer를 사용하지 않는다. view로 인해 생긴 buffer의 제한이 사라진다.
+            &raquo; cast(format[, shape]) Since 3.3 : shape 기본값은 [byte_length//new_itemsize], 같은 buffer를
+            참조하는 새 memoryview 객체를 반환한다.
+            &raquo; obj Since 3.3 : view 객체의 buffer
+            &raquo; nbytes Since 3.3 : 바이트 크기
+            &raquo; readonly
+            &raquo; format : struct 모듈 스타일의 format string
+            &raquo; itemsize : 요소 하나의 바이트 크기
+            &raquo; ndim, shape, strides : 각 차원 원소의 바이트 크기들
+
+            <th>Set Types</th>
+            1. set, frozenset : 해쉬 가능한 순서 없는 collection. frozenset은 불변이며, 다른 set의 원소가 될 수 있다.
+
+            2. class set([iterable])
+            class frozenset([iterable])
+            * 연산자 버전이 있는 메서드들은 인자로 iterable도 받을 수 있다.
+            * set과 frozenset 두 가지에 대한 연산 결과는 첫번째 피연산자의 타입이다.
+            &raquo; len(s), x in s, x not in s, for x in set
+            &raquo; isdisjoint(other) : 교집합이 공집합인지 여부
+            &raquo; issubset(other) : 연산자 &lt;=, &lt;로도 가능
+            &raquo; issuperset(other) : 연산자 &gt;=, &gt;로도 가능
+            &raquo; union(*others) : 연산자 |로도 가능
+            &raquo; intersection(*others) : 연산자 &amp;로도 가능
+            &raquo; difference(*others) : 연산자 -로도 가능
+            &raquo; symmetric_difference(other) : 연산자 ^로도 가능
+            &raquo; update(*others) : others의 모든 원소 추가. set |= other | ...
+            &raquo; intersection_update(*others) : 호출자를 포함한 모든 집합에 속하는 공통 원소들만. set &amp;= other &amp; ...
+            &raquo; difference_update(*others) : 호출자에 속하는 원소들만. set -= other | ...
+            &raquo; symmetric_difference_update(other) : set ^= other
+            &raquo; copy(), add(elem), remove(elem) : 없으면 KeyError, discard(elem) : 포함하면 삭제, pop() : 임의 원소
+            빼기, clear()
+            * elem은 set일 수 있다.
+
+            <th>Mapping Types</th>
+            1. dict : mapping 객체는 해쉬가능한 값을 임의의 객체로 매핑한다.
+
+            2. class dict(**kwarg)
+            class dict(mapping, **kwarg)
+            class dict(iterable, **kwarg)
+            &nbsp;&nbsp;&nbsp;&nbsp;a = dict(one=1, two=2, three=3)
+            &nbsp;&nbsp;&nbsp;&nbsp;b = {'one': 1, 'two': 2, 'three': 3}
+            &nbsp;&nbsp;&nbsp;&nbsp;c = dict(zip(['one', 'two', 'three'], [1, 2, 3]))
+            &nbsp;&nbsp;&nbsp;&nbsp;d = dict([('two', 2), ('one', 1), ('three', 3)])
+            &nbsp;&nbsp;&nbsp;&nbsp;e = dict({'three': 3, 'one': 1, 'two': 2})
+            &nbsp;&nbsp;&nbsp;&nbsp;a == b == c == d == e
+
+            3. Dictionary Operations
+            &raquo; len(d), d[key], d[key] = value, del d[key], key in d, key not in d, iter(d)
+            &raquo; copy(), clear()
+            &raquo; classmethod fromkeys(seq[, value]) : seq를 키로 하는 딕셔너리 반환. value의 기본값은 None
+            &raquo; get(key[, default]) : key가 없으면 default 반환
+            &raquo; items() : (key, value)쌍에 대한 view 반환, keys() : key에 대한 view 반환, values() : value에 대한 view
+            반환
+            &raquo; pop(key[, default]), popitem() : 임의의 (key, value) 빼기
+            &raquo; setdefault(key[, default]) : key가 있으면 value 반환, 없으면 default로 추가하고 defualt 반환. 둘 다 없으면
+            KeyError
+            &raquo; update([other]) : other에는 dict 생성 인자들 모두 허용된다.
+
+            4. Dictionary view objects
+            * dict의 변화는 view에도 반영된다.
+            &raquo; len(dictview), iter(dictview) : dict 수정 중엔 RuntimeError 가능성, x in dictview
+
+            <th>Context Manager Types</th>
+            1. with statement : context manager가 정의한 runtime context를 지원
+            &raquo; contextmanager.__enter__() : 반환된 객체는 with문의 as 절의 식별자에 bound된다.
+            &raquo; contextmanager.__exit__(exc_type, exc_val, exc_tb) : 억제된 예외가 있는지 여부 반환. True면 인자에 예외
+            타입, 값, traceback 정보가 넘어간다.
+
+            <th>Special Attributes</th>
+            &raquo; object.__dict__, instance.__class__, class.__bases__, definition.__name__, class.subclasses__()
+            &raquo; class.__mro__ : method를 찾는 순서, class.mro() : 재정의 가능. __mro__ 반환.
+            &raquo; Since 3.3 definition.__qualname__ : qualified name(모듈의 글로벌 스코프부터 호출자까지 '.'으로 구분)

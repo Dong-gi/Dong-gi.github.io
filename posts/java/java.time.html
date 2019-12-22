@@ -5,7 +5,7 @@
     <ol>
         <li>시간대(time-zone)을 이용한 현재의 date와 time 제공. 지정하지 않는 이상, 시계 내부의 시각은 계속 변한다.
             <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/time/ClockTest.java" lan="java">예시 코드 »</button></li>
-        
+
         <li>static Clock system(ZoneId zone) : 특정 시간대의 시계 반환</li>
         + systemUTC() == system(ZoneOffset.UTC), systemDefaultZone() == system(ZoneId.systemDefault())
         <li>static Clock tick(Clock baseClock, Duration tickDuration)</li>

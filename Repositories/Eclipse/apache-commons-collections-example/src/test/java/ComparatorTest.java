@@ -20,5 +20,5 @@ public class ComparatorTest {
 		comparator.add('c'); // Cannot modify a FixedOrderComparator after a comparison
 		assertTrue(comparator.compare('h', 'c') < 0);
 	}
-	
+
 }

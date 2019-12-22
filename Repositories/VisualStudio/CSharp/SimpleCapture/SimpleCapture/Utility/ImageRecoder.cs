@@ -19,7 +19,7 @@ namespace SimpleCapture.Utility
         private delegate void ScreenCaptured(BitmapSource source);
         private static event ScreenCaptured FrameCreated = delegate { };
         private static Dictionary<int, ImageRecoder> workers = new Dictionary<int, ImageRecoder>();
-        
+
         private static readonly object LOCK = new object();
         private static bool isWorking = false;
         #endregion
@@ -46,7 +46,7 @@ namespace SimpleCapture.Utility
                     State = States.RECODING
                 };
                 FrameCreated += workers[index].ScreenCaptureHandler;
-                
+
                 if (!isWorking)
                 {
                     isWorking = true;

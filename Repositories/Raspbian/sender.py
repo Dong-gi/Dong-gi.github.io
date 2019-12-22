@@ -45,7 +45,7 @@ class Sender:
             print 'Could not open socket'
             sys.exit(1)
         self.sock.settimeout(3)
-        
+
         if img is not None:
             self.sendImg(img, name)
 
@@ -53,21 +53,21 @@ class Sender:
         zero_pad_size = (16 - len(img) % 16) % 16
         img += bytearray(zero_pad_size)
         img = cipher.encrypt(buffer(img))
-    
+
         hash = SHA256.new()
         hash.update(img)
         str = ''
         for b in hash.digest():
             str += '{} '.format(ord(b))
         hash = str
-    
+
         l = len(img)
         msg = '{"act":"start","name":"' + name\
               + '","size":' + '{}'.format(math.ceil(l/64000.)) + '}'
         self.sendMsg(msg, 0.05)
         while self.expect('OK')[0] == False:
             self.sendMsg(msg, 0.05)
-        
+
         num = 0
         segments = []
         while l > 64000:
@@ -78,7 +78,7 @@ class Sender:
             img = img[64000:]
         segments.append(to_bytes(num, 4, 'big') + img)
         self.sendMsg(segments[num])
-    
+
         msg = '{"act":"end","name":"' + name + '","hash":"' + hash + '"}'
         self.sendMsg(msg, 0.05)
         result, received = self.expect('OK')

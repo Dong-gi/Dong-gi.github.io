@@ -13,7 +13,7 @@ public class Main1011 {
             for(int i = 0; i < length; ++i) {
                 price[i] = scanner.nextInt();
             }
-            
+
             int[] mins = new int[length];
             for(int i = 0; i < length; ++i) {
                 int[] beforeMins = new int[3];
@@ -23,7 +23,7 @@ public class Main1011 {
                 Arrays.sort(beforeMins);
                 mins[i] = beforeMins[0] + price[i];
             }
-            
+
             int[] result = new int[3];
             result[0] = (length-3 >= 0)? mins[length-3] : 0;
             result[1] = (length-2 >= 0)? mins[length-2] : 0;

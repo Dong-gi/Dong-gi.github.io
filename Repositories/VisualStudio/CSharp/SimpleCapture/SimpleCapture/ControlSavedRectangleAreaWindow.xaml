@@ -12,7 +12,7 @@
             <i:InvokeCommandAction Command="{Binding CloseCommand}" CommandParameter="{x:Reference window}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -26,12 +26,12 @@
                 <ColumnDefinition Width="105" />
                 <ColumnDefinition Width="105" />
             </Grid.ColumnDefinitions>
-            
+
             <Label Content="Index" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             <Label Content="(Left, Top)" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Label Content="(Width x Height)" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
-        
+
         <ListView x:Name="List_Rects" ItemsSource="{Binding Items}" Grid.Row="1">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -56,7 +56,7 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            
+
             <Button Content="Add" Background="Transparent" VerticalAlignment="Center" Margin="12,5">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">

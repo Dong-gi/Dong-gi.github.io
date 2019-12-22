@@ -1,109 +1,113 @@
 <hr>
 
 <details>
-    <summary>서버 설정 및 운용</summary>
-    <details>
-        <summary>데이터베이스 클러스터 생성</summary>
-        <ul>
-            <li>파일 시스템 관점에서 데이터베이스 클러스터는 모든 데이터가 저장되는 단일 디렉터리다.</li>
-            <li>일반적인 위치 : /usr/local/pgsql/data, /var/lib/pgsql/data</li>
-            <li>위치 지정</li>
-            <ol>
-                <li>initdb 명령에 -D 옵션을 사용한다</li>
-                $ initdb -D /tmp/pgsql/data
-                <li>PGDATA 환경 변수를 설정한다</li>
-                <li>$ pg_ctl -D /tmp/pgsql/data initdb</li>
-            </ol>
-            <li>인코딩 지정</li>
-            $ initdb -D /usr/local/pgsql/data -E utf8 --no-locale
-        </ul>
-    </details>
-    
-    <details>
-        <summary>서버 시작</summary>
-        <ul>
-            <li>포그라운드에서 실행</li>
-            $ postgres -D /usr/local/pgsql/data<br>
-            -D 옵션이 없으면 PGDATA 환경 변수를 이용한다. 이도 없으면 구동 실패
-            <li>백그라운드에서 실행</li>
-            $ postgres -D /usr/local/pgsql/data &gt;logfile 2&gt;&amp;1 &amp;<br>
-            $ pg_ctl start -l logfile
-            <li>서버 자동 시작 스크립트가 contrib/start-scripts에 제공된다</li>
-            <li>포트 지정</li>
-            $ postgres -p 56789
-        </ul>
-    </details>
-
-    <details>
-        <summary>서버 종료</summary>
-        <ul>
-            $ pg_ctl [-w] [-D datadir] [-m [s[mart]|f[ast]|i[mmediate]]] stop
-            <li>SIGTERM : smart</li>
-            기존 세션의 정상적인 종료를 허용하지만, 새로운 연결은 허용하지 않는다.
-            <li>SIGINT : fast(default)</li>
-            새로운 연결을 허용하지 않고, 모든 서버 프로세스에 SIGTERM을 전송한다. 이로써 트랜잭션이 중단되고 즉시 종료된다.
-            <li>SIGQUIT : immediate</li>
-            모든 자식 프로세스에 SIGQUIT을 전달하고 대기한다. 5초 이내에 종료되지 않으면 SIGKILL로 즉시 종료하고, 자신도 정상적인 중지 절차없이 중지한다. 다음 서버 시작 시 복구 작업이 진행된다.
-        </ul>
-    </details>
-
-    <details>
-        <summary>데이터베이스 클러스터 업데이트</summary>
-        PostgreSQL의 버전은 major.minor로 구성된다. 10부터는 major 버전이 단일 숫자지만, 그 외는 9.5, 9.6과 같이 두 영역이 major 버전이다. minor 버전 차이는 클러스터 구조에 영향을 미치지 않기 때문에 실행 파일만 바꾸면 업그레이드가 완료된다
-        <ul>
-            <li>pg_dumpall을 통한 업그레이드</li>
-            <ol>
-                <li>덤프</li>
-                $ pg_dumpall &gt; outputfile
-                <li>서버 종료</li>
-                pg_ctl stop
-                <li>업그레이드를 위해 기존 클러스터 디렉터리 이동</li>
-                mv /usr/local/pgsql /usr/local/pgsql.old
-                <li>새 버전 설치</li>
-                <li>이전 pg_hba.conf, postgresql.conf 수정 내용 복원</li>
-                <li>서버 시작</li>
-                $ /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data
-                <li>복원</li>
-                $ /usr/local/pgsql/bin/psql -d postgres -f outputfile
-            </ol>
-            새 서버를 다른 디렉터리에 설치하고, 이전 서버와 다른 포트에서 병렬 실행하는 경우<br>
-            $ pg_dumpall -p 5432 | psql -d postgres -p 5433
-
-            <li>pg_upgrade를 통한 업그레이드</li>
-            다른 메이저 버전으로 현재 위치에 마이그레이션할 수 있다.
-        </ul>
-    </details>
-
-    <details>
-        <summary>암호화 옵션</summary>
+    <summary>데이터베이스 클러스터 생성</summary>
+    <ul>
+        <li>파일 시스템 관점에서 데이터베이스 클러스터는 모든 데이터가 저장되는 단일 디렉터리다.</li>
+        <li>일반적인 위치 : /usr/local/pgsql/data, /var/lib/pgsql/data</li>
+        <li>위치 지정</li>
         <ol>
-            <li>패스워드 암호화</li>
-            데이터베이스 유저 암호는 해시값만 저장되며, SCRAM, MD5 방식 로그인의 경우 서버에 전송되기 전에 클라이언트에서 해싱을 수행하므로 평문을 알아내기는 어렵다. SCRAM이 MD5보다 안전하다고 한다
-            <li>특정 컬럼 암호화</li>
-            pgcrypto 모듈은 특정 필드의 암호화를 허용한다. 클라이언트가 키를 제공하고, 서버에서 복호화되어 클라이언트로 전송된다
-            <li>데이터 파티션 암호화</li>
-            스토리지 암호화는 파일 시스템 레벨 또는 블록 레벨에서 수행된다. 드라이브가 도난 당한 경우 데이터가 탈취되지 않도록 해준다
-            <li>네트워크 암호화</li>
-            SSL 연결을 이용한다. 추가로 중간자 공격을 방지하기 위해 SSL 호스트 인증을 사용할 수 있다. 이 경우 서버, 클라이언트 양쪽에 추가적인 설정이 필요하다
-            <li>클라이언트 측 암호화</li>
-            서버를 신뢰할 수 없는 경우 클라이언트가 데이터를 암호화한다
+            <li>initdb 명령에 -D 옵션을 사용한다</li>
+            <pre>$ initdb -D /tmp/pgsql/data</pre>
+            <li>PGDATA 환경 변수를 설정한다</li>
+            <li>$ pg_ctl -D /tmp/pgsql/data initdb</li>
         </ol>
-    </details>
+        <li>인코딩 지정</li>
+        <pre>$ initdb -D /usr/local/pgsql/data -E utf8 --no-locale</pre>
+    </ul>
+</details>
 
-    <details>
-        <summary>SSL을 사용한 TCP/IP 연결 보호</summary>
+<hr>
+
+<details>
+    <summary>서버 시작</summary>
+    <ul>
+        <li>포그라운드에서 실행 : -D 옵션이 없으면 PGDATA 환경 변수를 이용한다. 이도 없으면 구동 실패</li>
+        <pre>$ postgres -D /usr/local/pgsql/data</pre>
+        <li>백그라운드에서 실행</li>
+<pre>$ postgres -D /usr/local/pgsql/data &gt;logfile 2&gt;&amp;1 &amp;
+$ pg_ctl start -l logfile</pre>
+        <li>서버 자동 시작 스크립트가 contrib/start-scripts에 제공된다</li>
+        <li>포트 지정</li>
+        <pre>$ postgres -p 56789</pre>
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>서버 종료</summary>
+    <pre>$ pg_ctl [-w] [-D datadir] [-m [s[mart]|f[ast]|i[mmediate]]] stop</pre>
+    <ul>
+        <li>SIGTERM : smart</li>
+        기존 세션의 정상적인 종료를 허용하지만, 새로운 연결은 허용하지 않는다.
+        <li>SIGINT : fast(default)</li>
+        새로운 연결을 허용하지 않고, 모든 서버 프로세스에 SIGTERM을 전송한다. 이로써 트랜잭션이 중단되고 즉시 종료된다.
+        <li>SIGQUIT : immediate</li>
+        모든 자식 프로세스에 SIGQUIT을 전달하고 대기한다. 5초 이내에 종료되지 않으면 SIGKILL로 즉시 종료하고, 자신도 정상적인 중지 절차없이 중지한다. 다음 서버 시작 시 복구 작업이 진행된다.
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>데이터베이스 클러스터 업데이트</summary>
+    PostgreSQL의 버전은 major.minor로 구성된다. 10부터는 major 버전이 단일 숫자지만, 그 외는 9.5, 9.6과 같이 두 영역이 major 버전이다. minor 버전 차이는 클러스터 구조에 영향을 미치지 않기 때문에 실행 파일만 바꾸면 업그레이드가 완료된다
+    <ul>
+        <li>pg_dumpall을 통한 업그레이드</li>
         <ol>
-            <li>기본 설정</li>
-            postgresql.confg에서 ssl을 on으로 설정한다.<br>
-            SSL 모드에서 시작하려면 서버 인증서가 포함된 파일과 개인 키가 있어야 한다. 이 파일들은 각각 서버 데이터 디렉터리에서 server.crt, server.key일 것으로 예상되지만, ssl_cert_file, ssl_key_file 환경 변수로 위치와 이름을 지정할 수 있다
-            <li>OpenSSL 설정</li>
-            PostgreSQL은 openssl version-d로 출력되는 디렉터리에서 openssl.cnf를 찾는다. OPENSSL_CONF 환경 변수로 직접 지정할 수 있다.<br>
-            PostgreSQL에서 사용할 알고리즘은 postgresql.conf의 ssl_ciphers를 변경하여 지정할 수 있다
-            <li>인증서 생성</li>
-            openssl req -new -x509 -days 365 -nodes -text -out server.crt -keyout server.key -subj "/CN=dbhost.yourdomain.com"<br>
-            chmod og-rwx server.key
+            <li>덤프</li>
+            <pre>$ pg_dumpall &gt; outputfile</pre>
+            <li>서버 종료</li>
+            <pre>pg_ctl stop</pre>
+            <li>업그레이드를 위해 기존 클러스터 디렉터리 이동</li>
+            <pre>mv /usr/local/pgsql /usr/local/pgsql.old</pre>
+            <li>새 버전 설치</li>
+            <li>이전 pg_hba.conf, postgresql.conf 수정 내용 복원</li>
+            <li>서버 시작</li>
+            <pre>$ /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data</pre>
+            <li>복원</li>
+            <pre>$ /usr/local/pgsql/bin/psql -d postgres -f outputfile</pre>
         </ol>
-    </details>
+        <li>새 서버를 다른 디렉터리에 설치하고, 이전 서버와 다른 포트에서 병렬 실행하는 경우</li>
+        <pre>$ pg_dumpall -p 5432 | psql -d postgres -p 5433</pre>
+        <li>pg_upgrade를 통한 업그레이드</li>
+        다른 메이저 버전으로 현재 위치에 마이그레이션할 수 있다.
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>암호화 옵션</summary>
+    <ol>
+        <li>패스워드 암호화</li>
+        데이터베이스 유저 암호는 해시값만 저장되며, SCRAM, MD5 방식 로그인의 경우 서버에 전송되기 전에 클라이언트에서 해싱을 수행하므로 평문을 알아내기는 어렵다. SCRAM이 MD5보다 안전하다고 한다
+        <li>특정 컬럼 암호화</li>
+        pgcrypto 모듈은 특정 필드의 암호화를 허용한다. 클라이언트가 키를 제공하고, 서버에서 복호화되어 클라이언트로 전송된다
+        <li>데이터 파티션 암호화</li>
+        스토리지 암호화는 파일 시스템 레벨 또는 블록 레벨에서 수행된다. 드라이브가 도난 당한 경우 데이터가 탈취되지 않도록 해준다
+        <li>네트워크 암호화</li>
+        SSL 연결을 이용한다. 추가로 중간자 공격을 방지하기 위해 SSL 호스트 인증을 사용할 수 있다. 이 경우 서버, 클라이언트 양쪽에 추가적인 설정이 필요하다
+        <li>클라이언트 측 암호화</li>
+        서버를 신뢰할 수 없는 경우 클라이언트가 데이터를 암호화한다
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>SSL을 사용한 TCP/IP 연결 보호</summary>
+    <ol>
+        <li>기본 설정 : postgresql.confg에서 ssl을 on으로 설정</li>
+        SSL 모드에서 시작하려면 서버 인증서가 포함된 파일과 개인 키가 있어야 한다. 이 파일들은 각각 서버 데이터 디렉터리에서 server.crt, server.key일 것으로 예상되지만, ssl_cert_file, ssl_key_file 환경 변수로 위치와 이름을 지정할 수 있다
+        <li>OpenSSL 설정</li>
+        PostgreSQL은 openssl version-d로 출력되는 디렉터리에서 openssl.cnf를 찾는다. OPENSSL_CONF 환경 변수로 직접 지정할 수 있다.<br>
+        PostgreSQL에서 사용할 알고리즘은 postgresql.conf의 ssl_ciphers를 변경하여 지정할 수 있다
+        <li>인증서 생성</li>
+<pre>openssl req -new -x509 -days 365 -nodes -text -out server.crt -keyout server.key -subj "/CN=dbhost.yourdomain.com"
+chmod og-rwx server.key</pre>
+    </ol>
 </details>
 
 <hr>

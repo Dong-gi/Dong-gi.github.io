@@ -9,7 +9,7 @@
     <body>
         <ol></ol>
     </body>
-    
+
     <script>
     let pages = [
     	['./hello1', '튜토리얼 Hello1 서블릿'],
@@ -31,10 +31,10 @@
     	a.setAttribute('target', '_blank');
     	a.setAttribute('href', page[0]);
     	a.textContent = page[1];
-    	
+
     	let li = document.createElement('li');
     	li.appendChild(a);
-        
+
     	document.getElementsByTagName('ol')[0].appendChild(li);
     }
     </script>

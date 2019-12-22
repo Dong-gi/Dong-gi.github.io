@@ -4,7 +4,7 @@ public class LombokNonNullExample {
 
     public static void main(String[] args) {
         print("Hello");
-        print(null);        
+        print(null);
     }
 
     private static void print(@NonNull Object o) {

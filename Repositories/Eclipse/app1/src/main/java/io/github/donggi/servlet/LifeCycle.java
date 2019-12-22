@@ -26,19 +26,19 @@ public class LifeCycle extends HttpServlet {
         super();
         logger.info("생성자 호출");
     }
-    
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         logger.info("init 호출");
         super.init(config);
     }
-    
+
     @Override
     public void destroy() {
         logger.info("destroy 호출");
         super.destroy();
     }
-    
+
     @Override
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
         logger.info("service 호출");
@@ -56,7 +56,7 @@ public class LifeCycle extends HttpServlet {
 	/*
 	9월 07, 2019 9:03:33 오후 org.apache.catalina.startup.Catalina start
 	INFO: 서버가 [971] 밀리초 내에 시작되었습니다.
-	
+
 	9월 07, 2019 9:03:40 오후 servlet.LifeCycle <init>
 	INFO: 생성자 호출
 	9월 07, 2019 9:03:40 오후 servlet.LifeCycle init
@@ -77,7 +77,7 @@ public class LifeCycle extends HttpServlet {
 	INFO: destroy 호출
 	9월 07, 2019 9:04:53 오후 org.apache.catalina.core.StandardContext reload
 	INFO: 이름이 [/app1]인 컨텍스트를 다시 로드하는 것을 완료했습니다.
-	
+
 	9월 07, 2019 9:05:16 오후 servlet.LifeCycle <init>
 	INFO: 생성자 호출
 	9월 07, 2019 9:05:16 오후 servlet.LifeCycle init

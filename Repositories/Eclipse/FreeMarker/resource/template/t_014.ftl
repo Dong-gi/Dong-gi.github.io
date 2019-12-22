@@ -104,6 +104,6 @@ Donggi Kim
 
 
 5. 부모 노드 접근
-chapter → text → book → bookshelf → @document → 
+chapter → text → book → bookshelf → @document →
 
 -->

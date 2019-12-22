@@ -12,7 +12,7 @@
         <input type="file" name="files" multiple="multiple"/>
         <input type="submit" value="download"/>
     </form>
-    
+
     <form action="downloadZip" method="post" enctype="multipart/form-data">
         <input type="file" name="files" multiple="multiple"/>
         <input type="submit" value="downloadZip"/>

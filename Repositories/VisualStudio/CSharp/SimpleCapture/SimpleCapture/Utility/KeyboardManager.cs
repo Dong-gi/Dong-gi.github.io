@@ -130,7 +130,7 @@ namespace SimpleCapture.Utility
 
             return CallNextHookEx(hookPtr, nCode, wParam, ref lParam);
         }
-        
+
         [StructLayout(LayoutKind.Sequential)]
         private struct KBHookStruct
         {

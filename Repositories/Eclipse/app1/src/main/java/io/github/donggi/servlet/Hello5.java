@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 public class Hello5 extends HttpServlet {
 
     private static final Logger logger = Logger.getLogger(Hello5.class.getCanonicalName());
-            
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -21,4 +21,4 @@ public class Hello5 extends HttpServlet {
 INFO: 클라이언트 호출 없이도 초기화 진행!
  */
     }
-} 
+}

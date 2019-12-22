@@ -9,7 +9,7 @@
             <li>MainActivity.java</li>
             앱을 실행하면 이 클래스의 인스턴스가 실행되고 layout을 로드한다.
             <button class="btn-code" path="Repositories/Android/Project01/app/src/main/java/io/github/donggi/project01/MainActivity.java" lan="java">MainActivity.java »</button>
-            <li>activity_main.xml</li>                    
+            <li>activity_main.xml</li>
             액티비티의 UI를 정의한다.
             <button class="btn-code" path="Repositories/Android/Project01/app/src/main/res/layout/activity_main.xml" lan="xml">activity_main.xml »</button>
             <li>AndroidManifest.xml</li>
@@ -29,16 +29,16 @@
             액티비티 시작 : startActivity() or startActivityForResult()<br>
             액티비티 생애주기 : onCreate(인스턴스 생성 시), onRestart(재시작), onStart(onCreate, onRestart 후), onResume(포그라운드), onPause(백그라운드), onStop(비가시영역 진입), onDestroy(소멸)<br>
             xml에서 saveEnabled 속성을 true로 하면 onSaveInstanceState, onRestoreInstanceState 메서드를 재정의하여 사용할 수 있다.
-            
+
             <li>Service : 백그라운드에서 실행되는 요소.</li>
             서비스 시작 : startService() or bindService()
-            
+
             <li>ContentProvider : 외부로 공유하는 데이터 집합 관리.</li>
             ContentProvider 이용 : ContentResolver.query()
-            
+
             <li>BroadcastReceiver : 각 브로드캐스트는 Intent 객체로 전달된다.</li>
             브로드캐스트 송신 : sendBroadcast(), sendOrderedBroadcast(), sendStickyBroadcast()
-            
+
             <li>Intent : 컴포넌트 간의 데이터 전달.</li>
             <ul>
                 <li>Activity, Service, BroadcastReceiver는 Intent로 활성화되고, ContentProvider는 ContentResolver의 요청으로 활성화된다.</li>
@@ -96,7 +96,7 @@ manager.setComponentEnabledSetting(
         <summary>UI</summary>
         <ol>
             <li>안드로이드 UI는 layout(ViewGroup 객체)들과 widget(View 객체)들의 계층으로 이루어진다.</li>
-            
+
             <li>길이 단위</li>
             <ul>
                 <li>px : 픽셀. 장치마다 밀도가 달라 제각기로 표현된다.</li>

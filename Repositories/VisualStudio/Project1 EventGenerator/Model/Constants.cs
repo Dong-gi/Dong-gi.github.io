@@ -13,7 +13,7 @@ namespace EventGenerator.Model
         public const string SSH_EXAMPLE_SERVER_PORT = "SSH_EXAMPLE_SERVER_PORT";
         public const string SSH_EXAMPLE_SERVER_ID = "SSH_EXAMPLE_SERVER_ID";
         public const string SSH_EXAMPLE_SERVER_PW = "SSH_EXAMPLE_SERVER_PW";
-        
+
         public const string AWS_ACCESS_KEY_ID = "AWS_ACCESS_KEY_ID";
         public const string AWS_SECRET_ACCESS_KEY = "AWS_SECRET_ACCESS_KEY";
         public const string AWS_DISTRIBUTION_ID = "AWS_DISTRIBUTION_ID";

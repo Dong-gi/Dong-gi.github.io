@@ -54,7 +54,7 @@
             <li>[a-z&amp;&amp;[^m-p]] » a ~ z &amp;&amp; m ~ p는 제외 : [a-lq-z](차집합)</li>
         </ol>
     </details>
-        
+
     <details>
         <summary>정규표현식 문자 집합 상수</summary>
         <ol>
@@ -216,24 +216,24 @@
         <ol>
             <li>public static final int UNIX_LINES</li>
             줄끝 '\n'만 ., ^, $에서 동작. (?d) 플래그도 같은 의미.
-            
+
             <li>public static final int CASE_INSENSITIVE</li>
             대소문자 구분 없음. (?i) 플래그도 같은 의미.
-            
+
             <li>public static final int COMMENTS</li>
             공백과 주석 허용 » 공백과 #부터 줄 끝까지의 주석이 무시된다. (?x) 플래그도 같은 의미.
-            
+
             <li>public static final int MULTILINE</li>
             ^, $이 각 줄의 끝을 기준으로도 작동; 기본 동작은 입력 시작과 끝에서만 작동. (?m) 플래그도 같은 의미.
-            
+
             <li>public static final int LITERAL Since 1.5</li>
             표현식 전체를 상수 문자열 취급.
-            
+
             <li>public static final int DOTALL</li>
             .이 줄 끝도 포함하여 매치; 기본 동작은 줄 끝 문자는 미포함. (?s) 플래그도 같은 의미.
-            
+
             <li>public static final int UNICODE_CASE</li>
-            CASE_INSENSITIVE 플래그가 유니코드 표준 상에서 동작한다; 기본은 US-ASCII에서만 동작. (?u) 플래그도 같은 의미.        
+            CASE_INSENSITIVE 플래그가 유니코드 표준 상에서 동작한다; 기본은 US-ASCII에서만 동작. (?u) 플래그도 같은 의미.
         </ol>
     </details>
 
@@ -241,13 +241,13 @@
         <summary>Method Detail</summary>
         <ol>
             <li>static Pattern compile(String regex) + 1 오버로딩</li>
-        
+
             <li>static boolean matches(String regex, CharSequence input) : 1회용</li>
             <li>String pattern()</li>
             <li>String toString() Since 1.5</li>
             <li>static String quote(String s) Since 1.5</li>
             s를 매칭할 수 있는 정규표현식 리터럴 문자열 표현을 반환.
-            
+
             <li>int flags()</li>
             <li>Matcher matcher(CharSequence input)</li>
             <li>String[] split(CharSequence input) + 1 오버로딩</li>
@@ -275,16 +275,16 @@
             <li>MatchResult toMatchResult() Since 1.5</li>
             <li>Matcher usePattern(Pattern newPattern) Since 1.5</li>
             <li>Matcher reset() + 1오버로딩</li>
-            
+
             <li>int start(String name) Since 1.8</li>
             주어진 식별자에 해당하는 그룹의 시작 인덱스 반환
             <li>int end(String name) Since 1.8</li>
             <li>String group(String name) Since 1.7</li>
-            
+
             <li>boolean mathes()</li>
             <li>boolean find() + 1 오버로딩</li>
             <li>boolean lookingAt()</li>
-            
+
             <li>static String quoteReplacement(String s) Since 1.5</li>
             appendReplacement 메서드의 replacement로 사용될 s의 리터럴 표기를 반환.
             <li>Matcher appendReplacement(StringBuffer sb, String replacement) + 1 오버로딩</li>
@@ -297,7 +297,7 @@
             <li>String replaceAll(Function&lt;MatchResult, String&gt; replacer) Since 9</li>
             <li>String replaceFirst(String replacement) + 1 오버로딩</li>
             <li>Stream&lt;MatchResult&gt; results() Since 9</li>
-            
+
             <li>Matcher region(int start, int end) Since 1.5</li>
             입력 소스의 특정 구간을 매칭 대상으로 하도록 초기화한다. transparency, anchoring 속성에 따라 동작이 다르다.
             <li>int regionStart(), regionEnd() Since 1.5</li>

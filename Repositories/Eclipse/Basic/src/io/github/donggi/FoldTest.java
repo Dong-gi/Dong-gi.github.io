@@ -19,7 +19,7 @@ class List<T> {
     T value;
     List<T> link;
     List<T> last;
-    
+
     List(T init) {
         value = init;
     }

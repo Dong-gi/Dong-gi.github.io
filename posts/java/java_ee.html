@@ -5,7 +5,7 @@
     <ol>
         <li>Java Enterprise Edition은 동적 웹 애플리케이션 개발을 위한 자바 플랫폼이다.</li>
         JavaSE와 다른 문서 페이지를 참조해야 한다. <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://javaee.github.io/javaee-spec/javadocs/">https://javaee.github.io/javaee-spec/javadocs/</a>
-        
+
         <li>WAR(Web Application Archive) : JavaEE 웹 애플리케이션을 위한 압축 파일</li>
 <pre>웹 애플리케이션 루트
 ㄴ META-INF
@@ -29,10 +29,10 @@
         <li>서블릿</li>
         자바로 구현된 CGI(Common Gateway Interface; 웹 서버와 프로그램 사이의 통신 규약).
         JCP(Java Community Process)에서 제정한 Servlet Specification을 따라야 한다.
-        
+
         <li>서블릿 컨테이너</li>
         서블릿의 생애를 관리하는 프로그램(예. 톰캣)
-        
+
         <li>JSP</li>
         전용 태그 "&lt;% %&gt;"를 이용해 HTML 문서에 자바 코드를 삽입.
         컨테이너가 알아서 컴파일 하며, 서블릿 클래스와 달리 수정사항이 있어도 다시 빌드할 필요가 없다.
@@ -48,18 +48,18 @@
 
         <li><a role="button" target="_blank" class="btn btn-info btn-sm" href="https://tomcat.apache.org/">톰캣</a> 설치</li>
         + posts/tip/tomcat.html 참고
-        
+
         <li>IDE(이클립스, STS 등) 설치</li>
-    
+
         <li>이클립스에 톰캣 추가</li>
         Windows » Preferences » Server » Runtime Environments » Add » Apache
-        
+
         <li>이클립스 프로젝트에 톰캣 구성 추가</li>
         프로젝트 Server 속성에 추가.
-        
+
         <li>IntelliJ에 톰캣 추가</li>
         Settings » Application Servers » + » 톰캣 홈 디렉터리 추가
-        
+
         <li>IntelliJ 프로젝트에 톰캣 구성 추가</li>
         도구 모음에서 Run/Debug Configurations 아이콘(아래방향 화살표)을 누른 다음 Edit Configurations 클릭<br>
         옵션. 대화상자가 열리면 + 버튼 클릭 후 Tomcat Server를 Local로 추가.<br>
@@ -68,7 +68,7 @@
     </ol>
 </details>
 
-<hr>    
+<hr>
 
 <details>
     <summary>Hello World 프로젝트</summary>
@@ -77,23 +77,23 @@
         <ol>
             <li>New Project » Web » Dynamic Web Project » Target runtime에 톰캣 설정</li>
             <img class="rounded mx-auto d-block" alt="" src="imgs/20180929_220300.png">
-        
+
             <li>코드 작성</li>
             <img class="rounded mx-auto d-block" alt="" src="imgs/20180929_220301.png"><br>
             <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello1.java" lan="java">Hello1.java »</button>
             <button class="btn-code" path="Repositories/Eclipse/app1/src/main/webapp/WEB-INF/web.xml" lan="xml">web.xml »</button><br>
             web.xml은 배포 설명자로, 서블릿 및 서블릿 매핑, 필터 등을 정의한다.
             이클립스 프로젝트 생성 마법사로 web.xml을 생성하면 자동으로 welcome-file-list를 구성해주는데, welcome-file-list에 정의된 welcome-file을 순서대로 찾아 기본 페이지로 보여준다.
-            
+
             <li>실행</li>
             <img class="rounded mx-auto d-block" alt="" src="imgs/20180929_220302.png"><br>
             또는 Export » WAR file를 선택하여 webapps 디렉터리에 추가하여 배치되기를 기다린 뒤 브라우저에서 실행.
-        
+
             <li>이클립스 내부에서 실행하는 경우 웹 애플리케이션 배포 위치</li>
             %이클립스 프로젝트 디렉터리%\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Web01\WEB-INF
         </ol>
     </details>
-    
+
     <details>
         <summary>톰캣에 직접 배치</summary>
         <ol>
@@ -110,14 +110,14 @@
             <li>동일한 배포 설명자 web.xml을 WEB-INF에 작성하고 실행</li>
         </ol>
     </details>
-    
+
     <details>
         <summary>이클립스 Maven 프로젝트</summary>
         <ol>
             <li>New Project » Maven » Maven Project » maven-archetype-webapp</li>
             <img class="rounded mx-auto d-block" alt="" src="imgs/20180930_154849.png"><br>
             webapp 아티팩트로 프로젝트를 만들면 Hello World를 출력하는 index.jsp가 생성된다.
-            
+
             <li>Maven Install, 빌드하여 war 파일이 생성되면 톰캣 webapps 디렉터리에 붙여넣고 배치되기를 기다린 뒤 브라우저에서 실행</li>
             maven이 pom.xml에 정의된 라이브러리를 /users/유저이름/.m2 폴더에 다운로드한다.
         </ol>
@@ -290,7 +290,7 @@
             　　&lt;param-value&gt;Context Param&lt;/param-value&gt;<br>
             &lt;/context-param&gt;
         </details>
-        
+
         <li>ServletConfig</li>
         서블릿 수준 공유 데이터. GenericServlet#getServletConfig로 참조할 수 있다. JSP에서는 config 변수.<br>
         initParams : 서블릿 초기화 매개변수. 서블릿 내에서 GenericServlet#getInitParameter로 참조할 수 있다.
@@ -302,7 +302,7 @@
 
         <li>ServletRequest</li>
         (클라이언트 요청 처리) 스레드 수준 공유 데이터. 서블릿마다 자동으로 공유되지는 않으며, 직접 전달해야 한다
-        
+
         <li>각 클라이언트의 요청이 별개의 스레드에서 실행되므로, ThreadLocal이 유용할 수 있다</li>
 
         <li>JspContext</li>
@@ -596,7 +596,7 @@
             세 가지 Weaving 방식 : 컴파일 타임 위빙, 클래스 로드 타임 위빙, 런타임 위빙
         </ol>
     </details>
-    
+
     <details>
         <summary>Spring AOP</summary>
         <ul>

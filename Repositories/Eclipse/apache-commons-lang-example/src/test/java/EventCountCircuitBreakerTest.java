@@ -30,7 +30,7 @@ Mon Sep 16 09:48:32 KST 2019
 Mon Sep 16 09:48:37 KST 2019
          */
     }
-    
+
     public void arg4ConstructorTest() throws Exception {
         var breaker = new EventCountCircuitBreaker(5, 1, TimeUnit.SECONDS, 2);
         for(var i = 0; i < 13; ) {
@@ -59,7 +59,7 @@ Mon Sep 16 09:48:37 KST 2019
 2515 | 2675 | 2835 | 2995 | 3156 | 3316 | 3477 | task 12 // 마찬가지로 3316 시점에서도 CLOSE되지 않았다
          */
     }
-    
+
     public void arg6ConstructorTest() throws Exception {
         var breaker = new EventCountCircuitBreaker(5, 1, TimeUnit.SECONDS, 5, 2, TimeUnit.SECONDS);
         for(var i = 0; i < 13; ) {

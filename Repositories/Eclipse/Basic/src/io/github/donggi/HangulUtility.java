@@ -100,7 +100,7 @@ public class HangulUtility {
         return -1;
     }
 
-    /** 
+    /**
      * 문자가 종성을 갖는지 여부를 반환
      */
     public static boolean hasJongseong(char letter) {

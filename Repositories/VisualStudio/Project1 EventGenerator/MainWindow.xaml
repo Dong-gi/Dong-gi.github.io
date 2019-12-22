@@ -6,7 +6,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:viewmodel="clr-namespace:EventGenerator.ViewModel"
         mc:Ignorable="d"
-        
+
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -15,7 +15,7 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        
+
         Title="통합 이벤트 생성기" Height="600" Width="1200" Icon="Resources/yellow.ico"
         AllowDrop="True" DragEnter="Window_DragEnter" Drop="Window_Drop" Closing="Window_Closing">
 
@@ -68,7 +68,7 @@
 
         <Image x:Key="blueIcon" Source="Resources/blue.ico" />
         <Image x:Key="yellowIcon" Source="Resources/yellow.ico" />
-        
+
         <viewmodel:MainViewModel x:Key="mainViewModel"/>
     </Window.Resources>
 

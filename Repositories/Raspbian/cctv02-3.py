@@ -17,7 +17,7 @@ while video.isOpened():
     _, img = video.read()
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     _, gray = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    
+
     frames.append(img)
     grays.append(gray)
     if len(frames) < 3:
@@ -27,7 +27,7 @@ while video.isOpened():
     else:
         frames.remove(frames[0])
         grays.remove(grays[0])
-            
+
     diff1 = cv2.absdiff(grays[2], grays[1])
     diff1 = cv2.subtract(diff1, thresh)
     _, diff1 = cv2.threshold(diff1, 0, 255, cv2.THRESH_BINARY)
@@ -35,7 +35,7 @@ while video.isOpened():
     diff2 = cv2.subtract(diff2, thresh)
     _, diff2 = cv2.threshold(diff2, 0, 255, cv2.THRESH_BINARY)
     mask = cv2.bitwise_and(diff1, diff2)
-        
+
     alpha = 0.96
     moving = cv2.countNonZero(mask)
     if moving < 1000:
@@ -60,7 +60,7 @@ while video.isOpened():
             #hull = cv2.convexHull(contour)
             cv2.drawContours(result, [approx], 0, (0, 0, 255), 3)
         #background = cv2.addWeighted(background, 1-alpha, grays[2], alpha, 0)
-        
+
     show_ori = cv2.resize(img, (640, 360))
     show_back = cv2.resize(background, (640, 360))
     show_res = cv2.resize(result, (640, 360))

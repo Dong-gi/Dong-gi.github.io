@@ -19,4 +19,4 @@ public class Hello3 extends HttpServlet {
         resp.setContentType("text/html; charset=utf-8");
         resp.getWriter().append("안녕하세요! ").append(getInitParameter("name"));
     }
-} 
+}

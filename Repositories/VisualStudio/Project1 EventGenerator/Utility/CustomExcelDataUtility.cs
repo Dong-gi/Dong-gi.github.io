@@ -1,4 +1,5 @@
 ﻿using EventGenerator.Model.CustomAttribute;
+using MoreLinq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -54,6 +55,44 @@ namespace EventGenerator.Utility
                 }
                 result.Add(dataLine);
             }
+            return result;
+        }
+
+        public static List<string[]> GaraRowsToExcelData(IEnumerable<Model.Dto.Gara> rows, string[] columns)
+        {
+            if (!rows.Any()) return null;
+            var result = new List<string[]>() { columns, Array.Empty<string>(), columns };
+            rows.ForEach(row =>
+            {
+                var dataLine = new string[columns.Length];
+                for (var i = 0; i < columns.Length; ++i)
+                    dataLine[i] = row.Get(i);
+                result.Add(dataLine);
+            });
+            return result;
+        }
+
+        public static List<string[]> DapperRowToExcelData(IEnumerable<dynamic> rows)
+        {
+            if (!rows.Any()) return null;
+            var result = new List<string[]>() { Array.Empty<string>(), Array.Empty<string>() };
+            var fieldNameLine = new List<string>();
+            IEnumerator<KeyValuePair<string, object>> row = (rows.First() as IDictionary<string, object>).GetEnumerator();
+            while (row.MoveNext())
+                fieldNameLine.Add(row.Current.Key);
+            result.Add(fieldNameLine.ToArray());
+
+            rows.ForEach(dapperRow =>
+            {
+                var dataLine = new string[fieldNameLine.Count];
+                row = (dapperRow as IDictionary<string, object>).GetEnumerator();
+                for (var i = 0; i < dataLine.Length; ++i)
+                {
+                    row.MoveNext();
+                    dataLine[i] = (row.Current.Value ?? "").ToString();
+                }
+                result.Add(dataLine);
+            });
             return result;
         }
     }

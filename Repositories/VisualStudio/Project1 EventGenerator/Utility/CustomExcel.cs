@@ -191,7 +191,7 @@ namespace EventGenerator.Utility
                         currentSheet = sheets[nextSheetPos];
                     sheetCount = nextSheetPos;
                 }
-                
+
                 Range cells = currentSheet.Cells;
                 cells.NumberFormat = "@";
 

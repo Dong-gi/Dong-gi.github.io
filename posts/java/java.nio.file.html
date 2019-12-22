@@ -44,7 +44,7 @@
         <ol>
             <li>WatchService에 Watchable 객체가 등록되었음을 표현하는 토큰.</li>
             <li>처음 생성되면 ready 상태. 이벤트를 감지하면 reset()되기 전까지 signalled 상태가 되고, WatchService 큐에 진입하여 처리된다. reset()되면 다시 ready.</li>
-            
+
             <li>boolean isValid() : 취소되거나 서비스가 닫힐 때까지 유효</li>
             <li>List&lt;WatchEvent&lt;?&gt;&gt; pollEvents() : 대기 중인 이벤트들을 제거하고 반환</li>
             <li>boolean reset()</li>
@@ -180,11 +180,11 @@
         <ol>
             <li>파일 경로를 가리킨다. 사용자 정의 파일 시스템을 개발하기 위해 만들어짐.
                 <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/nio/PathTest.java" lan="java">예시 코드 »</button></li>
-            
+
             <li>static Path of(String first, String... more) Since 11</li>
             예. of("/foo", "bar", "gus") → "/foo/bar/gus" // FileSystem#getSeparator == "/"
             <li>static Path of(URI uri) Since 11 ↔ toUri</li>
-            
+
             <li>FileSystem getFileSystem() : 이 Path를 만든 FileSystem 반환</li>
             <li>Path getRoot()</li>
             getFileName, getParent, getNameCount, getName, subpath, toAbsolutePath, toRealPath
@@ -195,7 +195,7 @@
             (getParent() == null) ? other : getParent().resolve(other);
             <li>Path relativize(Path other)</li>
             호출한 path를 기준으로, other에 도달하는 상대경로를 반환한다
-            
+
             <li>boolean isAbsolute() + startsWith, endsWith</li>
             <li>default File toFile()</li>
         </ol>
@@ -220,11 +220,11 @@
             <li>static bolean isSameFile(Path path, Path path2)</li>
             <li>static long mismatch(Path path, Path path2) Since 12</li>
             두 파일이 불일치하는 최초의 바이트 위치를 반환한다. 같으면 -1L.
-            
+
             <li>static byte[] readAllBytes(Path path) + readString Since 11, lines, readAllLines Since 1.8</li>
             <li>static Path write(Path path, Iterable&lt;? extends CharSequence&gt; lines, OpenOption... options) Since 1.8 + 오버로딩</li>
             <li>static Path writeString(Path path, CharSequence csq, Charset cs, OpenOption... options) Since 11 + 오버로딩</li>
-            
+
             <li>static boolean isHidden(Path path)</li>
             + isDirectory, isSymbolicLink, isRegularFile, exists, notExists, isReadable, isWritable, isExecutable
             <li>static String probeContentType(Path path)</li>

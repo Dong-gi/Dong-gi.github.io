@@ -28,7 +28,7 @@
     <filter-mapping>
         <filter-name>doNothingFilter</filter-name>
         <url-pattern>/*</url-pattern> <!-- 특정 url 패턴에 필터 적용 : 모든 웹컴포넌트 -->
-        <!--<url-pattern>*.jsp</url-pattern> 계층적인 URL 경로와 *.ext를 함께 쓸 수는 
+        <!--<url-pattern>*.jsp</url-pattern> 계층적인 URL 경로와 *.ext를 함께 쓸 수는
             없음 -->
         <!--<servlet-name>hello1Servlet</servlet-name> 특정 서블릿에 필터 적용 -->
     </filter-mapping>

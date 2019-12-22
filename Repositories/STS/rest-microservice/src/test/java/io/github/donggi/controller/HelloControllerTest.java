@@ -19,7 +19,7 @@ public class HelloControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
-    
+
     @Test
     public void helloTest1() {
         var result = restTemplate.getForObject("/hello", HelloResponse.class);
@@ -31,5 +31,5 @@ public class HelloControllerTest {
         var json = restTemplate.getForObject("/hello", String.class);
         System.out.println(new ObjectMapper().readTree(json).get("message"));
     }
-    
+
 }

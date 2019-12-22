@@ -48,7 +48,7 @@ public class Main1003 {
                 while(numbers.get(i+1) == small) i++;
             } catch(Exception e) {}
         }
-        
+
         System.out.println(count);
     }
 

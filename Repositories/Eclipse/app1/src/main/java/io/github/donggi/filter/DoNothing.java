@@ -26,7 +26,7 @@ public class DoNothing implements Filter {
         logger.info(resp.getContentType()); // 실제 타입은 HttpServletResponse
         chain.doFilter(req, resp);          // 필터 체인에 속하는 필터들의 순서는 기본적으로 web.xml의 <filter-mapping> 순서
         logger.info("사후 작업 진행");
-    } 
+    }
 
     /*
 9월 09, 2019 9:55:40 오후 filter.DoNothing init

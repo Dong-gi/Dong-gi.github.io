@@ -21,10 +21,7 @@ namespace Basic
                                PubDate = item.Element("pubDate").Value
                                // 속성 추출 : item.Attribute("속성명").Value or item.Attribute["속성명"].Value
                            };
-            rss.ForEach(x =>
-            {
-                Console.WriteLine($"{nameof(x.Title)} : {x.Title}@{x.PubDate}\n{nameof(x.Description)} : {x.Description}\n");
-            });
+            rss.ForEach(x => Console.WriteLine($"{nameof(x.Title)} : {x.Title}@{x.PubDate}\n{nameof(x.Description)} : {x.Description}\n"));
 
 /*
 Title : 트래비스 스트라이크 어게인: 노 모어 히어로즈, PS4와 PC로@2019.05.26 (12:10:25)
@@ -35,8 +32,7 @@ Description : <img width="90" height="75" src="https://cmg.ruliweb.com/data/news
 
 Title : 크래프톤의 로그라이크 신작, ‘미스트오버’ 유저 간담회@2019.05.25 (19:02:32)
 Description : <img width="90" height="75" src="https://cmg.ruliweb.com/data/news/tn/19/05/25/16aee70c00a_zgbstn.jpg"> 전 블루홀에서 사명을 변경한 크래프톤이 자사의 신작이자 PC/콘솔 플랫폼으로 출시할 로그라이크 던전크롤링 게임 ‘미스트오버’ 를 한국 유저들에게 선보이는 유저 간담회를 열었다.                  오늘 행사에서는 유저 및 ...
-
-...*/
+*/
         }
     }
 }

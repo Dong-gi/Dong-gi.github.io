@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp6"
         mc:Ignorable="d"
-        
+
         x:Name="thisWindow"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="MainWindow" Height="450" Width="800">
@@ -15,18 +15,18 @@
         <local:RgbToColorConverter x:Key="convRgbToColor"/>
         <local:MyClock x:Key="clock"/>
     </Window.Resources>
-    
+
     <StackPanel Orientation="Vertical" VerticalAlignment="Center">
         <Label DataContext="{Binding ElementName=thisWindow}" Content="{Binding Path=Message}" HorizontalAlignment="Center"/>
         <Label Content="{Binding Path=Message}" HorizontalAlignment="Center"/>
-        
+
         <ScrollBar Name="scroll" Orientation="Horizontal" Maximum="255" LargeChange="16" SmallChange="1"/>
 
         <Label DataContext="{Binding ElementName=scroll}" Content="{Binding Path=Value}" HorizontalAlignment="Center"/>
         <Label Content="{Binding ElementName=scroll, Path=Value}" HorizontalAlignment="Center"/>
         <Label x:Name="label1" HorizontalAlignment="Center"/>
         <Label Content="{Binding ElementName=thisWindow, Path=Content.Children[2].Value}" HorizontalAlignment="Center"/>
-        
+
         <!-- 프로퍼티 엘리먼트 문법 -->
         <Label HorizontalAlignment="Center">
             <Label.Content>

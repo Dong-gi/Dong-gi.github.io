@@ -21,7 +21,7 @@ with picamera.PiCamera() as cam:
         #cv2.imshow('gray', gray)
         found = 0
         start = time.time()
-        
+
         faces = faceCascade.detectMultiScale(gray, 1.3, 3)
         for (x, y, w, h) in faces:
             img = cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
@@ -32,7 +32,7 @@ with picamera.PiCamera() as cam:
                 #print(ew, eh)
                 cv2.rectangle(roiColor, (ex, ey), (ex+ew, ey+eh), (0, 255, 0), 2)
                 found = found + 1
-        
+
         if found > 0:
             print('{}eye(s) found : {:.2f}s'.format(found, time.time()-start))
         cv2.imshow('img', img)

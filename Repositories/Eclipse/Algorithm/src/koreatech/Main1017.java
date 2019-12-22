@@ -23,7 +23,7 @@ public class Main1017 {
             System.out.println(max(sum[cycle][0], sum[cycle][1], sum[cycle][2]));
         }
     }
-    
+
     private static int max(int... nums) {
         Arrays.sort(nums);
         return nums[nums.length-1];

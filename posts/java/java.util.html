@@ -58,7 +58,7 @@
                 <li>추가 못하면 false : boolean offerFirst(E), offerLast(E)</li>
                 <li>없으면 예외 발생 : E removeFirst() == pop(), removeLast(), getFirst(), getLast()</li>
                 <li>없으면 null : E pollFirst(), pollLast(), peekFirst(), peekLast()</li>
-                
+
                 <li>boolean removeFirstOccurrence(Object o) + removeLastOccurrence</li>
                 <li>Iterator&lt;E&gt; descendingIterator() : iterator()의 역순</li>
             </ol>
@@ -68,25 +68,25 @@
             <summary>interface List&lt;E&gt; extends Collection&lt;E&gt; Since 1.2</summary>
             <ol>
                 <li>boolean addAll(int index, Collection&lt;? extends E&gt; c)</li>
-                
+
                 <li>default void replaceAll(UnaryOperator&lt;E&gt; operator) Since 1.8</li>
                 모든 원소를 연산 결과로 대체
-                
+
                 <li>default void sort(Comparator&lt;? super E&gt; c) Since 1.8</li>
-                
+
                 <li>int hashCode()</li>
                 hashCode = 31*hashCode + (e==null ? 0 : e.hashCode());
-                
+
                 <li>E get(int index)</li>
                 <li>E set(int index, E element) : 이전 값은 반환.</li>
                 <li>void add(int index, E element)</li>
                 <li>E remove(int index)</li>
                 <li>int indexOf(Object o) + lastIndexOf</li>
-                
+
                 <li>ListIterator&lt;E&gt; listIterator() + 1 오버로딩</li>
-                
+
                 <li>List&lt;E&gt; subList(int fromIndex, int toIndex)</li>
-                
+
                 <li>static &lt;E&gt; List&lt;E&gt; of() Since 9 + 11 오버로딩<br>
                     static &lt;E&gt; List&lt;E&gt; copyOf(Collection&lt;? extends E&gt; coll) Since 10</li>
                 null 허용하지 않는 변경 불가능한 리스트. 모든 원소가 serializable하면 리스트도 그러하다.
@@ -101,7 +101,7 @@
                 변경 불가능한 집합을 반환한다. null 원소를 허용하지 않으며, 모든 원소가 serializable하면 집합도 그러하다.
             </ol>
         </details>
-        
+
         <details>
             <summary>interface SortedSet&lt;E&gt; extends Set&lt;E&gt; Since 1.2</summary>
             <ol>
@@ -112,7 +112,7 @@
                 <li>E first() + last</li>
             </ol>
         </details>
-        
+
         <details>
             <summary>interface NavigableSet&lt;E&gt; extends SortedSet&lt;E&gt; Since 1.6</summary>
             <ol>
@@ -120,7 +120,7 @@
                 e보다 작은 원소들 중 최댓값을 반환. 없으면 null
                 <li>E pollFirst() + pollLast</li>
                 제거하고 반환
-                
+
                 <li>NavigableSet&lt;E&gt; descendingSet()</li>
                 <li>Iterator&lt;E&gt; descendingIterator()</li>
                 <li>NavigableSet&lt;E&gt; subSet(E fromElement, boolean fromInclusive, E toElement, bolean toInclusive) + headSet, tailSet</li>
@@ -134,7 +134,7 @@
                 <ol>
                     <li>K getKey() + getValue</li>
                     <li>V setValue(V value)</li>
-                    
+
                     <li>static &lt;K extends Comparable&lt;? super K&gt;, V&gt; Comparator&lt;Map.Entry&lt;K, V&gt;&gt; comparingByKey() Since 1.8 + 1 오버로딩 + comparingByValue</li>
                     키를 자연스러운 순서로 비교하는 비교자 반환. 인자 있는 함수의 경우 해당 비교자를 이용.
                 </ol>
@@ -143,10 +143,10 @@
                 <summary>Method Detail</summary>
                 <ol>
                     <li>Collection과 유사한 메서드는 생략</li>
-                    
+
                     <li>boolean containsKey(Object key)</li>
                     <li>boolean containsValue(Object value)</li>
-                    
+
                     <li>V get(Object key)</li>
                     <li>default V getOrDefault(Object key, V defaultValue) Since 1.8
                         <button class="btn-code" path="Repositories/Eclipse/JavaSE/src/util/MapExample.java" displayRange="[12,16]" lan="java">예시 코드 »</button></li>
@@ -171,15 +171,15 @@
                         <li>주어진 함수를 통해 새로운 값에 연결</li>
                         <li>결과가 null인 경우 맵에서 제거.</li>
                     </ul>
-                    
+
                     <li>default boolean remove(Object key, Object value) Since 1.8</li>
-                    
+
                     <li>Set&lt;K&gt; keySet()</li>
                     <li>Collection&lt;V&gt; values()</li>
                     <li>Set&lt;Map.Entry&lt;K, V&gt;&gt; entrySet()</li>
-                    
+
                     <li>default void forEach(BiConsumer&lt;? super K, ? super V&gt; action) Since 1.8</li>
-                    
+
                     <li>static &lt;K, V&gt; Map&lt;K, V&gt; of() Since 9 + 11 오버로딩<br>
                         @SafeVarargs static &lt;K, V&gt; Map&lt;K, V&gt; ofEntries(Map.Entry&lt;? extends K, ? extends V&gt;... entries) Since 9<br>
                         static &lt;K, V&gt; Map.Entry&lt;K, V&gt; entry(K k, V v) Since 9<br>
@@ -205,13 +205,13 @@
             <ol>
                 <li>Map.Entry&lt;K, V&gt; lowerEntry(K key) + floorEntry: &lt;=key, ceilingEntry: &gt;=key, higherEntry: &gt;key</li>
                 key보다 작은 키들 중 최댓값에 대한 entry 반환. 없으면 null
-                
+
                 <li>K lowerKey(K key) + floorKey: &lt;=key, ceilingKey: &gt;=key, higherKey: &gt;key</li>
                 key보다 작은 키들 중 최댓값 반환. 없으면 null
-                
+
                 <li>Map.Entry&lt;K, V&gt; firstEntry() + lastEntry, pollFirstEntry, pollLastEntry</li>
                 poll~ : 제거하고 반환
-                
+
                 <li>NavigableSet&lt;K&gt; navigableKeySet() + descendingKeySet</li>
                 <li>NavigableMap&lt;K, V&gt; descendingMap()</li>
                 <li>NavigableMap&lt;K, V&gt; subMap(K fromKey, boolean fromInclusive, K toKey, boolean toInclusive) + headMap, tailMap</li>
@@ -283,7 +283,7 @@
                 <ol>
                     <li>boolean tryAdvance(Consumer&lt;? super T&gt; action)</li>
                     남은 원소가 존재하면 하나를 소비하고 true 반환. 그 외엔 false
-                    
+
                     <li>default void forEachRemaining(Consumer&lt;? super T&gt; action)</li>
 
                     <li>Spliterator&lt;T&gt; trySplit()</li>
@@ -363,27 +363,27 @@
             <ol>
                 <li>public BitSet() + (int nbits)</li>
                 각 비트의 기본값은 false. 스레드-안전하지 않음.
-                                
+
                 <li>static BitSet valueOf(long[] longs) Since 1.7 + LongBuffer, byte[], ByteBuffer</li>
                 <li>byte[] toByteArray() Since 1.7 + toLongArray</li>
-                
+
                 <li>boolean get(int bitIndex)</li>
                 <li>BitSet get(int fromIndex, int toIndex) Since 1.4</li>
                 <li>void set(int fromIndex, int toIndex, boolean value) Since 1.4 + 3 오버로딩</li>
                 <li>void clear(int fromIndex, int toIndex) Since 1.4 + 2 오버로딩 == set(~, false)</li>
                 <li>void flip(int fromIndex, int toIndex) Since 1.4 + 1 오버로딩</li>
-                
+
                 <li>int nextSetBit(int fromIndex) Since 1.4 + nextClearBit, previousSetBit, previousClearBit</li>
-                
+
                 <li>void and(BitSet set) + or, xor</li>
                 <li>void andNot(BitSet set) Since 1.2 : set에 true로 설정된 모든 index에 대해 false 설정</li>
                 <li>boolean intersects(BitSet set) Since 1.4 : 하나라도 true로 일치하는 경우</li>
-                
+
                 <li>boolean imEmpty() Since 1.4</li>
                 <li>int size() : 총 비트 수</li>
                 <li>int cardinality() Since 1.4 : true 비트 수</li>
                 <li>int length() Since 1.7 : the index of the highest set bit</li>
-                
+
                 <li>IntStream stream() Since 1.8</li>
             </ol>
         </details>
@@ -456,7 +456,7 @@
             <ol>
                 <li>public PriorityQueue() + (int initialCapacity), (Comparator&lt;? super E&gt; comparator) Since 1.8, (int initialCapacity, Comparator&lt;? super E&gt; comparator), (Collection&lt;? extends E&gt; c), (PriorityQueue&lt;? extends E&gt; c) : c와 정렬 방향 같음, (SortedSet&lt;? extends E&gt; c) : c와 정렬 방향 같음</li>
                 우선순위 힙에 기반한 unbounded 우선순위 큐. head가 가장 우선순위가 작은 원소.
-                
+
                 <li>Comparator&lt;? super E&gt; comparator()</li>
             </ol>
         </details>
@@ -505,7 +505,7 @@
                     <li>public static final Map EMPTY_MAP Since 1.3 : 변경 불가</li>
                 </ul>
             </details>
-        
+
             <details>
                 <summary>리스트 연산</summary>
                 <ul>
@@ -519,7 +519,7 @@
                     <li>static &lt;T&gt; ArrayList&lt;T&gt; list(Enumeration&lt;T&gt; e) Since 1.4</li>
                 </ul>
             </details>
-        
+
             <details>
                 <summary>Collection 연산</summary>
                 <ul>
@@ -529,7 +529,7 @@
                     <li>static &lt;T&gt; boolean addAll(Collection&lt;? super T&gt; c, T... elements) Since 1.5</li>
                 </ul>
             </details>
-        
+
             <details>
                 <summary>변경 불가능한 Collection Factory</summary>
                 <ul>
@@ -543,7 +543,7 @@
                     <li>static &lt;K, V&gt; NavigableMap&lt;K, V&gt; unmodifiableNavigableMap(NavigableMap&lt;K, ? extends V&gt; m) Since 1.8</li>
                 </ul>
             </details>
-        
+
             <details>
                 <summary>Synchronization</summary>
                 <ul>
@@ -558,7 +558,7 @@
                     <li>static &lt;K, V&gt; NavigableMap&lt;K, V&gt; synchronizedNavigableMap(NavigableMap&lt;K, V&gt; m) Since 1.8</li>
                 </ul>
             </details>
-        
+
             <details>
                 <summary>타입 체킹 추가</summary>
                 <ul>
@@ -573,7 +573,7 @@
                     <li>static &lt;K, V&gt; NavigableMap&lt;K, V&gt; checkedNavigableMap(NavigableMap&lt;K, V&gt; m, Class&lt;K&gt; keyType, Class&lt;V&gt; valueType) Since 1.8</li>
                 </ul>
             </details>
-        
+
             <details>
                 <summary>Empty Collection(변경 불가)</summary>
                 <ul>
@@ -589,7 +589,7 @@
                     <li>static final &lt;K, V&gt; NavigableMap&lt;K, V&gt; emptyNavigableMap() Since 1.8</li>
                 </ul>
             </details>
-        
+
             <details>
                 <summary>Singleton Collection(변경 불가)</summary>
                 <ul>
@@ -599,7 +599,7 @@
                     <li>static &lt;T&gt; List&lt;T&gt; nCopies(int n, T o)</li>
                 </ul>
             </details>
-        
+
             <details>
                 <summary>기타</summary>
                 <ul>
@@ -651,18 +651,18 @@
         <summary>@FunctionalInterface interface Comparator&lt;T&gt; Since 1.2</summary>
         <ol>
             <li>int compare(T o1, T o2)</li>
-            
+
             <li>default Comparator&lt;T&gt; reversed() Since 1.8</li>
-            
+
             <li>default Comparator&lt;T&gt; thenComparing(Comparator&lt;? super T&gt; other) Since 1.8 + 2 오버로딩 + thenComparingInt, Long, Double</li>
             이 비교자가 두 객체를 같다고 판단하면, other가 새로 판단한다.
-            
+
             <li>static &lt;T extends Comparable&lt;? super T&gt;&gt; Comparator&lt;T&gt; naturalOrder() Since 1.8 + reverseOrder</li>
             자연스러운 비교자를 반환한다.
-    
+
             <li>static &lt;T&gt; Comparator&lt;T&gt; nullsFirst(Comparator&lt;? super T&gt; comparator) Since 1.8 + nullsLast</li>
             null은 모든 non-null 값보다 작다고 간주한다. null끼리는 서로 같다고 간주한다.
-            
+
             <li>static &lt;T, U&gt; Comparator&lt;T&gt; comparing(Function&lt;? super T, ? extends U&gt; keyExtractor, Comparator&lt;? super U&gt; keyComparator) Since 1.8 + 1 오버로딩 + comparingInt, Long, Double</li>
             정렬에 이용할 키를 생성하는 함수와, 키를 이용해 비교하는 비교자를 넘기면 둘을 포함하는 T타입 비교자를 반환.
         </ol>
@@ -683,10 +683,10 @@
             <summary>변경, 변환</summary>
             <ol>
                 <li>static void fill(long[] a, long val) + 17 오버로딩</li>
-                
+
                 <li>static &lt;T&gt; void setAll(T[] array, IntFunction&lt;? extends T&gt; generator) Since 1.8 + 3 오버로딩</li>
                 <li>static &lt;T&gt; void parallelSetAll(T[] array, IntFunction&lt;? extends T&gt; generator) SInce 1.8 + 3 오버로딩</li>
-                
+
                 <li>static &lt;T&gt; void parallelPrefix(T[] array, BinaryOperator&lt;T&gt; op) Since 1.8 + 7 오버로딩</li>
                 전체 원소에 순차적으로 연산 적용하여 값 변경. 큰 배열은 루프보다 이게 더 빠르다.
 
@@ -695,7 +695,7 @@
                 toString(Object[])이 o.toString()을 이용하는 반면, 여기서는 String.valueOf(Object)가 이용되고, 원소가 배열인 경우 "[]"를 추가하고 해당 배열의 원소들에 대해 같은 작업을 한다.
 
                 <li>static &lt;T&gt; List&lt;T&gt; asList(T... a)</li>
-                
+
                 <li>static &lt;T&gt; Spliterator&lt;T&gt; spliterator(T[] array) Since 1.8 + 7 오버로딩</li>
                 characteristics()에서 SIZED | SUBSIZED | ORDERED | IMMUTABLE를 반환하는 Spliterator 인스턴스를 반환한다.
 
@@ -716,14 +716,14 @@
             <ol>
                 <li>static int compare(boolean[] a, boolean[] b) Since 9 + 19 오버로딩</li>
                 <li>static int compareUnsigned(byte[] a, byte[] b) Since 9 + 7 오버로딩</li>
-                    
+
                 <li>static int mismatch(boolean[] a, boolean[] b) Since 9 + 19 오버로딩</li>
                 처음으로 일치하지 않는 인덱스 반환.
 
                 <li>static boolean equals(long[] a, long[] a2) + 9 오버로딩</li>
                 <li>static boolean equals(long[] a, int aFromIndex, int aToIndex, long[] b, int bFromIndex, int bToIndex) Since 9 + 9 오버로딩</li>
                 Object의 경우, Objects.equals(e1, e2)일 때 같다고 간주한다.
-                
+
                 <li>static boolean deepEquals(Object[] a1, Object[] a2) Since 1.5</li>
                 null일 수 있는 각 배열의 두 원소 e1, e2에 대하여, 다음 4가지 경우에 대해 둘이 같다고 판단한다.
                 <ol>
@@ -804,21 +804,21 @@
 
             <li>T get()</li>
             <li>boolean isPresent() + isEmpty Since 11</li>
-            
+
             <li>void ifPresent(Consumer&lt;? super T&gt; action)</li>
             <li>void ifPresentOrElse(Consumer&lt;? super T&gt; action, Runnable emptyAction) Since 9</li>
-            
+
             <li>Optional&lt;T&gt; filter(Predicate&lt;? super T&gt; predicate) : 값이 존재하고 필터를 통과하면 그대로 반환. 아니면 빈 컨테이너 반환</li>
             <li>&lt;U&gt; Optional&lt;U&gt; map(Function&lt;? super T, ? extends U&gt; mapper)</li>
             <li>&lt;U&gt; Optional&lt;U&gt; flatMap(Function&lt;? super T, ? extends Optional&lt;? extends U&gt;&gt; mapper)</li>
             mapper가 반환하는 값 자체가 Optional이므로 map()과 달리 추가적인 Optional로 감싸지 않는다.
-            
+
             <li>Optional&lt;T&gt; or(Supplier&lt;? extends Optional&lt;? extends T&gt;&gt; supplier) Since 9</li>
             값이 존재하면 그대로 반환. 없으면 제공되는 값 반환.
             <li>T orElse(T other)</li>
             <li>T orElseGet(Supplier&lt;? extends T&gt; supplier)</li>
             <li>T orELseThrow() Since 10 : 값이 없으면 NoSuchElementException + 1 오버로딩</li>
-            
+
             <li>Stream&lt;T&gt; stream() Since 9</li>
             값이 존재하면 해당 값 하나만 포함하는 스트림 반환. 없으면 빈 스트림 반환.
         </ol>
@@ -888,18 +888,18 @@
                 <li>static Set&lt;String&gt; getAvailableCalendarTypes() Since 1.8</li>
 
                 <li>boolean equals(Object obj) + after, before</li>
-                
+
                 <li>final Date getTime() + setTime</li>
                 <li>long getTimeInMillis() + setTimeInMillis</li>
                 <li>int get(int field) + set</li>
-                
+
                 <li>abstract void add(int field, int amount)</li>
                 <li>abstract void roll(int field, boolean up) : 1 기본단위만큼 up/down</li>
                 <li>void roll(int field, int amount) Since 1.2</li>
 
                 <li>final void clear() + 1 오버로딩 : 설정 취소. isSet()이 false를 반환</li>
                 <li>final boolean isSet(int field)</li>
-                
+
                 <li>String getDisplayName(int field, int style, Locale locale) Since 1.6 + 1 오버로딩</li>
                 <li>String getCalendarType() Since 1.8</li>
                 <li>TimeZone getTimeZone() + setTimeZone</li>
@@ -945,22 +945,22 @@
             <ol>
                 <li>void schedule(TimerTask task, long delay)</li>
                 delay밀리초 이후 task가 실행되도록 스케쥴.
-                
+
                 <li>void schedule(TimerTask task, Date time)</li>
                 time에 task가 실행되도록 스케쥴. time이 과거라면 즉시 실행
-                
+
                 <li>void schedule(TimerTask task, long delay, long period)</li>
                 delay밀리초 이후 period 주기를 갖고 task가 실행되도록 스케쥴.
-                
+
                 <li>void schedule(TimerTask task, Date firstTime, long period)</li>
                 firstTime 이후 period 주기를 갖고 task가 실행되도록 스케쥴.
-                
+
                 <li>void scheduleAtFixedRate(TimerTask task, long delay, long period) + 1 오버로딩</li>
                 period가 이전 task 종료가 아닌 최초 실행 시점을 기준으로 작동한다. 따라서 어떤 이유로 이전 작업이 지연된 경우, 시간당 작업률을 맞추기 위해 이후 작업이 연속적으로 실행될 수 있다.
-                
+
                 <li>void cancel()</li>
                 타이머를 종료한다. 스케쥴된 모든 작업을 버리고, 현재 실행중인 작업에는 간섭하지 않는다. 타이머 종료 후 백그라운드 스레드도 우아하게 종료되어 GC 대상이 된다. 이후 더 이상의 스케쥴은 불가능하다.
-                
+
                 <li>int purge() Since 1.5</li>
                 호출할 일이 거의 없는 메서드. 많은 작업을 한번에 취소한 경우, 취소한 작업들을 제거하여 참조가 없는 경우 GC 대상이 되도록 한다.
             </ol>
@@ -984,7 +984,7 @@
                     <li>true 반환 : 1회용으로 스케쥴되었지만 아직 실행되지 않은 경우, 반복 작업으로 스케쥴된 경우</li>
                     <li>false 반환 : 1회용으로 스케쥴되어 이미 실행된 경우, 아직 스케쥴되지 않은 경우, 이미 취소된 경우</li>
                 </ul>
-                
+
                 <li>long scheduledExecutionTime()</li>
                 가장 최근에 스케쥴된 ─ 또한 실제로 실행된 ─ 시점을 반환한다. 전형적으로 run 메서드에서, 작업이 너무 길어지는 것을 방지하기 위해 사용된다.
             </ol>
@@ -1002,10 +1002,10 @@
             <li>double에 관한 통계를 모은 상태 객체. 스트림과 함께 사용되도록 설계되었다.</li>
             예. var stats = doubleStream.collect(DoubleSummaryStatistics::new, DoubleSummaryStatistics::accept, DoubleSummaryStatistics::combine);<br>
             예. var stats = people.stream().collect(Collectors.summarizingDouble(Person::getWeight));
-            
+
             <li>DoubleSummaryStatistics() + (long count, double min, double max, double sum) Since 10</li>
             갯수 0, 합계 0, 최솟값 Double.POSITIVE_INFINITY, 최댓값 Double.NEGATIVE_INFINITY, 평균 0인 객체 생성.
-            
+
             <li>void accept(double value) : 요약 정보에 value를 추가</li>
             <li>void combine(DoubleSummaryStatistics other) : other를 호출자에 추가</li>
             <li>final long getCount() + getSum, getMin, getMax, getAverage</li>
@@ -1016,13 +1016,13 @@
         <ol>
             <li>public Random() + (long seed)</li>
             의사난수 생성기. 스레드-안전하지만 성능 저하 가능성이 있으므로 ThreadLocalRandom을 고려할 것.
-            
+
             <li>void setSeed(long seed)</li>
             <li>void nextBytes(byte[] bytes) Since 1.1</li>
             <li>int nextInt() + 1 오버로딩, nextLong, nextBoolean Since 1.2, nextFloat, nextDouble</li>
             <li>double nextGaussian()</li>
             평균 0, 표준분산 1인 정규분포 난수 반환
-            
+
             <details>
                 <summary>난수 스트림</summary>
                 <ol>
@@ -1065,7 +1065,7 @@
                 <li>Base64.Encoder withoutPadding()</li>
             </ol>
         </details>
-        <details>    
+        <details>
             <summary>static class Base64.Decoder Since 1.8</summary>
             <ol>
                 <li>byte[] decode(byte[] src)</li>
@@ -1113,7 +1113,7 @@
         </ol>
         <details>
             <summary>Constructor Detail</summary>
-            <ol>            
+            <ol>
                 <li>public Scanner(Readable source)</li>
                 <li>public Scanner(InputStream source) + 2 오버로딩</li>
                 <li>public Scanner(File source) + 2 오버로딩</li>
@@ -1157,7 +1157,7 @@
         <summary>class StringTokenizer implements Enumberation&lt;Object&gt; Since 1.0</summary>
         <ol>
             <li>public StringTokenizer(String str, String delim, boolean returnDelims) + 2 오버로딩</li>
-            
+
             <li>boolean hasMoreTokens()</li>
             <li>String nextToken() + 1 오버로딩</li>
             <li>int countTokens()</li>
@@ -1198,7 +1198,7 @@
             <li>Object setProperty(String key, String value) Since 1.2</li>
             <li>String getProperty(String key)</li>
             <li>String getProperty(String key, String defaultValue)</li>
-            
+
             <li>Enumeration&lt;?&gt; propertyNames()</li>
             <li>Set&lt;String&gt; stringPropertyNames() Since 1.6</li>
 
@@ -1206,10 +1206,10 @@
             <li>void load(InputStream inStream) Since 1.2</li>
             <li>void store(Writer writer, String comments) Since 1.6</li>
             <li>void store(OutputStream out, String comments) Since 1.2</li>
-            
+
             <li>void loadFromXML(InputStream in) Since 1.5</li>
             <li>void storeToXML(OutputStream os, String comment) Since 1.5 + 2 오버로딩</li>
-            
+
             <li>void list(PrintStream out) + 1 오버로딩 : 디버깅에 유용</li>
         </ol>
     </details>
@@ -1225,7 +1225,7 @@
         <li>static UUID nameUUIDFromBytes(byte[] name) : type 3 UUID 생성</li>
         <li>static UUID fromString(String name) : toString() 결과로부터 UUID 생성</li>
         <li>+ com.fasterxml.uuid, com.datastax.cassandra</li>
-        
+
         <li>int version()</li>
         1 Time-based UUID, 2 DCE security UUID, 3 Name-based UUID, 4 Randomly generated UUID
         <li>int variant()</li>

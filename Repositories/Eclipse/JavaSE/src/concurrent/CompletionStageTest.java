@@ -8,18 +8,18 @@ import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.Test;
 
 class CompletionStageTest {
-    
+
     static <T> T asIs(T t) {
         System.out.printf("%d : %s\n", System.currentTimeMillis(), t);
         return t;
     }
-    
+
     static <T> T asIsEx(T t) {
         System.out.printf("%d(Exception) : %s\n", System.currentTimeMillis(), t);
         rethrow(new Exception("그냥 던짐"));
         return t;
     }
-    
+
     @SuppressWarnings("unchecked")
     static <T extends Throwable> void rethrow(Throwable t) throws T {
         throw (T) t;
@@ -35,7 +35,7 @@ class CompletionStageTest {
 1571620621741 : 10
  */
     }
-    
+
     @Test
     void exceptionallyComposeTest() throws InterruptedException, ExecutionException {
         var cf = CompletableFuture.supplyAsync(() -> asIsEx(1));
