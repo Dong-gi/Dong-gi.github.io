@@ -1,0 +1,27 @@
+불린 플래그 : XX:+FlagName, XX:-FlagName
+파라미터 플래그 : -XX:FlagName=value
+
+근본적인 혁신이 없는 이상 애플리케이션은 업데이트할 때마다 조금씩 느려진다
+
+코드 캐시 크기 : -XX:ReservedCodeCacheSize=N(MB)
+힙 크기 : -XmsN(초기값), -XmxN(최대값)
+힙 내부 제너레이션 크기 : -XX:NewRatio=N, -XX:NewSize=N(영 제너레이션 초기 크기), -XX:MaxNewSize=N(영 제너레이션 최대 크기), -XmnN(NewSize, MaxNewSize 동일하게 설정)
+    (영 제너레이션 초기 크기) = (힙 초기 크기) / (1 + NewRatio)
+    영 제너레이션이 큰 경우 : 덜 자주 수집되고, 더 적은 객체가 올드 제너레이션으로 이동. 대신 올드 제너레이션이 작아 풀 GC는 더 자주 일어난다
+    올드 제너레이션 크기는 영 제너레이션 외 나머지 전부
+
+GC 병렬 스레드 개수 : -XX:ParallelGCThreads=N
+
+힙 히스토그램 : jcmd {pid} GC.class_histogram
+힙 덤프 : jcmd {pid} GC.heap_dump ./out.hprof
+
+-XX:+HeapDumpOnOutOfMemoryError : 메모리 부족시 힙 덤프 생성
+-XX:HeapDumpPath={path} : 힙 덤프 작성 위치
+-XX:+HeapDumpBeforeFullGC : 풀 GC 전에 힙 덤프 생성
+-XX:+HeapDumpAfterFullGC : 풀 GC 후에 힙 덤프 생성
+
+-XX:GCHeapFreeLimit=N : 풀 GC로 힙의 N% 이상 해제되면 OK
+
+컴퓨터의 엔트로피를 이용하는 SecureRandom, SSL연결은 엔트로피를 사용할 수 있을 때까지 대기하므로 성능 테스트시 유의해야 한다
+
+자바 코드는 보통 JNI 호출보다 더 빠르다

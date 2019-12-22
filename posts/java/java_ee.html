@@ -954,6 +954,81 @@
             <img class="rounded mx-auto d-block" src="imgs/20191009_124647.png">
         </ol>
     </details>
+    <ol>
+        <li>@Async</li>
+        메서드를 스프링이 관리하는 ThreadExecutor에서 비동기적으로 실행하는 프록시를 생성한다.
+        <button class="btn-code" path="Repositories/STS/web-app/src/main/java/io/github/donggi/WebAppApplication.java" lan="java">@EnableAsync »</button>
+        <button class="btn-code" path="Repositories/STS/web-app/src/main/java/io/github/donggi/controller/SleepController.java" lan="java">@Async »</button>
+        
+        <li>@Scheduled</li>
+        메서드를 명시적으로 호출하지 않아도 스케쥴대로 실행된다.
+        <button class="btn-code" path="Repositories/STS/web-app/src/main/java/io/github/donggi/WebAppApplication.java" lan="java">@EnableScheduling »</button>
+        <button class="btn-code" path="Repositories/STS/web-app/src/main/java/io/github/donggi/controller/HelloController.java" lan="java">@Scheduled »</button>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>WebSocket</summary>
+    <ul>
+        <li>HTTP/1.1 업그레이드 기능을 이용해 기존 HTTP/HTTPS를 웹 소켓 연결 WS/WSS로 그대로 전환</li>
+        사용하던 80/443포트 그대로 연결하므로 방화벽의 차단에도 안전. 프록시 서버가 HTTP 업그레이드를 처리하지 않는다면 WSS를 이용.
+
+        <li>웹소켓 API Since JavaEE 7</li>
+        <ul>
+            <li>javax.websocket : 클라이언트/서버 공통 기능</li>
+            <ul>
+                <li>WebSocketContainer</li>
+                웹소켓 클라이언트 기능. connectToServer()
+                <li>ContainerProvider</li>
+                웹소켓 클라이언트 인스턴스 획득을 위한 getWebSocketContainer()
+                <li>@interface ClientEndpoint</li>
+                POJO가 클라이언트측 웹소켓임을 나타낸다. 해당 클래스는 메서드는 @OnOpen, @OnClose, @OnError, @OnMessage 애너테이트될 수 있다
+                <li>@interface OnOpen + OnClose</li>
+                선택적 Session 매개변수, 선택적 EndpointConfig 매개변수, 0 ~ n개 @PathParam String 매개변수를 가질 수 있다
+                <li>@interface OnError</li>
+                선택적 Session 매개변수, Throwable 매개변수, 0 ~ n개 @PathParam String 매개변수를 가질 수 있다
+                <li>@interface OnMessage</li>
+                선택적 Session 매개변수, 0 ~ n개 @PathParam String 매개변수, 아래 중 하나의 메시지 매개변수
+                <ul>
+                    <li>텍스트 메시지 처리</li>
+                    <ul>
+                        <li>전체 메시지 String</li>
+                        <li>메시지로부터 변환되는 Java primitive or class</li>
+                        <li>메시지 청크 String and boolean pair : 마지막 메시지는 true</li>
+                        <li>전체 메시지 Reader</li>
+                        <li>Decoder.Text or Decoder.TextStream</li>
+                    </ul>
+                    <li>이진 메시지 처리</li>
+                    <ul>
+                        <li>전체 메시지 byte[] or ByteBuffer</li>
+                        <li>메시지 청크 (byte[] or ByteBuffer) and boolean pair : 마지막 메시지는 true</li>
+                        <li>전체 메시지 InputStream</li>
+                        <li>Decoder.Binary or Decoder.BinaryStream</li>
+                    </ul>
+                    <li>퐁 메시지 처리 : PongMessage</li>
+                </ul>
+            </ul>
+            <li>javax.websocket.server : 서버 전용 기능</li>
+            <ul>
+                <li>ServerContainer extends WebSocketContainer</li>
+                ServerEndpointConfig 인스턴스 또는 @ServerEndpoint 클래스 등록
+            </ul>
+        </ul>
+
+        <li>Spring Boot 예시</li>
+        <ul>
+            <li>웹소켓 API를 사용하기 위해 javax.websocket-api, 스프링의 관리를 위해 spring-websocket 필요
+                <button class="btn-code" path="Repositories/STS/web-app/pom.xml" lan="xml">pom.xml »</button></li>
+            <li>스프링이 Endpoint를 찾아 알아서 빈을 생성하도록 ServerEndpointExporter 생성
+                <button class="btn-code" path="Repositories/STS/web-app/src/main/java/io/github/donggi/config/WebSocketConfig.java" lan="java">WebSocketConfig.java »</button></li>
+            <li>@ServerEndpoint 예
+                <button class="btn-code" path="Repositories/STS/web-app/src/main/java/io/github/donggi/websocket/Echo.java" lan="java">Echo.java »</button></li>
+            @ServerEndpoint 안에서 @Autowired 주입을 위해 @ServerEndpoint(configurator = ServerEndpointConfigurator.class)를 설정하고 @PostConstruct에서 주입을 실행했음을 참고
+            <button class="btn-code" path="Repositories/STS/web-app/src/main/java/io/github/donggi/config/ServerEndpointConfigurator.java" lan="java">ServerEndpointConfigurator.java »</button>
+        </ul>
+    </ul>
 </details>
 
 <hr>

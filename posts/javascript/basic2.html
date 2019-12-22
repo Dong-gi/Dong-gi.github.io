@@ -80,10 +80,16 @@
         <li>프로토콜은 ws(비보안), wss(보안)</li>
         <li>웹 소켓은 동일 소스 정책이 적용되지 않으므로, 연결을 수락할지는 완전히 서버의 권한</li>
         <li>이벤트 종류 : open, message, error, close</li>
-        let socket = new WebSocket("ws://host-address/page_or_function_name");<br>
-        socket.send("Hello World");<br>
-        socket.onmessage = function(event) { event.data ... }<br>
-        socket.close(); // close 이벤트 객체는 wasClean, code, reason 프로퍼티 존재
+        let connection = new WebSocket("ws://host-address/page_or_function_name");<br>
+        // new WebSocket("wss://secure.example.com/chat", {"chat.v1", "chat.v2"});
+        // connection.readyState === WebSocket.OPEN // CONNECTING, OPEN, CLOSING, CLOSED
+        // connection.bufferedAmount : 전송 대기중인 크기
+        connection.send("Hello World");<br>
+        connection.onmessage = function(event) { event.data ... }<br>
+        // onopen, onclose, onerror
+        // onclose 이벤트 종료코드 1000외는 모두 비정상 종료 : http://tools.ietf.org/html/rfc6455#section-7.4
+        // onmessage 이벤트 data 프로퍼티 : 메시지가 텍스트면 문자열, 메시지가 바이너리고 connection.binaryType이 "blob"(기본)이면 Blob, 메시지가 바이너리고 connection.binaryType이 "arraybuffer"면 ArrayBuffer
+        connection.close(); // close 이벤트 객체는 wasClean, code, reason 프로퍼티 존재
     </ol>
 </details>
 

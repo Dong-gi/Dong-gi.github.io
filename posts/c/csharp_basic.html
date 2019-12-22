@@ -642,12 +642,12 @@
 
         <details>
             <summary>yield</summary>
-            public static IEnumerable<int> InfiniteSeries(int limit) {<br>
-            　　var num = 0;<br>
-            　　if(num &lt;= limit)<br>
-            　　　　yield return ++start;<br>
-            　　yield break;<br>
-            }
+<pre>public static IEnumerable&lt;int&gt; InfiniteSeries(int limit) {
+    var num = 0;
+    if(num &lt;= limit)
+        yield return ++start;
+    yield break;
+}</pre>
         </details>
 
         <details>
@@ -657,15 +657,16 @@
 
         <details>
             <summary>async 한정자, await 연산자</summary>
-            async로 한정한 void 리턴 메서드는 await없이 비동기 실행된다.<br>
-            async로 한정한 Task 또는 Task&lt;TResult&gt; 반환 메서드/Task/람다식은 await 연산자를 만나는 곳에서 호출자에게 제어를 넘겨주며, await 연산자가 없으면 동기적으로 실행된다.<br>
-            await 이후의 코드들은 대기하는 작업이 종료된 이후에 실행되도록 컴파일된다.<br>
-            <br>
-            private async void Read() {<br>
-            　　using(FileStream fs)<br>
-            　　　　await fs.ReadAsync(buf, 0, buf.Length);<br>
-            　　　　// public Task&lt;int&gt; ReadAsync(byte[] buffer, int offset, int count);
-            }
+            <ul>
+                <li>async로 한정한 void 리턴 메서드는 await없이 비동기 실행된다.</li>
+                <li>async로 한정한 Task 또는 Task&lt;TResult&gt; 반환 메서드/Task/람다식은 await 연산자를 만나는 곳에서 호출자에게 제어를 넘겨주며, await 연산자가 없으면 동기적으로 실행된다.<br></li>
+                <li>await 이후의 코드들은 대기하는 작업이 종료된 이후에 실행되도록 컴파일된다.</li>
+            </ul>
+<pre>private async void Read() {
+    using(FileStream fs)
+        await fs.ReadAsync(buf, 0, buf.Length);
+        // public Task&lt;int&gt; ReadAsync(byte[] buffer, int offset, int count);
+}</pre>
         </details>
     </details>
 
