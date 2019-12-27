@@ -96,10 +96,13 @@ const posts = {
         { filename: "posts/python/built_in_function.html", category: "Programming/Python", title: "Python Built-in Functions 3.8" },
         { filename: "posts/python/built_in_constant.html", category: "Programming/Python", title: "Python Built-in Constants 3.8" },
         { filename: "posts/python/built_in_type.html", category: "Programming/Python", title: "Python Built-in Types 3.8" },
-        { filename: "posts/python/1904252133.html", category: "Programming/Python", title: "Python Built-in Exceptions" },//, top: true
-        { filename: "posts/python/1904252134.html", category: "Programming/Python", title: "Python Text Processing Services" },//, top: true
-        { filename: "posts/python/1904252135.html", category: "Programming/Python", title: "Python Binary Data Services" },//, top: true
-        { filename: "posts/python/1904252136.html", category: "Programming/Python", title: "Python Data Types" },//, top: true
+        { filename: "posts/python/built_in_exception.html", category: "Programming/Python", title: "Python Built-in Exceptions 3.8" },
+        { filename: "posts/python/string.html", category: "Programming/Python/Library", title: "Lib/string : 문자열 공통 연산" },
+        { filename: "posts/python/re.html", category: "Programming/Python/Library", title: "Lib/re : 정규표현식" },
+        { filename: "posts/python/textwrap.html", category: "Programming/Python/Library", title: "Lib/textwrap : 텍스트 정돈" },
+        { filename: "posts/python/unicodedata.html", category: "Programming/Python/Library", title: "Lib/unicodedata" },
+        { filename: "posts/python/1904252135.html", category: "Programming/Python", title: "Python Binary Data Services" },
+        { filename: "posts/python/1904252136.html", category: "Programming/Python", title: "Python Data Types" },
 
         { filename: "posts/tip/aws.html", category: "Tip", title: "AWS" },
         { filename: "posts/tip/centos.html", category: "Tip", title: "CentOS" },

@@ -262,107 +262,39 @@
 <details>
     <summary>정규표현식</summary>
     <ul>
-        <li>/~/ instanceof RegExp</li>
-        (/123/gm)과 (new RegExp('123', 'gm'))는 의미적으로 동일하다<br>
-        flags : g(global), i(ignoreCase), m(multiline)<br>
-        global 플래그를 이용하는 경우, RegExp의 lastIndex가 검색 위치를 기억하여, 해당 위치부터 재탐색한다. 따라서 global RegExp에 동일한 문자열을 반복적으로 test()하는 경우 true, false가 토글되는 현상을 경험할 수도 있으며, lastIndex를 직접 0 이하로 조정하거나, global 플래그를 빼는 등의 주의가 필요하다.
-    </ul>
-    
-    <details>
-        <summary>문자 리터럴</summary>
-        <ul>
-            <li>x 그 자체</li>
-            <li>\0, \t, \n, \v, \f, \r</li>
-            <li>\xFF 아스키 코드, \uFFFF 유니코드</li>
-        </ul>
-    </details>
+        <li>정규표현식(RegExp) 리터럴 /X/</li>
+        /123/gm과 new RegExp('123', 'gm')는 의미적으로 동일하다
 
-    <details>
-        <summary>문자 집합</summary>
-        <ul>
-            <li>\w, \W, \s, \S, \d, \D</li>
-            <li>[xyz..]</li>
-            '유니코드도 가능합니다.'.replace(/[가-힣]/g, '[$&amp;]') → "[유][니][코][드][도] [가][능][합][니][다]."
-            <li>[^xyz..]</li>
-            <li>. 줄바꿈, 라인 종료 문자를 제외한 모든 문자</li>
-        </ul>
-    </details>
+        <li>Flag : g(global), i(ignoreCase), m(multiline), s(.이 newline도 매칭 Since ES2018)</li>
+        global 플래그를 이용하는 경우, RegExp.lastIndex로 검색 위치를 기록하며, 해당 위치부터 재탐색한다.
+        따라서 global RegExp에 동일 문자열을 반복적으로 test()하는 경우 true, false가 토글되는 현상을 경험할 수도 있다<br>
 
-    <ul>
+        ↓ 자바와 동일한 부분은 생략했음
         <li>Greedy 수량사</li>
         ?, *, +, {n}, {n, }, {n, m}
 
-        <li>Non-Greedy 수량사</li>
-        [Greedy 수량사]?
-    </ul>
-
-    <details>
-        <summary>Logical operations</summary>
+        <li>replace()에서의 backreference</li>
         <ul>
-            <li>XY » X followed by Y</li>
-            <li>X|Y » Either X or Y</li>
-            <li>(X) » X, as a capturing group</li>
-            <li>(?:X) » X, as a non-capturing group</li>
-        </ul>
-    </details>
-
-    <details>
-        <summary>경계 매칭</summary>
-        <ul>
-            <li>^ » 시작</li>
-            <li>$ » 끝</li>
-            <li>\b » 단어 경계 ↔ \B</li>
-            <li>(?=p) » positive lookahead</li>
-            <li>(?!p) » negative lookbehind</li>
-            <li>\n  » n번째 그룹 매칭 시작 위치</li>
-        </ul>
-    </details>
-
-    <details>
-        <summary>매칭 문자열 자체 및 그 앞뒤 매칭</summary>
-        <ol>
             <li>$&amp; 일치 문자열</li>
             '1 12 123 1234'.replace(/1/gm, '[$&amp;]') → "[1] [1]2 [1]23 [1]234"
-
             <li>$` 앞부분</li>
             '1 12 123 1234'.replace(/1/gm, '[$`]') → "[] [1 ]2 [1 12 ]23 [1 12 123 ]234"
-
             <li>$' 뒷부분</li>
             '1 12 123 1234'.replace(/1/gm, "[$']") → "[ 12 123 1234] [2 123 1234]2 [23 1234]23 [234]234"
-
-            <li>$n 캡처 그룹</li>
-            'novel@koreatech.ac.kr'.replace(/([\w\.]+)@((\w+\.\w+)(\.\w+)*)/, 'ID : [$1], DOMAIN : [$2], ETC : [$3], [$4]')<br>
-            → "ID : [novel], DOMAIN : [koreatech.ac.kr], ETC : [koreatech.ac], [.kr]"
-        </ol>
-    </details>
-
-    <details>
-        <summary>관련 메서드</summary>
-        <ul>
-            <li>RegExp#test()</li>
-            패턴이 검색되는지 여부 반환<br>
-            /1/gm.test('234567890') → false
-
-            <li>RegExp#exec()</li>
-            패턴을 검색하여 일치하는 인덱스들을 배열로 반환한다.<br>
-            매칭 시작 위치 index, 검색 텍스트 input 프로퍼티를 가진다. [i] 접근으로 캡처 그룹을 가져올 수 있다.<br>
-            /1/gm.exec('1 12 123') → ["1", index: 0, input: "1 12 123", groups: undefined]
-
-            <li>String#search(regexp)</li>
-            패턴을 검색하여 가장 처음 일치하는 인덱스를 반환<br>
-            '1 12 123'.search(/2/gm) → 3
-
-            <li>String#match(regexp)</li>
-            패턴과 일치하는 모든 부분문자열 반환
-
-            <li>String#replace(regexp, replaceValue)</li>
-            패턴과 일치하는 부분문자열을 replaceValue로 치환
-
-            <li>String#split(regexp, limit)</li>
-            패턴을 기준으로 문자열을 자른 결과를 반환<br>
-            '1 12 123 1234'.split(/1/gm, 4) → ["", " ", "2 ", "23 "]
         </ul>
-    </details>
+
+        <li>관련 메서드</li>
+        <ul>
+            <li>RegExp#test() : 패턴이 검색되는지 여부</li>
+            <li>RegExp#exec() : 매칭되는 인덱스들을 배열로 반환.
+                매칭 시작 index, 검색 텍스트 input 프로퍼티를 가진다. [i] 접근으로 캡처 그룹을 가져올 수 있다.</li>
+            /1/gm.exec('1 12 123') → ["1", index: 0, input: "1 12 123", groups: undefined]
+            <li>String#search(regexp) : 처음 매칭된 인덱스 반환</li>
+            <li>String#match(regexp) : 매칭되는 모든 부분문자열 반환</li>
+            <li>String#replace(regexp, replaceValue) : 매칭된 부분문자열을 replaceValue로 치환</li>
+            <li>String#split(regexp, limit) : 매칭된 문자열을 분리</li>
+        </ul>
+    </ul>
 </details>
 
 <hr>
