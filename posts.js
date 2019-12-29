@@ -114,6 +114,7 @@ const posts = {
         { filename: "posts/tip/git.html", category: "Tip", title: "Git" },
         { filename: "posts/tip/giregi.html", category: "Tip", title: "기레기 고소 방법" },
         { filename: "posts/tip/hangul.html", category: "Tip", title: "한글 유니코드" },
+        { filename: "posts/tip/linear_algebra.html", category: "Tip", title: "선형대수", top: true },
         { filename: "posts/tip/tomcat.html", category: "Tip", title: "tomcat" },
         { filename: "posts/tip/macro.html", category: "Tip", title: "macro" },
         { filename: "posts/tip/playstore.html", category: "Tip", title: "Google Play Store" },

@@ -1,3 +1,233 @@
+<script>
+    // 공식 도움말 https://github.com/mathjax/MathJax-demos-web
+    // LaTeX 키워드 https://oeis.org/wiki/List_of_LaTeX_mathematical_symbols
+    // LaTeX 스택 https://tex.stackexchange.com/
+    MathJax = {
+        tex: {
+            tags: 'ams',  // should be 'ams', 'none', or 'all'
+            inlineMath: [['식[', ']식']]
+        }
+    };
+</script>
+<script id="MathJax-script" async src="source/tex-chtml.js"></script>
+<link rel="stylesheet" href="source/mjx-chtml.css">
+
+<hr>
+
+<details open>
+    <summary>선형대수?</summary>
+    <strong>1차(선형) 시스템을 다루는 대수학</strong>
+</details>
+
+<hr>
+
+<details>
+    <summary>연립일차방정식과 행렬</summary>
+    <ul>
+        <li>임의 연립일차방정식
+            \begin{align*}
+            a_{11}x_{1}+a_{12}x_{2}+\cdots+a_{1n}x_{n} & =b_{1} \\
+            a_{21}x_{1}+a_{22}x_{2}+\cdots+a_{2n}x_{n} & =b_{2} \\
+            \vdots \\
+            a_{m1}x_{1}+a_{m2}x_{2}+\cdots+a_{mn}x_{n} & =b_{m} \\
+            \end{align*}
+            을 계수들의 첨가행렬(augmented matrix)
+            \begin{gather*}
+                \begin{bmatrix}
+                    a_{11} & a_{12} & \cdots & a_{1n} \\
+                    a_{21} & a_{22} & \cdots & a_{2n} \\
+                    \vdots & \vdots &  & \vdots \\
+                    a_{m1} & a_{m2} & \cdots & a_{mn} \\
+                \end{bmatrix}
+                \begin{bmatrix}
+                    x_{1} \\ x_{2} \\ \vdots \\ x_{n}
+                \end{bmatrix}
+                =
+                \begin{bmatrix}
+                    b_{1} \\ b_{2} \\ \vdots \\ b_{m}
+                \end{bmatrix} \\
+                A\mathbf{x} = \mathbf{b} \\
+                \left[
+                    A | \mathbf{b}
+                \right]
+                =
+                \left[
+                \begin{array}{cccc|c}
+                    a_{11} & a_{12} & \cdots & a_{1n} & b_{1} \\
+                    a_{21} & a_{22} & \cdots & a_{2n} & b_{2} \\
+                    \vdots & \vdots &  & \vdots & \vdots \\
+                    a_{m1} & a_{m2} & \cdots & a_{mn} & b_{m} \\
+                \end{array}
+                \right]
+            \end{gather*}
+            로 나타낼 수 있다.</li>
+        <li>동차연립일차방정식</li>
+        <ul>
+            <li>모든 일차방정식의 상수항이 0인 연립일차방정식</li>
+            \begin{align*}
+                a_{11}x_{1}+a_{12}x_{2}+\cdots+a_{1n}x_{n} & =0 \\
+                a_{21}x_{1}+a_{22}x_{2}+\cdots+a_{2n}x_{n} & =0 \\
+                \vdots \\
+                a_{m1}x_{1}+a_{m2}x_{2}+\cdots+a_{mn}x_{n} & =0 \\
+            \end{align*}
+            <li>동차연립일차방정식의 해는 자명해식[(0, 0, \cdots, 0)]식만 갖거나, 무수히 많다</li>
+        </ul>
+        <li>연립방정식을 푸는 대수적인 연산</li>
+        <ol>
+            <li>0이 아닌 상수를 방정식에 곱하기</li>
+            <li>두 방정식을 바꾸기</li>
+            <li>한 방정식의 상수 배를 다른 방정식에 더하기</li>
+        </ol>
+        <li>↓ 첨가행렬에 대한 기본 행연산</li>
+        <ol>
+            <li>0이 아닌 상수를 행에 곱하기</li>
+            <li>두 행을 바꾸기</li>
+            <li>한 행의 상수 배를 다른 방정식에 더하기</li>
+        </ol>
+        <li>행사다리꼴 행렬(REF; Row Echelon Form matrix)</li>
+        <ol>
+            아래 두 조건을 만족하는 행렬은 행사다리꼴 행렬이다
+            <li>모든 원소가 0인 행은 맨 아래에 있다</li>
+            <li>나머지 행의 선행 계수는 그 위 행의 선행 계수보다 오른쪽에 있다</li>
+            \begin{bmatrix}
+                2 & 1 & 1 & 5 \\
+                0 & -8 & -2 & -12 \\
+                0 & 0 & 1 & 2
+            \end{bmatrix}
+        </ol>
+        <li>기약 행사다리꼴 행렬(RREF; Reduced REF)</li>
+        REF면서, 선행 계수가 존재하는 행의 선행 계수 외 모든 원소가 0인 경우
+        <li>행사다리꼴에 관한 성질</li>
+        <ol>
+            <li>모든 행렬은 유일한 기약 행사다리꼴을 갖는다</li>
+            <li>행렬의 모든 행사다리꼴은 모두 같은 위치에 선행 계수를 가지며, 이 위치가 행렬의 축(pivot)이다</li>
+        </ol>
+        <li>역행렬</li>
+        <ul>
+            <li>만약 식[A]식가 정사각행렬이고, 식[AB=BA=I]식를 만족하는 식[B]식가 존재한다면,</li>
+            식[A]식는 가역(invertible) 또는 정칙(nonsingular)이라 하고, 식[B]식는 식[A]식의 역행렬(inverse; 식[A^{-1}]식)
+            <li>위와 같은 행렬 식[B]식가 존재하지 않으면 식[A]식는 특이(singular)</li>
+            <li>식[A]식가 가역이면 식[A^{T}]식도 가역이고, 식[(A^{T})^{-1}=(A^{-1})^{T}]식이다.</li>
+            증명: 식[
+            \begin{gather*}
+                A^{T}(A^{-1})^{T}=(A^{-1}A)^{T}=I^{T}=I \\
+                (A^{-1})^{T}A^{T}=(AA^{-1})^{T}=I^{T}=I
+            \end{gather*}
+            ]식
+            <li>정사각행렬 식[A]식에 대해, 아래 명제들은 동등하다</li>
+            <ol>
+                <li>식[A]식는 가역이다</li>
+                (4 ⇒ 1)증명. 식[E_{k} \cdots E_{2}E_{1}A=I]식에 대하여, 각 기본행렬 식[E_{1}, E_{2}, \cdots, E_{k}]식은 모두 가역이므로, 식[A=E_{1}^{-1}E_{2}^{-1} \cdots E_{k}^{-1}]식이며, 식[A]식는 가역행렬들의 곱이므로 가역이다
+                <li>연립방정식 식[A\mathbf{x}=0]식은 자명해만 갖는다</li>
+                (1 ⇒ 2)증명. 연립일차방정식 식[A\mathbf{x}=0]식의 임의 해 식[\mathbf{x}_{0}]식에 대하여, 식[A^{-1}A\mathbf{x}_{0}=I\mathbf{x}_{0}=\mathbf{x}_{0}=0]식이므로, 식[A\mathbf{x}=0]식은 자명해만을 갖는다<br>
+                <li>식[A]식의 기약 행사다리꼴은 식[I]식다</li>
+                (2 ⇒ 3)증명. 연립방정식 식[A\mathbf{x}=0]식은 자명해만 가지므로, 첨가행렬에 기본행연산을 거듭하면 식[I]식에 도달한다.
+                <li>식[A]식는 기본행렬들의 곱으로 표현할 수 있다</li>
+                (3 ⇒ 4)증명. (2 ⇒ 3)증명의 각 기본행연산은 기본행렬들을 식[A]식의 왼쪽에 곱하여 이루어진다. 따라서 식[E_{k} \cdots E_{2}E_{1}A=I]식를 만족하는 식[E_{1}, E_{2}, \cdots, E_{k}]식가 존재한다.
+                <li>차원이 같은 두 정사각행렬 식[A, B]식에 대하여, 식[AB=I]식 또는 식[BA=I]식을 만족하면 식[B=A^{-1}]식이다.</li>
+                증명. 먼저 식[A]식가 가역임을 보인다. 연립일차방정식 식[A\mathbf{x}=0]식의 임의 해 식[\mathbf{x}_{0}]식에 대하여, 식[BA\mathbf{x}_{0}=I\mathbf{x}_{0}=\mathbf{x}_{0}=0]식, 위 (1, 2) 명제는 동등하므로 식[A]식는 가역이다.<br>
+                식[BA=I]식 양쪽에 식[A^{-1}]식를 곱하면, 식[BAA^{-1}=BI=IA^{-1}]식, 따라서 식[B=A^{-1}]식
+            </ol>
+            <li>따름정리. 차원이 같은 두 정사각행렬 식[A, B]식에 대하여, 식[AB]식가 가역이면 식[A, B]식 모두 가역이다</li>
+            증명. 식[AB(AB)^{-1}=I]식에 대해, 식[A(B(AB)^{-1})=I]식이므로 식[A^{-1}=B(AB)^{-1}]식
+        </ul>
+        <li>Row equivalent</li>
+        행렬 식[A]식와 식[B]식가 서로 기본 행연산을 통해 얻을 수 있는 경우
+        <li>기본행렬; Elementary matrix</li>
+        <ul>
+            <li>단위 행렬 식[I_{n}]식에 기본 행연산을 한 번 수행하여 얻은 행렬</li>
+            <li>기본행렬 식[E]식에 대하여, 식[EA]식는 식[A]식에 기본 행연산을 수행한 것과 같다.</li>
+            <li>유일해가 존재하는 연립일차방정식에 대한 첨가행렬의 기약 사다리꼴이 식[I]식임을 이용하여 역행렬을 구할 수 있다</li>
+            <ol>
+                <li>예제. 식[A=
+                \begin{bmatrix}
+                    2 & 0 & 1 \\
+                    -2 & 3 & 4 \\
+                    -5 & 5 & 6
+                \end{bmatrix}
+                ]식의 역행렬을 구하라.</li>
+                <li>풀이. 식[
+                \left[
+                    A | I
+                \right]
+                =
+                \left[
+                \begin{array}{ccc|ccc}
+                    2 & 0 & 1 & 1 & 0 & 0 \\
+                    -2 & 3 & 4 & 0 & 1 & 0 \\
+                    -5 & 5 & 6 & 0 & 0 & 1
+                \end{array}
+                \right]
+                ]식<br>
+                식[
+                \left[
+                \begin{array}{ccc|ccc}
+                    2 & 0 & 1 & 1 & 0 & 0 \\
+                    0 & 3 & 5 & 1 & 1 & 0 \\
+                    0 & 10 & 17 & 5 & 0 & 2
+                \end{array}
+                \right]
+                \longleftarrow
+                \begin{gather*}
+                    R_{2} + R_{1} \\
+                    2R_{3} + 5R_{1}
+                \end{gather*}
+                ]식
+                식[
+                \left[
+                \begin{array}{ccc|ccc}
+                    2 & 0 & 1 & 1 & 0 & 0 \\
+                    0 & 3 & 5 & 1 & 1 & 0 \\
+                    0 & 0 & 1 & 5 & -10 & 6
+                \end{array}
+                \right]
+                \longleftarrow
+                \begin{gather*}
+                    3R_{3} - 10R_{2}
+                \end{gather*}
+                ]식
+                식[
+                \left[
+                \begin{array}{ccc|ccc}
+                    2 & 0 & 0 & -4 & 10 & -6 \\
+                    0 & 3 & 0 & -24 & 51 & -30 \\
+                    0 & 0 & 1 & 5 & -10 & 6
+                \end{array}
+                \right]
+                \longleftarrow
+                \begin{gather*}
+                    R_{1} - R_{3} \\
+                    R_{2} - 5R_{3}
+                \end{gather*}
+                ]식
+                식[
+                \left[
+                \begin{array}{ccc|ccc}
+                    1 & 0 & 0 & -2 & 5 & -3 \\
+                    0 & 1 & 0 & -8 & 17 & -10 \\
+                    0 & 0 & 1 & 5 & -10 & 6
+                \end{array}
+                \right]
+                \longleftarrow
+                \begin{gather*}
+                    {1 \over 2}R_{1} \\
+                    {1 \over 3}R_{2}
+                \end{gather*}
+                ]식</li>
+                <li>답. 식[A^{-1}=
+                \begin{bmatrix}
+                    -2 & 5 & -3 \\
+                    -8 & 17 & -10 \\
+                    5 & -10 & 6
+                \end{bmatrix}
+                ]식</li>
+            </ol>
+        </ul>
+    </ul>
+</details>
+
+<hr>
+
 <ol>
     <li>m x n 행렬 : n차원 공간의 점으로부터 m차원 공간으로의 선형 사상(map)</li>
     
@@ -9,3 +239,5 @@
         역행렬 A-1 : AA-1 = A-1A = I를 만족하는 역 사상<br>
         블록행렬 : 행렬을 가로/세로로 나누어 각 구역을 작은 행렬로 간주 A = (A11 A12 A13)</li>
 </ol>
+
+<hr>
