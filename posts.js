@@ -100,9 +100,9 @@ const posts = {
         { filename: "posts/python/string.html", category: "Programming/Python/Library", title: "Lib/string : 문자열 공통 연산" },
         { filename: "posts/python/re.html", category: "Programming/Python/Library", title: "Lib/re : 정규표현식" },
         { filename: "posts/python/textwrap.html", category: "Programming/Python/Library", title: "Lib/textwrap : 텍스트 정돈" },
-        { filename: "posts/python/unicodedata.html", category: "Programming/Python/Library", title: "Lib/unicodedata" },
-        { filename: "posts/python/1904252135.html", category: "Programming/Python", title: "Python Binary Data Services" },
-        { filename: "posts/python/1904252136.html", category: "Programming/Python", title: "Python Data Types" },
+        { filename: "posts/python/unicodedata.html", category: "Programming/Python/Library", title: "Lib/unicodedata : 유니코드 database 표준" },
+        { filename: "posts/python/struct.html", category: "Programming/Python/Library", title: "Lib/struct : 이진 데이터 패킹/언패킹" },
+        { filename: "posts/python/1904252136.html", category: "Programming/Python/Library", title: "Python Data Types" },
 
         { filename: "posts/tip/aws.html", category: "Tip", title: "AWS" },
         { filename: "posts/tip/centos.html", category: "Tip", title: "CentOS" },
