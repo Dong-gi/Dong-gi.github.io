@@ -380,7 +380,33 @@
             \|\mathbf{u}-\mathbf{v}\|^{2}=\|\mathbf{u}\|^{2}-2(\mathbf{u}\cdot\mathbf{v})+\|\mathbf{v}\|^{2}
         \end{gather*}]식이므로, 식[\mathbf{u}\cdot\mathbf{v}={1 \over 4}\|\mathbf{u}+\mathbf{v}\|^{2}-{1 \over 4}\|\mathbf{u}-\mathbf{v}\|^{2}]식</li>
         <li>피타고라스 정리 : 벡터 식[\mathbf{u}, \mathbf{v}]식가 직교하면 식[\|\mathbf{u}+\mathbf{v}\|^{2}=\|\mathbf{u}\|^{2}+\|\mathbf{v}\|^{2}]식이 성립한다</li>
-        <li>내적은 두 벡터가 행벡터이든 열벡터이든 무관하게 성립한다. 따라서 정사각행렬 식[A]식와 두 행벡터 식[\mathbf{u}, \mathbf{v}]식에 대하여, 식[A\mathbf{u}\cdot\mathbf{v}=\mathbf{u}\cdot A^{T}\mathbf{v}]식이 성립한다</li>
+        <li>내적은 두 벡터가 행벡터이든 열벡터이든 무관하게 성립한다.</li>
+        <table>
+            <tr>
+                <td>식[\mathbf{u}, \mathbf{v}]식 모두 열벡터</td>
+                <td>식[\mathbf{u}\cdot\mathbf{v}=\mathbf{u}^{T}\mathbf{v}=\mathbf{v}^{T}\mathbf{u}]식</td>
+            </tr>
+            <tr>
+                <td>식[\mathbf{u}, \mathbf{v}]식 모두 행벡터</td>
+                <td>식[\mathbf{u}\cdot\mathbf{v}=\mathbf{u}\mathbf{v}^{T}=\mathbf{v}\mathbf{u}^{T}]식</td>
+            </tr>
+            <tr>
+                <td>식[\mathbf{u}]식는 열벡터, 식[\mathbf{v}]식는 행벡터</td>
+                <td>식[\mathbf{u}\cdot\mathbf{v}=\mathbf{u}^{T}\mathbf{v}^{T}=\mathbf{v}\mathbf{u}]식</td>
+            </tr>
+            <tr>
+                <td>식[\mathbf{u}]식는 행벡터, 식[\mathbf{v}]식는 열벡터</td>
+                <td>식[\mathbf{u}\cdot\mathbf{v}=\mathbf{u}\mathbf{v}=\mathbf{v}^{T}\mathbf{u}^{T}]식</td>
+            </tr>
+        </table>
+        따라서 정사각행렬 식[A]식와 두 열벡터 식[\mathbf{u}, \mathbf{v}]식에 대하여,
+        \begin{align*}
+        A\mathbf{u}\cdot\mathbf{v}
+        &= \mathbf{v}^{T}A\mathbf{u} \\
+        &= (A^{T}\mathbf{v})^{T}\mathbf{u} \\
+        &= \mathbf{u}\cdot A^{T}\mathbf{v}
+        \end{align*}
+        이 성립한다
         <li>두 행렬 식[A=\left[\mathbf{r}_{1}, \mathbf{r}_{2}, \cdots, \mathbf{r}_{n}\right]^{T}, B=\left[\mathbf{c}_{1}, \mathbf{c}_{2}, \cdots, \mathbf{c}_{n}\right]]식에 대한 곱을 내적으로 표현할 수 있다. 식[\left(AB\right)_{ij}=\mathbf{r}_{i}\cdot\mathbf{c}_{j}]식</li>
     </ol>
 </details>
