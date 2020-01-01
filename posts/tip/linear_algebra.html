@@ -23,207 +23,373 @@
 
 <details>
     <summary>연립일차방정식과 행렬</summary>
-    <ul>
-        <li>임의 연립일차방정식
-            \begin{align*}
-            a_{11}x_{1}+a_{12}x_{2}+\cdots+a_{1n}x_{n} & =b_{1} \\
-            a_{21}x_{1}+a_{22}x_{2}+\cdots+a_{2n}x_{n} & =b_{2} \\
-            \vdots \\
-            a_{m1}x_{1}+a_{m2}x_{2}+\cdots+a_{mn}x_{n} & =b_{m} \\
-            \end{align*}
-            을 계수들의 첨가행렬(augmented matrix)
-            \begin{gather*}
-                \begin{bmatrix}
-                    a_{11} & a_{12} & \cdots & a_{1n} \\
-                    a_{21} & a_{22} & \cdots & a_{2n} \\
-                    \vdots & \vdots &  & \vdots \\
-                    a_{m1} & a_{m2} & \cdots & a_{mn} \\
-                \end{bmatrix}
-                \begin{bmatrix}
-                    x_{1} \\ x_{2} \\ \vdots \\ x_{n}
-                \end{bmatrix}
-                =
-                \begin{bmatrix}
-                    b_{1} \\ b_{2} \\ \vdots \\ b_{m}
-                \end{bmatrix} \\
-                A\mathbf{x} = \mathbf{b} \\
-                \left[
-                    A | \mathbf{b}
-                \right]
-                =
-                \left[
-                \begin{array}{cccc|c}
-                    a_{11} & a_{12} & \cdots & a_{1n} & b_{1} \\
-                    a_{21} & a_{22} & \cdots & a_{2n} & b_{2} \\
-                    \vdots & \vdots &  & \vdots & \vdots \\
-                    a_{m1} & a_{m2} & \cdots & a_{mn} & b_{m} \\
-                \end{array}
-                \right]
-            \end{gather*}
-            로 나타낼 수 있다.</li>
-        <li>동차연립일차방정식</li>
-        <ul>
-            <li>모든 일차방정식의 상수항이 0인 연립일차방정식</li>
-            \begin{align*}
-                a_{11}x_{1}+a_{12}x_{2}+\cdots+a_{1n}x_{n} & =0 \\
-                a_{21}x_{1}+a_{22}x_{2}+\cdots+a_{2n}x_{n} & =0 \\
-                \vdots \\
-                a_{m1}x_{1}+a_{m2}x_{2}+\cdots+a_{mn}x_{n} & =0 \\
-            \end{align*}
-            <li>동차연립일차방정식의 해는 자명해식[(0, 0, \cdots, 0)]식만 갖거나, 무수히 많다</li>
-        </ul>
-        <li>연립방정식을 푸는 대수적인 연산</li>
-        <ol>
-            <li>0이 아닌 상수를 방정식에 곱하기</li>
-            <li>두 방정식을 바꾸기</li>
-            <li>한 방정식의 상수 배를 다른 방정식에 더하기</li>
-        </ol>
-        <li>↓ 첨가행렬에 대한 기본 행연산</li>
-        <ol>
-            <li>0이 아닌 상수를 행에 곱하기</li>
-            <li>두 행을 바꾸기</li>
-            <li>한 행의 상수 배를 다른 방정식에 더하기</li>
-        </ol>
-        <li>행사다리꼴 행렬(REF; Row Echelon Form matrix)</li>
-        <ol>
-            아래 두 조건을 만족하는 행렬은 행사다리꼴 행렬이다
-            <li>모든 원소가 0인 행은 맨 아래에 있다</li>
-            <li>나머지 행의 선행 계수는 그 위 행의 선행 계수보다 오른쪽에 있다</li>
+    <li>임의의 연립일차방정식
+        식[\begin{align*}
+        a_{11}x_{1}+a_{12}x_{2}+\cdots+a_{1n}x_{n} & =b_{1} \\
+        a_{21}x_{1}+a_{22}x_{2}+\cdots+a_{2n}x_{n} & =b_{2} \\
+        \vdots \\
+        a_{m1}x_{1}+a_{m2}x_{2}+\cdots+a_{mn}x_{n} & =b_{m} \\
+        \end{align*}]식<br>
+        을 계수들의 첨가행렬(augmented matrix)
+        식[\begin{gather*}
             \begin{bmatrix}
-                2 & 1 & 1 & 5 \\
-                0 & -8 & -2 & -12 \\
-                0 & 0 & 1 & 2
+                a_{11} & a_{12} & \cdots & a_{1n} \\
+                a_{21} & a_{22} & \cdots & a_{2n} \\
+                \vdots & \vdots &  & \vdots \\
+                a_{m1} & a_{m2} & \cdots & a_{mn} \\
             \end{bmatrix}
-        </ol>
+            \begin{bmatrix}
+                x_{1} \\ x_{2} \\ \vdots \\ x_{n}
+            \end{bmatrix}
+            =
+            \begin{bmatrix}
+                b_{1} \\ b_{2} \\ \vdots \\ b_{m}
+            \end{bmatrix} \\
+            A\mathbf{x} = \mathbf{b} \\
+            \left[
+                A | \mathbf{b}
+            \right]
+            =
+            \left[
+            \begin{array}{cccc|c}
+                a_{11} & a_{12} & \cdots & a_{1n} & b_{1} \\
+                a_{21} & a_{22} & \cdots & a_{2n} & b_{2} \\
+                \vdots & \vdots &  & \vdots & \vdots \\
+                a_{m1} & a_{m2} & \cdots & a_{mn} & b_{m} \\
+            \end{array}
+            \right]
+        \end{gather*}]식<br>
+        로 나타낼 수 있다.</li>
+    <li>동차연립일차방정식</li>
+    <ul>
+        <li>모든 일차방정식의 상수항이 0인 연립일차방정식</li>
+        식[\begin{align*}
+            a_{11}x_{1}+a_{12}x_{2}+\cdots+a_{1n}x_{n} & =0 \\
+            a_{21}x_{1}+a_{22}x_{2}+\cdots+a_{2n}x_{n} & =0 \\
+            \vdots \\
+            a_{m1}x_{1}+a_{m2}x_{2}+\cdots+a_{mn}x_{n} & =0 \\
+        \end{align*}]식
+        <li>동차연립일차방정식의 해는 자명해식[(0, 0, \cdots, 0)]식만 갖거나, 무수히 많다</li>
+    </ul>
+    <li>연립방정식을 푸는 대수적인 연산</li>
+    <ol>
+        <li>0이 아닌 상수를 방정식에 곱하기</li>
+        <li>두 방정식을 바꾸기</li>
+        <li>한 방정식의 상수 배를 다른 방정식에 더하기</li>
+    </ol>
+    <li>↓ 첨가행렬에 대한 기본 행연산</li>
+    <ol>
+        <li>0이 아닌 상수를 행에 곱하기</li>
+        <li>두 행을 바꾸기</li>
+        <li>한 행의 상수 배를 다른 방정식에 더하기</li>
+    </ol>
+    <li>행사다리꼴 행렬(REF; Row Echelon Form matrix)</li>
+    <ol>
+        아래 두 조건을 만족하는 행렬은 행사다리꼴 행렬이다
+        <li>모든 원소가 0인 행은 맨 아래에 있다</li>
+        <li>나머지 행의 선행 계수는 그 위 행의 선행 계수보다 오른쪽에 있다</li>
+    </ol>
+    <ul>
         <li>기약 행사다리꼴 행렬(RREF; Reduced REF)</li>
         REF면서, 선행 계수가 존재하는 행의 선행 계수 외 모든 원소가 0인 경우
-        <li>행사다리꼴에 관한 성질</li>
-        <ol>
-            <li>모든 행렬은 유일한 기약 행사다리꼴을 갖는다</li>
-            <li>행렬의 모든 행사다리꼴은 모두 같은 위치에 선행 계수를 가지며, 이 위치가 행렬의 축(pivot)이다</li>
-        </ol>
-        <li>역행렬</li>
-        <ul>
-            <li>만약 식[A]식가 정사각행렬이고, 식[AB=BA=I]식를 만족하는 식[B]식가 존재한다면,</li>
-            식[A]식는 가역(invertible) 또는 정칙(nonsingular)이라 하고, 식[B]식는 식[A]식의 역행렬(inverse; 식[A^{-1}]식)
-            <li>위와 같은 행렬 식[B]식가 존재하지 않으면 식[A]식는 특이(singular)</li>
-            <li>식[A]식가 가역이면 식[A^{T}]식도 가역이고, 식[(A^{T})^{-1}=(A^{-1})^{T}]식이다.</li>
-            증명: 식[
-            \begin{gather*}
-                A^{T}(A^{-1})^{T}=(A^{-1}A)^{T}=I^{T}=I \\
-                (A^{-1})^{T}A^{T}=(AA^{-1})^{T}=I^{T}=I
-            \end{gather*}
-            ]식
-            <li>정사각행렬 식[A]식에 대해, 아래 명제들은 동등하다</li>
-            <ol>
-                <li>식[A]식는 가역이다</li>
-                (4 ⇒ 1)증명. 식[E_{k} \cdots E_{2}E_{1}A=I]식에 대하여, 각 기본행렬 식[E_{1}, E_{2}, \cdots, E_{k}]식은 모두 가역이므로, 식[A=E_{1}^{-1}E_{2}^{-1} \cdots E_{k}^{-1}]식이며, 식[A]식는 가역행렬들의 곱이므로 가역이다
-                <li>연립방정식 식[A\mathbf{x}=0]식은 자명해만 갖는다</li>
-                (1 ⇒ 2)증명. 연립일차방정식 식[A\mathbf{x}=0]식의 임의 해 식[\mathbf{x}_{0}]식에 대하여, 식[A^{-1}A\mathbf{x}_{0}=I\mathbf{x}_{0}=\mathbf{x}_{0}=0]식이므로, 식[A\mathbf{x}=0]식은 자명해만을 갖는다<br>
-                <li>식[A]식의 기약 행사다리꼴은 식[I]식다</li>
-                (2 ⇒ 3)증명. 연립방정식 식[A\mathbf{x}=0]식은 자명해만 가지므로, 첨가행렬에 기본행연산을 거듭하면 식[I]식에 도달한다.
-                <li>식[A]식는 기본행렬들의 곱으로 표현할 수 있다</li>
-                (3 ⇒ 4)증명. (2 ⇒ 3)증명의 각 기본행연산은 기본행렬들을 식[A]식의 왼쪽에 곱하여 이루어진다. 따라서 식[E_{k} \cdots E_{2}E_{1}A=I]식를 만족하는 식[E_{1}, E_{2}, \cdots, E_{k}]식가 존재한다.
-                <li>차원이 같은 두 정사각행렬 식[A, B]식에 대하여, 식[AB=I]식 또는 식[BA=I]식을 만족하면 식[B=A^{-1}]식이다.</li>
-                증명. 먼저 식[A]식가 가역임을 보인다. 연립일차방정식 식[A\mathbf{x}=0]식의 임의 해 식[\mathbf{x}_{0}]식에 대하여, 식[BA\mathbf{x}_{0}=I\mathbf{x}_{0}=\mathbf{x}_{0}=0]식, 위 (1, 2) 명제는 동등하므로 식[A]식는 가역이다.<br>
-                식[BA=I]식 양쪽에 식[A^{-1}]식를 곱하면, 식[BAA^{-1}=BI=IA^{-1}]식, 따라서 식[B=A^{-1}]식
-            </ol>
-            <li>따름정리. 차원이 같은 두 정사각행렬 식[A, B]식에 대하여, 식[AB]식가 가역이면 식[A, B]식 모두 가역이다</li>
-            증명. 식[AB(AB)^{-1}=I]식에 대해, 식[A(B(AB)^{-1})=I]식이므로 식[A^{-1}=B(AB)^{-1}]식
-        </ul>
-        <li>Row equivalent</li>
-        행렬 식[A]식와 식[B]식가 서로 기본 행연산을 통해 얻을 수 있는 경우
-        <li>기본행렬; Elementary matrix</li>
-        <ul>
-            <li>단위 행렬 식[I_{n}]식에 기본 행연산을 한 번 수행하여 얻은 행렬</li>
-            <li>기본행렬 식[E]식에 대하여, 식[EA]식는 식[A]식에 기본 행연산을 수행한 것과 같다.</li>
-            <li>유일해가 존재하는 연립일차방정식에 대한 첨가행렬의 기약 사다리꼴이 식[I]식임을 이용하여 역행렬을 구할 수 있다</li>
-            <ol>
-                <li>예제. 식[A=
-                \begin{bmatrix}
-                    2 & 0 & 1 \\
-                    -2 & 3 & 4 \\
-                    -5 & 5 & 6
-                \end{bmatrix}
-                ]식의 역행렬을 구하라.</li>
-                <li>풀이. 식[
-                \left[
-                    A | I
-                \right]
-                =
-                \left[
-                \begin{array}{ccc|ccc}
-                    2 & 0 & 1 & 1 & 0 & 0 \\
-                    -2 & 3 & 4 & 0 & 1 & 0 \\
-                    -5 & 5 & 6 & 0 & 0 & 1
-                \end{array}
-                \right]
-                ]식<br>
-                식[
-                \left[
-                \begin{array}{ccc|ccc}
-                    2 & 0 & 1 & 1 & 0 & 0 \\
-                    0 & 3 & 5 & 1 & 1 & 0 \\
-                    0 & 10 & 17 & 5 & 0 & 2
-                \end{array}
-                \right]
-                \longleftarrow
-                \begin{gather*}
-                    R_{2} + R_{1} \\
-                    2R_{3} + 5R_{1}
-                \end{gather*}
-                ]식
-                식[
-                \left[
-                \begin{array}{ccc|ccc}
-                    2 & 0 & 1 & 1 & 0 & 0 \\
-                    0 & 3 & 5 & 1 & 1 & 0 \\
-                    0 & 0 & 1 & 5 & -10 & 6
-                \end{array}
-                \right]
-                \longleftarrow
-                \begin{gather*}
-                    3R_{3} - 10R_{2}
-                \end{gather*}
-                ]식
-                식[
-                \left[
-                \begin{array}{ccc|ccc}
-                    2 & 0 & 0 & -4 & 10 & -6 \\
-                    0 & 3 & 0 & -24 & 51 & -30 \\
-                    0 & 0 & 1 & 5 & -10 & 6
-                \end{array}
-                \right]
-                \longleftarrow
-                \begin{gather*}
-                    R_{1} - R_{3} \\
-                    R_{2} - 5R_{3}
-                \end{gather*}
-                ]식
-                식[
-                \left[
-                \begin{array}{ccc|ccc}
-                    1 & 0 & 0 & -2 & 5 & -3 \\
-                    0 & 1 & 0 & -8 & 17 & -10 \\
-                    0 & 0 & 1 & 5 & -10 & 6
-                \end{array}
-                \right]
-                \longleftarrow
-                \begin{gather*}
-                    {1 \over 2}R_{1} \\
-                    {1 \over 3}R_{2}
-                \end{gather*}
-                ]식</li>
-                <li>답. 식[A^{-1}=
-                \begin{bmatrix}
-                    -2 & 5 & -3 \\
-                    -8 & 17 & -10 \\
-                    5 & -10 & 6
-                \end{bmatrix}
-                ]식</li>
-            </ol>
-        </ul>
     </ul>
+    <li>행사다리꼴에 관한 성질</li>
+    <ol>
+        <li>모든 행렬은 유일한 기약 행사다리꼴을 갖는다</li>
+        <li>행렬의 모든 행사다리꼴은 모두 같은 위치에 선행 계수를 가지며, 이 위치가 행렬의 축(pivot)이다</li>
+    </ol>
+    <li>역행렬</li>
+    <ul>
+        <li>만약 식[A]식가 정사각행렬이고, 식[AB=BA=I]식를 만족하는 식[B]식가 존재한다면,</li>
+        식[A]식는 가역(invertible) 또는 정칙(nonsingular)이라 하고, 식[B]식는 식[A]식의 역행렬(inverse; 식[A^{-1}]식)
+        <li>위와 같은 행렬 식[B]식가 존재하지 않으면 식[A]식는 특이(singular)</li>
+        <li>식[A]식가 가역이면 식[A^{T}]식도 가역이고, 식[(A^{T})^{-1}=(A^{-1})^{T}]식이다.</li>
+        증명: 식[
+        \begin{gather*}
+            A^{T}(A^{-1})^{T}=(A^{-1}A)^{T}=I^{T}=I \\
+            (A^{-1})^{T}A^{T}=(AA^{-1})^{T}=I^{T}=I
+        \end{gather*}
+        ]식
+    </ul>
+    <details>
+        <summary>정사각행렬 식[A]식에 대해, 아래 명제들은 동등하다</summary>
+        <ol>
+            <li>식[A]식는 가역이다</li>
+            (4 ⇒ 1)증명. 식[E_{k} \cdots E_{2}E_{1}A=I]식에 대하여, 각 기본행렬 식[E_{1}, E_{2}, \cdots, E_{k}]식은 모두 가역이므로, 식[A=E_{1}^{-1}E_{2}^{-1} \cdots E_{k}^{-1}]식이며, 식[A]식는 가역행렬들의 곱이므로 가역이다
+            <li>연립방정식 식[A\mathbf{x}=0]식은 자명해만 갖는다</li>
+            (1 ⇒ 2)증명. 연립일차방정식 식[A\mathbf{x}=0]식의 임의 해 식[\mathbf{x}_{0}]식에 대하여, 식[A^{-1}A\mathbf{x}_{0}=I\mathbf{x}_{0}=\mathbf{x}_{0}=0]식이므로, 식[A\mathbf{x}=0]식은 자명해만을 갖는다<br>
+            <li>식[A]식의 기약 행사다리꼴은 식[I]식다</li>
+            (2 ⇒ 3)증명. 연립방정식 식[A\mathbf{x}=0]식은 자명해만 가지므로, 첨가행렬에 기본행연산을 거듭하면 식[I]식에 도달한다.
+            <li>식[A]식는 기본행렬들의 곱으로 표현할 수 있다</li>
+            (3 ⇒ 4)증명. (2 ⇒ 3)증명의 각 기본행연산은 기본행렬들을 식[A]식의 왼쪽에 곱하여 이루어진다. 따라서 식[E_{k} \cdots E_{2}E_{1}A=I]식를 만족하는 식[E_{1}, E_{2}, \cdots, E_{k}]식가 존재한다.
+            <li>크기가 같은 두 정사각행렬 식[A, B]식에 대하여, 식[AB=I]식 또는 식[BA=I]식을 만족하면 식[B=A^{-1}]식이다.</li>
+            증명. 먼저 식[A]식가 가역임을 보인다. 연립일차방정식 식[A\mathbf{x}=0]식의 임의 해 식[\mathbf{x}_{0}]식에 대하여, 식[BA\mathbf{x}_{0}=I\mathbf{x}_{0}=\mathbf{x}_{0}=0]식, 위 (1, 2) 명제는 동등하므로 식[A]식는 가역이다.<br>
+            식[BA=I]식 양쪽에 식[A^{-1}]식를 곱하면, 식[BAA^{-1}=BI=IA^{-1}]식, 따라서 식[B=A^{-1}]식
+            <li>식[\operatorname{det}(A) \ne 0]식이 성립한다</li>
+        </ol>
+    </details>
+    <details>
+        <summary>가역인 행렬에 대해 참인 명제</summary>
+        <li>크기가 같은 두 정사각행렬 식[A, B]식에 대하여, 식[AB]식가 가역이면 식[A, B]식 모두 가역이다</li>
+        증명. 식[AB(AB)^{-1}=I]식에 대해, 식[A(B(AB)^{-1})=I]식이므로 식[A^{-1}=B(AB)^{-1}]식
+        <li>위 명제의 대우 : 식[A]식또는 식[B]식가 특이행렬이면, 식[AB]식도 특이행렬이다</li>
+        <li>식[A]식가 가역이면 식[A^{T}]식도 가역이고 식[(A^{T})^{-1}=(A^{-1})^{T}]식</li>
+        증명. 식[\begin{gather*}
+            A^{T}(A^{-1})^{T}=(A^{-1}A)^{T}=I^{T}=I \\
+            (A^{-1})^{T}A^{T}=(AA^{-1})^{T}=I^{T}=I
+        \end{gather*}]식
+        <li>식[A]식가 가역인 대칭행렬이면, 식[A^{-1}]식도 대칭행렬</li>
+        증명. 식[A=A^{T}이므로, (A^{-1})^{T}=(A^{T})^{-1}=A^{-1}]식
+        <li>식[A]식가 가역인 정사각행렬이면, 식[\operatorname{det}(A)\operatorname{det}(A^{-1})=1]식</li>
+    </details>
+    <li>Row equivalent</li>
+    행렬 식[A]식와 식[B]식가 서로 기본 행연산을 통해 얻을 수 있는 경우
+    <li>기본행렬; Elementary matrix</li>
+    <ul>
+        <li>단위 행렬 식[I_{n}]식에 기본 행연산을 한 번 수행하여 얻은 행렬</li>
+        <li>기본행렬 식[E]식에 대하여, 식[EA]식는 식[A]식에 기본 행연산을 수행한 것과 같다.</li>
+        <li>유일해가 존재하는 연립일차방정식에 대한 첨가행렬의 기약 사다리꼴이 식[I]식임을 이용하여 역행렬을 구할 수 있다</li>
+    </ul>
+    <details>
+        <summary>예제. 식[A=
+        \begin{bmatrix}
+            2 & 0 & 1 \\
+            -2 & 3 & 4 \\
+            -5 & 5 & 6
+        \end{bmatrix}
+        ]식의 역행렬을 구하라.</summary>
+        <li>풀이.</li>
+        식[\left[
+            A | I
+        \right]
+        =
+        \left[
+        \begin{array}{ccc|ccc}
+            2 & 0 & 1 & 1 & 0 & 0 \\
+            -2 & 3 & 4 & 0 & 1 & 0 \\
+            -5 & 5 & 6 & 0 & 0 & 1
+        \end{array}
+        \right]
+        ]식<br>
+        식[
+        \left[
+        \begin{array}{ccc|ccc}
+            2 & 0 & 1 & 1 & 0 & 0 \\
+            0 & 3 & 5 & 1 & 1 & 0 \\
+            0 & 10 & 17 & 5 & 0 & 2
+        \end{array}
+        \right]
+        \longleftarrow
+        \begin{gather*}
+            R_{2} + R_{1} \\
+            2R_{3} + 5R_{1}
+        \end{gather*}
+        ]식
+        식[
+        \left[
+        \begin{array}{ccc|ccc}
+            2 & 0 & 1 & 1 & 0 & 0 \\
+            0 & 3 & 5 & 1 & 1 & 0 \\
+            0 & 0 & 1 & 5 & -10 & 6
+        \end{array}
+        \right]
+        \longleftarrow
+        \begin{gather*}
+            3R_{3} - 10R_{2}
+        \end{gather*}
+        ]식
+        식[
+        \left[
+        \begin{array}{ccc|ccc}
+            2 & 0 & 0 & -4 & 10 & -6 \\
+            0 & 3 & 0 & -24 & 51 & -30 \\
+            0 & 0 & 1 & 5 & -10 & 6
+        \end{array}
+        \right]
+        \longleftarrow
+        \begin{gather*}
+            R_{1} - R_{3} \\
+            R_{2} - 5R_{3}
+        \end{gather*}
+        ]식
+        식[
+        \left[
+        \begin{array}{ccc|ccc}
+            1 & 0 & 0 & -2 & 5 & -3 \\
+            0 & 1 & 0 & -8 & 17 & -10 \\
+            0 & 0 & 1 & 5 & -10 & 6
+        \end{array}
+        \right]
+        \longleftarrow
+        \begin{gather*}
+            {1 \over 2}R_{1} \\
+            {1 \over 3}R_{2}
+        \end{gather*}]식
+        <li>답. 식[A^{-1}=
+        \begin{bmatrix}
+            -2 & 5 & -3 \\
+            -8 & 17 & -10 \\
+            5 & -10 & 6
+        \end{bmatrix}]식</li>
+    </details>
+    <li>삼각행렬; Triangular matrix</li>
+    주대각선의 위쪽이나 아래쪽 원소가 모두 0인 경우
+    <ul>
+        <li>하삼각행렬; Lower triangular matrix</li>
+        식[L= \begin{bmatrix} l_{1,1} & & & 0 \\ l_{2,1} & l_{2,2} & & \\ \vdots & \vdots & \ddots & \\ l_{n,1} & l_{n,2} & \ldots & l_{n,n} \end{bmatrix}]식
+        <li>상삼각행렬; Upper triangular matrix</li>
+        식[U = \begin{bmatrix} u_{1,1} & u_{1,2} & \ldots & u_{1,n} \\ & u_{2,2} & \ldots & u_{2,n} \\ & & \ddots & \vdots \\ 0 & & & u_{n,n} \end{bmatrix}]식
+        <li>대각행렬; Diagonal matrix</li>
+        식[D=
+        \begin{bmatrix}
+            d_{1} & 0 & \cdots & 0 \\
+            0 & d_{2} & \cdots & 0 \\
+            \vdots & \vdots &  & \vdots \\
+            0 & 0 & \cdots & d_{n} \\
+        \end{bmatrix}]식
+        <li>삼각행렬 성질</li>
+        <ol>
+            <li>하삼각행렬의 전치행렬은 상삼각형렬. 역도 성립</li>
+            <li>하삼각행렬들의 곱은 하삼각행렬, 상삼각행렬들의 곱은 상삼각행렬</li>
+            <li>삼각행렬이 가역이기 위한 필요충분조건은 주대각선 원소가 모두 0이 아닐 것</li>
+            <li>가역인 하삼각행렬의 역행렬은 하삼각행렬, 가역인 상삼각행렬의 역행렬은 상삼각행렬</li>
+        </ol>
+    </ul>
+    <li>대칭행렬; Symmetric matrix</li>
+    <ul>
+        <li>식[A=A^{T}]식을 만족하는 행렬 식[A]식</li>
+        <li>임의 행렬 식[A]식에 대하여, 식[AA^{T}]식, 식[A^{T}A]식은 모두 대칭행렬</li>
+        증명: 식[(AA^{T})^{T}=(A^{T})^{T}A^{T}=AA^{T}]식
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>행렬식; Determinant</summary>
+    <li>행렬식 : 정사각행렬을 수에 대응시키는 함수로, 행렬이 나타내는 선형 변환이 부피(길이, 면적, ...)를 확장시키는 정도를 나타낸다</li>
+    <li>식[A=\begin{bmatrix}a&b\\c&d\end{bmatrix}]식에 대하여,</li>
+    식[\operatorname{det}(A) =
+        \begin{vmatrix} a & b \\ c & d \end{vmatrix}
+        = ad-bc]식,
+    식[A^{-1}={1 \over \operatorname{det}(A)}\begin{bmatrix}d & -b \\ -c & a\end{bmatrix}]식
+    <li>소행렬식; Minor determinant</li>
+    정사각행렬 식[A]식의 원소 식[a_{ij}]식에 대한 소행렬식 식[M_{ij}]식는 식[A]식의 i번째 행과 j번째 열을 제거하여 만든 부분행렬의 행렬식
+    <li>여인자; Cofactor : 식[C_{ij}=(-1)^{i+j}M_{ij}]식</li>
+    <li>여인자 전개; Cofactor expansion : 식[|A| = \sum_{j=1}^n a_{ij}C_{ij}]식, 또는 식[|A| = \sum_{i=1}^n a_{ij}C_{ij}]식</li>
+    식[\begin{gather*}
+        \operatorname{det}\!{}_0\begin{pmatrix}\end{pmatrix}=1 \\
+        \operatorname{det}\!{}_1\begin{pmatrix}a\end{pmatrix}=a\operatorname{det}\!{}_0\begin{pmatrix}\end{pmatrix} \\
+        \operatorname{det}\!{}_2\begin{pmatrix}a&b\\c&d\end{pmatrix}
+            =a\operatorname{det}\!{}_1\begin{pmatrix}d\end{pmatrix}
+            -b\operatorname{det}\!{}_1\begin{pmatrix}c\end{pmatrix} \\
+        \operatorname{det}\!{}_3\begin{pmatrix}a&b&c\\d&e&f\\g&h&i\end{pmatrix}
+            =a\operatorname{det}\!{}_2\begin{pmatrix}e&f\\h&i\end{pmatrix}
+            -b\operatorname{det}\!{}_2\begin{pmatrix}d&f\\g&i\end{pmatrix}
+            +c\operatorname{det}\!{}_2\begin{pmatrix}d&e\\g&h\end{pmatrix}
+    \end{gather*}]식
+    <li>삼각행렬 식[A]식에 대하여, 식[|A|=a_{11}a_{22} \cdots a_{nn}]식</li>
+    <li>정방행렬 식[A]식에 대하여, 식[|A|=|A^{T}|]식</li>
+    <li>서로 다른 행 또는 열의 원소와 여인자를 전개하면 0이 된다.</li>
+    식[\sum_{j=1}^n a_{ij}C_{kj} = 0\qquad(i\ne k)]식,
+    식[\sum_{i=1}^n a_{ij}C_{ik} = 0\qquad(j\ne k)]식
+    <li>크로네커 델타(Kronecker delta) 함수를 이용해 아래와 같이 표현할 수 있다</li>
+    식[\sum_{j=1}^n a_{ij}C_{kj} = \delta_{ik}|A|]식,
+    식[\sum_{i=1}^n a_{ij}C_{ik} = \delta_{jk}|A|]식,
+    식[\delta_{ij} = \left\{\begin{matrix} 
+    1 & \mbox{if } i=j  \\ 
+    0 & \mbox{if } i \ne j \end{matrix}\right.]식
+    <li>기본 행연산과 행렬식의 관계</li>
+    <ol>
+        <li>행을 k배 : 식[k|A|]식</li>
+        <li>두 행을 교환 : 식[-|A|]식</li>
+        <li>한 행의 k배를 다른 행에 더함 : 식[|A|]식</li>
+    </ol>
+    <li>Lemma. 크기가 같은 정사각행렬 식[A, E]식에 대해, 식[E]식가 기본행렬이면 식[\operatorname{det}(EA)=\operatorname{det}(E)\operatorname{det}(A)]식</li>
+    증명. 위 "기본 행연산과 행렬식의 관계" 참고
+    <li>크기가 같은 정사각행렬 식[A, B]식에 대하여, 식[\operatorname{det}(AB)=\operatorname{det}(A)\operatorname{det}(B)]식가 성립한다</li>
+    증명. 식[A]식또는 식[B]식가 특이행렬인 경우, 식[AB]식 역시 특이행렬이므로 식[\operatorname{det}(AB)=0=\operatorname{det}(A)\operatorname{det}(B)]식. 식[A, B]식 모두 가역인 경우, 두 행렬을 각각 기본행렬들의 곱으로 표현할 수 있으므로 참(위 Lemma 참고)
+    <li>여인자 행렬; Cofactor matrix : 식[\mathbf{C}=\begin{bmatrix}
+        C_{11} & C_{12} & \cdots & C_{1n} \\
+        C_{21} & C_{22} & \cdots & C_{2n} \\
+        \vdots & \vdots & \ddots & \vdots \\
+        C_{n1} & C_{n2} & \cdots & C_{nn}
+    \end{bmatrix}]식</li>
+    <li>수반 행렬; Adjugate matrix : 식[\operatorname{adj}(A)=\mathbf{C}^{T}]식</li>
+    <li>식[A \operatorname{adj}(A)=\begin{bmatrix} \operatorname{det}(A) & & 0 \\ & \ddots & \\ 0 & & \operatorname{det}(A) \end{bmatrix}=\operatorname{det}(A)I]식</li>
+    식[\Longrightarrow A^{-1}={1 \over \operatorname{det}(A)}\operatorname{adj}(A)]식
+    <li>크라메르 공식; Cramer's rule</li>
+    연립방정식 식[A\begin{bmatrix}x_{1} \\ x_{2} \\ \vdots \\ x_{n}\end{bmatrix}=\mathbf{b}]식의 해는
+    식[x_{j}={\operatorname{det}(A_{j}) \over \operatorname{det}(A)}]식이다.<br>
+    이때, 식[A_{j}]식 ::= 식[A]식의 식[j]식번째 열을 식[\mathbf{b}]식로 교체한 행렬
+    <details>
+        <summary>증명</summary>
+        식[\begin{align*}
+        \mathbf{x}
+        & = A^{-1}\mathbf{b} \\
+        & = {1 \over \operatorname{det}(A)}\operatorname{adj}(A)\mathbf{b} \\
+        & = {1 \over \operatorname{det}(A)}
+        \begin{bmatrix}
+            C_{11} & C_{21} & \cdots & C_{n1} \\
+            C_{12} & C_{22} & \cdots & C_{n2} \\
+            \vdots & \vdots & \ddots & \vdots \\
+            C_{1n} & C_{2n} & \cdots & C_{nn}
+        \end{bmatrix}
+        \begin{bmatrix}b_{1} \\ b_{2} \\ \vdots \\ b_{n}\end{bmatrix} \\
+        & = {1 \over \operatorname{det}(A)}
+        \begin{bmatrix}
+            b_{1}C_{11} + b_{2}C_{21} + \cdots + b_{n}C_{n1} \\
+            b_{1}C_{12} + b_{2}C_{22} + \cdots + b_{n}C_{n2} \\
+            \vdots \\
+            b_{1}C_{1n} + b_{2}C_{2n} + \cdots + b_{n}C_{nn}
+        \end{bmatrix}
+        \end{align*} \\
+        \Longrightarrow x_{j} = {b_{1}C_{1j} + b_{2}C_{2j} + \cdots + b_{n}C_{nj} \over \operatorname{det}(A)}]식<br>
+        이때, 식[A_{j}]식는 식[A]식와 식[j]식번째 열 하나만 다르므로, 식[j]식열에 대한 여인자는 서로 동일하다.
+        식[\Longrightarrow b_{1}C_{1j} + b_{2}C_{2j} + \cdots + b_{n}C_{nj}=\operatorname{det}(A_{j})]식
+    </details>
+</details>
+
+<hr>
+
+<details>
+    <summary>유클리트 벡터공간 식[R^{n}]식</summary>
+    <li>벡터 식[\mathbf{v}]식의 놈(norm; 크기) 식[\|\mathbf{v}\|=\sqrt{v_{1}^{2}+v_{2}^{2}+\cdots+v_{n}^{2}}]식</li>
+    <li>단위 벡터; Unit vector : 길이가 1인 벡터</li>
+    <li>내적; Inner product</li>
+    유클리드 공간 식[R^{n}]식의 두 벡터 식[\mathbf{u}, \mathbf{v}]식에 대한 내적, 스칼라 곱은 다음과 같의 정의할 수 있다.
+    \begin{align*}
+    \mathbf{u}\cdot\mathbf{v}
+    &= \|\mathbf{u}\|\|\mathbf{v}\|\operatorname{cos}(\theta)\qquad(0 \leq \theta \leq \pi) \\
+    &= \sum_{i=1}^{n}u_{i}v_{i}
+    \end{align*}
+    두 벡터 중 하나를 다른 것에 사영하여 그 크기를 서로 곱한 값이라고 보면 된다.
+    <ol>
+        <li>내적이 0인 경우, 두 벡터가 직교(Orthogonal)한다고 한다</li>
+        예를 들어, 직선 식[ax+by+c=0]식은 벡터 식[\left(b, -a\right)]식와 평행하며, 따라서 벡터 식[\left(a, b\right)]식를 법선으로 가진다.
+        유사하게 평면 식[ax+by+cz+d=0]식은 벡터 식[\left(a, b, c\right)]식을 법선으로 가진다.
+        <li>벡터 식[\mathbf{u}, \mathbf{v}]식에 대하여, 식[\mathbf{u}]식의 식[\mathbf{v}]식로의 정사영(orthogonal projection of 식[\mathbf{u}]식 on 식[\mathbf{v}]식)을 아래와 같이 표현한다.</li>
+        \[\operatorname{proj}_{\mathbf{v}}\mathbf{u} = {\operatorname{cos}(\theta)\|\mathbf{u}\| \over \|\mathbf{v}\|}\mathbf{v} = {\mathbf{u}\cdot\mathbf{v} \over \|\mathbf{v}\|^{2}}\mathbf{v}\]
+        여기서 식[\operatorname{cos}(\theta)\|\mathbf{u}\|]식은 사영의 크기, 나머지가 방향이라고 보면 된다. 식[\mathbf{u}-\operatorname{proj}_{\mathbf{v}}\mathbf{u}]식는 식[\mathbf{v}]식과 직교한다
+        <li>내적의 절대값은 벡터 각각의 크기를 곱한 것보다 클 수 없다.
+            식[|\mathbf{u}\cdot\mathbf{v}|\leq\|\mathbf{u}\|\|\mathbf{v}\|]식</li>
+        <li>자기 자신과의 내적은 크기의 제곱이된다.
+            식[\|\mathbf{v}\|=\sqrt{\mathbf{v}\cdot\mathbf{v}}]식</li>
+        <li>식[\begin{gather*}
+            \|\mathbf{u}+\mathbf{v}\|^{2}=\|\mathbf{u}\|^{2}+2(\mathbf{u}\cdot\mathbf{v})+\|\mathbf{v}\|^{2} \\
+            \|\mathbf{u}-\mathbf{v}\|^{2}=\|\mathbf{u}\|^{2}-2(\mathbf{u}\cdot\mathbf{v})+\|\mathbf{v}\|^{2}
+        \end{gather*}]식이므로, 식[\mathbf{u}\cdot\mathbf{v}={1 \over 4}\|\mathbf{u}+\mathbf{v}\|^{2}-{1 \over 4}\|\mathbf{u}-\mathbf{v}\|^{2}]식</li>
+        <li>피타고라스 정리 : 벡터 식[\mathbf{u}, \mathbf{v}]식가 직교하면 식[\|\mathbf{u}+\mathbf{v}\|^{2}=\|\mathbf{u}\|^{2}+\|\mathbf{v}\|^{2}]식이 성립한다</li>
+        <li>내적은 두 벡터가 행벡터이든 열벡터이든 무관하게 성립한다. 따라서 정사각행렬 식[A]식와 두 행벡터 식[\mathbf{u}, \mathbf{v}]식에 대하여, 식[A\mathbf{u}\cdot\mathbf{v}=\mathbf{u}\cdot A^{T}\mathbf{v}]식이 성립한다</li>
+        <li>두 행렬 식[A=\left[\mathbf{r}_{1}, \mathbf{r}_{2}, \cdots, \mathbf{r}_{n}\right]^{T}, B=\left[\mathbf{c}_{1}, \mathbf{c}_{2}, \cdots, \mathbf{c}_{n}\right]]식에 대한 곱을 내적으로 표현할 수 있다. 식[\left(AB\right)_{ij}=\mathbf{r}_{i}\cdot\mathbf{c}_{j}]식</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>일반 벡터공간</summary>
+    
 </details>
 
 <hr>

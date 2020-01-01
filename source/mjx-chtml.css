@@ -660,7 +660,7 @@ mjx-mfenced {
 mjx-mtable {
   display: inline-block;
   text-align: center;
-  vertical-align: .25em;
+  vertical-align: 0;
   position: relative;
   box-sizing: border-box;
 }
@@ -1150,6 +1150,7 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
 mjx-stretchy-v.mjx-c7C mjx-ext mjx-c::before {
   content: "\2223";
   padding-left: 0;
+  font-weight: bold;
 }
 
  mjx-c.mjx-c28::before {
