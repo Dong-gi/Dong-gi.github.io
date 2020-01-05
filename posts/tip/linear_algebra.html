@@ -126,6 +126,15 @@
             증명. 먼저 식[A]식가 가역임을 보인다. 연립일차방정식 식[A\mathbf{x}=0]식의 임의 해 식[\mathbf{x}_{0}]식에 대하여, 식[BA\mathbf{x}_{0}=I\mathbf{x}_{0}=\mathbf{x}_{0}=0]식, 위 (1, 2) 명제는 동등하므로 식[A]식는 가역이다.<br>
             식[BA=I]식 양쪽에 식[A^{-1}]식를 곱하면, 식[BAA^{-1}=BI=IA^{-1}]식, 따라서 식[B=A^{-1}]식
             <li>식[\operatorname{det}(A) \ne 0]식이 성립한다</li>
+            <li>식[A]식의 열벡터들이 일차독립이다</li>
+            식[A]식의 행벡터들이 일차독립이다
+            <li>식[A]식의 열공간이 식[R^n]식과 동일하다</li>
+            식[A]식의 행공간이 식[R^n]식과 동일하다
+            <li>식[\operatorname{rank}(A)=n]식이 성립한다</li>
+            식[\operatorname{nullity}(A)=0]식이 성립한다
+            <li>식[A]식의 행공간의 직교여공간이 식[\{\mathbf{0}\}]식</li>
+            식[A]식의 영공간의 직교여공간이 식[R^n]식
+            <li>0은 식[A]식의 고유값이 아니다</li>
         </ol>
     </details>
     <details>
@@ -415,21 +424,183 @@
 
 <details>
     <summary>일반 벡터공간</summary>
-    
+    <details>
+        <summary>벡터공간 식[V]식</summary>
+        <ol>
+            <li>+ 닫힘성 : 식[\mathbf{u}, \mathbf{v}\in V \implies \mathbf{u}+\mathbf{v} \in V]식</li>
+            <li>+ 교환법칙 : 식[\mathbf{u}+\mathbf{v}=\mathbf{v}+\mathbf{u}]식</li>
+            <li>+ 결합법칙 : 식[(\mathbf{u}+\mathbf{v})+\mathbf{w}=\mathbf{u}+(\mathbf{v}+\mathbf{w})]식</li>
+            <li>+ 항등원 : 임의 벡터 식[\mathbf{u}]식에 대해 식[\mathbf{u}+\mathbf{0}=\mathbf{u}]식를 만족하는 식[\mathbf{0}\in V]식가 존재</li>
+            <li>+ 역원 : 임의 벡터 식[\mathbf{u}]식에 대해 식[\mathbf{u}+(-\mathbf{u})=\mathbf{0}]식을 만족하는 식[-\mathbf{u}\in V]식가 존재</li>
+            <li>식[\cdot]식 닫힘성 : 임의 스칼라 식[k]식에 대해 식[\mathbf{u}\in V \implies k\mathbf{u}\in V]식</li>
+            <li>식[\cdot]식 분배법칙 : 식[k(\mathbf{u}+\mathbf{v})=k\mathbf{u}+k\mathbf{v}]식</li>
+            <li>식[\cdot]식 분배법칙 : 식[(k+m)\mathbf{u}=k\mathbf{u}+m\mathbf{u}]식</li>
+            <li>식[\cdot]식 결합법칙 : 식[k(m\mathbf{u})=(km)\mathbf{u}]식</li>
+            <li>식[\cdot]식 항등원 : 식[1\mathbf{u}=\mathbf{u}]식</li>
+        </ol>
+    </details>
+    <li>부분공간 식[W]식 ::= 벡터공간 식[V]식의 부분집합 식[W]식가 식[V]식에서 정의된 덧셈과 스칼라 곱셈에 대해 벡터공간의 조건을 만족</li>
+    + 닫힘성, 식[\cdot]식 닫힘성만 보이면 식[W]식가 부분공간임이 증명된다
+    <li>식[S]식의 생성; Span of S</li>
+    식[S=\{\mathbf{v}_1, \mathbf{v}_2, \cdots, \mathbf{v}_n\}]식에 대하여,
+    식[\operatorname{span}(S) = \operatorname{span}\{\mathbf{v}_1, \mathbf{v}_2, \cdots, \mathbf{v}_n\}]식 ::= {식[S]식의 원소들로 가능한 모든 일차결합}
+    <li>식[S=\{\mathbf{v}_1, \mathbf{v}_2, \cdots, \mathbf{v}_n\}]식에 대하여,</li>
+    <ul>
+        벡터방정식 식[k_1\mathbf{v}_1+k_2\mathbf{v}_2+\cdots+k_n\mathbf{v}_n=0]식은 자명해 식[(0, 0, \cdots, 0)]식을 갖는다.
+        <li>일차독립 : 벡터방정식이 자명해만 가지는 경우</li>
+        <li>일차종속 : 벡터방정식이 자명해 외의 해를 갖는 경우</li>
+        일차종속의 경우, 어떤 벡터 식[\mathbf{v}_i]식는 나머지 벡터들의 일차결합으로 표현된다
+    </ul>
+    <li>벡터공간 식[V]식의 부분집합 식[S=\{\mathbf{v}_1, \mathbf{v}_2, \cdots, \mathbf{v}_n\}]식가 일차독립이면서 식[\operatorname{span}(S)=V]식를 만족하는 경우, 식[S]식를 식[V]식의 기저(basis)라고 한다</li>
+    이때, 식[V]식의 차원(dimension)은 식[\operatorname{dim}(V)=|S|]식
+    <li>기저 변환 : 벡터공간 식[V]식의 기저를 식[B]식에서 식[B']식으로 변경하는 경우, 벡터 식[\mathbf{v}]식의 좌표에 대해 다음이 성립한다. 식[[\mathbf{v}]_{B'}=P_{B\rightarrow B'}[\mathbf{v}]_B]식</li>
+    <details>
+        <summary>기저 변환 예제</summary>
+        <ol>
+            식[[B' | B] \xrightarrow{\text{Row_Operation}} [I | P_{B\rightarrow B'}]]식
+            <li>Q. 식[R^2]식에서 기저 식[B=\begin{bmatrix} 1 & 0\\ 0 & 1\end{bmatrix}]식, 식[B'=\begin{bmatrix} 1 & 3\\ 2 & 1\end{bmatrix}]식가 있을 때, 식[P_{B\rightarrow B'}]식, 식[P_{B'\rightarrow B}]식를 구하라</li>
+            <li>식[P_{B\rightarrow B'}]식 풀이</li>
+            \[[B' | B]=
+            \left[
+                \begin{array}{cc|cc}
+                    1 & 3 & 1 & 0 \\
+                    2 & 1 & 0 & 1
+                \end{array}
+            \right]\]
+            \[\left[
+                \begin{array}{cc|cc}
+                    1 & 3 & 1 & 0 \\
+                    0 & 1 & {2 \over 5} & -{1 \over 5}
+                \end{array}
+            \right]
+            \longleftarrow
+            \begin{gather*}
+                R_{2} - 2R_{1} \\
+                -{1\over 5}R_{2}
+            \end{gather*}\]
+            \[\left[
+                \begin{array}{cc|cc}
+                    1 & 0 & -{1 \over 5} & {3 \over 5} \\
+                    0 & 1 & {2 \over 5} & -{1 \over 5}
+                \end{array}
+            \right]
+            \longleftarrow
+            R_{1} - 3R_{2}\]
+            예. 기저 B에서의 좌표 식[\begin{bmatrix}1 \\ 0\end{bmatrix}_B]식와 기저 B'에서의 좌표
+            식[\begin{bmatrix}
+                -{1 \over 5} & {3 \over 5} \\
+                {2 \over 5} & -{1 \over 5}
+            \end{bmatrix}
+            \begin{bmatrix}1 \\ 0\end{bmatrix}_B=
+            \begin{bmatrix}-{1 \over 5} \\ {2 \over 5}\end{bmatrix}_{B'}]식는 동일한 것을 가리킨다
+            <li>식[P_{B'\rightarrow B}]식 풀이</li>
+            \[[B' | B]=
+            \left[
+                \begin{array}{cc|cc}
+                    1 & 0 & 1 & 3 \\
+                    0 & 1 & 2 & 1
+                \end{array}
+            \right]\]
+            예. 기저 B'에서의 좌표 식[\begin{bmatrix}1 \\ 0\end{bmatrix}_{B'}]식와 기저 B에서의 좌표
+            식[\begin{bmatrix}
+                1 & 3 \\
+                2 & 1
+            \end{bmatrix}
+            \begin{bmatrix}1 \\ 0\end{bmatrix}_{B'}=
+            \begin{bmatrix}1 \\ 2\end{bmatrix}_B]식는 동일한 것을 가리킨다
+        </ol>
+    </details>
+    <details>
+        <summary>행, 열에 의한 공간</summary>
+        식[A가]식 식[m\times n]식행렬일 때,
+        <li>식[\operatorname{row}(A)]식 ::= 행공간; Row space. 행벡터로 생성되는 식[R^m]식의 부분공간</li>
+        기본 행연산은 행공간을 변경하지 않는다
+        <li>식[\operatorname{col}(A)]식 ::= 열공간; Column space. 열벡터로 생성되는 식[R^n]식의 부분공간</li>
+        <li>해공간; Solution space : 연립일차방정식 식[A\mathbf{x}=\mathbf{b}]식의 해가 되는 식[R^n]식의 부분공간</li>
+        해공간이 존재한다 식[\iff]식 식[\mathbf{b}]식가 식[A]식의 열공간에 포함된다
+        <li>식[\operatorname{null}(A) = \operatorname{ker}(A)]식 ::= 영공간(Null space) 또는 핵(Kernel). 연립일차방정식 식[A\mathbf{x}=\mathbf{0}]식의 해공간</li>
+        기본 행연산은 영공간을 변경하지 않는다
+        <li>식[A]식가 행사다리꼴이면, 선행 계수를 갖는 행벡터들은 식[A]식의 행공간의 기저, 선행 계수를 갖는 열벡터들은 식[A]식의 열공간의 기저가 된다</li>
+        <ol>
+            <li>식[R]식이 식[A]식의 행사다리꼴이면, 식[R]식에서 선행 계수를 갖는 열벡터에 대응되는 식[A]식의 열벡터들은 식[A]식의 열공간의 기저다.</li>
+            <li>식[A^T]식의 열공간과 식[A]식의 행공간은 동일하다.</li>
+        </ol>
+        <li>식[\operatorname{rank}(A)]식 ::= 식[A]식의 행공간과 열공간의 차원은 같다. 이 값을 식[A]식의 랭크라 한다</li>
+        <li>식[\operatorname{nullity}(A)]식 ::= 식[A]식의 영공간의 차원을 퇴화차수(nullity)라고 한다</li>
+        <li>차원 정리 : 식[\operatorname{rank}(A)+\operatorname{nullity}(A)=n]식</li>
+        n = (선행 계수가 존재하는 열[기저]의 수) + (선행 계수가 없는 열[자유변수]의 수)
+        <ol>
+            <li>식[\operatorname{nullity}(A^T)=m-\operatorname{rank}(A)]식</li>
+            <li>식[W^\perp]식 직교여공간; Orthogonal complement ::= 부분공간 식[W]식의 모든 벡터와 수직인 벡터들의 집합</li>
+            <li>식[A]식의 영공간과 식[A]식의 행공간은 식[R^n]식에서 직교여공간이다</li>
+            <li>식[A^T]식의 영공간과 식[A]식의 열공간은 식[R^n]식에서 직교여공간이다</li>
+        </ol>
+        <details>
+            <summary>예제 : 열공간 기저 구하기</summary>
+            <ol>
+                <li>문제</li>
+                식[\begin{align*}
+                A =& \begin{bmatrix}\mathbf{c}_1 & \mathbf{c}_2 & \mathbf{c}_3 & \mathbf{c}_4 & \mathbf{c}_5\end{bmatrix} \\
+                =& \begin{bmatrix}
+                    1 & 0 & -3 & 5 & 0 \\
+                    -1 & -1 & 1 & -4 & 1 \\
+                    0 & 1 & 2 & -1 & 0 \\
+                    2 & 1 & -4 & 9 & 0
+                \end{bmatrix}
+                \end{align*}]식
+                의 열공간의 기저를 구하고, 기저에 포함되지 않는 벡터들은 기저벡터의 일차결합으로 표현하라
+                <li>풀이</li>
+                식[A]식의 기약 행사다리꼴은 식[\begin{bmatrix}
+                    1 & 0 & -3 & 5 & 0 \\
+                    0 & 1 & 2 & -1 & 0 \\
+                    0 & 0 & 0 & 0 & 1 \\
+                    0 & 0 & 0 & 0 & 0
+                \end{bmatrix}]식과 같으므로, 식[A]식의 열공간의 기저는 식[\{\mathbf{c}_1, \mathbf{c}_2, \mathbf{c}_5\}]식이고,
+                식[\begin{gather*}
+                    \mathbf{c}_3 = -3\mathbf{c}_1+2\mathbf{c}_2 \\
+                    \mathbf{c}_4 = 5\mathbf{c}_1-\mathbf{c}_2
+                \end{gather*}]식
+            </ol>
+        </details>
+    </details>
 </details>
 
 <hr>
 
-<ol>
-    <li>m x n 행렬 : n차원 공간의 점으로부터 m차원 공간으로의 선형 사상(map)</li>
-    
-    <li>벡터 v, 기저 벡터 e1 ~ en에 대해 v = u1e1 + ... + unen일 때, u1, ..., un은 선형결합의 랭크</li>
-
-    <li>영행렬 O : 임의 벡터를 원점으로 사상<br>
-        단위행렬 I or E : 아무것도 하지 않는 사상<br>
-        대각행렬 diag(a1, ..., an) : 비대각 성분이 모두 0<br>
-        역행렬 A-1 : AA-1 = A-1A = I를 만족하는 역 사상<br>
-        블록행렬 : 행렬을 가로/세로로 나누어 각 구역을 작은 행렬로 간주 A = (A11 A12 A13)</li>
-</ol>
+<details>
+    <summary>고유 벡터</summary>
+    <li>행렬 식[A]식가 선형 변환 식[T:R^n \rightarrow R^n]식일때, 영이 아닌 벡터 식[\mathbf{x}]식에 대해 식[A\mathbf{x}=\lambda\mathbf{x}]식을 만족하는 스칼라 식[\lambda]식가 존재하는 경우,</li>
+    <ol>
+        <li>식[\mathbf{x}]식 ::= 식[A]식의 고유벡터(eigenvector)</li>
+        <li>식[\lambda]식 ::= 식[A]식의 고유값(eigenvalue)</li>
+    </ol>
+    즉, 고유벡터는 선형 변환에 대해 방향이 바뀌지 않는다
+    <li>Eigenvalue equation ::= 식[\operatorname{det}(\lambda I-A)=0]식</li>
+    고유값이 존재한다 식[\iff]식 식[(\lambda I - A)\mathbf{x}=0]식의 비자명해가 존재한다
+    식[\iff]식 식[\operatorname{det}(\lambda I-A)=0]식
+    <li>삼각행렬의 대각성분들은 고유값이다</li>
+    <li>고유공간; Eigenspace ::= Eigenvalue equation의 해공간</li>
+    <details>
+        <summary>예제: 고유값과 고유공간의 기저 구하기</summary>
+        <ol>
+            <li>Q. 행렬 식[A = \begin{bmatrix} 1 & 0 & -1 \\ 1 & 1 & -2 \\ 0 & 0 & 2 \end{bmatrix}]식의 고유값과 고유공간에 대한 기저를 구하라</li>
+            <li>풀이</li>
+            식[\operatorname{det}(\lambda I - A) =
+            \begin{vmatrix} \lambda - 1 & 0 & 1 \\ -1 & \lambda - 1 & 2 \\ 0 & 0 & \lambda - 2 \end{vmatrix} =
+            (\lambda-2)(\lambda-1)^2 = 0]식
+            <li>Case 1. 식[\lambda = 2]식</li>
+            식[(\lambda I - A)\mathbf{x} =
+            \begin{bmatrix} 1 & 0 & 1 \\ -1 & 1 & 2 \\ 0 & 0 & 0 \end{bmatrix}
+            \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = 0]식<br>
+            따라서 식[x_1 = -s, x_2 = -3s, x_3 = s]식이며, 고유벡터는 식[s\begin{bmatrix} -1 \\ -3 \\ 1 \end{bmatrix}]식, 고유공간의 기저는 식[\begin{bmatrix} -1 \\ -3 \\ 1 \end{bmatrix}]식
+            <li>Case 2. 식[\lambda = 1]식</li>
+            식[(\lambda I - A)\mathbf{x} =
+            \begin{bmatrix} 0 & 0 & 1 \\ -1 & 0 & 2 \\ 0 & 0 & -1 \end{bmatrix}
+            \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = 0]식<br>
+            따라서 식[x_1 = 0, x_2 = s, x_3 = 0]식이며, 고유벡터는 식[s\begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix}]식, 고유공간의 기저는 식[\begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix}]식
+        </ol>
+    </details>
+    <li>행렬 식[A]식에 고유값이 존재하는 경우, 식[A^k\mathbf{x}=\lambda ^k\mathbf{x}]식</li>
+</details>
 
 <hr>
