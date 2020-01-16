@@ -118,6 +118,7 @@ const posts = {
         { filename: "posts/tip/tomcat.html", category: "Tip", title: "tomcat" },
         { filename: "posts/tip/macro.html", category: "Tip", title: "macro" },
         { filename: "posts/tip/playstore.html", category: "Tip", title: "Google Play Store" },
+        { filename: "posts/tip/probability.html", category: "Tip", title: "확률", top: true },
         { filename: "posts/tip/psql.html", category: "Tip", title: "psql" },
         { filename: "posts/tip/refactoring.html", category: "Tip", title: "디자인 패턴 + 리팩터링" },
         { filename: "posts/tip/regex.html", category: "Tip", title: "정규표현식" },
