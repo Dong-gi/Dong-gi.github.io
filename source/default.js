@@ -89,6 +89,8 @@ function loadContent(post) {
  */
 function insertDisqusThread(post) {
     localStorage.lastContentId = post.id;
+	if(location.host != "dong-gi.github.io")
+		return;
     let content = $('details>p', posts.contents[post.id]);
     if ($('div#disqus_thread').length > 0) {
         DISQUS.reset({
