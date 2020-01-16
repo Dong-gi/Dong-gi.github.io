@@ -749,7 +749,7 @@ if (msg is string { Length: 5 } five)
         <ul>
             <li>\k'name'역참조 가능. replace에서 ${name}참조 가능, GroupCollection의 인덱서로 참조 가능</li>
             <li>그룹 오버로딩 가능 : (?&lt;1&gt;a)(?&lt;1&gt;\1b) // 스택처럼 정의가 쌓이며 '-name'으로 가장 최근 정의 삭제 가능</li>
-        </ul>        
+        </ul>
         <li>균형 조정 그룹; Balancing group</li>
         <ul>
             <li>(?&lt;name1-name2&gt;X) == (?'name1-name2'X)</li>
@@ -761,7 +761,7 @@ foreach (Match match in Regex.Matches(html, @"&lt;(?'tag'\w+)&gt;(.(?&lt;!&lt;/\
 
 // All text : &lt;html&gt;&lt;body&gt;Hello&lt;p&gt;World&lt;/p&gt;olleH&lt;/body&gt;&lt;/html&gt;Plain Text&lt;script&gt;console.log('hello world');&lt;/script&gt;Plain Text&lt;yes&gt;Text&lt;/no&gt;
 // HTML part : &lt;html&gt;&lt;body&gt;Hello&lt;p&gt;World&lt;/p&gt;olleH&lt;/body&gt;&lt;/html&gt;
-// HTML part : &lt;script&gt;console.log('hello world');&lt;/script&gt;        
+// HTML part : &lt;script&gt;console.log('hello world');&lt;/script&gt;
 </pre>
         </ul>
         <li>옵션</li>

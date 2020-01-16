@@ -58,15 +58,15 @@
             <li>구성 요소 선언, 요구 권한 식별, 최소 API 레벨 선언 등</li>
             &lt;activity&gt;, &lt;service&gt;, &lt;receiver&gt;, &lt;provider&gt;<br>
             BroadcastReceiver는 registerReceiver()를 통해 동적으로 등록할 수 있다.
-            
+
             <li>다른 앱의 intent에 응답하기 위해 &lt;intent-filter&gt;요소를 해당 요소의 하위에 추가한다.</li>
-            
+
             <li>요구사항 선언</li>
             <ul>
                 <li>예. 카메라 없으면 구글 플레이에서 설치 불가</li>
                 &lt;uses-feature android:name="android.hardware.camera.any" android:required="true"/&gt;<br>
                 http://developer.android.com/guide/topics/manifest/uses-feature-element.html#features-reference
-                
+
                 <li>API 7이상</li>
                 &lt;uses-sdk android:minSdkVersion="7" android:targetSdkVersion="19" /&gt;
 
@@ -270,7 +270,7 @@ lock.release();</pre>
         xml : android:keepScreenOn="true" 또는<br>
         java : getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        <li>주기적인 백그라운드 알람</li>    
+        <li>주기적인 백그라운드 알람</li>
 <pre>AlarmManager manager = (AlarmManager)getSystemService(ALARM_SERVICE);
 // 1회 알람 : set(int type, long triggerAtMillis, PendingIntent operation)
 // 1회 정시 알람 : setExact(int type, long triggerAtMillis, PendingIntent operation) + 오버로딩
@@ -285,7 +285,7 @@ manager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealti
                 <li>RTC_WAKEUP, ELAPSED_REALTIME_WAKEUP : *_WAKEUP 타입은 기기가 자고 있으면 깨워서 실행시킨다</li>
             </ol>
         </details>
-            
+
         <li>Doze 모드 Since 23</li>
         네트워크 액세스 정지. WAKE_LOCK 무시. AlarmManager 경보 무시. Wi-Fi 검색 X, JobScheduler 실행 X, AbstractThreadedSyncAdapter 실행 X
         <ul>

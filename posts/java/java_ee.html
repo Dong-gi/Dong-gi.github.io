@@ -876,7 +876,7 @@
             java -jar -Dspring.profiles.active=dev app-name.jar
             <li>디버그 포트 열기</li>
             -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=55555,suspend=n<br>
-            suspend=y로 하는 경우, 디버그 연결까지 실행을 대기한다
+            suspend=y로 하는 경우, 디버그 연결까지 실행을 대기한다, 허용 서브넷 명시 : address=*:55555, address=0.0.0.0:55555
         </ol>
     </details>
     <details open>
@@ -959,7 +959,7 @@
         메서드를 스프링이 관리하는 ThreadExecutor에서 비동기적으로 실행하는 프록시를 생성한다.
         <button class="btn-code" path="Repositories/STS/web-app/src/main/java/io/github/donggi/WebAppApplication.java" lan="java">@EnableAsync »</button>
         <button class="btn-code" path="Repositories/STS/web-app/src/main/java/io/github/donggi/controller/SleepController.java" lan="java">@Async »</button>
-        
+
         <li>@Scheduled</li>
         메서드를 명시적으로 호출하지 않아도 스케쥴대로 실행된다.
         <button class="btn-code" path="Repositories/STS/web-app/src/main/java/io/github/donggi/WebAppApplication.java" lan="java">@EnableScheduling »</button>

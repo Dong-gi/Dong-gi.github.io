@@ -132,7 +132,7 @@ console.log(request.responseText);</pre>
 
         <li>FormData를 보낼 수 있다</li>
 <pre>let data = new FormData();
-data.append("key", "value");        
+data.append("key", "value");
 let data = new FormData(document.forms[0]);
 request.send(data);
 // Blob, BufferSource, FormData, URLSearchParams, ReadableStream, USVString 전송 가능</pre>
@@ -158,7 +158,7 @@ $.ajax({
     error: (request, status, error) => {
         showSnackbar("등록 실패.", $('body'));
     }
-});</pre>        
+});</pre>
         <li>jQuery Ajax 옵션</li>
         async, complete(xhr, status), data, error(xhr, status, error), jsonp, jsonpCallback, success(data, status, xhr), timeout, type, url
 
