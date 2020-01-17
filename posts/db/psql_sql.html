@@ -1551,7 +1551,7 @@ CREATE TABLE t_user_item ( user_id bigint, item m_item, count int );</pre>
         <summary>Conditional Expressions</summary>
         <ol>
             <li>case</li>
-            case when <i>condition</i> then <i>result</i> [when ...] [else <i>result</i>]
+            case when <i>condition</i> then <i>result</i> [when ...] [else <i>result</i>] end
             <li>coalesce</li>
             coalesce(value [, ...]) : 처음으로 등장하는 non-null값을 반환한다. 모두 null이면 최종적으로 null이 반환된다.
             <li>nullif</li>
