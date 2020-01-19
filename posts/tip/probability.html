@@ -122,7 +122,30 @@
 	<ol>
 		<li>이산확률 : 식[\sigma^2 = E((X-\mu)^2) = \sum (x-\mu)^2f(x)]식</li>
 		<li>연속확률 : 식[\sigma^2 = E((X-\mu)^2) = \int_{-\infty}^{\infty}(x-\mu)^2f(x)dx]식</li>
+		<li>식[\sigma^2 = E(X^2)-\mu^2]식</li>
+		확률변수 X에 종속된 확률변수 식[g(X)]식에 대하여,
+		<li>이산확률 : 식[\sigma_{g(X)}^2 = E((g(X)-\mu_{g(X)})^2) = \sum (g(x)-\mu_{g(X)})^2f(x)]식</li>
+		<li>연속확률 : 식[\sigma_{g(X)}^2 = E((g(X)-\mu_{g(X)})^2) = \int_{-\infty}^{\infty}(g(x)-\mu_{g(X)})^2f(x)dx]식</li>
 	</ol>
+	<li>공분산; Covariance</li>
+	<ol>
+		두 확률변수 사이의 선형적 관계를 보여준다. 따라서 비선형적 관계를 가진 확률변수에 대한 공분산은 별 의미가 없다
+		<li>이산확률 : 식[\sigma_{XY}=E((X-\mu_X)(Y-\mu_Y))=\sum_x\sum_y (x-\mu_X)(y-\mu_Y)f(x,y)]식</li>
+		<li>연속확률 : 식[\sigma_{XY}=E((X-\mu_X)(Y-\mu_Y))=\int_{-\infty}^{\infty}\int_{-\infty}^{\infty} (x-\mu_X)(y-\mu_Y)f(x,y)dxdy]식</li>
+		<li>식[\sigma_{XY}=E(XY)-\mu_X\mu_Y]식</li>
+		선형적 관계를 갖는 확률변수에 대한 공분산이 0이라면, 두 확률변수는 독립이다
+	</ol>
+	<li>상관 계수; Correlation coefficient</li>
+	식[-1\le \rho_{XY}={\sigma_{XY} \over \sigma_X\sigma_Y} \le 1]식. 확률변수의 측정단위와 무관하게 두 확률변수 사이의 선형적 관계를 보여준다. 식[Y=aX+b]식와 같은 일차종속인 경우 식[\rho_{XY} = \pm 1]식
+	<li>확률변수의 선형결합</li>
+	<ol>
+		<li>식[E(aX+b)=aE(X)+b]식</li>
+		<li>식[E(g(X)\pm h(X)) = E(g(X)\pm E(h(X))]식</li>
+		<li>식[X, Y]식가 독립 식[\iff E(XY)=E(X)E(Y)]식</li>
+		<li>식[\rho_{aX+bY+c}^2 = a^2\rho_X^2+b^2\rho_Y^2+2ab\rho_{XY}]식</li>
+	</ol>
+	<li>체비쇼프 부등식; Chebyshev's inequality</li>
+	평균으로부터 k 표준편차 이상 떨어진 자료들은 식[1/k^2]식 이상 차지하지 않는다. 식[P(|X-\mu|\ge k\sigma)\le 1/k^2]식
 </details>
 
 <script id="MathJax-script" async src="/source/tex-chtml.js"></script>
