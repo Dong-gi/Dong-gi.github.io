@@ -71,10 +71,15 @@ function getContentHTML(post) {
  */
 function loadContent(post) {
     return () => {
-        if ($('details>p', posts.contents[post.id]).length > 0) {
+		if($('details', posts.contents[post.id])[0].open)
+			return;
+		localStorage.lastContentId = post.id;
+		if ($('details>p', posts.contents[post.id]).length > 0) {
             if (!($('div#disqus_thread', posts.contents[post.id]).length > 0))
                 insertDisqusThread(post);
-            return;
+			if (location.host == "dong-gi.github.io")
+				return;
+			$('details>p', posts.contents[post.id]).remove();
         }
         let content = $("<p>");
         $(content).load(post.filename.replace(/ /gm, '%20') + '?' + new Date().getTime(), (response, status, xhr) => {
@@ -88,8 +93,7 @@ function loadContent(post) {
  * 포스트 댓글 로드
  */
 function insertDisqusThread(post) {
-    localStorage.lastContentId = post.id;
-	if(location.host != "dong-gi.github.io")
+	if (location.host != "dong-gi.github.io")
 		return;
     let content = $('details>p', posts.contents[post.id]);
     if ($('div#disqus_thread').length > 0) {
