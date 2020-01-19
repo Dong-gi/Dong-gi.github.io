@@ -23,6 +23,102 @@
 	<li>순열; Permutation : n개의 서로 다른 대상 중 r개를 선택해 일렬로 세우는 경우의 수 식[{}_n P_{r}={n! \over (n-r)!}]식</li>
 	<li>원순열; Circular permutaion : n개의 서로 다른 대상을 원형으로 세우는 경우의 수. 식[(n-1)!]식</li>
 	<li>분할; Partition : 각 집합 원소 사이의 순서는 고려하지 않을 때, n개의 대상을 r개의 집합으로 구분하는 경우의 수는 식[\begin{pmatrix}n \\ n_1,\cdots,n_r\end{pmatrix}={n! \over n_1!\cdots n_r!}]식</li>
+	<details>
+		<summary>예제</summary>
+		<li>Q. 10명을 4인실 하나, 3인실 둘에 할당하는 경우의 수는?</li>
+		<li>풀이. 식[{10! \over 4!3!3!}=4200]식</li>
+	</details>
+	<li>조합; Combination : n개의 대상 중 r개를 순서를 고려하지 않고 선택하는 경우의 수. 식[\begin{pmatrix}n \\ r,n-r\end{pmatrix}={n! \over r!(n-r)!}]식</li>
+	<li>조건부 확률; Conditional probability : 사상 A가 발생한 상태에서 사상 B가 발생할 확률 식[P(B|A)={P(A \cap B) \over P(A)}]식</li>
+	식[\begin{gather*}
+		\implies P(A \cap B)=P(A)P(B|A)=P(B)P(A|B) \\
+		\implies P(A_1\cap\cdots\cap A_n)=P(A_1)P(A_2|A_1)\cdots P(A_n|A_1\cap\cdots\cap A_{n-1})
+	\end{gather*}]식
+	<li>전확률 정리; Law of total probability</li>
+	사상 식[B_1, \cdots, B_k]식가 표본공간을 빈틈없이 분할할 때, 식[P(A)=\sum_{i=1}^n P(B_i \cap A)=\sum_{i=1}^n P(B_i)P(A|B_i)]식
+	<li>베이즈 정리; Bayes' theorem</li>
+	사상 식[B_1, \cdots, B_k]식가 표본공간을 빈틈없이 분할할 때, 식[P(B_i|A)={P(B_i\cap A) \over P(A)}={P(B_i)P(A|B_i) \over \sum_{i=1}^n P(B_i)P(A|B_i)}]식
+	<li>독립; Independent : 두 사상 A, B가 독립
+		\begin{gather*}
+			\iff & P(B|A)=P(B) \\
+			\iff & P(A|B)=P(A) \\
+			\iff & P(A\cap B)=P(A)P(B)
+		\end{gather*}</li>
 </details>
 
 <hr>
+
+<details open>
+	<summary>확률분포</summary>
+	<li>확률변수; Random variable ::= 표본공간의 원소를 실수로 대응하는 함수.</li>
+	식[P(X=x)]식 ::= 확률변수 식[X]식의 값이 식[x]식일 확률
+	<li>확률질량함수; Probability mass function ::= 이산확률변수 식[X]식에 대하여 아래를 만족하는 함수 식[f(x)]식</li>
+	<ol>
+		<li>식[f(x)=P(X=x)]식</li>
+		<li>식[f(x)\ge 0]식</li>
+		<li>식[\sum f(x)=1]식</li>
+	</ol>
+	<li>확률밀도함수; Probability density function ::= 연속확률변수 식[X]식에 대하여 아래를 만족하는 함수 식[f(x)]식</li>
+	<ol>
+		<li>식[f(x)\ge 0]식</li>
+		<li>식[P(a\le X \le b)=\int_a^b f(x)dx]식</li>
+		등호의 유무는 중요하지 않다
+		<li>식[\int_{-\infty}^{\infty} f(x)dx=1]식</li>
+	</ol>
+	<li>누적분포함수; Cumulative distribution function</li>
+	<ol>
+		<li>이산확률변수 식[X]식에 대하여, 식[F(x)=P(X\le x)=\sum_{t\le x}f(t)]식</li>
+		<li>연속확률변수 식[X]식에 대하여, 식[F(x)=P(X\le x)=\int_{-\infty}^{x}f(t)dt]식</li>
+	</ol>
+	<li>결합분포 식[f(x,y)]식</li>
+	<ul>
+		<li>결합확률분포 : 이산확률변수 식[X, Y]식에 대하여,</li>
+		<ol>
+			<li>식[f(x,y)=P(X=x,Y=y)]식</li>
+			<li>식[f(x,y)\ge 0]식</li>
+			<li>식[\sum_x\sum_y f(x,y)=1]식</li>
+		</ol>
+		<li>결합밀도함수 : 연속확률변수 식[X, Y]식에 대하여,</li>
+		<ol>
+			<li>식[f(x,y)\ge 0]식</li>
+			<li>식[P((X,Y)\in A)=\iint_A f(x,y)dx dy]식</li>
+			<li>식[\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}f(x,y)dx dy]식</li>
+		</ol>
+	</ul>
+	<li>주변분포; Marginal distribution</li>
+	<ol>
+		결합분포에서 하나의 확률변수만 고려한 확률 식[g(x), h(y)]식
+		<li>이산확률 : 식[g(x)=\sum_y f(x,y)]식</li>
+		<li>연속확률 : 식[g(x)=\int_{-\infty}^{\infty}f(x,y)dy]식</li>
+	</ol>
+	<li>조건부 분포; Conditional distribution</li>
+	<ol>
+		<li>식[f(y|x)={f(x,y) \over g(x)}]식</li>
+		<li>이산확률 : 식[P(a\le Y\le b|X=x)=\sum_{a\le y\le b}f(y|x)]식</li>
+		<li>연속확률 : 식[P(a\le Y\le b|X=x)=\int_{a}^{b}f(y|x)dx]식</li>
+	</ol>
+	<li>통계적 독립 : 두 확률변수 식[X, Y]식가 독립</li>
+	\begin{gather*}
+		\iff & f(x,y)=g(x)h(y) \\
+		\iff & f(y|x)=h(y) \\
+		\iff & f(x|y)=g(x)
+	\end{gather*}
+	<li>확률분포의 평균 = 기대값; Expected value</li>
+	<ol>
+		<li>이산확률 : 식[\mu=E(X)=\sum xf(x)]식</li>
+		<li>연속확률 : 식[\mu=E(X)=\int_{-\infty}^{\infty}xf(x)dx]식</li>
+		확률변수 X에 종속된 확률변수 식[g(X)]식에 대하여,
+		<li>이산확률 : 식[\mu_{g(X)}=E(g(X))=\sum g(x)f(x)]식</li>
+		<li>연속확률 : 식[\mu_{g(X)}=E(g(X))=\int_{-\infty}^{\infty}g(x)f(x)dx]식</li>
+	</ol>
+	<details>
+		<summary>예제</summary>
+		<li>Q. 확률변수 X의 밀도함수가 식[f(x)= \left\{\begin{matrix}
+				x & 0\le x\le \sqrt{2} \\
+				0 & \mbox{else} \end{matrix}\right.]식일때, 식[g(X)=2X-1]식의 기대값을 구하라</li>
+		<li>풀이. 식[E(2X-1)=\int_{0}^{\sqrt{2}}(2x-1)xdx=\int_{0}^{\sqrt{2}}(2x^2-x)dx=4\sqrt{2}/3-1]식</li>
+	</details>
+</details>
+
+<script id="MathJax-script" async src="/source/tex-chtml.js"></script>
+<link rel="stylesheet" href="/source/mjx-chtml.css">
