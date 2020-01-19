@@ -28,7 +28,7 @@
 		<li>Q. 10명을 4인실 하나, 3인실 둘에 할당하는 경우의 수는?</li>
 		<li>풀이. 식[{10! \over 4!3!3!}=4200]식</li>
 	</details>
-	<li>조합; Combination : n개의 대상 중 r개를 순서를 고려하지 않고 선택하는 경우의 수. 식[\begin{pmatrix}n \\ r,n-r\end{pmatrix}={n! \over r!(n-r)!}]식</li>
+	<li>조합; Combination : n개의 대상 중 r개를 순서를 고려하지 않고 선택하는 경우의 수. 식[\begin{pmatrix}n \\ r,n-r\end{pmatrix}=\begin{pmatrix}n \\ r\end{pmatrix}={n! \over r!(n-r)!}]식</li>
 	<li>조건부 확률; Conditional probability : 사상 A가 발생한 상태에서 사상 B가 발생할 확률 식[P(B|A)={P(A \cap B) \over P(A)}]식</li>
 	식[\begin{gather*}
 		\implies P(A \cap B)=P(A)P(B|A)=P(B)P(A|B) \\
@@ -146,7 +146,94 @@
 	</ol>
 	<li>체비쇼프 부등식; Chebyshev's inequality</li>
 	평균으로부터 k 표준편차 이상 떨어진 자료들은 식[1/k^2]식 이상 차지하지 않는다. 식[P(|X-\mu|\ge k\sigma)\le 1/k^2]식
+	<li>이산균등분포; Discrete uniform distribution</li>
+	<ol>
+		<li>식[f(x;n)={1 \over n}]식 ::= 이산확률변수 X에 대하여, 임의의 식[x]식가 될 확률 식[P(X=x_i)]식이 식[{1 \over n}]식로 동일한 경우</li>
+		<li>평균 식[\mu={1 \over n}\sum x_i]식</li>
+		<li>분산 식[\sigma^2={1 \over n}\sum (x_i-\mu)^2]식</li>
+	</ol>
+	<li>이항분포; Binomial distribution</li>
+	<ol>
+		<li>베르누이 시행; Bernoulli trial</li>
+		<ol>
+			<li>시행의 결과는 둘 중 하나만 가능</li>
+			<li>각 시행에서 성공확률은 항상 일정</li>
+			<li>각 시행은 서로 독립</li>
+		</ol>
+		<li>이항확률변수; Binomial random variable : n번의 베르누이 시행에서의 성공횟수 X</li>
+		<li>이항분포 식[b(x;n,p)=\begin{pmatrix}n \\ x\end{pmatrix}p^x q^{n-x}]식</li>
+		<li>평균 식[\mu=np]식</li>
+		<li>분산 식[\sigma^2=npq]식</li>
+		<li>음이항분포; Negative binomial distribution</li>
+		n번째 성공이 일어날 때까지의 시행횟수 X의 확률분포 식[b^*(x;n,p)=\begin{pmatrix}x-1 \\ n-1\end{pmatrix}p^n q^{x-n}]식
+		<li>기하분포; Geometric distribution</li>
+		첫번째 성공이 일어날 때까지의 시행횟수 X의 확률분포 식[g(x;p)=pq^{x-1}]식, 평균 식[\mu=1/p]식, 분산 식[\sigma^2={1-p \over p^2}]식
+	</ol>
+	<li>초기하분포; Hypergeometric distribution</li>
+	<ol>
+		<li>초기하확률변수 : 크기가 식[N]식인 모집단의 k개가 성공, 나머지는 실패일 때 n개를 비복원으로 뽑았을 때 나온 성공의 개수 X</li>
+		<li>초기하분포 식[h(x;N,n,k)={\begin{pmatrix}k \\ x\end{pmatrix}\begin{pmatrix}N-k \\ N-x\end{pmatrix} \over \begin{pmatrix}N \\ n\end{pmatrix}}]식</li>
+		<li>평균 식[\mu = {nk \over N}]식</li>
+		<li>분산 식[\sigma^2={N-n \over N-1}\cdot n \cdot {k \over N}\left(1-{k \over N}\right)]식</li>
+		<li>식[n/N\le 0.05]식이면 이항분포 식[b(x;n,k/N)]식으로 근사 가능</li>
+	</ol>
+	<li>푸아송 분포; Poisson distribution</li>
+	<ol>
+		<li>푸아송 확률변수 : 특정 기간 t동안 사건이 평균적으로 식[\lambda]식번 발생하고, 이것이 다른 기간과 독립적일때, 사건이 발생한 횟수 X</li>
+		<li>평균 식[\mu=\lambda t]식 ← 기간에 따른 평균 발생비율은 항상 일정하므로</li>
+		<li>푸아송 분포 식[p(x;\lambda t)={e^{-\lambda t}(\lambda t)^x \over x!}]식</li>
+		<li>분산 식[\sigma^2 = \lambda t]식</li>
+		<li>이항분포의 n이 매우 크고, p가 0에 가까우면 식[\mu=np]식인 푸아송 분포로 근사 가능</li>
+	</ol>
+	<li>정규분포; Normal distribution</li>
+	<ol>
+		<li>평균 식[\mu]식, 표준편차 식[\sigma]식</li>
+		<li>정규분포 식[X \sim N(\mu,\sigma^2)]식 : 식[n(x;\mu,\sigma)={1 \over \sqrt{2\pi}\sigma}e^{-{1 \over 2\sigma^2}(x-\mu)^2}]식</li>
+		<li>표준정규분포 : 식[Z \sim N(0,1)]식</li>
+		정규화 : 식[Z={X-\mu \over \sigma}]식
+		<li>이항분포 식[b(x;n,p)]식는 정규분포 식[n(x;np,\sqrt{npq})]식를 근사적으로 따른다</li>
+		식[P(X\le x)=\sum_{k=0}^x b(k;n,p)\approx P(Z \le {{x+0.5-np} \over \sqrt{npq}})]식 ← +0.5는 결과를 실제에 가깝게 하는 연속성 수정(Continuity correction)
+	</ol>
+	<li>감마분포</li>
+	<ol>
+		<li>감마함수 식[\Gamma(\alpha)=\int_0^{\infty}x^{\alpha-1}e^{-x}dx]식</li>
+		자연수 n에 대하여 식[\Gamma(n)=(n-1)!]식, 식[\Gamma(1/2)=\sqrt{\pi}]식
+		<li>감마분포; Gamma distribution 식[f(x;\alpha,\theta)=\left\{\begin{matrix}
+    		{x^{\alpha-1}e^{-x/\theta} \over \theta^\alpha\Gamma(\alpha)} & \mbox{if x > 0} \\
+    		0 & \mbox{else} \end{matrix}\right.]식</li>
+		<li>평균 식[\mu=\alpha\theta]식</li>
+		<li>분산 식[\sigma^2=\alpha\theta^2]식</li>
+		<li>지수분포; Exponential distribution 식[f(x;\theta)=\left\{\begin{matrix}
+    		{e^{-x/\theta} \over \theta} & \mbox{if x > 0} \\
+    		0 & \mbox{else} \end{matrix}\right.]식</li>
+		<ol>
+			<li>식[\theta=1/\lambda]식로 두면, 식[f(x;1/\lambda)=\lambda e^{-\lambda x}]식</li>
+			<li>푸아송 사건이 발생하지 않을 확률 식[p(0;\lambda t)=e^{-\lambda t}]식</li>
+			= 첫 번째 푸아송 사건이 발생하기까지 소요된 시간 t에 대한 확률변수 X의 확률분포
+			<li>위 X에 대한 누적확률분포는 식[P(0\le X\le x)=1-e^{-\lambda x}]식</li>
+			<li>이를 연속확률변수에 적용하기 위해 미분하면 식[\lambda e^{-\lambda x}]식</li>
+			<li>따라서 지수분포는 연속확률변수에 대한 푸아송 분포임을 알 수 있다</li>
+			<li>푸아송 분포와 마찬가지로 특정 기간 동안 사건의 발생은 다른 기간과 독립적이다. 식[P(X\ge t)=P(X\ge t_0+t|X\ge t_0)]식</li>
+		</ol>
+		<li>카이제곱 분포; Chi-squared distribution</li>
+		<ol>
+			<li>식[\alpha=k/2, \theta=2]식인 감마분포와 동일하다. 식[f(x;k)=\left\{\begin{matrix}
+    			{x^{k/2-1}e^{-x/2} \over 2^{k/2}\Gamma(k/2)} & \mbox{if x > 0} \\
+    			0 & \mbox{else} \end{matrix}\right.]식</li>
+			<li>평균 식[\mu=k]식</li>
+			<li>분산 식[\sigma^2=2k]식</li>
+		</ol>
+	</ol>
 </details>
-
+<!--
 <script id="MathJax-script" async src="/source/tex-chtml.js"></script>
 <link rel="stylesheet" href="/source/mjx-chtml.css">
+-->
+<ul>
+	<li>https://developers.google.com/machine-learning/crash-course/ml-intro?hl=ko</li>
+	<li>http://hunkim.github.io/ml/</li>
+	<li>https://github.com/golbin/TensorFlow-Tutorials</li>
+	<li>https://www.cs.ox.ac.uk/people/nando.defreitas/machinelearning/</li>
+	<li>https://scikit-learn.org/stable/tutorial/</li>
+	<li>https://www.udacity.com/course/intro-to-tensorflow-for-deep-learning--ud187</li>
+</ul>
