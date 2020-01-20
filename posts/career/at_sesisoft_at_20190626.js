@@ -1,31 +1,38 @@
-$.each($('table'), (idx, table) => {
-    if($(table).hasClass('ordered-table')) return;
-    $(table).addClass('ordered-table');
-
-    let hasDataColumnIdxSet = new Set(); // 모든 행의 x번째 열이 비어있다면, 삭제하기 위한 인덱스 집합
-    let headRow = $('tr:first', table); // 테이블의 1번째 행을 테이블 헤더 행으로 간주
-    headRow.addClass('table-head-row');
-    let columnSize = $('td, th', headRow).length;
-
-    $.each($('td, th', $('tr:not(.table-head-row)', table)), (idx, node) => {
-        let after = $(node).html().replace(/null/gmi, "").trim();
-        $(node).html(after);
-
-        if (after.length > 0)
-            hasDataColumnIdxSet.add(idx % columnSize);
-    });
-
-    $.each($('td, th', table), (idx, node) => {
-        if (!hasDataColumnIdxSet.has(idx % columnSize))
-            $(node).remove();
-    });
-
-    $.each($('td, th', headRow), (idx, node) => $(node).click(customTableSort(idx, node, table)));
-
-    let preSort = $('td[pre-sort], th[pre-sort]', headRow);
-    preSort.sort((head1, head2) => parseFloat($(head1).attr('pre-sort')) - parseFloat($(head2).attr('pre-sort')));
-    $.each(preSort, (idx, node) => $(node).click());
+$(() => {
+	const observer = new MutationObserver(callback);
+	observer.observe($('body')[0], { attributes: false, childList: true, subtree: true });
 });
+
+
+const callback = function(mutationsList, observer) {
+	$.each($('table:not(".ordered-table")'), (idx, table) => {
+		$(table).addClass('ordered-table');
+
+		let hasDataColumnIdxSet = new Set(); // 모든 행의 x번째 열이 비어있다면, 삭제하기 위한 인덱스 집합
+		let headRow = $('tr:first', table); // 테이블의 1번째 행을 테이블 헤더 행으로 간주
+		headRow.addClass('table-head-row');
+		let columnSize = $('td, th', headRow).length;
+
+		$.each($('td, th', $('tr:not(.table-head-row)', table)), (idx, node) => {
+			let after = $(node).html().replace(/null/gmi, "").trim();
+			$(node).html(after);
+
+			if (after.length > 0)
+				hasDataColumnIdxSet.add(idx % columnSize);
+		});
+
+		$.each($('td, th', table), (idx, node) => {
+			if (!hasDataColumnIdxSet.has(idx % columnSize))
+				$(node).remove();
+		});
+
+		$.each($('td, th', headRow), (idx, node) => $(node).click(customTableSort(idx, node, table)));
+
+		let preSort = $('td[pre-sort], th[pre-sort]', headRow);
+		preSort.sort((head1, head2) => parseFloat($(head1).attr('pre-sort')) - parseFloat($(head2).attr('pre-sort')));
+		$.each(preSort, (idx, node) => $(node).click());
+	});
+}
 
 function customTableSort(idx, node, table) {
     let rgba = getRgba(node);
