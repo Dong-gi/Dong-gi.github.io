@@ -102,7 +102,7 @@ const posts = {
         { filename: "posts/python/textwrap.html", category: "Programming/Python/Library", title: "Lib/textwrap : 텍스트 정돈" },
         { filename: "posts/python/unicodedata.html", category: "Programming/Python/Library", title: "Lib/unicodedata : 유니코드 database 표준" },
         { filename: "posts/python/struct.html", category: "Programming/Python/Library", title: "Lib/struct : 이진 데이터 패킹/언패킹" },
-        { filename: "posts/python/1904252136.html", category: "Programming/Python/Library", title: "Python Data Types" },
+        { filename: "posts/python/datetime.html", category: "Programming/Python/Library", title: "Lib/datetime : 단순 시간 표현" },
 
         { filename: "posts/tip/aws.html", category: "Tip", title: "AWS" },
         { filename: "posts/tip/centos.html", category: "Tip", title: "CentOS" },

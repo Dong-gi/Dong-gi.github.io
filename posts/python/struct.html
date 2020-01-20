@@ -8,6 +8,8 @@
     <li>struct.calcsize(fmt) : format 표현에 필요한 바이트 크기</li>
 </ul>
 
+<hr>
+
 <details>
     <summary>Format String</summary>
     <li>Byte Order, Size, and Alignment</li>
@@ -22,6 +24,7 @@
     <ul>
         <li>Native byte order : 호스트 시스템으로 결정</li>
         <li>Native size, alignment : C 컴파일러의 sizeof로 결정</li>
+		정렬을 위해 패딩 바이트(0)들이 첨가될 수 있다
     </ul>
     <li>Format Character</li>
     <table>
@@ -49,26 +52,24 @@
         <tr><td>P</td><td>void*</td><td>integer</td><td>@,=에서만 가능</td></tr>
     </table>
     <ul>
-        <li>포맷 문자 앞에 정수가 오면 반복을 의미한다. 포맷 문자 사이의 공백은 무시한다.</li>
-        <li>s의 경우 앞에 오는 정수는 반복이 아닌 바이트 크기다. 주어지지 않는다면 기본은 1. 패킹 과정에서 크기를 맞추기 위해 null 바이트가 포함될 수 있다. 언패킹에선 bytes 객체의 크기가 딱 알맞다.</li>
+        <li>포맷 문자 앞에 정수가 오면 반복을 의미한다. 예. '4h'는 'hhhh'와 동일하다.</li>
+		<li>포맷 문자 사이의 공백은 무시한다. 단, 반복을 나타내는 정수와 포맷 문자 사이에는 공백이 허용되지 않는다.</li>
+        <li>s의 경우 앞에 오는 정수는 반복이 아닌 바이트 크기다(없으면 1로 간주). 패킹 과정에서 크기를 맞추기 위해 문자열이 잘리거나 null 바이트가 포함될 수 있다. 0s는 빈 문자열 하나를 의미한다</li>
+		<li>p는 파스칼 문자열로, 첫 바이트는 문자열의 길이(~255)를 나타낸다</li>
     </ul>
 </details>
-            **
-            **
-            ** 0s는 빈 문자열을 의미한다.(0c는 0개 문자)
-            ** p는 "Pascal string"으로, 첫 바이트는 문자열 길이를 담는다.
 
-            4. 예제
-            &raquo; https://docs.python.org/3/library/struct.html#examples
-            &gt;&gt;&gt; from struct import *
-            &gt;&gt;&gt; pack('hhl', 1, 2, 3)
-            b'\x00\x01\x00\x02\x00\x00\x00\x03'
-            &gt;&gt;&gt; unpack('hhl', b'\x00\x01\x00\x02\x00\x00\x00\x03')
-            (1, 2, 3)
-            &gt;&gt;&gt; calcsize('hhl')
-            8
+<hr>
 
-            5. Classes
-            &raquo; class struct.Struct(format)
-            * pack(v1, v2, ...), pack_into(buffer, offset, v1, v2, ...), unpack(buffer), unpack_from(buffer,
-            offset=0), iter_unpack(buffer) Since 3.4, format, size
+<details>
+	<summary>class struct.Struct(format)</summary>
+	<ol>
+		<li>이 클래스 인스턴스를 생성하든, 모듈 함수를 호출하든 최근 사용된 포맷 문자열 일부는 캐시된다</li>
+		<li>pack(v1, v2, ...), pack_into(buffer, offset, v1, v2, ...)</li>
+		<li>unpack(buffer), unpack_from(buffer, offset=0)</li>
+		<li>iter_unpack(buffer) Since 3.4</li>
+		<li>format, size</li>
+	</ol>
+</details>
+
+<hr>
