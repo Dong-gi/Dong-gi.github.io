@@ -48,7 +48,7 @@
 
 <hr>
 
-<details open>
+<details>
 	<summary>확률분포</summary>
 	<li>확률변수; Random variable ::= 표본공간의 원소를 실수로 대응하는 함수.</li>
 	식[P(X=x)]식 ::= 확률변수 식[X]식의 값이 식[x]식일 확률
@@ -230,14 +230,51 @@
 				y_1 = u_1(x_1,x_2) \\
 				y_2 = u_2(x_1,x_2) \\
 				x_1 = w_1(y_1,y_2) \\
-				x_2 = w_2(y_1,y_2)\end{gather*}]식라면, 식[Y_1,Y_2]식의 확률분포는 식[g(y_1,y_2)=f(w_1(y_1,y_2),w_2(y_1,y_2))]식</li>
+				x_2 = w_2(y_1,y_2)\end{gather*}]식라면, 식[Y_1,Y_2]식의 결합확률분포는 식[g(y_1,y_2)=f(w_1(y_1,y_2),w_2(y_1,y_2))]식</li>
+			<li>연속확률변수 식[X, Y]식가 일대일 대응관계 식[y=u(x), x=u^{-1}(y)]식라면, 식[Y]식의 확률분포는 식[g(y)=f(u^{-1}(y))|{\partial{u^{-1}(y)} \over \partial{y}}|]식</li>
+			<li>연속확률변수 식[X, Y]식가 일대일 대응관계 식[\begin{gather*}
+				y_1 = u_1(x_1,x_2) \\
+				y_2 = u_2(x_1,x_2) \\
+				x_1 = w_1(y_1,y_2) \\
+				x_2 = w_2(y_1,y_2)\end{gather*}]식라면, 식[Y_1,Y_2]식의 결합확률분포는 식[g(y_1,y_2)=f(w_1(y_1,y_2),w_2(y_1,y_2))|J|]식</li>
+			이때, 식[J]식는 야코비 행렬(Jacobian matrix)로 식[|J|=\begin{vmatrix} {\partial{x_1} \over \partial{y_1}} & {\partial{x_1} \over \partial{y_2}} \\
+			{\partial{x_2} \over \partial{y_1}} & {\partial{x_2} \over \partial{y_2}}\end{vmatrix}]식
+			<li>연속확률변수 식[X, Y]식에 대해, 식[u:X\to Y]식는 일대일 함수지만 역함수는 존재하지 않는 경우.
+				만일 식[X]식을 빈틈없이 나눈 각 구간마다 부분적인 역함수 식[x_1=w_1(y), \cdots, x_k=w_k(y)]식가 존재한다면,
+				식[Y]식의 확률분포는 식[g(y)=\sum f(w_i(y))|J_i|]식 ← 식[J_i={\partial{x_i} \over \partial{y}}]식</li>
+		</ol>
+		<li>적률; Moment</li>
+		<ol>
+			<li>적률 ::= 확률변수 거듭제곱의 평균 식[m_n = E(X^n)]식</li>
+			<li>적률생성함수 ::= 식[M_X(t)=E(e^{tX})]식</li>
+			\begin{align*}
+				M_X(t)
+				&= \int_{-\infty}^\infty e^{tx} f(x)\,\mathrm{d}x \\
+				&= \int_{-\infty}^\infty \left( 1+ tx + \frac{t^2x^2}{2!} + \cdots\right) f(x)\,\mathrm{d}x \\
+				&= 1 + tm_1 + \frac{t^2m_2}{2!} +\cdots
+			\end{align*}
+			<li>적률생성함수로 적률 생성 : 식[m_n = \left.\frac{d^nM_X(t)}{dt^n}\right|_{t=0}]식</li>
+			<li>확률변수 식[X, Y]식의 적률생성함수가 일치 식[\implies]식 식[X, Y]식의 확률분포는 동일</li>
+			<li>식[M_{aX}(t)=M_X(at)]식</li>
+			<li>식[M_{X+b}(t)=e^{bt}M_X(t)]식</li>
+			<li>식[X_1,\cdots,X_n]식이 독립이면 식[Y=X_1+\cdots+X_n]식의 적률생성함수는 식[M_Y(t)=M_{X_1}(t)\cdots M_{X_n}(t)]식</li>
+			<li>식[X_1,\cdots,X_n]식이 독립이면서 정규분포를 따를 때, 식[Y=a_1X_1+\cdots+a_nX_n]식도 정규분포 식[N(\mu_Y,\sigma_Y^2)]식을 따르며, 식[\mu_Y=a_1\mu_1+\cdots+a_n\mu_n]식, 식[\sigma_Y^2=a_1^2\sigma_1^2+\cdots+a_n^2\sigma_n^2]식</li>
+			<li>식[X_1,\cdots,X_n]식이 독립이면서 카이제곱분포를 따를 때, 식[Y=X_1+\cdots+X_n]식은 자유도가 식[v=v_1+\cdots+v_n]식인 카이제곱분포를 따른다</li>
+			<li>식[X_1,\cdots,X_n]식이 독립이면서 정규분포를 따를 때, 식[Y=\sum ({X_i-\mu_i \over \sigma_i})^2]식는 자유도 식[v=n]식인 카이제곱분포를 따른다</li>
 		</ol>
 	</ol>
 </details>
-<!--
+
+<hr>
+
+<details open>
+	<summary>추정</summary>
+	<li>표본 식[X_i]식, 표본평균 식[\overline{X}=\sum{X_i}/n]식, 표본분산 식[S^2={\sum(X_i-\overline{X})^2 \over (n-1)}={1 \over n(n-1)}[n\sum X_i^2 - (\sum X_i)^2]]식</li>
+</details>
+
 <script id="MathJax-script" async src="/source/tex-chtml.js"></script>
 <link rel="stylesheet" href="/source/mjx-chtml.css">
--->
+
 <ul>
 	<li>https://developers.google.com/machine-learning/crash-course/ml-intro?hl=ko</li>
 	<li>http://hunkim.github.io/ml/</li>
