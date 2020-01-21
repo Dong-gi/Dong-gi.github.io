@@ -118,18 +118,6 @@ li li li li:hover {
     margin-right: 5px;
 }
 
-td.sorting-table-head-black:after,
-th.sorting-table-head-black:after {
-    content: attr(sort-order);
-    color: black;
-}
-
-td.sorting-table-head-white:after,
-th.sorting-table-head-white:after {
-    content: attr(sort-order);
-    color: white;
-}
-
 /* Overwrite the Bootstrap's settings */
 
 @media screen and (min-width: 0px) {

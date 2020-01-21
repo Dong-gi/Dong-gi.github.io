@@ -1,11 +1,30 @@
 $(() => {
 	const observer = new MutationObserver(callback);
 	observer.observe($('body')[0], { attributes: false, childList: true, subtree: true });
+	
+	$('head').append(`<style>
+td.sorting-table-head-black:after,
+th.sorting-table-head-black:after {
+    content: attr(sort-order);
+    color: black;
+}
+
+td.sorting-table-head-white:after,
+th.sorting-table-head-white:after {
+    content: attr(sort-order);
+    color: white;
+}</style>`);
 });
 
 
 const callback = function(mutationsList, observer) {
+	$.each($('table.ordered-table'), (idx, table) => {
+		if($('tr.table-head-row', table).length < 1)
+			$(table).removeClass('ordered-table');
+	});
 	$.each($('table:not(".ordered-table")'), (idx, table) => {
+		if($('tr', table).length < 2)
+			return;
 		$(table).addClass('ordered-table');
 
 		let hasDataColumnIdxSet = new Set(); // 모든 행의 x번째 열이 비어있다면, 삭제하기 위한 인덱스 집합
@@ -64,7 +83,8 @@ function getRgba(node) {
 }
 
 function customTextCompare(str1, str2) {
-    let numPartRegex = /(-?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/;
+	// '-' 붙은 숫자를 음수로 간주하는 경우 : '-'자체가 문자열 시작 or '-' 앞에 공백이 존재하여 별개 파트로 간주 가능
+    let numPartRegex = /((^|\s-)?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/;
     let startWithNumberRegex = new RegExp(`^${numPartRegex.source}`);
     let strPartRegex = new RegExp(`^((?!${numPartRegex.source})[\\d\\D])+`, 'm');
 
