@@ -20,9 +20,9 @@ const posts = {
         { filename: "posts/career/at_home_at_20190724.html", category: "Career", title: "JavaScript - https://www.steamgifts.com/ 스크립트" },
         { filename: "posts/career/at_sesisoft_at_20190715.html", category: "Career", title: "JavaScript - IGA Works 푸시 등록 절차 개선" },
 
-        { filename: "posts/c/csharp_library.html", category: "Programming/C#.NET", title: "C# 라이브러리" },
-        { filename: "posts/c/csharp_basic.html", category: "Programming/C#.NET", title: "C# 시작하기" },
-        { filename: "posts/c/wpf_basic.html", category: "Programming/C#.NET", title: "WPF 시작하기" },
+        { filename: "posts/dotnet/csharp_library.html", category: "Programming/.NET", title: "C# 라이브러리" },
+        { filename: "posts/dotnet/csharp_basic.html", category: "Programming/.NET", title: "C# 시작하기" },
+        { filename: "posts/dotnet/wpf_basic.html", category: "Programming/.NET", title: "WPF 시작하기" },
 
         { filename: "posts/db/concept.html", category: "Programming/DB", title: "기본 개념" },
         { filename: "posts/db/mysql.html", category: "Programming/DB", title: "MySQL" },
