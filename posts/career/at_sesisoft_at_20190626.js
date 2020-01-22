@@ -83,8 +83,11 @@ function getRgba(node) {
 }
 
 function customTextCompare(str1, str2) {
-	// '-' 붙은 숫자를 음수로 간주하는 경우 : '-'자체가 문자열 시작 or '-' 앞에 공백이 존재하여 별개 파트로 간주 가능
-    let numPartRegex = /((^|\s-)?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/;
+	// 부호 붙은 숫자를 수로 간주하는 경우
+	// 1. 부호 자체가 문자열 시작
+	// 2. 부호 앞에 공백이 존재하여 별개 파트로 간주 가능
+	// 3. 부호 앞에 화폐 기호 [$¥£₡₱€₩₭฿]가 존재
+	let numPartRegex = /((^|[\s$¥£₡₱€₩₭฿][+-])?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/;
     let startWithNumberRegex = new RegExp(`^${numPartRegex.source}`);
     let strPartRegex = new RegExp(`^((?!${numPartRegex.source})[\\d\\D])+`, 'm');
 
@@ -95,8 +98,8 @@ function customTextCompare(str1, str2) {
         let isStr2StartWithNumber = startWithNumberRegex.test(str2);
 
         if(isStr1StartWithNumber && isStr2StartWithNumber) {
-            let num1 = parseFloat(str1.match(startWithNumberRegex)[0].replace(/,/g, ''));
-            let num2 = parseFloat(str2.match(startWithNumberRegex)[0].replace(/,/g, ''));
+            let num1 = parseFloat(str1.match(startWithNumberRegex)[0].replace(/[^\-\d\.]/g, ''));
+            let num2 = parseFloat(str2.match(startWithNumberRegex)[0].replace(/[^\-\d\.]/g, ''));
 
             if(Math.abs(num1 - num2) >= Number.EPSILON)
                 return num1 - num2;
