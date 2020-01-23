@@ -154,7 +154,7 @@
     <Compile Include="Model\BaseContext.cs" />
     <Compile Include="Model\Game1Context.cs" />
     <Compile Include="Service\AWSService.cs" />
-    <Compile Include="Service\CustomHttpService.cs" />
+    <Compile Include="Service\NaiveHttpService.cs" />
     <Compile Include="Service\FileService.cs" />
     <Compile Include="Service\SSHService.cs" />
     <Compile Include="Service\UpdateService.cs" />

@@ -75,6 +75,7 @@ namespace EventGenerator
         {
             Utility.CustomExcel.CloseAll();
             (DataContext as MainViewModel).TaskbarIcon.Dispose();
+            (DataContext as MainViewModel).Server.Server.Stop();
         }
     }
 }

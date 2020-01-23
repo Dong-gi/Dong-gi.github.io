@@ -88,6 +88,8 @@ namespace EventGenerator.ViewModel
         }
         #endregion
 
+
+        public NaiveHttpService Server { get; private set; }
         public MainViewModel()
         {
             RedirectConsoleWrite();
@@ -104,6 +106,7 @@ namespace EventGenerator.ViewModel
 
             Console.Write(File.ReadAllText("./LICENSE.md"));
             Toast("실행 위치", System.AppDomain.CurrentDomain.BaseDirectory);
+            Server = new NaiveHttpService();
         }
 
         #region INotifyPropertyChanged 구현 관련

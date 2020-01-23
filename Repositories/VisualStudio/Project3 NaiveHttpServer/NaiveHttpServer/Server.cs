@@ -1,54 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventGenerator.Service
+namespace NaiveHttpServer
 {
-    public class CustomHttpService
+    public class Server : IDisposable
     {
-        public TcpListener Server { get; private set; }
+        private TcpListener Listener { get; set; }
+        public string BaseUrl { get; private set; }
+        public string DocRoot { get; set; } = "./www";
+        public List<Handler> Handlers { get; private set; } = new List<Handler>();
 
-        public CustomHttpService()
+        public Server(ushort port = 55555)
         {
             var random = new Random(System.DateTime.Now.Millisecond);
-            var port = 55555;
-            while (Server == null)
+            while (Listener == null)
             {
                 try
                 {
-                    Server = new TcpListener(IPAddress.Loopback, port);
-                    Server.Start();
+                    Listener = new TcpListener(IPAddress.Loopback, port);
+                    Listener.Start();
                 }
                 catch
                 {
-                    Server = null;
-                    port = random.Next(10000, 60000);
+                    Listener = null;
+                    port = (ushort)random.Next(10000, 60000);
                     continue;
                 }
-                var baseURL = $"http://localhost:{port}/";
-                System.Diagnostics.Process.Start(baseURL);
-                Console.WriteLine(baseURL);
+                BaseUrl = $"http://localhost:{port}/";
+                System.Diagnostics.Process.Start(BaseUrl);
+                Console.WriteLine($"Simple HTTP Server Listening... : {BaseUrl}");
             }
-            Work();
+            Listen();
         }
 
-        private async void Work()
+        private async void Listen()
         {
             TcpClient client;
             try
             {
-                client = await Server.AcceptTcpClientAsync();
+                client = await Listener.AcceptTcpClientAsync();
             }
             catch
             {
                 return;
             }
-            Work();
+            Listen();
+            Work(client);
+        }
+
+        public void Work(TcpClient client)
+        {
             var stream = client.GetStream();
             var buf = new byte[1024];
             var request = new StringBuilder();
@@ -75,10 +81,17 @@ Content-Length: {body.Length}
 
 ");
             stream.Write(response, 0, response.Length);
+            stream.Flush();
             stream.Write(body, 0, body.Length);
             stream.Flush();
             stream.Close();
             client.Close();
+        }
+
+        public void Close() => Dispose();
+        public void Dispose()
+        {
+            Listener.Stop();
         }
     }
 }
