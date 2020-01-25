@@ -165,3 +165,32 @@
 </details>
 
 <hr>
+
+<details open>
+	<summary>Canvas</summary>
+	<li>canvas를 지원하지 않는 브라우저를 위해 안에 fallback content(대체 텍스트 또는 DOM)를 적어주면 좋다</li>
+	<li>스크립트에서 canvas의 지원을 확인하는 방법 : DOM이 HTMLCanvasElement 클래스인지 확인
+		<button class="btn-code" path="posts/front/canvas/draw1.js" lan="javascript">예시 »</button></li>
+	<li>캔버스의 기본 그리기 요소는 직사각형과 path(일련의 점들을 선분으로 연결) 두 가지</li>
+	<details>
+		<summary><a role="button" target="_blank" class="btn btn-info btn-sm" href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement">HTMLCanvasElement</a> → HTMLElement</summary>
+		
+	</details>
+	<details>
+		<summary><a role="button" target="_blank" class="btn btn-info btn-sm" href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D</a></summary>
+		<li>clearRect(x, y, width, height) : 지정 사각형을 rgba(0,0,0,0)로 설정. 이후에 path를 그릴 땐 beginPath()를 다시 호출해야 함에 유의.</li>
+		<li>fillRect(x, y, width, height) : 지정 사각형을 현재 fillStyle로 설정.</li>
+		<li>이미지 그리기
+			<button class="btn-code" path="posts/front/canvas/draw2.js" lan="javascript">예시 »</button></li>
+	</details>
+	<canvas id="tutorial-canvas" width="100%" height="33%">연습용 캔버스</canvas>
+	
+	<details>
+		<summary>참고</summary>
+		<li>https://www.w3.org/TR/2dcontext/</li>
+		<li>https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API</li>
+		<li>https://joshondesign.com/p/books/canvasdeepdive/title.html</li>
+	</details>
+</details>
+
+<hr>

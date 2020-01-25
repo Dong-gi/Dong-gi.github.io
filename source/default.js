@@ -298,7 +298,7 @@ function insertCode(buttonId) {
                 $('div#' + buttonId).css('max-height', window.innerHeight / 2);
 
                 if (lan === 'javascript') {
-                    let script = $('<button>').addClass('btn btn-info btn-sm btn-code').text('실행');
+                    let script = $('<button>').addClass('btn btn-info btn-sm').text('실행');
                     $(script).click(() => eval(posts.codes[buttonId]));
                     $(button).after(script);
                 }
