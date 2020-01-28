@@ -5,48 +5,67 @@
 
 <hr>
 
-<details>
+<details open>
 	<summary>class datetime.date : year, month, day</summary>
-	         class datetime.time : hour, minute, second, microsecond, tzinfo
-             class datetime.datetime : year, month, day, hour, minute, second, microsecond, tzinfo
-             class datetime.timedelta : 두 date, time, datetime 객체 간의 microsecond 차이
-             class datetime.tzinfo : Abstract base class for time zone information
-             class datetime.timezone Since 3.2 : tzinfo 구현
-            <br>
-            <br>3. timedelta Objects
-             class datetime.timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0,
-            hours=0, weeks=0)
-            <br>* microseconds : [0, 1000000), seconds : [0, 86400)
-             timedelta.min : timedelta(-999999999), timedelta.max : timedelta(days=999999999, hours=23,
-            minutes=59, seconds=59, microseconds=999999)
-            <br>* timedelta.max &gt; -timedelta.min이므로, -timedelta.max는 존재할 수 없다.
-             Operation : t1 = t2 + t3, t1 = t2 - t3, t1 = t2 * i or t1= i * t2, t1 = t2 * f or t1
-            = f * t2, f = t2 / t3, t1 = t2 / f or t1 = t2 / i, t1 = t2 // i or t1 = t2 // t3, t1 = t2 % t3,
-            q, r = divmod(t1, t2), +t1, -t1, abs(t), str(t), repr(t)
-             timedelta.total_seconds() Since 3.2 : td / timedelta(seconds=1)과 동일.
-            <br>
-            <br>4. date Objects
-             class datetime.date(year, month, day)
-            <br>* year : [MINYEAR, MAXYEAR], month : [1, 12], day : [1, 해당 연월의 일수]
-             classmethod date.today() : date.fromtimestamp(time.time())과 동일
-             classmethod date.fromtimestamp(timestamp) : 1970 ~ 2038년 외의 경우 에러발생 가능.
-             classmethod date.fromordinal(ordinal) : 1년 1월은 ordinal 1. ordinal : [1, date.max.toordinal()]
-             date.min, date.max, date.resolution : timedelta(days=1), date.year, date.month, date.day
-             Operation : date2 = date1 + timedelta, date2 = date1 - timedelta, timedelta = date1 -
-            date2, date1 &lt; date2
-            <br>* seconds와 microseconds는 무시
-             date.replace(year=self.year, month=self.month, day=self.day)
-             date.timetuple() : time.struct_time을 반환한다.
-             date.toordinal()
-             date.weekday() : 월요일(0) ~ 일요일(6)
-             date.isoweekday() : 월요일(1) ~ 일요일(7)
-             date.isocalendar() : (ISO year, ISO week number, ISO weekday)
-             date.isoformat() : 'YYYY-MM-DD' 반환
-             date.__str__() : str(d) == d.isoformat()
-             date.ctime() : date(2002, 12, 4).ctime() == 'Wed Dec 4 00:00:00 2002'
-             date.strftime(format) : 명시적인 포맷 문자열 format에 따라 변환.
-             date.__format__(format) : strftime(format)과 동일
-            <br>
+	<ul>
+		<li>class datetime.date(year, month, day)</li>
+		인스턴스는 변경 불가능 + 해시 가능하다
+		<li>클래스 메서드</li>
+		<ul>
+			<li>classmethod date.today() : date.fromtimestamp(time.time())과 동일</li>
+			<li>classmethod date.fromtimestamp(timestamp) : 1970 ~ 2038년 외의 경우 에러발생 가능.</li>
+			<li>classmethod date.fromordinal(ordinal) : ordinal[1, date.max.toordinal()]. 1년 1월 ordinal == 1</li>
+			<li>classmethod date.fromisoformat(date_string) Since 3.7 : 'YYYY-MM-DD'</li>
+			<li>classmethod date.fromisocalendar(year, week, day) Since 3.8</li>
+		</ul>
+		<li>클래스 속성</li>
+		<ul>
+			<li>date.min == date(MINYEAR, 1, 1)</li>
+			<li>date.max == date(MAXYEAR, 12, 31)</li>
+			<li>date.resolution == timedelta(days=1)</li>
+		</ul>
+		<li>인스턴스 속성(읽기 전용)</li>
+		<ul>
+			<li>year[MINYEAR, MAXYEAR]</li>
+			<li>month[1, 12]</li>
+			<li>day[1, 해당 연월의 일수]</li>
+		</ul>
+		<li>지원 연산</li>
+		date1 + timedelta, date1 - timedelta, date1 - date2, 산술 비교
+		<li>인스턴스 메서드</li>
+		<ul>
+			<li>replace(year=self.year, month=self.month, day=self.day)</li>
+			<li>timetuple() : time.struct_time을 반환한다.</li>
+			<li>toordinal()</li>
+			<li>weekday() : 월요일(0) ~ 일요일(6)</li>
+			<li>isoweekday() : 월요일(1) ~ 일요일(7)</li>
+			<li>isocalendar() : (ISO year, ISO week number, ISO weekday) 튜플 반환</li>
+			<li>isoformat() : 'YYYY-MM-DD' 반환</li>
+			<li>__str__() : str(d) == d.isoformat()</li>
+			<li>ctime() : date(2002, 12, 4).ctime() == 'Wed Dec 4 00:00:00 2002'</li>
+			<li>strftime(format) : 포맷 문자열 format에 따라 변환.</li>
+			<li>__format__(format) : strftime(format)과 동일</li>
+		</ul>
+	</ul>
+</details>
+
+<hr>
+
+<details>
+	<summary>class datetime.time : hour, minute, second, microsecond, tzinfo</summary>
+	<ul>
+		<li>인스턴스는 변경 불가능 + 해시 가능하다</li>
+	</ul>
+</details>
+
+<hr>
+
+<details>
+	<summary>class datetime.datetime : date + time</summary>
+	<ul>
+		인스턴스는 변경 불가능 + 해시 가능하다
+		
+		
             <br>5. datetime Objects
              class datetime.datetime(year, month, day, hour=0, minute=0, second=0, microsecond=0,
             tzinfo=None, *, fold=0)
@@ -123,36 +142,55 @@
             <br>* %G : 년 - 세기 포함, ISO 8601 : 0001 ~ 9999
             <br>* %u : 요일 - 1(월요일) ~ 7(일요일), ISO 8601
             <br>* %V : 주(월요일 기준) - 연중 n번째, ISO 8601 : 01 ~ 53 // 01번째 주는 1월 4일을 포함
+	</ul>
 </details>
 
 <hr>
 
 <details>
-	<summary></summary>
+	<summary>class datetime.timedelta : date, time, datetime 사이의 microsecond 차이</summary>
+	<ul>
+		<li>class datetime.timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)</li>
+		<li>차분 대상의 타임존 유무 여부는 timedelta 값에 영향을 끼치지 않는다</li>
+		<li>클래스 속성</li>
+		<ul>
+			<li>timedelta.min == timedelta(-999999999)</li>
+			<li>timedelta.max == timedelta(days=999999999, seconds=86399, microseconds=999999)</li>
+			<li>timedelta.resolution == timedelta(microseconds=1)</li>
+		</ul>
+        <li>인스턴스 속성(읽기 전용)</li>
+		<ul>
+			<li>days[-999999999, 999999999]</li>
+			<li>seconds[0, 86400)</li>
+			<li>microseconds[0, 1000000)</li>
+		</ul>
+		<li>지원 연산</li>
+		<table>
+			<tr><td>t1 + t2</td><td>t1 - t2</td><td>t1 * num [round even]</td><td>t1 / t2</td></tr>
+			<tr><td>t1 / num [round even]</td><td>t1 // int</td><td>t1 // t2</td><td>t1 % t2</td></tr>
+			<tr><td>divmod(t1, t2)</td><td>+t1</td><td>-t1</td><td>abs(t)</td></tr>
+			<tr><td>str(t)</td><td>repr(t)</td><td>산술 비교</td><td>동등 비교</td></tr>
+		</table>
+		<li>인스턴스 메서드</li>
+		<ul>
+			<li>timedelta.total_seconds() Since 3.2 : td / timedelta(seconds=1)과 동일.</li>
+		</ul>
+	</ul>
 </details>
 
 <hr>
 
 <details>
-	<summary></summary>
+	<summary>class datetime.tzinfo : 타임존 ABC</summary>
 </details>
 
 <hr>
 
 <details>
-	<summary></summary>
-</details>
-
-<hr>
-
-<details>
-	<summary></summary>
-</details>
-
-<hr>
-
-<details>
-	<summary></summary>
+	<summary>class datetime.timezone Since 3.2 : tzinfo 구현체</summary>
+	<ul>
+		<li>인스턴스는 변경 불가능 + 해시 가능하다</li>
+	</ul>
 </details>
 
 <hr>

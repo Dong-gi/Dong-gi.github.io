@@ -168,12 +168,15 @@
 
 <details open>
 	<summary>Canvas</summary>
-	<li>canvas를 지원하지 않는 브라우저를 위해 안에 fallback content(대체 텍스트 또는 DOM)를 적어주면 좋다</li>
-	<li>스크립트에서 canvas의 지원을 확인하는 방법 : DOM이 HTMLCanvasElement 클래스인지 확인
-		<button class="btn-code" path="posts/front/canvas/draw1.js" lan="javascript">예시 »</button></li>
-	<li>캔버스의 기본 그리기 요소는 직사각형과 path(일련의 점들을 선분으로 연결) 두 가지</li>
+	<ul>
+		<li>canvas를 지원하지 않는 브라우저를 위해 안에 fallback content(대체 텍스트 또는 DOM)를 적어주면 좋다</li>
+		<li>스크립트에서 canvas의 지원을 확인하는 방법 : DOM이 HTMLCanvasElement 클래스인지 확인
+			<button class="btn-code" path="posts/front/canvas/draw1.js" lan="javascript">예시 »</button></li>
+		<li>캔버스의 기본 그리기 요소는 직사각형과 path(일련의 점들을 선분으로 연결) 두 가지</li>
+	</ul>
 	<details>
-		<summary><a role="button" target="_blank" class="btn btn-info btn-sm" href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement">HTMLCanvasElement</a> → HTMLElement</summary>
+		<summary>interface <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement">HTMLCanvasElement</a> : HTMLElement</summary>
+		<li>width, height : 각각 캔버스의 너비, 높이. 기본값은 300, 150</li>
 		
 	</details>
 	<details>

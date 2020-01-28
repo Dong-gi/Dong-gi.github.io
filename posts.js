@@ -137,9 +137,9 @@ const posts = {
 };
 
 /*
-<button class="btn-code" path="Repositories/Eclipse" lan="java">예시 코드 »</button>
-<button type="button" class="btn btn-primary btn-sm" onclick="">실행 »</button>
-<a role="button" target="_blank" class="btn btn-info btn-sm" href=""></a>
-<a role="button" class="btn btn-info btn-sm" href="javascript:;"></a>
+<button class="btn-code" path="Repositories/Eclipse" lan="java">예시 코드 »
+<button type="button" class="btn btn-primary btn-sm" onclick="">실행 »
+<a role="button" target="_blank" class="btn btn-info btn-sm" href="">
+<a role="button" class="btn btn-info btn-sm" href="javascript:;">
 <img class="rounded mx-auto d-block" src="imgs/">
  */
