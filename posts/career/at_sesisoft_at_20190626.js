@@ -27,24 +27,9 @@ const callback = function(mutationsList, observer) {
 			return;
 		$(table).addClass('ordered-table');
 
-		let hasDataColumnIdxSet = new Set(); // 모든 행의 x번째 열이 비어있다면, 삭제하기 위한 인덱스 집합
-		let headRow = $('tr:first', table); // 테이블의 1번째 행을 테이블 헤더 행으로 간주
+		let headRow = $('tr:first', table);  // 테이블의 1번째 행을 테이블 헤더 행으로 간주
 		headRow.addClass('table-head-row');
-		let columnSize = $('td, th', headRow).length;
-
-		$.each($('td, th', $('tr:not(.table-head-row)', table)), (idx, node) => {
-			let after = $(node).html().replace(/null/gmi, "").trim();
-			$(node).html(after);
-
-			if (after.length > 0)
-				hasDataColumnIdxSet.add(idx % columnSize);
-		});
-
-		$.each($('td, th', table), (idx, node) => {
-			if (!hasDataColumnIdxSet.has(idx % columnSize))
-				$(node).remove();
-		});
-
+		
 		$.each($('td, th', headRow), (idx, node) => $(node).click(customTableSort(idx, node, table)));
 
 		let preSort = $('td[pre-sort], th[pre-sort]', headRow);
@@ -54,12 +39,13 @@ const callback = function(mutationsList, observer) {
 }
 
 function customTableSort(idx, node, table) {
+    if($(node).hasClass('not-sort'))
+        return;
     let rgba = getRgba(node);
     if(rgba[0] + rgba[1] + rgba[2] < 255 * rgba[3])
         $(node).addClass('sorting-table-head-white');
     else
         $(node).addClass('sorting-table-head-black');
-
     if(!$(node).attr('sort-order'))
         $(node).attr('sort-order', '●');
 
@@ -68,10 +54,10 @@ function customTableSort(idx, node, table) {
         let order = !($(node).attr('sort-order') === '▲');
         $(node).attr('sort-order', order? '▲' : '▼');
 
-        $('tr:not(.table-head-row)', table).sort((r1, r2) => {
+        $(Array.from(table.rows).slice(1)).sort((r1, r2) => {
             let result = customTextCompare($($('td, th', r1)[idx]).text(), $($('td, th', r2)[idx]).text());
             return order ? result : -result;
-        }).appendTo($('tbody', table));
+        }).appendTo($(table.tBodies[table.tBodies.length-1]));
     };
 }
 
@@ -80,45 +66,4 @@ function getRgba(node) {
     let backgroundColor = window.getComputedStyle(node).getPropertyValue("background-color");
     let rgba = rgbaRegex.exec(backgroundColor);
     return [parseInt(rgba[1]), parseInt(rgba[2]), parseInt(rgba[3]), /rgba/.test(backgroundColor)? parseFloat(rgba[3]) : 1];
-}
-
-function customTextCompare(str1, str2) {
-	// 부호 붙은 숫자를 수로 간주하는 경우
-	// 1. 부호 자체가 문자열 시작
-	// 2. 부호 앞에 공백이 존재하여 별개 파트로 간주 가능
-	// 3. 부호 앞에 화폐 기호 [$¥£₡₱€₩₭฿]가 존재
-	let numPartRegex = /((^|[\s$¥£₡₱€₩₭฿][+-])?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/;
-    let startWithNumberRegex = new RegExp(`^${numPartRegex.source}`);
-    let strPartRegex = new RegExp(`^((?!${numPartRegex.source})[\\d\\D])+`, 'm');
-
-    while (true) {
-        if(str1.length * str2.length === 0) return str1.length - str2.length;
-
-        let isStr1StartWithNumber = startWithNumberRegex.test(str1);
-        let isStr2StartWithNumber = startWithNumberRegex.test(str2);
-
-        if(isStr1StartWithNumber && isStr2StartWithNumber) {
-            let num1 = parseFloat(str1.match(startWithNumberRegex)[0].replace(/[^\-\d\.]/g, ''));
-            let num2 = parseFloat(str2.match(startWithNumberRegex)[0].replace(/[^\-\d\.]/g, ''));
-
-            if(Math.abs(num1 - num2) >= Number.EPSILON)
-                return num1 - num2;
-
-            str1 = str1.replace(startWithNumberRegex, '');
-            str2 = str2.replace(startWithNumberRegex, '');
-            continue;
-        }
-
-        if(isStr1StartWithNumber) return -1;
-        if(isStr2StartWithNumber) return 1;
-
-        let text1 = str1.match(strPartRegex)[0];
-        let text2 = str2.match(strPartRegex)[0];
-        let result = text1.localeCompare(text2);
-
-        if(result !== 0) return result;
-        str1 = str1.replace(strPartRegex, '');
-        str2 = str2.replace(strPartRegex, '');
-        continue;
-    }
 }

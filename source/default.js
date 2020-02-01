@@ -1,13 +1,76 @@
+String.prototype.hashCode = function () {
+    let hash = 0, i, chr;
+    if (this.length === 0) return hash;
+    for (i = 0; i < this.length; i++) {
+        chr   = this.charCodeAt(i);
+        hash  = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+};
+
+class Donggi {}
+Donggi.compareString = function (str1, str2) {
+	// 부호 붙은 숫자를 수로 간주하는 경우
+	// 1. 부호 자체가 문자열 시작
+	// 2. 부호 앞에 공백이 존재하여 별개 파트로 간주 가능
+	// 3. 부호 앞에 화폐 기호 [$¥£₡₱€₩₭฿]가 존재
+	let numPartRegex = /((^|[\s$¥£₡₱€₩₭฿][+-])?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/;
+    let startWithNumberRegex = new RegExp(`^${numPartRegex.source}`);
+    let strPartRegex = new RegExp(`^((?!${numPartRegex.source})[\\d\\D])+`, 'm');
+
+    while (true) {
+        if(str1.length * str2.length === 0) return str1.length - str2.length;
+
+        let isStr1StartWithNumber = startWithNumberRegex.test(str1);
+        let isStr2StartWithNumber = startWithNumberRegex.test(str2);
+
+        if(isStr1StartWithNumber && isStr2StartWithNumber) {
+            let num1 = parseFloat(str1.match(startWithNumberRegex)[0].replace(/[^\-\d\.]/g, ''));
+            let num2 = parseFloat(str2.match(startWithNumberRegex)[0].replace(/[^\-\d\.]/g, ''));
+
+            if(Math.abs(num1 - num2) >= Number.EPSILON)
+                return num1 - num2;
+
+            str1 = str1.replace(startWithNumberRegex, '');
+            str2 = str2.replace(startWithNumberRegex, '');
+            continue;
+        }
+
+        if(isStr1StartWithNumber) return -1;
+        if(isStr2StartWithNumber) return 1;
+
+        let text1 = str1.match(strPartRegex)[0];
+        let text2 = str2.match(strPartRegex)[0];
+        let result = text1.localeCompare(text2);
+
+        if(result !== 0) return result;
+        str1 = str1.replace(strPartRegex, '');
+        str2 = str2.replace(strPartRegex, '');
+        continue;
+    }
+}
+Donggi.throttle = function (func, context) {
+    clearTimeout(func.tId);
+    func.tId = setTimeout(() => func.call(context), 100);
+}
+
 $(() => {
     console.log(hljs.listLanguages());
+    console.log(location);
 
-    initPosts();
+    prepareSidebar();
+    preparePosts();
     updateDropupManually(0, "");
     updateScrollManually(localStorage.lastContentId);
 
-    $(window).on('resize', () => throttle(adjustDropupWidth));
-    $(window).on('scroll', () => throttle(updateDropupAuto));
+    $(window).on('resize', () => Donggi.throttle(adjustDropupWidth));
+    $(window).on('scroll', () => Donggi.throttle(updateDropupAuto));
     new MutationObserver(mutationCallback).observe(document.getElementsByTagName('body')[0], { attributes: false, childList: true, subtree: true });
+
+    new FileList('../file_list.js', '#file-list', customFileAction);
+    // https://stackoverflow.com/questions/824349/how-do-i-modify-the-url-without-reloading-the-page
+    // https://www.w3schools.com/w3css/w3css_navigation.asp
 
     // 엔터로 검색 가능
     $('input#input-query').keydown((event) => {
@@ -19,10 +82,22 @@ $(() => {
     });
 });
 
-/**
- * 카테고리 초기화하고 포스트 등록, 포스트는 순서대로 아이디를 가짐
- */
-function initPosts() {
+function prepareSidebar() {
+    closeSidebar();
+    document.getElementById('outside').onclick = closeSidebar;
+}
+
+function openSidebar() {
+    document.getElementById('sidebar').style.display = 'block';
+    document.getElementById('outside').style.display = 'block';
+}
+
+function closeSidebar() {
+    document.getElementById('sidebar').style.display = 'none';
+    document.getElementById('outside').style.display = 'none';
+}
+
+function preparePosts() {
     let id = 0;
     posts.list.sort((post1, post2) => post2.title.localeCompare(post1.title));
     posts.list.sort((post1, post2) => post2.category.localeCompare(post1.category));
@@ -42,26 +117,19 @@ function initPosts() {
         category.posts.push(post);
 
         // 모든 컨텐츠 골격 생성
-        let content = $(getContentHTML(post));
+        let content = $(getPostHTML(post));
         posts.contents.push(content);
         $('div#contents').prepend(content);
         $('summary', content).click(loadContent(post));
     }
 }
 
-/**
- * 포스트 HTML 골격 반환
- */
-function getContentHTML(post) {
+function getPostHTML(post) {
     let title = post.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     let location = `https://dong-gi.github.io/${post.filename}`;
-    return `<div class="jumbotron" id="${post.id}">
-                <a class="d-none" href="${location}">${title}</a>
+    return `<div class="w3-panel w3-card w3-light-grey w3-padding-16 w3-section" id="${post.id}">
                 <details>
-                    <summary class="row">
-                        <div class="col-12 col-md-8 col-lg-6" title="${location}">${title}</div>
-                        <div class="col d-none d-md-block">${post.category}</div>
-                    </summary>
+                    <summary title="${location}"><span class="w3-small">${post.category}</span><span class="w3-xlarge"> ${title}</span></summary>
                 </details>
             </div>`;
 }
@@ -71,15 +139,15 @@ function getContentHTML(post) {
  */
 function loadContent(post) {
     return () => {
-		if($('details', posts.contents[post.id])[0].open)
-			return;
-		localStorage.lastContentId = post.id;
-		if ($('details>p', posts.contents[post.id]).length > 0) {
+        if($('details', posts.contents[post.id])[0].open)
+            return;
+        localStorage.lastContentId = post.id;
+        if ($('details>p', posts.contents[post.id]).length > 0) {
             if (!($('div#disqus_thread', posts.contents[post.id]).length > 0))
                 insertDisqusThread(post);
-			if (location.host == "dong-gi.github.io")
-				return;
-			$('details>p', posts.contents[post.id]).remove();
+            if (location.host == "dong-gi.github.io")
+                return;
+            $('details>p', posts.contents[post.id]).remove();
         }
         let content = $("<p>");
         $(content).load(post.filename.replace(/ /gm, '%20') + '?' + new Date().getTime(), (response, status, xhr) => {
@@ -93,8 +161,8 @@ function loadContent(post) {
  * 포스트 댓글 로드
  */
 function insertDisqusThread(post) {
-	if (location.host != "dong-gi.github.io")
-		return;
+    if (location.host != "dong-gi.github.io")
+        return;
     let content = $('details>p', posts.contents[post.id]);
     if ($('div#disqus_thread').length > 0) {
         DISQUS.reset({
@@ -197,7 +265,7 @@ function updateDropupAuto() {
  */
 function updateScrollManually(id) {
     $('html, body').animate({
-        scrollTop: !id ? 0 : $(posts.contents[id]).offset().top
+        scrollTop: !id ? 0 : $(posts.contents[id]).offset().top - document.getElementById('nav').clientHeight
     }, 500);
 }
 
@@ -232,11 +300,6 @@ function adjustDropupWidth() {
 function mutationCallback(mutations, observer) {
     for (let mutation of mutations) {
         if (mutation.type !== 'childList') return;
-
-        $.each($('table', $(mutation.target)), (idx, table) => {
-            if($(table).hasClass('table')) return;
-            $(table).addClass('table table-sm table-hover');
-        });
 
         $.each($('button.btn-code', $(mutation.target)), (idx, button) => {
             let id = `code-${new Date().getTime()}-${Math.random().toString().replace(/\./g, '')}`;
@@ -424,8 +487,93 @@ function showSnackbar(text, parent, timeout) {
     }, timeout || 1000);
 }
 
-// 함수 감속
-function throttle(func, context) {
-    clearTimeout(func.tId);
-    func.tId = setTimeout(() => func.call(context), 100);
+function customFileAction(dir, file) {
+    FileList.defaultFileAction(dir, file);
+}
+
+class FileList {
+    /**
+     * 문서의 '#file-list' 항목을 찾아 파일 목록들로 채운다.
+     * @param {String} lsResultPath "ls -R"의 결과를 가진 파일의 경로
+     * @param {Function} fileAction Optional. 파일 클릭 시, 디렉터리 경로와 파일명을 먹는 임의 함수. 기본값 : 새 탭에서 열기
+     */
+    constructor(lsResultPath, targetQuery, fileAction) {
+        this.fileAction = (!!fileAction)? fileAction : FileList.defaultFileAction;
+        this.target = $(targetQuery)[0];
+        this.fileMap = new Map();
+        this.rootDir = null;
+        
+        if(!this.target)
+            return;
+        $.ajax(lsResultPath, {
+                type : "GET",
+                success : ((fileList) => function(data, status) {
+                    let dir = null;
+                    for (let line of data.split('\n')) {
+                        if (line.endsWith(':')) {
+                            dir = line.slice(0, -1);
+                            if (!fileList.rootDir)
+                                fileList.rootDir = dir;
+                            fileList.fileMap.set(dir, []);
+                        } else if (line.length > 0)
+                            fileList.fileMap.get(dir).push(line);
+                    }
+                    for (let files of fileList.fileMap.values())
+                        files.sort(Donggi.compareString);
+                    fileList.updateFileList(fileList.rootDir);
+                })(this),
+                error : ((fileList) => function(request, status, err) {
+                    $(fileList.target).html('No Data');
+                })(this)
+        });
+    }
+    
+    updateFileList(dir) {
+        let details = $(`#details-${dir.hashCode()}`);
+        if (dir == this.rootDir && details.length < 1) {
+            $(this.target).html(this.getDirHTML(dir, '', true));
+            this.updateFileList(dir);
+            return;
+        }
+
+        let ul = $('ul:first', details)[0];
+        if (ul.childElementCount > 1)
+            return;
+
+        for (let name of this.fileMap.get(dir)) {
+            let path = `${dir}/${name}`;
+            let isDir = this.fileMap.has(path);
+            if (isDir) {
+                while (this.fileMap.has(path)
+                       && this.fileMap.get(path).length == 1
+                       && this.fileMap.has(`${path}/${this.fileMap.get(path)[0]}`))
+                    path = `${path}/${this.fileMap.get(path)[0]}`;
+                $(ul).append(this.getDirHTML(path, dir, false));
+                let dirAction = ((fileList, dir) => function (e) { fileList.updateFileList(dir); })(this, path);
+                $(`#details-${path.hashCode()}>summary`).click(dirAction);
+            } else {
+                $(ul).append(FileList.getFileHTML(dir, name));
+                let fileAction = ((fileList, dir, name) => function (e) { fileList.fileAction(dir, name); })(this, dir, name);
+                $(`#li-${path.hashCode()}`).click(fileAction);
+            }
+        }
+    }
+    
+    getDirHTML(dir, parentDir, open) {
+        return `<details ${(!!open)? 'open' : ''} id="details-${dir.hashCode()}" class="w3-small file-list" title="${dir}"><summary>${dir.replace(parentDir, '')}</summary><ul></ul></details>`;
+    }
+    
+    static getFileHTML(dir, name) {
+        let path = `${dir}/${name}`;
+        return `<li id="li-${path.hashCode()}" title="${path}">${name}</li>`;
+    }
+    
+    static defaultFileAction(dir, file) {
+        let a = document.createElement('a');
+        a.href = `${dir}/${file}`;
+        a.target = '_blank';
+        document.getElementsByTagName('body')[0].append(a);
+        a.click();
+        console.log(a);
+    }
 }

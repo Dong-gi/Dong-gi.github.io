@@ -1,5 +1,6 @@
-body {
-    padding-bottom: 4rem;
+/* 파일 리스트 스타일 */
+.file-list ul {
+    padding-left: 1.5em;
 }
 
 div {
@@ -10,65 +11,11 @@ img {
     max-width: 100%;
 }
 
-main {
-    width: 100%;
-}
-
-.jumbotron {
-    padding: 1.2rem 0.5rem;
-}
-
-summary {
-    font-size: 1.1em;
-    font-weight: 500;
-}
-
-summary>div.col-12 {
-    margin-left: -3em;
-    padding-left: 3em;
-}
-
-summary::-webkit-details-marker {
-    display: none
-}
-
-summary:before {
-    content: "　+　";
-}
-
-details[open]>summary:before {
-    content: "　-　";
-}
-
 details>p {
     background-color: white;
     border-radius: 1em;
     margin-top: 1rem;
     padding: 0.5em 1em;
-}
-
-p>details>summary {
-    margin-left: -0.7;
-}
-
-details details[open] {
-    border: solid 1.5px #eee;
-    border-radius: 0.5em;
-}
-
-details details {
-    padding: 0.25em 0 0.25em 2.0rem;
-    margin: 0.25em 0;
-}
-
-details details details>summary {
-    margin-left: -1.0rem;
-}
-
-details details details dl,
-details details details ol,
-details details details ul {
-    margin-left: -1.5em;
 }
 
 li {
@@ -77,18 +24,6 @@ li {
 
 li:hover {
     background-color: antiquewhite;
-}
-
-li li:hover {
-    background-color: white;
-}
-
-li li li:hover {
-    background-color: antiquewhite;
-}
-
-li li li li:hover {
-    background-color: white;
 }
 
 .my-code, .modal-body {
@@ -134,7 +69,6 @@ pre {
 }
 
 hr {
-    margin: 0;
     border-top: 3px solid rgba(0, 0, 0, .1);
 }
 
