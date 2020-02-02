@@ -1,67 +1,9 @@
-/* 파일 리스트 스타일 */
-.file-list ul {
-    padding-left: 1.5em;
-}
-
 div {
     word-wrap: break-word;
 }
 
 img {
     max-width: 100%;
-}
-
-details>p {
-    background-color: white;
-    border-radius: 1em;
-    margin-top: 1rem;
-    padding: 0.5em 1em;
-}
-
-li {
-    margin: 0.5rem 0;
-}
-
-li:hover {
-    background-color: antiquewhite;
-}
-
-.my-code, .modal-body {
-    word-wrap: normal;
-}
-
-.my-code ol, .modal-body ol {
-    margin-left: 0;
-}
-
-.my-code li, .code-modal li {
-    margin: 0;
-}
-
-.my-code li:hover, .code-modal li:hover {
-    background-color: antiquewhite;
-}
-
-.my-code {
-    background-color: white;
-    overflow: auto;
-    border: solid #eeeeee;
-    border-radius: 1em;
-}
-
-.btn {
-    margin-right: 5px;
-}
-
-/* Overwrite the Bootstrap's settings */
-
-@media screen and (min-width: 0px) {
-    .modal-dialog {
-        max-width: 1920px;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-    }
 }
 
 pre {
@@ -72,23 +14,56 @@ hr {
     border-top: 3px solid rgba(0, 0, 0, .1);
 }
 
-.modal-content {
-    height: 100%;
+ul, ol {
+    margin: 0;
+}
+
+li {
+    margin: 0.5rem 0;
+}
+
+li:hover {
+    background-color: antiquewhite;
+}
+
+/* 파일 리스트 스타일 */
+.file-list ul {
+    padding-left: 1.5em;
+}
+
+/* 포스트 영역 스타일 */
+.post-details>p {
+    background-color: white;
+    border-radius: 1em;
+    margin-top: 1rem;
+    padding: 0.5em 1em;
+}
+
+/* 코드 영역 스타일 */
+.code-div {
+    word-wrap: normal;
+    overflow: auto;
+}
+
+.code-modal .w3-modal-content {
+    position: fixed;
+    top: 0;
+    max-height: 100%;
+    max-width: 100%;
     width: 100%;
+    height: 100%;
+    overflow: auto;
 }
 
-.modal-body {
-    max-height: calc(100% - 140px);
-    overflow-y: scroll;
+.code-div ol {
+    margin-left: 0;
 }
 
-.navbar {
-    padding-bottom: 0;
-    padding-top: 0;
+.code-div li {
+    margin: 0;
 }
 
 /* Snackbar : from https://www.w3schools.com/howto/howto_js_snackbar.asp */
-
 #snackbar {
     visibility: hidden;
     min-width: 250px;
@@ -155,8 +130,7 @@ hr {
     }
 }
 
-/* 스크롤바 */
-
+/* 스크롤바 스타일 */
 ::-webkit-scrollbar {
     width: 5px;
     height: 5px;
@@ -164,19 +138,13 @@ hr {
     padding: 0;
 }
 
-/* Track */
-
 ::-webkit-scrollbar-track {
     box-shadow: inset 0 0 5px grey;
 }
 
-/* Handle */
-
 ::-webkit-scrollbar-thumb {
     background: #777777;
 }
-
-/* Handle on hover */
 
 ::-webkit-scrollbar-thumb:hover {
     background: #000000;

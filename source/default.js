@@ -54,37 +54,87 @@ Donggi.throttle = function (func, context) {
     clearTimeout(func.tId);
     func.tId = setTimeout(() => func.call(context), 100);
 }
+Donggi.openLink = function (url, target) {
+    let a = document.createElement('a');
+    a.href = url;
+    a.target = target;
+    document.body.append(a);
+    a.click();
+}
+Donggi.getNodesFromText = function (text, outerTag) {
+    let outer = document.createElement((!!outerTag)? outerTag : 'div');
+    outer.innerHTML = text;
+    return (!!outerTag)? outer : div.childNodes;
+}
+Donggi.getElementFromText = function (text) {
+    let div = document.createElement('div');
+    div.innerHTML = text;
+    return div.firstChild;
+}
+Donggi.toggleClass = function (element, classEnumarable) {
+    for (let clazz of classEnumarable) {
+        if (element.classList.contains(clazz))
+            element.classList.remove(clazz);
+        else
+            element.classList.add(clazz);
+    }
+}
+Donggi.showSnackbar = function (text, parent, timeout) {
+    let hiddenElement = Donggi.getElementFromText(`<div id="snackbar" class="show">${text}</div>`);
+    (parent || document.body).append(hiddenElement);
+    setTimeout(function () {
+        hiddenElement.remove();
+    }, timeout || 1000);
+}
+Donggi.printElement = function (element) {
+    const y = window.scrollY;
+    const html = document.getElementsByTagName('html')[0];
+    let print = Donggi.getElementFromText(`<print>${element.innerHTML}</print>`);
+    html.append(print);
+    document.body.style.display = 'none';
+    window.print();
+    document.body.style.display = 'block';
+    print.remove();
+    window.scrollTo(0, y);
+}
+Donggi.copyTextToCilpboard = function (text, parent) {
+    let textarea = Donggi.getElementFromText(`<textarea>${text.trim()}</textarea>`);
+    (parent || document.body).append(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    textarea.remove();
+}
+Donggi.copyElementToClipboard = function (element) {
+    let notActive = {
+        TEXTAREA: true
+    };
+    let parent = element;
+    while (notActive[parent.tagName])
+        parent = parent.parent();
+    Donggi.copyTextToCilpboard(element.value || element.textContent, parent);
+    Donggi.showSnackbar("Copied!!", parent);
+    parent.focus();
+}
 
-$(() => {
+window.addEventListener('load', () => {
     console.log(hljs.listLanguages());
-    console.log(location);
 
     prepareSidebar();
     preparePosts();
-    updateDropupManually(0, "");
-    updateScrollManually(localStorage.lastContentId);
+    document.getElementById('query').onkeydown = queryUpdated;
+    new MutationObserver(mutationCallback).observe(document.body, { attributes: false, childList: true, subtree: true });
 
-    $(window).on('resize', () => Donggi.throttle(adjustDropupWidth));
-    $(window).on('scroll', () => Donggi.throttle(updateDropupAuto));
-    new MutationObserver(mutationCallback).observe(document.getElementsByTagName('body')[0], { attributes: false, childList: true, subtree: true });
-
-    new FileList('../file_list.js', '#file-list', customFileAction);
+    
     // https://stackoverflow.com/questions/824349/how-do-i-modify-the-url-without-reloading-the-page
     // https://www.w3schools.com/w3css/w3css_navigation.asp
-
-    // 엔터로 검색 가능
-    $('input#input-query').keydown((event) => {
-        if (event.keyCode == 13) {
-            internalSearch();
-            event.stopPropagation();
-        }
-        return true;
-    });
+    // https://www.w3schools.com/w3css/tryit.asp?filename=tryw3css_modal2
+    // https://www.w3schools.com/w3css/tryit.asp?filename=tryw3css_filters_list
 });
 
 function prepareSidebar() {
     closeSidebar();
     document.getElementById('outside').onclick = closeSidebar;
+    new FileList('../file_list.js', '#file-list', customFileAction);
 }
 
 function openSidebar() {
@@ -98,358 +148,240 @@ function closeSidebar() {
 }
 
 function preparePosts() {
-    let id = 0;
-    posts.list.sort((post1, post2) => post2.title.localeCompare(post1.title));
-    posts.list.sort((post1, post2) => post2.category.localeCompare(post1.category));
-    posts.list.sort((post1, post2) => post1.top ? 1 : post2.top ? -1 : 0);
+    posts.list.sort((post1, post2) => Donggi.compareString(post1.title, post2.title));
+    posts.list.sort((post1, post2) => Donggi.compareString(post1.category, post2.category));
+    posts.list.sort((post1, post2) => post1.top ? -1 : post2.top ? 1 : 0);
 
-    for (post of posts.list) {
-        post.id = id++;
-
-        let category = posts.tree;
-        for (cate of post.category.split("/")) {
-            if (!category.hasOwnProperty(cate))
+    let categoryMap = {};
+    for (let post of posts.list) {
+        posts.hash[post.title.hashCode()] = post;
+        
+        // 카테고리 맵 초기화
+        let category = categoryMap;
+        for (let cate of post.category.split("/")) {
+            if (!category.hasOwnProperty(cate)) {
                 category[cate] = {};
+                category[cate].posts = [];
+            }
             category = category[cate];
         }
-        if (!category.hasOwnProperty("posts"))
-            category.posts = [];
-        category.posts.push(post);
+        category.posts.push(post.file);
 
-        // 모든 컨텐츠 골격 생성
-        let content = $(getPostHTML(post));
-        posts.contents.push(content);
-        $('div#contents').prepend(content);
-        $('summary', content).click(loadContent(post));
+        // 컨텐츠 골격 생성
+        let content = Donggi.getElementFromText(getPostHTML(post));
+        document.getElementById('contents').append(content);
+        content.querySelector('summary').addEventListener('click', loadPost(post.file));
     }
+
+    scrollToPost(localStorage.lastReadPost);
+    let categories = ['카테고리'];
+    let categoryText = '';
+    while (categories.length > 0) {
+        let current = categories.pop();
+        let entry = categoryMap;
+        for (let cate of current.split("/"))
+            if (entry.hasOwnProperty(cate))
+                entry = entry[cate];
+
+        categoryText += `${current}:\n`;
+        for (let cate in entry) {
+            if (cate != 'posts') {
+                categories.push(`${current}/${cate}`);
+                categoryText += `${cate}\n`;
+            } else {
+                for (let file of entry.posts)
+                    categoryText += `${file}\n`;
+            }
+        }
+    }
+    let url = URL.createObjectURL(new Blob([categoryText], {
+        type: 'text/plain;charset=utf-8;'
+    }));
+    new FileList(url, '#post-list', (_, file) => {
+        scrollToPost(file);
+        closeSidebar();
+    });
 }
 
-function getPostHTML(post) {
-    let title = post.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    let location = `https://dong-gi.github.io/${post.filename}`;
-    return `<div class="w3-panel w3-card w3-light-grey w3-padding-16 w3-section" id="${post.id}">
-                <details>
-                    <summary title="${location}"><span class="w3-small">${post.category}</span><span class="w3-xlarge"> ${title}</span></summary>
-                </details>
-            </div>`;
-}
-
-/**
- * 포스트 로드 클로저
- */
-function loadContent(post) {
+function loadPost(file) {
     return () => {
-        if($('details', posts.contents[post.id])[0].open)
+        let details = document.getElementById(`post-${file.hashCode()}`);
+        if (details.open)
             return;
-        localStorage.lastContentId = post.id;
-        if ($('details>p', posts.contents[post.id]).length > 0) {
-            if (!($('div#disqus_thread', posts.contents[post.id]).length > 0))
-                insertDisqusThread(post);
+        localStorage.lastReadPost = file;
+        if (details.childElementCount > 1) {
+            if (!details.querySelector('div#disqus_thread'))
+                insertDisqusThread(details, file);
             if (location.host == "dong-gi.github.io")
                 return;
-            $('details>p', posts.contents[post.id]).remove();
+            // 테스트 사이트에서는 항상 리로드
+            for (let node of details.children) {
+                if (/^summary$/i.test(node.tagName))
+                    continue;
+                node.remove();
+            }
         }
-        let content = $("<p>");
-        $(content).load(post.filename.replace(/ /gm, '%20') + '?' + new Date().getTime(), (response, status, xhr) => {
-            $('summary', posts.contents[post.id]).after(content);
-            insertDisqusThread(post);
-        });
+        let xhr = new XMLHttpRequest();
+        xhr.addEventListener("load", ((details, file) => function(e) {
+            if (this.status != 200) {
+                details.append(document.createTextNode('Ajax Failed'));
+                return;
+            }
+            details.append(Donggi.getNodesFromText(this.responseText, 'p'));
+            insertDisqusThread(details, file);
+        })(details, file));
+        xhr.open("GET", `${file.replace(/ /gm, '%20')}?${new Date().getTime()}`, true);
+        xhr.send();
     };
 }
 
-/**
- * 포스트 댓글 로드
- */
-function insertDisqusThread(post) {
-    if (location.host != "dong-gi.github.io")
+function insertDisqusThread(details, file) {
+    if (!/dong-gi\.github\.io/i.test(location.host))
         return;
-    let content = $('details>p', posts.contents[post.id]);
-    if ($('div#disqus_thread').length > 0) {
+
+    if (!!document.querySelector('div#disqus_thread')) {
         DISQUS.reset({
             reload: true,
             config: function () {
-                this.page.url = 'https://dong-gi.github.io/${post.filename}';
-                this.page.identifier = '${post.filename}';
+                this.page.url = `https://dong-gi.github.io/${file}`;
+                this.page.identifier = file;
             }
         });
-
-        $(content).after($('div#disqus_thread'));
+        details.append(document.querySelector('div#disqus_thread'));
         return;
     }
 
-    $(content).after($(`<div id="disqus_thread">
-                            <script>
-                                var disqus_config = function () {
-                                    this.page.url = 'https://dong-gi.github.io/${post.filename}';
-                                    this.page.identifier = '${post.filename}';
-                                };
-                                (function() {
-                                    var d = document, s = d.createElement('script');
-                                    s.src = 'https://donggi.disqus.com/embed.js';
-                                    s.setAttribute('data-timestamp', +new Date());
-                                    $('div#disqus_thread').append(s);
-                                })();
-                            </script>
-                        </div>`));
+    details.append(Donggi.getElementFromText('<div id="disqus_thread"></div>'));
+    eval(`var disqus_config = function () {
+            this.page.url = 'https://dong-gi.github.io/${file}';
+            this.page.identifier = '${file}';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');
+            s.src = 'https://donggi.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            document.querySelector('div#disqus_thread').append(s);
+        })();`);
 }
 
-/**
- * path에 따라서 카테고리 드롭업 수동 갱신
- * @param {Number} level 갱신 레벨. [1, 5] 자연수.
- * @param {String} path 카테고리{/카테고리}*
- */
-function updateDropupManually(level, path) {
-    let paths = path.split("/");
-    // level 수준 드롭업에 이름 설정
-    $(`#dropup-lv-${level} button`).text(paths[paths.length - 1]);
-    // level + 1 수준 드롭업 갱신
-    $(`#dropup-lv-${level + 1} button`).text(`개요 ${level + 1}`);
-    let menu = $(`#dropup-lv-${level + 1} .dropdown-menu`);
-    menu.empty();
-
-    let category = posts.tree;
-    for (let l = 1; l <= level; ++l)
-        category = category[paths[l - 1]];
-    for (cate of Object.getOwnPropertyNames(category)) {
-        if (cate !== 'posts')
-            menu.append($(`<a class="dropdown-item" href="javascript:updateDropupManually(${level + 1},&quot;${path.length > 0 ? path + '/' : ''}${cate}&quot;);">${cate}</a>`));
-    }
-    if ($(menu).children().length != 0)
-        $(`#dropup-lv-${level + 1}`).removeClass("d-none");
-
-    // level + 2 ~ 수준 드롭업 숨기기
-    for (let l = level + 2; l <= 5; ++l)
-        if (!$("#dropup-lv-" + l).hasClass("d-none"))
-            $("#dropup-lv-" + l).addClass("d-none");
-
-    // 컨텐츠 보이기/숨기기
-    menu = $("#dropup-posts .dropdown-menu");
-    menu.empty();
-    posts.visible = [];
-    for (let i = 0; i < posts.list.length; ++i) {
-        if (posts.list[i].category.startsWith(path + "/") || posts.list[i].category.endsWith(path)) {
-            if ($(posts.contents[i]).hasClass("d-none"))
-                $(posts.contents[i]).removeClass("d-none")
-            menu.prepend($(`<a class="dropdown-item" href="javascript:updateScrollManually(${posts.list[i].id});">${posts.list[i].title}</a>`));
-            posts.visible.push(i);
-        } else {
-            if (!$(posts.contents[i]).hasClass("d-none"))
-                $(posts.contents[i]).addClass("d-none")
-        }
-    }
-    updateDropupAuto();
-    adjustDropupWidth();
-}
-
-/**
- * 스크롤 이동에 따른 드롭업 자동 갱신
- */
-function updateDropupAuto() {
-    let pos = (document.scrollTop || window.pageYOffset) - (document.clientTop || 0);
-    let currentContentIdx = posts.visible.length - 1;
-    while (currentContentIdx > 0) {
-        if (pos >= $(posts.contents[posts.visible[currentContentIdx - 1]]).offset().top)
-            --currentContentIdx;
-        else
-            break;
-    }
-    $('#dropup-posts button').text(posts.list[posts.visible[currentContentIdx]].title);
-    let paths = posts.list[posts.visible[currentContentIdx]].category.split("/");
-    for (let level = 1; level <= paths.length; ++level)
-        $("#dropup-lv-" + level + " button").text(paths[level - 1]);
-    return currentContentIdx;
-}
-
-/**
- * 해당 포스트로 스크롤 이동
- */
-function updateScrollManually(id) {
-    $('html, body').animate({
-        scrollTop: !id ? 0 : $(posts.contents[id]).offset().top - document.getElementById('nav').clientHeight
-    }, 500);
-}
-
-function internalSearch() {
-    let query = $('input#input-query').val();
-    let beforeHref = $('#searchAnchor').attr('href');
-    $('#searchAnchor').attr('href', `https://github.com/Dong-gi/Dong-gi.github.io/search?q=${query}`);
-    document.getElementById('searchAnchor').click();
-    $('#searchAnchor').attr('href', beforeHref);
-}
-
-function adjustDropupWidth() {
-    let buttonMaxWidth = (window.innerWidth - 75.67) / 6;
-    let dropupMaxHeight = window.innerHeight / 2;
-    let dropupMaxWidth = buttonMaxWidth > 150 ? buttonMaxWidth : 150;
-
-    $('nav.fixed-bottom button').css({
-        "max-width": buttonMaxWidth + "px",
-        "overflow": "auto"
+function scrollToPost(file) {
+    window.scrollTo({
+        top: (!file)? 0 : document.getElementById(`post-${file.hashCode()}`).offsetTop - document.getElementById('nav').clientHeight,
+        behavior: 'smooth'
     });
-    $('nav.fixed-bottom div.dropdown-menu').css({
-        'max-height': dropupMaxHeight + "px",
-        'overflow': 'auto'
-    });
-    $('nav.fixed-bottom div.dropdown-menu a').css({
-        'max-width': dropupMaxWidth + "px",
-        'overflow': 'auto'
-    });
-    $('input#input-query').css('width', dropupMaxWidth / 2 + "px")
+}
+
+function queryUpdated(e) {
+    if (e.keyCode == 13) {
+        Donggi.openLink(`https://github.com/Dong-gi/Dong-gi.github.io/search?q=${this.value}`, '_blank');
+        event.stopPropagation();
+    }
+    return true;
 }
 
 function mutationCallback(mutations, observer) {
     for (let mutation of mutations) {
         if (mutation.type !== 'childList') return;
 
-        $.each($('button.btn-code', $(mutation.target)), (idx, button) => {
-            let id = `code-${new Date().getTime()}-${Math.random().toString().replace(/\./g, '')}`;
-            $(button).attr('id', id);
-            $(button).attr('type', 'button');
-            $(button).attr('title', $(button).attr('path'));
-            $(button).addClass('btn btn-primary btn-sm');
-            $(button).removeClass('btn-code');
-            $(button).click(insertCode($(button).attr('id')));
-        });
+        for (let button of mutation.target.querySelectorAll('button.btn-code')) {
+            let id = `${new Date().getTime()}-${Math.random().toString().replace(/\./g, '')}`;
+            button.id = `code-button-${id}`;
+            button.title = button.getAttribute('path');
+            button.classList.add('w3-btn', 'w3-round', 'w3-round-xxlarge', 'w3-small', 'w3-teal');
+            button.classList.remove('btn-code');
+            button.onclick = insertCode(id);
+        }
     }
 }
 
-function insertCode(buttonId) {
+function insertCode(id) {
     return () => {
-        if ($('div#' + buttonId).length == 0) {
-            let button = $('button#' + buttonId);
-            let lan = $(button).attr('lan');
-            let div = $('<div>').addClass('my-code').attr('id', buttonId);
-            let path = $(button).attr('path');
-            $(div).load((path.startsWith('/') ? "" : "./") + path.replace(/ /gm, '%20') + '?' + new Date().getTime(), (response, status, xhr) => {
-                posts.codes[buttonId] = response;
+        if (!document.getElementById(`code-div-${id}`)) {
+            let button = document.getElementById(`code-button-${id}`);
+            let path = button.getAttribute('path');
+            let xhr = new XMLHttpRequest();
+            xhr.addEventListener("load", ((button) => function(e) {
+                let div = Donggi.getElementFromText(`<div id="code-div-${id}" class="w3-leftbar w3-border-green code-div" style="max-height:${window.innerHeight / 2}"></div>`);
+                let lan = button.getAttribute('lan');
+                if (this.status != 200)
+                    this.responseText = 'Ajax Failed';
+                posts.codes[id] = this.responseText;
+                
+                if (lan != 'nohighlight') {
+                    this.responseText = this.responseText.replace(/\t/gm, '    ');
+                    this.responseText = this.responseText.replace(/ /gm, '  ');
 
-                if (lan !== 'nohighlight') {
-                    response = response.replace(/\t/gm, '    ');
-                    response = response.replace(/ /gm, '  ');
-
-                    let lines;
+                    let lines = null;
                     if (lan === "text")
-                        lines = response.split(/\n/gm);
+                        lines = this.responseText.split(/\n/gm);
                     else
-                        lines = hljs.highlight(lan, response)['value'].split(/\n/gm);
+                        lines = hljs.highlight(lan, this.responseText)['value'].split(/\n/gm);
 
-                    let ol = $('<ol>').css('font-family', 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New');
-                    let displayRange = JSON.parse($(button).attr('displayRange') || '[1, 100000000]');
+                    let ol = Donggi.getElementFromText('<ol style="font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New"></ol>');
+                    let displayRange = JSON.parse(button.getAttribute('displayRange') || '[1, 100000000]');
                     displayRange = displayRange.reverse();
 
                     while (displayRange.length > 0) {
                         let displayStart = displayRange.pop() - 1;
                         let displayEnd = displayRange.pop();
                         for (let idx = displayStart; idx < displayEnd && idx < lines.length; ++idx)
-                            ol.append($('<li>').html(lines[idx].replace(/  /gm, '&nbsp;')));
+                            ol.append(Donggi.getElementFromText(`<li>${lines[idx].replace(/  /gm, '&nbsp;')}</li>`));
                         if (displayRange.length > 0)
-                            ol.append($('<hr>'));
+                            ol.append(document.createElement('<hr>'));
                     }
-
-                    $(div).html(ol);
+                    div.append(ol);
                 }
 
-                if (lan !== 'nohighlight') {
-                    let modal = $('<button>').addClass('btn btn-info btn-sm btn-code').text('모달로 보기');
-                    $(modal).click(showModal(buttonId));
-                    $(button).after(modal);
-                    $(modal).after(div);
-                } else {
-                    $(button).after(div);
-                }
+                if (lan != 'nohighlight') {
+                    let modal = Donggi.getElementFromText('<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-blue">모달로 보기</button>');
+                    modal.onclick = showModal(id);
+                    button.after(modal);
+                    modal.after(div);
+                } else
+                    button.after(div);
 
-                $('div#' + buttonId).css('max-height', window.innerHeight / 2);
-
-                if (lan === 'javascript') {
-                    let script = $('<button>').addClass('btn btn-info btn-sm').text('실행');
-                    $(script).click(() => eval(posts.codes[buttonId]));
-                    $(button).after(script);
+                if (lan == 'javascript') {
+                    let script = Donggi.getElementFromText('<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-green">실행</button>');
+                    script.onclick = () => eval(posts.codes[id]);
+                    button.after(script);
                 }
-            });
+            })(button));
+            xhr.open("GET", `${path.startsWith('/') ? "" : "./"}${path.replace(/ /gm, '%20')}?${new Date().getTime()}`, true);
+            xhr.send();
         } else {
-            $('div#' + buttonId).toggleClass('d-none')
-            $('div#' + buttonId).css('max-height', window.innerHeight / 2);
+            let div = document.getElementById(`code-div-${id}`);
+            Donggi.toggleClass(div, ['w3-hide']);
+            div.style.maxHeight = window.innerHeight / 2;
         }
     };
 }
 
-/**
- * 코드 모달 HTML 골격 반환
- */
-function getCodeModalHTML(buttonId, filename) {
-    return `<div id="modal-${buttonId}" class="modal code-modal" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2 style="display: inline-block;" class="modal-title">${filename}</h2>
-                            <button style="float: right;" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true" style="color: black; font-size: 2em; font-weight: bold;">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary copy">Copy</button>
-                            <button type="button" class="btn btn-primary download">Download</button>
-                            <button type="button" class="btn btn-primary print">Print</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-}
-
-function showModal(buttonId) {
+function showModal(id) {
     return () => {
-        let code = $('.code-modal#modal' + buttonId);
-        if (code.length > 0) {
-            $(code).modal('show');
+        let modal = document.getElementById(`modal-${id}`);
+        if (!!modal) {
+            modal.style.display = 'block';
             return;
         }
-        // 골격 생성
-        code = $(getCodeModalHTML(buttonId, $('button#' + buttonId).attr('path').split('/').pop()));
-        // 내용 추가
-        $('.modal-body', code).html($('.my-code#' + buttonId).html());
-        // 복사 버튼
-        $("button.copy", code).click(() => {
-            copyTextToCilpboard(posts.codes[buttonId], code);
-            showSnackbar("복사 완료", code);
-            $(code).focus();
-        });
-        // 다운로드 버튼
-        $("button.download", code).click(() => {
-            downloadCode($('button#' + buttonId).attr('path').split('/').pop(), posts.codes[buttonId]);
-        });
-        // 출력 버튼
-        $("button.print", code).click(() => {
-            printElement($('div.modal-body', code));
-        });
-        $('body').append(code);
-        $(code).modal('show');
-        $(code).css('margin', '0');
-        $(code).css('padding', '0');
-    };
-}
 
-function copyElementToClipboard(element) {
-    let notActive = {
-        TEXTAREA: true
+        modal = Donggi.getElementFromText(getCodeModalHTML(id, document.getElementById(`code-button-${id}`).getAttribute('path').split('/').pop()));
+        let header = modal.querySelector('header');
+        let body = modal.querySelector('.code-modal-body');
+        let footer = modal.querySelector('footer');
+        
+        document.body.append(modal);
+        modal.style.display = 'block';
+        body.innerHTML = document.getElementById(`code-div-${id}`).innerHTML;
+        body.style.height = window.innerHeight - parseFloat(window.getComputedStyle(header).height);
+        
+        modal.querySelector('button.copy').onclick = (() => {
+            Donggi.copyTextToCilpboard(posts.codes[id], modal);
+            Donggi.showSnackbar("복사 완료", modal);
+            modal.focus();
+        });
+        modal.querySelector('button.download').onclick = (() => downloadCode(document.getElementById(`code-button-${id}`).getAttribute('path').split('/').pop(), posts.codes[id]));
+        modal.querySelector('button.print').onclick = (() => Donggi.printElement(body));
     };
-    let parent = element;
-    while (notActive[parent.prop('tagName')]) {
-        parent = parent.parent();
-    }
-    copyTextToCilpboard($(element).text() || $(element).val(), parent);
-    showSnackbar("Copied!!", parent);
-    parent.focus();
-}
-
-function copyTextToCilpboard(text, parent) {
-    let textarea = $('<textarea></textarea>');
-    $(parent || 'body').append(textarea);
-    textarea.text(text.trim());
-    textarea.select();
-    document.execCommand("copy");
-    textarea.remove();
 }
 
 function downloadCode(fileName, text) {
@@ -458,37 +390,43 @@ function downloadCode(fileName, text) {
         type: 'text/plain;charset=utf-8;'
     }));
     a.href = url;
-    // location.href = a.href;
     a.target = '_blank';
     a.download = fileName;
-    document.getElementsByTagName('body')[0].append(a);
+    document.body.append(a);
     a.click();
 }
 
-function printElement(node) {
-    const y = window.scrollY;
-    const html = $('html');
-    let printDiv = $('<div></div>').html($(node).html()).css({});
-    html.append(printDiv);
-    document.body.style.display = 'none';
-    window.print();
-    document.body.style.display = 'block';
-    $(printDiv).html('');
-    window.scrollTo(0, y);
-}
-
-function showSnackbar(text, parent, timeout) {
-    let hiddenElement = $('<div id="snackbar">' + text + '</div>');
-    $(parent || 'body').append(hiddenElement);
-    hiddenElement.addClass('show');
-    setTimeout(function () {
-        hiddenElement.removeClass('show');
-        hiddenElement.remove();
-    }, timeout || 1000);
-}
-
 function customFileAction(dir, file) {
-    FileList.defaultFileAction(dir, file);
+    if (/dong-gi\.github\.io/i.test(location.host))
+        FileList.defaultFileAction(dir.replace(/^.+dong-gi\.github\.io/i, ''), file);
+    else
+        FileList.defaultFileAction(dir, file);
+}
+
+function getPostHTML(post) {
+    let title = post.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    let location = `https://dong-gi.github.io/${post.file}`;
+    return `<div class="w3-panel w3-card w3-light-grey w3-padding-16 w3-section">
+                <details id="post-${post.file.hashCode()}" class="post-details"><summary title="${location}"><span class="w3-small">${post.category}</span><span class="w3-large"> ${title}</span></summary></details>
+            </div>`;
+}
+
+function getCodeModalHTML(id, filename) {
+    return `<div id="modal-${id}" class="w3-modal code-modal">
+    <div class="w3-modal-content">
+        <header class="w3-container">
+            <h2 style="display: inline-block;" class="modal-title">${filename}</h2>
+            <span class="w3-button w3-circle w3-display-topright" style="color: black; font-size: 2em; font-weight: bold;" onclick="document.getElementById('modal-${id}').style.display='none'">&times;</span>
+        </header>
+        <div class="w3-container w3-leftbar w3-border-green code-modal-body code-div"></div>
+        <footer class="w3-container w3-display-bottomright">
+            <button type="button" class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge copy">Copy</button>
+            <button type="button" class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge download">Download</button>
+            <button type="button" class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge print">Print</button>
+            <button type="button" class="w3-btn w3-white w3-border w3-border-red w3-round-xlarge" onclick="document.getElementById('modal-${id}').style.display='none'">Close</button>
+        </footer>
+    </div>
+</div>`;
 }
 
 class FileList {
@@ -499,44 +437,45 @@ class FileList {
      */
     constructor(lsResultPath, targetQuery, fileAction) {
         this.fileAction = (!!fileAction)? fileAction : FileList.defaultFileAction;
-        this.target = $(targetQuery)[0];
+        this.target = document.querySelector(targetQuery);
         this.fileMap = new Map();
         this.rootDir = null;
         
         if(!this.target)
             return;
-        $.ajax(lsResultPath, {
-                type : "GET",
-                success : ((fileList) => function(data, status) {
-                    let dir = null;
-                    for (let line of data.split('\n')) {
-                        if (line.endsWith(':')) {
-                            dir = line.slice(0, -1);
-                            if (!fileList.rootDir)
-                                fileList.rootDir = dir;
-                            fileList.fileMap.set(dir, []);
-                        } else if (line.length > 0)
-                            fileList.fileMap.get(dir).push(line);
-                    }
-                    for (let files of fileList.fileMap.values())
-                        files.sort(Donggi.compareString);
-                    fileList.updateFileList(fileList.rootDir);
-                })(this),
-                error : ((fileList) => function(request, status, err) {
-                    $(fileList.target).html('No Data');
-                })(this)
-        });
+        let xhr = new XMLHttpRequest();
+        xhr.addEventListener("load", ((fileList) => function(e) {
+            if (this.status != 200) {
+                fileList.target.innerHTML = 'No Data';
+                return;
+            }
+            let dir = null;
+            for (let line of this.responseText.split('\n')) {
+                if (line.endsWith(':')) {
+                    dir = line.slice(0, -1);
+                    if (!fileList.rootDir)
+                        fileList.rootDir = dir;
+                    fileList.fileMap.set(dir, []);
+                } else if (line.length > 0)
+                    fileList.fileMap.get(dir).push(line);
+            }
+            for (let files of fileList.fileMap.values())
+                files.sort(Donggi.compareString);
+            fileList.updateFileList(fileList.rootDir);
+        })(this));
+        xhr.open("GET", lsResultPath, true);
+        xhr.send();
     }
     
     updateFileList(dir) {
-        let details = $(`#details-${dir.hashCode()}`);
-        if (dir == this.rootDir && details.length < 1) {
-            $(this.target).html(this.getDirHTML(dir, '', true));
+        let details = document.getElementById(`dir-${dir.hashCode()}`);
+        if (dir == this.rootDir && !details) {
+            this.target.append(FileList.getDirHTML(dir, '', true));
             this.updateFileList(dir);
             return;
         }
 
-        let ul = $('ul:first', details)[0];
+        let ul = details.querySelector('ul');
         if (ul.childElementCount > 1)
             return;
 
@@ -548,32 +487,29 @@ class FileList {
                        && this.fileMap.get(path).length == 1
                        && this.fileMap.has(`${path}/${this.fileMap.get(path)[0]}`))
                     path = `${path}/${this.fileMap.get(path)[0]}`;
-                $(ul).append(this.getDirHTML(path, dir, false));
+                if (this.fileMap.get(path).length < 1)
+                    continue;
+                ul.append(FileList.getDirHTML(path, dir, false));
                 let dirAction = ((fileList, dir) => function (e) { fileList.updateFileList(dir); })(this, path);
-                $(`#details-${path.hashCode()}>summary`).click(dirAction);
+                document.getElementById(`dir-${path.hashCode()}`).firstChild.onclick = dirAction;
             } else {
-                $(ul).append(FileList.getFileHTML(dir, name));
+                ul.append(FileList.getFileHTML(dir, name));
                 let fileAction = ((fileList, dir, name) => function (e) { fileList.fileAction(dir, name); })(this, dir, name);
-                $(`#li-${path.hashCode()}`).click(fileAction);
+                document.getElementById(`file-${path.hashCode()}`).onclick = fileAction;
             }
         }
     }
     
-    getDirHTML(dir, parentDir, open) {
-        return `<details ${(!!open)? 'open' : ''} id="details-${dir.hashCode()}" class="w3-small file-list" title="${dir}"><summary>${dir.replace(parentDir, '')}</summary><ul></ul></details>`;
+    static getDirHTML(dir, parentDir, open) {
+        return Donggi.getElementFromText(`<details ${(!!open)? 'open' : ''} id="dir-${dir.hashCode()}" class="w3-small file-list" title="${dir}"><summary>${dir.replace(parentDir, '')}</summary><ul></ul></details>`);
     }
     
     static getFileHTML(dir, name) {
         let path = `${dir}/${name}`;
-        return `<li id="li-${path.hashCode()}" title="${path}">${name}</li>`;
+        return Donggi.getElementFromText(`<li id="file-${path.hashCode()}" title="${path}">${name}</li>`);
     }
     
     static defaultFileAction(dir, file) {
-        let a = document.createElement('a');
-        a.href = `${dir}/${file}`;
-        a.target = '_blank';
-        document.getElementsByTagName('body')[0].append(a);
-        a.click();
-        console.log(a);
+        Donggi.openLink(`${dir}/${file}`, '_blank');
     }
 }
