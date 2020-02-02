@@ -1,8 +1,8 @@
-$(() => {
-	const observer = new MutationObserver(callback);
-	observer.observe($('body')[0], { attributes: false, childList: true, subtree: true });
-	
-	$('head').append(`<style>
+window.addEventListener('load', () => {
+    const observer = new MutationObserver(callback);
+    observer.observe(document.body, { attributes: false, childList: true, subtree: true });
+    
+    document.getElementsByTagName('head')[0].append(Donggi.getElementFromText(`<style>
 td.sorting-table-head-black:after,
 th.sorting-table-head-black:after {
     content: attr(sort-order);
@@ -13,57 +13,75 @@ td.sorting-table-head-white:after,
 th.sorting-table-head-white:after {
     content: attr(sort-order);
     color: white;
-}</style>`);
+}</style>`));
 });
 
 
 const callback = function(mutationsList, observer) {
-	$.each($('table.ordered-table'), (idx, table) => {
-		if($('tr.table-head-row', table).length < 1)
-			$(table).removeClass('ordered-table');
-	});
-	$.each($('table:not(".ordered-table")'), (idx, table) => {
-		if($('tr', table).length < 2)
-			return;
-		$(table).addClass('ordered-table');
+    for (let mutation of mutationsList) {
+        if (mutation.type !== 'childList') return;
 
-		let headRow = $('tr:first', table);  // 테이블의 1번째 행을 테이블 헤더 행으로 간주
-		headRow.addClass('table-head-row');
-		
-		$.each($('td, th', headRow), (idx, node) => $(node).click(customTableSort(idx, node, table)));
+        for (let table of mutation.target.querySelectorAll('table')) {
+            if (table.rows.length < 1) {
+                table.classList.remove('ordered-table');
+                return;
+            }
+            if (table.classList.contains('ordered-table'))
+                return;
+            if (table.rows.length < 2)
+                return;
+            table.classList.add('w3-table-all', 'w3-card', 'w3-small', 'ordered-table');
 
-		let preSort = $('td[pre-sort], th[pre-sort]', headRow);
-		preSort.sort((head1, head2) => parseFloat($(head1).attr('pre-sort')) - parseFloat($(head2).attr('pre-sort')));
-		$.each(preSort, (idx, node) => $(node).click());
-	});
+            let headRow = table.rows[0]; // 테이블의 1번째 행을 테이블 헤더 행으로 간주
+            headRow.classList.add('table-head-row');
+
+            let hasDataIdxSet = new Set(); // 모든 행의 x번째 열이 비어있다면, 삭제하기 위한 인덱스 집합
+            for (let tr of Array.from(table.rows).slice(1)) {
+                tr.querySelectorAll('td, th').forEach((node, idx, nodeList) => {
+                    node.innerHTML = node.innerHTML.replace(/null/gmi, '').replace(/^\s+$/g, '').trim();
+                    if (node.innerHTML.length > 0)
+                        hasDataIdxSet.add(idx);
+                });
+            }
+            for (let tr of table.rows) {
+                tr.querySelectorAll('td, th').forEach((node, idx, nodeList) => {
+                    if (!hasDataIdxSet.has(idx))
+                        node.remove();
+                });
+            }
+
+            headRow.querySelectorAll('td, th').forEach((node, idx, nodeList) => node.onclick = customTableSort(idx, node, table));
+            let preSort = Array.from(headRow.querySelectorAll('td[pre-sort], th[pre-sort]'));
+            preSort.sort((head1, head2) => parseFloat(head1.getAttribute('pre-sort')) - parseFloat(head2.getAttribute('pre-sort')));
+            for (let head of preSort)
+                head.click();
+        }
+    }
 }
 
 function customTableSort(idx, node, table) {
-    if($(node).hasClass('not-sort'))
+    if (node.classList.contains('not-sort'))
         return;
-    let rgba = getRgba(node);
-    if(rgba[0] + rgba[1] + rgba[2] < 255 * rgba[3])
-        $(node).addClass('sorting-table-head-white');
+    let rgba = Donggi.getRgba(node);
+    if (rgba[0] + rgba[1] + rgba[2] < 255 * rgba[3])
+        node.classList.add('sorting-table-head-white');
     else
-        $(node).addClass('sorting-table-head-black');
-    if(!$(node).attr('sort-order'))
-        $(node).attr('sort-order', '●');
+        node.classList.add('sorting-table-head-black');
+    if (!node.getAttribute('sort-order'))
+        node.setAttribute('sort-order', '●');
 
     return () => {
-        // order : true(기본), false(역순)
-        let order = !($(node).attr('sort-order') === '▲');
-        $(node).attr('sort-order', order? '▲' : '▼');
+        // order : true(오름차순), false(내림차순)
+        let order = !(node.getAttribute('sort-order') == '▲');
+        node.setAttribute('sort-order', order? '▲' : '▼');
 
-        $(Array.from(table.rows).slice(1)).sort((r1, r2) => {
-            let result = customTextCompare($($('td, th', r1)[idx]).text(), $($('td, th', r2)[idx]).text());
-            return order ? result : -result;
-        }).appendTo($(table.tBodies[table.tBodies.length-1]));
+        let dataRows = Array.from(table.rows).slice(1);
+        dataRows.sort((r1, r2) => {
+            let result = Donggi.compareString(r1.querySelectorAll('td, th')[idx].textContent.trim(), r2.querySelectorAll('td, th')[idx].textContent.trim());
+            return order? result : -result;
+        });
+
+        for (let tr of dataRows)
+            table.append(tr);
     };
-}
-
-function getRgba(node) {
-    let rgbaRegex = /(\d+)\D*(\d+)\D*(\d+)\D*(\d*\.?\d*)/;
-    let backgroundColor = window.getComputedStyle(node).getPropertyValue("background-color");
-    let rgba = rgbaRegex.exec(backgroundColor);
-    return [parseInt(rgba[1]), parseInt(rgba[2]), parseInt(rgba[3]), /rgba/.test(backgroundColor)? parseFloat(rgba[3]) : 1];
 }

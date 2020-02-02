@@ -11,42 +11,47 @@ String.prototype.hashCode = function () {
 
 class Donggi {}
 Donggi.compareString = function (str1, str2) {
+    let ori1 = str1;
+    let ori2 = str2;
 	// 부호 붙은 숫자를 수로 간주하는 경우
 	// 1. 부호 자체가 문자열 시작
 	// 2. 부호 앞에 공백이 존재하여 별개 파트로 간주 가능
 	// 3. 부호 앞에 화폐 기호 [$¥£₡₱€₩₭฿]가 존재
-	let numPartRegex = /((^|[\s$¥£₡₱€₩₭฿][+-])?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/;
-    let startWithNumberRegex = new RegExp(`^${numPartRegex.source}`);
-    let strPartRegex = new RegExp(`^((?!${numPartRegex.source})[\\d\\D])+`, 'm');
+	let numPartRegex1 = /(((^|[\s$¥£₡₱€₩₭฿])[+-])?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/;
+    let numPartRegex2 = /(([\s$¥£₡₱€₩₭฿][+-])?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/;
+    let startWithNumberRegex1 = new RegExp(`^${numPartRegex1.source}`);
+    let startWithNumberRegex2 = new RegExp(`^${numPartRegex2.source}`);
+    let strPartRegex1 = new RegExp(`^((?!${numPartRegex1.source})[\\d\\D])+`, 'm');
+    let strPartRegex2 = new RegExp(`^((?!${numPartRegex2.source})[\\d\\D])+`, 'm');
 
     while (true) {
         if(str1.length * str2.length === 0) return str1.length - str2.length;
 
-        let isStr1StartWithNumber = startWithNumberRegex.test(str1);
-        let isStr2StartWithNumber = startWithNumberRegex.test(str2);
+        let isStr1StartWithNumber = ((str1 == ori1)? startWithNumberRegex1 : startWithNumberRegex2).test(str1);
+        let isStr2StartWithNumber = ((str2 == ori2)? startWithNumberRegex1 : startWithNumberRegex2).test(str2);
 
         if(isStr1StartWithNumber && isStr2StartWithNumber) {
-            let num1 = parseFloat(str1.match(startWithNumberRegex)[0].replace(/[^\-\d\.]/g, ''));
-            let num2 = parseFloat(str2.match(startWithNumberRegex)[0].replace(/[^\-\d\.]/g, ''));
+            let num1 = parseFloat(str1.match(((str1 == ori1)? startWithNumberRegex1 : startWithNumberRegex2))[0].replace(/[^\-\d\.]/g, ''));
+            let num2 = parseFloat(str2.match(((str2 == ori2)? startWithNumberRegex1 : startWithNumberRegex2))[0].replace(/[^\-\d\.]/g, ''));
 
             if(Math.abs(num1 - num2) >= Number.EPSILON)
                 return num1 - num2;
 
-            str1 = str1.replace(startWithNumberRegex, '');
-            str2 = str2.replace(startWithNumberRegex, '');
+            str1 = str1.replace(((str1 == ori1)? startWithNumberRegex1 : startWithNumberRegex2), '');
+            str2 = str2.replace(((str2 == ori2)? startWithNumberRegex1 : startWithNumberRegex2), '');
             continue;
         }
 
         if(isStr1StartWithNumber) return -1;
         if(isStr2StartWithNumber) return 1;
 
-        let text1 = str1.match(strPartRegex)[0];
-        let text2 = str2.match(strPartRegex)[0];
+        let text1 = str1.match(((str1 == ori1)? strPartRegex1 : strPartRegex2))[0];
+        let text2 = str2.match(((str1 == ori1)? strPartRegex1 : strPartRegex2))[0];
         let result = text1.localeCompare(text2);
 
         if(result !== 0) return result;
-        str1 = str1.replace(strPartRegex, '');
-        str2 = str2.replace(strPartRegex, '');
+        str1 = str1.replace(((str1 == ori1)? strPartRegex1 : strPartRegex2), '');
+        str2 = str2.replace(((str1 == ori1)? strPartRegex1 : strPartRegex2), '');
         continue;
     }
 }
@@ -115,20 +120,44 @@ Donggi.copyElementToClipboard = function (element) {
     Donggi.showSnackbar("Copied!!", parent);
     parent.focus();
 }
+Donggi.getRgba = function (element) {
+    let rgbaRegex = /(\d+)\D*(\d+)\D*(\d+)\D*(\d*\.?\d*)/;
+    let backgroundColor = window.getComputedStyle(element).getPropertyValue("background-color");
+    let rgba = rgbaRegex.exec(backgroundColor);
+    return [parseInt(rgba[1]), parseInt(rgba[2]), parseInt(rgba[3]), /rgba/.test(backgroundColor)? parseFloat(rgba[3]) : 1];
+}
 
 window.addEventListener('load', () => {
     console.log(hljs.listLanguages());
+
+    document.getElementsByTagName('head')[0].append(Donggi.getElementFromText(`<style>
+td.sorting-table-head-black:after,
+th.sorting-table-head-black:after {
+    content: attr(sort-order);
+    color: black;
+}
+
+td.sorting-table-head-white:after,
+th.sorting-table-head-white:after {
+    content: attr(sort-order);
+    color: white;
+}</style>`));
 
     prepareSidebar();
     preparePosts();
     document.getElementById('query').onkeydown = queryUpdated;
     new MutationObserver(mutationCallback).observe(document.body, { attributes: false, childList: true, subtree: true });
-
     
-    // https://stackoverflow.com/questions/824349/how-do-i-modify-the-url-without-reloading-the-page
-    // https://www.w3schools.com/w3css/w3css_navigation.asp
-    // https://www.w3schools.com/w3css/tryit.asp?filename=tryw3css_modal2
-    // https://www.w3schools.com/w3css/tryit.asp?filename=tryw3css_filters_list
+    let postQuery = location.search.match(/[?&]post=([^&]+)/);
+    if (!!postQuery)
+        scrollToPost(postQuery[1]);
+    window.onpopstate = function(e) {
+        let postQuery = e.state.html.match(/[?&]post=([^&]+)/);
+        if (!!postQuery) {
+            document.title = e.state.pageTitle;
+            scrollToPost(postQuery[1]);
+        }
+    };
 });
 
 function prepareSidebar() {
@@ -154,7 +183,7 @@ function preparePosts() {
 
     let categoryMap = {};
     for (let post of posts.list) {
-        posts.hash[post.title.hashCode()] = post;
+        posts.hash[post.file.hashCode()] = post;
         
         // 카테고리 맵 초기화
         let category = categoryMap;
@@ -198,7 +227,7 @@ function preparePosts() {
         type: 'text/plain;charset=utf-8;'
     }));
     new FileList(url, '#post-list', (_, file) => {
-        scrollToPost(file);
+        scrollToPost(file.hashCode());
         closeSidebar();
     });
 }
@@ -208,7 +237,16 @@ function loadPost(file) {
         let details = document.getElementById(`post-${file.hashCode()}`);
         if (details.open)
             return;
-        localStorage.lastReadPost = file;
+        localStorage.lastReadPost = file.hashCode();
+        let path = location.pathname;
+        let postQuery = location.search.match(/[?&]post=([^&]+)/);
+        if (!!postQuery)
+            path += location.search.replace(postQuery[1], file.hashCode());
+        else
+            path += `${location.search.length>0? location.search + '&' : '?'}post=${file.hashCode()}`;
+        document.title = posts.hash[file.hashCode()].title;
+        window.history.pushState({"html":path,"pageTitle":document.title}, document.title, `${location.origin}${path}`);
+
         if (details.childElementCount > 1) {
             if (!details.querySelector('div#disqus_thread'))
                 insertDisqusThread(details, file);
@@ -228,6 +266,15 @@ function loadPost(file) {
                 return;
             }
             details.append(Donggi.getNodesFromText(this.responseText, 'p'));
+            // 야매로 만들어서 그런지 script 실행이 안 됨... 때문에 따로 복제 생성
+            for (let script of details.querySelectorAll('script')) {
+                let nScript = document.createElement('script');
+                if (script.src.length > 0)
+                    nScript.src = script.src;
+                if (script.text.length > 0)
+                    nScript.text = script.text;
+                details.append(nScript);
+            }
             insertDisqusThread(details, file);
         })(details, file));
         xhr.open("GET", `${file.replace(/ /gm, '%20')}?${new Date().getTime()}`, true);
@@ -264,9 +311,9 @@ function insertDisqusThread(details, file) {
         })();`);
 }
 
-function scrollToPost(file) {
+function scrollToPost(hash) {
     window.scrollTo({
-        top: (!file)? 0 : document.getElementById(`post-${file.hashCode()}`).offsetTop - document.getElementById('nav').clientHeight,
+        top: (!hash)? 0 : document.getElementById(`post-${hash}`).offsetTop - document.getElementById('nav').clientHeight,
         behavior: 'smooth'
     });
 }
@@ -290,6 +337,42 @@ function mutationCallback(mutations, observer) {
             button.classList.add('w3-btn', 'w3-round', 'w3-round-xxlarge', 'w3-small', 'w3-teal');
             button.classList.remove('btn-code');
             button.onclick = insertCode(id);
+        }
+        
+        for (let table of mutation.target.querySelectorAll('table')) {
+            if (table.rows.length < 1) {
+                table.classList.remove('ordered-table');
+                return;
+            }
+            if (table.classList.contains('ordered-table'))
+                return;
+            if (table.rows.length < 2)
+                return;
+            table.classList.add('w3-table-all', 'w3-card', 'w3-small', 'ordered-table');
+
+            let headRow = table.rows[0]; // 테이블의 1번째 행을 테이블 헤더 행으로 간주
+            headRow.classList.add('table-head-row');
+
+            let hasDataIdxSet = new Set(); // 모든 행의 x번째 열이 비어있다면, 삭제하기 위한 인덱스 집합
+            for (let tr of Array.from(table.rows).slice(1)) {
+                tr.querySelectorAll('td, th').forEach((node, idx, nodeList) => {
+                    node.innerHTML = node.innerHTML.replace(/null/gmi, '').replace(/^\s+$/g, '').trim();
+                    if (node.innerHTML.length > 0)
+                        hasDataIdxSet.add(idx);
+                });
+            }
+            for (let tr of table.rows) {
+                tr.querySelectorAll('td, th').forEach((node, idx, nodeList) => {
+                    if (!hasDataIdxSet.has(idx))
+                        node.remove();
+                });
+            }
+
+            headRow.querySelectorAll('td, th').forEach((node, idx, nodeList) => node.onclick = customTableSort(idx, node, table));
+            let preSort = Array.from(headRow.querySelectorAll('td[pre-sort], th[pre-sort]'));
+            preSort.sort((head1, head2) => parseFloat(head1.getAttribute('pre-sort')) - parseFloat(head2.getAttribute('pre-sort')));
+            for (let head of preSort)
+                head.click();
         }
     }
 }
@@ -401,6 +484,33 @@ function customFileAction(dir, file) {
         FileList.defaultFileAction(dir.replace(/^.+dong-gi\.github\.io/i, ''), file);
     else
         FileList.defaultFileAction(dir, file);
+}
+
+function customTableSort(idx, node, table) {
+    if (node.classList.contains('not-sort'))
+        return;
+    let rgba = Donggi.getRgba(node);
+    if (rgba[0] + rgba[1] + rgba[2] < 255 * rgba[3])
+        node.classList.add('sorting-table-head-white');
+    else
+        node.classList.add('sorting-table-head-black');
+    if (!node.getAttribute('sort-order'))
+        node.setAttribute('sort-order', '●');
+
+    return () => {
+        // order : true(오름차순), false(내림차순)
+        let order = !(node.getAttribute('sort-order') == '▲');
+        node.setAttribute('sort-order', order? '▲' : '▼');
+
+        let dataRows = Array.from(table.rows).slice(1);
+        dataRows.sort((r1, r2) => {
+            let result = Donggi.compareString(r1.querySelectorAll('td, th')[idx].textContent.trim(), r2.querySelectorAll('td, th')[idx].textContent.trim());
+            return order? result : -result;
+        });
+
+        for (let tr of dataRows)
+            table.append(tr);
+    };
 }
 
 function getPostHTML(post) {
