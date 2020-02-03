@@ -3164,12 +3164,12 @@ vs_code.html
 windows.html
 
 /workspace/donggi-github/Dong-gi.github.io/source:
-bootstrap-4.0.0.min.css
-bootstrap-4.0.0.min.js
 default.css
 default.js
 highlight.pack.js
 mjx-chtml.css
+redirect.js
 tex-chtml.js
+utility.js
 w3.css
 xcode.css

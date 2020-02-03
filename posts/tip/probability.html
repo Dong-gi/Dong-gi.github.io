@@ -1,3 +1,5 @@
+<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/redirect.js?200203_0949"></script>
 <script>
     MathJax = {
         tex: {
@@ -270,6 +272,24 @@
 <details open>
 	<summary>추정</summary>
 	<li>표본 식[X_i]식, 표본평균 식[\overline{X}=\sum{X_i}/n]식, 표본분산 식[S^2={\sum(X_i-\overline{X})^2 \over (n-1)}={1 \over n(n-1)}[n\sum X_i^2 - (\sum X_i)^2]]식</li>
+    <li>t-분포</li>
+    <ol>
+        <li>중심극한정리; Central limit theorem</li>
+        평균이 식[\mu]식, 분산이 식[\sigma^2]식인 모집단으로부터, 크기 n인 표본을 추출했을 때,
+        n이 충분히 크다면 식[Z = {\overline{X}-\mu \over \sigma/\sqrt{n}}]식는 표준정규분포를 따른다.
+        이때 식[\overline{X}]식는 표본평균.
+        <li>Cochran's theorem</li>
+        식[N(\mu, \sigma^2)]식를 따르는 정규모집단으로부터 크기 n인 표본을 추출했을 때,
+        n이 충분히 크다면 식[\chi^2={(n-1)S^2 \over \sigma^2}]식는 카이제곱분포 식[f(x; n-1)]식를 따른다
+        <li>식[T={Z \over \sqrt{V/(n-1)}}]식는 자유도 n-1인 t-분포를 따른다</li>
+        모집단의 분산을 모를 때 모평균의 추정에 이용할 수 있다.
+    </ol>
+    <li>F-분포</li>
+    <ul>
+        <li>자유도가 각각 식[v_1, v_2]식인 두 카이제곱변수 식[V_1, V_2]식에 대하여, 식[F={V_1/v_1 \over V_2/v_2}]식는 자유도가 식[(v_1, v_2)]식인 F-분포를 따른다</li>
+        <li><a target="_blank" href="https://math100.tistory.com/47">F-분포표 보는 법</a></li>
+        <li>모분산이 각각 식[\sigma_1^2, \sigma_2^2]식인 정규모집단에서 독립적으로 추출한 두 표본에 대해 식[F={S_1^2/\sigma_1^2 \over S_2^2/\sigma_2^2}]식는 자유도가 식[(n_1-1, n_2-1)]식인 F-분포를 따른다</li>
+    </ul>
 </details>
 
 <script id="MathJax-script" async src="/source/tex-chtml.js"></script>
