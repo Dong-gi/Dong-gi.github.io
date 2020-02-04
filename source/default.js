@@ -16,7 +16,7 @@ th.sorting-table-head-white:after {
 
     prepareSidebar();
     preparePosts();
-    document.getElementById('query').onkeydown = queryUpdated;
+    document.getElementById('query').onkeyup = queryUpdated;
     new MutationObserver(mutationCallback).observe(document.body, { attributes: false, childList: true, subtree: true });
     
     let postQuery = location.search.match(/[?&]post=([^&]+)/);
@@ -65,7 +65,7 @@ function preparePosts() {
             }
             category = category[cate];
         }
-        category.posts.push(post.file);
+        category.posts.push(post.title);
 
         // 컨텐츠 골격 생성
         let content = Donggi.getElementFromText(getPostHTML(post));
@@ -89,16 +89,16 @@ function preparePosts() {
                 categories.push(`${current}/${cate}`);
                 categoryText += `${cate}\n`;
             } else {
-                for (let file of entry.posts)
-                    categoryText += `${file}\n`;
+                for (let title of entry.posts)
+                    categoryText += `${title}\n`;
             }
         }
     }
     let url = URL.createObjectURL(new Blob([categoryText], {
         type: 'text/plain;charset=utf-8;'
     }));
-    new FileList(url, '#post-list', (_, file) => {
-        scrollToPost(file.hashCode());
+    new FileList(url, '#post-list', (_, title) => {
+        scrollToPost(posts.list.filter(x => x.title == title)[0].file.hashCode());
         closeSidebar();
     });
 }
@@ -188,12 +188,12 @@ function scrollToPost(hash) {
         console.log(`Post not found. hash = ${hash}`);
         return;
     }
+    if (!details.open)
+        details.querySelector('summary').click();
     window.scrollTo({
         top: (!hash)? 0 : details.offsetTop - document.getElementById('nav').clientHeight,
         behavior: 'smooth'
     });
-    if (!details.open)
-        details.querySelector('summary').click();
 }
 
 function queryUpdated(e) {
@@ -201,6 +201,13 @@ function queryUpdated(e) {
         Donggi.openLink(`https://github.com/Dong-gi/Dong-gi.github.io/search?q=${this.value}`, '_blank');
         event.stopPropagation();
     }
+    let query = document.getElementById('query').value;
+    let showAll = query.length < 2;
+    let regex = new RegExp(query, 'gmi');
+    if (showAll)
+        document.getElementById('contents').childNodes.forEach((node, idx, nodeList) => node.style.display = 'block');
+    else
+        document.getElementById('contents').childNodes.forEach((node, idx, nodeList) => node.style.display = regex.test(node.textContent)? 'block' : 'none');
     return true;
 }
 

@@ -2517,8 +2517,6 @@ XRSettings.asset
 /workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio:
 CSharp
 Project1 EventGenerator
-Project2 EventGenerator v2
-Project3 NaiveHttpServer
 csharp_base_keyword.cs
 csharp_interpolated_string.cs
 csharp_property.cs
@@ -2820,118 +2818,6 @@ StringUtility.cs
 Game1ViewModel.cs
 Game2ViewModel.cs
 MainViewModel.cs
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2:
-App.config
-App.xaml
-App.xaml.cs
-Dao
-EventGenerator.csproj
-EventGenerator.sln
-ImageOptimizer
-LICENSE.md
-MainWindow.xaml
-MainWindow.xaml.cs
-Model
-Properties
-README.md
-Resources
-Service
-Updater
-Utility
-ViewModel
-packages.config
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Dao:
-Dao.cs
-Game1Dao.cs
-GaraDao.cs
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/ImageOptimizer:
-ImageOptimizer.zip
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Model:
-BaseContext.cs
-Constants.cs
-CustomAttribute.cs
-DB.cs
-DBServer.cs
-Dto.cs
-Game1Context.cs
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Properties:
-AssemblyInfo.cs
-Resources.Designer.cs
-Resources.resx
-Settings.Designer.cs
-Settings.settings
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Resources:
-blue.ico
-blue.png
-yellow.ico
-yellow.png
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Service:
-AWSService.cs
-FileService.cs
-Game1Service.cs
-NaiveHttpService.cs
-SSHService.cs
-UpdateService.cs
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Updater:
-App.config
-InstallerUpdater.cs
-Program.cs
-Properties
-Updater.csproj
-Updater.csproj.user
-ZipUpdater.cs
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Updater/Properties:
-AssemblyInfo.cs
-app.manifest
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Utility:
-ActionUtility.cs
-CollectionUtility.cs
-Connection.cs
-ConsoleRedirectWriter.cs
-CustomCommand.cs
-CustomExcel.cs
-CustomExcelDataUtility.cs
-ImageOptimizer.cs
-ShellStreamDeligater.cs
-StringUtility.cs
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/ViewModel:
-Game1ViewModel.cs
-Game2ViewModel.cs
-MainViewModel.cs
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project3 NaiveHttpServer:
-NaiveHttpServer
-NaiveHttpServerTest
-Project3 NaiveHttpServer.sln
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project3 NaiveHttpServer/NaiveHttpServer:
-Handler.cs
-NaiveHttpServer.csproj
-Properties
-Server.cs
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project3 NaiveHttpServer/NaiveHttpServer/Properties:
-AssemblyInfo.cs
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project3 NaiveHttpServer/NaiveHttpServerTest:
-App.config
-NaiveHttpServerTest.csproj
-Program.cs
-Properties
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project3 NaiveHttpServer/NaiveHttpServerTest/Properties:
-AssemblyInfo.cs
 
 /workspace/donggi-github/Dong-gi.github.io/Repositories/sh:
 0_basic.sh
