@@ -1,3 +1,5 @@
+<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/redirect.js?200203_0949"></script>
 <hr>
 
 <details>
@@ -270,7 +272,7 @@ using static MyProgram.Model.Constants;</pre>
                 <li>abstract class : 인스턴스화 불가능<br>
                     abstract method : 서브 클래스에서 반드시 override</li>
                 <li>연산자 오버로딩</li>
-                <pre>public static 반환타입 operator 연산자(타입1 변수1, 타입2 변수2) {}</pre>
+                public static 반환타입 operator 연산자(타입1 변수1, 타입2 변수2) {}
                 <li>형 변환 정의</li>
 <pre>public static implicit operator 타입2(타입1 변수1) {};
 public static explicit operator 타입2(타입1 변수1) {};</pre>
@@ -363,7 +365,7 @@ Console.WriteLine(authority.HasFlag(WRITE));</pre>
             </ol>
 
             <li>제네릭 별명</li>
-            <pre>using Commands = System.Collections.Generic.Dictionary&lt;string, System.Windows.Input.ICommand&gt;;</pre>
+            using Commands = System.Collections.Generic.Dictionary&lt;string, System.Windows.Input.ICommand&gt;;
         </ul>
     </details>
 </details>
@@ -385,11 +387,11 @@ Console.WriteLine(authority.HasFlag(WRITE));</pre>
             <summary>튜플 : System.ValueTuple</summary>
             <ul>
                 <li>익명 튜플 : 멤버의 기본 이름은 Item1, Item2, ...</li>
-                <pre>var unnamed = ("one", "two");</pre>
+                var unnamed = ("one", "two");
                 <li>명명 튜플 : 컴파일하면 멤버명은 Item*으로 변경된다</li>
-                <pre>var named = (first: "one", second: "two");</pre>
+                var named = (first: "one", second: "two");
                 <li>튜플 프로젝션 이니셜라이저 : 변수명을 자동으로 요소 이름으로 사용</li>
-                <pre>var accumulation = (count, sum);</pre>
+                var accumulation = (count, sum);
                 <li>Since C# 7.3 ==, != 연산자 지원(short-circuit)</li>
                 <ul>
                     <li>Nullable인 튜플이나 멤버에 대해 자동으로 변환을 수행한다</li>
@@ -491,7 +493,7 @@ var text = words[phrase];</pre>
             </ul>
             <li>private protected : 동일 어셈블리 내의 클래스 및 파생 클래스에서 엑세스 가능</li>
             <li>ref 매개변수 : 참조 전달. 호출자 스코프의 변수를 그대로 사용하는 효과. 참조가 존재하기 위해 호출 전에 초기화 필요</li>
-            <pre>void Method(ref int refArgument)</pre>
+            void Method(ref int refArgument)
             <li>ref 반환 : 참조 반환<br>
                 ref 지역 변수 : ref 반환값으로 초기화되는 지역 변수<br>
                 Since C# 7.3 : foreach 반복 변수는 ref 또는 ref readonly 지역 변수일 수 있다<br>

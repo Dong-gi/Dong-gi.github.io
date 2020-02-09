@@ -1,3 +1,5 @@
+<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/redirect.js?200203_0949"></script>
 <hr>
 
 <details>
@@ -340,8 +342,8 @@
         <details>
             <summary>Customizing module attribute access</summary>
             모듈 수준의 __getattr__, __dir__ 정의 가능. 다른 특별 메서드들도 정의해주고 싶다면 모듈 객체의 __class__ 속성을 types.ModuleType의 서브 클래스로 설정.
-            <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.python.org/ko/3/reference/datamodel.html#customizing-module-attribute-access">참고자료 1</a>
-            <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://www.python.org/dev/peps/pep-0562/">참고자료 2</a>
+            <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://docs.python.org/ko/3/reference/datamodel.html#customizing-module-attribute-access">참고자료 1</a>
+            <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://www.python.org/dev/peps/pep-0562/">참고자료 2</a>
             <button class="btn-code" path="Repositories/Python/Basic/large_module.py" lan="python">large_module.py »</button>
             <button class="btn-code" path="Repositories/Python/Basic/test_module.py" lan="python">test_module.py »</button>
             <button class="btn-code" path="Repositories/Python/Basic/module_example.py" lan="python">module_example.py »</button>
@@ -369,7 +371,7 @@
                     <ul>
                         <li>Data descriptor : __set__()이나 __delete__() 중 하나라도 정의한 경우</li>
                         보통 데이터 디스크립터는 __get__()과 __set__()을 모두 정의한다. 이 경우 데이터 디스크립터는 인스턴스의 __dict__에 있는 값보다 우선한다.<br>
-                        <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.python.org/ko/3/library/functions.html#property">property() 함수</a>는 데이터 디스크립터로 구현되기 때문에, 인스턴스가 property의 동작을 변경할 수 없다. property는 __set__()을 자동 구현하므로, 읽기 전용 속성을 만들기 쉽다.
+                        <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://docs.python.org/ko/3/library/functions.html#property">property() 함수</a>는 데이터 디스크립터로 구현되기 때문에, 인스턴스가 property의 동작을 변경할 수 없다. property는 __set__()을 자동 구현하므로, 읽기 전용 속성을 만들기 쉽다.
                         <button class="btn-code" path="Repositories/Python/Basic/property_example.py" displayRange="[1,17,20,35]" lan="python">property_example.py »</button>
                         <li>Non-data descriptor : 인스턴스 __dict__보다 우선순위가 낮다</li>
                         파이썬 메서드(staticmethod(), classmethod() 포함)는 비데이터 디스크립터로 구현되기 때문에, 인스턴스가 메서드를 새로 정의하거나 덮어쓸 수 있다. 따라서 같은 클래스의 다른 인스턴스들과는 다른 동작을 할 수 있다.<br>
@@ -416,7 +418,7 @@
 
             <li>metaclass</li>
             <ol>
-                <li><a role="button" target="_blank" class="btn btn-info btn-sm" href="https://stackoverflow.com/a/6581949/7369515">https://stackoverflow.com/a/6581949/7369515</a>
+                <li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://stackoverflow.com/a/6581949/7369515">https://stackoverflow.com/a/6581949/7369515</a>
                     <button class="btn-code" path="Repositories/Python/Basic/metaclass_example.py" displayRange="[1,48,50,62]" lan="python">예시 코드 »</button></li>
                 <li>기본적으로 클래스는 type(name, bases, dict)을 사용해서 만들어진다.</li>
                 <li>메타클래스는 type(name, bases, dict)의 동작을 대신 수행할 수 있는 함수/클래스다. __new__, __init__, __call__을 후킹하여 복잡한 작업을 뒤에서 처리할 수 있게 해준다.</li>

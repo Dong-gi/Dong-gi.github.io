@@ -1,3 +1,5 @@
+<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/redirect.js?200203_0949"></script>
 <hr>
 
 <details>
@@ -155,7 +157,7 @@
     <details>
         <summary>class RandomUtils Since 3.3</summary>
         <ol>
-            <li>java.util.Random 인스턴스를 생성하는 귀찮음을 해소해줄 수 있다. 성능/정확성을 위해 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://commons.apache.org/proper/commons-rng/commons-rng-core/javadocs/api-1.2/overview-summary.html">Commons RNG</a>를 고려해봄이 좋다</li>
+            <li>java.util.Random 인스턴스를 생성하는 귀찮음을 해소해줄 수 있다. 성능/정확성을 위해 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://commons.apache.org/proper/commons-rng/commons-rng-core/javadocs/api-1.2/overview-summary.html">Commons RNG</a>를 고려해봄이 좋다</li>
             <li>static boolean nextBoolean() Since 3.5</li>
             <li>static byte[] nextBytes(int count)</li>
             <li>static int nextInt(int startInclusive, int endExclusive) + 오버로딩 + long, double, float</li>
@@ -164,7 +166,7 @@
     <details>
         <summary>class RandomStringUtils Since 1.0</summary>
         <ol>
-            <li>스레드-안전. 간단한 랜덤 문자열 생성. 정교한 작업이 필요하다면 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://commons.apache.org/proper/commons-text/javadocs/api-release/">commons-text</a> RandomStringGenerator 이용</li>
+            <li>스레드-안전. 간단한 랜덤 문자열 생성. 정교한 작업이 필요하다면 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://commons.apache.org/proper/commons-text/javadocs/api-release/">commons-text</a> RandomStringGenerator 이용</li>
             <li>static String random(int count) : 특정 길이 랜덤 문자열 반환</li>
             <li>static String randomAscii(int minLengthInclusive, int maxLengthExclusive) Since 3.5 + 오버로딩</li>
             <li>static String randomAlphabetic(int minLengthInclusive, int maxLengthExclusive) Since 3.5 + 오버로딩</li>
@@ -333,7 +335,7 @@
         <details>
             <summary>interface CircuitBreaker&lt;T&gt; Since 3.5</summary>
             <ol>
-                <li><a role="button" target="_blank" class="btn btn-info btn-sm" href="https://martinfowler.com/bliki/CircuitBreaker.html">CircuitBreaker</a>는 외부 리소스의 가용 여부를 알려주는 역할을 한다.</li>
+                <li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://martinfowler.com/bliki/CircuitBreaker.html">CircuitBreaker</a>는 외부 리소스의 가용 여부를 알려주는 역할을 한다.</li>
                 리소스를 신뢰할 수 없는 상태로 변이되면 당분간 리소스에 대한 모든 요청을 즉시 거부하도록 고안된 개념이지만, 적절하게 알아서 구현하면 된다
                 <li>회로에서 가져온 개념이므로 close가 가용, open이 불가를 의미한다</li>
                 <li>boolean isOpen() + isClosed</li>

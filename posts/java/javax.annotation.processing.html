@@ -1,3 +1,5 @@
+<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/redirect.js?200203_0949"></script>
 <hr>
 
 <details>
@@ -84,10 +86,10 @@
     <summary>IDE에서 애너테이션 프로세싱 켜기</summary>
     <ol>
         <li>Eclipse : 프로젝트 설정 변경</li>
-        <img class="rounded mx-auto d-block" src="imgs/20191128_134424.png">
-        <img class="rounded mx-auto d-block" src="imgs/20191128_134459.png">
+        <img class="w3-round" src="imgs/20191128_134424.png">
+        <img class="w3-round" src="imgs/20191128_134459.png">
         <li>Android Studio : 안드로이드 스튜디오(프로젝트 X) 설정 변경</li>
-        <img class="rounded mx-auto d-block" src="imgs/20191128_133722.png">
+        <img class="w3-round" src="imgs/20191128_133722.png">
     </ol>
 </details>
 
@@ -97,9 +99,9 @@
         <li>애너테이션 정의 : <button class="btn-code" path="Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/MyTarget.java" lan="java">MyTarget »</button></li>
         <li>애너테이션 프로세서 정의 : <button class="btn-code" path="Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/processor/MyTargetProcessor.java" lan="java">MyTargetProcessor »</button></li>
         <li>애너테이션 컴파일</li>
-        <pre>D:\>javac -encoding UTF-8 io/github/donggi/annotation/MyTarget.java</pre>
+        D:\>javac -encoding UTF-8 io/github/donggi/annotation/MyTarget.java
         <li>애너테이션 프로세서 컴파일</li>
-        <pre>D:\>javac -encoding UTF-8 io/github/donggi/annotation/processor/MyTargetProcessor.java</pre>
+        D:\>javac -encoding UTF-8 io/github/donggi/annotation/processor/MyTargetProcessor.java
         <li>애너테이션 프로세서 지정하여 컴파일 <button class="btn-code" path="Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/test/MyTargetTest.java" lan="java">MyTargetTest »</button></li>
 <pre>D:\>javac -encoding UTF-8 -processor io.github.donggi.annotation.processor.MyTargetProcessor io/github/donggi/annotation/test/MyTargetTest.java
 Note: [ROUND  1] It's my turn.
@@ -125,8 +127,8 @@ Note: [ROUND  3] It's my turn.</pre>
     <ol>
         <li>위 "javac -processor 이용 예" 프로젝트 그대로 jar 빌드</li>
         <li>META-INF/services/javax.annotation.processing.Processor 파일에 애너테이션 프로세서 클래스 <button class="btn-code" path="Repositories/Eclipse/annotation-processing1/src/main/resources/META-INF/services/javax.annotation.processing.Processor" lan="text">명시 »</button></li>
-        <img class="rounded mx-auto d-block" src="imgs/20191128_164401.png">
-        <img class="rounded mx-auto d-block" src="imgs/20191128_164656.png">
+        <img class="w3-round" src="imgs/20191128_164401.png">
+        <img class="w3-round" src="imgs/20191128_164656.png">
         <li>jar 포함하여 컴파일</li>
 <pre>D:\>javac -encoding UTF-8 -cp annotation-processing1-1.0.jar io/github/donggi/annotation/test/MyTargetTest.java
 Note: [ROUND  1] It's my turn.
@@ -140,7 +142,7 @@ Note: [ROUND  1] It's my turn.
         <li>위 "javac -cp 이용 예" jar 그대로 이용.</li>
         <li>위 "IDE에서 애너테이션 프로세싱 켜기"와 같이 애너테이션 프로세싱 허용하고 jar 등록</li>
         <li>소스 작성에 따라 자동적으로 호출되고, Error Log 뷰에 아래와 같이 표시된다</li>
-        <img class="rounded mx-auto d-block" src="imgs/20191128_170023.png">
+        <img class="w3-round" src="imgs/20191128_170023.png">
     </ol>
 </details>
 
@@ -161,7 +163,7 @@ Note: [ROUND  1] It's my turn.
         <button class="btn-code" path="Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/build.gradle" lan="text">processor build.gradle »</button>
         <button class="btn-code" path="Repositories/Eclipse/annotation-processing3/annotation-processing3-test/build.gradle" lan="text">test build.gradle »</button>
         <li>프로세서 프로젝트는 위 "javac -cp 이용 예"와 마찬가지로 javax.annotation.processing.Processor를 포함한다</li>
-        <img class="rounded mx-auto d-block" src="imgs/20191128_180107.png">
+        <img class="w3-round" src="imgs/20191128_180107.png">
         <li>Gradle 빌드</li>
 <pre>D:\annotation-processing3>set GRADLE_OPTS=-Dfile.encoding=UTF-8
 

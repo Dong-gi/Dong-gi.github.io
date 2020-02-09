@@ -1,3 +1,5 @@
+<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/redirect.js?200203_0949"></script>
 <hr>
 
 <details>
@@ -101,7 +103,7 @@
         <li>컬렉션 초기화 구문</li>
         <ul>
             <li>ICollection&lt;T&gt; 타입은 {}로 초기화 가능.</li>
-            <pre>new List&lt;int&gt; {0, 1, 2}</pre>
+            new List&lt;int&gt; {0, 1, 2}
             <li>Since C# 6.0 : 확장 메서드로 Add()가 정의됐으면 {} 초기화 가능</li>
         </ul>
     </ul>
@@ -133,7 +135,7 @@
 <pre>Monitor.Enter(/* ojbect */);
 try { /* body */ } finally{ Monitor.Exit(/* object */); }</pre>
         <li>Monitor 구문과 동치인 lock 블록</li>
-        <pre>lock (/* object */) { /* body */ }</pre>
+        lock (/* object */) { /* body */ }
         <li>lock 블록과 Monitor를 혼용하여 대기 스레드들을 직접 관리</li>
 <pre>readonly var myLock = new object();
 var isDone = false;

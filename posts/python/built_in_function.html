@@ -1,3 +1,5 @@
+<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/redirect.js?200203_0949"></script>
 <hr>
 
 <details>
@@ -52,7 +54,7 @@
             class str(object=b", encoding='utf-8', errors='strict')</li>
         <ul>
             <li>encoding, errors 둘 다 없으면 object.__str__() 또는 repr(object) 반환</li>
-            <li>encoding, errors 하나라도 있으면 object는 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.python.org/3/glossary.html#term-bytes-like-object">bytes-like object</a>여야 한다. bytes.decode(encoding, errors)를 반환</li>
+            <li>encoding, errors 하나라도 있으면 object는 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://docs.python.org/3/glossary.html#term-bytes-like-object">bytes-like object</a>여야 한다. bytes.decode(encoding, errors)를 반환</li>
         </ul>
 
         <li>class dict(**kwarg)<br>
@@ -315,7 +317,7 @@
         <li>source(문자열, 바이트 문자열, AST 객체)를 code나 AST 객체로 컴파일한다. Code 객체는 exec()나 eval()을 통해 실행할 수 있다.</li>
         <li>filename : 코드를 읽어온 파일. 파일로부터 읽은 것이 아니라면 '&lt;string&gt;'를 보통 대신 넘긴다.</li>
         <li>mode : 'exec'(여러 문장 실행), 'eval'(표현식 하나 계산), 'single'(한 줄 실행)</li>
-        <pre>exec(compile("a = 1\nb = 2\nprint(a+b)", "&lt;string&gt;", "exec"))</pre>
+        exec(compile("a = 1\nb = 2\nprint(a+b)", "&lt;string&gt;", "exec"))
         <li>optimize Since 3.2 : 0(최적화 없음, __debug__ is true), 1(asserts 제거, __debug__ is false), 2(docstring도 제거)</li>
         <li>Since 3.8 : 플래그로 ast.PyCF_ALLOW_TOP_LEVEL_AWAIT 가능</li>
         최상위 레벨 await, async for, async with 사용 가능
@@ -342,7 +344,7 @@
         <li>open(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None)</li>
         <ul>
         <li>파일을 열고 file 객체를 반환한다. 텍스트 모드의 경우 io.TextIOBase, 이진 모드의 경우 io.BufferedIOBase</li>
-        <li>file : <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.python.org/3/glossary.html#term-path-like-object">path-like object</a></li>
+        <li>file : <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://docs.python.org/3/glossary.html#term-path-like-object">path-like object</a></li>
         file이 file descriptor인 경우, closefd가 False면 반환된 객체가 닫혀도 descriptor를 닫지 않는다
         <li>mode : r(읽기, default), w(쓰기, 파일 처음부터), x(없으면 생성), a(이어 쓰기), b(이진), t(텍스트, default), +(읽기+쓰기)</li>
         <li>encoding : 텍스트 모드에서만 사용. 주어지지 않은 경우 locale.getpreferredencoding(False) 이용.</li>

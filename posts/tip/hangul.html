@@ -1,8 +1,10 @@
+<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/redirect.js?200203_0949"></script>
 <ol>
     <li>한글은 0xAC00('가')부터 0xD7A3('힣')까지 총 11,172자가 정의</li>
 
     <li>11,172 = 초성 19 * 중성 21 * 종성 28(종성 없는 경우 포함)</li>
-    <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://www.unicode.org/Public/UNIDATA/EastAsianWidth.txt">http://www.unicode.org/Public/UNIDATA/EastAsianWidth.txt</a>
+    <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="http://www.unicode.org/Public/UNIDATA/EastAsianWidth.txt">http://www.unicode.org/Public/UNIDATA/EastAsianWidth.txt</a>
 
     <li>코드 포인트 = (초성 인덱스 * 21 + 중성 인덱스) * 28 + 종성 인덱스 + '가'0xAC00</li>
     <ul>

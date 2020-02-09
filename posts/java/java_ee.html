@@ -1,10 +1,12 @@
+<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/redirect.js?200203_0949"></script>
 <hr>
 
 <details>
     <summary>JavaEE</summary>
     <ol>
         <li>Java Enterprise Edition은 동적 웹 애플리케이션 개발을 위한 자바 플랫폼이다.</li>
-        JavaSE와 다른 문서 페이지를 참조해야 한다. <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://javaee.github.io/javaee-spec/javadocs/">https://javaee.github.io/javaee-spec/javadocs/</a>
+        JavaSE와 다른 문서 페이지를 참조해야 한다. <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://javaee.github.io/javaee-spec/javadocs/">https://javaee.github.io/javaee-spec/javadocs/</a>
 
         <li>WAR(Web Application Archive) : JavaEE 웹 애플리케이션을 위한 압축 파일</li>
 <pre>웹 애플리케이션 루트
@@ -44,9 +46,9 @@
 <details>
     <summary>개발환경</summary>
     <ol>
-        <li><a role="button" target="_blank" class="btn btn-info btn-sm" href="http://openjdk.java.net/install/">OpenJDK</a> 설치</li>
+        <li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="http://openjdk.java.net/install/">OpenJDK</a> 설치</li>
 
-        <li><a role="button" target="_blank" class="btn btn-info btn-sm" href="https://tomcat.apache.org/">톰캣</a> 설치</li>
+        <li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://tomcat.apache.org/">톰캣</a> 설치</li>
         + posts/tip/tomcat.html 참고
 
         <li>IDE(이클립스, STS 등) 설치</li>
@@ -76,17 +78,17 @@
         <summary>이클립스 Dynamic Web Project</summary>
         <ol>
             <li>New Project » Web » Dynamic Web Project » Target runtime에 톰캣 설정</li>
-            <img class="rounded mx-auto d-block" alt="" src="imgs/20180929_220300.png">
+            <img class="w3-round" src="imgs/20180929_220300.png">
 
             <li>코드 작성</li>
-            <img class="rounded mx-auto d-block" alt="" src="imgs/20180929_220301.png"><br>
+            <img class="w3-round" src="imgs/20180929_220301.png"><br>
             <button class="btn-code" path="Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello1.java" lan="java">Hello1.java »</button>
             <button class="btn-code" path="Repositories/Eclipse/app1/src/main/webapp/WEB-INF/web.xml" lan="xml">web.xml »</button><br>
             web.xml은 배포 설명자로, 서블릿 및 서블릿 매핑, 필터 등을 정의한다.
             이클립스 프로젝트 생성 마법사로 web.xml을 생성하면 자동으로 welcome-file-list를 구성해주는데, welcome-file-list에 정의된 welcome-file을 순서대로 찾아 기본 페이지로 보여준다.
 
             <li>실행</li>
-            <img class="rounded mx-auto d-block" alt="" src="imgs/20180929_220302.png"><br>
+            <img class="w3-round" src="imgs/20180929_220302.png"><br>
             또는 Export » WAR file를 선택하여 webapps 디렉터리에 추가하여 배치되기를 기다린 뒤 브라우저에서 실행.
 
             <li>이클립스 내부에서 실행하는 경우 웹 애플리케이션 배포 위치</li>
@@ -115,7 +117,7 @@
         <summary>이클립스 Maven 프로젝트</summary>
         <ol>
             <li>New Project » Maven » Maven Project » maven-archetype-webapp</li>
-            <img class="rounded mx-auto d-block" alt="" src="imgs/20180930_154849.png"><br>
+            <img class="w3-round" src="imgs/20180930_154849.png"><br>
             webapp 아티팩트로 프로젝트를 만들면 Hello World를 출력하는 index.jsp가 생성된다.
 
             <li>Maven Install, 빌드하여 war 파일이 생성되면 톰캣 webapps 디렉터리에 붙여넣고 배치되기를 기다린 뒤 브라우저에서 실행</li>
@@ -268,7 +270,7 @@
         <ul>
             <li>&lt;%@ %&gt; : 지시자; Directive : page, taglib, include 3종류가 있다</li>
             <li>&lt;% %&gt; : Scriptlet : 일반 자바 코드를 작성하면 된다. _jspService 메서드 안의 코드로, 매개변수를 포함한 아래의 변수들을 참조할 수 있다.</li>
-            <img class="rounded mx-auto d-block" alt="" src="imgs/20190912_191500.png">
+            <img class="w3-round" src="imgs/20190912_191500.png">
             <li>&lt;%! %&gt; : 선언문; Declaration : 서블릿 클래스의 멤버 정의</li>
             <li>&lt;%= %&gt; : Expression : out#print 또는 out#write에 들어갈 값을 반환하는 문장을 작성하면 된다</li>
         </ul>
@@ -590,7 +592,7 @@
             <li>Aspect : 횡단 관심사. 로깅/보안 등, 여러 객체를 가로질러 공통적으로 사용되는 모듈/기능</li>
             <li>Join Point : Aspect 실행 지점</li>
             <li>Advice : Join Point에서 실행되는 코드</li>
-            <li>Pointcut : 일치하는 Join Point에 대한 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://www.eclipse.org/aspectj/doc/next/progguide/semantics-pointcuts.html">정규 표현식</a>.</li>
+            <li>Pointcut : 일치하는 Join Point에 대한 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://www.eclipse.org/aspectj/doc/next/progguide/semantics-pointcuts.html">정규 표현식</a>.</li>
             Advice는 Pointcut과 연관되며, 일치하는 모든 Join Point에서 실행된다.
             <li>Weaving : Advice 코드를 삽입</li>
             세 가지 Weaving 방식 : 컴파일 타임 위빙, 클래스 로드 타임 위빙, 런타임 위빙
@@ -858,9 +860,9 @@
             <button class="btn-code" path="Repositories/STS/rest-microservice/src/main/java/io/github/donggi/controller/HelloController.java" lan="java">HelloController.java</button>
             <button class="btn-code" path="Repositories/STS/rest-microservice/src/test/java/io/github/donggi/controller/HelloControllerTest.java" lan="java">HelloControllerTest.java</button>
             <li>스프링 부트 마이크로서비스는 실행에 필요한 모든 의존 라이브러리, HTTP 리스너 등을 하나의 jar로 패키징한다</li>
-            <img class="rounded mx-auto d-block" src="imgs/20191006_180335.png">
-            <img class="rounded mx-auto d-block" src="imgs/20191006_180348.png">
-            <img class="rounded mx-auto d-block" src="imgs/20191006_180401.png">
+            <img class="w3-round" src="imgs/20191006_180335.png">
+            <img class="w3-round" src="imgs/20191006_180348.png">
+            <img class="w3-round" src="imgs/20191006_180401.png">
             <li>mvn install하면 bootJar가 빌드된다<br>
                 java -jar target/rest-microservice-0.0.1-SNAPSHOT.jar</li>
         </ol>
@@ -892,7 +894,7 @@
             <button class="btn-code" path="Repositories/STS/reactive-webflux/pom.xml" lan="xml">pom.xml</button>
             <button class="btn-code" path="Repositories/STS/reactive-webflux/src/main/java/io/github/donggi/controller/HelloController.java" lan="java">HelloController.java</button>
             <button class="btn-code" path="Repositories/STS/reactive-webflux/src/test/java/io/github/donggi/controller/HelloControllerTest.java" lan="java">HelloControllerTest.java</button>
-            <img class="rounded mx-auto d-block" src="imgs/20191008_110029.png">
+            <img class="w3-round" src="imgs/20191008_110029.png">
             <li>리액티브 스트림 : java.util.concurrent.Flow</li>
             <ul>
                 <li>Publisher : 발행자. subscribe​(Subscriber)</li>
@@ -918,7 +920,7 @@
         <summary>Spring Config Server</summary>
         <ol>
             <li>Config Server 선택</li>
-            <img class="rounded mx-auto d-block" src="imgs/20191009_095724.png">
+            <img class="w3-round" src="imgs/20191009_095724.png">
             <li>예시 코드</li>
             <button class="btn-code" path="Repositories/STS/config-server/src/main/resources/bootstrap.properties" lan="text">bootstrap.properties</button>
             <button class="btn-code" path="Repositories/STS/config-server/src/main/java/io/github/donggi/ConfigServerApplication.java" lan="java">@EnableConfigServer</button>
@@ -932,7 +934,7 @@
                 <li>/{label}/{application}-{profile}.yml</li>
                 <li>/{application}-{profile}.properties</li>
                 <li>/{label}/{application}-{profile}.properties</li>
-                <img class="rounded mx-auto d-block" src="imgs/20191009_115402.png">
+                <img class="w3-round" src="imgs/20191009_115402.png">
             </ul>
             <li>갱신 : http://localhost:28888/actuator/refresh</li>
         </ol>
@@ -941,17 +943,17 @@
         <summary>Spring Config Client</summary>
         <ol>
             <li>Config Client, Actuator 선택</li>
-            <img class="rounded mx-auto d-block" src="imgs/20191009_124833.png">
+            <img class="w3-round" src="imgs/20191009_124833.png">
             <li>예시 코드</li>
             <button class="btn-code" path="Repositories/Config/config-client.properties" lan="text">config-client.properties</button>
             <button class="btn-code" path="Repositories/STS/config-client/src/main/resources/bootstrap.properties" lan="text">bootstrap.properties</button>
             <button class="btn-code" path="Repositories/STS/config-client/src/main/java/io/github/donggi/controller/HelloController.java" lan="java">HelloController.java</button>
             <li>접근 예 http://localhost:18888/hello</li>
-            <img class="rounded mx-auto d-block" src="imgs/20191009_122755.png">
+            <img class="w3-round" src="imgs/20191009_122755.png">
             <li>갱신 : POST http://localhost:18888/actuator/refresh</li>
             http://localhost:18888/actuator/에 접속했을 때 /refresh가 보이지 않는다면 management.security.enabled=false, management.endpoints.web.exposure.include=* 2개 설정 확인
-            <img class="rounded mx-auto d-block" src="imgs/20191009_124710.png">
-            <img class="rounded mx-auto d-block" src="imgs/20191009_124647.png">
+            <img class="w3-round" src="imgs/20191009_124710.png">
+            <img class="w3-round" src="imgs/20191009_124647.png">
         </ol>
     </details>
     <ol>

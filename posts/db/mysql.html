@@ -1,3 +1,5 @@
+<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/redirect.js?200203_0949"></script>
 <ul>
     <li>General Information</li>
     GNU 하의 무료 라이선스 or Oracle 상용 라이선스 중 선택
@@ -11,14 +13,14 @@ ALTER TABLE table_name CHANGE COLUMN before_col_name after_col_name TYPE AFTER c
 SHOW [FULL] COLUMNS FROM table_name [WHERE...];</pre>
 
     <li>테이블 구조 복사 생성</li>
-    <pre>create table new_table_name like base_table_name;</pre>
+    create table new_table_name like base_table_name;
 
     <li>프로시저 호출</li>
     <ol>
         <li>CREATE PROCEDURE로 정의된 내장 프로시저를 호출한다.</li>
-        <pre>CALL sp_name([parameter[, ...]])</pre>
+        CALL sp_name([parameter[, ...]])
         <li>매개변수가 없다면 괄호를 생략할 수 있다.</li>
-        <pre>CALL sp_name[()]</pre>
+        CALL sp_name[()]
         <li>OUT, INOUT 매개변수를 출력으로 이용할 수 있다. 이는 프로시저 내부에서의 호출에서도 유효하다.</li>
         PREPARE와 EXECUTE를 이용한 prepared CALL 구문에서는 IN, OUT, INOUT 인자에 placeholder를 이용할 수 있다.
 <pre>mysql&gt; SET @increment = 10;
@@ -70,7 +72,7 @@ SHOW EVENTS;</pre>
             <li>출력 가능 경로 확인 : SHOW VARIABLES LIKE 'secure_file%';</li>
             <li>기본 출력은 멀티 라인 텍스트를 \로 연결하여 출력하고, null값을 \N로 출력한다. 아래 툴을 이용하면, 멀티 라인 문자열과 빈 문자열만 ""로 감싸고, null값은 비워서 표현하는 select_clause를 얻을 수 있다.</li>
             <textarea style="width: 100%" id="mysql-csv-column-convert-in-textarea">column1, colmun2</textarea>
-            <textarea style="width: 100%" id="mysql-csv-column-convert-out-textarea"/>
+            <textarea style="width: 100%" id="mysql-csv-column-convert-out-textarea"></textarea>
             <script>
                 let columnClause = `CASE
                                         WHEN $1 is null THEN ""
@@ -78,18 +80,18 @@ SHOW EVENTS;</pre>
                                         WHEN (INSTR(IFNULL(CAST($1 AS CHAR), ""), "\\n") = 0 AND INSTR(IFNULL(CAST($1 AS CHAR), ""), ",") = 0) THEN IFNULL($1, "")
                                         ELSE CONCAT("\\"", $1, "\\"")
                                     END AS $1`.replace("\n", "").replace(/\s{2,}/gm, ' ');
-                $('#mysql-csv-column-convert-in-textarea').on('input', () => {
+                document.getElementById('mysql-csv-column-convert-in-textarea').addEventListener('input', function (e) {
                     let columnClauses = [];
-                    for(let column of $('#mysql-csv-column-convert-in-textarea')[0].value.match(/\w+/gm))
+                    for(let column of this.value.match(/\w+/gm))
                         columnClauses.push(column.replace(/(\w+)/, columnClause));
-                    $('#mysql-csv-column-convert-out-textarea')[0].value = columnClauses.join(',\n');
+                    document.getElementById('mysql-csv-column-convert-out-textarea').value = columnClauses.join(',\n\n');
                 });
             </script>
         </ul>
     </ul>
 
     <li>로그 확인</li>
-    <pre>mysql&gt; show variables where variable_name like '%log%';</pre>
+    mysql&gt; show variables where variable_name like '%log%';
     <table>
         <tbody>
             <tr><td>general_log_file</td><td>/var/lib/mysql/e5b7c25145a2.log</td></tr>
@@ -98,9 +100,9 @@ SHOW EVENTS;</pre>
             <tr><td>slow_query_log_file</td><td>/var/lib/mysql/e5b7c25145a2-slow.log</td></tr>
         </tbody>
     </table>
-    <pre>mysql&gt; SET GLOBAL general_log = 1;</pre>
-    <pre>$ tail /var/lib/mysql/e5b7c25145a2.log -f</pre>
+    mysql&gt; SET GLOBAL general_log = 1;<br>
+    $ tail /var/lib/mysql/e5b7c25145a2.log -f
 
     <li>입출력 내역 파일로 기록</li>
-    <pre>tee file_name.log;</pre>
+    tee file_name.log;
 </ul>

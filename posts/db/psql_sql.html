@@ -1,3 +1,5 @@
+<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/redirect.js?200203_0949"></script>
 <hr>
 
 <details>
@@ -70,7 +72,7 @@ SELECT string_agg(str, ',' ORDER BY str) FROM table;
 
 -- 실제 호출 예
 SELECT count(*) AS unfiltered, count(*) FILTER (WHERE num &lt; 5) AS filtered FROM generate_series(1,10) AS num;</pre>
-                <li><a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/9.6/functions-aggregate.html">내장 집계 함수 목록</a></li>
+                <li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="http://postgresql.kr/docs/9.6/functions-aggregate.html">내장 집계 함수 목록</a></li>
             </ol>
         </details>
 
@@ -121,7 +123,7 @@ function_name ( * ) [ FILTER ( WHERE filter_clause ) ] OVER ( window_definition 
                     <li>EXCLUDE NO OTHERS</li>
                 </ol>
                 <li>expression은 윈도우 함수 호출을 포함하지 않아야 한다.</li>
-                <li><a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/9.6/functions-window.html#FUNCTIONS-WINDOW-TABLE">내장 윈도우 함수 목록</a></li>
+                <li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="http://postgresql.kr/docs/9.6/functions-window.html#FUNCTIONS-WINDOW-TABLE">내장 윈도우 함수 목록</a></li>
             </ol>
         </details>
 
@@ -145,7 +147,7 @@ db_name=# CREATE DATABASE [db_name] TEMPLATE template0 LC_COLLATE 'C';</pre>
 
         <ul>
             <li>Scalar Subqueries : 한 행 또는 한 컬럼을 반환하는, 괄호에 감싸인 SELECT 쿼리</li>
-            <pre>SELECT name, (SELECT max(pop) FROM cities WHERE cities.state = states.name) FROM states;</pre>
+            SELECT name, (SELECT max(pop) FROM cities WHERE cities.state = states.name) FROM states;
         </ul>
 
         <details>
@@ -185,7 +187,7 @@ SELECT getf1(CAST(ROW(11,'this is a test',2.5) AS myrowtype));</pre>
                 <li>SELECT ... WHERE CASE WHEN x &gt; 0 THEN y/x &gt; 1.5 ELSE false END;</li>
                 <li>SELECT CASE WHEN x &gt; 0 THEN x ELSE 1/0 END FROM tab;</li>
                 주의. IMMUTABLE 함수는 값이 먼저 평가되기 때문에, 실제로 x가 항상 0보다 크더라도 1/0이 미리 평가되어 에러가 발생한다.
-                <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/xfunc-volatility.html">xfunc-volatility</a>
+                <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="http://postgresql.kr/docs/current/xfunc-volatility.html">xfunc-volatility</a>
             </ol>
         </ul>
     </details>
@@ -201,12 +203,12 @@ CREATE FUNCTION concat_lower_or_upper(a text, b text, uppercase boolean DEFAULT 
 $$ LANGUAGE SQL IMMUTABLE STRICT;</pre>
         <ol>
             <li>Using Positional Notation</li>
-            <pre>SELECT concat_lower_or_upper('Hello', 'World');</pre>
+            SELECT concat_lower_or_upper('Hello', 'World');
             <li>Using Named Notation</li>
-            <pre>SELECT concat_lower_or_upper(a =&gt; 'Hello', b =&gt; 'World');</pre>
+            SELECT concat_lower_or_upper(a =&gt; 'Hello', b =&gt; 'World');
             <li>Using Mixed Notation</li>
             키워드 인자는 나머지보다 뒤에 위치해야 한다.
-            <pre>SELECT concat_lower_or_upper('Hello', 'World', uppercase =&gt; true);</pre>
+            SELECT concat_lower_or_upper('Hello', 'World', uppercase =&gt; true);
         </ol>
     </details>
 </details>
@@ -250,7 +252,7 @@ CREATE TABLE products (
     CHECK (discounted_price &gt; 0 AND price &gt; discounted_price)
 );</pre>
             <li>Not-Null Constraints</li>
-            <pre>CREATE TABLE products ( product_no integer NOT NULL, price numeric );</pre>
+            CREATE TABLE products ( product_no integer NOT NULL, price numeric );
 
             <li>Unique Constraints</li>
 <pre>CREATE TABLE products ( product_no integer UNIQUE, price numeric );
@@ -297,7 +299,7 @@ CREATE TABLE order_items (
     <details>
         <summary>System Columns</summary>
         oid : object_id. 테이블을 WITH OIDS로 생성하거나, default with oids이 설정된 경우 생성되는 열. 타입 이름도 oid.
-        <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/9.6/ddl-system-columns.html">http://postgresql.kr/docs/9.6/ddl-system-columns.html</a>
+        <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="http://postgresql.kr/docs/9.6/ddl-system-columns.html">http://postgresql.kr/docs/9.6/ddl-system-columns.html</a>
     </details>
 
     <details>
@@ -331,10 +333,10 @@ ALTER TABLE products ALTER COLUMN price DROP DEFAULT;</pre>
 -- 기존 값이 새로운 타입으로 암묵적으로 변환된다면 위의 것으로 충분. 복잡한 변환을 명시하려면 USING 절을 추가 사용.</pre>
 
             <li>Renaming a Column</li>
-            <pre>ALTER TABLE products RENAME COLUMN product_no TO product_number;</pre>
+            ALTER TABLE products RENAME COLUMN product_no TO product_number;
 
             <li>Renaming a Table</li>
-            <pre>ALTER TABLE products RENAME TO items;</pre>
+            ALTER TABLE products RENAME TO items;
         </ol>
     </details>
 
@@ -351,7 +353,7 @@ ALTER TABLE products ALTER COLUMN price DROP DEFAULT;</pre>
 
     <details>
         <summary>Row Security Policies
-            <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/ddl-rowsecurity.html">ddl-rowsecurity</a></summary>
+            <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="http://postgresql.kr/docs/current/ddl-rowsecurity.html">ddl-rowsecurity</a></summary>
 <pre>-- 관리자 그룹에 속한 사용자가, 자신과 관련한 행만 접근
 CREATE TABLE accounts (manager text, company text, contact_email text);
 ALTER TABLE accounts ENABLE ROW LEVEL SECURITY;
@@ -446,10 +448,10 @@ DELETE FROM products WHERE obsoletion_date = 'today' RETURNING *;</pre>
                 두 테이블의 공통된 컬럼 리스트를 USING한 것과 동일한 결과를 산출한다.
 
                 <li>테이블 별명 : FROM table_reference [AS] alias</li>
-                셀프 조인을 위해선 필수적으로 사용된다. 모호함을 피하기 위해 괄호를 이용할 수도 있다.
-                <pre>SELECT * FROM (my_table AS a CROSS JOIN my_table) AS b ...</pre>
-                컬럼에도 별명을 붙일 수 있다.
-                <pre>FROM table_reference [AS] alias ( column1 [, column2 [, ...]] )</pre>
+                셀프 조인을 위해선 필수적으로 사용된다. 모호함을 피하기 위해 괄호를 이용할 수도 있다.<br>
+                SELECT * FROM (my_table AS a CROSS JOIN my_table) AS b ...<br>
+                컬럼에도 별명을 붙일 수 있다.<br>
+                FROM table_reference [AS] alias ( column1 [, column2 [, ...]] )
 
                 <li>서브쿼리 사용을 위한 별명 : FROM (SELECT * FROM table1) AS alias</li>
 
@@ -777,9 +779,9 @@ insert into test values( ARRAY[[1, 2], [3, 4]] ); -- 배열 생성자는 애초�
             <li>배열 검색</li>
             <ul>
                 <li>배열의 원소 중 하나라도 100</li>
-                <pre>SELECT ... WHERE 100 = ANY(arr);</pre>
+                SELECT ... WHERE 100 = ANY(arr);
                 <li>배열의 원소 모두가 100</li>
-                <pre>SELECT ... WHERE 100 = ALL(arr);</pre>
+                SELECT ... WHERE 100 = ALL(arr);
                 <li>generate_subscripts() : 주어진 배열과 차원에 대해 subscript의 집합을 반환한다</li>
 <pre>SELECT generate_subscripts('{{"1,1","1,2"},{"2,1","2,2"},{"3,1","3,2"}}'::text[][], 1) AS s;
 -- 1차원 subscripts → 1, 2, 3
@@ -791,7 +793,7 @@ WITH arr AS (SELECT '{{"1,1","1,2"},{"2,1","2,2"},{"3,1","3,2"}}'::text[][] AS a
     dims AS (SELECT arr, s1, s2, arr[s1][s2] FROM arr, generate_subscripts(arr, 1) AS s1, generate_subscripts(arr, 2) AS s2)
 SELECT * FROM dims;</pre>
             </ul>
-            <li><a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/functions-array.html">functions-array.html</a></li>
+            <li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="http://postgresql.kr/docs/current/functions-array.html">functions-array.html</a></li>
         </ul>
     </details>
 
@@ -805,11 +807,11 @@ SELECT * FROM dims;</pre>
 CREATE TABLE t_user_item ( user_id bigint, item m_item, count int );</pre>
 
             <li>Literal composite value</li>
-            포맷 : '( val1 , val2 , ... )'
-            <pre>INSERT INTO table_name (complex_column_name) VALUES((1.1,2.2));</pre>
+            포맷 : '( val1 , val2 , ... )'<br>
+            INSERT INTO table_name (complex_column_name) VALUES((1.1,2.2));
 
             <li>SET 바로 다음엔 괄호가 없어도 되지만, 등호 다음엔 필요하다.</li>
-            <pre>UPDATE table_name SET complex_column.r = (complex_column).r + 1 WHERE ...;</pre>
+            UPDATE table_name SET complex_column.r = (complex_column).r + 1 WHERE ...;
         </ol>
     </details>
 
@@ -822,8 +824,8 @@ CREATE TABLE t_user_item ( user_id bigint, item m_item, count int );</pre>
             <li>tsrange — Range of timestamp without time zone</li>
             <li>tstzrange — Range of timestamp with time zone</li>
             <li>daterange — Range of date</li>
-            <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/functions-range.html#RANGE-OPERATORS-TABLE">functions-range.html#RANGE-OPERATORS-TABLE</a>
-            <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/functions-range.html#RANGE-FUNCTIONS-TABLE">functions-range.html#RANGE-FUNCTIONS-TABLE</a>
+            <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="http://postgresql.kr/docs/current/functions-range.html#RANGE-OPERATORS-TABLE">functions-range.html#RANGE-OPERATORS-TABLE</a>
+            <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="http://postgresql.kr/docs/current/functions-range.html#RANGE-FUNCTIONS-TABLE">functions-range.html#RANGE-FUNCTIONS-TABLE</a>
         </ol>
     </details>
 
@@ -1009,7 +1011,7 @@ CREATE TABLE t_user_item ( user_id bigint, item m_item, count int );</pre>
                 주어진 코드값에 대한 문자를 반환한다. UTF8 문자에 대해서는 유니코드 코드 포인트를 인자로 전달하고, 그 외의 경우엔 아스키 코드를 인자로 전달해야 한다. 0은 입력으로 허용되지 않는다.
 
                 <li>convert(<i>string</i> bytea, <i>src_encoding</i>, <i>dest_encoding</i>)</li>
-                가능한 빌트인 변환 목록 : <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/functions-string.html#CONVERSION-NAMES">#CONVERSION-NAMES</a>
+                가능한 빌트인 변환 목록 : <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="http://postgresql.kr/docs/current/functions-string.html#CONVERSION-NAMES">#CONVERSION-NAMES</a>
 
                 <li>convert_from(<i>string</i> bytea, src_encoding) : dest_encoding = DB 인코딩</li>
 
@@ -1219,7 +1221,7 @@ CREATE TABLE t_user_item ( user_id bigint, item m_item, count int );</pre>
     <details>
         <summary>Formatting Functions</summary>
         <ol>
-            <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/functions-formatting.html">functions-formatting.html</a>
+            <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="http://postgresql.kr/docs/current/functions-formatting.html">functions-formatting.html</a>
             <li>to_char()</li>
             <li>to_date()</li>
             <li>to_number()</li>
@@ -1358,7 +1360,7 @@ CREATE TABLE t_user_item ( user_id bigint, item m_item, count int );</pre>
                     <tr>
                         <td>at time zone</td>
                         <td>timestamptz</td>
-                        <td>Convert timestamp to timestamptz<a role="button" target="_blank" class="btn btn-info btn-sm" href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">wiki/List_of_tz</a></td>
+                        <td>Convert timestamp to timestamptz<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">wiki/List_of_tz</a></td>
                         <td>timestamp '2000-01-01 00:00:00' at time zone 'Asia/Seoul'</td>
                         <td>1999-12-31 07:00:00-08</td>
                     </tr>
@@ -1533,7 +1535,7 @@ CREATE TABLE t_user_item ( user_id bigint, item m_item, count int );</pre>
                 </tbody>
             </table>
         </details>
-        <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/functions-json.html">functions-json.html</a>
+        <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="http://postgresql.kr/docs/current/functions-json.html">functions-json.html</a>
     </details>
 
     <details>
@@ -1597,7 +1599,7 @@ expression operator some (subquery)</pre>
 
     <details>
         <summary>System Information Functions</summary>
-        <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://postgresql.kr/docs/current/functions-info.html">functions-info.html</a>
+        <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="http://postgresql.kr/docs/current/functions-info.html">functions-info.html</a>
     </details>
 </details>
 

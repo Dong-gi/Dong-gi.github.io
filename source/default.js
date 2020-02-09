@@ -22,6 +22,8 @@ th.sorting-table-head-white:after {
     let postQuery = location.search.match(/[?&]post=([^&]+)/);
     if (!!postQuery)
         scrollToPost(postQuery[1]);
+    else
+        scrollToPost(localStorage.lastReadPost);
     window.onpopstate = function(e) {
         let postQuery = e.state.html.match(/[?&]post=([^&]+)/);
         if (!!postQuery) {
@@ -73,7 +75,6 @@ function preparePosts() {
         content.querySelector('summary').addEventListener('click', loadPost(post.file));
     }
 
-    scrollToPost(localStorage.lastReadPost);
     let categories = ['카테고리'];
     let categoryText = '';
     while (categories.length > 0) {
@@ -191,8 +192,7 @@ function scrollToPost(hash) {
     if (!details.open)
         details.querySelector('summary').click();
     window.scrollTo({
-        top: (!hash)? 0 : details.offsetTop - document.getElementById('nav').clientHeight,
-        behavior: 'smooth'
+        top: (!hash)? 0 : details.offsetTop - document.getElementById('nav').clientHeight
     });
 }
 
@@ -217,7 +217,7 @@ function mutationCallback(mutations, observer) {
         
         for (let img of mutation.target.querySelectorAll('img')) {
             if (!!img.onclick)
-                return;
+                continue;
             img.onclick = ((src) => function(e) { Donggi.openLink(src, '_blank'); })(img.src);
         }
 
@@ -233,12 +233,12 @@ function mutationCallback(mutations, observer) {
         for (let table of mutation.target.querySelectorAll('table')) {
             if (table.rows.length < 1) {
                 table.classList.remove('ordered-table');
-                return;
+                continue;
             }
             if (table.classList.contains('ordered-table'))
-                return;
+                continue;
             if (table.rows.length < 2)
-                return;
+                continue;
             table.classList.add('w3-table-all', 'w3-card', 'w3-small', 'ordered-table');
 
             let headRow = table.rows[0]; // 테이블의 1번째 행을 테이블 헤더 행으로 간주
@@ -301,9 +301,20 @@ function insertCode(id) {
                         for (let idx = displayStart; idx < displayEnd && idx < lines.length; ++idx)
                             ol.append(Donggi.getElementFromText(`<li>${lines[idx].replace(/  /gm, '&nbsp;')}</li>`));
                         if (displayRange.length > 0)
-                            ol.append(document.createElement('<hr>'));
+                            ol.append(document.createElement('hr'));
                     }
                     div.append(ol);
+                } else {
+                    div.append(Donggi.getNodesFromText(this.responseText, 'p'));
+                    // 야매로 만들어서 그런지 script 실행이 안 됨... 때문에 따로 복제 생성
+                    for (let script of div.querySelectorAll('script')) {
+                        let nScript = document.createElement('script');
+                        if (script.src.length > 0)
+                            nScript.src = script.src;
+                        if (script.text.length > 0)
+                            nScript.text = script.text;
+                        div.append(nScript);
+                    }
                 }
 
                 if (lan != 'nohighlight') {
@@ -451,7 +462,7 @@ class FileList {
                 return;
             }
             let dir = null;
-            for (let line of this.responseText.split('\n')) {
+            for (let line of this.responseText.replace(/\r/gm, '').split('\n')) {
                 if (line.endsWith(':')) {
                     dir = line.slice(0, -1);
                     if (!fileList.rootDir)

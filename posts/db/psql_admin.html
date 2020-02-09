@@ -1,3 +1,5 @@
+<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/redirect.js?200203_0949"></script>
 <hr>
 
 <details>
@@ -8,12 +10,12 @@
         <li>위치 지정</li>
         <ol>
             <li>initdb 명령에 -D 옵션을 사용한다</li>
-            <pre>$ initdb -D /tmp/pgsql/data</pre>
+            $ initdb -D /tmp/pgsql/data
             <li>PGDATA 환경 변수를 설정한다</li>
             <li>$ pg_ctl -D /tmp/pgsql/data initdb</li>
         </ol>
         <li>인코딩 지정</li>
-        <pre>$ initdb -D /usr/local/pgsql/data -E utf8 --no-locale</pre>
+        $ initdb -D /usr/local/pgsql/data -E utf8 --no-locale
     </ul>
 </details>
 
@@ -23,13 +25,13 @@
     <summary>서버 시작</summary>
     <ul>
         <li>포그라운드에서 실행 : -D 옵션이 없으면 PGDATA 환경 변수를 이용한다. 이도 없으면 구동 실패</li>
-        <pre>$ postgres -D /usr/local/pgsql/data</pre>
+        $ postgres -D /usr/local/pgsql/data
         <li>백그라운드에서 실행</li>
 <pre>$ postgres -D /usr/local/pgsql/data &gt;logfile 2&gt;&amp;1 &amp;
 $ pg_ctl start -l logfile</pre>
         <li>서버 자동 시작 스크립트가 contrib/start-scripts에 제공된다</li>
         <li>포트 지정</li>
-        <pre>$ postgres -p 56789</pre>
+        $ postgres -p 56789
     </ul>
 </details>
 
@@ -37,7 +39,7 @@ $ pg_ctl start -l logfile</pre>
 
 <details>
     <summary>서버 종료</summary>
-    <pre>$ pg_ctl [-w] [-D datadir] [-m [s[mart]|f[ast]|i[mmediate]]] stop</pre>
+    $ pg_ctl [-w] [-D datadir] [-m [s[mart]|f[ast]|i[mmediate]]] stop
     <ul>
         <li>SIGTERM : smart</li>
         기존 세션의 정상적인 종료를 허용하지만, 새로운 연결은 허용하지 않는다.
@@ -57,20 +59,20 @@ $ pg_ctl start -l logfile</pre>
         <li>pg_dumpall을 통한 업그레이드</li>
         <ol>
             <li>덤프</li>
-            <pre>$ pg_dumpall &gt; outputfile</pre>
+            $ pg_dumpall &gt; outputfile
             <li>서버 종료</li>
-            <pre>pg_ctl stop</pre>
+            pg_ctl stop
             <li>업그레이드를 위해 기존 클러스터 디렉터리 이동</li>
-            <pre>mv /usr/local/pgsql /usr/local/pgsql.old</pre>
+            mv /usr/local/pgsql /usr/local/pgsql.old
             <li>새 버전 설치</li>
             <li>이전 pg_hba.conf, postgresql.conf 수정 내용 복원</li>
             <li>서버 시작</li>
-            <pre>$ /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data</pre>
+            $ /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data
             <li>복원</li>
-            <pre>$ /usr/local/pgsql/bin/psql -d postgres -f outputfile</pre>
+            $ /usr/local/pgsql/bin/psql -d postgres -f outputfile
         </ol>
         <li>새 서버를 다른 디렉터리에 설치하고, 이전 서버와 다른 포트에서 병렬 실행하는 경우</li>
-        <pre>$ pg_dumpall -p 5432 | psql -d postgres -p 5433</pre>
+        $ pg_dumpall -p 5432 | psql -d postgres -p 5433
         <li>pg_upgrade를 통한 업그레이드</li>
         다른 메이저 버전으로 현재 위치에 마이그레이션할 수 있다.
     </ul>

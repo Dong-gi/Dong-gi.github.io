@@ -1,10 +1,12 @@
-<div class="row">
-    <div class="col-2">
+<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/redirect.js?200203_0949"></script>
+<div class="w3-row">
+    <div class="w3-col s2">
         <img src="http://seoji.nl.go.kr/fu/ecip/dbfiles/CIP_FILES_TBL/4096969_3.jpg"
             onerror="this.src='http://seoji.nl.go.kr/fu/ecip/dbfiles/CIP_FILES_TBL/4096969_3.jpg'" alt="책표지">
     </div>
 
-    <div class="col-10">
+    <div class="w3-col s10">
         <table>
             <tr>
                 <th>표제/저자사항</th>
@@ -57,7 +59,7 @@
     <ol>
         <li>기본 인증을 안전하게 이용하는 유일한 방법은 SSL과 결합해서 사용하는 것.</li>
         <li>클라이언트 최초 GET 요청</li>
-        <pre>GET /family/jeff.jpt HTTP/1.0</pre>
+        GET /family/jeff.jpt HTTP/1.0
         <li>서버 401 Unauthorized 응답</li>
 <pre>HTTP/1.0 401 Authorization Required
 WWW-Authenticate: Basic realm="문서 집합 정보"</pre>
@@ -79,7 +81,7 @@ Authorization: Basic "ID:base-64_encoded_password"</pre>
         비밀번호를 비가역적으로 뒤섞은 지문(fingerprint), 요약(digest)을 보낸다.
         <li>재전송 공격을 방지하기 위해 서버는 클라이언트에 nonce를 넘기고, nonce는 다이제스트 생성에 관여한다. nonce는 밀리초 혹은 인증할 때마다 변경되므로, 재전송 공격에 안전하다.</li>
         <li>클라이언트 최초 요청</li>
-        <pre>GET /cgi-bin/checkout?cart=17854 HTTP/1.1</pre>
+        GET /cgi-bin/checkout?cart=17854 HTTP/1.1
         <li>서버 401 Unauthorized 응답</li>
 <pre>HTTP/1.1 401 Unauthorized
 WWW-Authenticate: Digest

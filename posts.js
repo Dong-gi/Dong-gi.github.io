@@ -140,4 +140,11 @@ const posts = {
 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="">
 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="javascript:;">
 <img class="w3-round" src="imgs/">
+
+	<li>https://developers.google.com/machine-learning/crash-course/ml-intro?hl=ko</li>
+	<li>http://hunkim.github.io/ml/</li>
+	<li>https://github.com/golbin/TensorFlow-Tutorials</li>
+	<li>https://www.cs.ox.ac.uk/people/nando.defreitas/machinelearning/</li>
+	<li>https://scikit-learn.org/stable/tutorial/</li>
+	<li>https://www.udacity.com/course/intro-to-tensorflow-for-deep-learning--ud187</li>
  */

@@ -1,10 +1,12 @@
+<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/redirect.js?200203_0949"></script>
 <hr>
 
 <details>
     <summary>개발 환경</summary>
     <ol>
         <li>JDK 설치</li>
-        2019년 1월부로 오라클 JDK SE 버전이 전면 유료화되므로, <a role="button" target="_blank" class="btn btn-info btn-sm" href="http://openjdk.java.net/install/">OpenJDK</a>를 설치한다.<br>
+        2019년 1월부로 오라클 JDK SE 버전이 전면 유료화되므로, <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="http://openjdk.java.net/install/">OpenJDK</a>를 설치한다.<br>
         설치 경로 예시 » C:\Program Files\Java\jdk-10.0.2
 
         <li>환경변수 설정</li>
@@ -15,7 +17,7 @@
     </ol>
     <details>
         <summary>IDE 설치</summary>
-        <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://www.eclipse.org/downloads/">Eclipse</a>, IntelliJ Community 등 취향에 맞게 설치한다.<br>
+        <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://www.eclipse.org/downloads/">Eclipse</a>, IntelliJ Community 등 취향에 맞게 설치한다.<br>
         Eclipse 환경 설정 : Window &raquo; Preferences
         <ul>
             <li>폰트 설정</li>
@@ -44,11 +46,11 @@
         <li>프로젝트 생성</li>
         "File" 메뉴 클릭, 또는 "Package Explorer"에서 우클릭 - New - Java Project.<br>
         없으면 New - Other... - Java - Java Project를 선택<br>
-        <img class="rounded mx-auto d-block" alt="" src="imgs/20180826_213734.png">
+        <img class="w3-round" src="imgs/20180826_213734.png">
 
         <li>Main 클래스 생성</li>
         "Package Explorer"의 해당 프로젝트에서 우클릭 - New - Class<br>
-        <img class="rounded mx-auto d-block" alt="" src="imgs/20180826_214148.png"><br>
+        <img class="w3-round" src="imgs/20180826_214148.png"><br>
         Name에는 "HelloWorld"(공백 없음에 유의)를 적고, public static void main(String[] args)를 체크
 
         <li>실행</li>
@@ -100,7 +102,7 @@
     <ul>
         <li>식별자(Identifier)는 의미 있는 코드에 붙이는 이름을 의미한다. 의미 있는 코드에는 변수(Variable), 상수(Constant), 메서드, 클래스 등이 있다.</li>
         <li>자바 식별자는 '_', '$'의 사용을 허용한다. 단, '_' 단독으로는 사용할 수 없다.</li>
-        <li>식별자 관례 : 상수는 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://en.wikipedia.org/wiki/Snake_case">SNAKE_CASE</a>, 상수를 제외한 식별자는 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://en.wikipedia.org/wiki/Camel_case">camelCase</a> 이용. 클래스는 CamelCase.
+        <li>식별자 관례 : 상수는 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://en.wikipedia.org/wiki/Snake_case">SNAKE_CASE</a>, 상수를 제외한 식별자는 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://en.wikipedia.org/wiki/Camel_case">camelCase</a> 이용. 클래스는 CamelCase.
             <button class="btn-code" path="Repositories/Eclipse/Basic/src/io/github/donggi/Identifier.java" lan="java">예시 코드 »</button></li>
     </ul>
 </details>

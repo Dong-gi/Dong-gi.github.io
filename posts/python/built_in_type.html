@@ -1,3 +1,5 @@
+<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/redirect.js?200203_0949"></script>
 <hr>
 
 <details>
@@ -54,7 +56,7 @@
             <li>int.bit_length() Since 3.1 : 비트 길이</li>
             <li>int.to_bytes(length, byteorder, *, signed=False) Since 3.2 # byteorder : "big" | "little" | sys.byteorder</li>
             <li>classmethod int.from_bytes(bytes, byteorder, *, signed=False) Since 3.2
-                # bytes는 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.python.org/3/glossary.html#term-bytes-like-object">bytes-like object</a>거나 byte iterable이어야 한다</li>
+                # bytes는 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://docs.python.org/3/glossary.html#term-bytes-like-object">bytes-like object</a>거나 byte iterable이어야 한다</li>
             <li>int.as_integer_ratio() Since 3.8 # float과의 호환성을 위해 추가되었다. 분모는 1로 고정</li>
         </ul>
 
@@ -206,14 +208,14 @@
             <li>count(sub[, start[, end]])<br>
                 find(sub[, start[, end]]), rfind(sub[, start[, end]]) # 첫 등장 위치. 없으면 -1. 단순 포함 여부는 in 연산자<br>
                 index(sub[, start[, end]]), rindex(sub[, start[, end]]) # find와 같지만 없으면 ValueError</li>
-            sub는 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.python.org/3/glossary.html#term-bytes-like-object">bytes-like object</a> 거나 [0, 255] 사이의 정수(Since 3.3)여야 한다.
+            sub는 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://docs.python.org/3/glossary.html#term-bytes-like-object">bytes-like object</a> 거나 [0, 255] 사이의 정수(Since 3.3)여야 한다.
             <li>decode(encoding="utf-8", errors="strict")</li>
             <li>endswith(suffix[, start[, end]])<br>
                 startswith(prefix[, start[, end]])<br>
                 # suffix, prefix에 튜플도 가능</li>
             <li>join(iterable)</li>
             <li>static maketrans(from, to) Since 3.1</li>
-            from, to는 같은 길이의 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://docs.python.org/3/glossary.html#term-bytes-like-object">bytes-like object</a>여야 한다. translate()에 이용할 테이블을 생성한다.
+            from, to는 같은 길이의 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://docs.python.org/3/glossary.html#term-bytes-like-object">bytes-like object</a>여야 한다. translate()에 이용할 테이블을 생성한다.
             <li>translate(table, delete=b'')</li>
             포함하는 delete 안의 바이트들을 모두 제거한 뒤 table에 따라 변환한다. table은 길이 256의 bytes 객체여야 한다.
             <li>partition(sep)<br>
