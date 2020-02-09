@@ -2939,6 +2939,7 @@ http.html
 /workspace/donggi-github/Dong-gi.github.io/posts/front/canvas:
 draw1.js
 draw2.js
+draw3.js
 
 /workspace/donggi-github/Dong-gi.github.io/posts/front/freemarker:
 built_in.html

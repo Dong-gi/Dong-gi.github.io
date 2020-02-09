@@ -1,7 +1,8 @@
+<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/redirect.js?200203_0949"></script>
 <hr>
 
 <details>
-
     <summary>태그</summary>
     <ul>
         <li>문서 요소의 타입을 나타내는 이름으로, 사용자가 임의로 만들 수도 있다.</li>
@@ -176,18 +177,45 @@
 	</ul>
 	<details>
 		<summary>interface <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement">HTMLCanvasElement</a> : HTMLElement</summary>
-		<li>width, height : 각각 캔버스의 너비, 높이. 기본값은 300, 150</li>
-		
+		<ul>
+            <li>width, height : 각각 캔버스의 너비, 높이. 기본값은 300, 150</li>
+            <li>getContext(contextType[, contextAttributes])</li>
+            contextType : '2d'(CanvasRenderingContext2D), 'webgl'(WebGLRenderingContext), 'webgl2'(WebGL2RenderingContext), 'bitmaprenderer'(ImageBitmapRenderingContext)
+            <li>toDataURL([type][, encoderOptions])</li>
+            type : default 'image/png', encoderOptions : default 0.92, 이미지 퀄리티[0, 1]
+            <li>toBlob(callback[, mimeType][, qualityArgument])</li>
+            callback : Blob을 먹는 함수, mimeType : default 'image/png', qualityArgument : 이미지 퀄리티[0, 1]
+        </ul>
 	</details>
 	<details>
-		<summary><a role="button" target="_blank" class="btn btn-info btn-sm" href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D</a></summary>
-		<li>clearRect(x, y, width, height) : 지정 사각형을 rgba(0,0,0,0)로 설정. 이후에 path를 그릴 땐 beginPath()를 다시 호출해야 함에 유의.</li>
-		<li>fillRect(x, y, width, height) : 지정 사각형을 현재 fillStyle로 설정.</li>
-		<li>이미지 그리기
-			<button class="btn-code" path="posts/front/canvas/draw2.js" lan="javascript">예시 »</button></li>
+		<summary>interface <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D</a></summary>
+        <ul>
+            <li>사각형 그리기</li>
+            <ul>
+                <li>clearRect(x, y, width, height)</li>
+                지정 사각형을 rgba(0,0,0,0)로 초기화. 이후 path를 그릴 땐 beginPath()를 다시 호출해야 함에 유의.
+		        <li>fillRect(x, y, width, height)</li>
+                지정 사각형을 현재 fillStyle로 채우기.
+                <li>strokeRect(x, y, width, height)</li>
+                지정 사각형에 현재 strokeStyle로 외각선 그리기.
+            </ul>
+            <li>텍스트 그리기</li>
+            <ul>
+                <li>관련 속성 : font, textAlign, textBaseline, direction</li>
+                <li>fillText(text, x, y[, maxWidth])</li>
+                텍스트를 그리고 글자 내부는 현재 fillStyle로 채운다.
+                <li>strokeText(text, x, y,[, maxWidth])</li>
+                텍스트를 그리고 글자 외각선은 현재 fillStyle로 채운다.
+                <li>measureText(text)</li>
+                텍스트를 그린 결과가 어떻게 될지 미리 알 수 있는 <a role="button" target="_blank" class="btn btn-info btn-sm" href="https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics">TextMetrics</a> 객체 반환.
+            </ul>
+		    <li>이미지 그리기
+			    <button class="btn-code" path="posts/front/canvas/draw2.js" lan="javascript">예시 »</button></li>
+            
+        </ul>
 	</details>
 	<canvas id="tutorial-canvas" width="100%" height="33%">연습용 캔버스</canvas>
-	
+	<button class="btn-code" path="posts/front/canvas/draw3.js" lan="javascript">예시 »</button>
 	<details>
 		<summary>참고</summary>
 		<li>https://www.w3.org/TR/2dcontext/</li>

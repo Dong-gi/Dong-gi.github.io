@@ -214,6 +214,12 @@ function queryUpdated(e) {
 function mutationCallback(mutations, observer) {
     for (let mutation of mutations) {
         if (mutation.type !== 'childList') return;
+        
+        for (let img of mutation.target.querySelectorAll('img')) {
+            if (!!img.onclick)
+                return;
+            img.onclick = ((src) => function(e) { Donggi.openLink(src, '_blank'); })(img.src);
+        }
 
         for (let button of mutation.target.querySelectorAll('button.btn-code')) {
             let id = `${new Date().getTime()}-${Math.random().toString().replace(/\./g, '')}`;
@@ -276,14 +282,14 @@ function insertCode(id) {
                 posts.codes[id] = this.responseText;
                 
                 if (lan != 'nohighlight') {
-                    this.responseText = this.responseText.replace(/\t/gm, '    ');
-                    this.responseText = this.responseText.replace(/ /gm, '  ');
+                    let code = this.responseText.replace(/\t/gm, '    ');
+                    code = code.replace(/ /gm, '  ');
 
                     let lines = null;
                     if (lan === "text")
-                        lines = this.responseText.split(/\n/gm);
+                        lines = code.split(/\n/gm);
                     else
-                        lines = hljs.highlight(lan, this.responseText)['value'].split(/\n/gm);
+                        lines = hljs.highlight(lan, code)['value'].split(/\n/gm);
 
                     let ol = Donggi.getElementFromText('<ol style="font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New"></ol>');
                     let displayRange = JSON.parse(button.getAttribute('displayRange') || '[1, 100000000]');
@@ -401,7 +407,7 @@ function customTableSort(idx, node, table) {
 function getPostHTML(post) {
     let title = post.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     let location = `https://dong-gi.github.io/${post.file}`;
-    return `<div class="w3-panel w3-card w3-light-grey w3-padding-16 w3-section">
+    return `<div class="w3-panel w3-card w3-light-grey w3-padding-8 w3-section">
                 <details id="post-${post.file.hashCode()}" class="post-details"><summary title="${location}"><span class="w3-small">${post.category}</span><span class="w3-large"> ${title}</span></summary></details>
             </div>`;
 }

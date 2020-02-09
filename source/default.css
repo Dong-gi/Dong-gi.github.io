@@ -16,19 +16,15 @@ hr {
 
 ul, ol {
     margin: 0;
+    padding-left: 20px;
 }
 
-li {
+li, summary {
     margin: 0.5rem 0;
 }
 
 li:hover {
     background-color: antiquewhite;
-}
-
-/* 파일 리스트 스타일 */
-.file-list ul {
-    padding-left: 1.5em;
 }
 
 /* 포스트 영역 스타일 */
@@ -39,8 +35,15 @@ li:hover {
     padding: 0.5em 1em;
 }
 
+.post-details>p details details{
+    margin-left: 0.5em;
+    padding-left: 1.0em;
+    border-left: 6px solid rgba(0, 0, 0, .1)
+}
+
 /* 코드 영역 스타일 */
 .code-div {
+    background-color: white;
     word-wrap: normal;
     overflow: auto;
 }
