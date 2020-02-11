@@ -7,14 +7,14 @@
 
 <hr>
 
-<details open>
+<details>
 	<summary>class datetime.date : year, month, day</summary>
 	<ul>
 		<li>class datetime.date(year, month, day)</li>
 		인스턴스는 변경 불가능 + 해시 가능하다
 		<li>클래스 메서드</li>
 		<ul>
-			<li>classmethod date.today() : date.fromtimestamp(time.time())과 동일</li>
+			<li>classmethod date.today() : date.fromtimestamp(time.time())와 동일</li>
 			<li>classmethod date.fromtimestamp(timestamp) : 1970 ~ 2038년 외의 경우 에러발생 가능.</li>
 			<li>classmethod date.fromordinal(ordinal) : ordinal[1, date.max.toordinal()]. 1년 1월 ordinal == 1</li>
 			<li>classmethod date.fromisoformat(date_string) Since 3.7 : 'YYYY-MM-DD'</li>
@@ -33,20 +33,23 @@
 			<li>day[1, 해당 연월의 일수]</li>
 		</ul>
 		<li>지원 연산</li>
-		date1 + timedelta, date1 - timedelta, date1 - date2, 산술 비교
+        <table>
+            <tr><td>date2 = date1 + timedelta</td></tr>
+            <tr><td>date2 = date1 - timedelta</td></tr>
+            <tr><td>timedelta = date1 - date2</td></tr>
+            <tr><td>산술 비교</td></tr>
+        </table>
 		<li>인스턴스 메서드</li>
 		<ul>
 			<li>replace(year=self.year, month=self.month, day=self.day)</li>
 			<li>timetuple() : time.struct_time을 반환한다.</li>
-			<li>toordinal()</li>
+			<li>toordinal() : ordinal 반환</li>
 			<li>weekday() : 월요일(0) ~ 일요일(6)</li>
 			<li>isoweekday() : 월요일(1) ~ 일요일(7)</li>
 			<li>isocalendar() : (ISO year, ISO week number, ISO weekday) 튜플 반환</li>
 			<li>isoformat() : 'YYYY-MM-DD' 반환</li>
 			<li>__str__() : str(d) == d.isoformat()</li>
-			<li>ctime() : date(2002, 12, 4).ctime() == 'Wed Dec 4 00:00:00 2002'</li>
-			<li>strftime(format) : 포맷 문자열 format에 따라 변환.</li>
-			<li>__format__(format) : strftime(format)과 동일</li>
+			<li>__format__(format) == strftime(format) : 문자열 format에 따라 변환.</li>
 		</ul>
 	</ul>
 </details>
@@ -62,23 +65,37 @@
 
 <hr>
 
-<details>
+<details open>
 	<summary>class datetime.datetime : date + time</summary>
 	<ul>
-		인스턴스는 변경 불가능 + 해시 가능하다
-		
-		
-            <br>5. datetime Objects
-             class datetime.datetime(year, month, day, hour=0, minute=0, second=0, microsecond=0,
-            tzinfo=None, *, fold=0)
-            <br>* fold Since 3.6 : [0, 1]
-             datetime은 date를 상속하므로 date의 메서드를 갖는다.
-             classmethod datetime.today() : datetime.fromtimestamp(time.time())과 동일
-             classmethod datetime.now(tz=None) : 현재 날짜와 시각 반환. tz가 지정되지 않으면 today()와 동일.
-             classmethod datetime.fromordinal(ordinal)
-             classmethod datetime.combine(date, time, tzinfo=self.tzinfo)
-             classmethod datetime.strptime(date_string, format) : datetime(*(time.strptime(date_string,
-            format)[0:6]))과 동일
+        <li>class datetime.datetime(year, month, day, hour=0, minute=0, second=0, microsecond=0, tzinfo=None, *, fold=0)</li>
+		<ul>
+            <li>인스턴스는 변경 불가능 + 해시 가능하다</li>
+            <li>fold Since 3.6 : 0 or 1. </li>
+            <li>datetime은 date를 상속</li>
+        </ul>
+		<li>클래스 메서드</li>
+        <ul>
+            <li>classmethod datetime.now(tz=None)</li>
+            <li>classmethod datetime.fromtimestamp(timestamp, tz=None) : 1970 ~ 2038년 외의 경우 에러발생 가능.</li>
+            <li>classmethod datetime.fromordinal(ordinal) : hour 이하는 0</li>
+            <li>classmethod datetime.combine(date, time, tzinfo=self.tzinfo)</li>
+            tzinfo Since 3.6 : 지정되지 않은 경우, time.tzinfo가 사용된다
+            <li>classmethod datetime.fromisoformat(date_string) Since 3.7</li>
+            <ul>
+                <li>YYYY-MM-DD[*HH[:MM[:SS[.fff[fff]]]][+HH:MM[:SS[.ffffff]]]] // *는 임의 1글자</li>
+                <li>datetime.isoformat()의 역함수로 설계되었기에 모든 ISO 8601 포맷을 인식하지는 못한다.</li>
+            </ul>
+            <li>classmethod datetime.fromisocalendar(year, week, day) Since 3.8</li>
+            <li>classmethod datetime.strptime(date_string, format) == datetime(*(time.strptime(date_string, format)[0:6]))</li>
+        </ul>
+		<li>클래스 속성</li>
+        <li>인스턴스 속성(읽기 전용)</li>
+        <li>지원 연산</li>
+        <li>인스턴스 메서드</li>
+            
+        
+             
              datetime.min, datetime.max, datetime.resolution : timedelta(microseconds=1), datetime.year,
             datetime.month, datetime.day, datetime.hour, datetime.minute, datetime.second, datetime.microsecond,
             datetime.tzinfo, datetime.fold

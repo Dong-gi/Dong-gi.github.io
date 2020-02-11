@@ -189,8 +189,8 @@
 	</details>
 	<details>
 		<summary>interface <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D</a></summary>
-        <ul>
-            <li>사각형 그리기</li>
+        <details>
+            <summary>사각형 그리기</summary>
             <ul>
                 <li>clearRect(x, y, width, height)</li>
                 지정 사각형을 rgba(0,0,0,0)로 초기화. 이후 path를 그릴 땐 beginPath()를 다시 호출해야 함에 유의.
@@ -199,9 +199,10 @@
                 <li>strokeRect(x, y, width, height)</li>
                 지정 사각형에 현재 strokeStyle로 외각선 그리기.
             </ul>
-            <li>텍스트 그리기</li>
+        </details>
+        <details>
+            <summary>텍스트 그리기</summary>
             <ul>
-                <li>관련 속성 : font, textAlign, textBaseline, direction</li>
                 <li>fillText(text, x, y[, maxWidth])</li>
                 텍스트를 그리고 글자 내부는 현재 fillStyle로 채운다.
                 <li>strokeText(text, x, y,[, maxWidth])</li>
@@ -209,10 +210,83 @@
                 <li>measureText(text)</li>
                 텍스트를 그린 결과가 어떻게 될지 미리 알 수 있는 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics">TextMetrics</a> 객체 반환.
             </ul>
-		    <li>이미지 그리기
-			    <button class="btn-code" path="posts/front/canvas/draw2.js" lan="javascript">예시 »</button></li>
-            
-        </ul>
+        </details>
+        <details>
+            <summary>선분 생성</summary>
+            <ul>
+                아래 메서드들은 실제 그리기 작업을 수행하지는 않는다.
+                <li>beginPath() : 그리기 시작 명시</li>
+                <li>closePath()</li>
+                선분 조각이 하나 이상 추가되었고, 마지막 정점이 시작점과 다른 경우 두 점을 잇는 선분을 추가한다.
+                <li>moveTo(x, y) : 선분 조각의 시작점을 설정</li>
+                <li>lineTo(x, y) : 마지막 정점으로부터 (x, y)까지의 선분 조각을 추가.</li>
+                <li>bazierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)</li>
+                마지막 정점으로부터 (x, y)까지를 잇는, 2개의 조절점을 이용하는 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://ko.wikipedia.org/wiki/%EB%B2%A0%EC%A7%80%EC%97%90_%EA%B3%A1%EC%84%A0">베지에 곡선</a>을 추가한다.
+            </ul>
+        </details>
+        <details>
+            <summary>선분 그리기</summary>
+        </details>
+        <details>
+            <summary>선분 스타일</summary>
+            <ul>
+                <li>lineWidth : default 1.0</li>
+                <li>lineCap : 종점 표시 종류. 'butt'(default), 'round', 'square'</li>
+                <li>lineJoin : 교점 표시 종류. 'round', 'bevel', 'miter'(default)</li>
+                + miterLimit
+                <li>getLineDash() + setter</li>
+                선분 요소와 공백(gap)의 길이로 이루어진 배열. 원소가 홀수개라면 자동으로 뒤에 똑같은 배열이 덧붙여져 짝수 크기가 된다.<br>
+                + lineDashOffset : 선분을 그리기 시작할 offset. default 0.0
+            </ul>
+        </details>
+        <details>
+            <summary>텍스트 스타일</summary>
+            <ul>
+                <li>font : default '10px sans-serif'</li>
+                <li>textAlign : 'start'(default), 'end', 'left', 'right', 'center'</li>
+                <li>textBaseline : 'top', 'hanging', 'middle', 'alphabetic'(default), 'ideographic', 'bottom'</li>
+                <li>direction : 'inherit'(default), 'ltr'(left to right), 'rtl'</li>
+            </ul>
+        </details>
+        <details>
+            <summary>fillStyle, strokeStyle</summary>
+            <ol>
+                default '#000', 값으로 가능한 타입은 아래 3가지.
+                <li>DOMString : CSS 색상으로 파싱될 수 있는 문자열</li>
+                <li>CanvasGradient</li>
+                <ul>
+                    <li>CanvasRenderingContext2D.createLinearGradient(x0, y0, x1, y1)</li>
+                    선형 그래디언트의 시작점(x0, y0), 종점(x1, y1)
+                    <li>CanvasRenderingContext2D.createRadialGradient(x0, y0, r0, x1, y1, r1)</li>
+                    원형 그래디언트의 시작 원(x0, y0, r0), 끝 원(x1, y1, r1)
+                </ul>
+                <li>CanvasPattern</li>
+                <ul>
+                    <li>CanvasRenderingContext2D.createPattern(image, repetition)</li>
+                    <ul>
+                        <li>image : HTMLImageElement, SVGImageElement, HTMLVideoElement, HTMLCanvasElement, ImageBitmap, OffscreenCanvas</li>
+                        <li>repetition : 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat'</li>
+                    </ul>
+                </ul>
+            </ol>
+        </details>
+        <details>
+            <summary>그림자 그리기</summary>
+            <ul>
+                <li>shadowBlur : default 0</li>
+                <li>shadowColor : CSS 색상으로 파싱될 수 있는 문자열</li>
+                <li>shadowOffsetX : default 0</li>
+                <li>shadowOffsetY : default 0</li>
+            </ul>
+        </details>
+        <details>
+            <summary>이미지 그리기</summary>
+            <ul>
+                <li>drawImage(image, dx, dy); <button class="btn-code" path="posts/front/canvas/draw2.js" lan="javascript">예시 »</button></li>
+                <li>drawImage(image, dx, dy, dWidth, dHeight);</li>
+                <li>drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);</li>
+            </ul>
+        </details>
 	</details>
 	<canvas id="tutorial-canvas" width="100%" height="33%">연습용 캔버스</canvas>
 	<button class="btn-code" path="posts/front/canvas/draw3.js" lan="javascript">예시 »</button>
