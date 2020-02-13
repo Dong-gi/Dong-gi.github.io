@@ -1,5 +1,15 @@
 <script src="/source/utility.js?200203_1003"></script>
 <script src="/source/redirect.js?200203_0949"></script>
+<script>
+    MathJax = {
+        tex: {
+            tags: 'ams',  // should be 'ams', 'none', or 'all'
+            inlineMath: [['식[', ']식']]
+        }
+    };
+</script>
+<script id="MathJax-script" async src="/source/tex-chtml.js"></script>
+<link rel="stylesheet" href="/source/mjx-chtml.css">
 <hr>
 
 <details>
@@ -195,9 +205,9 @@
                 <li>clearRect(x, y, width, height)</li>
                 지정 사각형을 rgba(0,0,0,0)로 초기화. 이후 path를 그릴 땐 beginPath()를 다시 호출해야 함에 유의.
 		        <li>fillRect(x, y, width, height)</li>
-                지정 사각형을 현재 fillStyle로 채우기.
+                지정 사각형을 현재 fillStyle로 채우기 == rect() + fill()
                 <li>strokeRect(x, y, width, height)</li>
-                지정 사각형에 현재 strokeStyle로 외각선 그리기.
+                지정 사각형에 현재 strokeStyle로 외각선 그리기 == rect() + stroke()
             </ul>
         </details>
         <details>
@@ -212,23 +222,62 @@
             </ul>
         </details>
         <details>
-            <summary>선분 생성</summary>
+            <summary>path 생성</summary>
             <ul>
                 아래 메서드들은 실제 그리기 작업을 수행하지는 않는다.
                 <li>beginPath() : 그리기 시작 명시</li>
                 <li>closePath()</li>
-                선분 조각이 하나 이상 추가되었고, 마지막 정점이 시작점과 다른 경우 두 점을 잇는 선분을 추가한다.
-                <li>moveTo(x, y) : 선분 조각의 시작점을 설정</li>
-                <li>lineTo(x, y) : 마지막 정점으로부터 (x, y)까지의 선분 조각을 추가.</li>
+                path 조각이 하나 이상 추가되었고, 마지막 정점이 시작점과 다른 경우 두 점을 잇는 선분을 추가한다.
+                <li>moveTo(x, y) : path 조각의 시작점을 설정</li>
+                <li>lineTo(x, y) : 마지막 정점으로부터 (x, y)까지의 선분을 추가.</li>
                 <li>bazierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)</li>
-                마지막 정점으로부터 (x, y)까지를 잇는, 2개의 조절점을 이용하는 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://ko.wikipedia.org/wiki/%EB%B2%A0%EC%A7%80%EC%97%90_%EA%B3%A1%EC%84%A0">베지에 곡선</a>을 추가한다.
+                마지막 정점으로부터 (x, y)까지를 잇는, 2개의 조절점을 이용하는 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://ko.wikipedia.org/wiki/베지에_곡선">베지에 곡선</a>을 추가한다.
+                <li>quadraticCurveTo(cpx, cpy, x, y)</li>
+                마지막 정점으로부터 (x, y)까지를 잇는, 1개의 조절점을 이용하는 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://ko.wikipedia.org/wiki/베지에_곡선">베지에 곡선</a>을 추가한다.
+                <li>arc(x, y, radius, startAngle, endAngle[, anticlockwise])</li>
+                (x, y)를 기준점으로 하는 반지름 radius인 호를 추가한다. anticlockwise의 기본값은 false. anticlockwise를 true로 한다고 각도의 증감 방향이 바뀌진 않는다
+                <li>arcTo(x1, y1, x2, y2, radius)</li>
+                <ol>
+                    <li>조절점1(x1, y1), 조절점2(x2, y2), 선분1(마지막 정점-조절점1), 선분2(조절점1-조절점2)를 생각한다</li>
+                    <li>선분1, 선분2 모두와 거리가 radius만큼 떨어진 정점2를 생각한다. 그러면 정점2에서 반지름 radius인 원을 그렸을 때 선분1, 선분2와의 교점1, 교점2가 존재한다</li>
+                    <li>lineTo(교점1)</li>
+                    <li>교점1부터 교점2까지의 호를 추가한다. arc(정점2, radius, ...)</li>
+                </ol>
+                <li>ellipse(x, y, radiusX, radiusY, rotation, startAngle, endAngle[, anticlockwise])</li>
+                rotation은 라디안 단위의 값으로, 해당 값만큼 타원을 회전시킨다
+                <li>rect(x, y, width, height)</li>
             </ul>
         </details>
         <details>
-            <summary>선분 그리기</summary>
+            <summary>path 그리기</summary>
+            <ul>
+                <li>fill([fillRule])<br>
+                    fill(path[, fillRule])</li>
+                <ul>
+                    현재 또는 지정된 path의 영역 내부를 칠한다.
+                    <li>fillRule : '<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://en.wikipedia.org/wiki/Nonzero-rule">nonzero</a>'(default) | '<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://en.wikipedia.org/wiki/Even-odd_rule">evenodd</a>'</li>
+                    <li>path : <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D</a> 인스턴스</li>
+                </ul>
+                <li>stroke([path])</li>
+                현재 또는 지정된 path의 외각선을 그린다(outline)
+                <li>drawFocusIfNeeded(element)<br>
+                    drawFocusIfNeeded(path, element)</li>
+                element가 focus를 얻은 상태면 현재 또는 지정된 path 주변에 강조선을 그린다
+                <li>scrollPathIntoView([path])</li>
+                Experimental. Element.scrollIntoView()와 유사하게, 현재 또는 지정된 path가 스크린에 표시되도록 스크롤을 이동한다.
+                <li>clip([fillRule])<br>
+                    clip(path[, fillRule])</li>
+                fillRule은 fill()과 동일. 현재 또는 지정된 path를 관심영역으로 설정한다. 이후의 그리기는 관심영역 내부의 것만 렌더링된다.
+                <li>isPointInPath(x, y[, fillRule])<br>
+                    isPointInPath(path, x, y[, fillRule])</li>
+                fillRule은 fill()과 동일. 정점이 현재 또는 지정된 path의 내부에 있는지 판별한다
+                <li>isPointInStroke(x, y)<br>
+                    isPointInStroke(path, x, y)</li>
+                정점이 현재 또는 지정된 path의 외각선 위에 있는지 판별한다
+            </ul>
         </details>
         <details>
-            <summary>선분 스타일</summary>
+            <summary>path 스타일</summary>
             <ul>
                 <li>lineWidth : default 1.0</li>
                 <li>lineCap : 종점 표시 종류. 'butt'(default), 'round', 'square'</li>
@@ -285,6 +334,35 @@
                 <li>drawImage(image, dx, dy); <button class="btn-code" path="posts/front/canvas/draw2.js" lan="javascript">예시 »</button></li>
                 <li>drawImage(image, dx, dy, dWidth, dHeight);</li>
                 <li>drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);</li>
+            </ul>
+        </details>
+        <details>
+            <summary>변환</summary>
+            <details>
+                <summary>DOMMatrix</summary>
+                <ul>
+                    <li>2D 및 3D 변환을 나타내는 4x4 행렬</li>
+                    <li>속성</li>
+                    <ul>
+                        <li>readonly is2D : true면 2D 변환행렬, false면 3D</li>
+                        <li>readonly isIdentity : 단위행렬인지 여부</li>
+                        <li>m11, m12, ..., m43, m44 : 행렬 성분. double</li>
+                        <li>a, b, c, d, e, f : 2D 변환에 사용되는 값. 차례로 2x2 변환행렬, dx, dy에 해당하며, m11, m12, m21, m22, m41, m42에 대응한다</li>
+                    </ul>
+                </ul>
+            </details>
+            <ul>
+                <li>setTransform(a, b, c, d, e, f)<br>
+                    setTransform(matrix) + getTransform()</li>
+                <li>transform(a, b, c, d, e, f)</li>
+                old = ctx.getTransform();<br>
+                식[m_{old} = \begin{bmatrix} old.a & old.c & old.e \\ old.b & old.d & old.f \\ 0 & 0 & 1 \end{bmatrix}]식<br>
+                식[m_{new} = m_{old} \begin{bmatrix} a & c & e \\ b & d & f \\ 0 & 0 & 1 \end{bmatrix}]식
+                <li>scale(x, y)</li>
+                기본적으로 캔버스 내의 단위는 정확히 px과 같지만 이를 변경할 수 있다. 음수 스케일링은 요소를 뒤집는 효과가 있다
+                <li>rotate(angle) : (0, 0)을 기준으로 시계방향 회전. 단위는 라디안.</li>
+                <li>translate(x, y)</li>
+                현재의 dx, dy에 각각 x, y만큼 추가한다
             </ul>
         </details>
 	</details>

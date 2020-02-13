@@ -20,10 +20,7 @@ th.sorting-table-head-white:after {
     new MutationObserver(mutationCallback).observe(document.body, { attributes: false, childList: true, subtree: true });
     
     let postQuery = location.search.match(/[?&]post=([^&]+)/);
-    if (!!postQuery)
-        scrollToPost(postQuery[1]);
-    else
-        scrollToPost(localStorage.lastReadPost);
+    setTimeout(((postQuery) => function() { scrollToPost((!!postQuery)? postQuery[1] : localStorage.lastReadPost); })(postQuery), 369);
     window.onpopstate = function(e) {
         let postQuery = e.state.html.match(/[?&]post=([^&]+)/);
         if (!!postQuery) {
@@ -191,6 +188,7 @@ function scrollToPost(hash) {
     }
     if (!details.open)
         details.querySelector('summary').click();
+    // details.parentElement.scrollIntoView(true);
     window.scrollTo({
         top: (!hash)? 0 : details.offsetTop - document.getElementById('nav').clientHeight
     });
