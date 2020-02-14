@@ -1,4 +1,4 @@
-<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/utility.js?200203_1003"></scrip<script src="/source/utility.js?200203_1003"></script>
 <script src="/source/redirect.js?200203_0949"></script>
 <script>
     MathJax = {
@@ -177,7 +177,7 @@
 
 <hr>
 
-<details open>
+<details>
 	<summary>Canvas</summary>
 	<ul>
 		<li>canvas를 지원하지 않는 브라우저를 위해 안에 fallback content(대체 텍스트 또는 DOM)를 적어주면 좋다</li>
@@ -365,9 +365,55 @@
                 현재의 dx, dy에 각각 x, y만큼 추가한다
             </ul>
         </details>
+        <details>
+            <summary>전역 속성</summary>
+            <ul>
+                <li>globalAlpha</li>
+                캔버스에 그려지기 전에 도형, 이미지 등에 적용되는 투명도. default 1.0
+                <li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation">globalCompositeOperation</a></li>
+                캔버스의 기존 내용에 새로운 도형, 이미지를 추가할 때의 합성 방법. 기본값은 덮어쓰기('source-over').
+            </ul>
+        </details>
+        <details>
+            <summary>비트 조작</summary>
+            <details>
+                <summary>ImageData</summary>
+                <ul>
+                    <li>캔버스 비트 배열 정보를 갖는 인터페이스. CanvasRenderingContext2D 메서드 또는 생성자로 인스턴스를 얻을 수 있다</li>
+                    <li>생성자</li>
+                    <ul>
+                        <li>ImageData(array, width[, height])</li>
+                        array는 RGBA값을 담은 Uint8ClampedArray. 길이가 정확하지 않으면 에러 발생
+                        <li>ImageData(width, height) : 검은 사각형</li>
+                    </ul>
+                    <li>속성</li>
+                    <ul>
+                        <li>data : RGBA값을 가진 Uint8ClampedArray</li>
+                        <li>width, height</li>
+                    </ul>
+                </ul>
+            </details>
+            <ul>
+                <li>getImageData(sx, sy, sw, sh)</li>
+                지정 사각형 영역의 정보를 가진 ImageData 반환. 여기서 지정한 사각형은 변환 행렬의 영향을 받지 않으며, 캔버스 바깥을 포함하는 경우 RGBA(0, 0, 0, 0)로 채워진다
+                <li>putImageData(imageData, dx, dy[, dirtyX, dirtyY, dirtyWidth, dirtyHeight])</li>
+                지정 위치에 imageData를 덮어쓴다. dirty* 매개변수로 그릴 imageData 영역을 지정할 수 있다.
+                <li>createImageData(width, height)<br>
+                    createImageData(imagedata)</li>
+                RGBA(0, 0, 0, 0)으로 채워진 새 ImageData 인스턴스를 반환한다. imagedata로 호출한 경우, imagedata의 width, height만 사용된다
+            </ul>
+        </details>
+        <details>
+            <summary>상태 저장/복구</summary>
+            <ul>
+                <li>canvas : 연관 HTMLCanvasElement 객체. null일 수 있음</li>
+                <li>save()</li>
+                다음 항목들을 저장한다 : 변환행렬, 관심영역, lineDash, strokeStyle, fillStyle, globalAlpha, lineWidth, lineCap, lineJoin, miterLimit, lineDashOffset, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, globalCompositeOperation, font, textAlign, textBaseline, direction, imageSmoothingEnabled
+                <li>restore() : save()로 저장한 사항 복구</li>
+            </ul>
+        </details>
 	</details>
 	<canvas id="tutorial-canvas" width="100%" height="33%">연습용 캔버스</canvas>
-	<button class="btn-code" path="posts/front/canvas/draw3.js" lan="javascript">예시 »</button>
 	<details>
 		<summary>참고</summary>
 		<li>https://www.w3.org/TR/2dcontext/</li>
