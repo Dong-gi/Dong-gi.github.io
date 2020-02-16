@@ -17,7 +17,7 @@ const posts = {
         { file: "/posts/career/at_sesisoft_from_201806.html", category: "Career", title: "C#.NET, WPF - 데이터 작업 툴" },
         { file: "/posts/career/at_sesisoft_at_20190808.html", category: "Career", title: "JavaScript - 구글 스프레드시트 스크립트" },
         { file: "/posts/career/at_sesisoft_at_20190626.html", category: "Career", title: "JavaScript - 자연스러운 테이블 정렬" },
-        { file: "/posts/career/at_home_at_20190724.html", category: "Career", title: "JavaScript - https://www.steamgifts.com/ 스크립트" },
+        { file: "/posts/career/at_home_at_20190724.html", category: "Career", title: "JavaScript - 브라우저 매크로 스크립트" },
         { file: "/posts/career/at_sesisoft_at_20190715.html", category: "Career", title: "JavaScript - IGA Works 푸시 등록 절차 개선" },
 
         { file: "/posts/dotnet/csharp_library.html", category: "Programming/.NET", title: "C# 라이브러리" },

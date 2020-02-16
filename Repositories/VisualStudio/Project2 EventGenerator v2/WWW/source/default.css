@@ -1,0 +1,160 @@
+* {
+    font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New;
+}
+
+div {
+    word-wrap: break-word;
+}
+
+img {
+    max-width: 100%;
+}
+
+pre {
+    margin : 0.5rem 0;
+}
+
+hr {
+    border-top: 3px solid rgba(0, 0, 0, .1);
+}
+
+ul, ol {
+    margin: 0;
+    padding-left: 20px;
+}
+
+li, summary {
+    margin: 0.5rem 0;
+}
+
+li:hover {
+    background-color: antiquewhite;
+}
+
+/* 포스트 영역 스타일 */
+.post-details>p {
+    background-color: white;
+    border-radius: 1em;
+    margin-top: 1rem;
+    padding: 0.5em 1em;
+}
+
+.post-details>p details details{
+    margin-left: 0.5em;
+    padding-left: 1.0em;
+    border-left: 6px solid rgba(0, 0, 0, .1)
+}
+
+/* 코드 영역 스타일 */
+.code-div {
+    background-color: white;
+    word-wrap: normal;
+    overflow: auto;
+}
+
+.code-modal .w3-modal-content {
+    position: fixed;
+    top: 0;
+    margin: 0;
+    max-height: 100%;
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.code-div ol {
+    margin-left: 0;
+    padding-left: 40px;
+}
+
+.code-div li {
+    margin: 0;
+}
+
+/* Snackbar : from https://www.w3schools.com/howto/howto_js_snackbar.asp */
+#snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1000000;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+
+/* 스크롤바 스타일 */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    margin: 0;
+    padding: 0;
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #777777;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #000000;
+}

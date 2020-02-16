@@ -55,7 +55,7 @@ namespace EventGenerator.ViewModel
                 {
                     if (request.RequestPath.Equals("/"))
                         NaiveHttpServer.WriteTextFile($"{HttpServer.DocRoot}/index.html", stream);
-                    else if (new Regex(@"\.(html|js|css|txt|java|cs|c|cpp|h|hpp|md|properties|sh|py|json|sql|xml)$").IsMatch(request.RequestPath))
+                    else if (new Regex(@"\.(html|js|css|txt|java|cs|c|cpp|h|hpp|md|properties|sh|py|json|sql|xml)$", RegexOptions.IgnoreCase).IsMatch(request.RequestPath))
                         NaiveHttpServer.WriteTextFile($"{HttpServer.DocRoot}{request.RequestPath}", stream);
                     else
                         NaiveHttpServer.WriteBinaryFile($"{HttpServer.DocRoot}{request.RequestPath}", stream);

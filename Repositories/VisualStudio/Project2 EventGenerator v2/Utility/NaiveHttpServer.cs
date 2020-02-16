@@ -19,6 +19,32 @@ namespace EventGenerator.Utility
             public const string InternalServerError  = "500 Internal Server Error";
             public const string NotImplemented = "501 Not Implemented";
         }
+        public static class MimeType
+        {
+            public const string Text = "text/plain";
+            public const string Html = "text/html";
+            public const string Css = "text/css";
+            public const string Javascript = "text/javascript";
+
+            public static string Get(string path)
+            {
+                try
+                {
+                    switch (path.Split('.').Last().ToLower())
+                    {
+                        case "html": return Html;
+                        case "css": return Css;
+                        case "js":
+                        case "json": return Javascript;
+                        default: return Text;
+                    }
+                }
+                catch
+                {
+                    return Text;
+                }
+            }
+        }
         public enum Method { GET, POST }
         public class Request
         {
@@ -137,7 +163,7 @@ namespace EventGenerator.Utility
                 var regex = new Regex(@"GET\s*([^ ?]+)[?]?([\S]*).*\n([\s\S]+)");
                 var match = regex.Match(requestText);
                 if (match.Success)
-                    request = new Request(Method.GET, match.Groups[1].Value.Trim(), match.Groups[3].Value.Trim(), match.Groups[2].Value.Trim());
+                    request = new Request(Method.GET, match.Groups[1].Value.Trim(), match.Groups[3].Value.Trim(), Uri.UnescapeDataString(match.Groups[2].Value.Trim()));
             }
             else if (requestText.StartsWith("POST"))
             {
@@ -165,12 +191,12 @@ namespace EventGenerator.Utility
             }
         }
 
-        public static void Write(NetworkStream stream, string body, string status = Status.OK)
+        public static void Write(NetworkStream stream, string body, string status = Status.OK, string mime = MimeType.Html)
         {
             var data = Encoding.UTF8.GetBytes(body);
             var header = Encoding.UTF8.GetBytes($@"HTTP/1.1 {status}
 Server: C# TcpListener
-Content-Type: text/html; charset=utf-8
+Content-Type: {mime}; charset=utf-8
 Content-Length: {data.Length}
 
 ");
@@ -184,7 +210,7 @@ Content-Length: {data.Length}
             try
             {
                 if (File.Exists(path))
-                    Write(stream, File.ReadAllText(path));
+                    Write(stream, File.ReadAllText(path), mime: MimeType.Get(path));
                 else
                     Write(stream, $"The file '{path}' not exists", Status.NotFound);
             }
