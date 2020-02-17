@@ -8,7 +8,7 @@ namespace EventGenerator.Model
 {
     public class DBServer
     {
-        public enum ServerKind { POSTGRES, SQLITE }
+        public enum ServerKind { POSTGRES, MYSQL, SQLITE }
 
         public string Name { get; private set; }
         public string ServerIP { get; private set; }
@@ -36,8 +36,9 @@ namespace EventGenerator.Model
             Name = "버전업 서버",
             ServerIP = "localhost",
             ServerPort = "3306",
-            User = "user",
-            Password = "password",
+            User = "dgkim",
+            Password = "dgkim",
+            Kind = ServerKind.MYSQL
         };
         #endregion
 

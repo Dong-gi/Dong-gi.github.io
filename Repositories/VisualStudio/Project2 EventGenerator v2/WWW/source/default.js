@@ -12,7 +12,12 @@ th.sorting-table-head-white:after {
     color: white;
 }</style>`));
 
-/*
+    /*
+    https://developer.mozilla.org/ko/docs/Web/API/HTML_%EB%93%9C%EB%9E%98%EA%B7%B8_%EC%95%A4_%EB%93%9C%EB%A1%AD_API
+    https://www.w3schools.com/tags/att_global_draggable.asp
+    https://www.w3schools.com/tags/tryit.asp?filename=tryhtml5_global_draggable
+    */
+   /*
     let xhr = new XMLHttpRequest();
     xhr.addEventListener("load", function(e) {
         if (xhr.status != 200) {
@@ -44,21 +49,26 @@ function prepareSidebar() {
     let main = document.getElementById('main');
     let option = {};
     bar.style.display = 'block';
-    main.style.marginLeft = bar.style.width = localStorage.sidebarWidth || 200;
+    if (!localStorage.sidebarWidth)
+    localStorage.sidebarWidth = 200;
+    main.style.marginLeft = bar.style.width = localStorage.sidebarWidth;
     document.body.addEventListener('mousemove', Donggi.throttle(mousemove, 33, option));
     document.body.addEventListener('mouseup', mouseup);
-    bar.addEventListener('mousedown', dragstart);
+    document.body.addEventListener('mousedown', dragstart);
 
     let isJoinPoint = false;
     let isDragging = false;
     function mousemove(e) {
         if (!isDragging) {
-            if (Math.abs(bar.clientLeft + bar.clientWidth - 10 - e.pageX) < 10) {
+            if (Math.abs(bar.clientLeft + bar.clientWidth - e.pageX) < 150)
+                option.fast = true;
+            if (Math.abs(bar.clientLeft + bar.clientWidth + parseInt('0' + bar.style.borderRightWidth) - e.pageX) < 15) {
                 isJoinPoint = true;
                 bar.style.cursor = 'col-resize';
-                bar.style.borderRight = '5px solid gray';
+                bar.style.borderRight = '7px solid gray';
             } else {
                 isJoinPoint = false;
+                option.fast = false;
                 bar.style.cursor = '';
                 bar.style.borderRight = '';
             }
@@ -69,12 +79,13 @@ function prepareSidebar() {
     function dragstart(e) {
         if (isJoinPoint) {
             isDragging = true;
-            option.fast = true;
         }
     }
     function mouseup(e) {
-        if (isDragging)
+        if (isDragging) {
             main.style.marginLeft = bar.style.width = localStorage.sidebarWidth = e.pageX;
+            adjustModals();
+        }
         isDragging = false;
         option.fast = false;
     }
@@ -131,7 +142,6 @@ function preparePosts() {
     }));
     new FileList(url, '#post-list', (_, title) => {
         scrollToPost(posts.list.filter(x => x.title == title)[0].file.hashCode());
-        closeSidebar();
     });
 }
 
@@ -213,25 +223,13 @@ function mutationCallback(mutations, observer) {
                 continue;
             if (table.rows.length < 2)
                 continue;
-            table.classList.add('w3-table-all', 'w3-card', 'w3-small', 'ordered-table');
+            if (table.getAttribute('id').startsWith('sheet-table'))
+                table.classList.add('w3-table-all', 'w3-card', 'ordered-table');
+            else
+                table.classList.add('w3-table-all', 'w3-card', 'w3-small', 'ordered-table');
 
             let headRow = table.rows[0]; // 테이블의 1번째 행을 테이블 헤더 행으로 간주
             headRow.classList.add('table-head-row');
-
-            let hasDataIdxSet = new Set(); // 모든 행의 x번째 열이 비어있다면, 삭제하기 위한 인덱스 집합
-            for (let tr of Array.from(table.rows).slice(1)) {
-                tr.querySelectorAll('td, th').forEach((node, idx, nodeList) => {
-                    node.innerHTML = node.innerHTML.replace(/null/gmi, '').replace(/^\s+$/g, '').trim();
-                    if (node.innerHTML.length > 0)
-                        hasDataIdxSet.add(idx);
-                });
-            }
-            for (let tr of table.rows) {
-                tr.querySelectorAll('td, th').forEach((node, idx, nodeList) => {
-                    if (!hasDataIdxSet.has(idx))
-                        node.remove();
-                });
-            }
 
             headRow.querySelectorAll('td, th').forEach((node, idx, nodeList) => node.onclick = customTableSort(idx, node, table));
             let preSort = Array.from(headRow.querySelectorAll('td[pre-sort], th[pre-sort]'));
@@ -242,52 +240,79 @@ function mutationCallback(mutations, observer) {
     }
 }
 
-function tmp() {
+function query(json) {
     /*
-    https://developer.mozilla.org/ko/docs/Web/HTML/Global_attributes/contenteditable
-    contenteditable="true"
-    https://developer.mozilla.org/ko/docs/Web/API/HTML_%EB%93%9C%EB%9E%98%EA%B7%B8_%EC%95%A4_%EB%93%9C%EB%A1%AD_API
-    https://www.w3schools.com/tags/att_global_draggable.asp
-    https://www.w3schools.com/tags/tryit.asp?filename=tryhtml5_global_draggable
-    */
-    let div = document.getElementById('contents');
-    let sheet = {
+    addSheet({
+        id: new Date().getTime(),
         sheetNum: 1,
-        sheetName: '테스트',
+        sheetName: `${new Date().getTime()}`,
         className: 'test',
         rows: [{"id":1,"name":"dgkim","add_date":"2020-02-15T20:48:45.04391+09:00"},{"id":2,"name":"dgkim2","add_date":"2020-02-15T20:48:45.04391+09:00"},{"id":3,"name":null,"add_date":"2020-02-15T20:49:14.012979+09:00"},{"id":4,"name":"","add_date":"2020-02-15T20:49:24.884275+09:00"},{"id":5,"name":"test","add_date":"2019-01-03T01:23:45+09:00"}],
         table: null
-    };
-
-    function makeTable(sheet) {
-        if (sheet.rows.length < 1) return false;
-        let props = [];
-        for (let prop in sheet.rows[0])
-            props.push(prop);
-        sheet.table = Donggi.getElementFromText(`<table id="${sheet.sheetName.replace()}"><tr><th colspan="${props.length}" title="${sheet.className}">${sheet.sheetName}</th></tr></table>`);
-    }
+    });
+    */
 }
 
-function showModal(id) {
+function addSheet(sheet) {
+    sheets.push(sheet);
+    let li = Donggi.getElementFromText(`<li><span contenteditable="true">${sheet.sheetName}</span> : ${sheet.className}</li>`);
+    li.onclick = showSheetModal(sheet);
+    Donggi.bind(sheet, 'sheetName', [li.querySelector('span')]);
+    
+    let removeButton = Donggi.getElementFromText(`<button type="button" class="w3-circle w3-red" title="시트 '${sheet.sheetName}' 삭제" style="font-weight: bold;">&times;</button>`);
+    removeButton.onclick = ((li, sheet) => function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        removeSheet(sheet);
+        li.remove();
+        let modal = document.getElementById(`modal-${sheet.id}`);
+        if (!!modal)
+            modal.remove();
+    })(li, sheet);
+    li.append(removeButton);
+    document.getElementById('sheet-list').append(li);
+}
+
+function removeSheet(sheet) {
+    sheets = sheets.filter(s => s != sheet);
+}
+
+function adjustModals() {
+    document.querySelectorAll('div.sheet-modal>.w3-modal-content').forEach((node, idx, nodeList) => {
+        node.style.marginLeft = localStorage.sidebarWidth;
+        node.style.width = document.body.clientWidth - localStorage.sidebarWidth;
+    });
+}
+
+function showSheetModal(sheet) {
     return () => {
-        let modal = document.getElementById(`modal-${id}`);
+        let modal = document.getElementById(`modal-${sheet.id}`);
         if (!!modal) {
-            modal.style.display = 'block';
+            if (modal.style.display == 'block')
+                modal.style.display = 'none';
+            else {
+                document.querySelectorAll('div.sheet-modal').forEach((node, idx, nodeList) => node.style.display = 'none');
+                modal.style.display = 'block';
+            }
+            adjustModals();
             return;
         }
 
-        modal = Donggi.getElementFromText(getCodeModalHTML(id, document.getElementById(`code-button-${id}`).getAttribute('path').split('/').pop()));
+        modal = Donggi.getElementFromText(getSheetModalHTML(sheet));
+        document.getElementById('main').append(modal);
+        Donggi.bind(sheet, 'sheetName', [modal.querySelector('.modal-title')]);
         let header = modal.querySelector('header');
         let body = modal.querySelector('.code-modal-body');
         let footer = modal.querySelector('footer');
         
-        document.body.append(modal);
         modal.style.display = 'block';
-        body.innerHTML = document.getElementById(`code-div-${id}`).innerHTML;
+        adjustModals();
+        makeSheetTableHTML(sheet)
+        body.append(sheet.table);
         body.style.height = window.innerHeight - parseFloat(window.getComputedStyle(header).height);
         
         modal.querySelector('button.copy').onclick = (() => {
-            Donggi.copyTextToCilpboard(posts.codes[id], modal);
+            Donggi.copyTextToCilpboard(sheet.table.innerText.replace(/\t\n/gm, '\t').replace(/\n\t/gm, '\t').replace(/\n{2,}/gm, '\n'), modal);
             Donggi.showSnackbar("복사 완료", modal);
             modal.focus();
         });
@@ -331,22 +356,42 @@ function getPostHTML(post) {
             </div>`;
 }
 
-function getCodeModalHTML(id, filename) {
-    return `<div id="modal-${id}" class="w3-modal code-modal">
+function getSheetModalHTML(sheet) {
+    return `<div id="modal-${sheet.id}" class="w3-modal sheet-modal code-modal">
     <div class="w3-modal-content">
         <header class="w3-container">
-            <h2 style="display: inline-block;" class="modal-title">${filename}</h2>
-            <span class="w3-button w3-circle w3-display-topright" style="color: black; font-size: 2em; font-weight: bold;" onclick="document.getElementById('modal-${id}').style.display='none'">&times;</span>
+            <h2 style="display: inline-block;" class="modal-title" contenteditable="true" title="${sheet.className}">${sheet.sheetName}</h2>
+            <span class="w3-button w3-circle w3-display-topright" style="color: black; font-size: 1.5em; font-weight: bold;" onclick="document.getElementById('modal-${sheet.id}').style.display='none'">&times;</span>
         </header>
         <div class="w3-container w3-leftbar w3-border-green code-modal-body code-div"></div>
         <footer class="w3-container w3-display-bottomright">
             <button type="button" class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge copy">Copy</button>
             <button type="button" class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge download">Download</button>
             <button type="button" class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge print">Print</button>
-            <button type="button" class="w3-btn w3-white w3-border w3-border-red w3-round-xlarge" onclick="document.getElementById('modal-${id}').style.display='none'">Close</button>
+            <button type="button" class="w3-btn w3-white w3-border w3-border-red w3-round-xlarge" onclick="document.getElementById('modal-${sheet.id}').style.display='none'">Close</button>
         </footer>
     </div>
 </div>`;
+}
+
+function makeSheetTableHTML(sheet) {
+    let tr = Donggi.getElementFromText(`<tr class="w3-teal"></tr>`, 'tbody');
+    let props = [];
+    for (let prop in sheet.rows[0]) {
+        props.push(prop);
+        tr.append(Donggi.getElementFromText(`<th>${prop}</th>`, 'tr'));
+    }
+    sheet.table = Donggi.getElementFromText(`<table id="sheet-table-${sheet.id}"></table>`);
+    sheet.table.append(tr);
+    for (let row of sheet.rows) {
+        tr = document.createElement('tr');
+        for (let prop of props) {
+            let td = Donggi.getElementFromText(`<td><div style="max-width:300px!important" contenteditable="true">${row[prop]}</div></td>`, 'tr');
+            Donggi.bind(row, prop, [td.querySelector('div')]);
+            tr.append(td);
+        }
+        sheet.table.append(tr);
+    }
 }
 
 class FileList {
@@ -412,6 +457,7 @@ class FileList {
                 ul.append(FileList.getDirHTML(path, dir, false));
                 let dirAction = ((fileList, dir) => function (e) { fileList.updateFileList(dir); })(this, path);
                 document.getElementById(`dir-${path.hashCode()}`).firstChild.onclick = dirAction;
+                document.getElementById(`dir-${path.hashCode()}`).firstChild.click();
             } else {
                 ul.append(FileList.getFileHTML(dir, name));
                 let fileAction = ((fileList, dir, name) => function (e) { fileList.fileAction(dir, name); })(this, dir, name);

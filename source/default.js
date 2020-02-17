@@ -426,7 +426,7 @@ function getCodeModalHTML(id, filename) {
     <div class="w3-modal-content">
         <header class="w3-container">
             <h2 style="display: inline-block;" class="modal-title">${filename}</h2>
-            <span class="w3-button w3-circle w3-display-topright" style="color: black; font-size: 2em; font-weight: bold;" onclick="document.getElementById('modal-${id}').style.display='none'">&times;</span>
+            <span class="w3-button w3-circle w3-display-topright" style="color: black; font-size: 1.5em; font-weight: bold;" onclick="document.getElementById('modal-${id}').style.display='none'">&times;</span>
         </header>
         <div class="w3-container w3-leftbar w3-border-green code-modal-body code-div"></div>
         <footer class="w3-container w3-display-bottomright">

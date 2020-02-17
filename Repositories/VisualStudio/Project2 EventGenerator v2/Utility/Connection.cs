@@ -9,6 +9,7 @@ using EventGenerator.Model.CustomAttribute;
 using MoreLinq;
 using System.Threading;
 using System.Text.RegularExpressions;
+using MySql.Data.MySqlClient;
 
 namespace EventGenerator.Utility
 {
@@ -52,32 +53,48 @@ namespace EventGenerator.Utility
 
         private IEnumerable<T> InnerQuery<T>(string query, DBServer dbServer)
         {
-            if (dbServer.Kind == DBServer.ServerKind.SQLITE)
+            switch (dbServer.Kind)
             {
-                var columns = new List<string>();
-                typeof(T).GetRuntimeProperties().ForEach(propertyInfo =>
-                {
-                    if (!(System.Attribute.GetCustomAttribute(propertyInfo, typeof(CustomVersionAttribute)) is CustomVersionAttribute version) ||
-                        version.Active(dbServer.Version))
-                        columns.Add(string.Format("NULLIF({0}, '') AS {0}", propertyInfo.Name));
-                });
-                query = query.Replace("SELECT *", "SELECT " + string.Join(",", columns));
-                using (var connection = new System.Data.SQLite.SQLiteConnection(GetConnectionString(dbServer)))
-                {
-                    connection.Open();
-                    return connection.Query<T>(query);
-                }
+                case DBServer.ServerKind.SQLITE:
+                    var columns = new List<string>();
+                    typeof(T).GetRuntimeProperties().ForEach(propertyInfo =>
+                    {
+                        if (!(System.Attribute.GetCustomAttribute(propertyInfo, typeof(CustomVersionAttribute)) is CustomVersionAttribute version) ||
+                            version.Active(dbServer.Version))
+                            columns.Add(string.Format("NULLIF({0}, '') AS {0}", propertyInfo.Name));
+                    });
+                    query = query.Replace("SELECT *", "SELECT " + string.Join(",", columns));
+                    using (var connection = new System.Data.SQLite.SQLiteConnection(GetConnectionString(dbServer)))
+                    {
+                        connection.Open();
+                        return connection.Query<T>(query);
+                    }
+                case DBServer.ServerKind.POSTGRES:
+                    using (var connection = new NpgsqlConnection(GetConnectionString(dbServer)))
+                    {
+                        connection.Open();
+                        return connection.Query<T>(query);
+                    }
+                case DBServer.ServerKind.MYSQL:
+                    using (var connection = new MySqlConnection(GetConnectionString(dbServer)))
+                    {
+                        connection.Open();
+                        return connection.Query<T>(query);
+                    }
             }
-            using (var connection = new NpgsqlConnection(GetConnectionString(dbServer)))
-            {
-                connection.Open();
-                return connection.Query<T>(query);
-            }
+            return new List<T>();
         }
 
-        private string GetConnectionString(DBServer dbServer) =>
-            dbServer.Kind == DBServer.ServerKind.SQLITE ?
-                $"Data Source=Resources\\{dbServer.Name}\\{dbServer.Name}_{db.ToString().ToLower()}.db" :
-                $"Server={dbServer.ServerIP};Port={dbServer.ServerPort};Database={db.ToString().ToLower()};Userid={dbServer.User};Password={dbServer.Password};Pooling=true;MinPoolSize=5;MaxPoolSize=20;Timeout=300;CommandTimeout=300;"; // Enlist=true;
+        private string GetConnectionString(DBServer dbServer) {
+            switch (dbServer.Kind) {
+                case DBServer.ServerKind.SQLITE:
+                    return $"Data Source=Resources\\{dbServer.Name}\\{dbServer.Name}_{db.ToString().ToLower()}.db";
+                case DBServer.ServerKind.POSTGRES:
+                    return $"Server={dbServer.ServerIP};Port={dbServer.ServerPort};Database={db.ToString().ToLower()};Userid={dbServer.User};Password={dbServer.Password};Pooling=true;MinPoolSize=5;MaxPoolSize=20;Timeout=300;CommandTimeout=300;"; // Enlist=true;
+                case DBServer.ServerKind.MYSQL:
+                    return $"Server={dbServer.ServerIP};Port={dbServer.ServerPort};Database={db.ToString().ToLower()};Userid={dbServer.User};Password={dbServer.Password};Pooling=true;MinPoolSize=5;MaxPoolSize=20;";
+            }
+            return "";
+        }
     }
 }

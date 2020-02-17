@@ -87,10 +87,10 @@ Donggi.getNodesFromText = function (text, outerTag) {
     outer.innerHTML = text;
     return (!!outerTag)? outer : div.childNodes;
 }
-Donggi.getElementFromText = function (text) {
-    let div = document.createElement('div');
-    div.innerHTML = text;
-    return div.firstChild;
+Donggi.getElementFromText = function (text, outerTag) {
+    let outer = document.createElement((!!outerTag)? outerTag : 'div');
+    outer.innerHTML = text;
+    return outer.firstChild;
 }
 Donggi.toggleClass = function (element, classEnumarable) {
     for (let clazz of classEnumarable) {
@@ -141,4 +141,46 @@ Donggi.getRgba = function (element) {
     let backgroundColor = window.getComputedStyle(element).getPropertyValue("background-color");
     let rgba = rgbaRegex.exec(backgroundColor);
     return [parseInt(rgba[1]), parseInt(rgba[2]), parseInt(rgba[3]), /rgba/.test(backgroundColor)? parseFloat(rgba[3]) : 1];
+}
+Donggi.bindMap = new Map();
+Donggi.bind = function (obj, property, editableNodes) {
+    return ((obj, property, editableNodes) => {
+        const bindHandler = {
+            set(o, prop, value) {
+                try {
+                    if (o[prop] != value)
+                        Donggi.bindMap.get(obj)[prop].nodes.forEach((node) => {
+                            if (node.innerText != `${value}`)
+                                node.innerText = `${value}`;
+                        });
+                } finally {
+                    Reflect.set(...arguments);
+                }
+            }
+        };
+
+        if (!Donggi.bindMap.has(obj))
+            Donggi.bindMap.set(obj, {});
+        let map = Donggi.bindMap.get(obj);
+
+        if (!map.hasOwnProperty(property)) {
+            map[property] = {
+                proxy: new Proxy(obj, bindHandler),
+                nodes: new Set()
+            };
+        }
+        let proxy = map[property].proxy;
+        for (let node of editableNodes)
+            map[property].nodes.add(node);
+
+        for (let node of editableNodes) {
+            node.addEventListener('input', ((proxy) => function (e) {
+                //console.log(this.innerText);
+                if (this.innerText != proxy[property])
+                    proxy[property] = this.innerText;
+            })(proxy));
+        }
+        //console.log(obj, property, editableNodes);
+        return proxy;
+    })(obj, property, editableNodes);
 }
