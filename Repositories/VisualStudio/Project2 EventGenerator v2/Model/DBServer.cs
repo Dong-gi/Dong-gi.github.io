@@ -21,6 +21,8 @@ namespace EventGenerator.Model
 
         private DBServer() { }
 
+        public static DBServer Get(string name)
+            => Game1DBServers.Concat(Game2DBServers).Where(x => nameof(x).Equals(name)).FirstOrDefault();
         #region Game1 DBMS
         public static DBServer[] Game1DBServers { get => new DBServer[] { Game1Now, Game1Upgrade }; }
         public static DBServer Game1Now = new DBServer()

@@ -1,3 +1,17 @@
+var sheets = [];
+var queries = (!!localStorage.queries)? JSON.parse(localStorage.queries) : [];
+const servers = {
+    game1Now: { name: 'Game1 현재 버전', id: 'Game1Now'},
+    game1Next: { name: 'Game1 다음 버전', id: 'Game1Upgrade'},
+};
+class Query {
+    constructor(server, db, query) {
+        [this.server, this.db, this.query] = arguments;
+        this.count = 0;
+        this.description = '';
+    }
+}
+
 window.addEventListener('load', () => {
     document.getElementsByTagName('head')[0].append(Donggi.getElementFromText(`<style>
 td.sorting-table-head-black:after,
@@ -240,11 +254,18 @@ function mutationCallback(mutations, observer) {
     }
 }
 
-function query(json) {
+function sendQuery(query, save) {
+    if (!query)
+        return;
+    if (!!save) {
+        query.count += 1;
+        let tmp = [];
+        localStorage.queries = JSON.stringify(queries);
+    }
     /*
     addSheet({
         id: new Date().getTime(),
-        sheetNum: 1,
+        sheetNum: sheets.length,
         sheetName: `${new Date().getTime()}`,
         className: 'test',
         rows: [{"id":1,"name":"dgkim","add_date":"2020-02-15T20:48:45.04391+09:00"},{"id":2,"name":"dgkim2","add_date":"2020-02-15T20:48:45.04391+09:00"},{"id":3,"name":null,"add_date":"2020-02-15T20:49:14.012979+09:00"},{"id":4,"name":"","add_date":"2020-02-15T20:49:24.884275+09:00"},{"id":5,"name":"test","add_date":"2019-01-03T01:23:45+09:00"}],
@@ -255,8 +276,16 @@ function query(json) {
 
 function addSheet(sheet) {
     sheets.push(sheet);
-    let li = Donggi.getElementFromText(`<li><span contenteditable="true">${sheet.sheetName}</span> : ${sheet.className}</li>`);
+    let li = Donggi.getElementFromText(`<li id="sheet-li-${sheet.id}" draggable="true"><span contenteditable="true">${sheet.sheetName}</span> : ${sheet.className}</li>`);
+    li.onmousedown = ((li) => function(e) { addSheet.selectedSheet = li; })(li);
     li.onclick = showSheetModal(sheet);
+    li.ondragover = (e) => e.preventDefault();
+    li.ondrop = (e) => {
+        e.target.before(addSheet.selectedSheet);
+        document.querySelectorAll('#sheet-list>li').forEach((node, idx, nodeList) => {
+            sheets.filter(x => node.getAttribute('id') == `sheet-li-${x.id}`)[0].sheetNum = idx;
+        });
+    };
     Donggi.bind(sheet, 'sheetName', [li.querySelector('span')]);
     
     let removeButton = Donggi.getElementFromText(`<button type="button" class="w3-circle w3-red" title="시트 '${sheet.sheetName}' 삭제" style="font-weight: bold;">&times;</button>`);

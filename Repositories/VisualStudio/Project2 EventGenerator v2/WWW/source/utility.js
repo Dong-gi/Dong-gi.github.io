@@ -184,3 +184,24 @@ Donggi.bind = function (obj, property, editableNodes) {
         return proxy;
     })(obj, property, editableNodes);
 }
+Donggi.addInputSelection = function (node, texts) {
+    let ul = document.createElement('ul');
+    ul.style.margin = '8px';
+    ul.style.paddingRight = '8px';
+    ul.style.backgroundColor = 'white';
+    ul.style.zIndex = 100000000;
+    ul.style.position = 'absolute';
+    ul.style.display = 'none';
+    document.body.append(ul);
+    for (let text of texts) {
+        let li = Donggi.getElementFromText(`<li>${text}</li>`);
+        ul.append(li);
+    }
+    ((node, ul) => {
+        node.onmousedown = e => {
+            ul.style.top = e.clientY;
+            ul.style.left = e.clientX;
+            ul.style.display = 'block';
+        };
+    })(node, ul);
+}
