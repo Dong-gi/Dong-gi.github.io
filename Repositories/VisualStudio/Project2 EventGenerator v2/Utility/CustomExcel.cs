@@ -98,9 +98,7 @@ namespace EventGenerator.Utility
             try
             {
                 if (sheetName == null)
-                    sheetName = new Random().Next().ToString();
-                if (allowDuplicateSheet)
-                    sheetName = (new Random().Next().ToString() + sheetName).Substring(0, 30);
+                    sheetName = allowDuplicateSheet ? new Random().Next().ToString() : ((list[1][1].Length <= 30) ? list[1][1] : list[1][1].Substring(0, 30));
 
                 var writeNew = false;
                 try

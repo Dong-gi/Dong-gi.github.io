@@ -136,7 +136,7 @@ const posts = {
 
 /*
 <button class="btn-code" path="Repositories/Eclipse" lan="java">예시 코드 »
-<button type="button" class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" onclick="">실행 »
+<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" onclick="">실행 »
 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="">
 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="javascript:;">
 <img class="w3-round" src="imgs/">

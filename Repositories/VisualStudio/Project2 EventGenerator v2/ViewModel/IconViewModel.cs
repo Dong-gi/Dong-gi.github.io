@@ -44,8 +44,30 @@ namespace EventGenerator.ViewModel
                 RequestFilter = (request) => request.RequestPath.Equals("/query"),
                 RequestHandler = (request, stream) =>
                 {
-                    var result = new Connection(DB.dgkim).Query<object>(request.Param["query"], DBServer.Game1Now);
+                    var db = (DB)System.Enum.Parse(typeof(DB), request.Param["db"]);
+                    var server = (DBServer)typeof(DBServer).GetProperty(request.Param["server"], typeof(DBServer)).GetValue(null);
+                    var result = new Connection(db).Query<object>(request.Param["query"], server);
                     NaiveHttpServer.Write(stream, JsonConvert.SerializeObject(result));
+                }
+            });
+            HttpServer.Handlers.Add(new NaiveHttpServer.Handler()
+            {
+                RequestFilter = (request) => request.RequestPath.Equals("/saveXls"),
+                RequestHandler = (request, stream) =>
+                {
+                    var saveXlsRequests = JsonConvert.DeserializeObject<Model.SaveXlsRequest[]>(request.RawParam, new JsonSerializerSettings
+                    {
+                        Error = (sender, args) =>
+                        {
+                            System.Console.WriteLine(args.ErrorContext.Error.Message);
+                            System.Console.WriteLine(args.ErrorContext.Error.StackTrace);
+                        }
+                    });
+                    var xls = CustomNewExcel.NewInstance();
+                    foreach(var req in saveXlsRequests)
+                        xls.AddSheet(req.Data, true, req.SheetName);
+                    xls.Save("통합 문서.xls");
+                    NaiveHttpServer.Write(stream, "OK");
                 }
             });
             HttpServer.Handlers.Add(new NaiveHttpServer.Handler()

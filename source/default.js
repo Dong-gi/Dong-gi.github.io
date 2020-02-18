@@ -430,10 +430,10 @@ function getCodeModalHTML(id, filename) {
         </header>
         <div class="w3-container w3-leftbar w3-border-green code-modal-body code-div"></div>
         <footer class="w3-container w3-display-bottomright">
-            <button type="button" class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge copy">Copy</button>
-            <button type="button" class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge download">Download</button>
-            <button type="button" class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge print">Print</button>
-            <button type="button" class="w3-btn w3-white w3-border w3-border-red w3-round-xlarge" onclick="document.getElementById('modal-${id}').style.display='none'">Close</button>
+            <button class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge copy">Copy</button>
+            <button class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge download">Download</button>
+            <button class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge print">Print</button>
+            <button class="w3-btn w3-white w3-border w3-border-red w3-round-xlarge" onclick="document.getElementById('modal-${id}').style.display='none'">Close</button>
         </footer>
     </div>
 </div>`;

@@ -1,9 +1,7 @@
 var sheets = [];
 var queries = (!!localStorage.queries)? JSON.parse(localStorage.queries) : [];
-const servers = {
-    game1Now: { name: 'Game1 현재 버전', id: 'Game1Now'},
-    game1Next: { name: 'Game1 다음 버전', id: 'Game1Upgrade'},
-};
+const servers = ['Game1Now','Game1Upgrade'];
+
 class Query {
     constructor(server, db, query) {
         [this.server, this.db, this.query] = arguments;
@@ -25,23 +23,6 @@ th.sorting-table-head-white:after {
     content: attr(sort-order);
     color: white;
 }</style>`));
-
-    /*
-    https://developer.mozilla.org/ko/docs/Web/API/HTML_%EB%93%9C%EB%9E%98%EA%B7%B8_%EC%95%A4_%EB%93%9C%EB%A1%AD_API
-    https://www.w3schools.com/tags/att_global_draggable.asp
-    https://www.w3schools.com/tags/tryit.asp?filename=tryhtml5_global_draggable
-    */
-   /*
-    let xhr = new XMLHttpRequest();
-    xhr.addEventListener("load", function(e) {
-        if (xhr.status != 200) {
-            console.log('Ajax Failed');
-            return;
-        }
-        console.log(xhr.responseText);
-    });
-    xhr.open("POST", '/query', true);
-    xhr.send(`{query:"select * from test"}`);*/
 
     prepareSidebar();
     preparePosts();
@@ -174,14 +155,9 @@ function loadPost(file) {
         document.title = posts.hash[file.hashCode()].title;
         window.history.pushState({"html":path,"pageTitle":document.title}, document.title, `${location.origin}${path}`);
 
-        if (details.childElementCount > 1) {
-            // 테스트 사이트에서는 항상 리로드
-            for (let node of details.children) {
-                if (/^summary$/i.test(node.tagName))
-                    continue;
-                node.remove();
-            }
-        }
+        // 리로드하지 않음
+        if (details.childElementCount > 1)
+            return;
         let xhr = new XMLHttpRequest();
         xhr.addEventListener("load", ((details, file) => function(e) {
             if (this.status != 200) {
@@ -255,14 +231,6 @@ function mutationCallback(mutations, observer) {
 }
 
 function sendQuery(query, save) {
-    if (!query)
-        return;
-    if (!!save) {
-        query.count += 1;
-        let tmp = [];
-        localStorage.queries = JSON.stringify(queries);
-    }
-    /*
     addSheet({
         id: new Date().getTime(),
         sheetNum: sheets.length,
@@ -271,7 +239,72 @@ function sendQuery(query, save) {
         rows: [{"id":1,"name":"dgkim","add_date":"2020-02-15T20:48:45.04391+09:00"},{"id":2,"name":"dgkim2","add_date":"2020-02-15T20:48:45.04391+09:00"},{"id":3,"name":null,"add_date":"2020-02-15T20:49:14.012979+09:00"},{"id":4,"name":"","add_date":"2020-02-15T20:49:24.884275+09:00"},{"id":5,"name":"test","add_date":"2019-01-03T01:23:45+09:00"}],
         table: null
     });
-    */
+    return;
+    if (!query)
+        return;
+    if (!!save) {
+        query.count += 1;
+        let tmp = [];
+        localStorage.queries = JSON.stringify(queries);
+    }
+
+    console.log(query);
+    let xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", ((query) => function(e) {
+        if (e.target.status != 200) {
+            Donggi.showSnackbar('쿼리 실패');
+            return;
+        }
+        console.log(e.target.responseText);
+        let data = JSON.parse(e.target.responseText);
+        if (!Array.isArray(data) || data.length < 1)
+            return;
+        let tableMatch = /from\s*(\S+)/i.exec(query.query);
+        addSheet({
+            id: new Date().getTime(),
+            sheetNum: sheets.length,
+            sheetName: `${(!!tableMatch)? tableMatch[1] : new Date().getTime()}`,
+            className: `${(!!tableMatch)? tableMatch[1] : 'unknown type'}`,
+            rows: data,
+            table: null
+        });
+    })(query));
+    xhr.open("POST", '/query', true);
+    xhr.send(JSON.stringify(query));
+}
+
+function saveXls(sheets) {
+    if (!Array.isArray(sheets) || sheets.length < 1)
+        return;
+    let request = [];
+    for (let sheet of sheets.sort(x => x.sheetNum)) {
+        let xlsData = [];
+        let props = [];
+        for (let prop in sheet.rows[0])
+            props.push(prop);
+        xlsData.push(props);
+        for (let row of sheet.rows) {
+            let dto = [];
+            for (let prop of props)
+                dto.push(`${row[prop]}`);
+            xlsData.push(dto);
+        }
+        request.push({
+            SheetName: sheet.sheetName,
+            ClassName: sheet.className,
+            Data: xlsData
+        });
+    }
+    let xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", function(e) {
+        if (e.target.status != 200) {
+            Donggi.showSnackbar('저장 실패');
+            return;
+        }
+    });
+    xhr.open("POST", '/saveXls', true);
+    xhr.send(JSON.stringify(request));
+    console.log(JSON.stringify(request));
 }
 
 function addSheet(sheet) {
@@ -288,7 +321,7 @@ function addSheet(sheet) {
     };
     Donggi.bind(sheet, 'sheetName', [li.querySelector('span')]);
     
-    let removeButton = Donggi.getElementFromText(`<button type="button" class="w3-circle w3-red" title="시트 '${sheet.sheetName}' 삭제" style="font-weight: bold;">&times;</button>`);
+    let removeButton = Donggi.getElementFromText(`<button class="w3-circle w3-red" title="시트 '${sheet.sheetName}' 삭제" style="font-weight: bold;">&times;</button>`);
     removeButton.onclick = ((li, sheet) => function(e) {
         e.stopPropagation();
         e.preventDefault();
@@ -345,7 +378,7 @@ function showSheetModal(sheet) {
             Donggi.showSnackbar("복사 완료", modal);
             modal.focus();
         });
-        modal.querySelector('button.download').onclick = (() => downloadCode(document.getElementById(`code-button-${id}`).getAttribute('path').split('/').pop(), posts.codes[id]));
+        modal.querySelector('button.download').onclick = ((sheet) => function(e) { saveXls([sheet]); })(sheet);
         modal.querySelector('button.print').onclick = (() => Donggi.printElement(body));
     };
 }
@@ -394,10 +427,10 @@ function getSheetModalHTML(sheet) {
         </header>
         <div class="w3-container w3-leftbar w3-border-green code-modal-body code-div"></div>
         <footer class="w3-container w3-display-bottomright">
-            <button type="button" class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge copy">Copy</button>
-            <button type="button" class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge download">Download</button>
-            <button type="button" class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge print">Print</button>
-            <button type="button" class="w3-btn w3-white w3-border w3-border-red w3-round-xlarge" onclick="document.getElementById('modal-${sheet.id}').style.display='none'">Close</button>
+            <button class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge copy">Copy</button>
+            <button class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge download">Download</button>
+            <button class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge print">Print</button>
+            <button class="w3-btn w3-white w3-border w3-border-red w3-round-xlarge" onclick="document.getElementById('modal-${sheet.id}').style.display='none'">Close</button>
         </footer>
     </div>
 </div>`;

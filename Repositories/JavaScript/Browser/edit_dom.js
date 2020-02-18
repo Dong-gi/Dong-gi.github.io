@@ -42,16 +42,16 @@ class DomEditer {
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h2 style="display: inline-block;" class="modal-title">${filename}</h2>
-                                <button style="float: right;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button style="float: right;" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true" style="color: black; font-size: 2em; font-weight: bold;">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body"></div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary copy">Copy</button>
-                                <button type="button" class="btn btn-primary download">Download</button>
-                                <button type="button" class="btn btn-primary print">Print</button>
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                <button class="btn btn-primary copy">Copy</button>
+                                <button class="btn btn-primary download">Download</button>
+                                <button class="btn btn-primary print">Print</button>
+                                <button class="btn btn-danger" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>

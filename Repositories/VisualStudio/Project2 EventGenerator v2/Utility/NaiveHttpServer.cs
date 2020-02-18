@@ -45,19 +45,24 @@ namespace EventGenerator.Utility
                 }
             }
         }
-        public enum Method { GET, POST }
+        public static class Method {
+            public const string GET = "GET";
+            public const string POST = "POST";
+        }
         public class Request
         {
-            public Method Method { get; private set; }
+            public string Method { get; private set; }
             public string RequestPath { get; private set; }
             public Dictionary<string, string> Header { get; private set; }
             public Dictionary<string, string> Param { get; private set; }
+            public string RawParam { get; private set; }
             
-            public Request(Method method, string path, string header = null, string param = null)
+            public Request(string method, string path, string header = null, string param = null)
             {
                 Method = method;
                 RequestPath = path;
                 Header = new Dictionary<string, string>();
+                RawParam = param;
                 if (header != null)
                 {
                     var regex = new Regex(@"([^:]+):(.+)");
@@ -141,16 +146,26 @@ namespace EventGenerator.Utility
             var stream = client.GetStream();
             var buf = new byte[1024];
             var requestBuilder = new StringBuilder();
-            while (stream.DataAvailable)
+            var retry = 20;
+            while (retry-- > 0 && client.Connected)
             {
-                var size = stream.Read(buf, 0, buf.Length);
-                requestBuilder.Append(Encoding.UTF8.GetString(buf, 0, size));
-            }
-
-            var requestText = requestBuilder.ToString().Replace("\r", "");
-            Console.WriteLine(requestText);
-            Handle(requestText, stream);
-            
+                while (stream.DataAvailable)
+                {
+                    var size = stream.Read(buf, 0, buf.Length);
+                    if (size > 0)
+                        requestBuilder.Append(Encoding.UTF8.GetString(buf, 0, size));
+                    System.Threading.Thread.Sleep(10);
+                    // Console.WriteLine($"Read : {requestBuilder.Capacity}");
+                }
+                var requestText = requestBuilder.ToString().Replace("\r", "");
+                if (requestText.Length < 1)
+                {
+                    System.Threading.Thread.Sleep(100);
+                    continue;
+                }
+                Handle(requestText, stream);
+                break;
+            }            
             stream.Close();
             client.Close();
         }
@@ -170,11 +185,11 @@ namespace EventGenerator.Utility
                 var regex = new Regex(@"POST\s*([^ ?]+)[?]?([\S]*).*\n([\s\S]+?)\n\n([\s\S]*)");
                 var match = regex.Match(requestText);
                 if (match.Success)
-                    request = new Request(Method.GET, match.Groups[1].Value.Trim(), match.Groups[3].Value.Trim(), match.Groups[4].Value.Trim());
+                    request = new Request(Method.POST, match.Groups[1].Value.Trim(), match.Groups[3].Value.Trim(), match.Groups[4].Value.Trim());
             }
+            // Console.WriteLine($">>>>>>>>>>>>>>>>>>>>>> Hash : {stream.GetHashCode()}, {request == null}, Request : {(request == null? requestText.Length.ToString() : request.ToString())}");
             if (request != null && Handlers.Any(x => x.RequestFilter(request)))
             {
-                Console.WriteLine(request);
                 try
                 {
                     Handlers.Find(x => x.RequestFilter(request)).RequestHandler(request, stream);
@@ -260,7 +275,6 @@ Content-Length: {body.Length}
                 System.Threading.Thread.Sleep(20);
                 return;
             }
-            Console.WriteLine("Failed");
         }
     }
 }
