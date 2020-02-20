@@ -76,7 +76,7 @@ namespace EventGenerator.ViewModel
         }
         public DBServer[] DBServers
         {
-            get => Get<DBServer[]>(nameof(DBServers), new DBServer[] { });
+            get => Get<DBServer[]>(nameof(DBServers), () => new DBServer[] { });
             private set => Set<DBServer[]>(nameof(DBServers), value);
         }
         public DBServer CurrentDBServer
@@ -87,11 +87,13 @@ namespace EventGenerator.ViewModel
 
         public Game1ViewModel Game1
         {
-            get => Get<Game1ViewModel>(nameof(Game1), new Game1ViewModel { Main = this });
+            get => Get<Game1ViewModel>(nameof(Game1), () => new Game1ViewModel { Main = this });
+            private set => Set<Game1ViewModel>(nameof(Game1), value);
         }
         public Game2ViewModel Game2
         {
-            get => Get<Game2ViewModel>(nameof(Game2), new Game2ViewModel { Main = this });
+            get => Get<Game2ViewModel>(nameof(Game2), () => new Game2ViewModel { Main = this });
+            private set => Set<Game2ViewModel>(nameof(Game2), value);
         }
         #endregion
 

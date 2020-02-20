@@ -17,7 +17,7 @@ namespace EventGenerator.ViewModel
         #region 프로퍼티
         public MainViewModel Main
         {
-            get => Get<MainViewModel>(nameof(Main), null);
+            get => Get<MainViewModel>(nameof(Main), defaultValue: null);
             set
             {
                 if (Main == null)
@@ -26,7 +26,7 @@ namespace EventGenerator.ViewModel
         }
         public List<object> Data1
         {
-            get => Get<List<object>>(nameof(Data1), new List<object>());
+            get => Get<List<object>>(nameof(Data1), () => new List<object>());
             set => Set<List<object>>(nameof(Data1), value); }
         #endregion
 

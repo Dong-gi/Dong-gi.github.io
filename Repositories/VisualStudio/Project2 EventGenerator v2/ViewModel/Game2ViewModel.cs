@@ -14,7 +14,7 @@ namespace EventGenerator.ViewModel
         #region 프로퍼티
         public MainViewModel Main
         {
-            get => Get<MainViewModel>(nameof(Main), null);
+            get => Get<MainViewModel>(nameof(Main), defaultValue: null);
             set
             {
                 if (Main == null)

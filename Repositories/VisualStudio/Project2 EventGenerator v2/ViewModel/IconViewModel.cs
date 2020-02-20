@@ -14,7 +14,7 @@ namespace EventGenerator.ViewModel
         public static IconViewModel Current { get; private set; }
         public MainWindow MainWindow
         {
-            get => Get<MainWindow>(nameof(MainWindow), null);
+            get => Get<MainWindow>(nameof(MainWindow), defaultValue: null);
             private set => Set<MainWindow>(nameof(MainWindow), value);
         }
         public NaiveHttpServer HttpServer { get; } = new NaiveHttpServer();
@@ -91,16 +91,12 @@ namespace EventGenerator.ViewModel
 
         private void OpenMainWindow()
         {
-            var vm = new MainViewModel();
-            MainWindow = new MainWindow
-            {
-                DataContext = vm
-            };
-            Utility.ConsoleRedirectWriter.WRITER.WriteEvent += vm.WriteEventHandler;
+            MainWindow = new MainWindow();
+            Utility.ConsoleRedirectWriter.WRITER.WriteEvent += (MainWindow.DataContext as MainViewModel).WriteEventHandler;
             MainWindow.Closed += (o, e) =>
             {
+                Utility.ConsoleRedirectWriter.WRITER.WriteEvent -= (MainWindow.DataContext as MainViewModel).WriteEventHandler;
                 MainWindow = null;
-                Utility.ConsoleRedirectWriter.WRITER.WriteEvent -= vm.WriteEventHandler;
             };
             MainWindow.Show();
         }

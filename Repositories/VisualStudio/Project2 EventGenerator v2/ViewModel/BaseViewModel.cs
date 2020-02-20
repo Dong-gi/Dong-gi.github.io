@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Input;
 
@@ -9,6 +10,18 @@ namespace EventGenerator.ViewModel
         public Dictionary<string, ICommand> Commands { get; private set; } = new Dictionary<string, ICommand>();
         protected readonly Dictionary<string, object> Properties = new Dictionary<string, object>();
         public T Get<T>(string propertyName) => (T)Properties[propertyName];
+        public T Get<T>(string propertyName, Func<T> func)
+        {
+            try
+            {
+                return Get<T>(propertyName);
+            }
+            catch
+            {
+                Set<T>(propertyName, func.Invoke());
+                return Get<T>(propertyName);
+            }
+        }
         public T Get<T>(string propertyName, T defaultValue)
         {
             try
