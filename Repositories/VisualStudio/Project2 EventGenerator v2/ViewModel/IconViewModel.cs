@@ -11,6 +11,7 @@ namespace EventGenerator.ViewModel
     class IconViewModel : BaseViewModel
     {
         #region 프로퍼티
+        public static IconViewModel Current { get; private set; }
         public MainWindow MainWindow
         {
             get => Get<MainWindow>(nameof(MainWindow), null);
@@ -22,6 +23,8 @@ namespace EventGenerator.ViewModel
 
         public IconViewModel()
         {
+            Current = this;
+
             Commands[OPEN_MAIN_WINDOW_COMMAND] = new CustomCommand(OpenMainWindow)
             {
                 CanExecuteAction = (_) => MainWindow == null,
@@ -35,7 +38,7 @@ namespace EventGenerator.ViewModel
             };
             Commands[EXIT_APP_COMMAND] = new CustomCommand(Application.Current.Shutdown, false);
             Commands[UPDATE_COMMAND] = new CustomCommand(UpdateService.Update, false);
-            Commands[OPEN_EXECUTING_FORDER_COMMAND] = new CustomCommand(FileService.OpenExecutingFolder);
+            Commands[OPEN_EXECUTING_FORDER_COMMAND] = new CustomCommand(FileUtility.OpenExecutingFolder);
             Commands[OPEN_BROWSER_COMMAND] = new CustomCommand(HttpServer.OpenBrowser);
             SingleIcon.Toast("실행 위치", System.AppDomain.CurrentDomain.BaseDirectory);
 
@@ -46,7 +49,7 @@ namespace EventGenerator.ViewModel
                 {
                     var db = (DB)System.Enum.Parse(typeof(DB), request.Param["db"]);
                     var server = (DBServer)typeof(DBServer).GetProperty(request.Param["server"], typeof(DBServer)).GetValue(null);
-                    var result = new Connection(db).Query<object>(request.Param["query"], server);
+                    var result = new Connection(db).Query<object>(server, request.Param["query"]);
                     NaiveHttpServer.Write(stream, JsonConvert.SerializeObject(result));
                 }
             });
@@ -63,9 +66,9 @@ namespace EventGenerator.ViewModel
                             System.Console.WriteLine(args.ErrorContext.Error.StackTrace);
                         }
                     });
-                    var xls = CustomNewExcel.NewInstance();
+                    var xls = new MSExcel();
                     foreach(var req in saveXlsRequests)
-                        xls.AddSheet(req.Data, true, req.SheetName);
+                        xls.AddSheet(req.Data, req.SheetName, true);
                     xls.Save("통합 문서.xls");
                     NaiveHttpServer.Write(stream, "OK");
                 }

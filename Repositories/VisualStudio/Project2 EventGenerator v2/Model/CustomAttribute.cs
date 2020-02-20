@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EventGenerator.Model.CustomAttribute
 {
-    [System.AttributeUsage(System.AttributeTargets.Property)]
-    class CustomVersionAttribute : System.Attribute
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property)]
+    class CustomVersionAttribute : Attribute
     {
         public readonly double added;
         public readonly double removed;
@@ -26,7 +22,7 @@ namespace EventGenerator.Model.CustomAttribute
     }
 
     [AttributeUsage(AttributeTargets.Class)]
-    class CustomDBAttribute : System.Attribute
+    class CustomDBAttribute : Attribute
     {
         public Model.DB DB { get; set; }
 

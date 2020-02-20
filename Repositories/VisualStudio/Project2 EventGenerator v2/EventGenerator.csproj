@@ -26,7 +26,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -36,7 +36,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>
@@ -157,9 +157,10 @@
     <Compile Include="Model\DB.cs" />
     <Compile Include="Model\DBServer.cs" />
     <Compile Include="Model\BaseContext.cs" />
-    <Compile Include="Model\Game1Context.cs" />
+    <Compile Include="Model\ServerKind.cs" />
     <Compile Include="Service\AWSService.cs" />
-    <Compile Include="Service\FileService.cs" />
+    <Compile Include="Utility\FileUtility.cs" />
+    <Compile Include="Utility\ChatworkUtility.cs" />
     <Compile Include="Utility\NaiveHttpServer.cs" />
     <Compile Include="Service\SSHService.cs" />
     <Compile Include="Service\UpdateService.cs" />
@@ -169,8 +170,8 @@
     <Compile Include="Service\Game1Service.cs" />
     <Compile Include="Utility\ConsoleRedirectWriter.cs" />
     <Compile Include="Utility\CustomCommand.cs" />
-    <Compile Include="Utility\CustomExcelDataUtility.cs" />
-    <Compile Include="Utility\CustomExcel.cs" />
+    <Compile Include="Utility\ExcelDataUtility.cs" />
+    <Compile Include="Utility\MSExcel.cs" />
     <Compile Include="Utility\Connection.cs" />
     <Compile Include="Utility\ImageOptimizer.cs" />
     <Compile Include="Utility\ShellStreamDeligater.cs" />

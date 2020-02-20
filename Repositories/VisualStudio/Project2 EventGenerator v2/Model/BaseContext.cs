@@ -7,15 +7,27 @@ using System.Threading.Tasks;
 
 namespace EventGenerator.Model
 {
-    abstract class BaseContext
+    public class BaseContext
     {
-        public CustomExcel Excel { get; private set; } = CustomNewExcel.NewInstance();
+        public MSExcel Excel { get; private set; } = new MSExcel();
+        protected readonly Dictionary<Type, object> TypeListPairs = new Dictionary<Type, object>();
 
-
-        public void Save(string fileName) => Task.Factory.StartNew(() => Excel.Save(fileName));
-
-        public void AddSheet<T>(IEnumerable<T> items, DBServer server, bool addSheetWhenListEmpty = false, bool allowDuplicateSheets = false) =>
-            Excel.AddSheet(CustomExcelDataUtility.ConvertToExcelData(AddItems(items), server, returnAnyway: addSheetWhenListEmpty), allowDuplicateSheets);
+        public List<T> GetList<T>()
+        {
+            try
+            {
+                return TypeListPairs[typeof(T)] as List<T>;
+            }
+            catch
+            {
+                return SetList(new List<T>());
+            }
+        }
+        public List<T> SetList<T>(List<T> list)
+        {
+            TypeListPairs[typeof(T)] = list;
+            return list;
+        }
 
         public List<T> AddItems<T>(IEnumerable<T> items)
         {
@@ -26,15 +38,13 @@ namespace EventGenerator.Model
             baseList.AddRange(items);
             var key = typeof(T).GetMethod("Key");
             if (key != null)
-                baseList = baseList.DistinctBy(obj => key.Invoke(null, new Object[] {obj})).ToList();
+                return SetList(baseList.DistinctBy(obj => key.Invoke(null, new Object[] {obj})).ToList());
             return baseList;
         }
 
-        public List<T> GetList<T>()
-        {
-            var context = this.GetType();
-            var property = context.GetProperty(typeof(T).Name + "List", typeof(List<T>));
-            return context.GetProperty(typeof(T).Name + "List", typeof(List<T>)).GetValue(this) as List<T>;
-        }
+        public void AddSheet<T>(DBServer server, IEnumerable<T> items, bool addSheetWhenListEmpty = false, bool allowDuplicateSheets = false)
+            => Excel.AddSheet(ExcelDataUtility.MakeGame1SheetData(server, AddItems(items), returnAnyway: addSheetWhenListEmpty), typeof(T).Name, allowDuplicateSheets);
+
+        public void Save(string fileName) => Task.Factory.StartNew(() => Excel.Save(fileName));
     }
 }

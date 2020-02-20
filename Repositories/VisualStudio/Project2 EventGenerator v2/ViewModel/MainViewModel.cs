@@ -87,11 +87,11 @@ namespace EventGenerator.ViewModel
 
         public Game1ViewModel Game1
         {
-            get => Get<Game1ViewModel>(nameof(Game1), new Game1ViewModel() { Main = this });
+            get => Get<Game1ViewModel>(nameof(Game1), new Game1ViewModel { Main = this });
         }
         public Game2ViewModel Game2
         {
-            get => Get<Game2ViewModel>(nameof(Game2), new Game2ViewModel() { Main = this });
+            get => Get<Game2ViewModel>(nameof(Game2), new Game2ViewModel { Main = this });
         }
         #endregion
 
@@ -100,7 +100,7 @@ namespace EventGenerator.ViewModel
             Commands[TAB_CHANGED_COMMAND] = new CustomCommand(TabChanged, false);
             Commands[DB_SERVER_CHANGED_COMMAND] = new CustomCommand(DBServerChanged);
             Commands[UPDATE_COMMAND] = new CustomCommand(UpdateService.Update, false);
-            Commands[OPEN_EXECUTING_FORDER_COMMAND] = new CustomCommand(FileService.OpenExecutingFolder);
+            Commands[OPEN_EXECUTING_FORDER_COMMAND] = new CustomCommand(FileUtility.OpenExecutingFolder);
 
             TabChanged(0);
             InitialLog();
@@ -119,14 +119,14 @@ namespace EventGenerator.ViewModel
 
             Task.Factory.StartNew(() =>
             {
-                var imgPaths = filePaths.Where(x => FileService.imageExts.Find(ext => x.EndsWith(ext, StringComparison.OrdinalIgnoreCase)) != null);
+                var imgPaths = filePaths.Where(x => FileUtility.ImageExts.Find(ext => x.EndsWith(ext, StringComparison.OrdinalIgnoreCase)) != null);
                 if (imgPaths.Count() < 1) return;
 
-                imgPaths.ForEach(filePath => FileService.Download(filePath));
+                imgPaths.ForEach(filePath => FileUtility.Download(filePath));
                 SingleIcon.Toast("완료", "이미지 처리");
             });
-            Task.Factory.StartNew(() => FileService.ProcessCsvFiles(filePaths));
-            Task.Factory.StartNew(() => FileService.ProcessAcbFiles(filePaths));
+            Task.Factory.StartNew(() => FileUtility.ProcessCsvFiles(filePaths));
+            Task.Factory.StartNew(() => FileUtility.ProcessAcbFiles(filePaths));
         }
         #endregion
 

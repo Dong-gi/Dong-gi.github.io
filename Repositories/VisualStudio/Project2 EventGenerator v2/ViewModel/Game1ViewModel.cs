@@ -1,22 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Input;
-using EventGenerator.Model.Dto;
 using EventGenerator.Utility;
 using EventGenerator.Model;
-using System.IO;
 using Newtonsoft.Json;
-using Microsoft.Office.Interop.Excel;
-using System.Reflection;
 using MoreLinq;
-using System.Threading;
-using EventGenerator.Dao;
-using System.ComponentModel;
-using EventGenerator.Model.CustomAttribute;
 using static EventGenerator.Model.Dto.Game1;
 using static EventGenerator.Model.Constants;
 using EventGenerator.Service;
@@ -57,7 +46,7 @@ namespace EventGenerator.ViewModel
         #region SubTab2
         private void SearchTest1()
         {
-            var searched = new Connection(DB.dgkim).Query<object>("select * from test", DBServer.Game1Now).ToList();
+            var searched = new Connection(DB.DGKIM).Query<object>(DBServer.Game1Now, "select * from test").ToList();
             if (!searched.Any())
                 return;
             
@@ -86,7 +75,7 @@ namespace EventGenerator.ViewModel
                 foreach (var row in (dataGrid as DataGrid).SelectedItems)
                     selected.Add(row);
             });
-            var gs1 = new Game1Service().MakeTable1(selected.WithAs<object, Table1>().OrderBy(x => x.column1), Main.CurrentDBServer);
+            var gs1 = new Game1Service().MakeTable1(Main.CurrentDBServer, selected.WithAs<object, Table1>().OrderBy(x => x.column1));
             gs1.Save("Game1_Table1.xls");
         }
         #endregion

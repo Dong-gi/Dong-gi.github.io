@@ -53,42 +53,39 @@ namespace EventGenerator.Model.Dto
         public string C28 { get; set; }
         public string C29 { get; set; }
 
-        public string Get(int index)
+        public string Get(int index) => index switch
         {
-            switch (index)
-            {
-                case 0: return C0;
-                case 1: return C1;
-                case 2: return C2;
-                case 3: return C3;
-                case 4: return C4;
-                case 5: return C5;
-                case 6: return C6;
-                case 7: return C7;
-                case 8: return C8;
-                case 9: return C9;
-                case 10: return C10;
-                case 11: return C11;
-                case 12: return C12;
-                case 13: return C13;
-                case 14: return C14;
-                case 15: return C15;
-                case 16: return C16;
-                case 17: return C17;
-                case 18: return C18;
-                case 19: return C19;
-                case 20: return C20;
-                case 21: return C21;
-                case 22: return C22;
-                case 23: return C23;
-                case 24: return C24;
-                case 25: return C25;
-                case 26: return C26;
-                case 27: return C27;
-                case 28: return C28;
-                case 29: return C29;
-            }
-            return "?";
-        }
+            0 => C0,
+            1 => C1,
+            2 => C2,
+            3 => C3,
+            4 => C4,
+            5 => C5,
+            6 => C6,
+            7 => C7,
+            8 => C8,
+            9 => C9,
+            10 => C10,
+            11 => C11,
+            12 => C12,
+            13 => C13,
+            14 => C14,
+            15 => C15,
+            16 => C16,
+            17 => C17,
+            18 => C18,
+            19 => C19,
+            20 => C20,
+            21 => C21,
+            22 => C22,
+            23 => C23,
+            24 => C24,
+            25 => C25,
+            26 => C26,
+            27 => C27,
+            28 => C28,
+            29 => C29,
+            _ => "?",
+        };
     }
 }

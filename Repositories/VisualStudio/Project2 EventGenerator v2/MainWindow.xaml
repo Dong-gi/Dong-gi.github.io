@@ -17,7 +17,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
 
         Title="통합 이벤트 생성기" Height="600" Width="1200" Icon="Resources/yellow.ico"
-        AllowDrop="True" DragEnter="Window_DragEnter" Drop="Window_Drop" Closing="Window_Closing">
+        AllowDrop="True" DragEnter="Window_DragEnter" Drop="Window_Drop">
 
     <Window.Resources>
         <Style x:Key="horizontalStackPanelStyle" TargetType="{x:Type StackPanel}">

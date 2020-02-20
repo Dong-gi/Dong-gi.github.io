@@ -1,5 +1,4 @@
-﻿using EventGenerator.Utility;
-using Microsoft.Office.Interop.Excel;
+﻿using Microsoft.Office.Interop.Excel;
 using MoreLinq;
 using System;
 using System.Collections.Generic;
@@ -10,11 +9,11 @@ using System.Text.RegularExpressions;
 
 using static EventGenerator.Model.Constants;
 
-namespace EventGenerator.Service
+namespace EventGenerator.Utility
 {
-    public class FileService
+    public static class FileUtility
     {
-        public static readonly List<string> imageExts = new List<string>(new string[] { ".jpg", ".png", ".gif", ".bmp", ".jpeg" });
+        public static readonly List<string> ImageExts = new List<string> { ".jpg", ".png", ".gif", ".bmp", ".jpeg" };
 
 
         public static void OpenFolder(string path) => System.Diagnostics.Process.Start(path);
@@ -23,19 +22,37 @@ namespace EventGenerator.Service
         public static string FileExt(string filePath) => filePath.Trim().Split('.').Last();
         public static string FileNameWithoutExt(string filePath) => Regex.Replace(FileName(filePath), $"\\.{FileExt(filePath)}$", "");
 
-        public static bool Download(string remotePath, string fileName = null, string saveFileName = null, string savePath = null)
+        // 중복되지 않는 파일명
+        public static string AlternateFileName(string binPath, string fileName)
         {
-            using (var client = new System.Net.WebClient())
+            if (!File.Exists(binPath + fileName))
+                return fileName;
+
+            var name = FileNameWithoutExt(fileName);
+            var ext = FileExt(fileName);
+            for (var suffix = 1; ; ++suffix)
             {
-                try
-                {
-                    if (savePath != null)
-                        Directory.CreateDirectory(savePath);
-                    client.DownloadFile(remotePath + (fileName ?? ""), (savePath ?? IMG_SAVE_PATH) + (saveFileName ?? fileName ?? FileName(remotePath)));
-                    Console.Write($"다운로드 성공 : {fileName ?? ""}@{remotePath}");
-                    return true;
-                }
-                catch (Exception e) { Console.Write(e); }
+                var newFileName = $"{name}_{suffix}.{ext}";
+                if (!File.Exists(binPath + newFileName))
+                    return newFileName;
+            }
+        }
+
+        public static bool Download(string remotePath, string fileName = null, string saveFileName = null, string savePath = null, bool print = false)
+        {
+            using var client = new System.Net.WebClient();
+            try
+            {
+                if (savePath != null)
+                    Directory.CreateDirectory(savePath);
+                client.DownloadFile($"{remotePath}{fileName ?? ""}", $"{savePath ?? IMG_SAVE_PATH}{saveFileName ?? fileName ?? FileName(remotePath)}");
+                Console.Write($"다운로드 성공 : {fileName ?? ""}@{remotePath}");
+                return true;
+            }
+            catch (Exception e)
+            {
+                if (print)
+                    Console.Write(e);
             }
             return false;
         }
@@ -52,8 +69,8 @@ namespace EventGenerator.Service
                 processed = true;
                 var text = File.ReadAllText(filePath);
                 var newFilePath = regex3.Replace(filePath, "$1.csv");
-                using (var writer = new StreamWriter(newFilePath))
-                    writer.Write(regex2.Replace(regex1.Replace(text, " 0$2"), "\"\""));
+                using var writer = new StreamWriter(newFilePath);
+                writer.Write(regex2.Replace(regex1.Replace(text, " 0$2"), "\"\""));
                 if (!newFilePath.Equals(filePath))
                     File.Delete(filePath);
                 Console.Write("CSV 처리 완료 : " + filePath);
@@ -225,7 +242,7 @@ namespace EventGenerator.Service
                 sheet.Cells.RowHeight = 13;
 
                 Console.Write("CSV to XLSX 변환 완료");
-                var fileName = FileService.FileName(filePath);
+                var fileName = FileUtility.FileName(filePath);
                 book.SaveAs(new FileInfo(filePath).DirectoryName
                         + (new FileInfo(filePath).DirectoryName.EndsWith("\\") ? "" : "\\")
                         + fileName.Replace(".csv", ".xlsx"), XlFileFormat.xlWorkbookDefault);

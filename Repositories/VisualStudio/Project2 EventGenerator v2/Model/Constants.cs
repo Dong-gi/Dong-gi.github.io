@@ -12,6 +12,10 @@
         public const string AWS_SECRET_ACCESS_KEY = "AWS_SECRET_ACCESS_KEY";
         public const string AWS_DISTRIBUTION_ID = "AWS_DISTRIBUTION_ID";
         public const string AWS_BASE_INVALIDATION_ID = "AWS_BASE_INVALIDATION_ID";
+
+        public const string CHATWORK_API_URL = "CHATWORK_API_URL";
+        public const string CHATWORK_TOKEN = "CHATWORK_TOKEN";
+        public const string CHATWORK_ROOM_ID = "CHATWORK_ROOM_ID";
         #endregion
 
         #region 커맨드

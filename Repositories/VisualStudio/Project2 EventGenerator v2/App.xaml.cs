@@ -9,8 +9,6 @@ namespace EventGenerator
     /// </summary>
     public partial class App : Application
     {
-        public TaskbarIcon icon;
-
         protected override void OnStartup(StartupEventArgs e)
         {
             System.Globalization.CultureInfo c = new System.Globalization.CultureInfo("ko-KR");
@@ -25,8 +23,10 @@ namespace EventGenerator
 
         protected override void OnExit(ExitEventArgs e)
         {
-             Utility.NaiveHttpServer.CloseAll();
+            Utility.NaiveHttpServer.CloseAll();
             SingleIcon.GetIcon().Dispose();
+            Utility.MSExcel.Workbooks.Close();
+            Utility.MSExcel.App.Quit();
             base.OnExit(e);
         }
     }
@@ -46,6 +46,8 @@ namespace EventGenerator
         public static async void Toast(string title, string msg)
         {
             Console.WriteLine($"Toast │ {title} │ {msg}");
+            if (System.AppDomain.CurrentDomain.BaseDirectory.Contains("Visual Studio"))
+                return;
             await Utility.ActionUtility.UI(() => GetIcon().ShowBalloonTip(title, msg, GetIcon().Icon));
         }
     }

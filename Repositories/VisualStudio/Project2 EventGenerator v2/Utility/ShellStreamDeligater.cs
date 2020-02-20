@@ -1,20 +1,16 @@
-﻿using EventGenerator.ViewModel;
-using Renci.SshNet;
+﻿using Renci.SshNet;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace EventGenerator.Utility
 {
     public class ShellStreamDeligater : IDisposable
     {
         private ShellStream Stream { get; set; }
-        private bool IsCopy { get; set; } = false;
-        public string CopyText { get; private set; }
+        private StringBuilder CopyText { get; set; } = new StringBuilder();
+        public string LastCopiedTest { get; private set; }
         public bool IsWriteConsole { get; set; } = true;
         public bool IsReceived { get; private set; } = false;
 
@@ -25,8 +21,7 @@ namespace EventGenerator.Utility
             stream.DataReceived += (sender, args) =>
             {
                 var text = Encoding.Default.GetString(args.Data);
-                if (IsCopy)
-                    CopyText += text;
+                CopyText.Append(text);
                 if (IsWriteConsole)
                     Console.Write(text);
                 IsReceived = true;
@@ -35,15 +30,15 @@ namespace EventGenerator.Utility
 
         public ShellStreamDeligater CopyStart()
         {
-            CopyText = "";
-            IsCopy = true;
+            CopyText.Clear();
             return this;
         }
         public ShellStreamDeligater CopyEnd()
         {
-            IsCopy = false;
-            ActionUtility.UI(() => System.Windows.Clipboard.SetText(CopyText)).Wait();
-            //MainViewModel.Current.Toast("알림", "클립보드로 복사 완료");
+            LastCopiedTest = CopyText.Length > 0 ? CopyText.ToString() : "EMPTY";
+            if (IsWriteConsole)
+                Console.WriteLine($"복사 완료 : {LastCopiedTest}");
+            ActionUtility.UI(() => System.Windows.Clipboard.SetText(LastCopiedTest)).Wait();
             return this;
         }
         public ShellStreamDeligater Read()
@@ -70,12 +65,16 @@ namespace EventGenerator.Utility
         public ShellStreamDeligater Expect(Regex regex)
         {
             Stream.Expect(regex);
+            while (!regex.IsMatch(CopyText.ToString()))
+                Thread.Sleep(50);
             return this;
         }
         public ShellStreamDeligater Expect(Regex regex, TimeSpan timeout)
         {
             if (Stream.Expect(regex, timeout) == null)
                 throw new TimeoutException();
+            while (!regex.IsMatch(CopyText.ToString()))
+                Thread.Sleep(50);
             return this;
         }
 

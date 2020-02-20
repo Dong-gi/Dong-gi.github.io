@@ -15,11 +15,11 @@ namespace EventGenerator.Dao
 
 
         #region DB1
-        public static IEnumerable<Table1> SelectTable1(IEnumerable<string> ids)
-            => DB1Dao().SelectAllWhereIdIn(table1, column1, ids).OrderBy(column1).Query<Table1>();
+        public static IEnumerable<Table1> SelectTable1(DBServer server, IEnumerable<string> ids)
+            => DB1Dao().SELECT_ALL_FROM_table_WHERE_column_IN_ids(table1, column1, ids).OrderBy(column1).Query<Table1>(server);
 
-        public static IEnumerable<Table1> SelectTable1(string start, string end)
-            => DB1Dao().SelectAll().Where($"{column1} between '{start}' and '{end}'").OrderBy(column1).Query<Table1>();
+        public static IEnumerable<Table1> SelectTable1(DBServer server, string start, string end)
+            => DB1Dao().SelectAll().Where($"{column1} between '{start}' and '{end}'").OrderBy(column1).Query<Table1>(server);
         #endregion
     }
 }
