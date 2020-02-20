@@ -41,7 +41,10 @@ namespace EventGenerator.Utility
                 {
                     var fieldVal = propertyInfo.GetValue(obj);
                     if (fieldVal == null)
+                    {
                         dataLine.Add(null);
+                        continue;
+                    }
 
                     // SQLite에서 Timestamp를 가져와도 스레드에 설정된 문화권의 포맷을 이용하지 않아 별도 처리
                     if (server.ServerKind == ServerKind.SQLITE

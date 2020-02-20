@@ -230,6 +230,21 @@ function mutationCallback(mutations, observer) {
     }
 }
 
+function sendCommand(command) {
+    console.log(command);
+    let xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", ((command) => function(e) {
+        if (e.target.status != 200) {
+            Donggi.showSnackbar(`"${command.name}" 커맨드 실패`);
+            return;
+        }
+        Donggi.showSnackbar(`"${command.name}" 커맨드 성공`);
+        console.log(e.target.responseText);
+    })(command));
+    xhr.open("POST", '/command', true);
+    xhr.send(JSON.stringify(command));
+}
+
 function sendQuery(query, save) {
     addSheet({
         id: new Date().getTime(),

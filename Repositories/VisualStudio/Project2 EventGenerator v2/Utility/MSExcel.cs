@@ -19,6 +19,7 @@ namespace EventGenerator.Utility
         public readonly _Workbook Workbook;
         public readonly Sheets Sheets;
         public _Worksheet CurrentSheet { get; set; }
+        private bool ReWriteFirstSheet { get; set; } = false;
 
         static MSExcel()
         {
@@ -37,6 +38,7 @@ namespace EventGenerator.Utility
                 Sheets = Workbook.Worksheets;
                 for (var i = Sheets.Count; i > 1; --i)
                     Sheets[i].Delete();
+                ReWriteFirstSheet = true;
             }
             else
             {
@@ -55,7 +57,15 @@ namespace EventGenerator.Utility
             sheetName = DetermineSheetName(sheetName, allowDuplicateSheet);
             // CurrentSheet가 설정된 경우엔 기존 시트에 덮어쓰기
             if (CurrentSheet == null)
-                CurrentSheet = Sheets.Add(After: Sheets[Sheets.Count]);
+            {
+                if (ReWriteFirstSheet)
+                {
+                    CurrentSheet = Sheets[1];
+                    ReWriteFirstSheet = false;
+                }
+                else
+                    CurrentSheet = Sheets.Add(After: Sheets[Sheets.Count]);
+            }
             CurrentSheet.Name = sheetName;
             AfterSheetSelected(ref sheetName);
 
@@ -102,7 +112,8 @@ namespace EventGenerator.Utility
             var actualFileName = FileUtility.AlternateFileName(SaveDir, fileName);
             try
             {
-                Workbook.Close(true, SaveDir + actualFileName, format ?? XlFileFormat.xlWorkbookNormal);
+                Workbook.SaveAs(SaveDir + actualFileName, format ?? XlFileFormat.xlWorkbookNormal);
+                Workbook.Close(false);
                 SingleIcon.Toast("저장 완료", actualFileName);
             }
             catch (Exception e)
