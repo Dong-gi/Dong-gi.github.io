@@ -2004,23 +2004,8 @@ tree_table_view_example.fxml
 tree_view_example.fxml
 
 /workspace/donggi-github/Dong-gi.github.io/Repositories/JavaScript:
-Angular
 Basic
 Browser
-igaworks_push.js
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/JavaScript/Angular:
-hello-world
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/JavaScript/Angular/hello-world:
-src
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/JavaScript/Angular/hello-world/src:
-app
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/JavaScript/Angular/hello-world/src/app:
-app.component.ts
-i18n.service.ts
 
 /workspace/donggi-github/Dong-gi.github.io/Repositories/JavaScript/Basic:
 array.js
@@ -2039,7 +2024,14 @@ dom_example1.js
 dom_example2.js
 edit_dom.js
 file_example.js
+google_spreadsheet_1.js
+google_spreadsheet_2.js
+google_spreadsheet_3.js
+hiy9.net.js
+igaworks_push.js
 location.js
+maplestory.fandom.com.js
+steamgifts.com.js
 window_open.js
 window_popup.js
 window_resizeto.js
@@ -2517,6 +2509,7 @@ XRSettings.asset
 /workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio:
 CSharp
 Project1 EventGenerator
+Project2 EventGenerator v2
 csharp_base_keyword.cs
 csharp_interpolated_string.cs
 csharp_property.cs
@@ -2744,7 +2737,6 @@ MainWindow.xaml
 MainWindow.xaml.cs
 Model
 Properties
-README.md
 Resources
 Service
 Updater
@@ -2819,6 +2811,119 @@ Game1ViewModel.cs
 Game2ViewModel.cs
 MainViewModel.cs
 
+/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2:
+App.config
+App.xaml
+App.xaml.cs
+Dao
+EventGenerator.csproj
+EventGenerator.sln
+Icon.xaml
+ImageOptimizer
+LICENSE.md
+MainWindow.xaml
+MainWindow.xaml.cs
+Model
+Properties
+Resources
+Service
+Updater
+Utility
+ViewModel
+WWW
+packages.config
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Dao:
+Dao.cs
+Game1Dao.cs
+GaraDao.cs
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/ImageOptimizer:
+ImageOptimizer.zip
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Model:
+BaseContext.cs
+Constants.cs
+CustomAttribute.cs
+DB.cs
+DBServer.cs
+Dto.cs
+SaveXlsRequest.cs
+ServerKind.cs
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Properties:
+AssemblyInfo.cs
+Resources.Designer.cs
+Resources.resx
+Settings.Designer.cs
+Settings.settings
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Resources:
+blue.ico
+blue.png
+yellow.ico
+yellow.png
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Service:
+AWSService.cs
+Game1Service.cs
+SSHService.cs
+UpdateService.cs
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Updater:
+App.config
+InstallerUpdater.cs
+Program.cs
+Properties
+Updater.csproj
+Updater.csproj.user
+ZipUpdater.cs
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Updater/Properties:
+AssemblyInfo.cs
+app.manifest
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Utility:
+ActionUtility.cs
+ChatworkUtility.cs
+CollectionUtility.cs
+Connection.cs
+ConsoleRedirectWriter.cs
+CustomCommand.cs
+ExcelDataUtility.cs
+FileUtility.cs
+ImageOptimizer.cs
+MSExcel.cs
+NaiveHttpServer.cs
+ShellStreamDeligater.cs
+StringUtility.cs
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/ViewModel:
+BaseViewModel.cs
+Game1ViewModel.cs
+Game2ViewModel.cs
+IconViewModel.cs
+MainViewModel.cs
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/WWW:
+index.html
+posts
+posts.js
+source
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/WWW/posts:
+game1
+query.html
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/WWW/posts/game1:
+test.html
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/WWW/source:
+default.css
+default.js
+utility.js
+w3.css
+
 /workspace/donggi-github/Dong-gi.github.io/Repositories/sh:
 0_basic.sh
 0_basic.txt
@@ -2868,19 +2973,22 @@ kanna.gif
 /workspace/donggi-github/Dong-gi.github.io/posts:
 algorithm
 book
-career
 db
 dotnet
 front
 java
 javascript
+project
 python
 tip
 
 /workspace/donggi-github/Dong-gi.github.io/posts/algorithm:
+ai.html
 algo.html
 book01.html
 koreatech.html
+linear_algebra.html
+probability.html
 
 /workspace/donggi-github/Dong-gi.github.io/posts/book:
 001.html
@@ -2892,20 +3000,6 @@ koreatech.html
 007.html
 008.html
 009.html
-
-/workspace/donggi-github/Dong-gi.github.io/posts/career:
-SESISOFT_EventGenerator.uml
-SESISOFT_EventGenerator.~ml
-at_home_at_20190724.html
-at_home_at_20190724.js
-at_sesisoft_at_20190626.html
-at_sesisoft_at_20190626.js
-at_sesisoft_at_20190715.html
-at_sesisoft_at_20190808.html
-at_sesisoft_at_20190808_1.js
-at_sesisoft_at_20190808_2.js
-at_sesisoft_at_20191112.js
-at_sesisoft_from_201806.html
 
 /workspace/donggi-github/Dong-gi.github.io/posts/db:
 concept.html
@@ -3007,6 +3101,11 @@ node.html
 selector_example.html
 storage_example.html
 
+/workspace/donggi-github/Dong-gi.github.io/posts/project:
+browser_code_snippet.html
+browser_script.html
+wpf_data_tool.html
+
 /workspace/donggi-github/Dong-gi.github.io/posts/python:
 basic.html
 built_in_constant.html
@@ -3032,10 +3131,7 @@ fp.html
 giregi.html
 git.html
 hangul.html
-linear_algebra.html
-macro.html
 playstore.html
-probability.html
 psql.html
 quantum_computer.html
 refactoring.html
@@ -3054,6 +3150,7 @@ default.css
 default.js
 highlight.pack.js
 mjx-chtml.css
+ordered-table.js
 redirect.js
 tex-chtml.js
 utility.js

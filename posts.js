@@ -1,9 +1,12 @@
 const posts = {
     list: [
+        { file: "/posts/algorithm/ai.html", category: "Algorithm", title: "AI" },
         { file: "/posts/algorithm/algo.html", category: "Algorithm", title: "Algorithm" },
         { file: "/posts/algorithm/book01.html", category: "Algorithm", title: "『알고리즘 도감』" },
         { file: "/posts/algorithm/koreatech.html", category: "Algorithm", title: "jduge.koreatech.ac.kr" },
-
+        { file: "/posts/algorithm/linear_algebra.html", category: "Algorithm", title: "선형대수" },
+        { file: "/posts/algorithm/probability.html", category: "Algorithm", title: "확률" },
+        
         { file: "/posts/book/001.html", category: "Book", title: "1만 시간의 재발견" },
         { file: "/posts/book/002.html", category: "Book", title: "마음의 탄생" },
         { file: "/posts/book/003.html", category: "Book", title: "생각하는 삶을 위한 철학의 역사" },
@@ -14,16 +17,10 @@ const posts = {
         { file: "/posts/book/007.html", category: "Book", title: "키르케고르 실존 극장" },
         { file: "/posts/book/008.html", category: "Book", title: "Gamification by Design" },
 
-        { file: "/posts/career/at_sesisoft_from_201806.html", category: "Career", title: "C#.NET, WPF - 데이터 작업 툴" },
-        { file: "/posts/career/at_sesisoft_at_20190808.html", category: "Career", title: "JavaScript - 구글 스프레드시트 스크립트" },
-        { file: "/posts/career/at_sesisoft_at_20190626.html", category: "Career", title: "JavaScript - 자연스러운 테이블 정렬" },
-        { file: "/posts/career/at_home_at_20190724.html", category: "Career", title: "JavaScript - 브라우저 매크로 스크립트" },
-        { file: "/posts/career/at_sesisoft_at_20190715.html", category: "Career", title: "JavaScript - IGA Works 푸시 등록 절차 개선" },
-
         { file: "/posts/dotnet/csharp_library.html", category: "Programming/.NET", title: "C# 라이브러리" },
         { file: "/posts/dotnet/csharp_basic.html", category: "Programming/.NET", title: "C# 시작하기" },
         { file: "/posts/dotnet/wpf_basic.html", category: "Programming/.NET", title: "WPF 시작하기" },
-
+        
         { file: "/posts/db/concept.html", category: "Programming/DB", title: "기본 개념" },
         { file: "/posts/db/mysql.html", category: "Programming/DB", title: "MySQL" },
         { file: "/posts/db/psql_to_sqlite.html", category: "Programming/DB", title: "PostgreSQL → SQLite3 마이그레이션" },
@@ -104,6 +101,10 @@ const posts = {
         { file: "/posts/python/struct.html", category: "Programming/Python/Library", title: "Lib/struct : 이진 데이터 패킹/언패킹" },
         { file: "/posts/python/datetime.html", category: "Programming/Python/Library", title: "Lib/datetime : 단순 시간 표현" },
 
+        { file: "/posts/project/wpf_data_tool.html", category: "Project", title: "C#.NET, WPF - 데이터 작업 툴" },
+        { file: "/posts/project/browser_code_snippet.html", category: "Project", title: "JavaScript - 브라우저 코드 조각" },
+        { file: "/posts/project/browser_script.html", category: "Project", title: "JavaScript - 브라우저 매크로 스크립트" },
+        
         { file: "/posts/tip/aws.html", category: "Tip", title: "AWS" },
         { file: "/posts/tip/centos.html", category: "Tip", title: "CentOS" },
         { file: "/posts/tip/chrome.html", category: "Tip", title: "Chrome" },
@@ -114,11 +115,8 @@ const posts = {
         { file: "/posts/tip/git.html", category: "Tip", title: "Git" },
         { file: "/posts/tip/giregi.html", category: "Tip", title: "기레기 고소 방법" },
         { file: "/posts/tip/hangul.html", category: "Tip", title: "한글 유니코드" },
-        { file: "/posts/tip/linear_algebra.html", category: "Tip", title: "선형대수", top: true },
         { file: "/posts/tip/tomcat.html", category: "Tip", title: "tomcat" },
-        { file: "/posts/tip/macro.html", category: "Tip", title: "macro" },
         { file: "/posts/tip/playstore.html", category: "Tip", title: "Google Play Store" },
-        { file: "/posts/tip/probability.html", category: "Tip", title: "확률", top: true },
         { file: "/posts/tip/psql.html", category: "Tip", title: "psql" },
         { file: "/posts/tip/refactoring.html", category: "Tip", title: "디자인 패턴 + 리팩터링" },
         { file: "/posts/tip/regex.html", category: "Tip", title: "정규표현식" },
@@ -140,11 +138,4 @@ const posts = {
 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="">
 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="javascript:;">
 <img class="w3-round" src="imgs/">
-
-	<li>https://developers.google.com/machine-learning/crash-course/ml-intro?hl=ko</li>
-	<li>http://hunkim.github.io/ml/</li>
-	<li>https://github.com/golbin/TensorFlow-Tutorials</li>
-	<li>https://www.cs.ox.ac.uk/people/nando.defreitas/machinelearning/</li>
-	<li>https://scikit-learn.org/stable/tutorial/</li>
-	<li>https://www.udacity.com/course/intro-to-tensorflow-for-deep-learning--ud187</li>
  */

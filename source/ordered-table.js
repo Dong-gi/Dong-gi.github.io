@@ -1,8 +1,13 @@
-window.addEventListener('load', () => {
-    const observer = new MutationObserver(callback);
-    observer.observe(document.body, { attributes: false, childList: true, subtree: true });
-    
-    document.getElementsByTagName('head')[0].append(Donggi.getElementFromText(`<style>
+window.addEventListener('load', initOrderedTableFunctionality);
+initOrderedTableFunctionality();
+
+function initOrderedTableFunctionality() {
+    if (document.readyState != 'ready' && document.readyState != 'complete')
+        return;
+    if (!!document.querySelector('style#ordered-table-style'))
+        return;
+    document.getElementsByTagName('head')[0].append(Donggi.getElementFromText(
+`<style id="ordered-table-style">
 td.sorting-table-head-black:after,
 th.sorting-table-head-black:after {
     content: attr(sort-order);
@@ -14,22 +19,23 @@ th.sorting-table-head-white:after {
     content: attr(sort-order);
     color: white;
 }</style>`));
-});
 
+    new MutationObserver(addOrderedTableFunctionality).observe(document.body, { attributes: false, childList: true, subtree: true });
+}
 
-const callback = function(mutationsList, observer) {
-    for (let mutation of mutationsList) {
+function addOrderedTableFunctionality(mutations, observer) {
+    for (let mutation of mutations) {
         if (mutation.type !== 'childList') return;
-
+        
         for (let table of mutation.target.querySelectorAll('table')) {
             if (table.rows.length < 1) {
                 table.classList.remove('ordered-table');
-                return;
+                continue;
             }
             if (table.classList.contains('ordered-table'))
-                return;
+                continue;
             if (table.rows.length < 2)
-                return;
+                continue;
             table.classList.add('w3-table-all', 'w3-card', 'w3-small', 'ordered-table');
 
             let headRow = table.rows[0]; // 테이블의 1번째 행을 테이블 헤더 행으로 간주
