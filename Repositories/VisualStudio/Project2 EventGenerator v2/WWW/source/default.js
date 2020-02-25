@@ -213,7 +213,7 @@ function mutationCallback(mutations, observer) {
                 continue;
             if (table.rows.length < 2)
                 continue;
-            if (table.getAttribute('id').startsWith('sheet-table'))
+            if (!!table.getAttribute('id') && table.getAttribute('id').startsWith('sheet-table'))
                 table.classList.add('w3-table-all', 'w3-card', 'ordered-table');
             else
                 table.classList.add('w3-table-all', 'w3-card', 'w3-small', 'ordered-table');
@@ -246,15 +246,6 @@ function sendCommand(command) {
 }
 
 function sendQuery(query, save) {
-    addSheet({
-        id: new Date().getTime(),
-        sheetNum: sheets.length,
-        sheetName: `${new Date().getTime()}`,
-        className: 'test',
-        rows: [{"id":1,"name":"dgkim","add_date":"2020-02-15T20:48:45.04391+09:00"},{"id":2,"name":"dgkim2","add_date":"2020-02-15T20:48:45.04391+09:00"},{"id":3,"name":null,"add_date":"2020-02-15T20:49:14.012979+09:00"},{"id":4,"name":"","add_date":"2020-02-15T20:49:24.884275+09:00"},{"id":5,"name":"test","add_date":"2019-01-03T01:23:45+09:00"}],
-        table: null
-    });
-    return;
     if (!query)
         return;
     if (!!save) {
