@@ -6,6 +6,7 @@ const posts = {
         { file: "/posts/algorithm/koreatech.html", category: "Algorithm", title: "jduge.koreatech.ac.kr" },
         { file: "/posts/algorithm/linear_algebra.html", category: "Algorithm", title: "선형대수" },
         { file: "/posts/algorithm/probability.html", category: "Algorithm", title: "확률" },
+        { file: "/posts/algorithm/tip.html", category: "Algorithm", title: "토막글" },
         
         { file: "/posts/book/001.html", category: "Book", title: "1만 시간의 재발견" },
         { file: "/posts/book/002.html", category: "Book", title: "마음의 탄생" },
@@ -100,6 +101,9 @@ const posts = {
         { file: "/posts/python/unicodedata.html", category: "Programming/Python/Library", title: "Lib/unicodedata : 유니코드 database 표준" },
         { file: "/posts/python/struct.html", category: "Programming/Python/Library", title: "Lib/struct : 이진 데이터 패킹/언패킹" },
         { file: "/posts/python/datetime.html", category: "Programming/Python/Library", title: "Lib/datetime : 단순 시간 표현" },
+        { file: "/posts/python/calendar.html", category: "Programming/Python/Library", title: "Lib/calendar : 달력 연산" },
+        { file: "/posts/python/collections.html", category: "Programming/Python/Library", title: "Lib/collections : 컨테이너" },
+        { file: "/posts/python/collections.abc.html", category: "Programming/Python/Library", title: "Lib/collections.abc : 컨테이너 ABC" },
 
         { file: "/posts/project/wpf_data_tool.html", category: "Project", title: "C#.NET, WPF - 데이터 작업 툴" },
         { file: "/posts/project/browser_code_snippet.html", category: "Project", title: "JavaScript - 브라우저 코드 조각" },

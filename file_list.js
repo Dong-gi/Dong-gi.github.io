@@ -2020,6 +2020,7 @@ type.js
 
 /workspace/donggi-github/Dong-gi.github.io/Repositories/JavaScript/Browser:
 blob_example.js
+davidfennmusic.bandcamp.com.js
 dom_example1.js
 dom_example2.js
 edit_dom.js
@@ -2989,6 +2990,7 @@ book01.html
 koreatech.html
 linear_algebra.html
 probability.html
+tip.html
 
 /workspace/donggi-github/Dong-gi.github.io/posts/book:
 001.html
@@ -3112,6 +3114,9 @@ built_in_constant.html
 built_in_exception.html
 built_in_function.html
 built_in_type.html
+calendar.html
+collections.abc.html
+collections.html
 data_model.html
 datetime.html
 re.html

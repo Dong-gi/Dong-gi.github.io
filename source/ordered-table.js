@@ -34,9 +34,12 @@ function addOrderedTableFunctionality(mutations, observer) {
             }
             if (table.classList.contains('ordered-table'))
                 continue;
+            table.classList.add('w3-table-all', 'w3-card', 'w3-small');
             if (table.rows.length < 2)
                 continue;
-            table.classList.add('w3-table-all', 'w3-card', 'w3-small', 'ordered-table');
+            table.classList.add('ordered-table');
+            if (table.classList.contains('no-sort'))
+                continue;
 
             let headRow = table.rows[0]; // 테이블의 1번째 행을 테이블 헤더 행으로 간주
             headRow.classList.add('table-head-row');

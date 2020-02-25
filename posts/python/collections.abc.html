@@ -1,0 +1,161 @@
+<script src="/source/utility.js?200203_1003"></script>
+<script src="/source/redirect.js?200203_0949"></script>
+
+<table>
+   <tr>
+       <th>ABC</th>
+       <th>상속</th>
+       <th>Abstract Methods</th>
+       <th>Mixin Methods(재정의 안 해도 괜찮)</th>
+   </tr>
+   <tr>
+       <td>Container</td>
+       <td></td>
+       <td>__contains__</td>
+       <td></td>
+   </tr>
+   <tr>
+       <td>Hashable</td>
+       <td></td>
+       <td>__hash__</td>
+       <td></td>
+   </tr>
+   <tr>
+       <td>Iterable</td>
+       <td></td>
+       <td>__iter__</td>
+       <td></td>
+   </tr>
+   <tr>
+       <td>Iterator</td>
+       <td>Iterable</td>
+       <td>__next__</td>
+       <td>__iter__</td>
+   </tr>
+   <tr>
+       <td>Reversible</td>
+       <td>Iterable</td>
+       <td>__reversed__</td>
+       <td></td>
+   </tr>
+   <tr>
+       <td>Generator</td>
+       <td>Iterator</td>
+       <td>send, throw</td>
+       <td>close, __iter__, __next__</td>
+   </tr>
+   <tr>
+       <td>Sized</td>
+       <td></td>
+       <td>__len__</td>
+       <td></td>
+   </tr>
+   <tr>
+       <td>Callable</td>
+       <td></td>
+       <td>__call__</td>
+       <td></td>
+   </tr>
+   <tr>
+       <td>Collection</td>
+       <td>Sized, Iterable, Container</td>
+       <td>__contains__, __iter__, __len__</td>
+       <td></td>
+   </tr>
+   <tr>
+       <td>Sequence</td>
+       <td>Reversible, Collection</td>
+       <td>__getitem__, __len__</td>
+       <td>__contains__, __iter__, __reversed__, index, count</td>
+   </tr>
+   <tr>
+       <td>MutableSequence</td>
+       <td>Sequence</td>
+       <td>__getitem__, __setitem__, __delitem__, __len__, insert</td>
+       <td>Sequence 상속 메서드, append, reverse, extend, pop, remove, and __iadd__</td>
+   </tr>
+   <tr>
+       <td>ByteString</td>
+       <td>Sequence</td>
+       <td>__getitem__, __len__</td>
+       <td>Sequence 상속 메서드</td>
+   </tr>
+   <tr>
+       <td>Set</td>
+       <td>Collection</td>
+       <td>__contains__, __iter__, __len__</td>
+       <td>__le__, __lt__, __eq__,__ne__, __gt__, __ge__,__and__, __or__, __sub__, __xor__, isdisjoint</td>
+   </tr>
+   <tr>
+       <td>MutableSet</td>
+       <td>Set</td>
+       <td>__contains__, __iter__, __len__, add, discard</td>
+       <td>Set 상속 메서드, clear, pop, remove,__ior__, __iand__, __ixor__, __isub__</td>
+   </tr>
+   <tr>
+       <td>Mapping</td>
+       <td>Collection</td>
+       <td>__getitem__, __iter__, __len__</td>
+       <td>__contains__, keys, items,values, get, __eq__, __ne__</td>
+   </tr>
+   <tr>
+       <td>MutableMapping</td>
+       <td>Mapping</td>
+       <td>__getitem__, __setitem__, __delitem__, __iter__, __len__</td>
+       <td>Mapping 상속 메서드, pop, popitem, clear, update, setdefault</td>
+   </tr>
+   <tr>
+       <td>MappingView</td>
+       <td>Sized</td>
+       <td></td>
+       <td>__len__</td>
+   </tr>
+   <tr>
+       <td>ItemsView</td>
+       <td>MappingView, Set</td>
+       <td></td>
+       <td>__contains__, __iter__</td>
+   </tr>
+   <tr>
+       <td>KeysView</td>
+       <td>MappingView, Set</td>
+       <td></td>
+       <td>__contains__, __iter__</td>
+   </tr>
+   <tr>
+       <td>ValuesView</td>
+       <td>MappingView, Collection</td>
+       <td></td>
+       <td>__contains__, __iter__</td>
+   </tr>
+   <tr>
+       <td>Awaitable</td>
+       <td></td>
+       <td>__await__</td>
+       <td></td>
+   </tr>
+   <tr>
+       <td>Coroutine</td>
+       <td>Awaitable</td>
+       <td>send, throw</td>
+       <td>close</td>
+   </tr>
+   <tr>
+       <td>AsyncIterable</td>
+       <td></td>
+       <td>__aiter__</td>
+       <td></td>
+   </tr>
+   <tr>
+       <td>AsyncIterator</td>
+       <td>AsyncIterable</td>
+       <td>__anext__</td>
+       <td>__aiter__</td>
+   </tr>
+   <tr>
+       <td>AsyncGenerator</td>
+       <td>AsyncIterator</td>
+       <td>asend, athrow</td>
+       <td>aclose, __aiter__, __anext__</td>
+   </tr>
+</table>

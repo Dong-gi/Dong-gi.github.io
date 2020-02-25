@@ -33,7 +33,7 @@
 			<li>day[1, 해당 연월의 일수]</li>
 		</ul>
 		<li>지원 연산</li>
-        <table>
+        <table class="no-sort">
             <tr><td>date2 = date1 + timedelta</td></tr>
             <tr><td>date2 = date1 - timedelta</td></tr>
             <tr><td>timedelta = date1 - date2</td></tr>
@@ -59,26 +59,78 @@
 <details>
 	<summary>class datetime.time : hour, minute, second, microsecond, tzinfo</summary>
 	<ul>
-		<li>인스턴스는 변경 불가능 + 해시 가능하다</li>
+        <li>class datetime.time(hour=0, minute=0, second=0, microsecond=0, tzinfo=None, *, fold=0)</li>
+		<ul>
+            <li>인스턴스는 변경 불가능 + 해시 가능하다</li>
+            <li>fold Since 3.6 : 0 or 1</li>
+            서머 타임이나 윤초 적용처럼, 특정 시각이 2가지로 해석되는 경우의 선후 관계를 나타낸다. 예를 들어 0은 서머 타임 적용 전 8시, 1은 서머 타임 적용 후 8시를 나타낼 수 있다.
+        </ul>
+        <li>클래스 메서드</li>
+        <ul>
+            <li>classmethod time.fromisoformat(time_string) Since 3.7</li>
+            <ul>
+                <li>HH[:MM[:SS[.fff[fff]]]][+HH:MM[:SS[.ffffff]]]</li>
+                <li>time.isoformat()의 역함수로 설계되었기에 모든 ISO 8601 포맷을 인식하지는 못한다.</li>
+            </ul>
+        </ul>
+		<li>클래스 속성</li>
+        <ul>
+            <li>min == time(0, 0, 0, 0)</li>
+            <li>max == time(23, 59, 59, 999999)</li>
+            <li>resolution == timedelta(microseconds=1)</li>
+        </ul>
+        <li>인스턴스 속성(읽기 전용)</li>
+        hour, minute, second, microsecond, tzinfo, fold(의미는 ↑ 생성자 참고) Since 3.6
+        <li>지원 연산</li>
+        <table class="no-sort">
+            <tr><td>산술 비교</td></tr>
+        </table>
+        <ul>
+            <li>naive한 객체는 동등 비교에서 True를 반환하지 않는다</li>
+            <li>Boolean 평가 시 항상 True로 간주된다; 3.5 이전에는 UTC 자정을 false로 간주했다</li>
+        </ul>
+        <li>인스턴스 메서드</li>
+        <ul>
+            <li>replace(hour=self.hour, minute=self.minute, second=self.second, microsecond=self.microsecond, tzinfo=self.tzinfo, *, fold=0)</li>
+            <li>time.isoformat(timespec='auto')</li>
+            <table>
+                <tr><td>Format</td><td>Case</td></tr>
+                <tr><td>HH:MM:SS.ffffff</td><td>microsecond > 0</td></tr>
+                <tr><td>HH:MM:SS</td><td>microsecond == 0</td></tr>
+                <tr><td>HH:MM:SS.ffffff+HH:MM[:SS[.ffffff]]</td><td>utcoffset() != None</td></tr>
+                <tr><td>HH:MM:SS+HH:MM[:SS[.ffffff]]</td><td>microsecond == 0 and utcoffset() != None</td></tr>
+            </table>
+            <table>
+                <tr><td>Format</td><td>timespec</td></tr>
+                <tr><td>'seconds' # microsecond == 0<br>'microseconds' # microsecond > 0</td><td>'auto'</td></tr>
+                <tr><td>HH</td><td>'hours'</td></tr>
+                <tr><td>HH:MM</td><td>'minutes'</td></tr>
+                <tr><td>HH:MM:SS</td><td>'seconds'</td></tr>
+                <tr><td>HH:MM:SS.sss</td><td>'milliseconds'</td></tr>
+                <tr><td>HH:MM:SS.ffffff</td><td>'microseconds'</td></tr>
+            </table>
+            <li>__str__() == isoformat()</li>
+            <li>strftime(format)</li>
+            <li>__format__(format) == strftime(format)</li>
+        </ul>
 	</ul>
 </details>
 
 <hr>
 
-<details open>
+<details>
 	<summary>class datetime.datetime : date + time</summary>
 	<ul>
+        <li>datetime은 date를 상속</li>
         <li>class datetime.datetime(year, month, day, hour=0, minute=0, second=0, microsecond=0, tzinfo=None, *, fold=0)</li>
 		<ul>
             <li>인스턴스는 변경 불가능 + 해시 가능하다</li>
-            <li>fold Since 3.6 : 0 or 1. </li>
-            <li>datetime은 date를 상속</li>
+            <li>fold Since 3.6 : 0 or 1</li>
+            서머 타임이나 윤초 적용처럼, 특정 시각이 2가지로 해석되는 경우의 선후 관계를 나타낸다. 예를 들어 0은 서머 타임 적용 전 8시, 1은 서머 타임 적용 후 8시를 나타낼 수 있다.
         </ul>
 		<li>클래스 메서드</li>
         <ul>
             <li>classmethod datetime.now(tz=None)</li>
-            <li>classmethod datetime.fromtimestamp(timestamp, tz=None) : 1970 ~ 2038년 외의 경우 에러발생 가능.</li>
-            <li>classmethod datetime.fromordinal(ordinal) : hour 이하는 0</li>
             <li>classmethod datetime.combine(date, time, tzinfo=self.tzinfo)</li>
             tzinfo Since 3.6 : 지정되지 않은 경우, time.tzinfo가 사용된다
             <li>classmethod datetime.fromisoformat(date_string) Since 3.7</li>
@@ -86,81 +138,31 @@
                 <li>YYYY-MM-DD[*HH[:MM[:SS[.fff[fff]]]][+HH:MM[:SS[.ffffff]]]] // *는 임의 1글자</li>
                 <li>datetime.isoformat()의 역함수로 설계되었기에 모든 ISO 8601 포맷을 인식하지는 못한다.</li>
             </ul>
-            <li>classmethod datetime.fromisocalendar(year, week, day) Since 3.8</li>
-            <li>classmethod datetime.strptime(date_string, format) == datetime(*(time.strptime(date_string, format)[0:6]))</li>
+            <li>classmethod datetime.strptime(date_string, format)</li>
+            == datetime(*(time.strptime(date_string, format)[0:6]))
         </ul>
 		<li>클래스 속성</li>
+        <ul>
+            <li>min == datetime(MINYEAR, 1, 1, tzinfo=None)</li>
+            <li>max == datetime(MAXYEAR, 12, 31, 23, 59, 59, 999999, tzinfo=None)</li>
+            <li>resolution == timedelta(microseconds=1)</li>
+        </ul>
         <li>인스턴스 속성(읽기 전용)</li>
+        year, month, day, hour, minute, second, microsecond, tzinfo, fold(의미는 ↑ 생성자 참고) Since 3.6
         <li>지원 연산</li>
+        <table class="no-sort">
+            <tr><td>datetime2 = datetime1 + timedelta</td></tr>
+            <tr><td>datetime2 = datetime1 - timedelta</td></tr>
+            <tr><td>timedelta = datetime1 - datetime2</td></tr>
+            <tr><td>산술비교</td></tr>
+        </table>
         <li>인스턴스 메서드</li>
-            
-        
-             
-             datetime.min, datetime.max, datetime.resolution : timedelta(microseconds=1), datetime.year,
-            datetime.month, datetime.day, datetime.hour, datetime.minute, datetime.second, datetime.microsecond,
-            datetime.tzinfo, datetime.fold
-             Operation : datetime2 = datetime1 + timedelta, datetime2 = datetime1 - timedelta, timedelta
-            = datetime1 - datetime2, datetime1 &lt; datetime2
-             datetime.date(), datetime.time(), datetime.timetz(), datetime.utcoffset(), datetime.tzname()
-             datetime.replace(year=self.year, month=self.month, day=self.day, hour=self.hour, minute=self.minute,
-            second=self.second, microsecond=self.microsecond, tzinfo=self.tzinfo, * fold=0)
-             datetime.timetuple() : time.struct_time((d.year, d.month, d.day, d.hour, d.minute, d.second,
-            d.weekday(), yday, dst)), where yday = d.toordinal() - date(d.year, 1, 1).toordinal() + 1
-             datetime.astimezone(tz=None)
-            <br>
-            <br>6. time objects
-             class datetime.time(hour=0, minute=0, second=0, microsecond=0, tzinfo=None, *, fold=0)
-            <br>* 하루 중의 시각을 나타낸다.
-             두 time 객체 간 비교가 가능하다.
-             time.replace(hour=self.hour, minute=self.minute, second=self.second, microsecond=self.microsecond,
-            tzinfo=self.tzinfo, * fold=0)
-             time.isoformat(timespec='auto') : 'HH:MM:SS.mmmmmm'
-            <br>* timespec : 'auto'(마이크로초가 0이면 'seconds', 아니면 'microseconds'), 'hours'(HH), 'minutes'(HH:MM),
-            'seconds'(HH:MM:SS), 'milliseconds'(HH:MM:SS:sss), 'microseconds'(HH:MM:SS:mmmmmm)
-             time.__str__() : str(t) == t.isoformat()
-             time.strftime(format)
-             time.__format__(format) : time.strftime()과 동일
-            <br>
-            <br>7. tzinfo Objects
-             class datetime.tzinfo
-             tzinfo.utcoffset(dt) : UTC와 현지 시각의 차이 반환 // dt = 'd'ate't'ime
-             tzinfo.dst(dt) : DST(daylight saving time)을 반환한다.
-             tzinfo.tzname(dt) : timezone 이름 반환
-             tzinfo.fromutc(dt) : datetime.astimezone()에서 호출한다. 변경된 timezone에서의 datetime을 반환한다.
-            <br>
-            <br>8. timezone Objects
-             timezone 클래스는 tzinfo의 서브클래스다.
-             class datetime.timezone(offset, name=None)
-            <br>
-            <br>9. strftime(), strptime()
-             strftime(fmt)는 time.strftime(fmt, d.timetuple())처럼 동작한다.
-            <br>* %a : 요일명 - 약어 - 로캐일 적용
-            <br>* %A : 요일명 - 풀네임 - 로캐일 적용
-            <br>* %w : 요일 - 0(일요일) ~ 6(토요일)
-            <br>* %d : 요일 - zero-pad : 01 ~ 31
-            <br>* %b : 월 - 약어 - 로캐일 적용
-            <br>* %B : 월 - 풀네임 - 로캐일 적용
-            <br>* %m : 월 - zero-pad : 01 ~ 12
-            <br>* %y : 년 - 세기 제외, zero-pad : 00 ~ 99
-            <br>* %Y : 년 - 세기 포함, zero-pad : 0001 ~ 9999
-            <br>* %H : 시(24h) - zero-pad : 00 ~ 23
-            <br>* %I : 시(12h) - zero-pad : 01 ~ 12
-            <br>* %p : AM or PM - 로캐일 적용
-            <br>* %M : 분 - zero-pad : 00 ~ 59
-            <br>* %S : 초 - zero-pad : 00 ~ 59
-            <br>* %f : 마이크로초 - zero-pad : 000000 ~ 999999
-            <br>* %z : UTC 차이 : +HHMM or -HHMM
-            <br>* %Z : Timezone 이름
-            <br>* %j : 일 - 연중 n번째, zero-pad : 001 ~ 366
-            <br>* %U : 주(일요일 기준) - 연중 n번째, zero-pad : 00 ~ 53
-            <br>* %W : 주(월요일 기준) - 연중 n번째, zero-pad : 00 ~ 53
-            <br>* %c : 날짜와 시각 표현 - 로캐일 적용
-            <br>* %x : 날짜 표현 - 로캐일 적용
-            <br>* %X : 시각 표현 - 로캐일 적용
-            <br>* %% : 리터럴 '%'
-            <br>* %G : 년 - 세기 포함, ISO 8601 : 0001 ~ 9999
-            <br>* %u : 요일 - 1(월요일) ~ 7(일요일), ISO 8601
-            <br>* %V : 주(월요일 기준) - 연중 n번째, ISO 8601 : 01 ~ 53 // 01번째 주는 1월 4일을 포함
+        <ul>
+            <li>tzinfo가 설정되지 않은 naive한 datetime이 UTC로 잘 작동하기 위해서는 timezone.utc로 설정해야 한다</li>
+            <li>date() + time, timetz</li>
+            <li>astimezone(tz=None)</li>
+            동일한 UTC 시각을 다른 시간대로 변환하여 반환한다.
+        </ul>
 	</ul>
 </details>
 
@@ -201,6 +203,20 @@
 
 <details>
 	<summary>class datetime.tzinfo : 타임존 ABC</summary>
+    <ul>
+        <li>dt : datetime | time</li>
+        <li>utcoffset(dt)</li>
+        <ul>
+            <li>UTC와 현지 시각의 차이(timedelta) 반환</li>
+            <li>DST(daylight saving time) 값이 있다면 합산하여 반환함이 바람직하다</li>
+            <li>utcoffset()이 None을 반환하지 않으면 dst()도 그러해야 한다</li>
+        </ul>
+        <li>dst(dt)</li>
+        timedelta로 반환. 모르면 None. 비활성화면 timedelta(0) 반환
+        <li>tzname(dt)</li>
+        <li>fromutc(dt)</li>
+        datetime.astimezone()에서 호출한다. 이때 dt.tzinfo == slef이고 dt의 시각은 UTC므로, 오차를 더해 반환(dt + dt.utcoffset())하면 된다
+    </ul>
 </details>
 
 <hr>
@@ -208,223 +224,49 @@
 <details>
 	<summary>class datetime.timezone Since 3.2 : tzinfo 구현체</summary>
 	<ul>
-		<li>인스턴스는 변경 불가능 + 해시 가능하다</li>
+        <li>class datetime.timezone(offset, name=None)</li>
+        <ul>
+            <li>인스턴스는 변경 불가능 + 해시 가능하다</li>
+            <li>timezone 클래스는 tzinfo의 서브클래스</li>
+            <li>고정된 UTC offset을 표현하며, 변경 불가능하다</li>
+        </ul>
 	</ul>
 </details>
 
 <hr>
 
 <details>
-	<summary></summary>
+	<summary>strftime(), strptime() 사양</summary>
+    <table>
+        <tr><th>Directive</th><th>의미</th></tr>    
+        <tr><td>%a</td><td>요일명 - 약어 - 로캐일 적용</td></tr>
+        <tr><td>%A</td><td>요일명 - 풀네임 - 로캐일 적용</td></tr>
+        <tr><td>%w</td><td>요일 - 0(일요일) ~ 6(토요일)</td></tr>
+        <tr><td>%d</td><td>일 - zero-pad : 01 ~ 31</td></tr>
+        <tr><td>%b</td><td>월 - 약어 - 로캐일 적용</td></tr>
+        <tr><td>%B</td><td>월 - 풀네임 - 로캐일 적용</td></tr>
+        <tr><td>%m</td><td>월 - zero-pad : 01 ~ 12</td></tr>
+        <tr><td>%y</td><td>년 - 세기 제외, zero-pad : 00 ~ 99</td></tr>
+        <tr><td>%Y</td><td>년 - 세기 포함, zero-pad : 0001 ~ 9999</td></tr>
+        <tr><td>%H</td><td>시(24h) - zero-pad : 00 ~ 23</td></tr>
+        <tr><td>%I</td><td>시(12h) - zero-pad : 01 ~ 12</td></tr>
+        <tr><td>%p</td><td>AM or PM - 로캐일 적용</td></tr>
+        <tr><td>%M</td><td>분 - zero-pad : 00 ~ 59</td></tr>
+        <tr><td>%S</td><td>초 - zero-pad : 00 ~ 59</td></tr>
+        <tr><td>%f</td><td>마이크로초 - zero-pad : 000000 ~ 999999</td></tr>
+        <tr><td>%z</td><td>UTC 차이 : +HHMM or -HHMM</td></tr>
+        <tr><td>%Z</td><td>Timezone 이름</td></tr>
+        <tr><td>%j</td><td>일 - 연중 n번째, zero-pad : 001 ~ 366</td></tr>
+        <tr><td>%U</td><td>주(일요일 기준) - 연중 n번째, zero-pad : 00 ~ 53</td></tr>
+        <tr><td>%W</td><td>주(월요일 기준) - 연중 n번째, zero-pad : 00 ~ 53</td></tr>
+        <tr><td>%c</td><td>날짜와 시각 표현 - 로캐일 적용</td></tr>
+        <tr><td>%x</td><td>날짜 표현 - 로캐일 적용</td></tr>
+        <tr><td>%X</td><td>시각 표현 - 로캐일 적용</td></tr>
+        <tr><td>%%</td><td>리터럴 '%'</td></tr>
+        <tr><td>%G</td><td>년 - 세기 포함, ISO 8601 : 0001 ~ 9999</td></tr>
+        <tr><td>%u</td><td>요일 - 1(월요일) ~ 7(일요일), ISO 8601</td></tr>
+        <tr><td>%V</td><td>주(월요일 기준) - 연중 n번째, ISO 8601 : 01 ~ 53<br>01번째 주는 1월 4일을 포함</td></tr>
+    </table>
 </details>
 
 <hr>
-
-<details>
-	<summary></summary>
-</details>
-
-<hr>
-
-
-# Assume that input was "May 5 1992"
-day (d) = 5        # It is the 5th day
-month (m) = 3      # (*** Count starts at March i.e March = 1, April = 2, ... January = 11, February = 12)
-century (c) = 19   # the first two characters of the century
-year (y) = 92      # Year is 1992 (*** if month is January or february decrease one year)
-# Formula and calculation
-day of the week (w) = (d + floor(2.6m - 0.2) - 2c + y + floor(y/4) + floor(c/4)) modulo 7
-after calculation we get, (w) = 2
-Count for the day of the week starts at Sunday, i.e Sunday = 0, Monday = 1, Tuesday = 2, ... Saturday = 6
-
-
-
-
-            <th>calendar - General calendar-related functions</th>
-            1. class calendar.Calendar(firstweekday=0)
-             월요일(0)이 첫번째. setfirstweekday()로 변경 가능.
-             iterweekdays()
-             itermonthdates(year, month) : 1~12월에 관한 iterator 반환. 각 반복자는 해당 월의 1일부터 말일까지 datetime.date
-            객체들로 반환
-             itermonthdays(year, month) : itermonthdates()와 비슷. 날짜들은 숫자로 반환된다.
-             itermonthdays2(year, month) : itermonthdates()와 비슷. 날짜들은 (일, 요일)의 정수 튜플들로 반환된다.
-             monthdatescalendar(year, month) : 해당 년월의 주들을 반환한다. 각 주는 datetime.date 객체의 리스트.
-             monthdayscalendar(year, month) : 해당 년월의 주들을 반환한다. 각 주는 일 숫자들의 리스트.
-             monthdays2calendar(year, month) : 해당 년월의 주들을 반환한다. 각 주는 (일, 요일)의 정수 튜플들의 리스트.
-             yeardatescalendar(year, width=3) : 가공하기 쉬운 형태로 1년을 반환한다. 예를 들어 c.yeardatescalendar(2017)은
-            4(=12/width) x 3(=width) x ? x 7의 리스트로 반환된다. 전체 12개월을 4행 3열로 표현한 것으로, 각 월은 ?개 주로 구성되고, 각 주는 7개의
-            datetime.date 객체 리스트로 구성된다.
-             yeardayscalendar(year, width=3) : yeardatescalendar()와 비슷. 각 주는 날짜 숫자들의 리스트.
-             yeardays2calendar(year, width=3) : yeardatescalendar()와 비슷. 각 주는 (일, 요일)의 정수 튜플들의 리스트.
-            각 주에서, 해당 월을 벗어난 일들은 0.
-            <br>
-            <br>2. class calendar.TextCalendar(firstweekday=0)
-             formatmonth(theyear, themonth, w=0, l=0) : 해당 년월의 문자열 달력 반환. w는 각 일의 너비(가운데 정렬), l은 각
-            주의 라인 수.
-             prmonth(theyear, themonth, w=0, l=0) : print(formatmonth())
-             formatyear(theyear, w=2, l=1, c=6, m=3) : m열의 달력을 반환한다. w는 각 일의 너비(가운데 정렬), l은 각 주의 라인
-            수, c는 month column 사이의 공백 수
-             pryear(theyear, w=2, l=1, c=6, m=3) : print(formatyear())
-            <br>
-            <br>3. class calendar.HTMLCalendar(firstweekday=0)
-             formatmonth(theyear, themonth, withyear=True) : 해당 년월의 달력을 HTML table로 반환. withyear가
-            True면 헤더에 포함.
-             formatyear(theyear, width=3) : 해당 년의 달력을 HTML table로 반환. width는 각 행의 월 수.
-             formatyearpage(theyear, width=3, css='calendar.css', encoding=None) : formatyear()와 유사.
-            이용할 css와 encoding을 지정.
-            <br>
-            <br>4. class calendar.LocaleTextCalendar(firstweekday=0, locale=None)
-             TextCalendar의 서브클래스. 로캐일 이름을 지정한다.
-            <br>
-            <br>5. class calendar.LocaleHTMLCalendar(firstweekday=0, locale=None)
-             HTMLCalendar의 서브클래스. 로캐일 이름을 지정한다.
-            <br>* 4, 5의 formatweekday(), formatmonthname()은 현재 로캐일을 지정된 로캐일로 잠시 변경한다. 이는 전체 프로세스가 공유하므로, 스레드-안전하지
-            않다.
-            <br>
-            <br>6. 텍스트 달력들에 대해 아래의 함수들이 지원된다.
-             calendar.setfirstweekday(weekday) : 0 = calendar.MONDAY ~ 6 = calendar.SUNDAY
-             calendar.isleap(year) : 윤년인지 여부 반환
-             calendar.leapdays(y1, y2) : [y1, y2) 중, 윤년들의 수를 반환.
-             calendar.weekday(year, month, day) : 0 ~ 6 반환
-             calendar.weekheader(n) : 주의 요일명들을 n글자씩 자른 헤더를 반환.
-             calendar.monthrange(year, month) : 해당 년월의 첫번째 일(0~6)과 일수를 반환.
-             calendar.monthcalendar(year, month) : 해당 년월을 행렬로 반환한다. 각 행은 firstweekday부터 시작하는 한 주.
-            해당 월을 벗어난 일들은 0.
-             calendar.month(theyear, themonth, w=0, l=0) : 해당 년월의 달력을 TextCalendar의 formatmonth()를
-            통해 문자열로 반환.
-             calendar.prmonth(theyear, themonth, w=0, l=0) : print(month())
-             calendar.calendar(year, w=2, l=1, c=6, m=3) : TextCalendar의 formatyear()를 이용해 반환.
-             calendar.prcal(year, w=0, l=0, c=6, m=3) : print(calendar())
-             calendar.timegm(tuple) : calendar와 관계있지는 않다. time.gmtime()의 역함수로, time.gmtime()을 인자로
-            넘기면 POSIX 인코딩된 Unix timestamp 값이 반환된다.
-            <br>
-            <br>7. data attributes
-             calendar.day_name : 현재 로캐일의 요일명 배열
-             calendar.day_abbr : 현재 로캐일의 축약 요일명 배열
-             calendar.month_name : 현재 로캐일의 월명 배열. 길이 13이며, 1부터 12까지 이용
-             calendar.month_abbr : 현재 로캐일의 축약 월명 배열. 길이 13이며, 1부터 12까지 이용
-
-            <th>collections - Container datatypes</th>
-            1. ChainMap objects Since 3.3
-             여러 매핑을 하나처럼 이용.
-             class collections.ChainMap(*maps)
-            <br>* 여러 매핑을 한데 모아 갱신 가능한 view를 만든다.
-            <br>* maps : 매핑들의 리스트. 리스트 순서가 탐색 순서. 변경 가능.
-            <br>* new_child(m=None) : 새로운 매핑 m을 포함하는 새로운 ChainMap을 반환한다. m은 새로운 ChainMap의 첫번째 매핑이 된다. 이렇게 함으로써
-            부모의 매핑을 나중에 접근하는 효과가 있다.
-            <br>* parents : maps의 첫번째 매핑을 제외한 것들로 새로운 ChainMap을 만들어 반환한다. ChainMap(*d.maps[1:])와 동일
-            <br>
-             예시 : https://docs.python.org/3/library/collections.html#chainmap-examples-and-recipes
-            <br>* 사용 패턴
-            <br>c = ChainMap() # Create root context
-            <br>d = c.new_child() # Create nested child context
-            <br>e = c.new_child() # Child of c, independent from d
-            <br>e.maps[0] # Current context dictionary -- like Python's locals()
-            <br>e.maps[-1] # Root context -- like Python's globals()
-            <br>e.parents # Enclosing context chain -- like Python's nonlocals
-            <br>
-            <br>d['x'] # Get first key in the chain of contexts
-            <br>d['x'] = 1 # Set value in current context
-            <br>del d['x'] # Delete from current context
-            <br>list(d) # All nested values
-            <br>k in d # Check all nested values
-            <br>len(d) # Number of nested values
-            <br>d.items() # All nested items
-            <br>dict(d) # Flatten into a regular dictionary
-            <br>
-            <br>
-            <br>2. Counter objects
-             편리하고 빠른 계수를 지원한다.
-             class collections.Counter([iterable-or-mapping])
-            <br>* Counter는 dict의 서브클래스다. Counter는 없는 키에 대하여 KeyError를 발생하지 않고, 새로운 키를 추가하고 0을 반환한다. 카운트를 0으로
-            설정하는 것으로 원소가 제거되지 않는다. 카운터 원소를 제거하려면 del 키워드를 사용.
-            <br> c = Counter() # a new, empty counter
-            <br> c = Counter('gallahad') # a new counter from an iterable
-            <br> c = Counter({'red': 4, 'blue': 2}) # a new counter from a mapping
-            <br> c = Counter(cats=4, dogs=8) # a new counter from keyword args
-            <br>* elements() : 각 원소들을 각 카운트만큼 반복하는 iterator를 반환한다.
-            <br>&gt;&gt;&gt; c = Counter(a=4, b=2, c=0, d=-2)
-            <br>&gt;&gt;&gt; sorted(c.elements())
-            <br>['a', 'a', 'a', 'a', 'b', 'b']
-            <br>* most_common([n]) : 가장 많은 n개의 원소들을 그 갯수와 함께 반환한다.
-            <br>&gt;&gt;&gt; Counter('abracadabra').most_common(3)
-            <br>[('a', 5), ('r', 2), ('b', 2)]
-            <br>* subtract([iterable-or-mapping]) : 카운트를 뺀다.
-            <br>* fromkeys(iterable) : not implemented
-            <br>* update([iterable-or-mapping]) : 카운트를 더한다.
-            <br>
-            <br>* 사용 패턴
-            <br>sum(c.values()) # total of all counts
-            <br>c.clear() # reset all counts
-            <br>list(c) # list unique elements
-            <br>set(c) # convert to a set
-            <br>dict(c) # convert to a regular dictionary
-            <br>c.items() # convert to a list of (elem, cnt) pairs
-            <br>Counter(dict(list_of_pairs)) # convert from a list of (elem, cnt) pairs
-            <br>c.most_common()[:-n-1:-1] # n least common elements
-            <br>+c # remove zero and negative counts
-            <br>
-            <br>
-            <br>3. deque objects
-             class collections.deque([iterable[, maxlen]])
-            <br>* iterable이 존재하면 좌에서 우로 append()를 통해 초기화한다.
-            <br>* 스레드-안전, 메모리 효율적인 O(1)에 근접한 기능을 제공.
-            <br>* list도 비슷한 기능을 제공하나, 고정 길이 연산에 적합하며, 길이가 바뀌는 연산은 O(n) 메모리 이동이 발생
-            <br>* maxlen이 주어졌다면 추가적인 삽입은 반대쪽 원소의 제거와 동시에 일어난다. 최근 n개만 관심 있는 경우 등에 유용.
-             append(x), appendleft(x), clear(), copy() Since 3.5 : 얕은 복사
-             count(x), extend(iterable), extendleft(iterable)
-             index(x[, start[, stop]]) Since 3.5, insert(i, x) Since 3.5 : i번째에 삽입
-             pop(), popleft(), remove(value), reverse() Since 3.2
-             rotate(n=1) : n번 우로 이동(d.appendleft(d.pop())). 음수면 좌로 이동.
-             maxlen : 없으면 None
-             이외에 iteration, pickling(Python 객체 직렬화), len(d), reversed(d), copy.copy(d), copy.deepcopy(d),
-            in 연산자, index 접근 지원.
-            <br>* 단, index 접근은 느리므로, 대신 리스트를 이용할 것.
-             Since 3.5 : __add__(), __mul__(), __imul__() 지원
-            <br>
-            <br>4. defaultdict objects
-             class collections.defaultdict([default_factory[, ...]])
-            <br>* dict의 서브클래스로 메서드 하나를 재정의하고, 변경 가능한 인스턴스 변수를 하나 갖는다.
-            <br>* default_factory 함수로 기본값을 제공한다. 나머지 인자는 dict의 생성자에서 받아들이는 것과 동일하다.
-             __missing__(key) : default_factory가 None이면 KeyError, 아니면 default_factory 호출.
-             default_factory : 없으면 None
-             예시 : https://docs.python.org/3/library/collections.html#defaultdict-examples
-            <br>
-            <br>5. namedtuple()
-             collections.namedtuple(typename, field_names, *, verbose=False, rename=False, module=None)
-            <br>* 튜플 각 위치에 의미를 부여하여 읽기 쉬게 한다. 기존 튜플이 이용되는 곳에 모두 사용될 수 있고, 인덱스 접근 대신 이름 접근이 가능하다.
-            <br>* 이름이 typename인 tuple의 서브클래스를 반환한다. 인스턴스들은 유용한 docstring과 __repr__()을 갖는다.
-            <br>* filed_names는 문자열 시퀀스거나, 'x y'또는 'x, y'처럼 분리한 단일 문자열일 수 있다.
-            <br>* 필드명은 Python 식별자 모두 사용할 수 있지만, '_'로 시작할 수 없다.
-            <br>* rename이 True면 유효하지 않은 필드명은 '_1'처럼 인덱스가 이용된다.
-            <br>* verbose가 True면 클래스 정의가 출력된다. 이는 구식 옵션으로, _source 속성을 출력하는 것이 더 간단하다.
-            <br>* Named tuple은 인스턴스 딕셔너리가 없어, 보통의 tuple보다 더 많은 메모리를 사용하지 않는다.
-            <br>* Since 3.6 : verbose, rename은 키워드로만 사용 가능, module 인자 추가
-            <br>* csv, sqlite3 모듈의 결과를 저장하기에 적합.
-            <br>** 예.
-            <br>EmployeeRecord = namedtuple('EmployeeRecord', 'name, age, title, department, paygrade')
-            <br>import csv
-            <br>for emp in map(EmployeeRecord._make, csv.reader(open("employees.csv", "rb"))):
-            <br>&nbsp;&nbsp;&nbsp;&nbsp;print(emp.name, emp.title)
-             classmethod somenamedtuple._make(iterable) : iterable로 튜플 생성
-             somenamedtuple._asdict() : OrderedDict 반환
-             somenamedtuple._replace(**kwargs) : 값을 변경한 새 튜플 반환. 따라서 기본값 튜플 하나를 이용해 다른 튜플들을 생성하는 것도
-            좋은 방법이다.
-             somenamedtuple._source : namedtuple Python 코드. 파일에 저장하거나 다른데서 exec() 가능
-             somenamedtuple._fields : 필드명들의 튜플 반환. 예. Pixel = namedtuple('Pixel', Point._fields +
-            Color._fields)
-            <br>* getattr()로 필드 접근 가능.
-            <br>* dictionary를 언패킹(**)하면 생성자에 이용 가능. 예. Point(**{'x':1, 'y':2})
-            <br>* 생성된 namedtuple은 Python 정규 클래스므로, 함수나 서브클래스를 쉽게 추가할 수 있다.
-            <br>** 예. class Point(namedtuple('Point', 'x, y')): ...
-            <br>* Since 3.5 : namedtuple 클래스의 docstring 속성들이 쓰기 가능해짐.
-            <br><br><br>6. OrderedDict objects
-             class collections.OrderedDict([items])
-            <br>* dict + 추가된 키들의 순서 기억
-             popitem(last=True)
-             move_to_end(key, last=True)
-            <br>* Since 3.5 : OrderedDict의 items, keys, values view들이 reversed() 지원.
-            <br>* OrderedDict 객체끼리의 비교는 순서가 중요하지만, 다른 Mapping 객체와의 비교에서는 순서 상관없다.
-            <br><br>7. UserDict objects : dict 객체를 data 속성으로 갖는다.
-            <br>8. UserList objects : list 객체를 data 속성으로 갖는다.
-            <br>9. UserString objects : str 객체를 data 속성으로 갖는다.
