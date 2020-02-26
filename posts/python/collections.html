@@ -45,119 +45,118 @@
 
 <hr>
 
-<details open>
-    <summary></summary>
-    
+<details>
+    <summary>deque</summary>
+    <ul>
+        <li>class collections.deque([iterable[, maxlen]])</li>
+        <ul>
+            <li>iterable이 존재하면 좌→우 순서대로 append()</li>
+            <li>스레드-안전, 메모리 효율적인 O(1)에 근접한 기능을 제공.</li>
+            <li>list도 비슷한 기능을 제공하나, 고정 길이 연산에 적합하며, 길이가 바뀌는 연산은 O(n) 메모리 이동이 발생</li>
+            <li>maxlen이 주어졌다면 추가적인 삽입은 반대쪽 원소의 제거와 동시에 일어난다. 최근 n개만 관심 있는 경우 등에 유용.</li>
+        </ul>
+        <li>삽입</li>
+        <ul>
+            <li>append(x) + appendleft</li>
+            <li>extend(iterable) + extendleft</li>
+            <li>insert(i, x) Since 3.5</li>
+        </ul>
+        <li>삭제</li>
+        <ul>
+            <li>clear()</li>
+            <li>pop() + popleft</li>
+            <li>remove(value)</li>
+        </ul>
+        <li>copy() Since 3.5 : 얕은 복사</li>
+        <li>count(x) Since 3.2</li>
+        <li>index(x[, start[, stop]]) Since 3.5</li>
+        <li>reverse() Since 3.2 : 제자리에서 순서를 변경하고 None 반환</li>
+        <li>rotate(n=1) : n번 우로 이동(d.appendleft(d.pop())). 음수면 좌로 이동.</li>
+        <li>maxlen Since 3.1 : 없으면 None</li>
+        이외에 iteration, pickling(Python 객체 직렬화), len(d), reversed(d), copy.copy(d), copy.deepcopy(d), in 연산자, index 접근(느림) 지원.
+        <li>Since 3.5 : __add__(), __mul__(), __imul__() 지원</li>
+    </ul>
 </details>
 
 <hr>
 
 <details>
-    <summary></summary>
-    
+    <summary>defaultdict</summary>
+    <ul>
+        <li>class collections.defaultdict([default_factory[, ...]])</li>
+        <ul>
+            <li>dict을 상속한다.</li>
+            <li>무인자 함수 default_factory(기본값 None)로 기본값을 제공한다.</li>
+            예. 기본값으로 리스트 사용 → defaultdict(list)
+            <li>나머지 인자는 dict의 생성자에서 받아들이는 것과 동일하다.</li>
+        </ul>
+        <li>__missing__(key)</li>
+        default_factory가 None이면 KeyError, 아니면 default_factory 호출.
+        <li>default_factory</li>
+    </ul>
 </details>
 
 <hr>
 
 <details>
-    <summary></summary>
-    
+    <summary>namedtuple</summary>
+    <ul>
+        <li>collections.namedtuple(typename, field_names, *, rename=False, defaults=None, module=None)</li>
+        <ul>
+            <li>이름이 typename인 tuple의 서브클래스를 반환. 인스턴스들은 유용한 docstring과 __repr__()을 갖는다.</li>
+            <li>filed_names</li>
+            _fields 속성. 문자열의 시퀀스거나, 'x y'또는 'x, y'처럼 분리한 단일 문자열일 수 있다.
+            <li>rename Since 3.1</li>
+            True면 유효하지 않은 필드명은 '_1'처럼 인덱스 이름으로 설정된다
+            <li>defaults Since 3.7</li>
+            _field_defaults 속성. None 아니면 iterable을 제공. 기본값의 수는 필드보다 적어도 되지만, 기본값을 갖는 필드들은 우측부터임에 유의
+            <li>module Since 3.6</li>
+            __module__ 속성
+        </ul>
+        <li>classmethod somenamedtuple._make(iterable)</li>
+        <li>somenamedtuple._asdict() : OrderedDict 반환</li>
+        <li>somenamedtuple._replace(**kwargs)</li>
+        값을 변경한 새 튜플 반환
+        <li>getattr(somenamedtuple, 'attr_name') 가능</li>
+        <li>somenamedtuple(**somedict) 가능</li>
+        <li>class Sub(somenamedtuple): 가능</li>
+        <li>Since 3.5 : 생성된 클래스의 __doc__ 속성 쓰기 가능</li>
+    </ul>
 </details>
 
 <hr>
 
 <details>
-    <summary></summary>
-    
+    <summary>class OrderedDict(dict) Since 3.1</summary>
+    <ul>
+        <li>class collections.OrderedDict([items])</li>
+        <li>popitem(last=True)</li>
+        <li>move_to_end(key, last=True) Since 3.2</li>
+        last=True면 우측 끝으로, 아니면 왼쪽 끝으로
+        <li>OrderedDict 객체끼리의 비교는 순서가 중요하지만, 다른 Mapping 객체와의 비교에서는 순서 상관없다.</li>
+        <li>Since 3.5 : OrderedDict의 items, keys, values view들이 reversed() 지원.</li>
+    </ul>
 </details>
 
 <hr>
 
 <details>
-    <summary></summary>
-    
+    <summary>class UserDict(_collections_abc.MutableMapping)</summary>
+    dict를 상속하기 쉽게 만든 래퍼 클래스. self.data에 실제 dict가 존재
 </details>
 
 <hr>
 
 <details>
-    <summary></summary>
-    
+    <summary>class UserList(_collections_abc.MutableSequence)</summary>
+    list를 상속하기 쉽게 만든 래퍼 클래스. self.data에 실제 list가 존재
 </details>
 
 <hr>
 
 <details>
-    <summary></summary>
-    
+    <summary>class UserString(_collections_abc.Sequence)</summary>
+    str을 상속하기 쉽게 만든 래퍼 클래스. self.data에 실제 str이 존재
 </details>
 
 <hr>
-
-
-            
-            <br>
-            <br>
-            <br>3. deque objects
-             class collections.deque([iterable[, maxlen]])
-            <br>* iterable이 존재하면 좌에서 우로 append()를 통해 초기화한다.
-            <br>* 스레드-안전, 메모리 효율적인 O(1)에 근접한 기능을 제공.
-            <br>* list도 비슷한 기능을 제공하나, 고정 길이 연산에 적합하며, 길이가 바뀌는 연산은 O(n) 메모리 이동이 발생
-            <br>* maxlen이 주어졌다면 추가적인 삽입은 반대쪽 원소의 제거와 동시에 일어난다. 최근 n개만 관심 있는 경우 등에 유용.
-             append(x), appendleft(x), clear(), copy() Since 3.5 : 얕은 복사
-             count(x), extend(iterable), extendleft(iterable)
-             index(x[, start[, stop]]) Since 3.5, insert(i, x) Since 3.5 : i번째에 삽입
-             pop(), popleft(), remove(value), reverse() Since 3.2
-             rotate(n=1) : n번 우로 이동(d.appendleft(d.pop())). 음수면 좌로 이동.
-             maxlen : 없으면 None
-             이외에 iteration, pickling(Python 객체 직렬화), len(d), reversed(d), copy.copy(d), copy.deepcopy(d),
-            in 연산자, index 접근 지원.
-            <br>* 단, index 접근은 느리므로, 대신 리스트를 이용할 것.
-             Since 3.5 : __add__(), __mul__(), __imul__() 지원
-            <br>
-            <br>4. defaultdict objects
-             class collections.defaultdict([default_factory[, ...]])
-            <br>* dict의 서브클래스로 메서드 하나를 재정의하고, 변경 가능한 인스턴스 변수를 하나 갖는다.
-            <br>* default_factory 함수로 기본값을 제공한다. 나머지 인자는 dict의 생성자에서 받아들이는 것과 동일하다.
-             __missing__(key) : default_factory가 None이면 KeyError, 아니면 default_factory 호출.
-             default_factory : 없으면 None
-             예시 : https://docs.python.org/3/library/collections.html#defaultdict-examples
-            <br>
-            <br>5. namedtuple()
-             collections.namedtuple(typename, field_names, *, verbose=False, rename=False, module=None)
-            <br>* 튜플 각 위치에 의미를 부여하여 읽기 쉬게 한다. 기존 튜플이 이용되는 곳에 모두 사용될 수 있고, 인덱스 접근 대신 이름 접근이 가능하다.
-            <br>* 이름이 typename인 tuple의 서브클래스를 반환한다. 인스턴스들은 유용한 docstring과 __repr__()을 갖는다.
-            <br>* filed_names는 문자열 시퀀스거나, 'x y'또는 'x, y'처럼 분리한 단일 문자열일 수 있다.
-            <br>* 필드명은 Python 식별자 모두 사용할 수 있지만, '_'로 시작할 수 없다.
-            <br>* rename이 True면 유효하지 않은 필드명은 '_1'처럼 인덱스가 이용된다.
-            <br>* verbose가 True면 클래스 정의가 출력된다. 이는 구식 옵션으로, _source 속성을 출력하는 것이 더 간단하다.
-            <br>* Named tuple은 인스턴스 딕셔너리가 없어, 보통의 tuple보다 더 많은 메모리를 사용하지 않는다.
-            <br>* Since 3.6 : verbose, rename은 키워드로만 사용 가능, module 인자 추가
-            <br>* csv, sqlite3 모듈의 결과를 저장하기에 적합.
-            <br>** 예.
-            <br>EmployeeRecord = namedtuple('EmployeeRecord', 'name, age, title, department, paygrade')
-            <br>import csv
-            <br>for emp in map(EmployeeRecord._make, csv.reader(open("employees.csv", "rb"))):
-            <br>&nbsp;&nbsp;&nbsp;&nbsp;print(emp.name, emp.title)
-             classmethod somenamedtuple._make(iterable) : iterable로 튜플 생성
-             somenamedtuple._asdict() : OrderedDict 반환
-             somenamedtuple._replace(**kwargs) : 값을 변경한 새 튜플 반환. 따라서 기본값 튜플 하나를 이용해 다른 튜플들을 생성하는 것도
-            좋은 방법이다.
-             somenamedtuple._source : namedtuple Python 코드. 파일에 저장하거나 다른데서 exec() 가능
-             somenamedtuple._fields : 필드명들의 튜플 반환. 예. Pixel = namedtuple('Pixel', Point._fields +
-            Color._fields)
-            <br>* getattr()로 필드 접근 가능.
-            <br>* dictionary를 언패킹(**)하면 생성자에 이용 가능. 예. Point(**{'x':1, 'y':2})
-            <br>* 생성된 namedtuple은 Python 정규 클래스므로, 함수나 서브클래스를 쉽게 추가할 수 있다.
-            <br>** 예. class Point(namedtuple('Point', 'x, y')): ...
-            <br>* Since 3.5 : namedtuple 클래스의 docstring 속성들이 쓰기 가능해짐.
-            <br><br><br>6. OrderedDict objects
-             class collections.OrderedDict([items])
-            <br>* dict + 추가된 키들의 순서 기억
-             popitem(last=True)
-             move_to_end(key, last=True)
-            <br>* Since 3.5 : OrderedDict의 items, keys, values view들이 reversed() 지원.
-            <br>* OrderedDict 객체끼리의 비교는 순서가 중요하지만, 다른 Mapping 객체와의 비교에서는 순서 상관없다.
-            <br><br>7. UserDict objects : dict 객체를 data 속성으로 갖는다.
-            <br>8. UserList objects : list 객체를 data 속성으로 갖는다.
-            <br>9. UserString objects : str 객체를 data 속성으로 갖는다.

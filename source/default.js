@@ -214,6 +214,9 @@ function mutationCallback(mutations, observer) {
             button.classList.remove('btn-code');
             button.onclick = insertCode(id);
         }
+        
+        for (let hoverContent of mutation.target.querySelectorAll('.hover-content'))
+            Donggi.addHoverContent(hoverContent, document.getElementById(hoverContent.getAttribute('template-id')));
     }
 }
 

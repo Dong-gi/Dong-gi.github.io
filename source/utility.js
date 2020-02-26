@@ -136,6 +136,22 @@ Donggi.copyElementToClipboard = function (element) {
     Donggi.showSnackbar("Copied!!", parent);
     parent.focus();
 }
+Donggi.getOffsetLeft = function (node) {
+    let result = node.offsetLeft;
+    while (!!node.offsetParent) {
+        result += node.offsetParent.offsetLeft;
+        node = node.offsetParent;
+    }
+    return result;
+}
+Donggi.getOffsetTop = function (node) {
+    let result = node.offsetTop;
+    while (!!node.offsetParent) {
+        result += node.offsetParent.offsetTop;
+        node = node.offsetParent;
+    }
+    return result;
+}
 Donggi.getRgba = function (element) {
     let rgbaRegex = /(\d+)\D*(\d+)\D*(\d+)\D*(\d*\.?\d*)/;
     let backgroundColor = window.getComputedStyle(element).getPropertyValue("background-color");
@@ -207,9 +223,41 @@ Donggi.addInputSelection = function (node, texts) {
     ((node, ul) => {
         node.onmousedown = e => {
             document.querySelectorAll('ul.input-selection').forEach((node, idx, nodeList) => node.style.display = 'none');
-            ul.style.top = e.clientY;
-            ul.style.left = e.clientX;
+            ul.style.top = e.pageY;
+            ul.style.left = e.pageX;
             ul.style.display = 'block';
         };
     })(node, ul);
+}
+Donggi.addHoverContent = function (target, content, targetDecorator) {
+    content.style.position = 'absolute';
+    content.style.display = 'none';
+    
+    targetDecorator = (!targetDecorator)? (target) => {
+        let rgba = Donggi.getRgba(target);
+        target.style.backgroundColor = `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3] > 0.5? rgba[3] : rgba[3] + 0.1})`;
+    } : targetDecorator;
+    parentDecorator(target);
+    
+    let enter = ((target, content) => function (e) {
+        if (content.style.display == 'block')
+            return;
+        content.style.display = 'block';
+        content.style.top = e.pageY;
+        content.style.left = e.pageX;
+    })(target, content);
+    let leave = ((target, content) => function (e) {
+        let left = Donggi.getOffsetLeft(target);
+        let top = Donggi.getOffsetTop(target);
+        if (left < e.pageX && e.pageX < left + target.clientWidth && top < e.pageY && e.pageY < top + target.clientHeight)
+            return;
+        left = Donggi.getOffsetLeft(content);
+        top = Donggi.getOffsetTop(content);
+        if (left < e.pageX && e.pageX < left + content.clientWidth && top < e.pageY && e.pageY < top + content.clientHeight)
+            return;
+        content.style.display = 'none';
+    })(target, content);
+    target.addEventListener('mouseenter', Donggi.throttle(enter, 10));
+    target.addEventListener('mouseleave', Donggi.debounce(leave, 300));
+    content.addEventListener('mouseleave', Donggi.debounce(leave, 300));
 }
