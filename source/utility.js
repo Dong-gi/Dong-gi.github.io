@@ -237,7 +237,7 @@ Donggi.addHoverContent = function (target, content, targetDecorator) {
         let rgba = Donggi.getRgba(target);
         target.style.backgroundColor = `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3] > 0.5? rgba[3] : rgba[3] + 0.1})`;
     } : targetDecorator;
-    parentDecorator(target);
+    targetDecorator(target);
     
     let enter = ((target, content) => function (e) {
         if (content.style.display == 'block')
@@ -247,17 +247,19 @@ Donggi.addHoverContent = function (target, content, targetDecorator) {
         content.style.left = e.pageX;
     })(target, content);
     let leave = ((target, content) => function (e) {
+        if (content.style.display == 'none')
+            return;
         let left = Donggi.getOffsetLeft(target);
         let top = Donggi.getOffsetTop(target);
-        if (left < e.pageX && e.pageX < left + target.clientWidth && top < e.pageY && e.pageY < top + target.clientHeight)
+        if (left < e.pageX && e.pageX < left + target.offsetWidth && top < e.pageY && e.pageY < top + target.offsetHeight)
             return;
         left = Donggi.getOffsetLeft(content);
         top = Donggi.getOffsetTop(content);
-        if (left < e.pageX && e.pageX < left + content.clientWidth && top < e.pageY && e.pageY < top + content.clientHeight)
+        if (left < e.pageX && e.pageX < left + content.offsetWidth && top < e.pageY && e.pageY < top + content.offsetHeight)
             return;
         content.style.display = 'none';
     })(target, content);
-    target.addEventListener('mouseenter', Donggi.throttle(enter, 10));
+    target.addEventListener('mouseenter', enter);
     target.addEventListener('mouseleave', Donggi.debounce(leave, 300));
     content.addEventListener('mouseleave', Donggi.debounce(leave, 300));
 }

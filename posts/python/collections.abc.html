@@ -16,20 +16,20 @@
    <tr>
        <td>Hashable</td>
        <td></td>
-       <td>__hash__</td>
+       <td><span class="hover-content" template-id="template-python-collections-abc-hash">__hash__</span></td>
        <td></td>
    </tr>
    <tr>
-       <td>Iterable</td>
+       <td><span class="hover-content" template-id="template-python-collections-abc-iterable">Iterable</span></td>
        <td></td>
-       <td>__iter__</td>
+       <td><span class="hover-content" template-id="template-python-collections-abc-iter">__iter__</span></td>
        <td></td>
    </tr>
    <tr>
        <td>Iterator</td>
        <td>Iterable</td>
        <td>__next__</td>
-       <td>__iter__</td>
+       <td><span class="hover-content" template-id="template-python-collections-abc-iter">__iter__</span></td>
    </tr>
    <tr>
        <td>Reversible</td>
@@ -41,91 +41,91 @@
        <td>Generator</td>
        <td>Iterator</td>
        <td>send, throw</td>
-       <td>close, __iter__, __next__</td>
+       <td>close, <span class="hover-content" template-id="template-python-collections-abc-iter">__iter__</span>, __next__</td>
    </tr>
    <tr>
        <td>Sized</td>
        <td></td>
-       <td>__len__</td>
+       <td><span class="hover-content" template-id="template-python-collections-abc-len">__len__</span></td>
        <td></td>
    </tr>
    <tr>
        <td>Callable</td>
        <td></td>
-       <td>__call__</td>
+       <td><span class="hover-content" template-id="template-python-collections-abc-call">__call__</span></td>
        <td></td>
    </tr>
    <tr>
-       <td>Collection</td>
+       <td>Collection Since 3.6</td>
        <td>Sized, Iterable, Container</td>
-       <td>__contains__, __iter__, __len__</td>
+       <td><span class="hover-content" template-id="template-python-collections-abc-contains">__contains__</span>, <span class="hover-content" template-id="template-python-collections-abc-iter">__iter__</span>, <span class="hover-content" template-id="template-python-collections-abc-len">__len__</span></td>
        <td></td>
    </tr>
    <tr>
        <td>Sequence</td>
        <td>Reversible, Collection</td>
-       <td>__getitem__, __len__</td>
-       <td>__contains__, __iter__, __reversed__, index, count</td>
+       <td>__getitem__, <span class="hover-content" template-id="template-python-collections-abc-len">__len__</span></td>
+       <td><span class="hover-content" template-id="template-python-collections-abc-contains">__contains__</span>, <span class="hover-content" template-id="template-python-collections-abc-iter">__iter__</span>, __reversed__, index, count</td>
    </tr>
    <tr>
        <td>MutableSequence</td>
        <td>Sequence</td>
-       <td>__getitem__, __setitem__, __delitem__, __len__, insert</td>
+       <td>__getitem__, __setitem__, __delitem__, <span class="hover-content" template-id="template-python-collections-abc-len">__len__</span>, insert</td>
        <td>Sequence 상속 메서드, append, reverse, extend, pop, remove, and __iadd__</td>
    </tr>
    <tr>
        <td>ByteString</td>
        <td>Sequence</td>
-       <td>__getitem__, __len__</td>
+       <td>__getitem__, <span class="hover-content" template-id="template-python-collections-abc-len">__len__</span></td>
        <td>Sequence 상속 메서드</td>
    </tr>
    <tr>
        <td>Set</td>
        <td>Collection</td>
-       <td>__contains__, __iter__, __len__</td>
+       <td><span class="hover-content" template-id="template-python-collections-abc-contains">__contains__</span>, <span class="hover-content" template-id="template-python-collections-abc-iter">__iter__</span>, <span class="hover-content" template-id="template-python-collections-abc-len">__len__</span></td>
        <td>__le__, __lt__, __eq__,__ne__, __gt__, __ge__,__and__, __or__, __sub__, __xor__, isdisjoint</td>
    </tr>
    <tr>
        <td>MutableSet</td>
        <td>Set</td>
-       <td>__contains__, __iter__, __len__, add, discard</td>
+       <td><span class="hover-content" template-id="template-python-collections-abc-contains">__contains__</span>, <span class="hover-content" template-id="template-python-collections-abc-iter">__iter__</span>, <span class="hover-content" template-id="template-python-collections-abc-len">__len__</span>, add, discard</td>
        <td>Set 상속 메서드, clear, pop, remove,__ior__, __iand__, __ixor__, __isub__</td>
    </tr>
    <tr>
        <td>Mapping</td>
        <td>Collection</td>
-       <td>__getitem__, __iter__, __len__</td>
-       <td>__contains__, keys, items,values, get, __eq__, __ne__</td>
+       <td>__getitem__, <span class="hover-content" template-id="template-python-collections-abc-iter">__iter__</span>, <span class="hover-content" template-id="template-python-collections-abc-len">__len__</span></td>
+       <td><span class="hover-content" template-id="template-python-collections-abc-contains">__contains__</span>, keys, items,values, get, __eq__, __ne__</td>
    </tr>
    <tr>
        <td>MutableMapping</td>
        <td>Mapping</td>
-       <td>__getitem__, __setitem__, __delitem__, __iter__, __len__</td>
+       <td>__getitem__, __setitem__, __delitem__, <span class="hover-content" template-id="template-python-collections-abc-iter">__iter__</span>, <span class="hover-content" template-id="template-python-collections-abc-len">__len__</span></td>
        <td>Mapping 상속 메서드, pop, popitem, clear, update, setdefault</td>
    </tr>
    <tr>
        <td>MappingView</td>
        <td>Sized</td>
        <td></td>
-       <td>__len__</td>
+       <td><span class="hover-content" template-id="template-python-collections-abc-len">__len__</span></td>
    </tr>
    <tr>
        <td>ItemsView</td>
        <td>MappingView, Set</td>
        <td></td>
-       <td>__contains__, __iter__</td>
+       <td><span class="hover-content" template-id="template-python-collections-abc-contains">__contains__</span>, <span class="hover-content" template-id="template-python-collections-abc-iter">__iter__</span></td>
    </tr>
    <tr>
        <td>KeysView</td>
        <td>MappingView, Set</td>
        <td></td>
-       <td>__contains__, __iter__</td>
+       <td><span class="hover-content" template-id="template-python-collections-abc-contains">__contains__</span>, <span class="hover-content" template-id="template-python-collections-abc-iter">__iter__</span></td>
    </tr>
    <tr>
        <td>ValuesView</td>
        <td>MappingView, Collection</td>
        <td></td>
-       <td>__contains__, __iter__</td>
+       <td><span class="hover-content" template-id="template-python-collections-abc-contains">__contains__</span>, <span class="hover-content" template-id="template-python-collections-abc-iter">__iter__</span></td>
    </tr>
    <tr>
        <td>Awaitable</td>
@@ -161,4 +161,22 @@
 
 <div id="template-python-collections-abc-contains" class="w3-container w3-leftbar w3-border-green w3-white">
 object.__contains__(self, item)
+</div>
+<div id="template-python-collections-abc-hash" class="w3-container w3-leftbar w3-border-green w3-white">
+object.__hash__(self)
+</div>
+<div id="template-python-collections-abc-len" class="w3-container w3-leftbar w3-border-green w3-white">
+object.__len__(self)
+</div>
+<div id="template-python-collections-abc-call" class="w3-container w3-leftbar w3-border-green w3-white">
+object.__call__(self[, args...])
+</div>
+<div id="template-python-collections-abc-iterable" class="w3-container w3-leftbar w3-border-green w3-white">
+    <ul>
+        <li>isinstance(obj, Iterable) : Iterable로 등록되었거나 __iter__()를 가지면 True</li>
+        <li>iter(obj) : __getitem__()으로 순회하는 클래스도 감지 가능. 순회 가능하지 않으면 예외 발생.</li>
+    </ul>
+</div>
+<div id="template-python-collections-abc-iter" class="w3-container w3-leftbar w3-border-green w3-white">
+object.__iter__(self)
 </div>
