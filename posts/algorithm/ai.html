@@ -1,9 +1,22 @@
 <script src="/source/redirect.js?200226_1657"></script>
+<link rel="stylesheet" href="/source/mjx-chtml.css">
+<script>
+    MathJax = {
+        tex: {
+            tags: 'ams',  // should be 'ams', 'none', or 'all'
+            inlineMath: [['식[', ']식']]
+        }
+    };
+</script>
+<script id="MathJax-script" async src="/source/tex-chtml.js?200223_1219"></script>
 <hr>
 
 <details>
-    <summary>참고자료</summary>
+    <summary>참고중인 자료</summary>
     <ul>
+        <li>https://bkshin.tistory.com/category/머신러닝</li>
+        <li>https://datascienceschool.net/view-notebook/</li>
+        
         <li>https://developers.google.com/machine-learning/crash-course/ml-intro?hl=ko</li>
 	    <li>http://hunkim.github.io/ml/</li>
 	    <li>https://github.com/golbin/TensorFlow-Tutorials</li>
@@ -15,14 +28,107 @@
 
 <hr>
 
+<details>
+    <summary>참고 완료 자료</summary>
+    <ul>
+        <li></li>
+    </ul>
+</details>
+
+<hr>
+
 <details open>
     <summary></summary>
+    Tool
+엑셀 : 소량 분석에 좋음
+Weka : 자바 머신러닝 프로그램
+Octave : MATLAB과 호환되는 오픈소스
+
+Python library
+scikit-learn : NumPy 의존 머신러닝
+matplotlib : 데이터 시각화
+numpy : 숫자 배열
+scipy : NumPy 의존 수학 연산
+pandas : 데이터를 테이블 형태로 다루기
+
+https://www.github.com/field-cady
+https://github.com/keunwoochoi/data-science-handbook
+
+데이터 가공, 분석 → 특징 추출 → 모델 수립 → 결론 도출
+
+Overfitting 방지
+* 데이터를 학습 집합과 시험 집합으로 분리
+* 교차검증 : 데이터를 K개 집합으로 나누어 K-1개 집합으로 학습, 나머지 1개로 성능 측정. K개의 성능 평균이 실제 분류기의 성능
+* 시험 데이터도 결국 분류기가 경험하게 되므로 최종 성능 평가에만 사용하는 별도의 데이터 집합을 둘 수도
 </details>
 
 <hr>
 
 <details>
-    <summary></summary>
+    <summary>scikit-learn</summary>
+    <ol>
+        <li>n_samples : 표본 개수</li>
+        <li>n_features : 변수 개수</li>
+        <li>n_classes : 분류할 클래스(출력) 개수</li>
+        
+        <li>n_informative : n_features 중, 출력과 상관 관계가 있는 변수의 개수</li>
+        <li>n_redundant : n_features 중, 다른 변수의 선형 결합으로 나타내지는 변수의 개수</li>
+        <li>n_repeated : n_features 중, 완전히 동일한 변수의 개수</li>
+        <li>n_clusters_per_class : 클래스 당 클러스터 개수</li>
+        <li>random_state : 난수 시드</li>
+        
+        <li>fit(self, X, y, sample_weight=None)</li>
+        <ul>
+            <li>X : 학습 데이터. (n_samples, n_features) 크기의 유사 배열 또는 행렬 객체</li>
+            <li>y : 출력 클래스. (n_samples,) 또는 (n_samples, n_outputs) 크기의 유사 배열 객체</li>
+        </ul>
+    </ol>
 </details>
 
 <hr>
+
+<details open>
+    <summary>Classification</summary>
+    <ol>
+        * 지도학습에 사용할 데이터는 해당 레이블을 전형적으로 나타내주는 게 좋다. 괜히 애매한 데이터를 한쪽 레이블에 넣고 학습시키면 악효과가 발생할 수 있다.
+        * 이진 분류기로 k개 범주를 분류하려면 각 범주별로 k번 학습시키면 된다
+
+        <li>Decesion Tree</li>
+        <ol>
+            <li>leaf가 아닌 노드들은 데이터를 분류하기 위한 질문을 가진다</li>
+            <span class="hover-content" template-id="template-ai-impurity">불순도</span>가 가장 작은 질문이 선택된다
+            <li>leaf 노드는 클래스(회귀 모델에서는 확률값)를 가진다</li>
+            <li>데이터는 루트 노드로부터 진입하여 질문에 따라 자식 노드로 이동한다</li>
+            <li>정확성을 높이는 방안</li>
+            <ul>
+                <li>각 leaf 노드에 최소한 x개의 데이터가 분류되도록 제한</li>
+                <li>트리의 최소 높이와 최대 높이를 제한</li>
+            </ul>
+            <li>Python : from sklearn.tree import DecisionTreeClassifier</li>
+        </ol>
+        
+        <li>Random Forest</li>
+        <ul>
+            <li>서로 다른 학습 데이터로 만든 결정 트리들의 평균값으로 분류</li>
+            <li>Python : from sklearn.tree import RandomForestClassifier</li>
+            <ul>
+                <li>n_estimators : 사용할 결정 트리의 개수. 많을수록 좋지만 사용 메모리 및 훈련 시간 증대</li>
+                <li>max_features : 각 트리당 사용할 변수의 개수. n_features에 가까울수록 각 결정 트리들이 서로 비슷해진다</li>
+                <ul>
+                    <li>int : max_features개 변수 사용</li>
+                    <li>float : int(max_features * n_features)개 변수 사용</li>
+                    <li>"auto", "sqrt" : sqrt(n_features)개 변수 사용</li>
+                    <li>"log2" : log2(n_features)개 변수 사용</li>
+                    <li>None : n_features개 변수 사용</li>
+                </ul>
+            </ul>
+        </ul>
+    </ol>
+</details>
+
+<hr>
+
+<div id="template-ai-impurity" class="w3-container w3-leftbar w3-border-green w3-white">
+불순도 Impurity : 분류된 범주에 다른 범주의 데이터가 섞여있는 정도. 없으면 최소<br>
+엔트로피 Entropy : 불순도를 수치화한 것. 식[-\sum_{k}P_k \log_{2}P_k]식. 식[P_k]식는 클래스 k로 분류된 데이터 중 실제로 클래스가 k인 데이터의 비율.
+</div>

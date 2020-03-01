@@ -104,6 +104,7 @@ const posts = {
         { file: "/posts/python/calendar.html", category: "Programming/Python/Library", title: "Lib/calendar : 달력 연산" },
         { file: "/posts/python/collections.html", category: "Programming/Python/Library", title: "Lib/collections : 컨테이너" },
         { file: "/posts/python/collections.abc.html", category: "Programming/Python/Library", title: "Lib/collections.abc : 컨테이너 ABC" },
+        { file: "/posts/python/pandas.html", category: "Programming/Python/Library", title: "3rd/pandas : 데이터 처리" },
 
         { file: "/posts/project/wpf_data_tool.html", category: "Project", title: "C#.NET, WPF - 데이터 작업 툴" },
         { file: "/posts/project/browser_code_snippet.html", category: "Project", title: "JavaScript - 브라우저 코드 조각" },

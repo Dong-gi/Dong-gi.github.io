@@ -2039,6 +2039,7 @@ window_resizeto.js
 
 /workspace/donggi-github/Dong-gi.github.io/Repositories/Python:
 Basic
+Library
 
 /workspace/donggi-github/Dong-gi.github.io/Repositories/Python/Basic:
 built_in_function_example.py
@@ -2066,6 +2067,9 @@ translate_example.py
 try_except.py
 type_example.py
 weakref_example.py
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/Python/Library:
+pandas_1.py
 
 /workspace/donggi-github/Dong-gi.github.io/Repositories/Raspbian:
 cam01.py
@@ -2969,6 +2973,8 @@ w3.css
 20191128_164656.png
 20191128_170023.png
 20191128_180107.png
+20200227_143848.png
+20200227_145006.png
 kanna.gif
 
 /workspace/donggi-github/Dong-gi.github.io/posts:
@@ -3119,6 +3125,7 @@ collections.abc.html
 collections.html
 data_model.html
 datetime.html
+pandas.html
 re.html
 string.html
 struct.html
