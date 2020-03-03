@@ -34,7 +34,7 @@
    <tr>
        <td>Reversible</td>
        <td>Iterable</td>
-       <td>__reversed__</td>
+       <td><span class="hover-content" template-id="template-python-collections-abc-reversed">__reversed__</span></td>
        <td></td>
    </tr>
    <tr>
@@ -65,7 +65,7 @@
        <td>Sequence</td>
        <td>Reversible, Collection</td>
        <td>__getitem__, <span class="hover-content" template-id="template-python-collections-abc-len">__len__</span></td>
-       <td><span class="hover-content" template-id="template-python-collections-abc-contains">__contains__</span>, <span class="hover-content" template-id="template-python-collections-abc-iter">__iter__</span>, __reversed__, index, count</td>
+       <td><span class="hover-content" template-id="template-python-collections-abc-contains">__contains__</span>, <span class="hover-content" template-id="template-python-collections-abc-iter">__iter__</span>, <span class="hover-content" template-id="template-python-collections-abc-reversed">__reversed__</span>, index, count</td>
    </tr>
    <tr>
        <td>MutableSequence</td>
@@ -160,10 +160,10 @@
 </table>
 
 <div id="template-python-collections-abc-contains" class="w3-container w3-leftbar w3-border-green w3-white">
-object.__contains__(self, item)
+object.__contains__(self, item) : item을 포함하는지 여부
 </div>
 <div id="template-python-collections-abc-hash" class="w3-container w3-leftbar w3-border-green w3-white">
-object.__hash__(self)
+object.__hash__(self) : 해시값 반환
 </div>
 <div id="template-python-collections-abc-len" class="w3-container w3-leftbar w3-border-green w3-white">
 object.__len__(self)
@@ -179,4 +179,7 @@ object.__call__(self[, args...])
 </div>
 <div id="template-python-collections-abc-iter" class="w3-container w3-leftbar w3-border-green w3-white">
 object.__iter__(self)
+</div>
+<div id="template-python-collections-abc-reversed" class="w3-container w3-leftbar w3-border-green w3-white">
+object.__reversed__(self) : 반대 순서의 iterator 객체 반환
 </div>

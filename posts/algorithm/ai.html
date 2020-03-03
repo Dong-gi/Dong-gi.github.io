@@ -37,7 +37,7 @@
 
 <hr>
 
-<details open>
+<details>
     <summary></summary>
     Tool
 엑셀 : 소량 분석에 좋음
@@ -60,6 +60,10 @@ Overfitting 방지
 * 데이터를 학습 집합과 시험 집합으로 분리
 * 교차검증 : 데이터를 K개 집합으로 나누어 K-1개 집합으로 학습, 나머지 1개로 성능 측정. K개의 성능 평균이 실제 분류기의 성능
 * 시험 데이터도 결국 분류기가 경험하게 되므로 최종 성능 평가에만 사용하는 별도의 데이터 집합을 둘 수도
+    <ul>
+        <li>지도학습에 사용할 데이터는 해당 레이블을 전형적으로 나타내주는 게 좋다. 괜히 애매한 데이터를 한쪽 레이블에 넣고 학습시키면 악효과가 발생할 수 있다.</li>
+        <li>이진 분류기로 k개 범주를 분류하려면 각 범주별로 k번 학습시키면 된다</li>
+    </ul>
 </details>
 
 <hr>
@@ -89,10 +93,7 @@ Overfitting 방지
 
 <details open>
     <summary>Classification</summary>
-    <ol>
-        * 지도학습에 사용할 데이터는 해당 레이블을 전형적으로 나타내주는 게 좋다. 괜히 애매한 데이터를 한쪽 레이블에 넣고 학습시키면 악효과가 발생할 수 있다.
-        * 이진 분류기로 k개 범주를 분류하려면 각 범주별로 k번 학습시키면 된다
-
+    <ul>
         <li>Decesion Tree</li>
         <ol>
             <li>leaf가 아닌 노드들은 데이터를 분류하기 위한 질문을 가진다</li>
@@ -114,16 +115,31 @@ Overfitting 방지
             <ul>
                 <li>n_estimators : 사용할 결정 트리의 개수. 많을수록 좋지만 사용 메모리 및 훈련 시간 증대</li>
                 <li>max_features : 각 트리당 사용할 변수의 개수. n_features에 가까울수록 각 결정 트리들이 서로 비슷해진다</li>
-                <ul>
-                    <li>int : max_features개 변수 사용</li>
-                    <li>float : int(max_features * n_features)개 변수 사용</li>
-                    <li>"auto", "sqrt" : sqrt(n_features)개 변수 사용</li>
-                    <li>"log2" : log2(n_features)개 변수 사용</li>
-                    <li>None : n_features개 변수 사용</li>
-                </ul>
+                <table class="no-sort">
+                    <tr><td>int</td><td>max_features개 변수 사용</td></tr>
+                    <tr><td>float</td><td>int(max_features * n_features)개 변수 사용</td></tr>
+                    <tr><td>"auto", "sqrt"</td><td>sqrt(n_features)개 변수 사용</td></tr>
+                    <tr><td>"log2"</td><td>log2(n_features)개 변수 사용</td></tr>
+                    <tr><td>None</td><td>n_features개 변수 사용</td></tr>
+                </table>
             </ul>
         </ul>
-    </ol>
+        
+        <li>SVM; Support Vector Machine</li>
+        <ul>
+            <li>선형 이진 분류기</li>
+            <li>모든 벡터(데이터)의 차원이 동일한 경우, 적절한 원점을 설정해 만든 n차원 공간에서 <span class="hover-content" template-id="template-ai-margin">margin</span>이 최대인 <span class="hover-content" template-id="template-ai-hyperplane">초평면</span>을 찾는다</li>
+            <li>초평면의 법선 식[w]식, 초평면과 원점 사이의 거리 식[b]식, 임의 데이터 식[x]식에 대하여 식[f(x)=w \cdot x + b]식의 부호가 클래스를 결정한다</li>
+            <li>n차원 공간 [식[x_1, \cdots, x_n]식]에서는 초평면을 찾기 어렵지만, 적절히 차원을 늘리면 [식[x_1, \cdots, x_n, x_{n+1}]식] 초평면을 찾기 쉬워질 수 있다</li>
+            <ul>
+                <li>식[x_{n+1} = k(x_1, \cdots, x_n)]식</li>
+                <li>커널 함수 : 식[k(x, y) = k(y, x)]식</li>
+                <li>다항 커널 : 식[k(x, y) = (x \cdot y + c)^n]식</li>
+                <li>가우스 커널 : 식[k(x, y) = \operatorname{exp}(-\gamma |x-y|^2)]식</li>
+                <li>시그모이드 커널 : 식[k(x, y) = \operatorname{tanh}(x \cdot y + r)]식</li>
+            </ul>
+        </ul>
+    </ul>
 </details>
 
 <hr>
@@ -131,4 +147,11 @@ Overfitting 방지
 <div id="template-ai-impurity" class="w3-container w3-leftbar w3-border-green w3-white">
 불순도 Impurity : 분류된 범주에 다른 범주의 데이터가 섞여있는 정도. 없으면 최소<br>
 엔트로피 Entropy : 불순도를 수치화한 것. 식[-\sum_{k}P_k \log_{2}P_k]식. 식[P_k]식는 클래스 k로 분류된 데이터 중 실제로 클래스가 k인 데이터의 비율.
+</div>
+<div id="template-ai-margin" class="w3-container w3-leftbar w3-border-green w3-white">
+margin : 초평면과 가장 가까운 데이터 사이의 거리
+</div>
+<div id="template-ai-hyperplane" class="w3-container w3-leftbar w3-border-green w3-white">
+초평면(超平面, 영어: hyperplane)은 3차원 공간 속의 평면을 일반화하여 얻는 개념이다.
+<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://ko.wikipedia.org/wiki/%EC%B4%88%ED%8F%89%EB%A9%B4_(%EC%88%98%ED%95%99)">위키피디아</a>
 </div>
