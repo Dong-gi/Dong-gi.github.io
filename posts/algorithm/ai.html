@@ -12,57 +12,16 @@
 <hr>
 
 <details>
-    <summary>참고중인 자료</summary>
+    <summary>참고 자료</summary>
     <ul>
         <li>https://bkshin.tistory.com/category/머신러닝</li>
         <li>https://datascienceschool.net/view-notebook/</li>
-        
         <li>https://developers.google.com/machine-learning/crash-course/ml-intro?hl=ko</li>
 	    <li>http://hunkim.github.io/ml/</li>
 	    <li>https://github.com/golbin/TensorFlow-Tutorials</li>
 	    <li>https://www.cs.ox.ac.uk/people/nando.defreitas/machinelearning/</li>
 	    <li>https://scikit-learn.org/stable/tutorial/</li>
 	    <li>https://www.udacity.com/course/intro-to-tensorflow-for-deep-learning--ud187</li>
-    </ul>
-</details>
-
-<hr>
-
-<details>
-    <summary>참고 완료 자료</summary>
-    <ul>
-        <li></li>
-    </ul>
-</details>
-
-<hr>
-
-<details>
-    <summary></summary>
-    Tool
-엑셀 : 소량 분석에 좋음
-Weka : 자바 머신러닝 프로그램
-Octave : MATLAB과 호환되는 오픈소스
-
-Python library
-scikit-learn : NumPy 의존 머신러닝
-matplotlib : 데이터 시각화
-numpy : 숫자 배열
-scipy : NumPy 의존 수학 연산
-pandas : 데이터를 테이블 형태로 다루기
-
-https://www.github.com/field-cady
-https://github.com/keunwoochoi/data-science-handbook
-
-데이터 가공, 분석 → 특징 추출 → 모델 수립 → 결론 도출
-
-Overfitting 방지
-* 데이터를 학습 집합과 시험 집합으로 분리
-* 교차검증 : 데이터를 K개 집합으로 나누어 K-1개 집합으로 학습, 나머지 1개로 성능 측정. K개의 성능 평균이 실제 분류기의 성능
-* 시험 데이터도 결국 분류기가 경험하게 되므로 최종 성능 평가에만 사용하는 별도의 데이터 집합을 둘 수도
-    <ul>
-        <li>지도학습에 사용할 데이터는 해당 레이블을 전형적으로 나타내주는 게 좋다. 괜히 애매한 데이터를 한쪽 레이블에 넣고 학습시키면 악효과가 발생할 수 있다.</li>
-        <li>이진 분류기로 k개 범주를 분류하려면 각 범주별로 k번 학습시키면 된다</li>
     </ul>
 </details>
 
@@ -91,7 +50,7 @@ Overfitting 방지
 
 <hr>
 
-<details open>
+<details>
     <summary>Classification</summary>
     <ul>
         <li>Decesion Tree</li>
@@ -130,7 +89,7 @@ Overfitting 방지
             <li>선형 이진 분류기</li>
             <li>모든 벡터(데이터)의 차원이 동일한 경우, 적절한 원점을 설정해 만든 n차원 공간에서 <span class="hover-content" template-id="template-ai-margin">margin</span>이 최대인 <span class="hover-content" template-id="template-ai-hyperplane">초평면</span>을 찾는다</li>
             <li>초평면의 법선 식[w]식, 초평면과 원점 사이의 거리 식[b]식, 임의 데이터 식[x]식에 대하여 식[f(x)=w \cdot x + b]식의 부호가 클래스를 결정한다</li>
-            <li>n차원 공간 [식[x_1, \cdots, x_n]식]에서는 초평면을 찾기 어렵지만, 적절히 차원을 늘리면 [식[x_1, \cdots, x_n, x_{n+1}]식] 초평면을 찾기 쉬워질 수 있다</li>
+            <li>n차원 공간 [식[x_1, \cdots, x_n]식]에서는 초평면을 찾기 어렵지만, 적절히 차원을 늘리면 [식[x_1, \cdots, x_n, x_{n+1}, \cdots]식] 초평면을 찾기 쉬워질 수 있다</li>
             <ul>
                 <li>식[x_{n+1} = k(x_1, \cdots, x_n)]식</li>
                 <li>커널 함수 : 식[k(x, y) = k(y, x)]식</li>

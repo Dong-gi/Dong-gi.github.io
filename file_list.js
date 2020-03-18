@@ -2021,6 +2021,7 @@ type.js
 /workspace/donggi-github/Dong-gi.github.io/Repositories/JavaScript/Browser:
 blob_example.js
 davidfennmusic.bandcamp.com.js
+decode.js
 dom_example1.js
 dom_example2.js
 edit_dom.js
@@ -2996,7 +2997,6 @@ book01.html
 koreatech.html
 linear_algebra.html
 probability.html
-tip.html
 
 /workspace/donggi-github/Dong-gi.github.io/posts/book:
 001.html
@@ -3140,17 +3140,15 @@ docker.html
 eclipse.html
 error.html
 fp.html
-giregi.html
 git.html
-hangul.html
-playstore.html
 psql.html
 quantum_computer.html
 refactoring.html
 regex.html
 rpi.html
+snippets.html
 special_characters.html
-svg.html
+tip.html
 tomcat.html
 unity.html
 vi.html

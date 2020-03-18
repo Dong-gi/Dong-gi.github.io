@@ -1,0 +1,100 @@
+<script src="/source/redirect.js?200226_1657"></script>
+<hr>
+
+<details>
+    <summary>윈도우 시작 프로그램 등록</summary>
+    <ol>
+        <li>shell:startup 실행</li>
+        <li>exe 바로가기 붙여넣기</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>윈도우 부트매니저 설정</summary>
+    <ul>
+        <li>SSD에 설치한 윈도우가 BIOS 설정에서는 검색되지 않는 경우에 대해 해결됨 확인</li>
+        <li>자료 : https://m.blog.naver.com/pspsim/221141734669</li>
+        <ol>
+            <li>msconfig 실행</li>
+            <li>부팅 메뉴에서 기본값 설정, 불필요한 부팅 옵션 삭제 등 처리 후 저장</li>
+        </ol>
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>윈도우 SSD 인식 불량 해결</summary>
+    <ul>
+        <li>파티션은 활성 상태인데 볼륨은 비활성 상태인 경우에 대해 해결됨 확인</li>
+        <li>자료 : https://kin.naver.com/qna/detail.nhn?d1id=1&dirId=1010305&docId=291566434&qb=7KeI66y4CSDtlZjrk5zrlJTsiqTtgawg7J247Iud7J20IOyViOuQmOuEpOyalA==&enc=utf8&section=kin&rank=2&search_sort=0&spq=0</li>
+        <ol>
+            <li>diskpart</li>
+            <li>list disk</li>
+            <li>select disk 1</li>
+            디스크 번호는 list 결과에 따라 적절히
+            <li>clean</li>
+            <li>create partition primary</li>
+            부팅 디스크로 이용하려면 주(primary) 파티션이어야 함
+            <li>list partition</li>
+            <li>select partition 1</li>
+            <li>active</li>
+            파티션 활성화
+            <li>format fs=ntfs quick</li>
+            빠른 포맷 진행
+            <li>exit</li>
+        </ol>
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>Visual Studio 정의 탐색(F12) 실패 해결</summary>
+    NuGet 패키지 Microsoft.Net.Compilers 설치
+</details>
+
+<hr>
+
+<details>
+    <summary>Nox ADB 연결</summary>
+    <ul>
+        <li>nox_adb.exe connect 127.0.0.1:5037</li>
+        <li>5037 포트는 안드로이드 ADB 기본 포트</li>
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>Google Play Store 인앱 결제 상품 변경 사항을 바로 적용</summary>
+    <ol>
+        <li>변경할 부분들을 모두 변경한 다음 상품을 '비활성' 상태로 저장</li>
+        <li>상품을 다시 '활성' 상태로 저장하면 변경 사항이 즉시 반영된다.</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>SVG 크기가 안 맞을 때</summary>
+    <ol>
+        <li>SVG; Scalable Vector Graphics</li>
+        XML로 서술되는 벡터 그래픽 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://image.flaticon.com/icons/svg/53/53260.svg">예</a>
+    
+        <li>html 노드로 설정한 크기에 맞게 출력되지 않는 경우</li>
+        svg 파일을 텍스트 에디터로 열어 width, height 속성을 삭제하고, 대신 viewBox 등으로 출력 범위를 지정.<br>
+        &lt;svg width="" height=""&gt; → &lt;svg viewBox="0 0 100 100"&gt;
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>기레기 고소 방법</summary>
+    <img class="w3-round" src="imgs/20190629_155650.jpg">
+</details>
+
+<hr>
