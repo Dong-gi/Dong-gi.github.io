@@ -2,9 +2,315 @@
 <hr>
 
 <details>
+    <summary>정규표현식 일본어 검색</summary>
+    <ol>
+        <li>히라가나 : [\u3041-\u3096]</li>
+        <li>가타카나 : [\u30A1-\u30FA]</li>
+        <li>한자 : [\u4E00-\u9FEF\u3400-\u4DBF\uF900-\uFADF]</li>
+        <li>특문 : [\u3000-\u303F\uFF00-\uFF9F]</li>
+        <li>전체 : [\u3041-\u3096\u30A1-\u30FA\u4E00-\u9FEF\u3400-\u4DBF\uF900-\uFADF\u3000-\u303F\uFF00-\uFF9F]</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>특수문자 영문명</summary>
+    <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://www.owasp.org/index.php/Password_special_characters">https://www.owasp.org/index.php/Password_special_characters</a>
+    <table class="no-sort">
+        <tr>
+            <th>Character</th>
+            <th>Name</th>
+            <th>Unicode
+            </th>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Space</td>
+            <td>U+0020
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;!</td>
+            <td>Exclamation</td>
+            <td>U+0021
+            </td>
+        </tr>
+        <tr>
+            <td>"</td>
+            <td>Doublequote</td>
+            <td>U+0022
+            </td>
+        </tr>
+        <tr>
+            <td>#</td>
+            <td>Numbersign(hash)</td>
+            <td>U+0023
+            </td>
+        </tr>
+        <tr>
+            <td>$</td>
+            <td>Dollarsign</td>
+            <td>U+0024
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;%</td>
+            <td>Percent</td>
+            <td>U+0025
+            </td>
+        </tr>
+        <tr>
+            <td>&amp;</td>
+            <td>Ampersand</td>
+            <td>U+0026
+            </td>
+        </tr>
+        <tr>
+            <td>'</td>
+            <td>Singlequote</td>
+            <td>U+0027
+            </td>
+        </tr>
+        <tr>
+            <td>(</td>
+            <td>Leftparenthesis</td>
+            <td>U+0028
+            </td>
+        </tr>
+        <tr>
+            <td>)</td>
+            <td>Rightparenthesis</td>
+            <td>U+0029
+            </td>
+        </tr>
+        <tr>
+            <td>*</td>
+            <td>Asterisk</td>
+            <td>U+002A
+            </td>
+        </tr>
+        <tr>
+            <td>+</td>
+            <td>Plus</td>
+            <td>U+002B
+            </td>
+        </tr>
+        <tr>
+            <td>,</td>
+            <td>Comma</td>
+            <td>U+002C
+            </td>
+        </tr>
+        <tr>
+            <td>-</td>
+            <td>Minus</td>
+            <td>U+002D
+            </td>
+        </tr>
+        <tr>
+            <td>.</td>
+            <td>Fullstop</td>
+            <td>U+002E
+            </td>
+        </tr>
+        <tr>
+            <td>/</td>
+            <td>Slash</td>
+            <td>U+002F
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;:</td>
+            <td>Colon</td>
+            <td>U+003A
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;;</td>
+            <td>Semicolon</td>
+            <td>U+003B
+            </td>
+        </tr>
+        <tr>
+            <td>&lt;</td>
+            <td>Lessthan</td>
+            <td>U+003C
+            </td>
+        </tr>
+        <tr>
+            <td>=</td>
+            <td>Equalsign</td>
+            <td>U+003D
+            </td>
+        </tr>
+        <tr>
+            <td>&gt;</td>
+            <td>Greaterthan</td>
+            <td>U+003E
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;?</td>
+            <td>Questionmark</td>
+            <td>U+003F
+            </td>
+        </tr>
+        <tr>
+            <td>@</td>
+            <td>Atsign</td>
+            <td>U+0040
+            </td>
+        </tr>
+        <tr>
+            <td>[</td>
+            <td>Leftbracket</td>
+            <td>U+005B
+            </td>
+        </tr>
+        <tr>
+            <td>\</td>
+            <td>Backslash</td>
+            <td>U+005C
+            </td>
+        </tr>
+        <tr>
+            <td>]</td>
+            <td>Rightbracket</td>
+            <td>U+005D
+            </td>
+        </tr>
+        <tr>
+            <td>^</td>
+            <td>Caret</td>
+            <td>U+005E
+            </td>
+        </tr>
+        <tr>
+            <td>_</td>
+            <td>Underscore</td>
+            <td>U+005F
+            </td>
+        </tr>
+        <tr>
+            <td>`</td>
+            <td>Graveaccent(backtick)</td>
+            <td>U+0060
+            </td>
+        </tr>
+        <tr>
+            <td>{</td>
+            <td>Leftbrace</td>
+            <td>U+007B
+            </td>
+        </tr>
+        <tr>
+            <td>|</td>
+            <td>Verticalbar</td>
+            <td>U+007C
+            </td>
+        </tr>
+        <tr>
+            <td>}</td>
+            <td>Rightbrace</td>
+            <td>U+007D
+            </td>
+        </tr>
+        <tr>
+            <td>~</td>
+            <td>Tilde</td>
+            <td>U+007E
+            </td>
+        </tr>
+    </table>
+</details>
+
+<hr>
+
+<details>
+    <summary>VS Code 단축키로 날짜 입력</summary>
+    아래의 VS Code 부가 기능을 설치하면, Ctrl + Shift + I를 이용해 곧바로 날짜 문자열을 입력할 수 있다.<br>
+    <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://marketplace.visualstudio.com/items?itemName=jsynowiec.vscode-insertdatestring">https://marketplace.visualstudio.com/items?itemName=jsynowiec.vscode-insertdatestring</a>
+</details>
+
+<hr>
+
+<details>
+    <summary>VS Code 파일 탐색 뷰에서 현재 문서 자동 추적 중지</summary>
+    <img class="w3-round" src="imgs/20190330_214623.png">
+</details>
+
+<hr>
+
+<details>
+    <summary>Chrome 디버깅</summary>
+    <ol>
+        <li>자료 : https://subicura.com/2018/02/14/javascript-debugging.html</li>
+        <li>jQuery 등의 라이브러리 중단 생략 : Blackboxing에 패턴 추가</li>
+        <li>특정 도메인으로의 요청 시 중단 : XHR/fetch Breakpoints 추가</li>
+        <li>DOM 변경 시 중단 : Elements 탭의 타깃 요소 - 우클릭 - Break on 설정</li>
+        <li>지역변수를 콘솔에서 사용 : 변수 - 우클릭 - Store as global variable</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>윈도우 차단한 앱 알림 해제</summary>
+    레지스트리 : HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\
+</details>
+
+<hr>
+
+<details>
+    <summary>윈도우 파일 확장자 일괄 변경</summary>
+    ren *.html *.txt
+</details>
+
+<hr>
+
+<details>
+    <summary>윈도우 디렉터리 목록 저장</summary>
+    <ul>
+        <li>dir /s /b *.png &gt; png.txt</li>
+        <li>/s : 재귀</li>
+        <li>/b : "디렉터리/파일명"만 출력</li>
+        <li>&gt; : 저장</li>
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>Firefox 미디어 자동재생 해제 &amp; 다운로드 설정</summary>
+    <ol>
+        <li>about:config 접속</li>
+        <li>media.play-stand-alone 항목 false로 설정</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>Visual Studio 리소스 디렉터리 전체 출력 디렉터리에 복사</summary>
+    <ul>
+        <li>프로젝트 파일 편집</li>
+        <li>예. temp 디렉터리 하위 항목을 모두 복사하려는 경우.</li>
+    <pre>&lt;ItemGroup&gt;
+    &lt;Content Include="temp\**"&gt;
+        &lt;CopyToOutputDirectory&gt;PreserveNewest&lt;/CopyToOutputDirectory&gt;
+    &lt;/Content&gt;
+&lt;/ItemGroup&gt;</pre>
+    </ul>
+</details>
+
+<hr>
+
+<details>
     <summary>윈도우 시작 프로그램 등록</summary>
     <ol>
         <li>shell:startup 실행</li>
+        C:\Users\%USER_NAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
         <li>exe 바로가기 붙여넣기</li>
     </ol>
 </details>

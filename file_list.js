@@ -3135,7 +3135,6 @@ unicodedata.html
 /workspace/donggi-github/Dong-gi.github.io/posts/tip:
 aws.html
 centos.html
-chrome.html
 docker.html
 eclipse.html
 error.html
@@ -3144,16 +3143,12 @@ git.html
 psql.html
 quantum_computer.html
 refactoring.html
-regex.html
 rpi.html
 snippets.html
-special_characters.html
 tip.html
 tomcat.html
 unity.html
 vi.html
-vs_code.html
-windows.html
 
 /workspace/donggi-github/Dong-gi.github.io/source:
 default.css
