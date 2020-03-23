@@ -3115,7 +3115,9 @@ browser_script.html
 wpf_data_tool.html
 
 /workspace/donggi-github/Dong-gi.github.io/posts/python:
+array.html
 basic.html
+bisect.html
 built_in_constant.html
 built_in_exception.html
 built_in_function.html
@@ -3123,20 +3125,24 @@ built_in_type.html
 calendar.html
 collections.abc.html
 collections.html
+copy.html
 data_model.html
 datetime.html
+heapq.html
 pandas.html
 re.html
+reprlib.html
 string.html
 struct.html
 textwrap.html
+types.html
 unicodedata.html
+weakref.html
 
 /workspace/donggi-github/Dong-gi.github.io/posts/tip:
 aws.html
 centos.html
 docker.html
-eclipse.html
 error.html
 fp.html
 git.html

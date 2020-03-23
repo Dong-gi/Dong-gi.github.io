@@ -1,8 +1,25 @@
 <script src="/source/redirect.js?200226_1657"></script>
 <hr>
 
-<details open>
-    <summary>이클립스 APT 에러</summary>
+<details>
+    <summary>이클립스 자동완성 불가; No Java Proposals</summary>
+    <ol>
+        <li>Windows - Preferences - Java - Editor - Content Assist - Advanced</li>
+        ↑ 그냥 설정에 proposal 입력하면 바로 필터링된다.<br>
+        하여튼 해당 부분에서 자동 완성 제안에 표시되지 않은 항목이 있다면 체크하고 적용한다.
+
+        <li>만약 위 설정에 문제가 없는 경우</li>
+        {WORKSPACE_DIRECTORY}/.metadata/.plugins/org.eclipse.jdt.core<br>
+        위 디렉터리에서 *.index, savedIndexNames.txt를 지우고 재실행
+
+        <li>https://stackoverflow.com/questions/908489/eclipse-java-code-completion-not-working</li>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>이클립스 애너테이션 처리 오류</summary>
     <ol>
         <li>예외 : DOMA4011, javax.annotation.processing.FilterException: Source file already created</li>
         <li>원인 : 이클립스 배치 모드에서 특정 파일 수(2000)를 초과하면 애너테이션 처리에 버그 발생</li>
@@ -16,7 +33,7 @@
 
 <hr>
 
-<details open>
+<details>
     <summary>MySQL 시간 기본값 0 설정이 안 될 때</summary>
     <ol>
         <li>왜 굳이 now(), NULL, 특정 시각 상수가 아닌 0을 이용하려는지는 모르겠지만...</li>
@@ -32,8 +49,8 @@
 
 <hr>
 
-<details open>
-    <summary>PostgreSQL : remaining connection slots are reserved for non-replication superuser connections</summary>
+<details>
+    <summary>PostgreSQL remaining connection slots are reserved for non-replication superuser connections</summary>
     <ol>
         <li>원인 : 일반적으로 최대 연결 수 부족</li>
         <li>해결 : /var/lib/pgsql/data/postgresql.conf</li>
@@ -44,7 +61,7 @@
 
 <hr>
 
-<details open>
+<details>
     <summary>도커 컨테이너 에러 종료 후 재시작 불가</summary>
     예외 종료된 도커 컨테이너가 아래와 같이 실행되지 않을 때<br>
     <strong>Error response from daemon: container "83a7208d6b68d3d97be501b47d6a4bb28245b086f25eda819dec93a8d40320a3": already exists</strong><br>
@@ -55,19 +72,19 @@
 
 <hr>
 
-<details open>
+<details>
     <summary>C# 인증 오류 해결 : 무조건 신뢰하는 방향</summary>
-<pre>//Trust all certificates
-System.Net.ServicePointManager.ServerCertificateValidationCallback = ((sender, certificate, chain, sslPolicyErrors) => true);
-// trust sender
-System.Net.ServicePointManager.ServerCertificateValidationCallback = ((sender, cert, chain, errors) => true);
-// validate cert by calling a function
-ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback((sender, cert, chain, policyErrors) => true);</pre>
+    //Trust all certificates<br>
+    System.Net.ServicePointManager.ServerCertificateValidationCallback = ((sender, certificate, chain, sslPolicyErrors) => true);<br>
+    // trust sender<br>
+    System.Net.ServicePointManager.ServerCertificateValidationCallback = ((sender, cert, chain, errors) => true);<br>
+    // validate cert by calling a function<br>
+    ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback((sender, cert, chain, policyErrors) => true);
 </details>
 
 <hr>
 
-<details open>
+<details>
     <summary>java.text.ParseException: Unparseable date: "2028-07-25 15:00:00"</summary>
     <ol>
         <li>아스키 공백 문자(32)가 맞는지 확인한다.</li>
