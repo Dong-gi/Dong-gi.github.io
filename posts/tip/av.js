@@ -131,32 +131,39 @@ for (let a of document.querySelectorAll('a.search_result_row')) {
         console.log(e);
     }
 }
-function filterGame() {
+function sleep(ms) {
+    return new Promise(_ => setTimeout(_, ms));
+}
+async function processGame() {
     if (games.length < 1) {
         return;
     }
-    let game = games.pop();
+    let game = games[0];
+    games = games.slice(1);
     // if (game.review == 'positive') { // 긍정적이지 않은 것 모두 제거
     if (game.disPrice == 0) { // 유료 모두 제거
-        filterGame();
+        processGame();
+        return;
     }
     console.log(game);
     window.scrollTo({
-        top: game.optionNode.offsetParent.offsetTop
+        top: game.optionNode.parentElement.offsetTop
     });
     game.optionNode.parentElement.dispatchEvent(new MouseEvent('mouseover', {view: window, bubbles: false, cancelable: true}));
     game.optionNode.dispatchEvent(new MouseEvent('click', {view: window, bubbles: false, cancelable: true}));
-    setTimeout(removeGame, game.oriPrice % 3690 + 369 * 3);
+    await sleep(game.oriPrice % 3690 + 369 * 3);
+    removeGame();
 }
 function removeGame() {
     let options = document.querySelector('div.ds_options_tooltip');
     for (let option of options.querySelectorAll('div.option')) {
         if (/제외하기/.test(option.innerText)) {
-            option.click();
+            option.dispatchEvent(new MouseEvent('click', {view: window, bubbles: false, cancelable: true}));
+            options.dispatchEvent(new MouseEvent('mouseout', {view: window, bubbles: false, cancelable: true}));
             console.log('제외 완료');
             break;
         }
     }
-    setTimeout(filterGame, 369);
+    processGame();
 }
-setTimeout(filterGame, 369);
+processGame();
