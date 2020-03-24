@@ -72,6 +72,10 @@ li:hover {
     margin: 0;
 }
 
+mjx-container {
+    font-size:17px!important
+}
+
 /* Snackbar : from https://www.w3schools.com/howto/howto_js_snackbar.asp */
 #snackbar {
     visibility: hidden;

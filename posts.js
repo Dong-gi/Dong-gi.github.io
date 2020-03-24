@@ -108,7 +108,9 @@ const posts = {
         { file: "/posts/python/array.html", category: "Programming/Python/Library", title: "Lib/array : 고효율 숫자 배열" },
         { file: "/posts/python/weakref.html", category: "Programming/Python/Library", title: "Lib/weakref : 약한 참조" },
         { file: "/posts/python/types.html", category: "Programming/Python/Library", title: "Lib/types : 동적 타입 생성" },
-        { file: "/posts/python/copy.html", category: "Programming/Python/Library", title: "Lib/copy : 복사" },
+        { file: "/posts/python/copy.html", category: "Programming/Python/Library", title: "Lib/copy" },
+        { file: "/posts/python/enum.html", category: "Programming/Python/Library", title: "Lib/enum" },
+        { file: "/posts/python/math.html", category: "Programming/Python/Library", title: "Lib/math, cmath" },
         { file: "/posts/python/pandas.html", category: "Programming/Python/Library", title: "3rd/pandas : 데이터 처리" },
 
         { file: "/posts/project/wpf_data_tool.html", category: "Project", title: "C#.NET, WPF - 데이터 작업 툴" },

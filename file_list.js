@@ -3128,10 +3128,11 @@ collections.html
 copy.html
 data_model.html
 datetime.html
+enum.html
 heapq.html
+math.html
 pandas.html
 re.html
-reprlib.html
 string.html
 struct.html
 textwrap.html

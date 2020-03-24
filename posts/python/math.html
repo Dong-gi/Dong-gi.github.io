@@ -1,0 +1,71 @@
+<script src="/source/redirect.js?200226_1657"></script>
+<link rel="stylesheet" href="/source/mjx-chtml.css">
+<script>
+    MathJax = {
+        tex: {
+            tags: 'ams',  // should be 'ams', 'none', or 'all'
+            inlineMath: [['식[', ']식']]
+        }
+    };
+</script>
+<script id="MathJax-script" async src="/source/tex-chtml.js?200223_1219"></script>
+
+<hr>
+
+<details>
+    <summary>math : 실함수</summary>
+    <table>
+        <tr><th>함수</th><th>기능</th></tr>
+        <tr><td>ceil(x)</td><td>x보다 작지 않은 최소 정수. 식[\lceil{x}\rceil]식</td></tr>
+        <tr><td>floor(x)</td><td>x보다 크지 않은 최대 정수. 식[\lfloor{x}\rfloor]식</td></tr>
+        <tr><td>isqrt(x) Since 3.8</td><td>식[\lfloor \sqrt{n} \rfloor]식. 식[\lceil \sqrt{n} \rceil]식를 원한다면 1 + isqrt(n-1)</td></tr>
+        <tr><td>comb(n, k)</td><td>조합. 식[\begin{pmatrix}n \\ r\end{pmatrix}={n! \over r!(n-r)!}]식</td></tr>
+        <tr><td>perm(n, k=None)</td><td>순열. 식[{}_n P_{k}={n! \over (n-k)!}]식</td></tr>
+        <tr><td>copysign(x, y)</td><td>식[|x| {y \over |y|}]식</td></tr>
+        <tr><td>fabs(x)</td><td>|x|</td></tr>
+        <tr><td>factorial(x)</td><td>x가 음이 아닌 정수일 때만 x!</td></tr>
+        <tr><td>fmod(x, y)</td><td>C 라이브러리대로 동작.<br>|x - n*y| &lt; |y|를 만족하는 정수 n을 찾고 그 나머지(부호는 x와 동일)를 반환.</td></tr>
+        <tr><td>frexp(x)</td><td>식[x = m2^e]식를 만족하는 실수 m, 정수 e의 튜플 반환. x != 0이면 식[0.5 \le |m| < 1]식</td></tr>
+        <tr><td>ldexp(x, i)</td><td>Inverse of frexp(), 식[x2^i]식</td></tr>
+        <tr><td>fsum(iterable)</td><td>정밀도는 IEEE-754, 반올림 모드는 half-even</td></tr>
+        <tr><td>prod(iterable, *, start=1) Since 3.8</td><td>iterable 모두 곱하여 반환</td></tr>
+        <tr><td>gcd(a, b) Since 3.5</td><td>0이 아닌 정수 a, b에 대해, 양의 최대공약수 반환</td></tr>
+        <tr><td>isclose(a, b, *, rel_tol=1e-09, abs_tol=0.0) Since 3.5</td><td>a, b가 충분히 가까운지 여부.<br>rel_tol는 절대값이 더 큰쪽에 적용될 최대 허용 오차 비율</td></tr>
+        <tr><td>isfinite(x)</td><td>NaN, infinity가 아닌지 여부</td></tr>
+        <tr><td>isinf(x)</td><td>infinity인지 여부</td></tr>
+        <tr><td>isnan(x)</td><td>NaN인지 여부</td></tr>
+        <tr><td>modf(x)</td><td>x의 (소수부, 정수부) 반환</td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+    </table>
+</details>
+
+<hr>
+
+<details>
+    <summary>cmath : 복소함수</summary>
+    <table>
+        <tr><th>함수</th><th>기능</th></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+        <tr><td></td><td></td></tr>
+    </table>
+</details>
+
+<hr>
