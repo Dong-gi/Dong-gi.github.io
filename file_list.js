@@ -2030,10 +2030,10 @@ google_spreadsheet_1.js
 google_spreadsheet_2.js
 google_spreadsheet_3.js
 hiy9.net.js
-igaworks_push.js
 location.js
 maplestory.fandom.com.js
 steamgifts.com.js
+store.steampowered.com.js
 window_open.js
 window_popup.js
 window_resizeto.js
@@ -2945,17 +2945,12 @@ w3.css
 20180930_154849.png
 20190330_214623.png
 20190629_155650.jpg
-20190716_085717.png
-20190716_085751.png
 20190719_100711.png
 20190719_103028.png
 20190723_100443.png
 20190723_100506.png
 20190731_143749.png
 20190731_143815.png
-20190809_113253.png
-20190809_113613.png
-20190809_113828.png
 20190912_191500.png
 20191006_180335.png
 20191006_180348.png
@@ -2988,7 +2983,7 @@ java
 javascript
 project
 python
-tip
+single
 
 /workspace/donggi-github/Dong-gi.github.io/posts/algorithm:
 ai.html
@@ -3110,8 +3105,9 @@ selector_example.html
 storage_example.html
 
 /workspace/donggi-github/Dong-gi.github.io/posts/project:
-browser_code_snippet.html
-browser_script.html
+error.html
+snippets.html
+tip.html
 wpf_data_tool.html
 
 /workspace/donggi-github/Dong-gi.github.io/posts/python:
@@ -3140,19 +3136,17 @@ types.html
 unicodedata.html
 weakref.html
 
-/workspace/donggi-github/Dong-gi.github.io/posts/tip:
+/workspace/donggi-github/Dong-gi.github.io/posts/single:
+av.js
 aws.html
 centos.html
 docker.html
-error.html
 fp.html
 git.html
 psql.html
 quantum_computer.html
 refactoring.html
 rpi.html
-snippets.html
-tip.html
 tomcat.html
 unity.html
 vi.html

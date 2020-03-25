@@ -1,4 +1,4 @@
-let ownPoint = parseInt($('span.nav__points').text());
+let ownPoint = parseInt(document.querySelector('span.nav__points').innerText);
 
 class GiveawayContext {
     constructor(node) {
