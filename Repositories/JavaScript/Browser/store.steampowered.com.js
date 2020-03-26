@@ -1,4 +1,5 @@
 // Steam 목록 자동 "제외하기"
+// https://store.steampowered.com/search/?sort_by=Released_DESC
 class SteamGameRow {
     constructor(title, release, discount, review, oriPrice, disPrice, optionNode) {
         [this.title, this.release, this.discount, this.review, this.oriPrice, this.disPrice, this.optionNode] = arguments;
@@ -68,7 +69,7 @@ async function processGame() {
     
     game.optionNode.parentElement.dispatchEvent(new MouseEvent('mouseover', {view: window, bubbles: false, cancelable: true}));
     game.optionNode.dispatchEvent(new MouseEvent('click', {view: window, bubbles: false, cancelable: true}));
-    await sleep(game.oriPrice % 3690 + 369 * 3);
+    await sleep(game.oriPrice % 3690 + 369 * 3 + new Date().getMilliseconds());
 
     let options = document.querySelector('div.ds_options_tooltip');
     for (let option of options.querySelectorAll('div.option')) {
