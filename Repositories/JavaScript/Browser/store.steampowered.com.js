@@ -57,6 +57,7 @@ async function processGame() {
         return;
     }
     
+    if (!game.optionNode)
     let position = game.optionNode.parentElement.offsetTop - 50;
     if (position < 0) { // 이미 처리됨
         processGame();
