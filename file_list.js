@@ -2070,6 +2070,8 @@ type_example.py
 weakref_example.py
 
 /workspace/donggi-github/Dong-gi.github.io/Repositories/Python/Library:
+functools_singledispatch.py
+functools_wraps.py
 pandas_1.py
 
 /workspace/donggi-github/Dong-gi.github.io/Repositories/Raspbian:
@@ -3124,11 +3126,19 @@ collections.html
 copy.html
 data_model.html
 datetime.html
+decimal.html
 enum.html
+functools.html
 heapq.html
+itertools.html
 math.html
+operator.html
 pandas.html
+persistence.html
+random.html
 re.html
+shutil.html
+statistics.html
 string.html
 struct.html
 textwrap.html

@@ -1,0 +1,55 @@
+<script src="/source/redirect.js?200226_1657"></script>
+<hr>
+
+<details>
+    <summary>random : 암호적으로 안전하지 않은 의사 난수 생성기</summary>
+    <ul>
+        <li>Bookkeeping functions</li>
+        <ul>
+            <li>seed(a=None, version=2) : 시드 설정. a를 지정하지 않은 경우 시스템 시각 사용</li>
+            <li>getrandbits(k) : k개 비트로 구성된 int 반환</li>
+        </ul>
+        <li>Functions for integers</li>
+        <ul>
+            <li>randrange(stop), randrange(start, stop[, step])</li>
+            <li>randint(a, b)</li>
+        </ul>
+        <li>Functions for sequences</li>
+        <ul>
+            <li>choice(seq)</li>
+            <li>choices(population, weights=None, *, cum_weights=None, k=1) Since 3.6</li>
+            <ul>
+                <li>weights : population 각 요소별 가중치</li>
+                <li>cum_weights : population 각 요소별 누적 가중치</li>
+                <li>k : 뽑을 요소 수. 복원 추출</li>
+            </ul>
+            <li>shuffle(x[, random])</li>
+            x를 제자리에서 섞는다. random은 [0.0, 1.0)을 반환하는 무인자 함수
+            <li>sample(population, k) : 비복원 추출</li>
+        </ul>
+        <li>Real-valued distributions</li>
+        <ul>
+            <li>random() : [0.0, 1.0)</li>
+            <li>uniform(a, b) : [a, b]</li>
+            <li>gauss(mu, sigma)</li>
+            <li>gammavariate(alpha, beta)</li>
+            <li>betavariable(alpha, beta)</li>
+            <li>이하 생략</li>
+        </ul>
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>secrets Since 3.6 : 암호적으로 안전한 난수 생성기</summary>
+    <ul>
+        <li>randbits(k)</li>
+        <li>randbelow(n) : [0, n)</li>
+        <li>choice(sequence)</li>
+        <li>token_bytes([nbytes=None]), token_hex([nbytes=None]), token_urlsafe([nbytes=None])</li>
+        <li></li>
+    </ul>
+</details>
+
+<hr>
