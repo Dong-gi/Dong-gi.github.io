@@ -3153,7 +3153,6 @@ centos.html
 docker.html
 fp.html
 git.html
-psql.html
 quantum_computer.html
 refactoring.html
 rpi.html
