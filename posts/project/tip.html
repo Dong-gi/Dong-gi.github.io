@@ -2,6 +2,52 @@
 <hr>
 
 <details>
+    <summary>PostgreSQL 팁</summary>
+    <ul>
+        <li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="http://postgresql.kr/docs/current/sql-commands.html">명령어 목록</a></li>
+        
+        <li>timezone 변경</li>
+        <ol>
+            <li>postgresql.conf의 log_timezone, timezone 설정 변경</li>
+            <li>SELECT pg_reload_conf();</li>
+        </ol>
+        
+        <li>postgres 유저 비밀번호를 모를 때</li>
+        <ol>
+            <li>pg_hba.conf 파일을 비밀번호 없이 접속할 수 있도록 trust로 변경 후 접속(서비스 재시작 필요)</li>
+            <li>비밀번호 설정 후 pg_hba.conf 다시 원복</li>
+        </ol>
+        
+        <li>모든 테이블에 대한 권한 부여</li>
+        <ul>
+            <li>GRANT SELECT ON ALL TABLES IN SCHEMA public TO user;</li>
+            <li>GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO user;</li>
+            <li>이후 추가되는 테이블에도 적용하려면 기본 권한을 변경</li>
+            ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO user;
+            <li>실제로 적용됐는지 확인</li>
+            select * from information_schema.role_table_grants where table_name = 'table_name';
+        </ul>
+        
+        <li>dblink 재활용</li>
+    <pre>SELECT dblink_connect('myconn', 'hostaddr=1.2.3.4 port=5432 dbname=history user=readonly password=password');
+    (SELECT account_id, last_login_date FROM v_account WHERE account_id IN
+        (SELECT r.account_id FROM dblink('myconn', 'SELECT account_id, sum(amount) as total_amount FROM v_payment_history WHERE status=2 GROUP BY account_id HAVING sum(amount) &gt;= 10000') AS r(account_id BIGINT, total_amount BIGINT))
+    ) UNION ...</pre>
+    
+        <li>시각 차이 획득</li>
+        select abs(extract (epoch from (insert_datetime - '2019-07-04 19:39:55'::timestamp)));
+    
+        <li>커넥션 정리</li>
+        select pg_terminate_backend(pid) from pg_stat_activity where client_addr = '10.0.2.2';
+    
+        <li>AWS Redshift와 드라이버 충돌될 때</li>
+        jdbc 연결 쿼리에 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://www.simba.com/products/Redshift/doc/JDBC_InstallGuide/content/jdbc/re/options/opensourcesubprotocoloverride.htm">OpenSourceSubProtocolOverride=true</a> 추가.
+    </ul>
+</details>
+
+<hr>
+
+<details>
     <summary>이클립스 단축키</summary>
     <ol>
         <li>Ctrl + Shift + L : 전체 단축키 목록</li>
@@ -253,16 +299,14 @@
 <hr>
 
 <details>
-    <summary>VS Code 단축키로 날짜 입력</summary>
-    아래의 VS Code 부가 기능을 설치하면, Ctrl + Shift + I를 이용해 곧바로 날짜 문자열을 입력할 수 있다.<br>
-    <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://marketplace.visualstudio.com/items?itemName=jsynowiec.vscode-insertdatestring">https://marketplace.visualstudio.com/items?itemName=jsynowiec.vscode-insertdatestring</a>
-</details>
+    <summary>VS Code 팁</summary>
+    <ul>
+        <li>단축키로 날짜 입력</li>
+        <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://marketplace.visualstudio.com/items?itemName=jsynowiec.vscode-insertdatestring">VS Code 부가 기능</a>을 설치하면, Ctrl + Shift + I를 이용해 곧바로 날짜 문자열을 입력할 수 있다.
 
-<hr>
-
-<details>
-    <summary>VS Code 파일 탐색 뷰에서 현재 문서 자동 추적 중지</summary>
-    <img class="w3-round" src="imgs/20190330_214623.png">
+        <li>파일 탐색 뷰에서 현재 문서 자동 추적 중지</li>
+        <img class="w3-round" src="imgs/20190330_214623.png">
+    </ul>
 </details>
 
 <hr>
@@ -281,26 +325,60 @@
 <hr>
 
 <details>
-    <summary>윈도우 차단한 앱 알림 해제</summary>
-    레지스트리 : HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\
-</details>
-
-<hr>
-
-<details>
-    <summary>윈도우 파일 확장자 일괄 변경</summary>
-    ren *.html *.txt
-</details>
-
-<hr>
-
-<details>
-    <summary>윈도우 dir 결과 저장</summary>
+    <summary>윈도우 팁</summary>
     <ul>
-        <li>dir /s /b *.png &gt; png.txt</li>
-        <li>/s : 재귀</li>
-        <li>/b : "디렉터리/파일명"만 출력</li>
-        <li>&gt; : 저장</li>
+        <li>차단한 앱 알림 해제</li>
+        레지스트리 : HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\
+
+        <li>파일명 일괄 변경</li>
+        ren *.html *.txt
+
+        <li>dir 결과 저장</li>
+        <ul>
+            <li>dir /s /b *.png &gt; png.txt</li>
+            <li>/s : 재귀</li>
+            <li>/b : "디렉터리/파일명"만 출력</li>
+            <li>&gt; : 저장</li>
+        </ul>
+
+        <li>시작 프로그램 등록</li>
+        <ol>
+            <li>shell:startup 실행</li>
+            C:\Users\%USER_NAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+            <li>exe 바로가기 붙여넣기</li>
+        </ol>
+
+        <li>부트매니저 설정</li>
+        <ul>
+            <li>SSD에 설치한 윈도우가 BIOS 설정에서는 검색되지 않는 경우에 대해 해결됨 확인</li>
+            <li>자료 : https://m.blog.naver.com/pspsim/221141734669</li>
+            <ol>
+                <li>msconfig 실행</li>
+                <li>부팅 메뉴에서 기본값 설정, 불필요한 부팅 옵션 삭제 등 처리 후 저장</li>
+            </ol>
+        </ul>
+        
+        <li>SSD 인식 불량 해결</li>
+        <ul>
+            <li>파티션은 활성 상태인데 볼륨은 비활성 상태인 경우에 대해 해결됨 확인</li>
+            <li>자료 : https://kin.naver.com/qna/detail.nhn?d1id=1&dirId=1010305&docId=291566434&qb=7KeI66y4CSDtlZjrk5zrlJTsiqTtgawg7J247Iud7J20IOyViOuQmOuEpOyalA==&enc=utf8&section=kin&rank=2&search_sort=0&spq=0</li>
+            <ol>
+                <li>diskpart</li>
+                <li>list disk</li>
+                <li>select disk 1</li>
+                디스크 번호는 list 결과에 따라 적절히
+                <li>clean</li>
+                <li>create partition primary</li>
+                부팅 디스크로 이용하려면 주(primary) 파티션이어야 함
+                <li>list partition</li>
+                <li>select partition 1</li>
+                <li>active</li>
+                파티션 활성화
+                <li>format fs=ntfs quick</li>
+                빠른 포맷 진행
+                <li>exit</li>
+            </ol>
+        </ul>
     </ul>
 </details>
 
@@ -326,57 +404,6 @@
         &lt;CopyToOutputDirectory&gt;PreserveNewest&lt;/CopyToOutputDirectory&gt;
     &lt;/Content&gt;
 &lt;/ItemGroup&gt;</pre>
-    </ul>
-</details>
-
-<hr>
-
-<details>
-    <summary>윈도우 시작 프로그램 등록</summary>
-    <ol>
-        <li>shell:startup 실행</li>
-        C:\Users\%USER_NAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
-        <li>exe 바로가기 붙여넣기</li>
-    </ol>
-</details>
-
-<hr>
-
-<details>
-    <summary>윈도우 부트매니저 설정</summary>
-    <ul>
-        <li>SSD에 설치한 윈도우가 BIOS 설정에서는 검색되지 않는 경우에 대해 해결됨 확인</li>
-        <li>자료 : https://m.blog.naver.com/pspsim/221141734669</li>
-        <ol>
-            <li>msconfig 실행</li>
-            <li>부팅 메뉴에서 기본값 설정, 불필요한 부팅 옵션 삭제 등 처리 후 저장</li>
-        </ol>
-    </ul>
-</details>
-
-<hr>
-
-<details>
-    <summary>윈도우 SSD 인식 불량 해결</summary>
-    <ul>
-        <li>파티션은 활성 상태인데 볼륨은 비활성 상태인 경우에 대해 해결됨 확인</li>
-        <li>자료 : https://kin.naver.com/qna/detail.nhn?d1id=1&dirId=1010305&docId=291566434&qb=7KeI66y4CSDtlZjrk5zrlJTsiqTtgawg7J247Iud7J20IOyViOuQmOuEpOyalA==&enc=utf8&section=kin&rank=2&search_sort=0&spq=0</li>
-        <ol>
-            <li>diskpart</li>
-            <li>list disk</li>
-            <li>select disk 1</li>
-            디스크 번호는 list 결과에 따라 적절히
-            <li>clean</li>
-            <li>create partition primary</li>
-            부팅 디스크로 이용하려면 주(primary) 파티션이어야 함
-            <li>list partition</li>
-            <li>select partition 1</li>
-            <li>active</li>
-            파티션 활성화
-            <li>format fs=ntfs quick</li>
-            빠른 포맷 진행
-            <li>exit</li>
-        </ol>
     </ul>
 </details>
 
