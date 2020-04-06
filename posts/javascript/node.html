@@ -23,13 +23,79 @@
     <summary>TypeScript</summary>
     <ol>
         <li>JavaScript에 타입이 추가된 수퍼셋. 컴파일하면 자바스크립트 코드가 된다</li>
-        앵귤러는 타입스크립트로 작성되었기 때문에 개발에 필요하다
         <li>npm install -g typescript</li>
         <li>tsc file-name.ts --target es6</li>
         <li>타입스크립트에서는 생성자 매개변수 앞에 public/private 접근한정자가 있으면 자동으로 클래스의 속성으로 선언한다</li>
         <li>VS Code의 타입스크립트 컴파일러를 npm 패키지로 설정</li>
         "typescript.tsdk": "C:/Users/name/AppData/Roaming/npm/node_modules/typescript/bin/tsc"
     </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>전역 객체</summary>
+    <ul>
+        <li>__filename, __dirname : 실행 중인 소스 파일 정보. REPL 모드에서는 당연히 없다</li>
+        <li>console : 콘솔 관련</li>
+        <li>exports : 모듈 관련</li>
+        <li>process : 프로세스 관련</li>
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>Lib/console</summary>
+    <ul>
+        <li>console.log(any data[, any ...args]) + info, debug, warn, error</li>
+        util.format(format[, ...args]) 형태의 호출 가능
+        <li>console.table(any tabularData[, string[] properties]) Since 10</li>
+        <li>console.time([string label]) + timeEnd</li>
+        label(기본값 'default')로 타이머 시작/종료
+        <li>console.timeLog([string label][, any ...data]) Since 10.7</li>
+        label(기본값 'default')의 타이머를 중지하지 않고, 경과 시간과 data 출력
+        <li>console.trace([any message][, any ...args])</li>
+        스택 출력
+        <li>new console.Console(stream.Writable stdout[, stream.Writable stderr][, boolean ignoreErrors])</li>
+        <li>console.assert(any value[, any ...message])</li>
+        value가 false면 console.error(...message)
+        <li>console.count([string label]) Since 8.3 + countReset</li>
+        label(기본값 'default')로 몇 번 호출했는지 출력한다
+        <li>console.dir(any obj[, Object options])</li>
+        <ul>
+            <li>boolean options.showHidden : 기본값 false</li>
+            <li>number options.depth : 기본값 2. null이면 끝까지 재귀</li>
+        </ul>
+        <li>console.group([any ...label]) + groupEnd</li>
+        console.log(...label)실행 후, 다음 출력부터는 앞에 공백 2개 추가
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>Lib/process</summary>
+    <ul>
+        <li>Event 'beforeExit'</li>
+        정상 종료 전, process.exitCode를 인자로 콜백이 호출된다. process.exit() 등으로 종료하는 경우 호출되지 않는다. 콜백에서 비동기 호출로 프로그램 종료를 지연시킬 수 있다.
+        <li>Event 'exit'</li>
+        정상 종료 및 process.exit() 호출 시 process.exitCode를 인자로 콜백이 호출된다. 콜백은 동기적 연산만 수행해야 한다.
+        <li>Event 'multipleResolves' Since 10.12</li>
+        <ul>
+            <li>임의 Promise의 두 번째 resolve 또는 reject 호출부터 콜백이 호출된다</li>
+            Promise.race() 호출처럼, 경우에 따라서 이 이벤트 발생이 에러가 아닐수도 있다.
+            <li>콜백 : (string type, Promise promise, any value)</li>
+        </ul>
+        <li>process.abort()</li>
+        강제 종료. Worker 스레드에서는 실행 불가.
+        <li>process.chdir(directory)</li>
+        실행 위치 변경
+        <li>string[] process.argv</li>
+        <li>Object process.env</li>
+        <li>string process.execPath</li>
+        <li>string[] process.execArgv</li>
+    </ul>
 </details>
 
 <hr>

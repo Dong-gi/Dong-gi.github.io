@@ -17,6 +17,7 @@ Config
 Eclipse
 IntelliJ
 JavaScript
+Node
 Python
 Raspbian
 STS
@@ -2037,6 +2038,8 @@ store.steampowered.com.js
 window_open.js
 window_popup.js
 window_resizeto.js
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/Node:
 
 /workspace/donggi-github/Dong-gi.github.io/Repositories/Python:
 Basic

@@ -87,6 +87,7 @@ const posts = {
         { file: "/posts/javascript/basic.html", category: "Programming/JavaScript", title: "코어 JavaScript" },
         { file: "/posts/javascript/basic2.html", category: "Programming/JavaScript", title: "브라우저 JavaScript" },
         { file: "/posts/javascript/jquery.html", category: "Programming/JavaScript", title: "jQuery" },
+        { file: "/posts/javascript/node.html", category: "Programming/JavaScript", title: "Node" },
 
         { file: "/posts/python/basic.html", category: "Programming/Python", title: "Python 3.8 시작하기" },
         { file: "/posts/python/data_model.html", category: "Programming/Python", title: "Python 3.8 데이터 모델" },

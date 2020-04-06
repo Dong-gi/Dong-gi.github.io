@@ -1,43 +1,38 @@
 <script src="/source/redirect.js?200226_1657"></script>
-<ul>
-    <li>General Information</li>
-    GNU 하의 무료 라이선스 or Oracle 상용 라이선스 중 선택
+<hr>
 
-    <li>테이블 컬럼 순서 변경</li>
-<pre>ALTER TABLE table_name MODIFY COLUMN col_name1 TYPE AFTER col_name2;
-ALTER TABLE table_name CHANGE COLUMN before_col_name after_col_name TYPE AFTER col_name;</pre>
-
-    <li>테이블 정의 확인</li>
-<pre>DESC table_name;
-SHOW [FULL] COLUMNS FROM table_name [WHERE...];</pre>
-
-    <li>테이블 구조 복사 생성</li>
-    create table new_table_name like base_table_name;
-
-    <li>프로시저 호출</li>
-    <ol>
-        <li>CREATE PROCEDURE로 정의된 내장 프로시저를 호출한다.</li>
-        CALL sp_name([parameter[, ...]])
-        <li>매개변수가 없다면 괄호를 생략할 수 있다.</li>
-        CALL sp_name[()]
-        <li>OUT, INOUT 매개변수를 출력으로 이용할 수 있다. 이는 프로시저 내부에서의 호출에서도 유효하다.</li>
-        PREPARE와 EXECUTE를 이용한 prepared CALL 구문에서는 IN, OUT, INOUT 인자에 placeholder를 이용할 수 있다.
+<details>
+    <summary>프로시저</summary>
+    <ul>
+        <li>프로시저 호출</li>
+        <ol>
+            <li>CREATE PROCEDURE로 정의된 내장 프로시저를 호출한다.</li>
+            CALL sp_name([parameter[, ...]])
+            <li>매개변수가 없다면 괄호를 생략할 수 있다.</li>
+            CALL sp_name[()]
+            <li>OUT, INOUT 매개변수를 출력으로 이용할 수 있다. 이는 프로시저 내부에서의 호출에서도 유효하다.</li>
+            PREPARE와 EXECUTE를 이용한 prepared CALL 구문에서는 IN, OUT, INOUT 인자에 placeholder를 이용할 수 있다.
 <pre>mysql&gt; SET @increment = 10;
 mysql&gt; PREPARE s FROM 'CALL p(?, ?)';
 mysql&gt; EXECUTE s USING @version, @increment;
 mysql&gt; SELECT @version, @increment;</pre>
-    </ol>
+        </ol>
+    
+        <li>프로시저 작성</li>
+        <ol>
+            <li>분산 저장된 DB와 테이블들을 한꺼번에 검색하는 프로시저
+                <button class="btn-code" path="posts/db/example/mysql_select_all_table.sql" lan="sql">예시 코드</button></li>
+            <li>가정 1 : 유저 데이터를 4개 DB(user_1 ~ suer_4), 총 32개의 테이블(_1 ~ _32)로 분산 저장</li>
+            예. 유저의 소지 아이템과 관련된 i_user_item 테이블에 대하여, user_1에는 i_user_item_1, i_user_item_5, ..., i_user_item_29까지 존재
+            <li>가정 2 : 각 테이블에 데이터 입력 시, 테이블 suffix는 user_id % 32 + 1로 결정된다</li>
+        </ol>
+    </ul>
+</details>
 
-    <li>프로시저 작성</li>
-    <ol>
-        <li>분산 저장된 DB와 테이블들을 한꺼번에 검색하는 프로시저
-            <button class="btn-code" path="posts/db/example/mysql_select_all_table.sql" lan="sql">예시 코드</button></li>
-        <li>가정 1 : 유저 데이터를 4개 DB(user_1 ~ suer_4), 총 32개의 테이블(_1 ~ _32)로 분산 저장</li>
-        예. 유저의 소지 아이템과 관련된 i_user_item 테이블에 대하여, user_1에는 i_user_item_1, i_user_item_5, ..., i_user_item_29까지 존재
-        <li>가정 2 : 각 테이블에 데이터 입력 시, 테이블 suffix는 user_id % 32 + 1로 결정된다</li>
-    </ol>
+<hr>
 
-    <li>Event</li>
+<details>
+    <summary>이벤트</summary>
     <ol>
         <li>서버 실행 중 이벤트 사용 설정</li>
 <pre>mysql&gt; SET GLOBAL event_scheduler = on;
@@ -60,8 +55,12 @@ $$ delimiter;</pre>
 <pre>SHOW PROCESSLIST;
 SHOW EVENTS;</pre>
     </ol>
+</details>
 
-    <li>CSV 입출력</li>
+<hr>
+
+<details>
+    <summary>CSV 입출력</summary>
     <ul>
         <li>CSV로부터 입력</li>
         LOAD DATA LOCAL INFILE "/~.csv" replace into table <i>table_name</i> fields terminated by ',' enclosed by '\"' IGNORE 1 LINES;
@@ -88,20 +87,41 @@ SHOW EVENTS;</pre>
             </script>
         </ul>
     </ul>
+</details>
 
-    <li>로그 확인</li>
-    mysql&gt; show variables where variable_name like '%log%';
-    <table>
-        <tbody>
+<hr>
+
+<details>
+    <summary>자잘한 것들</summary>
+    <ul>
+        <li>테이블 컬럼 순서 변경</li>
+<pre>ALTER TABLE table_name MODIFY COLUMN col_name1 TYPE AFTER col_name2;
+ALTER TABLE table_name CHANGE COLUMN before_col_name after_col_name TYPE AFTER col_name;</pre>
+
+        <li>테이블 정의 확인</li>
+<pre>DESC table_name;
+SHOW [FULL] COLUMNS FROM table_name [WHERE...];</pre>
+
+        <li>테이블 복사 생성</li>
+        create table new_table_name like base_table_name;
+
+        <li>로그 확인</li>
+        mysql&gt; show variables where variable_name like '%log%';
+        <table class="no-sort">
             <tr><td>general_log_file</td><td>/var/lib/mysql/e5b7c25145a2.log</td></tr>
             <tr><td>relay_log_basename</td><td>/var/lib/mysql/e5b7c25145a2-relay-bin</td></tr>
             <tr><td>relay_log_index</td><td>/var/lib/mysql/e5b7c25145a2-relay-bin.index</td></tr>
             <tr><td>slow_query_log_file</td><td>/var/lib/mysql/e5b7c25145a2-slow.log</td></tr>
-        </tbody>
-    </table>
-    mysql&gt; SET GLOBAL general_log = 1;<br>
-    $ tail /var/lib/mysql/e5b7c25145a2.log -f
+        </table>
+        mysql&gt; SET GLOBAL general_log = 1;<br>
+        $ tail /var/lib/mysql/e5b7c25145a2.log -f
 
-    <li>입출력 내역 파일로 기록</li>
-    tee file_name.log;
-</ul>
+        <li>입출력 내역 파일로 기록</li>
+        tee file_name.log;
+        
+        <li>my.cnf 찾기</li>
+        mysqld --verbose --help | grep -A 1 'Default options'
+    </ul>
+</details>
+
+<hr>
