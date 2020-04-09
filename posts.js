@@ -132,6 +132,7 @@ const posts = {
         { file: "/posts/single/docker.html", category: "Programming/Single Topic", title: "Docker" },
         { file: "/posts/single/fp.html", category: "Programming/Single Topic", title: "FP; Functional Programming" },
         { file: "/posts/single/git.html", category: "Programming/Single Topic", title: "Git" },
+        { file: "/posts/single/nginx.html", category: "Programming/Single Topic", title: "Nginx" },
         { file: "/posts/single/tomcat.html", category: "Programming/Single Topic", title: "tomcat" },
         { file: "/posts/single/refactoring.html", category: "Programming/Single Topic", title: "디자인 패턴 + 리팩터링" },
         { file: "/posts/single/rpi.html", category: "Programming/Single Topic", title: "Raspberry Pi 3 + OpenCV(python)" },
