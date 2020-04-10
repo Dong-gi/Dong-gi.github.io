@@ -8515,6 +8515,7 @@ probability.html
 /workspace/donggi-github/Dong-gi.github.io/posts/db:
 concept.html
 example
+mongodb.html
 mysql.html
 psql_admin.html
 psql_programming.html

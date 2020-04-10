@@ -245,6 +245,9 @@ Donggi.addHoverContent = function (target, content, targetDecorator) {
         content.style.display = 'block';
         content.style.top = e.pageY;
         content.style.left = e.pageX;
+        content.style.maxWidth = window.innerWidth - e.clientX;
+        content.style.maxHeight = window.innerHeight - e.clientY;
+        content.style.overflow = 'auto';
     })(target, content);
     let leave = ((target, content) => function (e) {
         if (content.style.display == 'none')

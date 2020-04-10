@@ -22,6 +22,7 @@ const posts = {
         { file: "/posts/dotnet/wpf_basic.html", category: "Programming/.NET", title: "WPF 시작하기" },
         
         { file: "/posts/db/concept.html", category: "Programming/DB", title: "기본 개념" },
+        { file: "/posts/db/mongodb.html", category: "Programming/DB", title: "MongoDB" },
         { file: "/posts/db/mysql.html", category: "Programming/DB", title: "MySQL" },
         { file: "/posts/db/psql_to_sqlite.html", category: "Programming/DB", title: "PostgreSQL → SQLite3 마이그레이션" },
         { file: "/posts/db/psql_admin.html", category: "Programming/DB", title: "PostgreSQL 서버 관리" },
@@ -149,4 +150,7 @@ const posts = {
 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="">
 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="javascript:;">
 <img class="w3-round" src="imgs/">
+
+<span class="hover-content" template-id="template-python-collections-abc-iterable">
+<div id="template-python-collections-abc-iterable" class="w3-container w3-leftbar w3-border-green w3-white">
  */

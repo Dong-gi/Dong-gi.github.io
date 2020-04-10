@@ -1,0 +1,495 @@
+<script src="/source/redirect.js?200226_1657"></script>
+<hr>
+
+<details>
+    <summary>시작하기</summary>
+    <ol>
+        <li>NoSQL 데이터베이스의 한 종류. 데이터를 BSON(Binary JSON)으로 취급하며, SQL을 지원하지 않는다.</li>
+        <table>
+            <tr><th>RDBMS</th><th>MongoDB</th></tr>
+            <tr><td>Table</td><td>Collection</td></tr>
+            <tr><td>Tuple, Row</td><td>Document</td></tr>
+            <tr><td>Join</td><td>Embedding, Linking</td></tr>
+        </table>
+        <li>https://docs.mongodb.com/manual/installation/</li>
+        <li>서비스 등록이 안 됐길래 그냥 직접 실행함</li>
+        mongod --fork -f /etc/mongod.conf
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>BSON Specification</summary>
+    <ol>
+        <li>http://bsonspec.org/spec.html</li>
+        <li>Basic Types</li>
+        <table class="no-sort">
+            <tr>
+                <th>type</th>
+                <th>size(bytes)</th>
+            </tr>
+            <tr>
+                <td>byte</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>int32</td>
+                <td>4(signed, 2의 보수)</td>
+            </tr>
+            <tr>
+                <td>int64</td>
+                <td>8(signed, 2의 보수)</td>
+            </tr>
+            <tr>
+                <td>uint64</td>
+                <td>8(unsigned)</td>
+            </tr>
+            <tr>
+                <td>double</td>
+                <td>8(IEEE 754-2008)</td>
+            </tr>
+            <tr>
+                <td>decimal128</td>
+                <td>16(IEEE 754-2008)</td>
+            </tr>
+        </table>
+        <li>Non-terminals</li>
+        <table class="no-sort">
+            <tr>
+                <td>document</td>
+                <td>::=</td>
+                <td>int32&nbsp;e_list&nbsp;"\x00"</td>
+                <td>BSON 객체. int32는 문서의 바이트 크기</td>
+            </tr>
+            <tr>
+                <td>e_list</td>
+                <td>::=</td>
+                <td>element e_list</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>""</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>element</td>
+                <td>::=</td>
+                <td>"\x01" e_name double</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x02" e_name string</td>
+                <td>UTF-8 string</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x03"&nbsp;e_name&nbsp;document</td>
+                <td>Embedded document</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x04" e_name document</td>
+                <td><span class="hover-content" template-id="template-mongodb-bson-array">Array</span></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x05" e_name binary</td>
+                <td>Binary data</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x06" e_name</td>
+                <td>Deprecated</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x07" e_name (byte*12)</td>
+                <td>4바이트 시각 + 5바이트 랜덤 + 3바이트 카운터</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x08" e_name "\x00"</td>
+                <td>Boolean "false"</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x08" e_name "\x01"</td>
+                <td>Boolean "true"</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x09" e_name int64</td>
+                <td>UTC datetime(밀리초)</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x0A" e_name</td>
+                <td>Null</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x0B" e_name cstring cstring</td>
+                <td>각각 정규표현식 패턴, <span class="hover-content" template-id="template-mongodb-bson-regex-option">옵션(알파벳 순)</span></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x0C" e_name string (byte*12)</td>
+                <td>Deprecated</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x0D" e_name string</td>
+                <td>JavaScript code</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x0E" e_name string</td>
+                <td>Deprecated</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x0F" e_name code_w_s</td>
+                <td>JavaScript code w/ scope</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x10" e_name int32</td>
+                <td>32-bit integer</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x11" e_name uint64</td>
+                <td>Timestamp</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x12" e_name int64</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x13" e_name decimal128</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\xFF" e_name</td>
+                <td><span class="hover-content" template-id="template-mongodb-min-key">Min key</span></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x7F" e_name</td>
+                <td><span class="hover-content" template-id="template-mongodb-max-key">Max key</span></td>
+            </tr>
+            <tr>
+                <td>e_name</td>
+                <td>::=</td>
+                <td>cstring</td>
+                <td>Key name</td>
+            </tr>
+            <tr>
+                <td>string</td>
+                <td>::=</td>
+                <td>int32&nbsp;(byte*)&nbsp;"\x00"</td>
+                <td>UTF8 문자열. int32는 바이트 길이(\x00 포함)</td>
+            </tr>
+            <tr>
+                <td>cstring</td>
+                <td>::=</td>
+                <td>(byte*) "\x00"</td>
+                <td>Modified UTF8 문자열</td>
+            </tr>
+            <tr>
+                <td>binary</td>
+                <td>::=</td>
+                <td>int32 subtype (byte*)</td>
+                <td>int32는 (byte*) 바이트 길이</td>
+            </tr>
+            <tr>
+                <td>subtype</td>
+                <td>::=</td>
+                <td>"\x00"</td>
+                <td>Generic binary subtype</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x01"</td>
+                <td>Function</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x02"</td>
+                <td>Binary (Old)</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x03"</td>
+                <td>UUID (Old)</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x04"</td>
+                <td>UUID</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x05"</td>
+                <td>MD5</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x06"</td>
+                <td>Encrypted BSON value</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>|</td>
+                <td>"\x80"</td>
+                <td>User defined</td>
+            </tr>
+            <tr>
+                <td>code_w_s</td>
+                <td>::=</td>
+                <td>int32 string document</td>
+                <td>Code w/ scope</td>
+            </tr>
+        </table>
+    </ol>
+</details>
+
+<hr>
+
+<details>
+    <summary>mongo Shell</summary>
+    <ul>
+        <li>mongo</li>
+        기본 포트 27017
+        <li>mongo --port 28015</li>
+        <li>mongo "mongodb://host:port"</li>
+        <li>mongo --password "mongodb://username@host:port"</li>
+        <li>mongo --ssl --host replA/mongodb0.example.com.local:27017,mongodb1.example.com.local:27017,mongodb2.example.com.local:27017</li>
+        <li>mongo localhost:27017 file.js</li>
+        load("file.js")
+    </ul>
+    <details>
+        <summary>help</summary>
+        <table class="no-sort">
+            <tr><td>db.help()</td><td>db 메서드 목록</td></tr>
+            <tr><td>db.mycoll.help()</td><td>collection 메서드 목록</td></tr>
+            <tr><td>sh.help()</td><td>sharding 메서드 목록</td></tr>
+            <tr><td>rs.help()</td><td>replica set 메서드 목록</td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td>help admin</td><td>파일시스템 접근, 프로세스 실행 명령 목록</td></tr>
+            <tr><td><span class="hover-content" template-id="template-mongodb-help-connect">help connect</span></td><td></td></tr>
+            <tr><td><span class="hover-content" template-id="template-mongodb-help-misc">help misc</span></td><td></td></tr>
+            <tr><td>help mr</td><td>mapreduce</td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td>show dbs // db.adminCommand('listDatabases')</td><td>DB 목록</td></tr>
+            <tr><td>show collections // db.getCollectionNames()</td><td>현재 DB의 컬렉션 목록</td></tr>
+            <tr><td>show users // db.getUsers()</td><td>현재 DB의 유저 목록</td></tr>
+            <tr><td>show logs // db.adminCommand({'getLog': '*'})</td><td>로거 목록</td></tr>
+            <tr><td>show log [name] // db.adminCommand({'getLog': 'name'})</td><td>로그 출력. name 기본값은 'global'</td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td>db</td><td>현재 사용 중인 DB</td></tr>
+            <tr><td>use dbName // db.getSiblingDB('dbName')</td><td>DB 선택</td></tr>
+            <tr><td>it // cursor = db.collName.find()</td><td>직전 find() 이터레이터 참조</td></tr>
+            <tr><td>DBQuery.shellBatchSize = x</td><td>한번에 표시할 항목 수 변경</td></tr>
+            <tr><td>print()</td><td>콘솔 출력</td></tr>
+            <tr><td>printjson()</td><td>print(tojson(x))</td></tr>
+            <tr><td>edit functionName</td><td>함수 편집</td></tr>
+            <tr><td>exit</td><td></td></tr>
+        </table>
+    </details>
+    <details>
+        <summary>db.help()</summary>
+        <table class="no-sort">
+            <tr><td>db.dropDatabase()</td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+        </table>
+    </details>
+    <details>
+        <summary>db.mycoll.find().help()</summary>
+        <ul>
+            <li>find([object predicate][, object projection])</li>
+            let coll = db.myCollection;
+            <table class="no-sort">
+                <tr><td>coll.find()</td><td>select *</td></tr>
+                <tr><td>coll.findOne()</td><td>select * limit 1</td></tr>
+                <tr><td>coll.find({lv: 1})</td><td>select * where lv = 1</td></tr>
+                <tr><td>coll.find({item: null})</td><td>item 속성이 null이거나 없으면 해당</td></tr>
+                <tr><td>coll.find({leaderCard.lv: 1})</td><td>select * where leaderCard.lv = 1</td></tr>
+                <tr><td>coll.find({tags: ["red", "blank"]})</td><td>길이 및 원소 순서가 정확히 일치해야 함</td></tr>
+                <tr><td>coll.find({tags: {$all: ["red", "blank"]}})</td><td>'red', 'blank' 두 개 모두 포함하기만 하면 됨</td></tr>
+                <tr><td>coll.find({arr: {$elemMatch: {$gt: 22, $lt: 30}}})</td><td>배열 원소 하나라도 모든 조건을 충족하면 됨</td></tr>
+                <tr><td>coll.find({"arr.0": {$gt: 22}})</td><td>arr[0]이 모든 조건을 충족하면 됨</td></tr>
+                <tr><td>coll.find({arr: {$size: 3}})</td><td>arr.length == 3</td></tr>
+                <tr><td>coll.find({lv: {$gt: 1}})</td><td>select * where lv &gt; 1</td></tr>
+                <tr><td>coll.find({$or: [{status: "A"}, {qty: {$lt: 30}}]})</td><td>select * where status = 'A' or qty &lt; 30</td></tr>
+                <tr><td>coll.find({status: {$in: ["A", "D"]}})</td><td>select * where status in ('A', 'D')</td></tr>
+                <tr><td>coll.find({}, {_id: 0})</td><td>_id 속성은 제외</td></tr>
+                <tr><td>coll.find({}, {'leaderCard.lv': 1})</td><td></td></tr>
+                <tr><td>coll.find().sort({lv: 1})</td><td>1(오름차순), -1(내림차순)</td></tr>
+                <tr><td>coll.find().limit(10)</td><td></td></tr>
+                <tr><td>coll.count()</td><td></td></tr>
+                <tr><td>coll.find().count()</td><td>limit(), skip() 무시</td></tr>
+                <tr><td>coll.find().size()</td><td>limit(), skip() 적용</td></tr>
+                <tr><td></td><td></td></tr>
+                <tr><td></td><td></td></tr>
+                <tr><td></td><td></td></tr>
+                <tr><td></td><td></td></tr>
+                <tr><td></td><td></td></tr>
+            </table>
+            <li>Cursor methods</li>
+        </ul>
+    </details>
+    <details>
+        <summary>db.mycoll.help()</summary>
+        let coll = db.myCollection;
+        <table class="no-sort">
+            <tr><td>coll.insertOne() Since 3.2</td><td>1개 추가</td></tr>
+            <tr><td>coll.insertMany() Since 3.2</td><td>배열 요소 전부 추가</td></tr>
+            <tr><td>coll.insert()</td><td>document 하나 또는 배열</td></tr>
+            <tr><td>coll.updateOne() Since 3.2</td><td>Update a single existing document in the collection.</td></tr>
+            <tr><td>coll.updateMany() Since 3.2</td><td>Update multiple existing documents in the collection.</td></tr>
+            <tr><td>coll.replaceOne() Since 3.2</td><td></td></tr>
+            <tr><td>coll.save()</td><td>Insert either a new document or update an existing document in the collection.</td></tr>
+            <tr><td>coll.deleteOne() Since 3.2</td><td>Delete a single document from the collection.</td></tr>
+            <tr><td>coll.deleteMany() Since 3.2</td><td>Delete documents from the collection.</td></tr>
+            <tr><td><span class="hover-content" template-id="template-mongodb-bulk-write">coll.bulkWrite()</span></td><td>insertOne, updateOne, updateMany, replaceOne, deleteOne, deleteMany 혼용.</td></tr>
+            <tr><td>coll.drop()</td><td>Drops or removes completely the collection.</td></tr>
+            <tr><td>coll.createIndex()</td><td>Create a new index on the collection if the index does not exist; otherwise, the operation has no effect.</td></tr>
+            <tr><td>db.getSiblingDB()</td><td>Return a reference to another database using this same connection without explicitly switching the current database. This allows for cross database queries.</td></tr>
+            <tr><td>coll.renameCollection('newName')</td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td></td><td></td></tr>
+        </table>
+    </details>
+    db.inventory.find( { price: { $type: "decimal" } } )
+    db.collection.updateOne( { _id: 10 }, { $set:  { calc: NumberLong("2555555000000") } } )
+    db.collection.updateOne( { _id: 10 }, { $inc: { calc: NumberLong(5) } } )
+</details>
+
+<hr>
+
+<div id="template-mongodb-bson-regex-option" class="w3-container w3-leftbar w3-border-green w3-white">
+    <table class="no-sort">
+        <tr><td>i</td><td>대소문자 구별X</td></tr>
+        <tr><td>m</td><td>여러 줄 매칭</td></tr>
+        <tr><td>x</td><td>verbose</td></tr>
+        <tr><td>l</td><td>로캐일에 따른 \w, \W 등의 해석</td></tr>
+        <tr><td>s</td><td>'.'이 임의 문자 매칭</td></tr>
+        <tr><td>u</td><td>\w, \W 등이 유니코드에 따라 매칭</td></tr>
+    </table>
+</div>
+<div id="template-mongodb-bson-array" class="w3-container w3-leftbar w3-border-green w3-white">
+    예. ['red', 'blue']는 {'0': 'red', '1': 'blue'}로 표현된다
+</div>
+<div id="template-mongodb-min-key" class="w3-container w3-leftbar w3-border-green w3-white">
+    항상 다른 것보다 작다고 간주됨
+</div>
+<div id="template-mongodb-max-key" class="w3-container w3-leftbar w3-border-green w3-white">
+    항상 다른 것보다 크다고 간주됨
+</div>
+<div id="template-mongodb-help-connect" class="w3-container w3-leftbar w3-border-green w3-white">
+    <pre>const mongo = new Mongo('host[:port]');
+const mydb = mongo.getDB('mydb');
+//  or
+const mydb2 = connect('host[:port]/mydb2');</pre>
+</div>
+<div id="template-mongodb-help-misc" class="w3-container w3-leftbar w3-border-green w3-white">
+    <pre>b = new BinData(subtype,base64str)  new BSON BinData
+b = HexData(subtype,hexstr)         BSON BinData from a hex string
+b = UUID(hexstr)                    BSON BinData of UUID subtype
+b = MD5(hexstr)                     BSON BinData of MD5 subtype
+b.subtype(), b.length(), b.hex(), b.base64(), b.toString()
+
+"hexstr"                            0x 접두 필요없이 [0-9a-fA-F]를 나열
+
+o = new ObjectId()                  ObjectId
+o.getTimestamp(), o.isObjectId, o.toString(), o.equals(otherid)
+
+d = ISODate()                       like Date() but behaves more intuitively when used
+d = ISODate('YYYY-MM-DD hh:mm:ss')  without an explicit "new " prefix on construction</pre>
+</div>
+<div id="template-mongodb-bulk-write" class="w3-container w3-leftbar w3-border-green w3-white">
+    <pre>coll.bulkWrite(
+    [
+        {
+            insertOne:
+            {
+                "document":
+                {
+                    "_id": 4, "char": "Dithras", "class": "barbarian", "lvl": 4
+                }
+            }
+        },
+        {
+            insertOne:
+            {
+                "document":
+                {
+                    "_id": 5, "char": "Taeln", "class": "fighter", "lvl": 3
+                }
+            }
+        },
+        {
+            updateOne:
+            {
+                "filter": { "char": "Eldon" },
+                "update": { $set: { "status": "Critical Injury" } }
+            }
+        },
+        {
+            deleteOne:
+                { "filter": { "char": "Brisbane" } }
+        },
+        {
+            replaceOne:
+            {
+                "filter": { "char": "Meldane" },
+                "replacement": { "char": "Tanys", "class": "oracle", "lvl": 4 }
+            }
+        }
+    ]
+);</pre>
+</div>
