@@ -250,8 +250,11 @@ function insertCode(id) {
                     while (displayRange.length > 0) {
                         let displayStart = displayRange.pop() - 1;
                         let displayEnd = displayRange.pop();
-                        for (let idx = displayStart; idx < displayEnd && idx < lines.length; ++idx)
-                            ol.append(Donggi.getElementFromText(`<li>${lines[idx].replace(/  /gm, '&nbsp;')}</li>`));
+                        for (let idx = displayStart; idx < displayEnd && idx < lines.length; ++idx) {
+                            let li = document.createElement('li');
+                            li.innerText = lines[idx].replace(/  /gm, ' ');
+                            ol.append(li);
+                        }
                         if (displayRange.length > 0)
                             ol.append(document.createElement('hr'));
                     }

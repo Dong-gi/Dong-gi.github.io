@@ -1,0 +1,14 @@
+{
+  "name": "mocha-start",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.ja",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^7.1.1"
+  }
+}
