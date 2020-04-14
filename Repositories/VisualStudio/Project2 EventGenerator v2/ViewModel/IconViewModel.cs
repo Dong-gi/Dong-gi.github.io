@@ -1,4 +1,5 @@
-﻿using EventGenerator.Model;
+﻿using EventGenerator.Dao;
+using EventGenerator.Model;
 using EventGenerator.Service;
 using EventGenerator.Utility;
 using Newtonsoft.Json;
@@ -47,7 +48,7 @@ namespace EventGenerator.ViewModel
                 RequestFilter = (request) => request.RequestPath.Equals("/query"),
                 RequestHandler = (request, stream) =>
                 {
-                    var db = (DB)System.Enum.Parse(typeof(DB), request.Param["db"]);
+                    var db = (DB)System.Enum.Parse(typeof(DB), request.Param["db"].Trim().ToUpper());
                     var server = (DBServer)typeof(DBServer).GetProperty(request.Param["server"], typeof(DBServer)).GetValue(null);
                     var result = new Connection(db).Query<object>(server, request.Param["query"]);
                     NaiveHttpServer.Write(stream, JsonConvert.SerializeObject(result));

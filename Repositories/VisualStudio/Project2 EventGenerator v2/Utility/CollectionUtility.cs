@@ -17,12 +17,11 @@ namespace EventGenerator.Utility
 
             var result = new T[dim1, dim2];
             for (var i = 0; i < dim1; ++i)
-                for (var j = 0; j < dim2; ++j)
-                    try
-                    {
-                        result[i, j] = source[i][j];
-                    }
-                    catch { }
+            {
+                var len = dim2 < source[i].Length ? dim2 : source[i].Length;
+                for (var j = 0; j < len; ++j)
+                    result[i, j] = source[i][j];
+            }
             return result;
         }
 

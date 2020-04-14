@@ -10,8 +10,10 @@ using MoreLinq;
 using System.Threading;
 using System.Text.RegularExpressions;
 using MySql.Data.MySqlClient;
+using EventGenerator.Utility;
+using System.Linq;
 
-namespace EventGenerator.Utility
+namespace EventGenerator.Dao
 {
     public class Connection
     {
@@ -58,6 +60,11 @@ namespace EventGenerator.Utility
                 Console.WriteLine($"예외 발생 서버 : {server}\n예외 발생 쿼리 : {queryString}");
                 if (retryCount > 0)
                 {
+                    if (e.InnerException is Exception e2 && e2.Message.Contains("no such table"))
+                    {
+                        Console.WriteLine("↑ 테이블이 없어 무시합니다.");
+                        return new List<T>();
+                    }
                     Console.WriteLine(e.Message);
                     Console.WriteLine($"재시도합니다... 남은 재시도 횟수 : {retryCount}");
                     return Query<T>(server, queryString, retryCount - 1, print);
@@ -76,13 +83,16 @@ namespace EventGenerator.Utility
             switch (server.ServerKind)
             {
                 case ServerKind.SQLITE:
-                    var columns = new List<string>();
-                    typeof(T).GetRuntimeProperties().ForEach(propertyInfo =>
-                    {
-                        if (!(System.Attribute.GetCustomAttribute(propertyInfo, typeof(CustomVersionAttribute)) is CustomVersionAttribute version) ||
-                            version.Active(server.Version))
-                            columns.Add(string.Format("NULLIF({0}, '') AS {0}", propertyInfo.Name));
-                    });
+                    var activeProperties = typeof(T).GetRuntimeProperties().Where(propertyInfo =>
+                                        // 버전 정보가 명시되지 않은 경우, 유효한 걸로 간주
+                                        !(System.Attribute.GetCustomAttribute(propertyInfo, typeof(CustomVersionAttribute)) is CustomVersionAttribute version)
+                                        || version.Active(server.Version)
+                                   ).ToList();
+                    // 확장 프로퍼티는 제거
+                    var extensionProperties = activeProperties.Where(x => x.DeclaringType.FullName.Contains("Extension")).ToList();
+                    activeProperties.RemoveAll(x => extensionProperties.Contains(x));
+
+                    var columns = activeProperties.Select(propertyInfo => string.Format("NULLIF({0}, 'NULL') AS {0}", propertyInfo.Name));
                     query = query.Replace("SELECT *", "SELECT " + string.Join(",", columns));
                     using (var connection = new System.Data.SQLite.SQLiteConnection(GetConnectionString(server)))
                     {
@@ -109,7 +119,7 @@ namespace EventGenerator.Utility
         {
             return server.ServerKind switch
             {
-                ServerKind.SQLITE => $"Data Source=Resources\\{server.Name}\\{server.Name}_{DBName.ToString().ToLower()}.db",
+                ServerKind.SQLITE => $"Data Source=Resources\\sqlite\\{server.Name}_{DBName.ToString().ToLower()}.db",
                 ServerKind.POSTGRES => $"Server={server.ServerIP};Port={server.ServerPort};Database={DBName.ToString().ToLower()};Userid={server.User};Password={server.Password};Pooling=true;MinPoolSize=5;MaxPoolSize=20;Timeout=300;CommandTimeout=300;",// Enlist=true;
                 ServerKind.MYSQL => $"Server={server.ServerIP};Port={server.ServerPort};Database={DBName.ToString().ToLower()};Userid={server.User};Password={server.Password};Pooling=true;MinPoolSize=5;MaxPoolSize=20;",
                 _ => "",
