@@ -7543,7 +7543,6 @@ zh_CN.json
 zh_TW.json
 
 /workspace/donggi-github/Dong-gi.github.io/Repositories/Node/express-start/templates:
-doc1.jade
 index.jade
 
 /workspace/donggi-github/Dong-gi.github.io/Repositories/Node/jade-start:

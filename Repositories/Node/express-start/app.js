@@ -6,7 +6,8 @@ app.set('port', 3000);
 app.set('views', path.join(__dirname, 'templates'));
 app.set('view engine', 'jade');
 
-app.use(express.static(path.join(__dirname, 'templates')));
-
-app.all('/', (req, res) => res.render('index', { time: new Date() }));
+app.all(/.*/, (req, res) => {
+    let url = req.url.substr(1);
+    res.render(url == ''? 'index' : url, { time: new Date() });
+});
 app.listen(app.get('port'));

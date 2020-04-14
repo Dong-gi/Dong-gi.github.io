@@ -1,2 +1,17 @@
-- for (var x = 0; x < 3; x++)
-li item
+- let txt = '<strong>안녕 세상!</strong>'
+- console.log(txt)
+p=  txt
+
+- let list = ['안', '녕', '세', '상']
+ul
+    |이것은 each 키워드 결과
+    - each item in list
+        li= item
+
+ul
+    |이것은 for 루프 결과
+    - for (let item of list)
+        li= item
+
+- let test = (x) => console.log(x);
+- test(1234);

@@ -252,7 +252,7 @@ function insertCode(id) {
                         let displayEnd = displayRange.pop();
                         for (let idx = displayStart; idx < displayEnd && idx < lines.length; ++idx) {
                             let li = document.createElement('li');
-                            li.innerText = lines[idx].replace(/  /gm, ' ');
+                            li.innerText = lines[idx].replace(/  /gm, '\u00A0');
                             ol.append(li);
                         }
                         if (displayRange.length > 0)
