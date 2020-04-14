@@ -9,6 +9,7 @@ using MoreLinq;
 using static EventGenerator.Model.Dto.Game1;
 using static EventGenerator.Model.Constants;
 using EventGenerator.Service;
+using EventGenerator.Dao;
 
 namespace EventGenerator.ViewModel
 {

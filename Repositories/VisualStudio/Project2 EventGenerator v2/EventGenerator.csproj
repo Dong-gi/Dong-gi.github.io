@@ -172,7 +172,7 @@
     <Compile Include="Utility\CustomCommand.cs" />
     <Compile Include="Utility\ExcelDataUtility.cs" />
     <Compile Include="Utility\MSExcel.cs" />
-    <Compile Include="Utility\Connection.cs" />
+    <Compile Include="Dao\Connection.cs" />
     <Compile Include="Utility\ImageOptimizer.cs" />
     <Compile Include="Utility\ShellStreamDeligater.cs" />
     <Compile Include="Utility\StringUtility.cs" />
