@@ -1,0 +1,20 @@
+a.w3-btn.w3-round#something 링크입니다
+
+//- 태그 속성에는 자바스크립트 식이면 OK
+- let aClass = ['w3-btn', 'w3-round']
+a(  class=aClass,
+    target='_blank',
+    href='www.google.co.kr') 내 이름 링크!
+
+- let aAttribute = {class:aClass, target:'_blank', href:'www.google.co.kr'}
+a&attributes(aAttribute) 내 이름도 링크!
+
+- let status = { isLoggedIn: false }
+- Object.seal(status)
+- let getLoginClass = () => !status.isLoggedIn? 'logged-out' : 'logged-in'
+div(class=getLoginClass(), id='loginDiv')
+
+input(type='checkbox', checked)
+
+p(style="font-size:1.2em;background:yellow")
+p(style={'font-size':'1.2em',background:'yellow'})

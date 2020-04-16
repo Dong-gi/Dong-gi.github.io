@@ -1,17 +1,58 @@
+//- 한 줄씩 평가된다
 - let txt = '<strong>안녕 세상!</strong>'
 - console.log(txt)
+//- 마찬가지로 한 줄씩 평가된다
+p=  console.log(txt)
 p=  txt
+p=  (txt = `[${txt}]`)
+//- Danger
+p!= txt
 
 - let list = ['안', '녕', '세', '상']
 ul
     |이것은 each 키워드 결과
-    - each item in list
+    each item in list
         li= item
+
+ul
+    |이것은 each 키워드 결과 + 인덱스도 이용할 수 있다
+    each item, idx in list
+        li= `item ${idx} : ${item}`
 
 ul
     |이것은 for 루프 결과
     - for (let item of list)
         li= item
 
-- let test = (x) => console.log(x);
-- test(1234);
+ul
+    |이것은 each 키워드 결과 + 객체 순회도 가능
+    each value, key in {a:'aaa', b:'bbb', c:'ccc'}
+        li= `key: ${key}, value: ${value}`
+
+- let test = (x) => `Your input value : ${x}`
+p=  test(1234)
+
+- let n = 5
+p
+    |이것은 case 키워드 결과
+    case n % 2
+        when 0
+            span= `${n} is even number`
+        default
+            span= `${n} is odd number`
+
+p
+    |이것은 switch 결과
+    span= ((n) => { switch (n%2) { case 0: return `${n} is even number`; default: return `${n} is odd number`; }})(n)
+
+p
+    |이것은 if 키워드 결과
+    if n % 2 == 0
+        span= `${n} is even number`
+    else
+        span= `${n} is odd number`
+
+p
+    |이것은 while 키워드 결과
+    while n < 10
+        span= `${n++}`

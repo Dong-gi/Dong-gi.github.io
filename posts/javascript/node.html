@@ -362,6 +362,11 @@ app.use(middleware);</pre>
             app.use('/static', express.static(path.join(__dirname, 'ag3t9a23gt')));
         </ol>
         
+        <li>세션</li>
+        <ol>
+            <li>cookie-parser, express-session 모듈 이용</li>
+            
+        </ol>
     </ul>
 </details>
 
@@ -411,9 +416,26 @@ app.use(middleware);</pre>
         <li>Plain Text
             <button class="btn-code" path="Repositories/Node/jade-start/doc2.jade" lan="text">예시 »</button>
             <button class="btn-code" path="Repositories/Node/jade-start/doc2.html" lan="text">결과 »</button></li>
-        <li>Code
+        <li>코드 실행
             <button class="btn-code" path="Repositories/Node/jade-start/doc3.jade" lan="text">예시 »</button>
             <button class="btn-code" path="Repositories/Node/jade-start/doc3.html" lan="text">결과 »</button></li>
+        <li>태그 속성
+            <button class="btn-code" path="Repositories/Node/jade-start/doc4.jade" lan="text">예시 »</button>
+            <button class="btn-code" path="Repositories/Node/jade-start/doc4.html" lan="text">결과 »</button></li>
+        <li>다른 문서 포함
+            <button class="btn-code" path="Repositories/Node/jade-start/doc5.main.jade" lan="text">main 예시 »</button>
+            <button class="btn-code" path="Repositories/Node/jade-start/doc5.part.jade" lan="text">part 예시 »</button>
+            <button class="btn-code" path="Repositories/Node/jade-start/doc5.text.html" lan="text">text 예시 »</button>
+            <button class="btn-code" path="Repositories/Node/jade-start/doc5.main.html" lan="text">결과 »</button></li>
+        <li>템플릿 - mixin
+            <button class="btn-code" path="Repositories/Node/jade-start/doc6.jade" lan="text">예시 »</button>
+            <button class="btn-code" path="Repositories/Node/jade-start/doc6.html" lan="text">결과 »</button></li>
+        <li>템플릿 - extends
+            <button class="btn-code" path="Repositories/Node/jade-start/doc7.template.jade" lan="text">template 예시 »</button>
+            <button class="btn-code" path="Repositories/Node/jade-start/doc7.main.jade" lan="text">main 예시1 »</button>
+            <button class="btn-code" path="Repositories/Node/jade-start/doc7.main.html" lan="text">결과1 »</button>
+            <button class="btn-code" path="Repositories/Node/jade-start/doc7.main2.jade" lan="text">main 예시1 »</button>
+            <button class="btn-code" path="Repositories/Node/jade-start/doc7.main2.html" lan="text">결과1 »</button></li>
     </ul>
 </details>
 
@@ -458,6 +480,17 @@ app.use(middleware);</pre>
         this.skip()으로 런타임 중 스킵 가능 ← 테스트 함수 및 'before' hook 안에서 사용 가능
         <li>this.retries(n) : (행위) 테스트에서 재시도를 하도록 설정</li>
         <li>시간 제한 : this.timeout(n), setTimeout(done, 300)</li>
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>3rd/mongodb : MongoDB 공식 드라이버</summary>
+    <ul>
+        <li>http://mongodb.github.io/node-mongodb-native/3.6/tutorials/</li>
+        <li>http://mongodb.github.io/node-mongodb-native/3.6/api/</li>
+        <button class="btn-code" path="Repositories/Node/express-start/test/mongodb.test.js" lan="javascript">예시 코드 »</button>
     </ul>
 </details>
 

@@ -251,9 +251,12 @@ function insertCode(id) {
                         let displayStart = displayRange.pop() - 1;
                         let displayEnd = displayRange.pop();
                         for (let idx = displayStart; idx < displayEnd && idx < lines.length; ++idx) {
-                            let li = document.createElement('li');
-                            li.innerText = lines[idx].replace(/  /gm, '\u00A0');
-                            ol.append(li);
+                            if (lan === "text") {
+                                let li = document.createElement('li');
+                                li.innerText = lines[idx].replace(/  /gm, '\u00A0');
+                                ol.append(li);
+                            } else
+                                ol.append(Donggi.getElementFromText(`<li>${lines[idx].replace(/  /gm, '&nbsp;')}</li>`));
                         }
                         if (displayRange.length > 0)
                             ol.append(document.createElement('hr'));
