@@ -2040,6 +2040,7 @@ window_popup.js
 window_resizeto.js
 
 /workspace/donggi-github/Dong-gi.github.io/Repositories/Node:
+cluster.test.js
 express-start
 jade-start
 mocha-start
@@ -2089,7 +2090,6 @@ constantinople
 content-disposition
 content-type
 cookie
-cookie-parser
 cookie-signature
 core-util-is
 css
@@ -2806,13 +2806,6 @@ index.js
 package.json
 
 /workspace/donggi-github/Dong-gi.github.io/Repositories/Node/express-start/node_modules/cookie:
-HISTORY.md
-LICENSE
-README.md
-index.js
-package.json
-
-/workspace/donggi-github/Dong-gi.github.io/Repositories/Node/express-start/node_modules/cookie-parser:
 HISTORY.md
 LICENSE
 README.md

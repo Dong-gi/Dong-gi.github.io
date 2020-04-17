@@ -10,11 +10,12 @@
     
     <li>HTTP 서버 설정</li>
     <pre>server {
-    listen 9090 default_server;        # IPv4
-    listen 80 default_server;
+    listen 0.0.0.0:9090 default_server;        # IPv4
+    listen 0.0.0.0:80 default_server;
     listen [::]:9090 default_server;   # IPv6
     listen [::]:80 default_server;
 
+    access_log /var/log/nginx/default.server.log;
     # Root directory
     root /workspace/donggi-github/Dong-gi.github.io/;
 
@@ -45,9 +46,10 @@
     
     <li>리버스 프록시 설정</li>
     <pre>server {
-    listen 55555;
+    listen 0.0.0.0:55555;
     listen [::]:55555;
 
+    access_log /var/log/nginx/express.log;
     server_name _;
 
     location / {

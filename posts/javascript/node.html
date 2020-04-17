@@ -93,6 +93,16 @@
             name 패키지 설치 후 package.json에 의존성 추가
         </ol>
     </details>
+    
+    <details>
+        <summary>패키지 배포</summary>
+        <ul>
+            <li>$ npm publish</li>
+            <li>$ npm version patch # 패치 버전 1 증가</li>
+            <li>$ npm version minor # 마이너 버전 1 증가</li>
+            <li>$ npm unpublish # 배포 중단</li>
+        </ul>
+    </details>
 </details>
 
 <hr>
@@ -130,6 +140,18 @@
             <li>help</li>
             <li>.exit</li>
         </ol>
+    </ul>
+</details>
+
+<hr>
+
+<details>
+    <summary>Lib/Cluster</summary>
+    <ul>
+        <li>멀티 코어 CPU의 성능을 이용하기 위해, 동일한 로직을 이용하는 멀티 프로세스 생성/관리 기능 제공</li>
+        <li>프로세스는 마스터(cluster.isMaster)와 워커로 구성.</li>
+        <li>자식(워커) 프로세스들은 부모 프로세스와 TCP 연결을 공유할 수 있다.</li>
+        <button class="btn-code" path="Repositories/Node/cluster.test.js" lan="javascript">예시 »</button>
     </ul>
 </details>
 
@@ -314,6 +336,7 @@
 <details>
     <summary>3rd/express : Web Framework</summary>
     <ul>
+        <li>정적 리소스 제공에는 Nginx, CDN, Amazon S3 등을 고려함이 좋다</li>
         <li>Quick start</li>
         <ol>
             아래 명령으로 프로젝트 골격을 빠르게 구성할 수 있다.

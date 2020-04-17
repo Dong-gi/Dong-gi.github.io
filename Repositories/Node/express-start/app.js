@@ -1,7 +1,15 @@
+const process = require('process');
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
+const session = require('express-session'); // Since 1.5 cookie-parser 필요없음
+const bodyParser = require('body-parser');
+
+
+const connectionUrl = `mongodb://localhost:27017`;
+const mongo = new require('mongodb').MongoClient(connectionUrl, {useUnifiedTopology: true});
+mongo.connect(function(err) {
+    assert.equal(err, null);
+});
 
 
 const app = express();
@@ -11,13 +19,28 @@ app.set('view engine', 'jade');
 app.set('trust proxy', 1);
 
 
-app.use(cookieParser('donggi-test.goorm.io'));
+app.on('error', function (err) {});
+process.on('uncaughtException', function (err) {});
+
+
+/*
+const RedisStore = require('connect-redis')(session);
+app.use(session({
+    store: new RedisStore(...),
+    ...
+}))
+*/
 app.use(session({
     secret: 'donggi-test.goorm.io',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: true }
+    cookie: { secure: true } // default : { path: ‘/’, httpOnly: true, secure: false, maxAge: null }
 }));
+app.use(function (req, res, next) {
+    req.mongo = mongo;
+});
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
 
 
 app.all('/api', authorize);
@@ -28,7 +51,6 @@ app.all('/api', (req, res) => {
 
 app.all('*', (req, res) => {
     let url = req.url.substr(1);
-    console.log(url);
     res.render(url == ''? 'index' : url, { time: new Date() });
 });
 
@@ -37,7 +59,10 @@ app.listen(app.get('port'), () => console.log('server started'));
 
 
 function authorize(req, res, next) {
-    if (req.session) {
+    if (req.session && req.session.expire && req.session.expire < new Date()) {
+        req.session = null;
+    }
+    if (req.session && req.session.accountId) {
         console.log(req.session);
         return next();
     } else {
