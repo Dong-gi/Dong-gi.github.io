@@ -404,6 +404,7 @@ class FileList {
             }
             for (let files of fileList.fileMap.values())
                 files.sort(Donggi.compareString);
+            console.log(fileList.fileMap);
             fileList.updateFileList(fileList.rootDir);
         })(this));
         xhr.open("GET", lsResultPath, true);
