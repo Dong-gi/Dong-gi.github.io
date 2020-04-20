@@ -31,6 +31,18 @@ li:hover {
     background-color: antiquewhite;
 }
 
+.file-list {
+    padding: 0 8px!important
+}
+
+.file-list ul {
+    padding-left: 12px!important
+}
+
+.file-list li {
+    margin-left: 24px!important
+}
+
 /* 포스트 영역 스타일 */
 .post-details>p {
     background-color: white;

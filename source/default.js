@@ -18,19 +18,29 @@ window.addEventListener('load', () => {
 });
 
 function prepareSidebar() {
-    closeSidebar();
-    document.getElementById('outside').onclick = closeSidebar;
+    if (window.innerWidth > 600)
+        openSidebar();
+    else
+        closeSidebar();
+    document.getElementById('sidebar').style.width = '333px';
     new FileList('../file_list.js', '#file-list', customFileAction);
 }
 
 function openSidebar() {
+    document.getElementById('main').style.marginLeft = '333px';
     document.getElementById('sidebar').style.display = 'block';
-    document.getElementById('outside').style.display = 'block';
 }
 
 function closeSidebar() {
+    document.getElementById('main').style.marginLeft = '0';
     document.getElementById('sidebar').style.display = 'none';
-    document.getElementById('outside').style.display = 'none';
+}
+
+function toggleSidebar() {
+    if (document.getElementById('sidebar').style.display == 'none')
+        openSidebar();
+    else
+        closeSidebar();
 }
 
 function preparePosts() {
@@ -42,7 +52,7 @@ function preparePosts() {
     for (let post of posts.list) {
         posts.hash[post.file.hashCode()] = post;
         
-        // 카테고리 맵 초기화
+        /* 카테고리 맵 초기화 */
         let category = categoryMap;
         for (let cate of post.category.split("/")) {
             if (!category.hasOwnProperty(cate)) {
@@ -53,7 +63,7 @@ function preparePosts() {
         }
         category.posts.push(post.title);
 
-        // 컨텐츠 골격 생성
+        /* 컨텐츠 골격 생성 */
         let content = Donggi.getElementFromText(getPostHTML(post));
         document.getElementById('contents').append(content);
         content.querySelector('summary').addEventListener('click', loadPost(post.file));
@@ -83,8 +93,9 @@ function preparePosts() {
         type: 'text/plain;charset=utf-8;'
     }));
     new FileList(url, '#post-list', (_, title) => {
+        if (window.innerWidth <= 600)
+            closeSidebar();
         scrollToPost(posts.list.filter(x => x.title == title)[0].file.hashCode());
-        closeSidebar();
     });
 }
 
@@ -108,7 +119,7 @@ function loadPost(file) {
                 insertDisqusThread(details, file);
             if (location.host == "dong-gi.github.io")
                 return;
-            // 테스트 사이트에서는 항상 리로드
+            /* 테스트 사이트에서는 항상 리로드 */
             for (let node of details.children) {
                 if (/^summary$/i.test(node.tagName))
                     continue;
@@ -122,7 +133,7 @@ function loadPost(file) {
                 return;
             }
             details.append(Donggi.getNodesFromText(this.responseText, 'p'));
-            // 야매로 만들어서 그런지 script 실행이 안 됨... 때문에 따로 복제 생성
+            /* 야매로 만들어서 그런지 script 실행이 안 됨... 때문에 따로 복제 생성 */
             for (let script of details.querySelectorAll('script')) {
                 let nScript = document.createElement('script');
                 if (script.src.length > 0)
@@ -175,7 +186,6 @@ function scrollToPost(hash) {
     }
     if (!details.open)
         details.querySelector('summary').click();
-    // details.parentElement.scrollIntoView(true);
     window.scrollTo({
         top: (!hash)? 0 : details.offsetTop - document.getElementById('nav').clientHeight
     });
@@ -264,7 +274,6 @@ function insertCode(id) {
                     div.append(ol);
                 } else {
                     div.append(Donggi.getNodesFromText(this.responseText, 'p'));
-                    // 야매로 만들어서 그런지 script 실행이 안 됨... 때문에 따로 복제 생성
                     for (let script of div.querySelectorAll('script')) {
                         let nScript = document.createElement('script');
                         if (script.src.length > 0)

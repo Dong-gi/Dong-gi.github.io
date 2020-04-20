@@ -41,6 +41,7 @@ const posts = {
         { file: "/posts/java/android.html", category: "Programming/Java", title: "Android" },
         { file: "/posts/java/basic.html", category: "Programming/Java", title: "Java 시작하기" },
         { file: "/posts/java/effective_java.html", category: "Programming/Java", title: "『Effective Java』" },
+        { file: "/posts/java/gradle.html", category: "Programming/Java", title: "Gradle" },
         { file: "/posts/java/java_ee.html", category: "Programming/Java", title: "JavaEE" },
         { file: "/posts/java/javafx.html", category: "Programming/Java", title: "JavaFX" },
         { file: "/posts/java/jni.html", category: "Programming/Java", title: "Java Native Interface" },
@@ -145,12 +146,13 @@ const posts = {
 };
 
 /*
-<button class="btn-code" path="Repositories/Eclipse" lan="java">예시 코드 »
-<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" onclick="">실행 »
-<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="">
-<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="javascript:;">
-<img class="w3-round" src="imgs/">
+script(src='/source/redirect.js')
 
-<span class="hover-content" template-id="template-python-collections-abc-iterable">
-<div id="template-python-collections-abc-iterable" class="w3-container w3-leftbar w3-border-green w3-white">
- */
+button.btn-code(path='Repositories/Eclipse',lan='java') 예시 코드 »
+a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank',href='')
+a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(href="javascript:;")
+img.w3-round(src='imgs/')
+
+span.hover-content(template-id='template-id'
+div.w3-container.w3-leftbar.w3-border-green.w3-white#template-id
+*/

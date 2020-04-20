@@ -4,7 +4,7 @@ String.prototype.hashCode = function () {
     for (i = 0; i < this.length; i++) {
         chr   = this.charCodeAt(i);
         hash  = ((hash << 5) - hash) + chr;
-        hash |= 0; // Convert to 32bit integer
+        hash |= 0; /* 32bit */
     }
     return hash;
 };
@@ -13,10 +13,10 @@ var Donggi = function () {}
 Donggi.compareString = function (str1, str2) {
     let ori1 = str1;
     let ori2 = str2;
-	// 부호 붙은 숫자를 수로 간주하는 경우
-	// 1. 부호 자체가 문자열 시작
-	// 2. 부호 앞에 공백이 존재하여 별개 파트로 간주 가능
-	// 3. 부호 앞에 화폐 기호 [$¥£₡₱€₩₭฿]가 존재
+	/* 부호 붙은 숫자를 수로 간주하는 경우
+	   1. 부호 자체가 문자열 시작
+	   2. 부호 앞에 공백이 존재하여 별개 파트로 간주 가능
+	   3. 부호 앞에 화폐 기호 [$¥£₡₱€₩₭฿]가 존재 */
 	let numPartRegex1 = /(((^|[\s$¥£₡₱€₩₭฿])[+-])?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/;
     let numPartRegex2 = /(([\s$¥£₡₱€₩₭฿][+-])?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/;
     let startWithNumberRegex1 = new RegExp(`^${numPartRegex1.source}`);
@@ -191,12 +191,10 @@ Donggi.bind = function (obj, property, editableNodes) {
 
         for (let node of editableNodes) {
             node.addEventListener('input', ((proxy) => function (e) {
-                //console.log(this.innerText);
                 if (this.innerText != proxy[property])
                     proxy[property] = this.innerText;
             })(proxy));
         }
-        //console.log(obj, property, editableNodes);
         return proxy;
     })(obj, property, editableNodes);
 }

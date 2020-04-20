@@ -41,10 +41,10 @@ function addOrderedTableFunctionality(mutations, observer) {
             if (table.classList.contains('no-sort'))
                 continue;
 
-            let headRow = table.rows[0]; // 테이블의 1번째 행을 테이블 헤더 행으로 간주
+            let headRow = table.rows[0]; /* 테이블의 1번째 행을 테이블 헤더 행으로 간주 */
             headRow.classList.add('table-head-row');
 
-            let hasDataIdxSet = new Set(); // 모든 행의 x번째 열이 비어있다면, 삭제하기 위한 인덱스 집합
+            let hasDataIdxSet = new Set(); /* 모든 행의 x번째 열이 비어있다면, 삭제하기 위한 인덱스 집합 */
             for (let tr of Array.from(table.rows).slice(1)) {
                 tr.querySelectorAll('td, th').forEach((node, idx, nodeList) => {
                     node.innerHTML = node.innerHTML.replace(/null/gmi, '').replace(/^\s+$/g, '').trim();
@@ -80,7 +80,7 @@ function customTableSort(idx, node, table) {
         node.setAttribute('sort-order', '●');
 
     return () => {
-        // order : true(오름차순), false(내림차순)
+        /* order : true(오름차순), false(내림차순) */
         let order = !(node.getAttribute('sort-order') == '▲');
         node.setAttribute('sort-order', order? '▲' : '▼');
 

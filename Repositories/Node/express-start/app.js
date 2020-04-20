@@ -66,7 +66,6 @@ function authorize(req, res, next) {
         console.log(req.session);
         return next();
     } else {
-        res.set
         res.redirect(401, '/auth');
     }
 }

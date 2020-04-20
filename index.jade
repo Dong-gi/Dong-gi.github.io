@@ -1,0 +1,57 @@
+html(lnag='ko')
+    head
+        meta(charset='UTF-8')
+        meta(name='viewport',content='width=device-width,initial-scale=1,shrink-to-fit=no')
+        meta(name='google-site-verification',content='aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM')
+
+        title 한 걸음씩...
+
+        style
+            include ./source/w3.css
+            include ./source/xcode.css
+            include ./source/mjx-chtml.css
+            include ./source/default.css
+
+        script
+            include ./source/utility.js
+            include ./source/highlight.pack.js
+            include ./posts.js
+            include ./source/ordered-table.js
+            include ./source/default.js
+        script#dsq-count-scr(src='//donggi.disqus.com/count.js',async)
+        script#MathJax-script(src='/source/tex-chtml.js',async)
+    
+        script.
+            MathJax = {
+                tex: {
+                    tags: 'ams',  // should be 'ams', 'none', or 'all'
+                    inlineMath: [['식[', ']식']]
+                }
+            };
+    
+        <!-- Google Analytics -->
+        script(src='https://www.googletagmanager.com/gtag/js?id=UA-143098403-1',async)
+        script.
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-143098403-1');
+
+    body
+        div.w3-bar-block.w3-sidebar.w3-animate-left#sidebar
+            a.w3-bar-item.w3-button(href='javascript:closeSidebar();') Close &times;
+            hr
+            div#post-list
+            hr
+            div#file-list
+            hr
+    
+    div#main
+        div.w3-bar.w3-blue.w3-large#nav(style='position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle')
+            button.w3-bar-item.w3-button.w3-hover-theme(onclick='toggleSidebar()') &#9776;
+            input.w3-bar-item#query(type='text',placeholder='search')
+        
+        div#contents
+        
+        |&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.
+        a(target='_blank',href='LICENSE') LICENSE
