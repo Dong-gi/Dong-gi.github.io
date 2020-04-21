@@ -1,6 +1,8 @@
 const posts = { list: [], hash: {}, codes: {} }
 
 window.addEventListener('load', () => {
+    new MutationObserver(mutationCallback).observe(document.body, { attributes: false, childList: true, subtree: true });
+
     /* 하이라이팅 지원 목록 */
     console.log(hljs.listLanguages());
 
@@ -16,7 +18,6 @@ window.addEventListener('load', () => {
     prepareSidebar();
     preparePosts();
     document.getElementById('query').onkeyup = queryUpdated;
-    new MutationObserver(mutationCallback).observe(document.body, { attributes: false, childList: true, subtree: true });
     
     let postQuery = location.search.match(/[?&]post=([^&]+)/);
     setTimeout(((postQuery) => function() { scrollToPost((!!postQuery)? postQuery[1] : localStorage.lastReadPost? localStorage.lastReadPost : posts.list[0].file.hashCode()); })(postQuery), 369);
@@ -35,7 +36,7 @@ function prepareSidebar() {
     else
         closeSidebar();
     document.getElementById('sidebar').style.width = '333px';
-    new FileList('/source/filelist.js', '#file-list', customFileAction);
+    new FileList('/source/filelist.js', '#file-list');
 }
 
 function openSidebar() {
@@ -56,8 +57,8 @@ function toggleSidebar() {
 }
 
 function preparePosts() {
-    posts.list.sort((post1, post2) => Donggi.compareString(post1.title, post2.title));
-    posts.list.sort((post1, post2) => Donggi.compareString(post1.category, post2.category));
+    posts.list.sort((post1, post2) => Donggi.compareString(post2.title, post1.title));
+    posts.list.sort((post1, post2) => Donggi.compareString(post2.category, post1.category));
 
     let categoryMap = {};
     for (let post of posts.list) {
@@ -361,13 +362,6 @@ function downloadCode(fileName, text) {
     a.click();
 }
 
-function customFileAction(dir, file) {
-    if (/dong-gi\.github\.io/i.test(location.host))
-        FileList.defaultFileAction(dir.replace(/^.+dong-gi\.github\.io/i, ''), file);
-    else
-        FileList.defaultFileAction(dir, file);
-}
-
 function getCodeModalHTML(id, filename) {
     return `<div id="modal-${id}" class="w3-modal code-modal">
     <div class="w3-modal-content">
@@ -394,7 +388,7 @@ class FileList {
      */
     constructor(lsResultPath, targetQuery, fileAction, openAll) {
         this.target = document.querySelector(targetQuery);
-        this.fileAction = (!!fileAction)? fileAction : FileList.defaultFileAction;
+        this.fileAction = (!!fileAction)? fileAction : null;
         this.openAll = !!openAll;
         this.target.innerHTML = '';
         this.fileMap = new Map();
@@ -455,9 +449,12 @@ class FileList {
                 if (this.openAll)
                     this.updateFileList(path);
             } else {
-                ul.append(FileList.getFileHTML(dir, name));
-                let fileAction = ((fileList, dir, name) => function (e) { fileList.fileAction(dir, name); })(this, dir, name);
-                document.getElementById(`file-${path.hashCode()}`).onclick = fileAction;
+                if (!!this.fileAction) {
+                    ul.append(FileList.getFileHTMLwithoutA(dir, name));
+                    let fileAction = ((fileList, dir, name) => function (e) { fileList.fileAction(dir, name); })(this, dir, name);
+                    document.getElementById(`file-${path.hashCode()}`).onclick = fileAction;
+                } else
+                    ul.append(FileList.getFileHTMLwithA(this.rootDir, dir, name));
             }
         }
     }
@@ -466,12 +463,13 @@ class FileList {
         return Donggi.getElementFromText(`<details ${(!!open)? 'open' : ''} id="dir-${dir.hashCode()}" class="w3-small file-list" title="${dir}"><summary>${dir.replace(parentDir, '')}</summary><ul></ul></details>`);
     }
     
-    static getFileHTML(dir, name) {
-        let path = `${dir}/${name}`;
-        return Donggi.getElementFromText(`<li id="file-${path.hashCode()}" title="${path}">${name}</li>`);
+    static getFileHTMLwithA(rootDir, dir, name) {
+        let path = `${dir.substr(rootDir.length)}/${name}`;
+        return Donggi.getElementFromText(`<li id="file-${path.hashCode()}"><a href="${path}">${name}</a></li>`);
     }
     
-    static defaultFileAction(dir, file) {
-        Donggi.openLink(`${dir}/${file}`, '_blank');
+    static getFileHTMLwithoutA(dir, name) {
+        let path = `${dir}/${name}`;
+        return Donggi.getElementFromText(`<li id="file-${path.hashCode()}" title="${path}">${name}</li>`);
     }
 }

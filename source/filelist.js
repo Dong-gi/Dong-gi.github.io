@@ -7,10 +7,10 @@ google17afeae5a0bb8a4d.html
 imgs
 index.html
 index.jade
-index2.html
 posts
 posts.jade
 posts.jade.test
+robots.txt
 sitemap
 source
 
@@ -3455,6 +3455,7 @@ filelist.js
 highlight.pack.js
 mjx-chtml.css
 ordered-table.js
+skeleton.jade
 tex-chtml.js
 utility.jade
 utility.js
