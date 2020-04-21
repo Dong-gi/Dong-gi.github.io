@@ -1,3 +1,14 @@
+//- +w3button()&attributes({ class: 'btn-code', path: 'Repositories/Eclipse', lan: 'java' })
+//- +asA('http://...')
+//- +w3a()&attributes({ target: '_blank', href: '' }) |링크
+//- +w3a()&attributes({ href: "javascript:;" }) |실행
+//- +w3img('imgs/', 'alt')
+
+//- span.hover-content(template-id='template-id'
+//- div.w3-container.w3-leftbar.w3-border-green.w3-white#template-id
+
+include ./source/utility.jade
+
 html(lnag='ko')
     head
         meta(charset='UTF-8')
@@ -13,11 +24,9 @@ html(lnag='ko')
             include ./source/default.css
 
         script
-            include ./source/utility.js
             include ./source/highlight.pack.js
-            include ./posts.js
-            include ./source/ordered-table.js
-            include ./source/default.js
+        script
+            include ./source/default.min.js
         script#dsq-count-scr(src='//donggi.disqus.com/count.js',async)
         script#MathJax-script(src='/source/tex-chtml.js',async)
     
@@ -39,19 +48,283 @@ html(lnag='ko')
 
     body
         div.w3-bar-block.w3-sidebar.w3-animate-left#sidebar
+            hr
             a.w3-bar-item.w3-button(href='javascript:closeSidebar();') Close &times;
+            hr
+            div#marker-list
             hr
             div#post-list
             hr
             div#file-list
             hr
     
-    div#main
-        div.w3-bar.w3-blue.w3-large#nav(style='position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle')
-            button.w3-bar-item.w3-button.w3-hover-theme(onclick='toggleSidebar()') &#9776;
-            input.w3-bar-item#query(type='text',placeholder='search')
+        div#main
+            div.w3-bar.w3-blue.w3-large#nav(style='position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle')
+                button.w3-bar-item.w3-button.w3-hover-theme(onclick='toggleSidebar()') &#9776;
+                input.w3-bar-item#query(type='text',placeholder='search')
         
-        div#contents
+            div#contents
         
-        |&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.
-        a(target='_blank',href='LICENSE') LICENSE
+            |&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.
+            a(target='_blank',href='LICENSE') LICENSE
+
+    +post('./posts/algorithm/ai.html','Algorithm','AI')
+        include ./posts/algorithm/ai.html
+//-    +post('./posts/algorithm/algo.html','Algorithm','Algorithm')
+//-        include ./posts/algorithm/algo.html
+//-    +post('./posts/algorithm/book01.html','Algorithm','『알고리즘 도감』')
+//-        include ./posts/algorithm/book01.html
+//-    +post('./posts/algorithm/koreatech.html','Algorithm','jduge.koreatech.ac.kr')
+//-        include ./posts/algorithm/koreatech.html
+//-    +post('./posts/algorithm/linear_algebra.html','Algorithm','선형대수')
+//-        include ./posts/algorithm/linear_algebra.html
+//-    +post('./posts/algorithm/probability.html','Algorithm','확률')
+//-        include ./posts/algorithm/probability.html
+//-    +post('./posts/book/001.html','Book','1만 시간의 재발견')
+//-        include ./posts/book/001.html
+//-    +post('./posts/book/002.html','Book','마음의 탄생')
+//-        include ./posts/book/002.html
+//-    +post('./posts/book/003.html','Book','생각하는 삶을 위한 철학의 역사')
+//-        include ./posts/book/003.html
+//-    +post('./posts/book/004.html','Book','쇼펜하우어, 돌이 별이 되는 철학')
+//-        include ./posts/book/004.html
+//-    +post('./posts/book/005.html','Book','인생의 모든 의미')
+//-        include ./posts/book/005.html
+//-    +post('./posts/book/009.html','Book','인지 편향')
+//-        include ./posts/book/009.html
+//-    +post('./posts/book/006.html','Book','지식의 착각')
+//-        include ./posts/book/006.html
+//-    +post('./posts/book/007.html','Book','키르케고르 실존 극장')
+//-        include ./posts/book/007.html
+//-    +post('./posts/book/008.html','Book','Gamification by Design')
+//-        include ./posts/book/008.html
+//-    +post('./posts/dotnet/csharp_library.html','Programming/.NET','C# 라이브러리')
+//-        include ./posts/dotnet/csharp_library.html
+//-    +post('./posts/dotnet/csharp_basic.html','Programming/.NET','C# 시작하기')
+//-        include ./posts/dotnet/csharp_basic.html
+//-    +post('./posts/dotnet/wpf_basic.html','Programming/.NET','WPF 시작하기')
+//-        include ./posts/dotnet/wpf_basic.html
+//-    +post('./posts/db/concept.html','Programming/DB','기본 개념')
+//-        include ./posts/db/concept.html
+//-    +post('./posts/db/mongodb.html','Programming/DB','MongoDB')
+//-        include ./posts/db/mongodb.html
+//-    +post('./posts/db/mysql.html','Programming/DB','MySQL')
+//-        include ./posts/db/mysql.html
+//-    +post('./posts/db/psql_to_sqlite.html','Programming/DB','PostgreSQL → SQLite3 마이그레이션')
+//-        include ./posts/db/psql_to_sqlite.html
+//-    +post('./posts/db/psql_admin.html','Programming/DB','PostgreSQL 서버 관리')
+//-        include ./posts/db/psql_admin.html
+//-    +post('./posts/db/psql_programming.html','Programming/DB','PostgreSQL 서버 프로그래밍')
+//-        include ./posts/db/psql_programming.html
+//-    +post('./posts/db/psql_tutorial.html','Programming/DB','PostgreSQL 시작하기')
+//-        include ./posts/db/psql_tutorial.html
+//-    +post('./posts/db/psql_sql.html','Programming/DB','PostgreSQL SQL 언어')
+//-        include ./posts/db/psql_sql.html
+//-    +post('./posts/front/css.html','Programming/Front','CSS')
+//-        include ./posts/front/css.html
+//-    +post('./posts/front/html.html','Programming/Front','HTML')
+//-        include ./posts/front/html.html
+//-    +post('./posts/front/http.html','Programming/Front','HTTP 1.1')
+//-        include ./posts/front/http.html
+//-    +post('./posts/front/freemarker/built_in.html','Programming/Front/FreeMarker','Built-in 목록 2.3.28')
+//-        include ./posts/front/freemarker/built_in.html
+//-    +post('./posts/front/freemarker/programming_guide.html','Programming/Front/FreeMarker','프로그래밍 가이드 2.3.28')
+//-        include ./posts/front/freemarker/programming_guide.html
+//-    +post('./posts/front/freemarker/template_guide.html','Programming/Front/FreeMarker','템플릿 작성 가이드 2.3.28')
+//-        include ./posts/front/freemarker/template_guide.html
+//-    +post('./posts/front/freemarker/xml_guide.html','Programming/Front/FreeMarker','XML 처리 가이드 2.3.28')
+//-        include ./posts/front/freemarker/xml_guide.html
+//-    +post('./posts/java/android.html','Programming/Java','Android')
+//-        include ./posts/java/android.html
+//-    +post('./posts/java/basic.html','Programming/Java','Java 시작하기')
+//-        include ./posts/java/basic.html
+//-    +post('./posts/java/effective_java.html','Programming/Java','『Effective Java』')
+//-        include ./posts/java/effective_java.html
+//-    +post('./posts/java/gradle.html','Programming/Java','Gradle')
+//-        include ./posts/java/gradle.html
+//-    +post('./posts/java/java_ee.html','Programming/Java','JavaEE')
+//-        include ./posts/java/java_ee.html
+//-    +post('./posts/java/javafx.html','Programming/Java','JavaFX')
+//-        include ./posts/java/javafx.html
+//-    +post('./posts/java/jni.html','Programming/Java','Java Native Interface')
+//-        include ./posts/java/jni.html
+//-    +post('./posts/java/oop.html','Programming/Java','Java 객체지향')
+//-        include ./posts/java/oop.html
+//-    +post('./posts/java/version.html','Programming/Java','Java 버전별 추가사항')
+//-        include ./posts/java/version.html
+//-    +post('./posts/java/apache.commons.collections.html','Programming/Java/apache.commons','Apache Commons Collections 4.4')
+//-        include ./posts/java/apache.commons.collections.html
+//-    +post('./posts/java/apache.commons.lang.html','Programming/Java/apache.commons','Apache Commons Lang 3.9')
+//-        include ./posts/java/apache.commons.lang.html
+//-    +post('./posts/java/apache.commons.math.html','Programming/Java/apache.commons','Apache Commons Math 3.6.1')
+//-        include ./posts/java/apache.commons.math.html
+//-    +post('./posts/java/apache.commons.rng.html','Programming/Java/apache.commons','Apache Commons RNG Core 1.2')
+//-        include ./posts/java/apache.commons.rng.html
+//-    +post('./posts/java/com.sun.nio.sctp.html','Programming/Java/jdk.sctp','com.sun.nio.sctp 12 Since 1.7')
+//-        include ./posts/java/com.sun.nio.sctp.html
+//-    +post('./posts/java/jackson.html','Programming/Java/FasterXML','Jackson 2.10.1')
+//-        include ./posts/java/jackson.html
+//-    +post('./posts/java/gson.html','Programming/Java/google','Gson 2.8.6')
+//-        include ./posts/java/gson.html
+//-    +post('./posts/java/guava.html','Programming/Java/google','Guava 23.0')
+//-        include ./posts/java/guava.html
+//-    +post('./posts/java/java.io.html','Programming/Java/java.base','java.io 12 Since 1.0')
+//-        include ./posts/java/java.io.html
+//-    +post('./posts/java/java.lang.html','Programming/Java/java.base','java.lang 12 Since 1.0')
+//-        include ./posts/java/java.lang.html
+//-    +post('./posts/java/java.lang.annotation.html','Programming/Java/java.base','java.lang.annotation 12 Since 1.5')
+//-        include ./posts/java/java.lang.annotation.html
+//-    +post('./posts/java/java.lang.module.html','Programming/Java/java.base','java.lang.module 12 Since 9')
+//-        include ./posts/java/java.lang.module.html
+//-    +post('./posts/java/java.lang.ref.html','Programming/Java/java.base','java.lang.ref 12 Since 1.2')
+//-        include ./posts/java/java.lang.ref.html
+//-    +post('./posts/java/java.lang.reflect.html','Programming/Java/java.base','java.lang.reflect 12 Since 1.1')
+//-        include ./posts/java/java.lang.reflect.html
+//-    +post('./posts/java/java.math.html','Programming/Java/java.base','java.math 12 Since 1.1')
+//-        include ./posts/java/java.math.html
+//-    +post('./posts/java/java.net.html','Programming/Java/java.base','java.net 12 Since 1.0')
+//-        include ./posts/java/java.net.html
+//-    +post('./posts/java/java.nio.html','Programming/Java/java.base','java.nio 12 Since 1.4')
+//-        include ./posts/java/java.nio.html
+//-    +post('./posts/java/java.nio.channels.html','Programming/Java/java.base','java.nio.channels 12 Since 1.4')
+//-        include ./posts/java/java.nio.channels.html
+//-    +post('./posts/java/java.nio.charset.html','Programming/Java/java.base','java.nio.charset 12 Since 1.4')
+//-        include ./posts/java/java.nio.charset.html
+//-    +post('./posts/java/java.nio.file.html','Programming/Java/java.base','java.nio.file 12 Since 1.7')
+//-        include ./posts/java/java.nio.file.html
+//-    +post('./posts/java/java.security.html','Programming/Java/java.base','java.security 12 Since 1.1')
+//-        include ./posts/java/java.security.html
+//-    +post('./posts/java/java.text.html','Programming/Java/java.base','java.text 12 Since 1.1')
+//-        include ./posts/java/java.text.html
+//-    +post('./posts/java/java.time.html','Programming/Java/java.base','java.time 12 Since 1.8')
+//-        include ./posts/java/java.time.html
+//-    +post('./posts/java/java.time.format.html','Programming/Java/java.base','java.time.format 12 Since 1.8')
+//-        include ./posts/java/java.time.format.html
+//-    +post('./posts/java/java.util.html','Programming/Java/java.base','java.util 12 Since 1.0')
+//-        include ./posts/java/java.util.html
+//-    +post('./posts/java/java.util.concurrent.html','Programming/Java/java.base','java.util.concurrent 12 Since 1.5')
+//-        include ./posts/java/java.util.concurrent.html
+//-    +post('./posts/java/java.util.concurrent.atomic.html','Programming/Java/java.base','java.util.concurrent.atomic 12 Since 1.5')
+//-        include ./posts/java/java.util.concurrent.atomic.html
+//-    +post('./posts/java/java.util.function.html','Programming/Java/java.base','java.util.function 12 Since 1.8')
+//-        include ./posts/java/java.util.function.html
+//-    +post('./posts/java/java.util.regex.html','Programming/Java/java.base','java.util.regex 12 Since 1.4')
+//-        include ./posts/java/java.util.regex.html
+//-    +post('./posts/java/java.util.stream.html','Programming/Java/java.base','java.util.stream 12 Since 1.8')
+//-        include ./posts/java/java.util.stream.html
+//-    +post('./posts/java/java.util.zip.html','Programming/Java/java.base','java.util.zip 12 Since 1.1')
+//-        include ./posts/java/java.util.zip.html
+//-    +post('./posts/java/javax.crypto.html','Programming/Java/java.base','javax.crypto 12 Since 1.4')
+//-        include ./posts/java/javax.crypto.html
+//-    +post('./posts/java/javax.net.html','Programming/Java/java.base','javax.net 12 Since 1.4')
+//-        include ./posts/java/javax.net.html
+//-    +post('./posts/java/javax.net.ssl.html','Programming/Java/java.base','javax.net.ssl 12 Since 1.4')
+//-        include ./posts/java/javax.net.ssl.html
+//-    +post('./posts/java/javax.annotation.processing.html','Programming/Java/java.compiler','Annotation Processing API')
+//-        include ./posts/java/javax.annotation.processing.html
+//-    +post('./posts/java/lombok.html','Programming/Java','lombok 1.18.10')
+//-        include ./posts/java/lombok.html
+//-    +post('./posts/java/logback.html','Programming/Java','Logback with SLF4J')
+//-        include ./posts/java/logback.html
+//-    +post('./posts/javascript/basic.html','Programming/JavaScript','코어 JavaScript')
+//-        include ./posts/javascript/basic.html
+//-    +post('./posts/javascript/basic2.html','Programming/JavaScript','브라우저 JavaScript')
+//-        include ./posts/javascript/basic2.html
+//-    +post('./posts/javascript/jquery.html','Programming/JavaScript','jQuery')
+//-        include ./posts/javascript/jquery.html
+//-    +post('./posts/javascript/node.html','Programming/JavaScript','Node')
+//-        include ./posts/javascript/node.html
+//-    +post('./posts/python/basic.html','Programming/Python','Python 3.8 시작하기')
+//-        include ./posts/python/basic.html
+//-    +post('./posts/python/data_model.html','Programming/Python','Python 3.8 데이터 모델')
+//-        include ./posts/python/data_model.html
+//-    +post('./posts/python/built_in_function.html','Programming/Python','Python Built-in Functions 3.8')
+//-        include ./posts/python/built_in_function.html
+//-    +post('./posts/python/built_in_constant.html','Programming/Python','Python Built-in Constants 3.8')
+//-        include ./posts/python/built_in_constant.html
+//-    +post('./posts/python/built_in_type.html','Programming/Python','Python Built-in Types 3.8')
+//-        include ./posts/python/built_in_type.html
+//-    +post('./posts/python/built_in_exception.html','Programming/Python','Python Built-in Exceptions 3.8')
+//-        include ./posts/python/built_in_exception.html
+//-    +post('./posts/python/persistence.html','Programming/Python','Python Data Persistence')
+//-        include ./posts/python/persistence.html
+//-    +post('./posts/python/string.html','Programming/Python/Library','Lib/string : 문자열 공통 연산')
+//-        include ./posts/python/string.html
+//-    +post('./posts/python/re.html','Programming/Python/Library','Lib/re : 정규표현식')
+//-        include ./posts/python/re.html
+//-    +post('./posts/python/textwrap.html','Programming/Python/Library','Lib/textwrap : 텍스트 정돈')
+//-        include ./posts/python/textwrap.html
+//-    +post('./posts/python/unicodedata.html','Programming/Python/Library','Lib/unicodedata : 유니코드 database 표준')
+//-        include ./posts/python/unicodedata.html
+//-    +post('./posts/python/struct.html','Programming/Python/Library','Lib/struct : 이진 데이터 패킹/언패킹')
+//-        include ./posts/python/struct.html
+//-    +post('./posts/python/datetime.html','Programming/Python/Library','Lib/datetime : 단순 시간 표현')
+//-        include ./posts/python/datetime.html
+//-    +post('./posts/python/calendar.html','Programming/Python/Library','Lib/calendar : 달력 연산')
+//-        include ./posts/python/calendar.html
+//-    +post('./posts/python/collections.html','Programming/Python/Library','Lib/collections : 컨테이너')
+//-        include ./posts/python/collections.html
+//-    +post('./posts/python/collections.abc.html','Programming/Python/Library','Lib/collections.abc : 컨테이너 ABC')
+//-        include ./posts/python/collections.abc.html
+//-    +post('./posts/python/heapq.html','Programming/Python/Library','Lib/heapq : 우선순위 큐')
+//-        include ./posts/python/heapq.html
+//-    +post('./posts/python/bisect.html','Programming/Python/Library','Lib/bisect : 리스트 정렬 유지 삽입')
+//-        include ./posts/python/bisect.html
+//-    +post('./posts/python/array.html','Programming/Python/Library','Lib/array : 고효율 숫자 배열')
+//-        include ./posts/python/array.html
+//-    +post('./posts/python/weakref.html','Programming/Python/Library','Lib/weakref : 약한 참조')
+//-        include ./posts/python/weakref.html
+//-    +post('./posts/python/types.html','Programming/Python/Library','Lib/types : 동적 타입 생성')
+//-        include ./posts/python/types.html
+//-    +post('./posts/python/copy.html','Programming/Python/Library','Lib/copy')
+//-        include ./posts/python/copy.html
+//-    +post('./posts/python/enum.html','Programming/Python/Library','Lib/enum')
+//-        include ./posts/python/enum.html
+//-    +post('./posts/python/math.html','Programming/Python/Library','Lib/math, cmath')
+//-        include ./posts/python/math.html
+//-    +post('./posts/python/decimal.html','Programming/Python/Library','Lib/decimal : 정확한 10진수 연산')
+//-        include ./posts/python/decimal.html
+//-    +post('./posts/python/random.html','Programming/Python/Library','Lib/random, secrets : 난수')
+//-        include ./posts/python/random.html
+//-    +post('./posts/python/statistics.html','Programming/Python/Library','Lib/statistics : 통계')
+//-        include ./posts/python/statistics.html
+//-    +post('./posts/python/itertools.html','Programming/Python/Library','Lib/itertools')
+//-        include ./posts/python/itertools.html
+//-    +post('./posts/python/functools.html','Programming/Python/Library','Lib/functools : 고계함수')
+//-        include ./posts/python/functools.html
+//-    +post('./posts/python/operator.html','Programming/Python/Library','Lib/operator : 표준 연산')
+//-        include ./posts/python/operator.html
+//-    +post('./posts/python/shutil.html','Programming/Python/Library','Lib/shutil : 고수준 파일 연산')
+//-        include ./posts/python/shutil.html
+//-    +post('./posts/python/pandas.html','Programming/Python/Library','3rd/pandas : 데이터 처리')
+//-        include ./posts/python/pandas.html
+//-    +post('./posts/project/wpf_data_tool.html','Project','C#.NET, WPF - 데이터 작업 툴')
+//-        include ./posts/project/wpf_data_tool.html
+//-    +post('./posts/project/snippets.html','Project','Code Snippets')
+//-        include ./posts/project/snippets.html
+//-    +post('./posts/project/error.html','Project','Exceptions + Errors')
+//-        include ./posts/project/error.html
+//-    +post('./posts/project/tip.html','Project','잡다한 팁')
+//-        include ./posts/project/tip.html
+//-    +post('./posts/single/aws.html','Programming/Single Topic','AWS')
+//-        include ./posts/single/aws.html
+//-    +post('./posts/single/centos.html','Programming/Single Topic','CentOS')
+//-        include ./posts/single/centos.html
+//-    +post('./posts/single/docker.html','Programming/Single Topic','Docker')
+//-        include ./posts/single/docker.html
+//-    +post('./posts/single/fp.html','Programming/Single Topic','FP; Functional Programming')
+//-        include ./posts/single/fp.html
+//-    +post('./posts/single/git.html','Programming/Single Topic','Git')
+//-        include ./posts/single/git.html
+//-    +post('./posts/single/nginx.html','Programming/Single Topic','Nginx')
+//-        include ./posts/single/nginx.html
+//-    +post('./posts/single/tomcat.html','Programming/Single Topic','tomcat')
+//-        include ./posts/single/tomcat.html
+//-    +post('./posts/single/refactoring.html','Programming/Single Topic','디자인 패턴 + 리팩터링')
+//-        include ./posts/single/refactoring.html
+//-    +post('./posts/single/rpi.html','Programming/Single Topic','Raspberry Pi 3 + OpenCV(python)')
+//-        include ./posts/single/rpi.html
+//-    +post('./posts/single/unity.html','Programming/Single Topic','Unity : 작성 중지')
+//-        include ./posts/single/unity.html
+//-    +post('./posts/single/vi.html','Programming/Single Topic','vi')
+//-        include ./posts/single/vi.html

@@ -1,0 +1,396 @@
+html
+  body
+    script(src='/source/redirect.js?200226_1657')
+    link(rel='stylesheet', href='/source/mjx-chtml.css')
+    script.
+      MathJax = {
+      tex: {
+      tags: 'ams',  // should be 'ams', 'none', or 'all'
+      inlineMath: [['식[', ']식']]
+      }
+      };
+    script#MathJax-script(async='', src='/source/tex-chtml.js?200223_1219')
+    hr
+    details
+      summary 알고리즘의 평가
+      |     
+      ol
+        li 시간복잡도 : 입력의 크기에 따른 소요 시간 평가
+        |         
+        li 공간복잡도 : 입력의 크기에 따른 필요 메모리 평가
+        |         
+        li 빅-오 표기법 : 점근적 상한
+        |         식[O(g(n)) = f(n) ::= \{ \exists{a, b}, \forall{n \ge a}, 0 \le f(n) \le bg(n) \}]식
+        |         
+        li 오메가 표기법 : 점근적 하한
+        |         식[\Omega(g(n)) = f(n) ::= \{ \exists{a, b}, \forall{n \ge a}, 0 \le bg(n) \le f(n) \}]식
+        |         
+        li 세타 표기법
+        |         식[\Theta(g(n)) = O(g(n)) \cap \Omega(g(n))]식
+    hr
+    details
+      summary 자료구조 : 트리
+      |     
+      ol
+        li Complete Binary Tree : 모든 leaf node의 레벨이 h 또는 h-1인 이진 트리(h는 트리의 height)
+        |         
+        li 이진 트리의 탐색 : (왼쪽 노드 방문, 오른쪽 노드 방문, 현재 노드 처리)의 순열 == 3!
+        |         
+        li 이진 검색 트리 : 노드의 좌우 서브 트리 사이에 분명한 대소관계가 존재
+        |         
+        li AVL 트리 : 이진 검색 트리 임의 노드에서 좌우 서브 트리 높이 차이 <= 1을 만족
+        |         
+        details
+          summary AVL 트리의 회전
+          |             
+          ol
+            li 트리에 대한 삽입/삭제 연산에 의해 좌우 서브 트리 높이 차이가 2가 될 수 있다.
+            |                 
+            li 인접한 3개 노드의 위치 변경(회전)을 통해 이를 해소할 수 있다.
+            |                 
+            li 회전의 기준이 되는 세 노드 x, y, z는 다음과 같다.
+            |                 
+            ul
+              li z는 삽입/삭제된 위치로부터 root로 가는 경로상 처음으로 존재하는 불균형 노드
+              |                     
+              li y는 z의 자식 중에서 가장 큰 높이를 갖는 노드
+              |                     
+              li x는 y의 자식 중에서 가장 큰 높이를 갖는 노드
+            |                 
+            li x ← y ← z가 서로 같은 방향일 때는 한 번의 회전으로 균형을 되찾을 수 있다
+            |                 
+            li x ← y ← z가 서로 다른 방향일 때는 두 번의 회전으로 균형을 되찾을 수 있다
+          |             
+          table.no-sort
+            tbody
+              tr
+                th(colspan='12') LL Rotation : this, this.left, this.left.left가 서로 위치 변경
+              |                     
+              tr
+                td(colspan='4')
+                  pre.
+                    \n      +-+
+                          |5|
+                         +-----+
+                       +-+     +--+
+                       |3|     |11|
+                      +--+    +---+
+                    +-+     +-+
+                    |1|     |9|
+                    +-+    +---+
+                         +-+   +--+
+                         |7|   |10|
+                         +-+   +--+                    
+                |                         
+                td(colspan='4')
+                  pre.
+                    \n      +-+
+                          |5|
+                         +----+
+                       +-+    +-+
+                       |3|    |9|
+                      +--+   +---+
+                    +-+    +-+   +--+
+                    |1|    |7|   |11|
+                    +-+    +-+   +--+
+                               +--+
+                               |10|
+                               +--+                    
+                |                         
+                td(colspan='4')
+                  pre.
+                    \ndef rotate_ll():
+                        parent.change(this, this.left)
+                        left.parent, parent = this.parent, left
+                        left.right, left = this, left.right                    
+              |                     
+              tr
+                th(colspan='12') RR Rotation : this, this.right, this.right.right가 서로 위치 변경
+              |                     
+              tr
+                td(colspan='4')
+                  pre.
+                    \n      +-+
+                          |5|
+                         +---+
+                       +-+   +-+
+                       |3|   |7|
+                      +--+   +--+
+                    +-+         +-+
+                    |1|         |9|
+                    +-+        +---+
+                             +-+   +--+
+                             |8|   |11|
+                             +-+   +--+                    
+                |                         
+                td(colspan='4')
+                  pre.
+                    \n      +-+
+                          |5|
+                         +----+
+                       +-+    +-+
+                       |3|    |9|
+                      +--+   +---+
+                    +-+    +-+   +--+
+                    |1|    |7|   |11|
+                    +-+    +-+   +--+
+                             +-+
+                             |8|
+                             +-+                    
+                |                         
+                td(colspan='4')
+                  pre.
+                    \ndef rotate_rr():
+                        parent.change(this, this.right)
+                        right.parent, parent = this.parent, right
+                        right.left, right = this, right.left                    
+              |                     
+              tr
+                th(colspan='12') LR Rotation : this, this.left, this.left.right가 서로 위치 변경
+              |                     
+              tr
+                td(colspan='3')
+                  pre.
+                    \n     +-+
+                         |9|
+                        +---+
+                      +-+   +--+
+                      |3|   |11|
+                      +-+   +--+
+                    +-+ +-+
+                    |1| |5|
+                    +-+ +-+
+                          +-+
+                          |7|
+                          +-+                    
+                |                         
+                td(colspan='3')
+                  pre.
+                    \n       +-+
+                           |9|
+                          +---+
+                        +-+   +--+
+                        |5|   |11|
+                        +-+   +--+
+                      +-+ +-+
+                      |3| |7|
+                      +-+ +-+
+                    +-+
+                    |1|
+                    +-+                    
+                |                         
+                td(colspan='3')
+                  pre.
+                    \n     +-+
+                         |5|
+                        +---+
+                      +-+   +-+
+                      |3|   |9|
+                      +-+   +--+
+                    +-+   +-+  +--+
+                    |1|   |7|  |11|
+                    +-+   +-+  +--+                    
+                |                         
+                td(colspan='3')
+                  pre.
+                    \ndef rotate_lr():
+                        left.rotate_rr()
+                        rotate_ll()                    
+              |                     
+              tr
+                th(colspan='12') RL Rotation : this, this.right, this.right.left가 서로 위치 변경
+              |                     
+              tr
+                td(colspan='3')
+                  pre.
+                    \n   +-+
+                       |5|
+                      +-----+
+                    +-+     +--+
+                    |3|     |11|
+                    +-+    +----+
+                         +-+    +--+
+                         |9|    |12|
+                        +--+    +--+
+                      +-+
+                      |7|
+                      +-+                    
+                |                         
+                td(colspan='3')
+                  pre.
+                    \n   +-+
+                       |5|
+                      +----+
+                    +-+    +-+
+                    |3|    |9|
+                    +-+   +---+
+                        +-+   +--+
+                        |7|   |11|
+                        +-+   ----+
+                                  +--+
+                                  |12|
+                                  +--+                    
+                |                         
+                td(colspan='3')
+                  pre.
+                    \n       +-+
+                           |9|
+                         +----+
+                       +-+    +--+
+                       |5|    |11|
+                      +---+   ----+
+                    +-+   +-+     +--+
+                    |3|   |7|     |12|
+                    +-+   +-+     +--+                    
+                |                         
+                td(colspan='3')
+                  pre.
+                    \ndef rotate_rl():
+                        right.rotate_ll()
+                        rotate_rr()                    
+        |         
+        li 힙 : 상하 노드 사이에 분명한 대소관계가 존재. 우선순위 큐의 구현에 적합
+    hr
+    details
+      summary 자료구조 : 그래프
+      |     
+      ul
+        li G : graph, V : vertex, E : edge
+        |         
+        li 모든 간선의 가중치가 동일한 그래프, 또는 사이클이 없는 그래프(트리)의 탐색은 너비 우선 탐색, 깊이 우선 탐색 2개로 적절히 해결된다
+        |         동일한 정점을 2번 조사할 필요도 없다
+      |     
+      details
+        summary 최단경로 찾기 : 다익스트라
+        |         
+        ol
+          li 시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대
+          |             간선의 가중치에 음수가 있는 경우 적용 불가
+          |             
+          li 정의
+          |             W(P) := 시작점으로부터 정점 P까지 도달하는 가중치의 현재 최소합.
+          br
+          |             W(P1, P2) := 간선 P1→P2의 가중치
+          br
+          |             Working set := 최단경로 알고리즘의 가중치 업데이트 대상이 되는 정점 집합. 최초값은 시작점으로부터 간선 하나만 건너 도달할 수 있는 모든 정점
+          |             
+          li Working set에 속한 정점 P중, W(P)가 가장 낮은 P에 대해 다음을 수행한다
+          |             
+          ol
+            li Working set에서 P 제거
+            |                 
+            li
+              | P에서 간선 하나만 건너 도달할 수 있는 모든 정점 P'에 대해, W(P') = min(W(P'), W(P) + W(P, P'))를 수행하고, W(P')값이 변경된 경우 P'을 Working set에 추가한다.
+            |                 
+            li 만약 P'이 목표 지점이라면, 최단 경로를 찾았으므로 추가 작업을 중지한다.
+      |     
+      ul
+        li 최단경로 찾기 : A*
+        |         도착점의 추정 가중치 0부터 시작하여, 도착점으로부터 먼 정점일수록 높아지는 추정 가중치를 갖고 시작한다.
+        br
+        |         다익스트라 알고리즘을 사용하되, Working set에서 작업 대상이 되는 원소를 찾을 때, 추정 가중치를 합하여 구한다는 게 차이점.
+      |     
+      details
+        summary 최단경로 찾기 : 벨만-포드
+        |         
+        ul
+          li 음수 가중치의 간선이 존재하는 경우, Working set은 정점이 아닌 간선을 대상으로 하고, 매 업데이트마다 모든 간선을 검사한다
+          |             
+          li 다익스트라 알고리즘과 마찬가지로 시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대
+          |             
+          li 그래프 임의의 정점 P에 대한 W(P)의 변동이 없을 때까지 아래를 반복한다.
+          |             그래프 모든 간선 P→P'에 대해, W(P') = min(W(P'), W(P) + W(P, P'))
+          |             
+          li
+            | |V|-1번의 업데이트로 모든 정점까지의 모든 최단경로가 구해지며, |V|번째의 업데이트로 갱신이 일어난 경우는 음수 가중치의 사이클이 존재하는 것이므로 최단 경로는 존재하지 않는다
+      |     
+      details
+        summary 무방향 그래프의 최소신장 트리 : 크루스칼
+        |         
+        ol
+          li 최초 |V|개의 집합을 생성하고, 그래프 각 정점이 하나씩 포함된다
+          |             
+          li 집합이 하나만 남을 때까지 다음을 반복한다
+          |             
+          li 최소 가중치 간선을 선택 → 두 정점이 서로 다른 집합에 포함된 경우 → 두 집합을 합치고 간선은 결과에 추가
+          |             간선의 두 정점이 같은 집합에 포함된 경우 간선은 버려진다
+    hr
+    details
+      summary 정렬
+      |     
+      ul
+        li Stability : 정렬 키가 동일한 두 요소의 순서가 정렬 후에도 유지되는 경우
+        |         
+        li Bubble Sort
+        pre.
+          \nis_go_next = True
+          while is_go_next:
+              is_go_next = False
+              for i in range(0, len(l)-1):
+                  if l[i] > l[i+1]:
+                      l[i], l[i+1] = l[i+1], l[i]
+                      is_go_next = True
+                    
+        |         
+        li Selection Sort
+        pre.
+          \nfor i in range(0, len(l)-1):
+              x = l.index(min(l[i:]))
+              l[i], l[x] = l[x], l[i]          
+        |         
+        li Insertion Sort
+        pre.
+          \nfor i in range(1, len(l)):
+              x = l.pop(i)
+              for j in range(0, i):
+                  if l[j] > x:
+                      l.insert(j, x)
+                      break
+              else:
+                  l.insert(i, x)
+                    
+        |         
+        li Merge Sort : 버블 소트 1단계 실행 → 부분적으로 정렬된 리스트들을 마지막 1개가 될 때까지 병합
+        |         
+        li Heap Sort : 힙에 모두 넣고 순서대로 빼내면 정렬된다
+        |         
+        li
+          | Quick Sort : 크기가 3 이상인 부분 리스트에 대하여, pivot을 하나 선택하여 [<pivot], [=pivot], [>pivot]으로 분할하는 것을 반복
+        |         
+        li Counting Sort
+        pre.
+          \nd = dict()
+          for x in l:
+              if x in d:
+                  d[x] += 1
+              else:
+                  d[x] = 1          
+    hr
+    details
+      summary DP; Dynamic Programming
+      |     
+      ol
+        li 동적계획법 := 점화식(상향식)/재귀(하향식) + 캐싱
+    hr
+    details
+      summary P-NP
+      |     
+      ol
+        li 튜링 기계(TM) : 긴 테이프에 쓰여있는 여러 가지 기호들을 일정한 규칙에 따라 바꾸는 기계
+        |         무한한 저장공간은 무한한 길이의 테이프로 나타나는데 이 테이프는 하나의 기호를 인쇄할 수 있는 크기의 정사각형들로 쪼개져있다. 언제든지 기계속에는 하나의 기호가 들어가있고 이를 "읽힌 기호"라고 한다. 이 기계는 "읽힌 기호"를 바꿀 수 있는데 그 기계의 행동은 오직 읽힌 기호만이 결정한다. 테이프는 앞뒤로 움직일 수 있어서 모든 기호들은 적어도 한번씩은 기계에게 읽힐 것이다.
+        |         
+        li P : 결정론적 튜링 기계로 다항 시간 안에 풀 수 있는 결정 문제
+        |         문제에 대한 해답을 다항 시간 안에 풀 수 있음
+        |         
+        li NP : 비결정론적 튜링 기계로 다항 시간 안에 풀 수 있는 결정 문제. P⊆NP
+        |         해답이 맞는지 틀린지에 대한 결정 문제를 다항 시간 안에 풀 수 있음
+        |         
+        li
+          | NP-Hard : 다음을 만족하는 결정 문제 C. 모든 NP 문제가 다항 시간 안에 C로 변환될 수 있다. NP-난해 문제는 최소한 모든 NP문제만큼 어렵다
+        |         Halting problem : 프로그램과 입력값이 주어졌을 때, 프로그램이 정지할 지 아니면 영원히 계산할 지 결정하는 문제
+        |         
+        li NP-Complete : NP-Hard and C ∈ NP
+        |         어떤 NP-완전 문제가 P에 속한다면 P=NP를 증명하게 된다, 반대로 P에 속하지 않으면 P≠NP를 증명하게 된다
+        br
+        |         SAT(SATisfiability problem) : 어떠한 변수들로 이루어진 논리식이 주어졌을 때, 그 논리식이 참이 되는 변수값이 존재하는지를 찾는 문제
+    hr

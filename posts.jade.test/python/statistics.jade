@@ -1,0 +1,66 @@
+html
+  body
+    script(src='/source/redirect.js?200226_1657')
+    ul
+      li 별다른 표시가 없다면 각 함수들은 int, float, Decimal, Fraction 모두 인자로 지원.
+      |     다른 타입들을 인자로 이용하려는 경우 map() 따위로 조정 필요
+      |     
+      |     
+      li 대표값
+      |     
+      ul
+        li mean(data) : 산술 평균. data는 Iterable
+        |         
+        li fmean(data) : 빠른 float 산술 평균. data는 Iterable
+        |         
+        li geometric_mean(data) Since 3.8 : 기하 평균. data는 Iterable
+        |         
+        li harmonic_mean(data) Since 3.6 : 조화 평균. data는 Iterable
+        |         
+        li median(data) : 중앙값. data는 Iterable
+        |         median([1, 3, 5, 7]) == 4.0
+        br
+        |         median_low([1, 3, 5, 7]) == 3
+        br
+        |         median_high([1, 3, 5, 7]) == 5
+        |         
+        li median_grouped(data, interval=1)
+        |         median = L + interval*(N/2 - CF)/F
+        br
+        |         L = the lower limit of the median interval
+        br
+        |         N = the total number of data points
+        br
+        |         CF = the number of data points below the median interval
+        br
+        |         F = the number of data points in the median interval
+        |         
+        li mode(data) : 최빈값. data는 이산하다고 가정되는 Iterable. data 요소의 타입은 제한되지 않는다
+        |         
+        li multimode(data) Since 3.8 : 최빈값 리스트 반환.
+        |         
+        li quantiles(data, *, n=4, method='exclusive') Since 3.8
+        |         data를 n개 구간으로 나누어, 각 구간이 모두 같은 개수의 표본을 갖도록 하는 구분점들의 리스트를 반환한다.
+      |     
+      |     
+      li 분산
+      |     
+      ul
+        li pstdev(data, mu=None) : 표준편차
+        |         
+        li pvariance(data, mu=None) : 분산
+        |         
+        li stdev(data, xbar=None) : 표본표준편차
+        |         
+        li variance(data, xbar=None) : 표본분산
+    hr
+    details
+      summary class statistics.NormalDist
+      |     
+      ul
+        li statistics.NormalDist(mu=0.0, sigma=1.0)
+        |         
+        li classmethod from_samples(data)
+        |         
+        li 이하 생략
+    hr

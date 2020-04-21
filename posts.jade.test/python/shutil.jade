@@ -1,0 +1,107 @@
+html
+  body
+    script(src='/source/redirect.js?200226_1657')
+    ul
+      li
+        | make_archive(base_name, format[, root_dir[, base_dir[, verbose[, dry_run[, owner[, group[, logger]]]]]]])
+      |     
+      ul
+        li base_name : 확장자 미포함 압축 파일 path.
+        |         
+        li format : 'zip', 'tar', 'gztar', 'bztar', 'xztar'
+        |         
+        li root_dir : 압축 파일의 최상위 디렉터리. 기본값은 현재 디렉터리
+        |         
+        li base_dir : 압축 시작 디렉터리. 기본값은 현재 디렉터리
+        |         
+        li shutil.make_archive 이벤트 발생
+      |     
+      li get_archive_formats()
+      |     가능한 압축 포맷 반환
+      |     
+      li unpack_archive(filename[, extract_dir[, format]])
+      |     
+      li get_unpack_formats()
+      |     
+      li copyfileobj(fsrc, fdst[, length])
+      |     
+      ul
+        li fsrc : file-like source
+        |         주의. fsrc의 현재 위치부터 복사를 시작함
+        |         
+        li fdst : file-like destination
+        |         
+        li length : buffer size
+      |     
+      li copyfile(src, dst, *, follow_symlinks=True)
+      |     
+      ul
+        li src : path-like source
+        |         
+        li dst : path-like destination
+        |         붙여넣을 파일명을 정확히 포함해야 한다
+        |         
+        li shutil.copyfile 이벤트 발생
+      |     
+      li copymode(src, dst, *, follow_symlinks=True)
+      |     
+      ul
+        li 파일 권한 비트 복사
+        |         
+        li src : path-like source
+        |         
+        li dst : path-like destination
+        |         
+        li shutil.copymode 이벤트 발생
+      |     
+      li copystat(src, dst, *, follow_symlinks=True)
+      |     
+      ul
+        li 파일 권한 비트, 마지막 접근 시각, 마지막 수정 시각 등 복사
+        |         
+        li src : path-like source
+        |         
+        li dst : path-like destination
+        |         
+        li shutil.copystat 이벤트 발생
+      |     
+      li copy(src, dst, *, follow_symlinks=True)
+      |     
+      ul
+        li copyfile + copymode
+        |         copyfile과 다르게 dst는 디렉터리를 가리켜도 된다.
+        |         
+        li shutil.copyfile, shutil.copymode 이벤트 발생
+      |     
+      li copy2(src, dst, *, follow_symlinks=True)
+      |     
+      ul
+        li copyfile + copystat
+        |         copyfile과 다르게 dst는 디렉터리를 가리켜도 된다.
+        |         
+        li shutil.copyfile, shutil.copystat 이벤트 발생
+      |     
+      li
+        | copytree(src, dst, symlinks=False, ignore=None, copy_function=copy2, ignore_cangling_symlinks=False, dirs_exist_ok=False)
+      |     
+      ul
+        li dirs_exist_ok : 붙여넣을 디렉터리의 일부가 이미 존재해도 괜찮은지
+        |         
+        li ignore : 디렉터리, os.listdir()를 인자로 받아 생략할 이름들의 집합을 반환하는 함수
+        |         
+        li shutil.copytree 이벤트 발생
+      |     
+      li ignore_patterns(*patterns)
+      |     glob-style 패턴들을 인자로 받아 copytree()의 ignore에 사용할만한 함수를 반환
+      |     
+      li rmtree(path, ignore_errors=False, onerror=None)
+      |     shutil.rmtree 이벤트 발생
+      |     
+      li move(src, dst, copy_function=copy2)
+      |     파일 또는 디렉터리를 옮긴다. shutil.move 이벤트 발생
+      |     
+      li chown(path, user=None, group=None)
+      |     shutil.chown 이벤트 발생
+      |     
+      li which(cmd, mode=os.F_OK | os.X_OK, path=None)
+      |     cmd를 실행하게 될 실행 파일의 path 반환. 없으면 None

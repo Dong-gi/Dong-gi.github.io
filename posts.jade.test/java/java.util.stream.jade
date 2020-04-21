@@ -1,0 +1,349 @@
+html
+  body
+    script(src='/source/redirect.js?200226_1657')
+    hr
+    details
+      summary
+        | interface BaseStream<T, S extends BaseStream<T, S>> extends AutoCloseable Since 1.8
+      |     
+      ol
+        li Iterator<T> iterator()
+        |         
+        li Spliterator<T> spliterator()
+        |         
+        li boolean isParallel()
+        |         
+        li S sequential() : 순차적인 스트림 반환(어쩌면 자기 자신)
+        |         
+        li S parallel() : 병렬적인 스트림 반환(어쩌면 자기 자신)
+        |         
+        li S unordered() : 순서 없는 스트림 반환(어쩌면 자기 자신)
+        |         
+        li S onClose(Runnable closeHandler)
+    hr
+    details
+      summary interface DoubleStream extends BaseStream<Double, DoubleStream> Since 1.8
+      |     
+      ol
+        li DoubleStream map(DoubleUnaryOperator mapper)
+        |         
+        li <U> Stream<U> mapToObj(DoubleFunction<? extends U> mapper) + int, long
+        |         
+        li DoubleStream flatMap(DoubleFunction<? extends DoubleStream> mapper)
+        |         
+        li double[] toArray()
+        |         
+        li double sum()
+        |         
+        li OptionalDouble min(), max(), average(), findFirst(), findAny()
+        |         
+        li DoubleSummaryStatistics summaryStatistics()
+        |         
+        li Stream<Double> boxed()
+    hr
+    details
+      summary interface IntStream extends BaseStream<Integer, Integer> Since 1.8 + LongStream
+      |     
+      ol
+        li
+          b static interface IntStream.Builder
+        |         
+        li static IntStream range(int startInclusive, int endExclusive)
+        |         
+        li static IntStream rangeClosed(int startInclusive, int endInclusive)
+    hr
+    details
+      summary interface Stream<T> extends BaseStream<T, Stream<T>> Since 1.8
+      |     
+      ol
+        li 2가지 스트림 연산
+        |         
+        ul
+          li Terminal Operation
+          |             종결 연산. 스트림 연산 파이프라인의 마지막으로, 더 이상 스트림 연산을 수행할 수 없다.
+          |             
+          li Intermediate Operation
+          |             중간 연산. 새로운 스트림을 반환한다.
+        |         
+        li 2가지 중간 연산
+        |         
+        ul
+          li Stateless Operation
+          |             요소의 연산 과정에 상태의 보존이 필요 없는 경우. filter, map 등
+          |             
+          li Stateful Operation
+          |             요소의 연산 과정에 상태의 보존이 필요한 경우. sorted, distinct 등.
+          br
+          |             이러한 연산을 사용하기 위해선 스트림 전체 인풋이 필요할 수 있으며, 병렬 스트림에서는 요구되는 버퍼의 크기가 늘어나게 된다.
+      |     
+      details
+        summary static interface Stream.Builder<T> Since 1.8
+        |         
+        ul
+          li void accept(T t)
+          |             
+          li default Stream.Builder<T> add(T t)
+          |             
+          li Stream<T> build()
+      |     
+      details
+        summary 팩터리 메서드
+        |         
+        ol
+          li static <T> Stream.Builder<T> builder()
+          |             
+          li static <T> Stream<T> empty()
+          |             
+          li static <T> Stream<T> of(T t)
+          |             
+          li static <T> Stream<T> ofNullable(T t) Since 9
+          |             
+          li @SafeVarargs static <T> Stream<T> of(T... values)
+          |             
+          li static <T> Stream<T> iterate(T seed, UnaryOperator<T> f)
+          |             
+          li
+            | static <T> Stream<T> iterate(T seed, Predicate<? super T> hasNext, UnaryOperator<T> next) Since 9
+          |             
+          li static <T> Stream<T> generate(Supplier<? extends T> s)
+          |             
+          li static <T> Stream<T> concat(Stream<? extends T> a, Stream<? extends T> b)
+      |     
+      details
+        summary 중간 연산
+        |         
+        ol
+          li Stream<T> filter(Predicate<? super T> predicate)
+          |             predicate이 true인 요소만 남긴다.
+          |             
+          li <R> Stream<R> map(Function<? super T, ? extends R> mapper)
+          |             mapper : 하나의 T 변수에서 하나의 R 변수로 대응하는 변환
+          br
+          |             mapper를 이용해 새로운 스트림을 반환한다.
+          |             
+          li IntStream mapToInt(ToIntFunction<? super T> mapper) + long, double
+          |             
+          li <R> Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper)
+          |             mapper : 하나의 T 변수에서 여러 R 변수(R 스트림)로 대응하는 변환.
+          br
+          |             mapper를 이용해 만들어진 여러 R 스트림을 일렬로 펴서(flattening) 하나의 R 스트림으로 변환. mapper가 null을 반환하면 빈 스트림을 대신 이용된다.
+          br
+          |             최종적으로 반환되는 스트림 외의 모든 중간 스트림은 닫힌다. 
+          button.btn-code(path='Repositories/Eclipse/JavaSE/src/util/FlatMapExample.java', lan='java') 예시 코드 »
+          |             
+          li
+            | IntStream flatMapToInt(Function<? super T, ? extends IntStream> mapper ) + long, double
+          |             
+          li Stream<T> distinct()
+          |             Object.equals(Object)를 이용해 유일한 것들만으로 구성. stateful 중간 연산.
+          |             
+          li Stream<T> sorted()
+          |             자연스러운 방향으로 정렬. T가 Comparable하지 않으면 예외 발생할 수 있음. stateful 중간 연산.
+          |             
+          li Stream<T> sorted(Comparator<? super T> comparator)
+          |             
+          li Stream<T> peek(Consumer<? super T> action)
+          |             forEach와 유사한 기능을 하는 중간 연산. 다른 중간 연산 전후의 값을 살펴보는 디버깅 용도로 만들어짐.
+          |             
+          li Stream<T> limit(long maxSize)
+          |             스트림의 크기가 maxSize 이하가 되도록 한다. short-circuiting stateful 중간 연산.
+          |             
+          li Stream<T> skip(long n)
+          |             n개를 버린 나머지로 스트림을 구성해 반환한다. 더 없으면 빈 스트림이 반환된다.
+          |             
+          li default Stream<T> takeWhile(Predicate<? super T> predicate) Since 9
+          |             요소들을 하나씩 검사하여, predicate을 만족하지 않는 요소가 나오기 전까지로 구성된 스트림을 반환한다. 순서 있는 스트림에 대하여는 조건을 만족하는 최장 길이 접두 요소들을 얻게 되며, 순서 없는 스트림은 조건을 만족하는 부분 집합을 얻게 된다. short-circuiting stateful 중간 연산.
+          br
+          |             일반적으로 연산이 저렴하지만, 순서 있는 병렬 스트림에 대하여는 최장 길이 접두 요소들을 찾기 위해 연산이 비싸지므로, 허용된다면 순서 없는 스트림 소스(generate(Supplier))를 이용하거나, BaseStream.unordered()를 이용해 순서를 없애는 것이 성능에 도움이 될 것이다.
+          |             
+          li default Stream<T> dropWhile(Predicate<? super T> predicate) Since 9
+          |             stateful 중간 연산.
+      |     
+      details
+        summary 종결 연산
+        |         
+        ol
+          li void forEach(Consumer<? super T> action)
+          |             
+          li void forEachOrdered(Consumer<? super T> action
+          |             순서 있는 스트림의 경우, 이를 이용하면 요소의 순서대로 소비자가 실행된다.
+          |             
+          li Object[] toArray()
+          |             
+          li <A> A[] toArray(IntFunction<A[]> generator)
+          |             generator : 배열 크기를 먹고 배열을 뱉는 함수. 예: A[]::new.
+          |             
+          li T reduce(T identity, BinaryOperator<T> accumulator)
+          |             하나의 T 변수로 축약하는 종결 연산. 아래와 동치다.
+          br
+          |             var result = identity;
+          br
+          |             for(T element : 스트림)
+          br
+          |             　　result = accumulator.apply(result, element);
+          br
+          |             return result;
+          |             
+          li Optional<T> reduce(BinaryOperator<T> accumulator
+          |             하나의 T로 축약하는 종결 연산. 처음 연산 결과는 null이며, 스트림 첫 번째 요소를 만나면 치환된다. 이후는 reduce(T, BinaryOperator)와 같다.
+          |             
+          li
+            | <U> U reduce(U identity, BiFunction<U, ? super T, U> accumulator, BinaryOperator<U> combiner)
+          |             하나의 U 변수로 축약하는 종결 연산. 연산은 reduce(T, BinaryOperator)와 동일한데, identity 값은 combiner 연산에 대한 항등원이어야 한다. 다시 말해, 임의의 U 타입 변수 u에 대하여 u == combiner(identity, u)를 만족해야 한다.
+          br
+          |             이는 연산 과정에서 다음의 검사를 통해 검증된다. combiner.apply(u, accumulator.apply(identity, t)) == accumulator.apply(u, t)
+          br
+          |             이렇게 복잡하게 하는 것보다는 map과 reduce를 쪼개 이용하는 것이 훨씬 간결하므로 유념.
+          |             
+          li
+            | <R> R collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator, BiConsumer<R, R> combiner)
+          |             하나의 R 변수로 축약하는 종결 연산. reduce와 다르게 R 자체가 결과값에 대한 가변적인 컨테이너(ArrayList, String 등)가 되어야 한다. 아래와 동치다.
+          br
+          |             여기서는 combiner를 사용하지 않는 것처럼 보이지만, combiner는 병렬 스트림 연산을 위해 존재하는 것이므로, 연산 결과 자체는 아래와 동치가 맞다.
+          br
+          |             var result = supplier.get();
+          br
+          |             for(T element : this stream)
+          br
+          |             　　accumulator.accept(result, element);
+          br
+          |             return result;
+          br
+          |             
+          br
+          |             메서드 참조 예.
+          br
+          |             collect(ArrayList::new, ArrayList::add, ArrayList::addAll)
+          br
+          |             collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+          |             
+          li <R, A> collect(Collector<? super T, A, R> collector)
+          |             collect(Supplier, BiConsumer, BiConsumer)의 매개변수를 캡슐화한 Collector를 이용.
+          br
+          |             Collectors 유틸리티 클래스에 이미 정의된 Collector들이 있으니 편하게 이용 가능.
+          |             
+          li Optional<T> min(Comparator<? super T> comparator) + max
+          |             
+          li long count()
+          |             개수를 반환하는 종결 연산.
+          |             
+          li boolean anyMatch(Predicate<? super T> predicate) + allMatch, noneMatch
+          |             short-circuiting 종결 연산.
+          |             
+          li Optional<T> findFirst() + findAny
+          |             short-circuiting 종결 연산.
+    hr
+    details
+      summary final class StreamSupport Since 1.8
+      |     
+      ol
+        li static <T> Stream<T> stream(Spliterator<T> spliterator, boolean parallel)
+        |         
+        li
+          | static <T> Stream<T> stream(Supplier<? extends Spliterator<T>> supplier, int characteristics, boolean parallel)
+        |         characteristics = supplier.get().characteristics()
+        |         
+        li
+          | static IntStream intStream(Spliterator.OfInt spliterator, boolean parallel) + long, double
+        |         
+        li
+          | static IntStream intStream(Supplier<? extends Spliterator.OfInt> supplier, int characteristics, boolean parallel)
+        |         characteristics = supplier.get().characteristics()
+    hr
+    details
+      summary interface Collector<T, A, R> Since 1.8
+      |     
+      ol
+        li
+          b static enum Collector.Characteristics
+        |         CONCURRENT, IDENTITY_FINISH, UNORDERED
+        |         
+        li Supplier<A> supplier()
+        |         결과 컨테이너인 A를 생성하는 함수 반환.
+        |         
+        li BiConsumer<A, T> accumulator()
+        |         A의 결과에 T 타입 데이터를 축적하는 함수
+        |         
+        li BinaryOperator<A> combiner()
+        |         두 결과 컨테이너를 받아 하나로 반환하는 함수
+        |         
+        li Function<A, R> finisher()
+        |         결과 컨테이너로부터 최종 결과 R으로 변환하는 함수 반환
+        |         
+        li Set<Collector.Characteristics> characteristics()
+        |         
+        li
+          | static <T, A, R> Collector<T, A, R> of(Supplier<A> supplier, BiConsumer<A, T> accumulator, BinaryOperator<A> combiner, Function<A, R> finisher, Collector.Characteristics... characteristics) + 1 오버로딩
+    hr
+    details
+      summary final class Collectors Since 1.8
+      |     
+      ol
+        li
+          | static <T, C extends Collection<T>> Collector<T, ?, C> toCollection(Supplier<C> collectionFactory)
+        |         collectionFactory로 생성한 Collection 객체에 원소들을 만나는 순서대로 집어넣는 Collector 반환.
+        |         
+        li static <T> Collector<T, ?, List<T>> toList()
+        |         새로운 List 객체에 입력 원소들을 모두 담아 반환하는 Collector. 반환된 List의 타입, 변경 가능 여부, 직렬화, 스레드-안전 그 무엇도 보장하지 않음.
+        |         
+        li static <T> Collector<T, ? Set<T>> toSet()
+        |         새로운 Set 객체에 입력 원소들을 모두 담아 반환하는 Collector. 반환된 Set의 타입, 변경 가능 여부, 직렬화, 스레드-안전 그 무엇도 보장하지 않음.
+        |         
+        li static <T> Collector<T, ?, List<T>> toUnmodifiableList() Since 10
+        |         
+        li static <T> Collector<T, ?, Set<T>> toUnmodifiableSet() Since 10
+        |         
+        li static Collector<CharSequence, ?, String> joining() + 2 오버로딩
+        |         String에 만나는 순서대로 덧붙이는 Collector.
+        |         
+        li
+          | static <T, U, A, R> Collector<T, ?, R> mapping(Function<? super T, ? extends U> mapper, Collector<? super U, A, R> downstream)
+        |         U 타입 원소에 대한 Collector에 T 타입 원소를 mapper를 통해 U 타입으로 변환하여 받아들이는 Collector.
+        |         
+        li
+          | static <T, U, A, R> Collector<T, ?, R> flatMapping(Function<? super T, ? extends Stream<? extends U>> mapper, Collector<? super U, A, R> downstream) Since 9
+        |         Flat mapper는 입력 요소를 0개 이상의 요소를 담은 stream으로 만들어내며, downstream에 투입되면 해당 stream은 닫힌다.(null인 경우 빈 스트림을 대신 이용한다)
+        |         
+        li
+          | static <T, A, R> Collector<T, ?, R> filtering(Predicate<? super T> predicate, Collector<? super T, A, R> downstream) Since 9
+        |         동일한 입력 타입 T 원소를 받아 predicate을 만족하면 downstream에 투입하는 Collector.
+        |         
+        li
+          | static <T, A, R, RR> Collector<T, A, RR> collectingAndThen(Collector<T, A, R> downstream, Function<R, RR> finisher)
+        |         
+        li static <T> Collector<T, ?, Long> counting()
+        |         
+        li static <T> Collector<T, ?, Optional<T>> minBy(Comparator<? super T> comparator)
+        |         
+        li static <T> Collector<T, ?, Optional<T>> maxBy(Comparator<? super T> comparator)
+        |         
+        li
+          | static <T> Collector<T, ?, Integer> summingInt(ToIntFunction<? super T> mapper) + Long, Double
+        |         
+        li
+          | static <T> Collector<T, ?, Double> averagingInt(ToIntFunction<? super T> mapper) + Long, Double
+        |         
+        li
+          | static <T> Collector<T, ?, IntSummaryStatistics> summarizingInt(ToIntFunction<? super T> mapper) + Long, Double
+        |         
+        li static <T> Collector<T, ? T> reducing(T identity, BInaryOperator<T> op) + 2 오버로딩
+        |         reducing 설명은 DoubleStream 참고
+        |         
+        li
+          | static <T, K> Collector<T, ?, Map<K, List<T>>> groupingBy(Function<? super T, ? extends K> classifier) + 2 오버로딩
+        |         
+        li
+          | static <T, K> Collector<T, ?, ConcurrentMap<K, List<T>>> groupingByConcurrent(Function<? super T, ? extends K> classifier) + 2 오버로딩
+        |         
+        li
+          | static <T> Collector<T, ?, Map<Boolean, List<T>>> partitioningBy(Predicate<? super T> predicate) + 1 오버로딩
+        |         
+        li
+          | static <T, K, U> Collector<T, ?, Map<K, U>> toMap(Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper) + 2 오버로딩
+        |         
+        li
+          | static <T, K, U> Collector<T, ?, Map<K, U>> toUnmodifiableMap(Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper) Since 10 + 1 오버로딩
+        |         
+        li
+          | static <T, K, U> Collector<T, ?, ConcurrentMap<K, U>> toConcurrentMap(Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper) + 2 오버로딩
+    hr

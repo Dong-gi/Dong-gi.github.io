@@ -1,0 +1,94 @@
+html
+  body
+    script(src='/source/redirect.js?200226_1657')
+    hr
+    details
+      summary 암호적으로 안전한 난수 생성기
+      |     
+      details
+        summary interface SecureRandomParameters Since 9
+        |         SecureRandom 메서드 인자임을 나타내는 마커 인터페이스
+      |     
+      details
+        summary class SecureRandom extends Random Since 1.1
+        |         
+        ol
+          li 비결정적인 출력을 위해, 전달되는 시드 역시 예측할 수 없어야 한다
+          |             시드를 제공하지 않은 경우, 최초 nextBytes 호출 시 구현체에서 정의하는 엔트로피 소스로부터 시드를 선택한다
+          |             
+          li SecureRandom 인스턴스는 스레드-안전하다
+          |             
+          li public SecureRandom() + 오버로딩
+          |             
+          button.btn-code(path='Repositories/Eclipse/JavaSE/src/security/SecureRandomTest.java', lan='java') 예시 코드 »
+        |         
+        details
+          summary Method Detail
+          |             
+          ol
+            li static SecureRandom getInstance(String algorithm) + 오버로딩
+            |                 https://docs.oracle.com/en/java/javase/12/docs/specs/security/standard-names.html#securerandom-number-generation-algorithms
+            |                 
+            li
+              | static SecureRandom getInstance(String algorithm, SecureRandomParameters params) Since 9 + 오버로딩
+            |                 SecureRandom.getInstance("DRBG", DrbgParameters.instantiation(128, RESEED_ONLY, null));
+            |                 
+            li static SecureRandomParameters getInstanceStrong() Since 1.8
+            |                 
+            li final Provider getProvider() + getAlgorithm Since 1.5, getParameters Since 9
+            |                 
+            li void setSeed(byte[] seed) + 오버로딩 + getSeed
+            |                 
+            li void reseed() Since 9 + 오버로딩
+            |                 엔트로피 소스로부터 시드 재선택
+            |                 
+            li void nextBytes(byte[] bytes) + 오버로딩 + generateSeed
+      |     
+      details
+        summary class DrbgParameters Since 9
+        |         
+        ol
+          li DRBG; Deterministic Random Bit Generator 이용을 위한 파라미터
+          |             기본 파라미터 외에 직접 지정하고 싶은 경우, 메서드의 SecureRandomParameters 파라미터로 넘기면 된다
+          br
+          |             var drbg = SecureRandom.getInstance("DRBG", DrbgParameters.instantiation(112, NONE, null)); // Weak DRBG 인스턴스. 112비트 보안 강도
+          br
+          |             drbg.nextBytes(buffer, DrbgParameters.nextBytes(256, false, "more".getBytes())); // 보안 강도 112비트를 초과하여 실패
+          br
+          |             drbg.nextBytes(buffer, DrbgParameters.nextBytes(112, true, "more".getBytes())); // 예측 저항(PR_AND_RESEED) 없으므로 실패
+          |             
+          li 시스템 속성
+          |             securerandom.drbg.config → 기본값 : Hash_DRBG with SHA-256
+        |         
+        details
+          summary Nested Classes
+          |             
+          ol
+            li
+              | static final class DrbgParameters.Instantiation implements SecureRandomParameters Since 9
+            |                 DRBG 인스턴스 생성 시 사용.
+            |                 
+            li static enum DrbgParameters.Capability Since 9
+            |                 NONE(예측 저항 x, reseed x), PR_AND_RESEED(예측 저항 o, reseed o), RESEED_ONLY(예측 저항 x, reseed o)
+            |                 
+            li
+              | static final class DrbgParameters.Reseed implements SecureRandomParameters Since 9
+            |                 DRBG 인스턴스 reseed에 이용
+            |                 
+            li
+              | static final class DrbgParameters.NextBytes implements SecureRandomParameters Since 9
+            |                 DRBG 인스턴스의 랜덤 비트열 생성에 이용
+        |         
+        details
+          summary Method Detail
+          |             
+          ol
+            li
+              | static DrbgParameters.Instantiation instantiation(int strength, DrbgParameters.Capability capability, byte[] personalizationString)
+            |                 
+            li
+              | static DrbgParameters.NextBytes nextBytes(int strength, boolean predictionResistance, byte[] additionalInput)
+            |                 
+            li
+              | static DrbgParameters.Reseed reseed(boolean predictionResistance, byte[] additionalInput)
+    hr

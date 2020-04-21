@@ -1,0 +1,15 @@
+html
+  body
+    button.btn.btn-primary.btn-sm(onclick="javascript:$('p.class488_1').stop(true)") 이벤트 중지
+    p.class488_1 나를 클릭해봐!
+    p.class488_1 나를 클릭해봐!
+    p.class488_1 나를 클릭해봐!
+    p.class488_1 나를 클릭해봐!
+    script.
+      $(() => {
+      $('p.class488_1').click((event) => {
+      $(event.currentTarget).toggle('slow', ((node) => {
+      return () => $(node).click();
+      })(event.currentTarget));
+      });
+      });

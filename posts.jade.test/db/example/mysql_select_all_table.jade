@@ -1,0 +1,15 @@
+html
+  body
+    | # 전체 유저 테이블 검색(테이블 이름, select 절, 테이블 조건, 전체 조건)
+    | DELIMITER $$
+    | DROP PROCEDURE IF EXISTS select_all_user_tables$$
+    | CREATE PROCEDURE select_all_user_tables(IN _table_name TEXT, IN _select TEXT, IN _after TEXT, IN _all_after TEXT)
+    | BEGIN
+    | IF LENGTH(_select) < 1 THEN
+    | SET @_select = '*';
+    | ELSE
+    | SET @_select = _select;
+    | END IF;
+    | SET @_db_suffix = 1;
+    | SET @_query = '';
+    | WHILE @_db_suffix

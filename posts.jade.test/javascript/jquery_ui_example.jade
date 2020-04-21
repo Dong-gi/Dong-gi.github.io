@@ -1,0 +1,14 @@
+html
+  body
+    | 1초만 기다려주세요... 
+    span#jquery-ui-example-span.d-none
+      | Date: 
+      input#jquery-ui-example-datepicker(type='text')
+      p
+      link(rel='stylesheet', href='//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css')
+      script(src='https://code.jquery.com/ui/1.12.1/jquery-ui.js')
+      script.
+        setTimeout(() => {
+        $('#jquery-ui-example-datepicker').datepicker();
+        $('#jquery-ui-example-span').removeClass('d-none');
+        }, 1000);

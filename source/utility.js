@@ -82,14 +82,36 @@ Donggi.openLink = function (url, target) {
     document.body.append(a);
     a.click();
 }
+/* innerHTML을 이용하므로, text는 항상 닫는 태그가 존재해야 한다.(심지어 hr 등도) */
 Donggi.getNodesFromText = function (text, outerTag) {
     let outer = document.createElement((!!outerTag)? outerTag : 'div');
     outer.innerHTML = text;
+    /* innerHTML로 삽입된 스크립트는 실행되지 않는다. */
+    for (let script of outer.querySelectorAll('script')) {
+        let nScript = document.createElement('script');
+        if (script.src.length > 0)
+            nScript.src = script.src;
+        if (script.text.length > 0)
+            nScript.text = script.text;
+        script.after(nScript);
+        script.remove();
+    }
     return (!!outerTag)? outer : div.childNodes;
 }
+/* innerHTML을 이용하므로, text는 항상 닫는 태그가 존재해야 한다.(심지어 hr 등도) */
 Donggi.getElementFromText = function (text, outerTag) {
     let outer = document.createElement((!!outerTag)? outerTag : 'div');
     outer.innerHTML = text;
+    /* innerHTML로 삽입된 스크립트는 실행되지 않는다. */
+    for (let script of outer.querySelectorAll('script')) {
+        let nScript = document.createElement('script');
+        if (script.src.length > 0)
+            nScript.src = script.src;
+        if (script.text.length > 0)
+            nScript.text = script.text;
+        script.after(nScript);
+        script.remove();
+    }
     return outer.firstChild;
 }
 Donggi.toggleClass = function (element, classEnumarable) {
@@ -263,4 +285,27 @@ Donggi.addHoverContent = function (target, content, targetDecorator) {
     target.addEventListener('mouseenter', enter);
     target.addEventListener('mouseleave', Donggi.debounce(leave, 300));
     content.addEventListener('mouseleave', Donggi.debounce(leave, 300));
+}
+Donggi.makeLSlikeText = function (rootName, obj, listAttrName) {
+    let paths = [rootName];
+    let text = '';
+    while (paths.length > 0) {
+        let path = paths.pop();
+        let directory = obj;
+        for (let dirPart of path.split("/"))
+            if (directory.hasOwnProperty(dirPart))
+                directory = directory[dirPart];
+
+        text += `${path}:\n`;
+        for (let prop in directory) {
+            if (prop != listAttrName) {
+                paths.push(`${path}/${prop}`);
+                text += `${prop}\n`;
+            } else {
+                for (let file of directory[prop])
+                    text += `${file}\n`;
+            }
+        }
+    }
+    return text;
 }

@@ -1,0 +1,41 @@
+html
+  body
+    script(src='/source/redirect.js?200226_1657')
+    ul
+      li 유효숫자 개념을 고려한다. 기본 유효숫자는 28자리며, 변경 가능하다. decimal.getcontext().prec = 999999
+      |     
+      li
+        | 반올림 모드 : decimal.ROUND_DOWN, ROUND_05UP, ROUND_UP, ROUND_HALF_DOWN, ROUND_HALF_EVEN, ROUND_HALF_UP, ROUND_FLOOR, ROUND_CEILING
+      |     
+      li 생성자에서는 유효숫자의 제한이 없으며, 따라서 반올림도 수행되지 않는다.
+      |     
+      li (-7) % 4 == 1, Decimal(-7) % Decimal(4) == Decimal(-3)
+      |     
+      li -7 // 4 == -2, Decimal(-7) // Decimal(4) == Decimal(-1)
+    hr
+    details
+      summary class decimal.Decimal
+      |     
+      ul
+        li Decimal 인스턴스는 불변 객체다. 각 연산마다 새 Decimal 인스턴스가 생성된다.
+        |         
+        li class decimal.Decimal(value="0", context=None)
+        |         문자열, 튜플(sign_number, tuple_of_digits, int_exponent)로도 생성 가능
+        |         
+        |         
+        li 인스턴스 메서드
+        |         
+        ul
+          li adjusted() : 최고 자리수(10^n)의 자리값(n)을 반환
+          |             
+          li as_integer_ratio() Since 3.6 : 기약분수의 (분자, 분모) 반환
+          |             
+          li as_tuple() : (sign, digits, exponent)
+          |             
+          li copy_abs(), copy_negate(), copy_sign(other, context=None)
+          |             
+          li quantize(exp, rounding=None, context=None)
+          |             Decimal('7.325').quantize(Decimal('.01'), rounding=ROUND_DOWN) == Decimal('7.32')
+          |             
+          li 이하 생략
+    hr

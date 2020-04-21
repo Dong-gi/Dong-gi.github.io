@@ -1,5 +1,17 @@
+const posts = { list: [], hash: {}, codes: {} }
+
 window.addEventListener('load', () => {
+    /* 하이라이팅 지원 목록 */
     console.log(hljs.listLanguages());
+
+    /* index.jade에서 포함한 포스트 목록 초기화 */
+    for (let template of document.querySelectorAll('template.post'))
+        posts.list.push({
+            file: template.getAttribute('file'),
+            category: template.getAttribute('category'),
+            title: template.getAttribute('title'),
+            html: template.innerHTML
+        });
 
     prepareSidebar();
     preparePosts();
@@ -7,7 +19,7 @@ window.addEventListener('load', () => {
     new MutationObserver(mutationCallback).observe(document.body, { attributes: false, childList: true, subtree: true });
     
     let postQuery = location.search.match(/[?&]post=([^&]+)/);
-    setTimeout(((postQuery) => function() { scrollToPost((!!postQuery)? postQuery[1] : localStorage.lastReadPost); })(postQuery), 369);
+    setTimeout(((postQuery) => function() { scrollToPost((!!postQuery)? postQuery[1] : localStorage.lastReadPost? localStorage.lastReadPost : posts.list[0].file.hashCode()); })(postQuery), 369);
     window.onpopstate = function(e) {
         let postQuery = e.state.html.match(/[?&]post=([^&]+)/);
         if (!!postQuery) {
@@ -23,7 +35,7 @@ function prepareSidebar() {
     else
         closeSidebar();
     document.getElementById('sidebar').style.width = '333px';
-    new FileList('../file_list.js', '#file-list', customFileAction);
+    new FileList('/source/filelist.js', '#file-list', customFileAction);
 }
 
 function openSidebar() {
@@ -46,7 +58,6 @@ function toggleSidebar() {
 function preparePosts() {
     posts.list.sort((post1, post2) => Donggi.compareString(post1.title, post2.title));
     posts.list.sort((post1, post2) => Donggi.compareString(post1.category, post2.category));
-    posts.list.sort((post1, post2) => post1.top ? -1 : post2.top ? 1 : 0);
 
     let categoryMap = {};
     for (let post of posts.list) {
@@ -64,89 +75,100 @@ function preparePosts() {
         category.posts.push(post.title);
 
         /* 컨텐츠 골격 생성 */
-        let content = Donggi.getElementFromText(getPostHTML(post));
-        document.getElementById('contents').append(content);
-        content.querySelector('summary').addEventListener('click', loadPost(post.file));
+        let title = post.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        let path = `https://dong-gi.github.io${post.file}`;
+        let html = Donggi.getElementFromText(`<div class="w3-panel w3-card w3-light-grey w3-padding-8 w3-section"><details id="post-${post.file.hashCode()}" class="post-details"><summary title="${location}"><span class="w3-small">${post.category}</span><span class="w3-large"> ${title}</span></summary></details></div>`);
+        html.querySelector('details').append(Donggi.getNodesFromText(post.html, 'p'));
+        document.getElementById('contents').append(html);
+        html.querySelector('summary').addEventListener('click', updateLastPost(post));
     }
 
-    let categories = ['카테고리'];
-    let categoryText = '';
-    while (categories.length > 0) {
-        let current = categories.pop();
-        let entry = categoryMap;
-        for (let cate of current.split("/"))
-            if (entry.hasOwnProperty(cate))
-                entry = entry[cate];
-
-        categoryText += `${current}:\n`;
-        for (let cate in entry) {
-            if (cate != 'posts') {
-                categories.push(`${current}/${cate}`);
-                categoryText += `${cate}\n`;
-            } else {
-                for (let title of entry.posts)
-                    categoryText += `${title}\n`;
-            }
-        }
-    }
-    let url = URL.createObjectURL(new Blob([categoryText], {
+    let url = URL.createObjectURL(new Blob([Donggi.makeLSlikeText('카테고리', categoryMap, 'posts')], {
         type: 'text/plain;charset=utf-8;'
     }));
     new FileList(url, '#post-list', (_, title) => {
         if (window.innerWidth <= 600)
             closeSidebar();
-        scrollToPost(posts.list.filter(x => x.title == title)[0].file.hashCode());
+        setTimeout(() => scrollToPost(posts.list.filter(x => x.title == title)[0].file.hashCode()), 123);
     });
 }
 
-function loadPost(file) {
+function updateLastPost(post) {
     return () => {
-        let details = document.getElementById(`post-${file.hashCode()}`);
+        let details = document.getElementById(`post-${post.file.hashCode()}`);
         if (details.open)
             return;
-        localStorage.lastReadPost = file.hashCode();
+        localStorage.lastReadPost = post.file.hashCode();
         let path = location.pathname;
         let postQuery = location.search.match(/[?&]post=([^&]+)/);
         if (!!postQuery)
-            path += location.search.replace(postQuery[1], file.hashCode());
+            path += location.search.replace(postQuery[1], post.file.hashCode());
         else
-            path += `${location.search.length>0? location.search + '&' : '?'}post=${file.hashCode()}`;
-        document.title = posts.hash[file.hashCode()].title;
+            path += `${location.search.length>0? location.search + '&' : '?'}post=${post.file.hashCode()}`;
+        document.title = posts.hash[post.file.hashCode()].title;
         window.history.pushState({"html":path,"pageTitle":document.title}, document.title, `${location.origin}${path}`);
 
-        if (details.childElementCount > 1) {
-            if (!details.querySelector('div#disqus_thread'))
-                insertDisqusThread(details, file);
-            if (location.host == "dong-gi.github.io")
-                return;
-            /* 테스트 사이트에서는 항상 리로드 */
-            for (let node of details.children) {
-                if (/^summary$/i.test(node.tagName))
-                    continue;
-                node.remove();
+        if (!details.querySelector('div#disqus_thread'))
+            insertDisqusThread(details, post.file);
+        
+        if (!post.markers) {
+            post.markers = {};
+            for (let marker of details.querySelectorAll('a.marker')) {
+                let route = getMarkerInfos(marker);
+                let hash = route.join('/').hashCode();
+                marker.id = `marker-${hash}`;
+                
+                let mapping = post.markers;
+                let name = route.pop();
+                for (let item of route) {
+                    if (!mapping.hasOwnProperty(item)) {
+                        mapping[item] = {};
+                        mapping[item].markers = [];
+                    }
+                    mapping = mapping[item];
+                }
+                mapping.markers.push(name);
             }
         }
-        let xhr = new XMLHttpRequest();
-        xhr.addEventListener("load", ((details, file) => function(e) {
-            if (this.status != 200) {
-                details.append(document.createTextNode('Ajax Failed'));
-                return;
+        
+        let url = URL.createObjectURL(new Blob([Donggi.makeLSlikeText('컨텐츠', post.markers, 'markers')], {
+            type: 'text/plain;charset=utf-8;'
+        }));
+        new FileList(url, '#marker-list', (prefix, title) => {
+            if (window.innerWidth <= 600)
+                closeSidebar();
+            let hash = `${prefix.substr(4)}/${title}`.hashCode();
+            let target = document.getElementById(`marker-${hash}`);
+            let parent = target.parentElement;
+            while (parent.tagName != 'BODY') {
+                if (parent.tagName == 'DETAILS' && !parent.open)
+                    parent.querySelector('summary').click();
+                parent = parent.parentElement;
             }
-            details.append(Donggi.getNodesFromText(this.responseText, 'p'));
-            /* 야매로 만들어서 그런지 script 실행이 안 됨... 때문에 따로 복제 생성 */
-            for (let script of details.querySelectorAll('script')) {
-                let nScript = document.createElement('script');
-                if (script.src.length > 0)
-                    nScript.src = script.src;
-                if (script.text.length > 0)
-                    nScript.text = script.text;
-                details.append(nScript);
-            }
-            insertDisqusThread(details, file);
-        })(details, file));
-        xhr.open("GET", `${file.replace(/ /gm, '%20')}?${new Date().getTime()}`, true);
-        xhr.send();
+            target.scrollIntoView(true);
+            target.parentElement.style.animation = '';
+            setTimeout(((target) => function () {
+                target.parentElement.style.animation = 'highlight 3s 1';
+            })(target), 123);
+        }, true);
     };
+    function getMarkerInfos(marker) {
+        let route = [];
+        let parent = marker.parentElement;
+        while (!parent.classList.contains('post-details')) {
+            switch (parent.tagName) {
+                case 'SUMMARY': case 'LI': case 'A': case 'SPAN': case 'TD': case 'TH':
+                case 'H1': case 'H2': case 'H3': case 'H4': case 'H5': case 'H6':
+                    route.push(parent.textContent.substr(0, 30).replace(/\//gm, '\\'));
+                default:
+                    break;
+            }
+            parent = parent.parentElement;
+        }
+        route.push(parent.querySelector('summary').textContent.substr(0, 30).replace(/\//gm, '\\'));
+        route.reverse();
+        return route;
+    }
 }
 
 function insertDisqusThread(details, file) {
@@ -220,7 +242,6 @@ function mutationCallback(mutations, observer) {
             let id = `${new Date().getTime()}-${Math.random().toString().replace(/\./g, '')}`;
             button.id = `code-button-${id}`;
             button.title = button.getAttribute('path');
-            button.classList.add('w3-btn', 'w3-round', 'w3-round-xxlarge', 'w3-small', 'w3-teal');
             button.classList.remove('btn-code');
             button.onclick = insertCode(id);
         }
@@ -274,14 +295,6 @@ function insertCode(id) {
                     div.append(ol);
                 } else {
                     div.append(Donggi.getNodesFromText(this.responseText, 'p'));
-                    for (let script of div.querySelectorAll('script')) {
-                        let nScript = document.createElement('script');
-                        if (script.src.length > 0)
-                            nScript.src = script.src;
-                        if (script.text.length > 0)
-                            nScript.text = script.text;
-                        div.append(nScript);
-                    }
                 }
 
                 if (lan != 'nohighlight') {
@@ -355,14 +368,6 @@ function customFileAction(dir, file) {
         FileList.defaultFileAction(dir, file);
 }
 
-function getPostHTML(post) {
-    let title = post.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    let location = `https://dong-gi.github.io${post.file}`;
-    return `<div class="w3-panel w3-card w3-light-grey w3-padding-8 w3-section">
-                <details id="post-${post.file.hashCode()}" class="post-details"><summary title="${location}"><span class="w3-small">${post.category}</span><span class="w3-large"> ${title}</span></summary></details>
-            </div>`;
-}
-
 function getCodeModalHTML(id, filename) {
     return `<div id="modal-${id}" class="w3-modal code-modal">
     <div class="w3-modal-content">
@@ -383,13 +388,15 @@ function getCodeModalHTML(id, filename) {
 
 class FileList {
     /**
-     * 문서의 '#file-list' 항목을 찾아 파일 목록들로 채운다.
+     * document.querySelector(targetQuery) 항목을 찾아 파일 목록들로 채운다.
      * @param {String} lsResultPath "ls -R"의 결과를 가진 파일의 경로
      * @param {Function} fileAction Optional. 파일 클릭 시, 디렉터리 경로와 파일명을 먹는 임의 함수. 기본값 : 새 탭에서 열기
      */
-    constructor(lsResultPath, targetQuery, fileAction) {
-        this.fileAction = (!!fileAction)? fileAction : FileList.defaultFileAction;
+    constructor(lsResultPath, targetQuery, fileAction, openAll) {
         this.target = document.querySelector(targetQuery);
+        this.fileAction = (!!fileAction)? fileAction : FileList.defaultFileAction;
+        this.openAll = !!openAll;
+        this.target.innerHTML = '';
         this.fileMap = new Map();
         this.rootDir = null;
         
@@ -442,9 +449,11 @@ class FileList {
                     path = `${path}/${this.fileMap.get(path)[0]}`;
                 if (this.fileMap.get(path).length < 1)
                     continue;
-                ul.append(FileList.getDirHTML(path, dir, false));
+                ul.append(FileList.getDirHTML(path, dir, this.openAll));
                 let dirAction = ((fileList, dir) => function (e) { fileList.updateFileList(dir); })(this, path);
                 document.getElementById(`dir-${path.hashCode()}`).firstChild.onclick = dirAction;
+                if (this.openAll)
+                    this.updateFileList(path);
             } else {
                 ul.append(FileList.getFileHTML(dir, name));
                 let fileAction = ((fileList, dir, name) => function (e) { fileList.fileAction(dir, name); })(this, dir, name);

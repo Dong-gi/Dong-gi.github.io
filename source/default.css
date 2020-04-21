@@ -88,6 +88,12 @@ mjx-container {
     font-size:17px!important
 }
 
+/* 요소 하이라이팅 */
+@keyframes highlight {
+  from {background: #ff0;}
+  to {left: #fff;}
+}
+
 /* Snackbar : from https://www.w3schools.com/howto/howto_js_snackbar.asp */
 #snackbar {
     visibility: hidden;
