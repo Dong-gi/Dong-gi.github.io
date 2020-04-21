@@ -1,32 +1,32 @@
 html
-  body
-    audio#audio481(controls='')
-    button.btn.btn-primary.btn-sm(onclick="play('audio481')") 재생
-    button.btn.btn-primary.btn-sm(onclick="pause('audio481')") 일시정지
-    | 재생 위치 : 
-    input#input481-currentTime(type='text')
-    | 볼륨 : 
-    input#input481-currentVolume(type='text')
-    script.
-      let audio = document.getElementById('audio481');
-      audio.src = 'https://freesound.org/data/previews/18/18765_18799-lq.mp3';
-      audio.onplay = () => {
-      audio.ontimeupdate();
-      audio.onvolumechange();
-      };
-      audio.ontimeupdate = () => {
-      document.getElementById('input481-currentTime').value = audio.currentTime;
-      };
-      audio.onvolumechange = () => {
-      document.getElementById('input481-currentVolume').value = audio.volume;
-      };
-      function play(id) {
-      document.getElementById(id).play();
-      }
-      function pause(id) {
-      document.getElementById(id).pause();
-      }
-    p
-      | 출처 : https://freesound.org/people/reinsamba/sounds/18765/
-      br
-      |     라이선스 : https://creativecommons.org/licenses/by/3.0/deed.ko
+    body
+        audio#audio481(controls='')
+        button.btn.btn-primary.btn-sm(onclick="play('audio481')") 재생
+        button.btn.btn-primary.btn-sm(onclick="pause('audio481')") 일시정지
+        | 재생 위치 : 
+        input#input481-currentTime(type='text')
+        | 볼륨 : 
+        input#input481-currentVolume(type='text')
+        script.
+            let audio = document.getElementById('audio481');
+            audio.src = 'https://freesound.org/data/previews/18/18765_18799-lq.mp3';
+            audio.onplay = () => {
+            audio.ontimeupdate();
+            audio.onvolumechange();
+            };
+            audio.ontimeupdate = () => {
+            document.getElementById('input481-currentTime').value = audio.currentTime;
+            };
+            audio.onvolumechange = () => {
+            document.getElementById('input481-currentVolume').value = audio.volume;
+            };
+            function play(id) {
+            document.getElementById(id).play();
+            }
+            function pause(id) {
+            document.getElementById(id).pause();
+            }
+        p
+            | 출처 : https://freesound.org/people/reinsamba/sounds/18765/
+            br
+            |     라이선스 : https://creativecommons.org/licenses/by/3.0/deed.ko

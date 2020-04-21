@@ -1,37 +1,37 @@
 html
-  body
-    script(src='/source/redirect.js?200226_1657')
-    ul
-      li 부모 노드 < 자식 노드인 힙을 이용한 큐
-      |     
-      li 인덱스 접근 heap[i] 가능
-      |     
-      strong heapq 모듈은 명시적인 클래스를 제공하지 않음에 유의
-      |  리스트 자체를 힙처럼 이용한다.
-      |     
-      li 우선순위 큐 구현 시 유의사항
-      |     
-      ol
-        li 우선순위가 동일할 때, 힙에 들어온 순서가 영향을 끼치는 지 여부
-        |         예. 노드 속성에 삽입 순서를 추가
-        |         
-        li 이미 삽입된 노드의 우선순위가 도중에 변경된 경우 위치를 어떻게 옮길 것인지
-        |         예. 기존 노드는 비활성화 처리하고, 새로 힙에 추가
-    ol
-      li heapq.heapify(x) : 리스트 x를 힙으로 제자리(in-place) 변환
-      |     
-      li heapq.heappush(heap, item)
-      |     
-      li heapq.heappop(heap) : heap[0] 노드를 제거하고 반환한다
-      |     
-      li heapq.heappushpop(heap, item) : push 후 pop
-      |     
-      li heapq.heapreplace(heap, item) : pop 후 push
-      |     
-      li heapq.merge(*iterables, key=None, reverse=False)
-      |     미리 오름차순 정렬된 여러 Iterable에 대해, 크기순으로 하나씩 순회하는 새 Iterable을 반환한다. reverse=True인 경우, 입력 Iterable들은 내림차순 정렬돼있어야 한다.
-      |     
-      li heapq.nsmallest(n, iterable, key=None) == sorted(iterable, key=key)[:n]
-      |     
-      li
-        | heapq.nlargest(n, iterable, key=None) == sorted(iterable, key=key, reverseTrue)[:n]
+    body
+        script(src='/source/redirect.js?200226_1657')
+        ul
+            li 부모 노드 < 자식 노드인 힙을 이용한 큐
+            |     
+            li 인덱스 접근 heap[i] 가능
+            |     
+            strong heapq 모듈은 명시적인 클래스를 제공하지 않음에 유의
+            |  리스트 자체를 힙처럼 이용한다.
+            |     
+            li 우선순위 큐 구현 시 유의사항
+            |     
+            ol
+                li 우선순위가 동일할 때, 힙에 들어온 순서가 영향을 끼치는 지 여부
+                |         예. 노드 속성에 삽입 순서를 추가
+                |         
+                li 이미 삽입된 노드의 우선순위가 도중에 변경된 경우 위치를 어떻게 옮길 것인지
+                |         예. 기존 노드는 비활성화 처리하고, 새로 힙에 추가
+        ol
+            li heapq.heapify(x) : 리스트 x를 힙으로 제자리(in-place) 변환
+            |     
+            li heapq.heappush(heap, item)
+            |     
+            li heapq.heappop(heap) : heap[0] 노드를 제거하고 반환한다
+            |     
+            li heapq.heappushpop(heap, item) : push 후 pop
+            |     
+            li heapq.heapreplace(heap, item) : pop 후 push
+            |     
+            li heapq.merge(*iterables, key=None, reverse=False)
+            |     미리 오름차순 정렬된 여러 Iterable에 대해, 크기순으로 하나씩 순회하는 새 Iterable을 반환한다. reverse=True인 경우, 입력 Iterable들은 내림차순 정렬돼있어야 한다.
+            |     
+            li heapq.nsmallest(n, iterable, key=None) == sorted(iterable, key=key)[:n]
+            |     
+            li
+                | heapq.nlargest(n, iterable, key=None) == sorted(iterable, key=key, reverseTrue)[:n]

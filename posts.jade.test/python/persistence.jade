@@ -1,116 +1,116 @@
 html
-  body
-    script(src='/source/redirect.js?200226_1657')
-    hr
-    details
-      summary pickle : 파이썬 객체 직렬화
-      |     
-      ul
-        li 오염된 데이터를 unpickle하는 것만으로 실행에 치명적일 수 있음에 주의
-        |         
-        |         
-        li 지원 타입
-        |         None, True, False, int, float, complex, str, bytes, bytearray, tuple, list, set, dict, 모듈 레벨 function(def, lambda), 모듈 레벨 class, __dict__ 또는 __getstate__()가 직렬화 가능한 객체
-        |         
-        |         
-        li marshal 모듈과의 차이점
-        |         
-        ul
-          li pickle은 사용자 정의 모델도 직렬화 가능
-          |             
-          li pickle은 버전이 같으면 동일한 직렬화 로직 사용
-        |         
-        |         
-        li Protocol
-        |         
-        ol
-          li Version 0 : 사람이 읽을만한 형태로 직렬화
-          |             
-          li Version 1 : 이진 포맷으로 직렬화
-          |             
-          li Version 2 : Version 1보다 향상. Since 2.3
-          |             
-          li Version 3 : Version 2로 역직렬화 불가. Since 3.0
-          |             
-          li Version 4 : Version 3보다 향상. Since 3.4
-          |             
-          li Version 5 : Version 4보다 향상. Since 3.8
-        |         
-        |         
-        li 모듈 상수
-        |         
-        ul
-          li HIGHEST_PROTOCOL
-          |             
-          li DEFAULT_PROTOCOL
-        |         
-        |         
-        li class Pickler(file, protocol=None, *, fix_imports=True, buffer_callback=None)
-        |         
-        ul
-          li file : bytes를 인자로 받는 write() 메서드를 가진 객체
-          |             
-          li fix_imports가 True고 protocol이 3 미만이면 Python 2 모듈명을 찾아 직렬화
-        |         
-        |         
-        li
-          | class Unpickler(file, *, fix_imports=True, encoding="ASCII", errors="strict", buffers=None)
-        |         file : read(), readinto(), readline() 메서드를 가진 객체
-        |         
-        |         
-        li 모듈 함수
-        |         
-        ul
-          li dump(obj, file, protocol=None, *, fix_imports=True, buffer_callback=None)
-          |             == Pickler(file, protocol).dump(obj)
-          |             
-          li dumps(obj, protocol=None, *, fix_imports=True, buffer_callback=None)
-          |             bytes로 직렬화
-          |             
-          li load(file, *, fix_imports=True, encoding="ASCII", errors="strict", buffers=None)
-          |             == Unpickler(file).load()
-          |             
-          li
-            | loads(bytes_object, *, fix_imports=True, encoding="ASCII", errors="strict", buffers=None)
-          |             bytes로부터 역직렬화
-    hr
-    details
-      summary shelve : pickle을 이용해 dict과 유사한 형식으로 직렬화
-      |     
-      ul
-        li open(filename, flag='c', protocol=None, writeback=False)
-        |         
-        ul
-          li
-            | flag : 'r'(기존 파일 읽기 전용), 'w'(기존 파일 읽기/쓰기), 'c'(읽기/쓰기, 기존 파일 없으면 생성), 'n'(읽기/쓰기, 항상 새 파일 생성)
-        |         
-        li close()를 명시적으로 호출하거나, with을 이용해 자동으로 호출되도록 해야 한다.
-        |         with shelve.open('spam') as db:
-        br
-        |             db['eggs'] = 'eggs'
-    hr
-    details
-      summary sqlite3
-      |     
-      pre.
-        \nconn = sqlite3.connect('example.db') # 파일 시스템
-        conn = sqlite3.connect(':memory:') # in-memory
-        
-        c = conn.cursor()
-        c.execute('any sql query')
-        
-        # dynamic query
-        t = ('RHAT',)
-        for row in c.execute('SELECT * FROM stocks WHERE symbol=?', t):
-            print(row)
-        
-        # multiple query
-        purchases = [('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                     ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                     ('2006-04-06', 'SELL', 'IBM', 500, 53.00),
-                    ]
-        c.executemany('INSERT INTO stocks VALUES (?,?,?,?,?)', purchases)
-        
-        conn.commit()
-        conn.close()        
-    hr
+    body
+        script(src='/source/redirect.js?200226_1657')
+        hr
+        details
+            summary pickle : 파이썬 객체 직렬화
+            |     
+            ul
+                li 오염된 데이터를 unpickle하는 것만으로 실행에 치명적일 수 있음에 주의
+                |         
+                |         
+                li 지원 타입
+                |         None, True, False, int, float, complex, str, bytes, bytearray, tuple, list, set, dict, 모듈 레벨 function(def, lambda), 모듈 레벨 class, __dict__ 또는 __getstate__()가 직렬화 가능한 객체
+                |         
+                |         
+                li marshal 모듈과의 차이점
+                |         
+                ul
+                    li pickle은 사용자 정의 모델도 직렬화 가능
+                    |             
+                    li pickle은 버전이 같으면 동일한 직렬화 로직 사용
+                |         
+                |         
+                li Protocol
+                |         
+                ol
+                    li Version 0 : 사람이 읽을만한 형태로 직렬화
+                    |             
+                    li Version 1 : 이진 포맷으로 직렬화
+                    |             
+                    li Version 2 : Version 1보다 향상. Since 2.3
+                    |             
+                    li Version 3 : Version 2로 역직렬화 불가. Since 3.0
+                    |             
+                    li Version 4 : Version 3보다 향상. Since 3.4
+                    |             
+                    li Version 5 : Version 4보다 향상. Since 3.8
+                |         
+                |         
+                li 모듈 상수
+                |         
+                ul
+                    li HIGHEST_PROTOCOL
+                    |             
+                    li DEFAULT_PROTOCOL
+                |         
+                |         
+                li class Pickler(file, protocol=None, *, fix_imports=True, buffer_callback=None)
+                |         
+                ul
+                    li file : bytes를 인자로 받는 write() 메서드를 가진 객체
+                    |             
+                    li fix_imports가 True고 protocol이 3 미만이면 Python 2 모듈명을 찾아 직렬화
+                |         
+                |         
+                li
+                    | class Unpickler(file, *, fix_imports=True, encoding="ASCII", errors="strict", buffers=None)
+                |         file : read(), readinto(), readline() 메서드를 가진 객체
+                |         
+                |         
+                li 모듈 함수
+                |         
+                ul
+                    li dump(obj, file, protocol=None, *, fix_imports=True, buffer_callback=None)
+                    |             == Pickler(file, protocol).dump(obj)
+                    |             
+                    li dumps(obj, protocol=None, *, fix_imports=True, buffer_callback=None)
+                    |             bytes로 직렬화
+                    |             
+                    li load(file, *, fix_imports=True, encoding="ASCII", errors="strict", buffers=None)
+                    |             == Unpickler(file).load()
+                    |             
+                    li
+                        | loads(bytes_object, *, fix_imports=True, encoding="ASCII", errors="strict", buffers=None)
+                    |             bytes로부터 역직렬화
+        hr
+        details
+            summary shelve : pickle을 이용해 dict과 유사한 형식으로 직렬화
+            |     
+            ul
+                li open(filename, flag='c', protocol=None, writeback=False)
+                |         
+                ul
+                    li
+                        | flag : 'r'(기존 파일 읽기 전용), 'w'(기존 파일 읽기/쓰기), 'c'(읽기/쓰기, 기존 파일 없으면 생성), 'n'(읽기/쓰기, 항상 새 파일 생성)
+                |         
+                li close()를 명시적으로 호출하거나, with을 이용해 자동으로 호출되도록 해야 한다.
+                |         with shelve.open('spam') as db:
+                br
+                |             db['eggs'] = 'eggs'
+        hr
+        details
+            summary sqlite3
+            |     
+            pre.
+                \nconn = sqlite3.connect('example.db') # 파일 시스템
+                conn = sqlite3.connect(':memory:') # in-memory
+                
+                c = conn.cursor()
+                c.execute('any sql query')
+                
+                # dynamic query
+                t = ('RHAT',)
+                for row in c.execute('SELECT * FROM stocks WHERE symbol=?', t):
+                        print(row)
+                
+                # multiple query
+                purchases = [('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+                                          ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+                                          ('2006-04-06', 'SELL', 'IBM', 500, 53.00),
+                                        ]
+                c.executemany('INSERT INTO stocks VALUES (?,?,?,?,?)', purchases)
+                
+                conn.commit()
+                conn.close()        
+        hr

@@ -1,23 +1,23 @@
 html
-  body
-    form#form482-2(action='/')
-      input(type='text', name='message', value='message 2')
-      |     
-      input(type='submit', value='전송')
-    script.
-      document.getElementById('form482-2').onsubmit = (e) => {
-      console.log('내용 : ' + document.getElementById('form482-2').message.value);
-      return false; // 이벤트 기본 동작 취소 e.preventDefault() + 이벤트 전파 방지 e.stopPropagation()
-      };
-    form(onsubmit='console.log(this.message.value); return false;')
-      input(type='text', name='message', value='message 4')
-      |     
-      input(type='submit', value='전송')
-    form#form482-4
-      input(type='text', name='message', value='message 5')
-      |     
-      input(onclick='func482_2()', value='전송')
-    script.
-      function func482_2() {
-      console.log('내용 : ' + document.getElementById('form482-4').message.value);
-      };
+    body
+        form#form482-2(action='/')
+            input(type='text', name='message', value='message 2')
+            |     
+            input(type='submit', value='전송')
+        script.
+            document.getElementById('form482-2').onsubmit = (e) => {
+            console.log('내용 : ' + document.getElementById('form482-2').message.value);
+            return false; // 이벤트 기본 동작 취소 e.preventDefault() + 이벤트 전파 방지 e.stopPropagation()
+            };
+        form(onsubmit='console.log(this.message.value); return false;')
+            input(type='text', name='message', value='message 4')
+            |     
+            input(type='submit', value='전송')
+        form#form482-4
+            input(type='text', name='message', value='message 5')
+            |     
+            input(onclick='func482_2()', value='전송')
+        script.
+            function func482_2() {
+            console.log('내용 : ' + document.getElementById('form482-4').message.value);
+            };

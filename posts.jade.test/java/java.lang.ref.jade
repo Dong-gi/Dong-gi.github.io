@@ -1,99 +1,99 @@
 html
-  body
-    script(src='/source/redirect.js?200226_1657')
-    hr
-    details(open='')
-      summary Package Summary
-      |     
-      ol
-        li 참조 객체에 관한 클래스를 제공한다
-        |         
-        li 3단계의 참조 레벨을 제공한다 : Soft > Weak > Phantom
-        |         
-        li 객체 참조 레벨
-        |         
-        ul
-          li Strongly reachable
-          |             참조 객체의 조회없이 객체에 직접 접근 가능한 스레드가 존재. 객체를 생성한 스레드가 이 레벨에 해당
-          |             
-          li Softly reachable
-          |             Not strongly reachable + Soft 참조 객체의 조회로 객체에 접근 가능
-          |             
-          li Weakly reachable
-          |             Not strongly reachable + Not softly reachable + Weak 참조 객체의 조회로 객체에 접근 가능.
-          |             약한 참조가 해제되면 대상 객체는 소멸(finilization) 대상이 된다.
-          |             
-          li Phantom reachable
-          |             Not strongly reachable + Not softly reachable + Not weakly reachable + 객체는 소멸됐지만 Phantom 참조 객체가 참조하는 중
-          |             
-          li Unreachable
-          |             참조 불가능하며, 따라서 메모리 해제 대상이 된다.
-    hr
-    details
-      summary final class Cleaner Since 9
-      |     
-      ol
-        li 객체 참조와 관련 정리 작업을 관리한다.
-        |         객체가 phantom reachable 상태로 변했음을 통지받으면 정리 작업이 실행된다. 참조 레벨의 변경을 통지받기 위해 PhantomReference와 ReferenceQueue를 이용한다.
-        |         
-        li 객체 참조와 정리 작업을 등록하면 Cleanable 인스턴스가 반환된다
-        |         가장 효과적인 사용법은 객체의 close() 메서드나, 객체가 필요없는 시점에 명시적으로 clean()을 호출하는 것.
-        |         
-        li 등록하는 객체를 객체 정리 작업이 참조하면 안 된다
-        |         참조하는 경우, 객체는 Phantom reachable 레벨에 도달할 수 없고, 자동적으로 정리 작업은 호출될 일이 없어진다.
-        |         
-        li
-          | 정리 작업은 Runnable이며, 실행 중 발생하는 모든 예외는 무시된다. 발생한 예외는 Cleaner와 다른 정리 작업에 영향을 미치지 않는다.
-        |         Cleaner 인스턴스와 관계된 스레드가 정리 작업을 실행하며, 모든 정리 작업이 실행된 후엔 Cleaner 인스턴스가 GC에 의해 정리된다
-        |         
-        li System.exit 도중의 정리 작업의 실행은 정의되지 않는다
-      |     
-      details
-        summary static interface Cleaner.Cleanable Since 9
-        |         void clean() : cleanable을 등록 취소하고 정리 작업을 실행한다. 반복 호출되도 정리 작업은 최대 1번만 실행된다.
-      |     
-      details
-        summary Method Detail
-        |         
-        ol
-          li static Cleaner create() + 1 오버로딩
-          |             
-          li Cleaner.Cleanable register(Object obj, Runnable action)
-    hr
-    details
-      summary class ReferenceQueue<T> Since 1.2
-      |     
-      ol
-        li 참조 큐. 참조 레벨 변화를 감지하면 GC가 참조 객체를 큐에 추가한다
-        |         
-        li Reference<? extends T> poll()
-        |         참조 객체가 즉시 사용 가능하면 큐에서 제거하고 반환한다. 그 외의 경우 즉시 null을 반환한다.
-        |         
-        li Reference<? extends T> remove(long timeout) + 1 오버로딩
-        |         다음 참조 객체를 규에서 제거하고 반환한다. 그 다음 참조 객체가 사용 가능해질 때까지 최대 timeout 만큼 대기한다
-    hr
-    details
-      summary abstract class Reference<T> Since 1.2
-      |     
-      ol
-        li GC와 상호작용하기 위한 메서드들을 정의한다. 이 클래스를 직접 상속하지 않아야 한다
-        |         
-        li T get() : 참조하는 객체를 반환한다
-        |         
-        li void clear()
-        |         
-        li boolean enqueue() : 참조 객체를 정리하고 등록된 큐에 넣는다 + isEnqueued
-        |         
-        li static void reachabilityFence(Object ref)
-        |         ref의 참조 레벨을 Strongly reachable로 고정한다. 대부분의 상황에서는 필요없다.
-      |     
-      details
-        summary Sub Class
-        |         
-        ol
-          li class SoftReference<T> extends Reference<T> Since 1.2
-          |             
-          li class WeakReference<T> extends Reference<T> Since 1.2
-          |             
-          li class PhantomReference<T> extends Reference<T> Since 1.2
-    hr
+    body
+        script(src='/source/redirect.js?200226_1657')
+        hr
+        details(open='')
+            summary Package Summary
+            |     
+            ol
+                li 참조 객체에 관한 클래스를 제공한다
+                |         
+                li 3단계의 참조 레벨을 제공한다 : Soft > Weak > Phantom
+                |         
+                li 객체 참조 레벨
+                |         
+                ul
+                    li Strongly reachable
+                    |             참조 객체의 조회없이 객체에 직접 접근 가능한 스레드가 존재. 객체를 생성한 스레드가 이 레벨에 해당
+                    |             
+                    li Softly reachable
+                    |             Not strongly reachable + Soft 참조 객체의 조회로 객체에 접근 가능
+                    |             
+                    li Weakly reachable
+                    |             Not strongly reachable + Not softly reachable + Weak 참조 객체의 조회로 객체에 접근 가능.
+                    |             약한 참조가 해제되면 대상 객체는 소멸(finilization) 대상이 된다.
+                    |             
+                    li Phantom reachable
+                    |             Not strongly reachable + Not softly reachable + Not weakly reachable + 객체는 소멸됐지만 Phantom 참조 객체가 참조하는 중
+                    |             
+                    li Unreachable
+                    |             참조 불가능하며, 따라서 메모리 해제 대상이 된다.
+        hr
+        details
+            summary final class Cleaner Since 9
+            |     
+            ol
+                li 객체 참조와 관련 정리 작업을 관리한다.
+                |         객체가 phantom reachable 상태로 변했음을 통지받으면 정리 작업이 실행된다. 참조 레벨의 변경을 통지받기 위해 PhantomReference와 ReferenceQueue를 이용한다.
+                |         
+                li 객체 참조와 정리 작업을 등록하면 Cleanable 인스턴스가 반환된다
+                |         가장 효과적인 사용법은 객체의 close() 메서드나, 객체가 필요없는 시점에 명시적으로 clean()을 호출하는 것.
+                |         
+                li 등록하는 객체를 객체 정리 작업이 참조하면 안 된다
+                |         참조하는 경우, 객체는 Phantom reachable 레벨에 도달할 수 없고, 자동적으로 정리 작업은 호출될 일이 없어진다.
+                |         
+                li
+                    | 정리 작업은 Runnable이며, 실행 중 발생하는 모든 예외는 무시된다. 발생한 예외는 Cleaner와 다른 정리 작업에 영향을 미치지 않는다.
+                |         Cleaner 인스턴스와 관계된 스레드가 정리 작업을 실행하며, 모든 정리 작업이 실행된 후엔 Cleaner 인스턴스가 GC에 의해 정리된다
+                |         
+                li System.exit 도중의 정리 작업의 실행은 정의되지 않는다
+            |     
+            details
+                summary static interface Cleaner.Cleanable Since 9
+                |         void clean() : cleanable을 등록 취소하고 정리 작업을 실행한다. 반복 호출되도 정리 작업은 최대 1번만 실행된다.
+            |     
+            details
+                summary Method Detail
+                |         
+                ol
+                    li static Cleaner create() + 1 오버로딩
+                    |             
+                    li Cleaner.Cleanable register(Object obj, Runnable action)
+        hr
+        details
+            summary class ReferenceQueue<T> Since 1.2
+            |     
+            ol
+                li 참조 큐. 참조 레벨 변화를 감지하면 GC가 참조 객체를 큐에 추가한다
+                |         
+                li Reference<? extends T> poll()
+                |         참조 객체가 즉시 사용 가능하면 큐에서 제거하고 반환한다. 그 외의 경우 즉시 null을 반환한다.
+                |         
+                li Reference<? extends T> remove(long timeout) + 1 오버로딩
+                |         다음 참조 객체를 규에서 제거하고 반환한다. 그 다음 참조 객체가 사용 가능해질 때까지 최대 timeout 만큼 대기한다
+        hr
+        details
+            summary abstract class Reference<T> Since 1.2
+            |     
+            ol
+                li GC와 상호작용하기 위한 메서드들을 정의한다. 이 클래스를 직접 상속하지 않아야 한다
+                |         
+                li T get() : 참조하는 객체를 반환한다
+                |         
+                li void clear()
+                |         
+                li boolean enqueue() : 참조 객체를 정리하고 등록된 큐에 넣는다 + isEnqueued
+                |         
+                li static void reachabilityFence(Object ref)
+                |         ref의 참조 레벨을 Strongly reachable로 고정한다. 대부분의 상황에서는 필요없다.
+            |     
+            details
+                summary Sub Class
+                |         
+                ol
+                    li class SoftReference<T> extends Reference<T> Since 1.2
+                    |             
+                    li class WeakReference<T> extends Reference<T> Since 1.2
+                    |             
+                    li class PhantomReference<T> extends Reference<T> Since 1.2
+        hr

@@ -1,227 +1,227 @@
 html
-  body
-    script(src='/source/redirect.js?200226_1657')
-    ul
-      li struct는 bytes 객체로 표현된 C 구조체와 Python 값 사이의 변환을 지원한다.
-      |     
-      li struct.pack(fmt, v1, v2, ...) : 포맷 문자열 fmt에 따라 v1, v2, ... 들을 포장한 bytes 객체 반환
-      |     
-      li
-        | struct.pack_into(fmt, buffer, offset, v1, v2, ...) : pack의 결과를 쓰기 가능한 buffer의 offset 위치에 쓴다
-      |     
-      li struct.unpack(fmt, buffer) : 포맷 문자열 fmt에 따라 포장된 buffer를 풀어 값의 튜플로 반환
-      |     
-      li struct.unpack_from(fmt, buffer, offset=0) : unpack과 유사
-      |     
-      li
-        | struct.iter_unpack(fmt, buffer) Since 3.4 : unpack 순회하는 iterator 반환. buffer 크기는 반드시 fmt의 정수배 == calcsize(fmt)
-      |     
-      li struct.calcsize(fmt) : format 표현에 필요한 바이트 크기
-    hr
-    details
-      summary Format String
-      |     
-      li Byte Order, Size, and Alignment
-      |     
-      table
-        tr
-          th Char
-          th Byte order
-          th Size
-          th Alignment
-        |         
-        tr
-          td @(default)
-          td native
-          td native
-          td native
-        |         
-        tr
-          td =
-          td native
-          td standard
-          td none
-        |         
-        tr
-          td <
-          td little-endian
-          td standard
-          td none
-        |         
-        tr
-          td >
-          td big-endian
-          td standard
-          td none
-        |         
-        tr
-          td !
-          td network(=big-endian)
-          td standard
-          td none
-      |     
-      ul
-        li Native byte order : 호스트 시스템으로 결정
-        |         
-        li Native size, alignment : C 컴파일러의 sizeof로 결정
-        | 		정렬을 위해 패딩 바이트(0)들이 첨가될 수 있다
-      |     
-      li Format Character
-      |     
-      table
-        tr
-          th Char
-          th C type
-          th Python type
-          th Standard size
-        |         
-        tr
-          td x
-          td pad byte
-          td no value
-          td
-        |         
-        tr
-          td c
-          td char
-          td bytes of length 1
-          td 1
-        |         
-        tr
-          td b
-          td signed char
-          td integer
-          td 1
-        |         
-        tr
-          td B
-          td unsigned char
-          td integer
-          td 1
-        |         
-        tr
-          td ?
-          td _Bool
-          td bool
-          td 1
-        |         
-        tr
-          td h
-          td short
-          td integer
-          td 2
-        |         
-        tr
-          td H
-          td unsigned short
-          td integer
-          td 2
-        |         
-        tr
-          td i
-          td int
-          td integer
-          td 4
-        |         
-        tr
-          td I
-          td unsigned int
-          td integer
-          td 4
-        |         
-        tr
-          td l
-          td long
-          td integer
-          td 4
-        |         
-        tr
-          td L
-          td unsigned long
-          td integer
-          td 4
-        |         
-        tr
-          td q
-          td long long
-          td integer
-          td 8
-        |         
-        tr
-          td Q
-          td unsigned long long
-          td integer
-          td 8
-        |         
-        tr
-          td n Since 3.3
-          td ssize_t
-          td integer
-          td @에서만 가능
-        |         
-        tr
-          td N Since 3.3
-          td size_t
-          td integer
-          td @에서만 가능
-        |         
-        tr
-          td e Since 3.6
-          td 반배 정밀도 부동소수
-          td float
-          td 2
-        |         
-        tr
-          td f
-          td float
-          td float
-          td 4
-        |         
-        tr
-          td d
-          td double
-          td float
-          td 8
-        |         
-        tr
-          td s
-          td char[]
-          td bytes
-          td
-        |         
-        tr
-          td p
-          td char[]
-          td bytes
-          td
-        |         
-        tr
-          td P
-          td void*
-          td integer
-          td @,=에서만 가능
-      |     
-      ul
-        li 포맷 문자 앞에 정수가 오면 반복을 의미한다. 예. '4h'는 'hhhh'와 동일하다.
-        | 		
-        li 포맷 문자 사이의 공백은 무시한다. 단, 반복을 나타내는 정수와 포맷 문자 사이에는 공백이 허용되지 않는다.
-        |         
-        li
-          | s의 경우 앞에 오는 정수는 반복이 아닌 바이트 크기다(없으면 1로 간주). 패킹 과정에서 크기를 맞추기 위해 문자열이 잘리거나 null 바이트가 포함될 수 있다. 0s는 빈 문자열 하나를 의미한다
-        | 		
-        li p는 파스칼 문자열로, 첫 바이트는 문자열의 길이(~255)를 나타낸다
-    hr
-    details
-      summary class struct.Struct(format)
-      | 	
-      ol
-        li 이 클래스 인스턴스를 생성하든, 모듈 함수를 호출하든 최근 사용된 포맷 문자열 일부는 캐시된다
-        | 		
-        li pack(v1, v2, ...), pack_into(buffer, offset, v1, v2, ...)
-        | 		
-        li unpack(buffer), unpack_from(buffer, offset=0)
-        | 		
-        li iter_unpack(buffer) Since 3.4
-        | 		
-        li format, size
-    hr
+    body
+        script(src='/source/redirect.js?200226_1657')
+        ul
+            li struct는 bytes 객체로 표현된 C 구조체와 Python 값 사이의 변환을 지원한다.
+            |     
+            li struct.pack(fmt, v1, v2, ...) : 포맷 문자열 fmt에 따라 v1, v2, ... 들을 포장한 bytes 객체 반환
+            |     
+            li
+                | struct.pack_into(fmt, buffer, offset, v1, v2, ...) : pack의 결과를 쓰기 가능한 buffer의 offset 위치에 쓴다
+            |     
+            li struct.unpack(fmt, buffer) : 포맷 문자열 fmt에 따라 포장된 buffer를 풀어 값의 튜플로 반환
+            |     
+            li struct.unpack_from(fmt, buffer, offset=0) : unpack과 유사
+            |     
+            li
+                | struct.iter_unpack(fmt, buffer) Since 3.4 : unpack 순회하는 iterator 반환. buffer 크기는 반드시 fmt의 정수배 == calcsize(fmt)
+            |     
+            li struct.calcsize(fmt) : format 표현에 필요한 바이트 크기
+        hr
+        details
+            summary Format String
+            |     
+            li Byte Order, Size, and Alignment
+            |     
+            table
+                tr
+                    th Char
+                    th Byte order
+                    th Size
+                    th Alignment
+                |         
+                tr
+                    td @(default)
+                    td native
+                    td native
+                    td native
+                |         
+                tr
+                    td =
+                    td native
+                    td standard
+                    td none
+                |         
+                tr
+                    td <
+                    td little-endian
+                    td standard
+                    td none
+                |         
+                tr
+                    td >
+                    td big-endian
+                    td standard
+                    td none
+                |         
+                tr
+                    td !
+                    td network(=big-endian)
+                    td standard
+                    td none
+            |     
+            ul
+                li Native byte order : 호스트 시스템으로 결정
+                |         
+                li Native size, alignment : C 컴파일러의 sizeof로 결정
+                | 		정렬을 위해 패딩 바이트(0)들이 첨가될 수 있다
+            |     
+            li Format Character
+            |     
+            table
+                tr
+                    th Char
+                    th C type
+                    th Python type
+                    th Standard size
+                |         
+                tr
+                    td x
+                    td pad byte
+                    td no value
+                    td
+                |         
+                tr
+                    td c
+                    td char
+                    td bytes of length 1
+                    td 1
+                |         
+                tr
+                    td b
+                    td signed char
+                    td integer
+                    td 1
+                |         
+                tr
+                    td B
+                    td unsigned char
+                    td integer
+                    td 1
+                |         
+                tr
+                    td ?
+                    td _Bool
+                    td bool
+                    td 1
+                |         
+                tr
+                    td h
+                    td short
+                    td integer
+                    td 2
+                |         
+                tr
+                    td H
+                    td unsigned short
+                    td integer
+                    td 2
+                |         
+                tr
+                    td i
+                    td int
+                    td integer
+                    td 4
+                |         
+                tr
+                    td I
+                    td unsigned int
+                    td integer
+                    td 4
+                |         
+                tr
+                    td l
+                    td long
+                    td integer
+                    td 4
+                |         
+                tr
+                    td L
+                    td unsigned long
+                    td integer
+                    td 4
+                |         
+                tr
+                    td q
+                    td long long
+                    td integer
+                    td 8
+                |         
+                tr
+                    td Q
+                    td unsigned long long
+                    td integer
+                    td 8
+                |         
+                tr
+                    td n Since 3.3
+                    td ssize_t
+                    td integer
+                    td @에서만 가능
+                |         
+                tr
+                    td N Since 3.3
+                    td size_t
+                    td integer
+                    td @에서만 가능
+                |         
+                tr
+                    td e Since 3.6
+                    td 반배 정밀도 부동소수
+                    td float
+                    td 2
+                |         
+                tr
+                    td f
+                    td float
+                    td float
+                    td 4
+                |         
+                tr
+                    td d
+                    td double
+                    td float
+                    td 8
+                |         
+                tr
+                    td s
+                    td char[]
+                    td bytes
+                    td
+                |         
+                tr
+                    td p
+                    td char[]
+                    td bytes
+                    td
+                |         
+                tr
+                    td P
+                    td void*
+                    td integer
+                    td @,=에서만 가능
+            |     
+            ul
+                li 포맷 문자 앞에 정수가 오면 반복을 의미한다. 예. '4h'는 'hhhh'와 동일하다.
+                | 		
+                li 포맷 문자 사이의 공백은 무시한다. 단, 반복을 나타내는 정수와 포맷 문자 사이에는 공백이 허용되지 않는다.
+                |         
+                li
+                    | s의 경우 앞에 오는 정수는 반복이 아닌 바이트 크기다(없으면 1로 간주). 패킹 과정에서 크기를 맞추기 위해 문자열이 잘리거나 null 바이트가 포함될 수 있다. 0s는 빈 문자열 하나를 의미한다
+                | 		
+                li p는 파스칼 문자열로, 첫 바이트는 문자열의 길이(~255)를 나타낸다
+        hr
+        details
+            summary class struct.Struct(format)
+            | 	
+            ol
+                li 이 클래스 인스턴스를 생성하든, 모듈 함수를 호출하든 최근 사용된 포맷 문자열 일부는 캐시된다
+                | 		
+                li pack(v1, v2, ...), pack_into(buffer, offset, v1, v2, ...)
+                | 		
+                li unpack(buffer), unpack_from(buffer, offset=0)
+                | 		
+                li iter_unpack(buffer) Since 3.4
+                | 		
+                li format, size
+        hr

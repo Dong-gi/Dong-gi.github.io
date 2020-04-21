@@ -1,173 +1,173 @@
 html
-  body
-    script(src='/source/redirect.js?200226_1657')
-    hr
-    details
-      summary Consumer
-      |     
-      details
-        summary @FunctionalInterface interface Consumer<T> Since 1.8
-        |         
-        ol
-          li 인자를 하나 먹고 아무것도 반환하지 않는 소비자.
-          |             
-          li void accept(T t)
-          |             
-          li
-            | default Consumer<T> andThen(Consumer<? super T> after) : 이 소비자 다음에 after가 소비하는 병합된 소비자 반환.
-      |     
-      details
-        summary @FunctionalInterface interface DoubleConsumer Since 1.8 + int, long
-        |         
-        ol
-          li void accept(double value)
-          |             
-          li default DoubleConsumer andThen(DoubleConsumer after)
-      |     
-      details
-        summary @FunctionalInterface interface BiConsumer<T, U> Since 1.8
-        |         
-        ol
-          li 인자 두개를 먹고 아무것도 뱉지 않는 소비자.
-          |             
-          li void accept(T t, U u) : 적당한 동작 수행
-          |             
-          li
-            | default BiConsumer<T, U> andThen(BiConsumer<? super T, ? super U> after) : 현재 소비자가 작업을 마치면 after가 실행되는 새로운 소비자 반환.
-      |     
-      details
-        summary @FunctionalInterface interface ObjDoubleConsumer<T> Since 1.8
-        |         void accept(T t, double value) + int, long
-    hr
-    details
-      summary Supplier
-      |     
-      details
-        summary @FunctionalInterface interface Supplier<T> Since 1.8
-        |         T get()
-      |     
-      details
-        summary @FunctionalInterface interface BooleanSupplier Since 1.8
-        |         boolean getAsBoolean() : boolean 값을 공급하는 생산자. + int, double, long
-    hr
-    details
-      summary Function, Operator
-      |     
-      details
-        summary @FunctionalInterface interface Function<T, R> Since 1.8
-        |         
-        ol
-          li 인자 하나를 먹고 결과 하나를 뱉는 함수.
-          |             
-          li R apply(T t)
-          |             
-          li default <V> Function&V, R> compose(Function<? super V, ? extends T> before)
-          |             
-          li default <V> Function<T, V> andThen(Function<? super R, ? extends V> after)
-          |             
-          li static <T> Function<T, T> identity() : 입력 인자 그대로 반환하는 함수.
-      |     
-      details
-        summary @FunctionalInterface interface IntFunction<R> Since 1.8
-        |         R apply(int value) + double, long
-      |     
-      details
-        summary @FunctionalInterface interface DoubleToIntFunction Since 1.8
-        |         int applyAsInt(double value) + double, int, long 간의 상호 변환 함수들이 모두 정의됨
-      |     
-      details
-        summary @FunctionalInterface interface UnaryOperator<T> extends Function<T, T> Since 1.8
-        |         static <T> UnaryOperator<T> identity()
-      |     
-      details
-        summary @FunctionalInterface interface DoubleUnaryOperator Since 1.8 + int, long
-        |         
-        ol
-          li double applyAsDouble(double operand)
-          |             
-          li default DoubleUnaryOperator compose(DoubleUnaryOperator before)
-          |             
-          li default DoubleUnaryOperator andThen(DoubleUnaryOperator after)
-          |             
-          li static DoubleUnaryOperator identity() : 항상 입력값 그대로 반환하는 단항 연산자 반환.
-      |     
-      details
-        summary @FunctionalInterface interface ToDoubleFunction<T> Since 1.8
-        |         double applyAsDouble(T value) + int, long
-      |     
-      details
-        summary @FunctionalInterface interface BiFunction<T, U, R> Since 1.8
-        |         
-        ol
-          li 인자 두개를 먹고 값을 반환하는 함수.
-          |             
-          li R apply(T t, U u)
-          |             
-          li
-            | default <V> BiFunction<T, U, V> andThen(Function<? super R, ? extends V> after) : 함수가 실행되고 난 결과를 after가 처리하는 새로운 함수 반환.
-      |     
-      details
-        summary @FunctionalInterface interface ToDoubleBiFunction<T, U> Since 1.8
-        |         double applyAsDouble(T t, U u) + int, long
-      |     
-      details
-        summary
-          | @FunctionalInterface interface BinaryOperator extends BiFunction<T, T, T> Since 1.8
-        |         
-        ol
-          li 같은 타입의 인자 두개를 먹고 같은 타입의 값을 반환하는 함수.
-          |             
-          li
-            | static <T> BinaryOperator<T> minBy(Comparator<? super T> comparator) : 주어진 comparator에 따라 둘 중 작은 것을 반환하는 함수를 생성.
-          |             
-          li
-            | static <T> BinaryOperator<T> maxBy(Comparator<? super T> comparator) : 주어진 comparator에 따라 둘 중 큰 것을 반환하는 함수 생성.
-      |     
-      details
-        summary @FunctionalInterface interface DoubleBinaryOperator Since 1.8
-        |         double applyAsDouble(double left, double right) : double 두개를 먹고 double 하나를 반환하는 함수. + int, long
-    hr
-    details
-      summary Predicate
-      |     
-      details
-        summary @FunctionalInterface interface Predicate<T> Since 1.8
-        |         
-        ol
-          li boolean test(T t)
-          |             
-          li default Predicate<T> and(Predicate<? super T> other)
-          |             
-          li default Predicate<T> or(Predicate<? super T> other)
-          |             
-          li
-            | static <T> Predicate<T> isEqual(Object targetRef) : Object.equals(Object, Object)를 이용해 비교하는 Predicate 반환
-      |     
-      details
-        summary @FunctionalInterface interface DoublePredicate Since 1.8 + int, long
-        |         
-        ol
-          li boolean test(double value)
-          |             
-          li default DoublePredicate and(DoublePredicate other)
-          |             
-          li default DoublePredicate or(DoublePredicate other)
-          |             
-          li default DoublePredicate negate()
-      |     
-      details
-        summary @FunctionalInterface interface BiPredicate<T, U> Since 1.8
-        |         
-        ol
-          li 인자 두개를 먹고 가부를 판단하는 함수.
-          |             
-          li boolean test(T t, U u)
-          |             
-          li
-            | default BiPredicate<T, U> and(BiPredicate<? super T, ? super U> other) : A short-circuiting logical AND of this predicate and other.
-          |             
-          li default BiPredicate<T, U> negate()
-          |             
-          li
-            | default BiPredicate<T, U> or(BiPredicate<? super T, ? super U> other) : A short-circuiting logical OR of this predicate and other.
-    hr
+    body
+        script(src='/source/redirect.js?200226_1657')
+        hr
+        details
+            summary Consumer
+            |     
+            details
+                summary @FunctionalInterface interface Consumer<T> Since 1.8
+                |         
+                ol
+                    li 인자를 하나 먹고 아무것도 반환하지 않는 소비자.
+                    |             
+                    li void accept(T t)
+                    |             
+                    li
+                        | default Consumer<T> andThen(Consumer<? super T> after) : 이 소비자 다음에 after가 소비하는 병합된 소비자 반환.
+            |     
+            details
+                summary @FunctionalInterface interface DoubleConsumer Since 1.8 + int, long
+                |         
+                ol
+                    li void accept(double value)
+                    |             
+                    li default DoubleConsumer andThen(DoubleConsumer after)
+            |     
+            details
+                summary @FunctionalInterface interface BiConsumer<T, U> Since 1.8
+                |         
+                ol
+                    li 인자 두개를 먹고 아무것도 뱉지 않는 소비자.
+                    |             
+                    li void accept(T t, U u) : 적당한 동작 수행
+                    |             
+                    li
+                        | default BiConsumer<T, U> andThen(BiConsumer<? super T, ? super U> after) : 현재 소비자가 작업을 마치면 after가 실행되는 새로운 소비자 반환.
+            |     
+            details
+                summary @FunctionalInterface interface ObjDoubleConsumer<T> Since 1.8
+                |         void accept(T t, double value) + int, long
+        hr
+        details
+            summary Supplier
+            |     
+            details
+                summary @FunctionalInterface interface Supplier<T> Since 1.8
+                |         T get()
+            |     
+            details
+                summary @FunctionalInterface interface BooleanSupplier Since 1.8
+                |         boolean getAsBoolean() : boolean 값을 공급하는 생산자. + int, double, long
+        hr
+        details
+            summary Function, Operator
+            |     
+            details
+                summary @FunctionalInterface interface Function<T, R> Since 1.8
+                |         
+                ol
+                    li 인자 하나를 먹고 결과 하나를 뱉는 함수.
+                    |             
+                    li R apply(T t)
+                    |             
+                    li default <V> Function&V, R> compose(Function<? super V, ? extends T> before)
+                    |             
+                    li default <V> Function<T, V> andThen(Function<? super R, ? extends V> after)
+                    |             
+                    li static <T> Function<T, T> identity() : 입력 인자 그대로 반환하는 함수.
+            |     
+            details
+                summary @FunctionalInterface interface IntFunction<R> Since 1.8
+                |         R apply(int value) + double, long
+            |     
+            details
+                summary @FunctionalInterface interface DoubleToIntFunction Since 1.8
+                |         int applyAsInt(double value) + double, int, long 간의 상호 변환 함수들이 모두 정의됨
+            |     
+            details
+                summary @FunctionalInterface interface UnaryOperator<T> extends Function<T, T> Since 1.8
+                |         static <T> UnaryOperator<T> identity()
+            |     
+            details
+                summary @FunctionalInterface interface DoubleUnaryOperator Since 1.8 + int, long
+                |         
+                ol
+                    li double applyAsDouble(double operand)
+                    |             
+                    li default DoubleUnaryOperator compose(DoubleUnaryOperator before)
+                    |             
+                    li default DoubleUnaryOperator andThen(DoubleUnaryOperator after)
+                    |             
+                    li static DoubleUnaryOperator identity() : 항상 입력값 그대로 반환하는 단항 연산자 반환.
+            |     
+            details
+                summary @FunctionalInterface interface ToDoubleFunction<T> Since 1.8
+                |         double applyAsDouble(T value) + int, long
+            |     
+            details
+                summary @FunctionalInterface interface BiFunction<T, U, R> Since 1.8
+                |         
+                ol
+                    li 인자 두개를 먹고 값을 반환하는 함수.
+                    |             
+                    li R apply(T t, U u)
+                    |             
+                    li
+                        | default <V> BiFunction<T, U, V> andThen(Function<? super R, ? extends V> after) : 함수가 실행되고 난 결과를 after가 처리하는 새로운 함수 반환.
+            |     
+            details
+                summary @FunctionalInterface interface ToDoubleBiFunction<T, U> Since 1.8
+                |         double applyAsDouble(T t, U u) + int, long
+            |     
+            details
+                summary
+                    | @FunctionalInterface interface BinaryOperator extends BiFunction<T, T, T> Since 1.8
+                |         
+                ol
+                    li 같은 타입의 인자 두개를 먹고 같은 타입의 값을 반환하는 함수.
+                    |             
+                    li
+                        | static <T> BinaryOperator<T> minBy(Comparator<? super T> comparator) : 주어진 comparator에 따라 둘 중 작은 것을 반환하는 함수를 생성.
+                    |             
+                    li
+                        | static <T> BinaryOperator<T> maxBy(Comparator<? super T> comparator) : 주어진 comparator에 따라 둘 중 큰 것을 반환하는 함수 생성.
+            |     
+            details
+                summary @FunctionalInterface interface DoubleBinaryOperator Since 1.8
+                |         double applyAsDouble(double left, double right) : double 두개를 먹고 double 하나를 반환하는 함수. + int, long
+        hr
+        details
+            summary Predicate
+            |     
+            details
+                summary @FunctionalInterface interface Predicate<T> Since 1.8
+                |         
+                ol
+                    li boolean test(T t)
+                    |             
+                    li default Predicate<T> and(Predicate<? super T> other)
+                    |             
+                    li default Predicate<T> or(Predicate<? super T> other)
+                    |             
+                    li
+                        | static <T> Predicate<T> isEqual(Object targetRef) : Object.equals(Object, Object)를 이용해 비교하는 Predicate 반환
+            |     
+            details
+                summary @FunctionalInterface interface DoublePredicate Since 1.8 + int, long
+                |         
+                ol
+                    li boolean test(double value)
+                    |             
+                    li default DoublePredicate and(DoublePredicate other)
+                    |             
+                    li default DoublePredicate or(DoublePredicate other)
+                    |             
+                    li default DoublePredicate negate()
+            |     
+            details
+                summary @FunctionalInterface interface BiPredicate<T, U> Since 1.8
+                |         
+                ol
+                    li 인자 두개를 먹고 가부를 판단하는 함수.
+                    |             
+                    li boolean test(T t, U u)
+                    |             
+                    li
+                        | default BiPredicate<T, U> and(BiPredicate<? super T, ? super U> other) : A short-circuiting logical AND of this predicate and other.
+                    |             
+                    li default BiPredicate<T, U> negate()
+                    |             
+                    li
+                        | default BiPredicate<T, U> or(BiPredicate<? super T, ? super U> other) : A short-circuiting logical OR of this predicate and other.
+        hr

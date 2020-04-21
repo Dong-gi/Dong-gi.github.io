@@ -1,80 +1,80 @@
 html
-  body
-    script(src='/source/redirect.js?200226_1657')
-    hr
-    details
-      summary 자료
-      |     
-      ol
-        li https://github.com/google/gson
-        |         
-        li https://www.javadoc.io/doc/com.google.code.gson/gson
-        |         
-        li https://memorynotfound.com/gson-tutorials/
-        |         
-        li https://github.com/google/gson/blob/master/UserGuide.md
-    hr
-    details
-      summary JSON
-      |     
-      ul
-        li
-          | public 필드 또는 public setter가 존재하는 POJO
-          button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[26,43]', lan='java') 예1 »
-          |             
-          button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[45,61]', lan='java') 예2 »
-        |         
-        li
-          | 제네릭 List, Map도 가능. 
-          button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[64,70]', lan='java') 예 »
-        |         
-        li
-          | JSON 노드 수정. 
-          button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[73,89]', lan='java') 예 »
-        |         
-        li
-          button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[92,101]', lan='java') JsonWriter »
-          |             
-          button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[104,109]', lan='java') JsonParser »
-        |         
-        li
-          | 직렬화/역직렬화 관련 옵션
-          button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[111,133]', lan='java') 예1 »
-          |                 
-          button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[135,145]', lan='java') 예2 »
-        |         
-        ul
-          li DateFormat 설정 : GsonBuilder#setDateFormat
-          |             
-          li 직렬화 제외 설정 : GsonBuilder#excludeFieldsWithModifiers
-          |             @Expose with GsonBuilder#excludeFieldsWithoutExposeAnnotation
-          |             
-          li 직렬화 시 정렬 : GsonBuilder#setPrettyPrinting
-          |             
-          li Null 허용 : GsonBuilder#serializeNulls
-          |             
-          li 사용자 정의 어댑터 : GsonBuilder#registerTypeAdapter
-          |             TypeAdapter, InstanceCreator, JsonSerializer, JsonDeserializer 중 하나 이상의 조합
-          |             
-          li 속성명 임의 설정 : @SerializedName("custom_naming")
-    hr
-    details
-      summary Android ProGuard 관련 설정
-      |     
-      pre.
-        \n##---------------Begin: proguard configuration for Gson  ----------
-        # 출처 : https://github.com/google/gson/blob/master/examples/android-proguard-example/proguard.cfg
-        # Gson uses generic type information stored in a class file when working with fields. Proguard
-        # removes such information by default, so configure it to keep all of it.
-        -keepattributes Signature
-        
-        # For using GSON @Expose annotation
-        -keepattributes *Annotation*
-        
-        # Gson specific classes
-        -dontwarn sun.misc.**
-        #-keep class com.google.gson.stream.** { *; }
-        
-        # Application classes that will be serialized/deserialized over Gson
-        -keep class com.google.gson.examples.android.model.** {         
-    hr
+    body
+        script(src='/source/redirect.js?200226_1657')
+        hr
+        details
+            summary 자료
+            |     
+            ol
+                li https://github.com/google/gson
+                |         
+                li https://www.javadoc.io/doc/com.google.code.gson/gson
+                |         
+                li https://memorynotfound.com/gson-tutorials/
+                |         
+                li https://github.com/google/gson/blob/master/UserGuide.md
+        hr
+        details
+            summary JSON
+            |     
+            ul
+                li
+                    | public 필드 또는 public setter가 존재하는 POJO
+                    button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[26,43]', lan='java') 예1 »
+                    |             
+                    button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[45,61]', lan='java') 예2 »
+                |         
+                li
+                    | 제네릭 List, Map도 가능. 
+                    button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[64,70]', lan='java') 예 »
+                |         
+                li
+                    | JSON 노드 수정. 
+                    button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[73,89]', lan='java') 예 »
+                |         
+                li
+                    button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[92,101]', lan='java') JsonWriter »
+                    |             
+                    button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[104,109]', lan='java') JsonParser »
+                |         
+                li
+                    | 직렬화/역직렬화 관련 옵션
+                    button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[111,133]', lan='java') 예1 »
+                    |                 
+                    button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[135,145]', lan='java') 예2 »
+                |         
+                ul
+                    li DateFormat 설정 : GsonBuilder#setDateFormat
+                    |             
+                    li 직렬화 제외 설정 : GsonBuilder#excludeFieldsWithModifiers
+                    |             @Expose with GsonBuilder#excludeFieldsWithoutExposeAnnotation
+                    |             
+                    li 직렬화 시 정렬 : GsonBuilder#setPrettyPrinting
+                    |             
+                    li Null 허용 : GsonBuilder#serializeNulls
+                    |             
+                    li 사용자 정의 어댑터 : GsonBuilder#registerTypeAdapter
+                    |             TypeAdapter, InstanceCreator, JsonSerializer, JsonDeserializer 중 하나 이상의 조합
+                    |             
+                    li 속성명 임의 설정 : @SerializedName("custom_naming")
+        hr
+        details
+            summary Android ProGuard 관련 설정
+            |     
+            pre.
+                \n##---------------Begin: proguard configuration for Gson  ----------
+                # 출처 : https://github.com/google/gson/blob/master/examples/android-proguard-example/proguard.cfg
+                # Gson uses generic type information stored in a class file when working with fields. Proguard
+                # removes such information by default, so configure it to keep all of it.
+                -keepattributes Signature
+                
+                # For using GSON @Expose annotation
+                -keepattributes *Annotation*
+                
+                # Gson specific classes
+                -dontwarn sun.misc.**
+                #-keep class com.google.gson.stream.** { *; }
+                
+                # Application classes that will be serialized/deserialized over Gson
+                -keep class com.google.gson.examples.android.model.** {         
+        hr

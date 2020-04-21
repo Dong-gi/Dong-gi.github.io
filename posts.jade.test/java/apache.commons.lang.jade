@@ -1,1070 +1,1070 @@
 html
-  body
-    script(src='/source/redirect.js?200226_1657')
-    hr
-    details
-      summary org.apache.commons.lang3 Since 1.0
-      |     
-      details
-        summary class AnotationUtils Since 3.0
-        |         
-        ol
-          li 스레드-안전. 애너테이션 (프록시) 인스턴스에 관한 유틸리티를 제공한다
-          |             
-          li
-            | static boolean equals(Annotation a1, Annotation a2) : Annotation.equals(Object)의 문서대로 처리해준다
-          |             
-          li static int hashCode(Annotation a) : Annotation.hashCode()의 문서대로 처리해준다
-          |             
-          li static String toString(Annotation a) : Annotation.toString()의 문서대로 처리해준다
-          |             
-          li static boolean isValidAnnotationMemberType(Class<?> type)
-      |     
-      details
-        summary class ArchUtils Since 3.6
-        |         
-        ol
-          li java.lang.System "os.arch" 프로퍼티에 관한 유틸리티를 제공한다
-          |             
-          li static Processor getProcessor() : 현재 JVM의 프로세서 정보를 반환
-          |             
-          li
-            | static Processor getProcessor(String value) : value는 "os.arch" 프로퍼티의 반환값과 유사해야 한다
-      |     
-      details
-        summary class ArrayUtils Since 2.0
-        |         
-        ol
-          li 스레드-안전. null에 관대한 배열 유틸리티를 제공한다.
-          |             
-          li public static final Object[] EMPTY_OBJECT_ARRAY
-          |             
-          li public static final Class<?>[] EMPTY_CLASS_ARRAY
-          |             
-          li public static final long[] EMPTY_LONG_ARRAY
-          |             
-          li public static final Long[] EMPTY_LONG_OBJECT_ARRAY + 이하 생략
-        |         
+    body
+        script(src='/source/redirect.js?200226_1657')
+        hr
         details
-          summary Method Detail
-          |             
-          ol
-            li static <T> boolean isArrayIndexValid(T[] array, int index) Since 3.8
-            |                 
-            li
-              | static String toString(Object array, String stringIfNull) + 1 오버로딩 + toStringArray
-            |                 
-            li static int hashCode(Object array)
-            |                 
-            li static Map<Object, Object> toMap(Object[] array)
-            |                 각 원소는 Map.Entry거나 배열이여야 하며, 배열인 경우 원소가 2개 이상 있어야 한다(1번째는 키, 2번째는 값)
-            |                 
-            li static <T> T[] toArray(T... items) Since 3.0
-            |                 
-            li static <T> T[] clone(T[] array) : 얕은 복사 수행 + 8 오버로딩
-            |                 
-            li static <T> T[] nullToEmpty(T[] array, Class<T[]> type) Since 3.5 + 19 오버로딩
-            |                 방어적 프로그래밍 기법 : array가 null이면 같은 타입의 빈 배열을 반환한다. null이 아니면 그대로 반환.
-            |                 
-            li
-              | static <T> T[] subarray(T[] array, int startIndexInclusive, int endIndexExclusive) Since 2.1 + 8 오버로딩
-            |                 
-            li
-              | static boolean isSameLength(Object[] array1, Object[] array2) : null은 카운트 제외 + 8 오버로딩
-            |                 
-            li static int getLength(Object array) Since 2.1 : null이면 0
-            |                 
-            li static boolean isSameType(Object array1, Object array2)
-            |                 배열이 같은 타입인지 반환한다. 다차원 배열 타입도 처리된다
-            |                 
-            li static void shuffle(Object[] array) Since 3.6 + 오버로딩
-            |                 
-            li
-              | static void reverse(Object[] array, int startIndexInclusive, int endIndexExclusive) + 17 오버로딩
-            |                 
-            li
-              | static void swap(Object[] array, int offset1, int offset2, int len) Since 3.5 + 17 오버로딩
-            |                 array가 null이거나, 인덱스가 오버플로된 경우 작업을 하지 않는다. 음수 인덱스는 0으로 간주한다
-            |                 
-            li
-              | static void shift(Object[] array, int startIndexInclusive, int endIndexExclusive, int offset) Since 3.5 + 17 오버로딩
-            |                 
-            li
-              | static int indexOf(Object[] array, Object objectToFind, int startIndex) + 19 오버로딩 + lastIndexOf, contains
-            |                 null에 대하여 INDEX_NOT_FOUND(-1)를 반환한다
-            |                 
-            li static char[] toPrimitive(Character[] array, char valueForNull) + 오버로딩
-            |                 
-            li static Character[] toObject(char[] array) + 오버로딩
-            |                 
-            li
-              | static boolean isEmpty(Object[] array) Since 2.1 : null이면 true + 오버로딩 + isNotEmpty
-            |                 
-            li static <T> T[] addAll(T[] array1, T... array2) Since 2.1 + 오버로딩
-            |                 + add, remove, removeElement, removeAll, removeElements, removeAllOccurences, insert
-            |                 
-            li
-              | static <T> boolean isSorted(T[] array, Comparator<T> comparator) Since 3.4 + 오버로딩
-      |     
-      details
-        summary class BitField Since 2.0
-        |         
-        ol
-          li 클래스 인스턴스 내부에 비트값들을 저장하지 않고, 외부 int, short, byte에 대한 마스킹 연산을 지원한다
-          |             
-          li
-            | public BitField(int mask)
-            button.btn-code(path='Repositories/Eclipse/apache-commons-lang-example/src/test/java/BitFieldTest.java', lan='java') 예시 코드 »
-        |         
+            summary org.apache.commons.lang3 Since 1.0
+            |     
+            details
+                summary class AnotationUtils Since 3.0
+                |         
+                ol
+                    li 스레드-안전. 애너테이션 (프록시) 인스턴스에 관한 유틸리티를 제공한다
+                    |             
+                    li
+                        | static boolean equals(Annotation a1, Annotation a2) : Annotation.equals(Object)의 문서대로 처리해준다
+                    |             
+                    li static int hashCode(Annotation a) : Annotation.hashCode()의 문서대로 처리해준다
+                    |             
+                    li static String toString(Annotation a) : Annotation.toString()의 문서대로 처리해준다
+                    |             
+                    li static boolean isValidAnnotationMemberType(Class<?> type)
+            |     
+            details
+                summary class ArchUtils Since 3.6
+                |         
+                ol
+                    li java.lang.System "os.arch" 프로퍼티에 관한 유틸리티를 제공한다
+                    |             
+                    li static Processor getProcessor() : 현재 JVM의 프로세서 정보를 반환
+                    |             
+                    li
+                        | static Processor getProcessor(String value) : value는 "os.arch" 프로퍼티의 반환값과 유사해야 한다
+            |     
+            details
+                summary class ArrayUtils Since 2.0
+                |         
+                ol
+                    li 스레드-안전. null에 관대한 배열 유틸리티를 제공한다.
+                    |             
+                    li public static final Object[] EMPTY_OBJECT_ARRAY
+                    |             
+                    li public static final Class<?>[] EMPTY_CLASS_ARRAY
+                    |             
+                    li public static final long[] EMPTY_LONG_ARRAY
+                    |             
+                    li public static final Long[] EMPTY_LONG_OBJECT_ARRAY + 이하 생략
+                |         
+                details
+                    summary Method Detail
+                    |             
+                    ol
+                        li static <T> boolean isArrayIndexValid(T[] array, int index) Since 3.8
+                        |                 
+                        li
+                            | static String toString(Object array, String stringIfNull) + 1 오버로딩 + toStringArray
+                        |                 
+                        li static int hashCode(Object array)
+                        |                 
+                        li static Map<Object, Object> toMap(Object[] array)
+                        |                 각 원소는 Map.Entry거나 배열이여야 하며, 배열인 경우 원소가 2개 이상 있어야 한다(1번째는 키, 2번째는 값)
+                        |                 
+                        li static <T> T[] toArray(T... items) Since 3.0
+                        |                 
+                        li static <T> T[] clone(T[] array) : 얕은 복사 수행 + 8 오버로딩
+                        |                 
+                        li static <T> T[] nullToEmpty(T[] array, Class<T[]> type) Since 3.5 + 19 오버로딩
+                        |                 방어적 프로그래밍 기법 : array가 null이면 같은 타입의 빈 배열을 반환한다. null이 아니면 그대로 반환.
+                        |                 
+                        li
+                            | static <T> T[] subarray(T[] array, int startIndexInclusive, int endIndexExclusive) Since 2.1 + 8 오버로딩
+                        |                 
+                        li
+                            | static boolean isSameLength(Object[] array1, Object[] array2) : null은 카운트 제외 + 8 오버로딩
+                        |                 
+                        li static int getLength(Object array) Since 2.1 : null이면 0
+                        |                 
+                        li static boolean isSameType(Object array1, Object array2)
+                        |                 배열이 같은 타입인지 반환한다. 다차원 배열 타입도 처리된다
+                        |                 
+                        li static void shuffle(Object[] array) Since 3.6 + 오버로딩
+                        |                 
+                        li
+                            | static void reverse(Object[] array, int startIndexInclusive, int endIndexExclusive) + 17 오버로딩
+                        |                 
+                        li
+                            | static void swap(Object[] array, int offset1, int offset2, int len) Since 3.5 + 17 오버로딩
+                        |                 array가 null이거나, 인덱스가 오버플로된 경우 작업을 하지 않는다. 음수 인덱스는 0으로 간주한다
+                        |                 
+                        li
+                            | static void shift(Object[] array, int startIndexInclusive, int endIndexExclusive, int offset) Since 3.5 + 17 오버로딩
+                        |                 
+                        li
+                            | static int indexOf(Object[] array, Object objectToFind, int startIndex) + 19 오버로딩 + lastIndexOf, contains
+                        |                 null에 대하여 INDEX_NOT_FOUND(-1)를 반환한다
+                        |                 
+                        li static char[] toPrimitive(Character[] array, char valueForNull) + 오버로딩
+                        |                 
+                        li static Character[] toObject(char[] array) + 오버로딩
+                        |                 
+                        li
+                            | static boolean isEmpty(Object[] array) Since 2.1 : null이면 true + 오버로딩 + isNotEmpty
+                        |                 
+                        li static <T> T[] addAll(T[] array1, T... array2) Since 2.1 + 오버로딩
+                        |                 + add, remove, removeElement, removeAll, removeElements, removeAllOccurences, insert
+                        |                 
+                        li
+                            | static <T> boolean isSorted(T[] array, Comparator<T> comparator) Since 3.4 + 오버로딩
+            |     
+            details
+                summary class BitField Since 2.0
+                |         
+                ol
+                    li 클래스 인스턴스 내부에 비트값들을 저장하지 않고, 외부 int, short, byte에 대한 마스킹 연산을 지원한다
+                    |             
+                    li
+                        | public BitField(int mask)
+                        button.btn-code(path='Repositories/Eclipse/apache-commons-lang-example/src/test/java/BitFieldTest.java', lan='java') 예시 코드 »
+                |         
+                details
+                    summary Method Detail
+                    |             
+                    ol
+                        li int getValue(int holder)
+                        |                 마스크 비트에 해당하는 비트들을 우측으로 시프트하여 값 반환
+                        |                 
+                        li int getRawValue(int holder)
+                        |                 마스크 비트에 해당하는 비트들의 위치 그대로 값 반환
+                        |                 
+                        li int set(int holder) + clear
+                        |                 
+                        li int setValue(int holder, int value)
+                        |                 마스크 비트에 value를 설정한 후의 값을 반환
+                        |                 
+                        li boolean isSet(int holder) + isAllSet
+                        |                 마스크 비트에 해당하는 비트들 중 하나라도 설정되었다면 true
+            |     
+            details
+                summary class BooleanUtils Since 2.0
+                |         
+                ol
+                    li 스레드-안전. boolean, Boolean에 관한 유틸리티 제공
+                    |             
+                    li static Boolean negate(Boolean bool) + isTrue, isNotTrue, isFalse, isNotFalse
+                    |             
+                    li static boolean toBoolean(Boolean bool, boolean valueIfNull)
+                    |             
+                    li static boolean toBoolean(int value) + toBooleanObject, toInteger
+                    |             
+                    li static boolean toBoolean(String str) + 오버로딩
+                    |             대소문자 무관. true : "true", "on", "y", "t", "yes". toBooleanObject(String)에서는 키워드 외의 문자열에 대해서 null 반환
+                    |             
+                    li static String toStringTrueFalse(boolean bool) + toStringOnOff, toStringYesNo
+                    |             
+                    li static boolean and(boolean... array) Since 3.0.1 + or, xor
+            |     
+            details
+                summary class ClassPathUtils Since 3.3
+                |         
+                ol
+                    li static String toFullyQualifiedName(Class<?> context, String resourceName) + 오버로딩
+                    |             ClassPathUtils.toFullyQualifiedName(StringUtils.class, "StringUtils.properties") == "org.apache.commons.lang3.StringUtils.properties"
+                    |             
+                    li static String toFullyQualifiedPath(Class<?> context, resourceName) + 오버로딩
+                    |             ClassPathUtils.toFullyQualifiedPath(StringUtils.class, "StringUtils.properties") == "org/apache/commons/lang3/StringUtils.properties"
+            |     
+            details
+                summary class Functions
+                |         
+                ol
+                    li 예외를 허용하는 함수 유틸리티. 내부에서 발생한 예외는 RuntimeException으로 감싸여 전달된다
+                    |             
+                    li
+                        | @FunctionalInterface static interface Functions.FailableConsumer<O, T extends Throwable>
+                    |             
+                    li
+                        | @FunctionalInterface static interface Functions.FailableFunction<I, O, T extends Throwable>
+                    |             
+                    li
+                        | @FunctionalInterface static interface Functions.FailablePredicate<O, T extends Throwable>
+                    |             
+                    li
+                        | @FunctionalInterface static interface Functions.FailableRunnable<T extends Throwable>
+                    |             
+                    li
+                        | @FunctionalInterface static interface Functions.FailableCallable<O, T extends Throwable>
+                    |             
+                    li
+                        | @FunctionalInterface static interface Functions.FailableBiConsumer<O1, O2, T extends Throwable>
+                    |             
+                    li
+                        | @FunctionalInterface static interface Functions.FailableBiFunction<I1, I2, O, T extends Throwable>
+                    |             
+                    li
+                        | @FunctionalInterface static interface Functions.FailableBiPredicate<O1, O2, T extends Throwable>
+                |         
+                details
+                    summary Method Detail
+                    |             
+                    ol
+                        li static <T extends Throwable> void run(Functions.FailableRunnable<T> pRunnable)
+                        |                 + call(Callable), accept(Consumer), apply(Function), test(Predicate)
+                        |                 
+                        li
+                            | @SafeVarargs static void tryWithResources(Functions.FailableRunnable<? extends Throwable> pAction, Functions.FailableRunnable<? extends Throwable>... pResources) + 1 오버로딩
+                        |                 AutoCloseable하지 않은 객체들에 대해, pAction 실행 후 성공/실패 여부와 무관하게 pResources가 제공된 순서대로 실행됨을 보장한다.
+                        |                 
+                        li static RuntimeException rethrow(Throwable pThrowable)
+                        |                 사용 예시 : throw rethrow(e);
+            |     
+            details
+                summary class ObjectUtils Since 1.0
+                |         
+                ol
+                    li 스레드-안전. 객체 관련 유틸리티를 제공한다
+                    |             
+                    li static boolean isEmpty(Object object) Since 3.9 + isNotEmpty
+                    |             
+                    ul
+                        li CharSequence : length() == 0
+                        |                 
+                        li Array : length == 0
+                        |                 
+                        li Collection : size() == 0
+                        |                 
+                        li Map : size() == 0
+                    |             
+                    li static <T> T defaultIfNull(T object, T defaultValue)
+                    |             
+                    li @SafeVarargs static <T> T firstNonNull(T... values) Since 3.0
+                    |             
+                    li static boolean anyNotNull(Object... values) Since 3.5 + allNotNull
+                    |             
+                    li @SafeVarargs static <T extends Comparable<? super T>> T min (T... values)
+                    |             + max, compare, median(중앙값), mode(최빈값)
+            |     
+            details
+                summary class RandomUtils Since 3.3
+                |         
+                ol
+                    li
+                        | java.util.Random 인스턴스를 생성하는 귀찮음을 해소해줄 수 있다. 성능/정확성을 위해 
+                        a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://commons.apache.org/proper/commons-rng/commons-rng-core/javadocs/api-1.2/overview-summary.html') Commons RNG
+                        | 를 고려해봄이 좋다
+                    |             
+                    li static boolean nextBoolean() Since 3.5
+                    |             
+                    li static byte[] nextBytes(int count)
+                    |             
+                    li
+                        | static int nextInt(int startInclusive, int endExclusive) + 오버로딩 + long, double, float
+            |     
+            details
+                summary class RandomStringUtils Since 1.0
+                |         
+                ol
+                    li
+                        | 스레드-안전. 간단한 랜덤 문자열 생성. 정교한 작업이 필요하다면 
+                        a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://commons.apache.org/proper/commons-text/javadocs/api-release/') commons-text
+                        |  RandomStringGenerator 이용
+                    |             
+                    li static String random(int count) : 특정 길이 랜덤 문자열 반환
+                    |             
+                    li
+                        | static String randomAscii(int minLengthInclusive, int maxLengthExclusive) Since 3.5 + 오버로딩
+                    |             
+                    li
+                        | static String randomAlphabetic(int minLengthInclusive, int maxLengthExclusive) Since 3.5 + 오버로딩
+                    |             
+                    li
+                        | static String randomNumeric(int minLengthInclusive, int maxLengthExclusive) Since 3.5 + 오버로딩
+                    |             
+                    li
+                        | static String randomAlphanumeric(int minLengthInclusive, int maxLengthExclusive) Since 3.5 + 오버로딩
+                    |             
+                    li
+                        | static String randomGraph(int minLengthInclusive, int maxLengthExclusive) Since 3.5 + 오버로딩 + randomPrint
+                    |             공백 문자를 제외한, 눈에 보이는 문자들(POSIX [:graph:] )로만 구성
+                    |             
+                    li static String random(int count, String chars) + 오버로딩
+                    |             
+                    li 이하 생략
+            |     
+            details
+                summary final class Range<T> implements Serializable Since 3.0
+                |         
+                ol
+                    li 스레드-안전. 비교 가능한 객체의 구간을 정의한다.
+                    |             
+                    li static <T> Range<T> is(T element, Comparator<T> comparator) + 오버로딩
+                    |             구간의 최소/최댓값 모두 element로 설정한 구간을 반환한다
+                    |             
+                    li
+                        | static <T> Range<T> between(T fromInclusive, T toInclusive, Comparator<T> comparator) + 오버로딩
+                    |             
+                    li T getMinimum() + getMaximum, getComparator
+                    |             
+                    li boolean contains(T element)
+                    |             + isBefore, isAfter, isStartedBy, isEndedBy, containsRange, isOverlappedBy, isBeforeRange, isAfterRange
+                    |             
+                    li int elementCompareTo(T element)
+                    |             isBefore면 -1, contains면 0, isAfter면 1
+                    |             
+                    li Range<T> intersectionWith(Range<T> other) SInce 3.0.1
+            |     
+            details
+                summary class RegExUtils Since 3.8
+                |         
+                ol
+                    li static String removeAll(String text, String regex) + 오버로딩
+                    |             + removeFirst, removePattern(removeAll + Pattern.DOTALL 옵션), replaceAll, replaceFirst, replacePattern(replaceAll + Pattern.DOTALL 옵션)
+            |     
+            details
+                summary class SerializationUtils Since 1.0
+                |         
+                ol
+                    li 스레드-안전. 직렬화/역직렬화 유틸리티 제공
+                    |             
+                    li static <T extends Serializable> T clone(T object) : 직렬화를 이용한 depp clone
+                    |             
+                    li static <T extends Serializable> T roundtrip(T msg) : 직렬화 후 역직렬화하여 반환
+                    |             
+                    li static byte[] serialize(Serializable obj) + 오버로딩
+                    |             
+                    li static <T> T deserialize(byte[] objectData) + 오버로딩
+            |     
+            details
+                summary class StringUtils Since 1.0
+                |         
+                ol
+                    li 스레드-안전. null 안전한 String 유틸리티 제공
+                    |             
+                    li static String normalizeSpace(String str) Since 3.0
+                    |             
+                    li static String repeat(String str, String separator, int repeat) Since 2.5 + 오버로딩
+                    |             
+                    li static String rightPad(String str, int size) + leftPad
+                    |             
+                    li static boolean isEmpty(CharSequence cs) Since 3.0 + 오버로딩
+                    |             + isNotEmpty, isAnyEmpty, isNoneEmpty, isAllEmpty, isBlank(isEmpty 포함), isNotBlank, isAnyBlank, isNoneBlank, isAllBlank
+                    |             
+                    li static String trim(String str) : heading, trailing 제어 문자(ASCII <= 32) 제거
+                    |             + trimToNull(결과가 isBlank면 null), trimToEmpty, strip(공백 문자; Character#isWhitespace 또는 사용자 지정 문자 제거), stripToNull, stripToEmpty, stripStart, stripEnd, stripAll, stripAccents
+                    |             
+                    li static String truncate(String str, int maxWidth) Since 3.5 + 오버로딩
+                    |             
+                    li
+                        | static int compare(String str1, String str2, boolean nullIsLess) Since 3.5 + 오버로딩
+                    |             
+                    li
+                        | static boolean contains(CharSequence seq, CharSequence searchSeq) Since 3.0 + 오버로딩
+                    |             + containsAny, containsOnly(검색 대상 문자들로만 구성됐는지 여부), containsNone, startWithAny, endsWithAny
+                    |             
+                    li
+                        | static int indexOf(CharSequence seq, CharSequence searchSeq, int startPos) Since 3.0 + 오버로딩
+                    |             + lastIndexOf, indexOfAny, indexOfAnyBut(검색 대상 문자에 해당하지 않는 최초의 인덱스)
+                    |             
+                    li
+                        | static int ordinalIndexOf(CharSequence str, CharSequence searchStr, int ordinal) Since 3.0 + lastOrdinalIndexOf
+                    |             ordinal번째로 검색된 위치를 반환
+                    |             
+                    li static String left(String str, int len) + right, mid, center, abbreviate
+                    |             
+                    li static String substringBefore(String str, String separator) Since 2.0
+                    |             + substringAfter, substringBeforeLast, substringAfterLast, substringBetween, substringsBetween
+                    |             
+                    li
+                        | static String[] splitByWholeSeparator(String str, String separator, int max) + 오버로딩
+                    |             + splitPreserveAllTokens, splitByWholeSeparatorPreserveAllTokens, splitByCharacterType
+                    |             
+                    li @SafeVarargs static <T> String join(T... elements) + 오버로딩
+                    |             
+                    li static String deleteWhitespace(String str)
+                    |             + removeStart, removeEnd, remove, replaceOnce, replaceEach, replaceEachRepeatedly(문자열이 containsNone을 만족할 때까지 반복), replaceChars
+                    |             
+                    li static String overlay(String str, String overlay, int start, int end) Since 2.0
+                    |             str의 부분 문자열[start, end)을 overlay로 교체한다. start > end인 경우 스왑된다.
+                    |             
+                    li static String rotate(String str, int shift) Since 3.5
+                    |             + reverse, reverseDelimited
+                    |             
+                    li static String getCommonPrefix(String... strs) Since 2.4
+                    |             
+                    li
+                        | static String appendIfMissing(String str, CharSequence suffix, CharSequence... suffixes) Since 3.2 + prependIfMissing
+                    |             
+                    li
+                        | static String wrap(String str, String wrapWith) Since 3.4 + 오버로딩 + wrapIfMissing, unwrap
+            |     
+            details
+                summary class SystemUtils Since 1.0
+                |         
+                ol
+                    li 스레드-안전. java.lang.System에 관한 헬퍼 제공
+                    |             
+                    li public static final String JAVA_HOME Since Java 1.1
+                    |             
+                    li public static final String JAVA_IO_TMPDIR Since Java 1.2
+                    |             
+                    li public static final String OS_ARCH Since Java 1.1
+                    |             
+                    li public static final String USER_DIR Since Java 1.1
+                    |             
+                    li public static final boolean IS_OS_WINDOWS Since 2.0 등
+            |     
+            details
+                summary class ThreadUtils Since 3.5
+                |         
+                ol
+                    li 스레드-안전. Thread, ThreadGroup에 관한 헬퍼 제공
+                    |             
+                    li @FunctionalInterface static interface ThreadUtils.ThreadPredicate
+                    |             boolean test(Thread thread)
+                    |             
+                    li @FunctionalInterface static interface ThreadUtils.ThreadGroupPredicate
+                    |             boolean test(ThreadGroup threadGroup)
+                    |             
+                    li
+                        | static class ThreadUtils.ThreadIdPredicate implements ThreadUtils.ThreadPredicate
+                    |             
+                    li
+                        | static class ThreadUtils.NamePredicate implements ThreadUtils.ThreadPredicate, ThreadUtils.ThreadGroupPredicate
+                |         
+                details
+                    summary Method Detail
+                    |             
+                    ol
+                        li static Thread findThreadById(long threadId, ThreadGroup threadGroup) + 오버로딩
+                        |                 
+                        li
+                            | static Collection<Thread> findThreadsByName(String threadName, ThreadGroup threadGroup) + 오버로딩
+                        |                 
+                        li static Collection<ThreadGroup> findThreadGroupsByName(String threadGroupName)
+                        |                 
+                        li static Collection<ThreadGroup> getAllThreadGroups()
+                        |                 
+                        li static ThreadGroup getSystemThreadGroup()
+                        |                 
+                        li static Collection<Thread> getAllThreads()
+                        |                 
+                        li
+                            | static Collection<Thread> findThreads(ThreadGroup group, boolean recurse, ThreadUtils.ThreadPredicate predicate) + 오버로딩
+            |     
+            details
+                summary class Validate Since 2.0
+                |         
+                ol
+                    li 스레드-안전. 인자 평가에 관한 유틸리티를 제공한다
+                    |             
+                    li static void isTrue(boolean expression, String format, Object... values) + 오버로딩
+                    |             
+                    li static <T> T notNull(T object, String format, Object... values) + 오버로딩
+                    |             
+                    li static <T> T[] notEmpty(T[] array, String format, Object... values) + 오버로딩
+                    |             
+                    li static <T> T[] noNullElements(T[] array, String format, Object... values) + 오버로딩
+                    |             
+                    li
+                        | static <T> T[] validIndex(T[] array, int index, String format, Object... values) Since 3.0 + 오버로딩
+                    |             
+                    li static void matchesPattern(CharSequence input, String pattern) Since 3.0 + 오버로딩
+                    |             
+                    li
+                        | static <T> void inclusiveBetween(T start, T end, Comparable<T> value) Since 3.0 + 오버로딩 + exclusiveBetween
+                    |             
+                    li static void isInstanceOf(Class<?> type, Object obj) Since 3.0 + 오버로딩
+                    |             
+                    li static void isAssignableFrom(Class<?> superType, Class<?> type) Since 3.0 + 오버로딩
+        hr
         details
-          summary Method Detail
-          |             
-          ol
-            li int getValue(int holder)
-            |                 마스크 비트에 해당하는 비트들을 우측으로 시프트하여 값 반환
-            |                 
-            li int getRawValue(int holder)
-            |                 마스크 비트에 해당하는 비트들의 위치 그대로 값 반환
-            |                 
-            li int set(int holder) + clear
-            |                 
-            li int setValue(int holder, int value)
-            |                 마스크 비트에 value를 설정한 후의 값을 반환
-            |                 
-            li boolean isSet(int holder) + isAllSet
-            |                 마스크 비트에 해당하는 비트들 중 하나라도 설정되었다면 true
-      |     
-      details
-        summary class BooleanUtils Since 2.0
-        |         
-        ol
-          li 스레드-안전. boolean, Boolean에 관한 유틸리티 제공
-          |             
-          li static Boolean negate(Boolean bool) + isTrue, isNotTrue, isFalse, isNotFalse
-          |             
-          li static boolean toBoolean(Boolean bool, boolean valueIfNull)
-          |             
-          li static boolean toBoolean(int value) + toBooleanObject, toInteger
-          |             
-          li static boolean toBoolean(String str) + 오버로딩
-          |             대소문자 무관. true : "true", "on", "y", "t", "yes". toBooleanObject(String)에서는 키워드 외의 문자열에 대해서 null 반환
-          |             
-          li static String toStringTrueFalse(boolean bool) + toStringOnOff, toStringYesNo
-          |             
-          li static boolean and(boolean... array) Since 3.0.1 + or, xor
-      |     
-      details
-        summary class ClassPathUtils Since 3.3
-        |         
-        ol
-          li static String toFullyQualifiedName(Class<?> context, String resourceName) + 오버로딩
-          |             ClassPathUtils.toFullyQualifiedName(StringUtils.class, "StringUtils.properties") == "org.apache.commons.lang3.StringUtils.properties"
-          |             
-          li static String toFullyQualifiedPath(Class<?> context, resourceName) + 오버로딩
-          |             ClassPathUtils.toFullyQualifiedPath(StringUtils.class, "StringUtils.properties") == "org/apache/commons/lang3/StringUtils.properties"
-      |     
-      details
-        summary class Functions
-        |         
-        ol
-          li 예외를 허용하는 함수 유틸리티. 내부에서 발생한 예외는 RuntimeException으로 감싸여 전달된다
-          |             
-          li
-            | @FunctionalInterface static interface Functions.FailableConsumer<O, T extends Throwable>
-          |             
-          li
-            | @FunctionalInterface static interface Functions.FailableFunction<I, O, T extends Throwable>
-          |             
-          li
-            | @FunctionalInterface static interface Functions.FailablePredicate<O, T extends Throwable>
-          |             
-          li
-            | @FunctionalInterface static interface Functions.FailableRunnable<T extends Throwable>
-          |             
-          li
-            | @FunctionalInterface static interface Functions.FailableCallable<O, T extends Throwable>
-          |             
-          li
-            | @FunctionalInterface static interface Functions.FailableBiConsumer<O1, O2, T extends Throwable>
-          |             
-          li
-            | @FunctionalInterface static interface Functions.FailableBiFunction<I1, I2, O, T extends Throwable>
-          |             
-          li
-            | @FunctionalInterface static interface Functions.FailableBiPredicate<O1, O2, T extends Throwable>
-        |         
+            summary org.apache.commons.lang3.arch Since 3.6
+            |     
+            details(open='')
+                summary class Processor Since 3.6
+                |         
+                ol
+                    li static enum Processor.Arch : BIT_32, BIT_64, UNKNOWN
+                    |             
+                    li static enum Processor.Type : IA_64, PPC, UNKNOWN, X86
+                    |             
+                    li Processor.Arch getArch + getType
+                    |             
+                    li boolean is32Bit() + is64Bit, isX86, ...
+        hr
         details
-          summary Method Detail
-          |             
-          ol
-            li static <T extends Throwable> void run(Functions.FailableRunnable<T> pRunnable)
-            |                 + call(Callable), accept(Consumer), apply(Function), test(Predicate)
-            |                 
-            li
-              | @SafeVarargs static void tryWithResources(Functions.FailableRunnable<? extends Throwable> pAction, Functions.FailableRunnable<? extends Throwable>... pResources) + 1 오버로딩
-            |                 AutoCloseable하지 않은 객체들에 대해, pAction 실행 후 성공/실패 여부와 무관하게 pResources가 제공된 순서대로 실행됨을 보장한다.
-            |                 
-            li static RuntimeException rethrow(Throwable pThrowable)
-            |                 사용 예시 : throw rethrow(e);
-      |     
-      details
-        summary class ObjectUtils Since 1.0
-        |         
-        ol
-          li 스레드-안전. 객체 관련 유틸리티를 제공한다
-          |             
-          li static boolean isEmpty(Object object) Since 3.9 + isNotEmpty
-          |             
-          ul
-            li CharSequence : length() == 0
-            |                 
-            li Array : length == 0
-            |                 
-            li Collection : size() == 0
-            |                 
-            li Map : size() == 0
-          |             
-          li static <T> T defaultIfNull(T object, T defaultValue)
-          |             
-          li @SafeVarargs static <T> T firstNonNull(T... values) Since 3.0
-          |             
-          li static boolean anyNotNull(Object... values) Since 3.5 + allNotNull
-          |             
-          li @SafeVarargs static <T extends Comparable<? super T>> T min (T... values)
-          |             + max, compare, median(중앙값), mode(최빈값)
-      |     
-      details
-        summary class RandomUtils Since 3.3
-        |         
-        ol
-          li
-            | java.util.Random 인스턴스를 생성하는 귀찮음을 해소해줄 수 있다. 성능/정확성을 위해 
-            a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://commons.apache.org/proper/commons-rng/commons-rng-core/javadocs/api-1.2/overview-summary.html') Commons RNG
-            | 를 고려해봄이 좋다
-          |             
-          li static boolean nextBoolean() Since 3.5
-          |             
-          li static byte[] nextBytes(int count)
-          |             
-          li
-            | static int nextInt(int startInclusive, int endExclusive) + 오버로딩 + long, double, float
-      |     
-      details
-        summary class RandomStringUtils Since 1.0
-        |         
-        ol
-          li
-            | 스레드-안전. 간단한 랜덤 문자열 생성. 정교한 작업이 필요하다면 
-            a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://commons.apache.org/proper/commons-text/javadocs/api-release/') commons-text
-            |  RandomStringGenerator 이용
-          |             
-          li static String random(int count) : 특정 길이 랜덤 문자열 반환
-          |             
-          li
-            | static String randomAscii(int minLengthInclusive, int maxLengthExclusive) Since 3.5 + 오버로딩
-          |             
-          li
-            | static String randomAlphabetic(int minLengthInclusive, int maxLengthExclusive) Since 3.5 + 오버로딩
-          |             
-          li
-            | static String randomNumeric(int minLengthInclusive, int maxLengthExclusive) Since 3.5 + 오버로딩
-          |             
-          li
-            | static String randomAlphanumeric(int minLengthInclusive, int maxLengthExclusive) Since 3.5 + 오버로딩
-          |             
-          li
-            | static String randomGraph(int minLengthInclusive, int maxLengthExclusive) Since 3.5 + 오버로딩 + randomPrint
-          |             공백 문자를 제외한, 눈에 보이는 문자들(POSIX [:graph:] )로만 구성
-          |             
-          li static String random(int count, String chars) + 오버로딩
-          |             
-          li 이하 생략
-      |     
-      details
-        summary final class Range<T> implements Serializable Since 3.0
-        |         
-        ol
-          li 스레드-안전. 비교 가능한 객체의 구간을 정의한다.
-          |             
-          li static <T> Range<T> is(T element, Comparator<T> comparator) + 오버로딩
-          |             구간의 최소/최댓값 모두 element로 설정한 구간을 반환한다
-          |             
-          li
-            | static <T> Range<T> between(T fromInclusive, T toInclusive, Comparator<T> comparator) + 오버로딩
-          |             
-          li T getMinimum() + getMaximum, getComparator
-          |             
-          li boolean contains(T element)
-          |             + isBefore, isAfter, isStartedBy, isEndedBy, containsRange, isOverlappedBy, isBeforeRange, isAfterRange
-          |             
-          li int elementCompareTo(T element)
-          |             isBefore면 -1, contains면 0, isAfter면 1
-          |             
-          li Range<T> intersectionWith(Range<T> other) SInce 3.0.1
-      |     
-      details
-        summary class RegExUtils Since 3.8
-        |         
-        ol
-          li static String removeAll(String text, String regex) + 오버로딩
-          |             + removeFirst, removePattern(removeAll + Pattern.DOTALL 옵션), replaceAll, replaceFirst, replacePattern(replaceAll + Pattern.DOTALL 옵션)
-      |     
-      details
-        summary class SerializationUtils Since 1.0
-        |         
-        ol
-          li 스레드-안전. 직렬화/역직렬화 유틸리티 제공
-          |             
-          li static <T extends Serializable> T clone(T object) : 직렬화를 이용한 depp clone
-          |             
-          li static <T extends Serializable> T roundtrip(T msg) : 직렬화 후 역직렬화하여 반환
-          |             
-          li static byte[] serialize(Serializable obj) + 오버로딩
-          |             
-          li static <T> T deserialize(byte[] objectData) + 오버로딩
-      |     
-      details
-        summary class StringUtils Since 1.0
-        |         
-        ol
-          li 스레드-안전. null 안전한 String 유틸리티 제공
-          |             
-          li static String normalizeSpace(String str) Since 3.0
-          |             
-          li static String repeat(String str, String separator, int repeat) Since 2.5 + 오버로딩
-          |             
-          li static String rightPad(String str, int size) + leftPad
-          |             
-          li static boolean isEmpty(CharSequence cs) Since 3.0 + 오버로딩
-          |             + isNotEmpty, isAnyEmpty, isNoneEmpty, isAllEmpty, isBlank(isEmpty 포함), isNotBlank, isAnyBlank, isNoneBlank, isAllBlank
-          |             
-          li static String trim(String str) : heading, trailing 제어 문자(ASCII <= 32) 제거
-          |             + trimToNull(결과가 isBlank면 null), trimToEmpty, strip(공백 문자; Character#isWhitespace 또는 사용자 지정 문자 제거), stripToNull, stripToEmpty, stripStart, stripEnd, stripAll, stripAccents
-          |             
-          li static String truncate(String str, int maxWidth) Since 3.5 + 오버로딩
-          |             
-          li
-            | static int compare(String str1, String str2, boolean nullIsLess) Since 3.5 + 오버로딩
-          |             
-          li
-            | static boolean contains(CharSequence seq, CharSequence searchSeq) Since 3.0 + 오버로딩
-          |             + containsAny, containsOnly(검색 대상 문자들로만 구성됐는지 여부), containsNone, startWithAny, endsWithAny
-          |             
-          li
-            | static int indexOf(CharSequence seq, CharSequence searchSeq, int startPos) Since 3.0 + 오버로딩
-          |             + lastIndexOf, indexOfAny, indexOfAnyBut(검색 대상 문자에 해당하지 않는 최초의 인덱스)
-          |             
-          li
-            | static int ordinalIndexOf(CharSequence str, CharSequence searchStr, int ordinal) Since 3.0 + lastOrdinalIndexOf
-          |             ordinal번째로 검색된 위치를 반환
-          |             
-          li static String left(String str, int len) + right, mid, center, abbreviate
-          |             
-          li static String substringBefore(String str, String separator) Since 2.0
-          |             + substringAfter, substringBeforeLast, substringAfterLast, substringBetween, substringsBetween
-          |             
-          li
-            | static String[] splitByWholeSeparator(String str, String separator, int max) + 오버로딩
-          |             + splitPreserveAllTokens, splitByWholeSeparatorPreserveAllTokens, splitByCharacterType
-          |             
-          li @SafeVarargs static <T> String join(T... elements) + 오버로딩
-          |             
-          li static String deleteWhitespace(String str)
-          |             + removeStart, removeEnd, remove, replaceOnce, replaceEach, replaceEachRepeatedly(문자열이 containsNone을 만족할 때까지 반복), replaceChars
-          |             
-          li static String overlay(String str, String overlay, int start, int end) Since 2.0
-          |             str의 부분 문자열[start, end)을 overlay로 교체한다. start > end인 경우 스왑된다.
-          |             
-          li static String rotate(String str, int shift) Since 3.5
-          |             + reverse, reverseDelimited
-          |             
-          li static String getCommonPrefix(String... strs) Since 2.4
-          |             
-          li
-            | static String appendIfMissing(String str, CharSequence suffix, CharSequence... suffixes) Since 3.2 + prependIfMissing
-          |             
-          li
-            | static String wrap(String str, String wrapWith) Since 3.4 + 오버로딩 + wrapIfMissing, unwrap
-      |     
-      details
-        summary class SystemUtils Since 1.0
-        |         
-        ol
-          li 스레드-안전. java.lang.System에 관한 헬퍼 제공
-          |             
-          li public static final String JAVA_HOME Since Java 1.1
-          |             
-          li public static final String JAVA_IO_TMPDIR Since Java 1.2
-          |             
-          li public static final String OS_ARCH Since Java 1.1
-          |             
-          li public static final String USER_DIR Since Java 1.1
-          |             
-          li public static final boolean IS_OS_WINDOWS Since 2.0 등
-      |     
-      details
-        summary class ThreadUtils Since 3.5
-        |         
-        ol
-          li 스레드-안전. Thread, ThreadGroup에 관한 헬퍼 제공
-          |             
-          li @FunctionalInterface static interface ThreadUtils.ThreadPredicate
-          |             boolean test(Thread thread)
-          |             
-          li @FunctionalInterface static interface ThreadUtils.ThreadGroupPredicate
-          |             boolean test(ThreadGroup threadGroup)
-          |             
-          li
-            | static class ThreadUtils.ThreadIdPredicate implements ThreadUtils.ThreadPredicate
-          |             
-          li
-            | static class ThreadUtils.NamePredicate implements ThreadUtils.ThreadPredicate, ThreadUtils.ThreadGroupPredicate
-        |         
+            summary org.apache.commons.lang3.concurrent
+            |     
+            details
+                summary CircuitBreaker
+                |         
+                details
+                    summary interface CircuitBreaker<T> Since 3.5
+                    |             
+                    ol
+                        li
+                            a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://martinfowler.com/bliki/CircuitBreaker.html') CircuitBreaker
+                            | 는 외부 리소스의 가용 여부를 알려주는 역할을 한다.
+                        |                 리소스를 신뢰할 수 없는 상태로 변이되면 당분간 리소스에 대한 모든 요청을 즉시 거부하도록 고안된 개념이지만, 적절하게 알아서 구현하면 된다
+                        |                 
+                        li 회로에서 가져온 개념이므로 close가 가용, open이 불가를 의미한다
+                        |                 
+                        li boolean isOpen() + isClosed
+                        |                 
+                        li void close() + open
+                        |                 
+                        li boolean checkState()
+                        |                 가용 상태를 재확인하여 필요하다면 상태를 변경한다.
+                        |                 
+                        li boolean incrementAndCheckState(T increment)
+                        |                 checkState()에 인자가 필요한 경우 이용한다
+                |         
+                details
+                    summary abstract class AbstractCircuitBreaker<T> implements CircuitBreaker<T> Since 3.5
+                    |             
+                    ol
+                        li protected static enum AbstractCircuitBreaker.Stage : CLOSED, OPEN
+                        |                 
+                        li void addChangeListener(PropertyChangeListener listener)
+                        |                 
+                        li void removeChangeListener(PropertyChangeListener listener)
+                |         
+                details
+                    summary class ThresholdCircuitBreaker extends AbstractCircuitBreaker<Long> Since 3.5
+                    |             
+                    ol
+                        li 스레드-안전. 1회용 CircuitBreaker를 제공한다. 물론 close()로 강제로 천이시킬 수 있다
+                        |                 
+                        li public ThresholdCircuitBreaker(long threshold)
+                        |                 
+                        li long getThreshold()
+                |         
+                details
+                    summary class EventCountCircuitBreaker extends AbstractCircuitBreaker<Integer> Since 3.5
+                    |             
+                    ol
+                        li 카운트와 인터벌을 가지고 아래와 같은 서비스를 제공할 수 있다. 카운팅은 외부에서 직접해야함에 유의
+                        |                 
+                        ul
+                            li n개 이상의 실패가 발생하면 상태를 OPEN으로 천이
+                            |                     
+                            li n분 동안 m개 이상의 실패가 발생하면 l분간 상태를 OPEN으로 천이.
+                            |                     
+                            li 분당 요청이 n개 이하로 떨어지면 상태를 CLOSED로 천이
+                        |                 
+                        li
+                            | public EventCountCircuitBreaker(int threshold, long checkInterval, TimeUnit checkUnit)
+                        |                 기준 이벤트 카운트/인터벌 모두 공유. 초당 최대 5개의 처리를 하는
+                        |                 
+                        button.btn-code(path='Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', displayrange='[11,32]', lan='java') 예시 »
+                        |                 
+                        li
+                            | public EventCountCircuitBreaker(int openingThreshold, long checkInterval, TimeUnit checkUnit, int closingThreshold)
+                        |                 기준 인터벌을 공유. 초당 5개 이상의 요청이 발생하면 OPEN, 초당 2개 이하로 떨어지면(부정확) CLOSE하는
+                        |                 
+                        button.btn-code(path='Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', displayrange='[34,61]', lan='java') 예시 »
+                        |                 
+                        li
+                            | public EventCountCircuitBreaker(int openingThreshold, long openingInterval, TimeUnit openingUnit, int closingThreshold, long closingInterval, TimeUnit closingUnit)
+                        |                 초당 5번 이상 실패하면 2초간 OPEN하는
+                        |                 
+                        button.btn-code(path='Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', displayrange='[63,90]', lan='java') 예시 »
+            |     
+            details
+                summary Initializer
+                |         
+                details
+                    summary interface ConcurrentInitializer<T> Since 3.0
+                    |             
+                    ol
+                        li 스레드-안전한 초기화 로직을 의미한다
+                        |                 
+                        li T get()
+                |         
+                details
+                    summary
+                        | abstract class AtomicInitializer<T> implements ConcurrentInitializer<T> Since 3.0
+                    |             
+                    ol
+                        li
+                            | 『Effective Java』에서 소개하는 
+                            button.btn-code(path='posts/java/effective_java.html', lan='nohighlight') 객체 필드 초기화 지연
+                            | 과 유사한 형태의 로직으로, AtomicReference를 이용해 단 한 번만 객체가 초기화됨을 보장한다
+                        |                 
+                        li protected abstrct T initialize()
+                |         
+                details
+                    summary
+                        | abstract class AtomicSafeInitializer<T> implements ConcurrentInitializer<T> Since 3.0
+                    |             AtomicInitializer와 다르가 initialize()가 단 한 번만 호출됨이 보장된다
+                |         
+                details
+                    summary
+                        | abstract class BackgroundInitializer<T> implements ConcurrentInitializer<T> Since 3.0
+                    |             
+                    ol
+                        li 내부적으로 ExecutorService와 Future를 이용해 백그라운드 초기화 작업을 지원한다.
+                        |                 start()로 초기화를 다른 스레드에서 시작시키고, get()을 통해 블로킹할 수 있다.
+                        |                 
+                        li final ExecutorService getExternalExecutor() + setExternalExecutor
+                        |                 
+                        li boolean start()
+                        |                 단 한 번만 실행됨이 보장된다. 최초에만 true, 나머지는 false 반환.
+                        |                 
+                        li boolean isStarted() == (future != null)
+                        |                 
+                        li Future<T> getFuture()
+                        |                 
+                        li protected 메서드 생략
+                |         
+                details
+                    summary abstract class LazyInitializer<T> implements ConcurrentInitializer<T> Since 3.0
+                    |             
+                    ol
+                        li
+                            | 『Effective Java』에서 소개하는 
+                            button.btn-code(path='posts/java/effective_java.html', lan='nohighlight') 객체 필드 초기화 지연
+                            |  로직을 이용해 늦은 초기화를 지원한다
+                        |                 
+                        li protected abstract T initialize()
+                |         
+                details
+                    summary class ConstantInitializer<T> implements ConcurrentInitializer<T> Since 3.0
+                    |             항상 같은 객체/값을 반환하는 ConcurrentInitializer 콘크리트 클래스
+                |         
+                details
+                    summary
+                        | class CallableBackgroundInitializer<T> extends BackgroundInitializer<T> Since 3.0
+                    |             Callable을 이용한 BackgroundInitializer 콘크리트 클래스
+                |         
+                details
+                    summary
+                        | class MultiBackgroundInitializer extends BackgroundInitializer<MultiBackgroundInitializer.MultiBackgroundInitializerResults> Since 3.0
+                    |             
+                    details
+                        summary static class MultiBackgroundInitializer.MultiBackgroundInitializerResults
+                        |                 
+                        ol
+                            li BackgroundInitializer<?> getInitializer(String name)
+                            |                     
+                            li boolean isException(String name) + isSuccessful, getResultObject, getException
+                            |                     
+                            li Set<String> initializerNames()
+                    |             
+                    ol
+                        li 병렬로 초기화 작업을 진행한다
+                        |                 
+                        li public MultiBackgroundInitializer(ExecutorService exec)
+                        |                 명시하지 않으면 내부 ExecutorService 사용
+                        |                 
+                        li void addInitializer(String name, BackgroundInitializer<?> init)
+            |     
+            details
+                summary ThreadFactory
+                |         
+                details(open='')
+                    summary class BasicThreadFactory implements ThreadFactory Since 3.0
+                    |             
+                    ol
+                        li 내부 ThreadFactory가 생성한 스레드에 특정 속성들을 설정하여 관리하기 편하게 해준다.
+                        |                 
+                        li namingPattern에는 포맷 문자열을 이용하면 된다. %d에는 스레드 번호가 할당된다.
+                        |                 스레드 번호는 내부적으로 관리되는 총 생성 스레드 수와 관계가 있다
+                        |                 
+                        li long getThreadCount() + 이하 생략
+                    |             
+                    details
+                        summary static class BasicThreadFactory.Builder implements Builder<BasicThreadFactory>
+                        |                 
+                        ol
+                            li BasicThreadFactory.Builder wrappedFactory(ThreadFactory factory)
+                            |                     
+                            li BasicThreadFactory.Builder namingPattern(String pattern)
+                            |                     
+                            li BasicThreadFactory.Builder daemon(boolean daemon)
+                            |                     
+                            li
+                                | BasicThreadFactory.Builder uncaughtExceptionHandler(Thread.UncaughtExceptionHandler handler)
+                            |                     
+                            li void reset() : build() 호출 시 빌드 후 자동으로 호출된다
+            |     
+            details
+                summary class ConcurrentUtils Since 3.0
+                |         
+                ol
+                    li
+                        | static ConcurrentException extractCause(ExecutionException ex) + extractCauseUnchecked
+                    |             
+                    ul
+                        li ex == null || ex.getCause() == null 이면 null 반환
+                        |                 
+                        li ex.getCause()가 RuntimeException, Error면 rethrow
+                        |                 
+                        li
+                            | 그 외의 경우 새 ConcurrentException의 cause로 설정되어 반환된다; extractCauseUnchecked의 경우 ConcurrentRuntimeException을 반환
+                    |             
+                    li static void handleCause(ExecutionException ex) + handleCauseUnchecked
+                    |             각각 extractCause와 extractCauseUnchecked를 호출하여 그 반환값이 null이 아니면 throw한다. 명시적으로 예외를 처리하기 위해 try 구문에서 호출하면 된다.
+                    |             
+                    li
+                        | static <K, V> V putIfAbsent(ConcurrentMap<K, V> map, K key, V value) + createIfAbsent
+                    |             
+                    li
+                        | static <T> initialize(ConcurrentInitializer<T> initializer) + initializeUnchecked
+                    |             
+                    li static <T> Future<T> constantFuture(T value)
+            |     
+            details
+                summary interface Computable<I, O> Since 3.6
+                |         O compute(I arg)
+            |     
+            details
+                summary class Memoizer<I, O> implements Computable<I, O> Since 3.6
+                |         
+                ol
+                    li 이전 연산 결과를 내부 맵에 저장한다. 맵의 크기를 제한하거나, 내용을 삭제할 수는 없다.
+                    |             
+                    li public Memoizer(Computable<I, O> computable, boolean recalculate)
+                    |             recalculate : 이전 compute가 실패한 경우, 다음 compute 호출 시 다시 계산할 지 여부. 지정하지 않으면 false
+            |     
+            details
+                summary class TimedSemaphore Since 3.0
+                |         
+                ol
+                    li 시간 당 소비자 수를 제한하는 세마포어를 제공한다
+                    |             
+                    li public static final int NO_LIMIT
+                    |             
+                    li
+                        | public TimedSemaphore(ScheduledExecutorService service, long timePeriod, TimeUnit timeUnit, int limit)
+                    |             service가 제공되지 않으면 내부적으로 하나 생성하여 사용한다
+                |         
+                details
+                    summary Metho Detail
+                    |             
+                    ol
+                        li final void setLimit(int limit) + getLimit
+                        |                 
+                        li void shutdown() + isShutdown
+                        |                 
+                        li void acquire()
+                        |                 순번을 얻기까지 스레드를 블록한다
+                        |                 
+                        li boolean tryAcquire() Since 3.5
+                        |                 순번을 얻을 수 있다면 얻은 뒤 true를 반환하고, 아니면 false를 반환한다. true를 받았다면 즉시 다음으로 진행하면 된다
+                        |                 
+                        li int getLastAcquiresPerPeriod()
+                        |                 + getAcquireCount, getAvailablePermits, getAverageCallsPerPeriod, getPeriod, getUnit
+        hr
         details
-          summary Method Detail
-          |             
-          ol
-            li static Thread findThreadById(long threadId, ThreadGroup threadGroup) + 오버로딩
-            |                 
-            li
-              | static Collection<Thread> findThreadsByName(String threadName, ThreadGroup threadGroup) + 오버로딩
-            |                 
-            li static Collection<ThreadGroup> findThreadGroupsByName(String threadGroupName)
-            |                 
-            li static Collection<ThreadGroup> getAllThreadGroups()
-            |                 
-            li static ThreadGroup getSystemThreadGroup()
-            |                 
-            li static Collection<Thread> getAllThreads()
-            |                 
-            li
-              | static Collection<Thread> findThreads(ThreadGroup group, boolean recurse, ThreadUtils.ThreadPredicate predicate) + 오버로딩
-      |     
-      details
-        summary class Validate Since 2.0
-        |         
-        ol
-          li 스레드-안전. 인자 평가에 관한 유틸리티를 제공한다
-          |             
-          li static void isTrue(boolean expression, String format, Object... values) + 오버로딩
-          |             
-          li static <T> T notNull(T object, String format, Object... values) + 오버로딩
-          |             
-          li static <T> T[] notEmpty(T[] array, String format, Object... values) + 오버로딩
-          |             
-          li static <T> T[] noNullElements(T[] array, String format, Object... values) + 오버로딩
-          |             
-          li
-            | static <T> T[] validIndex(T[] array, int index, String format, Object... values) Since 3.0 + 오버로딩
-          |             
-          li static void matchesPattern(CharSequence input, String pattern) Since 3.0 + 오버로딩
-          |             
-          li
-            | static <T> void inclusiveBetween(T start, T end, Comparable<T> value) Since 3.0 + 오버로딩 + exclusiveBetween
-          |             
-          li static void isInstanceOf(Class<?> type, Object obj) Since 3.0 + 오버로딩
-          |             
-          li static void isAssignableFrom(Class<?> superType, Class<?> type) Since 3.0 + 오버로딩
-    hr
-    details
-      summary org.apache.commons.lang3.arch Since 3.6
-      |     
-      details(open='')
-        summary class Processor Since 3.6
-        |         
-        ol
-          li static enum Processor.Arch : BIT_32, BIT_64, UNKNOWN
-          |             
-          li static enum Processor.Type : IA_64, PPC, UNKNOWN, X86
-          |             
-          li Processor.Arch getArch + getType
-          |             
-          li boolean is32Bit() + is64Bit, isX86, ...
-    hr
-    details
-      summary org.apache.commons.lang3.concurrent
-      |     
-      details
-        summary CircuitBreaker
-        |         
+            summary org.apache.commons.lang3.event Since 3.0
+            |     
+            details
+                summary class EventListenerSupport<L> implements Serializable Since 3.0
+                |         
+                ol
+                    li 이벤트 리스터들을 관리하고, 일괄 통지하는 기능을 제공한다
+                    |             
+                    li public EventListenerSupport(Class<L> listenerInterface, ClassLoader classLoader)
+                    |             classLoader가 지정되지 않은 경우, 현재 스레드의 것을 이용한다
+                |         
+                details
+                    summary Method Detail
+                    |             
+                    ol
+                        li static <T> EventListenerSupport<T> create(Class<T> listenerInterface)
+                        |                 
+                        li L fire()
+                        |                 프록시 객체를 반환한다. 프록시 메서드는 등록된 모든 이벤트 리스너에 포워딩된다
+                        |                 
+                        li void addListener(L listener, boolean allowDuplicate) Since 3.5 + 1 오버로딩
+                        |                 allowDuplicate는 지정되지 않은 경우 true
+                        |                 
+                        li void removeListener(L listener)
+                        |                 
+                        li L[] getListeners()
+            |     
+            details
+                summary class EventUtils Since 3.0
+                |         
+                ol
+                    li
+                        | static <L> void addEventListener(Object eventSource, Class<L> listenerType, L listener)
+                    |             eventSource의 "add" + listenerType.getSimpleName()에 해당하는 메서드로 listener 등록
+                    |             
+                    li
+                        | static <L> void bindEventsToMethod(Object target, String methodName, Object eventSource, Class<L> listenerType, String... eventTypes)
+                    |             addEventListener를 호출한다. 이때 listener는 target의 methodName 메서드를 호출하는 프록시다. eventTypes는 listenerType 인터페이스 중 어떤 메서드들에 대해 동작할 지를 의미하며, 비어 있는 경우 모든 메서드에 대해 동작한다.
+        hr
         details
-          summary interface CircuitBreaker<T> Since 3.5
-          |             
-          ol
-            li
-              a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://martinfowler.com/bliki/CircuitBreaker.html') CircuitBreaker
-              | 는 외부 리소스의 가용 여부를 알려주는 역할을 한다.
-            |                 리소스를 신뢰할 수 없는 상태로 변이되면 당분간 리소스에 대한 모든 요청을 즉시 거부하도록 고안된 개념이지만, 적절하게 알아서 구현하면 된다
-            |                 
-            li 회로에서 가져온 개념이므로 close가 가용, open이 불가를 의미한다
-            |                 
-            li boolean isOpen() + isClosed
-            |                 
-            li void close() + open
-            |                 
-            li boolean checkState()
-            |                 가용 상태를 재확인하여 필요하다면 상태를 변경한다.
-            |                 
-            li boolean incrementAndCheckState(T increment)
-            |                 checkState()에 인자가 필요한 경우 이용한다
-        |         
+            summary org.apache.commons.lang3.exception Since 1.0
+            |     
+            details(open='')
+                summary class ExceptionUtils Since 1.0
+                |         
+                ol
+                    li static Throwable getRootCause(Throwable throwable)
+                    |             
+                    li
+                        | static void printRootCauseStackTrace(Throwable throwable, PrintWriter writer) Since 2.0 + 오버로딩
+                    |             
+                    li static <R> R rethrow(Throwable throwable)
+                    |             R은 장식. throwable을 즉시 throw한다. 아래와 같이 제네릭을 이용하여 CheckedException을 컴파일러로부터 숨긴다. 메서드 시그니처의 불필요한 throws 절과 예외 체인의 불필요한 "Caused by" 항목을 제거할 수 있다. 자바의 예외 처리 방법에 벗어나는 감이 있지만, 라이브러리 개발에는 유용하다.
+                    br
+                    |             
+                    br
+                    |             @SuppressWarnings("unchecked")
+                    br
+                    |             private static <R, T extends Throwable> R typeErasure(final Throwable throwable) throws T {
+                    br
+                    |             　　throw (T) throwable;
+                    br
+                    |             }
+                    |             
+                    li static <R> R wrapAndThrow(Throwable throwable)
+                    |             throwable이 RuntimeException, Error의 인스턴스면 각각 해당 타입으로 throw하고, 나머지는 UndeclaredThrowableException로 throw한다. 결과적으로 Error를 제외하면 모두 RuntimeException으로 throw하는 셈
+        hr
         details
-          summary abstract class AbstractCircuitBreaker<T> implements CircuitBreaker<T> Since 3.5
-          |             
-          ol
-            li protected static enum AbstractCircuitBreaker.Stage : CLOSED, OPEN
-            |                 
-            li void addChangeListener(PropertyChangeListener listener)
-            |                 
-            li void removeChangeListener(PropertyChangeListener listener)
-        |         
+            summary org.apache.commons.lang3.math Since 2.0
+            |     
+            details
+                summary final class Fraction extends Number implements Comparable<Fraction> Since 2.0
+                |         
+                ol
+                    li int 분자/분모를 이용한다. BigInteger 구현은 Commons Math BigFraction을 이용
+                    |             
+                    li public static final Fraction ZERO, ONE, ONE_HALF, ONE_THIRD, ...
+                    |             
+                    li static Fraction getFraction(int numerator, int denominator) : 분수
+                    |             
+                    li static Fraction getFraction(int whole, int numerator, int denominator) : 대분수
+                    |             
+                    li static Fraction getReducedFraction(int numerator, int denominator) : 기약분수
+                    |             
+                    li static Fraction getFraction(double value) + 오버로딩
+                    |             
+                    li Fraction reduce()
+                    |             + invert, negate, abs, pow, add, subtract, multiplyBy, divideBy
+            |     
+            details
+                summary class NumberUtils Since 2.0
+                |         
+                ol
+                    li static int toInt(String str, int defaultValue) Since 2.1 + 오버로딩
+                    |             null과 빈 문자열은 defaultValue를 반환. 지정되지 않은 경우 0
+                    |             + toLong, toFloat, toDouble, toByte, toShort
+                    |             
+                    li static BigDecimal toScaledBigDecimal(String value) Since 3.8 + 오버로딩
+                    |             RoundingMode.HALF_EVEN으로 소수점 2째자리까지만 남긴다
+                    |             
+                    li static Number createNumber(String str)
+                    |             0x, -0x, #, -#로 시작하면 16진수로 간주. 타입 정보를 명시하지 않은 경우, 정수는 Integer, Long(8자 이상), BigInteger(16자 이상)로 변환, 소수는 Float, Double, BigDecimal로 변환된다
+                    br
+                    |             + createFloat, createDouble, createInteger, ...
+                    |             
+                    li static int min(int... array) + 오버로딩 + max
+        hr
         details
-          summary class ThresholdCircuitBreaker extends AbstractCircuitBreaker<Long> Since 3.5
-          |             
-          ol
-            li 스레드-안전. 1회용 CircuitBreaker를 제공한다. 물론 close()로 강제로 천이시킬 수 있다
-            |                 
-            li public ThresholdCircuitBreaker(long threshold)
-            |                 
-            li long getThreshold()
-        |         
+            summary org.apache.commons.lang3.mutable Since 2.1
+            |     
+            details
+                summary interface Mutable<T> Since 2.1
+                |         
+                ol
+                    li java.lang에서 제공하는 기본 타입의 래퍼들이 변경할 수 없는 것에 반해, 변경할 수 있는 T 타입 래퍼를 제공한다.
+                    |             
+                    li T getValue() + setValue
+            |     
+            details
+                summary
+                    | class MutableBoolean implements Mutable<Boolean>, Serializable, Comparable<MutableBoolean> Since 2.2
+                |         
+                ol
+                    li boolean booleanValue()
+                    |             
+                    li boolean isTrue()
+            |     
+            details
+                summary
+                    | class MutableInt extends Number implements Comparable<MutableInt>, Mutable<Number> Since 2.1
+                |         
+                ol
+                    li + MutableByte, MutableDouble, MutableFloat, MutableLong, MutaleShort
+                    |             
+                    li void increment() + decrement
+                    |             
+                    li int getAndIncrement() Since 3.5 + incrementAndGet, ...
+                    |             스레드-안전하지 않다
+                    |             
+                    li void add(Number operand) Since 2.2 + 오버로딩 + subtract, ...
+            |     
+            details
+                summary class MutableObject<T> implements Mutable<T>, Serializable Since 2.1
+                |         추가 메서드 없음.
+        hr
         details
-          summary class EventCountCircuitBreaker extends AbstractCircuitBreaker<Integer> Since 3.5
-          |             
-          ol
-            li 카운트와 인터벌을 가지고 아래와 같은 서비스를 제공할 수 있다. 카운팅은 외부에서 직접해야함에 유의
-            |                 
-            ul
-              li n개 이상의 실패가 발생하면 상태를 OPEN으로 천이
-              |                     
-              li n분 동안 m개 이상의 실패가 발생하면 l분간 상태를 OPEN으로 천이.
-              |                     
-              li 분당 요청이 n개 이하로 떨어지면 상태를 CLOSED로 천이
-            |                 
-            li
-              | public EventCountCircuitBreaker(int threshold, long checkInterval, TimeUnit checkUnit)
-            |                 기준 이벤트 카운트/인터벌 모두 공유. 초당 최대 5개의 처리를 하는
-            |                 
-            button.btn-code(path='Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', displayrange='[11,32]', lan='java') 예시 »
-            |                 
-            li
-              | public EventCountCircuitBreaker(int openingThreshold, long checkInterval, TimeUnit checkUnit, int closingThreshold)
-            |                 기준 인터벌을 공유. 초당 5개 이상의 요청이 발생하면 OPEN, 초당 2개 이하로 떨어지면(부정확) CLOSE하는
-            |                 
-            button.btn-code(path='Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', displayrange='[34,61]', lan='java') 예시 »
-            |                 
-            li
-              | public EventCountCircuitBreaker(int openingThreshold, long openingInterval, TimeUnit openingUnit, int closingThreshold, long closingInterval, TimeUnit closingUnit)
-            |                 초당 5번 이상 실패하면 2초간 OPEN하는
-            |                 
-            button.btn-code(path='Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', displayrange='[63,90]', lan='java') 예시 »
-      |     
-      details
-        summary Initializer
-        |         
+            summary org.apache.commons.lang3.reflect Since 3.0
+            |     
+            details
+                summary interface Typed<T> Since 3.2
+                |         
+                ol
+                    li "타입을 가짐"에 대한 일반화
+                    |             
+                    li Type getType()
+            |     
+            details
+                summary abstract class TypeLiteral<T> implements Typed<T> Since 3.2
+                |         
+                ol
+                    li
+                        | JavaDoc에서는 유용하다고 하는데... 런타임에서 제네릭 정보가 남아있지 않기 때문에 그게 그거일듯... Type에서 Class로 변환하는 방법도 딱히 없으니...
+                    |             이거 쓸 바엔 
+                    button.btn-code(path='Repositories/Eclipse/apache-commons-lang-example/src/test/java/TypeTest.java', lan='java') 예시 코드
+                    | 를 사용하는 게 나을듯
+            |     사용할 일 생기면 정리 : TypeUtils, FieldUtils, ConstructorUtils, MethodUtils
+        hr
         details
-          summary interface ConcurrentInitializer<T> Since 3.0
-          |             
-          ol
-            li 스레드-안전한 초기화 로직을 의미한다
-            |                 
-            li T get()
-        |         
+            summary org.apache.commons.lang3.time Since 2.0
+            |     
+            details
+                summary interface DateParser Since 3.2
+                |         
+                ol
+                    li Date parse(String source) + 오버로딩
+                    |             
+                    li String getPattern()
+                    |             + getTimeZone, getLocale
+            |     
+            details
+                summary interface DatePrinter Since 3.2
+                |         
+                ol
+                    li String format(long millis) + 오버로딩
+                    |             
+                    li <B extends Appendable> B format(long millis, B buf) Since 3.5 + 오버로딩
+                    |             
+                    li String getPattern()
+                    |             + getTimeZone, getLocale
+            |     
+            details
+                summary class FastDateFormat extends Format implements DateParser, DatePrinter Since 2.0
+                |         
+                ol
+                    li SimpleDateFormat의 고속, 스레드-안전한 버전
+                    |             
+                    li static FastDateFormat getInstance(String pattern) + 오버로딩
+                    |             pattern : SimpleDateFormat에 맞는 포맷 문자열
+                    |             
+                    li
+                        | static FastDateFormat getDateTimeInstance(int dateStyle, int timeStyle, TimeZone timeZone) Since 2.1 + 오버로딩
+                    |             스타일 : FULL, LONG, MEDIUM, SHORT
+            |     
+            details
+                summary class DateFormatUtils Since 2.0
+                |         
+                ol
+                    li
+                        | public static final FastDateFormat ISO_8601_EXTENDED_DATETIME_FORMAT Since 3.5 : yyyy-MM-dd'T'HH:mm:ss
+                    |             
+                    li
+                        | public static final FastDateFormat ISO_8601_EXTENDED_DATETIME_TIME_ZONE_FORMAT Since 3.5 : yyyy-MM-dd'T'HH:mm:ssZZ
+                    |             
+                    li
+                        | public static final FastDateFormat ISO_8601_EXTENDED_DATE_FORMAT Since 3.5 : yyyy-MM-dd
+                    |             
+                    li
+                        | public static final FastDateFormat ISO_8601_EXTENDED_TIME_FORMAT Since 3.5 : HH:mm:ss
+                    |             
+                    li
+                        | public static final FastDateFormat ISO_8601_EXTENDED_TIME_TIME_ZONE_FORMAT Since 3.5 : HH:mm:ssZZ
+                    |             
+                    li
+                        | public static final FastDateFormat SMTP_DATETIME_FORMAT : EEE, dd MMM yyyy HH:mm:ss Z
+                |         
+                details(open='')
+                    summary Method Detail
+                    |             
+                    ol
+                        li static String format(Date date, String pattern, Locale locale) + 오버로딩
+                        |                 
+                        li static String formatUTC(Date date, String pattern, Locale locale) + 오버로딩
+            |     
+            details
+                summary class DateUtils Since 2.0
+                |         
+                ol
+                    li static boolean isSameDay(Calendar cal1, Calendar cal2) Since 2.1 + 오버로딩
+                    |             
+                    li static boolean isSameInstant(Calendar cal1, Calendar cal2) Since 2.1 + 오버로딩
+                    |             
+                    li
+                        | static boolean truncatedEquals(Calendar cal1, Calendar cal2, int field) Since 3.0 + 오버로딩
+                    |             
+                    li
+                        | static boolean truncatedCompareTo(Calendar cal1, Calendar cal2, int field) Since 3.0 + 오버로딩
+                    |             
+                    li static Date addYears(Date date, int amount)
+                    |             + addMonths, addWeeks, addDays, addHours, addMinutes, addSeconds, addMilliseconds
+                    |             
+                    li static Date setYears(Date date, int amount) Since 2.4
+                    |             + setMonths, setDays, setHours, setMinutes, setSeconds, setMilliseconds
+                    |             
+                    li static Calendar toCalendar(Date date, TimeZone tz)
+                    |             
+                    li static Date round(Calendar date, int field) + 오버로딩
+                    |             + truncate, ceiling
+            |     
+            details
+                summary class StopWatch Since 2.0
+                |         
+                ol
+                    li static StopWatch createStarted() Since 3.5
+                    |             
+                    li void start() + stop, reset, split, unsplit, suspend, resume
+                    |             + isStarted, isSuspended, isStopped Since 3.2
+                    |             
+                    li long getTime(TimeUnit timeUnit) Since 3.5 + 오버로딩
+                    |             
+                    li long getNanoTime() Since 3.0
+                    |             
+                    li long getSplitTime() Since 2.1 + getSplitNanoTime Since 3.0
+                    |             
+                    li long getStartTime() Since 2.4
+                    |             
+                    li String toString()
+        hr
         details
-          summary
-            | abstract class AtomicInitializer<T> implements ConcurrentInitializer<T> Since 3.0
-          |             
-          ol
-            li
-              | 『Effective Java』에서 소개하는 
-              button.btn-code(path='posts/java/effective_java.html', lan='nohighlight') 객체 필드 초기화 지연
-              | 과 유사한 형태의 로직으로, AtomicReference를 이용해 단 한 번만 객체가 초기화됨을 보장한다
-            |                 
-            li protected abstrct T initialize()
-        |         
-        details
-          summary
-            | abstract class AtomicSafeInitializer<T> implements ConcurrentInitializer<T> Since 3.0
-          |             AtomicInitializer와 다르가 initialize()가 단 한 번만 호출됨이 보장된다
-        |         
-        details
-          summary
-            | abstract class BackgroundInitializer<T> implements ConcurrentInitializer<T> Since 3.0
-          |             
-          ol
-            li 내부적으로 ExecutorService와 Future를 이용해 백그라운드 초기화 작업을 지원한다.
-            |                 start()로 초기화를 다른 스레드에서 시작시키고, get()을 통해 블로킹할 수 있다.
-            |                 
-            li final ExecutorService getExternalExecutor() + setExternalExecutor
-            |                 
-            li boolean start()
-            |                 단 한 번만 실행됨이 보장된다. 최초에만 true, 나머지는 false 반환.
-            |                 
-            li boolean isStarted() == (future != null)
-            |                 
-            li Future<T> getFuture()
-            |                 
-            li protected 메서드 생략
-        |         
-        details
-          summary abstract class LazyInitializer<T> implements ConcurrentInitializer<T> Since 3.0
-          |             
-          ol
-            li
-              | 『Effective Java』에서 소개하는 
-              button.btn-code(path='posts/java/effective_java.html', lan='nohighlight') 객체 필드 초기화 지연
-              |  로직을 이용해 늦은 초기화를 지원한다
-            |                 
-            li protected abstract T initialize()
-        |         
-        details
-          summary class ConstantInitializer<T> implements ConcurrentInitializer<T> Since 3.0
-          |             항상 같은 객체/값을 반환하는 ConcurrentInitializer 콘크리트 클래스
-        |         
-        details
-          summary
-            | class CallableBackgroundInitializer<T> extends BackgroundInitializer<T> Since 3.0
-          |             Callable을 이용한 BackgroundInitializer 콘크리트 클래스
-        |         
-        details
-          summary
-            | class MultiBackgroundInitializer extends BackgroundInitializer<MultiBackgroundInitializer.MultiBackgroundInitializerResults> Since 3.0
-          |             
-          details
-            summary static class MultiBackgroundInitializer.MultiBackgroundInitializerResults
-            |                 
-            ol
-              li BackgroundInitializer<?> getInitializer(String name)
-              |                     
-              li boolean isException(String name) + isSuccessful, getResultObject, getException
-              |                     
-              li Set<String> initializerNames()
-          |             
-          ol
-            li 병렬로 초기화 작업을 진행한다
-            |                 
-            li public MultiBackgroundInitializer(ExecutorService exec)
-            |                 명시하지 않으면 내부 ExecutorService 사용
-            |                 
-            li void addInitializer(String name, BackgroundInitializer<?> init)
-      |     
-      details
-        summary ThreadFactory
-        |         
-        details(open='')
-          summary class BasicThreadFactory implements ThreadFactory Since 3.0
-          |             
-          ol
-            li 내부 ThreadFactory가 생성한 스레드에 특정 속성들을 설정하여 관리하기 편하게 해준다.
-            |                 
-            li namingPattern에는 포맷 문자열을 이용하면 된다. %d에는 스레드 번호가 할당된다.
-            |                 스레드 번호는 내부적으로 관리되는 총 생성 스레드 수와 관계가 있다
-            |                 
-            li long getThreadCount() + 이하 생략
-          |             
-          details
-            summary static class BasicThreadFactory.Builder implements Builder<BasicThreadFactory>
-            |                 
-            ol
-              li BasicThreadFactory.Builder wrappedFactory(ThreadFactory factory)
-              |                     
-              li BasicThreadFactory.Builder namingPattern(String pattern)
-              |                     
-              li BasicThreadFactory.Builder daemon(boolean daemon)
-              |                     
-              li
-                | BasicThreadFactory.Builder uncaughtExceptionHandler(Thread.UncaughtExceptionHandler handler)
-              |                     
-              li void reset() : build() 호출 시 빌드 후 자동으로 호출된다
-      |     
-      details
-        summary class ConcurrentUtils Since 3.0
-        |         
-        ol
-          li
-            | static ConcurrentException extractCause(ExecutionException ex) + extractCauseUnchecked
-          |             
-          ul
-            li ex == null || ex.getCause() == null 이면 null 반환
-            |                 
-            li ex.getCause()가 RuntimeException, Error면 rethrow
-            |                 
-            li
-              | 그 외의 경우 새 ConcurrentException의 cause로 설정되어 반환된다; extractCauseUnchecked의 경우 ConcurrentRuntimeException을 반환
-          |             
-          li static void handleCause(ExecutionException ex) + handleCauseUnchecked
-          |             각각 extractCause와 extractCauseUnchecked를 호출하여 그 반환값이 null이 아니면 throw한다. 명시적으로 예외를 처리하기 위해 try 구문에서 호출하면 된다.
-          |             
-          li
-            | static <K, V> V putIfAbsent(ConcurrentMap<K, V> map, K key, V value) + createIfAbsent
-          |             
-          li
-            | static <T> initialize(ConcurrentInitializer<T> initializer) + initializeUnchecked
-          |             
-          li static <T> Future<T> constantFuture(T value)
-      |     
-      details
-        summary interface Computable<I, O> Since 3.6
-        |         O compute(I arg)
-      |     
-      details
-        summary class Memoizer<I, O> implements Computable<I, O> Since 3.6
-        |         
-        ol
-          li 이전 연산 결과를 내부 맵에 저장한다. 맵의 크기를 제한하거나, 내용을 삭제할 수는 없다.
-          |             
-          li public Memoizer(Computable<I, O> computable, boolean recalculate)
-          |             recalculate : 이전 compute가 실패한 경우, 다음 compute 호출 시 다시 계산할 지 여부. 지정하지 않으면 false
-      |     
-      details
-        summary class TimedSemaphore Since 3.0
-        |         
-        ol
-          li 시간 당 소비자 수를 제한하는 세마포어를 제공한다
-          |             
-          li public static final int NO_LIMIT
-          |             
-          li
-            | public TimedSemaphore(ScheduledExecutorService service, long timePeriod, TimeUnit timeUnit, int limit)
-          |             service가 제공되지 않으면 내부적으로 하나 생성하여 사용한다
-        |         
-        details
-          summary Metho Detail
-          |             
-          ol
-            li final void setLimit(int limit) + getLimit
-            |                 
-            li void shutdown() + isShutdown
-            |                 
-            li void acquire()
-            |                 순번을 얻기까지 스레드를 블록한다
-            |                 
-            li boolean tryAcquire() Since 3.5
-            |                 순번을 얻을 수 있다면 얻은 뒤 true를 반환하고, 아니면 false를 반환한다. true를 받았다면 즉시 다음으로 진행하면 된다
-            |                 
-            li int getLastAcquiresPerPeriod()
-            |                 + getAcquireCount, getAvailablePermits, getAverageCallsPerPeriod, getPeriod, getUnit
-    hr
-    details
-      summary org.apache.commons.lang3.event Since 3.0
-      |     
-      details
-        summary class EventListenerSupport<L> implements Serializable Since 3.0
-        |         
-        ol
-          li 이벤트 리스터들을 관리하고, 일괄 통지하는 기능을 제공한다
-          |             
-          li public EventListenerSupport(Class<L> listenerInterface, ClassLoader classLoader)
-          |             classLoader가 지정되지 않은 경우, 현재 스레드의 것을 이용한다
-        |         
-        details
-          summary Method Detail
-          |             
-          ol
-            li static <T> EventListenerSupport<T> create(Class<T> listenerInterface)
-            |                 
-            li L fire()
-            |                 프록시 객체를 반환한다. 프록시 메서드는 등록된 모든 이벤트 리스너에 포워딩된다
-            |                 
-            li void addListener(L listener, boolean allowDuplicate) Since 3.5 + 1 오버로딩
-            |                 allowDuplicate는 지정되지 않은 경우 true
-            |                 
-            li void removeListener(L listener)
-            |                 
-            li L[] getListeners()
-      |     
-      details
-        summary class EventUtils Since 3.0
-        |         
-        ol
-          li
-            | static <L> void addEventListener(Object eventSource, Class<L> listenerType, L listener)
-          |             eventSource의 "add" + listenerType.getSimpleName()에 해당하는 메서드로 listener 등록
-          |             
-          li
-            | static <L> void bindEventsToMethod(Object target, String methodName, Object eventSource, Class<L> listenerType, String... eventTypes)
-          |             addEventListener를 호출한다. 이때 listener는 target의 methodName 메서드를 호출하는 프록시다. eventTypes는 listenerType 인터페이스 중 어떤 메서드들에 대해 동작할 지를 의미하며, 비어 있는 경우 모든 메서드에 대해 동작한다.
-    hr
-    details
-      summary org.apache.commons.lang3.exception Since 1.0
-      |     
-      details(open='')
-        summary class ExceptionUtils Since 1.0
-        |         
-        ol
-          li static Throwable getRootCause(Throwable throwable)
-          |             
-          li
-            | static void printRootCauseStackTrace(Throwable throwable, PrintWriter writer) Since 2.0 + 오버로딩
-          |             
-          li static <R> R rethrow(Throwable throwable)
-          |             R은 장식. throwable을 즉시 throw한다. 아래와 같이 제네릭을 이용하여 CheckedException을 컴파일러로부터 숨긴다. 메서드 시그니처의 불필요한 throws 절과 예외 체인의 불필요한 "Caused by" 항목을 제거할 수 있다. 자바의 예외 처리 방법에 벗어나는 감이 있지만, 라이브러리 개발에는 유용하다.
-          br
-          |             
-          br
-          |             @SuppressWarnings("unchecked")
-          br
-          |             private static <R, T extends Throwable> R typeErasure(final Throwable throwable) throws T {
-          br
-          |             　　throw (T) throwable;
-          br
-          |             }
-          |             
-          li static <R> R wrapAndThrow(Throwable throwable)
-          |             throwable이 RuntimeException, Error의 인스턴스면 각각 해당 타입으로 throw하고, 나머지는 UndeclaredThrowableException로 throw한다. 결과적으로 Error를 제외하면 모두 RuntimeException으로 throw하는 셈
-    hr
-    details
-      summary org.apache.commons.lang3.math Since 2.0
-      |     
-      details
-        summary final class Fraction extends Number implements Comparable<Fraction> Since 2.0
-        |         
-        ol
-          li int 분자/분모를 이용한다. BigInteger 구현은 Commons Math BigFraction을 이용
-          |             
-          li public static final Fraction ZERO, ONE, ONE_HALF, ONE_THIRD, ...
-          |             
-          li static Fraction getFraction(int numerator, int denominator) : 분수
-          |             
-          li static Fraction getFraction(int whole, int numerator, int denominator) : 대분수
-          |             
-          li static Fraction getReducedFraction(int numerator, int denominator) : 기약분수
-          |             
-          li static Fraction getFraction(double value) + 오버로딩
-          |             
-          li Fraction reduce()
-          |             + invert, negate, abs, pow, add, subtract, multiplyBy, divideBy
-      |     
-      details
-        summary class NumberUtils Since 2.0
-        |         
-        ol
-          li static int toInt(String str, int defaultValue) Since 2.1 + 오버로딩
-          |             null과 빈 문자열은 defaultValue를 반환. 지정되지 않은 경우 0
-          |             + toLong, toFloat, toDouble, toByte, toShort
-          |             
-          li static BigDecimal toScaledBigDecimal(String value) Since 3.8 + 오버로딩
-          |             RoundingMode.HALF_EVEN으로 소수점 2째자리까지만 남긴다
-          |             
-          li static Number createNumber(String str)
-          |             0x, -0x, #, -#로 시작하면 16진수로 간주. 타입 정보를 명시하지 않은 경우, 정수는 Integer, Long(8자 이상), BigInteger(16자 이상)로 변환, 소수는 Float, Double, BigDecimal로 변환된다
-          br
-          |             + createFloat, createDouble, createInteger, ...
-          |             
-          li static int min(int... array) + 오버로딩 + max
-    hr
-    details
-      summary org.apache.commons.lang3.mutable Since 2.1
-      |     
-      details
-        summary interface Mutable<T> Since 2.1
-        |         
-        ol
-          li java.lang에서 제공하는 기본 타입의 래퍼들이 변경할 수 없는 것에 반해, 변경할 수 있는 T 타입 래퍼를 제공한다.
-          |             
-          li T getValue() + setValue
-      |     
-      details
-        summary
-          | class MutableBoolean implements Mutable<Boolean>, Serializable, Comparable<MutableBoolean> Since 2.2
-        |         
-        ol
-          li boolean booleanValue()
-          |             
-          li boolean isTrue()
-      |     
-      details
-        summary
-          | class MutableInt extends Number implements Comparable<MutableInt>, Mutable<Number> Since 2.1
-        |         
-        ol
-          li + MutableByte, MutableDouble, MutableFloat, MutableLong, MutaleShort
-          |             
-          li void increment() + decrement
-          |             
-          li int getAndIncrement() Since 3.5 + incrementAndGet, ...
-          |             스레드-안전하지 않다
-          |             
-          li void add(Number operand) Since 2.2 + 오버로딩 + subtract, ...
-      |     
-      details
-        summary class MutableObject<T> implements Mutable<T>, Serializable Since 2.1
-        |         추가 메서드 없음.
-    hr
-    details
-      summary org.apache.commons.lang3.reflect Since 3.0
-      |     
-      details
-        summary interface Typed<T> Since 3.2
-        |         
-        ol
-          li "타입을 가짐"에 대한 일반화
-          |             
-          li Type getType()
-      |     
-      details
-        summary abstract class TypeLiteral<T> implements Typed<T> Since 3.2
-        |         
-        ol
-          li
-            | JavaDoc에서는 유용하다고 하는데... 런타임에서 제네릭 정보가 남아있지 않기 때문에 그게 그거일듯... Type에서 Class로 변환하는 방법도 딱히 없으니...
-          |             이거 쓸 바엔 
-          button.btn-code(path='Repositories/Eclipse/apache-commons-lang-example/src/test/java/TypeTest.java', lan='java') 예시 코드
-          | 를 사용하는 게 나을듯
-      |     사용할 일 생기면 정리 : TypeUtils, FieldUtils, ConstructorUtils, MethodUtils
-    hr
-    details
-      summary org.apache.commons.lang3.time Since 2.0
-      |     
-      details
-        summary interface DateParser Since 3.2
-        |         
-        ol
-          li Date parse(String source) + 오버로딩
-          |             
-          li String getPattern()
-          |             + getTimeZone, getLocale
-      |     
-      details
-        summary interface DatePrinter Since 3.2
-        |         
-        ol
-          li String format(long millis) + 오버로딩
-          |             
-          li <B extends Appendable> B format(long millis, B buf) Since 3.5 + 오버로딩
-          |             
-          li String getPattern()
-          |             + getTimeZone, getLocale
-      |     
-      details
-        summary class FastDateFormat extends Format implements DateParser, DatePrinter Since 2.0
-        |         
-        ol
-          li SimpleDateFormat의 고속, 스레드-안전한 버전
-          |             
-          li static FastDateFormat getInstance(String pattern) + 오버로딩
-          |             pattern : SimpleDateFormat에 맞는 포맷 문자열
-          |             
-          li
-            | static FastDateFormat getDateTimeInstance(int dateStyle, int timeStyle, TimeZone timeZone) Since 2.1 + 오버로딩
-          |             스타일 : FULL, LONG, MEDIUM, SHORT
-      |     
-      details
-        summary class DateFormatUtils Since 2.0
-        |         
-        ol
-          li
-            | public static final FastDateFormat ISO_8601_EXTENDED_DATETIME_FORMAT Since 3.5 : yyyy-MM-dd'T'HH:mm:ss
-          |             
-          li
-            | public static final FastDateFormat ISO_8601_EXTENDED_DATETIME_TIME_ZONE_FORMAT Since 3.5 : yyyy-MM-dd'T'HH:mm:ssZZ
-          |             
-          li
-            | public static final FastDateFormat ISO_8601_EXTENDED_DATE_FORMAT Since 3.5 : yyyy-MM-dd
-          |             
-          li
-            | public static final FastDateFormat ISO_8601_EXTENDED_TIME_FORMAT Since 3.5 : HH:mm:ss
-          |             
-          li
-            | public static final FastDateFormat ISO_8601_EXTENDED_TIME_TIME_ZONE_FORMAT Since 3.5 : HH:mm:ssZZ
-          |             
-          li
-            | public static final FastDateFormat SMTP_DATETIME_FORMAT : EEE, dd MMM yyyy HH:mm:ss Z
-        |         
-        details(open='')
-          summary Method Detail
-          |             
-          ol
-            li static String format(Date date, String pattern, Locale locale) + 오버로딩
-            |                 
-            li static String formatUTC(Date date, String pattern, Locale locale) + 오버로딩
-      |     
-      details
-        summary class DateUtils Since 2.0
-        |         
-        ol
-          li static boolean isSameDay(Calendar cal1, Calendar cal2) Since 2.1 + 오버로딩
-          |             
-          li static boolean isSameInstant(Calendar cal1, Calendar cal2) Since 2.1 + 오버로딩
-          |             
-          li
-            | static boolean truncatedEquals(Calendar cal1, Calendar cal2, int field) Since 3.0 + 오버로딩
-          |             
-          li
-            | static boolean truncatedCompareTo(Calendar cal1, Calendar cal2, int field) Since 3.0 + 오버로딩
-          |             
-          li static Date addYears(Date date, int amount)
-          |             + addMonths, addWeeks, addDays, addHours, addMinutes, addSeconds, addMilliseconds
-          |             
-          li static Date setYears(Date date, int amount) Since 2.4
-          |             + setMonths, setDays, setHours, setMinutes, setSeconds, setMilliseconds
-          |             
-          li static Calendar toCalendar(Date date, TimeZone tz)
-          |             
-          li static Date round(Calendar date, int field) + 오버로딩
-          |             + truncate, ceiling
-      |     
-      details
-        summary class StopWatch Since 2.0
-        |         
-        ol
-          li static StopWatch createStarted() Since 3.5
-          |             
-          li void start() + stop, reset, split, unsplit, suspend, resume
-          |             + isStarted, isSuspended, isStopped Since 3.2
-          |             
-          li long getTime(TimeUnit timeUnit) Since 3.5 + 오버로딩
-          |             
-          li long getNanoTime() Since 3.0
-          |             
-          li long getSplitTime() Since 2.1 + getSplitNanoTime Since 3.0
-          |             
-          li long getStartTime() Since 2.4
-          |             
-          li String toString()
-    hr
-    details
-      summary org.apache.commons.lang3.tuple Since 3.0
-      |     
-      details
-        summary
-          | abstract class Pair<L, R> implements Map.Entry<L, R>, Comparable<Pare<L, R>>, Serializable Since 3.0
-        |         static <L, R> Pair<L, R> of(L left, R right)
-      |     
-      details
-        summary final class ImmutablePair<L, R> extends Pair<L, R> Since 3.0
-        |         
-        ol
-          li public final L left + right
-          |             
-          li static <L, R> ImmutablePair<L, R> of(L left, R right)
-      |     
-      details
-        summary class MutablePair<L, R> extends Pair<L, R> Since 3.0
-        |         
-        ol
-          li public L left + right
-          |             
-          li static <L, R> MutablePair<L, R> of(L left, R right)
-      |     
-      details
-        summary
-          | abstract class Triple<L, M, R> implements Comparable<Triple<L, M, R>>, Serializable Since 3.2
-        |         static <L, M, R> Triple<L, M, R> of(L left, M middle, R right)
-      |     
-      details
-        summary final class ImmutableTriple<L, M, R> extends Triple<L, M, R> Since 3.2
-        |         
-        ol
-          li public final L left + middle, right
-          |             
-          li static <L, M, R> ImmutableTriple<L, M, R> of(L left, M middle, R right)
-      |     
-      details
-        summary class MutableTriple<L, M, R> extends Triple<L, M, R> Since 3.2
-        |         
-        ol
-          li public final L left + middle, right
-          |             
-          li static <L, M, R> MutableTriple<L, M, R> of(L left, M middle, R right)
-    hr
+            summary org.apache.commons.lang3.tuple Since 3.0
+            |     
+            details
+                summary
+                    | abstract class Pair<L, R> implements Map.Entry<L, R>, Comparable<Pare<L, R>>, Serializable Since 3.0
+                |         static <L, R> Pair<L, R> of(L left, R right)
+            |     
+            details
+                summary final class ImmutablePair<L, R> extends Pair<L, R> Since 3.0
+                |         
+                ol
+                    li public final L left + right
+                    |             
+                    li static <L, R> ImmutablePair<L, R> of(L left, R right)
+            |     
+            details
+                summary class MutablePair<L, R> extends Pair<L, R> Since 3.0
+                |         
+                ol
+                    li public L left + right
+                    |             
+                    li static <L, R> MutablePair<L, R> of(L left, R right)
+            |     
+            details
+                summary
+                    | abstract class Triple<L, M, R> implements Comparable<Triple<L, M, R>>, Serializable Since 3.2
+                |         static <L, M, R> Triple<L, M, R> of(L left, M middle, R right)
+            |     
+            details
+                summary final class ImmutableTriple<L, M, R> extends Triple<L, M, R> Since 3.2
+                |         
+                ol
+                    li public final L left + middle, right
+                    |             
+                    li static <L, M, R> ImmutableTriple<L, M, R> of(L left, M middle, R right)
+            |     
+            details
+                summary class MutableTriple<L, M, R> extends Triple<L, M, R> Since 3.2
+                |         
+                ol
+                    li public final L left + middle, right
+                    |             
+                    li static <L, M, R> MutableTriple<L, M, R> of(L left, M middle, R right)
+        hr

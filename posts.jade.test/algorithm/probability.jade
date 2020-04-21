@@ -1,441 +1,441 @@
 html
-  body
-    script(src='/source/redirect.js?200226_1657')
-    link(rel='stylesheet', href='/source/mjx-chtml.css')
-    script.
-      MathJax = {
-      tex: {
-      tags: 'ams',  // should be 'ams', 'none', or 'all'
-      inlineMath: [['식[', ']식']]
-      }
-      };
-    script#MathJax-script(async='', src='/source/tex-chtml.js?200223_1219')
-    hr
-    details
-      summary 확률
-      | 	
-      ul
-        li 표본평균; Mean : 식[\overline{x}=\sum_{i=1}^n{x_i \over n}]식
-        | 		
-        li
-          | 중앙값; Median : 자료가 정렬되어 있을 때,
-          | 식[\tilde{x}=\left\{\begin{matrix}
-          | x_{(n+1)/2} & \mbox{if n is odd} \\
-          | {1 \over 2}(x_{n/2}+x_{n/2+1}) & \mbox{if n is even} \end{matrix}\right.]식
-        | 		
-        li
-          | 절사평균; Trimmed mean 식[\overline{x}_{\operatorname{tr}(n)}]식 ::= 자료의 상/하위 n%를 버린 나머지에 대한 평균
-        | 		
-        li
-          | 표본분산; Variance : 식[s^2=\sum_{i=1}^n{(x_i-\overline{x})^2 \over n-1}]식. 이때, 식[s]식는 표본표준편차(Standard deviation)
-        | 		
-        li
-          | 순열; Permutation : n개의 서로 다른 대상 중 r개를 선택해 일렬로 세우는 경우의 수 식[{}_n P_{r}={n! \over (n-r)!}]식
-        | 		
-        li 원순열; Circular permutaion : n개의 서로 다른 대상을 원형으로 세우는 경우의 수. 식[(n-1)!]식
-        | 		
-        li
-          | 분할; Partition : 각 집합 원소 사이의 순서는 고려하지 않을 때, n개의 대상을 r개의 집합으로 구분하는 경우의 수는 식[\begin{pmatrix}n \\ n_1,\cdots,n_r\end{pmatrix}={n! \over n_1!\cdots n_r!}]식
-        | 		
+    body
+        script(src='/source/redirect.js?200226_1657')
+        link(rel='stylesheet', href='/source/mjx-chtml.css')
+        script.
+            MathJax = {
+            tex: {
+            tags: 'ams',  // should be 'ams', 'none', or 'all'
+            inlineMath: [['식[', ']식']]
+            }
+            };
+        script#MathJax-script(async='', src='/source/tex-chtml.js?200223_1219')
+        hr
         details
-          summary 예제
-          | 			
-          ol
-            li Q. 10명을 4인실 하나, 3인실 둘에 할당하는 경우의 수는?
-            | 				
-            li 풀이. 식[{10! \over 4!3!3!}=4200]식
-        | 		
-        li
-          | 조합; Combination : n개의 대상 중 r개를 순서를 고려하지 않고 선택하는 경우의 수. 식[\begin{pmatrix}n \\ r,n-r\end{pmatrix}=\begin{pmatrix}n \\ r\end{pmatrix}={n! \over r!(n-r)!}]식
-        | 		
-        li
-          | 조건부 확률; Conditional probability : 사상 A가 발생한 상태에서 사상 B가 발생할 확률 식[P(B|A)={P(A \cap B) \over P(A)}]식
-        | 		식[\begin{gather*}
-        | 			\implies P(A \cap B)=P(A)P(B|A)=P(B)P(A|B) \\
-        | 			\implies P(A_1\cap\cdots\cap A_n)=P(A_1)P(A_2|A_1)\cdots P(A_n|A_1\cap\cdots\cap A_{n-1})
-        | 		\end{gather*}]식
-        | 		
-        li 전확률 정리; Law of total probability
-        | 		사상 식[B_1, \cdots, B_k]식가 표본공간을 빈틈없이 분할할 때, 식[P(A)=\sum_{i=1}^n P(B_i \cap A)=\sum_{i=1}^n P(B_i)P(A|B_i)]식
-        | 		
-        li 베이즈 정리; Bayes' theorem
-        | 		사상 식[B_1, \cdots, B_k]식가 표본공간을 빈틈없이 분할할 때, 식[P(B_i|A)={P(B_i\cap A) \over P(A)}={P(B_i)P(A|B_i) \over \sum_{i=1}^n P(B_i)P(A|B_i)}]식
-        | 		
-        li
-          | 독립; Independent : 두 사상 A, B가 독립
-          | \begin{gather*}
-          | \iff & P(B|A)=P(B) \\
-          | \iff & P(A|B)=P(A) \\
-          | \iff & P(A\cap B)=P(A)P(B)
-          | \end{gather*}
-    hr
-    details
-      summary 확률분포
-      | 	
-      ul
-        li 확률변수; Random variable ::= 표본공간의 원소를 실수로 대응하는 함수.
-        | 		식[P(X=x)]식 ::= 확률변수 식[X]식의 값이 식[x]식일 확률
-        | 		
-        li 확률질량함수; Probability mass function ::= 이산확률변수 식[X]식에 대하여 아래를 만족하는 함수 식[f(x)]식
-        | 		
-        ol
-          li 식[f(x)=P(X=x)]식
-          | 			
-          li 식[f(x)\ge 0]식
-          | 			
-          li 식[\sum f(x)=1]식
-        | 		
-        li 확률밀도함수; Probability density function ::= 연속확률변수 식[X]식에 대하여 아래를 만족하는 함수 식[f(x)]식
-        | 		
-        ol
-          li 식[f(x)\ge 0]식
-          | 			
-          li 식[P(a\le X \le b)=\int_a^b f(x)dx]식
-          | 			등호의 유무는 중요하지 않다
-          | 			
-          li 식[\int_{-\infty}^{\infty} f(x)dx=1]식
-        | 		
-        li 누적분포함수; Cumulative distribution function
-        | 		
-        ol
-          li 이산확률변수 식[X]식에 대하여, 식[F(x)=P(X\le x)=\sum_{t\le x}f(t)]식
-          | 			
-          li 연속확률변수 식[X]식에 대하여, 식[F(x)=P(X\le x)=\int_{-\infty}^{x}f(t)dt]식
-        | 		
-        li 결합분포 식[f(x,y)]식
-        | 		
-        ul
-          li 결합확률분포 : 이산확률변수 식[X, Y]식에 대하여,
-          | 			
-          ol
-            li 식[f(x,y)=P(X=x,Y=y)]식
-            | 				
-            li 식[f(x,y)\ge 0]식
-            | 				
-            li 식[\sum_x\sum_y f(x,y)=1]식
-          | 			
-          li 결합밀도함수 : 연속확률변수 식[X, Y]식에 대하여,
-          | 			
-          ol
-            li 식[f(x,y)\ge 0]식
-            | 				
-            li 식[P((X,Y)\in A)=\iint_A f(x,y)dx dy]식
-            | 				
-            li 식[\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}f(x,y)dx dy]식
-        | 		
-        li 주변분포; Marginal distribution
-        | 		
-        ol
-          | 결합분포에서 하나의 확률변수만 고려한 확률 식[g(x), h(y)]식
-          li 이산확률 : 식[g(x)=\sum_y f(x,y)]식
-          | 			
-          li 연속확률 : 식[g(x)=\int_{-\infty}^{\infty}f(x,y)dy]식
-        | 		
-        li 조건부 분포; Conditional distribution
-        | 		
-        ol
-          li 식[f(y|x)={f(x,y) \over g(x)}]식
-          | 			
-          li 이산확률 : 식[P(a\le Y\le b|X=x)=\sum_{a\le y\le b}f(y|x)]식
-          | 			
-          li 연속확률 : 식[P(a\le Y\le b|X=x)=\int_{a}^{b}f(y|x)dx]식
-        | 		
-        li 통계적 독립 : 두 확률변수 식[X, Y]식가 독립
-        | 		\begin{gather*}
-        | 			\iff & f(x,y)=g(x)h(y) \\
-        | 			\iff & f(y|x)=h(y) \\
-        | 			\iff & f(x|y)=g(x)
-        | 		\end{gather*}
-        | 		
-        li 확률분포의 평균 = 기대값; Expected value
-        | 		
-        ol
-          li 이산확률 : 식[\mu=E(X)=\sum xf(x)]식
-          | 			
-          li 연속확률 : 식[\mu=E(X)=\int_{-\infty}^{\infty}xf(x)dx]식
-          | 			확률변수 X에 종속된 확률변수 식[g(X)]식에 대하여,
-          | 			
-          li 이산확률 : 식[\mu_{g(X)}=E(g(X))=\sum g(x)f(x)]식
-          | 			
-          li 연속확률 : 식[\mu_{g(X)}=E(g(X))=\int_{-\infty}^{\infty}g(x)f(x)dx]식
-        | 		
+            summary 확률
+            | 	
+            ul
+                li 표본평균; Mean : 식[\overline{x}=\sum_{i=1}^n{x_i \over n}]식
+                | 		
+                li
+                    | 중앙값; Median : 자료가 정렬되어 있을 때,
+                    | 식[\tilde{x}=\left\{\begin{matrix}
+                    | x_{(n+1)/2} & \mbox{if n is odd} \\
+                    | {1 \over 2}(x_{n/2}+x_{n/2+1}) & \mbox{if n is even} \end{matrix}\right.]식
+                | 		
+                li
+                    | 절사평균; Trimmed mean 식[\overline{x}_{\operatorname{tr}(n)}]식 ::= 자료의 상/하위 n%를 버린 나머지에 대한 평균
+                | 		
+                li
+                    | 표본분산; Variance : 식[s^2=\sum_{i=1}^n{(x_i-\overline{x})^2 \over n-1}]식. 이때, 식[s]식는 표본표준편차(Standard deviation)
+                | 		
+                li
+                    | 순열; Permutation : n개의 서로 다른 대상 중 r개를 선택해 일렬로 세우는 경우의 수 식[{}_n P_{r}={n! \over (n-r)!}]식
+                | 		
+                li 원순열; Circular permutaion : n개의 서로 다른 대상을 원형으로 세우는 경우의 수. 식[(n-1)!]식
+                | 		
+                li
+                    | 분할; Partition : 각 집합 원소 사이의 순서는 고려하지 않을 때, n개의 대상을 r개의 집합으로 구분하는 경우의 수는 식[\begin{pmatrix}n \\ n_1,\cdots,n_r\end{pmatrix}={n! \over n_1!\cdots n_r!}]식
+                | 		
+                details
+                    summary 예제
+                    | 			
+                    ol
+                        li Q. 10명을 4인실 하나, 3인실 둘에 할당하는 경우의 수는?
+                        | 				
+                        li 풀이. 식[{10! \over 4!3!3!}=4200]식
+                | 		
+                li
+                    | 조합; Combination : n개의 대상 중 r개를 순서를 고려하지 않고 선택하는 경우의 수. 식[\begin{pmatrix}n \\ r,n-r\end{pmatrix}=\begin{pmatrix}n \\ r\end{pmatrix}={n! \over r!(n-r)!}]식
+                | 		
+                li
+                    | 조건부 확률; Conditional probability : 사상 A가 발생한 상태에서 사상 B가 발생할 확률 식[P(B|A)={P(A \cap B) \over P(A)}]식
+                | 		식[\begin{gather*}
+                | 			\implies P(A \cap B)=P(A)P(B|A)=P(B)P(A|B) \\
+                | 			\implies P(A_1\cap\cdots\cap A_n)=P(A_1)P(A_2|A_1)\cdots P(A_n|A_1\cap\cdots\cap A_{n-1})
+                | 		\end{gather*}]식
+                | 		
+                li 전확률 정리; Law of total probability
+                | 		사상 식[B_1, \cdots, B_k]식가 표본공간을 빈틈없이 분할할 때, 식[P(A)=\sum_{i=1}^n P(B_i \cap A)=\sum_{i=1}^n P(B_i)P(A|B_i)]식
+                | 		
+                li 베이즈 정리; Bayes' theorem
+                | 		사상 식[B_1, \cdots, B_k]식가 표본공간을 빈틈없이 분할할 때, 식[P(B_i|A)={P(B_i\cap A) \over P(A)}={P(B_i)P(A|B_i) \over \sum_{i=1}^n P(B_i)P(A|B_i)}]식
+                | 		
+                li
+                    | 독립; Independent : 두 사상 A, B가 독립
+                    | \begin{gather*}
+                    | \iff & P(B|A)=P(B) \\
+                    | \iff & P(A|B)=P(A) \\
+                    | \iff & P(A\cap B)=P(A)P(B)
+                    | \end{gather*}
+        hr
         details
-          summary 예제
-          | 			
-          ol
-            li
-              | Q. 확률변수 X의 밀도함수가 식[f(x)= \left\{\begin{matrix}
-              | x & 0\le x\le \sqrt{2} \\
-              | 0 & \mbox{else} \end{matrix}\right.]식일때, 식[g(X)=2X-1]식의 기대값을 구하라
-            | 				
-            li
-              | 풀이. 식[E(2X-1)=\int_{0}^{\sqrt{2}}(2x-1)xdx=\int_{0}^{\sqrt{2}}(2x^2-x)dx=4\sqrt{2}/3-1]식
-        | 		
-        li 확률분포의 분산
-        | 		
-        ol
-          li 이산확률 : 식[\sigma^2 = E((X-\mu)^2) = \sum (x-\mu)^2f(x)]식
-          | 			
-          li 연속확률 : 식[\sigma^2 = E((X-\mu)^2) = \int_{-\infty}^{\infty}(x-\mu)^2f(x)dx]식
-          | 			
-          li 식[\sigma^2 = E(X^2)-\mu^2]식
-          | 			확률변수 X에 종속된 확률변수 식[g(X)]식에 대하여,
-          | 			
-          li
-            | 이산확률 : 식[\sigma_{g(X)}^2 = E((g(X)-\mu_{g(X)})^2) = \sum (g(x)-\mu_{g(X)})^2f(x)]식
-          | 			
-          li
-            | 연속확률 : 식[\sigma_{g(X)}^2 = E((g(X)-\mu_{g(X)})^2) = \int_{-\infty}^{\infty}(g(x)-\mu_{g(X)})^2f(x)dx]식
-        | 		
-        li 공분산; Covariance
-        | 		
-        ol
-          | 두 확률변수 사이의 선형적 관계를 보여준다. 따라서 비선형적 관계를 가진 확률변수에 대한 공분산은 별 의미가 없다
-          li
-            | 이산확률 : 식[\sigma_{XY}=E((X-\mu_X)(Y-\mu_Y))=\sum_x\sum_y (x-\mu_X)(y-\mu_Y)f(x,y)]식
-          | 			
-          li
-            | 연속확률 : 식[\sigma_{XY}=E((X-\mu_X)(Y-\mu_Y))=\int_{-\infty}^{\infty}\int_{-\infty}^{\infty} (x-\mu_X)(y-\mu_Y)f(x,y)dxdy]식
-          | 			
-          li 식[\sigma_{XY}=E(XY)-\mu_X\mu_Y]식
-          | 			선형적 관계를 갖는 확률변수에 대한 공분산이 0이라면, 두 확률변수는 독립이다
-        | 		
-        li 상관 계수; Correlation coefficient
-        | 		식[-1\le \rho_{XY}={\sigma_{XY} \over \sigma_X\sigma_Y} \le 1]식. 확률변수의 측정단위와 무관하게 두 확률변수 사이의 선형적 관계를 보여준다. 식[Y=aX+b]식와 같은 일차종속인 경우 식[\rho_{XY} = \pm 1]식
-        | 		
-        li 확률변수의 선형결합
-        | 		
-        ol
-          li 식[E(aX+b)=aE(X)+b]식
-          | 			
-          li 식[E(g(X)\pm h(X)) = E(g(X)\pm E(h(X))]식
-          | 			
-          li 식[X, Y]식가 독립 식[\iff E(XY)=E(X)E(Y)]식
-          | 			
-          li 식[\rho_{aX+bY+c}^2 = a^2\rho_X^2+b^2\rho_Y^2+2ab\rho_{XY}]식
-        | 		
-        li 체비쇼프 부등식; Chebyshev's inequality
-        | 		평균으로부터 k 표준편차 이상 떨어진 자료들은 식[1/k^2]식 이상 차지하지 않는다. 식[P(|X-\mu|\ge k\sigma)\le 1/k^2]식
-        | 		
-        li 이산균등분포; Discrete uniform distribution
-        | 		
-        ol
-          li
-            | 식[f(x;n)={1 \over n}]식 ::= 이산확률변수 X에 대하여, 임의의 식[x]식가 될 확률 식[P(X=x_i)]식이 식[{1 \over n}]식로 동일한 경우
-          | 			
-          li 평균 식[\mu={1 \over n}\sum x_i]식
-          | 			
-          li 분산 식[\sigma^2={1 \over n}\sum (x_i-\mu)^2]식
-        | 		
-        li 이항분포; Binomial distribution
-        | 		
-        ol
-          li 베르누이 시행; Bernoulli trial
-          | 			
-          ol
-            li 시행의 결과는 둘 중 하나만 가능
-            | 				
-            li 각 시행에서 성공확률은 항상 일정
-            | 				
-            li 각 시행은 서로 독립
-          | 			
-          li 이항확률변수; Binomial random variable : n번의 베르누이 시행에서의 성공횟수 X
-          | 			
-          li 이항분포 식[b(x;n,p)=\begin{pmatrix}n \\ x\end{pmatrix}p^x q^{n-x}]식
-          | 			
-          li 평균 식[\mu=np]식
-          | 			
-          li 분산 식[\sigma^2=npq]식
-          | 			
-          li 음이항분포; Negative binomial distribution
-          | 			n번째 성공이 일어날 때까지의 시행횟수 X의 확률분포 식[b^*(x;n,p)=\begin{pmatrix}x-1 \\ n-1\end{pmatrix}p^n q^{x-n}]식
-          | 			
-          li 기하분포; Geometric distribution
-          | 			첫번째 성공이 일어날 때까지의 시행횟수 X의 확률분포 식[g(x;p)=pq^{x-1}]식, 평균 식[\mu=1/p]식, 분산 식[\sigma^2={1-p \over p^2}]식
-        | 		
-        li 초기하분포; Hypergeometric distribution
-        | 		
-        ol
-          li 초기하확률변수 : 크기가 식[N]식인 모집단의 k개가 성공, 나머지는 실패일 때 n개를 비복원으로 뽑았을 때 나온 성공의 개수 X
-          | 			
-          li
-            | 초기하분포 식[h(x;N,n,k)={\begin{pmatrix}k \\ x\end{pmatrix}\begin{pmatrix}N-k \\ N-x\end{pmatrix} \over \begin{pmatrix}N \\ n\end{pmatrix}}]식
-          | 			
-          li 평균 식[\mu = {nk \over N}]식
-          | 			
-          li
-            | 분산 식[\sigma^2={N-n \over N-1}\cdot n \cdot {k \over N}\left(1-{k \over N}\right)]식
-          | 			
-          li 식[n/N\le 0.05]식이면 이항분포 식[b(x;n,k/N)]식으로 근사 가능
-        | 		
-        li 푸아송 분포; Poisson distribution
-        | 		
-        ol
-          li 푸아송 확률변수 : 특정 기간 t동안 사건이 평균적으로 식[\lambda]식번 발생하고, 이것이 다른 기간과 독립적일때, 사건이 발생한 횟수 X
-          | 			
-          li 평균 식[\mu=\lambda t]식 ← 기간에 따른 평균 발생비율은 항상 일정하므로
-          | 			
-          li 푸아송 분포 식[p(x;\lambda t)={e^{-\lambda t}(\lambda t)^x \over x!}]식
-          | 			
-          li 분산 식[\sigma^2 = \lambda t]식
-          | 			
-          li 이항분포의 n이 매우 크고, p가 0에 가까우면 식[\mu=np]식인 푸아송 분포로 근사 가능
-        | 		
-        li 정규분포; Normal distribution
-        | 		
-        ol
-          li 평균 식[\mu]식, 표준편차 식[\sigma]식
-          | 			
-          li
-            | 정규분포 식[X \sim N(\mu,\sigma^2)]식 : 식[n(x;\mu,\sigma)={1 \over \sqrt{2\pi}\sigma}e^{-{1 \over 2\sigma^2}(x-\mu)^2}]식
-          | 			
-          li 표준정규분포 : 식[Z \sim N(0,1)]식
-          | 			정규화 : 식[Z={X-\mu \over \sigma}]식
-          | 			
-          li 이항분포 식[b(x;n,p)]식는 정규분포 식[n(x;np,\sqrt{npq})]식를 근사적으로 따른다
-          | 			식[P(X\le x)=\sum_{k=0}^x b(k;n,p)\approx P(Z \le {{x+0.5-np} \over \sqrt{npq}})]식 ← +0.5는 결과를 실제에 가깝게 하는 연속성 수정(Continuity correction)
-        | 		
-        li 감마분포
-        | 		
-        ol
-          li 감마함수 식[\Gamma(\alpha)=\int_0^{\infty}x^{\alpha-1}e^{-x}dx]식
-          | 			자연수 n에 대하여 식[\Gamma(n)=(n-1)!]식, 식[\Gamma(1/2)=\sqrt{\pi}]식
-          | 			
-          li
-            | 감마분포; Gamma distribution 식[f(x;\alpha,\theta)=\left\{\begin{matrix}
-            | {x^{\alpha-1}e^{-x/\theta} \over \theta^\alpha\Gamma(\alpha)} & \mbox{if x > 0} \\
-            | 0 & \mbox{else} \end{matrix}\right.]식
-          | 			
-          li 평균 식[\mu=\alpha\theta]식
-          | 			
-          li 분산 식[\sigma^2=\alpha\theta^2]식
-          | 			
-          li
-            | 지수분포; Exponential distribution 식[f(x;\theta)=\left\{\begin{matrix}
-            | {e^{-x/\theta} \over \theta} & \mbox{if x > 0} \\
-            | 0 & \mbox{else} \end{matrix}\right.]식
-          | 			
-          ol
-            li 식[\theta=1/\lambda]식로 두면, 식[f(x;1/\lambda)=\lambda e^{-\lambda x}]식
-            | 				
-            li 푸아송 사건이 발생하지 않을 확률 식[p(0;\lambda t)=e^{-\lambda t}]식
-            | 				= 첫 번째 푸아송 사건이 발생하기까지 소요된 시간 t에 대한 확률변수 X의 확률분포
-            | 				
-            li 위 X에 대한 누적확률분포는 식[P(0\le X\le x)=1-e^{-\lambda x}]식
-            | 				
-            li 이를 연속확률변수에 적용하기 위해 미분하면 식[\lambda e^{-\lambda x}]식
-            | 				
-            li 따라서 지수분포는 연속확률변수에 대한 푸아송 분포임을 알 수 있다
-            | 				
-            li
-              | 푸아송 분포와 마찬가지로 특정 기간 동안 사건의 발생은 다른 기간과 독립적이다. 식[P(X\ge t)=P(X\ge t_0+t|X\ge t_0)]식
-          | 			
-          li 카이제곱 분포; Chi-squared distribution
-          | 			
-          ol
-            li
-              | 식[\alpha=k/2, \theta=2]식인 감마분포와 동일하다. 식[f(x;k)=\left\{\begin{matrix}
-              | {x^{k/2-1}e^{-x/2} \over 2^{k/2}\Gamma(k/2)} & \mbox{if x > 0} \\
-              | 0 & \mbox{else} \end{matrix}\right.]식
-            | 				
-            li 평균 식[\mu=k]식
-            | 				
-            li 분산 식[\sigma^2=2k]식
-          | 			
-          li 확률변수 변환
-          | 			
-          ol
-            li
-              | 이산확률변수 식[X, Y]식가 일대일 대응관계 식[y=u(x), x=u^{-1}(y)]식라면, 식[Y]식의 확률분포는 식[g(y)=f(u^{-1}(y))]식
-            | 				
-            li
-              | 이산확률변수 식[X_1,X_2,Y_1,Y_2]식가 일대일 대응관계 식[\begin{gather*}
-              | y_1 = u_1(x_1,x_2) \\
-              | y_2 = u_2(x_1,x_2) \\
-              | x_1 = w_1(y_1,y_2) \\
-              | x_2 = w_2(y_1,y_2)\end{gather*}]식라면, 식[Y_1,Y_2]식의 결합확률분포는 식[g(y_1,y_2)=f(w_1(y_1,y_2),w_2(y_1,y_2))]식
-            | 				
-            li
-              | 연속확률변수 식[X, Y]식가 일대일 대응관계 식[y=u(x), x=u^{-1}(y)]식라면, 식[Y]식의 확률분포는 식[g(y)=f(u^{-1}(y))|{\partial{u^{-1}(y)} \over \partial{y}}|]식
-            | 				
-            li
-              | 연속확률변수 식[X, Y]식가 일대일 대응관계 식[\begin{gather*}
-              | y_1 = u_1(x_1,x_2) \\
-              | y_2 = u_2(x_1,x_2) \\
-              | x_1 = w_1(y_1,y_2) \\
-              | x_2 = w_2(y_1,y_2)\end{gather*}]식라면, 식[Y_1,Y_2]식의 결합확률분포는 식[g(y_1,y_2)=f(w_1(y_1,y_2),w_2(y_1,y_2))|J|]식
-            | 				이때, 식[J]식는 야코비 행렬(Jacobian matrix)로 식[|J|=\begin{vmatrix} {\partial{x_1} \over \partial{y_1}} & {\partial{x_1} \over \partial{y_2}} \\
-            | 				{\partial{x_2} \over \partial{y_1}} & {\partial{x_2} \over \partial{y_2}}\end{vmatrix}]식
-            | 				
-            li
-              | 연속확률변수 식[X, Y]식에 대해, 식[u:X\to Y]식는 일대일 함수지만 역함수는 존재하지 않는 경우.
-              | 만일 식[X]식을 빈틈없이 나눈 각 구간마다 부분적인 역함수 식[x_1=w_1(y), \cdots, x_k=w_k(y)]식가 존재한다면,
-              | 식[Y]식의 확률분포는 식[g(y)=\sum f(w_i(y))|J_i|]식 ← 식[J_i={\partial{x_i} \over \partial{y}}]식
-          | 			
-          li 적률; Moment
-          | 			
-          ol
-            li 적률 ::= 확률변수 거듭제곱의 평균 식[m_n = E(X^n)]식
-            | 				
-            li 적률생성함수 ::= 식[M_X(t)=E(e^{tX})]식
-            | 				\begin{align*}
-            | 					M_X(t)
-            | 					&= \int_{-\infty}^\infty e^{tx} f(x)\,\mathrm{d}x \\
-            | 					&= \int_{-\infty}^\infty \left( 1+ tx + \frac{t^2x^2}{2!} + \cdots\right) f(x)\,\mathrm{d}x \\
-            | 					&= 1 + tm_1 + \frac{t^2m_2}{2!} +\cdots
-            | 				\end{align*}
-            | 				
-            li 적률생성함수로 적률 생성 : 식[m_n = \left.\frac{d^nM_X(t)}{dt^n}\right|_{t=0}]식
-            | 				
-            li 확률변수 식[X, Y]식의 적률생성함수가 일치 식[\implies]식 식[X, Y]식의 확률분포는 동일
-            | 				
-            li 식[M_{aX}(t)=M_X(at)]식
-            | 				
-            li 식[M_{X+b}(t)=e^{bt}M_X(t)]식
-            | 				
-            li
-              | 식[X_1,\cdots,X_n]식이 독립이면 식[Y=X_1+\cdots+X_n]식의 적률생성함수는 식[M_Y(t)=M_{X_1}(t)\cdots M_{X_n}(t)]식
-            | 				
-            li
-              | 식[X_1,\cdots,X_n]식이 독립이면서 정규분포를 따를 때, 식[Y=a_1X_1+\cdots+a_nX_n]식도 정규분포 식[N(\mu_Y,\sigma_Y^2)]식을 따르며, 식[\mu_Y=a_1\mu_1+\cdots+a_n\mu_n]식, 식[\sigma_Y^2=a_1^2\sigma_1^2+\cdots+a_n^2\sigma_n^2]식
-            | 				
-            li
-              | 식[X_1,\cdots,X_n]식이 독립이면서 카이제곱분포를 따를 때, 식[Y=X_1+\cdots+X_n]식은 자유도가 식[v=v_1+\cdots+v_n]식인 카이제곱분포를 따른다
-            | 				
-            li
-              | 식[X_1,\cdots,X_n]식이 독립이면서 정규분포를 따를 때, 식[Y=\sum ({X_i-\mu_i \over \sigma_i})^2]식는 자유도 식[v=n]식인 카이제곱분포를 따른다
-    hr
-    details
-      summary 추정
-      | 	
-      ul
-        li
-          | 표본 식[X_i]식, 표본평균 식[\overline{X}=\sum{X_i}/n]식, 표본분산 식[S^2={\sum(X_i-\overline{X})^2 \over (n-1)}={1 \over n(n-1)}[n\sum X_i^2 - (\sum X_i)^2]]식
-        |     	
-        li t-분포
-        |     	
-        ol
-          li 중심극한정리; Central limit theorem
-          |     	    평균이 식[\mu]식, 분산이 식[\sigma^2]식인 모집단으로부터, 크기 n인 표본을 추출했을 때,
-          |     	    n이 충분히 크다면 식[Z = {\overline{X}-\mu \over \sigma/\sqrt{n}}]식는 표준정규분포를 따른다.
-          |     	    이때 식[\overline{X}]식는 표본평균.
-          |     	    
-          li Cochran's theorem
-          |     	    식[N(\mu, \sigma^2)]식를 따르는 정규모집단으로부터 크기 n인 표본을 추출했을 때,
-          |     	    n이 충분히 크다면 식[\chi^2={(n-1)S^2 \over \sigma^2}]식는 카이제곱분포 식[f(x; n-1)]식를 따른다
-          |     	    
-          li 식[T={Z \over \sqrt{V/(n-1)}}]식는 자유도 n-1인 t-분포를 따른다
-          |     	    모집단의 분산을 모를 때 모평균의 추정에 이용할 수 있다.
-        |     	
-        li F-분포
-        |     	
-        ul
-          li
-            | 자유도가 각각 식[v_1, v_2]식인 두 카이제곱변수 식[V_1, V_2]식에 대하여, 식[F={V_1/v_1 \over V_2/v_2}]식는 자유도가 식[(v_1, v_2)]식인 F-분포를 따른다
-          |     	    
-          li
-            a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://math100.tistory.com/47') F-분포표 보는 법
-          |     	    
-          li
-            | 모분산이 각각 식[\sigma_1^2, \sigma_2^2]식인 정규모집단에서 독립적으로 추출한 두 표본에 대해 식[F={S_1^2/\sigma_1^2 \over S_2^2/\sigma_2^2}]식는 자유도가 식[(n_1-1, n_2-1)]식인 F-분포를 따른다
-    hr
+            summary 확률분포
+            | 	
+            ul
+                li 확률변수; Random variable ::= 표본공간의 원소를 실수로 대응하는 함수.
+                | 		식[P(X=x)]식 ::= 확률변수 식[X]식의 값이 식[x]식일 확률
+                | 		
+                li 확률질량함수; Probability mass function ::= 이산확률변수 식[X]식에 대하여 아래를 만족하는 함수 식[f(x)]식
+                | 		
+                ol
+                    li 식[f(x)=P(X=x)]식
+                    | 			
+                    li 식[f(x)\ge 0]식
+                    | 			
+                    li 식[\sum f(x)=1]식
+                | 		
+                li 확률밀도함수; Probability density function ::= 연속확률변수 식[X]식에 대하여 아래를 만족하는 함수 식[f(x)]식
+                | 		
+                ol
+                    li 식[f(x)\ge 0]식
+                    | 			
+                    li 식[P(a\le X \le b)=\int_a^b f(x)dx]식
+                    | 			등호의 유무는 중요하지 않다
+                    | 			
+                    li 식[\int_{-\infty}^{\infty} f(x)dx=1]식
+                | 		
+                li 누적분포함수; Cumulative distribution function
+                | 		
+                ol
+                    li 이산확률변수 식[X]식에 대하여, 식[F(x)=P(X\le x)=\sum_{t\le x}f(t)]식
+                    | 			
+                    li 연속확률변수 식[X]식에 대하여, 식[F(x)=P(X\le x)=\int_{-\infty}^{x}f(t)dt]식
+                | 		
+                li 결합분포 식[f(x,y)]식
+                | 		
+                ul
+                    li 결합확률분포 : 이산확률변수 식[X, Y]식에 대하여,
+                    | 			
+                    ol
+                        li 식[f(x,y)=P(X=x,Y=y)]식
+                        | 				
+                        li 식[f(x,y)\ge 0]식
+                        | 				
+                        li 식[\sum_x\sum_y f(x,y)=1]식
+                    | 			
+                    li 결합밀도함수 : 연속확률변수 식[X, Y]식에 대하여,
+                    | 			
+                    ol
+                        li 식[f(x,y)\ge 0]식
+                        | 				
+                        li 식[P((X,Y)\in A)=\iint_A f(x,y)dx dy]식
+                        | 				
+                        li 식[\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}f(x,y)dx dy]식
+                | 		
+                li 주변분포; Marginal distribution
+                | 		
+                ol
+                    | 결합분포에서 하나의 확률변수만 고려한 확률 식[g(x), h(y)]식
+                    li 이산확률 : 식[g(x)=\sum_y f(x,y)]식
+                    | 			
+                    li 연속확률 : 식[g(x)=\int_{-\infty}^{\infty}f(x,y)dy]식
+                | 		
+                li 조건부 분포; Conditional distribution
+                | 		
+                ol
+                    li 식[f(y|x)={f(x,y) \over g(x)}]식
+                    | 			
+                    li 이산확률 : 식[P(a\le Y\le b|X=x)=\sum_{a\le y\le b}f(y|x)]식
+                    | 			
+                    li 연속확률 : 식[P(a\le Y\le b|X=x)=\int_{a}^{b}f(y|x)dx]식
+                | 		
+                li 통계적 독립 : 두 확률변수 식[X, Y]식가 독립
+                | 		\begin{gather*}
+                | 			\iff & f(x,y)=g(x)h(y) \\
+                | 			\iff & f(y|x)=h(y) \\
+                | 			\iff & f(x|y)=g(x)
+                | 		\end{gather*}
+                | 		
+                li 확률분포의 평균 = 기대값; Expected value
+                | 		
+                ol
+                    li 이산확률 : 식[\mu=E(X)=\sum xf(x)]식
+                    | 			
+                    li 연속확률 : 식[\mu=E(X)=\int_{-\infty}^{\infty}xf(x)dx]식
+                    | 			확률변수 X에 종속된 확률변수 식[g(X)]식에 대하여,
+                    | 			
+                    li 이산확률 : 식[\mu_{g(X)}=E(g(X))=\sum g(x)f(x)]식
+                    | 			
+                    li 연속확률 : 식[\mu_{g(X)}=E(g(X))=\int_{-\infty}^{\infty}g(x)f(x)dx]식
+                | 		
+                details
+                    summary 예제
+                    | 			
+                    ol
+                        li
+                            | Q. 확률변수 X의 밀도함수가 식[f(x)= \left\{\begin{matrix}
+                            | x & 0\le x\le \sqrt{2} \\
+                            | 0 & \mbox{else} \end{matrix}\right.]식일때, 식[g(X)=2X-1]식의 기대값을 구하라
+                        | 				
+                        li
+                            | 풀이. 식[E(2X-1)=\int_{0}^{\sqrt{2}}(2x-1)xdx=\int_{0}^{\sqrt{2}}(2x^2-x)dx=4\sqrt{2}/3-1]식
+                | 		
+                li 확률분포의 분산
+                | 		
+                ol
+                    li 이산확률 : 식[\sigma^2 = E((X-\mu)^2) = \sum (x-\mu)^2f(x)]식
+                    | 			
+                    li 연속확률 : 식[\sigma^2 = E((X-\mu)^2) = \int_{-\infty}^{\infty}(x-\mu)^2f(x)dx]식
+                    | 			
+                    li 식[\sigma^2 = E(X^2)-\mu^2]식
+                    | 			확률변수 X에 종속된 확률변수 식[g(X)]식에 대하여,
+                    | 			
+                    li
+                        | 이산확률 : 식[\sigma_{g(X)}^2 = E((g(X)-\mu_{g(X)})^2) = \sum (g(x)-\mu_{g(X)})^2f(x)]식
+                    | 			
+                    li
+                        | 연속확률 : 식[\sigma_{g(X)}^2 = E((g(X)-\mu_{g(X)})^2) = \int_{-\infty}^{\infty}(g(x)-\mu_{g(X)})^2f(x)dx]식
+                | 		
+                li 공분산; Covariance
+                | 		
+                ol
+                    | 두 확률변수 사이의 선형적 관계를 보여준다. 따라서 비선형적 관계를 가진 확률변수에 대한 공분산은 별 의미가 없다
+                    li
+                        | 이산확률 : 식[\sigma_{XY}=E((X-\mu_X)(Y-\mu_Y))=\sum_x\sum_y (x-\mu_X)(y-\mu_Y)f(x,y)]식
+                    | 			
+                    li
+                        | 연속확률 : 식[\sigma_{XY}=E((X-\mu_X)(Y-\mu_Y))=\int_{-\infty}^{\infty}\int_{-\infty}^{\infty} (x-\mu_X)(y-\mu_Y)f(x,y)dxdy]식
+                    | 			
+                    li 식[\sigma_{XY}=E(XY)-\mu_X\mu_Y]식
+                    | 			선형적 관계를 갖는 확률변수에 대한 공분산이 0이라면, 두 확률변수는 독립이다
+                | 		
+                li 상관 계수; Correlation coefficient
+                | 		식[-1\le \rho_{XY}={\sigma_{XY} \over \sigma_X\sigma_Y} \le 1]식. 확률변수의 측정단위와 무관하게 두 확률변수 사이의 선형적 관계를 보여준다. 식[Y=aX+b]식와 같은 일차종속인 경우 식[\rho_{XY} = \pm 1]식
+                | 		
+                li 확률변수의 선형결합
+                | 		
+                ol
+                    li 식[E(aX+b)=aE(X)+b]식
+                    | 			
+                    li 식[E(g(X)\pm h(X)) = E(g(X)\pm E(h(X))]식
+                    | 			
+                    li 식[X, Y]식가 독립 식[\iff E(XY)=E(X)E(Y)]식
+                    | 			
+                    li 식[\rho_{aX+bY+c}^2 = a^2\rho_X^2+b^2\rho_Y^2+2ab\rho_{XY}]식
+                | 		
+                li 체비쇼프 부등식; Chebyshev's inequality
+                | 		평균으로부터 k 표준편차 이상 떨어진 자료들은 식[1/k^2]식 이상 차지하지 않는다. 식[P(|X-\mu|\ge k\sigma)\le 1/k^2]식
+                | 		
+                li 이산균등분포; Discrete uniform distribution
+                | 		
+                ol
+                    li
+                        | 식[f(x;n)={1 \over n}]식 ::= 이산확률변수 X에 대하여, 임의의 식[x]식가 될 확률 식[P(X=x_i)]식이 식[{1 \over n}]식로 동일한 경우
+                    | 			
+                    li 평균 식[\mu={1 \over n}\sum x_i]식
+                    | 			
+                    li 분산 식[\sigma^2={1 \over n}\sum (x_i-\mu)^2]식
+                | 		
+                li 이항분포; Binomial distribution
+                | 		
+                ol
+                    li 베르누이 시행; Bernoulli trial
+                    | 			
+                    ol
+                        li 시행의 결과는 둘 중 하나만 가능
+                        | 				
+                        li 각 시행에서 성공확률은 항상 일정
+                        | 				
+                        li 각 시행은 서로 독립
+                    | 			
+                    li 이항확률변수; Binomial random variable : n번의 베르누이 시행에서의 성공횟수 X
+                    | 			
+                    li 이항분포 식[b(x;n,p)=\begin{pmatrix}n \\ x\end{pmatrix}p^x q^{n-x}]식
+                    | 			
+                    li 평균 식[\mu=np]식
+                    | 			
+                    li 분산 식[\sigma^2=npq]식
+                    | 			
+                    li 음이항분포; Negative binomial distribution
+                    | 			n번째 성공이 일어날 때까지의 시행횟수 X의 확률분포 식[b^*(x;n,p)=\begin{pmatrix}x-1 \\ n-1\end{pmatrix}p^n q^{x-n}]식
+                    | 			
+                    li 기하분포; Geometric distribution
+                    | 			첫번째 성공이 일어날 때까지의 시행횟수 X의 확률분포 식[g(x;p)=pq^{x-1}]식, 평균 식[\mu=1/p]식, 분산 식[\sigma^2={1-p \over p^2}]식
+                | 		
+                li 초기하분포; Hypergeometric distribution
+                | 		
+                ol
+                    li 초기하확률변수 : 크기가 식[N]식인 모집단의 k개가 성공, 나머지는 실패일 때 n개를 비복원으로 뽑았을 때 나온 성공의 개수 X
+                    | 			
+                    li
+                        | 초기하분포 식[h(x;N,n,k)={\begin{pmatrix}k \\ x\end{pmatrix}\begin{pmatrix}N-k \\ N-x\end{pmatrix} \over \begin{pmatrix}N \\ n\end{pmatrix}}]식
+                    | 			
+                    li 평균 식[\mu = {nk \over N}]식
+                    | 			
+                    li
+                        | 분산 식[\sigma^2={N-n \over N-1}\cdot n \cdot {k \over N}\left(1-{k \over N}\right)]식
+                    | 			
+                    li 식[n/N\le 0.05]식이면 이항분포 식[b(x;n,k/N)]식으로 근사 가능
+                | 		
+                li 푸아송 분포; Poisson distribution
+                | 		
+                ol
+                    li 푸아송 확률변수 : 특정 기간 t동안 사건이 평균적으로 식[\lambda]식번 발생하고, 이것이 다른 기간과 독립적일때, 사건이 발생한 횟수 X
+                    | 			
+                    li 평균 식[\mu=\lambda t]식 ← 기간에 따른 평균 발생비율은 항상 일정하므로
+                    | 			
+                    li 푸아송 분포 식[p(x;\lambda t)={e^{-\lambda t}(\lambda t)^x \over x!}]식
+                    | 			
+                    li 분산 식[\sigma^2 = \lambda t]식
+                    | 			
+                    li 이항분포의 n이 매우 크고, p가 0에 가까우면 식[\mu=np]식인 푸아송 분포로 근사 가능
+                | 		
+                li 정규분포; Normal distribution
+                | 		
+                ol
+                    li 평균 식[\mu]식, 표준편차 식[\sigma]식
+                    | 			
+                    li
+                        | 정규분포 식[X \sim N(\mu,\sigma^2)]식 : 식[n(x;\mu,\sigma)={1 \over \sqrt{2\pi}\sigma}e^{-{1 \over 2\sigma^2}(x-\mu)^2}]식
+                    | 			
+                    li 표준정규분포 : 식[Z \sim N(0,1)]식
+                    | 			정규화 : 식[Z={X-\mu \over \sigma}]식
+                    | 			
+                    li 이항분포 식[b(x;n,p)]식는 정규분포 식[n(x;np,\sqrt{npq})]식를 근사적으로 따른다
+                    | 			식[P(X\le x)=\sum_{k=0}^x b(k;n,p)\approx P(Z \le {{x+0.5-np} \over \sqrt{npq}})]식 ← +0.5는 결과를 실제에 가깝게 하는 연속성 수정(Continuity correction)
+                | 		
+                li 감마분포
+                | 		
+                ol
+                    li 감마함수 식[\Gamma(\alpha)=\int_0^{\infty}x^{\alpha-1}e^{-x}dx]식
+                    | 			자연수 n에 대하여 식[\Gamma(n)=(n-1)!]식, 식[\Gamma(1/2)=\sqrt{\pi}]식
+                    | 			
+                    li
+                        | 감마분포; Gamma distribution 식[f(x;\alpha,\theta)=\left\{\begin{matrix}
+                        | {x^{\alpha-1}e^{-x/\theta} \over \theta^\alpha\Gamma(\alpha)} & \mbox{if x > 0} \\
+                        | 0 & \mbox{else} \end{matrix}\right.]식
+                    | 			
+                    li 평균 식[\mu=\alpha\theta]식
+                    | 			
+                    li 분산 식[\sigma^2=\alpha\theta^2]식
+                    | 			
+                    li
+                        | 지수분포; Exponential distribution 식[f(x;\theta)=\left\{\begin{matrix}
+                        | {e^{-x/\theta} \over \theta} & \mbox{if x > 0} \\
+                        | 0 & \mbox{else} \end{matrix}\right.]식
+                    | 			
+                    ol
+                        li 식[\theta=1/\lambda]식로 두면, 식[f(x;1/\lambda)=\lambda e^{-\lambda x}]식
+                        | 				
+                        li 푸아송 사건이 발생하지 않을 확률 식[p(0;\lambda t)=e^{-\lambda t}]식
+                        | 				= 첫 번째 푸아송 사건이 발생하기까지 소요된 시간 t에 대한 확률변수 X의 확률분포
+                        | 				
+                        li 위 X에 대한 누적확률분포는 식[P(0\le X\le x)=1-e^{-\lambda x}]식
+                        | 				
+                        li 이를 연속확률변수에 적용하기 위해 미분하면 식[\lambda e^{-\lambda x}]식
+                        | 				
+                        li 따라서 지수분포는 연속확률변수에 대한 푸아송 분포임을 알 수 있다
+                        | 				
+                        li
+                            | 푸아송 분포와 마찬가지로 특정 기간 동안 사건의 발생은 다른 기간과 독립적이다. 식[P(X\ge t)=P(X\ge t_0+t|X\ge t_0)]식
+                    | 			
+                    li 카이제곱 분포; Chi-squared distribution
+                    | 			
+                    ol
+                        li
+                            | 식[\alpha=k/2, \theta=2]식인 감마분포와 동일하다. 식[f(x;k)=\left\{\begin{matrix}
+                            | {x^{k/2-1}e^{-x/2} \over 2^{k/2}\Gamma(k/2)} & \mbox{if x > 0} \\
+                            | 0 & \mbox{else} \end{matrix}\right.]식
+                        | 				
+                        li 평균 식[\mu=k]식
+                        | 				
+                        li 분산 식[\sigma^2=2k]식
+                    | 			
+                    li 확률변수 변환
+                    | 			
+                    ol
+                        li
+                            | 이산확률변수 식[X, Y]식가 일대일 대응관계 식[y=u(x), x=u^{-1}(y)]식라면, 식[Y]식의 확률분포는 식[g(y)=f(u^{-1}(y))]식
+                        | 				
+                        li
+                            | 이산확률변수 식[X_1,X_2,Y_1,Y_2]식가 일대일 대응관계 식[\begin{gather*}
+                            | y_1 = u_1(x_1,x_2) \\
+                            | y_2 = u_2(x_1,x_2) \\
+                            | x_1 = w_1(y_1,y_2) \\
+                            | x_2 = w_2(y_1,y_2)\end{gather*}]식라면, 식[Y_1,Y_2]식의 결합확률분포는 식[g(y_1,y_2)=f(w_1(y_1,y_2),w_2(y_1,y_2))]식
+                        | 				
+                        li
+                            | 연속확률변수 식[X, Y]식가 일대일 대응관계 식[y=u(x), x=u^{-1}(y)]식라면, 식[Y]식의 확률분포는 식[g(y)=f(u^{-1}(y))|{\partial{u^{-1}(y)} \over \partial{y}}|]식
+                        | 				
+                        li
+                            | 연속확률변수 식[X, Y]식가 일대일 대응관계 식[\begin{gather*}
+                            | y_1 = u_1(x_1,x_2) \\
+                            | y_2 = u_2(x_1,x_2) \\
+                            | x_1 = w_1(y_1,y_2) \\
+                            | x_2 = w_2(y_1,y_2)\end{gather*}]식라면, 식[Y_1,Y_2]식의 결합확률분포는 식[g(y_1,y_2)=f(w_1(y_1,y_2),w_2(y_1,y_2))|J|]식
+                        | 				이때, 식[J]식는 야코비 행렬(Jacobian matrix)로 식[|J|=\begin{vmatrix} {\partial{x_1} \over \partial{y_1}} & {\partial{x_1} \over \partial{y_2}} \\
+                        | 				{\partial{x_2} \over \partial{y_1}} & {\partial{x_2} \over \partial{y_2}}\end{vmatrix}]식
+                        | 				
+                        li
+                            | 연속확률변수 식[X, Y]식에 대해, 식[u:X\to Y]식는 일대일 함수지만 역함수는 존재하지 않는 경우.
+                            | 만일 식[X]식을 빈틈없이 나눈 각 구간마다 부분적인 역함수 식[x_1=w_1(y), \cdots, x_k=w_k(y)]식가 존재한다면,
+                            | 식[Y]식의 확률분포는 식[g(y)=\sum f(w_i(y))|J_i|]식 ← 식[J_i={\partial{x_i} \over \partial{y}}]식
+                    | 			
+                    li 적률; Moment
+                    | 			
+                    ol
+                        li 적률 ::= 확률변수 거듭제곱의 평균 식[m_n = E(X^n)]식
+                        | 				
+                        li 적률생성함수 ::= 식[M_X(t)=E(e^{tX})]식
+                        | 				\begin{align*}
+                        | 					M_X(t)
+                        | 					&= \int_{-\infty}^\infty e^{tx} f(x)\,\mathrm{d}x \\
+                        | 					&= \int_{-\infty}^\infty \left( 1+ tx + \frac{t^2x^2}{2!} + \cdots\right) f(x)\,\mathrm{d}x \\
+                        | 					&= 1 + tm_1 + \frac{t^2m_2}{2!} +\cdots
+                        | 				\end{align*}
+                        | 				
+                        li 적률생성함수로 적률 생성 : 식[m_n = \left.\frac{d^nM_X(t)}{dt^n}\right|_{t=0}]식
+                        | 				
+                        li 확률변수 식[X, Y]식의 적률생성함수가 일치 식[\implies]식 식[X, Y]식의 확률분포는 동일
+                        | 				
+                        li 식[M_{aX}(t)=M_X(at)]식
+                        | 				
+                        li 식[M_{X+b}(t)=e^{bt}M_X(t)]식
+                        | 				
+                        li
+                            | 식[X_1,\cdots,X_n]식이 독립이면 식[Y=X_1+\cdots+X_n]식의 적률생성함수는 식[M_Y(t)=M_{X_1}(t)\cdots M_{X_n}(t)]식
+                        | 				
+                        li
+                            | 식[X_1,\cdots,X_n]식이 독립이면서 정규분포를 따를 때, 식[Y=a_1X_1+\cdots+a_nX_n]식도 정규분포 식[N(\mu_Y,\sigma_Y^2)]식을 따르며, 식[\mu_Y=a_1\mu_1+\cdots+a_n\mu_n]식, 식[\sigma_Y^2=a_1^2\sigma_1^2+\cdots+a_n^2\sigma_n^2]식
+                        | 				
+                        li
+                            | 식[X_1,\cdots,X_n]식이 독립이면서 카이제곱분포를 따를 때, 식[Y=X_1+\cdots+X_n]식은 자유도가 식[v=v_1+\cdots+v_n]식인 카이제곱분포를 따른다
+                        | 				
+                        li
+                            | 식[X_1,\cdots,X_n]식이 독립이면서 정규분포를 따를 때, 식[Y=\sum ({X_i-\mu_i \over \sigma_i})^2]식는 자유도 식[v=n]식인 카이제곱분포를 따른다
+        hr
+        details
+            summary 추정
+            | 	
+            ul
+                li
+                    | 표본 식[X_i]식, 표본평균 식[\overline{X}=\sum{X_i}/n]식, 표본분산 식[S^2={\sum(X_i-\overline{X})^2 \over (n-1)}={1 \over n(n-1)}[n\sum X_i^2 - (\sum X_i)^2]]식
+                |     	
+                li t-분포
+                |     	
+                ol
+                    li 중심극한정리; Central limit theorem
+                    |     	    평균이 식[\mu]식, 분산이 식[\sigma^2]식인 모집단으로부터, 크기 n인 표본을 추출했을 때,
+                    |     	    n이 충분히 크다면 식[Z = {\overline{X}-\mu \over \sigma/\sqrt{n}}]식는 표준정규분포를 따른다.
+                    |     	    이때 식[\overline{X}]식는 표본평균.
+                    |     	    
+                    li Cochran's theorem
+                    |     	    식[N(\mu, \sigma^2)]식를 따르는 정규모집단으로부터 크기 n인 표본을 추출했을 때,
+                    |     	    n이 충분히 크다면 식[\chi^2={(n-1)S^2 \over \sigma^2}]식는 카이제곱분포 식[f(x; n-1)]식를 따른다
+                    |     	    
+                    li 식[T={Z \over \sqrt{V/(n-1)}}]식는 자유도 n-1인 t-분포를 따른다
+                    |     	    모집단의 분산을 모를 때 모평균의 추정에 이용할 수 있다.
+                |     	
+                li F-분포
+                |     	
+                ul
+                    li
+                        | 자유도가 각각 식[v_1, v_2]식인 두 카이제곱변수 식[V_1, V_2]식에 대하여, 식[F={V_1/v_1 \over V_2/v_2}]식는 자유도가 식[(v_1, v_2)]식인 F-분포를 따른다
+                    |     	    
+                    li
+                        a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://math100.tistory.com/47') F-분포표 보는 법
+                    |     	    
+                    li
+                        | 모분산이 각각 식[\sigma_1^2, \sigma_2^2]식인 정규모집단에서 독립적으로 추출한 두 표본에 대해 식[F={S_1^2/\sigma_1^2 \over S_2^2/\sigma_2^2}]식는 자유도가 식[(n_1-1, n_2-1)]식인 F-분포를 따른다
+        hr

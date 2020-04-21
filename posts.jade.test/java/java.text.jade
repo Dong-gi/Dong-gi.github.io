@@ -1,389 +1,389 @@
 html
-  body
-    script(src='/source/redirect.js?200226_1657')
-    hr
-    details
-      summary abstract class Format implements Serializable, Cloneable Since 1.1
-      |     
-      ol
-        li 자바에서 제공하는 주요 Format 서브 클래스는 DateFormat, MessageFormat, NumberFormat
-        |         
-        li 콘크리트 서브 클래스는 아래 3개 메서드를 반드시 구현해야 한다
-        |         format(Object, StringBuffer, FieldPosition), formatToCharacterIterator(Object), parseObject(String, ParsePosition)
-    hr
-    details
-      summary final class Normalizer Since 1.6
-      |     
-      ol
-        li
-          | 유니코드 
-          a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://ko.wikipedia.org/wiki/유니코드_정규화') 정규화/역정규화
-          |  관련 기능을 제공한다.
-        |         
-        li static enum Normalizer.Form Since 1.6
-        |         NFC, NFD, NFKC, NFKD
-        |         
-        li static String normalize(CharSequence src, Normalizer.Form form) + isNormalized
-    hr
-    details
-      summary abstract class NumberFormat extends Format Since 1.1
-      |     
-      ol
-        li static enum NumberFormat.Style Since 12
-        |         SHORT, LONG
-        |         
-        li static class NumberFormat.Field extends Format.Field Since 1.4
-        |         INTEGER(정수부), FRACTION(분수), EXPONENT(지수부), DECIMAL_SEPARATOR(소수 구분 기호), SIGN(부호), GROUPING_SEPARATOR(단위 구분 문자), EXPONENT_SYMBOL, PERCENT, PERMILLE, CURRENCY, EXPONENT_SIGN, PREFIX Since 12, SUFFIX Since 12
-        |         
-        li static final NumberFormat getInstance(Locale inLocale) + 오버로딩
-        |         + getNumberInstance : 범용 
-        button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/NumberFormatTest.java', lan='java') 예시 코드 »
-        |         , getIntegerInstance Since 1.4 : 포맷에 HALF_EVEN을 이용하고, 파싱은 정수부만, getCurrencyInstance, getPercentInstance, getCompactNumberInstance Since 12 : 기본값은 NumberFormat.Style.SHORT 스타일
-        |         
-        li static Locale[] getAvailableLocales()
-        |         
-        li void setParseIntegerOnly(boolean value)
-        |         + groupingUsed, maximumIntegerDigits, minimumIntegerDigits, maximumFractionDigits, minimumFractionDigits, currency Since 1.4, roundingMode Since 1.6
-    hr
-    details
-      summary class SimpleDateFormat extends DateFormat Since 1.1
-      |     
-      ol
-        li 패턴
-        |         
-        table
-          thead
-            tr
-              th 문자
-              |                     
-              th 표현요소
-              |                     
-              th 예
-          |             
-          tbody
-            tr
-              th G
-              |                     
-              td 기원 전/후
-              |                     
-              td
-                | AD
-                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[18,23]', lan='java') 예
-            |                 
-            tr
-              th y
-              |                     
-              td 년
-              |                     
-              td
-                | 1996; 96
-                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[26,31]', lan='java') 예
-            |                 
-            tr
-              th Y
-              |                     
-              td Week year
-              |                     
-              td
-                | 2009; 09
-                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[34,43]', lan='java') 예
-            |                 
-            tr
-              th M
-              |                     
-              td 월(context sensitive)
-              |                     
-              td
-                | July; Jul; 07
-                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[26,31]', lan='java') 예
-            |                 
-            tr
-              th L
-              |                     
-              td 월 (standalone form)
-              |                     
-              td July; Jul; 07
-            |                 
-            tr
-              th w
-              |                     
-              td Week in year
-              |                     
-              td
-                | 27
-                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[34,43]', lan='java') 예
-            |                 
-            tr
-              th W
-              |                     
-              td Week in month
-              |                     
-              td 2
-            |                 
-            tr
-              th D
-              |                     
-              td Day in year
-              |                     
-              td 189
-            |                 
-            tr
-              th d
-              |                     
-              td Day in month
-              |                     
-              td
-                | 10
-                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[26,31]', lan='java') 예
-            |                 
-            tr
-              th F
-              |                     
-              td Day of week in month
-              |                     
-              td 2
-            |                 
-            tr
-              th E
-              |                     
-              td Day name in week
-              |                     
-              td
-                | Tuesday; Tue
-                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[34,43]', lan='java') 예
-            |                 
-            tr
-              th u
-              |                     
-              td Day number of week
-              |                     
-              td
-                | 1 = Monday, ..., 7 = Sunday
-                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[34,43]', lan='java') 예
-            |                 
-            tr
-              th a
-              |                     
-              td Am/pm
-              |                     
-              td
-                | PM
-                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[46,51]', lan='java') 예
-            |                 
-            tr
-              th H
-              |                     
-              td Hour in day (0-23)
-              |                     
-              td
-                | 0
-                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[26,31]', lan='java') 예
-            |                 
-            tr
-              th k
-              |                     
-              td Hour in day (1-24)
-              |                     
-              td 24
-            |                 
-            tr
-              th K
-              |                     
-              td Hour in am/pm (0-11)
-              |                     
-              td 0
-            |                 
-            tr
-              th h
-              |                     
-              td Hour in am/pm (1-12)
-              |                     
-              td
-                | 12
-                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[46,51]', lan='java') 예
-            |                 
-            tr
-              th m
-              |                     
-              td Minute in hour
-              |                     
-              td
-                | 30
-                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[26,31]', lan='java') 예
-            |                 
-            tr
-              th s
-              |                     
-              td Second in minute
-              |                     
-              td
-                | 55
-                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[26,31]', lan='java') 예
-            |                 
-            tr
-              th S
-              |                     
-              td Millisecond
-              |                     
-              td
-                | 978
-                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[46,51]', lan='java') 예
-            |                 
-            tr
-              th z
-              |                     
-              td General time zone
-              |                     
-              td Pacific Standard Time; PST; GMT-08:00
-            |                 
-            tr
-              th Z
-              |                     
-              td RFC 822 time zone
-              |                     
-              td
-                | -0800
-                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[46,51]', lan='java') 예
-            |                 
-            tr
-              th X
-              |                     
-              td ISO 8601 time zone
-              |                     
-              td -08; -0800; -08:00
-    hr
-    details
-      summary class MessageFormat extends Format Since 1.1
-      |     
-      ol
-        li MessageFormatPattern ::= String | MessageFormatPattern FormatElement String
-        |         
-        li FormatElement ::= { ArgumentIndex[, FormatType[, FormatStyle]] }
-        |         
-        li FormatType ::= number | date | time | choice
-        |         
-        li
-          | FormatStyle ::= short | medium | long | full | integer | currency | percent | SubformatPattern
-        |         
-        li '' 안의 포맷 문자열은 이스케이프된다
-        |         
-        li
-          | 동일 요소에 대한 반복적인 파싱은 마지막 파싱 결과만 유효하다
-          button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/MessageFormatTest.java', lan='java') 예시 코드 »
-        |         
-        table
-          thead
-            tr
-              th FormatType
-              |                     
-              th FormatStyle
-              |                     
-              th Subformat Created
-          |             
-          tbody
-            tr
-              th (none)
-              |                     
-              th (none)
-              |                     
-              td null
-            |                 
-            tr
-              th(rowspan='5') number
-              |                     
-              th (none)
-              |                     
-              td NumberFormat.getInstance(getLocale())
-            |                 
-            tr
-              th integer
-              |                     
-              td NumberFormat.getIntegerInstance(getLocale())
-            |                 
-            tr
-              th currency
-              |                     
-              td NumberFormat.getCurrencyInstance(getLocale())
-            |                 
-            tr
-              th percent
-              |                     
-              td NumberFormat.getPercentInstance(getLocale())
-            |                 
-            tr
-              th SubformatPattern
-              |                     
-              td
-                | new DecimalFormat(subformatPattern, DecimalFormatSymbols.getInstance(getLocale()))
-            |                 
-            tr
-              th(rowspan='6') date
-              |                     
-              th (none)
-              |                     
-              td DateFormat.getDateInstance(DateFormat.DEFAULT, getLocale())
-            |                 
-            tr
-              th short
-              |                     
-              td DateFormat.getDateInstance(DateFormat.SHORT, getLocale())
-            |                 
-            tr
-              th medium
-              |                     
-              td DateFormat.getDateInstance(DateFormat.DEFAULT, getLocale())
-            |                 
-            tr
-              th long
-              |                     
-              td DateFormat.getDateInstance(DateFormat.LONG, getLocale())
-            |                 
-            tr
-              th full
-              |                     
-              td DateFormat.getDateInstance(DateFormat.FULL, getLocale())
-            |                 
-            tr
-              th SubformatPattern
-              |                     
-              td new SimpleDateFormat(subformatPattern, getLocale())
-            |                 
-            tr
-              th(rowspan='6') time
-              |                     
-              th (none)
-              |                     
-              td DateFormat.getTimeInstance(DateFormat.DEFAULT, getLocale())
-            |                 
-            tr
-              th short
-              |                     
-              td DateFormat.getTimeInstance(DateFormat.SHORT, getLocale())
-            |                 
-            tr
-              th medium
-              |                     
-              td DateFormat.getTimeInstance(DateFormat.DEFAULT, getLocale())
-            |                 
-            tr
-              th long
-              |                     
-              td DateFormat.getTimeInstance(DateFormat.LONG, getLocale())
-            |                 
-            tr
-              th full
-              |                     
-              td DateFormat.getTimeInstance(DateFormat.FULL, getLocale())
-            |                 
-            tr
-              th SubformatPattern
-              |                     
-              td new SimpleDateFormat(subformatPattern, getLocale())
-            |                 
-            tr
-              th choice
-              |                     
-              th SubformatPattern
-              |                     
-              td new ChoiceFormat(subformatPattern)
-    hr
+    body
+        script(src='/source/redirect.js?200226_1657')
+        hr
+        details
+            summary abstract class Format implements Serializable, Cloneable Since 1.1
+            |     
+            ol
+                li 자바에서 제공하는 주요 Format 서브 클래스는 DateFormat, MessageFormat, NumberFormat
+                |         
+                li 콘크리트 서브 클래스는 아래 3개 메서드를 반드시 구현해야 한다
+                |         format(Object, StringBuffer, FieldPosition), formatToCharacterIterator(Object), parseObject(String, ParsePosition)
+        hr
+        details
+            summary final class Normalizer Since 1.6
+            |     
+            ol
+                li
+                    | 유니코드 
+                    a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://ko.wikipedia.org/wiki/유니코드_정규화') 정규화/역정규화
+                    |  관련 기능을 제공한다.
+                |         
+                li static enum Normalizer.Form Since 1.6
+                |         NFC, NFD, NFKC, NFKD
+                |         
+                li static String normalize(CharSequence src, Normalizer.Form form) + isNormalized
+        hr
+        details
+            summary abstract class NumberFormat extends Format Since 1.1
+            |     
+            ol
+                li static enum NumberFormat.Style Since 12
+                |         SHORT, LONG
+                |         
+                li static class NumberFormat.Field extends Format.Field Since 1.4
+                |         INTEGER(정수부), FRACTION(분수), EXPONENT(지수부), DECIMAL_SEPARATOR(소수 구분 기호), SIGN(부호), GROUPING_SEPARATOR(단위 구분 문자), EXPONENT_SYMBOL, PERCENT, PERMILLE, CURRENCY, EXPONENT_SIGN, PREFIX Since 12, SUFFIX Since 12
+                |         
+                li static final NumberFormat getInstance(Locale inLocale) + 오버로딩
+                |         + getNumberInstance : 범용 
+                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/NumberFormatTest.java', lan='java') 예시 코드 »
+                |         , getIntegerInstance Since 1.4 : 포맷에 HALF_EVEN을 이용하고, 파싱은 정수부만, getCurrencyInstance, getPercentInstance, getCompactNumberInstance Since 12 : 기본값은 NumberFormat.Style.SHORT 스타일
+                |         
+                li static Locale[] getAvailableLocales()
+                |         
+                li void setParseIntegerOnly(boolean value)
+                |         + groupingUsed, maximumIntegerDigits, minimumIntegerDigits, maximumFractionDigits, minimumFractionDigits, currency Since 1.4, roundingMode Since 1.6
+        hr
+        details
+            summary class SimpleDateFormat extends DateFormat Since 1.1
+            |     
+            ol
+                li 패턴
+                |         
+                table
+                    thead
+                        tr
+                            th 문자
+                            |                     
+                            th 표현요소
+                            |                     
+                            th 예
+                    |             
+                    tbody
+                        tr
+                            th G
+                            |                     
+                            td 기원 전/후
+                            |                     
+                            td
+                                | AD
+                                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[18,23]', lan='java') 예
+                        |                 
+                        tr
+                            th y
+                            |                     
+                            td 년
+                            |                     
+                            td
+                                | 1996; 96
+                                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[26,31]', lan='java') 예
+                        |                 
+                        tr
+                            th Y
+                            |                     
+                            td Week year
+                            |                     
+                            td
+                                | 2009; 09
+                                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[34,43]', lan='java') 예
+                        |                 
+                        tr
+                            th M
+                            |                     
+                            td 월(context sensitive)
+                            |                     
+                            td
+                                | July; Jul; 07
+                                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[26,31]', lan='java') 예
+                        |                 
+                        tr
+                            th L
+                            |                     
+                            td 월 (standalone form)
+                            |                     
+                            td July; Jul; 07
+                        |                 
+                        tr
+                            th w
+                            |                     
+                            td Week in year
+                            |                     
+                            td
+                                | 27
+                                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[34,43]', lan='java') 예
+                        |                 
+                        tr
+                            th W
+                            |                     
+                            td Week in month
+                            |                     
+                            td 2
+                        |                 
+                        tr
+                            th D
+                            |                     
+                            td Day in year
+                            |                     
+                            td 189
+                        |                 
+                        tr
+                            th d
+                            |                     
+                            td Day in month
+                            |                     
+                            td
+                                | 10
+                                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[26,31]', lan='java') 예
+                        |                 
+                        tr
+                            th F
+                            |                     
+                            td Day of week in month
+                            |                     
+                            td 2
+                        |                 
+                        tr
+                            th E
+                            |                     
+                            td Day name in week
+                            |                     
+                            td
+                                | Tuesday; Tue
+                                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[34,43]', lan='java') 예
+                        |                 
+                        tr
+                            th u
+                            |                     
+                            td Day number of week
+                            |                     
+                            td
+                                | 1 = Monday, ..., 7 = Sunday
+                                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[34,43]', lan='java') 예
+                        |                 
+                        tr
+                            th a
+                            |                     
+                            td Am/pm
+                            |                     
+                            td
+                                | PM
+                                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[46,51]', lan='java') 예
+                        |                 
+                        tr
+                            th H
+                            |                     
+                            td Hour in day (0-23)
+                            |                     
+                            td
+                                | 0
+                                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[26,31]', lan='java') 예
+                        |                 
+                        tr
+                            th k
+                            |                     
+                            td Hour in day (1-24)
+                            |                     
+                            td 24
+                        |                 
+                        tr
+                            th K
+                            |                     
+                            td Hour in am/pm (0-11)
+                            |                     
+                            td 0
+                        |                 
+                        tr
+                            th h
+                            |                     
+                            td Hour in am/pm (1-12)
+                            |                     
+                            td
+                                | 12
+                                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[46,51]', lan='java') 예
+                        |                 
+                        tr
+                            th m
+                            |                     
+                            td Minute in hour
+                            |                     
+                            td
+                                | 30
+                                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[26,31]', lan='java') 예
+                        |                 
+                        tr
+                            th s
+                            |                     
+                            td Second in minute
+                            |                     
+                            td
+                                | 55
+                                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[26,31]', lan='java') 예
+                        |                 
+                        tr
+                            th S
+                            |                     
+                            td Millisecond
+                            |                     
+                            td
+                                | 978
+                                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[46,51]', lan='java') 예
+                        |                 
+                        tr
+                            th z
+                            |                     
+                            td General time zone
+                            |                     
+                            td Pacific Standard Time; PST; GMT-08:00
+                        |                 
+                        tr
+                            th Z
+                            |                     
+                            td RFC 822 time zone
+                            |                     
+                            td
+                                | -0800
+                                button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange='[46,51]', lan='java') 예
+                        |                 
+                        tr
+                            th X
+                            |                     
+                            td ISO 8601 time zone
+                            |                     
+                            td -08; -0800; -08:00
+        hr
+        details
+            summary class MessageFormat extends Format Since 1.1
+            |     
+            ol
+                li MessageFormatPattern ::= String | MessageFormatPattern FormatElement String
+                |         
+                li FormatElement ::= { ArgumentIndex[, FormatType[, FormatStyle]] }
+                |         
+                li FormatType ::= number | date | time | choice
+                |         
+                li
+                    | FormatStyle ::= short | medium | long | full | integer | currency | percent | SubformatPattern
+                |         
+                li '' 안의 포맷 문자열은 이스케이프된다
+                |         
+                li
+                    | 동일 요소에 대한 반복적인 파싱은 마지막 파싱 결과만 유효하다
+                    button.btn-code(path='Repositories/Eclipse/JavaSE/src/text/MessageFormatTest.java', lan='java') 예시 코드 »
+                |         
+                table
+                    thead
+                        tr
+                            th FormatType
+                            |                     
+                            th FormatStyle
+                            |                     
+                            th Subformat Created
+                    |             
+                    tbody
+                        tr
+                            th (none)
+                            |                     
+                            th (none)
+                            |                     
+                            td null
+                        |                 
+                        tr
+                            th(rowspan='5') number
+                            |                     
+                            th (none)
+                            |                     
+                            td NumberFormat.getInstance(getLocale())
+                        |                 
+                        tr
+                            th integer
+                            |                     
+                            td NumberFormat.getIntegerInstance(getLocale())
+                        |                 
+                        tr
+                            th currency
+                            |                     
+                            td NumberFormat.getCurrencyInstance(getLocale())
+                        |                 
+                        tr
+                            th percent
+                            |                     
+                            td NumberFormat.getPercentInstance(getLocale())
+                        |                 
+                        tr
+                            th SubformatPattern
+                            |                     
+                            td
+                                | new DecimalFormat(subformatPattern, DecimalFormatSymbols.getInstance(getLocale()))
+                        |                 
+                        tr
+                            th(rowspan='6') date
+                            |                     
+                            th (none)
+                            |                     
+                            td DateFormat.getDateInstance(DateFormat.DEFAULT, getLocale())
+                        |                 
+                        tr
+                            th short
+                            |                     
+                            td DateFormat.getDateInstance(DateFormat.SHORT, getLocale())
+                        |                 
+                        tr
+                            th medium
+                            |                     
+                            td DateFormat.getDateInstance(DateFormat.DEFAULT, getLocale())
+                        |                 
+                        tr
+                            th long
+                            |                     
+                            td DateFormat.getDateInstance(DateFormat.LONG, getLocale())
+                        |                 
+                        tr
+                            th full
+                            |                     
+                            td DateFormat.getDateInstance(DateFormat.FULL, getLocale())
+                        |                 
+                        tr
+                            th SubformatPattern
+                            |                     
+                            td new SimpleDateFormat(subformatPattern, getLocale())
+                        |                 
+                        tr
+                            th(rowspan='6') time
+                            |                     
+                            th (none)
+                            |                     
+                            td DateFormat.getTimeInstance(DateFormat.DEFAULT, getLocale())
+                        |                 
+                        tr
+                            th short
+                            |                     
+                            td DateFormat.getTimeInstance(DateFormat.SHORT, getLocale())
+                        |                 
+                        tr
+                            th medium
+                            |                     
+                            td DateFormat.getTimeInstance(DateFormat.DEFAULT, getLocale())
+                        |                 
+                        tr
+                            th long
+                            |                     
+                            td DateFormat.getTimeInstance(DateFormat.LONG, getLocale())
+                        |                 
+                        tr
+                            th full
+                            |                     
+                            td DateFormat.getTimeInstance(DateFormat.FULL, getLocale())
+                        |                 
+                        tr
+                            th SubformatPattern
+                            |                     
+                            td new SimpleDateFormat(subformatPattern, getLocale())
+                        |                 
+                        tr
+                            th choice
+                            |                     
+                            th SubformatPattern
+                            |                     
+                            td new ChoiceFormat(subformatPattern)
+        hr

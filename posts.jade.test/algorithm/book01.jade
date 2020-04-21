@@ -1,75 +1,75 @@
 html
-  body
-    script(src='/source/redirect.js?200226_1657')
-    .w3-row
-      .w3-col.s2
-        img.w3-round(src='http://seoji.nl.go.kr/fu/ecip/dbfiles/CIP_FILES_TBL/6534360_3.jpg')
-      |     
-      .w3-col.s10
-        table.no-sort
-          tr
-            th 표제/저자사항
-            |                 
-            td 알고리즘 도감 / 이시다 모리테루,미야자키 쇼이치 지음 ;김완섭 옮김
-          |             
-          tr
-            th ISBN 정보
-            |                 
-            td 979-11-88621-12-5 [93000]
-          |             
-          tr
-            th 발행사항
-            |                 
-            td Jpub(제이펍) , 발행일 : 20180209
-          |             
-          tr
-            th 출판사 홈페이지
-            |                 
-            td http://www.jpub.kr
-    hr
-    ol
-      li 문자열 검색; Boyer-Moore
-      |     예. abcxdezcabacabac에서 abac 검색
-      br
-      |     처음 검색 인덱스 0. 마지막 위치의 x는 패턴에 없는 문자이므로 다음 검색 인덱스는 1이 아닌 4.
-      |     
-      li 디피-헬만 키 교환법
-      |     두 키 K1, K2를 합성하는, 교환법칙이 성립하는(F(k1, k2) == F(k2, k1)) 함수 F가 있을 때, 두 대화 참여자 A, B의 키 생성 절차는 아래와 같다.
-      |     
-      ol
-        li A가 B에게 공개키 P를 전달
-        |         
-        li A, B가 각각 비밀키 SA, SB를 준비.
-        |         
-        li A는 B에게 F(P, SA)를, B는 A에게 F(P, SB)를 전달
-        |         
-        li A, B는 이제 각각 F(P, SB, SA), F(P, SA, SB)를 이용하여 대화를 암호화할 수 있다.
-      |     중간에 공개된 키들을 모두 가로채더라도, P, F(P, SA), F(P, SB)만으로는 F(P, SA, SB)를 만들어낼 수 없다. 아래는 RSA키 생성 절차
-      |     
-      ol
-        li A가 B에게 (소수 P, 생성자 G) 전달
-        |         
-        li A, B가 각각 비밀키 X, Y를 준비. (X, Y < P-2)
-        |         
-        li A는 B에게 G^X mod P를, B는 A에게 G^Y mod P를 전달
-        |         
-        li A, B는 이제 각각 (G^Y mod P)^X mod P, (G^X mod P)^Y mod P == G^(XY) mod P를 공유한다.
-      |     
-      li 메시지 인증 코드; MAC(Message Authentication Code)
-      |     암호문과 키를 이용해 만든 MAC를 암호문과 같이 전달하면 수신측은 암호문 또는 키의 변조를 감지해낼 수 있다. 흔히 사용되는 것은 암호문과 키를 해싱하여 MAC을 행성하는 HMAC
-      |     
-      li 전자 서명
-      |     
-      ol
-        li A는 메시지(평문이든 다른 암호문이든 무관), 비밀키, 공개키를 준비.
-        |         키 생성 알고리즘 G : 서명자의 (비밀키, 공개키)쌍을 생성한다.
-        |         
-        li A는 B에게 공개키를 전달.
-        |         
-        li A는 비밀키를 사용해 메시지를 암호화. 이것이 전자 서명
-        |         서명 생성 알고리즘 S : 메시지와 비밀키를 입력받으면 서명을 생성한다
-        |         
-        li A는 메시지와 전자 서명을 B에게 전달.
-        |         
-        li B는 공개키를 이용해 암호문을 복호화하여 전자 서명과 일치하는지 확인.
-        |         서명 검증 알고리즘 V : 메시지, 공개키, 서명을 입력받으면 승인/거부를 출력한다
+    body
+        script(src='/source/redirect.js?200226_1657')
+        .w3-row
+            .w3-col.s2
+                img.w3-round(src='http://seoji.nl.go.kr/fu/ecip/dbfiles/CIP_FILES_TBL/6534360_3.jpg')
+            |     
+            .w3-col.s10
+                table.no-sort
+                    tr
+                        th 표제/저자사항
+                        |                 
+                        td 알고리즘 도감 / 이시다 모리테루,미야자키 쇼이치 지음 ;김완섭 옮김
+                    |             
+                    tr
+                        th ISBN 정보
+                        |                 
+                        td 979-11-88621-12-5 [93000]
+                    |             
+                    tr
+                        th 발행사항
+                        |                 
+                        td Jpub(제이펍) , 발행일 : 20180209
+                    |             
+                    tr
+                        th 출판사 홈페이지
+                        |                 
+                        td http://www.jpub.kr
+        hr
+        ol
+            li 문자열 검색; Boyer-Moore
+            |     예. abcxdezcabacabac에서 abac 검색
+            br
+            |     처음 검색 인덱스 0. 마지막 위치의 x는 패턴에 없는 문자이므로 다음 검색 인덱스는 1이 아닌 4.
+            |     
+            li 디피-헬만 키 교환법
+            |     두 키 K1, K2를 합성하는, 교환법칙이 성립하는(F(k1, k2) == F(k2, k1)) 함수 F가 있을 때, 두 대화 참여자 A, B의 키 생성 절차는 아래와 같다.
+            |     
+            ol
+                li A가 B에게 공개키 P를 전달
+                |         
+                li A, B가 각각 비밀키 SA, SB를 준비.
+                |         
+                li A는 B에게 F(P, SA)를, B는 A에게 F(P, SB)를 전달
+                |         
+                li A, B는 이제 각각 F(P, SB, SA), F(P, SA, SB)를 이용하여 대화를 암호화할 수 있다.
+            |     중간에 공개된 키들을 모두 가로채더라도, P, F(P, SA), F(P, SB)만으로는 F(P, SA, SB)를 만들어낼 수 없다. 아래는 RSA키 생성 절차
+            |     
+            ol
+                li A가 B에게 (소수 P, 생성자 G) 전달
+                |         
+                li A, B가 각각 비밀키 X, Y를 준비. (X, Y < P-2)
+                |         
+                li A는 B에게 G^X mod P를, B는 A에게 G^Y mod P를 전달
+                |         
+                li A, B는 이제 각각 (G^Y mod P)^X mod P, (G^X mod P)^Y mod P == G^(XY) mod P를 공유한다.
+            |     
+            li 메시지 인증 코드; MAC(Message Authentication Code)
+            |     암호문과 키를 이용해 만든 MAC를 암호문과 같이 전달하면 수신측은 암호문 또는 키의 변조를 감지해낼 수 있다. 흔히 사용되는 것은 암호문과 키를 해싱하여 MAC을 행성하는 HMAC
+            |     
+            li 전자 서명
+            |     
+            ol
+                li A는 메시지(평문이든 다른 암호문이든 무관), 비밀키, 공개키를 준비.
+                |         키 생성 알고리즘 G : 서명자의 (비밀키, 공개키)쌍을 생성한다.
+                |         
+                li A는 B에게 공개키를 전달.
+                |         
+                li A는 비밀키를 사용해 메시지를 암호화. 이것이 전자 서명
+                |         서명 생성 알고리즘 S : 메시지와 비밀키를 입력받으면 서명을 생성한다
+                |         
+                li A는 메시지와 전자 서명을 B에게 전달.
+                |         
+                li B는 공개키를 이용해 암호문을 복호화하여 전자 서명과 일치하는지 확인.
+                |         서명 검증 알고리즘 V : 메시지, 공개키, 서명을 입력받으면 승인/거부를 출력한다

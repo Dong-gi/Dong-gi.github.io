@@ -1,1495 +1,1495 @@
 html
-  body
-    script(src='/source/redirect.js?200226_1657')
-    hr
-    details
-      summary @FunctionalInterface interface Callable<V> Since 1.5
-      |     V call() : 매개변수 없는, 결과를 반환하는 작업을 정의. Runnable과 달리 checked 예외를 던져도 된다.
-    hr
-    details
-      summary interface ThreadFactory Since 1.5
-      |     Thread newThread(Runnable r)
-    hr
-    details
-      summary 비동기 자료형 관련
-      |     
-      details
-        summary interface Future<V> Since 1.5
-        |         
-        ol
-          li 비동기적 계산의 결과를 표현. 결과는 오직 get 메서드로만 얻을 수 있으며, 필요하다면 결과가 준비될 때까지 블록시킨다.
-          |             
-          li boolean cancel(boolean mayInterruptIfRunning) + isCancelled
-          |             작업이 완료됐거나 이미 취소된 경우 false를 반환한다. 이 메서드가 종료된 후의 isDone()은 항상 true.
-          |             
-          li boolean isDone()
-          |             
-          li V get()
-          |             결과가 준비될 때까지 대기
-          |             
-          li V get(long timeout, TimeUnit unit)
-          |             결과가 준비될 때까지 최대 timeout만큼 대기
-      |     
-      details
-        summary interface RunnableFuture<V> extends Runnable, Future<V> Since 1.6
-        |         
-        ol
-          li Runnable한 Future. 즉 비동기 연산과 그 결과를 표현한다.
-          |             
-          li void run() : Future로 하여금 결과를 설정하도록 한다.
-      |     
-      details
-        summary class FutureTask<V> implements RunnableFuture<V> Since 1.5
-        |         
-        ol
-          li public FutureTask(Callable<V> callable)
-          |             
-          li public FutureTask(Runnable runnable, V result)
-          |             
-          li protected void done() : 완료 상태로 천이되면 호출된다
-          |             
-          li protected void set(V v) : 결과 설정
-          |             
-          li protected boolean runAndReset() : 반복 실행 목적
-      |     
-      details
-        summary interface Delayed extends Comparable<Delayed> Since 1.5
-        |         
-        ol
-          li 객체가 일정 지연 뒤 작동함을 마킹하는 인터페이스. 이를 구현할 땐 compareTo를 반드시 같이 구현해야 한다.
-          |             
-          li long getDelay(TimeUnit unit)
-      |     
-      details
-        summary interface ScheduledFuture<V> extends Delayed, Future<V> Since 1.5
-        |         ScheduledExecutorService의 스케쥴링 결과.
-      |     
-      details
-        summary
-          | interface RunnableScheduledFuture<V> extends RunnableFuture<V>, ScheduledFuture<V> Since 1.6
-        |         
-        ol
-          li Runnable한 ScheduledFuture.
-          |             
-          li boolean isPeriodic()
-      |     
-      details
-        summary interface CompletionStage<T> Since 1.8
-        |         
-        ol
-          li 비동기적일 수 있는 계산 단계. 다른 CompletionStage가 완료된 뒤 어떠한 동작을 수행하거나 값을 계산한다.
-          |             Stage에서 수행되는 연산은 Function, Consumer, Runnable로 표현되어야 한다. 각각은 apply, accept, run 메서드로 stage에 제공된다.
-          |             연산에 넘겨지는 인자는 트리거 stage의 결과이며, 이를 통해 연산의 pipeline을 만들 수 있다.
-          |             
-          button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/CompletionStageTest.java', lan='java') 예시 코드 »
-          |             
-          li
-            | <U> CompletionStage<U> thenApply(Function<? super T, ? extends U> fn) + thenApplyAsync
-            br
-            |                 CompletionStage<Void> thenAccept(Consumer<? super T> action) + thenAcceptAsync
-            br
-            |                 CompletionStage<Void> thenRun(Runnable action) + thenRunAsync
-          |             이전 연산이 완료되면 그 결과로 fn, action 호출
-          |             
-          li
-            | <U, V> CompletionStage<V> thenCombine(CompletionStage<? extends U> other, BiFunction<? super T, ? super U, ? extends V> fn) + thenCombineAsync
-            br
-            |                 <U> CompletionStage<Void> thenAcceptBoth(CompletionStage<? extends U> other, BiConsumer<? super T, ? super U> action) + thenAcceptBothAsync
-            br
-            |                 CompletionStage<Void> runAfterBoth(CompletionStage<?> other, Runnable action) + runAfterBothAsync
-          |             this와 other 모두가 종료되면 그 결과로 fn, action 호출
-          |             
-          li
-            | <U> CompletionStage<U> applyToEither(CompletionStage<? extends T> other, Function<? super T, U> fn) + applyToEitherAsync
-            br
-            |                 CompletionStage<Void> acceptEither(CompletionStage<? extends T> other, Consumer<? super T> action) + acceptEitherAsync
-            br
-            |                 CompletionStage<Void> runAfterEither(CompletionStage<?> other, Runnable action) + runAfterEitherAsync
-          |             this나 other 둘 중 하나라도 종료되면 그 결과로 fn, action 호출
-          |             
-          li
-            | <U> CompletionStage<U> thenCompose(Function<? super T, ? extends CompletionStage<U>> fn) + thenComposeAsync
-          |             this의 결과를 인자로 fn이 반환하는 CompletionStage가 실행되고, 실행된 결과와 같은 값으로 종료되는 CompletionStage를 반환한다
-          |             
-          li
-            | <U> CompletionStage<U> handle(BiFunction<? super T, Throwable, ? extends U> fn) + handleAsync
-          |             this가 종료되면 결과와 예외를 인자로 fn을 실행하고, fn의 결과로 반환된 stage를 종료한다.
-          |             
-          li
-            | CompletionStage<T> whenComplete(BiConsumer<? super T, ? super Throwable> action) + whenCompleteAsync
-          |             this가 종료되면 결과와 예외를 인자로 action을 실행하고, action이 종료되면 반환된 stage도 종료된다.
-          |             
-          li
-            | CompletionStage<T> exceptionally(Function<Throwable, ? extends T> fn) + exceptionallyAsync Since 12
-          |             this가 예외를 발생하면 그것을 인자로 fn 실행하는 CompletionStage 반환. 예외 발생이 없는 경우, this의 결과와 같은 값으로 반환된 stage가 종료된다.
-          |             
-          li
-            | default CompletionStage<T> exceptionallyCompose(Function<Throwable, ? extends CompletionStage<T>> fn) Since 12 + exceptionallyComposeAsync
-          |             this가 예외를 발생하면 fn이 반환하는 CompletionStage로 구성된다.
-          |             
-          li CompletableFuture<T> toCompletableFuture()
-      |     
-      details
-        summary class CompletableFuture<T> impliments Future<T>, CompletionStage<T> Since 1.8
-        |         
-        ol
-          li CompletionStage로 이용될 수 있는, 명시적으로 종료(값과 상태를 설정)되는 Future.
-          |             
-          li 둘 이상의 스레드가 complete, completeExceptionally, cancel을 호출할 경우, 하나만 성공한다.
-          |             
-          li non-async 메서드로 등록된 작업은 현재 CompletableFuture가 완료된 스레드 또는 호출자에서 실행된다.
-          |             
-          li 명시적인 Executor 없이 async 메서드로 등록된 작업은 ForkJoinPool#commonPool에서 수행.
-          |             
-          li CompletionStage 메서드들을 독립적으로 구현했기 때문에, 하나를 재정의해도 다른 메서드에 영향이 없다.
-          |             
-          li
-            | CompletionStage 메서드들만 이용하도록 하려면 minimalCompletionStage()를, future를 변경하지 못하도록 하려면 copy()를 이용.
-          |             
-          li
-            | 전반적인 계산에 대한 직접적인 제어를 할 수 없어서 cancel()의 호출은 completeExceptionally(new CancellationException()) 호출과 동일하다
-          |             
-          li 서브클래스들은 각자의 클래스 인스턴스를 반환하도록 newIncompletableFuture 메서드를 재정의해야 한다
-        |         
+    body
+        script(src='/source/redirect.js?200226_1657')
+        hr
         details
-          summary static interface CompletableFuture.AsynchronousCompletionTask Since 1.8
-          |             비동기 메서드에서 생성된 비동기 작업을 나타내는 마커 인터페이스
-        |         
+            summary @FunctionalInterface interface Callable<V> Since 1.5
+            |     V call() : 매개변수 없는, 결과를 반환하는 작업을 정의. Runnable과 달리 checked 예외를 던져도 된다.
+        hr
         details
-          summary Method Detail
-          |             
-          ol
-            li static <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier) + 1 오버로드
-            |                 supplier의 결과를 가지고 비동기 종료되는 CompletableFuture 반환
-            |                 
-            li static CompletableFuture<Void> runAsync(Runnable runnable) + 1 오버로드
-            |                 runnable을 실행하고 비동기 종료되는 CompletableFuture 반환
-            |                 
-            li static <U> CompletableFuture<U> completedFuture(U value)
-            |                 이미 특정 값으로 종료된 CompletableFuture 반환
-            |                 
-            li static CompletableFuture<Void> allOf(CompletableFuture<?>... cfs)
-            |                 모든 cfs가 종료되면 완료되는 새로운 CompletableFuture 객체 반환. 하나라도 예외 종료되면 반환된 CompletableFuture도 그러하다. cfs가 빈 경우, null로 종료된다
-            |                 
-            li static CompletableFuture<Object> anyOf(CompletableFuture<?>... cfs)
-            |                 하나라도 종료되면, 그 결과와 같은 값으로 종료되는 CompletableFuture 객체 반환. cfs가 빈 경우, 완료되지 않는다
-            |                 
-            li T join()
-            |                 종료되면 결과 값 반환, 또는 발생한 예외 던지기. 예외는 CompletionException이고, 기저 예외를 cause로 설정한다
-            |                 
-            li T getNow(T valueIfAbsent)
-            |                 종료되었다면 결과 값 반환, 또는 발생한 예외 던지기. 아니면 valueIfAbsent 반환.
-            |                 
-            li boolean complete(T value)
-            |                 종료되지 않았다면 get()과 연관 메서드들의 반환값을 value로 설정. 이 호출로 CompletableFuture가 완료 상태로 천이되었다면 true 반환.
-            |                 
-            li boolean completeExceptionally(Throwable ex)
-            |                 종료되지 않았다면 get()과 연관 메서드들이 주어진 예외를 던지도록 한다. 이 호출로 CompletableFuture가 완료 상태로 천이되었다면 true 반환.
-            |                 
-            li boolean isCompletedExeptionally()
-            |                 
-            li void obtrudeValue(T value) + obtrudeException
-            |                 강제로 get()과 연관 메서드들의 반환값 설정. 에러 복구를 위해 설계됨.
-            |                 
-            li int getNumberOfDependents()
-            |                 종료 대기중인 CompletableFuture의 개수 추정. 동기화가 아닌 시스템 모니터링을 위해 설계됨.
-        |         
+            summary interface ThreadFactory Since 1.5
+            |     Thread newThread(Runnable r)
+        hr
         details
-          summary Method Detail Since 9
-          |             
-          ol
-            li static Executor delayedExecutor(long delay, TimeUnit unit) + 1 오버로딩
-            |                 주어진 딜레이 이후에 executor로 작업을 제출하는 새로운 Executor 반환.
-            |                 
-            li static <U> CompletionStage<U> completedStage(U value)
-            |                 주어진 value로 이미 종료된 새로운 CompletionStage 반환.
-            |                 
-            li static <U> CompletableFuture<U> failedFuture(Throwable ex)
-            |                 주어진 예외로 이미 종료된 새로운 CompletableFuture 객체 반환.
-            |                 
-            li static <U> CompletionStage<U> failedStage(Throwable ex)
-            |                 주어진 예외로 이미 종료된 새로운 CompletionStage 반환.
-            |                 
-            li <U> CompletableFuture<U> newIncompletableFuture()
-            |                 완료되지 않은 새로운 CompletableFuture 객체를 반환한다. 서브클래스들은 각자의 클래스 인스턴스를 반환하도록 newIncompletableFuture 메서드를 재정의해야 한다
-            |                 
-            li Executor defaultExecutor()
-            |                 
-            li CompletableFuture<T> copy()
-            |                 정상적으로 종료되었다면, 같은 값을 갖는 종료된 CompletableFuture 반환. 예외 종료되었다면, 해당 예외를 원인으로 한 CompletionException으로 예외 종료된 CompletableFuture 반환. 동작은 thenApply(x -> x)와 같다.
-            |                 
-            li CompletionStage<T> minimalCompletionStage()
-            |                 CompletionStage에 정의된 메서드만 이용 가능. 재정의되지 않았다면 toCompletableFuture() 메서드를 통해 그 외의 메서드에 접근 가능하다.
-            |                 
-            li CompletableFuture<T> completeAsync(Supplier<? extends T> supplier) + 1 오버로딩
-            |                 이 CompletableFuture를 supplier의 결과값으로 종료한다.
-            |                 
-            li CompletableFuture<T> orTimeout(long timeout, TimeUnit unit)
-            |                 이 CompletableFuture가 주어진 시간 내에 종료되지 않은 경우, TimeoutException으로 예외 종료한다.
-            |                 
-            li CompletableFuture<T> completeOnTimeout(T value, long timeout, TimeUnit unit)
-            |                 이 CompletableFuture가 주어진 시간 내에 종료되지 않은 경우, value로 종료한다.
-      |     
-      details
-        summary abstract class ForkJoinTask<V> implements Future<V>, Serializable Since 1.7
-        |         
-        ol
-          li ForkJoinPool의 실행 단위. 일반적인 스레드보다는 훨씬 가벼운 유사-스레드
-          |             
-          li 메인 ForkJoinTask가 존재하여 다른 subtask들을 실행한다
-          |             
-          li
-            | 전형적으로는 fork, join 메서드 쌍만 이용하며, a.fork(); b.fork(); b.join(); a.join();처럼 join 순서에 유의
-          |             
-          li
-            | RecursiveAction : 반환이 필요없는 경우
-            br
-            |                 RecursiveTask : 반환이 필요한 경우
-            br
-            |                 CountedCompleter : 작업의 완료가 다른 작업의 트리거가 되는 경우
-        |         
-        details
-          summary 일반 Method Detail
-          |             
-          ol
-            li final ForkJoinTask<V> fork() : 작업 시작
-            |                 
-            li final V join() : 종료 대기 후 결과 반환. 비정상 종료 시 RuntimeException 또는 Error 발생
-            |                 
-            li final V invoke() : fork + join
-            |                 
-            li static void invokeAll(ForkJoinTask<?>... tasks) + 오버로딩
-            |                 모든 작업을 시작. 모두 완료되면 반환. 하나라도 예외가 발생하면 rethrow. 예외 종료된 경우 각 작업의 상태는 직접 획득해야 한다.
-            |                 
-            li final boolean isCompleteNormally() + isCompletedAbnormally
-            |                 
-            li final Throwable getException()
-            |                 
-            li static ForkJoinTask<?> adapt(Runnable runnable) + 오버로딩
-        |         
-        details
-          summary 잘 안 쓸 것 같은 Method
-          |             
-          ol
-            li void complete(V value) + completeExceptionally
-            |                 
-            li final void quietlyComplete() Since 1.8
-            |                 값은 설정하지 말고 정상 종료. 가장 최근의 setRawResult(V) 값이 join 및 연관 메서드의 결과로 반환된다
-            |                 
-            li final void quietlyJoin()
-            |                 작업의 종료를 기다린다. 결과를 반환하지도, 예외를 던지지도 않는다
-            |                 
-            li final void quietlyInvoke()
-            |                 작업을 시작하고 종료를 기다린다. 결과를 반환하지도, 예외를 던지지도 않는다
-            |                 
-            li void reinitialize()
-            |                 초기화하여 다시 fork할 수 있게 한다
-            |                 
-            li static ForkJoinPool getPool() + inForkJoinPool
-            |                 현재 스레드를 호스팅하는 풀 반환. 없으면(inForkJoinPool() == false) null 반환
-            |                 
-            li boolean tryUnfork()
-            |                 성공하면 true 반환. 작업을 시작하도록 지시(fork)했지만 아직 다른 스레드에 넘겨져 실행되기 전에는 취소가 잘 된다
-            |                 
-            li static int getQueuedTaskCount()
-            |                 현재 워커 스레드로 fork됐지만 아직 실행되지는 않은 작업들의 개수 추정치
-      |     
-      details
-        summary abstract class RecursiveAction extends ForkJoinTask<Void> Since 1.7
-        |         재귀적이며 결과없는 ForkJoinTask
-        |         
-        button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/RecursiveActionTest.java', lan='java') 예시 코드 »
-        br
-        |         코드 출처 : https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/util/concurrent/RecursiveAction.html
-      |     
-      details
-        summary abstract class RecursiveTask<V> extends ForkJoinTask<V> Since 1.7
-        |         재귀적이며 결과가 있는 ForkJoinTask
-        |         
-        button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/RecursiveTaskTest.java', lan='java') 예시 코드 »
-        br
-        |         코드 출처 : https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/util/concurrent/RecursiveTask.html
-      |     
-      details
-        summary abstract class CountedCompleter<T> extends ForkJoinTask<T> Since 1.8
-        |         
-        ol
-          li 다른 작업들을 기다린 뒤 트리거로 작업을 시작하는 ForkJoinTask
-          |             
-          li
-            | Concrete 서브클래스들은 compute() 메서드를 반드시 재정의해야 하며, 되도록이면 반환하기 전에 tryComplete()을 호출해야 한다
-          |             
-          li 일반적으로 CountedCompleter는 결과를 갖지 않겠지만, 결과가 필요한 경우 getRawResult() 메서드를 재정의하면 된다
-          |             
-          li
-            button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', displayrange='[14,34,75,85]', lan='java') 예시 : setPendingCount + tryComplete
-            |                 
-            button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', displayrange='[36,54,75,85]', lan='java') 예시 : addToPendingCount + propagateCompletion
-            |                 
-            button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', displayrange='[56,73,75,85]', lan='java') 예시 : 생성자에서 pendingCount 설정
-            |                 
-            button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', displayrange='[87,130]', lan='java') 예시 : quietlyCompleteRoot
-            |                 
-            button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', displayrange='[132,168]', lan='java') 예시 : compute 사용없이 트리거로만 이용
-            br
-            |                 출처 ; https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/util/concurrent/CountedCompleter.html
-        |         
-        details
-          summary Constructor Detail
-          |             
-          ol
-            li
-              | protected CountedCompleter(CountedCompleter<?> completer, int initialPendingCount)
-            |                 
-            li
-              | protected CountedCompleter(CountedCompleter<?> completer) : initialPendingCount = 0
-            |                 
-            li protected CountedCompleter() : parent completer = null, initialPendingCount = 0
-        |         
-        details
-          summary Method Detail
-          |             
-          ol
-            li abstract void compute() : 메인 작업 정의
-            |                 
-            li void onCompletion(CountedCompleter<?> caller)
-            |                 tryComplete()이 호출되고, 남은 pendingCount가 0이면 호출된다. 또는 complete(T)가 호출된 경우에도 실행된다
-            |                 
-            li boolean onExceptionalCompletion(Throwable ex, CountedCompleter<?> caller)
-            |                 compute()에서 예외가 발생했거나, ForkJoinTask#completeExceptionally가 호출된 경우 실행된다. 기본 구현은 return true;
-            br
-            |                 true를 반환하였고, caller가 아직 완료되지 않은 경우, caller도 같은 예외로 종료된다
-            |                 
-            li final CountedCompleter<?> getCompleter() : 생성자에서 지정한 부모 completer 반환 + getRoot
-            |                 
-            li final int getPendingCount()
-            |                 + setPendingCount, addToPendingCount, compareAndSetPendingCount, decrementPendingCountUnlessZero
-            |                 
-            li final void tryComplete()
-            |                 pendingCount가 0이 아니면 1 감소시킨다. 0인 경우 onCompletion 메서드를 호출하고, parent completer에 대해서도 tryComplete()을 호출한다
-            |                 
-            li final void propagateCompletion()
-            |                 tryComplete()와 같지만, onCompletion 메서드는 호출하지 않는다
-            |                 
-            li
-              | final CountedCompleter<?> firstComplete()
-              br
-              |                     final CountedCompleter<?> nextComplete()
-            |                 firstComplete() : pendingCount가 0이면 return this; 그 외엔 pendingCount를 감소시키고 return null;
-            br
-            |                 nextComplete() : parent completer가 없는 경우, ForkJoinTask#quietlyComplete 호출하고 return null; pendingCount가 0이 아니면 감소시키고 return null; 그 외엔 parent completer 반환
-            br
-            |                 for(var c = firstComplete(); c != null; c = c.nextComplete()) { ... }
-            |                 
-            li final void quietlyCompleteRoot() == getRoot().quietlyComplete()
-            |                 
-            li final void helpComplete(int maxTasks)
-            |                 이 작업이 완료되지 않았다면, completion path 상의 최대 maxTasks개 만큼의 시작되지 않은 작업을 진행시킨다
-    hr
-    details
-      summary Executor 관련
-      |     
-      details
-        summary interface Executor Since 1.5
-        |         
-        ol
-          li
-            | 전달받은 Runnable을 실행하는 객체. Executor 자체가 스레드의 병행성을 부여하진 않으며, 구현에서 호출자와 다른 스레드 공간을 마련해주어야 한다.
-          |             
-          li void execute(Runnable command)
-      |     
-      details
-        summary interface ExecutorService extends Executor Since 1.5
-        |         
-        ol
-          li
-            | java.util.concurrent 패키지의 기본적인 Executor 구현.
-            button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/ExecutorServiceTest.java', lan='java') 예시 코드 »
-          |             
-          li void shutdown()
-          |             추가적인 Runnable을 받지 않는다. 이전에 추가된 것은 마저 실행한다.
-          |             
-          li List<&Runnable> shutdownNow()
-          |             실행중인 모든 작업을 중지. 실행 대기중이었던 작업들은 반환.
-          |             
-          li boolean isShutdown()
-          |             
-          li boolean isTerminated()
-          |             shutdown, shutdownNow 호출 이후 모든 작업이 끝났는지 여부
-          |             
-          li boolean awaitTermination(long timeout, TimeUnit unit)
-          |             shutdown 요청 후 모든 작업이 종료되기를 기다리며 블록한다. timeout 발생한 경우 false 반환.
-          |             
-          li <T> Future<T> submit(Callable<T> task)
-          |             결과를 반환하는 작업을 등록한다. 작업이 성공적으로 종료되면 Future#get으로 결과를 확인할 수 있다.
-          |             
-          li <T> Future<T> submit(Runnable atask, T result)
-          |             작업을 등록한다. 작업이 성공적으로 종료되면 Future#get으로 result를 얻을 수 있다.
-          |             
-          li Futur<?> submit(Runnable task)
-          |             작업을 등록한다. 작업이 성공적으로 종료되면 Future#get은 null을 반환한다.
-          |             
-          li <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
-          |             모든 작업이 종료되면 Future 리스트를 반환한다. 따라서 리스트 안의 각 Future#isDone은 true다.
-          |             
-          li
-            | <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timout, TimeUnit unit)
-          |             모든 작업이 종료되거나 timeout이 발생하면 반환. 리스트 안의 각 Future#isDone은 true. timeout 발생 시 완료되지 않은 작업들은 취소된다.
-          |             
-          li <T> T invokeAny(Collection<? extends Callable<T>> tasks)
-          |             성공적으로 완료된 첫 작업의 결과를 반환한다. 완료되지 않은 작업들은 취소된다.
-          |             
-          li
-            | <T> T invokeAny(Collection<? extends Callable<>> tasks, long timeout, TimeUnit unit)
-          |             timeout되면 TimeoutException 발생
-      |     
-      details
-        summary interface ScheduledExecutorService extends ExecutorService Since 1.5
-        |         
-        ol
-          li 실행 전에 딜레이를 두거나, 주기적으로 실행을 반복할 수 있는 ExecutorService
-          |             
-          li ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) + 오버로딩
-          |             주어진 delay 이후 command가 1회 실행되도록 한다
-          |             
-          li
-            | ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit)
-          |             반복되는 작업은 반환된 Future를 통해 취소할 수 있다.
-          |             
-          li
-            | ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit)
-          |             scheduleAtFixedRate와 달리, 이전 작업이 완료된 후 다음 작업이 시작된다.
-      |     
-      details
-        summary abstract class AbstractExecutorService implements ExecutorService Since 1.5
-        |         
-        ol
-          li submit, invokeAny, invokeAll 메서드 구현. 반환하는 RunnableFuture에는 FutureTask 이용.
-          |             
-          li
-            | protected <T> RunnableFuture<T> newTaskFor(Runnable runnable, T value) Since 1.6 + 오버로딩
-      |     
-      details
-        summary class ThreadPoolExecutor extends AbstractExecutorService Since 1.5
-        |         
-        ol
-          li 각 작업들은 스레드풀의 별개 스레드에서 실행된다
-          |             
-          li Core and maximum pool sizes
-          |             corePoolSize에 도달할 때까지 신규 작업에 대해 신규 스레드를 할당한다. 대기 중인 스레드가 없으면 maxPoolSize에 도달할 때까지 신규 작업에 대해 신규 스레드를 할당한다
-          |             
-          li On-demand construction
-          |             처음부터 corePoolSize만큼의 스레드를 만들어놓을 지를 설정할 수 있다
-          |             
-          li Creating new threads
-          |             지정되지 않으면 Executors#defaultThreadFactory로부터 신규 스레드를 생성한다. 동일 스레드그룹 + NORM_PRIORITY + non-daemon
-          |             
-          li Keep-alive times
-          |             corePoolSize를 초과한 스레드들은 대기 상태가 keepAliveTime을 초과하면 종료된다. allowCoreThreadTimeOut 메서드로 코어 스레드에도 적용할 지 설정 가능
-          |             
-          li Queuing
-          |             
-          ul
-            li 처리를 기다리는 작업들은 BlockingQueue에서 대기한다.
-            |                 
-            li corePoolSize 이상의 스레드가 활성 상태라면 작업은 우선 큐에 진입된다. 큐에 자리가 없으면 신규 스레드가 생성되어 작업을 처리한다.
-            |                 
-            li 큐에 자리도 없고 활성 스레드 수가 maximumPoolSize와 같다면 추가 작업은 거부된다
-            |                 
-            li 큐잉 전략 1. Direct handoff
-            |                 SynchronousQueue. 작업 가능한 스레드가 없으면 신규로 생성한다. 제한없는 maximumPoolSize 필요
-            |                 
-            li 큐잉 전략 2. Unbounded queue
-            |                 무제한으로 큐에 작업을 추가하므로, 활성 스레드의 수는 항상 corePoolSize 이하다
-            |                 
-            li 큐잉 전략 3. Bounded queue
-            |                 큐의 크기와 maxPoolSize의 적절한 trade off 필요
-          |             
-          li Rejected tasks
-          |             
-          ul
-            li 거부된 작업에 대하여 RejectedExecutionHandler#rejectedExecution 메서드가 실행된다
-            |                 
-            li 기본 정책. ThreadPoolExecutor.AbortPolicy : 핸들러가 RejectedExecutionException 발생
-            |                 
-            li ThreadPoolExecutor.CallerRunsPolicy : 작업을 제출한 스레드가 직접 작업을 실행한다
-            |                 
-            li ThreadPoolExecutor.DiscardPolicy : 거부된 작업은 버려진다
-            |                 
-            li
-              | ThreadPoolExecutor.DiscardOldestPolicy : 신규 작업이 아닌, 큐에서 가장 오래된 작업이 버려진다. 신규 작업은 다시 시도된다
-          |             
-          li Hook methods
-          |             beforeExecute, afterExecute, terminated 메서드를 재정의하여 작업 전후에 필요한 부분을 실행할 수 있다
-        |         
-        details
-          summary interface RejectedExecutionHandler Since 1.5
-          |             
-          ol
-            li ThreadPoolExecutor에서 실행되지 않은 작업에 대한 처리를 위해 사용.
-            |                 
-            li void rejectedExecution(Runnable r, ThreadPoolExecutor executor)
-            |                 
-            li static class ThreadPoolExecutor.AbortPolicy implements RejectedExecutionHandler
-            |                 
-            li
-              | static class ThreadPoolExecutor.CallerRunsPolicy implements RejectedExecutionHandler
-            |                 
-            li
-              | static class ThreadPoolExecutor.DiscardPolicy implements RejectedExecutionHandler
-            |                 
-            li
-              | static class ThreadPoolExecutor.DiscardOldestPolicy implements RejectedExecutionHandler
-        |         
-        details
-          summary Constructor Detail
-          |             
-          ol
-            li
-              | public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue)
-            |                 
-            li
-              | public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory)
-            |                 
-            li
-              | public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, RejectedExecutionHandler handler)
-            |                 
-            li
-              | public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler)
-        |         
-        details
-          summary Method Detail
-          |             
-          ol
-            li void execute(Runnable command) ↔ remove
-            |                 command를 언젠가 실행한다. 작업 스레드가 실행하지 못하면, RejectedExecutionHandler가 처리한다
-            |                 
-            li void shutdown()
-            |                 순차적 종료 절차에 진입한다. 추가 작업은 받지 않고, 이미 제출된 작업들은 마저 처리한다
-            |                 
-            li List<Runnable> shutdownNow()
-            |                 대기 중인 작업에 더해 실행 중인 작업들도 모두 중지한다. 대기중이었던 작업들은 리스트로 반환한다. 실행 중인 작업들에 유예 시간을 주고 싶다면 ExecutorService#awaitTermination 이용
-            |                 
-            li boolean isTerminating()
-            |                 shutdown 또는 shutdownNow 메서드가 호출되었지만, 아직 중지가 완료되지는 않았다면 true
-            |                 
-            li void setThreadFactory(ThreadFactory threadFactory) + getter 메서드
-            |                 + set/getRejectedExecutionHandler, set/getCorePoolSize, set/getMaximumPoolSize, set/getKeepAliveTime
-            |                 
-            li boolean prestartCoreThread()
-            |                 신규 스레드를 하나 생성한다. 이미 corePoolSize 만큼 스레드가 존재한다면 false 반환.
-            |                 
-            li int prestartAllCoreThreads()
-            |                 생성된 스레드의 수가 corePoolSize가 될 때까지 신규 스레드를 생성한다. 신규로 생성된 스레드의 수를 반환한다
-            |                 
-            li void allowCoreThreadTimeOut(boolean value) Since 1.6 + 오버로딩
-            |                 코어 스레드에도 keep-alive를 적용할 지 여부 setter/getter
-            |                 
-            li BlockingQueue<Runnable> getQueue()
-            |                 직접 조작하진 말고, 모니터링/디버깅 용도로 이용함이 바람직하다
-            |                 
-            li void purge() : 취소된 Future 작업들을 큐에서 제거
-            |                 
-            li int getPoolSize()
-            |                 현재 풀 안의 스레드 수 반환
-            |                 
-            li int getActiveCount()
-            |                 현재 실행 중인 스레드 수 추정치 반환
-            |                 
-            li int getLargestPoolSize()
-            |                 풀에 동시에 존재했던 스레드의 최대 개수 반환
-            |                 
-            li long getTaskCount()
-            |                 실행 스케쥴된 작업의 총 개수의 근사치 반환
-            |                 
-            li long getCompletedTaskCount()
-            |                 실행 완료된 작업의 총 개수의 근사치 반환
-      |     
-      details
-        summary
-          | class ScheduledThreadPoolExecutor extends ThreadPoolExecutor implements ScheduledExecutorService Since 1.5
-        |         
-        ol
-          li 생성자는 ThreadPoolExecutor와 유사
-          |             
-          li
-            | protected <V> RunnableScheduledFuture<V> decorateTask(Runnable runnable, RunnableScheduledFuture<V> task) Since 1.6 + 오버로딩
-          |             
-          li void setContinueExistingPeriodicTasksAfterShutdownPolicy(boolean value) + getter
-          |             기본값 false. true면 shutdownNow가 호출되거나 이 정책이 false가 될 때까지 주기 작업을 계속 실행한다
-          |             
-          li void setExecuteExistingDelayedTasksAfterShutdownPolicy(boolean value) + getter
-          |             기본값 true. true면 shutdownNow가 호출되거나 종료 후 이 정책이 false가 되기 전까지는 지연 작업을 실행한다
-          |             
-          li void setRemoveOnCancelPolicy(boolean value) Since 1.7 + getter
-          |             기본값 false. 취소된 작업을 즉시 큐에서 제거할 것인지, 또는 해당하는 딜레이 후 제거할 것인지 설정.
-      |     
-      details
-        summary interface CompletionService<V> Since 1.5
-        |         
-        ol
-          li 생산자가 작업들을 추가하면, 소비자는 그것이 완료된 순서대로 이용할 수 있다.
-          |             
-          li Future<V> submit(Callable<V> task)
-          |             
-          li Future<V> submit(Runnable task, V result)
-          |             
-          li Future<V> take()
-          |             완료된 작업을 가져온다. 없으면 대기한다.
-          |             
-          li Future<V> poll()
-          |             완료된 작업을 가져온다. 없으면 null.
-          |             
-          li Futur<V> poll(long timeout, TimeUnit unit)
-      |     
-      details
-        summary class ExecutorCompletionService<V> impliments CompletionService<V&gt
-        |         
-        ol
-          li
-            | CompletionService 구현. 주어진 Executor를 실행에 이용한다. 완료되는 순서대로 작업을 take 메서드로 접근할 수 있는 큐에 배치한다.
-          |             
-          li public ExecutorCompletionService(Executor executor)
-          |             
-          li
-            | public ExecutorCompletionService(Executor executor, BlockingQueue<Future<V>> completionQueue)
-      |     
-      details
-        summary class ForkJoinWorkerThread extends Thread Since 1.7
-        |         
-        ol
-          li ForkJoinPool에서 ForkJoinTask를 실행하는 스레드
-          |             
-          li protected ForkJoinWorkerThread(ForkJoinPool pool) + getPool
-          |             
-          li int getPoolIndex() : 풀 안에서 이 스레드의 번호(Unique)
-          |             
-          li protected void onStart() + onTermination
-      |     
-      details
-        summary class ForkJoinPool extends AbstractExecutorService Since 1.7
-        |         
-        ol
-          li ForkJoinTask에 관한 ExecutorService. Non-ForkJoinTask 호출자도 이용할 수 있는 메서드를 제공한다
-          |             execute(ForkJoinTask), invoke(ForkJoinTask), submit(ForkJoinTask)
-          |             
-          li 모든 ForkJoinWorkerThread는 데몬 스레드로 초기화된다
-          |             
-          li Common pool 튜닝에 관한 시스템 속성
-          |             java.util.concurrent.ForkJoinPool.common.parallelism : parallelism level. 기본값은 프로세서 수
-          br
-          |             java.util.concurrent.ForkJoinPool.common.threadFactory : class name of a ForkJoinPool.ForkJoinWorkerThreadFactory
-          br
-          |             java.util.concurrent.ForkJoinPool.common.exceptionHandler : class name of a Thread.UncaughtExceptionHandler
-          br
-          |             java.util.concurrent.ForkJoinPool.common.maximumSpares : maximum number of allowed extra threads to maintain target parallelism (default 256).
-        |         
-        details
-          summary static interface ForkJoinPool.ForkJoinWorkerThreadFactory
-          |             ForkJoinWorkerThread newThread(ForkJoinPool pool)
-        |         
-        details
-          summary static interface ForkJoinPool.ManagedBlocker
-          |             
-          ol
-            li boolean block()
-            |             필요한 만큼 현재 스레드를 블록시킨다. 추가적인 블로킹이 필요하지 않으면 true 반환
-            |             
-            li boolean isReleasable
-            |             블로킹이 필요없으면 true 반환
-        |         
-        details
-          summary Field, Constructor Detail
-          |             
-          ol
-            li
-              | public static final ForkJoinPool.ForkJoinWorkerThreadFactory defaultForkJoinWorkerThreadFactory
-            |                 
-            li public ForkJoinPool() == this(Runtime.availableProcessors())
-            |                 
-            li public ForkJoinPool(int parallelism)
-            |                 
-            li
-              | public ForkJoinPool(int parallelism, ForkJoinPool.ForkJoinWorkerThreadFactory factory, Thread.UncaughtExceptionHandler handler, boolean asyncMode)
-            |                 
-            li
-              | public ForkJoinPool(int parallelism, ForkJoinPool.ForkJoinWorkerThreadFactory factory, Thread.UncaughtExceptionHandler handler, boolean asyncMode, int corePoolSize, int maximumPoolSize, int minimumRunnable, Predicate<? super ForkJoinPool> saturate, long keepAliveTime, TimeUnit unit) Since 9
-        |         
-        details
-          summary Method Detail
-          |             
-          ol
-            li static ForkJoinPool commonPool() Since 1.8
-            |                 
-            li static void managedBlock(ForkJoinPool.ManagedBlocker blocker)
-            |                 
-            li
-              | <T> T invoke(ForkJoinTask<T> task)
-              br
-              |                     void execute(ForkJoinTask<?> task) + 오버로딩
-              br
-              |                     <T> ForkJoinTask<T> submit(ForkJoinTask<T> task) + 오버로딩
-            |                 
-            li void shutdown()
-            |                 + shutdownNow(), isTerminated, isTerminating, isShutdown, awaitTermination, awaitQuiescence
-            |                 
-            li ForkJoinPool.ForkJoinWorkerThreadFactory getFactory()
-            |                 + getUncaughtExceptionHandler, getParallelism, getPoolSize, getAsyncMode, getRunningThreadCount, getActiveThreadCount, isQuiescent, getStealCount, getQueuedTaskCount, getQueuedSubmissionCount, hasQueuedSubmissions
-      |     
-      details
-        summary class Executors Since 1.5
-        |         
-        details
-          summary ExecutorService 관련
-          |             
-          ul
-            li static ExecutorService newFixedThreadPool(int nThreads) + 오버로딩
-            |                 최대 동시 실행 가능한 스레드 수가 제한. 나머지 스레드는 큐에서 대기. 스레드들은 명시적으로 shutdown되기 전까지 풀에 존재한다.
-            |                 
-            li static ExecutorService newWorkStealingPool() Since 1.8 + 오버로딩
-            |                 사용 가능한 프로세서 수를 parallelism level로 이용. 반환되는 객체는 ForkJoinPool 인스턴스
-            |                 
-            li static ExecutorService newSingleThreadExecutor() + 오버로딩
-            |                 하나의 워커 스레드만 사용한다. 예기지 않게 워커가 종료되면 새로운 스레드가 나머지 작업을 위해 그 자리를 대신할 수 있다.
-            br
-            |                 같은 특징을 갖는 newFixedThreadPool(1)과 다르게, 반환된 ExecutorService가 추가적인 워커 스레드를 이용하도록 설정할 수 없다.
-            |                 
-            li static ExecutorService newCachedThreadPool() + 오버로딩
-            |                 이전에 종료된 스레드를 재사용. 60초 동안 이용되지 않으면 풀에서 삭제된다.
-            |                 
-            li static ExecutorService unconfigurableExecutorService(ExecutorService executor)
-            |                 ExecutorService에 정의된 메서드들은 executor에 연결하고, 그 외 캐스트를 통해 이용할 수 있는 메서드들은 호출하지 못하도록 한다.
-        |         
-        details
-          summary ScheduledExecutorService 관련
-          |             
-          ul
-            li static ScheduledExecutorService newSingleThreadScheduledExecutor() + 오버로딩
-            |                 
-            li static ScheduledExecutorService newScheduledThreadPool(int corePoolSize) + 오버로딩
-            |                 
-            li
-              | static ScheduledExecutorService unconfigurableScheduledExecutorService(ScheduledExecutorService executor)
-            |                 ScheduledExecutorService에 정의된 메서드들은 executor에 연결하고, 그 외 캐스트를 통해 이용할 수 있는 메서드들은 호출하지 못하도록 한다.
-        |         
-        details
-          summary ThreadFactory 관련
-          |             
-          ul
-            li static ThreadFactory defaultThreadFactory()
-            |                 모든 스레드들을 같은 ThreadGroup으로 생성한다. 스레드의 우선순위는 Threa.NORM_PRIORITY와 그룹의 최대 허용치 중 작은 것으로 설정된다.
-            br
-            |                 각 스레드들은 non-daemon으로 생성되며, Thread.getName()을 통해 얻을 수 있는 "pool-N-thread-M" 꼴의 이름으로 접근할 수 있다.
-            |                 
-            li static ThreadFactory privilegedThreadFactory()
-            |                 호출하는 스레드와 같은 권한으로 새로운 스레드를 생성하는 ThreadFactory 반환.
-        |         
-        details
-          summary Callable 관련
-          |             
-          ul
-            li static <T> Callable<T> callable(Runnable task, T result)
-            |                 
-            li static Callable<Object> callable(Runnable task)
-            |                 작업이 완료되면 null을 반환하는 Callable 반환
-            |                 
-            li static Callable<Object> callable(PrivilegedAction<?> action)
-            |                 호출되면 action#run을 실행하고 그 결과를 반환하는 Callable 반환
-            |                 
-            li static Callable<Object> callable(PrivilegedExceptionAction<?> action)
-            |                 
-            li static <T> Callable<T> privilegedCallable(Callable<T> callable)
-            |                 호출되면 callable을 현재 access control context에서 실행. AccessController.doPrivileged에서 호출되어야 한다.
-            |                 
-            li
-              | static <T> Callable<T> privilegedCallableUsingCurrentClassLoader(Callable<T> callable)
-    hr
-    details
-      summary 리액티브 스트림
-      |     
-      ol
-        li https://github.com/reactive-streams/reactive-streams-jvm
-        |         
-        li final class Flow Since 9
-        |         static int defaultBufferSize() : 256
-        |         
-        li @FunctionalInterface static interface Flow.Publisher<T>
-        |         void subscribe(Flow.Subscriber<? super T> subscriber)
-        |         
-        details
-          summary 규칙
-          |             
-          ol
-            li
-              | Publisher가 Subscriber에 onNext로 신호를 보낸 횟수 <= Subscriber가 Subscription으로 보낸 request의 횟수
-            |                 이 규칙은 onNext의 호출에 대하여, 선행되는 request가 항상 존재함을 함의한다
-            |                 
-            li
-              | Publisher가 onNext로 신호를 보낸 횟수가 request보다 적은 경우, Subscription을 onComplete 또는 onError로 종결한다
-            |                 이 규칙은 request에 대한 onNext가 항상 존재하지는 않음을 명시한다
-            |                 
-            li onSubscribe, onNext, onError, onComplete 신호는 직렬적이어야 한다
-            |                 결코 다른 신호와 중첩되는 시점이 있어서는 안 된다
-            |                 
-            li Publisher의 실패는 반드시 onError로 보내야 한다
-            |                 
-            li 스트림이 정상적으로 종결된 경우 Publisher는 반드시 onComplete 신호를 보내야 한다
-            |                 
-            li Publisher가 onError, onComplete 신호를 보낸 경우, Subscription은 반드시 취소된 것으로 간주되야 한다
-            |                 
-            li 종료 상태(onError, onCompletion)에서 추가적인 신호의 발생은 절대 없다
-            |                 
-            li Subscription이 취소된 경우, 추가적인 신호 전달은 절대 없다
-            |                 
-            li
-              | Publisher.subscribe 안에서 onSubscribe를 반드시 호출해야 하며, 반드시 다른 신호를 보내기 전에 선행되어야 한다. 또, 이 경우 메서드는 반드시 정상 종결되어야 한다
-            |                 Subscriber.onSubscribe 호출 시 null 검사는 필요없다. NullPointerException이 발생하게 내버려두면 된다.
-            |                 
-            li Publisher.subscribe는 여러 번 호출될 수 있지만, 하나의 Subscriber로부터는 최대 한 번만 호출되어야 한다
-            |                 
-            li Publisher는 여러 Subscriber들에 대한 멀티캐스트를 지원할 수 있다
-        |         
-        li static interface Flow.Subsbriber<T>
-        |         void onSubscribe(Flow.Subscription), onNext(T), onError(Throwable), onComplete(Void)
-        |         
-        details
-          summary 규칙
-          |             
-          ol
-            li Subscriber는 onNext 신호를 받고 싶다면 반드시 먼저 request 신호를 보내야 한다
-            |                 
-            li 신호를 보낼 때, Publisher의 완료를 기다리지 말고 비동기적으로 전달함이 권장된다
-            |                 
-            li onComplete, onError 메서드는 절대 Subscription, Publisher 어느쪽의 메서드도 호출해선 안 된다
-            |                 
-            li onComplete, onError 신호를 받은 이후부터, Subscription은 반드시 취소로 간주되어야 한다
-            |                 
-            li 유효한 Subscription이 존재한다면, 추가적인 onSubscribe 신호에 대해 반드시 cancel을 호출해야 한다
-            |                 하나의 Subscriber는 둘 이상의 Publisher를 동시에 구독하지 않아야 한다
-            |                 
-            li 더 이상 필요없다면 반드시 Subscription.cancel을 호출해야 한다
-            |                 
-            li Subscription으로 보내는 신호들은 반드시 직렬적이어야 한다
-            |                 결코 동시에 두 신호를 보내는 순간은 없어야 한다
-            |                 
-            li cancel의 호출은 대기 중인 작업의 취소를 보장하지 않는다. cancel 이후 추가적인 onNext 신호에 대해 준비되어야 한다
-            |                 
-            li 아무런 request를 보내지 않았더라도, onComplete, onError 신호에 대해 준비되어야 한다
-            |                 
-            li onSubscribe, onNext, onError, onComplete는 인자가 null이 아닌 이상 반드시 정상 종료되어야 한다
-            |                 Subscriber의 실패는 Subscription.cancel로만 통지할 수 있다. 이 규칙이 지켜지지 않은 경우, Subscription은 반드시 취소로 간주되어야 한다
-        |         
-        li static interface Flow.Subscription
-        |         void request(long) , cancel(Void)
-        |         
-        details
-          summary 규칙
-          |             
-          ol
-            li request, cancel은 반드시 Subscriber가 호출해야 한다
-            |                 
-            li onNext, onSubscribe 안에서 동기적으로 request를 호출하는 것은 허용된다
-            |                 
-            li cancel의 호출은 멱등이어야 하고, 그 실행은 스레드-안전해야 한다
-            |                 
-            li Subscription이 취소됐다면, 이후의 request, cancel의 호출은 아무 작업도 하지 않아야 한다
-            |                 
-            li 0이하에 대한 request 호출은 onError로 IllegalArgumentException을 보내야 한다
-            |                 
-            li Subscription이 취소됐다면, Publisher는 Subscriber에 대한 모든 참조를 제거해야 한다
-            |                 
-            li request, cancel은 항상 정상 종료되어야 한다
-            |                 
-            li Subscription은 반드시 무제한적인 request 호출을 허용해야 한다. n == Long.MAX_VALUE
-        |         
-        li
-          | static interface Flow.Processor<T, R> extends Flow.Subscriber<T>, Flow.Publisher<R>
-      |     
-      details
-        summary class SubmissionPublisher<T> implements Flow.Publisher<T>, AutoCloseable Since 9
-        |         
-        details
-          summary Constructor Detail
-          |             
-          ol
-            li
-              | public SubmissionPublisher(Executor executor, int maxBufferCapacity, BiConsumer<? super Flow.Subscriber<? super T>, ? super Throwable> handler) + 오버로딩
-            |                 executor : 비동기적으로 구독자에게 전달하는 데 쓰일 Executor
-            br
-            |                 maxBufferCapacity : 각 구독자에 대한 버퍼의 한도. 실제 한도는 getMaxBufferCapacity()로 확인
-            br
-            |                 handler : null이 아니면 onNext에서 발생한 예외를 처리
-            |                 
-            li public SubmissionPublisher()
-            |                 executor = ForkJoinPool.commonPool(), maxBufferCapacity = Flow.defaultBufferSize(), handler = null
-        |         
-        details
-          summary Method Detail
-          |             
-          ol
-            li int submit(T item)
-            |                 각 구독자에게 비동기적으로 item을 보낸다(onNext). lag(배포된 item 중에 아직 소비되지 않은 개수) 추정치를 반환한다.
-            |                 
-            li
-              | int offer(T item, BiPredicate<Flow.Subscriber<? super T>, ? super T> onDrop) + 오버로딩
-            |                 가능하다면 각 구독자에게 비동기적으로 item을 보낸다(onNext). 리소스 초과(버퍼가 가득 찼다던지)로 실패한 경우 onDrop이 실행된다. onDrop이 true를 반환하면 onNext를 다시 시도한다.
-            br
-            |                 반환값이 음수인 경우 drop된 구독자 수를 의미하고, 그 외의 경우 lag(배포된 item 중에 아직 소비되지 않은 개수) 추정치를 의미한다
-            |                 
-            li void closeExceptionally(Throwable error) + getClosedException
-            |                 
-            li boolean isClosed()
-            |                 
-            li boolean hasSubscribers()
-            |                 + getNumberOfSubscribers(), getExecutor(), getMaxBufferCapacity(), getSubscribers(), isSubscribed(Flow.Subscriber<? super T> subscriber)
-            |                 
-            li long estimateMinimumDemand()
-            |                 각 구독자들이 요청한 아이템 수 중, 아직 공급되지 않은 수의 최소값(추정치) 반환
-            |                 
-            li int estimateMaximumLag()
-            |                 각 구독자들에 보낸 아이템 중 아직 소비되지 않은 수의 최대값(추정치) 반환
-            |                 
-            li CompletableFuture<Void> consume(Consumer<? super T> consumer)
-            |                 배포된 모든 아이템에 대해 consumer 실행. 정상적으로 모두 실행되면 onComplete가 호출되고, CompletableFuture도 정상 종료된다
-    hr
-    details
-      summary Blocking 컬렉션
-      |     
-      details
-        summary interface BlockingQueue<E> extends Queue<E> Since 1.5
-        |         
-        ol
-          li 기본적으로 스레드-안전하지만, addAll 따위의 bulk 연산은 특별히 표시되지 않는 한 그렇지 않다.
-          |             
-          li 요소를 획득할 때, 큐가 비어있는 경우 블로킹. 요소를 추가할 때, 큐에 빈 자리가 있을 때까지 블로킹
-          |             
-          table
-            tbody
-              tr
-                th
-                th 예외 발생
-                th 특별값 반환
-                th 블로킹
-                th 시간 제한
-              |                     
-              tr
-                th Insert
-                td add(E)
-                td offer(E)
-                td put(E)
-                td offer(E,long,TimeUnit)
-              |                     
-              tr
-                th Remove
-                td remove()
-                td poll()
-                td take()
-                td poll(long,TimeUnit)
-              |                     
-              tr
-                th Examine
-                td element()
-                td peek()
-                td -
-                td -
-          |             
-          li int remainingCapacity()
-          |             블로킹없이 삽입 가능한 요소의 수. 오차가 있을 수 있다
-          |             
-          li int drainTo(Collection<? super E> c) + 오버로딩
-          |             모든 원소를 c로 옮긴다
-      |     
-      details
-        summary
-          | class ArrayBlockingQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>, Serializable Since 1.5
-        |         
-        ol
-          li 크기가 고정된 기저 배열을 이용한 BlockingQueue
-          |             
-          li 기본적으로 삽입을 기다리는 스레드들 사이의 처리 순서는 보장되지 않지만, fairness를 설정하면 FIFO 순으로 처리된다
-          |             
-          li Collection, Iterator의 모든 선택적 연산을 구현했다.
-          |             
-          li public ArrayBlockingQueue(int capacity, boolean fair) + 오버로딩
-      |     
-      details
-        summary
-          | class LinkedBlockingQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>, Serializable Since 1.5
-        |         
-        ol
-          li 크기를 고정할 수 있는 연결된 BlockingQueue
-          |             
-          li Collection, Iterator의 모든 선택적 연산을 구현했다
-          |             
-          li public LinkedBlockingQueue(int capacity) + 오버로딩
-          |             지정하지 않은 경우, 기본 크기는 Integer.MAX_VALUE
-      |     
-      details
-        summary
-          | class PriorityBlockingQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>, Serializable Since 1.5
-        |         
-        ol
-          li 크기 제한 없고, PriorityQueue와 비슷한 정렬을 이용한 BlockingQueue
-          |             
-          li Collection, Iterator의 모든 선택적 연산을 구현했다
-          |             다만 iterator(), spliterator()로 제공되는 인스턴스들은 순회하는 순서를 보장하지 않는다. 순차적인 순회를 원한다면 Arrays.sort(queue.toArray())를 고려할 것
-          |             
-          li 같은 우선순위의 원소 사이의 정렬은 정의되지 않았다
-          |             
-          li
-            | public PriorityBlockingQueue(int initialCapacity, Comparator<? super E> comperator) + 오버로딩
-          |             initialCapacity는 지정되지 않은 경우 11, comperator는 지정되지 않은 경우 자연스러운 정렬을 이용
-          |             
-          li Comparator<? super E> comparator()
-      |     
-      details
-        summary
-          | class SynchronousQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>, Serializable Since 1.5
-        |         
-        ol
-          li 서로 연관된 삽입 연산과 삭제 연산 한 쌍이 동시에 존재할 때까지 연산을 블로킹한다
-          |             
-          li Collection, Iterator의 모든 선택적 연산을 구현했지만, 빈 컬렉션처럼 동작한다
-          |             
-          li public SynchronousQueue(boolean fair) + 오버로딩
-          |             fair : 대기하는 스레드들이 순서대로 처리된다. 지정되지 않으면 false
-      |     
-      details
-        summary
-          | class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements BlockingQueue<E> Since 1.5
-        |         
-        ol
-          li Delayed 요소들로 구성된, 크기 제한없는 BlockingQueue. 요소의 지연 시간이 만료되어야 큐로부터 획득 가능하다
-          |             요소가 만료됐음은 getDelay(TimeUnit.NANOSECONDS) 리턴값이 0 이하일 때로 판정
-          |             
-          li Collection, Iterator의 모든 선택적 연산을 구현했다
-          |             
-          li public DelayQueue() + 오버로딩
-      |     
-      details
-        summary interface BlockingDeque<E> extends BlockingQueue<E>, Deque<E> Since 1.6
-        |         요소를 획득할 때, 덱이 비어있는 경우 블로킹. 요소를 추가할 때, 덱에 빈 자리가 있을 때까지 블로킹
-        |         
-        table
-          tbody
-            tr
-              th
-              th 예외 발생
-              th 특별값 반환
-              th 블로킹
-              th 시간 제한
-            |                 
-            tr
-              th Insert
-              td
-                | addFirst(E)
+            summary 비동기 자료형 관련
+            |     
+            details
+                summary interface Future<V> Since 1.5
+                |         
+                ol
+                    li 비동기적 계산의 결과를 표현. 결과는 오직 get 메서드로만 얻을 수 있으며, 필요하다면 결과가 준비될 때까지 블록시킨다.
+                    |             
+                    li boolean cancel(boolean mayInterruptIfRunning) + isCancelled
+                    |             작업이 완료됐거나 이미 취소된 경우 false를 반환한다. 이 메서드가 종료된 후의 isDone()은 항상 true.
+                    |             
+                    li boolean isDone()
+                    |             
+                    li V get()
+                    |             결과가 준비될 때까지 대기
+                    |             
+                    li V get(long timeout, TimeUnit unit)
+                    |             결과가 준비될 때까지 최대 timeout만큼 대기
+            |     
+            details
+                summary interface RunnableFuture<V> extends Runnable, Future<V> Since 1.6
+                |         
+                ol
+                    li Runnable한 Future. 즉 비동기 연산과 그 결과를 표현한다.
+                    |             
+                    li void run() : Future로 하여금 결과를 설정하도록 한다.
+            |     
+            details
+                summary class FutureTask<V> implements RunnableFuture<V> Since 1.5
+                |         
+                ol
+                    li public FutureTask(Callable<V> callable)
+                    |             
+                    li public FutureTask(Runnable runnable, V result)
+                    |             
+                    li protected void done() : 완료 상태로 천이되면 호출된다
+                    |             
+                    li protected void set(V v) : 결과 설정
+                    |             
+                    li protected boolean runAndReset() : 반복 실행 목적
+            |     
+            details
+                summary interface Delayed extends Comparable<Delayed> Since 1.5
+                |         
+                ol
+                    li 객체가 일정 지연 뒤 작동함을 마킹하는 인터페이스. 이를 구현할 땐 compareTo를 반드시 같이 구현해야 한다.
+                    |             
+                    li long getDelay(TimeUnit unit)
+            |     
+            details
+                summary interface ScheduledFuture<V> extends Delayed, Future<V> Since 1.5
+                |         ScheduledExecutorService의 스케쥴링 결과.
+            |     
+            details
+                summary
+                    | interface RunnableScheduledFuture<V> extends RunnableFuture<V>, ScheduledFuture<V> Since 1.6
+                |         
+                ol
+                    li Runnable한 ScheduledFuture.
+                    |             
+                    li boolean isPeriodic()
+            |     
+            details
+                summary interface CompletionStage<T> Since 1.8
+                |         
+                ol
+                    li 비동기적일 수 있는 계산 단계. 다른 CompletionStage가 완료된 뒤 어떠한 동작을 수행하거나 값을 계산한다.
+                    |             Stage에서 수행되는 연산은 Function, Consumer, Runnable로 표현되어야 한다. 각각은 apply, accept, run 메서드로 stage에 제공된다.
+                    |             연산에 넘겨지는 인자는 트리거 stage의 결과이며, 이를 통해 연산의 pipeline을 만들 수 있다.
+                    |             
+                    button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/CompletionStageTest.java', lan='java') 예시 코드 »
+                    |             
+                    li
+                        | <U> CompletionStage<U> thenApply(Function<? super T, ? extends U> fn) + thenApplyAsync
+                        br
+                        |                 CompletionStage<Void> thenAccept(Consumer<? super T> action) + thenAcceptAsync
+                        br
+                        |                 CompletionStage<Void> thenRun(Runnable action) + thenRunAsync
+                    |             이전 연산이 완료되면 그 결과로 fn, action 호출
+                    |             
+                    li
+                        | <U, V> CompletionStage<V> thenCombine(CompletionStage<? extends U> other, BiFunction<? super T, ? super U, ? extends V> fn) + thenCombineAsync
+                        br
+                        |                 <U> CompletionStage<Void> thenAcceptBoth(CompletionStage<? extends U> other, BiConsumer<? super T, ? super U> action) + thenAcceptBothAsync
+                        br
+                        |                 CompletionStage<Void> runAfterBoth(CompletionStage<?> other, Runnable action) + runAfterBothAsync
+                    |             this와 other 모두가 종료되면 그 결과로 fn, action 호출
+                    |             
+                    li
+                        | <U> CompletionStage<U> applyToEither(CompletionStage<? extends T> other, Function<? super T, U> fn) + applyToEitherAsync
+                        br
+                        |                 CompletionStage<Void> acceptEither(CompletionStage<? extends T> other, Consumer<? super T> action) + acceptEitherAsync
+                        br
+                        |                 CompletionStage<Void> runAfterEither(CompletionStage<?> other, Runnable action) + runAfterEitherAsync
+                    |             this나 other 둘 중 하나라도 종료되면 그 결과로 fn, action 호출
+                    |             
+                    li
+                        | <U> CompletionStage<U> thenCompose(Function<? super T, ? extends CompletionStage<U>> fn) + thenComposeAsync
+                    |             this의 결과를 인자로 fn이 반환하는 CompletionStage가 실행되고, 실행된 결과와 같은 값으로 종료되는 CompletionStage를 반환한다
+                    |             
+                    li
+                        | <U> CompletionStage<U> handle(BiFunction<? super T, Throwable, ? extends U> fn) + handleAsync
+                    |             this가 종료되면 결과와 예외를 인자로 fn을 실행하고, fn의 결과로 반환된 stage를 종료한다.
+                    |             
+                    li
+                        | CompletionStage<T> whenComplete(BiConsumer<? super T, ? super Throwable> action) + whenCompleteAsync
+                    |             this가 종료되면 결과와 예외를 인자로 action을 실행하고, action이 종료되면 반환된 stage도 종료된다.
+                    |             
+                    li
+                        | CompletionStage<T> exceptionally(Function<Throwable, ? extends T> fn) + exceptionallyAsync Since 12
+                    |             this가 예외를 발생하면 그것을 인자로 fn 실행하는 CompletionStage 반환. 예외 발생이 없는 경우, this의 결과와 같은 값으로 반환된 stage가 종료된다.
+                    |             
+                    li
+                        | default CompletionStage<T> exceptionallyCompose(Function<Throwable, ? extends CompletionStage<T>> fn) Since 12 + exceptionallyComposeAsync
+                    |             this가 예외를 발생하면 fn이 반환하는 CompletionStage로 구성된다.
+                    |             
+                    li CompletableFuture<T> toCompletableFuture()
+            |     
+            details
+                summary class CompletableFuture<T> impliments Future<T>, CompletionStage<T> Since 1.8
+                |         
+                ol
+                    li CompletionStage로 이용될 수 있는, 명시적으로 종료(값과 상태를 설정)되는 Future.
+                    |             
+                    li 둘 이상의 스레드가 complete, completeExceptionally, cancel을 호출할 경우, 하나만 성공한다.
+                    |             
+                    li non-async 메서드로 등록된 작업은 현재 CompletableFuture가 완료된 스레드 또는 호출자에서 실행된다.
+                    |             
+                    li 명시적인 Executor 없이 async 메서드로 등록된 작업은 ForkJoinPool#commonPool에서 수행.
+                    |             
+                    li CompletionStage 메서드들을 독립적으로 구현했기 때문에, 하나를 재정의해도 다른 메서드에 영향이 없다.
+                    |             
+                    li
+                        | CompletionStage 메서드들만 이용하도록 하려면 minimalCompletionStage()를, future를 변경하지 못하도록 하려면 copy()를 이용.
+                    |             
+                    li
+                        | 전반적인 계산에 대한 직접적인 제어를 할 수 없어서 cancel()의 호출은 completeExceptionally(new CancellationException()) 호출과 동일하다
+                    |             
+                    li 서브클래스들은 각자의 클래스 인스턴스를 반환하도록 newIncompletableFuture 메서드를 재정의해야 한다
+                |         
+                details
+                    summary static interface CompletableFuture.AsynchronousCompletionTask Since 1.8
+                    |             비동기 메서드에서 생성된 비동기 작업을 나타내는 마커 인터페이스
+                |         
+                details
+                    summary Method Detail
+                    |             
+                    ol
+                        li static <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier) + 1 오버로드
+                        |                 supplier의 결과를 가지고 비동기 종료되는 CompletableFuture 반환
+                        |                 
+                        li static CompletableFuture<Void> runAsync(Runnable runnable) + 1 오버로드
+                        |                 runnable을 실행하고 비동기 종료되는 CompletableFuture 반환
+                        |                 
+                        li static <U> CompletableFuture<U> completedFuture(U value)
+                        |                 이미 특정 값으로 종료된 CompletableFuture 반환
+                        |                 
+                        li static CompletableFuture<Void> allOf(CompletableFuture<?>... cfs)
+                        |                 모든 cfs가 종료되면 완료되는 새로운 CompletableFuture 객체 반환. 하나라도 예외 종료되면 반환된 CompletableFuture도 그러하다. cfs가 빈 경우, null로 종료된다
+                        |                 
+                        li static CompletableFuture<Object> anyOf(CompletableFuture<?>... cfs)
+                        |                 하나라도 종료되면, 그 결과와 같은 값으로 종료되는 CompletableFuture 객체 반환. cfs가 빈 경우, 완료되지 않는다
+                        |                 
+                        li T join()
+                        |                 종료되면 결과 값 반환, 또는 발생한 예외 던지기. 예외는 CompletionException이고, 기저 예외를 cause로 설정한다
+                        |                 
+                        li T getNow(T valueIfAbsent)
+                        |                 종료되었다면 결과 값 반환, 또는 발생한 예외 던지기. 아니면 valueIfAbsent 반환.
+                        |                 
+                        li boolean complete(T value)
+                        |                 종료되지 않았다면 get()과 연관 메서드들의 반환값을 value로 설정. 이 호출로 CompletableFuture가 완료 상태로 천이되었다면 true 반환.
+                        |                 
+                        li boolean completeExceptionally(Throwable ex)
+                        |                 종료되지 않았다면 get()과 연관 메서드들이 주어진 예외를 던지도록 한다. 이 호출로 CompletableFuture가 완료 상태로 천이되었다면 true 반환.
+                        |                 
+                        li boolean isCompletedExeptionally()
+                        |                 
+                        li void obtrudeValue(T value) + obtrudeException
+                        |                 강제로 get()과 연관 메서드들의 반환값 설정. 에러 복구를 위해 설계됨.
+                        |                 
+                        li int getNumberOfDependents()
+                        |                 종료 대기중인 CompletableFuture의 개수 추정. 동기화가 아닌 시스템 모니터링을 위해 설계됨.
+                |         
+                details
+                    summary Method Detail Since 9
+                    |             
+                    ol
+                        li static Executor delayedExecutor(long delay, TimeUnit unit) + 1 오버로딩
+                        |                 주어진 딜레이 이후에 executor로 작업을 제출하는 새로운 Executor 반환.
+                        |                 
+                        li static <U> CompletionStage<U> completedStage(U value)
+                        |                 주어진 value로 이미 종료된 새로운 CompletionStage 반환.
+                        |                 
+                        li static <U> CompletableFuture<U> failedFuture(Throwable ex)
+                        |                 주어진 예외로 이미 종료된 새로운 CompletableFuture 객체 반환.
+                        |                 
+                        li static <U> CompletionStage<U> failedStage(Throwable ex)
+                        |                 주어진 예외로 이미 종료된 새로운 CompletionStage 반환.
+                        |                 
+                        li <U> CompletableFuture<U> newIncompletableFuture()
+                        |                 완료되지 않은 새로운 CompletableFuture 객체를 반환한다. 서브클래스들은 각자의 클래스 인스턴스를 반환하도록 newIncompletableFuture 메서드를 재정의해야 한다
+                        |                 
+                        li Executor defaultExecutor()
+                        |                 
+                        li CompletableFuture<T> copy()
+                        |                 정상적으로 종료되었다면, 같은 값을 갖는 종료된 CompletableFuture 반환. 예외 종료되었다면, 해당 예외를 원인으로 한 CompletionException으로 예외 종료된 CompletableFuture 반환. 동작은 thenApply(x -> x)와 같다.
+                        |                 
+                        li CompletionStage<T> minimalCompletionStage()
+                        |                 CompletionStage에 정의된 메서드만 이용 가능. 재정의되지 않았다면 toCompletableFuture() 메서드를 통해 그 외의 메서드에 접근 가능하다.
+                        |                 
+                        li CompletableFuture<T> completeAsync(Supplier<? extends T> supplier) + 1 오버로딩
+                        |                 이 CompletableFuture를 supplier의 결과값으로 종료한다.
+                        |                 
+                        li CompletableFuture<T> orTimeout(long timeout, TimeUnit unit)
+                        |                 이 CompletableFuture가 주어진 시간 내에 종료되지 않은 경우, TimeoutException으로 예외 종료한다.
+                        |                 
+                        li CompletableFuture<T> completeOnTimeout(T value, long timeout, TimeUnit unit)
+                        |                 이 CompletableFuture가 주어진 시간 내에 종료되지 않은 경우, value로 종료한다.
+            |     
+            details
+                summary abstract class ForkJoinTask<V> implements Future<V>, Serializable Since 1.7
+                |         
+                ol
+                    li ForkJoinPool의 실행 단위. 일반적인 스레드보다는 훨씬 가벼운 유사-스레드
+                    |             
+                    li 메인 ForkJoinTask가 존재하여 다른 subtask들을 실행한다
+                    |             
+                    li
+                        | 전형적으로는 fork, join 메서드 쌍만 이용하며, a.fork(); b.fork(); b.join(); a.join();처럼 join 순서에 유의
+                    |             
+                    li
+                        | RecursiveAction : 반환이 필요없는 경우
+                        br
+                        |                 RecursiveTask : 반환이 필요한 경우
+                        br
+                        |                 CountedCompleter : 작업의 완료가 다른 작업의 트리거가 되는 경우
+                |         
+                details
+                    summary 일반 Method Detail
+                    |             
+                    ol
+                        li final ForkJoinTask<V> fork() : 작업 시작
+                        |                 
+                        li final V join() : 종료 대기 후 결과 반환. 비정상 종료 시 RuntimeException 또는 Error 발생
+                        |                 
+                        li final V invoke() : fork + join
+                        |                 
+                        li static void invokeAll(ForkJoinTask<?>... tasks) + 오버로딩
+                        |                 모든 작업을 시작. 모두 완료되면 반환. 하나라도 예외가 발생하면 rethrow. 예외 종료된 경우 각 작업의 상태는 직접 획득해야 한다.
+                        |                 
+                        li final boolean isCompleteNormally() + isCompletedAbnormally
+                        |                 
+                        li final Throwable getException()
+                        |                 
+                        li static ForkJoinTask<?> adapt(Runnable runnable) + 오버로딩
+                |         
+                details
+                    summary 잘 안 쓸 것 같은 Method
+                    |             
+                    ol
+                        li void complete(V value) + completeExceptionally
+                        |                 
+                        li final void quietlyComplete() Since 1.8
+                        |                 값은 설정하지 말고 정상 종료. 가장 최근의 setRawResult(V) 값이 join 및 연관 메서드의 결과로 반환된다
+                        |                 
+                        li final void quietlyJoin()
+                        |                 작업의 종료를 기다린다. 결과를 반환하지도, 예외를 던지지도 않는다
+                        |                 
+                        li final void quietlyInvoke()
+                        |                 작업을 시작하고 종료를 기다린다. 결과를 반환하지도, 예외를 던지지도 않는다
+                        |                 
+                        li void reinitialize()
+                        |                 초기화하여 다시 fork할 수 있게 한다
+                        |                 
+                        li static ForkJoinPool getPool() + inForkJoinPool
+                        |                 현재 스레드를 호스팅하는 풀 반환. 없으면(inForkJoinPool() == false) null 반환
+                        |                 
+                        li boolean tryUnfork()
+                        |                 성공하면 true 반환. 작업을 시작하도록 지시(fork)했지만 아직 다른 스레드에 넘겨져 실행되기 전에는 취소가 잘 된다
+                        |                 
+                        li static int getQueuedTaskCount()
+                        |                 현재 워커 스레드로 fork됐지만 아직 실행되지는 않은 작업들의 개수 추정치
+            |     
+            details
+                summary abstract class RecursiveAction extends ForkJoinTask<Void> Since 1.7
+                |         재귀적이며 결과없는 ForkJoinTask
+                |         
+                button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/RecursiveActionTest.java', lan='java') 예시 코드 »
                 br
-                | addLast(E)
-              td
-                | offerFirst(E)
+                |         코드 출처 : https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/util/concurrent/RecursiveAction.html
+            |     
+            details
+                summary abstract class RecursiveTask<V> extends ForkJoinTask<V> Since 1.7
+                |         재귀적이며 결과가 있는 ForkJoinTask
+                |         
+                button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/RecursiveTaskTest.java', lan='java') 예시 코드 »
                 br
-                | offerLast(E)
-              td
-                | putFirst(E)
-                br
-                | putLast(E)
-              td
-                | offerFirst(E,long,TimeUnit)
-                br
-                | offerLast(E,long,TimeUnit)
-            |                 
-            tr
-              th Remove
-              td
-                | removeFirst()
-                br
-                | removeLast()
-              td
-                | pollFirst()
-                br
-                | pollLast()
-              td
-                | takeFirst()
-                br
-                | takeLast()
-              td
-                | pollFirst(long,TimeUnit)
-                br
-                | pollLast(long,TimeUnit)
-            |                 
-            tr
-              th Examine
-              td
-                | getFirst()
-                br
-                | getLast()
-              td
-                | peekFirst()
-                br
-                | peekLast()
-              td -
-              td -
-      |     
-      details
-        summary
-          | class LinkedBlockingDeque<E> extends AbstractQueue<E> implements BlockingDeque<E>, Serializable Since 1.6
-        |         
-        ol
-          li 크기를 제한할 수 있는 BlockingDeque.
-          |             
-          li Collection, Iterator의 모든 선택적 연산을 구현했다
-          |             
-          li public LinkedBlockingDeque(int capacity) + 오버로딩
-          |             지정하지 않은 경우 Integer.MAX_VALUE가 사용된다
-      |     
-      details
-        summary interface TransferQueue<E> extends BlockingQueue<E> Since 1.7
-        |         
-        ol
-          li 생산자가 소비자가 소비할 때까지 대기할 수 있는 BlockingQueue.
-          |             기존의 BlockingQueue와 SynchronousQueue 기능 모두를 선택적으로 이용할 수 있다
-          |             
-          li void transfer(E e)
-          |             소비자에게 e를 전달한다. 소비자가 소비할 때까지 대기한다
-          |             
-          li boolean tryTransfer(E e)
-          |             대기 중인 소비자에게 e를 전달한다. 대기 중인 소비자가 없다면 즉시 false를 반환한다
-          |             
-          li boolean tryTransfer(E e, long timeout, TimeUnit unit)
-          |             timeout이 지나도록 대기 중인 소비자가 없다면 false를 반환한다
-          |             
-          li boolean hasWaitingConsumer()
-          |             
-          li int getWaitingConsumerCount()
-      |     
-      details
-        summary
-          | class LinkedTransferQueue<E> extends AbstractQueue<E> implements TransferQueue<E>, Serializable Since 1.7
-        |         
-        ol
-          li 크기 제한없고 연결된 TransferQueue.
-          |             
-          li size 계산에 순회가 필요하므로 정확하지 않을 수 있다
-          |             
-          li addAll 따위의 bulk 연산은 원자적으로 실행되지 않을 수 있다
-          |             
-          li Collection, Iterator의 모든 선택적 연산을 구현했다
-          |             
-          li public LinkedTransferQueue() + 오버로딩
-    hr
-    details
-      summary Non-Blocking 컬렉션
-      |     
-      details
-        summary
-          | class CopyOnWriteArrayList<E> implements List<E>, RandomAccess, Cloneable, Serializable Since 1.5
-        |         
-        ol
-          li 스레드-안전한 ArrayList
-          |             
-          li add, set 등의 연산마다 새로운 배열을 만든다. 따라서 일반적인 용도로는 매우 나쁘다
-          |             
-          li iterator는 생성된 시점의 snapshot을 순회함이 보장되지만, iterator를 통한 요소의 변경은 불가하다
-          |             
-          li public CopyOnWriteArrayList() + 오버로딩
-          |             
-          li int indexOf(E e, int index) + lastIndexOf
-          |             
-          li boolean addIfAbsent(E e) + addAllAbsent
-      |     
-      details
-        summary
-          | class CopyOnWriteArraySet<E> extends AbstractSet<E> implements Serializable Since 1.5
-        |         모든 연산에 CopyOnWriteArrayList를 사용하는 Set
-      |     
-      details
-        summary
-          | class ConcurrentLinkedQueue<E> extends AbstractQueue<E> implements Queue<E>, Serializable Since 1.5
-        |         
-        ol
-          li 크기 제한 없고, 스레드-안전한 연결된 Queue
-          |             
-          li size 계산에 순회가 필요하므로, 오차가 있을 수 있다
-          |             
-          li addAll 따위의 bulk 연산은 원자적으로 실행되지 않을 수 있다
-          |             
-          li Collection, Iterator의 모든 선택적 연산을 구현했다.
-      |     
-      details
-        summary
-          | class ConcurrentlinkedDeque<E> extends AbstractCollection<E> implements Deque<E>, Serializable Since 1.7
-        |         
-        ol
-          li 크기 제한 없고, 스레드-안전한 연결된 Deque
-          |             
-          li size 계산에 순회가 필요하므로, 오차가 있을 수 있다
-          |             
-          li addAll 따위의 bulk 연산은 원자적으로 실행되지 않을 수 있다
-          |             
-          li Collection, Iterator의 모든 선택적 연산을 구현했다.
-      |     
-      details
-        summary interface ConcurrentMap<K, V> extends Map<K, V> Since 1.5
-        |         
-        ol
-          li 스레드-안전, 작업의 원자성 보장
-          |             Map의 각 연산, Map이 반환하는 컬렉션들의 연산 모두 재정의해야 한다
-      |     
-      details
-        summary
-          | interface ConcurrentNavigableMap<K, V> extends ConcurrentMap<K, V>, NavigableMap<K, V> Since 1.6
-        |         NavigableMap 연산을 지원하는 ConcurrentMap
-      |     
-      details
-        summary
-          | class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>, Serializable Since 1.5
-        |         
-        ol
-          li 읽기 연산에 대해서는 완전한 동시성을, 갱신 연산에 대해서는 높은 수준의 동시성을 제공
-          |             Hashtable의 모든 연산을 구현했다. 읽기 연산에 대해 원소를 잠그지는 않으며, 테이블 전체를 잠기는 기능 또한 없다. 가져간 원소를 사용하려고 하는 시점에는 맵에서 제거됐을 수도 있다.
-          |             
-          li 카운터로 사용할 수 있다. 예. map.computeIfAbsent(key, x -> new LongAdder()).increment();
-          |             
-          li Map, Iterator의 모든 선택적 연산을 구현했다
-          |             
-          li 3가지 Bulk 연산을 지원한다 : forEach, search, reduce
-          |             인자로 받은 parallelismThreshold보다 맵이 작다고 판단되면 순차적으로 원소를 소비, 그 외엔 병렬로 소비. 1이면 최대 병렬성, Long.MAX_VALUE면 병렬 X
-          |             
-          li 모든 작업 메서드의 매개변수는 non-null이어야 한다
-          |             
-          li public ConcurrentHashMap(int initialCapacity, float loadFactor) Since 1.6 + 오버로딩
-        |         
+                |         코드 출처 : https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/util/concurrent/RecursiveTask.html
+            |     
+            details
+                summary abstract class CountedCompleter<T> extends ForkJoinTask<T> Since 1.8
+                |         
+                ol
+                    li 다른 작업들을 기다린 뒤 트리거로 작업을 시작하는 ForkJoinTask
+                    |             
+                    li
+                        | Concrete 서브클래스들은 compute() 메서드를 반드시 재정의해야 하며, 되도록이면 반환하기 전에 tryComplete()을 호출해야 한다
+                    |             
+                    li 일반적으로 CountedCompleter는 결과를 갖지 않겠지만, 결과가 필요한 경우 getRawResult() 메서드를 재정의하면 된다
+                    |             
+                    li
+                        button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', displayrange='[14,34,75,85]', lan='java') 예시 : setPendingCount + tryComplete
+                        |                 
+                        button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', displayrange='[36,54,75,85]', lan='java') 예시 : addToPendingCount + propagateCompletion
+                        |                 
+                        button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', displayrange='[56,73,75,85]', lan='java') 예시 : 생성자에서 pendingCount 설정
+                        |                 
+                        button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', displayrange='[87,130]', lan='java') 예시 : quietlyCompleteRoot
+                        |                 
+                        button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', displayrange='[132,168]', lan='java') 예시 : compute 사용없이 트리거로만 이용
+                        br
+                        |                 출처 ; https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/util/concurrent/CountedCompleter.html
+                |         
+                details
+                    summary Constructor Detail
+                    |             
+                    ol
+                        li
+                            | protected CountedCompleter(CountedCompleter<?> completer, int initialPendingCount)
+                        |                 
+                        li
+                            | protected CountedCompleter(CountedCompleter<?> completer) : initialPendingCount = 0
+                        |                 
+                        li protected CountedCompleter() : parent completer = null, initialPendingCount = 0
+                |         
+                details
+                    summary Method Detail
+                    |             
+                    ol
+                        li abstract void compute() : 메인 작업 정의
+                        |                 
+                        li void onCompletion(CountedCompleter<?> caller)
+                        |                 tryComplete()이 호출되고, 남은 pendingCount가 0이면 호출된다. 또는 complete(T)가 호출된 경우에도 실행된다
+                        |                 
+                        li boolean onExceptionalCompletion(Throwable ex, CountedCompleter<?> caller)
+                        |                 compute()에서 예외가 발생했거나, ForkJoinTask#completeExceptionally가 호출된 경우 실행된다. 기본 구현은 return true;
+                        br
+                        |                 true를 반환하였고, caller가 아직 완료되지 않은 경우, caller도 같은 예외로 종료된다
+                        |                 
+                        li final CountedCompleter<?> getCompleter() : 생성자에서 지정한 부모 completer 반환 + getRoot
+                        |                 
+                        li final int getPendingCount()
+                        |                 + setPendingCount, addToPendingCount, compareAndSetPendingCount, decrementPendingCountUnlessZero
+                        |                 
+                        li final void tryComplete()
+                        |                 pendingCount가 0이 아니면 1 감소시킨다. 0인 경우 onCompletion 메서드를 호출하고, parent completer에 대해서도 tryComplete()을 호출한다
+                        |                 
+                        li final void propagateCompletion()
+                        |                 tryComplete()와 같지만, onCompletion 메서드는 호출하지 않는다
+                        |                 
+                        li
+                            | final CountedCompleter<?> firstComplete()
+                            br
+                            |                     final CountedCompleter<?> nextComplete()
+                        |                 firstComplete() : pendingCount가 0이면 return this; 그 외엔 pendingCount를 감소시키고 return null;
+                        br
+                        |                 nextComplete() : parent completer가 없는 경우, ForkJoinTask#quietlyComplete 호출하고 return null; pendingCount가 0이 아니면 감소시키고 return null; 그 외엔 parent completer 반환
+                        br
+                        |                 for(var c = firstComplete(); c != null; c = c.nextComplete()) { ... }
+                        |                 
+                        li final void quietlyCompleteRoot() == getRoot().quietlyComplete()
+                        |                 
+                        li final void helpComplete(int maxTasks)
+                        |                 이 작업이 완료되지 않았다면, completion path 상의 최대 maxTasks개 만큼의 시작되지 않은 작업을 진행시킨다
+        hr
         details
-          summary Method Detail
-          |             
-          ol
-            li boolean contains(Object value)
-            |                 containsValue(Object)와 동일하며, Hashtable과의 호환을 위해 존재
-            |                 
-            li Enumeration<K> keys() + elements
-            |                 
-            li long mappingCount()
-            |                 크기가 매우 큰 경우, Map.size() 대신 이용
-            |                 
-            li static <K> ConcurrentHashMap.KeySetView<K, Boolean> newKeySet() Since 1.8 + 오버로딩
-            |                 
-            li ConcurrentHashMap.KeySetView<K, V> keySet(V mappedValue)
-            |                 
-            li
-              | void forEach(long parallelismThreshold, BiConsumer<? super K, ? super V> action) Since 1.8
-            |                 + 오버로딩, forEachKey, forEachValue, forEachEntry
-            |                 
-            li
-              | <U> U search(long parallelismThreshold, BiFunction<? super K, ? super V, ? extends U> searchFunction) Since 1.8
-            |                 찾는 원소에 대해서는 non-null 반환 + searchKeys, searchValues, searchEntries
-            |                 
-            li
-              | <U> U reduce(long parallelismThreshold, BiFunction<? super K, ? super V, ? extends U> transformer, BiFunction<? super U, ? super U, ? extends U> reducer) Since 1.8
-            |                 + reduceToDouble ~ Int, reduceKeys, reduceKeysToDouble ~ Int, reduceValues, reduceValuesToDouble ~ Int, reduceEntries, reduceEntriesToDouble ~ Int
-      |     
-      details
-        summary
-          | class ConcurrentSkipListMap<K,V> extends AbstractMap<K,V> implements ConcurrentNavigableMap<K,V>, Cloneable, Serializable Since 1.6
-        |         
-        ol
-          li
-            | ConcurrentNavigableMap 구현체. 평균 log(n) 시간이 소요되는, 스레드-안전한 
-            a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://en.wikipedia.org/wiki/Skip_list') SkipList
-            |  구현을 이용
-          |             
-          li 오름차순 정렬된 뷰와 이터레이터가 내림차순보다 빠르다
-          |             
-          li putAll과 같은 bulk 연산은 원자적으로 종료되지 않을 수 있다
-          |             
-          li Map, Iterator의 모든 선택적 연산을 구현했다
-          |             
-          li public ConcurrentSkipListMap(Comparator<? super K> comparator) + 오버로딩
-          |             지정하지 않은 경우, 자연스러운 정렬을 이용한다
-      |     
-      details
-        summary
-          | class ConcurrentSkipListSet<E> extends AbstractSet<E> implements NavigableSet<E>, Cloneable, Serializable Since 1.6
-        |         
-        ol
-          li ConcurrentSkipListMap을 이용한 NavigableSet
-          |             
-          li public ConcurrentSkipListSet(Comparator<? super E> comparator)
-          |             지정하지 않은 경우, 자연스러운 정렬을 이용한다
-    hr
-    details
-      summary 실행 기법
-      |     
-      details
-        summary class Semaphore implements Serializable Since 1.5
-        |         
-        ol
-          li 제한된 수의 접근 권한을 acquire()로 획득, release()로 반환.
-          |             fairness : acquire()호출 순서대로 권한 획득.
-          |             
-          li public Semaphore(int permits, boolean fair) + 오버로딩
-          |             fair : 지정하지 않은 경우 false
-        |         
+            summary Executor 관련
+            |     
+            details
+                summary interface Executor Since 1.5
+                |         
+                ol
+                    li
+                        | 전달받은 Runnable을 실행하는 객체. Executor 자체가 스레드의 병행성을 부여하진 않으며, 구현에서 호출자와 다른 스레드 공간을 마련해주어야 한다.
+                    |             
+                    li void execute(Runnable command)
+            |     
+            details
+                summary interface ExecutorService extends Executor Since 1.5
+                |         
+                ol
+                    li
+                        | java.util.concurrent 패키지의 기본적인 Executor 구현.
+                        button.btn-code(path='Repositories/Eclipse/JavaSE/src/concurrent/ExecutorServiceTest.java', lan='java') 예시 코드 »
+                    |             
+                    li void shutdown()
+                    |             추가적인 Runnable을 받지 않는다. 이전에 추가된 것은 마저 실행한다.
+                    |             
+                    li List<&Runnable> shutdownNow()
+                    |             실행중인 모든 작업을 중지. 실행 대기중이었던 작업들은 반환.
+                    |             
+                    li boolean isShutdown()
+                    |             
+                    li boolean isTerminated()
+                    |             shutdown, shutdownNow 호출 이후 모든 작업이 끝났는지 여부
+                    |             
+                    li boolean awaitTermination(long timeout, TimeUnit unit)
+                    |             shutdown 요청 후 모든 작업이 종료되기를 기다리며 블록한다. timeout 발생한 경우 false 반환.
+                    |             
+                    li <T> Future<T> submit(Callable<T> task)
+                    |             결과를 반환하는 작업을 등록한다. 작업이 성공적으로 종료되면 Future#get으로 결과를 확인할 수 있다.
+                    |             
+                    li <T> Future<T> submit(Runnable atask, T result)
+                    |             작업을 등록한다. 작업이 성공적으로 종료되면 Future#get으로 result를 얻을 수 있다.
+                    |             
+                    li Futur<?> submit(Runnable task)
+                    |             작업을 등록한다. 작업이 성공적으로 종료되면 Future#get은 null을 반환한다.
+                    |             
+                    li <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
+                    |             모든 작업이 종료되면 Future 리스트를 반환한다. 따라서 리스트 안의 각 Future#isDone은 true다.
+                    |             
+                    li
+                        | <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timout, TimeUnit unit)
+                    |             모든 작업이 종료되거나 timeout이 발생하면 반환. 리스트 안의 각 Future#isDone은 true. timeout 발생 시 완료되지 않은 작업들은 취소된다.
+                    |             
+                    li <T> T invokeAny(Collection<? extends Callable<T>> tasks)
+                    |             성공적으로 완료된 첫 작업의 결과를 반환한다. 완료되지 않은 작업들은 취소된다.
+                    |             
+                    li
+                        | <T> T invokeAny(Collection<? extends Callable<>> tasks, long timeout, TimeUnit unit)
+                    |             timeout되면 TimeoutException 발생
+            |     
+            details
+                summary interface ScheduledExecutorService extends ExecutorService Since 1.5
+                |         
+                ol
+                    li 실행 전에 딜레이를 두거나, 주기적으로 실행을 반복할 수 있는 ExecutorService
+                    |             
+                    li ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) + 오버로딩
+                    |             주어진 delay 이후 command가 1회 실행되도록 한다
+                    |             
+                    li
+                        | ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit)
+                    |             반복되는 작업은 반환된 Future를 통해 취소할 수 있다.
+                    |             
+                    li
+                        | ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit)
+                    |             scheduleAtFixedRate와 달리, 이전 작업이 완료된 후 다음 작업이 시작된다.
+            |     
+            details
+                summary abstract class AbstractExecutorService implements ExecutorService Since 1.5
+                |         
+                ol
+                    li submit, invokeAny, invokeAll 메서드 구현. 반환하는 RunnableFuture에는 FutureTask 이용.
+                    |             
+                    li
+                        | protected <T> RunnableFuture<T> newTaskFor(Runnable runnable, T value) Since 1.6 + 오버로딩
+            |     
+            details
+                summary class ThreadPoolExecutor extends AbstractExecutorService Since 1.5
+                |         
+                ol
+                    li 각 작업들은 스레드풀의 별개 스레드에서 실행된다
+                    |             
+                    li Core and maximum pool sizes
+                    |             corePoolSize에 도달할 때까지 신규 작업에 대해 신규 스레드를 할당한다. 대기 중인 스레드가 없으면 maxPoolSize에 도달할 때까지 신규 작업에 대해 신규 스레드를 할당한다
+                    |             
+                    li On-demand construction
+                    |             처음부터 corePoolSize만큼의 스레드를 만들어놓을 지를 설정할 수 있다
+                    |             
+                    li Creating new threads
+                    |             지정되지 않으면 Executors#defaultThreadFactory로부터 신규 스레드를 생성한다. 동일 스레드그룹 + NORM_PRIORITY + non-daemon
+                    |             
+                    li Keep-alive times
+                    |             corePoolSize를 초과한 스레드들은 대기 상태가 keepAliveTime을 초과하면 종료된다. allowCoreThreadTimeOut 메서드로 코어 스레드에도 적용할 지 설정 가능
+                    |             
+                    li Queuing
+                    |             
+                    ul
+                        li 처리를 기다리는 작업들은 BlockingQueue에서 대기한다.
+                        |                 
+                        li corePoolSize 이상의 스레드가 활성 상태라면 작업은 우선 큐에 진입된다. 큐에 자리가 없으면 신규 스레드가 생성되어 작업을 처리한다.
+                        |                 
+                        li 큐에 자리도 없고 활성 스레드 수가 maximumPoolSize와 같다면 추가 작업은 거부된다
+                        |                 
+                        li 큐잉 전략 1. Direct handoff
+                        |                 SynchronousQueue. 작업 가능한 스레드가 없으면 신규로 생성한다. 제한없는 maximumPoolSize 필요
+                        |                 
+                        li 큐잉 전략 2. Unbounded queue
+                        |                 무제한으로 큐에 작업을 추가하므로, 활성 스레드의 수는 항상 corePoolSize 이하다
+                        |                 
+                        li 큐잉 전략 3. Bounded queue
+                        |                 큐의 크기와 maxPoolSize의 적절한 trade off 필요
+                    |             
+                    li Rejected tasks
+                    |             
+                    ul
+                        li 거부된 작업에 대하여 RejectedExecutionHandler#rejectedExecution 메서드가 실행된다
+                        |                 
+                        li 기본 정책. ThreadPoolExecutor.AbortPolicy : 핸들러가 RejectedExecutionException 발생
+                        |                 
+                        li ThreadPoolExecutor.CallerRunsPolicy : 작업을 제출한 스레드가 직접 작업을 실행한다
+                        |                 
+                        li ThreadPoolExecutor.DiscardPolicy : 거부된 작업은 버려진다
+                        |                 
+                        li
+                            | ThreadPoolExecutor.DiscardOldestPolicy : 신규 작업이 아닌, 큐에서 가장 오래된 작업이 버려진다. 신규 작업은 다시 시도된다
+                    |             
+                    li Hook methods
+                    |             beforeExecute, afterExecute, terminated 메서드를 재정의하여 작업 전후에 필요한 부분을 실행할 수 있다
+                |         
+                details
+                    summary interface RejectedExecutionHandler Since 1.5
+                    |             
+                    ol
+                        li ThreadPoolExecutor에서 실행되지 않은 작업에 대한 처리를 위해 사용.
+                        |                 
+                        li void rejectedExecution(Runnable r, ThreadPoolExecutor executor)
+                        |                 
+                        li static class ThreadPoolExecutor.AbortPolicy implements RejectedExecutionHandler
+                        |                 
+                        li
+                            | static class ThreadPoolExecutor.CallerRunsPolicy implements RejectedExecutionHandler
+                        |                 
+                        li
+                            | static class ThreadPoolExecutor.DiscardPolicy implements RejectedExecutionHandler
+                        |                 
+                        li
+                            | static class ThreadPoolExecutor.DiscardOldestPolicy implements RejectedExecutionHandler
+                |         
+                details
+                    summary Constructor Detail
+                    |             
+                    ol
+                        li
+                            | public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue)
+                        |                 
+                        li
+                            | public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory)
+                        |                 
+                        li
+                            | public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, RejectedExecutionHandler handler)
+                        |                 
+                        li
+                            | public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler)
+                |         
+                details
+                    summary Method Detail
+                    |             
+                    ol
+                        li void execute(Runnable command) ↔ remove
+                        |                 command를 언젠가 실행한다. 작업 스레드가 실행하지 못하면, RejectedExecutionHandler가 처리한다
+                        |                 
+                        li void shutdown()
+                        |                 순차적 종료 절차에 진입한다. 추가 작업은 받지 않고, 이미 제출된 작업들은 마저 처리한다
+                        |                 
+                        li List<Runnable> shutdownNow()
+                        |                 대기 중인 작업에 더해 실행 중인 작업들도 모두 중지한다. 대기중이었던 작업들은 리스트로 반환한다. 실행 중인 작업들에 유예 시간을 주고 싶다면 ExecutorService#awaitTermination 이용
+                        |                 
+                        li boolean isTerminating()
+                        |                 shutdown 또는 shutdownNow 메서드가 호출되었지만, 아직 중지가 완료되지는 않았다면 true
+                        |                 
+                        li void setThreadFactory(ThreadFactory threadFactory) + getter 메서드
+                        |                 + set/getRejectedExecutionHandler, set/getCorePoolSize, set/getMaximumPoolSize, set/getKeepAliveTime
+                        |                 
+                        li boolean prestartCoreThread()
+                        |                 신규 스레드를 하나 생성한다. 이미 corePoolSize 만큼 스레드가 존재한다면 false 반환.
+                        |                 
+                        li int prestartAllCoreThreads()
+                        |                 생성된 스레드의 수가 corePoolSize가 될 때까지 신규 스레드를 생성한다. 신규로 생성된 스레드의 수를 반환한다
+                        |                 
+                        li void allowCoreThreadTimeOut(boolean value) Since 1.6 + 오버로딩
+                        |                 코어 스레드에도 keep-alive를 적용할 지 여부 setter/getter
+                        |                 
+                        li BlockingQueue<Runnable> getQueue()
+                        |                 직접 조작하진 말고, 모니터링/디버깅 용도로 이용함이 바람직하다
+                        |                 
+                        li void purge() : 취소된 Future 작업들을 큐에서 제거
+                        |                 
+                        li int getPoolSize()
+                        |                 현재 풀 안의 스레드 수 반환
+                        |                 
+                        li int getActiveCount()
+                        |                 현재 실행 중인 스레드 수 추정치 반환
+                        |                 
+                        li int getLargestPoolSize()
+                        |                 풀에 동시에 존재했던 스레드의 최대 개수 반환
+                        |                 
+                        li long getTaskCount()
+                        |                 실행 스케쥴된 작업의 총 개수의 근사치 반환
+                        |                 
+                        li long getCompletedTaskCount()
+                        |                 실행 완료된 작업의 총 개수의 근사치 반환
+            |     
+            details
+                summary
+                    | class ScheduledThreadPoolExecutor extends ThreadPoolExecutor implements ScheduledExecutorService Since 1.5
+                |         
+                ol
+                    li 생성자는 ThreadPoolExecutor와 유사
+                    |             
+                    li
+                        | protected <V> RunnableScheduledFuture<V> decorateTask(Runnable runnable, RunnableScheduledFuture<V> task) Since 1.6 + 오버로딩
+                    |             
+                    li void setContinueExistingPeriodicTasksAfterShutdownPolicy(boolean value) + getter
+                    |             기본값 false. true면 shutdownNow가 호출되거나 이 정책이 false가 될 때까지 주기 작업을 계속 실행한다
+                    |             
+                    li void setExecuteExistingDelayedTasksAfterShutdownPolicy(boolean value) + getter
+                    |             기본값 true. true면 shutdownNow가 호출되거나 종료 후 이 정책이 false가 되기 전까지는 지연 작업을 실행한다
+                    |             
+                    li void setRemoveOnCancelPolicy(boolean value) Since 1.7 + getter
+                    |             기본값 false. 취소된 작업을 즉시 큐에서 제거할 것인지, 또는 해당하는 딜레이 후 제거할 것인지 설정.
+            |     
+            details
+                summary interface CompletionService<V> Since 1.5
+                |         
+                ol
+                    li 생산자가 작업들을 추가하면, 소비자는 그것이 완료된 순서대로 이용할 수 있다.
+                    |             
+                    li Future<V> submit(Callable<V> task)
+                    |             
+                    li Future<V> submit(Runnable task, V result)
+                    |             
+                    li Future<V> take()
+                    |             완료된 작업을 가져온다. 없으면 대기한다.
+                    |             
+                    li Future<V> poll()
+                    |             완료된 작업을 가져온다. 없으면 null.
+                    |             
+                    li Futur<V> poll(long timeout, TimeUnit unit)
+            |     
+            details
+                summary class ExecutorCompletionService<V> impliments CompletionService<V&gt
+                |         
+                ol
+                    li
+                        | CompletionService 구현. 주어진 Executor를 실행에 이용한다. 완료되는 순서대로 작업을 take 메서드로 접근할 수 있는 큐에 배치한다.
+                    |             
+                    li public ExecutorCompletionService(Executor executor)
+                    |             
+                    li
+                        | public ExecutorCompletionService(Executor executor, BlockingQueue<Future<V>> completionQueue)
+            |     
+            details
+                summary class ForkJoinWorkerThread extends Thread Since 1.7
+                |         
+                ol
+                    li ForkJoinPool에서 ForkJoinTask를 실행하는 스레드
+                    |             
+                    li protected ForkJoinWorkerThread(ForkJoinPool pool) + getPool
+                    |             
+                    li int getPoolIndex() : 풀 안에서 이 스레드의 번호(Unique)
+                    |             
+                    li protected void onStart() + onTermination
+            |     
+            details
+                summary class ForkJoinPool extends AbstractExecutorService Since 1.7
+                |         
+                ol
+                    li ForkJoinTask에 관한 ExecutorService. Non-ForkJoinTask 호출자도 이용할 수 있는 메서드를 제공한다
+                    |             execute(ForkJoinTask), invoke(ForkJoinTask), submit(ForkJoinTask)
+                    |             
+                    li 모든 ForkJoinWorkerThread는 데몬 스레드로 초기화된다
+                    |             
+                    li Common pool 튜닝에 관한 시스템 속성
+                    |             java.util.concurrent.ForkJoinPool.common.parallelism : parallelism level. 기본값은 프로세서 수
+                    br
+                    |             java.util.concurrent.ForkJoinPool.common.threadFactory : class name of a ForkJoinPool.ForkJoinWorkerThreadFactory
+                    br
+                    |             java.util.concurrent.ForkJoinPool.common.exceptionHandler : class name of a Thread.UncaughtExceptionHandler
+                    br
+                    |             java.util.concurrent.ForkJoinPool.common.maximumSpares : maximum number of allowed extra threads to maintain target parallelism (default 256).
+                |         
+                details
+                    summary static interface ForkJoinPool.ForkJoinWorkerThreadFactory
+                    |             ForkJoinWorkerThread newThread(ForkJoinPool pool)
+                |         
+                details
+                    summary static interface ForkJoinPool.ManagedBlocker
+                    |             
+                    ol
+                        li boolean block()
+                        |             필요한 만큼 현재 스레드를 블록시킨다. 추가적인 블로킹이 필요하지 않으면 true 반환
+                        |             
+                        li boolean isReleasable
+                        |             블로킹이 필요없으면 true 반환
+                |         
+                details
+                    summary Field, Constructor Detail
+                    |             
+                    ol
+                        li
+                            | public static final ForkJoinPool.ForkJoinWorkerThreadFactory defaultForkJoinWorkerThreadFactory
+                        |                 
+                        li public ForkJoinPool() == this(Runtime.availableProcessors())
+                        |                 
+                        li public ForkJoinPool(int parallelism)
+                        |                 
+                        li
+                            | public ForkJoinPool(int parallelism, ForkJoinPool.ForkJoinWorkerThreadFactory factory, Thread.UncaughtExceptionHandler handler, boolean asyncMode)
+                        |                 
+                        li
+                            | public ForkJoinPool(int parallelism, ForkJoinPool.ForkJoinWorkerThreadFactory factory, Thread.UncaughtExceptionHandler handler, boolean asyncMode, int corePoolSize, int maximumPoolSize, int minimumRunnable, Predicate<? super ForkJoinPool> saturate, long keepAliveTime, TimeUnit unit) Since 9
+                |         
+                details
+                    summary Method Detail
+                    |             
+                    ol
+                        li static ForkJoinPool commonPool() Since 1.8
+                        |                 
+                        li static void managedBlock(ForkJoinPool.ManagedBlocker blocker)
+                        |                 
+                        li
+                            | <T> T invoke(ForkJoinTask<T> task)
+                            br
+                            |                     void execute(ForkJoinTask<?> task) + 오버로딩
+                            br
+                            |                     <T> ForkJoinTask<T> submit(ForkJoinTask<T> task) + 오버로딩
+                        |                 
+                        li void shutdown()
+                        |                 + shutdownNow(), isTerminated, isTerminating, isShutdown, awaitTermination, awaitQuiescence
+                        |                 
+                        li ForkJoinPool.ForkJoinWorkerThreadFactory getFactory()
+                        |                 + getUncaughtExceptionHandler, getParallelism, getPoolSize, getAsyncMode, getRunningThreadCount, getActiveThreadCount, isQuiescent, getStealCount, getQueuedTaskCount, getQueuedSubmissionCount, hasQueuedSubmissions
+            |     
+            details
+                summary class Executors Since 1.5
+                |         
+                details
+                    summary ExecutorService 관련
+                    |             
+                    ul
+                        li static ExecutorService newFixedThreadPool(int nThreads) + 오버로딩
+                        |                 최대 동시 실행 가능한 스레드 수가 제한. 나머지 스레드는 큐에서 대기. 스레드들은 명시적으로 shutdown되기 전까지 풀에 존재한다.
+                        |                 
+                        li static ExecutorService newWorkStealingPool() Since 1.8 + 오버로딩
+                        |                 사용 가능한 프로세서 수를 parallelism level로 이용. 반환되는 객체는 ForkJoinPool 인스턴스
+                        |                 
+                        li static ExecutorService newSingleThreadExecutor() + 오버로딩
+                        |                 하나의 워커 스레드만 사용한다. 예기지 않게 워커가 종료되면 새로운 스레드가 나머지 작업을 위해 그 자리를 대신할 수 있다.
+                        br
+                        |                 같은 특징을 갖는 newFixedThreadPool(1)과 다르게, 반환된 ExecutorService가 추가적인 워커 스레드를 이용하도록 설정할 수 없다.
+                        |                 
+                        li static ExecutorService newCachedThreadPool() + 오버로딩
+                        |                 이전에 종료된 스레드를 재사용. 60초 동안 이용되지 않으면 풀에서 삭제된다.
+                        |                 
+                        li static ExecutorService unconfigurableExecutorService(ExecutorService executor)
+                        |                 ExecutorService에 정의된 메서드들은 executor에 연결하고, 그 외 캐스트를 통해 이용할 수 있는 메서드들은 호출하지 못하도록 한다.
+                |         
+                details
+                    summary ScheduledExecutorService 관련
+                    |             
+                    ul
+                        li static ScheduledExecutorService newSingleThreadScheduledExecutor() + 오버로딩
+                        |                 
+                        li static ScheduledExecutorService newScheduledThreadPool(int corePoolSize) + 오버로딩
+                        |                 
+                        li
+                            | static ScheduledExecutorService unconfigurableScheduledExecutorService(ScheduledExecutorService executor)
+                        |                 ScheduledExecutorService에 정의된 메서드들은 executor에 연결하고, 그 외 캐스트를 통해 이용할 수 있는 메서드들은 호출하지 못하도록 한다.
+                |         
+                details
+                    summary ThreadFactory 관련
+                    |             
+                    ul
+                        li static ThreadFactory defaultThreadFactory()
+                        |                 모든 스레드들을 같은 ThreadGroup으로 생성한다. 스레드의 우선순위는 Threa.NORM_PRIORITY와 그룹의 최대 허용치 중 작은 것으로 설정된다.
+                        br
+                        |                 각 스레드들은 non-daemon으로 생성되며, Thread.getName()을 통해 얻을 수 있는 "pool-N-thread-M" 꼴의 이름으로 접근할 수 있다.
+                        |                 
+                        li static ThreadFactory privilegedThreadFactory()
+                        |                 호출하는 스레드와 같은 권한으로 새로운 스레드를 생성하는 ThreadFactory 반환.
+                |         
+                details
+                    summary Callable 관련
+                    |             
+                    ul
+                        li static <T> Callable<T> callable(Runnable task, T result)
+                        |                 
+                        li static Callable<Object> callable(Runnable task)
+                        |                 작업이 완료되면 null을 반환하는 Callable 반환
+                        |                 
+                        li static Callable<Object> callable(PrivilegedAction<?> action)
+                        |                 호출되면 action#run을 실행하고 그 결과를 반환하는 Callable 반환
+                        |                 
+                        li static Callable<Object> callable(PrivilegedExceptionAction<?> action)
+                        |                 
+                        li static <T> Callable<T> privilegedCallable(Callable<T> callable)
+                        |                 호출되면 callable을 현재 access control context에서 실행. AccessController.doPrivileged에서 호출되어야 한다.
+                        |                 
+                        li
+                            | static <T> Callable<T> privilegedCallableUsingCurrentClassLoader(Callable<T> callable)
+        hr
         details
-          summary Method Detail
-          |             
-          ol
-            li void acquire() + 오버로딩
-            |                 권한을 하나 요구한다. 권한을 얻을 때까지 대기하며, 대기 중인 스레드는 인터럽트될 수 있다.
-            |                 
-            li void acquireUninterruptibly() + 오버로딩
-            |                 대기 중일 때 인터럽트되더라도 계속 대기한다. 인터럽트되지 않았을 경우와 권한을 얻는 시기가 달라질 수 있다
-            |                 
-            li boolean tryAcquire() + 오버로딩
-            |                 
-            li void release() + 오버로딩
-            |                 
-            li int availablePermits()
-            |                 
-            li int drainPermits() : 가용한 모든 권한을 얻는다. 만약 음수라면 release하여 0으로 맞춘다.
-            |                 
-            li boolean isFair()
-            |                 
-            li final boolean hasQueuedThreads()
-            |                 
-            li final int getQueueLength()
-      |     
-      details
-        summary class CountDownLatch Since 1.5
-        |         
-        ol
-          li count가 0일 될때까지(원하는 작업들이 완료될 때까지), 1개 이상의 스레드가 대기하는 동기화 제공.
-          |             
-          li public CountDownLatch(int count)
-          |             
-          li void await()
-          |             count가 0이 될때까지 대기한다. 대기 중에 인터럽트될 수 있다
-          |             
-          li boolean await(long timeout, TimeUnit unit)
-          |             대기 중에 timeout을 넘으면 즉시 false 반환
-          |             
-          li void countDown()
-          |             --count, count가 0이면 대기하는 모든 스레드를 깨운다
-          |             
-          li long getCount()
-      |     
-      details
-        summary class CyclicBarrier Since 1.5
-        |         
-        ol
-          li 스레드들이 공통의 목적이 달성되기까지 함께 대기. 그 목적을 barrier라고 하며, barrier를 재사용할 수 있어 cyclic하다.
-          |             
-          li public CyclicBarrier(int parties, Runnable barrierAction) + 오버로딩
-          |             barrierAction : barrier를 넘을 때 실행. 지정하지 않은 경우, 대기하던 스레드를 깨우기만 한다
-          |             
-          li int getParties()
-          |             
-          li int await()
-          |             마지막 스레드가 await을 호출할 때까지 대기한다. 대기 중에 인터럽트될 수 있다. 현재 스레드의 대기 순번 반환. getParties() - 1이 첫 번째, 0이 마지막 스레드.
-          |             
-          li int await(long timeout, TimeUnit unit)
-          |             timeout을 초과하여 대기하면 barrier는 부서진다
-          |             
-          li boolean isBroken()
-          |             
-          li void reset()
-          |             barrier를 초기 상태로 재설정한다. 이미 대기 중인 스레드가 있다면 BrokenBarrierException 발생. 부서진 barrier를 재사용하려면 별도의 동기화가 필요하므로, 차라리 새로 하나 만들자
-          |             
-          li int getNumberWaiting()
-      |     
-      details
-        summary class Exchanger<V> Since 1.5
-        |         
-        ol
-          li 두 스레드가 같은 시점에 값을 서로 교환하도록 해준다.
-          |             
-          li public Exchanger()
-          |             
-          li V exchange(V x) throws InterruptedException
-          |             다른 스레드가 같은 지점에 도달하기까지 기다렸다가, 서로 값을 교환한다.
-          |             
-          li
-            | V exchange(V x, long timeout, TimeUnit unit) throws InterruptedException, TimeoutException
-          |             timeout 초과 시 TimeoutException 발생
-      |     
-      details
-        summary class Phaser Since 1.7
-        |         
-        ol
-          li 재사용 가능한 동기화 barrier. CyclicBarrier, CountDownLatch 기능에 더해 보다 유연한 메서드 제공
-          |             
-          li CyclicBarrier와 다르게 각 회전마다 총 대기하는 스레드 수가 다를 수 있다
-          |             현재 phase가 완료되기 전에 미리 이후의 phase(들)을 등록할 수 있다. 각 phase는 0부터 시작하는 번호를 가진다(Integer.MAX_VALUE에 도달하면 다음은 다시 0)
-          |             
-          li
-            | 계층 구조를 구성할 수 있다. 자식 Phaser의 parties가 0이 아니게 되는 순간 parent에 등록되고, 0이 되는 순간 parent에서 제거된다
-          |             
-          li public Phaser(int parties) + 오버로딩
-          |             parties : 다음 phase로 넘어가기 위해 필요한 수
-          |             
-          li public Phaser(Phaser parent, int parties)
-          |             parties : 다음 phase로 넘어가기 위해 필요한 수. 지정하지 않으면 0
-        |         
+            summary 리액티브 스트림
+            |     
+            ol
+                li https://github.com/reactive-streams/reactive-streams-jvm
+                |         
+                li final class Flow Since 9
+                |         static int defaultBufferSize() : 256
+                |         
+                li @FunctionalInterface static interface Flow.Publisher<T>
+                |         void subscribe(Flow.Subscriber<? super T> subscriber)
+                |         
+                details
+                    summary 규칙
+                    |             
+                    ol
+                        li
+                            | Publisher가 Subscriber에 onNext로 신호를 보낸 횟수 <= Subscriber가 Subscription으로 보낸 request의 횟수
+                        |                 이 규칙은 onNext의 호출에 대하여, 선행되는 request가 항상 존재함을 함의한다
+                        |                 
+                        li
+                            | Publisher가 onNext로 신호를 보낸 횟수가 request보다 적은 경우, Subscription을 onComplete 또는 onError로 종결한다
+                        |                 이 규칙은 request에 대한 onNext가 항상 존재하지는 않음을 명시한다
+                        |                 
+                        li onSubscribe, onNext, onError, onComplete 신호는 직렬적이어야 한다
+                        |                 결코 다른 신호와 중첩되는 시점이 있어서는 안 된다
+                        |                 
+                        li Publisher의 실패는 반드시 onError로 보내야 한다
+                        |                 
+                        li 스트림이 정상적으로 종결된 경우 Publisher는 반드시 onComplete 신호를 보내야 한다
+                        |                 
+                        li Publisher가 onError, onComplete 신호를 보낸 경우, Subscription은 반드시 취소된 것으로 간주되야 한다
+                        |                 
+                        li 종료 상태(onError, onCompletion)에서 추가적인 신호의 발생은 절대 없다
+                        |                 
+                        li Subscription이 취소된 경우, 추가적인 신호 전달은 절대 없다
+                        |                 
+                        li
+                            | Publisher.subscribe 안에서 onSubscribe를 반드시 호출해야 하며, 반드시 다른 신호를 보내기 전에 선행되어야 한다. 또, 이 경우 메서드는 반드시 정상 종결되어야 한다
+                        |                 Subscriber.onSubscribe 호출 시 null 검사는 필요없다. NullPointerException이 발생하게 내버려두면 된다.
+                        |                 
+                        li Publisher.subscribe는 여러 번 호출될 수 있지만, 하나의 Subscriber로부터는 최대 한 번만 호출되어야 한다
+                        |                 
+                        li Publisher는 여러 Subscriber들에 대한 멀티캐스트를 지원할 수 있다
+                |         
+                li static interface Flow.Subsbriber<T>
+                |         void onSubscribe(Flow.Subscription), onNext(T), onError(Throwable), onComplete(Void)
+                |         
+                details
+                    summary 규칙
+                    |             
+                    ol
+                        li Subscriber는 onNext 신호를 받고 싶다면 반드시 먼저 request 신호를 보내야 한다
+                        |                 
+                        li 신호를 보낼 때, Publisher의 완료를 기다리지 말고 비동기적으로 전달함이 권장된다
+                        |                 
+                        li onComplete, onError 메서드는 절대 Subscription, Publisher 어느쪽의 메서드도 호출해선 안 된다
+                        |                 
+                        li onComplete, onError 신호를 받은 이후부터, Subscription은 반드시 취소로 간주되어야 한다
+                        |                 
+                        li 유효한 Subscription이 존재한다면, 추가적인 onSubscribe 신호에 대해 반드시 cancel을 호출해야 한다
+                        |                 하나의 Subscriber는 둘 이상의 Publisher를 동시에 구독하지 않아야 한다
+                        |                 
+                        li 더 이상 필요없다면 반드시 Subscription.cancel을 호출해야 한다
+                        |                 
+                        li Subscription으로 보내는 신호들은 반드시 직렬적이어야 한다
+                        |                 결코 동시에 두 신호를 보내는 순간은 없어야 한다
+                        |                 
+                        li cancel의 호출은 대기 중인 작업의 취소를 보장하지 않는다. cancel 이후 추가적인 onNext 신호에 대해 준비되어야 한다
+                        |                 
+                        li 아무런 request를 보내지 않았더라도, onComplete, onError 신호에 대해 준비되어야 한다
+                        |                 
+                        li onSubscribe, onNext, onError, onComplete는 인자가 null이 아닌 이상 반드시 정상 종료되어야 한다
+                        |                 Subscriber의 실패는 Subscription.cancel로만 통지할 수 있다. 이 규칙이 지켜지지 않은 경우, Subscription은 반드시 취소로 간주되어야 한다
+                |         
+                li static interface Flow.Subscription
+                |         void request(long) , cancel(Void)
+                |         
+                details
+                    summary 규칙
+                    |             
+                    ol
+                        li request, cancel은 반드시 Subscriber가 호출해야 한다
+                        |                 
+                        li onNext, onSubscribe 안에서 동기적으로 request를 호출하는 것은 허용된다
+                        |                 
+                        li cancel의 호출은 멱등이어야 하고, 그 실행은 스레드-안전해야 한다
+                        |                 
+                        li Subscription이 취소됐다면, 이후의 request, cancel의 호출은 아무 작업도 하지 않아야 한다
+                        |                 
+                        li 0이하에 대한 request 호출은 onError로 IllegalArgumentException을 보내야 한다
+                        |                 
+                        li Subscription이 취소됐다면, Publisher는 Subscriber에 대한 모든 참조를 제거해야 한다
+                        |                 
+                        li request, cancel은 항상 정상 종료되어야 한다
+                        |                 
+                        li Subscription은 반드시 무제한적인 request 호출을 허용해야 한다. n == Long.MAX_VALUE
+                |         
+                li
+                    | static interface Flow.Processor<T, R> extends Flow.Subscriber<T>, Flow.Publisher<R>
+            |     
+            details
+                summary class SubmissionPublisher<T> implements Flow.Publisher<T>, AutoCloseable Since 9
+                |         
+                details
+                    summary Constructor Detail
+                    |             
+                    ol
+                        li
+                            | public SubmissionPublisher(Executor executor, int maxBufferCapacity, BiConsumer<? super Flow.Subscriber<? super T>, ? super Throwable> handler) + 오버로딩
+                        |                 executor : 비동기적으로 구독자에게 전달하는 데 쓰일 Executor
+                        br
+                        |                 maxBufferCapacity : 각 구독자에 대한 버퍼의 한도. 실제 한도는 getMaxBufferCapacity()로 확인
+                        br
+                        |                 handler : null이 아니면 onNext에서 발생한 예외를 처리
+                        |                 
+                        li public SubmissionPublisher()
+                        |                 executor = ForkJoinPool.commonPool(), maxBufferCapacity = Flow.defaultBufferSize(), handler = null
+                |         
+                details
+                    summary Method Detail
+                    |             
+                    ol
+                        li int submit(T item)
+                        |                 각 구독자에게 비동기적으로 item을 보낸다(onNext). lag(배포된 item 중에 아직 소비되지 않은 개수) 추정치를 반환한다.
+                        |                 
+                        li
+                            | int offer(T item, BiPredicate<Flow.Subscriber<? super T>, ? super T> onDrop) + 오버로딩
+                        |                 가능하다면 각 구독자에게 비동기적으로 item을 보낸다(onNext). 리소스 초과(버퍼가 가득 찼다던지)로 실패한 경우 onDrop이 실행된다. onDrop이 true를 반환하면 onNext를 다시 시도한다.
+                        br
+                        |                 반환값이 음수인 경우 drop된 구독자 수를 의미하고, 그 외의 경우 lag(배포된 item 중에 아직 소비되지 않은 개수) 추정치를 의미한다
+                        |                 
+                        li void closeExceptionally(Throwable error) + getClosedException
+                        |                 
+                        li boolean isClosed()
+                        |                 
+                        li boolean hasSubscribers()
+                        |                 + getNumberOfSubscribers(), getExecutor(), getMaxBufferCapacity(), getSubscribers(), isSubscribed(Flow.Subscriber<? super T> subscriber)
+                        |                 
+                        li long estimateMinimumDemand()
+                        |                 각 구독자들이 요청한 아이템 수 중, 아직 공급되지 않은 수의 최소값(추정치) 반환
+                        |                 
+                        li int estimateMaximumLag()
+                        |                 각 구독자들에 보낸 아이템 중 아직 소비되지 않은 수의 최대값(추정치) 반환
+                        |                 
+                        li CompletableFuture<Void> consume(Consumer<? super T> consumer)
+                        |                 배포된 모든 아이템에 대해 consumer 실행. 정상적으로 모두 실행되면 onComplete가 호출되고, CompletableFuture도 정상 종료된다
+        hr
         details
-          summary Method Detail
-          |             
-          ol
-            li int register() + bulkRegister
-            |                 새로운 phase를 등록한다
-            |                 
-            li int arrive()
-            |                 현재 phaser에 도착한다. 다른 스레드의 도착을 기다리지는 않는다. 현재 phase 번호를 반환한다(종료됐다면 음수)
-            |                 
-            li int arriveAndDeregister()
-            |                 현재 phaser에 도착하고, 이후 phase에서는 자신이 빠짐을 알린다
-            |                 
-            li int arriveAndAwaitAdvance()
-            |                 현재 phaser에 도착하고, 현재 phase의 모든 구성원이 도착할 때까지 기다린다 == awaitAdvance(arrive())
-            |                 
-            li int awaitAdvance(int phase) + awaitAdvanceInterruptibly
-            |                 지정한 번호의 phase의 모든 구성원이 도착할 때까지 기다린다. 현재 phase의 번호와 다르거나, phaser가 종료된 경우엔 즉시 반환한다.
-            |                 
-            li void forceTermination() + isTerminated
-            |                 계층 구조에 속해있다면, 모든 phaser가 종료된다
-            |                 
-            li final int getPhase()
-            |                 현재 phase 번호를 반환한다. Phaser가 종료됐다면 음수(마지막 phase 번호 + Integer.MAX_VALUE)를 반환한다
-            |                 
-            li int getRegisteredParties() + getArrivedParties, getUnarrivedParties
-            |                 
-            li Phaser getParent() + getRoot
-    hr
-    details
-      summary class ThreadLocalRandom extends Random Since 1.7
-      |     
-      ol
-        li 현재 스레드에 격리된 난수 생성기
-        |         
-        li static ThreadLocalRandom current()
-        |         
-        li int nextInt(int origin, int bound) : [origin, bound)
-        |         + nextLong, nextDouble
-    hr
-    details
-      summary enum TimeUnit Since 1.5
-      |     
-      ol
-        li
-          | NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS, MINUTES Since 1.6, HOURS Since 1.6, DAYS Since 1.6
-        |         
-        li long convert(long sourceDuration, TimeUnit sourceUnit)
-        |         
-        li long toNanos(long duration) == NANOSECONDS.convert(duration, this)
-        |         + toMicros, toMillis, toSeconds, toMinutes, toHours, toDays
-        |         
-        li void timeWait(Object obj, long timeout)
-        |         timeout만큼 obj.wait()
-        |         
-        li void timedJoin(Thread thread, long timeout)
-        |         timeout만큼 Thread.join()
-        |         
-        li void sleep(long timeout)
-        |         
-        li ChronoUnit toChronoUnit() Since 9
-        |         
-        li static TimeUnit of(ChronoUnit chronoUnit) Since 9
-    hr
+            summary Blocking 컬렉션
+            |     
+            details
+                summary interface BlockingQueue<E> extends Queue<E> Since 1.5
+                |         
+                ol
+                    li 기본적으로 스레드-안전하지만, addAll 따위의 bulk 연산은 특별히 표시되지 않는 한 그렇지 않다.
+                    |             
+                    li 요소를 획득할 때, 큐가 비어있는 경우 블로킹. 요소를 추가할 때, 큐에 빈 자리가 있을 때까지 블로킹
+                    |             
+                    table
+                        tbody
+                            tr
+                                th
+                                th 예외 발생
+                                th 특별값 반환
+                                th 블로킹
+                                th 시간 제한
+                            |                     
+                            tr
+                                th Insert
+                                td add(E)
+                                td offer(E)
+                                td put(E)
+                                td offer(E,long,TimeUnit)
+                            |                     
+                            tr
+                                th Remove
+                                td remove()
+                                td poll()
+                                td take()
+                                td poll(long,TimeUnit)
+                            |                     
+                            tr
+                                th Examine
+                                td element()
+                                td peek()
+                                td -
+                                td -
+                    |             
+                    li int remainingCapacity()
+                    |             블로킹없이 삽입 가능한 요소의 수. 오차가 있을 수 있다
+                    |             
+                    li int drainTo(Collection<? super E> c) + 오버로딩
+                    |             모든 원소를 c로 옮긴다
+            |     
+            details
+                summary
+                    | class ArrayBlockingQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>, Serializable Since 1.5
+                |         
+                ol
+                    li 크기가 고정된 기저 배열을 이용한 BlockingQueue
+                    |             
+                    li 기본적으로 삽입을 기다리는 스레드들 사이의 처리 순서는 보장되지 않지만, fairness를 설정하면 FIFO 순으로 처리된다
+                    |             
+                    li Collection, Iterator의 모든 선택적 연산을 구현했다.
+                    |             
+                    li public ArrayBlockingQueue(int capacity, boolean fair) + 오버로딩
+            |     
+            details
+                summary
+                    | class LinkedBlockingQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>, Serializable Since 1.5
+                |         
+                ol
+                    li 크기를 고정할 수 있는 연결된 BlockingQueue
+                    |             
+                    li Collection, Iterator의 모든 선택적 연산을 구현했다
+                    |             
+                    li public LinkedBlockingQueue(int capacity) + 오버로딩
+                    |             지정하지 않은 경우, 기본 크기는 Integer.MAX_VALUE
+            |     
+            details
+                summary
+                    | class PriorityBlockingQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>, Serializable Since 1.5
+                |         
+                ol
+                    li 크기 제한 없고, PriorityQueue와 비슷한 정렬을 이용한 BlockingQueue
+                    |             
+                    li Collection, Iterator의 모든 선택적 연산을 구현했다
+                    |             다만 iterator(), spliterator()로 제공되는 인스턴스들은 순회하는 순서를 보장하지 않는다. 순차적인 순회를 원한다면 Arrays.sort(queue.toArray())를 고려할 것
+                    |             
+                    li 같은 우선순위의 원소 사이의 정렬은 정의되지 않았다
+                    |             
+                    li
+                        | public PriorityBlockingQueue(int initialCapacity, Comparator<? super E> comperator) + 오버로딩
+                    |             initialCapacity는 지정되지 않은 경우 11, comperator는 지정되지 않은 경우 자연스러운 정렬을 이용
+                    |             
+                    li Comparator<? super E> comparator()
+            |     
+            details
+                summary
+                    | class SynchronousQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>, Serializable Since 1.5
+                |         
+                ol
+                    li 서로 연관된 삽입 연산과 삭제 연산 한 쌍이 동시에 존재할 때까지 연산을 블로킹한다
+                    |             
+                    li Collection, Iterator의 모든 선택적 연산을 구현했지만, 빈 컬렉션처럼 동작한다
+                    |             
+                    li public SynchronousQueue(boolean fair) + 오버로딩
+                    |             fair : 대기하는 스레드들이 순서대로 처리된다. 지정되지 않으면 false
+            |     
+            details
+                summary
+                    | class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements BlockingQueue<E> Since 1.5
+                |         
+                ol
+                    li Delayed 요소들로 구성된, 크기 제한없는 BlockingQueue. 요소의 지연 시간이 만료되어야 큐로부터 획득 가능하다
+                    |             요소가 만료됐음은 getDelay(TimeUnit.NANOSECONDS) 리턴값이 0 이하일 때로 판정
+                    |             
+                    li Collection, Iterator의 모든 선택적 연산을 구현했다
+                    |             
+                    li public DelayQueue() + 오버로딩
+            |     
+            details
+                summary interface BlockingDeque<E> extends BlockingQueue<E>, Deque<E> Since 1.6
+                |         요소를 획득할 때, 덱이 비어있는 경우 블로킹. 요소를 추가할 때, 덱에 빈 자리가 있을 때까지 블로킹
+                |         
+                table
+                    tbody
+                        tr
+                            th
+                            th 예외 발생
+                            th 특별값 반환
+                            th 블로킹
+                            th 시간 제한
+                        |                 
+                        tr
+                            th Insert
+                            td
+                                | addFirst(E)
+                                br
+                                | addLast(E)
+                            td
+                                | offerFirst(E)
+                                br
+                                | offerLast(E)
+                            td
+                                | putFirst(E)
+                                br
+                                | putLast(E)
+                            td
+                                | offerFirst(E,long,TimeUnit)
+                                br
+                                | offerLast(E,long,TimeUnit)
+                        |                 
+                        tr
+                            th Remove
+                            td
+                                | removeFirst()
+                                br
+                                | removeLast()
+                            td
+                                | pollFirst()
+                                br
+                                | pollLast()
+                            td
+                                | takeFirst()
+                                br
+                                | takeLast()
+                            td
+                                | pollFirst(long,TimeUnit)
+                                br
+                                | pollLast(long,TimeUnit)
+                        |                 
+                        tr
+                            th Examine
+                            td
+                                | getFirst()
+                                br
+                                | getLast()
+                            td
+                                | peekFirst()
+                                br
+                                | peekLast()
+                            td -
+                            td -
+            |     
+            details
+                summary
+                    | class LinkedBlockingDeque<E> extends AbstractQueue<E> implements BlockingDeque<E>, Serializable Since 1.6
+                |         
+                ol
+                    li 크기를 제한할 수 있는 BlockingDeque.
+                    |             
+                    li Collection, Iterator의 모든 선택적 연산을 구현했다
+                    |             
+                    li public LinkedBlockingDeque(int capacity) + 오버로딩
+                    |             지정하지 않은 경우 Integer.MAX_VALUE가 사용된다
+            |     
+            details
+                summary interface TransferQueue<E> extends BlockingQueue<E> Since 1.7
+                |         
+                ol
+                    li 생산자가 소비자가 소비할 때까지 대기할 수 있는 BlockingQueue.
+                    |             기존의 BlockingQueue와 SynchronousQueue 기능 모두를 선택적으로 이용할 수 있다
+                    |             
+                    li void transfer(E e)
+                    |             소비자에게 e를 전달한다. 소비자가 소비할 때까지 대기한다
+                    |             
+                    li boolean tryTransfer(E e)
+                    |             대기 중인 소비자에게 e를 전달한다. 대기 중인 소비자가 없다면 즉시 false를 반환한다
+                    |             
+                    li boolean tryTransfer(E e, long timeout, TimeUnit unit)
+                    |             timeout이 지나도록 대기 중인 소비자가 없다면 false를 반환한다
+                    |             
+                    li boolean hasWaitingConsumer()
+                    |             
+                    li int getWaitingConsumerCount()
+            |     
+            details
+                summary
+                    | class LinkedTransferQueue<E> extends AbstractQueue<E> implements TransferQueue<E>, Serializable Since 1.7
+                |         
+                ol
+                    li 크기 제한없고 연결된 TransferQueue.
+                    |             
+                    li size 계산에 순회가 필요하므로 정확하지 않을 수 있다
+                    |             
+                    li addAll 따위의 bulk 연산은 원자적으로 실행되지 않을 수 있다
+                    |             
+                    li Collection, Iterator의 모든 선택적 연산을 구현했다
+                    |             
+                    li public LinkedTransferQueue() + 오버로딩
+        hr
+        details
+            summary Non-Blocking 컬렉션
+            |     
+            details
+                summary
+                    | class CopyOnWriteArrayList<E> implements List<E>, RandomAccess, Cloneable, Serializable Since 1.5
+                |         
+                ol
+                    li 스레드-안전한 ArrayList
+                    |             
+                    li add, set 등의 연산마다 새로운 배열을 만든다. 따라서 일반적인 용도로는 매우 나쁘다
+                    |             
+                    li iterator는 생성된 시점의 snapshot을 순회함이 보장되지만, iterator를 통한 요소의 변경은 불가하다
+                    |             
+                    li public CopyOnWriteArrayList() + 오버로딩
+                    |             
+                    li int indexOf(E e, int index) + lastIndexOf
+                    |             
+                    li boolean addIfAbsent(E e) + addAllAbsent
+            |     
+            details
+                summary
+                    | class CopyOnWriteArraySet<E> extends AbstractSet<E> implements Serializable Since 1.5
+                |         모든 연산에 CopyOnWriteArrayList를 사용하는 Set
+            |     
+            details
+                summary
+                    | class ConcurrentLinkedQueue<E> extends AbstractQueue<E> implements Queue<E>, Serializable Since 1.5
+                |         
+                ol
+                    li 크기 제한 없고, 스레드-안전한 연결된 Queue
+                    |             
+                    li size 계산에 순회가 필요하므로, 오차가 있을 수 있다
+                    |             
+                    li addAll 따위의 bulk 연산은 원자적으로 실행되지 않을 수 있다
+                    |             
+                    li Collection, Iterator의 모든 선택적 연산을 구현했다.
+            |     
+            details
+                summary
+                    | class ConcurrentlinkedDeque<E> extends AbstractCollection<E> implements Deque<E>, Serializable Since 1.7
+                |         
+                ol
+                    li 크기 제한 없고, 스레드-안전한 연결된 Deque
+                    |             
+                    li size 계산에 순회가 필요하므로, 오차가 있을 수 있다
+                    |             
+                    li addAll 따위의 bulk 연산은 원자적으로 실행되지 않을 수 있다
+                    |             
+                    li Collection, Iterator의 모든 선택적 연산을 구현했다.
+            |     
+            details
+                summary interface ConcurrentMap<K, V> extends Map<K, V> Since 1.5
+                |         
+                ol
+                    li 스레드-안전, 작업의 원자성 보장
+                    |             Map의 각 연산, Map이 반환하는 컬렉션들의 연산 모두 재정의해야 한다
+            |     
+            details
+                summary
+                    | interface ConcurrentNavigableMap<K, V> extends ConcurrentMap<K, V>, NavigableMap<K, V> Since 1.6
+                |         NavigableMap 연산을 지원하는 ConcurrentMap
+            |     
+            details
+                summary
+                    | class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V>, Serializable Since 1.5
+                |         
+                ol
+                    li 읽기 연산에 대해서는 완전한 동시성을, 갱신 연산에 대해서는 높은 수준의 동시성을 제공
+                    |             Hashtable의 모든 연산을 구현했다. 읽기 연산에 대해 원소를 잠그지는 않으며, 테이블 전체를 잠기는 기능 또한 없다. 가져간 원소를 사용하려고 하는 시점에는 맵에서 제거됐을 수도 있다.
+                    |             
+                    li 카운터로 사용할 수 있다. 예. map.computeIfAbsent(key, x -> new LongAdder()).increment();
+                    |             
+                    li Map, Iterator의 모든 선택적 연산을 구현했다
+                    |             
+                    li 3가지 Bulk 연산을 지원한다 : forEach, search, reduce
+                    |             인자로 받은 parallelismThreshold보다 맵이 작다고 판단되면 순차적으로 원소를 소비, 그 외엔 병렬로 소비. 1이면 최대 병렬성, Long.MAX_VALUE면 병렬 X
+                    |             
+                    li 모든 작업 메서드의 매개변수는 non-null이어야 한다
+                    |             
+                    li public ConcurrentHashMap(int initialCapacity, float loadFactor) Since 1.6 + 오버로딩
+                |         
+                details
+                    summary Method Detail
+                    |             
+                    ol
+                        li boolean contains(Object value)
+                        |                 containsValue(Object)와 동일하며, Hashtable과의 호환을 위해 존재
+                        |                 
+                        li Enumeration<K> keys() + elements
+                        |                 
+                        li long mappingCount()
+                        |                 크기가 매우 큰 경우, Map.size() 대신 이용
+                        |                 
+                        li static <K> ConcurrentHashMap.KeySetView<K, Boolean> newKeySet() Since 1.8 + 오버로딩
+                        |                 
+                        li ConcurrentHashMap.KeySetView<K, V> keySet(V mappedValue)
+                        |                 
+                        li
+                            | void forEach(long parallelismThreshold, BiConsumer<? super K, ? super V> action) Since 1.8
+                        |                 + 오버로딩, forEachKey, forEachValue, forEachEntry
+                        |                 
+                        li
+                            | <U> U search(long parallelismThreshold, BiFunction<? super K, ? super V, ? extends U> searchFunction) Since 1.8
+                        |                 찾는 원소에 대해서는 non-null 반환 + searchKeys, searchValues, searchEntries
+                        |                 
+                        li
+                            | <U> U reduce(long parallelismThreshold, BiFunction<? super K, ? super V, ? extends U> transformer, BiFunction<? super U, ? super U, ? extends U> reducer) Since 1.8
+                        |                 + reduceToDouble ~ Int, reduceKeys, reduceKeysToDouble ~ Int, reduceValues, reduceValuesToDouble ~ Int, reduceEntries, reduceEntriesToDouble ~ Int
+            |     
+            details
+                summary
+                    | class ConcurrentSkipListMap<K,V> extends AbstractMap<K,V> implements ConcurrentNavigableMap<K,V>, Cloneable, Serializable Since 1.6
+                |         
+                ol
+                    li
+                        | ConcurrentNavigableMap 구현체. 평균 log(n) 시간이 소요되는, 스레드-안전한 
+                        a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://en.wikipedia.org/wiki/Skip_list') SkipList
+                        |  구현을 이용
+                    |             
+                    li 오름차순 정렬된 뷰와 이터레이터가 내림차순보다 빠르다
+                    |             
+                    li putAll과 같은 bulk 연산은 원자적으로 종료되지 않을 수 있다
+                    |             
+                    li Map, Iterator의 모든 선택적 연산을 구현했다
+                    |             
+                    li public ConcurrentSkipListMap(Comparator<? super K> comparator) + 오버로딩
+                    |             지정하지 않은 경우, 자연스러운 정렬을 이용한다
+            |     
+            details
+                summary
+                    | class ConcurrentSkipListSet<E> extends AbstractSet<E> implements NavigableSet<E>, Cloneable, Serializable Since 1.6
+                |         
+                ol
+                    li ConcurrentSkipListMap을 이용한 NavigableSet
+                    |             
+                    li public ConcurrentSkipListSet(Comparator<? super E> comparator)
+                    |             지정하지 않은 경우, 자연스러운 정렬을 이용한다
+        hr
+        details
+            summary 실행 기법
+            |     
+            details
+                summary class Semaphore implements Serializable Since 1.5
+                |         
+                ol
+                    li 제한된 수의 접근 권한을 acquire()로 획득, release()로 반환.
+                    |             fairness : acquire()호출 순서대로 권한 획득.
+                    |             
+                    li public Semaphore(int permits, boolean fair) + 오버로딩
+                    |             fair : 지정하지 않은 경우 false
+                |         
+                details
+                    summary Method Detail
+                    |             
+                    ol
+                        li void acquire() + 오버로딩
+                        |                 권한을 하나 요구한다. 권한을 얻을 때까지 대기하며, 대기 중인 스레드는 인터럽트될 수 있다.
+                        |                 
+                        li void acquireUninterruptibly() + 오버로딩
+                        |                 대기 중일 때 인터럽트되더라도 계속 대기한다. 인터럽트되지 않았을 경우와 권한을 얻는 시기가 달라질 수 있다
+                        |                 
+                        li boolean tryAcquire() + 오버로딩
+                        |                 
+                        li void release() + 오버로딩
+                        |                 
+                        li int availablePermits()
+                        |                 
+                        li int drainPermits() : 가용한 모든 권한을 얻는다. 만약 음수라면 release하여 0으로 맞춘다.
+                        |                 
+                        li boolean isFair()
+                        |                 
+                        li final boolean hasQueuedThreads()
+                        |                 
+                        li final int getQueueLength()
+            |     
+            details
+                summary class CountDownLatch Since 1.5
+                |         
+                ol
+                    li count가 0일 될때까지(원하는 작업들이 완료될 때까지), 1개 이상의 스레드가 대기하는 동기화 제공.
+                    |             
+                    li public CountDownLatch(int count)
+                    |             
+                    li void await()
+                    |             count가 0이 될때까지 대기한다. 대기 중에 인터럽트될 수 있다
+                    |             
+                    li boolean await(long timeout, TimeUnit unit)
+                    |             대기 중에 timeout을 넘으면 즉시 false 반환
+                    |             
+                    li void countDown()
+                    |             --count, count가 0이면 대기하는 모든 스레드를 깨운다
+                    |             
+                    li long getCount()
+            |     
+            details
+                summary class CyclicBarrier Since 1.5
+                |         
+                ol
+                    li 스레드들이 공통의 목적이 달성되기까지 함께 대기. 그 목적을 barrier라고 하며, barrier를 재사용할 수 있어 cyclic하다.
+                    |             
+                    li public CyclicBarrier(int parties, Runnable barrierAction) + 오버로딩
+                    |             barrierAction : barrier를 넘을 때 실행. 지정하지 않은 경우, 대기하던 스레드를 깨우기만 한다
+                    |             
+                    li int getParties()
+                    |             
+                    li int await()
+                    |             마지막 스레드가 await을 호출할 때까지 대기한다. 대기 중에 인터럽트될 수 있다. 현재 스레드의 대기 순번 반환. getParties() - 1이 첫 번째, 0이 마지막 스레드.
+                    |             
+                    li int await(long timeout, TimeUnit unit)
+                    |             timeout을 초과하여 대기하면 barrier는 부서진다
+                    |             
+                    li boolean isBroken()
+                    |             
+                    li void reset()
+                    |             barrier를 초기 상태로 재설정한다. 이미 대기 중인 스레드가 있다면 BrokenBarrierException 발생. 부서진 barrier를 재사용하려면 별도의 동기화가 필요하므로, 차라리 새로 하나 만들자
+                    |             
+                    li int getNumberWaiting()
+            |     
+            details
+                summary class Exchanger<V> Since 1.5
+                |         
+                ol
+                    li 두 스레드가 같은 시점에 값을 서로 교환하도록 해준다.
+                    |             
+                    li public Exchanger()
+                    |             
+                    li V exchange(V x) throws InterruptedException
+                    |             다른 스레드가 같은 지점에 도달하기까지 기다렸다가, 서로 값을 교환한다.
+                    |             
+                    li
+                        | V exchange(V x, long timeout, TimeUnit unit) throws InterruptedException, TimeoutException
+                    |             timeout 초과 시 TimeoutException 발생
+            |     
+            details
+                summary class Phaser Since 1.7
+                |         
+                ol
+                    li 재사용 가능한 동기화 barrier. CyclicBarrier, CountDownLatch 기능에 더해 보다 유연한 메서드 제공
+                    |             
+                    li CyclicBarrier와 다르게 각 회전마다 총 대기하는 스레드 수가 다를 수 있다
+                    |             현재 phase가 완료되기 전에 미리 이후의 phase(들)을 등록할 수 있다. 각 phase는 0부터 시작하는 번호를 가진다(Integer.MAX_VALUE에 도달하면 다음은 다시 0)
+                    |             
+                    li
+                        | 계층 구조를 구성할 수 있다. 자식 Phaser의 parties가 0이 아니게 되는 순간 parent에 등록되고, 0이 되는 순간 parent에서 제거된다
+                    |             
+                    li public Phaser(int parties) + 오버로딩
+                    |             parties : 다음 phase로 넘어가기 위해 필요한 수
+                    |             
+                    li public Phaser(Phaser parent, int parties)
+                    |             parties : 다음 phase로 넘어가기 위해 필요한 수. 지정하지 않으면 0
+                |         
+                details
+                    summary Method Detail
+                    |             
+                    ol
+                        li int register() + bulkRegister
+                        |                 새로운 phase를 등록한다
+                        |                 
+                        li int arrive()
+                        |                 현재 phaser에 도착한다. 다른 스레드의 도착을 기다리지는 않는다. 현재 phase 번호를 반환한다(종료됐다면 음수)
+                        |                 
+                        li int arriveAndDeregister()
+                        |                 현재 phaser에 도착하고, 이후 phase에서는 자신이 빠짐을 알린다
+                        |                 
+                        li int arriveAndAwaitAdvance()
+                        |                 현재 phaser에 도착하고, 현재 phase의 모든 구성원이 도착할 때까지 기다린다 == awaitAdvance(arrive())
+                        |                 
+                        li int awaitAdvance(int phase) + awaitAdvanceInterruptibly
+                        |                 지정한 번호의 phase의 모든 구성원이 도착할 때까지 기다린다. 현재 phase의 번호와 다르거나, phaser가 종료된 경우엔 즉시 반환한다.
+                        |                 
+                        li void forceTermination() + isTerminated
+                        |                 계층 구조에 속해있다면, 모든 phaser가 종료된다
+                        |                 
+                        li final int getPhase()
+                        |                 현재 phase 번호를 반환한다. Phaser가 종료됐다면 음수(마지막 phase 번호 + Integer.MAX_VALUE)를 반환한다
+                        |                 
+                        li int getRegisteredParties() + getArrivedParties, getUnarrivedParties
+                        |                 
+                        li Phaser getParent() + getRoot
+        hr
+        details
+            summary class ThreadLocalRandom extends Random Since 1.7
+            |     
+            ol
+                li 현재 스레드에 격리된 난수 생성기
+                |         
+                li static ThreadLocalRandom current()
+                |         
+                li int nextInt(int origin, int bound) : [origin, bound)
+                |         + nextLong, nextDouble
+        hr
+        details
+            summary enum TimeUnit Since 1.5
+            |     
+            ol
+                li
+                    | NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS, MINUTES Since 1.6, HOURS Since 1.6, DAYS Since 1.6
+                |         
+                li long convert(long sourceDuration, TimeUnit sourceUnit)
+                |         
+                li long toNanos(long duration) == NANOSECONDS.convert(duration, this)
+                |         + toMicros, toMillis, toSeconds, toMinutes, toHours, toDays
+                |         
+                li void timeWait(Object obj, long timeout)
+                |         timeout만큼 obj.wait()
+                |         
+                li void timedJoin(Thread thread, long timeout)
+                |         timeout만큼 Thread.join()
+                |         
+                li void sleep(long timeout)
+                |         
+                li ChronoUnit toChronoUnit() Since 9
+                |         
+                li static TimeUnit of(ChronoUnit chronoUnit) Since 9
+        hr

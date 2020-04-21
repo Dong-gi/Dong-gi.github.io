@@ -1,1505 +1,1505 @@
 html
-  body
-    script(src='/source/redirect.js?200226_1657')
-    hr
-    details
-      summary org.apache.commons.collections4
-      |     
-      details
-        summary 컬렉션 자료형 인터페이스
-        |         
+    body
+        script(src='/source/redirect.js?200226_1657')
+        hr
         details
-          summary interface BoundedCollection<E> extends Collection<E> Since 3.0
-          |             
-          ol
-            li 크기 제한을 갖는 컬렉션
-            |                 
-            li isFull(), maxSize()
-        |         
-        details
-          summary interface Bag<E> extends Collection<E> Since 2.0
-          |             
-          ol
-            li 컬렉션이 보유한 객체에 대한 갯수를 유지한다.
-            |                 
-            li 예를 들어, Bag {a, b, c, a} 인스턴스에 대해 getCount(a) == 2, uniqueSet() == Set {a, b, c}
-            |                 
-            li Bag의 메서드는 Collection API와 다르게 작동하므로, Collection으로 참조하지 않는 것이 바람직하다
-          |             
-          details
-            summary Method Summary
-            |                 
-            ol
-              li int getCount(Object object) : object 보유 갯수 반환. 없으면 0
-              |                     
-              li boolean add(E object)
-              |                     object의 사본이 uniqueSet()에 있다면 카운트만 1 증가하고 false 반환. uniqueSet()에 없다면 사본 추가 → 카운트 1 설정 → true 반환.
-              |                     
-              li boolean add(E object, int nCopies) : add(E)와 유사
-              |                     
-              li boolean remove(Object object) : object를 모두 제거하고, 컬렉션의 변동이 있다면 true를 반환한다.
-              |                     
-              li boolean remove(Object object, int nCopies) : remove(Object)와 유사
-              |                     
-              li Set<E> uniqueSet()
-              |                     
-              li boolean containsAll(Collection<?> coll)
-              |                     coll의 모든 요소가 uniqueSet()에 존재하고, 각 요소에 대한 getCount(Object)가 coll에 존재하는 개수보다 크거나 같은 경우 true 반환
-              |                     
-              li boolean removeAll(Collection<?> coll)
-              |                     coll의 모든 요소에 대해 한 번씩 remove(Object)를 호출한 것과 같다.
-              |                     
-              li boolean retainAll(Collection<?> coll)
-              |                     coll에 포함된 요소만 Bag에 유지하되, coll에 존재하는 개수만큼만 최대로 유지한다.
-        |         
-        details
-          summary interface SortedBag<E> extends Bag<E> Since 2.0
-          |             
-          ol
-            li Comparator<? super E> comparator()
-            |                 
-            li E first(), last()
-        |         
-        details
-          summary interface MultiSet<E> extends Collection<E> Since 4.1
-          |             
-          ol
-            li Bag과 유사하지만, Collection API를 좀 더 적절하게 따른다.
-          |             
-          details
-            summary static interface MultiSet.Entry<E>
-            |                 
-            ol
-              li MultiSet의 변경 불가능한 원소를 표현한다
-            |                 
+            summary org.apache.commons.collections4
+            |     
             details
-              summary Method Summary
-              |                     
-              ol
-                li E getElement()
-                |                         
-                li int getCount()
-                |                         
-                li boolean equals(Object o) : 둘 다 null이거나, 개수까지 일치할 때 true
-                |                         
-                li int hashCode()
-          |             
-          details
-            summary Method Detail
-            |                 
+                summary 컬렉션 자료형 인터페이스
+                |         
+                details
+                    summary interface BoundedCollection<E> extends Collection<E> Since 3.0
+                    |             
+                    ol
+                        li 크기 제한을 갖는 컬렉션
+                        |                 
+                        li isFull(), maxSize()
+                |         
+                details
+                    summary interface Bag<E> extends Collection<E> Since 2.0
+                    |             
+                    ol
+                        li 컬렉션이 보유한 객체에 대한 갯수를 유지한다.
+                        |                 
+                        li 예를 들어, Bag {a, b, c, a} 인스턴스에 대해 getCount(a) == 2, uniqueSet() == Set {a, b, c}
+                        |                 
+                        li Bag의 메서드는 Collection API와 다르게 작동하므로, Collection으로 참조하지 않는 것이 바람직하다
+                    |             
+                    details
+                        summary Method Summary
+                        |                 
+                        ol
+                            li int getCount(Object object) : object 보유 갯수 반환. 없으면 0
+                            |                     
+                            li boolean add(E object)
+                            |                     object의 사본이 uniqueSet()에 있다면 카운트만 1 증가하고 false 반환. uniqueSet()에 없다면 사본 추가 → 카운트 1 설정 → true 반환.
+                            |                     
+                            li boolean add(E object, int nCopies) : add(E)와 유사
+                            |                     
+                            li boolean remove(Object object) : object를 모두 제거하고, 컬렉션의 변동이 있다면 true를 반환한다.
+                            |                     
+                            li boolean remove(Object object, int nCopies) : remove(Object)와 유사
+                            |                     
+                            li Set<E> uniqueSet()
+                            |                     
+                            li boolean containsAll(Collection<?> coll)
+                            |                     coll의 모든 요소가 uniqueSet()에 존재하고, 각 요소에 대한 getCount(Object)가 coll에 존재하는 개수보다 크거나 같은 경우 true 반환
+                            |                     
+                            li boolean removeAll(Collection<?> coll)
+                            |                     coll의 모든 요소에 대해 한 번씩 remove(Object)를 호출한 것과 같다.
+                            |                     
+                            li boolean retainAll(Collection<?> coll)
+                            |                     coll에 포함된 요소만 Bag에 유지하되, coll에 존재하는 개수만큼만 최대로 유지한다.
+                |         
+                details
+                    summary interface SortedBag<E> extends Bag<E> Since 2.0
+                    |             
+                    ol
+                        li Comparator<? super E> comparator()
+                        |                 
+                        li E first(), last()
+                |         
+                details
+                    summary interface MultiSet<E> extends Collection<E> Since 4.1
+                    |             
+                    ol
+                        li Bag과 유사하지만, Collection API를 좀 더 적절하게 따른다.
+                    |             
+                    details
+                        summary static interface MultiSet.Entry<E>
+                        |                 
+                        ol
+                            li MultiSet의 변경 불가능한 원소를 표현한다
+                        |                 
+                        details
+                            summary Method Summary
+                            |                     
+                            ol
+                                li E getElement()
+                                |                         
+                                li int getCount()
+                                |                         
+                                li boolean equals(Object o) : 둘 다 null이거나, 개수까지 일치할 때 true
+                                |                         
+                                li int hashCode()
+                    |             
+                    details
+                        summary Method Detail
+                        |                 
+                        ol
+                            li int getCount(Object object)
+                            |                     
+                            li int setCount(E object, int count) : 변경 전 개수 반환
+                            |                     
+                            li boolean add(E object) : 항상 true
+                            |                     
+                            li Set<MultiSet.Entry<E>> entrySet()
+                |         
+                details
+                    summary
+                        | interface IterableMap<K, V> extends Map<K, V>, Put<K, V>, IterableGet<K, V> Since 3.0
+                    |             MapIterator를 지원하는 Map
+                |         
+                details
+                    summary
+                        | interface IterableSortedMap<K, V> extends SortedMap<K, V>, OrderedMap<K, V> Since 4.0
+                    |             추가 메서드는 없다.
+                |         
+                details
+                    summary interface BoundedMap<K, V> extends IterableMap<K, V> Since 3.0
+                    |             추가 메서드는 없다.
+                |         
+                details
+                    summary interface BidiMap<K, V> extends IterableMap<K, V> Since 3.0
+                    |             
+                    ol
+                        li 키와 값이 일대일 대응을 만족하도록 강제하여, 값을 통한 키의 탐색이 가능하게 한다.
+                        |                 
+                        li 값을 통한 키의 탐색은 키를 통한 값의 탐색과 동일한 성능으로 이루어져야 한다.
+                        |                 
+                        li 키와 값의 위치를 뒤집은 BidiMap을 반환하는 inverseBidiMap() 연산도 지원한다
+                    |             
+                    details
+                        summary Method Summary
+                        |                 
+                        ol
+                            li V put(K key, V value)
+                            |                     value가 이미 맵에 존재하는 경우, 기존 매핑을 제거하고 삽입한다.
+                            |                     
+                            li K getKey(Object value)
+                            |                     
+                            li K removeValue(Object value) : 값을 통한 매핑 제거. 지원하지 않을 수 있다.
+                            |                     
+                            li BidiMap<V, K> inverseBidiMap()
+                |         
+                details
+                    summary
+                        | interface SortedBidiMap<K, V> extends OrderedBidiMap<K, V>, SortedMap<K, V> Since 3.0
+                    |             
+                    ol
+                        li Comparator<? super V> valueComparator()
+                |         
+                details
+                    summary interface MultiValuedMap<K, V> Since 4.1
+                    |             
+                    ol
+                        li 각 키에 대한 값을 컬렉션에 보관하는 맵을 정의한다
+                        |                 
+                        li 키를 통해 얻은 컬렉션의 변경 가능 여부는 정해지지 않는다.
+                    |             
+                    details
+                        summary Method Detail
+                        |                 
+                        ol
+                            li Collection, Map을 직접 상속하진 않지만, 동일한 메서드들은 생략
+                            |                     
+                            li
+                                | boolean containsValue(Object value)
+                                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MultiValuedMapTest.java', displayrange='[17,24]', lan='java') 예시 코드 »
+                            |                     
+                            li Collection<V> get(K key), remove(Object key)
+                            |                     
+                            li boolean putAll(K key, Iterable<? extends V> values) : 맵이 변경되면 true
+                            |                     
+                            li boolean removeMapping(Object Key, Object item)
+                            |                     
+                            li Map<K, Collection<V>> asMap()
+                            |                     
+                            li
+                                | MapIterator<K, V> mapIterator()
+                                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MultiValuedMapTest.java', displayrange='[27,45]', lan='java') 예시 코드 »
+                |         
+                details
+                    summary
+                        | interface ListValuedMap<K, V> extends MultiValuedMap<K, V> Since 4.1 + SetValuedMap
+                    |             List를 컨테이너로 이용하는 것 외의 변경은 없다.
+                |         
+                details
+                    summary interface OrderedMap<K, V> extends IterableMap<K, V> Since 3.0
+                    |             K firstKey(), lastKey(), nextKey(K key), previousKey(K key)
+                |         
+                details
+                    summary interface OrderedBidiMap<K, V> extends BidiMap<K, V>, OrderedMap<K, V> Since 3.0
+                    |             OrderedBidiMap<V, K> inverseBidiMap()
+                |         
+                details
+                    summary interface KeyValue<K, V> Since 3.0
+                    |             
+                    ol
+                        li K getKey()
+                        |                 
+                        li V getValue()
+                |         
+                details
+                    summary interface Trie<K, V> extends IterableSortedMap<K, V> Since 4.0
+                    |             Prefix tree에 대해 정의한다.
+                    |             
+                    img.w3-round(src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Trie_example.svg/1024px-Trie_example.svg.png')
+                    |             
+                    button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/TrieTest.java', displayrange='[13,32]', lan='java') 예시 코드 »
+            |     
+            details
+                summary 컬렉션 연산 인터페이스
+                |         
+                details
+                    summary interface Unmodifiable Since 3.0
+                    |             컬렉션 변경 연산이 제공되지 않음을 표시하는 마커 인터페이스
+                |         
+                details
+                    summary interface Get<K, V> Since 4.0
+                    |             Map 인터페이스의 읽기 기능에 대한 정의를 담고 있다. 라고 적혀있지만 remove(Object) 메서드는 여기에 있다.
+                |         
+                details
+                    summary interface IterableGet<K, V> extends Get<K, V> Since 4.0
+                    |             이 인터페이스를 구현한 Map은 mapIterator() 메서드를 통해 MapIterator<K, V>를 제공한다.
+                |         
+                details
+                    summary interface Put<K, V> Since 4.0
+                    |             Map 인터페이스의 쓰기 기능에 대한 정의를 담고 있다.  Put(K, V)는 V가 아닌 Object를 반환함에 유의.
+                |         
+                details
+                    summary class FluentIterable<E> implements Iterable<E> Since 4.1
+                    |             
+                    ol
+                        li 스트림의 중간 연산들을 컬렉션에 직접 적용할 수 있는 기능을 제공한다. 기저 컬렉션에 대한 뷰를 반환하기 때문에 변형을 거쳐도 부하가 적다.
+                        |                 
+                        li 스트림의 종결 연산처럼, 뷰의 요소들로 구성된 새로운 컬렉션을 반환하는 기능을 제공한다.
+                    |             
+                    details
+                        summary Method Detail
+                        |                 
+                        ol
+                            li static <T> FluentIterable<T> empty()
+                            |                     
+                            li static <T> FluentIterable<T> of(T singleton) + T..., Iterable<T>
+                            |                     
+                            li FluentIterable<E> append(E... elements) + Iterable<T>
+                            |                     
+                            li
+                                | FluentIterable<E> collate(Iterable<? extends E> other[, Comparator<? super E> comparator])
+                            |                     (현재 뷰의 원소들 + other에 포함된 원소들)로 구성된 새로운 뷰를 반환한다. 비교자를 받는 메서드로 정렬 순서를 지정할 수 있으며, 지정되지 않은 경우 자연스러운 순서(ComparatorUtils.NATURAL_COMPARATOR)가 이용된다.
+                            |                     
+                            li FluentIterable<E> eval() : 현재 뷰에 대한 독립적인 새로운 뷰를 반환한다.
+                            |                     
+                            li FluentIterable<E> filter(Predicate<? super E> predicate)
+                            |                     
+                            li FluentIterable<E> limit(long maxSize)
+                            |                     
+                            li FluentIterable<E> loop()
+                            |                     
+                            li FluentIterable<E> reverse()
+                            |                     
+                            li FluentIterable<E> skip(long elementsToSkip)
+                            |                     
+                            li <O> FluentIterable<O> transform(Transformer<? super E, ? extends O> transformer)
+                            |                     
+                            li FluentIterable<E> unique()
+                            |                     
+                            li FluentIterable<E> unmodifiable()
+                            |                     
+                            li
+                                | FluentIterable<E> zip(Iterable<? extends E> other) + Iterable... : 각 이터러블을 순서대로 순회
+                            |                     
+                            li Enumeration<E> asEnumeration()
+                            |                     
+                            li boolean allMatch(Predicate<? super E> predicate) + anyMatch
+                            |                     
+                            li boolean isEmpty()
+                            |                     
+                            li boolean contains(Object object)
+                            |                     
+                            li void forEach(Closure<? super E> closure)
+                            |                     
+                            li E get(int position)
+                            |                     
+                            li int size()
+                            |                     
+                            li void copyInto(Collection<? super E> collection)
+                            |                     
+                            li E[] toArray(Class<E> arrayClass)
+                            |                     
+                            li List<E> toList()
+                |         
+                details
+                    summary interface OrderedIterator<E> extends Iterator<E> Since 3.0
+                    |             
+                    ol
+                        li 역방향 순회를 추가로 지원한다
+                        |                 
+                        li boolean hasPrevious(), E previous()
+                |         
+                details
+                    summary interface MapIterator<K, V> extends Iterator<K> Since 3.0
+                    |             
+                    ol
+                        li Map에 대한 이터레이터를 정의한다.
+                        |                 
+                        li 이 인터페이스를 구현한 Map은 내부에서 데이터를 Entry 객체로 유지하지 않는다(불필요한 객체 생성 방지).
+                        |                 
+                        li Entry 대신 키를 이용해 순회하며, getValue(), setValue() 연산을 지원한다.
+                    |             
+                    details
+                        summary Method Summary
+                        |                 
+                        ol
+                            li K getKey()
+                            |                     
+                            li V getValue()
+                            |                     
+                            li void remove() : 지원하지 않을 수 있다.
+                            |                     
+                            li V setValue() : 지원하지 않을 수 있다.
+                |         
+                details
+                    summary interface OrderedMapIterator<K, V> extends MapIterator<K, V>, OrderedIterator<K>
+                    |             추가 메서드는 없다.
+                |         
+                details
+                    summary interface ResettableIterator<E> extends Iterator<E> Since 3.0
+                    |             void reset() : 이너레이터가 생성됐을 때 초기 위치로 돌아간다.
+                |         
+                details
+                    summary
+                        | interface ResettableListIterator<E> extends ListIterator<E>, ResettableIterator<E>, OrderedIterator<E> Since 3.0
+                    |             추가 메서드는 없다. 이 타입의 이터레이터는 재사용할 수 있다.
+            |     
+            details
+                summary 함수 인터페이스
+                |         
+                details
+                    summary @FunctionalInterface interface Closure<T> Since 1.0
+                    |             
+                    ol
+                        li void execute(T input)
+                        |                 
+                        li ClosureUtils 클래스에서 이에 관한 유틸리티를 제공한다.
+                |         
+                details
+                    summary interface Equator<T> Since 4.0
+                    |             
+                    ol
+                        li boolean equate(T o1, T o2) : 두 인스턴스가 같은지 여부를 반환
+                        |                 
+                        li int hash(T o) : equate() 메서드에서 이용하는 로직을 이용해 해시값 반환
+                |         
+                details
+                    summary @FunctionalInterface interface Factory<T> Since 2.1
+                    |             
+                    ol
+                        li T create()
+                        |                 
+                        li 인스턴스 생성에 인자가 필요하다면 Transformer를 이용
+                        |                 
+                        li FactoryUtils에서 이에 관한 유틸리티를 제공한다.
+                |         
+                details
+                    summary @FunctionalInterface interface Predicate<T> Since 1.0
+                    |             
+                    ol
+                        li 인자 하나에 대한 가부를 결정하는 함수
+                        |                 
+                        li boolean evaluate(T object)
+                        |                 
+                        li PredicateUtils에서 관련된 유틸리티를 제공한다.
+                |         
+                details
+                    summary @FunctionalInterface interface Transformer<I, O> Since 1.0
+                    |             
+                    ol
+                        li 인스턴스를 다른 타입으로 변환하는 함수를 정의한다.
+                        |                 
+                        li 입력 인스턴스는 변경되지 않아야 한다.
+                        |                 
+                        li O transform(I input)
+                        |                 
+                        li TransformerUtils에서 관련된 유틸리티를 제공한다.
+            |     
+            details
+                summary 유틸리티 클래스
+                |         
+                details
+                    summary class BagUtils Since 2.1
+                    |             
+                    details
+                        summary Field Detail
+                        |                 
+                        ol
+                            li static final Bag EMPTY_BAG : 변경 불가. getter → emptyBag()
+                            |                     
+                            li static final Bag EMPTY_SORTED_BAG : 변경 불가. getter → emptySortedBag()
+                    |             
+                    details
+                        summary Method Detail
+                        |                 
+                        ol
+                            li static <E> Bag<E> collectionBag(Bag<E> bag) Since 4.0 : Collection API를 따르는 백
+                            |                     
+                            li 아래의 함수들에 대하여, SortedBag 버전이 존재한다
+                            |                     
+                            li static <E> Bag<E> synchronizedBag(Bag<E> bag) : 스레드-안전
+                            |                     
+                            li static <E> Bag<E&Gt; unmodifiableBag(Bag<? extends E> bag) : 변경 불가능한 뷰
+                            |                     
+                            li
+                                | static <E> Bag<E> predicatedBag(Bag<E> bag, Predicate<? super E> predicate) : 아이템 추가 전 테스트 추가
+                            |                     
+                            li
+                                | static <E> Bag<E> transformingBag(Bag<E> bag, Transformer<? super E, ? extends E>) : 아이템 추가 전 변환기 추가
+                |         
+                details
+                    summary class ClosureUtils Since 3.0
+                    |             
+                    ol
+                        li static <E> Closure<E> exceptionClosure() : 예외를 던지는 클로저
+                        |                 
+                        li static <E> Closure<E> nopClosure() : 아무것도 안 하는 클로저
+                        |                 
+                        li
+                            | static <E> Closure<E> asClosure(Transformer<? super E, ?> transformer) : transformer를 실행하는 클로저
+                        |                 
+                        li
+                            | static <E> Closure<E> forClosure(int count, Closure<? super E> closure) : closure를 count번 호출하는 클로저
+                        |                 count가 0이거나 closure == null이면 NOPClosure가 반환된다
+                        |                 
+                        li
+                            | static <E> Closure<E> whileClosure(Predicate<? super E> predicate, Closure<? super E> closure)
+                            | : 클로저에 대한 입력이 predicate을 
+                            button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ClosureUtilsTest.java', displayrange='[18,34]', lan='java') 만족하는 동안
+                            | closure를 호출하는 클로저
+                        |                 
+                        li
+                            | static <E> Closure<E> doWhileClosure(Closure<? super E> closure, Predicate<? super E> predicate) : closure를 최소 1번 호출하는 클로저
+                        |                 
+                        li
+                            | static <E> Closure<E> invokerClosure(String methodName)
+                            br
+                            |                     static <E> Closure<E> invokerClosure(String methodName, Class<?>[] paramTypes, Object[] args)
+                        |                 입력 객체의 
+                        button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ClosureUtilsTest.java', displayrange='[37,47]', lan='java') methodName 메서드를 호출
+                        | 하는 클로저
+                        |                 
+                        li
+                            | static <E> Closure<E> chainedClosure(Closure<? super E>... closures)
+                            br
+                            |                     static <E> Closure<E> chainedClosure(Collection<? extends Closure<? super E>> closures)
+                        |                 클로저들을 순차적으로 호출하는 클로저. 문서에는 다음 클로저에 이전 클로저의 결과를 넘긴다지만... void 리턴인데
+                        |                 
+                        button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ClosureUtilsTest.java', displayrange='[50,59]', lan='java') 어림도 없지
+                        |                 
+                        li
+                            | static <E> Closure<E> ifClosure(Predicate<? super E> predicate, Closure<? super E> trueClosure)
+                            br
+                            |                     static <E> Closure<E> ifClosure(Predicate<? super E> predicate, Closure<? super E> trueClosure, Closure<? super E> falseClosure)
+                        |                 
+                        li
+                            | static <E> Closure<E> switchClosure(Predicate<? super E>[] predicates, Closure<? super E>[] closures)
+                            br
+                            |                     static <E> Closure<E> switchClosure(Predicate<? super E>[] predicates, Closure<? super E>[] closures, Closure<? super E> defaultClosure)
+                            br
+                            |                     static <E> Closure<E> switchClosure(Map<Predicate<E>, CLosure<E>> predicatesAndClosures)
+                            br
+                            |                     static <E> Closure<E> switchMapClosure(Map<? extends E, Closure<E>> objectsAndClosures)
+                        |                 실행되는 클로저는 하나 뿐이다. 매핑을 인자로 받는 경우 default closuer는 null 키에 대한 값으로 설정하면 된다.
+                        |                 
+                        button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ClosureUtilsTest.java', displayrange='[62,75]', lan='java') 예시
+                |         
+                details
+                    summary class CollectionUtils Since 1.0
+                    |             
+                    details
+                        summary Field Detail
+                        |                 public static final Collection EMPTY_COLLECTION : 변경 불가. getter Since 4.0 → emptyCollection()
+                    |             
+                    details
+                        summary Method Detail
+                        |                 
+                        ol
+                            li static <T> Collection<T> emptyIfNull(Collection<T> collection)
+                            |                     collection이 null이면 EMPTY_COLLECTION, 그 외엔 collection 자체 반환
+                            |                     
+                            li
+                                | static <T> Collection<O> union(Iterable<? extends O> a, Iterable<? extends O> b) + intersection, disjunction(대칭 차집합), subtract
+                            |                     a, b의 합집합 표현을 반환한다. subtract에 한하여 3번째 인자로 Predicate을 받는 함수가 존재한다(Since 4.0)
+                            br
+                            |                     각 원소의 cardinality ↓
+                            |                     
+                            ul
+                                li
+                                    | union : 
+                                    button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/CollectionUtilsTest.java', displayrange='[18,30]', lan='java') a, b중 큰 쪽과 같다
+                                |                         
+                                li intersection : a, b중 작은 쪽과 같다
+                                |                         
+                                li disjunction : cardinality_of_union - cardinality_of_intersection
+                                |                         
+                                li subtract : cardinality_of_a - cardinality_of_b
+                            |                     
+                            li static boolean containsAll(Collection<?> coll1, Collection<?> coll2) Since 4.0
+                            |                     coll1이 coll2의 모든 원소를 포함하는지 여부를 반환한다. 각 원소에 대한 cardinality는 고려 대상이 아니다.
+                            |                     
+                            li
+                                | static boolean containsAny(Collection<?> coll1, Collection<?> coll2) Since 2.1
+                                | static boolean containsAny(Collection<?> coll1, T... coll2) Since 4.2
+                            |                     
+                            li static <?O> Map<O, Integer> getCardinalityMap(Iterable<? extends O> coll)
+                            |                     
+                            li static boolean isSubCollection(Collection<?> a, Collection<?> b)
+                            |                     a가 b의 부분 컬렉션인지(cardinality 고려) 여부 반환
+                            |                     
+                            li static boolean isProperSubCollection(Collection<?> a, Collection<?> b)
+                            |                     isSubCollection() && cardinality_of_b > cardinality_of_a를 만족하는 원소가 적어도 하나 존재
+                            |                     
+                            li
+                                | static boolean isEqualCollection(Collection<?> a, Collection<?> b)
+                                br
+                                |                         static <E> boolean isEqualCollection(Collection<? extends E> a, Collection<? extends E> b, Equator<? super E> equator) Since 4.0
+                            |                     
+                            li
+                                | static <T> boolean filter(Iterable<T> collection, Predicate<? super T> predicate)
+                                br
+                                |                         static <T> boolean filterInverse(Iterable<T> collection, Predicate<? super T> predicate)
+                            |                     필터 조건에 만족되지 않는 원소들은 collection에서 제거된다.
+                            |                     
+                            li
+                                | static <C> void transform(Collection<C> collection, Transformer<? super C, ? extends C> transformer)
+                            |                     
+                            li
+                                | static <O> Collection<O> select(Iterable<? extends O> inputCollection, Predicate<? super O> predicate)
+                                br
+                                |                         static <O> Collection<O> selectRejected(Iterable<? extends O> inputCollection, Predicate<? super O> predicate)
+                                br
+                                |                         static <O, R extends Collection<? super O>> R select(Iterable<? extends O> inputCollection, Predicate<? super O> predicate, R outputCollection)
+                                br
+                                |                         static <O, R extends Collection<? super O>> R selectRejected(Iterable<? extends O> inputCollection, Predicate<? super O> predicate, R outputCollection)
+                                br
+                                |                         static <O, R extends Collection<? super O>> R select(Iterable<? extends O> inputCollection, Predicate<? super O> predicate, R outputCollection, R rejectedCollection) Since 4.1
+                            |                     
+                            li
+                                | static <I, O> Collection<O> collect(Iterable<I> inputCollection, Transformer<? super I, ? extends O> transformer)
+                                br
+                                |                         static <I, O> Collection<O> collect(Iterator<I> inputIterator, Transformer<? super I, ? extends O> transformer)
+                                br
+                                |                         static <I, O, R extends Collection<? super O>> R collect(Iterable<I> inputCollection, Transformer<? super I, ? extends O> transformer, R outputCollection)
+                                br
+                                |                         static <I, O, R extends Collection<? super O>> R collect(Iterator<I> inputIterator, Transformer<? super I, ? extends O> transformer, R outputCollection)
+                            |                     
+                            li
+                                | static <T> boolean addIgnoreNull(Collection<T> collection, T object) Since 3.2
+                                br
+                                |                         static <C> boolean addAll(Collection<C> collection, Iterable<? extends C> iterable) + Iterator, Enumeration, C...
+                            |                     
+                            li
+                                | static int size(Object object) Since 3.1
+                                br
+                                |                         static boolean sizeIsEmpty(Object object) Since 3.2
+                            |                     Collection, Map, Array, Iterator, Enumeration 지원
+                            |                     
+                            li static void reverseArray(Object[] array)
+                            |                     
+                            li
+                                | static <O extends Comparable<? super O>> List<O> collate(Iterable<? extends O> a, Iterable<? extends O> b, boolean includeDuplicates) Since 4.0
+                                br
+                                |                         static <O extends Comparable<? super O>> List<O> collate(Iterable<? extends O> a, Iterable<? extends O> b, Comparator<? super O> c, boolean includeDuplicates) Since 4.0
+                            |                     2개의 정렬된 컬렉션을 하나의 정렬된 컬렉션으로 반환
+                            |                     
+                            li static <E> Collection<List<E>> permutations(COllection<E> collection) Since 4.0
+                            |                     구성 요소들에 대한 순열을 반환한다. 사이즈가 큰 경우, PermutationIterator를 이용하면 된다.
+                            |                     
+                            li
+                                | static <C> Collection<C> retainAll(Collection<C> collection, Collection<?> retain) Since 3.2
+                            |                     retain에 담긴 요소들만으로 구성된 컬렉션을 반환한다. 반환된 컬렉션 각 요소의 cardinality는 기존과 동일하다. retain 컬렉션의 탐색 속도가 빠를수록 함수 완료가 빨라진다
+                            |                     
+                            li
+                                | static <E> Collection<E> retainAll(Iterable<E> collection, Iterable<? extends E> retain, Equator<? super E> equator) Since 4.1
+                            |                     
+                            li
+                                | static <E> Collection<E> removeAll(Collection<E> collection, Collection<?> remove) Since 4.0
+                            |                     
+                            li
+                                | static <E> Collection<E> removeAll(Iterable<E> collection, Iterable<? extends E> remove, Equator<? super E> equator) Since 4.1
+                            |                     
+                            li
+                                | static <C> Collection<C> predicatedCollection(Collection<C> collection, Predicate<? super C> predicate) : 삽입 제약 추가
+                            |                     
+                            li
+                                | static <E> Collection<E> transformingCollection(Collection<E> collection, Transformer<? super E, ? extends E> transformer) : 변환 로직 추가
+                            |                     위 두 함수는 삽입 트리거로 이용할 수 있다.
+                            |                     
+                            li
+                                | static <E> E extractSingleton(Collection<E> collection) Since 4.0 : 싱글톤 컬렉션의 원소 반환
+                |         
+                details
+                    summary class ComparatorUtils Since 2.1
+                    |             
+                    details
+                        summary Field Detail
+                        |                 public static final Comparator NATURAL_COMPARATOR : getter → naturalComparator()
+                    |             
+                    details
+                        summary Method Detail
+                        |                 
+                        ol
+                            li static <E> Comparator<E> chainedComparator(Comparator<E>... comparators)
+                            |                     
+                            li
+                                | static <E> Comparator<E> chainedComparator(Collection<Comparator<E>> comparators)
+                            |                     
+                            li static <E> Comparator<E> reversedComparator(Comparator<E> comparator)
+                            |                     
+                            li static <E> Comparator<Boolean> booleanComparator(boolean trueFirst)
+                            |                     
+                            li
+                                | static <E> Comparator<E> nullLowComparator(Comparator<E> comparator) + nullHighComparator
+                            |                     
+                            li
+                                | static <I, O> Comparator<I> transformedComparator(Comparator<O> comparator, Transformer<? super I, ? extends O> fransformer)
+                            |                     
+                            li static <E> E min(E o1, E o2, Comparator<E> comparator) + max
+                |         
+                details
+                    summary class EnumerationUtils Since 3.0
+                    |             
+                    ol
+                        li static<T> T get(Enumeration<T> e, int index) Since 4.1
+                        |                 
+                        li static<T> List<E> toList(Enumeration<? extends E> enumeration)
+                        |                 
+                        li static List<String> toList(StringTokenizer stringTokenizer)
+                |         
+                details
+                    summary class FactoryUtils Since 3.0
+                    |             
+                    ol
+                        li static <T> Factory<T> exceptionFactory()
+                        |                 
+                        li static <T> Factory<T> nullFactory()
+                        |                 
+                        li static <T> Factory<T> constantFactory(T constantToReturn)
+                        |                 
+                        li static <T> Factory<T> prototypeFactory(T prototype)
+                        |                 prototype 객체에 대하여 clone(), 복사 생성자, 직렬화 복제 순으로 복제를 시도한다
+                        |                 
+                        li static <T> Factory<T> instantiateFactory(Class<T> classToInstantiate)
+                        |                 주어진 클래스의 인자없는 생성자를 이용한다
+                        |                 
+                        li
+                            | static <T> Factory<T> instantiateFactory(Class<T> classToInstantiate, Class<?>[] paramTypes, Object[] args
+                |         
+                details
+                    summary class IterableUtils Since 4.1
+                    |             
+                    ol
+                        li static <E> Iterable<E> emptyIterable()
+                        |                 
+                        li static <E> Iterable<E> emptyIfNull(Iterable<E> iterable)
+                        |                 
+                        li
+                            | static <E> Iterable<E> chainedIterable(Iterable<? extends E> a, Iterable<? extends E> b) + 3 오버로딩
+                        |                 
+                        li
+                            | static <E> Iterable<E> filteredIterable(Iterable<E> iterable, Predicate<? super E> predicate)
+                        |                 
+                        li static <E> Iterable<E> boundedIterable(Iterable<E> iterable, long maxSize)
+                        |                 
+                        li static <E> Iterable<E> loopingIterable(Iterable<E> iterable)
+                        |                 
+                        li static <E> Iterable<E> reversedIterable(Iterable<E> iterable)
+                        |                 
+                        li
+                            | static <E> Iterable<E> skippingIterable(Iterable<E> iterable, long elementsToSkip)
+                        |                 
+                        li
+                            | static <I, O> Iterable<O> transformedIterable(Iterable<I> iterable, Transformer<? super I, ? extends O> transformer)
+                        |                 
+                        li static <E> Iterable<E> uniqueIterable(Iterable<E> iterable)
+                        |                 
+                        li static <E> Iterable<E> unmodifiableIterable(Iterable<E> iterable)
+                        |                 
+                        li
+                            | static <E> Iterable<E> zippingIterable(Iterable<? extends E> a, Iterable<? extends E> b) + 1 오버로딩
+                        |                 
+                        li static <E> void forEach(Iterable<E> iterable, Closure<? super E> closure)
+                        |                 
+                        li static <E> E forEachBufLast(Iterable<E> iterable, Closure<? super E> closure)
+                        |                 
+                        li static <E> E find(Iterable<E> iterable, Predicate<? super E> predicate)
+                        |                 
+                        li static <E> int indexOf(Iterable<E> iterable, Predicate<? super E> predicate)
+                        |                 
+                        li
+                            | static <E> boolean matchesAll(Iterable<E> iterable, Predicate<? super E> predicate) + matchesAny
+                        |                 
+                        li static <E> long countMatches(Iterable<E> input, Predicate<? super E> predicate)
+                        |                 
+                        li static boolean isEmpty(Iterable<?> iterable)
+                        |                 
+                        li static <E> boolean contains(Iterable<E> iterable, Object object) + 1 오버로딩
+                        |                 
+                        li static <E, T extends E> int frequency(Iterable<E> iterable, T obj)
+                        |                 
+                        li static <T> T get(Iterable<T> iterable, int index)
+                        |                 
+                        li static <T> T first(Iterable<T> iterable) Since 4.2
+                        |                 
+                        li satic int size(Iterable<?> iterable)
+                        |                 
+                        li
+                            | static <O> List<List<O>> partition(Iterable<? extends O> iterable, Predicate<? super O> predicate) + 2 오버로딩
+                        |                 
+                        li static <E> List<E> toList(Iterable<E> iterable)
+                        |                 
+                        li static <E> String toString(Iterable<E> iterable) + 2 오버로딩
+                |         
+                details
+                    summary class IteratorUtils Since 2.1
+                    |             
+                    details
+                        summary Field Detail
+                        |                 
+                        ol
+                            li public static final ResettableIterator EMPTY_ITERATOR : getter → emptyIterator()
+                            |                     
+                            li
+                                | public static final ResettableIterator EMPTY_LIST_ITERATOR : getter → emptyListIterator()
+                            |                     
+                            li
+                                | public static final ResettableIterator EMPTY_ORDERED_ITERATOR : getter → emptyOrderedIterator()
+                            |                     
+                            li
+                                | public static final ResettableIterator EMPTY_MAP_ITERATOR : getter → emptyMapIterator()
+                            |                     
+                            li
+                                | public static final ResettableIterator EMPTY_ORDERED_MAP_ITERATOR : getter → emptyOrderedMapIterator()
+                    |             
+                    details
+                        summary Method Detail
+                        |                 
+                        ol
+                            li static <E> ResettableIterator<E> singletonIterator(E object) + ListIterator
+                            |                     
+                            li
+                                | static <E> ResettableIterator<E> arrayIterator(E... array) + 5 오버로딩 + ListIterator
+                            |                     
+                            li
+                                | static <E> ResettableIterator<E> BoundedIterator<E> boundedIterator(Iterator<? extends E> iterator, long max) Since 4.1 + 1 오버로딩
+                            |                     
+                            li
+                                | static <E> Iterator<E> unmodifiableIterator(Iterator<E> iterator) + ListIterator, MapIterator
+                            |                     
+                            li
+                                | static <E> Iterator<E> chainedIterator(Iterator<? extends E>... iterators) + 2 오버로딩
+                            |                     
+                            li
+                                | static <E> Iterator<E> collatedIterator(Comparator<? super E> comparator, Iterator<? extends E>... iterators) + 2 오버로딩
+                            |                     
+                            li
+                                | static <E> ResettableIterator<E> loopingIterator(Collection<? extends E> coll) + ListIterator Since 3.2
+                            |                     
+                            li static <E> Iterator<E> asIterator(Enumeration<? extends E> enumeration) + 1 오버로딩
+                            |                     
+                            li static <E> Enumeration<E> asEnumeration(Iterator<? extends E> iterator)
+                            |                     
+                            li
+                                | static <E> Iterable<E> asIterable(Iterator<? extends E> iterator) : iterator를 래핑한다. 1회 순회용
+                            |                     
+                            li
+                                | static <E> Iterable<E> asMultipleUseIterable(Iterator<? extends E> iterator) : iterator를 래핑한다. 반복 순회용
+                            |                     
+                            li static <E> ListIterator<E> toListIterator(Iterator<? extends E> iterator)
+                            |                     
+                            li static Object[] toArray(Iterator<?> iterator) + 1 오버로딩
+                            |                     
+                            li static <E> List<E> toList(Iterator<? extends E> iterator) + 1 오버로딩
+                            |                     
+                            li static Iterator<?> getIterator(Object obj)
+                            |                     null, Iterator, Enumeration, Collection, Map, Dictionary, array, iterator() 정의된 객체, 임의 객체, NodeList, Node 각각에 대해 iterator 반환
+                            |                     
+                            li
+                                | static <E> void forEach(Iterator<E> iterator, Closure<? super E> closure) Since 4.1
+                            |                     
+                            li
+                                | static <E> E forEachBufLast(Iterator<E> iterator, Closure<? super E> closure) Since 4.1
+                            |                     
+                            li
+                                | static <E> E find(Iterator<E> iterator, Predicate<? super E> predicate) Since 4.1
+                            |                     
+                            li
+                                | static <E> int indexOf(Iterator<E> iterator, Predicate<? super E> predicate) Since 4.1
+                            |                     
+                            li
+                                | static <E> boolean matchesAny(Iterator<E> iterator, Predicate<? super E> predicate) Since 4.1 + matchesAll
+                            |                     
+                            li static boolean isEmpty(Iterator<?> iterator) Since 4.1
+                            |                     
+                            li static <E> boolean contains(Iterator<E> iterator, Object object) Since 4.1
+                            |                     
+                            li static <E> E get(Iterator<E> iterator, int index) Since 4.1
+                            |                     
+                            li static <E> E first(Iterator<E>) Since 4.2
+                            |                     
+                            li static int size(Iterator<?> iterator) Since 4.1
+                            |                     
+                            li static <E> String toString(Iterator<E> iterator) Since 4.1 + 2 오버로딩
+                            |                     
+                            li 여러 콘크리트 이터레이터의 생성자들이 유틸리티 대리자로 작성되어 있다
+                |         
+                details
+                    summary class ListUtils Since 1.0
+                    |             
+                    ol
+                        li static <T> List<T> emptyIfNull(List<T> list)
+                        |                 
+                        li static <T> List<T> defaultIfNull(List<T> list, List<T> defaultList) Since 4.0
+                        |                 
+                        li
+                            | static <T> List<T> intersection(List<? extends E> list1, List<? extends E> list2)
+                        |                 
+                        li static <T> List<T> subtract(List<? extends E> list1, List<? extends E> list2)
+                        |                 
+                        li static <T> List<T> union(List<? extends E> list1, List<? extends E> list2)
+                        |                 
+                        li
+                            | static <T> List<T> sum(List<? extends E> list1, List<? extends E> list2) : union - intersection
+                        |                 
+                        li
+                            | static <T> List<T> select(Collection<? extends T> inputCollection, Predicate<? super T> predicate) Since 4.0
+                        |                 
+                        li
+                            | static <T> List<T> selectRejected(Collection<? extends T> inputCollection, Predicate<? super T> predicate) Since 4.0
+                        |                 
+                        li static boolean isEqualList(Collection<?> list1, Collection<?> list2)
+                        |                 
+                        li static int hashCodeForList(Collection<?> list)
+                        |                 
+                        li
+                            | static <T> List<T> retainAll(Collection<T> collection, Collection<?> retain) Since 3.2
+                        |                 
+                        li
+                            | static <T> List<T> removeAll(Collection<T> collection, Collection<?> remove) Since 3.2
+                        |                 
+                        li static <T> List<T> synchronizedList(List<E> list)
+                        |                 
+                        li static <T> List<T> unmodifiableList(List<? extends E> list)
+                        |                 
+                        li static <T> List<T> predicatedList(List<E> list, Predicate<E> predicate)
+                        |                 
+                        li
+                            | static <T> List<T> transformedList(List<E> list, Transformer<? super E, ? extends E> transformer)
+                        |                 
+                        li static <T> List<T> lazyList(List<E> list, Factory<? extends E> factory) + 1 오버로딩
+                        |                 요청된 인덱스에 한해서만 객체를 생성한다. 빈 구역은 null로 채워진다.
+                        |                 
+                        button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ListUtilsTest.java', lan='java') 예시
+                        |                 
+                        li static <T> List<T> fixedSizeList(List<T> list) : 요소의 추가/삭제 불가
+                        |                 
+                        li static <T> int indexOf(List<T> list, Predicate<T> predicate)
+                        |                 
+                        li
+                            | static <T> List<T> longestCommonSubsequence(List<T> a, List<T> b) Since 4.0 + 2 오버로딩
+                        |                 
+                        li static <T> List<List<T>> partition(List<T> list, int size) Since 4.0
+                |         
+                details
+                    summary class MapUtils Since 1.0
+                    |             
+                    details
+                        summary Field Detail
+                        |                 public static final SortedMap EMPTY_SORTED_MAP
+                    |             
+                    details
+                        summary Method Detail
+                        |                 
+                        ol
+                            li static <K, V> V getObject(Map<? super K, V> map, K key) : map이 null이면 null 반환
+                            |                     
+                            li
+                                | static <K> String getString(Map<? super K, ?> map, K key) + Boolean, Number, Byte, Short, Integer, Long, Float, Double, Map, Object
+                            |                     조회된 객체에 대하여 toString() 호출. map이 null이면 null 반환. key가 map에 없어도 null 반환.
+                            |                     
+                            button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', displayrange='[17,32,35,42]', lan='java') 예시
+                            |                     
+                            li static <K, V> Properties toProperties(Map<K, V> map)
+                            |                     
+                            li static Map<String, Object> toMap(ResourceBundle resourceBundle)
+                            |                     
+                            li
+                                | static void verbosePrint(PrintStream out, Object label, Map<?, ?> map) + debugPrint
+                                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', displayrange='[17,32,45,62]', lan='java') 예시
+                            |                     
+                            li
+                                | static <K, V> Map<K, V> invertMap(Map<K, V> map) : 키-값 위치를 바꾼 새 HashMap 반환
+                                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', displayrange='[17,32,65,67]', lan='java') 예시
+                            |                     
+                            li
+                                | static <K> void safeAddToMap(Map<? super K, Object> map, K key, Object value) : null 삽입 거부
+                            |                     
+                            li static <K, V> Map<K, V> putAll(Map<K, V> map, Object[] array) Since 3.2
+                            |                     
+                            li static <K, V> Map<K, V> emptyIfNull(Map<K, V> map)
+                            |                     
+                            li static boolean isEmpty(Map<?, ?> map) Since 3.2 + isNotEmpty
+                            |                     
+                            li static <K, V> Map<K, V> synchronizedMap(Map<K, V> map) + SortedMap 버전
+                            |                     
+                            li
+                                | static <K, V> Map<K, V> unmodifiableMap(Map<? extends K, ? extends V> map) + SortedMap 버전
+                            |                     
+                            li
+                                | static <K, V> IterableMap<K, V> predicatedMap(Map<K, V> map, Predicate<? super K> keyPred, Predicate<? super V> valuePred) + transformedMap + SortedMap 버전
+                            |                     
+                            li static <K, V> IterableMap<K, V> fixedSizeMap(Map<K, V> map) + SortedMap 버전
+                            |                     
+                            li
+                                | static <K, V> IterableMap<K, V> lazyMap(Map<K, V> map, Factory<? extends V> factory) + 1 오버로딩 + SortedMap 버전
+                            |                     
+                            li static <K, V> OrderedMap<K, V> orderedMap(Map<K, V> map)
+                            |                     
+                            li
+                                | static <K, V> void populateMap(Map<K, V> map, Iterable<? extends V> elements, Transformer<V, K> keyTransformer) + 3 오버로딩
+                                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', displayrange='[17,32,70,85]', lan='java') 예시
+                            |                     
+                            li
+                                | static <K, V> IterableMap<K, V> iterableMap(Map<K, V> map) Since 4.0 + SortedMap 버전
+                            |                     
+                            li static int size(Map<?, ?> map)
+                |         
+                details
+                    summary class MultiMapUtils Since 4.1
+                    |             
+                    details
+                        summary Field Detail
+                        |                 public static final MultiValuedMap EMPTY_MULTI_VALUED_MAP : getter → emptyMultiValuedMap()
+                    |             
+                    details
+                        summary Method Detail
+                        |                 
+                        ol
+                            li static <K, V> MultiValuedMap<K, V> emptyIfNull(MultiValuedMap<K, V> map)
+                            |                     
+                            li static boolean isEmpty(MultiValuedMap<?, ?> map)
+                            |                     
+                            li
+                                | static <K, V> Collection<V> getCollection(MultiValuedMap<K, V> map, K key) + getValuesAsList, Set, Bag
+                            |                     
+                            li static <K, V> ListValuedMap<K, V&gt newListValuedHashMap() + Set
+                            |                     
+                            li
+                                | static <K, V> MultiValuedMap<K, V> unmodifiableMultiValuedMap(MultiValuedMap<? extends K, ? extends V> map) + transformedMultiValuedMap
+                |         
+                details
+                    summary class MultiSetUtils Since 4.1
+                    |             
+                    details
+                        summary Field Detail
+                        |                 public static final MultiSet EMPTY_MULTISET : getter → emptyMultiSet()
+                    |             
+                    details
+                        summary Method Detail
+                        |                 
+                        ol
+                            li static <E> MultiSet<E> synchronizedMultiSet(MultiSet<E> multiset)
+                            |                     
+                            li static <E> MultiSet<E> unmodifiableMultiSet(MultiSet<? extends E> multiset)
+                            |                     
+                            li
+                                | static <E> MultiSet<E> predicatedMultiSet(MultiSet<E> multiset, Predicate<? super E> predicate)
+                |         
+                details
+                    summary class PredicateUtils Since 3.0
+                    |             
+                    ol
+                        li static <T> Predicate<T> exceptionPredicate() + true, false
+                        |                 
+                        li static <T> Predicate<T> nullPredicate() + notNull : 입력이 null인지 여부 체크
+                        |                 
+                        li static <T> Predicate<T> equalPredicate(T value)
+                        |                 
+                        li static <T> Predicate<T> identityPredicate(T value)
+                        |                 
+                        li static <T> Predicate<T> instanceofPredicate(Class<?> type)
+                        |                 
+                        li static <T> Predicate<T> uniquePredicate() : 각 입력 객체에 대하여, 최초에만 true 반환
+                        |                 
+                        li
+                            | static <T> Predicate<T> invokerPredicate(String methodName) + 1 오버로딩 : boolean/Boolean을 반환하는 메서드 호출
+                        |                 
+                        li
+                            | static <T> Predicate<T> andPredicate(Predicate<? super T> predicate1, Predicate<? super T> predicate2) + all, or, any, either(XOR), one, neither(NOR), none, not
+                        |                 
+                        li static <T> Predicate<T> asPredicate(Transformer<? super T, Boolean> transformer)
+                        |                 
+                        li
+                            | static <T> Predicate<T> nullsExceptionPredicate(Predicate<? super T> predicate) + nullsFalse, nullsTrue
+                        |                 
+                        li
+                            | static <T> Predicate<T> transformedPredicate(Transformer<? super T, ? extends T> transformer, Predicate<? super T> predicate) Since 3.1
+                |         
+                details
+                    summary class QueueUtils Since 4.0
+                    |             
+                    details
+                        summary Field Detail
+                        |                 public static final Queue EMPTY_QUEUE : getter → emptyQueue()
+                    |             
+                    details
+                        summary Method Detail
+                        |                 
+                        ol
+                            li static <E> Queue<E> synchronizedQueue(Queue<E> queue) Since 4.2
+                            |                     
+                            li
+                                | static <E> Queue<E> unmodifiableQueue(QUeue<? extends E> queue) + predicated, tranforming
+                |         
+                details
+                    summary class SetUtils Since 2.1
+                    |             
+                    details
+                        summary abstract static class SetUtils.SetView extends AbstractSet<E> Since 4.1
+                        |                 
+                        ol
+                            li <S extends Set<E>> void copyInto(S set)
+                            |                     
+                            li Set<E> toSet()
+                    |             
+                    details
+                        summary Field Detail
+                        |                 public static final SortedSet EMPTY_SORTED_SET : getter → emptySortedSet()
+                    |             
+                    details
+                        summary Method Detail
+                        |                 
+                        ol
+                            li
+                                | static <E> SetUtils.SetView<E> difference(Set<? extends E> a, Set<? extends E> b) Since 4.1
+                            |                     차집합 a-b. + disjunction(대칭 차집합), intersection(교집합), union(합집합) Since 4.1
+                            |                     
+                            li static <T> Set<T> emptyIfNull(Set<T> set)
+                            |                     
+                            li static <T> int hashCodeForSet(Collection<T> set)
+                            |                     
+                            li static <E> HashSet<E> hashSet(E... items) Since 4.3
+                            |                     
+                            li static boolean isEqualSet(Collection<?> set1, Collection<?> set2)
+                            |                     
+                            li static <E> Set<E> newIdentityHashSet() Since 4.1 : ==을 이용하는 집합
+                            |                     
+                            li static <E> Set<E> unmodifiableSet(E... items) Since 4.3
+                            |                     
+                            li static <E> Set<E> orderedSet(Set<E> set)
+                            |                     + predicatedSet, predicatedNavigableSet Since 4.1, predicatedSortedSet, synchroizedSet, synchronizedSortedSet, transformedSet, transformedSortedSet, transformedNavigableSet Since 4.1, unmodifiableSet, unmodifiableNavigableSet Since 4.1, unmodifiableSortedSet
+                |         
+                details
+                    summary class SplitMapUtils Since 4.0
+                    |             
+                    ol
+                        li Put, Get을 구현한 객체를 Map으로 변환한다
+                        |                 
+                        li static <K, V> IterableMap<K, V> readableMap(Get<K, V> get)
+                        |                 
+                        li static <K, V> Map<K, V> writableMap(Put<K, V> put)
+                |         
+                details
+                    summary class TransformerUtils Since 3.0
+                    |             
+                    ol
+                        li static <I, O> Transformer<I, O> exceptionTransformer() + null
+                        |                 
+                        li static <I, O> Transformer<I, O> constantTransformer(O constantToReturn)
+                        |                 
+                        li static <T> Transformer<T, T> nopTransformer() + clone
+                        |                 
+                        li static <T> Transformer<Class<? extends T>, T> instantiateTransformer() + 1 오버로딩
+                        |                 
+                        li static <T> Transformer<T, T> asTransformer(Closure<? super T> closure) + 2 오버로딩
+                        |                 
+                        li
+                            | static <T> Transformer<T, T> chainedTransformer(Transformer<? super T, ? extends T>... transformers) + 1 오버로딩
+                        |                 
+                        li
+                            | static <T> Transformer<T, T> ifTransformer(Predicate<? super T> predicate, Transformer<? super T, ? extends T> trueTransformer) Since 4.1 + 1 오버로딩 + switchTransformer
+                        |                 
+                        li static <I, O> Transformer<I, O> mapTransformer(Map<? super I, ? extends O> map)
+                        |                 
+                        li static <I, O> Transformer<I, O> invokerTransformer(String methodName) + 1 오버로딩
+                        |                 
+                        li static <T> Transformer<T, String> stringValueTransformer()
+        hr
+        details
+            summary org.apache.commons.collections4.bag
+            |     
             ol
-              li int getCount(Object object)
-              |                     
-              li int setCount(E object, int count) : 변경 전 개수 반환
-              |                     
-              li boolean add(E object) : 항상 true
-              |                     
-              li Set<MultiSet.Entry<E>> entrySet()
-        |         
-        details
-          summary
-            | interface IterableMap<K, V> extends Map<K, V>, Put<K, V>, IterableGet<K, V> Since 3.0
-          |             MapIterator를 지원하는 Map
-        |         
-        details
-          summary
-            | interface IterableSortedMap<K, V> extends SortedMap<K, V>, OrderedMap<K, V> Since 4.0
-          |             추가 메서드는 없다.
-        |         
-        details
-          summary interface BoundedMap<K, V> extends IterableMap<K, V> Since 3.0
-          |             추가 메서드는 없다.
-        |         
-        details
-          summary interface BidiMap<K, V> extends IterableMap<K, V> Since 3.0
-          |             
-          ol
-            li 키와 값이 일대일 대응을 만족하도록 강제하여, 값을 통한 키의 탐색이 가능하게 한다.
-            |                 
-            li 값을 통한 키의 탐색은 키를 통한 값의 탐색과 동일한 성능으로 이루어져야 한다.
-            |                 
-            li 키와 값의 위치를 뒤집은 BidiMap을 반환하는 inverseBidiMap() 연산도 지원한다
-          |             
-          details
-            summary Method Summary
-            |                 
-            ol
-              li V put(K key, V value)
-              |                     value가 이미 맵에 존재하는 경우, 기존 매핑을 제거하고 삽입한다.
-              |                     
-              li K getKey(Object value)
-              |                     
-              li K removeValue(Object value) : 값을 통한 매핑 제거. 지원하지 않을 수 있다.
-              |                     
-              li BidiMap<V, K> inverseBidiMap()
-        |         
-        details
-          summary
-            | interface SortedBidiMap<K, V> extends OrderedBidiMap<K, V>, SortedMap<K, V> Since 3.0
-          |             
-          ol
-            li Comparator<? super V> valueComparator()
-        |         
-        details
-          summary interface MultiValuedMap<K, V> Since 4.1
-          |             
-          ol
-            li 각 키에 대한 값을 컬렉션에 보관하는 맵을 정의한다
-            |                 
-            li 키를 통해 얻은 컬렉션의 변경 가능 여부는 정해지지 않는다.
-          |             
-          details
-            summary Method Detail
-            |                 
-            ol
-              li Collection, Map을 직접 상속하진 않지만, 동일한 메서드들은 생략
-              |                     
-              li
-                | boolean containsValue(Object value)
-                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MultiValuedMapTest.java', displayrange='[17,24]', lan='java') 예시 코드 »
-              |                     
-              li Collection<V> get(K key), remove(Object key)
-              |                     
-              li boolean putAll(K key, Iterable<? extends V> values) : 맵이 변경되면 true
-              |                     
-              li boolean removeMapping(Object Key, Object item)
-              |                     
-              li Map<K, Collection<V>> asMap()
-              |                     
-              li
-                | MapIterator<K, V> mapIterator()
-                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MultiValuedMapTest.java', displayrange='[27,45]', lan='java') 예시 코드 »
-        |         
-        details
-          summary
-            | interface ListValuedMap<K, V> extends MultiValuedMap<K, V> Since 4.1 + SetValuedMap
-          |             List를 컨테이너로 이용하는 것 외의 변경은 없다.
-        |         
-        details
-          summary interface OrderedMap<K, V> extends IterableMap<K, V> Since 3.0
-          |             K firstKey(), lastKey(), nextKey(K key), previousKey(K key)
-        |         
-        details
-          summary interface OrderedBidiMap<K, V> extends BidiMap<K, V>, OrderedMap<K, V> Since 3.0
-          |             OrderedBidiMap<V, K> inverseBidiMap()
-        |         
-        details
-          summary interface KeyValue<K, V> Since 3.0
-          |             
-          ol
-            li K getKey()
-            |                 
-            li V getValue()
-        |         
-        details
-          summary interface Trie<K, V> extends IterableSortedMap<K, V> Since 4.0
-          |             Prefix tree에 대해 정의한다.
-          |             
-          img.w3-round(src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Trie_example.svg/1024px-Trie_example.svg.png')
-          |             
-          button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/TrieTest.java', displayrange='[13,32]', lan='java') 예시 코드 »
-      |     
-      details
-        summary 컬렉션 연산 인터페이스
-        |         
-        details
-          summary interface Unmodifiable Since 3.0
-          |             컬렉션 변경 연산이 제공되지 않음을 표시하는 마커 인터페이스
-        |         
-        details
-          summary interface Get<K, V> Since 4.0
-          |             Map 인터페이스의 읽기 기능에 대한 정의를 담고 있다. 라고 적혀있지만 remove(Object) 메서드는 여기에 있다.
-        |         
-        details
-          summary interface IterableGet<K, V> extends Get<K, V> Since 4.0
-          |             이 인터페이스를 구현한 Map은 mapIterator() 메서드를 통해 MapIterator<K, V>를 제공한다.
-        |         
-        details
-          summary interface Put<K, V> Since 4.0
-          |             Map 인터페이스의 쓰기 기능에 대한 정의를 담고 있다.  Put(K, V)는 V가 아닌 Object를 반환함에 유의.
-        |         
-        details
-          summary class FluentIterable<E> implements Iterable<E> Since 4.1
-          |             
-          ol
-            li 스트림의 중간 연산들을 컬렉션에 직접 적용할 수 있는 기능을 제공한다. 기저 컬렉션에 대한 뷰를 반환하기 때문에 변형을 거쳐도 부하가 적다.
-            |                 
-            li 스트림의 종결 연산처럼, 뷰의 요소들로 구성된 새로운 컬렉션을 반환하는 기능을 제공한다.
-          |             
-          details
-            summary Method Detail
-            |                 
-            ol
-              li static <T> FluentIterable<T> empty()
-              |                     
-              li static <T> FluentIterable<T> of(T singleton) + T..., Iterable<T>
-              |                     
-              li FluentIterable<E> append(E... elements) + Iterable<T>
-              |                     
-              li
-                | FluentIterable<E> collate(Iterable<? extends E> other[, Comparator<? super E> comparator])
-              |                     (현재 뷰의 원소들 + other에 포함된 원소들)로 구성된 새로운 뷰를 반환한다. 비교자를 받는 메서드로 정렬 순서를 지정할 수 있으며, 지정되지 않은 경우 자연스러운 순서(ComparatorUtils.NATURAL_COMPARATOR)가 이용된다.
-              |                     
-              li FluentIterable<E> eval() : 현재 뷰에 대한 독립적인 새로운 뷰를 반환한다.
-              |                     
-              li FluentIterable<E> filter(Predicate<? super E> predicate)
-              |                     
-              li FluentIterable<E> limit(long maxSize)
-              |                     
-              li FluentIterable<E> loop()
-              |                     
-              li FluentIterable<E> reverse()
-              |                     
-              li FluentIterable<E> skip(long elementsToSkip)
-              |                     
-              li <O> FluentIterable<O> transform(Transformer<? super E, ? extends O> transformer)
-              |                     
-              li FluentIterable<E> unique()
-              |                     
-              li FluentIterable<E> unmodifiable()
-              |                     
-              li
-                | FluentIterable<E> zip(Iterable<? extends E> other) + Iterable... : 각 이터러블을 순서대로 순회
-              |                     
-              li Enumeration<E> asEnumeration()
-              |                     
-              li boolean allMatch(Predicate<? super E> predicate) + anyMatch
-              |                     
-              li boolean isEmpty()
-              |                     
-              li boolean contains(Object object)
-              |                     
-              li void forEach(Closure<? super E> closure)
-              |                     
-              li E get(int position)
-              |                     
-              li int size()
-              |                     
-              li void copyInto(Collection<? super E> collection)
-              |                     
-              li E[] toArray(Class<E> arrayClass)
-              |                     
-              li List<E> toList()
-        |         
-        details
-          summary interface OrderedIterator<E> extends Iterator<E> Since 3.0
-          |             
-          ol
-            li 역방향 순회를 추가로 지원한다
-            |                 
-            li boolean hasPrevious(), E previous()
-        |         
-        details
-          summary interface MapIterator<K, V> extends Iterator<K> Since 3.0
-          |             
-          ol
-            li Map에 대한 이터레이터를 정의한다.
-            |                 
-            li 이 인터페이스를 구현한 Map은 내부에서 데이터를 Entry 객체로 유지하지 않는다(불필요한 객체 생성 방지).
-            |                 
-            li Entry 대신 키를 이용해 순회하며, getValue(), setValue() 연산을 지원한다.
-          |             
-          details
-            summary Method Summary
-            |                 
-            ol
-              li K getKey()
-              |                     
-              li V getValue()
-              |                     
-              li void remove() : 지원하지 않을 수 있다.
-              |                     
-              li V setValue() : 지원하지 않을 수 있다.
-        |         
-        details
-          summary interface OrderedMapIterator<K, V> extends MapIterator<K, V>, OrderedIterator<K>
-          |             추가 메서드는 없다.
-        |         
-        details
-          summary interface ResettableIterator<E> extends Iterator<E> Since 3.0
-          |             void reset() : 이너레이터가 생성됐을 때 초기 위치로 돌아간다.
-        |         
-        details
-          summary
-            | interface ResettableListIterator<E> extends ListIterator<E>, ResettableIterator<E>, OrderedIterator<E> Since 3.0
-          |             추가 메서드는 없다. 이 타입의 이터레이터는 재사용할 수 있다.
-      |     
-      details
-        summary 함수 인터페이스
-        |         
-        details
-          summary @FunctionalInterface interface Closure<T> Since 1.0
-          |             
-          ol
-            li void execute(T input)
-            |                 
-            li ClosureUtils 클래스에서 이에 관한 유틸리티를 제공한다.
-        |         
-        details
-          summary interface Equator<T> Since 4.0
-          |             
-          ol
-            li boolean equate(T o1, T o2) : 두 인스턴스가 같은지 여부를 반환
-            |                 
-            li int hash(T o) : equate() 메서드에서 이용하는 로직을 이용해 해시값 반환
-        |         
-        details
-          summary @FunctionalInterface interface Factory<T> Since 2.1
-          |             
-          ol
-            li T create()
-            |                 
-            li 인스턴스 생성에 인자가 필요하다면 Transformer를 이용
-            |                 
-            li FactoryUtils에서 이에 관한 유틸리티를 제공한다.
-        |         
-        details
-          summary @FunctionalInterface interface Predicate<T> Since 1.0
-          |             
-          ol
-            li 인자 하나에 대한 가부를 결정하는 함수
-            |                 
-            li boolean evaluate(T object)
-            |                 
-            li PredicateUtils에서 관련된 유틸리티를 제공한다.
-        |         
-        details
-          summary @FunctionalInterface interface Transformer<I, O> Since 1.0
-          |             
-          ol
-            li 인스턴스를 다른 타입으로 변환하는 함수를 정의한다.
-            |                 
-            li 입력 인스턴스는 변경되지 않아야 한다.
-            |                 
-            li O transform(I input)
-            |                 
-            li TransformerUtils에서 관련된 유틸리티를 제공한다.
-      |     
-      details
-        summary 유틸리티 클래스
-        |         
-        details
-          summary class BagUtils Since 2.1
-          |             
-          details
-            summary Field Detail
-            |                 
-            ol
-              li static final Bag EMPTY_BAG : 변경 불가. getter → emptyBag()
-              |                     
-              li static final Bag EMPTY_SORTED_BAG : 변경 불가. getter → emptySortedBag()
-          |             
-          details
-            summary Method Detail
-            |                 
-            ol
-              li static <E> Bag<E> collectionBag(Bag<E> bag) Since 4.0 : Collection API를 따르는 백
-              |                     
-              li 아래의 함수들에 대하여, SortedBag 버전이 존재한다
-              |                     
-              li static <E> Bag<E> synchronizedBag(Bag<E> bag) : 스레드-안전
-              |                     
-              li static <E> Bag<E&Gt; unmodifiableBag(Bag<? extends E> bag) : 변경 불가능한 뷰
-              |                     
-              li
-                | static <E> Bag<E> predicatedBag(Bag<E> bag, Predicate<? super E> predicate) : 아이템 추가 전 테스트 추가
-              |                     
-              li
-                | static <E> Bag<E> transformingBag(Bag<E> bag, Transformer<? super E, ? extends E>) : 아이템 추가 전 변환기 추가
-        |         
-        details
-          summary class ClosureUtils Since 3.0
-          |             
-          ol
-            li static <E> Closure<E> exceptionClosure() : 예외를 던지는 클로저
-            |                 
-            li static <E> Closure<E> nopClosure() : 아무것도 안 하는 클로저
-            |                 
-            li
-              | static <E> Closure<E> asClosure(Transformer<? super E, ?> transformer) : transformer를 실행하는 클로저
-            |                 
-            li
-              | static <E> Closure<E> forClosure(int count, Closure<? super E> closure) : closure를 count번 호출하는 클로저
-            |                 count가 0이거나 closure == null이면 NOPClosure가 반환된다
-            |                 
-            li
-              | static <E> Closure<E> whileClosure(Predicate<? super E> predicate, Closure<? super E> closure)
-              | : 클로저에 대한 입력이 predicate을 
-              button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ClosureUtilsTest.java', displayrange='[18,34]', lan='java') 만족하는 동안
-              | closure를 호출하는 클로저
-            |                 
-            li
-              | static <E> Closure<E> doWhileClosure(Closure<? super E> closure, Predicate<? super E> predicate) : closure를 최소 1번 호출하는 클로저
-            |                 
-            li
-              | static <E> Closure<E> invokerClosure(String methodName)
-              br
-              |                     static <E> Closure<E> invokerClosure(String methodName, Class<?>[] paramTypes, Object[] args)
-            |                 입력 객체의 
-            button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ClosureUtilsTest.java', displayrange='[37,47]', lan='java') methodName 메서드를 호출
-            | 하는 클로저
-            |                 
-            li
-              | static <E> Closure<E> chainedClosure(Closure<? super E>... closures)
-              br
-              |                     static <E> Closure<E> chainedClosure(Collection<? extends Closure<? super E>> closures)
-            |                 클로저들을 순차적으로 호출하는 클로저. 문서에는 다음 클로저에 이전 클로저의 결과를 넘긴다지만... void 리턴인데
-            |                 
-            button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ClosureUtilsTest.java', displayrange='[50,59]', lan='java') 어림도 없지
-            |                 
-            li
-              | static <E> Closure<E> ifClosure(Predicate<? super E> predicate, Closure<? super E> trueClosure)
-              br
-              |                     static <E> Closure<E> ifClosure(Predicate<? super E> predicate, Closure<? super E> trueClosure, Closure<? super E> falseClosure)
-            |                 
-            li
-              | static <E> Closure<E> switchClosure(Predicate<? super E>[] predicates, Closure<? super E>[] closures)
-              br
-              |                     static <E> Closure<E> switchClosure(Predicate<? super E>[] predicates, Closure<? super E>[] closures, Closure<? super E> defaultClosure)
-              br
-              |                     static <E> Closure<E> switchClosure(Map<Predicate<E>, CLosure<E>> predicatesAndClosures)
-              br
-              |                     static <E> Closure<E> switchMapClosure(Map<? extends E, Closure<E>> objectsAndClosures)
-            |                 실행되는 클로저는 하나 뿐이다. 매핑을 인자로 받는 경우 default closuer는 null 키에 대한 값으로 설정하면 된다.
-            |                 
-            button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ClosureUtilsTest.java', displayrange='[62,75]', lan='java') 예시
-        |         
-        details
-          summary class CollectionUtils Since 1.0
-          |             
-          details
-            summary Field Detail
-            |                 public static final Collection EMPTY_COLLECTION : 변경 불가. getter Since 4.0 → emptyCollection()
-          |             
-          details
-            summary Method Detail
-            |                 
-            ol
-              li static <T> Collection<T> emptyIfNull(Collection<T> collection)
-              |                     collection이 null이면 EMPTY_COLLECTION, 그 외엔 collection 자체 반환
-              |                     
-              li
-                | static <T> Collection<O> union(Iterable<? extends O> a, Iterable<? extends O> b) + intersection, disjunction(대칭 차집합), subtract
-              |                     a, b의 합집합 표현을 반환한다. subtract에 한하여 3번째 인자로 Predicate을 받는 함수가 존재한다(Since 4.0)
-              br
-              |                     각 원소의 cardinality ↓
-              |                     
-              ul
+                li class HashBag<E> extends AbstractMapBag<E> implements Serializable Since 3.0
+                |         저장소로 HashMap을 이용하는 표준 Bag 구현을 제공한다.
+                |         
                 li
-                  | union : 
-                  button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/CollectionUtilsTest.java', displayrange='[18,30]', lan='java') a, b중 큰 쪽과 같다
-                |                         
-                li intersection : a, b중 작은 쪽과 같다
-                |                         
-                li disjunction : cardinality_of_union - cardinality_of_intersection
-                |                         
-                li subtract : cardinality_of_a - cardinality_of_b
-              |                     
-              li static boolean containsAll(Collection<?> coll1, Collection<?> coll2) Since 4.0
-              |                     coll1이 coll2의 모든 원소를 포함하는지 여부를 반환한다. 각 원소에 대한 cardinality는 고려 대상이 아니다.
-              |                     
-              li
-                | static boolean containsAny(Collection<?> coll1, Collection<?> coll2) Since 2.1
-                | static boolean containsAny(Collection<?> coll1, T... coll2) Since 4.2
-              |                     
-              li static <?O> Map<O, Integer> getCardinalityMap(Iterable<? extends O> coll)
-              |                     
-              li static boolean isSubCollection(Collection<?> a, Collection<?> b)
-              |                     a가 b의 부분 컬렉션인지(cardinality 고려) 여부 반환
-              |                     
-              li static boolean isProperSubCollection(Collection<?> a, Collection<?> b)
-              |                     isSubCollection() && cardinality_of_b > cardinality_of_a를 만족하는 원소가 적어도 하나 존재
-              |                     
-              li
-                | static boolean isEqualCollection(Collection<?> a, Collection<?> b)
-                br
-                |                         static <E> boolean isEqualCollection(Collection<? extends E> a, Collection<? extends E> b, Equator<? super E> equator) Since 4.0
-              |                     
-              li
-                | static <T> boolean filter(Iterable<T> collection, Predicate<? super T> predicate)
-                br
-                |                         static <T> boolean filterInverse(Iterable<T> collection, Predicate<? super T> predicate)
-              |                     필터 조건에 만족되지 않는 원소들은 collection에서 제거된다.
-              |                     
-              li
-                | static <C> void transform(Collection<C> collection, Transformer<? super C, ? extends C> transformer)
-              |                     
-              li
-                | static <O> Collection<O> select(Iterable<? extends O> inputCollection, Predicate<? super O> predicate)
-                br
-                |                         static <O> Collection<O> selectRejected(Iterable<? extends O> inputCollection, Predicate<? super O> predicate)
-                br
-                |                         static <O, R extends Collection<? super O>> R select(Iterable<? extends O> inputCollection, Predicate<? super O> predicate, R outputCollection)
-                br
-                |                         static <O, R extends Collection<? super O>> R selectRejected(Iterable<? extends O> inputCollection, Predicate<? super O> predicate, R outputCollection)
-                br
-                |                         static <O, R extends Collection<? super O>> R select(Iterable<? extends O> inputCollection, Predicate<? super O> predicate, R outputCollection, R rejectedCollection) Since 4.1
-              |                     
-              li
-                | static <I, O> Collection<O> collect(Iterable<I> inputCollection, Transformer<? super I, ? extends O> transformer)
-                br
-                |                         static <I, O> Collection<O> collect(Iterator<I> inputIterator, Transformer<? super I, ? extends O> transformer)
-                br
-                |                         static <I, O, R extends Collection<? super O>> R collect(Iterable<I> inputCollection, Transformer<? super I, ? extends O> transformer, R outputCollection)
-                br
-                |                         static <I, O, R extends Collection<? super O>> R collect(Iterator<I> inputIterator, Transformer<? super I, ? extends O> transformer, R outputCollection)
-              |                     
-              li
-                | static <T> boolean addIgnoreNull(Collection<T> collection, T object) Since 3.2
-                br
-                |                         static <C> boolean addAll(Collection<C> collection, Iterable<? extends C> iterable) + Iterator, Enumeration, C...
-              |                     
-              li
-                | static int size(Object object) Since 3.1
-                br
-                |                         static boolean sizeIsEmpty(Object object) Since 3.2
-              |                     Collection, Map, Array, Iterator, Enumeration 지원
-              |                     
-              li static void reverseArray(Object[] array)
-              |                     
-              li
-                | static <O extends Comparable<? super O>> List<O> collate(Iterable<? extends O> a, Iterable<? extends O> b, boolean includeDuplicates) Since 4.0
-                br
-                |                         static <O extends Comparable<? super O>> List<O> collate(Iterable<? extends O> a, Iterable<? extends O> b, Comparator<? super O> c, boolean includeDuplicates) Since 4.0
-              |                     2개의 정렬된 컬렉션을 하나의 정렬된 컬렉션으로 반환
-              |                     
-              li static <E> Collection<List<E>> permutations(COllection<E> collection) Since 4.0
-              |                     구성 요소들에 대한 순열을 반환한다. 사이즈가 큰 경우, PermutationIterator를 이용하면 된다.
-              |                     
-              li
-                | static <C> Collection<C> retainAll(Collection<C> collection, Collection<?> retain) Since 3.2
-              |                     retain에 담긴 요소들만으로 구성된 컬렉션을 반환한다. 반환된 컬렉션 각 요소의 cardinality는 기존과 동일하다. retain 컬렉션의 탐색 속도가 빠를수록 함수 완료가 빨라진다
-              |                     
-              li
-                | static <E> Collection<E> retainAll(Iterable<E> collection, Iterable<? extends E> retain, Equator<? super E> equator) Since 4.1
-              |                     
-              li
-                | static <E> Collection<E> removeAll(Collection<E> collection, Collection<?> remove) Since 4.0
-              |                     
-              li
-                | static <E> Collection<E> removeAll(Iterable<E> collection, Iterable<? extends E> remove, Equator<? super E> equator) Since 4.1
-              |                     
-              li
-                | static <C> Collection<C> predicatedCollection(Collection<C> collection, Predicate<? super C> predicate) : 삽입 제약 추가
-              |                     
-              li
-                | static <E> Collection<E> transformingCollection(Collection<E> collection, Transformer<? super E, ? extends E> transformer) : 변환 로직 추가
-              |                     위 두 함수는 삽입 트리거로 이용할 수 있다.
-              |                     
-              li
-                | static <E> E extractSingleton(Collection<E> collection) Since 4.0 : 싱글톤 컬렉션의 원소 반환
-        |         
+                    | class TreeBag<E> extends AbstractMapBag<E> implements SortedBag<E>, Serializable Since 3.0
+                |         저장소로 TreeMap을 이용하는 표준 SortedBag 구현을 제공한다.
+                |         
+                li
+                    | final class CollectionBag<E> extends AbstractBagDecorator<E> Since 4.0 + CollectionSortedBag
+                |         Bag 인스턴스가 Collection API에 맞게 동작하도록 래핑하는 생성자 CollectionBag(Bag<E> bag)를 제공한다
+                |         
+                li
+                    | final class UnmodifiableBag<E> extends AbstractBagDecorator<E> implements Unmodifiable Since 3.0 + UnmodifiableSortedBag
+                |         Bag 인스턴스가 변경되지 않도록 래핑하는 팩터리 메서드 unmodifiableBag(Bag<? extends E> bag)을 제공한다.
+                |         
+                li
+                    | class PredicatedBag<E> extends PredicatedCollection<E> implements Bag<E> Since 3.0 + PredicatedSortedBag
+                |         Bag 인스턴스에 요소 추가 제약을 거는 팩터리 메서드 predicatedBag(Bag<E> bag, Predicate<? super E> predicate) Since 4.0을 제공한다. 요소 추가에 실패하는 경우 IllegalArgumentException 발생.
+                |         
+                li
+                    | class SynchronizedBag<E> extends SynchronizedCollection<E> implements Bag<E> Since 3.0 + SynchronizedSortedBag
+                |         Bag 인스턴스가 스레드-안전하도록 래핑하는 팩터리 메서드 synchronizedBag(Bag<E> bag) Since 4.0을 제공한다.
+                |         
+                li
+                    | class TransformedBag<E> extends TransformedCollection<E> implements Bag<E> Since 3.0 + TransformedSortedBag
+                |         Bag 인스턴스의 요소 변환 제약을 거는 팩터리 메서드를 제공한다. 기존 요소를 포함하여 변환하는 경우 transformedBag(...) Since 4.0, 신규 요소들만 변환하는 경우 transformingBag(...) Since 4.0
+        hr
         details
-          summary class ComparatorUtils Since 2.1
-          |             
-          details
-            summary Field Detail
-            |                 public static final Comparator NATURAL_COMPARATOR : getter → naturalComparator()
-          |             
-          details
-            summary Method Detail
-            |                 
+            summary org.apache.commons.collections4.bidimap
+            |     
             ol
-              li static <E> Comparator<E> chainedComparator(Comparator<E>... comparators)
-              |                     
-              li
-                | static <E> Comparator<E> chainedComparator(Collection<Comparator<E>> comparators)
-              |                     
-              li static <E> Comparator<E> reversedComparator(Comparator<E> comparator)
-              |                     
-              li static <E> Comparator<Boolean> booleanComparator(boolean trueFirst)
-              |                     
-              li
-                | static <E> Comparator<E> nullLowComparator(Comparator<E> comparator) + nullHighComparator
-              |                     
-              li
-                | static <I, O> Comparator<I> transformedComparator(Comparator<O> comparator, Transformer<? super I, ? extends O> fransformer)
-              |                     
-              li static <E> E min(E o1, E o2, Comparator<E> comparator) + max
-        |         
+                li
+                    | class DualHashBidiMap<K, V> extends AbstractDualBidiMap<K, V> implements Serializable Since 3.0 + DualLinkedHashBidiMap Since 4.0, DualTreeBidiMap Since 3.0
+                |         2개의 HashMap 인스턴스를 이용한 BidiMap 구현을 제공한다.
+                |         
+                li
+                    | class TreeBidiMap<K extends Comparable<K>, V extends Comparable<V>> implements OrderedBidiMap<K, V>, Serializable Since 3.0
+                |         키, 값이 모두 정렬 가능할 때, red-black 트리를 이용한 BidiMap 구현을 제공한다.
+                |         
+                li
+                    | class UnmodifiableBidiMap<K, V> extends AbstractBidiMapDecorator<K, V> implements Unmodifiable Since 3.0 + UnmodifiableOrderedBidiMap, UnmodifiableSortedBidiMap
+                |         인스턴스가 변경되지 않도록 래핑하는 팩터리 메서드 unmodifiableBidiMap(...) Since 4.0을 제공한다.
+        hr
         details
-          summary class EnumerationUtils Since 3.0
-          |             
-          ol
-            li static<T> T get(Enumeration<T> e, int index) Since 4.1
-            |                 
-            li static<T> List<E> toList(Enumeration<? extends E> enumeration)
-            |                 
-            li static List<String> toList(StringTokenizer stringTokenizer)
-        |         
-        details
-          summary class FactoryUtils Since 3.0
-          |             
-          ol
-            li static <T> Factory<T> exceptionFactory()
-            |                 
-            li static <T> Factory<T> nullFactory()
-            |                 
-            li static <T> Factory<T> constantFactory(T constantToReturn)
-            |                 
-            li static <T> Factory<T> prototypeFactory(T prototype)
-            |                 prototype 객체에 대하여 clone(), 복사 생성자, 직렬화 복제 순으로 복제를 시도한다
-            |                 
-            li static <T> Factory<T> instantiateFactory(Class<T> classToInstantiate)
-            |                 주어진 클래스의 인자없는 생성자를 이용한다
-            |                 
-            li
-              | static <T> Factory<T> instantiateFactory(Class<T> classToInstantiate, Class<?>[] paramTypes, Object[] args
-        |         
-        details
-          summary class IterableUtils Since 4.1
-          |             
-          ol
-            li static <E> Iterable<E> emptyIterable()
-            |                 
-            li static <E> Iterable<E> emptyIfNull(Iterable<E> iterable)
-            |                 
-            li
-              | static <E> Iterable<E> chainedIterable(Iterable<? extends E> a, Iterable<? extends E> b) + 3 오버로딩
-            |                 
-            li
-              | static <E> Iterable<E> filteredIterable(Iterable<E> iterable, Predicate<? super E> predicate)
-            |                 
-            li static <E> Iterable<E> boundedIterable(Iterable<E> iterable, long maxSize)
-            |                 
-            li static <E> Iterable<E> loopingIterable(Iterable<E> iterable)
-            |                 
-            li static <E> Iterable<E> reversedIterable(Iterable<E> iterable)
-            |                 
-            li
-              | static <E> Iterable<E> skippingIterable(Iterable<E> iterable, long elementsToSkip)
-            |                 
-            li
-              | static <I, O> Iterable<O> transformedIterable(Iterable<I> iterable, Transformer<? super I, ? extends O> transformer)
-            |                 
-            li static <E> Iterable<E> uniqueIterable(Iterable<E> iterable)
-            |                 
-            li static <E> Iterable<E> unmodifiableIterable(Iterable<E> iterable)
-            |                 
-            li
-              | static <E> Iterable<E> zippingIterable(Iterable<? extends E> a, Iterable<? extends E> b) + 1 오버로딩
-            |                 
-            li static <E> void forEach(Iterable<E> iterable, Closure<? super E> closure)
-            |                 
-            li static <E> E forEachBufLast(Iterable<E> iterable, Closure<? super E> closure)
-            |                 
-            li static <E> E find(Iterable<E> iterable, Predicate<? super E> predicate)
-            |                 
-            li static <E> int indexOf(Iterable<E> iterable, Predicate<? super E> predicate)
-            |                 
-            li
-              | static <E> boolean matchesAll(Iterable<E> iterable, Predicate<? super E> predicate) + matchesAny
-            |                 
-            li static <E> long countMatches(Iterable<E> input, Predicate<? super E> predicate)
-            |                 
-            li static boolean isEmpty(Iterable<?> iterable)
-            |                 
-            li static <E> boolean contains(Iterable<E> iterable, Object object) + 1 오버로딩
-            |                 
-            li static <E, T extends E> int frequency(Iterable<E> iterable, T obj)
-            |                 
-            li static <T> T get(Iterable<T> iterable, int index)
-            |                 
-            li static <T> T first(Iterable<T> iterable) Since 4.2
-            |                 
-            li satic int size(Iterable<?> iterable)
-            |                 
-            li
-              | static <O> List<List<O>> partition(Iterable<? extends O> iterable, Predicate<? super O> predicate) + 2 오버로딩
-            |                 
-            li static <E> List<E> toList(Iterable<E> iterable)
-            |                 
-            li static <E> String toString(Iterable<E> iterable) + 2 오버로딩
-        |         
-        details
-          summary class IteratorUtils Since 2.1
-          |             
-          details
-            summary Field Detail
-            |                 
+            summary org.apache.commons.collections4.collection
+            |     
             ol
-              li public static final ResettableIterator EMPTY_ITERATOR : getter → emptyIterator()
-              |                     
-              li
-                | public static final ResettableIterator EMPTY_LIST_ITERATOR : getter → emptyListIterator()
-              |                     
-              li
-                | public static final ResettableIterator EMPTY_ORDERED_ITERATOR : getter → emptyOrderedIterator()
-              |                     
-              li
-                | public static final ResettableIterator EMPTY_MAP_ITERATOR : getter → emptyMapIterator()
-              |                     
-              li
-                | public static final ResettableIterator EMPTY_ORDERED_MAP_ITERATOR : getter → emptyOrderedMapIterator()
-          |             
-          details
-            summary Method Detail
-            |                 
+                li class CompositeCollection<E> implements Collection<E>, Serializable Since 3.0
+                |         다른 컬렉션(들)에 대해 하나의 뷰를 제공하는 장식자 컬렉션 구현. 뷰에 대한 add/remove 연산이 기저 컬렉션에 적용돼야 한다면 CompositeCollection.CollectionMutator를 제공해야 한다.
+                |         
+                li class IndexedCollection<K, C> extends AbstractCollectionDecorator<C> Since 4.0
+                |         컬렉션에 대해 맵과 비슷한 뷰를 제공하는 장식자 컬렉션 구현. 뷰에 대한 변경은 키와 기저 컬렉션의 갱신이 자동으로 이루어지지만, 기저 컬렉션이 직접 변경된 경우 reindex()를 통해 직접 동기화해야 한다.
+                |         
+                li class PredicatedCollection<E> extends AbstractCollectionDecorator<E> Since 3.0
+                |         컬렉션에 대해 삽입 제약을 거는 장식자 컬렉션 구현. Builder 팩터리 클래스도 제공한다.
+                |         
+                li class SynchronizedCollection<E> implements Collection<E>, Serializable Since 3.0
+                |         컬렉션이 스레드-안전하도록 래핑하는 팩터리 메서드를 제공한다
+                |         
+                li class TransformedCollection<E> extends AbstractCollectionDecorator Since 3.0
+                |         컬렉션에 요소 변환 제약을 거는 팩터리 메서드를 제공한다. 기존 요소를 포함하여 변환하는 경우 transformedCollection(...) Since 4.0, 신규 요소들만 변환하는 경우 transformingCollection(...) Since 4.0
+                |         
+                li
+                    | final class UnmodifiableCollection<E> extends AbstractCollectionDecorator<E> implements Unmodifiable Since 3.0 + UnmodifiableBoundedCollection
+                |         컬렉션이 변경되지 않도록 래핑하는 팩터리 메서드 제공
+        hr
+        details
+            summary org.apache.commons.collections4.comparators
+            |     
             ol
-              li static <E> ResettableIterator<E> singletonIterator(E object) + ListIterator
-              |                     
-              li
-                | static <E> ResettableIterator<E> arrayIterator(E... array) + 5 오버로딩 + ListIterator
-              |                     
-              li
-                | static <E> ResettableIterator<E> BoundedIterator<E> boundedIterator(Iterator<? extends E> iterator, long max) Since 4.1 + 1 오버로딩
-              |                     
-              li
-                | static <E> Iterator<E> unmodifiableIterator(Iterator<E> iterator) + ListIterator, MapIterator
-              |                     
-              li
-                | static <E> Iterator<E> chainedIterator(Iterator<? extends E>... iterators) + 2 오버로딩
-              |                     
-              li
-                | static <E> Iterator<E> collatedIterator(Comparator<? super E> comparator, Iterator<? extends E>... iterators) + 2 오버로딩
-              |                     
-              li
-                | static <E> ResettableIterator<E> loopingIterator(Collection<? extends E> coll) + ListIterator Since 3.2
-              |                     
-              li static <E> Iterator<E> asIterator(Enumeration<? extends E> enumeration) + 1 오버로딩
-              |                     
-              li static <E> Enumeration<E> asEnumeration(Iterator<? extends E> iterator)
-              |                     
-              li
-                | static <E> Iterable<E> asIterable(Iterator<? extends E> iterator) : iterator를 래핑한다. 1회 순회용
-              |                     
-              li
-                | static <E> Iterable<E> asMultipleUseIterable(Iterator<? extends E> iterator) : iterator를 래핑한다. 반복 순회용
-              |                     
-              li static <E> ListIterator<E> toListIterator(Iterator<? extends E> iterator)
-              |                     
-              li static Object[] toArray(Iterator<?> iterator) + 1 오버로딩
-              |                     
-              li static <E> List<E> toList(Iterator<? extends E> iterator) + 1 오버로딩
-              |                     
-              li static Iterator<?> getIterator(Object obj)
-              |                     null, Iterator, Enumeration, Collection, Map, Dictionary, array, iterator() 정의된 객체, 임의 객체, NodeList, Node 각각에 대해 iterator 반환
-              |                     
-              li
-                | static <E> void forEach(Iterator<E> iterator, Closure<? super E> closure) Since 4.1
-              |                     
-              li
-                | static <E> E forEachBufLast(Iterator<E> iterator, Closure<? super E> closure) Since 4.1
-              |                     
-              li
-                | static <E> E find(Iterator<E> iterator, Predicate<? super E> predicate) Since 4.1
-              |                     
-              li
-                | static <E> int indexOf(Iterator<E> iterator, Predicate<? super E> predicate) Since 4.1
-              |                     
-              li
-                | static <E> boolean matchesAny(Iterator<E> iterator, Predicate<? super E> predicate) Since 4.1 + matchesAll
-              |                     
-              li static boolean isEmpty(Iterator<?> iterator) Since 4.1
-              |                     
-              li static <E> boolean contains(Iterator<E> iterator, Object object) Since 4.1
-              |                     
-              li static <E> E get(Iterator<E> iterator, int index) Since 4.1
-              |                     
-              li static <E> E first(Iterator<E>) Since 4.2
-              |                     
-              li static int size(Iterator<?> iterator) Since 4.1
-              |                     
-              li static <E> String toString(Iterator<E> iterator) Since 4.1 + 2 오버로딩
-              |                     
-              li 여러 콘크리트 이터레이터의 생성자들이 유틸리티 대리자로 작성되어 있다
-        |         
+                li
+                    | final class Boolean Comparator implements Comparator<Boolean>, Serializable SInce 3.0
+                |         Boolean 정렬을 위한 비교자를 제공한다
+                |         
+                li
+                    | class ComparableComparator<E extends Comparable<? super E>> implements Comparator<E>, Serializable Since 2.0
+                |         Comparable에 대한 Comparator를 반환하는 유틸리티 메서드를 제공한다
+                |         
+                li class ComparatorChain<E> implements Comparator<E>, Serializable Since 2.0
+                |         
+                li class FixedOrderComparator<T> implements Comparator<T>, Serializable Since 3.0
+                |         객체들의 고정된 순서를 비교하는 비교자를 제공한다.
+                |         
+                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ComparatorTest.java', lan='java') 예시
+                |         
+                li class NullComparator<E> implements Comparator<E>, Serializable Since 2.0
+                |         
+                li class ReverseComparator<E> implements Comparator<E>, Serializable Since 2.0
+                |         
+                li
+                    | class TransformingComparator<I, O> implements Comparator<I>, Serializable Since 2.1
+        hr
         details
-          summary class ListUtils Since 1.0
-          |             
-          ol
-            li static <T> List<T> emptyIfNull(List<T> list)
-            |                 
-            li static <T> List<T> defaultIfNull(List<T> list, List<T> defaultList) Since 4.0
-            |                 
-            li
-              | static <T> List<T> intersection(List<? extends E> list1, List<? extends E> list2)
-            |                 
-            li static <T> List<T> subtract(List<? extends E> list1, List<? extends E> list2)
-            |                 
-            li static <T> List<T> union(List<? extends E> list1, List<? extends E> list2)
-            |                 
-            li
-              | static <T> List<T> sum(List<? extends E> list1, List<? extends E> list2) : union - intersection
-            |                 
-            li
-              | static <T> List<T> select(Collection<? extends T> inputCollection, Predicate<? super T> predicate) Since 4.0
-            |                 
-            li
-              | static <T> List<T> selectRejected(Collection<? extends T> inputCollection, Predicate<? super T> predicate) Since 4.0
-            |                 
-            li static boolean isEqualList(Collection<?> list1, Collection<?> list2)
-            |                 
-            li static int hashCodeForList(Collection<?> list)
-            |                 
-            li
-              | static <T> List<T> retainAll(Collection<T> collection, Collection<?> retain) Since 3.2
-            |                 
-            li
-              | static <T> List<T> removeAll(Collection<T> collection, Collection<?> remove) Since 3.2
-            |                 
-            li static <T> List<T> synchronizedList(List<E> list)
-            |                 
-            li static <T> List<T> unmodifiableList(List<? extends E> list)
-            |                 
-            li static <T> List<T> predicatedList(List<E> list, Predicate<E> predicate)
-            |                 
-            li
-              | static <T> List<T> transformedList(List<E> list, Transformer<? super E, ? extends E> transformer)
-            |                 
-            li static <T> List<T> lazyList(List<E> list, Factory<? extends E> factory) + 1 오버로딩
-            |                 요청된 인덱스에 한해서만 객체를 생성한다. 빈 구역은 null로 채워진다.
-            |                 
-            button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ListUtilsTest.java', lan='java') 예시
-            |                 
-            li static <T> List<T> fixedSizeList(List<T> list) : 요소의 추가/삭제 불가
-            |                 
-            li static <T> int indexOf(List<T> list, Predicate<T> predicate)
-            |                 
-            li
-              | static <T> List<T> longestCommonSubsequence(List<T> a, List<T> b) Since 4.0 + 2 오버로딩
-            |                 
-            li static <T> List<List<T>> partition(List<T> list, int size) Since 4.0
-        |         
+            summary org.apache.commons.collections4.functors
+            |     
+            details
+                summary Predicate
+                |         
+                ol
+                    li final class AllPredicate<T> extends AbstractQuantifierPredicate<T> Since 3.0
+                    |             + AnyPredicate, OnePredicate, NonePredicate(NOR), AndPredicate, NotPredicate, OrPredicate
+                    |             
+                    li class ComparatorPredicate<T> implements Predicate<T>, Serializable Since 4.0
+                    |             기준 객체와 비교자를 이용해 판별한 선후 관계로 가부를 결정 + EqualPredicate, IdentityPredicate, UniquePredicate, InstanseofPredicate, NotNullPredicate, NullPredicate
+                    |             
+                    li
+                        | final class ExceptionPredicate<T> implements Predicate<T>, Serializable Since 3.0
+                    |             + FalsePredicate, TruePredicate
+                    |             
+                    li
+                        | final class TransformerPredicate<T> implements Predicate<T>, Serializable Since 3.0
+                    |             Transformer<? super T, Boolean>를 이용하며, TransformedPredicate와 다름에 유의
+                    |             
+                    li
+                        | final class NullsExceptionPredicate<T> implements PredicateDecorator<T>, Serializable Since 3.0
+                    |             + NullsFalsePredicate, NullsTruePredicate, TransformedPredicate
+            |     
+            details
+                summary Closure
+                |         
+                ol
+                    li abstract class CatchAndRethrowClosure<E> implements Closure<E> Since 4.0
+                    |             void execute(E input)가 클로저 내부에서 예외를 억제하는 반면, abstract void executeAndThrow(E input) throws Throwable은 임의 checked exception의 전파를 허용한다. 따라서 클로저를 유틸에서 이용하는 경우 클로저 외부에서 예외의 처리가 가능해진다.
+                    |             
+                    li class chainedClosure<E> implements CLosure<E>, Serializable Since 3.0
+                    |             
+                    li final class ExceptionClosure<E> implements Closure<E>, Serializable Since 3.0
+                    |             
+                    li final class NOPClosure<E> implements Closure<E>, Serializable Since 3.0
+                    |             
+                    li class TransformerClosure<E> implements Closure<E>, Serializable Since 3.0
+                    |             
+                    li class ForClosure<E> implements Closure<E> Since 3.0
+                    |             + IfClosure, SwitchClosure, WhileClosure
+            |     
+            details
+                summary Tansformer
+                |         
+                ol
+                    li class ChainedTransformer<T> implements Transformer<T, T>, Serializable Since 3.0
+                    |             
+                    li class CloneTransformer<T> implements Transformer<T, T> Since 3.0
+                    |             
+                    li class ClosureTransformer<T> implements Transformer<T, T>, Serializable Since 3.0
+                    |             + PredicateTransformer, NOPTransformer
+                    |             
+                    li
+                        | class ConstantTransformer<I, O> implements Transformer<I, O>, Serializable Since 3.0
+                    |             
+                    li
+                        | class FactoryTransformer<I, O> implements Transformer<I, O>, Serializable Since 3.0
+                    |             + InstantiateTransformer, InvokerTransformer
+                    |             
+                    li
+                        | final class ExceptionTransformer<I, O> implements Transformer<I, O> Serializable Since 3.0
+                    |             
+                    li class IfTransformer<I, O> implements Transformer<I, O> Serializable Since 4.1
+                    |             + SwitchTransformer
+                    |             
+                    li
+                        | final class MapTransformer<I, O> implements Transformer<I, O>, Serializable Since 3.0
+                    |             
+                    li
+                        | final class StringValueTransformer<T> implements Transformer<T, String>, Serializable Since 3.0
+            |     
+            details
+                summary Equator
+                |         class DefaultEquator<T> implements Equator<T>, Serializable Since 4.0
+            |     
+            details
+                summary Factory
+                |         
+                ol
+                    li class ConstantFactory<T> implements Factory<T>, Serializable Since 3.0
+                    |             
+                    li final class ExceptionFactory<T> implements Factory<T>, Serializable Since 3.0
+                    |             
+                    li class InstantiateFactory<T> implements Factory<T> Since 3.0
+                    |             
+                    li class PrototypeFactory Since 3.0
+                    |             객체에 대하여 prototypeFactory() 메서드를 호출하면 public clone 메서드 → public 복사 생성자 → 직렬화 복사 순으로 객체 생성 시도한다.
+        hr
         details
-          summary class MapUtils Since 1.0
-          |             
-          details
-            summary Field Detail
-            |                 public static final SortedMap EMPTY_SORTED_MAP
-          |             
-          details
-            summary Method Detail
-            |                 
+            summary org.apache.commons.collections4.iterators
+            |     
             ol
-              li static <K, V> V getObject(Map<? super K, V> map, K key) : map이 null이면 null 반환
-              |                     
-              li
-                | static <K> String getString(Map<? super K, ?> map, K key) + Boolean, Number, Byte, Short, Integer, Long, Float, Double, Map, Object
-              |                     조회된 객체에 대하여 toString() 호출. map이 null이면 null 반환. key가 map에 없어도 null 반환.
-              |                     
-              button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', displayrange='[17,32,35,42]', lan='java') 예시
-              |                     
-              li static <K, V> Properties toProperties(Map<K, V> map)
-              |                     
-              li static Map<String, Object> toMap(ResourceBundle resourceBundle)
-              |                     
-              li
-                | static void verbosePrint(PrintStream out, Object label, Map<?, ?> map) + debugPrint
-                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', displayrange='[17,32,45,62]', lan='java') 예시
-              |                     
-              li
-                | static <K, V> Map<K, V> invertMap(Map<K, V> map) : 키-값 위치를 바꾼 새 HashMap 반환
-                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', displayrange='[17,32,65,67]', lan='java') 예시
-              |                     
-              li
-                | static <K> void safeAddToMap(Map<? super K, Object> map, K key, Object value) : null 삽입 거부
-              |                     
-              li static <K, V> Map<K, V> putAll(Map<K, V> map, Object[] array) Since 3.2
-              |                     
-              li static <K, V> Map<K, V> emptyIfNull(Map<K, V> map)
-              |                     
-              li static boolean isEmpty(Map<?, ?> map) Since 3.2 + isNotEmpty
-              |                     
-              li static <K, V> Map<K, V> synchronizedMap(Map<K, V> map) + SortedMap 버전
-              |                     
-              li
-                | static <K, V> Map<K, V> unmodifiableMap(Map<? extends K, ? extends V> map) + SortedMap 버전
-              |                     
-              li
-                | static <K, V> IterableMap<K, V> predicatedMap(Map<K, V> map, Predicate<? super K> keyPred, Predicate<? super V> valuePred) + transformedMap + SortedMap 버전
-              |                     
-              li static <K, V> IterableMap<K, V> fixedSizeMap(Map<K, V> map) + SortedMap 버전
-              |                     
-              li
-                | static <K, V> IterableMap<K, V> lazyMap(Map<K, V> map, Factory<? extends V> factory) + 1 오버로딩 + SortedMap 버전
-              |                     
-              li static <K, V> OrderedMap<K, V> orderedMap(Map<K, V> map)
-              |                     
-              li
-                | static <K, V> void populateMap(Map<K, V> map, Iterable<? extends V> elements, Transformer<V, K> keyTransformer) + 3 오버로딩
-                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', displayrange='[17,32,70,85]', lan='java') 예시
-              |                     
-              li
-                | static <K, V> IterableMap<K, V> iterableMap(Map<K, V> map) Since 4.0 + SortedMap 버전
-              |                     
-              li static int size(Map<?, ?> map)
-        |         
+                li class ArrayIterator<E> implements ResettableIterator<E> Since 1.0
+                |         배열에 대한 이터레이터 제공. + ArrayListIterator(java.util.ListIterator 프로토콜 추가 제공), ObjectArrayIterator, ObjectArrayListIterator
+                |         
+                li class ListIteratorWrapper<E> implements ResettableListIterator<E> Since 2.1
+                |         
+                li class PeekingIterator<E> implements Iterator<E> Since 4.0
+                |         
+                li class LoopingIterator<E> implements ResettableIterator<E> Since 3.0
+                |         + LoopingListIterator Since 3.2
+                |         
+                li class SingletonIterator<E> Since 2.0 + SingletonListIterator
+                |         
+                li class ReverseListIterator<E> implements  ResettableListIterator<E> Since 3.2
+                |         
+                li class PushbackIterator<E> implements Iterator<E> Since 4.0
+                |         next()를 취소할 수 있다. next()에서 반환하지 않은 객체도 pushback()으로 넣을 수 있으며, 래핑된 실제 iterator에는 영향을 끼치지 않는다.
+                |         
+                li class EnumerationIterator<E> implements Iterator<E> Since 1.0
+                |         Enumeration이 이터레이터로 동작하도록 하는 어댑터 제공 + IteratorEnumeration, IteratorIterable
+                |         
+                li class TransformIterator<I, O> implements Iterator<O> Since 1.0
+                |         
+                li
+                    | class EntrySetMapIterator<K, V> implements MapIterator<K, V>, ResettableIterator<K> Since 3.0
+                |         맵의 entrySet을 이용한 MapIterator 구현 제공
+                |         
+                li class EmptyIterator<E> implements ResettableIterator<E> Since 3.1
+                |         + EmptyListIterator, EmptyMapIterator, EmptyOrderedIterator, EmptyOrderedMapIterator, UnmodifiableIterator, UnmodifiableListIterator, UnmodifiableMapIterator, UnmodifiableOrderedMapIterator
+                |         
+                li class BoundedIterator<E> implements Iterator<E> Since 4.1
+                |         다른 이터레이터의 특정 범위만 조회하는 래퍼를 제공. + SkippingIterator
+                |         
+                li class FilterIterator<E> implements Iterator<E> Since 1.0
+                |         + FilterListIterator, UniqueFilterIterator
+                |         
+                li class CollatingIterator<E> implements Iterator<E> Since 2.1
+                |         여러 이터레이터들을 특정 순서대로 소비하는 래퍼를 제공. + ZippingIterator(각 이터레이터 1개씩 순회 조회), IteratorChain(넘겨진 순서대로 소비), LazyIteratorChain
+                |         
+                li class ObjectGraphIterator<E> implements Iterator<E> Since 3.1
+                |         이터레이터들로 구성된 객체를 하나의 이터레이터로 순회할 수 있는 기능을 제공한다.
+                |         
+                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/IteratorTest.java', lan='java') 예시
+                |         
+                li class PermutationIterator<E> implements Iterator<List<E>> Since 4.0
+                |         순열을 조회하는 이터레이터를 제공한다.
+        hr
         details
-          summary class MultiMapUtils Since 4.1
-          |             
-          details
-            summary Field Detail
-            |                 public static final MultiValuedMap EMPTY_MULTI_VALUED_MAP : getter → emptyMultiValuedMap()
-          |             
-          details
-            summary Method Detail
-            |                 
+            summary org.apache.commons.collections4.keyvalue
+            |     
             ol
-              li static <K, V> MultiValuedMap<K, V> emptyIfNull(MultiValuedMap<K, V> map)
-              |                     
-              li static boolean isEmpty(MultiValuedMap<?, ?> map)
-              |                     
-              li
-                | static <K, V> Collection<V> getCollection(MultiValuedMap<K, V> map, K key) + getValuesAsList, Set, Bag
-              |                     
-              li static <K, V> ListValuedMap<K, V&gt newListValuedHashMap() + Set
-              |                     
-              li
-                | static <K, V> MultiValuedMap<K, V> unmodifiableMultiValuedMap(MultiValuedMap<? extends K, ? extends V> map) + transformedMultiValuedMap
-        |         
+                li class MultiKey<K> implements Serializable Since 3.0
+                |         여러 키 값을 하나의 키로 이용할 수 있게 해준다. 이를 통해 다중 맵을 이용하지 않고 문제를 해결할 수 있다.
+                |         
+                li class DefaultKeyValue<K, V> extends AbstractKeyValue<K, V> Since 3.0
+                |         Map.Entry를 구현하지 않는 키-값 쌍 기능 제공. 키와 값이 null일 수 있다. + DefaultMapEntry
+                |         
+                li
+                    | class TiedMapEntry<K, V> implements Map.Entry<K, V>, KeyValue<K, V>, Serializable Since 3.0
+                |         맵과 결합된 Map.Entry
+                |         
+                li
+                    | final class UnmodifiableMapEntry<K, V> extends AbstractMapEntry<K, V> implements Unmodifiable Since 3.0
+        hr
         details
-          summary class MultiSetUtils Since 4.1
-          |             
-          details
-            summary Field Detail
-            |                 public static final MultiSet EMPTY_MULTISET : getter → emptyMultiSet()
-          |             
-          details
-            summary Method Detail
-            |                 
+            summary org.apache.commons.collections4.list
+            |     
             ol
-              li static <E> MultiSet<E> synchronizedMultiSet(MultiSet<E> multiset)
-              |                     
-              li static <E> MultiSet<E> unmodifiableMultiSet(MultiSet<? extends E> multiset)
-              |                     
-              li
-                | static <E> MultiSet<E> predicatedMultiSet(MultiSet<E> multiset, Predicate<? super E> predicate)
-        |         
+                li
+                    | class CursorableLinkedList<E> extends AbstractLinkedList<E> implements Serializable Since 1.0
+                |         ListIterator를 통한 동시 수정이 가능한 리스트 구현을 제공한다. listIterator(), cursor() 메서드로 Cursor 객체를 얻을 수 있다.
+                |         
+                li
+                    | class FixedSizeList<E> extends AbstractSerializableListDecorator<E> implements BoundedCollection<E> Since 3.0
+                |         다른 리스트의 크기를 제한하는 래퍼를 제공한다. 요소를 변경하는 작업만 지원된다.
+                |         
+                li class GrowthList<E> extends AbstractSerializableListDecorator<E> Since 3.2
+                |         리스트의 크기를 벗어난 인덱스에 대한 add/set 호출이 있을 때, 자동으로 null로 채운다. 음수 인덱스에 대해서는 IndexOutofBoundsException 발생
+                |         
+                li class LazyList<E> extends AbstractSerializableListDecorator<E> Since 3.0
+                |         GrowthList와 비슷. get 요청된 인덱스에 대한 요소를 특정 인스턴스로 할당한다.
+                |         
+                li
+                    | class PredicatedList<E> extends PredicatedCollection<E> implements List<E> Since 3.0
+                |         + TransformedList
+                |         
+                li class SetUniqueList<E> extends AbstractSerializableListDecorator<E> Since 3.0
+                |         
+                li class TreeList<E> extends AbstractList<E> Since 3.1
+                |         임의 인덱스 삽입/제거에 최적화된 리스트 구현 제공.add, get, iterator만 이용한다면 ArrayList가 좋다
+                |         
+                li
+                    | final class UnmodifiableList<E> extends AbstractSerializableListDecorator<E> implements Unmodifiable Since 3.0
+        hr
         details
-          summary class PredicateUtils Since 3.0
-          |             
-          ol
-            li static <T> Predicate<T> exceptionPredicate() + true, false
-            |                 
-            li static <T> Predicate<T> nullPredicate() + notNull : 입력이 null인지 여부 체크
-            |                 
-            li static <T> Predicate<T> equalPredicate(T value)
-            |                 
-            li static <T> Predicate<T> identityPredicate(T value)
-            |                 
-            li static <T> Predicate<T> instanceofPredicate(Class<?> type)
-            |                 
-            li static <T> Predicate<T> uniquePredicate() : 각 입력 객체에 대하여, 최초에만 true 반환
-            |                 
-            li
-              | static <T> Predicate<T> invokerPredicate(String methodName) + 1 오버로딩 : boolean/Boolean을 반환하는 메서드 호출
-            |                 
-            li
-              | static <T> Predicate<T> andPredicate(Predicate<? super T> predicate1, Predicate<? super T> predicate2) + all, or, any, either(XOR), one, neither(NOR), none, not
-            |                 
-            li static <T> Predicate<T> asPredicate(Transformer<? super T, Boolean> transformer)
-            |                 
-            li
-              | static <T> Predicate<T> nullsExceptionPredicate(Predicate<? super T> predicate) + nullsFalse, nullsTrue
-            |                 
-            li
-              | static <T> Predicate<T> transformedPredicate(Transformer<? super T, ? extends T> transformer, Predicate<? super T> predicate) Since 3.1
-        |         
-        details
-          summary class QueueUtils Since 4.0
-          |             
-          details
-            summary Field Detail
-            |                 public static final Queue EMPTY_QUEUE : getter → emptyQueue()
-          |             
-          details
-            summary Method Detail
-            |                 
+            summary org.apache.commons.collections4.map
+            |     
             ol
-              li static <E> Queue<E> synchronizedQueue(Queue<E> queue) Since 4.2
-              |                     
-              li
-                | static <E> Queue<E> unmodifiableQueue(QUeue<? extends E> queue) + predicated, tranforming
-        |         
+                li
+                    | class CaseInsensitiveMap<K, V> extends AbstractHashedMap<K, V> implements Serializable, Cloneable Since 3.0
+                |         키의 삽입, 비교 시 모두 소문자로 변환된다. keySet() 역시 소문자로 변환된 키를 반환한다
+                |         
+                li
+                    | class CompositeMap<K, V> extends AbstractIterableMap<K, V> implements Serializable Since 3.0
+                |         
+                li
+                    | class CompositeMap<K, V> extends AbstractIterableMap<K, V> implements Serializable Since 3.0
+                |         여러 맵들에 대해 하나의 뷰를 제공하는 장식자 맵 제공. 뷰에 대한 삽입/삭제 연산이 기저 맵에 적용되야 한다면 CompositeMap.MapMutator를 제공하면 된다.
+                |         
+                li
+                    | class DefaultedMap<K, V> extends AbstractMapDecorator<K, V> implements Serializable Since 3.2
+                |         + LazyMap, LazySortedMap
+                |         
+                li
+                    | class FixedSizeMap<K, V> extends AbstractMapDecorator<K, V> implements BoundedMap<K, V>, Serializable Since 3.2
+                |         + FixedSizeSortedMap
+                |         
+                li
+                    | class Flat3Map<K, V> implements IterableMap<K, V>, Serializable, Cloneable Since 3.0
+                |         요소가 3개 이하일 때 최적으로 동작하는 맵 제공
+                |         
+                li
+                    | class HashedMap<K, V> extends AbstractHashedMap<K, V> implements Serializable, Cloneable Since 3.0
+                |         JDK HashMap + MapIterator + Cloneable
+                |         
+                li
+                    | class LinkedMap<K, V> extends AbstractLinkedMap<K, V> implements Serializable, Cloneable Since 3.0
+                |         JDK LinkedHashMap + MapIterator + Cloneable
+                br
+                |         + ListOrderedMap : 삽입 순서를 List에 저장
+                |         
+                li
+                    | class LRUMap<K, V> extends AbstractLinkedMap<K, V> implements BoundedMap<K, V>, Serializable, Cloneable Since 3.0
+                |         임계 크기를 초과하면 가장 마지막으로 사용(get/put)된 entry 제거. DEFAULT_MAX_SIZE == 100
+                |         
+                li
+                    | class MultiKeyMap<K, V> extends AbstractMapDecorator<MultiKey<? extends K>, V> implements Serializable, Cloneable Since 3.1
+                |         
+                li
+                    | class PassiveExpiringMap<K, V> extends AbstractMapDecorator<K, V> implements Serializable Since 4.0
+                |         맵에 entry를 유지할 시간을 정의. 각 시간이 지나면 맵에서 제거된다.
+                |         
+                li
+                    | class PredicatedMap<K, V> extends AbstractMapDecorator<K, V> implements Serializable Since 3.0
+                |         + PredicatedSortedMap, TransformedMap, TransformedSortedMap
+                |         
+                li
+                    | class ReferenceIdentityMap<K, V> extends AbstractReferenceMap<K, V> implements Serializable Since 3.0
+                |         키, 값의 GC를 허용하고, equals() 대신 ==로 일치를 판별하는 맵을 제공한다. + ReferenceMap
+                |         
+                li final class StaticBucketMap<K, V> extends AbstractIterableMap<K, V> Since 3.0
+                |         주어진 한도 내에서는 고성능의 스레드-안전한 java.util.Map 구현을 제공한다. 크기가 한도를 벗어나면 O(n)에 가까워진다.
+                |         
+                li
+                    | class SingletonMap<K, V> implements OrderedMap<K, V>, BoundedMap<K, V>, KeyValue<K, V>, Serializable, Cloneable Since 3.1
+                |         
+                li
+                    | class UnmodifiableEntrySet<K, V> extends AbstractSetDecorator<Map.Entry<K, V>> implements Unmodifiable Since 3.0
+                |         변결할 수 없는 entry 집합을 반환하는 팩터리 메서드 제공 + UnmodifiableMap, UnmodifiableOrderedMap, UnmodifiableSortedMap
+                |         
+                li
+                    | class EntrySetToMapIteratorAdapter<K, V> implements MapIterator<K, V>, ResettableIterator Since 4.0
+        hr
         details
-          summary class SetUtils Since 2.1
-          |             
-          details
-            summary abstract static class SetUtils.SetView extends AbstractSet<E> Since 4.1
-            |                 
+            summary org.apache.commons.collections4.multimap
+            |     
             ol
-              li <S extends Set<E>> void copyInto(S set)
-              |                     
-              li Set<E> toSet()
-          |             
-          details
-            summary Field Detail
-            |                 public static final SortedSet EMPTY_SORTED_SET : getter → emptySortedSet()
-          |             
-          details
-            summary Method Detail
-            |                 
+                li
+                    | class ArrayListValuedHashMap<K, V> extends AbstractListValuedMap<K, V> implements Serializable SInce 4.1
+                |         + HashSetValuedHashMap
+                |         
+                li
+                    | class TransformedMultiValuedMap<K, V> extends AbstractMultiValuedMapDecorator<K, V> Since 4.1
+                |         
+                li
+                    | final class UnmodifiableMultiValuedMap<K, V> extends AbstractMultiValuedMapDecorator<K, V> implements Unmodifiable Since 4.1
+        hr
+        details
+            summary org.apache.commons.collections4.multiset
+            |     
             ol
-              li
-                | static <E> SetUtils.SetView<E> difference(Set<? extends E> a, Set<? extends E> b) Since 4.1
-              |                     차집합 a-b. + disjunction(대칭 차집합), intersection(교집합), union(합집합) Since 4.1
-              |                     
-              li static <T> Set<T> emptyIfNull(Set<T> set)
-              |                     
-              li static <T> int hashCodeForSet(Collection<T> set)
-              |                     
-              li static <E> HashSet<E> hashSet(E... items) Since 4.3
-              |                     
-              li static boolean isEqualSet(Collection<?> set1, Collection<?> set2)
-              |                     
-              li static <E> Set<E> newIdentityHashSet() Since 4.1 : ==을 이용하는 집합
-              |                     
-              li static <E> Set<E> unmodifiableSet(E... items) Since 4.3
-              |                     
-              li static <E> Set<E> orderedSet(Set<E> set)
-              |                     + predicatedSet, predicatedNavigableSet Since 4.1, predicatedSortedSet, synchroizedSet, synchronizedSortedSet, transformedSet, transformedSortedSet, transformedNavigableSet Since 4.1, unmodifiableSet, unmodifiableNavigableSet Since 4.1, unmodifiableSortedSet
-        |         
+                li
+                    | class HashMultiSet<E> extends AbstractMapMultiSet<E> implements Serializable Since 4.1
+                |         
+                li
+                    | class PredicatedMultiSet<E> extends PredicatedCollection<E> implements MultiSet<E> Since 4.1
+                |         
+                li
+                    | class SynchronizedMultiSet<E> extends SynchronizedCollection<E> implements MultiSet<E> Since 4.1
+                |         
+                li
+                    | final class UnmodifiableMultiSet<E> extends AbstractMultiSetDecorator<E> implements Unmodifiable Since 4.1
+        hr
         details
-          summary class SplitMapUtils Since 4.0
-          |             
-          ol
-            li Put, Get을 구현한 객체를 Map으로 변환한다
-            |                 
-            li static <K, V> IterableMap<K, V> readableMap(Get<K, V> get)
-            |                 
-            li static <K, V> Map<K, V> writableMap(Put<K, V> put)
-        |         
+            summary org.apache.commons.collections4.properties
+            |     
+            ol
+                li class SortedProperties extends Properties Since 4.2
+                |         
+                li class PropertiesFactory extends AbstractPropertiesFactory<Properties> Since 4.4
+                |         + SortedPropertiesFactory
+        hr
         details
-          summary class TransformerUtils Since 3.0
-          |             
-          ol
-            li static <I, O> Transformer<I, O> exceptionTransformer() + null
-            |                 
-            li static <I, O> Transformer<I, O> constantTransformer(O constantToReturn)
-            |                 
-            li static <T> Transformer<T, T> nopTransformer() + clone
-            |                 
-            li static <T> Transformer<Class<? extends T>, T> instantiateTransformer() + 1 오버로딩
-            |                 
-            li static <T> Transformer<T, T> asTransformer(Closure<? super T> closure) + 2 오버로딩
-            |                 
-            li
-              | static <T> Transformer<T, T> chainedTransformer(Transformer<? super T, ? extends T>... transformers) + 1 오버로딩
-            |                 
-            li
-              | static <T> Transformer<T, T> ifTransformer(Predicate<? super T> predicate, Transformer<? super T, ? extends T> trueTransformer) Since 4.1 + 1 오버로딩 + switchTransformer
-            |                 
-            li static <I, O> Transformer<I, O> mapTransformer(Map<? super I, ? extends O> map)
-            |                 
-            li static <I, O> Transformer<I, O> invokerTransformer(String methodName) + 1 오버로딩
-            |                 
-            li static <T> Transformer<T, String> stringValueTransformer()
-    hr
-    details
-      summary org.apache.commons.collections4.bag
-      |     
-      ol
-        li class HashBag<E> extends AbstractMapBag<E> implements Serializable Since 3.0
-        |         저장소로 HashMap을 이용하는 표준 Bag 구현을 제공한다.
-        |         
-        li
-          | class TreeBag<E> extends AbstractMapBag<E> implements SortedBag<E>, Serializable Since 3.0
-        |         저장소로 TreeMap을 이용하는 표준 SortedBag 구현을 제공한다.
-        |         
-        li
-          | final class CollectionBag<E> extends AbstractBagDecorator<E> Since 4.0 + CollectionSortedBag
-        |         Bag 인스턴스가 Collection API에 맞게 동작하도록 래핑하는 생성자 CollectionBag(Bag<E> bag)를 제공한다
-        |         
-        li
-          | final class UnmodifiableBag<E> extends AbstractBagDecorator<E> implements Unmodifiable Since 3.0 + UnmodifiableSortedBag
-        |         Bag 인스턴스가 변경되지 않도록 래핑하는 팩터리 메서드 unmodifiableBag(Bag<? extends E> bag)을 제공한다.
-        |         
-        li
-          | class PredicatedBag<E> extends PredicatedCollection<E> implements Bag<E> Since 3.0 + PredicatedSortedBag
-        |         Bag 인스턴스에 요소 추가 제약을 거는 팩터리 메서드 predicatedBag(Bag<E> bag, Predicate<? super E> predicate) Since 4.0을 제공한다. 요소 추가에 실패하는 경우 IllegalArgumentException 발생.
-        |         
-        li
-          | class SynchronizedBag<E> extends SynchronizedCollection<E> implements Bag<E> Since 3.0 + SynchronizedSortedBag
-        |         Bag 인스턴스가 스레드-안전하도록 래핑하는 팩터리 메서드 synchronizedBag(Bag<E> bag) Since 4.0을 제공한다.
-        |         
-        li
-          | class TransformedBag<E> extends TransformedCollection<E> implements Bag<E> Since 3.0 + TransformedSortedBag
-        |         Bag 인스턴스의 요소 변환 제약을 거는 팩터리 메서드를 제공한다. 기존 요소를 포함하여 변환하는 경우 transformedBag(...) Since 4.0, 신규 요소들만 변환하는 경우 transformingBag(...) Since 4.0
-    hr
-    details
-      summary org.apache.commons.collections4.bidimap
-      |     
-      ol
-        li
-          | class DualHashBidiMap<K, V> extends AbstractDualBidiMap<K, V> implements Serializable Since 3.0 + DualLinkedHashBidiMap Since 4.0, DualTreeBidiMap Since 3.0
-        |         2개의 HashMap 인스턴스를 이용한 BidiMap 구현을 제공한다.
-        |         
-        li
-          | class TreeBidiMap<K extends Comparable<K>, V extends Comparable<V>> implements OrderedBidiMap<K, V>, Serializable Since 3.0
-        |         키, 값이 모두 정렬 가능할 때, red-black 트리를 이용한 BidiMap 구현을 제공한다.
-        |         
-        li
-          | class UnmodifiableBidiMap<K, V> extends AbstractBidiMapDecorator<K, V> implements Unmodifiable Since 3.0 + UnmodifiableOrderedBidiMap, UnmodifiableSortedBidiMap
-        |         인스턴스가 변경되지 않도록 래핑하는 팩터리 메서드 unmodifiableBidiMap(...) Since 4.0을 제공한다.
-    hr
-    details
-      summary org.apache.commons.collections4.collection
-      |     
-      ol
-        li class CompositeCollection<E> implements Collection<E>, Serializable Since 3.0
-        |         다른 컬렉션(들)에 대해 하나의 뷰를 제공하는 장식자 컬렉션 구현. 뷰에 대한 add/remove 연산이 기저 컬렉션에 적용돼야 한다면 CompositeCollection.CollectionMutator를 제공해야 한다.
-        |         
-        li class IndexedCollection<K, C> extends AbstractCollectionDecorator<C> Since 4.0
-        |         컬렉션에 대해 맵과 비슷한 뷰를 제공하는 장식자 컬렉션 구현. 뷰에 대한 변경은 키와 기저 컬렉션의 갱신이 자동으로 이루어지지만, 기저 컬렉션이 직접 변경된 경우 reindex()를 통해 직접 동기화해야 한다.
-        |         
-        li class PredicatedCollection<E> extends AbstractCollectionDecorator<E> Since 3.0
-        |         컬렉션에 대해 삽입 제약을 거는 장식자 컬렉션 구현. Builder 팩터리 클래스도 제공한다.
-        |         
-        li class SynchronizedCollection<E> implements Collection<E>, Serializable Since 3.0
-        |         컬렉션이 스레드-안전하도록 래핑하는 팩터리 메서드를 제공한다
-        |         
-        li class TransformedCollection<E> extends AbstractCollectionDecorator Since 3.0
-        |         컬렉션에 요소 변환 제약을 거는 팩터리 메서드를 제공한다. 기존 요소를 포함하여 변환하는 경우 transformedCollection(...) Since 4.0, 신규 요소들만 변환하는 경우 transformingCollection(...) Since 4.0
-        |         
-        li
-          | final class UnmodifiableCollection<E> extends AbstractCollectionDecorator<E> implements Unmodifiable Since 3.0 + UnmodifiableBoundedCollection
-        |         컬렉션이 변경되지 않도록 래핑하는 팩터리 메서드 제공
-    hr
-    details
-      summary org.apache.commons.collections4.comparators
-      |     
-      ol
-        li
-          | final class Boolean Comparator implements Comparator<Boolean>, Serializable SInce 3.0
-        |         Boolean 정렬을 위한 비교자를 제공한다
-        |         
-        li
-          | class ComparableComparator<E extends Comparable<? super E>> implements Comparator<E>, Serializable Since 2.0
-        |         Comparable에 대한 Comparator를 반환하는 유틸리티 메서드를 제공한다
-        |         
-        li class ComparatorChain<E> implements Comparator<E>, Serializable Since 2.0
-        |         
-        li class FixedOrderComparator<T> implements Comparator<T>, Serializable Since 3.0
-        |         객체들의 고정된 순서를 비교하는 비교자를 제공한다.
-        |         
-        button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ComparatorTest.java', lan='java') 예시
-        |         
-        li class NullComparator<E> implements Comparator<E>, Serializable Since 2.0
-        |         
-        li class ReverseComparator<E> implements Comparator<E>, Serializable Since 2.0
-        |         
-        li
-          | class TransformingComparator<I, O> implements Comparator<I>, Serializable Since 2.1
-    hr
-    details
-      summary org.apache.commons.collections4.functors
-      |     
-      details
-        summary Predicate
-        |         
-        ol
-          li final class AllPredicate<T> extends AbstractQuantifierPredicate<T> Since 3.0
-          |             + AnyPredicate, OnePredicate, NonePredicate(NOR), AndPredicate, NotPredicate, OrPredicate
-          |             
-          li class ComparatorPredicate<T> implements Predicate<T>, Serializable Since 4.0
-          |             기준 객체와 비교자를 이용해 판별한 선후 관계로 가부를 결정 + EqualPredicate, IdentityPredicate, UniquePredicate, InstanseofPredicate, NotNullPredicate, NullPredicate
-          |             
-          li
-            | final class ExceptionPredicate<T> implements Predicate<T>, Serializable Since 3.0
-          |             + FalsePredicate, TruePredicate
-          |             
-          li
-            | final class TransformerPredicate<T> implements Predicate<T>, Serializable Since 3.0
-          |             Transformer<? super T, Boolean>를 이용하며, TransformedPredicate와 다름에 유의
-          |             
-          li
-            | final class NullsExceptionPredicate<T> implements PredicateDecorator<T>, Serializable Since 3.0
-          |             + NullsFalsePredicate, NullsTruePredicate, TransformedPredicate
-      |     
-      details
-        summary Closure
-        |         
-        ol
-          li abstract class CatchAndRethrowClosure<E> implements Closure<E> Since 4.0
-          |             void execute(E input)가 클로저 내부에서 예외를 억제하는 반면, abstract void executeAndThrow(E input) throws Throwable은 임의 checked exception의 전파를 허용한다. 따라서 클로저를 유틸에서 이용하는 경우 클로저 외부에서 예외의 처리가 가능해진다.
-          |             
-          li class chainedClosure<E> implements CLosure<E>, Serializable Since 3.0
-          |             
-          li final class ExceptionClosure<E> implements Closure<E>, Serializable Since 3.0
-          |             
-          li final class NOPClosure<E> implements Closure<E>, Serializable Since 3.0
-          |             
-          li class TransformerClosure<E> implements Closure<E>, Serializable Since 3.0
-          |             
-          li class ForClosure<E> implements Closure<E> Since 3.0
-          |             + IfClosure, SwitchClosure, WhileClosure
-      |     
-      details
-        summary Tansformer
-        |         
-        ol
-          li class ChainedTransformer<T> implements Transformer<T, T>, Serializable Since 3.0
-          |             
-          li class CloneTransformer<T> implements Transformer<T, T> Since 3.0
-          |             
-          li class ClosureTransformer<T> implements Transformer<T, T>, Serializable Since 3.0
-          |             + PredicateTransformer, NOPTransformer
-          |             
-          li
-            | class ConstantTransformer<I, O> implements Transformer<I, O>, Serializable Since 3.0
-          |             
-          li
-            | class FactoryTransformer<I, O> implements Transformer<I, O>, Serializable Since 3.0
-          |             + InstantiateTransformer, InvokerTransformer
-          |             
-          li
-            | final class ExceptionTransformer<I, O> implements Transformer<I, O> Serializable Since 3.0
-          |             
-          li class IfTransformer<I, O> implements Transformer<I, O> Serializable Since 4.1
-          |             + SwitchTransformer
-          |             
-          li
-            | final class MapTransformer<I, O> implements Transformer<I, O>, Serializable Since 3.0
-          |             
-          li
-            | final class StringValueTransformer<T> implements Transformer<T, String>, Serializable Since 3.0
-      |     
-      details
-        summary Equator
-        |         class DefaultEquator<T> implements Equator<T>, Serializable Since 4.0
-      |     
-      details
-        summary Factory
-        |         
-        ol
-          li class ConstantFactory<T> implements Factory<T>, Serializable Since 3.0
-          |             
-          li final class ExceptionFactory<T> implements Factory<T>, Serializable Since 3.0
-          |             
-          li class InstantiateFactory<T> implements Factory<T> Since 3.0
-          |             
-          li class PrototypeFactory Since 3.0
-          |             객체에 대하여 prototypeFactory() 메서드를 호출하면 public clone 메서드 → public 복사 생성자 → 직렬화 복사 순으로 객체 생성 시도한다.
-    hr
-    details
-      summary org.apache.commons.collections4.iterators
-      |     
-      ol
-        li class ArrayIterator<E> implements ResettableIterator<E> Since 1.0
-        |         배열에 대한 이터레이터 제공. + ArrayListIterator(java.util.ListIterator 프로토콜 추가 제공), ObjectArrayIterator, ObjectArrayListIterator
-        |         
-        li class ListIteratorWrapper<E> implements ResettableListIterator<E> Since 2.1
-        |         
-        li class PeekingIterator<E> implements Iterator<E> Since 4.0
-        |         
-        li class LoopingIterator<E> implements ResettableIterator<E> Since 3.0
-        |         + LoopingListIterator Since 3.2
-        |         
-        li class SingletonIterator<E> Since 2.0 + SingletonListIterator
-        |         
-        li class ReverseListIterator<E> implements  ResettableListIterator<E> Since 3.2
-        |         
-        li class PushbackIterator<E> implements Iterator<E> Since 4.0
-        |         next()를 취소할 수 있다. next()에서 반환하지 않은 객체도 pushback()으로 넣을 수 있으며, 래핑된 실제 iterator에는 영향을 끼치지 않는다.
-        |         
-        li class EnumerationIterator<E> implements Iterator<E> Since 1.0
-        |         Enumeration이 이터레이터로 동작하도록 하는 어댑터 제공 + IteratorEnumeration, IteratorIterable
-        |         
-        li class TransformIterator<I, O> implements Iterator<O> Since 1.0
-        |         
-        li
-          | class EntrySetMapIterator<K, V> implements MapIterator<K, V>, ResettableIterator<K> Since 3.0
-        |         맵의 entrySet을 이용한 MapIterator 구현 제공
-        |         
-        li class EmptyIterator<E> implements ResettableIterator<E> Since 3.1
-        |         + EmptyListIterator, EmptyMapIterator, EmptyOrderedIterator, EmptyOrderedMapIterator, UnmodifiableIterator, UnmodifiableListIterator, UnmodifiableMapIterator, UnmodifiableOrderedMapIterator
-        |         
-        li class BoundedIterator<E> implements Iterator<E> Since 4.1
-        |         다른 이터레이터의 특정 범위만 조회하는 래퍼를 제공. + SkippingIterator
-        |         
-        li class FilterIterator<E> implements Iterator<E> Since 1.0
-        |         + FilterListIterator, UniqueFilterIterator
-        |         
-        li class CollatingIterator<E> implements Iterator<E> Since 2.1
-        |         여러 이터레이터들을 특정 순서대로 소비하는 래퍼를 제공. + ZippingIterator(각 이터레이터 1개씩 순회 조회), IteratorChain(넘겨진 순서대로 소비), LazyIteratorChain
-        |         
-        li class ObjectGraphIterator<E> implements Iterator<E> Since 3.1
-        |         이터레이터들로 구성된 객체를 하나의 이터레이터로 순회할 수 있는 기능을 제공한다.
-        |         
-        button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/IteratorTest.java', lan='java') 예시
-        |         
-        li class PermutationIterator<E> implements Iterator<List<E>> Since 4.0
-        |         순열을 조회하는 이터레이터를 제공한다.
-    hr
-    details
-      summary org.apache.commons.collections4.keyvalue
-      |     
-      ol
-        li class MultiKey<K> implements Serializable Since 3.0
-        |         여러 키 값을 하나의 키로 이용할 수 있게 해준다. 이를 통해 다중 맵을 이용하지 않고 문제를 해결할 수 있다.
-        |         
-        li class DefaultKeyValue<K, V> extends AbstractKeyValue<K, V> Since 3.0
-        |         Map.Entry를 구현하지 않는 키-값 쌍 기능 제공. 키와 값이 null일 수 있다. + DefaultMapEntry
-        |         
-        li
-          | class TiedMapEntry<K, V> implements Map.Entry<K, V>, KeyValue<K, V>, Serializable Since 3.0
-        |         맵과 결합된 Map.Entry
-        |         
-        li
-          | final class UnmodifiableMapEntry<K, V> extends AbstractMapEntry<K, V> implements Unmodifiable Since 3.0
-    hr
-    details
-      summary org.apache.commons.collections4.list
-      |     
-      ol
-        li
-          | class CursorableLinkedList<E> extends AbstractLinkedList<E> implements Serializable Since 1.0
-        |         ListIterator를 통한 동시 수정이 가능한 리스트 구현을 제공한다. listIterator(), cursor() 메서드로 Cursor 객체를 얻을 수 있다.
-        |         
-        li
-          | class FixedSizeList<E> extends AbstractSerializableListDecorator<E> implements BoundedCollection<E> Since 3.0
-        |         다른 리스트의 크기를 제한하는 래퍼를 제공한다. 요소를 변경하는 작업만 지원된다.
-        |         
-        li class GrowthList<E> extends AbstractSerializableListDecorator<E> Since 3.2
-        |         리스트의 크기를 벗어난 인덱스에 대한 add/set 호출이 있을 때, 자동으로 null로 채운다. 음수 인덱스에 대해서는 IndexOutofBoundsException 발생
-        |         
-        li class LazyList<E> extends AbstractSerializableListDecorator<E> Since 3.0
-        |         GrowthList와 비슷. get 요청된 인덱스에 대한 요소를 특정 인스턴스로 할당한다.
-        |         
-        li
-          | class PredicatedList<E> extends PredicatedCollection<E> implements List<E> Since 3.0
-        |         + TransformedList
-        |         
-        li class SetUniqueList<E> extends AbstractSerializableListDecorator<E> Since 3.0
-        |         
-        li class TreeList<E> extends AbstractList<E> Since 3.1
-        |         임의 인덱스 삽입/제거에 최적화된 리스트 구현 제공.add, get, iterator만 이용한다면 ArrayList가 좋다
-        |         
-        li
-          | final class UnmodifiableList<E> extends AbstractSerializableListDecorator<E> implements Unmodifiable Since 3.0
-    hr
-    details
-      summary org.apache.commons.collections4.map
-      |     
-      ol
-        li
-          | class CaseInsensitiveMap<K, V> extends AbstractHashedMap<K, V> implements Serializable, Cloneable Since 3.0
-        |         키의 삽입, 비교 시 모두 소문자로 변환된다. keySet() 역시 소문자로 변환된 키를 반환한다
-        |         
-        li
-          | class CompositeMap<K, V> extends AbstractIterableMap<K, V> implements Serializable Since 3.0
-        |         
-        li
-          | class CompositeMap<K, V> extends AbstractIterableMap<K, V> implements Serializable Since 3.0
-        |         여러 맵들에 대해 하나의 뷰를 제공하는 장식자 맵 제공. 뷰에 대한 삽입/삭제 연산이 기저 맵에 적용되야 한다면 CompositeMap.MapMutator를 제공하면 된다.
-        |         
-        li
-          | class DefaultedMap<K, V> extends AbstractMapDecorator<K, V> implements Serializable Since 3.2
-        |         + LazyMap, LazySortedMap
-        |         
-        li
-          | class FixedSizeMap<K, V> extends AbstractMapDecorator<K, V> implements BoundedMap<K, V>, Serializable Since 3.2
-        |         + FixedSizeSortedMap
-        |         
-        li
-          | class Flat3Map<K, V> implements IterableMap<K, V>, Serializable, Cloneable Since 3.0
-        |         요소가 3개 이하일 때 최적으로 동작하는 맵 제공
-        |         
-        li
-          | class HashedMap<K, V> extends AbstractHashedMap<K, V> implements Serializable, Cloneable Since 3.0
-        |         JDK HashMap + MapIterator + Cloneable
-        |         
-        li
-          | class LinkedMap<K, V> extends AbstractLinkedMap<K, V> implements Serializable, Cloneable Since 3.0
-        |         JDK LinkedHashMap + MapIterator + Cloneable
-        br
-        |         + ListOrderedMap : 삽입 순서를 List에 저장
-        |         
-        li
-          | class LRUMap<K, V> extends AbstractLinkedMap<K, V> implements BoundedMap<K, V>, Serializable, Cloneable Since 3.0
-        |         임계 크기를 초과하면 가장 마지막으로 사용(get/put)된 entry 제거. DEFAULT_MAX_SIZE == 100
-        |         
-        li
-          | class MultiKeyMap<K, V> extends AbstractMapDecorator<MultiKey<? extends K>, V> implements Serializable, Cloneable Since 3.1
-        |         
-        li
-          | class PassiveExpiringMap<K, V> extends AbstractMapDecorator<K, V> implements Serializable Since 4.0
-        |         맵에 entry를 유지할 시간을 정의. 각 시간이 지나면 맵에서 제거된다.
-        |         
-        li
-          | class PredicatedMap<K, V> extends AbstractMapDecorator<K, V> implements Serializable Since 3.0
-        |         + PredicatedSortedMap, TransformedMap, TransformedSortedMap
-        |         
-        li
-          | class ReferenceIdentityMap<K, V> extends AbstractReferenceMap<K, V> implements Serializable Since 3.0
-        |         키, 값의 GC를 허용하고, equals() 대신 ==로 일치를 판별하는 맵을 제공한다. + ReferenceMap
-        |         
-        li final class StaticBucketMap<K, V> extends AbstractIterableMap<K, V> Since 3.0
-        |         주어진 한도 내에서는 고성능의 스레드-안전한 java.util.Map 구현을 제공한다. 크기가 한도를 벗어나면 O(n)에 가까워진다.
-        |         
-        li
-          | class SingletonMap<K, V> implements OrderedMap<K, V>, BoundedMap<K, V>, KeyValue<K, V>, Serializable, Cloneable Since 3.1
-        |         
-        li
-          | class UnmodifiableEntrySet<K, V> extends AbstractSetDecorator<Map.Entry<K, V>> implements Unmodifiable Since 3.0
-        |         변결할 수 없는 entry 집합을 반환하는 팩터리 메서드 제공 + UnmodifiableMap, UnmodifiableOrderedMap, UnmodifiableSortedMap
-        |         
-        li
-          | class EntrySetToMapIteratorAdapter<K, V> implements MapIterator<K, V>, ResettableIterator Since 4.0
-    hr
-    details
-      summary org.apache.commons.collections4.multimap
-      |     
-      ol
-        li
-          | class ArrayListValuedHashMap<K, V> extends AbstractListValuedMap<K, V> implements Serializable SInce 4.1
-        |         + HashSetValuedHashMap
-        |         
-        li
-          | class TransformedMultiValuedMap<K, V> extends AbstractMultiValuedMapDecorator<K, V> Since 4.1
-        |         
-        li
-          | final class UnmodifiableMultiValuedMap<K, V> extends AbstractMultiValuedMapDecorator<K, V> implements Unmodifiable Since 4.1
-    hr
-    details
-      summary org.apache.commons.collections4.multiset
-      |     
-      ol
-        li
-          | class HashMultiSet<E> extends AbstractMapMultiSet<E> implements Serializable Since 4.1
-        |         
-        li
-          | class PredicatedMultiSet<E> extends PredicatedCollection<E> implements MultiSet<E> Since 4.1
-        |         
-        li
-          | class SynchronizedMultiSet<E> extends SynchronizedCollection<E> implements MultiSet<E> Since 4.1
-        |         
-        li
-          | final class UnmodifiableMultiSet<E> extends AbstractMultiSetDecorator<E> implements Unmodifiable Since 4.1
-    hr
-    details
-      summary org.apache.commons.collections4.properties
-      |     
-      ol
-        li class SortedProperties extends Properties Since 4.2
-        |         
-        li class PropertiesFactory extends AbstractPropertiesFactory<Properties> Since 4.4
-        |         + SortedPropertiesFactory
-    hr
-    details
-      summary org.apache.commons.collections4.queue
-      |     
-      ol
-        li
-          | class CircularFifoQueue<E> extends AbstractCollection<E> implements Queue<E>, BoundedCollection<E>, Serializable Since 4.0
-        |         고정 크기의 큐로써 가장 마지막 요소가 null이면 덮어쓴다
-        |         
-        li PredicatedQueue, SynchronizedQueue, TransformedQueue, UnmodifiableQueue
-    hr
-    details
-      summary org.apache.commons.collections4.set
-      |     
-      ol
-        li class CompositeSet<E> implements Set<E>, Serializable Since 3.0
-        |         여러 셋에 대한 하나의 뷰를 제공. 뷰에 대한 연산이 기저 셋에 적용돼야 한다면 CompositeSet.SetMutator를 제공해야 한다
-        |         
-        li class ListOrderedSet<E> extends AbstractSerializableSetDecorator<E> Since 3.0
-        |         같은 요소에 대해 2번째 add 호출이 있는 경우, 1번째 위치를 유지한다
-        |         
-        li final class MapBackedSet<E, V> implements Set<E>, Serializable Since 3.1
-        |         Map을 Set처럼 이용하게 해준다
-        |         
-        li
-          | PredicatedSet, PredicatedSortedSet, PredicatedNavigableSet, TransformedSet, TransformedSortedSet, TrnasformedNavigableSet, UnmodifiableSet, UnmodifiableSortedSet, UnmodifiableNavigableSet
-    hr
+            summary org.apache.commons.collections4.queue
+            |     
+            ol
+                li
+                    | class CircularFifoQueue<E> extends AbstractCollection<E> implements Queue<E>, BoundedCollection<E>, Serializable Since 4.0
+                |         고정 크기의 큐로써 가장 마지막 요소가 null이면 덮어쓴다
+                |         
+                li PredicatedQueue, SynchronizedQueue, TransformedQueue, UnmodifiableQueue
+        hr
+        details
+            summary org.apache.commons.collections4.set
+            |     
+            ol
+                li class CompositeSet<E> implements Set<E>, Serializable Since 3.0
+                |         여러 셋에 대한 하나의 뷰를 제공. 뷰에 대한 연산이 기저 셋에 적용돼야 한다면 CompositeSet.SetMutator를 제공해야 한다
+                |         
+                li class ListOrderedSet<E> extends AbstractSerializableSetDecorator<E> Since 3.0
+                |         같은 요소에 대해 2번째 add 호출이 있는 경우, 1번째 위치를 유지한다
+                |         
+                li final class MapBackedSet<E, V> implements Set<E>, Serializable Since 3.1
+                |         Map을 Set처럼 이용하게 해준다
+                |         
+                li
+                    | PredicatedSet, PredicatedSortedSet, PredicatedNavigableSet, TransformedSet, TransformedSortedSet, TrnasformedNavigableSet, UnmodifiableSet, UnmodifiableSortedSet, UnmodifiableNavigableSet
+        hr

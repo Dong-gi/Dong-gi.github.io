@@ -1,70 +1,70 @@
 html
-  body
-    script(src='/source/redirect.js?200226_1657')
-    hr
-    details
-      summary org.apache.commons.rng
-      |     
-      details
-        summary interface UniformRandomProvider Since 1.0
-        |         
-        ol
-          li void nextBytes(byte[] bytes) + 오버로딩
-          |             
-          li int nextInt() + 오버로딩
-          |             + nextLong, nextBoolean, nextFloat, nextDouble
-      |     
-      details
-        summary
-          | interface RestorableUniformRandomProvider extends UniformRandomProvider Since 1.0
-        |         
-        ol
-          li 난수 생성기 상태를 저장/복원할 수 있다
-          |             
-          li RandomProviderState saveState()
-          |             
-          li void restoreState(RandomProviderState state)
-    hr
-    details
-      summary org.apache.commons.rng.core.source32
-      |     
-      ol
-        li class ISAACRandom extends IntProvider Since 1.0
-        |         암호적으로 안전한 ISAAC 알고리즘 의사 난수 생성기
-        |         
-        li class JDKRandom extends IntProvider Since 1.0
-        |         Random.nextInt()를 이용하는 의사 난수 생성기
-        |         
-        li class KISSRandom extends IntProvider Since 1.0
-        |         KISS 알고리즘 의사 난수 생성기
-        |         
-        li class MersenneTwister extends IntProvider Since 1.0
-        |         메르센 소수를 이용한 의사 난수 생성기. 사용 시 저작권 명시 제약이 있다
-        |         
-        li class MultiplyWithCarry256 extends IntProvider Since 1.0
-        |         Multiply-With-Carry 알고리즘 의사 난수 생성기
-        |         
-        li class Well1024a extends AbstractWell Since 1.0
-        |         WELL1024a 알고리즘 의사 난수 생성기 + Well19937a, Well19937c, Well44497a, Well44497b, Well512a
-    hr
-    details
-      summary org.apache.commons.rng.core.util
-      |     
-      details(open='')
-        summary final class NumberFactory
-        |         
-        ol
-          li static double makeDouble(int v, int w) + 오버로딩
-          |             
-          li static float makeFloat(int v)
-          |             
-          li static long makeLong(int v, int w) + 오버로딩
-          |             
-          li static int extractHi(long v) + extractLo
-          |             
-          li static byte[] makeByteArray(long[] input) + 오버로딩
-          |             
-          li static int makeInt(byte[] input)
-          |             
-          li static int[] makeIntArray(byte[] input) + makeLongArray
-    hr
+    body
+        script(src='/source/redirect.js?200226_1657')
+        hr
+        details
+            summary org.apache.commons.rng
+            |     
+            details
+                summary interface UniformRandomProvider Since 1.0
+                |         
+                ol
+                    li void nextBytes(byte[] bytes) + 오버로딩
+                    |             
+                    li int nextInt() + 오버로딩
+                    |             + nextLong, nextBoolean, nextFloat, nextDouble
+            |     
+            details
+                summary
+                    | interface RestorableUniformRandomProvider extends UniformRandomProvider Since 1.0
+                |         
+                ol
+                    li 난수 생성기 상태를 저장/복원할 수 있다
+                    |             
+                    li RandomProviderState saveState()
+                    |             
+                    li void restoreState(RandomProviderState state)
+        hr
+        details
+            summary org.apache.commons.rng.core.source32
+            |     
+            ol
+                li class ISAACRandom extends IntProvider Since 1.0
+                |         암호적으로 안전한 ISAAC 알고리즘 의사 난수 생성기
+                |         
+                li class JDKRandom extends IntProvider Since 1.0
+                |         Random.nextInt()를 이용하는 의사 난수 생성기
+                |         
+                li class KISSRandom extends IntProvider Since 1.0
+                |         KISS 알고리즘 의사 난수 생성기
+                |         
+                li class MersenneTwister extends IntProvider Since 1.0
+                |         메르센 소수를 이용한 의사 난수 생성기. 사용 시 저작권 명시 제약이 있다
+                |         
+                li class MultiplyWithCarry256 extends IntProvider Since 1.0
+                |         Multiply-With-Carry 알고리즘 의사 난수 생성기
+                |         
+                li class Well1024a extends AbstractWell Since 1.0
+                |         WELL1024a 알고리즘 의사 난수 생성기 + Well19937a, Well19937c, Well44497a, Well44497b, Well512a
+        hr
+        details
+            summary org.apache.commons.rng.core.util
+            |     
+            details(open='')
+                summary final class NumberFactory
+                |         
+                ol
+                    li static double makeDouble(int v, int w) + 오버로딩
+                    |             
+                    li static float makeFloat(int v)
+                    |             
+                    li static long makeLong(int v, int w) + 오버로딩
+                    |             
+                    li static int extractHi(long v) + extractLo
+                    |             
+                    li static byte[] makeByteArray(long[] input) + 오버로딩
+                    |             
+                    li static int makeInt(byte[] input)
+                    |             
+                    li static int[] makeIntArray(byte[] input) + makeLongArray
+        hr
