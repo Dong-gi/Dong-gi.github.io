@@ -3045,9 +3045,13 @@ single
 ai.html
 algo.html
 book01.html
+koreatech
 koreatech.html
 linear_algebra.html
 probability.html
+
+/workspace/donggi-github/Dong-gi.github.io/posts/algorithm/koreatech:
+1003.html
 
 /workspace/donggi-github/Dong-gi.github.io/posts/book:
 001.html
@@ -3230,6 +3234,10 @@ single
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/algorithm:
 ai.jade
+koreatech
+
+/workspace/donggi-github/Dong-gi.github.io/posts.jade/algorithm/koreatech:
+1003.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/book:
 

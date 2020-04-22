@@ -1,36 +1,193 @@
-const posts = { list: [], hash: {}, codes: {} }
+const posts = { list: [
+    { file: "/posts/algorithm/koreatech/1003.html", category: "Algorithm/KOREATECH", title: "1003번" },
+    /* ↓ 정리 안 됨 */
+    { file: "/posts/algorithm/ai.html", category: "Algorithm", title: "AI" },
+    { file: "/posts/algorithm/algo.html", category: "Algorithm", title: "Algorithm" },
+    { file: "/posts/algorithm/book01.html", category: "Algorithm", title: "『알고리즘 도감』" },
+    { file: "/posts/algorithm/koreatech.html", category: "Algorithm", title: "jduge.koreatech.ac.kr" },
+    { file: "/posts/algorithm/linear_algebra.html", category: "Algorithm", title: "선형대수" },
+    { file: "/posts/algorithm/probability.html", category: "Algorithm", title: "확률" },
+    
+    { file: "/posts/book/001.html", category: "Book", title: "1만 시간의 재발견" },
+    { file: "/posts/book/002.html", category: "Book", title: "마음의 탄생" },
+    { file: "/posts/book/003.html", category: "Book", title: "생각하는 삶을 위한 철학의 역사" },
+    { file: "/posts/book/004.html", category: "Book", title: "쇼펜하우어, 돌이 별이 되는 철학" },
+    { file: "/posts/book/005.html", category: "Book", title: "인생의 모든 의미" },
+    { file: "/posts/book/009.html", category: "Book", title: "인지 편향" },
+    { file: "/posts/book/006.html", category: "Book", title: "지식의 착각" },
+    { file: "/posts/book/007.html", category: "Book", title: "키르케고르 실존 극장" },
+    { file: "/posts/book/008.html", category: "Book", title: "Gamification by Design" },
+
+    { file: "/posts/dotnet/csharp_library.html", category: "Programming/.NET", title: "C# 라이브러리" },
+    { file: "/posts/dotnet/csharp_basic.html", category: "Programming/.NET", title: "C# 시작하기" },
+    { file: "/posts/dotnet/wpf_basic.html", category: "Programming/.NET", title: "WPF 시작하기" },
+    
+    { file: "/posts/db/concept.html", category: "Programming/DB", title: "기본 개념" },
+    { file: "/posts/db/mongodb.html", category: "Programming/DB", title: "MongoDB" },
+    { file: "/posts/db/mysql.html", category: "Programming/DB", title: "MySQL" },
+    { file: "/posts/db/psql_to_sqlite.html", category: "Programming/DB", title: "PostgreSQL → SQLite3 마이그레이션" },
+    { file: "/posts/db/psql_admin.html", category: "Programming/DB", title: "PostgreSQL 서버 관리" },
+    { file: "/posts/db/psql_programming.html", category: "Programming/DB", title: "PostgreSQL 서버 프로그래밍" },
+    { file: "/posts/db/psql_tutorial.html", category: "Programming/DB", title: "PostgreSQL 시작하기" },
+    { file: "/posts/db/psql_sql.html", category: "Programming/DB", title: "PostgreSQL SQL 언어" },
+
+    { file: "/posts/front/css.html", category: "Programming/Front", title: "CSS" },
+    { file: "/posts/front/html.html", category: "Programming/Front", title: "HTML" },
+    { file: "/posts/front/http.html", category: "Programming/Front", title: "HTTP 1.1" },
+    { file: "/posts/front/freemarker/built_in.html", category: "Programming/Front/FreeMarker", title: "Built-in 목록 2.3.28" },
+    { file: "/posts/front/freemarker/programming_guide.html", category: "Programming/Front/FreeMarker", title: "프로그래밍 가이드 2.3.28" },
+    { file: "/posts/front/freemarker/template_guide.html", category: "Programming/Front/FreeMarker", title: "템플릿 작성 가이드 2.3.28" },
+    { file: "/posts/front/freemarker/xml_guide.html", category: "Programming/Front/FreeMarker", title: "XML 처리 가이드 2.3.28" },
+
+    { file: "/posts/java/android.html", category: "Programming/Java", title: "Android" },
+    { file: "/posts/java/basic.html", category: "Programming/Java", title: "Java 시작하기" },
+    { file: "/posts/java/effective_java.html", category: "Programming/Java", title: "『Effective Java』" },
+    { file: "/posts/java/java_ee.html", category: "Programming/Java", title: "JavaEE" },
+    { file: "/posts/java/javafx.html", category: "Programming/Java", title: "JavaFX" },
+    { file: "/posts/java/jni.html", category: "Programming/Java", title: "Java Native Interface" },
+    { file: "/posts/java/oop.html", category: "Programming/Java", title: "Java 객체지향" },
+    { file: "/posts/java/version.html", category: "Programming/Java", title: "Java 버전별 추가사항" },
+
+    { file: "/posts/java/apache.commons.collections.html", category: "Programming/Java/apache.commons", title: "Apache Commons Collections 4.4" },
+    { file: "/posts/java/apache.commons.lang.html", category: "Programming/Java/apache.commons", title: "Apache Commons Lang 3.9" },
+    { file: "/posts/java/apache.commons.math.html", category: "Programming/Java/apache.commons", title: "Apache Commons Math 3.6.1" },
+    { file: "/posts/java/apache.commons.rng.html", category: "Programming/Java/apache.commons", title: "Apache Commons RNG Core 1.2" },
+    { file: "/posts/java/com.sun.nio.sctp.html", category: "Programming/Java/jdk.sctp", title: "com.sun.nio.sctp 12 Since 1.7" },
+    { file: "/posts/java/jackson.html", category: "Programming/Java/FasterXML", title: "Jackson 2.10.1" },
+    { file: "/posts/java/gson.html", category: "Programming/Java/google", title: "Gson 2.8.6" },
+    { file: "/posts/java/guava.html", category: "Programming/Java/google", title: "Guava 23.0" },
+    { file: "/posts/java/java.io.html", category: "Programming/Java/java.base", title: "java.io 12 Since 1.0" },
+    { file: "/posts/java/java.lang.html", category: "Programming/Java/java.base", title: "java.lang 12 Since 1.0" },
+    { file: "/posts/java/java.lang.annotation.html", category: "Programming/Java/java.base", title: "java.lang.annotation 12 Since 1.5" },
+    { file: "/posts/java/java.lang.module.html", category: "Programming/Java/java.base", title: "java.lang.module 12 Since 9" },
+    { file: "/posts/java/java.lang.ref.html", category: "Programming/Java/java.base", title: "java.lang.ref 12 Since 1.2" },
+    { file: "/posts/java/java.lang.reflect.html", category: "Programming/Java/java.base", title: "java.lang.reflect 12 Since 1.1" },
+    { file: "/posts/java/java.math.html", category: "Programming/Java/java.base", title: "java.math 12 Since 1.1" },
+    { file: "/posts/java/java.net.html", category: "Programming/Java/java.base", title: "java.net 12 Since 1.0" },
+    { file: "/posts/java/java.nio.html", category: "Programming/Java/java.base", title: "java.nio 12 Since 1.4" },
+    { file: "/posts/java/java.nio.channels.html", category: "Programming/Java/java.base", title: "java.nio.channels 12 Since 1.4" },
+    { file: "/posts/java/java.nio.charset.html", category: "Programming/Java/java.base", title: "java.nio.charset 12 Since 1.4" },
+    { file: "/posts/java/java.nio.file.html", category: "Programming/Java/java.base", title: "java.nio.file 12 Since 1.7" },
+    { file: "/posts/java/java.security.html", category: "Programming/Java/java.base", title: "java.security 12 Since 1.1" },
+    { file: "/posts/java/java.text.html", category: "Programming/Java/java.base", title: "java.text 12 Since 1.1" },
+    { file: "/posts/java/java.time.html", category: "Programming/Java/java.base", title: "java.time 12 Since 1.8" },
+    { file: "/posts/java/java.time.format.html", category: "Programming/Java/java.base", title: "java.time.format 12 Since 1.8" },
+    { file: "/posts/java/java.util.html", category: "Programming/Java/java.base", title: "java.util 12 Since 1.0" },
+    { file: "/posts/java/java.util.concurrent.html", category: "Programming/Java/java.base", title: "java.util.concurrent 12 Since 1.5" },
+    { file: "/posts/java/java.util.concurrent.atomic.html", category: "Programming/Java/java.base", title: "java.util.concurrent.atomic 12 Since 1.5"},
+    { file: "/posts/java/java.util.function.html", category: "Programming/Java/java.base", title: "java.util.function 12 Since 1.8"  },
+    { file: "/posts/java/java.util.regex.html", category: "Programming/Java/java.base", title: "java.util.regex 12 Since 1.4" },
+    { file: "/posts/java/java.util.stream.html", category: "Programming/Java/java.base", title: "java.util.stream 12 Since 1.8" },
+    { file: "/posts/java/java.util.zip.html", category: "Programming/Java/java.base", title: "java.util.zip 12 Since 1.1" },
+    { file: "/posts/java/javax.crypto.html", category: "Programming/Java/java.base", title: "javax.crypto 12 Since 1.4" },
+    { file: "/posts/java/javax.net.html", category: "Programming/Java/java.base", title: "javax.net 12 Since 1.4" },
+    { file: "/posts/java/javax.net.ssl.html", category: "Programming/Java/java.base", title: "javax.net.ssl 12 Since 1.4" },
+    { file: "/posts/java/javax.annotation.processing.html", category: "Programming/Java/java.compiler", title: "Annotation Processing API" },
+    { file: "/posts/java/lombok.html", category: "Programming/Java", title: "lombok 1.18.10" },
+    { file: "/posts/java/logback.html", category: "Programming/Java", title: "Logback with SLF4J" },
+
+    { file: "/posts/javascript/basic.html", category: "Programming/JavaScript", title: "코어 JavaScript" },
+    { file: "/posts/javascript/basic2.html", category: "Programming/JavaScript", title: "브라우저 JavaScript" },
+    { file: "/posts/javascript/jquery.html", category: "Programming/JavaScript", title: "jQuery" },
+    { file: "/posts/javascript/node.html", category: "Programming/JavaScript", title: "Node" },
+
+    { file: "/posts/python/basic.html", category: "Programming/Python", title: "Python 3.8 시작하기" },
+    { file: "/posts/python/data_model.html", category: "Programming/Python", title: "Python 3.8 데이터 모델" },
+    { file: "/posts/python/built_in_function.html", category: "Programming/Python", title: "Python Built-in Functions 3.8" },
+    { file: "/posts/python/built_in_constant.html", category: "Programming/Python", title: "Python Built-in Constants 3.8" },
+    { file: "/posts/python/built_in_type.html", category: "Programming/Python", title: "Python Built-in Types 3.8" },
+    { file: "/posts/python/built_in_exception.html", category: "Programming/Python", title: "Python Built-in Exceptions 3.8" },
+    { file: "/posts/python/persistence.html", category: "Programming/Python", title: "Python Data Persistence" },
+    { file: "/posts/python/string.html", category: "Programming/Python/Library", title: "Lib/string : 문자열 공통 연산" },
+    { file: "/posts/python/re.html", category: "Programming/Python/Library", title: "Lib/re : 정규표현식" },
+    { file: "/posts/python/textwrap.html", category: "Programming/Python/Library", title: "Lib/textwrap : 텍스트 정돈" },
+    { file: "/posts/python/unicodedata.html", category: "Programming/Python/Library", title: "Lib/unicodedata : 유니코드 database 표준" },
+    { file: "/posts/python/struct.html", category: "Programming/Python/Library", title: "Lib/struct : 이진 데이터 패킹/언패킹" },
+    { file: "/posts/python/datetime.html", category: "Programming/Python/Library", title: "Lib/datetime : 단순 시간 표현" },
+    { file: "/posts/python/calendar.html", category: "Programming/Python/Library", title: "Lib/calendar : 달력 연산" },
+    { file: "/posts/python/collections.html", category: "Programming/Python/Library", title: "Lib/collections : 컨테이너" },
+    { file: "/posts/python/collections.abc.html", category: "Programming/Python/Library", title: "Lib/collections.abc : 컨테이너 ABC" },
+    { file: "/posts/python/heapq.html", category: "Programming/Python/Library", title: "Lib/heapq : 우선순위 큐" },
+    { file: "/posts/python/bisect.html", category: "Programming/Python/Library", title: "Lib/bisect : 리스트 정렬 유지 삽입" },
+    { file: "/posts/python/array.html", category: "Programming/Python/Library", title: "Lib/array : 고효율 숫자 배열" },
+    { file: "/posts/python/weakref.html", category: "Programming/Python/Library", title: "Lib/weakref : 약한 참조" },
+    { file: "/posts/python/types.html", category: "Programming/Python/Library", title: "Lib/types : 동적 타입 생성" },
+    { file: "/posts/python/copy.html", category: "Programming/Python/Library", title: "Lib/copy" },
+    { file: "/posts/python/enum.html", category: "Programming/Python/Library", title: "Lib/enum" },
+    { file: "/posts/python/math.html", category: "Programming/Python/Library", title: "Lib/math, cmath" },
+    { file: "/posts/python/decimal.html", category: "Programming/Python/Library", title: "Lib/decimal : 정확한 10진수 연산" },
+    { file: "/posts/python/random.html", category: "Programming/Python/Library", title: "Lib/random, secrets : 난수" },
+    { file: "/posts/python/statistics.html", category: "Programming/Python/Library", title: "Lib/statistics : 통계" },
+    { file: "/posts/python/itertools.html", category: "Programming/Python/Library", title: "Lib/itertools" },
+    { file: "/posts/python/functools.html", category: "Programming/Python/Library", title: "Lib/functools : 고계함수" },
+    { file: "/posts/python/operator.html", category: "Programming/Python/Library", title: "Lib/operator : 표준 연산" },
+    { file: "/posts/python/shutil.html", category: "Programming/Python/Library", title: "Lib/shutil : 고수준 파일 연산" },
+    { file: "/posts/python/pandas.html", category: "Programming/Python/Library", title: "3rd/pandas : 데이터 처리" },
+
+    { file: "/posts/project/wpf_data_tool.html", category: "Project", title: "C#.NET, WPF - 데이터 작업 툴" },
+    { file: "/posts/project/snippets.html", category: "Project", title: "Code Snippets" },
+    { file: "/posts/project/error.html", category: "Project", title: "Exceptions + Errors" },
+    { file: "/posts/project/tip.html", category: "Project", title: "잡다한 팁" },
+    
+    { file: "/posts/single/aws.html", category: "Programming/Single Topic", title: "AWS" },
+    { file: "/posts/single/centos.html", category: "Programming/Single Topic", title: "CentOS" },
+    { file: "/posts/single/docker.html", category: "Programming/Single Topic", title: "Docker" },
+    { file: "/posts/single/fp.html", category: "Programming/Single Topic", title: "FP; Functional Programming" },
+    { file: "/posts/single/git.html", category: "Programming/Single Topic", title: "Git" },
+    { file: "/posts/single/nginx.html", category: "Programming/Single Topic", title: "Nginx" },
+    { file: "/posts/single/tomcat.html", category: "Programming/Single Topic", title: "tomcat" },
+    { file: "/posts/single/refactoring.html", category: "Programming/Single Topic", title: "디자인 패턴 + 리팩터링" },
+    { file: "/posts/single/rpi.html", category: "Programming/Single Topic", title: "Raspberry Pi 3 + OpenCV(python)" },
+    { file: "/posts/single/unity.html", category: "Programming/Single Topic", title: "Unity : 작성 중지" },
+    { file: "/posts/single/vi.html", category: "Programming/Single Topic", title: "vi" },
+], codes: {} }
 
 window.addEventListener('load', () => {
     new MutationObserver(mutationCallback).observe(document.body, { attributes: false, childList: true, subtree: true });
+    mutationCallback([{ type: 'childList', target: document.body }]);
 
     /* 하이라이팅 지원 목록 */
     console.log(hljs.listLanguages());
 
-    /* index.jade에서 포함한 포스트 목록 초기화 */
-    for (let template of document.querySelectorAll('template.post'))
-        posts.list.push({
-            file: template.getAttribute('file'),
-            category: template.getAttribute('category'),
-            title: template.getAttribute('title'),
-            html: template.innerHTML
-        });
-
-    prepareSidebar();
-    preparePosts();
+    updateSidebar();
+    updatePostList();
+    insertDisqusThread();
+    updateMarkerList();
     document.getElementById('query').onkeyup = queryUpdated;
-    
-    let postQuery = location.search.match(/[?&]post=([^&]+)/);
-    setTimeout(((postQuery) => function() { scrollToPost((!!postQuery)? postQuery[1] : localStorage.lastReadPost? localStorage.lastReadPost : posts.list[0].file.hashCode()); })(postQuery), 369);
-    window.onpopstate = function(e) {
-        let postQuery = e.state.html.match(/[?&]post=([^&]+)/);
-        if (!!postQuery) {
-            document.title = e.state.pageTitle;
-            scrollToPost(postQuery[1]);
-        }
-    };
 });
 
-function prepareSidebar() {
+function mutationCallback(mutations, observer) {
+    for (let mutation of mutations) {
+        if (mutation.type !== 'childList') return;
+        addImageOnclick(mutation.target.querySelectorAll('img'));
+        addCodeBtnOnclick(mutation.target.querySelectorAll('button.btn-code'));
+        addHoverContents(mutation.target.querySelectorAll('.hover-content'));
+    }
+}
+
+function addImageOnclick(imgs) {
+    for (let img of imgs) {
+        if (!!img.onclick)
+            continue;
+        img.onclick = ((src) => function(e) { Donggi.openLink(src, '_blank'); })(img.src);
+    }
+}
+
+function addCodeBtnOnclick(btns) {
+    for (let button of btns) {
+        let id = `${new Date().getTime()}-${Math.random().toString().replace(/\./g, '')}`;
+        button.id = `code-button-${id}`;
+        button.classList.remove('btn-code');
+        button.onclick = insertCode(id);
+    }
+}
+
+function addHoverContents(targets) {
+    for (let hoverContent of targets)
+        Donggi.addHoverContent(hoverContent, document.getElementById(hoverContent.getAttribute('template-id')));
+}
+
+function updateSidebar() {
     if (window.innerWidth > 600)
         openSidebar();
     else
@@ -56,15 +213,12 @@ function toggleSidebar() {
         closeSidebar();
 }
 
-function preparePosts() {
+function updatePostList() {
     posts.list.sort((post1, post2) => Donggi.compareString(post2.title, post1.title));
     posts.list.sort((post1, post2) => Donggi.compareString(post2.category, post1.category));
 
-    let categoryMap = {};
+    let categoryMap = { posts: [] };
     for (let post of posts.list) {
-        posts.hash[post.file.hashCode()] = post;
-        
-        /* 카테고리 맵 초기화 */
         let category = categoryMap;
         for (let cate of post.category.split("/")) {
             if (!category.hasOwnProperty(cate)) {
@@ -74,105 +228,18 @@ function preparePosts() {
             category = category[cate];
         }
         category.posts.push(post.title);
-
-        /* 컨텐츠 골격 생성 */
-        let title = post.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        let path = `https://dong-gi.github.io${post.file}`;
-        let html = Donggi.getElementFromText(`<div class="w3-panel w3-card w3-light-grey w3-padding-8 w3-section"><details id="post-${post.file.hashCode()}" class="post-details"><summary title="${location}"><span class="w3-small">${post.category}</span><span class="w3-large"> ${title}</span></summary></details></div>`);
-        html.querySelector('details').append(Donggi.getNodesFromText(post.html, 'p'));
-        document.getElementById('contents').append(html);
-        html.querySelector('summary').addEventListener('click', updateLastPost(post));
     }
-
     let url = URL.createObjectURL(new Blob([Donggi.makeLSlikeText('카테고리', categoryMap, 'posts')], {
         type: 'text/plain;charset=utf-8;'
     }));
-    new FileList(url, '#post-list', (_, title) => {
-        if (window.innerWidth <= 600)
-            closeSidebar();
-        setTimeout(() => scrollToPost(posts.list.filter(x => x.title == title)[0].file.hashCode()), 123);
+    new FileList(url, '#post-list', null, true, (category, title) => {
+        let post = posts.list.filter(x => x.title == title)[0];
+        return Donggi.getElementFromText(`<li><a href="${post.file}">${title}</a></li>`);
     });
 }
 
-function updateLastPost(post) {
-    return () => {
-        let details = document.getElementById(`post-${post.file.hashCode()}`);
-        if (details.open)
-            return;
-        localStorage.lastReadPost = post.file.hashCode();
-        let path = location.pathname;
-        let postQuery = location.search.match(/[?&]post=([^&]+)/);
-        if (!!postQuery)
-            path += location.search.replace(postQuery[1], post.file.hashCode());
-        else
-            path += `${location.search.length>0? location.search + '&' : '?'}post=${post.file.hashCode()}`;
-        document.title = posts.hash[post.file.hashCode()].title;
-        window.history.pushState({"html":path,"pageTitle":document.title}, document.title, `${location.origin}${path}`);
-
-        if (!details.querySelector('div#disqus_thread'))
-            insertDisqusThread(details, post.file);
-        
-        if (!post.markers) {
-            post.markers = {};
-            for (let marker of details.querySelectorAll('a.marker')) {
-                let route = getMarkerInfos(marker);
-                let hash = route.join('/').hashCode();
-                marker.id = `marker-${hash}`;
-                
-                let mapping = post.markers;
-                let name = route.pop();
-                for (let item of route) {
-                    if (!mapping.hasOwnProperty(item)) {
-                        mapping[item] = {};
-                        mapping[item].markers = [];
-                    }
-                    mapping = mapping[item];
-                }
-                mapping.markers.push(name);
-            }
-        }
-        
-        let url = URL.createObjectURL(new Blob([Donggi.makeLSlikeText('컨텐츠', post.markers, 'markers')], {
-            type: 'text/plain;charset=utf-8;'
-        }));
-        new FileList(url, '#marker-list', (prefix, title) => {
-            if (window.innerWidth <= 600)
-                closeSidebar();
-            let hash = `${prefix.substr(4)}/${title}`.hashCode();
-            let target = document.getElementById(`marker-${hash}`);
-            let parent = target.parentElement;
-            while (parent.tagName != 'BODY') {
-                if (parent.tagName == 'DETAILS' && !parent.open)
-                    parent.querySelector('summary').click();
-                parent = parent.parentElement;
-            }
-            target.scrollIntoView(true);
-            target.parentElement.style.animation = '';
-            setTimeout(((target) => function () {
-                target.parentElement.style.animation = 'highlight 3s 1';
-            })(target), 123);
-        }, true);
-    };
-    function getMarkerInfos(marker) {
-        let route = [];
-        let parent = marker.parentElement;
-        while (!parent.classList.contains('post-details')) {
-            switch (parent.tagName) {
-                case 'SUMMARY': case 'LI': case 'A': case 'SPAN': case 'TD': case 'TH':
-                case 'H1': case 'H2': case 'H3': case 'H4': case 'H5': case 'H6':
-                    route.push(parent.textContent.substr(0, 30).replace(/\//gm, '\\'));
-                default:
-                    break;
-            }
-            parent = parent.parentElement;
-        }
-        route.push(parent.querySelector('summary').textContent.substr(0, 30).replace(/\//gm, '\\'));
-        route.reverse();
-        return route;
-    }
-}
-
-function insertDisqusThread(details, file) {
+function insertDisqusThread() {
+    let parent = document.querySelector('div#contents')
     if (!/dong-gi\.github\.io/i.test(location.host))
         return;
 
@@ -180,18 +247,18 @@ function insertDisqusThread(details, file) {
         DISQUS.reset({
             reload: true,
             config: function () {
-                this.page.url = `https://dong-gi.github.io${file}`;
-                this.page.identifier = file;
+                this.page.url = `https://dong-gi.github.io${location.pathname}`;
+                this.page.identifier = location.pathname;
             }
         });
-        details.append(document.querySelector('div#disqus_thread'));
+        parent.append(document.querySelector('div#disqus_thread'));
         return;
     }
 
-    details.append(Donggi.getElementFromText('<div id="disqus_thread"></div>'));
+    parent.append(Donggi.getElementFromText('<div id="disqus_thread"></div>'));
     eval(`var disqus_config = function () {
-            this.page.url = 'https://dong-gi.github.io${file}';
-            this.page.identifier = '${file}';
+            this.page.url = 'https://dong-gi.github.io${location.pathname}';
+            this.page.identifier = '${location.pathname}';
         };
         (function() {
             var d = document, s = d.createElement('script');
@@ -201,17 +268,48 @@ function insertDisqusThread(details, file) {
         })();`);
 }
 
-function scrollToPost(hash) {
-    let details = document.getElementById(`post-${hash}`);
-    if (!details) {
-        console.log(`Post not found. hash = ${hash}`);
-        return;
+function updateMarkerList() {
+    let markerMap = { markers: [] };
+    for (let marker of document.querySelectorAll('.marker')) {
+        let name = getMarkerName(marker);
+        marker.setAttribute('marker-id', `marker-${name.hashCode()}`);
+        markerMap.markers.push(name);
     }
-    if (!details.open)
-        details.querySelector('summary').click();
-    window.scrollTo({
-        top: (!hash)? 0 : details.offsetTop - document.getElementById('nav').clientHeight
-    });
+    let url = URL.createObjectURL(new Blob([Donggi.makeLSlikeText('컨텐츠', markerMap, 'markers')], {
+        type: 'text/plain;charset=utf-8;'
+    }));
+    new FileList(url, '#marker-list', (prefix, title) => {
+        let isNarrow = window.innerWidth <= 600;
+        if (isNarrow)
+            closeSidebar();
+        let target = document.querySelector(`.marker[marker-id=marker-${title.hashCode()}]`);
+        let parent = target;
+        while (parent.tagName != 'BODY') {
+            if (parent.tagName == 'DETAILS' && !parent.open)
+                parent.querySelector('summary').click();
+            parent = parent.parentElement;
+        }
+        target.style.animation = '';
+        setTimeout(((target) => function () {
+            target.style.animation = 'highlight 2s 1';
+        })(target), 139);
+        setTimeout(((target) => function () {
+            window.scrollTo({
+                top: target.offsetTop - document.getElementById('nav').clientHeight
+            });
+        })(target), isNarrow? 444 : 0);
+    }, true, null, false);
+}
+
+function getMarkerName(marker) {
+    switch (marker.tagName) {
+        case 'IMG':
+            return `이미지 : ${marker.alt.substr(0, 30).replace(/\//gm, '\\')}`;
+        case 'TABLE':
+            return `표 : ${marker.caption.textContent.substr(0, 30).replace(/\//gm, '\\')}`;
+        default:
+            return marker.textContent.substr(0, 30).replace(/\//gm, '\\');
+    }
 }
 
 function queryUpdated(e) {
@@ -223,40 +321,17 @@ function queryUpdated(e) {
     let showAll = query.length < 2;
     let regex = new RegExp(query, 'gmi');
     if (showAll)
-        document.getElementById('contents').childNodes.forEach((node, idx, nodeList) => node.style.display = 'block');
+        document.getElementById('contents').childNodes.forEach((node, idx, nodeList) => !!node.style && (node.style.display = 'block'));
     else
-        document.getElementById('contents').childNodes.forEach((node, idx, nodeList) => node.style.display = regex.test(node.textContent)? 'block' : 'none');
+        document.getElementById('contents').childNodes.forEach((node, idx, nodeList) => !!node.style && (node.style.display = regex.test(node.textContent)? 'block' : 'none'));
     return true;
-}
-
-function mutationCallback(mutations, observer) {
-    for (let mutation of mutations) {
-        if (mutation.type !== 'childList') return;
-        
-        for (let img of mutation.target.querySelectorAll('img')) {
-            if (!!img.onclick)
-                continue;
-            img.onclick = ((src) => function(e) { Donggi.openLink(src, '_blank'); })(img.src);
-        }
-
-        for (let button of mutation.target.querySelectorAll('button.btn-code')) {
-            let id = `${new Date().getTime()}-${Math.random().toString().replace(/\./g, '')}`;
-            button.id = `code-button-${id}`;
-            button.title = button.getAttribute('path');
-            button.classList.remove('btn-code');
-            button.onclick = insertCode(id);
-        }
-        
-        for (let hoverContent of mutation.target.querySelectorAll('.hover-content'))
-            Donggi.addHoverContent(hoverContent, document.getElementById(hoverContent.getAttribute('template-id')));
-    }
 }
 
 function insertCode(id) {
     return () => {
         if (!document.getElementById(`code-div-${id}`)) {
             let button = document.getElementById(`code-button-${id}`);
-            let path = button.getAttribute('path');
+            let path = button.title;
             let xhr = new XMLHttpRequest();
             xhr.addEventListener("load", ((button) => function(e) {
                 let div = Donggi.getElementFromText(`<div id="code-div-${id}" class="w3-leftbar w3-border-green code-div" style="max-height:${window.innerHeight / 2}"></div>`);
@@ -324,13 +399,14 @@ function insertCode(id) {
 
 function showModal(id) {
     return () => {
+        closeSidebar();
         let modal = document.getElementById(`modal-${id}`);
         if (!!modal) {
             modal.style.display = 'block';
             return;
         }
 
-        modal = Donggi.getElementFromText(getCodeModalHTML(id, document.getElementById(`code-button-${id}`).getAttribute('path').split('/').pop()));
+        modal = Donggi.getElementFromText(getCodeModalHTML(id, document.getElementById(`code-button-${id}`).title.split('/').pop()));
         let header = modal.querySelector('header');
         let body = modal.querySelector('.code-modal-body');
         let footer = modal.querySelector('footer');
@@ -345,7 +421,7 @@ function showModal(id) {
             Donggi.showSnackbar("복사 완료", modal);
             modal.focus();
         });
-        modal.querySelector('button.download').onclick = (() => downloadCode(document.getElementById(`code-button-${id}`).getAttribute('path').split('/').pop(), posts.codes[id]));
+        modal.querySelector('button.download').onclick = (() => downloadCode(document.getElementById(`code-button-${id}`).title.split('/').pop(), posts.codes[id]));
         modal.querySelector('button.print').onclick = (() => Donggi.printElement(body));
     };
 }
@@ -383,13 +459,19 @@ function getCodeModalHTML(id, filename) {
 class FileList {
     /**
      * document.querySelector(targetQuery) 항목을 찾아 파일 목록들로 채운다.
-     * @param {String} lsResultPath "ls -R"의 결과를 가진 파일의 경로
-     * @param {Function} fileAction Optional. 파일 클릭 시, 디렉터리 경로와 파일명을 먹는 임의 함수. 기본값 : 새 탭에서 열기
+     *
+     * @param {String} lsResultPath "ls -R" 결과와 같은 포맷의 텍스트 파일 경로
+     * @param {Function} fileAction Optional. 파일 클릭 시, 디렉터리 경로와 파일명을 먹는 임의 함수. 기본값: 새 탭에서 열기
+     * @param {Boolean} openAll Optional. 목록을 처음부터 모두 열 것인지 여부. 기본값: false
+     * @param {Function} fileHTMLmaker Optional. 디렉터리 경로와 파일명을 먹고 HTMLElement를 반환하는 함수. 기본값: li 요소 생성
+     * @param {Boolean} sort Optional. 목록을 정렬할 지 여부. 기본값: true
      */
-    constructor(lsResultPath, targetQuery, fileAction, openAll) {
+    constructor(lsResultPath, targetQuery, fileAction, openAll, fileHTMLmaker, sort) {
         this.target = document.querySelector(targetQuery);
         this.fileAction = (!!fileAction)? fileAction : null;
         this.openAll = !!openAll;
+        this.fileHTMLmaker = (!!fileHTMLmaker)? fileHTMLmaker : null;
+        this.sort = !!sort;
         this.target.innerHTML = '';
         this.fileMap = new Map();
         this.rootDir = null;
@@ -412,8 +494,9 @@ class FileList {
                 } else if (line.length > 0)
                     fileList.fileMap.get(dir).push(line);
             }
-            for (let files of fileList.fileMap.values())
-                files.sort(Donggi.compareString);
+            if (this.sort)
+                for (let files of fileList.fileMap.values())
+                    files.sort(Donggi.compareString);
             console.log(fileList.fileMap);
             fileList.updateFileList(fileList.rootDir);
         })(this));
@@ -450,11 +533,12 @@ class FileList {
                     this.updateFileList(path);
             } else {
                 if (!!this.fileAction) {
-                    ul.append(FileList.getFileHTMLwithoutA(dir, name));
+                    let element = !!this.fileHTMLmaker? this.fileHTMLmaker(dir, name) : FileList.getFileHTMLwithoutA(dir, name);
+                    ul.append(element);
                     let fileAction = ((fileList, dir, name) => function (e) { fileList.fileAction(dir, name); })(this, dir, name);
-                    document.getElementById(`file-${path.hashCode()}`).onclick = fileAction;
+                    element.onclick = fileAction;
                 } else
-                    ul.append(FileList.getFileHTMLwithA(this.rootDir, dir, name));
+                    ul.append(!!this.fileHTMLmaker? this.fileHTMLmaker(dir, name) : FileList.getFileHTMLwithA(this.rootDir, dir, name));
             }
         }
     }
@@ -465,11 +549,11 @@ class FileList {
     
     static getFileHTMLwithA(rootDir, dir, name) {
         let path = `${dir.substr(rootDir.length)}/${name}`;
-        return Donggi.getElementFromText(`<li id="file-${path.hashCode()}"><a href="${path}">${name}</a></li>`);
+        return Donggi.getElementFromText(`<li><a href="${path}">${name}</a></li>`);
     }
     
     static getFileHTMLwithoutA(dir, name) {
         let path = `${dir}/${name}`;
-        return Donggi.getElementFromText(`<li id="file-${path.hashCode()}" title="${path}">${name}</li>`);
+        return Donggi.getElementFromText(`<li title="${path}">${name}</li>`);
     }
 }

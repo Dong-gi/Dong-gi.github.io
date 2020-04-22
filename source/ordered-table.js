@@ -21,6 +21,7 @@ th.sorting-table-head-white:after {
 }</style>`));
 
     new MutationObserver(addOrderedTableFunctionality).observe(document.body, { attributes: false, childList: true, subtree: true });
+    addOrderedTableFunctionality([{ type: 'childList', target: document.body }]);
 }
 
 function addOrderedTableFunctionality(mutations, observer) {

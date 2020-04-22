@@ -1,7 +1,111 @@
-include ./utility.jade
+- String.prototype.hashCode=function(){let e,t,o=0;if(0===this.length)return o;for(e=0;e<this.length;e++)o=(o<<5)-o+(t=this.charCodeAt(e)),o|=0;return o};
 
-html(lnag='ko')
-    head
-        meta(charset='UTF-8')
-        meta(name='viewport',content='width=device-width,initial-scale=1,shrink-to-fit=no')
-        meta(name='google-site-verification',content='aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM')
+mixin w3a(color)
+    if color
+        a.w3-btn.w3-round.w3-round-xxlarge.w3-small(class=color)&attributes(attributes)
+            if block
+                block
+            else
+                |참고 »
+    else
+        a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green&attributes(attributes)
+            if block
+                block
+            else
+                |참고 »
+
+mixin w3img(src, alt)
+    img.w3-round(src=src, alt=alt)&attributes(attributes)
+
+mixin w3button(color)
+    if color
+        button.w3-btn.w3-round.w3-round-xxlarge.w3-small(class=color)&attributes(attributes)
+            if block
+                block
+            else
+                |예시 코드 »
+    else
+        button.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-teal&attributes(attributes)
+            if block
+                block
+            else
+                |예시 코드 »
+
+mixin asA(href)
+    +w3a()&attributes({ href: href, target: '_blank' })&attributes(attributes)= href
+        if block
+            block
+
+mixin ths(...cells)
+    tr&attributes(attributes)
+        each content, idx in cells
+            th= content
+
+mixin tds(...cells)
+    tr&attributes(attributes)
+        each content, idx in cells
+            td= content
+
+mixin hoverTemplate()
+    div.w3-container.w3-leftbar.w3-border-green.w3-white&attributes(attributes)
+        if block
+            block
+
+mixin post(title, description, keywords, useMJX)
+    html(lnag='ko')
+        head
+            meta(charset='UTF-8')
+            meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+            meta(name='google-site-verification', content='aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM')
+            meta(name='author', content='Donggi Kim <hi.donggi@gmail.com>')
+            meta(name='keywords', content=keywords)
+            meta(name='description', content=description)
+            title= title
+            style#common-style
+                include ./w3.css
+                include ./xcode.css
+                include ./default.css
+            script#highlight-js
+                include ./highlight.pack.js
+            script#default-js
+                include ./default.min.js
+            script#dsq-count-scr(src='//donggi.disqus.com/count.js',async)
+            if useMJX
+                style#mjx-style
+                    include ./mjx-chtml.css
+                script#MathJax-script(src='/source/tex-chtml.js',async)
+                script.
+                    MathJax = {
+                        tex: {
+                            tags: 'ams',
+                            inlineMath: [['식[', ']식']]
+                        }
+                    };
+            script#google-analytics(src='https://www.googletagmanager.com/gtag/js?id=UA-143098403-1',async)
+            script.
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'UA-143098403-1');
+        body
+            div.w3-bar-block.w3-sidebar.w3-animate-left#sidebar
+                hr
+                a.w3-bar-item.w3-button(href='javascript:closeSidebar();') Close &times;
+                hr
+                div#marker-list
+                hr
+                div#post-list
+                    |<details open="" id="dir-1627423780" class="w3-small file-list" title="카테고리"><summary>카테고리</summary><ul><details open="" id="dir-1538474020" class="w3-small file-list" title="카테고리/Algorithm"><summary>/Algorithm</summary><ul><li><a href="/posts/algorithm/book01.html">『알고리즘 도감』</a></li><li><a href="/posts/algorithm/linear_algebra.html">선형대수</a></li><li><a href="/posts/algorithm/probability.html">확률</a></li><li><a href="/posts/algorithm/ai.html">AI</a></li><li><a href="/posts/algorithm/algo.html">Algorithm</a></li><li><a href="/posts/algorithm/koreatech.html">jduge.koreatech.ac.kr</a></li></ul></details><details open="" id="dir--1093242348" class="w3-small file-list" title="카테고리/Book"><summary>/Book</summary><ul><li><a href="/posts/book/001.html">1만 시간의 재발견</a></li><li><a href="/posts/book/002.html">마음의 탄생</a></li><li><a href="/posts/book/003.html">생각하는 삶을 위한 철학의 역사</a></li><li><a href="/posts/book/004.html">쇼펜하우어, 돌이 별이 되는 철학</a></li><li><a href="/posts/book/005.html">인생의 모든 의미</a></li><li><a href="/posts/book/009.html">인지 편향</a></li><li><a href="/posts/book/006.html">지식의 착각</a></li><li><a href="/posts/book/007.html">키르케고르 실존 극장</a></li><li><a href="/posts/book/008.html">Gamification by Design</a></li></ul></details><details open="" id="dir-68539214" class="w3-small file-list" title="카테고리/Programming"><summary>/Programming</summary><ul><details open="" id="dir--681806672" class="w3-small file-list" title="카테고리/Programming/.NET"><summary>/.NET</summary><ul><li><a href="/posts/dotnet/csharp_library.html">C# 라이브러리</a></li><li><a href="/posts/dotnet/csharp_basic.html">C# 시작하기</a></li><li><a href="/posts/dotnet/wpf_basic.html">WPF 시작하기</a></li></ul></details><details open="" id="dir-1742306015" class="w3-small file-list" title="카테고리/Programming/DB"><summary>/DB</summary><ul><li><a href="/posts/db/concept.html">기본 개념</a></li><li><a href="/posts/db/mongodb.html">MongoDB</a></li><li><a href="/posts/db/mysql.html">MySQL</a></li><li><a href="/posts/db/psql_to_sqlite.html">PostgreSQL → SQLite3 마이그레이션</a></li><li><a href="/posts/db/psql_admin.html">PostgreSQL 서버 관리</a></li><li><a href="/posts/db/psql_programming.html">PostgreSQL 서버 프로그래밍</a></li><li><a href="/posts/db/psql_tutorial.html">PostgreSQL 시작하기</a></li><li><a href="/posts/db/psql_sql.html">PostgreSQL SQL 언어</a></li></ul></details><details open="" id="dir-362107912" class="w3-small file-list" title="카테고리/Programming/Front"><summary>/Front</summary><ul><li><a href="/posts/front/css.html">CSS</a></li><details open="" id="dir-524556877" class="w3-small file-list" title="카테고리/Programming/Front/FreeMarker"><summary>/FreeMarker</summary><ul><li><a href="/posts/front/freemarker/template_guide.html">템플릿 작성 가이드 2.3.28</a></li><li><a href="/posts/front/freemarker/programming_guide.html">프로그래밍 가이드 2.3.28</a></li><li><a href="/posts/front/freemarker/built_in.html">Built-in 목록 2.3.28</a></li><li><a href="/posts/front/freemarker/xml_guide.html">XML 처리 가이드 2.3.28</a></li></ul></details><li><a href="/posts/front/html.html">HTML</a></li><li><a href="/posts/front/http.html">HTTP 1.1</a></li></ul></details><details open="" id="dir--680952733" class="w3-small file-list" title="카테고리/Programming/Java"><summary>/Java</summary><ul><li><a href="/posts/java/effective_java.html">『Effective Java』</a></li><li><a href="/posts/java/android.html">Android</a></li><details open="" id="dir--1196474764" class="w3-small file-list" title="카테고리/Programming/Java/apache.commons"><summary>/apache.commons</summary><ul><li><a href="/posts/java/apache.commons.collections.html">Apache Commons Collections 4.4</a></li><li><a href="/posts/java/apache.commons.lang.html">Apache Commons Lang 3.9</a></li><li><a href="/posts/java/apache.commons.math.html">Apache Commons Math 3.6.1</a></li><li><a href="/posts/java/apache.commons.rng.html">Apache Commons RNG Core 1.2</a></li></ul></details><details open="" id="dir-316075650" class="w3-small file-list" title="카테고리/Programming/Java/FasterXML"><summary>/FasterXML</summary><ul><li><a href="/posts/java/jackson.html">Jackson 2.10.1</a></li></ul></details><details open="" id="dir-1520409957" class="w3-small file-list" title="카테고리/Programming/Java/google"><summary>/google</summary><ul><li><a href="/posts/java/gson.html">Gson 2.8.6</a></li><li><a href="/posts/java/guava.html">Guava 23.0</a></li></ul></details><li><a href="/posts/java/oop.html">Java 객체지향</a></li><li><a href="/posts/java/version.html">Java 버전별 추가사항</a></li><li><a href="/posts/java/basic.html">Java 시작하기</a></li><li><a href="/posts/java/jni.html">Java Native Interface</a></li><details open="" id="dir-1739521137" class="w3-small file-list" title="카테고리/Programming/Java/java.base"><summary>/java.base</summary><ul><li><a href="/posts/java/java.io.html">java.io 12 Since 1.0</a></li><li><a href="/posts/java/java.lang.html">java.lang 12 Since 1.0</a></li><li><a href="/posts/java/java.lang.annotation.html">java.lang.annotation 12 Since 1.5</a></li><li><a href="/posts/java/java.lang.module.html">java.lang.module 12 Since 9</a></li><li><a href="/posts/java/java.lang.ref.html">java.lang.ref 12 Since 1.2</a></li><li><a href="/posts/java/java.lang.reflect.html">java.lang.reflect 12 Since 1.1</a></li><li><a href="/posts/java/java.math.html">java.math 12 Since 1.1</a></li><li><a href="/posts/java/java.net.html">java.net 12 Since 1.0</a></li><li><a href="/posts/java/java.nio.html">java.nio 12 Since 1.4</a></li><li><a href="/posts/java/java.nio.channels.html">java.nio.channels 12 Since 1.4</a></li><li><a href="/posts/java/java.nio.charset.html">java.nio.charset 12 Since 1.4</a></li><li><a href="/posts/java/java.nio.file.html">java.nio.file 12 Since 1.7</a></li><li><a href="/posts/java/java.security.html">java.security 12 Since 1.1</a></li><li><a href="/posts/java/java.text.html">java.text 12 Since 1.1</a></li><li><a href="/posts/java/java.time.html">java.time 12 Since 1.8</a></li><li><a href="/posts/java/java.time.format.html">java.time.format 12 Since 1.8</a></li><li><a href="/posts/java/java.util.html">java.util 12 Since 1.0</a></li><li><a href="/posts/java/java.util.concurrent.html">java.util.concurrent 12 Since 1.5</a></li><li><a href="/posts/java/java.util.concurrent.atomic.html">java.util.concurrent.atomic 12 Since 1.5</a></li><li><a href="/posts/java/java.util.function.html">java.util.function 12 Since 1.8</a></li><li><a href="/posts/java/java.util.regex.html">java.util.regex 12 Since 1.4</a></li><li><a href="/posts/java/java.util.stream.html">java.util.stream 12 Since 1.8</a></li><li><a href="/posts/java/java.util.zip.html">java.util.zip 12 Since 1.1</a></li><li><a href="/posts/java/javax.crypto.html">javax.crypto 12 Since 1.4</a></li><li><a href="/posts/java/javax.net.html">javax.net 12 Since 1.4</a></li><li><a href="/posts/java/javax.net.ssl.html">javax.net.ssl 12 Since 1.4</a></li></ul></details><details open="" id="dir-152113727" class="w3-small file-list" title="카테고리/Programming/Java/java.compiler"><summary>/java.compiler</summary><ul><li><a href="/posts/java/javax.annotation.processing.html">Annotation Processing API</a></li></ul></details><li><a href="/posts/java/java_ee.html">JavaEE</a></li><li><a href="/posts/java/javafx.html">JavaFX</a></li><details open="" id="dir-418998869" class="w3-small file-list" title="카테고리/Programming/Java/jdk.sctp"><summary>/jdk.sctp</summary><ul><li><a href="/posts/java/com.sun.nio.sctp.html">com.sun.nio.sctp 12 Since 1.7</a></li></ul></details><li><a href="/posts/java/logback.html">Logback with SLF4J</a></li><li><a href="/posts/java/lombok.html">lombok 1.18.10</a></li></ul></details><details open="" id="dir-1907368718" class="w3-small file-list" title="카테고리/Programming/JavaScript"><summary>/JavaScript</summary><ul><li><a href="/posts/javascript/basic2.html">브라우저 JavaScript</a></li><li><a href="/posts/javascript/basic.html">코어 JavaScript</a></li><li><a href="/posts/javascript/jquery.html">jQuery</a></li><li><a href="/posts/javascript/node.html">Node</a></li></ul></details><details open="" id="dir--1366657315" class="w3-small file-list" title="카테고리/Programming/Python"><summary>/Python</summary><ul><details open="" id="dir--1908391063" class="w3-small file-list" title="카테고리/Programming/Python/Library"><summary>/Library</summary><ul><li><a href="/posts/python/pandas.html">3rd/pandas : 데이터 처리</a></li><li><a href="/posts/python/array.html">Lib/array : 고효율 숫자 배열</a></li><li><a href="/posts/python/bisect.html">Lib/bisect : 리스트 정렬 유지 삽입</a></li><li><a href="/posts/python/calendar.html">Lib/calendar : 달력 연산</a></li><li><a href="/posts/python/collections.html">Lib/collections : 컨테이너</a></li><li><a href="/posts/python/collections.abc.html">Lib/collections.abc : 컨테이너 ABC</a></li><li><a href="/posts/python/copy.html">Lib/copy</a></li><li><a href="/posts/python/datetime.html">Lib/datetime : 단순 시간 표현</a></li><li><a href="/posts/python/decimal.html">Lib/decimal : 정확한 10진수 연산</a></li><li><a href="/posts/python/enum.html">Lib/enum</a></li><li><a href="/posts/python/functools.html">Lib/functools : 고계함수</a></li><li><a href="/posts/python/heapq.html">Lib/heapq : 우선순위 큐</a></li><li><a href="/posts/python/itertools.html">Lib/itertools</a></li><li><a href="/posts/python/math.html">Lib/math, cmath</a></li><li><a href="/posts/python/operator.html">Lib/operator : 표준 연산</a></li><li><a href="/posts/python/random.html">Lib/random, secrets : 난수</a></li><li><a href="/posts/python/re.html">Lib/re : 정규표현식</a></li><li><a href="/posts/python/shutil.html">Lib/shutil : 고수준 파일 연산</a></li><li><a href="/posts/python/statistics.html">Lib/statistics : 통계</a></li><li><a href="/posts/python/string.html">Lib/string : 문자열 공통 연산</a></li><li><a href="/posts/python/struct.html">Lib/struct : 이진 데이터 패킹/언패킹</a></li><li><a href="/posts/python/textwrap.html">Lib/textwrap : 텍스트 정돈</a></li><li><a href="/posts/python/types.html">Lib/types : 동적 타입 생성</a></li><li><a href="/posts/python/unicodedata.html">Lib/unicodedata : 유니코드 database 표준</a></li><li><a href="/posts/python/weakref.html">Lib/weakref : 약한 참조</a></li></ul></details><li><a href="/posts/python/data_model.html">Python 3.8 데이터 모델</a></li><li><a href="/posts/python/basic.html">Python 3.8 시작하기</a></li><li><a href="/posts/python/built_in_constant.html">Python Built-in Constants 3.8</a></li><li><a href="/posts/python/built_in_exception.html">Python Built-in Exceptions 3.8</a></li><li><a href="/posts/python/built_in_function.html">Python Built-in Functions 3.8</a></li><li><a href="/posts/python/built_in_type.html">Python Built-in Types 3.8</a></li><li><a href="/posts/python/persistence.html">Python Data Persistence</a></li></ul></details><details open="" id="dir--1952767880" class="w3-small file-list" title="카테고리/Programming/Single Topic"><summary>/Single Topic</summary><ul><li><a href="/posts/single/refactoring.html">디자인 패턴 + 리팩터링</a></li><li><a href="/posts/single/aws.html">AWS</a></li><li><a href="/posts/single/centos.html">CentOS</a></li><li><a href="/posts/single/docker.html">Docker</a></li><li><a href="/posts/single/fp.html">FP; Functional Programming</a></li><li><a href="/posts/single/git.html">Git</a></li><li><a href="/posts/single/nginx.html">Nginx</a></li><li><a href="/posts/single/rpi.html">Raspberry Pi 3 + OpenCV(python)</a></li><li><a href="/posts/single/tomcat.html">tomcat</a></li><li><a href="/posts/single/unity.html">Unity : 작성 중지</a></li><li><a href="/posts/single/vi.html">vi</a></li></ul></details></ul></details><details open="" id="dir--419676146" class="w3-small file-list" title="카테고리/Project"><summary>/Project</summary><ul><li><a href="/posts/project/tip.html">잡다한 팁</a></li><li><a href="/posts/project/wpf_data_tool.html">C#.NET, WPF - 데이터 작업 툴</a></li><li><a href="/posts/project/snippets.html">Code Snippets</a></li><li><a href="/posts/project/error.html">Exceptions + Errors</a></li></ul></details></ul></details>
+                hr
+                div#file-list
+                hr
+            div#main
+                div.w3-bar.w3-blue.w3-large#nav(style='position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle')
+                    button.w3-bar-item.w3-button.w3-hover-theme(onclick='toggleSidebar()') &#9776;
+                    input.w3-bar-item#query(type='text',placeholder='search')
+                div#contents
+                    if block
+                        block
+                hr
+                |&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.
+                a(target='_blank',href='LICENSE') LICENSE

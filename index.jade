@@ -1,4 +1,4 @@
-//- +w3button()&attributes({ class: 'btn-code', path: 'Repositories/Eclipse', lan: 'java' })
+//- +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse', lan: 'java' })
 //- +asA('http://...')
 //- +w3a()&attributes({ target: '_blank', href: '' }) |링크
 //- +w3a()&attributes({ href: "javascript:;" }) |실행
@@ -7,65 +7,23 @@
 //- span.hover-content(template-id='template-id'
 //- div.w3-container.w3-leftbar.w3-border-green.w3-white#template-id
 
-include ./source/utility.jade
+include ./source/skeleton.jade
 
-html(lnag='ko')
-    head
-        meta(charset='UTF-8')
-        meta(name='viewport',content='width=device-width,initial-scale=1,shrink-to-fit=no')
-        meta(name='google-site-verification',content='aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM')
++post('한 걸음씩...', 'blog, programming', '프로그래밍 블로그를 지향하는 정적 사이트')
+    h1.marker Index
+    table.marker.no-sort
+        caption 수정사항
+        +tds('2020-04-22', 'Jade 템플릿 적용')
 
-        title 한 걸음씩...
-
-        style
-            include ./source/w3.css
-            include ./source/xcode.css
-            include ./source/mjx-chtml.css
-            include ./source/default.css
-
-        script
-            include ./source/highlight.pack.js
-        script
-            include ./source/default.min.js
-        script#dsq-count-scr(src='//donggi.disqus.com/count.js',async)
-        script#MathJax-script(src='/source/tex-chtml.js',async)
+    h2.marker 별 건 없고 칸나쨩이나 보고가세요.
+    +w3img('imgs/kanna.gif', '칸나쨩').marker
     
-        script.
-            MathJax = {
-                tex: {
-                    tags: 'ams',
-                    inlineMath: [['식[', ']식']]
-                }
-            };
-    
-        <!-- Google Analytics -->
-        script(src='https://www.googletagmanager.com/gtag/js?id=UA-143098403-1',async)
-        script.
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'UA-143098403-1');
-
-    body
-        div.w3-bar-block.w3-sidebar.w3-animate-left#sidebar
-            hr
-            a.w3-bar-item.w3-button(href='javascript:closeSidebar();') Close &times;
-            hr
-            div#marker-list
-            hr
-            div#post-list
-            hr
-            div#file-list
-            hr
-    
-        div#main
-            div.w3-bar.w3-blue.w3-large#nav(style='position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle')
-                button.w3-bar-item.w3-button.w3-hover-theme(onclick='toggleSidebar()') &#9776;
-                input.w3-bar-item#query(type='text',placeholder='search')
-        
-            div#contents
-        
-            |&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.
-            a(target='_blank',href='LICENSE') LICENSE
-
-    +post('/posts','정리중','정리중')
+    h2.marker 주요 포스트
+    table.no-sort
+        +ths('내용', '링크')
+        tr
+            td 오류 대응 목록
+            td: +asA('/posts/project/error.html')
+        tr
+            td 브라우저 매크로 등 스니펫
+            td: +asA('/posts/project/snippets.html')

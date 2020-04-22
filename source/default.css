@@ -10,17 +10,17 @@ img {
     max-width: 100%;
 }
 
+caption {
+    padding-top:8px!important;
+    padding-bottom:8px!important
+}
+
 pre {
     margin : 0.5rem 0;
 }
 
 hr {
     border-top: 3px solid rgba(0, 0, 0, .1);
-}
-
-ul, ol {
-    margin: 0;
-    padding-left: 20px;
 }
 
 li, summary {
@@ -90,8 +90,8 @@ mjx-container {
 
 /* 요소 하이라이팅 */
 @keyframes highlight {
-  from {background: #ff0;}
-  to {left: #fff;}
+  from {background: #ff0; box-shadow: 0 0 0.5em 0.5em #ff0; padding: 0.25em}
+  to {background: #fff; box-shadow: 0 0 #fff; padding: 0}
 }
 
 /* Snackbar : from https://www.w3schools.com/howto/howto_js_snackbar.asp */
