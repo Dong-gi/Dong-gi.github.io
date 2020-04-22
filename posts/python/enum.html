@@ -1,11 +1,4 @@
-<script src="/source/redirect.js?200226_1657"></script>
-<ul>
-    <li>enum 클래스는 그 자체로 순회 가능하다</li>
-    <li>enum 클래스 멤버는 해시 가능하다</li>
-</ul>
-<ol>
-    <li>class enum.Enum : 베이스 클래스</li>
-    <pre>class RGB(enum.Enum):
+<script src="/source/redirect.js?200226_1657"></script><ul><li>enum 클래스는 그 자체로 순회 가능하다<li>enum 클래스 멤버는 해시 가능하다</ul><ol><li>class enum.Enum : 베이스 클래스</li><pre>class RGB(enum.Enum):
     R = enum.auto()
     G = enum.auto()
     B = enum.auto()
@@ -13,16 +6,4 @@
 print(RGB(2) == RGB.B)
 print(RGB['B'] == RGB.B)
 print(RGB.B.name == 'B')
-print(RGB.B.value == 2)</pre>
-    <ul>
-        <li>Enum 클래스 자체도 callable이다</li>
-        Animal = Enum('Animal', 'ANT BEE CAT DOG')<br>
-        # 이렇게 생성한 enum 클래스의 모듈을 특정할 수 없는 경우, pickling/unpickling 불가
-    </ul>
-    <li>class enum.IntEnum : int 상속</li>
-    <li>class enum.IntFlag Since 3.6 : int 상속 + 비트 연산 가능</li>
-    <li>class enum.Flag Since 3.6 : 비트 연산 가능</li>
-    <li>class enum.auto Since 3.6 : 자동 할당</li>
-    auto의 동작은 _generate_next_value_(name, start, count, last_values)를 재정의하여 변경할 수 있다
-    <li>enum.unique() : 일대일 대응 검증 클래스 데커레이터</li>
-</ol>
+print(RGB.B.value == 2)</pre><ul><li>Enum 클래스 자체도 callable이다</li>Animal = Enum('Animal', 'ANT BEE CAT DOG')<br># 이렇게 생성한 enum 클래스의 모듈을 특정할 수 없는 경우, pickling/unpickling 불가</ul><li>class enum.IntEnum : int 상속<li>class enum.IntFlag Since 3.6 : int 상속 + 비트 연산 가능<li>class enum.Flag Since 3.6 : 비트 연산 가능<li>class enum.auto Since 3.6 : 자동 할당</li>auto의 동작은 _generate_next_value_(name, start, count, last_values)를 재정의하여 변경할 수 있다<li>enum.unique() : 일대일 대응 검증 클래스 데커레이터</ol>

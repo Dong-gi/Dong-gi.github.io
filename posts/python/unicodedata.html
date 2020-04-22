@@ -1,18 +1,4 @@
-<script src="/source/redirect.js?200226_1657"></script>
-<ul>
-    <li>unicodedata.lookup(name) ↔ name(chr[, default]): 유니코드 이름에 해당하는 문자 반환. 없으면 KeyError</li>
-    <li>unicodedata.decimal(chr[, default]) : 문자에 해당하는 integer 반환<br>
-        unicodedata.digit(chr[, default]) : 문자에 해당하는 integer 반환<br>
-        unicodedata.numeric(chr[, default]) : 문자에 해당하는 float 반환</li>
-    <li>unicodedata.category(chr)<br>
-        unicodedata.bidirectional(chr)<br>
-        unicodedata.mirrored(chr) ...</li>
-    <li>unicodedata.normalize(form, unistr) + is_normalized Since 3.8
-        <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" target="_blank" href="https://ko.wikipedia.org/wiki/%EC%9C%A0%EB%8B%88%EC%BD%94%EB%93%9C_%EC%A0%95%EA%B7%9C%ED%99%94">참고 자료</a></li>
-    <ul>
-        <li>NFC : 코드 포인트를 조합해서 가장 짧은 동일 문자열 생성; Normalization Form: Composition</li>
-        <li>NFD : 조합된 문자를 기본 문자와 결합 문자로 분리; Normalization Form: Decomposition</li>
-<pre># 출처 : https://github.com/AllenDowney/fluent-python-notebooks/blob/master/04-text-byte/sanitize.py
+<script src="/source/redirect.js?200226_1657"></script><ul><li>unicodedata.lookup(name) ↔ name(chr[, default]): 유니코드 이름에 해당하는 문자 반환. 없으면 KeyError<li>unicodedata.decimal(chr[, default]) : 문자에 해당하는 integer 반환<br>unicodedata.digit(chr[, default]) : 문자에 해당하는 integer 반환<br>unicodedata.numeric(chr[, default]) : 문자에 해당하는 float 반환<li>unicodedata.category(chr)<br>unicodedata.bidirectional(chr)<br>unicodedata.mirrored(chr) ...<li>unicodedata.normalize(form, unistr) + is_normalized Since 3.8 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green"target="_blank"href="https://ko.wikipedia.org/wiki/%EC%9C%A0%EB%8B%88%EC%BD%94%EB%93%9C_%EC%A0%95%EA%B7%9C%ED%99%94">참고 자료</a></li><ul><li>NFC : 코드 포인트를 조합해서 가장 짧은 동일 문자열 생성; Normalization Form: Composition<li>NFD : 조합된 문자를 기본 문자와 결합 문자로 분리; Normalization Form: Decomposition</li><pre># 출처 : https://github.com/AllenDowney/fluent-python-notebooks/blob/master/04-text-byte/sanitize.py
 import unicodedata
 import string
 def shave_marks(txt):
@@ -26,9 +12,4 @@ def shave_marks(txt):
         keepers.append(c)
         if not unicodedata.combining(c):
             latin_base = c in string.ascii_letters
-    return unicodedata.normalize('NFC', ''.join(keepers))</pre>
-        <li>NFKC : Normalization Form: Compatibility (K) Composition</li>
-        <li>NFKD : Normalization Form: Compatibility (K) Decomposition</li>
-        호환 분해 예 : ½(U+00BD) → '1/2', 마이크로(U+00B5) → 뮤(U+03BC)
-    </ul>
-</ul>
+    return unicodedata.normalize('NFC', ''.join(keepers))</pre><li>NFKC : Normalization Form: Compatibility (K) Composition<li>NFKD : Normalization Form: Compatibility (K) Decomposition</li>호환 분해 예 : ½(U+00BD) → '1/2', 마이크로(U+00B5) → 뮤(U+03BC)</ul></ul>

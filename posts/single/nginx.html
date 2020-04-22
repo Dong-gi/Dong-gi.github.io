@@ -1,15 +1,6 @@
-<script src="/source/redirect.js?200226_1657"></script>
-<ol>
-    <li>NGINX?</li>
-    HTTP 서버 + 메일 프록시 + 리버스 프록시 +  로드 밸런서
-    
-    <li>nginx.conf : 메인 설정</li>
-    <pre>http {
+<script src="/source/redirect.js?200226_1657"></script><ol><li>NGINX?</li>HTTP 서버 + 메일 프록시 + 리버스 프록시 + 로드 밸런서<li>nginx.conf : 메인 설정</li><pre>http {
     include /etc/nginx/sites-enabled/*; # 활성 서버
-}</pre>
-    
-    <li>HTTP 서버 설정</li>
-    <pre>server {
+}</pre><li>HTTP 서버 설정</li><pre>server {
     listen 0.0.0.0:9090 default_server;        # IPv4
     listen 0.0.0.0:80 default_server;
     listen [::]:9090 default_server;   # IPv6
@@ -42,10 +33,7 @@
         charset utf-8;
         autoindex on;
     }
-}</pre>
-    
-    <li>리버스 프록시 설정</li>
-    <pre>server {
+}</pre><li>리버스 프록시 설정</li><pre>server {
     listen 0.0.0.0:55555;
     listen [::]:55555;
 
@@ -60,7 +48,4 @@
 
         proxy_pass http://127.0.0.1:3000/;
     }
-}</pre>
-    
-    <li>nginx -s reload</li>
-</ol>
+}</pre><li>nginx -s reload</ol>

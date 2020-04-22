@@ -1,5 +1,9 @@
 const posts = { list: [
-    { file: "/posts/algorithm/koreatech/1003.html", category: "Algorithm/KOREATECH", title: "1003번" },
+    { file: "/posts/algorithm/koreatech/1003.html", category: "Algorithm/KOREATECH", title: "1003: 0을 만들자" },
+    { file: "/posts/algorithm/koreatech/1008.html", category: "Algorithm/KOREATECH", title: "1008: 순환 소수" },
+    { file: "/posts/algorithm/koreatech/1010.html", category: "Algorithm/KOREATECH", title: "소수(Prime) 관련 문제: 1010,1016" },
+    { file: "/posts/algorithm/koreatech/1011.html", category: "Algorithm/KOREATECH", title: "동적계획법(DP) 문제: 1011,1017,1055,1056,1057" },
+    { file: "/posts/algorithm/koreatech/1018.html", category: "Algorithm/KOREATECH", title: "1018: 문자열 거리 최소화 하기" },
     /* ↓ 정리 안 됨 */
     { file: "/posts/algorithm/ai.html", category: "Algorithm", title: "AI" },
     { file: "/posts/algorithm/algo.html", category: "Algorithm", title: "Algorithm" },
@@ -232,7 +236,7 @@ function updatePostList() {
     let url = URL.createObjectURL(new Blob([Donggi.makeLSlikeText('카테고리', categoryMap, 'posts')], {
         type: 'text/plain;charset=utf-8;'
     }));
-    new FileList(url, '#post-list', null, true, (category, title) => {
+    new FileList(url, '#post-list', null, false, (category, title) => {
         let post = posts.list.filter(x => x.title == title)[0];
         return Donggi.getElementFromText(`<li><a href="${post.file}">${title}</a></li>`);
     });
@@ -270,19 +274,19 @@ function insertDisqusThread() {
 
 function updateMarkerList() {
     let markerMap = { markers: [] };
+    let id = new Date().getTime();
     for (let marker of document.querySelectorAll('.marker')) {
-        let name = getMarkerName(marker);
-        marker.setAttribute('marker-id', `marker-${name.hashCode()}`);
-        markerMap.markers.push(name);
+        marker.setAttribute('marker-id', `marker-${id++}`);
+        markerMap.markers.push(marker.getAttribute('marker-id'));
     }
     let url = URL.createObjectURL(new Blob([Donggi.makeLSlikeText('컨텐츠', markerMap, 'markers')], {
         type: 'text/plain;charset=utf-8;'
     }));
-    new FileList(url, '#marker-list', (prefix, title) => {
+    new FileList(url, '#marker-list', (_, markerId) => {
         let isNarrow = window.innerWidth <= 600;
         if (isNarrow)
             closeSidebar();
-        let target = document.querySelector(`.marker[marker-id=marker-${title.hashCode()}]`);
+        let target = document.querySelector(`.marker[marker-id=${markerId}]`);
         let parent = target;
         while (parent.tagName != 'BODY') {
             if (parent.tagName == 'DETAILS' && !parent.open)
@@ -298,7 +302,10 @@ function updateMarkerList() {
                 top: target.offsetTop - document.getElementById('nav').clientHeight
             });
         })(target), isNarrow? 444 : 0);
-    }, true, null, false);
+    }, true, (_, markerId) => {
+        let marker = document.querySelector(`.marker[marker-id=${markerId}]`);
+        return Donggi.getElementFromText(`<li>${getMarkerName(marker)}</li>`);
+    }, false);
 }
 
 function getMarkerName(marker) {
