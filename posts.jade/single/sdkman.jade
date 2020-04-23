@@ -1,0 +1,8 @@
+include ../../source/skeleton.jade
+
++post('SDKMAN에 대해 알아보자', 'SDKMAN', 'SDKMAN 설치, 사용법 정리')
+    h1.marker SDKMAN?
+    p SDKMAN은 SDK 관리자로서, 여러 버전의 동일 SDK를 병렬로 설치하고 특정 버전을 골라 사용할 수 있게 해준다.
+    h2.marker 설치
+    +asCode()
+        |$ curl -s "https://get.sdkman.io" | bash

@@ -1,14 +1,17 @@
 const posts = { list: [
-    { file: "/posts/algorithm/koreatech/1003.html", category: "Algorithm/KOREATECH", title: "1003: 0을 만들자" },
-    { file: "/posts/algorithm/koreatech/1008.html", category: "Algorithm/KOREATECH", title: "1008: 순환 소수" },
-    { file: "/posts/algorithm/koreatech/1010.html", category: "Algorithm/KOREATECH", title: "소수(Prime) 관련 문제: 1010,1016" },
-    { file: "/posts/algorithm/koreatech/1011.html", category: "Algorithm/KOREATECH", title: "동적계획법(DP) 문제: 1011,1017,1055,1056,1057" },
-    { file: "/posts/algorithm/koreatech/1018.html", category: "Algorithm/KOREATECH", title: "1018: 문자열 거리 최소화 하기" },
+    { file: "/posts/single/sdkman.html", category: "단일 주제", title: "SDKMAN; The Software Development Kit Manager" },
+    { file: "/posts/algorithm/koreatech/1003.html", category: "알고리즘/KOREATECH", title: "1003: 0을 만들자" },
+    { file: "/posts/algorithm/koreatech/1008.html", category: "알고리즘/KOREATECH", title: "1008: 순환 소수" },
+    { file: "/posts/algorithm/koreatech/1010.html", category: "알고리즘/KOREATECH", title: "소수(Prime) 관련 문제" },
+    { file: "/posts/algorithm/koreatech/1011.html", category: "알고리즘/KOREATECH", title: "동적계획법(DP) 문제" },
+    { file: "/posts/algorithm/koreatech/1018.html", category: "알고리즘/KOREATECH", title: "1018: 문자열 거리 최소화 하기" },
+    { file: "/posts/algorithm/koreatech/1034.html", category: "알고리즘/KOREATECH", title: "1034,1041: 최소 이동 거리" },
+    { file: "/posts/algorithm/koreatech/1048.html", category: "알고리즘/KOREATECH", title: "1048: AP 배분" },
+    { file: "/posts/algorithm/koreatech/1095.html", category: "알고리즘/KOREATECH", title: "1095: 자연스러운 정렬" },
     /* ↓ 정리 안 됨 */
     { file: "/posts/algorithm/ai.html", category: "Algorithm", title: "AI" },
     { file: "/posts/algorithm/algo.html", category: "Algorithm", title: "Algorithm" },
     { file: "/posts/algorithm/book01.html", category: "Algorithm", title: "『알고리즘 도감』" },
-    { file: "/posts/algorithm/koreatech.html", category: "Algorithm", title: "jduge.koreatech.ac.kr" },
     { file: "/posts/algorithm/linear_algebra.html", category: "Algorithm", title: "선형대수" },
     { file: "/posts/algorithm/probability.html", category: "Algorithm", title: "확률" },
     
@@ -166,6 +169,7 @@ function mutationCallback(mutations, observer) {
         addImageOnclick(mutation.target.querySelectorAll('img'));
         addCodeBtnOnclick(mutation.target.querySelectorAll('button.btn-code'));
         addHoverContents(mutation.target.querySelectorAll('.hover-content'));
+        convertAsCodeDiv(mutation.target.querySelectorAll('.as-code'));
     }
 }
 
@@ -182,13 +186,22 @@ function addCodeBtnOnclick(btns) {
         let id = `${new Date().getTime()}-${Math.random().toString().replace(/\./g, '')}`;
         button.id = `code-button-${id}`;
         button.classList.remove('btn-code');
-        button.onclick = insertCode(id);
+        button.onclick = insertCodeDiv(id);
     }
 }
 
 function addHoverContents(targets) {
     for (let hoverContent of targets)
         Donggi.addHoverContent(hoverContent, document.getElementById(hoverContent.getAttribute('template-id')));
+}
+
+function convertAsCodeDiv(divs) {
+    for (let div of divs) {
+        let code = div.innerHTML;
+        div.innerHTML = '';
+        fillCodeDiv(div, div.getAttribute('lan'), code);
+        div.style.maxHeight = window.innerHeight / 2;
+    }
 }
 
 function updateSidebar() {
@@ -218,8 +231,8 @@ function toggleSidebar() {
 }
 
 function updatePostList() {
-    posts.list.sort((post1, post2) => Donggi.compareString(post2.title, post1.title));
-    posts.list.sort((post1, post2) => Donggi.compareString(post2.category, post1.category));
+    posts.list.sort((post1, post2) => Donggi.compareString(post1.title, post2.title));
+    posts.list.sort((post1, post2) => Donggi.compareString(post1.category, post2.category));
 
     let categoryMap = { posts: [] };
     for (let post of posts.list) {
@@ -334,7 +347,7 @@ function queryUpdated(e) {
     return true;
 }
 
-function insertCode(id) {
+function insertCodeDiv(id) {
     return () => {
         if (!document.getElementById(`code-div-${id}`)) {
             let button = document.getElementById(`code-button-${id}`);
@@ -345,40 +358,9 @@ function insertCode(id) {
                 let lan = button.getAttribute('lan');
                 if (this.status != 200)
                     this.responseText = 'Ajax Failed';
+
                 posts.codes[id] = this.responseText;
-                
-                if (lan != 'nohighlight') {
-                    let code = this.responseText.replace(/\t/gm, '    ');
-                    code = code.replace(/ /gm, '  ');
-
-                    let lines = null;
-                    if (lan === "text")
-                        lines = code.split(/\n/gm);
-                    else
-                        lines = hljs.highlight(lan, code)['value'].split(/\n/gm);
-
-                    let ol = Donggi.getElementFromText('<ol style="font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New"></ol>');
-                    let displayRange = JSON.parse(button.getAttribute('displayRange') || '[1, 100000000]');
-                    displayRange = displayRange.reverse();
-
-                    while (displayRange.length > 0) {
-                        let displayStart = displayRange.pop() - 1;
-                        let displayEnd = displayRange.pop();
-                        for (let idx = displayStart; idx < displayEnd && idx < lines.length; ++idx) {
-                            if (lan === "text") {
-                                let li = document.createElement('li');
-                                li.innerText = lines[idx].replace(/  /gm, '\u00A0');
-                                ol.append(li);
-                            } else
-                                ol.append(Donggi.getElementFromText(`<li>${lines[idx].replace(/  /gm, '&nbsp;')}</li>`));
-                        }
-                        if (displayRange.length > 0)
-                            ol.append(document.createElement('hr'));
-                    }
-                    div.append(ol);
-                } else {
-                    div.append(Donggi.getNodesFromText(this.responseText, 'p'));
-                }
+                fillCodeDiv(div, lan, this.responseText, button.getAttribute('displayRange'));
 
                 if (lan != 'nohighlight') {
                     let modal = Donggi.getElementFromText('<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-blue">모달로 보기</button>');
@@ -402,6 +384,41 @@ function insertCode(id) {
             div.style.maxHeight = window.innerHeight / 2;
         }
     };
+}
+
+function fillCodeDiv(div, lan, text, displayRange) {
+    if (lan != 'nohighlight') {
+        let code = text.replace(/\t/gm, '    ');
+        code = code.replace(/ /gm, '  ');
+
+        let lines = null;
+        if (lan === "text")
+            lines = code.split(/\n/gm);
+        else
+            lines = hljs.highlight(lan, code)['value'].split(/\n/gm);
+
+        let ol = document.createElement('ol');
+        displayRange = JSON.parse(displayRange || '[1, 100000000]');
+        displayRange = displayRange.reverse();
+
+        while (displayRange.length > 0) {
+            let displayStart = displayRange.pop() - 1;
+            let displayEnd = displayRange.pop();
+            for (let idx = displayStart; idx < displayEnd && idx < lines.length; ++idx) {
+                if (lan === "text") {
+                    let li = document.createElement('li');
+                    li.innerText = lines[idx].replace(/  /gm, '\u00A0');
+                    ol.append(li);
+                } else
+                    ol.append(Donggi.getElementFromText(`<li>${lines[idx].replace(/  /gm, '&nbsp;')}</li>`));
+            }
+            if (displayRange.length > 0)
+                ol.append(document.createElement('hr'));
+        }
+        div.append(ol);
+    } else {
+        div.append(Donggi.getNodesFromText(text, 'p'));
+    }
 }
 
 function showModal(id) {

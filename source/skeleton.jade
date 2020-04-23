@@ -51,6 +51,12 @@ mixin hoverTemplate()
         if block
             block
 
+mixin asCode(lan)
+    - lan = lan || 'text'
+    .as-code.code-div.w3-leftbar.w3-border-green(lan=lan)
+        if block
+            block
+
 mixin post(title, description, keywords, useMJX)
     html(lnag='ko')
         head

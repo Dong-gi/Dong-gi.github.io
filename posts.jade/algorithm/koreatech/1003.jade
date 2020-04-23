@@ -5,7 +5,7 @@ include ../../../source/skeleton.jade
     p 길이 n인 정수 순열이 주어 졌을 때, 그 안에 숫자를 3개 골라서 합이 0(Zero) 이 되는 조합이 몇 개 있는지 출력하는 프로그램을 만들어 주세요.
     h2.marker 풀이
     p (a, b, c)의 조합은 순서와 상관이 없으므로, a <= b <= c인 조합만 고려하면 된다. 이를 (small, center, big)으로 표현하면, big = -(small+center)가 성립한다.
-    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Algorithm/src/koreatech/Main1003.java', lan: 'java' })
+        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Algorithm/src/koreatech/Main1003.java', lan: 'java' })
     ol
         li small < center < big인 경우 : 전체 수열에서 big이 적어도 한번 등장하는지 체크한다. (-1, 0, 1)과 같은 경우.
         li small < center = big인 경우 : 전체 수열에서 big이 적어도 두번 등장하는지 체크한다. (-2, 1, 1)과 같은 경우.

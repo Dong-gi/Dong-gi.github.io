@@ -3048,7 +3048,6 @@ ai.html
 algo.html
 book01.html
 koreatech
-koreatech.html
 linear_algebra.html
 probability.html
 
@@ -3058,6 +3057,10 @@ probability.html
 1010.html
 1011.html
 1018.html
+1034.html
+1048.html
+1060.html
+1095.html
 
 /workspace/donggi-github/Dong-gi.github.io/posts/book:
 001.html
@@ -3222,6 +3225,7 @@ nginx.html
 quantum_computer.html
 refactoring.html
 rpi.html
+sdkman.html
 tomcat.html
 unity.html
 vi.html
@@ -3248,6 +3252,10 @@ koreatech
 1010.jade
 1011.jade
 1018.jade
+1034.jade
+1048.jade
+1060.jade
+1095.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/book:
 
@@ -3275,6 +3283,7 @@ freemarker
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/python:
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/single:
+sdkman.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test:
 algorithm
@@ -3291,7 +3300,6 @@ single
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/algorithm:
 algo.jade
 book01.jade
-koreatech.jade
 linear_algebra.jade
 probability.jade
 
