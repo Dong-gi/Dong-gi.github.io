@@ -3245,7 +3245,9 @@ single
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/algorithm:
 ai.jade
 algo.jade
+book01.jade
 koreatech
+linear_algebra.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/algorithm/koreatech:
 1003.jade
@@ -3307,8 +3309,6 @@ python
 single
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/algorithm:
-book01.jade
-linear_algebra.jade
 probability.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/book:

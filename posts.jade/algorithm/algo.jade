@@ -17,7 +17,7 @@ include ../../source/skeleton.jade
         li Complete Binary Tree : 모든 leaf node의 레벨이 h 또는 h-1인 이진 트리(h는 트리의 height)
         li 이진 트리의 탐색 : (왼쪽 노드 방문, 오른쪽 노드 방문, 현재 노드 처리)의 순열 == 3!
         li 이진 검색 트리 : 노드의 좌우 서브 트리 사이에 분명한 대소관계가 존재
-        li AVL 트리 : 이진 검색 트리 임의 노드에서 좌우 서브 트리 높이 차이 <= 1을 만족
+        li AVL 트리 : 이진 검색 트리 임의 노드에서 좌우 서브 트리 높이 차이 &lt;= 1을 만족
         li 힙 : 상하 노드 사이에 분명한 대소관계가 존재. 우선순위 큐의 구현에 적합
 
     h2.marker AVL 트리의 회전
@@ -272,7 +272,7 @@ include ../../source/skeleton.jade
     h2.marker Heap Sort
     p 힙에 모두 넣고 순서대로 빼내면 정렬된다
     h2.marker Quick Sort
-    p 크기가 3 이상인 부분 리스트에 대하여, pivot을 하나 선택하여 [<pivot], [=pivot], [>pivot]으로 분할하는 것을 반복
+    p 크기가 3 이상인 부분 리스트에 대하여, pivot을 하나 선택하여 [&lt;pivot], [=pivot], [&gt;pivot]으로 분할하는 것을 반복
     h2.marker Counting Sort
     +asCode('python')
         | d = dict()

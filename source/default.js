@@ -1,28 +1,28 @@
 const posts = { list: [
-    { file: "/posts/single/sdkman.html",            category: "단일 주제",          title: "SDKMAN; The Software Development Kit Manager" },
-    { file: "/posts/book/001.html",                 category: "독서",              title: "1만 시간의 재발견" },
-    { file: "/posts/book/002.html",                 category: "독서",              title: "마음의 탄생" },
-    { file: "/posts/book/003.html",                 category: "독서",              title: "생각하는 삶을 위한 철학의 역사" },
-    { file: "/posts/book/004.html",                 category: "독서",              title: "쇼펜하우어, 돌이 별이 되는 철학" },
-    { file: "/posts/book/005.html",                 category: "독서",              title: "인생의 모든 의미" },
-    { file: "/posts/book/009.html",                 category: "독서",              title: "인지 편향" },
-    { file: "/posts/book/006.html",                 category: "독서",              title: "지식의 착각" },
-    { file: "/posts/book/007.html",                 category: "독서",              title: "키르케고르 실존 극장" },
-    { file: "/posts/book/008.html",                 category: "독서",              title: "Gamification by Design" },
-    { file: "/posts/algorithm/algo.html",           category: "알고리즘",           title: "알고리즘 일반" },
-    { file: "/posts/algorithm/koreatech/1003.html", category: "알고리즘/KOREATECH", title: "1003: 0을 만들자" },
-    { file: "/posts/algorithm/koreatech/1008.html", category: "알고리즘/KOREATECH", title: "1008: 순환 소수" },
-    { file: "/posts/algorithm/koreatech/1010.html", category: "알고리즘/KOREATECH", title: "소수(Prime) 관련 문제" },
-    { file: "/posts/algorithm/koreatech/1011.html", category: "알고리즘/KOREATECH", title: "동적계획법(DP) 문제" },
-    { file: "/posts/algorithm/koreatech/1018.html", category: "알고리즘/KOREATECH", title: "1018: 문자열 거리 최소화 하기" },
-    { file: "/posts/algorithm/koreatech/1034.html", category: "알고리즘/KOREATECH", title: "1034,1041: 최소 이동 거리" },
-    { file: "/posts/algorithm/koreatech/1048.html", category: "알고리즘/KOREATECH", title: "1048: AP 배분" },
-    { file: "/posts/algorithm/koreatech/1095.html", category: "알고리즘/KOREATECH", title: "1095: 자연스러운 정렬" },
-
-    /* ↓ 정리 안 됨 */
-    { file: "/posts/algorithm/ai.html", category: "Algorithm", title: "AI" },
-    { file: "/posts/algorithm/book01.html", category: "Algorithm", title: "『알고리즘 도감』" },
-    { file: "/posts/algorithm/linear_algebra.html", category: "Algorithm", title: "선형대수" },
+{ file: "/posts/single/sdkman.html",                    category: "단일 주제",              title: "SDKMAN; The Software Development Kit Manager" },
+{ file: "/posts/book/001.html",                         category: "독서",                  title: "1만 시간의 재발견" },
+{ file: "/posts/book/002.html",                         category: "독서",                  title: "마음의 탄생" },
+{ file: "/posts/book/003.html",                         category: "독서",                  title: "생각하는 삶을 위한 철학의 역사" },
+{ file: "/posts/book/004.html",                         category: "독서",                  title: "쇼펜하우어, 돌이 별이 되는 철학" },
+{ file: "/posts/book/005.html",                         category: "독서",                  title: "인생의 모든 의미" },
+{ file: "/posts/book/009.html",                         category: "독서",                  title: "인지 편향" },
+{ file: "/posts/book/006.html",                         category: "독서",                  title: "지식의 착각" },
+{ file: "/posts/book/007.html",                         category: "독서",                  title: "키르케고르 실존 극장" },
+{ file: "/posts/book/008.html",                         category: "독서",                  title: "Gamification by Design" },
+{ file: "/posts/algorithm/algo.html",                   category: "알고리즘",               title: "알고리즘 일반" },
+{ file: "/posts/algorithm/book01.html",                 category: "알고리즘",               title: "『알고리즘 도감』" },
+{ file: "/posts/algorithm/linear_algebra.html",         category: "알고리즘",               title: "선형대수" },
+{ file: "/posts/algorithm/koreatech/1003.html",         category: "알고리즘/KOREATECH",     title: "1003: 0을 만들자" },
+{ file: "/posts/algorithm/koreatech/1008.html",         category: "알고리즘/KOREATECH",     title: "1008: 순환 소수" },
+{ file: "/posts/algorithm/koreatech/1010.html",         category: "알고리즘/KOREATECH",     title: "소수(Prime) 관련 문제" },
+{ file: "/posts/algorithm/koreatech/1011.html",         category: "알고리즘/KOREATECH",     title: "동적계획법(DP) 문제" },
+{ file: "/posts/algorithm/koreatech/1018.html",         category: "알고리즘/KOREATECH",     title: "1018: 문자열 거리 최소화 하기" },
+{ file: "/posts/algorithm/koreatech/1034.html",         category: "알고리즘/KOREATECH",     title: "1034,1041: 최소 이동 거리" },
+{ file: "/posts/algorithm/koreatech/1048.html",         category: "알고리즘/KOREATECH",     title: "1048: AP 배분" },
+{ file: "/posts/algorithm/koreatech/1095.html",         category: "알고리즘/KOREATECH",     title: "1095: 자연스러운 정렬" },
+{ file: "/posts/algorithm/ai.html",                     category: "작성 중지",              title: "AI" },
+    
+    /* ↓ 정리 안 됨
     { file: "/posts/algorithm/probability.html", category: "Algorithm", title: "확률" },
     
 
@@ -148,6 +148,7 @@ const posts = { list: [
     { file: "/posts/single/rpi.html", category: "Programming/Single Topic", title: "Raspberry Pi 3 + OpenCV(python)" },
     { file: "/posts/single/unity.html", category: "Programming/Single Topic", title: "Unity : 작성 중지" },
     { file: "/posts/single/vi.html", category: "Programming/Single Topic", title: "vi" },
+     */
 ], codes: {} }
 
 window.addEventListener('load', () => {
