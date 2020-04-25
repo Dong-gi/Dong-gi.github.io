@@ -3244,6 +3244,7 @@ single
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/algorithm:
 ai.jade
+algo.jade
 koreatech
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/algorithm/koreatech:
@@ -3258,6 +3259,14 @@ koreatech
 1095.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/book:
+001.jade
+002.jade
+003.jade
+004.jade
+005.jade
+006.jade
+007.jade
+008.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/db:
 example
@@ -3298,20 +3307,11 @@ python
 single
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/algorithm:
-algo.jade
 book01.jade
 linear_algebra.jade
 probability.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/book:
-001.jade
-002.jade
-003.jade
-004.jade
-005.jade
-006.jade
-007.jade
-008.jade
 009.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/db:
