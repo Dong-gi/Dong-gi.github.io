@@ -2,7 +2,7 @@ include ../../source/skeleton.jade
 +post('선형대수', '선형대수, 행렬, 벡터, 내적', '대학 선형대수 정리 문서', true)
     h1.marker 선형대수?
     strong 1차(선형) 시스템을 다루는 대수학
-    
+
     h2.marker 참고문서
     ol
         li
@@ -84,13 +84,13 @@ include ../../source/skeleton.jade
         li 0이 아닌 상수를 행에 곱하기
         li 두 행을 바꾸기
         li 한 행의 상수 배를 다른 방정식에 더하기
-        
+
     h3.marker 행사다리꼴 행렬(REF; Row Echelon Form matrix)
     ol
         p 아래 두 조건을 만족하는 행렬은 행사다리꼴 행렬이다
         li 모든 원소가 0인 행은 맨 아래에 있다
         li 나머지 행의 선행 계수는 그 위 행의 선행 계수보다 오른쪽에 있다
-    
+
     h4.marker 기약 행사다리꼴 행렬(RREF; Reduced REF)
     p REF면서, 선행 계수가 존재하는 행의 선행 계수 외 모든 원소가 0인 경우
 
@@ -248,7 +248,6 @@ include ../../source/skeleton.jade
                 | 5 & -10 & 6
                 | \end{bmatrix}]식
 
-
     h3.marker 삼각행렬; Triangular matrix
     p 주대각선의 위쪽이나 아래쪽 원소가 모두 0인 경우
     ul
@@ -278,7 +277,6 @@ include ../../source/skeleton.jade
         li 식[A=A^{T}]식을 만족하는 행렬 식[A]식
         li 임의 행렬 식[A]식에 대하여, 식[AA^{T}]식, 식[A^{T}A]식은 모두 대칭행렬
         p 증명: 식[(AA^{T})^{T}=(A^{T})^{T}A^{T}=AA^{T}]식
-
 
     h2.marker 행렬식; Determinant
     ul
@@ -385,7 +383,7 @@ include ../../source/skeleton.jade
     ul
         li 벡터 식[\mathbf{v}]식의 놈(norm; 크기) 식[\|\mathbf{v}\|=\sqrt{v_{1}^{2}+v_{2}^{2}+\cdots+v_{n}^{2}}]식
         li 단위 벡터; Unit vector : 길이가 1인 벡터
-    
+
     h3.marker 내적; Inner product
     p
         | 유클리드 공간 식[R^{n}]식의 두 벡터 식[\mathbf{u}, \mathbf{v}]식에 대한 내적, 스칼라 곱은 다음과 같의 정의할 수 있다.
@@ -762,7 +760,6 @@ include ../../source/skeleton.jade
         li 복소행렬의 켤레전치행렬 : 식[A^* = \overline{A^T}]식
         li Unitary 행렬 식[\iff A^* = A^{-1}]식
         li Hermitian 행렬 식[\iff A^* = A]식
-
 
     h2.marker 내적공간
     ul

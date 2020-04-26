@@ -4,517 +4,328 @@ html
         hr
         details
             summary Address
-            |     
             details
                 summary class InetAddress implements Serializable Since 1.0
-                |         
                 ol
                     li IP 주소를 표현하며, IPv4, IPv6 각각에 대응하는 서브 클래스가 있다. 서브 클래스를 직접 이용하는 일은 별로 없을 거라고 한다.
-                    |             
                     li boolean isLoopbackAddress() Since 1.4 + isAnyLocalAddress, ...
-                    |             
                     li boolean isReachable(int timeout) Since 1.5 + 1 오버로딩
                     |             ICMP, ECHO, REQUEST 등으로 연결 시도
-                    |             
                     li String getHostName() + getCanonicalHostName
-                    |             
                     li byte[] getAddress() + getHostAddress
-                    |             
                     li static InetAddress getByAddress(byte[] addr) Since 1.4 + 1 오버로딩
-                    |             
                     li static InetAddress getByName(String host)
-                    |             
                     li
                         | static InetAddress[] getAllByName(String host)
                         button.btn-code(path='Repositories/Eclipse/JavaSE/src/net/InetAddressTest.java', lan='java') 예시 코드 »
-                    |             
                     li static InetAddress getLocalHost()
-                    |             
                     li static InetAddress getLoopbackAddress() Since 1.7 : 127.0.0.1(127.*.*.*) or ::1
-            |     
             details
                 summary abstract class SocketAddress implements Serializable Since 1.4
                 |         프로토콜과 무관한 소켓 주소를 의미.
-            |     
             details
                 summary class InetSocketAddress extends SocketAddress Since 1.4
-                |         
                 ol
                     li IP 소켓 주소[(IP 주소 or 호스트 이름) + 포트]를 표현.
-                    |             
                     li public InetSocketAddress(int port)
                     |             port가 0이면 바인드시 자동 할당.
-                    |             
                     li public InetSocketAddress(InetAddress addr, int port)
                     |             addr이 null이면 와일드카드 할당
-                    |             
                     li public InetSocketAddress(String hostname, int port)
                     |             호스트에 해당하는 InetAddress를 찾기 위해 연결을 시도한다. 실패 시 unresolved 플래그 설정
-                |         
                 details
                     summary Method Detail
-                    |             
                     ol
                         li static InetSocketAddress createUnresolved(String host, int port) Since 1.5
-                        |                 
                         li final int getPort()
-                        |                 
                         li final InetAddress getAddress()
-                        |                 
                         li final String getHostName()
-                        |                 
                         li final String getHostString() Since 1.7 : 이름이 없으면 주소로 생성
-                        |                 
                         li final boolean isUnresolved()
-            |     
             details
                 summary class InterfaceAddress Since 1.6
-                |         
                 ol
                     li IPv4 : IP 주소 + 서브넷 마스크 + 브로드캐스트 주소
-                    |             
                     li IPv6 : IP 주소 + network prefix length
-                |         
                 details
                     summary Method Detail
-                    |             
                     ol
                         li InetAddress getAddress()
-                        |                 
                         li InetAddress getBroadcast()
-                        |                 
                         li short getNetworkPrefixLength()
         hr
         details
             summary Connection
-            |     
             details
                 summary abstract class URLConnection Since 1.0
-                |         
                 ol
                     | URL이 지정하는 원격지와의 연결을 정의하며, 일반적으로 아래 단계에 따라 사용된다
                     li openConnection 메서드를 통해 연결 객체 획득
-                    |             
                     li 구성 인자 및 요청 속성 설정
                     |             메서드 : setAllowUserInteraction, setDoInput, setDoOutput, setIfModifiedSince, setUseCaches
-                    |             
                     li connect 메서드로 연결 시도
-                    |             
                     li 연결 성공하면 헤더와 컨텐츠에 접근할 수 있다
                     |             메서드 : getContent, getHeaderField, getInputStream, getOutputStream
-                    |             
                     button.btn-code(path='Repositories/Eclipse/JavaSE/src/net/HttpURLConnectionTest.java', lan='java') 예시 코드 »
                     br
                     |             자주 사용되는 헤더 필드 접근 메서드 : getContentEncoding, getContentLength, getContentType, getDate, getExpiration, getLastModified
-            |     
             details
                 summary abstract class HttpURLConnection extends URLConnection Since 1.1
-                |         
                 ol
                     li HttpURLConnection은 요청을 1회만 하지만, 기저 네트워크 연결은 다른 인스턴스가 공유할 수 있다
-                    |             
                     li public static final int HTTP_OK, HTTP_BAD_REQUEST, HTTP_NOT_FOUND, ...
-                    |             
                     li
                         | int getResponseCode()
                         button.btn-code(path='Repositories/Eclipse/JavaSE/src/net/HttpURLConnectionTest.java', lan='java') 예시 코드 »
-                    |             
                     li void setAuthenticator(Authenticator auth) Since 9
                     |             기본 구현은 UnsupportedOperationException를 던지므로, 사용하려면 재정의해야 한다
-            |     
             details
                 summary abstract class JarURLConnection extends URLConnection Since 1.2
-                |         
                 ol
                     li 원격지 jar에 대한 연결을 제공한다
-                    |             
                     li JarEntry 표기 : jar:http://www.foo.com/bar/baz.jar!/COM/foo/Quux.class
-                    |             
                     li JarFile 표기 : jar:http://www.foo.com/bar/baz.jar!/
-                    |             
                     li Jar directory 표기 : jar:http://www.foo.com/bar/baz.jar!/COM/foo/
         hr
         details
             summary Socket
-            |     
             details
                 summary interface SocketOptions Since 1.1
-                |         
                 ol
                     li 생략
-                    |             
                     li @Native static final int SO_REUSEPORT Since 9
                     |             여러 소켓이 같은 주소와 포트를 listen할 수 있는지 여부.
-                    |             
                     li @Native static final int SO_LINGER
                     |             TCP 소켓 linger-on-close timeout 설정. 0이면 즉시 강제 종료. 양수면 최대 65,535까지 종료 대기. 그 외엔 일반적인 종료 절차.
-                    |             
                     li @Native static final int SO_TIMEOUT
                     |             ServerSocket#accept, SocketInputStream#read, DatagramSocket#receive에 대한 timeout 설정. 사용하기 전에 미리 설정돼야 한다.
-                    |             
                     li @Native static final int SO_SNDBUF : 전송 버퍼 크기에 대한 힌트 + SO_RCVBUF
-                    |             
                     li @Native static final int SO_KEEPALIVE
                     |             TCP 연결에서 2시간(실제와 다를 수 있음) 동안 아무 교환이 없으면 keepalive probe를 보낸다. 응답이 ACK면 정상, RST면 상대가 리셋(리부트)되었으므로 연결 종료, 응답 없는 경우에도 연결 종료.
-                    |             
                     li @Native static final int SO_OOBINLINE
                     |             TCP 소켓에 설정되면 input stream을 통해 긴급 데이터(1바이트)를 받을 수 있다. 설정되지 않으면(기본) 버려진다.
-                    |             
                     li void setOption(int optID, Object value) + getOption
-            |     
             details
                 summary class Socket implements Closeable Since 1.0
-                |         
                 ol
                     li
                         | TCP 클라이언트 소켓
                         button.btn-code(path='Repositories/Eclipse/JavaSE/src/net/SocketTest.java', lan='java') 예시 코드 »
-                |         
                 details
                     summary Constructor Detail
-                    |             
                     ol
                         li public Socket() Since 1.1
-                        |                 
                         li public Socket(Proxy proxy) Since 1.5
-                        |                 
                         li public Socket(String host, int port) + 1 오버로딩
-                        |                 
                         li
                             | public Socket(String host, int port, InetAddress localAddr, int localPort) Since 1.1 + 1 오버로딩
-                |         
                 details
                     summary Method Detail
-                    |             
                     ol
                         li void connect(SocketAddress endpoint, int timeout) Since 1.4 + 1 오버로딩
-                        |                 
                         li void bind(SocketAddress bindpoint) Since 1.4
-                        |                 
                         li void shutdownInput() Since 1.3 + shutdownOutput
-                        |                 
                         li InetAddress getInetAddress() + getLocalAddress
-                        |                 
                         li int getPort() + getLocalPort
-                        |                 
                         li SocketAddress getRemoteSocketAddress() Since 1.4 + getLocalSocketAddress
-                        |                 
                         li SocketChannel getChannel() Since 1.4
                         |                 SocketChannel#open 또는 ServerSocketChannel#accept로 생성된 경우에만 존재.
-                        |                 
                         li InputStream getInputStream() + getOutputStream
-                        |                 
                         li boolean isInputShutdown() Since 1.4 + isOutputShutdown
-                        |                 
                         li boolean isConnected() Since 1.4 + isClosed, isBound
-                        |                 
-                        li <T> Socket setOption(SocketOption<T> name, T value) Since 9
-                        |                 
-                        li <T> T getOption(SocketOption<T> name) Since 9
-                        |                 
-                        li Set<SocketOption<?>> supportedOptions() Since 9
-            |     
+                        li &lt;T> Socket setOption(SocketOption&lt;T> name, T value) Since 9
+                        li &lt;T> T getOption(SocketOption&lt;T> name) Since 9
+                        li Set&lt;SocketOption&lt;?>> supportedOptions() Since 9
             details
                 summary class ServerSocket implements Closeable Since 1.0
-                |         
                 ol
                     li
                         | TCP 서버 소켓
                         button.btn-code(path='Repositories/Eclipse/JavaSE/src/net/SocketTest.java', lan='java') 예시 코드 »
-                |         
                 details
                     summary Constructor Detail
-                    |             
                     ol
                         li public ServerSocket()
-                        |                 
                         li public ServerSocket(int port)
                         |                 port 0은 자동 할당. 들어오는 연결 큐의 크기는 50.
-                        |                 
                         li public ServerSocket(int port, int backlog)
                         |                 port 0은 자동 할당. backlog는 연결 큐의 크기 설정.
-                        |                 
                         li public ServerSocket(int port, int backlog, InetAddress bindAddr) Since 1.1
-                |         
                 details
                     summary Method Detail
-                    |             
                     ol
                         li void bind(SocketAddress endpoint) Since 1.4 + 1 오버로딩
-                        |                 
                         li InetAddress getInetAddress() + getLocalSocketAddress, getLocalPort
-                        |                 
                         li Socket accept()
-                        |                 
                         li ServerSocketChannel getChannel() Since 1.4
                         |                 ServerSocketChannel#open으로 생성된 경우에만 존재.
-                        |                 
                         li boolean isBound() Since 1.4 + isClosed
-                        |                 
                         li static void setSocketFactory(SocketImplFactory fac)
-                        |                 
                         li
                             | void setPerformancePreferences(int connectionTime, int latency, int bandwidth) Since 1.5
-                        |                 
-                        li <T> ServerSocket setOption(SocketOption<T> name, T value) Since 9
-                        |                 
-                        li <T> T getOption(SocketOption<T> name) Since 9
-                        |                 
-                        li Set<SocketOption<?>> supportedOptions() Since 9
-            |     
+                        li &lt;T> ServerSocket setOption(SocketOption&lt;T> name, T value) Since 9
+                        li &lt;T> T getOption(SocketOption&lt;T> name) Since 9
+                        li Set&lt;SocketOption&lt;?>> supportedOptions() Since 9
             details
                 summary class DatagramSocket implements Closeable Since 1.0
-                |         
                 ol
                     li UDP 소켓을 정의한다
-                    |             
                     li void send(DatagramPacket p)
-                    |             
                     li void receive(DatagramPacket p)
-                    |             
                     li void bind(SocketAddress addr) Since 1.4 + isBound
                     |             생성자에서 바인드하지 않은 경우, 이를 통해 바인드 가능.
-                    |             
                     li void connect(InetAddress address, int port) + 1 오버로딩 + disconnect, isConnected
                     |             기본적으로 UDP 데이터그램 소켓은 연결이 없다. 이 메서드로 원격지에 연결하는순간, 소켓은 해당 원격지와만 통신할 수 있다.
                     br
                     |             원격지와 연결하면 다음 메서드들이 동작한다. getInetAddress(), getPort(), getRemoteSocketAddress()
-                    |             
                     li boolean isClosed() Since 1.4
-                    |             
                     li SocketAddress getLocalSocketAddress() Since 1.4 + getLocalAddress, getLocalPort
-                    |             
                     li void setTrafficClass(int tc) Since 1.4 + getTrafficClass
-                    |             
                     ul
-                        li 0<=tc<=255. IPv4에서, 하위 8개 비트를 IP 패킷의 TOS에 쓴다.
-                        |                 
+                        li 0&lt;=tc&lt;=255. IPv4에서, 하위 8개 비트를 IP 패킷의 TOS에 쓴다.
                         li IPv6에서, IP 헤더의 sin6_flowinfo 필드에 들어간다.
-                        |                 
                         li RRC 1349의 TOS 값 정의
                         |                 IPTOS_LOWCOST(0x02), IPTOS_RELIABILITY(0x04), IPTOS_THROUGHPUT(0x08), IPTOS_LOWDELAY(0x10)
-                    |             
                     li DatagramChannel getChannel() Since 1.4
                     |             DatagramChannel#open으로 생성된 경우에만 존재.
-                    |             
                     li
                         | static void setDatagramSocketImplFactory(DatagramSocketImplFactory fac) Since 1.3
-                    |             
                     li
-                        | <T> DatagramSocket setOption(SocketOption<T> name, T value) Since 9 + getOption, 각종 옵션 setter/getter
-                    |             
-                    li Set<SocketOption<?>> supportedOptions() Since 9
-            |     
+                        | &lt;T> DatagramSocket setOption(SocketOption&lt;T> name, T value) Since 9 + getOption, 각종 옵션 setter/getter
+                    li Set&lt;SocketOption&lt;?>> supportedOptions() Since 9
             details
                 summary class MulticastSocket extends DatagramSocket Since 1.1
-                |         
                 ol
                     li 멀티캐스트 데이터그램 소켓을 제공한다.
-                    |             
                     li 멀티캐스트 그룹 ::= Class D IP 주소 + UDP 포트
                     |             Class D ::= (224.0.0.0, 239.255.255.255]
-                    |             
                     li 멀티캐스트 그룹에 데이터그램을 보내면 모든 구독자들이 받게 된다
                     |             멀티캐스트 그룹의 멤버가 아니라도 멀티캐스트 데이터그램을 보내는 것은 가능하다
-                    |             
                     li JavaDoc 예시
                     pre.
                         \nvar group = InetAddress.getByName("228.5.6.7");
                         var s = new MulticastSocket(6789);
                         s.joinGroup(group);
-                        
                         var msg = "hello".getBytes();
                         s.send(new DatagramPacket(msg, msg.length, group, 6789));
-                        
                         var buf = new byte[1000];
                         s.receive(new DatagramPacket(buf, buf.length));
-                        
                         s.leaveGroup(group);            
-            |     
             details
                 summary final class DatagramPacket Since 1.0
-                |         
                 ol
                     li UDP 패킷을 정의한다. 송신용 생성자는 byte[]와 길이 정보가 필요하고, 수신용 생성자는 주소 정보가 추가로 필요하다.
-                    |             
                     li 패킷 데이터, 길이, 주소 각각에 대한 getter/setter 제공
         hr
         details
             summary URI
-            |     
             details
-                summary final class URI implements Comparable<URI>, Serializable Since 1.4
-                |         
+                summary final class URI implements Comparable&lt;URI>, Serializable Since 1.4
                 details
                     summary URI syntax and components
-                    |             
                     ol
                         li syntax : [scheme:]scheme-specific-part[#fragment]
-                        |                 
                         li Absolute URI : 스킴을 명시한 URI
-                        |                 
                         li Relative URI : Not absolute URI
-                        |                 
                         li Opaque URI : scheme-specific-part가 '/'로 시작하지 않는 absolute URI
                         |                 예: "mailto:java-net@java.sun.com", "urn:isbn:096139210x"
-                        |                 
                         li Hierarchical URI : scheme-specific-part가 '/'로 시작하는 absolute or relative URI
                         |                 [scheme:][//authority][path][?query][#fragment]
                         br
                         |                 예: "http://example.com/languages/java", "sample/a/index.html#28", "../../demo/b/index.html"
                         br
-                        |                 
                         li Server-based authority : [user-info@]host[:port]
-                        |                 
                         li Registry-based authority : not server-based authority
-                |         
                 details
                     summary Operations on URI instances
-                    |             
                     ol
                         li Normalization : "."과 ".."을 제거
-                        |                 
                         li Resolution : 상대 URI와 base URI를 이용해 단일 URI를 찾는 작업
-                        |                 
                         li Relativization : Resolution의 역.
                         |                 임의의 정규화된 두 URI u, v에 대하여, u.relativize(u.resolve(v)).equals(v)와 u.resolve(u.relativize(v)).equals(v)는 항상 성립한다.
-                |         
                 details
                     summary Constructor Detail
-                    |             
                     ol
                         li public URI(String str)
-                        |                 
                         li
                             | public URI(String scheme, String userInfo, String host, int port, String path, String query, String fragment)
-                        |                 
                         li
                             | public URI(String scheme, String authority, String path, String query, String fragment)
-                        |                 
                         li public URI(String scheme, String host, String path, String fragment)
-                        |                 
                         li
                             | public URI(String scheme, String ssp, String fragment) // ssp : scheme-specific-part
-                |         
                 details
                     summary Method Detail
-                    |             
                     ol
                         li static URI create(String str)
-                        |                 
                         li URI parseServerAuthority()
-                        |                 
                         li URI normalize()
-                        |                 
                         li URI resolve(URI uri) + 1 오버로딩
-                        |                 
                         li URI relativize(URI uri)
-                        |                 
                         li URL toURL()
-                        |                 
                         li String getScheme() + getRawSchemeSpecificPart, getSchemeSpecificPart, ...
-                        |                 
                         li boolean isAbsolute() + isOpaque
-                        |                 
                         li String toASCIIString() : URI를 US_ASCII 문자열로 반환.
-            |     
             details
                 summary final class URL implements Serializable Since 1.0
-                |         
                 ol
                     li 인스턴스 생성 시, URI와 다르게 정의된 scheme에 대한 핸들러를 찾기 때문에, 핸들러를 찾지 못하면 예외가 발생한다
-                |         
                 details
                     summary Constructor Detail
-                    |             
                     ol
                         li public URL(String spec)
-                        |                 
                         li public URL(String protocol, String host, int port, String file) + 2 오버로딩
-                        |                 
                         li public URL(URL context, String spec) + 1 오버로딩
-                |         
                 details
                     summary Method Detail
-                    |             
                     ol
                         li String getQuery() + getPath, getUserInfo, ...
-                        |                 
                         li boolean sameFile(URL other) : fragment(#) 제외하고 같은 파일인지 여부
-                        |                 
                         li URI toURI() Since 1.5
-                        |                 
                         li
                             | URLConnection openConnection() Since 1.5 + 1 오버로딩
                             button.btn-code(path='Repositories/Eclipse/JavaSE/src/net/HttpURLConnectionTest.java', lan='java') 예시 코드 »
-                        |                 
                         li final InputStream openStream() == openConnection().getInputStream()
-                        |                 
                         li final Object getContent() + 1 오버로딩 == openConnection().getContent()
-            |     
             details
                 summary class URLDecoder Since 1.2
-                |         
                 ol
                     li static String decode(String s, String enc) Since 1.4
-                    |             
                     li static String decode(String s, Charset charset) Since 10
-            |     
             details
                 summary class URLEncoder Since 1.0
-                |         
                 ol
                     li static String encode(String s, String enc) Since 1.4
-                    |             
                     li static String encode(String s, Charset charset) Since 10
-            |     
             details
                 summary class URLClassLoader extends SecureClassLoader implements Closeable Since 1.2
-                |         
                 ol
                     li URL을 이용한 클래스 로더를 제공한다
-                    |             
                     li public URLClassLoader(URL[] urls) + 4 오버로딩
         hr
         details
             summary final class NetworkInterface Since 1.4
-            |     
             ol
                 li
                     | 이름과 할당된 IP 주소들로 구성된 Network Interface 표현.
                     button.btn-code(path='Repositories/Eclipse/JavaSE/src/net/NetworkInterfaceTest.java', lan='java') 예시 코드 »
-                |         
                 li
-                    | static Stream<NetworkInterface> networkInterfaces() Since 9 + getNetworkInterfaces
-                |         
+                    | static Stream&lt;NetworkInterface> networkInterfaces() Since 9 + getNetworkInterfaces
                 li
                     | static NetworkInterface getByIndex(int index) Since 1.7 + getByName, getByInetAddress
-                |         
                 li String getName() + getDisplayName
-                |         
                 li int getIndex() Since 1.7 : -1 for unknown
-                |         
-                li Stream<InetAdress> inetAddresses() Since 9 + getInetAddresses
-                |         
-                li List<InterfaceAddress> getInterfaceAddresses() Since 1.6
-                |         
-                li Stream<NetworkInterface> subInterfaces() Since 9 + getSubInterfaces
+                li Stream&lt;InetAdress> inetAddresses() Since 9 + getInetAddresses
+                li List&lt;InterfaceAddress> getInterfaceAddresses() Since 1.6
+                li Stream&lt;NetworkInterface> subInterfaces() Since 9 + getSubInterfaces
                 |         subinterface = vertual interface
-                |         
                 li NetworkInterface getParent() Since 1.6
-                |         
                 li byte[] getHardwareAddress() Since 1.6 : 보통 MAC 주소
-                |         
                 li boolean isUp() Since 1.6
                 |         Returns whether a network interface is up and running
-                |         
                 li boolean isLoopback() Since 1.6
-                |         
                 li boolean isPointToPoint() Since 1.6
-                |         
                 li boolean supportsMulticast() Since 1.6
-                |         
                 li int getMTU() Since 1.6
-                |         
                 li boolean isVirtual() Since 1.6
         hr

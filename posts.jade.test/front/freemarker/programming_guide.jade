@@ -4,36 +4,23 @@ html
         hr
         details
             summary 시작
-            |     
             ol
                 button.btn-code(path='Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', displayrange='[112, 142, 17, 23]', lan='java') Java »
-                |         
                 button.btn-code(path='Repositories/Eclipse/FreeMarker/resource/template/t_001_hello_world.ftl', displayrange='[1, 12, 15, 26]', lan='xml') FTL + 결과 »
-                |         
                 li Configuration 인스턴스 생성
-                |         
                 li Data-model 생성
-                |         
                 ul
                     li java.lang.String
-                    |             
                     li java.lang.Number
-                    |             
                     li java.lang.Boolean
-                    |             
                     li java.util.Date
-                    |             
                     li java.util.Map
-                    |             
                     li Custom Beans
-                |         
                 li Template 인스턴스 얻기
-                |         
                 li Template과 data-model 머지
         hr
         details
             summary Data-model
-            |     
             ol
                 li Scalar
                 |         각 스칼라 타입은 Template
@@ -41,165 +28,108 @@ html
                 | Model 인터페이스에 해당한다.
                 br
                 |         Boolean, Number, String, Date-like(Date, Time, Date-time)
-                |         
                 li Container
-                |         
                 ul
                     li Hash
-                    |             
                     details
                         summary interface TemplateHashModel extends TemplateModel
-                        |                 
                         ol
                             li TemplateModel get(java.lang.String key)
-                            |                     
                             li boolean isEmpty()
-                    |             
                     details
                         summary interface TemplateHashModelEx extends TemplateHashModel
-                        |                 
                         ol
                             li int size()
-                            |                     
                             li TemplateCollectionModel keys()
-                            |                     
                             li TemplateCollectionModel values()
-                    |             
                     details
                         summary interface TemplateHashModelEx2 extends TemplateHashModelEx
-                        |                 
                         ol
                             li static interface TemplateHashModelEx2.KeyValuePair
-                            |                     
                             li static interface TemplateHashModelEx2.KeyValuePairIterator
-                            |                     
                             li TemplateHashModelEx2.KeyValuePairIterator keyValuePairIterator()
-                    |             
                     details
                         summary
                             | class SimpleHash extends WrappingTemplateModel implements TemplateHashModelEx2, java.io.Serializable
-                        |                 
                         ol
                             li public SimpleHash(ObjectWrapper wrapper)
-                            |                     
                             li public SimpleHash(java.util.Map map, ObjectWrapper wrapper)
-                            |                     
                             li protected java.util.Map copyMap(java.util.Map map)
-                            |                     
                             li void put(java.lang.String key, java.lang.Object value)
-                            |                     
                             li boolean containsKey(java.lang.String key)
-                            |                     
                             li void remove(java.lang.String key)
-                            |                     
                             li void putAll(java.util.Map m)
-                            |                     
                             li java.util.Map toMap()
-                    |             
                     li Sequence
-                    |             
                     details
                         summary interface TemplateSequenceModel extends TemplateModel
-                        |                 
                         ol
                             li TemplateModel get(int index)
-                            |                     
                             li int size()
-                    |             
                     details
                         summary
                             | class SimpleSequence extends WrappingTemplateModel implements TemplateSequenceModel, java.io.Serializable
-                        |                 
                         ol
                             li public SimpleSequence(TemplateCollectionModel tcm)
-                            |                     
                             li public SimpleSequence(ObjectWrapper wrapper)
-                            |                     
                             li public SimpleSequence(int capacity, ObjectWrapper wrapper) Since 2.3.21
-                            |                     
                             li public SimpleSequence(java.util.Collection collection, ObjectWrapper wrapper)
-                            |                     
                             li void add(java.lang.Object obj)
-                            |                     
                             li SimpleSequence synchronizedWrapper()
-                    |             
                     li Collection
-                    |             
                     details
                         summary interface TemplateCollectionModel extends TemplateModel
-                        |                 
                         ol
                             li TemplateModelIterator iterator()
-                    |             
                     details
                         summary
                             | class SimpleCollection extends WrappingTemplateModel implements TemplateCollectionModel, java.io.Serializable
-                        |                 
                         ol
                             li
                                 strong public SimpleCollection(java.util.Collection collection, ObjectWrapper wrapper)
-                            |                     
                             li
                                 strong public SimpleCollection(java.util.Iterator iterator, ObjectWrapper wrapper)
-                            |                     
                             li public SimpleCollection(java.lang.Iterable iterable, ObjectWrapper wrapper)
-                |         
                 li Method
-                |         
                 strong interface TemplateMethodModelEx extends TemplateMethodModel
                 br
                 |         » java.lang.Object exec(java.util.List arguments)
-                |         
                 button.btn-code(path='Repositories/Eclipse/FreeMarker/src/io/github/donggi/ProgrammerGuilde.java', displayrange='[18, 26]', lan='java') Java »
-                |         
                 button.btn-code(path='Repositories/Eclipse/FreeMarker/resource/template/t_013_method.ftl', displayrange='[1, 1, 3, 3]', lan='xml') FTL + 결과 »
-                |         
                 li Object Wrapper
-                |         
                 ul
                     details
                         summary interface ObjectWrapper
                         |                 TemplateModel wrap(java.lang.Object obj)
-                    |             
                     details
                         summary interface ObjectWrapperAndUnwrapper extends ObjectWrapper
-                        |                 
                         ol
                             li static final java.lang.Object CANT_UNWRAP_TO_TARGET_CLASS
                             |                     unwrap은 가능하지만, 결과물이 타깃 클래스 인스턴스가 아닐 수 있음을 표시. 아니면 null
-                            |                     
                             li java.lang.Object unwrap(TemplateModel tm)
                             |                     unwrap 실패의 의미로 null을 반환하지 말 것.
-                            |                     
                             li
                                 | java.lang.Object tryUnwrapTo(TemplateModel tm, java.lang.Class
                                 | targetClass)
                             |                     targetClass가 Object.class가 아닌 경우, 변환이 안 될 것 같으면 CANT_UNWRAP_TO_TARGET_CLASS 반환.
-                    |             
                     details
                         summary class DefaultObjectWrapper extends BeansWrapper
                         |                 FreeMarker에서 기본으로 사용하는 ObjectWrapper. Configuration#getDefaultObjectWrapper 또는 DefaultObjectWrapperBuilder#build로 획득.
         hr
         details
             summary Configuration
-            |     
             ol
                 li Shared variable
                 |         모든 템플릿이 공유하는 변수(함수와 directive도 변수임을 상기) 설정. Configuration#setSharedVariable
-                |         
                 li Setting
                 |         locale, number_format, default_encoding, template_exception_handler, date_format, time_format, datetime_format, time_zone, url_escaping_charset 등
                 br
                 |         https://freemarker.apache.org/docs/api/freemarker/template/Configuration.html#setSetting-java.lang.String-java.lang.String-
-                |         
                 li Template loading
-                |         
                 ul
                     li 템플릿 로더 설정
-                    |             
                     ul
                         li Configuration#setDirectoryForTemplate : 파일 시스템 상의 기본 디렉터리 지정
-                        |                 
                         li
                             | Configuration#setClassForTemplateLoading
                             br
@@ -207,38 +137,29 @@ html
                         |                 클래스 로딩과 같은 매커니즘으로 템플릿을 가져오고자 할 때 사용. jar로 웹앱을 배치한 경우 유용
                         br
                         |                 setServletContextForTemplateLoading(servletContext, path) == setTemplateLoader(new WebappTemplateLoader(sctxt, path))
-                        |                 
                         li Configuration#setServletContextForTemplateLoading
                         |                 ServletContext#getResource를 이용해 템플릿 로드. 압축 상태의 war에서도 잘 동작. WEB-INF/web.xml에 *.ftl등 템플릿 확장자 설정해야 함.
-                        |                 
                         li Configuration#setTemplateLoader
                         |                 직접 TemplateLoader를 구현했거나, 템플릿 로더의 설정을 변경하여 이용해야 하는 경우 이용.
                         br
                         |                 * 이미 URLTemplateLoader이 구현돼있으니 괜한 뻘짓할 필요 없다.
-                    |             
                     li 여러 장소에서 로드
                     |             Configuration#setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[] { loader1, loader2, ... }))
-                |         
                 li Template caching
                 |         로드된 템플릿은 캐시된다. 기본 갱신 주기는 5초며, Configuration으로 설정 가능. 클래스 로더를 이용하는 경우 갱신 파악에 문제가 있을 수 있다.
                 br
                 |         getTemplate을 호출하면 캐시에 저장되고, 템플릿 파일이 삭제되면 캐시에서도 삭제된다.
                 br
                 |         기본적으로 MruCacheStorage가 이용된다.
-                |         
                 ul
                     li MruCacheStorage : strong part + soft part 2단계 캐싱
-                    |             
                     li Strong part : JVM에 의해 정리되지 않는 캐시
-                    |             
                     li Soft part : JVM에 의해 정리될 수 있는 캐시
-                    |             
                     li 디폴트 옵션은 strong 0, soft Integer.MAX_VALUE.
                     |             변경하려면 Configuration#setCacheStorage(new freemarker.cache.MruCacheStorage(20, 250)) 또는 Configuration#setSetting(Configuration.CACHE_STORAGE_KEY, "strong:20, soft:250")
         hr
         details
             summary 보안 권한
-            |     
             ol
                 button.btn-code(path='posts/front/freemarker/freemarker_permission.txt', lan='text')
                     | 보안 설정한 JVM으로 실행하는 경우 권한을 부여해야 한다.

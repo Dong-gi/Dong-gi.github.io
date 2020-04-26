@@ -12,7 +12,7 @@ html
         | table_no integer := 0;
         | var_r record;
         | BEGIN
-        | WHILE table_no < 100 LOOP
+        | WHILE table_no &lt; 100 LOOP
         | FOR var_r IN EXECUTE format('SELECT account_id, user_card_id, card_id FROM %I WHERE card_id IN(' || array_to_string(card_ids, ',') || ')', 't_user_card_' || table_no)
         | LOOP
         | account_id := var_r.account_id;

@@ -4,103 +4,81 @@ html
         hr
         details
             summary jQuery 시작하기
-            |     
             ol
                 li jQuery === $ : $.noConflict()를 호출하면 $를 사용할 수 없다.
-                |         
                 li 문서 준비 완료 이벤트 핸들러 등록
                 |         $(document).ready(() => {}), $(() => {})
-                |         
                 li 동일 이벤트에 대해 여러 핸들러 등록 가능
-                |         
                 li
                     details
                         summary 선택자
-                        |                 
                         table
                             thead
                                 tr
                                     th 구분
                                     th 문법
                                     th 예시
-                            |                     
                             tbody
                                 tr
                                     td 전체 선택
                                     td *
                                     td $('*').length
-                                |                         
                                 tr
                                     td 클래스 선택
                                     td(colspan='2') .className
-                                |                         
                                 tr
                                     td ID 선택
                                     td(colspan='2') #id
-                                |                         
                                 tr
                                     td 다중 선택
                                     td ,
                                     td $('h1, h2, h3, h4, h5, h6')
-                                |                         
                                 tr
                                     td 자식 선택
                                     td >
                                     td $('details > summary')
-                                |                         
                                 tr
                                     td 후손 선택
                                     td ' '(스페이스)
                                     td $('div div')
-                                |                         
                                 tr
                                     td 속성 선택
                                     td [attrName]
                                     td $('input[value]')
-                                |                         
                                 tr
                                     td 속성값 일치
                                     td [attrName="value"]
                                     td $('input[value="hello"]')
-                                |                         
                                 tr
                                     td 속성값 포함
                                     td [attrName*="subString"]
                                     td $('input[value*="hello"]')
-                                |                         
                                 tr
                                     td 속성값 시작
                                     td [attrName^="subString"]
                                     td $('input[value^="hello"]')
-                                |                         
                                 tr
                                     td 속성값 종료
                                     td [attrName$="subString"]
                                     td $('input[value$="hello"]')
-                                |                         
                                 tr
                                     td 속성값 단어로 포함
                                     td [attrName~="word"]
                                     td $('input[value~="hello"]')
-                                |                         
                                 tr
                                     td Pseudo-class 선택
                                     td :pseudo-class
                                     td $('a:hover')
-                                |                         
                                 tr
                                     td 필터 선택
                                     td :odd|even|first|last
                                     td $('li:even')
-                                |                         
                                 tr
                                     td 함수 필터
                                     td(colspan='2')
                                         | :contains("subStr")|eq(n)|gt(n)|lt(n)|has("tagName")|not("selector")|nth-child(2n+3)
-                |         
                 li 탐색 영역 한정
                 |         $('td', $('table#sort-target'));
-                |         
                 li .attr() ↔ .removeAttr()
                 |         .attr('style') : getter
                 br
@@ -109,95 +87,65 @@ html
                 |         .attr({ 'style': 'background-color:yellow;' }) : setter
                 br
                 |         style 속성을 변경하는 대신 .css() 함수 이용 가능
-                |         
                 li .html()
                 |         내부 html 텍스트 get/set
-                |         
                 li .text()
                 |         html 태그를 제외한 내부 plain 텍스트 get/set
-                |         
                 li .remove() : 노드 제거
-                |         
                 li .empty() : 후손 제거
-                |         
                 li 노드 삽입
                 |         .appendTo(), .prependTo(), .append(), .prepend(), .after(), .before(), .insertAfter(), .insertBefore()
-                |         
                 li .clone() : 노드 복사
-                |         
                 li .filter()
                 |         $('div').filter(index => index === 1).css('font-size', 11).end() // end() : 이전 선택 단계로
                 br
                 |         .filter(index => index === 2).css('font-size', 22);
-                |         
                 li .extend()
                 |         let obj = {};
                 br
                 |         $.extend(obj, {'key1': true, 'key2': 'value'});
-                |         
                 li .parseXML()
-                |         $.parseXML('<tag1><tag2>aa</tag2><tag2>bb</tag2></tag1>')
+                |         $.parseXML('&lt;tag1>&lt;tag2>aa&lt;/tag2>&lt;tag2>bb&lt;/tag2>&lt;/tag1>')
         hr
         details
             summary 애니메이션
-            |     
             ol
                 button.btn-code(path='posts/javascript/animation_example.html', lan='nohighlight') 애니메이션 예시
-                |         
                 button.btn-code(path='posts/javascript/animation_example.html', lan='html') 애니메이션 예시 코드
-                |         
                 li
                     | 종류 : show, hide, toggle, slideDown, slideUp, slideToggle, fadeIn, fadeOut, fadeToggle, animate...
-                |         
                 li clearQueue() : 애니메이션 큐 정리
-                |         
                 li stop() : 애니메이션 정지
-                |         
                 li delay() : 애니메이션 지연
         hr
         details
             summary 이벤트 모델
-            |     
             ol
                 li DOM 이벤트 흐름 : 이벤트 캡처링 → 타깃 → 이벤트 버블링
-                | 		
                 ul
                     li 이벤트 캡처링 : 최상위 노드로부터 이벤트가 전달되는 과정
                     | 			캡처링 단계에서 리스너의 호출 기본값은 false. 동작을 위해 addEventListener()의 옵션 매개변수를 지정해야 한다
-                    | 			
                     li 이벤트 버블링 : 최하위 노드로부터 이벤트가 전달되는 과정
-                |         
                 li 이벤트 강제 발생
                 |         $(node).trigger('eventName');
                 br
                 |         $.event.trigger(); // 사용자 정의 이벤트 강제 발생
-                |         
                 li 이벤트 핸들러 추가/제거
-                |         
                 strong JavaScript 이벤트 핸들러 설정 메서드
-                |         
                 ol
                     li EventTarget : Element, Document, Window, XMLHttpRequest
-                    |             
                     li EventTarget.addEventListener() : 이벤트 핸들러 추가
-                    |             
                     li EventTarget.dispatchEvent() : 처리할 이벤트 추가
-                    |             
                     li EventTarget.removeEventListener() : 이벤트 핸들러 제거
-                |         
                 strong jQuery 이벤트 핸들러 설정 함수
-                |         
                 ol
                     li .on(events[, selector][, data], handler)
                     |             selector가 null이거나 제공되지 않은 경우, 선택된 노드들에 대해 이벤트 핸들러 추가. selector가 제공된 경우 선택자에 매칭되는 후손 노드(미래에 추가되는 것들도 포함)들에 핸들러가 연결된다.
-                    |             
                     li .one(events[, selector][, data], handler)
                     |             핸들러가 한 번만 이벤트를 처리한다.
         hr
         details
             summary jQuery UI
-            |     
             button.btn-code(path='posts/javascript/jquery_ui_example.html', lan='nohighlight') 예시
-            |     
             button.btn-code(path='posts/javascript/jquery_ui_example.html', lan='html') 예시 코드
         hr

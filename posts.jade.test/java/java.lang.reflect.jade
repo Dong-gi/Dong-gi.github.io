@@ -4,262 +4,167 @@ html
         hr
         details(open='')
             summary 자바 제네릭의 제약사항
-            |     
             ol
                 li 자바의 제네릭은 컴파일 과정에서 모두 Object 또는 바운드된 클래스로 교체된다.
-                |         
-                li 따라서 List<T> 참조 변수만 가지고 T가 어떤 타입인지 런타임에 알아내는 방법은 없다.
+                li 따라서 List&lt;T> 참조 변수만 가지고 T가 어떤 타입인지 런타임에 알아내는 방법은 없다.
                 |         다만, 원소가 존재한다면 instanceof, Class#isInstanse, Class#isAssignableFrom을 이용한 판별은 가능하다.
-                |         
                 li 따라서 제네릭 타입에 대한 직접적인 연산은 모두 무효하다.
         hr
         details
             summary final class Array Since 1.1
-            |     
             ol
                 li 동적으로 자바 배열을 생성하고 접근하는 static 메서드들을 제공.
-                |         
-                li static Object newInstance(Class<?> componentType, int length) + 1 오버로딩
-                |         
+                li static Object newInstance(Class&lt;?> componentType, int length) + 1 오버로딩
                 li static int getLength(Object array)
-                |         
                 li static Object get(Object array, int index) + getBoolean, getByte, ...
-                |         
                 li
                     | static void set(Object array, int index, Object value) + setBollean, setByte, ...
         hr
         details
             summary class Modifier Since 1.1
-            |     
             ol
                 li
                     | public static final int PUBLIC, PRIVATE, PROTECTED, STATIC, FINAL, SYNCHRONIZED, VOLATILE, TRANSIENT, NATIVE, INTERFACE, ABSTRACT, STRICT
-                |         
                 li static boolean isPublic(int mod) ~ isStrict(int mod)
-                |         
                 li static String toString(int mod)
-                |         
                 li
                     | static int classModifiers() Since 1.7 + interfaceModifiers, constructorModifiers, ...
                 |         사용할 수 있는 제한자들을 OR하여 반환
         hr
         details
             summary 지원 타입 종류
-            |     
             ol
                 li interface Type Since 1.5
                 |         모든 타입의 공통 super interface.
-                |         
                 li interface ParameterizedType extends Type Since 1.5
-                |         Collection<String>처럼 파라미터화된 타입을 표현.
-                |         
+                |         Collection&lt;String>처럼 파라미터화된 타입을 표현.
                 li interface GenericArrayType extends Type Since 1.5
                 |         원소 타입이 parameterized type 또는 type 변수인 배열 타입을 표현.
-                |         
                 li interface WildcardType extends Type Since 1.5
                 |         ?, ? extends Number, ? super Integer와 같은 와일드카드 타입을 표현.
-                |         
                 li interface AnnotatedElement Since 1.5
                 |         애너테이트된 요소를 표현
-                |         
                 details
                     summary interface AnnotatedType extends AnnotatedElement Since 1.8
-                    |             
                     ol
                         li default AnnotatedType getAnnotatedOwnerType() Since 9
-                        |                 이 타입이 멤버로 속해있는, 애너테이트된 타입 반환. 예를 들어 이 타입이 @TA O<T>.I<S>라면, @TA O<T>를 반환.
+                        |                 이 타입이 멤버로 속해있는, 애너테이트된 타입 반환. 예를 들어 이 타입이 @TA O&lt;T>.I&lt;S>라면, @TA O&lt;T>를 반환.
                         br
                         |                 null : 이 타입이 top-level이거나 local 클래스, 익명 클래스, 기본 자료형, void인 경우. 이 타입이 AnnotatedArrayType, AnnotatedTypeVariable, AnnotatedWildcardType의 인스턴스인 경우.
-                        |                 
                         li Type getType() : 이 애너테이트된 타입의 기저 타입
-                |         
                 li interface AnnotatedArrayType extends AnnotatedType Since 1.8
                 |         원소가 애너테이트된 배열을 표현.
-                |         
                 li interface AnnotatedParameterizedType extends AnnotatedType Since 1.8
                 |         타입 인자들이 애너테이트된 parameterized type을 표현.
-                |         
                 li
-                    | interface TypeVariable<D extends GenericDeclaration> extends Type, AnnotatedElement Since 1.5
+                    | interface TypeVariable&lt;D extends GenericDeclaration> extends Type, AnnotatedElement Since 1.5
                 |         타입 변수에 관한 공통 superinterface.
-                |         
                 li interface GenericDeclaration extends AnnotatedElement Since 1.5
                 |         모든 타입 변수 정의들에 대한 공통 인터페이스.
-                |         
                 li interface AnnotatedTypeVariable extends AnnotatedType Since 1.8
                 |         애너테이트된 바운드를 가진 타입 변수를 표현.
-                |         
                 li interface AnnotatedWildcardType extends AnnotatedType Since 1.8
                 |         애너테이트된 upper 또는 lower 바운드들에 대한 와일드카드 타입을 표현
         hr
         details
             summary 클래스 멤버 관련
-            |     
             details
                 summary interface Member Since 1.1
-                |         
                 ol
                     li 하나의 멤버(필드나 메서드) 또는 생성자를 가리킨다.
-                    |             
-                    li Class<?> getDeclaringClass()
-                    |             
+                    li Class&lt;?> getDeclaringClass()
                     li String getName()
-                    |             
                     li int getModifiers()
-                    |             
                     li boolean isSynthetic() Since 1.5 : 컴파일러에 의해 만들어진 멤버인지 여부
-            |     
             details
                 summary class AccessibleObject implements AnnotatedElement Since 1.2
-                |         
                 ol
                     li Field, Method, Constructor의 base 클래스. 리플렉트된 객체를 사용하기 전에 suppressing check 표시한다.
-                    |             
                     li static void setAccessible(AccessibleObject[] array, boolean flag)
                     |             배열의 각 원소들을 setAccessible(boolean)으로 설정할 수 있을 때, 한번에 하기 위한 메서드
-                    |             
                     li void setAccessible(boolean flag)
-                    |             
                     li final boolean trySetAccessible() Since 9
                     |             아마도 변경되었을 accessible flag 값을 반환한다. 실패할 경우 예외를 발생하지 않고 false를 반환.
-                    |             
                     li final boolean canAccess(Object obj) Since 9
-            |     
             details
                 summary final class Field extends AccessibleObject implements Member Since 1.1
-                |         
                 ol
                     li boolean isEnumConstant() Since 1.5
-                    |             
                     li boolean isSynthetic() Since 1.5 : 컴파일러에 의해 만들어진 멤버인지 여부
-                    |             
-                    li Class<?> getType()
-                    |             
+                    li Class&lt;?> getType()
                     li Type getGenericType() Since 1.5
-                    |             
                     li String toGenericString() Since 1.5
-                    |             
                     li Object get(Object obj)
-                    |             
                     li boolean getBoolean(Object obj) + ...
-                    |             
                     li void set(Object obj, Object value)
-                    |             
                     li void setBoolean(Object obj, boolean z) + ...
-                    |             
                     li AnnotatedType getAnnotatedType() Since 1.8
-            |     
             details
                 summary
                     | abstract class Executable extends AccessibleObject implements Member, GenericDeclaration Since 1.8
-                |         
                 ol
                     li Method, Constructor의 공통 기능
-                    |             
-                    li abstract Class<?>[] getParameterTypes()
-                    |             
+                    li abstract Class&lt;?>[] getParameterTypes()
                     li int getParameterCount()
-                    |             
                     li Type[] getGenericParameterTypes()
-                    |             
                     li Parameter[] getParameters()
-                    |             
-                    li abstract Class<?>[] getExceptionTypes()
-                    |             
+                    li abstract Class&lt;?>[] getExceptionTypes()
                     li Type[] getGenericExceptionTypes()
-                    |             
                     li abstract Annotation[][] getParameterAnnotations()
-                    |             
                     li abstract AnnotatedType getAnnotatedReturnType()
-                    |             
                     li AnnotatedType getAnnotatedReceiverType()
-                    |             
                     li AnnotatedType[] getAnnotatedParameterTypes()
-                    |             
                     li AnnotatedType[] getAnnotatedExceptionTypes()
-                    |             
                     li abstract String toGenericString()
-                    |             
                     li boolean isVarArgs()
-                    |             
                     li boolean isSynthetic()
-            |     
             details
                 summary final class Method extends Executable Since 1.1
-                |         
                 ol
-                    li Class<&?> getReturnType()
-                    |             
+                    li Class&lt;&?> getReturnType()
                     li Type getGenericReturnType() Since 1.5
-                    |             
                     li Object getDefaultValue() Since 1.5
-                    |             
                     li Object invoke(Object obj, Object... args)
-                    |             
                     li boolean isBridge()
-                    |             
                     li boolean isDefault() Since 1.8
-            |     
             details
-                summary final class Constructor<T> extends Executable Since 1.1
+                summary final class Constructor&lt;T> extends Executable Since 1.1
                 |         T newInstance(Object... initargs)
-            |     
             details
                 summary final class Parameter implements AnnotatedElement
-                |         
                 ol
                     li 메서드 인자에 관한 정보.
-                    |             
                     li boolean isNamePresent()
-                    |             
                     li boolean isImplicit()
-                    |             
                     li boolean isSynthetic()
-                    |             
                     li boolean isVarArgs()
-                    |             
                     li Executable getDeclaringExecutable()
-                    |             
                     li int getModifiers()
-                    |             
                     li String getName()
-                    |             
                     li Type getParameterizedType()
-                    |             
-                    li Class<?> getType()
-                    |             
+                    li Class&lt;?> getType()
                     li AnnotatedType getAnnotatedType()
-            |     
             details
                 summary interface InvocationHandler Since 1.3
-                |         
                 ol
                     li Proxy 인스턴스의 invocation handler에서 구현하는 인터페이스.
-                    |             
                     li Object invoke(Object proxy, Method method, Object[] args)
-            |     
             details
                 summary class Proxy implements Serializable Since 1.3
-                |         
                 ol
                     li Proxy는 인터페이스 익명 객체처럼 행동하면서 사용자 정의 메서드를 호출할 수 있는 객체를 생성하는 static 메서드를 제공한다.
                     |             예. 인터페이스 Foo의 프록시 인스턴스 생성
                     br
                     |             InvocationHandler handler = new MyInvocationHandler(...);
                     br
-                    |             Foo f = (Foo) Proxy.newProxyInstance(Foo.class.getClassLoader(), new Class<?>[] { Foo.class }, handler);
-                    |             
+                    |             Foo f = (Foo) Proxy.newProxyInstance(Foo.class.getClassLoader(), new Class&lt;?>[] { Foo.class }, handler);
                     li 프록시 클래스 속성
                     |             "$Proxy"로 이름이 시작. final and non-abstract. java.lang.reflect.Proxy를 상속. 생성시 주어진 인터페이스들을 차례대로 구현. ProtectionDomain은 bootstrap 클래스 로더가 로드한 시스템 클래스들과 동일.
-                |         
                 details
                     summary Method Detail
-                    |             
                     ol
                         li
-                            | static Object newProxyInstance(ClassLoader loader, Class<?>[] interfaces, InvocationHandler h)
-                        |                 
-                        li static boolean isProxyClass(Class<?> cl)
-                        |                 
+                            | static Object newProxyInstance(ClassLoader loader, Class&lt;?>[] interfaces, InvocationHandler h)
+                        li static boolean isProxyClass(Class&lt;?> cl)
                         li static InvocationHandler getInvocationHandler(Object proxy)
         hr

@@ -4,33 +4,24 @@ html
         hr
         details
             summary interface Annotation Since 1.5
-            |     
             ol
                 li 이 인터페이스를 구현하는 것으로 새로운 애너테이션을 정의할 순 없다.
-                |         
-                li Class<? extends Annotation> annotationType()
-                |         
+                li Class&lt;? extends Annotation> annotationType()
                 li int hashCode()
         hr
         details
             summary enum ElementType Since 1.5
-            |     
             ol
                 li 애너테이션이 적용되는 요소를 표현한다.
-                |         
                 li
                     | TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VALIABLE, ANNOTATION_TYPE, PACKAGE, TYPE_PARAMETER Since 1.8, MODULE Since 9
         hr
         details
             summary enum RetentionPolicy Since 1.5
-            |     
             ol
                 li 애너테이션 유지 정책.
-                |         
                 li SOURCE : 컴파일러가 제거
-                |         
                 li CLASS : 컴파일러가 클래스 파일에 기록(default)
-                |         
                 li RUNTIME : 클래스 파일에 기록하고 JVM 런타임에도 유지. 따라서 리플렉션 가능.
         hr
         details

@@ -2,7 +2,6 @@ html
     body
         form#form482-2(action='/')
             input(type='text', name='message', value='message 2')
-            |     
             input(type='submit', value='전송')
         script.
             document.getElementById('form482-2').onsubmit = (e) => {
@@ -11,11 +10,9 @@ html
             };
         form(onsubmit='console.log(this.message.value); return false;')
             input(type='text', name='message', value='message 4')
-            |     
             input(type='submit', value='전송')
         form#form482-4
             input(type='text', name='message', value='message 5')
-            |     
             input(onclick='func482_2()', value='전송')
         script.
             function func482_2() {

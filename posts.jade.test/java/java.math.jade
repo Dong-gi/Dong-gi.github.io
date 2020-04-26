@@ -3,125 +3,85 @@ html
         script(src='/source/redirect.js?200226_1657')
         hr
         details
-            summary class BigDecimal extends Number implements Comparable<BigDecimal> Since 1.1
-            |     
+            summary class BigDecimal extends Number implements Comparable&lt;BigDecimal> Since 1.1
             ol
                 li 임의 정밀도의 변경할 수 없는 10진 정수와 32비트 정수인 지수로 십진수를 표현한다.
-                |         
                 li public static final BigDecimal ZERO, ONE, TEN Since 1.5
-            |     
             details
                 summary Constructor Detail
-                |         
                 ol
                     li public BigDecimal(char[] in) Since 1.5 + 3 오버로딩
-                    |             
                     li public BigDecimal(String val) + 1 오버로딩
                     |             val ::= (부호)?(진수부)(지수부)?
                     br
                     |             진수부 ::= 정수부.(소수부) or .소수부 or 정수부
                     br
                     |             지수부 ::= (e|E)정수
-                    |             
                     li public BigDecimal(double val) + 8 오버로딩
                     |             double의 오차 때문에 정확하진 않다.
-            |     
             details
                 summary Method Detail
-                |         
                 ol
                     li static BigDecimal valueOf(double val) Since 1.5 + 2 오버로딩
-                    |             
                     li BigDecimal add(BigDecimal augend) + 1 오버로딩 + subtract, multiply, divide
-                    |             
                     li BigDecimal divideToIntegralValue(BigDecimal divisor) Since 1.5 + 1 오버로딩 : 몫
-                    |             
                     li BigDecimal remainder(BigDecimal divisor) SInce 1.5 + 1 오버로딩 : 나머지
-                    |             
                     li BigDecimal[] divideAndRemainder(BigDecimal divisor) Since 1.5
-                    |             
                     li
                         | sqrt, pow, abs, negate, scale, precision, unscaledValue, round, movePointRight, scaleByPowerOfTen, ...
         hr
         details
-            summary class BigInteger extends Number implements Comparable<BigInteger> Since 1.1
-            |     
+            summary class BigInteger extends Number implements Comparable&lt;BigInteger> Since 1.1
             ol
                 li 변경할 수 없는 임의 길이의 정수. -2^(Integer.MAX_VALUE) ~ 2^(Integer.MAX_VALUE)
-                |         
                 li
                     | public static final BigInteger ZERO Since 1.2, ONE Since 1.2, TWO Since 9, TEN Since 1.5
-            |     
             details
                 summary Constructor Detail
-                |         
                 ol
                     li public BigInteger(byte[] val, int off, int len) Since 9 + 1 오버로딩
-                    |             
                     li
                         | public BigInteger(int signum, byte[] magnitude, int off, int len) Since 9 + 1 오버로딩
-                    |             
                     li public BigInteger(String val, int radix) + 1 오버로딩
-                    |             
                     li public BigInteger(int numBits, Random rnd) : [0 ~ 2^numBits) 사이 난수
-                    |             
                     li public BigInteger(int bitLength, int certainty, Random rnd)
                     |             rnd를 통해 난수를 생성하고, 특정 비트 길이의 양의 정수(아마도 소수) 반환. 소수일 확률은 (1 - 0.5^certainty) 초과.
-            |     
             details
                 summary Method Detail
-                |         
                 ol
                     li static BigInteger probablePrime(int bitLength, Random rnd) Since 1.4
                     |             합성수일 가능성은 2^(-100)을 넘지 않는다.
-                    |             
                     li BigInteger nextProbablePrime() Since 1.5
                     |             이 BigInteger보다 큰 첫 소수(아마도)를 반환한다. 합성수일 가능성은 2^(-100)을 넘지 않는다.
-                    |             
                     li static BigInteger valueOf(long val)
-                    |             
                     li BigDecimal에는 없는 메서드
                     |             sqrtAndRemainder() Since 9, gcd(BigInteger), modPow(BigInteger, BigInteger), shiftLeft(int), and(BigInteger), testBit(int), setBit(n), flipBit(int)
         hr
         details
             summary final class MathContext implements Serializable Since 1.5
-            |     
             ol
                 li 정밀도, 반올림 모드를 캡슐화한 변경 불가능한 객체.
-                |         
                 li public static final MathContext UNLIMITED : precision=0, roundingMode=HALF_UP
-                |         
                 li
                     | public static final MathContext DECIMAL32, DECIMAL64, DECIMAL128 : 7/16/34digits, roundingMode=HALF_EVEN
-            |     
             details
                 summary Constructor Detail
-                |         
                 ol
                     li public MathContext(int setPrecision) : HALF_UP
-                    |             
                     li public MathContext(int setPrecision, RoundingMode setRoundingMode)
-                    |             
                     li public MathContext(String val) : MathContext#toString과 같은 포맷
-            |     
             details
                 summary Method Detail
-                |         
                 ol
                     li int getPrecision()
-                    |             
                     li RoundingMode getRoundingMode()
         hr
         details
             summary enum RoundingMode Since 1.5
-            |     
             ul
                 li CEILING, FLOOR, UP : 0에서 멀어지도록 선택
-                |         
                 li DOWN : 0에 가까워지도록 선택
-                |         
                 li
                     | HALF_UP, HALF_DOWN, HALF_EVEN : 가장 인접한 두 이웃들이 같은 거리에 있는 경우(*5인 경우), 각각 큰/작은/짝수 이웃을 선택.
-                |         
                 li UNNECESSARY : 올림이나 내림이 필요없는 상태. 그 외엔 ArithmeticException 발생.
         hr

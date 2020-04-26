@@ -3,475 +3,327 @@ html
         script(src='/source/redirect.js?200226_1657')
         ul
             li datetime.MINYEAR == 1
-            | 	
             li datetime.MAXYEAR == 9999
         hr
         details
             summary class datetime.date : year, month, day
-            | 	
             ul
                 li class datetime.date(year, month, day)
                 | 		인스턴스는 변경 불가능 + 해시 가능하다
-                | 		
                 li 클래스 메서드
-                | 		
                 ul
                     li classmethod date.today() : date.fromtimestamp(time.time())와 동일
-                    | 			
                     li classmethod date.fromtimestamp(timestamp) : 1970 ~ 2038년 외의 경우 에러발생 가능.
-                    | 			
                     li
                         | classmethod date.fromordinal(ordinal) : ordinal[1, date.max.toordinal()]. 1년 1월 ordinal == 1
-                    | 			
                     li classmethod date.fromisoformat(date_string) Since 3.7 : 'YYYY-MM-DD'
-                    | 			
                     li classmethod date.fromisocalendar(year, week, day) Since 3.8
-                | 		
                 li 클래스 속성
-                | 		
                 ul
                     li date.min == date(MINYEAR, 1, 1)
-                    | 			
                     li date.max == date(MAXYEAR, 12, 31)
-                    | 			
                     li date.resolution == timedelta(days=1)
-                | 		
                 li 인스턴스 속성(읽기 전용)
-                | 		
                 ul
                     li year[MINYEAR, MAXYEAR]
-                    | 			
                     li month[1, 12]
-                    | 			
                     li day[1, 해당 연월의 일수]
-                | 		
                 li 지원 연산
-                |         
                 table.no-sort
                     tr
                         td date2 = date1 + timedelta
-                    |             
                     tr
                         td date2 = date1 - timedelta
-                    |             
                     tr
                         td timedelta = date1 - date2
-                    |             
                     tr
                         td 산술 비교
-                | 		
                 li 인스턴스 메서드
-                | 		
                 ul
                     li replace(year=self.year, month=self.month, day=self.day)
-                    | 			
                     li timetuple() : time.struct_time을 반환한다.
-                    | 			
                     li toordinal() : ordinal 반환
-                    | 			
                     li weekday() : 월요일(0) ~ 일요일(6)
-                    | 			
                     li isoweekday() : 월요일(1) ~ 일요일(7)
-                    | 			
                     li isocalendar() : (ISO year, ISO week number, ISO weekday) 튜플 반환
-                    | 			
                     li isoformat() : 'YYYY-MM-DD' 반환
-                    | 			
                     li __str__() : str(d) == d.isoformat()
-                    | 			
                     li __format__(format) == strftime(format) : 문자열 format에 따라 변환.
         hr
         details
             summary class datetime.time : hour, minute, second, microsecond, tzinfo
-            | 	
             ul
                 li
                     | class datetime.time(hour=0, minute=0, second=0, microsecond=0, tzinfo=None, *, fold=0)
-                | 		
                 ul
                     li 인스턴스는 변경 불가능 + 해시 가능하다
-                    |             
                     li fold Since 3.6 : 0 or 1
                     |             서머 타임이나 윤초 적용처럼, 특정 시각이 2가지로 해석되는 경우의 선후 관계를 나타낸다. 예를 들어 0은 서머 타임 적용 전 8시, 1은 서머 타임 적용 후 8시를 나타낼 수 있다.
-                |         
                 li 클래스 메서드
-                |         
                 ul
                     li classmethod time.fromisoformat(time_string) Since 3.7
-                    |             
                     ul
                         li HH[:MM[:SS[.fff[fff]]]][+HH:MM[:SS[.ffffff]]]
-                        |                 
                         li time.isoformat()의 역함수로 설계되었기에 모든 ISO 8601 포맷을 인식하지는 못한다.
-                | 		
                 li 클래스 속성
-                |         
                 ul
                     li min == time(0, 0, 0, 0)
-                    |             
                     li max == time(23, 59, 59, 999999)
-                    |             
                     li resolution == timedelta(microseconds=1)
-                |         
                 li 인스턴스 속성(읽기 전용)
                 |         hour, minute, second, microsecond, tzinfo, fold(의미는 ↑ 생성자 참고) Since 3.6
-                |         
                 li 지원 연산
-                |         
                 table.no-sort
                     tr
                         td 산술 비교
-                |         
                 ul
                     li naive한 객체는 동등 비교에서 True를 반환하지 않는다
-                    |             
                     li Boolean 평가 시 항상 True로 간주된다; 3.5 이전에는 UTC 자정을 false로 간주했다
-                |         
                 li 인스턴스 메서드
-                |         
                 ul
                     li
                         | replace(hour=self.hour, minute=self.minute, second=self.second, microsecond=self.microsecond, tzinfo=self.tzinfo, *, fold=0)
-                    |             
                     li time.isoformat(timespec='auto')
-                    |             
                     table
                         tr
                             td Format
                             td Case
-                        |                 
                         tr
                             td HH:MM:SS.ffffff
                             td microsecond > 0
-                        |                 
                         tr
                             td HH:MM:SS
                             td microsecond == 0
-                        |                 
                         tr
                             td HH:MM:SS.ffffff+HH:MM[:SS[.ffffff]]
                             td utcoffset() != None
-                        |                 
                         tr
                             td HH:MM:SS+HH:MM[:SS[.ffffff]]
                             td microsecond == 0 and utcoffset() != None
-                    |             
                     table
                         tr
                             td Format
                             td timespec
-                        |                 
                         tr
                             td
                                 | 'seconds' # microsecond == 0
                                 br
                                 | 'microseconds' # microsecond > 0
                             td 'auto'
-                        |                 
                         tr
                             td HH
                             td 'hours'
-                        |                 
                         tr
                             td HH:MM
                             td 'minutes'
-                        |                 
                         tr
                             td HH:MM:SS
                             td 'seconds'
-                        |                 
                         tr
                             td HH:MM:SS.sss
                             td 'milliseconds'
-                        |                 
                         tr
                             td HH:MM:SS.ffffff
                             td 'microseconds'
-                    |             
                     li __str__() == isoformat()
-                    |             
                     li strftime(format)
-                    |             
                     li __format__(format) == strftime(format)
         hr
         details
             summary class datetime.datetime : date + time
-            | 	
             ul
                 li datetime은 date를 상속
-                |         
                 li
                     | class datetime.datetime(year, month, day, hour=0, minute=0, second=0, microsecond=0, tzinfo=None, *, fold=0)
-                | 		
                 ul
                     li 인스턴스는 변경 불가능 + 해시 가능하다
-                    |             
                     li fold Since 3.6 : 0 or 1
                     |             서머 타임이나 윤초 적용처럼, 특정 시각이 2가지로 해석되는 경우의 선후 관계를 나타낸다. 예를 들어 0은 서머 타임 적용 전 8시, 1은 서머 타임 적용 후 8시를 나타낼 수 있다.
-                | 		
                 li 클래스 메서드
-                |         
                 ul
                     li classmethod datetime.now(tz=None)
-                    |             
                     li classmethod datetime.combine(date, time, tzinfo=self.tzinfo)
                     |             tzinfo Since 3.6 : 지정되지 않은 경우, time.tzinfo가 사용된다
-                    |             
                     li classmethod datetime.fromisoformat(date_string) Since 3.7
-                    |             
                     ul
                         li YYYY-MM-DD[*HH[:MM[:SS[.fff[fff]]]][+HH:MM[:SS[.ffffff]]]] // *는 임의 1글자
-                        |                 
                         li datetime.isoformat()의 역함수로 설계되었기에 모든 ISO 8601 포맷을 인식하지는 못한다.
-                    |             
                     li classmethod datetime.strptime(date_string, format)
                     |             == datetime(*(time.strptime(date_string, format)[0:6]))
-                | 		
                 li 클래스 속성
-                |         
                 ul
                     li min == datetime(MINYEAR, 1, 1, tzinfo=None)
-                    |             
                     li max == datetime(MAXYEAR, 12, 31, 23, 59, 59, 999999, tzinfo=None)
-                    |             
                     li resolution == timedelta(microseconds=1)
-                |         
                 li 인스턴스 속성(읽기 전용)
                 |         year, month, day, hour, minute, second, microsecond, tzinfo, fold(의미는 ↑ 생성자 참고) Since 3.6
-                |         
                 li 지원 연산
-                |         
                 table.no-sort
                     tr
                         td datetime2 = datetime1 + timedelta
-                    |             
                     tr
                         td datetime2 = datetime1 - timedelta
-                    |             
                     tr
                         td timedelta = datetime1 - datetime2
-                    |             
                     tr
                         td 산술비교
-                |         
                 li 인스턴스 메서드
-                |         
                 ul
                     li tzinfo가 설정되지 않은 naive한 datetime이 UTC로 잘 작동하기 위해서는 timezone.utc로 설정해야 한다
-                    |             
                     li date() + time, timetz
-                    |             
                     li astimezone(tz=None)
                     |             동일한 UTC 시각을 다른 시간대로 변환하여 반환한다.
         hr
         details
             summary class datetime.timedelta : date, time, datetime 사이의 microsecond 차이
-            | 	
             ul
                 li
                     | class datetime.timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
-                | 		
                 li 차분 대상의 타임존 유무 여부는 timedelta 값에 영향을 끼치지 않는다
-                | 		
                 li 클래스 속성
-                | 		
                 ul
                     li timedelta.min == timedelta(-999999999)
-                    | 			
                     li timedelta.max == timedelta(days=999999999, seconds=86399, microseconds=999999)
-                    | 			
                     li timedelta.resolution == timedelta(microseconds=1)
-                |         
                 li 인스턴스 속성(읽기 전용)
-                | 		
                 ul
                     li days[-999999999, 999999999]
-                    | 			
                     li seconds[0, 86400)
-                    | 			
                     li microseconds[0, 1000000)
-                | 		
                 li 지원 연산
-                | 		
                 table
                     tr
                         td t1 + t2
                         td t1 - t2
                         td t1 * num [round even]
                         td t1 / t2
-                    | 			
                     tr
                         td t1 / num [round even]
                         td t1 // int
                         td t1 // t2
                         td t1 % t2
-                    | 			
                     tr
                         td divmod(t1, t2)
                         td +t1
                         td -t1
                         td abs(t)
-                    | 			
                     tr
                         td str(t)
                         td repr(t)
                         td 산술 비교
                         td 동등 비교
-                | 		
                 li 인스턴스 메서드
-                | 		
                 ul
                     li timedelta.total_seconds() Since 3.2 : td / timedelta(seconds=1)과 동일.
         hr
         details
             summary class datetime.tzinfo : 타임존 ABC
-            |     
             ul
                 li dt : datetime | time
-                |         
                 li utcoffset(dt)
-                |         
                 ul
                     li UTC와 현지 시각의 차이(timedelta) 반환
-                    |             
                     li DST(daylight saving time) 값이 있다면 합산하여 반환함이 바람직하다
-                    |             
                     li utcoffset()이 None을 반환하지 않으면 dst()도 그러해야 한다
-                |         
                 li dst(dt)
                 |         timedelta로 반환. 모르면 None. 비활성화면 timedelta(0) 반환
-                |         
                 li tzname(dt)
-                |         
                 li fromutc(dt)
                 |         datetime.astimezone()에서 호출한다. 이때 dt.tzinfo == slef이고 dt의 시각은 UTC므로, 오차를 더해 반환(dt + dt.utcoffset())하면 된다
         hr
         details
             summary class datetime.timezone Since 3.2 : tzinfo 구현체
-            | 	
             ul
                 li class datetime.timezone(offset, name=None)
-                |         
                 ul
                     li 인스턴스는 변경 불가능 + 해시 가능하다
-                    |             
                     li timezone 클래스는 tzinfo의 서브클래스
-                    |             
                     li 고정된 UTC offset을 표현하며, 변경 불가능하다
         hr
         details
             summary strftime(), strptime() 사양
-            |     
             table
                 tr
                     th Directive
                     th 의미
-                |     
-                |         
                 tr
                     td %a
                     td 요일명 - 약어 - 로캐일 적용
-                |         
                 tr
                     td %A
                     td 요일명 - 풀네임 - 로캐일 적용
-                |         
                 tr
                     td %w
                     td 요일 - 0(일요일) ~ 6(토요일)
-                |         
                 tr
                     td %d
                     td 일 - zero-pad : 01 ~ 31
-                |         
                 tr
                     td %b
                     td 월 - 약어 - 로캐일 적용
-                |         
                 tr
                     td %B
                     td 월 - 풀네임 - 로캐일 적용
-                |         
                 tr
                     td %m
                     td 월 - zero-pad : 01 ~ 12
-                |         
                 tr
                     td %y
                     td 년 - 세기 제외, zero-pad : 00 ~ 99
-                |         
                 tr
                     td %Y
                     td 년 - 세기 포함, zero-pad : 0001 ~ 9999
-                |         
                 tr
                     td %H
                     td 시(24h) - zero-pad : 00 ~ 23
-                |         
                 tr
                     td %I
                     td 시(12h) - zero-pad : 01 ~ 12
-                |         
                 tr
                     td %p
                     td AM or PM - 로캐일 적용
-                |         
                 tr
                     td %M
                     td 분 - zero-pad : 00 ~ 59
-                |         
                 tr
                     td %S
                     td 초 - zero-pad : 00 ~ 59
-                |         
                 tr
                     td %f
                     td 마이크로초 - zero-pad : 000000 ~ 999999
-                |         
                 tr
                     td %z
                     td UTC 차이 : +HHMM or -HHMM
-                |         
                 tr
                     td %Z
                     td Timezone 이름
-                |         
                 tr
                     td %j
                     td 일 - 연중 n번째, zero-pad : 001 ~ 366
-                |         
                 tr
                     td %U
                     td 주(일요일 기준) - 연중 n번째, zero-pad : 00 ~ 53
-                |         
                 tr
                     td %W
                     td 주(월요일 기준) - 연중 n번째, zero-pad : 00 ~ 53
-                |         
                 tr
                     td %c
                     td 날짜와 시각 표현 - 로캐일 적용
-                |         
                 tr
                     td %x
                     td 날짜 표현 - 로캐일 적용
-                |         
                 tr
                     td %X
                     td 시각 표현 - 로캐일 적용
-                |         
                 tr
                     td %%
                     td 리터럴 '%'
-                |         
                 tr
                     td %G
                     td 년 - 세기 포함, ISO 8601 : 0001 ~ 9999
-                |         
                 tr
                     td %u
                     td 요일 - 1(월요일) ~ 7(일요일), ISO 8601
-                |         
                 tr
                     td %V
                     td

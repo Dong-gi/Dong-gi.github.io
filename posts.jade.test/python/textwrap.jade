@@ -4,22 +4,16 @@ html
         ul
             li textwrap.wrap(text, width=70, **kwargs)
             |     text의 모든 라인이 최대 width 길이가 되도록 조정한다. 라인들의 리스트를 반환한다. kwargs는 TextWrapper 속성 참고
-            |     
             li textwrap.fill(text, width=70, **kwargs)
             |     "\n".join(wrap(text, width, kwargs))와 동일하다
-            |     
             li textwrap.shorten(text, width, **kwargs) Since 3.4
             |     text의 모든 공백들을 단일 스페이스로 변경하고, width길이에 맞게 자른다.
             |     width를 넘는 경우, 자른 자리에 placeholder를 넣은 길이가 width가 된다.
-            |     
             li textwrap.dedent(text)
             |     text 각 라인이 공통 공백으로 시작되는 경우, 이를 제거한다. ''', """리터럴 정렬에 유용.
-            |     
             li textwrap.indent(text, prefix, predicate=None) Since 3.3
             |     공백 이외의 문자를 포함한 모든 라인 앞에 prefix를 붙인다. predicate 함수는 각 라인을 인자로 받아 prefix를 붙일지 여부를 반환한다.
-            |     
             li class textwrap.TextWrapper(**kwargs)
-            |     
             ul
                 li
                     | width(default 70) # 라인 최대 길아
@@ -39,7 +33,6 @@ html
                     |             max_lines(default None) Since 3.4
                     br
                     |             placeholder(default '[...]') Since 3.4
-                |         
                 li
                     | wrap(text)
                     br
