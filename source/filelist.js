@@ -3222,6 +3222,7 @@ docker.html
 fp.html
 git.html
 nginx.html
+nyaa.js
 quantum_computer.html
 refactoring.html
 rpi.html
@@ -3248,6 +3249,7 @@ algo.jade
 book01.jade
 koreatech
 linear_algebra.jade
+probability.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/algorithm/koreatech:
 1003.jade
@@ -3269,6 +3271,7 @@ linear_algebra.jade
 006.jade
 007.jade
 008.jade
+009.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/db:
 example
@@ -3276,6 +3279,9 @@ example
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/db/example:
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/dotnet:
+csharp_basic.jade
+csharp_library.jade
+wpf_basic.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/front:
 canvas
@@ -3297,22 +3303,13 @@ freemarker
 sdkman.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test:
-algorithm
-book
 db
-dotnet
 front
 java
 javascript
 project
 python
 single
-
-/workspace/donggi-github/Dong-gi.github.io/posts.jade.test/algorithm:
-probability.jade
-
-/workspace/donggi-github/Dong-gi.github.io/posts.jade.test/book:
-009.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/db:
 concept.jade
@@ -3331,11 +3328,6 @@ pgsql_export_csv.jade
 pgsql_hello_world.jade
 pgsql_select_tables_with_suffix.jade
 pgsql_trigger_before_update.jade
-
-/workspace/donggi-github/Dong-gi.github.io/posts.jade.test/dotnet:
-csharp_basic.jade
-csharp_library.jade
-wpf_basic.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/front:
 canvas

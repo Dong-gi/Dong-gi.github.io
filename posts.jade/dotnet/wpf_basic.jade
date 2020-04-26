@@ -1,0 +1,147 @@
+include ../../source/skeleton.jade
++post('WPF 기초', 'C#, .NET, WPF', 'WPF 기초 정리')
+    h1.marker 실습 1
+    ol
+        li XAML(eXtensible Application Markup Language)로 컨트롤을 작성하는 것과 코드에서 생성하는 것은 결과적으로 동일하다.
+        li Blend에서 디자인을 따로 할 수 있다. 분업-협업 가능.
+        li 참조 → 참조 추가에서 .NET 어셈블리 or 제작한 프로젝트 참조 추가
+        li NuGet 패키지 관리에서 다른 사용자들이 배포하는 프레임워크를 설치할 수 있다.
+        li 네임스페이스 접두어 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        li.marker Window : Initialized → Activated → Loaded → ContentRendered → 실행 → Closing → Unloaded → Deactivated → Closed
+        p Activated, Deactivated는 키보드/마우스 포커스를 얻거나 잃는 이벤트를 의미한다.
+        li 다루는 것 : Grid.Background, Button.Content, Application.Current.Properties, MessageBox.Show(), MessageBoxResult, Button_Click, Window_Loaded, Window_Closing
+        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp1/MainWindow.xaml', lan: 'xml' }) MainWindow.xaml »
+        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp1/MainWindow.xaml.cs', lan: 'cs' }) MainWindow.xaml.cs »
+
+    h1.marker 실습 2
+    ol
+        li Modal : 자식 윈도우가 종료되기 전까지 부모 윈도우는 비활성화.
+        li Modeless : 자식 윈도우와 부모 윈도우가 별개로 동작.
+        li Application.Current.Windows : 실행중인 윈도우들의 컬렉션.
+        li 프로젝트, 추가 → 사용자 정의 컨트롤
+        li 다루는 것 : Window.Show(), Window.ShowDialog(), Window 속성들
+        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp2/MainWindow.xaml', lan: 'xml' }) MainWindow.xaml »
+        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp2/MainWindow.xaml.cs', lan: 'cs' }) MainWindow.xaml.cs »
+        li 다루는 것 : 사용자 정의 컨트롤
+        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp3/UserControl1.xaml', lan: 'xml' }) UserControl1.xaml »
+        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp3/UserControl1.xaml.cs', lan: 'cs' }) UserControl1.xaml.cs »
+        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp3/MainWindow.xaml', lan: 'xml' }) MainWindow.xaml »
+        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp3/MainWindow.xaml.cs', lan: 'cs' }) MainWindow.xaml.cs »
+
+    h1.marker 레이아웃
+    ol
+        li
+            | 디자이너도 아니고... 종류만 알아보고 넘어간다. 
+            +w3a()&attributes({target:'_blank', href:'https://docs.microsoft.com/en-us/dotnet/framework/wpf/advanced/layout'}) MS WPF Docs - Layout »
+        li Canvas : 캔버스 내부의 상대 좌표를 이용해 자식 요소들을 배치한다.
+        li DockPanel : Top, Left, Bottom, Right에 자식 요소들을 배치.
+        li Grid : 영역을 행과 열로 나누어 요소들을 배치한다. 나눠진 그리드 하나를 여러 요소가 공유할 수도, 한 요소가 여러 그리드를 차지할 수도 있다.
+        li StackPanel : 수직/수평적으로 자식 요소들을 나열.
+        li VirtualizingPanel : Panel에 대한 추상 클래스.
+        li WrapPanel : 자식 요소들을 좌에서 우로 차례대로 배치하다, 패널의 경계를 넘어서면 다음 줄(바로 아래)로 넘겨 배치한다.
+
+    h1.marker 리소스
+    ol
+        li xaml 내부에 정적 리소스 정의 : &lt;Window.Resources>&lt;/Window.Resources>
+        li ResourceDictionary : xaml에 리소스들을 정의하고 이를 별개의 파일로 분리.
+        li 스타일 : 리소스 영역에 Style 요소를 작성하고, Setter Property="" Value=""를 이용해 값을 할당한다.
+        li 스타일 상속 : Style 요소의 BasedOn 속성 이용
+        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp4/Dictionary1.xaml', lan: 'xml' }) Dictionary1.xaml »
+        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp4/MainWindow.xaml', lan: 'xml' }) MainWindow.xaml »
+
+    h1.marker 컨트롤
+    ol
+        li (ButtonBase ← Button, (ToggleButton ← CheckBox, RadioButton))
+        li ListBox, ComboBox, ListView, TreeView
+        li Menu, Toolbar / TabControl, Expander, GroupBox / Slider, ScrollBar
+        li TextBox, RichTextBox, PasswordBox
+
+    h1.marker 이벤트
+    ol
+        li Event Tunneling : 부모 컨트롤로부터 자식 컨트롤로 Preview 접두어가 붙은 이벤트가 전달됨.
+        li Event Bubbling : 이벤트 센더는 이벤트를 처리하고 이를 다시 부모로 전달
+        li 1,2와 같은 이벤트를 RoutedEvent라고 하며, 따라서 이벤트 핸들러의 파라미터로 RoutedEventArgs가 넘겨진다.
+
+    h1.marker Command
+    ol
+        li 이벤트 핸들러를 xaml과 독립적으로 작성하는 것을 가능하게 해준다.
+        li ICommand를 구현하며 CanExecute(), Execute(), CanExecuteChanged를 정의한다.
+        li 내장 명령 : ApplicationCommands, ComponentCommands, MediaCommands, NavigationCommands, EditingCommands
+        li 명령 바인딩 : System.Windows.Interactivity.WPF 패키지 설치/이용
+
+    h1.marker 트리거
+    p
+        | 특정 조건에 따라 스타일을 적용시키는 방법.
+        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp5/MainWindow.xaml', lan: 'xml' }) MainWindow.xaml »
+
+    h1.marker 바인딩
+    ul
+        li MVVM : Model - View - ViewModel
+        li View의 컨트롤들을 ViewModel과 바인딩 : Control의 값 변경 + 이벤트를 ViewModel에 통지, Model의 값 변경을 View에 통지.
+        li ViewModel은 INotifyPropertyChanged을 구현. 프로퍼티 setter에서 변경되었음을 통지.
+        +asCode('cs').
+            public event PropertyChangedEventHandler PropertyChanged;
+            PropertyChanged(this, new PropertyChangedEventArgs("DateTime"));          
+        li 바인딩이랑 바인딩 소스로부터 바인딩 타깃으로 프로퍼티 값을 전달하는 것
+        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp6/MainWindow.xaml', lan: 'xml' }) MainWindow.xaml »
+        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp6/MainWindow.xaml.cs', lan: 'cs' }) MainWindow.xaml.cs »
+        li BindingMode : OneWay, TwoWay, OneTime, OneWayToSource
+        +asCode('xml').
+            &lt;ListBox
+                xmlns:g="clr-namespace:System.Globalization;assembly=mscorlib"
+                ItemsSource="{Binding Source={x:Static g:DateTimeFormatInfo.CurrentInfo}, Path=DayNames, Mode=OneTime}"/>          
+        ul
+            li TwoWay : 바인딩 소스는 타깃이 입력 포커스를 잃을 때까지 값이 갱신되지 않는다. 설정을 변경하려면 Binding의 UpdateSourceTrigger를 변경하면 된다.
+            p UpdateSourceTrigger : LostFocus(TextBox의 Text를 위한 기본값), PropertyChanged(대부분의 피로퍼티에 기본), Explicit
+            li Explicit : 해당 엘리먼트로부터 BindingExpression 인스턴스를 얻고 UpdateSource()를 호출
+            +asCode('cs').
+                var bindExp = textBox.GetBindingExpression(TextBox.TextProperty);
+                bindExp.UpdateSource();            
+        li DataContext는 자식 요소에까지 적용된다
+        li 데이터바인딩으로 사용자 정의 클래스 사용
+        ol
+            li 코드에서 DataContext 설정 : DataContext 프로퍼티에 할당
+            li 클래스 이름을 ElementName으로 사용 : FrameworkElement를 상속
+            li Resources에 객체 생성 후 참조
+            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp6/MyClock.cs', lan: 'cs' })
+            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp6/MainWindow.xaml', lan: 'xml' }) MainWindow.xaml »
+        li
+            | 코드에서 바인딩 설정
+            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp6/MainWindow.xaml.cs', lan: 'cs' })
+        li IValueConverter : 데이터가 바인딩 소스에서 타깃으로 전달될 때 변환 수행
+        +asCode('cs').
+            public class MyConverter : IValueConverter {
+                public object Convert(object value, Type typeTarget, object param, CultureInfo culture) {
+                    // value : 변환할 객체
+                    // typeTarget ; 변환 대상 타입; 변환할 수 없으면 null 반환
+                    // param : Binding의 ConvertParameter 프로퍼티가 가리키는 객체
+                }
+                public object ConvertBack(object value, Type typeTarget, object param, CultureInfo culture) { }
+                public string MyProperty { get; set; }
+            }          
+        ul
+            li 코드에서 컨버터 연결 : binding.Convert = new MyConverter();
+            li XAML에서 컨버터 연결 : Resources 절에 객체 생성 후 요소에서 참조
+        +asCode('xml').
+            &lt;Window.Resources>
+                &lt;!-- src는 프로젝트 네임스페이스와 연결 -->
+                &lt;src:MyConverter x:Key="conv" MyProperty="Hello"/>
+                &lt;/Window.Resources>
+            &lt;StackPanel>
+                &lt;ScrollBar Name="scroll" Maximum="100"/>
+                &lt;Label Content="{Binding ElementName=scroll, Path=Value, Converter={StaticResource conv}, ConverterParameter=2}"/>
+            &lt;/StackPanel>          
+        li IMultiValueConverter
+        p 여러 소스로부터 얻어진 객체들을 하나의 타깃 객체로 변환. IMultiValueConverter 인터페이스 구현
+            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp6/RgbToColorConverter.cs', lan: 'cs' })
+
+    h1.marker 기타
+    ol
+        li Invokes method on main UI thread
+        +asCode('cs').
+            await System.Windows.Application.Current.Dispatcher.BeginInvoke(action);          
+        +asCode('cs').
+            Dispatcher.Invoke(DispatcherPriority.Normal, new WaitCallback(func), parameter)          
+        li
+            | DispatcherTimer : 타이머 작업
+            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp6/MyClock.cs', lan: 'cs' })

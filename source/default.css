@@ -1,62 +1,28 @@
-* {
-    font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New;
-}
+*{font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New}
+div{word-wrap: break-word}
+img{max-width: 100%}
+caption{padding-top:8px!important;padding-bottom:8px!important}
+hr{border-top: 3px solid rgba(0, 0, 0, .1)}
+li,summary{margin: 0.5rem 0}
+li:hover{background-color: antiquewhite}
 
-div {
-    word-wrap: break-word;
-}
-
-img {
-    max-width: 100%;
-}
-
-caption {
-    padding-top:8px!important;
-    padding-bottom:8px!important
-}
-
-pre {
-    margin : 0.5rem 0;
-}
-
-hr {
-    border-top: 3px solid rgba(0, 0, 0, .1);
-}
-
-li, summary {
-    margin: 0.5rem 0;
-}
-
-li:hover {
-    background-color: antiquewhite;
-}
-
-.file-list {
-    padding: 0 8px!important
-}
-
-.file-list ul {
-    padding-left: 12px!important
-}
-
-.file-list li {
-    margin-left: 24px!important
-}
+.file-list{padding: 0 8px!important}
+.file-list ul{padding-left: 12px!important}
+.file-list li{margin-left: 24px!important}
 
 /* 포스트 영역 스타일 */
-div#contents details{
+div#contents details {
     margin-left: 0.5em;
     padding-left: 1.0em;
     border-left: 6px solid rgba(0, 0, 0, .1)
 }
-
 /* 코드 영역 스타일 */
 .code-div {
     background-color: white;
     word-wrap: normal;
     overflow: auto;
 }
-
+div#contents .code-div{margin: 8px 0}
 .code-modal .w3-modal-content {
     position: fixed;
     top: 0;
@@ -67,26 +33,16 @@ div#contents details{
     height: 100%;
     overflow: auto;
 }
+.code-div ol{margin-left: 0;padding-left: 40px}
+.code-div li{margin: 0}
 
-.code-div ol {
-    margin-left: 0;
-    padding-left: 40px;
-}
-
-.code-div li {
-    margin: 0;
-}
-
-mjx-container {
-    font-size:17px!important
-}
+mjx-container{font-size:17px!important}
 
 /* 요소 하이라이팅 */
 @keyframes highlight {
   from {background: #ff0; box-shadow: 0 0 0.5em 0.5em #ff0; padding: 0.25em}
   to {background: #fff; box-shadow: 0 0 #fff; padding: 0}
 }
-
 /* Snackbar : from https://www.w3schools.com/howto/howto_js_snackbar.asp */
 #snackbar {
     visibility: hidden;
@@ -103,57 +59,27 @@ mjx-container {
     bottom: 30px;
     font-size: 17px;
 }
-
 #snackbar.show {
     visibility: visible;
     -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
     animation: fadein 0.5s, fadeout 0.5s 2.5s;
 }
-
 @-webkit-keyframes fadein {
-    from {
-        bottom: 0;
-        opacity: 0;
-    }
-    to {
-        bottom: 30px;
-        opacity: 1;
-    }
+    from {bottom: 0;opacity: 0}
+    to {bottom: 30px;opacity: 1}
 }
-
 @keyframes fadein {
-    from {
-        bottom: 0;
-        opacity: 0;
-    }
-    to {
-        bottom: 30px;
-        opacity: 1;
-    }
+    from {bottom: 0;opacity: 0}
+    to {bottom: 30px;opacity: 1}
 }
-
 @-webkit-keyframes fadeout {
-    from {
-        bottom: 30px;
-        opacity: 1;
-    }
-    to {
-        bottom: 0;
-        opacity: 0;
-    }
+    from {bottom: 30px;opacity: 1}
+    to {bottom: 0;opacity: 0}
 }
-
 @keyframes fadeout {
-    from {
-        bottom: 30px;
-        opacity: 1;
-    }
-    to {
-        bottom: 0;
-        opacity: 0;
-    }
+    from {bottom: 30px;opacity: 1}
+    to {bottom: 0;opacity: 0}
 }
-
 /* 스크롤바 스타일 */
 ::-webkit-scrollbar {
     width: 5px;
@@ -161,15 +87,6 @@ mjx-container {
     margin: 0;
     padding: 0;
 }
-
-::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px grey;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #777777;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #000000;
-}
+::-webkit-scrollbar-track{box-shadow: inset 0 0 5px grey}
+::-webkit-scrollbar-thumb{background: #777777}
+::-webkit-scrollbar-thumb:hover{background: #000000}
