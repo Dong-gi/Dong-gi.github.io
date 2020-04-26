@@ -44,14 +44,7 @@ li:hover {
 }
 
 /* 포스트 영역 스타일 */
-.post-details>p {
-    background-color: white;
-    border-radius: 1em;
-    margin-top: 1rem;
-    padding: 0.5em 1em;
-}
-
-.post-details>p details details{
+div#contents details{
     margin-left: 0.5em;
     padding-left: 1.0em;
     border-left: 6px solid rgba(0, 0, 0, .1)
