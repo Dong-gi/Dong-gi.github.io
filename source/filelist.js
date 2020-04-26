@@ -3277,6 +3277,7 @@ probability.jade
 concept.jade
 example
 mongodb.jade
+mysql.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/db/example:
 
@@ -3315,7 +3316,6 @@ single
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/db:
 example
-mysql.jade
 psql_admin.jade
 psql_programming.jade
 psql_sql.jade
@@ -3323,7 +3323,6 @@ psql_to_sqlite.jade
 psql_tutorial.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/db/example:
-mysql_select_all_table.jade
 pgsql_export_csv.jade
 pgsql_hello_world.jade
 pgsql_select_tables_with_suffix.jade

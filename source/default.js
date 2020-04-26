@@ -24,11 +24,11 @@ const posts = { list: [
 { file: "/posts/algorithm/ai.html",                     category: "작성 중지",              title: "AI" },
 { file: "/posts/db/concept.html",                       category: "DB",                    title: "DB 기초" },
 { file: "/posts/db/mongodb.html",                       category: "DB",                    title: "MongoDB" },
+{ file: "/posts/db/mysql.html",                         category: "DB",                    title: "MySQL" },
 { file: "/posts/dotnet/csharp_basic.html",              category: "Programming/.NET",      title: "C# 기초" },
 { file: "/posts/dotnet/csharp_library.html",            category: "Programming/.NET",      title: "C# 라이브러리" },
 { file: "/posts/dotnet/wpf_basic.html",                 category: "Programming/.NET",      title: "WPF 기초" },
 /* ↓ 정리 안 됨
-{ file: "/posts/db/mysql.html", category: "Programming/DB", title: "MySQL" },
 { file: "/posts/db/psql_to_sqlite.html", category: "Programming/DB", title: "PostgreSQL → SQLite3 마이그레이션" },
 { file: "/posts/db/psql_admin.html", category: "Programming/DB", title: "PostgreSQL 서버 관리" },
 { file: "/posts/db/psql_programming.html", category: "Programming/DB", title: "PostgreSQL 서버 프로그래밍" },
@@ -196,6 +196,7 @@ function addHoverContents(targets) {
 function convertAsCodeDiv(divs) {
     for (let div of divs) {
         let code = div.innerHTML.trim().replace(/&amp;/gm, '&').replace(/&lt;/gm, '<').replace(/&gt;/gm, '>');
+        // console.log(code);
         div.innerHTML = '';
         fillCodeDiv(div, div.getAttribute('lan'), code);
         div.style.maxHeight = window.innerHeight / 2;
