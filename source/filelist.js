@@ -3274,7 +3274,9 @@ probability.jade
 009.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/db:
+concept.jade
 example
+mongodb.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/db/example:
 
@@ -3312,9 +3314,7 @@ python
 single
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/db:
-concept.jade
 example
-mongodb.jade
 mysql.jade
 psql_admin.jade
 psql_programming.jade
