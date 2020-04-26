@@ -58,7 +58,7 @@ html
                     li java.util.function 패키지에 유용한 FunctionalInterface들이 정의되어 있다.
                     li 기존의 인터페이스에 static 메서드가 추가되었다. 예) Comparator.comparing
                 li 익명 메서드 Lambda : FunctionalInterface의 메서드만을 명시함으로써 익명 객체를 생성한다.
-                |         시그니처를 간소화하는 것은 어디까지나 정의가 분명할 때뿐이다. 
+                |         시그니처를 간소화하는 것은 어디까지나 정의가 분명할 때뿐이다.
                 button.btn-code(path='Repositories/Eclipse/Basic/src/io/github/donggi/Lambda2.java', lan='java') 예시 코드 »
                 li 메서드 참조를 이용해 기정의된 메서드를 람다로 이용할 수 있다. '::' 연산자를 이용한다.
                 li
@@ -99,7 +99,7 @@ html
                 li @Deprecated(since="9") protected void finalize()
                 |         객체 폐기 메서드였던 것.
                 br
-                |         대안 : Non-heap 리소스를 갖는 객체들에 대하여 명시적인 자원 해제 메서드를 지원해야 하며, 가능하면 AutoCloseable을 구현한다. java.lang.ref.Cleaner, java.lang.ref.PhantomReference는 참조되지 않는 객체를 해제하는 데 유연한 방법을 
+                |         대안 : Non-heap 리소스를 갖는 객체들에 대하여 명시적인 자원 해제 메서드를 지원해야 하며, 가능하면 AutoCloseable을 구현한다. java.lang.ref.Cleaner, java.lang.ref.PhantomReference는 참조되지 않는 객체를 해제하는 데 유연한 방법을
                 a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/lang/ref/Cleaner.html') 제공한다.
         hr
         details
@@ -154,9 +154,9 @@ html
                 li 메서드에서는 와일드카드 '?'를 이용하여 제네릭 타입을 매개변수로 받을 수 있다.
                 li 제네릭을 통한 객체 생성 불가. 제네릭을 static 요소에서 이용하는 데 제한.
                 li
-                    | 제네릭 타입의 선언, 제네릭 리스트 일부 구현, 바운드된 타입 매개변수 선언 
+                    | 제네릭 타입의 선언, 제네릭 리스트 일부 구현, 바운드된 타입 매개변수 선언
                     button.btn-code(path='Repositories/Eclipse/Basic/src/io/github/donggi/Generic.java', lan='java') 예 »
                 li
-                    | 비제네릭 클래스의 제네릭 생성자 선언, 비제네릭 클래스 - 제네릭 클래스 상속 
+                    | 비제네릭 클래스의 제네릭 생성자 선언, 비제네릭 클래스 - 제네릭 클래스 상속
                     button.btn-code(path='Repositories/Eclipse/Basic/src/io/github/donggi/Generic2.java', lan='java') 예 »
         hr

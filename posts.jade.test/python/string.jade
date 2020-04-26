@@ -51,7 +51,7 @@ html
                 # ValueError: Invalid placeholder in string: line 1, col 11
                 # $를 출력하고 싶을 땐 $$를 이용하면 된다.
                 Template('$who likes $what').substitute(dict(who='tim'))        # KeyError: 'what'
-                Template('$who likes $what').safe_substitute(dict(who='tim'))   # 'tim likes $what'        
+                Template('$who likes $what').safe_substitute(dict(who='tim'))   # 'tim likes $what'
         hr
         details
             summary Helper functions
@@ -60,5 +60,5 @@ html
                 pre.
                     \nif sep is None:
                             sep = ' '
-                    sep.join([word.capitalize() for word in s.split(sep=sep)])          
+                    sep.join([word.capitalize() for word in s.split(sep=sep)])
         hr

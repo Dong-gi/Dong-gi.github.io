@@ -26,11 +26,11 @@ html
         hr
         details
             summary DOM; Document Object Model
-            |     Icons made by 
+            |     Icons made by
             a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://www.freepik.com') Freepik
-            |  from 
+            |  from
             a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://www.flaticon.com') www.flaticon.com
-            |  is licensed by 
+            |  is licensed by
             a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://creativecommons.org/licenses/by/3.0/') CC 3.0 BY
             #basic2-div1
                 button.btn-code(path='Repositories/JavaScript/Browser/dom_example1.js', lan='javascript') DOM 예시 1
@@ -56,7 +56,7 @@ html
                     worker.postMessage("start!"); // 작업 시작. JSON 구조로 직렬화 가능한 값은 모두 전달 가능
                     worker.terminate(); // 즉시 종료
                     worker.onmesage = ...
-                    worker.onerror ...          
+                    worker.onerror ...
                 li 웹 워커 내부에서 전역 객체는 worker 자체
                 |         페이지에서 보낸 메시지를 알기 위해서 onmesage 이벤트 핸들러를 등록한다.
                 br
@@ -79,7 +79,7 @@ html
                     // onopen, onclose, onerror
                     // onclose 이벤트 종료코드 1000외는 모두 비정상 종료 : http://tools.ietf.org/html/rfc6455#section-7.4
                     // onmessage 이벤트 data 프로퍼티 : 메시지가 텍스트면 문자열, 메시지가 바이너리고 connection.binaryType이 "blob"(기본)이면 Blob, 메시지가 바이너리고 connection.binaryType이 "arraybuffer"면 ArrayBuffer
-                    connection.close(); // close 이벤트 객체는 wasClean, code, reason 프로퍼티 존재          
+                    connection.close(); // close 이벤트 객체는 wasClean, code, reason 프로퍼티 존재
         hr
         details
             summary 함수 감속
@@ -89,7 +89,7 @@ html
                 \nfunction throttle(func, context) {
                         clearTimeout(func.tId);
                         func.tId = setTimeout(() => func.call(context), 100);
-                }        
+                }
         hr
         details
             summary AJAX; Asynchronous JavaScript and XML + JSONP
@@ -110,14 +110,14 @@ html
                     // XMLHttpRequest.open(method, url, async, user, password)
                     request.open('GET', './index.html', false);
                     request.send();
-                    console.log(request.responseText);          
+                    console.log(request.responseText);
                 li FormData를 보낼 수 있다
                 pre.
                     \nlet data = new FormData();
                     data.append("key", "value");
                     let data = new FormData(document.forms[0]);
                     request.send(data);
-                    // Blob, BufferSource, FormData, URLSearchParams, ReadableStream, USVString 전송 가능          
+                    // Blob, BufferSource, FormData, URLSearchParams, ReadableStream, USVString 전송 가능
                 li jQuery Ajax 구문
                 |         Ajax 간편 표기 : $.get(), $.post(), $.getJSON(), $.getScript(), $(selector).load()
                 pre.
@@ -139,7 +139,7 @@ html
                             error: (request, status, error) => {
                                     showSnackbar("등록 실패.", $('body'));
                             }
-                    });          
+                    });
                 li jQuery Ajax 옵션
                 |         async, complete(xhr, status), data, error(xhr, status, error), jsonp, jsonpCallback, success(data, status, xhr), timeout, type, url
                 li JSONP : JSON with Padding
@@ -171,5 +171,5 @@ html
             pre.
                 \nlet script = document.createElement('script');
                 script.src = "https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js";
-                document.getElementsByTagName('head')[0].appendChild(script);        
+                document.getElementsByTagName('head')[0].appendChild(script);
         hr

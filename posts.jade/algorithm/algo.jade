@@ -48,7 +48,7 @@ include ../../source/skeleton.jade
                     | +-+    +---+
                     |      +-+   +--+
                     |      |7|   |10|
-                    |      +-+   +--+                  
+                    |      +-+   +--+
             td(colspan='4')
                 pre
                     |       +-+
@@ -62,13 +62,13 @@ include ../../source/skeleton.jade
                     | +-+    +-+   +--+
                     |            +--+
                     |            |10|
-                    |            +--+                   
+                    |            +--+
             td(colspan='4')
                 +asCode('python')
                     | def rotate_ll():
                     |     parent.change(this, this.left)
                     |     left.parent, parent = this.parent, left
-                    |     left.right, left = this, left.right                    
+                    |     left.right, left = this, left.right
         tr
             th(colspan='12') RR Rotation : this, this.right, this.right.right가 서로 위치 변경
         tr
@@ -105,7 +105,7 @@ include ../../source/skeleton.jade
                     | def rotate_rr():
                     |     parent.change(this, this.right)
                     |     right.parent, parent = this.parent, right
-                    |     right.left, right = this, right.left                    
+                    |     right.left, right = this, right.left
         tr
             th(colspan='12') LR Rotation : this, this.left, this.left.right가 서로 위치 변경
         tr
@@ -152,7 +152,7 @@ include ../../source/skeleton.jade
                 +asCode('python')
                     | def rotate_lr():
                     |     left.rotate_rr()
-                    |     rotate_ll()                    
+                    |     rotate_ll()
         tr
             th(colspan='12') RL Rotation : this, this.right, this.right.left가 서로 위치 변경
         tr
@@ -199,7 +199,7 @@ include ../../source/skeleton.jade
                 +asCode('python')
                    | def rotate_rl():
                    |     right.rotate_ll()
-                   |     rotate_rr()                    
+                   |     rotate_rr()
 
     h1.marker 자료구조 : 그래프
     ul
@@ -256,7 +256,7 @@ include ../../source/skeleton.jade
     +asCode('python')
         | for i in range(0, len(l)-1):
         |     x = l.index(min(l[i:]))
-        |     l[i], l[x] = l[x], l[i]          
+        |     l[i], l[x] = l[x], l[i]
     h2.marker Insertion Sort
     +asCode('python')
         | for i in range(1, len(l)):
@@ -280,7 +280,7 @@ include ../../source/skeleton.jade
         |     if x in d:
         |         d[x] += 1
         |     else:
-        |         d[x] = 1          
+        |         d[x] = 1
 
     h1.marker DP; Dynamic Programming
     p 동적계획법 := 점화식(상향식)/재귀(하향식) + 캐싱

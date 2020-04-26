@@ -8,7 +8,7 @@ html
             pre.
                 \nhttp {
                         include /etc/nginx/sites-enabled/*; # 활성 서버
-                }        
+                }
             li HTTP 서버 설정
             pre.
                 \nserver {
@@ -23,7 +23,7 @@ html
                         server_name _;
                         # ↓ Routings
                         location ~ github\.io {
-                                rewrite .*github\.io/?(.*) /$1; 
+                                rewrite .*github\.io/?(.*) /$1;
                         }
                         location ~ /.git/ {
                                 return 404;
@@ -38,7 +38,7 @@ html
                                 charset utf-8;
                                 autoindex on;
                         }
-                }        
+                }
             li 리버스 프록시 설정
             pre.
                 \nserver {
@@ -53,5 +53,5 @@ html
                                 proxy_set_header X-NginX-Proxy true;
                                 proxy_pass http://127.0.0.1:3000/;
                         }
-                }        
+                }
             li nginx -s reload

@@ -17,7 +17,7 @@ html
                         \nmysql> SET @increment = 10;
                         mysql> PREPARE s FROM 'CALL p(?, ?)';
                         mysql> EXECUTE s USING @version, @increment;
-                        mysql> SELECT @version, @increment;            
+                        mysql> SELECT @version, @increment;
                 li 프로시저 작성
                 ol
                     li
@@ -35,7 +35,7 @@ html
                     \nmysql> SET GLOBAL event_scheduler = on;
                     mysql> SET @@global.event_scheduler = on;
                     mysql> SET GLOBAL event_scheduler = 1;
-                    mysql> SET @@global.event_scheduler = 1;          
+                    mysql> SET @@global.event_scheduler = 1;
                 li 서버 재실행 후 이벤트 사용 설정
                 |         종료 후 my.cnf or my.ini 에 옵션(event_scheduler=On)을 추가하고 mysql 시작
                 li 이벤트 생성
@@ -48,25 +48,25 @@ html
                                     begin
                                             update user.i_user_quest_status set clear_count = 0;
                                     end
-                    $$ delimiter;          
+                    $$ delimiter;
                 li 이벤트 확인
                 pre.
                     \nSHOW PROCESSLIST;
-                    SHOW EVENTS;          
+                    SHOW EVENTS;
         hr
         details
             summary CSV 입출력
             ul
                 li CSV로부터 입력
-                |         LOAD DATA LOCAL INFILE "/~.csv" replace into table 
+                |         LOAD DATA LOCAL INFILE "/~.csv" replace into table
                 i table_name
                 |  fields terminated by ',' enclosed by '\"' IGNORE 1 LINES;
                 li CSV로 출력
                 ul
                     li
-                        | 기본 명령 : SELECT 
+                        | 기본 명령 : SELECT
                         i select_clause
-                        |  FROM 
+                        |  FROM
                         i table_expression
                         |  INTO OUTFILE "~.csv" FIELDS TERMINATED BY "," LINES TERMINATED BY "\n";
                     li 출력 가능 경로 확인 : SHOW VARIABLES LIKE 'secure_file%';
@@ -94,11 +94,11 @@ html
                 li 테이블 컬럼 순서 변경
                 pre.
                     \nALTER TABLE table_name MODIFY COLUMN col_name1 TYPE AFTER col_name2;
-                    ALTER TABLE table_name CHANGE COLUMN before_col_name after_col_name TYPE AFTER col_name;          
+                    ALTER TABLE table_name CHANGE COLUMN before_col_name after_col_name TYPE AFTER col_name;
                 li 테이블 정의 확인
                 pre.
                     \nDESC table_name;
-                    SHOW [FULL] COLUMNS FROM table_name [WHERE...];          
+                    SHOW [FULL] COLUMNS FROM table_name [WHERE...];
                 li 테이블 복사 생성
                 |         create table new_table_name like base_table_name;
                 li 로그 확인

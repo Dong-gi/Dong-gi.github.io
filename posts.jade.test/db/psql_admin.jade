@@ -24,7 +24,7 @@ html
                 li 백그라운드에서 실행
                 pre.
                     \n$ postgres -D /usr/local/pgsql/data >logfile 2>&1 &
-                    $ pg_ctl start -l logfile          
+                    $ pg_ctl start -l logfile
                 li 서버 자동 시작 스크립트가 contrib/start-scripts에 제공된다
                 li 포트 지정
                 |         $ postgres -p 56789
@@ -89,5 +89,5 @@ html
                 li 인증서 생성
                 pre.
                     \nopenssl req -new -x509 -days 365 -nodes -text -out server.crt -keyout server.key -subj "/CN=dbhost.yourdomain.com"
-                    chmod og-rwx server.key          
+                    chmod og-rwx server.key
         hr

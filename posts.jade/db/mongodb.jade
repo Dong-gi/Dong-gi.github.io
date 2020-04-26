@@ -146,7 +146,7 @@ include ../../source/skeleton.jade
                 td |
                 td "\x0B" e_name cstring cstring
                 td
-                    | 각각 정규표현식 패턴, 
+                    | 각각 정규표현식 패턴,
                     span.hover-content(template-id='template-mongodb-bson-regex-option') 옵션(알파벳 순)
                 td regex
             tr
@@ -297,7 +297,7 @@ include ../../source/skeleton.jade
             mongo "mongodb://host:port"
             mongo --password "mongodb://username@host:port"
             mongo --ssl --host replA/mongodb0.example.com.local:27017,mongodb1.example.com.local:27017,mongodb2.example.com.local:27017
-            
+
             mongo localhost:27017 file.js
             > load("file.js")
         li find(), aggregate() 쿼리 결과는 기본 101개로 제한된다
@@ -307,16 +307,16 @@ include ../../source/skeleton.jade
             li cursor.next() 호출로 자동으로 getMore 연산이 수행되어 나머지 결과도 가져온다
             li cursor.objsLeftInBatch()로 배치에 남은 문서 수 확인 가능
         li
-            | 메서드 
+            | 메서드
             +asA('https://docs.mongodb.com/manual/reference/method/')
         li
-            | 연산자 
+            | 연산자
             +asA('https://docs.mongodb.com/manual/reference/operator/query/')
         li
-            | 트랜잭션 
+            | 트랜잭션
             +asA('https://docs.mongodb.com/manual/core/transactions/')
         li
-            | Aggregation variables 
+            | Aggregation variables
             +asA('https://docs.mongodb.com/manual/reference/aggregation-variables/')
 
     h3.marker help
@@ -604,7 +604,7 @@ include ../../source/skeleton.jade
         o = new ObjectId()                  // ObjectId
         o.getTimestamp(), o.isObjectId, o.toString(), o.equals(otherid)
         d = ISODate()                       // like Date() but behaves more intuitively when used
-        d = ISODate('YYYY-MM-DD hh:mm:ss')  // without an explicit "new " prefix on construction        
+        d = ISODate('YYYY-MM-DD hh:mm:ss')  // without an explicit "new " prefix on construction
     +hoverTemplate().as-code#template-mongodb-bulk-write&attributes({lan: 'javascript'}).
         coll.bulkWrite([
             {

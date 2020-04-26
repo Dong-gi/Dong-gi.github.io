@@ -79,17 +79,17 @@ html
             summary javac -processor 이용 예
             ol
                 li
-                    | 애너테이션 정의 : 
+                    | 애너테이션 정의 :
                     button.btn-code(path='Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/MyTarget.java', lan='java') MyTarget »
                 li
-                    | 애너테이션 프로세서 정의 : 
+                    | 애너테이션 프로세서 정의 :
                     button.btn-code(path='Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/processor/MyTargetProcessor.java', lan='java') MyTargetProcessor »
                 li 애너테이션 컴파일
                 |         D:\>javac -encoding UTF-8 io/github/donggi/annotation/MyTarget.java
                 li 애너테이션 프로세서 컴파일
                 |         D:\>javac -encoding UTF-8 io/github/donggi/annotation/processor/MyTargetProcessor.java
                 li
-                    | 애너테이션 프로세서 지정하여 컴파일 
+                    | 애너테이션 프로세서 지정하여 컴파일
                     button.btn-code(path='Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/test/MyTargetTest.java', lan='java') MyTargetTest »
                 pre.
                     \nD:\>javac -encoding UTF-8 -processor io.github.donggi.annotation.processor.MyTargetProcessor io/github/donggi/annotation/test/MyTargetTest.java
@@ -107,13 +107,13 @@ html
                     Note: Annotation 'io.github.donggi.annotation.MyTarget' found at 'io.github.donggi.annotation.test.MyTargetTestGenerated'
                     Note: Annotation value :
                     Note: Skipping generated file 'io.github.donggi.annotation.test.MyTargetTestGenerated'
-                    Note: [ROUND  3] It's my turn.          
+                    Note: [ROUND  3] It's my turn.
         details
             summary javac -cp 이용 예
             ol
                 li 위 "javac -processor 이용 예" 프로젝트 그대로 jar 빌드
                 li
-                    | META-INF/services/javax.annotation.processing.Processor 파일에 애너테이션 프로세서 클래스 
+                    | META-INF/services/javax.annotation.processing.Processor 파일에 애너테이션 프로세서 클래스
                     button.btn-code(path='Repositories/Eclipse/annotation-processing1/src/main/resources/META-INF/services/javax.annotation.processing.Processor', lan='text') 명시 »
                 img.w3-round(src='imgs/20191128_164401.png')
                 img.w3-round(src='imgs/20191128_164656.png')
@@ -121,7 +121,7 @@ html
                 pre.
                     \nD:\>javac -encoding UTF-8 -cp annotation-processing1-1.0.jar io/github/donggi/annotation/test/MyTargetTest.java
                     Note: [ROUND  1] It's my turn.
-                    // 이하 생략          
+                    // 이하 생략
         details
             summary Eclipse에서 프로세서 jar 이용 예
             ol
@@ -175,5 +175,5 @@ html
                     Note: [ROUND  3] It's my turn.
                     Note: [ROUND  4] It's my turn.
                     BUILD SUCCESSFUL in 3s
-                    6 actionable tasks: 6 executed          
+                    6 actionable tasks: 6 executed
         hr

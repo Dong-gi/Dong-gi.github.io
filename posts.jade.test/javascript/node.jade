@@ -79,7 +79,7 @@ html
                                 "engines": {          // Node 버전 제한
                                     "node": ">=10"
                                 }
-                            }              
+                            }
                     li npm install
                     |             package.json대로 의존 라이브러리 설치
                     li
@@ -198,7 +198,7 @@ html
                     li eventName 이벤트 발행 시 emit()의 args를 배열로 받는다.
                 |         const { on, EventEmitter } = require('events');
                 br
-                |         (async () => { //... 
+                |         (async () => { //...
                 br
                 |             for await (const event of on(emitter, 'foo')) {}
                 br
@@ -238,7 +238,7 @@ html
                     li 모듈 사이에 require() 사이클이 존재하는 경우, 초기화 완료되지 않은 exports 객체를 반환하여 무한 반복을 방지한다
                     li 모듈을 /usr/lib/node_modules/{name}/{version} 경로로 관리하면 효율적인 require() 가능
                     li
-                        | require 
+                        | require
                         a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://nodejs.org/dist/latest-v12.x/docs/api/modules.html#modules_all_together') 알고리즘
                     |             확장자 없는 파일 X, X.js 파일, X.json 파일, X.node 파일, X/index.js 디렉터리, X/package.json 디렉터리 등을 적절히 처리
                     li 선두 '/', './', '../' 없이 요구된 모듈
@@ -306,7 +306,7 @@ html
                 pre.
                     \nconst express = require('express')
                     const app = express()
-                    app.listen(3000, () => console.log(`Server Started`))          
+                    app.listen(3000, () => console.log(`Server Started`))
                 li 실행 환경
                 ol
                     li 환경 변수 이름 : NODE_ENV
@@ -341,7 +341,7 @@ html
                             // Do something
                             next();
                     }
-                    app.use(middleware);          
+                    app.use(middleware);
                 li static 파일 전송 미들웨어
                 ol
                     li static 디렉터리 파일들을 전송하는 미들웨어 사용
@@ -378,7 +378,7 @@ html
                                 "sourceDir": "/home/myuser/app2",
                                 "args": ["--port", "8081"]
                             }
-                        ]            
+                        ]
         hr
         details
             summary 3rd/Jade : 템플릿 엔진
@@ -431,7 +431,7 @@ html
                     pre.
                         \n"scripts": {
                             "test": "mocha"
-                        }            
+                        }
                     button.btn-code(path='Repositories/Node/mocha-start/test/test1.js', lan='javascript') 예시 코드 »
                 li 비동기 코드 테스트
                 ul

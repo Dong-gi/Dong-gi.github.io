@@ -8,7 +8,7 @@ html
                 table
                     tr
                         th 표제/저자사항
-                        td HTTP 완벽 가이드 / 데이빗 고울리, 브라이언 토티, 마조리 세이어, 세일루 레디, 안슈 아가왈 
+                        td HTTP 완벽 가이드 / 데이빗 고울리, 브라이언 토티, 마조리 세이어, 세일루 레디, 안슈 아가왈
                     tr
                         th ISBN 정보
                         td 978-89-6626-120-8 [13000]
@@ -17,7 +17,7 @@ html
                         td https://doi.org/10.978.896626/1208
                     tr
                         th 발행사항
-                        td 인사이트, 발행일 : 20141215 
+                        td 인사이트, 발행일 : 20141215
                     tr
                         th 출판사 홈페이지
                         td http://blog.insightbook.co.kr/
@@ -45,12 +45,12 @@ html
                 li 서버 401 Unauthorized 응답
                 pre.
                     \nHTTP/1.0 401 Authorization Required
-                    WWW-Authenticate: Basic realm="문서 집합 정보"          
+                    WWW-Authenticate: Basic realm="문서 집합 정보"
                 |         WWW-Authenticate 헤더 : 보안 영역 설명
                 li 클라이언트 인증 GET 요청
                 pre.
                     \nGET /family/jeff.jpg HTTP/1.0
-                    Authorization: Basic "ID:base-64_encoded_password"          
+                    Authorization: Basic "ID:base-64_encoded_password"
                 |         Authorization 헤더 : 인증 알고리즘, 사용자 이름, 비밀번호
                 li 200 OK
         hr
@@ -69,7 +69,7 @@ html
                     WWW-Authenticate: Digest
                             realm="Shopping Cart"
                             qop="auth,auth-int"
-                            nonce="66C4EF58..."          
+                            nonce="66C4EF58..."
                 li 클라이언트 인증 GET 요청
                 pre.
                     \nGET /cgi-bin/checkout?cart=17854 HTTP/1.1
@@ -80,7 +80,7 @@ html
                             uri="/cgi-bin/checkout?cart=17854"
                             qop="auth"
                             nc=0000001,
-                            cnonce="CFA920710..."          
+                            cnonce="CFA920710..."
                 li 계산
                 ol
                     li H(d) := 단방향 해시 함수

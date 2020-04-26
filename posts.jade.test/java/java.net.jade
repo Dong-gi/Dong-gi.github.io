@@ -210,7 +210,7 @@ html
                         s.send(new DatagramPacket(msg, msg.length, group, 6789));
                         var buf = new byte[1000];
                         s.receive(new DatagramPacket(buf, buf.length));
-                        s.leaveGroup(group);            
+                        s.leaveGroup(group);
             details
                 summary final class DatagramPacket Since 1.0
                 ol

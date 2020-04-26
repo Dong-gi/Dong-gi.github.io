@@ -120,7 +120,7 @@ html
                 li 시맨틱; Semantic
                 |         HTML5 이전의 웹페이지들은 table 태그를 주로 사용하여 디자인했다. 중첩된 table들로 이루어진 웹페이지는 검색 엔진을 비롯한 프로그램이 기계적으로 의미를 찾기 어려워 HTML5는 문서에 대한 의미를 태그가 포함하는 방향을 모색했다.
                 li 시맨틱 태그
-                |         header, nav, section, article, aside, footer, ... 자세한 설명은 
+                |         header, nav, section, article, aside, footer, ... 자세한 설명은
                 a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://www.w3schools.com/html/html5_semantic_elements.asp') 여기로
                 li 시맨틱 CSS
                 |         HTML5로 접어들면서 HTML 태그들은 골격만을 정의하고, 디자인은 JavaScript와 CSS로 보다 확실히 분리되었다. 디자인의 특징은 의미 범주가 같은 것들을(class) 비슷하게 표현한다는 것이며, 따라서 CSS 선택자들은 문서의 의미 정보를 내포하고 있다고 할 수 있다.
@@ -140,7 +140,7 @@ html
                         　　&lt;source srcset="img_flowers.jpg" media="(max-width: 1500px)">
                         　　&lt;source srcset="flowers.jpg">
                         　　&lt;img src="img_smallflower.jpg" alt="Flowers">
-                        &lt;/picture>            
+                        &lt;/picture>
                     |             출처 : https://www.w3schools.com/html/html_responsive.asp
                 li 멀티미디어
                 a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://www.w3schools.com/tags/ref_av_dom.asp') Audio/Video
@@ -157,7 +157,7 @@ html
                 li 캔버스의 기본 그리기 요소는 직사각형과 path(일련의 점들을 선분으로 연결) 두 가지
             details
                 summary
-                    | interface 
+                    | interface
                     a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement') HTMLCanvasElement
                     |  : HTMLElement
                 ul
@@ -170,7 +170,7 @@ html
                     |             callback : Blob을 먹는 함수, mimeType : default 'image/png', qualityArgument : 이미지 퀄리티[0, 1]
             details
                 summary
-                    | interface 
+                    | interface
                     a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D') CanvasRenderingContext2D
                 details
                     summary 사각형 그리기
@@ -189,7 +189,7 @@ html
                         li strokeText(text, x, y,[, maxWidth])
                         |                 텍스트를 그리고 글자 외각선은 현재 fillStyle로 채운다.
                         li measureText(text)
-                        |                 텍스트를 그린 결과가 어떻게 될지 미리 알 수 있는 
+                        |                 텍스트를 그린 결과가 어떻게 될지 미리 알 수 있는
                         a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics') TextMetrics
                         |  객체 반환.
                 details
@@ -202,11 +202,11 @@ html
                         li moveTo(x, y) : path 조각의 시작점을 설정
                         li lineTo(x, y) : 마지막 정점으로부터 (x, y)까지의 선분을 추가.
                         li bazierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
-                        |                 마지막 정점으로부터 (x, y)까지를 잇는, 2개의 조절점을 이용하는 
+                        |                 마지막 정점으로부터 (x, y)까지를 잇는, 2개의 조절점을 이용하는
                         a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://ko.wikipedia.org/wiki/베지에_곡선') 베지에 곡선
                         | 을 추가한다.
                         li quadraticCurveTo(cpx, cpy, x, y)
-                        |                 마지막 정점으로부터 (x, y)까지를 잇는, 1개의 조절점을 이용하는 
+                        |                 마지막 정점으로부터 (x, y)까지를 잇는, 1개의 조절점을 이용하는
                         a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://ko.wikipedia.org/wiki/베지에_곡선') 베지에 곡선
                         | 을 추가한다.
                         li arc(x, y, radius, startAngle, endAngle[, anticlockwise])
@@ -237,7 +237,7 @@ html
                                 a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://en.wikipedia.org/wiki/Even-odd_rule') evenodd
                                 | '
                             li
-                                | path : 
+                                | path :
                                 a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://developer.mozilla.org/en-US/docs/Web/API/Path2D') Path2D
                                 |  인스턴스
                         li stroke([path])
@@ -312,7 +312,7 @@ html
                     summary 이미지 그리기
                     ul
                         li
-                            | drawImage(image, dx, dy); 
+                            | drawImage(image, dx, dy);
                             button.btn-code(path='posts/front/canvas/draw2.js', lan='javascript') 예시 »
                         li drawImage(image, dx, dy, dWidth, dHeight);
                         li drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);

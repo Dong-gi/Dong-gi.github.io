@@ -27,7 +27,7 @@ html
                         li 서비스 시작
                         pre.
                             \n$ service postgresql-9.6 start
-                            $ service postgresql-9.6 restart // 재시작하는 경우              
+                            $ service postgresql-9.6 restart // 재시작하는 경우
                         li 자동 구동 설정
                         |                 $ chkconfig postgresql-9.6 on
                 details
@@ -36,13 +36,13 @@ html
                         li 패키지 설치
                         pre.
                             \nrpm -Uvh https://yum.postgresql.org/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm
-                            yum install -y postgresql10-server postgresql10              
+                            yum install -y postgresql10-server postgresql10
                         li DB 초기화
                         |                 /usr/pgsql-10/bin/postgresql-10-setup initdb
                         li 서비스 시작
                         pre.
                             \nsystemctl start postgresql-10
-                            systemctl status postgresql-10 // 상태 확인              
+                            systemctl status postgresql-10 // 상태 확인
                         li 자동 구동 설정
                         |                 systemctl enable postgresql-10
                 ul
@@ -61,11 +61,11 @@ html
                     li 백업
                     pre.
                         \n$ pg_dump -U [소유주] [DB명] -t [테이블 명] > [백업 파일명] // 테이블 백업
-                        $ pg_dump -U [소유주] [DB명] > [백업 파일명] // DB 백업            
+                        $ pg_dump -U [소유주] [DB명] > [백업 파일명] // DB 백업
                     li 복구
                     pre.
                         \n$ pgsql -U [DB 사용자 명] -f [백업 파일명] [DB명] // 테이블 복구
-                        $ psql -U [소유주] [DB명] &lt; [백업 파일명] // DB 복구            
+                        $ psql -U [소유주] [DB명] &lt; [백업 파일명] // DB 복구
                 details
                     summary psql을 이용한 데이터베이스 사용
                     ul
@@ -90,19 +90,19 @@ html
                             li postgres 계정으로 db 접속
                             pre.
                                 \n$ su - [postgres]
-                                $ psql postgres                
+                                $ psql postgres
                             li 사용자 추가
                             pre.
                                 \n$ adduser username
-                                postgres=# create user username;                
+                                postgres=# create user username;
                             li 사용자 암호 설정
                             pre.
                                 \npostgres=# \password username
-                                postgres=# alter user username with password 'new_password';                
+                                postgres=# alter user username with password 'new_password';
                             li DB 생성 후 권한 부여
                             pre.
                                 \npostgres=# create database db_name ENCODING 'UTF-8';
-                                postgres=# GRANT ALL PRIVILEGES ON DATABASE db_name TO username;                
+                                postgres=# GRANT ALL PRIVILEGES ON DATABASE db_name TO username;
                     details
                         summary psql 명령어
                         pre.
@@ -121,19 +121,19 @@ html
                             -- file_name 실행
                             db_name=# \i file_name
                             -- 접속 종료
-                            db_name=# \q              
+                            db_name=# \q
                 details
                     summary 외부 접속 허용
                     ul
                         li iptables 규칙 추가
                         ol
-                            | /etc/sysconfig/iptables 
+                            | /etc/sysconfig/iptables
                             a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://webdir.tistory.com/170') https://webdir.tistory.com/170
                             li 규칙 추가
-                            |                     PostgreSQL 서버의 포트(--dport 5432)로 들어오는(INPUT) tcp 패킷(-p tcp)을 허용(ACCEPT)하는 규칙을 추가(-A). 
+                            |                     PostgreSQL 서버의 포트(--dport 5432)로 들어오는(INPUT) tcp 패킷(-p tcp)을 허용(ACCEPT)하는 규칙을 추가(-A).
                             strong 규칙의 순서가 중요하므로, 앞선 규칙에서 패킷이 폐기되지 않도록 주의
                             pre.
-                                \n$ iptables -A INPUT -p tcp --dport 5432 -j ACCEPT                
+                                \n$ iptables -A INPUT -p tcp --dport 5432 -j ACCEPT
                             li 확인
                             |                     $ iptables -nL --line-numbers
                             li iptable 재시작
@@ -145,7 +145,7 @@ html
                             #port=5432
                             # 변경 후
                             listen_addresses='*'
-                            port=5432              
+                            port=5432
                         li /home/postgres/pgsql/data/pg_hba.conf
                         pre.
                             \n# 보통 서브넷을 특정
@@ -154,7 +154,7 @@ html
                             0.0.0.0/0
                             + host all all 0.0.0.0/0 md5 # 모든 네트워크에 대해 MD5방식 로그인 요구
                             + host all all 0.0.0.0/0 trust # 암호 요구 없이 접속 허용.
-                            + local all all md5 # 로컬 서버에서도 암호를 이용해 접속하도록 변경              
+                            + local all all md5 # 로컬 서버에서도 암호를 이용해 접속하도록 변경
                         li PostgreSQL 서버 restart
         hr
         details
@@ -172,7 +172,7 @@ html
                                 lv integer NOT NULL,
                                 nickname text NOT NULL,
                                 start_game_date timestamp with time zone NOT NULL
-                        );            
+                        );
                     li psql 안에서 각 명령은 ;로 끝나야 한다.
                     li -- : 한 줄 주석
                     li 복사 생성
@@ -198,7 +198,7 @@ html
                     COPY t_account_0 (account_id, lv, nickname, start_game_date) FROM stdin;
                     1\t1\t'test'\t2017-03-31 12:06:06.446+09
                     2\t2\t'test2'\t2017-03-31 12:06:06.446+09
-                    \.          
+                    \.
             details
                 summary 테이블의 자료 조회하기
                 pre.
@@ -224,7 +224,7 @@ html
                     SELECT city FROM weather WHERE temp_lo = (SELECT max(temp_lo) FROM weather);
                     SELECT city, max(temp_lo) FROM weather GROUP BY city;
                     SELECT city, max(temp_lo) FROM weather GROUP BY city HAVING max(temp_lo) &lt; 40;
-                    SELECT city, max(temp_lo) FROM weather WHERE city LIKE ’S%’ GROUP BY city;          
+                    SELECT city, max(temp_lo) FROM weather WHERE city LIKE ’S%’ GROUP BY city;
             details(open='')
                 summary 자료 갱신
                 |         UPDATE weather SET temp_hi = temp_hi - 2, temp_lo = temp_lo - 2 WHERE date > ‘1994-11-28’;
@@ -232,7 +232,7 @@ html
                 summary 자료 삭제
                 pre.
                     \nDELETE FROM weather WHERE city = ‘Hayward’;
-                    DELETE FROM weather;          
+                    DELETE FROM weather;
         hr
         details
             summary 고급 기능
@@ -252,7 +252,7 @@ html
                             temp_hi     int,
                             prcp        real,
                             date        date
-                    );          
+                    );
             details
                 summary 트랜잭션
                 ol
@@ -268,7 +268,7 @@ html
                         -- ... Wally한테 가야하는 건데...
                         ROLLBACK TO my_savepoint;
                         UPDATE accounts SET balance = balance + 100 WHERE name = 'Wally';
-                        COMMIT;            
+                        COMMIT;
             details
                 summary 윈도우 함수
                 ol
@@ -277,14 +277,14 @@ html
                     li PARTITION BY는 그룹을 정의한다. 이를 생략할 경우 전체 행이 하나의 그룹으로 취급된다.
                     pre.
                         \n-- 부서별 평균 임금과 각 직원의 급여 비교
-                        SELECT depname, empno, salary, avg(salary) OVER (PARTITION BY depname) FROM empsalary;            
+                        SELECT depname, empno, salary, avg(salary) OVER (PARTITION BY depname) FROM empsalary;
                     li ORDER BY로 그룹 내 정렬 순서를 지정할 수 있다.
                     |             SELECT depname, empno, salary, rank() OVER (PARTITION BY depname ORDER BY salary DESC) FROM empsalary;
                     li 윈도우 프레임 : 현재 윈도우 함수가 처리하는 행집합. 많은 윈도우 함수들이 윈도우 프레임 단위로 계산한다.
                     pre.
                         \n-- ORDER BY로 인한 윈도우 프레임 차이
                         SELECT salary, sum(salary) OVER () FROM empsalary;
-                        SELECT salary, sum(salary) OVER (ORDER BY salary) FROM empsalary;            
+                        SELECT salary, sum(salary) OVER (ORDER BY salary) FROM empsalary;
                     li 윈도우 함수의 처리 대상은 미리 결정되어야 한다.
                     |             SELECT 항목 영역 안에서와 ORDER BY 절에서만 사용할 수 있다.
                     li 집계 함수의 결과를 윈도우 함수의 입력으로 사용할 수는 있지만 그 반대는 불가능하다.
@@ -295,7 +295,7 @@ html
                                 SELECT depname, empno, salary, enroll_date, rank()
                                         OVER (PARTITION BY depname ORDER BY salary DESC, empno) AS pos FROM empsalary
                         ) AS ss WHERE pos &lt;= 3;
-                        -- rank 함수의 대상은 OVER에서 특정되므로 생략되었다.            
+                        -- rank 함수의 대상은 OVER에서 특정되므로 생략되었다.
                     li 같은 윈도우 프레임을 이용하는 경우, alias를 이용할 수 있다.
                     |             SELECT sum(salary) OVER w, avg(salary) OVER w FROM empsalary WINDOW w AS (PARITION BY depname ORDER BY salary DESC);
             details
@@ -311,11 +311,11 @@ html
                         );
                         CREATE TABLE capitals (
                                 state       char(2)
-                        ) INHERITS (cities);            
+                        ) INHERITS (cities);
                     li 테이블을 조회할 경우, 모든 하위 테이블도 대상이 되며, 해당 테이블만 조회하려면 ONLY 키워드를 이용한다.
                     pre.
                         \n-- 수도를 빼고 도시 고도 500ft 초과의 도시 검색.
-                        SELECT name, altitude FROM ONLY cities WHERE altitude > 500;            
+                        SELECT name, altitude FROM ONLY cities WHERE altitude > 500;
         hr
         details
             summary PostgreSQL 팁
@@ -343,13 +343,13 @@ html
                     \nSELECT dblink_connect('myconn', 'hostaddr=1.2.3.4 port=5432 dbname=history user=readonly password=password');
                             (SELECT account_id, last_login_date FROM v_account WHERE account_id IN
                                     (SELECT r.account_id FROM dblink('myconn', 'SELECT account_id, sum(amount) as total_amount FROM v_payment_history WHERE status=2 GROUP BY account_id HAVING sum(amount) >= 10000') AS r(account_id BIGINT, total_amount BIGINT))
-                            ) UNION ...          
+                            ) UNION ...
                 li 시각 차이 획득
                 |         select abs(extract (epoch from (insert_datetime - '2019-07-04 19:39:55'::timestamp)));
                 li 커넥션 정리
                 |         select pg_terminate_backend(pid) from pg_stat_activity where client_addr = '10.0.2.2';
                 li AWS Redshift와 드라이버 충돌될 때
-                |         jdbc 연결 쿼리에 
+                |         jdbc 연결 쿼리에
                 a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://www.simba.com/products/Redshift/doc/JDBC_InstallGuide/content/jdbc/re/options/opensourcesubprotocoloverride.htm') OpenSourceSubProtocolOverride=true
                 |  추가.
                 li 테이블 목록 획득

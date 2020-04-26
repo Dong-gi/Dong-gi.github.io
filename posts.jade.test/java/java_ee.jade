@@ -6,7 +6,7 @@ html
             summary JavaEE
             ol
                 li Java Enterprise Edition은 동적 웹 애플리케이션 개발을 위한 자바 플랫폼이다.
-                |         JavaSE와 다른 문서 페이지를 참조해야 한다. 
+                |         JavaSE와 다른 문서 페이지를 참조해야 한다.
                 a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://javaee.github.io/javaee-spec/javadocs/') https://javaee.github.io/javaee-spec/javadocs/
                 li WAR(Web Application Archive) : JavaEE 웹 애플리케이션을 위한 압축 파일
                 pre.
@@ -27,7 +27,7 @@ html
                                     ㄴ JSP 태그 파일
                             ㄴ tld
                                     ㄴ JSP 태그 라이브러리 설명자
-                    ㄴ 기타 웹에서 접근 가능한 파일          
+                    ㄴ 기타 웹에서 접근 가능한 파일
                 li 서블릿
                 |         자바로 구현된 CGI(Common Gateway Interface; 웹 서버와 프로그램 사이의 통신 규약).
                 |         JCP(Java Community Process)에서 제정한 Servlet Specification을 따라야 한다.
@@ -143,7 +143,7 @@ html
                 li 사용하기 전에 드라이버 클래스 로드
                 |         로드할 JDBC 클래스 이름은 다운로드 받은 압축파일의 html 문서에 있음
                 li
-                    | 사용하기 
+                    | 사용하기
                     button.btn-code(path='Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello4.java', lan='java') JDBC Test »
                 ul
                     li url : JDBC 연결 문자열로, 옵션은 각 JDBC마다 제공하는 것이 다르다
@@ -200,11 +200,11 @@ html
                 li 웹 브라우저가 웹 컴포넌트를 호출하면, 필터가 사전작업을 수행하고 웹 컴포넌트를 호출.
                 li 필터 체인 : 하나의 페이지에 대해 여러 필터가 정의된 경우, 정의된 순서대로 필터가 호출된다.
                 li
-                    | 배포 설명자에 명시 : 
+                    | 배포 설명자에 명시 :
                     button.btn-code(path='Repositories/Eclipse/app1/src/main/webapp/WEB-INF/web.xml', lan='xml') web.xml »
                     button.btn-code(path='Repositories/Eclipse/app1/src/main/java/io/github/donggi/filter/DoNothing.java', lan='java') 예시 코드 »
                 li
-                    | 애너테이션으로 명시 : 
+                    | 애너테이션으로 명시 :
                     button.btn-code(path='Repositories/Eclipse/app1/src/main/java/io/github/donggi/filter/DoNothing2.java', lan='java') 예시 코드 »
         hr
         details
@@ -512,7 +512,7 @@ html
                     li Join Point : Aspect 실행 지점
                     li Advice : Join Point에서 실행되는 코드
                     li
-                        | Pointcut : 일치하는 Join Point에 대한 
+                        | Pointcut : 일치하는 Join Point에 대한
                         a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://www.eclipse.org/aspectj/doc/next/progguide/semantics-pointcuts.html') 정규 표현식
                         | .
                     |             Advice는 Pointcut과 연관되며, 일치하는 모든 Join Point에서 실행된다.
@@ -701,7 +701,7 @@ html
                         | void : 메서드가 (Http)ServletRequest를 매개변수로 받는다면 직접 응답을 처리한다고 가정한다. 그 외의 경우, 뷰 이름은 요청 URL로부터 결정.
                     li
                         | 메서드에 @ResponseBody가 적용된 경우 반환 객체를 HTTP 응답으로(HttpMessageConverter) 전송한다.
-                        | AJAX에 유용. 
+                        | AJAX에 유용.
                         button.btn-code(path='Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/EtcController.java', lan='java') 예시
                     li 뷰 이름을 통한 리다이렉트 : "redirect:" 접두어 활용. 상대 경로, 절대 경로 모두 가능
             ol
@@ -715,16 +715,16 @@ html
                         button.btn-code(path='Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/web.xml', lan='xml') WEB-INF/web.xml
                         button.btn-code(path='Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view/error.jsp', lan='xml') error.jsp
                     li
-                        | 컨트롤러 내부 @ExceptionHandler 메서드 선언 : 
+                        | 컨트롤러 내부 @ExceptionHandler 메서드 선언 :
                         button.btn-code(path='Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/HelloController.java', lan='java') 예시
                     li
-                        | 컨트롤러 HandlerExceptionResolver 인터페이스 구현 : 
+                        | 컨트롤러 HandlerExceptionResolver 인터페이스 구현 :
                         button.btn-code(path='Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/FileController.java', lan='java') 예시
                     li
-                        | SimpleMappingExceptionResolver로 전체 컨트롤러 특정 예외를 특정 뷰로 연결 : 
+                        | SimpleMappingExceptionResolver로 전체 컨트롤러 특정 예외를 특정 뷰로 연결 :
                         button.btn-code(path='Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/dispatcher-servlet.xml', lan='xml') WEB-INF/dispatcher-servlet.xml
                     li
-                        | @ControllerAdvice를 이요한 특정 패키지/클래스/인터페이스 예외 처리 : 
+                        | @ControllerAdvice를 이요한 특정 패키지/클래스/인터페이스 예외 처리 :
                         button.btn-code(path='Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/advice/UnhandledExceptionAdvice.java', lan='java') 예시
                 li
                     | 사용자 정의 PropertyEditor

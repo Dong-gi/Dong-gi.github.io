@@ -37,7 +37,7 @@ html
                                     keepers.append(c)
                                     if not unicodedata.combining(c):
                                             latin_base = c in string.ascii_letters
-                            return unicodedata.normalize('NFC', ''.join(keepers))          
+                            return unicodedata.normalize('NFC', ''.join(keepers))
                 li NFKC : Normalization Form: Compatibility (K) Composition
                 li NFKD : Normalization Form: Compatibility (K) Decomposition
                 |         호환 분해 예 : ½(U+00BD) → '1/2', 마이크로(U+00B5) → 뮤(U+03BC)

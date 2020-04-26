@@ -31,7 +31,7 @@ include ../../source/skeleton.jade
     h1.marker 레이아웃
     ol
         li
-            | 디자이너도 아니고... 종류만 알아보고 넘어간다. 
+            | 디자이너도 아니고... 종류만 알아보고 넘어간다.
             +w3a()&attributes({target:'_blank', href:'https://docs.microsoft.com/en-us/dotnet/framework/wpf/advanced/layout'}) MS WPF Docs - Layout »
         li Canvas : 캔버스 내부의 상대 좌표를 이용해 자식 요소들을 배치한다.
         li DockPanel : Top, Left, Bottom, Right에 자식 요소들을 배치.
@@ -81,7 +81,7 @@ include ../../source/skeleton.jade
         li ViewModel은 INotifyPropertyChanged을 구현. 프로퍼티 setter에서 변경되었음을 통지.
         +asCode('cs').
             public event PropertyChangedEventHandler PropertyChanged;
-            PropertyChanged(this, new PropertyChangedEventArgs("DateTime"));          
+            PropertyChanged(this, new PropertyChangedEventArgs("DateTime"));
         li 바인딩이랑 바인딩 소스로부터 바인딩 타깃으로 프로퍼티 값을 전달하는 것
         +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp6/MainWindow.xaml', lan: 'xml' }) MainWindow.xaml »
         +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp6/MainWindow.xaml.cs', lan: 'cs' }) MainWindow.xaml.cs »
@@ -89,14 +89,14 @@ include ../../source/skeleton.jade
         +asCode('xml').
             &lt;ListBox
                 xmlns:g="clr-namespace:System.Globalization;assembly=mscorlib"
-                ItemsSource="{Binding Source={x:Static g:DateTimeFormatInfo.CurrentInfo}, Path=DayNames, Mode=OneTime}"/>          
+                ItemsSource="{Binding Source={x:Static g:DateTimeFormatInfo.CurrentInfo}, Path=DayNames, Mode=OneTime}"/>
         ul
             li TwoWay : 바인딩 소스는 타깃이 입력 포커스를 잃을 때까지 값이 갱신되지 않는다. 설정을 변경하려면 Binding의 UpdateSourceTrigger를 변경하면 된다.
             p UpdateSourceTrigger : LostFocus(TextBox의 Text를 위한 기본값), PropertyChanged(대부분의 피로퍼티에 기본), Explicit
             li Explicit : 해당 엘리먼트로부터 BindingExpression 인스턴스를 얻고 UpdateSource()를 호출
             +asCode('cs').
                 var bindExp = textBox.GetBindingExpression(TextBox.TextProperty);
-                bindExp.UpdateSource();            
+                bindExp.UpdateSource();
         li DataContext는 자식 요소에까지 적용된다
         li 데이터바인딩으로 사용자 정의 클래스 사용
         ol
@@ -118,7 +118,7 @@ include ../../source/skeleton.jade
                 }
                 public object ConvertBack(object value, Type typeTarget, object param, CultureInfo culture) { }
                 public string MyProperty { get; set; }
-            }          
+            }
         ul
             li 코드에서 컨버터 연결 : binding.Convert = new MyConverter();
             li XAML에서 컨버터 연결 : Resources 절에 객체 생성 후 요소에서 참조
@@ -130,7 +130,7 @@ include ../../source/skeleton.jade
             &lt;StackPanel>
                 &lt;ScrollBar Name="scroll" Maximum="100"/>
                 &lt;Label Content="{Binding ElementName=scroll, Path=Value, Converter={StaticResource conv}, ConverterParameter=2}"/>
-            &lt;/StackPanel>          
+            &lt;/StackPanel>
         li IMultiValueConverter
         p 여러 소스로부터 얻어진 객체들을 하나의 타깃 객체로 변환. IMultiValueConverter 인터페이스 구현
             +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp6/RgbToColorConverter.cs', lan: 'cs' })
@@ -139,9 +139,9 @@ include ../../source/skeleton.jade
     ol
         li Invokes method on main UI thread
         +asCode('cs').
-            await System.Windows.Application.Current.Dispatcher.BeginInvoke(action);          
+            await System.Windows.Application.Current.Dispatcher.BeginInvoke(action);
         +asCode('cs').
-            Dispatcher.Invoke(DispatcherPriority.Normal, new WaitCallback(func), parameter)          
+            Dispatcher.Invoke(DispatcherPriority.Normal, new WaitCallback(func), parameter)
         li
             | DispatcherTimer : 타이머 작업
             +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/WpfApp6/MyClock.cs', lan: 'cs' })

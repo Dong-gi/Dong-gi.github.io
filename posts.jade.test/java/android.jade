@@ -76,7 +76,7 @@ html
                                     new ComponentName(this, MainActivity.class),
                                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                                     PackageManager.DONT_KILL_APP
-                            );              
+                            );
                         li 인텐트 필터링 예
                         pre.
                             \n&lt;activity ~>
@@ -85,7 +85,7 @@ html
                                             &lt;category android:name="android.intent.category.DEFAULT"/>
                                             &lt;data android:mimeType="video/*"/>
                                     &lt;/intent-filter>
-                            &lt;/activity>              
+                            &lt;/activity>
             details
                 summary UI
                 ol
@@ -141,11 +141,11 @@ html
                     button.btn-code(path='Repositories/Android/Project04/app/src/main/res/layout/navigator.xml', lan='xml') navigator xml »
                     button.btn-code(path='Repositories/Android/Project04/app/src/main/res/menu/navigation.xml', lan='xml') navigation xml »
                     br
-                    |             Used icons made by 
+                    |             Used icons made by
                     a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://www.flaticon.com/authors/smashicons') Smashicons
-                    |  from 
+                    |  from
                     a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://www.flaticon.com/') www.flaticon.com
-                    |  is licensed by 
+                    |  is licensed by
                     a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://creativecommons.org/licenses/by/3.0/') CC 3.0 BY
         hr
         details
@@ -186,7 +186,7 @@ html
                     // 왕복 운동의 한쪽만 카운트(양의 가속도)
                     if(projection >= thresh) {
                             lastDetected = System.currentTimeMillis();
-                    }          
+                    }
         hr
         details
             summary Location Manager
@@ -242,7 +242,7 @@ html
                     PowerManager.WakeLock lock = manager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "TAG_FOR_DEBUG");
                     lock.acquire();
                     // business login
-                    lock.release();          
+                    lock.release();
                 li 화면 항상 켜기
                 |         xml : android:keepScreenOn="true" 또는
                 br
@@ -254,7 +254,7 @@ html
                     // 1회 정시 알람 : setExact(int type, long triggerAtMillis, PendingIntent operation) + 오버로딩
                     manager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+5000, pendingIntent);
                     // 반복 알람 : setRepeating(int type, long triggerAtMillis, long intervalMillis, PendingIntent operation)
-                    // Since 19 : 모든 반복 알람은 부정확하다.          
+                    // Since 19 : 모든 반복 알람은 부정확하다.
                 details
                     summary 알람 type
                     ol
@@ -285,7 +285,7 @@ html
                                     runProguard true
                                     proguardFile getDefaultProguardFile('proguard-android.txt')
                             }
-                    }          
+                    }
         hr
         details
             summary 최적화

@@ -24,29 +24,29 @@ html
                                     NEW.status_text = REPLACE(NEW.status_text, 'イナバ', '이나바');
                                     RETURN NEW;
                             END;
-                            $$ LANGUAGE plpgsql;              
+                            $$ LANGUAGE plpgsql;
             details
                 summary Value Expressions
                 ul
                     li 열 참조
                     pre.
                         \n-- correlation은 테이블 이름이나 alias
-                        correlation.columnname            
+                        correlation.columnname
                     li 위치 매개변수 : 함수 정의의 매개변수 위치를 이용해 변수 참조
                     pre.
                         \n-- 문자열을 2번 반복해서 반환하는 함수
-                        CREATE OR REPLACE FUNCTION test(text) RETURNS text AS $body$ SELECT $1 || $1 $body$ LANGUAGE sql;            
+                        CREATE OR REPLACE FUNCTION test(text) RETURNS text AS $body$ SELECT $1 || $1 $body$ LANGUAGE sql;
                     li 배열 요소 참조
                     pre.
                         \n-- subscript는 integer 값을 내는 표현식
                         expression[subscript]
-                        expression[lower_subscript:upper_subscript]            
+                        expression[lower_subscript:upper_subscript]
                     li 필드 선택
                     pre.
                         \n-- 특정 행의 열 참조. expression은 row type 또는 열집합
                         expression.fieldname
                         -- 일반적으로 expression은 괄호로 감싸져야 하지만, 테이블이나 위치 매개변수의 경우 생략할 수 있다.
-                        -- .*로 모든 필드를 얻을 수 있다.            
+                        -- .*로 모든 필드를 얻을 수 있다.
                 details
                     summary 집계 함수 호출
                     ol
@@ -64,7 +64,7 @@ html
                             -- 복수의 인자를 받는 집계 함수에서는 ORDER BY 절이 전체 인자가 끝나고 등장해야 한다.
                             SELECT string_agg(str, ',' ORDER BY str) FROM table;
                             -- 실제 호출 예
-                            SELECT count(*) AS unfiltered, count(*) FILTER (WHERE num &lt; 5) AS filtered FROM generate_series(1,10) AS num;              
+                            SELECT count(*) AS unfiltered, count(*) FILTER (WHERE num &lt; 5) AS filtered FROM generate_series(1,10) AS num;
                         li
                             a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://postgresql.kr/docs/9.6/functions-aggregate.html') 내장 집계 함수 목록
                 details
@@ -76,7 +76,7 @@ html
                             \nfunction_name ([expression [, expression ... ]]) [ FILTER ( WHERE filter_clause ) ] OVER window_name
                             function_name ([expression [, expression ... ]]) [ FILTER ( WHERE filter_clause ) ] OVER ( window_definition )
                             function_name ( * ) [ FILTER ( WHERE filter_clause ) ] OVER window_name
-                            function_name ( * ) [ FILTER ( WHERE filter_clause ) ] OVER ( window_definition )              
+                            function_name ( * ) [ FILTER ( WHERE filter_clause ) ] OVER ( window_definition )
                         li window_name ::= WINDOW 절로 정의된 윈도우 이름.
                         |                 OVER window_name과 OVER (window_name)은 다르다. 후자의 경우 윈도우 정의를 복사하여 적용하며, frame 절을 포함하는 경우 수행되지 않는다.
                         li window_definition ::=
@@ -86,7 +86,7 @@ html
                             [ PARTITION BY expression [, ...] ]
                             -- ORDER BY 절도 마찬가지로 출력-열이나 숫자를 지정할 수 없다.
                             [ ORDER BY expression [ ASC | DESC | USING operator ] [ NULLS { FIRST | LAST } ] [, ...] ]
-                            [ frame_clause ]              
+                            [ frame_clause ]
                         li frame_clause
                         ol
                             | frame_clause는 윈도우 함수가 전체 파티션이 아닌, 현재까지의 파티션을 대상으로 계산을 수행하게 한다.
@@ -117,7 +117,7 @@ html
                         SELECT * FROM tbl WHERE ... ORDER BY a COLLATE "C"; -- 결과 정렬
                         SELECT * FROM tbl WHERE a > 'foo' COLLATE "C";   -- 입력 정렬
                         SELECT * FROM tbl WHERE a COLLATE "C" > 'foo';   -- 입력 정렬
-                        SELECT * FROM tbl WHERE (a > 'foo') COLLATE "C"; -- 에러. 연산 결과인 boolean은 non-collatable            
+                        SELECT * FROM tbl WHERE (a > 'foo') COLLATE "C"; -- 에러. 연산 결과인 boolean은 non-collatable
                     ol
                         | LC_COLLATE를 설정하여 기본 로캐일에 따른 정렬을 수행하게 할 수 있다
                         li 데이터베이스 최초 생성 시 LC_COLLATE 변수 값을 'C'로 설정
@@ -126,7 +126,7 @@ html
                             \ndb_name=# DROP DATABASE [db_name];
                             db_name=# CREATE DATABASE [db_name] LC_COLLATE 'C';
                             -- 데이터베이스는 생성될 때 기본적으로 template1 데이터베이스를 복제하여 생성된다. 하지만 이는 로캐일이 이미 설정되어 충돌하여 에러가 발생할 수 있다.
-                            db_name=# CREATE DATABASE [db_name] TEMPLATE template0 LC_COLLATE 'C';              
+                            db_name=# CREATE DATABASE [db_name] TEMPLATE template0 LC_COLLATE 'C';
                 ul
                     li Scalar Subqueries : 한 행 또는 한 컬럼을 반환하는, 괄호에 감싸인 SELECT 쿼리
                     |             SELECT name, (SELECT max(pop) FROM cities WHERE cities.state = states.name) FROM states;
@@ -140,7 +140,7 @@ html
                         SELECT ARRAY[ARRAY[1,2], ARRAY[3,4]];
                         SELECT ARRAY(SELECT oid FROM pg_proc WHERE proname LIKE 'bytea%');
                         CREATE TABLE arr(f1 int[], f2 int[]);
-                        INSERT INTO arr VALUES (ARRAY[[1,2],[3,4]], ARRAY[[5,6],[7,8]]);            
+                        INSERT INTO arr VALUES (ARRAY[[1,2],[3,4]], ARRAY[[5,6],[7,8]]);
                 details
                     summary 행 생성자
                     pre.
@@ -155,7 +155,7 @@ html
                         CREATE OR REPLACE FUNCTION getf1(myrowtype) RETURNS int AS 'SELECT $1.f1' LANGUAGE SQL;
                         -- Now we need a cast to indicate which function to call:
                         SELECT getf1(ROW(1,2.5,'this is a test')::mytable);
-                        SELECT getf1(CAST(ROW(11,'this is a test',2.5) AS myrowtype));            
+                        SELECT getf1(CAST(ROW(11,'this is a test',2.5) AS myrowtype));
                 ul
                     li Expression Evaluation Rules
                     ol
@@ -174,7 +174,7 @@ html
                                     WHEN $3 THEN UPPER($1 || ' ' || $2)
                                     ELSE LOWER($1 || ' ' || $2)
                             END;
-                    $$ LANGUAGE SQL IMMUTABLE STRICT;          
+                    $$ LANGUAGE SQL IMMUTABLE STRICT;
                 ol
                     li Using Positional Notation
                     |             SELECT concat_lower_or_upper('Hello', 'World');
@@ -193,7 +193,7 @@ html
                     CREATE TABLE products (
                             product_no integer DEFAULT nextval('products_product_no_seq'),
                             ...
-                    );          
+                    );
             details
                 summary Constraints
                 ol
@@ -216,7 +216,7 @@ html
                                 price numeric CHECK (price > 0),
                                 discounted_price numeric,
                                 CHECK (discounted_price > 0 AND price > discounted_price)
-                        );            
+                        );
                     li Not-Null Constraints
                     |             CREATE TABLE products ( product_no integer NOT NULL, price numeric );
                     li Unique Constraints
@@ -225,7 +225,7 @@ html
                         CREATE TABLE products ( product_no integer, price numeric, UNIQUE (product_no) );
                         CREATE TABLE example ( a integer, b integer, c integer, UNIQUE (a, c) );
                         -- 식별자를 부여할 수 있다.
-                        CREATE TABLE products ( product_no integer CONSTRAINT must_be_different UNIQUE, price numeric );            
+                        CREATE TABLE products ( product_no integer CONSTRAINT must_be_different UNIQUE, price numeric );
                     li Primary Keys
                     |             CREATE TABLE example ( a integer, b integer, c integer, PRIMARY KEY (a, c) );
                     li Foreign Keys
@@ -247,7 +247,7 @@ html
                                 order_id integer REFERENCES orders,
                                 quantity integer,
                                 PRIMARY KEY (product_no, order_id)
-                        );            
+                        );
                     li 무결성 제약 : ON DELETE, ON UPDATE에 사용
                     pre.
                         \nCREATE TABLE order_items (
@@ -255,7 +255,7 @@ html
                                 order_id integer REFERENCES orders ON DELETE CASCADE, -- 참조하는 행이 삭제되면 같이 삭제됨.
                                 quantity integer,
                                 PRIMARY KEY (product_no, order_id)
-                        );            
+                        );
             details
                 summary System Columns
                 |         oid : object_id. 테이블을 WITH OIDS로 생성하거나, default with oids이 설정된 경우 생성되는 열. 타입 이름도 oid.
@@ -266,30 +266,30 @@ html
                     li Adding a Column
                     pre.
                         \nALTER TABLE products ADD COLUMN description text;
-                        ALTER TABLE products ADD COLUMN description text CHECK (description != '');            
+                        ALTER TABLE products ADD COLUMN description text CHECK (description != '');
                     li Removing a Column
                     pre.
                         \nALTER TABLE products DROP COLUMN description;
                         -- 외래키로 참조중인 경우, 제약을 명시해줘야 반영된다.
-                        ALTER TABLE products DROP COLUMN description CASCADE;            
+                        ALTER TABLE products DROP COLUMN description CASCADE;
                     li Adding a Constraint
                     pre.
                         \nALTER TABLE products ADD CHECK (name != '');
                         ALTER TABLE products ADD CONSTRAINT some_name UNIQUE (product_no);
                         ALTER TABLE products ADD FOREIGN KEY (product_group_id) REFERENCES product_groups;
-                        ALTER TABLE products ALTER COLUMN product_no SET NOT NULL;            
+                        ALTER TABLE products ALTER COLUMN product_no SET NOT NULL;
                     li Removing a Constraint
                     pre.
                         \nALTER TABLE products DROP CONSTRAINT some_name;
-                        ALTER TABLE products ALTER COLUMN product_no DROP NOT NULL;            
+                        ALTER TABLE products ALTER COLUMN product_no DROP NOT NULL;
                     li Changing a Column's Default Value
                     pre.
                         \nALTER TABLE products ALTER COLUMN price SET DEFAULT 7.77;
-                        ALTER TABLE products ALTER COLUMN price DROP DEFAULT;            
+                        ALTER TABLE products ALTER COLUMN price DROP DEFAULT;
                     li Changing a Column's Data Type
                     pre.
                         \nALTER TABLE products ALTER COLUMN price TYPE numeric(10,2);
-                        -- 기존 값이 새로운 타입으로 암묵적으로 변환된다면 위의 것으로 충분. 복잡한 변환을 명시하려면 USING 절을 추가 사용.            
+                        -- 기존 값이 새로운 타입으로 암묵적으로 변환된다면 위의 것으로 충분. 복잡한 변환을 명시하려면 USING 절을 추가 사용.
                     li Renaming a Column
                     |             ALTER TABLE products RENAME COLUMN product_no TO product_number;
                     li Renaming a Table
@@ -310,7 +310,7 @@ html
                     \n-- 관리자 그룹에 속한 사용자가, 자신과 관련한 행만 접근
                     CREATE TABLE accounts (manager text, company text, contact_email text);
                     ALTER TABLE accounts ENABLE ROW LEVEL SECURITY;
-                    CREATE POLICY account_managers ON accounts TO managers USING (manager = current_user);          
+                    CREATE POLICY account_managers ON accounts TO managers USING (manager = current_user);
             details
                 summary Schemas
                 pre.
@@ -320,7 +320,7 @@ html
                     DROP SCHEMA myschema CASCADE; -- 포함된 내용도 삭제
                     -- 모든 새 데이터베이스는 public이라는 스키마를 갖고 있다. 따라서 아래 두 문장은 서로 같다.
                     CREATE TABLE products ( ... );
-                    CREATE TABLE public.products ( ... );          
+                    CREATE TABLE public.products ( ... );
             details
                 summary Table Partitioning
                 ul
@@ -337,7 +337,7 @@ html
                         \ncreate table api_access_log ( account_id int, access_time datetime, request_uri text ) partition by range(access_time);
                         create table api_access_log_201901 partition of api_access_log for values from ('2019-01-01') to ('2019-02-01');
                         -- 파티션 테이블을 파티셔닝할 수 있다.
-                        create table api_access_log_201901 partition of api_access_log for values from ('2019-01-01') to ('2019-02-01') partition by range(account_id % 100);            
+                        create table api_access_log_201901 partition of api_access_log for values from ('2019-01-01') to ('2019-02-01') partition by range(account_id % 100);
                     li 주의
                     ol
                         li 값 변경으로 인해 행이 한 파티션에서 다른 파티션으로 이동되는 경우, 예약된 UPDATE, DELETE 작업이 실패할 수 있다.
@@ -357,7 +357,7 @@ html
                 pre.
                     \nINSERT INTO users (firstname, lastname) VALUES ('Joe', 'Cool') RETURNING id;
                     UPDATE products SET price = price * 1.10 WHERE price &lt;= 99.99 RETURNING name, price AS new_price;
-                    DELETE FROM products WHERE obsoletion_date = 'today' RETURNING *;          
+                    DELETE FROM products WHERE obsoletion_date = 'today' RETURNING *;
         hr
         details
             summary Queries
@@ -391,19 +391,19 @@ html
                             \n-- Table function : 행 집합을 반환하는 함수.
                             CREATE TABLE foo (fooid int, foosubid int, fooname text);
                             CREATE FUNCTION getfoo(int) RETURNS SETOF foo AS $$ SELECT * FROM foo WHERE fooid = $1; $$ LANGUAGE SQL;
-                            SELECT * FROM getfoo(1) AS t1;              
+                            SELECT * FROM getfoo(1) AS t1;
                         li LATERAL 서브쿼리 : 키워드 좌측의 테이블들을 참조할 수 있다
                         pre.
                             \n-- unknown_log 테이블로부터 각 로그의 첫 30글자, 삽입 시각, 로그 길이를 가져오기
                             SELECT substring(log.log, 1, 30), log.insert_datetime, len FROM unknown_log log LEFT JOIN LATERAL LENGTH(log.log) len ON true;
-                            -- LEFT JOIN ON true == CROSS JOIN. 사실 LATERAL 빼도 잘 동작하며, 실제로 사용할 일이 있을진 모르겠음...              
+                            -- LEFT JOIN ON true == CROSS JOIN. 사실 LATERAL 빼도 잘 동작하며, 실제로 사용할 일이 있을진 모르겠음...
                 details
                     summary WHERE 절
                     ol
                         li GROUPING SETS
                         |                 한 테이블에 대해 같은 조건으로 여러 그룹에 대해 SELECT해야하는 경우, 이를 한 번에 질의할 수 있다.
                         pre.
-                            \nSELECT brand, size, sum(sales) FROM items_sold GROUP BY GROUPING SETS ((brand), (size), ());              
+                            \nSELECT brand, size, sum(sales) FROM items_sold GROUP BY GROUPING SETS ((brand), (size), ());
                         |                 → 브랜드별 판매량, 사이즈별 판매량, 전체 판매량 각각이 한 테이블에 모두 표시된다
                         li GROUP BY CUBE ( a, b )
                         |                 a, b의 파워 셋에 대해 질의한 것과 같다. ((), (a), (b), (a, b))
@@ -413,7 +413,7 @@ html
                         |                 ROLLUP(a, (b, c)) == ((), (a), (a, b, c))
                         li 여러 그루핑 조건을 같이 쓰는 경우, 마지막 조건에 대해 cross product가 이루어진다
                         pre.
-                            \nGROUP BY a, CUBE (b, c), GROUPING SETS (d, e)              
+                            \nGROUP BY a, CUBE (b, c), GROUPING SETS (d, e)
                         |                 → ((a, d), (a, e), (a, b, d), (a, b, e), ..., (a, b, c, e))
                         li GROUP BY 절에서 행 생성자의 이용은 ROW(a, b)를 통해 할 수 있다
             details
@@ -471,7 +471,7 @@ html
                             pre.
                                 \n-- 10~100의 합계.
                                 WITH RECURSIVE t(n) AS ( VALUES (10) UNION SELECT n+1 FROM t WHERE n &lt; 100 )
-                                SELECT sum(n) FROM t;                
+                                SELECT sum(n) FROM t;
                             table
                                 tr
                                     th t
@@ -503,13 +503,13 @@ html
                                     SELECT g.id, g.link, g.data, 1 FROM graph g
                             　UNION ALL
                                     SELECT g.id, g.link, g.data, sg.depth + 1 FROM graph g, search_graph sg WHERE g.id = sg.link
-                            ) SELECT * FROM search_graph;              
+                            ) SELECT * FROM search_graph;
                 details
                     summary Data-Modifying Statements in WITH
                     |             INSERT, UPDATE, DELETE를 WITH과 함께 사용할 수 있다.
                     pre.
                         \nWITH moved_rows AS ( DELETE FROM products WHERE isnert_datetime &lt; '2010-11-01' RETURNING * )
-                        INSERT INTO products_log SELECT * FROM moved_rows;            
+                        INSERT INTO products_log SELECT * FROM moved_rows;
         hr
         details
             summary Data Types
@@ -768,11 +768,11 @@ html
                     pre.
                         \ncreate table test( nums integer[] );
                         create table test( nums integer ARRAY );
-                        create table test( matrix integer[][] );            
+                        create table test( matrix integer[][] );
                     li 배열 표현
                     pre.
                         \ninsert into test values( '{1, 2, 3, 4}'::int[] ); -- insert시엔 ::int[]같은 캐스팅 생략 가능
-                        insert into test values( ARRAY[[1, 2], [3, 4]] ); -- 배열 생성자는 애초에 배열을 반환하므로 캐스팅 불필요            
+                        insert into test values( ARRAY[[1, 2], [3, 4]] ); -- 배열 생성자는 애초에 배열을 반환하므로 캐스팅 불필요
                     li 배열 참조
                     ol
                         li 원소 참조 arr[idx]
@@ -803,7 +803,7 @@ html
                             -- 배열 펼치기
                             WITH arr AS (SELECT '{{"1,1","1,2"},{"2,1","2,2"},{"3,1","3,2"}}'::text[][] AS arr),
                                     dims AS (SELECT arr, s1, s2, arr[s1][s2] FROM arr, generate_subscripts(arr, 1) AS s1, generate_subscripts(arr, 2) AS s2)
-                            SELECT * FROM dims;              
+                            SELECT * FROM dims;
                     li
                         a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://postgresql.kr/docs/current/functions-array.html') functions-array.html
             details
@@ -813,7 +813,7 @@ html
                     li 테이블을 만들면 그와 동일한 이름의 타입이 생성된다.
                     pre.
                         \nCREATE TABLE m_item ( item_id int, name text );
-                        CREATE TABLE t_user_item ( user_id bigint, item m_item, count int );            
+                        CREATE TABLE t_user_item ( user_id bigint, item m_item, count int );
                     li Literal composite value
                     |             포맷 : '( val1 , val2 , ... )'
                     br
@@ -1006,9 +1006,9 @@ html
                     li
                         | split_part(
                         i string
-                        | , 
+                        | ,
                         i delimiter
-                        | , 
+                        | ,
                         i n
                         | )
                     |             구분자로 문자열을 분할하여 n번째 문자열 반환
@@ -1024,25 +1024,25 @@ html
                     li
                         | left(
                         i string
-                        | , 
+                        | ,
                         i n
                         | ), right(
                         i string
-                        | , 
+                        | ,
                         i n
                         | )
                     li
                         | lpad(
                         i string
-                        | , 
+                        | ,
                         i length
-                        |  [, 
+                        |  [,
                         i fill_string
                         | ]), rpad(
                         i string
-                        | , 
+                        | ,
                         i length
-                        |  [, 
+                        |  [,
                         i fill_string
                         | ])
                     |             fill_string 기본값은 스페이스
@@ -1054,7 +1054,7 @@ html
                     li
                         | repeat(
                         i string
-                        | , 
+                        | ,
                         i number
                         | )
                     li
@@ -1087,7 +1087,7 @@ html
                         li
                             | length(
                             i string
-                            |  bytea, 
+                            |  bytea,
                             i encoding
                             | ) : 문자열 문자 수
                 details
@@ -1096,22 +1096,22 @@ html
                         li
                             | overlay(
                             i src_string
-                            |  placing 
+                            |  placing
                             i replacement_string
                             |  from int [for int]
                         |                 src_string i번째 글자부터 n개를 replacement_string로 교체
                         li
                             | replace(
                             i src_string
-                            | , 
+                            | ,
                             i target_string
-                            | , 
+                            | ,
                             i dest_string
                             | )
                         li
                             | position(
                             i substring
-                            |  in 
+                            |  in
                             i string
                             | ) : substring의 위치 반환
                         li
@@ -1121,61 +1121,61 @@ html
                         li
                             | substring(
                             i string
-                            |  from 
+                            |  from
                             i pattern
                             | ) : POSIX 정규표현식
                         li
                             | substring(
                             i string
-                            |  from 
+                            |  from
                             i pattern
-                            |  for 
+                            |  for
                             i escape
                             | ) : SQL 정규표현식
                         li
                             | trim([leading | trailing | both] [
                             i characters
-                            | ] from 
+                            | ] from
                             i string
                             | )
                         li
-                            | trim([leading | trailing | both] [from] 
+                            | trim([leading | trailing | both] [from]
                             i string
-                            |  [, 
+                            |  [,
                             i characters
                             | ])
                         li
                             | btrim(
                             i string
-                            |  [, 
+                            |  [,
                             i characters
                             | ])
                         |                 trim(both ...)를 수행한다. characters의 기본값은 스페이스
                         li
                             | ltrim(
                             i string
-                            | [, 
+                            | [,
                             i characters
                             | ]), rtrim(
                             i string
-                            | [, 
+                            | [,
                             i characters
                             | ])
                         li
                             | regexp_match(
                             i string
-                            | , 
+                            | ,
                             i pattern
-                            | [, 
+                            | [,
                             i flags
                             | ]) Since PostgreSQL 10 : POSIX 정규표현식
                         |                 첫 번째 매칭 문자열 배열 반환. 패턴에 그룹이 없으면 전체 매칭 문자열이, 그룹이 있으면 각 그룹에 매칭되는 부분 문자열들이 배열의 원소가 된다.
                         li
                             | regexp_matches(
                             i string
-                            | , 
+                            | ,
                             i pattern
-                            | [, 
+                            | [,
                             i flags
                             | ]) : POSIX 정규표현식
                         |                 매칭 문자열 배열로 이루어진 행집합을 반환한다. 전체 문자열 매칭을 위해 'g' 플래그를 이용해야 한다.
@@ -1183,43 +1183,43 @@ html
                         li
                             | regexp_split_to_array(
                             i string
-                            | , 
+                            | ,
                             i pattern
-                            | [, 
+                            | [,
                             i flags
                             | ]) : POSIX 정규표현식
                         |                 매칭 문자열을 구분자로 하여 분리한 부분 문자열들로 구성된 배열 반환. 문자열 시작, 끝의 길이 0 매칭 문자열은 무시된다.
                         li
                             | regexp_split_to_table(
                             i string
-                            | , 
+                            | ,
                             i pattern
-                            | [, 
+                            | [,
                             i flags
                             | ]) : POSIX 정규표현식
                         |                 매칭 문자열을 구분자로 하여 분리한 부분 문자열들로 구성된 테이블 반환. 문자열 시작, 끝의 길이 0 매칭 문자열은 무시된다.
                         li
                             | regexp_replace(
                             i string
-                            | , 
+                            | ,
                             i pattern
-                            | , 
+                            | ,
                             i replacement
-                            |  [, 
+                            |  [,
                             i flags
                             | ]) : POSIX 정규표현식
                         li
                             | starts_with(
                             i string
-                            | , 
+                            | ,
                             i prefix
                             | )
                         li
                             | translate(
                             i string
-                            | , 
+                            | ,
                             i from
-                            | , 
+                            | ,
                             i to
                             | )
                         |                 문자열 각 문자에 대하여, from[i]에 일치하는 문자를 to[i]로 교체한다.
@@ -1237,12 +1237,12 @@ html
                         li
                             | convert(
                             i string
-                            |  bytea, 
+                            |  bytea,
                             i src_encoding
-                            | , 
+                            | ,
                             i dest_encoding
                             | )
-                        |                 가능한 빌트인 변환 목록 : 
+                        |                 가능한 빌트인 변환 목록 :
                         a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://postgresql.kr/docs/current/functions-string.html#CONVERSION-NAMES') #CONVERSION-NAMES
                         li
                             | convert_from(
@@ -1255,7 +1255,7 @@ html
                         li
                             | to_ascii(
                             i string
-                            |  [, 
+                            |  [,
                             i encoding
                             | ]
                         |                 LATIN1, LATIN2, LATIN9, WIN1250문자열을 아스키 문자열로 변환
@@ -1266,11 +1266,11 @@ html
                         li
                             | decode(
                             i string
-                            | , 
+                            | ,
                             i format
                             | ), encode(
                             i string
-                            | , 
+                            | ,
                             i format
                             | )
                         |                 지원 format : base64, hex, escape
@@ -1333,9 +1333,9 @@ html
                         li 전체 문자열이 패턴과 일치하는지 여부를 판별한다
                         li Syntax
                         i string
-                        |  [NOT] LIKE 
+                        |  [NOT] LIKE
                         i pattern
-                        |  [ESCAPE 
+                        |  [ESCAPE
                         i escape-character
                         | ]
                         li pattern
@@ -1355,9 +1355,9 @@ html
                         |                 LIKE와 마찬가지로 전체 문자열이 패턴과 일치해야 한다.
                         li Syntax
                         i string
-                        |  [NOT] SIMILAR TO 
+                        |  [NOT] SIMILAR TO
                         i pattern
-                        |  [ESCAPE 
+                        |  [ESCAPE
                         i escape-character
                         | ]
                         li pattern
@@ -1365,7 +1365,7 @@ html
                             li '_'와 '%'는 LIKE와 같은 의미를 지닌다
                             li
                                 i sub1
-                                |  | 
+                                |  |
                                 i sub2
                                 |  : sub1 또는 sub2
                             li * : 0 or more
@@ -1854,11 +1854,11 @@ html
                 summary Conditional Expressions
                 ol
                     li case
-                    |             case when 
+                    |             case when
                     i condition
-                    |  then 
+                    |  then
                     i result
-                    |  [when ...] [else 
+                    |  [when ...] [else
                     i result
                     | ] end
                     li coalesce
@@ -1880,7 +1880,7 @@ html
                     li any, some
                     pre.
                         \nexpression operator any (subquery)
-                        expression operator some (subquery)            
+                        expression operator some (subquery)
                     |             subquery는 하나의 컬럼만 반환해야 한다. expression 판별값이 subquery 결과 중에 하나라도 operator를 만족하면 true
                     li all
                     |             expression operator all (subquery)

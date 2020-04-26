@@ -85,7 +85,7 @@ html
                         | strip() : 앞뒤 문자열 제거. 기본은 공백 제거
                         button.btn-code(path='Repositories/Python/Basic/type_example.py', displayrange='[42,43]', lan='python') 예시 »
                     li
-                        | 정렬 
+                        | 정렬
                         button.btn-code(path='Repositories/Python/Basic/type_example.py', displayrange='[45,50]', lan='python') 예시 »
                     li
                         | replace() : 부분 문자열 대체
@@ -96,18 +96,18 @@ html
                 summary Formatted string literal(aka. f-string) Since 3.6
                 ul
                     li
-                        | f_string ::= ( 
+                        | f_string ::= (
                         i literal_char
-                        |  | "{{" | "}}" | 
+                        |  | "{{" | "}}" |
                         i replacement_field
                         |  )*
                     |             {{, }}는 각각 {, }를 표시하기 위한 리터럴
                     li
-                        | replacement_field ::= "{" 
+                        | replacement_field ::= "{"
                         i f_expression
-                        |  [! 
+                        |  [!
                         i conversion
-                        | ] [: 
+                        | ] [:
                         i format_spec
                         | ] "}"
                     li
@@ -216,9 +216,9 @@ html
             ol
                 li 파이썬의 함수는 일급 객체다.
                 li
-                    | 함수 정의 def 
+                    | 함수 정의 def
                     i func_name
-                    | (): 
+                    | ():
                     button.btn-code(path='Repositories/Python/Basic/syntax.py', displayrange='[91,100]', lan='python') 예시 »
                 |         def func(a, b, *, c = None): # * 뒷부분은 키워드 인자로만 보낼 수 있다
                 li return이 없으면 호출자는 None을 얻는다. None 검사 : is None
@@ -323,7 +323,7 @@ html
             ol
                 li pip : 파이썬 패키지 설치, 제거에 관한 프로그램
                 li
-                    | 기본적으로 
+                    | 기본적으로
                     a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://pypi.org/') https://pypi.org/
                     | 의 패키지들이 대상이다.
                 li pip install requests
@@ -345,12 +345,12 @@ html
                 pre.
                     \nif __debug__:
                             if not expression:
-                                    raise AssertionError          
+                                    raise AssertionError
                 li assert EXPRESSION1, EXPRESSION2 ::=
                 pre.
                     \nif __debug__:
                             if not expression1:
-                                    raise AssertionError(expression2)          
+                                    raise AssertionError(expression2)
         hr
         details
             summary weakref
@@ -378,7 +378,7 @@ html
             ol
                 li 새로운 할당 연산 := Since 3.8
                 pre.
-                    \nif (x := True):          
+                    \nif (x := True):
                 | 처럼 할당 후 사용이 가능해졌다
                 li 키워드 매개변수 비허용 / Since 3.8
                 |         def func(a, b, /, c, d, *, e, f): # a, b는 키워드 인자로 보낼 수 없다
