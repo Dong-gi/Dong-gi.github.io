@@ -1,4 +1,5 @@
 ﻿using EventGenerator.Model;
+using EventGenerator.Model.Dto;
 using EventGenerator.Utility;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,5 +53,22 @@ namespace EventGenerator.Dao
             => SelectAll().From(table).Where().Between(column, from, to);
 
         public virtual IEnumerable<T> Query<T>(DBServer server, bool print = false) => Connection.Query<T>(server, QueryString.Append(';').ToString(), print: print);
+
+        public static IEnumerable<PostgresTables> GetPostgresTables(DBServer server, DB db)
+            => new Connection(db).Query<PostgresTables>(server, "select * from information_schema.tables");
+
+        public static IEnumerable<PostgresColumns> GetPostgresColumns(DBServer server, DB db, string tableName)
+            => new Connection(db).Query<PostgresColumns>(server, $"select * from information_schema.columns where table_name = '{tableName}'");
+
+        public static IEnumerable<string> GetPostgresPrimaryKeys(DBServer server, DB db, string tableName)
+            => new Connection(db).Query<string>(server, $@"SELECT pg_attribute.attname as column FROM pg_index, pg_class, pg_attribute, pg_namespace 
+WHERE 
+  pg_class.oid = '{tableName}'::regclass AND 
+  indrelid = pg_class.oid AND 
+  nspname = 'public' AND 
+  pg_class.relnamespace = pg_namespace.oid AND 
+  pg_attribute.attrelid = pg_class.oid AND 
+  pg_attribute.attnum = any(pg_index.indkey)
+ AND indisprimary");
     }
 }
