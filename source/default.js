@@ -25,15 +25,15 @@ const posts = { list: [
 { file: "/posts/db/concept.html",                       category: "DB",                    title: "DB 기초" },
 { file: "/posts/db/mongodb.html",                       category: "DB",                    title: "MongoDB" },
 { file: "/posts/db/mysql.html",                         category: "DB",                    title: "MySQL" },
+{ file: "/posts/db/psql_to_sqlite.html",                category: "DB",                    title: "PostgreSQL → SQLite3 마이그레이션" },
+{ file: "/posts/db/psql_admin.html",                    category: "DB",                    title: "PostgreSQL 서버 관리" },
+{ file: "/posts/db/psql_programming.html",              category: "DB",                    title: "PostgreSQL 서버 프로그래밍" },
+{ file: "/posts/db/psql_tutorial.html",                 category: "DB",                    title: "PostgreSQL 시작하기" },
+{ file: "/posts/db/psql_sql.html",                      category: "DB",                    title: "PostgreSQL SQL 언어" },
 { file: "/posts/dotnet/csharp_basic.html",              category: "Programming/.NET",      title: "C# 기초" },
 { file: "/posts/dotnet/csharp_library.html",            category: "Programming/.NET",      title: "C# 라이브러리" },
 { file: "/posts/dotnet/wpf_basic.html",                 category: "Programming/.NET",      title: "WPF 기초" },
 /* ↓ 정리 안 됨
-{ file: "/posts/db/psql_to_sqlite.html", category: "Programming/DB", title: "PostgreSQL → SQLite3 마이그레이션" },
-{ file: "/posts/db/psql_admin.html", category: "Programming/DB", title: "PostgreSQL 서버 관리" },
-{ file: "/posts/db/psql_programming.html", category: "Programming/DB", title: "PostgreSQL 서버 프로그래밍" },
-{ file: "/posts/db/psql_tutorial.html", category: "Programming/DB", title: "PostgreSQL 시작하기" },
-{ file: "/posts/db/psql_sql.html", category: "Programming/DB", title: "PostgreSQL SQL 언어" },
 
 { file: "/posts/front/css.html", category: "Programming/Front", title: "CSS" },
 { file: "/posts/front/html.html", category: "Programming/Front", title: "HTML" },
@@ -204,16 +204,19 @@ function convertAsCodeDiv(divs) {
     }
 }
 
+var isNarrow = false;
 function updateSidebar() {
-    if (window.innerWidth > 600)
-        openSidebar();
-    else
+    isNarrow = window.innerWidth <= 600;
+    if (isNarrow)
         closeSidebar();
+    else
+        openSidebar();
     document.getElementById('sidebar').style.width = '333px';
     new FileList('/source/filelist.js', '#file-list');
 }
 
 function openSidebar() {
+    isNarrow = window.innerWidth <= 600;
     document.getElementById('main').style.marginLeft = '333px';
     document.getElementById('sidebar').style.display = 'block';
 }
@@ -296,7 +299,6 @@ function updateMarkerList() {
         type: 'text/plain;charset=utf-8;'
     }));
     new FileList(url, '#marker-list', (_, markerId) => {
-        let isNarrow = window.innerWidth <= 600;
         if (isNarrow)
             closeSidebar();
         let target = document.querySelector(`.marker[marker-id=${markerId}]`);
@@ -317,7 +319,16 @@ function updateMarkerList() {
         })(target), isNarrow? 444 : 0);
     }, true, (_, markerId) => {
         let marker = document.querySelector(`.marker[marker-id=${markerId}]`);
-        return Donggi.getElementFromText(`<li>${getMarkerName(marker)}</li>`);
+        let li = Donggi.getElementFromText(`<li>${getMarkerName(marker)}</li>`);
+        
+        let main = document.querySelector('div#contents');
+        let level = 1;
+        while (marker.parentElement != main) {
+            marker = marker.parentElement;
+            level += 1;
+        }
+        li.classList.add(`margin-left-${level}`);
+        return li;
     }, false);
 }
 

@@ -20,267 +20,269 @@ include ../../source/skeleton.jade
         li AVL 트리 : 이진 검색 트리 임의 노드에서 좌우 서브 트리 높이 차이 &lt;= 1을 만족
         li 힙 : 상하 노드 사이에 분명한 대소관계가 존재. 우선순위 큐의 구현에 적합
 
-    h2.marker AVL 트리의 회전
-    ol
-        li 트리에 대한 삽입/삭제 연산에 의해 좌우 서브 트리 높이 차이가 2가 될 수 있다.
-        li 인접한 3개 노드의 위치 변경(회전)을 통해 이를 해소할 수 있다.
-        li 회전의 기준이 되는 세 노드 x, y, z는 다음과 같다.
-        ul
-            li z는 삽입/삭제된 위치로부터 root로 가는 경로상 처음으로 존재하는 불균형 노드
-            li y는 z의 자식 중에서 가장 큰 높이를 갖는 노드
-            li x는 y의 자식 중에서 가장 큰 높이를 갖는 노드
-        li x ← y ← z가 서로 같은 방향일 때는 한 번의 회전으로 균형을 되찾을 수 있다
-        li x ← y ← z가 서로 다른 방향일 때는 두 번의 회전으로 균형을 되찾을 수 있다
-    table.no-sort
-        tr
-            th(colspan='12') LL Rotation : this, this.left, this.left.left가 서로 위치 변경
-        tr
-            td(colspan='4')
-                pre
-                    |       +-+
-                    |       |5|
-                    |      +-----+
-                    |    +-+     +--+
-                    |    |3|     |11|
-                    |   +--+    +---+
-                    | +-+     +-+
-                    | |1|     |9|
-                    | +-+    +---+
-                    |      +-+   +--+
-                    |      |7|   |10|
-                    |      +-+   +--+
-            td(colspan='4')
-                pre
-                    |       +-+
-                    |       |5|
-                    |      +----+
-                    |    +-+    +-+
-                    |    |3|    |9|
-                    |   +--+   +---+
-                    | +-+    +-+   +--+
-                    | |1|    |7|   |11|
-                    | +-+    +-+   +--+
-                    |            +--+
-                    |            |10|
-                    |            +--+
-            td(colspan='4')
-                +asCode('python')
-                    | def rotate_ll():
-                    |     parent.change(this, this.left)
-                    |     left.parent, parent = this.parent, left
-                    |     left.right, left = this, left.right
-        tr
-            th(colspan='12') RR Rotation : this, this.right, this.right.right가 서로 위치 변경
-        tr
-            td(colspan='4')
-                pre
-                    |       +-+
-                    |       |5|
-                    |      +---+
-                    |    +-+   +-+
-                    |    |3|   |7|
-                    |   +--+   +--+
-                    | +-+         +-+
-                    | |1|         |9|
-                    | +-+        +---+
-                    |          +-+   +--+
-                    |          |8|   |11|
-                    |          +-+   +--+
-            td(colspan='4')
-                pre
-                    |       +-+
-                    |       |5|
-                    |      +----+
-                    |    +-+    +-+
-                    |    |3|    |9|
-                    |   +--+   +---+
-                    | +-+    +-+   +--+
-                    | |1|    |7|   |11|
-                    | +-+    +-+   +--+
-                    |          +-+
-                    |          |8|
-                    |          +-+
-            td(colspan='4')
-                +asCode('python')
-                    | def rotate_rr():
-                    |     parent.change(this, this.right)
-                    |     right.parent, parent = this.parent, right
-                    |     right.left, right = this, right.left
-        tr
-            th(colspan='12') LR Rotation : this, this.left, this.left.right가 서로 위치 변경
-        tr
-            td(colspan='3')
-                pre
-                    |      +-+
-                    |      |9|
-                    |     +---+
-                    |   +-+   +--+
-                    |   |3|   |11|
-                    |   +-+   +--+
-                    | +-+ +-+
-                    | |1| |5|
-                    | +-+ +-+
-                    |       +-+
-                    |       |7|
-                    |       +-+
-            td(colspan='3')
-                pre
-                    |        +-+
-                    |        |9|
-                    |       +---+
-                    |     +-+   +--+
-                    |     |5|   |11|
-                    |     +-+   +--+
-                    |   +-+ +-+
-                    |   |3| |7|
-                    |   +-+ +-+
-                    | +-+
-                    | |1|
-                    | +-+
-            td(colspan='3')
-                pre
-                    |      +-+
-                    |      |5|
-                    |     +---+
-                    |   +-+   +-+
-                    |   |3|   |9|
-                    |   +-+   +--+
-                    | +-+   +-+  +--+
-                    | |1|   |7|  |11|
-                    | +-+   +-+  +--+
-            td(colspan='3')
-                +asCode('python')
-                    | def rotate_lr():
-                    |     left.rotate_rr()
-                    |     rotate_ll()
-        tr
-            th(colspan='12') RL Rotation : this, this.right, this.right.left가 서로 위치 변경
-        tr
-            td(colspan='3')
-                pre
-                    |    +-+
-                    |    |5|
-                    |   +-----+
-                    | +-+     +--+
-                    | |3|     |11|
-                    | +-+    +----+
-                    |      +-+    +--+
-                    |      |9|    |12|
-                    |     +--+    +--+
-                    |   +-+
-                    |   |7|
-                    |   +-+
-            td(colspan='3')
-                pre
-                    |    +-+
-                    |    |5|
-                    |   +----+
-                    | +-+    +-+
-                    | |3|    |9|
-                    | +-+   +---+
-                    |     +-+   +--+
-                    |     |7|   |11|
-                    |     +-+   ----+
-                    |               +--+
-                    |               |12|
-                    |               +--+
-            td(colspan='3')
-                pre
-                    |        +-+
-                    |        |9|
-                    |      +----+
-                    |    +-+    +--+
-                    |    |5|    |11|
-                    |   +---+   ----+
-                    | +-+   +-+     +--+
-                    | |3|   |7|     |12|
-                    | +-+   +-+     +--+
-            td(colspan='3')
-                +asCode('python')
-                   | def rotate_rl():
-                   |     right.rotate_ll()
-                   |     rotate_rr()
+    div
+        h2.marker AVL 트리의 회전
+        ol
+            li 트리에 대한 삽입/삭제 연산에 의해 좌우 서브 트리 높이 차이가 2가 될 수 있다.
+            li 인접한 3개 노드의 위치 변경(회전)을 통해 이를 해소할 수 있다.
+            li 회전의 기준이 되는 세 노드 x, y, z는 다음과 같다.
+            ul
+                li z는 삽입/삭제된 위치로부터 root로 가는 경로상 처음으로 존재하는 불균형 노드
+                li y는 z의 자식 중에서 가장 큰 높이를 갖는 노드
+                li x는 y의 자식 중에서 가장 큰 높이를 갖는 노드
+            li x ← y ← z가 서로 같은 방향일 때는 한 번의 회전으로 균형을 되찾을 수 있다
+            li x ← y ← z가 서로 다른 방향일 때는 두 번의 회전으로 균형을 되찾을 수 있다
+        table.no-sort
+            tr
+                th(colspan='12') LL Rotation : this, this.left, this.left.left가 서로 위치 변경
+            tr
+                td(colspan='4')
+                    pre
+                        |       +-+
+                        |       |5|
+                        |      +-----+
+                        |    +-+     +--+
+                        |    |3|     |11|
+                        |   +--+    +---+
+                        | +-+     +-+
+                        | |1|     |9|
+                        | +-+    +---+
+                        |      +-+   +--+
+                        |      |7|   |10|
+                        |      +-+   +--+
+                td(colspan='4')
+                    pre
+                        |       +-+
+                        |       |5|
+                        |      +----+
+                        |    +-+    +-+
+                        |    |3|    |9|
+                        |   +--+   +---+
+                        | +-+    +-+   +--+
+                        | |1|    |7|   |11|
+                        | +-+    +-+   +--+
+                        |            +--+
+                        |            |10|
+                        |            +--+
+                td(colspan='4')
+                    +asCode('python')
+                        | def rotate_ll():
+                        |     parent.change(this, this.left)
+                        |     left.parent, parent = this.parent, left
+                        |     left.right, left = this, left.right
+            tr
+                th(colspan='12') RR Rotation : this, this.right, this.right.right가 서로 위치 변경
+            tr
+                td(colspan='4')
+                    pre
+                        |       +-+
+                        |       |5|
+                        |      +---+
+                        |    +-+   +-+
+                        |    |3|   |7|
+                        |   +--+   +--+
+                        | +-+         +-+
+                        | |1|         |9|
+                        | +-+        +---+
+                        |          +-+   +--+
+                        |          |8|   |11|
+                        |          +-+   +--+
+                td(colspan='4')
+                    pre
+                        |       +-+
+                        |       |5|
+                        |      +----+
+                        |    +-+    +-+
+                        |    |3|    |9|
+                        |   +--+   +---+
+                        | +-+    +-+   +--+
+                        | |1|    |7|   |11|
+                        | +-+    +-+   +--+
+                        |          +-+
+                        |          |8|
+                        |          +-+
+                td(colspan='4')
+                    +asCode('python')
+                        | def rotate_rr():
+                        |     parent.change(this, this.right)
+                        |     right.parent, parent = this.parent, right
+                        |     right.left, right = this, right.left
+            tr
+                th(colspan='12') LR Rotation : this, this.left, this.left.right가 서로 위치 변경
+            tr
+                td(colspan='3')
+                    pre
+                        |      +-+
+                        |      |9|
+                        |     +---+
+                        |   +-+   +--+
+                        |   |3|   |11|
+                        |   +-+   +--+
+                        | +-+ +-+
+                        | |1| |5|
+                        | +-+ +-+
+                        |       +-+
+                        |       |7|
+                        |       +-+
+                td(colspan='3')
+                    pre
+                        |        +-+
+                        |        |9|
+                        |       +---+
+                        |     +-+   +--+
+                        |     |5|   |11|
+                        |     +-+   +--+
+                        |   +-+ +-+
+                        |   |3| |7|
+                        |   +-+ +-+
+                        | +-+
+                        | |1|
+                        | +-+
+                td(colspan='3')
+                    pre
+                        |      +-+
+                        |      |5|
+                        |     +---+
+                        |   +-+   +-+
+                        |   |3|   |9|
+                        |   +-+   +--+
+                        | +-+   +-+  +--+
+                        | |1|   |7|  |11|
+                        | +-+   +-+  +--+
+                td(colspan='3')
+                    +asCode('python')
+                        | def rotate_lr():
+                        |     left.rotate_rr()
+                        |     rotate_ll()
+            tr
+                th(colspan='12') RL Rotation : this, this.right, this.right.left가 서로 위치 변경
+            tr
+                td(colspan='3')
+                    pre
+                        |    +-+
+                        |    |5|
+                        |   +-----+
+                        | +-+     +--+
+                        | |3|     |11|
+                        | +-+    +----+
+                        |      +-+    +--+
+                        |      |9|    |12|
+                        |     +--+    +--+
+                        |   +-+
+                        |   |7|
+                        |   +-+
+                td(colspan='3')
+                    pre
+                        |    +-+
+                        |    |5|
+                        |   +----+
+                        | +-+    +-+
+                        | |3|    |9|
+                        | +-+   +---+
+                        |     +-+   +--+
+                        |     |7|   |11|
+                        |     +-+   ----+
+                        |               +--+
+                        |               |12|
+                        |               +--+
+                td(colspan='3')
+                    pre
+                        |        +-+
+                        |        |9|
+                        |      +----+
+                        |    +-+    +--+
+                        |    |5|    |11|
+                        |   +---+   ----+
+                        | +-+   +-+     +--+
+                        | |3|   |7|     |12|
+                        | +-+   +-+     +--+
+                td(colspan='3')
+                    +asCode('python')
+                       | def rotate_rl():
+                       |     right.rotate_ll()
+                       |     rotate_rr()
 
     h1.marker 자료구조 : 그래프
     ul
         li G : graph, V : vertex, E : edge
         li 모든 간선의 가중치가 동일한 그래프, 또는 사이클이 없는 그래프(트리)의 탐색은 너비 우선 탐색, 깊이 우선 탐색 2개로 적절히 해결된다. 동일한 정점을 2번 조사할 필요도 없다
-
-    h2.marker 최단경로 찾기 : 다익스트라
-    ol
-        li 시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대. 간선의 가중치에 음수가 있는 경우 적용 불가
-        li 정의
-        ul
-            li W(P) := 시작점으로부터 정점 P까지 도달하는 가중치의 현재 최소합.
-            li W(P1, P2) := 간선 P1→P2의 가중치
-            li Working set := 최단경로 알고리즘의 가중치 업데이트 대상이 되는 정점 집합. 최초값은 시작점으로부터 간선 하나만 건너 도달할 수 있는 모든 정점
-
-        li Working set에 속한 정점 P중, W(P)가 가장 낮은 P에 대해 다음을 수행한다
+    div
+        h2.marker 최단경로 찾기 : 다익스트라
         ol
-            li Working set에서 P 제거
-            li P에서 간선 하나만 건너 도달할 수 있는 모든 정점 P'에 대해, W(P') = min(W(P'), W(P) + W(P, P'))를 수행하고, W(P')값이 변경된 경우 P'을 Working set에 추가한다.
-            li 만약 P'이 목표 지점이라면, 최단 경로를 찾았으므로 추가 작업을 중지한다.
+            li 시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대. 간선의 가중치에 음수가 있는 경우 적용 불가
+            li 정의
+            ul
+                li W(P) := 시작점으로부터 정점 P까지 도달하는 가중치의 현재 최소합.
+                li W(P1, P2) := 간선 P1→P2의 가중치
+                li Working set := 최단경로 알고리즘의 가중치 업데이트 대상이 되는 정점 집합. 최초값은 시작점으로부터 간선 하나만 건너 도달할 수 있는 모든 정점
 
-    h2.marker 최단경로 찾기 : A*
-    ul
-        li 도착점의 추정 가중치 0부터 시작하여, 도착점으로부터 먼 정점일수록 높아지는 추정 가중치를 갖고 시작한다.
-        li 다익스트라 알고리즘을 사용하되, Working set에서 작업 대상이 되는 원소를 찾을 때, 추정 가중치를 합하여 구한다는 게 차이점.
+            li Working set에 속한 정점 P중, W(P)가 가장 낮은 P에 대해 다음을 수행한다
+            ol
+                li Working set에서 P 제거
+                li P에서 간선 하나만 건너 도달할 수 있는 모든 정점 P'에 대해, W(P') = min(W(P'), W(P) + W(P, P'))를 수행하고, W(P')값이 변경된 경우 P'을 Working set에 추가한다.
+                li 만약 P'이 목표 지점이라면, 최단 경로를 찾았으므로 추가 작업을 중지한다.
 
-    h2.marker 최단경로 찾기 : 벨만-포드
-    ul
-        li 음수 가중치의 간선이 존재하는 경우, Working set은 정점이 아닌 간선을 대상으로 하고, 매 업데이트마다 모든 간선을 검사한다
-        li 다익스트라 알고리즘과 마찬가지로 시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대
-        li 그래프 임의의 정점 P에 대한 W(P)의 변동이 없을 때까지 아래를 반복한다.
-        p 그래프 모든 간선 P→P'에 대해, W(P') = min(W(P'), W(P) + W(P, P'))
-        li |V|-1번의 업데이트로 모든 정점까지의 모든 최단경로가 구해지며, |V|번째의 업데이트로 갱신이 일어난 경우는 음수 가중치의 사이클이 존재하는 것이므로 최단 경로는 존재하지 않는다
+        h2.marker 최단경로 찾기 : A*
+        ul
+            li 도착점의 추정 가중치 0부터 시작하여, 도착점으로부터 먼 정점일수록 높아지는 추정 가중치를 갖고 시작한다.
+            li 다익스트라 알고리즘을 사용하되, Working set에서 작업 대상이 되는 원소를 찾을 때, 추정 가중치를 합하여 구한다는 게 차이점.
 
-    h2.marker 무방향 그래프의 최소신장 트리 : 크루스칼
-    ol
-        li 최초 |V|개의 집합을 생성하고, 그래프 각 정점이 하나씩 포함된다
-        li 집합이 하나만 남을 때까지 다음을 반복한다
-        li 최소 가중치 간선을 선택 → 두 정점이 서로 다른 집합에 포함된 경우 → 두 집합을 합치고 간선은 결과에 추가
-        p 간선의 두 정점이 같은 집합에 포함된 경우 간선은 버려진다
+        h2.marker 최단경로 찾기 : 벨만-포드
+        ul
+            li 음수 가중치의 간선이 존재하는 경우, Working set은 정점이 아닌 간선을 대상으로 하고, 매 업데이트마다 모든 간선을 검사한다
+            li 다익스트라 알고리즘과 마찬가지로 시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대
+            li 그래프 임의의 정점 P에 대한 W(P)의 변동이 없을 때까지 아래를 반복한다.
+            p 그래프 모든 간선 P→P'에 대해, W(P') = min(W(P'), W(P) + W(P, P'))
+            li |V|-1번의 업데이트로 모든 정점까지의 모든 최단경로가 구해지며, |V|번째의 업데이트로 갱신이 일어난 경우는 음수 가중치의 사이클이 존재하는 것이므로 최단 경로는 존재하지 않는다
+
+        h2.marker 무방향 그래프의 최소신장 트리 : 크루스칼
+        ol
+            li 최초 |V|개의 집합을 생성하고, 그래프 각 정점이 하나씩 포함된다
+            li 집합이 하나만 남을 때까지 다음을 반복한다
+            li 최소 가중치 간선을 선택 → 두 정점이 서로 다른 집합에 포함된 경우 → 두 집합을 합치고 간선은 결과에 추가
+            p 간선의 두 정점이 같은 집합에 포함된 경우 간선은 버려진다
 
     h1.marker 정렬
     p Stability : 정렬 키가 동일한 두 요소의 순서가 정렬 후에도 유지되는 경우
-    h2.marker Bubble Sort
-    +asCode('python')
-        | is_go_next = True
-        | while is_go_next:
-        |     is_go_next = False
-        |     for i in range(0, len(l)-1):
-        |         if l[i] > l[i+1]:
-        |             l[i], l[i+1] = l[i+1], l[i]
-        |             is_go_next = True
-    h2.marker Selection Sort
-    +asCode('python')
-        | for i in range(0, len(l)-1):
-        |     x = l.index(min(l[i:]))
-        |     l[i], l[x] = l[x], l[i]
-    h2.marker Insertion Sort
-    +asCode('python')
-        | for i in range(1, len(l)):
-        |     x = l.pop(i)
-        |     for j in range(0, i):
-        |         if l[j] > x:
-        |             l.insert(j, x)
-        |             break
-        |     else:
-        |     l.insert(i, x)
-    h2.marker Merge Sort
-    p 버블 소트 1단계 실행 → 부분적으로 정렬된 리스트들을 마지막 1개가 될 때까지 병합
-    h2.marker Heap Sort
-    p 힙에 모두 넣고 순서대로 빼내면 정렬된다
-    h2.marker Quick Sort
-    p 크기가 3 이상인 부분 리스트에 대하여, pivot을 하나 선택하여 [&lt;pivot], [=pivot], [&gt;pivot]으로 분할하는 것을 반복
-    h2.marker Counting Sort
-    +asCode('python')
-        | d = dict()
-        | for x in l:
-        |     if x in d:
-        |         d[x] += 1
-        |     else:
-        |         d[x] = 1
+    div
+        h2.marker Bubble Sort
+        +asCode('python')
+            | is_go_next = True
+            | while is_go_next:
+            |     is_go_next = False
+            |     for i in range(0, len(l)-1):
+            |         if l[i] > l[i+1]:
+            |             l[i], l[i+1] = l[i+1], l[i]
+            |             is_go_next = True
+        h2.marker Selection Sort
+        +asCode('python')
+            | for i in range(0, len(l)-1):
+            |     x = l.index(min(l[i:]))
+            |     l[i], l[x] = l[x], l[i]
+        h2.marker Insertion Sort
+        +asCode('python')
+            | for i in range(1, len(l)):
+            |     x = l.pop(i)
+            |     for j in range(0, i):
+            |         if l[j] > x:
+            |             l.insert(j, x)
+            |             break
+            |     else:
+            |     l.insert(i, x)
+        h2.marker Merge Sort
+        p 버블 소트 1단계 실행 → 부분적으로 정렬된 리스트들을 마지막 1개가 될 때까지 병합
+        h2.marker Heap Sort
+        p 힙에 모두 넣고 순서대로 빼내면 정렬된다
+        h2.marker Quick Sort
+        p 크기가 3 이상인 부분 리스트에 대하여, pivot을 하나 선택하여 [&lt;pivot], [=pivot], [&gt;pivot]으로 분할하는 것을 반복
+        h2.marker Counting Sort
+        +asCode('python')
+            | d = dict()
+            | for x in l:
+            |     if x in d:
+            |         d[x] += 1
+            |     else:
+            |         d[x] = 1
 
     h1.marker DP; Dynamic Programming
     p 동적계획법 := 점화식(상향식)/재귀(하향식) + 캐싱

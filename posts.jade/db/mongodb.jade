@@ -23,7 +23,7 @@ include ../../source/skeleton.jade
         li 최대 쿼리 결과 크기는 BSON 문서가 허용하는 16MB
         p 이를 초과하는 문서가 필요하다면 GridFS API를 이용. mongofiles 명령 또는 드라이버 참고.
 
-    h2.marker BSON Specification
+    h1.marker BSON Specification
     ol
         +asA('http://bsonspec.org/spec.html')
         li Basic Types
@@ -288,7 +288,7 @@ include ../../source/skeleton.jade
                 td Code w/ scope
                 td
 
-    h2.marker mongo Shell
+    h1.marker mongo Shell
     ul
         li mongo
         p 기본 포트 27017
@@ -318,221 +318,222 @@ include ../../source/skeleton.jade
         li
             | Aggregation variables
             +asA('https://docs.mongodb.com/manual/reference/aggregation-variables/')
+    div
+        h2.marker help
+        table.no-sort
+            tr
+                td db.help()
+                td db 메서드 목록
+            tr
+                td db.mycoll.help()
+                td collection 메서드 목록
+            tr
+                td sh.help()
+                td sharding 메서드 목록
+            tr
+                td rs.help()
+                td replica set 메서드 목록
+            +tds('', '')
+            tr
+                td help admin
+                td 파일시스템 접근, 프로세스 실행 명령 목록
+            tr
+                td: span.hover-content(template-id='template-mongodb-help-connect') help connect
+                td
+            tr
+                td: span.hover-content(template-id='template-mongodb-help-misc') help misc
+                td
+            tr
+                td help mr
+                td mapreduce
+            +tds('', '')
+            tr
+                td show dbs // db.adminCommand('listDatabases')
+                td DB 목록
+            tr
+                td show collections // db.getCollectionNames()
+                td 현재 DB의 컬렉션 목록
+            tr
+                td show users // db.getUsers()
+                td 현재 DB의 유저 목록
+            tr
+                td show logs // db.adminCommand({'getLog': '*'})
+                td 로거 목록
+            tr
+                td show log [name] // db.adminCommand({'getLog': 'name'})
+                td 로그 출력. name 기본값은 'global'
+            +tds('', '')
+            tr
+                td db
+                td 현재 사용 중인 DB
+            tr
+                td use dbName // db.getSiblingDB('dbName')
+                td DB 선택
+            tr
+                td it // cursor = db.collName.find()
+                td 직전 find() 이터레이터 참조
+            tr
+                td DBQuery.shellBatchSize = x
+                td 한번에 표시할 항목 수 변경
+            tr
+                td print()
+                td 콘솔 출력
+            tr
+                td printjson()
+                td print(tojson(x))
+            tr
+                td edit functionName
+                td 함수 편집
+            tr
+                td exit
+                td
+    
+        h2.marker db.mycoll.find().help()
+        div
+            h3.marker find([object predicate][, object projection])
+            +asCode('javascript') let coll = db.myCollection;
+            table.no-sort
+                tr
+                    td coll.find()
+                    td select *
+                tr
+                    td coll.find({lv: 1})
+                    td select * where lv = 1
+                tr
+                    td coll.find({item: null})
+                    td item 속성이 null이거나 없으면 해당
+                tr
+                    td coll.find({item: {$type: 10}})
+                    td item 속성이 BSON 타입 10(Null)이면 해당
+                tr
+                    td coll.find({item: {$type: "array"}})
+                    td item 속성이 배열이면 해당
+                tr
+                    td coll.find({item: {$exists: false}})
+                    td item 속성이 없으면 해당
+                tr
+                    td coll.find({leaderCard.lv: 1})
+                    td select * where leaderCard.lv = 1
+                tr
+                    td coll.find({tags: ["red", "blank"]})
+                    td 길이 및 원소 순서가 정확히 일치해야 함
+                tr
+                    td coll.find({tags: {$all: ["red", "blank"]}})
+                    td 'red', 'blank' 두 개 모두 포함하기만 하면 됨
+                tr
+                    td coll.find({arr: {$elemMatch: {$gt: 22, $lt: 30}}})
+                    td 배열 원소 하나라도 모든 조건을 충족하면 됨
+                tr
+                    td coll.find({"arr.0": {$gt: 22}})
+                    td arr[0]이 모든 조건을 충족하면 됨
+                tr
+                    td coll.find({arr: {$size: 3}})
+                    td arr.length == 3
+                tr
+                    td coll.find({lv: {$gt: 1}})
+                    td select * where lv > 1
+                tr
+                    td coll.find({$or: [{status: "A"}, {qty: {$lt: 30}}]})
+                    td select * where status = 'A' or qty &lt; 30
+                tr
+                    td coll.find({status: {$in: ["A", "D"]}})
+                    td select * where status in ('A', 'D')
+                tr
+                    td coll.find({}, {_id: 0})
+                    td Projection; _id 속성은 제외
+                tr
+                    td coll.find({}, {'leaderCard.lv': 1})
+                    td Projection; 특정 내부 속성 포함
+                tr
+                    td coll.find().sort({lv: 1})
+                    td 1(오름차순), -1(내림차순)
+                tr
+                    td coll.find().limit(10)
+                    td
+                tr
+                    td coll.findOne()
+                    td == limit(1)
+                tr
+                    td coll.find().count()
+                    td limit(), skip() 무시
+                tr
+                    td coll.find().size()
+                    td limit(), skip() 적용
+        
+            h3.marker Cursor methods
+            p db.mycoll.find()는 이터레이터(Cursor)를 반환한다. 단, mongo 쉘에서 var 변수에 할당하지 않은 경우 자동으로 결과를 출력하고 끝냄에 유의.
+            table.no-sort
+                tr
+                    td cursor.forEach()
+                    td
+                tr
+                    td cursor.toArray()
+                    td 커서를 모두 순회하고 메모리에 올린다.
+                tr
+                    td cursor.noCursorTimeout()
+                    td 이 경우 커서를 모두 순회하거나, 수동으로 close()를 호출해야만 한다.
+    
+        h2.marker db.mycoll.help()
+        +asCode('javascript') let coll = db.myCollection;
+        table.no-sort
+            tr
+                td coll.insertOne() Since 3.2
+                td 1개 추가
+            tr
+                td coll.insertMany() Since 3.2
+                td 배열 요소 전부 추가
+            tr
+                td coll.insert()
+                td document 하나 또는 배열
+            tr
+                td coll.updateOne(filter, update, options) Since 3.2
+                td
+                    ul
+                        li 1개 변경
+                        +asCode('javascript').
+                            updateOne({_id: 10}, {$set: {calc: 5}}) // update set calc = 5
+                            {$inc: {calc: 5}} // set calc = calc + 5
+                            {$currentDate: {updDate: true}} // set updDate = now()
+                        li 옵션에 upsert: true가 있으면 없을 시 삽입
+                        li Since 4.2 갱신 연산에서 Aggregation pipeline 및 aggregation variable 사용 가능
+                        +asCode('javascript') {$set: {modified: "$$NOW"}}
+                        +asCode('javascript').
+                            {$set: {grade: {$switch: {
+                                branches: [
+                                    { case: { $gte: [ "$avgScore", 90 ] }, then: "A" },
+                                    { case: { $gte: [ "$avgScore", 80 ] }, then: "B" }
+                                ], default: "F"
+                            }
+                        +asCode('javascript') {$set: {myArr: {$concatArrays: ["$myArr", [8, 6]]}}}
+            tr
+                td coll.updateMany(filter, update, options) Since 3.2
+                td 여러 개 변경
+            tr
+                td coll.replaceOne(filter, update, options) Since 3.2
+                td 1개 대치. _id는 변경되지 않는다.
+            tr
+                td coll.deleteOne() Since 3.2
+                td 1개 삭제
+            tr
+                td coll.deleteMany() Since 3.2
+                td 여러 개 삭제
+            tr
+                td coll.drop()
+                td 전부 삭제
+            tr
+                td: span.hover-content(template-id='template-mongodb-bulk-write') coll.bulkWrite()
+                td insertOne, updateOne, updateMany, replaceOne, deleteOne, deleteMany 혼용.
+            tr
+                td coll.createIndex()
+                td 인덱스가 없으면 생성.
+            tr
+                td db.getSiblingDB()
+                td 현재 연결을 변경하지 않고 다른 DB 연결 획득.
+            tr
+                td coll.renameCollection('newName')
+                td
 
-    h3.marker help
-    table.no-sort
-        tr
-            td db.help()
-            td db 메서드 목록
-        tr
-            td db.mycoll.help()
-            td collection 메서드 목록
-        tr
-            td sh.help()
-            td sharding 메서드 목록
-        tr
-            td rs.help()
-            td replica set 메서드 목록
-        +tds('', '')
-        tr
-            td help admin
-            td 파일시스템 접근, 프로세스 실행 명령 목록
-        tr
-            td: span.hover-content(template-id='template-mongodb-help-connect') help connect
-            td
-        tr
-            td: span.hover-content(template-id='template-mongodb-help-misc') help misc
-            td
-        tr
-            td help mr
-            td mapreduce
-        +tds('', '')
-        tr
-            td show dbs // db.adminCommand('listDatabases')
-            td DB 목록
-        tr
-            td show collections // db.getCollectionNames()
-            td 현재 DB의 컬렉션 목록
-        tr
-            td show users // db.getUsers()
-            td 현재 DB의 유저 목록
-        tr
-            td show logs // db.adminCommand({'getLog': '*'})
-            td 로거 목록
-        tr
-            td show log [name] // db.adminCommand({'getLog': 'name'})
-            td 로그 출력. name 기본값은 'global'
-        +tds('', '')
-        tr
-            td db
-            td 현재 사용 중인 DB
-        tr
-            td use dbName // db.getSiblingDB('dbName')
-            td DB 선택
-        tr
-            td it // cursor = db.collName.find()
-            td 직전 find() 이터레이터 참조
-        tr
-            td DBQuery.shellBatchSize = x
-            td 한번에 표시할 항목 수 변경
-        tr
-            td print()
-            td 콘솔 출력
-        tr
-            td printjson()
-            td print(tojson(x))
-        tr
-            td edit functionName
-            td 함수 편집
-        tr
-            td exit
-            td
-
-    h3.marker db.mycoll.find().help()
-    h4.marker find([object predicate][, object projection])
-    +asCode('javascript') let coll = db.myCollection;
-    table.no-sort
-        tr
-            td coll.find()
-            td select *
-        tr
-            td coll.find({lv: 1})
-            td select * where lv = 1
-        tr
-            td coll.find({item: null})
-            td item 속성이 null이거나 없으면 해당
-        tr
-            td coll.find({item: {$type: 10}})
-            td item 속성이 BSON 타입 10(Null)이면 해당
-        tr
-            td coll.find({item: {$type: "array"}})
-            td item 속성이 배열이면 해당
-        tr
-            td coll.find({item: {$exists: false}})
-            td item 속성이 없으면 해당
-        tr
-            td coll.find({leaderCard.lv: 1})
-            td select * where leaderCard.lv = 1
-        tr
-            td coll.find({tags: ["red", "blank"]})
-            td 길이 및 원소 순서가 정확히 일치해야 함
-        tr
-            td coll.find({tags: {$all: ["red", "blank"]}})
-            td 'red', 'blank' 두 개 모두 포함하기만 하면 됨
-        tr
-            td coll.find({arr: {$elemMatch: {$gt: 22, $lt: 30}}})
-            td 배열 원소 하나라도 모든 조건을 충족하면 됨
-        tr
-            td coll.find({"arr.0": {$gt: 22}})
-            td arr[0]이 모든 조건을 충족하면 됨
-        tr
-            td coll.find({arr: {$size: 3}})
-            td arr.length == 3
-        tr
-            td coll.find({lv: {$gt: 1}})
-            td select * where lv > 1
-        tr
-            td coll.find({$or: [{status: "A"}, {qty: {$lt: 30}}]})
-            td select * where status = 'A' or qty &lt; 30
-        tr
-            td coll.find({status: {$in: ["A", "D"]}})
-            td select * where status in ('A', 'D')
-        tr
-            td coll.find({}, {_id: 0})
-            td Projection; _id 속성은 제외
-        tr
-            td coll.find({}, {'leaderCard.lv': 1})
-            td Projection; 특정 내부 속성 포함
-        tr
-            td coll.find().sort({lv: 1})
-            td 1(오름차순), -1(내림차순)
-        tr
-            td coll.find().limit(10)
-            td
-        tr
-            td coll.findOne()
-            td == limit(1)
-        tr
-            td coll.find().count()
-            td limit(), skip() 무시
-        tr
-            td coll.find().size()
-            td limit(), skip() 적용
-
-    h4.marker Cursor methods
-    p db.mycoll.find()는 이터레이터(Cursor)를 반환한다. 단, mongo 쉘에서 var 변수에 할당하지 않은 경우 자동으로 결과를 출력하고 끝냄에 유의.
-    table.no-sort
-        tr
-            td cursor.forEach()
-            td
-        tr
-            td cursor.toArray()
-            td 커서를 모두 순회하고 메모리에 올린다.
-        tr
-            td cursor.noCursorTimeout()
-            td 이 경우 커서를 모두 순회하거나, 수동으로 close()를 호출해야만 한다.
-
-    h3.marker db.mycoll.help()
-    +asCode('javascript') let coll = db.myCollection;
-    table.no-sort
-        tr
-            td coll.insertOne() Since 3.2
-            td 1개 추가
-        tr
-            td coll.insertMany() Since 3.2
-            td 배열 요소 전부 추가
-        tr
-            td coll.insert()
-            td document 하나 또는 배열
-        tr
-            td coll.updateOne(filter, update, options) Since 3.2
-            td
-                ul
-                    li 1개 변경
-                    +asCode('javascript').
-                        updateOne({_id: 10}, {$set: {calc: 5}}) // update set calc = 5
-                        {$inc: {calc: 5}} // set calc = calc + 5
-                        {$currentDate: {updDate: true}} // set updDate = now()
-                    li 옵션에 upsert: true가 있으면 없을 시 삽입
-                    li Since 4.2 갱신 연산에서 Aggregation pipeline 및 aggregation variable 사용 가능
-                    +asCode('javascript') {$set: {modified: "$$NOW"}}
-                    +asCode('javascript').
-                        {$set: {grade: {$switch: {
-                            branches: [
-                                { case: { $gte: [ "$avgScore", 90 ] }, then: "A" },
-                                { case: { $gte: [ "$avgScore", 80 ] }, then: "B" }
-                            ], default: "F"
-                        }
-                    +asCode('javascript') {$set: {myArr: {$concatArrays: ["$myArr", [8, 6]]}}}
-        tr
-            td coll.updateMany(filter, update, options) Since 3.2
-            td 여러 개 변경
-        tr
-            td coll.replaceOne(filter, update, options) Since 3.2
-            td 1개 대치. _id는 변경되지 않는다.
-        tr
-            td coll.deleteOne() Since 3.2
-            td 1개 삭제
-        tr
-            td coll.deleteMany() Since 3.2
-            td 여러 개 삭제
-        tr
-            td coll.drop()
-            td 전부 삭제
-        tr
-            td: span.hover-content(template-id='template-mongodb-bulk-write') coll.bulkWrite()
-            td insertOne, updateOne, updateMany, replaceOne, deleteOne, deleteMany 혼용.
-        tr
-            td coll.createIndex()
-            td 인덱스가 없으면 생성.
-        tr
-            td db.getSiblingDB()
-            td 현재 연결을 변경하지 않고 다른 DB 연결 획득.
-        tr
-            td coll.renameCollection('newName')
-            td
-
-    h2.marker Aggregation
+    h1.marker Aggregation
     ul
         li: +asCode('javascript').
                 db.mycoll.aggregate([

@@ -3275,11 +3275,13 @@ probability.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/db:
 concept.jade
-example
 mongodb.jade
 mysql.jade
-
-/workspace/donggi-github/Dong-gi.github.io/posts.jade/db/example:
+psql_admin.jade
+psql_programming.jade
+psql_sql.jade
+psql_to_sqlite.jade
+psql_tutorial.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/dotnet:
 csharp_basic.jade
@@ -3306,27 +3308,12 @@ freemarker
 sdkman.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test:
-db
 front
 java
 javascript
 project
 python
 single
-
-/workspace/donggi-github/Dong-gi.github.io/posts.jade.test/db:
-example
-psql_admin.jade
-psql_programming.jade
-psql_sql.jade
-psql_to_sqlite.jade
-psql_tutorial.jade
-
-/workspace/donggi-github/Dong-gi.github.io/posts.jade.test/db/example:
-pgsql_export_csv.jade
-pgsql_hello_world.jade
-pgsql_select_tables_with_suffix.jade
-pgsql_trigger_before_update.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/front:
 canvas
