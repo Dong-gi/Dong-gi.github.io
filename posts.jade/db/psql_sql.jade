@@ -178,143 +178,140 @@ include ../../source/skeleton.jade
             +asCode('sql') SELECT concat_lower_or_upper('Hello', 'World', uppercase => true);
 
     h1.marker Data Definition
-    details
-        summary Default Values
-        pre.
-            \n-- 기본값에 표현식을 사용할 수 있다. 가장 흔히 쓰이는 것은 timestamp 열이 CURRENT_TIMESTAMP 값을 갖게 하는 것.
+    div
+        h2.marker Default Values
+        +asCode('sql').
+            -- 기본값에 표현식을 사용할 수 있다. 가장 흔히 쓰이는 것은 timestamp 열이 CURRENT_TIMESTAMP 값을 갖게 하는 것.
             CREATE TABLE products (
-                    product_no integer DEFAULT nextval('products_product_no_seq'),
-                    ...
+                product_no integer DEFAULT nextval('products_product_no_seq'),
+                ...
             );
-    details
-        summary Constraints
+        h2.marker Constraints
         ol
-            li Check Constraints
-            pre.
-                \nCREATE TABLE products ( product_no integer, price numeric CHECK (price > 0) );
+            li.marker Check Constraints
+            +asCode('sql').
+                CREATE TABLE products ( product_no integer, price numeric CHECK (price > 0) );
+                
                 -- 식별자를 줄 수 있다.
                 CREATE TABLE products ( product_no integer, price numeric CONSTRAINT positive_price CHECK (price > 0) );
+                
                 -- 여러 열을 체크할 수 있다.
                 CREATE TABLE products (
-                        product_no integer,
-                        name text,
-                        price numeric CHECK (price > 0),
-                        discounted_price numeric CHECK (discounted_price > 0), CHECK (price > discounted_price)
+                    product_no integer,
+                    name text,
+                    price numeric CHECK (price > 0),
+                    discounted_price numeric CHECK (discounted_price > 0), CHECK (price > discounted_price)
                 );
+                
                 -- 열 삽입 제약 조건을 테이블 제약 조건으로 사용할 수 있다.
                 CREATE TABLE products (
-                        product_no integer,
-                        name text,
-                        price numeric CHECK (price > 0),
-                        discounted_price numeric,
-                        CHECK (discounted_price > 0 AND price > discounted_price)
+                    product_no integer,
+                    name text,
+                    price numeric CHECK (price > 0),
+                    discounted_price numeric,
+                    CHECK (discounted_price > 0 AND price > discounted_price)
                 );
-            li Not-Null Constraints
-            |             CREATE TABLE products ( product_no integer NOT NULL, price numeric );
-            li Unique Constraints
-            pre.
-                \nCREATE TABLE products ( product_no integer UNIQUE, price numeric );
+            li.marker Not-Null Constraints
+            +asCode('sql') CREATE TABLE products ( product_no integer NOT NULL, price numeric );
+            li.marker Unique Constraints
+            +asCode('sql').
+                CREATE TABLE products ( product_no integer UNIQUE, price numeric );
                 CREATE TABLE products ( product_no integer, price numeric, UNIQUE (product_no) );
                 CREATE TABLE example ( a integer, b integer, c integer, UNIQUE (a, c) );
                 -- 식별자를 부여할 수 있다.
                 CREATE TABLE products ( product_no integer CONSTRAINT must_be_different UNIQUE, price numeric );
-            li Primary Keys
-            |             CREATE TABLE example ( a integer, b integer, c integer, PRIMARY KEY (a, c) );
-            li Foreign Keys
-            pre.
-                \nCREATE TABLE orders (
-                        order_id integer PRIMARY KEY,
-                        product_no integer REFERENCES products (product_no),
-                        quantity integer
+            li.marker Primary Keys
+            +asCode('sql') CREATE TABLE example ( a integer, b integer, c integer, PRIMARY KEY (a, c) );
+            li.marker Foreign Keys
+            +asCode('sql').
+                CREATE TABLE orders (
+                    order_id integer PRIMARY KEY,
+                    product_no integer REFERENCES products (product_no),
+                    quantity integer
                 );
                 CREATE TABLE t1 (
-                        a integer PRIMARY KEY,
-                        b integer,
-                        c integer,
-                        FOREIGN KEY (b, c) REFERENCES other_table (c1, c2)
+                    a integer PRIMARY KEY,
+                    b integer,
+                    c integer,
+                    FOREIGN KEY (b, c) REFERENCES other_table (c1, c2)
                 );
                 -- 외래키와 기본키 혼용
                 CREATE TABLE order_items (
-                        product_no integer REFERENCES products,
-                        order_id integer REFERENCES orders,
-                        quantity integer,
-                        PRIMARY KEY (product_no, order_id)
+                    product_no integer REFERENCES products,
+                    order_id integer REFERENCES orders,
+                    quantity integer,
+                    PRIMARY KEY (product_no, order_id)
                 );
-            li 무결성 제약 : ON DELETE, ON UPDATE에 사용
-            pre.
-                \nCREATE TABLE order_items (
-                        product_no integer REFERENCES products ON DELETE RESTRICT, -- 참조하는 행이 삭제되지 않음.
-                        order_id integer REFERENCES orders ON DELETE CASCADE, -- 참조하는 행이 삭제되면 같이 삭제됨.
-                        quantity integer,
-                        PRIMARY KEY (product_no, order_id)
+            li.marker 무결성 제약 : ON DELETE, ON UPDATE에 사용
+            +asCode('sql').
+                CREATE TABLE order_items (
+                    product_no integer REFERENCES products ON DELETE RESTRICT, -- 참조하는 행이 삭제되지 않음.
+                    order_id integer REFERENCES orders ON DELETE CASCADE, -- 참조하는 행이 삭제되면 같이 삭제됨.
+                    quantity integer,
+                    PRIMARY KEY (product_no, order_id)
                 );
-    details
-        summary System Columns
-        |         oid : object_id. 테이블을 WITH OIDS로 생성하거나, default with oids이 설정된 경우 생성되는 열. 타입 이름도 oid.
-        a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://postgresql.kr/docs/9.6/ddl-system-columns.html') http://postgresql.kr/docs/9.6/ddl-system-columns.html
-    details
-        summary Modifying Tables
+        h2.marker System Columns
+        p
+            | oid : object_id. 테이블을 WITH OIDS로 생성하거나, default with oids이 설정된 경우 생성되는 열. 타입 이름도 oid.
+            +asA('http://postgresql.kr/docs/9.6/ddl-system-columns.html')
+        h2.marker Modifying Tables
         ol
-            li Adding a Column
-            pre.
-                \nALTER TABLE products ADD COLUMN description text;
+            li.marker Adding a Column
+            +asCode('sql').
+                ALTER TABLE products ADD COLUMN description text;
                 ALTER TABLE products ADD COLUMN description text CHECK (description != '');
-            li Removing a Column
-            pre.
-                \nALTER TABLE products DROP COLUMN description;
+            li.marker Removing a Column
+            +asCode('sql').
+                ALTER TABLE products DROP COLUMN description;
                 -- 외래키로 참조중인 경우, 제약을 명시해줘야 반영된다.
                 ALTER TABLE products DROP COLUMN description CASCADE;
-            li Adding a Constraint
-            pre.
-                \nALTER TABLE products ADD CHECK (name != '');
+            li.marker Adding a Constraint
+            +asCode('sql').
+                ALTER TABLE products ADD CHECK (name != '');
                 ALTER TABLE products ADD CONSTRAINT some_name UNIQUE (product_no);
                 ALTER TABLE products ADD FOREIGN KEY (product_group_id) REFERENCES product_groups;
                 ALTER TABLE products ALTER COLUMN product_no SET NOT NULL;
-            li Removing a Constraint
-            pre.
-                \nALTER TABLE products DROP CONSTRAINT some_name;
+            li.marker Removing a Constraint
+            +asCode('sql').
+                ALTER TABLE products DROP CONSTRAINT some_name;
                 ALTER TABLE products ALTER COLUMN product_no DROP NOT NULL;
-            li Changing a Column's Default Value
-            pre.
-                \nALTER TABLE products ALTER COLUMN price SET DEFAULT 7.77;
+            li.marker Changing a Column's Default Value
+            +asCode('sql').
+                ALTER TABLE products ALTER COLUMN price SET DEFAULT 7.77;
                 ALTER TABLE products ALTER COLUMN price DROP DEFAULT;
-            li Changing a Column's Data Type
-            pre.
-                \nALTER TABLE products ALTER COLUMN price TYPE numeric(10,2);
+            li.marker Changing a Column's Data Type
+            +asCode('sql').
+                ALTER TABLE products ALTER COLUMN price TYPE numeric(10,2);
                 -- 기존 값이 새로운 타입으로 암묵적으로 변환된다면 위의 것으로 충분. 복잡한 변환을 명시하려면 USING 절을 추가 사용.
-            li Renaming a Column
-            |             ALTER TABLE products RENAME COLUMN product_no TO product_number;
-            li Renaming a Table
-            |             ALTER TABLE products RENAME TO items;
-    details
-        summary Privileges
-        |         권한 : SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER, CREATE, CONNECT, TEMPORARY, EXECUTE, USAGE &lt;&lt; ALL
-        ul
-            li GRANT UPDATE ON table_name TO username;
-            li REVOKE ALL ON table_name FROM username;
-            li GRANT SELECT ON ALL TABLES IN SCHEMA public TO user;
-            li GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO user;
-    details
-        summary
+            li.marker Renaming a Column
+            +asCode('sql') ALTER TABLE products RENAME COLUMN product_no TO product_number;
+            li.marker Renaming a Table
+            +asCode('sql') ALTER TABLE products RENAME TO items;
+        h2.marker Privileges
+        p 권한 : SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER, CREATE, CONNECT, TEMPORARY, EXECUTE, USAGE &lt;&lt; ALL
+        +asCode('sql').
+            GRANT UPDATE ON table_name TO username;
+            REVOKE ALL ON table_name FROM username;
+            GRANT SELECT ON ALL TABLES IN SCHEMA public TO user;
+            GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO user;
+        h2.marker
             | Row Security Policies
-            a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://postgresql.kr/docs/current/ddl-rowsecurity.html') ddl-rowsecurity
-        pre.
-            \n-- 관리자 그룹에 속한 사용자가, 자신과 관련한 행만 접근
+            +w3a()&attributes({target:'_blank', href:'http://postgresql.kr/docs/current/ddl-rowsecurity.html'}) ddl-rowsecurity
+        +asCode('sql').
+            -- 관리자 그룹에 속한 사용자가, 자신과 관련한 행만 접근
             CREATE TABLE accounts (manager text, company text, contact_email text);
             ALTER TABLE accounts ENABLE ROW LEVEL SECURITY;
             CREATE POLICY account_managers ON accounts TO managers USING (manager = current_user);
-    details
-        summary Schemas
-        pre.
-            \nCREATE SCHEMA myschema; -- Schema의 테이블은 schema.table 또는 database.schema.table로 접근
+        h2.marker Schemas
+        +asCode('sql').
+            CREATE SCHEMA myschema; -- Schema의 테이블은 schema.table 또는 database.schema.table로 접근
             CREATE TABLE myschema.mytable ( ... );
             DROP SCHEMA myschema;
             DROP SCHEMA myschema CASCADE; -- 포함된 내용도 삭제
             -- 모든 새 데이터베이스는 public이라는 스키마를 갖고 있다. 따라서 아래 두 문장은 서로 같다.
             CREATE TABLE products ( ... );
             CREATE TABLE public.products ( ... );
-    details
-        summary Table Partitioning
+        h2.marker Table Partitioning
         ul
             li 개요
             ol
@@ -324,147 +321,142 @@ include ../../source/skeleton.jade
                 li Hash partitioning : 모듈로 n 공간에서 키값의 나머지가 같은 것들로 분할
                 li 상속을 이용한 파티셔닝 : 자식 테이블은 추가적인 컬럼을 가질 수 있으며, 다중 상속도 가능하다.
             li 파티셔닝
-            |             CHECK, NOT NULL 제약 조건은 파티션 테이블에 상속된다. NO INHERIT 마킹된 CHECK 제약조건은 제외.
-            pre.
-                \ncreate table api_access_log ( account_id int, access_time datetime, request_uri text ) partition by range(access_time);
+            p CHECK, NOT NULL 제약 조건은 파티션 테이블에 상속된다. NO INHERIT 마킹된 CHECK 제약조건은 제외.
+            +asCode('sql').
+                create table api_access_log ( account_id int, access_time datetime, request_uri text ) partition by range(access_time);
                 create table api_access_log_201901 partition of api_access_log for values from ('2019-01-01') to ('2019-02-01');
                 -- 파티션 테이블을 파티셔닝할 수 있다.
                 create table api_access_log_201901 partition of api_access_log for values from ('2019-01-01') to ('2019-02-01') partition by range(account_id % 100);
-            li 주의
+            li.marker 주의
             ol
                 li 값 변경으로 인해 행이 한 파티션에서 다른 파티션으로 이동되는 경우, 예약된 UPDATE, DELETE 작업이 실패할 수 있다.
                 li BEFORE ROW 트리거는 각 파티션 테이블에 따로 정의해야 한다.
-            li Partition Pruning
+            li.marker Partition Pruning
             ol
                 li SET enable_partition_pruning = on;로 옵션을 켤 수 있다. 켜 있는 게 디폴트.
                 li 가지치기 옵션이 켜있는 경우, 파티셔닝된 테이블의 정의(인덱스의 정의가 아니라)를 살펴, 스캔하지 않아도 되는 테이블들은 제외한다.
                 li 가지치기 시점 : 쿼리 플랜 초기화 시, 쿼리 플랜 실행 중(Append 노드 타입에 한하여)
     
-    ils
-    summary Data Manipulation
+    h1.marker Data Manipulation
     ol
         li Inserting Data, Updating Data, Deleting Data
-        |         DB - PostgreSQL 시작하기 - SQL 언어 참고
+        p DB - PostgreSQL 시작하기 - SQL 언어 참고
         li Returning Data From Modified Rows
-        pre.
-            \nINSERT INTO users (firstname, lastname) VALUES ('Joe', 'Cool') RETURNING id;
+        +asCode('sql').
+            INSERT INTO users (firstname, lastname) VALUES ('Joe', 'Cool') RETURNING id;
             UPDATE products SET price = price * 1.10 WHERE price &lt;= 99.99 RETURNING name, price AS new_price;
             DELETE FROM products WHERE obsoletion_date = 'today' RETURNING *;
     
-    ils
-    summary Queries
-    details
-        summary Table Expressions
-        details
-            summary FROM 절
+    h1.marker Queries
+    div
+        h2.marker Table Expressions
+        div
+            h3.marker FROM 절
             ul
-                li 일반 : FROM table_reference [, table_reference [, ...]]
-                li Cartesian product(Cross join) : FROM T1 CROSS JOIN T2
-                |                 또는 콤마로 구분 : FROM T1, T2
-                li
-                    | 판별식을 이용한 조인 : FROM T1 { [INNER] | { LEFT | RIGHT | FULL } [OUTER] } JOIN T2 ON boolean_expression
-                |                 두 테이블에 대해 판별식이 참일 경우에만 결과 행으로 반환된다.
-                li
-                    | 컬럼 셋을 이용한 조인 : FROM T1 { [INNER] | { LEFT | RIGHT | FULL } [OUTER] } JOIN T2 USING ( join column list )
-                |                 두 테이블의 컬럼 셋이 일치하는 경우에만 결과 행으로 반환된다.
-                li 자연 조인 : FROM T1 NATURAL { [INNER] | { LEFT | RIGHT | FULL } [OUTER] } JOIN T2
-                |                 두 테이블의 공통된 컬럼 리스트를 USING한 것과 동일한 결과를 산출한다.
-                li 테이블 별명 : FROM table_reference [AS] alias
-                |                 셀프 조인을 위해선 필수적으로 사용된다. 모호함을 피하기 위해 괄호를 이용할 수도 있다.
-                br
-                |                 SELECT * FROM (my_table AS a CROSS JOIN my_table) AS b ...
-                br
-                |                 컬럼에도 별명을 붙일 수 있다.
-                br
-                |                 FROM table_reference [AS] alias ( column1 [, column2 [, ...]] )
-                li 서브쿼리 사용을 위한 별명 : FROM (SELECT * FROM table1) AS alias
+                li 일반
+                +asCode('sql') FROM table_reference [, table_reference [, ...]]
+                li.marker Cartesian product(Cross join)
+                +asCode('sql') FROM T1 CROSS JOIN T2
+                p 또는 콤마로 구분
+                +asCode('sql') FROM T1, T2
+                li.marker 판별식을 이용한 조인
+                +asCode('sql') FROM T1 { [INNER] | { LEFT | RIGHT | FULL } [OUTER] } JOIN T2 ON boolean_expression
+                p 두 테이블에 대해 판별식이 참일 경우에만 결과 행으로 반환된다.
+                li.marker 컬럼 셋을 이용한 조인
+                +asCode('sql') FROM T1 { [INNER] | { LEFT | RIGHT | FULL } [OUTER] } JOIN T2 USING ( join column list )
+                p 두 테이블의 컬럼 셋이 일치하는 경우에만 결과 행으로 반환된다.
+                li.marker 자연 조인
+                +asCode('sql') FROM T1 NATURAL { [INNER] | { LEFT | RIGHT | FULL } [OUTER] } JOIN T2
+                p 두 테이블의 공통된 컬럼 리스트를 USING한 것과 동일한 결과를 산출한다.
+                li 테이블 별명
+                +asCode('sql') FROM table_reference [AS] alias
+                p 셀프 조인을 위해선 필수적으로 사용된다. 모호함을 피하기 위해 괄호를 이용할 수도 있다.
+                +asCode('sql') SELECT * FROM (my_table AS a CROSS JOIN my_table) AS b ...
+                p 컬럼에도 별명을 붙일 수 있다.
+                +asCode('sql') FROM table_reference [AS] alias ( column1 [, column2 [, ...]] )
+                li 서브쿼리 사용을 위한 별명
+                +asCode('sql') FROM (SELECT * FROM table1) AS alias
                 li Table function에 별명 사용
-                pre.
-                    \n-- Table function : 행 집합을 반환하는 함수.
+                +asCode('sql').
+                    -- Table function : 행 집합을 반환하는 함수.
                     CREATE TABLE foo (fooid int, foosubid int, fooname text);
                     CREATE FUNCTION getfoo(int) RETURNS SETOF foo AS $$ SELECT * FROM foo WHERE fooid = $1; $$ LANGUAGE SQL;
                     SELECT * FROM getfoo(1) AS t1;
-                li LATERAL 서브쿼리 : 키워드 좌측의 테이블들을 참조할 수 있다
-                pre.
-                    \n-- unknown_log 테이블로부터 각 로그의 첫 30글자, 삽입 시각, 로그 길이를 가져오기
+                li LATERAL 서브쿼리
+                p 키워드 좌측의 테이블들을 참조할 수 있다
+                +asCode('sql').
+                    -- unknown_log 테이블로부터 각 로그의 첫 30글자, 삽입 시각, 로그 길이를 가져오기
                     SELECT substring(log.log, 1, 30), log.insert_datetime, len FROM unknown_log log LEFT JOIN LATERAL LENGTH(log.log) len ON true;
                     -- LEFT JOIN ON true == CROSS JOIN. 사실 LATERAL 빼도 잘 동작하며, 실제로 사용할 일이 있을진 모르겠음...
-        details
-            summary WHERE 절
+            h3.marker WHERE 절
             ol
-                li GROUPING SETS
-                |                 한 테이블에 대해 같은 조건으로 여러 그룹에 대해 SELECT해야하는 경우, 이를 한 번에 질의할 수 있다.
-                pre.
-                    \nSELECT brand, size, sum(sales) FROM items_sold GROUP BY GROUPING SETS ((brand), (size), ());
-                |                 → 브랜드별 판매량, 사이즈별 판매량, 전체 판매량 각각이 한 테이블에 모두 표시된다
-                li GROUP BY CUBE ( a, b )
-                |                 a, b의 파워 셋에 대해 질의한 것과 같다. ((), (a), (b), (a, b))
-                li GROUP BY ROLLUP ( a, b )
-                |                 공집합부터 a, b를 순서대로 추가한 집합들에 대해 질의한 것과 같다. ((), (a), (a, b))
+                li.marker GROUPING SETS
+                p 한 테이블에 대해 같은 조건으로 여러 그룹에 대해 SELECT해야하는 경우, 이를 한 번에 질의할 수 있다.
+                +asCode('sql').
+                    -- 브랜드별 판매량, 사이즈별 판매량, 전체 판매량 각각이 한 테이블에 모두 표시된다
+                    SELECT brand, size, sum(sales) FROM items_sold GROUP BY GROUPING SETS ((brand), (size), ());
+                li.marker GROUP BY CUBE ( a, b )
+                p a, b의 파워 셋에 대해 질의한 것과 같다. ((), (a), (b), (a, b))
+                li.marker GROUP BY ROLLUP ( a, b )
+                p 공집합부터 a, b를 순서대로 추가한 집합들에 대해 질의한 것과 같다. ((), (a), (a, b))
                 li CUBE, ROLLUP의 요소로 리스트가 올 수 있다.
-                |                 ROLLUP(a, (b, c)) == ((), (a), (a, b, c))
+                p ROLLUP(a, (b, c)) == ((), (a), (a, b, c))
                 li 여러 그루핑 조건을 같이 쓰는 경우, 마지막 조건에 대해 cross product가 이루어진다
-                pre.
-                    \nGROUP BY a, CUBE (b, c), GROUPING SETS (d, e)
-                |                 → ((a, d), (a, e), (a, b, d), (a, b, e), ..., (a, b, c, e))
+                +asCode('sql').
+                    GROUP BY a, CUBE (b, c), GROUPING SETS (d, e)
+                    -- ((a, d), (a, e), (a, b, d), (a, b, e), ..., (a, b, c, e))
                 li GROUP BY 절에서 행 생성자의 이용은 ROW(a, b)를 통해 할 수 있다
-    details
-        summary Select Lists
-        ol
-            li SELECT DISTINCT select_list ...
-            |             각 열집합에 대해 고유한 행들만 선택한다
-            li SELECT DISTINCT ON (expression [, expression ...]) select_list ...
-            |             모든 행에 대해 expression이 평가된다. 두 행의 모든 평가값이 같은 경우 두 행은 같다고 간주한다.
-    details
-        summary Combining Queries
-        ol
-            li query1 UNION [ALL] query2
-            li query1 INTERSECT [ALL] query2
-            li query1 EXCEPT [ALL] query2
-    details
-        summary Sorting Rows
+        h2.marker Select Lists
+        +asCode('sql') SELECT DISTINCT select_list ...
+        p 각 열집합에 대해 고유한 행들만 선택한다
+        +asCode('sql') SELECT DISTINCT ON (expression [, expression ...]) select_list ...
+        p 모든 행에 대해 expression이 평가된다. 두 행의 모든 평가값이 같은 경우 두 행은 같다고 간주한다.
+
+        h2.marker Combining Queries
+        +asCode('sql').
+            query1 UNION [ALL] query2
+            query1 INTERSECT [ALL] query2
+            query1 EXCEPT [ALL] query2
+
+        h2.marker Sorting Rows
         ul
-            li
-                | ORDER BY sort_expression1 [ASC | DESC] [NULLS { FIRST | LAST }] [, sort_expression2 ...]
+            +asCode('sql') ORDER BY sort_expression1 [ASC | DESC] [NULLS { FIRST | LAST }] [, sort_expression2 ...]
             li ASC, DESC : 기본값은 ASC
-            li
-                | NULLS FIRST, NULLS LAST : null값에 대한 정렬 순서를 의미하며, 기본값은 ASC의 경우 NULLS LAST, DESC의 경우 NULLS FIRST
-    details
-        summary LIMIT and OFFSET
+            li NULLS FIRST, NULLS LAST
+            p null값에 대한 정렬 순서를 의미하며, 기본값은 ASC의 경우 NULLS LAST, DESC의 경우 NULLS FIRST
+    
+        h2.marker LIMIT and OFFSET
         ul
-            li
-                | SELECT select_list FROM table_expression [ ORDER BY ... ] [ LIMIT { number | ALL } ] [ OFFSET number ]
+            +asCode('sql') SELECT select_list FROM table_expression [ ORDER BY ... ] [ LIMIT { number | ALL } ] [ OFFSET number ]
             li LIMIT : 출력 행의 개수 제한
             li OFFSET : 산출된 순서대로 n개 행을 출력하지 않고 무시
-    details
-        summary VALUES Lists
+
+        h2.marker VALUES Lists
         ul
             li VALUES ( expression [, ...] ) [, ...]
-            |             SELECT * FROM (VALUES (1, 'one'), (2, 'two'), (3, 'three')) AS t (num,letter);
+            +asCode('sql') SELECT * FROM (VALUES (1, 'one'), (2, 'two'), (3, 'three')) AS t (num,letter);
             li 실제 디스크 상에 테이블을 만들지 않으면서 상수 테이블을 만드는 방법.
             li 문법적으로 "SELECT select_list FROM table_expression"과 동일하게 취급된다.
-    details
-        summary WITH Queries
-        details
-            summary SELECT in WITH
+
+        h2.marker WITH Queries
+        div
+            h3.marker SELECT in WITH
             ul
                 li 여러 개의 SELECT 서브 쿼리를 날리는 대신 WITH을 이용하여 분리할 수 있다.
-                |                 with tmp1 AS (SELECT ...), tmp2 AS (SELECT ...) SELECT ... WHERE tmp1...
+                +asCode('sql') with tmp1 AS (SELECT ...), tmp2 AS (SELECT ...) SELECT ... WHERE tmp1...
                 li RECURSIVE를 이용하여 iteration 연산이 가능하다.
                 ol
-                    | 연산 순서
-                    li
-                        | non-recursive 부분을 계산한다. UNION을 위해 (not UNION ALL) 중복되는 행을 제거한다. 남은 행들을 결과에 포함시키고, 임시 작업 테이블로 설정한다.
+                    p.marker 연산 순서
+                    li non-recursive 부분을 계산한다. UNION을 위해 (not UNION ALL) 중복되는 행을 제거한다. 남은 행들을 결과에 포함시키고, 임시 작업 테이블로 설정한다.
                     li 작업 테이블이 빌 때까지 아래를 반복한다.
                     ol
-                        li
-                            | recursive 부분을 계산하고, 작업 테이블 내용을 덮어쓴다. UNION을 위해 (not UNION ALL) 중복된 행(이전 결과와도 비교)들을 제거한다. 남은 행들을 결과에 포함시키고, 임시 중간 테이블로 설정한다.
+                        li recursive 부분을 계산하고, 작업 테이블 내용을 덮어쓴다. UNION을 위해 (not UNION ALL) 중복된 행(이전 결과와도 비교)들을 제거한다. 남은 행들을 결과에 포함시키고, 임시 중간 테이블로 설정한다.
                         li 작업 테이블의 내용을 중간 테이블 내용으로 대체한다. 중간 테이블은 비운다.
-                    pre.
-                        \n-- 10~100의 합계.
+                    +asCode('sql').
+                        -- 10~100의 합계.
                         WITH RECURSIVE t(n) AS ( VALUES (10) UNION SELECT n+1 FROM t WHERE n &lt; 100 )
                         SELECT sum(n) FROM t;
-                    table
+                    table.no-sort
                         tr
                             th t
                             th working_table
@@ -490,286 +482,276 @@ include ../../source/skeleton.jade
                             td 10, 11, 12, 13, ..., 100
                             td empty
                 li RECURSIVE 연산은 계층 구조나 트리 형태의 데이터에 유용하다.
-                pre.
-                    \nWITH RECURSIVE search_graph(id, link, data, depth) AS (
-                            SELECT g.id, g.link, g.data, 1 FROM graph g
-                    　UNION ALL
-                            SELECT g.id, g.link, g.data, sg.depth + 1 FROM graph g, search_graph sg WHERE g.id = sg.link
+                +asCode('sql').
+                    WITH RECURSIVE search_graph(id, link, data, depth) AS (
+                        SELECT g.id, g.link, g.data, 1 FROM graph g
+                    UNION ALL
+                        SELECT g.id, g.link, g.data, sg.depth + 1 FROM graph g, search_graph sg WHERE g.id = sg.link
                     ) SELECT * FROM search_graph;
-        details
-            summary Data-Modifying Statements in WITH
-            |             INSERT, UPDATE, DELETE를 WITH과 함께 사용할 수 있다.
-            pre.
-                \nWITH moved_rows AS ( DELETE FROM products WHERE isnert_datetime &lt; '2010-11-01' RETURNING * )
+        
+            h3.marker Data-Modifying Statements in WITH
+            p INSERT, UPDATE, DELETE를 WITH과 함께 사용할 수 있다.
+            +asCode('sql').
+                WITH moved_rows AS ( DELETE FROM products WHERE isnert_datetime &lt; '2010-11-01' RETURNING * )
                 INSERT INTO products_log SELECT * FROM moved_rows;
     
-    ils
-    summary Data Types
-    details
-        summary Numeric Types
-        table
-            thead
-                tr
-                    th Name
-                    th Size
-                    th Description
-            tbody
-                tr
-                    td smallint, int2
-                    td 2 bytes
-                    td signed integer
-                tr
-                    td integer, int, int4
-                    td 4 bytes
-                    td signed integer
-                tr
-                    td bigint, int8
-                    td 8 bytes
-                    td signed integer
-                tr
-                    td decimal(p, s), numeric(p, s)
-                    td variable
-                    td 임의 개수의 유효숫자와 소수 정밀도를 가진 10진수
-                tr
-                    td real, float4
-                    td 4 bytes
-                    td IEEE 754 단일 정밀도 부동소수(최소 유효숫자 6자리)
-                tr
-                    td double precision, float8
-                    td 8 bytes
-                    td IEEE 754 배 정밀도 부동소수(최소 유효숫자 15자리)
-                tr
-                    td smallserial, serial2
-                    td 2 bytes
-                    td 자동 증가 정수
-                tr
-                    td serial, serial4
-                    td 4 bytes
-                    td 자동 증가 정수
-                tr
-                    td bigserial, serial8
-                    td 8 bytes
-                    td 자동 증가 정수
+    h1.marker Data Types
+    div
+        h2.marker Numeric Types
+        table.no-sort
+            tr
+                th Name
+                th Size
+                th Description
+            tr
+                td smallint, int2
+                td 2 bytes
+                td signed integer
+            tr
+                td integer, int, int4
+                td 4 bytes
+                td signed integer
+            tr
+                td bigint, int8
+                td 8 bytes
+                td signed integer
+            tr
+                td decimal(p, s), numeric(p, s)
+                td variable
+                td 임의 개수의 유효숫자와 소수 정밀도를 가진 10진수
+            tr
+                td real, float4
+                td 4 bytes
+                td IEEE 754 단일 정밀도 부동소수(최소 유효숫자 6자리)
+            tr
+                td double precision, float8
+                td 8 bytes
+                td IEEE 754 배 정밀도 부동소수(최소 유효숫자 15자리)
+            tr
+                td smallserial, serial2
+                td 2 bytes
+                td 자동 증가 정수
+            tr
+                td serial, serial4
+                td 4 bytes
+                td 자동 증가 정수
+            tr
+                td bigserial, serial8
+                td 8 bytes
+                td 자동 증가 정수
         ul
             li decimal, numeric
             ol
                 li p(precision) : 유효숫자 수
                 li s(scale) : 소수 정밀도
-                |                 예. 3.141592의 precision = 7, scale = 6.
-                br
-                |                 정수는 scale = 0인 numeric으로 간주해도 무방
+                p
+                    | 예. 3.141592의 precision = 7, scale = 6.
+                    br
+                    | 정수는 scale = 0인 numeric으로 간주해도 무방
                 li NUMERIC(precision) : scale = 0
                 li NUMERIC : 임의 유효숫자, 소수 정밀도의 10진수 모두 저장 가능
-                |                 무한히 큰 수를 지원하진 않는다. 소수점 전 131072 자리, 소수점 후 16383 자리까지 지원.
+                p 무한히 큰 수를 지원하진 않는다. 소수점 전 131072 자리, 소수점 후 16383 자리까지 지원.
                 li 'NaN' 상수 지원
-                |                 'NaN'에 대한 연산 결과는 'NaN'
+                p 'NaN'에 대한 연산 결과는 'NaN'
                 li Rounding mode
-                |                 numeric 타입의 반올림은 0에서 멀어지는 방향으로 이루어진다.
+                p numeric 타입의 반올림은 0에서 멀어지는 방향으로 이루어진다.
             li real, double precision
-            |             'NaN', 'Infinity', '-Infinity' 상수 지원
+            p 'NaN', 'Infinity', '-Infinity' 상수 지원
             li serial
-            |             serial 타입은 1부터 시작하여 자동으로 1씩 증가하는 정수에 대한 표현 편의를 제공한다. 9.6 버전에서는 sequence를 이용함으로써 구현한다.
-    details
-        summary Character Types
-        table
-            thead
-                tr
-                    th Name
-                    th Description
-            tbody
-                tr
-                    td character [ (n) ], char [ (n) ]
-                    td 고정 길이(n) 문자열. 스페이스가 덧붙여진다.
-                tr
-                    td character varying [ (n) ], varchar [ (n) ]
-                    td 가변 길이(최대 n) 문자열
-                tr
-                    td text
-                    td 가변 길이 문자열
-    details
-        summary Binary Data Type : bytea
+            p serial 타입은 1부터 시작하여 자동으로 1씩 증가하는 정수에 대한 표현 편의를 제공한다. 9.6 버전에서는 sequence를 이용함으로써 구현한다.
+
+        h2.marker Character Types
+        table.no-sort
+            tr
+                th Name
+                th Description
+            tr
+                td character [ (n) ], char [ (n) ]
+                td 고정 길이(n) 문자열. 스페이스가 덧붙여진다.
+            tr
+                td character varying [ (n) ], varchar [ (n) ]
+                td 가변 길이(최대 n) 문자열
+            tr
+                td text
+                td 가변 길이 문자열
+
+        h2.marker Binary Data Type : bytea
         ol
             li 로캐일에 의존하지 않는 이진 문자열을 표현한다
             li bytea의 출력에는 'hex', 'escape' 두 가지 방식(bytea_output)이 있으며, 기본값은 'hex'로 설정되어 있다.
             ul
                 li hex : 각 바이트를 16진수 2자리로 표현. 예. '\xDEADBEEF'
-                li
-                    | escape : 출력 가능 아스키 문자(32 ~ 126)는 있는 그대로, 백슬래시는 \\, 그 외는 \xxx로 표현한다. 예. 'abc klm *\251T'
-    details
-        summary Date/Time Types
-        table
-            thead
-                tr
-                    th Name
-                    th Size
-                    th Description
-                    td Range
-                    td Resolution
-            tbody
-                tr
-                    td timestamp [ (p) ] [ without time zone ]
-                    td 8 bytes
-                    td date and time (no time zone)
-                    td 4713 BC ~ 294276 AD
-                    td 1μs
-                tr
-                    td timestamp [ (p) ] with time zone, timestamptz
-                    td 8 bytes
-                    td date and time, including time zone
-                    td 4713 BC ~ 294276 AD
-                    td 1μs
-                tr
-                    td date
-                    td 4 bytes
-                    td date
-                    td 4713 BC ~ 5874897 AD
-                    td 1 day
-                tr
-                    td interval [ fields ] [ (p) ]
-                    td 16 bytes
-                    td time span
-                    td -178000000 years ~ 178000000 years
-                    td 1μs
-                tr
-                    td time [ (p) ] [ without time zone ]
-                    td 8 bytes
-                    td time of day (no time zone)
-                    td 00:00:00 ~ 24:00:00
-                    td 1μs
-                tr
-                    td time [ (p) ] with time zone, timetz
-                    td 12 bytes
-                    td time of day, with time zone
-                    td 00:00:00+1459 ~ 24:00:00-1459
-                    td 1μs
+                li escape : 출력 가능 아스키 문자(32 ~ 126)는 있는 그대로, 백슬래시는 \\, 그 외는 \xxx로 표현한다. 예. 'abc klm *\251T'
+
+        h2.marker Date/Time Types
+        table.no-sort
+            tr
+                th Name
+                th Size
+                th Description
+                td Range
+                td Resolution
+            tr
+                td timestamp [ (p) ] [ without time zone ]
+                td 8 bytes
+                td date and time (no time zone)
+                td 4713 BC ~ 294276 AD
+                td 1μs
+            tr
+                td timestamp [ (p) ] with time zone, timestamptz
+                td 8 bytes
+                td date and time, including time zone
+                td 4713 BC ~ 294276 AD
+                td 1μs
+            tr
+                td date
+                td 4 bytes
+                td date
+                td 4713 BC ~ 5874897 AD
+                td 1 day
+            tr
+                td interval [ fields ] [ (p) ]
+                td 16 bytes
+                td time span
+                td -178000000 years ~ 178000000 years
+                td 1μs
+            tr
+                td time [ (p) ] [ without time zone ]
+                td 8 bytes
+                td time of day (no time zone)
+                td 00:00:00 ~ 24:00:00
+                td 1μs
+            tr
+                td time [ (p) ] with time zone, timetz
+                td 12 bytes
+                td time of day, with time zone
+                td 00:00:00+1459 ~ 24:00:00-1459
+                td 1μs
         ul
             li p
-            |             초 단위 소수 precision. 0 ~ 6까지 가능하며, 기본값은 없다(설정되지 않은 상태).
+            p 초 단위 소수 precision. 0 ~ 6까지 가능하며, 기본값은 없다(설정되지 않은 상태).
             li interval field
-            |             YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, YEAR TO MONTH, DAY TO HOUR, DAY TO MINUTE, DAY TO SECOND, HOUR TO MINUTE, HOUR TO SECOND, MINUTE TO SECOND
-            li Special Date/Time Input String
-            table
-                thead
-                    tr
-                        th String
-                        th Valid Types
-                        th Description
-                tbody
-                    tr
-                        td epoch
-                        td date, timestamp
-                        td 1970-01-01 00:00:00+00 (Unix system time zero)
-                    tr
-                        td infinity
-                        td date, timestamp
-                        td later than all other time stamps
-                    tr
-                        td -infinity
-                        td date, timestamp
-                        td earlier than all other time stamps
-                    tr
-                        td now
-                        td date, time, timestamp
-                        td 	current transaction's start time
-                    tr
-                        td today
-                        td date, timestamp
-                        td midnight today
-                    tr
-                        td tomorrow
-                        td date, timestamp
-                        td midnight tomorrow
-                    tr
-                        td yesterday
-                        td date, timestamp
-                        td midnight yesterday
-                    tr
-                        td allballs
-                        td time
-                        td 00:00:00.00 UTC
-    details
-        summary boolean, bool
+            p YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, YEAR TO MONTH, DAY TO HOUR, DAY TO MINUTE, DAY TO SECOND, HOUR TO MINUTE, HOUR TO SECOND, MINUTE TO SECOND
+            li.marker Special Date/Time Input String
+            table.no-sort
+                tr
+                    th String
+                    th Valid Types
+                    th Description
+                tr
+                    td epoch
+                    td date, timestamp
+                    td 1970-01-01 00:00:00+00 (Unix system time zero)
+                tr
+                    td infinity
+                    td date, timestamp
+                    td later than all other time stamps
+                tr
+                    td -infinity
+                    td date, timestamp
+                    td earlier than all other time stamps
+                tr
+                    td now
+                    td date, time, timestamp
+                    td 	current transaction's start time
+                tr
+                    td today
+                    td date, timestamp
+                    td midnight today
+                tr
+                    td tomorrow
+                    td date, timestamp
+                    td midnight tomorrow
+                tr
+                    td yesterday
+                    td date, timestamp
+                    td midnight yesterday
+                tr
+                    td allballs
+                    td time
+                    td 00:00:00.00 UTC
+
+        h2.marker boolean, bool
         ol
             li TRUE, 't', 'true', 'y', 'yes', 'on', '1'
             li FALSE, 'f', 'false', 'n', 'no', 'off', '0'
-    details
-        summary Enumerated Types
-        |         CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy'); // 대소문자 구분한다
-    details
-        summary Geometric Types
-        table
-            thead
+    
+        h2.marker Enumerated Types
+        +asCode('sql') CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy'); -- 대소문자 구분한다
+    
+        h2.marker Geometric Types
+        table.no-sort
+            tr
                 th Name
                 th Size
                 th Description
                 th Representation
-            tbody
-                tr
-                    td point
-                    td 16 bytes
-                    td xy 좌표계 상의 점
-                    td (x, y)
-                tr
-                    td line
-                    td 32 bytes
-                    td 직선
-                    td {A, B, C} // Ax + By + C = 0또는 직선 상의 두 점을 콤마로 구분하여 제공
-                tr
-                    td lseg
-                    td 32 bytes
-                    td 선분
-                    td ((x1, y1), (x2, y2))
-                tr
-                    td box
-                    td 32 bytes
-                    td 모든 변이 축과 평행한 직사각형
-                    td ((x1, y1), (x2, y2))
-                tr
-                    td path
-                    td 16n bytes
-                    td Closed path
-                    td ((x1, y1), ...)
-                tr
-                    td path
-                    td 16n bytes
-                    td Open path
-                    td [(x1, y1), ...]
-                tr
-                    td polygon
-                    td 40+16n bytes
-                    td Polygon
-                    td ((x1, y1), ...)
-                tr
-                    td circle
-                    td 24 bytes
-                    td Circle
-                    td &lt;(x, y), r>
-    details
-        summary JSON Types : json, jsonb
+            tr
+                td point
+                td 16 bytes
+                td xy 좌표계 상의 점
+                td (x, y)
+            tr
+                td line
+                td 32 bytes
+                td 직선
+                td {A, B, C} // Ax + By + C = 0또는 직선 상의 두 점을 콤마로 구분하여 제공
+            tr
+                td lseg
+                td 32 bytes
+                td 선분
+                td ((x1, y1), (x2, y2))
+            tr
+                td box
+                td 32 bytes
+                td 모든 변이 축과 평행한 직사각형
+                td ((x1, y1), (x2, y2))
+            tr
+                td path
+                td 16n bytes
+                td Closed path
+                td ((x1, y1), ...)
+            tr
+                td path
+                td 16n bytes
+                td Open path
+                td [(x1, y1), ...]
+            tr
+                td polygon
+                td 40+16n bytes
+                td Polygon
+                td ((x1, y1), ...)
+            tr
+                td circle
+                td 24 bytes
+                td Circle
+                td &lt;(x, y), r>
+
+        h2.marker JSON Types : json, jsonb
         ul
             li jsonb : 이진 포맷으로 저장하여 입력 시 조금 느리지만, 처리는 json보다 빠르다.
             li 배열 포함 여부 확인 예. SELECT '[1, 2, 3]'::jsonb @> '[3, 1]'::jsonb;
             li 배열 원소 존재 유무 확인 예. SELECT '["foo", "bar", "baz"]'::jsonb ? 'bar';
             li key의 존재 유무 확인 예. SELECT '{"foo": "bar"}'::jsonb ? 'foo';
             li key로 접근 예. select '{"key":"value"}'::jsonb -> 'key';
-    details
-        summary Array
+
+        h2.marker Array
         ul
             li 배열 타입 정의
-            |             PostgreSQL은 배열 크기를 제한하지 않는다.
-            pre.
-                \ncreate table test( nums integer[] );
+            p PostgreSQL은 배열 크기를 제한하지 않는다.
+            +asCode('sql').
+                create table test( nums integer[] );
                 create table test( nums integer ARRAY );
                 create table test( matrix integer[][] );
             li 배열 표현
-            pre.
-                \ninsert into test values( '{1, 2, 3, 4}'::int[] ); -- insert시엔 ::int[]같은 캐스팅 생략 가능
+            +asCode('sql').
+                insert into test values( '{1, 2, 3, 4}'::int[] ); -- insert시엔 ::int[]같은 캐스팅 생략 가능
                 insert into test values( ARRAY[[1, 2], [3, 4]] ); -- 배열 생성자는 애초에 배열을 반환하므로 캐스팅 불필요
-            li 배열 참조
+            li.marker 배열 참조
             ol
                 li 원소 참조 arr[idx]
                 li 슬라이스 arr[start : end]
-                |                 모든 차원을 슬라이스한다고 간주된다. arr[1:2][2]는 arr[1:2][1:2]와 같다.
+                p 모든 차원을 슬라이스한다고 간주된다. arr[1:2][2]는 arr[1:2][1:2]와 같다.
                 li 배열 차원 반환 array_dims()
                 li 지정된 차원에 대해 배열 크기 반환 array_length()
                 li 전체 원소 수 반환 cardinality()
@@ -780,40 +762,38 @@ include ../../source/skeleton.jade
                     li array_prepend() : 1차원 배열 앞에 원소를 추가한다.
                     li array_append() : 1차원 배열 뒤에 원소를 추가한다.
                     li array_cat() : 다차원 배열들에 대해 || 연산과 같은 작업을 한다. 단, 배열만 인자로 사용 가능하다. 0차원 값은 안 된다.
-            li 배열 검색
+            li.marker 배열 검색
             ul
                 li 배열의 원소 중 하나라도 100
-                |                 SELECT ... WHERE 100 = ANY(arr);
+                +asCode('sql') SELECT ... WHERE 100 = ANY(arr);
                 li 배열의 원소 모두가 100
-                |                 SELECT ... WHERE 100 = ALL(arr);
+                +asCode('sql') SELECT ... WHERE 100 = ALL(arr);
                 li generate_subscripts() : 주어진 배열과 차원에 대해 subscript의 집합을 반환한다
-                pre.
-                    \nSELECT generate_subscripts('{{"1,1","1,2"},{"2,1","2,2"},{"3,1","3,2"}}'::text[][], 1) AS s;
+                +asCode('sql').
+                    SELECT generate_subscripts('{{"1,1","1,2"},{"2,1","2,2"},{"3,1","3,2"}}'::text[][], 1) AS s;
                     -- 1차원 subscripts → 1, 2, 3
                     SELECT generate_subscripts('{{"1,1","1,2"},{"2,1","2,2"},{"3,1","3,2"}}'::text[][], 2) AS s;
                     -- 2차원 subscripts → 1, 2
                     -- 배열 펼치기
                     WITH arr AS (SELECT '{{"1,1","1,2"},{"2,1","2,2"},{"3,1","3,2"}}'::text[][] AS arr),
-                            dims AS (SELECT arr, s1, s2, arr[s1][s2] FROM arr, generate_subscripts(arr, 1) AS s1, generate_subscripts(arr, 2) AS s2)
+                        dims AS (SELECT arr, s1, s2, arr[s1][s2] FROM arr, generate_subscripts(arr, 1) AS s1, generate_subscripts(arr, 2) AS s2)
                     SELECT * FROM dims;
-            li
-                a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://postgresql.kr/docs/current/functions-array.html') functions-array.html
-    details
-        summary Composite Types
+            li: +w3a()&attributes({target:'_blank', href:'http://postgresql.kr/docs/current/functions-array.html'}) functions-array.html
+
+        h2.marker Composite Types
         ol
-            li CREATE TYPE complex AS ( r float4, i float4 );
+            +asCode('sql') CREATE TYPE complex AS ( r float4, i float4 );
             li 테이블을 만들면 그와 동일한 이름의 타입이 생성된다.
-            pre.
-                \nCREATE TABLE m_item ( item_id int, name text );
+            +asCode('sql').
+                CREATE TABLE m_item ( item_id int, name text );
                 CREATE TABLE t_user_item ( user_id bigint, item m_item, count int );
             li Literal composite value
-            |             포맷 : '( val1 , val2 , ... )'
-            br
-            |             INSERT INTO table_name (complex_column_name) VALUES((1.1,2.2));
+            p 포맷 : '( val1 , val2 , ... )'
+            +asCode('sql') INSERT INTO table_name (complex_column_name) VALUES((1.1,2.2));
             li SET 바로 다음엔 괄호가 없어도 되지만, 등호 다음엔 필요하다.
-            |             UPDATE table_name SET complex_column.r = (complex_column).r + 1 WHERE ...;
-    details
-        summary Range Types
+            +asCode('sql') UPDATE table_name SET complex_column.r = (complex_column).r + 1 WHERE ...;
+    
+        h2.marker Range Types
         ol
             li int4range — Range of integer
             li int8range — Range of bigint
@@ -821,136 +801,16 @@ include ../../source/skeleton.jade
             li tsrange — Range of timestamp without time zone
             li tstzrange — Range of timestamp with time zone
             li daterange — Range of date
-            a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://postgresql.kr/docs/current/functions-range.html#RANGE-OPERATORS-TABLE') functions-range.html#RANGE-OPERATORS-TABLE
-            a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://postgresql.kr/docs/current/functions-range.html#RANGE-FUNCTIONS-TABLE') functions-range.html#RANGE-FUNCTIONS-TABLE
-    details
-        summary Domain Types
-        ol
-            li 기저 타입을 토대로 제약을 추가하여 새로 정의하는 타입
-            li CREATE DOMAIN non_negative_int AS integer CHECK (VALUE >= 0);
-    details
-        summary Pseudo Types
-        table
-            thead
-                tr
-                    th Name
-                    th Description
-            tbody
-                tr
-                    td any
-                    td Indicates that a function accepts any input data type.
-                tr
-                    td anyelement
-                    td Indicates that a function accepts any data type
-                tr
-                    td anyarray
-                    td Indicates that a function accepts any array data type
-                tr
-                    td anynonarray
-                    td Indicates that a function accepts any non-array data type
-                tr
-                    td anyenum
-                    td Indicates that a function accepts any enum data type
-                tr
-                    td anyrange
-                    td Indicates that a function accepts any range data type
-                tr
-                    td cstring
-                    td Indicates that a function accepts or returns a null-terminated C string.
-                tr
-                    td internal
-                    td Indicates that a function accepts or returns a server-internal data type.
-                tr
-                    td language_handler
-                    td A procedural language call handler is declared to return language_handler.
-                tr
-                    td fdw_handler
-                    td A foreign-data wrapper handler is declared to return fdw_handler.
-                tr
-                    td index_am_handler
-                    td An index access method handler is declared to return index_am_handler.
-                tr
-                    td tsm_handler
-                    td A tablesample method handler is declared to return tsm_handler.
-                tr
-                    td record
-                    td Identifies a function taking or returning an unspecified row type.
-                tr
-                    td trigger
-                    td A trigger function is declared to return trigger.
-                tr
-                    td event_trigger
-                    td An event trigger function is declared to return event_trigger.
-                tr
-                    td pg_ddl_command
-                    td Identifies a representation of DDL commands that is available to event triggers.
-                tr
-                    td void
-                    td Indicates that a function returns no value.
-                tr
-                    td unknown
-                    td Identifies a not-yet-resolved type, e.g. of an undecorated string literal.
-                tr
-                    td opaque
-                    td An obsolete type name that formerly served many of the above purposes.
-    details
-        summary 기타 내장 자료형 표
-        table
-            thead
-                tr
-                    th Name
-                    th Size
-                    th Description
-            tbody
-                tr
-                    td money
-                    td 8 bytes
-                    td 고정 소수 표현을 이용하며, lc_monetary 설정에 따라 조정된다.
-                tr
-                    td cidr
-                    td 7 or 19 bytes
-                    td IPv4 or IPv6 network address
-                tr
-                    td inet
-                    td 7 or 19 bytes
-                    td IPv4 or IPv6 host address
-                tr
-                    td macaddr
-                    td 6 bytes
-                    td MAC (Media Access Control) address
-                tr
-                    td macaddr8
-                    td 8 bytes
-                    td MAC (Media Access Control) address (EUI-64 format)
-                tr
-                    td bit [ (n) ]
-                    td variable
-                    td fixed-length bit string
-                tr
-                    td bit varying [ (n) ], varbit [ (n) ]
-                    td variable
-                    td variable-length bit string
-                tr
-                    td tsquery
-                    td variable
-                    td text search query
-                tr
-                    td tsvector
-                    td variable
-                    td text search document
-                tr
-                    td uuid
-                    td variable
-                    td universally unique identifier; RFC 4122, ISO/IEC 9834-8:2005
-                tr
-                    td xml
-                    td variable
-                    td XML data
+            +w3a()&attributes({target:'_blank', href:'http://postgresql.kr/docs/current/functions-range.html#RANGE-OPERATORS-TABLE'}) functions-range.html#RANGE-OPERATORS-TABLE
+            +w3a()&attributes({target:'_blank', href:'http://postgresql.kr/docs/current/functions-range.html#RANGE-FUNCTIONS-TABLE'}) functions-range.html#RANGE-FUNCTIONS-TABLE
+
+        h2.marker Domain Types
+        p 기저 타입을 토대로 제약을 추가하여 새로 정의하는 타입
+        +asCode('sql') CREATE DOMAIN non_negative_int AS integer CHECK (VALUE >= 0);
     
-    ils
-    summary Functions and Operations
-    details
-        summary Logical Operators
+    h1.marker Functions and Operations
+    div
+        h2.marker Logical Operators
         ol
             li AND, OR, NOT
             li NULL도 논리 상태로 이용한다
@@ -960,320 +820,100 @@ include ../../source/skeleton.jade
                 li TRUE OR NULL == TRUE
                 li FALSE OR NULL == NULL
                 li NULL AND NULL == NULL OR NULL == NOT NULL == NULL
-    details
-        summary Comparison Functions and Operators
+        h2.marker Comparison Functions and Operators
         ol
             li &lt;, >, &lt;=, >=, =, &lt;> or !=
             li a [NOT] BETWEEN x AND y
-            |             a [NOT] BETWEEN SYMMETRIC x AND y : x, y 대소관계를 판별하여 적절히 비교한다
+            p a [NOT] BETWEEN SYMMETRIC x AND y : x, y 대소관계를 판별하여 적절히 비교한다
             li a IS DISTINCT FROM b
-            |             a != b과 같지만 null을 일반적인 값으로 취급한다는 차이가 있다
+            p a != b과 같지만 null을 일반적인 값으로 취급한다는 차이가 있다
             li expression IS [NOT] NULL
             li boolean_expression IS [NOT] TRUE // FALSE, UNKNOWN
-    details
-        summary Mathematical Functions and Operators
+    
+        h2.marker Mathematical Functions and Operators
         ol
             li +, -, *, /, %, @(절댓값)
             li ^(거듭제곱), |/(제곱근), ||/(삼중근), !(팩토리얼, 후위), !!(팩토리얼, 전위)
             li 비트 연산자 &, |, #(XOR), ~, &lt;&lt;, >>
             li abs(x), sqrt(x), cbrt(x), ceil(x), floor(x), exp(x), div(x, y), round(x, y), ...
             li random() : x ∈ [0.0, 1.0), setseed(dp) : dp ∈ [-1.0, 1.0]
-    details
-        summary String Functions and Operators
-        ol
-            li 문자열 연결 연산자 ||
-            |             비문자열도 피연산자 중 한쪽이 될 수 있다
-            li
-                | lower(
-                i string
-                | ) : 소문자 문자열로 변환
-            li
-                | upper(
-                i string
-                | ) : 대문자 문자열로 변환
-            li
-                | initcap(
-                i string
-                | ) : 각 단어의 첫 글자만 대문자가 되도록 변환
-            li
-                | split_part(
-                i string
-                | ,
-                i delimiter
-                | ,
-                i n
-                | )
-            |             구분자로 문자열을 분할하여 n번째 문자열 반환
-            li concat(param1 [, param2 [,...]]) : 각 인자들을 한 문자열로 합쳐 반환한다. null은 무시한다.
-            li
-                | concat_ws(
-                i sep
-                | , param1 [, param2 [,...]]) : sep를 구분자로 하여 접합한다.
-            li
-                | format(
-                i formatstr
-                |  [, formatarg [,...]]) : C의 printf와 유사
-            li
-                | left(
-                i string
-                | ,
-                i n
-                | ), right(
-                i string
-                | ,
-                i n
-                | )
-            li
-                | lpad(
-                i string
-                | ,
-                i length
-                |  [,
-                i fill_string
-                | ]), rpad(
-                i string
-                | ,
-                i length
-                |  [,
-                i fill_string
-                | ])
-            |             fill_string 기본값은 스페이스
-            li
-                | quote_ident(
-                i string
-                | ) : ""로 감싼 문자열 표현 반환
-            li quote_literal(param), quote_nullable(param) : ''로 감싼 문자열 표현 반환
-            li
-                | repeat(
-                i string
-                | ,
-                i number
-                | )
-            li
-                | reverse(
-                i string
-                | )
-        details
-            summary 문자열 길이 관련
+    
+        h2.marker String Functions and Operators
+        div
+            h3.marker 문자열 변형
+            ul
+                li 문자열 연결 연산자 ||
+                p 비문자열도 피연산자 중 한쪽이 될 수 있다
+                li lower(string) : 소문자 문자열로 변환
+                li upper(string) : 대문자 문자열로 변환
+                li initcap(string) : 각 단어의 첫 글자만 대문자가 되도록 변환
+                li split_part(string, delimiter, n) : 구분자로 문자열을 분할하여 n번째 문자열 반환
+                li concat(param1 [, param2 [,...]]) : 각 인자들을 한 문자열로 합쳐 반환한다. null은 무시한다.
+                li concat_ws(sep, param1 [, param2 [,...]]) : sep를 구분자로 하여 접합한다.
+                li format(formatstr [, formatarg [,...]]) : C의 printf와 유사
+                li left(string, n), right(string, n)
+                li lpad(string, length [, fill_string]), rpad(string, length [, fill_string])
+                p fill_string 기본값은 스페이스
+                li quote_ident(string) : ""로 감싼 문자열 표현 반환
+                li quote_literal(param), quote_nullable(param) : ''로 감싼 문자열 표현 반환
+                li repeat(string, number)
+                li reverse(string)
+        
+            h3.marker 문자열 길이 관련
+            ul
+                li bit_length(string) : 문자열 비트 수
+                li octet_length(string) : 문자열 바이트 수
+                li char_length(string) : 문자열 문자 수
+                li character_length(string) : 문자열 문자 수
+                li length(string) : 문자열 문자 수
+                li length(string | bytea, encoding) : 문자열 문자 수
+        
+            h3.marker 검색
             ol
-                li
-                    | bit_length(
-                    i string
-                    | ) : 문자열 비트 수
-                li
-                    | octet_length(
-                    i string
-                    | ) : 문자열 바이트 수
-                li
-                    | char_length(
-                    i string
-                    | ) : 문자열 문자 수
-                li
-                    | character_length(
-                    i string
-                    | ) : 문자열 문자 수
-                li
-                    | length(
-                    i string
-                    | ) : 문자열 문자 수
-                li
-                    | length(
-                    i string
-                    |  bytea,
-                    i encoding
-                    | ) : 문자열 문자 수
-        details
-            summary 검색 및 수정 관련
-            ol
-                li
-                    | overlay(
-                    i src_string
-                    |  placing
-                    i replacement_string
-                    |  from int [for int]
-                |                 src_string i번째 글자부터 n개를 replacement_string로 교체
-                li
-                    | replace(
-                    i src_string
-                    | ,
-                    i target_string
-                    | ,
-                    i dest_string
-                    | )
-                li
-                    | position(
-                    i substring
-                    |  in
-                    i string
-                    | ) : substring의 위치 반환
-                li
-                    | substring(
-                    i string
-                    |  [from int] [for int]
-                li
-                    | substring(
-                    i string
-                    |  from
-                    i pattern
-                    | ) : POSIX 정규표현식
-                li
-                    | substring(
-                    i string
-                    |  from
-                    i pattern
-                    |  for
-                    i escape
-                    | ) : SQL 정규표현식
-                li
-                    | trim([leading | trailing | both] [
-                    i characters
-                    | ] from
-                    i string
-                    | )
-                li
-                    | trim([leading | trailing | both] [from]
-                    i string
-                    |  [,
-                    i characters
-                    | ])
-                li
-                    | btrim(
-                    i string
-                    |  [,
-                    i characters
-                    | ])
-                |                 trim(both ...)를 수행한다. characters의 기본값은 스페이스
-                li
-                    | ltrim(
-                    i string
-                    | [,
-                    i characters
-                    | ]), rtrim(
-                    i string
-                    | [,
-                    i characters
-                    | ])
-                li
-                    | regexp_match(
-                    i string
-                    | ,
-                    i pattern
-                    | [,
-                    i flags
-                    | ]) Since PostgreSQL 10 : POSIX 정규표현식
-                |                 첫 번째 매칭 문자열 배열 반환. 패턴에 그룹이 없으면 전체 매칭 문자열이, 그룹이 있으면 각 그룹에 매칭되는 부분 문자열들이 배열의 원소가 된다.
-                li
-                    | regexp_matches(
-                    i string
-                    | ,
-                    i pattern
-                    | [,
-                    i flags
-                    | ]) : POSIX 정규표현식
-                |                 매칭 문자열 배열로 이루어진 행집합을 반환한다. 전체 문자열 매칭을 위해 'g' 플래그를 이용해야 한다.
-                |                 PostgreSQL 10 이전 버전에서 regexp_match와 같은 결과를 얻기 위한 서브쿼리 트릭 : (SELECT ..., (SELECT regexp_matches(str, pattern)) FROM table...)
-                li
-                    | regexp_split_to_array(
-                    i string
-                    | ,
-                    i pattern
-                    | [,
-                    i flags
-                    | ]) : POSIX 정규표현식
-                |                 매칭 문자열을 구분자로 하여 분리한 부분 문자열들로 구성된 배열 반환. 문자열 시작, 끝의 길이 0 매칭 문자열은 무시된다.
-                li
-                    | regexp_split_to_table(
-                    i string
-                    | ,
-                    i pattern
-                    | [,
-                    i flags
-                    | ]) : POSIX 정규표현식
-                |                 매칭 문자열을 구분자로 하여 분리한 부분 문자열들로 구성된 테이블 반환. 문자열 시작, 끝의 길이 0 매칭 문자열은 무시된다.
-                li
-                    | regexp_replace(
-                    i string
-                    | ,
-                    i pattern
-                    | ,
-                    i replacement
-                    |  [,
-                    i flags
-                    | ]) : POSIX 정규표현식
-                li
-                    | starts_with(
-                    i string
-                    | ,
-                    i prefix
-                    | )
-                li
-                    | translate(
-                    i string
-                    | ,
-                    i from
-                    | ,
-                    i to
-                    | )
-                |                 문자열 각 문자에 대하여, from[i]에 일치하는 문자를 to[i]로 교체한다.
-        details
-            summary 인코딩 관련
+                li replace(src_string, target_string, dest_string)
+                li position(substring in string) : substring의 위치 반환
+                li substring(string [from int] [for int])
+                li substring(string from pattern) : POSIX 정규표현식
+                li substring(string from pattern for escape) : SQL 정규표현식
+                li trim([leading | trailing | both] [characters] from string)
+                li regexp_match(string, pattern[, flags]) Since PostgreSQL 10
+                p POSIX 정규표현식. 첫 번째 매칭 문자열 배열 반환. 패턴에 그룹이 없으면 전체 매칭 문자열이, 그룹이 있으면 각 그룹에 매칭되는 부분 문자열들이 배열의 원소가 된다.
+                li regexp_matches(string, pattern[, flags])
+                p POSIX 정규표현식. 매칭 문자열 배열로 이루어진 행집합을 반환한다. 전체 문자열 매칭을 위해 'g' 플래그를 이용해야 한다.
+                p PostgreSQL 10 이전 버전에서 regexp_match와 같은 결과를 얻기 위한 서브쿼리 트릭
+                +asCode('sql') SELECT ..., (SELECT regexp_matches(str, pattern)) FROM table...
+                li regexp_split_to_array(string, pattern[, flags])
+                p POSIX 정규표현식. 매칭 문자열을 구분자로 하여 분리한 부분 문자열들로 구성된 배열 반환. 문자열 시작, 끝의 길이 0 매칭 문자열은 무시된다.
+                li regexp_split_to_table(string, pattern[, flags])
+                p POSIX 정규표현식. 매칭 문자열을 구분자로 하여 분리한 부분 문자열들로 구성된 테이블 반환. 문자열 시작, 끝의 길이 0 매칭 문자열은 무시된다.
+                li regexp_replace(string, pattern, replacement[, flags]) : POSIX 정규표현식
+                li starts_with(string, prefix)
+                li translate(string, from, to)
+                p 문자열 각 문자에 대하여, from[i]에 일치하는 문자를 to[i]로 교체한다.
+        
+            h3.marker 인코딩 관련
             ol
                 li pg_client_encoding() : 현재 인코딩 이름 반환
-                li
-                    | ascii(
-                    i string
-                    | )
-                |                 첫 글자의 아스키 코드값을 반환한다. UTF8 문자열의 경우 유니코드 코드 포인트를 반환한다.
+                li ascii(string)
+                p 첫 글자의 아스키 코드값을 반환한다. UTF8 문자열의 경우 유니코드 코드 포인트를 반환한다.
                 li chr(int)
-                |                 주어진 코드값에 대한 문자를 반환한다. UTF8 문자에 대해서는 유니코드 코드 포인트를 인자로 전달하고, 그 외의 경우엔 아스키 코드를 인자로 전달해야 한다. 0은 입력으로 허용되지 않는다.
-                li
-                    | convert(
-                    i string
-                    |  bytea,
-                    i src_encoding
-                    | ,
-                    i dest_encoding
-                    | )
-                |                 가능한 빌트인 변환 목록 :
-                a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://postgresql.kr/docs/current/functions-string.html#CONVERSION-NAMES') #CONVERSION-NAMES
-                li
-                    | convert_from(
-                    i string
-                    |  bytea, src_encoding) : dest_encoding = DB 인코딩
-                li
-                    | convert_to(
-                    i string
-                    |  bytea, dest_encoding) : src_encoding = DB 인코딩
-                li
-                    | to_ascii(
-                    i string
-                    |  [,
-                    i encoding
-                    | ]
-                |                 LATIN1, LATIN2, LATIN9, WIN1250문자열을 아스키 문자열로 변환
-                li
-                    | to_hex(
-                    i number
-                    | ) : 16진수 표현 문자열 반환
-                li
-                    | decode(
-                    i string
-                    | ,
-                    i format
-                    | ), encode(
-                    i string
-                    | ,
-                    i format
-                    | )
-                |                 지원 format : base64, hex, escape
-                |                 Data Types - Binary Data Types - escape 참고
+                p 주어진 코드값에 대한 문자를 반환한다. UTF8 문자에 대해서는 유니코드 코드 포인트를 인자로 전달하고, 그 외의 경우엔 아스키 코드를 인자로 전달해야 한다. 0은 입력으로 허용되지 않는다.
+                li convert(string | bytea, src_encoding, dest_encoding)
+                p
+                    | 가능한 빌트인 변환 목록 :
+                    +w3a()&attributes({target:'_blank', href:'http://postgresql.kr/docs/current/functions-string.html#CONVERSION-NAMES'}) #CONVERSION-NAMES
+                li convert_from(string | bytea, src_encoding) : dest_encoding = DB 인코딩
+                li convert_to(string | bytea, dest_encoding) : src_encoding = DB 인코딩
+                li to_ascii(string [, encoding]
+                p LATIN1, LATIN2, LATIN9, WIN1250문자열을 아스키 문자열로 변환
+                li to_hex(number) : 16진수 표현 문자열 반환
+                li decode(string, format), encode(string, format)
+                p 지원 format : base64, hex, escape
+                p Data Types - Binary Data Types - escape 참고
                 li set_bit(string, offset, newvalue), set_byte(string, offset, newvalue)
-                li
-                    | md5(
-                    i string
-                    | ), sha256(bytea), sha512(bytea)
-    details
-        summary Bit String Operators
+                li md5(string), sha256(bytea), sha512(bytea)
+    
+        h2.marker Bit String Operators
         table
             thead
                 tr

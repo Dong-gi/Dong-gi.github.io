@@ -204,10 +204,12 @@ function convertAsCodeDiv(divs) {
     }
 }
 
-var isNarrow = false;
+function isNarrow() {
+    return document.getElementById('nav').clientWidth <= 600;
+}
+
 function updateSidebar() {
-    isNarrow = window.innerWidth <= 600;
-    if (isNarrow)
+    if (isNarrow())
         closeSidebar();
     else
         openSidebar();
@@ -216,7 +218,6 @@ function updateSidebar() {
 }
 
 function openSidebar() {
-    isNarrow = window.innerWidth <= 600;
     document.getElementById('main').style.marginLeft = '333px';
     document.getElementById('sidebar').style.display = 'block';
 }
@@ -299,7 +300,7 @@ function updateMarkerList() {
         type: 'text/plain;charset=utf-8;'
     }));
     new FileList(url, '#marker-list', (_, markerId) => {
-        if (isNarrow)
+        if (isNarrow())
             closeSidebar();
         let target = document.querySelector(`.marker[marker-id=${markerId}]`);
         let parent = target;
@@ -316,7 +317,7 @@ function updateMarkerList() {
             window.scrollTo({
                 top: target.offsetTop - document.getElementById('nav').clientHeight
             });
-        })(target), isNarrow? 444 : 0);
+        })(target), isNarrow()? 444 : 0);
     }, true, (_, markerId) => {
         let marker = document.querySelector(`.marker[marker-id=${markerId}]`);
         let li = Donggi.getElementFromText(`<li>${getMarkerName(marker)}</li>`);
