@@ -3296,6 +3296,7 @@ http.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/front/freemarker:
 built_in.jade
+programming_guide.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/java:
 
@@ -3321,7 +3322,6 @@ freemarker
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/front/freemarker:
 freemarker_permission.jade
-programming_guide.jade
 template_guide.jade
 xml_guide.jade
 
