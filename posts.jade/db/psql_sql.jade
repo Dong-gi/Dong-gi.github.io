@@ -653,7 +653,7 @@ include ../../source/skeleton.jade
                 tr
                     td now
                     td date, time, timestamp
-                    td 	current transaction's start time
+                    td current transaction's start time
                 tr
                     td today
                     td date, timestamp
@@ -914,92 +914,76 @@ include ../../source/skeleton.jade
                 li md5(string), sha256(bytea), sha512(bytea)
     
         h2.marker Bit String Operators
-        table
-            thead
-                tr
-                    th Operator
-                    th Description
-                    th Example
-                    th Result
-            tbody
-                tr
-                    td ||
-                    td concatenation
-                    td B'10001' || B'011'
-                    td 10001011
-                tr
-                    td &
-                    td bitwise AND
-                    td B'10001' & B'01101'
-                    td 00001
-                tr
-                    td |
-                    td bitwise OR
-                    td B'10001' | B'01101'
-                    td 11101
-                tr
-                    td #
-                    td bitwise XOR
-                    td B'10001' # B'01101'
-                    td 11100
-                tr
-                    td ~
-                    td bitwise NOT
-                    td ~ B'10001'
-                    td 01110
-                tr
-                    td &lt;&lt;
-                    td bitwise shift left
-                    td B'10001' &lt;&lt; 3
-                    td 01000
-                tr
-                    td >>
-                    td bitwise shift right
-                    td B'10001' >> 2
-                    td 00100
-    details
-        summary Pattern matching
-        details
-            summary LIKE
+        table.no-sort
+            tr
+                th Operator
+                th Description
+                th Example
+                th Result
+            tr
+                td ||
+                td concatenation
+                td B'10001' || B'011'
+                td 10001011
+            tr
+                td &
+                td bitwise AND
+                td B'10001' & B'01101'
+                td 00001
+            tr
+                td |
+                td bitwise OR
+                td B'10001' | B'01101'
+                td 11101
+            tr
+                td #
+                td bitwise XOR
+                td B'10001' # B'01101'
+                td 11100
+            tr
+                td ~
+                td bitwise NOT
+                td ~ B'10001'
+                td 01110
+            tr
+                td &lt;&lt;
+                td bitwise shift left
+                td B'10001' &lt;&lt; 3
+                td 01000
+            tr
+                td >>
+                td bitwise shift right
+                td B'10001' >> 2
+                td 00100
+
+        h2.marker Pattern matching
+        div
+            h3.marker LIKE
             ol
                 li 전체 문자열이 패턴과 일치하는지 여부를 판별한다
                 li Syntax
-                i string
-                |  [NOT] LIKE
-                i pattern
-                |  [ESCAPE
-                i escape-character
-                | ]
+                +asCode('sql') string [NOT] LIKE pattern [ESCAPE escape-character]
                 li pattern
                 ul
                     li '_' : 임의의 1글자
                     li '%' : 연속적인 임의의 0개 이상 글자
                     li 'string' : 'string' 자체
                 li ESCAPE
-                |                 '%', '_'의 이스케이핑을 끄고 싶을 때 : ESCAPE ''
+                p '%', '_'의 이스케이핑을 끄고 싶을 때 : ESCAPE ''
                 li 기타
-                |                 PostgreSQL 고유의 ILIKE : 대소문자 구별없는 LIKE
-                |                 LIKE = ~~, ILIKE = ~~*, NOT LIKE = !~~, NOT ILIKE = !~~*
-        details
-            summary SIMILAR TO 정규표현식
+                p PostgreSQL 고유의 ILIKE : 대소문자 구별없는 LIKE
+                p LIKE = ~~, ILIKE = ~~*, NOT LIKE = !~~, NOT ILIKE = !~~*
+            
+            h3.marker SIMILAR TO 정규표현식
             ol
                 li LIKE와 비슷하나, 패턴으로 SQL 표준 정규표현식을 이용한다
-                |                 LIKE와 마찬가지로 전체 문자열이 패턴과 일치해야 한다.
+                p LIKE와 마찬가지로 전체 문자열이 패턴과 일치해야 한다.
                 li Syntax
-                i string
-                |  [NOT] SIMILAR TO
-                i pattern
-                |  [ESCAPE
-                i escape-character
-                | ]
+                +asCode('sql') string [NOT] SIMILAR TO pattern [ESCAPE escape-character]
                 li pattern
                 ol
                     li '_'와 '%'는 LIKE와 같은 의미를 지닌다
-                    li
-                        i sub1
-                        |  |
-                        i sub2
-                        |  : sub1 또는 sub2
+                    li sub1 | sub2 : sub1 또는 sub2
                     li * : 0 or more
                     li + : 1 or more
                     li ? : 0 or 1
@@ -1008,45 +992,32 @@ include ../../source/skeleton.jade
                     li {m, n} : m~n times
                     li () : 그루핑
                     li [] : 글자 집합
-        details
-            summary POSIX 정규표현식
-            details
-                summary 용어
+        
+            h3.marker POSIX 정규표현식
+            div
+                h4.marker 용어
                 ol
                     li RE; 정규표현식 : 정규표현식은 |로 구분되는 브랜치들로 구성된다. 임의의 브랜치와 일치하는 부분 문자열은 매칭 결과가 된다
-                    li
-                        | Branch : 브랜치는 quantified atom 또는 constraint들로 구성된다. 구성요소 순서대로 매칭을 시도하며, 빈 브랜치는 빈 문자열과 매칭된다.
+                    li Branch : 브랜치는 quantified atom 또는 constraint들로 구성된다. 구성요소 순서대로 매칭을 시도하며, 빈 브랜치는 빈 문자열과 매칭된다.
                     li Quantified atom : quantifier가 붙은 atom
                     li Constraint : 길이 0인 문자열이 매칭되지만, 특별한 위치와 의미를 지닌다.
-            details
-                summary 연산자
+                h4.marker 연산자
                 ol
                     li ~ : case sensitive match
                     li ~* : case insensitive match
                     li !~ : case sensitive 'not' match
                     li !~* : case insensitive 'not' match
-            details
-                summary Atom
+                h4.marker Atom
                 ol
-                    li
-                        | (
-                        i re
-                        | ) : 정규표현식 re를 매칭하며, 그루핑 번호가 붙는다
-                    li
-                        | (?:
-                        i re
-                        | ) : re에 대해 매칭은 하지만, 그루핑 번호는 붙지 않는다(non-capturing set)
+                    li (re) : 정규표현식 re를 매칭하며, 그루핑 번호가 붙는다
+                    li (?:re) : re에 대해 매칭은 하지만, 그루핑 번호는 붙지 않는다(non-capturing set)
                     li . : 임의의 문자에 매칭
-                    li
-                        | [
-                        i chars
-                        | ] : 문자 집합 임의의 문자에 매칭
+                    li [chars] : 문자 집합 임의의 문자에 매칭
                     li \k : k는 non-alphanumeric 문자. 예. \\는 백슬래시 문자 자체에 매칭된다.
                     li \c : c는 alphanumeric 문자. 이스케이핑된다.
                     li { : 뒤에 숫자가 오는 경우 정규표현식 quantifier가 된다.
                     li x : 문자 x 자체에 매칭된다
-            details
-                summary Quantifier
+                h4.marker Quantifier
                 ol
                     li * : 0 or more
                     li + : 1 or more
@@ -1060,45 +1031,28 @@ include ../../source/skeleton.jade
                     li {m}? : non-greedy version of {m}
                     li {m,}? : non-greedy version of {m,}
                     li {m,n}? : non-greedy version of {m,n}
-            details
-                summary Constraint
+                h4.marker Constraint
                 ol
                     li ^ : 문자열의 시작에 매칭된다.
                     li $ : 문자열의 끝에 매칭된다.
                     li (?=re) : positive lookahead. 매칭된 부분문자열의 시작부터 재탐색한다
-                    |                     예. 아이디는 영문 대소문자와 숫자로만 구성할 수 있으며, 첫 글자는 숫자가 될 수 없다
-                    |                     SELECT 'awef79' ~ '(?=^[a-zA-Z])(?=^[a-zA-Z0-9]+$)'; // t
-                    |                     SELECT '79awef' ~ '(?=^[a-zA-Z])(?=^[a-zA-Z0-9]+$)'; // f
+                    +asCode('sql').
+                        -- 예. 아이디는 영문 대소문자와 숫자로만 구성할 수 있으며, 첫 글자는 숫자가 될 수 없다
+                        SELECT 'awef79' ~ '(?=^[a-zA-Z])(?=^[a-zA-Z0-9]+$)'; -- t
+                        SELECT '79awef' ~ '(?=^[a-zA-Z])(?=^[a-zA-Z0-9]+$)'; -- f
                     li (?!re) : negative lookahead. 매칭된 부분문자열의 시작이 아닌 위치부터 재탐색한다
                     li (?&lt;=re) : positive lookahead. 매칭된 부분문자열의 끝부터 재탐색한다
                     li (?&lt;!re) : negative lookahead. 매칭된 부분문자열의 끝이 아닌 위치부터 재탐색한다
-                |                 Lookahead와 lookbehind는 back reference를 포함할 수 없으며, 모든 괄호는 non-capturing으로 간주된다.
-            details
-                summary 문자 이스케이프
+                    p Lookahead와 lookbehind는 back reference를 포함할 수 없으며, 모든 괄호는 non-capturing으로 간주된다.
+                h4.marker 문자 이스케이프
                 ol
                     li \a(alert character), \b(backspace), \f, \n, \r, \t, \v(수직 탭), \0
                     li \B : \\
-                    li
-                        | \c
-                        i X
-                        |  : X는 임의 문자. 하위 5개 비트가 같고 나머지 비트가 모두 0
-                    li
-                        | \u
-                        i FFFF
-                        | , \U
-                        i FFFFFFFF
-                        |  : 유니코드 코드포인트. DB 인코딩에 따라 달라진다...
-                    li
-                        | \x
-                        i FFF
-                        | , \
-                        i xy
-                        | (8진수 2개), \
-                        i xyz
-                        | (8진수 3개)
-            details
-                summary 클래스 약어 이스케이프
-                |                 alnum, alpha, blank, cntrl, digit, graph, lower, print, punct, space, upper, xdigit
+                    li \cX : X는 임의 문자. 하위 5개 비트가 같고 나머지 비트가 모두 0
+                    li \uFFFF, \UFFFFFFFF : 유니코드 코드포인트. DB 인코딩에 따라 달라진다...
+                    li \xFFF, \xy(8진수 2개), \xyz(8진수 3개)
+                h4.marker 클래스 약어 이스케이프
+                p alnum, alpha, blank, cntrl, digit, graph, lower, print, punct, space, upper, xdigit
                 ol
                     li \d : [[:digit:]]
                     li \s : [[:space:]]
@@ -1106,21 +1060,18 @@ include ../../source/skeleton.jade
                     li \D : [^[:digit:]]
                     li \S : [^[:space:]]
                     li \W : [^[alnum:]_] // underscore included
-            details
-                summary Constraint 이스케이프
+                h4.marker Constraint 이스케이프
                 ol
                     li \A : 문자열 시작, \Z : 문자열 끝
-                    |                     ^, $와 다르게 멀티 라인 처리 지원 x
+                    p ^, $와 다르게 멀티 라인 처리 지원 x
                     li \m : 단어 시작
                     li \M : 단어 끝
                     li \y : 단어 시작 또는 끝
                     li \Y : not \y
-            details
-                summary Back reference
-                |                 \m[nn] : m은 nonzero digit. n은 추가적인 자릿수
-            details
-                summary Option letter
-                |                 정규표현식 플래그에 사용되는 문자들은 아래와 같다
+                h4.marker Back reference
+                p \m[nn] : m은 nonzero digit. n은 추가적인 자릿수
+                h4.marker Option letter
+                p 정규표현식 플래그에 사용되는 문자들은 아래와 같다
                 ol
                     li c : 대소문자 구분 (overrides operator type)
                     li i : 대소문자 구분 x (overrides operator type)
@@ -1128,486 +1079,463 @@ include ../../source/skeleton.jade
                     li n, m : 멀티 라인 처리
                     li p : 부분적 멀티 라인 처리. ^와 $는 멀티 라인 처리 x
                     li w : 부분적 멀티 라인 처리. ^와 $는 멀티 라인 처리 o
-    details
-        summary Formatting Functions
+
+        h2.marker Formatting Functions
         ol
-            a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://postgresql.kr/docs/current/functions-formatting.html') functions-formatting.html
+            +w3a()&attributes({target:'_blank', href:'http://postgresql.kr/docs/current/functions-formatting.html'}) functions-formatting.html
             li to_char()
             li to_date()
             li to_number()
             li to_timestamp()
-    details
-        summary Date/Time Functions and Operators
-        details
-            summary Date/Time Operators
-            table
-                thead
-                    tr
-                        th Operator
-                        th Example
-                        th Result
-                tbody
-                    tr
-                        td +
-                        td date '2001-09-28' + integer '7'
-                        td date '2001-10-05'
-                    tr
-                        td +
-                        td date '2001-09-28' + interval '1 hour'
-                        td timestamp '2001-09-28 01:00:00'
-                    tr
-                        td +
-                        td date '2001-09-28' + time '03:00'
-                        td timestamp '2001-09-28 03:00:00'
-                    tr
-                        td +
-                        td interval '1 day' + interval '1 hour'
-                        td interval '1 day 01:00:00'
-                    tr
-                        td +
-                        td timestamp '2001-09-28 01:00' + interval '23 hours'
-                        td timestamp '2001-09-29 00:00:00'
-                    tr
-                        td +
-                        td time '01:00' + interval '3 hours'
-                        td time '04:00:00'
-                    tr
-                        td -
-                        td - interval '23 hours'
-                        td interval '-23:00:00'
-                    tr
-                        td -
-                        td date '2001-10-01' - date '2001-09-28'
-                        td integer 3
-                    tr
-                        td -
-                        td date '2001-10-01' - integer '7'
-                        td date '2001-09-24'
-                    tr
-                        td -
-                        td date '2001-09-28' - interval '1 hour'
-                        td timestamp '2001-09-27 23:00:00'
-                    tr
-                        td -
-                        td time '05:00' - time '03:00'
-                        td interval '02:00:00'
-                    tr
-                        td -
-                        td time '05:00' - interval '2 hours'
-                        td time '03:00:00'
-                    tr
-                        td -
-                        td timestamp '2001-09-28 23:00' - interval '23 hours'
-                        td timestamp '2001-09-28 00:00:00'
-                    tr
-                        td -
-                        td interval '1 day' - interval '1 hour'
-                        td interval '1 day -01:00:00'
-                    tr
-                        td -
-                        td timestamp '2001-09-29 03:00' - timestamp '2001-09-27 12:00'
-                        td interval '1 day 15:00:00'
-                    tr
-                        td *
-                        td 900 * interval '1 second'
-                        td interval '00:15:00'
-                    tr
-                        td *
-                        td 21 * interval '1 day'
-                        td interval '21 days'
-                    tr
-                        td *
-                        td double precision '3.5' * interval '1 hour'
-                        td interval '03:30:00'
-                    tr
-                        td /
-                        td interval '1 hour' / double precision '1.5'
-                        td interval '00:40:00'
-                    tr
-                        td overlaps
-                        td
-                            | (date '2000-01-01', date '2000-12-31') overlaps (date '2000-07-07', date '2000-08-08')
-                        td t
-                    tr
-                        td overlaps
-                        td
-                            | (date '2000-01-01', make_interval(years => 1)) overlaps (date '2000-07-07', date '2000-08-08')
-                        td t
-        details
-            summary Date/Time Functions
-            table
-                thead
-                    tr
-                        th Function
-                        th Return Type
-                        th Description
-                        th Example
-                        th Result
-                tbody
-                    tr
-                        td clock_timestamp()
-                        td timestamptz
-                        td(colspan='3') 현재 timestamp. 클록 기준.
-                    tr
-                        td timeofday()
-                        td text
-                        td(colspan='3') 현재 시각(clock_timestamp)을 문자열로 반환
-                    tr
-                        td current_date
-                        td date
-                        td(colspan='3') 현재 date. 트랜잭션 시작 기준
-                    tr
-                        td current_time
-                        td timetz
-                        td(colspan='3') 현재 time. 트랜잭션 시작 기준. CURRENT_TIME(precision) 가능
-                    tr
-                        td current_timestamp
-                        td timestamptz
-                        td(colspan='3') 현재 timestamp. 트랜잭션 시작 기준. CURRENT_TIMESTAMP(precision) 가능
-                    tr
-                        td localtime
-                        td time
-                        td(colspan='3') 현재 time. 트랜잭션 시작 기준. LOCALTIME(precision) 가능
-                    tr
-                        td localtimestamp
-                        td timestamp
-                        td(colspan='3') 현재 timestamp. 트랜잭션 시작 기준. LOCALTIMESTAMP(precision) 가능
-                    tr
-                        td now()
-                        td timestamptz
-                        td(colspan='3') 현재 timestamp. 트랜잭션 시작 기준
-                    tr
-                        td statement_timestamp()
-                        td timestamptz
-                        td(colspan='3') 현재 timestamp. 현재 문장 실행 기준
-                    tr
-                        td transaction_timestamp()
-                        td timestamptz
-                        td(colspan='3') 현재 timestamp. 트랜잭션 시작 기준
-                    tr
-                        td make_date(year int, month int, day int)
-                        td date
-                        td date 생성
-                        td make_date(2013, 7, 15)
-                        td 2013-07-15
-                    tr
-                        td
-                            | make_interval(years int DEFAULT 0, months int DEFAULT 0, weeks int DEFAULT 0, days int DEFAULT 0, hours int DEFAULT 0, mins int DEFAULT 0, secs double precision DEFAULT 0.0)
-                        td interval
-                        td interval 생성
-                        td make_interval(days => 10)
-                        td 10 days
-                    tr
-                        td make_time(hour int, min int, sec double precision)
-                        td time
-                        td time 생성
-                        td make_time(8, 15, 23.5)
-                        td 08:15:23.5
-                    tr
-                        td
-                            | make_timestamp(year int, month int, day int, hour int, min int, sec double precision)
-                        td timestamp
-                        td timestamp 생성
-                        td make_timestamp(2013, 7, 15, 8, 15, 23.5)
-                        td 2013-07-15 08:15:23.5
-                    tr
-                        td
-                            | make_timestamptz(year int, month int, day int, hour int, min int, sec double precision, [timezone text])
-                        td timestamptz
-                        td timestamp 생성. timezone 생략시 현재 설정 사용
-                        td make_timestamptz(2013, 7, 15, 8, 15, 23.5)
-                        td 2013-07-15 08:15:23.5+01
-                    tr
-                        td to_timestamp(double precision)
-                        td timestamptz
-                        td Convert Unix epoch (seconds since 1970-01-01 00:00:00+00) to timestamp
-                        td to_timestamp(1284352323)
-                        td 2010-09-13 04:32:03+00
-                    tr
-                        td at time zone
-                        td timestamptz
-                        td
-                            | Convert timestamp to timestamptz
-                            a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones') wiki/List_of_tz
-                        td timestamp '2000-01-01 00:00:00' at time zone 'Asia/Seoul'
-                        td 1999-12-31 07:00:00-08
-                    tr
-                        td age(timestamp,timestamp)
-                        td interval
-                        td 연월일로 표기되는 두 시각 사이의 차이. 부정확
-                        td age(timestamp '2001-04-10', timestamp '1957-06-13')
-                        td 43 years 9 mons 27 days
-                    tr
-                        td age(timestamp)
-                        td interval
-                        td 현재 date로부터 뺀다. = age(current_date::timestamp, from)
-                        td age(timestamp '1957-06-13')
-                        td 43 years 8 mons 3 days
-                    tr
-                        td date_part(text,timestamp)
-                        td float8
-                        td = extract
-                        td date_part('hour', timestamp '2001-02-16 20:38:40')
-                        td 20
-                    tr
-                        td date_part(text,interval)
-                        td float8
-                        td = extract
-                        td date_part('month', interval '2 years 3 months')
-                        td 3
-                    tr
-                        td extract(field from timestamp)
-                        td float8
-                        td Get subfield
-                        td extract(hour from timestamp '2001-02-16 20:38:40')
-                        td 20
-                    tr
-                        td extract(field from interval)
-                        td float8
-                        td Get subfield
-                        td extract(month from interval '2 years 3 months')
-                        td 3
-                    tr
-                        td extract, date_part field
-                        td(colspan='4')
-                            | century, day, decade, dow(day of the week), doy(day of the year), epoch(number of seconds sinse 1970-01-01 00:00:00 UTC), hour, isodow(day of the week), isoyear(ISO 8601 week-numbering), microseconds, millenium, milliseconds, minute, month, quarter, second, timezone, timezone_hour, timezone_minute, week(ISO 8601 week-numbering), year
-                    tr
-                        td isfinite(date)
-                        td boolean
-                        td Test for finite date (not +/-infinity)
-                        td isfinite(date '2001-02-16')
-                        td true
-                    tr
-                        td isfinite(timestamp)
-                        td boolean
-                        td Test for finite time stamp (not +/-infinity)
-                        td isfinite(timestamp '2001-02-16 21:28:30')
-                        td true
-                    tr
-                        td isfinite(interval)
-                        td boolean
-                        td Test for finite interval
-                        td isfinite(interval '4 hours')
-                        td true
-                    tr
-                        td date_trunc(text,timestamp)
-                        td timestamp
-                        td Truncate to specified precision
-                        td date_trunc('hour', timestamp '2001-02-16 20:38:40')
-                        td 2001-02-16 20:00:00
-                    tr
-                        td date_trunc(text,interval)
-                        td interval
-                        td Truncate to specified precision
-                        td date_trunc('hour', interval '2 days 3 hours 40 minutes')
-                        td 2 days 03:00:00
-                    tr
-                        td date_trunc field
-                        td(colspan='4')
-                            | microseconds, milliseconds, second, minute, hour, day, week, month, quarter, year, decade, century, millenium
-                    tr
-                        td justify_days(interval)
-                        td interval
-                        td Adjust interval so 30-day time periods are represented as months
-                        td justify_days(interval '35 days')
-                        td 1 mon 5 days
-                    tr
-                        td justify_hours(interval)
-                        td interval
-                        td Adjust interval so 24-hour time periods are represented as days
-                        td justify_hours(interval '27 hours')
-                        td 1 day 03:00:00
-                    tr
-                        td justify_interval(interval)
-                        td interval
-                        td
-                            | Adjust interval using justify_days and justify_hours, with additional sign adjustments
-                        td justify_interval(interval '1 mon -1 hour')
-                        td 29 days 23:00:00
-    details
-        summary JSON Functions and Operators
-        details(open='')
-            summary json and jsonb Operators
-            table
-                thead
-                    tr
-                        th Operator
-                        th Right Operand Type
-                        th Description
-                        th Example
-                        th Example Result
-                tbody
-                    tr
-                        td ->
-                        td int
-                        td Get JSON array element(인덱스는 0부터 시작. 음수면 뒤에서부터)
-                        td '[{"a":"foo"},{"b":"bar"},{"c":"baz"}]'::json->2
-                        td {"c":"baz"}
-                    tr
-                        td ->
-                        td text
-                        td Get JSON object field by key
-                        td '{"a": {"b":"foo"}}'::json->'a'
-                        td {"b":"foo"}
-                    tr
-                        td ->>
-                        td int
-                        td Get JSON array element as text
-                        td '[1,2,3]'::json->>2
-                        td 3
-                    tr
-                        td ->>
-                        td text
-                        td Get JSON object field as text
-                        td '{"a":1,"b":2}'::json->>'b'
-                        td 2
-                    tr
-                        td #>
-                        td text[]
-                        td Get JSON object at specified path
-                        td '{"a": {"b":{"c": "foo"}}}'::json#>'{a,b}'
-                        td {"c": "foo"}
-                    tr
-                        td #>>
-                        td text[]
-                        td Get JSON object at specified path as text
-                        td '{"a":[1,2,3],"b":[4,5,6]}'::json#>>'{a,2}'
-                        td 3
-        a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://postgresql.kr/docs/current/functions-json.html') functions-json.html
-    details
-        summary Sequence Manipulation Functions
+
+        h2.marker Date/Time Functions and Operators
+        div
+            h3.marker Date/Time Operators
+            table.no-sort
+                tr
+                    th Operator
+                    th Example
+                    th Result
+                tr
+                    td +
+                    td date '2001-09-28' + integer '7'
+                    td date '2001-10-05'
+                tr
+                    td +
+                    td date '2001-09-28' + interval '1 hour'
+                    td timestamp '2001-09-28 01:00:00'
+                tr
+                    td +
+                    td date '2001-09-28' + time '03:00'
+                    td timestamp '2001-09-28 03:00:00'
+                tr
+                    td +
+                    td interval '1 day' + interval '1 hour'
+                    td interval '1 day 01:00:00'
+                tr
+                    td +
+                    td timestamp '2001-09-28 01:00' + interval '23 hours'
+                    td timestamp '2001-09-29 00:00:00'
+                tr
+                    td +
+                    td time '01:00' + interval '3 hours'
+                    td time '04:00:00'
+                tr
+                    td -
+                    td - interval '23 hours'
+                    td interval '-23:00:00'
+                tr
+                    td -
+                    td date '2001-10-01' - date '2001-09-28'
+                    td integer 3
+                tr
+                    td -
+                    td date '2001-10-01' - integer '7'
+                    td date '2001-09-24'
+                tr
+                    td -
+                    td date '2001-09-28' - interval '1 hour'
+                    td timestamp '2001-09-27 23:00:00'
+                tr
+                    td -
+                    td time '05:00' - time '03:00'
+                    td interval '02:00:00'
+                tr
+                    td -
+                    td time '05:00' - interval '2 hours'
+                    td time '03:00:00'
+                tr
+                    td -
+                    td timestamp '2001-09-28 23:00' - interval '23 hours'
+                    td timestamp '2001-09-28 00:00:00'
+                tr
+                    td -
+                    td interval '1 day' - interval '1 hour'
+                    td interval '1 day -01:00:00'
+                tr
+                    td -
+                    td timestamp '2001-09-29 03:00' - timestamp '2001-09-27 12:00'
+                    td interval '1 day 15:00:00'
+                tr
+                    td *
+                    td 900 * interval '1 second'
+                    td interval '00:15:00'
+                tr
+                    td *
+                    td 21 * interval '1 day'
+                    td interval '21 days'
+                tr
+                    td *
+                    td double precision '3.5' * interval '1 hour'
+                    td interval '03:30:00'
+                tr
+                    td /
+                    td interval '1 hour' / double precision '1.5'
+                    td interval '00:40:00'
+                tr
+                    td overlaps
+                    td
+                        | (date '2000-01-01', date '2000-12-31') overlaps (date '2000-07-07', date '2000-08-08')
+                    td t
+                tr
+                    td overlaps
+                    td
+                        | (date '2000-01-01', make_interval(years => 1)) overlaps (date '2000-07-07', date '2000-08-08')
+                    td t
+
+            h3.marker Date/Time Functions
+            table.no-sort
+                tr
+                    th Function
+                    th Return Type
+                    th Description
+                    th Example
+                    th Result
+                tr
+                    td clock_timestamp()
+                    td timestamptz
+                    td(colspan='3') 현재 timestamp. 클록 기준.
+                tr
+                    td timeofday()
+                    td text
+                    td(colspan='3') 현재 시각(clock_timestamp)을 문자열로 반환
+                tr
+                    td current_date
+                    td date
+                    td(colspan='3') 현재 date. 트랜잭션 시작 기준
+                tr
+                    td current_time
+                    td timetz
+                    td(colspan='3') 현재 time. 트랜잭션 시작 기준. CURRENT_TIME(precision) 가능
+                tr
+                    td current_timestamp
+                    td timestamptz
+                    td(colspan='3') 현재 timestamp. 트랜잭션 시작 기준. CURRENT_TIMESTAMP(precision) 가능
+                tr
+                    td localtime
+                    td time
+                    td(colspan='3') 현재 time. 트랜잭션 시작 기준. LOCALTIME(precision) 가능
+                tr
+                    td localtimestamp
+                    td timestamp
+                    td(colspan='3') 현재 timestamp. 트랜잭션 시작 기준. LOCALTIMESTAMP(precision) 가능
+                tr
+                    td now()
+                    td timestamptz
+                    td(colspan='3') 현재 timestamp. 트랜잭션 시작 기준
+                tr
+                    td statement_timestamp()
+                    td timestamptz
+                    td(colspan='3') 현재 timestamp. 현재 문장 실행 기준
+                tr
+                    td transaction_timestamp()
+                    td timestamptz
+                    td(colspan='3') 현재 timestamp. 트랜잭션 시작 기준
+                tr
+                    td make_date(year int, month int, day int)
+                    td date
+                    td date 생성
+                    td make_date(2013, 7, 15)
+                    td 2013-07-15
+                tr
+                    td make_interval(years int DEFAULT 0, months int DEFAULT 0, weeks int DEFAULT 0, days int DEFAULT 0, hours int DEFAULT 0, mins int DEFAULT 0, secs double precision DEFAULT 0.0)
+                    td interval
+                    td interval 생성
+                    td make_interval(days => 10)
+                    td 10 days
+                tr
+                    td make_time(hour int, min int, sec double precision)
+                    td time
+                    td time 생성
+                    td make_time(8, 15, 23.5)
+                    td 08:15:23.5
+                tr
+                    td make_timestamp(year int, month int, day int, hour int, min int, sec double precision)
+                    td timestamp
+                    td timestamp 생성
+                    td make_timestamp(2013, 7, 15, 8, 15, 23.5)
+                    td 2013-07-15 08:15:23.5
+                tr
+                    td make_timestamptz(year int, month int, day int, hour int, min int, sec double precision, [timezone text])
+                    td timestamptz
+                    td timestamp 생성. timezone 생략시 현재 설정 사용
+                    td make_timestamptz(2013, 7, 15, 8, 15, 23.5)
+                    td 2013-07-15 08:15:23.5+01
+                tr
+                    td to_timestamp(double precision)
+                    td timestamptz
+                    td Convert Unix epoch (seconds since 1970-01-01 00:00:00+00) to timestamp
+                    td to_timestamp(1284352323)
+                    td 2010-09-13 04:32:03+00
+                tr
+                    td at time zone
+                    td timestamptz
+                    td
+                        | Convert timestamp to timestamptz
+                        +w3a()&attributes({target:'_blank', href:'https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'}) wiki/List_of_tz
+                    td timestamp '2000-01-01 00:00:00' at time zone 'Asia/Seoul'
+                    td 1999-12-31 07:00:00-08
+                tr
+                    td age(timestamp,timestamp)
+                    td interval
+                    td 연월일로 표기되는 두 시각 사이의 차이. 부정확
+                    td age(timestamp '2001-04-10', timestamp '1957-06-13')
+                    td 43 years 9 mons 27 days
+                tr
+                    td age(timestamp)
+                    td interval
+                    td 현재 date로부터 뺀다. = age(current_date::timestamp, from)
+                    td age(timestamp '1957-06-13')
+                    td 43 years 8 mons 3 days
+                tr
+                    td date_part(text,timestamp)
+                    td float8
+                    td = extract
+                    td date_part('hour', timestamp '2001-02-16 20:38:40')
+                    td 20
+                tr
+                    td date_part(text,interval)
+                    td float8
+                    td = extract
+                    td date_part('month', interval '2 years 3 months')
+                    td 3
+                tr
+                    td extract(field from timestamp)
+                    td float8
+                    td Get subfield
+                    td extract(hour from timestamp '2001-02-16 20:38:40')
+                    td 20
+                tr
+                    td extract(field from interval)
+                    td float8
+                    td Get subfield
+                    td extract(month from interval '2 years 3 months')
+                    td 3
+                tr
+                    td extract, date_part field
+                    td(colspan='4') century, day, decade, dow(day of the week), doy(day of the year), epoch(number of seconds sinse 1970-01-01 00:00:00 UTC), hour, isodow(day of the week), isoyear(ISO 8601 week-numbering), microseconds, millenium, milliseconds, minute, month, quarter, second, timezone, timezone_hour, timezone_minute, week(ISO 8601 week-numbering), year
+                tr
+                    td isfinite(date)
+                    td boolean
+                    td Test for finite date (not +/-infinity)
+                    td isfinite(date '2001-02-16')
+                    td true
+                tr
+                    td isfinite(timestamp)
+                    td boolean
+                    td Test for finite time stamp (not +/-infinity)
+                    td isfinite(timestamp '2001-02-16 21:28:30')
+                    td true
+                tr
+                    td isfinite(interval)
+                    td boolean
+                    td Test for finite interval
+                    td isfinite(interval '4 hours')
+                    td true
+                tr
+                    td date_trunc(text,timestamp)
+                    td timestamp
+                    td Truncate to specified precision
+                    td date_trunc('hour', timestamp '2001-02-16 20:38:40')
+                    td 2001-02-16 20:00:00
+                tr
+                    td date_trunc(text,interval)
+                    td interval
+                    td Truncate to specified precision
+                    td date_trunc('hour', interval '2 days 3 hours 40 minutes')
+                    td 2 days 03:00:00
+                tr
+                    td date_trunc field
+                    td(colspan='4') microseconds, milliseconds, second, minute, hour, day, week, month, quarter, year, decade, century, millenium
+                tr
+                    td justify_days(interval)
+                    td interval
+                    td Adjust interval so 30-day time periods are represented as months
+                    td justify_days(interval '35 days')
+                    td 1 mon 5 days
+                tr
+                    td justify_hours(interval)
+                    td interval
+                    td Adjust interval so 24-hour time periods are represented as days
+                    td justify_hours(interval '27 hours')
+                    td 1 day 03:00:00
+                tr
+                    td justify_interval(interval)
+                    td interval
+                    td Adjust interval using justify_days and justify_hours, with additional sign adjustments
+                    td justify_interval(interval '1 mon -1 hour')
+                    td 29 days 23:00:00
+
+        h2.marker JSON Functions and Operators
+        div
+            +w3a()&attributes({target:'_blank', href:'http://postgresql.kr/docs/current/functions-json.html'}) functions-json.html
+            h3.marker json and jsonb Operators
+            table.no-sort
+                tr
+                    th Operator
+                    th Right Operand Type
+                    th Description
+                    th Example
+                    th Example Result
+                tr
+                    td ->
+                    td int
+                    td Get JSON array element(인덱스는 0부터 시작. 음수면 뒤에서부터)
+                    td '[{"a":"foo"},{"b":"bar"},{"c":"baz"}]'::json->2
+                    td {"c":"baz"}
+                tr
+                    td ->
+                    td text
+                    td Get JSON object field by key
+                    td '{"a": {"b":"foo"}}'::json->'a'
+                    td {"b":"foo"}
+                tr
+                    td ->>
+                    td int
+                    td Get JSON array element as text
+                    td '[1,2,3]'::json->>2
+                    td 3
+                tr
+                    td ->>
+                    td text
+                    td Get JSON object field as text
+                    td '{"a":1,"b":2}'::json->>'b'
+                    td 2
+                tr
+                    td #>
+                    td text[]
+                    td Get JSON object at specified path
+                    td '{"a": {"b":{"c": "foo"}}}'::json#>'{a,b}'
+                    td {"c": "foo"}
+                tr
+                    td #>>
+                    td text[]
+                    td Get JSON object at specified path as text
+                    td '{"a":[1,2,3],"b":[4,5,6]}'::json#>>'{a,2}'
+                    td 3
+
+        h2.marker Sequence Manipulation Functions
         ol
             li currval(regclass) : 지정된 sequence의 가장 최근 반환된 nextval
             li lastval() : 가장 최근 반환된 임의 sequence의 nextval
             li nextval(regclass) : sequence를 증가시키고 반환
             li setval(regclass, bigint) : sequence의 현재값 설정
-            |             regclass는 pg_class 시스템 카탈로그에 저장된 sequence의 OID며, 이를 직접 찾을 필요는 없다. '' 사이에 식별자를 넣어주면 알아서 변환해준다.
-    details
-        summary Conditional Expressions
+            p regclass는 pg_class 시스템 카탈로그에 저장된 sequence의 OID며, 이를 직접 찾을 필요는 없다. '' 사이에 식별자를 넣어주면 알아서 변환해준다.
+
+        h2.marker Conditional Expressions
         ol
             li case
-            |             case when
-            i condition
-            |  then
-            i result
-            |  [when ...] [else
-            i result
-            | ] end
+            +asCode('sql') case when condition then result [when ...] [else result] end
             li coalesce
-            |             coalesce(value [, ...]) : 처음으로 등장하는 non-null값을 반환한다. 모두 null이면 최종적으로 null이 반환된다.
+            +asCode('sql') coalesce(value [, ...])
+            p 처음으로 등장하는 non-null값을 반환한다. 모두 null이면 최종적으로 null이 반환된다.
             li nullif
-            |             nullif(value1, value2) : value1과 value2가 같으면 null 반환. 다르면 value1 반환
+            +asCode('sql') nullif(value1, value2)
+            p value1과 value2가 같으면 null 반환. 다르면 value1 반환
             li greatest
-            |             greatest(value [, ...])
+            +asCode('sql') greatest(value [, ...])
             li least
-            |             least(value [, ...])
-    details
-        summary Subquery Expressions
+            +asCode('sql') least(value [, ...])
+
+        h2.marker Subquery Expressions
         ol
             li exists
-            |             exists(subquery) : 서브쿼리가 한 행 이상 반환하면 true, 아니면 false
+            p exists(subquery) : 서브쿼리가 한 행 이상 반환하면 true, 아니면 false
             li in
-            |             expression in (subquery) : expression 판별값이 subquery 결과 중에 있으면 true, 아니면 false
+            p expression in (subquery) : expression 판별값이 subquery 결과 중에 있으면 true, 아니면 false
             li not in
             li any, some
-            pre.
-                \nexpression operator any (subquery)
+            +asCode('sql').
+                expression operator any (subquery)
                 expression operator some (subquery)
-            |             subquery는 하나의 컬럼만 반환해야 한다. expression 판별값이 subquery 결과 중에 하나라도 operator를 만족하면 true
+            p subquery는 하나의 컬럼만 반환해야 한다. expression 판별값이 subquery 결과 중에 하나라도 operator를 만족하면 true
             li all
-            |             expression operator all (subquery)
+            +asCode('sql') expression operator all (subquery)
             li Single-row Comparison
-            |             row_constructor operator (subquery) : subquery는 row_constructor와 같은 개수의 컬럼을 반환해야 한다.
-    details
-        summary Series Generating Functions
+            p row_constructor operator (subquery) : subquery는 row_constructor와 같은 개수의 컬럼을 반환해야 한다.
+
+        h2.marker Series Generating Functions
         ol
             li generate_series(start, stop)
             li generate_series(start, stop, step)
             li generate_series(start, stop interval)
-    details
-        summary System Information Functions
-        a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://postgresql.kr/docs/current/functions-info.html') functions-info.html
-    
-    ils
-    summary 동시성 제어
-    details
-        summary 소개
+
+        h2.marker System Information Functions
+        +w3a()&attributes({target:'_blank', href:'http://postgresql.kr/docs/current/functions-info.html'}) functions-info.html
+
+    h1.marker 동시성 제어
+    div
+        h2.marker 소개
         ol
             li PostgreSQL은 다중버전 모델 MVCC(Multiversion Concurrency Control)을 이용해서 동시성 처리를 관리한다
-            |             각 트랜잭션의 시작을 기점으로 자료를 각각의 스냅샷(데이터베이스 버전)으로 처리해서 세션이 사용한다. 이렇게 하면 최소한의 잠금을 사용하여 트랜잭션 격리가 이루어진다.
+            p 각 트랜잭션의 시작을 기점으로 자료를 각각의 스냅샷(데이터베이스 버전)으로 처리해서 세션이 사용한다. 이렇게 하면 최소한의 잠금을 사용하여 트랜잭션 격리가 이루어진다.
             li MVCC와 별개로 개발자가 이용할 수 있는 테이블, 행 단위 잠금 기능을 제공한다
-    details
-        summary 트랜잭션 격리
+
+        h2.marker 트랜잭션 격리
         ul
             li SQL 표준 트랜잭션 격리 수준; Transaction Isolation Level
             ul
                 li dirty read : 다른 트랜잭션이 아직 커밋하지 않은 자료도 읽을 수 있다
-                li
-                    | nonrepeatable read : 다른 트랜잭션이 커밋한 자료를 읽을 수 있다. 다음 읽기 시도시 해당 트랜잭션이 값을 변경했다면 변경된 값을 읽는다.
+                li nonrepeatable read : 다른 트랜잭션이 커밋한 자료를 읽을 수 있다. 다음 읽기 시도시 해당 트랜잭션이 값을 변경했다면 변경된 값을 읽는다.
                 li phantom read : 다른 트랜잭션이 커밋한 자료를 읽을 수 있다. 다음 읽기 시도 시, 최초 읽은 값 그대로 보여준다.
                 li serialization anomaly
                 ol
                     li let result ::= 트랜잭션 그룹에 대한 최종 실행 성공 상태
                     li let possibleResults ::= 각 트랜잭션을 하나씩 순서대로 실행하는 모든 경우에 대해, 각 실행 성공 상태 리스트
                     li 직렬화 이상 == result not in possibleResults.
-            li PostgreSQL 트랜잭션 격리 수준
-            |             트랜잭션 격리 수준을 설정하려면 SET TRANSACTION 명령을 이용한다. PostgreSQL은 MVCC 모델을 이용하기 때문에, Read uncommitted는 Read committed처럼 작동한다
-            table
-                thead
-                    tr
-                        th 격리 수준
-                        th Dirty Read
-                        th Nonrepeatable Read
-                        th Phantom Read
-                        th Serialization Anomaly
-                tbody
-                    tr
-                        td Read uncommitted
-                        td 허용, PG에서는 없음
-                        td 가능
-                        td 가능
-                        td 가능
-                    tr
-                        td Read committed
-                        td 불가능
-                        td 가능
-                        td 가능
-                        td 가능
-                    tr
-                        td Repeatable read
-                        td 불가능
-                        td 불가능
-                        td 허용, PG에서는 없음
-                        td 가능
-                    tr
-                        td Serializable
-                        td 불가능
-                        td 불가능
-                        td 불가능
-                        td 불가능
-        details
-            summary Read Committed 격리 수준
+            li.marker PostgreSQL 트랜잭션 격리 수준
+            p 트랜잭션 격리 수준을 설정하려면 SET TRANSACTION 명령을 이용한다. PostgreSQL은 MVCC 모델을 이용하기 때문에, Read uncommitted는 Read committed처럼 작동한다
+            table.no-sort
+                tr
+                    th 격리 수준
+                    th Dirty Read
+                    th Nonrepeatable Read
+                    th Phantom Read
+                    th Serialization Anomaly
+                tr
+                    td Read uncommitted
+                    td 허용, PG에서는 없음
+                    td 가능
+                    td 가능
+                    td 가능
+                tr
+                    td Read committed
+                    td 불가능
+                    td 가능
+                    td 가능
+                    td 가능
+                tr
+                    td Repeatable read
+                    td 불가능
+                    td 불가능
+                    td 허용, PG에서는 없음
+                    td 가능
+                tr
+                    td Serializable
+                    td 불가능
+                    td 불가능
+                    td 불가능
+                    td 불가능
+        div
+            h3.marker Read Committed 격리 수준
             ol
                 li PostgreSQL 기본 격리 수준
                 li for update/share 절 없는 select 쿼리는 쿼리 실행 전 마지막으로 커밋된 자료를 읽는다.
-                |                 다른 트랜잭션과 분리된 스냅샷을 이용하므로, select 쿼리 실행 중 다른 트랜잭션이 변경하여 커밋한 자료는 읽을 수 없다. 이때, 같은 select 쿼리가 다시 호출되는 경우 변경 커밋된 자료를 가져온다.
-                |                 현재 트랜잭션에서 업데이트한 자료는 커밋되지 않았더라도 다시 읽을 때 갱신된 값으로 가져온다.
+                p 다른 트랜잭션과 분리된 스냅샷을 이용하므로, select 쿼리 실행 중 다른 트랜잭션이 변경하여 커밋한 자료는 읽을 수 없다. 이때, 같은 select 쿼리가 다시 호출되는 경우 변경 커밋된 자료를 가져온다.
+                p 현재 트랜잭션에서 업데이트한 자료는 커밋되지 않았더라도 다시 읽을 때 갱신된 값으로 가져온다.
                 li update, delete, select for update/share 쿼리는 타깃 행을 찾는 것까지는 select 쿼리와 동일하다
-                |                 실행 시각을 기준으로 발견한 타깃 행이 변경/삭제/잠금 중인 경우 커밋이나 롤백되기를 기다린다. 행이 변경된 경우 where 절이 재평가되고 갱신된 행을 대상으로 쿼리 실행, 삭제된 경우 무시, 롤백된 경우 기존 행을 대상으로 쿼리가 실행된다.
-        details
-            summary Repeatable Read 격리 수준
+                p 실행 시각을 기준으로 발견한 타깃 행이 변경/삭제/잠금 중인 경우 커밋이나 롤백되기를 기다린다. 행이 변경된 경우 where 절이 재평가되고 갱신된 행을 대상으로 쿼리 실행, 삭제된 경우 무시, 롤백된 경우 기존 행을 대상으로 쿼리가 실행된다.
+            h3.marker Repeatable Read 격리 수준
             ol
                 li 트랜잭션 실행 전 마지막으로 커밋된 자료만을 본다.
-                |                 물론 현재 트랜잭션에서 업데이트한 자료는 커밋되지 않았더라도 다시 읽을 때 갱신된 값으로 가져온다.
+                p 물론 현재 트랜잭션에서 업데이트한 자료는 커밋되지 않았더라도 다시 읽을 때 갱신된 값으로 가져온다.
                 li update, delete, select for update/share 쿼리는 타깃 행을 찾는 것까지는 select 쿼리와 동일하다
-                |                 실행 시각을 기준으로 발견한 타깃 행이 변경/삭제/잠금 중인 경우 커밋이나 롤백되기를 기다린다. 롤백된 경우 기존 행에 대해 쿼리가 실행되고, 변동이 있다면 에러를 발생하고 롤백한다.
-                |                 ← Repeatable Read 트랜잭션은 트랜잭션 시작 이후 다른 트랜잭션에 의해 변경된 행을 갱신하거나 잠글 수 없다.
+                p 실행 시각을 기준으로 발견한 타깃 행이 변경/삭제/잠금 중인 경우 커밋이나 롤백되기를 기다린다. 롤백된 경우 기존 행에 대해 쿼리가 실행되고, 변동이 있다면 에러를 발생하고 롤백한다. ← Repeatable Read 트랜잭션은 트랜잭션 시작 이후 다른 트랜잭션에 의해 변경된 행을 갱신하거나 잠글 수 없다.
                 li 따라서 update 트랜잭션은 응용 수준에서 트랜잭션 직렬화 실패에 대한 대응이 필요하다
-                |                 읽기만 하는 트랜잭션은 직렬화 실패가 일어날 수 없다.
+                p 읽기만 하는 트랜잭션은 직렬화 실패가 일어날 수 없다.
                 li 트랜잭션 시작 시각을 기준으로 DB에 대한 엄격한 정적 뷰를 보장하지만, 동시 실행되는 트랜잭션에 의해 일부 불일치가 발생할 수 있다.
-                |                 예를 들어 다른 트랜잭션에서 여러 연관 테이블의 행들을 순차적으로 업데이트하는 와중에 읽기를 수행하는 경우, 시간적으로는 일관적이지만, 논리적으로는 일관적이지 않은 데이터를 읽게될 수 있다.
-        details
-            summary Serializable 격리 수준
+                p 예를 들어 다른 트랜잭션에서 여러 연관 테이블의 행들을 순차적으로 업데이트하는 와중에 읽기를 수행하는 경우, 시간적으로는 일관적이지만, 논리적으로는 일관적이지 않은 데이터를 읽게될 수 있다.
+            h3.marker Serializable 격리 수준
             ol
                 li 커밋된 모든 트랜잭션들을 하나씩 순차적으로 실행한다.
                 li 이걸로 모든 이상 발생 가능성이 차단되는 것이 아니기 떄문에, 여전히 트랜잭션 직렬화 실패에 대한 대응이 필요하다
@@ -1616,135 +1544,131 @@ include ../../source/skeleton.jade
                     li 가능한 경우 READ ONLY 명시
                     li 기본으로 잠금을 제공하므로 select for update/share 구문은 필요없다
                     li 페이지 수준 predicate 잠금이 여러 개 필요하지만 메모리 부족으로 릴레이션 수준의 잠금이 걸리는 경우, 최대 잠금 수 설정을 조정한다
-                    |                     http://postgresql.kr/docs/current/runtime-config-locks.html#GUC-MAX-PRED-LOCKS-PER-TRANSACTION
+                    +asA('http://postgresql.kr/docs/current/runtime-config-locks.html#GUC-MAX-PRED-LOCKS-PER-TRANSACTION')
                     li 릴레이션 수준 잠금이 설정되는 것을 방지하기 위해 인덱스 스캔을 이용한다.
-    details
-        summary Explicit Locking
+    
+        h2.marker Explicit Locking
         ol
             li Table-level Locks
-            |             아래 표는 테이블 수준 잠금의 종류와, 각 요청된 잠금 수준에 대해 이미 설정된 잠금으로 인해 요청이 처리되지 않는 경우를 보여준다. 테이블 잠금은 LOCK 명령어로 획득할 수 있다
-            table.text-center
-                thead
-                    tr
-                        th(rowspan='2') Requested Lock Mode
-                        th(colspan='8') Current Lock Mode
-                    tr
-                        th ACCESS SHARE
-                        th ROW SHARE
-                        th ROW EXCLUSIVE
-                        th SHARE UPDATE EXCLUSIVE
-                        th SHARE
-                        th SHARE ROW EXCLUSIVE
-                        th EXCLUSIVE
-                        th ACCESS EXCLUSIVE
-                tbody
-                    tr
-                        td ACCESS SHARE
-                        td(colspan='7')
-                        td X
-                    tr
-                        td ROW SHARE
-                        td(colspan='6')
-                        td X
-                        td X
-                    tr
-                        td ROW EXCLUSIVE
-                        td(colspan='4')
-                        td X
-                        td X
-                        td X
-                        td X
-                    tr
-                        td SHARE UPDATE EXCLUSIVE
-                        td(colspan='3')
-                        td X
-                        td X
-                        td X
-                        td X
-                        td X
-                    tr
-                        td SHARE
-                        td(colspan='2')
-                        td X
-                        td X
-                        td
-                        td X
-                        td X
-                        td X
-                    tr
-                        td SHARE ROW EXCLUSIVE
-                        td(colspan='2')
-                        td X
-                        td X
-                        td X
-                        td X
-                        td X
-                        td X
-                    tr
-                        td EXCLUSIVE
-                        td
-                        td X
-                        td X
-                        td X
-                        td X
-                        td X
-                        td X
-                        td X
-                    tr
-                        td ACCESS EXCLUSIVE
-                        td X
-                        td X
-                        td X
-                        td X
-                        td X
-                        td X
-                        td X
-                        td X
+            p 아래 표는 테이블 수준 잠금의 종류와, 각 요청된 잠금 수준에 대해 이미 설정된 잠금으로 인해 요청이 처리되지 않는 경우를 보여준다. 테이블 잠금은 LOCK 명령어로 획득할 수 있다
+            table.w3-centered.no-sort
+                tr
+                    th(rowspan='2') Requested Lock Mode
+                    th(colspan='8') Current Lock Mode
+                tr
+                    th ACCESS SHARE
+                    th ROW SHARE
+                    th ROW EXCLUSIVE
+                    th SHARE UPDATE EXCLUSIVE
+                    th SHARE
+                    th SHARE ROW EXCLUSIVE
+                    th EXCLUSIVE
+                    th ACCESS EXCLUSIVE
+                tr
+                    td ACCESS SHARE
+                    td(colspan='7')
+                    td X
+                tr
+                    td ROW SHARE
+                    td(colspan='6')
+                    td X
+                    td X
+                tr
+                    td ROW EXCLUSIVE
+                    td(colspan='4')
+                    td X
+                    td X
+                    td X
+                    td X
+                tr
+                    td SHARE UPDATE EXCLUSIVE
+                    td(colspan='3')
+                    td X
+                    td X
+                    td X
+                    td X
+                    td X
+                tr
+                    td SHARE
+                    td(colspan='2')
+                    td X
+                    td X
+                    td
+                    td X
+                    td X
+                    td X
+                tr
+                    td SHARE ROW EXCLUSIVE
+                    td(colspan='2')
+                    td X
+                    td X
+                    td X
+                    td X
+                    td X
+                    td X
+                tr
+                    td EXCLUSIVE
+                    td
+                    td X
+                    td X
+                    td X
+                    td X
+                    td X
+                    td X
+                    td X
+                tr
+                    td ACCESS EXCLUSIVE
+                    td X
+                    td X
+                    td X
+                    td X
+                    td X
+                    td X
+                    td X
+                    td X
             ol
                 li ACCESS SHARE
-                |                 select 명령이 이 잠금을 필요로 한다. 테이블을 읽기만 하는 쿼리들은 보통 이 잠금 수준에서 동작한다.
+                p select 명령이 이 잠금을 필요로 한다. 테이블을 읽기만 하는 쿼리들은 보통 이 잠금 수준에서 동작한다.
                 li ROW SHARE
-                |                 select for update, select for share 명령이 이 잠금을 필요로 한다.
+                p select for update, select for share 명령이 이 잠금을 필요로 한다.
                 li ROW EXCLUSIVE
-                |                 update, delete, insert 명령이 이 잠금을 필요로 한다. 테이블 데이터를 수정하는 쿼리들은 보통 이 잠금 수준에서 동작한다
+                p update, delete, insert 명령이 이 잠금을 필요로 한다. 테이블 데이터를 수정하는 쿼리들은 보통 이 잠금 수준에서 동작한다
                 li SHARE UPDATE EXCLUSIVE
-                |                 Acquired by VACUUM (without FULL), ANALYZE, CREATE INDEX CONCURRENTLY, CREATE STATISTICS and ALTER TABLE VALIDATE and other ALTER TABLE variants
+                p Acquired by VACUUM (without FULL), ANALYZE, CREATE INDEX CONCURRENTLY, CREATE STATISTICS and ALTER TABLE VALIDATE and other ALTER TABLE variants
                 li SHARE
-                |                 Acquired by CREATE INDEX (without CONCURRENTLY)
+                p Acquired by CREATE INDEX (without CONCURRENTLY)
                 li SHARE ROW EXCLUSIVE
-                |                 Acquired by CREATE COLLATION, CREATE TRIGGER, and many forms of ALTER TABLE
+                p Acquired by CREATE COLLATION, CREATE TRIGGER, and many forms of ALTER TABLE
                 li EXCLUSIVE
-                |                 Acquired by REFRESH MATERIALIZED VIEW CONCURRENTLY
+                p Acquired by REFRESH MATERIALIZED VIEW CONCURRENTLY
                 li ACCESS EXCLUSIVE
-                |                 Acquired by the DROP TABLE, TRUNCATE, REINDEX, CLUSTER, VACUUM FULL, and REFRESH MATERIALIZED VIEW (without CONCURRENTLY) commands
-            li Row-level Lock Modes
-            |             행 수준 잠금은 자동적으로 설정되고 해제된다.
+                p Acquired by the DROP TABLE, TRUNCATE, REINDEX, CLUSTER, VACUUM FULL, and REFRESH MATERIALIZED VIEW (without CONCURRENTLY) commands
+            li.marker Row-level Lock Modes
+            p 행 수준 잠금은 자동적으로 설정되고 해제된다.
             ol
                 li FOR UPDATE
-                |                 select한 행들을 변경을 위해 잠근다. 다른 트랜잭션의 잠금, 변경, 삭제를 막는다
+                p select한 행들을 변경을 위해 잠근다. 다른 트랜잭션의 잠금, 변경, 삭제를 막는다
                 li FOR NO KEY UPDATE
-                |                 FOR UPDATE와 비슷. select for key share 명령은 막지 않는다
+                p FOR UPDATE와 비슷. select for key share 명령은 막지 않는다
                 li FOR SHARE
-                |                 FOR NO KEY UPDATE와 비슷. 공유된 잠금을 설정하며, select for share, select for key share 명령은 막지 않는다
+                p FOR NO KEY UPDATE와 비슷. 공유된 잠금을 설정하며, select for share, select for key share 명령은 막지 않는다
                 li FOR KEY SHARE
-                |                 FOR SHARE와 비슷. select for no key update 명령은 막지 않는다
-    
-    ils
-    summary Performance Tips
+                p FOR SHARE와 비슷. select for no key update 명령은 막지 않는다
+
+    h1.marker Performance Tips
     ul
         li Populating a Database
         ol
             li 여러 insert 명령이 순차적으로 실행되는 경우, autocommit 기능을 끄고 마지막에 한꺼번에 커밋하는 것이 좋다
-            |             SQL 명령문에서 BEGIN, COMMIT 명령으로 트랜잭션을 수행하는 것과 동일하다.
+            p SQL 명령문에서 BEGIN, COMMIT 명령으로 트랜잭션을 수행하는 것과 동일하다.
             li 여러 행 데이터를 입력하는 경우, COPY 명령을 이용하는 것이 좋다
             li 테이블을 최초로 생성하면서 데이터를 입력하는 경우, 인덱스를 제거하고 나중에 다시 만드는 것이 좋다
             li 일시적으로 maintenance_work_mem, max_wal_size 설정을 높인다
             li pg_dump는 위에 적힌 것을 비롯한 여러 성능 향상 기법들을 이용한다
         li Non-Durable Settings
-        |         데이터베이스의 안정성이 필요없는 경우 아래와 같이 성능 위주의 설정이 가능하다
+        p 데이터베이스의 안정성이 필요없는 경우 아래와 같이 성능 위주의 설정이 가능하다
         ol
             li DB 클러스터를 RAM 디스크에 둔다.
             li fsync, synchronous commit, full page writes 설정을 끈다
             li max_wal_size, checkpoint_timeout 설정을 높인다
             li 테이블 생성 시 UNLOGGED를 설정한다
-

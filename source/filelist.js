@@ -3289,12 +3289,13 @@ csharp_library.jade
 wpf_basic.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/front:
-canvas
+css.jade
 freemarker
-
-/workspace/donggi-github/Dong-gi.github.io/posts.jade/front/canvas:
+html.jade
+http.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/front/freemarker:
+built_in.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/java:
 
@@ -3316,18 +3317,9 @@ python
 single
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/front:
-canvas
-css.jade
 freemarker
-html.jade
-http.jade
-
-/workspace/donggi-github/Dong-gi.github.io/posts.jade.test/front/canvas:
-draw1.jade
-draw2.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/front/freemarker:
-built_in.jade
 freemarker_permission.jade
 programming_guide.jade
 template_guide.jade
