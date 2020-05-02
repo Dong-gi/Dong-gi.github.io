@@ -1,4 +1,15 @@
 const posts = { list: [
+{ file: "/posts/single/aws.html",                           category: "단일 문서",                       title: "AWS" },
+{ file: "/posts/single/centos.html",                        category: "단일 문서",                       title: "CentOS" },
+{ file: "/posts/single/docker.html",                        category: "단일 문서",                       title: "Docker" },
+{ file: "/posts/single/fp.html",                            category: "단일 문서",                       title: "FP; Functional Programming" },
+{ file: "/posts/single/git.html",                           category: "단일 문서",                       title: "Git" },
+{ file: "/posts/single/nginx.html",                         category: "단일 문서",                       title: "Nginx" },
+{ file: "/posts/single/sdkman.html",                        category: "단일 문서",                       title: "SDKMAN; The Software Development Kit Manager" },
+{ file: "/posts/single/tomcat.html",                        category: "단일 문서",                       title: "tomcat" },
+{ file: "/posts/single/refactoring.html",                   category: "단일 문서",                       title: "디자인 패턴 + 리팩터링" },
+{ file: "/posts/single/rpi.html",                           category: "단일 문서",                       title: "Raspberry Pi 3 + OpenCV(python)" },
+{ file: "/posts/single/vi.html",                            category: "단일 문서",                       title: "vi" },
 { file: "/posts/book/001.html",                             category: "독서",                           title: "1만 시간의 재발견" },
 { file: "/posts/book/002.html",                             category: "독서",                           title: "마음의 탄생" },
 { file: "/posts/book/003.html",                             category: "독서",                           title: "생각하는 삶을 위한 철학의 역사" },
@@ -21,6 +32,8 @@ const posts = { list: [
 { file: "/posts/algorithm/koreatech/1048.html",             category: "알고리즘/KOREATECH",              title: "1048: AP 배분" },
 { file: "/posts/algorithm/koreatech/1095.html",             category: "알고리즘/KOREATECH",              title: "1095: 자연스러운 정렬" },
 { file: "/posts/algorithm/ai.html",                         category: "작성 중지",                       title: "AI" },
+{ file: "/posts/single/quantum_computer.html",              category: "작성 중지",                       title: "양자 컴퓨터" },
+{ file: "/posts/single/unity.html",                         category: "작성 중지",                       title: "Unity" },
 { file: "/posts/db/concept.html",                           category: "DB",                             title: "DB 기초" },
 { file: "/posts/db/mongodb.html",                           category: "DB",                             title: "MongoDB" },
 { file: "/posts/db/mysql.html",                             category: "DB",                             title: "MySQL" },
@@ -29,19 +42,21 @@ const posts = { list: [
 { file: "/posts/db/psql_programming.html",                  category: "DB",                             title: "PostgreSQL 서버 프로그래밍" },
 { file: "/posts/db/psql_tutorial.html",                     category: "DB",                             title: "PostgreSQL 시작하기" },
 { file: "/posts/db/psql_sql.html",                          category: "DB",                             title: "PostgreSQL SQL 언어" },
-{ file: "/posts/single/sdkman.html",                        category: "Programming",                    title: "SDKMAN; The Software Development Kit Manager" },
 { file: "/posts/dotnet/csharp_basic.html",                  category: "Programming/.NET",               title: "C# 기초" },
 { file: "/posts/dotnet/csharp_library.html",                category: "Programming/.NET",               title: "C# 라이브러리" },
 { file: "/posts/dotnet/wpf_basic.html",                     category: "Programming/.NET",               title: "WPF 기초" },
 { file: "/posts/front/css.html",                            category: "Programming/Front",              title: "CSS" },
 { file: "/posts/front/html.html",                           category: "Programming/Front",              title: "HTML" },
 { file: "/posts/front/http.html",                           category: "Programming/Front",              title: "HTTP 1.1" },
-{ file: "/posts/front/freemarker/built_in.html",            category: "Programming/Front/FreeMarker",   title: "Built-in 목록 2.3.28" },
-{ file: "/posts/front/freemarker/programming_guide.html",   category: "Programming/Front/FreeMarker",   title: "프로그래밍 가이드 2.3.28" },
+{ file: "/posts/front/freemarker/built_in.html",            category: "Programming/FreeMarker",         title: "Built-in 목록 2.3.28" },
+{ file: "/posts/front/freemarker/programming_guide.html",   category: "Programming/FreeMarker",         title: "프로그래밍 가이드 2.3.28" },
+{ file: "/posts/front/freemarker/template_guide.html",      category: "Programming/FreeMarker",         title: "템플릿 작성 가이드 2.3.28" },
+{ file: "/posts/front/freemarker/xml_guide.html",           category: "Programming/FreeMarker",         title: "XML 처리 가이드 2.3.28" },
+{ file: "/posts/project/wpf_data_tool.html",                category: "Project",                        title: "C#.NET, WPF - 데이터 작업 툴" },
+{ file: "/posts/project/snippets.html",                     category: "Project",                        title: "Code Snippets" },
+{ file: "/posts/project/error.html",                        category: "Project",                        title: "Exceptions + Errors" },
+{ file: "/posts/project/tip.html",                          category: "Project",                        title: "잡다한 팁" },
 /* ↓ 정리 안 됨
-{ file: "/posts/front/freemarker/template_guide.html", category: "Programming/Front/FreeMarker", title: "템플릿 작성 가이드 2.3.28" },
-{ file: "/posts/front/freemarker/xml_guide.html", category: "Programming/Front/FreeMarker", title: "XML 처리 가이드 2.3.28" },
-
 { file: "/posts/java/android.html", category: "Programming/Java", title: "Android" },
 { file: "/posts/java/basic.html", category: "Programming/Java", title: "Java 시작하기" },
 { file: "/posts/java/effective_java.html", category: "Programming/Java", title: "『Effective Java』" },
@@ -126,23 +141,6 @@ const posts = { list: [
 { file: "/posts/python/operator.html", category: "Programming/Python/Library", title: "Lib/operator : 표준 연산" },
 { file: "/posts/python/shutil.html", category: "Programming/Python/Library", title: "Lib/shutil : 고수준 파일 연산" },
 { file: "/posts/python/pandas.html", category: "Programming/Python/Library", title: "3rd/pandas : 데이터 처리" },
-
-{ file: "/posts/project/wpf_data_tool.html", category: "Project", title: "C#.NET, WPF - 데이터 작업 툴" },
-{ file: "/posts/project/snippets.html", category: "Project", title: "Code Snippets" },
-{ file: "/posts/project/error.html", category: "Project", title: "Exceptions + Errors" },
-{ file: "/posts/project/tip.html", category: "Project", title: "잡다한 팁" },
-
-{ file: "/posts/single/aws.html", category: "Programming/Single Topic", title: "AWS" },
-{ file: "/posts/single/centos.html", category: "Programming/Single Topic", title: "CentOS" },
-{ file: "/posts/single/docker.html", category: "Programming/Single Topic", title: "Docker" },
-{ file: "/posts/single/fp.html", category: "Programming/Single Topic", title: "FP; Functional Programming" },
-{ file: "/posts/single/git.html", category: "Programming/Single Topic", title: "Git" },
-{ file: "/posts/single/nginx.html", category: "Programming/Single Topic", title: "Nginx" },
-{ file: "/posts/single/tomcat.html", category: "Programming/Single Topic", title: "tomcat" },
-{ file: "/posts/single/refactoring.html", category: "Programming/Single Topic", title: "디자인 패턴 + 리팩터링" },
-{ file: "/posts/single/rpi.html", category: "Programming/Single Topic", title: "Raspberry Pi 3 + OpenCV(python)" },
-{ file: "/posts/single/unity.html", category: "Programming/Single Topic", title: "Unity : 작성 중지" },
-{ file: "/posts/single/vi.html", category: "Programming/Single Topic", title: "vi" },
  */
 ], codes: {} }
 
@@ -157,7 +155,7 @@ window.addEventListener('load', () => {
     updatePostList();
     insertDisqusThread();
     updateMarkerList();
-    document.getElementById('query').onkeyup = queryUpdated;
+    document.getElementById('query').onkeyup = Donggi.debounce(queryUpdated, 500);
 });
 
 function mutationCallback(mutations, observer) {
@@ -451,13 +449,20 @@ function showModal(id) {
         body.innerHTML = document.getElementById(`code-div-${id}`).innerHTML;
         body.style.height = window.innerHeight - parseFloat(window.getComputedStyle(header).height);
         
-        modal.querySelector('button.copy').onclick = (() => {
+        footer.querySelector('button.copy').onclick = () => {
             Donggi.copyTextToCilpboard(posts.codes[id], modal);
             Donggi.showSnackbar("복사 완료", modal);
             modal.focus();
-        });
-        modal.querySelector('button.download').onclick = (() => downloadCode(document.getElementById(`code-button-${id}`).title.split('/').pop(), posts.codes[id]));
-        modal.querySelector('button.print').onclick = (() => Donggi.printElement(body));
+        };
+        footer.querySelector('button.download').onclick = () => downloadCode(document.getElementById(`code-button-${id}`).title.split('/').pop(), posts.codes[id]);
+        footer.querySelector('button.print').onclick = () => Donggi.printElement(body);
+        for (let node of modal.querySelectorAll('.w3-btn.close')) {
+            node.onclick = () => {
+                document.getElementById(`modal-${id}`).style.display = 'none';
+                if (!isNarrow())
+                    openSidebar();
+            };
+        }
     };
 }
 
@@ -478,14 +483,14 @@ function getCodeModalHTML(id, filename) {
     <div class="w3-modal-content">
         <header class="w3-container">
             <h2 style="display: inline-block;" class="modal-title">${filename}</h2>
-            <span class="w3-button w3-circle w3-display-topright" style="color: black; font-size: 1.5em; font-weight: bold;" onclick="document.getElementById('modal-${id}').style.display='none'">&times;</span>
+            <span class="w3-btn w3-circle w3-display-topright close" style="color: black; font-size: 1.5em; font-weight: bold;">&times;</span>
         </header>
         <div class="w3-container w3-leftbar w3-border-green code-modal-body code-div"></div>
         <footer class="w3-container w3-display-bottomright">
             <button class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge copy">Copy</button>
             <button class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge download">Download</button>
             <button class="w3-btn w3-white w3-border w3-border-green w3-round-xlarge print">Print</button>
-            <button class="w3-btn w3-white w3-border w3-border-red w3-round-xlarge" onclick="document.getElementById('modal-${id}').style.display='none'">Close</button>
+            <button class="w3-btn w3-white w3-border w3-border-red w3-round-xlarge close">Close</button>
         </footer>
     </div>
 </div>`;

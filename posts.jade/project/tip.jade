@@ -1,0 +1,268 @@
+include ../../source/skeleton.jade
++post('잡다한 팁', 'Tip', '잡다한 팁')
+    h1.marker 이클립스 단축키
+    ol
+        li Ctrl + Shift + L : 전체 단축키 목록
+        li F3 : 정의로 이동
+        li F4 : Type hierarchy
+        li Ctrl + Shift + G : 참조 위치 검색
+        li Ctrl + E : 열린 파일 목록 팝업
+        li Ctrl + D : 라인 제거
+        li Ctrl + L : 라인 이동
+        li Ctrl + O : Outline 팝업
+        li Alt + ←/→ : 편집 위치 전/후이동
+        li Ctrl + (Shift) + K : 블록 지정 텍스트 (뒤로) 검색
+        li Ctrl + (Shift) + / : 블록 지정 텍스트 (/**/) 주석 토글
+        li Ctrl + (Shift) + W : (전체) 파일 닫기
+        li Ctrl + Shift + F, Ctrl + I : 블록 지정 텍스트에 포맷 적용
+        li Ctrl + 1 : Quick fix
+        li Ctrl + Shift + O : import 정돈
+        li Ctrl + Shift + T : 클래스 검색
+        li Ctrl + Shift + R : 리소스 검색
+
+    h1.marker 정규표현식 일본어 검색
+    ol
+        li 히라가나 : [\u3041-\u3096]
+        li 가타카나 : [\u30A1-\u30FA]
+        li 한자 : [\u4E00-\u9FEF\u3400-\u4DBF\uF900-\uFADF]
+        li 특문 : [\u3000-\u303F\uFF00-\uFF9F]
+        li 전체 : [\u3041-\u3096\u30A1-\u30FA\u4E00-\u9FEF\u3400-\u4DBF\uF900-\uFADF\u3000-\u303F\uFF00-\uFF9F]
+
+    h1.marker 특수문자 영문명
+    +asA('https://www.owasp.org/index.php/Password_special_characters')
+    table.no-sort
+        tr
+            th Character
+            th Name
+            th Unicode
+        tr
+            td
+            td Space
+            td U+0020
+        tr
+            td  !
+            td Exclamation
+            td U+0021
+        tr
+            td "
+            td Doublequote
+            td U+0022
+        tr
+            td #
+            td Numbersign(hash)
+            td U+0023
+        tr
+            td $
+            td Dollarsign
+            td U+0024
+        tr
+            td  %
+            td Percent
+            td U+0025
+        tr
+            td &
+            td Ampersand
+            td U+0026
+        tr
+            td '
+            td Singlequote
+            td U+0027
+        tr
+            td (
+            td Leftparenthesis
+            td U+0028
+        tr
+            td )
+            td Rightparenthesis
+            td U+0029
+        tr
+            td *
+            td Asterisk
+            td U+002A
+        tr
+            td +
+            td Plus
+            td U+002B
+        tr
+            td ,
+            td Comma
+            td U+002C
+        tr
+            td -
+            td Minus
+            td U+002D
+        tr
+            td .
+            td Fullstop
+            td U+002E
+        tr
+            td /
+            td Slash
+            td U+002F
+        tr
+            td  :
+            td Colon
+            td U+003A
+        tr
+            td  ;
+            td Semicolon
+            td U+003B
+        tr
+            td &lt;
+            td Lessthan
+            td U+003C
+        tr
+            td =
+            td Equalsign
+            td U+003D
+        tr
+            td >
+            td Greaterthan
+            td U+003E
+        tr
+            td  ?
+            td Questionmark
+            td U+003F
+        tr
+            td @
+            td Atsign
+            td U+0040
+        tr
+            td [
+            td Leftbracket
+            td U+005B
+        tr
+            td \
+            td Backslash
+            td U+005C
+        tr
+            td ]
+            td Rightbracket
+            td U+005D
+        tr
+            td ^
+            td Caret
+            td U+005E
+        tr
+            td _
+            td Underscore
+            td U+005F
+        tr
+            td `
+            td Graveaccent(backtick)
+            td U+0060
+        tr
+            td {
+            td Leftbrace
+            td U+007B
+        tr
+            td |
+            td Verticalbar
+            td U+007C
+        tr
+            td }
+            td Rightbrace
+            td U+007D
+        tr
+            td ~
+            td Tilde
+            td U+007E
+
+    h1.marker VS Code 팁
+    ul
+        li.marker 단축키로 날짜 입력
+        +asA('https://marketplace.visualstudio.com/items?itemName=jsynowiec.vscode-insertdatestring')
+        p 를 설치하면, Ctrl + Shift + I를 이용해 곧바로 날짜 문자열을 입력할 수 있다.
+        li.marker 파일 탐색 뷰에서 현재 문서 자동 추적 중지
+        +w3img('/imgs/20190330_214623.png')
+
+    h1.marker Chrome 디버깅
+    ol
+        li 자료 : https://subicura.com/2018/02/14/javascript-debugging.html
+        li jQuery 등의 라이브러리 중단 생략 : Blackboxing에 패턴 추가
+        li 특정 도메인으로의 요청 시 중단 : XHR/fetch Breakpoints 추가
+        li DOM 변경 시 중단 : Elements 탭의 타깃 요소 - 우클릭 - Break on 설정
+        li 지역변수를 콘솔에서 사용 : 변수 - 우클릭 - Store as global variable
+
+    h1.marker 윈도우 팁
+    ul
+        li.marker 차단한 앱 알림 해제
+        p 레지스트리 : HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\
+        li.marker 확장자 일괄 변경
+        +asCode('shell') ren *.html *.txt
+        li.marker dir 결과 저장
+        +asCode('shell') dir /s /b *.png > png.txt
+        ul
+            li /s : 재귀
+            li /b : "디렉터리/파일명"만 출력
+            li > : 저장
+        li.marker 시작 프로그램 등록
+        ol
+            li shell:startup 실행
+            p C:\Users\%USER_NAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+            li exe 바로가기 붙여넣기
+        li.marker 부트매니저 설정
+        ul
+            li SSD에 설치한 윈도우가 BIOS 설정에서는 검색되지 않는 경우에 대해 해결됨 확인
+            li 자료 : https://m.blog.naver.com/pspsim/221141734669
+            ol
+                li msconfig 실행
+                li 부팅 메뉴에서 기본값 설정, 불필요한 부팅 옵션 삭제 등 처리 후 저장
+        li.marker SSD 인식 불량 해결
+        ul
+            li 파티션은 활성 상태인데 볼륨은 비활성 상태인 경우에 대해 해결됨 확인
+            li 자료 : https://kin.naver.com/qna/detail.nhn?d1id=1&dirId=1010305&docId=291566434&qb=7KeI66y4CSDtlZjrk5zrlJTsiqTtgawg7J247Iud7J20IOyViOuQmOuEpOyalA==&enc=utf8&section=kin&rank=2&search_sort=0&spq=0
+            +asCode('shell').
+                diskpart
+                list disk
+                select disk 1 # 디스크 번호는 list 결과에 따라 적절히
+                clean
+                create partition primary # 부팅 디스크로 이용하려면 주(primary) 파티션이어야 함
+                list partition
+                select partition 1
+                active # 파티션 활성화
+                format fs=ntfs quick # 빠른 포맷 진행
+                exit
+
+    h1.marker Firefox 미디어 자동재생 해제 & 다운로드 설정
+    ol
+        li about:config 접속
+        li media.play-stand-alone 항목 false로 설정
+            
+            ils
+    h1.marker Visual Studio 리소스 디렉터리 전체 출력 디렉터리에 복사
+    ul
+        li 프로젝트 파일 편집
+        li 예. temp 디렉터리 하위 항목을 모두 복사하려는 경우.
+        +asCode('xml').
+            &lt;ItemGroup>
+                &lt;Content Include="temp\**">
+                    &lt;CopyToOutputDirectory>PreserveNewest&lt;/CopyToOutputDirectory>
+                &lt;/Content>
+            &lt;/ItemGroup>
+
+    h1.marker Visual Studio 정의 탐색(F12) 실패 해결
+    p NuGet 패키지 Microsoft.Net.Compilers 설치
+
+    h1.marker Nox ADB 연결
+    ul
+        li nox_adb.exe connect 127.0.0.1:5037
+        li 5037 포트는 안드로이드 ADB 기본 포트
+
+    h1.marker Google Play Store 인앱 결제 상품 변경 사항을 바로 적용
+    ol
+        li 변경할 부분들을 모두 변경한 다음 상품을 '비활성' 상태로 저장
+        li 상품을 다시 '활성' 상태로 저장하면 변경 사항이 즉시 반영된다.
+
+    h1.marker SVG 크기가 안 맞을 때
+    ol
+        li SVG; Scalable Vector Graphics
+        p
+            | XML로 서술되는 벡터 그래픽. 예 
+            +asA('https://image.flaticon.com/icons/svg/53/53260.svg')
+        li html 노드로 설정한 크기에 맞게 출력되지 않는 경우
+        p svg 파일을 텍스트 에디터로 열어 width, height 속성을 삭제하고, 대신 viewBox 등으로 출력 범위를 지정.
+        +asCode('xml') &lt;svg width="" height=""> → &lt;svg viewBox="0 0 100 100">
+
+    h1.marker 기레기 고소 방법
+    +w3img('/imgs/20190629_155650.jpg')

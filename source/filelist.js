@@ -3297,33 +3297,39 @@ http.jade
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/front/freemarker:
 built_in.jade
 programming_guide.jade
+template_guide.jade
+xml_guide.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/java:
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/javascript:
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/project:
+error.jade
+tip.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/python:
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/single:
+aws.jade
+centos.jade
+docker.jade
+fp.jade
+git.jade
+nginx.jade
+quantum_computer.jade
+refactoring.jade
+rpi.jade
 sdkman.jade
+tomcat.jade
+unity.jade
+vi.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test:
-front
 java
 javascript
 project
 python
-single
-
-/workspace/donggi-github/Dong-gi.github.io/posts.jade.test/front:
-freemarker
-
-/workspace/donggi-github/Dong-gi.github.io/posts.jade.test/front/freemarker:
-freemarker_permission.jade
-template_guide.jade
-xml_guide.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/java:
 android.jade
@@ -3386,9 +3392,7 @@ selector_example.jade
 storage_example.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/project:
-error.jade
 snippets.jade
-tip.jade
 wpf_data_tool.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade.test/python:
@@ -3424,20 +3428,6 @@ textwrap.jade
 types.jade
 unicodedata.jade
 weakref.jade
-
-/workspace/donggi-github/Dong-gi.github.io/posts.jade.test/single:
-aws.jade
-centos.jade
-docker.jade
-fp.jade
-git.jade
-nginx.jade
-quantum_computer.jade
-refactoring.jade
-rpi.jade
-tomcat.jade
-unity.jade
-vi.jade
 
 /workspace/donggi-github/Dong-gi.github.io/sitemap:
 2020_04_18.txt
