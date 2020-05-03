@@ -46,8 +46,6 @@ div#contents .code-div{margin:8px 0}
 
 .hover-template li{margin:0}
 
-mjx-container{font-size:17px!important}
-
 /* 요소 하이라이팅 */
 @keyframes highlight {
   from {background:#ff0; box-shadow:0 0 0.5em 0.5em #ff0; padding:0.25em}
