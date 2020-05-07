@@ -3127,6 +3127,7 @@ gradle.html
 gson.html
 guava.html
 jackson.html
+java.base.html
 java_ee.html
 javafx.html
 javax.annotation.processing.html
