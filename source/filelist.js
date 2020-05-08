@@ -3264,7 +3264,10 @@ tip.jade
 wpf_data_tool.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/python:
+built_in_function.jade
+built_in_type.jade
 pandas.jade
+persistence.jade
 standard.jade
 
 /workspace/donggi-github/Dong-gi.github.io/posts.jade/single:
@@ -3325,10 +3328,7 @@ storage_example.jade
 basic.jade
 built_in_constant.jade
 built_in_exception.jade
-built_in_function.jade
-built_in_type.jade
 data_model.jade
-persistence.jade
 
 /workspace/donggi-github/Dong-gi.github.io/sitemap:
 2020_04_18.txt

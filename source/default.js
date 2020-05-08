@@ -53,7 +53,10 @@ const posts = { list: [
 { file: "/posts/front/freemarker/template_guide.html",      category: "Programming/FreeMarker",         title: "템플릿 작성 가이드 2.3.28" },
 { file: "/posts/front/freemarker/xml_guide.html",           category: "Programming/FreeMarker",         title: "XML 처리 가이드 2.3.28" },
 { file: "/posts/java/java.base.html",                       category: "Programming/Java",               title: "java.base 12" },
+{ file: "/posts/python/built_in_function.html",             category: "Programming/Python",             title: "Python Built-in Functions 3.8" },
+{ file: "/posts/python/built_in_type.html",                 category: "Programming/Python",             title: "Python Built-in Types 3.8" },
 { file: "/posts/python/standard.html",                      category: "Programming/Python",             title: "표준 라이브러리" },
+{ file: "/posts/python/persistence.html",                   category: "Programming/Python",             title: "Python Data Persistence" },
 { file: "/posts/python/pandas.html",                        category: "Programming/Python",             title: "3rd/pandas : 데이터 처리" },
 { file: "/posts/project/error.html",                        category: "Project",                        title: "Exceptions + Errors" },
 { file: "/posts/project/tip.html",                          category: "Project",                        title: "잡다한 팁" },
@@ -88,11 +91,8 @@ const posts = { list: [
 
 { file: "/posts/python/basic.html", category: "Programming/Python", title: "Python 3.8 시작하기" },
 { file: "/posts/python/data_model.html", category: "Programming/Python", title: "Python 3.8 데이터 모델" },
-{ file: "/posts/python/built_in_function.html", category: "Programming/Python", title: "Python Built-in Functions 3.8" },
 { file: "/posts/python/built_in_constant.html", category: "Programming/Python", title: "Python Built-in Constants 3.8" },
-{ file: "/posts/python/built_in_type.html", category: "Programming/Python", title: "Python Built-in Types 3.8" },
 { file: "/posts/python/built_in_exception.html", category: "Programming/Python", title: "Python Built-in Exceptions 3.8" },
-{ file: "/posts/python/persistence.html", category: "Programming/Python", title: "Python Data Persistence" },
  */
 ], codes: {} }
 
