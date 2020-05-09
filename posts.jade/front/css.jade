@@ -61,10 +61,10 @@ include ../../source/skeleton.jade
             li 배경 이미지 background-image: url("url")
             p 이미지 잘라넣기 : 투명한 img로 자리를 차지하고, background: url('url') 시작w 시작h; 설정
             p
-                +w3a()&attributes({target:'_blank', href:'https://www.w3schools.com/css/css3_border_images.asp'}) 외곽 이미지
-                +w3a()&attributes({target:'_blank', href:'https://www.w3schools.com/css/css3_backgrounds.asp'}) 배경 이미지
-                +w3a()&attributes({target:'_blank', href:'https://www.w3schools.com/css/css3_images.asp'}) 이미지 스타일링
-                +w3a()&attributes({target:'_blank', href:'https://www.w3schools.com/css/css3_object-fit.asp'}) img 크기에 맞추는 방식
+                +asA('https://www.w3schools.com/css/css3_border_images.asp', '외곽 이미지')
+                +asA('https://www.w3schools.com/css/css3_backgrounds.asp', '배경 이미지')
+                +asA('https://www.w3schools.com/css/css3_images.asp', '이미지 스타일링')
+                +asA('https://www.w3schools.com/css/css3_object-fit.asp', 'img 크기에 맞추는 방식')
             li 외곽선 border-style: dotted | dashed | solid | double | groove | none | hidden | ...
             ul
                 li 두께 border-width: width; » 색상 border-color: color; » 곡률 border-radius: radius;
@@ -94,19 +94,19 @@ include ../../source/skeleton.jade
             li 폰트 font-family: family-name|generic-family|initial|inherit;
             li
                 | 영역을 벗어난 텍스트 처리 text-overflow, text-break, text-wrap
-                +w3a()&attributes({target:'_blank', href:'https://www.w3schools.com/css/css3_text_effects.asp'}) 참고
+                +asA('https://www.w3schools.com/css/css3_text_effects.asp', '참고')
         li 리스트
         ol
             li 리스트 아이템 이미지 마크 설정 list-style-image: none|url|initial|inherit;
             li
                 | 리스트 아이템 마커 타입 list-style-type: value;
-                +w3a()&attributes({target:'_blank', href:'https://www.w3schools.com/cssref/pr_list-style-type.asp'}) 참고
+                +asA('https://www.w3schools.com/cssref/pr_list-style-type.asp', '참고')
             li 리스트 아이템 마커 위치 list-style-position: inside | outside;
         li.marker 보여주기 속성
         ol
             li
                 | display: none | block | inline | inline-block(너비/높이 속성을 가질 수 있다)
-                +w3a()&attributes({target:'_blank', href:'https://www.w3schools.com/cssref/pr_class_display.asp'}) 참고
+                +asA('https://www.w3schools.com/cssref/pr_class_display.asp', '참고')
             li visibility: visible | hidden(자리는 차지) | collapse | initial | inherit;
             li 위치 position: static | relative | fixed | absolute | sticky;
             li z축 우선순위 z-index: number;
@@ -117,20 +117,20 @@ include ../../source/skeleton.jade
             li box-shadow: none|h-offset v-offset blur spread color |inset|initial|inherit;
             li
                 | 다단
-                +w3a()&attributes({target:'_blank', href:'https://www.w3schools.com/css/css3_multiple_columns.asp'}) 참고
+                +asA('https://www.w3schools.com/css/css3_multiple_columns.asp', '참고')
             li 사용자가 크기 조절 resize: none|both|horizontal|vertical|initial|inherit;
 
     h1.marker 변형
     ol
         li
             | 2D 변형 » translate(), rotate(), scale(), skewX(), skewY(), matrix()
-            +w3a()&attributes({target:'_blank', href:'https://www.w3schools.com/css/css3_2dtransforms.asp'}) 참고
+            +asA('https://www.w3schools.com/css/css3_2dtransforms.asp', '참고')
         li
             | 3D 변형 » rotateX(), rotateY(), rotateZ()
-            +w3a()&attributes({target:'_blank', href:'https://www.w3schools.com/css/css3_3dtransforms.asp'}) 참고
+            +asA('https://www.w3schools.com/css/css3_3dtransforms.asp', '참고')
         li
             | 전개 » transition
-            +w3a()&attributes({target:'_blank', href:'https://www.w3schools.com/css/css3_transitions.asp'}) 여기로
+            +asA('https://www.w3schools.com/css/css3_transitions.asp', '여기로')
         li
             | 애니메이션 »
-            +w3a()&attributes({target:'_blank', href:'https://www.w3schools.com/css/css3_animations.asp'}) 여기로
+            +asA('https://www.w3schools.com/css/css3_animations.asp', '여기로')

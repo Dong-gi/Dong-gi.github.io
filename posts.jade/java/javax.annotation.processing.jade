@@ -80,17 +80,17 @@ html
             ol
                 li
                     | 애너테이션 정의 :
-                    button.btn-code(path='Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/MyTarget.java', lan='java') MyTarget »
+                    +codeBtn('Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/MyTarget.java', 'java') MyTarget »
                 li
                     | 애너테이션 프로세서 정의 :
-                    button.btn-code(path='Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/processor/MyTargetProcessor.java', lan='java') MyTargetProcessor »
+                    +codeBtn('Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/processor/MyTargetProcessor.java', 'java') MyTargetProcessor »
                 li 애너테이션 컴파일
                 |         D:\>javac -encoding UTF-8 io/github/donggi/annotation/MyTarget.java
                 li 애너테이션 프로세서 컴파일
                 |         D:\>javac -encoding UTF-8 io/github/donggi/annotation/processor/MyTargetProcessor.java
                 li
                     | 애너테이션 프로세서 지정하여 컴파일
-                    button.btn-code(path='Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/test/MyTargetTest.java', lan='java') MyTargetTest »
+                    +codeBtn('Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/test/MyTargetTest.java', 'java') MyTargetTest »
                 pre.
                     \nD:\>javac -encoding UTF-8 -processor io.github.donggi.annotation.processor.MyTargetProcessor io/github/donggi/annotation/test/MyTargetTest.java
                     Note: [ROUND  1] It's my turn.
@@ -114,7 +114,7 @@ html
                 li 위 "javac -processor 이용 예" 프로젝트 그대로 jar 빌드
                 li
                     | META-INF/services/javax.annotation.processing.Processor 파일에 애너테이션 프로세서 클래스
-                    button.btn-code(path='Repositories/Eclipse/annotation-processing1/src/main/resources/META-INF/services/javax.annotation.processing.Processor', lan='text') 명시 »
+                    +codeBtn('Repositories/Eclipse/annotation-processing1/src/main/resources/META-INF/services/javax.annotation.processing.Processor', 'text') 명시 »
                 img.w3-round(src='imgs/20191128_164401.png')
                 img.w3-round(src='imgs/20191128_164656.png')
                 li jar 포함하여 컴파일
@@ -147,10 +147,10 @@ html
                         tr
                             th annotation-processing3-test
                             td 테스트 프로젝트
-                button.btn-code(path='Repositories/Eclipse/annotation-processing3/settings.gradle', lan='text') 루트 settings.gradle »
-                button.btn-code(path='Repositories/Eclipse/annotation-processing3/build.gradle', lan='text') 루트 build.gradle »
-                button.btn-code(path='Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/build.gradle', lan='text') processor build.gradle »
-                button.btn-code(path='Repositories/Eclipse/annotation-processing3/annotation-processing3-test/build.gradle', lan='text') test build.gradle »
+                +codeBtn('Repositories/Eclipse/annotation-processing3/settings.gradle', 'text') 루트 settings.gradle »
+                +codeBtn('Repositories/Eclipse/annotation-processing3/build.gradle', 'text') 루트 build.gradle »
+                +codeBtn('Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/build.gradle', 'text') processor build.gradle »
+                +codeBtn('Repositories/Eclipse/annotation-processing3/annotation-processing3-test/build.gradle', 'text') test build.gradle »
                 li 프로세서 프로젝트는 위 "javac -cp 이용 예"와 마찬가지로 javax.annotation.processing.Processor를 포함한다
                 img.w3-round(src='imgs/20191128_180107.png')
                 li Gradle 빌드

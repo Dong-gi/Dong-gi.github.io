@@ -15,21 +15,21 @@ html
             ul
                 li
                     | public 필드 또는 public setter가 존재하는 POJO
-                    button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[26,43]', lan='java') 예1 »
-                    button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[45,61]', lan='java') 예2 »
+                    +codeBtn('Repositories/Eclipse/gson/src/test/java/gson/Test.java', 'java', '[26,43]') 예1 »
+                    +codeBtn('Repositories/Eclipse/gson/src/test/java/gson/Test.java', 'java', '[45,61]') 예2 »
                 li
                     | 제네릭 List, Map도 가능.
-                    button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[64,70]', lan='java') 예 »
+                    +codeBtn('Repositories/Eclipse/gson/src/test/java/gson/Test.java', 'java', '[64,70]') 예 »
                 li
                     | JSON 노드 수정.
-                    button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[73,89]', lan='java') 예 »
+                    +codeBtn('Repositories/Eclipse/gson/src/test/java/gson/Test.java', 'java', '[73,89]') 예 »
                 li
-                    button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[92,101]', lan='java') JsonWriter »
-                    button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[104,109]', lan='java') JsonParser »
+                    +codeBtn('Repositories/Eclipse/gson/src/test/java/gson/Test.java', 'java', '[92,101]') JsonWriter »
+                    +codeBtn('Repositories/Eclipse/gson/src/test/java/gson/Test.java', 'java', '[104,109]') JsonParser »
                 li
                     | 직렬화/역직렬화 관련 옵션
-                    button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[111,133]', lan='java') 예1 »
-                    button.btn-code(path='Repositories/Eclipse/gson/src/test/java/gson/Test.java', displayrange='[135,145]', lan='java') 예2 »
+                    +codeBtn('Repositories/Eclipse/gson/src/test/java/gson/Test.java', 'java', '[111,133]') 예1 »
+                    +codeBtn('Repositories/Eclipse/gson/src/test/java/gson/Test.java', 'java', '[135,145]') 예2 »
                 ul
                     li DateFormat 설정 : GsonBuilder#setDateFormat
                     li 직렬화 제외 설정 : GsonBuilder#excludeFieldsWithModifiers

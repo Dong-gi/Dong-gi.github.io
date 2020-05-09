@@ -13,7 +13,7 @@ include ../../source/skeleton.jade
 
         li IDE 설치
         p Eclipse, IntelliJ Community 등 취향에 맞게 설치한다.
-        
+
         h2.marker Eclipse 환경 설정 : Window » Preferences
         ul
             li 폰트 설정
@@ -46,7 +46,7 @@ include ../../source/skeleton.jade
             | Name에는 "HelloWorld"(공백 없음에 유의)를 적고, public static void main(String[] args)를 체크
         li 실행
         p
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/HelloWorld.java', lan: 'java' })
+            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/HelloWorld.java', 'java')
             |  와 같이 코드를 작성하고 Run.
             br
             | 콘솔 결과창이 보이지 않는다면 Window - Show View - Console 선택
@@ -75,7 +75,7 @@ include ../../source/skeleton.jade
         li // : '//'부터 줄의 끝까지 무시한다.
         li
             | /* */ : '/*'와 '*/' 사이의 모든 텍스트를 무시한다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/Comment.java', lan: 'java' })
+            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/Comment.java', 'java')
 
     h1.marker 식별자
     ul
@@ -83,7 +83,7 @@ include ../../source/skeleton.jade
         li 자바 식별자는 '_', '$'의 사용을 허용한다. 단, '_' 단독으로는 사용할 수 없다.
         li
             | 식별자 관례 : 상수는 SNAKE_CASE, 상수를 제외한 식별자는 camelCase 이용. 클래스는 CamelCase.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/Identifier.java', lan: 'java' })
+            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/Identifier.java', 'java')
 
     h1.marker 자료형, 연산
     ul
@@ -94,15 +94,15 @@ include ../../source/skeleton.jade
             br
             | 식별자 없이 값 자체를 나타내는 코드를 리터럴(Literal)이라 부른다. 각 자료형의 리터럴과 적용되는 연산은 아래의 예시 코드 참고.
             br
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/TypeExample.java', displayrange: '[5, 25]', lan: 'java' }) boolean
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/TypeExample.java', displayrange: '[38, 43]', lan: 'java' }) char
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/TypeExample.java', displayrange: '[45, 86]', lan: 'java' }) number
+            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/TypeExample.java', 'java', '[5, 25]') boolean
+            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/TypeExample.java', 'java', '[38, 43]') char
+            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/TypeExample.java', 'java', '[45, 86]') number
         li 참조 자료형(Reference Type)
         p
             | 메모리의 주소를 통해 값에 접근한다. C/C++의 포인터와 같지만, 자바는 포인터 연산을 지원하지는 않는다.
             br
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/TypeExample.java', displayrange: '[27, 36]', lan: 'java' }) 문자열
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/TypeExample.java', displayrange: '[88, 100]', lan: 'java' }) 배열
+            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/TypeExample.java', 'java', '[27, 36]') 문자열
+            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/TypeExample.java', 'java', '[88, 100]') 배열
         li 변수 할당
         p 기본 자료형 변수는 정적 할당, 참조 자료형 변수는 동적 할당된다. 동적 할당된 객체들은 자동으로 GC 대상이 된다.
         ul
@@ -128,17 +128,17 @@ include ../../source/skeleton.jade
         li switch 조건식에 정수(char 포함), String, Enum이 허용된다.
         li 반복문에 label을 설정해 중첩된 루프들 중 어느 것이든 break/continue시킬 수 있다.
         li Iterable하면 향상된 for 구문을 이용할 수 있다.
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/Syntax.java', displayrange: '[6, 35]', lan: 'java' }) switch
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/Syntax.java', displayrange: '[37, 41]', lan: 'java' }) labeled 반복문
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/Syntax.java', displayrange: '[43, 46]', lan: 'java' }) enhanced for
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java', lan: 'java' }) try-with-resource
+        +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/Syntax.java', 'java', '[6, 35]') switch
+        +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/Syntax.java', 'java', '[37, 41]') labeled 반복문
+        +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/Syntax.java', 'java', '[43, 46]') enhanced for
+        +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java', 'java') try-with-resource
 
     h1.marker Varargs
     ul
         li 가변 길이 매개변수 선언 : Type... 배열명
         p
             | 나열된 매개변수들이 하나의 배열로 넘겨지며, 배열 자체를 넘길 수 있다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/VarArgs.java', lan: 'java' })
+            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/VarArgs.java', 'java')
 
     h1.marker 제한자(Modifier)
     ol
@@ -170,4 +170,4 @@ include ../../source/skeleton.jade
     h1.marker JUnit
     p
         | 단위 테스트에 사용되는 라이브러리
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/JUnitExample.java', lan: 'java' })
+        +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/JUnitExample.java', 'java')

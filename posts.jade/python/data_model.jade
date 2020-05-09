@@ -16,7 +16,7 @@ include ../../source/skeleton.jade
         li Ellipsis
         p
             | 리터럴 ... 이나 식별자 "Ellipsis"로 이 타입의 싱글톤 객체를 얻을 수 있다. 다음은 NumPy에서 "전체 차원"을 의미하는 ...
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/data_model.py', displayrange: '[1,1,10,39]', lan: 'python' })
+            +codeBtn('/Repositories/Python/Basic/data_model.py', 'python', '[1,1,10,39]')
     div
         h2.marker numbers.Number; 수
         ol
@@ -25,9 +25,9 @@ include ../../source/skeleton.jade
                 li int : 크기 제약 없는 정수
                 li
                     | bool : 
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/data_model.py', displayrange: '[42,45]', lan: 'python' }) int의 subtype
+                    +codeBtn('/Repositories/Python/Basic/data_model.py', 'python', '[42,45]') int의 subtype
                     | 이며, True, False는 대부분 상황에서
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/data_model.py', displayrange: '[46,47]', lan: 'python' }) 1, 0처럼 동작
+                    +codeBtn('/Repositories/Python/Basic/data_model.py', 'python', '[46,47]') 1, 0처럼 동작
                     | 한다.
             li.marker numbers.Real (float) : double precision 부동 소수
             li.marker numbers.Complex : 실수부, 허수부 모두 float인 복소수.
@@ -54,7 +54,7 @@ include ../../source/skeleton.jade
                     li 항목이 1개 : 표현식에 콤마를 붙여서 생성
                     li
                         | 항목이 0개 : 한 쌍의 빈 괄호로
-                        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/data_model.py', displayrange: '[50,55]', lan: 'python' }) 생성
+                        +codeBtn('/Repositories/Python/Basic/data_model.py', 'python', '[50,55]') 생성
                 li.marker bytes
                 ul
                     li 바이트(0 ~ 255) 단위 불변 배열
@@ -188,7 +188,7 @@ include ../../source/skeleton.jade
     p
         | 특별 메서드를 구현하면 사용자 정의 객체도 내장형 객체처럼 작동하게 된다.
         | 사용자 정의 클래스의 묵시적인 특수 메서드 호출은 메서드가 인스턴스 딕셔너리가 아닌 객체의 형에 정의되어 있을 때만 올바르게 작동함이
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/special_method.py', lan: 'python' }) 보장된다
+        +codeBtn('/Repositories/Python/Basic/special_method.py', 'python') 보장된다
     p 특별 메서드를 직접 구현하기보다는 ABC를 상속하는 것이 낫다.
     ul
         li collections.abc
@@ -260,11 +260,11 @@ include ../../source/skeleton.jade
             h3.marker Customizing module attribute access
             p
                 | 모듈 수준의 __getattr__, __dir__ 정의 가능. 다른 특별 메서드들도 정의해주고 싶다면 모듈 객체의 __class__ 속성을 types.ModuleType의 서브 클래스로 설정.
-                +w3a()&attributes({target:'_blank', href:'https://docs.python.org/ko/3/reference/datamodel.html#customizing-module-attribute-access'}) 참고자료 1
-                +w3a()&attributes({target:'_blank', href:'https://www.python.org/dev/peps/pep-0562/'}) 참고자료 2
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/large_module.py', lan: 'python' }) large_module.py »
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/test_module.py', lan: 'python' }) test_module.py »
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/module_example.py', lan: 'python' }) module_example.py »
+                +asA('https://docs.python.org/ko/3/reference/datamodel.html#customizing-module-attribute-access', '참고자료 1')
+                +asA('https://www.python.org/dev/peps/pep-0562/', '참고자료 2')
+                +codeBtn('/Repositories/Python/Basic/large_module.py', 'python') large_module.py »
+                +codeBtn('/Repositories/Python/Basic/test_module.py', 'python') test_module.py »
+                +codeBtn('/Repositories/Python/Basic/module_example.py', 'python') module_example.py »
 
             h3.marker Implementing Descriptors
             p 다음의 메서드들은, 메서드가 정의된 클래스의 인스턴스가 소유자(owner) 클래스에 등장할 때만 적용된다. 속성(attribute)들은 소유자 클래스의 __dict__의 키로 이용되는 속성을 가리킨다.
@@ -279,7 +279,7 @@ include ../../source/skeleton.jade
                 li.marker object.__set_name__(self, owner, name)
                 p
                     | 소유자 클래스 owner가 생성될 때 호출되어 이 디스크립터를 name에 할당한다.
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/descriptor_example.py', lan: 'python' }) descriptor_example.py »
+                    +codeBtn('/Repositories/Python/Basic/descriptor_example.py', 'python') descriptor_example.py »
             div
                 h4.marker 디스크립터 호출
                 ol
@@ -289,9 +289,9 @@ include ../../source/skeleton.jade
                         p
                             | 보통 데이터 디스크립터는 __get__()과 __set__()을 모두 정의한다. 이 경우 데이터 디스크립터는 인스턴스의 __dict__에 있는 값보다 우선한다.
                             br
-                            +w3a()&attributes({target:'_blank', href:'https://docs.python.org/ko/3/library/functions.html#property'}) property() 함수
+                            +asA('https://docs.python.org/ko/3/library/functions.html#property', 'property() 함수')
                             | 는 데이터 디스크립터로 구현되기 때문에, 인스턴스가 property의 동작을 변경할 수 없다. property는 __set__()을 자동 구현하므로, 읽기 전용 속성을 만들기 쉽다.
-                            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/property_example.py', displayrange: '[1,17,20,35]', lan: 'python' }) property_example.py »
+                            +codeBtn('/Repositories/Python/Basic/property_example.py', 'python', '[1,17,20,35]') property_example.py »
                         li Non-data descriptor : 인스턴스 __dict__보다 우선순위가 낮다
                         p
                             | 파이썬 메서드(staticmethod(), classmethod() 포함)는 비데이터 디스크립터로 구현되기 때문에, 인스턴스가 메서드를 새로 정의하거나 덮어쓸 수 있다. 따라서 같은 클래스의 다른 인스턴스들과는 다른 동작을 할 수 있다.
@@ -331,21 +331,21 @@ include ../../source/skeleton.jade
                 | 클래스를 상속하는 경우, 베이스 클래스의 __init_subclass__가 호출된다. 클래스 데코레이터는 직접 적용할 클래스를 지정해줘야 하지만, __init_subclass__는 미래에 정의될 모든 서브 클래스에 적용된다.
                 br
                 | 새 클래스에 주어진 키워드 인자들(metaclass 제외)은 부모 클래스의 __init_subclass__로 전달된다. __init_subclass__에서는 필요한 키워드 인자들만 사용하고, 나머지는 베이스 클래스로 전달해야 한다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/init_subclass.py', lan: 'python' })
+                +codeBtn('/Repositories/Python/Basic/init_subclass.py', 'python')
             li.marker metaclass
             ol
                 li
-                    +asA('https://stackoverflow.com/a/6581949/7369515')
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/metaclass_example.py', displayrange: '[1,48,50,62]', lan: 'python' })
+                    +asA('https://stackoverflow.com/a/6581949/7369515', '참고자료')
+                    +codeBtn('/Repositories/Python/Basic/metaclass_example.py', 'python', '[1,48,50,62]')
                 li 기본적으로 클래스는 type(name, bases, dict)을 사용해서 만들어진다.
                 li 메타클래스는 type(name, bases, dict)의 동작을 대신 수행할 수 있는 함수/클래스다. __new__, __init__, __call__을 후킹하여 복잡한 작업을 뒤에서 처리할 수 있게 해준다.
             li.marker 클래스 및 인스턴스 검사
             ol
                 li ABC; Abstract Base Class 도입을 위해 추가되었다
                 p
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/data_model.py', displayrange: '[191,192]', lan: 'python' }) abc 호환 검사 »
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/data_model.py', displayrange: '[194,197]', lan: 'python' }) abc 호환 추가 »
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/data_model.py', displayrange: '[199,211]', lan: 'python' }) 특별 메서드와 abc 호환 검사 »
+                    +codeBtn('/Repositories/Python/Basic/data_model.py', 'python', '[191,192]') abc 호환 검사 »
+                    +codeBtn('/Repositories/Python/Basic/data_model.py', 'python', '[194,197]') abc 호환 추가 »
+                    +codeBtn('/Repositories/Python/Basic/data_model.py', 'python', '[199,211]') 특별 메서드와 abc 호환 검사 »
                 li class.__instancecheck__(self, instance)
                 p isinstance(instance, class)에서 호출된다
                 li class.__subclasscheck__(self, subclass)
@@ -424,18 +424,18 @@ include ../../source/skeleton.jade
             li generator.throw(exc_type[, exc_value[, traceback]])
             p
                 | 제너레이터가 중단한 곳의 yield 표현식에 예외를 전달한다. 제너레이터가 예외를 처리하면 제어 흐름이 다음 yield 문까지 진행되고, 생성된 값은 generator.throw() 호출 값이 된다. 제너레이터가 예외를 처리하지 않으면 코루틴은 중단되고 호출자까지 예외가 전파된다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/data_model.py', displayrange: '[68,81]', lan: 'python' }) 제너레이터를 이용한 간단한 코루틴 »
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/data_model.py', displayrange: '[83,98]', lan: 'python' }) 값을 반환하는 코루틴 »
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/data_model.py', displayrange: '[101,126]', lan: 'python' }) 첫 번째 yield까지 자동 진행하는 코루틴 »
+                +codeBtn('/Repositories/Python/Basic/data_model.py', 'python', '[68,81]') 제너레이터를 이용한 간단한 코루틴 »
+                +codeBtn('/Repositories/Python/Basic/data_model.py', 'python', '[83,98]') 값을 반환하는 코루틴 »
+                +codeBtn('/Repositories/Python/Basic/data_model.py', 'python', '[101,126]') 첫 번째 yield까지 자동 진행하는 코루틴 »
             li yield from
             ul
                 li yield from x
                 p
                     | iter(x)를 호출해서 x의 반복자를 가져온다. StopIteration 예외를 내부적으로 잡아서 자동으로 처리한다.
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/data_model.py', displayrange: '[128,134,177,188]', lan: 'python' })
+                    +codeBtn('/Repositories/Python/Basic/data_model.py', 'python', '[128,134,177,188]')
                 li
                     | yield from은 가장 바깥쪽 호출자와 가장 안쪽의 하위 제너레이터 사이에 양방향 채널을 열어준다.
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/data_model.py', displayrange: '[101,109,137,175]', lan: 'python' })
+                    +codeBtn('/Repositories/Python/Basic/data_model.py', 'python', '[101,109,137,175]')
                 ul
                     li delegating generator : yield from 표현식을 갖는 제너레이터 함수
                     li subgenerator : yield from 표현식이 가져온 제너레이터.

@@ -116,7 +116,7 @@ include ../../source/skeleton.jade
                     | ][:
                     i formatString
                     | ]}
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/csharp_interpolated_string.cs', lan: 'cs' })
+                    +codeBtn('/Repositories/VisualStudio/csharp_interpolated_string.cs', 'cs')
                 li Since C# 8 : @$"", $@"" 모두 유효. 이전에는 $@""만 가능
             h3 Boolean
             table
@@ -125,7 +125,7 @@ include ../../source/skeleton.jade
                     td true or false
                     td System.Boolean
             h3 Boolean 연산 &&, ||는 Short-circuit
-    
+
         h2.marker 배열
         ul
             li 배열 초기화시 기본값으로 채워진다.
@@ -137,7 +137,7 @@ include ../../source/skeleton.jade
                 int[] arr3 = { 1, 2, 3 };
                 int[,] arr4 = new int[2, 2];
                 int[,] arr5 = new int[,] { { 1, 2 }, { 3, 4 } };
-    
+
         h2.marker 형변환
         ul
             li 암시적 형변환 : 보다 큰 정의의 자료형으로 자동 변환.
@@ -146,7 +146,7 @@ include ../../source/skeleton.jade
             p Unboxing : Reference type 데이터를 Value type으로 변환. 캐스팅을 통해 명시적으로 수행.
             li if (o is Mammal m) { }
             li as 연산자를 이용한 명시적 변환은, null을 허용하는 참조 자료형만 가능하다.
-    
+
         h2.marker 구문
         ul
             li if ~ else if ~ else
@@ -161,7 +161,7 @@ include ../../source/skeleton.jade
             li checked/unchecked 블록
             p 기본적으로는 프로그램 실행 시 오버플로/언더플로를 무시한다.
             p checked/unchecked 블록은 이를 각각 명시적인 예외로 처리/비처리 하도록 한다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/CheckedExample.cs', displayrange: '[13, 39]', lan: 'cs' })
+            +codeBtn('/Repositories/VisualStudio/CSharp/Basic/CheckedExample.cs', 'cs', '[13, 39]')
             li 예외 처리
             +asCode('cs').
                 throw e; // e는 System.Exception 및 파생 클래스의 인스턴스
@@ -171,7 +171,7 @@ include ../../source/skeleton.jade
                 try {} catch (ExceptionType e) {}
                 try {} catch () when (!filePath.Contains(".tmp")) {} // when 필터를 사용하는 경우, 같은 타입을 여러 번 catch 가능
                 try {} finally { iDisposable.Dispose(); } // 다음과 동일 : using(var iDisposable = ~) { }
-    
+
         h2.marker 네임스페이스
         +asCode('cs').
             namespace MyProgram.Model { }
@@ -184,7 +184,7 @@ include ../../source/skeleton.jade
         ul
             li
                 | 프로퍼티 → (히든) 필드에 대한 getter/setter 메서드
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/csharp_property.cs', lan: 'cs' }) ViewModel에서의 사용 예 »
+                +codeBtn('/Repositories/VisualStudio/csharp_property.cs', 'cs') ViewModel에서의 사용 예 »
             li 익명 객체 → new { PropertyName = value } : 생성 후 읽기만 가능
             li 정적 생성자 → static 클래스이름() { }
             p 첫 번째 인스턴스가 만들어지거나 정적 멤버가 참조되기 전에 자동으로 호출된다.
@@ -199,7 +199,7 @@ include ../../source/skeleton.jade
                     | this 키워드 : 클래스의 현재 인스턴스
                     br
                     | base 키워드 : 부모 클래스 메서드 또는 생성자 호출
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/csharp_base_keyword.cs', lan: 'cs' })
+                    +codeBtn('/Repositories/VisualStudio/csharp_base_keyword.cs', 'cs')
                 li sealed 키워드 → 상속/재정의 불가
                 li 부모 클래스 인스턴스를 자식 클래스로 다운캐스팅 불가.
                 li
@@ -222,19 +222,19 @@ include ../../source/skeleton.jade
                 +asCode('cs').
                     public static implicit operator 타입2(타입1 변수1) {};
                     public static explicit operator 타입2(타입1 변수1) {};
-    
+
         h2.marker 델리게이트
         ul
             li
                 | 메서드를 참조하는 자료형
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/DelegateExample.cs', lan: 'cs' })
+                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/DelegateExample.cs', 'cs')
             li 델리게이트로 변환될 수 있는 익명 메서드 생성
             ol
                 li delegate 연산자 → delegate (int a, int b) { return a + b; }
                 li 람다 Since C# 3 → (a, b) => a + b;
             li 델리게이트에는 BeginInvoke 및 EndInvoke 메서드가 자동으로 추가되며, 이를 통해 임의 메서드를 비동기 호출할 수 있다
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/DelegateExample.cs', displayrange: '[12, 22, 49, 64]', lan: 'cs' }) 비동기 호출 예 »
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/DelegateExample.cs', displayrange: '[12, 22, 66, 86]', lan: 'cs' }) 비동기 호출 대기 예 »
+            +codeBtn('/Repositories/VisualStudio/CSharp/Basic/DelegateExample.cs', 'cs', '[12, 22, 49, 64]') 비동기 호출 예 »
+            +codeBtn('/Repositories/VisualStudio/CSharp/Basic/DelegateExample.cs', 'cs', '[12, 22, 66, 86]') 비동기 호출 대기 예 »
             li 델리게이트 체인
             +asCode('cs').
                 myDelegate += obj.Func;
@@ -248,21 +248,21 @@ include ../../source/skeleton.jade
                 li 일반화된 델리게이트. 간단하게 구독/해지 가능. 클래스 밖에서 호출 불가.
                 li 이벤트의 첫 번째 인자는 이벤트 발생 객체. 두 번째 인자는 EventArgs 호환 객체.
                 +asCode('cs') public event EventHandler SomeEvent = delegate { };
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/EventExample.cs', lan: 'cs' })
-    
+                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/EventExample.cs', 'cs')
+
         h2.marker 인터페이스
         ol
             li 인터페이스도 프로퍼티를 가질 수 있다(get/set 지정만 가능). 구현하는 클래스에서 프로퍼티를 구현한다.
             li class SubClass : BaseClass, Interface1, Interface2, ...
             li interface Interface1 : Interface2
-    
+
         h2.marker 구조체 struct
         ol
             li 사용자 정의 ValueType.
             li ValueType이므로 생성자 호출 없이 선언만으로 초기화가 진행된다. 사용되는 기본 생성자는 컴파일러가 자동으로 추가하며, 재정의할 수 없다.
             li 모든 타입은 Object의 파생 클래스이므로, 구조체도 new 키워드로 인스턴스를 생성할 수 있다. 인자를 받는 생성자는 모든 필드를 초기화해야 한다.
             li ValueType이므로 할당 시 깊은 복사가 이루어진다.
-    
+
         h2.marker 열거형 enum
         ol
             li 정수형을 상속받아 정의할 수 있는 ValueType. 기본 int
@@ -271,7 +271,7 @@ include ../../source/skeleton.jade
             [Flags] enum Authority { READ = 1, WRITE = 2, EXECUTE = 4 }
             var authority = READ | WRITE;
             Console.WriteLine(authority.HasFlag(WRITE));
-    
+
         h2.marker 제네릭
         ul
             li Generic Method
@@ -356,7 +356,7 @@ include ../../source/skeleton.jade
                         => (x, y, width, height) = (rect.X, rect.Y, rect.Width, rect.Height);
                     var rect = new Rectangle(1, 2, 3, 4);
                     var (_, _, w, h) = rect;
-    
+
         h2.marker 연산자
         ul
             li.marker await : 피연산자가 나타내는 비동기 작업이 완료될 때까지 바깥쪽 비동기 메서드의 평가를 일시 중단
@@ -365,7 +365,7 @@ include ../../source/skeleton.jade
             li.marker nameof(Identifier) : 식별자 문자열 반환
             li.marker
                 | Null 조건부 연산자 ?. 및 ?[]
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/NullableExample.cs', lan: 'cs' })
+                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/NullableExample.cs', 'cs')
             ul
                 li 피연산자가 null이 아니면 멤버 액세스 ?. 또는 요소 액세스 ?[] 연산을 적용한다.
                 li null이면 그대로 null 반환
@@ -395,7 +395,7 @@ include ../../source/skeleton.jade
                 var lastPhrase = words[6..]; // contains "the, "lazy" and "dog"
                 Range phrase = 1..4;
                 var text = words[phrase];
-    
+
         h2.marker 한정자
         ul
             li.marker async : 메서드, 람다식, 익명 메서드(delegate 연산자)를 비동기로 지정.
@@ -435,7 +435,7 @@ include ../../source/skeleton.jade
                 | 컴파일 시 -unsafe 옵션을 지정해야 한다 : 비주얼 스튜디오는 "프로젝트 속성 - 빌드 - 안전하지 않은 코드 허용"
                 br
                 | 관련 클래스 : System.Runtime.InteropServices.Marshal
-    
+
         h2.marker 메서드
         ol
             li.marker 매개변수 명시
@@ -444,10 +444,10 @@ include ../../source/skeleton.jade
             +asCode('cs') Method(int a = 0, int b = 0) {}
             li.marker
                 | 가변 길이 매개변수 params
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/ParamsExample.cs', displayrange: '[11, 17]', lan: 'cs' })
+                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/ParamsExample.cs', 'cs', '[11, 17]')
             li.marker
                 | 확장 메서드 : 기존 클래스에 static method 추가됨.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/ExtensionExample.cs', lan: 'cs' })
+                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/ExtensionExample.cs', 'cs')
             li.marker 람다 식 사용 확장 : 생성자, 소멸자, 이벤트 add/remove, 속성 set, 인덱서 set
             li.marker 메서드 안에 지역 함수 정의 가능
             p static 지역 함수로 선언하면 외부 변수 참조 불가
@@ -460,12 +460,12 @@ include ../../source/skeleton.jade
                                 [CallerFilePath] string filePath = "",
                                 [CallerLineNumber] int lineNumber = 0) { }
             li Main 메서드에 async 허용
-    
+
         h2.marker 구문
         ol
             li.marker
                 | 인덱서 구문 : 하나 이상의 인수로 참조되는 속성을 반환. string, List&lt;T> 등은 인덱서를 구현함.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/IndexerExample.cs', lan: 'cs' })
+                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/IndexerExample.cs', 'cs')
             li.marker switch case 필터 Since C# 7.0
             +asCode('cs').
                 switch(item) {
@@ -499,10 +499,10 @@ include ../../source/skeleton.jade
                         }
                     }
                 }
-        
+
             h3.marker LINQ; Language INtegrated Query
             ol
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/LinqExample.cs', lan: 'cs' })
+                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/LinqExample.cs', 'cs')
                 li MoreLinq 패키지에서 추가적인 편의성을 제공한다.
                 li from : LINQ query는 from으로 시작한다. from의 대상은 IEnumarable&lt;T>
                 p LINQ query 결과도 IEnumerable&lt;T>
@@ -542,40 +542,40 @@ include ../../source/skeleton.jade
                     var lambda = Expression&lt;Func&lt;int, int>>.Lambda&lt;Func&lt;int, int>>(exp, new ParameterExpression[] { (ParameterExpression)param1 });
                     var compiledFunc = lambda.Compile();
                     Console.WriteLine(compiledFunc(3));
-    
+
         h2.marker Attribute
         ol
             li
                 | 자바의 애너테이션처럼 요소를 장식한다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', lan: 'cs' }) AttributeExample.cs 전체 코드 »
+                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs') AttributeExample.cs 전체 코드 »
             li
                 | 사용자 정의 특성은 System.Attribute를 상속하여 만든다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', displayrange: '[12, 19]', lan: 'cs' })
+                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs', '[12, 19]')
             li
                 | 명명시 Attribute를 접미하고, 실제 사용할 땐 생략 가능하다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', displayrange: '[21, 24]', lan: 'cs' })
+                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs', '[21, 24]')
             li
                 | 특성 적용 대상 제한 : System.AttributeUsage 생성자에 AttributeTargets 전달. 생략시 기본값은 AttributeTargets.All
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', displayrange: '[12, 13]', lan: 'cs' })
+                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs', '[12, 13]')
             li
                 | 적용 대상 명시 : assembly, module, type, method, property, field, event, param, return, typevar
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', displayrange: '[23, 24]', lan: 'cs' })
-    
+                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs', '[23, 24]')
+
         h2.marker App.config
         ol
             li supportedRuntime
             p 실행에 필요한 닷넷 버전 지정. 비주얼 스튜디오가 자동으로 추가해주는듯
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/App.config', lan: 'xml' }) App.config »
+            +codeBtn('/Repositories/VisualStudio/CSharp/Basic/App.config', 'xml') App.config »
             li appSettings
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/App.config', lan: 'xml' }) App.config »
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/CSharp/Basic/Program.cs', lan: 'cs' }) Program.cs »
-    
+            +codeBtn('/Repositories/VisualStudio/CSharp/Basic/App.config', 'xml') App.config »
+            +codeBtn('/Repositories/VisualStudio/CSharp/Basic/Program.cs', 'cs') Program.cs »
+
         h2.marker 디버그 모드
         ol
             li 전처리 상수 #if DEBUG ... #endif
             li [Conditional("DEBUG")] 적용된 클래스, 메서드는 릴리스 빌드 시 포함되지 않는다
             li System.Diagnostics.Debug.WriteLine() : 디버그 출력
-    
+
         h2.marker Reflection 리플렉션
         ul
             li AppDomain → Assembly ← Module ← Type
@@ -598,7 +598,7 @@ include ../../source/skeleton.jade
                 li MethodBuilder.GetILGenerator()로 ILGenerator 객체 획득
                 li ILGenerator.Emit()으로 메서드 내용 추가
                 li TypeBuilder.CrateType()으로 인스턴스 생성 가능
-    
+
         h2.marker 재귀 패턴 매칭 Since C# 8.0
         +asCode('cs').
             int? x = null;

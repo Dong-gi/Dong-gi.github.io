@@ -24,7 +24,7 @@ include ../../source/skeleton.jade
                     $ service postgresql-9.6 restart # 재시작하는 경우
                 li 자동 구동 설정
                 +asCode('shell') $ chkconfig postgresql-9.6 on
-        
+
             h3.marker PostgreSQL 10 on CentOS 7
             ol
                 li 패키지 설치
@@ -42,10 +42,10 @@ include ../../source/skeleton.jade
                 ul
                     li 서비스 시작 후, 실행 위치 확인
                     +asCode('shell') $ ps aux | grep postgres
-    
+
         h2.marker 실행 구조
         p postgres라는 이름의 서버 프로세스가 항시 실행되면서 클라이언트의 연결 요청 시 이를 처리하고, 연결 수립 시 하위 프로세스를 생성하여 할당한다.
-    
+
         h2.marker 데이터베이스 사용하기
         ul
             li 데이터베이스 사용 방법
@@ -96,7 +96,7 @@ include ../../source/skeleton.jade
                     +asCode('shell').
                         postgres=# create database db_name ENCODING 'UTF-8';
                         postgres=# GRANT ALL PRIVILEGES ON DATABASE db_name TO username;
-            
+
                 h4.marker psql 명령어
                 +asCode('sql').
                         -- 사용 가능한 데이터베이스 리스트
@@ -115,13 +115,13 @@ include ../../source/skeleton.jade
                         db_name=# \i file_name
                         -- 접속 종료
                         db_name=# \q
-        
+
             h3.marker 외부 접속 허용
             ul
                 li iptables 규칙 추가
                 ol
                     p /etc/sysconfig/iptables
-                    +asA('https://webdir.tistory.com/170')
+                    +asA('https://webdir.tistory.com/170', '참고자료')
                     li 규칙 추가
                     p PostgreSQL 서버의 포트(--dport 5432)로 들어오는(INPUT) tcp 패킷(-p tcp)을 허용(ACCEPT)하는 규칙을 추가(-A).
                     p strong 규칙의 순서가 중요하므로, 앞선 규칙에서 패킷이 폐기되지 않도록 주의
@@ -135,7 +135,7 @@ include ../../source/skeleton.jade
                     # 변경 전
                     listen_addresses='localhost'
                     #port=5432
-                    
+
                     # 변경 후
                     listen_addresses='*'
                     port=5432
@@ -169,33 +169,33 @@ include ../../source/skeleton.jade
            +asCode('sql') create table t_account_0 ( like t_account including all );
            li 삭제
            +asCode('sql') DROP TABLE table_name;
-    
+
         h2.marker 테이블에 자료 입력하기
         +asCode('sql').
             -- 숫자가 아닌 자료형은 ‘’안에 적는다.
             INSERT INTO weather VALUES (‘San Francisco’, 46, 50, 0.25, ‘1994-11-27’);
-            
+
             -- 여러 개 입력 시 콤마로 구분
             INSERT INTO weather (city, temp_lo, temp_hi, prcp, date) VALUES ('San Francisco', 43, 57, 0.0, '1994-11-29'), ('San Francisco', 43, 57, 0.0, '1994-11-29');
-            
+
             -- SELECT and INSERT
             insert into t_account_old select * from t_account_0;
-            
+
             -- SELECT and INSERT order by
             with tmp as (delete from test returning *) insert into test select * from tmp order by v;
-            
+
             -- COPY from file
             COPY weather FROM '/home/user/weather.txt';
-            
+
             -- COPY from CSV file
             COPY weather FROM '/home/user/weather.txt' WITH csv;
-            
+
             -- COPY from STDIN
             COPY t_account_0 (account_id, lv, nickname, start_game_date) FROM stdin;
             1\t1\t'test'\t2017-03-31 12:06:06.446+09
             2\t2\t'test2'\t2017-03-31 12:06:06.446+09
             \.
-    
+
         h2.marker 테이블의 자료 조회하기
         +asCode('sql').
             SELECT * FROM weather;
@@ -203,11 +203,11 @@ include ../../source/skeleton.jade
             SELECT * FROM weather WHERE city = ‘San Francisco’ AND prop > 0.0;
             SELECT * FROM weather ORDER BY city, temp_lo;
             SELECT DISTINCT city FROM weather;
-            
+
             -- Cartesian product
             SELECT * FROM weather w, cities c WHERE w.city = c.name;
             SELECT weather.city, cities.location FROM weather, cities WHERE cities.name = weather.city;
-            
+
             -- JOIN
             SELECT * FROM weather INNER JOIN cities ON (weather.city = cities.name);
             SELECT * FROM weather LEFT OUTER JOIN cities ON (weather.city = cities.name);
@@ -215,7 +215,7 @@ include ../../source/skeleton.jade
             -- + RIGHT OUTER JOIN, FULL OUTER JOIN
             -- SELF JOIN : 자기 자신과의 조인
             SELECT w1.city, w1.temp_lo AS low, w2.city, w2.temp_lo AS low FROM weather w1, weather w2 WHERE w1.temp_lo &lt; w2.temp_lo;
-    
+
         h2.marker 집계 함수
         +asCode('sql').
             SELECT max(temp_lo) FROM weather;
@@ -223,10 +223,10 @@ include ../../source/skeleton.jade
             SELECT city, max(temp_lo) FROM weather GROUP BY city;
             SELECT city, max(temp_lo) FROM weather GROUP BY city HAVING max(temp_lo) &lt; 40;
             SELECT city, max(temp_lo) FROM weather WHERE city LIKE ’S%’ GROUP BY city;
-    
+
         h2.marker 자료 갱신
         +asCode('sql') UPDATE weather SET temp_hi = temp_hi - 2, temp_lo = temp_lo - 2 WHERE date > ‘1994-11-28’;
-    
+
         h2.marker 자료 삭제
         +asCode('sql').
             DELETE FROM weather WHERE city = ‘Hayward’;
@@ -236,7 +236,7 @@ include ../../source/skeleton.jade
     div
         h2.marker 뷰
         +asCode('sql') CREATE VIEW myview AS SELECT city, temp_lo, temp_hi, prcp, date, location FROM weather, cities WHERE city = name;
-    
+
         h2.marker 외래키
         +asCode('sql').
             CREATE TABLE cities (
@@ -250,7 +250,7 @@ include ../../source/skeleton.jade
                 prcp        real,
                 date        date
             );
-    
+
         h2.marker 트랜잭션
         ol
             li 트랜잭션의 시작과 끝은 BEGIN, COMMIT으로 구분하며, 이를 생략한 각 쿼리는 자동으로 감싸진다. 일부 클라이언트 라이브러리는 자동으로 BEGIN, COMMIT 명령을 포함하여, 사용자가 트랜잭션을 지정하면 오류를 내는 경우도 있다.
@@ -265,7 +265,7 @@ include ../../source/skeleton.jade
             ROLLBACK TO my_savepoint;
             UPDATE accounts SET balance = balance + 100 WHERE name = 'Wally';
             COMMIT;
-    
+
         h2.marker 윈도우 함수
         ol
             li 행 집합을 대상으로 계산하는 함수. 집계 함수는 행 집합에 대한 하나의 행으로 결과를 보여주지만, 윈도우 함수는 각 행 단위로 결과를 출력한다.
@@ -294,7 +294,7 @@ include ../../source/skeleton.jade
                 -- rank 함수의 대상은 OVER에서 특정되므로 생략되었다.
             li 같은 윈도우 프레임을 이용하는 경우, alias를 이용할 수 있다.
             +asCode('sql') SELECT sum(salary) OVER w, avg(salary) OVER w FROM empsalary WINDOW w AS (PARITION BY depname ORDER BY salary DESC);
-    
+
         h2.marker 상속
         ol
             li 객체지향 데이터베이스에서 사용하는 개념. 테이블을 상속하면 해당 테이블의 모든 열을 갖게된다. 다중 상속이 가능하다.
@@ -315,7 +315,7 @@ include ../../source/skeleton.jade
 
     h1.marker PostgreSQL 팁
     ul
-        li: +w3a()&attributes({target:'_blank', href:'http://postgresql.kr/docs/current/sql-commands.html'}) 명령어 목록
+        li: +asA('http://postgresql.kr/docs/current/sql-commands.html', '명령어 목록')
         li.marker timezone 변경
         ol
             li postgresql.conf의 log_timezone, timezone 설정 변경
@@ -344,7 +344,7 @@ include ../../source/skeleton.jade
         +asCode('sql') select pg_terminate_backend(pid) from pg_stat_activity where client_addr = '10.0.2.2';
         li.marker
             | AWS Redshift와 드라이버 충돌될 때 jdbc 연결 쿼리에
-            +w3a()&attributes({target:'_blank', href:'https://www.simba.com/products/Redshift/doc/JDBC_InstallGuide/content/jdbc/re/options/opensourcesubprotocoloverride.htm'}) OpenSourceSubProtocolOverride=true
+            +asA('https://www.simba.com/products/Redshift/doc/JDBC_InstallGuide/content/jdbc/re/options/opensourcesubprotocoloverride.htm', 'OpenSourceSubProtocolOverride=true')
             | 추가
         li.marker 테이블 목록 획득
         +asCode('sql') select * from information_schema.tables

@@ -20,7 +20,7 @@ include ../../source/skeleton.jade
         li instanceof 연산자로 호환 여부 확인 가능
         li
             | {}를 이용해 간단하게 익명클래스를 작성할 수 있다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/AnonymousClass.java', lan: 'java' }) 익명클래스 객체 예시 »
+            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/AnonymousClass.java', 'java') 익명클래스 객체 예시 »
 
     h1.marker 인터페이스
     ul
@@ -29,7 +29,7 @@ include ../../source/skeleton.jade
         li 인터페이스의 메서드는 기본적으로 body가 없지만, default method는 가질 수 있다.
         li 인터페이스 구현 : implements
         li 추상클래스는 인터페이스를 부분적으로 구현해도 된다.
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/Interface.java', lan: 'java' })
+        +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/Interface.java', 'java')
 
     h1.marker 중첩 클래스
     ul
@@ -38,7 +38,7 @@ include ../../source/skeleton.jade
         li Inner Interface : 외부 클래스 이름으로 접근
         li Anonymous Class : 외부 클래스 final 멤버 접근 가능
         li Local Class : 외부 클래스 final 멤버 접근 가능
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/Nested.java', lan: 'java' })
+        +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/Nested.java', 'java')
 
     h1.marker 람다
     ul
@@ -50,11 +50,11 @@ include ../../source/skeleton.jade
         li 익명 메서드 Lambda : FunctionalInterface의 메서드만을 명시함으로써 익명 객체를 생성한다.
         p
             | 시그니처를 간소화하는 것은 어디까지나 정의가 분명할 때뿐이다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/Lambda2.java', lan: 'java' })
+            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/Lambda2.java', 'java')
         li 메서드 참조를 이용해 기정의된 메서드를 람다로 이용할 수 있다. '::' 연산자를 이용한다.
         li
             | 생성자 참조 » "::new". 배열 생성자 int[]::new도 가능.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/Lambda.java', lan: 'java' })
+            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/Lambda.java', 'java')
 
     h1.marker Object 클래스
     ol
@@ -83,8 +83,8 @@ include ../../source/skeleton.jade
         li void wait() : 해당 객체에 대해 스레드를 대기.
         li void wait(long timeout) : 깨워질 때까지 최대 timeout ms동안 대기.
         li void wait(long timeout, int nanos) : timeout ms + nanos ns
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/ObjectExample.java', lan: 'java' }) 예시 : clone, equals, hashCode, toString, compareTo »
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/Notify.java', lan: 'java' }) 예시 : notify, wait »
+        +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/ObjectExample.java', 'java') 예시 : clone, equals, hashCode, toString, compareTo »
+        +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/Notify.java', 'java') 예시 : notify, wait »
         li @Deprecated(since="9") protected void finalize()
         p
             | 객체 폐기 메서드였던 것.
@@ -107,7 +107,7 @@ include ../../source/skeleton.jade
         li enum은 여타 클래스와 같이 멤버 변수, 메서드를 가질 수 있으며, private 생성자와 abstract method도 가질 수 있다.
         li enum은 로드시 한번만 생성되므로 싱글톤을 간단하게 구현할 수 있다.
         li Enum&lt;E> :: name, toString, ordinal, compareTo, valueOf
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/EnumExample.java', lan: 'java' })
+        +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/EnumExample.java', 'java')
 
     h1.marker 예외
     ul
@@ -119,13 +119,13 @@ include ../../source/skeleton.jade
             li Throwable(Throwable causeExc), Throwable(String msg, Throwable causeExc) : 보다 근본적인 원인을 인자로 하여 새로운 예외 생성
             li Throwable initCause(Throwable causeExc) : 예외의 근원을 설정하며, 생성자를 통해 호출되거나 이미 호출된 경우 다시 호출 불가
             li Throwable getCause() : 현재 예외의 근원을 얻는다. 없으면 null
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/ExceptionExample.java', lan: 'java' })
+        +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/ExceptionExample.java', 'java')
         li 부모보다 많은 종류의 예외를 공표할 수 없다.
 
     h1.marker 옵션 타입
     p
         | Optional&lt;T> : T 타입의 존재 여부를 포함하는 T타입 컨테이너
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/OptionalExample.java', lan: 'java' })
+        +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/OptionalExample.java', 'java')
 
     h1.marker 제네릭
     ul
@@ -139,7 +139,7 @@ include ../../source/skeleton.jade
         li 제네릭을 통한 객체 생성 불가. 제네릭을 static 요소에서 이용하는 데 제한.
         li
             | 제네릭 타입의 선언, 제네릭 리스트 일부 구현, 바운드된 타입 매개변수 선언
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/Generic.java', lan: 'java' }) 예 »
+            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/Generic.java', 'java') 예 »
         li
             | 비제네릭 클래스의 제네릭 생성자 선언, 비제네릭 클래스 - 제네릭 클래스 상속
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/Generic2.java', lan: 'java' }) 예 »
+            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/Generic2.java', 'java') 예 »

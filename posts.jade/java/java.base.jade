@@ -19,7 +19,7 @@ include ../../source/skeleton.jade
         ol
             li
                 | JVM이 컨트롤할 수 있는 문자 기반 콘솔에 대한 접근 제공. 콘솔 존재 여부는 하위 플랫폼에 의존적이며, 싱글톤으로 System.console()을 통해 얻을 수 있다. 만일 가용한 콘솔이 없다면 null이 넘겨진다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/ConsoleExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/ConsoleExample.java', 'java')
             li 콘솔에 대한 읽기/쓰기 작업은 모두 원자적으로 이루어지며, 따라서 다른 스레드가 대기할 가능성이 있다.
             li 콘솔에 대한 close()는 실제로 아무런 영향을 미치지 않는다.
             li 유닉스의 Ctrl+D, 윈도우의 Ctrl+Z와 같은 종료 문자를 만나면 읽기 메서드는 null을 반환한다.
@@ -138,24 +138,24 @@ include ../../source/skeleton.jade
             h3.marker class PipedInputStream extends InputStream
             p
                 | PipedOutputStream과 연결되어 바이트들을 받는 InputStream. PipedOutputStream과 별개의 스레드에서 동작해야 한다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/PipedStreamExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PipedStreamExample.java', 'java')
             h3.marker class PipedOutputStream extends OutputStream
             p
                 | 연결된 PipedInputStream으로 바이트들을 보내는 OutputStream. PipedInputStream과 별개의 스레드에서 동작해야 한다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/PipedStreamExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PipedStreamExample.java', 'java')
             h3.marker class SequenceInputStream extends InputStream
             p 여러 InputStream을 이어붙인듯이 활용하는 InputStream.
             h3.marker class PushbackInputStream extends FilterInputStream
             p
                 | 이미 읽은 것을 취소하고 다시 읽을 수 있는 기능을 지원한다. 이전에 읽은 내용을 저장하지는 않으므로, 덮어쓰기처럼 이용할 수 있다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/PushBackExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PushBackExample.java', 'java')
             h3.marker class FileInputStream extends InputStream
-            p: +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java', lan: 'java'})
+            p: +codeBtn('/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java', 'java')
             +asCode('java').
                 FileChannel getChannel()
                     // 유니크한 FileChannel을 반환하며, 채널에서의 위치는 스트림에서 읽어들인 만큼과 같다.
             h3.marker class FileOutputStream extends OutputStream
-            p: +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java', lan: 'java'})
+            p: +codeBtn('/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java', 'java')
             +asCode('java').
                 FileChannel getChannel()
                     // 유니크한 FileChannel을 반환하며, 채널에서의 위치는 스트림에서 쓴 바이트 수와 같다(append 모드가 아닐 경우). append 모드에서는 파일의 크기와 채널의 위치가 동일하다.
@@ -169,7 +169,7 @@ include ../../source/skeleton.jade
             ol
                 li
                     | 직렬화와 역질렬화를 지원하는 마커 인터페이스. ObjectInputStream, ObjectOutputStream의 메서드들을 이용해 알아서 저장/복구한다.
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java', 'java')
                 li 직렬화하지 않을 멤버는 transient 키워드로 표시한다.
                 li 직접 구현하고 싶다면 Externalizable 인터페이스를 구현하거나, 다음의 메서드들을 작성한다.
                 +asCode('java').
@@ -186,18 +186,18 @@ include ../../source/skeleton.jade
             ol
                 li
                     | 객체 직렬화를 직접 구현하고자 할 때 이를 구현한다. 객체 직렬화는 빈 객체를 만든 뒤 각 속성의 값을 쓰므로 기본 생성자가 필요하다.
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/ExternalizableExample.java', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/io/ExternalizableExample.java', 'java')
             +asCode('java').
                 void writeExternal(ObjectOutput out) # 객체를 out에 쓴다.
                 void readExternal(ObjectInput in)    # in으로 객체를 생성한다.
             h3.marker class ObjectInputStream extends InputStream implements ObjectInput, ObjectStreamConstants
             p
                 | 객체 읽기에 관한 InputStream.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java', 'java')
             h3.marker class ObjectOutputStream extends OutputStream implements OjbectOutput, ObjectStreamConstants
             p
                 | 객체 쓰기에 관한 OutputStream.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java', 'java')
 
         h2.marker 문자 단위 IO 관련
         div
@@ -238,7 +238,7 @@ include ../../source/skeleton.jade
             h3.marker class InputStreamReader extends Reader
             p
                 | InputStream에 대해 Reader 작업을 지원해주는 bridge 클래스.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/BufferedReaderExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/BufferedReaderExample.java', 'java')
             h3.marker class OutputStreamWriter extends Writer
             p OutputStream에 Writer 작업을 지원해주는 bridge 클래스.
             h3.marker abstract class FilterReader extends Reader
@@ -262,7 +262,7 @@ include ../../source/skeleton.jade
             h3.marker class BufferedReader extends Reader
             p
                 | 다른 Reader에 대한 버퍼를 제공하여, 시스템 읽기 작업이 빈번하게 일어나지 않게 해준다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/BufferedReaderExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/BufferedReaderExample.java', 'java')
             +asCode('java').
                 String readLine()         // EOF도 줄의 끝으로 간주
                 Stream&lt;String> lines()
@@ -280,15 +280,15 @@ include ../../source/skeleton.jade
             h3.marker class PipedReader extends Reader
             p
                 | PipedInputStream과 유사.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/PipedReaderExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PipedReaderExample.java', 'java')
             h3.marker class PipedWriter extends Writer
             p
                 | PipedOutputStream과 유사.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/PipedReaderExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PipedReaderExample.java', 'java')
             h3.marker class PushbackReader extends FilterReader
             p
                 | PushbackInputStream과 비슷.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/PushBackExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PushBackExample.java', 'java')
             h3.marker class FileReader extends InputStreamReader
             | 특별한 내용 없음
             h3.marker class FileWriter extends OutputStreamWriter
@@ -299,11 +299,11 @@ include ../../source/skeleton.jade
             h3.marker @FunctionalInterface interface FileFilter
             p
                 | 파일 패스 필터링에 사용되며 File#listFiles의 매개변수로 객체가 넘겨진다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/FileFilterExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/FileFilterExample.java', 'java')
             h3.marker @FunctionalInterface interface FilenameFilter
             p
                 | 특정 디렉터리에서의 파일명 필터링에 사용되며 FileDialog#setFilenameFilter, File#list, File#listFiles의 매개변수로 객체가 넘겨진다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/FilenameFilterExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/FilenameFilterExample.java', 'java')
             h3.marker class File implements Serializable, Comparable&lt;file&gt;
             ol
                 li 추상화된 파일 및 디렉터리 경로에 대한 추상화된 표현 제공.(물리적 저장 장치 » 경로 문자열 » File 객체)
@@ -338,13 +338,13 @@ include ../../source/skeleton.jade
                     // (특정) 디렉터리에 새로운 빈 파일을 만들어 반환한다. 이 메서드는 오직 임시 파일 작업을 위해 만들어졌으며, deleteOnExit()을 통해 자동으로 정리되어야 한다.
                     // prefix : 의미 있는 접두어, suffix : null이면 ".tmp"
             p
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/FileFilterExample.java', lan: 'java'}) FileFilter 예
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/FilenameFilterExample.java', lan: 'java'}) FilenameFilter 예
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/FileExample.java', lan: 'java'}) File 예
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/FileFilterExample.java', 'java') FileFilter 예
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/FilenameFilterExample.java', 'java') FilenameFilter 예
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/FileExample.java', 'java') File 예
             h3.marker final class FilePermission extends Permission implements Serializable
             p
                 | 파일 및 디렉터리에 관한 권한을 표현하는 클래스.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/io/FilePermissionExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/FilePermissionExample.java', 'java')
             ul
                 li "/*"로 끝나는 경로는 해당 디렉터리 내부 모든 파일 및 디렉터리를 가리킨다. "*"는 현재 디렉터리 내부.
                 li "/-"로 끝나는 경로는 해당 디렉터리 내부 모든 파일 및 모든 서브디렉터리를 가리킨다. "-"는 현재 디렉터리 내부.
@@ -385,7 +385,7 @@ include ../../source/skeleton.jade
         h2.marker interface AutoCloseable
         p
             | 자동으로 자원을 해제하는 객체를 표현한다. try-with-resources 블록에 사용되면 close()가 자동으로 호출된다. IO 작업이 없는 것들을 try-with-resources 블록에 이용하는 것은 불필요한 일이다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java', lan: 'java'})
+            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java', 'java')
         h2.marker interface Cloneable
         p Object#clone()을 재정의했음을 나타내는 마커 인터페이스.
         h2.marker interface Comparable&lt;T>
@@ -404,7 +404,7 @@ include ../../source/skeleton.jade
         h2.marker interface Iterable&lt;T>
         p
             | 이를 구현한 클래스 객체는 enhanced for statement의 순회 대상이 될 수 있다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/lang/IterableExample.java', lan: 'java'})
+            +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/IterableExample.java', 'java')
         +asCode('java').
             Iterator&lt;T> iterator()
                 // 구현한 클래스 인스턴스를 반환하면 된다.
@@ -417,7 +417,7 @@ include ../../source/skeleton.jade
         ol
             li
                 | native process들에 대한 제어 제공. 프로세스 생애 모니터링, 자식 프로세스 나열, 프로세스 정보 얻기, 프로세스 종료 등.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/lang/ProcessHandleExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/ProcessHandleExample.java', 'java')
             li 프로세스 ID는 OS가 할당한 것으로, 값의 범위는 OS에 의존적이다.
             li ProcessHandle 객체는 다음 팩터리 메서드로 반환된다.
             +asCode('java').
@@ -453,14 +453,14 @@ include ../../source/skeleton.jade
         h2.marker interface Readable
         p
             | Readable은 문자들에 대한 소스다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/lang/ReadableExample.java', lan: 'java'})
+            +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/ReadableExample.java', 'java')
         +asCode('java').
             int read(CharBuffer cb)
                 // 문자들을 그대로 cb에 put()을 통해 저장한다. cb에 대한 어떠한 사전처리도 없다. 저장한 char 개수를 반환하며, 소스의 끝이면 -1을 반환한다.
         h2.marker @FunctionalInterface interface Runnable
         p
             | Runnable은 한 스레드로서 실행되도록 구현돼야 한다. Thread의 run()만을 재정의할 때 사용한다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/lang/RunnableExample.java', lan: 'java'})
+            +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/RunnableExample.java', 'java')
         h2.marker class SecurityManager
         ol
             li 보안 정책을 구현할 수 있는 클래스. 전형적인 확인 절차는 아래와 같다.
@@ -518,7 +518,7 @@ include ../../source/skeleton.jade
             h3.marker interface CharSequence
             p
                 | 일련의 char 값들을 표현한다. equals(), hashCode()에 대한 규약이 없어, 두 CharSequence 객체를 비교하는 결과는 정의되어 있지 않으며, 따라서 set이나 map의 키로 이용하기에 부적절하다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/lang/CharSequenceExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/CharSequenceExample.java', 'java')
             +asCode('java').
                 static int compare(CharSequence cs1, CharSequence cs2) Since 11
                     // 두 CharSequence를 사전순으로 비교한다.
@@ -571,7 +571,7 @@ include ../../source/skeleton.jade
                     li 자바 플랫폼은 보충 평면의 문자들은 2개의 char의 쌍으로 표현한다.
                     li 하위 21개 비트를 이용하여 int 하나로 모든 유니코드 code point를 표현할 수 있다.
                 li int를 받는 메서드는 모든 유니코드를 처리할 수 있지만, char만을 받는 메서드는 보충 평면 문자를 처리하지 못한다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/lang/CharacterExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/CharacterExample.java', 'java')
             +asCode('java').
                 static final char MIN_HIGH_SURROGATE          // \uD800
                 static final char MAX_HIGH_SURROGATE          // \uDBFF
@@ -769,7 +769,7 @@ include ../../source/skeleton.jade
             p 모든 에러와 예외의 조상.
 
         h2.marker 클래스 관련
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/lang/ClassExample.java', lan: 'java'})
+        +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/ClassExample.java', 'java')
         div
             h3.marker final class Class&lt;T> implements Serializable, GenericDeclaration, Type, AnnotatedElement, TypeDescriptor.OfField&lt;Class&lt;?>>, Constable
             div
@@ -1160,7 +1160,7 @@ include ../../source/skeleton.jade
         h2.marker @Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Repeatable
         p
             | 애너테이션을 반복적으로 정의할 수 있음을 표현.
-            +asA('https://docs.oracle.com/javase/tutorial/java/annotations/repeating.html')
+            +asA('https://docs.oracle.com/javase/tutorial/java/annotations/repeating.html', '참고자료')
 
         h2.marker @Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Retention
         p 애너테이션을 얼마나 유지할 지 표현. value ← RetentionPolicy
@@ -1416,7 +1416,7 @@ include ../../source/skeleton.jade
             h3.marker class InetAddress implements Serializable
             p
                 | IP 주소를 표현하며, IPv4, IPv6 각각에 대응하는 서브 클래스가 있다. 서브 클래스를 직접 이용하는 일은 별로 없을 거라고 한다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/net/InetAddressTest.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/net/InetAddressTest.java', 'java')
             +asCode('java').
                 static InetAddress getLoopbackAddress() // 127.0.0.1(127.*.*.*) or ::1
                 static InetAddress getByAddress(byte[] addr)
@@ -1451,7 +1451,7 @@ include ../../source/skeleton.jade
                 li 연결 성공하면 헤더와 컨텐츠에 접근할 수 있다
                 p
                     | getContent, getHeaderField, getInputStream, getOutputStream
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/net/HttpURLConnectionTest.java', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/net/HttpURLConnectionTest.java', 'java')
                     br
                     | 자주 사용되는 헤더 필드 접근 메서드 : getContentEncoding, getContentLength, getContentType, getDate, getExpiration, getLastModified
 
@@ -1461,7 +1461,7 @@ include ../../source/skeleton.jade
                 li public static final int HTTP_OK, HTTP_BAD_REQUEST, HTTP_NOT_FOUND, ...
                 li
                     | int getResponseCode()
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/net/HttpURLConnectionTest.java', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/net/HttpURLConnectionTest.java', 'java')
 
             h3.marker abstract class JarURLConnection extends URLConnection
             ol
@@ -1492,7 +1492,7 @@ include ../../source/skeleton.jade
             h3.marker class Socket implements Closeable
             p
                 | TCP 클라이언트 소켓
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/net/SocketTest.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/net/SocketTest.java', 'java')
             +asCode('java').
                 void connect(SocketAddress endpoint, int timeout)
                 void bind(SocketAddress bindpoint)
@@ -1509,7 +1509,7 @@ include ../../source/skeleton.jade
             h3.marker class ServerSocket implements Closeable
             p
                 | TCP 서버 소켓
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/net/SocketTest.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/net/SocketTest.java', 'java')
             +asCode('java').
                 public ServerSocket(int port)
                     // port 0은 자동 할당. 들어오는 연결 큐의 크기(backlog)는 50.
@@ -1606,7 +1606,7 @@ include ../../source/skeleton.jade
             h3.marker final class URL implements Serializable
             p
                 | 인스턴스 생성 시, URI와 다르게 정의된 scheme에 대한 핸들러를 찾기 때문에, 핸들러를 찾지 못하면 예외가 발생한다
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/net/HttpURLConnectionTest.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/net/HttpURLConnectionTest.java', 'java')
             +asCode('java').
                 boolean sameFile(URL other) : fragment(#) 제외하고 같은 파일인지 여부
                 URI toURI()
@@ -1627,7 +1627,7 @@ include ../../source/skeleton.jade
         h2.marker final class NetworkInterface
         p
             | 이름과 할당된 IP 주소들로 구성된 Network Interface 표현.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/net/NetworkInterfaceTest.java', lan: 'java'})
+            +codeBtn('/Repositories/Eclipse/JavaSE/src/net/NetworkInterfaceTest.java', 'java')
         +asCode('java').
             static Stream&lt;NetworkInterface> networkInterfaces()
                 // Since 9, + getNetworkInterfaces
@@ -1687,7 +1687,7 @@ include ../../source/skeleton.jade
                 p 버퍼의 byte order는 해당 버퍼에 대한 연산의 기준이 된다. 기본값은 ByteOrder.BIG_ENDIAN.
                 li 인덱싱
                 p ByteBuffer인덱스를 지정하는 absolute get/put의 인덱스는 바이트 단위다. 뷰 버퍼의 인덱스는 해당 타입 크기 단위다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/nio/ByteBufferExample.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/nio/ByteBufferExample.java', 'java')
             +asCode('java').
                 abstract byte get(int index)
                 ByteBuffer get(byte[] dst, int offset, int length)
@@ -1835,7 +1835,7 @@ include ../../source/skeleton.jade
             ol
                 li
                     | 스트림 지향 읽기 소켓 채널
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/nio/AsynchronousSocketChannelTest.java', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/nio/AsynchronousSocketChannelTest.java', 'java')
                 li 스레드-안전하지만 최대 accept 가능한 스레드는 하나 뿐이며, accept 도중 중복되는 요청은 AcceptPendingException
                 li 지원하는 소켓 옵션 : SO_RCVBUF(수신 버퍼 크기), SO_REUSEADDR(주소 재사용); 구현에 따라 추가될 수도 있다
             +asCode('java').
@@ -1852,7 +1852,7 @@ include ../../source/skeleton.jade
             ol
                 li
                     | 스트림 지향 소켓 채널. open 팩터리 메서드로 직접 열거나(Unbound), AsynchronousServerSocketChannel#accept로 열 수(Bound) 있다.
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/nio/AsynchronousSocketChannelTest.java', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/nio/AsynchronousSocketChannelTest.java', 'java')
                 li 스레드-안전하지만 최대 하나의 읽기/쓰기만 각각 동시에 존재할 수 있다.
                 p 도중에 중복되는 요청은 각각 ReadPendingException, WritePendinException 발생
                 li 지원하는 소켓 옵션 : SO_SNDBUF(전송 버퍼 크기), SO_RCVBUF(수신 버퍼 크기), SO_KEEPALIVE(기본 false, keep-alive 작동은 구현체에 의존적이다), TCP_NODELAY(Nagle 알고리즘 비활성)
@@ -2170,7 +2170,7 @@ include ../../source/skeleton.jade
             h3.marker interface Path extends Comparable&lt;Path>, Iterable&lt;Path>, Watchable
             p
                 | 파일 경로를 가리킨다. 사용자 정의 파일 시스템을 개발하기 위해 만들어짐.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/nio/PathTest.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/nio/PathTest.java', 'java')
             +asCode('java').
                 static Path of(String first, String... more)
                     // Since 11
@@ -2246,7 +2246,7 @@ include ../../source/skeleton.jade
                 li 비결정적인 출력을 위해, 전달되는 시드 역시 예측할 수 없어야 한다
                 p 시드를 제공하지 않은 경우, 최초 nextBytes 호출 시 구현체에서 정의하는 엔트로피 소스로부터 시드를 선택한다
                 li SecureRandom 인스턴스는 스레드-안전하다
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/security/SecureRandomTest.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/security/SecureRandomTest.java', 'java')
             +asCode('java').
                 static SecureRandom getInstance(String algorithm)
                     // https://docs.oracle.com/en/java/javase/12/docs/specs/security/standard-names.html#securerandom-number-generation-algorithms
@@ -2302,7 +2302,7 @@ include ../../source/skeleton.jade
         ol
             li
                 | 유니코드
-                +w3a()&attributes({target:'_blank', href:'https://ko.wikipedia.org/wiki/유니코드_정규화'}) 정규화/역정규화
+                +asA('https://ko.wikipedia.org/wiki/유니코드_정규화', '정규화/역정규화')
                 |  관련 기능을 제공한다.
         +asCode('java').
             static enum Normalizer.Form {
@@ -2313,7 +2313,7 @@ include ../../source/skeleton.jade
                 // + isNormalized
 
         h2.marker abstract class NumberFormat extends Format
-        p: +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/text/NumberFormatTest.java', lan: 'java'})
+        p: +codeBtn('/Repositories/Eclipse/JavaSE/src/text/NumberFormatTest.java', 'java')
         +asCode('java').
             static enum NumberFormat.Style { // Since 12
                 SHORT, LONG
@@ -2337,25 +2337,25 @@ include ../../source/skeleton.jade
                 td 기원 전/후
                 td
                     | AD
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange: '[18,23]', lan: 'java'}) 예
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', 'java', '[18,23]') 예
             tr
                 th y
                 td 년
                 td
                     | 1996; 96
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange: '[26,31]', lan: 'java'}) 예
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', 'java', '[26,31]') 예
             tr
                 th Y
                 td Week year
                 td
                     | 2009; 09
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange: '[34,43]', lan: 'java'}) 예
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', 'java', '[34,43]') 예
             tr
                 th M
                 td 월(context sensitive)
                 td
                     | July; Jul; 07
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange: '[26,31]', lan: 'java'}) 예
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', 'java', '[26,31]') 예
             tr
                 th L
                 td 월 (standalone form)
@@ -2365,7 +2365,7 @@ include ../../source/skeleton.jade
                 td Week in year
                 td
                     | 27
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange: '[34,43]', lan: 'java'}) 예
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', 'java', '[34,43]') 예
             tr
                 th W
                 td Week in month
@@ -2379,7 +2379,7 @@ include ../../source/skeleton.jade
                 td Day in month
                 td
                     | 10
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange: '[26,31]', lan: 'java'}) 예
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', 'java', '[26,31]') 예
             tr
                 th F
                 td Day of week in month
@@ -2389,25 +2389,25 @@ include ../../source/skeleton.jade
                 td Day name in week
                 td
                     | Tuesday; Tue
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange: '[34,43]', lan: 'java'}) 예
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', 'java', '[34,43]') 예
             tr
                 th u
                 td Day number of week
                 td
                     | 1 = Monday, ..., 7 = Sunday
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange: '[34,43]', lan: 'java'}) 예
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', 'java', '[34,43]') 예
             tr
                 th a
                 td Am/pm
                 td
                     | PM
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange: '[46,51]', lan: 'java'}) 예
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', 'java', '[46,51]') 예
             tr
                 th H
                 td Hour in day (0-23)
                 td
                     | 0
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange: '[26,31]', lan: 'java'}) 예
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', 'java', '[26,31]') 예
             tr
                 th k
                 td Hour in day (1-24)
@@ -2421,25 +2421,25 @@ include ../../source/skeleton.jade
                 td Hour in am/pm (1-12)
                 td
                     | 12
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange: '[46,51]', lan: 'java'}) 예
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', 'java', '[46,51]') 예
             tr
                 th m
                 td Minute in hour
                 td
                     | 30
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange: '[26,31]', lan: 'java'}) 예
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', 'java', '[26,31]') 예
             tr
                 th s
                 td Second in minute
                 td
                     | 55
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange: '[26,31]', lan: 'java'}) 예
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', 'java', '[26,31]') 예
             tr
                 th S
                 td Millisecond
                 td
                     | 978
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange: '[46,51]', lan: 'java'}) 예
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', 'java', '[46,51]') 예
             tr
                 th z
                 td General time zone
@@ -2449,7 +2449,7 @@ include ../../source/skeleton.jade
                 td RFC 822 time zone
                 td
                     | -0800
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', displayrange: '[46,51]', lan: 'java'}) 예
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/text/SimpleDateFormatTest.java', 'java', '[46,51]') 예
             tr
                 th X
                 td ISO 8601 time zone
@@ -2465,7 +2465,7 @@ include ../../source/skeleton.jade
             li '' 안의 포맷 문자열은 이스케이프된다
             li
                 | 동일 요소에 대한 반복적인 파싱은 마지막 파싱 결과만 유효하다
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/text/MessageFormatTest.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/text/MessageFormatTest.java', 'java')
         table
             tr
                 th FormatType
@@ -2540,7 +2540,7 @@ include ../../source/skeleton.jade
         h2.marker abstract class Clock
         p
             | 시간대(time-zone)을 이용한 현재의 date와 time 제공. 지정하지 않는 이상, 시계 내부의 시각은 계속 변한다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/time/ClockTest.java', lan: 'java'})
+            +codeBtn('/Repositories/Eclipse/JavaSE/src/time/ClockTest.java', 'java')
         +asCode('java').
             static Clock system(ZoneId zone)
                 // 특정 시간대의 시계 반환
@@ -2559,7 +2559,7 @@ include ../../source/skeleton.jade
                 // 지정된 시간대에 현재 시계의 복사본을 생성하여 반환한다. 따라서 시각 자체는 조정하지 않는다.
 
         h2.marker final class Duration implements TemporalAmount, Comparable&lt;Duration>, Serializable
-        p: +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/time/DurationTest.java', lan: 'java'})
+        p: +codeBtn('/Repositories/Eclipse/JavaSE/src/time/DurationTest.java', 'java')
         +asCode('java').
             static Duration of(long amount, TemporalUnit unit)
             static Duration from(TemporalAmount amount)
@@ -2597,7 +2597,7 @@ include ../../source/skeleton.jade
     h1.marker java.time.format
     div
         h2.marker final class DateTimeFormatter
-        p: +w3a()&attributes({target:'_blank', href:'https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/time/format/DateTimeFormatter.html#predefined'}) DateTimeFormatter.html#predefined
+        p: +asA('https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/time/format/DateTimeFormatter.html#predefined', 'DateTimeFormatter.html#predefined')
         table
             tr
                 th Formatter
@@ -2693,7 +2693,7 @@ include ../../source/skeleton.jade
                     li 서브 컬렉션을 작성할 때, 인자없는 생성자와 Collection 인자 하나만 받는 생성자를 각각 작성하도록 권장한다
                     li 정의하지 않아도 되는 선택적 메서드들에 대하여, 구현하지 않는 경우 UnsupportedOperationException을 던져야 한다
                     li 컬렉션이 자기 자신을 요소로 갖는 경우 일부 메서드 실행 중 예외가 발생할 수 있다.
-                    p: +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/util/CollectionExample.java', lan: 'java'})
+                    p: +codeBtn('/Repositories/Eclipse/JavaSE/src/util/CollectionExample.java', 'java')
                 +asCode('java').
                     int size()
                     boolean isEmpty()
@@ -2794,27 +2794,27 @@ include ../../source/skeleton.jade
                 ul
                     li
                         | default V getOrDefault(Object key, V defaultValue)
-                        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/util/MapExample.java', displayrange: '[12,16]', lan: 'java'})
+                        +codeBtn('/Repositories/Eclipse/JavaSE/src/util/MapExample.java', 'java', '[12,16]')
                     li V put(K key, V value) : 이전 값은 반환된다.
                     li
                         | default V putIfAbsent(K key, V value)
-                        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/util/MapExample.java', displayrange: '[18,24]', lan: 'java'})
+                        +codeBtn('/Repositories/Eclipse/JavaSE/src/util/MapExample.java', 'java', '[18,24]')
                     li default V compute(K key, BiFunction&lt;? super K, ? super V, ? extends V> remappingFunction)
                     p
                         | 값을 다시 계산하여 덮어쓴다.
-                        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/util/MapExample.java', displayrange: '[26,32]', lan: 'java'})
+                        +codeBtn('/Repositories/Eclipse/JavaSE/src/util/MapExample.java', 'java', '[26,32]')
                     li default V computeIfAbsent(K key, Function&lt;? super K, ? extends V> mappingFunction) + computeIfPresent
                     p
                         | computeIfAbsent : key가 맵에 없거나, 대응하는 값이 null인 경우 새로운 값을 계산하여 넣는다. 계산된 값이 null이면 null 반환. 그 외의 경우 현재값 반환
-                        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/util/MapExample.java', displayrange: '[34,56]', lan: 'java'})
+                        +codeBtn('/Repositories/Eclipse/JavaSE/src/util/MapExample.java', 'java', '[34,56]')
                     p computeIfPresent : key가 존재하고, 대응하는 값이 null이 아닌 경우 새로운 값을 계산하여 넣는다. 키가 존재하면 현재값 반환. 그 외의 경우 null 반환
                     li default V replace(K key, V value) + replaceAll
                     p
                         | key가 있을 때만 대체. 없으면 null 반환
-                        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/util/MapExample.java', displayrange: '[58,70]', lan: 'java'})
+                        +codeBtn('/Repositories/Eclipse/JavaSE/src/util/MapExample.java', 'java', '[58,70]')
                     li
                         | default V merge(K key, V value, BiFunction&lt;? super V, ? super V, ? extends V> remappingFunction)
-                        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/util/MapExample.java', displayrange: '[72,89]', lan: 'java'})
+                        +codeBtn('/Repositories/Eclipse/JavaSE/src/util/MapExample.java', 'java', '[72,89]')
                     ul
                         li key가 맵에 없거나, 대응하는 값이 null인 경우 : null이 아닌 value로 연결.
                         li 주어진 함수를 통해 새로운 값에 연결
@@ -3488,7 +3488,7 @@ include ../../source/skeleton.jade
                     | Stage에서 수행되는 연산은 Function, Consumer, Runnable로 표현되어야 한다. 각각은 apply, accept, run 메서드로 stage에 제공된다.
                     br
                     | 연산에 넘겨지는 인자는 트리거 stage의 결과이며, 이를 통해 연산의 pipeline을 만들 수 있다.
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/concurrent/CompletionStageTest.java', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/concurrent/CompletionStageTest.java', 'java')
                 li 아래 각 메서드들은 async 버전이 존재한다
             +asCode('java').
                 // 이전 연산이 완료되면 그 결과로 fn, action 호출
@@ -3620,14 +3620,14 @@ include ../../source/skeleton.jade
             h3.marker abstract class RecursiveAction extends ForkJoinTask&lt;Void>
             p
                 | 재귀적이며 결과없는 ForkJoinTask
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/concurrent/RecursiveActionTest.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/concurrent/RecursiveActionTest.java', 'java')
                 br
                 | 코드 출처 : https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/util/concurrent/RecursiveAction.html
 
             h3.marker abstract class RecursiveTask&lt;V> extends ForkJoinTask&lt;V>
             p
                 | 재귀적이며 결과가 있는 ForkJoinTask
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/concurrent/RecursiveTaskTest.java', lan: 'java'})
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/concurrent/RecursiveTaskTest.java', 'java')
                 br
                 | 코드 출처 : https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/util/concurrent/RecursiveTask.html
 
@@ -3637,11 +3637,11 @@ include ../../source/skeleton.jade
                 li Concrete 서브클래스들은 compute() 메서드를 반드시 재정의해야 하며, 되도록이면 반환하기 전에 tryComplete()을 호출해야 한다
                 li 일반적으로 CountedCompleter는 결과를 갖지 않겠지만, 결과가 필요한 경우 getRawResult() 메서드를 재정의하면 된다
                 li
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', displayrange: '[14,34,75,85]', lan: 'java'}) 예시 : setPendingCount + tryComplete
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', displayrange: '[36,54,75,85]', lan: 'java'}) 예시 : addToPendingCount + propagateCompletion
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', displayrange: '[56,73,75,85]', lan: 'java'}) 예시 : 생성자에서 pendingCount 설정
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', displayrange: '[87,130]', lan: 'java'}) 예시 : quietlyCompleteRoot
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', displayrange: '[132,168]', lan: 'java'}) 예시 : compute 사용없이 트리거로만 이용
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', 'java', '[14,34,75,85]') 예시 : setPendingCount + tryComplete
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', 'java', '[36,54,75,85]') 예시 : addToPendingCount + propagateCompletion
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', 'java', '[56,73,75,85]') 예시 : 생성자에서 pendingCount 설정
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', 'java', '[87,130]') 예시 : quietlyCompleteRoot
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java', 'java', '[132,168]') 예시 : compute 사용없이 트리거로만 이용
                     br
                     | 출처 ; https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/util/concurrent/CountedCompleter.html
             +asCode('java').
@@ -3682,7 +3682,7 @@ include ../../source/skeleton.jade
             ol
                 li
                     | java.util.concurrent 패키지의 기본적인 Executor 구현.
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/concurrent/ExecutorServiceTest.java', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/concurrent/ExecutorServiceTest.java', 'java')
             +asCode('java').
                 void shutdown()
                     // 추가적인 Runnable을 받지 않는다. 이전에 추가된 것은 마저 실행한다.
@@ -4190,7 +4190,7 @@ include ../../source/skeleton.jade
             ol
                 li
                     | ConcurrentNavigableMap 구현체. 평균 log(n) 시간이 소요되는, 스레드-안전한
-                    +w3a()&attributes({target:'_blank', href:'http://en.wikipedia.org/wiki/Skip_list'}) SkipList
+                    +asA('http://en.wikipedia.org/wiki/Skip_list', 'SkipList')
                     |  구현을 이용
                 li 오름차순 정렬된 뷰와 이터레이터가 내림차순보다 빠르다
                 li putAll과 같은 bulk 연산은 원자적으로 종료되지 않을 수 있다
@@ -4670,7 +4670,7 @@ include ../../source/skeleton.jade
         h2.marker interface MatchResult
         p
             | 정규표현식 매칭 결과. group의 의미에 대해선 Pattern 참고.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/regex/MatchResultExample.java', lan: 'java'})
+            +codeBtn('/Repositories/Eclipse/JavaSE/src/regex/MatchResultExample.java', 'java')
         +asCode('java').
             int start()             // 매치된 결과의 시작 인덱스 반환
             int start(int group)    // group번째 매치된 결과의 시작 인덱스 반환
@@ -4707,7 +4707,7 @@ include ../../source/skeleton.jade
                 li Capturing group : 괄호 순서에 따라 그룹에 ID가 매겨지며, 이는 나중에 참조(backreference)될 수 있다
                 p
                     | 0번 그룹은 항상 전체 표현을 가리킨다.
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', displayrange: '[16,26]', lan: 'java'}) 예를 들어
+                    +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[16,26]') 예를 들어
                     |  (A)(B(C))에 대하여,
                 table.no-sort
                     tr
@@ -4727,46 +4727,46 @@ include ../../source/skeleton.jade
                         td (C)
                 li
                     | Non-capturing group : (?:X)는 후참조(backreference)할 수 없다
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', displayrange: '[28,37]', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[28,37]')
             h3.marker Character expression
             ul
                 li
                     | x, \\ : 각각 x, \에 대응
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', displayrange: '[39,39]', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[39,39]')
                 li
                     | \0n, \0nn, \0nnn : 8진수 아스키 코드[0,255] == [00, 0377]
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', displayrange: '[40,40]', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[40,40]')
                 li
                     | \xhh : 16진수 아스키 코드[0,255]
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', displayrange: '[41,41]', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[41,41]')
                 li
                     | \uhhhh, \u{h...h} : 16진수 유니코드[Character.MIN_CODE_POINT, Character.MAX_CODE_POINT]
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', displayrange: '[42,42]', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[42,42]')
                 li
                     | \N{name} : 유니코드 이름
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', displayrange: '[43,43]', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[43,43]')
                 li
                     | \t(tab \u0009), \n(newline \u000A), \r(carriage-return \u000D), \f(form-feed \u000C), \a(alert \u0007), \e(escape \u001B), \cx(x에 관한 제어 문자)
             h3.marker Character class
             ul
                 li
                     | [abc] : 단순 집합
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', displayrange: '[44,44]', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[44,44]')
                 li
                     | [^abc] : 여집합
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', displayrange: '[45,45]', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[45,45]')
                 li
                     | [a-z] : 유니코드 Range(inclusive)
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', displayrange: '[46,46]', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[46,46]')
                 li
                     | [a-d[m-p]] == [a-dm-p] : 합집합
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', displayrange: '[47,47]', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[47,47]')
                 li
                     | [a-z&&[def]] : 교집합
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', displayrange: '[48,48]', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[48,48]')
                 li
                     | [a-z&&[^bc]] : 차집합(A and not(B) == A - B)
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', displayrange: '[49,49]', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[49,49]')
             h3.marker Predefined character classe
             ul
                 li . : 임의 문자. DOTALL 플래그가 있으면 line terminator도 매칭
@@ -4807,7 +4807,7 @@ include ../../source/skeleton.jade
             ul
                 p
                     | 처음에 매치할 수 있는 만큼 최대한 매치. 그 다음 요소의 매칭이 없으면 백트래킹.
-                    +w3a()&attributes({target:'_blank', href:'https://stackoverflow.com/questions/5319840/greedy-vs-reluctant-vs-possessive-quantifiers'}) 참고자료
+                    +asA('https://stackoverflow.com/questions/5319840/greedy-vs-reluctant-vs-possessive-quantifiers', '참고자료')
                 li X? : X, once or not at all
                 li X* : X, zero or more times
                 li X+ : X, one or more times
@@ -4833,7 +4833,7 @@ include ../../source/skeleton.jade
                 li \k&lt;name> : Tthe named-capturing group "name" matched
                 p
                     | ↑ 정규표현식 내에서는 위 두 가지 backreference가 가능하며, replace()에서는 $0, $1, $2, ...로 표기한다
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', displayrange: '[51,57,59,71,73,85]', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[51,57,59,71,73,85]')
             h3.marker Quotation
             ul
                 li \ : Nothing, but quotes the following character
@@ -4843,13 +4843,13 @@ include ../../source/skeleton.jade
             ul
                 li
                     | (?&lt;name>X) : X, as a named-capturing group
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', displayrange: '[59,71]', lan: 'java'})
+                    +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[59,71]')
                 li (?:X) : X, as a non-capturing group
                 li (?idmsuxU-idmsuxU) : 각 플래그를 켜거나 끈다
                 li (?idmsux-idmsux:X) : 주어진 플래그로 non-capturing group X를 매칭한다
                 li (?=X) : Positive lookahead, (?!X) : Negative lookahead
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', displayrange: '[51,57]', lan: 'java'})
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', displayrange: '[87,102]', lan: 'java'}) 금칙어 판별
+                +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[51,57]')
+                +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[87,102]') 금칙어 판별
                 li (?&lt;=X) : Positive lookbehind, (?&lt;!X) : Negative lookbehind
                 li (?>X) : Non-capturing group + Possessive
 
@@ -4862,14 +4862,14 @@ include ../../source/skeleton.jade
         +asCode('java').
             MatchResult toMatchResult()
             Stream&lt;MatchResult> results() // Since 9
-            
+
             Matcher usePattern(Pattern newPattern)
             Matcher reset()
-            
+
             int start(String name) // 주어진 식별자에 해당하는 그룹의 시작 인덱스 반환
             int end(String name)
             String group(String name)
-            
+
             static String quoteReplacement(String s)
                 // appendReplacement 메서드의 replacement로 사용될 s의 리터럴 표기를 반환.
             Matcher appendReplacement(StringBuffer sb, String replacement)
@@ -4879,12 +4879,12 @@ include ../../source/skeleton.jade
             StringBuffer appendTail(StringBuffer sb)
                 // 입력 소스의 append position부터를 sb에 추가.
                 // appendReplacement 메서드를 호출한 뒤에 이를 호출하여 남머지 부분을 복사할 목적으로 만들어짐.
-            
+
             String replaceAll(String replacement)
                 // 입력 소스의 모든 매칭되는 부분을 replacement로 변경.
             String replaceAll(Function&lt;MatchResult, String> replacer) // Since 9
             String replaceFirst(String replacement)
-            
+
             Matcher region(int start, int end)
                 // 입력 소스의 특정 구간을 매칭 대상으로 하도록 초기화한다. transparency, anchoring 속성에 따라 동작이 다르다.
             Matcher useTransparentBounds(boolean b)
@@ -4934,7 +4934,7 @@ include ../../source/skeleton.jade
                     | 요소의 연산 과정에 상태의 보존이 필요한 경우. sorted, distinct 등.
                     br
                     | 이러한 연산을 사용하기 위해선 스트림 전체 인풋이 필요할 수 있으며, 병렬 스트림에서는 요구되는 버퍼의 크기가 늘어나게 된다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/JavaSE/src/util/FlatMapExample.java', lan: 'java'})
+            +codeBtn('/Repositories/Eclipse/JavaSE/src/util/FlatMapExample.java', 'java')
         +asCode('java').
             // 팩터리 메서드
             static &lt;T> Stream.Builder&lt;T> builder()
@@ -4951,7 +4951,7 @@ include ../../source/skeleton.jade
             // 중간 연산
             Stream&lt;T> filter(Predicate&lt;? super T> predicate)
                 // predicate이 true인 요소만 남긴다.
-            
+
             &lt;R> Stream&lt;R> map(Function&lt;? super T, ? extends R> mapper)
                 // mapper : 하나의 T 변수에서 하나의 R 변수로 대응하는 변환
             IntStream mapToInt(ToIntFunction&lt;? super T> mapper)
@@ -4962,16 +4962,16 @@ include ../../source/skeleton.jade
                 // 최종적으로 반환되는 스트림 외의 모든 중간 스트림은 닫힌다.
             IntStream flatMapToInt(Function&lt;? super T, ? extends IntStream> mapper )
                 // + long, double
-            
+
             Stream&lt;T> distinct()
                 // Object.equals(Object)를 이용해 유일한 것들만으로 구성. stateful 중간 연산.
             Stream&lt;T> sorted()
                 // 자연스러운 방향으로 정렬. T가 Comparable하지 않으면 예외 발생할 수 있음. stateful 중간 연산.
             Stream&lt;T> sorted(Comparator&lt;? super T> comparator)
-            
+
             Stream&lt;T> peek(Consumer&lt;? super T> action)
                 // forEach와 유사한 기능을 하는 중간 연산. 다른 중간 연산 전후의 값을 살펴보는 디버깅 용도로 만들어짐.
-            
+
             Stream&lt;T> limit(long maxSize)
                 // 스트림의 크기가 maxSize 이하가 되도록 한다. short-circuiting stateful 중간 연산.
             Stream&lt;T> skip(long n)
@@ -4989,11 +4989,11 @@ include ../../source/skeleton.jade
             void forEach(Consumer&lt;? super T> action)
             void forEachOrdered(Consumer&lt;? super T> action
                 // 순서 있는 스트림의 경우, 이를 이용하면 요소의 순서대로 소비자가 실행된다.
-            
+
             Object[] toArray()
             &lt;A> A[] toArray(IntFunction&lt;A[]> generator)
                 // generator : 배열 크기를 먹고 배열을 뱉는 함수. 예: A[]::new.
-            
+
             T reduce(T identity, BinaryOperator&lt;T> accumulator)
                 // 하나의 T 변수로 축약하는 종결 연산. 아래와 동치다.
             {
@@ -5009,7 +5009,7 @@ include ../../source/skeleton.jade
                 // 다시 말해, 임의의 U 타입 변수 u에 대하여 u == combiner(identity, u)를 만족해야 한다.
                 // 이는 연산 과정에서 다음의 검사를 통해 검증된다. combiner.apply(u, accumulator.apply(identity, t)) == accumulator.apply(u, t)
                 // 이렇게 복잡하게 하는 것보다는 map과 reduce를 쪼개 이용하는 것이 훨씬 간결하므로 유념.
-            
+
             &lt;R> R collect(Supplier&lt;R> supplier, BiConsumer&lt;R, ? super T> accumulator, BiConsumer&lt;R, R> combiner)
                 // 하나의 R 변수로 축약하는 종결 연산. reduce와 다르게 R 자체가 결과값에 대한 가변적인 컨테이너(ArrayList, String 등)가 되어야 한다. 아래와 동치다.
                 // 여기서는 combiner를 사용하지 않는 것처럼 보이지만, combiner는 병렬 스트림 연산을 위해 존재하는 것이므로, 연산 결과 자체는 아래와 동치가 맞다.
@@ -5027,7 +5027,7 @@ include ../../source/skeleton.jade
             &lt;R, A> collect(Collector&lt;? super T, A, R> collector)
                 // collect(Supplier, BiConsumer, BiConsumer)의 매개변수를 캡슐화한 Collector를 이용.
                 // Collectors 유틸리티 클래스에 이미 정의된 Collector들이 있으니 편하게 이용 가능.
-            
+
             Optional&lt;T> min(Comparator&lt;? super T> comparator) // + max
             long count()
                 // 개수를 반환하는 종결 연산.
@@ -5082,20 +5082,20 @@ include ../../source/skeleton.jade
             static &lt;T> Collector&lt;T, ? Set&lt;T>> toSet()
                 // 새로운 Set 객체에 입력 원소들을 모두 담아 반환하는 Collector. 반환된 Set의 타입, 변경 가능 여부, 직렬화, 스레드-안전 그 무엇도 보장하지 않음.
             static &lt;T> Collector&lt;T, ?, Set&lt;T>> toUnmodifiableSet() // Since 10
-            
+
             static Collector&lt;CharSequence, ?, String> joining()
                 // String에 만나는 순서대로 덧붙이는 Collector.
-            
+
             static &lt;T, U, A, R> Collector&lt;T, ?, R> mapping(Function&lt;? super T, ? extends U> mapper, Collector&lt;? super U, A, R> downstream)
                 // U 타입 원소에 대한 Collector에 T 타입 원소를 mapper를 통해 U 타입으로 변환하여 받아들이는 Collector.
             static &lt;T, U, A, R> Collector&lt;T, ?, R> flatMapping(Function&lt;? super T, ? extends Stream&lt;? extends U>> mapper, Collector&lt;? super U, A, R> downstream) // Since 9
                 // Flat mapper는 입력 요소를 0개 이상의 요소를 담은 stream으로 만들어내며, downstream에 투입되면 해당 stream은 닫힌다.(null인 경우 빈 스트림을 대신 이용한다)
-            
+
             static &lt;T, A, R> Collector&lt;T, ?, R> filtering(Predicate&lt;? super T> predicate, Collector&lt;? super T, A, R> downstream) Since 9
                 // 동일한 입력 타입 T 원소를 받아 predicate을 만족하면 downstream에 투입하는 Collector.
-            
+
             static &lt;T, A, R, RR> Collector&lt;T, A, RR> collectingAndThen(Collector&lt;T, A, R> downstream, Function&lt;R, RR> finisher)
-            
+
             static &lt;T> Collector&lt;T, ?, Long> counting()
             static &lt;T> Collector&lt;T, ?, Optional&lt;T>> minBy(Comparator&lt;? super T> comparator)
             static &lt;T> Collector&lt;T, ?, Optional&lt;T>> maxBy(Comparator&lt;? super T> comparator)
@@ -5104,7 +5104,7 @@ include ../../source/skeleton.jade
             static &lt;T> Collector&lt;T, ?, IntSummaryStatistics> summarizingInt(ToIntFunction&lt;? super T> mapper) // + Long, Double
             static &lt;T> Collector&lt;T, ? T> reducing(T identity, BinaryOperator&lt;T> op)
                 // reducing 설명은 DoubleStream 참고
-            
+
             static &lt;T, K> Collector&lt;T, ?, Map&lt;K, List&lt;T>>> groupingBy(Function&lt;? super T, ? extends K> classifier)
             static &lt;T, K> Collector&lt;T, ?, ConcurrentMap&lt;K, List&lt;T>>> groupingByConcurrent(Function&lt;? super T, ? extends K> classifier)
             static &lt;T> Collector&lt;T, ?, Map&lt;Boolean, List&lt;T>>> partitioningBy(Predicate&lt;? super T> predicate)
@@ -5132,7 +5132,7 @@ include ../../source/skeleton.jade
         h2.marker class ZipInputStream extends InflaterInputStream
         +asCode('java').
             public ZipInputStream(InputStream in, Charset charset)
-            
+
             ZipEntry getNextEntry()
             void closeEntry()
                 // 현재 ZipEntry를 닫고 읽기 위치를 다음 entry로 이동.
@@ -5142,7 +5142,7 @@ include ../../source/skeleton.jade
         h2.marker class ZipOutputStream extends DeflaterOutputStream
         +asCode('java').
             public ZipOutputStream(OutputStream out, Charset charset)
-            
+
             void setComment(String comment)
             void setMethod(int method)
                 // ZipEntry에 설정되지 않은 경우 사용하는 압축 방법 : DEFLATED(압축, 기본값), STORED(비압축)
@@ -5158,7 +5158,7 @@ include ../../source/skeleton.jade
         +asCode('java').
             public ZipEntry(String name)
             public ZipEntry(ZipEntry e) // e로 필드를 채운다.
-            
+
             String getName()
             ZipEntry setLastModifiedTime(FileTime time)
             ZipEntry setLastAccessTime(FileTime time)
@@ -5180,7 +5180,7 @@ include ../../source/skeleton.jade
                 // UTF-8
                 // mode : OPEN_READ | OPEN_DELETE(파일이 close 호출 전까지 삭제됨, 내용은 객체를 통해 계속 접근 가능)
             public ZipFile(File file, int mode, Charset charset)
-            
+
             ZipEntry getEntry(String name)
             InputStream getInputStream(ZipEntry entry)
                 // ZipFile이 닫히면 이 메서드가 반환한 모든 스트림도 같이 닫힌다.

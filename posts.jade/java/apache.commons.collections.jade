@@ -101,14 +101,14 @@ html
                             li Collection, Map을 직접 상속하진 않지만, 동일한 메서드들은 생략
                             li
                                 | boolean containsValue(Object value)
-                                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MultiValuedMapTest.java', displayrange='[17,24]', lan='java') 예시 코드 »
+                                +codeBtn('Repositories/Eclipse/apache-commons-collections-example/src/test/java/MultiValuedMapTest.java', 'java', '[17,24]') 예시 코드 »
                             li Collection&lt;V> get(K key), remove(Object key)
                             li boolean putAll(K key, Iterable&lt;? extends V> values) : 맵이 변경되면 true
                             li boolean removeMapping(Object Key, Object item)
                             li Map&lt;K, Collection&lt;V>> asMap()
                             li
                                 | MapIterator&lt;K, V> mapIterator()
-                                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MultiValuedMapTest.java', displayrange='[27,45]', lan='java') 예시 코드 »
+                                +codeBtn('Repositories/Eclipse/apache-commons-collections-example/src/test/java/MultiValuedMapTest.java', 'java', '[27,45]') 예시 코드 »
                 details
                     summary
                         | interface ListValuedMap&lt;K, V> extends MultiValuedMap&lt;K, V> Since 4.1 + SetValuedMap
@@ -128,7 +128,7 @@ html
                     summary interface Trie&lt;K, V> extends IterableSortedMap&lt;K, V> Since 4.0
                     |             Prefix tree에 대해 정의한다.
                     img.w3-round(src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Trie_example.svg/1024px-Trie_example.svg.png')
-                    button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/TrieTest.java', displayrange='[13,32]', lan='java') 예시 코드 »
+                    +codeBtn('Repositories/Eclipse/apache-commons-collections-example/src/test/java/TrieTest.java', 'java', '[13,32]') 예시 코드 »
             details
                 summary 컬렉션 연산 인터페이스
                 details
@@ -270,7 +270,7 @@ html
                         li
                             | static &lt;E> Closure&lt;E> whileClosure(Predicate&lt;? super E> predicate, Closure&lt;? super E> closure)
                             | : 클로저에 대한 입력이 predicate을
-                            button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ClosureUtilsTest.java', displayrange='[18,34]', lan='java') 만족하는 동안
+                            +codeBtn('Repositories/Eclipse/apache-commons-collections-example/src/test/java/ClosureUtilsTest.java', 'java', '[18,34]') 만족하는 동안
                             | closure를 호출하는 클로저
                         li
                             | static &lt;E> Closure&lt;E> doWhileClosure(Closure&lt;? super E> closure, Predicate&lt;? super E> predicate) : closure를 최소 1번 호출하는 클로저
@@ -279,14 +279,14 @@ html
                             br
                             |                     static &lt;E> Closure&lt;E> invokerClosure(String methodName, Class&lt;?>[] paramTypes, Object[] args)
                         |                 입력 객체의
-                        button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ClosureUtilsTest.java', displayrange='[37,47]', lan='java') methodName 메서드를 호출
+                        +codeBtn('Repositories/Eclipse/apache-commons-collections-example/src/test/java/ClosureUtilsTest.java', 'java', '[37,47]') methodName 메서드를 호출
                         | 하는 클로저
                         li
                             | static &lt;E> Closure&lt;E> chainedClosure(Closure&lt;? super E>... closures)
                             br
                             |                     static &lt;E> Closure&lt;E> chainedClosure(Collection&lt;? extends Closure&lt;? super E>> closures)
                         |                 클로저들을 순차적으로 호출하는 클로저. 문서에는 다음 클로저에 이전 클로저의 결과를 넘긴다지만... void 리턴인데
-                        button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ClosureUtilsTest.java', displayrange='[50,59]', lan='java') 어림도 없지
+                        +codeBtn('Repositories/Eclipse/apache-commons-collections-example/src/test/java/ClosureUtilsTest.java', 'java', '[50,59]') 어림도 없지
                         li
                             | static &lt;E> Closure&lt;E> ifClosure(Predicate&lt;? super E> predicate, Closure&lt;? super E> trueClosure)
                             br
@@ -300,7 +300,7 @@ html
                             br
                             |                     static &lt;E> Closure&lt;E> switchMapClosure(Map&lt;? extends E, Closure&lt;E>> objectsAndClosures)
                         |                 실행되는 클로저는 하나 뿐이다. 매핑을 인자로 받는 경우 default closuer는 null 키에 대한 값으로 설정하면 된다.
-                        button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ClosureUtilsTest.java', displayrange='[62,75]', lan='java') 예시
+                        +codeBtn('Repositories/Eclipse/apache-commons-collections-example/src/test/java/ClosureUtilsTest.java', 'java', '[62,75]') 예시
                 details
                     summary class CollectionUtils Since 1.0
                     details
@@ -319,7 +319,7 @@ html
                             ul
                                 li
                                     | union :
-                                    button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/CollectionUtilsTest.java', displayrange='[18,30]', lan='java') a, b중 큰 쪽과 같다
+                                    +codeBtn('Repositories/Eclipse/apache-commons-collections-example/src/test/java/CollectionUtilsTest.java', 'java', '[18,30]') a, b중 큰 쪽과 같다
                                 li intersection : a, b중 작은 쪽과 같다
                                 li disjunction : cardinality_of_union - cardinality_of_intersection
                                 li subtract : cardinality_of_a - cardinality_of_b
@@ -554,7 +554,7 @@ html
                             | static &lt;T> List&lt;T> transformedList(List&lt;E> list, Transformer&lt;? super E, ? extends E> transformer)
                         li static &lt;T> List&lt;T> lazyList(List&lt;E> list, Factory&lt;? extends E> factory) + 1 오버로딩
                         |                 요청된 인덱스에 한해서만 객체를 생성한다. 빈 구역은 null로 채워진다.
-                        button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ListUtilsTest.java', lan='java') 예시
+                        +codeBtn('Repositories/Eclipse/apache-commons-collections-example/src/test/java/ListUtilsTest.java', 'java') 예시
                         li static &lt;T> List&lt;T> fixedSizeList(List&lt;T> list) : 요소의 추가/삭제 불가
                         li static &lt;T> int indexOf(List&lt;T> list, Predicate&lt;T> predicate)
                         li
@@ -572,15 +572,15 @@ html
                             li
                                 | static &lt;K> String getString(Map&lt;? super K, ?> map, K key) + Boolean, Number, Byte, Short, Integer, Long, Float, Double, Map, Object
                             |                     조회된 객체에 대하여 toString() 호출. map이 null이면 null 반환. key가 map에 없어도 null 반환.
-                            button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', displayrange='[17,32,35,42]', lan='java') 예시
+                            +codeBtn('Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', 'java', '[17,32,35,42]') 예시
                             li static &lt;K, V> Properties toProperties(Map&lt;K, V> map)
                             li static Map&lt;String, Object> toMap(ResourceBundle resourceBundle)
                             li
                                 | static void verbosePrint(PrintStream out, Object label, Map&lt;?, ?> map) + debugPrint
-                                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', displayrange='[17,32,45,62]', lan='java') 예시
+                                +codeBtn('Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', 'java', '[17,32,45,62]') 예시
                             li
                                 | static &lt;K, V> Map&lt;K, V> invertMap(Map&lt;K, V> map) : 키-값 위치를 바꾼 새 HashMap 반환
-                                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', displayrange='[17,32,65,67]', lan='java') 예시
+                                +codeBtn('Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', 'java', '[17,32,65,67]') 예시
                             li
                                 | static &lt;K> void safeAddToMap(Map&lt;? super K, Object> map, K key, Object value) : null 삽입 거부
                             li static &lt;K, V> Map&lt;K, V> putAll(Map&lt;K, V> map, Object[] array) Since 3.2
@@ -597,7 +597,7 @@ html
                             li static &lt;K, V> OrderedMap&lt;K, V> orderedMap(Map&lt;K, V> map)
                             li
                                 | static &lt;K, V> void populateMap(Map&lt;K, V> map, Iterable&lt;? extends V> elements, Transformer&lt;V, K> keyTransformer) + 3 오버로딩
-                                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', displayrange='[17,32,70,85]', lan='java') 예시
+                                +codeBtn('Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', 'java', '[17,32,70,85]') 예시
                             li
                                 | static &lt;K, V> IterableMap&lt;K, V> iterableMap(Map&lt;K, V> map) Since 4.0 + SortedMap 버전
                             li static int size(Map&lt;?, ?> map)
@@ -769,7 +769,7 @@ html
                 li class ComparatorChain&lt;E> implements Comparator&lt;E>, Serializable Since 2.0
                 li class FixedOrderComparator&lt;T> implements Comparator&lt;T>, Serializable Since 3.0
                 |         객체들의 고정된 순서를 비교하는 비교자를 제공한다.
-                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/ComparatorTest.java', lan='java') 예시
+                +codeBtn('Repositories/Eclipse/apache-commons-collections-example/src/test/java/ComparatorTest.java', 'java') 예시
                 li class NullComparator&lt;E> implements Comparator&lt;E>, Serializable Since 2.0
                 li class ReverseComparator&lt;E> implements Comparator&lt;E>, Serializable Since 2.0
                 li
@@ -865,7 +865,7 @@ html
                 |         여러 이터레이터들을 특정 순서대로 소비하는 래퍼를 제공. + ZippingIterator(각 이터레이터 1개씩 순회 조회), IteratorChain(넘겨진 순서대로 소비), LazyIteratorChain
                 li class ObjectGraphIterator&lt;E> implements Iterator&lt;E> Since 3.1
                 |         이터레이터들로 구성된 객체를 하나의 이터레이터로 순회할 수 있는 기능을 제공한다.
-                button.btn-code(path='Repositories/Eclipse/apache-commons-collections-example/src/test/java/IteratorTest.java', lan='java') 예시
+                +codeBtn('Repositories/Eclipse/apache-commons-collections-example/src/test/java/IteratorTest.java', 'java') 예시
                 li class PermutationIterator&lt;E> implements Iterator&lt;List&lt;E>> Since 4.0
                 |         순열을 조회하는 이터레이터를 제공한다.
         hr

@@ -21,7 +21,7 @@ include ../../source/skeleton.jade
         +asCode('shell').
             npm init    # package.json 생성
             npm install # package.json대로 의존 라이브러리 설치
-            
+
             # name 패키지 설치 후 package.json에 의존성 추가
             npm install name --save
             npm install name --save-dev
@@ -126,38 +126,38 @@ include ../../source/skeleton.jade
         li 멀티 코어 CPU의 성능을 이용하기 위해, 동일한 로직을 이용하는 멀티 프로세스 생성/관리 기능 제공
         li 프로세스는 마스터(cluster.isMaster)와 워커로 구성.
         li 자식(워커) 프로세스들은 부모 프로세스와 TCP 연결을 공유할 수 있다.
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/cluster.test.js', lan: 'javascript' })
+        +codeBtn('/Repositories/Node/cluster.test.js', 'javascript')
 
     h1.marker Lib/Console
     +asCode('javascript').
         console.log(any data[, any ...args])
             // + info, debug, warn, error
             // util.format(format[, ...args]) 형태의 호출 가능
-        
+
         console.table(any tabularData[, string[] properties]) // Since 10
-        
+
         console.time([string label])
             // + timeEnd
             // label(기본값 'default')로 타이머 시작/종료
         console.timeLog([string label][, any ...data]) // Since 10.7
             // label(기본값 'default')의 타이머를 중지하지 않고, 경과 시간과 data 출력
-        
+
         console.trace([any message][, any ...args])
             // 스택 출력
-        
+
         new console.Console(stream.Writable stdout[, stream.Writable stderr][, boolean ignoreErrors])
-        
+
         console.assert(any value[, any ...message])
             // value가 false면 console.error(...message)
-        
+
         console.count([string label])
             // Since 8.3 + countReset
             // label(기본값 'default')로 몇 번 호출했는지 출력한다
-        
+
         console.dir(any obj[, Object options])
             // boolean options.showHidden : 기본값 false
             // number options.depth : 기본값 2. null이면 끝까지 재귀
-        
+
         console.group([any ...label])
             // console.log(...label)실행 후, 다음 출력부터는 앞에 공백 2개 추가
             // + groupEnd
@@ -236,7 +236,7 @@ include ../../source/skeleton.jade
             li 모듈을 /usr/lib/node_modules/{name}/{version} 경로로 관리하면 효율적인 require() 가능
             li
                 | require
-                +w3a()&attributes({target:'_blank', href:'https://nodejs.org/dist/latest-v12.x/docs/api/modules.html#modules_all_together'}) 알고리즘
+                +asA('https://nodejs.org/dist/latest-v12.x/docs/api/modules.html#modules_all_together', '알고리즘')
             p 확장자 없는 파일 X, X.js 파일, X.json 파일, X.node 파일, X/index.js 디렉터리, X/package.json 디렉터리 등을 적절히 처리
             li 선두 '/', './', '../' 없이 요구된 모듈
             ol
@@ -293,7 +293,7 @@ include ../../source/skeleton.jade
             p 아래 명령으로 프로젝트 골격을 빠르게 구성할 수 있다.
             +asCode('shell').
                 npx express-generator # Since 8.2
-                
+
                 # Before 8.2
                 npm install -g express-generator
                 express
@@ -353,7 +353,7 @@ include ../../source/skeleton.jade
         li CLI 호출
         +asCode('shell').
             forever [action] [options] SCRIPT [script-options]
-            
+
             forever start name.js
             forever start config.json
         +asCode('javascript').
@@ -383,37 +383,37 @@ include ../../source/skeleton.jade
         li ↓ 아래 코드들은 1.11.0 버전 결과임
         li
             | 주석
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc1.jade', lan: 'text' })
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc1.html', lan: 'text' }) 결과 »
+            +codeBtn('/Repositories/Node/jade-start/doc1.jade', 'text')
+            +codeBtn('/Repositories/Node/jade-start/doc1.html', 'text') 결과 »
         li
             | Plain Text
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc2.jade', lan: 'text' })
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc2.html', lan: 'text' }) 결과 »
+            +codeBtn('/Repositories/Node/jade-start/doc2.jade', 'text')
+            +codeBtn('/Repositories/Node/jade-start/doc2.html', 'text') 결과 »
         li
             | 코드 실행
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc3.jade', lan: 'text' })
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc3.html', lan: 'text' }) 결과 »
+            +codeBtn('/Repositories/Node/jade-start/doc3.jade', 'text')
+            +codeBtn('/Repositories/Node/jade-start/doc3.html', 'text') 결과 »
         li
             | 태그 속성
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc4.jade', lan: 'text' })
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc4.html', lan: 'text' }) 결과 »
+            +codeBtn('/Repositories/Node/jade-start/doc4.jade', 'text')
+            +codeBtn('/Repositories/Node/jade-start/doc4.html', 'text') 결과 »
         li
             | 다른 문서 포함
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc5.main.jade', lan: 'text' }) main
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc5.part.jade', lan: 'text' }) part
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc5.text.html', lan: 'text' }) text
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc5.main.html', lan: 'text' }) 결과 »
+            +codeBtn('/Repositories/Node/jade-start/doc5.main.jade', 'text') main
+            +codeBtn('/Repositories/Node/jade-start/doc5.part.jade', 'text') part
+            +codeBtn('/Repositories/Node/jade-start/doc5.text.html', 'text') text
+            +codeBtn('/Repositories/Node/jade-start/doc5.main.html', 'text') 결과 »
         li
             | 템플릿 - mixin
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc6.jade', lan: 'text' })
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc6.html', lan: 'text' }) 결과 »
+            +codeBtn('/Repositories/Node/jade-start/doc6.jade', 'text')
+            +codeBtn('/Repositories/Node/jade-start/doc6.html', 'text') 결과 »
         li
             | 템플릿 - extends
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc7.template.jade', lan: 'text' }) template
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc7.main.jade', lan: 'text' }) main 예시1 »
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc7.main.html', lan: 'text' }) 결과1 »
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc7.main2.jade', lan: 'text' }) main 예시1 »
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/jade-start/doc7.main2.html', lan: 'text' }) 결과1 »
+            +codeBtn('/Repositories/Node/jade-start/doc7.template.jade', 'text') template
+            +codeBtn('/Repositories/Node/jade-start/doc7.main.jade', 'text') main 예시1 »
+            +codeBtn('/Repositories/Node/jade-start/doc7.main.html', 'text') 결과1 »
+            +codeBtn('/Repositories/Node/jade-start/doc7.main2.jade', 'text') main 예시1 »
+            +codeBtn('/Repositories/Node/jade-start/doc7.main2.html', 'text') 결과1 »
 
     h1.marker 3rd/mocha : 테스트 프레임워크
     ul
@@ -426,18 +426,18 @@ include ../../source/skeleton.jade
             "scripts": {
                 "test": "mocha"
             }
-        p: +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/mocha-start/test/test1.js', lan: 'javascript' })
+        p: +codeBtn('/Repositories/Node/mocha-start/test/test1.js', 'javascript')
         li 비동기 코드 테스트
         ul
             li 테스트 함수가 콜백을 인자로 받아 비동기 작업 완료 후 호출.
             li 예외 발생 시 예외 객체 그대로 전달하면 알아서 fail로 간주.
             li 콜백이 2회 이상 호출된 경우 fail로 간주.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/mocha-start/test/test2.js', lan: 'javascript' })
+            +codeBtn('/Repositories/Node/mocha-start/test/test2.js', 'javascript')
             li 또는 그냥 Promise를 반환하면 알아서 성공/실패 판단
             li 실행 환경이 지원한다면, 테스트 함수 자체를 async로 해도 무방
         li Hooking
         ul
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/mocha-start/test/test3.js', lan: 'javascript' })
+            +codeBtn('/Repositories/Node/mocha-start/test/test3.js', 'javascript')
             li before : 첫 번째 테스트 실행 전 한 번만 실행
             li beforeEach : 매 테스트 실행 전 한 번씩 실행
             li after : 마지막 테스트 실행 후 한 번만 실행
@@ -453,5 +453,5 @@ include ../../source/skeleton.jade
     ul
         li http://mongodb.github.io/node-mongodb-native/3.6/tutorials/
         li http://mongodb.github.io/node-mongodb-native/3.6/api/
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Node/express-start/test/mongodb.test.js', lan: 'javascript' })
-    
+        +codeBtn('/Repositories/Node/express-start/test/mongodb.test.js', 'javascript')
+

@@ -19,7 +19,7 @@ include ../../source/skeleton.jade
         ol
             li
                 | 분산 저장된 DB와 테이블들을 한꺼번에 검색하는 프로시저
-                +w3button()&attributes({ class: 'btn-code', title: '/posts/db/example/mysql_select_all_table.sql', lan: 'sql' })
+                +codeBtn('/posts/db/example/mysql_select_all_table.sql', 'sql')
             li 가정 1 : 유저 데이터를 4개 DB(user_1 ~ suer_4), 총 32개의 테이블(_1 ~ _32)로 분산 저장
             p 예. 유저의 소지 아이템과 관련된 i_user_item 테이블에 대하여, user_1에는 i_user_item_1, i_user_item_5, ..., i_user_item_29까지 존재
             li 가정 2 : 각 테이블에 데이터 입력 시, 테이블 suffix는 user_id % 32 + 1로 결정된다

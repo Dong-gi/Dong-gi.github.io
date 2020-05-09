@@ -58,7 +58,7 @@ include ../../source/skeleton.jade
             li property 속성을 반환한다. fget은 getter, fset은 setter, fdel은 속성 소멸자, doc은 도움말로써, 없으면 fget의 docstring을 복사해온다.
             li @property 데커레이터를 통해 쉽게 읽기전용 property를 만들 수 있다.
             li property 객체의 getter, setter, deleter 메서드 각각을 데커레이터로 정의할 수 있다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/property_example.py', displayrange: '[1,17,20,35]', lan: 'python' })
+            +codeBtn('/Repositories/Python/Basic/property_example.py', 'python', '[1,17,20,35]')
         div.marker: +asCode('python').
             class slice(stop)
             class slice(start, stop[, step])
@@ -89,7 +89,7 @@ include ../../source/skeleton.jade
             li 메서드 호출을 상위 클래스로 연결하는 프록시 객체를 반환한다.
             p
                 | 예. type(obj).__mro__의 순서가 D → C → B → A → object일 때, super(C, obj)의 탐색 순서는 B → A → object.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/super_example.py', lan: 'python' })
+                +codeBtn('/Repositories/Python/Basic/super_example.py', 'python')
             li object-or-type이 객체인 경우 isinstance(obj, type) == True, 타입인 경우 issubclass(type2, type) == True를 만족해야 한다
 
     h1.marker 객체 관련
@@ -135,7 +135,7 @@ include ../../source/skeleton.jade
         div.marker: +asCode('python') ascii(object)
         p
             | 객체의 문자열 표현(repr())을 반환한다. ASCII 문자가 아닌 경우 이스케이프된다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/built_in_function_example.py', displayrange: '[1,1]', lan: 'python' })
+            +codeBtn('/Repositories/Python/Basic/built_in_function_example.py', 'python', '[1,1]')
         div.marker: +asCode('python') repr(object)
         p object에 대한 문자열 표현을 반환한다. 여러 타입들이 object == eval(repr(object))를 만족하며, 그 외의 경우 &lt;> 사이에 객체 정보가 담긴다. __repr__()를 재정의하여 결과를 변경할 수 있다.
         div.marker: +asCode('python').
@@ -152,7 +152,7 @@ include ../../source/skeleton.jade
             ('0o11', '0o11', '0o11')
             >>> hex(15), format(15, '#X'), format(15, 'x'), f'{15:#x}'
             ('0xf', '0XF', 'f', '0xf')
-        p: +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/built_in_function_example.py', displayrange: '[3,4]', lan: 'python' })
+        p: +codeBtn('/Repositories/Python/Basic/built_in_function_example.py', 'python', '[3,4]')
         div.marker: +asCode('python') format(value[, format_spec])
         p type(value).__format__(value, format_spec)과 같으며, 빌트인 자료형들에 쓰이는 표준 format_spec이 https://docs.python.org/3/library/string.html#formatspec에 정의되어 있다.
 
@@ -259,7 +259,7 @@ include ../../source/skeleton.jade
             li 파일을 열고 file 객체를 반환한다. 텍스트 모드의 경우 io.TextIOBase, 이진 모드의 경우 io.BufferedIOBase
             li
                 | file :
-                +w3a()&attributes({target:'_blank', href:'https://docs.python.org/3/glossary.html#term-path-like-object'}) path-like object
+                +asA('https://docs.python.org/3/glossary.html#term-path-like-object', 'path-like object')
                 | . file이 file descriptor인 경우, closefd가 False면 반환된 객체가 닫혀도 descriptor를 닫지 않는다
             li mode : r(읽기, default), w(쓰기, 파일 처음부터), x(없으면 생성), a(이어 쓰기), b(이진), t(텍스트, default), +(읽기+쓰기)
             li encoding : 텍스트 모드에서만 사용. 주어지지 않은 경우 locale.getpreferredencoding(False) 이용.

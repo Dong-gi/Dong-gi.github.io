@@ -124,21 +124,21 @@ include ../../source/skeleton.jade
                     &lt;img src="img_smallflower.jpg" alt="Flowers">
                 &lt;/picture>
         li 멀티미디어
-        +w3a()&attributes({target:'_blank', href:'https://www.w3schools.com/tags/ref_av_dom.asp'}) Audio/Video
-        +w3a()&attributes({target:'_blank', href:'https://www.w3schools.com/graphics/default.asp'}) Graphic
-        +w3a()&attributes({target:'_blank', href:'https://www.w3schools.com/html/html_object.asp'}) Plug-in
+        +asA('https://www.w3schools.com/tags/ref_av_dom.asp', 'Audio/Video')
+        +asA('https://www.w3schools.com/graphics/default.asp', 'Graphic')
+        +asA('https://www.w3schools.com/html/html_object.asp', 'Plug-in')
 
     h1.marker Canvas
     ul
         li canvas를 지원하지 않는 브라우저를 위해 안에 fallback content(대체 텍스트 또는 DOM)를 적어주면 좋다
         li
             | 스크립트에서 canvas의 지원을 확인하는 방법 : DOM이 HTMLCanvasElement 클래스인지 확인
-            +w3button()&attributes({ class: 'btn-code', title: '/posts/front/canvas/draw1.js', lan: 'javascript' })
+            +codeBtn('/posts/front/canvas/draw1.js', 'javascript')
         li 캔버스의 기본 그리기 요소는 직사각형과 path(일련의 점들을 선분으로 연결) 두 가지
     div
         h2.marker
             | interface
-            +w3a()&attributes({target:'_blank', href:'https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement'}) HTMLCanvasElement
+            +asA('https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement', 'HTMLCanvasElement')
             |  : HTMLElement
         ul
             li width, height : 각각 캔버스의 너비, 높이. 기본값은 300, 150
@@ -150,7 +150,7 @@ include ../../source/skeleton.jade
             p callback : Blob을 먹는 함수, mimeType : default 'image/png', qualityArgument : 이미지 퀄리티[0, 1]
         h2.marker
             | interface
-            +w3a()&attributes({target:'_blank', href:'https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D'}) CanvasRenderingContext2D
+            +asA('https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D', 'CanvasRenderingContext2D')
         div
             h3.marker 사각형 그리기
             ul
@@ -169,7 +169,7 @@ include ../../source/skeleton.jade
                 li measureText(text)
                 p
                     | 텍스트를 그린 결과가 어떻게 될지 미리 알 수 있는
-                    +w3a()&attributes({target:'_blank', href:'https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics'}) TextMetrics
+                    +asA('https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics', 'TextMetrics')
                     |  객체 반환.
             h3.marker path 생성
             ul
@@ -181,12 +181,12 @@ include ../../source/skeleton.jade
                 li bazierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
                 p
                     | 마지막 정점으로부터 (x, y)까지를 잇는, 2개의 조절점을 이용하는
-                    +w3a()&attributes({target:'_blank', href:'https://ko.wikipedia.org/wiki/베지에_곡선'}) 베지에 곡선
+                    +asA('https://ko.wikipedia.org/wiki/베지에_곡선', '베지에 곡선')
                     | 을 추가한다.
                 li quadraticCurveTo(cpx, cpy, x, y)
                 p
                     | 마지막 정점으로부터 (x, y)까지를 잇는, 1개의 조절점을 이용하는
-                    +w3a()&attributes({target:'_blank', href:'https://ko.wikipedia.org/wiki/베지에_곡선'}) 베지에 곡선
+                    +asA('https://ko.wikipedia.org/wiki/베지에_곡선', '베지에 곡선')
                     | 을 추가한다.
                 li arc(x, y, radius, startAngle, endAngle[, anticlockwise])
                 p (x, y)를 기준점으로 하는 반지름 radius인 호를 추가한다. anticlockwise의 기본값은 false. anticlockwise를 true로 한다고 각도의 증감 방향이 바뀌진 않는다
@@ -209,13 +209,13 @@ include ../../source/skeleton.jade
                     | 현재 또는 지정된 path의 영역 내부를 칠한다.
                     li
                         | fillRule : '
-                        +w3a()&attributes({target:'_blank', href:'https://en.wikipedia.org/wiki/Nonzero-rule'}) nonzero
+                        +asA('https://en.wikipedia.org/wiki/Nonzero-rule', 'nonzero')
                         | '(default) | '
-                        +w3a()&attributes({target:'_blank', href:'https://en.wikipedia.org/wiki/Even-odd_rule'}) evenodd
+                        +asA('https://en.wikipedia.org/wiki/Even-odd_rule', 'evenodd')
                         | '
                     li
                         | path :
-                        +w3a()&attributes({target:'_blank', href:'https://developer.mozilla.org/en-US/docs/Web/API/Path2D'}) Path2D
+                        +asA('https://developer.mozilla.org/en-US/docs/Web/API/Path2D', 'Path2D')
                         |  인스턴스
                 li stroke([path])
                 p 현재 또는 지정된 path의 외각선을 그린다(outline)
@@ -284,7 +284,7 @@ include ../../source/skeleton.jade
             ul
                 li
                     | drawImage(image, dx, dy);
-                    +w3button()&attributes({ class: 'btn-code', title: '/posts/front/canvas/draw2.js', lan: 'javascript' })
+                    +codeBtn('/posts/front/canvas/draw2.js', 'javascript')
                 li drawImage(image, dx, dy, dWidth, dHeight);
                 li drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
             h3.marker 변환
@@ -315,14 +315,14 @@ include ../../source/skeleton.jade
                 li rotate(angle) : (0, 0)을 기준으로 시계방향 회전. 단위는 라디안.
                 li translate(x, y)
                 p 현재의 dx, dy에 각각 x, y만큼 추가한다
-        
+
             h3.marker 전역 속성
             ul
                 li globalAlpha
                 p 캔버스에 그려지기 전에 도형, 이미지 등에 적용되는 투명도. default 1.0
-                li: +w3a()&attributes({target:'_blank', href:'https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation'}) globalCompositeOperation
+                li: +asA('https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation', 'globalCompositeOperation')
                 p 캔버스의 기존 내용에 새로운 도형, 이미지를 추가할 때의 합성 방법. 기본값은 덮어쓰기('source-over').
-        
+
             h3.marker 비트 조작
             div
                 h4.marker ImageData
@@ -347,7 +347,7 @@ include ../../source/skeleton.jade
                     br
                     | createImageData(imagedata)
                 p RGBA(0, 0, 0, 0)으로 채워진 새 ImageData 인스턴스를 반환한다. imagedata로 호출한 경우, imagedata의 width, height만 사용된다
-        
+
             h3.marker 상태 저장/복구
             ul
                 li canvas : 연관 HTMLCanvasElement 객체. null일 수 있음
@@ -361,4 +361,4 @@ include ../../source/skeleton.jade
         li: +asA('https://www.w3.org/TR/2dcontext/')
         li: +asA('https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API')
         li: +asA('https://joshondesign.com/p/books/canvasdeepdive/title.html')
-            
+

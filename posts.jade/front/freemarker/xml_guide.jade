@@ -3,15 +3,15 @@ include ../../../source/skeleton.jade
     h1.marker 템플릿에 XML 연결
     p
         | 아래의 예시에서 사용하는 공통 xml과 java.
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/FreeMarker/resource/template/t_014.xml', lan: 'xml'}) xml »
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/FreeMarker/src/io/github/donggi/ProgrammerGuilde.java', displayrange: '[28, 35]', lan: 'java'}) Java »
+        +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_014.xml', 'xml') xml »
+        +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/ProgrammerGuilde.java', 'java', '[28, 35]') Java »
     h1.marker 이름으로 요소 접근
-    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/FreeMarker/resource/template/t_014.ftl', displayrange: '[2, 2, 50, 50, 4, 5, 52, 53, 7, 7, 55, 55, 9, 14, 57, 62]', lan: 'xml'}) FTL + 결과 »
+    +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_014.ftl', 'xml', '[2, 2, 50, 50, 4, 5, 52, 53, 7, 7, 55, 55, 9, 14, 57, 62]') FTL + 결과 »
     h1.marker 요소의 속성 접근
-    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/FreeMarker/resource/template/t_014.ftl', displayrange: '[18, 20, 66, 67, 22, 24, 69, 70]', lan: 'xml'}) FTL + 결과 »
+    +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_014.ftl', 'xml', '[18, 20, 66, 67, 22, 24, 69, 70]') FTL + 결과 »
     h1.marker 자식 요소 순회
-    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/FreeMarker/resource/template/t_014.ftl', displayrange: '[28, 30, 74, 90, 32, 35, 93, 98]', lan: 'xml'}) FTL + 결과 »
+    +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_014.ftl', 'xml', '[28, 30, 74, 90, 32, 35, 93, 98]') FTL + 결과 »
     h1.marker 속성 순회
-    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/FreeMarker/resource/template/t_014.ftl', displayrange: '[39, 41, 102, 103]', lan: 'xml'}) FTL + 결과 »
+    +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_014.ftl', 'xml', '[39, 41, 102, 103]') FTL + 결과 »
     h1.marker 부모 노드 접근
-    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/FreeMarker/resource/template/t_014.ftl', displayrange: '[45, 46, 107, 107]', lan: 'xml'}) FTL + 결과 »
+    +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_014.ftl', 'xml', '[45, 46, 107, 107]') FTL + 결과 »

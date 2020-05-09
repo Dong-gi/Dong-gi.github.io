@@ -73,7 +73,7 @@ html
                     li 클래스 인스턴스 내부에 비트값들을 저장하지 않고, 외부 int, short, byte에 대한 마스킹 연산을 지원한다
                     li
                         | public BitField(int mask)
-                        button.btn-code(path='Repositories/Eclipse/apache-commons-lang-example/src/test/java/BitFieldTest.java', lan='java') 예시 코드 »
+                        +codeBtn('Repositories/Eclipse/apache-commons-lang-example/src/test/java/BitFieldTest.java', 'java') 예시 코드 »
                 details
                     summary Method Detail
                     ol
@@ -349,15 +349,15 @@ html
                         li
                             | public EventCountCircuitBreaker(int threshold, long checkInterval, TimeUnit checkUnit)
                         |                 기준 이벤트 카운트/인터벌 모두 공유. 초당 최대 5개의 처리를 하는
-                        button.btn-code(path='Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', displayrange='[11,32]', lan='java') 예시 »
+                        +codeBtn('Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', 'java', '[11,32]') 예시 »
                         li
                             | public EventCountCircuitBreaker(int openingThreshold, long checkInterval, TimeUnit checkUnit, int closingThreshold)
                         |                 기준 인터벌을 공유. 초당 5개 이상의 요청이 발생하면 OPEN, 초당 2개 이하로 떨어지면(부정확) CLOSE하는
-                        button.btn-code(path='Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', displayrange='[34,61]', lan='java') 예시 »
+                        +codeBtn('Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', 'java', '[34,61]') 예시 »
                         li
                             | public EventCountCircuitBreaker(int openingThreshold, long openingInterval, TimeUnit openingUnit, int closingThreshold, long closingInterval, TimeUnit closingUnit)
                         |                 초당 5번 이상 실패하면 2초간 OPEN하는
-                        button.btn-code(path='Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', displayrange='[63,90]', lan='java') 예시 »
+                        +codeBtn('Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', 'java', '[63,90]') 예시 »
             details
                 summary Initializer
                 details
@@ -371,7 +371,7 @@ html
                     ol
                         li
                             | 『Effective Java』에서 소개하는
-                            button.btn-code(path='posts/java/effective_java.html', lan='nohighlight') 객체 필드 초기화 지연
+                            +codeBtn('posts/java/effective_java.html', 'nohighlight') 객체 필드 초기화 지연
                             | 과 유사한 형태의 로직으로, AtomicReference를 이용해 단 한 번만 객체가 초기화됨을 보장한다
                         li protected abstrct T initialize()
                 details
@@ -395,7 +395,7 @@ html
                     ol
                         li
                             | 『Effective Java』에서 소개하는
-                            button.btn-code(path='posts/java/effective_java.html', lan='nohighlight') 객체 필드 초기화 지연
+                            +codeBtn('posts/java/effective_java.html', 'nohighlight') 객체 필드 초기화 지연
                             |  로직을 이용해 늦은 초기화를 지원한다
                         li protected abstract T initialize()
                 details
@@ -599,7 +599,7 @@ html
                     li
                         | JavaDoc에서는 유용하다고 하는데... 런타임에서 제네릭 정보가 남아있지 않기 때문에 그게 그거일듯... Type에서 Class로 변환하는 방법도 딱히 없으니...
                     |             이거 쓸 바엔
-                    button.btn-code(path='Repositories/Eclipse/apache-commons-lang-example/src/test/java/TypeTest.java', lan='java') 예시 코드
+                    +codeBtn('Repositories/Eclipse/apache-commons-lang-example/src/test/java/TypeTest.java', 'java') 예시 코드
                     | 를 사용하는 게 나을듯
             |     사용할 일 생기면 정리 : TypeUtils, FieldUtils, ConstructorUtils, MethodUtils
         hr

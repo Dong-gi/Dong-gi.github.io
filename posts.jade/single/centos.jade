@@ -197,7 +197,7 @@ include ../../source/skeleton.jade
             date "+%Y-%m-%d %T"
             date -s "2019-01-01 12:34:56"
         li
-            +w3a()&attributes({target:'_blank', href:'https://nxmnpg.lemoda.net/8/ntpdate'}) ntpdate
+            +asA('https://nxmnpg.lemoda.net/8/ntpdate', 'ntpdate')
             |  server : 동기화
             br
             | ntpdate -d server : 오차 출력
@@ -257,8 +257,8 @@ include ../../source/skeleton.jade
 
     h1.marker 쉘 스크립트
     ol
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/sh/0_basic.sh', lan: 'bash'})
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/sh/0_basic.txt', lan: 'text'}) 실행 결과 »
+        +codeBtn('/Repositories/sh/0_basic.sh', 'bash')
+        +codeBtn('/Repositories/sh/0_basic.txt', 'text') 실행 결과 »
         li 특별 전역 변수
         p $?(마지막 명령 리턴값), $>(프로세스의 사용자 ID), $0(현재 Perl 스크립트 이름), 등...
 

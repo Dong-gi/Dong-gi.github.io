@@ -1,11 +1,8 @@
-//- +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse', lan: 'java' })
-//- +asA('http://...')
-//- +w3a()&attributes({ target: '_blank', href: '' }) |링크
-//- +w3a()&attributes({ href: "javascript:;" }) |실행
-//- +w3img('imgs/', 'alt')
-
+//- +codeBtn('/Repositories/', 'java')
+//- +asA('href', 'innerText')
+//- +w3img('/imgs/', 'alt')
+//- +hoverTemplate()#template-id
 //- span.hover-content(template-id='template-id'
-//- div.w3-container.w3-leftbar.w3-border-green.w3-white#template-id
 
 include ./source/skeleton.jade
 //- include ../../source/skeleton.jade
@@ -13,11 +10,11 @@ include ./source/skeleton.jade
     h1.marker Index
     table.marker.no-sort
         caption 수정사항
-        +tds('2020-04-22', 'Jade 템플릿 적용')
+        +tds('2020-04-22', 'Jade 템플릿 적용 시작')
         +tds('2020-01-16', 'GoormIDE로 이전')
 
     h2.marker 별 건 없고 칸나쨩이나 보고가세요.
-    +w3img('imgs/kanna.gif', '칸나쨩').marker
+    +w3img('/imgs/kanna.gif', '칸나쨩').marker
     
     h2.marker 주요 포스트
     table.no-sort
@@ -26,7 +23,7 @@ include ./source/skeleton.jade
             td 오류 대응 목록
             td: +asA('/posts/project/error.html')
         tr
-            td 브라우저 매크로 등 스니펫
+            td 브라우저 매크로 등 코드 스니펫
             td: +asA('/posts/project/snippets.html')
         tr
             td WPF 데이터 툴

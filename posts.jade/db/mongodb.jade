@@ -307,17 +307,10 @@ include ../../source/skeleton.jade
             li cursor.next() 호출로 자동으로 getMore 연산이 수행되어 나머지 결과도 가져온다
             li cursor.objsLeftInBatch()로 배치에 남은 문서 수 확인 가능
         li
-            | 메서드
-            +asA('https://docs.mongodb.com/manual/reference/method/')
-        li
-            | 연산자
-            +asA('https://docs.mongodb.com/manual/reference/operator/query/')
-        li
-            | 트랜잭션
-            +asA('https://docs.mongodb.com/manual/core/transactions/')
-        li
-            | Aggregation variables
-            +asA('https://docs.mongodb.com/manual/reference/aggregation-variables/')
+            +asA('https://docs.mongodb.com/manual/reference/method/', '메서드')
+            +asA('https://docs.mongodb.com/manual/reference/operator/query/', '연산자')
+            +asA('https://docs.mongodb.com/manual/core/transactions/', '트랜잭션')
+            +asA('https://docs.mongodb.com/manual/reference/aggregation-variables/', 'Aggregation variables')
     div
         h2.marker help
         table.no-sort
@@ -387,7 +380,7 @@ include ../../source/skeleton.jade
             tr
                 td exit
                 td
-    
+
         h2.marker db.mycoll.find().help()
         div
             h3.marker find([object predicate][, object projection])
@@ -459,7 +452,7 @@ include ../../source/skeleton.jade
                 tr
                     td coll.find().size()
                     td limit(), skip() 적용
-        
+
             h3.marker Cursor methods
             p db.mycoll.find()는 이터레이터(Cursor)를 반환한다. 단, mongo 쉘에서 var 변수에 할당하지 않은 경우 자동으로 결과를 출력하고 끝냄에 유의.
             table.no-sort
@@ -472,7 +465,7 @@ include ../../source/skeleton.jade
                 tr
                     td cursor.noCursorTimeout()
                     td 이 경우 커서를 모두 순회하거나, 수동으로 close()를 호출해야만 한다.
-    
+
         h2.marker db.mycoll.help()
         +asCode('javascript') let coll = db.myCollection;
         table.no-sort

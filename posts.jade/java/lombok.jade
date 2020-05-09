@@ -5,7 +5,7 @@ html
         details
             summary
                 | val
-                button.btn-code(path='Repositories/Eclipse/lombok-example/src/main/java/LombokValExample.java', lan='java') 예시 »
+                +codeBtn('Repositories/Eclipse/lombok-example/src/main/java/LombokValExample.java', 'java') 예시 »
             ol
                 li 자동 타입 추론을 통한 타입 명시 생략을 가능하게 해준다.
                 li 할당 연산이 있는 지역 변수와 foreach에서만 사용 가능.
@@ -15,14 +15,14 @@ html
         details
             summary
                 | @NonNull
-                button.btn-code(path='Repositories/Eclipse/lombok-example/src/main/java/LombokNonNullExample.java', lan='java') 예시 »
+                +codeBtn('Repositories/Eclipse/lombok-example/src/main/java/LombokNonNullExample.java', 'java') 예시 »
             ol
                 li 메서드, 생성자의 매개변수에 null 검사를 추가해준다. null이면 NullPointerException 발생
         hr
         details
             summary
                 | @CleanUp
-                button.btn-code(path='Repositories/Eclipse/lombok-example/src/main/java/LombokNonNullExample.java', lan='java') 예시 »
+                +codeBtn('Repositories/Eclipse/lombok-example/src/main/java/LombokNonNullExample.java', 'java') 예시 »
             ol
                 li 지역 변수가 유효 스코프를 벗어나면 close()를 자동으로 호출한다.
                 li try ~ finally와 같은 방식으로 호출함을 보장한다.
@@ -31,7 +31,7 @@ html
         details
             summary
                 | @Getter, @Setter
-                button.btn-code(path='Repositories/Eclipse', lan='java') 예시 »
+                +codeBtn('Repositories/Eclipse', 'java') 예시 »
             ol
                 li 필드의 기본적인 getter와 setter를 자동 구현해준다.
                 li 기본 시그니처는 [TYPE] get[Name], boolean is[Name], void set[Name]
@@ -43,7 +43,7 @@ html
         details
             summary
                 | @ToString
-                button.btn-code(path='Repositories/Eclipse/lombok-example/src/main/java/LombokToStringExample.java', lan='java') 예시 »
+                +codeBtn('Repositories/Eclipse/lombok-example/src/main/java/LombokToStringExample.java', 'java') 예시 »
             ol
                 li 클래스명, 모든 non-static 필드값을 포함한 문자열을 반환하는 toString 메서드를 생성한다.
                 li 필드 이름을 포함하고 싶다면 includeFieldNames 필드를 사용(기본 true)
@@ -55,7 +55,7 @@ html
         details
             summary
                 | @EqualsAndHashCode
-                button.btn-code(path='Repositories/Eclipse/lombok-example/src/main/java/LombokEqualsAndHashCodeExample.java', lan='java') 예시 »
+                +codeBtn('Repositories/Eclipse/lombok-example/src/main/java/LombokEqualsAndHashCodeExample.java', 'java') 예시 »
             ol
                 li 모든 non-static, non-transient 필드를 이용하는 equals, hashCode 메서드를 생성한다.
                 li callSuper를 설정하는 경우, 수퍼클래스의 hashCode() 값을 해시 알고리즘에 이용한다.
@@ -63,7 +63,7 @@ html
         details
             summary
                 | @NoArgsConstructor, @RequiredArgsConstructor, @AllArgsConstructor
-                button.btn-code(path='Repositories/Eclipse/lombok-example/src/main/java/LombokConstructorExample.java', lan='java') 예시 »
+                +codeBtn('Repositories/Eclipse/lombok-example/src/main/java/LombokConstructorExample.java', 'java') 예시 »
             ol
                 li
                     | NoArgsConstructor는 기본생성자를 생성한다. final 필드로 인해 예외가 발생할 수 있으며, 이 경우 force 옵션을 사용하면 기본값으로 초기화된다.
@@ -72,7 +72,7 @@ html
         details
             summary
                 | @Data
-                button.btn-code(path='Repositories/Eclipse/lombok-example/src/main/java/LombokDataExample.java', lan='java') 예시 »
+                +codeBtn('Repositories/Eclipse/lombok-example/src/main/java/LombokDataExample.java', 'java') 예시 »
             ol
                 li Target : ElementType.TYPE
                 li 모든 필드에 대한 @ToString, @EqualsAndHashCode, @Getter 생성
@@ -82,14 +82,14 @@ html
         details
             summary
                 | @Value
-                button.btn-code(path='Repositories/Eclipse/lombok-example/src/main/java/LombokValueExample.java', lan='java') 예시 »
+                +codeBtn('Repositories/Eclipse/lombok-example/src/main/java/LombokValueExample.java', 'java') 예시 »
             ol
                 li final한 @Data
         hr
         details
             summary
                 | @Builder
-                button.btn-code(path='Repositories/Eclipse/lombok-example/src/main/java/LombokBuilderExample.java', lan='java') 예시 »
+                +codeBtn('Repositories/Eclipse/lombok-example/src/main/java/LombokBuilderExample.java', 'java') 예시 »
             ol
                 li 메서드에 @Builder가 붙으면 아래의 7가지가 생성된다.
                 ul
@@ -119,7 +119,7 @@ html
         details
             summary
                 | @SneakyThrows
-                button.btn-code(path='Repositories/Eclipse/lombok-example/src/main/java/LombokSneakyThrowsExample.java', lan='java') 예시 »
+                +codeBtn('Repositories/Eclipse/lombok-example/src/main/java/LombokSneakyThrowsExample.java', 'java') 예시 »
             ol
                 li
                     | org.apache.commons.lang3.exception.ExceptionUtils#rethrow보다 강하게 throws 절을 사용하지 않아도 되게 해준다.
@@ -128,7 +128,7 @@ html
         details
             summary
                 | @Synchronized
-                button.btn-code(path='Repositories/Eclipse/lombok-example/src/main/java/LombokSynchronizedExample.java', lan='java') 예시 »
+                +codeBtn('Repositories/Eclipse/lombok-example/src/main/java/LombokSynchronizedExample.java', 'java') 예시 »
             ol
                 li synchronized 키워드의 편리한 축약형.
                 li 인스턴스 메서드에 붙으면 $lock 객체를, static 메서드에 붙으면 $LOCK 객체를 이용해 키워드와 동일한 동작을 한다.

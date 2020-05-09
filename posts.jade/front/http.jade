@@ -14,7 +14,7 @@ include ../../source/skeleton.jade
     div
         h2.marker 보안 요건
         p 기밀성 confidentiality, 무결성 integrity, 가용성 availability, 인증 authentication, 부인 방지 NonRepudiation
-        
+
         h2.marker 소스 간 자원 공유 CORS;Cross-Origin Resource Sharing
         ol
             li 본문이 text/plain이고, 커스텀 헤더가 없는 GET, POST 요청에는 Origin 헤더가 추가된다.
@@ -22,7 +22,7 @@ include ../../source/skeleton.jade
             li 서버가 응답하기로 결정하면 Access-Control-Allow-Origin 헤더를 반송한다.
             li Access-Control-Allow-Origin 헤더의 소스가 맞지 않으면 브라우저에서 요청을 거부할 수 있다.
             li: strong 브라우저의 크로스 도메인을 회피하기 위해 서버에서 대신 요청을 수행해줄 수 있다.
-        
+
         HTTP 기본 인증
         ol
             li 기본 인증을 안전하게 이용하는 유일한 방법은 SSL과 결합해서 사용하는 것.

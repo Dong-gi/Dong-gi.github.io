@@ -12,7 +12,7 @@ include ../../source/skeleton.jade
             li ((코드 포인트 - 종성 인덱스 - '가'0xAC00) / 28 - 중성 인덱스) / 21 = 초성 인덱스
         li
             | 조사 처리
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/src/io/github/donggi/HangulUtility.java', lan: 'java' })
+            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/HangulUtility.java', 'java')
 
     h1.marker Common - year, month, day로부터 요일 구하기
     ol
@@ -26,32 +26,32 @@ include ../../source/skeleton.jade
         p Week day : 0(일요일), 1(월요일), ..., 6(토요일)
 
     h1.marker C# - Console Redirect
-    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/VisualStudio/Project2 EventGenerator v2/Utility/ConsoleRedirectWriter.cs', lan: 'cs' })
+    +codeBtn('/Repositories/VisualStudio/Project2 EventGenerator v2/Utility/ConsoleRedirectWriter.cs', 'cs')
 
     h1.marker HTML, JavaScript - 브라우저 매크로
     ul
         li https://www.steamgifts.com/
         p
             | 게임 신청을 편리하게 하기 위한
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/JavaScript/Browser/steamgifts.com.js', lan: 'javascript' }) 스크립트
+            +codeBtn('/Repositories/JavaScript/Browser/steamgifts.com.js', 'javascript') 스크립트
         li http://hiy9.net/ms-ost/
             | 메이플스토리 OST 다운로드
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/JavaScript/Browser/hiy9.net.js', lan: 'javascript' }) 스크립트
+            +codeBtn('/Repositories/JavaScript/Browser/hiy9.net.js', 'javascript') 스크립트
         li https://maplestory.fandom.com/wiki/Music
             | 메이플스토리 OST 다운로드
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/JavaScript/Browser/maplestory.fandom.com.js', lan: 'javascript' }) 스크립트
+            +codeBtn('/Repositories/JavaScript/Browser/maplestory.fandom.com.js', 'javascript') 스크립트
         li https://davidfennmusic.bandcamp.com/album/moonlighter
             | 플레이리스트 다운로드
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/JavaScript/Browser/davidfennmusic.bandcamp.com.js', lan: 'javascript' }) 스크립트
+            +codeBtn('/Repositories/JavaScript/Browser/davidfennmusic.bandcamp.com.js', 'javascript') 스크립트
         li https://store.steampowered.com/
             | 스팀 게임 자동으로 "제외하기"
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/JavaScript/Browser/store.steampowered.com.js', lan: 'javascript' }) 스크립트
+            +codeBtn('/Repositories/JavaScript/Browser/store.steampowered.com.js', 'javascript') 스크립트
 
     h1.marker HTML, JavaScript - 이미지 파일 인코딩/디코딩
     ul
         li
             | XOR를 이용한
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/JavaScript/Browser/decode.js', lan: 'javascript' }) 인코딩/디코딩
+            +codeBtn('/Repositories/JavaScript/Browser/decode.js', 'javascript') 인코딩/디코딩
         ol
             li 비트열 a, b에 대하여 (a ^ b) ^ b = a임을 이용
             li 인코딩 ::= 기존 데이터의 각 바이트에 대하여, data[i] ^= pattern[i]
@@ -59,7 +59,7 @@ include ../../source/skeleton.jade
             li 따라서 XOR에 이용하는 pattern만 정확히 재현할 수 있다면 빠르게 in-place 인코딩/디코딩이 가능하다
 
     h1.marker HTML, JavaScript - 테이블 정렬
-    +w3button()&attributes({ class: 'btn-code', title: '/source/ordered-table.js', lan: 'javascript' })
+    +codeBtn('/source/ordered-table.js', 'javascript')
 
     h1.marker JavaScript, Google Apps Script
     ul

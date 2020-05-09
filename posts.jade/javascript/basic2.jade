@@ -5,16 +5,16 @@ include ../../source/skeleton.jade
         li window
         p
             | 브라우저 윈도우를 가리키는 객체
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/JavaScript/Browser/window_open.js', lan: 'javascript' }) Window#open
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/JavaScript/Browser/window_resizeto.js', lan: 'javascript' }) Window#resizeTo
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/JavaScript/Browser/window_popup.js', lan: 'javascript' }) Window#alert, confirm, prompt
+            +codeBtn('/Repositories/JavaScript/Browser/window_open.js', 'javascript') Window#open
+            +codeBtn('/Repositories/JavaScript/Browser/window_resizeto.js', 'javascript') Window#resizeTo
+            +codeBtn('/Repositories/JavaScript/Browser/window_popup.js', 'javascript') Window#alert, confirm, prompt
         p window.onload : 문서를 전부 로드했을 때 실행되는 이벤트 리스너.
         li screen
         p window.screen과 동일. 표시되는 화면과 연관
         li location
         p
             | window.location과 동일. 현재 페이지 URL과 연관
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/JavaScript/Browser/location.js', lan: 'javascript' })
+            +codeBtn('/Repositories/JavaScript/Browser/location.js', 'javascript')
         li history
         p window.history와 동일. 페이지 기록과 연관
         li navigator
@@ -25,20 +25,20 @@ include ../../source/skeleton.jade
     h1.marker DOM; Document Object Model
     p
         | Icons made by
-        +w3a()&attributes({target:'_blank', href:'http://www.freepik.com'}) Freepik
+        +asA('http://www.freepik.com', 'Freepik')
         |  from
-        +w3a()&attributes({target:'_blank', href:'http://www.flaticon.com'}) www.flaticon.com
+        +asA('http://www.flaticon.com', 'www.flaticon.com')
         |  is licensed by
-        +w3a()&attributes({target:'_blank', href:'http://creativecommons.org/licenses/by/3.0/'}) CC 3.0 BY
+        +asA('http://creativecommons.org/licenses/by/3.0/', 'CC 3.0 BY')
     #basic2-div1
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/JavaScript/Browser/dom_example1.js', lan: 'javascript' }) DOM 예시 1
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/JavaScript/Browser/dom_example2.js', lan: 'javascript' }) DOM 예시 2
-        +w3button()&attributes({ class: 'btn-code', title: '/posts/javascript/audio_example.html', lan: 'nohighlight' }) Audio 예시
-        +w3button()&attributes({ class: 'btn-code', title: '/posts/javascript/audio_example.html', lan: 'html' }) Audio 예시 코드
-        +w3button()&attributes({ class: 'btn-code', title: '/posts/javascript/form_example.html', lan: 'nohighlight' }) Form 예시
-        +w3button()&attributes({ class: 'btn-code', title: '/posts/javascript/form_example.html', lan: 'html' }) Form 예시 코드
-        +w3button()&attributes({ class: 'btn-code', title: '/posts/javascript/selector_example.html', lan: 'nohighlight' }) Query selector 예시
-        +w3button()&attributes({ class: 'btn-code', title: '/posts/javascript/selector_example.html', lan: 'html' }) Query selector 예시 코드
+        +codeBtn('/Repositories/JavaScript/Browser/dom_example1.js', 'javascript') DOM 예시 1
+        +codeBtn('/Repositories/JavaScript/Browser/dom_example2.js', 'javascript') DOM 예시 2
+        +codeBtn('/posts/javascript/audio_example.html', 'nohighlight') Audio 예시
+        +codeBtn('/posts/javascript/audio_example.html', 'html') Audio 예시 코드
+        +codeBtn('/posts/javascript/form_example.html', 'nohighlight') Form 예시
+        +codeBtn('/posts/javascript/form_example.html', 'html') Form 예시 코드
+        +codeBtn('/posts/javascript/selector_example.html', 'nohighlight') Query selector 예시
+        +codeBtn('/posts/javascript/selector_example.html', 'html') Query selector 예시 코드
 
     h1.marker 이벤트 모델
     div
@@ -48,7 +48,7 @@ include ../../source/skeleton.jade
             li 이벤트 캡처링 : 최상위 노드로부터 이벤트가 전달되는 과정
             p 캡처링 단계에서 리스너의 호출 기본값은 false. 동작을 위해 addEventListener()의 옵션 매개변수를 지정해야 한다
             li 이벤트 버블링 : 최하위 노드로부터 이벤트가 전달되는 과정
-        
+
         h2.marker JavaScript 이벤트 핸들러 설정
         ol
             li EventTarget : Element, Document, Window, XMLHttpRequest
@@ -59,8 +59,8 @@ include ../../source/skeleton.jade
 
     h1.marker 브라우저 저장소
     p
-        +w3button()&attributes({ class: 'btn-code', title: '/posts/javascript/storage_example.html', lan: 'nohighlight' }) 저장소 예시
-        +w3button()&attributes({ class: 'btn-code', title: '/posts/javascript/storage_example.html', lan: 'html' }) 저장소 예시 코드
+        +codeBtn('/posts/javascript/storage_example.html', 'nohighlight') 저장소 예시
+        +codeBtn('/posts/javascript/storage_example.html', 'html') 저장소 예시 코드
 
     h1.marker 웹 워커
     ol
@@ -86,13 +86,13 @@ include ../../source/skeleton.jade
         // new WebSocket("wss://secure.example.com/chat", {"chat.v1", "chat.v2"});
         // connection.readyState === WebSocket.OPEN // CONNECTING, OPEN, CLOSING, CLOSED
         // connection.bufferedAmount : 전송 대기중인 크기
-        
+
         connection.send("Hello World");
         connection.onmessage = function(event) { event.data ... }
         // onopen, onclose, onerror
         // onclose 이벤트 종료코드 1000외는 모두 비정상 종료 : http://tools.ietf.org/html/rfc6455#section-7.4
         // onmessage 이벤트 data 프로퍼티 : 메시지가 텍스트면 문자열, 메시지가 바이너리고 connection.binaryType이 "blob"(기본)이면 Blob, 메시지가 바이너리고 connection.binaryType이 "arraybuffer"면 ArrayBuffer
-        
+
         connection.close(); // close 이벤트 객체는 wasClean, code, reason 프로퍼티 존재
 
     h1.marker 함수 감속
@@ -139,14 +139,14 @@ include ../../source/skeleton.jade
         request.open('GET', './index.html', false);
         request.send();
         console.log(request.responseText);
-        
+
         // FormData를 보낼 수 있다
         let data = new FormData();
         data.append("key", "value");
         let data = new FormData(document.forms[0]);
         request.send(data);
         // Blob, BufferSource, FormData, URLSearchParams, ReadableStream, USVString 전송 가능
-        
+
         // jQuery Ajax 구문
         //     Ajax 간편 표기 : $.get(), $.post(), $.getJSON(), $.getScript(), $(selector).load()
         $.ajax({ type: 'get', url: './index.html', success: (data) => console.log(data) });
@@ -180,7 +180,7 @@ include ../../source/skeleton.jade
         li 아래 입력 필드에 아무 파일이나(이왕이면 이미지로) 드롭해보세요
         p
             input#basic2-input-files1(type='file', multiple)
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/JavaScript/Browser/file_example.js', lan: 'javascript' })
+            +codeBtn('/Repositories/JavaScript/Browser/file_example.js', 'javascript')
         li File, Blob 객체를 slice하면 Blob 객체가 반환된다
         li BLOB; BInary Large Object
         ul
@@ -189,7 +189,7 @@ include ../../source/skeleton.jade
             li URL.createObjectURL()로 blob:// 주소를 가져올 수 있으며, 이 url은 DOM이나 CSS를 활용할 수 있다
             p
                 | Blob URL 삭제 : URL.revokeObjectURL()
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/JavaScript/Browser/blob_example.js', lan: 'javascript' })
+                +codeBtn('/Repositories/JavaScript/Browser/blob_example.js', 'javascript')
             li FileReader 객체를 사용하면 Blob 내용을 비동기적으로 문자열이나 ArrayBuffer로 추출할 수 있다
         li FileReader
         +asCode('javascript') readAsText(file, encoding), readAsDataURL(file), readAsBinaryString(file), readAsArrayBuffer(file)

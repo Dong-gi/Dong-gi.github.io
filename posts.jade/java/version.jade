@@ -28,7 +28,7 @@ html
                 li Collection.parallelStream » 멀티 코어 프로세싱 가능
                 li lazy evaluation : 최종연산 없이 중간연산을 실행하지 않음.
                 li
-                    button.btn-code(path='Repositories/Eclipse/Basic/src/io/github/donggi/StreamExample.java', lan='java') 예시 코드 »
+                    +codeBtn('Repositories/Eclipse/Basic/src/io/github/donggi/StreamExample.java', 'java') 예시 코드 »
         hr
         details
             summary Java 9
@@ -80,21 +80,21 @@ html
                 ol
                     li 먼저, 결과물의 디렉터리 구조를 보면 src 루트에 module-info.java가 존재함을 볼 수 있다.
                     img.w3-round(src='imgs/20180827_230700.png')
-                    button.btn-code(path='Repositories/Eclipse/TestModule1/src/module-info.java', lan='java') TestModule1/src/module-info.java »
+                    +codeBtn('Repositories/Eclipse/TestModule1/src/module-info.java', 'java') TestModule1/src/module-info.java »
                     li second라는 이름의 모듈이 필요함을 정의했고, second 모듈을 찾기 위해서 TestModule2 프로젝트를 참조하도록 설정해야 한다.
                     img.w3-round(src='imgs/20180827_230710.png')
                     li second 모듈에서는 hello 패키지를 외부에서 사용할 수 있게 정의.
-                    button.btn-code(path='Repositories/Eclipse/TestModule2/src/module-info.java', lan='java') TestModule2/src/module-info.java »
+                    +codeBtn('Repositories/Eclipse/TestModule2/src/module-info.java', 'java') TestModule2/src/module-info.java »
                     li
-                        button.btn-code(path='Repositories/Eclipse/TestModule2/src/hello/HelloWorld.java', lan='java') hello.HelloWorld »
-                        button.btn-code(path='Repositories/Eclipse/TestModule1/src/test/Test.java', lan='java') 를 first 모듈에서 사용하는 예 »
+                        +codeBtn('Repositories/Eclipse/TestModule2/src/hello/HelloWorld.java', 'java') hello.HelloWorld »
+                        +codeBtn('Repositories/Eclipse/TestModule1/src/test/Test.java', 'java') 를 first 모듈에서 사용하는 예 »
             ol
                 li REPL로 JShell이 추가되었다 : 코드를 한줄씩 실행하면서 검사할 수 있다.
                 a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://docs.oracle.com/javase/9/jshell/toc.htm') https://docs.oracle.com/javase/9/jshell/toc.htm
                 li Collection factory method 추가 : List.of(...) 등
                 li
                     | try-with-resources 구문 변동 : final한(final 변수 or 변수 초기화 후 변경 없음) resource는 별개의 선언 없이 그대로 이용할 수 있다.
-                button.btn-code(path='Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java', lan='java') 예시 코드 »
+                +codeBtn('Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java', 'java') 예시 코드 »
                 li 타입 추론 강화로 diamond 연산자 &lt;>가 익명 클래스도 지원
                 li "_"는 더 이상 유효한 식별자가 아니게 되었다.
                 li private 인터페이스 메서드 지원
@@ -109,7 +109,7 @@ html
                     li 기존 for 루프 인덱스에 이용 가능
                     li
                         | try-with-resources 변수에 이용 가능
-                        button.btn-code(path='Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java', lan='java') 예시 코드 »
+                        +codeBtn('Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java', 'java') 예시 코드 »
                 li 변경 불가능한 collection 생성 메서드 추가 : toUnmodifiableList 등
                 li javadoc 커맨드라인 옵션에 --add-stylesheet 추가 : 여러 css 이용 가능
         hr
@@ -127,7 +127,7 @@ html
         details
             summary Java 12
             |     Switch 표현식(Preview)
-            button.btn-code(path='Repositories/Eclipse/Basic/src/io/github/donggi/SwitchExpression.java', lan='java') 예시 코드 »
+            +codeBtn('Repositories/Eclipse/Basic/src/io/github/donggi/SwitchExpression.java', 'java') 예시 코드 »
         hr
         details
             summary Java 13

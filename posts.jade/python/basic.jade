@@ -36,7 +36,7 @@ include ../../source/skeleton.jade
             li ** : 거듭제곱
             li
                 | int() : 형변환, 소수점이나 지수가 표현된 문자열은 정수로 변환 불가
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[1,9]', lan: 'python' })
+                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[1,9]')
 
         h2.marker float
         ol
@@ -44,7 +44,7 @@ include ../../source/skeleton.jade
             li float 정밀도는 그대로 가진다.
             li
                 | float() : 형변환, 소수점이나 지수가 표현된 문자열은 정수로 변환 불가
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[12,17]', lan: 'python' })
+                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[12,17]')
 
         h2.marker complex
         p 복소수 a + bj
@@ -58,10 +58,10 @@ include ../../source/skeleton.jade
                 | * : 문자열 복제 연산자
                 br
                 | 문자열 리터럴은 단순히 공백을 기준으로 나열만 해도 연결된다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[20,22]', lan: 'python' })
+                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[20,22]')
             li
                 | ''' 또는 """로 열고 닫음으로써 여러 줄의 문자열 리터럴을 작성할 수 있다. 이진 문자열도 가능하다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[23,26]', lan: 'python' })
+                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[23,26]')
             li r'' → Raw String 리터럴. 이스케이프하지 않는다
             li
                 | str() : 사람이 읽기 편한 형태로 객체의 문자열 표현 반환
@@ -69,23 +69,23 @@ include ../../source/skeleton.jade
                 | repr() : 개발자를 위한 형태로 객체의 문자열 표현 반환. repr() 그대로 객체를 복원할 수 있도록 하자.
             li
                 | str은 시퀀스이므로 슬라이싱
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[28,33]', lan: 'python' }) 가능
+                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[28,33]') 가능
                 |  , len() 이용
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[35,35]', lan: 'python' }) 가능
+                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[35,35]') 가능
             li
                 | split() : 분리. 기본은 공백 문자
                 br
                 | join() : 문자열 접합
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[37,40]', lan: 'python' })
+                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[37,40]')
             li
                 | strip() : 앞뒤 문자열 제거. 기본은 공백 제거
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[42,43]', lan: 'python' })
+                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[42,43]')
             li
                 | 정렬
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[45,50]', lan: 'python' })
+                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[45,50]')
             li
                 | replace() : 부분 문자열 대체
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[52,53]', lan: 'python' })
+                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[52,53]')
 
         h2.marker Formatted string literal(aka. f-string) Since 3.6
         ul
@@ -106,10 +106,10 @@ include ../../source/skeleton.jade
                 | ] "}"
             li
                 | f_expression : 값을 산출하는 표현식
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/f_string.py', displayrange: '[1,2]', lan: 'python' })
+                +codeBtn('/Repositories/Python/Basic/f_string.py', 'python', '[1,2]')
             li
                 | conversion ::= "s" | "r" | "a"
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/f_string.py', displayrange: '[4,11]', lan: 'python' })
+                +codeBtn('/Repositories/Python/Basic/f_string.py', 'python', '[4,11]')
             p 각각 해당하는 함수를 호출한다 : !s → str(), !r → repr(), !a → ascii()
             li f_expression이 산출한 값이 conversion을 거쳐 __format__(format_spec)으로 포매팅된다
             li
@@ -131,7 +131,7 @@ include ../../source/skeleton.jade
             li fill ::= 임의_문자
             li
                 | align ::= "&lt;" | ">" | "=" | "^"
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/f_string.py', displayrange: '[13,17]', lan: 'python' })
+                +codeBtn('/Repositories/Python/Basic/f_string.py', 'python', '[13,17]')
             li sign ::= "+" | "-" | " "
             li '#' 옵션이 있으면 2, 8, 16진수 앞에 '0b', '0o', '0x'를 각각 붙인다.
             li width ::= digit+
@@ -142,19 +142,19 @@ include ../../source/skeleton.jade
         h2.marker list
         p
             | 가변 시퀀스
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[56,57]', lan: 'python' }) 생성 : [], list()
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[59,61]', lan: 'python' }) 슬라이스
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[63,66]', lan: 'python' }) 리스트 병합 : +, extend()
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[68,80]', lan: 'python' }) 요소 추가/삭제
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[82,85]', lan: 'python' }) 검색
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[87,91]', lan: 'python' }) 정렬
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[93,109]', lan: 'python' }) 복사
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[56,57]') 생성 : [], list()
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[59,61]') 슬라이스
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[63,66]') 리스트 병합 : +, extend()
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[68,80]') 요소 추가/삭제
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[82,85]') 검색
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[87,91]') 정렬
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[93,109]') 복사
 
         h2.marker tuple
         p
             | 불변 시퀀스. 불변이므로 딕셔너리의 키로 사용 가능.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[112,116]', lan: 'python' }) 생성, 병합
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[118,121,191,198]', lan: 'python' }) 튜플 패킹/언패킹
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[112,116]') 생성, 병합
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[118,121,191,198]') 튜플 패킹/언패킹
 
         h2.marker collections.namedtuple
         p
@@ -166,30 +166,30 @@ include ../../source/skeleton.jade
 
         h2.marker set
         p
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[124,131]', lan: 'python' }) 생성, 요소 추가
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[133,143]', lan: 'python' }) 원소 포함 여부
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[145,158]', lan: 'python' }) 집합 연산
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[124,131]') 생성, 요소 추가
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[133,143]') 원소 포함 여부
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[145,158]') 집합 연산
 
         h2.marker dict
         p
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[161,178]', lan: 'python' }) 생성, 병합
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[180,183]', lan: 'python' }) 키-값 얻기
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/type_example.py', displayrange: '[185,189]', lan: 'python' }) 복사
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[161,178]') 생성, 병합
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[180,183]') 키-값 얻기
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[185,189]') 복사
 
     h1.marker 구문
     p
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[1,2]', lan: 'python' }) 라인 유지 \
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[4,10]', lan: 'python' }) if ~ elif ~ else
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[12,20]', lan: 'python' }) while
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[22,27]', lan: 'python' }) for
+        +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[1,2]') 라인 유지 \
+        +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[4,10]') if ~ elif ~ else
+        +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[12,20]') while
+        +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[22,27]') for
     ol
         li for
         p for문은 순회 객체에 대하여 iter()를 호출한다. iter()는 __next__() 메서드를 정의한 iterator 객체를 반환하며, __next__()가 전달하는 값을 하나씩 루프에 사용한다.
         p 더 이상 요소가 없을 때 __next__()는 StopIteration 예외를 발생시키고, for 루프는 종료된다. 클래스 자체에 __next__()가 정의되어 있다면, iter()는 self를 반환하는 것으로 충분하다.
         li 콤마로 구분된 값들을 자동으로 튜플로 구성하여 다중 할당, 다중 반환이 가능하다.
         p
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[29,34]', lan: 'python' }) 다중 할당 예시 : 피보나치 수열 »
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[37,46]', lan: 'python' }) 다중 반환 예시 : 최대공약수/최소공배수 »
+            +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[29,34]') 다중 할당 예시 : 피보나치 수열 »
+            +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[37,46]') 다중 반환 예시 : 최대공약수/최소공배수 »
         li else
         ul
             li for/else : break로 멈추지 않고, for 루프가 완전히 실행된 후에 else 블록이 실행된다.
@@ -202,12 +202,12 @@ include ../../source/skeleton.jade
             li 여러 시퀀스 동시 순회 : zip()
             p
                 | 같은 오프셋의 요소들로 튜플을 생성. 시퀀스가 하나라도 끝나면 순회 종료.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[48,49]', lan: 'python' })
+                +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[48,49]')
                 br
                 | 길이가 긴 시퀀스를 기준으로 하는 itertools.zip_longest()도 존재
             li
                 | comprehension : 순회를 통해 리스트, 딕셔너리, 셋 등 생성
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[52,89]', lan: 'python' })
+                +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[52,89]')
             p 파이썬 3에서 comprehension은 함수처럼 고유한 지역 범위를 가진다.
         li Monkey patching
         p 소스 코드를 건드리지 않고 런타임에 클래스나 모듈을 변경하는 행위
@@ -219,35 +219,35 @@ include ../../source/skeleton.jade
             | 함수 정의 def
             i func_name
             | ():
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[91,100]', lan: 'python' })
+            +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[91,100]')
         +asCode('python') def func(a, b, *, c = None):
         p * 뒷부분은 키워드 인자로만 보낼 수 있다
         li return이 없으면 호출자는 None을 얻는다. None 검사 : is None
         li docstring : 함수 body 첫 줄에 문자열로 함수 설명. help()로 출력된다.
         li
             | 함수 외부 scope에 접근할 수 있다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[102,105]', lan: 'python' })
+            +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[102,105]')
         li
             | 디폴트 매개변수, 키워드 매개변수, 매개변수 타입 바운딩
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[107,119]', lan: 'python' })
+            +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[107,119]')
         li
             | * : 인자를 튜플로. ** : 인자를 딕셔너리로.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[121,131]', lan: 'python' })
+            +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[121,131]')
         li
             | 함수 내부에 함수 정의 가능
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[133,138]', lan: 'python' })
+            +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[133,138]')
         li
             | 람다 함수 : lambda
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[133,136,140,141]', lan: 'python' })
+            +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[133,136,140,141]')
         li Generator
         p
             | 자료를 순회할 때마다 다음 항목 반환. __iter__()와 __next__()를 자동으로 생성하고, StopIteration 예외도 자동으로 발생시킨다. cf. range() : 미리 모든 값을 생성한다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[143,150]', lan: 'python' })
+            +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[143,150]')
         p 다중 반복을 지원하려면 동일 객체에 대해 iter()를 호출할 때마다 독립적인 반복자가 새로 만들어져야 한다. 이를 파이썬스럽게 구현하려면 새로운 Iterator 인스턴스 대신 제너레이터(특히 Generator Comprehension)를 반환하면 된다.
         li Decorator
         p
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[153,169]', lan: 'python' }) 함수 데커레이터
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[171,184]', lan: 'python' }) 클래스 데커레이터
+            +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[153,169]') 함수 데커레이터
+            +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[171,184]') 클래스 데커레이터
 
     h1.marker namespace
     ol
@@ -257,18 +257,18 @@ include ../../source/skeleton.jade
         li 함수는 지역 네임스페이스를 정의
         p
             | locals() : 지역 네임스페이스 정보를 담은 딕셔너리
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/scope_example.py', displayrange: '[31, 45]', lan: 'python' }) nonlocal을 이용한 클로저 »
+            +codeBtn('/Repositories/Python/Basic/scope_example.py', 'python', '[31, 45]') nonlocal을 이용한 클로저 »
         li global 키워드로 전역 변수 접근
         p
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/scope_example.py', displayrange: '[1, 29]', lan: 'python' })
+            +codeBtn('/Repositories/Python/Basic/scope_example.py', 'python', '[1, 29]')
             |  출처 : 
             +asA('https://docs.python.org/3/tutorial/classes.html#scopes-and-namespaces-example')
 
     h1.marker 예외
     p
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/try_except.py', displayrange: '[1,5]', lan: 'python' }) try: ~ except:
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/try_except.py', displayrange: '[7,11]', lan: 'python' }) except ExceptionType as name:
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/try_except.py', displayrange: '[13,20]', lan: 'python' }) raise MyException("Don't Worry")
+        +codeBtn('/Repositories/Python/Basic/try_except.py', 'python', '[1,5]') try: ~ except:
+        +codeBtn('/Repositories/Python/Basic/try_except.py', 'python', '[7,11]') except ExceptionType as name:
+        +codeBtn('/Repositories/Python/Basic/try_except.py', 'python', '[13,20]') raise MyException("Don't Worry")
 
     h1.marker 모듈
     ol
@@ -284,7 +284,7 @@ include ../../source/skeleton.jade
         li reload(module)
         li
             | 처음 실행되는 모듈의 __name__ 속성은 "__main__"이다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/fibonacci_example.py', lan: 'python' }) fibonacci_example.py »
+            +codeBtn('/Repositories/Python/Basic/fibonacci_example.py', 'python') fibonacci_example.py »
         li 모듈 탐색 경로 추가 sys.path.append('/usr/me/some_directory')
         li dir()을 이용해 모듈에 정의된 것들을 확인할 수 있다.
 
@@ -296,16 +296,16 @@ include ../../source/skeleton.jade
 
     h1.marker 클래스
     p
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/class_example.py', displayrange: '[1,8]', lan: 'python' }) 클래스 예
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/class_example.py', displayrange: '[10,12]', lan: 'python' }) 속성 삭제 del
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/class_example.py', displayrange: '[25,30]', lan: 'python' }) 속성 추가
+        +codeBtn('/Repositories/Python/Basic/class_example.py', 'python', '[1,8]') 클래스 예
+        +codeBtn('/Repositories/Python/Basic/class_example.py', 'python', '[10,12]') 속성 삭제 del
+        +codeBtn('/Repositories/Python/Basic/class_example.py', 'python', '[25,30]') 속성 추가
     ol
         li
             | 객체 메서드를 표현하는 객체도 속성들을 갖는다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/class_example.py', displayrange: '[15,22]', lan: 'python' })
+            +codeBtn('/Repositories/Python/Basic/class_example.py', 'python', '[15,22]')
         li
             | Name mangling : 파이썬은 기본적으로 접근 한정자가 없다. 다른 언어의 private과 같은 사용과 함께 이름 충돌을 회피하기 위해 2개 이상의 '_'로 시작하는 식별자는 내부적으로 앞에 '_classname'이 덧붙여 구분된다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/class_example.py', displayrange: '[33,48,51,67]', lan: 'python' })
+            +codeBtn('/Repositories/Python/Basic/class_example.py', 'python', '[33,48,51,67]')
         li 다중 상속
         p 메서드 결정 순서(Method Resolution Order)는 __mro__ 속성을 따른다.
 
@@ -355,7 +355,7 @@ include ../../source/skeleton.jade
     ol
         li
             | 약한 참조 : 캐시와 같이 객체 카운트를 증가시키지 않고 객체를 참조.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/weakref_example.py', lan: 'python' })
+            +codeBtn('/Repositories/Python/Basic/weakref_example.py', 'python')
         li WeakValueDictionary : 약한 참조를 값으로 가지는 가변 매핑. 객체가 GC 수집되면 키가 자동으로 제거된다. + WeakSet
         li weakref.finalize(참조변수, 콜백) # 객체 소멸시 실행될 콜백 등록
 

@@ -10,7 +10,7 @@ include ../../source/skeleton.jade
         li Docker registry
         p
             | 이미지 저장소.
-            +w3a()&attributes({target:'_blank', href:'https://hub.docker.com/'}) Docker Hub
+            +asA('https://hub.docker.com/', 'Docker Hub')
             | 는 누구나 이용할 수 있는 퍼블릭 레지스트리로, 도커에서 기본적으로 검색하는 저장소다
         p Private registry 생성
         +asCode('shell') docker service create --name registry -p 5000:5000 registry
@@ -20,7 +20,7 @@ include ../../source/skeleton.jade
             br
             | CONTAINER : 실행 가능한 IMAGE 인스턴스
             br
-            +w3a()&attributes({target:'_blank', href:'https://docs.docker.com/engine/reference/builder/'}) Dockerfile
+            +asA('https://docs.docker.com/engine/reference/builder/', 'Dockerfile')
             |  : 이미지 빌드 절차
 
     h1.marker Dockerfile
@@ -125,7 +125,7 @@ include ../../source/skeleton.jade
             li SHELL ["executable", "param1", "param2"]
             li RUN, CMD, ENTRYPOINT 기본 쉘 변경
 
-    h1.marker: +w3a()&attributes({target:'_blank', href:'https://docs.docker.com/engine/reference/commandline/docker/'}) Commands
+    h1.marker: +asA('https://docs.docker.com/engine/reference/commandline/docker/', 'Commands')
     div
         h2.marker docker build [OPTIONS] PATH | URL | -
         +asCode('shell') docker image build [OPTIONS] PATH | URL | - # 와 동일
@@ -327,7 +327,7 @@ include ../../source/skeleton.jade
         h2.marker Swarm
         +asCode().
             docker swarm init
-            
+
             docker service create --name demo alpine:3.5 ping 1.1.1.1
             docker service ps
             docker service logs demo

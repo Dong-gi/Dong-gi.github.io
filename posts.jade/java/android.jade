@@ -8,20 +8,20 @@ include ../../source/skeleton.jade
             li MainActivity.java
             p
                 | 앱을 실행하면 이 클래스의 인스턴스가 실행되고 layout을 로드한다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project01/app/src/main/java/io/github/donggi/project01/MainActivity.java', lan: 'java' }) MainActivity.java »
+                +codeBtn('/Repositories/Android/Project01/app/src/main/java/io/github/donggi/project01/MainActivity.java', 'java') MainActivity.java »
             li activity_main.xml
             p
                 | 액티비티의 UI를 정의한다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project01/app/src/main/res/layout/activity_main.xml', lan: 'xml' }) activity_main.xml »
+                +codeBtn('/Repositories/Android/Project01/app/src/main/res/layout/activity_main.xml', 'xml') activity_main.xml »
             li AndroidManifest.xml
             p
                 | 앱의 기본적인 특성을 기술하고, 각 컴포넌트를 정의한다.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project01/app/src/main/AndroidManifest.xml', lan: 'xml' }) AndroidManifest.xml »
+                +codeBtn('/Repositories/Android/Project01/app/src/main/AndroidManifest.xml', 'xml') AndroidManifest.xml »
             li build.gradle
             p
                 | 앱의 컴파일과 빌드에 관한 구성 설정.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project01/build.gradle', lan: 'gradle' }) Project Gradle »
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project01/app/build.gradle', lan: 'gradle' }) "app" module Gradle »
+                +codeBtn('/Repositories/Android/Project01/build.gradle', 'gradle') Project Gradle »
+                +codeBtn('/Repositories/Android/Project01/app/build.gradle', 'gradle') "app" module Gradle »
 
         h2.marker 앱 컴포넌트
         ol
@@ -60,7 +60,7 @@ include ../../source/skeleton.jade
 
                 &lt;!-- API 7이상 -->
                 &lt;uses-sdk android:minSdkVersion="7" android:targetSdkVersion="19" />
-            
+
             li application 엘리먼트
             p 많은 메모리를 필요로 하는 경우에만 android:largeHeap 속성 이용
 
@@ -99,7 +99,7 @@ include ../../source/skeleton.jade
                 li 버튼, 텍스트 박스 등의 UI 요소
                 p
                     | TextView, EditText, Button, ImageView, Switch, ...
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project04/app/src/main/res/layout/activity_main2.xml', lan: 'xml' })
+                    +codeBtn('/Repositories/Android/Project04/app/src/main/res/layout/activity_main2.xml', 'xml')
                 li id 속성 : @[+]id/ID
                 p ID를 할당할 때는 +를 앞에 붙여 R 클래스의 상수로 등록되도록 한다.
                 li layout_width, layout_height : 너비, 높이
@@ -119,57 +119,57 @@ include ../../source/skeleton.jade
                 p baselineAligned 속성으로 요소들의 아래 줄을 일치시킬 지 여부를 지정할 수 있다
                 p
                     | 요소의 layout_weight 속성으로 너비/높이를 일정 비율씩 나눠가질 수 있다.
-                    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project04/app/src/main/res/layout/activity_main.xml', lan: 'xml' })
+                    +codeBtn('/Repositories/Android/Project04/app/src/main/res/layout/activity_main.xml', 'xml')
                 li GridLayout
                 p 화면의 가로/세로(columnCount/rowCount)를 잘라 만든 격자를 이용해 배치.
             li UI를 업데이트할 때엔 새 Runnable을 생성해 activity.runOnUiThread() 호출
             li EventListener
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project04/app/src/main/res/layout/activity_main3.xml', lan: 'xml' }) xml »
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project04/app/src/main/java/io/github/donggi/project04/Main3Activity.java', lan: 'java' }) java »
+            +codeBtn('/Repositories/Android/Project04/app/src/main/res/layout/activity_main3.xml', 'xml') xml »
+            +codeBtn('/Repositories/Android/Project04/app/src/main/java/io/github/donggi/project04/Main3Activity.java', 'java') java »
             li 테마 적용 예
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project05/app/src/main/AndroidManifest.xml', lan: 'xml' }) AndroidManifest.xml »
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project05/app/src/main/res/layout/activity_main.xml', lan: 'xml' }) activity_main.xml »
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project05/app/src/main/java/io/github/donggi/project05/MainActivity.java', lan: 'java' }) MainActivity.java »
+            +codeBtn('/Repositories/Android/Project05/app/src/main/AndroidManifest.xml', 'xml') AndroidManifest.xml »
+            +codeBtn('/Repositories/Android/Project05/app/src/main/res/layout/activity_main.xml', 'xml') activity_main.xml »
+            +codeBtn('/Repositories/Android/Project05/app/src/main/java/io/github/donggi/project05/MainActivity.java', 'java') MainActivity.java »
             li BottomNavigationView
             p
                 | com.google.android.material:material 포함.
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project04/app/build.gradle', lan: 'gradle' }) "app" module Gradle »
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project04/app/src/main/res/layout/activity_main4.xml', lan: 'xml' }) activity xml »
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project04/app/src/main/res/layout/navigator.xml', lan: 'xml' }) navigator xml »
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project04/app/src/main/res/menu/navigation.xml', lan: 'xml' }) navigation xml »
+                +codeBtn('/Repositories/Android/Project04/app/build.gradle', 'gradle') "app" module Gradle »
+                +codeBtn('/Repositories/Android/Project04/app/src/main/res/layout/activity_main4.xml', 'xml') activity xml »
+                +codeBtn('/Repositories/Android/Project04/app/src/main/res/layout/navigator.xml', 'xml') navigator xml »
+                +codeBtn('/Repositories/Android/Project04/app/src/main/res/menu/navigation.xml', 'xml') navigation xml »
             p Used icons made by
-            +w3a()&attributes({target:'_blank', href:'https://www.flaticon.com/authors/smashicons'}) Smashicons
+            +asA('https://www.flaticon.com/authors/smashicons', 'Smashicons')
             |  from
-            +w3a()&attributes({target:'_blank', href:'https://www.flaticon.com/'}) www.flaticon.com
+            +asA('https://www.flaticon.com/', 'www.flaticon.com')
             |  is licensed by
-            +w3a()&attributes({target:'_blank', href:'http://creativecommons.org/licenses/by/3.0/'}) CC 3.0 BY
+            +asA('http://creativecommons.org/licenses/by/3.0/', 'CC 3.0 BY')
 
     h1.marker SQLite
     ol
         li https://developer.android.com/jetpack/androidx/releases/room
         li https://developer.android.com/training/data-storage/room
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project06/app/build.gradle', lan: 'gradle' }) "app" module Gradle »
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project06/app/src/main/java/io/github/donggi/project06/dto/User.java', lan: 'java' }) User.java »
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project06/app/src/main/java/io/github/donggi/project06/dao/UserDao.java', lan: 'java' }) UserDao.java »
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project06/app/src/main/java/io/github/donggi/project06/DB.java', lan: 'java' }) DB.java »
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project06/app/src/main/java/io/github/donggi/project06/MainActivity.java', lan: 'java' }) MainActivity.java »
+        +codeBtn('/Repositories/Android/Project06/app/build.gradle', 'gradle') "app" module Gradle »
+        +codeBtn('/Repositories/Android/Project06/app/src/main/java/io/github/donggi/project06/dto/User.java', 'java') User.java »
+        +codeBtn('/Repositories/Android/Project06/app/src/main/java/io/github/donggi/project06/dao/UserDao.java', 'java') UserDao.java »
+        +codeBtn('/Repositories/Android/Project06/app/src/main/java/io/github/donggi/project06/DB.java', 'java') DB.java »
+        +codeBtn('/Repositories/Android/Project06/app/src/main/java/io/github/donggi/project06/MainActivity.java', 'java') MainActivity.java »
 
     h1.marker 권한 요청
-    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project03/app/src/main/java/io/github/donggi/project03/MainActivity.java', lan: 'java' }) MainActivity.java »
-    +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project03/app/src/main/AndroidManifest.xml', lan: 'xml' }) AndroidManifest.xml »
+    +codeBtn('/Repositories/Android/Project03/app/src/main/java/io/github/donggi/project03/MainActivity.java', 'java') MainActivity.java »
+    +codeBtn('/Repositories/Android/Project03/app/src/main/AndroidManifest.xml', 'xml') AndroidManifest.xml »
 
     h1.marker 알림 보내기
     p
         | 매니페스트 설정 불필요
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project02/app/src/main/res/layout/activity_main.xml', lan: 'xml' }) activity_main.xml »
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project02/app/src/main/java/io/github/donggi/project02/MainActivity.java', lan: 'java' }) MainActivity.java »
+        +codeBtn('/Repositories/Android/Project02/app/src/main/res/layout/activity_main.xml', 'xml') activity_main.xml »
+        +codeBtn('/Repositories/Android/Project02/app/src/main/java/io/github/donggi/project02/MainActivity.java', 'java') MainActivity.java »
 
     h1.marker SensorManager
     ul
         li https://developer.android.com/guide/topics/sensors/sensors_overview.html?hl=ko
         li SensorManager, Sensor, SensorEvent, SensorEventListener
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project07/app/src/main/java/io/github/donggi/project07/example/ListAllSensorsExample.java', lan: 'java' }) ListAllSensorsExample.java »
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project07/app/src/main/java/io/github/donggi/project07/example/AccelerometerExample.java', lan: 'java' }) AccelerometerExample.java »
+        +codeBtn('/Repositories/Android/Project07/app/src/main/java/io/github/donggi/project07/example/ListAllSensorsExample.java', 'java') ListAllSensorsExample.java »
+        +codeBtn('/Repositories/Android/Project07/app/src/main/java/io/github/donggi/project07/example/AccelerometerExample.java', 'java') AccelerometerExample.java »
         li 걸음 감지 예
         +asCode('java').
             for(int i = 0; i &lt; 3; ++i)
@@ -198,12 +198,12 @@ include ../../source/skeleton.jade
             li void requestLocationUpdates(String provider, long minTime, float minDistance, LocationListener listener) + removeUpdates
             p
                 | minTime : 업데이트 간 최소 시간(ms), minDistance : 업데이트 간 최소 거리(m)
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project07/app/src/main/java/io/github/donggi/project07/example/LocationExample.java', lan: 'java' }) LocationExample.java »
+                +codeBtn('/Repositories/Android/Project07/app/src/main/java/io/github/donggi/project07/example/LocationExample.java', 'java') LocationExample.java »
             li void requestSingleUpdate (String provider, PendingIntent intent)
             li void addProximityAlert (double latitude, double longitude, float radius, long expiration, PendingIntent intent) + removeProximityAlert
             p
                 | 근접 경보. 등록한 영역에 들어가거나 나갈 때 인텐트로 알림. ACCESS_FINE_LOCATION 권한 필요
-                +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Android/Project07/app/src/main/java/io/github/donggi/project07/example/ProximityAlertExample.java', lan: 'java' }) ProximityAlertExample.java »
+                +codeBtn('/Repositories/Android/Project07/app/src/main/java/io/github/donggi/project07/example/ProximityAlertExample.java', 'java') ProximityAlertExample.java »
             p expiration : 기한 내에 도착하지 못하면 알림 취소. -1이면 무기한.
             p intent로 KEY_PROXIMITY_ENTERING이라는 boolean 값 전달. true면 들어가는 것, false면 나가는 것.
 

@@ -22,7 +22,7 @@ include ../../source/skeleton.jade
         complex            # 실수부(z.real) 허수부(z.imag)는 각각 float이다.
         fractions.Fraction # 유리수
         decimal.Decimal    # 사용자 정의 정밀도 부동소수
-        
+
         # 산술 연산
         x + y
         x - y
@@ -40,7 +40,7 @@ include ../../source/skeleton.jade
         divmod(x, y)
         pow(x, y)
         x ** y
-        
+
         # 비트 연산
         x | y
         x ^ y
@@ -48,7 +48,7 @@ include ../../source/skeleton.jade
         x &lt;&lt; n
         x >> n
         ~x
-        
+
         # int(numbers.Integral 구현체) 확장 연산
         int.bit_length()
             # Since 3.1, 비트 길이
@@ -56,7 +56,7 @@ include ../../source/skeleton.jade
             # Since 3.2, byteorder : "big" | "little" | sys.byteorder
         classmethod int.from_bytes(bytes, byteorder, *, signed=False)
             # Since 3.2, bytes는 bytes-like object거나 byte iterable이어야 한다
-        
+
         # float(numbers.Real 구현체) 확장 연산
         float.as_integer_ratio()
             # (분자, 분모) 튜플을 반환한다. 분모는 양수.
@@ -65,7 +65,7 @@ include ../../source/skeleton.jade
             # 0x로 시작하고 p로 끝난뒤 지수가 붙는다. 지수의 base는 2
         classmethod float.fromhex(s)
             # C의 %a 포맷과 Java의 Double.toHexString()의 결과를 받아들일 수 있다.
-        
+
         # Hashing
         #     해시값은 modulo P 안에서 선택된다. P는 고정된 소수로, sys.hash_info에서 확인 가능
 
@@ -82,8 +82,8 @@ include ../../source/skeleton.jade
         h2.marker Generator Types
         p
             | generator는 iterator protocol을 쉽게 제공한다. container의 __iter__()가 generator로 정의된 경우, 자동으로 __iter__()와 __next__()를 지원하는 iterator 객체를 반환한다.
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[143,150]', lan: 'python' }) 예시 1 »
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/syntax.py', displayrange: '[70,76]', lan: 'python' }) 예시 2»
+            +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[143,150]') 예시 1 »
+            +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[70,76]') 예시 2»
 
     h1.marker Sequence Types
     ul
@@ -138,8 +138,8 @@ include ../../source/skeleton.jade
     h1.marker Text Sequence Type
     p
         | str 객체 또는 유니코드 시퀀스 strings로 표현하며, 모두 내용은 변경 불가능하다.
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/format_map_example.py', lan: 'python' }) format_map 예시 »
-        +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/translate_example.py', lan: 'python' }) translate 예시 »
+        +codeBtn('/Repositories/Python/Basic/format_map_example.py', 'python') format_map 예시 »
+        +codeBtn('/Repositories/Python/Basic/translate_example.py', 'python') translate 예시 »
     +asCode('python').
         casefold() # lower()보다 강한 변환
         swapcase() # 두 번 적용한 것이 원본과 항상 같지는 않다
@@ -159,7 +159,7 @@ include ../../source/skeleton.jade
             # suffix, prefix에 튜플도 가능
 
         encode(encoding="utf-8", errors="strict")
-        
+
         expandtabs(tabsize=8)
             # 오피스 문서와 같은 탭 작업.
             # 문자열 끝에 탭이 존재하면, 반환된 문자열의 길이는 tabsize의 배수가 된다.
@@ -188,7 +188,7 @@ include ../../source/skeleton.jade
         partition(sep)
         rpartition(sep)
             # 처음 만나는 sep을 기준으로 분리하여, (앞부분, sep, 뒷부분)을 반환. sep이 없을 경우 (sep, '', '')반환.
-        
+
         join(iterable)
             # iterable 문자열들을 str로 접합
         split(sep=None, maxsplit=-1)
@@ -225,7 +225,7 @@ include ../../source/skeleton.jade
         li.marker bytes and bytearray Operations
         +asCode('python').
             decode(encoding="utf-8", errors="strict")
-            
+
             # str 유사 메서드가 많다. 아래는 차이점만 기술
             count(), find(), index()
                 # sub는 bytes-like object거나 [0, 255] 사이의 정수(Since 3.3)여야 한다.
@@ -242,8 +242,8 @@ include ../../source/skeleton.jade
             li Since 3.3 → 1차원 memoryview는 slicing 가능
             li Since 3.4 → memoryview는 자동으로 collections.abc.Sequence
             li Since 3.5 → 정수 tuple로 indexing 가능
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/tobytes_example.py', lan: 'python' }) tobytes 예 »
-            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Python/Basic/cast_example.py', lan: 'python' }) cast 예 »
+            +codeBtn('/Repositories/Python/Basic/tobytes_example.py', 'python') tobytes 예 »
+            +codeBtn('/Repositories/Python/Basic/cast_example.py', 'python') cast 예 »
         +asCode('python').
             __eq__(exporter)
                 # struct 모듈이 지원하지 않는 객체와의 비교는 False
@@ -258,12 +258,12 @@ include ../../source/skeleton.jade
                 # Since 3.8
             release()
                 # Since 3.2, buffer 해제. 이후 다른 연산은 ValueError
-            
+
             cast(format[, shape])
                 # Since 3.3, 같은 buffer를 참조하는 새 memoryview 객체를 반환한다.
                 # format은 struct syntax로 지정하며, 가능한 포맷은 'B'(unsigned char), 'b'(signed char), 'c'(char)
                 # shape 기본값은 [byte_length//new_itemsize]
-            
+
             // 인스턴스 프로퍼티
             obj          # Since 3.3, memoryview의 기저 객체
             readonly     # 객체가 readonly인지 여부
@@ -292,7 +292,7 @@ include ../../source/skeleton.jade
             x in s
             x not in s
             for x in set
-            
+
             isdisjoint(other)                  # 교집합이 공집합인지 여부
             issubset(other)                    # 연산자 &lt;=, &lt;로도 가능
             issuperset(other)                  # 연산자 >=, >로도 가능
@@ -304,7 +304,7 @@ include ../../source/skeleton.jade
             intersection_update(*others)       # 모든 집합에 속하는 공통 원소들만 보존. set &= other & ...
             difference_update(*others)         # 호출자에 속하는 원소들만 보존. set -= other | ...
             symmetric_difference_update(other) # set ^= other
-            
+
             # ↓ elem은 set일 수 있다.
             copy()
             add(elem)
@@ -328,7 +328,7 @@ include ../../source/skeleton.jade
             c = dict(zip(['one', 'two', 'three'], [1, 2, 3]))
             d = dict([('two', 2), ('one', 1), ('three', 3)])
             e = dict({'three': 3, 'one': 1, 'two': 2})
-            
+
             a == b == c == d == e
         div
             h3.marker Dictionary Operations
@@ -343,7 +343,7 @@ include ../../source/skeleton.jade
                 copy()
                 clear()
                 list(d) # 키 리스트 반환
-                
+
                 classmethod fromkeys(seq[, value])
                     # seq를 키로 하는 dict 반환. value의 기본값은 None
                 get(key[, default])
@@ -354,15 +354,15 @@ include ../../source/skeleton.jade
                     # key에 대한 view 반환
                 values()
                     # value에 대한 view 반환
-                
+
                 pop(key[, default])
                 popitem() # 임의 키-값 쌍 제거
-                
+
                 setdefault(key[, default])
                     # key가 있으면 value 반환, 없으면 default로 추가하고 defualt 반환. 둘 다 없으면 KeyError
                 update([other])
                     # other에는 dict 생성 인자들 모두 허용된다.
-                
+
                 # Since 3.8 → dict 순서를 reversed()로 뒤집을 수 있다
 
             h3.marker Dictionary view objects
