@@ -1,5 +1,5 @@
 include ../../source/skeleton.jade
-+post('Python Built-in Functions', 'Python, Built-in, Functions', 'Python 내장 함수 정리')
++post('Python Built-in Functions', 'Python, Built-in, Function', 'Python 내장 함수 정리')
     h1.marker 타입 관련
     div
         div.marker: +asCode('python') class bool([x])
@@ -259,14 +259,12 @@ include ../../source/skeleton.jade
             li 파일을 열고 file 객체를 반환한다. 텍스트 모드의 경우 io.TextIOBase, 이진 모드의 경우 io.BufferedIOBase
             li
                 | file :
-                a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://docs.python.org/3/glossary.html#term-path-like-object') path-like object
-            |         file이 file descriptor인 경우, closefd가 False면 반환된 객체가 닫혀도 descriptor를 닫지 않는다
-            li
-                | mode : r(읽기, default), w(쓰기, 파일 처음부터), x(없으면 생성), a(이어 쓰기), b(이진), t(텍스트, default), +(읽기+쓰기)
+                +w3a()&attributes({target:'_blank', href:'https://docs.python.org/3/glossary.html#term-path-like-object'}) path-like object
+                | . file이 file descriptor인 경우, closefd가 False면 반환된 객체가 닫혀도 descriptor를 닫지 않는다
+            li mode : r(읽기, default), w(쓰기, 파일 처음부터), x(없으면 생성), a(이어 쓰기), b(이진), t(텍스트, default), +(읽기+쓰기)
             li encoding : 텍스트 모드에서만 사용. 주어지지 않은 경우 locale.getpreferredencoding(False) 이용.
-            |         가능한 인코딩 목록은 codecs 모듈에 정의됨.
+            p 가능한 인코딩 목록은 codecs 모듈에 정의됨.
             li 텍스트 IO와 이진 IO를 구별하며, 전자의 경우 str을, 후자의 경우 bytes를 반환한다.
             li buffering : 0(이진모드, 버퍼링 없음), 1(텍스트 모드, 라인 단위), > 1(바이트 사이즈 버퍼링)
         div.marker: +asCode('python') __import__(name, globals=None, locals=None, fromlist=(), level=0)
-        |         importlib.import_module()과 다르게 보통 직접 사용할 일 없는 함수. import 문을 통해 호출된다.
-    
+        p importlib.import_module()과 다르게 보통 직접 사용할 일 없는 함수. import 문을 통해 호출된다.
