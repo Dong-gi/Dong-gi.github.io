@@ -31,10 +31,13 @@ mixin w3button(color)
             else
                 |예시 코드 »
 
-mixin asA(href)
-    +w3a()&attributes({ href: href, target: '_blank' })&attributes(attributes)= href
+mixin codeBtn(path, lan, displayRange)
+    +w3button()&attributes({ class: 'btn-code', title: path, displayRange: displayRange, lan: lan || 'text' })&attributes(attributes)
         if block
             block
+
+mixin asA(href, text)
+    +w3a()&attributes({ href: href, target: '_blank' })&attributes(attributes)= text || href
 
 mixin ths(...cells)
     tr&attributes(attributes)

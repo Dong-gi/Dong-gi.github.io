@@ -1,22 +1,21 @@
-html
-    body
-        script(src='/source/redirect.js?200226_1657')
-        ol
-            li C 네이티브 코드를 이용할 클래스 컴파일 : javac Test.java → Test.class 생성
-            li C에서 이용할 헤더 파일 생성 : javah -jni Test → Test.h 생성
-            li
-                | VS에서 JDK path 추가 : 속성 - 포함 디렉터리 - "$(JAVA_HOME)\include", "$(JAVA_HOME)\include\win32 추가
-            li VS에서 dll 빌드 : 속성 - 구성(출력) 형식 - 동적 라이브러리(.dll) 설정
-            li 빌드한 dll을 이클립스 프로젝트 폴더 안으로 이동. x86 JRE/JDK를 이용하여 실행
-            |     Window - Preference - Installed JREs에 x86 있는지 확인.
+include ../../source/skeleton.jade
++post('JNI; Java Native Interface', 'JNI', 'Java Native Interface 정리')
+    ol
+        li C 네이티브 코드를 이용할 클래스 컴파일 : javac Test.java → Test.class 생성
+        li C에서 이용할 헤더 파일 생성 : javah -jni Test → Test.h 생성
+        li VS에서 JDK path 추가 : 속성 - 포함 디렉터리 - "$(JAVA_HOME)\include", "$(JAVA_HOME)\include\win32 추가
+        li VS에서 dll 빌드 : 속성 - 구성(출력) 형식 - 동적 라이브러리(.dll) 설정
+        li 빌드한 dll을 이클립스 프로젝트 폴더 안으로 이동. x86 JRE/JDK를 이용하여 실행
+        p
+            | Window - Preference - Installed JREs에 x86 있는지 확인.
             br
-            |     Run - Run Configurations...- x86 JRE로 설정
-            li References
-            a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://goo.gl/WqxXTE') https://goo.gl/WqxXTE
-            a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://goo.gl/QJDpRv') https://goo.gl/QJDpRv
-            a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://goo.gl/rrMwdr') https://goo.gl/rrMwdr
-            a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://goo.gl/5R2UMC') https://goo.gl/5R2UMC
-            li
-                button.btn-code(path='Repositories/Eclipse/Basic/jni/Test.java', lan='java') Java 예시 코드 »
-                button.btn-code(path='Repositories/Eclipse/Basic/jni/test.c', lan='c') C 예시 코드 »
-                a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://github.com/Dong-gi/Dong-gi.github.io/releases/') test.dll »
+            | Run - Run Configurations...- x86 JRE로 설정
+        li References
+        +asA('https://goo.gl/WqxXTE')
+        +asA('https://goo.gl/QJDpRv')
+        +asA('https://goo.gl/rrMwdr')
+        +asA('https://goo.gl/5R2UMC')
+        li
+            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/jni/Test.java', lan: 'java' }) Java 예시 코드 »
+            +w3button()&attributes({ class: 'btn-code', title: '/Repositories/Eclipse/Basic/jni/test.c', lan: 'c'}) C 예시 코드 »
+            +w3a()&attributes({target:'_blank', href:'https://github.com/Dong-gi/Dong-gi.github.io/releases/'}) test.dll »

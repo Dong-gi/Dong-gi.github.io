@@ -58,8 +58,8 @@ const posts = { list: [
 { file: "/posts/java/effective_java.html",                  category: "Programming/Java",               title: "『Effective Java』" },
 { file: "/posts/java/java_ee.html", category: "Programming/Java", title: "JavaEE" },
 { file: "/posts/java/javafx.html",                          category: "Programming/Java",               title: "JavaFX" },
-{ file: "/posts/java/jni.html", category: "Programming/Java", title: "Java Native Interface" },
-{ file: "/posts/java/oop.html", category: "Programming/Java", title: "Java 객체지향" },
+{ file: "/posts/java/jni.html",                             category: "Programming/Java",               title: "Java Native Interface" },
+{ file: "/posts/java/oop.html",                             category: "Programming/Java",               title: "Java 객체지향" },
 { file: "/posts/java/version.html", category: "Programming/Java", title: "Java 버전별 추가사항" },
 { file: "/posts/java/apache.commons.collections.html", category: "Programming/Java/apache.commons", title: "Apache Commons Collections 4.4" },
 { file: "/posts/java/apache.commons.lang.html", category: "Programming/Java/apache.commons", title: "Apache Commons Lang 3.9" },
@@ -354,7 +354,7 @@ function fillCodeDiv(div, lan, text, displayRange) {
             lines = hljs.highlight(lan, code)['value'].split(/\n/gm);
 
         let ol = document.createElement('ol');
-        displayRange = JSON.parse(displayRange || '[1, 100000000]');
+        displayRange = JSON.parse(displayRange || '[1, 100000000]') || [1, 100000000]);
         displayRange = displayRange.reverse();
 
         while (displayRange.length > 0) {
