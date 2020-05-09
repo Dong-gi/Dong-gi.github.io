@@ -8,16 +8,35 @@ include ./source/skeleton.jade
 //- include ../../source/skeleton.jade
 +post('한 걸음씩...', 'blog, programming', '프로그래밍 블로그를 지향하는 정적 사이트')
     h1.marker Index
-    table.marker.no-sort
+    table.marker
         caption 수정사항
+        tr
+            th(pre-sort=1) 날짜
+            th 내용
+        +tds('2020-05-09', 'Jade 템플릿 적용 완료')
         +tds('2020-04-22', 'Jade 템플릿 적용 시작')
         +tds('2020-01-16', 'GoormIDE로 이전')
 
     h2.marker 별 건 없고 칸나쨩이나 보고가세요.
     +w3img('/imgs/kanna.gif', '칸나쨩').marker
-    
+
+    h2.marker 경력
+    table
+        tr
+            th(pre-sort=1) 시기
+            th 내용
+        tr
+            td 2018-05
+            td.hover-content(template-id='template-index-2') 산업기능요원 복무 시작@세시소프트
+        +tds('2018-02-20', '공학사 취득@한국기술교육대학교')
+        tr
+            td 2018-02-06
+            td.hover-content(template-id='template-index-1') 직업능력개발훈련교사 자격증 취득
+        +tds('2017-11-24', '정보처리기사 취득')
+        +tds('1995', '응애')
+
     h2.marker 주요 포스트
-    table.no-sort
+    table
         +ths('내용', '링크')
         tr
             td 오류 대응 목록
@@ -28,3 +47,26 @@ include ./source/skeleton.jade
         tr
             td WPF 데이터 툴
             td: +asA('/posts/project/wpf_data_tool.html')
+        tr
+            td java.base 모듈
+            td: +asA('/posts/algorithm/linear_algebra.html')
+        tr
+            td 선형 대수
+            td: +asA('/posts/algorithm/linear_algebra.html')
+
+
+    +hoverTemplate()#template-index-1
+        ul
+            li 통신서비스 3급
+            li 정보기술개발 3급
+            li 전자기기개발 3급
+            li 전자기기일반 3급
+    +hoverTemplate()#template-index-2
+        ol
+            li 서비스 게임 서버 운영
+            li 서비스 게임 이벤트 데이터 관리
+            p
+                | 관련 
+                +asA('/posts/project/wpf_data_tool.html', '데이터 툴')
+                |  제작 및 공유
+            li 서비스 게임 QA 대응

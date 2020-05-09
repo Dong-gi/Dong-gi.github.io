@@ -54,24 +54,25 @@ const posts = { list: [
 { file: "/posts/front/freemarker/xml_guide.html",           category: "Programming/FreeMarker",         title: "XML 처리 가이드 2.3.28" },
 { file: "/posts/java/android.html",                         category: "Programming/Java",               title: "Android" },
 { file: "/posts/java/basic.html",                           category: "Programming/Java",               title: "Java 시작하기" },
-{ file: "/posts/java/java.base.html",                       category: "Programming/Java",               title: "java.base 12" },
 { file: "/posts/java/effective_java.html",                  category: "Programming/Java",               title: "『Effective Java』" },
-{ file: "/posts/java/java_ee.html", category: "Programming/Java", title: "JavaEE" },
+{ file: "/posts/java/java_ee.html",                         category: "Programming/Java",               title: "JavaEE" },
 { file: "/posts/java/javafx.html",                          category: "Programming/Java",               title: "JavaFX" },
 { file: "/posts/java/jni.html",                             category: "Programming/Java",               title: "Java Native Interface" },
 { file: "/posts/java/oop.html",                             category: "Programming/Java",               title: "Java 객체지향" },
-{ file: "/posts/java/version.html", category: "Programming/Java", title: "Java 버전별 추가사항" },
-{ file: "/posts/java/apache.commons.collections.html", category: "Programming/Java/apache.commons", title: "Apache Commons Collections 4.4" },
-{ file: "/posts/java/apache.commons.lang.html", category: "Programming/Java/apache.commons", title: "Apache Commons Lang 3.9" },
-{ file: "/posts/java/apache.commons.math.html", category: "Programming/Java/apache.commons", title: "Apache Commons Math 3.6.1" },
-{ file: "/posts/java/apache.commons.rng.html", category: "Programming/Java/apache.commons", title: "Apache Commons RNG Core 1.2" },
-{ file: "/posts/java/com.sun.nio.sctp.html", category: "Programming/Java/jdk.sctp", title: "com.sun.nio.sctp Since 1.7" },
-{ file: "/posts/java/jackson.html", category: "Programming/Java/FasterXML", title: "Jackson 2.10.1" },
-{ file: "/posts/java/gson.html", category: "Programming/Java/google", title: "Gson 2.8.6" },
-{ file: "/posts/java/guava.html", category: "Programming/Java/google", title: "Guava 23.0" },
-{ file: "/posts/java/javax.annotation.processing.html", category: "Programming/Java/java.compiler", title: "Annotation Processing API" },
-{ file: "/posts/java/lombok.html", category: "Programming/Java", title: "lombok 1.18.10" },
-{ file: "/posts/java/logback.html", category: "Programming/Java", title: "Logback with SLF4J" },
+{ file: "/posts/java/version.html",                         category: "Programming/Java",               title: "Java 버전별 추가사항" },
+{ file: "/posts/java/performance.html",                     category: "Programming/Java",               title: "JVM 옵션 및 성능 관련사항" },            // 미완
+{ file: "/posts/java/apache.commons.collections.html",      category: "Programming/Java/3rd",           title: "Apache Commons Collections 4.4" },
+{ file: "/posts/java/apache.commons.lang.html",             category: "Programming/Java/3rd",           title: "Apache Commons Lang 3.9" },
+{ file: "/posts/java/apache.commons.math.html",             category: "Programming/Java/3rd",           title: "Apache Commons Math 3.6.1" },         // 미완
+{ file: "/posts/java/apache.commons.rng.html",              category: "Programming/Java/3rd",           title: "Apache Commons RNG Core 1.2" },
+{ file: "/posts/java/jackson.html",                         category: "Programming/Java/3rd",           title: "Jackson 2.10.1" },
+{ file: "/posts/java/gson.html",                            category: "Programming/Java/3rd",           title: "Gson 2.8.6" },
+{ file: "/posts/java/guava.html",                           category: "Programming/Java/3rd",           title: "Guava 23.0" },                        // 미완
+{ file: "/posts/java/lombok.html",                          category: "Programming/Java/3rd",           title: "lombok 1.18.10" },
+{ file: "/posts/java/logback.html",                         category: "Programming/Java/3rd",           title: "Logback with SLF4J" },
+{ file: "/posts/java/java.base.html",                       category: "Programming/Java/Standard",      title: "java.base 12" },
+{ file: "/posts/java/javax.annotation.processing.html",     category: "Programming/Java/Standard",      title: "Annotation Processing API" },
+{ file: "/posts/java/com.sun.nio.sctp.html",                category: "Programming/Java/Standard",      title: "com.sun.nio.sctp Since 1.7" },
 { file: "/posts/javascript/basic.html",                     category: "Programming/JavaScript",         title: "코어 JavaScript" },
 { file: "/posts/javascript/basic2.html",                    category: "Programming/JavaScript",         title: "브라우저 JavaScript" },
 { file: "/posts/javascript/jquery.html",                    category: "Programming/JavaScript",         title: "jQuery" },
@@ -354,7 +355,7 @@ function fillCodeDiv(div, lan, text, displayRange) {
             lines = hljs.highlight(lan, code)['value'].split(/\n/gm);
 
         let ol = document.createElement('ol');
-        displayRange = JSON.parse(displayRange || '[1, 100000000]') || [1, 100000000]);
+        displayRange = JSON.parse(displayRange || '[1, 100000000]') || [1, 100000000];
         displayRange = displayRange.reverse();
 
         while (displayRange.length > 0) {

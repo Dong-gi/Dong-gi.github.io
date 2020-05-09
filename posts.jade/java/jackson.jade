@@ -1,84 +1,64 @@
-html
-    body
-        script(src='/source/redirect.js?200226_1657')
-        hr
-        details
-            summary 자료
-            ol
-                li https://github.com/FasterXML/jackson-databind
-                li https://github.com/FasterXML/jackson-docs
-                li https://github.com/FasterXML/jackson-databind/wiki
-                li http://www.javadoc.io/doc/com.fasterxml.jackson.core/jackson-databind
-                li https://www.baeldung.com/jackson
-        hr
-        details
-            summary JSON
-            ul
-                li
-                    | public 필드 또는 public setter가 존재하는 POJO
-                    +codeBtn('Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[32,49]') 예1 »
-                    +codeBtn('Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[52,68]') 예2 »
-                li
-                    | 제네릭 List, Map도 가능.
-                    +codeBtn('Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[70,77]') 예 »
-                li
-                    | JSON 노드 수정.
-                    +codeBtn('Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[79,91]') 예 »
-                li
-                    | JSON 직렬화/역직렬화에 직접 관여할 수 있다.
-                    +codeBtn('Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[93,106]') 예1 »
-                    +codeBtn('Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[108,117]') 예2 »
-                li
-                    | 직렬화/역직렬화 관련 옵션
-                    +codeBtn('Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[119,145]') 예1 »
-                    +codeBtn('Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[147,162]') 예2 »
-                    +codeBtn('Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[164,174]') 예3 »
-                ul
-                    li https://github.com/FasterXML/jackson-databind/wiki/JacksonFeatures
-                    li https://github.com/FasterXML/jackson-docs/wiki/JacksonAnnotations
-                    li DateFormat 설정 : mapper.setDateFormat(DateFormat)
-                    li 직렬화 제외 설정 : mapper.setSerializationInclusion(JsonInclude.Include);
-                    li 직렬화 시 정렬 : mapper.enable(SerializationFeature.INDENT_OUTPUT);
-                    li 빈 객체 직렬화 허용 : mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-                    li
-                        | java.util.Date, Calendar를 timestamp 숫자로 쓰지 않기 : mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-                    li
-                        | 매칭되지 않은 속성은 건너뛰기 : mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-                    li
-                        | 속성명을 ""로 감싸지 않아도 됨 : mapper.enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
-                    li ""대신 '' 허용 : mapper.enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
-                    li
-                        | Non-ASCII 이스케이프 : JsonMapper.Builder#configure(JsonWriteFeature.ESCAPE_NON_ASCII, true)
-                    li
-                        | 애너테이션 기반 설정 : @JsonProperty("newName"), @JsonIgnoreProperties({ "foo", "bar" }), @JsonCreator, @JsonSetter, @JsonGetter, ...
-        hr
-        details
-            summary YAML, CSV, XML...
-            ol
-                li https://github.com/FasterXML/jackson-dataformats-binary
-                li
-                    | compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.10.1'
-                li
-                    | compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.10.1'
-                li
-                    | compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-smile', version: '2.10.1'
-                li
-                    | compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-cbor', version: '2.10.1'
-                li
-                    | compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-csv', version: '2.10.1'
-                li
-                    | compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-properties', version: '2.10.1'
-                li
-                    | compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-avro', version: '2.10.1'
-        hr
-        details
-            summary Android ProGuard 관련 설정
-            ol
-                li https://github.com/FasterXML/jackson-docs/wiki/JacksonOnAndroid
-                pre.
-                    \n# Proguard configuration for Jackson 2.x
-                    -dontwarn com.fasterxml.jackson.databind.**
-                    -keepclassmembers class * {
-                              @com.fasterxml.jackson.annotation.* *;
-                    }
-        hr
+include ../../source/skeleton.jade
++post('Jackson', 'Jackson', 'Jackson 정리')
+    h1.marker 자료
+    ol
+        li: +asA('https://github.com/FasterXML/jackson-databind')
+        li: +asA('https://github.com/FasterXML/jackson-docs')
+        li: +asA('https://github.com/FasterXML/jackson-databind/wiki')
+        li: +asA('http://www.javadoc.io/doc/com.fasterxml.jackson.core/jackson-databind')
+        li: +asA('https://www.baeldung.com/jackson')
+
+    h1.marker JSON
+    ul
+        li
+            | public 필드 또는 public setter가 존재하는 POJO
+            +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[32,49]') 예1 »
+            +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[52,68]') 예2 »
+        li
+            | 제네릭 List, Map도 가능.
+            +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[70,77]')
+        li
+            | JSON 노드 수정.
+            +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[79,91]')
+        li
+            | JSON 직렬화/역직렬화에 직접 관여할 수 있다.
+            +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[93,106]') 예1 »
+            +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[108,117]') 예2 »
+        li
+            | 직렬화/역직렬화 관련 옵션
+            +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[119,145]') 예1 »
+            +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[147,162]') 예2 »
+            +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[164,174]') 예3 »
+        ul
+            li: +asA('https://github.com/FasterXML/jackson-databind/wiki/JacksonFeatures')
+            li: +asA('https://github.com/FasterXML/jackson-docs/wiki/JacksonAnnotations')
+            li DateFormat 설정 : mapper.setDateFormat(DateFormat)
+            li 직렬화 제외 설정 : mapper.setSerializationInclusion(JsonInclude.Include);
+            li 직렬화 시 정렬 : mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            li 빈 객체 직렬화 허용 : mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+            li java.util.Date, Calendar를 timestamp 숫자로 쓰지 않기 : mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            li 매칭되지 않은 속성은 건너뛰기 : mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+            li 속성명을 ""로 감싸지 않아도 됨 : mapper.enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
+            li ""대신 '' 허용 : mapper.enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
+            li Non-ASCII 이스케이프 : JsonMapper.Builder#configure(JsonWriteFeature.ESCAPE_NON_ASCII, true)
+            li 애너테이션 기반 설정 : @JsonProperty("newName"), @JsonIgnoreProperties({ "foo", "bar" }), @JsonCreator, @JsonSetter, @JsonGetter, ...
+
+    h1.marker YAML, CSV, XML...
+    ol
+        li: +asA('https://github.com/FasterXML/jackson-dataformats-binary')
+        li compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.10.1'
+        li compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.10.1'
+        li compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-smile', version: '2.10.1'
+        li compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-cbor', version: '2.10.1'
+        li compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-csv', version: '2.10.1'
+        li compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-properties', version: '2.10.1'
+        li compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-avro', version: '2.10.1'
+
+    h1.marker Android ProGuard 관련 설정
+    +asA('https://github.com/FasterXML/jackson-docs/wiki/JacksonOnAndroid')
+    +asCode().
+        # Proguard configuration for Jackson 2.x
+        -dontwarn com.fasterxml.jackson.databind.**
+        -keepclassmembers class * {
+            @com.fasterxml.jackson.annotation.* *;
+        }

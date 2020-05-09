@@ -3173,7 +3173,6 @@ docker.html
 fp.html
 git.html
 nginx.html
-nyaa.js
 quantum_computer.html
 refactoring.html
 rpi.html

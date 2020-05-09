@@ -7,5 +7,5 @@ echo 'post 빌드 완료'
 jade --doctype html /workspace/donggi-github/Dong-gi.github.io/index.jade
 echo 'index 빌드 완료'
 
-ls --ignore="av.js" --ignore="node_modules" -R /workspace/donggi-github/Dong-gi.github.io > /workspace/donggi-github/Dong-gi.github.io/source/filelist.js
+ls --ignore="nyaa.js" --ignore="node_modules" -R /workspace/donggi-github/Dong-gi.github.io > /workspace/donggi-github/Dong-gi.github.io/source/filelist.js
 echo '파일 목록 갱신 완료'
