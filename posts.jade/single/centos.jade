@@ -17,9 +17,9 @@ include ../../source/skeleton.jade
         li init 프로세스 중에 /etc/rc.d/rc.local 스크립트를 실행한다
         p 해당 파일은 호환을 위해 아직 남아있지만, 사용자 정의 systemd 서비스나 udev 규칙을 만드는 것이 권장된다
 
-    h1.marker shutdown : 시스템 종료 관련
+    h1.marker shutdown : 시스템 종료
+    +asCode('shell') $ shutdown [OPTIONS...] time [warning-message]
     ol
-        li shutdown [OPTIONS...] time [warning-message]
         li -H : 시스템 종료
         li -P : 시스템 종료 + 전원 차단(하드웨어 지원 필요)
         li -r : 재부팅
@@ -32,26 +32,40 @@ include ../../source/skeleton.jade
         li warning-message : 로그인한 유저들에게 보낼 브로드캐스팅 메시지
 
     h1.marker init : 일시적인 runlevel 변경
+    +asCode('shell') $ init runlevel
     ol
-        li init runlevel
         li runlevel : 0(종료), 6(재부팅), 1(복구), 2(multiuser without NFS), 3(multiuser; TUI), 5(X11; GUI)
         li 시스템 기본 runlevel 확인
-        +asCode('shell') systemctl get-default
+        +asCode('shell') $ systemctl get-default
 
     h1.marker 사용자 관리
     ol
-        li useradd [options] USER_NAME
+        li useradd : 사용자 추가
+        +asCode('shell') $ useradd [options] USER_NAME
         p -d(HOME_DIR), -g(group id or name), -p(password), -D(기본값 출력/설정), 등...
-        li passwd [options] USER_NAME
+        
+        li passwd : 비밀번호 설정
+        +asCode('shell') $ passwd [options] USER_NAME
         p -d(삭제), -l(잠금), -u(잠금 해제), -e(강제 만료)
-        li usermod [options] USER_NAME
+        
+        li usermod : 사용자 수정
+        +asCode('shell') $ usermod [options] USER_NAME
         p -d(HOME_DIR), -m(HOME_DIR 변경 시 파일 이동), -L(잠금), -p(password), 등...
-        li userdel [options] USER_NAME
-        li groupadd [options] GROUP_NAME
+        
+        li userdel : 사용자 삭제
+        +asCode('shell') $ userdel [options] USER_NAME
+        
+        li groupadd : 사용자 그룹 추가
+        +asCode('shell') $ groupadd [options] GROUP_NAME
         p -g(수동 GID), -p(password)
-        li groupdel [options] GROUP_NAME
-        li su [options] [-] [USER_NAME [arg]...]
+        
+        li groupdel : 사용자 그룹 삭제
+        +asCode('shell') $ groupdel [options] GROUP_NAME
+        
+        li su : 다른 사용자 권한 사용
+        +asCode('shell') $ su [options] [-] [USER_NAME [arg]...]
         p 다른 사용자의 권한으로 쉘을 실행한다. USER_NAME이 없으면 root로 간주한다. 단순히 '-'만 있으면 '-l'과 동일하다.
+        
         li 사용자 목록 : /etc/passwd
         +asCode().
             ID:Password(x):UID:GID:Comment:HOME_DIR:SHELL
@@ -64,50 +78,82 @@ include ../../source/skeleton.jade
     h1.marker 파일 시스템
     ol
         li 디렉터리 구조
-        p /bin(명령어), /dev(장치 파일), /etc(환경설정), /lib(라이브러리, 커널 모듈), /media(이동식 디스크), /usr(응용프로그램), /var(자주 변경)
+        table
+            +ths('path', '목적')
+            +tds('/bin', '명령어')
+            +tds('/dev', '장치 파일')
+            +tds('/etc', '환경설정')
+            +tds('/lib', '라이브러리, 커널 모듈')
+            +tds('/media', '이동식 디스크')
+            +tds('/usr', '응용프로그램')
+            +tds('/var', '자주 변경')
+        
         li I-node
         p 파일의 이름을 제외한 모든 정보. ID는 각 파일에 고유하게 부여된다
-        li pwd
-        p Print working directory; 현재 디렉터리 절대경로
-        li cd
-        p cd(자신의 HOME_DIR로), cd DIR(디렉터리 이동), cd ~USER_NAME(유저 HOME_DIR로)
-        li ls [options] [paths]
-        p
-            | -a(.로 시작하는 경로 포함), -c(with -lt: 시간순, with -l: 이름순), -X(확장자순), -S(크기순), -r(역정렬), -l(자세히), 등...
-            br
-            | d rwx r-x r-x : 디렉터리, 소유자 권한, 그룹 권한, 기타 사용자 권한 755(read, write, execute)
-            br
-            | - rw- r-- r-- : 파일, (상동) 644
-            br
-            | l r-- r-- r-- : 링크, (상동) 444
-        li mkdir [options] [directories]
+        
+        li pwd : 작업 디렉터리 절대경로 출력. Print working directory
+        +asCode('shell') $ pwd
+        
+        li cd : 작업 디렉터리 변경
+        +asCode('shell').
+            $ cd            # 자신의 HOME_DIR로
+            $ cd DIR        # 지정 디렉터리로
+            $ cd ~USER_NAME # 유저 HOME_DIR로
+        
+        li ls : 파일 목록 출력
+        +asCode('shell') $ ls [options] [paths]
+        ul
+            li options
+            p -a(.로 시작하는 경로 포함), -c(with -lt: 시간순, with -l: 이름순), -X(확장자순), -S(크기순), -r(역정렬), -l(자세히), 등...
+            li 출력 예
+            +asCode('shell').
+                d rwx r-x r-x # 디렉터리, 소유자 권한, 그룹 권한, 기타 사용자 권한 755(read, write, execute)
+                - rw- r-- r-- # 파일, (상동) 644
+                l r-- r-- r-- # 링크, (상동) 444
+        
+        li mkdir : 디렉터리 생성
+        +asCode('shell') $ mkdir [options] [directories]
         p -m(권한, 기본 755), -p(경로상의 모든 디렉터리 생성)
-        li rmdir [options] [directories]
-        p 빈 디렉터리만 삭제 가능. -p(경로 상의 모든 디렉터리 삭제)
-        li rm [options] [paths]
-        p
-            | -f(파일이 없으면 무시), -i(각 파일 삭제 확인), -r(재귀 실행), 등...
-            br
-            | rm -rf ./my_dir # my_dir 디렉터리 및 내부 파일 모두 삭제
-        li touch [options] [files]
+        
+        li rm : 파일 삭제
+        +asCode('shell') $ rm [options] [paths]
+        ul
+            li options
+            p -f(파일이 없으면 무시), -i(각 파일 삭제 확인), -r(재귀 실행), 등...
+            li 예. my_dir 디렉터리 및 내부 파일 모두 삭제
+            +asCode('shell') $ rm -rf ./my_dir
+        
+        li touch : 파일 시각 변경
+        +asCode('shell') $ touch [options] [files]
         p 각 파일에 대해 시간 정보를 현재 시각으로 변경한다. 파일이 없으면 생성한다(크기 0).
-        li chmod [options] 8진수 [paths]
+        
+        li chmod : 파일 권한 제한 변경
+        +asCode('shell') $ chmod [options] 8진수 [paths]
         p -R : 재귀 실행 // + chown(파일 소유자 및 그룹 변경), chgrp(사용자 그룹 변경)
-        li
-            | cp [options] source dest_path
-            br
-            | cp [options] [sources] [target_directory]
+        
+        li cp : 파일 복사
+        +asCode('shell').
+            $ cp [options] source dest_path
+            $ cp [options] [sources] [target_directory]
         p -a(파일 속성 유지), -b(목적지에 이미 있으면 백업하고 복사), -r(재귀 실행), -s(심볼릭 링크 생성), 등...
+        
         li mv : cp + 원본 삭제
-        li cat [options] [files]
+        
+        li cat : 파일 텍스트 출력
+        +asCode('shell') $ cat [options] [files]
         p -n(줄 번호), -E(줄 끝에 $), -s(반복적인 빈 라인 생략), -T(탭을 ^T로 표기)
+        
         li find
         p 파일명 표현에 와일드카드 *, ?가 허용된다. 표현식 앞에 !이나 -not을 붙일 수 있다. 표현식들 사이를 -and, -or로 엮을 수 있다.
-        li grep [options] pattern [files]
+        
+        li grep : 텍스트 검색
+        +asCode('shell') $ grep [options] pattern [files]
         p -E(ERE), -G(BRE), -P(Perl Regexp), -e(정규표현식), -i(ignore case), -w(패턴에 단어 전체가 매칭되는 경우만), -x(패턴에 줄 전체가 매칭되는 경우만), -m(최대 출력 개수), -n(줄 번호 같이 출력), -o(매칭된 부분만 출력), -l(매칭된 파일들의 이름만 출력), -L(매칭되지 않는 파일들의 이름만 출력), -A(매칭 후 n개 라인도 출력), -B(매칭 전 n개 라인도 출력) 등...
-        li |
+        
+        li | : 파이프라인
         p 프로세스들의 출력과 입력을 잇는 파이프라인을 구성한다.
-        +asCode('shell') history | grep psql
+        +asCode('shell') $ history | grep psql
+        
         li 리다이렉션
         p
             | > : 파일이 없다면 생성하고, 있다면 덮어쓴다
@@ -115,10 +161,10 @@ include ../../source/skeleton.jade
             | >> : 파일이 없다면 생성하고, 있다면 append
             br
             | &lt; : 파일로부터 표준 입력을 받는다
-        li
-            | tar [options] file : 압축해제
-            br
-            | tar [options] file paths : 압축
+        li tar : 압축
+        +asCode('shell').
+            $ tar [options] file       # 압축해제
+            $ tar [options] file paths # 압축
         p
             | Main Operation : -A(append), -r(append), -c(create), -d(파일 시스템과의 차분 출력), -t(목록 출력), -u(update), -x(압축해제)
             br
@@ -169,7 +215,7 @@ include ../../source/skeleton.jade
     ol
         li RPM : Redhat Package Manager
         p {package_name}-{version}-{release}.{architecture}.rpm
-        li rpm [options]
+        +asCode('shell') $ rpm [options]
         p -a(전체 패키지 검증), -i(install), -U(설치 또는 upgrade), -F(기존 패키지 upgrade), -v(verbose), -h(진행과정을 #로), -e(erase), -qa(설치된 패키지 목록), -qi(패키지 상세 정보) 등...
         li yum
         p
@@ -181,79 +227,77 @@ include ../../source/skeleton.jade
     ol
         li 서드 파티 패키지를 설치하려면 EPEL을 허용해야 한다
         li RHEL 6.x / CentOS 6.x
-        +asCode('shell') rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+        +asCode('shell') $ rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
         li RHEL 7.x / CentOS 7.x
-        +asCode('shell') rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+        +asCode('shell') $ rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
         p 또는
-        +asCode('shell') yum install epel-release.noarch
+        +asCode('shell') $ yum install epel-release.noarch
 
     h1.marker 시간 관련
     ol
-        li
-            | date : 현재 시각 반환
-            br
-            | date -s time_string : 시각 변경5
+        li date : 시각 출력/변경
         +asCode('shell').
-            date "+%Y-%m-%d %T"
-            date -s "2019-01-01 12:34:56"
+            $ date                # 현재 시각 출력
+            $ date "+%Y-%m-%d %T" # 포맷 지정
+            
+            $ date -s time_string # 시각 변경
+            $ date -s "2019-01-01 12:34:56"
+        
         li
             +asA('https://nxmnpg.lemoda.net/8/ntpdate', 'ntpdate')
-            |  server : 동기화
-            br
-            | ntpdate -d server : 오차 출력
+            |  : 시각 동기화
+        +asCode('shell').
+            $ ntpdate server    # 동기화
+            $ ntpdate -d server # 오차 출력
         p NTP : Network Time Protocol. 시간 동기화를 위한 프로토콜.
         +asA('https://zetawiki.com/wiki/공용_NTP_서버_목록')
 
-    h1.marker crond
-    ol
-        li systemctl status crond : 상태 확인
-        li crontab
-        p -l(list), -e(edit), -u(user)
-        li 유저가 아닌 시스템 단위의 작업은 /etc/crontab 직접 수정
+    h1.marker crond : 작업 예약
+    +asCode('shell').
+        $ systemctl status crond # 상태 확인
+        $ crontab -l             # 작업 목록 출력
+            # -e : edit
+            # -u : 사용자 지정
+    p 유저가 아닌 시스템 단위의 작업은 /etc/crontab 직접 수정
 
     h1.marker 프로세스 관련
     ol
-        li ps -ef
-        p Process Snapshot; -e(전체 프로세스), -f(full-format)
-        li
-            | kill -9
-            i pid
-        p 프로세스 종료.
-        li top
-        p 실행 중인 작업 보기.
-        li.marker 백그라운드로 전환
-        p
-            | Ctrl + Z : 현재 프로세스를 백그라운드로 전환하고 suspend
-            br
-            | bg : 백그라운드 job으로 계속 실행 ↔ fg
-            br
-            | jobs : 백그라운드 job 리스트
-            br
-            | 명령행 끝에 &를 붙이면 즉시 백그라운드 job으로 실행시킬 수 있다
-            br
-            | 현재 터미널 세션이 종료해도 n번 백그라운드 job을 계속하게 하려는 경우 : disown -h %n
+        li ps : 프로세스 출력. Process Snapshot
+        +asCode('shell') $ ps -ef # -e(전체 프로세스), -f(full-format)
+        
+        li kill : 프로세스 종료
+        +asCode('shell') $ kill -9 pid # -9(강제종료)
+        
+        li top : 실행 중인 작업 보기.
+        
+        li 백그라운드 작업
+        ul
+            li Ctrl + Z : 현재 프로세스를 백그라운드로 전환하고 suspend
+            li bg : 백그라운드 job으로 계속 실행 ↔ fg
+            li jobs : 백그라운드 job 리스트
+            p
+                | 명령행 끝에 &를 붙이면 즉시 백그라운드 job으로 실행시킬 수 있다
+                br
+                | 현재 터미널 세션이 종료해도 n번 백그라운드 job을 계속하게 하려는 경우 : disown -h %n
 
     h1.marker 메모리 관련
     ol
-        li vmstat 1
-        p Report virtual memory statistics
-        li free -m -w -h -s 1
-        p
-            | Display amount of free and used memory in the system.
-            br
-            | -m : 메가바이트 단위
-            br
-            | -w : wide output
-            br
-            | -h : human-readable output
-            br
-            | -s 1 : 1초마다
+        li vmstat : Report virtual memory statistics
+        +asCode('shell') $ vmstat 1 # 1초마다 출력
+        
+        li free : Display amount of free and used memory in the system.
+        +asCode('shell').
+            $ free -m -w -h -s 1
+                # -m : 메가바이트 단위
+                # -w : wide output
+                # -h : human-readable output
+                # -s 1 : 1초마다
 
     h1.marker 환경변수
-    ol
-        li printenv [VAR_NAMES]
-        li echo $VAR_NAME
-        li export VAR_NAME[=value]
+    +asCode('shell').
+        $ printenv [VAR_NAMES]
+        $ echo $VAR_NAME
+        $ export VAR_NAME[=value]
 
     h1.marker 쉘 스크립트
     ol
@@ -264,32 +308,43 @@ include ../../source/skeleton.jade
 
     h1.marker FTP Server : vsftpd
     ol
-        li yum install vsftpd
-        li /etc/vsftpd/vsftpd.conf
+        li 설치
+        +asCode('shell') $ yum install vsftpd
+        
+        li 설정 : /etc/vsftpd/vsftpd.conf
         +asCode('ini').
             anonymous_enable=NO # 익명 차단
             listen_ipv6=NO # IPv4 사용
-        li
-            | firewall-cmd --permanent --add-service=ftp
-            br
-            | firewall-cmd --permanent --add-port=21/tcp
-            br
-            | firewall-cmd --reload
-        p 방화벽 허용. 확인 : firewall-cmd --zone=public --list-all
-        li SELinux 관련 정책
-        p getsebool -a | grep ftp
-        li
-            | systemctl enable vsftpd
-            br
-            | systemctl restart vsftpd
+        
+        li 방화벽 허용
+        +asCode('shell').
+            $ firewall-cmd --permanent --add-service=ftp
+            $ firewall-cmd --permanent --add-port=21/tcp
+            $ firewall-cmd --reload
+            # ↓ 잘 됐는지 확인
+            $ firewall-cmd --zone=public --list-all
+        
+        li SELinux 관련 정책 확인
+        +asCode('shell').
+            $ getsebool -a | grep ftp
+            $ setsebool ftp_home_dir on # 필요한 권한은 허용
+        
+        li 시스템 시작
+        +asCode('shell').
+            $ systemctl enable vsftpd
+            $ systemctl restart vsftpd
+    ul
         li root 로그인 허용
         p /etc/vsftpd/ftpusers, /etc/vsftpd/user_list에서 root 제거
+        
         li 사용자 홈 디렉터리 외부 접근 허용
         p /etc/vsftpd/chroot_list : chroot_list_enable=YES
+        
         li Active Mode 사용 : 20포트
         p /etc/vsftpd/vsftpd.conf : pasv_enable=NO
+        
         li Passive Mode 사용
-        ul
+        ol
             li /etc/vsftpd/vsftpd.conf
             +asCode('ini').
                 connect_from_port_20=NO
@@ -310,6 +365,6 @@ include ../../source/skeleton.jade
         li 부팅시 사용되는 기본 모드는 /etc/selinux/config에 정의돼있다
         li SELinux 로그 위치 : /var/log/audit/audit.log
         li SELinux 로그 분석 유티릴티 : setroubleshoot
-        +asCode('shell')
-            yum install setroubleshoot
-            sealert -a /var/log/audit/audit.log
+        +asCode('shell').
+            $ yum install setroubleshoot
+            $ sealert -a /var/log/audit/audit.log

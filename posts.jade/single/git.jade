@@ -20,8 +20,9 @@ include ../../source/skeleton.jade
     h1.marker Submodule
     ul
         li 관리하는 디렉터리 자체가 다른 git 저장소일 수 있다
-        li git submodule init
-        li git submodule update
+        +asCode('shell').
+            $ git submodule init
+            $ git submodule update
 
     h1.marker Git Hook
     ul

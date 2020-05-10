@@ -19,12 +19,12 @@ include ../../source/skeleton.jade
 
         h2.marker 프로젝트 의존성 관리
         +asCode('shell').
-            npm init    # package.json 생성
-            npm install # package.json대로 의존 라이브러리 설치
+            $ npm init    # package.json 생성
+            $ npm install # package.json대로 의존 라이브러리 설치
 
             # name 패키지 설치 후 package.json에 의존성 추가
-            npm install name --save
-            npm install name --save-dev
+            $ npm install name --save
+            $ npm install name --save-dev
         div
             h3.marker package.json
             p 아래 예시는 다른 패키지의 것들을 맘대로 섞은 것임
@@ -84,17 +84,17 @@ include ../../source/skeleton.jade
 
         h2.marker 패키지 배포
         +asCode('shell').
-            npm publish
-            npm version patch # 패치 버전 1 증가
-            npm version minor # 마이너 버전 1 증가
-            npm unpublish     # 배포 중단
+            $ npm publish
+            $ npm version patch # 패치 버전 1 증가
+            $ npm version minor # 마이너 버전 1 증가
+            $ npm unpublish     # 배포 중단
 
     h1.marker TypeScript
     ol
         li JavaScript에 타입이 추가된 수퍼셋. 컴파일하면 자바스크립트 코드가 된다
         +asCode('shell').
-            npm install -g typescript
-            tsc file-name.ts --target es6
+            $ npm install -g typescript
+            $ tsc file-name.ts --target es6
         li 타입스크립트에서는 생성자 매개변수 앞에 public/private 접근한정자가 있으면 자동으로 클래스의 속성으로 선언한다
         li VS Code의 타입스크립트 컴파일러를 npm 패키지로 설정
         p "typescript.tsdk": "C:/Users/name/AppData/Roaming/npm/node_modules/typescript/bin/tsc"
@@ -105,9 +105,9 @@ include ../../source/skeleton.jade
         +asCode('javascript') debugger;
         li node 실행 시 디버깅 켜기
         +asCode('shell').
-            node debug app.js
+            $ node debug app.js
             # 또는
-            node inspect app.js
+            $ node inspect app.js
         li 자동으로 디버깅 포트를 열며, chrome://inspect 등으로도 이용 가능
         li 명령어
         ol

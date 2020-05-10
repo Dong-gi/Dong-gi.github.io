@@ -17,9 +17,6 @@ include ../../source/skeleton.jade
         li 애플리케이션 배포 및 취소
         p webapps 디렉터리에 war 파일을 옮기면 자동으로 압축을 푼다. 반대로 삭제하면 자동으로 정리한다. 또는 관리자 페이지의 deploy/undeploy를 이용.
 
-    h1.marker JVM 타임존 설정
-    +asCode('shell') -Duser.timezone=Asia/Seoul
-
     h1.marker 톰캣 JVM 실행 인코딩/문자셋 설정
     ol
         li catalina.bat

@@ -3174,6 +3174,7 @@ fp.html
 git.html
 nginx.html
 quantum_computer.html
+redis.html
 refactoring.html
 rpi.html
 sdkman.html
@@ -3304,6 +3305,7 @@ fp.jade
 git.jade
 nginx.jade
 quantum_computer.jade
+redis.jade
 refactoring.jade
 rpi.jade
 sdkman.jade

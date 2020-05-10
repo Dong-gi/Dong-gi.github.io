@@ -29,16 +29,16 @@ include ../../source/skeleton.jade
             ol
                 li 패키지 설치
                 +asCode('shell').
-                    rpm -Uvh https://yum.postgresql.org/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm
-                    yum install -y postgresql10-server postgresql10
+                    $ rpm -Uvh https://yum.postgresql.org/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm
+                    $ yum install -y postgresql10-server postgresql10
                 li DB 초기화
-                +asCode('shell') /usr/pgsql-10/bin/postgresql-10-setup initdb
+                +asCode('shell') $ /usr/pgsql-10/bin/postgresql-10-setup initdb
                 li 서비스 시작
                 +asCode('shell').
-                    systemctl start postgresql-10
-                    systemctl status postgresql-10 // 상태 확인
+                    $ systemctl start postgresql-10
+                    $ systemctl status postgresql-10 // 상태 확인
                 li 자동 구동 설정
-                +asCode('shell') systemctl enable postgresql-10
+                +asCode('shell') $ systemctl enable postgresql-10
                 ul
                     li 서비스 시작 후, 실행 위치 확인
                     +asCode('shell') $ ps aux | grep postgres

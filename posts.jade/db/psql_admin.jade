@@ -43,9 +43,9 @@ include ../../source/skeleton.jade
             li 덤프
             +asCode('shell') $ pg_dumpall > outputfile
             li 서버 종료
-            +asCode('shell') pg_ctl stop
+            +asCode('shell') $ pg_ctl stop
             li 업그레이드를 위해 기존 클러스터 디렉터리 이동
-            +asCode('shell') mv /usr/local/pgsql /usr/local/pgsql.old
+            +asCode('shell') $ mv /usr/local/pgsql /usr/local/pgsql.old
             li 새 버전 설치
             li 이전 pg_hba.conf, postgresql.conf 수정 내용 복원
             li 서버 시작
@@ -79,5 +79,5 @@ include ../../source/skeleton.jade
         p PostgreSQL에서 사용할 알고리즘은 postgresql.conf의 ssl_ciphers를 변경하여 지정할 수 있다
         li 인증서 생성
         +asCode('shell').
-            openssl req -new -x509 -days 365 -nodes -text -out server.crt -keyout server.key -subj "/CN=dbhost.yourdomain.com"
-            chmod og-rwx server.key
+            $ openssl req -new -x509 -days 365 -nodes -text -out server.crt -keyout server.key -subj "/CN=dbhost.yourdomain.com"
+            $ chmod og-rwx server.key

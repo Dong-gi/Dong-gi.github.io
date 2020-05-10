@@ -19,7 +19,7 @@ include ../../source/skeleton.jade
                 td Embedding, Linking
         +asA('https://docs.mongodb.com/manual/installation/')
         li 서비스 등록이 안 됐길래 그냥 직접 실행함
-        +asCode('bash') mongod --fork -f /etc/mongod.conf
+        +asCode('shell') $ mongod --fork -f /etc/mongod.conf
         li 최대 쿼리 결과 크기는 BSON 문서가 허용하는 16MB
         p 이를 초과하는 문서가 필요하다면 GridFS API를 이용. mongofiles 명령 또는 드라이버 참고.
 
@@ -292,13 +292,14 @@ include ../../source/skeleton.jade
     ul
         li mongo
         p 기본 포트 27017
-        +asCode('bash').
-            mongo --port 28015
-            mongo "mongodb://host:port"
-            mongo --password "mongodb://username@host:port"
-            mongo --ssl --host replA/mongodb0.example.com.local:27017,mongodb1.example.com.local:27017,mongodb2.example.com.local:27017
+        +asCode('shell').
+            $ mongo --port 28015
+            $ mongo "mongodb://host:port"
+            $ mongo --password "mongodb://username@host:port"
+            $ mongo --ssl --host replA/mongodb0.example.com.local:27017,mongodb1.example.com.local:27017,mongodb2.example.com.local:27017
 
-            mongo localhost:27017 file.js
+            $ mongo localhost:27017 file.js
+            # or
             > load("file.js")
         li find(), aggregate() 쿼리 결과는 기본 101개로 제한된다
         ol
@@ -528,34 +529,39 @@ include ../../source/skeleton.jade
 
     h1.marker Aggregation
     ul
-        li: +asCode('javascript').
-                db.mycoll.aggregate([
-                    {$match: {grade: 'A'}},
-                    {$group: {total: {$sum: "$amount"}}}
-                ])
-        li: +asCode('javascript') db.mycoll.mapReduce(mappingFunc, reduceFunc, {query: filterObj, out: "outName"})
+        li aggregate
         +asCode('javascript').
+            db.mycoll.aggregate([
+                {$match: {grade: 'A'}},
+                {$group: {total: {$sum: "$amount"}}}
+            ])
+        li mapReduce
+        +asCode('javascript').
+            db.mycoll.mapReduce(mappingFunc, reduceFunc, {query: filterObj, out: "outName"})
+            
             db.mycoll.mapReduce(
                 function() { emit(groupKey, value); },
                 function(key, values) { return aggrValue; }
             )
-        p 예 ↓
-        +asCode('javascript').
+
+            // 예 ↓
             for(let i = 0; i &lt; 50; ++i) db.test.insertOne({num: i})
             db.test.mapReduce(
                 function() { emit(this.num % 5, this.num); },
                 function(key, values) { return Array.join(values); },
                 { out: 'result' }
             ).find()
-        +asCode('text').
-            { "_id" : 0, "value" : "0,5,10,15,20,25,30,35,40,45" }
-            { "_id" : 1, "value" : "1,6,11,16,21,26,31,36,41,46" }
-            { "_id" : 2, "value" : "2,7,12,17,22,27,32,37,42,47" }
-            { "_id" : 3, "value" : "3,8,13,18,23,28,33,38,43,48" }
-            { "_id" : 4, "value" : "4,9,14,19,24,29,34,39,44,49" }
-        li: +asCode('javascript') db.mycoll.estimatedDocumentCount()
-        li: +asCode('javascript') db.mycoll.count()
-        li: +asCode('javascript') db.mycoll.distinct([string field][, object query][, object options])
+            // { "_id" : 0, "value" : "0,5,10,15,20,25,30,35,40,45" }
+            // { "_id" : 1, "value" : "1,6,11,16,21,26,31,36,41,46" }
+            // { "_id" : 2, "value" : "2,7,12,17,22,27,32,37,42,47" }
+            // { "_id" : 3, "value" : "3,8,13,18,23,28,33,38,43,48" }
+            // { "_id" : 4, "value" : "4,9,14,19,24,29,34,39,44,49" }
+        li estimatedDocumentCount
+        +asCode('javascript') db.mycoll.estimatedDocumentCount()
+        li count
+        +asCode('javascript') db.mycoll.count()
+        li distinct
+        +asCode('javascript') db.mycoll.distinct([string field][, object query][, object options])
 
     +hoverTemplate()#template-mongodb-bson-regex-option
         table.no-sort
@@ -606,25 +612,21 @@ include ../../source/skeleton.jade
                     {
                         "document": { "_id": 4, "char": "Dithras", "class": "barbarian", "lvl": 4 }
                     }
-            },
-            {
+            }, {
                 insertOne:
                     {
                         "document": { "_id": 5, "char": "Taeln", "class": "fighter", "lvl": 3 }
                     }
-            },
-            {
+            }, {
                 updateOne:
                     {
                         "filter": { "char": "Eldon" },
                         "update": { $set: { "status": "Critical Injury" } }
                     }
-            },
-            {
+            }, {
                 deleteOne:
                     { "filter": { "char": "Brisbane" } }
-            },
-            {
+            }, {
                 replaceOne:
                     {
                         "filter": { "char": "Meldane" },
