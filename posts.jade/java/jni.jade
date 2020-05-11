@@ -1,6 +1,7 @@
 include ../../source/skeleton.jade
 +post('JNI; Java Native Interface', 'JNI', 'Java Native Interface 정리')
     ol
+        strong 자바 코드는 보통 JNI 호출보다 더 빠르다
         li C 네이티브 코드를 이용할 클래스 컴파일 : javac Test.java → Test.class 생성
         li C에서 이용할 헤더 파일 생성 : javah -jni Test → Test.h 생성
         li VS에서 JDK path 추가 : 속성 - 포함 디렉터리 - "$(JAVA_HOME)\include", "$(JAVA_HOME)\include\win32 추가
