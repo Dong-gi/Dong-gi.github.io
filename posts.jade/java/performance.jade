@@ -26,11 +26,11 @@ include ../../source/skeleton.jade
                 -XmnN            # NewSize, MaxNewSize 동일하게 설정
                 -XX:NewRatio=N   # (영 제너레이션 초기 크기) = (힙 초기 크기) / (1 + NewRatio)
 
-        -XX:+HeapDumpOnOutOfMemoryError : 메모리 부족시 힙 덤프 생성
-        -XX:HeapDumpPath={path} : 힙 덤프 작성 위치
-        -XX:+HeapDumpBeforeFullGC : 풀 GC 전에 힙 덤프 생성
-        -XX:+HeapDumpAfterFullGC : 풀 GC 후에 힙 덤프 생성
-        -XX:GCHeapFreeLimit=N : 풀 GC로 힙의 N% 이상 해제되면 OK
+                -XX:+HeapDumpOnOutOfMemoryError # 메모리 부족시 힙 덤프 생성
+                -XX:HeapDumpPath={path}         # 힙 덤프 작성 위치
+                -XX:+HeapDumpBeforeFullGC       # 풀 GC 전에 힙 덤프 생성
+                -XX:+HeapDumpAfterFullGC        # 풀 GC 후에 힙 덤프 생성
+                -XX:GCHeapFreeLimit=N           # 풀 GC로 힙의 N% 이상 해제되면 OK
 
             li GC 병렬 스레드 개수
             +asCode('shell') -XX:ParallelGCThreads=N
