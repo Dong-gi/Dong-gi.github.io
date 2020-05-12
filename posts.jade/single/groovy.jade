@@ -1,0 +1,137 @@
+include ../../source/skeleton.jade
++post('Groovy', 'Groovy', 'Groovy 정리')
+    h1.marker
+        | Groovy 
+        +asA('http://groovy-lang.org/single-page-documentation.html')
+    p Java 파생 스크립트 언어
+    div
+        h2.marker 설치(SDKMAN)
+        +asCode('shell') $ sdk install groovy
+
+    h1.marker Language Specification
+    p Java 스펙과 다른 것만 기술한다.
+    div
+        h2.marker Syntax
+        div
+            h3.marker Identifiers
+            ol
+                li Quoted identifiers
+                p 임의의 문자열 상수 표현 및 GString 표현을 '.' 이후의 식별자로 이용할 수 있다.
+                +asCode('groovy').
+                    def map = [:]
+                    
+                    map.' a b c ' = 'abc'
+                    assert map." a b c " == 'abc'
+                    
+                    def firstName = "Homer"
+                    map."Simpson-${firstName}" = "Homer Simpson"
+                    assert map.'Simpson-Homer' == "Homer Simpson"
+                
+                
+    +asCode('groovy').
+        package groovy
+        
+        a = 20
+        println a
+        println plus(10, 20)
+        
+        def plus(x, y) {
+            x + y
+        }
+        
+        
+        java -classpath groovy.jar:asm.jar Test
+        
+        
+        
+        문법
+        
+        def a = 20 // 동적 타입
+        a = "문자열"
+        
+        int a = 20 // 정적 타입
+        
+        java.util.Date a = new java.util.Date() // 자바 클래스 사용 가능
+        
+        list = [10, 20, 30]
+        println list[2]
+        println list.get(2)
+        println list.size()
+        emptyList = []
+        
+        map = ["key1":"value1","key2":"value2"]
+        println map.key1
+        map.key1 = "value3"
+        println map.getClass()
+        emptyMap = [:]
+        
+        
+        if () ~ else if () ~ else
+        
+        def dd = ( a < 20 ) ? "s" : "x"
+        
+        
+        switch(x) {
+            case "aaa":
+            break
+            case 123:
+            case [1, 3, 2.333, true]:
+            case 20..30:
+            case Number:
+            default:
+        }
+        
+        
+        while(){}
+        
+        for(int i = 0; i < 3; i++)
+        for (i in 0..9)
+        for (i in [100, 90, 92])
+        for ( i in 배열)
+        for (entry in 맵)
+        for(c in 문자열)
+        
+        
+        목록.each()
+        맵.each({key value -> ...})
+        목록.eachWithIndex({obj, i -> ...})
+        맵.eachWithIndex({entry, i ->})
+        
+        
+        def plus(a, b) {
+            a + b
+        }
+        
+        int minus(int a, int b) {
+            return a - b
+        }
+        
+        plus = {a, b -> a + b}
+        minus = {int a, int b -> return a - b}
+        
+        
+        기본 임포트 패키지
+        java.lang, java.io, java.math, java.net, java.util, groovy.lang, groovy.util
+        
+        
+        
+        class Test {
+            Integer num
+            void hello() {
+        
+            }
+        }
+        
+        t = new Test()
+        
+        
+        
+        msg = "'hello'"
+        msg = '"hello"'
+        msg = /"hello'/
+        msg = """hello
+        hello"""
+        
+        msg = "message : $msg"
+        formatter = "current time : ${new Date()}"
+        formatter = "current time : ${arg -> arg}"

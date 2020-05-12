@@ -35,17 +35,17 @@ include ../../source/skeleton.jade
             li GC 병렬 스레드 개수
             +asCode('shell') -XX:ParallelGCThreads=N
     
-    h1.marker Java 옵션
+    h1.marker Java 옵션(JAVA_OPTS)
     ol
         li user.timezone 프로퍼티 기본값 지정
-        +asCode('shell') -Duser.timezone=Asia/Seoul
+        +asCode('shell') $ java -Duser.timezone=Asia/Seoul
         li 인코딩 관련 설정
-        +asCode('shell') -Dfile.encoding=UTF-8 -Dfile.client.encoding=UTF-8 -Dclient.encoding.override=UTF-8
+        +asCode('shell') $ java -Dfile.encoding=UTF-8 -Dfile.client.encoding=UTF-8 -Dclient.encoding.override=UTF-8
         li
             | 리모트 디버깅 설정 
             +asA('https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/introclientissues005.html')
         +asCode('shell').
-            -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=*:54433,server=y,suspend=n
+            $ java -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=*:54433,server=y,suspend=n
                 # address : 수신 허용 범위
                 # server  : 서버로 작동할지 여부
                 # suspend : 디버거 부착까지 기다릴지 여부

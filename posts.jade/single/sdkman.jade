@@ -3,6 +3,40 @@ include ../../source/skeleton.jade
 +post('SDKMAN', 'SDKMAN', 'SDKMAN 설치, 사용법 정리')
     h1.marker SDKMAN?
     p SDKMAN은 SDK 관리자로서, 여러 버전의 동일 SDK를 병렬로 설치하고 특정 버전을 골라 사용할 수 있게 해준다.
-    h2.marker 설치
-    +asCode()
-        |$ curl -s "https://get.sdkman.io" | bash
+    
+    h1.marker 설치
+    ol
+        li 자동설치
+        +asCode('shell') $ curl -s "https://get.sdkman.io" | bash
+        li 스크린 안내대로 나머지 설치 진행
+        +asCode('shell') $ source "/root/.sdkman/bin/sdkman-init.sh"
+
+    h1.marker sdk help
+    +asCode('shell').
+        Usage: sdk <command> [candidate] [version]
+               sdk offline <enable|disable>
+        
+            candidate  :  설치할 SDK; groovy, scala, grails, gradle, kotlin, ...
+            version    :  지정하지 않으면 가장 최근 안정 버전
+            local-path :  설치 위치 지정(옵션)
+
+            commands:
+               install   or i    <candidate> [version] [local-path]
+               uninstall or rm   <candidate> <version>
+               list      or ls   [candidate]                        # 설치 가능 목록
+               update                                               # 설치 가능 목록 갱신
+               upgrade   or ug   [candidate]                        # 최신이 아닌 SDK 목록
+               broadcast or b                                       # 최근 갱신된 SDK 목록
+               
+               use       or u    <candidate> <version>              # 현재 터미널에서 사용할 SDK 버전 지정
+               default   or d    <candidate> [version]              # SDK 기본 버전 지정
+               current   or c    [candidate]                        # 지정된 SDK 버전 목록
+               
+               home      or h    <candidate> <version>              # SDK에 대한 홈 디렉터리 설정
+                                                                    # 현재 터미널에서 .sdkmanrc 파일의 설정 사용
+               env       or e    [init]                             # init : 디렉터리에 .sdkmanrc 파일 생성
+               
+               selfupdate        [force]                            # force : SDKMAN 재설치
+               flush             <broadcast|archives|temp>          # SDKMAN 캐시 정리
+        
+

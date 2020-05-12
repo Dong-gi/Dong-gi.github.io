@@ -19,6 +19,7 @@ source
 Android
 Config
 Eclipse
+Groovy
 IntelliJ
 JavaScript
 Node
@@ -1952,6 +1953,12 @@ java
 /workspace/donggi-github/Dong-gi.github.io/Repositories/Eclipse/spring-transaction/src/test/java:
 Test.java
 
+/workspace/donggi-github/Dong-gi.github.io/Repositories/Groovy:
+standalone
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/Groovy/standalone:
+HelloWorld.groovy
+
 /workspace/donggi-github/Dong-gi.github.io/Repositories/IntelliJ:
 JavaFX
 
@@ -3172,6 +3179,8 @@ centos.html
 docker.html
 fp.html
 git.html
+gradle.html
+groovy.html
 nginx.html
 quantum_computer.html
 redis.html
@@ -3303,6 +3312,8 @@ centos.jade
 docker.jade
 fp.jade
 git.jade
+gradle.jade
+groovy.jade
 nginx.jade
 quantum_computer.jade
 redis.jade
