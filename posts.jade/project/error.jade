@@ -45,8 +45,10 @@ include ../../source/skeleton.jade
     ol
         li 자료 : https://stackoverflow.com/a/32584211/7369515
         li 원인 : 일반적으로 최대 연결 수 부족
-        li 해결 : /var/lib/pgsql/data/postgresql.conf
+        li 해결1 : /var/lib/pgsql/data/postgresql.conf
         +asCode('ini') max_connections=${적당히_큰_숫자}
+        li 해결2 : 연결 강제로 끊기
+        +asCode('sql') select distinct pg_terminate_backend(pid) from pg_stat_activity where client_addr = 'x.x.x.x';
 
     h1.marker 도커 컨테이너 에러 종료 후 재시작 불가
     ol

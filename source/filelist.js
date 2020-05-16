@@ -19,7 +19,7 @@ source
 Android
 Config
 Eclipse
-Groovy
+Gradle
 IntelliJ
 JavaScript
 Node
@@ -1953,11 +1953,11 @@ java
 /workspace/donggi-github/Dong-gi.github.io/Repositories/Eclipse/spring-transaction/src/test/java:
 Test.java
 
-/workspace/donggi-github/Dong-gi.github.io/Repositories/Groovy:
-standalone
+/workspace/donggi-github/Dong-gi.github.io/Repositories/Gradle:
+project-01
 
-/workspace/donggi-github/Dong-gi.github.io/Repositories/Groovy/standalone:
-HelloWorld.groovy
+/workspace/donggi-github/Dong-gi.github.io/Repositories/Gradle/project-01:
+build.gradle
 
 /workspace/donggi-github/Dong-gi.github.io/Repositories/IntelliJ:
 JavaFX

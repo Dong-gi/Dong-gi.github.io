@@ -1,118 +1,175 @@
-<html lnag="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="google-site-verification" content="aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM"><meta name="author" content="Donggi Kim &lt;hi.donggi@gmail.com&gt;"><meta name="keywords" content="Groovy"><meta name="description" content="Groovy 정리"><title>Groovy</title><link id="w3css" rel="stylesheet" href="/source/w3.css"><link id="highlight-style" rel="stylesheet" href="/source/xcode.css"><link id="default-style" rel="stylesheet" href="/source/default.css"><script id="highlight-js" src="/source/highlight.pack.js"></script><script id="default-js" src="/source/default.min.js"></script><script id="dsq-count-scr" src="//donggi.disqus.com/count.js" async></script><script id="kakao-ads" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script><script id="google-analytics" src="https://www.googletagmanager.com/gtag/js?id=UA-143098403-1" async></script><script>window.dataLayer = window.dataLayer || [];
+<html lnag="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="google-site-verification" content="aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM"><meta name="author" content="Donggi Kim &lt;hi.donggi@gmail.com&gt;"><meta name="keywords" content="Groovy"><meta name="description" content="Groovy 정리"><title>Groovy</title><link id="w3css" rel="stylesheet" href="/source/w3.css"><link id="highlight-style" rel="stylesheet" href="/source/xcode.css"><link id="default-style" rel="stylesheet" href="/source/default.css"><script id="highlight-js" src="/source/highlight.pack.js"></script><script id="default-js" src="/source/default.min.js"></script><script id="dsq-count-scr" src="//donggi.disqus.com/count.js" async></script><script id="kakao-ads" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script><script id="google-ads" data-ad-client="ca-pub-7897366614471210" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script><script id="google-analytics" src="https://www.googletagmanager.com/gtag/js?id=UA-143098403-1" async></script><script>window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', 'UA-143098403-1');</script><script id="google-ads" data-ad-client="ca-pub-7897366614471210" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script></head><body><div id="sidebar" class="w3-bar-block w3-sidebar w3-animate-left"><hr><a href="javascript:closeSidebar();" class="w3-bar-item w3-button">Close &times;</a><hr><div id="marker-list"></div><hr><div id="post-list"><details open="" id="dir-1627423780" class="w3-small file-list" title="카테고리"><summary>카테고리</summary><ul><details id="dir-1275377989" class="w3-small file-list" title="카테고리/단일 문서" open=""><summary>/단일 문서</summary><ul><li><a href="/posts/single/refactoring.html">디자인 패턴 + 리팩터링</a></li><li><a href="/posts/single/aws.html">AWS</a></li><li><a href="/posts/single/centos.html">CentOS</a></li><li><a href="/posts/single/docker.html">Docker</a></li><li><a href="/posts/single/fp.html">FP; Functional Programming</a></li><li><a href="/posts/single/git.html">Git</a></li><li><a href="/posts/single/nginx.html">Nginx</a></li><li><a href="/posts/single/rpi.html">Raspberry Pi 3 + OpenCV(python)</a></li><li><a href="/posts/single/sdkman.html">SDKMAN; The Software Development Kit Manager</a></li><li><a href="/posts/single/tomcat.html">tomcat</a></li><li><a href="/posts/single/vi.html">vi</a></li></ul></details><details id="dir-992513986" class="w3-small file-list" title="카테고리/독서" open=""><summary>/독서</summary><ul><li><a href="/posts/book/001.html">1만 시간의 재발견</a></li><li><a href="/posts/book/002.html">마음의 탄생</a></li><li><a href="/posts/book/003.html">생각하는 삶을 위한 철학의 역사</a></li><li><a href="/posts/book/004.html">쇼펜하우어, 돌이 별이 되는 철학</a></li><li><a href="/posts/book/005.html">인생의 모든 의미</a></li><li><a href="/posts/book/009.html">인지 편향</a></li><li><a href="/posts/book/006.html">지식의 착각</a></li><li><a href="/posts/book/007.html">키르케고르 실존 극장</a></li><li><a href="/posts/book/008.html">Gamification by Design</a></li></ul></details><details id="dir-453420171" class="w3-small file-list" title="카테고리/알고리즘" open=""><summary>/알고리즘</summary><ul><li><a href="/posts/algorithm/book01.html">『알고리즘 도감』</a></li><li><a href="/posts/algorithm/linear_algebra.html">선형대수</a></li><li><a href="/posts/algorithm/algo.html">알고리즘 일반</a></li><li><a href="/posts/algorithm/probability.html">확률</a></li><details id="dir--1451989604" class="w3-small file-list" title="카테고리/알고리즘/KOREATECH" open=""><summary>/KOREATECH</summary><ul><li><a href="/posts/algorithm/koreatech/1003.html">1003: 0을 만들자</a></li><li><a href="/posts/algorithm/koreatech/1008.html">1008: 순환 소수</a></li><li><a href="/posts/algorithm/koreatech/1018.html">1018: 문자열 거리 최소화 하기</a></li><li><a href="/posts/algorithm/koreatech/1048.html">1048: AP 배분</a></li><li><a href="/posts/algorithm/koreatech/1095.html">1095: 자연스러운 정렬</a></li><li><a href="/posts/algorithm/koreatech/1034.html">1034,1041: 최소 이동 거리</a></li><li><a href="/posts/algorithm/koreatech/1011.html">동적계획법(DP) 문제</a></li><li><a href="/posts/algorithm/koreatech/1010.html">소수(Prime) 관련 문제</a></li></ul></details></ul></details><details id="dir-1817032068" class="w3-small file-list" title="카테고리/작성 중지" open=""><summary>/작성 중지</summary><ul><li><a href="/posts/single/quantum_computer.html">양자 컴퓨터</a></li><li><a href="/posts/algorithm/ai.html">AI</a></li><li><a href="/posts/single/unity.html">Unity</a></li></ul></details><details id="dir-991040073" class="w3-small file-list" title="카테고리/DB" open=""><summary>/DB</summary><ul><li><a href="/posts/db/concept.html">DB 기초</a></li><li><a href="/posts/db/mongodb.html">MongoDB</a></li><li><a href="/posts/db/mysql.html">MySQL</a></li><li><a href="/posts/db/psql_to_sqlite.html">PostgreSQL → SQLite3 마이그레이션</a></li><li><a href="/posts/db/psql_admin.html">PostgreSQL 서버 관리</a></li><li><a href="/posts/db/psql_programming.html">PostgreSQL 서버 프로그래밍</a></li><li><a href="/posts/db/psql_tutorial.html">PostgreSQL 시작하기</a></li><li><a href="/posts/db/psql_sql.html">PostgreSQL SQL 언어</a></li></ul></details><details id="dir-68539214" class="w3-small file-list" title="카테고리/Programming" open=""><summary>/Programming</summary><ul><details id="dir--681806672" class="w3-small file-list" title="카테고리/Programming/.NET" open=""><summary>/.NET</summary><ul><li><a href="/posts/dotnet/csharp_basic.html">C# 기초</a></li><li><a href="/posts/dotnet/csharp_library.html">C# 라이브러리</a></li><li><a href="/posts/dotnet/wpf_basic.html">WPF 기초</a></li></ul></details><details id="dir-1549890375" class="w3-small file-list" title="카테고리/Programming/FreeMarker" open=""><summary>/FreeMarker</summary><ul><li><a href="/posts/front/freemarker/template_guide.html">템플릿 작성 가이드 2.3.28</a></li><li><a href="/posts/front/freemarker/programming_guide.html">프로그래밍 가이드 2.3.28</a></li><li><a href="/posts/front/freemarker/built_in.html">Built-in 목록 2.3.28</a></li><li><a href="/posts/front/freemarker/xml_guide.html">XML 처리 가이드 2.3.28</a></li></ul></details><details id="dir-362107912" class="w3-small file-list" title="카테고리/Programming/Front" open=""><summary>/Front</summary><ul><li><a href="/posts/front/css.html">CSS</a></li><li><a href="/posts/front/html.html">HTML</a></li><li><a href="/posts/front/http.html">HTTP 1.1</a></li></ul></details><details id="dir--680952733" class="w3-small file-list" title="카테고리/Programming/Java" open=""><summary>/Java</summary><ul><li><a href="/posts/java/effective_java.html">『Effective Java』</a></li><li><a href="/posts/java/android.html">Android</a></li><li><a href="/posts/java/oop.html">Java 객체지향</a></li><li><a href="/posts/java/version.html">Java 버전별 추가사항</a></li><li><a href="/posts/java/basic.html">Java 시작하기</a></li><li><a href="/posts/java/jni.html">Java Native Interface</a></li><li><a href="/posts/java/java_ee.html">JavaEE</a></li><li><a href="/posts/java/javafx.html">JavaFX</a></li><li><a href="/posts/java/performance.html">JVM 옵션 및 성능 관련사항</a></li><details id="dir--741032455" class="w3-small file-list" title="카테고리/Programming/Java/3rd" open=""><summary>/3rd</summary><ul><li><a href="/posts/java/apache.commons.collections.html">Apache Commons Collections 4.4</a></li><li><a href="/posts/java/apache.commons.lang.html">Apache Commons Lang 3.9</a></li><li><a href="/posts/java/apache.commons.math.html">Apache Commons Math 3.6.1</a></li><li><a href="/posts/java/apache.commons.rng.html">Apache Commons RNG Core 1.2</a></li><li><a href="/posts/java/gson.html">Gson 2.8.6</a></li><li><a href="/posts/java/guava.html">Guava 23.0</a></li><li><a href="/posts/java/jackson.html">Jackson 2.10.1</a></li><li><a href="/posts/java/logback.html">Logback with SLF4J</a></li><li><a href="/posts/java/lombok.html">lombok 1.18.10</a></li></ul></details><details id="dir-76588809" class="w3-small file-list" title="카테고리/Programming/Java/Standard" open=""><summary>/Standard</summary><ul><li><a href="/posts/java/javax.annotation.processing.html">Annotation Processing API</a></li><li><a href="/posts/java/com.sun.nio.sctp.html">com.sun.nio.sctp Since 1.7</a></li><li><a href="/posts/java/java.base.html">java.base 12</a></li></ul></details></ul></details><details id="dir-1907368718" class="w3-small file-list" title="카테고리/Programming/JavaScript" open=""><summary>/JavaScript</summary><ul><li><a href="/posts/javascript/basic2.html">브라우저 JavaScript</a></li><li><a href="/posts/javascript/basic.html">코어 JavaScript</a></li><li><a href="/posts/javascript/jquery.html">jQuery</a></li><li><a href="/posts/javascript/node.html">Node</a></li></ul></details><details id="dir--1366657315" class="w3-small file-list" title="카테고리/Programming/Python" open=""><summary>/Python</summary><ul><li><a href="/posts/python/pandas.html">3rd/pandas : 데이터 처리</a></li><li><a href="/posts/python/standard.html">표준 라이브러리</a></li><li><a href="/posts/python/data_model.html">Python 3.8 데이터 모델</a></li><li><a href="/posts/python/basic.html">Python 3.8 시작하기</a></li><li><a href="/posts/python/built_in_constant.html">Python Built-in Constants 3.8</a></li><li><a href="/posts/python/built_in_exception.html">Python Built-in Exceptions 3.8</a></li><li><a href="/posts/python/built_in_function.html">Python Built-in Functions 3.8</a></li><li><a href="/posts/python/built_in_type.html">Python Built-in Types 3.8</a></li><li><a href="/posts/python/persistence.html">Python Data Persistence</a></li></ul></details></ul></details><details id="dir--419676146" class="w3-small file-list" title="카테고리/Project" open=""><summary>/Project</summary><ul><li><a href="/posts/project/tip.html">잡다한 팁</a></li><li><a href="/posts/project/wpf_data_tool.html">C#.NET, WPF - 데이터 작업 툴</a></li><li><a href="/posts/project/snippets.html">Code Snippets</a></li><li><a href="/posts/project/error.html">Exceptions + Errors</a></li></ul></details></ul></details></div><hr><div class="w3-center"><ins style="display:none;" data-ad-unit="DAN-1k1r635zxb6g3" data-ad-width="300" data-ad-height="250" class="kakao_ad_area"></ins></div><hr><div id="file-list"></div><hr></div><div id="main"><div id="nav" style="position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle" class="w3-bar w3-blue w3-large"><button onclick="toggleSidebar()" class="w3-bar-item w3-button w3-hover-theme">&#9776;</button><input id="query" type="text" placeholder="search" class="w3-bar-item"></div><div id="contents" class="w3-padding"><h1 class="marker">Groovy <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="http://groovy-lang.org/single-page-documentation.html" target="_blank">single-page-documentation.html</a></h1><p>Java 파생 스크립트 언어</p><div><h2 class="marker">설치(SDKMAN)</h2><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ sdk install groovy</div></div><h1 class="marker">Language Specification</h1><p>Java 스펙과 다른 것만 기술한다.</p><div><h2 class="marker">Syntax</h2><div><h3 class="marker">Identifiers</h3><ol><li>Quoted identifiers</li><p>임의의 문자열 상수 표현 및 GString 표현을 '.' 이후의 식별자로 이용할 수 있다.</p><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def map = [:]
+gtag('config', 'UA-143098403-1');</script></head><body><div id="sidebar" class="w3-bar-block w3-sidebar w3-animate-left"><hr><a href="javascript:closeSidebar();" class="w3-bar-item w3-button">Close &times;</a><hr><div id="marker-list"></div><hr><div id="post-list"><details open="" id="dir-1627423780" class="w3-small file-list" title="카테고리"><summary>카테고리</summary><ul><details id="dir-1275377989" class="w3-small file-list" title="카테고리/단일 문서" open=""><summary>/단일 문서</summary><ul><li><a href="/posts/single/refactoring.html">디자인 패턴 + 리팩터링</a></li><li><a href="/posts/single/aws.html">AWS</a></li><li><a href="/posts/single/centos.html">CentOS</a></li><li><a href="/posts/single/docker.html">Docker</a></li><li><a href="/posts/single/fp.html">FP; Functional Programming</a></li><li><a href="/posts/single/git.html">Git</a></li><li><a href="/posts/single/nginx.html">Nginx</a></li><li><a href="/posts/single/rpi.html">Raspberry Pi 3 + OpenCV(python)</a></li><li><a href="/posts/single/sdkman.html">SDKMAN; The Software Development Kit Manager</a></li><li><a href="/posts/single/tomcat.html">tomcat</a></li><li><a href="/posts/single/vi.html">vi</a></li></ul></details><details id="dir-992513986" class="w3-small file-list" title="카테고리/독서" open=""><summary>/독서</summary><ul><li><a href="/posts/book/001.html">1만 시간의 재발견</a></li><li><a href="/posts/book/002.html">마음의 탄생</a></li><li><a href="/posts/book/003.html">생각하는 삶을 위한 철학의 역사</a></li><li><a href="/posts/book/004.html">쇼펜하우어, 돌이 별이 되는 철학</a></li><li><a href="/posts/book/005.html">인생의 모든 의미</a></li><li><a href="/posts/book/009.html">인지 편향</a></li><li><a href="/posts/book/006.html">지식의 착각</a></li><li><a href="/posts/book/007.html">키르케고르 실존 극장</a></li><li><a href="/posts/book/008.html">Gamification by Design</a></li></ul></details><details id="dir-453420171" class="w3-small file-list" title="카테고리/알고리즘" open=""><summary>/알고리즘</summary><ul><li><a href="/posts/algorithm/book01.html">『알고리즘 도감』</a></li><li><a href="/posts/algorithm/linear_algebra.html">선형대수</a></li><li><a href="/posts/algorithm/algo.html">알고리즘 일반</a></li><li><a href="/posts/algorithm/probability.html">확률</a></li><details id="dir--1451989604" class="w3-small file-list" title="카테고리/알고리즘/KOREATECH" open=""><summary>/KOREATECH</summary><ul><li><a href="/posts/algorithm/koreatech/1003.html">1003: 0을 만들자</a></li><li><a href="/posts/algorithm/koreatech/1008.html">1008: 순환 소수</a></li><li><a href="/posts/algorithm/koreatech/1018.html">1018: 문자열 거리 최소화 하기</a></li><li><a href="/posts/algorithm/koreatech/1048.html">1048: AP 배분</a></li><li><a href="/posts/algorithm/koreatech/1095.html">1095: 자연스러운 정렬</a></li><li><a href="/posts/algorithm/koreatech/1034.html">1034,1041: 최소 이동 거리</a></li><li><a href="/posts/algorithm/koreatech/1011.html">동적계획법(DP) 문제</a></li><li><a href="/posts/algorithm/koreatech/1010.html">소수(Prime) 관련 문제</a></li></ul></details></ul></details><details id="dir-1817032068" class="w3-small file-list" title="카테고리/작성 중지" open=""><summary>/작성 중지</summary><ul><li><a href="/posts/single/quantum_computer.html">양자 컴퓨터</a></li><li><a href="/posts/algorithm/ai.html">AI</a></li><li><a href="/posts/single/unity.html">Unity</a></li></ul></details><details id="dir-991040073" class="w3-small file-list" title="카테고리/DB" open=""><summary>/DB</summary><ul><li><a href="/posts/db/concept.html">DB 기초</a></li><li><a href="/posts/db/mongodb.html">MongoDB</a></li><li><a href="/posts/db/mysql.html">MySQL</a></li><li><a href="/posts/db/psql_to_sqlite.html">PostgreSQL → SQLite3 마이그레이션</a></li><li><a href="/posts/db/psql_admin.html">PostgreSQL 서버 관리</a></li><li><a href="/posts/db/psql_programming.html">PostgreSQL 서버 프로그래밍</a></li><li><a href="/posts/db/psql_tutorial.html">PostgreSQL 시작하기</a></li><li><a href="/posts/db/psql_sql.html">PostgreSQL SQL 언어</a></li></ul></details><details id="dir-68539214" class="w3-small file-list" title="카테고리/Programming" open=""><summary>/Programming</summary><ul><details id="dir--681806672" class="w3-small file-list" title="카테고리/Programming/.NET" open=""><summary>/.NET</summary><ul><li><a href="/posts/dotnet/csharp_basic.html">C# 기초</a></li><li><a href="/posts/dotnet/csharp_library.html">C# 라이브러리</a></li><li><a href="/posts/dotnet/wpf_basic.html">WPF 기초</a></li></ul></details><details id="dir-1549890375" class="w3-small file-list" title="카테고리/Programming/FreeMarker" open=""><summary>/FreeMarker</summary><ul><li><a href="/posts/front/freemarker/template_guide.html">템플릿 작성 가이드 2.3.28</a></li><li><a href="/posts/front/freemarker/programming_guide.html">프로그래밍 가이드 2.3.28</a></li><li><a href="/posts/front/freemarker/built_in.html">Built-in 목록 2.3.28</a></li><li><a href="/posts/front/freemarker/xml_guide.html">XML 처리 가이드 2.3.28</a></li></ul></details><details id="dir-362107912" class="w3-small file-list" title="카테고리/Programming/Front" open=""><summary>/Front</summary><ul><li><a href="/posts/front/css.html">CSS</a></li><li><a href="/posts/front/html.html">HTML</a></li><li><a href="/posts/front/http.html">HTTP 1.1</a></li></ul></details><details id="dir--680952733" class="w3-small file-list" title="카테고리/Programming/Java" open=""><summary>/Java</summary><ul><li><a href="/posts/java/effective_java.html">『Effective Java』</a></li><li><a href="/posts/java/android.html">Android</a></li><li><a href="/posts/java/oop.html">Java 객체지향</a></li><li><a href="/posts/java/version.html">Java 버전별 추가사항</a></li><li><a href="/posts/java/basic.html">Java 시작하기</a></li><li><a href="/posts/java/jni.html">Java Native Interface</a></li><li><a href="/posts/java/java_ee.html">JavaEE</a></li><li><a href="/posts/java/javafx.html">JavaFX</a></li><li><a href="/posts/java/performance.html">JVM 옵션 및 성능 관련사항</a></li><details id="dir--741032455" class="w3-small file-list" title="카테고리/Programming/Java/3rd" open=""><summary>/3rd</summary><ul><li><a href="/posts/java/apache.commons.collections.html">Apache Commons Collections 4.4</a></li><li><a href="/posts/java/apache.commons.lang.html">Apache Commons Lang 3.9</a></li><li><a href="/posts/java/apache.commons.math.html">Apache Commons Math 3.6.1</a></li><li><a href="/posts/java/apache.commons.rng.html">Apache Commons RNG Core 1.2</a></li><li><a href="/posts/java/gson.html">Gson 2.8.6</a></li><li><a href="/posts/java/guava.html">Guava 23.0</a></li><li><a href="/posts/java/jackson.html">Jackson 2.10.1</a></li><li><a href="/posts/java/logback.html">Logback with SLF4J</a></li><li><a href="/posts/java/lombok.html">lombok 1.18.10</a></li></ul></details><details id="dir-76588809" class="w3-small file-list" title="카테고리/Programming/Java/Standard" open=""><summary>/Standard</summary><ul><li><a href="/posts/java/javax.annotation.processing.html">Annotation Processing API</a></li><li><a href="/posts/java/com.sun.nio.sctp.html">com.sun.nio.sctp Since 1.7</a></li><li><a href="/posts/java/java.base.html">java.base 12</a></li></ul></details></ul></details><details id="dir-1907368718" class="w3-small file-list" title="카테고리/Programming/JavaScript" open=""><summary>/JavaScript</summary><ul><li><a href="/posts/javascript/basic2.html">브라우저 JavaScript</a></li><li><a href="/posts/javascript/basic.html">코어 JavaScript</a></li><li><a href="/posts/javascript/jquery.html">jQuery</a></li><li><a href="/posts/javascript/node.html">Node</a></li></ul></details><details id="dir--1366657315" class="w3-small file-list" title="카테고리/Programming/Python" open=""><summary>/Python</summary><ul><li><a href="/posts/python/pandas.html">3rd/pandas : 데이터 처리</a></li><li><a href="/posts/python/standard.html">표준 라이브러리</a></li><li><a href="/posts/python/data_model.html">Python 3.8 데이터 모델</a></li><li><a href="/posts/python/basic.html">Python 3.8 시작하기</a></li><li><a href="/posts/python/built_in_constant.html">Python Built-in Constants 3.8</a></li><li><a href="/posts/python/built_in_exception.html">Python Built-in Exceptions 3.8</a></li><li><a href="/posts/python/built_in_function.html">Python Built-in Functions 3.8</a></li><li><a href="/posts/python/built_in_type.html">Python Built-in Types 3.8</a></li><li><a href="/posts/python/persistence.html">Python Data Persistence</a></li></ul></details></ul></details><details id="dir--419676146" class="w3-small file-list" title="카테고리/Project" open=""><summary>/Project</summary><ul><li><a href="/posts/project/tip.html">잡다한 팁</a></li><li><a href="/posts/project/wpf_data_tool.html">C#.NET, WPF - 데이터 작업 툴</a></li><li><a href="/posts/project/snippets.html">Code Snippets</a></li><li><a href="/posts/project/error.html">Exceptions + Errors</a></li></ul></details></ul></details></div><hr><div class="w3-center"><ins style="display:none;" data-ad-unit="DAN-1k1r635zxb6g3" data-ad-width="300" data-ad-height="250" class="kakao_ad_area"></ins></div><hr><div id="file-list"></div><hr></div><div id="main"><div id="nav" style="position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle" class="w3-bar w3-blue w3-large"><button onclick="toggleSidebar()" class="w3-bar-item w3-button w3-hover-theme">&#9776;</button><input id="query" type="text" placeholder="search" class="w3-bar-item"></div><div id="contents" class="w3-padding"><h1 class="marker">Groovy <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="http://groovy-lang.org/single-page-documentation.html" target="_blank">single-page-documentation.html</a></h1><p>Java 파생 스크립트 언어</p><div><h2 class="marker">설치(SDKMAN)</h2><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ sdk install groovy</div><h2 class="marker">실행</h2><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ groovy FileName.groovy # '.groovy' 생략 가능</div><h2 class="marker">컴파일</h2><p>.class 파일을 생성한다</p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ groovyc FileName.groovy</div></div><h1 class="marker">Language Specification</h1><p>Java 스펙과 다른 것만 기술한다.</p><div><h2 class="marker">Syntax</h2><div><h3 class="marker">Identifiers</h3><ol><li>Quoted identifiers</li><p>임의의 문자열 상수 표현 및 GString 표현을 '.' 이후의 식별자로 이용할 수 있다.</p><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def map = [:]
 
 map.' a b c ' = 'abc'
 assert map." a b c " == 'abc'
 
 def firstName = "Homer"
 map."Simpson-${firstName}" = "Homer Simpson"
-assert map.'Simpson-Homer' == "Homer Simpson"
+assert map.'Simpson-Homer' == "Homer Simpson"</div></ol><h3 class="marker">Strings</h3><ol><li>Single-quoted string : 'text'</li><li>Triple-single-quoted string : '''text'''</li><ul><li>여러 줄에 걸친 텍스트 문자열 표현 가능.</li><li>들여쓰기 공백도 포함되므로 유의 ─ String#stripIndent 등을 이용하여 지울 수 있다.</li><li>줄 끝에 \를 쓰면 \n를 삽입하지 않는다</li></ul><li>groovy.lang.GString; String interpolation</li><ul><li>보간 ${}식에는 임의 표현식 ─ 심지어 여러 문장도 가능하다. 반환 없는 문장에 대해서는 null이 채워지고, 여러 문장인 경우 마지막 문장의 평가값만 문자열 보간에 이용된다.</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def text = 'Hello World'
+def text2 = "${text}${text}"
 
-</div></ol></div></div><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">package groovy
+assert text2.toString() == text + text</div><li>모호하지 않은 경우, .표현식은 {}를 생략할 수 있다.</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def obj = [id: 123, name: 'abc']
+assert "$obj.id, $obj.name" == '123, abc'</div><li>$ 자체를 표현하고 싶은 경우 \$로 이스케이프</li><li>GString의 평가값이 String과 같아도 해시코드는 서로 다르다</li></ul><li>Triple-double-quoted string : """text"""</li><p>Interpolation 가능.</p><li>Slashy string : /text/</li><p>Interpolation 가능. \를 이스케이프하지 않는다. 대신 / 자체를 표현하려면 \/로 이스케이프. 여러 줄 문자열 가능.</p></ol><h3 class="marker">Characters</h3><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">char c1 = 'a'
+def c2 = 'b' as char
+def c3 = (char)'c'</div><h3 class="marker">Numbers</h3><ul><li>BigInteger/BigDecimal literal : 1234g</li><li>Double literal : 1234d</li><li>Power operator : x**y</li></ul><h3 class="marker">Lists</h3><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def list = [1, 2, 3] // default : ArrayList
+def list2 = [1, 2, 3] as LinkedList
+LinkedList list3 = [1, 2, 3]
 
-a = 20
-println a
-println plus(10, 20)
+assert list[-1] == 3
 
-def plus(x, y) {
-    x + y
+list << 4 // append
+assert list[3] == 4
+
+assert list[1, 3] == [2, 4]
+assert list[1..3] == [2, 3, 4]</div><h3 class="marker">Arrays</h3><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def arr = [1, 2, 3] as int[]
+int[] arr2 = [1, 2, 3]</div><h3 class="marker">Maps</h3><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def map = [:]                       // empty map
+map = [key1: 'value1', 2: 'value2'] // LinkedHashMap
+map.key3 = 'value3'
+assert map[2] == 'value2'
+assert map.key1 == map['key1']
+</div></div><h2 class="marker">Operators</h2><div><h3 class="marker">Relational operators</h3><ul><li>== : equal</li><li>=== : identical Since 3.0.0</li><p>is 연산자와 동일</p></ul><h3 class="marker">Conditional operators</h3><ul><li>Elvis operator</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">displayName = user.name ?: 'Anonymous'
+displayTitle ?= 'Default' // Since 3.0.0</div></ul><h3 class="marker">Object operators</h3><ul><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">class Account {
+    public String name
+    Account(String name) { this.name = name }
+    String getName() { "name: ${name}" }
+}</div><li>Safe navigation operator : ?.</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def account = null
+assert account?.name == null</div><li>Direct field access operator : @</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def account = new Account('HHH')
+assert account.name != account.@name</div><li>Method pointer operator : .&</li><p>메서드를 가리키는 groovy.lang.Closure 인스턴스를 반환한다.</p><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def f = '123'.&length
+assert f() == 3
+
+def something(int x) { x * 2 }
+def something(str) { "${str} ${str}" }
+f = this.&something
+assert f(123) == 246
+assert f('123') == '123 123'
+
+f = Integer.&new // Since 3.0.0
+assert f(123) == 123</div></ul><h3 class="marker">Regural expression</h3><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green"></div><h3 class="marker">Other operators</h3><ul><li>Spread(-dot) operator</li><p>컬렉션에 대한 프로젝션 반환. 컬렉션의 collect와 유사.</p><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def data = [
+    [key1: '1-1', key2: '1-2'],
+    null,
+    [key1: '2-1', key2: '2-1']
+]
+assert data*.key1 == ['1-1', null, '2-1']
+assert data.collectNested { it?.key1 } == ['1-1', null, '2-1']
+
+data = [data, data]
+assert data.collectNested { it?.key1 } == [['1-1', null, '2-1'], ['1-1', null, '2-1']]</div><li>Spreading method arguments</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def f(int x, int y, int z) { "${x}, ${y}, ${z}" }
+def args = [1, 2, 3]
+assert f(*args) == '1, 2, 3'</div><li>Spread list elements</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def l = [1, 2, 3]
+l = [*l, 4, *l]
+assert l.size() == 7</div><li>Spread map elements</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def data = [1:2, 3:4]
+data = [*:data, 5:6, *:data, 1:7]
+assert data.size() == 3
+assert data[1] == 7</div><li>Range operator</li><p>next(), previous()가 정의된 임의 Comparable로 range를 구성할 수 있다.</p><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def range = 0..5
+assert range instanceof List
+assert (0..5).collect() == [0, 1, 2, 3, 4, 5]
+assert (0..<5).collect() == [0, 1, 2, 3, 4]</div><li>Subscript operator</li><p>getAt(int), putAt(int, value)를 정의하면 아래 연산이 가능</p><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def list = [1, 2, 3, 4]
+assert list[2] == 3
+list[1..3] = [4, 3, 2]
+assert list == [1, 4, 3, 2]
+list[0..2] = [9, 8, 7, 6]
+assert list == [9, 8, 7, 6, 2]</div><li>Spaceship operator</li><p>&lt;=> == compareTo</p><li>Safe index operator : ?[] Since 3.0.0</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def arr = null
+def x = arr?[123] // null에 대한 getAt은 모두 null
+arr?[123] = 123   // null에 대한 setAt은 모두 무시</div><li>Membership operator : in</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def list = [1, 2, 3]
+assert (1 in list)</div><ul><li>List에 대하여 in == contains()</li><li>그 외엔 in == isCase()</li></ul><li>Coercion operator : as</li><p>대상 타입이 소스와 동일하더라도 새 인스턴스를 생성함에 유의. asType() 메서드로 사용자정의 변환 가능</p><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">x as String</div></ul><h3 class="marker">Operator overloading</h3><table><tr><th>operator</th><th>method</th></tr><tr><td>+</td><td>plus</td></tr><tr><td>-</td><td>minus</td></tr><tr><td>*</td><td>multiply</td></tr><tr><td>/</td><td>div</td></tr><tr><td>%</td><td>mod</td></tr><tr><td>**</td><td>power</td></tr><tr><td>|</td><td>or</td></tr><tr><td>&amp;</td><td>and</td></tr><tr><td>^</td><td>xor</td></tr><tr><td>as</td><td>asType</td></tr><tr><td>obj()</td><td>call</td></tr><tr><td>obj[x]</td><td>getAt</td></tr><tr><td>obj[x] = y</td><td>putAt</td></tr><tr><td>x in y</td><td>isCase</td></tr><tr><td>&lt;&lt;</td><td>leftShift</td></tr><tr><td>&gt;&gt;</td><td>rightShift</td></tr><tr><td>&gt;&gt;&gt;</td><td>rightShiftUnsigned</td></tr><tr><td>++</td><td>next</td></tr><tr><td>--</td><td>previous</td></tr><tr><td>+x</td><td>positive</td></tr><tr><td>-x</td><td>negative</td></tr><tr><td>~x</td><td>betwiseNegate</td></tr></table></div><h2 class="marker">Program structure</h2><div><h3 class="marker">Package names</h3><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">package com.xxx</div><h3 class="marker">Imports</h3><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">import x.y.Z</div><p>Default imports</p><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">import java.lang.*
+import java.util.*
+import java.io.*
+import java.net.*
+import groovy.lang.*
+import groovy.util.*
+import java.math.BigInteger
+import java.math.BigDecimal</div><h3 class="marker">Scripts versus classes</h3><p>Groovy는 스크립트와 Java 클래스 작성 모두를 허용하며, 스크립트는 컴파일 시 클래스로 변환된다.</p><ul><li>스크립트의 함수 선언은 자동으로 컴파일된 클래스의 멤버가 된다.</li><li>나머지 스크립트는 컴파일된 클래스의 run() 바디가 된다.</li></ul><h3 class="marker">Variables</h3><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def x = 1     // 동적 타입 변수. 컴파일된 클래스의 run() 내부 지역 변수가 된다.
+x = 'hello'
+
+int x = 1     // 정적 타입 변수. 컴파일된 클래스의 run() 내부 지역 변수가 된다.
+
+x = 1         // 스크립트 클래스에 바인딩되어 클래스 내부 어디서든 접근 가능
+
+@Field x = 1  // 컴파일된 클래스의 필드가 된다.
+</div></div><h2 class="marker">Object orientation</h2><div><h3 class="marker">Types</h3><ul><li>Constructors</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">class Person {
+    String name
+    Integer age
+    Person() {
+        println('no-arg constructor called')
+    }
+    Person(name, age) {
+        this.name = name
+        this.age = age
+        println('arg constructor called')
+    }
+    String toString() {
+        "{name:'${name}',age:${age}}"
+    }
 }
 
+def p1 = new Person('p1', 11)
+def p2 = ['p2', 22] as Person
+Person p3 = ['p3', 33]
+// no-arg 생성자는 아래와 같은 호출 가능
+def p4 = new Person(age: 44, name: 'p4')
+def p5 = new Person([age: 55, name: 'p5'])
 
-java -classpath groovy.jar:asm.jar Test
+println([p1, p2, p3, p4, p5])
+/*
+arg constructor called
+arg constructor called
+arg constructor called
+no-arg constructor called
+no-arg constructor called
+[{name:'p1',age:11}, {name:'p2',age:22}, {name:'p3',age:33}, {name:'p4',age:44}, {name:'p5',age:55}]
+*/</div><li>Annotation</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">@interface Status {
+    int statusCode() default 200
+}
+@Status(statusCode=503)
+internalError() {}</div><ul><li>Meta-annotations</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">import groovy.transform.AnnotationCollector
 
+@Service
+@Transactional
+@AnnotationCollector
+@interface TransactionalService {}</div></ul></ul><h3 class="marker">Traits</h3><p>Interface와 AbstractClass를 섞은 느낌</p></div><h2 class="marker">Closures</h2><div><h3 class="marker">Syntax</h3><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">{ [params -> ] statements }
 
+next = { x++ }
+plus = { a, b -> a + b }
+minus = { int a, int b -> return a - b }
+concat = { String... args -> args.join(',') }</div><h3 class="marker">Delegation strategy</h3><ul><li>this : 클로저를 갖는 클래스 인스턴스</li><li>owner : 클로저를 갖는 클래스 또는 클로저 인스턴스</li><li>delegate : 사용자가 임의로 설정할 공유값. 기본값은 owner</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">class Person { String name }
+def toUpper = { delegate.name.toUpperCase() }
+def p = new Person(name: 'Norman')
+toUpper.delegate = p
+assert toUpper() == 'NORMAN'
 
-문법
-
-def a = 20 // 동적 타입
-a = "문자열"
-
-int a = 20 // 정적 타입
-
-java.util.Date a = new java.util.Date() // 자바 클래스 사용 가능
-
-list = [10, 20, 30]
-println list[2]
-println list.get(2)
-println list.size()
-emptyList = []
-
-map = ["key1":"value1","key2":"value2"]
-println map.key1
-map.key1 = "value3"
-println map.getClass()
-emptyMap = [:]
-
-
-if () ~ else if () ~ else
-
-def dd = ( a < 20 ) ? "s" : "x"
-
-
-switch(x) {
+toUpper = { name.toUpperCase() }
+p = new Person(name: 'Norman')
+toUpper.delegate = p
+assert toUpper() == 'NORMAN'</div><li>Closure.resolveStrategy</li><p>delegate를 생략했을 때, 어느 것을 먼저 찾을 것인지</p><ul><li>Closure.OWNER_FIRST : owner 먼저. owner에 없으면 delegate</li><li>Closure.DELEGATE_FIRST : delegate 먼저. delegate에 없으면 owner</li><li>Closure.OWNER_ONLY, DELEGATE_ONLY</li><li>Closure.TO_SELF : Closure 서브클래스를 직접 작성하는 경우, Closure 인스턴스 자체.</li></ul></ul><h3 class="marker">Closures in GStrings</h3><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">"x = ${-> x}" // 나중에(사용할 때마다) 평가된다</div><h3 class="marker">Functional programming</h3><ul><li>Left currying : Closure.curry(...)</li><li>Right currying : Closure.rcurry(...)</li><li>Index based currying : Closure.ncurry(idx, value, ...)</li><li>Memoization : Closure.memoize()</li><p>memoizeAtMost, memoizeAtLeast, memoizeBetween</p><li>Composition : beforeClosure >> afterClosure, afterClosure &lt;&lt; beforeClosure</li><li>Trampoline : 재귀 호출 쌓이는 스택을 회피하기 위해 클로저를 반복적 호출로 변환</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def facto = { n, r = 1g -> n &lt; 2? r : facto.trampoline(n-1, n * r) }
+facto = facto.trampoline()
+</div></ul></div><h2 class="marker">Semantics</h2><div><h3 class="marker">Statements</h3><ul><li>Multiple assignment</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def (x, y, z) = [1, 2]
+assert z == null</div><li>Object destructing with multiple assignment</li><p>getAt/putAt 메서드를 정의하면 객체에 대한 복수 할당이 가능하다</p><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">class Rect {
+    double w
+    double h
+    double getAt(int idx) {
+        switch(idx) {
+        case 0: return w
+        case 1: return h
+        }
+    }
+}
+def (w, h) = new Rect(w=123d,h=456d)
+print([w, h])</div><li>switch/case</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">switch(x) {
     case "aaa":
     break
     case 123:
     case [1, 3, 2.333, true]:
     case 20..30:
+    case ~/regex/:
+    case { x > 10 }:
     case Number:
     default:
-}
-
-
-while(){}
-
-for(int i = 0; i < 3; i++)
+}</div><li>Looping structures</li><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">for (int i = 0; i < 3; i++)
 for (i in 0..9)
 for (i in [100, 90, 92])
-for ( i in 배열)
-for (entry in 맵)
-for(c in 문자열)
-
-
-목록.each()
-맵.each({key value -> ...})
-목록.eachWithIndex({obj, i -> ...})
-맵.eachWithIndex({entry, i ->})
-
-
-def plus(a, b) {
-    a + b
-}
-
-int minus(int a, int b) {
-    return a - b
-}
-
-plus = {a, b -> a + b}
-minus = {int a, int b -> return a - b}
-
-
-기본 임포트 패키지
-java.lang, java.io, java.math, java.net, java.util, groovy.lang, groovy.util
-
-
-
-class Test {
-    Integer num
-    void hello() {
-
-    }
-}
-
-t = new Test()
-
-
-
-msg = "'hello'"
-msg = '"hello"'
-msg = /"hello'/
-msg = """hello
-hello"""
-
-msg = "message : $msg"
-formatter = "current time : ${new Date()}"
-formatter = "current time : ${arg -> arg}"</div></div><hr>&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="/LICENSE" target="_blank">LICENSE</a></div></body></html>
+for (i in array)
+for (entry in map)
+for(c in 'string')</div></ul></div></div></div><hr>&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="/LICENSE" target="_blank">LICENSE</a></div></body></html>

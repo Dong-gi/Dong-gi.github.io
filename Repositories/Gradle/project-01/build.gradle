@@ -1,0 +1,7 @@
+for ( i in [2, 4, 6] ) {
+    task "hello${i}" {
+        doLast {
+            println "${'hello?' * i}"
+        }
+    }
+}
