@@ -1,0 +1,56 @@
+include ../../source/skeleton.jade
++post('SF Document', 'SF, Webapp Framework, HTML Framework', 'Why do more? Here\'s Simplest html Framework.')
+    h1.marker SF; Simplest html Framework
+    div
+        h2 Purpose
+        p The world most simplest html framework
+
+        h2 Versions
+        table
+            +ths('version', 'size', 'link')
+            tr
+                td 0.1.1
+                td 1.84KB
+                td: +asA('https://github.com/Dong-gi/SF/releases/download/0.1.1/sf.min.js')
+
+    h1.marker Demos
+    div
+        h2.marker 0.1.1
+        div
+            h3.marker Get app instance
+            +asCode('javascript').
+                const app = SF.build()              // root = document.querySelector('[sf]')
+                const app = SF.build(document.body) // root = document.body
+            
+            h3.marker Hello World
+            +codeBtn('/Repositories/JavaScript/SF/demo1.html', 'html')
+            +asA('/Repositories/JavaScript/SF/demo1.html')
+
+    h1.marker Change Logs
+    ol
+        li.marker 0.1.0
+        p First version
+
+        li.marker 0.1.1
+        ol
+            li Bug fix. Solve ambiguous situation like below
+            +asCode('javascript').
+                // Before
+                app.head[0].title = 'Welcome' // 'title' attribute? or 'title' node?
+                // After
+                app.head[0].title = 'Welcome'              // 'title' attribute
+                app.head[0].$title[0].innerText = 'Welcome' // 'title' node
+            li Improve. If there's only one node with the specific node name, then return that node instead of array of children.
+            +asCode('javascript').
+                // Before
+                app.head[0].$title[0].innerText = 'Welcome'
+                // After
+                app.head.$title.innerText = 'Welcome'
+
+        p x.$ : 원본 객체 참조
+
+        h2.marker 0.2.0
+        p Coming soon... 'binding'
+        
+        h2.marker 0.3.0
+        p Coming soon... datagrid : string, csv, [], [][], {}, {{}}, {}{}, [{}], {[]}, ...

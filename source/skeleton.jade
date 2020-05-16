@@ -29,10 +29,10 @@ mixin codeBtn(path, lan, displayRange)
         if block
             block
         else
-            |예시 코드 »
+            |View Code »
 
 mixin asA(href, text)
-    +w3a()&attributes({ href: href, target: '_blank' })&attributes(attributes)= text || href.split('/').pop() || '참고자료'
+    +w3a()&attributes({ href: href, target: '_blank' })&attributes(attributes)= text || href.split('/').pop() || 'Reference'
 
 mixin ths(...cells)
     tr&attributes(attributes)

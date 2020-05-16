@@ -10,18 +10,15 @@ if (!String.prototype.hashCode) {
         return hash;
     };
 }
-if (!String.prototype.asSF) {
-    String.prototype.asSF = function () {
-        let temp = document.createElement('template');
-        temp.insertAdjacentHTML('afterbegin', this);
-        switch (temp.childElementCount) {
-            case 0: return null;
-            case 1: return SF.asSF(temp.firstChild);
-            default: return SF.asSFarr(temp.children);
-        }
-    };
-}
-// x.$ : 원본 객체 참조
+String.prototype.asSF = function () {
+    let temp = document.createElement('template');
+    temp.insertAdjacentHTML('afterbegin', this);
+    switch (temp.childElementCount) {
+        case 0: return null;
+        case 1: return SF.asSF(temp.firstChild);
+        default: return SF.asSFarr(temp.children);
+    }
+};
 class SF {
     static build(root) {
         if (!root)
@@ -30,7 +27,7 @@ class SF {
         app.templates = SF.templates;
         app.newTemplate = function (templateName, htmlMaker, callback) {
             let template = ((htmlMaker, callback) => new Proxy(SF.__placeholder, {
-                apply: function(target, thisArg, argumentsList) {
+                apply: function (target, thisArg, argumentsList) {
                     let node = htmlMaker().asSF();
                     callback(node);
                     return node;
@@ -57,13 +54,12 @@ class SF {
             set(o, prop, value) {
                 if (o.hasAttribute(prop))
                     return o.setAttribute(prop, value);
-                else if (o.hasOwnProperty(prop))
+                if (o.hasOwnProperty(prop))
                     return o[prop] = value;
-                else
-                    return o[prop] = value;
+                return o[prop] = value;
             },
             get(o, prop) {
-                switch(prop) {
+                switch (prop) {
                     case '$':
                         return o;
                     case 'after': case 'before': case 'firstChild': case 'lastChild': case 'firstElementChild': case 'lastElementChild': case 'parentElement': case 'parentNode':
@@ -73,16 +69,17 @@ class SF {
                     case 'text':
                         return SF.asSFarr(Array.from(o.childNodes).filter(x => x.nodeName == '#text'))
                 }
+                if (prop.startsWith('$'))
+                    return SF.asSFarr(o.querySelectorAll(prop.substr(1)));
                 if (o.hasAttribute(prop))
                     return o.getAttribute(prop);
-                else if (o.hasOwnProperty(prop))
+                if (o.hasOwnProperty(prop))
                     return o[prop];
-                else if (o[prop] != undefined && o[prop] != null)
+                if (o[prop] != undefined && o[prop] != null)
                     return o[prop];
-                else if (o.hasAttribute('sf') && document.getElementById(prop))
+                if (o.hasAttribute('sf') && document.getElementById(prop))
                     return SF.asSF(document.getElementById(prop));
-                else
-                    return SF.asSFarr(o.querySelectorAll(prop));
+                return SF.asSFarr(o.querySelectorAll(prop));
             }
         });
         return SF.map[element.__key];
@@ -93,11 +90,9 @@ class SF {
         for (let e of elements) {
             arr.push(SF.asSF(e));
         }
-        return arr;
+        return arr.length == 1? arr[0] : arr;
     }
-    // TODO. bind
-    // TODO. datagrid : string, csv, [], [][], {}, {{}}, {}{}, [{}], {[]}, ...
 }
 SF.map = SF.map || new Map();
 SF.templates = SF.templates || new Map();
-SF.__placeholder = SF.__placeholder || function () {};
+SF.__placeholder = SF.__placeholder || function () { };
