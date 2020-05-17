@@ -1,4 +1,4 @@
-./:
+/d/Dong-gi.github.io:
 404.html
 build_site.sh
 google17afeae5a0bb8a4d.html
@@ -15,7 +15,7 @@ robots.txt
 sitemap
 source
 
-./imgs:
+/d/Dong-gi.github.io/imgs:
 20180826_213734.png
 20180826_214148.png
 20180827_230700.png
@@ -54,7 +54,7 @@ source
 20200227_145006.png
 kanna.gif
 
-./posts:
+/d/Dong-gi.github.io/posts:
 algorithm
 book
 db
@@ -66,7 +66,7 @@ project
 python
 single
 
-./posts/algorithm:
+/d/Dong-gi.github.io/posts/algorithm:
 ai.html
 algo.html
 book01.html
@@ -74,7 +74,7 @@ koreatech
 linear_algebra.html
 probability.html
 
-./posts/algorithm/koreatech:
+/d/Dong-gi.github.io/posts/algorithm/koreatech:
 1003.html
 1008.html
 1010.html
@@ -85,7 +85,7 @@ probability.html
 1060.html
 1095.html
 
-./posts/book:
+/d/Dong-gi.github.io/posts/book:
 001.html
 002.html
 003.html
@@ -96,7 +96,7 @@ probability.html
 008.html
 009.html
 
-./posts/db:
+/d/Dong-gi.github.io/posts/db:
 concept.html
 example
 mongodb.html
@@ -107,37 +107,37 @@ psql_sql.html
 psql_to_sqlite.html
 psql_tutorial.html
 
-./posts/db/example:
+/d/Dong-gi.github.io/posts/db/example:
 mysql_select_all_table.sql
 pgsql_export_csv.sql
 pgsql_hello_world.sql
 pgsql_select_tables_with_suffix.sql
 pgsql_trigger_before_update.sql
 
-./posts/dotnet:
+/d/Dong-gi.github.io/posts/dotnet:
 csharp_basic.html
 csharp_library.html
 wpf_basic.html
 
-./posts/front:
+/d/Dong-gi.github.io/posts/front:
 canvas
 css.html
 freemarker
 html.html
 http.html
 
-./posts/front/canvas:
+/d/Dong-gi.github.io/posts/front/canvas:
 draw1.js
 draw2.js
 
-./posts/front/freemarker:
+/d/Dong-gi.github.io/posts/front/freemarker:
 built_in.html
 freemarker_permission.txt
 programming_guide.html
 template_guide.html
 xml_guide.html
 
-./posts/java:
+/d/Dong-gi.github.io/posts/java:
 android.html
 apache.commons.collections.html
 apache.commons.lang.html
@@ -161,7 +161,7 @@ oop.html
 performance.html
 version.html
 
-./posts/javascript:
+/d/Dong-gi.github.io/posts/javascript:
 animation_example.html
 audio_example.html
 basic.html
@@ -173,14 +173,14 @@ node.html
 selector_example.html
 storage_example.html
 
-./posts/project:
+/d/Dong-gi.github.io/posts/project:
 error.html
 sf.html
 snippets.html
 tip.html
 wpf_data_tool.html
 
-./posts/python:
+/d/Dong-gi.github.io/posts/python:
 basic.html
 built_in_constant.html
 built_in_exception.html
@@ -191,7 +191,7 @@ pandas.html
 persistence.html
 standard.html
 
-./posts/single:
+/d/Dong-gi.github.io/posts/single:
 aws.html
 centos.html
 demo3.html
@@ -210,7 +210,7 @@ tomcat.html
 unity.html
 vi.html
 
-./posts.jade:
+/d/Dong-gi.github.io/posts.jade:
 algorithm
 book
 db
@@ -222,7 +222,7 @@ project
 python
 single
 
-./posts.jade/algorithm:
+/d/Dong-gi.github.io/posts.jade/algorithm:
 ai.jade
 algo.jade
 book01.jade
@@ -230,7 +230,7 @@ koreatech
 linear_algebra.jade
 probability.jade
 
-./posts.jade/algorithm/koreatech:
+/d/Dong-gi.github.io/posts.jade/algorithm/koreatech:
 1003.jade
 1008.jade
 1010.jade
@@ -241,7 +241,7 @@ probability.jade
 1060.jade
 1095.jade
 
-./posts.jade/book:
+/d/Dong-gi.github.io/posts.jade/book:
 001.jade
 002.jade
 003.jade
@@ -252,7 +252,7 @@ probability.jade
 008.jade
 009.jade
 
-./posts.jade/db:
+/d/Dong-gi.github.io/posts.jade/db:
 concept.jade
 mongodb.jade
 mysql.jade
@@ -262,24 +262,24 @@ psql_sql.jade
 psql_to_sqlite.jade
 psql_tutorial.jade
 
-./posts.jade/dotnet:
+/d/Dong-gi.github.io/posts.jade/dotnet:
 csharp_basic.jade
 csharp_library.jade
 wpf_basic.jade
 
-./posts.jade/front:
+/d/Dong-gi.github.io/posts.jade/front:
 css.jade
 freemarker
 html.jade
 http.jade
 
-./posts.jade/front/freemarker:
+/d/Dong-gi.github.io/posts.jade/front/freemarker:
 built_in.jade
 programming_guide.jade
 template_guide.jade
 xml_guide.jade
 
-./posts.jade/java:
+/d/Dong-gi.github.io/posts.jade/java:
 android.jade
 apache.commons.collections.jade
 apache.commons.lang.jade
@@ -302,20 +302,20 @@ oop.jade
 performance.jade
 version.jade
 
-./posts.jade/javascript:
+/d/Dong-gi.github.io/posts.jade/javascript:
 basic.jade
 basic2.jade
 jquery.jade
 node.jade
 
-./posts.jade/project:
+/d/Dong-gi.github.io/posts.jade/project:
 error.jade
 sf.jade
 snippets.jade
 tip.jade
 wpf_data_tool.jade
 
-./posts.jade/python:
+/d/Dong-gi.github.io/posts.jade/python:
 basic.jade
 built_in_constant.jade
 built_in_exception.jade
@@ -326,7 +326,7 @@ pandas.jade
 persistence.jade
 standard.jade
 
-./posts.jade/single:
+/d/Dong-gi.github.io/posts.jade/single:
 aws.jade
 centos.jade
 demo3.jade
@@ -345,7 +345,7 @@ tomcat.jade
 unity.jade
 vi.jade
 
-./Repositories:
+/d/Dong-gi.github.io/Repositories:
 Android
 Config
 Eclipse
@@ -361,7 +361,7 @@ STS
 Unity
 VisualStudio
 
-./Repositories/Android:
+/d/Dong-gi.github.io/Repositories/Android:
 Project01
 Project02
 Project03
@@ -370,7 +370,7 @@ Project05
 Project06
 Project07
 
-./Repositories/Android/Project01:
+/d/Dong-gi.github.io/Repositories/Android/Project01:
 app
 build.gradle
 gradle
@@ -379,55 +379,55 @@ gradlew
 gradlew.bat
 settings.gradle
 
-./Repositories/Android/Project01/app:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app:
 build.gradle
 proguard-rules.pro
 src
 
-./Repositories/Android/Project01/app/src:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src:
 androidTest
 main
 test
 
-./Repositories/Android/Project01/app/src/androidTest:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/androidTest:
 java
 
-./Repositories/Android/Project01/app/src/androidTest/java:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/androidTest/java:
 io
 
-./Repositories/Android/Project01/app/src/androidTest/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/androidTest/java/io:
 github
 
-./Repositories/Android/Project01/app/src/androidTest/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/androidTest/java/io/github:
 donggi
 
-./Repositories/Android/Project01/app/src/androidTest/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/androidTest/java/io/github/donggi:
 project01
 
-./Repositories/Android/Project01/app/src/androidTest/java/io/github/donggi/project01:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/androidTest/java/io/github/donggi/project01:
 ExampleInstrumentedTest.java
 
-./Repositories/Android/Project01/app/src/main:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/main:
 AndroidManifest.xml
 java
 res
 
-./Repositories/Android/Project01/app/src/main/java:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/main/java:
 io
 
-./Repositories/Android/Project01/app/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/main/java/io:
 github
 
-./Repositories/Android/Project01/app/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/main/java/io/github:
 donggi
 
-./Repositories/Android/Project01/app/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/main/java/io/github/donggi:
 project01
 
-./Repositories/Android/Project01/app/src/main/java/io/github/donggi/project01:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/main/java/io/github/donggi/project01:
 MainActivity.java
 
-./Repositories/Android/Project01/app/src/main/res:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/main/res:
 drawable
 drawable-v24
 layout
@@ -439,70 +439,70 @@ mipmap-xxhdpi
 mipmap-xxxhdpi
 values
 
-./Repositories/Android/Project01/app/src/main/res/drawable:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/main/res/drawable:
 ic_launcher_background.xml
 
-./Repositories/Android/Project01/app/src/main/res/drawable-v24:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/main/res/drawable-v24:
 ic_launcher_foreground.xml
 
-./Repositories/Android/Project01/app/src/main/res/layout:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/main/res/layout:
 activity_main.xml
 
-./Repositories/Android/Project01/app/src/main/res/mipmap-anydpi-v26:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/main/res/mipmap-anydpi-v26:
 ic_launcher.xml
 ic_launcher_round.xml
 
-./Repositories/Android/Project01/app/src/main/res/mipmap-hdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/main/res/mipmap-hdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project01/app/src/main/res/mipmap-mdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/main/res/mipmap-mdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project01/app/src/main/res/mipmap-xhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/main/res/mipmap-xhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project01/app/src/main/res/mipmap-xxhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/main/res/mipmap-xxhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project01/app/src/main/res/mipmap-xxxhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/main/res/mipmap-xxxhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project01/app/src/main/res/values:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/main/res/values:
 colors.xml
 strings.xml
 styles.xml
 
-./Repositories/Android/Project01/app/src/test:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/test:
 java
 
-./Repositories/Android/Project01/app/src/test/java:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/test/java:
 io
 
-./Repositories/Android/Project01/app/src/test/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/test/java/io:
 github
 
-./Repositories/Android/Project01/app/src/test/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/test/java/io/github:
 donggi
 
-./Repositories/Android/Project01/app/src/test/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/test/java/io/github/donggi:
 project01
 
-./Repositories/Android/Project01/app/src/test/java/io/github/donggi/project01:
+/d/Dong-gi.github.io/Repositories/Android/Project01/app/src/test/java/io/github/donggi/project01:
 ExampleUnitTest.java
 
-./Repositories/Android/Project01/gradle:
+/d/Dong-gi.github.io/Repositories/Android/Project01/gradle:
 wrapper
 
-./Repositories/Android/Project01/gradle/wrapper:
+/d/Dong-gi.github.io/Repositories/Android/Project01/gradle/wrapper:
 gradle-wrapper.jar
 gradle-wrapper.properties
 
-./Repositories/Android/Project02:
+/d/Dong-gi.github.io/Repositories/Android/Project02:
 app
 build.gradle
 gradle
@@ -511,55 +511,55 @@ gradlew
 gradlew.bat
 settings.gradle
 
-./Repositories/Android/Project02/app:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app:
 build.gradle
 proguard-rules.pro
 src
 
-./Repositories/Android/Project02/app/src:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src:
 androidTest
 main
 test
 
-./Repositories/Android/Project02/app/src/androidTest:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/androidTest:
 java
 
-./Repositories/Android/Project02/app/src/androidTest/java:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/androidTest/java:
 io
 
-./Repositories/Android/Project02/app/src/androidTest/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/androidTest/java/io:
 github
 
-./Repositories/Android/Project02/app/src/androidTest/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/androidTest/java/io/github:
 donggi
 
-./Repositories/Android/Project02/app/src/androidTest/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/androidTest/java/io/github/donggi:
 project02
 
-./Repositories/Android/Project02/app/src/androidTest/java/io/github/donggi/project02:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/androidTest/java/io/github/donggi/project02:
 ExampleInstrumentedTest.java
 
-./Repositories/Android/Project02/app/src/main:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/main:
 AndroidManifest.xml
 java
 res
 
-./Repositories/Android/Project02/app/src/main/java:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/main/java:
 io
 
-./Repositories/Android/Project02/app/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/main/java/io:
 github
 
-./Repositories/Android/Project02/app/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/main/java/io/github:
 donggi
 
-./Repositories/Android/Project02/app/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/main/java/io/github/donggi:
 project02
 
-./Repositories/Android/Project02/app/src/main/java/io/github/donggi/project02:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/main/java/io/github/donggi/project02:
 MainActivity.java
 
-./Repositories/Android/Project02/app/src/main/res:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/main/res:
 drawable
 drawable-v24
 layout
@@ -571,70 +571,70 @@ mipmap-xxhdpi
 mipmap-xxxhdpi
 values
 
-./Repositories/Android/Project02/app/src/main/res/drawable:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/main/res/drawable:
 ic_launcher_background.xml
 
-./Repositories/Android/Project02/app/src/main/res/drawable-v24:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/main/res/drawable-v24:
 ic_launcher_foreground.xml
 
-./Repositories/Android/Project02/app/src/main/res/layout:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/main/res/layout:
 activity_main.xml
 
-./Repositories/Android/Project02/app/src/main/res/mipmap-anydpi-v26:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/main/res/mipmap-anydpi-v26:
 ic_launcher.xml
 ic_launcher_round.xml
 
-./Repositories/Android/Project02/app/src/main/res/mipmap-hdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/main/res/mipmap-hdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project02/app/src/main/res/mipmap-mdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/main/res/mipmap-mdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project02/app/src/main/res/mipmap-xhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/main/res/mipmap-xhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project02/app/src/main/res/mipmap-xxhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/main/res/mipmap-xxhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project02/app/src/main/res/mipmap-xxxhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/main/res/mipmap-xxxhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project02/app/src/main/res/values:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/main/res/values:
 colors.xml
 strings.xml
 styles.xml
 
-./Repositories/Android/Project02/app/src/test:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/test:
 java
 
-./Repositories/Android/Project02/app/src/test/java:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/test/java:
 io
 
-./Repositories/Android/Project02/app/src/test/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/test/java/io:
 github
 
-./Repositories/Android/Project02/app/src/test/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/test/java/io/github:
 donggi
 
-./Repositories/Android/Project02/app/src/test/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/test/java/io/github/donggi:
 project02
 
-./Repositories/Android/Project02/app/src/test/java/io/github/donggi/project02:
+/d/Dong-gi.github.io/Repositories/Android/Project02/app/src/test/java/io/github/donggi/project02:
 ExampleUnitTest.java
 
-./Repositories/Android/Project02/gradle:
+/d/Dong-gi.github.io/Repositories/Android/Project02/gradle:
 wrapper
 
-./Repositories/Android/Project02/gradle/wrapper:
+/d/Dong-gi.github.io/Repositories/Android/Project02/gradle/wrapper:
 gradle-wrapper.jar
 gradle-wrapper.properties
 
-./Repositories/Android/Project03:
+/d/Dong-gi.github.io/Repositories/Android/Project03:
 app
 build.gradle
 gradle
@@ -643,55 +643,55 @@ gradlew
 gradlew.bat
 settings.gradle
 
-./Repositories/Android/Project03/app:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app:
 build.gradle
 proguard-rules.pro
 src
 
-./Repositories/Android/Project03/app/src:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src:
 androidTest
 main
 test
 
-./Repositories/Android/Project03/app/src/androidTest:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/androidTest:
 java
 
-./Repositories/Android/Project03/app/src/androidTest/java:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/androidTest/java:
 io
 
-./Repositories/Android/Project03/app/src/androidTest/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/androidTest/java/io:
 github
 
-./Repositories/Android/Project03/app/src/androidTest/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/androidTest/java/io/github:
 donggi
 
-./Repositories/Android/Project03/app/src/androidTest/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/androidTest/java/io/github/donggi:
 project03
 
-./Repositories/Android/Project03/app/src/androidTest/java/io/github/donggi/project03:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/androidTest/java/io/github/donggi/project03:
 ExampleInstrumentedTest.java
 
-./Repositories/Android/Project03/app/src/main:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/main:
 AndroidManifest.xml
 java
 res
 
-./Repositories/Android/Project03/app/src/main/java:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/main/java:
 io
 
-./Repositories/Android/Project03/app/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/main/java/io:
 github
 
-./Repositories/Android/Project03/app/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/main/java/io/github:
 donggi
 
-./Repositories/Android/Project03/app/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/main/java/io/github/donggi:
 project03
 
-./Repositories/Android/Project03/app/src/main/java/io/github/donggi/project03:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/main/java/io/github/donggi/project03:
 MainActivity.java
 
-./Repositories/Android/Project03/app/src/main/res:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/main/res:
 drawable
 drawable-v24
 layout
@@ -703,70 +703,70 @@ mipmap-xxhdpi
 mipmap-xxxhdpi
 values
 
-./Repositories/Android/Project03/app/src/main/res/drawable:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/main/res/drawable:
 ic_launcher_background.xml
 
-./Repositories/Android/Project03/app/src/main/res/drawable-v24:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/main/res/drawable-v24:
 ic_launcher_foreground.xml
 
-./Repositories/Android/Project03/app/src/main/res/layout:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/main/res/layout:
 activity_main.xml
 
-./Repositories/Android/Project03/app/src/main/res/mipmap-anydpi-v26:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/main/res/mipmap-anydpi-v26:
 ic_launcher.xml
 ic_launcher_round.xml
 
-./Repositories/Android/Project03/app/src/main/res/mipmap-hdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/main/res/mipmap-hdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project03/app/src/main/res/mipmap-mdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/main/res/mipmap-mdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project03/app/src/main/res/mipmap-xhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/main/res/mipmap-xhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project03/app/src/main/res/mipmap-xxhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/main/res/mipmap-xxhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project03/app/src/main/res/mipmap-xxxhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/main/res/mipmap-xxxhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project03/app/src/main/res/values:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/main/res/values:
 colors.xml
 strings.xml
 styles.xml
 
-./Repositories/Android/Project03/app/src/test:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/test:
 java
 
-./Repositories/Android/Project03/app/src/test/java:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/test/java:
 io
 
-./Repositories/Android/Project03/app/src/test/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/test/java/io:
 github
 
-./Repositories/Android/Project03/app/src/test/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/test/java/io/github:
 donggi
 
-./Repositories/Android/Project03/app/src/test/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/test/java/io/github/donggi:
 project03
 
-./Repositories/Android/Project03/app/src/test/java/io/github/donggi/project03:
+/d/Dong-gi.github.io/Repositories/Android/Project03/app/src/test/java/io/github/donggi/project03:
 ExampleUnitTest.java
 
-./Repositories/Android/Project03/gradle:
+/d/Dong-gi.github.io/Repositories/Android/Project03/gradle:
 wrapper
 
-./Repositories/Android/Project03/gradle/wrapper:
+/d/Dong-gi.github.io/Repositories/Android/Project03/gradle/wrapper:
 gradle-wrapper.jar
 gradle-wrapper.properties
 
-./Repositories/Android/Project04:
+/d/Dong-gi.github.io/Repositories/Android/Project04:
 app
 build.gradle
 gradle
@@ -775,58 +775,58 @@ gradlew
 gradlew.bat
 settings.gradle
 
-./Repositories/Android/Project04/app:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app:
 build.gradle
 proguard-rules.pro
 src
 
-./Repositories/Android/Project04/app/src:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src:
 androidTest
 main
 test
 
-./Repositories/Android/Project04/app/src/androidTest:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/androidTest:
 java
 
-./Repositories/Android/Project04/app/src/androidTest/java:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/androidTest/java:
 io
 
-./Repositories/Android/Project04/app/src/androidTest/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/androidTest/java/io:
 github
 
-./Repositories/Android/Project04/app/src/androidTest/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/androidTest/java/io/github:
 donggi
 
-./Repositories/Android/Project04/app/src/androidTest/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/androidTest/java/io/github/donggi:
 project04
 
-./Repositories/Android/Project04/app/src/androidTest/java/io/github/donggi/project04:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/androidTest/java/io/github/donggi/project04:
 ExampleInstrumentedTest.java
 
-./Repositories/Android/Project04/app/src/main:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main:
 AndroidManifest.xml
 java
 res
 
-./Repositories/Android/Project04/app/src/main/java:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main/java:
 io
 
-./Repositories/Android/Project04/app/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main/java/io:
 github
 
-./Repositories/Android/Project04/app/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main/java/io/github:
 donggi
 
-./Repositories/Android/Project04/app/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main/java/io/github/donggi:
 project04
 
-./Repositories/Android/Project04/app/src/main/java/io/github/donggi/project04:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main/java/io/github/donggi/project04:
 Main2Activity.java
 Main3Activity.java
 Main4Activity.java
 MainActivity.java
 
-./Repositories/Android/Project04/app/src/main/res:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main/res:
 drawable
 drawable-v24
 layout
@@ -839,7 +839,7 @@ mipmap-xxhdpi
 mipmap-xxxhdpi
 values
 
-./Repositories/Android/Project04/app/src/main/res/drawable:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main/res/drawable:
 folder.png
 ic_launcher_background.xml
 paper_plane.png
@@ -847,74 +847,74 @@ README
 settings.png
 users.png
 
-./Repositories/Android/Project04/app/src/main/res/drawable-v24:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main/res/drawable-v24:
 ic_launcher_foreground.xml
 
-./Repositories/Android/Project04/app/src/main/res/layout:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main/res/layout:
 activity_main.xml
 activity_main2.xml
 activity_main3.xml
 activity_main4.xml
 navigator.xml
 
-./Repositories/Android/Project04/app/src/main/res/menu:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main/res/menu:
 navigation.xml
 
-./Repositories/Android/Project04/app/src/main/res/mipmap-anydpi-v26:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main/res/mipmap-anydpi-v26:
 ic_launcher.xml
 ic_launcher_round.xml
 
-./Repositories/Android/Project04/app/src/main/res/mipmap-hdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main/res/mipmap-hdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project04/app/src/main/res/mipmap-mdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main/res/mipmap-mdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project04/app/src/main/res/mipmap-xhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main/res/mipmap-xhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project04/app/src/main/res/mipmap-xxhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main/res/mipmap-xxhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project04/app/src/main/res/mipmap-xxxhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main/res/mipmap-xxxhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project04/app/src/main/res/values:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/main/res/values:
 colors.xml
 strings.xml
 styles.xml
 
-./Repositories/Android/Project04/app/src/test:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/test:
 java
 
-./Repositories/Android/Project04/app/src/test/java:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/test/java:
 io
 
-./Repositories/Android/Project04/app/src/test/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/test/java/io:
 github
 
-./Repositories/Android/Project04/app/src/test/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/test/java/io/github:
 donggi
 
-./Repositories/Android/Project04/app/src/test/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/test/java/io/github/donggi:
 project04
 
-./Repositories/Android/Project04/app/src/test/java/io/github/donggi/project04:
+/d/Dong-gi.github.io/Repositories/Android/Project04/app/src/test/java/io/github/donggi/project04:
 ExampleUnitTest.java
 
-./Repositories/Android/Project04/gradle:
+/d/Dong-gi.github.io/Repositories/Android/Project04/gradle:
 wrapper
 
-./Repositories/Android/Project04/gradle/wrapper:
+/d/Dong-gi.github.io/Repositories/Android/Project04/gradle/wrapper:
 gradle-wrapper.jar
 gradle-wrapper.properties
 
-./Repositories/Android/Project05:
+/d/Dong-gi.github.io/Repositories/Android/Project05:
 app
 build.gradle
 gradle
@@ -923,55 +923,55 @@ gradlew
 gradlew.bat
 settings.gradle
 
-./Repositories/Android/Project05/app:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app:
 build.gradle
 proguard-rules.pro
 src
 
-./Repositories/Android/Project05/app/src:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src:
 androidTest
 main
 test
 
-./Repositories/Android/Project05/app/src/androidTest:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/androidTest:
 java
 
-./Repositories/Android/Project05/app/src/androidTest/java:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/androidTest/java:
 io
 
-./Repositories/Android/Project05/app/src/androidTest/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/androidTest/java/io:
 github
 
-./Repositories/Android/Project05/app/src/androidTest/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/androidTest/java/io/github:
 donggi
 
-./Repositories/Android/Project05/app/src/androidTest/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/androidTest/java/io/github/donggi:
 project05
 
-./Repositories/Android/Project05/app/src/androidTest/java/io/github/donggi/project05:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/androidTest/java/io/github/donggi/project05:
 ExampleInstrumentedTest.java
 
-./Repositories/Android/Project05/app/src/main:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/main:
 AndroidManifest.xml
 java
 res
 
-./Repositories/Android/Project05/app/src/main/java:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/main/java:
 io
 
-./Repositories/Android/Project05/app/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/main/java/io:
 github
 
-./Repositories/Android/Project05/app/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/main/java/io/github:
 donggi
 
-./Repositories/Android/Project05/app/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/main/java/io/github/donggi:
 project05
 
-./Repositories/Android/Project05/app/src/main/java/io/github/donggi/project05:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/main/java/io/github/donggi/project05:
 MainActivity.java
 
-./Repositories/Android/Project05/app/src/main/res:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/main/res:
 drawable
 drawable-v24
 layout
@@ -983,70 +983,70 @@ mipmap-xxhdpi
 mipmap-xxxhdpi
 values
 
-./Repositories/Android/Project05/app/src/main/res/drawable:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/main/res/drawable:
 ic_launcher_background.xml
 
-./Repositories/Android/Project05/app/src/main/res/drawable-v24:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/main/res/drawable-v24:
 ic_launcher_foreground.xml
 
-./Repositories/Android/Project05/app/src/main/res/layout:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/main/res/layout:
 activity_main.xml
 
-./Repositories/Android/Project05/app/src/main/res/mipmap-anydpi-v26:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/main/res/mipmap-anydpi-v26:
 ic_launcher.xml
 ic_launcher_round.xml
 
-./Repositories/Android/Project05/app/src/main/res/mipmap-hdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/main/res/mipmap-hdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project05/app/src/main/res/mipmap-mdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/main/res/mipmap-mdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project05/app/src/main/res/mipmap-xhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/main/res/mipmap-xhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project05/app/src/main/res/mipmap-xxhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/main/res/mipmap-xxhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project05/app/src/main/res/mipmap-xxxhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/main/res/mipmap-xxxhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project05/app/src/main/res/values:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/main/res/values:
 colors.xml
 strings.xml
 styles.xml
 
-./Repositories/Android/Project05/app/src/test:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/test:
 java
 
-./Repositories/Android/Project05/app/src/test/java:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/test/java:
 io
 
-./Repositories/Android/Project05/app/src/test/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/test/java/io:
 github
 
-./Repositories/Android/Project05/app/src/test/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/test/java/io/github:
 donggi
 
-./Repositories/Android/Project05/app/src/test/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/test/java/io/github/donggi:
 project05
 
-./Repositories/Android/Project05/app/src/test/java/io/github/donggi/project05:
+/d/Dong-gi.github.io/Repositories/Android/Project05/app/src/test/java/io/github/donggi/project05:
 ExampleUnitTest.java
 
-./Repositories/Android/Project05/gradle:
+/d/Dong-gi.github.io/Repositories/Android/Project05/gradle:
 wrapper
 
-./Repositories/Android/Project05/gradle/wrapper:
+/d/Dong-gi.github.io/Repositories/Android/Project05/gradle/wrapper:
 gradle-wrapper.jar
 gradle-wrapper.properties
 
-./Repositories/Android/Project06:
+/d/Dong-gi.github.io/Repositories/Android/Project06:
 app
 build.gradle
 gradle
@@ -1055,64 +1055,64 @@ gradlew
 gradlew.bat
 settings.gradle
 
-./Repositories/Android/Project06/app:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app:
 build.gradle
 proguard-rules.pro
 src
 
-./Repositories/Android/Project06/app/src:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src:
 androidTest
 main
 test
 
-./Repositories/Android/Project06/app/src/androidTest:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/androidTest:
 java
 
-./Repositories/Android/Project06/app/src/androidTest/java:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/androidTest/java:
 io
 
-./Repositories/Android/Project06/app/src/androidTest/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/androidTest/java/io:
 github
 
-./Repositories/Android/Project06/app/src/androidTest/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/androidTest/java/io/github:
 donggi
 
-./Repositories/Android/Project06/app/src/androidTest/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/androidTest/java/io/github/donggi:
 project06
 
-./Repositories/Android/Project06/app/src/androidTest/java/io/github/donggi/project06:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/androidTest/java/io/github/donggi/project06:
 ExampleInstrumentedTest.java
 
-./Repositories/Android/Project06/app/src/main:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main:
 AndroidManifest.xml
 java
 res
 
-./Repositories/Android/Project06/app/src/main/java:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/java:
 io
 
-./Repositories/Android/Project06/app/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/java/io:
 github
 
-./Repositories/Android/Project06/app/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/java/io/github:
 donggi
 
-./Repositories/Android/Project06/app/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/java/io/github/donggi:
 project06
 
-./Repositories/Android/Project06/app/src/main/java/io/github/donggi/project06:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/java/io/github/donggi/project06:
 dao
 DB.java
 dto
 MainActivity.java
 
-./Repositories/Android/Project06/app/src/main/java/io/github/donggi/project06/dao:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/java/io/github/donggi/project06/dao:
 UserDao.java
 
-./Repositories/Android/Project06/app/src/main/java/io/github/donggi/project06/dto:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/java/io/github/donggi/project06/dto:
 User.java
 
-./Repositories/Android/Project06/app/src/main/res:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/res:
 drawable
 drawable-v24
 layout
@@ -1124,70 +1124,70 @@ mipmap-xxhdpi
 mipmap-xxxhdpi
 values
 
-./Repositories/Android/Project06/app/src/main/res/drawable:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/res/drawable:
 ic_launcher_background.xml
 
-./Repositories/Android/Project06/app/src/main/res/drawable-v24:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/res/drawable-v24:
 ic_launcher_foreground.xml
 
-./Repositories/Android/Project06/app/src/main/res/layout:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/res/layout:
 activity_main.xml
 
-./Repositories/Android/Project06/app/src/main/res/mipmap-anydpi-v26:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/res/mipmap-anydpi-v26:
 ic_launcher.xml
 ic_launcher_round.xml
 
-./Repositories/Android/Project06/app/src/main/res/mipmap-hdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/res/mipmap-hdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project06/app/src/main/res/mipmap-mdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/res/mipmap-mdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project06/app/src/main/res/mipmap-xhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/res/mipmap-xhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project06/app/src/main/res/mipmap-xxhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/res/mipmap-xxhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project06/app/src/main/res/mipmap-xxxhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/res/mipmap-xxxhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project06/app/src/main/res/values:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/main/res/values:
 colors.xml
 strings.xml
 styles.xml
 
-./Repositories/Android/Project06/app/src/test:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/test:
 java
 
-./Repositories/Android/Project06/app/src/test/java:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/test/java:
 io
 
-./Repositories/Android/Project06/app/src/test/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/test/java/io:
 github
 
-./Repositories/Android/Project06/app/src/test/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/test/java/io/github:
 donggi
 
-./Repositories/Android/Project06/app/src/test/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/test/java/io/github/donggi:
 project06
 
-./Repositories/Android/Project06/app/src/test/java/io/github/donggi/project06:
+/d/Dong-gi.github.io/Repositories/Android/Project06/app/src/test/java/io/github/donggi/project06:
 ExampleUnitTest.java
 
-./Repositories/Android/Project06/gradle:
+/d/Dong-gi.github.io/Repositories/Android/Project06/gradle:
 wrapper
 
-./Repositories/Android/Project06/gradle/wrapper:
+/d/Dong-gi.github.io/Repositories/Android/Project06/gradle/wrapper:
 gradle-wrapper.jar
 gradle-wrapper.properties
 
-./Repositories/Android/Project07:
+/d/Dong-gi.github.io/Repositories/Android/Project07:
 app
 build.gradle
 gradle
@@ -1196,63 +1196,63 @@ gradlew
 gradlew.bat
 settings.gradle
 
-./Repositories/Android/Project07/app:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app:
 build.gradle
 proguard-rules.pro
 src
 
-./Repositories/Android/Project07/app/src:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src:
 androidTest
 main
 test
 
-./Repositories/Android/Project07/app/src/androidTest:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/androidTest:
 java
 
-./Repositories/Android/Project07/app/src/androidTest/java:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/androidTest/java:
 io
 
-./Repositories/Android/Project07/app/src/androidTest/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/androidTest/java/io:
 github
 
-./Repositories/Android/Project07/app/src/androidTest/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/androidTest/java/io/github:
 donggi
 
-./Repositories/Android/Project07/app/src/androidTest/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/androidTest/java/io/github/donggi:
 project07
 
-./Repositories/Android/Project07/app/src/androidTest/java/io/github/donggi/project07:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/androidTest/java/io/github/donggi/project07:
 ExampleInstrumentedTest.java
 
-./Repositories/Android/Project07/app/src/main:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main:
 AndroidManifest.xml
 java
 res
 
-./Repositories/Android/Project07/app/src/main/java:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main/java:
 io
 
-./Repositories/Android/Project07/app/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main/java/io:
 github
 
-./Repositories/Android/Project07/app/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main/java/io/github:
 donggi
 
-./Repositories/Android/Project07/app/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main/java/io/github/donggi:
 project07
 
-./Repositories/Android/Project07/app/src/main/java/io/github/donggi/project07:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main/java/io/github/donggi/project07:
 example
 MainActivity.java
 
-./Repositories/Android/Project07/app/src/main/java/io/github/donggi/project07/example:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main/java/io/github/donggi/project07/example:
 AccelerometerExample.java
 ListAllSensorsExample.java
 LocationExample.java
 PermissionChecker.java
 ProximityAlertExample.java
 
-./Repositories/Android/Project07/app/src/main/res:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main/res:
 drawable
 drawable-v24
 layout
@@ -1264,76 +1264,76 @@ mipmap-xxhdpi
 mipmap-xxxhdpi
 values
 
-./Repositories/Android/Project07/app/src/main/res/drawable:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main/res/drawable:
 ic_launcher_background.xml
 
-./Repositories/Android/Project07/app/src/main/res/drawable-v24:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main/res/drawable-v24:
 ic_launcher_foreground.xml
 
-./Repositories/Android/Project07/app/src/main/res/layout:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main/res/layout:
 activity_main.xml
 
-./Repositories/Android/Project07/app/src/main/res/mipmap-anydpi-v26:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main/res/mipmap-anydpi-v26:
 ic_launcher.xml
 ic_launcher_round.xml
 
-./Repositories/Android/Project07/app/src/main/res/mipmap-hdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main/res/mipmap-hdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project07/app/src/main/res/mipmap-mdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main/res/mipmap-mdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project07/app/src/main/res/mipmap-xhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main/res/mipmap-xhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project07/app/src/main/res/mipmap-xxhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main/res/mipmap-xxhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project07/app/src/main/res/mipmap-xxxhdpi:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main/res/mipmap-xxxhdpi:
 ic_launcher.png
 ic_launcher_round.png
 
-./Repositories/Android/Project07/app/src/main/res/values:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/main/res/values:
 colors.xml
 strings.xml
 styles.xml
 
-./Repositories/Android/Project07/app/src/test:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/test:
 java
 
-./Repositories/Android/Project07/app/src/test/java:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/test/java:
 io
 
-./Repositories/Android/Project07/app/src/test/java/io:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/test/java/io:
 github
 
-./Repositories/Android/Project07/app/src/test/java/io/github:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/test/java/io/github:
 donggi
 
-./Repositories/Android/Project07/app/src/test/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/test/java/io/github/donggi:
 project07
 
-./Repositories/Android/Project07/app/src/test/java/io/github/donggi/project07:
+/d/Dong-gi.github.io/Repositories/Android/Project07/app/src/test/java/io/github/donggi/project07:
 ExampleUnitTest.java
 
-./Repositories/Android/Project07/gradle:
+/d/Dong-gi.github.io/Repositories/Android/Project07/gradle:
 wrapper
 
-./Repositories/Android/Project07/gradle/wrapper:
+/d/Dong-gi.github.io/Repositories/Android/Project07/gradle/wrapper:
 gradle-wrapper.jar
 gradle-wrapper.properties
 
-./Repositories/Config:
+/d/Dong-gi.github.io/Repositories/Config:
 config-client.properties
 LICENSE
 test.xml
 webapp.properties
 
-./Repositories/Eclipse:
+/d/Dong-gi.github.io/Repositories/Eclipse:
 Algorithm
 annotation-processing1
 annotation-processing2
@@ -1355,13 +1355,13 @@ spring-transaction
 TestModule1
 TestModule2
 
-./Repositories/Eclipse/Algorithm:
+/d/Dong-gi.github.io/Repositories/Eclipse/Algorithm:
 src
 
-./Repositories/Eclipse/Algorithm/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/Algorithm/src:
 koreatech
 
-./Repositories/Eclipse/Algorithm/src/koreatech:
+/d/Dong-gi.github.io/Repositories/Eclipse/Algorithm/src/koreatech:
 Main1003.java
 Main1008.java
 Main1010.java
@@ -1379,68 +1379,68 @@ Main1058.java
 Main1060.java
 Main1095.java
 
-./Repositories/Eclipse/annotation-processing1:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing1:
 pom.xml
 src
 
-./Repositories/Eclipse/annotation-processing1/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing1/src:
 main
 
-./Repositories/Eclipse/annotation-processing1/src/main:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing1/src/main:
 java
 resources
 
-./Repositories/Eclipse/annotation-processing1/src/main/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing1/src/main/java:
 io
 
-./Repositories/Eclipse/annotation-processing1/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing1/src/main/java/io:
 github
 
-./Repositories/Eclipse/annotation-processing1/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing1/src/main/java/io/github:
 donggi
 
-./Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi:
 annotation
 
-./Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation:
 MyTarget.java
 processor
 test
 
-./Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/processor:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/processor:
 MyTargetProcessor.java
 
-./Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/test:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/test:
 MyTargetTest.java
 
-./Repositories/Eclipse/annotation-processing1/src/main/resources:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing1/src/main/resources:
 META-INF
 
-./Repositories/Eclipse/annotation-processing1/src/main/resources/META-INF:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing1/src/main/resources/META-INF:
 services
 
-./Repositories/Eclipse/annotation-processing1/src/main/resources/META-INF/services:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing1/src/main/resources/META-INF/services:
 javax.annotation.processing.Processor
 
-./Repositories/Eclipse/annotation-processing2:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing2:
 src
 
-./Repositories/Eclipse/annotation-processing2/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing2/src:
 io
 
-./Repositories/Eclipse/annotation-processing2/src/io:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing2/src/io:
 github
 
-./Repositories/Eclipse/annotation-processing2/src/io/github:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing2/src/io/github:
 donggi
 
-./Repositories/Eclipse/annotation-processing2/src/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing2/src/io/github/donggi:
 test
 
-./Repositories/Eclipse/annotation-processing2/src/io/github/donggi/test:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing2/src/io/github/donggi/test:
 MyTargetTest.java
 
-./Repositories/Eclipse/annotation-processing3:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3:
 annotation-processing3-definition
 annotation-processing3-processor
 annotation-processing3-test
@@ -1450,145 +1450,145 @@ gradlew
 gradlew.bat
 settings.gradle
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-definition:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-definition:
 build.gradle
 gradle
 gradlew
 gradlew.bat
 src
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/gradle:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/gradle:
 wrapper
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/gradle/wrapper:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/gradle/wrapper:
 gradle-wrapper.jar
 gradle-wrapper.properties
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/src:
 main
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/src/main:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/src/main:
 java
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/src/main/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/src/main/java:
 io
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/src/main/java/io:
 github
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/src/main/java/io/github:
 donggi
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/src/main/java/io/github/donggi:
 annotation
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/src/main/java/io/github/donggi/annotation:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-definition/src/main/java/io/github/donggi/annotation:
 MyTarget.java
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-processor:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-processor:
 build.gradle
 gradle
 gradlew
 gradlew.bat
 src
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/gradle:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/gradle:
 wrapper
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/gradle/wrapper:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/gradle/wrapper:
 gradle-wrapper.jar
 gradle-wrapper.properties
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src:
 main
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main:
 java
 resources
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/java:
 io
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/java/io:
 github
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/java/io/github:
 donggi
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/java/io/github/donggi:
 annotation
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/java/io/github/donggi/annotation:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/java/io/github/donggi/annotation:
 processor
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/java/io/github/donggi/annotation/processor:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/java/io/github/donggi/annotation/processor:
 MyTargetProcessor.java
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/resources:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/resources:
 META-INF
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/resources/META-INF:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/resources/META-INF:
 services
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/resources/META-INF/services:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/src/main/resources/META-INF/services:
 javax.annotation.processing.Processor
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-test:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-test:
 build.gradle
 gradle
 gradlew
 gradlew.bat
 src
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-test/gradle:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-test/gradle:
 wrapper
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-test/gradle/wrapper:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-test/gradle/wrapper:
 gradle-wrapper.jar
 gradle-wrapper.properties
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-test/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-test/src:
 main
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-test/src/main:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-test/src/main:
 java
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-test/src/main/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-test/src/main/java:
 io
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-test/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-test/src/main/java/io:
 github
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-test/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-test/src/main/java/io/github:
 donggi
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-test/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-test/src/main/java/io/github/donggi:
 annotation
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-test/src/main/java/io/github/donggi/annotation:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-test/src/main/java/io/github/donggi/annotation:
 test
 
-./Repositories/Eclipse/annotation-processing3/annotation-processing3-test/src/main/java/io/github/donggi/annotation/test:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/annotation-processing3-test/src/main/java/io/github/donggi/annotation/test:
 MyTargetTest.java
 
-./Repositories/Eclipse/annotation-processing3/gradle:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/gradle:
 wrapper
 
-./Repositories/Eclipse/annotation-processing3/gradle/wrapper:
+/d/Dong-gi.github.io/Repositories/Eclipse/annotation-processing3/gradle/wrapper:
 gradle-wrapper.jar
 gradle-wrapper.properties
 
-./Repositories/Eclipse/apache-commons-collections-example:
+/d/Dong-gi.github.io/Repositories/Eclipse/apache-commons-collections-example:
 pom.xml
 src
 
-./Repositories/Eclipse/apache-commons-collections-example/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/apache-commons-collections-example/src:
 test
 
-./Repositories/Eclipse/apache-commons-collections-example/src/test:
+/d/Dong-gi.github.io/Repositories/Eclipse/apache-commons-collections-example/src/test:
 java
 
-./Repositories/Eclipse/apache-commons-collections-example/src/test/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/apache-commons-collections-example/src/test/java:
 ClosureUtilsTest.java
 CollectionUtilsTest.java
 ComparatorTest.java
@@ -1598,62 +1598,62 @@ MapUtilsTest.java
 MultiValuedMapTest.java
 TrieTest.java
 
-./Repositories/Eclipse/apache-commons-lang-example:
+/d/Dong-gi.github.io/Repositories/Eclipse/apache-commons-lang-example:
 pom.xml
 src
 
-./Repositories/Eclipse/apache-commons-lang-example/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/apache-commons-lang-example/src:
 test
 
-./Repositories/Eclipse/apache-commons-lang-example/src/test:
+/d/Dong-gi.github.io/Repositories/Eclipse/apache-commons-lang-example/src/test:
 java
 
-./Repositories/Eclipse/apache-commons-lang-example/src/test/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/apache-commons-lang-example/src/test/java:
 BitFieldTest.java
 EventCountCircuitBreakerTest.java
 TypeTest.java
 
-./Repositories/Eclipse/app1:
+/d/Dong-gi.github.io/Repositories/Eclipse/app1:
 pom.xml
 src
 
-./Repositories/Eclipse/app1/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/app1/src:
 main
 
-./Repositories/Eclipse/app1/src/main:
+/d/Dong-gi.github.io/Repositories/Eclipse/app1/src/main:
 java
 webapp
 
-./Repositories/Eclipse/app1/src/main/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/app1/src/main/java:
 io
 
-./Repositories/Eclipse/app1/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/Eclipse/app1/src/main/java/io:
 github
 
-./Repositories/Eclipse/app1/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/Eclipse/app1/src/main/java/io/github:
 donggi
 
-./Repositories/Eclipse/app1/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Eclipse/app1/src/main/java/io/github/donggi:
 filter
 listener
 request
 response
 servlet
 
-./Repositories/Eclipse/app1/src/main/java/io/github/donggi/filter:
+/d/Dong-gi.github.io/Repositories/Eclipse/app1/src/main/java/io/github/donggi/filter:
 DoNothing.java
 DoNothing2.java
 
-./Repositories/Eclipse/app1/src/main/java/io/github/donggi/listener:
+/d/Dong-gi.github.io/Repositories/Eclipse/app1/src/main/java/io/github/donggi/listener:
 ContextListener.java
 
-./Repositories/Eclipse/app1/src/main/java/io/github/donggi/request:
+/d/Dong-gi.github.io/Repositories/Eclipse/app1/src/main/java/io/github/donggi/request:
 RequestWrapper.java
 
-./Repositories/Eclipse/app1/src/main/java/io/github/donggi/response:
+/d/Dong-gi.github.io/Repositories/Eclipse/app1/src/main/java/io/github/donggi/response:
 ResponseWrapper.java
 
-./Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet:
+/d/Dong-gi.github.io/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet:
 CallOther.java
 Hello1.java
 Hello2.java
@@ -1663,23 +1663,23 @@ Hello5.java
 Hello6.java
 LifeCycle.java
 
-./Repositories/Eclipse/app1/src/main/webapp:
+/d/Dong-gi.github.io/Repositories/Eclipse/app1/src/main/webapp:
 index.jsp
 jsp
 META-INF
 WEB-INF
 
-./Repositories/Eclipse/app1/src/main/webapp/jsp:
+/d/Dong-gi.github.io/Repositories/Eclipse/app1/src/main/webapp/jsp:
 Hello.jsp
 
-./Repositories/Eclipse/app1/src/main/webapp/META-INF:
+/d/Dong-gi.github.io/Repositories/Eclipse/app1/src/main/webapp/META-INF:
 context.xml
 
-./Repositories/Eclipse/app1/src/main/webapp/WEB-INF:
+/d/Dong-gi.github.io/Repositories/Eclipse/app1/src/main/webapp/WEB-INF:
 common.properties
 web.xml
 
-./Repositories/Eclipse/app2:
+/d/Dong-gi.github.io/Repositories/Eclipse/app2:
 build.gradle
 gradle
 gradlew
@@ -1687,34 +1687,34 @@ gradlew.bat
 settings.gradle
 src
 
-./Repositories/Eclipse/app2/gradle:
+/d/Dong-gi.github.io/Repositories/Eclipse/app2/gradle:
 wrapper
 
-./Repositories/Eclipse/app2/gradle/wrapper:
+/d/Dong-gi.github.io/Repositories/Eclipse/app2/gradle/wrapper:
 gradle-wrapper.jar
 gradle-wrapper.properties
 
-./Repositories/Eclipse/app2/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/app2/src:
 main
 test
 
-./Repositories/Eclipse/app2/src/main:
+/d/Dong-gi.github.io/Repositories/Eclipse/app2/src/main:
 java
 resource
 
-./Repositories/Eclipse/app2/src/main/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/app2/src/main/java:
 io
 
-./Repositories/Eclipse/app2/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/Eclipse/app2/src/main/java/io:
 github
 
-./Repositories/Eclipse/app2/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/Eclipse/app2/src/main/java/io/github:
 donggi
 
-./Repositories/Eclipse/app2/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Eclipse/app2/src/main/java/io/github/donggi:
 bean
 
-./Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean:
+/d/Dong-gi.github.io/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean:
 Hello1.java
 Hello10.java
 Hello11.java
@@ -1732,7 +1732,7 @@ Hello7.java
 Hello8.java
 Hello9.java
 
-./Repositories/Eclipse/app2/src/main/resource:
+/d/Dong-gi.github.io/Repositories/Eclipse/app2/src/main/resource:
 Beans1.xml
 Beans10.xml
 Beans11.xml
@@ -1757,22 +1757,22 @@ Beans7.xml
 Beans8.xml
 Beans9.xml
 
-./Repositories/Eclipse/app2/src/test:
+/d/Dong-gi.github.io/Repositories/Eclipse/app2/src/test:
 java
 
-./Repositories/Eclipse/app2/src/test/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/app2/src/test/java:
 io
 
-./Repositories/Eclipse/app2/src/test/java/io:
+/d/Dong-gi.github.io/Repositories/Eclipse/app2/src/test/java/io:
 github
 
-./Repositories/Eclipse/app2/src/test/java/io/github:
+/d/Dong-gi.github.io/Repositories/Eclipse/app2/src/test/java/io/github:
 donggi
 
-./Repositories/Eclipse/app2/src/test/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Eclipse/app2/src/test/java/io/github/donggi:
 bean
 
-./Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean:
+/d/Dong-gi.github.io/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean:
 Beans19Test.java
 ConfigTest1.java
 ConfigTest2.java
@@ -1798,24 +1798,24 @@ Hello6Test2.java
 Hello6Test3.java
 Hello8Test.java
 
-./Repositories/Eclipse/Basic:
+/d/Dong-gi.github.io/Repositories/Eclipse/Basic:
 jni
 src
 
-./Repositories/Eclipse/Basic/jni:
+/d/Dong-gi.github.io/Repositories/Eclipse/Basic/jni:
 test.c
 Test.java
 
-./Repositories/Eclipse/Basic/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/Basic/src:
 io
 
-./Repositories/Eclipse/Basic/src/io:
+/d/Dong-gi.github.io/Repositories/Eclipse/Basic/src/io:
 github
 
-./Repositories/Eclipse/Basic/src/io/github:
+/d/Dong-gi.github.io/Repositories/Eclipse/Basic/src/io/github:
 donggi
 
-./Repositories/Eclipse/Basic/src/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Eclipse/Basic/src/io/github/donggi:
 AnonymousClass.java
 ClassExample.java
 Comment.java
@@ -1843,14 +1843,14 @@ TryWithResources.java
 TypeExample.java
 VarArgs.java
 
-./Repositories/Eclipse/FreeMarker:
+/d/Dong-gi.github.io/Repositories/Eclipse/FreeMarker:
 resource
 src
 
-./Repositories/Eclipse/FreeMarker/resource:
+/d/Dong-gi.github.io/Repositories/Eclipse/FreeMarker/resource:
 template
 
-./Repositories/Eclipse/FreeMarker/resource/template:
+/d/Dong-gi.github.io/Repositories/Eclipse/FreeMarker/resource/template:
 t_001_hello_world.ftl
 t_002_hello.ftl
 t_003_escape.ftl
@@ -1892,56 +1892,56 @@ t_020_index.html
 t_020_number.html
 t_020_switch.html
 
-./Repositories/Eclipse/FreeMarker/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/FreeMarker/src:
 io
 
-./Repositories/Eclipse/FreeMarker/src/io:
+/d/Dong-gi.github.io/Repositories/Eclipse/FreeMarker/src/io:
 github
 
-./Repositories/Eclipse/FreeMarker/src/io/github:
+/d/Dong-gi.github.io/Repositories/Eclipse/FreeMarker/src/io/github:
 donggi
 
-./Repositories/Eclipse/FreeMarker/src/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Eclipse/FreeMarker/src/io/github/donggi:
 Basic.java
 ProgrammerGuilde.java
 
-./Repositories/Eclipse/gson:
+/d/Dong-gi.github.io/Repositories/Eclipse/gson:
 pom.xml
 src
 
-./Repositories/Eclipse/gson/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/gson/src:
 test
 
-./Repositories/Eclipse/gson/src/test:
+/d/Dong-gi.github.io/Repositories/Eclipse/gson/src/test:
 java
 
-./Repositories/Eclipse/gson/src/test/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/gson/src/test/java:
 gson
 
-./Repositories/Eclipse/gson/src/test/java/gson:
+/d/Dong-gi.github.io/Repositories/Eclipse/gson/src/test/java/gson:
 Test.java
 
-./Repositories/Eclipse/jackson:
+/d/Dong-gi.github.io/Repositories/Eclipse/jackson:
 pom.xml
 src
 
-./Repositories/Eclipse/jackson/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/jackson/src:
 test
 
-./Repositories/Eclipse/jackson/src/test:
+/d/Dong-gi.github.io/Repositories/Eclipse/jackson/src/test:
 java
 
-./Repositories/Eclipse/jackson/src/test/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/jackson/src/test/java:
 jackson
 
-./Repositories/Eclipse/jackson/src/test/java/jackson:
+/d/Dong-gi.github.io/Repositories/Eclipse/jackson/src/test/java/jackson:
 JsonTest.java
 
-./Repositories/Eclipse/JavaSE:
+/d/Dong-gi.github.io/Repositories/Eclipse/JavaSE:
 src
 student.data
 
-./Repositories/Eclipse/JavaSE/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/JavaSE/src:
 concurrent
 io
 lang
@@ -1953,14 +1953,14 @@ text
 time
 util
 
-./Repositories/Eclipse/JavaSE/src/concurrent:
+/d/Dong-gi.github.io/Repositories/Eclipse/JavaSE/src/concurrent:
 CompletionStageTest.java
 CountedCompleterTest.java
 ExecutorServiceTest.java
 RecursiveActionTest.java
 RecursiveTaskTest.java
 
-./Repositories/Eclipse/JavaSE/src/io:
+/d/Dong-gi.github.io/Repositories/Eclipse/JavaSE/src/io:
 BufferedReaderExample.java
 ConsoleExample.java
 ExternalizableExample.java
@@ -1974,7 +1974,7 @@ PushBackExample.java
 SerializableExample.java
 StreamTokenizerExample.java
 
-./Repositories/Eclipse/JavaSE/src/lang:
+/d/Dong-gi.github.io/Repositories/Eclipse/JavaSE/src/lang:
 CharacterExample.java
 CharSequenceExample.java
 ClassExample.java
@@ -1983,52 +1983,52 @@ ProcessHandleExample.java
 ReadableExample.java
 RunnableExample.java
 
-./Repositories/Eclipse/JavaSE/src/net:
+/d/Dong-gi.github.io/Repositories/Eclipse/JavaSE/src/net:
 HttpURLConnectionTest.java
 InetAddressTest.java
 NetworkInterfaceTest.java
 SocketTest.java
 
-./Repositories/Eclipse/JavaSE/src/nio:
+/d/Dong-gi.github.io/Repositories/Eclipse/JavaSE/src/nio:
 AsynchronousSocketChannelTest.java
 ByteBufferExample.java
 PathTest.java
 sctp
 
-./Repositories/Eclipse/JavaSE/src/nio/sctp:
+/d/Dong-gi.github.io/Repositories/Eclipse/JavaSE/src/nio/sctp:
 SctpChannelTest.java
 
-./Repositories/Eclipse/JavaSE/src/regex:
+/d/Dong-gi.github.io/Repositories/Eclipse/JavaSE/src/regex:
 MatchResultExample.java
 
-./Repositories/Eclipse/JavaSE/src/security:
+/d/Dong-gi.github.io/Repositories/Eclipse/JavaSE/src/security:
 SecureRandomTest.java
 
-./Repositories/Eclipse/JavaSE/src/text:
+/d/Dong-gi.github.io/Repositories/Eclipse/JavaSE/src/text:
 MessageFormatTest.java
 NumberFormatTest.java
 SimpleDateFormatTest.java
 
-./Repositories/Eclipse/JavaSE/src/time:
+/d/Dong-gi.github.io/Repositories/Eclipse/JavaSE/src/time:
 ClockTest.java
 DurationTest.java
 
-./Repositories/Eclipse/JavaSE/src/util:
+/d/Dong-gi.github.io/Repositories/Eclipse/JavaSE/src/util:
 CollectionExample.java
 FlatMapExample.java
 MapExample.java
 
-./Repositories/Eclipse/lombok-example:
+/d/Dong-gi.github.io/Repositories/Eclipse/lombok-example:
 pom.xml
 src
 
-./Repositories/Eclipse/lombok-example/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/lombok-example/src:
 main
 
-./Repositories/Eclipse/lombok-example/src/main:
+/d/Dong-gi.github.io/Repositories/Eclipse/lombok-example/src/main:
 java
 
-./Repositories/Eclipse/lombok-example/src/main/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/lombok-example/src/main/java:
 LombokBuilderExample.java
 LombokCleanupExample.java
 LombokConstructorExample.java
@@ -2043,40 +2043,40 @@ LombokToStringExample.java
 LombokValExample.java
 LombokValueExample.java
 
-./Repositories/Eclipse/no-reuse:
+/d/Dong-gi.github.io/Repositories/Eclipse/no-reuse:
 src
 
-./Repositories/Eclipse/no-reuse/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/no-reuse/src:
 AESTest.java
 Solution.java
 Test.java
 
-./Repositories/Eclipse/spring-aop:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop:
 pom.xml
 src
 
-./Repositories/Eclipse/spring-aop/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src:
 main
 test
 
-./Repositories/Eclipse/spring-aop/src/main:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src/main:
 java
 
-./Repositories/Eclipse/spring-aop/src/main/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src/main/java:
 io
 
-./Repositories/Eclipse/spring-aop/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src/main/java/io:
 github
 
-./Repositories/Eclipse/spring-aop/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src/main/java/io/github:
 donggi
 
-./Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi:
 advice
 aspect
 service
 
-./Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice:
 AfterAdvice.java
 AfterAdvice2.java
 AfterAdvice3.java
@@ -2084,7 +2084,7 @@ BeforeAdvice.java
 BeforeAdvice2.java
 TimerAdvice.java
 
-./Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect:
 AfterAspect.java
 AfterAspect2.java
 AfterAspect3.java
@@ -2092,31 +2092,31 @@ AroundAspect.java
 BeforeAspect.java
 BeforeAspect2.java
 
-./Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/service:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/service:
 impl
 PrintService.java
 
-./Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/service/impl:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/service/impl:
 PrintServiceImpl.java
 PrintServiceImpl2.java
 
-./Repositories/Eclipse/spring-aop/src/test:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src/test:
 java
 resources
 
-./Repositories/Eclipse/spring-aop/src/test/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src/test/java:
 io
 
-./Repositories/Eclipse/spring-aop/src/test/java/io:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src/test/java/io:
 github
 
-./Repositories/Eclipse/spring-aop/src/test/java/io/github:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src/test/java/io/github:
 donggi
 
-./Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi:
 advice
 
-./Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice:
 AfterAdviceTest.java
 AfterAdviceTest2.java
 AfterAdviceTest3.java
@@ -2130,10 +2130,10 @@ BeforeAdviceTest4.java
 TimerAdviceTest.java
 TimerAdviceTest2.java
 
-./Repositories/Eclipse/spring-aop/src/test/resources:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src/test/resources:
 beans
 
-./Repositories/Eclipse/spring-aop/src/test/resources/beans:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-aop/src/test/resources/beans:
 Beans1.xml
 Beans10.xml
 Beans11.xml
@@ -2147,28 +2147,28 @@ Beans7.xml
 Beans8.xml
 Beans9.xml
 
-./Repositories/Eclipse/spring-mvc:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc:
 pom.xml
 src
 
-./Repositories/Eclipse/spring-mvc/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src:
 main
 test
 
-./Repositories/Eclipse/spring-mvc/src/main:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/main:
 java
 webapp
 
-./Repositories/Eclipse/spring-mvc/src/main/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/main/java:
 io
 
-./Repositories/Eclipse/spring-mvc/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/main/java/io:
 github
 
-./Repositories/Eclipse/spring-mvc/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/main/java/io/github:
 donggi
 
-./Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi:
 advice
 controller
 request
@@ -2176,41 +2176,41 @@ service
 util
 validator
 
-./Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/advice:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/advice:
 InitAdvice.java
 UnhandledExceptionAdvice.java
 
-./Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller:
 BulkLoginController.java
 EtcController.java
 FileController.java
 HelloController.java
 LoginController.java
 
-./Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/request:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/request:
 BulkLoginRequest.java
 LoginRequest.java
 
-./Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/service:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/service:
 FileService.java
 
-./Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/util:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/util:
 MultipleDateEditor.java
 
-./Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/validator:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/validator:
 LoginRequestValidator.java
 
-./Repositories/Eclipse/spring-mvc/src/main/webapp:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/main/webapp:
 index.jsp
 WEB-INF
 
-./Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF:
 applicationContext.xml
 dispatcher-servlet.xml
 view
 web.xml
 
-./Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view:
 bulkLogin.jsp
 error.jsp
 etc
@@ -2218,104 +2218,104 @@ file
 hello.jsp
 login.jsp
 
-./Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view/etc:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view/etc:
 date.jsp
 json.jsp
 
-./Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view/file:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view/file:
 download.jsp
 upload.jsp
 
-./Repositories/Eclipse/spring-mvc/src/test:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/test:
 java
 
-./Repositories/Eclipse/spring-mvc/src/test/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-mvc/src/test/java:
 Test.java
 
-./Repositories/Eclipse/spring-transaction:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-transaction:
 pom.xml
 src
 
-./Repositories/Eclipse/spring-transaction/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-transaction/src:
 main
 test
 
-./Repositories/Eclipse/spring-transaction/src/main:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-transaction/src/main:
 java
 resources
 
-./Repositories/Eclipse/spring-transaction/src/main/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-transaction/src/main/java:
 io
 
-./Repositories/Eclipse/spring-transaction/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-transaction/src/main/java/io:
 github
 
-./Repositories/Eclipse/spring-transaction/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-transaction/src/main/java/io/github:
 donggi
 
-./Repositories/Eclipse/spring-transaction/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-transaction/src/main/java/io/github/donggi:
 service
 
-./Repositories/Eclipse/spring-transaction/src/main/java/io/github/donggi/service:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-transaction/src/main/java/io/github/donggi/service:
 NameService.java
 
-./Repositories/Eclipse/spring-transaction/src/main/resources:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-transaction/src/main/resources:
 applicationContext.xml
 
-./Repositories/Eclipse/spring-transaction/src/test:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-transaction/src/test:
 java
 
-./Repositories/Eclipse/spring-transaction/src/test/java:
+/d/Dong-gi.github.io/Repositories/Eclipse/spring-transaction/src/test/java:
 Test.java
 
-./Repositories/Eclipse/TestModule1:
+/d/Dong-gi.github.io/Repositories/Eclipse/TestModule1:
 src
 
-./Repositories/Eclipse/TestModule1/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/TestModule1/src:
 module-info.java
 test
 
-./Repositories/Eclipse/TestModule1/src/test:
+/d/Dong-gi.github.io/Repositories/Eclipse/TestModule1/src/test:
 Test.java
 
-./Repositories/Eclipse/TestModule2:
+/d/Dong-gi.github.io/Repositories/Eclipse/TestModule2:
 src
 
-./Repositories/Eclipse/TestModule2/src:
+/d/Dong-gi.github.io/Repositories/Eclipse/TestModule2/src:
 hello
 module-info.java
 
-./Repositories/Eclipse/TestModule2/src/hello:
+/d/Dong-gi.github.io/Repositories/Eclipse/TestModule2/src/hello:
 HelloWorld.java
 
-./Repositories/Gradle:
+/d/Dong-gi.github.io/Repositories/Gradle:
 project-01
 
-./Repositories/Gradle/project-01:
+/d/Dong-gi.github.io/Repositories/Gradle/project-01:
 build.gradle
 
-./Repositories/IntelliJ:
+/d/Dong-gi.github.io/Repositories/IntelliJ:
 JavaFX
 
-./Repositories/IntelliJ/JavaFX:
+/d/Dong-gi.github.io/Repositories/IntelliJ/JavaFX:
 App1
 
-./Repositories/IntelliJ/JavaFX/App1:
+/d/Dong-gi.github.io/Repositories/IntelliJ/JavaFX/App1:
 src
 
-./Repositories/IntelliJ/JavaFX/App1/src:
+/d/Dong-gi.github.io/Repositories/IntelliJ/JavaFX/App1/src:
 donggi
 
-./Repositories/IntelliJ/JavaFX/App1/src/donggi:
+/d/Dong-gi.github.io/Repositories/IntelliJ/JavaFX/App1/src/donggi:
 bean
 controller
 fxml
 Main.java
 
-./Repositories/IntelliJ/JavaFX/App1/src/donggi/bean:
+/d/Dong-gi.github.io/Repositories/IntelliJ/JavaFX/App1/src/donggi/bean:
 FileItem.java
 
-./Repositories/IntelliJ/JavaFX/App1/src/donggi/controller:
+/d/Dong-gi.github.io/Repositories/IntelliJ/JavaFX/App1/src/donggi/controller:
 AlertController.java
 BaseController.java
 CheckBoxController.java
@@ -2337,7 +2337,7 @@ TranslateTransitionController.java
 TreeTableViewController.java
 TreeViewController.java
 
-./Repositories/IntelliJ/JavaFX/App1/src/donggi/fxml:
+/d/Dong-gi.github.io/Repositories/IntelliJ/JavaFX/App1/src/donggi/fxml:
 check_box_example.fxml
 combo_box_example.fxml
 image_button_example.fxml
@@ -2350,12 +2350,12 @@ table_view_example.fxml
 tree_table_view_example.fxml
 tree_view_example.fxml
 
-./Repositories/JavaScript:
+/d/Dong-gi.github.io/Repositories/JavaScript:
 Basic
 Browser
 SF
 
-./Repositories/JavaScript/Basic:
+/d/Dong-gi.github.io/Repositories/JavaScript/Basic:
 array.js
 async.js
 class.js
@@ -2366,7 +2366,7 @@ promise.js
 syntax.js
 type.js
 
-./Repositories/JavaScript/Browser:
+/d/Dong-gi.github.io/Repositories/JavaScript/Browser:
 blob_example.js
 davidfennmusic.bandcamp.com.js
 decode.js
@@ -2386,30 +2386,30 @@ window_open.js
 window_popup.js
 window_resizeto.js
 
-./Repositories/JavaScript/SF:
+/d/Dong-gi.github.io/Repositories/JavaScript/SF:
 demo1.html
 demo2.html
 
-./Repositories/Node:
+/d/Dong-gi.github.io/Repositories/Node:
 cluster.test.js
 express-start
 jade-start
 mocha-start
 
-./Repositories/Node/express-start:
+/d/Dong-gi.github.io/Repositories/Node/express-start:
 app.js
 package.json
 package-lock.json
 templates
 test
 
-./Repositories/Node/express-start/templates:
+/d/Dong-gi.github.io/Repositories/Node/express-start/templates:
 index.jade
 
-./Repositories/Node/express-start/test:
+/d/Dong-gi.github.io/Repositories/Node/express-start/test:
 mongodb.test.js
 
-./Repositories/Node/jade-start:
+/d/Dong-gi.github.io/Repositories/Node/jade-start:
 doc1.html
 doc1.jade
 doc2.html
@@ -2430,20 +2430,20 @@ doc7.main2.html
 doc7.main2.jade
 doc7.template.jade
 
-./Repositories/Node/mocha-start:
+/d/Dong-gi.github.io/Repositories/Node/mocha-start:
 package.json
 package-lock.json
 test
 
-./Repositories/Node/mocha-start/test:
+/d/Dong-gi.github.io/Repositories/Node/mocha-start/test:
 test1.js
 test2.js
 test3.js
 
-./Repositories/Python:
+/d/Dong-gi.github.io/Repositories/Python:
 Basic
 
-./Repositories/Python/Basic:
+/d/Dong-gi.github.io/Repositories/Python/Basic:
 built_in_function_example.py
 cast_example.py
 class_example.py
@@ -2470,7 +2470,7 @@ try_except.py
 type_example.py
 weakref_example.py
 
-./Repositories/Raspbian:
+/d/Dong-gi.github.io/Repositories/Raspbian:
 cam01.py
 cam02.py
 cam03.py
@@ -2505,7 +2505,7 @@ start06.py
 start07.py
 start08.py
 
-./Repositories/SF:
+/d/Dong-gi.github.io/Repositories/SF:
 build.sh
 LICENSE
 README.md
@@ -2513,29 +2513,29 @@ sf.js
 sf.min.js
 v
 
-./Repositories/SF/v:
+/d/Dong-gi.github.io/Repositories/SF/v:
 0.1.0
 0.1.1
 0.1.2
 0.1.3
 
-./Repositories/SF/v/0.1.0:
+/d/Dong-gi.github.io/Repositories/SF/v/0.1.0:
 sf.min.js
 
-./Repositories/SF/v/0.1.1:
+/d/Dong-gi.github.io/Repositories/SF/v/0.1.1:
 sf.min.js
 
-./Repositories/SF/v/0.1.2:
+/d/Dong-gi.github.io/Repositories/SF/v/0.1.2:
 sf.min.js
 
-./Repositories/SF/v/0.1.3:
+/d/Dong-gi.github.io/Repositories/SF/v/0.1.3:
 sf.min.js
 
-./Repositories/sh:
+/d/Dong-gi.github.io/Repositories/sh:
 0_basic.sh
 0_basic.txt
 
-./Repositories/STS:
+/d/Dong-gi.github.io/Repositories/STS:
 config-client
 config-server
 logback-gradle
@@ -2544,99 +2544,99 @@ reactive-webflux
 rest-microservice
 web-app
 
-./Repositories/STS/config-client:
+/d/Dong-gi.github.io/Repositories/STS/config-client:
 mvnw
 mvnw.cmd
 pom.xml
 src
 
-./Repositories/STS/config-client/src:
+/d/Dong-gi.github.io/Repositories/STS/config-client/src:
 main
 test
 
-./Repositories/STS/config-client/src/main:
+/d/Dong-gi.github.io/Repositories/STS/config-client/src/main:
 java
 resources
 
-./Repositories/STS/config-client/src/main/java:
+/d/Dong-gi.github.io/Repositories/STS/config-client/src/main/java:
 io
 
-./Repositories/STS/config-client/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/STS/config-client/src/main/java/io:
 github
 
-./Repositories/STS/config-client/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/STS/config-client/src/main/java/io/github:
 donggi
 
-./Repositories/STS/config-client/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/STS/config-client/src/main/java/io/github/donggi:
 ConfigClientApplication.java
 controller
 
-./Repositories/STS/config-client/src/main/java/io/github/donggi/controller:
+/d/Dong-gi.github.io/Repositories/STS/config-client/src/main/java/io/github/donggi/controller:
 HelloController.java
 
-./Repositories/STS/config-client/src/main/resources:
+/d/Dong-gi.github.io/Repositories/STS/config-client/src/main/resources:
 bootstrap.properties
 
-./Repositories/STS/config-client/src/test:
+/d/Dong-gi.github.io/Repositories/STS/config-client/src/test:
 java
 
-./Repositories/STS/config-client/src/test/java:
+/d/Dong-gi.github.io/Repositories/STS/config-client/src/test/java:
 io
 
-./Repositories/STS/config-client/src/test/java/io:
+/d/Dong-gi.github.io/Repositories/STS/config-client/src/test/java/io:
 github
 
-./Repositories/STS/config-client/src/test/java/io/github:
+/d/Dong-gi.github.io/Repositories/STS/config-client/src/test/java/io/github:
 donggi
 
-./Repositories/STS/config-client/src/test/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/STS/config-client/src/test/java/io/github/donggi:
 ConfigClientApplicationTests.java
 
-./Repositories/STS/config-server:
+/d/Dong-gi.github.io/Repositories/STS/config-server:
 mvnw
 mvnw.cmd
 pom.xml
 src
 
-./Repositories/STS/config-server/src:
+/d/Dong-gi.github.io/Repositories/STS/config-server/src:
 main
 test
 
-./Repositories/STS/config-server/src/main:
+/d/Dong-gi.github.io/Repositories/STS/config-server/src/main:
 java
 resources
 
-./Repositories/STS/config-server/src/main/java:
+/d/Dong-gi.github.io/Repositories/STS/config-server/src/main/java:
 io
 
-./Repositories/STS/config-server/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/STS/config-server/src/main/java/io:
 github
 
-./Repositories/STS/config-server/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/STS/config-server/src/main/java/io/github:
 donggi
 
-./Repositories/STS/config-server/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/STS/config-server/src/main/java/io/github/donggi:
 ConfigServerApplication.java
 
-./Repositories/STS/config-server/src/main/resources:
+/d/Dong-gi.github.io/Repositories/STS/config-server/src/main/resources:
 bootstrap.properties
 
-./Repositories/STS/config-server/src/test:
+/d/Dong-gi.github.io/Repositories/STS/config-server/src/test:
 java
 
-./Repositories/STS/config-server/src/test/java:
+/d/Dong-gi.github.io/Repositories/STS/config-server/src/test/java:
 io
 
-./Repositories/STS/config-server/src/test/java/io:
+/d/Dong-gi.github.io/Repositories/STS/config-server/src/test/java/io:
 github
 
-./Repositories/STS/config-server/src/test/java/io/github:
+/d/Dong-gi.github.io/Repositories/STS/config-server/src/test/java/io/github:
 donggi
 
-./Repositories/STS/config-server/src/test/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/STS/config-server/src/test/java/io/github/donggi:
 ConfigServerApplicationTests.java
 
-./Repositories/STS/logback-gradle:
+/d/Dong-gi.github.io/Repositories/STS/logback-gradle:
 build.gradle
 gradle
 gradlew
@@ -2644,267 +2644,267 @@ gradlew.bat
 settings.gradle
 src
 
-./Repositories/STS/logback-gradle/gradle:
+/d/Dong-gi.github.io/Repositories/STS/logback-gradle/gradle:
 wrapper
 
-./Repositories/STS/logback-gradle/gradle/wrapper:
+/d/Dong-gi.github.io/Repositories/STS/logback-gradle/gradle/wrapper:
 gradle-wrapper.jar
 gradle-wrapper.properties
 
-./Repositories/STS/logback-gradle/src:
+/d/Dong-gi.github.io/Repositories/STS/logback-gradle/src:
 main
 test
 
-./Repositories/STS/logback-gradle/src/main:
+/d/Dong-gi.github.io/Repositories/STS/logback-gradle/src/main:
 java
 resources
 
-./Repositories/STS/logback-gradle/src/main/java:
+/d/Dong-gi.github.io/Repositories/STS/logback-gradle/src/main/java:
 io
 
-./Repositories/STS/logback-gradle/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/STS/logback-gradle/src/main/java/io:
 github
 
-./Repositories/STS/logback-gradle/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/STS/logback-gradle/src/main/java/io/github:
 donggi
 
-./Repositories/STS/logback-gradle/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/STS/logback-gradle/src/main/java/io/github/donggi:
 LogbackGradleApplication.java
 
-./Repositories/STS/logback-gradle/src/main/resources:
+/d/Dong-gi.github.io/Repositories/STS/logback-gradle/src/main/resources:
 application.properties
 logback.xml
 logback-appenders.xml
 
-./Repositories/STS/logback-gradle/src/test:
+/d/Dong-gi.github.io/Repositories/STS/logback-gradle/src/test:
 java
 
-./Repositories/STS/logback-gradle/src/test/java:
+/d/Dong-gi.github.io/Repositories/STS/logback-gradle/src/test/java:
 io
 
-./Repositories/STS/logback-gradle/src/test/java/io:
+/d/Dong-gi.github.io/Repositories/STS/logback-gradle/src/test/java/io:
 github
 
-./Repositories/STS/logback-gradle/src/test/java/io/github:
+/d/Dong-gi.github.io/Repositories/STS/logback-gradle/src/test/java/io/github:
 donggi
 
-./Repositories/STS/logback-gradle/src/test/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/STS/logback-gradle/src/test/java/io/github/donggi:
 LogbackGradleApplicationTests.java
 
-./Repositories/STS/logback-maven:
+/d/Dong-gi.github.io/Repositories/STS/logback-maven:
 mvnw
 mvnw.cmd
 pom.xml
 src
 
-./Repositories/STS/logback-maven/src:
+/d/Dong-gi.github.io/Repositories/STS/logback-maven/src:
 main
 test
 
-./Repositories/STS/logback-maven/src/main:
+/d/Dong-gi.github.io/Repositories/STS/logback-maven/src/main:
 java
 resources
 
-./Repositories/STS/logback-maven/src/main/java:
+/d/Dong-gi.github.io/Repositories/STS/logback-maven/src/main/java:
 io
 
-./Repositories/STS/logback-maven/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/STS/logback-maven/src/main/java/io:
 github
 
-./Repositories/STS/logback-maven/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/STS/logback-maven/src/main/java/io/github:
 donggi
 
-./Repositories/STS/logback-maven/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/STS/logback-maven/src/main/java/io/github/donggi:
 LogbackMavenApplication.java
 
-./Repositories/STS/logback-maven/src/main/resources:
+/d/Dong-gi.github.io/Repositories/STS/logback-maven/src/main/resources:
 application.properties
 logback.xml
 logback-appenders.xml
 
-./Repositories/STS/logback-maven/src/test:
+/d/Dong-gi.github.io/Repositories/STS/logback-maven/src/test:
 java
 
-./Repositories/STS/logback-maven/src/test/java:
+/d/Dong-gi.github.io/Repositories/STS/logback-maven/src/test/java:
 io
 
-./Repositories/STS/logback-maven/src/test/java/io:
+/d/Dong-gi.github.io/Repositories/STS/logback-maven/src/test/java/io:
 github
 
-./Repositories/STS/logback-maven/src/test/java/io/github:
+/d/Dong-gi.github.io/Repositories/STS/logback-maven/src/test/java/io/github:
 donggi
 
-./Repositories/STS/logback-maven/src/test/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/STS/logback-maven/src/test/java/io/github/donggi:
 LogbackMavenApplicationTests.java
 
-./Repositories/STS/reactive-webflux:
+/d/Dong-gi.github.io/Repositories/STS/reactive-webflux:
 mvnw
 mvnw.cmd
 pom.xml
 src
 
-./Repositories/STS/reactive-webflux/src:
+/d/Dong-gi.github.io/Repositories/STS/reactive-webflux/src:
 main
 test
 
-./Repositories/STS/reactive-webflux/src/main:
+/d/Dong-gi.github.io/Repositories/STS/reactive-webflux/src/main:
 java
 resources
 
-./Repositories/STS/reactive-webflux/src/main/java:
+/d/Dong-gi.github.io/Repositories/STS/reactive-webflux/src/main/java:
 io
 
-./Repositories/STS/reactive-webflux/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/STS/reactive-webflux/src/main/java/io:
 github
 
-./Repositories/STS/reactive-webflux/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/STS/reactive-webflux/src/main/java/io/github:
 donggi
 
-./Repositories/STS/reactive-webflux/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/STS/reactive-webflux/src/main/java/io/github/donggi:
 controller
 ReactiveWebfluxApplication.java
 response
 
-./Repositories/STS/reactive-webflux/src/main/java/io/github/donggi/controller:
+/d/Dong-gi.github.io/Repositories/STS/reactive-webflux/src/main/java/io/github/donggi/controller:
 HelloController.java
 
-./Repositories/STS/reactive-webflux/src/main/java/io/github/donggi/response:
+/d/Dong-gi.github.io/Repositories/STS/reactive-webflux/src/main/java/io/github/donggi/response:
 HelloResponse.java
 
-./Repositories/STS/reactive-webflux/src/main/resources:
+/d/Dong-gi.github.io/Repositories/STS/reactive-webflux/src/main/resources:
 application.properties
 
-./Repositories/STS/reactive-webflux/src/test:
+/d/Dong-gi.github.io/Repositories/STS/reactive-webflux/src/test:
 java
 
-./Repositories/STS/reactive-webflux/src/test/java:
+/d/Dong-gi.github.io/Repositories/STS/reactive-webflux/src/test/java:
 io
 
-./Repositories/STS/reactive-webflux/src/test/java/io:
+/d/Dong-gi.github.io/Repositories/STS/reactive-webflux/src/test/java/io:
 github
 
-./Repositories/STS/reactive-webflux/src/test/java/io/github:
+/d/Dong-gi.github.io/Repositories/STS/reactive-webflux/src/test/java/io/github:
 donggi
 
-./Repositories/STS/reactive-webflux/src/test/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/STS/reactive-webflux/src/test/java/io/github/donggi:
 controller
 ReactiveWebfluxApplicationTests.java
 
-./Repositories/STS/reactive-webflux/src/test/java/io/github/donggi/controller:
+/d/Dong-gi.github.io/Repositories/STS/reactive-webflux/src/test/java/io/github/donggi/controller:
 HelloControllerTest.java
 
-./Repositories/STS/rest-microservice:
+/d/Dong-gi.github.io/Repositories/STS/rest-microservice:
 mvnw
 mvnw.cmd
 pom.xml
 src
 
-./Repositories/STS/rest-microservice/src:
+/d/Dong-gi.github.io/Repositories/STS/rest-microservice/src:
 main
 test
 
-./Repositories/STS/rest-microservice/src/main:
+/d/Dong-gi.github.io/Repositories/STS/rest-microservice/src/main:
 java
 resources
 
-./Repositories/STS/rest-microservice/src/main/java:
+/d/Dong-gi.github.io/Repositories/STS/rest-microservice/src/main/java:
 io
 
-./Repositories/STS/rest-microservice/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/STS/rest-microservice/src/main/java/io:
 github
 
-./Repositories/STS/rest-microservice/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/STS/rest-microservice/src/main/java/io/github:
 donggi
 
-./Repositories/STS/rest-microservice/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/STS/rest-microservice/src/main/java/io/github/donggi:
 controller
 response
 RestMicroserviceApplication.java
 
-./Repositories/STS/rest-microservice/src/main/java/io/github/donggi/controller:
+/d/Dong-gi.github.io/Repositories/STS/rest-microservice/src/main/java/io/github/donggi/controller:
 HelloController.java
 
-./Repositories/STS/rest-microservice/src/main/java/io/github/donggi/response:
+/d/Dong-gi.github.io/Repositories/STS/rest-microservice/src/main/java/io/github/donggi/response:
 HelloResponse.java
 
-./Repositories/STS/rest-microservice/src/main/resources:
+/d/Dong-gi.github.io/Repositories/STS/rest-microservice/src/main/resources:
 application.properties
 
-./Repositories/STS/rest-microservice/src/test:
+/d/Dong-gi.github.io/Repositories/STS/rest-microservice/src/test:
 java
 
-./Repositories/STS/rest-microservice/src/test/java:
+/d/Dong-gi.github.io/Repositories/STS/rest-microservice/src/test/java:
 io
 
-./Repositories/STS/rest-microservice/src/test/java/io:
+/d/Dong-gi.github.io/Repositories/STS/rest-microservice/src/test/java/io:
 github
 
-./Repositories/STS/rest-microservice/src/test/java/io/github:
+/d/Dong-gi.github.io/Repositories/STS/rest-microservice/src/test/java/io/github:
 donggi
 
-./Repositories/STS/rest-microservice/src/test/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/STS/rest-microservice/src/test/java/io/github/donggi:
 controller
 RestMicroserviceApplicationTests.java
 
-./Repositories/STS/rest-microservice/src/test/java/io/github/donggi/controller:
+/d/Dong-gi.github.io/Repositories/STS/rest-microservice/src/test/java/io/github/donggi/controller:
 HelloControllerTest.java
 
-./Repositories/STS/web-app:
+/d/Dong-gi.github.io/Repositories/STS/web-app:
 mvnw
 mvnw.cmd
 pom.xml
 src
 
-./Repositories/STS/web-app/src:
+/d/Dong-gi.github.io/Repositories/STS/web-app/src:
 main
 
-./Repositories/STS/web-app/src/main:
+/d/Dong-gi.github.io/Repositories/STS/web-app/src/main:
 java
 resources
 
-./Repositories/STS/web-app/src/main/java:
+/d/Dong-gi.github.io/Repositories/STS/web-app/src/main/java:
 io
 
-./Repositories/STS/web-app/src/main/java/io:
+/d/Dong-gi.github.io/Repositories/STS/web-app/src/main/java/io:
 github
 
-./Repositories/STS/web-app/src/main/java/io/github:
+/d/Dong-gi.github.io/Repositories/STS/web-app/src/main/java/io/github:
 donggi
 
-./Repositories/STS/web-app/src/main/java/io/github/donggi:
+/d/Dong-gi.github.io/Repositories/STS/web-app/src/main/java/io/github/donggi:
 config
 controller
 response
 WebAppApplication.java
 websocket
 
-./Repositories/STS/web-app/src/main/java/io/github/donggi/config:
+/d/Dong-gi.github.io/Repositories/STS/web-app/src/main/java/io/github/donggi/config:
 ServerEndpointConfigurator.java
 WebSocketConfig.java
 
-./Repositories/STS/web-app/src/main/java/io/github/donggi/controller:
+/d/Dong-gi.github.io/Repositories/STS/web-app/src/main/java/io/github/donggi/controller:
 HelloController.java
 SleepController.java
 
-./Repositories/STS/web-app/src/main/java/io/github/donggi/response:
+/d/Dong-gi.github.io/Repositories/STS/web-app/src/main/java/io/github/donggi/response:
 HelloResponse.java
 
-./Repositories/STS/web-app/src/main/java/io/github/donggi/websocket:
+/d/Dong-gi.github.io/Repositories/STS/web-app/src/main/java/io/github/donggi/websocket:
 Echo.java
 
-./Repositories/STS/web-app/src/main/resources:
+/d/Dong-gi.github.io/Repositories/STS/web-app/src/main/resources:
 application.properties
 
-./Repositories/Unity:
+/d/Dong-gi.github.io/Repositories/Unity:
 Project 1
 
-./Repositories/Unity/Project 1:
+/d/Dong-gi.github.io/Repositories/Unity/Project 1:
 Assembly-CSharp.csproj
 Assets
 Project 1.sln
 ProjectSettings
 
-./Repositories/Unity/Project 1/Assets:
+/d/Dong-gi.github.io/Repositories/Unity/Project 1/Assets:
 EmptyObject.cs
 EmptyObject.cs.meta
 New Material.mat
@@ -2916,11 +2916,11 @@ NewBehaviourScript.cs.meta
 Scenes
 Scenes.meta
 
-./Repositories/Unity/Project 1/Assets/Scenes:
+/d/Dong-gi.github.io/Repositories/Unity/Project 1/Assets/Scenes:
 SampleScene.unity
 SampleScene.unity.meta
 
-./Repositories/Unity/Project 1/ProjectSettings:
+/d/Dong-gi.github.io/Repositories/Unity/Project 1/ProjectSettings:
 AudioManager.asset
 ClusterInputManager.asset
 DynamicsManager.asset
@@ -2940,7 +2940,7 @@ UnityConnectSettings.asset
 VFXManager.asset
 XRSettings.asset
 
-./Repositories/VisualStudio:
+/d/Dong-gi.github.io/Repositories/VisualStudio:
 CSharp
 csharp_base_keyword.cs
 csharp_interpolated_string.cs
@@ -2948,7 +2948,7 @@ csharp_property.cs
 Project1 EventGenerator
 Project2 EventGenerator v2
 
-./Repositories/VisualStudio/CSharp:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp:
 Basic
 CSharp.sln
 Notifycation
@@ -2960,7 +2960,7 @@ WpfApp4
 WpfApp5
 WpfApp6
 
-./Repositories/VisualStudio/CSharp/Basic:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/Basic:
 App.config
 AttributeExample.cs
 Basic.csproj
@@ -2977,10 +2977,10 @@ ParamsExample.cs
 Program.cs
 Properties
 
-./Repositories/VisualStudio/CSharp/Basic/Properties:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/Basic/Properties:
 AssemblyInfo.cs
 
-./Repositories/VisualStudio/CSharp/Notifycation:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/Notifycation:
 App.config
 App.xaml
 App.xaml.cs
@@ -2989,18 +2989,18 @@ MainWindow.xaml.cs
 Notifycation.csproj
 Properties
 
-./Repositories/VisualStudio/CSharp/Notifycation/Properties:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/Notifycation/Properties:
 AssemblyInfo.cs
 Resources.Designer.cs
 Resources.resx
 Settings.Designer.cs
 Settings.settings
 
-./Repositories/VisualStudio/CSharp/SimpleCapture:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/SimpleCapture:
 SimpleCapture
 WPF.sln
 
-./Repositories/VisualStudio/CSharp/SimpleCapture/SimpleCapture:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/SimpleCapture/SimpleCapture:
 App.config
 App.xaml
 App.xaml.cs
@@ -3020,19 +3020,19 @@ Test
 Utility
 ViewModel
 
-./Repositories/VisualStudio/CSharp/SimpleCapture/SimpleCapture/Command:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/SimpleCapture/SimpleCapture/Command:
 ActivateWindowCommand.cs
 CloseWindowCommand.cs
 CustomCommand.cs
 
-./Repositories/VisualStudio/CSharp/SimpleCapture/SimpleCapture/Properties:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/SimpleCapture/SimpleCapture/Properties:
 AssemblyInfo.cs
 Resources.Designer.cs
 Resources.resx
 Settings.Designer.cs
 Settings.settings
 
-./Repositories/VisualStudio/CSharp/SimpleCapture/SimpleCapture/Resource:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/SimpleCapture/SimpleCapture/Resource:
 cancel.png
 copy-archive.png
 full-size.png
@@ -3040,12 +3040,12 @@ icon.png
 recorder.png
 reduce.png
 
-./Repositories/VisualStudio/CSharp/SimpleCapture/SimpleCapture/Test:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/SimpleCapture/SimpleCapture/Test:
 Test.cs
 TestWindow.xaml
 TestWindow.xaml.cs
 
-./Repositories/VisualStudio/CSharp/SimpleCapture/SimpleCapture/Utility:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/SimpleCapture/SimpleCapture/Utility:
 AVIWriter.cs
 ImageRecoder.cs
 ImageUtility.cs
@@ -3053,11 +3053,11 @@ KeyboardManager.cs
 SelectRectangleCaptureAreaWindow.xaml
 SelectRectangleCaptureAreaWindow.xaml.cs
 
-./Repositories/VisualStudio/CSharp/SimpleCapture/SimpleCapture/ViewModel:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/SimpleCapture/SimpleCapture/ViewModel:
 ImageRecoderViewModel.cs
 SavedRectanglesViewModel.cs
 
-./Repositories/VisualStudio/CSharp/WpfApp1:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/WpfApp1:
 App.config
 App.xaml
 App.xaml.cs
@@ -3066,14 +3066,14 @@ MainWindow.xaml.cs
 Properties
 WpfApp1.csproj
 
-./Repositories/VisualStudio/CSharp/WpfApp1/Properties:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/WpfApp1/Properties:
 AssemblyInfo.cs
 Resources.Designer.cs
 Resources.resx
 Settings.Designer.cs
 Settings.settings
 
-./Repositories/VisualStudio/CSharp/WpfApp2:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/WpfApp2:
 App.config
 App.xaml
 App.xaml.cs
@@ -3082,14 +3082,14 @@ MainWindow.xaml.cs
 Properties
 WpfApp2.csproj
 
-./Repositories/VisualStudio/CSharp/WpfApp2/Properties:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/WpfApp2/Properties:
 AssemblyInfo.cs
 Resources.Designer.cs
 Resources.resx
 Settings.Designer.cs
 Settings.settings
 
-./Repositories/VisualStudio/CSharp/WpfApp3:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/WpfApp3:
 App.config
 App.xaml
 App.xaml.cs
@@ -3100,14 +3100,14 @@ UserControl1.xaml
 UserControl1.xaml.cs
 WpfApp3.csproj
 
-./Repositories/VisualStudio/CSharp/WpfApp3/Properties:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/WpfApp3/Properties:
 AssemblyInfo.cs
 Resources.Designer.cs
 Resources.resx
 Settings.Designer.cs
 Settings.settings
 
-./Repositories/VisualStudio/CSharp/WpfApp4:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/WpfApp4:
 App.config
 App.xaml
 App.xaml.cs
@@ -3117,14 +3117,14 @@ MainWindow.xaml.cs
 Properties
 WpfApp4.csproj
 
-./Repositories/VisualStudio/CSharp/WpfApp4/Properties:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/WpfApp4/Properties:
 AssemblyInfo.cs
 Resources.Designer.cs
 Resources.resx
 Settings.Designer.cs
 Settings.settings
 
-./Repositories/VisualStudio/CSharp/WpfApp5:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/WpfApp5:
 App.config
 App.xaml
 App.xaml.cs
@@ -3133,14 +3133,14 @@ MainWindow.xaml.cs
 Properties
 WpfApp5.csproj
 
-./Repositories/VisualStudio/CSharp/WpfApp5/Properties:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/WpfApp5/Properties:
 AssemblyInfo.cs
 Resources.Designer.cs
 Resources.resx
 Settings.Designer.cs
 Settings.settings
 
-./Repositories/VisualStudio/CSharp/WpfApp6:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/WpfApp6:
 App.config
 App.xaml
 App.xaml.cs
@@ -3151,14 +3151,14 @@ Properties
 RgbToColorConverter.cs
 WpfApp6.csproj
 
-./Repositories/VisualStudio/CSharp/WpfApp6/Properties:
+/d/Dong-gi.github.io/Repositories/VisualStudio/CSharp/WpfApp6/Properties:
 AssemblyInfo.cs
 Resources.Designer.cs
 Resources.resx
 Settings.Designer.cs
 Settings.settings
 
-./Repositories/VisualStudio/Project1 EventGenerator:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project1 EventGenerator:
 App.config
 App.xaml
 App.xaml.cs
@@ -3178,15 +3178,15 @@ Updater
 Utility
 ViewModel
 
-./Repositories/VisualStudio/Project1 EventGenerator/Dao:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project1 EventGenerator/Dao:
 Dao.cs
 Game1Dao.cs
 GaraDao.cs
 
-./Repositories/VisualStudio/Project1 EventGenerator/ImageOptimizer:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project1 EventGenerator/ImageOptimizer:
 ImageOptimizer.zip
 
-./Repositories/VisualStudio/Project1 EventGenerator/Model:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project1 EventGenerator/Model:
 BaseContext.cs
 Constants.cs
 CustomAttribute.cs
@@ -3195,27 +3195,27 @@ DBServer.cs
 Dto.cs
 Game1Context.cs
 
-./Repositories/VisualStudio/Project1 EventGenerator/Properties:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project1 EventGenerator/Properties:
 AssemblyInfo.cs
 Resources.Designer.cs
 Resources.resx
 Settings.Designer.cs
 Settings.settings
 
-./Repositories/VisualStudio/Project1 EventGenerator/Resources:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project1 EventGenerator/Resources:
 blue.ico
 blue.png
 yellow.ico
 yellow.png
 
-./Repositories/VisualStudio/Project1 EventGenerator/Service:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project1 EventGenerator/Service:
 AWSService.cs
 FileService.cs
 Game1Service.cs
 SSHService.cs
 UpdateService.cs
 
-./Repositories/VisualStudio/Project1 EventGenerator/Updater:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project1 EventGenerator/Updater:
 App.config
 InstallerUpdater.cs
 Program.cs
@@ -3224,11 +3224,11 @@ Updater.csproj
 Updater.csproj.user
 ZipUpdater.cs
 
-./Repositories/VisualStudio/Project1 EventGenerator/Updater/Properties:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project1 EventGenerator/Updater/Properties:
 app.manifest
 AssemblyInfo.cs
 
-./Repositories/VisualStudio/Project1 EventGenerator/Utility:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project1 EventGenerator/Utility:
 ActionUtility.cs
 CollectionUtility.cs
 Connection.cs
@@ -3240,12 +3240,12 @@ ImageOptimizer.cs
 ShellStreamDeligater.cs
 StringUtility.cs
 
-./Repositories/VisualStudio/Project1 EventGenerator/ViewModel:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project1 EventGenerator/ViewModel:
 Game1ViewModel.cs
 Game2ViewModel.cs
 MainViewModel.cs
 
-./Repositories/VisualStudio/Project2 EventGenerator v2:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2:
 App.config
 App.xaml
 App.xaml.cs
@@ -3269,21 +3269,21 @@ Utility
 ViewModel
 WWW
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/bin:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/bin:
 Debug
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/bin/Debug:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/bin/Debug:
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/Dao:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Dao:
 Connection.cs
 Dao.cs
 Game1Dao.cs
 GaraDao.cs
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/ImageOptimizer:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/ImageOptimizer:
 ImageOptimizer.zip
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/Model:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Model:
 BaseContext.cs
 Constants.cs
 CustomAttribute.cs
@@ -3293,34 +3293,34 @@ Dto.cs
 SaveXlsRequest.cs
 ServerKind.cs
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/obj:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/obj:
 Debug
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/obj/Debug:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/obj/Debug:
 TempPE
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/obj/Debug/TempPE:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/obj/Debug/TempPE:
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/Properties:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Properties:
 AssemblyInfo.cs
 Resources.Designer.cs
 Resources.resx
 Settings.Designer.cs
 Settings.settings
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/Resources:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Resources:
 blue.ico
 blue.png
 yellow.ico
 yellow.png
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/Service:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Service:
 AWSService.cs
 Game1Service.cs
 SSHService.cs
 UpdateService.cs
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/Updater:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Updater:
 App.config
 bin
 InstallerUpdater.cs
@@ -3331,25 +3331,25 @@ Updater.csproj
 Updater.csproj.user
 ZipUpdater.cs
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/Updater/bin:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Updater/bin:
 Debug
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/Updater/bin/Debug:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Updater/bin/Debug:
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/Updater/obj:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Updater/obj:
 Debug
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/Updater/obj/Debug:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Updater/obj/Debug:
 TempPE
 Updater.csprojAssemblyReference.cache
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/Updater/obj/Debug/TempPE:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Updater/obj/Debug/TempPE:
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/Updater/Properties:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Updater/Properties:
 app.manifest
 AssemblyInfo.cs
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/Utility:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/Utility:
 ActionUtility.cs
 ChatworkUtility.cs
 CollectionUtility.cs
@@ -3363,37 +3363,37 @@ NaiveHttpServer.cs
 ShellStreamDeligater.cs
 StringUtility.cs
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/ViewModel:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/ViewModel:
 BaseViewModel.cs
 Game1ViewModel.cs
 Game2ViewModel.cs
 IconViewModel.cs
 MainViewModel.cs
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/WWW:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/WWW:
 index.html
 posts
 posts.js
 source
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/WWW/posts:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/WWW/posts:
 game1
 query.html
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/WWW/posts/game1:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/WWW/posts/game1:
 test.html
 
-./Repositories/VisualStudio/Project2 EventGenerator v2/WWW/source:
+/d/Dong-gi.github.io/Repositories/VisualStudio/Project2 EventGenerator v2/WWW/source:
 default.css
 default.js
 utility.js
 w3.css
 
-./sitemap:
+/d/Dong-gi.github.io/sitemap:
 sitemap.js
 sitemap.txt
 
-./source:
+/d/Dong-gi.github.io/source:
 default.css
 default.js
 default.min.js
