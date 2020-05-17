@@ -2,16 +2,23 @@ include ../../source/skeleton.jade
 +post('SF Document', 'SF, Webapp Framework, HTML Framework', 'Why do more? Here\'s Simplest html Framework.')
     h1.marker SF; Simplest html Framework
     div
-        h2 Purpose
+        h2.marker Goal
         p The world most simplest html framework
 
-        h2 Versions
+        h2.marker Versions
         table
             +ths('version', 'size', 'link')
             tr
-                td 0.1.1
-                td 1.84KB
-                td: +asA('https://github.com/Dong-gi/SF/releases/download/0.1.1/sf.min.js')
+                td 0.1.3
+                td 2.02KB
+                td: +asA('https://github.com/Dong-gi/SF/releases/download/0.1.3/sf.min.js')
+        
+        h2.marker Terms
+        ol
+            li SFNode
+            p Proxy object of HTMLElement returned by SF#build, SF#asSF, SF#asSFarr
+            li App instance
+            p SFNode returned by SF#build
 
     h1.marker Demos
     div
@@ -24,7 +31,27 @@ include ../../source/skeleton.jade
             
             h3.marker Hello World
             +codeBtn('/Repositories/JavaScript/SF/demo1.html', 'html')
-            +asA('/Repositories/JavaScript/SF/demo1.html')
+            +asA('/Repositories/JavaScript/SF/demo1.html') Open new tab
+        h2.marker 0.1.3
+        div
+            h3.marker Template 1
+            +asCode('javascript').
+                const Card = app.newTemplate(templateName, htmlMaker)
+                    // templateName : anything which can be used as map's key
+                    // htmlMaker    : void   -> HTML string
+                const Card = app.asTemplate(templateName, element)
+                    // element      : HTMLElement
+                app.$.append(Card(callback).$)
+                    // callback     : SFNode, ... -> ?
+            +codeBtn('/Repositories/JavaScript/SF/demo2.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo2.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo2.html') Open new tab
+
+            //-h3.marker Template 2
+            //-+codeBtn('/Repositories/JavaScript/SF/demo3.html', 'html')
+            //-+codeBtn('/Repositories/JavaScript/SF/demo3.html', 'nohighlight') View live here
+            //-+asA('/Repositories/JavaScript/SF/demo3.html') Open new tab
+
 
     h1.marker Change Logs
     ol
@@ -46,11 +73,22 @@ include ../../source/skeleton.jade
                 app.head[0].$title[0].innerText = 'Welcome'
                 // After
                 app.head.$title.innerText = 'Welcome'
+        
+        li.marker 0.1.2
+        ol
+            li Now app instance has '__isRoot' property as true
+            li Removed callback parameter from SFNode#newTemplate, SFNode#asTemplate
+            li Changed signature of SFNode#asTemplate
+            li When get a property from SFNode, do childNodes searching before calling querySelectorAll()
 
-        p x.$ : 원본 객체 참조
+        li.marker 0.1.3
+        ol
+            li Renamed SF.map to SF.__map, SF.templates to SF.__templates
+            li Removed app instance's 'templates' property
+        //-p x.$ : 원본 객체 참조
 
-        h2.marker 0.2.0
+        h2.marker ?
         p Coming soon... 'binding'
         
-        h2.marker 0.3.0
+        h2.marker ?
         p Coming soon... datagrid : string, csv, [], [][], {}, {{}}, {}{}, [{}], {[]}, ...

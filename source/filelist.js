@@ -194,6 +194,7 @@ standard.html
 ./posts/single:
 aws.html
 centos.html
+demo3.html
 docker.html
 fp.html
 git.html
@@ -328,6 +329,7 @@ standard.jade
 ./posts.jade/single:
 aws.jade
 centos.jade
+demo3.jade
 docker.jade
 fp.jade
 git.jade
@@ -2386,6 +2388,7 @@ window_resizeto.js
 
 ./Repositories/JavaScript/SF:
 demo1.html
+demo2.html
 
 ./Repositories/Node:
 cluster.test.js
@@ -2512,8 +2515,20 @@ v
 
 ./Repositories/SF/v:
 0.1.0
+0.1.1
+0.1.2
+0.1.3
 
 ./Repositories/SF/v/0.1.0:
+sf.min.js
+
+./Repositories/SF/v/0.1.1:
+sf.min.js
+
+./Repositories/SF/v/0.1.2:
+sf.min.js
+
+./Repositories/SF/v/0.1.3:
 sf.min.js
 
 ./Repositories/sh:

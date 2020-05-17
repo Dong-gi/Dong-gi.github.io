@@ -1,0 +1,392 @@
+include ../../source/skeleton.jade
++post('Demo3', 'SF, Demo', 'SF Demo 3', false, true)
+    script.
+        onload();
+        function onload() {
+            if (document.readyState != "complete") {
+                window.addEventListener('load', onload)
+                return;
+            }
+
+            const State = {
+                INIT: Symbol(),     // no input
+                HAS_NUM1: Symbol(), // has number 1
+                HAS_OP: Symbol(),   // has operator
+                HAS_NUM2: Symbol(), // has number 2
+                END: Symbol()       // has output
+            };
+            Object.freeze(State);
+            const Nums = ['I', 'V', 'X'];
+            Object.freeze(Nums);
+            const Ops = ['+', '-', '*', '/'];
+            Object.freeze(Ops);
+
+            const app1 = SF.build(document.getElementById('calc1'));
+            const app2 = SF.build(document.getElementById('calc2'));
+            const Calculator = app1.asTemplate('Calculator', document.querySelector(`[temp-id="calculator"]`));
+            const NumberBtn = app1.asTemplate('NumberBtn', document.querySelector(`[temp-id="calc-num-btn"]`));
+            const FuncBtn = app1.asTemplate('FuncBtn', document.querySelector(`[temp-id="calc-func-btn"]`));
+
+            app1.$.append(Calculator(newCalc1).$);
+            app2.$.append(Calculator(newCalc2).$);
+
+            function newCalc(calculator) {
+                calculator.state = State.INIT;
+                calculator.num1 = calculator.p[2].span[0];
+                calculator.op = calculator.p[2].span[1];
+                calculator.num2 = calculator.p[2].span[2];
+                calculator.out = calculator.p[3].span;
+                for (let num of Nums)
+                    calculator.p[0].$.append(NumberBtn(newNumBtn, calculator, num).$);
+                for (let op of Ops)
+                    calculator.p[1].$.append(NumberBtn(newOpBtn, calculator, op).$);
+                calculator.p[1].$.append(FuncBtn(newExecBtn, calculator).$);
+                calculator.p[1].$.append(FuncBtn((btn, calculator) => {
+                    btn.innerText = 'clear';
+                    calculator.clear = () => {
+                        calculator.state = State.INIT;
+                        calculator.num1.innerText = '';
+                        calculator.op.innerText = '';
+                        calculator.num2.innerText = '';
+                        calculator.out.innerText = '';
+                    };
+                    btn.onclick = calculator.clear;
+                }, calculator).$);
+                calculator.p[1].$.append(FuncBtn((btn, calculator) => {
+                    btn.innerText = 'random';
+                    btn.title = 'Calculate random operation';
+                    btn.onclick = () => {
+                        calculator.clear();
+                        calculator.num1.innerText = formatRoman(Math.floor(Math.random() * 39 + 1));
+                        calculator.op.innerText = Ops[Math.floor(Math.random() * 4)];
+                        calculator.num2.innerText = formatRoman(Math.floor(Math.random() * 39 + 1));
+                        calculator.out.innerText = calculator.exec();
+                        calculator.state = State.END;
+                    };
+                }, calculator).$);
+            }
+            function newNumBtn(btn, calculator, text) {
+                btn.innerText = text;
+                btn.onclick = () => {
+                    switch(calculator.state) {
+                        case State.INIT:
+                            calculator.num1.innerText += text;
+                            calculator.state = State.HAS_NUM1;
+                            break;
+                        case State.HAS_NUM1:
+                            calculator.num1.innerText += text;
+                            break;
+                        case State.HAS_OP:
+                            calculator.num2.innerText += text;
+                            calculator.state = State.HAS_NUM2;
+                            break;
+                        case State.HAS_NUM2:
+                            calculator.num2.innerText += text;
+                            break;
+                        default:
+                            calculator.out.innerText = 'Please click the "clear" button';
+                            break;
+                    }
+                };
+            }
+            function newOpBtn(btn, calculator, text) {
+                btn.innerText = text;
+                btn.onclick = () => {
+                    switch(calculator.state) {
+                        case State.HAS_NUM1:
+                        case State.HAS_OP:
+                        case State.HAS_NUM2:
+                            calculator.op.innerText = text;
+                            calculator.state = State.HAS_OP;
+                            break;
+                        case State.INIT:
+                            calculator.out.innerText = 'Click a number button first';
+                            break;
+                        default:
+                            calculator.out.innerText = 'Please click the "clear" button';
+                            break;
+                    }
+                };
+            }
+            function newExecBtn(btn, calculator) {
+                btn.innerText = '=';
+                btn.onclick = () => {
+                    switch(calculator.state) {
+                        case State.HAS_NUM2:
+                            calculator.out.innerText = calculator.exec();
+                            calculator.state = State.END;
+                            break;
+                        case State.END:
+                            calculator.out.innerText = 'Please click the "clear" button';
+                            break;
+                        default:
+                            calculator.out.innerText = 'Insufficient inputs';
+                            break;
+                    }
+                };
+            }
+
+            const ValidRomanNums = [Symbol(),
+                                    'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
+                                    'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX',
+                                    'XXI', 'XXII', 'XXIII', 'XXIV', 'XXV', 'XXVI', 'XXVII', 'XXVIII', 'XXIX', 'XXX',
+                                    'XXXI', 'XXXII', 'XXXIII', 'XXXIV', 'XXXV', 'XXXVI', 'XXXVII', 'XXXVIII', 'XXXIX',
+                                   ];
+            function newCalc1(calculator) {
+                newCalc(calculator);
+                calculator.exec = () => {
+                    let num1 = calculator.num1.innerText.replace(/\s/g, '');
+                    let num2 = calculator.num2.innerText.replace(/\s/g, '');
+                    if (ValidRomanNums.indexOf(num1) < 1 || ValidRomanNums.indexOf(num2) < 1)
+                        return '범위를 벗어났습니다.(입력)'
+                    num1 = ValidRomanNums.indexOf(num1);
+                    num2 = ValidRomanNums.indexOf(num2);
+                    
+                    let result = `Error. ${num1} ${calculator.op.innerText} ${num2}`;
+                    switch(calculator.op.innerText.replace(/\s/g, '')) {
+                        case '+':
+                            result = num1 + num2;
+                            break;
+                        case '-':
+                            if (num1 < num2)
+                                result = '작은 수에서 큰수를 뺄 수 없습니다.'
+                            else
+                                result = num1 - num2;
+                            break;
+                        case '*':
+                            result = num1 * num2;
+                            break;
+                        case '/':
+                            if (num1 < num2)
+                                result = '작은 수를 큰 수로 나눌 수 없습니다.'
+                            else if (num1 % num2 == 0)
+                                result = `몫 ${ValidRomanNums[Math.floor(num1 / num2)]}`;
+                            else
+                                result = `몫 ${ValidRomanNums[Math.floor(num1 / num2)]}, 나머지 ${ValidRomanNums[num1 % num2]}`;
+                            break;
+                    }
+                    if (Number.isInteger(result)) {
+                        if (result < 1 || 39 < result)
+                            return '범위를 벗어났습니다.';
+                        return ValidRomanNums[result];
+                    }
+                    return result;
+                };
+            }
+
+            function parseRoman(str) {
+                if (parseRoman.memo.has(str))
+                    return parseRoman.memo[str];
+                let nums = [];
+                while (str.length > 0) {
+                    if (str.length > 1 && parseRoman.memo[str[0]] < parseRoman.memo[str[1]]) {
+                        nums.push(parseRoman.memo[str[1]] - parseRoman.memo[str[0]]);
+                        str = str.substr(2);
+                        continue;
+                    }
+                    nums.push(parseRoman.memo[str[0]]);
+                    str = str.substr(1);
+                }
+                for (let i = 0; i < nums.length - 1; ++i)
+                    if (nums[i] < nums[i+1] || (nums[i] == nums[i+1] && formatRoman(nums[i]).length > 1)) { // Format Error
+                        parseRoman.memo[str] = -1;
+                        return parseRoman.memo[str];
+                    }
+                let result = 0;
+                for (let num of nums)
+                    result += num;
+                parseRoman.memo[str] = result;
+                return parseRoman.memo[str];
+            }
+            parseRoman.memo = new Map();
+            parseRoman.memo['I'] = 1;
+            parseRoman.memo['V'] = 5;
+            parseRoman.memo['X'] = 10;
+
+            function formatRoman(num) {
+                if (formatRoman.memo.has(num))
+                    return formatRoman.memo[num];
+                let result = '';
+                while (num > 0) {
+                    if (num >= 10) {
+                        num -= 10;
+                        result += 'X';
+                    } else if (num >= 5) {
+                        num -= 5;
+                        result += 'V';
+                    } else {
+                        num -= 1;
+                        result += 'I';
+                    }
+                }
+                result = result.replace('VIIII', 'IX').replace('IIII', 'IV');
+                formatRoman.memo[num] = result;
+                return formatRoman.memo[num];
+            }
+            formatRoman.memo = new Map();
+
+            function newCalc2(calculator) {
+                newCalc(calculator);
+                calculator.exec = () => {
+                    let num1 = parseRoman(calculator.num1.innerText.replace(/\s/g, ''));
+                    let num2 = parseRoman(calculator.num2.innerText.replace(/\s/g, ''));
+                    if (num1 < 1 || num2 < 1 || num1 > 39 || num2 > 39)
+                        return '범위를 벗어났습니다.(입력)'
+                    let result = `Error. ${num1} ${calculator.op.innerText} ${num2}`;
+                    switch(calculator.op.innerText.replace(/\s/g, '')) {
+                        case '+':
+                            result = num1 + num2;
+                            break;
+                        case '-':
+                            if (num1 < num2)
+                                result = '작은 수에서 큰수를 뺄 수 없습니다.'
+                            else
+                                result = num1 - num2;
+                            break;
+                        case '*':
+                            result = num1 * num2;
+                            break;
+                        case '/':
+                            if (num1 < num2)
+                                result = '작은 수를 큰 수로 나눌 수 없습니다.'
+                            else if (num1 % num2 == 0)
+                                result = `몫 ${formatRoman(Math.floor(num1 / num2))}`;
+                            else
+                                result = `몫 ${formatRoman(Math.floor(num1 / num2))}, 나머지 ${formatRoman(num1 % num2)}`;
+                            break;
+                    }
+                    if (Number.isInteger(result)) {
+                        if (result < 1 || 39 < result)
+                            return '범위를 벗어났습니다.';
+                        return formatRoman(result);
+                    }
+                    return result;
+                };
+            }
+        }
+
+    h1.marker 문제
+    ol
+        li 로마 숫자에 대한 사칙 연산을 수행하는 계산기
+        li 입출력 숫자의 범위는 모두 [I, XXXIX]로 제한된다
+    
+    h1.marker 풀이 1 : 매핑 이용
+    #calc1
+    div
+        h2.marker 해설
+        ol
+            li
+                +codeBtn('/posts.jade/single/demo3.jade', 'text') 전체 코드 보기
+                +codeBtn('/posts.jade/single/demo3.jade', 'text', '[129,175]') 풀이 1 코드만 보기
+            li 입출력 모두 유한한 경우의 수를 가지므로, 모든 로마 숫자를 미리 가지고 연산을 수행할 수 있다
+            p 0번째 항목에 Symbol()을 넣은 이유 : 실수로라도 ValidRomanNums.indexOf(x)가 0이 나오지 않도록 하기 위해
+            +asCode('javascript').
+                const ValidRomanNums = [Symbol(),
+                                        'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
+                                        'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX',
+                                        'XXI', 'XXII', 'XXIII', 'XXIV', 'XXV', 'XXVI', 'XXVII', 'XXVIII', 'XXIX', 'XXX',
+                                        'XXXI', 'XXXII', 'XXXIII', 'XXXIV', 'XXXV', 'XXXVI', 'XXXVII', 'XXXVIII', 'XXXIX',
+                                       ];
+            li 로마 숫자 → 아라비아 숫자
+            +asCode('javascript') ValidRomanNums.indexOf(str)
+            li 아라비아 숫자 → 로마 숫자
+            +asCode('javascript') ValidRomanNums[num]
+    
+    h1.marker 풀이 2 : 파서/포매터 이용
+    #calc2
+    div
+        h2.marker 해설
+        ol
+            li
+                +codeBtn('/posts.jade/single/demo3.jade', 'text') 전체 코드 보기
+                +codeBtn('/posts.jade/single/demo3.jade', 'text', '[177,265]') 풀이 2 코드만 보기
+            li 로마 숫자 파서와 포매터를 이용하면 보다 일반적인 연산이 가능하다.
+            p 예를 들어, IIII+I와 같은 연산을 풀이 1에서는 허용하지 않지만, 풀이 2에서는 IV+I와 동일하게 연산이 수행된다.
+            li.marker 로마 숫자 파서 : 로마 숫자 → 아라비아 숫자
+            +asCode('javascript').
+                function parseRoman(str) {
+                    if (parseRoman.memo.has(str))
+                        return parseRoman.memo[str];
+                    let nums = [];
+                    /**
+                     * 예, XXIXIV → nums == [10, 10, 9, 4]
+                     * 예, XXIXVIII → nums == [10, 10, 9, 5, 1, 1, 1]
+                     * 예, XIXIXVIIXI → nums == [10, 9, 9, 5, 1, 9, 1]
+                     */
+                    while (str.length > 0) {
+                        // 작은 수 문자가 큰 수 문자 앞에 있는 경우, nums에 (큰 수 - 작은 수) 추가
+                        if (str.length > 1 && parseRoman.memo[str[0]] < parseRoman.memo[str[1]]) {
+                            nums.push(parseRoman.memo[str[1]] - parseRoman.memo[str[0]]);
+                            str = str.substr(2);
+                            continue;
+                        }
+                        // 그 외의 경우, nums에 문자 하나 그대로 추가
+                        nums.push(parseRoman.memo[str[0]]);
+                        str = str.substr(1);
+                    }
+                    for (let i = 0; i < nums.length - 1; ++i)
+                        /**
+                         * 로마 숫자 표기법상,
+                         * 1. 각 숫자는 그 다음 숫자보다 작으면 안 된다.
+                         * 2. 동일한 숫자가 연속되는 경우, 해당 숫자는 단위 숫자여야 한다.
+                         */
+                        if (nums[i] < nums[i+1] || (nums[i] == nums[i+1] && formatRoman(nums[i]).length > 1)) { // Format Error
+                            parseRoman.memo[str] = -1;
+                            return parseRoman.memo[str];
+                        }
+                    let result = 0;
+                    for (let num of nums)
+                        result += num;
+                    parseRoman.memo[str] = result;
+                    return parseRoman.memo[str];
+                }
+                parseRoman.memo = new Map();    // 캐싱
+                parseRoman.memo['I'] = 1;       // 기본 단위는 미리 추가
+                parseRoman.memo['V'] = 5;
+                parseRoman.memo['X'] = 10;
+            li.marker 로마 숫자 포매터 : 아라비아 숫자 → 로마 숫자
+            +asCode('javascript').
+                function formatRoman(num) {
+                    if (formatRoman.memo.has(num))
+                        return formatRoman.memo[num];
+                    let result = '';
+                    // 각 단위마다 하나씩 추가
+                    while (num > 0) {
+                        if (num >= 10) {
+                            num -= 10;
+                            result += 'X';
+                        } else if (num >= 5) {
+                            num -= 5;
+                            result += 'V';
+                        } else {
+                            num -= 1;
+                            result += 'I';
+                        }
+                    }
+                    // 축약 가능한 표기는 축약. 동일한 축약 표기는 한 번에 2번 이상 등장할 수 없다.
+                    result = result.replace('VIIII', 'IX').replace('IIII', 'IV');
+                    formatRoman.memo[num] = result;
+                    return formatRoman.memo[num];
+                }
+                formatRoman.memo = new Map();   // 파서와 마찬가지로 캐싱
+    h1.marker SF; Simple html Framework
+    p
+        | 이 문제의 풀이에는 최근 고안한 HTML 프레임워크가 적용됐습니다. SF에 대하여는 다음의 링크를 참고해주세요.
+        +asA('/posts/project/sf.html')
+
+    .w3-hide
+        div(temp-id='calculator')
+            p
+                | numbers : 
+            p
+                | operators : 
+            p
+                | input : 
+                span
+                span
+                span
+            p
+                | output : 
+                span
+        +w3button()&attributes({'temp-id': 'calc-num-btn'})
+        +w3button('w3-blue')&attributes({'temp-id': 'calc-func-btn'})

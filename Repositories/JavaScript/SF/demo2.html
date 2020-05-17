@@ -1,0 +1,45 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://github.com/Dong-gi/SF/releases/download/0.1.3/sf.min.js"></script>
+    <title>demo2</title>
+</head>
+
+<body>
+    <div id="demo2"></div>
+    <div id="templates" style="display: none;">
+        <table>
+            <tr temp-id="line">
+                <th></th>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        onload();
+        function onload() {
+            if (document.readyState != "complete") {
+                window.addEventListener('load', onload)
+                return;
+            }
+
+            const app = SF.build(document.getElementById('demo2'));
+            const Table = app.newTemplate('Table', () => `<table><tbody></tbody></table>`);
+            const Line = app.asTemplate('Line', app.templates['[temp-id="line"]']);
+
+            app.$.append(Table().$);
+            for (let i = 0; i < 10; ++i) {
+                let line = Line(newLine, i, Math.random(), Math.random());
+                app.table.tbody.$.append(line.$);
+            }
+        }
+        function newLine(sf, c1, c2, c3) {
+            [sf.th.innerText, sf.td[0].innerText, sf.td[1].innerText] = [c1, c2, c3];
+        }
+    </script>
+</body>
+
+</html>
