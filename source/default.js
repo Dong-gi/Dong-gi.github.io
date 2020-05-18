@@ -4,6 +4,8 @@ const posts = { list: [
 { file: "/posts/single/docker.html",                        category: "단일 문서",                       title: "Docker" },
 { file: "/posts/single/fp.html",                            category: "단일 문서",                       title: "FP; Functional Programming" },
 { file: "/posts/single/git.html",                           category: "단일 문서",                       title: "Git" },
+{ file: "/posts/single/gradle.html",                        category: "단일 문서",                       title: "Gradle" },
+{ file: "/posts/single/groovy.html",                        category: "단일 문서",                       title: "Groovy" },
 { file: "/posts/single/nginx.html",                         category: "단일 문서",                       title: "Nginx" },
 { file: "/posts/single/rpi.html",                           category: "단일 문서",                       title: "Raspberry Pi 3 + OpenCV(python)" },
 { file: "/posts/single/redis.html",                         category: "단일 문서",                       title: "Redis" },
@@ -90,6 +92,7 @@ const posts = { list: [
 { file: "/posts/project/error.html",                        category: "Project",                        title: "Exceptions + Errors" },
 { file: "/posts/project/tip.html",                          category: "Project",                        title: "잡다한 팁" },
 { file: "/posts/project/snippets.html",                     category: "Project",                        title: "Code Snippets" },
+{ file: "/posts/project/sf.html",                           category: "Project",                        title: "SF; Simplest html Framework" },
 { file: "/posts/project/wpf_data_tool.html",                category: "Project",                        title: "C#.NET, WPF - 데이터 작업 툴" },
 ], codes: {} }
 
