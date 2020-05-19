@@ -2084,6 +2084,7 @@ cluster.test.js
 express-start
 jade-start
 mocha-start
+redis-start
 
 /workspace/donggi-github/Dong-gi.github.io/Repositories/Node/express-start:
 app.js
@@ -2128,6 +2129,11 @@ test
 test1.js
 test2.js
 test3.js
+
+/workspace/donggi-github/Dong-gi.github.io/Repositories/Node/redis-start:
+app.js
+package-lock.json
+package.json
 
 /workspace/donggi-github/Dong-gi.github.io/Repositories/Python:
 Basic

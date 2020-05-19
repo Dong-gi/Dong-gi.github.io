@@ -10,14 +10,39 @@ include ../../source/skeleton.jade
         li CLI
         +asCode('shell').
             export GRADLE_OPTS="-Dfile.encoding=utf-8"
-            $ gradle [option...] [task...]
-            $ gradle --help                                   # 도움말 1
-            $ gradle --daemon                                 # 그래들 데몬을 실행시켜둔다. 반복 빌드가 빨라진다.
-            $ gradle -b new.gradle                            # 스크립트 파일 지정. 기본 build.gradle
-            $ gradle             tasks                        # 작업 목록 출력
-            $ gradle             help                         # 도움말 2
-            $ gradle             help --task init             # init 작업 도움말 출력
-            $ gradle             init --type java-application # 프로젝트 스켈레톤 생성
+            $ gradle [task...] [option...]             # 각 작업은 ' '로 구분
+                                                       # 여러 옵션 + CLI 해석 불가 옵션들을 gradle.properties에 작성 가능
+            $ gradle           --help                  # gradle 도움말
+            $ gradle           --daemon                # 그래들 데몬을 실행시켜둔다. 반복 빌드가 빨라진다.
+            $ gradle           -b new.gradle           # 스크립트 파일 지정. 기본 build.gradle
+            $ gradle           -x test                 # 실행하지 않을 작업 명시
+            $ gradle           --continuous            # 입력 소스 변경 시 자동 실행
+                                                       # 빌드 로직 변경은 자동으로 반영되지 않음. 수동으로 재실행해야 함(6.4 문서 기준)
+                                                       # 자동 빌드의 종료는 Ctrl+D 또는 kill
+            
+            $ gradle           -D{propName}={value}    # JVM 시스템 속성
+                                                       # 루트 프로젝트의 gradle.properties에서 'systemProp.' 접두 포함하여 지정 가능
+            $ gradle           -Dgradle.wrapperUser={user}         # gradlew HTTP 인증 정보
+            $ gradle           -Dgradle.wrapperPassword={password} # gradlew HTTP 인증 정보
+            $ gradle           -Dgradle.user.home={path}           # GRADLE_USER_HOME
+            $ gradle           -Dorg.gradle.logging.level=(quiet, warn, lifecycle, info, debug)
+                                                                   # 로그 레벨. -q, -w, -i, -d로도 지정 가능
+            $ gradle           -Dorg.gradle.jvmargs                # JVM 전달 인자
+            #                  -Dorg.gradle.jvmargs="-Xmx1g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
+            $ gradle           -Dorg.gradle.java.home              # JDK_HOME
+                                                       
+            $ gradle           -P{propName}={value}    # 프로젝트 속성
+                                                       # ORG_GRADLE_PROJECT_{propName}={value} 환경 변수로도 설정 가능
+                                                       # 존재하지 않는 프로젝트 속성 참조 시 빌드 실패함에 유의
+                                                       # Project#hasProperty(String) 이용
+            
+            $ gradle tasks                             # 작업 목록 출력
+            $ gradle help      --task clean            # 작업 도움말
+            $ gradle init                              # 프로젝트 스켈레톤 생성
+                                                       # https://docs.gradle.org/current/userguide/build_init_plugin.html
+            $ gradle {subProject}:{taskName}           # 서브프로젝트 작업 실행
+                                                       # 작업 이름만 지정하는 경우 모든 서브프로젝트에 대해 실행된다
+                                                       # 서브프로젝트 디렉터리에서 실행하는 경우엔 프로젝트 이름 생략 가능
     div
         h2.marker build.gradle
         ol
@@ -297,6 +322,17 @@ include ../../source/skeleton.jade
         div
             h3.marker Task
             ul
+                li: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html')
+                +asCode('gradle').
+                    task copy(type: Copy) {
+                        group = 'Project 01'
+                        description = 'Core Gradle의 Copy 태스크를 이용하여 src 디렉터리를 dest로 복사한다'
+                        from 'src'
+                        into 'dest'
+                        caseSensitive = false
+                        includeEmptyDirs = false
+                        excludes = ['.gradle/']
+                    }
                 li clean
                 p
                     | 출력 디렉터리(기본값 build/)
@@ -306,9 +342,6 @@ include ../../source/skeleton.jade
         
         h2.marker Java 플러그인
         div
-            h3.marker Source set
-            p 작업에 필요한 코드와 리소스를 묶은 단위. 입출력 경로를 지정.
-            
             h3.marker Task
             ul
                 li
@@ -322,8 +355,27 @@ include ../../source/skeleton.jade
                 li
                     | compileJava - 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.compile.JavaCompile.html')
-                p Depends on : 컴파일 경로를 변경하는 모든 작업 + jar
-                p 프로덕션(main 소스셋) .java 소스 코드 컴파일
+                ul
+                    li Depends on : 컴파일 경로를 변경하는 모든 작업 + jar
+                    li 프로덕션(main 소스셋) .java 소스 코드 컴파일
+                    li
+                        +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.compile.CompileOptions.html')
+                        |  JavaCompile.options
+                    +asCode('gradle').
+                        compileJava {
+                            options.encoding = 'UTF-8'
+                            options.debuf = false        // class 파일에 디버깅 정보를 포함할 것인지(기본 true), 사용 레벨은 DebugOptions#getDebugLevel
+                            options.compilerArgs = ['-Xlint:none'] // 컴파일러에 넘길 임의 추가 인자
+                            options.listFiles = true     // 컴파일 대상 목록 출력 여부(기본 false)
+                            options.warnings = false     // 경고 출력할 지 여부(기본 true)
+                        }
+                        
+                        // 또는
+                        tasks.withType(JavaCompile) {
+                            options.encoding = 'UTF-8'
+                        }
+                        
+                        
                 li
                     | processResources - 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html')
@@ -340,6 +392,10 @@ include ../../source/skeleton.jade
                     | javadoc - 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.javadoc.Javadoc.html')
                 p Depends on : classes
+                +asCode('gradle').
+                    javadoc {
+                        options.links << 'https://docs.oracle.com/en/java/javase/12/docs/api/'
+                    }
                 p API 문서 생성
                 li
                     | compileTestJava - 
@@ -405,18 +461,29 @@ include ../../source/skeleton.jade
                     +tds('', 'FileCollection', 'annotationProcessorPath', '기본값 {name}AnnotationProcessor 설정')
                     +tds('', 'FileCollection', 'runtimeClasspath', '기본값 {output} + {name}RuntimeClasspath 설정')
                     +tds('readonly', 'SourceDirectorySet', 'java', '.java 파일들')
-                    +tds('', 'Set<File>', 'java.srcDirs', '자바 소스가 존재하는 경로들, 기본값 src/{name}/java')
+                    +tds('', 'Set<File>', 'java.srcDirs', '자바 소스가 디렉터리들, 기본값 src/{name}/java')
                     +tds('', 'File', 'java.outputDir', '기본값 {buildDir}/classes/java/{name}')
                     +tds('readonly', 'SourceDirectorySet', 'resources', '.java를 제외한 리소스 파일들')
-                    +tds('', '', '', '')
-                    +tds('', '', '', '')
-                    +tds('', '', '', '')
+                    +tds('', 'Set<File>', 'resources.srcDirs', '리소스 디렉터리들, 기본값 src/{name}/resources')
+                li 신규 소스셋 추가
+                +asCode('gradle').
+                    sourceSets {
+                        newSet {
+                            compileClasspath = sourceSets.main.output
+                            runtimeClasspath = output + compileClasspath
+                        }
+                    }
+                    
+                    dependencies {
+                        newSetCompile 'a:b:c'
+                        newSetRuntime 'a:b:c'
+                    }
             h3.marker Contributed extension
             p
                 | 가능한 버전은 다음 링크 참고 
                 +asA('https://docs.gradle.org/current/javadoc/org/gradle/api/JavaVersion.html')
             +asCode('gradle').
-                java {
+                java { // 모든 작업에 적용된다. 특정 작업만 적용하려면 해당 작업의 속성 변경
                     sourceCompatibility = JavaVersion.VERSION_1_8 // 컴파일 버전
                     targetCompatibility = JavaVersion.VERSION_1_8 // 출력 버전
                 }
@@ -430,6 +497,22 @@ include ../../source/skeleton.jade
                 +tds('readonly', 'SourceSetContainer', 'sourceSets', '')
                 +tds('', 'String', 'archivesBaseName', '기본값 {projectName}')
                 +tds('', '', '', '')
+        
+        h2.marker Application 플러그인
+        +asCode('gradle').
+            applicationName = 'test'
+            mainClassName = 'a.b.C'
+            
+            run {
+                standardInput = System.in
+            }
+            
+            // distZip : jar 빌드 후 실행 스크립트 파일 생성
+        
+        h2.marker War 플러그인
+        +asCode('gradle').
+            // providedCompile : main 소스셋 컴파일 시 필요하지만, war 파일에서는 제외할 것들
+            // providedRuntime : main 소스셋 실행 시 필요하지만, war 파일에서는 제외할 것들
         +asCode('gradle').
             clean {
                 delete << 'src/main/tmp' // clean 작업 시 'src/main/tmp' 디렉터리도 정리
@@ -443,9 +526,10 @@ include ../../source/skeleton.jade
                     
                     providedCompile '' // 빌드 시 사용 && 출력에 미포함
                     compile ''         // 빌드 시 사용 && 출력에 포함
-                    testCompile ''     // 테스트에만 필요
+                    testCompile 'junit:junit:4.11'     // 테스트에만 필요
                 }
-            
+        
 
     h1.marker Gradle Wrapper; gradlew
     p Gradle이 설치되지 않았어도, 프로젝트가 필요로 하는 버전의 Gradle을 자동으로 설치해 이용한다.
+    +asCode('gradle') $ gradle wrapper --gradle-version=6.4
