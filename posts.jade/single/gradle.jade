@@ -188,6 +188,32 @@ include ../../source/skeleton.jade
                 ----------
                 hello - Say hello
                 ...
+            
+            li.marker 기존 작업 덮어쓰기
+            +asCode('gradle').
+                plugins {
+                    id 'base'
+                }
+                
+                task clean(type: Delete, overwrite: true) {
+                    doLast {
+                        println 'I like cleaning'
+                    }
+                }
+            
+            li.marker 특정 조건을 만족하는 경우에만 실행
+            +asCode('gradle').
+                def p = this
+                
+                task hello() {
+                    onlyIf {
+                        p.hasProperty('userName')
+                    }
+                    doLast {
+                        println "Hello ${p.userName}!"
+                    }
+                }
+            +asCode('shell') $ gradle hello --daemon -PuserName="World" 
                 
         h2.marker 빌드 절차
         ol
@@ -197,7 +223,7 @@ include ../../source/skeleton.jade
                 +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html')
                 |  인스턴스를 만든다.
                 br
-                | 루트 프로젝트에 존재하는 settings.gradle 스크립트가 실행된다.
+                | 루트 프로젝트에 존재하는 settings.gradle 스크립트(-c 또는 --settings-file 옵션으로 다른 파일 지정 가능)가 실행된다.
                 +codeBtn('/Repositories/Eclipse/annotation-processing3/settings.gradle', 'gradle')
                 +asA('https://docs.gradle.org/current/userguide/multi_project_builds.html#multi_project_builds')
                 br
@@ -228,6 +254,175 @@ include ../../source/skeleton.jade
                     else
                         println "${project} Succeeded"
                 }
+                // + gradle.beforeProject, ProjectsLoaded, buildFinished, projectsEvaluated, settingsEvaluated
+        
+        h2.marker 기본 작업
+        div
+            h3.marker: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html')
+            +asCode('gradle').
+                task copy(type: Copy) {
+                    group = 'Project 01'
+                    description = 'Core Gradle의 Copy 태스크를 이용하여 src 디렉터리를 dest로 복사한다'
+                    from 'src'
+                    into 'dest'
+                    caseSensitive = false
+                    includeEmptyDirs = false
+                    excludes = ['.gradle/']
+                    rename { fileName -> newFileName }
+                    rename '(.*).txt', '$1.csv'
+                }
+            h3.marker: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Delete.html')
+            +asCode('gradle').
+                task makePretty(type: Delete) {
+                    delete 'uglyFolder', 'uglyFile'
+                    followSymlinks = true
+                }
+            h3.marker: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Exec.html')
+            +asCode('gradle').
+                task stopTomcat(type: Exec) {
+                    workingDir '../tomcat/bin'
+                    commandLine './stop.sh'
+                    standardOutput = new ByteArrayOutputStream()
+                    ext.output = {
+                        return standardOutput.toString()
+                    }
+                }
+            h3.marker: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.JavaExec.html')
+            +asCode('gradle').
+                apply plugin: 'java'
+                
+                task runApp(type: JavaExec) {
+                    classpath = sourceSets.main.runtimeClasspath
+                    main = 'package.Main'
+                    args 'appArg1'
+                }
+            +asCode('gradle').
+                apply plugin: 'java'
+                
+                jar {
+                    manifest {
+                        attributes('Main-Class': 'package.Main')
+                    }
+                }
+                
+                task runExecutableJar(type: JavaExec) {
+                    classpath = files(tasks.jar)
+                    args 'appArg1'
+                }
+            +asCode('shell'). $ gradle runApp --debug-jvm
+            +asCode('gradle').
+                task runApp(type: JavaExec) {
+                    // ...
+                    debugOptions {
+                        enabled = true
+                        port = 5566
+                        server = true
+                        suspend = false
+                    }
+                }
+            h3.marker: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Zip.html')
+            +asCode('gradle').
+                plugins {
+                    id 'base'
+                }
+                
+                task zip(type: Zip) {
+                    group = 'Project 01'
+                    description = 'src 디렉터리를 out.zip으로 압축한다'
+                    from 'src'
+                    archiveFileName = 'out.zip'
+                }
+            h3.marker: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Tar.html')
+            p Zip 유사
+
+        h2.marker: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html')
+        div
+            h3.marker Script blocks
+            ul
+                li allprojects {}
+                p
+                    | 프로젝트 및 서브 프로젝트 설정 
+                    +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:allprojects(groovy.lang.Closure)')
+                li artifacts {}
+                p
+                    | 빌드 출력물 설정 
+                    +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:artifacts(groovy.lang.Closure)')
+                li buildscript {}
+                p
+                    | 클래스패스 설정 
+                    +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:buildscript(groovy.lang.Closure)')
+                li configurations {}
+                p
+                    | 프로젝트 관련 설정 
+                    +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:configurations(groovy.lang.Closure)')
+                li dependencies {}
+                p
+                    | 프로젝트 의존성 설정 
+                    +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:dependencies(groovy.lang.Closure)')
+                li repositories {}
+                p
+                    | 저장소 설정 
+                    +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:repositories(groovy.lang.Closure)')
+                li subprojects {}
+                p
+                    | 서브프로젝트 설정 
+                    +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:subprojects(groovy.lang.Closure)')
+                li application {}
+                p
+                    | application 플러그인으로 추가된다. 
+                    +asA('https://docs.gradle.org/current/dsl/org.gradle.api.plugins.JavaApplication.html')
+                    |  설정.
+                li eclipse {}
+                p
+                    | eclipse 플러그인으로 추가된다. 
+                    +asA('https://docs.gradle.org/current/dsl/org.gradle.plugins.ide.eclipse.model.EclipseModel.html')
+                    |  설정.
+                li idea {}
+                p
+                    | idea 플러그인으로 추가된다. 
+                    +asA('https://docs.gradle.org/current/dsl/org.gradle.plugins.ide.idea.model.IdeaModel.html')
+                    |  설정.
+                li sourceSets {}
+                p
+                    | java 플러그인으로 추가된다. 소스셋 설정.
+                li visualStudio {}
+                p
+                    | visual-studio 플러그인으로 추가된다. 
+                    +asA('https://docs.gradle.org/current/dsl/org.gradle.ide.visualstudio.VisualStudioRootExtension.html')
+                    |  설정.
+            h3.marker Properties
+            +asCode('gradle').
+                readonly Logger        logger                         // logger.info, logger.error, ...
+                readonly TaskContainer tasks                          // 프로젝트 작업 목록
+                    tasks.addRule("Pattern: ping&lt;ID>") { String taskName ->
+                        if (taskName.startsWith("ping")) {
+                            task(taskName) {
+                                doLast {
+                                    println "Pinging: " + (taskName - 'ping')
+                                }
+                            }
+                        }
+                    }
+            h3.marker Methods
+            +asCode('gradle').
+                File                        file (Object path)        // CharSequence, File, Path, URI, URL 등에 대해 단일 파일 인스턴스 반환
+                ConfigurableFileCollection  files (Object... paths)   // +, - 연산 정의됨. 각각 합/차집합
+                ConfigurableFileTree        fileTree (Object baseDir) // ant 패턴 이용
+                    def tree = fileTree('src')
+                    tree.include('**/*.java')
+                    tree.exclude('**/*Test.java')
+                    
+                    def newTree = tree.matching { include('**/*.jpg') }
+                    
+                    tree.visit { fileDetail -> ... }
+                    tree.visit(new FileVisitor() {
+                        void visitDir(FileVisitDetails detail) {}
+                        void visitFile(FileVisitDetails detail) {}
+                    })
+                
+                WorkResult                  copy (?)                   // 기본 작업 Copy와 동일
+                WorkResult                  delete (action)            // 기본 작업 Delete와 동일
+                File                        mkdir (Object path)        // 경로 상 필요한 모든 디렉터리 생성
                 
         h2.marker
             | Gradle 성능 
@@ -322,17 +517,6 @@ include ../../source/skeleton.jade
         div
             h3.marker Task
             ul
-                li: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html')
-                +asCode('gradle').
-                    task copy(type: Copy) {
-                        group = 'Project 01'
-                        description = 'Core Gradle의 Copy 태스크를 이용하여 src 디렉터리를 dest로 복사한다'
-                        from 'src'
-                        into 'dest'
-                        caseSensitive = false
-                        includeEmptyDirs = false
-                        excludes = ['.gradle/']
-                    }
                 li clean
                 p
                     | 출력 디렉터리(기본값 build/)

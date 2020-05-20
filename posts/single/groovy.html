@@ -47,7 +47,11 @@ assert f(123) == 246
 assert f('123') == '123 123'
 
 f = Integer.&new // Since 3.0.0
-assert f(123) == 123</div></ul><h3 class="marker">Regural expression</h3><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green"></div><h3 class="marker">Other operators</h3><ul><li>Spread(-dot) operator</li><p>컬렉션에 대한 프로젝션 반환. 컬렉션의 collect와 유사.</p><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def data = [
+assert f(123) == 123</div></ul><h3 class="marker">Regex expression</h3><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def p = ~/regex/
+assert p instanceof Pattern // java.util.regex.Pattern
+
+def m = text ==~ /match/
+assert m instanceof Boolean</div><h3 class="marker">Other operators</h3><ul><li>Spread(-dot) operator</li><p>컬렉션에 대한 프로젝션 반환. 컬렉션의 collect와 유사.</p><div lan="groovy" class="as-code code-div w3-leftbar w3-border-green">def data = [
     [key1: '1-1', key2: '1-2'],
     null,
     [key1: '2-1', key2: '2-1']

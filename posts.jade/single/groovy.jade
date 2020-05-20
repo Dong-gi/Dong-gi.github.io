@@ -137,8 +137,13 @@ include ../../source/skeleton.jade
                     
                     f = Integer.&new // Since 3.0.0
                     assert f(123) == 123
-            h3.marker Regural expression
-            +asCode('groovy'). def p = ~/regex/ // java.util.regex.Pattern
+            h3.marker Regex expression
+            +asCode('groovy').
+                def p = ~/regex/
+                assert p instanceof Pattern // java.util.regex.Pattern
+                
+                def m = text ==~ /match/
+                assert m instanceof Boolean
             h3.marker Other operators
             ul
                 li Spread(-dot) operator

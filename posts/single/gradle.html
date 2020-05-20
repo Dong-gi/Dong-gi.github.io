@@ -137,7 +137,25 @@ Core tasks
 ----------
 hello - Say hello
 ...
-</div></ol><h2 class="marker">빌드 절차</h2><ol><li class="marker">Initialization</li><p>어떤 프로젝트들을 빌드해야 하는지 결정하고, <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.Project.html" target="_blank">org.gradle.api.Project</a> 인스턴스를 만든다.<br>루트 프로젝트에 존재하는 settings.gradle 스크립트가 실행된다.<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/annotation-processing3/settings.gradle" lan="gradle">View Code »</button><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/userguide/multi_project_builds.html#multi_project_builds" target="_blank">multi_project_builds</a><br>-I 또는 --init-script 옵션을 지정하는 경우, <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/userguide/init_scripts.html#init_scripts" target="_blank">init_scripts</a>를 실행한다</p><li class="marker">Configuration</li><p>Project 인스턴스의 설정이 진행된다. 빌드될 각 프로젝트의 build.gradle 스크립트가 실행된다.</p><li class="marker">Execution</li><p>구성 단계에서 실행하기로 결정된 작업들을 실행한다.</p><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">task hello {}
+</div><li class="marker">기존 작업 덮어쓰기</li><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">plugins {
+    id 'base'
+}
+
+task clean(type: Delete, overwrite: true) {
+    doLast {
+        println 'I like cleaning'
+    }
+}
+</div><li class="marker">특정 조건을 만족하는 경우에만 실행</li><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">def p = this
+
+task hello() {
+    onlyIf {
+        p.hasProperty('userName')
+    }
+    doLast {
+        println "Hello ${p.userName}!"
+    }
+}</div><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ gradle hello --daemon -PuserName="World" </div></ol><h2 class="marker">빌드 절차</h2><ol><li class="marker">Initialization</li><p>어떤 프로젝트들을 빌드해야 하는지 결정하고, <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.Project.html" target="_blank">org.gradle.api.Project</a> 인스턴스를 만든다.<br>루트 프로젝트에 존재하는 settings.gradle 스크립트(-c 또는 --settings-file 옵션으로 다른 파일 지정 가능)가 실행된다.<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/annotation-processing3/settings.gradle" lan="gradle">View Code »</button><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/userguide/multi_project_builds.html#multi_project_builds" target="_blank">multi_project_builds</a><br>-I 또는 --init-script 옵션을 지정하는 경우, <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/userguide/init_scripts.html#init_scripts" target="_blank">init_scripts</a>를 실행한다</p><li class="marker">Configuration</li><p>Project 인스턴스의 설정이 진행된다. 빌드될 각 프로젝트의 build.gradle 스크립트가 실행된다.</p><li class="marker">Execution</li><p>구성 단계에서 실행하기로 결정된 작업들을 실행한다.</p><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">task hello {}
 tasks.whenTaskAdded { task ->
     task.ext.srcDir = 'src/main/java'
 }
@@ -156,7 +174,90 @@ gradle.afterProject { project ->
     else
         println "${project} Succeeded"
 }
-</div></ol><h2 class="marker">Gradle 성능 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/userguide/organizing_gradle_projects.html#organizing_gradle_projects" target="_blank">organizing_gradle_projects</a></h2><ol><li class="marker">Build scan</li><p>--scan 옵션으로 실행하면 된다</p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ gradle build --scan</div><div class="w3-center"><img src="/imgs/20200518_112155.png" alt="Gradle build scan result example" class="w3-round"></div><li class="marker">프로젝트에 항상 settings.gradle을 둘 것</li><p>매 실행 시마다 settings.gradle이 있는지 찾으므로, 빈 파일이라도 만들어 두는 것이 좋다</p><li class="marker">gradle.properties를 모든 프로젝트에 적용시키려는 경우</li><p>GRADLE_USER_HOME 디렉터리에 위치시키면 된다</p><li class="marker">각 작업의 출력 디렉터리는 혼자만 사용함이 바람직하다</li><p>여러 작업이 동일한 출력 디렉터리를 이용하는 경우, 전체 빌드가 느려지고 빌드 캐시가 무용지물이 된다.</p></ol></div><h1 class="marker">Gradle 플러그인</h1><ol><li>플러그인은 Gradle 코어 기능을 확장하여 새로운 작업, 데이터 모델을 이용하게 한다</li><li>플러그인은 프로젝트와 무관하게 사용 가능하다</li><li>플러그인의 적용<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/javadoc/org/gradle/api/Plugin.html#apply-T-" target="_blank">apply-T-</a>은 여러 번 호출해도 부작용이 없다</li><li>사용할 플러그인 이름은 Fully qualified name이어야 하지만, Core Gradle 플러그인들은 짧은 이름을 사용할 수 있다.</li><p>예. JavaPlugin → 'java'</p></ol><div><h2 class="marker">Binary plugin</h2><p><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/javadoc/org/gradle/api/Plugin.html" target="_blank">Plugin</a> 인터페이스를 구현한 임의 클래스를 플러그인으로 이용할 수 있다</p><div><h3 class="marker">플러그인 포함 및 적용</h3><p>'java' 플러그인은 Core Gradle의 일부이므로 적용한다고 선언만하면 되지만, 대개의 플러그인들은 클래스를 찾기 위해 jar를 포함시켜야 한다</p><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">plugins {
+// + gradle.beforeProject, ProjectsLoaded, buildFinished, projectsEvaluated, settingsEvaluated
+</div></ol><h2 class="marker">기본 작업</h2><div><h3 class="marker"><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html" target="_blank">org.gradle.api.tasks.Copy</a></h3><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">task copy(type: Copy) {
+    group = 'Project 01'
+    description = 'Core Gradle의 Copy 태스크를 이용하여 src 디렉터리를 dest로 복사한다'
+    from 'src'
+    into 'dest'
+    caseSensitive = false
+    includeEmptyDirs = false
+    excludes = ['.gradle/']
+    rename { fileName -> newFileName }
+    rename '(.*).txt', '$1.csv'
+}</div><h3 class="marker"><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Delete.html" target="_blank">org.gradle.api.tasks.Delete</a></h3><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">task makePretty(type: Delete) {
+    delete 'uglyFolder', 'uglyFile'
+    followSymlinks = true
+}</div><h3 class="marker"><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Exec.html" target="_blank">org.gradle.api.tasks.Exec</a></h3><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">task stopTomcat(type: Exec) {
+    workingDir '../tomcat/bin'
+    commandLine './stop.sh'
+    standardOutput = new ByteArrayOutputStream()
+    ext.output = {
+        return standardOutput.toString()
+    }
+}</div><h3 class="marker"><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.JavaExec.html" target="_blank">org.gradle.api.tasks.JavaExec</a></h3><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">apply plugin: 'java'
+
+task runApp(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'package.Main'
+    args 'appArg1'
+}</div><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">apply plugin: 'java'
+
+jar {
+    manifest {
+        attributes('Main-Class': 'package.Main')
+    }
+}
+
+task runExecutableJar(type: JavaExec) {
+    classpath = files(tasks.jar)
+    args 'appArg1'
+}</div><div lan="shell" class="as-code code-div w3-leftbar w3-border-green"></div><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">task runApp(type: JavaExec) {
+    // ...
+    debugOptions {
+        enabled = true
+        port = 5566
+        server = true
+        suspend = false
+    }
+}</div><h3 class="marker"><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Zip.html" target="_blank">org.gradle.api.tasks.bundling.Zip</a></h3><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">plugins {
+    id 'base'
+}
+
+task zip(type: Zip) {
+    group = 'Project 01'
+    description = 'src 디렉터리를 out.zip으로 압축한다'
+    from 'src'
+    archiveFileName = 'out.zip'
+}</div><h3 class="marker"><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Tar.html" target="_blank">org.gradle.api.tasks.bundling.Tar</a></h3><p>Zip 유사</p></div><h2 class="marker"><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.Project.html" target="_blank">org.gradle.api.Project</a></h2><div><h3 class="marker">Script blocks</h3><ul><li>allprojects {}</li><p>프로젝트 및 서브 프로젝트 설정 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:allprojects(groovy.lang.Closure)" target="_blank">org.gradle.api.Project:allprojects(groovy.lang.Closure)</a></p><li>artifacts {}</li><p>빌드 출력물 설정 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:artifacts(groovy.lang.Closure)" target="_blank">org.gradle.api.Project:artifacts(groovy.lang.Closure)</a></p><li>buildscript {}</li><p>클래스패스 설정 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:buildscript(groovy.lang.Closure)" target="_blank">org.gradle.api.Project:buildscript(groovy.lang.Closure)</a></p><li>configurations {}</li><p>프로젝트 관련 설정 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:configurations(groovy.lang.Closure)" target="_blank">org.gradle.api.Project:configurations(groovy.lang.Closure)</a></p><li>dependencies {}</li><p>프로젝트 의존성 설정 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:dependencies(groovy.lang.Closure)" target="_blank">org.gradle.api.Project:dependencies(groovy.lang.Closure)</a></p><li>repositories {}</li><p>저장소 설정 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:repositories(groovy.lang.Closure)" target="_blank">org.gradle.api.Project:repositories(groovy.lang.Closure)</a></p><li>subprojects {}</li><p>서브프로젝트 설정 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:subprojects(groovy.lang.Closure)" target="_blank">org.gradle.api.Project:subprojects(groovy.lang.Closure)</a></p><li>application {}</li><p>application 플러그인으로 추가된다. <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.plugins.JavaApplication.html" target="_blank">org.gradle.api.plugins.JavaApplication</a> 설정.</p><li>eclipse {}</li><p>eclipse 플러그인으로 추가된다. <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.plugins.ide.eclipse.model.EclipseModel.html" target="_blank">org.gradle.plugins.ide.eclipse.model.EclipseModel</a> 설정.</p><li>idea {}</li><p>idea 플러그인으로 추가된다. <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.plugins.ide.idea.model.IdeaModel.html" target="_blank">org.gradle.plugins.ide.idea.model.IdeaModel</a> 설정.</p><li>sourceSets {}</li><p>java 플러그인으로 추가된다. 소스셋 설정.</p><li>visualStudio {}</li><p>visual-studio 플러그인으로 추가된다. <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.ide.visualstudio.VisualStudioRootExtension.html" target="_blank">org.gradle.ide.visualstudio.VisualStudioRootExtension</a> 설정.</p></ul><h3 class="marker">Properties</h3><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">readonly Logger        logger                         // logger.info, logger.error, ...
+readonly TaskContainer tasks                          // 프로젝트 작업 목록
+    tasks.addRule("Pattern: ping&lt;ID>") { String taskName ->
+        if (taskName.startsWith("ping")) {
+            task(taskName) {
+                doLast {
+                    println "Pinging: " + (taskName - 'ping')
+                }
+            }
+        }
+    }</div><h3 class="marker">Methods</h3><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">File                        file (Object path)        // CharSequence, File, Path, URI, URL 등에 대해 단일 파일 인스턴스 반환
+ConfigurableFileCollection  files (Object... paths)   // +, - 연산 정의됨. 각각 합/차집합
+ConfigurableFileTree        fileTree (Object baseDir) // ant 패턴 이용
+    def tree = fileTree('src')
+    tree.include('**/*.java')
+    tree.exclude('**/*Test.java')
+    
+    def newTree = tree.matching { include('**/*.jpg') }
+    
+    tree.visit { fileDetail -> ... }
+    tree.visit(new FileVisitor() {
+        void visitDir(FileVisitDetails detail) {}
+        void visitFile(FileVisitDetails detail) {}
+    })
+
+WorkResult                  copy (?)                   // 기본 작업 Copy와 동일
+WorkResult                  delete (action)            // 기본 작업 Delete와 동일
+File                        mkdir (Object path)        // 경로 상 필요한 모든 디렉터리 생성
+</div></div><h2 class="marker">Gradle 성능 <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/userguide/organizing_gradle_projects.html#organizing_gradle_projects" target="_blank">organizing_gradle_projects</a></h2><ol><li class="marker">Build scan</li><p>--scan 옵션으로 실행하면 된다</p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ gradle build --scan</div><div class="w3-center"><img src="/imgs/20200518_112155.png" alt="Gradle build scan result example" class="w3-round"></div><li class="marker">프로젝트에 항상 settings.gradle을 둘 것</li><p>매 실행 시마다 settings.gradle이 있는지 찾으므로, 빈 파일이라도 만들어 두는 것이 좋다</p><li class="marker">gradle.properties를 모든 프로젝트에 적용시키려는 경우</li><p>GRADLE_USER_HOME 디렉터리에 위치시키면 된다</p><li class="marker">각 작업의 출력 디렉터리는 혼자만 사용함이 바람직하다</li><p>여러 작업이 동일한 출력 디렉터리를 이용하는 경우, 전체 빌드가 느려지고 빌드 캐시가 무용지물이 된다.</p></ol></div><h1 class="marker">Gradle 플러그인</h1><ol><li>플러그인은 Gradle 코어 기능을 확장하여 새로운 작업, 데이터 모델을 이용하게 한다</li><li>플러그인은 프로젝트와 무관하게 사용 가능하다</li><li>플러그인의 적용<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/javadoc/org/gradle/api/Plugin.html#apply-T-" target="_blank">apply-T-</a>은 여러 번 호출해도 부작용이 없다</li><li>사용할 플러그인 이름은 Fully qualified name이어야 하지만, Core Gradle 플러그인들은 짧은 이름을 사용할 수 있다.</li><p>예. JavaPlugin → 'java'</p></ol><div><h2 class="marker">Binary plugin</h2><p><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/javadoc/org/gradle/api/Plugin.html" target="_blank">Plugin</a> 인터페이스를 구현한 임의 클래스를 플러그인으로 이용할 수 있다</p><div><h3 class="marker">플러그인 포함 및 적용</h3><p>'java' 플러그인은 Core Gradle의 일부이므로 적용한다고 선언만하면 되지만, 대개의 플러그인들은 클래스를 찾기 위해 jar를 포함시켜야 한다</p><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">plugins {
     id 'java'
 }</div><ol><li>플러그인 포털<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://plugins.gradle.org/" target="_blank">Reference</a> 또는 사용자 지정 저장소로부터 포함</li><ul><li>플러그인 포함 및 적용</li><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">plugins {
     id 'com.jfrog.bintray' version '0.4.1'
@@ -188,15 +289,7 @@ gradlePlugin {
             implementationClass = 'my.MyPlugin'
         }
     }
-}</div><li>스크립트 안의 클래스로 정의(스크립트 외부 사용은 불가)</li></ol></div><h2 class="marker">base 플러그인</h2><button class="w3-btn w3-round w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Gradle/project-01/build.gradle" lan="gradle">View Code »</button><div><h3 class="marker">Task</h3><ul><li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html" target="_blank">org.gradle.api.tasks.Copy</a></li><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">task copy(type: Copy) {
-    group = 'Project 01'
-    description = 'Core Gradle의 Copy 태스크를 이용하여 src 디렉터리를 dest로 복사한다'
-    from 'src'
-    into 'dest'
-    caseSensitive = false
-    includeEmptyDirs = false
-    excludes = ['.gradle/']
-}</div><li>clean</li><p>출력 디렉터리(기본값 build/)<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:buildDir" target="_blank">org.gradle.api.Project:buildDir</a>를 정리한다.</p></ul></div><h2 class="marker">Java 플러그인</h2><div><h3 class="marker">Task</h3><ul><li>clean - <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Delete.html" target="_blank">org.gradle.api.tasks.Delete</a></li><p>build 디렉터리 제거</p><li>clean{TaskName} - <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Delete.html" target="_blank">org.gradle.api.tasks.Delete</a></li><p>해당 작업 출력 제거</p><li>compileJava - <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_blank">org.gradle.api.tasks.compile.JavaCompile</a></li><ul><li>Depends on : 컴파일 경로를 변경하는 모든 작업 + jar</li><li>프로덕션(main 소스셋) .java 소스 코드 컴파일</li><li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.compile.CompileOptions.html" target="_blank">org.gradle.api.tasks.compile.CompileOptions</a> JavaCompile.options</li><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">compileJava {
+}</div><li>스크립트 안의 클래스로 정의(스크립트 외부 사용은 불가)</li></ol></div><h2 class="marker">base 플러그인</h2><button class="w3-btn w3-round w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Gradle/project-01/build.gradle" lan="gradle">View Code »</button><div><h3 class="marker">Task</h3><ul><li>clean</li><p>출력 디렉터리(기본값 build/)<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:buildDir" target="_blank">org.gradle.api.Project:buildDir</a>를 정리한다.</p></ul></div><h2 class="marker">Java 플러그인</h2><div><h3 class="marker">Task</h3><ul><li>clean - <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Delete.html" target="_blank">org.gradle.api.tasks.Delete</a></li><p>build 디렉터리 제거</p><li>clean{TaskName} - <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Delete.html" target="_blank">org.gradle.api.tasks.Delete</a></li><p>해당 작업 출력 제거</p><li>compileJava - <a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_blank">org.gradle.api.tasks.compile.JavaCompile</a></li><ul><li>Depends on : 컴파일 경로를 변경하는 모든 작업 + jar</li><li>프로덕션(main 소스셋) .java 소스 코드 컴파일</li><li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.compile.CompileOptions.html" target="_blank">org.gradle.api.tasks.compile.CompileOptions</a> JavaCompile.options</li><div lan="gradle" class="as-code code-div w3-leftbar w3-border-green">compileJava {
     options.encoding = 'UTF-8'
     options.debuf = false        // class 파일에 디버깅 정보를 포함할 것인지(기본 true), 사용 레벨은 DebugOptions#getDebugLevel
     options.compilerArgs = ['-Xlint:none'] // 컴파일러에 넘길 임의 추가 인자

@@ -1,17 +1,10 @@
-plugins {
-    id 'base'
-}
+def p = this
 
-task copy(type: Copy) {
-    group = 'Project 01'
-    description = 'Core Gradle의 Copy 태스크를 이용하여 src 디렉터리를 dest로 복사한다'
-    from 'src'
-    into 'dest'
-}
-
-task zip(type: Zip) {
-    group = 'Project 01'
-    description = 'src 디렉터리를 out.zip으로 압축한다'
-    from 'src'
-    archiveFileName = 'out.zip'
+task hello() {
+    onlyIf {
+        p.hasProperty('userName')
+    }
+    doLast {
+        println "Hello ${p.userName}!"
+    }
 }
