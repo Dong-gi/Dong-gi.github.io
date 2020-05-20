@@ -32,7 +32,9 @@ mixin codeBtn(path, lan, displayRange)
             |View Code »
 
 mixin asA(href, text)
-    - text || (href.indexOf('#') > 0 && (text = href.split('#').pop())) || (href.indexOf('/') > 0 && (text = href.split('/').pop())) || (text = 'Reference')
+    - if (!text && /#/.test(href)) { text = href.replace(/.*#/, '') }
+    - if (!text && /\//.test(href)) { text = href.replace(/.*\//, '') }
+    - if (!text) { text = 'Reference' }
     - text = text.replace(/\.(html?|jsp|php|asp|do|js|css|txt|java)$/, '')
     +w3a()&attributes({ href: href, target: '_blank' })&attributes(attributes)= text
 

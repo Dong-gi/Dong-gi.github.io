@@ -20,6 +20,10 @@ String.prototype.asSF = function () {
     }
 };
 class SF {
+    /**
+     * @param {HTMLElement} root 
+     * @returns {Proxy} App instance && SFNode
+     */
     static build(root) {
         if (!root)
             root = document.querySelector('[sf]');
@@ -44,6 +48,10 @@ class SF {
         }
         return app;
     }
+    /**
+     * @param {HTMLElement} element 
+     * @returns {Proxy} SFNode
+     */
     static asSF(element) {
         if (!element) return element;
         if (element.__key && SF.__map[element.__key])
@@ -52,6 +60,12 @@ class SF {
             element.__key = `${new Date().getTime()}__${Math.random()}`.replace('.', '').hashCode();
         SF.__map[element.__key] = new Proxy(element, {
             set(o, prop, value) {
+                if (!prop.startsWith('__')) {
+                    for (let hook of SF.__map[element.__key].__setHooks) {
+                        if (!hook.prop || hook.prop == prop)
+                            hook.callback(o, prop, value);
+                    }
+                }
                 if (o.hasAttribute(prop))
                     return o.setAttribute(prop, value);
                 if (o.hasOwnProperty(prop))
@@ -59,6 +73,12 @@ class SF {
                 return o[prop] = value;
             },
             get(o, prop) {
+                if (!prop.startsWith('__')) {
+                    for (let hook of SF.__map[element.__key].__getHooks) {
+                        if (!hook.prop || hook.prop == prop)
+                            hook.callback(o, prop);
+                    }
+                }
                 switch (prop) {
                     case '$':
                         return o;
@@ -85,100 +105,69 @@ class SF {
                 return SF.asSFarr(o.querySelectorAll(prop));
             }
         });
+        SF.__map[element.__key].__setHooks = [];
+        SF.__map[element.__key].__getHooks = [];
         return SF.__map[element.__key];
     }
+    /**
+     * @param {Iterable<HTMLElement>} elements
+     * @returns {Proxy[]} Array of SFNode, except when elements has only one element.
+     */
     static asSFarr(elements) {
         let arr = [];
         if (!elements) return arr;
         for (let e of elements) {
             arr.push(SF.asSF(e));
         }
-        return arr.length == 1? arr[0] : arr;
+        return arr.length == 1 ? arr[0] : arr;
+    }
+    /**
+     * Add binding from srcElement[propName] to tarElement[propName]
+     * @param {HTMLElement} srcElement 
+     * @param {HTMLElement} tarElement 
+     * @param {String} propName If Boolean(propName) == false, then all set operation on srcElement will applied to tarElement
+     */
+    static bindOneWay(srcElement, tarElement, propName) {
+        SF.whenPropertySet(srcElement, propName, (src, prop, value) => {
+            if (src[prop] != value)
+                SF.asSF(tarElement)[prop] = value
+        });
+    }
+    /**
+     * Add binding between srcElement[propName] and tarElement[propName]
+     * @param {HTMLElement} element1 
+     * @param {HTMLElement} element2 
+     * @param {String} propName If Boolean(propName) == false, then all set operation on elements will propagated
+     */
+    static bindTwoWay(element1, element2, propName) {
+        SF.bindOneWay(element1, element2, propName);
+        SF.bindOneWay(element2, element1, propName);
+    }
+    /**
+     * Add hooking before set operation
+     * @param {HTMLElement} element 
+     * @param {String} propName If Boolean(propName) == false, then all set operation on element will call callback
+     * @param {Function} callback (HTMLElement src, String propName, Object value) => ?
+     */
+    static whenPropertySet(element, propName, callback) {
+        SF.asSF(element).__setHooks.push(new HookAction(propName, callback));
+    }
+    /**
+     * Add hooking before get operation
+     * @param {HTMLElement} element 
+     * @param {String} propName If Boolean(propName) == false, then all get operation on element will call callback
+     * @param {Function} callback (HTMLElement src, String propName) => ?
+     */
+    static whenPropertyGet(element, propName, callback) {
+        SF.asSF(element).__getHooks.push(new HookAction(propName, callback));
     }
 }
 SF.__map = SF.__map || new Map();
 SF.__templates = SF.__templates || new Map();
 SF.__placeholder = SF.__placeholder || function () { };
 
-/*
-onload();
-function onload() {
-    if (document.readyState != "complete") {
-        window.addEventListener('load', onload)
-        return;
-    }
-
-    const State = {
-        INIT: Symbol(),     // no input
-        HAS_NUM1: Symbol(), // has number 1
-        HAS_OP: Symbol(),   // has operator
-        HAS_NUM2: Symbol(), // has number 2
-        END: Symbol()       // has output
-    };
-    Object.freeze(State);
-    const Nums = ['I', 'V', 'X'];
-    Object.freeze(Nums);
-
-    const app1 = SF.build(document.getElementById('calc1'));
-    const app2 = SF.build(document.getElementById('calc2'));
-    const Calculator = app1.asTemplate(document.querySelector(`[temp-id="calculator"]`));
-    const NumberBtn = app1.asTemplate(document.querySelector(`[temp-id="calc-num-btn"]`));
-    const FuncBtn = app1.asTemplate(document.querySelector(`[temp-id="calc-func-btn"]`));
-    
-    app1.$.append(Calculator(newCalc1).$);
-    app2.$.append(Calculator(newCalc2).$);
-    
-    function newCalc(calculator) {
-        calculator.state = State.INIT;
-        calculator.num1 = calculator.p[0].span[0];
-        calculator.op = calculator.p[0].span[1];
-        calculator.num2 = calculator.p[0].span[2];
-        calculator.out = calculator.p[1].span;
-        for (let num of Nums)
-            calculator.p[2].$.append(NumberBtn(newNumBtn, calculator, num).$);
-    }
-    function newNumBtn(btn, calculator, text) {
-        btn.innerText = text;
-        btn.onclick = () => {
-            switch(calculator.state) {
-                case State.INIT:
-                    calculator.num1.innerText += text;
-                    calculator.state = State.HAS_NUM1;
-                    break;
-                case State.HAS_NUM1:
-                    calculator.num1.innerText += text;
-                    break;
-                case State.HAS_OP:
-                    calculator.num2.innerText += text;
-                    calculator.state = State.HAS_NUM2;
-                    break;
-                case State.HAS_NUM2:
-                    calculator.num2.innerText += text;
-                    break;
-            }
-        };
-    }
-    function newCalc1(calculator) {
-        newCalc(calculator);
-    }
-    function newCalc2(calculator) {
-        newCalc(calculator);
+class HookAction {
+    constructor(prop, callback) {
+        [this.prop, this.callback] = [prop, callback];
     }
 }
-
-form(temp-id='calculator')
-p
-    | input : 
-    span
-    span
-    span
-p
-    | output : 
-    span
-p
-    | numbers : 
-p
-    | operators : 
-+w3button()&attributes({'temp-id': 'calc-num-btn'})
-+w3button('w3-blue')&attributes({'temp-id': 'calc-func-btn'})
-*/

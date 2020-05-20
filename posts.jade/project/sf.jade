@@ -16,7 +16,10 @@ include ../../source/skeleton.jade
         h2.marker Terms
         ol
             li SFNode
-            p Proxy object of HTMLElement returned by SF#build, SF#asSF, SF#asSFarr
+            ul
+                li Proxy object of a HTMLElement.
+                li Returned by SF#build, SF#asSF, SF#asSFarr
+                li Input HTMLElement can be accessed by SFNode.$
             li App instance
             p SFNode returned by SF#build
 
@@ -34,7 +37,7 @@ include ../../source/skeleton.jade
             +asA('/Repositories/JavaScript/SF/demo1.html') Open new tab
         h2.marker 0.1.3
         div
-            h3.marker Template 1
+            h3.marker Template Example 1
             +asCode('javascript').
                 const Card = app.newTemplate(templateName, htmlMaker)
                     // templateName : anything which can be used as map's key
@@ -47,10 +50,10 @@ include ../../source/skeleton.jade
             +codeBtn('/Repositories/JavaScript/SF/demo2.html', 'nohighlight') View live here
             +asA('/Repositories/JavaScript/SF/demo2.html') Open new tab
 
-            //-h3.marker Template 2
-            //-+codeBtn('/Repositories/JavaScript/SF/demo3.html', 'html')
-            //-+codeBtn('/Repositories/JavaScript/SF/demo3.html', 'nohighlight') View live here
-            //-+asA('/Repositories/JavaScript/SF/demo3.html') Open new tab
+            h3.marker Template Example 2
+            +codeBtn('/Repositories/JavaScript/SF/demo3.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo3.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo3.html') Open new tab
 
 
     h1.marker Change Logs
