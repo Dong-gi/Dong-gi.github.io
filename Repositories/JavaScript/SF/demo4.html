@@ -1,0 +1,67 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="/source/sf.js"></script>
+    <script src="https://github.com/Dong-gi/SF/releases/download/0.1.3/sf.min.js"></script>
+    <title>demo4</title>
+</head>
+
+<body>
+    <div id="demo4-1">
+        <form>
+            <fieldset>
+                <legend>Radio</legend>
+                <input type="radio" name="grade" id="grade-A" value="grade-A"><label for="grade-A">grade-A</label>
+                <input type="radio" name="grade" id="grade-B" value="grade-B"><label for="grade-B">grade-B</label>
+                <input type="radio" name="grade" id="grade-C" value="grade-C"><label for="grade-C">grade-C</label>
+            </fieldset>
+            <fieldset>
+                <legend>Checkbox</legend>
+                <input type="checkbox" name="hobby-A" id="hobby-A" value="hobby-A"><label for="hobby-A">hobby-A</label>
+                <input type="checkbox" name="hobby-B" id="hobby-B" value="hobby-B"><label for="hobby-B">hobby-B</label>
+                <input type="checkbox" name="hobby-C" id="hobby-C" value="hobby-C"><label for="hobby-C">hobby-C</label>
+            </fieldset>
+            <fieldset>
+                <legend>Select</legend>
+                <select name="lang" multiple>
+                    <optgroup label="Asia">
+                        <option value="Korean">Korean</option>
+                        <option value="Chinese">Chinese</option>
+                        <option value="Japanese">Japanese</option>
+                    </optgroup>
+                    <optgroup label="America">
+                        <option value="en-US">en-US</option>
+                    </optgroup>
+                </select>
+            </fieldset>
+            <fieldset>
+                <legend>Input</legend>
+                <input list="browsers" name="browser">
+                <datalist id="browsers">
+                    <option value="Edge">
+                    <option value="Firefox">
+                    <option value="Chrome">
+                    <option value="Opera">
+                    <option value="Safari">
+                </datalist>
+            </fieldset>
+            <fieldset>
+                <legend>Textarea</legend>
+                <textarea name="text"></textarea>
+            </fieldset>
+        </form>
+    </div>
+    <script>
+        onload();
+        function onload() {
+            if (document.readyState != "complete") {
+                window.addEventListener('load', onload)
+                return;
+            }
+        }
+    </script>
+</body>
+
+</html>

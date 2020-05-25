@@ -161,6 +161,77 @@ class SF {
     static whenPropertyGet(element, propName, callback) {
         SF.asSF(element).__getHooks.push(new HookAction(propName, callback));
     }
+    /**
+     * @param {HTMLElement} form HTML form element
+     * @returns {Proxy} A proxy object bound with element
+     */
+    static fromForm(form) {
+        let o = SF.asSF({});
+        o.$ = (form.$ || form);
+        SF.bindTwoWay(o, form);
+    }
+    /**
+     * @param {HTMLElement} form HTML form element
+     * @param {String} name Optional. If specified, the only element who's name is ${name} will processed
+     * @returns {Object} An object which has values of element
+     */
+    static formToObject(form, name) {
+        function innerFormToObject(element, obj) {
+            if (element.tagName == 'SELECT') {
+                let options = element.querySelectorAll('option:not([disabled]):checked');
+                if (!options)
+                    return obj;
+                if (options.length == 1)
+                    obj[element.name] = options[0].value;
+                else {
+                    obj[element.name] = [];
+                    for (let option of options)
+                        obj[element.name].push(option.value);
+                }
+            } else {
+                obj[element.name] = element.value;
+            }
+            return obj;
+        }
+        let r = {};
+        if (name) {
+            innerFormToObject(form.querySelector(`[name=${name}]`), r);
+        } else {
+            for (let input of form.querySelectorAll('input[name]:not([disabled]):not([type=radio]):not([type=checkbox])'))
+                innerFormToObject(input, r);
+            for (let radio of form.querySelectorAll('input[name][type=radio]:not([disabled]):checked'))
+                innerFormToObject(radio, r);
+            for (let checkbox of form.querySelectorAll('input[name][type=checkbox]:not([disabled]):checked'))
+                innerFormToObject(checkbox, r);
+            for (let textarea of form.querySelectorAll('textarea[name]:not([disabled])'))
+                innerFormToObject(textarea, r);
+            for (let select of form.querySelectorAll('select[name]:not([disabled])'))
+                innerFormToObject(select, r);
+        }
+        return r;
+    }
+    /**
+     * 
+     * @param {HTMLElement} form HTML form element
+     * @param {String} name Optional. If specified, the only element who's name is ${name} will processed
+     * @param {Object} json An object or JSON String which has form data
+     */
+    static toForm(form, json, name) {
+        function innerToForm(element, obj, name) {
+            let target = element.querySelector(`[name=${name}]`);
+            if (!target) return;
+            // input.type == 'file'
+        }
+        if (typeof(json) == typeof(''))
+            json = JSON.parse(json);
+        if (name) {
+            innerToForm(form, json, name);
+            return;
+        }
+        for (let attr in json) {
+            innerToForm(form, json, attr);
+        }
+    }
 }
 SF.__map = SF.__map || new Map();
 SF.__templates = SF.__templates || new Map();
