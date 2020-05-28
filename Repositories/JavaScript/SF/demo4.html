@@ -10,7 +10,7 @@
 
 <body>
     <div id="demo4-1">
-        <form>
+        <form id="demo4-1-form" style="display: inline-block;width: 40%;">
             <fieldset>
                 <legend>Radio</legend>
                 <input type="radio" name="grade" id="grade-A" value="grade-A"><label for="grade-A">grade-A</label>
@@ -25,6 +25,7 @@
             </fieldset>
             <fieldset>
                 <legend>Select</legend>
+                <label>name="lang"</label>
                 <select name="lang" multiple>
                     <optgroup label="Asia">
                         <option value="Korean">Korean</option>
@@ -38,6 +39,7 @@
             </fieldset>
             <fieldset>
                 <legend>Input</legend>
+                <label>name="browser"</label>
                 <input list="browsers" name="browser">
                 <datalist id="browsers">
                     <option value="Edge">
@@ -49,16 +51,49 @@
             </fieldset>
             <fieldset>
                 <legend>Textarea</legend>
+                <label>name="text"</label>
                 <textarea name="text"></textarea>
             </fieldset>
+            <fieldset>
+                <legend>File</legend>
+                <label>name="file"</label>
+                <input type="file" name="file" multiple />
+            </fieldset>
         </form>
+        <textarea id="demo4-1-out" style="display: inline-block;width: 40%; min-height: 300px;"></textarea>
     </div>
     <script>
         onload();
+        var boundForm;
         function onload() {
             if (document.readyState != "complete") {
                 window.addEventListener('load', onload)
                 return;
+            }
+            const app = SF.build(document.getElementById('demo4-1'));
+            boundForm = SF.bindForm(app['demo4-1-form']);
+            const out = app['demo4-1-out'];
+            out.value = JSON.stringify(boundForm);
+
+            SF.afterPropertySet(boundForm, null, function (src, propName, value) {
+                console.log(arguments);
+                let obj = JSON.parse(out.value);
+                if (obj[propName] != boundForm[propName])
+                    out.value = JSON.stringify(boundForm);
+            });
+
+            out.$.onkeyup = (e) => {
+                let obj = JSON.parse(e.target.value);
+                for (let prop in boundForm) {
+                    if (!(prop in obj))
+                        delete boundForm[prop];
+                }
+                for (let prop in obj) {
+                    if (Array.isArray(boundForm[prop]) && Array.isArray(obj[prop]) && boundForm[prop].length == obj[prop].length)
+                        continue;
+                    if (boundForm[prop] != obj[prop])
+                        boundForm[prop] = obj[prop];
+                }
             }
         }
     </script>

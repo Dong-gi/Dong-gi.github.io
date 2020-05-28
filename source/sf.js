@@ -19,18 +19,30 @@ String.prototype.asSF = function () {
         default: return SF.asSFarr(temp.children);
     }
 };
+class SFKey { }
+SFKey.map = Symbol('SFNode map');
+SFKey.key = Symbol("SFNode's key");
+SFKey.templates = Symbol('SF template map');
+SFKey.placeholder = Symbol('Placeholder function. Do nothing');
+SFKey.isRoot = Symbol('If true, this.$ == root element');
+SFKey.beforeSetHooks = Symbol('Before set hook list');
+SFKey.afterSetHooks = Symbol('After set hook list');
+SFKey.beforeDelHooks = Symbol('Before delete hook list');
+SFKey.afterDelHooks = Symbol('After delete hook list');
+Object.freeze(SFKey);
+
 class SF {
     /**
-     * @param {HTMLElement} root 
-     * @returns {Proxy} App instance && SFNode
+     * @param {HTMLElement} root Optional. If not specified, document.querySelector('[sf]') will be used instead
+     * @returns {Proxy} App instance
      */
     static build(root) {
         if (!root)
             root = document.querySelector('[sf]');
-        root.__isRoot = true;
+        root[SFKey.isRoot] = true;
         let app = this.asSF(root);
         app.newTemplate = function (templateName, htmlMaker) {
-            let template = new Proxy(SF.__placeholder, {
+            let template = new Proxy(SF[SFKey.placeholder], {
                 apply: function (target, thisArg, argumentsList) {
                     let node = htmlMaker().asSF();
                     if (argumentsList.length == 1)
@@ -40,7 +52,7 @@ class SF {
                     return node;
                 }
             });
-            SF.__templates[templateName] = template;
+            SF[SFKey.templates][templateName] = template;
             return template;
         }
         app.asTemplate = function (templateName, element) {
@@ -54,31 +66,38 @@ class SF {
      */
     static asSF(element) {
         if (!element) return element;
-        if (element.__key && SF.__map[element.__key])
-            return SF.__map[element.__key];
+        if (element[SFKey.key] && SF[SFKey.map][element[SFKey.key]])
+            return SF[SFKey.map][element[SFKey.key]];
         else
-            element.__key = `${new Date().getTime()}__${Math.random()}`.replace('.', '').hashCode();
-        SF.__map[element.__key] = new Proxy(element, {
+            element[SFKey.key] = `${new Date().getTime()}__${Math.random()}`.replace('.', '').hashCode();
+        SF[SFKey.map][element[SFKey.key]] = new Proxy(element, {
             set(o, prop, value) {
-                if (!prop.startsWith('__')) {
-                    for (let hook of SF.__map[element.__key].__setHooks) {
-                        if (!hook.prop || hook.prop == prop)
-                            hook.callback(o, prop, value);
-                    }
+                if (typeof (prop) != 'string')
+                    return (o[prop] = value) || true;
+
+                // Call hooks before set.
+                for (let hook of SF[SFKey.map][element[SFKey.key]][SFKey.beforeSetHooks]) {
+                    if (!hook.prop || hook.prop == prop)
+                        hook.callback(o, prop, value);
                 }
-                if (o.hasAttribute(prop))
-                    return o.setAttribute(prop, value);
-                if (o.hasOwnProperty(prop))
-                    return o[prop] = value;
-                return o[prop] = value;
+
+                if (o.hasAttribute && o.hasAttribute(prop))
+                    o.setAttribute(prop, value);
+                else
+                    o[prop] = value;
+
+                // Call hooks after set.
+                for (let hook of SF[SFKey.map][element[SFKey.key]][SFKey.afterSetHooks]) {
+                    if (!hook.prop || hook.prop == prop)
+                        hook.callback(o, prop, value);
+                }
+                return true;
             },
             get(o, prop) {
-                if (!prop.startsWith('__')) {
-                    for (let hook of SF.__map[element.__key].__getHooks) {
-                        if (!hook.prop || hook.prop == prop)
-                            hook.callback(o, prop);
-                    }
-                }
+                if (typeof (prop) != 'string')
+                    return o[prop];
+
+                // Properties which access HTMLElement
                 switch (prop) {
                     case '$':
                         return o;
@@ -86,28 +105,49 @@ class SF {
                         return SF.asSF(o[prop]);
                     case 'children': case 'childNodes':
                         return SF.asSFarr(o[prop]);
-                    case 'text':
+                    case '#text':
                         return SF.asSFarr(Array.from(o.childNodes).filter(x => x.nodeName == '#text'))
                 }
-                if (prop.startsWith('$'))
-                    return SF.asSFarr(o.querySelectorAll(prop.substr(1)));
-                if (o.hasAttribute(prop))
+                if (o.hasAttribute && o.hasAttribute(prop))
                     return o.getAttribute(prop);
                 if (o.hasOwnProperty(prop))
                     return o[prop];
                 if (o[prop] != undefined && o[prop] != null)
                     return o[prop];
-                if (o.__isRoot && document.getElementById(prop))
+                if (o[SFKey.isRoot] && document.getElementById(prop))
                     return SF.asSF(document.getElementById(prop));
-                let children = Array.from(o.childNodes).filter(x => x.nodeName == prop.toUpperCase());
-                if (children.length > 0)
-                    return SF.asSFarr(children);
-                return SF.asSFarr(o.querySelectorAll(prop));
+                if (o.childNodes) {
+                    let children = Array.from(o.childNodes).filter(x => x.nodeName == prop.toUpperCase());
+                    if (children.length > 0)
+                        return SF.asSFarr(children);
+                }
+                return o.querySelectorAll && SF.asSFarr(o.querySelectorAll(prop));
+            },
+            deleteProperty(o, prop) {
+                if (!(prop in o)) return false;
+                // Call hooks before delete.
+                if (typeof (prop) == 'string') {
+                    for (let hook of SF[SFKey.map][element[SFKey.key]][SFKey.beforeDelHooks]) {
+                        if (!hook.prop || hook.prop == prop)
+                            hook.callback(o, prop, o[prop]);
+                    }
+                }
+                delete o[prop];
+                // Call hooks after delete.
+                if (typeof (prop) == 'string') {
+                    for (let hook of SF[SFKey.map][element[SFKey.key]][SFKey.afterDelHooks]) {
+                        if (!hook.prop || hook.prop == prop)
+                            hook.callback(o, prop, o[prop]);
+                    }
+                }
+                return true;
             }
         });
-        SF.__map[element.__key].__setHooks = [];
-        SF.__map[element.__key].__getHooks = [];
-        return SF.__map[element.__key];
+        SF[SFKey.map][element[SFKey.key]][SFKey.beforeSetHooks] = [];
+        SF[SFKey.map][element[SFKey.key]][SFKey.afterSetHooks] = [];
+        SF[SFKey.map][element[SFKey.key]][SFKey.beforeDelHooks] = [];
+        SF[SFKey.map][element[SFKey.key]][SFKey.afterDelHooks] = [];
+        return SF[SFKey.map][element[SFKey.key]];
     }
     /**
      * @param {Iterable<HTMLElement>} elements
@@ -122,58 +162,119 @@ class SF {
         return arr.length == 1 ? arr[0] : arr;
     }
     /**
-     * Add binding from srcElement[propName] to tarElement[propName]
-     * @param {HTMLElement} srcElement 
-     * @param {HTMLElement} tarElement 
-     * @param {String} propName If Boolean(propName) == false, then all set operation on srcElement will applied to tarElement
+     * Add binding from source[propName] to target[propName]
+     * @param {Object} source 
+     * @param {Object} target 
+     * @param {String} propName If Boolean(propName) == false, then all set operation on source will applied to target
      */
-    static bindOneWay(srcElement, tarElement, propName) {
-        SF.whenPropertySet(srcElement, propName, (src, prop, value) => {
-            if (src[prop] != value)
-                SF.asSF(tarElement)[prop] = value
+    static bindOneWay(source, target, propName) {
+        SF.beforePropertySet(source, propName, (src, prop, value) => {
+            SF.asSF(target)[prop] = value
         });
     }
     /**
-     * Add binding between srcElement[propName] and tarElement[propName]
-     * @param {HTMLElement} element1 
-     * @param {HTMLElement} element2 
+     * Add binding between obj1[propName] and obj2[propName]
+     * @param {Object} obj1 
+     * @param {Object} obj2 
      * @param {String} propName If Boolean(propName) == false, then all set operation on elements will propagated
      */
-    static bindTwoWay(element1, element2, propName) {
-        SF.bindOneWay(element1, element2, propName);
-        SF.bindOneWay(element2, element1, propName);
+    static bindTwoWay(obj1, obj2, propName) {
+        SF.bindOneWay(obj1, obj2, propName);
+        SF.bindOneWay(obj2, obj1, propName);
     }
     /**
      * Add hooking before set operation
-     * @param {HTMLElement} element 
-     * @param {String} propName If Boolean(propName) == false, then all set operation on element will call callback
-     * @param {Function} callback (HTMLElement src, String propName, Object value) => ?
+     * @param {Object} obj 
+     * @param {String} propName If Boolean(propName) == false, then all set operation on obj will call callback
+     * @param {Function} callback (Object src, String propName, Object value) => ?
      */
-    static whenPropertySet(element, propName, callback) {
-        SF.asSF(element).__setHooks.push(new HookAction(propName, callback));
+    static beforePropertySet(obj, propName, callback) {
+        SF.asSF(obj)[SFKey.beforeSetHooks].push(new HookAction(propName, (src, prop, value) => {
+            if (src[prop] != value)
+                callback(src, prop, value);
+        }));
     }
     /**
-     * Add hooking before get operation
-     * @param {HTMLElement} element 
-     * @param {String} propName If Boolean(propName) == false, then all get operation on element will call callback
-     * @param {Function} callback (HTMLElement src, String propName) => ?
+     * Add hooking after set operation
+     * @param {Object} obj 
+     * @param {String} propName If Boolean(propName) == false, then all set operation on obj will call callback
+     * @param {Function} callback (Object src, String propName, Object value) => ?
      */
-    static whenPropertyGet(element, propName, callback) {
-        SF.asSF(element).__getHooks.push(new HookAction(propName, callback));
+    static afterPropertySet(obj, propName, callback) {
+        SF.asSF(obj)[SFKey.afterSetHooks].push(new HookAction(propName, (src, prop, value) => {
+            callback(src, prop, value);
+        }));
     }
     /**
-     * @param {HTMLElement} form HTML form element
+     * Add hooking before delete operation
+     * @param {Object} obj 
+     * @param {String} propName If Boolean(propName) == false, then all delete operation on obj will call callback
+     * @param {Function} callback (Object src, String propName, Object value) => ?
+     */
+    static beforePropertyDel(obj, propName, callback) {
+        SF.asSF(obj)[SFKey.beforeDelHooks].push(new HookAction(propName, (src, prop, value) => {
+            callback(src, prop, value);
+        }));
+    }
+    /**
+     * Add hooking after delete operation
+     * @param {Object} obj 
+     * @param {String} propName If Boolean(propName) == false, then all delete operation on obj will call callback
+     * @param {Function} callback (Object src, String propName) => ?
+     */
+    static afterPropertyDel(obj, propName, callback) {
+        SF.asSF(obj)[SFKey.afterDelHooks].push(new HookAction(propName, (src, prop) => {
+            callback(src, prop);
+        }));
+    }
+    /**
+     * @param {HTMLElement} form HTML <FORM> element
      * @returns {Proxy} A proxy object bound with element
      */
-    static fromForm(form) {
-        let o = SF.asSF({});
-        o.$ = (form.$ || form);
-        SF.bindTwoWay(o, form);
+    static bindForm(form) {
+        form = form.$ || form;
+        let o = SF.asSF(SF.formToObject(form));
+
+        // Apply 'o.name = value' to form
+        SF.afterPropertySet(o, null, ((form) => function (src, propName, value) {
+            SF.toForm(form, src, propName);
+        })(form));
+
+        // Apply 'delete o.name' to form
+        SF.afterPropertyDel(o, null, ((form) => function (src, propName, value) {
+            SF.toForm(form, src, propName);
+        })(form));
+
+        // Listen user actions
+        for (let element of form.querySelectorAll('input,select,textarea'))
+            element.onchange = SF.debounce(SF.observeForm(form, ((o) => function (name, value, src) {
+                o[name] = value;
+            })(o)), 100);
+        return o;
     }
     /**
-     * @param {HTMLElement} form HTML form element
-     * @param {String} name Optional. If specified, the only element who's name is ${name} will processed
-     * @returns {Object} An object which has values of element
+     * @param {HTMLElement} form HTML <FORM> element
+     * @returns {Function} callback (String name, Object value, HTMLElement src) => ?
+     */
+    static observeForm(form, callback) {
+        return ((form) => function (e) {
+            let target = e.target;
+            while (target != form) {
+                if (target.name) break;
+                if (target.tagName == 'LABEL' && target.getAttribute('for'))
+                    target = document.getElementById(target.getAttribute('for'));
+                else
+                    target = target.parentElement;
+            }
+            console.log(target.name, SF.formToObject(form, target.name)[target.name], target);
+            if (target != form)
+                callback(target.name, SF.formToObject(form, target.name)[target.name], target);
+        })(form);
+    }
+    /**
+     * @param {HTMLElement} form HTML <FORM> element
+     * @param {String} name Optional. If specified, the only descendant who's name is ${name} will processed
+     * @returns {Object} An object which has values of descendants
      */
     static formToObject(form, name) {
         function innerFormToObject(element, obj) {
@@ -188,25 +289,33 @@ class SF {
                     for (let option of options)
                         obj[element.name].push(option.value);
                 }
-            } else {
+            } else if (element.type && element.type.toLowerCase() == 'file')
+                obj[element.name] = Array.from(element.files).map(x => x.name);
+            else if (element.type && element.type.toLowerCase() == 'radio') {
+                if (name) {
+                    let checkedElement = form.querySelector(`input[name=${name}][type=radio]:not([disabled]):checked`);
+                    obj[element.name] = (!checkedElement) || checkedElement.checked;
+                } else
+                    obj[element.name] = element.checked;
+            } else if (element.type && element.type.toLowerCase() == 'checkbox')
+                obj[element.name] = element.checked;
+            else
                 obj[element.name] = element.value;
-            }
+
             return obj;
         }
         let r = {};
         if (name) {
             innerFormToObject(form.querySelector(`[name=${name}]`), r);
         } else {
-            for (let input of form.querySelectorAll('input[name]:not([disabled]):not([type=radio]):not([type=checkbox])'))
-                innerFormToObject(input, r);
-            for (let radio of form.querySelectorAll('input[name][type=radio]:not([disabled]):checked'))
-                innerFormToObject(radio, r);
-            for (let checkbox of form.querySelectorAll('input[name][type=checkbox]:not([disabled]):checked'))
-                innerFormToObject(checkbox, r);
-            for (let textarea of form.querySelectorAll('textarea[name]:not([disabled])'))
-                innerFormToObject(textarea, r);
-            for (let select of form.querySelectorAll('select[name]:not([disabled])'))
-                innerFormToObject(select, r);
+            let qInput = 'input[name]:not([disabled]):not([type=radio]):not([type=checkbox])';
+            let qRadio = 'input[name][type=radio]:not([disabled]):checked';
+            let qCheckbox = 'input[name][type=checkbox]:not([disabled]):checked';
+            let qTextarea = 'textarea[name]:not([disabled])';
+            let qSelect = 'select[name]:not([disabled])';
+
+            for (let element of form.querySelectorAll(`${qInput},${qRadio},${qCheckbox},${qTextarea},${qSelect}`))
+                innerFormToObject(element, r);
         }
         return r;
     }
@@ -217,25 +326,83 @@ class SF {
      * @param {Object} json An object or JSON String which has form data
      */
     static toForm(form, json, name) {
-        function innerToForm(element, obj, name) {
-            let target = element.querySelector(`[name=${name}]`);
+        function innerToForm(form, obj, name) {
+            let target = form.querySelector(`[name=${name}]`);
             if (!target) return;
-            // input.type == 'file'
+            switch (target.tagName) {
+                case 'INPUT':
+                    switch ((target.type || '').toLowerCase()) {
+                        case 'file': return;
+                        case 'radio': case 'checkbox':
+                            target.checked = Boolean(json[name]);
+                            return;
+                        default:
+                            target.value = json[name] || '';
+                            return;
+                    }
+                case 'TEXTAREA':
+                    target.value = json[name] || '';
+                    return;
+                case 'SELECT':
+                    for (let option of target.querySelectorAll('option:not([disabled])'))
+                        option.selected = false;
+                    if (Array.isArray(obj[name])) {
+                        for (let value of obj[name])
+                            target.querySelector(`option[value=${value}]`).selected = true;
+                    } else if (obj[name]) {
+                        target.querySelector(`option[value=${obj[name]}]`).selected = Boolean(obj[name]);
+                    }
+                    return;
+            }
+            console.log('??? target, form, obj, name ↓\n', target, form, obj, name);
         }
-        if (typeof(json) == typeof(''))
+        if (typeof (json) == 'string')
             json = JSON.parse(json);
         if (name) {
             innerToForm(form, json, name);
             return;
         }
-        for (let attr in json) {
-            innerToForm(form, json, attr);
+        for (let name in json) {
+            innerToForm(form, json, name);
         }
     }
+    /**
+     * @param {Function} f 
+     * @param {Number} t Milli seconds
+     * @param {Object} opt (opt.fast)? => no throttle
+     * @returns {Function} Throttled function
+     */
+    static throttle(f, t, opt) {
+        return function (args) {
+            let previousCall = this.lastCall;
+            this.lastCall = Date.now();
+            if (!previousCall || (!!opt && !!opt.fast) || (this.lastCall - previousCall) > t) {
+                f(args);
+            }
+        };
+    }
+    /**
+     * @param {Function} f 
+     * @param {Number} t Milli seconds
+     * @param {Object} opt (opt.fast)? => no debounce
+     * @returns {Function} Debounced function
+     */
+    static debounce(f, t, opt) {
+        return function (args) {
+            let previousCall = this.lastCall;
+            this.lastCall = Date.now();
+            if (previousCall && ((this.lastCall - previousCall) <= t)) {
+                if (!opt || !opt.fast)
+                    clearTimeout(this.lastCallTimer);
+            }
+            this.lastCallTimer = setTimeout(() => f(args), t);
+        };
+    }
 }
-SF.__map = SF.__map || new Map();
-SF.__templates = SF.__templates || new Map();
-SF.__placeholder = SF.__placeholder || function () { };
+SF[SFKey.map] = new Map();
+SF[SFKey.templates] = new Map();
+SF[SFKey.placeholder] = function () { };
+Object.freeze(SF);
 
 class HookAction {
     constructor(prop, callback) {
