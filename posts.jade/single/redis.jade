@@ -64,18 +64,25 @@ include ../../source/skeleton.jade
                 h4.marker MGET key [key ...]
                 p 각 키에 대해 get 하여 배열로 반환.
                 h4.marker APPEND key value
-                h4.marker BITCOUNT key [start end]
+                p 키가 이미 존재하면 append, 없으면 set. 연산 후의 문자열 길이 반환.
+                h4.marker INCR key
+                p 주어진 키의 정수 1 증가. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.
+                h4.marker INCRBY key increment
+                p 주어진 키의 정수 increment 증가. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.
+                h4.marker DECR key
+                p 주어진 키의 정수 1 감소. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.
+                h4.marker DECRBY key decrement
+                p 주어진 키의 정수 decrement 감소. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.
+                h4.marker INCRBYFLOAT key increment
+                p 주어진 키의 실수 increment 만큼 변경. 없으면 0. 값은 double. 연산 후의 값 문자열로 반환.
+                h4.marker SETBIT key offset value
+                p offset번째 비트를 value(0 | 1)로 변경. 이전 비트값 반환.
+                h4.marker GETBIT key offset
+                p offset번째 비트를 반환.
                 h4.marker BITFIELD key [GET type offset] [SET type offset value] [INCRBY type offset increment] [OVERFLOW WRAP|SAT|FAIL]
                 h4.marker BITOP operation destkey key [key ...]
                 h4.marker BITPOS key bit [start] [end]
-                h4.marker DECR key
-                h4.marker DECRBY key decrement
-                h4.marker GETBIT key offset
                 h4.marker GETRANGE key start end
-                h4.marker INCR key
-                h4.marker INCRBY key increment
-                h4.marker INCRBYFLOAT key increment
-                h4.marker SETBIT key offset value
                 h4.marker SETRANGE key offset value
                 h4.marker STRALGO algo-name arg [arg ...] Since 6.0
                 ol

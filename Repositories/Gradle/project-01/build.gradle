@@ -1,10 +1,6 @@
-def p = this
+apply plugin: test.hello.HelloPlugin
 
-task hello() {
-    onlyIf {
-        p.hasProperty('userName')
-    }
-    doLast {
-        println "Hello ${p.userName}!"
-    }
+hello {
+    message("hello", "world")
+    name = "world2"
 }

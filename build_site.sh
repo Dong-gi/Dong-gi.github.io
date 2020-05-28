@@ -9,7 +9,7 @@ echo 'post 빌드 완료'
 jade --doctype html index.jade
 echo 'index 빌드 완료'
 
-ls --ignore="nyaa.js" --ignore="node_modules" -R $(pwd) > source/filelist.js
+ls --ignore="node_modules"--ignore="bin" --ignore="build" --ignore="debug" --ignore="Logs" --ignore="obj" --ignore="out" --ignore="packages" --ignore="RemoteSystemsTempFiles" --ignore="Servers" --ignore="target" --ignore="Temp" --ignore="nyaa.js" -R $(pwd) > source/filelist.js
 echo '파일 목록 갱신 완료'
 
 cd Repositories/SF/
