@@ -47,7 +47,7 @@ function prepareSidebar() {
     if (!localStorage.sidebarWidth)
     localStorage.sidebarWidth = 200;
     main.style.marginLeft = bar.style.width = localStorage.sidebarWidth;
-    document.body.addEventListener('mousemove', Donggi.throttle(mousemove, 33, option));
+    document.body.addEventListener('mousemove', SF.throttle(mousemove, 33, option));
     document.body.addEventListener('mouseup', mouseup);
     document.body.addEventListener('mousedown', dragstart);
 

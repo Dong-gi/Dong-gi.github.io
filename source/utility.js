@@ -43,26 +43,6 @@ class Donggi {
             continue;
         }
     }
-    static throttle(f, t, opt) {
-        return function (args) {
-            let previousCall = this.lastCall;
-            this.lastCall = Date.now();
-            if (!previousCall || (!!opt && !!opt.fast) || (this.lastCall - previousCall) > t) {
-                f(args);
-            }
-        };
-    }
-    static debounce(f, t, opt) {
-        return function (args) {
-            let previousCall = this.lastCall;
-            this.lastCall = Date.now();
-            if (previousCall && ((this.lastCall - previousCall) <= t)) {
-                if (!opt || !opt.fast)
-                    clearTimeout(this.lastCallTimer);
-            }
-            this.lastCallTimer = setTimeout(() => f(args), t);
-        };
-    }
     static openLink(url, target) {
         let a = document.createElement('a');
         a.href = url;
@@ -266,8 +246,8 @@ class Donggi {
             content.style.display = 'none';
         })(target, content);
         target.addEventListener('mouseenter', enter);
-        target.addEventListener('mouseleave', Donggi.debounce(leave, 300));
-        content.addEventListener('mouseleave', Donggi.debounce(leave, 300));
+        target.addEventListener('mouseleave', SF.debounce(leave, 300));
+        content.addEventListener('mouseleave', SF.debounce(leave, 300));
     }
     static makeLSlikeText(rootName, obj, listAttrName) {
         let paths = [rootName];

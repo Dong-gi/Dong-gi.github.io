@@ -17,7 +17,7 @@ connection.onmessage = function(event) { event.data ... }
 // onmessage 이벤트 data 프로퍼티 : 메시지가 텍스트면 문자열, 메시지가 바이너리고 connection.binaryType이 "blob"(기본)이면 Blob, 메시지가 바이너리고 connection.binaryType이 "arraybuffer"면 ArrayBuffer
 
 connection.close(); // close 이벤트 객체는 wasClean, code, reason 프로퍼티 존재
-</div><h1 class="marker">함수 감속</h1><p>윈도우 resize, scroll 이벤트처럼 연속적으로 발생하지만 연속적으로 처리할 필요가 없는 경우, 타이머를 등록한 뒤 로직이 실행되도록 하고, 로직이 실행되기 전에 재호출되면 기존 타이머를 제거하고 타이머를 재등록하는 기법</p><div lan="javascript" class="as-code code-div w3-leftbar w3-border-green">Donggi.throttle = function throttle(f, t, opt) {
+</div><h1 class="marker">함수 감속</h1><p>윈도우 resize, scroll 이벤트처럼 연속적으로 발생하지만 연속적으로 처리할 필요가 없는 경우, 타이머를 등록한 뒤 로직이 실행되도록 하고, 로직이 실행되기 전에 재호출되면 기존 타이머를 제거하고 타이머를 재등록하는 기법</p><div lan="javascript" class="as-code code-div w3-leftbar w3-border-green">function throttle(f, t, opt) {
     return function (args) {
         let previousCall = this.lastCall;
         this.lastCall = Date.now();
@@ -26,7 +26,7 @@ connection.close(); // close 이벤트 객체는 wasClean, code, reason 프로�
         }
     }
 }
-Donggi.debounce = function debounce(f, t, opt) {
+function debounce(f, t, opt) {
     return function (args) {
         let previousCall = this.lastCall;
         this.lastCall = Date.now();

@@ -107,7 +107,7 @@ window.addEventListener('load', () => {
     updatePostList();
     insertDisqusThread();
     updateMarkerList();
-    document.getElementById('query').onkeyup = Donggi.debounce(queryUpdated, 500);
+    document.getElementById('query').onkeyup = SF.debounce(queryUpdated, 500);
 });
 
 function mutationCallback(mutations, observer) {

@@ -237,17 +237,17 @@ class SF {
 
         // Apply 'o.name = value' to form
         SF.afterPropertySet(o, null, ((form) => function (src, propName, value) {
-            SF.toForm(form, src, propName);
+            SF.jsonToForm(form, src, propName);
         })(form));
 
         // Apply 'delete o.name' to form
         SF.afterPropertyDel(o, null, ((form) => function (src, propName, value) {
-            SF.toForm(form, src, propName);
+            SF.jsonToForm(form, src, propName);
         })(form));
 
         // Listen user actions
         for (let element of form.querySelectorAll('input,select,textarea'))
-            element.onchange = SF.debounce(SF.observeForm(form, ((o) => function (name, value, src) {
+            element.onchange = element.onkeyup = SF.debounce(SF.observeForm(form, ((o) => function (name, value, src) {
                 o[name] = value;
             })(o)), 100);
         return o;
@@ -266,7 +266,6 @@ class SF {
                 else
                     target = target.parentElement;
             }
-            console.log(target.name, SF.formToObject(form, target.name)[target.name], target);
             if (target != form)
                 callback(target.name, SF.formToObject(form, target.name)[target.name], target);
         })(form);
@@ -294,7 +293,7 @@ class SF {
             else if (element.type && element.type.toLowerCase() == 'radio') {
                 if (name) {
                     let checkedElement = form.querySelector(`input[name=${name}][type=radio]:not([disabled]):checked`);
-                    obj[element.name] = (!checkedElement) || checkedElement.checked;
+                    obj[element.name] = (!checkedElement) || checkedElement.value;
                 } else
                     obj[element.name] = element.checked;
             } else if (element.type && element.type.toLowerCase() == 'checkbox')
@@ -320,12 +319,11 @@ class SF {
         return r;
     }
     /**
-     * 
-     * @param {HTMLElement} form HTML form element
-     * @param {String} name Optional. If specified, the only element who's name is ${name} will processed
+     * @param {HTMLElement} form HTML <FORM> element
      * @param {Object} json An object or JSON String which has form data
+     * @param {String} name Optional. If specified, the only element who's name is ${name} will processed
      */
-    static toForm(form, json, name) {
+    static jsonToForm(form, json, name) {
         function innerToForm(form, obj, name) {
             let target = form.querySelector(`[name=${name}]`);
             if (!target) return;
@@ -333,16 +331,16 @@ class SF {
                 case 'INPUT':
                     switch ((target.type || '').toLowerCase()) {
                         case 'file': return;
-                        case 'radio': case 'checkbox':
-                            target.checked = Boolean(json[name]);
-                            return;
+                        case 'radio':
+                            target = form.querySelector(`[name=${name}][value=${json[name]}]`);
+                            return target && (target.checked = Boolean(json[name]));
+                        case 'checkbox':
+                            return target.checked = Boolean(json[name]);
                         default:
-                            target.value = json[name] || '';
-                            return;
+                            return target.value = json[name] || '';
                     }
                 case 'TEXTAREA':
-                    target.value = json[name] || '';
-                    return;
+                    return target.value = json[name] || '';
                 case 'SELECT':
                     for (let option of target.querySelectorAll('option:not([disabled])'))
                         option.selected = false;
@@ -359,8 +357,7 @@ class SF {
         if (typeof (json) == 'string')
             json = JSON.parse(json);
         if (name) {
-            innerToForm(form, json, name);
-            return;
+            return innerToForm(form, json, name);
         }
         for (let name in json) {
             innerToForm(form, json, name);

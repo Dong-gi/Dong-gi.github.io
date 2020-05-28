@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <script src="/source/sf.js"></script>
-    <script src="https://github.com/Dong-gi/SF/releases/download/0.1.3/sf.min.js"></script>
+    <script src="https://github.com/Dong-gi/SF/releases/download/0.2.0/sf.min.js"></script>
     <title>demo4</title>
 </head>
 
@@ -60,29 +59,29 @@
                 <input type="file" name="file" multiple />
             </fieldset>
         </form>
-        <textarea id="demo4-1-out" style="display: inline-block;width: 40%; min-height: 300px;"></textarea>
+        <textarea id="demo4-1-out" style="display: inline-block;width: 40%;"></textarea>
     </div>
     <script>
         onload();
-        var boundForm;
         function onload() {
             if (document.readyState != "complete") {
                 window.addEventListener('load', onload)
                 return;
             }
             const app = SF.build(document.getElementById('demo4-1'));
-            boundForm = SF.bindForm(app['demo4-1-form']);
+            const boundForm = SF.bindForm(app['demo4-1-form']);
             const out = app['demo4-1-out'];
+
+            out.$.style.height = app.clientHeight - 50;
             out.value = JSON.stringify(boundForm);
 
             SF.afterPropertySet(boundForm, null, function (src, propName, value) {
-                console.log(arguments);
                 let obj = JSON.parse(out.value);
                 if (obj[propName] != boundForm[propName])
                     out.value = JSON.stringify(boundForm);
             });
 
-            out.$.onkeyup = (e) => {
+            out.$.onkeyup = SF.debounce((e) => {
                 let obj = JSON.parse(e.target.value);
                 for (let prop in boundForm) {
                     if (!(prop in obj))
@@ -94,7 +93,7 @@
                     if (boundForm[prop] != obj[prop])
                         boundForm[prop] = obj[prop];
                 }
-            }
+            }, 300);
         }
     </script>
 </body>
