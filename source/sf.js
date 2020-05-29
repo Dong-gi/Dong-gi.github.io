@@ -19,6 +19,9 @@ String.prototype.asSF = function () {
         default: return SF.asSFarr(temp.children);
     }
 };
+String.prototype.asDataGrid = function () {
+    return SF.asDataGrid(...arguments);
+}
 class SFKey { }
 SFKey.map = Symbol('SFNode map');
 SFKey.key = Symbol("SFNode's key");
@@ -70,7 +73,7 @@ class SF {
             return SF[SFKey.map][element[SFKey.key]];
         else
             element[SFKey.key] = `${new Date().getTime()}__${Math.random()}`.replace('.', '').hashCode();
-        SF[SFKey.map][element[SFKey.key]] = new Proxy(element, {
+        let result = new Proxy(element, {
             set(o, prop, value) {
                 if (typeof (prop) != 'string')
                     return (o[prop] = value) || true;
@@ -143,11 +146,12 @@ class SF {
                 return true;
             }
         });
-        SF[SFKey.map][element[SFKey.key]][SFKey.beforeSetHooks] = [];
-        SF[SFKey.map][element[SFKey.key]][SFKey.afterSetHooks] = [];
-        SF[SFKey.map][element[SFKey.key]][SFKey.beforeDelHooks] = [];
-        SF[SFKey.map][element[SFKey.key]][SFKey.afterDelHooks] = [];
-        return SF[SFKey.map][element[SFKey.key]];
+        SF[SFKey.map][element[SFKey.key]] = result;
+        result[SFKey.beforeSetHooks] = [];
+        result[SFKey.afterSetHooks] = [];
+        result[SFKey.beforeDelHooks] = [];
+        result[SFKey.afterDelHooks] = [];
+        return result;
     }
     /**
      * @param {Iterable<HTMLElement>} elements
@@ -363,6 +367,9 @@ class SF {
             innerToForm(form, json, name);
         }
     }
+    static asDataGrid() {
+        return SF.asSF({});
+    }
     /**
      * @param {Function} f 
      * @param {Number} t Milli seconds
@@ -403,6 +410,16 @@ Object.freeze(SF);
 
 class HookAction {
     constructor(prop, callback) {
-        [this.prop, this.callback] = [prop, callback];
+        this.active = new Set();
+        this.counter = 0;
+        this.prop = prop;
+        this.callback = ((cb) => function () {
+            if (this.active.size == 0) {
+                let mine;
+                this.active.add(mine = this.counter++);
+                cb(...arguments);
+                this.active.delete(mine);
+            }
+        })(callback);
     }
 }
