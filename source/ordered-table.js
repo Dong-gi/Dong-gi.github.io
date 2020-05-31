@@ -48,8 +48,8 @@ function addOrderedTableFunctionality(mutations, observer) {
             let hasDataIdxSet = new Set(); /* 모든 행의 x번째 열이 비어있다면, 삭제하기 위한 인덱스 집합 */
             for (let tr of Array.from(table.rows).slice(1)) {
                 tr.querySelectorAll('td, th').forEach((node, idx, nodeList) => {
-                    node.innerHTML = node.innerHTML.replace(/null/gmi, '').replace(/^\s+$/g, '').trim();
-                    if (node.innerHTML.length > 0)
+                    let text = node.textContent.replace(/null/gmi, '').replace(/^\s+$/g, '').trim();
+                    if (text.length > 0)
                         hasDataIdxSet.add(idx);
                 });
             }

@@ -1,6 +1,6 @@
 cd /workspace/donggi-github/Dong-gi.github.io/
 
-uglifyjs source/sf.js source/utility.js source/ordered-table.js source/default.js -o source/default.min.js -c -m
+terser --compress --mangle -o source/default.min.js -- source/sf.js source/utility.js source/ordered-table.js source/default.js
 echo 'js 압축 완료'
 
 jade --doctype html --hierarchy --out posts/ posts.jade/

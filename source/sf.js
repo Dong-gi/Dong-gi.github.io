@@ -19,9 +19,6 @@ String.prototype.asSF = function () {
         default: return SF.asSFarr(temp.children);
     }
 };
-String.prototype.asDataGrid = function () {
-    return SF.asDataGrid(...arguments);
-}
 class SFKey { }
 SFKey.map = Symbol('SFNode map');
 SFKey.key = Symbol("SFNode's key");
@@ -111,6 +108,8 @@ class SF {
                     case '#text':
                         return SF.asSFarr(Array.from(o.childNodes).filter(x => x.nodeName == '#text'))
                 }
+                if (prop.startsWith('$'))
+                    return SF.asSFarr(o.querySelectorAll(prop.substr(1)));
                 if (o.hasAttribute && o.hasAttribute(prop))
                     return o.getAttribute(prop);
                 if (o.hasOwnProperty(prop))
@@ -250,10 +249,13 @@ class SF {
         })(form));
 
         // Listen user actions
-        for (let element of form.querySelectorAll('input,select,textarea'))
-            element.onchange = element.onkeyup = SF.debounce(SF.observeForm(form, ((o) => function (name, value, src) {
+        for (let element of form.querySelectorAll('input,select,textarea')) {
+            let f = SF.debounce(SF.observeForm(form, ((o) => function (name, value, src) {
                 o[name] = value;
             })(o)), 100);
+            element.addEventListener('change', f);
+            element.addEventListener('keyup', f);
+        }
         return o;
     }
     /**
@@ -367,8 +369,21 @@ class SF {
             innerToForm(form, json, name);
         }
     }
-    static asDataGrid() {
-        return SF.asSF({});
+    /**
+     * @param {Object} data CSV, JSON, [[]], [{}], {{}}, {[]}
+     * @param {Object} opt Parsing and formatting options. Refer DataGrid.fromCSV, DataGrid.fromArray, DataGrid.fromObject
+     */
+    static asDataGrid(data, opt) {
+        if (typeof (data) == 'string' && data.startsWith('{') && data.endsWith('}'))
+            return SF.asDataGrid(JSON.parse(data));
+        let r;
+        if (Array.isArray(data))
+            r = DataGrid.fromArray(data, opt);
+        else if (typeof (data) == 'string')
+            r = DataGrid.fromCSV(data, opt);
+        else
+            r = DataGrid.fromObject(data, opt);
+        return r;
     }
     /**
      * @param {Function} f 
@@ -377,10 +392,11 @@ class SF {
      * @returns {Function} Throttled function
      */
     static throttle(f, t, opt) {
+        opt = opt || {};
         return function (args) {
-            let previousCall = this.lastCall;
-            this.lastCall = Date.now();
-            if (!previousCall || (!!opt && !!opt.fast) || (this.lastCall - previousCall) > t) {
+            let previousCall = opt.lastCall;
+            opt.lastCall = Date.now();
+            if (!previousCall || (!!opt && !!opt.fast) || (opt.lastCall - previousCall) > t) {
                 f(args);
             }
         };
@@ -392,14 +408,15 @@ class SF {
      * @returns {Function} Debounced function
      */
     static debounce(f, t, opt) {
+        opt = opt || {};
         return function (args) {
-            let previousCall = this.lastCall;
-            this.lastCall = Date.now();
-            if (previousCall && ((this.lastCall - previousCall) <= t)) {
+            let previousCall = opt.lastCall;
+            opt.lastCall = Date.now();
+            if (previousCall && ((opt.lastCall - previousCall) <= t)) {
                 if (!opt || !opt.fast)
-                    clearTimeout(this.lastCallTimer);
+                    clearTimeout(opt.lastCallTimer);
             }
-            this.lastCallTimer = setTimeout(() => f(args), t);
+            opt.lastCallTimer = setTimeout(() => f(args), t);
         };
     }
 }
@@ -421,5 +438,374 @@ class HookAction {
                 this.active.delete(mine);
             }
         })(callback);
+    }
+}
+class DataGrid {
+    /**
+     * @param {Array<Object>} data An array of data objects. Not contains header information.
+     * @param {Object} opt DataGrid options. Not used yet.
+     * @param {Array<String>} columnNames Header informations.
+     */
+    constructor(data, opt, columnNames) {
+        this.data = data;
+        this.opt = opt || {};
+        this.cols = new ColGroup();
+        for (let i = 0; i < columnNames.length; ++i)
+            this.cols.add(new Column(columnNames[i], i, i));
+    }
+    /**
+     * @param {String} text CSV String
+     * - If csv heads given, quoted string could contains '\n'.
+     * @param {Object} opt CSV Option
+     * - opt.noHead : Boolean, default false
+     * - opt.delimiter : String, default ',' or '\t' which exists more in first line.
+     * - opt.quote : String for RegExp, default '"'
+     * - opt.escape : String for RegExp, default '\\\\'. This used for escaped quote
+     * @returns {DataGrid}
+     */
+    static fromCSV(text, opt) {
+        opt = opt || {};
+        opt.delimiter = opt.delimiter || (text.split('\n', 1)[0].replace(',', '').length < text.split('\n', 1)[0].replace('\t', '').length ? ',' : '\t');
+        opt.quote = opt.quote || '"';
+        opt.escape = opt.escape || '\\\\';
+
+        // Normalize
+        text = text.replace(/\r\n/gm, '\n');
+        let fakeQuote = '🚮';
+        while (text.search(fakeQuote) >= 0)
+            fakeQuote += fakeQuote;
+        text = text.replace(new RegExp(opt.escape + opt.quote, 'gm'), fakeQuote);
+
+        let heads = [];
+        let data = [];
+        if (!opt.noHead) {
+            heads = parseNextLine();
+            parseRest();
+        } else {
+            let first = parseNextLine();
+            for (let i = 0; i < first.length; ++i)
+                heads.push(i);
+            data.push(toObject(first));
+            while (text.length > 0)
+                data.push(toObject(parseNextLine()));
+        }
+        return new DataGrid(data, opt, heads);
+
+        function parseNextLine() {
+            let line = '';
+            if (text.search('\n') >= 0) {
+                line = text.split('\n', 1)[0];
+                text = text.slice(line.length + 1);
+            } else {
+                line = text;
+                text = '';
+            }
+
+            let data = [];
+            let tokens = line.split(opt.delimiter);
+            let token;
+            let isMulti = false;
+            for (let i = 0; i < tokens.length; ++i) {
+                if (isMulti) {
+                    // Case : Multiple quoted data token(end)
+                    if (tokens[i].endsWith(opt.quote)) {
+                        data.push(token + unQuote(tokens[i]));
+                        isMulti = false;
+                        continue;
+                    }
+                    // Case : Multiple quoted data token(middle)
+                    token = token + tokens[i] + opt.delimiter;
+                } else {
+                    token = tokens[i];
+                    // Case : Single quoted data token
+                    if (token.startsWith(opt.quote) && token.endsWith(opt.quote) && token.length >= opt.quote.length * 2) {
+                        data.push(unQuote(token));
+                        continue;
+                    }
+                    // Case : Multiple quoted data token(start)
+                    if (token.startsWith(opt.quote)) {
+                        token = unQuote(token);
+                        token += opt.delimiter;
+                        isMulti = true;
+                        continue;
+                    }
+                    // Case : Single unquoted data token
+                    data.push(token);
+                }
+            }
+            return restoreQuote(data);
+        }
+        function parseRest() {
+            let tokens = text.split(opt.delimiter);
+            let line = [];
+            let token;
+            let isMulti = false;
+            for (let i = 0; i < tokens.length; ++i) {
+                let moreToken = null;
+                if (!isMulti) {
+                    // Case : Single quoted data token
+                    if (tokens[i].startsWith(opt.quote) && tokens[i].endsWith(opt.quote) && tokens[i].length >= opt.quote.length * 2) {
+                        // The processing is exists below
+                    }
+                    // Case : Last data token with '\n'
+                    else if (tokens[i].search('\n') >= 0)
+                        [tokens[i], moreToken] = tokens[i].split('\n');
+                }
+                if (isMulti) {
+                    // Case : Multiple quoted data token(end)
+                    if (tokens[i].endsWith(opt.quote)) {
+                        line.push(token + unQuote(tokens[i]));
+                        isMulti = false;
+                    }
+                    // Case : Multiple quoted data token(middle)
+                    else {
+                        token = token + tokens[i] + opt.delimiter;
+                    }
+                } else {
+                    token = tokens[i];
+                    // Case : Single quoted data token
+                    if (token.startsWith(opt.quote) && token.endsWith(opt.quote) && token.length >= opt.quote.length * 2) {
+                        line.push(unQuote(token));
+                    }
+                    // Case : Multiple quoted data token(start)
+                    else if (token.startsWith(opt.quote)) {
+                        token = unQuote(token);
+                        token += opt.delimiter;
+                        isMulti = true;
+                    }
+                    // Case : Single unquoted data token
+                    else
+                        line.push(token);
+                }
+                if (line.length == heads.length) {
+                    line[line.length - 1] = line[line.length - 1].replace(/(.*)\n/, '$1');
+                    data.push(toObject(restoreQuote(line)));
+                    line = [];
+                }
+                if (moreToken !== null) {
+                    token = moreToken;
+                    // Case : Single quoted data token
+                    if (token.startsWith(opt.quote) && token.endsWith(opt.quote) && token.length >= opt.quote.length * 2) {
+                        line.push(unQuote(token));
+                    }
+                    // Case : Multiple quoted data token(start)
+                    else if (token.startsWith(opt.quote)) {
+                        token = unQuote(token);
+                        token += opt.delimiter;
+                        isMulti = true;
+                    }
+                    // Case : Single unquoted data token
+                    else
+                        line.push(token);
+                }
+            }
+        }
+        function unQuote(str) {
+            return str.replace(new RegExp(opt.quote, 'g'), '')
+        }
+        function restoreQuote(arr) {
+            for (let i = 0; i < arr.length; ++i)
+                arr[i] = arr[i].replace(new RegExp(fakeQuote, 'gm'), opt.quote);
+            return arr;
+        }
+        function toObject(arr) {
+            let o = {};
+            for (let i = 0; i < heads.length; ++i)
+                o[heads[i]] = arr[i] || '';
+            return o;
+        }
+    }
+    /**
+     * @param {Array} arr Array<Array<ValueType>> or Array<Object>
+     * @param {Object} opt Option
+     * - opt.names : Array<String>, column names
+     * - opt.hasHead : Boolean default false. arr[0] is column names?
+     * @returns {DataGrid}
+     */
+    static fromArray(arr, opt) {
+        opt = opt || {};
+        let names = opt.names;
+        if (!names && opt.hasHead) {
+            names = [];
+            if (Array.isArray(arr[0])) {
+                names = arr[0];
+            } else {
+                for (let name in arr[0])
+                    names.push(`${name}`);
+            }
+            arr = arr.slice(1);
+        }
+        let data = [];
+        if (Array.isArray(arr[0])) {
+            if (!names)
+                names = [];
+            for (let line of arr)
+                data.push(toObject(line));
+        } else {
+            let propNames = new Set();
+            for (let line of arr) {
+                for (let prop in line)
+                    propNames.add(`${prop}`);
+                data.push(line);
+            }
+            if (!names)
+                names = Array.from(propNames);
+        }
+        return new DataGrid(data, opt, names);
+        function toObject(arr) {
+            let o = {};
+            for (let i = 0; i < arr.length; ++i) {
+                if (names.length <= i)
+                    names.push(i);
+                o[names[i]] = arr[i] || '';
+            }
+            return o;
+        }
+    }
+    /**
+     * @param {Object} arr Object of objects or Object of arrays
+     * @param {Object} opt Not used yet
+     * @returns {DataGrid}
+     */
+    static fromObject(obj, opt) {
+        let data = [];
+        for (let prop in obj)
+            data.push(obj[prop]);
+        return DataGrid.fromArray(data);
+    }
+    getHeight() {
+        return this.data.length;
+    }
+    getWidth() {
+        return this.cols.size();
+    }
+    /**
+     * Selection. SELECT * WHERE rowIdx IN [from, to) AND filter(row)
+     * @param {Number} from Inclusive. default 0
+     * @param {Number} to Exclusive. default DataGrid.getHeight()
+     * @param {Function} filter (row) => boolean. default () => true
+     */
+    getRows(from, to, filter) {
+        from = from || 0;
+        to = to || this.getHeight();
+
+        let rows = [];
+        for (let i = from; i < to; ++i) {
+            if (!filter || filter(this.data[i]))
+                rows.push(this.data[i]);
+        }
+        return new DataGrid(rows, this.opt, this.cols.columns().map(x => x.name));
+    }
+    /**
+     * Projection. Columns are order by dispIdx
+     * @param {Number} from Inclusive. default 0
+     * @param {Number} to Exclusive. default DataGrid.getWidth()
+     * @param {Function} filter (Column) => boolean. default () => true
+     */
+    getColumns(from, to, filter) {
+        from = from || 0;
+        to = to || this.getWidth();
+
+        let tmp = this.cols.columnsByDisplayOrder();
+        let targetCols = [];
+        for (let i = from; i < to; ++i) {
+            if (!filter || filter(tmp[i]))
+                targetCols.push(tmp[i]);
+        }
+        let rows = [];
+        for (let obj of this.data) {
+            let o = {};
+            for (let c of targetCols)
+                o[c.name] = obj[c.name];
+            rows.push(o);
+        }
+        return new DataGrid(rows, this.opt, targetCols.map(x => x.name));
+    }
+    getTableForm() {
+        let form = '<form><table></table></form>'.asSF();
+
+        let tr = document.createElement('tr');
+        for (let c of this.cols.columnsByDisplayOrder())
+            tr.append(`<th>${c.name}</th>`.asSF().$);
+        form.table.$.append(tr);
+
+        for (let i = 0; i < this.data.length; ++i) {
+            tr = document.createElement('tr');
+            for (let c of this.cols.columnsByDisplayOrder())
+                tr.append(`<td><textarea class="sf-datagrid-cell" name="C${i}-${c.name}">${this.data[i][c.name] || ''}</textarea></td>`.asSF().$);
+            form.table.$.append(tr);
+        }
+
+        for (let element of form.$.querySelectorAll('textarea')) {
+            let f = SF.debounce(SF.observeForm(form.$, (name, value, src) => {
+                let [i, prop] = name.match(/C(\d+)-(.+)/).slice(1);
+                this.data[i][prop] = value;
+                src.style.height = src.scrollHeight + 2;
+            }), 100);
+            element.addEventListener('change', f);
+            element.addEventListener('keyup', f);
+        }
+        return form.$;
+    }
+}
+class Column {
+    constructor(name, realIdx, dispIdx) {
+        this.name = name;
+        this.realIdx = realIdx;
+        this.dispIdx = dispIdx;
+    }
+}
+class ColGroup {
+    /**
+     * @param {Iterable<Column>} columns Optional
+     */
+    constructor(columns) {
+        this.cols = new Set(columns || []);
+    }
+    /**
+     * @returns {Column[]} All columns
+     */
+    columns() {
+        return Array.from(this.cols);
+    }
+    /**
+     * @returns {Column[]} All columns order by dispIdx
+     */
+    columnsByDisplayOrder() {
+        return this.columns().sort((c1, c2) => c1.dispIdx - c2.dispIdx);
+    }
+    /**
+     * @returns {Number} Size of columns
+     */
+    size() {
+        return this.cols.size;
+    }
+    add(col) {
+        this.cols.add(col);
+    }
+    remove(col) {
+        this.cols.delete(col);
+    }
+    removeBy(filter) {
+        for (let col of this.columns())
+            if (filter(col))
+                this.remove(col);
+    }
+    removeByName(name) {
+        this.removeBy(((name) => function (col) { col.name == name })(name));
+    }
+    removeByRealIdx(idx) {
+        this.removeBy(((rIdx) => function (col) { col.realIdx == rIdx })(idx));
+    }
+    removeByDisplayIdx(idx) {
+        this.removeBy(((dIdx) => function (col) { col.dispIdx == dIdx })(idx));
+    }
+    swapDisplayOrder(idx1, idx2) {
+        for (let col of this.columns()) {
+            if (col.dispIdx == idx1)
+                col.dispIdx = idx2;
+            else if (col.dispIdx == idx2)
+                col.dispIdx = idx1;
+        }
     }
 }

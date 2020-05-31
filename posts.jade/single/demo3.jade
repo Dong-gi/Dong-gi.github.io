@@ -180,8 +180,15 @@ include ../../source/skeleton.jade
                 let nums = [];
                 while (str.length > 0) {
                     if (str.length > 1 && parseRoman.memo[str[0]] < parseRoman.memo[str[1]]) {
-                        nums.push(parseRoman.memo[str[1]] - parseRoman.memo[str[0]]);
-                        str = str.substr(2);
+                        if (parseRoman.memo[str[1]] == parseRoman.memo[str[0]] * 5
+                            || parseRoman.memo[str[1]] == parseRoman.memo[str[0]] * 2)
+                        {
+                            nums.push(parseRoman.memo[str[1]] - parseRoman.memo[str[0]]);
+                            str = str.substr(2);
+                        } else { // Format Error
+                            parseRoman.memo[str] = -1;
+                            return parseRoman.memo[str];
+                        }
                         continue;
                     }
                     nums.push(parseRoman.memo[str[0]]);

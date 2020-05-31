@@ -27,7 +27,7 @@
             }
 
             const app = SF.build(document.getElementById('demo2'));
-            const Table = app.newTemplate('Table', () => `<table><tbody></tbody></table>`);
+            const Table = app.newTemplate('Table', () => `<table class="ordered-table"><tbody></tbody></table>`);
             const Line = app.asTemplate('Line', app.templates['[temp-id="line"]']);
 
             app.$.append(Table().$);

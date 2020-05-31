@@ -1,0 +1,71 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://github.com/Dong-gi/SF/releases/download/0.3.0/sf.min.js"></script>
+    <style>
+        .sf-datagrid-cell {
+            max-height: 100px;
+        }
+    </style>
+    <title>demo7</title>
+</head>
+
+<body>
+    <div id="demo7-1">
+        Form data ↓
+        <p id="demo7out1"></p>
+        DataGrid data ↓
+        <p id="demo7out2"></p>
+    </div>
+    <div id="demo7-2">
+        Form data ↓
+        <p id="demo7out3"></p>
+        DataGrid data ↓
+        <p id="demo7out4"></p>
+    </div>
+    <script>
+        onload();
+        function onload() {
+            if (document.readyState != "complete") {
+                window.addEventListener('load', onload)
+                return;
+            }
+
+            const datagrid1 = SF.asDataGrid(`information_id,body,start_date,end_date
+1,"안녕하세요.
+공지 \\"내용1\\"입니다.","2020-01-01 00:11:22","2020-01-01 11:22:33"
+2,"안녕하세요.
+공지 \\"내용2\\"입니다.","2020-02-02 00:11:22","2020-02-02 11:22:33"
+`);
+            const datagrid2 = SF.asDataGrid(`If opt.noHead == true,all data,must be,single line
+1,"안녕하세요.
+공지 \\"내용1\\"입니다.","2020-01-01 00:11:22","2020-01-01 11:22:33"
+2,"안녕하세요.
+공지 \\"내용2\\"입니다.","2020-02-02 00:11:22","2020-02-02 11:22:33"
+`, { noHead: true });
+
+            const app1 = SF.build(document.getElementById('demo7-1'));
+            const app2 = SF.build(document.getElementById('demo7-2'));
+            const form1 = datagrid1.getTableForm();
+            app1.$.prepend(form1);
+            const form2 = datagrid2.getTableForm();
+            app2.$.prepend(form2);
+
+            const boundForm1 = SF.bindForm(form1);
+            const boundForm2 = SF.bindForm(form2);
+            SF.afterPropertySet(boundForm1, null, update);
+            SF.afterPropertySet(boundForm2, null, update);
+            function update() {
+                app1.demo7out1.innerText = JSON.stringify(boundForm1);
+                app1.demo7out2.innerText = JSON.stringify(datagrid1.data);
+                app2.demo7out3.innerText = JSON.stringify(boundForm2);
+                app2.demo7out4.innerText = JSON.stringify(datagrid2.data);
+            }
+            update();
+        }
+    </script>
+</body>
+
+</html>

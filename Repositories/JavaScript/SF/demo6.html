@@ -1,0 +1,66 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://github.com/Dong-gi/SF/releases/download/0.3.0/sf.min.js"></script>
+    <style>
+        .sf-datagrid-cell {
+            max-height: 100px;
+        }
+    </style>
+    <title>demo6</title>
+</head>
+
+<body>
+    <div id="demo6-1">
+        Form data ↓
+        <p id="demo6out1"></p>
+        DataGrid data ↓
+        <p id="demo6out2"></p>
+    </div>
+    <div id="demo6-2">
+        Form data ↓
+        <p id="demo6out3"></p>
+        DataGrid data ↓
+        <p id="demo6out4"></p>
+    </div>
+    <script>
+        onload();
+        function onload() {
+            if (document.readyState != "complete") {
+                window.addEventListener('load', onload)
+                return;
+            }
+
+            const datagrid1 = SF.asDataGrid(`col1,col2,col3
+data11,data12,data13
+data21,data22,data23
+data31,data32,data33`);
+            const datagrid2 = SF.asDataGrid(`data11,data12,data13
+data21,data22,data23
+data31,data32,data33`, { noHead: true });
+
+            const app1 = SF.build(document.getElementById('demo6-1'));
+            const app2 = SF.build(document.getElementById('demo6-2'));
+            const form1 = datagrid1.getTableForm();
+            app1.$.prepend(form1);
+            const form2 = datagrid2.getTableForm();
+            app2.$.prepend(form2);
+
+            const boundForm1 = SF.bindForm(form1);
+            const boundForm2 = SF.bindForm(form2);
+            SF.afterPropertySet(boundForm1, null, update);
+            SF.afterPropertySet(boundForm2, null, update);
+            function update() {
+                app1.demo6out1.innerText = JSON.stringify(boundForm1);
+                app1.demo6out2.innerText = JSON.stringify(datagrid1.data);
+                app2.demo6out3.innerText = JSON.stringify(boundForm2);
+                app2.demo6out4.innerText = JSON.stringify(datagrid2.data);
+            }
+            update();
+        }
+    </script>
+</body>
+
+</html>
