@@ -127,9 +127,19 @@ include ../../source/skeleton.jade
         +asCode('shell') $ touch [options] [files]
         p 각 파일에 대해 시간 정보를 현재 시각으로 변경한다. 파일이 없으면 생성한다(크기 0).
         
-        li chmod : 파일 권한 제한 변경
-        +asCode('shell') $ chmod [options] 8진수 [paths]
-        p -R : 재귀 실행 // + chown(파일 소유자 및 그룹 변경), chgrp(사용자 그룹 변경)
+        li 파일 권한 변경
+        +asCode('shell').
+            $ chmod [options] 8진수 [paths]
+            # 예. 모든 .sh 파일 실행 권한 부여
+            $ chmod +x *.sh
+            # 예. bin/ 디렉터리 하위 전체에 실행 권한 부여
+            $ chmod -R +x ./bin/
+
+            # 예. tmp/ 디렉터리 하위 전체 소유자 변경
+            $ chown -R readonly ./tmp/
+
+            # 예. tmp/ 디렉터리 하위 전체 소유 그룹 변경
+            $ chgrp -R readonly ./tmp/
         
         li cp : 파일 복사
         +asCode('shell').
@@ -279,6 +289,12 @@ include ../../source/skeleton.jade
                 | 명령행 끝에 &를 붙이면 즉시 백그라운드 job으로 실행시킬 수 있다
                 br
                 | 현재 터미널 세션이 종료해도 n번 백그라운드 job을 계속하게 하려는 경우 : disown -h %n
+            li nohup name.sh > /dev/null 2>&1 &
+            ul
+                li nohup : 세션이 종료해도 프로세스는 계속 실행
+                li > /dev/null : stdout은 버림
+                li 2>&1 : strerr를 stdout으로 출력 - 따라서 같이 버림
+                li & : 백그라운드로 실행
 
     h1.marker 메모리 관련
     ol
@@ -299,8 +315,15 @@ include ../../source/skeleton.jade
         $ echo $VAR_NAME
         $ export VAR_NAME[=value]
 
-    h1.marker 쉘 스크립트
+    h1.marker 쉘
     ol
+        li 종류
+        ul
+            li Login shell
+            p 최초 실행 시 유저명과 비밀번호를 묻고 진입하는 쉘. 자동으로 .profile을 실행하고, bash의 경우 .bash_profile도 실행된다
+            li Non login shell
+            p 기존 쉘에서 새로 시작한 쉘. 자동으로 .profile을 실행하고, bash의 경우 .bashrc도 실행된다.
+        li 스크립트
         +codeBtn('/Repositories/sh/0_basic.sh', 'bash')
         +codeBtn('/Repositories/sh/0_basic.txt', 'text') 실행 결과 »
         li 특별 전역 변수

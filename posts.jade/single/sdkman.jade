@@ -10,6 +10,24 @@ include ../../source/skeleton.jade
         +asCode('shell') $ curl -s "https://get.sdkman.io" | bash
         li 스크린 안내대로 나머지 설치 진행
         +asCode('shell') $ source "/root/.sdkman/bin/sdkman-init.sh"
+        li 모든 유저가 SDKMAN을 사용할 수 있게 설치
+        ol
+            li 사용자 디렉터리가 아닌 곳에 설치
+            +asCode('shell') $ export SDKMAN_DIR="/usr/local/sdkman" && curl -s "https://get.sdkman.io" | bash
+            li sdkman-init.sh 실행에 필요한 권한 부여
+            +asCode('shell').
+                $ chmod -R +x /usr/local/sdkman/bin/
+                $ chmod -R +x /usr/local/sdkman/src/
+            li 사용자 로그인 시 자동으로 sdkman-init.sh 실행하도록 설정
+            +asCode('shell').
+                # .bashrc
+                #...
+                #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+                cd ~
+                export SDKMAN_DIR="/usr/local/sdkman"
+                [[ -s "/usr/local/sdkman/bin/sdkman-init.sh" ]] && source "/usr/local/sdkman/bin/sdkman-init.sh"
+                cd ~
+
 
     h1.marker sdk help
     +asCode('shell').
