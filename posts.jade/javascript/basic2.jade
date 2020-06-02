@@ -194,8 +194,21 @@ include ../../source/skeleton.jade
         li FileReader
         +asCode('javascript') readAsText(file, encoding), readAsDataURL(file), readAsBinaryString(file), readAsArrayBuffer(file)
 
-    h1.marker 브라우저 콘솔에서 jQuery 추가
-    +asCode('javascript').
-        let script = document.createElement('script');
-        script.src = "https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js";
-        document.getElementsByTagName('head')[0].appendChild(script);
+    h1.marker 잡다한 코드
+    ul
+        li 특정 노드로 스크롤 이동
+        +asCode('javascript') node.scrollIntoView()
+        li 특정 위치로 스크롤 이동
+        +asCode('javascript') window.scrollTo({ top: 123 })
+        li 페이지 갱신없이 히스토리 변경
+        +asCode('javascript').
+            // 이동
+            window.history.pushState({ html: path, pageTitle: document.title }, document.title, `${location.origin}${path}`);
+            // 뒤로가기 이벤트 리슨
+            window.onpopstate = function(e) {
+                let postQuery = e.state.html.match(/[?&]post=([^&]+)/);
+                if (!!postQuery) {
+                    document.title = e.state.pageTitle;
+                    scrollToPost(postQuery[1]);
+                }
+            };

@@ -269,7 +269,8 @@ function updateMarkerList() {
         })(target), isNarrow()? 444 : 0);
     }, true, (_, markerId) => {
         let marker = document.querySelector(`.marker[marker-id=${markerId}]`);
-        let li = Donggi.getElementFromText(`<li>${getMarkerName(marker)}</li>`);
+        let name = getMarkerName(marker);
+        let li = Donggi.getElementFromText(`<li title="${name}">${name.substr(0, 30)}</li>`);
         
         let main = document.querySelector('div#contents');
         let level = 1;
@@ -283,14 +284,18 @@ function updateMarkerList() {
 }
 
 function getMarkerName(marker) {
+    let name;
     switch (marker.tagName) {
         case 'IMG':
-            return `이미지 : ${marker.alt.substr(0, 30).replace(/\//gm, '\\')}`;
+            name = `이미지 : ${marker.alt}`;
+            break;
         case 'TABLE':
-            return `표 : ${marker.caption.textContent.substr(0, 30).replace(/\//gm, '\\')}`;
+            name = `표 : ${marker.caption.textContent}`;
+            break;
         default:
-            return marker.textContent.substr(0, 30).replace(/\//gm, '\\');
+            name = marker.textContent;
     }
+    return name.replace(/\//gm, '\\');
 }
 
 function queryUpdated(e) {

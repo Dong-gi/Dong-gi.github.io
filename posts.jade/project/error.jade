@@ -72,3 +72,15 @@ include ../../source/skeleton.jade
         li 아스키 공백 문자(32)가 맞는지 확인한다.
         +w3img('/imgs/20200227_143848.png')
         +w3img('/imgs/20200227_145006.png')
+
+    h1.marker 서버 응답이 잘려서 올 때
+    ol
+        li Linux > docker-machine > container(서버) 환경에서, Linux 서버의 용량이 부족할 때 이하의 현상이 발생함을 확인
+        ul
+            li container, docker-machine에서 서버 응답은 정상 획득
+            li Linux 서버 및 그 밖에서는 서버 응답이 잘림
+
+    h1.marker 암호화 오류. Padding is invalid and cannot be removed
+    ol
+        +asA('https://www.red-gate.com/simple-talk/blogs/oh-no-my-paddings-invalid/')
+        li 스트림을 직접 이용하는 경우, flush 완료됐는지 확인이 필요하다.

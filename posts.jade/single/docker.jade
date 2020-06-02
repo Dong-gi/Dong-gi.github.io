@@ -228,6 +228,10 @@ include ../../source/skeleton.jade
             $ docker container run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
         ol
             li 새 컨테이너를 만들고(create) 실행(start)한 뒤, 그 안에서 명령을 실행한다
+            li 옵션 순서에 따라 실행에 실패하기도 한다...
+            +asCode('shell').
+                # 성공 예시
+                docker run --name postgres1 -p 5452:5432 -d -it --privileged=true --network="my-net" --ip="172.18.0.2" -e "POSTGRES_PASSWORD=password" postgres:9.5
             li OPTIONS
             +asCode('shell').
                 --publish, -p # 포트 포워딩. -p 80:8080, -p 8888:8080/tcp
@@ -356,6 +360,9 @@ include ../../source/skeleton.jade
             --detach, -d  # 백그라운드로 실행시킨다
             --env, -e     # 환경 변수 설정 Since 1.25
             --workdir, -w # 워킹 디렉터리 설정 Since 1.35
+        p docker-machine 예.
+        +asCode('shell').
+            docker-machine ssh dbvm -- docker exec postgres1 /bin/bash /home/postgres/something.sh
 
     h1.marker 컨테이너 오케스트레이션
     div

@@ -268,7 +268,10 @@ include ../../source/skeleton.jade
         $ crontab -l             # 작업 목록 출력
             # -e : edit
             # -u : 사용자 지정
-    p 유저가 아닌 시스템 단위의 작업은 /etc/crontab 직접 수정
+    ul
+        li 유저가 아닌 시스템 단위의 작업은 /etc/crontab 직접 수정
+        li crontab path 설정
+        +asCode() PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
     h1.marker 프로세스 관련
     ol

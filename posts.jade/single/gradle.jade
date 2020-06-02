@@ -9,11 +9,9 @@ include ../../source/skeleton.jade
         li 변경이 없는 빌드 절차의 결과를 재사용하므로, 빠른 빌드 가능
         li CLI
         +asCode('shell').
-            export GRADLE_OPTS="-Dfile.encoding=utf-8"
             $ gradle [task...] [option...]             # 각 작업은 ' '로 구분
                                                        # 여러 옵션 + CLI 해석 불가 옵션들을 gradle.properties에 작성 가능
             $ gradle           --help                  # gradle 도움말
-            $ gradle           --daemon                # 그래들 데몬을 실행시켜둔다. 반복 빌드가 빨라진다.
             $ gradle           -b new.gradle           # 스크립트 파일 지정. 기본 build.gradle
             $ gradle           -m, --dry-run           # 실제 작업은 하지 않고 작업 실행. 실행될 의존 목록 확인 가능
             $ gradle           -x test                 # 실행하지 않을 작업 명시
@@ -28,12 +26,13 @@ include ../../source/skeleton.jade
             $ gradle           -Dgradle.user.home={path}           # GRADLE_USER_HOME
             $ gradle           -Dorg.gradle.logging.level=(quiet, warn, lifecycle, info, debug)
                                                                    # 로그 레벨. -q, -w, -i, -d로도 지정 가능
-            $ gradle           -Dorg.gradle.jvmargs                # JVM 전달 인자
+            $ gradle           -Dorg.gradle.jvmargs={args}         # JVM 전달 인자
             #                  -Dorg.gradle.jvmargs="-Xmx1g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
-            $ gradle           -Dorg.gradle.java.home              # JDK_HOME
+            $ gradle           -Dorg.gradle.java.home={path}       # JAVA_HOME
                                                        
             $ gradle           -P{propName}={value}    # 프로젝트 속성
                                                        # ORG_GRADLE_PROJECT_{propName}={value} 환경 변수로도 설정 가능
+                                                       # 설정 파일의 org.gradle.project.{propName}={value} 로도 설정 가능
                                                        # 존재하지 않는 프로젝트 속성 참조 시 빌드 실패함에 유의
                                                        # Project#hasProperty(String) 이용
             
@@ -46,8 +45,11 @@ include ../../source/skeleton.jade
                                                        # 서브프로젝트 디렉터리에서 실행하는 경우엔 프로젝트 이름 생략 가능
     div
         h2.marker build.gradle
-        ol
-            li Task; 작업
+        div
+            h3.marker
+                | Task; 작업 
+                +asA('https://docs.gradle.org/current/userguide/custom_tasks.html')
+                +asA('https://docs.gradle.org/current/userguide/more_about_tasks.html')
             +asCode('gradle').
                 def msg = 'hello world'
                 task hello {
@@ -56,7 +58,7 @@ include ../../source/skeleton.jade
                     }
                 }
             
-            li Task dependencies; 작업 의존
+            h3.marker Task dependencies; 작업 의존
             +asCode('gradle').
                 task hello {
                     doLast {
@@ -86,7 +88,7 @@ include ../../source/skeleton.jade
                 task ':doSomething' end
                 task ':bye' end
             
-            li Dynamic tasks; 동적 작업 정의
+            h3.marker Dynamic tasks; 동적 작업 정의
             +asCode('gradle').
                 [2, 4, 6].each {
                     def num = it
@@ -97,7 +99,7 @@ include ../../source/skeleton.jade
                     }
                 }
                 
-            li Groovy DSL shortcut notations; 그루비 축약 표현
+            h3.marker Groovy DSL shortcut notations; 그루비 축약 표현
             +asCode('gradle').
                 task hello {}
                 hello.doFirst { println 'doFirst' }
@@ -113,7 +115,7 @@ include ../../source/skeleton.jade
                 BUILD SUCCESSFUL in 7s
                 1 actionable task: 1 executed
             
-            li Extra task properties; 사용자 정의 속성 정의
+            h3.marker Extra task properties; 사용자 정의 속성 정의
             +asCode('gradle').
                 task _init { ext.author = 'Donggi Kim' }
                 task about {
@@ -122,7 +124,7 @@ include ../../source/skeleton.jade
                     }
                 }
             
-            li Using methods; 사용자 정의 메서드 이용
+            h3.marker Using methods; 사용자 정의 메서드 이용
             +asCode('gradle').
                 task _init { ext.author = 'Donggi Kim' }
                 task about {
@@ -149,7 +151,7 @@ include ../../source/skeleton.jade
                 BUILD SUCCESSFUL in 7s
                 1 actionable task: 1 executed
 
-            li Default tasks; 기본 실행 작업
+            h3.marker Default tasks; 기본 실행 작업
             +asCode('gradle').
                 defaultTasks 'hello'
                 
@@ -159,7 +161,7 @@ include ../../source/skeleton.jade
                     }
                 }
                 
-            li External dependencies; 스크립트에서 외부 클래스 사용
+            h3.marker External dependencies; 스크립트에서 외부 클래스 사용
             +asCode('gradle').
                 import org.apache.commons.codec.binary.Base64
                 
@@ -186,10 +188,10 @@ include ../../source/skeleton.jade
                     |  인스턴스를 구성한다.
                 li 프로젝트의 buildscript()는 모든 서브 프로젝트에도 적용된다
             
-            li 외부 스크립트 포함
+            h3.marker 외부 스크립트 포함
             +asCode('gradle') apply from ${filePath | url}
             
-            li 작업 설명
+            h3.marker 작업 설명
             +asCode('gradle').
                 task hello {
                     group = 'Core'
@@ -208,7 +210,7 @@ include ../../source/skeleton.jade
                 hello - Say hello
                 ...
             
-            li 기존 작업 덮어쓰기
+            h3.marker 기존 작업 덮어쓰기
             +asCode('gradle').
                 plugins {
                     id 'base'
@@ -220,7 +222,7 @@ include ../../source/skeleton.jade
                     }
                 }
             
-            li 특정 조건을 만족하는 경우에만 실행
+            h3.marker 특정 조건을 만족하는 경우에만 실행
             +asCode('gradle').
                 def p = this
                 
@@ -240,8 +242,8 @@ include ../../source/skeleton.jade
                 Hello World!
                 
         h2.marker 빌드 절차
-        ol
-            li Initialization
+        div
+            h3.marker Initialization
             ul
                 li
                     | 어떤 프로젝트들을 빌드해야 하는지 결정하고, 
@@ -255,7 +257,9 @@ include ../../source/skeleton.jade
                     | -I 또는 --init-script 옵션을 지정하는 경우, 
                     +asA('https://docs.gradle.org/current/userguide/init_scripts.html#init_scripts')
                     | 를 실행한다
-                li gradle 설치 디렉터리의 init.d에 임의 .gradle 스크립트를 넣으면 초기화 시 실행된다.
+                li USER_HOME/.gradle/ 에 init.gradle을 작성하면 초기화 시 실행된다.
+                li USER_HOME/.gradle/init.d/, GRADLE_HOME/init.d/ 에 임의 .gradle 스크립트를 넣으면 초기화 시 실행된다.
+                p 후자는 커스텀 gradle 배포에 이용하면 된다
                 +asCode('gradle').
                     // 예. 모든 프로젝트는 "libs" 디렉터리를 저장소로 이용한다.
                     allprojects {
@@ -271,9 +275,9 @@ include ../../source/skeleton.jade
                     | gradle wrapper 생성 후, gradle-wrapper.properties에
                     br
                     | distributionUrl=${customGradleUrl}
-            li Configuration
+            h3.marker Configuration
             p Project 인스턴스의 설정이 진행된다. 빌드될 각 프로젝트의 build.gradle 스크립트가 실행된다.
-            li Execution
+            h3.marker Execution
             p 구성 단계에서 실행하기로 결정된 작업들을 실행한다.
             +asCode('gradle').
                 task hello {}
@@ -298,8 +302,8 @@ include ../../source/skeleton.jade
                 // + gradle.beforeProject, ProjectsLoaded, buildFinished, projectsEvaluated, settingsEvaluated
         
         h2.marker 기본 작업
-        ul
-            li: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html')
+        div
+            h3.marker: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html')
             +asCode('gradle').
                 task copy(type: Copy) {
                     group = 'Project 01'
@@ -312,13 +316,13 @@ include ../../source/skeleton.jade
                     rename { fileName -> newFileName }
                     rename '(.*).txt', '$1.csv'
                 }
-            li: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Delete.html')
+            h3.marker: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Delete.html')
             +asCode('gradle').
                 task makePretty(type: Delete) {
                     delete 'uglyFolder', 'uglyFile'
                     followSymlinks = true
                 }
-            li: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Exec.html')
+            h3.marker: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Exec.html')
             +asCode('gradle').
                 task stopTomcat(type: Exec) {
                     workingDir '../tomcat/bin'
@@ -328,7 +332,7 @@ include ../../source/skeleton.jade
                         return standardOutput.toString()
                     }
                 }
-            li: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.JavaExec.html')
+            h3.marker: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.JavaExec.html')
             ul
                 li 예1.
                 +asCode('gradle').
@@ -353,7 +357,7 @@ include ../../source/skeleton.jade
                         classpath = files(tasks.jar)
                         args 'appArg1'
                     }
-            li: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Zip.html')
+            h3.marker: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Zip.html')
             +asCode('gradle').
                 plugins {
                     id 'base'
@@ -365,19 +369,13 @@ include ../../source/skeleton.jade
                     from 'src'
                     archiveFileName = 'out.zip'
                 }
-            li: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Tar.html')
+            h3.marker: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Tar.html')
             p Zip 유사
-        
-        h2.marker 사용자 정의 작업
-        +asCode('gradle').
-            class MyTask extends DefaultTask {
-                MyTask() {}
-            }
-            task myTask(type: MyTask) {}
 
-        h2.marker: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html')
+        h2.marker Project
         div
-            h3 Script blocks
+            +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html')
+            h3.marker Script blocks
             ul
                 li allprojects {}
                 p
@@ -430,20 +428,21 @@ include ../../source/skeleton.jade
                     | visual-studio 플러그인으로 추가된다. 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.ide.visualstudio.VisualStudioRootExtension.html')
                     |  설정.
-            h3 Properties
+            h3.marker Properties
             +asCode('gradle').
                 readonly Logger             logger                    // logger.info, logger.error, ...
                 readonly TaskContainer      tasks                     // 프로젝트 작업 목록
-                    tasks.addRule("Pattern: ping&lt;ID>") { String taskName ->
-                        if (taskName.startsWith("ping")) {
-                            task(taskName) {
-                                doLast {
-                                    println "Pinging: " + (taskName - 'ping')
-                                }
+                // 예.
+                tasks.addRule("Pattern: ping&lt;ID>") { String taskName ->
+                    if (taskName.startsWith("ping")) {
+                        task(taskName) {
+                            doLast {
+                                println "Pinging: " + (taskName - 'ping')
                             }
                         }
                     }
-            h3 Methods
+                }
+            h3.marker Methods
             +asCode('gradle').
                 File                        file (Object path)        // CharSequence, File, Path, URI, URL 등에 대해 단일 파일 인스턴스 반환
                 ConfigurableFileCollection  files (Object... paths)   // +, - 연산 정의됨. 각각 합/차집합
@@ -531,22 +530,101 @@ include ../../source/skeleton.jade
                     task sub1Task {}    // 여러 프로젝트 설정을 하나의 build.gradle에 작성하려는 경우 이름 명시 필요
                 }
 
+        h2.marker JUnit 테스트
+        ol
+            +asA('https://docs.gradle.org/current/userguide/java_testing.html')
+            +asCode('gradle').
+                dependencies {
+                    testImplementation 'junit:junit:4.12'
+                }
+                test {
+                    useJUnit()
+                }
+            li 단위 테스트 클래스 지정
+            +asCode('gradle').
+                task unitTest(type: Test) {
+                    include '**/*UT.class'
+                    reports.html.destination = file("${reports.html.destination}/unitTest")
+                    reports.junitXml.destination = file("${reports.junitXml.destination}/unitTest")
+                }
+            li 단위 테스트 카테고리 지정
+            +asCode('gradle').
+                task unitTest(type: Test) {
+                    useJUnit {
+                        includeCategories 'x.y.z.categories.UnitTests'
+                    }
+                    exclude '**/*Something.class'
+                }
+            li 특정 테스트 클래스 집합만 테스트
+            +asCode('java').
+                @RunWith(Suite.class)
+                @SuiteClasses({ Test1.class, Test2.class })
+                public class SomeFuncTest {}
+            +asCode('gradle').
+                task someFuncTest(type: Test) {
+                    include '**/SomeFuncTest.class'
+                    reports.html.destination = file("${reports.html.destination}/someFunc")
+                    reports.junitXml.destination = file("${reports.junitXml.destination}/someFunc")
+                }
+            li 특정 소스셋만 테스트
+            +asCode('gradle').
+                task testSet1Test(type: Test) {
+                    testClassesDir = sourceSets.testSet1.output.classesDir
+                    classpath = sourceSets.testSet1.runtimeClasspath
+                    
+                    reports.html.destination = file("${reports.html.destination}/testSet1")
+                    reports.junitXml.destination = file("${reports.junitXml.destination}/testSet1")
+                }
+            li 병렬 테스트
+            +asCode('gradle').
+                test {
+                    maxParallelForks = 4 // 병렬 테스트
+                    minHeapSize = '1g'   // JVM 옵션
+                    jvmArgs '-XX:+UseG1GC'
+                }
 
-        h2.marker 프록시 설정
-        +asCode('ini').
-            # gradle.properties
-            
-            # http
-            systemProp.http.proxyHost=x.y.z
-            systemProp.http.proxyPort=8888
-            systemProp.http.proxyUser=user
-            systemProp.http.proxyPassword=password
-            
-            # https
-            systemProp.https.proxyHost=x.y.z
-            systemProp.https.proxyPort=8888
-            systemProp.https.proxyUser=user
-            systemProp.https.proxyPassword=password
+        h2.marker gradle.properties
+        ol
+            +asA('https://docs.gradle.org/current/userguide/build_environment.html#sec:gradle_configuration_properties')
+            li Gradle properties
+            +asCode('ini').
+                org.gradle.caching           =true|false        # 이전 빌드 출력 캐싱
+                org.gradle.configureondemand =true|false        # 작업에 필요한 프로젝트만 구성. incubating
+                org.gradle.daemon.idletimeout=# of milliseconds # 데몬 유지 기간. 기본 3시간(10800000)
+                org.gradle.debug             =true|false        # -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005
+                org.gradle.java.home         =JAVA_HOME         # 기본값은 JAVA_HOME 환경 변수 또는 java 위치 디렉터리
+                org.gradle.jvmargs           =...               # JVM 전달 인자
+                org.gradle.parallel          =true|false
+                org.gradle.workers.max       =# of worekr processes
+            li System properties
+            +asCode('ini').
+                gradle.user.home=GRADLE_USER_HOME
+                # ↓ Gradle 다운로드 시 HTTP 인증 정보
+                systemProp.wrapperUser=username
+                systemProp.wrapperPassword=password
+            li gradle 명령이 참조하는 환경 변수
+            +asCode('shell').
+                GRADLE_USER_HOME # 기본값 $USER_HOME/.gradle
+                JAVA_HOME
+                # 주의
+                GRADLE_OPTS      # 그래들 클라이언트(콘솔 출력) 실행 시만 사용되는 JVM 인자. 빌드 VM에는 영향없다.
+                JAVA_OPTS        # 그래들 클라이언트(콘솔 출력) 실행 시만 사용된다. 빌드 VM에는 영향없다. 기본값 -Xmx64m
+                # 주의 +
+                # 그래들 데몬을 비활성화하면 클라이언트 VM이 직접 빌드 작업을 실행한다.
+            li 프록시 설정
+            +asCode('ini').
+                # http
+                systemProp.http.proxyHost=x.y.z
+                systemProp.http.proxyPort=8888
+                systemProp.http.proxyUser=user
+                systemProp.http.proxyPassword=password
+                systemProp.http.nonProxyHosts=*.nonproxyrepos.com|localhost
+                # https
+                systemProp.https.proxyHost=x.y.z
+                systemProp.https.proxyPort=8888
+                systemProp.https.proxyUser=user
+                systemProp.https.proxyPassword=password
+                systemProp.https.nonProxyHosts=*.nonproxyrepos.com|localhost
         
         h2.marker
             | Gradle 성능 
@@ -603,6 +681,7 @@ include ../../source/skeleton.jade
     
     h1.marker Gradle 플러그인
     ol
+        +asA('https://docs.gradle.org/current/userguide/plugin_reference.html')
         li 플러그인은 Gradle 코어 기능을 확장하여 새로운 작업, 데이터 모델을 이용하게 한다
         li 플러그인은 프로젝트와 무관하게 사용 가능하다
         li
@@ -611,6 +690,7 @@ include ../../source/skeleton.jade
             | 은 여러 번 호출해도 부작용이 없다
         li 사용할 플러그인 이름은 Fully qualified name이어야 하지만, 특별히 정의된 짧은 이름도 사용할 수 있다.
         p 예. JavaPlugin → 'java'
+        li groovy, java, kotlin으로 작성 가능
     div
         h2.marker Binary plugin
         p
@@ -672,7 +752,6 @@ include ../../source/skeleton.jade
                 li 스크립트 안의 클래스로 정의(스크립트 외부 사용은 불가)
                 
         h2.marker base 플러그인
-        +codeBtn('/Repositories/Gradle/project-01/build.gradle', 'gradle')
         div
             h3 Task
             ul
@@ -708,7 +787,8 @@ include ../../source/skeleton.jade
                         compileJava {
                             options.encoding = 'UTF-8'
                             options.debuf = false        // class 파일에 디버깅 정보를 포함할 것인지(기본 true), 사용 레벨은 DebugOptions#getDebugLevel
-                            options.compilerArgs = ['-Xlint:none'] // 컴파일러에 넘길 임의 추가 인자
+                            // ↓ test 작업처럼 새로운 JVM 프로세스를 포킹하는 경우, JVM 인자를 따로 지정해야 한다. 기본값 -Xmx512m
+                            options.compilerArgs += ['-Xlint:none', '-Xdoclint:none', '-nowarn']
                             options.listFiles = true     // 컴파일 대상 목록 출력 여부(기본 false)
                             options.warnings = false     // 경고 출력할 지 여부(기본 true)
                         }
@@ -867,6 +947,7 @@ include ../../source/skeleton.jade
                 }
             li javadoc 생성
             +asCode('shell') $./gradlew javadoc
+
         h2.marker Application 플러그인
         +asCode('gradle').
             applicationName = 'test'
@@ -886,23 +967,25 @@ include ../../source/skeleton.jade
             clean {
                 delete << 'src/main/tmp' // clean 작업 시 'src/main/tmp' 디렉터리도 정리
             }
-                // 패키지 저장소 명시
-                repositories {
-                    mavenCentral()
-                }
-                dependencies {
-                    compile group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
-                    
-                    providedCompile '' // 빌드 시 사용 && 출력에 미포함
-                    compile ''         // 빌드 시 사용 && 출력에 포함
-                    testCompile 'junit:junit:4.11'     // 테스트에만 필요
-                }
+            // 패키지 저장소 명시
+            repositories {
+                mavenCentral()
+            }
+            dependencies {
+                compile group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
+                
+                providedCompile '' // 빌드 시 사용 && 출력에 미포함
+                compile ''         // 빌드 시 사용 && 출력에 포함
+                testCompile 'junit:junit:4.11'     // 테스트에만 필요
+            }
         
         h2.marker 사용자 정의 플러그인
         ol
-            li 클래스 정의
-            li 프로젝트의 buildSrc에 코드를 두면 즉시 플러그인 사용 가능
+            li 빌드 스크립트에 플러그인 클래스 정의하면 즉시 사용 가능
+            li 프로젝트의 buildSrc에 플러그인 코드를 두면 즉시 사용 가능
             p Groovy 코드 경로 : buildSrc/src/main/groovy/...
+            +codeBtn('/Repositories/Gradle/project-01/build.gradle', 'gradle') build.gradle
+            +codeBtn('/Repositories/Gradle/project-01/buildSrc/src/main/groovy/test/hello/HelloPlugin.groovy', 'groovy') HelloPlugin.groovy
             p ↓ 실행 결과
             +asCode().
                 > Task :hello
@@ -911,7 +994,36 @@ include ../../source/skeleton.jade
             ul
                 li buildSrc/src/main/resources/META-INF/gradle-plugins/{id}.properties
                 li jar : META-INF/gradle-plugins/{id}.properties
+                +codeBtn('/Repositories/Gradle/project-02/build.gradle', 'gradle') build.gradle
+                +codeBtn('/Repositories/Gradle/project-02/buildSrc/src/main/resources/META-INF/gradle-plugins/hello.properties', 'ini') hello.properties
+                li 또는 http://plugins.gradle.org 에 플러그인 등록
+                +asA('https://guides.gradle.org/publishing-plugins-to-gradle-plugin-portal')
+                +asCode('gradle').
+                    plugins {
+                        id "a.b.c" version "1.0"
+                    }
+            li 외부 jar에 정의된 플러그인을 사용하려면, 해당 jar를 buildscript.dependencies에 추가해야 한다.
 
     h1.marker Gradle Wrapper; gradlew
     p Gradle이 설치되지 않았어도, 프로젝트가 필요로 하는 버전의 Gradle을 자동으로 설치해 이용한다.
-    +asCode('gradle') $ gradle wrapper --gradle-version=6.4
+    +asCode('gradle').
+        # 프로젝트 디렉터리에 wrapper 자동 생성. 생성된 jar 파일이 버전 관리 시 제외되지 않도록 유의
+        $ gradle wrapper
+        
+        # 버전 지정
+        $ gradle wrapper --gradle-version=6.4
+        
+        # wrapper 버전 업그레이드
+        $ ./gradlew wrapper --gradle-version=6.4
+        
+        # 커스텀 그래들 지정
+        --gradle-distribution-url
+        
+        # 해시 지정
+        --gradle-distribution-sha256-sum
+
+    p 다운로드에 필요한 HTTP 기본 인증 정보를 파일로 설정 가능
+    +asCode('ini').
+        # USER_HOME/.gradle/gradle.properties 또는 wrapper/gradle-wrapper.properties
+        systemProp.gradle.wrapperUser=username
+        systemProp.gradle.wrapperPassword=password

@@ -320,6 +320,7 @@ include ../../source/skeleton.jade
         ol
             li postgresql.conf의 log_timezone, timezone 설정 변경
             li SELECT pg_reload_conf();
+            li alter database db_name set timezone to 'Asia/Seoul';
         li.marker postgres 유저 비밀번호를 모를 때
         ol
             li pg_hba.conf 파일을 비밀번호 없이 접속할 수 있도록 trust로 변경 후 접속(서비스 재시작 필요)

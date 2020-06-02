@@ -22,7 +22,8 @@ $ docker image build [OPTIONS] PATH | URL | -
 --pause, -p   # 커밋 도중 컨테이너 일시 정지(default true)
 </div><h2 class="marker">docker tag : 이미지 태그 설정</h2><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]</div><ol><li>예.</li><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ docker tag 0e5574283393 fedora/httpd:version1.0</div><li>Docker Hub로 올리려는 경우, {Docker Hub Id}/{Repository Name}:{tag}</li><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ docker tag bulletinboard:1.0 gordon/bulletinboard:1.0</div><li>Private repository로 푸시하려면 해당 주소를 붙여줘야 한다</li><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ docker tag 0e5574283393 myregistryhost:5000/fedora/httpd:version1.0</div></ol><h2 class="marker">docker push : 이미지 업로드</h2><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ docker push [OPTIONS] NAME[:TAG]
 $ docker image push [OPTIONS] NAME[:TAG]</div><p>이미지를 저장소로 업로드한다. 올바른 이미지 태그에 대해서는 docker tag 명령 참고</p><h2 class="marker">docker run : 컨테이너 생성 후 실행</h2><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ docker run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
-$ docker container run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]</div><ol><li>새 컨테이너를 만들고(create) 실행(start)한 뒤, 그 안에서 명령을 실행한다</li><li>OPTIONS</li><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">--publish, -p # 포트 포워딩. -p 80:8080, -p 8888:8080/tcp
+$ docker container run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]</div><ol><li>새 컨테이너를 만들고(create) 실행(start)한 뒤, 그 안에서 명령을 실행한다</li><li>옵션 순서에 따라 실행에 실패하기도 한다...</li><div lan="shell" class="as-code code-div w3-leftbar w3-border-green"># 성공 예시
+docker run --name postgres1 -p 5452:5432 -d -it --privileged=true --network="my-net" --ip="172.18.0.2" -e "POSTGRES_PASSWORD=password" postgres:9.5</div><li>OPTIONS</li><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">--publish, -p # 포트 포워딩. -p 80:8080, -p 8888:8080/tcp
 --detach, -d  # 지정한 경우 백그라운드 실행. 커맨드가 리턴하면 컨테이너도 종료.
               # -d를 지정하지 않은 경우(default) 포그라운드로 실행되며, STDIN, STDOUT, STDERR가 콘솔에 연결된다(default).
 -it           # -i(--interactive, STDIN 계속 열어두기) + -t(-tty, Pseudo-tty 할당)
@@ -104,7 +105,7 @@ $ docker container exec [OPTIONS] CONTAINER COMMAND [ARG...]
 # OPTIONS
 --detach, -d  # 백그라운드로 실행시킨다
 --env, -e     # 환경 변수 설정 Since 1.25
---workdir, -w # 워킹 디렉터리 설정 Since 1.35
+--workdir, -w # 워킹 디렉터리 설정 Since 1.35</div><p>docker-machine 예.</p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">docker-machine ssh dbvm -- docker exec postgres1 /bin/bash /home/postgres/something.sh
 </div></div><h1 class="marker">컨테이너 오케스트레이션</h1><div><h2 class="marker">Kubernetes; K8s</h2><p>Empty</p><h2 class="marker">Swarm</h2><div lan="text" class="as-code code-div w3-leftbar w3-border-green">$ docker swarm init
 
 $ docker service create --name demo alpine:3.5 ping 1.1.1.1
