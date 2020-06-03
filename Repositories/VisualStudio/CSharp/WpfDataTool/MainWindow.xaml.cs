@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfDataTool.ViewModel;
 
 namespace WpfDataTool
 {
@@ -23,6 +24,21 @@ namespace WpfDataTool
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Window_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effects = DragDropEffects.Copy;
+        }
+
+        private void Window_Drop(object sender, DragEventArgs e)
+        {
+            (this.DataContext as MainViewModel).FileDroped((string[])e.Data.GetData(DataFormats.FileDrop));
+        }
+
+        private void TextBox_PreviewDragOver(object sender, DragEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }

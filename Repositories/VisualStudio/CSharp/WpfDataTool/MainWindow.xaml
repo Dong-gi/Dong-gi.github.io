@@ -3,10 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfDataTool"
+        xmlns:viewmodel="clr-namespace:WpfDataTool.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="400" Width="400" DragEnter="Window_DragEnter" Drop="Window_Drop">
+    
+    <Window.Resources>
+        <viewmodel:MainViewModel x:Key="mainViewModel"/>
+    </Window.Resources>
+
+    <Window.DataContext>
+        <Binding Source="{StaticResource mainViewModel}"/>
+    </Window.DataContext>
+    
     <Grid>
-        
+        <TextBox Text="{Binding LogText, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" AllowDrop="True" PreviewDragOver="TextBox_PreviewDragOver" />
     </Grid>
 </Window>

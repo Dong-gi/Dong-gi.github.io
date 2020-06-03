@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WpfDataTool.Model.Dto
 {
-    static class Postgres
+    public static class Postgres
     {
         /// <summary>
         /// information_schema.tables
