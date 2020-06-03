@@ -30,145 +30,43 @@ include ../../source/skeleton.jade
 
     h1.marker 특수문자 영문명
     +asA('https://www.owasp.org/index.php/Password_special_characters', '참고자료')
-    table.no-sort
-        tr
-            th Character
-            th Name
-            th Unicode
-        tr
-            td
-            td Space
-            td U+0020
-        tr
-            td  !
-            td Exclamation
-            td U+0021
-        tr
-            td "
-            td Doublequote
-            td U+0022
-        tr
-            td #
-            td Numbersign(hash)
-            td U+0023
-        tr
-            td $
-            td Dollarsign
-            td U+0024
-        tr
-            td  %
-            td Percent
-            td U+0025
-        tr
-            td &
-            td Ampersand
-            td U+0026
-        tr
-            td '
-            td Singlequote
-            td U+0027
-        tr
-            td (
-            td Leftparenthesis
-            td U+0028
-        tr
-            td )
-            td Rightparenthesis
-            td U+0029
-        tr
-            td *
-            td Asterisk
-            td U+002A
-        tr
-            td +
-            td Plus
-            td U+002B
-        tr
-            td ,
-            td Comma
-            td U+002C
-        tr
-            td -
-            td Minus
-            td U+002D
-        tr
-            td .
-            td Fullstop
-            td U+002E
-        tr
-            td /
-            td Slash
-            td U+002F
-        tr
-            td  :
-            td Colon
-            td U+003A
-        tr
-            td  ;
-            td Semicolon
-            td U+003B
-        tr
-            td &lt;
-            td Lessthan
-            td U+003C
-        tr
-            td =
-            td Equalsign
-            td U+003D
-        tr
-            td >
-            td Greaterthan
-            td U+003E
-        tr
-            td  ?
-            td Questionmark
-            td U+003F
-        tr
-            td @
-            td Atsign
-            td U+0040
-        tr
-            td [
-            td Leftbracket
-            td U+005B
-        tr
-            td \
-            td Backslash
-            td U+005C
-        tr
-            td ]
-            td Rightbracket
-            td U+005D
-        tr
-            td ^
-            td Caret
-            td U+005E
-        tr
-            td _
-            td Underscore
-            td U+005F
-        tr
-            td `
-            td Graveaccent(backtick)
-            td U+0060
-        tr
-            td {
-            td Leftbrace
-            td U+007B
-        tr
-            td |
-            td Verticalbar
-            td U+007C
-        tr
-            td }
-            td Rightbrace
-            td U+007D
-        tr
-            td ~
-            td Tilde
-            td U+007E
+    table
+        +ths('Character','Name','Unicode')
+        +tds('','Space','U+0020')
+        +tds('!','Exclamation','U+0021')
+        +tds('"','Doublequote','U+0022')
+        +tds('#','Numbersign(hash)','U+0023')
+        +tds('$','Dollarsign','U+0024')
+        +tds('%','Percent','U+0025')
+        +tds('&','Ampersand','U+0026')
+        +tds("'",'Singlequote','U+0027')
+        +tds('(','Leftparenthesis','U+0028')
+        +tds(')','Rightparenthesis','U+0029')
+        +tds('*','Asterisk','U+002A')
+        +tds('+','Plus','U+002B')
+        +tds(',','Comma','U+002C')
+        +tds('-','Minus','U+002D')
+        +tds('.','Fullstop','U+002E')
+        +tds('/','Slash','U+002F')
+        +tds(':','Colon','U+003A')
+        +tds(';','Semicolon','U+003B')
+        +tds('<','Lessthan','U+003C')
+        +tds('=','Equalsign','U+003D')
+        +tds('>','Greaterthan','U+003E')
+        +tds('?','Questionmark','U+003F')
+        +tds('@','Atsign','U+0040')
+        +tds('[','Leftbracket','U+005B')
+        +tds('\\','Backslash','U+005C')
+        +tds(']','Rightbracket','U+005D')
+        +tds('^','Caret','U+005E')
+        +tds('_','Underscore','U+005F')
+        +tds('`','Graveaccent(backtick)','U+0060')
+        +tds('{','Leftbrace','U+007B')
+        +tds('|','Verticalbar','U+007C')
+        +tds('}','Rightbrace','U+007D')
+        +tds('~','Tilde','U+007E')
 
-    h1.marker VS Code 팁
+    h1.marker VS Code
     ul
         li.marker 단축키로 날짜 입력
         +asA('https://marketplace.visualstudio.com/items?itemName=jsynowiec.vscode-insertdatestring')
@@ -184,7 +82,7 @@ include ../../source/skeleton.jade
         li DOM 변경 시 중단 : Elements 탭의 타깃 요소 - 우클릭 - Break on 설정
         li 지역변수를 콘솔에서 사용 : 변수 - 우클릭 - Store as global variable
 
-    h1.marker 윈도우 팁
+    h1.marker 윈도우
     ul
         li.marker 차단한 앱 알림 해제
         p 레지스트리 : HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\
@@ -230,10 +128,10 @@ include ../../source/skeleton.jade
         li media.play-stand-alone 항목 false로 설정
 
             ils
-    h1.marker Visual Studio 리소스 디렉터리 전체 출력 디렉터리에 복사
-    ul
-        li 프로젝트 파일 편집
-        li 예. temp 디렉터리 하위 항목을 모두 복사하려는 경우.
+    h1.marker Visual Studio
+    ol
+        li.marker 리소스 디렉터리 전체 출력 디렉터리에 복사
+        p 예시(temp 디렉터리 하위 항목 모두 복사)처럼 프로젝트 파일 편집.
         +asCode('xml').
             &lt;ItemGroup>
                 &lt;Content Include="temp\**">
@@ -241,8 +139,8 @@ include ../../source/skeleton.jade
                 &lt;/Content>
             &lt;/ItemGroup>
 
-    h1.marker Visual Studio 정의 탐색(F12) 실패 해결
-    p NuGet 패키지 Microsoft.Net.Compilers 설치
+        li 정의 탐색(F12) 실패 해결
+        p NuGet 패키지 Microsoft.Net.Compilers 설치
 
     h1.marker Nox ADB 연결
     ul

@@ -1,119 +1,123 @@
 include ../../source/skeleton.jade
 +post('JavaEE', 'JavaEE, Servlet, tomcat, JSP, Spring', 'JavaEE 정리')
-    details
-        summary JavaEE
-        ol
-            li Java Enterprise Edition은 동적 웹 애플리케이션 개발을 위한 자바 플랫폼이다.
-            | JavaSE와 다른 문서 페이지를 참조해야 한다.
-            a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://javaee.github.io/javaee-spec/javadocs/') https://javaee.github.io/javaee-spec/javadocs/
-            li WAR(Web Application Archive) : JavaEE 웹 애플리케이션을 위한 압축 파일
-            pre.
-                \n웹 애플리케이션 루트
-                ㄴ META-INF
-                        ㄴ MANIFEST.MF
-                        ㄴ 컨테이너 지원
-                ㄴ WEB-INF : 웹에서 접근 불가
-                        ㄴ classes
-                                ㄴ META-INF
-                                        ㄴ 애플리케이션 자원
-                                ㄴ 자바 .class 파일 및 자원
-                        ㄴ i88n
-                                ㄴ 국제화 파일
-                        ㄴ lib
-                                ㄴ 번들 jar 파일
-                        ㄴ tags
-                                ㄴ JSP 태그 파일
-                        ㄴ tld
-                                ㄴ JSP 태그 라이브러리 설명자
-                ㄴ 기타 웹에서 접근 가능한 파일
-            li 서블릿
+    h1.marker JavaEE
+    ol
+        li Java Enterprise Edition은 동적 웹 애플리케이션 개발을 위한 자바 플랫폼이다.
+        p
+            | JavaSE와는 문서 페이지가 다르다. 
+            +asA('https://javaee.github.io/javaee-spec/javadocs/')
+        li WAR(Web Application Archive) : JavaEE 웹 애플리케이션을 위한 압축 파일
+        p 전통적인 war 파일 구조 ↓
+        +asCode().
+            웹앱 루트
+            ㄴ META-INF
+                ㄴ MANIFEST.MF
+                ㄴ 컨테이너 지원
+            ㄴ WEB-INF : 웹에서 접근 불가
+                ㄴ classes
+                    ㄴ META-INF
+                        ㄴ 애플리케이션 자원
+                    ㄴ 자바 .class 파일 및 자원
+                ㄴ i88n
+                    ㄴ 국제화 파일
+                ㄴ lib
+                    ㄴ 번들 jar 파일
+                ㄴ tags
+                    ㄴ JSP 태그 파일
+                ㄴ tld
+                    ㄴ JSP 태그 라이브러리 설명자
+            ㄴ 기타 웹에서 접근 가능한 파일
+        li 서블릿
+        p
             | 자바로 구현된 CGI(Common Gateway Interface; 웹 서버와 프로그램 사이의 통신 규약).
-            | JCP(Java Community Process)에서 제정한 Servlet Specification을 따라야 한다.
-            li 서블릿 컨테이너
-            | 서블릿의 생애를 관리하는 프로그램(예. 톰캣)
-            li JSP
+            |  JCP(Java Community Process)에서 제정한 Servlet Specification을 따라야 한다.
+        li 서블릿 컨테이너
+        p 서블릿의 생애를 관리하는 프로그램(예. 톰캣)
+        li JSP
+        p
             | 전용 태그 "&lt;% %>"를 이용해 HTML 문서에 자바 코드를 삽입.
-            | 컨테이너가 알아서 컴파일 하며, 서블릿 클래스와 달리 수정사항이 있어도 다시 빌드할 필요가 없다.
-    hr
-    details
-        summary 개발환경
+            |  컨테이너가 자동으로 컴파일 하며, 서블릿 클래스와 달리 수정사항이 있어도 다시 빌드할 필요가 없다.
+
+    h1.marker 톰캣 배포 프로젝트
+    div
+        h2.marker 개발 환경
         ol
             li
-                a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='http://openjdk.java.net/install/') OpenJDK
-                | 설치
+                +asA('http://openjdk.java.net/install/', 'OpenJDK')
+                |  설치
             li
-                a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://tomcat.apache.org/') 톰캣
-                | 설치
-            | + posts/tip/tomcat.html 참고
+                +asA('https://tomcat.apache.org/', '톰캣')
+                |  설치
             li IDE(이클립스, STS 등) 설치
-            li 이클립스에 톰캣 추가
-            | Windows » Preferences » Server » Runtime Environments » Add » Apache
-            li 이클립스 프로젝트에 톰캣 구성 추가
-            | 프로젝트 Server 속성에 추가.
-            li IntelliJ에 톰캣 추가
-            | Settings » Application Servers » + » 톰캣 홈 디렉터리 추가
-            li IntelliJ 프로젝트에 톰캣 구성 추가
-            | 도구 모음에서 Run/Debug Configurations 아이콘(아래방향 화살표)을 누른 다음 Edit Configurations 클릭
-            br
-            | 옵션. 대화상자가 열리면 + 버튼 클릭 후 Tomcat Server를 Local로 추가.
-            br
-            | 옵션. 배포할 아티팩트를 선택하지 않았다는 경고가 표시되면 Deployment 탭을 누르고 "Deploy atthe server setup" 머리글 아래의 + 버튼 클릭. Artifact를 누르고
-            | 확장된 war 파일 아티팩트를 누른 다음 OK. 배포를 위한 "Application context"이름을 서버를 기준으로 한 상대 주소로 변경(예. /my-app)
-    hr
-    details
-        summary Hello World 프로젝트
-        details
-            summary 이클립스 Dynamic Web Project
+            ul
+                li 이클립스에 톰캣 추가
+                +asCode() Windows » Preferences » Server » Runtime Environments » Add » Apache
+                li 이클립스 프로젝트에 톰캣 구성 추가
+                +asCode() 프로젝트 Server 속성에 추가.
+                li IntelliJ에 톰캣 추가
+                +asCode() Settings » Application Servers » + » 톰캣 홈 디렉터리 추가
+                li IntelliJ 프로젝트에 톰캣 구성 추가
+                +asCode().
+                    도구 모음에서 Run/Debug Configurations 아이콘(아래방향 화살표)을 누른 다음 Edit Configurations 클릭
+                    
+                    대화상자가 열리면 + 버튼 클릭 후 Tomcat Server를 Local로 추가.
+                    
+                    배포할 아티팩트를 선택하지 않았다는 경고가 표시되면 Deployment 탭을 누르고 "Deploy at the server setup" 머리글 아래의 + 버튼 클릭.
+                    Artifact를 누르고 확장된 war 파일 아티팩트를 누른 다음 OK. 배포를 위한 "Application context"이름을 서버를 기준으로 한 상대 주소로 변경(예. /my-app)
+
+        h2.marker Hello World 프로젝트
+        div
+            h3.marker 이클립스 Dynamic Web Project
             ol
                 li New Project » Web » Dynamic Web Project » Target runtime에 톰캣 설정
-                img.w3-round(src='imgs/20180929_220300.png')
+                +w3img('/imgs/20180929_220300.png')
                 li 코드 작성
-                img.w3-round(src='imgs/20180929_220301.png')
-                br
+                +w3img('/imgs/20180929_220301.png')
                 +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello1.java', 'java') Hello1.java »
                 +codeBtn('/Repositories/Eclipse/app1/src/main/webapp/WEB-INF/web.xml', 'xml') web.xml »
-                br
-                | web.xml은 배포 설명자로, 서블릿 및 서블릿 매핑, 필터 등을 정의한다.
-                | 이클립스 프로젝트 생성 마법사로 web.xml을 생성하면 자동으로 welcome-file-list를 구성해주는데, welcome-file-list에 정의된 welcome-file을 순서대로 찾아 기본 페이지로 보여준다.
+                li web.xml
+                p
+                    | web.xml은 배포 설명자로, 서블릿 및 서블릿 매핑, 필터 등을 정의한다.
+                    |  이클립스 프로젝트 생성 마법사로 web.xml을 생성하면 자동으로 welcome-file-list를 구성해주는데, welcome-file-list에 정의된 welcome-file을 순서대로 찾아 기본 페이지로 보여준다.
                 li 실행
-                img.w3-round(src='imgs/20180929_220302.png')
-                br
-                | 또는 Export » WAR file를 선택하여 webapps 디렉터리에 추가하여 배치되기를 기다린 뒤 브라우저에서 실행.
+                +w3img('/imgs/20180929_220302.png')
+                p 또는 Export » WAR file를 선택하여, 톰캣 webapps 디렉터리에 옮긴 후 배치되기를 기다린 뒤 브라우저에서 실행.
                 li 이클립스 내부에서 실행하는 경우 웹 애플리케이션 배포 위치
-                | %이클립스 프로젝트 디렉터리%\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Web01\WEB-INF
-        details
-            summary 톰캣에 직접 배치
+                p ${PROJECT_ROOT}\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Web01\WEB-INF
+
+            h3.marker 톰캣에 직접 배치
             ol
-                li 위와 동일하게 HelloWorld.java 작성
+                li
+                    | 위와 동일하게 HelloWorld.java 작성 
+                    +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello1.java', 'java') Hello1.java »
                 li 컴파일
                 ul
                     li 톰캣 lib를 클래스패스로 넘기는 경우
-                    | javac -encoding UTF-8 -cp "C:\apache-tomcat-8.0.52\lib\servlet-api.jar" HelloWorld.java
+                    +asCode('shell') javac -encoding UTF-8 -cp "C:\apache-tomcat-8.0.52\lib\servlet-api.jar" HelloWorld.java
                     li JDK의 jre/lib/ext에 servlet-api.jar를 붙여넣은 경우
-                    | javac -encoding UTF-8 HelloWorld.java
-                li 컴파일된 클래스 파일을 webapps/"웹모듈명"/WEB-INF/classes/"패키지 경로"/ 에 저장
-                li 동일한 배포 설명자 web.xml을 WEB-INF에 작성하고 실행
-        details
-            summary 이클립스 Maven 프로젝트
+                    +asCode('shell') javac -encoding UTF-8 HelloWorld.java
+                li 컴파일된 클래스 파일을 webapps/${웹모듈명}/WEB-INF/classes/${패키지 경로}/ 에 저장
+                li
+                    | 동일한 배포 설명자 web.xml을 WEB-INF에 작성하고 실행 
+                    +codeBtn('/Repositories/Eclipse/app1/src/main/webapp/WEB-INF/web.xml', 'xml') web.xml »
+
+            h3.marker 이클립스 Maven 프로젝트
             ol
                 li New Project » Maven » Maven Project » maven-archetype-webapp
-                img.w3-round(src='imgs/20180930_154849.png')
-                br
-                | webapp 아티팩트로 프로젝트를 만들면 Hello World를 출력하는 index.jsp가 생성된다.
+                +w3img('/imgs/20180930_154849.png')
+                p webapp 아티팩트로 프로젝트를 만들면 Hello World를 출력하는 index.jsp가 생성된다.
                 li Maven Install, 빌드하여 war 파일이 생성되면 톰캣 webapps 디렉터리에 붙여넣고 배치되기를 기다린 뒤 브라우저에서 실행
-                | maven이 pom.xml에 정의된 라이브러리를 /users/유저이름/.m2 폴더에 다운로드한다.
-    hr
-    details
-        summary 서블릿 생애 주기
+                p maven이 pom.xml에 정의된 라이브러리를 /users/유저이름/.m2 폴더에 다운로드한다.
+
+        h2.marker 서블릿 생애 주기
         ol
             li 서블릿 컨테이너에 의해 최초로 로드되어 인스턴스 생성
             li init()
             li 각 요청마다 service() 호출
             li destroy()
-                +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/LifeCycle.java', 'java') 예시 코드 »
-    hr
-    details
-        summary web.xml 대신 애너테이션으로 서블릿 기술하기
+            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/LifeCycle.java', 'java')
+
+        h2.marker web.xml 대신 애너테이션으로 서블릿 기술
         ol
             li WebServlet 애너테이션으로 배포설명자 web.xml 대신 간결하게 서블릿을 기술할 수 있다.
             +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello2.java', 'java') value
@@ -122,22 +126,20 @@ include ../../source/skeleton.jade
             li urlPatterns : 배포설명자의 url-pattern들의 배열에 해당.
             li value : urlPatterns 요소와 동일하게 동작하기 때문에, 서블릿 매핑만을 기술할 거라면 편하게 WebServlet("/hello")처럼 기술할 수 있다.
             li initParams : 배포설명자의 init-param들의 배열에 해당.
-            | GenericServlet#getInitParameter로 참조할 수 있으며, 이 메서드는 ServletConfig#getInitParameter를 호출한다. ServletConfig는 getServletConfig 메서드로 참조할 수 있다.
+            p GenericServlet#getInitParameter로 참조할 수 있으며, 이 메서드는 ServletConfig#getInitParameter를 호출한다. ServletConfig는 getServletConfig 메서드로 참조할 수 있다.
             li loadOnStartup : 컨테이너가 애플리케이션을 시작할 때, 클라이언트의 요청이 없어도 자동으로 초기화를 진행한다.
-            | Non-negative 정수로 설정하며, 0에 가까울수록 우선 초기화
-            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello5.java', 'java') loadOnStartup
-    hr
-    details
-        summary JDBC 예시
+            p
+                | Non-negative 정수로 설정하며, 0에 가까울수록 우선 초기화
+                +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello5.java', 'java') loadOnStartup
+
+        h2.marker JDBC 예시
         ol
             li 드라이버 설치
-            | 톰캣 lib(C:\apache-tomcat-8.0.52\lib)에 복사
-            br
-            | 또는, 웹 애플리케이션 lib(프로젝트 경로\WebContent\WEB-INF\lib)에 복사
-            br
-            | 또는, 프로젝트에서 직접 포함
+            ul
+                li 톰캣 lib(예. C:\apache-tomcat-8.0.52\lib)에 복사
+                li 또는 웹 애플리케이션 lib(${프로젝트}\WebContent\WEB-INF\lib)에 복사
+                li 또는 프로젝트에 직접 포함
             li 사용하기 전에 드라이버 클래스 로드
-            | 로드할 JDBC 클래스 이름은 다운로드 받은 압축파일의 html 문서에 있음
             li 사용하기
                 +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello4.java', 'java') JDBC Test »
             ul
@@ -220,7 +222,7 @@ include ../../source/skeleton.jade
             ul
                 li &lt;%@ %> : 지시자; Directive : page, taglib, include 3종류가 있다
                 li &lt;% %> : Scriptlet : 일반 자바 코드를 작성하면 된다. _jspService 메서드 안의 코드로, 매개변수를 포함한 아래의 변수들을 참조할 수 있다.
-                img.w3-round(src='imgs/20190912_191500.png')
+                +w3img('/imgs/20190912_191500.png')
                 li &lt;%! %> : 선언문; Declaration : 서블릿 클래스의 멤버 정의
                 li &lt;%= %> : Expression : out#print 또는 out#write에 들어갈 값을 반환하는 문장을 작성하면 된다
     hr
@@ -477,8 +479,7 @@ include ../../source/skeleton.jade
                 li Join Point : Aspect 실행 지점
                 li Advice : Join Point에서 실행되는 코드
                 li Pointcut : 일치하는 Join Point에 대한
-                    a.w3-btn.w3-round.w3-round-xxlarge.w3-small.w3-green(target='_blank', href='https://www.eclipse.org/aspectj/doc/next/progguide/semantics-pointcuts.html') 정규 표현식
-                    | .
+                    +asA('https://www.eclipse.org/aspectj/doc/next/progguide/semantics-pointcuts.html', '정규 표현식')
                 | Advice는 Pointcut과 연관되며, 일치하는 모든 Join Point에서 실행된다.
                 li Weaving : Advice 코드를 삽입
                 | 세 가지 Weaving 방식 : 컴파일 타임 위빙, 클래스 로드 타임 위빙, 런타임 위빙
@@ -695,9 +696,9 @@ include ../../source/skeleton.jade
                 +codeBtn('/Repositories/STS/rest-microservice/src/main/java/io/github/donggi/controller/HelloController.java', 'java') HelloController.java
                 +codeBtn('/Repositories/STS/rest-microservice/src/test/java/io/github/donggi/controller/HelloControllerTest.java', 'java') HelloControllerTest.java
                 li 스프링 부트 마이크로서비스는 실행에 필요한 모든 의존 라이브러리, HTTP 리스너 등을 하나의 jar로 패키징한다
-                img.w3-round(src='imgs/20191006_180335.png')
-                img.w3-round(src='imgs/20191006_180348.png')
-                img.w3-round(src='imgs/20191006_180401.png')
+                +w3img('/imgs/20191006_180335.png')
+                +w3img('/imgs/20191006_180348.png')
+                +w3img('/imgs/20191006_180401.png')
                 li mvn install하면 bootJar가 빌드된다
                     br
                     | java -jar target/rest-microservice-0.0.1-SNAPSHOT.jar
@@ -728,7 +729,7 @@ include ../../source/skeleton.jade
                 +codeBtn('/Repositories/STS/reactive-webflux/pom.xml', 'xml') pom.xml
                 +codeBtn('/Repositories/STS/reactive-webflux/src/main/java/io/github/donggi/controller/HelloController.java', 'java') HelloController.java
                 +codeBtn('/Repositories/STS/reactive-webflux/src/test/java/io/github/donggi/controller/HelloControllerTest.java', 'java') HelloControllerTest.java
-                img.w3-round(src='imgs/20191008_110029.png')
+                +w3img('/imgs/20191008_110029.png')
                 li 리액티브 스트림 : java.util.concurrent.Flow
                 ul
                     li Publisher : 발행자. subscribe​(Subscriber)
@@ -748,7 +749,7 @@ include ../../source/skeleton.jade
             summary Spring Config Server
             ol
                 li Config Server 선택
-                img.w3-round(src='imgs/20191009_095724.png')
+                +w3img('/imgs/20191009_095724.png')
                 li 예시 코드
                 +codeBtn('/Repositories/STS/config-server/src/main/resources/bootstrap.properties', 'text') bootstrap.properties
                 +codeBtn('/Repositories/STS/config-server/src/main/java/io/github/donggi/ConfigServerApplication.java', 'java') @EnableConfigServer
@@ -764,23 +765,23 @@ include ../../source/skeleton.jade
                     li /{label}/{application}-{profile}.yml
                     li /{application}-{profile}.properties
                     li /{label}/{application}-{profile}.properties
-                    img.w3-round(src='imgs/20191009_115402.png')
+                    +w3img('/imgs/20191009_115402.png')
                 li 갱신 : http://localhost:28888/actuator/refresh
         details
             summary Spring Config Client
             ol
                 li Config Client, Actuator 선택
-                img.w3-round(src='imgs/20191009_124833.png')
+                +w3img('/imgs/20191009_124833.png')
                 li 예시 코드
                 +codeBtn('/Repositories/Config/config-client.properties', 'text') config-client.properties
                 +codeBtn('/Repositories/STS/config-client/src/main/resources/bootstrap.properties', 'text') bootstrap.properties
                 +codeBtn('/Repositories/STS/config-client/src/main/java/io/github/donggi/controller/HelloController.java', 'java') HelloController.java
                 li 접근 예 http://localhost:18888/hello
-                img.w3-round(src='imgs/20191009_122755.png')
+                +w3img('/imgs/20191009_122755.png')
                 li 갱신 : POST http://localhost:18888/actuator/refresh
                 | http://localhost:18888/actuator/에 접속했을 때 /refresh가 보이지 않는다면 management.security.enabled=false, management.endpoints.web.exposure.include=* 2개 설정 확인
-                img.w3-round(src='imgs/20191009_124710.png')
-                img.w3-round(src='imgs/20191009_124647.png')
+                +w3img('/imgs/20191009_124710.png')
+                +w3img('/imgs/20191009_124647.png')
         ol
             li @Async
             | 메서드를 스프링이 관리하는 ThreadExecutor에서 비동기적으로 실행하는 프록시를 생성한다.
