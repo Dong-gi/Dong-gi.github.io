@@ -455,19 +455,24 @@ class DataGrid {
     }
     /**
      * @param {String} text CSV String
-     * - If csv heads given, quoted string could contains '\n'.
+     * - If csv heads given, quoted string could contains '\n' or escaped quote.
      * @param {Object} opt CSV Option
      * - opt.noHead : Boolean, default false
-     * - opt.delimiter : String for RegExp, default ',' or '\t' which exists more in first line.
+     * - opt.delimiter : String for RegExp, default ',' or '\\t' which exists more in first line.
      * - opt.quote : String for RegExp, default '"'
      * - opt.escape : String for RegExp, default '\\\\'. This used for escaped quote
      * @returns {DataGrid}
      */
     static fromCSV(text, opt) {
         opt = opt || {};
-        opt.delimiter = opt.delimiter || (text.split('\n', 1)[0].replace(',', '').length < text.split('\n', 1)[0].replace('\t', '').length ? ',' : '\t');
+        opt.delimiter = opt.delimiter || (text.split('\n', 1)[0].replace(',', '').length < text.split('\n', 1)[0].replace('\t', '').length ? ',' : '\\t');
         opt.quote = opt.quote || '"';
         opt.escape = opt.escape || '\\\\';
+
+        const unquotedDataRegex1 = new RegExp(`^([^\n${opt.delimiter}${opt.quote}]*)${opt.delimiter}`);
+        const unquotedDataRegex2 = new RegExp(`^([^${opt.delimiter}${opt.quote}]*)\n`);
+        const quotedDataRegex1 = new RegExp(`^${opt.quote}(.*?)${opt.quote}(${opt.delimiter}|\n)?`, 'mi');
+        const quotedDataRegex2 = new RegExp(`^${opt.quote}([\\s\\S\n]*?)${opt.quote}(${opt.delimiter}|\n)?`, 'mi');
 
         // Normalize
         text = text.replace(/\r\n/gm, '\n');
@@ -500,48 +505,28 @@ class DataGrid {
                 line = text;
                 text = '';
             }
-
-            let data = [];
-            let tokens = line.split(opt.delimiter);
             let token;
-            let isMulti = false;
-            for (let i = 0; i < tokens.length; ++i) {
-                if (isMulti) {
-                    // Case : Multiple quoted data token(end)
-                    if (tokens[i].endsWith(opt.quote)) {
-                        data.push(token + unQuote(tokens[i]));
-                        isMulti = false;
-                        continue;
-                    }
-                    // Case : Multiple quoted data token(middle)
-                    token = token + tokens[i] + opt.delimiter;
+            let data = [];
+            while (line.length > 0) {
+                if (token = unquotedDataRegex1.exec(line)) {
+                    data.push(token[1]);
+                    line = line.replace(unquotedDataRegex1, '');
+                } else if (token = unquotedDataRegex2.exec(line)) {
+                    data.push(token[1]);
+                    line = line.replace(unquotedDataRegex2, '');
+                } else if (token = quotedDataRegex1.exec(line)) {
+                    data.push(token[1]);
+                    line = line.replace(quotedDataRegex1, '');
                 } else {
-                    token = tokens[i];
-                    // Case : Single quoted data token
-                    if (token.startsWith(opt.quote) && token.endsWith(opt.quote) && token.length >= opt.quote.length * 2) {
-                        data.push(unQuote(token));
-                        continue;
-                    }
-                    // Case : Multiple quoted data token(start)
-                    if (token.startsWith(opt.quote)) {
-                        token = unQuote(token);
-                        token += opt.delimiter;
-                        isMulti = true;
-                        continue;
-                    }
-                    // Case : Single unquoted data token
-                    data.push(token);
+                    data.push(line);
+                    line = '';
                 }
             }
             return restoreQuote(data);
         }
         function parseRest() {
-            const unquotedDataRegex1 = new RegExp(`^([^\n${opt.delimiter}${opt.quote}]*)${opt.delimiter}`);
-            const unquotedDataRegex2 = new RegExp(`^([^${opt.delimiter}${opt.quote}]*)\n`);
-            const quotedDataRegex = new RegExp(`^${opt.quote}([\\s\\S\n]*?)${opt.quote}(${opt.delimiter}|\n)?`, 'mi');
             let token;
             let line = [];
-            let isMulti = false;
             while (text.length > 0) {
                 if (token = unquotedDataRegex1.exec(text)) {
                     line.push(token[1]);
@@ -549,9 +534,9 @@ class DataGrid {
                 } else if (token = unquotedDataRegex2.exec(text)) {
                     line.push(token[1]);
                     text = text.replace(unquotedDataRegex2, '');
-                } else if (token = quotedDataRegex.exec(text)) {
+                } else if (token = quotedDataRegex2.exec(text)) {
                     line.push(token[1]);
-                    text = text.replace(quotedDataRegex, '');
+                    text = text.replace(quotedDataRegex2, '');
                 } else {
                     line.push(text);
                     text = '';
@@ -561,9 +546,6 @@ class DataGrid {
                     line = [];
                 }
             }
-        }
-        function unQuote(str) {
-            return str.replace(new RegExp(opt.quote, 'g'), '')
         }
         function restoreQuote(arr) {
             for (let i = 0; i < arr.length; ++i)
