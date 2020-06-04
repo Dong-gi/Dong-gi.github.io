@@ -163,7 +163,7 @@ function updateSidebar() {
     else
         openSidebar();
     document.getElementById('sidebar').style.width = '333px';
-    new FileList('/source/filelist.js', '#file-list');
+    new DKFileList('/source/filelist.js', '#file-list');
 }
 
 function openSidebar() {
@@ -202,7 +202,7 @@ function updatePostList() {
     let url = URL.createObjectURL(new Blob([Donggi.makeLSlikeText('카테고리', categoryMap, 'posts')], {
         type: 'text/plain;charset=utf-8;'
     }));
-    new FileList(url, '#post-list', null, false, (category, title) => {
+    new DKFileList(url, '#post-list', null, false, (category, title) => {
         let post = posts.list.filter(x => x.title == title)[0];
         return Donggi.getElementFromText(`<li><a href="${post.file}">${title}</a></li>`);
     });
@@ -248,7 +248,7 @@ function updateMarkerList() {
     let url = URL.createObjectURL(new Blob([Donggi.makeLSlikeText('컨텐츠', markerMap, 'markers')], {
         type: 'text/plain;charset=utf-8;'
     }));
-    new FileList(url, '#marker-list', (_, markerId) => {
+    new DKFileList(url, '#marker-list', (_, markerId) => {
         if (isNarrow())
             closeSidebar();
         let target = document.querySelector(`.marker[marker-id=${markerId}]`);
@@ -268,19 +268,33 @@ function updateMarkerList() {
             });
         })(target), isNarrow()? 444 : 0);
     }, true, (_, markerId) => {
-        let marker = document.querySelector(`.marker[marker-id=${markerId}]`);
-        let name = getMarkerName(marker);
-        let li = Donggi.getElementFromText(`<li title="${name}">${name.substr(0, 30)}</li>`);
+        let target = document.querySelector(`.marker[marker-id=${markerId}]`);
+        let name = getMarkerName(target);
+        let li = Donggi.getElementFromText(`<li class="${target.classList.contains('fake')? 'w3-hide' : ''}" title="${name}" marker-id="${markerId}">${name.substr(0, 25)}</li>`);
         
         let main = document.querySelector('div#contents');
-        let level = 1;
-        while (marker.parentElement != main) {
-            marker = marker.parentElement;
+        let level = 0;
+        while (target.parentElement != main) {
+            target = target.parentElement;
             level += 1;
         }
         li.classList.add(`margin-left-${level}`);
+        li.setAttribute('level', level);
         return li;
-    }, false);
+    }, false, () => {
+        let levels = [0, 0, 0, 0, 0, 0, 0, 0];
+        const headerTags = new Set(['H1', 'H2', 'H3', 'H4', 'H5', 'H6']);
+        for (let li of document.getElementById('marker-list').querySelectorAll('li')) {
+            let current = parseInt(li.getAttribute('level'));
+            levels[current]++;
+            levels.fill(0, current+1);
+            let prefix = `${levels.filter(x => x > 0).join('.')}. `;
+            li.innerText = `${prefix}${li.innerText}`;
+            let target = document.querySelector(`.marker[marker-id=${li.getAttribute('marker-id')}]`);
+            if (headerTags.has(target.tagName))
+                target.innerText = `${prefix}${target.innerText}`;
+        }
+    });
 }
 
 function getMarkerName(marker) {
@@ -453,7 +467,7 @@ function getCodeModalHTML(id, filename) {
 </div>`;
 }
 
-class FileList {
+class DKFileList {
     /**
      * document.querySelector(targetQuery) 항목을 찾아 파일 목록들로 채운다.
      *
@@ -462,8 +476,9 @@ class FileList {
      * @param {Boolean} openAll Optional. 목록을 처음부터 모두 열 것인지 여부. 기본값: false
      * @param {Function} fileHTMLmaker Optional. 디렉터리 경로와 파일명을 먹고 HTMLElement를 반환하는 함수. 기본값: li 요소 생성
      * @param {Boolean} sort Optional. 목록을 정렬할 지 여부. 기본값: true
+     * @param {Function} callback Optional. DKFileList => ?
      */
-    constructor(lsResultPath, targetQuery, fileAction, openAll, fileHTMLmaker, sort) {
+    constructor(lsResultPath, targetQuery, fileAction, openAll, fileHTMLmaker, sort, callback) {
         this.target = document.querySelector(targetQuery);
         this.fileAction = (!!fileAction)? fileAction : null;
         this.openAll = !!openAll;
@@ -472,6 +487,7 @@ class FileList {
         this.target.innerHTML = '';
         this.fileMap = new Map();
         this.rootDir = null;
+        this.callback = callback;
         
         if(!this.target)
             return;
@@ -496,6 +512,7 @@ class FileList {
                     files.sort(Donggi.compareString);
             console.log(fileList.fileMap);
             fileList.updateFileList(fileList.rootDir);
+            fileList.callback && fileList.callback(this);
         })(this));
         xhr.open("GET", lsResultPath, true);
         xhr.send();
@@ -504,7 +521,7 @@ class FileList {
     updateFileList(dir) {
         let details = document.getElementById(`dir-${dir.hashCode()}`);
         if (dir == this.rootDir && !details) {
-            this.target.append(FileList.getDirHTML(dir, '', true));
+            this.target.append(DKFileList.getDirHTML(dir, '', true));
             this.updateFileList(dir);
             return;
         }
@@ -523,19 +540,19 @@ class FileList {
                     path = `${path}/${this.fileMap.get(path)[0]}`;
                 if (this.fileMap.get(path).length < 1)
                     continue;
-                ul.append(FileList.getDirHTML(path, dir, this.openAll));
+                ul.append(DKFileList.getDirHTML(path, dir, this.openAll));
                 let dirAction = ((fileList, dir) => function (e) { fileList.updateFileList(dir); })(this, path);
                 document.getElementById(`dir-${path.hashCode()}`).firstChild.onclick = dirAction;
                 if (this.openAll)
                     this.updateFileList(path);
             } else {
                 if (!!this.fileAction) {
-                    let element = !!this.fileHTMLmaker? this.fileHTMLmaker(dir, name) : FileList.getFileHTMLwithoutA(dir, name);
+                    let element = !!this.fileHTMLmaker? this.fileHTMLmaker(dir, name) : DKFileList.getFileHTMLwithoutA(dir, name);
                     ul.append(element);
                     let fileAction = ((fileList, dir, name) => function (e) { fileList.fileAction(dir, name); })(this, dir, name);
                     element.onclick = fileAction;
                 } else
-                    ul.append(!!this.fileHTMLmaker? this.fileHTMLmaker(dir, name) : FileList.getFileHTMLwithA(this.rootDir, dir, name));
+                    ul.append(!!this.fileHTMLmaker? this.fileHTMLmaker(dir, name) : DKFileList.getFileHTMLwithA(this.rootDir, dir, name));
             }
         }
     }

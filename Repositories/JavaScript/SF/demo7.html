@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <script src="https://github.com/Dong-gi/SF/releases/download/0.3.0/sf.min.js"></script>
+    <script src="https://github.com/Dong-gi/SF/releases/download/0.3.1/sf.min.js"></script>
     <style>
         .sf-datagrid-cell {
             max-height: 100px;
@@ -35,15 +35,16 @@
 
             const datagrid1 = SF.asDataGrid(`information_id,body,start_date,end_date
 1,"안녕하세요.
-공지 \\"내용1\\"입니다.","2020-01-01 00:11:22","2020-01-01 11:22:33"
-2,"안녕하세요.
-공지 \\"내용2\\"입니다.","2020-02-02 00:11:22","2020-02-02 11:22:33"
+공지 \\"내용1\\"입,니다.","2020-01-01 00:11:22","2020-01-01 11:22:33
+asdf"
+2,"안녕하세요,
+공지 \\"내용2\\"입,니다.","2020-02-02 00:11:22","2020-02-02 11:22:33"
 `);
             const datagrid2 = SF.asDataGrid(`If opt.noHead == true,all data,must be,single line
 1,"안녕하세요.
-공지 \\"내용1\\"입니다.","2020-01-01 00:11:22","2020-01-01 11:22:33"
-2,"안녕하세요.
-공지 \\"내용2\\"입니다.","2020-02-02 00:11:22","2020-02-02 11:22:33"
+공지 \\"내용1\\"입,니다.","2020-01-01 00:11:22","2020-01-01 11:22:33"
+2,"안녕하세요,
+공지 \\"내용2\\"입,니다.","2020-02-02 00:11:22","2020-02-02 11:22:33"
 `, { noHead: true });
 
             const app1 = SF.build(document.getElementById('demo7-1'));

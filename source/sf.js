@@ -458,7 +458,7 @@ class DataGrid {
      * - If csv heads given, quoted string could contains '\n'.
      * @param {Object} opt CSV Option
      * - opt.noHead : Boolean, default false
-     * - opt.delimiter : String, default ',' or '\t' which exists more in first line.
+     * - opt.delimiter : String for RegExp, default ',' or '\t' which exists more in first line.
      * - opt.quote : String for RegExp, default '"'
      * - opt.escape : String for RegExp, default '\\\\'. This used for escaped quote
      * @returns {DataGrid}
@@ -536,67 +536,29 @@ class DataGrid {
             return restoreQuote(data);
         }
         function parseRest() {
-            let tokens = text.split(opt.delimiter);
-            let line = [];
+            const unquotedDataRegex1 = new RegExp(`^([^\n${opt.delimiter}${opt.quote}]*)${opt.delimiter}`);
+            const unquotedDataRegex2 = new RegExp(`^([^${opt.delimiter}${opt.quote}]*)\n`);
+            const quotedDataRegex = new RegExp(`^${opt.quote}([\\s\\S\n]*?)${opt.quote}(${opt.delimiter}|\n)?`, 'mi');
             let token;
+            let line = [];
             let isMulti = false;
-            for (let i = 0; i < tokens.length; ++i) {
-                let moreToken = null;
-                if (!isMulti) {
-                    // Case : Single quoted data token
-                    if (tokens[i].startsWith(opt.quote) && tokens[i].endsWith(opt.quote) && tokens[i].length >= opt.quote.length * 2) {
-                        // The processing is exists below
-                    }
-                    // Case : Last data token with '\n'
-                    else if (tokens[i].search('\n') >= 0)
-                        [tokens[i], moreToken] = tokens[i].split('\n');
-                }
-                if (isMulti) {
-                    // Case : Multiple quoted data token(end)
-                    if (tokens[i].endsWith(opt.quote)) {
-                        line.push(token + unQuote(tokens[i]));
-                        isMulti = false;
-                    }
-                    // Case : Multiple quoted data token(middle)
-                    else {
-                        token = token + tokens[i] + opt.delimiter;
-                    }
+            while (text.length > 0) {
+                if (token = unquotedDataRegex1.exec(text)) {
+                    line.push(token[1]);
+                    text = text.replace(unquotedDataRegex1, '');
+                } else if (token = unquotedDataRegex2.exec(text)) {
+                    line.push(token[1]);
+                    text = text.replace(unquotedDataRegex2, '');
+                } else if (token = quotedDataRegex.exec(text)) {
+                    line.push(token[1]);
+                    text = text.replace(quotedDataRegex, '');
                 } else {
-                    token = tokens[i];
-                    // Case : Single quoted data token
-                    if (token.startsWith(opt.quote) && token.endsWith(opt.quote) && token.length >= opt.quote.length * 2) {
-                        line.push(unQuote(token));
-                    }
-                    // Case : Multiple quoted data token(start)
-                    else if (token.startsWith(opt.quote)) {
-                        token = unQuote(token);
-                        token += opt.delimiter;
-                        isMulti = true;
-                    }
-                    // Case : Single unquoted data token
-                    else
-                        line.push(token);
+                    line.push(text);
+                    text = '';
                 }
                 if (line.length == heads.length) {
-                    line[line.length - 1] = line[line.length - 1].replace(/(.*)\n/, '$1');
                     data.push(toObject(restoreQuote(line)));
                     line = [];
-                }
-                if (moreToken !== null) {
-                    token = moreToken;
-                    // Case : Single quoted data token
-                    if (token.startsWith(opt.quote) && token.endsWith(opt.quote) && token.length >= opt.quote.length * 2) {
-                        line.push(unQuote(token));
-                    }
-                    // Case : Multiple quoted data token(start)
-                    else if (token.startsWith(opt.quote)) {
-                        token = unQuote(token);
-                        token += opt.delimiter;
-                        isMulti = true;
-                    }
-                    // Case : Single unquoted data token
-                    else
-                        line.push(token);
                 }
             }
         }
