@@ -356,7 +356,10 @@ function insertCodeDiv(id) {
                     button.after(script);
                 }
             })(button));
-            xhr.open("GET", `${path.startsWith('/') ? "" : "./"}${path.replace(/ /gm, '%20')}?${new Date().getTime()}`, true);
+            if (!/dong-gi\.github\.io/i.test(location.host))
+                xhr.open("GET", `${path.startsWith('/') ? "" : "./"}${path.replace(/ /gm, '%20')}`, true);
+            else
+                xhr.open("GET", `${path.startsWith('/') ? "" : "./"}${path.replace(/ /gm, '%20')}?${new Date().getTime()}`, true);
             xhr.send();
         } else {
             let div = document.getElementById(`code-div-${id}`);

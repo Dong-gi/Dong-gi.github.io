@@ -164,3 +164,23 @@ include ../../source/skeleton.jade
 
     h1.marker 기레기 고소 방법
     +w3img('/imgs/20190629_155650.jpg')
+
+    h1.marker 보안 관련
+    div
+        h2.marker Remote timing attack
+        ul
+            li 결론 : 동일 크기의 보안 입력에 대한 결과는 항상 동일한 시간으로 처리
+            li: +asA('https://codahale.com/a-lesson-in-timing-attacks/')
+            li 예를 들어 요청 해시와 실제 해시를 아래와 같이 비교한다고 할 때,
+            +asCode('java').
+                boolean isEqual(byte[] a, byte[] b) {
+                    if (a.length != b.length)
+                        return false;
+
+                    for (var i = 0; i < a.length; ++i)
+                        if (a[i] != b[i])
+                            return false;
+                    return true;
+                }
+            li 네트워크 연결 속도가 불안정한 상황에서도 최소 20마이크로초 단위로 서버의 응답 시간 차이를 식별할 수 있다고 한다
+            p LAN 환경에서는 그 한계가 100ns까지 떨어진다

@@ -397,6 +397,95 @@ include ../../source/skeleton.jade
                         +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Bean
                         +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans1.xml', 'xml') XML
                         +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello1Test.java', 'java') Context
+
+                    h5.marker Groovy DSL 메타데이터
+                    +asCode('groovy', 'services.groovy').
+                        beans {
+                            myService(MyService) {
+                                msg = "Hello World"
+                            }
+                        }
+                    +asCode('java').
+                        var context = new GenericGroovyApplicationContext("services.groovy");
+                    h5.marker 메타데이터 혼용
+                    p GenericApplicationContext를 이용하면 종류가 다른 메타데이터들을 혼용할 수 있다
+                    +asCode('java').
+                        var context = new GenericApplicationContext();
+                        new XmlBeanDefinitionReader(context).loadBeanDefinitions("services.xml", "daos.xml");
+                        new GroovyBeanDefinitionReader(context).loadBeanDefinitions("services.groovy", "daos.groovy");
+                        context.refresh();
+                
+                h4.marker Bean Overview
+                table.no-sort
+                    caption
+                        | 빈을 정의하는 요소 
+                        +asA('https://docs.spring.io/spring/docs/5.3.0-SNAPSHOT/javadoc-api/org/springframework/beans/factory/config/BeanDefinition.html')
+                    tr: td Class
+                    tr: td Name
+                    tr: td Scope
+                    tr: td Constructor arguments
+                    tr: td Properties
+                    tr: td Autowiring mode
+                    tr: td Lazy initialization mode
+                    tr: td Initialization method
+                    tr: td Destruction method
+                div
+                    h5.marker Naming Beans
+                    ul
+                        li 모든 빈은 이름을 가지며, 지정하지 않더라도 자동 할당된다
+                        li XML에서 빈 이름은 id 또는 name 속성으로 정의할 수 있다
+                        p id는 컨테이너 전체에 걸쳐 고유해야 하며, name은 여러 이름을 ',', ';', ' '로 구분하여 설정할 수 있다
+                        li 동일한 빈을 여러 이름으로 접근할 수 있다
+                        +asCode('xml').
+                            &lt;alias name="originalName" alias="alias1"/>
+                            &lt;alias name="originalName" alias="alias2"/>
+                    h5.marker Instantiating Beans
+                    ul
+                        li 빈 클래스로 static 클래스 지정 가능
+                        +asCode('xml') &lt;bean class="com.example.SomeThing$OtherThing"/>
+                        li 팩터리 메서드 지정 가능
+                        +asCode('xml').
+                            &lt;bean class="..." &lt;bean factory-method="newInstance"/>
+                            &lt;bean factory-bean="beanName" &lt;bean factory-method="newInstance"/>
+                        li 생성된 빈의 실제 타입은 BeanFactory#getType 메서드로 획득할 수 있다
+                    h5.marker Dependency Injection
+                    ul
+                        li 생성자 주입
+                        +asCode('xml').
+                            &lt;constructor-arg index="0" type="java.lang.String" name="msg" value="Hell World"/>
+                            &lt;constructor-arg value="Hell World"/>
+                            &lt;constructor-arg ref="beanName"/>
+                        p
+                            | index, type, name은 모호성을 피하기 위해 사용하며, name을 이용하는 경우 debug 컴파일하거나, 
+                            +asA('https://docs.oracle.com/javase/8/docs/api/java/beans/ConstructorProperties.html')
+                            | 를 이용해 이름을 탐색할 수 있게 해야한다.
+                        li 세터 주입
+                        p 인자 없는 생성자 또는 팩터리 메서드 호출 뒤, 세터를 호출하여 의존성을 주입한다
+                        +asCode('xml').
+                            &lt;
+                        li 익명 빈 + 생성자 주입 + 초기화 전/후 로직 BeanPostProcessor 예
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello4.java', 'java') Bean
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans4.xml', 'xml') XML
+                        +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test.java', 'java') Context
+                        li xmlns:c를 이용한 생성자 주입 예
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello4.java', 'java') Bean
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans6.xml', 'xml') XML
+                        +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test2.java', 'java') Context
+                        li 빈 생성 + 세터 주입 예
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Bean
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans1.xml', 'xml') XML
+                        +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello1Test.java', 'java') Context
+                        li p(property) xmlns:p를 이용한 세터 주입 예
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Bean
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans5.xml', 'xml') XML
+                        +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello1Test2.java', 'java') Context
+                        li 의존 객체 주입
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Hello1
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello4.java', 'java') Hello4
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans7.xml', 'xml') XML
+                        +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test3.java', 'java') Context
+                
+                
             ul
                 li 빈 Scope
                 ul
@@ -409,10 +498,6 @@ include ../../source/skeleton.jade
                 +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello16.java', 'java') Hello16 빈 클래스
                 +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans21.xml', 'xml') 빈 구성 파일
                 +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello15Test.java', 'java') 빈 사용 클래스
-                li p(property) xmlns:p를 이용한 세터 주입 예
-                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Hello1 빈 클래스
-                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans5.xml', 'xml') 빈 구성 파일
-                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello1Test2.java', 'java') 빈 사용 클래스
                 li 빈 초기화/소멸 로직 InitializingBean, DisposableBean 예
                     +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello2.java', 'java') Hello2 빈 클래스
                     +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans2.xml', 'xml') 빈 구성 파일
@@ -421,19 +506,6 @@ include ../../source/skeleton.jade
                     +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello3.java', 'java') Hello3 빈 클래스
                     +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans3.xml', 'xml') 빈 구성 파일
                     +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello3Test.java', 'java') 빈 사용 클래스
-                li 익명 빈 + 생성자 주입 + 초기화 전/후 로직 BeanPostProcessor 예
-                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello4.java', 'java') Hello4 빈 클래스
-                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans4.xml', 'xml') 빈 구성 파일
-                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test.java', 'java') 빈 사용 클래스
-                li c(constructor) xmlns를 이용한 생성자 주입 예
-                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello4.java', 'java') Hello4 빈 클래스
-                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans6.xml', 'xml') 빈 구성 파일
-                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test2.java', 'java') 빈 사용 클래스
-                li 의존 객체 주입 예
-                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Hello1 빈 클래스
-                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello4.java', 'java') Hello4 빈 클래스
-                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans7.xml', 'xml') 빈 구성 파일
-                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test3.java', 'java') 빈 사용 클래스
                 li 의존 컬렉션 주입 예
                     +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello5.java', 'java') Hello5 빈 클래스
                     +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans8.xml', 'xml') 빈 구성 파일
