@@ -36,8 +36,23 @@ include ./source/skeleton.jade
     table
         +ths('내용', '링크')
         tr
-            td SF; Simplest html Framework
-            td: +asA('/posts/project/sf.html')
+            td JVM 관련 포스트
+            td: +asA('/posts/java/index.html')
+        tr
+            td JavaScript 관련 포스트
+            td: +asA('/posts/javascript/index.html')
+        tr
+            td 인프라 관련 포스트
+            td: +asA('/posts/single/infra.html')
+        tr
+            td DB, Cache 관련 포스트
+            td: +asA('/posts/db/index.html')
+        tr
+            td Python 관련 포스트
+            td: +asA('/posts/python/index.html')
+        tr
+            td .NET 관련 포스트
+            td: +asA('/posts/dotnet/index.html')
         tr
             td 오류 대응 목록
             td: +asA('/posts/project/error.html')
@@ -45,17 +60,11 @@ include ./source/skeleton.jade
             td 브라우저 매크로 등 코드 스니펫
             td: +asA('/posts/project/snippets.html')
         tr
+            td SF; Simplest html Framework
+            td: +asA('/posts/project/sf.html')
+        tr
             td WPF 데이터 툴
             td: +asA('/posts/project/wpf_data_tool.html')
-        tr
-            td java.base 모듈
-            td: +asA('/posts/java/java.base.html')
-        tr
-            td 선형 대수
-            td: +asA('/posts/algorithm/linear_algebra.html')
-        tr
-            td Raspberry Pi 3 + OpenCV(python)
-            td: +asA('/posts/single/rpi.html')
 
 
     +hoverTemplate()#template-index-1

@@ -1,99 +1,105 @@
 const posts = { list: [
-{ file: "/posts/single/aws.html",                           category: "단일 문서",                       title: "AWS" },
-{ file: "/posts/single/centos.html",                        category: "단일 문서",                       title: "CentOS" },
-{ file: "/posts/single/docker.html",                        category: "단일 문서",                       title: "Docker" },
-{ file: "/posts/single/fp.html",                            category: "단일 문서",                       title: "FP; Functional Programming" },
-{ file: "/posts/single/git.html",                           category: "단일 문서",                       title: "Git" },
-{ file: "/posts/single/gradle.html",                        category: "단일 문서",                       title: "Gradle" },
-{ file: "/posts/single/groovy.html",                        category: "단일 문서",                       title: "Groovy" },
-{ file: "/posts/single/nginx.html",                         category: "단일 문서",                       title: "Nginx" },
-{ file: "/posts/single/rpi.html",                           category: "단일 문서",                       title: "Raspberry Pi 3 + OpenCV(python)" },
-{ file: "/posts/single/redis.html",                         category: "단일 문서",                       title: "Redis" },
-{ file: "/posts/single/sdkman.html",                        category: "단일 문서",                       title: "SDKMAN; The Software Development Kit Manager" },
-{ file: "/posts/single/tomcat.html",                        category: "단일 문서",                       title: "tomcat" },
-{ file: "/posts/single/vi.html",                            category: "단일 문서",                       title: "vi" },
-{ file: "/posts/single/refactoring.html",                   category: "단일 문서",                       title: "디자인 패턴 + 리팩터링" },
-{ file: "/posts/book/001.html",                             category: "독서",                           title: "1만 시간의 재발견" },
-{ file: "/posts/book/002.html",                             category: "독서",                           title: "마음의 탄생" },
-{ file: "/posts/book/003.html",                             category: "독서",                           title: "생각하는 삶을 위한 철학의 역사" },
-{ file: "/posts/book/004.html",                             category: "독서",                           title: "쇼펜하우어, 돌이 별이 되는 철학" },
-{ file: "/posts/book/005.html",                             category: "독서",                           title: "인생의 모든 의미" },
-{ file: "/posts/book/006.html",                             category: "독서",                           title: "지식의 착각" },
-{ file: "/posts/book/007.html",                             category: "독서",                           title: "키르케고르 실존 극장" },
-{ file: "/posts/book/008.html",                             category: "독서",                           title: "Gamification by Design" },
-{ file: "/posts/book/009.html",                             category: "독서",                           title: "인지 편향" },
-{ file: "/posts/algorithm/algo.html",                       category: "알고리즘",                        title: "알고리즘 일반" },
-{ file: "/posts/algorithm/book01.html",                     category: "알고리즘",                        title: "『알고리즘 도감』" },
-{ file: "/posts/algorithm/linear_algebra.html",             category: "알고리즘",                        title: "선형대수" },
-{ file: "/posts/algorithm/probability.html",                category: "알고리즘",                        title: "확률" },
-{ file: "/posts/algorithm/koreatech/1003.html",             category: "알고리즘/KOREATECH",              title: "1003: 0을 만들자" },
-{ file: "/posts/algorithm/koreatech/1008.html",             category: "알고리즘/KOREATECH",              title: "1008: 순환 소수" },
-{ file: "/posts/algorithm/koreatech/1010.html",             category: "알고리즘/KOREATECH",              title: "소수(Prime) 관련 문제" },
-{ file: "/posts/algorithm/koreatech/1011.html",             category: "알고리즘/KOREATECH",              title: "동적계획법(DP) 문제" },
-{ file: "/posts/algorithm/koreatech/1018.html",             category: "알고리즘/KOREATECH",              title: "1018: 문자열 거리 최소화 하기" },
-{ file: "/posts/algorithm/koreatech/1034.html",             category: "알고리즘/KOREATECH",              title: "1034,1041: 최소 이동 거리" },
-{ file: "/posts/algorithm/koreatech/1048.html",             category: "알고리즘/KOREATECH",              title: "1048: AP 배분" },
-{ file: "/posts/algorithm/koreatech/1095.html",             category: "알고리즘/KOREATECH",              title: "1095: 자연스러운 정렬" },
-{ file: "/posts/algorithm/ai.html",                         category: "작성 중지",                       title: "AI" },
-{ file: "/posts/single/quantum_computer.html",              category: "작성 중지",                       title: "양자 컴퓨터" },
-{ file: "/posts/single/unity.html",                         category: "작성 중지",                       title: "Unity" },
-{ file: "/posts/db/concept.html",                           category: "DB",                             title: "DB 기초" },
-{ file: "/posts/db/mongodb.html",                           category: "DB",                             title: "MongoDB" },
-{ file: "/posts/db/mysql.html",                             category: "DB",                             title: "MySQL" },
-{ file: "/posts/db/psql_to_sqlite.html",                    category: "DB",                             title: "PostgreSQL → SQLite3 마이그레이션" },
-{ file: "/posts/db/psql_admin.html",                        category: "DB",                             title: "PostgreSQL 서버 관리" },
-{ file: "/posts/db/psql_programming.html",                  category: "DB",                             title: "PostgreSQL 서버 프로그래밍" },
-{ file: "/posts/db/psql_tutorial.html",                     category: "DB",                             title: "PostgreSQL 시작하기" },
-{ file: "/posts/db/psql_sql.html",                          category: "DB",                             title: "PostgreSQL SQL 언어" },
-{ file: "/posts/dotnet/csharp_basic.html",                  category: "Programming/.NET",               title: "C# 기초" },
-{ file: "/posts/dotnet/csharp_library.html",                category: "Programming/.NET",               title: "C# 라이브러리" },
-{ file: "/posts/dotnet/wpf_basic.html",                     category: "Programming/.NET",               title: "WPF 기초" },
-{ file: "/posts/front/css.html",                            category: "Programming/Front",              title: "CSS" },
-{ file: "/posts/front/html.html",                           category: "Programming/Front",              title: "HTML" },
-{ file: "/posts/front/http.html",                           category: "Programming/Front",              title: "HTTP 1.1" },
-{ file: "/posts/front/freemarker/built_in.html",            category: "Programming/FreeMarker",         title: "Built-in 목록 2.3.28" },
-{ file: "/posts/front/freemarker/programming_guide.html",   category: "Programming/FreeMarker",         title: "프로그래밍 가이드 2.3.28" },
-{ file: "/posts/front/freemarker/template_guide.html",      category: "Programming/FreeMarker",         title: "템플릿 작성 가이드 2.3.28" },
-{ file: "/posts/front/freemarker/xml_guide.html",           category: "Programming/FreeMarker",         title: "XML 처리 가이드 2.3.28" },
-{ file: "/posts/java/android.html",                         category: "Programming/Java",               title: "Android" },
-{ file: "/posts/java/basic.html",                           category: "Programming/Java",               title: "Java 시작하기" },
-{ file: "/posts/java/effective_java.html",                  category: "Programming/Java",               title: "『Effective Java』" },
-{ file: "/posts/java/java_ee.html",                         category: "Programming/Java",               title: "JavaEE" },
-{ file: "/posts/java/javafx.html",                          category: "Programming/Java",               title: "JavaFX" },
-{ file: "/posts/java/jni.html",                             category: "Programming/Java",               title: "Java Native Interface" },
-{ file: "/posts/java/oop.html",                             category: "Programming/Java",               title: "Java 객체지향" },
-{ file: "/posts/java/version.html",                         category: "Programming/Java",               title: "Java 버전별 추가사항" },
-{ file: "/posts/java/performance.html",                     category: "Programming/Java",               title: "JVM 옵션 및 성능 관련사항" },            // 미완
-{ file: "/posts/java/apache.commons.collections.html",      category: "Programming/Java/3rd",           title: "Apache Commons Collections 4.4" },
-{ file: "/posts/java/apache.commons.lang.html",             category: "Programming/Java/3rd",           title: "Apache Commons Lang 3.9" },
-{ file: "/posts/java/apache.commons.math.html",             category: "Programming/Java/3rd",           title: "Apache Commons Math 3.6.1" },         // 미완
-{ file: "/posts/java/apache.commons.rng.html",              category: "Programming/Java/3rd",           title: "Apache Commons RNG Core 1.2" },
-{ file: "/posts/java/jackson.html",                         category: "Programming/Java/3rd",           title: "Jackson 2.10.1" },
-{ file: "/posts/java/gson.html",                            category: "Programming/Java/3rd",           title: "Gson 2.8.6" },
-{ file: "/posts/java/guava.html",                           category: "Programming/Java/3rd",           title: "Guava 23.0" },                        // 미완
-{ file: "/posts/java/lombok.html",                          category: "Programming/Java/3rd",           title: "lombok 1.18.10" },
-{ file: "/posts/java/logback.html",                         category: "Programming/Java/3rd",           title: "Logback with SLF4J" },
-{ file: "/posts/java/java.base.html",                       category: "Programming/Java/Standard",      title: "java.base 12" },
-{ file: "/posts/java/javax.annotation.processing.html",     category: "Programming/Java/Standard",      title: "Annotation Processing API" },
-{ file: "/posts/java/com.sun.nio.sctp.html",                category: "Programming/Java/Standard",      title: "com.sun.nio.sctp Since 1.7" },
-{ file: "/posts/javascript/basic.html",                     category: "Programming/JavaScript",         title: "코어 JavaScript" },
-{ file: "/posts/javascript/basic2.html",                    category: "Programming/JavaScript",         title: "브라우저 JavaScript" },
-{ file: "/posts/javascript/jquery.html",                    category: "Programming/JavaScript",         title: "jQuery" },
-{ file: "/posts/javascript/node.html",                      category: "Programming/JavaScript",         title: "Node" },
-{ file: "/posts/python/basic.html",                         category: "Programming/Python",             title: "Python 3.8 시작하기" },
-{ file: "/posts/python/built_in_constant.html",             category: "Programming/Python",             title: "Python Built-in Constants 3.8" },
-{ file: "/posts/python/built_in_exception.html",            category: "Programming/Python",             title: "Python Built-in Exceptions 3.8" },
-{ file: "/posts/python/built_in_function.html",             category: "Programming/Python",             title: "Python Built-in Functions 3.8" },
-{ file: "/posts/python/built_in_type.html",                 category: "Programming/Python",             title: "Python Built-in Types 3.8" },
-{ file: "/posts/python/data_model.html",                    category: "Programming/Python",             title: "Python 3.8 데이터 모델" },
-{ file: "/posts/python/standard.html",                      category: "Programming/Python",             title: "표준 라이브러리" },
-{ file: "/posts/python/persistence.html",                   category: "Programming/Python",             title: "Python Data Persistence" },
-{ file: "/posts/python/pandas.html",                        category: "Programming/Python",             title: "3rd/pandas : 데이터 처리" },
-{ file: "/posts/project/error.html",                        category: "Project",                        title: "Exceptions + Errors" },
-{ file: "/posts/project/tip.html",                          category: "Project",                        title: "잡다한 팁" },
-{ file: "/posts/project/snippets.html",                     category: "Project",                        title: "Code Snippets" },
-{ file: "/posts/project/sf.html",                           category: "Project",                        title: "SF; Simplest html Framework" },
-{ file: "/posts/project/wpf_data_tool.html",                category: "Project",                        title: "C#.NET, WPF - 데이터 작업 툴" },
+{ file: '/posts/single/infra.html',                         category: '단일 문서',                       title: 'Infra Index' },
+{ file: '/posts/single/aws.html',                           category: '단일 문서',                       title: 'AWS' },
+{ file: '/posts/single/centos.html',                        category: '단일 문서',                       title: 'CentOS' },
+{ file: '/posts/single/docker.html',                        category: '단일 문서',                       title: 'Docker' },
+{ file: '/posts/single/fp.html',                            category: '단일 문서',                       title: 'FP; Functional Programming' },
+{ file: '/posts/single/git.html',                           category: '단일 문서',                       title: 'Git' },
+{ file: '/posts/single/gradle.html',                        category: '단일 문서',                       title: 'Gradle' },
+{ file: '/posts/single/groovy.html',                        category: '단일 문서',                       title: 'Groovy' },
+{ file: '/posts/single/nginx.html',                         category: '단일 문서',                       title: 'Nginx' },
+{ file: '/posts/single/rpi.html',                           category: '단일 문서',                       title: 'Raspberry Pi 3 + OpenCV(python)' },
+{ file: '/posts/single/redis.html',                         category: '단일 문서',                       title: 'Redis' },
+{ file: '/posts/single/sdkman.html',                        category: '단일 문서',                       title: 'SDKMAN; The Software Development Kit Manager' },
+{ file: '/posts/single/tomcat.html',                        category: '단일 문서',                       title: 'tomcat' },
+{ file: '/posts/single/vi.html',                            category: '단일 문서',                       title: 'vi' },
+{ file: '/posts/single/refactoring.html',                   category: '단일 문서',                       title: '디자인 패턴 + 리팩터링' },
+{ file: '/posts/book/001.html',                             category: '독서',                           title: '1만 시간의 재발견' },
+{ file: '/posts/book/002.html',                             category: '독서',                           title: '마음의 탄생' },
+{ file: '/posts/book/003.html',                             category: '독서',                           title: '생각하는 삶을 위한 철학의 역사' },
+{ file: '/posts/book/004.html',                             category: '독서',                           title: '쇼펜하우어, 돌이 별이 되는 철학' },
+{ file: '/posts/book/005.html',                             category: '독서',                           title: '인생의 모든 의미' },
+{ file: '/posts/book/006.html',                             category: '독서',                           title: '지식의 착각' },
+{ file: '/posts/book/007.html',                             category: '독서',                           title: '키르케고르 실존 극장' },
+{ file: '/posts/book/008.html',                             category: '독서',                           title: 'Gamification by Design' },
+{ file: '/posts/book/009.html',                             category: '독서',                           title: '인지 편향' },
+{ file: '/posts/algorithm/algo.html',                       category: '알고리즘',                        title: '알고리즘 일반' },
+{ file: '/posts/algorithm/book01.html',                     category: '알고리즘',                        title: '『알고리즘 도감』' },
+{ file: '/posts/algorithm/linear_algebra.html',             category: '알고리즘',                        title: '선형대수' },
+{ file: '/posts/algorithm/probability.html',                category: '알고리즘',                        title: '확률' },
+{ file: '/posts/algorithm/koreatech/1003.html',             category: '알고리즘/KOREATECH',              title: '1003: 0을 만들자' },
+{ file: '/posts/algorithm/koreatech/1008.html',             category: '알고리즘/KOREATECH',              title: '1008: 순환 소수' },
+{ file: '/posts/algorithm/koreatech/1010.html',             category: '알고리즘/KOREATECH',              title: '소수(Prime) 관련 문제' },
+{ file: '/posts/algorithm/koreatech/1011.html',             category: '알고리즘/KOREATECH',              title: '동적계획법(DP) 문제' },
+{ file: '/posts/algorithm/koreatech/1018.html',             category: '알고리즘/KOREATECH',              title: '1018: 문자열 거리 최소화 하기' },
+{ file: '/posts/algorithm/koreatech/1034.html',             category: '알고리즘/KOREATECH',              title: '1034,1041: 최소 이동 거리' },
+{ file: '/posts/algorithm/koreatech/1048.html',             category: '알고리즘/KOREATECH',              title: '1048: AP 배분' },
+{ file: '/posts/algorithm/koreatech/1095.html',             category: '알고리즘/KOREATECH',              title: '1095: 자연스러운 정렬' },
+{ file: '/posts/algorithm/ai.html',                         category: '작성 중지',                       title: 'AI' },
+{ file: '/posts/single/quantum_computer.html',              category: '작성 중지',                       title: '양자 컴퓨터' },
+{ file: '/posts/single/unity.html',                         category: '작성 중지',                       title: 'Unity' },
+{ file: '/posts/db/index.html',                             category: 'DB',                             title: 'DB, Cache Index' },
+{ file: '/posts/db/concept.html',                           category: 'DB',                             title: 'DB 기초' },
+{ file: '/posts/db/mongodb.html',                           category: 'DB',                             title: 'MongoDB' },
+{ file: '/posts/db/mysql.html',                             category: 'DB',                             title: 'MySQL' },
+{ file: '/posts/db/psql_to_sqlite.html',                    category: 'DB',                             title: 'PostgreSQL → SQLite3 마이그레이션' },
+{ file: '/posts/db/psql_admin.html',                        category: 'DB',                             title: 'PostgreSQL 서버 관리' },
+{ file: '/posts/db/psql_programming.html',                  category: 'DB',                             title: 'PostgreSQL 서버 프로그래밍' },
+{ file: '/posts/db/psql_tutorial.html',                     category: 'DB',                             title: 'PostgreSQL 시작하기' },
+{ file: '/posts/db/psql_sql.html',                          category: 'DB',                             title: 'PostgreSQL SQL 언어' },
+{ file: '/posts/dotnet/index.html',                         category: 'Programming/.NET',               title: '.NET Index' },
+{ file: '/posts/dotnet/csharp_basic.html',                  category: 'Programming/.NET',               title: 'C# 기초' },
+{ file: '/posts/dotnet/csharp_library.html',                category: 'Programming/.NET',               title: 'C# 라이브러리' },
+{ file: '/posts/dotnet/wpf_basic.html',                     category: 'Programming/.NET',               title: 'WPF 기초' },
+{ file: '/posts/front/css.html',                            category: 'Programming/Front',              title: 'CSS' },
+{ file: '/posts/front/html.html',                           category: 'Programming/Front',              title: 'HTML' },
+{ file: '/posts/front/http.html',                           category: 'Programming/Front',              title: 'HTTP 1.1' },
+{ file: '/posts/front/freemarker/built_in.html',            category: 'Programming/FreeMarker',         title: 'Built-in 목록 2.3.28' },
+{ file: '/posts/front/freemarker/programming_guide.html',   category: 'Programming/FreeMarker',         title: '프로그래밍 가이드 2.3.28' },
+{ file: '/posts/front/freemarker/template_guide.html',      category: 'Programming/FreeMarker',         title: '템플릿 작성 가이드 2.3.28' },
+{ file: '/posts/front/freemarker/xml_guide.html',           category: 'Programming/FreeMarker',         title: 'XML 처리 가이드 2.3.28' },
+{ file: '/posts/java/index.html',                           category: 'Programming/Java',               title: 'Java Index' },
+{ file: '/posts/java/android.html',                         category: 'Programming/Java',               title: 'Android' },
+{ file: '/posts/java/basic.html',                           category: 'Programming/Java',               title: 'Java 시작하기' },
+{ file: '/posts/java/effective_java.html',                  category: 'Programming/Java',               title: '『Effective Java』' },
+{ file: '/posts/java/java_ee.html',                         category: 'Programming/Java',               title: 'JavaEE' },
+{ file: '/posts/java/javafx.html',                          category: 'Programming/Java',               title: 'JavaFX' },
+{ file: '/posts/java/jni.html',                             category: 'Programming/Java',               title: 'Java Native Interface' },
+{ file: '/posts/java/oop.html',                             category: 'Programming/Java',               title: 'Java 객체지향' },
+{ file: '/posts/java/version.html',                         category: 'Programming/Java',               title: 'Java 버전별 추가사항' },
+{ file: '/posts/java/performance.html',                     category: 'Programming/Java',               title: 'JVM 옵션 및 성능 관련사항' },            // 미완
+{ file: '/posts/java/apache.commons.collections.html',      category: 'Programming/Java/3rd',           title: 'Apache Commons Collections 4.4' },
+{ file: '/posts/java/apache.commons.lang.html',             category: 'Programming/Java/3rd',           title: 'Apache Commons Lang 3.9' },
+{ file: '/posts/java/apache.commons.math.html',             category: 'Programming/Java/3rd',           title: 'Apache Commons Math 3.6.1' },         // 미완
+{ file: '/posts/java/apache.commons.rng.html',              category: 'Programming/Java/3rd',           title: 'Apache Commons RNG Core 1.2' },
+{ file: '/posts/java/jackson.html',                         category: 'Programming/Java/3rd',           title: 'Jackson 2.10.1' },
+{ file: '/posts/java/gson.html',                            category: 'Programming/Java/3rd',           title: 'Gson 2.8.6' },
+{ file: '/posts/java/guava.html',                           category: 'Programming/Java/3rd',           title: 'Guava 23.0' },                        // 미완
+{ file: '/posts/java/lombok.html',                          category: 'Programming/Java/3rd',           title: 'lombok 1.18.10' },
+{ file: '/posts/java/logback.html',                         category: 'Programming/Java/3rd',           title: 'Logback with SLF4J' },
+{ file: '/posts/java/java.base.html',                       category: 'Programming/Java/Standard',      title: 'java.base 12' },
+{ file: '/posts/java/javax.annotation.processing.html',     category: 'Programming/Java/Standard',      title: 'Annotation Processing API' },
+{ file: '/posts/java/com.sun.nio.sctp.html',                category: 'Programming/Java/Standard',      title: 'com.sun.nio.sctp Since 1.7' },
+{ file: '/posts/javascript/index.html',                     category: 'Programming/JavaScript',         title: 'JavaScript Index' },
+{ file: '/posts/javascript/basic.html',                     category: 'Programming/JavaScript',         title: '코어 JavaScript' },
+{ file: '/posts/javascript/basic2.html',                    category: 'Programming/JavaScript',         title: '브라우저 JavaScript' },
+{ file: '/posts/javascript/jquery.html',                    category: 'Programming/JavaScript',         title: 'jQuery' },
+{ file: '/posts/javascript/node.html',                      category: 'Programming/JavaScript',         title: 'Node' },
+{ file: '/posts/python/index.html',                         category: 'Programming/Python',             title: 'Python Index' },
+{ file: '/posts/python/basic.html',                         category: 'Programming/Python',             title: 'Python 3.8 시작하기' },
+{ file: '/posts/python/built_in_constant.html',             category: 'Programming/Python',             title: 'Python Built-in Constants 3.8' },
+{ file: '/posts/python/built_in_exception.html',            category: 'Programming/Python',             title: 'Python Built-in Exceptions 3.8' },
+{ file: '/posts/python/built_in_function.html',             category: 'Programming/Python',             title: 'Python Built-in Functions 3.8' },
+{ file: '/posts/python/built_in_type.html',                 category: 'Programming/Python',             title: 'Python Built-in Types 3.8' },
+{ file: '/posts/python/data_model.html',                    category: 'Programming/Python',             title: 'Python 3.8 데이터 모델' },
+{ file: '/posts/python/standard.html',                      category: 'Programming/Python',             title: '표준 라이브러리' },
+{ file: '/posts/python/persistence.html',                   category: 'Programming/Python',             title: 'Python Data Persistence' },
+{ file: '/posts/python/pandas.html',                        category: 'Programming/Python',             title: '3rd/pandas : 데이터 처리' },
+{ file: '/posts/project/error.html',                        category: 'Project',                        title: 'Exceptions + Errors' },
+{ file: '/posts/project/tip.html',                          category: 'Project',                        title: '잡다한 팁' },
+{ file: '/posts/project/snippets.html',                     category: 'Project',                        title: 'Code Snippets' },
+{ file: '/posts/project/sf.html',                           category: 'Project',                        title: 'SF; Simplest html Framework' },
+{ file: '/posts/project/wpf_data_tool.html',                category: 'Project',                        title: 'C#.NET, WPF - 데이터 작업 툴' },
 ], codes: {} }
 
 window.addEventListener('load', () => {
@@ -163,7 +169,9 @@ function updateSidebar() {
     else
         openSidebar();
     document.getElementById('sidebar').style.width = '333px';
-    new DKFileList('/source/filelist.js', '#file-list');
+    new DKFileList('/source/filelist.js', '#file-list', null, false, null, true, () => {
+        document.querySelector('#file-list>details').open = false;
+    });
 }
 
 function openSidebar() {
@@ -190,7 +198,7 @@ function updatePostList() {
     let categoryMap = { posts: [] };
     for (let post of posts.list) {
         let category = categoryMap;
-        for (let cate of post.category.split("/")) {
+        for (let cate of post.category.split('/')) {
             if (!category.hasOwnProperty(cate)) {
                 category[cate] = {};
                 category[cate].posts = [];
@@ -202,9 +210,24 @@ function updatePostList() {
     let url = URL.createObjectURL(new Blob([Donggi.makeLSlikeText('카테고리', categoryMap, 'posts')], {
         type: 'text/plain;charset=utf-8;'
     }));
-    new DKFileList(url, '#post-list', null, false, (category, title) => {
+    new DKFileList(url, '#post-list', null, true, (category, title) => {
         let post = posts.list.filter(x => x.title == title)[0];
         return Donggi.getElementFromText(`<li><a href="${post.file}">${title}</a></li>`);
+    }, true, () => {
+        document.querySelectorAll('#post-list details').forEach(x => x.open = false);
+        let limit = document.getElementById('post-list');
+        let a = document.querySelector(`#post-list a[href="${location.pathname}"]`);
+        if (a) {
+            let p = a.parentElement;
+            p.classList.add('w3-yellow');
+            while (limit != p) {
+                if (p.tagName == 'DETAILS')
+                    p.open = true;
+                p = p.parentElement;
+            }
+        } else {
+            document.querySelector('#post-list details').open = true;
+        }
     });
 }
 
@@ -333,7 +356,7 @@ function insertCodeDiv(id) {
             let button = document.getElementById(`code-button-${id}`);
             let path = button.title;
             let xhr = new XMLHttpRequest();
-            xhr.addEventListener("load", ((button) => function(e) {
+            xhr.addEventListener('load', ((button) => function(e) {
                 let div = Donggi.getElementFromText(`<div id="code-div-${id}" class="w3-leftbar w3-border-green code-div" style="max-height:${window.innerHeight / 2}"></div>`);
                 let lan = button.getAttribute('lan');
                 if (this.status != 200)
@@ -357,9 +380,9 @@ function insertCodeDiv(id) {
                 }
             })(button));
             if (!/dong-gi\.github\.io/i.test(location.host))
-                xhr.open("GET", `${path.startsWith('/') ? "" : "./"}${path.replace(/ /gm, '%20')}`, true);
+                xhr.open('GET', `${path.startsWith('/') ? '' : './'}${path.replace(/ /gm, '%20')}`, true);
             else
-                xhr.open("GET", `${path.startsWith('/') ? "" : "./"}${path.replace(/ /gm, '%20')}?${new Date().getTime()}`, true);
+                xhr.open('GET', `${path.startsWith('/') ? '' : './'}${path.replace(/ /gm, '%20')}?${new Date().getTime()}`, true);
             xhr.send();
         } else {
             let div = document.getElementById(`code-div-${id}`);
@@ -375,7 +398,7 @@ function fillCodeDiv(div, lan, text, displayRange) {
         code = code.replace(/ /gm, '  ');
 
         let lines = null;
-        if (lan === "text")
+        if (lan === 'text')
             lines = code.split(/\n/gm);
         else
             lines = hljs.highlight(lan, code)['value'].split(/\n/gm);
@@ -388,7 +411,7 @@ function fillCodeDiv(div, lan, text, displayRange) {
             let displayStart = displayRange.pop() - 1;
             let displayEnd = displayRange.pop();
             for (let idx = displayStart; idx < displayEnd && idx < lines.length; ++idx) {
-                if (lan === "text") {
+                if (lan === 'text') {
                     let li = document.createElement('li');
                     li.innerText = lines[idx].replace(/  /gm, '\u00A0');
                     ol.append(li);
@@ -425,7 +448,7 @@ function showModal(id) {
         
         footer.querySelector('button.copy').onclick = () => {
             Donggi.copyTextToCilpboard(posts.codes[id], modal);
-            Donggi.showSnackbar("복사 완료", modal);
+            Donggi.showSnackbar('복사 완료', modal);
             modal.focus();
         };
         footer.querySelector('button.download').onclick = () => downloadCode(document.getElementById(`code-button-${id}`).title.split('/').pop(), posts.codes[id]);
@@ -495,7 +518,7 @@ class DKFileList {
         if(!this.target)
             return;
         let xhr = new XMLHttpRequest();
-        xhr.addEventListener("load", ((fileList) => function(e) {
+        xhr.addEventListener('load', ((fileList) => function(e) {
             if (this.status != 200) {
                 fileList.target.innerHTML = 'No Data';
                 return;
@@ -517,7 +540,7 @@ class DKFileList {
             fileList.updateFileList(fileList.rootDir);
             fileList.callback && fileList.callback(this);
         })(this));
-        xhr.open("GET", lsResultPath, true);
+        xhr.open('GET', lsResultPath, true);
         xhr.send();
     }
     
