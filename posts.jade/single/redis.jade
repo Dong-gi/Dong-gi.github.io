@@ -35,62 +35,577 @@ include ../../source/skeleton.jade
         p Redis 명령어들은 연관성에 따라 그룹에 묶여있다
         div
             h3.marker String
-            div
-                h4.marker SET key value [EX seconds|PX milliseconds] [NX|XX] [KEEPTTL]
-                p 원자적으로 key에 대하여 value를 할당한다. 이전에 설정한 값은 덮어씌어진다. 이전에 설정한 유효 기간은 지워진다.
-                +asCode('shell').
-                    > set name anonymous
-                    반환 : 'OK'(성공), nil(실패)
-                    
-                    EX seconds      : 유효 기한(s)
-                    PX milliseconds : 유효 기한(ms)
-                    NX              : 신규 키일 때만 설정 // 이를 이용해 잠금 구현 가능
-                    XX              : 중복 키일 때만 설정
-                    KEEPTTL         : 이전 유효 기간을 유지
-                h4.marker GET key
-                p key에 대한 값을 반환한다. 없으면 nil
-                +asCode('shell') > get name
-                h4.marker GETSET key value
-                p get 실행 → set 실행 → get 결과 반환
-                h4.marker STRLEN key
-                p 문자열 길이 반환. 값이 없어도 0
-                h4.marker MSET key value [key value ...]
-                p 원자적으로 주어진 키-값 쌍들을 모두 설정한다.
-                +asCode('shell').
-                    > mset k1 v1 k2 v2
-                    항상 성공하므로 'OK'만 반환
-                h4.marker MSETNX key value [key value ...]
-                p 모든 키가 신규인 경우 mset 실행하고 1 반환. 그 외엔 0 반환
-                h4.marker MGET key [key ...]
-                p 각 키에 대해 get 하여 배열로 반환.
-                h4.marker APPEND key value
-                p 키가 이미 존재하면 append, 없으면 set. 연산 후의 문자열 길이 반환.
-                h4.marker INCR key
-                p 주어진 키의 정수 1 증가. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.
-                h4.marker INCRBY key increment
-                p 주어진 키의 정수 increment 증가. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.
-                h4.marker DECR key
-                p 주어진 키의 정수 1 감소. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.
-                h4.marker DECRBY key decrement
-                p 주어진 키의 정수 decrement 감소. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.
-                h4.marker INCRBYFLOAT key increment
-                p 주어진 키의 실수 increment 만큼 변경. 없으면 0. 값은 double. 연산 후의 값 문자열로 반환.
-                h4.marker SETBIT key offset value
-                p offset번째 비트를 value(0 | 1)로 변경. 이전 비트값 반환.
-                h4.marker GETBIT key offset
-                p offset번째 비트를 반환.
-                h4.marker BITFIELD key [GET type offset] [SET type offset value] [INCRBY type offset increment] [OVERFLOW WRAP|SAT|FAIL]
-                h4.marker BITOP operation destkey key [key ...]
-                h4.marker BITPOS key bit [start] [end]
-                h4.marker GETRANGE key start end
-                h4.marker SETRANGE key offset value
-                h4.marker STRALGO algo-name arg [arg ...] Since 6.0
-                ol
-                    li STRALGO LCS [KEYS ...] [STRINGS ...] [LEN] Since 6.0
-                    p 두 문자열의 공통 시퀀스를 구한다.
-                    +asCode('shell').
-                        > stralgo lcs strings humble-bundle bundle-humble
-                        "ble-ule"
+            table
+                +ths('분류','명령','사용','설명')
+                tr
+                    td SET
+                    td SET
+                    td SET key value [EX seconds|PX milliseconds] [NX|XX] [KEEPTTL]
+                    td
+                        | 원자적으로 key에 대하여 value를 할당한다. 이전에 설정한 값은 덮어씌어진다. 이전에 설정한 유효 기간은 지워진다.
+                        +asCode().
+                            반환 : 'OK'(성공), nil(실패)
+
+                            EX seconds      : 유효 기한(s)
+                            PX milliseconds : 유효 기한(ms)
+                            NX              : 신규 키일 때만 설정 // 이를 이용해 잠금 구현 가능
+                            XX              : 중복 키일 때만 설정
+                            KEEPTTL         : 이전 유효 기간을 유지
+                        +asCode('shell').
+                            127.0.0.1:27017> set msg hello
+                            OK
+                tr
+                    td GET
+                    td GET
+                    td GET key
+                    td
+                        | key에 대한 값을 반환한다. 없으면 nil
+                        +asCode('shell').
+                            127.0.0.1:27017> get msg
+                            "hello"
+                tr
+                    td GET,SET
+                    td GETSET
+                    td GETSET key value
+                    td
+                        | get 실행 → set 실행 → get 결과 반환
+                        +asCode('shell').
+                            127.0.0.1:27017> getset msg hello2
+                            "hello"
+                tr
+                    td SET
+                    td SETRANGE
+                    td SETRANGE key offset value
+                    td
+                        | key에 대하여, offset(>=0) 위치부터 value로 덮어쓴다. 빈 자리는 \x00으로 채워지며, 설정 후 문자열 길이를 반환한다.
+                        +asCode('shell').
+                            127.0.0.1:27017> set msg hello
+                            OK
+                            127.0.0.1:27017> setrange msg 8 hello
+                            (integer) 13
+                            127.0.0.1:27017> get msg
+                            "hello\x00\x00\x00hello"
+                tr
+                    td GET
+                    td GETRANGE
+                    td GETRANGE key start end
+                    td
+                        | key에 대하여, 문자열의 [start, end] 만큼 반환한다. 음수 인덱스 가능
+                        +asCode('shell').
+                            127.0.0.1:27017> getrange msg 0 -1
+                            "hello\x00\x00\x00hello"
+                tr
+                    td GET
+                    td STRLEN
+                    td STRLEN key
+                    td
+                        | 문자열 길이 반환. 값이 없어도 0
+                        +asCode('shell').
+                            127.0.0.1:27017> strlen not_exists_key
+                            (integer) 0
+                tr
+                    td SET
+                    td MSET
+                    td MSET key value [key value ...]
+                    td
+                        | 원자적으로 주어진 키-값 쌍들을 모두 설정한다.
+                        +asCode('shell').
+                            127.0.0.1:27017> mset k1 v1 k2 v2
+                            OK # 항상 성공
+                tr
+                    td SET
+                    td MSETNX
+                    td MSETNX key value [key value ...]
+                    td 모든 키가 신규인 경우 mset 실행하고 1 반환. 그 외엔 0 반환
+                tr
+                    td GET
+                    td MGET
+                    td MGET key [key ...]
+                    td
+                        | 각 키에 대해 get 하여 배열로 반환.
+                        +asCode('shell').
+                            127.0.0.1:27017> mget k1 k2 not_exists_key
+                            1) "v1"
+                            2) "v2"
+                            3) (nil)
+                tr
+                    td SET
+                    td APPEND
+                    td APPEND key value
+                    td 키가 이미 존재하면 append, 없으면 set. 연산 후의 문자열 길이 반환.
+                tr
+                    td INCR
+                    td INCR
+                    td INCR key
+                    td 주어진 키의 정수 1 증가. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.
+                tr
+                    td INCR
+                    td INCRBY
+                    td INCRBY key increment
+                    td 주어진 키의 정수 increment 증가. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.
+                tr
+                    td INCR
+                    td DECR
+                    td DECR key
+                    td 주어진 키의 정수 1 감소. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.
+                tr
+                    td INCR
+                    td DECRBY
+                    td DECRBY key decrement
+                    td 주어진 키의 정수 decrement 감소. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.
+                tr
+                    td INCR
+                    td INCRBYFLOAT
+                    td INCRBYFLOAT key increment
+                    td 주어진 키의 실수 increment 만큼 변경. 없으면 0. 값은 double. 연산 후의 값 문자열로 반환.
+                tr
+                    td SET,BIT
+                    td SETBIT
+                    td SETBIT key offset value
+                    td offset번째 비트를 value(0 | 1)로 변경. 이전 비트값 반환.
+                tr
+                    td GET,BIT
+                    td GETBIT
+                    td GETBIT key offset
+                    td offset번째 비트를 반환.
+                tr
+                    td BIT
+                    td BITFIELD
+                    td BITFIELD key [GET type offset] [SET type offset value] [INCRBY type offset increment] [OVERFLOW WRAP|SAT|FAIL]
+                    td
+                        ul
+                            li 문자열을 비트 배열로 간주하여 GET, SET, INCRBY 연산들을 수행한다
+                            li type : 부호 있는 64비트, 부호 없는 63비트까지 가능.
+                            p 예. i5(부호 있는 5비트), u4(부호 없는 4비트)
+                            li offset : 시작 위치. 정수만 이용하는 경우 bit단위, #를 붙이면 type 크기 단위
+                            li OVERFLOW : WRAP(default, 오버/언더플로우 비트 무시), SAT(오버/언더플로우 시 최대/최소값으로), FAIL(실패, NULL 반환)
+                            p OVERFLOW 이후의 INCRBY에만 영향을 미침에 주의
+                            li 반환 : SET(이전 값), GET(현재 값), INCRBY(신규 값)
+                        +asCode('shell').
+                            127.0.0.1:27017> set time ''
+                            OK
+                            127.0.0.1:27017> bitfield time SET u6 #0 11 SET u6 #1 33 SET u6 #2 55 GET u6 #0 GET u6 #1 GET u6 #2 INCRBY u6 #0 1 INCRBY u6 #1 1 INCRBY u6 #2 1
+                            1) (integer) 0
+                            2) (integer) 0
+                            3) (integer) 0
+                            4) (integer) 11
+                            5) (integer) 33
+                            6) (integer) 55
+                            7) (integer) 12
+                            8) (integer) 34
+                            9) (integer) 56
+                tr
+                    td SET,BIT
+                    td BITOP
+                    td BITOP operation destkey key [key ...]
+                    td 소스 키들의 값에 대한 AND, OR, XOR, NOT 결과를 destkey에 저장한다
+                tr
+                    td GET,BIT
+                    td BITPOS
+                    td BITPOS key bit [start] [end]
+                    td bit와 일치하는 인덱스를 [start, end] 사이(음수 인덱스 가능)에서 구한다. 없는 경우 -1 반환
+                tr
+                    td GET
+                    td STRALGO
+                    td STRALGO algo-name arg [arg ...] Since 6.0
+                    td
+                        ol
+                            li STRALGO LCS [KEYS ...] [STRINGS ...] [LEN] Since 6.0
+                            p 두 문자열의 공통 시퀀스를 구한다.
+                            +asCode('shell').
+                                > stralgo lcs strings humble-bundle bundle-humble
+                                "ble-ule"
+            h3.marker List
+            p 값은 입력된 순서대로 저장되고, 값이 하나도 없으면 키가 삭제된다
+            table
+                +ths('분류','명령','사용','설명')
+                tr
+                    td SET
+                    td LPUSH
+                    td LPUSH key element [element ...]
+                    td 왼쪽에 값 추가. 이후 리스트 크기 반환
+                tr
+                    td SET
+                    td RPUSH
+                    td RPUSH key element [element ...]
+                    td 오른쪽에 값 추가. 이후 리스트 크기 반환
+                tr
+                    td SET
+                    td LPUSHX
+                    td LPUSHX key element [element ...]
+                    td 리스트가 존재하면 왼쪽에 값 추가. 이후 리스트 크기 반환
+                tr
+                    td SET
+                    td RPUSHX
+                    td RPUSHX key element [element ...]
+                    td 리스트가 존재하면 오른쪽에 값 추가. 이후 리스트 크기 반환
+                tr
+                    td POP
+                    td LPOP
+                    td LPOP key
+                    td 리스트 왼쪽 값 삭제 후 반환
+                tr
+                    td POP
+                    td RPOP
+                    td RPOP key
+                    td 리스트 오른쪽 값 삭제 후 반환
+                tr
+                    td POP,BLOCK
+                    td BLPOP
+                    td BLPOP key [key ...] timeout
+                    td 지정한 리스트들을 순회하여, 최초로 발견된 왼쪽 값 삭제 후 반환. 없으면 timeout(초)만큼 대기.
+                tr
+                    td POP,BLOCK
+                    td BRPOP
+                    td BRPOP key [key ...] timeout
+                    td 지정한 리스트들을 순회하여, 최초로 발견된 오른쪽 값 삭제 후 반환. 없으면 timeout(초)만큼 대기.
+                tr
+                    td GET
+                    td LINDEX
+                    td LINDEX key index
+                    td index(음수 가능) 번째 값 반환
+                tr
+                    td GET
+                    td LRANGE
+                    td LRANGE key start stop
+                    td [start, stop] 범위의 값 반환(음수 인덱스 가능)
+                tr
+                    td SET
+                    td LSET
+                    td LSET key index element
+                    td index(음수 가능) 번째 값을 element로 교체
+                tr
+                    td SET
+                    td LINSERT
+                    td LINSERT key BEFORE|AFTER pivot element
+                    td pivot 전/후에 element를 삽입
+                tr
+                    td GET
+                    td LLEN
+                    td LLEN key
+                    td 리스트 크기 반환
+                tr
+                    td REM
+                    td LREM
+                    td LREM key count element
+                    td element를 count개 삭제, count == 0이면 전부 삭제, count &lt; 0이면 오른쪽부터 삭제
+                tr
+                    td REM
+                    td LTRIM
+                    td LTRIM key start stop
+                    td [start, stop] 범위(음수 인덱스 가능)만 남기고 나머지 삭제
+                tr
+                    td BLOCK
+                    td RPOPLPUSH
+                    td RPOPLPUSH source destination
+                    td 원자적으로 rpop + lpush 실행
+                tr
+                    td BLOCK
+                    td BRPOPLPUSH
+                    td BRPOPLPUSH source destination timeout
+                    td 리스트에 값이 있으면 rpoplpush 실행, 없으면 timeout(초)만큼 대기
+            h3.marker Set
+            table
+                +ths('분류','명령','사용','설명')
+                tr
+                    td SET
+                    td SADD
+                    td SADD key member [member ...]
+                    td 집합에 원소 추가. 실제 추가된 개수 반환
+                tr
+                    td REM
+                    td SREM
+                    td SREM key member [member ...]
+                    td 집합에서 원소 삭제. 실제 제거된 개수 반환
+                tr
+                    td GET
+                    td SISMEMBER
+                    td SISMEMBER key member
+                    td 집합에 포함되면 1, 아니면 0
+                tr
+                    td GET
+                    td SCARD
+                    td SCARD key
+                    td 집합 크기 반환
+                tr
+                    td GET
+                    td SMEMBERS
+                    td SMEMBERS key
+                    td 전체 원소 반환. 집합이 클수록 느려진다
+                tr
+                    td GET
+                    td SSCAN
+                    td SSCAN key cursor [MATCH pattern] [COUNT count]
+                    td 집합이 큰 경우, 조회를 작은 단위(cursor)로 나누어 수행한다. pattern(GLOB style)이 있다면 일치하는 원소만 반환
+                tr
+                    td GET
+                    td SRANDMEMBER
+                    td SRANDMEMBER key [count]
+                    td 무작위로 count(default 1)개 반환
+                tr
+                    td POP
+                    td SPOP
+                    td SPOP key [count]
+                    td 무작위로 count(default 1)개 삭제 후 반환
+                tr
+                    td Set Operation
+                    td SUNION
+                    td SUNION key [key ...]
+                    td 합집합 반환
+                tr
+                    td Set Operation
+                    td SINTER
+                    td SINTER key [key ...]
+                    td 교집합 반환
+                tr
+                    td Set Operation
+                    td SDIFF
+                    td SDIFF key [key ...]
+                    td 차집합 반환
+                tr
+                    td Set Operation
+                    td SUNIONSTORE
+                    td SUNIONSTORE destination key [key ...]
+                    td sunion 결과 저장
+                tr
+                    td Set Operation
+                    td SINTERSTORE
+                    td SINTERSTORE destination key [key ...]
+                    td sinter 결과 저장
+                tr
+                    td Set Operation
+                    td SDIFFSTORE
+                    td SDIFFSTORE destination key [key ...]
+                    td sdiff 결과 저장
+                tr
+                    td SET
+                    td SMOVE
+                    td SMOVE source destination member
+                    td member가 source에 포함된다면 destination으로 이동하고 1 반환. 아니면 0
+            h3.marker Sorted Set
+            p key-value 관계에 정렬을 위한 score가 추가된다. key-(score, value), 같은 score 사이에서는 value를 기준으로 정렬된다
+            table
+                +ths('분류','명령','사용','설명')
+                tr
+                    td SET
+                    td ZADD
+                    td ZADD key [NX|XX] [CH] [INCR] score member [score member ...]
+                    td
+                        ul
+                            li NX : 멤버가 존재하면 스킵, XX : 멤버가 존재하면 score 갱신
+                            li INCR : score를 덮어쓰지 않고, 값만큼 증가
+                            li 리턴 : 신규로 추가된 원소 개수만(기본), score 갱신된 개수도 포함(CH)
+                tr
+                    td INCR
+                    td ZINCRBY
+                    td ZINCRBY key increment member
+                    td 스코어를 increment만큼 증가한 뒤 반환
+                tr
+                    td GET
+                    td ZSCORE
+                    td ZSCORE key member
+                    td 원소의 스코어 반환
+                tr
+                    td GET
+                    td ZRANK
+                    td ZRANK key member
+                    td 원소의 index(오름차순) 반환
+                tr
+                    td GET
+                    td ZREVRANK
+                    td ZREVRANK key member
+                    td 원소의 index(내림차순) 반환
+                tr
+                    td GET
+                    td ZCARD
+                    td ZCARD key
+                    td 집합 크기 반환
+                tr
+                    td GET
+                    td ZCOUNT
+                    td ZCOUNT key min max
+                    td 스코어가 [min, max]에 포함되는 원소 개수 반환. 모두 가져오려면 -inf, +inf 이용
+                tr
+                    td GET
+                    td ZLEXCOUNT
+                    td ZLEXCOUNT key min max
+                    td
+                        | 동일 스코어 상에서, 값을 기준으로 범위 안에 있는 원소 개수 반환.
+                        br
+                        |  min, max 앞에 [ 또는 (를 명시해야하며, 모두 가져오려면 -, + 이용
+                tr
+                    td GET
+                    td ZRANGE
+                    td ZRANGE key start stop [WITHSCORES]
+                    td 작은 것부터 [start, stop] 범위(음수 인덱스 가능) 원소 반환
+                tr
+                    td GET
+                    td ZRANGEBYLEX
+                    td ZRANGEBYLEX key min max [LIMIT offset count]
+                    td 동일 스코어 상에서, 값을 기준으로 작은 것부터 반환. min, max 앞에 [ 또는 (를 명시해야하며, 모두 가져오려면 -, + 이용
+                tr
+                    td GET
+                    td ZRANGEBYSCORE
+                    td ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT offset count]
+                    td 스코어가 작은 것부터 [min, max]에 포함되는 원소 반환. 모두 가져오려면 -inf, +inf 이용. 경계값 미포함하려면 (min, (max 이용
+                tr
+                    td GET
+                    td ZREVRANGE
+                    td ZREVRANGE key start stop [WITHSCORES]
+                    td 큰 것부터 [start, stop] 범위(음수 인덱스 가능) 원소 반환
+                tr
+                    td GET
+                    td ZREVRANGEBYLEX
+                    td ZREVRANGEBYLEX key max min [LIMIT offset count]
+                    td 동일 스코어 상에서, 값을 기준으로 큰 것부터 반환. min, max 앞에 [ 또는 (를 명시해야하며, 모두 가져오려면 -, + 이용
+                tr
+                    td GET
+                    td ZREVRANGEBYSCORE
+                    td ZREVRANGEBYSCORE key max min [WITHSCORES] [LIMIT offset count]
+                    td 스코어가 큰 것부터 [min, max]에 포함되는 원소 반환. 모두 가져오려면 [-inf, +inf] 이용. 경계값 미포함하려면 (min, (max 이용
+                tr
+                    td REM
+                    td ZREM
+                    td ZREM key member [member ...]
+                    td 원소 삭제. 삭제된 개수 반환
+                tr
+                    td REM
+                    td ZREMRANGEBYLEX
+                    td ZREMRANGEBYLEX key min max
+                    td 동일 스코어 상에서, 값 기준으로 원소 삭제
+                tr
+                    td REM
+                    td ZREMRANGEBYRANK
+                    td ZREMRANGEBYRANK key start stop
+                    td 인덱스(음수 가능) 기준으로 원소 삭제
+                tr
+                    td REM
+                    td ZREMRANGEBYSCORE
+                    td ZREMRANGEBYSCORE key min max
+                    td 스코어 기준으로 원소 삭제
+                tr
+                    td Set Operation
+                    td ZUNIONSTORE
+                    td ZUNIONSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
+                    td
+                        ul
+                            li 합집합 저장
+                            li WEIGHTS : 각 스코어에 곱할 가중치
+                            li AGGREGATE : SUM(스코어 합), MIN(스코어 평균), MAX(최대 스코어)
+                tr
+                    td Set Operation
+                    td ZINTERSTORE
+                    td ZINTERSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
+                    td
+                        ul
+                            li 교집합 저장
+                            li WEIGHTS : 각 스코어에 곱할 가중치
+                            li AGGREGATE : SUM(스코어 합), MIN(스코어 평균), MAX(최대 스코어)
+                tr
+                    td GET
+                    td ZSCAN
+                    td ZSCAN key cursor [MATCH pattern] [COUNT count]
+                    td 집합이 큰 경우, 조회를 작은 단위(cursor)로 나누어 수행한다. pattern(GLOB style)이 있다면 일치하는 원소만 반환
+                tr
+                    td POP
+                    td ZPOPMAX
+                    td ZPOPMAX key [count]
+                    td 큰 원소부터 pop
+                tr
+                    td POP
+                    td ZPOPMIN
+                    td ZPOPMIN key [count]
+                    td 작은 원소부터 pop
+                tr
+                    td BLOCK,POP
+                    td BZPOPMAX
+                    td BZPOPMAX key [key ...] timeout
+                    td 큰 원소부터 pop. 없으면 timeout(초)만큼 대기
+                tr
+                    td BLOCK,POP
+                    td BZPOPMIN
+                    td BZPOPMIN key [key ...] timeout
+                    td 작은 원소부터 pop. 없으면 timeout(초)만큼 대기
+            h3.marker Hash
+            p 하나의 key에 대해 여러(40억개) field-value 쌍을 가질 수 있다
+            table
+                +ths('분류','명령','사용','설명')
+                tr
+                    td 
+                    td HDEL
+                    td HDEL key field [field ...]
+                    td 
+                tr
+                    td 
+                    td HEXISTS
+                    td HEXISTS key field
+                    td 
+                tr
+                    td 
+                    td HGET
+                    td HGET key field
+                    td 
+                tr
+                    td 
+                    td HGETALL
+                    td HGETALL key
+                    td 
+                tr
+                    td 
+                    td HINCRBY
+                    td HINCRBY key field increment
+                    td 
+                tr
+                    td 
+                    td HINCRBYFLOAT
+                    td HINCRBYFLOAT key field increment
+                    td 
+                tr
+                    td 
+                    td HKEYS
+                    td HKEYS key
+                    td 
+                tr
+                    td 
+                    td HLEN
+                    td HLEN key
+                    td 
+                tr
+                    td 
+                    td HMGET
+                    td HMGET key field [field ...]
+                    td 
+                tr
+                    td 
+                    td HMSET
+                    td HMSET key field value [field value ...]
+                    td 
+                tr
+                    td 
+                    td HSCAN
+                    td HSCAN key cursor [MATCH pattern] [COUNT count]
+                    td 
+                tr
+                    td 
+                    td HSET
+                    td HSET key field value [field value ...]
+                    td 
+                tr
+                    td 
+                    td HSETNX
+                    td HSETNX key field value
+                    td 
+                tr
+                    td 
+                    td HSTRLEN
+                    td HSTRLEN key field
+                    td 
+                tr
+                    td 
+                    td HVALS
+                    td HVALS key
+                    td 
+
 
         +asCode().
             cluster > CLUSTER ADDSLOTS slot [slot ...]
@@ -117,6 +632,7 @@ include ../../source/skeleton.jade
             cluster > CLUSTER SLOTS
             cluster > READONLY
             cluster > READWRITE
+        +asCode().
             connection > AUTH password
             connection > CLIENT CACHING YES|NO
             connection > CLIENT GETNAME
@@ -134,6 +650,7 @@ include ../../source/skeleton.jade
             connection > PING [message]
             connection > QUIT
             connection > SELECT index
+        +asCode().
             generic > DEL key [key ...]
             generic > DUMP key
             generic > EXISTS key [key ...]
@@ -158,53 +675,25 @@ include ../../source/skeleton.jade
             generic > TYPE key
             generic > UNLINK key [key ...]
             generic > WAIT numreplicas timeout
+        +asCode().
             geo > GEOADD key longitude latitude member [longitude latitude member ...]
             geo > GEODIST key member1 member2 [m|km|ft|mi]
             geo > GEOHASH key member [member ...]
             geo > GEOPOS key member [member ...]
             geo > GEORADIUS key longitude latitude radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key]
             geo > GEORADIUSBYMEMBER key member radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key]
-            hash > HDEL key field [field ...]
-            hash > HEXISTS key field
-            hash > HGET key field
-            hash > HGETALL key
-            hash > HINCRBY key field increment
-            hash > HINCRBYFLOAT key field increment
-            hash > HKEYS key
-            hash > HLEN key
-            hash > HMGET key field [field ...]
-            hash > HMSET key field value [field value ...]
-            hash > HSCAN key cursor [MATCH pattern] [COUNT count]
-            hash > HSET key field value [field value ...]
-            hash > HSETNX key field value
-            hash > HSTRLEN key field
-            hash > HVALS key
+        +asCode().
             hyperloglog > PFADD key element [element ...]
             hyperloglog > PFCOUNT key [key ...]
             hyperloglog > PFMERGE destkey sourcekey [sourcekey ...]
-            list > BLPOP key [key ...] timeout
-            list > BRPOP key [key ...] timeout
-            list > BRPOPLPUSH source destination timeout
-            list > LINDEX key index
-            list > LINSERT key BEFORE|AFTER pivot element
-            list > LLEN key
-            list > LPOP key
-            list > LPUSH key element [element ...]
-            list > LPUSHX key element [element ...]
-            list > LRANGE key start stop
-            list > LREM key count element
-            list > LSET key index element
-            list > LTRIM key start stop
-            list > RPOP key
-            list > RPOPLPUSH source destination
-            list > RPUSH key element [element ...]
-            list > RPUSHX key element [element ...]
+        +asCode().
             pubsub > PSUBSCRIBE pattern [pattern ...]
             pubsub > PUBLISH channel message
             pubsub > PUBSUB subcommand [argument [argument ...]]
             pubsub > PUNSUBSCRIBE [pattern [pattern ...]]
             pubsub > SUBSCRIBE channel [channel ...]
             pubsub > UNSUBSCRIBE [channel [channel ...]]
+        +asCode().
             scripting > EVAL script numkeys key [key ...] arg [arg ...]
             scripting > EVALSHA sha1 numkeys key [key ...] arg [arg ...]
             scripting > SCRIPT DEBUG YES|SYNC|NO
@@ -212,6 +701,7 @@ include ../../source/skeleton.jade
             scripting > SCRIPT FLUSH
             scripting > SCRIPT KILL
             scripting > SCRIPT LOAD script
+        +asCode().
             server > ACL CAT [categoryname]
             server > ACL DELUSER username [username ...]
             server > ACL GENPASS [bits]
@@ -266,46 +756,7 @@ include ../../source/skeleton.jade
             server > SWAPDB index1 index2
             server > SYNC
             server > TIME
-            set > SADD key member [member ...]
-            set > SCARD key
-            set > SDIFF key [key ...]
-            set > SDIFFSTORE destination key [key ...]
-            set > SINTER key [key ...]
-            set > SINTERSTORE destination key [key ...]
-            set > SISMEMBER key member
-            set > SMEMBERS key
-            set > SMOVE source destination member
-            set > SPOP key [count]
-            set > SRANDMEMBER key [count]
-            set > SREM key member [member ...]
-            set > SSCAN key cursor [MATCH pattern] [COUNT count]
-            set > SUNION key [key ...]
-            set > SUNIONSTORE destination key [key ...]
-            sorted_set > BZPOPMAX key [key ...] timeout
-            sorted_set > BZPOPMIN key [key ...] timeout
-            sorted_set > ZADD key [NX|XX] [CH] [INCR] score member [score member ...]
-            sorted_set > ZCARD key
-            sorted_set > ZCOUNT key min max
-            sorted_set > ZINCRBY key increment member
-            sorted_set > ZINTERSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
-            sorted_set > ZLEXCOUNT key min max
-            sorted_set > ZPOPMAX key [count]
-            sorted_set > ZPOPMIN key [count]
-            sorted_set > ZRANGE key start stop [WITHSCORES]
-            sorted_set > ZRANGEBYLEX key min max [LIMIT offset count]
-            sorted_set > ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT offset count]
-            sorted_set > ZRANK key member
-            sorted_set > ZREM key member [member ...]
-            sorted_set > ZREMRANGEBYLEX key min max
-            sorted_set > ZREMRANGEBYRANK key start stop
-            sorted_set > ZREMRANGEBYSCORE key min max
-            sorted_set > ZREVRANGE key start stop [WITHSCORES]
-            sorted_set > ZREVRANGEBYLEX key max min [LIMIT offset count]
-            sorted_set > ZREVRANGEBYSCORE key max min [WITHSCORES] [LIMIT offset count]
-            sorted_set > ZREVRANK key member
-            sorted_set > ZSCAN key cursor [MATCH pattern] [COUNT count]
-            sorted_set > ZSCORE key member
-            sorted_set > ZUNIONSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
+        +asCode().
             stream > XACK key group ID [ID ...]
             stream > XADD key ID field value [field value ...]
             stream > XCLAIM key group consumer min-idle-time ID [ID ...] [IDLE ms] [TIME ms-unix-time] [RETRYCOUNT count] [FORCE] [JUSTID]
@@ -319,6 +770,7 @@ include ../../source/skeleton.jade
             stream > XREADGROUP GROUP group consumer [COUNT count] [BLOCK milliseconds] [NOACK] STREAMS key [key ...] ID [ID ...]
             stream > XREVRANGE key end start [COUNT count]
             stream > XTRIM key MAXLEN [~] count
+        +asCode().
             transactions > DISCARD
             transactions > EXEC
             transactions > MULTI

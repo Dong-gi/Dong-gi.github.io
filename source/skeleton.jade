@@ -56,7 +56,7 @@ mixin hoverTemplate()
 mixin asCode(lan, title)
     - lan = lan || 'text'
     - title = title || lan
-    strong
+    p: strong
         | ↓ 
         = title
     .as-code.code-div.w3-leftbar.w3-border-green(lan=lan)

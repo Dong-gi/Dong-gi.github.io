@@ -1,25 +1,47 @@
 <html lnag="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="google-site-verification" content="aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM"><meta name="author" content="Donggi Kim &lt;hi.donggi@gmail.com&gt;"><meta name="keywords" content="Redis"><meta name="description" content="Redis 정리"><title>Redis</title><link id="w3css" rel="stylesheet" href="/source/w3.css"><link id="highlight-style" rel="stylesheet" href="/source/xcode.css"><link id="default-style" rel="stylesheet" href="/source/default.css"><script id="highlight-js" src="/source/highlight.pack.js"></script><script id="default-js" src="/source/default.min.js"></script><script id="dsq-count-scr" src="//donggi.disqus.com/count.js" async></script><script id="kakao-ads" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script><script id="google-ads" data-ad-client="ca-pub-7897366614471210" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script><script id="google-analytics" src="https://www.googletagmanager.com/gtag/js?id=UA-143098403-1" async></script><script>window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', 'UA-143098403-1');</script></head><body><div id="sidebar" class="w3-bar-block w3-sidebar w3-animate-left"><hr><a href="javascript:closeSidebar();" class="w3-bar-item w3-button">Close &times;</a><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><div class="w3-center"><ins style="display:none;" data-ad-unit="DAN-1k1r635zxb6g3" data-ad-width="300" data-ad-height="250" class="kakao_ad_area"></ins></div><hr><div id="file-list"></div><hr></div><div id="main"><div id="nav" style="position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle" class="w3-bar w3-blue w3-large"><button onclick="toggleSidebar()" class="w3-bar-item w3-button w3-hover-theme">&#9776;</button><input id="query" type="text" placeholder="search" class="w3-bar-item"></div><div id="contents" class="w3-padding"><h1 class="marker">참고자료</h1><ul><li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://redis.io/documentation" target="_blank">공식 문서</a></li><li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="http://redisgate.kr/" target="_blank">레디스 엔터프라이즈 버전</a></li><li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://github.com/redis-essentials/book" target="_blank">Redis Essentials</a></li></ul><h1 class="marker">Redis</h1><ul><li>인메모리 저장소 + 물리 장치 백업</li><li>메시지 브로커 기능 보유 : Pub/Sub</li><li>BSD 라이선스</li></ul><div><h2 class="marker">redis-server/redis-cli</h2><ol><li>서버 실행</li><strong>↓ shell</strong><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ redis-server [/path/to/redis.conf] [options]
+gtag('config', 'UA-143098403-1');</script></head><body><div id="sidebar" class="w3-bar-block w3-sidebar w3-animate-left"><hr><a href="javascript:closeSidebar();" class="w3-bar-item w3-button">Close &times;</a><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><div class="w3-center"><ins style="display:none;" data-ad-unit="DAN-1k1r635zxb6g3" data-ad-width="300" data-ad-height="250" class="kakao_ad_area"></ins></div><hr><div id="file-list"></div><hr></div><div id="main"><div id="nav" style="position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle" class="w3-bar w3-blue w3-large"><button onclick="toggleSidebar()" class="w3-bar-item w3-button w3-hover-theme">&#9776;</button><input id="query" type="text" placeholder="search" class="w3-bar-item"></div><div id="contents" class="w3-padding"><h1 class="marker">참고자료</h1><ul><li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://redis.io/documentation" target="_blank">공식 문서</a></li><li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="http://redisgate.kr/" target="_blank">레디스 엔터프라이즈 버전</a></li><li><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://github.com/redis-essentials/book" target="_blank">Redis Essentials</a></li></ul><h1 class="marker">Redis</h1><ul><li>인메모리 저장소 + 물리 장치 백업</li><li>메시지 브로커 기능 보유 : Pub/Sub</li><li>BSD 라이선스</li></ul><div><h2 class="marker">redis-server/redis-cli</h2><ol><li>서버 실행</li><p><strong>↓ shell</strong></p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ redis-server [/path/to/redis.conf] [options]
 $ redis-server --help
 
-$ src/redis-server --port 27017</div><li>서버 접속</li><strong>↓ shell</strong><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ redis-cli [OPTIONS] [cmd [arg [arg ...]]]
+$ src/redis-server --port 27017</div><li>서버 접속</li><p><strong>↓ shell</strong></p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ redis-cli [OPTIONS] [cmd [arg [arg ...]]]
 $ redis-cli --help
 
-$ src/redis-cli -p 27017</div><li>help</li><strong>↓ shell</strong><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">> help
+$ src/redis-cli -p 27017</div><li>help</li><p><strong>↓ shell</strong></p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">> help
 > help @&lt;group>
-> help &lt;command></div></ol><h2 class="marker"><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://redis.io/commands" target="_blank">commands</a></h2><p>Redis 명령어들은 연관성에 따라 그룹에 묶여있다</p><div><h3 class="marker">String</h3><div><h4 class="marker">SET key value [EX seconds|PX milliseconds] [NX|XX] [KEEPTTL]</h4><p>원자적으로 key에 대하여 value를 할당한다. 이전에 설정한 값은 덮어씌어진다. 이전에 설정한 유효 기간은 지워진다.</p><strong>↓ shell</strong><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">> set name anonymous
-반환 : 'OK'(성공), nil(실패)
+> help &lt;command></div></ol><h2 class="marker"><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://redis.io/commands" target="_blank">commands</a></h2><p>Redis 명령어들은 연관성에 따라 그룹에 묶여있다</p><div><h3 class="marker">String</h3><table><tr><th>분류</th><th>명령</th><th>사용</th><th>설명</th></tr><tr><td>SET</td><td>SET</td><td>SET key value [EX seconds|PX milliseconds] [NX|XX] [KEEPTTL]</td><td>원자적으로 key에 대하여 value를 할당한다. 이전에 설정한 값은 덮어씌어진다. 이전에 설정한 유효 기간은 지워진다.<p><strong>↓ text</strong></p><div lan="text" class="as-code code-div w3-leftbar w3-border-green">반환 : 'OK'(성공), nil(실패)
 
 EX seconds      : 유효 기한(s)
 PX milliseconds : 유효 기한(ms)
 NX              : 신규 키일 때만 설정 // 이를 이용해 잠금 구현 가능
 XX              : 중복 키일 때만 설정
-KEEPTTL         : 이전 유효 기간을 유지</div><h4 class="marker">GET key</h4><p>key에 대한 값을 반환한다. 없으면 nil</p><strong>↓ shell</strong><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">> get name</div><h4 class="marker">GETSET key value</h4><p>get 실행 → set 실행 → get 결과 반환</p><h4 class="marker">STRLEN key</h4><p>문자열 길이 반환. 값이 없어도 0</p><h4 class="marker">MSET key value [key value ...]</h4><p>원자적으로 주어진 키-값 쌍들을 모두 설정한다.</p><strong>↓ shell</strong><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">> mset k1 v1 k2 v2
-항상 성공하므로 'OK'만 반환</div><h4 class="marker">MSETNX key value [key value ...]</h4><p>모든 키가 신규인 경우 mset 실행하고 1 반환. 그 외엔 0 반환</p><h4 class="marker">MGET key [key ...]</h4><p>각 키에 대해 get 하여 배열로 반환.</p><h4 class="marker">APPEND key value</h4><p>키가 이미 존재하면 append, 없으면 set. 연산 후의 문자열 길이 반환.</p><h4 class="marker">INCR key</h4><p>주어진 키의 정수 1 증가. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.</p><h4 class="marker">INCRBY key increment</h4><p>주어진 키의 정수 increment 증가. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.</p><h4 class="marker">DECR key</h4><p>주어진 키의 정수 1 감소. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.</p><h4 class="marker">DECRBY key decrement</h4><p>주어진 키의 정수 decrement 감소. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.</p><h4 class="marker">INCRBYFLOAT key increment</h4><p>주어진 키의 실수 increment 만큼 변경. 없으면 0. 값은 double. 연산 후의 값 문자열로 반환.</p><h4 class="marker">SETBIT key offset value</h4><p>offset번째 비트를 value(0 | 1)로 변경. 이전 비트값 반환.</p><h4 class="marker">GETBIT key offset</h4><p>offset번째 비트를 반환.</p><h4 class="marker">BITFIELD key [GET type offset] [SET type offset value] [INCRBY type offset increment] [OVERFLOW WRAP|SAT|FAIL]</h4><h4 class="marker">BITOP operation destkey key [key ...]</h4><h4 class="marker">BITPOS key bit [start] [end]</h4><h4 class="marker">GETRANGE key start end</h4><h4 class="marker">SETRANGE key offset value</h4><h4 class="marker">STRALGO algo-name arg [arg ...] Since 6.0</h4><ol><li>STRALGO LCS [KEYS ...] [STRINGS ...] [LEN] Since 6.0</li><p>두 문자열의 공통 시퀀스를 구한다.</p><strong>↓ shell</strong><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">> stralgo lcs strings humble-bundle bundle-humble
-"ble-ule"
-</div></ol></div></div><strong>↓ text</strong><div lan="text" class="as-code code-div w3-leftbar w3-border-green">cluster > CLUSTER ADDSLOTS slot [slot ...]
+KEEPTTL         : 이전 유효 기간을 유지</div><p><strong>↓ shell</strong></p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">127.0.0.1:27017> set msg hello
+OK</div></td></tr><tr><td>GET</td><td>GET</td><td>GET key</td><td>key에 대한 값을 반환한다. 없으면 nil<p><strong>↓ shell</strong></p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">127.0.0.1:27017> get msg
+"hello"</div></td></tr><tr><td>GET,SET</td><td>GETSET</td><td>GETSET key value</td><td>get 실행 → set 실행 → get 결과 반환<p><strong>↓ shell</strong></p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">127.0.0.1:27017> getset msg hello2
+"hello"</div></td></tr><tr><td>SET</td><td>SETRANGE</td><td>SETRANGE key offset value</td><td>key에 대하여, offset(>=0) 위치부터 value로 덮어쓴다. 빈 자리는 \x00으로 채워지며, 설정 후 문자열 길이를 반환한다.<p><strong>↓ shell</strong></p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">127.0.0.1:27017> set msg hello
+OK
+127.0.0.1:27017> setrange msg 8 hello
+(integer) 13
+127.0.0.1:27017> get msg
+"hello\x00\x00\x00hello"</div></td></tr><tr><td>GET</td><td>GETRANGE</td><td>GETRANGE key start end</td><td>key에 대하여, 문자열의 [start, end] 만큼 반환한다. 음수 인덱스 가능<p><strong>↓ shell</strong></p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">127.0.0.1:27017> getrange msg 0 -1
+"hello\x00\x00\x00hello"</div></td></tr><tr><td>GET</td><td>STRLEN</td><td>STRLEN key</td><td>문자열 길이 반환. 값이 없어도 0<p><strong>↓ shell</strong></p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">127.0.0.1:27017> strlen not_exists_key
+(integer) 0</div></td></tr><tr><td>SET</td><td>MSET</td><td>MSET key value [key value ...]</td><td>원자적으로 주어진 키-값 쌍들을 모두 설정한다.<p><strong>↓ shell</strong></p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">127.0.0.1:27017> mset k1 v1 k2 v2
+OK # 항상 성공</div></td></tr><tr><td>SET</td><td>MSETNX</td><td>MSETNX key value [key value ...]</td><td>모든 키가 신규인 경우 mset 실행하고 1 반환. 그 외엔 0 반환</td></tr><tr><td>GET</td><td>MGET</td><td>MGET key [key ...]</td><td>각 키에 대해 get 하여 배열로 반환.<p><strong>↓ shell</strong></p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">127.0.0.1:27017> mget k1 k2 not_exists_key
+1) "v1"
+2) "v2"
+3) (nil)</div></td></tr><tr><td>SET</td><td>APPEND</td><td>APPEND key value</td><td>키가 이미 존재하면 append, 없으면 set. 연산 후의 문자열 길이 반환.</td></tr><tr><td>INCR</td><td>INCR</td><td>INCR key</td><td>주어진 키의 정수 1 증가. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.</td></tr><tr><td>INCR</td><td>INCRBY</td><td>INCRBY key increment</td><td>주어진 키의 정수 increment 증가. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.</td></tr><tr><td>INCR</td><td>DECR</td><td>DECR key</td><td>주어진 키의 정수 1 감소. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.</td></tr><tr><td>INCR</td><td>DECRBY</td><td>DECRBY key decrement</td><td>주어진 키의 정수 decrement 감소. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환.</td></tr><tr><td>INCR</td><td>INCRBYFLOAT</td><td>INCRBYFLOAT key increment</td><td>주어진 키의 실수 increment 만큼 변경. 없으면 0. 값은 double. 연산 후의 값 문자열로 반환.</td></tr><tr><td>SET,BIT</td><td>SETBIT</td><td>SETBIT key offset value</td><td>offset번째 비트를 value(0 | 1)로 변경. 이전 비트값 반환.</td></tr><tr><td>GET,BIT</td><td>GETBIT</td><td>GETBIT key offset</td><td>offset번째 비트를 반환.</td></tr><tr><td>BIT</td><td>BITFIELD</td><td>BITFIELD key [GET type offset] [SET type offset value] [INCRBY type offset increment] [OVERFLOW WRAP|SAT|FAIL]</td><td><ul><li>문자열을 비트 배열로 간주하여 GET, SET, INCRBY 연산들을 수행한다</li><li>type : 부호 있는 64비트, 부호 없는 63비트까지 가능.</li><p>예. i5(부호 있는 5비트), u4(부호 없는 4비트)</p><li>offset : 시작 위치. 정수만 이용하는 경우 bit단위, #를 붙이면 type 크기 단위</li><li>OVERFLOW : WRAP(default, 오버/언더플로우 비트 무시), SAT(오버/언더플로우 시 최대/최소값으로), FAIL(실패, NULL 반환)</li><p>OVERFLOW 이후의 INCRBY에만 영향을 미침에 주의</p><li>반환 : SET(이전 값), GET(현재 값), INCRBY(신규 값)</li></ul><p><strong>↓ shell</strong></p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">127.0.0.1:27017> set time ''
+OK
+127.0.0.1:27017> bitfield time SET u6 #0 11 SET u6 #1 33 SET u6 #2 55 GET u6 #0 GET u6 #1 GET u6 #2 INCRBY u6 #0 1 INCRBY u6 #1 1 INCRBY u6 #2 1
+1) (integer) 0
+2) (integer) 0
+3) (integer) 0
+4) (integer) 11
+5) (integer) 33
+6) (integer) 55
+7) (integer) 12
+8) (integer) 34
+9) (integer) 56</div></td></tr><tr><td>SET,BIT</td><td>BITOP</td><td>BITOP operation destkey key [key ...]</td><td>소스 키들의 값에 대한 AND, OR, XOR, NOT 결과를 destkey에 저장한다</td></tr><tr><td>GET,BIT</td><td>BITPOS</td><td>BITPOS key bit [start] [end]</td><td>bit와 일치하는 인덱스를 [start, end] 사이(음수 인덱스 가능)에서 구한다. 없는 경우 -1 반환</td></tr><tr><td>GET</td><td>STRALGO</td><td>STRALGO algo-name arg [arg ...] Since 6.0</td><td><ol><li>STRALGO LCS [KEYS ...] [STRINGS ...] [LEN] Since 6.0</li><p>두 문자열의 공통 시퀀스를 구한다.</p><p><strong>↓ shell</strong></p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">> stralgo lcs strings humble-bundle bundle-humble
+"ble-ule"</div></ol></td></tr></table><h3 class="marker">List</h3><p>값은 입력된 순서대로 저장되고, 값이 하나도 없으면 키가 삭제된다</p><table><tr><th>분류</th><th>명령</th><th>사용</th><th>설명</th></tr><tr><td>SET</td><td>LPUSH</td><td>LPUSH key element [element ...]</td><td>왼쪽에 값 추가. 이후 리스트 크기 반환</td></tr><tr><td>SET</td><td>RPUSH</td><td>RPUSH key element [element ...]</td><td>오른쪽에 값 추가. 이후 리스트 크기 반환</td></tr><tr><td>SET</td><td>LPUSHX</td><td>LPUSHX key element [element ...]</td><td>리스트가 존재하면 왼쪽에 값 추가. 이후 리스트 크기 반환</td></tr><tr><td>SET</td><td>RPUSHX</td><td>RPUSHX key element [element ...]</td><td>리스트가 존재하면 오른쪽에 값 추가. 이후 리스트 크기 반환</td></tr><tr><td>POP</td><td>LPOP</td><td>LPOP key</td><td>리스트 왼쪽 값 삭제 후 반환</td></tr><tr><td>POP</td><td>RPOP</td><td>RPOP key</td><td>리스트 오른쪽 값 삭제 후 반환</td></tr><tr><td>POP,BLOCK</td><td>BLPOP</td><td>BLPOP key [key ...] timeout</td><td>지정한 리스트들을 순회하여, 최초로 발견된 왼쪽 값 삭제 후 반환. 없으면 timeout(초)만큼 대기.</td></tr><tr><td>POP,BLOCK</td><td>BRPOP</td><td>BRPOP key [key ...] timeout</td><td>지정한 리스트들을 순회하여, 최초로 발견된 오른쪽 값 삭제 후 반환. 없으면 timeout(초)만큼 대기.</td></tr><tr><td>GET</td><td>LINDEX</td><td>LINDEX key index</td><td>index(음수 가능) 번째 값 반환</td></tr><tr><td>GET</td><td>LRANGE</td><td>LRANGE key start stop</td><td>[start, stop] 범위의 값 반환(음수 인덱스 가능)</td></tr><tr><td>SET</td><td>LSET</td><td>LSET key index element</td><td>index(음수 가능) 번째 값을 element로 교체</td></tr><tr><td>SET</td><td>LINSERT</td><td>LINSERT key BEFORE|AFTER pivot element</td><td>pivot 전/후에 element를 삽입</td></tr><tr><td>GET</td><td>LLEN</td><td>LLEN key</td><td>리스트 크기 반환</td></tr><tr><td>REM</td><td>LREM</td><td>LREM key count element</td><td>element를 count개 삭제, count == 0이면 전부 삭제, count &lt; 0이면 오른쪽부터 삭제</td></tr><tr><td>REM</td><td>LTRIM</td><td>LTRIM key start stop</td><td>[start, stop] 범위(음수 인덱스 가능)만 남기고 나머지 삭제</td></tr><tr><td>BLOCK</td><td>RPOPLPUSH</td><td>RPOPLPUSH source destination</td><td>원자적으로 rpop + lpush 실행</td></tr><tr><td>BLOCK</td><td>BRPOPLPUSH</td><td>BRPOPLPUSH source destination timeout</td><td>리스트에 값이 있으면 rpoplpush 실행, 없으면 timeout(초)만큼 대기</td></tr></table><h3 class="marker">Set</h3><table><tr><th>분류</th><th>명령</th><th>사용</th><th>설명</th></tr><tr><td>SET</td><td>SADD</td><td>SADD key member [member ...]</td><td>집합에 원소 추가. 실제 추가된 개수 반환</td></tr><tr><td>REM</td><td>SREM</td><td>SREM key member [member ...]</td><td>집합에서 원소 삭제. 실제 제거된 개수 반환</td></tr><tr><td>GET</td><td>SISMEMBER</td><td>SISMEMBER key member</td><td>집합에 포함되면 1, 아니면 0</td></tr><tr><td>GET</td><td>SCARD</td><td>SCARD key</td><td>집합 크기 반환</td></tr><tr><td>GET</td><td>SMEMBERS</td><td>SMEMBERS key</td><td>전체 원소 반환. 집합이 클수록 느려진다</td></tr><tr><td>GET</td><td>SSCAN</td><td>SSCAN key cursor [MATCH pattern] [COUNT count]</td><td>집합이 큰 경우, 조회를 작은 단위(cursor)로 나누어 수행한다. pattern(GLOB style)이 있다면 일치하는 원소만 반환</td></tr><tr><td>GET</td><td>SRANDMEMBER</td><td>SRANDMEMBER key [count]</td><td>무작위로 count(default 1)개 반환</td></tr><tr><td>POP</td><td>SPOP</td><td>SPOP key [count]</td><td>무작위로 count(default 1)개 삭제 후 반환</td></tr><tr><td>Set Operation</td><td>SUNION</td><td>SUNION key [key ...]</td><td>합집합 반환</td></tr><tr><td>Set Operation</td><td>SINTER</td><td>SINTER key [key ...]</td><td>교집합 반환</td></tr><tr><td>Set Operation</td><td>SDIFF</td><td>SDIFF key [key ...]</td><td>차집합 반환</td></tr><tr><td>Set Operation</td><td>SUNIONSTORE</td><td>SUNIONSTORE destination key [key ...]</td><td>sunion 결과 저장</td></tr><tr><td>Set Operation</td><td>SINTERSTORE</td><td>SINTERSTORE destination key [key ...]</td><td>sinter 결과 저장</td></tr><tr><td>Set Operation</td><td>SDIFFSTORE</td><td>SDIFFSTORE destination key [key ...]</td><td>sdiff 결과 저장</td></tr><tr><td>SET</td><td>SMOVE</td><td>SMOVE source destination member</td><td>member가 source에 포함된다면 destination으로 이동하고 1 반환. 아니면 0</td></tr></table><h3 class="marker">Sorted Set</h3><p>key-value 관계에 정렬을 위한 score가 추가된다. key-(score, value), 같은 score 사이에서는 value를 기준으로 정렬된다</p><table><tr><th>분류</th><th>명령</th><th>사용</th><th>설명</th></tr><tr><td>SET</td><td>ZADD</td><td>ZADD key [NX|XX] [CH] [INCR] score member [score member ...]</td><td><ul><li>NX : 멤버가 존재하면 스킵, XX : 멤버가 존재하면 score 갱신</li><li>INCR : score를 덮어쓰지 않고, 값만큼 증가</li><li>리턴 : 신규로 추가된 원소 개수만(기본), score 갱신된 개수도 포함(CH)</li></ul></td></tr><tr><td>INCR</td><td>ZINCRBY</td><td>ZINCRBY key increment member</td><td>스코어를 increment만큼 증가한 뒤 반환</td></tr><tr><td>GET</td><td>ZSCORE</td><td>ZSCORE key member</td><td>원소의 스코어 반환</td></tr><tr><td>GET</td><td>ZRANK</td><td>ZRANK key member</td><td>원소의 index(오름차순) 반환</td></tr><tr><td>GET</td><td>ZREVRANK</td><td>ZREVRANK key member</td><td>원소의 index(내림차순) 반환</td></tr><tr><td>GET</td><td>ZCARD</td><td>ZCARD key</td><td>집합 크기 반환</td></tr><tr><td>GET</td><td>ZCOUNT</td><td>ZCOUNT key min max</td><td>스코어가 [min, max]에 포함되는 원소 개수 반환. 모두 가져오려면 -inf, +inf 이용</td></tr><tr><td>GET</td><td>ZLEXCOUNT</td><td>ZLEXCOUNT key min max</td><td>동일 스코어 상에서, 값을 기준으로 범위 안에 있는 원소 개수 반환.<br> min, max 앞에 [ 또는 (를 명시해야하며, 모두 가져오려면 -, + 이용</td></tr><tr><td>GET</td><td>ZRANGE</td><td>ZRANGE key start stop [WITHSCORES]</td><td>작은 것부터 [start, stop] 범위(음수 인덱스 가능) 원소 반환</td></tr><tr><td>GET</td><td>ZRANGEBYLEX</td><td>ZRANGEBYLEX key min max [LIMIT offset count]</td><td>동일 스코어 상에서, 값을 기준으로 작은 것부터 반환. min, max 앞에 [ 또는 (를 명시해야하며, 모두 가져오려면 -, + 이용</td></tr><tr><td>GET</td><td>ZRANGEBYSCORE</td><td>ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT offset count]</td><td>스코어가 작은 것부터 [min, max]에 포함되는 원소 반환. 모두 가져오려면 -inf, +inf 이용. 경계값 미포함하려면 (min, (max 이용</td></tr><tr><td>GET</td><td>ZREVRANGE</td><td>ZREVRANGE key start stop [WITHSCORES]</td><td>큰 것부터 [start, stop] 범위(음수 인덱스 가능) 원소 반환</td></tr><tr><td>GET</td><td>ZREVRANGEBYLEX</td><td>ZREVRANGEBYLEX key max min [LIMIT offset count]</td><td>동일 스코어 상에서, 값을 기준으로 큰 것부터 반환. min, max 앞에 [ 또는 (를 명시해야하며, 모두 가져오려면 -, + 이용</td></tr><tr><td>GET</td><td>ZREVRANGEBYSCORE</td><td>ZREVRANGEBYSCORE key max min [WITHSCORES] [LIMIT offset count]</td><td>스코어가 큰 것부터 [min, max]에 포함되는 원소 반환. 모두 가져오려면 [-inf, +inf] 이용. 경계값 미포함하려면 (min, (max 이용</td></tr><tr><td>REM</td><td>ZREM</td><td>ZREM key member [member ...]</td><td>원소 삭제. 삭제된 개수 반환</td></tr><tr><td>REM</td><td>ZREMRANGEBYLEX</td><td>ZREMRANGEBYLEX key min max</td><td>동일 스코어 상에서, 값 기준으로 원소 삭제</td></tr><tr><td>REM</td><td>ZREMRANGEBYRANK</td><td>ZREMRANGEBYRANK key start stop</td><td>인덱스(음수 가능) 기준으로 원소 삭제</td></tr><tr><td>REM</td><td>ZREMRANGEBYSCORE</td><td>ZREMRANGEBYSCORE key min max</td><td>스코어 기준으로 원소 삭제</td></tr><tr><td>Set Operation</td><td>ZUNIONSTORE</td><td>ZUNIONSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]</td><td><ul><li>합집합 저장</li><li>WEIGHTS : 각 스코어에 곱할 가중치</li><li>AGGREGATE : SUM(스코어 합), MIN(스코어 평균), MAX(최대 스코어)</li></ul></td></tr><tr><td>Set Operation</td><td>ZINTERSTORE</td><td>ZINTERSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]</td><td><ul><li>교집합 저장</li><li>WEIGHTS : 각 스코어에 곱할 가중치</li><li>AGGREGATE : SUM(스코어 합), MIN(스코어 평균), MAX(최대 스코어)</li></ul></td></tr><tr><td>GET</td><td>ZSCAN</td><td>ZSCAN key cursor [MATCH pattern] [COUNT count]</td><td>집합이 큰 경우, 조회를 작은 단위(cursor)로 나누어 수행한다. pattern(GLOB style)이 있다면 일치하는 원소만 반환</td></tr><tr><td>POP</td><td>ZPOPMAX</td><td>ZPOPMAX key [count]</td><td>큰 원소부터 pop</td></tr><tr><td>POP</td><td>ZPOPMIN</td><td>ZPOPMIN key [count]</td><td>작은 원소부터 pop</td></tr><tr><td>BLOCK,POP</td><td>BZPOPMAX</td><td>BZPOPMAX key [key ...] timeout</td><td>큰 원소부터 pop. 없으면 timeout(초)만큼 대기</td></tr><tr><td>BLOCK,POP</td><td>BZPOPMIN</td><td>BZPOPMIN key [key ...] timeout</td><td>작은 원소부터 pop. 없으면 timeout(초)만큼 대기</td></tr></table><h3 class="marker">Hash</h3><p>하나의 key에 대해 여러(40억개) field-value 쌍을 가질 수 있다</p><table><tr><th>분류</th><th>명령</th><th>사용</th><th>설명</th></tr><tr><td> </td><td>HDEL</td><td>HDEL key field [field ...]</td><td> </td></tr><tr><td> </td><td>HEXISTS</td><td>HEXISTS key field</td><td> </td></tr><tr><td> </td><td>HGET</td><td>HGET key field</td><td> </td></tr><tr><td> </td><td>HGETALL</td><td>HGETALL key</td><td> </td></tr><tr><td> </td><td>HINCRBY</td><td>HINCRBY key field increment</td><td> </td></tr><tr><td> </td><td>HINCRBYFLOAT</td><td>HINCRBYFLOAT key field increment</td><td> </td></tr><tr><td> </td><td>HKEYS</td><td>HKEYS key</td><td> </td></tr><tr><td> </td><td>HLEN</td><td>HLEN key</td><td> </td></tr><tr><td> </td><td>HMGET</td><td>HMGET key field [field ...]</td><td> </td></tr><tr><td> </td><td>HMSET</td><td>HMSET key field value [field value ...]</td><td> </td></tr><tr><td> </td><td>HSCAN</td><td>HSCAN key cursor [MATCH pattern] [COUNT count]</td><td> </td></tr><tr><td> </td><td>HSET</td><td>HSET key field value [field value ...]</td><td> </td></tr><tr><td> </td><td>HSETNX</td><td>HSETNX key field value</td><td> </td></tr><tr><td> </td><td>HSTRLEN</td><td>HSTRLEN key field</td><td> </td></tr><tr><td> </td><td>HVALS</td><td>HVALS key</td><td> </td></tr></table></div><p><strong>↓ text</strong></p><div lan="text" class="as-code code-div w3-leftbar w3-border-green">cluster > CLUSTER ADDSLOTS slot [slot ...]
 cluster > CLUSTER BUMPEPOCH
 cluster > CLUSTER COUNT-FAILURE-REPORTS node-id
 cluster > CLUSTER COUNTKEYSINSLOT slot
@@ -42,8 +64,7 @@ cluster > CLUSTER SETSLOT slot IMPORTING|MIGRATING|STABLE|NODE [node-id]
 cluster > CLUSTER SLAVES node-id
 cluster > CLUSTER SLOTS
 cluster > READONLY
-cluster > READWRITE
-connection > AUTH password
+cluster > READWRITE</div><p><strong>↓ text</strong></p><div lan="text" class="as-code code-div w3-leftbar w3-border-green">connection > AUTH password
 connection > CLIENT CACHING YES|NO
 connection > CLIENT GETNAME
 connection > CLIENT GETREDIR
@@ -59,8 +80,7 @@ connection > ECHO message
 connection > HELLO protover [AUTH username password] [SETNAME clientname]
 connection > PING [message]
 connection > QUIT
-connection > SELECT index
-generic > DEL key [key ...]
+connection > SELECT index</div><p><strong>↓ text</strong></p><div lan="text" class="as-code code-div w3-leftbar w3-border-green">generic > DEL key [key ...]
 generic > DUMP key
 generic > EXISTS key [key ...]
 generic > EXPIRE key seconds
@@ -83,62 +103,25 @@ generic > TOUCH key [key ...]
 generic > TTL key
 generic > TYPE key
 generic > UNLINK key [key ...]
-generic > WAIT numreplicas timeout
-geo > GEOADD key longitude latitude member [longitude latitude member ...]
+generic > WAIT numreplicas timeout</div><p><strong>↓ text</strong></p><div lan="text" class="as-code code-div w3-leftbar w3-border-green">geo > GEOADD key longitude latitude member [longitude latitude member ...]
 geo > GEODIST key member1 member2 [m|km|ft|mi]
 geo > GEOHASH key member [member ...]
 geo > GEOPOS key member [member ...]
 geo > GEORADIUS key longitude latitude radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key]
-geo > GEORADIUSBYMEMBER key member radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key]
-hash > HDEL key field [field ...]
-hash > HEXISTS key field
-hash > HGET key field
-hash > HGETALL key
-hash > HINCRBY key field increment
-hash > HINCRBYFLOAT key field increment
-hash > HKEYS key
-hash > HLEN key
-hash > HMGET key field [field ...]
-hash > HMSET key field value [field value ...]
-hash > HSCAN key cursor [MATCH pattern] [COUNT count]
-hash > HSET key field value [field value ...]
-hash > HSETNX key field value
-hash > HSTRLEN key field
-hash > HVALS key
-hyperloglog > PFADD key element [element ...]
+geo > GEORADIUSBYMEMBER key member radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] [ASC|DESC] [STORE key] [STOREDIST key]</div><p><strong>↓ text</strong></p><div lan="text" class="as-code code-div w3-leftbar w3-border-green">hyperloglog > PFADD key element [element ...]
 hyperloglog > PFCOUNT key [key ...]
-hyperloglog > PFMERGE destkey sourcekey [sourcekey ...]
-list > BLPOP key [key ...] timeout
-list > BRPOP key [key ...] timeout
-list > BRPOPLPUSH source destination timeout
-list > LINDEX key index
-list > LINSERT key BEFORE|AFTER pivot element
-list > LLEN key
-list > LPOP key
-list > LPUSH key element [element ...]
-list > LPUSHX key element [element ...]
-list > LRANGE key start stop
-list > LREM key count element
-list > LSET key index element
-list > LTRIM key start stop
-list > RPOP key
-list > RPOPLPUSH source destination
-list > RPUSH key element [element ...]
-list > RPUSHX key element [element ...]
-pubsub > PSUBSCRIBE pattern [pattern ...]
+hyperloglog > PFMERGE destkey sourcekey [sourcekey ...]</div><p><strong>↓ text</strong></p><div lan="text" class="as-code code-div w3-leftbar w3-border-green">pubsub > PSUBSCRIBE pattern [pattern ...]
 pubsub > PUBLISH channel message
 pubsub > PUBSUB subcommand [argument [argument ...]]
 pubsub > PUNSUBSCRIBE [pattern [pattern ...]]
 pubsub > SUBSCRIBE channel [channel ...]
-pubsub > UNSUBSCRIBE [channel [channel ...]]
-scripting > EVAL script numkeys key [key ...] arg [arg ...]
+pubsub > UNSUBSCRIBE [channel [channel ...]]</div><p><strong>↓ text</strong></p><div lan="text" class="as-code code-div w3-leftbar w3-border-green">scripting > EVAL script numkeys key [key ...] arg [arg ...]
 scripting > EVALSHA sha1 numkeys key [key ...] arg [arg ...]
 scripting > SCRIPT DEBUG YES|SYNC|NO
 scripting > SCRIPT EXISTS sha1 [sha1 ...]
 scripting > SCRIPT FLUSH
 scripting > SCRIPT KILL
-scripting > SCRIPT LOAD script
-server > ACL CAT [categoryname]
+scripting > SCRIPT LOAD script</div><p><strong>↓ text</strong></p><div lan="text" class="as-code code-div w3-leftbar w3-border-green">server > ACL CAT [categoryname]
 server > ACL DELUSER username [username ...]
 server > ACL GENPASS [bits]
 server > ACL LIST
@@ -191,48 +174,7 @@ server > SLAVEOF host port
 server > SLOWLOG subcommand [argument]
 server > SWAPDB index1 index2
 server > SYNC
-server > TIME
-set > SADD key member [member ...]
-set > SCARD key
-set > SDIFF key [key ...]
-set > SDIFFSTORE destination key [key ...]
-set > SINTER key [key ...]
-set > SINTERSTORE destination key [key ...]
-set > SISMEMBER key member
-set > SMEMBERS key
-set > SMOVE source destination member
-set > SPOP key [count]
-set > SRANDMEMBER key [count]
-set > SREM key member [member ...]
-set > SSCAN key cursor [MATCH pattern] [COUNT count]
-set > SUNION key [key ...]
-set > SUNIONSTORE destination key [key ...]
-sorted_set > BZPOPMAX key [key ...] timeout
-sorted_set > BZPOPMIN key [key ...] timeout
-sorted_set > ZADD key [NX|XX] [CH] [INCR] score member [score member ...]
-sorted_set > ZCARD key
-sorted_set > ZCOUNT key min max
-sorted_set > ZINCRBY key increment member
-sorted_set > ZINTERSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
-sorted_set > ZLEXCOUNT key min max
-sorted_set > ZPOPMAX key [count]
-sorted_set > ZPOPMIN key [count]
-sorted_set > ZRANGE key start stop [WITHSCORES]
-sorted_set > ZRANGEBYLEX key min max [LIMIT offset count]
-sorted_set > ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT offset count]
-sorted_set > ZRANK key member
-sorted_set > ZREM key member [member ...]
-sorted_set > ZREMRANGEBYLEX key min max
-sorted_set > ZREMRANGEBYRANK key start stop
-sorted_set > ZREMRANGEBYSCORE key min max
-sorted_set > ZREVRANGE key start stop [WITHSCORES]
-sorted_set > ZREVRANGEBYLEX key max min [LIMIT offset count]
-sorted_set > ZREVRANGEBYSCORE key max min [WITHSCORES] [LIMIT offset count]
-sorted_set > ZREVRANK key member
-sorted_set > ZSCAN key cursor [MATCH pattern] [COUNT count]
-sorted_set > ZSCORE key member
-sorted_set > ZUNIONSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
-stream > XACK key group ID [ID ...]
+server > TIME</div><p><strong>↓ text</strong></p><div lan="text" class="as-code code-div w3-leftbar w3-border-green">stream > XACK key group ID [ID ...]
 stream > XADD key ID field value [field value ...]
 stream > XCLAIM key group consumer min-idle-time ID [ID ...] [IDLE ms] [TIME ms-unix-time] [RETRYCOUNT count] [FORCE] [JUSTID]
 stream > XDEL key ID [ID ...]
@@ -244,8 +186,7 @@ stream > XRANGE key start end [COUNT count]
 stream > XREAD [COUNT count] [BLOCK milliseconds] STREAMS key [key ...] id [id ...]
 stream > XREADGROUP GROUP group consumer [COUNT count] [BLOCK milliseconds] [NOACK] STREAMS key [key ...] ID [ID ...]
 stream > XREVRANGE key end start [COUNT count]
-stream > XTRIM key MAXLEN [~] count
-transactions > DISCARD
+stream > XTRIM key MAXLEN [~] count</div><p><strong>↓ text</strong></p><div lan="text" class="as-code code-div w3-leftbar w3-border-green">transactions > DISCARD
 transactions > EXEC
 transactions > MULTI
 transactions > UNWATCH
