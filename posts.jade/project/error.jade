@@ -84,3 +84,29 @@ include ../../source/skeleton.jade
     ol
         +asA('https://www.red-gate.com/simple-talk/blogs/oh-no-my-paddings-invalid/')
         li 스트림을 직접 이용하는 경우, flush 완료됐는지 확인이 필요하다.
+        +asCode('cs', 'C# 암호화').
+            var source = File.ReadAllBytes("source_file");
+            using var aes = Aes.Create();
+            aes.Key = Encoding.ASCII.GetBytes("32 Bytes String");
+            aes.IV = Encoding.ASCII.GetBytes("16 Bytes String");
+            
+            using var mStream = new MemoryStream();
+            {
+                using var cStream = new CryptoStream(mStream, aes.CreateEncryptor(), CryptoStreamMode.Write);
+                cStream.Write(source, 0, source.Length);
+            } // 블록을 추가하여 암호화 스트림이 먼저 flush + close하도록 보장
+            var target = mStream.ToArray();
+        +asCode('cs', 'C# 복호화').
+            {
+                var source = File.ReadAllBytes("source_file");
+                var aes = Aes.Create();
+                aes.Key = Encoding.ASCII.GetBytes("32 Bytes String");
+                aes.IV = Encoding.ASCII.GetBytes("16 Bytes String");
+                
+                using var mStream = new MemoryStream(source);
+                using var cStream = new CryptoStream(mStream, aes.CreateDecryptor(), CryptoStreamMode.Read);
+                using var fStream = new FileStream("target_file", FileMode.Create);
+                var buf = new byte[source.Length];
+                var length = cStream.Read(buf, 0, buf.Length);
+                fStream.Write(buf, 0, length);
+            } // 블록을 추가하여 모든 스트림이 알아서 닫히도록 구성

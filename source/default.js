@@ -169,7 +169,25 @@ function updateSidebar() {
     else
         openSidebar();
     document.getElementById('sidebar').style.width = '333px';
-    new DKFileList('/source/filelist.js', '#file-list', null, false, null, true, () => {
+
+    let fileMap = { files: [] };
+    for (let file of fileText.trim().replace(/\r/gm, '').split('\n').sort(Donggi.compareString)) {
+        let subMap = fileMap;
+        let dirs = file.split('/');
+        let filename = dirs.pop();
+        for (let dir of dirs) {
+            if (!subMap.hasOwnProperty(dir)) {
+                subMap[dir] = {};
+                subMap[dir].files = [];
+            }
+            subMap = subMap[dir];
+        }
+        subMap.files.push(filename);
+    }
+    let url = URL.createObjectURL(new Blob([Donggi.makeLSlikeText('git', fileMap, 'files')], {
+        type: 'text/plain;charset=utf-8;'
+    }));
+    new DKFileList(url, '#file-list', null, false, null, true, () => {
         document.querySelector('#file-list>details').open = false;
     });
 }
