@@ -7,17 +7,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.support.AbstractApplicationContext;
 
+import lombok.extern.jbosslog.JBossLog;
+
 @Configuration
 @ImportResource("file:src/main/resource/Beans22.xml")
+@JBossLog
 public class ConfigTest3 {
 
     @Test
     public void test() {
         ApplicationContext context = new AnnotationConfigApplicationContext(ConfigTest3.class);
         ((AbstractApplicationContext) context).registerShutdownHook();
-        System.out.println((Hello1)context.getBean("hello1"));
-        System.out.println((Hello1)context.getBean("hello1-2"));
-        System.out.println((Hello6)context.getBean("hello6"));
+        log.info((Hello1)context.getBean("hello1"));
+        log.info((Hello1)context.getBean("hello1-2"));
+        log.info((Hello6)context.getBean("hello6"));
     }
 /*
 Hello1(message=Hello1 메시지)

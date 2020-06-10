@@ -5,13 +5,16 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import lombok.extern.jbosslog.JBossLog;
+
+@JBossLog
 public class Hello4Test2 {
 
     @Test
     public void test() {
         ApplicationContext context = new FileSystemXmlApplicationContext("src/main/resource/Beans6.xml");
         ((AbstractApplicationContext) context).registerShutdownHook();
-        System.out.println(((Hello4) context.getBean(Hello4.class.getCanonicalName() + "#0")).getMessage());
+        log.info(((Hello4) context.getBean(Hello4.class.getCanonicalName() + "#0")).getMessage());
     }
 /*
 21:49:56.660 [main] DEBUG org.springframework.context.support.FileSystemXmlApplicationContext - Refreshing org.springframework.context.support.FileSystemXmlApplicationContext@7770f470

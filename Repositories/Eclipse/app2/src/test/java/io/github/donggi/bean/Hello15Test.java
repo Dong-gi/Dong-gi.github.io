@@ -1,39 +1,25 @@
 package io.github.donggi.bean;
 
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
-public class Hello15Test {
+import lombok.extern.jbosslog.JBossLog;
 
-    public void test1() throws Exception {
-        ApplicationContext context = new FileSystemXmlApplicationContext("src/main/resource/Beans20.xml");
-        ((AbstractApplicationContext) context).registerShutdownHook();
-        System.out.println(((Hello15) context.getBean("hello15")).getHello16().getMessage());
-        Thread.sleep(1000);
-        System.out.println(((Hello15) context.getBean("hello15")).getHello16().getMessage());
-        Thread.sleep(1000);
-        System.out.println(((Hello15) context.getBean("hello15")).getHello16().getMessage());
-    }
-/*
-Fri Sep 20 06:56:43 KST 2019
-Fri Sep 20 06:56:43 KST 2019
-Fri Sep 20 06:56:43 KST 2019
- */
+@JBossLog
+public class Hello15Test {
     @Test
-    public void test2() throws Exception {
-        ApplicationContext context = new FileSystemXmlApplicationContext("src/main/resource/Beans21.xml");
-        ((AbstractApplicationContext) context).registerShutdownHook();
-        System.out.println(((Hello15) context.getBean("hello15")).getHello16().getMessage());
-        Thread.sleep(1000);
-        System.out.println(((Hello15) context.getBean("hello15")).getHello16().getMessage());
-        Thread.sleep(1000);
-        System.out.println(((Hello15) context.getBean("hello15")).getHello16().getMessage());
+    public void test() throws Exception {
+        try (var context = new FileSystemXmlApplicationContext("src/main/resource/Beans20.xml")) {
+            log.info(context.getBean("hello15"));
+            Thread.sleep(1000);
+            log.info(context.getBean("hello15"));
+            Thread.sleep(1000);
+            log.info(context.getBean("hello15"));
+        }
     }
 /*
-Fri Sep 20 06:59:20 KST 2019
-Fri Sep 20 06:59:21 KST 2019
-Fri Sep 20 06:59:22 KST 2019
- */
+18:03:12.116 [main] INFO io.github.donggi.bean.Hello15Test - Hello15(hello16=Hello16(message=Wed Jun 10 18:03:11 KST 2020))
+18:03:13.118 [main] INFO io.github.donggi.bean.Hello15Test - Hello15(hello16=Hello16(message=Wed Jun 10 18:03:11 KST 2020))
+18:03:14.118 [main] INFO io.github.donggi.bean.Hello15Test - Hello15(hello16=Hello16(message=Wed Jun 10 18:03:11 KST 2020))
+*/
 }

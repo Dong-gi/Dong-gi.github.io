@@ -1,0 +1,16 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="msg" class="java.lang.String"
+		c:original="Default Message" />
+	
+	<bean id="hello17-1" class="io.github.donggi.bean.Hello17"
+		c:_0="Hello World 17" />
+	<bean id="hello17-2" class="io.github.donggi.bean.Hello17"
+		c:_0-ref="msg" />
+</beans>

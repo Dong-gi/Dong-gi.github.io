@@ -7,7 +7,6 @@
    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <bean class="io.github.donggi.bean.Hello4">
-        <!-- index, type, name은 DTD 설명대로 옵션일 뿐. -->
-        <constructor-arg index="0" type="java.lang.String" name="message" value="Hell4 - 메시지"/>
+        <constructor-arg value="Hell4 - 메시지"/>
     </bean>
 </beans>

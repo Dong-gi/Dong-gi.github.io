@@ -8,7 +8,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractApplicationContext;
 
+import lombok.extern.jbosslog.JBossLog;
+
 @Configuration
+@JBossLog
 public class ConfigTest1 {
 
     @Bean
@@ -39,9 +42,9 @@ public class ConfigTest1 {
     public void test() {
         ApplicationContext context = new AnnotationConfigApplicationContext(ConfigTest1.class);
         ((AbstractApplicationContext) context).registerShutdownHook();
-        System.out.println((Hello1)context.getBean("hello1"));
-        System.out.println((Hello1)context.getBean("hello1-2"));
-        System.out.println((Hello6)context.getBean("hello6"));
+        log.info((Hello1)context.getBean("hello1"));
+        log.info((Hello1)context.getBean("hello1-2"));
+        log.info((Hello6)context.getBean("hello6"));
     }
 /*
 Hello1(message=Hello1 메시지)

@@ -4,12 +4,15 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import lombok.extern.jbosslog.JBossLog;
+
+@JBossLog
 public class Hello4Test5 {
 
     @Test
     public void test() {
         ApplicationContext context = new FileSystemXmlApplicationContext("src/main/resource/Beans24.xml");
-        System.out.println(context.getBean("hello4", Hello4.class).getMessage());
+        log.info(context.getBean("hello4", Hello4.class).getMessage());
     }
 /*
 11:15:37.797 [main] DEBUG org.springframework.context.support.FileSystemXmlApplicationContext - Refreshing org.springframework.context.support.FileSystemXmlApplicationContext@5cb9f472

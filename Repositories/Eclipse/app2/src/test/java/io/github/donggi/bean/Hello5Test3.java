@@ -4,35 +4,38 @@ import java.util.Arrays;
 
 import org.apache.commons.collections4.MapUtils;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
-public class Hello5Test3 {
+import lombok.extern.jbosslog.JBossLog;
 
+@JBossLog
+public class Hello5Test3 {
     @Test
     public void test() {
-        ApplicationContext context = new FileSystemXmlApplicationContext("src/main/resource/Beans10.xml");
-        ((AbstractApplicationContext) context).registerShutdownHook();
-        var hello5 = (Hello5) context.getBean("hello5");
-        System.out.println(Arrays.toString(hello5.getMessageArr()));
-        System.out.println(Arrays.toString(hello5.getMessageList().toArray()));
-        System.out.println(Arrays.toString(hello5.getMessageSet().toArray()));
-        MapUtils.verbosePrint(System.out, null, hello5.getMessageMap());
-        MapUtils.verbosePrint(System.out, null, hello5.getMessageProps());
+        try (var context = new FileSystemXmlApplicationContext("src/main/resource/Beans10.xml")) {
+            var hello5 = (Hello5) context.getBean("hello5");
+            log.info(Arrays.toString(hello5.getMessageArr()));
+            log.info(Arrays.toString(hello5.getMessageList().toArray()));
+            log.info(Arrays.toString(hello5.getMessageSet().toArray()));
+            MapUtils.verbosePrint(System.out, "map", hello5.getMessageMap());
+            MapUtils.verbosePrint(System.out, "prop1", hello5.getMessageProps1());
+            MapUtils.verbosePrint(System.out, "prop2", hello5.getMessageProps2());
+        }
     }
 /*
-22:06:10.357 [main] DEBUG org.springframework.beans.factory.support.DefaultListableBeanFactory - Creating shared instance of singleton bean 'hello5'
-[메시지 1, 메시지 1, , 메시지 2]
-[메시지 1, 메시지 1, , 메시지 2]
-[, 메시지 1, 메시지 2]
+13:58:37.145 [main] INFO io.github.donggi.bean.Hello5Test3 - [메시지 1, 메시지 1, , 메시지 2, null]
+13:58:37.145 [main] INFO io.github.donggi.bean.Hello5Test3 - [메시지 1, 메시지 1, , 메시지 2, null]
+13:58:37.145 [main] INFO io.github.donggi.bean.Hello5Test3 - [, null, 메시지 1, 메시지 2]
+map = 
 {
     key1 = value1
     key2 = value2
 }
+prop1 = 
 {
     key1 = value1
     key2 = value2
 }
- */
+prop2 = null
+*/
 }

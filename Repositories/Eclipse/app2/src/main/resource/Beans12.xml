@@ -1,22 +1,24 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 
-<beans
-    xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:p="http://www.springframework.org/schema/p"
-    xmlns:c="http://www.springframework.org/schema/c"
-    xmlns:util="http://www.springframework.org/schema/util"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
    http://www.springframework.org/schema/util
    http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
-    <bean
-        class="java.lang.String"
-        c:original="기본 메시지 " />
+	<bean id="hello16" autowire-candidate="false" class="io.github.donggi.bean.Hello16" />
+	<bean class="io.github.donggi.bean.Hello16">
+		<property name="message" value="Overrided Message"/>
+	</bean>
 
-    <bean
-        id="hello4"
-        class="io.github.donggi.bean.Hello4"
-        autowire="constructor" />
+	<bean id="hello15-1" class="io.github.donggi.bean.Hello15"
+		autowire="constructor" />
+	<bean id="hello15-2" class="io.github.donggi.bean.Hello15"
+		autowire="byName" />
+	<bean id="hello15-3" class="io.github.donggi.bean.Hello15"
+		autowire="no" />
 </beans>

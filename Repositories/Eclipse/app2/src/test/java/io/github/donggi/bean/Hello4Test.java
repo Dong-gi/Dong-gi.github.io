@@ -1,26 +1,25 @@
 package io.github.donggi.bean;
 
-import org.jboss.logging.Logger;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
-public class Hello4Test {
+import lombok.extern.jbosslog.JBossLog;
 
-    private final Logger LOG = Logger.getLogger(Hello4Test.class);
-    
+@JBossLog
+public class Hello4Test {
     @Test
     public void test() {
-        ApplicationContext context = new FileSystemXmlApplicationContext("src/main/resource/Beans4.xml") {
+        var context = new FileSystemXmlApplicationContext("src/main/resource/Beans4.xml") {
             @Override
             protected void onClose() {
                 super.onClose();
-                LOG.info("Context closed...");
+                log.info("Context closed...");
             }
         };
         ((AbstractApplicationContext) context).registerShutdownHook();
-        LOG.info(((Hello4) context.getBean(Hello4.class.getCanonicalName() + "#0")).getMessage());
+        log.info(context.getBean(Hello4.class.getCanonicalName() + "#0"));
+        System.exit(-1);
     }
 /*
 11:29:34.983 [main] DEBUG org.jboss.logging - Logging Provider: org.jboss.logging.Log4j2LoggerProvider

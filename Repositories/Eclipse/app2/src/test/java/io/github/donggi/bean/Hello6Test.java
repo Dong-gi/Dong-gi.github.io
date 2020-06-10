@@ -5,13 +5,16 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import lombok.extern.jbosslog.JBossLog;
+
+@JBossLog
 public class Hello6Test {
 
     @Test
     public void test() {
         ApplicationContext context = new FileSystemXmlApplicationContext("src/main/resource/Beans13.xml");
         ((AbstractApplicationContext) context).registerShutdownHook();
-        System.out.println(((Hello6) context.getBean("hello6")).getMessage());
+        log.info(((Hello6) context.getBean("hello6")).getMessage());
     }
 /*
 19:32:22.325 [main] DEBUG org.springframework.beans.factory.support.DefaultListableBeanFactory - Creating shared instance of singleton bean 'org.springframework.context.annotation.internalConfigurationAnnotationProcessor'

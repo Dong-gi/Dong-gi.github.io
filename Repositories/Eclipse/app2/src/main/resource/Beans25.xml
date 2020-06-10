@@ -1,0 +1,15 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="hello17-1" class="io.github.donggi.bean.Hello17">
+		<constructor-arg index="0" type="java.lang.String" name="message" value="Hello 17 and 1" />
+	</bean>
+	<bean id="hello17-2" class="io.github.donggi.bean.Hello17">
+		<!-- index, type, name은 DTD 설명대로 옵션일 뿐. -->
+		<constructor-arg value="Hello 17 and 2" />
+	</bean>
+</beans>

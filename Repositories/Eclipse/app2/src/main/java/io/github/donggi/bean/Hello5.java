@@ -13,5 +13,6 @@ public class Hello5 {
     private List<String> messageList;
     private Set<String> messageSet;
     private Map<String, String> messageMap;
-    private Properties messageProps;
+    private Properties messageProps1;
+    private Properties messageProps2;
 }

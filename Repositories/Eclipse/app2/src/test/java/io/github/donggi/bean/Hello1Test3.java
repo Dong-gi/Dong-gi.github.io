@@ -1,20 +1,19 @@
 package io.github.donggi.bean;
 
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
-public class Hello1Test3 {
+import lombok.extern.jbosslog.JBossLog;
 
+@JBossLog
+public class Hello1Test3 {
     @Test
     public void test() {
-        ApplicationContext context = new FileSystemXmlApplicationContext("src/main/resource/Beans11.xml");
-        ((AbstractApplicationContext) context).registerShutdownHook();
-        System.out.println(((Hello1) context.getBean("hello1")).getMessage());
+        try (var context = new FileSystemXmlApplicationContext("src/main/resource/Beans11.xml")) {
+            log.info(context.getBean("hello1"));
+        }
     }
 /*
-22:31:22.901 [main] DEBUG org.springframework.beans.factory.support.DefaultListableBeanFactory - Creating shared instance of singleton bean 'hello1'
-기본 메시지
- */
+14:01:11.834 [main] INFO io.github.donggi.bean.Hello1Test3 - Hello1(message=기본 메시지)
+*/
 }

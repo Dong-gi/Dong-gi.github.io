@@ -5,14 +5,14 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
-public class Hello4Test6 {
+import lombok.extern.jbosslog.JBossLog;
 
-    private final Logger LOG = Logger.getLogger(Hello4Test6.class);
-    
+@JBossLog
+public class Hello4Test6 {
     @Test
     public void test() {
         ApplicationContext context = new FileSystemXmlApplicationContext("src/main/resource/Beans4.xml");
-        LOG.info(((Hello4) context.getBean(Hello4.class.getCanonicalName() + "#0")).getMessage());
+        log.info(((Hello4) context.getBean(Hello4.class.getCanonicalName() + "#0")).getMessage());
     }
 /*
 11:30:14.707 [main] DEBUG org.jboss.logging - Logging Provider: org.jboss.logging.Log4j2LoggerProvider
