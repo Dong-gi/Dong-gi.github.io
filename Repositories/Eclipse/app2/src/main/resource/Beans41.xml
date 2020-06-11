@@ -3,9 +3,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+   default-init-method="init" default-destroy-method="close">
 
-	<bean id="hello2" class="io.github.donggi.bean.Hello2">
-		<property name="message" value="Hello2 - 메시지" />
-	</bean>
+	<bean id="www" class="io.github.donggi.bean.Hello26" />
 </beans>

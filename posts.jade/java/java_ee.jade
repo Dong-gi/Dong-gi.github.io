@@ -457,156 +457,157 @@ include ../../source/skeleton.jade
                             &lt;bean class="..." factory-method="newInstance"/>
                             &lt;bean factory-bean="beanName" factory-method="newInstance"/>
                         li 생성된 빈의 실제 타입은 BeanFactory#getType 메서드로 획득할 수 있다
-                    h5.marker Dependency Injection
+                h4.marker Dependency Injection
+                ul
+                    li A가 B에 의존하고, 둘 사이에 순환 의존성이 존재하지 않는다면, A에 B가 주입되기 전에 B가 완전히 초기화됨이 보장된다
+                    li.marker 생성자 주입 // 팩터리 메서드 인자도 동일한 태그를 사용한다
+                    +asCode('xml').
+                        &lt;constructor-arg index="0" type="java.lang.String" name="msg" value="Hell World"/>
+                        &lt;constructor-arg value="Hell World"/>
+                        &lt;constructor-arg ref="beanName"/>
+                        &lt;constructor-arg>
+                            &lt;ref bean="beanName"/>
+                        &lt;/constructor-arg>
                     ul
-                        li A가 B에 의존하고, 둘 사이에 순환 의존성이 존재하지 않는다면, A에 B가 주입되기 전에 B가 완전히 초기화됨이 보장된다
-                        li.marker 생성자 주입 // 팩터리 메서드 인자도 동일한 태그를 사용한다
-                        +asCode('xml').
-                            &lt;constructor-arg index="0" type="java.lang.String" name="msg" value="Hell World"/>
-                            &lt;constructor-arg value="Hell World"/>
-                            &lt;constructor-arg ref="beanName"/>
-                            &lt;constructor-arg>
-                                &lt;ref bean="beanName"/>
-                            &lt;/constructor-arg>
+                        li
+                            | index, type, name은 모호성을 피하기 위해 사용하는 옵션 프로퍼티이며, name을 이용하는 경우 debug 컴파일하거나, 
+                            +asA('https://docs.oracle.com/javase/8/docs/api/java/beans/ConstructorProperties.html')
+                            | 를 이용해 이름을 탐색할 수 있게 해야한다.
+                        li constructor-arg를 이용한 생성자 주입 예
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java') Bean
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans25.xml', 'xml') XML
+                        +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello17Test.java', 'java') Context
+                        li xmlns:c를 이용한 생성자 주입 예
                         ul
                             li
-                                | index, type, name은 모호성을 피하기 위해 사용하는 옵션 프로퍼티이며, name을 이용하는 경우 debug 컴파일하거나, 
-                                +asA('https://docs.oracle.com/javase/8/docs/api/java/beans/ConstructorProperties.html')
-                                | 를 이용해 이름을 탐색할 수 있게 해야한다.
-                            li constructor-arg를 이용한 생성자 주입 예
-                            +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java') Bean
-                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans25.xml', 'xml') XML
-                            +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello17Test.java', 'java') Context
-                            li xmlns:c를 이용한 생성자 주입 예
-                            ul
-                                li
-                                    | 생성자 인자 이름을 알 수 있는 경우 예 : 
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java') Bean
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans26.xml', 'xml') XML
-                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello17Test2.java', 'java') Context
-                                li
-                                    | 생성자 인자 이름을 알 수 없는 경우 예 : 
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java') Bean
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans32.xml', 'xml') XML
-                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello17Test4.java', 'java') Context
+                                | 생성자 인자 이름을 알 수 있는 경우 예 : 
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java') Bean
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans26.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello17Test2.java', 'java') Context
+                            li
+                                | 생성자 인자 이름을 알 수 없는 경우 예 : 
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java') Bean
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans32.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello17Test4.java', 'java') Context
 
-                        li.marker 세터 주입
-                        +asCode('xml').
-                            &lt;property name="message" value="Hello"/>
-                            &lt;property name="message" ref="beanName"/>
-                            &lt;property name="message">
-                                &lt;ref bean="beanName"/>
-                            &lt;/property>
-                            &lt;property name="message">
-                                &lt;bean class="java.lang.String" c:original="빈 메시지 2"/>
-                            &lt;/property>
-                        ul
-                            li 인자 없는 생성자 또는 팩터리 메서드 호출 뒤, 세터를 호출하여 의존성을 주입한다
-                            li property를 이용한 세터 주입 예
-                            +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Bean
-                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans1.xml', 'xml') XML
-                            +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello1Test.java', 'java') Context
-                            li p(property) xmlns:p를 이용한 세터 주입 예
-                            +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Bean
-                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans5.xml', 'xml') XML
-                            +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello1Test2.java', 'java') Context
+                    li.marker 세터 주입
+                    +asCode('xml').
+                        &lt;property name="message" value="Hello"/>
+                        &lt;property name="message" ref="beanName"/>
+                        &lt;property name="message">
+                            &lt;ref bean="beanName"/>
+                        &lt;/property>
+                        &lt;property name="message">
+                            &lt;bean class="java.lang.String" c:original="빈 메시지 2"/>
+                        &lt;/property>
+                    ul
+                        li 인자 없는 생성자 또는 팩터리 메서드 호출 뒤, 세터를 호출하여 의존성을 주입한다
+                        li property를 이용한 세터 주입 예
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Bean
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans1.xml', 'xml') XML
+                        +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello1Test.java', 'java') Context
+                        li p(property) xmlns:p를 이용한 세터 주입 예
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Bean
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans5.xml', 'xml') XML
+                        +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello1Test2.java', 'java') Context
 
-                        li.marker 기타 의존성 주입
-                        table
-                            +ths('종류', '예시 코드')
-                            tr
-                                td 익명 빈 생성
-                                td
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java') Bean
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans27.xml', 'xml') XML
-                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello17Test3.java', 'java') Context
-                            tr
-                                td 의존 빈 주입
-                                td
-                                    | property, constructor-arg 태그 안에서 이용하는 bean 태그들은 id, name이 필요없으며, 지정해도 무시된다.
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Bean1
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java') Bean2
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans7.xml', 'xml') XML
-                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test3.java', 'java') Context
-                            tr
-                                td 의존 컬렉션 주입
-                                td
-                                    | 자바 기본 타입 및 String은 문자열로부터 알아서 변환되어 주입된다.
-                                    |  반면 배열, List, Properties, Map 등은 전용 태그를 이용하거나, 다른 팩터리 메서드를 빌려 설정해야 한다.
+                    li.marker 기타 의존성 주입
+                    table
+                        +ths('종류', '예시 코드')
+                        tr
+                            td 익명 빈 생성
+                            td
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java') Bean
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans27.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello17Test3.java', 'java') Context
+                        tr
+                            td 의존 빈 주입
+                            td
+                                | property, constructor-arg 태그 안에서 이용하는 bean 태그들은 id, name이 필요없으며, 지정해도 무시된다.
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Bean1
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java') Bean2
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans7.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test3.java', 'java') Context
+                        tr
+                            td 의존 컬렉션 주입
+                            td
+                                | 자바 기본 타입 및 String은 문자열로부터 알아서 변환되어 주입된다.
+                                |  반면 배열, List, Properties, Map 등은 전용 태그를 이용하거나, 다른 팩터리 메서드를 빌려 설정해야 한다.
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello5.java', 'java') Bean
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans8.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello5Test.java', 'java') Context
+                        tr
+                            td 팩터리를 통한 의존 컬렉션 주입
+                            td
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello5.java', 'java') Bean
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans10.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello5Test3.java', 'java') Context
+                        tr
+                            td xmlns:util을 이용한 의존 컬렉션 주입
+                            td
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello5.java', 'java') Bean
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans9.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello5Test2.java', 'java') Context
+                        tr
+                            td parent 속성을 통한 상속
+                            td
+                                p
+                                    | 값 상속 예 : 
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Bean
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans11.xml', 'xml') XML
+                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello1Test3.java', 'java') Context
+                                p
+                                    | 컬렉션 상속(merge="true") 예 : 
                                     +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello5.java', 'java') Bean
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans8.xml', 'xml') XML
-                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello5Test.java', 'java') Context
-                            tr
-                                td 팩터리를 통한 의존 컬렉션 주입
-                                td
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello5.java', 'java') Bean
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans10.xml', 'xml') XML
-                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello5Test3.java', 'java') Context
-                            tr
-                                td xmlns:util을 이용한 의존 컬렉션 주입
-                                td
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello5.java', 'java') Bean
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans9.xml', 'xml') XML
-                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello5Test2.java', 'java') Context
-                            tr
-                                td parent 속성을 통한 상속
-                                td
-                                    p
-                                        | 값 상속 예 : 
-                                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Bean
-                                        +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans11.xml', 'xml') XML
-                                        +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello1Test3.java', 'java') Context
-                                    p
-                                        | 컬렉션 상속(merge="true") 예 : 
-                                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello5.java', 'java') Bean
-                                        +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans31.xml', 'xml') XML
-                                        +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello5Test4.java', 'java') Context
-                            tr
-                                td parent context를 이용한 상속
-                                td
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello18.java', 'java') Interface
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello18Impl.java', 'java') Impl
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans29.xml', 'xml') parent XML
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans30.xml', 'xml') child XML
-                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello18Test.java', 'java') Context
-                            tr
-                                td lookup-method를 통한 상속
-                                td
-                                    ul
-                                        li name : 재정의할 메서드 이름 → private X, void 반환 X, 메서드 매개변수 X, final X
-                                        li bean : 재정의한 메서드에서 반환할 객체
-                                        +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans19.xml', 'xml') XML
-                                        +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Beans19Test.java', 'java') Context
-                            tr
-                                td replaced-method를 통한 상속
-                                td
-                                    ul
-                                        li name : 재정의할 메서드 이름
-                                        li replacer : MethodReplacer 구현체
-                                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello22.java', 'java') Bean
-                                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello22Replacement.java', 'java') MethodReplacer
-                                        +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans36.xml', 'xml') XML
-                                        +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello22Test.java', 'java') Context
-                            tr
-                                td Compound property name을 이용한 내부 빈 속성 설정
-                                td
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello19.java', 'java') Bean
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans33.xml', 'xml') XML
-                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello19Test.java', 'java') Context
-                            tr
-                                td depends-on을 이용한 빈 생성 순서 설정
-                                td
-                                    | has-a 관계보다 약한 의존 관계에서, depends-on을 이용해 특정 빈이 먼저 생성되도록 강제할 수 있다.
-                                    |  양쪽 빈 모두 싱글톤인 경우, 객체 소멸 순서도 정해진다.
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello20.java', 'java') Bean
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans34.xml', 'xml') XML
-                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello20Test.java', 'java') Context
-                            tr
-                                td lazy-init을 이용한 빈 생성 늦추기
-                                td
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello21.java', 'java') Bean
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans35.xml', 'xml') XML
-                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello21Test.java', 'java') Context
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans31.xml', 'xml') XML
+                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello5Test4.java', 'java') Context
+                        tr
+                            td parent context를 이용한 상속
+                            td
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello18.java', 'java') Interface
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello18Impl.java', 'java') Impl
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans29.xml', 'xml') parent XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans30.xml', 'xml') child XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello18Test.java', 'java') Context
+                        tr
+                            td lookup-method를 통한 프록시
+                            td
+                                ul
+                                    li name : 재정의할 메서드 이름 → private X, void 반환 X, 메서드 매개변수 X, final X
+                                    li bean : 재정의한 메서드에서 반환할 객체
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans19.xml', 'xml') XML
+                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Beans19Test.java', 'java') Context
+                        tr
+                            td replaced-method를 통한 프록시
+                            td
+                                ul
+                                    li name : 재정의할 메서드 이름
+                                    li replacer : MethodReplacer 구현체
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello22.java', 'java') Bean
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello22Replacement.java', 'java') MethodReplacer
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans36.xml', 'xml') XML
+                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello22Test.java', 'java') Context
+                        tr
+                            td Compound property name을 이용한 내부 빈 속성 설정
+                            td
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello19.java', 'java') Bean
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans33.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello19Test.java', 'java') Context
+                        tr
+                            td depends-on을 이용한 빈 생성 순서 설정
+                            td
+                                | has-a 관계보다 약한 의존 관계에서, depends-on을 이용해 특정 빈이 먼저 생성되도록 강제할 수 있다.
+                                |  양쪽 빈 모두 싱글톤인 경우, 객체 소멸 순서도 정해진다.
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello20.java', 'java') Bean
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans34.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello20Test.java', 'java') Context
+                        tr
+                            td lazy-init을 이용한 빈 생성 늦추기
+                            td
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello21.java', 'java') Bean
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans35.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello21Test.java', 'java') Context
+                div
                     h5.marker Autowire
                     ul
                         li IoC 컨테이너가 관리중인 빈들을 자동으로 주입하도록 구성할 수 있다. XML에서는 bean 태그의 autowire 속성으로 제어하며, 아래 4가지 모드가 가능하다
@@ -628,47 +629,127 @@ include ../../source/skeleton.jade
                             +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans12.xml', 'xml') XML
                             +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello15Test3.java', 'java') Context
 
-                    h5.marker Bean Scope
+                h4.marker Bean Scope
+                ul
+                    li 빈의 유효 기간을 설정할 수 있다. 아래 6가지는 빈 설정 시 기본으로 이용할 수 있는 목록이다.
+                    table
+                        +ths('Scope', '설명')
+                        +tds('singleton', '기본값. 컨테이너에서 하나의 인스턴스만 생성')
+                        +tds('prototype', '빈 요청마다 새 인스턴스 생성. 컨테이너는 prototype 빈의 일부 lifecycle만 관리하며, 생성 이후 lifecycle은 클라이언트가 책임져야 한다')
+                        +tds('request', 'HTTP 요청마다 새 인스턴스 생성. Web 관련 ApplicationContext에서 지정 가능')
+                        +tds('session', 'HTTP 세션마다 새 인스턴스 생성. Web 관련 ApplicationContext에서 지정 가능')
+                        +tds('application', 'ServletContext마다 새 인스턴스 생성. Web 관련 ApplicationContext에서 지정 가능')
+                        +tds('websocket', 'WebSocket마다 새 인스턴스 생성. Web 관련 ApplicationContext에서 지정 가능')
+                    li Spring 3.0부터 스레드 단위로 인스턴스를 생성하는 SimpleThreadScope가 추가되었다.
+                    p ConfigurableBeanFactory.registerScope(String, Scope) 또는 CustomScopeConfigurer로 사용 가능
+                    li request, session, application 예
+                    +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/entity/PerApp.java', 'java') Bean per App
+                    +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/entity/PerRequest.java', 'java') Bean per Request
+                    +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/entity/PerSession.java', 'java') Bean per Session
+                    +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/controller/ScopeController.java', 'java', '[27,55]') Controller
+                    li 기본적으로 빈에 주입된 의존 객체는 컨테이너에 의해 다시 설정되지 않는다.
+                    p
+                        | 만일 스코프가 더 좁은 빈을 의존하지만 참조 시마다 새로운 인스턴스가 필요한 경우, 해당 메서드를 재정의하거나, aop:scoped-proxy를 이용하면 된다.
+                        |  AOP proxy 인스턴스는 직렬화 가능하며, 직렬화 전 참조 객체와 역직렬화 후 참조 객체는 동일하다.
+                    p 다른 방법으로 ObjectFactory#getObject(), ObjectProvider(→ ObjectFactory)의 getIfAvailable(), getIfUnique()을 이용할 수도 있다
+                    p JSR-330 에서는 Provider가 위와 비슷한 기능을 제공한다.
+                    table.no-sort
+                        tr
+                            td 아무 설정 없는 예
+                            td
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello15.java', 'java') Bean1
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello16.java', 'java') Bean2
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans20.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello15Test.java', 'java') Context
+                        tr
+                            td 메서드 재정의 예
+                            td
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello15.java', 'java') Bean1
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello16.java', 'java') Bean2
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans37.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello15Test5.java', 'java') Context
+                        tr
+                            td aop:scoped-proxy 예
+                            td
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello15.java', 'java') Bean1
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello16.java', 'java') Bean2
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans21.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello15Test4.java', 'java') Context
+                        tr
+                            td Custom Scope 예
+                            td
+                                +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/entity/PerApp.java', 'java') Bean per Minute
+                                +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/scope/MinuteScope.java', 'java') Custom Scope
+                                +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/config/MinuteBeanFactoryPostProcessor.java', 'java') PostBeanProcessor
+                                +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/config/AppConfig.java', 'java') AppConfig
+                                +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/controller/ScopeController.java', 'java', '[57,70]') Controller
+
+                h4.marker Bean 커스터마이징
+                div
+                    h5.marker Lifecycle Callback
                     ul
-                        li 빈의 유효 기간을 설정할 수 있다. 아래 6가지는 빈 설정 시 기본으로 이용할 수 있는 목록이다.
-                        table
-                            +ths('Scope', '설명')
-                            +tds('singleton', '기본값. 컨테이너에서 하나의 인스턴스만 생성')
-                            +tds('prototype', '빈 요청마다 새 인스턴스 생성. 컨테이너는 prototype 빈의 일부 lifecycle만 관리하며, 생성 이후 lifecycle은 클라이언트가 책임져야 한다')
-                            +tds('request', 'HTTP 요청마다 새 인스턴스 생성. Web 관련 ApplicationContext에서 지정 가능')
-                            +tds('session', 'HTTP 세션마다 새 인스턴스 생성. Web 관련 ApplicationContext에서 지정 가능')
-                            +tds('application', 'ServletContext마다 새 인스턴스 생성. Web 관련 ApplicationContext에서 지정 가능')
-                            +tds('websocket', 'WebSocket마다 새 인스턴스 생성. Web 관련 ApplicationContext에서 지정 가능')
-                        li Spring 3.0부터 스레드 단위로 인스턴스를 생성하는 SimpleThreadScope가 추가되었다.
-                        p ConfigurableBeanFactory.registerScope(String, Scope) 또는 CustomScopeConfigurer로 사용 가능
-                        li singleton 빈이 prototype 빈을 주입받은 경우, 최초 설정된 prototype 인스턴스만 이용한다.
-                        p 만일 prototype 빈 참조마다 새 인스턴스를 가져오고 싶다면, 해당 메서드를 재정의하거나, aop:scoped-proxy를 이용하면 된다.
-                        table.no-sort
-                            tr
-                                td 아무 설정 없는 예
-                                td
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello15.java', 'java') Bean1
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello16.java', 'java') Bean2
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans20.xml', 'xml') XML
-                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello15Test.java', 'java') Context
-                            tr
-                                td 메서드 재정의 예
-                                td
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello15.java', 'java') Bean1
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello16.java', 'java') Bean2
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans37.xml', 'xml') XML
-                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello15Test5.java', 'java') Context
-                            tr
-                                td aop:scoped-proxy 예
-                                td
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello15.java', 'java') Bean1
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello16.java', 'java') Bean2
-                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans21.xml', 'xml') XML
-                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello15Test4.java', 'java') Context
-                        li request, session, application, websocket 스코프를 이용하는 경우, 관련 환경에 따라 추가 설정이 필요할 수 있다.
+                        li
+                            | InitializingBean, DisposableBean 예 
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello2.java', 'java') Bean
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans2.xml', 'xml') XML
+                            +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello2Test.java', 'java') Context
+                        li
+                            | init-method, destroy-method 예 
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello3.java', 'java') Bean
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans3.xml', 'xml') XML
+                            +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello3Test.java', 'java') Context
+                        li
+                            | destroy-method로 (inferred)를 설정하면 public close() 또는 shutdown()을 찾아 실행한다 
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello23.java', 'java') Bean
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans38.xml', 'xml') XML
+                            +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello23Test.java', 'java') Context
+                        li
+                            | default-init-method, default-destroy-method 예 
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello24.java', 'java') Bean
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans39.xml', 'xml') XML
+                            +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello24Test.java', 'java') Context
+                        li JSR-250 : @PostConstruct, @PreDestroy
+                        li 위 설정들은 중복이 가능하며, 서로 다른 메서드들로 설정된 경우 아래 순서대로 실행된다
                         ul
-                            li Spring MVC의 경우 DIspatcherServlet이 모든 상태를 처리하므로, 별도 설정이 없어도 동작한다.
-                            li Servlet 2.5
+                            li @PostConstruct → InitializingBean → init-method
+                            li @PreDestroy → DisposableBean → destroy-method
+                        li
+                            | ConfigurableApplicationContext#registerShutdownHook 예 
+                            +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test.java', 'java') Context
+                    h5.marker Aware
+                    ul
+                        li
+                            | ApplicationContextAware 인터페이스를 구현한 경우, 빈 생성 후 어떤 컨텍스트가 만들었는지 알 수 있다. 
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello25.java', 'java') Bean
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans40.xml', 'xml') XML
+                            +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello25Test.java', 'java') Context
+                        li
+                            | BeanNameAware 인터페이스를 구현한 경우, 빈 생성 후 어떤 이름으로 만들었는지 알 수 있다. 
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello26.java', 'java') Bean
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans41.xml', 'xml') XML
+                            +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello26Test.java', 'java') Context
+                    +asA('https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/core.html#aware-list')
+                    table
+                        +ths('interface', '주입물')
+                        +tds('ApplicationEventPublisherAware', 'ApplicationEventPublisher')
+                        +tds('BeanClassLoaderAware', 'ClassLoader')
+                        +tds('BeanFactoryAware', 'BeanFactory')
+                        +tds('LoadTimeWeaverAware', 'LoadTimeWeaver')
+                        +tds('MessageSourceAware', 'MessageSource')
+                        +tds('ResourceLoaderAware', 'ResourceLoader')
+                        +tds('ServletConfigAware', 'ServletConfig')
+                        +tds('ServletContextAware', 'ServletContext')
+
+                h4.marker 컨테이너 확장
+                p ApplicationContext를 직접 상속하지 않고, 여러 인터페이스 구현체를 등록함으로써 기능 확장이 가능하다.
+                ul
+                    li
+                        | BeanPostProcessor 
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello27.java', 'java') Bean
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans42.xml', 'xml') XML
+                        +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello27Test.java', 'java') Context
+                    p 인스턴스 생성 후, 초기화 콜백 호출 전/후 작업을 추가할 수 있다. 여러 BeanPostProcessor를 등록하는 경우, order 속성(Ordered 인터페이스)으로 실행 순서를 제어할 수 있다.
+                    p ApplicationContext#addBeanPostProcessor를 이용해 직접 등록하는 경우, Ordered 인터페이스를 구현해도 무시하며, 직접 등록된 순서대로 실행된다. 자동으로 탐색된 다른 BeanPostProcessor들보다 항상 먼저 실행된다.
 
                 h4.marker Annotation 기반 설정
                 table
@@ -677,24 +758,24 @@ include ../../source/skeleton.jade
                         td @lookup
                         td lookup-method
                         td @Lookup("array")
+                    tr
+                        td @RequestScope
+                        td scope="request"
+                        td 
+                    tr
+                        td @SessionScope
+                        td scope="session"
+                        td 
+                    tr
+                        td @ApplicationScope
+                        td scope="application"
+                        td 
 
     details
         summary 정리중...                    
         details
             summary Spring IoC  
                 ul
-                    li LifeCycle - registerShutdownHook 예
-                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello4.java', 'java') Bean
-                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans4.xml', 'xml') XML
-                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello4Test.java', 'java') Context
-                    li 빈 초기화/소멸 로직 InitializingBean, DisposableBean 예
-                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello2.java', 'java') Hello2 빈 클래스
-                        +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans2.xml', 'xml') 빈 구성 파일
-                        +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello2Test.java', 'java') 빈 사용 클래스
-                    li 빈 초기화/소멸 로직 init/destroy-method 예
-                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello3.java', 'java') Hello3 빈 클래스
-                        +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans3.xml', 'xml') 빈 구성 파일
-                        +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello3Test.java', 'java') 빈 사용 클래스
                     li @Autowired를 이용한 세터 자동 주입 예 1
                         +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello6.java', 'java') Hello6 빈 클래스
                         +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans13.xml', 'xml') 빈 구성 파일
