@@ -678,11 +678,17 @@ include ../../source/skeleton.jade
                         tr
                             td Custom Scope 예
                             td
-                                +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/entity/PerApp.java', 'java') Bean per Minute
+                                +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/entity/PerMinute.java', 'java') Bean per Minute
                                 +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/scope/MinuteScope.java', 'java') Custom Scope
                                 +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/config/MinuteBeanFactoryPostProcessor.java', 'java') PostBeanProcessor
                                 +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/config/AppConfig.java', 'java') AppConfig
                                 +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/controller/ScopeController.java', 'java', '[57,70]') Controller
+                                p aop:scoped-proxy 설정을 하고 싶다면 @Scope의 proxyMode 변수를 설정
+                                ul
+                                    li DEFAULT == NO : 프록시 없음
+                                    li INTERFACES : 인터페이스 프록시 생성
+                                    li JDK 동적 프록시 이용
+                                    li TARGET_CLASS : 클래스 프록시 생성. CGLIB 이용
 
                 h4.marker Bean 커스터마이징
                 div
@@ -750,10 +756,139 @@ include ../../source/skeleton.jade
                         +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello27Test.java', 'java') Context
                     p 인스턴스 생성 후, 초기화 콜백 호출 전/후 작업을 추가할 수 있다. 여러 BeanPostProcessor를 등록하는 경우, order 속성(Ordered 인터페이스)으로 실행 순서를 제어할 수 있다.
                     p ApplicationContext#addBeanPostProcessor를 이용해 직접 등록하는 경우, Ordered 인터페이스를 구현해도 무시하며, 직접 등록된 순서대로 실행된다. 자동으로 탐색된 다른 BeanPostProcessor들보다 항상 먼저 실행된다.
+                    li BeanFactoryPostProcessor
+                    p 빈을 생성하기 전에 컨테이너 관련 설정을 변경할 수 있다. 여러 BeanFactoryPostProcessor를 등록하는 경우, order 속성(Ordered 인터페이스)으로 순서를 제어할 수 있다
+                    ul
+                        li
+                            | PropertySourcesPlaceholderConfigurer 예 
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Bean1
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java') Bean2
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans43.xml', 'xml') XML
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/beans43-1.properties', 'ini') properties1
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/beans43-2.properties', 'ini') properties2
+                            +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello17Test5.java', 'java') Context
+                        li
+                            | PropertyOverrideConfigurer 예 
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Bean1
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java') Bean2
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans44.xml', 'xml') XML
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/beans43-1.properties', 'ini') properties1
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/beans43-2.properties', 'ini') properties2
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/beans44.properties', 'ini') properties3
+                            +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello17Test6.java', 'java') Context
+                    li
+                        | FactoryBean
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello28.java', 'java') Bean
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans45.xml', 'xml') XML
+                        +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello28Test.java', 'java') Context
+                    p 빈 생성 절차를 XML보다 Java로 표현하는 것이 효율적인 경우, FactoryBean을 컨테이너에 등록할 수 있다
 
                 h4.marker Annotation 기반 설정
+                ul
+                    li XML 기반 설정과 같이 이용하는 경우, Annotation 기반 처리가 먼저 이뤄짐에 유의.
+                    li context:annotation-config → 컨테이너에 등록된 빈에 대하여 애너테이션 처리
+                    li context:component-scan → 기준 패키지의 모든 클래스를 탐색하여 자동으로 빈 등록, DI, 기타 애너테이션 처리
+                    li @Autowired, @Inject, @Value, @Resource는 BeanPostProcessor 구현체가 처리하므로, 사용자 정의 BeanPostProcessor 또는 BeanFactoryPostProcessor 클래스 안에서 해당 애너테이션들을 적용할 수 없다. 대신 @Bean을 이용해야 한다.
                 table
                     +ths('Annotation', '대응 XML', '예시 코드')
+                    tr
+                        td @Autowired
+                        td autowire
+                        td: ul
+                            li 적용 위치 : CONSTRUCTOR, FIELD, METHOD, PARAMETER
+                            li
+                                | CONSTRUCTOR 적용 예 
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno03.java', 'java') Bean
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno02.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno03Test.java', 'java') Context
+                            p Since 4.3 : 기본 생성자가 없으면서 여러 생성자가 존재하는 경우에만 생성자에 @Autowired 적용 필요
+                            li
+                                | FIELD 적용 예 
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno01.java', 'java') Bean
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno01.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno01Test.java', 'java') Context
+                            li 특정 타입 T의 배열(T[])/컬렉션(Collection&lt;T>)/맵(Map&lt;String, T>에 적용한 경우, 해당 타입의 모든 빈을 목록으로 설정해준다.
+                            p 타깃 타입이 org.springframework.core.Ordered를 구현했거나, @Order, @Priority를 갖고 있으면 정렬하여 설정해준다
+                            ul
+                                li
+                                    | Array FIELD 적용 예 
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno02.java', 'java') Bean
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno02.xml', 'xml') XML
+                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno02Test.java', 'java') Context
+                                li
+                                    | Set FIELD 적용 예 
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno05.java', 'java') Bean
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno02.xml', 'xml') XML
+                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno05Test.java', 'java') Context
+                                li
+                                    | Map FIELD 적용 예 
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno06.java', 'java') Bean
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno02.xml', 'xml') XML
+                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno06Test.java', 'java') Context
+                            li required = false
+                            ul
+                                li
+                                    | FIELD, METHOD에 required = false 적용 예 
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno07.java', 'java') Bean
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno02.xml', 'xml') XML
+                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno07Test.java', 'java') Context
+                                p 의존 객체가 하나라도 누락되면 호출을 생략한다. → 따라서 기본값 그대로 남는다.
+                                li 팩터리 메서드, CONSTRUCTOR에 required = false 적용
+                                p 배열, Collection, Map인자로 매칭되는 빈이 없는 경우, empty 인스턴스를 넘겨 호출한다.
+                                li
+                                    | ↑ 이는 @Autowired가 없는 단일 생성자를 갖는 일반 클래스에도 적용된다 
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno08.java', 'java') Bean
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno02.xml', 'xml') XML
+                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno08Test.java', 'java') Context
+                            li
+                                | METHOD 적용 예 
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno04.java', 'java') Bean
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno02.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno04Test.java', 'java') Context
+                            li
+                                | 인자가 있든 없든 호출되길 원한다면 Optional 또는 @Nullable(Since 5.0)을 이용하면 된다 
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno09.java', 'java') Bean
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno02.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno09Test.java', 'java') Context
+                            li 아래의 인터페이스 및 연관 구현 클래스에 대한 @Autowired 필드는 실행 환경에 따라 적절히 주입된다.
+                            p BeanFactory, ApplicationContext, Environment, ResourceLoader, ApplicationEventPublisher, MessageSource
+                    tr
+                        td @Primary
+                        td primary="true"
+                        td
+                            | 특정 빈을 우선적으로 주입하도록 설정한다 
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno10.java', 'java') Bean
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno02.xml', 'xml') XML
+                            +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno10Test.java', 'java') Context
+                    tr
+                        td @Qualifier
+                        td
+                            | qualifier value="xxx"
+                            br
+                            | qualifier type="x.y.Z" value="xxx"
+                        td: ul
+                            li
+                                | 빈을 구별할 수 있는 값을 설정한다. 빈 이름은 default qualifier로 이용됨에 유의. 
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno11.java', 'java') Bean
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno02.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno11Test.java', 'java') Context
+                            li Qualifier는 고유할 필요가 없으며, 배열/컬렉션/맵 주입 시 qualifier가 일치하는 모든 빈들이 멤버로 할당된다
+                            li @Autowired와 같이 사용하는 경우, 타입 기반 매칭이 먼저 수행됨에 유의. Qualifier 매칭만 수행하려는 경우 JSR-250의 @Resource를 이용할 것.
+                            li
+                                | 사용자 정의 @Qualifier를 이용할 수 있다 
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno12.java', 'java') Bean
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno02.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno12Test.java', 'java') Context
+                            li
+                                | 사용자 정의 @Qualifier는 값 없이도 빈 특정이 가능할 수 있다 
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno13.java', 'java') Bean
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno02.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno13Test.java', 'java') Context
+                            li
+                                | 사용자 정의 @Qualifier는 다른 타입 속성들을 가질 수 있다 
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno14.java', 'java') Bean
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno02.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno14Test.java', 'java') Context
                     tr
                         td @lookup
                         td lookup-method
