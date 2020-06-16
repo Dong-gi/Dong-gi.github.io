@@ -11,8 +11,8 @@ public class Anno09Test {
         try (var context = new FileSystemXmlApplicationContext("src/main/resource/anno02.xml")) {
             for (var name : context.getBeanNamesForType(Anno09.class)) {
                 var anno09 = (Anno09)context.getBean(name);
-                assertTrue(anno09.getAnno09field1() == null);
-                assertTrue(anno09.getAnno09field2() == null);
+                assertTrue(anno09.getField1() == null);
+                assertTrue(anno09.getField2() == null);
             }
         }
     }

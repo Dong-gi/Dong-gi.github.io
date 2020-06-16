@@ -20,11 +20,11 @@ class ForAnno11 {
     private String name;
 
     @Bean
-    public ForAnno11 data1() {
+    public ForAnno11 anno11Data1() {
         return new ForAnno11("data1");
     }
     @Bean(name="ForAnno11-2")
-    public ForAnno11 data2() {
+    public ForAnno11 anno11Data2() {
         return new ForAnno11("data2");
     }
 }
@@ -34,9 +34,9 @@ class ForAnno11 {
 @Component
 public class Anno11 {
 
-    private ForAnno11 anno11Data;
+    private ForAnno11 data;
 
     public Anno11(@Qualifier("ForAnno11-2") ForAnno11 data) {
-        this.anno11Data = data;
+        this.data = data;
     }
 }

@@ -21,12 +21,12 @@ class ForAnno10 {
     private String name;
 
     @Bean
-    public ForAnno10 data1() {
+    public ForAnno10 anno10Data1() {
         return new ForAnno10("data1");
     }
     @Bean
     @Primary
-    public ForAnno10 data2() {
+    public ForAnno10 anno10Data2() {
         return new ForAnno10("data2");
     }
 }
@@ -37,5 +37,5 @@ class ForAnno10 {
 public class Anno10 {
 
     @Autowired
-    private ForAnno10 anno10Data;
+    private ForAnno10 data;
 }

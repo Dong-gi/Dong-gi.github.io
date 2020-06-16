@@ -6,17 +6,17 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class Anno14Test {
+public class Anno16Test {
     @Test
     public void test() {
         try (var context = new FileSystemXmlApplicationContext("src/main/resource/anno02.xml")) {
-            for (var name : context.getBeanNamesForType(Anno14.class)) {
-                var anno14 = (Anno14)context.getBean(name);
-                log.info(anno14.getData().toString());
+            for (var name : context.getBeanNamesForType(Anno16.class)) {
+                var anno16 = (Anno16)context.getBean(name);
+                log.info(anno16.getData().getMessage());
             }
         }
     }
 /*
-10:57:18.679 [main] INFO io.github.donggi.anno.Anno14Test - ForAnno14C(name=ForAnno14C)
+11:27:41.469 [main] INFO io.github.donggi.anno.Anno15Test - Anno15Data#Integer
 */
 }

@@ -13,12 +13,12 @@ import lombok.Setter;
 @Component
 public class Anno09 {
 
-    private Anno09NotInstanciated anno09field1;
-    private Anno09NotInstanciated anno09field2;
+    private Anno09NotInstanciated field1;
+    private Anno09NotInstanciated field2;
 
-    public Anno09(Optional<Anno09NotInstanciated> anno09field1, @Nullable Anno09NotInstanciated anno09field2) {
-        this.anno09field1 = anno09field1.orElse(null);
-        this.anno09field2 = anno09field2;
+    public Anno09(Optional<Anno09NotInstanciated> field1, @Nullable Anno09NotInstanciated field2) {
+        this.field1 = field1.orElse(null);
+        this.field2 = field2;
     }
 
 }

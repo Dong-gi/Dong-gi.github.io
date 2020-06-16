@@ -14,10 +14,10 @@ public class Anno08Test {
         try (var context = new FileSystemXmlApplicationContext("src/main/resource/anno02.xml")) {
             for (var name : context.getBeanNamesForType(Anno08.class)) {
                 var anno08 = (Anno08)context.getBean(name);
-                assertTrue(anno08.getAnno08Array() != null);
-                assertTrue(anno08.getAnno08List() != null);
-                log.info(anno08.getAnno08Array().length);
-                log.info(anno08.getAnno08List().size());
+                assertTrue(anno08.getArr() != null);
+                assertTrue(anno08.getList() != null);
+                log.info(anno08.getArr().length);
+                log.info(anno08.getList().size());
             }
         }
     }

@@ -11,7 +11,7 @@ public class Anno12Test {
         try (var context = new FileSystemXmlApplicationContext("src/main/resource/anno02.xml")) {
             for (var name : context.getBeanNamesForType(Anno12.class)) {
                 var anno12 = (Anno12)context.getBean(name);
-                assertTrue(anno12.getAnno12Data().getName().equals("data2"));
+                assertTrue(anno12.getData().getName().equals("data2"));
             }
         }
     }

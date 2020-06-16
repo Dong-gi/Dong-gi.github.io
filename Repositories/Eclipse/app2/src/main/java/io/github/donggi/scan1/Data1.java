@@ -1,0 +1,9 @@
+package io.github.donggi.scan1;
+
+@ForScan1
+public class Data1 {
+    @Override
+    public String toString() {
+        return "Data1 with @ForScan1";
+    }
+}

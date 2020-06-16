@@ -333,7 +333,7 @@ function updateMarkerList() {
             li.innerText = `${prefix}${li.innerText}`;
             let target = document.querySelector(`.marker[marker-id=${li.getAttribute('marker-id')}]`);
             if (headerTags.has(target.tagName))
-                target.innerText = `${prefix}${target.innerText}`;
+                target.innerHTML = `${prefix}${target.innerHTML}`;
         }
     });
 }
