@@ -1,4 +1,4 @@
-package io.github.donggi.scan1;
+package io.github.donggi.scan;
 
 public class Data3 {
     @Override

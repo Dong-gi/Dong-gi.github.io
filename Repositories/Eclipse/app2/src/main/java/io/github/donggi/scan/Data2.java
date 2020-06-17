@@ -1,4 +1,4 @@
-package io.github.donggi.scan1;
+package io.github.donggi.scan;
 
 @ForScan1
 public class Data2 implements NotScan1 {

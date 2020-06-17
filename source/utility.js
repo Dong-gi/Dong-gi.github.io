@@ -270,7 +270,7 @@ class Donggi {
                 }
             }
         }
-        console.log(text);
+        //console.log(text);
         return text;
     }
 }

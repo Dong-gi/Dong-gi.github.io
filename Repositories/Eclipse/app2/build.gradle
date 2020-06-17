@@ -16,8 +16,10 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
-    providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'javax.inject:javax.inject:1'
+    implementation 'org.apache.commons:commons-collections4:4.4'
+    providedCompile 'org.projectlombok:lombok:1.18.8'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

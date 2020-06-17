@@ -642,6 +642,7 @@ include ../../source/skeleton.jade
                         +tds('websocket', 'WebSocket마다 새 인스턴스 생성. Web 관련 ApplicationContext에서 지정 가능')
                     li Spring 3.0부터 스레드 단위로 인스턴스를 생성하는 SimpleThreadScope가 추가되었다.
                     p ConfigurableBeanFactory.registerScope(String, Scope) 또는 CustomScopeConfigurer로 사용 가능
+                    +pos('scope 예')
                     li request, session, application 예
                     +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/entity/PerApp.java', 'java') Bean per App
                     +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/entity/PerRequest.java', 'java') Bean per Request
@@ -652,7 +653,9 @@ include ../../source/skeleton.jade
                         | 만일 스코프가 더 좁은 빈을 의존하지만 참조 시마다 새로운 인스턴스가 필요한 경우, 해당 메서드를 재정의하거나, aop:scoped-proxy를 이용하면 된다.
                         |  AOP proxy 인스턴스는 직렬화 가능하며, 직렬화 전 참조 객체와 역직렬화 후 참조 객체는 동일하다.
                     p 다른 방법으로 ObjectFactory#getObject(), ObjectProvider(→ ObjectFactory)의 getIfAvailable(), getIfUnique()을 이용할 수도 있다
-                    p JSR-330 에서는 Provider가 위와 비슷한 기능을 제공한다.
+                    p
+                        span.hover-content(template-id='template-jsr330') JSR-330
+                        | 에서는 Provider가 위와 비슷한 기능을 제공한다.
                     table.no-sort
                         tr
                             td 아무 설정 없는 예
@@ -685,9 +688,8 @@ include ../../source/skeleton.jade
                                 +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/controller/ScopeController.java', 'java', '[57,70]') Controller
                                 p aop:scoped-proxy 설정을 하고 싶다면 @Scope의 proxyMode 변수를 설정
                                 ul
-                                    li DEFAULT == NO : 프록시 없음
-                                    li INTERFACES : 인터페이스 프록시 생성
-                                    li JDK 동적 프록시 이용
+                                    li NO : default. 프록시 없음
+                                    li INTERFACES : 인터페이스 프록시 생성. JDK 동적 프록시 이용
                                     li TARGET_CLASS : 클래스 프록시 생성. CGLIB 이용
 
                 h4.marker Bean 커스터마이징
@@ -699,6 +701,11 @@ include ../../source/skeleton.jade
                             +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello2.java', 'java') Bean
                             +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans2.xml', 'xml') XML
                             +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello2Test.java', 'java') Context
+                        li
+                            | Lifecycle 예 
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello29.java', 'java') Bean
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans46.xml', 'xml') XML
+                            +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello29Test.java', 'java') Context
                         li
                             | init-method, destroy-method 예 
                             +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello3.java', 'java') Bean
@@ -804,21 +811,37 @@ include ../../source/skeleton.jade
                     li @Autowired, @Inject, @Value, @Resource는 BeanPostProcessor 구현체가 처리하므로, 사용자 정의 BeanPostProcessor 또는 BeanFactoryPostProcessor 클래스 안에서 해당 애너테이션들을 적용할 수 없다. 대신 @Bean을 이용해야 한다.
                     li Since JDK 9 : 스캔 대상 패키지가 module-info에서 exports 됐는지, non-public 메서드를 호출해야 되는 패키지가 opens(exports 말고) 됐는지 확인 필요
                 table
-                    +ths('Annotation', '대응 XML', '예시 코드')
+                    +ths('Annotation', '대응 코드', '예시 코드')
                     tr
                         td @Component
-                        td bean
+                        td xml: bean
                         td: ul
                             li 해당 타입이 빈 생성 대상임을 나타낸다
+                            li value로 빈 이름을 설정할 수 있다. ""(default)면 자동 할당
                             li @Repository : Persistence layer
                             li @Service : Service layer
                             li @Controller : Presentation layer
                             li @Configuration : @Bean 메서드들을 갖는 구성 클래스
+                            p
+                                | @Configuration 클래스 안에서 형제 @Bean 메서드 호출은 의존 관계의 정의를 의미한다 
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno26.java', 'java') Configuration
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno26Test.java', 'java') Context
                             li @RestController = @Controller + @ResponseBody
                             li 기타 사용자 정의 애너테이션도 가능
                     tr
+                        td @Bean
+                        td xml: bean
+                        td: ul
+                            li 팩터리 메서드에 적용하여 빈 생성 대상임을 나타낸다
+                            li static 메서드에 적용하는 경우 프록시를 통하지 않고 호출된다
+                            li name으로 빈 별명을 설정할 수 있다
+                            li initMethod를 설정할 수 있다 ← 메서드 바디에서 호출하면 되므로 쓸 일은 별로 없을듯
+                            li destroyMethod를 설정할 수 있다
+                            p 기본값은 "(inferred)"로, 자동으로 public close() 또는 shutdown()을 찾아 실행한다. 아무것도 호출하고 싶지 않다면 ""로 설정하면 된다.
+                            p DataSource 및 JNDI로 가져온 리소스들은 외부에서 생애가 관리되므로 destroyMethod="" 설정함이 바람직하다
+                    tr
                         td @Autowired
-                        td autowire
+                        td xml: autowire
                         td: ul
                             li 적용 위치 : CONSTRUCTOR, FIELD, METHOD, PARAMETER
                             li
@@ -871,7 +894,7 @@ include ../../source/skeleton.jade
                             p BeanFactory, ApplicationContext, Environment, ResourceLoader, ApplicationEventPublisher, MessageSource
                     tr
                         td @Primary
-                        td primary="true"
+                        td xml: primary="true"
                         td
                             | 특정 빈을 우선적으로 주입하도록 설정한다 
                             +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno10.java', 'java') Bean
@@ -879,9 +902,9 @@ include ../../source/skeleton.jade
                     tr
                         td @Qualifier
                         td
-                            | qualifier value="xxx"
+                            | xml: qualifier value="xxx"
                             br
-                            | qualifier type="x.y.Z" value="xxx"
+                            | xml: qualifier type="x.y.Z" value="xxx"
                         td: ul
                             li
                                 | 빈을 구별할 수 있는 값을 설정한다. 빈 이름은 default qualifier로 이용됨에 유의. 
@@ -907,7 +930,7 @@ include ../../source/skeleton.jade
                                 +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno15Test.java', 'java') Context
                     tr
                         td @Resource
-                        td ref="beanName"
+                        td xml: ref="beanName"
                         td: ul
                             li
                                 | 빈 이름을 기준으로 주입한다 
@@ -920,7 +943,7 @@ include ../../source/skeleton.jade
                                 +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno17Test.java', 'java') Context
                     tr
                         td @Value
-                        td context:property-placeholder
+                        td xml: context:property-placeholder
                         td: ul
                             li
                                 | 외부 *.properties 파일 기반으로 값 주입
@@ -941,21 +964,21 @@ include ../../source/skeleton.jade
                                 +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno20Test.java', 'java') Context
                     tr
                         td @PostConstruct
-                        td init-method
+                        td xml: init-method
                         td
                             | 빈 생성 후 호출 
                             +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno21.java', 'java') Bean
                             +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno21Test.java', 'java') Context
                     tr
                         td @PreDestroy
-                        td destroy-method
+                        td xml: destroy-method
                         td
                             | 빈 소멸 시 호출
                             +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno21.java', 'java') Bean
                             +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno21Test.java', 'java') Context
                     tr
                         td @ComponentScan
-                        td context:component-scan base-package=""
+                        td xml: context:component-scan base-package=""
                         td: ul
                             li
                                 | 스캔 범위를 확장한다 
@@ -963,72 +986,133 @@ include ../../source/skeleton.jade
                                 +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/rare/Rare1.java', 'java') Bean
                                 +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno22Test.java', 'java') Context
                             li
-                                | includeFilters == context:include-filter 
+                                | includeFilters == xml: context:include-filter 
                             p ↑ 명시적으로 매칭되는 클래스만 스캔
                             li
-                                | excludeFilters == context:exclude-filter
+                                | excludeFilters == xml: context:exclude-filter
                             p ↑ 매칭되는 클래스는 스캔 제외
-                            li useDefaultFilters=false == use-default-filters="false"
+                            li useDefaultFilters=false == xml: use-default-filters="false"
                             p ↑ @Component, @Repository, @Service 등을 자동으로 찾지 않는다.
                             li 필터 종류
                             ul
                                 li
                                     | annotation(default) : 타입에 특정 애너테이션이 붙어있는지? 
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno23.java', 'java') Configuration
                                 li
                                     | assignable : 특정 타입으로 할당 가능한지? 
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno23.java', 'java') Configuration
                                 li
                                     | aspectj : 클래스 경로가 AspectJ 표현식에 일치하는지? 
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno24.java', 'java') Configuration
+                                +asCode('gradle', 'AspectJ 관련 jar들을 포함해야 한다. Spring Boot 예') implementation 'org.springframework.boot:spring-boot-starter-aop'
                                 li
                                     | regex : 클래스 경로가 정규표현식에 일치하는지? 
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno24.java', 'java') Configuration
                                 li
                                     | custom : TypeFilter 구현 클래스 지정 
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno25.java', 'java') Configuration
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/scan/ScanFilter.java', 'java') TypeFilter
+                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno25Test.java', 'java') Context
+                            li nameGenerator == xml: name-generator
+                            p 스프링 기본 네이밍이 맞지 않는 경우 BeanNameGenerator 구현체를 직접 제공해도 된다. 특히 같은 이름의 클래스가 여러 패키지에 존재하는 경우, 클래스 풀네임을 이름으로 제공하는 FullyQualifiedAnnotationBeanNameGenerator(Since 5.2.3)도 고려해봄직하다.
+                            li scopeResolver == xml: scope-resolver
+                            p 애너테이션 기반 스코핑이 불충분하다면, 직접 ScopeMetadataResolver 구현체를 제공할 수 있다.
+                            li scopedProxy == xml: scoped-proxy
+                            p singleton 외 스코프 빈에 대한 기본 프록시 설정 가능.
+                            ul
+                                li NO : default. 프록시 없음
+                                li INTERFACES : 인터페이스 프록시 생성. JDK 동적 프록시 이용
+                                li TARGET_CLASS : 클래스 프록시 생성. CGLIB 이용
                     tr
-                        td @Import
+                        td @Inject
+                        td @Autowired
+                        td
+                            span.hover-content(template-id='template-jsr330') JSR-330
+                            ul
+                                li
+                                    | @Autowire와 마찬가지로 필드, 메서드, 생성자에 적용 가능 
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/jsr330/Anno01.java', 'java') Configuration
+                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/jsr330/Anno01Test.java', 'java') Context
+                                li
+                                    | @Named로 이름 지정 가능 
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/jsr330/Anno02.java', 'java') Configuration
+                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/jsr330/Anno02Test.java', 'java') Context
+                                p @Named는 주입/생성 빈 이름 모두에 사용할 수 있다
+                                li
+                                    | Provider를 이용하여 지연된 접근, 짧은 scope 빈 접근 가능 
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/jsr330/Anno03.java', 'java') Configuration
+                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/jsr330/Anno03Test.java', 'java') Context
+                                li
+                                    | Optional 또는 @Nullable도 사용 가능 
+                                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/jsr330/Anno04.java', 'java') Configuration
+                                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/jsr330/Anno04Test.java', 'java') Context
+                    tr
+                        td @Named, @ManagedBean
+                        td @Component
                         td 
+                            span.hover-content(template-id='template-jsr330') JSR-330.
+                            |  타입에 적용하는 경우 자동 생성 대상임을 나타낸다. 속성으로 이름을 지정하지 않는 경우 자동으로 할당된다.
+                    tr
+                        td @Singleton
+                        td @Scope("singleton")
                         td 
+                            span.hover-content(template-id='template-jsr330') JSR-330
+                            | 의 기본 scope는 prototype이지만, 스프링 컨테이너는 singleton으로 처리한다. 따라서 이 애너테이션은 사용자 정의 스코프 정의에만 이용하면 된다.
+                    tr
+                        td @Qualifier, @Named
+                        td @Qualifier
+                        td 
+                            span.hover-content(template-id='template-jsr330') JSR-330.
+                            |  javax.inject.Qualifier는 사용자 정의 Qualifier를 위해 존재하며, @Named는 String qualifier 구현체로 이용할 수 있다.
+                    tr
+                        td @Import, @ImportResource
+                        td xml: import
+                        td: ul
+                            li
+                                | @Import : @Configuration에서 다른 @Configuration 임포트 
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno27.java', 'java') Configuration
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno27Test.java', 'java') Context
+                            +asCode('java').
+                                @Configuration
+                                @Import({OtherConfiguration.class})
+                                public class MyConfiguration {}
+                            li
+                                | @ImportResource : @Configuration 다른 xml 임포트 
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno28.java', 'java') Configuration
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno28.xml', 'xml') XML
+                                +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno28Test.java', 'java') Context
+                            +asCode('java').
+                                @Configuration
+                                @ImportResource("file:src/main/resource/otherConfig.xml")
+                                public class MyConfiguration {}
+                            li xml에서 @Configuration 임포트는 context:component-scan, context:component-scan 이용
                     tr
                         td @DependsOn
-                        td 
+                        td xml: 
                         td 
                     tr
                         td @lookup
-                        td lookup-method
+                        td xml: lookup-method
                         td @Lookup("array")
                     tr
                         td @RequestScope
-                        td scope="request"
-                        td 
+                        td xml: scope="request"
+                        td: +goto('scope 예')
                     tr
                         td @SessionScope
-                        td scope="session"
-                        td 
+                        td xml: scope="session"
+                        td: +goto('scope 예')
                     tr
                         td @ApplicationScope
-                        td scope="application"
-                        td 
+                        td xml: scope="application"
+                        td: +goto('scope 예')
+                    tr
+                        td @Description
+                        td xml: description
+                        td 빈에 대한 설명(Optional)
 
     details
         summary 정리중...                    
-        details
-            summary Spring IoC  
-                ul
-                    li 빈 자동 등록
-                    ul
-                        li 스코프 설정을 해주고 싶다면 @Scope를 추가로 이용
-                        li aop:scoped-proxy 설정을 해주고 싶다면 @Scope의 proxyMode 변수를 설정
-                        | DEFAULT == NO : 프록시 없음, INTERFACES : 인터페이스 프록시 생성. JDK 동적 프록시 이용, TARGET_CLASS : 클래스 프록시 생성. CGLIB 이용
-                        br
-                        | context:component-scan 태그의 scoped-proxy 속성을 변경하면 DEFAULT 동작을 변경할 수 있다
-                    li JavaConfig 예
-                    ul
-                        li @Configuration에서 xml 임포트 예
-                            +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/ConfigTest3.java', 'java') JavaConfig 클래스
-                        li @Configuration에서 @Configuration 임포트 예
-                            +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/ConfigTest4.java', 'java') JavaConfig 클래스
-                        li xml에서 @Configuration 자동 생성 예
-                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans23.xml', 'xml') 빈 구성 파일
-                            +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/ConfigTest5.java', 'java') JavaConfig 클래스
-        hr
         details
             summary Spring AOP
             details
@@ -1411,3 +1495,12 @@ include ../../source/skeleton.jade
                     | @ServerEndpoint 안에서 @Autowired 주입을 위해 @ServerEndpoint(configurator = ServerEndpointConfigurator.class)를 설정하고 @PostConstruct에서 주입을 실행했음을 참고
                     +codeBtn('/Repositories/STS/web-app/src/main/java/io/github/donggi/config/ServerEndpointConfigurator.java', 'java') ServerEndpointConfigurator.java »
         hr
+    +hoverTemplate()#template-jsr330
+        p 별도 jar 포함 필요
+        +asCode('xml').
+            &lt;dependency>
+                &lt;groupId>javax.inject&lt;/groupId>
+                &lt;artifactId>javax.inject&lt;/artifactId>
+                &lt;version>1&lt;/version>
+            &lt;/dependency>
+        +asCode('gradle') implementation 'javax.inject:javax.inject:1'

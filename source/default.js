@@ -114,6 +114,16 @@ window.addEventListener('load', () => {
     insertDisqusThread();
     updateMarkerList();
     document.getElementById('query').onkeyup = SF.debounce(queryUpdated, 500);
+
+    window.onpopstate = function(e) {
+        let goto = /#(pos-?\d+)/.exec(location.hash);
+        if (goto) {
+            let arg = {
+                top: document.getElementById(goto[1]).offsetTop - document.getElementById('nav').clientHeight
+            };
+            setTimeout(() => window.scrollTo(arg), 100);
+        }
+    };
 });
 
 function mutationCallback(mutations, observer) {
@@ -554,7 +564,7 @@ class DKFileList {
             if (this.sort)
                 for (let files of fileList.fileMap.values())
                     files.sort(Donggi.compareString);
-            console.log(fileList.fileMap);
+            //console.log(fileList.fileMap);
             fileList.updateFileList(fileList.rootDir);
             fileList.callback && fileList.callback(this);
         })(this));
