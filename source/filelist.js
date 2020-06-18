@@ -1048,6 +1048,7 @@ Repositories/STS/ioc-example/gradlew.bat
 Repositories/STS/ioc-example/settings.gradle
 Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/IocExampleApplication.java
 Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/config/AppConfig.java
+Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/config/I18nConfig.java
 Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/config/MinuteBeanFactoryPostProcessor.java
 Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/controller/ScopeController.java
 Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/entity/PerApp.java
@@ -1057,8 +1058,13 @@ Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/entity/PerSe
 Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/response/CommonResponse.java
 Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/scope/MinuteScope.java
 Repositories/STS/ioc-example/src/main/resources/application.properties
+Repositories/STS/ioc-example/src/main/resources/i18n/colors.properties
+Repositories/STS/ioc-example/src/main/resources/i18n/colors_ko.properties
+Repositories/STS/ioc-example/src/main/resources/i18n/names.properties
+Repositories/STS/ioc-example/src/main/resources/i18n/names_ko.properties
 Repositories/STS/ioc-example/src/main/resources/logback.xml
 Repositories/STS/ioc-example/src/test/java/io/github/donggi/example/IocExampleApplicationTests.java
+Repositories/STS/ioc-example/src/test/java/io/github/donggi/example/config/MessageSourceTests.java
 Repositories/STS/logback-gradle/.gitignore
 Repositories/STS/logback-gradle/build.gradle
 Repositories/STS/logback-gradle/gradle/wrapper/gradle-wrapper.jar
@@ -1108,8 +1114,10 @@ Repositories/STS/reminder/gradlew.bat
 Repositories/STS/reminder/settings.gradle
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/ReminderApplication.java
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/action/IndexAction.java
+Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/action/ReminderAction.java
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/action/UserAction.java
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/annotation/NoAuthAction.java
+Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/annotation/NoTokenAction.java
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/aop/ApiExceptionAspect.java
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/aop/AuthAspect.java
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/aop/DtoAspect.java
@@ -1117,7 +1125,10 @@ Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/config/DBConfi
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/config/ThymeleafConfig.java
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/constant/Texts.java
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/dao/TUserDao.java
+Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/dao/TUserReminderDao.java
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/dao/TUserSessionDao.java
+Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/dto/LocalShare.java
+Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/dto/Reminder.java
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/dto/TUser.java
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/dto/TUserReminder.java
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/dto/TUserSession.java
@@ -1135,6 +1146,7 @@ Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/mapper/TUserSe
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/mapper/TUserSessionMapper.java
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/request/UserLoginRequest.java
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/response/ApiResponse.java
+Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/response/ReminderListResponse.java
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/response/UserLoginResponse.java
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/service/UserService.java
 Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/util/EnumUtil.java

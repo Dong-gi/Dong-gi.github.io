@@ -287,14 +287,14 @@ function insertDisqusThread() {
 
     parent.append(Donggi.getElementFromText('<div id="disqus_thread"></div>'))
     eval(`var disqus_config = function () {
-            this.page.url = 'https://dong-gi.github.io${location.pathname}'
-            this.page.identifier = '${location.pathname}'
-        }
+            this.page.url = 'https://dong-gi.github.io${location.pathname}';
+            this.page.identifier = '${location.pathname}';
+        };
         (function() {
-            var d = document, s = d.createElement('script')
-            s.src = 'https://donggi.disqus.com/embed.js'
-            s.setAttribute('data-timestamp', +new Date())
-            document.querySelector('div#disqus_thread').append(s)
+            var d = document, s = d.createElement('script');
+            s.src = 'https://donggi.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            document.querySelector('div#disqus_thread').append(s);
         })();`)
 }
 
