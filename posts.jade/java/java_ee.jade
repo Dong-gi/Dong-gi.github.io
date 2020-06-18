@@ -838,7 +838,19 @@ include ../../source/skeleton.jade
                             li initMethod를 설정할 수 있다 ← 메서드 바디에서 호출하면 되므로 쓸 일은 별로 없을듯
                             li destroyMethod를 설정할 수 있다
                             p 기본값은 "(inferred)"로, 자동으로 public close() 또는 shutdown()을 찾아 실행한다. 아무것도 호출하고 싶지 않다면 ""로 설정하면 된다.
-                            p DataSource 및 JNDI로 가져온 리소스들은 외부에서 생애가 관리되므로 destroyMethod="" 설정함이 바람직하다
+                            p JNDI로 가져온 리소스 ─ 특히 DataSource들은 외부에서 생애가 관리되므로 destroyMethod="" 설정함이 바람직하다
+                    tr
+                        td @Conditional
+                        td
+                        td Condition 인터페이스 구현체를 지정하여, @Component, @Configuration, @Bean 초기화를 진행할 지 여부를 미리 판단한다
+                    tr
+                        td
+                            +pos('@Profile')
+                            | @Profile
+                        td xml: beans profile=""
+                        td
+                            | @Conditional(value=org.springframework.context.annotation.ProfileCondition.class) → active profile을 기준으로 판단한다
+                            +goto('profile 표현식')
                     tr
                         td @Autowired
                         td xml: autowire
@@ -1085,7 +1097,11 @@ include ../../source/skeleton.jade
                                 @Configuration
                                 @ImportResource("file:src/main/resource/otherConfig.xml")
                                 public class MyConfiguration {}
-                            li xml에서 @Configuration 임포트는 context:component-scan, context:component-scan 이용
+                                
+                                @Configuration
+                                @ImportResource("classpath:/otherConfig.xml")
+                                public class MyConfiguration {}
+                            li xml에서 @Configuration 임포트는 context:component-scan, context:component-scan 또는 그냥 bean 이용
                     tr
                         td @DependsOn
                         td xml: 
@@ -1110,6 +1126,65 @@ include ../../source/skeleton.jade
                         td @Description
                         td xml: description
                         td 빈에 대한 설명(Optional)
+                    tr
+                        td @EnableLoadTimeWeaving
+                        td xml: context:load-time-weaver
+                        td
+                            | LoadTimeWeaverAware를 구현한 빈은 LoadTimeWeaver 인스턴스를 인자로 받는다
+                            +goto('Spring AOP')
+
+                h4.marker Environment
+                ul
+                    li Environment 인터페이스는 profile, properties 정보를 컨테이너에 제공한다
+                    +pos('profile 표현식')
+                    li
+                        | Profile 표현에 !(not), &amp;(and), |(or) 가능. 
+                        +goto('@Profile')
+                    p
+                        | 예. production &amp; (us-east | eu-central)
+                        br
+                        | xml 표현식에서 !는 가능하지만 &amp;, |는 포함할 수 없다. 대신 beans profiles=""를 중첩하여 &amp; 효과를 얻을 수는 있다
+                    li Profile 활성화
+                    +asCode('java').
+                        context.getEnvironment().setDefaultProfiles("profile1", "profile2")
+                        context.getEnvironment().setActiveProfiles("profile1", "profile2")
+                    +asCode('shell') $ env "spring.profiles.active=profile1,profile2"
+                    +asCode('shell') $ java ... -Dspring.profiles.active="profile1,profile2"
+                    li 제공할 수 있는 properties 타입
+                    p properties 파일, JNDI, Servlet context parameter, Properties 인스턴스, Map 인스턴스
+                    li StandardEnvironment(→ AbstractEnvironment) 기본 포함 properties
+                    p JVM system properties (System.getProperties()) + 환경 변수 (System.getenv()). 시스템 속성이 환경 변수보다 우선 검색된다
+                    li StandardServletEnvironment(→ StandardEnvironment) 추가 제공 properties
+                    p
+                        | Servlet config + Servlet context parameter + JndiPropertySource(Optional).
+                        br
+                        | 우선 순위 : ServletConfig ← ServletContext parameter ← JNDI ← JVM system properties ← 환경 변수
+                    li PropertySource 추가
+                    +asCode('java', '수동 추가').
+                        var sources = context.getEnvironment().getPropertySources();
+                        sources.addFirst(new PropertySourceA(...));
+                        sources.addLast(new PropertySourceB(...));
+                    +asCode('java', '자동 추가').
+                        @Configuration
+                        @PropertySource("classpath:io/github/donggi/${spring.profiles.active:localhost}.properties")
+                        @PropertySource("classpath:io/github/donggi/more/${spring.profiles.active:localhost}.properties")
+                        public class AppConfig {}
+
+                h4.marker ApplicationContext 추가 기능
+                div
+                    h5.marker 국제화; ApplicationContext → MessageSource
+                    ul
+                        li 부모의 것을 상속하는 HierarchicalMessageSource 인터페이스도 있다
+                        li 문자열 획득
+                        +asCode('java').
+                            String getMessage(String code, Object[] args[, String default], Locale loc)
+                            String getMessage(MessageSourceResolvable resolvable, Locale locale)
+                        li MessageSource 탐색
+                        ol
+                            li ApplicationContext는 자동으로 "messageSource" 이름의 MessageSource 빈을 찾는다
+                            li 없는 경우 부모 컨텍스트에서 해당하는 빈을 찾는다
+                            li 없는 경우 DelegatingMessageSource 인스턴스로 설정
+                        li MessageSource 구현체 : ResourceBundleMessageSource, StaticMessageSource
 
     details
         summary 정리중...                    
@@ -1127,6 +1202,7 @@ include ../../source/skeleton.jade
                     li Weaving : Advice 코드를 삽입
                     | 세 가지 Weaving 방식 : 컴파일 타임 위빙, 클래스 로드 타임 위빙, 런타임 위빙
             details
+                +pos('Spring AOP')
                 summary Spring AOP
                 ul
                     li 스프링은 인터페이스의 프록시를 만들어 Aspect의 실행을 삽입한다
