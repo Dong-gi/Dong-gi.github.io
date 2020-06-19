@@ -11,7 +11,7 @@ public class I18nConfig {
     public MessageSource messageSource() {
         var source = new ResourceBundleMessageSource();
         source.setDefaultEncoding("UTF-8");
-        source.setBasenames("i18n/names", "i18n/colors");
+        source.setBasenames("i18n/templates", "i18n/colors");
         /* try various...
         source.setBasenames("/i18n/names",
                 "i18n/names",

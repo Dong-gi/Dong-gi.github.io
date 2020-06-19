@@ -1174,7 +1174,7 @@ include ../../source/skeleton.jade
                 div
                     h5.marker 국제화; ApplicationContext → MessageSource
                     ul
-                        li 부모의 것을 상속하는 HierarchicalMessageSource 인터페이스도 있다
+                        li HierarchicalMessageSource 인터페이스는 부모의 것을 상속한다
                         li 문자열 획득
                         +asCode('java').
                             String getMessage(String code, Object[] args[, String default], Locale loc)
@@ -1185,6 +1185,59 @@ include ../../source/skeleton.jade
                             li 없는 경우 부모 컨텍스트에서 해당하는 빈을 찾는다
                             li 없는 경우 DelegatingMessageSource 인스턴스로 설정
                         li MessageSource 구현체 : ResourceBundleMessageSource, StaticMessageSource
+                        li *.properties 네이밍 규칙
+                        ul
+                            li Locale ENGLISH = createConstant("en", ""); → xxx_en.properties
+                            li Locale US = createConstant("en", "US"); → xxx_en_US.properties
+                        li
+                            | 예시 코드 
+                            +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/config/I18nConfig.java', 'java') Configuration
+                            +codeBtn('/Repositories/STS/ioc-example/src/main/resources/i18n/templates_en.properties', 'ini') templates_en.properties
+                            +codeBtn('/Repositories/STS/ioc-example/src/main/resources/i18n/templates_ko.properties', 'ini') templates_ko.properties
+                            +codeBtn('/Repositories/STS/ioc-example/src/test/java/io/github/donggi/example/config/I18nTests.java', 'java') Test
+                    h5.marker 이벤트 Pub/Sub
+                    ul
+                        li 이벤트 정의 : ApplicationEvent
+                        li 이벤트 리스너 : ApplicationListener 또는 @EventListener(Since 4.2)
+                        li 내장 이벤트
+                        table
+                            +ths('Event', '요약')
+                            +tds('ContextRefreshedEvent', 'ApplicationContext 초기화 또는 갱신(refresh) 완료')
+                            +tds('ContextStartedEvent', 'ConfigurableApplicationContext#start()')
+                            +tds('ContextStoppedEvent', 'ConfigurableApplicationContext#stop()')
+                            +tds('ContextClosedEvent', 'ConfigurableApplicationContext#close() 또는 JVM 종료')
+                            +tds('RequestHandledEvent', 'HTTP 요청 처리 완료')
+                            +tds('ServletRequestHandledEvent', 'RequestHandledEvent + 서블릿 정보')
+                        li
+                            | 예시 
+                            +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/event/MyEvent1.java', 'java') Event
+                            +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/event/MyEvent1Publisher.java', 'java') Publisher
+                            +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/event/MyEvent1Listener1.java', 'java') Listener
+                            +codeBtn('/Repositories/STS/ioc-example/src/test/java/io/github/donggi/example/event/Event1Tests.java', 'java') Test
+                        li
+                            | @EventListener 예시 
+                            +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/event/MyEvent2.java', 'java') Event
+                            +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/event/MyEvent2Publisher.java', 'java') Publisher
+                            +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/event/MyEvent2Listener1.java', 'java') Listener1
+                            +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/event/MyEvent2Listener2.java', 'java') Listener2
+                            +codeBtn('/Repositories/STS/ioc-example/src/test/java/io/github/donggi/example/event/Event2Tests.java', 'java') Test
+                        li 이벤트 핸들러가 다른 이벤트를 반환하는 경우, 해당 이벤트가 발행된다. 이벤트에 대한 컬렉션을 반환하면, 각각이 모두 발행된다
+                        p 단, @Async 메서드는 수동으로 발행해야 한다.
+                        li @Order로 리스너 호출 순서를 제어할 수 있다
+                        li @EventListener > condition에 사용 가능한 SpEL 이벤트 메타데이터
+                        table
+                            +ths('code', 'description')
+                            +tds('#root.event, event', 'ApplicationEvent 인스턴스')
+                            +tds('#root.args, args', '메서드 파라미터 배열')
+                            +tds('#name, #a0, #p0', '이름 또는 인덱스로 지정한 메서드 파라미터')
+                    h5.marker ApplicationContext → ResourceLoader
+                    ul
+                        li Resource ::= java.net.URL을 포함한 클래스 패스 또는 파일 시스템 상의 리소스
+                        li ApplicationContext는 그 자체로 ResourceLoader며, 저수준 Resource 획득을 쉽게 해준다
+                        li ResourceLoaderAware를 구현한 빈들은 초기화 시 ApplicationContext를 ResourceLoader로 전달받는다
+                        li ClassPathXmlAPplicationContext에 간단한 경로로 리소스를 질의하는 경우, 클래스 패스 상의 리소스를 찾는다.
+                        p 애매한 경우, 명시적으로 classpath:, file: 등 URL을 지정해야 한다.
+
 
     details
         summary 정리중...                    
