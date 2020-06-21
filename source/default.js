@@ -375,15 +375,9 @@ function getMarkerName(marker) {
 function queryUpdated(e) {
     if (e.keyCode == 13) {
         Donggi.openLink(`https://github.com/Dong-gi/Dong-gi.github.io/search?q=${this.value}`, '_blank')
-        event.stopPropagation()
+        e.stopPropagation()
+        return false
     }
-    let query = document.getElementById('query').value
-    let showAll = query.length < 2
-    let regex = new RegExp(query, 'gmi')
-    if (showAll)
-        document.getElementById('contents').childNodes.forEach((node, idx, nodeList) => !!node.style && (node.style.display = 'block'))
-    else
-        document.getElementById('contents').childNodes.forEach((node, idx, nodeList) => !!node.style && (node.style.display = regex.test(node.textContent) ? 'block' : 'none'))
     return true
 }
 
