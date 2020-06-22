@@ -11,8 +11,14 @@ mixin w3a(color)
                 block
 
 mixin w3img(src, alt)
-    .w3-center
+    .w3-center.w3-margin-bottom
         img.w3-round(src=src, alt=alt)&attributes(attributes)
+        - if (alt && alt.length > 0)
+            br
+            strong
+                | &lt;이미지 - 
+                = alt
+                | >
 
 mixin w3button(color)
     if color
@@ -36,7 +42,7 @@ mixin asA(href, text)
     - if (!text && /\//.test(href)) { text = href.replace(/.*\//, '') }
     - if (!text) { text = 'Reference' }
     - text = text.replace(/\.(html?|jsp|php|asp|do|js|css|txt|java)$/, '')
-    +w3a()&attributes({ href: href, target: '_blank' })&attributes(attributes)= text
+    +w3a()&attributes({ href: href })&attributes(attributes)= text
 
 mixin ths(...cells)
     tr&attributes(attributes)
@@ -124,6 +130,7 @@ mixin post(title, keywords, description, useMJX, noAds)
                 .w3-bar.w3-blue.w3-large#nav(style='position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle')
                     button.w3-bar-item.w3-button.w3-hover-theme(onclick='toggleSidebar()') &#9776;
                     input.w3-bar-item#query(type='text',placeholder='search')
+                    a.w3-bar-item.w3-button.w3-hover-theme(href='/') Home
                 #contents.w3-padding
                     if block
                         block

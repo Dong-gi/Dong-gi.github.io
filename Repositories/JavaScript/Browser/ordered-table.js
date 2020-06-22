@@ -4,10 +4,9 @@ initOrderedTableFunctionality()
 function initOrderedTableFunctionality() {
     if (document.readyState != 'ready' && document.readyState != 'complete')
         return
-    if (!!document.querySelector('style#ordered-table-style'))
+    if (document.querySelector('style#ordered-table-style'))
         return
-    document.getElementsByTagName('head')[0].append(Donggi.getElementFromText(
-        `<style id="ordered-table-style">
+    document.getElementsByTagName('head')[0].append(`<style id="ordered-table-style">
 td.sorting-table-head-black:after,
 th.sorting-table-head-black:after {
     content: attr(sort-order);
@@ -18,7 +17,7 @@ td.sorting-table-head-white:after,
 th.sorting-table-head-white:after {
     content: attr(sort-order);
     color: white;
-}</style>`))
+}</style>`.asSF().$)
 
     new MutationObserver(addOrderedTableFunctionality).observe(document.body, { attributes: false, childList: true, subtree: true })
     addOrderedTableFunctionality([{ type: 'childList', target: document.body }])
@@ -70,9 +69,9 @@ function addOrderedTableFunctionality(mutations, observer) {
 }
 
 function customTableSort(idx, node, table) {
-    if (node.classList.contains('not-sort'))
+    if (node.classList.contains('no-sort'))
         return
-    let rgba = Donggi.getRgba(node)
+    let rgba = SFUtil.getRgba(node)
     if (rgba[0] + rgba[1] + rgba[2] < 255 * rgba[3])
         node.classList.add('sorting-table-head-white')
     else
@@ -87,7 +86,7 @@ function customTableSort(idx, node, table) {
 
         let dataRows = Array.from(table.rows).slice(1)
         dataRows.sort((r1, r2) => {
-            let result = Donggi.compareString(r1.querySelectorAll('td, th')[idx].textContent.trim(), r2.querySelectorAll('td, th')[idx].textContent.trim())
+            let result = SFUtil.compareString(r1.querySelectorAll('td, th')[idx].textContent.trim(), r2.querySelectorAll('td, th')[idx].textContent.trim())
             return order ? result : -result
         })
 

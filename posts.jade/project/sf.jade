@@ -46,7 +46,7 @@ include ../../source/skeleton.jade
                 app.head.$title.innerText = 'Title : Hello World';
                 app.body.innerText = 'Body : Hello World';
             +codeBtn('/Repositories/JavaScript/SF/demo1.html', 'html')
-            +asA('/Repositories/JavaScript/SF/demo1.html', 'Open new tab')
+            +asA('/Repositories/JavaScript/SF/demo1.html', 'View on new tab')&attributes({ target: '_blank' })
 
             h3.marker Template Example 1
             +asCode('javascript').
@@ -59,12 +59,12 @@ include ../../source/skeleton.jade
                     // callback     : SFNode, ... -> ?
             +codeBtn('/Repositories/JavaScript/SF/demo2.html', 'html')
             +codeBtn('/Repositories/JavaScript/SF/demo2.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo2.html', 'Open new tab')
+            +asA('/Repositories/JavaScript/SF/demo2.html', 'View on new tab')&attributes({ target: '_blank' })
 
             h3.marker Template Example 2 : Roman numeral calculator
             +codeBtn('/Repositories/JavaScript/SF/demo3.html', 'html')
             +codeBtn('/Repositories/JavaScript/SF/demo3.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo3.html', 'Open new tab')
+            +asA('/Repositories/JavaScript/SF/demo3.html', 'View on new tab')&attributes({ target: '_blank' })
 
         h2.marker Version 0.2.2
         div
@@ -73,14 +73,13 @@ include ../../source/skeleton.jade
                 const app = SF.build(document.getElementById('demo4-1'));
                 const boundForm = SF.bindForm(app['demo4-1-form']);
             +codeBtn('/Repositories/JavaScript/SF/demo4.html', 'html')
-            +codeBtn('/Repositories/JavaScript/SF/demo4.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo4.html', 'Open new tab')
+            +asA('/Repositories/JavaScript/SF/demo4.html', 'View on new tab')&attributes({ target: '_blank' })
 
             h3.marker Object Binding Example
             +asCode('javascript') SF.bindTwoWay(x, y);
             +codeBtn('/Repositories/JavaScript/SF/demo5.html', 'html')
             +codeBtn('/Repositories/JavaScript/SF/demo5.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo5.html', 'Open new tab')
+            +asA('/Repositories/JavaScript/SF/demo5.html', 'View on new tab')&attributes({ target: '_blank' })
 
         h2.marker Version 0.3.2
         div
@@ -90,22 +89,22 @@ include ../../source/skeleton.jade
                 DataGrid.fromCSV(csv);
             +codeBtn('/Repositories/JavaScript/SF/demo6.html', 'html')
             +codeBtn('/Repositories/JavaScript/SF/demo6.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo6.html', 'Open new tab')
+            +asA('/Repositories/JavaScript/SF/demo6.html', 'View on new tab')&attributes({ target: '_blank' })
             
             h3.marker DataGrid Example 2 : CSV. Has multiple line quoted data.
             +codeBtn('/Repositories/JavaScript/SF/demo7.html', 'html')
             +codeBtn('/Repositories/JavaScript/SF/demo7.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo7.html', 'Open new tab')
+            +asA('/Repositories/JavaScript/SF/demo7.html', 'View on new tab')&attributes({ target: '_blank' })
             
             h3.marker DataGrid Example 3 : Array of Array, Array of Object
             +codeBtn('/Repositories/JavaScript/SF/demo8.html', 'html')
             +codeBtn('/Repositories/JavaScript/SF/demo8.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo8.html', 'Open new tab')
+            +asA('/Repositories/JavaScript/SF/demo8.html', 'View on new tab')&attributes({ target: '_blank' })
             
             h3.marker DataGrid Example 4 : Object of Array, Object of Object
             +codeBtn('/Repositories/JavaScript/SF/demo9.html', 'html')
             +codeBtn('/Repositories/JavaScript/SF/demo9.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo9.html', 'Open new tab')
+            +asA('/Repositories/JavaScript/SF/demo9.html', 'View on new tab')&attributes({ target: '_blank' })
 
     h1.marker Change Logs
     table

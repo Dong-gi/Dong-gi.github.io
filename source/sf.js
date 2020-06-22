@@ -13,6 +13,16 @@ if (!String.prototype.hashCode) {
 String.prototype.asSF = function () {
     let temp = document.createElement('template')
     temp.insertAdjacentHTML('afterbegin', this)
+    /* Scripts by innerHTML will not run; innerHTML로 삽입된 스크립트는 실행되지 않는다. */
+    for (let script of temp.querySelectorAll('script')) {
+        let nScript = document.createElement('script');
+        if (script.src.length > 0)
+            nScript.src = script.src;
+        if (script.text.length > 0)
+            nScript.text = script.text;
+        script.after(nScript);
+        script.remove();
+    }
     switch (temp.childElementCount) {
         case 0: return null
         case 1: return SF.asSF(temp.firstChild)
@@ -250,7 +260,7 @@ class SF {
 
         // Listen user actions
         for (let element of form.querySelectorAll('input,select,textarea')) {
-            let f = SF.debounce(SF.observeForm(form, ((o) => function (name, value, src) {
+            let f = SFUtil.debounce(SF.observeForm(form, ((o) => function (name, value, src) {
                 o[name] = value
             })(o)), 100)
             element.addEventListener('change', f)
@@ -295,7 +305,7 @@ class SF {
                         obj[element.name].push(option.value)
                 }
             } else if (element.type && element.type.toLowerCase() == 'file')
-                obj[element.name] = Array.from(element.files).map(x => x.name)
+                obj[element.name] = Array.from(element.files)
             else if (element.type && element.type.toLowerCase() == 'radio') {
                 if (name) {
                     let checkedElement = form.querySelector(`input[name=${name}][type=radio]:not([disabled]):checked`)
@@ -386,38 +396,24 @@ class SF {
         return r
     }
     /**
+     * @deprecated Since 0.4.0; Use SFUtil.throttle instead
      * @param {Function} f 
      * @param {Number} t Milli seconds
      * @param {Object} opt (opt.fast)? => no throttle
      * @returns {Function} Throttled function
      */
     static throttle(f, t, opt) {
-        opt = opt || {}
-        return function (args) {
-            let previousCall = opt.lastCall
-            opt.lastCall = Date.now()
-            if (!previousCall || (!!opt && !!opt.fast) || (opt.lastCall - previousCall) > t) {
-                f(args)
-            }
-        }
+        SFUtil.throttle(f, t, opt)
     }
     /**
+     * @deprecated Since 0.4.0; Use SFUtil.debounce instead
      * @param {Function} f 
      * @param {Number} t Milli seconds
      * @param {Object} opt (opt.fast)? => no debounce
      * @returns {Function} Debounced function
      */
     static debounce(f, t, opt) {
-        opt = opt || {}
-        return function (args) {
-            let previousCall = opt.lastCall
-            opt.lastCall = Date.now()
-            if (previousCall && ((opt.lastCall - previousCall) <= t)) {
-                if (!opt || !opt.fast)
-                    clearTimeout(opt.lastCallTimer)
-            }
-            opt.lastCallTimer = setTimeout(() => f(args), t)
-        }
+        SFUtil.debounce(f, t, opt)
     }
 }
 SF[SFKey.map] = new Map()
@@ -478,7 +474,7 @@ class DataGrid {
         text = text.replace(/\r\n/gm, '\n')
         let fakeQuote = '🚮'
         while (text.search(fakeQuote) >= 0)
-            fakeQuote += fakeQuote
+            fakeQuote = String.fromCodePoint(fakeQuote.codePointAt(0) + 1)
         text = text.replace(new RegExp(opt.escape + opt.quote, 'gm'), fakeQuote)
 
         let heads = []
@@ -681,7 +677,7 @@ class DataGrid {
         }
 
         for (let element of form.$.querySelectorAll('textarea')) {
-            let f = SF.debounce(SF.observeForm(form.$, (name, value, src) => {
+            let f = SFUtil.debounce(SF.observeForm(form.$, (name, value, src) => {
                 let [i, prop] = name.match(/C(\d+)-(.+)/).slice(1)
                 this.data[i][prop] = value
                 src.style.height = src.scrollHeight + 2
@@ -753,3 +749,428 @@ class ColGroup {
         }
     }
 }
+class SFUtil {
+    /// Utility for JavaScript Start
+    /**
+     * Do natural string compare
+     */
+    static compareString(str1, str2) {
+        if (str1 === str2)
+            return 0
+        let ori1 = str1
+        let ori2 = str2
+        /* Cases when treat a positive/negative sign followed by digits as Number; 부호 붙은 숫자를 수로 간주하는 경우
+           1. The sign is the first character of string; 부호 자체가 문자열 시작
+           2. The sign has a space ahead; 부호 앞에 공백이 존재하여 별개 파트로 간주 가능
+           3. The sign has a currency sign ahead; 부호 앞에 화폐 기호 [$¥£₡₱€₩₭฿]가 존재 */
+        let numPartRegex1 = /(((^|[\s$¥£₡₱€₩₭฿])[+-])?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/
+        let numPartRegex2 = /(([\s$¥£₡₱€₩₭฿][+-])?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/
+        let startWithNumberRegex1 = new RegExp(`^${numPartRegex1.source}`)
+        let startWithNumberRegex2 = new RegExp(`^${numPartRegex2.source}`)
+        let strPartRegex1 = new RegExp(`^((?!${numPartRegex1.source})[\\d\\D])+`, 'm')
+        let strPartRegex2 = new RegExp(`^((?!${numPartRegex2.source})[\\d\\D])+`, 'm')
+        while (true) {
+            if (str1.length * str2.length == 0)
+                return str1.length - str2.length
+            let isStr1StartWithNumber = ((str1 === ori1) ? startWithNumberRegex1 : startWithNumberRegex2).test(str1)
+            let isStr2StartWithNumber = ((str2 === ori2) ? startWithNumberRegex1 : startWithNumberRegex2).test(str2)
+            if (isStr1StartWithNumber && isStr2StartWithNumber) {
+                let num1 = parseFloat(str1.match(((str1 === ori1) ? startWithNumberRegex1 : startWithNumberRegex2))[0].replace(/[^\-\d\.]/g, ''))
+                let num2 = parseFloat(str2.match(((str2 === ori2) ? startWithNumberRegex1 : startWithNumberRegex2))[0].replace(/[^\-\d\.]/g, ''))
+                if (Math.abs(num1 - num2) >= Number.EPSILON)
+                    return num1 - num2
+                str1 = str1.replace(((str1 === ori1) ? startWithNumberRegex1 : startWithNumberRegex2), '')
+                str2 = str2.replace(((str2 === ori2) ? startWithNumberRegex1 : startWithNumberRegex2), '')
+                continue
+            }
+            if (isStr1StartWithNumber)
+                return -1
+            if (isStr2StartWithNumber)
+                return 1
+            let text1 = str1.match(((str1 === ori1) ? strPartRegex1 : strPartRegex2))[0]
+            let text2 = str2.match(((str2 === ori2) ? strPartRegex1 : strPartRegex2))[0]
+            let result = text1.localeCompare(text2)
+            if (result !== 0)
+                return result
+            str1 = str1.replace(((str1 === ori1) ? strPartRegex1 : strPartRegex2), '')
+            str2 = str2.replace(((str2 === ori2) ? strPartRegex1 : strPartRegex2), '')
+        }
+    }
+    /**
+     * @param {Function} f 
+     * @param {Number} t Milli seconds
+     * @param {Object} opt (opt.fast)? => no debounce
+     * @returns {Function} Debounced function
+     */
+    static debounce(f, t, opt) {
+        opt = opt || {}
+        return function (args) {
+            let previousCall = opt.lastCall
+            opt.lastCall = Date.now()
+            if (previousCall && ((opt.lastCall - previousCall) <= t)) {
+                if (!opt || !opt.fast)
+                    clearTimeout(opt.lastCallTimer)
+            }
+            opt.lastCallTimer = setTimeout(() => f(args), t)
+        }
+    }
+    /**
+     * Make 'ls -R' like text. For example, makeLSlikeText('root', {list: [1, 2], child1: {list: [3, 4]}}, 'list') ↓
+     * - root:
+     * - 1
+     * - 2
+     * - child1
+     * - root/child1:
+     * - 3
+     * - 4
+     * @param {string} rootName Similar to root directory name
+     * @param {object} obj Tree object which has children node as attributes and values in 'listAttrName' attribute
+     * @param {string} listAttrName The attribute's name which contains node values
+     */
+    static makeLSlikeText(rootName, obj, listAttrName) {
+        let paths = [rootName]
+        let text = ''
+        while (paths.length > 0) {
+            let path = paths.pop()
+            let directory = obj
+            for (let dirPart of path.split("/"))
+                if (directory.hasOwnProperty(dirPart))
+                    directory = directory[dirPart]
+            text += `${path}:\n`
+            for (let prop in directory) {
+                if (prop != listAttrName) {
+                    paths.push(`${path}/${prop}`)
+                    text += `${prop}\n`
+                }
+                else {
+                    for (let file of directory[prop])
+                        text += `${file}\n`
+                }
+            }
+        }
+        return text;
+    }
+    /**
+     * @param {Function} f 
+     * @param {Number} t Milli seconds
+     * @param {Object} opt (opt.fast)? => no throttle
+     * @returns {Function} Throttled function
+     */
+    static throttle(f, t, opt) {
+        opt = opt || {}
+        return function (args) {
+            let previousCall = opt.lastCall
+            opt.lastCall = Date.now()
+            if (!previousCall || (!!opt && !!opt.fast) || (opt.lastCall - previousCall) > t) {
+                f(args)
+            }
+        }
+    }
+    /// Utility for JavaScript End
+
+
+    // Utility for Style Start
+    /**
+     * Calcurate actual offset left
+     */
+    static getOffsetLeft(node) {
+        node = node.$ || node
+        let result = node.offsetLeft
+        while (node.offsetParent) {
+            result += node.offsetParent.offsetLeft
+            node = node.offsetParent
+        }
+        return result
+    }
+    /**
+     * Calcurate actual offset top
+     */
+    static getOffsetTop(node) {
+        node = node.$ || node
+        let result = node.offsetTop
+        while (node.offsetParent) {
+            result += node.offsetParent.offsetTop
+            node = node.offsetParent
+        }
+        return result
+    }
+    /**
+     * Get background rgba values as an array. If background color is rgb, then alpha value is 1
+     */
+    static getRgba(node) {
+        let rgbaRegex = /(\d+)\D*(\d+)\D*(\d+)\D*(\d*\.?\d*)/
+        let backgroundColor = window.getComputedStyle(node.$ || node).getPropertyValue("background-color")
+        let rgba = rgbaRegex.exec(backgroundColor)
+        return [parseInt(rgba[1]), parseInt(rgba[2]), parseInt(rgba[3]), /rgba/.test(backgroundColor) ? parseFloat(rgba[3]) : 1]
+    }
+    /**
+     * Highlight a node for a while. You can override animation by defining <style id="sf-highlight-css">
+     */
+    static highlight(node) {
+        if (!document.getElementById('sf-highlight-css'))
+            document.getElementsByTagName('head')[0].append(`<style id="sf-highlight-css">@keyframes sf-highlight{from{background:#ff0;box-shadow:0 0 0.5em 0.5em #ff0;padding:0.25em}to{background:#fff;box-shadow:0 0 #fff;padding:0}}</style>`.asSF().$)
+        node = node.$ || node
+        node.style.animation = ''
+        setTimeout(((target) => function () {
+            target.style.animation = 'sf-highlight 2s 1'
+        })(node), 139)
+    }
+    /**
+     * Show toast message for a while. You can override animation by defining <style id="sf-snackbar-css">
+     * @param {string} text Message
+     * @param {HTMLElement} parent (Optional) Default value is document.body; The toast div will attached to parent, and will be removed
+     * @param {number} duration (Optional) Default value is 1000(ms);
+     */
+    static showSnackbar(text, parent, duration) {
+        /* Snackbar from https://www.w3schools.com/howto/howto_js_snackbar.asp */
+        if (!document.getElementById('sf-snackbar-css'))
+            document.getElementsByTagName('head')[0].append(`<style id="sf-snackbar-css">#sf-snackbar{visibility:hidden;min-width:250px;margin-left:-125px;background-color:#333;color:#fff;text-align:center;border-radius:2px;padding:16px;position:fixed;z-index:1000000;left:50%;bottom:30px;font-size:17px}
+#sf-snackbar.show{visibility:visible;-webkit-animation:sf-fadein 0.5s,sf-fadeout 0.5s 2.5s;animation:sf-fadein 0.5s,sf-fadeout 0.5s 2.5s}
+@-webkit-keyframes sf-fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}
+@keyframes sf-fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}
+@-webkit-keyframes sf-fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}
+@keyframes sf-fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}</style>`.asSF().$)
+        parent = parent.$ || parent
+        let snackbar = `<div id="sf-snackbar" class="show">${text}</div>`.asSF().$;
+        (parent || document.body).append(snackbar)
+        setTimeout(() => document.getElementById('sf-snackbar').remove(), duration || 1000)
+    }
+    // Utility for Style End
+
+
+    // Utility for HTML Start
+    /**
+     * When mouse enter on 'target' node, 'content' node will be shown until mouse out
+     * @param {HTMLElement} target 
+     * @param {HTMLElement} content 
+     * @param {Function} targetDecorator (Optional) A decorator function (HTMLElement target) => ?
+     */
+    static addHoverContent(target, content, targetDecorator) {
+        content.style.position = 'absolute'
+        content.style.display = 'none'
+        targetDecorator = targetDecorator || ((target) => {
+            let rgba = SFUtil.getRgba(target)
+            target.style.backgroundColor = `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3] > 0.9 ? rgba[3] : rgba[3] + 0.1})`
+        })
+        targetDecorator(target)
+        let enter = ((target, content) => function (e) {
+            if (content.style.display == 'block')
+                return;
+            content.style.display = 'block';
+            content.style.top = e.pageY;
+            content.style.left = e.pageX;
+            content.style.maxWidth = window.innerWidth - e.clientX;
+            content.style.maxHeight = window.innerHeight - e.clientY;
+            content.style.overflow = 'auto';
+        })(target, content);
+        let leave = ((target, content) => function (e) {
+            if (content.style.display == 'none')
+                return
+            let left = SFUtil.getOffsetLeft(target)
+            let top = SFUtil.getOffsetTop(target)
+            if (left < e.pageX && e.pageX < left + target.offsetWidth && top < e.pageY && e.pageY < top + target.offsetHeight)
+                return
+            left = SFUtil.getOffsetLeft(content)
+            top = SFUtil.getOffsetTop(content)
+            if (left < e.pageX && e.pageX < left + content.offsetWidth && top < e.pageY && e.pageY < top + content.offsetHeight)
+                return
+            content.style.display = 'none'
+        })(target, content);
+        target.addEventListener('mouseenter', enter)
+        target.addEventListener('mouseleave', SFUtil.debounce(leave, 300))
+        content.addEventListener('mouseleave', SFUtil.debounce(leave, 300))
+    }
+    /**
+     * Add a selection functionality on 'node'
+     * @param {HTMLElement} node 
+     * @param {Iterable<string>} texts 
+     * @param {Function} maker (Optional) ul or ol maker. () => string; Default () => '<ul style="default..."></ul>'; 
+     */
+    static addInputSelection(node, texts, maker) {
+        node = node.$ || node
+        maker = maker || (() => '<ul style="margin:8px;padding-right:8px;background-color:white;z-index:10000;position:absolute;display:none"></ul>');
+        let ul = maker().asSF().$;
+        ul.classList.add('sf-input-selection')
+        document.body.append(ul)
+        for (let text of texts) {
+            let li = `<li>${text}</li>`.asSF().$;
+            li.onclick = ((node, ul) => function (e) {
+                ul.style.display = 'none'
+                if (node.hasAttribute('value'))
+                    node.value = this.innerText
+                else
+                    node.innerText = this.innerText
+                let event = document.createEvent('HTMLEvents')
+                event.initEvent('input', true, true)
+                node.dispatchEvent(event)
+            })(node, ul);
+            ul.append(li)
+        }
+        ((node, ul) => {
+            node.onmousedown = e => {
+                document.querySelectorAll('.sf-input-selection').forEach((node, idx, nodeList) => node.style.display = 'none')
+                ul.style.top = e.pageY
+                ul.style.left = e.pageX
+                ul.style.display = 'block'
+            }
+        })(node, ul);
+    }
+    /**
+     * All table will have sort functionality. Except table.no-sort
+     * * Depends on w3.css
+     */
+    static addOrderedTableFunctionality() {
+        if (document.querySelector('style#sf-ordered-table-css'))
+            return
+        document.getElementsByTagName('head')[0].append(`<style id="sf-ordered-table-css">
+td.sorting-table-head-black:after,th.sorting-table-head-black:after{content:attr(sort-order);color:black}
+td.sorting-table-head-white:after,th.sorting-table-head-white:after{content:attr(sort-order);color:white;}</style>`.asSF().$)
+
+        new MutationObserver(innerAddOrderedTableFunctionality).observe(document.body, { attributes: false, childList: true, subtree: true })
+        innerAddOrderedTableFunctionality([{ type: 'childList', target: document.body }])
+
+        function innerAddOrderedTableFunctionality(mutations, observer) {
+            for (let mutation of mutations) {
+                if (mutation.type !== 'childList') return
+
+                for (let table of mutation.target.querySelectorAll('table')) {
+                    if (table.rows.length < 3) {
+                        table.classList.remove('ordered-table')
+                        continue
+                    }
+                    if (table.classList.contains('ordered-table'))
+                        continue
+                    table.classList.add('w3-table-all', 'w3-card', 'w3-small')
+                    if (table.rows.length < 2)
+                        continue
+                    table.classList.add('ordered-table')
+                    if (table.classList.contains('no-sort'))
+                        continue
+
+                    let headRow = table.rows[0]; /* Consider the first row as a header row; 테이블의 1번째 행을 테이블 헤더 행으로 간주 */
+                    headRow.classList.add('table-head-row')
+
+                    let hasDataIdxSet = new Set(); /* If all n-th cell are empty, then remove; 모든 행의 x번째 열이 비어있다면, 삭제하기 위한 인덱스 집합 */
+                    for (let tr of Array.from(table.rows).slice(1)) {
+                        tr.querySelectorAll('td, th').forEach((node, idx, nodeList) => {
+                            if (hasDataIdxSet.has(idx))
+                                return
+                            let text = node.textContent.replace(/null/gmi, '').replace(/[\n\s]+/gm, '').trim()
+                            if (text.length > 0)
+                                hasDataIdxSet.add(idx)
+                        })
+                    }
+                    for (let tr of table.rows) {
+                        tr.querySelectorAll('td, th').forEach((node, idx, nodeList) => {
+                            if (!hasDataIdxSet.has(idx))
+                                node.remove()
+                        })
+                    }
+
+                    headRow.querySelectorAll('td, th').forEach((node, idx, nodeList) => node.onclick = SFUtil.tableSorter(idx, node, table))
+                    let preSort = Array.from(headRow.querySelectorAll('td[pre-sort], th[pre-sort]'))
+                    preSort.sort((head1, head2) => parseFloat(head1.getAttribute('pre-sort')) - parseFloat(head2.getAttribute('pre-sort')))
+                    for (let head of preSort)
+                        head.click()
+                }
+            }
+        }
+    }
+    /**
+     * Copy the element's value or textContent
+     */
+    static copyElementToClipboard(element) {
+        const notActive = { TEXTAREA: true }
+        let parent = element.$ || element
+        while (notActive[parent.tagName])
+            parent = parent.parent();
+        SFUtil.copyTextToCilpboard(element.value || element.textContent, parent);
+        SFUtil.showSnackbar('Copied!!', parent)
+        parent.focus()
+    }
+    /**
+     * Copy text using textarea tag
+     * @param {string} text 
+     * @param {HTMLElement} parent (Optional) Default value is document.body; The textarea will attached to parent, and will be removed
+     */
+    static copyTextToCilpboard(text, parent) {
+        parent = parent.$ || parent
+        let textarea = `<textarea>${text.trim()}</textarea>`.asSF().$;
+        (parent || document.body).append(textarea)
+        textarea.select()
+        document.execCommand('copy')
+        textarea.remove()
+    }
+    /**
+     * Open a link via anchor tag with specific url and target
+     */
+    static openLink(url, target) {
+        let a = document.createElement('a')
+        a.href = url
+        a.target = target
+        document.body.append(a)
+        a.click()
+        a.remove()
+    }
+    /**
+     * Print a HTMLElement. Depend on running browser
+     */
+    static printElement(element) {
+        element = element.$ || element
+        const y = window.scrollY
+        const html = document.getElementsByTagName('html')[0]
+        let print = `<print>${element.innerHTML}</print>`.asSF().$
+        html.append(print)
+        document.body.style.display = 'none'
+        window.print()
+        document.body.style.display = 'block'
+        print.remove()
+        window.scrollTo(0, y)
+    }
+    /**
+     * Return a closure which sort table's idx-th column
+     * @param {number} idx 
+     * @param {HTMLElement} th The head cell. Not sorted by itself
+     * @param {HTMLElement} table 
+     */
+    static tableSorter(idx, th, table) {
+        if (th.classList.contains('no-sort'))
+            return null
+        let rgba = SFUtil.getRgba(th)
+        if (rgba[0] + rgba[1] + rgba[2] < 255 * rgba[3])
+            th.classList.add('sorting-table-head-white')
+        else
+            th.classList.add('sorting-table-head-black')
+        if (!th.getAttribute('sort-order'))
+            th.setAttribute('sort-order', '●')
+
+        return () => {
+            /* order : true(Ascending; 오름차순), false(Descending; 내림차순) */
+            let order = !(th.getAttribute('sort-order') == '▲')
+            th.setAttribute('sort-order', order ? '▲' : '▼')
+
+            let dataRows = Array.from(table.rows).slice(1)
+            dataRows.sort((r1, r2) => {
+                let result = SFUtil.compareString(r1.querySelectorAll('td, th')[idx].textContent.trim(), r2.querySelectorAll('td, th')[idx].textContent.trim())
+                return order ? result : -result
+            })
+            for (let tr of dataRows)
+                table.append(tr)
+        }
+    }
+    /**
+     * @param {HTMLElement} node 
+     * @param {Iterable<string>} classes 
+     */
+    static toggleClass(node, classes) {
+        node = node.$ || node
+        for (let clazz of classes) {
+            if (node.classList.contains(clazz))
+                node.classList.remove(clazz)
+            else
+                node.classList.add(clazz)
+        }
+    }
+    // Utility for HTML End
+}
+Object.freeze(SFUtil)

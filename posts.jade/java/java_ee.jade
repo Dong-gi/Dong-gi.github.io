@@ -573,6 +573,7 @@ include ../../source/skeleton.jade
                             td lookup-method를 통한 프록시
                             td
                                 ul
+                                    +pos('lookup-method')
                                     li name : 재정의할 메서드 이름 → private X, void 반환 X, 메서드 매개변수 X, final X
                                     li bean : 재정의한 메서드에서 반환할 객체
                                     +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans19.xml', 'xml') XML
@@ -594,7 +595,9 @@ include ../../source/skeleton.jade
                                 +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans33.xml', 'xml') XML
                                 +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello19Test.java', 'java') Context
                         tr
-                            td depends-on을 이용한 빈 생성 순서 설정
+                            td
+                                +pos('depends-on')
+                                | depends-on을 이용한 빈 생성 순서 설정
                             td
                                 | has-a 관계보다 약한 의존 관계에서, depends-on을 이용해 특정 빈이 먼저 생성되도록 강제할 수 있다.
                                 |  양쪽 빈 모두 싱글톤인 경우, 객체 소멸 순서도 정해진다.
@@ -1104,12 +1107,12 @@ include ../../source/skeleton.jade
                             li xml에서 @Configuration 임포트는 context:component-scan, context:component-scan 또는 그냥 bean 이용
                     tr
                         td @DependsOn
-                        td xml: 
-                        td 
+                        td xml: depends-on
+                        td: +goto('depends-on')
                     tr
                         td @lookup
                         td xml: lookup-method
-                        td @Lookup("array")
+                        td: +goto('lookup-method')
                     tr
                         td @RequestScope
                         td xml: scope="request"

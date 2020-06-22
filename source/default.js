@@ -115,7 +115,8 @@ window.addEventListener('load', () => {
     updatePostList()
     insertDisqusThread()
     updateMarkerList()
-    document.getElementById('query').onkeyup = SF.debounce(queryUpdated, 500)
+    document.getElementById('query').onkeyup = SFUtil.debounce(queryUpdated, 500)
+    SFUtil.addOrderedTableFunctionality()
 
     window.onpopstate = function (e) {
         let goto = /#(pos-?\d+)/.exec(location.hash)
@@ -128,7 +129,7 @@ window.addEventListener('load', () => {
                 parent = parent.parentElement
             }
             let arg = {
-                top: Donggi.getOffsetTop(target) - document.getElementById('nav').clientHeight
+                top: SFUtil.getOffsetTop(target) - document.getElementById('nav').clientHeight
             }
             setTimeout(() => window.scrollTo(arg), 100)
         }
@@ -149,7 +150,7 @@ function addImageOnclick(imgs) {
     for (let img of imgs) {
         if (!!img.onclick)
             continue
-        img.onclick = ((src) => function (e) { Donggi.openLink(src, '_blank'); })(img.src)
+        img.onclick = ((src) => function (e) { SFUtil.openLink(src, '_blank'); })(img.src)
     }
 }
 
@@ -164,7 +165,7 @@ function addCodeBtnOnclick(btns) {
 
 function addHoverContents(targets) {
     for (let hoverContent of targets)
-        Donggi.addHoverContent(hoverContent, document.getElementById(hoverContent.getAttribute('template-id')))
+        SFUtil.addHoverContent(hoverContent, document.getElementById(hoverContent.getAttribute('template-id')))
 }
 
 function convertAsCodeDiv(divs) {
@@ -190,7 +191,7 @@ function updateSidebar() {
     document.getElementById('sidebar').style.width = '333px'
 
     let fileMap = { files: [] }
-    for (let file of fileText.trim().replace(/\r/gm, '').split('\n').sort(Donggi.compareString)) {
+    for (let file of fileText.trim().replace(/\r/gm, '').split('\n').sort(SFUtil.compareString)) {
         let subMap = fileMap
         let dirs = file.split('/')
         let filename = dirs.pop()
@@ -203,7 +204,7 @@ function updateSidebar() {
         }
         subMap.files.push(filename)
     }
-    let url = URL.createObjectURL(new Blob([Donggi.makeLSlikeText('git', fileMap, 'files')], {
+    let url = URL.createObjectURL(new Blob([SFUtil.makeLSlikeText('git', fileMap, 'files')], {
         type: 'text/plain;charset=utf-8;'
     }))
     new DKFileList(url, '#file-list', null, false, null, true, () => {
@@ -229,8 +230,8 @@ function toggleSidebar() {
 }
 
 function updatePostList() {
-    posts.list.sort((post1, post2) => Donggi.compareString(post1.title, post2.title))
-    posts.list.sort((post1, post2) => Donggi.compareString(post1.category, post2.category))
+    posts.list.sort((post1, post2) => SFUtil.compareString(post1.title, post2.title))
+    posts.list.sort((post1, post2) => SFUtil.compareString(post1.category, post2.category))
 
     let categoryMap = { posts: [] }
     for (let post of posts.list) {
@@ -244,12 +245,12 @@ function updatePostList() {
         }
         category.posts.push(post.title)
     }
-    let url = URL.createObjectURL(new Blob([Donggi.makeLSlikeText('카테고리', categoryMap, 'posts')], {
+    let url = URL.createObjectURL(new Blob([SFUtil.makeLSlikeText('카테고리', categoryMap, 'posts')], {
         type: 'text/plain;charset=utf-8;'
     }))
     new DKFileList(url, '#post-list', null, true, (category, title) => {
         let post = posts.list.filter(x => x.title == title)[0]
-        return Donggi.getElementFromText(`<li><a href="${post.file}">${title}</a></li>`)
+        return `<li><a href="${post.file}">${title}</a></li>`.asSF().$
     }, true, () => {
         document.querySelectorAll('#post-list details').forEach(x => x.open = false)
         let limit = document.getElementById('post-list')
@@ -285,7 +286,7 @@ function insertDisqusThread() {
         return
     }
 
-    parent.append(Donggi.getElementFromText('<div id="disqus_thread"></div>'))
+    parent.append('<div id="disqus_thread"></div>'.asSF().$)
     eval(`var disqus_config = function () {
             this.page.url = 'https://dong-gi.github.io${location.pathname}';
             this.page.identifier = '${location.pathname}';
@@ -305,7 +306,7 @@ function updateMarkerList() {
         marker.setAttribute('marker-id', `marker-${id++}`)
         markerMap.markers.push(marker.getAttribute('marker-id'))
     }
-    let url = URL.createObjectURL(new Blob([Donggi.makeLSlikeText('컨텐츠', markerMap, 'markers')], {
+    let url = URL.createObjectURL(new Blob([SFUtil.makeLSlikeText('컨텐츠', markerMap, 'markers')], {
         type: 'text/plain;charset=utf-8;'
     }))
     new DKFileList(url, '#marker-list', (_, markerId) => {
@@ -330,7 +331,7 @@ function updateMarkerList() {
     }, true, (_, markerId) => {
         let target = document.querySelector(`.marker[marker-id=${markerId}]`)
         let name = getMarkerName(target)
-        let li = Donggi.getElementFromText(`<li class="${target.classList.contains('fake') ? 'w3-hide' : ''}" title="${name}" marker-id="${markerId}">${name.substr(0, 25)}</li>`)
+        let li = `<li class="${target.classList.contains('fake') ? 'w3-hide' : ''}" title="${name}" marker-id="${markerId}">${name.substr(0, 25)}</li>`.asSF().$
 
         let main = document.querySelector('div#contents')
         let level = 0
@@ -374,7 +375,7 @@ function getMarkerName(marker) {
 
 function queryUpdated(e) {
     if (e.keyCode == 13) {
-        Donggi.openLink(`https://github.com/Dong-gi/Dong-gi.github.io/search?q=${this.value}`, '_blank')
+        SFUtil.openLink(`https://github.com/Dong-gi/Dong-gi.github.io/search?q=${this.value}`, '_blank')
         e.stopPropagation()
         return false
     }
@@ -388,7 +389,7 @@ function insertCodeDiv(id) {
             let path = button.title
             let xhr = new XMLHttpRequest()
             xhr.addEventListener('load', ((button) => function (e) {
-                let div = Donggi.getElementFromText(`<div id="code-div-${id}" class="w3-leftbar w3-border-green code-div" style="max-height:${window.innerHeight / 2}"></div>`)
+                let div = `<div id="code-div-${id}" class="w3-leftbar w3-border-green code-div" style="max-height:${window.innerHeight / 2}"></div>`.asSF().$
                 let lan = button.getAttribute('lan')
                 if (this.status != 200)
                     this.responseText = 'Ajax Failed'
@@ -397,7 +398,7 @@ function insertCodeDiv(id) {
                 fillCodeDiv(div, lan, this.responseText, button.getAttribute('displayRange'))
 
                 if (lan != 'nohighlight') {
-                    let modal = Donggi.getElementFromText('<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-blue">모달로 보기</button>')
+                    let modal = '<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-blue">모달로 보기</button>'.asSF().$
                     modal.onclick = showModal(id)
                     button.after(modal)
                     modal.after(div)
@@ -405,7 +406,7 @@ function insertCodeDiv(id) {
                     button.after(div)
 
                 if (lan == 'javascript') {
-                    let script = Donggi.getElementFromText('<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-green">실행</button>')
+                    let script = '<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-green">실행</button>'.asSF().$
                     script.onclick = () => eval(posts.codes[id])
                     button.after(script)
                 }
@@ -417,7 +418,7 @@ function insertCodeDiv(id) {
             xhr.send()
         } else {
             let div = document.getElementById(`code-div-${id}`)
-            Donggi.toggleClass(div, ['w3-hide'])
+            SFUtil.toggleClass(div, ['w3-hide'])
             div.style.maxHeight = window.innerHeight / 2
         }
     }
@@ -447,14 +448,20 @@ function fillCodeDiv(div, lan, text, displayRange) {
                     li.innerText = lines[idx].replace(/  /gm, '\u00A0')
                     ol.append(li)
                 } else
-                    ol.append(Donggi.getElementFromText(`<li>${lines[idx].replace(/  /gm, '&nbsp;')}</li>`))
+                    ol.append(`<li>${lines[idx].replace(/  /gm, '&nbsp;')}</li>`.asSF().$)
             }
             if (displayRange.length > 0)
                 ol.append(document.createElement('hr'))
         }
         div.append(ol)
     } else {
-        div.append(Donggi.getNodesFromText(text, 'p'))
+        let sfs = text.asSF()
+        if (Array.isArray(sfs)) {
+            for (let sf of sfs)
+                div.append(sf.$)
+        } else {
+            div.append(sfs.$)
+        }
     }
 }
 
@@ -467,7 +474,7 @@ function showModal(id) {
             return
         }
 
-        modal = Donggi.getElementFromText(getCodeModalHTML(id, document.getElementById(`code-button-${id}`).title.split('/').pop()))
+        modal = getCodeModalHTML(id, document.getElementById(`code-button-${id}`).title.split('/').pop()).asSF().$
         let header = modal.querySelector('header')
         let body = modal.querySelector('.code-modal-body')
         let footer = modal.querySelector('footer')
@@ -478,12 +485,12 @@ function showModal(id) {
         body.style.height = window.innerHeight - parseFloat(window.getComputedStyle(header).height)
 
         footer.querySelector('button.copy').onclick = () => {
-            Donggi.copyTextToCilpboard(posts.codes[id], modal)
-            Donggi.showSnackbar('복사 완료', modal)
+            SFUtil.copyTextToCilpboard(posts.codes[id], modal)
+            SFUtil.showSnackbar('복사 완료', modal)
             modal.focus()
         }
         footer.querySelector('button.download').onclick = () => downloadCode(document.getElementById(`code-button-${id}`).title.split('/').pop(), posts.codes[id])
-        footer.querySelector('button.print').onclick = () => Donggi.printElement(body)
+        footer.querySelector('button.print').onclick = () => SFUtil.printElement(body)
         for (let node of modal.querySelectorAll('.w3-btn.close')) {
             node.onclick = () => {
                 document.getElementById(`modal-${id}`).style.display = 'none'
@@ -566,7 +573,7 @@ class DKFileList {
             }
             if (this.sort)
                 for (let files of fileList.fileMap.values())
-                    files.sort(Donggi.compareString)
+                    files.sort(SFUtil.compareString)
             //console.log(fileList.fileMap)
             fileList.updateFileList(fileList.rootDir)
             fileList.callback && fileList.callback(this)
@@ -615,16 +622,16 @@ class DKFileList {
     }
 
     static getDirHTML(dir, parentDir, open) {
-        return Donggi.getElementFromText(`<details ${(!!open) ? 'open' : ''} id="dir-${dir.hashCode()}" class="w3-small file-list" title="${dir}"><summary>${dir.replace(parentDir, '')}</summary><ul></ul></details>`)
+        return `<details ${(!!open) ? 'open' : ''} id="dir-${dir.hashCode()}" class="w3-small file-list" title="${dir}"><summary>${dir.replace(parentDir, '')}</summary><ul></ul></details>`.asSF().$
     }
 
     static getFileHTMLwithA(rootDir, dir, name) {
         let path = `${dir.substr(rootDir.length)}/${name}`
-        return Donggi.getElementFromText(`<li><a href="${path}">${name}</a></li>`)
+        return `<li><a href="${path}">${name}</a></li>`.asSF().$
     }
 
     static getFileHTMLwithoutA(dir, name) {
         let path = `${dir}/${name}`
-        return Donggi.getElementFromText(`<li title="${path}">${name}</li>`)
+        return `<li title="${path}">${name}</li>`.asSF().$
     }
 }
