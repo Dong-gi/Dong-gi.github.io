@@ -105,7 +105,7 @@ mixin post(title, keywords, description, useMJX, noAds)
                     };
             if !noAds
                 //-script#kakao-ads(src='//t1.daumcdn.net/kas/static/ba.min.js', async)
-                //-script#google-ads(data-ad-client='ca-pub-7897366614471210', src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', async)
+                script#google-ads(data-ad-client='ca-pub-7897366614471210', src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', async)
                 script#google-analytics(src='https://www.googletagmanager.com/gtag/js?id=UA-143098403-1', async)
                 script.
                     window.dataLayer = window.dataLayer || [];
