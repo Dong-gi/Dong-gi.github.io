@@ -1102,6 +1102,22 @@ td.sorting-table-head-white:after,th.sorting-table-head-white:after{content:attr
         textarea.remove()
     }
     /**
+     * Download 'text' as 'fileName'
+     * @param {string} text 
+     * @param {string} fileName (Optional) Default 'text.txt'
+     */
+    static downloadText(text, fileName) {
+        let a = document.createElement('a')
+        a.href = URL.createObjectURL(new Blob([text], {
+            type: 'text/plain;charset=utf-8;'
+        }))
+        a.target = '_blank'
+        a.download = fileName
+        document.body.append(a)
+        a.click()
+        a.remove()
+    }
+    /**
      * Open a link via anchor tag with specific url and target
      */
     static openLink(url, target) {

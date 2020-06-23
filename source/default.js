@@ -132,6 +132,7 @@ window.addEventListener('load', () => {
                 top: SFUtil.getOffsetTop(target) - document.getElementById('nav').clientHeight
             }
             setTimeout(() => window.scrollTo(arg), 100)
+            SFUtil.highlight(target)
         }
     }
 })
@@ -319,10 +320,7 @@ function updateMarkerList() {
                 parent.open = true
             parent = parent.parentElement
         }
-        target.style.animation = ''
-        setTimeout(((target) => function () {
-            target.style.animation = 'highlight 2s 1'
-        })(target), 139)
+        SFUtil.highlight(target)
         setTimeout(((target) => function () {
             window.scrollTo({
                 top: target.offsetTop - document.getElementById('nav').clientHeight
@@ -489,7 +487,7 @@ function showModal(id) {
             SFUtil.showSnackbar('복사 완료', modal)
             modal.focus()
         }
-        footer.querySelector('button.download').onclick = () => downloadCode(document.getElementById(`code-button-${id}`).title.split('/').pop(), posts.codes[id])
+        footer.querySelector('button.download').onclick = () => SFUtil.downloadText(posts.codes[id], document.getElementById(`code-button-${id}`).title.split('/').pop())
         footer.querySelector('button.print').onclick = () => SFUtil.printElement(body)
         for (let node of modal.querySelectorAll('.w3-btn.close')) {
             node.onclick = () => {
@@ -499,18 +497,6 @@ function showModal(id) {
             }
         }
     }
-}
-
-function downloadCode(fileName, text) {
-    let a = document.createElement('a')
-    let url = URL.createObjectURL(new Blob([text.trim()], {
-        type: 'text/plain;charset=utf-8;'
-    }))
-    a.href = url
-    a.target = '_blank'
-    a.download = fileName
-    document.body.append(a)
-    a.click()
 }
 
 function getCodeModalHTML(id, filename) {
