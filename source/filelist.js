@@ -902,6 +902,11 @@ Repositories/JavaScript/Browser/window_open.js
 Repositories/JavaScript/Browser/window_popup.js
 Repositories/JavaScript/Browser/window_resizeto.js
 Repositories/JavaScript/SF/demo1.html
+Repositories/JavaScript/SF/demo10.html
+Repositories/JavaScript/SF/demo11.html
+Repositories/JavaScript/SF/demo12.html
+Repositories/JavaScript/SF/demo13.html
+Repositories/JavaScript/SF/demo14.html
 Repositories/JavaScript/SF/demo2.html
 Repositories/JavaScript/SF/demo3.html
 Repositories/JavaScript/SF/demo4.html
@@ -1019,6 +1024,7 @@ Repositories/SF/v/0.2.2/sf.min.js
 Repositories/SF/v/0.3.0/sf.min.js
 Repositories/SF/v/0.3.1/sf.min.js
 Repositories/SF/v/0.3.2/sf.min.js
+Repositories/SF/v/0.4.0/sf.min.js
 Repositories/STS/config-client/.gitignore
 Repositories/STS/config-client/.mvn/wrapper/MavenWrapperDownloader.java
 Repositories/STS/config-client/.mvn/wrapper/maven-wrapper.jar

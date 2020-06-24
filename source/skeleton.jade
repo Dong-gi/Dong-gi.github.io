@@ -129,7 +129,7 @@ mixin post(title, keywords, description, useMJX, noAds)
             #main
                 .w3-bar.w3-blue.w3-large#nav(style='position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle')
                     button.w3-bar-item.w3-button.w3-hover-theme(onclick='toggleSidebar()') &#9776;
-                    input.w3-bar-item#query(type='text',placeholder='search')
+                    input.w3-bar-item#query(type='text',placeholder='search',style='max-width:35%')
                     a.w3-bar-item.w3-button.w3-hover-theme(href='/') Home
                 #contents.w3-padding
                     if block

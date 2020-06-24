@@ -9,6 +9,10 @@ include ../../source/skeleton.jade
         table
             +ths('version', 'size', 'link')
             tr
+                td 0.4.0
+                td 20.1KB
+                td: +asA('https://github.com/Dong-gi/SF/releases/download/0.4.0/sf.min.js')
+            tr
                 td 0.3.2
                 td 10.9KB
                 td: +asA('https://github.com/Dong-gi/SF/releases/download/0.3.2/sf.min.js')
@@ -72,7 +76,9 @@ include ../../source/skeleton.jade
             +asCode('javascript').
                 const app = SF.build(document.getElementById('demo4-1'));
                 const boundForm = SF.bindForm(app['demo4-1-form']);
+            p Changed from <mark>0.4.0</mark> : SF.formToObject set input[type=file] as File[]
             +codeBtn('/Repositories/JavaScript/SF/demo4.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo4.html', 'nohighlight') View live here
             +asA('/Repositories/JavaScript/SF/demo4.html', 'View on new tab')&attributes({ target: '_blank' })
 
             h3.marker Object Binding Example
@@ -105,6 +111,66 @@ include ../../source/skeleton.jade
             +codeBtn('/Repositories/JavaScript/SF/demo9.html', 'html')
             +codeBtn('/Repositories/JavaScript/SF/demo9.html', 'nohighlight') View live here
             +asA('/Repositories/JavaScript/SF/demo9.html', 'View on new tab')&attributes({ target: '_blank' })
+
+        h2.marker Version 0.4.0
+        div
+            h3.marker SFUtil.compareString()
+            p Do natural string compare
+            +asCode('javascript').
+                let list = ['video-10.mp4', 'video-1.mp4', 'video-5.mp4', '2020-2-15', '2020-2', '2020', '2020-02-8', '$1,234.00', '$-1,234.00', '1,200.00', '-1200']
+                list.sort((i1, i2) => i1.compareString(i2))
+                JSON.stringify(list)
+                >> ["$-1,234.00","-1200","1,200.00","$1,234.00","2020","2020-2","2020-02-8","2020-2-15","video-1.mp4","video-5.mp4","video-10.mp4"]
+            h3.marker SFUtil.makeLSlikeText()
+            p return 'ls -R' like text
+            +asCode('javascript').
+                let o = {
+                    list: ['file1', 'file2'],
+                    dir1: {
+                        list: ['file11', 'file22']
+                    },
+                    dir2: {
+                        list: ['file111', 'file222'],
+                        dir3: {},
+                    },
+                }
+                SFUtil.makeLSlikeText('root', o, 'list')
+                >> root:
+                file1
+                file2
+                dir1
+                dir2
+                root/dir2:
+                file111
+                file222
+                dir3
+                root/dir2/dir3:
+                root/dir1:
+                file11
+                file22
+            h3.marker SFUtil.highlight()
+            +codeBtn('/Repositories/JavaScript/SF/demo10.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo10.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo10.html', 'View on new tab')&attributes({ target: '_blank' })
+            h3.marker SFUtil.showSnackbar()
+            +codeBtn('/Repositories/JavaScript/SF/demo11.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo11.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo11.html', 'View on new tab')&attributes({ target: '_blank' })
+            h3.marker SFUtil.addHoverContent()
+            +codeBtn('/Repositories/JavaScript/SF/demo12.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo12.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo12.html', 'View on new tab')&attributes({ target: '_blank' })
+            h3.marker SFUtil.addInputSelection()
+            +codeBtn('/Repositories/JavaScript/SF/demo13.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo13.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo13.html', 'View on new tab')&attributes({ target: '_blank' })
+            h3.marker
+                | SFUtil.copyElementToClipboard()
+                br
+                | SFUtil.copyTextToCilpboard()
+            +codeBtn('/Repositories/JavaScript/SF/demo14.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo14.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo14.html', 'View on new tab')&attributes({ target: '_blank' })
 
     h1.marker Change Logs
     table
@@ -150,3 +216,7 @@ include ../../source/skeleton.jade
         +tds('0.3.0', 'Fix', "Now function returned by SF.throttle, SF.debounce has it's own timer")
         +tds('0.3.0', 'New', 'DataGrid : SF.asDataGrid, DataGrid.fromCSV, DataGrid.fromArray, DataGrid.fromObject')
         +tds('0.3.2', 'Fix', 'CSV parsing error')
+        +tds('0.4.0', 'Fix', 'String.prototype.asSF\'s <script> tags not run')
+        +tds('0.4.0', 'Change', 'Move SF.throttle, SF.debounce to SFUtil')
+        +tds('0.4.0', 'Change', 'SF.formToObject set input[type=file] as File[]')
+        +tds('0.4.0', 'New', 'SFUtil class has several functions')

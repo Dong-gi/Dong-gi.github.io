@@ -777,17 +777,17 @@ include ../../source/skeleton.jade
                             +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Bean1
                             +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java') Bean2
                             +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans43.xml', 'xml') XML
-                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/beans43-1.properties', 'ini') properties1
-                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/beans43-2.properties', 'ini') properties2
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/beans43-1.properties', 'properties') properties1
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/beans43-2.properties', 'properties') properties2
                             +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello17Test5.java', 'java') Context
                         li
                             | PropertyOverrideConfigurer 예 
                             +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java') Bean1
                             +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java') Bean2
                             +codeBtn('/Repositories/Eclipse/app2/src/main/resource/Beans44.xml', 'xml') XML
-                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/beans43-1.properties', 'ini') properties1
-                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/beans43-2.properties', 'ini') properties2
-                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/beans44.properties', 'ini') properties3
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/beans43-1.properties', 'properties') properties1
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/beans43-2.properties', 'properties') properties2
+                            +codeBtn('/Repositories/Eclipse/app2/src/main/resource/beans44.properties', 'properties') properties3
                             +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/bean/Hello17Test6.java', 'java') Context
                     li
                         | FactoryBean
@@ -963,7 +963,7 @@ include ../../source/skeleton.jade
                             li
                                 | 외부 *.properties 파일 기반으로 값 주입
                                 +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno18.java', 'java') Bean
-                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno18.properties', 'ini') properties
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno18.properties', 'properties') properties
                                 +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno18Test.java', 'java') Context
                             li @Bean static 메서드로 PropertySourcesPlaceholderConfigurer 인스턴스를 반환하면 커스터마이징 가능하다
                             li Spring Boot 애플리케이션은 기본적으로 application.properties, application.yml 파일을 읽는 PropertySourcesPlaceholderConfigurer 빈을 갖는다
@@ -971,7 +971,7 @@ include ../../source/skeleton.jade
                             p
                                 | BeanPostProcessor는 ConversionService를 이용해 타입 변환을 수행한다. 커스텀 컨버터를 등록하면 사용자 정의 타입으로의 변환도 가능하다 
                                 +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno19.java', 'java') Bean
-                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno19.properties', 'ini') properties
+                                +codeBtn('/Repositories/Eclipse/app2/src/main/resource/anno19.properties', 'properties') properties
                                 +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno19Test.java', 'java') Context
                             li
                                 | SpEL 표현식도 가능하다 
@@ -1195,8 +1195,8 @@ include ../../source/skeleton.jade
                         li
                             | 예시 코드 
                             +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/config/I18nConfig.java', 'java') Configuration
-                            +codeBtn('/Repositories/STS/ioc-example/src/main/resources/i18n/templates_en.properties', 'ini') templates_en.properties
-                            +codeBtn('/Repositories/STS/ioc-example/src/main/resources/i18n/templates_ko.properties', 'ini') templates_ko.properties
+                            +codeBtn('/Repositories/STS/ioc-example/src/main/resources/i18n/templates_en.properties', 'properties') templates_en.properties
+                            +codeBtn('/Repositories/STS/ioc-example/src/main/resources/i18n/templates_ko.properties', 'properties') templates_ko.properties
                             +codeBtn('/Repositories/STS/ioc-example/src/test/java/io/github/donggi/example/config/I18nTests.java', 'java') Test
                     h5.marker 이벤트 Pub/Sub
                     ul
@@ -1241,6 +1241,53 @@ include ../../source/skeleton.jade
                         li ClassPathXmlAPplicationContext에 간단한 경로로 리소스를 질의하는 경우, 클래스 패스 상의 리소스를 찾는다.
                         p 애매한 경우, 명시적으로 classpath:, file: 등 URL을 지정해야 한다.
 
+            h3.marker Resources
+            div
+                h4.marker interface Resource extends InputStreamSource
+                +asCode('java').
+                    boolean             exists()            // 리소스의 실재 여부는 이 메서드로 확인해야 한다
+                    boolean             isReadable()
+                    boolean             isOpen()            // InputStream이 이미 열렸는지 여부.
+                                                            // true면 InputStream을 한 번만 읽고 닫아야 한다
+                    boolean             isFile()
+
+                    URL                 getURL()
+                    URI                 getURI()
+                    File                getFile()
+                        long            contentLength()
+                        long            lastModified()
+                        String          getFilename()
+                        String          getDescription()
+
+                    InputStream         getInputStream()    // from InputStreamSource
+                                                            // 매 호출마다 새로운 InputStream을 반환한다고 가정해도 된다
+                    ReadableByteChannel readableChannel()   // Channels.newChannel(getInputStream())
+
+                    Resource            createRelative(String relativePath)
+                h4.marker 내장 Resource 구현클래스
+                ul
+                    li UrlResource
+                    p classpath:, file:, http:, ftp: 등 일반적인 스킴 모두 지원
+                    li ClassPathResource
+                    p 클래스패스 상의 리소스
+                    li FileSystemResource
+                    p 파일 시스템 상의 리소스
+                    li ServletContextResource
+                    p 웹앱 루트 디렉터리를 기준으로 한 상대 경로 상의 리소스
+                    li InputStreamResource
+                    p 지정 IputStream으로부터 Resource 생성. isOpen()이 true를 반환한다. 다른 구현체를 이용할 수 있다면 그쪽을 사용하는 편이 좋다
+                    li ByteArrayResource
+                    p 주어진 byte 배열로부터 Resource 생성. 여러번 읽기 가능.
+                h4.marker interface ResourceLoader
+                +asCode('java').
+                    static String       CLASSPATH_URL_PREFIX    // "classpath:"
+
+                    ClassLoader         getClassLoader()
+                    Resource            getResource(String location)
+                        // 스킴을 지정하지 않은 경우, 각 ApplicationContext 구현체는 서로 다른 Resource를 찾아 반환한다
+                        // 예. ClassPathXmlApplicationContext -> ClassPathResource
+                        // 예. FileSystemXmlApplicationContext  -> FileSystemResource
+                        // 예. WebApplicationContext -> ServletContextResource
 
     details
         summary 정리중...                    

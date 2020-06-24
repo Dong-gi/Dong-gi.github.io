@@ -587,7 +587,7 @@ include ../../source/skeleton.jade
         ol
             +asA('https://docs.gradle.org/current/userguide/build_environment.html#sec:gradle_configuration_properties')
             li Gradle properties
-            +asCode('ini').
+            +asCode('properties').
                 org.gradle.caching           =true|false        # 이전 빌드 출력 캐싱
                 org.gradle.configureondemand =true|false        # 작업에 필요한 프로젝트만 구성. incubating
                 org.gradle.daemon.idletimeout=# of milliseconds # 데몬 유지 기간. 기본 3시간(10800000)
@@ -597,7 +597,7 @@ include ../../source/skeleton.jade
                 org.gradle.parallel          =true|false
                 org.gradle.workers.max       =# of worekr processes
             li System properties
-            +asCode('ini').
+            +asCode('properties').
                 gradle.user.home=GRADLE_USER_HOME
                 # ↓ Gradle 다운로드 시 HTTP 인증 정보
                 systemProp.wrapperUser=username
@@ -612,7 +612,7 @@ include ../../source/skeleton.jade
                 # 주의 +
                 # 그래들 데몬을 비활성화하면 클라이언트 VM이 직접 빌드 작업을 실행한다.
             li 프록시 설정
-            +asCode('ini').
+            +asCode('properties').
                 # http
                 systemProp.http.proxyHost=x.y.z
                 systemProp.http.proxyPort=8888
@@ -995,7 +995,7 @@ include ../../source/skeleton.jade
                 li buildSrc/src/main/resources/META-INF/gradle-plugins/{id}.properties
                 li jar : META-INF/gradle-plugins/{id}.properties
                 +codeBtn('/Repositories/Gradle/project-02/build.gradle', 'gradle') build.gradle
-                +codeBtn('/Repositories/Gradle/project-02/buildSrc/src/main/resources/META-INF/gradle-plugins/hello.properties', 'ini') hello.properties
+                +codeBtn('/Repositories/Gradle/project-02/buildSrc/src/main/resources/META-INF/gradle-plugins/hello.properties', 'properties') hello.properties
                 li 또는 http://plugins.gradle.org 에 플러그인 등록
                 +asA('https://guides.gradle.org/publishing-plugins-to-gradle-plugin-portal')
                 +asCode('gradle').
@@ -1023,7 +1023,7 @@ include ../../source/skeleton.jade
         --gradle-distribution-sha256-sum
 
     p 다운로드에 필요한 HTTP 기본 인증 정보를 파일로 설정 가능
-    +asCode('ini').
+    +asCode('properties').
         # USER_HOME/.gradle/gradle.properties 또는 wrapper/gradle-wrapper.properties
         systemProp.gradle.wrapperUser=username
         systemProp.gradle.wrapperPassword=password

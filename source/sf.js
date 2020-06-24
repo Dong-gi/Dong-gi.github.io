@@ -29,6 +29,19 @@ String.prototype.asSF = function () {
         default: return SF.asSFarr(temp.children)
     }
 }
+String.prototype.compareString = function (other) {
+    return SFUtil.compareString(this, other);
+}
+if (!File.prototype.toJSON) {
+    File.prototype.toJSON = function () {
+        return JSON.stringify({
+            name: this.name,
+            size: this.size,
+            type: this.type,
+            lastModified: this.lastModified,
+        })
+    }
+}
 class SFKey { }
 SFKey.map = Symbol('SFNode map')
 SFKey.key = Symbol("SFNode's key")
@@ -39,6 +52,12 @@ SFKey.beforeSetHooks = Symbol('Before set hook list')
 SFKey.afterSetHooks = Symbol('After set hook list')
 SFKey.beforeDelHooks = Symbol('Before delete hook list')
 SFKey.afterDelHooks = Symbol('After delete hook list')
+SFKey.numPartRegex1 = /(((^|[\s$¥£₡₱€₩₭฿])[+-]?)?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/
+SFKey.numPartRegex2 = /(([\s$¥£₡₱€₩₭฿][+-]?)?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/
+SFKey.startWithNumberRegex1 = new RegExp(`^${SFKey.numPartRegex1.source}`)
+SFKey.startWithNumberRegex2 = new RegExp(`^${SFKey.numPartRegex2.source}`)
+SFKey.textPartRegex1 = new RegExp(`^((?!${SFKey.numPartRegex1.source})[\\d\\D])+`, 'm')
+SFKey.textPartRegex2 = new RegExp(`^((?!${SFKey.numPartRegex2.source})[\\d\\D])+`, 'm')
 Object.freeze(SFKey)
 
 class SF {
@@ -753,47 +772,40 @@ class SFUtil {
     /// Utility for JavaScript Start
     /**
      * Do natural string compare
+     * - Cases when treat a positive/negative sign followed by digits as Number; 부호 붙은 숫자를 수로 간주하는 경우
+     * 1. The sign is the first character of string; 부호 자체가 문자열 시작
+     * 2. The sign has a space ahead; 부호 앞에 공백이 존재하여 별개 파트로 간주 가능
+     * 3. The sign has a currency sign ahead; 부호 앞에 화폐 기호 [$¥£₡₱€₩₭฿]가 존재
      */
     static compareString(str1, str2) {
-        if (str1 === str2)
+        if (str1 == str2)
             return 0
-        let ori1 = str1
-        let ori2 = str2
-        /* Cases when treat a positive/negative sign followed by digits as Number; 부호 붙은 숫자를 수로 간주하는 경우
-           1. The sign is the first character of string; 부호 자체가 문자열 시작
-           2. The sign has a space ahead; 부호 앞에 공백이 존재하여 별개 파트로 간주 가능
-           3. The sign has a currency sign ahead; 부호 앞에 화폐 기호 [$¥£₡₱€₩₭฿]가 존재 */
-        let numPartRegex1 = /(((^|[\s$¥£₡₱€₩₭฿])[+-])?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/
-        let numPartRegex2 = /(([\s$¥£₡₱€₩₭฿][+-])?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/
-        let startWithNumberRegex1 = new RegExp(`^${numPartRegex1.source}`)
-        let startWithNumberRegex2 = new RegExp(`^${numPartRegex2.source}`)
-        let strPartRegex1 = new RegExp(`^((?!${numPartRegex1.source})[\\d\\D])+`, 'm')
-        let strPartRegex2 = new RegExp(`^((?!${numPartRegex2.source})[\\d\\D])+`, 'm')
+        let [ori1, ori2] = [str1, str2]
         while (true) {
             if (str1.length * str2.length == 0)
                 return str1.length - str2.length
-            let isStr1StartWithNumber = ((str1 === ori1) ? startWithNumberRegex1 : startWithNumberRegex2).test(str1)
-            let isStr2StartWithNumber = ((str2 === ori2) ? startWithNumberRegex1 : startWithNumberRegex2).test(str2)
+            let isStr1StartWithNumber = ((str1 === ori1) ? SFKey.startWithNumberRegex1 : SFKey.startWithNumberRegex2).test(str1)
+            let isStr2StartWithNumber = ((str2 === ori2) ? SFKey.startWithNumberRegex1 : SFKey.startWithNumberRegex2).test(str2)
             if (isStr1StartWithNumber && isStr2StartWithNumber) {
-                let num1 = parseFloat(str1.match(((str1 === ori1) ? startWithNumberRegex1 : startWithNumberRegex2))[0].replace(/[^\-\d\.]/g, ''))
-                let num2 = parseFloat(str2.match(((str2 === ori2) ? startWithNumberRegex1 : startWithNumberRegex2))[0].replace(/[^\-\d\.]/g, ''))
+                let num1 = parseFloat(str1.match(((str1 === ori1) ? SFKey.startWithNumberRegex1 : SFKey.startWithNumberRegex2))[0].replace(/[^\-\d\.]/g, ''))
+                let num2 = parseFloat(str2.match(((str2 === ori2) ? SFKey.startWithNumberRegex1 : SFKey.startWithNumberRegex2))[0].replace(/[^\-\d\.]/g, ''))
                 if (Math.abs(num1 - num2) >= Number.EPSILON)
                     return num1 - num2
-                str1 = str1.replace(((str1 === ori1) ? startWithNumberRegex1 : startWithNumberRegex2), '')
-                str2 = str2.replace(((str2 === ori2) ? startWithNumberRegex1 : startWithNumberRegex2), '')
+                str1 = str1.replace(((str1 === ori1) ? SFKey.startWithNumberRegex1 : SFKey.startWithNumberRegex2), '')
+                str2 = str2.replace(((str2 === ori2) ? SFKey.startWithNumberRegex1 : SFKey.startWithNumberRegex2), '')
                 continue
             }
             if (isStr1StartWithNumber)
                 return -1
             if (isStr2StartWithNumber)
                 return 1
-            let text1 = str1.match(((str1 === ori1) ? strPartRegex1 : strPartRegex2))[0]
-            let text2 = str2.match(((str2 === ori2) ? strPartRegex1 : strPartRegex2))[0]
+            let text1 = str1.match(((str1 === ori1) ? SFKey.textPartRegex1 : SFKey.textPartRegex2))[0]
+            let text2 = str2.match(((str2 === ori2) ? SFKey.textPartRegex1 : SFKey.textPartRegex2))[0]
             let result = text1.localeCompare(text2)
             if (result !== 0)
                 return result
-            str1 = str1.replace(((str1 === ori1) ? strPartRegex1 : strPartRegex2), '')
-            str2 = str2.replace(((str2 === ori2) ? strPartRegex1 : strPartRegex2), '')
+            str1 = str1.replace(((str1 === ori1) ? SFKey.textPartRegex1 : SFKey.textPartRegex2), '')
+            str2 = str2.replace(((str2 === ori2) ? SFKey.textPartRegex1 : SFKey.textPartRegex2), '')
         }
     }
     /**
@@ -836,11 +848,13 @@ class SFUtil {
             for (let dirPart of path.split("/"))
                 if (directory.hasOwnProperty(dirPart))
                     directory = directory[dirPart]
-            text += `${path}:\n`
+            text = `${text}${path}:\n`
             for (let prop in directory) {
+                if (!directory.hasOwnProperty(prop))
+                    continue
                 if (prop != listAttrName) {
                     paths.push(`${path}/${prop}`)
-                    text += `${prop}\n`
+                    text = `${text}${prop}\n`
                 }
                 else {
                     for (let file of directory[prop])
@@ -930,7 +944,8 @@ class SFUtil {
 @keyframes sf-fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}
 @-webkit-keyframes sf-fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}
 @keyframes sf-fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}</style>`.asSF().$)
-        parent = parent.$ || parent
+        if (parent)        
+            parent = parent.$ || parent
         let snackbar = `<div id="sf-snackbar" class="show">${text}</div>`.asSF().$;
         (parent || document.body).append(snackbar)
         setTimeout(() => document.getElementById('sf-snackbar').remove(), duration || 1000)
@@ -946,6 +961,8 @@ class SFUtil {
      * @param {Function} targetDecorator (Optional) A decorator function (HTMLElement target) => ?
      */
     static addHoverContent(target, content, targetDecorator) {
+        target = target.$ || target
+        content = content.$ || content
         content.style.position = 'absolute'
         content.style.display = 'none'
         targetDecorator = targetDecorator || ((target) => {
@@ -988,14 +1005,20 @@ class SFUtil {
      */
     static addInputSelection(node, texts, maker) {
         node = node.$ || node
-        maker = maker || (() => '<ul style="margin:8px;padding-right:8px;background-color:white;z-index:10000;position:absolute;display:none"></ul>');
-        let ul = maker().asSF().$;
-        ul.classList.add('sf-input-selection')
-        document.body.append(ul)
+        maker = maker || (() => '<ul style="margin:0;padding:0.5rem 1rem 0.5rem 2rem;background-color:white;z-index:10000"></ul>');
+        let div = `<div>${maker()}</div>`.asSF()
+        let ul = div.ul.$;
+        div = div.$;
+        div.style.display = 'none'
+        div.style.position = 'absolute'
+        div.style.borderWidth = '2px'
+        div.style.borderStyle = 'inset'
+        div.classList.add('sf-input-selection')
+        document.body.append(div)
         for (let text of texts) {
             let li = `<li>${text}</li>`.asSF().$;
-            li.onclick = ((node, ul) => function (e) {
-                ul.style.display = 'none'
+            li.onclick = ((node, div) => function (e) {
+                div.style.display = 'none'
                 if (node.hasAttribute('value'))
                     node.value = this.innerText
                 else
@@ -1003,17 +1026,18 @@ class SFUtil {
                 let event = document.createEvent('HTMLEvents')
                 event.initEvent('input', true, true)
                 node.dispatchEvent(event)
-            })(node, ul);
+            })(node, div);
             ul.append(li)
         }
-        ((node, ul) => {
-            node.onmousedown = e => {
-                document.querySelectorAll('.sf-input-selection').forEach((node, idx, nodeList) => node.style.display = 'none')
-                ul.style.top = e.pageY
-                ul.style.left = e.pageX
-                ul.style.display = 'block'
-            }
-        })(node, ul);
+        node.onmousedown = (div => function (e) {
+            document.querySelectorAll('.sf-input-selection').forEach((node, idx, nodeList) => node.style.display = 'none')
+            div.style.display = 'block'
+            div.style.top = e.pageY
+            div.style.left = e.pageX
+            div.style.maxWidth = window.innerWidth - e.clientX;
+            div.style.maxHeight = window.innerHeight - e.clientY;
+            div.style.overflow = 'auto';
+        })(div)
     }
     /**
      * All table will have sort functionality. Except table.no-sort
@@ -1085,8 +1109,6 @@ td.sorting-table-head-white:after,th.sorting-table-head-white:after{content:attr
         while (notActive[parent.tagName])
             parent = parent.parent();
         SFUtil.copyTextToCilpboard(element.value || element.textContent, parent);
-        SFUtil.showSnackbar('Copied!!', parent)
-        parent.focus()
     }
     /**
      * Copy text using textarea tag
@@ -1094,7 +1116,8 @@ td.sorting-table-head-white:after,th.sorting-table-head-white:after{content:attr
      * @param {HTMLElement} parent (Optional) Default value is document.body; The textarea will attached to parent, and will be removed
      */
     static copyTextToCilpboard(text, parent) {
-        parent = parent.$ || parent
+        if (parent)
+            parent = parent.$ || parent
         let textarea = `<textarea>${text.trim()}</textarea>`.asSF().$;
         (parent || document.body).append(textarea)
         textarea.select()
