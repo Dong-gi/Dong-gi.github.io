@@ -1288,6 +1288,39 @@ include ../../source/skeleton.jade
                         // 예. ClassPathXmlApplicationContext -> ClassPathResource
                         // 예. FileSystemXmlApplicationContext  -> FileSystemResource
                         // 예. WebApplicationContext -> ServletContextResource
+                h4.marker Resource 주입
+                ul
+                    li XML 기반 설정에서, Resource 타입 property의 value로 URL 문자열이 가능하다
+                    li 일반적으로 ApplicationContext 생성자 자체도 URL 문자열 (배열)로 초기화 가능하다
+                    li ClassPathXmlApplicationContext 생성자에 클래스와 파일명 배열을 같이 보내면, 자동으로 클래스 위치에서 파일을 찾는다
+                    li ApplicationContext 생성자 및 PathMatcher 유틸리티 클래스는 와일드카드를 사용할 수 있다
+                    ul
+                        li "file:C:/some/path/*-context.xml", "classpath*:com/mycompany/**/applicationContext.xml"
+                        li XML관련 ApplicationContext는 "classpath*:" 접두를 사용할 수 있다. 의미는 모든 클래스패스 리소스 검색
+                        +asCode('java') new ClassPathXmlApplicationContext("classpath*:conf/appContext.xml");
+                        p 내부적으로 ClassLoader.getResources()를 이용한다. jar 파일에서 리소스를 로드하는 경우, getClass().getClassLoader().getResources()를 직접 호출했을 때와 비교하여 차이가 있으면 서버 설정을 조정하거나 해야 한다.
+                        li "jar:" 리소스들은 java.net.JarURLConnection을 필요로 하기 때문에, 일부 환경에서 실패할 수 있음에 유의
+                    li 이전 버전과의 호환성을 위해, FileSystemApplicationContext 자체가 ResourceLoader 역할을 하는 경우, 절대 경로도 상대 경로로 해석함에 유의.
+                    p 절대 경로로 리소스를 지정하려면 "file:///path/file.ext" 처럼 "file:" 접두를 사용해 UrlResource로 가져오도록 해야 한다.
+
+            h3.marker 데이터 검증, 바인딩, 타입 변환
+            div
+                h4.marker Validator를 이용한 검증
+                +asCode('java').
+                    boolean supports(Class&lt;?&gt; clazz)
+                        // 전형적으로 MyTargetClass.class.isAssignableFrom(clazz)
+                    void validate(Object target, Errors errors)
+                        // Errors.reject*()를 이용해 오류 정보 전달
+                        // Errors의 각 거부 항목들은 이름-에러코드 쌍으로 구성된다. 예. ("x", "is.null")
+                        // DefaultMessageCodesResolver는 에러 정보를 토대로 새 에러코드도 등록한다.
+                        //      예. ("x", "is.null") → is.null, is.null.x, is.null.float
+                        //      이를 이용해 MessageSource로부터 보다 적절한 메시지를 가져올 수 있다
+                        // ValidationUtils를 이용하면 구현에 도움이 된다
+                p
+                    | 예시 코드 
+                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno29.java', 'java') Bean
+                    +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/anno29_ko.properties', 'properties') message
+                    +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno29Test.java', 'java') Context
 
     details
         summary 정리중...                    

@@ -2,8 +2,6 @@ package io.github.donggi.bean;
 
 import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
 import lombok.AllArgsConstructor;
