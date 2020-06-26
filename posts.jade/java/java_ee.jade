@@ -1313,7 +1313,7 @@ include ../../source/skeleton.jade
                         // Errors.reject*()를 이용해 오류 정보 전달
                         // Errors의 각 거부 항목들은 이름-에러코드 쌍으로 구성된다. 예. ("x", "is.null")
                         // DefaultMessageCodesResolver는 에러 정보를 토대로 새 에러코드도 등록한다.
-                        //      예. ("x", "is.null") → is.null, is.null.x, is.null.float
+                        //      예. ("x", "is.null") → is.null.x, is.null.float, is.null
                         //      이를 이용해 MessageSource로부터 보다 적절한 메시지를 가져올 수 있다
                         // ValidationUtils를 이용하면 구현에 도움이 된다
                 p
@@ -1321,6 +1321,153 @@ include ../../source/skeleton.jade
                     +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno29.java', 'java') Bean
                     +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/anno29_ko.properties', 'properties') message
                     +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno29Test.java', 'java') Context
+                h4.marker 애너테이션 기반 검증
+                ul
+                    li 기본 구현 이용
+                    |    @NotNull, @Size(max=30), @Min(0)
+                h4.marker BeanWrapper의 프로퍼티 주입
+                ul
+                    li BeanWrapper는 단일/벌크 프로퍼티 설정을 위한 연산을 정의하며, BeanWrapperImpl은 가장 기본적으로 사용되는 구현 클래스다
+                    +asCode('java').
+                        var person = new BeanWrapperImpl(new Person());
+                        person.setPropertyValue("name", "my name");
+                        var realPerson = person.getWrappedInstance();
+                    li 프로퍼티 경로는 구분자를 이용한 무제한 확장이 가능하다
+                    table.no-sort
+                        +tds('prop', 'prop 이름의 필드를 가리킨다. 접근 메서드는 getProp() or isProp(), setProp()')
+                        +tds('prop1.prop2', 'prop1 필드의 prop2 필드. 접근 메서드는 getProp1().getProp2() or getProp1().isProp2(), getProp1().setProp2()')
+                        +tds('prop[2]', 'prop 이름의 배열, List, 기타 ordered collection')
+                        +tds('prop[key]', 'prop 이름의 Map')
+                h4.marker PropertyEditor의 Object ↔ String 변환
+                ul
+                    li Something 클래스와 같은 패키지에 PropertyEditor를 구현한 SomethingEditor가 존재하면 자동으로 사용된다
+                    p
+                        | 예시 코드 
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno30.java', 'java') Bean
+                        +codeBtn('/Repositories/Eclipse/app2/src/main/java/io/github/donggi/anno/Anno30DataEditor.java', 'java') Editor
+                        +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno30Test.java', 'java') Context
+                    li 내장 PropertyEditor 구현체
+                    table
+                        +ths('Class', '설명')
+                        +tds('ByteArrayPropertyEditor', 'String → byte[]. BeanWrapperImpl 기본 등록')
+                        +tds('ClassEditor', 'String(클래스 경로) ↔ Class. BeanWrapperImpl 기본 등록')
+                        +tds('FileEditor', 'String(파일 경로) → File. BeanWrapperImpl 기본 등록')
+                        +tds('InputStreamEditor', 'String(리소스 경로) → InputStream. BeanWrapperImpl 기본 등록; InputStream을 알아서 닫아주지는 않는다')
+                        +tds('LocaleEditor', 'String ↔ Locale. BeanWrapperImpl 기본 등록')
+                        +tds('PropertiesEditor', 'String → Properties. BeanWrapperImpl 기본 등록')
+                        +tds('URLEditor', 'String → URL. BeanWrapperImpl 기본 등록')
+                        
+                        +tds('CustomBooleanEditor', 'String ↔ Boolean. BeanWrapperImpl 기본 등록 & 덮어쓰기 가능')
+                        +tds('CustomNumberEditor', 'String ↔ Number. BeanWrapperImpl 기본 등록 & 덮어쓰기 가능')
+                        
+                        +tds('CustomCollectionEditor', 'source Collection → target Collection')
+                        +tds('CustomDateEditor', 'String ↔ Date. 커스텀 DateFormat 사용 가능.')
+                        +tds('PatternEditor', 'String ↔ Pattern')
+                        +tds('StringTrimmerEditor', 'String → Trimmed string. (Option) "" → null')
+                    li 사용자 정의 PropertyEditor를 BeanWrapper 또는 IoC container에 등록하여 사용할 수 있다
+                    +asCode('java', 'SomethingEditor.java').
+                        public class SomethingEditor extends PropertyEditorSupport {
+                            public void setAsText(String text) {
+                                setValue(new Something(text));
+                            }
+                        }
+                    ul
+                        li CustomEditorConfigurer 이용 : 중첩 프로퍼티 설정도 해준다
+                        +asCode('xml', 'config.xml').
+                            &lt;bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+                                &lt;property name="customEditors">
+                                    &lt;map>
+                                        &lt;entry key="package.Something" value="package.SomethingEditor"/>
+                                    &lt;/map>
+                                &lt;/property>
+                            &lt;/bean>
+                        +asCode('java', 'Config.java').
+                            @Bean
+                            public CustomEditorConfigurer customEditorConfigurer() {
+                                var c = new CustomEditorConfigurer();
+                                var map = new HashMap&lt;Class&lt;?>, Class&lt;? extends PropertyEditor>>();
+                                map.put(Something.class, SomethingEditor.class);
+                                c.setCustomEditors(map);
+                                return c;
+                            }
+                        li PropertyEditorRegistrar 이용 : 사용 시마다 새 PropertyEditor 인스턴스를 만들기 때문에 동기화 걱정 없음
+                        +asCode('java', 'CustomPropertyEditorRegistrar.java').
+                            public class CustomPropertyEditorRegistrar implements PropertyEditorRegistrar {
+                                public void registerCustomEditors(PropertyEditorRegistry registry) {
+                                    registry.registerCustomEditor(Something.class, new SomethingEditor());
+                                }
+                            }
+                        +asCode('java', 'Config.java').
+                            @Bean
+                            public PropertyEditorRegistrar customPropertyEditorRegistrar() {
+                                return new CustomPropertyEditorRegistrar();
+                            }
+                            @Bean
+                            public CustomEditorConfigurer customEditorConfigurer() {
+                                var c = new CustomEditorConfigurer();
+                                c.setPropertyEditorRegistrars(new PropertyEditorRegistrar[] { customPropertyEditorRegistrar() });
+                                return c;
+                            }
+                        li ConfigurableBeanFactory.registerCustomEditor()
+                h4.marker 타입 변환
+                ul
+                    li core.convert 서브 패키지는 타입 변환 시스템을 제공한다. PropertyEditor 대신 이용해도 좋다
+                    +asCode('java', 'interface Converter<S, T>') T convert(S source);
+                    ul
+                        li source는 non-null임이 보장된다
+                        li 실패한 경우 IllegalArgumentException을 던지면 된다
+                        li convert 메서드는 스레드-안전해야 한다.
+                        li core.convert.support 서브 패키지에서 여러 범용 컨버터를 제공한다.
+                    li 동일 소스로부터 여러 타입으로의 변환이 필요한 경우 ConverterFactory를 이용하면 좋다
+                    +asCode('java', 'interface ConverterFactory<S, R>') &lt;T extends R&gt; Converter&lt;S, T&gt; getConverter(Class&lt;T&gt; targetType);
+                    li n:m 변환을 한번에 지원하려면 GenericConverter가 유용할 수 있다
+                    +asCode('java', 'interface GenericConverter').
+                        Set&lt;ConvertiblePair&gt; getConvertibleTypes();
+                        Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType);
+                    +asCode('java', 'TypeDescriptor 헬퍼 메서드').
+                        List&lt;Integer&gt; list;
+                        conversionService.convert(list,
+                                TypeDescriptor.forObject(input),                                                // List&lt;Integer>
+                                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(String.class)))    // List&lt;String>
+                    li ConditionalGenericConverter : 특정 조건을 만족할 때만 변환
+                    +asCode('java', 'interface ConditionalConverter')
+                        boolean matched(TypeDescriptor sourceType, TypeDescriptor targetType);
+                    li 각 컨버터는 ConversionService 뒤에서 실행된다
+                    +asCode('java', 'interface ConversionService').
+                        boolean canConvert(Class&lt;?> sourceType, Class&lt;?> targetType);
+                        &lt;T> T convert(Object source, Class&lt;T> targetType);
+                        boolean canConvert(TypeDescriptor sourceType, TypeDescriptor targetType);
+                        Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType);
+                    ul
+                        li 대부분의 ConversionService 구현 클래스들은 ConverterRegistry 역시 구현하며, 이를 통해 컨버터를 등록할 수 있다
+                        li core.convert.support 서브 패키지에서 일반적인 GenericConversionService 클래스를 제공한다
+                        li core.convert.support 서브 패키지에서 ConversionService 생성을 위한 ConversionServiceFactory 클래스를 제공한다
+                        li IoC 컨테이너에 설정된 ConversionService는 관리되는 임의 빈에서 직접 사용할 수 있다.
+                    +asCode('xml', '기본 ConversionService 등록') &lt;bean class="org.springframework.context.support.ConversionServiceFactoryBean"/>
+                    +asCode('xml', '기본 + 사용자 컨버터 추가').
+                        &lt;bean class="org.springframework.context.support.ConversionServiceFactoryBean">
+                            &lt;property name="converters">
+                                &lt;set>
+                                    &lt;bean class="example.MyCustomConverter"/>
+                                &lt;/set>
+                            &lt;/property>
+                        &lt;/bean>
+                h4.marker Field Formatting
+                +asCode('java').
+                    interface Formatter&lt;T&gt; extends Printer&lt;T&gt;, Parser&lt;T&gt; {}
+                    interface Printer&lt;T&gt; {
+                        String print(T fieldValue, Locale locale);
+                    }
+                    interface Parser&lt;T&gt; {
+                        T parse(String clientValue, Locale locale) throws ParseException;
+                    }
+                ul
+                    li Formatter는 스레드-안전해야 한다
+                    li format 서브 패키지에서 여러 Formatter 구현체를 제공한다
+                    p NumberStyleFormatter, PercentStyleFormatter, DateFormatter, ...
+                    li FormatterRegistry, FormatterRegistrar : 포매터 등록을 위한 인터페이스
+                    +asA('https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/web.html#mvc-config-conversion')
+
 
     details
         summary 정리중...                    
