@@ -394,3 +394,9 @@ include ../../source/skeleton.jade
         +asCode('shell').
             $ yum install setroubleshoot
             $ sealert -a /var/log/audit/audit.log
+
+    h1.marker /etc/hosts
+    p: strong address hostname[[ alias1]...]
+    +asCode().
+        127.0.0.1   localhost localhost4
+        ::1         localhost localhost6

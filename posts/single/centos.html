@@ -53,4 +53,6 @@ $ systemctl restart vsftpd</div></ol><ul><li>root 로그인 허용</li><p>/etc/v
 pasv_enable=YES
 pasv_min_port=50000
 pasv_max_port=50010</div><li>방화벽에서 [pasv_min_port,pasv_max_port]/tcp 허용</li></ol></ul><h1 class="marker">SELinux</h1><ol><li>SELinux 모드 : enforce, permissive, disable</li><p>setenforce 1 # enforce로 임시 변경<br>setenforce 0 # permissive로 임시 변경<br>getenforce # 모드 확인</p><li>부팅시 사용되는 기본 모드는 /etc/selinux/config에 정의돼있다</li><li>SELinux 로그 위치 : /var/log/audit/audit.log</li><li>SELinux 로그 분석 유티릴티 : setroubleshoot</li><p><strong>↓ shell</strong></p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ yum install setroubleshoot
-$ sealert -a /var/log/audit/audit.log</div></ol></div><hr>&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="/LICENSE">LICENSE</a></div></body></html>
+$ sealert -a /var/log/audit/audit.log
+</div></ol><h1 class="marker">/etc/hosts</h1><p><strong>address hostname[[ alias1]...]</strong></p><p><strong>↓ text</strong></p><div lan="text" class="as-code code-div w3-leftbar w3-border-green">127.0.0.1   localhost localhost4
+::1         localhost localhost6</div></div><hr>&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="/LICENSE">LICENSE</a></div></body></html>

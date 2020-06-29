@@ -52,14 +52,64 @@ include ../../source/skeleton.jade
             ol
                 li psql : PostgreSQL 대화형 터미널 프로그램
                 li pgAdmin : PostgreSQL GUI 클라이언트 프로그램
-            li.marker 백업
+            li.marker 백업 - pg_dump
             +asCode('shell').
-                $ pg_dump -U [소유주] [DB명] -t [테이블 명] > [백업 파일명] # 테이블 백업
-                $ pg_dump -U [소유주] [DB명] > [백업 파일명] # DB 백업
+                $ pg_dump [connection-option...] [option...]
+                    # 접속 중인 유저들을 방해하지 않고 백업한다
+                    # 스크립트 평문으로 백업하는 경우, 임의 위치에서 psql로 복구 실행 가능
+                    # 다른 포맷으로 백업하는 경우, 복구에 pg_restore를 이용해야 한다.
+                
+                Connection options:
+                  -d, --dbname=DBNAME      # 지정하지 않으면 PGDATABASE 이용. 없으면 유저 이름
+                  -h, --host=HOSTNAME      # 지정하지 않으면 PGHOST 이용. 없으면 기본값
+                  -p, --port=PORT          # 지정하지 않으면 PGPORT 이용. 없으면 기본값
+                  -U, --username=NAME      # 지정하지 않으면 PGUSER 이용. 없으면 기본값
+                  
+                General options:
+                  -f, --file=FILENAME          # 출력 파일 또는 디렉터리output file or directory name
+                  -F, --format=c|d|t|p         # 출력 포맷. 각각 custom, directory, tar, plain text(default)
+                                               # 포맷이 directory인 경우(-Fd)에만 병렬 백업이 가능하다
+                  -j, --jobs=NUM               use this many parallel jobs to dump
+                  -v, --verbose                verbose mode
+                  -Z, --compress=0-9           compression level for compressed formats
+                  --lock-wait-timeout=TIMEOUT  fail after waiting TIMEOUT for a table lock
+                  
+                Options controlling the output content:
+                  -a, --data-only              dump only the data, not the schema
+                  -b, --blobs                  include large objects in dump
+                  -c, --clean                  clean (drop) database objects before recreating
+                  -C, --create                 include commands to create database in dump
+                  -E, --encoding=ENCODING      dump the data in encoding ENCODING
+                  -n, --schema=SCHEMA          # 지정 스키마만 포함. 와일드카드(*) 사용 가능
+                  -N, --exclude-schema=SCHEMA  # 지정 스키마 제외. 와일드카드(*) 사용 가능
+                  -o, --oids                   include OIDs in dump
+                  -O, --no-owner               skip restoration of object ownership in plain-text format
+                  -s, --schema-only            dump only the schema, no data
+                  -S, --superuser=NAME         superuser user name to use in plain-text format
+                  -t, --table=TABLE            # 지정 테이블만 포함. 와일드카드(*) 사용 가능
+                  -T, --exclude-table=TABLE    # 지정 테이블 제외. 와일드카드(*) 사용 가능
+                  -x, --no-privileges          do not dump privileges (grant/revoke)
+                  --column-inserts             dump data as INSERT commands with column names
+                  --disable-dollar-quoting     disable dollar quoting, use SQL standard quoting
+                  --disable-triggers           disable triggers during data-only restore
+                  --enable-row-security        enable row security (dump only content user has access to)
+                  --exclude-table-data=TABLE   do NOT dump data for the named table(s)
+                  --if-exists                  use IF EXISTS when dropping objects
+                  --inserts                    dump data as INSERT commands, rather than COPY
+                  --no-security-labels         do not dump security label assignments
+                  --no-synchronized-snapshots  do not use synchronized snapshots in parallel jobs
+                  --no-tablespaces             do not dump tablespace assignments
+                  --no-unlogged-table-data     do not dump unlogged table data
+                  --quote-all-identifiers      quote all identifiers, even if not key words
+                  --section=SECTION            dump named section (pre-data, data, or post-data)
+            li.marker 백업 - pg_dumpall
+            p 전체 DB를 하나의 스크립트 텍스트 파일로 백업.
             li.marker 복구
             +asCode('shell').
-                $ pgsql -U [DB 사용자 명] -f [백업 파일명] [DB명] # 테이블 복구
-                $ psql -U [소유주] [DB명] &lt; [백업 파일명] # DB 복구
+                db_name=# \i filename
+                $ psql -f filename
+                $ psql &lt; filename
+                $ pg_restore [connection-option...] [option...] [filename]
         div
             h3.marker psql을 이용한 데이터베이스 사용
             ul

@@ -1323,8 +1323,15 @@ include ../../source/skeleton.jade
                     +codeBtn('/Repositories/Eclipse/app2/src/test/java/io/github/donggi/anno/Anno29Test.java', 'java') Context
                 h4.marker 애너테이션 기반 검증
                 ul
-                    li 기본 구현 이용
-                    |    @NotNull, @Size(max=30), @Min(0)
+                    li
+                        +asA('https://beanvalidation.org/', 'Java Bean Validation API')
+                        | 예 
+                        +codeBtn('/Repositories/STS/spring-core/src/main/java/io/github/donggi/bean/Test2Bean.java', 'java') Bean1
+                        +codeBtn('/Repositories/STS/spring-core/src/main/java/io/github/donggi/bean/Test2Bean2.java', 'java') Bean2
+                        +codeBtn('/Repositories/STS/spring-core/src/main/java/io/github/donggi/bean/Test2Bean3.java', 'java') Bean3
+                        +codeBtn('/Repositories/STS/spring-core/src/main/java/io/github/donggi/anno/Test2Constraint.java', 'properties') Test2Constraint
+                        +codeBtn('/Repositories/STS/spring-core/src/main/java/io/github/donggi/config/Test2Config.java', 'properties') Config
+                        +codeBtn('/Repositories/STS/spring-core/src/test/java/io/github/donggi/Test2.java', 'java') Test
                 h4.marker BeanWrapper의 프로퍼티 주입
                 ul
                     li BeanWrapper는 단일/벌크 프로퍼티 설정을 위한 연산을 정의하며, BeanWrapperImpl은 가장 기본적으로 사용되는 구현 클래스다
@@ -1467,6 +1474,24 @@ include ../../source/skeleton.jade
                     p NumberStyleFormatter, PercentStyleFormatter, DateFormatter, ...
                     li FormatterRegistry, FormatterRegistrar : 포매터 등록을 위한 인터페이스
                     +asA('https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/web.html#mvc-config-conversion')
+                    li Annotation-driven Formatting
+                    p
+                        | AnnotationFormatterFactory를 이용한다. 예시 코드 
+                        +codeBtn('/Repositories/STS/spring-core/src/main/java/io/github/donggi/bean/Test1Bean.java', 'java') Bean
+                        +codeBtn('/Repositories/STS/spring-core/src/main/java/io/github/donggi/anno/Test1FormatAnnotationFormatterFactory.java', 'java') FormatterFactory
+                        +codeBtn('/Repositories/STS/spring-core/src/main/java/io/github/donggi/config/Test1Config.java', 'properties') Config
+                        +codeBtn('/Repositories/STS/spring-core/src/test/java/io/github/donggi/Test1.java', 'java') Test
+
+            h3.marker SpEL; Spring Expression Language
+            div
+                h4.marker Evaluation
+                +asCode('java').
+                    var parser = new SpelExpressionParser();
+                    var exp = parser.parseeExpression("'Hello World'");
+                    exp = parser.parseeExpression("'Hello World'.concat('!')"); // concat()
+                    exp = parser.parseeExpression("'Hello World'.bytes");       // getBytes()
+                    exp = parser.parseeExpression("'Hello World'.bytes.length");
+                    var val = exp.getValue();
 
 
     details
