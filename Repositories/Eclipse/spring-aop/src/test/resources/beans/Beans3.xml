@@ -1,44 +1,24 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 
-<beans
-    xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:aop="http://www.springframework.org/schema/aop"
-    xmlns:c="http://www.springframework.org/schema/c"
-    xmlns:p="http://www.springframework.org/schema/p"
-    xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:util="http://www.springframework.org/schema/util"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
    http://www.springframework.org/schema/aop
-   http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
-   http://www.springframework.org/schema/context
-   http://www.springframework.org/schema/context/spring-context.xsd
-   http://www.springframework.org/schema/util
-   http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+   http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
-    <bean
-        id="afterAdvice"
-        class="io.github.donggi.advice.AfterAdvice" />
+	<bean id="afterAdvice" class="io.github.donggi.advice.AfterAdvice" />
 
-    <aop:config>
-        <aop:aspect
-            id="afterAspect"
-            ref="afterAdvice">
-            <aop:pointcut
-                id="publicMethods"
-                expression="execution(public * io.github.donggi..*(..))" />
-            <aop:after-returning
-                pointcut-ref="publicMethods"
-                method="after1" />
-            <aop:after-returning
-                pointcut-ref="publicMethods"
-                method="after2"
-                returning="message" />
-        </aop:aspect>
-    </aop:config>
+	<aop:config>
+		<aop:aspect id="afterAspect" ref="afterAdvice">
+			<aop:pointcut id="publicMethods"
+				expression="execution(public * io.github.donggi..*(..))" />
+			<aop:after-returning pointcut-ref="publicMethods" method="after1" />
+			<aop:after-returning pointcut-ref="publicMethods" method="after2" returning="message" />
+		</aop:aspect>
+	</aop:config>
 
-    <bean
-        id="printService1"
-        class="io.github.donggi.service.impl.PrintServiceImpl" />
+	<bean id="printService1"
+		class="io.github.donggi.service.impl.PrintServiceImpl" />
 </beans>
