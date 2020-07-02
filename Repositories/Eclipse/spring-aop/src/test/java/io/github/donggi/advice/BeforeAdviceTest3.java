@@ -5,7 +5,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import io.github.donggi.service.PrintService;
 
 public class BeforeAdviceTest3 {
-
     @Test
     public void test() {
         try (var context = new ClassPathXmlApplicationContext("beans/Beans11.xml")) {
@@ -13,9 +12,9 @@ public class BeforeAdviceTest3 {
         }
     }
 /*
-before(void)
-before(JoinPoint) : execution(PrintService.print(..))
-param : [Hello World]
+before with no args : Hello World
+before with JoinPoint : execution(PrintService.print(..))
+param : Hello World
 Hello World
- */
+*/
 }

@@ -5,7 +5,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import io.github.donggi.service.PrintService;
 
 public class AfterAdviceTest5 {
-
     @Test
     public void test() {
         try (var context = new ClassPathXmlApplicationContext("beans/Beans9.xml")) {
@@ -13,7 +12,7 @@ public class AfterAdviceTest5 {
         }
     }
 /*
-after(void)
-after(Thrwoable) : 그냥 던져봤어
- */
+after with no args
+after with Thrwoable : 그냥 던져봤어
+*/
 }

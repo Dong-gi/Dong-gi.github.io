@@ -12,9 +12,9 @@ public class BeforeAdviceTest4 {
         }
     }
 /*
-before(void) : Hello World
-before(JoinPoint) : execution(PrintService.print(..))
+before with no args : Hello World
+before with JoinPoint : execution(PrintService.print(..))
 param : Hello World
 Hello World
- */
+*/
 }

@@ -13,11 +13,11 @@ public class TimerAdviceTest2 {
         }
     }
 /*
-io.github.donggi.aspect.AroundAspect@4264b240
+io.github.donggi.aspect.AroundAspect@21005f6c
 Hello World
-PrintService.print(..) 실행 시간 : 102
-io.github.donggi.aspect.AroundAspect@4264b240
+PrintService.print(..) 실행 시간 : 116
+io.github.donggi.aspect.AroundAspect@21005f6c
 그냥 던져봤어
 PrintService.print(..) 실행 시간 : 2
- */
+*/
 }

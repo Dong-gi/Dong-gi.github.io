@@ -7,7 +7,6 @@ import org.aspectj.lang.annotation.Pointcut;
 
 @Aspect
 public class AroundAspect {
-
     @Pointcut("execution(public * io.github.donggi..*(..))")
     public void aroundTarget() {}
 
@@ -25,5 +24,4 @@ public class AroundAspect {
             System.out.printf("%s 실행 시간 : %d\n", signature, System.currentTimeMillis() - start);
         }
     }
-
 }

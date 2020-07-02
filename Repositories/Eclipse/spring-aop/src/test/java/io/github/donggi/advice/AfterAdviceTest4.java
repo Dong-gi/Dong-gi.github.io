@@ -13,7 +13,7 @@ public class AfterAdviceTest4 {
     }
 /*
 Hello World
-after(void)
-after(String) : Hello World
- */
+after with no args
+after with String : Hello World
+*/
 }

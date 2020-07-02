@@ -1058,14 +1058,12 @@ td.sorting-table-head-white:after,th.sorting-table-head-white:after{content:attr
                 if (mutation.type !== 'childList') return
 
                 for (let table of mutation.target.querySelectorAll('table')) {
+                    table.classList.add('w3-table-all', 'w3-card', 'w3-small')
                     if (table.rows.length < 3) {
                         table.classList.remove('ordered-table')
                         continue
                     }
                     if (table.classList.contains('ordered-table'))
-                        continue
-                    table.classList.add('w3-table-all', 'w3-card', 'w3-small')
-                    if (table.rows.length < 2)
                         continue
                     table.classList.add('ordered-table')
                     if (table.classList.contains('no-sort'))

@@ -12,7 +12,7 @@ public class AfterAdviceTest2 {
         }
     }
 /*
-after(void)
-after(Thrwoable) : 그냥 던져봤어
- */
+after with no args
+after with Thrwoable : 그냥 던져봤어
+*/
 }

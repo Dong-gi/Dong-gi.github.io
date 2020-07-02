@@ -1568,11 +1568,16 @@ include ../../source/skeleton.jade
                     | Advice는 Pointcut과 연관되며, 일치하는 모든 Join Point에서 실행된다.
                     li Weaving : Advice 코드를 삽입
                     | 세 가지 Weaving 방식 : 컴파일 타임 위빙, 클래스 로드 타임 위빙, 런타임 위빙
+
                 h4.marker Spring AOP
                 ul
                     li Spring은 프록시를 만들어 Aspect의 실행을 삽입한다
                     p 따라서 final이거나, 정의되지 않은 메서드는 Aspect 삽입이 불가능하다.
                     li JDK 프록시는 public 인터페이스 메서드만, CGLIB 프록시는 public, protected 인터페이스/클래스 메서드에 삽입 가능
+                    +asCode('java', 'CGLIB 고정 - java') @EnableAspectJAutoProxy(proxyTargetClass=true)
+                    +asCode('xml','CGLIB 고정 - xml').
+                        &lt;aop:config proxy-target-class="true">&lt;/aop:config>
+                        &lt;aop:aspectj-autoproxy proxy-target-class="true"/>
                     li 프록시가 새 인터페이스를 구현하도록 변경(Introduction)하는 것은 가능하다.
                     li Aspect 적용 순서 정의
                     p @Order(xml에서는 order 속성)를 적용하거나 Ordered 인터페이스 구현
@@ -1636,7 +1641,7 @@ include ../../source/skeleton.jade
                             td After throwing
                             td
                                 +codeBtn('/Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice/AfterAdvice2.java', 'java') Advice
-                                +codeBtn('/Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans4 -> 변경.xml', 'xml') Config
+                                +codeBtn('/Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans4.xml', 'xml') Config
                                 +codeBtn('/Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/AfterAdviceTest2.java', 'java') Test
                         tr
                             td After
@@ -1647,14 +1652,14 @@ include ../../source/skeleton.jade
                         tr
                             td Around
                             td
-                                +codeBtn('/Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice/AfterAdvice2.java', 'java') Advice
+                                +codeBtn('/Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice/TimerAdvice.java', 'java') Advice
                                 +codeBtn('/Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans1.xml', 'xml') Config
                                 +codeBtn('/Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/TimerAdviceTest.java', 'java') Test
                     li.marker 각 advice별 예시 코드(@Aspect)
-                    +asCode('java', '@Aspect 켜기').
+                    +asCode('java', '@Aspect 켜기 - Java').
                         @Configuration
                         @EnableAspectJAutoProxy
-                    +asCode('xml', '@Aspect 켜기') &lt;aop:aspectj-autoproxy/>
+                    +asCode('xml', '@Aspect 켜기 - XML') &lt;aop:aspectj-autoproxy/>
                     table.no-sort
                         tr
                             td Before
@@ -1665,13 +1670,13 @@ include ../../source/skeleton.jade
                         tr
                             td After Returning
                             td
-                                +codeBtn('/Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/AfterAspect.java', 'java') After Aspect
+                                +codeBtn('/Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/AfterAspect.java', 'java') Aspect
                                 +codeBtn('/Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans8.xml', 'xml') Config
                                 +codeBtn('/Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/AfterAdviceTest4.java', 'java') Test
                         tr
                             td After Throwing
                             td
-                                +codeBtn('/Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/AfterAspect2.java', 'java') After Aspect
+                                +codeBtn('/Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/AfterAspect2.java', 'java') Aspect
                                 +codeBtn('/Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans9.xml', 'xml') Config
                                 +codeBtn('/Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/AfterAdviceTest5.java', 'java') Test
                         tr
@@ -1686,23 +1691,62 @@ include ../../source/skeleton.jade
                                 +codeBtn('/Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/AroundAspect.java', 'java') Aspect
                                 +codeBtn('/Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans6.xml', 'xml') Config
                                 +codeBtn('/Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/TimerAdviceTest2.java', 'java') Test
-                    li JoinPoint#getArgs 대신 Pointcut 정의로 매개변수 직접 받기
+                    li.marker execution 외 Pointcut 예시 코드
                     table.no-sort
                         tr
-                            td xml 설정 예
+                            td args XML 설정 예
                             td
                                 +codeBtn('/Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/advice/BeforeAdvice2.java', 'java') Advice
                                 +codeBtn('/Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans11.xml', 'xml') Config
                                 +codeBtn('/Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/BeforeAdviceTest3.java', 'java') Test
                         tr
-                            td 애너테이션 설정 예
+                            td args @Aspect 설정 예
                             td
                                 +codeBtn('/Repositories/Eclipse/spring-aop/src/main/java/io/github/donggi/aspect/BeforeAspect2.java', 'java') Aspect
                                 +codeBtn('/Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans12.xml', 'xml') Config
                                 +codeBtn('/Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/BeforeAdviceTest4.java', 'java') Test
+                        tr
+                            td execution + args 예
+                            td
+                                +asCode('java', '즉시 이용').
+                                    @Before("com.xyz.myapp.SystemArchitecture.dataAccessOperation() &amp;&amp; args(account,..)")
+                                    public void validateAccount(Account account) { ... }
+                                +asCode('java', 'Pointcut 지정').
+                                    @Pointcut("com.xyz.myapp.SystemArchitecture.dataAccessOperation() &amp;&amp; args(account,..)")
+                                    private void accountDataAccessOperation(Account account) {}
+
+                                    @Before("accountDataAccessOperation(account)")
+                                    public void validateAccount(Account account) { ... }
+                        tr
+                            td Generic args 예
+                            td: +asCode('java').
+                                public interface Sample&lt;T> {
+                                    void sampleGenericMethod(T param);
+                                    void sampleGenericCollectionMethod(Collection&lt;T> param);
+                                }
+                                
+                                @Before("execution(* ..Sample+.sampleGenericMethod(*)) &amp;&amp; args(param)")
+                                public void beforeSampleMethod(MyType param) { ... } // ← 가능
+                                
+                                @Before("execution(* ..Sample+.sampleGenericCollectionMethod(*)) &amp;&amp; args(param)")
+                                public void beforeSampleMethod(Collection&lt;MyType> param) { ... } // ← 불가능
+                    li.marker Aspect 인스턴스화 종류
+                    ul
+                        li default. 싱글톤
+                        li perthis : 대상 메서드를 실행하는 프록시 인스턴스(this)마다 프록시 생성
+                        +asCode('java').
+                            @Aspect("perthis(com.xyz.myapp.SystemArchitecture.businessService())")
+                            public class MyAspect { }
+                        li pertarget : 대상 메서드를 실행하는 실제 인스턴스(target)마다 프록시 생성
+
+                h4.marker Null-safety
+                ul
+                    li @Nullable : 파리미터, 반환값, 필드가 null일 수 있음
+                    li @NonNull : 파리미터, 반환값, 필드가 null일 수 없음
+                    li @NonNullApi : 패키지 수준으로
 
     details
-        summary 정리중...                    
+        summary 정리중...
         details
             summary Spring MVC
             ol

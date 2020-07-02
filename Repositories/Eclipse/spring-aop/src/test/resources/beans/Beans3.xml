@@ -12,13 +12,11 @@
 
 	<aop:config>
 		<aop:aspect id="afterAspect" ref="afterAdvice">
-			<aop:pointcut id="publicMethods"
-				expression="execution(public * io.github.donggi..*(..))" />
+			<aop:pointcut id="publicMethods" expression="execution(public * io.github.donggi..*(..))" />
 			<aop:after-returning pointcut-ref="publicMethods" method="after1" />
 			<aop:after-returning pointcut-ref="publicMethods" method="after2" returning="message" />
 		</aop:aspect>
 	</aop:config>
 
-	<bean id="printService1"
-		class="io.github.donggi.service.impl.PrintServiceImpl" />
+	<bean id="printService1" class="io.github.donggi.service.impl.PrintServiceImpl" />
 </beans>

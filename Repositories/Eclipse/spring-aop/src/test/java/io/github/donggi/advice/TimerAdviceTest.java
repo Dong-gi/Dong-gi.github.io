@@ -14,12 +14,12 @@ public class TimerAdviceTest {
         }
     }
 /*
-io.github.donggi.advice.TimerAdvice@5316e95f
-io.github.donggi.advice.TimerAdvice@5316e95f
+io.github.donggi.advice.TimerAdvice@662f5666
+io.github.donggi.advice.TimerAdvice@662f5666
 Hello World
-PrintService.print(..) 실행 시간 : 101
-io.github.donggi.advice.TimerAdvice@5316e95f
+PrintService.print(..) 실행 시간 : 127
+io.github.donggi.advice.TimerAdvice@662f5666
 그냥 던져봤어
-PrintService.print(..) 실행 시간 : 3
- */
+PrintService.print(..) 실행 시간 : 4
+*/
 }

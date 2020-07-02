@@ -3,7 +3,6 @@ package io.github.donggi.advice;
 import org.aspectj.lang.ProceedingJoinPoint;
 
 public class TimerAdvice {
-
     public Object timer(ProceedingJoinPoint joinPoint) throws Throwable {
         var start = System.currentTimeMillis();
         System.out.println(this);

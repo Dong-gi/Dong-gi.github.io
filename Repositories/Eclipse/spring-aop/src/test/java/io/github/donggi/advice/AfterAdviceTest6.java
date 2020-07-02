@@ -14,11 +14,11 @@ public class AfterAdviceTest6 {
     }
 /*
 Hello World
-after(void)
-after(JoinPoint) : execution(PrintService.print(..))
-this : io.github.donggi.service.impl.PrintServiceImpl@6d7fc27
-after(void)
-after(JoinPoint) : execution(PrintService.print(..))
-this : io.github.donggi.service.impl.PrintServiceImpl2@2a3888c1
- */
+after with no args
+after with JoinPoint : execution(PrintService.print(..))
+this : io.github.donggi.service.impl.PrintServiceImpl@12a94400
+after with no args
+after with JoinPoint : execution(PrintService.print(..))
+this : io.github.donggi.service.impl.PrintServiceImpl2@2a225dd7
+*/
 }
