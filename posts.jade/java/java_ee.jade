@@ -1743,7 +1743,14 @@ include ../../source/skeleton.jade
                 ul
                     li @Nullable : 파리미터, 반환값, 필드가 null일 수 있음
                     li @NonNull : 파리미터, 반환값, 필드가 null일 수 없음
-                    li @NonNullApi : 패키지 수준으로
+                    li @NonNullApi : 패키지 수준으로 파라미터, 반환값에 @NonNull 기본 적용
+                    li @NonNullFields : 패키지 수준으로 필드에 @NonNull 기본 적용
+
+                h4.marker Data Bufferes and Codecs Since 5.0
+                p java.nio 패키지에서 Buffer를 제공하지만, 여러 라이브러리들은 그전부터 자체적인 버퍼 api를 정의해 사용해왔다. 스프링은 이러한 불일치성을 해소하기 위해 추상화된 API를 제공한다.
+                ul
+                    li DataBufferFactory
+                    
 
     details
         summary 정리중...
