@@ -1,0 +1,261 @@
+include ../../source/skeleton.jade
++post('Ruby Basic', 'Ruby, Tutorial', '루비 기초 정리')
+    h1.marker 개요
+    ul
+        li 오픈소스, 객체지향, 스크립트 프로그래밍 언어의 일종
+        li: +asA('https://www.ruby-lang.org/', 'www.ruby-lang.org')
+        li 모든 자료형은 객체로 존재한다
+        li 실행
+        +asCode('shell').
+            $ ruby [filename]
+            $ ruby -e 'code line' [[-e 'code line']...]
+        li REPL
+        +asCode('shell').
+            $ irb
+            irb(main):001:0> 'hello'
+            => "hello"
+            irb(main):002:0> %x(ls -al)
+        li 종류
+        ul
+            li CRuby, MRI(Matz's Ruby Interpreter) : Ruby 참조 구현
+            li JRuby : JVM에서 동작하며, Java 라이브러리 이용 가능
+            +asCode('ruby').
+                include Java
+                import java.util.List
+                # ...
+            li MacRuby : Objective-C 런타임에서 동작하며, Cocoa 프레임워크 이용 가능
+        li 코딩 규약
+        table
+            +ths('분류', 'Ruby', 'Java')
+            tr
+                td 클래스, 모듈
+                td: +asCode('ruby').
+                    class MyClass
+                    end
+
+                    module MyModule
+                    end
+                td: +asCode('java') class MyClass {}
+            tr
+                td 메서드
+                td: +asCode('ruby').
+                    def my_method
+                    end
+
+                    def open?
+                        true
+                    end
+                td: +asCode('java').
+                    void myMethod() {}
+                    boolean isOpen() { return true; }
+            tr
+                td 변수
+                td: +asCode('ruby') my_variable = 1
+                td: +asCode('java') var myVariable = 1;
+
+    h1.marker 문법
+    div
+        h2.marker 스코프
+        ul
+            li Class level
+            li Module level
+            li Method level
+            li Block level
+            li Top level(앞의 것들 외 나머지)
+
+        h2.marker 문장
+        ul
+            li 주석 : #
+            li 라인
+            p 기본적으로 라인 당 식 하나. 여러 식을 한 라인에 기술하려면 ;로 구분
+            li 코드 인코딩 지정
+            +asCode('ruby') # encoding: utf-8
+
+        h2.marker 제어식
+        ul
+            li if
+            ul
+                li false, nil 외의 모든 값은 true로 간주
+                li 마지막 평가된 식의 값을 반환
+            +asCode('ruby').
+                if expression1
+                    # ...
+                elsif expression2
+                    # ...
+                else
+                    # ...
+                end
+
+        h2.marker 변수
+        ul
+            li 지역변수 선언에 별도 키워드 필요없음
+            +asCode('ruby') msg = "Hello World"
+            li 전역변수 prefix : $
+            +asCode('ruby').
+                $size = 10  # 전역변수 할당
+                $not_exists # 존재하지 않는 전역변수 참조는 nil 반환
+            li 상수 : SNAKE_CASE
+            +asCode('ruby').
+                SIZE = 10
+                SIZE = 20   # 실행됨. Warning 출력
+            li 인스턴스 변수 : @
+            +asCode('ruby').
+                class ClassName
+                    def length=(length)
+                        @length = length
+                    end
+                    def length
+                        @length
+                    end
+                end
+
+                class ClassName
+                    attr_accessor :length
+                end
+
+        h2.marker 메서드
+        ul
+            li 메서드 정의
+            +asCode('ruby').
+                def method_name
+                    # ...
+                end
+                def method_name(arg1, arg2, ...)
+                    # ...
+                end
+            li 반환값
+            p 기본적으로 마지막 평가된 식의 값이 반환값. 도중에 반환하려면 return 키워드 이용
+            li 메서드 호출 시 괄호 필요없음
+            +asCode('ruby') receiver.method_name arg
+            li Top level 메서드 호출 시 receiver 필요없음
+            li 메서드 내부에서 receiver를 self 키워드로 참조 가능
+            li 메서드 내부의 receiver 지정없는 메서드 호출은 self를 receiver로 간주
+
+        h2.marker 블록
+        ul
+            li block
+            +asCode('ruby').
+                do |var_name|
+                    # ...
+                end
+            +asCode('ruby').
+                {|var_name|
+                    # ...
+                }
+
+        h2.marker 클래스
+        ul
+            li 클래스 정의
+            +asCode('ruby').
+                class ClassName
+                end
+            li 생성자 호출
+            +asCode('ruby') var_name = ClassName.new
+            li 생성자 정의
+            +asCode('ruby').
+                class ClassName
+                    def initialize(arg1, arg2, ...)
+                        # ...
+                    end
+                end
+            li 클래스 메서드 정의
+            +asCode('ruby').
+                class ClassName
+                    def self.method_name(arg1, arg2, ...)
+                        # ...
+                    end
+                end
+            li 클래스 변수
+            +asCode('ruby').
+                class ClassName
+                    @@var_name = 10
+                end
+            li 상속
+            p 상속 관계를 지정하지 않은 클래스는 Object를 상속한다
+            +asCode('ruby').
+                class SubClass &lt; SuperClass
+                    def method_name
+                        super   # 부모 메서드 호출
+                        # ...
+                    end
+                end
+
+        h2.marker 모듈
+        p 인스턴스화 불가. 내부에 다른 모듈 및 클래스 정의 가능
+        +asCode('ruby').
+            module MyModule
+                class MyClass
+                end
+            end
+
+            o = MyModule::MyClass.new
+
+        h2.marker 내장 자료형
+        ul
+            li 수 : Numeric ← Fixnum, Bignum, Float
+            p 0b111, 0777, 0o777, 0xfff, 3.14e+3, 1_234 표기 가능
+            li 문자열 : String
+            ul
+                li '', "" 모두 가능하며, ""는 안에 보간식 &#x23;{...} 사용 가능
+                li 여러 줄 문자열(Heredoc)
+                +asCode('ruby').
+                    sql = &lt;&lt;SQL  # 식별자는 적절히 변경 가능
+                    select * from table1, table2
+                    where
+                        table1.col1 = table2.col2 and
+                        table1.col2 > &#x23;{size}
+                    SQL
+                +asCode('ruby').
+                    text = &lt;&lt;'TEXT'
+                        \이스케이프되지 않음
+                        &#x23;{보간식} 평가하지 않음
+                    TEXT
+                li % String
+                ul
+                    li 괄호로 (), [], {}, &lt;> 사용 가능
+                    p 또는 임의 non-alphanumeric 문자 사용 가능
+                    +asCode('ruby') %|123| == '123'
+                    li 소문자 : 보간식 평가 x, \이스케이프 x
+                    li %q : 문자열
+                    li %s : 심볼
+                    li %r : 정규식
+                    li %x : Shell 명령 실행 결과
+                    +asCode('ruby') %x(ls -al)
+                    li %i : Array of Symbols
+                    li %w : Array of Strings
+            li 심볼
+            p :로 시작하는 변경 불가능한 문자열. 식별자로 사용 불가능한 문자를 포함하는 경우 따옴표 사용 필요
+            +asCode('ruby').
+                :my_simbol
+                :'my-simbol'
+            li 배열 : []
+            +asCode('ruby').
+                arr = [0, 1, 2, 3]
+                arr[10]      # nil
+                arr[-1]      # 음수 인덱스 가능
+                arr[10] = 10 # 중간은 nil로 채워진다
+
+                %w(word1 word2 word3)       # 문자열 배열
+                %i(symbol1 symbol2 symbol3) # 심볼 배열
+            li 해시
+            +asCode('ruby').
+                scores = {
+                    'name1' => 10,
+                    'name2' => 20,
+                    :symbol1 => 100
+                }
+                scores['name3'] = 30
+                scores['anonymous'] # nil
+
+                symbol_only = {s1: 1, s2: 2, s3: 3}
+            li range
+            +asCode('ruby').
+                (1..5)      # 1, 2, 3, 4, 5
+                (1...5)     # 1, 2, 3, 4
+
+                Time.at(from)..Time.at(to)
+                ('a'..'f')
+            li 정규식; RegExp
+            +asCode('ruby').
+                pattern = /\d+/
+                pattern = %r(/var/log/tomcat/.+) # 보간식 사용 가능

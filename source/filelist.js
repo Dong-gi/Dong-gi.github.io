@@ -1582,6 +1582,7 @@ posts.jade/python/index.jade
 posts.jade/python/pandas.jade
 posts.jade/python/persistence.jade
 posts.jade/python/standard.jade
+posts.jade/ruby/basic.jade
 posts.jade/single/aws.jade
 posts.jade/single/centos.jade
 posts.jade/single/demo3.jade
@@ -1701,6 +1702,7 @@ posts/python/index.html
 posts/python/pandas.html
 posts/python/persistence.html
 posts/python/standard.html
+posts/ruby/basic.html
 posts/single/aws.html
 posts/single/centos.html
 posts/single/demo3.html

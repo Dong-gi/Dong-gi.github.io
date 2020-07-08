@@ -96,6 +96,7 @@ const posts = {
         { category: 'Python', file: '/posts/python/standard.html', title: '표준 라이브러리' },
         { category: 'Python', file: '/posts/python/persistence.html', title: 'Python Data Persistence' },
         { category: 'Python', file: '/posts/python/pandas.html', title: '3rd/pandas : 데이터 처리' },
+        { category: 'Ruby', file: '/posts/ruby/basic.html', title: 'Ruby Basic' },
         { category: '프로젝트', file: '/posts/project/error.html', title: 'Exceptions + Errors' },
         { category: '프로젝트', file: '/posts/project/tip.html', title: '잡다한 팁' },
         { category: '프로젝트', file: '/posts/project/snippets.html', title: 'Code Snippets' },
@@ -577,7 +578,7 @@ class DKFileList {
         }
 
         let ul = details.querySelector('ul')
-        if (ul.childElementCount > 1)
+        if (ul.childElementCount > 0)
             return
 
         for (let name of this.fileMap.get(dir)) {
