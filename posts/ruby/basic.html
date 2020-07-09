@@ -17,11 +17,39 @@ end
 def open?
     true
 end</div></td><td><p><strong>↓ java</strong></p><div lan="java" class="as-code code-div w3-leftbar w3-border-green">void myMethod() {}
-boolean isOpen() { return true; }</div></td></tr><tr><td>변수</td><td><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">my_variable = 1</div></td><td><p><strong>↓ java</strong></p><div lan="java" class="as-code code-div w3-leftbar w3-border-green">var myVariable = 1;</div></td></tr></table></ul><h1 class="marker">문법</h1><div><h2 class="marker">스코프</h2><ul><li>Class level</li><li>Module level</li><li>Method level</li><li>Block level</li><li>Top level(앞의 것들 외 나머지)</li></ul><h2 class="marker">문장</h2><ul><li>주석 : #</li><li>라인</li><p>기본적으로 라인 당 식 하나. 여러 식을 한 라인에 기술하려면 ;로 구분</p><li>코드 인코딩 지정</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green"># encoding: utf-8</div></ul><h2 class="marker">제어식</h2><ul><li>if</li><ul><li>false, nil 외의 모든 값은 true로 간주</li><li>마지막 평가된 식의 값을 반환</li></ul><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">if expression1
+boolean isOpen() { return true; }</div></td></tr><tr><td>변수</td><td><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">my_variable = 1</div></td><td><p><strong>↓ java</strong></p><div lan="java" class="as-code code-div w3-leftbar w3-border-green">var myVariable = 1;</div></td></tr></table></ul><h1 class="marker">문법</h1><div><h2 class="marker">스코프</h2><ul><li>Class level</li><li>Module level</li><li>Method level</li><li>Block level</li><li>Top level(앞의 것들 외 나머지)</li></ul><h2 class="marker">문장</h2><ul><li>주석 : #</li><li>라인</li><p>기본적으로 라인 당 식 하나. 여러 식을 한 라인에 기술하려면 ;로 구분</p><li>코드 인코딩 지정</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green"># encoding: utf-8</div><li>외부 소스 코드 로드</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">require 'path/to/file.rb'</div><ul><li>절대경로 이용 가능</li><li>$LOAD_PATH 내장변수의 디렉터리를 기준으로 한 상대경로 이용 가능</li><li>./, ../ 상대경로는 실행 디렉터리 기준</li></ul></ul><h2 class="marker">연산자</h2><ul><li>동등 비교 ==</li><p>==는 내용물이 같으면 true 반환. 인스턴스 주소 비교에는 equal? 메서드 이용</p><li>클래스 비교 ClassName === var_name</li><p>var_name의 클래스가 ClassName과 동일하면 true</p><li>push 연산 &lt;&lt;</li><p>배열, String, Integers 각각에 대해 서로 다른 동작 수행</p><li>비교 연산 a &lt;=> b</li><ul><li>1 : a가 b보다 뒤에 있음(a > b)</li><li>0 : a와 b는 동일 순서</li><li>-1 : a가 b보다 앞에 있음(a &lt; b)</li></ul><li>a ||= 10</li><p>변수 a가 아직 존재하지 않거나, false, nil이면 10을 할당</p><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">(defined?(a) &amp;&amp; a) ? a : a = 10</div><li>다중 할당</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">a, b = 1, 2
+a, b = [1, 2, 3]
+a, b, c = [1, 2]    # c == nil
+a, *rest = [1, 2, 3, 4, 5]</div><li>배열 해체 *</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">def plus(a, b)
+    a + b
+end
+plus *[1, 2]</div><li>nil safe 참조 연산 &amp;.</li><p>receiver가 nil이면 참조를 수행하지 않음</p><li>정규식 매칭 text =~ pattern, text !~ pattern</li><li>사용자 정의 연산자</li><p>정의 가능 연산자 : | ^ &amp; &lt;=> == =~ &lt;&lt; -@ + - * / % ** ~ [] []= ` != 등</p><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">class Point
+    attr_accessor :x
+    attr_accessor :y
+
+    def initialize(x = 0, y = 0)
+        self.x = x
+        self.y = y
+    end
+    def -@      # 단항 연산자는 뒤에 @가 붙는다
+        self.x *= -1
+        self.y *= -1
+        self
+    end
+end
+</div></ul><h2 class="marker">제어식</h2><ul><li>if</li><p><strong>↓ if 1</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">r = if expression1 # false, nil 외의 모든 값은 true로 간주
     # ...
 elsif expression2
     # ...
 else
+    # ...
+end                # 마지막 평가된 식의 값을 반환</div><p><strong>↓ if 2</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">... if expression # true면 앞 문장 실행</div><p><strong>↓ if 3</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">if expression1 then ... elsif expression2 then ... else ... end</div><li>unless</li><p><strong>↓ unless 1</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">r = unless expression # false면 실행
+    # ...
+else                  # elsif에 대응하는 키워드는 없다
+    # ...
+end                   # 마지막 평가된 식의 값을 반환</div><p><strong>↓ unless 2</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">... unless expression # false면 앞 문장 실행</div><li>예외 처리</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">begin
+    1 / 0
+rescue ZeroDivisionError
     # ...
 end
 </div></ul><h2 class="marker">변수</h2><ul><li>지역변수 선언에 별도 키워드 필요없음</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">msg = "Hello World"</div><li>전역변수 prefix : $</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">$size = 10  # 전역변수 할당
@@ -37,8 +65,24 @@ end
 
 class ClassName
     attr_accessor :length
-end
-</div></ul><h2 class="marker">메서드</h2><ul><li>메서드 정의</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">def method_name
+end</div><li>내장 변수</li><table><tr><th>이름</th><th>설명</th></tr><tr><td>$stdin</td><td>표준 입력. default STDIN</td></tr><tr><td>$stdout, $&gt;</td><td>표준 출력. default STDOUT</td></tr><tr><td>$stderr</td><td>표준 에러. default STDERR</td></tr><tr><td>$/, $-0</td><td>입력의 줄바꿈 문자열. default \n</td></tr><tr><td>$SAFE</td><td>현재 스레드 safe level</td></tr><tr><td>$!</td><td>마지막 발생한 예외 객체</td></tr><tr><td>$@</td><td>마지막 발생한 예외의 Backtrace</td></tr><tr><td>$$</td><td>실행 중인 루비 프로세스 PID</td></tr><tr><td>$?</td><td>마지막으로 종료된 프로세스 exit code</td></tr><tr><td>$:, $LOAD_PATH, $-I</td><td>스크립트 탐색 디렉터리</td></tr><tr><td>$LOADED_FEATURES, $&quot;</td><td>require로 읽은 파일들</td></tr><tr><td>$DEBUG</td><td>디버그 모드로 실행된 경우 true</td></tr><tr><td>$VERBOSE</td><td>nil이면 경고 출력 x, false면 중요 경고 출력, true면 모든 경고 출력</td></tr><tr><td>$~</td><td>마지막으로 정규식에 매치된 MatchData</td></tr><tr><td>$1, $2, ...</td><td>마지막으로 정규식에 매치된 각 그룹들</td></tr><tr><td>$+</td><td>마지막으로 정규식에 매치된 마지막 그룹</td></tr><tr><td>$&amp;</td><td>마지막으로 정규식에 매치된 문자열</td></tr><tr><td>$`</td><td>마지막으로 정규식에 매치된 문자열 시작 위치 전까지의 문자열</td></tr><tr><td>$'</td><td>마지막으로 정규식에 매치된 문자열 종료 위치 후부터의 문자열</td></tr><tr><td>$PROGRAM_NAME<br>$*<br>$FILENAME<br>$&lt;</td><td>실행 중인 스크립트 이름<br>스크립트 실행 인자<br>$&lt; 파일명<br>실행 인자 또는 STDIN으로 지정된 파일<p><strong>↓ test.rb</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">puts %($PROGRAM_NAME : &#x23;{$PROGRAM_NAME})
+puts %($*            : &#x23;{$*})
+puts %($FILENAME     : &#x23;{$FILENAME})
+puts %($&lt;            : &#x23;{$&lt;})
+puts %(ARGF read\n-----\n&#x23;{$&lt;.read}\n-----)</div><p><strong>↓ shell</strong></p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">$ ruby test.rb test.rb Games/Breach.exe
+$PROGRAM_NAME : test.rb
+$*            : ["test.rb", "Games/Breach.exe"]
+$FILENAME     : test.rb
+$&lt;            : ARGF
+ARGF read
+-----
+puts %($PROGRAM_NAME : &#x23;{$PROGRAM_NAME})
+puts %($*            : &#x23;{$*})
+puts %($FILENAME     : &#x23;{$FILENAME})
+puts %($&lt;            : &#x23;{$&lt;})
+puts %(ARGF read\n-----\n&#x23;{$&lt;.read}\n-----)
+MZP      ��  �       @
+-----</div></td></tr></table><li>내장 상수</li><table><tr><th>이름</th><th>설명</th></tr><tr><td>STDIN</td><td>$stdin 기본값</td></tr><tr><td>STDOUT</td><td>$stdout 기본값</td></tr><tr><td>STDERR</td><td>$stderr 기본값</td></tr><tr><td>ARGV</td><td>== $*</td></tr><tr><td>ARGF</td><td>== $&lt;</td></tr><tr><td>ENV</td><td>환경 변수</td></tr><tr><td>RUBY_VERSION</td><td>루비 실행 버전</td></tr></table></ul><h2 class="marker">메서드</h2><ul><li>메서드 정의</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">def method_name
     # ...
 end
 def method_name(arg1, arg2, ...)
@@ -99,4 +143,14 @@ symbol_only = {s1: 1, s2: 2, s3: 3}</div><li>range</li><p><strong>↓ ruby</stro
 
 Time.at(from)..Time.at(to)
 ('a'..'f')</div><li>정규식; RegExp</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">pattern = /\d+/
-pattern = %r(/var/log/tomcat/.+) # 보간식 사용 가능</div></ul></div></div><hr>&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="/LICENSE">LICENSE</a></div></body></html>
+pattern = %r(/var/log/tomcat/.+) # 보간식 사용 가능</div><li>Proc : 특정 지역변수들에 바운드된 호출 가능한 코드 블록</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">def gen_times(factor)
+    Proc.new {|n| n*factor } # 생성 1
+    proc {|n| n*factor }     # 생성 2
+    ->(n) { n*factor }       # 생성 3
+end
+
+times3 = gen_times(3)
+times5 = gen_times(5)
+
+times3.call(3)  # 9
+times5.call(3)  # 15</div></ul></div></div><hr>&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="/LICENSE">LICENSE</a></div></body></html>
