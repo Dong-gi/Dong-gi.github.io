@@ -8,14 +8,15 @@ include ./source/skeleton.jade
 //- include ../../source/skeleton.jade
 +post('한 걸음씩...', 'blog, programming', '프로그래밍 블로그를 지향하는 정적 사이트')
     h1.marker Index
-    table.marker
-        caption 수정사항
-        tr
-            th(pre-sort=1) 날짜
-            th 내용
-        +tds('2020-05-09', 'Jade 템플릿 적용 완료')
-        +tds('2020-04-22', 'Jade 템플릿 적용 시작')
-        +tds('2020-01-16', 'GoormIDE로 이전')
+    div
+        table.marker
+            caption 수정사항
+            tr
+                th(pre-sort=1) 날짜
+                th 내용
+            +tds('2020-05-09', 'Jade 템플릿 적용 완료')
+            +tds('2020-04-22', 'Jade 템플릿 적용 시작')
+            +tds('2020-01-16', 'GoormIDE로 이전')
 
     h2.marker 경력
     table

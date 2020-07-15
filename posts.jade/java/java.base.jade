@@ -1198,7 +1198,7 @@ include ../../source/skeleton.jade
                 li Weakly reachable
                 p
                     | Not strongly reachable && Not softly reachable && Weak 참조 객체의 조회로 객체에 접근 가능.
-                    | 약한 참조가 해제되면 대상 객체는 소멸(finilization) 대상이 된다.
+                    |  약한 참조가 해제되면 대상 객체는 소멸(finilization) 대상이 된다.
                 li Phantom reachable
                 p Not strongly reachable && Not softly reachable && Not weakly reachable && 객체는 소멸됐지만 Phantom 참조 객체가 참조하는 중
                 li Unreachable
@@ -1214,7 +1214,7 @@ include ../../source/skeleton.jade
             p 참조하는 경우, 객체는 Phantom reachable 레벨에 도달할 수 없고, 따라서 자동으로 정리 작업이 호출될 수 없다.
             li
                 | 정리 작업은 Runnable이며, 실행 중 발생하는 모든 예외는 무시된다. 발생한 예외는 Cleaner와 다른 정리 작업에 영향을 미치지 않는다.
-                | Cleaner 인스턴스와 관계된 스레드가 정리 작업을 실행하며, 모든 정리 작업이 실행된 후엔 Cleaner 인스턴스가 GC에 의해 정리된다
+                |  Cleaner 인스턴스와 관계된 스레드가 정리 작업을 실행하며, 모든 정리 작업이 실행된 후엔 Cleaner 인스턴스가 GC에 의해 정리된다
             li System.exit 도중의 정리 작업의 실행은 정의되지 않는다
         +asCode('java').
             static Cleaner create()
@@ -1244,7 +1244,7 @@ include ../../source/skeleton.jade
                 // + isEnqueued
         div
             h3.marker Sub Classes
-             +asCode('java').
+            +asCode('java').
                 class SoftReference&lt;T> extends Reference&lt;T>
                 class WeakReference&lt;T> extends Reference&lt;T>
                 class PhantomReference&lt;T> extends Reference&lt;T>
@@ -2997,6 +2997,9 @@ include ../../source/skeleton.jade
 
                 h4.marker class WeakHashMap&lt;K, V> extends AbstractMap&lt;K, V> implements Map&lt;K, V>
                 p key의 존재 여부는 key가 GC 대상이 되는 것에 영향이 없다. key 객체가 유효하지 않게 되면 자동으로 맵에서 삭제한다. key, value 모두에 null을 허용한다. 단, value가 key의 참조를 가지지 않도록 유의해야 한다. 스레드-안전하지 않다.
+
+                h4.marker class Hashtable&lt;K, V&gt; extends Dictionary&lt;K, V> implements Map&lt;K, V>, Cloneable, Serializable
+                p 스레드-안전한 해시 테이블 구현. 스레드-안전할 필요가 없으면 HashMap, 높은 동시성이 요구되는 경우엔 ConcurrentHashMap을 이용하는 것이 좋다.
 
             h3.marker 유틸리티 클래스
             div

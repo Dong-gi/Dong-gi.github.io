@@ -1592,6 +1592,7 @@ posts.jade/single/git.jade
 posts.jade/single/gradle.jade
 posts.jade/single/groovy.jade
 posts.jade/single/infra.jade
+posts.jade/single/interview.jade
 posts.jade/single/nginx.jade
 posts.jade/single/quantum_computer.jade
 posts.jade/single/redis.jade
@@ -1712,6 +1713,7 @@ posts/single/git.html
 posts/single/gradle.html
 posts/single/groovy.html
 posts/single/infra.html
+posts/single/interview.html
 posts/single/nginx.html
 posts/single/quantum_computer.html
 posts/single/redis.html

@@ -26,7 +26,7 @@ include ../../source/skeleton.jade
             br
             | AbstractProduct : 군집을 구성하는 각 객체 정의 → 구현 : ConcreteProduct
         li Builder
-        p 복잡한 객체 생성 로직을 별도 클래스로 분리.
+        p 복잡한 ─ 필드가 많지만, 인스턴스화에 모든 필드가 필요하지는 않은 ─ 객체 생성 로직을 별도 클래스로 분리.
         li Factory Method(Virtual Constructor)
         p 객체 생성 인터페이스를 정의. 구현을 어떻게 할 지는 각 서브클래스가 결정
         li Prototype
@@ -39,6 +39,7 @@ include ../../source/skeleton.jade
         p 서브시스템을 사용하기 쉽도록 상위 수준의 인터페이스 정의
         li Decorator
         p 동적으로 새로운 기능 추가
+        +asCode('java', '예') class FilterInputStream extends InputStream {}
         li Proxy
         p 다른 객체에 대한 접근을 제어하는 대리자
         li Chain of Responsibility
@@ -51,6 +52,8 @@ include ../../source/skeleton.jade
         p 감시하는 객체의 상태가 변하면 의존하는 객체들이 통지받도록 한다
         li State
         p 객체 내부 상태에 따라 행동을 변경
+        li Template Method
+        p 부모 클래스(abstract)는 공통 메서드를 정의하고, 각 leaf 클래스는 제각각의 구현을 갖는다.
         li Strategy
         p 동일한 계열의 알고리즘들을 캡슐화하여 상호 교환할 수 있도록 한다
         li Scott Meyers : All non-leaf classes should be abstract

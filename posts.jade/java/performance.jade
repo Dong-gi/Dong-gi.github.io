@@ -18,13 +18,27 @@ include ../../source/skeleton.jade
             +asCode('shell').
                 -XmsN # 초기값
                 -XmxN # 최대값
-            li 힙 = 영 제너레이션 + 올드 제너레이션
-            p 영 제너레이션이 큰 경우 : 덜 자주 수집되고, 더 적은 객체가 올드 제너레이션으로 이동. 대신 올드 제너레이션이 작아 풀 GC는 더 자주 일어난다
+            li 힙 = Young Generation + Old Generation
+            p Young Generation이 큰 경우 : 덜 자주 수집되고, 더 적은 객체가 Old Generation으로 이동. 대신 Old Generation이 작아 풀 GC는 더 자주 일어난다
+            ul
+                li Young Generation
+                ol
+                    li Eden Space : 최초 객체 생성
+                    li Survivor Space : Eden에서 수집 제외
+                    p From, To 두 단계로 구분되며, 이후 Tenured로 이동
+                li Tenured : Survivor에서 수집 제외
+                li Permanent Generation
+                ul
+                    li 객체 GC 대상이 아닌 영역으로, PermGen이라고도 한다.
+                    li 클래스 정의, String 상수 등 불변 객체들을 갖는다.
+                    li Java 8에서 Metaspace로 변경됐다
+                    p 크기 한계(MaxMetaspaceSize)에 도달하면 dead class 정보는 삭제된다
             +asCode('shell').
-                -XX:NewSize=N    # 영 제너레이션 초기 크기
-                -XX:MaxNewSize=N # 영 제너레이션 최대 크기
-                -XmnN            # NewSize, MaxNewSize 동일하게 설정
-                -XX:NewRatio=N   # (영 제너레이션 초기 크기) = (힙 초기 크기) / (1 + NewRatio)
+                -XX:NewSize=N       # Young Generation 초기 크기
+                -XX:MaxNewSize=N    # Young Generation 최대 크기
+                -XmnN               # NewSize, MaxNewSize 동일하게 설정
+                -XX:NewRatio=N      # (Young Generation 초기 크기) = (힙 초기 크기) / (1 + NewRatio)
+                -XX:SurvivorRatio=N # (Young Generation 크기) = N * (Survivor Space 크기)
 
                 -XX:+HeapDumpOnOutOfMemoryError # 메모리 부족시 힙 덤프 생성
                 -XX:HeapDumpPath={path}         # 힙 덤프 작성 위치

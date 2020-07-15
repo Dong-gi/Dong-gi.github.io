@@ -304,8 +304,10 @@ include ../../source/skeleton.jade
                     end
                 end
 
-                class ClassName
-                    attr_accessor :length
+                class Point
+                    attr_accessor :x, :y     # getter, setter 모두 생성
+                    attr_reader   :readonly  # getter만 생성
+                    attr_write    :writeonly # setter만 생성
                 end
             li 내장 변수
             table
@@ -396,6 +398,11 @@ include ../../source/skeleton.jade
 
                 test n1: 10, n2: 20                 # 10, 20, {}
                 test n1: 11, n2: 22, n3: 33, n4: 44 # 11, 22, {:n3=>33, :n4=>44}
+            li 접근 한정자
+            ul
+                li public : 지정하지 않은 경우 사용되는 기본값
+                li private : 인스턴스 내에서만 호출 가능
+                li protected : 서브 클래스 인스턴스에서까지 호출 가능
             li 메서드 정의 취소
             +asCode('ruby') undef method_name1, method_name2
             li 메서드 별명
@@ -407,6 +414,12 @@ include ../../source/skeleton.jade
             li Top level 메서드 호출 시 receiver 필요없음
             li 메서드 내부에서 receiver를 self 키워드로 참조 가능
             li 메서드 내부의 receiver 지정없는 메서드 호출은 self를 receiver로 간주
+            li Singleton method
+            p 특정 인스턴스에만 정의된 메서드
+            +asCode('ruby').
+                def obj.method_name
+                    # ...
+                end
 
         h2.marker 블록
         ul
@@ -451,9 +464,13 @@ include ../../source/skeleton.jade
             li 클래스 정의
             +asCode('ruby').
                 class ClassName
+                    class InnerClass # 가능
+                    end
                 end
             li 생성자 호출
-            +asCode('ruby') var_name = ClassName.new
+            +asCode('ruby').
+                var_name = ClassName.new
+                var_name = ClassName::InnerClass.new
             li 생성자 정의
             +asCode('ruby').
                 class ClassName
@@ -484,14 +501,55 @@ include ../../source/skeleton.jade
                 end
 
         h2.marker 모듈
-        p 인스턴스화 불가. 내부에 다른 모듈 및 클래스 정의 가능
-        +asCode('ruby').
-            module MyModule
-                class MyClass
-                end
-            end
+        ul
+            li 인스턴스화 불가. 상속 불가. 내부에 다른 모듈 및 클래스 정의 가능
+            +asCode('ruby').
+                module MyModule
+                    class MyClass
+                    end
 
-            o = MyModule::MyClass.new
+                    def self.singleton_method # 모듈 수준 싱글톤 메서드 가능
+                    end
+                end
+
+                o = MyModule::MyClass.new
+                MyModule.singleton_method
+            li Mixin : 모듈 메서드를 클래스 인스턴스 메서드로 추가
+            +asCode('ruby').
+                module MyModule
+                    def method_name
+                    end
+                end
+
+                class MyClass
+                    include MyModule
+
+                    def method_name
+                        super
+                        # ...
+                    end
+                end
+
+                MyClass.new.method_name
+            li 모듈 메서드를 인스턴스의 싱글톤 메서드로 추가
+            +asCode('ruby') obj.extend ModuleName
+            li 모듈 함수 : 모듈명 없이 호출 가능
+            +asCode('ruby').
+                module MyModule
+                    module_function
+
+                    def test1
+                    end
+                    def test2
+                    end
+                end
+
+                MyModule.test1
+                MyModule.test2
+
+                include MyModule
+                test1
+                test2
 
         h2.marker 내장 자료형
         ul
@@ -613,12 +671,41 @@ include ../../source/skeleton.jade
                         br
                         | printf(format_string, *arguments) -> nil
                     +asCode('ruby') (io || $stdout).write(sprintf(format_string, *arguments))
-            h3.marker 프로세스
+            h3.marker 실행/프로세스
             ul
+                li eval
+                p 동적으로 코드 평가
+                +asCode('ruby').
+                    def get_binding(str)
+                        binding
+                    end
+                    str = "hello"
+                    eval "str + ' Fred'"                     # "hello Fred"
+                    eval "str + ' Fred'", get_binding("bye") # "bye Fred"
                 li exit(status=true)
                 p SystemExit 예외를 발생하여 루비 프로세스 종료 절차를 시작한다.
                 li exit!(status=false)
                 p 현재 루비 프로세스를 즉시 종료한다. 종료 핸들러는 호출되지 않는다.
+                li
+                    | trap(signal, command) -> obj
+                    br
+                    | trap(signal) {| | block } -> obj
+                ul
+                    | 시스템 신호 처리 핸들러 등록
+                    li signal
+                    ol
+                        li "SIGALRM", "SIGUSR1" 등의 신호 이름.
+                        li 선두 "SIG"는 생략해도 된다
+                        li :EXIT, "EXIT", 0에 대해 처리를 등록하면 루비 프로세스 정상 종료 전 호출된다
+                    li command
+                    ol
+                        li "IGNORE", "SIG_IGN" : 신호 무시
+                        li "DEFAULT", "RUBY_DFL" : 루비 기본 핸들러가 처리
+                        li "SYSTEM_DEFAULT" : 시스템 기본 핸들러가 처리
+                        li 그 외의 경우 command(Proc 인스턴스) 또는 block 호출
+                +asCode('ruby').
+                    trap(0, proc { puts "Terminating: &#x23;{$$}" })
+                    trap("CLD")  { puts "Child died" }
                 li `cmd` -> string
                 ul
                     li cmd를 실행하여 결과를 반환한다
@@ -691,7 +778,6 @@ include ../../source/skeleton.jade
             //- #catch
             //- #chomp
             //- #chop
-            //- #eval
             //- #fail
             //- #fork
             //- #format
@@ -723,7 +809,6 @@ include ../../source/skeleton.jade
             //- #test
             //- #throw
             //- #trace_var
-            //- #trap
             //- #untrace_var
             //- #warn
             //- #y

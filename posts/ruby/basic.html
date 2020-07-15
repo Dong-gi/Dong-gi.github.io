@@ -143,8 +143,10 @@ SIZE = 20   # 실행됨. Warning 출력</div><li>인스턴스 변수 : @</li><p>
     end
 end
 
-class ClassName
-    attr_accessor :length
+class Point
+    attr_accessor :x, :y     # getter, setter 모두 생성
+    attr_reader   :readonly  # getter만 생성
+    attr_write    :writeonly # setter만 생성
 end</div><li>내장 변수</li><table><tr><th>이름</th><th>설명</th></tr><tr><td>$stdin</td><td>표준 입력. default STDIN</td></tr><tr><td>$stdout, $&gt;</td><td>표준 출력. default STDOUT</td></tr><tr><td>$stderr</td><td>표준 에러. default STDERR</td></tr><tr><td>$/, $-0</td><td>입력의 줄바꿈 문자열. default \n</td></tr><tr><td>$SAFE</td><td>현재 스레드 safe level</td></tr><tr><td>$!</td><td>마지막 발생한 예외 객체</td></tr><tr><td>$@</td><td>마지막 발생한 예외의 Backtrace</td></tr><tr><td>$$</td><td>실행 중인 루비 프로세스 PID</td></tr><tr><td>$?</td><td>마지막으로 종료된 프로세스 exit code</td></tr><tr><td>$:, $LOAD_PATH, $-I</td><td>스크립트 탐색 디렉터리</td></tr><tr><td>$LOADED_FEATURES, $&quot;</td><td>require로 읽은 파일들</td></tr><tr><td>$DEBUG</td><td>디버그 모드로 실행된 경우 true</td></tr><tr><td>$VERBOSE</td><td>nil이면 경고 출력 x, false면 중요 경고 출력, true면 모든 경고 출력</td></tr><tr><td>$~</td><td>마지막으로 정규식에 매치된 MatchData</td></tr><tr><td>$1, $2, ...</td><td>마지막으로 정규식에 매치된 각 그룹들</td></tr><tr><td>$+</td><td>마지막으로 정규식에 매치된 마지막 그룹</td></tr><tr><td>$&amp;</td><td>마지막으로 정규식에 매치된 문자열</td></tr><tr><td>$`</td><td>마지막으로 정규식에 매치된 문자열 시작 위치 전까지의 문자열</td></tr><tr><td>$'</td><td>마지막으로 정규식에 매치된 문자열 종료 위치 후부터의 문자열</td></tr><tr><td>$PROGRAM_NAME<br>$*<br>$FILENAME<br>$&lt;</td><td>실행 중인 스크립트 이름<br>스크립트 실행 인자<br>$&lt; 파일명<br>실행 인자 또는 STDIN으로 지정된 파일<p><strong>↓ test.rb</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">puts %($PROGRAM_NAME : &#x23;{$PROGRAM_NAME})
 puts %($*            : &#x23;{$*})
 puts %($FILENAME     : &#x23;{$FILENAME})
@@ -172,7 +174,10 @@ end</div><li>키워드 인자 전달 예</li><p><strong>↓ ruby</strong></p><di
 end
 
 test n1: 10, n2: 20                 # 10, 20, {}
-test n1: 11, n2: 22, n3: 33, n4: 44 # 11, 22, {:n3=>33, :n4=>44}</div><li>메서드 정의 취소</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">undef method_name1, method_name2</div><li>메서드 별명</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">alias new_name old_name</div><li>반환값</li><p>기본적으로 마지막 평가된 식의 값이 반환값. 도중에 반환하려면 return 키워드 이용</p><li>메서드 호출 시 괄호 필요없음</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">receiver.method_name arg</div><li>Top level 메서드 호출 시 receiver 필요없음</li><li>메서드 내부에서 receiver를 self 키워드로 참조 가능</li><li>메서드 내부의 receiver 지정없는 메서드 호출은 self를 receiver로 간주</li></ul><h2 class="marker">블록</h2><ul><li>block</li><p><strong>↓ block 1 - do~end</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">do |var_name|
+test n1: 11, n2: 22, n3: 33, n4: 44 # 11, 22, {:n3=>33, :n4=>44}</div><li>접근 한정자</li><ul><li>public : 지정하지 않은 경우 사용되는 기본값</li><li>private : 인스턴스 내에서만 호출 가능</li><li>protected : 서브 클래스 인스턴스에서까지 호출 가능</li></ul><li>메서드 정의 취소</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">undef method_name1, method_name2</div><li>메서드 별명</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">alias new_name old_name</div><li>반환값</li><p>기본적으로 마지막 평가된 식의 값이 반환값. 도중에 반환하려면 return 키워드 이용</p><li>메서드 호출 시 괄호 필요없음</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">receiver.method_name arg</div><li>Top level 메서드 호출 시 receiver 필요없음</li><li>메서드 내부에서 receiver를 self 키워드로 참조 가능</li><li>메서드 내부의 receiver 지정없는 메서드 호출은 self를 receiver로 간주</li><li>Singleton method</li><p>특정 인스턴스에만 정의된 메서드</p><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">def obj.method_name
+    # ...
+end
+</div></ul><h2 class="marker">블록</h2><ul><li>block</li><p><strong>↓ block 1 - do~end</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">do |var_name|
     # ...
 end</div><p><strong>↓ block 2 - {}</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">{|var_name1, var_name2, *var_name3|
     # ...
@@ -198,7 +203,10 @@ end
 # 대상이 Proc 인스턴스가 아닌 경우, 인스턴스의 to_proc 메서드 결과를 블록으로 전달한다
 my_method &amp;Proc.new {|var_name| ... }
 </div></ul><h2 class="marker">클래스</h2><ul><li>클래스 정의</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">class ClassName
-end</div><li>생성자 호출</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">var_name = ClassName.new</div><li>생성자 정의</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">class ClassName
+    class InnerClass # 가능
+    end
+end</div><li>생성자 호출</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">var_name = ClassName.new
+var_name = ClassName::InnerClass.new</div><li>생성자 정의</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">class ClassName
     def initialize(arg1, arg2, ...)
         # ...
     end
@@ -214,13 +222,45 @@ end</div><li>상속</li><p>상속 관계를 지정하지 않은 클래스는 Obj
         # ...
     end
 end
-</div></ul><h2 class="marker">모듈</h2><p>인스턴스화 불가. 내부에 다른 모듈 및 클래스 정의 가능</p><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">module MyModule
+</div></ul><h2 class="marker">모듈</h2><ul><li>인스턴스화 불가. 상속 불가. 내부에 다른 모듈 및 클래스 정의 가능</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">module MyModule
     class MyClass
+    end
+
+    def self.singleton_method # 모듈 수준 싱글톤 메서드 가능
     end
 end
 
 o = MyModule::MyClass.new
-</div><h2 class="marker">내장 자료형</h2><ul><li>수 : Numeric ← Fixnum, Bignum, Float</li><p>0b111, 0777, 0o777, 0xfff, 3.14e+3, 1_234 표기 가능</p><li>문자열 : String</li><ul><li>'', "" 모두 가능하며, ""는 안에 보간식 &#x23;{...} 사용 가능</li><li>여러 줄 문자열(Heredoc)</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">sql = &lt;&lt;SQL  # 식별자는 적절히 변경 가능
+MyModule.singleton_method</div><li>Mixin : 모듈 메서드를 클래스 인스턴스 메서드로 추가</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">module MyModule
+    def method_name
+    end
+end
+
+class MyClass
+    include MyModule
+
+    def method_name
+        super
+        # ...
+    end
+end
+
+MyClass.new.method_name</div><li>모듈 메서드를 인스턴스의 싱글톤 메서드로 추가</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">obj.extend ModuleName</div><li>모듈 함수 : 모듈명 없이 호출 가능</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">module MyModule
+    module_function
+
+    def test1
+    end
+    def test2
+    end
+end
+
+MyModule.test1
+MyModule.test2
+
+include MyModule
+test1
+test2
+</div></ul><h2 class="marker">내장 자료형</h2><ul><li>수 : Numeric ← Fixnum, Bignum, Float</li><p>0b111, 0777, 0o777, 0xfff, 3.14e+3, 1_234 표기 가능</p><li>문자열 : String</li><ul><li>'', "" 모두 가능하며, ""는 안에 보간식 &#x23;{...} 사용 가능</li><li>여러 줄 문자열(Heredoc)</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">sql = &lt;&lt;SQL  # 식별자는 적절히 변경 가능
 select * from table1, table2
 where
     table1.col1 = table2.col2 and
@@ -259,4 +299,10 @@ times5 = gen_times(5)
 
 times3.call(3)  # 9
 times5.call(3)  # 15
-</div></ul></div><h1 class="marker">표준 라이브러리</h1><div><h2 class="marker">module Kernel</h2><div><h3 class="marker">IO</h3><div><h4 class="marker">문자열 IO</h4><ul><li>gets(sep=$/) -> string | nil<br>gets(limit) -> string | nil<br>gets(sep, limit) -> string | nil</li><ul><li>ARGV의 파일 또는 $stdin으로부터 문자열을 입력받는다</li><li>반환값은 $_ 변수에 저장된다</li><li>limit을 지정하면 최대 limit 바이트만 읽는다</li><li>gets(sep=nil) -> 파일 한 개를 모두 읽어 반환</li><li>파일 끝에 도달한 경우 nil 반환</li></ul><li>#p(*obj) -> [obj, ...]</li><p>각 인자의 inspect() 결과를 줄바꿈 문자와 함께 $stdout으로 출력</p><li>#puts(*obj) -> nil</li><p>각 인자의 to_s() 결과를 줄바꿈 문자와 함께 $stdout으로 출력</p><li>#print(*obj) -> nil</li><ul><li>각 인자의 to_s() 결과를 $stdout으로 출력</li><li>$, != nil이면 구분자로 출력</li><li>$\ != nil이면 마지막에 출력</li><li>인자가 없는 경우 $_ 출력</li></ul><li>sprintf(format_string, *arguments) -> string</li><p><strong>↓ C언어와 유사</strong></p><div lan="text" class="as-code code-div w3-leftbar w3-border-green">%[flags][width][.precision]type</div><li>printf(io, format_string, *arguments) -> nil<br>printf(format_string, *arguments) -> nil</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">(io || $stdout).write(sprintf(format_string, *arguments))</div></ul></div><h3 class="marker">프로세스</h3><ul><li>exit(status=true)</li><p>SystemExit 예외를 발생하여 루비 프로세스 종료 절차를 시작한다.</p><li>exit!(status=false)</li><p>현재 루비 프로세스를 즉시 종료한다. 종료 핸들러는 호출되지 않는다.</p><li>`cmd` -> string</li><ul><li>cmd를 실행하여 결과를 반환한다</li><li>%x 문자열도 이 메서드를 이용한다</li><li>종료된 프로세스는 $?에 저장된다</li></ul><li>system([**env,] *command [,**opt]) -> true | false | nil</li><ul><li>명령을 실행하여 0으로 종료하면 true, 그 외 종료는 false, 실패는 nil</li><li>종료된 프로세스는 $?에 저장된다</li><li>command 형태</li><ol><li>쉘에서 실행할 문장 전체</li><li>command_name, arg1, arg2, ... # no shell</li><li>[command_name, argv0], arg1, arg2 ... # no shell</li></ol><li>env, opt로 주어지는 해시는 Kernel.exec(), Kernel.spawn()과 동일</li></ul><li>exec([**env,] *command [,**opt])</li><p>현재 프로세스에서 커맨드 실행 후 종료</p><li>spawn([**env,] *command [,**opt]) -> pid</li><ul><li>자식 프로세스로 명령을 실행하고 PID를 반환한다.</li><li>env</li><ol><li>key => value : 환경변수 설정</li><li>key => nil : 환경변수 삭제</li></ol><li>opt</li><p><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.ruby-lang.org/en/2.0.0/Kernel.html#method-i-spawn">method-i-spawn</a> 참고</p></ul></ul><h3 class="marker">외부 소스 코드 로드</h3><ul><li>require(path)</li><ul><li>절대경로 이용 가능</li><li>$LOAD_PATH 내장변수의 디렉터리를 기준으로 한 상대경로 이용 가능</li><li>./, ../ 상대경로는 실행 디렉터리 기준</li><li>파일을 찾지 못한 경우, 설치된 gems 중 매칭되는 것이 있는지 찾는다</li><li>같은 path에 대해 중복으로 실행하지 않는다</li></ul><li>require_relative(string) -> true | false</li><p>호출하는 파일이 존재하는 디렉터리를 기준으로 한 상대경로의 파일을 실행한다</p><li>load(filename, wrap=false) -> true</li><ul><li>같은 filename에 대해 반복 호출하면, 스크립트도 반복 실행된다.</li><li>wrap=true로 지정하면 익명 모듈 안에서 실행한다.</li></ul></ul></div></div></div><hr>&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="/LICENSE">LICENSE</a></div></body></html>
+</div></ul></div><h1 class="marker">표준 라이브러리</h1><div><h2 class="marker">module Kernel</h2><div><h3 class="marker">IO</h3><div><h4 class="marker">문자열 IO</h4><ul><li>gets(sep=$/) -> string | nil<br>gets(limit) -> string | nil<br>gets(sep, limit) -> string | nil</li><ul><li>ARGV의 파일 또는 $stdin으로부터 문자열을 입력받는다</li><li>반환값은 $_ 변수에 저장된다</li><li>limit을 지정하면 최대 limit 바이트만 읽는다</li><li>gets(sep=nil) -> 파일 한 개를 모두 읽어 반환</li><li>파일 끝에 도달한 경우 nil 반환</li></ul><li>#p(*obj) -> [obj, ...]</li><p>각 인자의 inspect() 결과를 줄바꿈 문자와 함께 $stdout으로 출력</p><li>#puts(*obj) -> nil</li><p>각 인자의 to_s() 결과를 줄바꿈 문자와 함께 $stdout으로 출력</p><li>#print(*obj) -> nil</li><ul><li>각 인자의 to_s() 결과를 $stdout으로 출력</li><li>$, != nil이면 구분자로 출력</li><li>$\ != nil이면 마지막에 출력</li><li>인자가 없는 경우 $_ 출력</li></ul><li>sprintf(format_string, *arguments) -> string</li><p><strong>↓ C언어와 유사</strong></p><div lan="text" class="as-code code-div w3-leftbar w3-border-green">%[flags][width][.precision]type</div><li>printf(io, format_string, *arguments) -> nil<br>printf(format_string, *arguments) -> nil</li><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">(io || $stdout).write(sprintf(format_string, *arguments))</div></ul></div><h3 class="marker">실행/프로세스</h3><ul><li>eval</li><p>동적으로 코드 평가</p><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">def get_binding(str)
+    binding
+end
+str = "hello"
+eval "str + ' Fred'"                     # "hello Fred"
+eval "str + ' Fred'", get_binding("bye") # "bye Fred"</div><li>exit(status=true)</li><p>SystemExit 예외를 발생하여 루비 프로세스 종료 절차를 시작한다.</p><li>exit!(status=false)</li><p>현재 루비 프로세스를 즉시 종료한다. 종료 핸들러는 호출되지 않는다.</p><li>trap(signal, command) -> obj<br>trap(signal) {| | block } -> obj</li><ul>시스템 신호 처리 핸들러 등록<li>signal</li><ol><li>"SIGALRM", "SIGUSR1" 등의 신호 이름.</li><li>선두 "SIG"는 생략해도 된다</li><li>:EXIT, "EXIT", 0에 대해 처리를 등록하면 루비 프로세스 정상 종료 전 호출된다</li></ol><li>command</li><ol><li>"IGNORE", "SIG_IGN" : 신호 무시</li><li>"DEFAULT", "RUBY_DFL" : 루비 기본 핸들러가 처리</li><li>"SYSTEM_DEFAULT" : 시스템 기본 핸들러가 처리</li><li>그 외의 경우 command(Proc 인스턴스) 또는 block 호출</li></ol></ul><p><strong>↓ ruby</strong></p><div lan="ruby" class="as-code code-div w3-leftbar w3-border-green">trap(0, proc { puts "Terminating: &#x23;{$$}" })
+trap("CLD")  { puts "Child died" }</div><li>`cmd` -> string</li><ul><li>cmd를 실행하여 결과를 반환한다</li><li>%x 문자열도 이 메서드를 이용한다</li><li>종료된 프로세스는 $?에 저장된다</li></ul><li>system([**env,] *command [,**opt]) -> true | false | nil</li><ul><li>명령을 실행하여 0으로 종료하면 true, 그 외 종료는 false, 실패는 nil</li><li>종료된 프로세스는 $?에 저장된다</li><li>command 형태</li><ol><li>쉘에서 실행할 문장 전체</li><li>command_name, arg1, arg2, ... # no shell</li><li>[command_name, argv0], arg1, arg2 ... # no shell</li></ol><li>env, opt로 주어지는 해시는 Kernel.exec(), Kernel.spawn()과 동일</li></ul><li>exec([**env,] *command [,**opt])</li><p>현재 프로세스에서 커맨드 실행 후 종료</p><li>spawn([**env,] *command [,**opt]) -> pid</li><ul><li>자식 프로세스로 명령을 실행하고 PID를 반환한다.</li><li>env</li><ol><li>key => value : 환경변수 설정</li><li>key => nil : 환경변수 삭제</li></ol><li>opt</li><p><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://docs.ruby-lang.org/en/2.0.0/Kernel.html#method-i-spawn">method-i-spawn</a> 참고</p></ul></ul><h3 class="marker">외부 소스 코드 로드</h3><ul><li>require(path)</li><ul><li>절대경로 이용 가능</li><li>$LOAD_PATH 내장변수의 디렉터리를 기준으로 한 상대경로 이용 가능</li><li>./, ../ 상대경로는 실행 디렉터리 기준</li><li>파일을 찾지 못한 경우, 설치된 gems 중 매칭되는 것이 있는지 찾는다</li><li>같은 path에 대해 중복으로 실행하지 않는다</li></ul><li>require_relative(string) -> true | false</li><p>호출하는 파일이 존재하는 디렉터리를 기준으로 한 상대경로의 파일을 실행한다</p><li>load(filename, wrap=false) -> true</li><ul><li>같은 filename에 대해 반복 호출하면, 스크립트도 반복 실행된다.</li><li>wrap=true로 지정하면 익명 모듈 안에서 실행한다.</li></ul></ul></div></div></div><hr>&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="/LICENSE">LICENSE</a></div></body></html>
