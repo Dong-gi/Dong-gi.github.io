@@ -937,6 +937,7 @@ Repositories/Node/mocha-start/package.json
 Repositories/Node/mocha-start/test/test1.js
 Repositories/Node/mocha-start/test/test2.js
 Repositories/Node/mocha-start/test/test3.js
+Repositories/Node/process.sample.js
 Repositories/Node/redis-start/app.js
 Repositories/Node/redis-start/package-lock.json
 Repositories/Node/redis-start/package.json

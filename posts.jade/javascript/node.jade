@@ -283,7 +283,9 @@ include ../../source/skeleton.jade
         li integer process.pid
         li integer process.ppid Since 9.2, Since 8.10
         p 부모 프로세스 PID
-        li Stream process.stdin, stdout, stderr
+        li
+            | Stream process.stdin, stdout, stderr 
+            +codeBtn('/Repositories/Node/process.sample.js', 'javascript')
 
     h1.marker 3rd/express : Web Framework
     ul
