@@ -1,0 +1,233 @@
+include ../../source/skeleton.jade
+
++post('Mathematics for Computer Science', 'MCS, Mathematics', 'Mathematics for Computer Science 정리', true)
+    h1.marker 도서 정보
+    .w3-row
+        .w3-col.s2.w3-center
+            +w3img('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQew5ZrEOtvLqafGH3aEaTctFKCSV4qjsRoZS4tT7Ci_lJXjSIV', '도서 이미지')&attributes({style: 'max-height:210px'})
+        .w3-col.s10
+            table.no-sort
+                +tds('표제/저자사항', 'Mathematics for Computer Science / Eric Lehman, F Thomson Leighton, Albert R Meyer')
+                +tds('ISBN 정보', '979-11-88621-12-5 [93000]')
+                tr
+                    td Copyright
+                    td
+                        | 2017, Eric Lehman, F Tom Leighton, 
+                        +asA('http://people.csail.mit.edu/meyer', 'Albert R Meyer')
+                        | . This work is available under the terms of the 
+                        +asA('http://creativecommons.org/licenses/by-sa/3.0/', 'Creative Commons Attribution-ShareAlike 3.0 license.')
+
+    h1.marker Proofs; 증명
+    div
+        h2.marker Introduction
+        p
+            strong Definition.
+            |  A mathematical proof of a proposition is a chain of logical deductions leading to the proposition from a base set of axioms.
+            br
+            strong 정의.
+            |  명제(proposition)에 대한 수학적 증명이란, 기본 공리(axiom)들로부터 명제에 도달하는 일련의 논리적 연역(deduction)이다.
+        h2.marker What is a Proof?
+        div
+            h3.marker Propositions
+            식[\mathbb{N}]식
+            h3.marker Predicates
+            h3.marker The Axiomatic Method
+            h3.marker Our Axioms
+            h3.marker Proving an Implication
+            h3.marker Proving an "If and Only If"
+            h3.marker Proof by Cases
+            h3.marker Proof by Contradiction
+            h3.marker Good Proofs in Practice
+            h3.marker References
+        h2.marker The Well Ordering Principle
+        div
+            h3.marker Well Ordering Proofs
+            h3.marker Template for WOP Proofs
+            h3.marker Factoring into Primes
+            h3.marker Well Ordered Sets
+        h2.marker Logical Formulas
+        div
+            h3.marker Propositions from Propositions
+            h3.marker Propositional Logic in Computer Programs
+            h3.marker Equivalence and Validity
+            h3.marker The Algebra of Propositions
+            h3.marker The SAT Problem
+            h3.marker Predicate Formulas
+            h3.marker References
+        h2.marker Mathematical Data Types
+        div
+            h3.marker Sets
+            h3.marker Sequences
+            h3.marker Functions
+            h3.marker Binary Relations
+            h3.marker Finite Cardinality
+        h2.marker Induction
+        div
+            h3.marker Ordinary Induction
+            h3.marker Strong Induction
+            h3.marker Strong Inductions vs. Induction vs. Well Ordering
+        h2.marker State Machines
+        div
+            h3.marker States and Transitions
+            h3.marker The Invariant Principle
+            h3.marker Partial Correctness &amp; Termination
+            h3.marker The Stable Marriage Problem
+        h2.marker Recursive Data Types
+        div
+            h3.marker Recursive Definitions and Structural Induction
+            h3.marker Strings of Matched Brackets
+            h3.marker Recursive Functions on Nonnegative Integers
+            h3.marker Arithmetic Expressions
+            h3.marker Games as a Recursive Data Type
+            h3.marker Induction in Computer Science
+        h2.marker Infinite Sets
+        div
+            h3.marker Infinite Cardinality
+            h3.marker The Halting Problem
+            h3.marker The Logic of Sets
+            h3.marker Does All This Really Work?
+    h1.marker Structures
+    div
+        h2.marker Introduction
+        h2.marker Number Theory
+        div
+            h3.marker Divisibility
+            h3.marker The Greatest Common Divisor
+            h3.marker Prime Mysteries
+            h3.marker The Fundamental Theorem of Arithmetic
+            h3.marker Alan Turing
+            h3.marker Modular Arithmetic
+            h3.marker Remainder Arithmetic
+            h3.marker Turing's Code (Version 2.0)
+            h3.marker Multiplicative Inverses and Cancelling
+            h3.marker Euler's Theorem
+            h3.marker RSA Public Key Encryption
+            h3.marker What has SAT got to do with it?
+            h3.marker References
+        h2.marker Directed graphs &amp; Partial Orders
+        div
+            h3.marker Vertex Degrees
+            h3.marker Walks and Paths
+            h3.marker Adjacency Matrices
+            h3.marker Walk Relations
+            h3.marker Directed Acyclic Graphs &amp; Scheduling
+            h3.marker Partial Orders
+            h3.marker Representing Partial Orders by Set Containment
+            h3.marker Linear Orders
+            h3.marker Product Orders
+            h3.marker Equivalence Relations
+            h3.marker Summary of Relational Properties
+            h3.marker References
+        h2.marker Communication Networks
+        div
+            h3.marker Routing
+            h3.marker Routing Measures
+            h3.marker Network Designs
+        h2.marker Simple Graphs
+        div
+            h3.marker Vertex Adjacency and Degrees
+            h3.marker Sexual Demographics in America
+            h3.marker Some Common Graphs
+            h3.marker Isomorphism
+            h3.marker Bipartite Graphs &amp; Matchings
+            h3.marker Coloring
+            h3.marker Walks in Simple Graphs
+            h3.marker Connectivity
+            h3.marker Special Walks and Tours
+            h3.marker k-connected Graphs
+            h3.marker Forests &amp; Trees
+            h3.marker References
+        h2.marker Planar Graphs
+        div
+            h3.marker Drawing Graphs in the Plane
+            h3.marker Definitions of Planar Graphs
+            h3.marker Euler's Formula
+            h3.marker Bounding the Number of Edges in a Plannar Graph
+            h3.marker Returning to 식[K_5]식 and 식[K_{3,3}]식
+            h3.marker Coloring Planar Graphs
+            h3.marker Classifying Polyhedra
+            h3.marker Another Characterization for Planar Graphs
+    h1.marker Counting
+    div
+        h2.marker Introduction
+        h2.marker Sums and Asymptotics
+        div
+            h3.marker The Value of an Annuity
+            h3.marker Sums of Powers
+            h3.marker Approximating Sums
+            h3.marker Hanging Out Over the Edge
+            h3.marker Products
+            h3.marker Double Trouble
+            h3.marker Asymptotic Notation
+        h2.marker Cardinality Rules
+        div
+            h3.marker Counting One Thing by Counting Another
+            h3.marker Counting Sequences
+            h3.marker The Generalized Product Rule
+            h3.marker The Division Rule
+            h3.marker Counting Subsets
+            h3.marker Sequences with Repetitions
+            h3.marker Counting Practice: Poker Hands
+            h3.marker The Pigeonhole Principle
+            h3.marker Inclusion-Exclusion
+            h3.marker Combinatorial Proofs
+            h3.marker References
+        h2.marker Generating Functions
+        div
+            h3.marker Infinite Series
+            h3.marker Counting with Generating Functions
+            h3.marker Partial Fractions
+            h3.marker Solving Linear Recurrences
+            h3.marker Formal Power Series
+            h3.marker References
+    h1.marker Probability
+    div
+        h2.marker Introduction
+        h2.marker Events and Probability Spaces
+        div
+            h3.marker Let's Make a Deal
+            h3.marker The Four Step Method
+            h3.marker Strange Dice
+            h3.marker The Birthday Principle
+            h3.marker Set Theory and Probability
+            h3.marker References
+        h2.marker Conditional Probability
+        div
+            h3.marker Month Hall Confusion
+            h3.marker Definition and Notation
+            h3.marker The Four-Step Method for Conditional Probability
+            h3.marker Why Tree Diagrams Work
+            h3.marker The Law of Total Probability
+            h3.marker Simpson's Paradox
+            h3.marker Independence
+            h3.marker Mutual Independence
+            h3.marker Probability versus Confidence
+        h2.marker Random Variables
+        div
+            h3.marker Random Variable Examples
+            h3.marker Independence
+            h3.marker Distribution Functions
+            h3.marker Great Expectations
+            h3.marker Linearity of Expectation
+        h2.marker Deviation from the Mean
+        div
+            h3.marker Markov's Theorem
+            h3.marker Chebyshev's Theorem
+            h3.marker Properties of Variance
+            h3.marker Estimation by Random Sampling
+            h3.marker Confidence in an Estimation
+            h3.marker Sums of Random Variables
+            h3.marker Really Great Expectations
+        h2.marker Random Walks
+        div
+            h3.marker Gambler's Ruin
+            h3.marker Random Walks on Graphs
+    h1.marker Recurrences
+        h2.marker Introduction
+        h2.marker Recurrences
+        div
+            h3.marker The Towers of Hanoi
+            h3.marker Merge Sort
+            h3.marker Linear Recurrences
+            h3.marker Divide-and-Conquer Recurrences
+            h3.marker A Feel for Recurrences

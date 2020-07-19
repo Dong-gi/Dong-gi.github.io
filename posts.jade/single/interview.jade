@@ -16,6 +16,16 @@ include ../../source/skeleton.jade
         ul
             li 80p 정수 타입 배열에는 final 키워드를 사용할 수 없다
             p -> 배열 원소의 타입과 무관하게 final 키워드 사용 가능하며, 해당 변수 초기화 이후 재할당은 불가하다
+    .w3-row
+        .w3-col.s2.w3-center
+            +w3img(src='https://www.hanbit.co.kr/data/books/B9005920688_l.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
+        .w3-col.s10
+            table.no-sort
+                +tds('제목', '프로그래밍 면접 이렇게 준비한다')
+                +tds('저자', '존 몽건,노아 킨들러,에릭 기게리 지음 서환수 옮김')
+                +tds('ISBN', '979-11-6224-199-8 [93000]')
+                +tds('발행일', '2019년 07월 04일')
+                +tds('발행처', '한빛미디어')
 
     h1.marker 이력서
     ol
@@ -45,7 +55,10 @@ include ../../source/skeleton.jade
         li 어떤 사업을 하는 회사인지, 무료 상용 서비스가 있다면 직접 체험할 필요도 있다
         li 스타트업 같은 소규모 회사는 CET, CTO 등의 SNS를 통해 동향 파악 가능
         li 면접관이 질문이 있는지 물었을 때, 없다고 답하면 부정적으로 보일 수 있음
-        li 코딩 면접 시, 단위 테스트를 꼭 작성
+        li 코딩 면접
+        ul
+            li 발생 가능한 예외, 경계조건에서의 동작 확인
+            li 단위 테스트 꼭 작성
 
     h1.marker Java 질문
     ol

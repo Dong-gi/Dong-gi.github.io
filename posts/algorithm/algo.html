@@ -120,7 +120,8 @@ gtag('config', 'UA-143098403-1');</script></head><body><div id="sidebar" class="
 |3|   |7|     |12|
 +-+   +-+     +--+</pre></td><td colspan="3"><p><strong>↓ python</strong></p><div lan="python" class="as-code code-div w3-leftbar w3-border-green">def rotate_rl():
     right.rotate_ll()
-    rotate_rr()</div></td></tr></table></div><h1 class="marker">자료구조 : 그래프</h1><ul><li>G : graph, V : vertex, E : edge</li><li>모든 간선의 가중치가 동일한 그래프, 또는 사이클이 없는 그래프(트리)의 탐색은 너비 우선 탐색, 깊이 우선 탐색 2개로 적절히 해결된다. 동일한 정점을 2번 조사할 필요도 없다</li></ul><div><h2 class="marker">최단경로 찾기 : 다익스트라</h2><ol><li>시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대. 간선의 가중치에 음수가 있는 경우 적용 불가</li><li>정의</li><ul><li>W(P) := 시작점으로부터 정점 P까지 도달하는 가중치의 현재 최소합.</li><li>W(P1, P2) := 간선 P1→P2의 가중치</li><li>Working set := 최단경로 알고리즘의 가중치 업데이트 대상이 되는 정점 집합. 최초값은 시작점으로부터 간선 하나만 건너 도달할 수 있는 모든 정점</li></ul><li>Working set에 속한 정점 P중, W(P)가 가장 낮은 P에 대해 다음을 수행한다</li><ol><li>Working set에서 P 제거</li><li>P에서 간선 하나만 건너 도달할 수 있는 모든 정점 P'에 대해, W(P') = min(W(P'), W(P) + W(P, P'))를 수행하고, W(P')값이 변경된 경우 P'을 Working set에 추가한다.</li><li>만약 P'이 목표 지점이라면, 최단 경로를 찾았으므로 추가 작업을 중지한다.</li></ol></ol><h2 class="marker">최단경로 찾기 : A*</h2><ul><li>도착점의 추정 가중치 0부터 시작하여, 도착점으로부터 먼 정점일수록 높아지는 추정 가중치를 갖고 시작한다.</li><li>다익스트라 알고리즘을 사용하되, Working set에서 작업 대상이 되는 원소를 찾을 때, 추정 가중치를 합하여 구한다는 게 차이점.</li></ul><h2 class="marker">최단경로 찾기 : 벨만-포드</h2><ul><li>음수 가중치의 간선이 존재하는 경우, Working set은 정점이 아닌 간선을 대상으로 하고, 매 업데이트마다 모든 간선을 검사한다</li><li>다익스트라 알고리즘과 마찬가지로 시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대</li><li>그래프 임의의 정점 P에 대한 W(P)의 변동이 없을 때까지 아래를 반복한다.</li><p>그래프 모든 간선 P→P'에 대해, W(P') = min(W(P'), W(P) + W(P, P'))</p><li>|V|-1번의 업데이트로 모든 정점까지의 모든 최단경로가 구해지며, |V|번째의 업데이트로 갱신이 일어난 경우는 음수 가중치의 사이클이 존재하는 것이므로 최단 경로는 존재하지 않는다</li></ul><h2 class="marker">무방향 그래프의 최소신장 트리 : 크루스칼</h2><ol><li>최초 |V|개의 집합을 생성하고, 그래프 각 정점이 하나씩 포함된다</li><li>집합이 하나만 남을 때까지 다음을 반복한다</li><li>최소 가중치 간선을 선택 → 두 정점이 서로 다른 집합에 포함된 경우 → 두 집합을 합치고 간선은 결과에 추가</li><p>간선의 두 정점이 같은 집합에 포함된 경우 간선은 버려진다</p></ol></div><h1 class="marker">정렬</h1><p>Stability : 정렬 키가 동일한 두 요소의 순서가 정렬 후에도 유지되는 경우</p><div><h2 class="marker">Bubble Sort</h2><p><strong>↓ python</strong></p><div lan="python" class="as-code code-div w3-leftbar w3-border-green">is_go_next = True
+    rotate_rr()
+</div></td></tr></table></div><h1 class="marker">자료구조 : 그래프</h1><ul><li>G : graph, V : vertex, E : edge</li><li>모든 간선의 가중치가 동일한 그래프, 또는 사이클이 없는 그래프(트리)의 탐색은 너비 우선 탐색, 깊이 우선 탐색 2개로 적절히 해결된다. 동일한 정점을 2번 조사할 필요도 없다</li></ul><div><h2 class="marker">최단경로 찾기 : 다익스트라</h2><ol><li>시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대. 간선의 가중치에 음수가 있는 경우 적용 불가</li><li>정의</li><ul><li>W(P) := 시작점으로부터 정점 P까지 도달하는 가중치의 현재 최소합.</li><li>W(P1, P2) := 간선 P1→P2의 가중치</li><li>Working set := 최단경로 알고리즘의 가중치 업데이트 대상이 되는 정점 집합. 최초값은 시작점으로부터 간선 하나만 건너 도달할 수 있는 모든 정점</li></ul><li>Working set에 속한 정점 P중, W(P)가 가장 낮은 P에 대해 다음을 수행한다</li><ol><li>Working set에서 P 제거</li><li>P에서 간선 하나만 건너 도달할 수 있는 모든 정점 P'에 대해, W(P') = min(W(P'), W(P) + W(P, P'))를 수행하고, W(P')값이 변경된 경우 P'을 Working set에 추가한다.</li><li>만약 P'이 목표 지점이라면, 최단 경로를 찾았으므로 추가 작업을 중지한다.</li></ol></ol><h2 class="marker">최단경로 찾기 : A*</h2><ul><li>도착점의 추정 가중치 0부터 시작하여, 도착점으로부터 먼 정점일수록 높아지는 추정 가중치를 갖고 시작한다.</li><li>다익스트라 알고리즘을 사용하되, Working set에서 작업 대상이 되는 원소를 찾을 때, 추정 가중치를 합하여 구한다는 게 차이점.</li></ul><h2 class="marker">최단경로 찾기 : 벨만-포드</h2><ul><li>음수 가중치의 간선이 존재하는 경우, Working set은 정점이 아닌 간선을 대상으로 하고, 매 업데이트마다 모든 간선을 검사한다</li><li>다익스트라 알고리즘과 마찬가지로 시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대</li><li>그래프 임의의 정점 P에 대한 W(P)의 변동이 없을 때까지 아래를 반복한다.</li><p>그래프 모든 간선 P→P'에 대해, W(P') = min(W(P'), W(P) + W(P, P'))</p><li>|V|-1번의 업데이트로 모든 정점까지의 모든 최단경로가 구해지며, |V|번째의 업데이트로 갱신이 일어난 경우는 음수 가중치의 사이클이 존재하는 것이므로 최단 경로는 존재하지 않는다</li></ul><h2 class="marker">무방향 그래프의 최소신장 트리 : 크루스칼</h2><ol><li>최초 |V|개의 집합을 생성하고, 그래프 각 정점이 하나씩 포함된다</li><li>집합이 하나만 남을 때까지 다음을 반복한다</li><li>최소 가중치 간선을 선택 → 두 정점이 서로 다른 집합에 포함된 경우 → 두 집합을 합치고 간선은 결과에 추가</li><p>간선의 두 정점이 같은 집합에 포함된 경우 간선은 버려진다</p></ol></div><h1 class="marker">정렬</h1><p>Stability : 정렬 키가 동일한 두 요소의 순서가 정렬 후에도 유지되는 경우</p><div><h2 class="marker">Bubble Sort</h2><p><strong>↓ python</strong></p><div lan="python" class="as-code code-div w3-leftbar w3-border-green">is_go_next = True
 while is_go_next:
     is_go_next = False
     for i in range(0, len(l)-1):
@@ -135,9 +136,57 @@ while is_go_next:
             l.insert(j, x)
             break
     else:
-    l.insert(i, x)</div><h2 class="marker">Merge Sort</h2><p>버블 소트 1단계 실행 → 부분적으로 정렬된 리스트들을 마지막 1개가 될 때까지 병합</p><h2 class="marker">Heap Sort</h2><p>힙에 모두 넣고 순서대로 빼내면 정렬된다</p><h2 class="marker">Quick Sort</h2><p>크기가 3 이상인 부분 리스트에 대하여, pivot을 하나 선택하여 [&lt;pivot], [=pivot], [&gt;pivot]으로 분할하는 것을 반복</p><h2 class="marker">Counting Sort</h2><p><strong>↓ python</strong></p><div lan="python" class="as-code code-div w3-leftbar w3-border-green">d = dict()
+    l.insert(i, x)</div><h2 class="marker">Merge Sort</h2><p>버블 소트 1단계 실행 → 부분적으로 정렬된 리스트들을 마지막 1개가 될 때까지 병합</p><h2 class="marker">Heap Sort</h2><p>힙에 모두 넣고 순서대로 빼내면 정렬된다</p><h2 class="marker">Quick Sort</h2><p>크기가 3 이상인 부분 리스트에 대하여, pivot을 하나 선택하여 [&lt;pivot], [=pivot], [&gt;pivot]으로 분할하는 것을 반복</p><p><strong>↓ 제자리 정렬 퀵소트</strong></p><div lan="python" class="as-code code-div w3-leftbar w3-border-green">def biggest_small_index(list, min, right, pivot):
+    # list[right]부터 왼쪽으로 탐색하여, pivot보다 작은 최초 원소 인덱스를 반환한다
+    while min &lt;= right:
+        if list[right] &lt; pivot:
+            return right
+        right-=1
+    return -1
+def quick_sort(list, start=None, end=None, pivot=None):
+    # list[start]부터 list[end]까지 정렬
+    if start == None:
+        if len(list) > 1:
+            quick_sort(list, 0, len(list)-1, list[0])
+        return
+    
+    # 2개인 경우는 단순 스왑
+    if end - start == 1:
+        if list[start] > list[end]:
+            list[start], list[end] = list[end], list[start]
+        return
+
+    # 3개 이상인 경우, 결과적으로 [&lt;pivot | >=pivot] 구간으로 나뉘며
+    # list[start:left] == [&lt;pivot]이 성립된다
+    left, right = start, biggest_small_index(list, start, end, pivot)
+    while left &lt;= right:
+        if list[left] &lt; pivot:
+            left+=1
+        else:
+            list[left], list[right] = list[right], list[left]
+            left+=1
+            right = biggest_small_index(list, left, right-1, pivot)
+    # [&lt;pivot] 구간 추가 정렬
+    if left - start > 1:
+        quick_sort(list, start, left-1, list[start])
+    # [>=pivot] 구간 추가 정렬
+    while left &lt;= end and list[left] == pivot:
+        left+=1
+    if end - left > 1:
+        quick_sort(list, left, end, list[left])
+
+import random
+for _ in range(1, 1000):
+    l1 = []
+    for _ in range(1, 1000):
+        l1.append(random.randint(0, 10))
+    l2 = [x for x in l1]
+    quick_sort(l1)
+    l2.sort()
+    assert l1 == l2</div><h2 class="marker">Counting Sort</h2><p><strong>↓ python</strong></p><div lan="python" class="as-code code-div w3-leftbar w3-border-green">d = dict()
 for x in l:
     if x in d:
         d[x] += 1
     else:
-        d[x] = 1</div></div><h1 class="marker">DP; Dynamic Programming</h1><p>동적계획법 := 점화식(상향식)/재귀(하향식) + 캐싱</p><h1 class="marker">P-NP</h1><ol><li>튜링 기계(TM) : 긴 테이프에 쓰여있는 여러 가지 기호들을 일정한 규칙에 따라 바꾸는 기계</li><p>무한한 저장공간은 무한한 길이의 테이프로 나타나는데 이 테이프는 하나의 기호를 인쇄할 수 있는 크기의 정사각형들로 쪼개져있다. 언제든지 기계속에는 하나의 기호가 들어가있고 이를 "읽힌 기호"라고 한다. 이 기계는 "읽힌 기호"를 바꿀 수 있는데 그 기계의 행동은 오직 읽힌 기호만이 결정한다. 테이프는 앞뒤로 움직일 수 있어서 모든 기호들은 적어도 한번씩은 기계에게 읽힐 것이다.</p><li>P : 결정론적 튜링 기계로 다항 시간 안에 풀 수 있는 결정 문제</li><p>문제에 대한 해답을 다항 시간 안에 풀 수 있음</p><li>NP : 비결정론적 튜링 기계로 다항 시간 안에 풀 수 있는 결정 문제. P⊆NP</li><p>해답이 맞는지 틀린지에 대한 결정 문제를 다항 시간 안에 풀 수 있음</p><li>NP-Hard : 다음을 만족하는 결정 문제 C. 모든 NP 문제가 다항 시간 안에 C로 변환될 수 있다. NP-난해 문제는 최소한 모든 NP문제만큼 어렵다</li><p>Halting problem : 프로그램과 입력값이 주어졌을 때, 프로그램이 정지할 지 아니면 영원히 계산할 지 결정하는 문제</p><li>NP-Complete : NP-Hard and C ∈ NP</li><p>어떤 NP-완전 문제가 P에 속한다면 P=NP를 증명하게 된다, 반대로 P에 속하지 않으면 P≠NP를 증명하게 된다</p><p>SAT(SATisfiability problem) : 어떠한 변수들로 이루어진 논리식이 주어졌을 때, 그 논리식이 참이 되는 변수값이 존재하는지를 찾는 문제</p></ol></div><hr>&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="/LICENSE">LICENSE</a></div></body></html>
+        d[x] = 1
+</div></div><h1 class="marker">DP; Dynamic Programming</h1><p>동적계획법 := 점화식(상향식)/재귀(하향식) + 캐싱</p><h1 class="marker">P-NP</h1><ol><li>튜링 기계(TM) : 긴 테이프에 쓰여있는 여러 가지 기호들을 일정한 규칙에 따라 바꾸는 기계</li><p>무한한 저장공간은 무한한 길이의 테이프로 나타나는데 이 테이프는 하나의 기호를 인쇄할 수 있는 크기의 정사각형들로 쪼개져있다. 언제든지 기계속에는 하나의 기호가 들어가있고 이를 "읽힌 기호"라고 한다. 이 기계는 "읽힌 기호"를 바꿀 수 있는데 그 기계의 행동은 오직 읽힌 기호만이 결정한다. 테이프는 앞뒤로 움직일 수 있어서 모든 기호들은 적어도 한번씩은 기계에게 읽힐 것이다.</p><li>P : 결정론적 튜링 기계로 다항 시간 안에 풀 수 있는 결정 문제</li><p>문제에 대한 해답을 다항 시간 안에 풀 수 있음</p><li>NP : 비결정론적 튜링 기계로 다항 시간 안에 풀 수 있는 결정 문제. P⊆NP</li><p>해답이 맞는지 틀린지에 대한 결정 문제를 다항 시간 안에 풀 수 있음</p><li>NP-Hard : 다음을 만족하는 결정 문제 C. 모든 NP 문제가 다항 시간 안에 C로 변환될 수 있다. NP-난해 문제는 최소한 모든 NP문제만큼 어렵다</li><p>Halting problem : 프로그램과 입력값이 주어졌을 때, 프로그램이 정지할 지 아니면 영원히 계산할 지 결정하는 문제</p><li>NP-Complete : NP-Hard and C ∈ NP</li><p>어떤 NP-완전 문제가 P에 속한다면 P=NP를 증명하게 된다, 반대로 P에 속하지 않으면 P≠NP를 증명하게 된다</p><p>SAT(SATisfiability problem) : 어떠한 변수들로 이루어진 논리식이 주어졌을 때, 그 논리식이 참이 되는 변수값이 존재하는지를 찾는 문제</p></ol></div><hr>&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="/LICENSE">LICENSE</a></div></body></html>

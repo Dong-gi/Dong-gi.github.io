@@ -65,11 +65,11 @@ include ../../source/skeleton.jade
                         |            |10|
                         |            +--+
                 td(colspan='4')
-                    +asCode('python')
-                        | def rotate_ll():
-                        |     parent.change(this, this.left)
-                        |     left.parent, parent = this.parent, left
-                        |     left.right, left = this, left.right
+                    +asCode('python').
+                        def rotate_ll():
+                            parent.change(this, this.left)
+                            left.parent, parent = this.parent, left
+                            left.right, left = this, left.right
             tr
                 th(colspan='12') RR Rotation : this, this.right, this.right.right가 서로 위치 변경
             tr
@@ -102,11 +102,11 @@ include ../../source/skeleton.jade
                         |          |8|
                         |          +-+
                 td(colspan='4')
-                    +asCode('python')
-                        | def rotate_rr():
-                        |     parent.change(this, this.right)
-                        |     right.parent, parent = this.parent, right
-                        |     right.left, right = this, right.left
+                    +asCode('python').
+                        def rotate_rr():
+                            parent.change(this, this.right)
+                            right.parent, parent = this.parent, right
+                            right.left, right = this, right.left
             tr
                 th(colspan='12') LR Rotation : this, this.left, this.left.right가 서로 위치 변경
             tr
@@ -150,10 +150,10 @@ include ../../source/skeleton.jade
                         | |1|   |7|  |11|
                         | +-+   +-+  +--+
                 td(colspan='3')
-                    +asCode('python')
-                        | def rotate_lr():
-                        |     left.rotate_rr()
-                        |     rotate_ll()
+                    +asCode('python').
+                        def rotate_lr():
+                            left.rotate_rr()
+                            rotate_ll()
             tr
                 th(colspan='12') RL Rotation : this, this.right, this.right.left가 서로 위치 변경
             tr
@@ -197,10 +197,10 @@ include ../../source/skeleton.jade
                         | |3|   |7|     |12|
                         | +-+   +-+     +--+
                 td(colspan='3')
-                    +asCode('python')
-                       | def rotate_rl():
-                       |     right.rotate_ll()
-                       |     rotate_rr()
+                    +asCode('python').
+                        def rotate_rl():
+                            right.rotate_ll()
+                            rotate_rr()
 
     h1.marker 자료구조 : 그래프
     ul
@@ -246,43 +246,92 @@ include ../../source/skeleton.jade
     p Stability : 정렬 키가 동일한 두 요소의 순서가 정렬 후에도 유지되는 경우
     div
         h2.marker Bubble Sort
-        +asCode('python')
-            | is_go_next = True
-            | while is_go_next:
-            |     is_go_next = False
-            |     for i in range(0, len(l)-1):
-            |         if l[i] > l[i+1]:
-            |             l[i], l[i+1] = l[i+1], l[i]
-            |             is_go_next = True
+        +asCode('python').
+            is_go_next = True
+            while is_go_next:
+                is_go_next = False
+                for i in range(0, len(l)-1):
+                    if l[i] > l[i+1]:
+                        l[i], l[i+1] = l[i+1], l[i]
+                        is_go_next = True
         h2.marker Selection Sort
-        +asCode('python')
-            | for i in range(0, len(l)-1):
-            |     x = l.index(min(l[i:]))
-            |     l[i], l[x] = l[x], l[i]
+        +asCode('python').
+            for i in range(0, len(l)-1):
+                x = l.index(min(l[i:]))
+                l[i], l[x] = l[x], l[i]
         h2.marker Insertion Sort
-        +asCode('python')
-            | for i in range(1, len(l)):
-            |     x = l.pop(i)
-            |     for j in range(0, i):
-            |         if l[j] > x:
-            |             l.insert(j, x)
-            |             break
-            |     else:
-            |     l.insert(i, x)
+        +asCode('python').
+            for i in range(1, len(l)):
+                x = l.pop(i)
+                for j in range(0, i):
+                    if l[j] > x:
+                        l.insert(j, x)
+                        break
+                else:
+                l.insert(i, x)
         h2.marker Merge Sort
         p 버블 소트 1단계 실행 → 부분적으로 정렬된 리스트들을 마지막 1개가 될 때까지 병합
         h2.marker Heap Sort
         p 힙에 모두 넣고 순서대로 빼내면 정렬된다
         h2.marker Quick Sort
         p 크기가 3 이상인 부분 리스트에 대하여, pivot을 하나 선택하여 [&lt;pivot], [=pivot], [&gt;pivot]으로 분할하는 것을 반복
+        +asCode('python', '제자리 정렬 퀵소트').
+            def biggest_small_index(list, min, right, pivot):
+                # list[right]부터 왼쪽으로 탐색하여, pivot보다 작은 최초 원소 인덱스를 반환한다
+                while min &lt;= right:
+                    if list[right] &lt; pivot:
+                        return right
+                    right-=1
+                return -1
+            def quick_sort(list, start=None, end=None, pivot=None):
+                # list[start]부터 list[end]까지 정렬
+                if start == None:
+                    if len(list) > 1:
+                        quick_sort(list, 0, len(list)-1, list[0])
+                    return
+                
+                # 2개인 경우는 단순 스왑
+                if end - start == 1:
+                    if list[start] > list[end]:
+                        list[start], list[end] = list[end], list[start]
+                    return
+
+                # 3개 이상인 경우, 결과적으로 [&lt;pivot | >=pivot] 구간으로 나뉘며
+                # list[start:left] == [&lt;pivot]이 성립된다
+                left, right = start, biggest_small_index(list, start, end, pivot)
+                while left &lt;= right:
+                    if list[left] &lt; pivot:
+                        left+=1
+                    else:
+                        list[left], list[right] = list[right], list[left]
+                        left+=1
+                        right = biggest_small_index(list, left, right-1, pivot)
+                # [&lt;pivot] 구간 추가 정렬
+                if left - start > 1:
+                    quick_sort(list, start, left-1, list[start])
+                # [>=pivot] 구간 추가 정렬
+                while left &lt;= end and list[left] == pivot:
+                    left+=1
+                if end - left > 1:
+                    quick_sort(list, left, end, list[left])
+
+            import random
+            for _ in range(1, 1000):
+                l1 = []
+                for _ in range(1, 1000):
+                    l1.append(random.randint(0, 10))
+                l2 = [x for x in l1]
+                quick_sort(l1)
+                l2.sort()
+                assert l1 == l2
         h2.marker Counting Sort
-        +asCode('python')
-            | d = dict()
-            | for x in l:
-            |     if x in d:
-            |         d[x] += 1
-            |     else:
-            |         d[x] = 1
+        +asCode('python').
+            d = dict()
+            for x in l:
+                if x in d:
+                    d[x] += 1
+                else:
+                    d[x] = 1
 
     h1.marker DP; Dynamic Programming
     p 동적계획법 := 점화식(상향식)/재귀(하향식) + 캐싱
