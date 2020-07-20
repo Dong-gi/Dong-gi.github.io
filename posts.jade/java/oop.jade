@@ -30,6 +30,32 @@ include ../../source/skeleton.jade
         li 인터페이스 구현 : implements
         li 추상클래스는 인터페이스를 부분적으로 구현해도 된다.
         +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/Interface.java', 'java')
+        li 여러 인터페이스를 동시에 구현할 수 있다
+        +asCode('java').
+            public class Test implements I1, I2 {
+                public static void main(String[] args) {
+                    var test = new Test();
+                    test.method();          // I1 I2 Override
+                    ((I1) test).method();   // I1 I2 Override
+                    ((I2) test).method();   // I1 I2 Override
+                }
+                @Override
+                public void method() {
+                    I1.super.method();
+                    I2.super.method();
+                    System.out.println(" Override");
+                }
+            }
+            interface I1 {
+                default public void method() {
+                    System.out.print(" I1");
+                }
+            }
+            interface I2 {
+                default public void method() {
+                    System.out.print(" I2");
+                }
+            }
 
     h1.marker 중첩 클래스
     ul

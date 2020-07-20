@@ -1510,6 +1510,7 @@ posts.jade/algorithm/koreatech/1048.jade
 posts.jade/algorithm/koreatech/1060.jade
 posts.jade/algorithm/koreatech/1095.jade
 posts.jade/algorithm/linear_algebra.jade
+posts.jade/algorithm/mcs.jade
 posts.jade/algorithm/probability.jade
 posts.jade/book/001.jade
 posts.jade/book/002.jade
@@ -1616,6 +1617,7 @@ posts/algorithm/koreatech/1048.html
 posts/algorithm/koreatech/1060.html
 posts/algorithm/koreatech/1095.html
 posts/algorithm/linear_algebra.html
+posts/algorithm/mcs.html
 posts/algorithm/probability.html
 posts/book/001.html
 posts/book/002.html

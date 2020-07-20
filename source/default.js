@@ -17,6 +17,7 @@ const posts = {list: [
 { category: 'JVM/Library',         file: '/posts/java/apache.commons.collections.html',     title: '3-1 Apache Commons Collections 4.4' },
 { category: 'JVM/Library',         file: '/posts/java/apache.commons.lang.html',            title: '3-2 Apache Commons Lang 3.9' },
 { category: 'JVM/Library',         file: '/posts/java/apache.commons.rng.html',             title: '3-3 Apache Commons RNG Core 1.2' },
+{ category: 'JVM/Library',         file: '/posts/java/apache.commons.math.html',            title: '3-4 Apache Commons Math 3.6.1' },
 { category: 'JVM/Library',         file: '/posts/front/freemarker/template_guide.html',     title: '4-1 FreeMarker 템플릿 작성 가이드 2.3.28' },
 { category: 'JVM/Library',         file: '/posts/front/freemarker/programming_guide.html',  title: '4-2 FreeMarker 프로그래밍 가이드 2.3.28' },
 { category: 'JVM/Library',         file: '/posts/front/freemarker/built_in.html',           title: '4-3 FreeMarker Built-in 목록 2.3.28' },
@@ -24,6 +25,7 @@ const posts = {list: [
 { category: 'JVM/Library',         file: '/posts/java/jackson.html',                        title: '5-1 Jackson 2.10.1' },
 { category: 'JVM/Library',         file: '/posts/java/gson.html',                           title: '5-2 Gson 2.8.6' },
 { category: 'JVM/Library',         file: '/posts/java/logback.html',                        title: '6 Logback with SLF4J' },
+{ category: 'JVM/Library',         file: '/posts/java/guava.html',                          title: '7 Guava 23.0' },
 { category: 'Infra',               file: '/posts/single/aws.html',                          title: 'AWS' },
 { category: 'Infra',               file: '/posts/single/centos.html',                       title: 'CentOS' },
 { category: 'Infra',               file: '/posts/single/docker.html',                       title: 'Docker' },
@@ -45,6 +47,7 @@ const posts = {list: [
 { category: 'Topic',               file: '/posts/single/fp.html',                           title: 'FP; Functional Programming' },
 { category: 'Topic',               file: '/posts/single/interview.html',                    title: '개발자 면접 준비' },
 { category: 'Topic',               file: '/posts/single/refactoring.html',                  title: '디자인 패턴 + 리팩터링' },
+{ category: 'Topic',               file: '/posts/single/quantum_computer.html',             title: '양자 컴퓨터' },
 { category: 'Topic/Book',          file: '/posts/book/001.html',                            title: '1만 시간의 재발견' },
 { category: 'Topic/Book',          file: '/posts/book/002.html',                            title: '마음의 탄생' },
 { category: 'Topic/Book',          file: '/posts/book/003.html',                            title: '생각하는 삶을 위한 철학의 역사' },
@@ -59,6 +62,7 @@ const posts = {list: [
 { category: 'Algorithm',           file: '/posts/algorithm/mcs.html',                       title: '2 컴퓨터공학도를 위한 수학' },
 { category: 'Algorithm',           file: '/posts/algorithm/linear_algebra.html',            title: '3 선형대수' },
 { category: 'Algorithm',           file: '/posts/algorithm/probability.html',               title: '4 확률' },
+{ category: 'Algorithm',           file: '/posts/algorithm/ai.html',                        title: '5 AI' },
 { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1003.html',            title: '1003: 0을 만들자' },
 { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1008.html',            title: '1008: 순환 소수' },
 { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1010.html',            title: '소수(Prime) 관련 문제' },
@@ -69,16 +73,29 @@ const posts = {list: [
 { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1095.html',            title: '1095: 자연스러운 정렬' },
 { category: '.NET',                file: '/posts/dotnet/csharp_basic.html',                 title: '1-1 C# 기초' },
 { category: '.NET',                file: '/posts/dotnet/csharp_library.html',               title: '1-2 C# 라이브러리' },
-{ category: '.NET',                file: '/posts/dotnet/wpf_basic.html',                    title: '1-3 WPF 기초' },
+{ category: '.NET',                file: '/posts/dotnet/wpf_basic.html',                    title: '2 WPF 기초' },
+{ category: '.NET',                file: '/posts/single/unity.html',                        title: '3 Unity' },
 { category: '.NET',                file: '/posts/project/wpf_data_tool.html',               title: 'x 데이터 작업 툴 - C#.NET, WPF' },
 { category: 'JavaScript',          file: '/posts/javascript/basic.html',                    title: '1-1 코어 JavaScript' },
 { category: 'JavaScript',          file: '/posts/javascript/basic2.html',                   title: '1-2 브라우저 JavaScript' },
 { category: 'JavaScript',          file: '/posts/javascript/jquery.html',                   title: '1-3 jQuery' },
 { category: 'JavaScript',          file: '/posts/javascript/node.html',                     title: '2 Node' },
-{ category: 'JavaScript',          file: '/posts/front/css.html',                           title: 'CSS' },
-{ category: 'JavaScript',          file: '/posts/front/html.html',                          title: 'HTML' },
-{ category: 'JavaScript',          file: '/posts/front/http.html',                          title: 'HTTP 1.1' },
 { category: 'JavaScript',          file: '/posts/project/sf.html',                          title: 'x SF; Simplest html Framework' },
+{ category: 'Web',                 file: '/posts/front/http.html',                          title: '1 HTTP 1.1' },
+{ category: 'Web',                 file: '/posts/front/html.html',                          title: '2 HTML' },
+{ category: 'Web',                 file: '/posts/front/css.html',                           title: '3 CSS' },
+{ category: 'Web',                 file: '/posts/single/nginx.html',                        title: 'x Nginx' },
+{ category: 'Web',                 file: '/posts/single/tomcat.html',                       title: 'x tomcat' },
+{ category: 'Web',                 file: '/posts/javascript/basic2.html',                   title: 'x 브라우저 JavaScript' },
+{ category: 'Web',                 file: '/posts/javascript/jquery.html',                   title: 'x jQuery' },
+{ category: 'Web',                 file: '/posts/java/java_ee.html',                        title: 'x JavaEE' },
+{ category: 'Web',                 file: '/posts/javascript/node.html',                     title: 'x Node' },
+{ category: 'Web',                 file: '/posts/front/freemarker/template_guide.html',     title: 'x FreeMarker 템플릿 작성 가이드 2.3.28' },
+{ category: 'Web',                 file: '/posts/front/freemarker/programming_guide.html',  title: 'x FreeMarker 프로그래밍 가이드 2.3.28' },
+{ category: 'Web',                 file: '/posts/front/freemarker/built_in.html',           title: 'x FreeMarker Built-in 목록 2.3.28' },
+{ category: 'Web',                 file: '/posts/front/freemarker/xml_guide.html',          title: 'x FreeMarker XML 처리 가이드 2.3.28' },
+{ category: 'Web',                 file: '/posts/project/sf.html',                          title: 'x SF; Simplest html Framework' },
+{ category: 'Web',                 file: '/posts/project/reminder.html',                    title: 'x 온라인 알리미 - Spring Boot 토이 프로젝트' },
 { category: 'Python',              file: '/posts/python/basic.html',                        title: '1-1 Python 3.8 시작하기' },
 { category: 'Python',              file: '/posts/python/built_in_function.html',            title: '1-2 Python Built-in Functions 3.8' },
 { category: 'Python',              file: '/posts/python/built_in_constant.html',            title: '1-3 Python Built-in Constants 3.8' },
@@ -91,16 +108,20 @@ const posts = {list: [
 { category: 'Project',             file: '/posts/project/wpf_data_tool.html',               title: '1 데이터 작업 툴 - C#.NET, WPF' },
 { category: 'Project',             file: '/posts/project/sf.html',                          title: '2 SF; Simplest html Framework' },
 { category: 'Project',             file: '/posts/project/reminder.html',                    title: '3 온라인 알리미 - Spring Boot 토이 프로젝트' },
-{ category: 'Project',             file: '/posts/project/error.html',                       title: 'x 경험한 예외' },
-{ category: 'Project',             file: '/posts/project/tip.html',                         title: 'x 잡다한 팁' },
-{ category: 'Project',             file: '/posts/project/snippets.html',                    title: 'x 코드 조각' },
+{ category: 'Project',             file: '/posts/project/error.html',                       title: '100 경험한 예외' },
+{ category: 'Project',             file: '/posts/project/tip.html',                         title: '200 잡다한 팁' },
+{ category: 'Project',             file: '/posts/project/snippets.html',                    title: '300 코드 조각' },
+{ category: 'Ruby',                file: '/posts/ruby/basic.html',                          title: '1 Ruby Basic' },
 
-{ category: '♻ 미완/.NET',           file: '/posts/single/unity.html',                        title: 'Unity' },
-{ category: '♻ 미완/JVM/3rd',        file: '/posts/java/apache.commons.math.html',            title: 'Apache Commons Math 3.6.1' },
-{ category: '♻ 미완/JVM/3rd',        file: '/posts/java/guava.html',                          title: 'Guava 23.0' },
-{ category: '♻ 미완/Topic',          file: '/posts/single/quantum_computer.html',             title: '양자 컴퓨터' },
-{ category: '♻ 미완/Topic',          file: '/posts/algorithm/ai.html',                        title: 'AI' },
-{ category: '♻ 미완/Ruby',           file: '/posts/ruby/basic.html',                          title: 'Ruby Basic' },
+{ category: '♻작성중,보류',        file: '/posts/algorithm/mcs.html',                       title: '컴퓨터공학도를 위한 수학' },
+{ category: '♻작성중,보류',        file: '/posts/single/redis.html',                        title: 'Redis' },
+{ category: '♻작성중,보류',        file: '/posts/single/unity.html',                        title: 'Unity' },
+{ category: '♻작성중,보류',        file: '/posts/java/java_ee.html',                        title: 'JavaEE' },
+{ category: '♻작성중,보류',        file: '/posts/java/apache.commons.math.html',            title: 'Apache Commons Math 3.6.1' },
+{ category: '♻작성중,보류',        file: '/posts/java/guava.html',                          title: 'Guava 23.0' },
+{ category: '♻작성중,보류',        file: '/posts/single/quantum_computer.html',             title: '양자 컴퓨터' },
+{ category: '♻작성중,보류',        file: '/posts/algorithm/ai.html',                        title: 'AI' },
+{ category: '♻작성중,보류',        file: '/posts/ruby/basic.html',                          title: 'Ruby Basic' },
 ], codes: {}}
 
 window.addEventListener('load', () => {
@@ -254,14 +275,16 @@ function updatePostList() {
     }, true, () => {
         document.querySelectorAll('#post-list details').forEach(x => x.open = false)
         let limit = document.getElementById('post-list')
-        let a = document.querySelector(`#post-list a[href="${location.pathname}"]`)
-        if (a) {
-            let p = a.parentElement
-            p.classList.add('w3-yellow')
-            while (limit != p) {
-                if (p.tagName == 'DETAILS')
-                    p.open = true
-                p = p.parentElement
+        let anchors = document.querySelectorAll(`#post-list a[href="${location.pathname}"]`)
+        if (anchors.length) {
+            for (let a of anchors) {
+                let p = a.parentElement
+                p.classList.add('w3-yellow')
+                while (limit != p) {
+                    if (p.tagName == 'DETAILS')
+                        p.open = true
+                    p = p.parentElement
+                }
             }
         } else {
             document.querySelector('#post-list details').open = true
