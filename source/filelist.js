@@ -1496,6 +1496,11 @@ imgs/20200621_174002.jpg
 imgs/20200621_174003.jpg
 imgs/20200622_130716.png
 imgs/20200622_130727.png
+imgs/20200721_200830.png
+imgs/20200721_200848.png
+imgs/20200721_200946.png
+imgs/20200721_201013.png
+imgs/20200721_205504.png
 imgs/kanna.gif
 index.html
 index.jade
@@ -1604,6 +1609,7 @@ posts.jade/single/redis.jade
 posts.jade/single/refactoring.jade
 posts.jade/single/rpi.jade
 posts.jade/single/sdkman.jade
+posts.jade/single/temp1.jade
 posts.jade/single/tomcat.jade
 posts.jade/single/unity.jade
 posts.jade/single/vi.jade
@@ -1728,6 +1734,7 @@ posts/single/redis.html
 posts/single/refactoring.html
 posts/single/rpi.html
 posts/single/sdkman.html
+posts/single/temp1.html
 posts/single/tomcat.html
 posts/single/unity.html
 posts/single/vi.html
