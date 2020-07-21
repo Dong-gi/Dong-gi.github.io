@@ -12,10 +12,16 @@ include ./source/skeleton.jade
         +ths('링크', '내용')
         tr
             td: +asA('/posts/project/reminder.html')
-            td 할일 목록 관리 - Spring Boot, MyBatis, PostgreSQL, Heroku 이용
+            td 할일 목록 관리 - Spring Boot, MyBatis Generator, PostgreSQL, Heroku 이용
         tr
             td: +asA('/posts/project/wpf_data_tool.html')
-            td WPF 데이터 툴 - NuGet Microsoft.Office.Interop.Excel, AWS CloudFront API, Google Sheets API 이용
+            td WPF 데이터 툴 - Microsoft.Office.Interop.Excel, AWS CloudFront API, Google Sheets API 이용
+        tr
+            td: +asA('/posts/project/igaworks_push.html')
+            td Igaworks 푸시 예약 자동화 - jQuery 이용
+        tr
+            td: +asA('/posts/single/demo3.html')
+            td 로마숫자 사칙연산 계산기 - JavaScript 이용
         tr
             td: +asA('/posts/project/error.html')
             td 오류 대응 목록
@@ -24,12 +30,12 @@ include ./source/skeleton.jade
             td 브라우저 매크로 등 코드 조각
         tr
             td: +asA('/posts/project/sf.html')
-            td SF; Simplest html Framework
+            td SF; Simplest HTML Framework
 
     h1.marker 경력(요약)
     table
         tr
-            th(pre-sort=1) 시기
+            th(pre-sort=1, sort-order='▲') 시기
             th 내용
         +tds('2020-07-04', '산업기능요원 복무 만료@세시소프트')
         tr
@@ -41,12 +47,11 @@ include ./source/skeleton.jade
             td.hover-content(template-id='template-index-1') 직업능력개발훈련교사 자격증 취득
         +tds('2017-11-24', '정보처리기사 취득')
 
-    h1 Index
+    h1.marker 수정사항
     div
-        table.marker
-            caption 수정사항
+        table
             tr
-                th(pre-sort=1) 날짜
+                th(pre-sort=1, sort-order='▲') 날짜
                 th 내용
             +tds('2020-05-09', '기존 HTML -> Jade 템플릿 변경 완료')
             +tds('2020-04-22', 'Jade 템플릿 적용 시작')

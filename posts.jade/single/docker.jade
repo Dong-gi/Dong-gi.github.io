@@ -15,13 +15,12 @@ include ../../source/skeleton.jade
         p Private registry 생성
         +asCode('shell') $ docker service create --name registry -p 5000:5000 registry
         li Docker object
-        p
-            | IMAGE : 컨테이너를 작성하는 절차를 담은 읽기 전용 템플릿
-            br
-            | CONTAINER : 실행 가능한 IMAGE 인스턴스
-            br
-            +asA('https://docs.docker.com/engine/reference/builder/', 'Dockerfile')
-            |  : 이미지 빌드 절차
+        ul
+            li IMAGE : 컨테이너를 작성하는 절차를 담은 읽기 전용 템플릿
+            li CONTAINER : 실행 가능한 IMAGE 인스턴스
+            li
+                +asA('https://docs.docker.com/engine/reference/builder/', 'Dockerfile')
+                |  : 이미지 빌드 절차
 
     h1.marker Dockerfile
     ul

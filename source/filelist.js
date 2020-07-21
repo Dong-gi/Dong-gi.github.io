@@ -1460,6 +1460,8 @@ imgs/20180929_220302.png
 imgs/20180930_154849.png
 imgs/20190330_214623.png
 imgs/20190629_155650.jpg
+imgs/20190716_085717.png
+imgs/20190716_085751.png
 imgs/20190719_100711.png
 imgs/20190719_103028.png
 imgs/20190731_143749.png
@@ -1569,6 +1571,7 @@ posts.jade/javascript/index.jade
 posts.jade/javascript/jquery.jade
 posts.jade/javascript/node.jade
 posts.jade/project/error.jade
+posts.jade/project/igaworks_push.jade
 posts.jade/project/reminder.jade
 posts.jade/project/sf.jade
 posts.jade/project/snippets.jade
@@ -1691,6 +1694,8 @@ posts/javascript/node.html
 posts/javascript/selector_example.html
 posts/javascript/storage_example.html
 posts/project/error.html
+posts/project/igaworks_push.html
+posts/project/igaworks_push.js
 posts/project/reminder.html
 posts/project/sf.html
 posts/project/snippets.html

@@ -1,0 +1,17 @@
+include ../../source/skeleton.jade
++post('Igaworks 푸시 예약 자동화', 'Igaworks, Push, Automation', 'Igaworks 푸시 예약 자동화 JavaScript 코드')
+    h1.marker 개요
+    ul
+        li
+            +asA('https://partners.igaworks.com/', 'Igaworks')
+            |  푸시 등록 첫 화면에서 스크립트를 실행하면, 마지막 화면까지 입력을 자동 진행한다.
+        +asCode('javascript', '실행 예').
+            customScript = document.createElement('script');
+            customScript.src = "https://cdn/igaworks_push.js";
+            document.getElementsByTagName('head')[0].appendChild(customScript);
+            sendNomalReservedPush('테스트 푸시', '푸시 타이틀', '푸시 메시지', '2019/08/10/', '01:23 PM');
+        +w3img('/imgs/20190716_085717.png', '실행 전').marker
+        +w3img('/imgs/20190716_085751.png', '실행 후').marker
+
+    h1.marker 코드
+    +codeBtn('/posts/project/igaworks_push.js', 'javascript') 전체 코드

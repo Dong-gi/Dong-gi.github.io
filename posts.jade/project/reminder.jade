@@ -6,11 +6,12 @@ include ../../source/skeleton.jade
         ol
             li
                 +asA('https://www.fastviewkorea.com/', '패스트뷰')
-                +asA('https://fastviewkorea.atlassian.net/wiki/spaces/FDV/pages/96501906/My+Reminder+Mobile', '사전 개발 과제')
+                +asA('https://fastviewkorea.atlassian.net/wiki/spaces/FDV/pages/96501906/My+Reminder+Mobile', '사전 과제')
                 | 로 제작한 웹앱입니다.
-            li: +asA('https://donggi.herokuapp.com/', '체험 링크')
-            p 무료 서비스를 이용하였기 때문에, 최초 진입 시 앱 구동을 위해 다소 시간이 소요될 수 있습니다. 이후 접속은 원활히 진행됩니다.
-            p 무료 서비스기 때문에, 종료 후 업로드된 파일들은 삭제됩니다;
+            li: +asA('https://donggi.herokuapp.com/', 'Heroku 체험 링크')
+            ul
+                li 무료 서비스를 이용하였기 때문에, 최초 진입 시 앱 구동을 위해 다소 시간이 소요될 수 있습니다. 이후 접속은 원활히 진행됩니다.
+                li 무료 서비스기 때문에, 종료 후 업로드된 파일들은 삭제됩니다.
             li
                 | GitHub 저장소 링크 : 
                 +asA('https://github.com/Dong-gi/Reminder')
@@ -80,9 +81,9 @@ include ../../source/skeleton.jade
                 }
             li 자동 로그인
             p 자동 로그인을 허용한 경우, 토큰 만료 시각을 2222년으로 설정하여 이후 요청에 이용할 수 있게 했습니다.
-            li SF; Simple html Framework
+            li SF; Simple HTML Framework
             p
-                | 프론트 구현에는 개인적으로 고안한 HTML 프레임워크를 적용했습니다. SF에 대하여는 다음의 링크를 참고해주세요.
+                | 이 문제의 풀이에는 개인적으로 작성한 HTML 라이브러리를 적용했습니다. 자세한 내용은 다음의 링크를 참고해주세요.
                 +asA('/posts/project/sf.html')
 
         h2.marker 개발 중 경험한 문제
@@ -91,7 +92,7 @@ include ../../source/skeleton.jade
             p
                 | insert 쿼리 실행 시 문제가 발생하여 
                 +asA('https://stackoverflow.com/questions/62373191/mybatis-does-not-support-javatype-property/62373453', '스택 오버플로 질문')
-                | 도 올렸지만, 결과적으로 POJO -> SQL 변환 시에는 setNonNullParameter, setParameter가 사용되기 때문에 해당 인자를 무시해도 된다는 것을 깨닫게 됐습니다.
+                | 도 올렸지만, 결과적으로 POJO -> SQL 변환 시에는 setNonNullParameter, setParameter가 사용되기 때문에 해당 인자를 무시해도 된다는 것을 알게 됐습니다.
 
         h2.marker 스크린샷
         +w3img('/imgs/20200621_174003.jpg', '로그인').marker
