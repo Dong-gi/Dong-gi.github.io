@@ -5,7 +5,8 @@ const posts = {list: [
 { category: 'JVM',                 file: '/posts/java/performance.html',                    title: '1-4 JVM 옵션 및 성능 관련사항' },
 { category: 'JVM',                 file: '/posts/java/jni.html',                            title: '1-5 Java Native Interface' },
 { category: 'JVM',                 file: '/posts/java/effective_java.html',                 title: '1-6 『Effective Java』' },
-{ category: 'JVM',                 file: '/posts/java/java_ee.html',                        title: '2 JavaEE' },
+{ category: 'JVM',                 file: '/posts/java/java_ee.html',                        title: '2-1 JavaEE' },
+{ category: 'JVM',                 file: '/posts/java/jpa.html',                            title: '2-2 JPA; Java Persistence API' },
 { category: 'JVM',                 file: '/posts/java/javafx.html',                         title: '3 JavaFX' },
 { category: 'JVM',                 file: '/posts/java/android.html',                        title: '4 Android' },
 { category: 'JVM',                 file: '/posts/single/groovy.html',                       title: '5 Groovy' },
@@ -114,6 +115,7 @@ const posts = {list: [
 { category: 'Project',             file: '/posts/single/demo3.html',                        title: '로마숫자 사칙연산 계산기' },
 { category: 'Ruby',                file: '/posts/ruby/basic.html',                          title: '1 Ruby Basic' },
 
+{ category: '♻작성중,보류',        file: '/posts/java/jpa.html',                            title: 'JPA; Java Persistence API' },
 { category: '♻작성중,보류',        file: '/posts/algorithm/mcs.html',                       title: '컴퓨터공학도를 위한 수학' },
 { category: '♻작성중,보류',        file: '/posts/single/redis.html',                        title: 'Redis' },
 { category: '♻작성중,보류',        file: '/posts/single/unity.html',                        title: 'Unity' },

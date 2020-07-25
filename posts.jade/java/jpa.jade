@@ -1,0 +1,48 @@
+include ../../source/skeleton.jade
++post('JPA', 'JPA, Java Persistence API, Hibernate, Spring Data JPA', 'JPA; Java Persistence API 정리')
+    h1.marker JPA?
+    div
+        h2.marker 정의
+        p
+            strong Java Persistence API
+            |  ::= Java ORM(Object-Relational Mapping)을 위한 명세
+            br
+            | → 객체지향 설계와 RDB의 설계를 둘 다 해치지 않으면서 둘 사이의 매핑을 지원 ─ 즉, 필요한 SQL을 자동으로 구성
+            ul
+                li SQL과 유사한, 객체를 이용한 JPQL(Java Persistence Query Language) 지원
+                li 객체 상속 관계 사용 가능
+                +asCode('java').
+                    public class MMonster {
+                        private Integer monsterId;
+                        private String name;
+                    }
+                    public class MBossMonster extends MMonster {
+                        private Integer baseMonsterId;
+                    }
+                li 객체 참조 관계 유지 가능
+                +asCode('java').
+                    public class MCharacterVoice {
+                        private Integer characterId;
+                        private MVoice voice;
+                    }
+                    public class MVoice {
+                        private Integer voiceId;
+                        private String message;
+                    }
+                +asCode('sql').
+                    create table m_character_voice (
+                        character_id int primary key,
+                        voice_id int not null
+                    );
+                    create table m_voice (
+                        voice_id int primary key,
+                        message text
+                    );
+
+        h2.marker 사용
+        p Hibernate와 같은 JPA 구현체(JPA Provider)를 이용하거나, 직접 구현하여 이용하면 된다
+
+    h1.marker Hibernate
+
+    h1.marker Spring Data JPA
+    p JPA에 대한 추상화된 모듈을 제공하여 보다 쉬운 사용을 가능하게 한다
