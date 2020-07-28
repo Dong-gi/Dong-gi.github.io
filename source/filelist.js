@@ -1565,6 +1565,7 @@ posts.jade/java/java_ee.jade
 posts.jade/java/javafx.jade
 posts.jade/java/javax.annotation.processing.jade
 posts.jade/java/jni.jade
+posts.jade/java/jpa.jade
 posts.jade/java/logback.jade
 posts.jade/java/lombok.jade
 posts.jade/java/oop.jade
@@ -1683,6 +1684,7 @@ posts/java/java_ee.html
 posts/java/javafx.html
 posts/java/javax.annotation.processing.html
 posts/java/jni.html
+posts/java/jpa.html
 posts/java/logback.html
 posts/java/lombok.html
 posts/java/oop.html
