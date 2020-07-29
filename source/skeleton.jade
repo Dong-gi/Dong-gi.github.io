@@ -30,9 +30,11 @@ mixin w3button(color)
             if block
                 block
 
-mixin codeBtn(path, lan, displayRange)
+mixin codeBtn(path, lan, displayRange, useFilenameAsBlock)
     +w3button()&attributes({ class: 'btn-code', title: path, displayRange: displayRange, lan: lan || 'text' })&attributes(attributes)
-        if block
+        if useFilenameAsBlock
+            = path.split('/').pop()
+        else if block
             block
         else
             |View Code »

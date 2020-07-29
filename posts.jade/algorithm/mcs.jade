@@ -437,9 +437,59 @@ include ../../source/skeleton.jade
             h3.marker The Algebra of Propositions
             div
                 h4 Propositions in Normal Form
-                | 65p
+                p
+                    strong Theorem 3.4.1.
+                    |  모든 명제 식은 그와 동치인 DNF, CNF가 존재한다.
+                p
+                    | 예. A AND (B OR C)
+                    table
+                        +ths('A', 'B', 'C', 'A AND (B OR C)')
+                        +tds('T', 'T', 'T', 'T')
+                        +tds('T', 'T', 'F', 'T')
+                        +tds('T', 'F', 'T', 'T')
+                        +tds('T', 'F', 'F', 'F')
+                        +tds('F', 'T', 'T', 'F')
+                        +tds('F', 'T', 'F', 'F')
+                        +tds('F', 'F', 'T', 'F')
+                        +tds('F', 'F', 'F', 'F')
+                    ul
+                        li DNF(Disjunctive normal form) : 식이 참이 되는 행들을 OR로 연결한다
+                        | 식[(A \land B \land C) \lor (A \land B \land \overline{C}) \lor (A \land \overline{B} \land C)]식
+                        li CNF(Conjunctive normal form) : 식이 거짓이 되는 행들을 AND로 연결한다
+                        | 식[(\overline{A} \lor B \lor C) \land (A \lor \overline{B} \lor \overline{C}) \land (A \lor \overline{B} \lor C) \land (A \lor B \lor \overline{C}) \land (A \lor B \lor C)]식
+                h4 Proving Equivalences
+                table
+                    +tds('교환법칙 of AND', '식[A \\land B = B \\land A]식')
+                    +tds('결합법칙 of AND', '식[(A \\land B) \\land C = A \\land (B \\land C)]식')
+                    +tds('항등원 of AND', '식[T \\land A = A]식')
+                    +tds('zero of AND', '식[F \\land A = F]식')
+                    +tds('멱등 of AND', '식[A \\land A = A]식')
+                    +tds('contradiction of AND', '식[A \\land \\overline{A} = F]식')
+                    +tds('double negation', '식[\\operatorname{NOT}(\\overline{A}) = A]식')
+                    +tds('validity of OR', '식[A \\lor \\overline{A} = T]식')
+                    +tds('De Morgan for AND', '식[\\operatorname{NOT}(A \\land B) = \\overline{A} \\lor \\overline{B}]식')
+                    +tds('De Morgan for OR', '식[\\operatorname{NOT}(A \\lor B) = \\overline{A} \\land \\overline{B}]식')
+                ul
+                    li A IMPLIES B = NOT(A) OR B
+                    li 식을 정규화할 때, 식[(\overline{A} \lor \overline{B}) \land (\overline{A} \lor \overline{C})]식처럼 변수에만 NOT이 적용되었다면 드모르간의 법칙을 이용해 확장할 필요가 없다
             h3.marker The SAT Problem
+            p
+                strong SAT
+                |  ::= 명제가 참일 수 있는 지(satisfiable)에 대한 일반적인 결정 문제
             h3.marker Predicate Formulas
+            div
+                h4 Quantifiers
+                ul
+                    li for all : 식[\forall]식
+                    li there exists : 식[\exists]식
+                    li Universal quantification : 명제가 항상 참인 한정
+                    li Existential quantification : 명제가 참일 수 있는 한정
+                h4 Mixing Quantifiers
+                p 예. 식[\forall{n}\in\text{Evens }\exists{p}\in\text{Primes }\exists{q}\in\text{Primes. }n=p+q]식
+                h4 Order of Quantifiers
+                p 서로 다른 종류의 한정 문구 순서를 변경하면 의미가 바뀔 수 있다
+                h4 Variables Over One Domain
+                p 모든 변수의 정의역이 동일하다면 표기에서 생략할 수 있다. 예. 식[\forall{x}\exists{y}.P(x, y)]식
             h3.marker Problems
         h2.marker Mathematical Data Types
         div
