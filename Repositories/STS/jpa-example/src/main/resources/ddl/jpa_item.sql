@@ -17,3 +17,23 @@ create table jpa_item3 (
     old_price int not null,
     old_discount int
 );
+create table jpa_item4 (
+    item_id bigserial primary key
+);
+create table jpa_item5 (
+    item_id bigserial primary key
+);
+create table jpa_item_info1 (
+    item_id bigint primary key,
+    info1 text
+);
+create table jpa_item_info2 (
+    item_id bigint primary key,
+    info1 text
+);
+create table jpa_item_info3 (
+    item_id bigint,
+    seq_no int,
+    info1 text,
+    primary key(item_id, seq_no)
+);

@@ -491,6 +491,38 @@ include ../../source/skeleton.jade
                 h4 Variables Over One Domain
                 p 모든 변수의 정의역이 동일하다면 표기에서 생략할 수 있다. 예. 식[\forall{x}\exists{y}.P(x, y)]식
             h3.marker Problems
+            div
+                h4 Problem 3.6.
+                p
+                    | Propositional logic comes up in digital circuit design using the convention that T corresponds to 1 and F to 0. A simple example is a 2-bit half-adder circuit. This circuit has 3 binary inputs, a1, a0, b, and 3 binary outputs, c, s1, s0. The 2-bit word 식[a_1a_0]식 gives the binary representation of an integer k between 0 and 3. The 3-bit word 식[cs_1s_0]식 gives the binary representation of k C b. The third output bit c is called the final carry bit.
+                    br
+                    | So if k and b were both 1, then the value of 식[a_1a_0]식 would be 01 and the value of the output 식[cs_1s_0]식 would 010, namely, the 3-bit binary representation of 1 + 1.
+                    br
+                    | In fact, the final carry bit equals 1 only when all three binary inputs are 1, that is, when k = 3 and b = 1. In that case, the value of 식[cs_1s_0]식 is 100, namely, the binary representation of 3 + 1.
+                    br
+                    | This 2-bit half-adder could be described by the following formulas:
+                    br
+                    | \begin{align*}
+                    |   c_0 =& b \\
+                    |   s_0 =& a_0\text{ XOR }c_0 \\
+                    |   c_1 =& a_0\text{ AND }c_0 && \text{the carry into column 1} \\
+                    |   s_1 =& a_1\text{ XOR }c_1 \\
+                    |   c_2 =& a_1\text{ AND }c_1 && \text{the carry into column 2} \\
+                    |   c   =& c_2
+                    | \end{align*}
+                ul
+                    li (a) Generalize the above construction of a 2-bit half-adder to an n + 1 bit half-adder with inputs 식[a_n,\cdots,a_1,a_0]식 and b and outputs 식[c,s_n,\cdots,s_1,s_0]식. That is, give simple formulas for 식[s_i]식 and 식[c_i]식 for 식[0 \le i \le n + 1]식, where 식[c_i]식 is the carry into column i + 1, and 식[c = c_{n+1}]식.
+                    p
+                        | \begin{align*}
+                        |   c_0 =& b \\
+                        |   s_i =& a_i\text{ XOR }c_i \\
+                        |   c_{i+1} =& a_i\text{ AND }c_i
+                        | \end{align*}
+                    li
+                        | (b) Write similar definitions for the digits and carries in the sum of two n + 1-bit binary numbers 식[a_n,\cdots,a_1,a_0]식 and 식[b_n,\cdots,b_1,b_0]식.
+                        br
+                        | Visualized as digital circuits, the above adders consist of a sequence of single-digit half-adders or adders strung together in series. These circuits mimic ordinary pencil-and-paper addition, where a carry into a column is calculated directly from the carry into the previous column, and the carries have to ripple across all the columns before the carry into the final column is determined. Circuits with this design are called ripple-carry adders. Ripple-carry adders are easy to understand and remember and require a nearly minimal number of operations. But the higherorder output bits and the final carry take time proportional to n to reach their final values.
+                    li (c) How many of each of the propositional operations does your adder from part (b) use to calculate the sum?
         h2.marker Mathematical Data Types
         div
             h3.marker Sets

@@ -1,5 +1,6 @@
 package io.github.donggi.jpa.dao;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.persistence.EntityManager;
@@ -28,6 +29,7 @@ class UserDaoTests {
     @Test
     void managerExists() {
         assertTrue(manager != null);
+        assertFalse(manager.isJoinedToTransaction());
     }
 
     @Test
@@ -62,6 +64,7 @@ class UserDaoTests {
     @Transactional
     @Rollback(false) // 테스트 자동 롤백하지 않도록 설정
     void updateUser() {
+        assertTrue(manager.isJoinedToTransaction());
         var user = user2Dao.findAll(PageRequest.of(0, 1)).getContent().get(0);
         user.setNickname("New nickname");
         System.out.println(user);

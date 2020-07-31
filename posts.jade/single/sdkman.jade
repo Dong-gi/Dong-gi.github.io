@@ -19,8 +19,7 @@ include ../../source/skeleton.jade
                 $ chmod -R +x /usr/local/sdkman/bin/
                 $ chmod -R +x /usr/local/sdkman/src/
             li 사용자 로그인 시 자동으로 sdkman-init.sh 실행하도록 설정
-            +asCode('shell').
-                # .bashrc
+            +asCode('shell', '.bashrc').
                 #...
                 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
                 cd ~
@@ -31,30 +30,30 @@ include ../../source/skeleton.jade
 
     h1.marker sdk help
     +asCode('shell').
-        Usage: sdk <command> [candidate] [version]
-               sdk offline <enable|disable>
+        Usage: sdk &lt;command> [candidate] [version]
+               sdk offline &lt;enable|disable>
         
             candidate  :  설치할 SDK; groovy, scala, grails, gradle, kotlin, ...
             version    :  지정하지 않으면 가장 최근 안정 버전
             local-path :  설치 위치 지정(옵션)
 
             commands:
-               install   or i    <candidate> [version] [local-path]
-               uninstall or rm   <candidate> <version>
+               install   or i    &lt;candidate> [version] [local-path]
+               uninstall or rm   &lt;candidate> &lt;version>
                list      or ls   [candidate]                        # 설치 가능 목록
                update                                               # 설치 가능 목록 갱신
                upgrade   or ug   [candidate]                        # 최신이 아닌 SDK 목록
                broadcast or b                                       # 최근 갱신된 SDK 목록
                
-               use       or u    <candidate> <version>              # 현재 터미널에서 사용할 SDK 버전 지정
-               default   or d    <candidate> [version]              # SDK 기본 버전 지정
+               use       or u    &lt;candidate> &lt;version>              # 현재 터미널에서 사용할 SDK 버전 지정
+               default   or d    &lt;candidate> [version]              # SDK 기본 버전 지정
                current   or c    [candidate]                        # 지정된 SDK 버전 목록
                
-               home      or h    <candidate> <version>              # SDK에 대한 홈 디렉터리 설정
+               home      or h    &lt;candidate> &lt;version>              # SDK에 대한 홈 디렉터리 설정
                                                                     # 현재 터미널에서 .sdkmanrc 파일의 설정 사용
                env       or e    [init]                             # init : 디렉터리에 .sdkmanrc 파일 생성
                
                selfupdate        [force]                            # force : SDKMAN 재설치
-               flush             <broadcast|archives|temp>          # SDKMAN 캐시 정리
+               flush             &lt;broadcast|archives|temp>          # SDKMAN 캐시 정리
         
 

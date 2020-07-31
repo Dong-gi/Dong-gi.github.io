@@ -3,9 +3,6 @@ package io.github.donggi;
 public class HangulUtility {
 
     public static void main(String[] args) {
-        System.out.println(new HangulStringBuilder("때리지 말고 말").roUro().append("해"));
-        // 때리지 말고 말로 해
-
         System.out.println(
                 new HangulStringBuilder()
                 .append("‘-이/-가’와 ‘-을/-를’").unNun()

@@ -17,14 +17,14 @@ include ./source/skeleton.jade
             td: +asA('/posts/project/wpf_data_tool.html')
             td WPF 데이터 툴 - Microsoft.Office.Interop.Excel, AWS CloudFront API, Google Sheets API 이용
         tr
+            td: +asA('/posts/project/error.html')
+            td 오류 대응 목록
+        tr
             td: +asA('/posts/project/igaworks_push.html')
             td Igaworks 푸시 예약 자동화 - jQuery 이용
         tr
             td: +asA('/posts/single/demo3.html')
             td 로마숫자 사칙연산 계산기 - JavaScript 이용
-        tr
-            td: +asA('/posts/project/error.html')
-            td 오류 대응 목록
         tr
             td: +asA('/posts/project/snippets.html')
             td 브라우저 매크로 등 코드 조각
@@ -66,9 +66,8 @@ include ./source/skeleton.jade
             li 전자기기일반 3급
     +hoverTemplate()#template-index-2
         ol
-            li 모바일 게임 Spring Boot, tomcat 서버 유지보수
-            li 게임 이벤트 
-            p
-                +asA('/posts/project/wpf_data_tool.html', '데이터 툴')
-                |  제작 및 공유
-            li 서비스 게임 QA, 라이브 이슈 대응
+            li 모바일 게임 API 서버(tomcat) 유지보수
+            li
+                | 게임 이벤트 데이터 작업을 위한 사내 
+                +asA('/posts/project/wpf_data_tool.html', 'WPF 애플리케이션')
+                |  개발
