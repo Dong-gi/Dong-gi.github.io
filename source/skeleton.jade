@@ -31,7 +31,9 @@ mixin w3button(color)
                 block
 
 mixin codeBtn(path, lan, displayRange, useFilenameAsBlock)
-    +w3button()&attributes({ class: 'btn-code', title: path, displayRange: displayRange, lan: lan || 'text' })&attributes(attributes)
+    - let attr = { class: 'btn-code', title: path, displayRange: displayRange, lan: lan || 'text' }
+    - if (Array.isArray(displayRange)) attr.displayRange = JSON.stringify(displayRange)
+    +w3button()&attributes(attr)&attributes(attributes)
         if useFilenameAsBlock
             = path.split('/').pop()
         else if block

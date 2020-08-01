@@ -460,6 +460,8 @@ function fillCodeDiv(div, lan, text, displayRange) {
 
         let ol = document.createElement('ol')
         displayRange = JSON.parse(displayRange || '[1, 100000000]') || [1, 100000000]
+        if (displayRange.length % 2 == 1)
+            displayRange.push(100000000)
         displayRange = displayRange.reverse()
 
         while (displayRange.length > 0) {
