@@ -1,5 +1,6 @@
 *{font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New}
 div{word-wrap:break-word}
+h1,h2,h3,h4,h5,h6{border-bottom:1px solid #ccc}
 img{max-width:100%}
 caption{padding-top:8px!important;padding-bottom:8px!important}
 hr{border-top:3px solid rgba(0, 0, 0, .1)}

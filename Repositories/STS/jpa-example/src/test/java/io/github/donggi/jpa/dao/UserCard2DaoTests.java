@@ -60,7 +60,7 @@ class UserCard2DaoTests {
 
     @Test
     @Order(1002)
-    void oneToOneTest1_select() {
+    void oneToOneTest2_select() {
         var userCard = userCard2Dao.findById(userCardId).get();
         assertTrue(userCard.getOwner().getNickname().equals("OneToOne2_update"));
         

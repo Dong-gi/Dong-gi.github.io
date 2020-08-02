@@ -73,6 +73,44 @@ include ../../source/skeleton.jade
                     +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserCard2.java', 'java', null, true)
                     +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserWithCard1.java', 'java', null, true)
                     +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/AbstractUser3.java', 'java', null, true)
+            tr
+                td 예시 코드 - @ManyToOne 단방향
+                td
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/resources/ddl/jpa_user_card.sql', 'sql', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/test/java/io/github/donggi/jpa/dao/UserCard3DaoTests.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserCard3.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/User3.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/AbstractUser3.java', 'java', null, true)
+            tr
+                td 예시 코드 - @ManyToOne, @OneToMany 양방향
+                td
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/resources/ddl/jpa_user_card.sql', 'sql', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/test/java/io/github/donggi/jpa/dao/UserCard4DaoTests.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserCard4.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserWithCard2.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/AbstractUser3.java', 'java', null, true)
+            tr
+                td 예시 코드 - @OneToMany 단방향
+                td
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/resources/ddl/jpa_user_card.sql', 'sql', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/test/java/io/github/donggi/jpa/dao/UserCard5DaoTests.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserWithCard3.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserCard5.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/AbstractUser3.java', 'java', null, true)
+            tr
+                td 예시 코드 - @ElementCollection
+                td
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/resources/ddl/jpa_gacha.sql', 'sql', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/test/java/io/github/donggi/jpa/dao/GachaWithOddsDaoTests.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/GachaOdds.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/GachaWithOdds.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/dao/GachaOddsDao.java', 'java', null, true)
+            tr
+                td 예시 코드 - @JoinTable
+                td
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/resources/ddl/jpa_guild.sql', 'sql', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/test/java/io/github/donggi/jpa/dao/GuildWithMemberDaoTests.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/GuildWithMember.java', 'java', null, true)
 
         h2.marker EntityManager
         div
@@ -201,30 +239,63 @@ include ../../source/skeleton.jade
             li Non-null 컬럼만 insert, update 시 이용.
             li 세션 당 최초 1번만 적용된다.
             li 쿼리 실행 후 생략된 컬럼 값이 변경되더라도, 객체에 설정되지 않는다.
-            +codeBtn('/Repositories/STS/jpa-example/src/test/java/io/github/donggi/jpa/dao/UserDaoTests.java', 'java', [18], true)
+            +codeBtn('/Repositories/STS/jpa-example/src/test/java/io/github/donggi/jpa/dao/UserDaoTests.java', 'java', [35,47], true)
             +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/User1.java', 'java', [19], true)
 
-        h2.marker 다른 엔티티 포함
-        ul
-            li
-                | 엔티티 필드 일부를 하나의 @Embeddable value 클래스로 묶을 수 있다. 
-                +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Price.java', 'java', [9], true)
-                +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Item1.java', 'java', [12], true)
-            p Value class : 여타 ValueType과 마찬가지로 값을 이용해 비교하며, 자기 자신을 변경하지 않는다(getter만 제공).
-            li
-                | @AttributeOverride를 이용해 동일 @Embeddable 클래스를 여러 개 이용하는 경우에 대처할 수 있다
-                +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Item2.java', 'java', [15], true)
-            li
-                | @Embeddable 클래스의 필드 일부도 다른 @Embeddable 클래스로 묶을 수 있다.
-                +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/PricePair.java', 'java', [12], true)
-                +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Item3.java', 'java', [12], true)
-            li @Embeddable 클래스로 복합키를 표현할 수 있다
+        h2.marker 다른 엔티티/값 포함
+        div
+            h3.marker Value Class
+            ul
+                li 여타 언어들의 ValueType에 해당하는 클래스
+                p 값을 이용해 다른 인스턴스와 비교하며, 자기 자신을 변경하지 않는다
+                li 값을 변경하는 연산은 새 인스턴스를 반환한다
+                li JPA에서는 @Embeddable 클래스로 Value Class를 정의한다
+            h3.marker 유의사항
+            ul
+                li 엔티티 포함이 많아질수록 코드 결합도가 증가한다
+                li 모든 테이블이 엔티티인 것은 아니다.
+                strong 서로 다른 두 엔티티의 라이프사이클은 독립적이다.
+                li 포함하려는 대상과의 관계가 엔티티:엔티티인지, 엔티티:밸류인지 명확히 파악해야 한다
+                p 엔티티:밸류 관계를 엔티티:엔티티 관계로 사용하면 불필요한 추가 작업이 발생할 수 있다
+                li @OneToMany 매핑을 사용하려는 경우, 정말로 모든 연관 엔티티가 필요한 지 고려할 것
+                li @ManyToMany 매핑을 사용하려는 경우, JoinTable을 엔티티로 사용하는 게 낫지 않은 지 고려
+            div
+                h4 Hibernate 컬렉션 자료형
+                table
+                    +ths('사용 타입', 'Hibernate가 실제로 인스턴스화하는 타입')
+                    +tds('List', 'ArrayList')
+                    +tds('Set', 'HashSet')
+                    +tds('Map', 'HashMap')
+                    +tds('SortedSet', 'TreeSet')
+                    +tds('SortedMap', 'TreeMap')
+                h4 Sorted 자료형의 정렬자 지정
+                ul
+                    li 요소가 Comparable하면 @org.hibernate.annotations.SortNatural 사용.
+                    li 그렇지 않으면 @org.hibernate.annotations.SortComparator로 Comparator 지정
+                h4 @org.hibernate.annotations.OrderBy
+                p JPA의 것과 다르게 JPQL order by 절을 이용해 DBMS가 정렬하도록 한다
+                +asCode('java') @OrderBy("score desc")
+            h3.marker @Embedded로 @Embeddable 타입 포함
+            ul
+                li
+                    | 엔티티 필드 일부를 하나의 @Embeddable 클래스로 묶을 수 있다. 
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Price.java', 'java', [9], true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Item1.java', 'java', [12], true)
+                li
+                    | @AttributeOverride를 이용해 동일 @Embeddable 클래스를 여러 개 이용하는 경우에 대처할 수 있다
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Item2.java', 'java', [15], true)
+                li
+                    | @Embeddable 클래스의 필드 일부도 다른 @Embeddable 클래스로 묶을 수 있다.
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/PricePair.java', 'java', [12], true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Item3.java', 'java', [12], true)
+            h3.marker @Embeddable 클래스로 복합키 정의
             p
                 | 복합키 클래스는 Serializable 인터페이스를 구현하고, equals(), hashCode()를 적절히 재정의해야 한다. 
                 +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/ItemInfo3Key.java', 'java', [12], true)
                 +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/ItemInfo3.java', 'java', [10], true)
-            li @SecondaryTable을 이용해 다른 테이블(secondary table) 컬럼을 엔티티(primary table)에 포함할 수 있다
+            h3.marker @SecondaryTable 포함
             ul
+                li 포함하는 대상은 secondary table, 포함하는 쪽은 primary table
                 li
                     | Default로 primary table의 기본키를 그대로 이용하여 조회한다 
                     +codeBtn('/Repositories/STS/jpa-example/src/main/resources/ddl/jpa_item.sql', 'sql', null, true)
@@ -236,32 +307,70 @@ include ../../source/skeleton.jade
                     +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/ItemInfo.java', 'java', [9], true)
                     +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Item5.java', 'java', [18], true)
                 li Select에 이용되는 쿼리는 left outer join이다.
-            li @OneToOne으로 다른 엔티티를 1개 포함할 수 있다
-            ul
-                li
-                    | 1:1 단방향 매핑 
-                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserCard1.java', 'java', [13], true)
+            h3.marker 엔티티 사이의 1:1, 1:N, N:1, M:N 매핑
+            div
+                h4.marker @OneToOne
                 ul
-                    li @JoinColumn으로 기본키를 설정한다. @SecondaryTable과는 다르게 조인 컬럼 자체를 영속 필드로 가질 수는 없고, 대신 매핑된 엔티티 변경에 따라 자동으로 조인 컬럼 값을 변경한다.
-                    li 두 테이블의 기본키가 동일한 경우 @JoinColumn 대신 @PrimaryKeyJoinColumn을 이용할 수 있다
-                    p 이 경우 신규 엔티티 삽입을 위해 식별자가 필요하므로, 참조하는 테이블의 신규 엔티티가 먼저 영속 컨텍스트에 등록되어야 한다
-                li 쿼리 지연 실행
+                    li
+                        | 1→1 단방향 매핑 
+                        +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserCard1.java', 'java', [13], true)
+                    ul
+                        li @JoinColumn으로 기본키를 설정한다. @SecondaryTable과는 다르게 조인 컬럼 자체를 영속 필드로 가질 수는 없고, 대신 매핑된 엔티티 변경에 따라 자동으로 조인 컬럼 값을 변경한다.
+                        li 두 테이블의 기본키가 동일한 경우 @JoinColumn 대신 @PrimaryKeyJoinColumn을 이용할 수 있다
+                        p 이 경우 신규 엔티티 삽입을 위해 식별자가 필요하므로, 참조하는 테이블의 신규 엔티티가 먼저 영속 컨텍스트에 등록되어야 한다
+                    li
+                        | 1→1 단방향 매핑을 그대로 양방향 매핑으로 이용 
+                        +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserCard2.java', 'java', [13], true)
+                        +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserWithCard1.java', 'java', [13], true)
+                    +asCode('java') @OneToOne(mappedBy = "fieldName")
+                h4.marker @ManyToOne, @OneToMany
+                ul
+                    li
+                        | N→1 단방향 매핑 
+                        +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserCard3.java', 'java', [13], true)
+                    p @OneToOne 단방향 매핑과 다를 게 없다. 다만 N:1 관계이므로 두 테이블의 기본키가 동일할 수는 없다.
+                    li
+                        | N→1 단방향 매핑을 그대로 양방향 매핑으로 이용 
+                        +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserCard4.java', 'java', [13], true)
+                        +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserWithCard2.java', 'java', [15], true)
+                    +asCode('java') @OneToMany(mappedBy = "fieldName")
+                    li
+                        | 1→N 단방향 매핑 
+                        +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserWithCard3.java', 'java', [16], true)
+                h4.marker @JoinTable
+                ul
+                    li JoinTable? : 검색에 필요한 두 테이블의 키 컬럼만 모은 테이블
+                    li
+                        | 1→N 단방향 매핑 예 
+                        +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/GuildWithMember.java', 'java', null, true)
+                    li @OneToMany 대신 @ManyToMany 이용 가능
+                    li mappedBy를 이용해 양방향 매핑 가능
+                h4.marker fetch 속성 - 쿼리 지연 실행
                 p Default로 처음부터 연관 테이블을 함께 조회(left outer join)한다. fetch 속성으로 변경할 수 있다.
                 +asCode('java') @OneToOne(fetch = FetchType.LAZY)
-                li
-                    | 1:1 단방향 매핑을 그대로 양방향 매핑으로 이용 
-                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserCard2.java', 'java', [13], true)
-                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserWithCard1.java', 'java', [13], true)
-                +asCode('java') @OneToOne(mappedBy = "fieldName")
+                h4.marker cascade 속성 - 영속성 전이 규칙
+                ul
+                    li 기본값은 {}으로 아무런 추가 작업이 없다
+                    li CascadeType.PERSIST : EntityManager::persist 시 연관 엔티티도 추가
+                    li CascadeType.REMOVE : EntityManager::remove 시 연관 엔티티도 삭제
+                    li CascadeType.DETACH : EntityManager::detach 시 연관 엔티티도 분리
+                    li CascadeType.REFRESH : EntityManager::refresh 시 연관 엔티티도 갱신
+                    li CascadeType.MERGE : EntityManager::merge 시 연관 엔티티도 추가
+                    li CascadeType.ALL
 
-        h2.marker 하이버네이트 관련 참고사항
-        ul
-            li 지연 로딩된 프록시 인스턴스의 실제 클래스 반환
-            +asCode('java') HibernateProxyHelper.getClassWithoutInitializingProxy(proxy)
- 
+            h3.marker @ElementCollection으로 프로젝션
+            ul
+                li
+                    | Embeddable 클래스도 가져올 수 있다 
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/GachaWithOdds.java', 'java', [18], true)
+                li
+                    | 당연히 JPQL로도 가능하다 
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/dao/GachaOddsDao.java', 'java', [12], true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/GachaOdds.java', 'java', [12], true)
+
         h2.marker 트랜잭션
-        ul
-            li RESOURCE_LOCAL 타입 트랜잭션
+        div
+            h3.marker RESOURCE_LOCAL 타입 트랜잭션
             ul
                 li JPA의 EntityTransaction을 이용한 트랜잭션 처리
                 li Spring Data JPA는 공유 EntityManager 인스턴스로 직접 트랜잭션 관리하는 것을 허용하지 않는다.
@@ -275,7 +384,7 @@ include ../../source/skeleton.jade
                         // java.lang.IllegalStateException: Not allowed to create transaction on shared EntityManager - use Spring transactions or EJB CMT instead
                         manager.getTransaction().commit();
                     }
-            li JTA(Java Transaction API) 타입 트랜잭션
+            h3.marker JTA(Java Transaction API) 타입 트랜잭션
             ul
                 li 직접 트랜잭션을 관리하는 경우
                 +asCode('java').
@@ -307,3 +416,117 @@ include ../../source/skeleton.jade
                     void updateUser() {
                         assertTrue(manager.isJoinedToTransaction());
                     }
+
+        h2.marker 하이버네이트 관련 추가 기록
+        ul
+            li 지연 로딩된 프록시 인스턴스의 실제 클래스 반환
+            +asCode('java') HibernateProxyHelper.getClassWithoutInitializingProxy(proxy)
+            li 쿼리 생성 설정
+            p DBMS 버전에 맞춰 설정 필요
+            +asCode('ini') spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQL10Dialect
+            li 로깅 관련 설정
+            +asCode('ini').
+                spring.jpa.properties.hibernate.show_sql=true           # 실행 sql 출력
+                spring.jpa.properties.hibernate.format_sql=true         # sql 보기 좋게 출력
+                spring.jpa.properties.hibernate.use_sql_comments=true   # sql 주석 출력
+                logging.level.org.hibernate.type.descriptor.sql=trace   # 컬럼 값 출력
+
+    h1.marker JPA Query
+    div
+        h2.marker JPQL; JPA Query Language
+        ul
+            li SQL과 유사한 쿼리 언어로, 테이블-컬럼 대신 엔티티-속성 이름을 이용한다
+            li 엔티티 이름 ::= @Entity 적용한 클래스 이름. name 속성을 이용한 경우 해당 값
+            +asCode('java').
+                query = entityManager.createQuery(query[, ResultClass.class]);
+                result = query.getResultList();
+                result = query.getSingleResult(); // 결과가 1개임이 보장되는 경우
+        div
+            h3.marker SELECT
+            +asCode('sql').
+                SELECT ... FROM ...
+                [WHERE ...]
+                [GROUP BY ... [HAVING ...]]
+                [ORDER BY ...]
+            div
+                h4 select 절
+                ul
+                    li select 절은 반환할 매핑에 대한 완전한 정보를 가져야 한다. 따라서 "select *"은 유효한 문법이 아니다.
+                +asCode('sql').
+                    select id, name      from Card
+                    select c.id, c.name  from Card as c
+                    select c.id, c.name  from Card c
+                    select c             from Card c
+                    
+                    select distinct name from Card
+                    
+                    select new io.github.donggi.jpa.entity.GachaOdds$Minimal(id.seqNo, objectId, odd) from jpa_gacha_odds
+                h4 from 절(조인)
+                ul
+                    li where 절에서 엔티티의 필드가 다른 엔티티를 참조하는 경우, 자동으로 join된다
+                    li join 명시
+                    +asCode('sql').
+                        from Entity1 e1 join Entity2 e2       -- == INNER JOIN
+                        from Entity1 e1 inner join Entity2 e2
+
+                        from Entity1 e1 left join Entity2 e2  -- == LEFT OUTER JOIN
+                        from Entity1 e1 left outer join Entity2 e2
+                    li join fetch
+                    p Entity의 field가 다른 엔티티의 참조일 때, 아래와 같이 실행하면 field까지 모두 가져와 설정한다.
+                    +asCode('sql') select e from Entity e [left [outer] | inner] join fetch e.field
+                h4 where 절
+                +asCode('sql').
+                    where x.field = 0
+                    where x.field &lt;> 0
+                    where x.field between 0 and 10
+                    where x.field in (0, 1, 2)
+                    where x.field not in (0, 1, 2)
+                    where x.field like '%ooo%'
+                    where x.field not like '%ooo%'
+                    where x.field is null
+                    where x.field is not null
+
+                    where x.collection is empty
+                    where x.collection is not empty
+                    where :obj member of x.collection
+                    where :obj not member of x.collection
+                    
+                    where exists(select ...)
+                    where 100 > all(select ...)
+                    where 100 > any(select ...)
+                    
+                    where (condition1 and condition2) or condition3
+                +asCode('java').
+                    query = entityManager.createQuery("... where x.field = ?");
+                    query.setParameter(0, obj);
+
+                    query = entityManager.createQuery("... where x.field = :obj");
+                    query.setParameter("obj", obj);
+
+                    @Query("select new io.github.donggi.jpa.entity.GachaOdds$Minimal(id.seqNo, objectId, odd) from jpa_gacha_odds where id.gachaId = :gachaId")
+                    public List&lt;GachaOdds.Minimal> findMinimalOdds(@Param("gachaId") Long gachaId);
+                h4 group by 절
+                div
+                    h5 집계함수
+                    table
+                        +ths('함수', '반환 타입')
+                        +tds('count', 'Long')
+                        +tds('max, min', '대상 타입')
+                        +tds('avg', 'Double')
+                        +tds('sum', 'Long, Double, BigInteger, BigDecimal')
+                h4 order by 절
+                ul
+                    li select 절에 정의한 매핑에 포함되거나, 그로부터 직접 도달할 수 있는 필드만 이용 가능하다.
+                    li 또, 정렬 가능하기 위해 필드의 타입은 Comparable해야 한다
+                +asCode('sql').
+                    order by x.field
+                    order by x.field1 desc, x.field2
+                h4 페이징
+                +asCode('java').
+                    query = entityManager.createQuery(...);
+                    query.setFirstResult(10); // 10번째부터
+                    query.setMaxResults(3);   // 최대 3개 획득
+
+                    @Query("...")
+                    public ReturnType methodName(..., Pageable pageable);
+        h2.marker Criteria
