@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
-import io.github.donggi.jpa.entity.GachaOdds;
-import io.github.donggi.jpa.entity.GachaWithOdds;
 import io.github.donggi.jpa.entity.GuildWithMember;
 import io.github.donggi.jpa.entity.User2;
 
