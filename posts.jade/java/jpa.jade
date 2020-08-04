@@ -111,6 +111,30 @@ include ../../source/skeleton.jade
                     +codeBtn('/Repositories/STS/jpa-example/src/main/resources/ddl/jpa_guild.sql', 'sql', null, true)
                     +codeBtn('/Repositories/STS/jpa-example/src/test/java/io/github/donggi/jpa/dao/GuildWithMemberDaoTests.java', 'java', null, true)
                     +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/GuildWithMember.java', 'java', null, true)
+            tr
+                td 예시 코드 - InheritanceType.SINGLE_TABLE
+                td
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/resources/ddl/jpa_voice.sql', 'sql', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/test/java/io/github/donggi/jpa/dao/Voice1DaoTests.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Voice1.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithCue1.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithActor1.java', 'java', null, true)
+            tr
+                td 예시 코드 - InheritanceType.JOINED
+                td
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/resources/ddl/jpa_voice.sql', 'sql', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/test/java/io/github/donggi/jpa/dao/Voice2DaoTests.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Voice2.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithCue2.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithActor2.java', 'java', null, true)
+            tr
+                td 예시 코드 - InheritanceType.TABLE_PER_CLASS
+                td
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/resources/ddl/jpa_voice.sql', 'sql', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/test/java/io/github/donggi/jpa/dao/Voice3DaoTests.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Voice3.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithCue3.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithActor3.java', 'java', null, true)
 
         h2.marker EntityManager
         div
@@ -368,10 +392,34 @@ include ../../source/skeleton.jade
                     +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/dao/GachaOddsDao.java', 'java', [12], true)
                     +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/GachaOdds.java', 'java', [12], true)
 
-        h2.marker @Inheritance - 클래스 상속과 테이블 매핑
+        h2.marker 클래스 상속과 테이블 매핑
         div
-            h3.marker InheritanceType.SINGLE_TABLE - 클래스 계층 구조가 한 테이블의 일부분씩 매핑
-            
+            h3.marker InheritanceType.SINGLE_TABLE
+            p
+                | 클래스 계층 구조가 하나의 테이블을 공유하고, 각각 일부분씩 매핑. 구분을 위한 컬럼(@DiscriminatorColumn) 존재 
+                +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Voice1.java', 'java', [17], true)
+                +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithCue1.java', 'java', [10], true)
+                +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithActor1.java', 'java', [10], true)
+                +codeBtn('/Repositories/STS/jpa-example/src/main/resources/ddl/jpa_voice.sql', 'sql', null, true)
+            h3.marker InheritanceType.JOINED
+            p
+                | 각 클래스는 키를 공유하는 별개의 테이블에 대응 
+                +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Voice2.java', 'java', [14], true)
+                +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithCue2.java', 'java', [11], true)
+                +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithActor2.java', 'java', [11], true)
+                +codeBtn('/Repositories/STS/jpa-example/src/main/resources/ddl/jpa_voice.sql', 'sql', null, true)
+            h3.marker InheritanceType.TABLE_PER_CLASS
+            p
+                | 각 클래스는 별개 테이블에 대응 → 키 관리에 유의 
+                +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Voice3.java', 'java', [14], true)
+                +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithCue3.java', 'java', [11], true)
+                +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithActor3.java', 'java', [11], true)
+                +codeBtn('/Repositories/STS/jpa-example/src/main/resources/ddl/jpa_voice.sql', 'sql', null, true)
+            h3.marker @MappedSuperclass - 공유 컬럼 정의
+            p
+                | add_date, upd_date 같은 일반적인 공유 컬럼을 한 곳에 정의할 수 있다 
+                +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/User3.java', 'java', [6], true)
+                +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/AbstractUser3.java', 'java', [17], true)
 
         h2.marker 트랜잭션
         div
@@ -420,6 +468,29 @@ include ../../source/skeleton.jade
                     @Rollback(false) // 테스트 자동 롤백하지 않도록 설정
                     void updateUser() {
                         assertTrue(manager.isJoinedToTransaction());
+                    }
+            h3.marker 잠금
+            div
+                h4 선점 잠금; Pessimistic lock; select for update
+                p 트랜잭션 내에서, 차후 수정을 위해 미리 행을 잠근다.
+                +asCode('java').
+                    // 즉시
+                    entityManager.find(..., LockModeType.PESSIMISTIC_WRITE);
+                    // timeout
+                    hints = new HashMap&lt;String, Object>();
+                    hints.put("javax.persistence.lock.timeout", 1234);
+                    entityManager.find(..., LockModeType.PESSIMISTIC_WRITE, hints);
+                    // JPQL
+                    query = entityManager.createQuery(...);
+                    query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
+                h4 비선점 잠금; Optimistic lock
+                p 테이블에 버전 컬럼(정수, timestamp)이 존재하여, 순차적인 update만 허용하도록 강제
+                +asCode('java').
+                    @Entity
+                    public class Something {
+                        // ...
+                        @Version
+                        private Integer ver;
                     }
 
         h2.marker 하이버네이트 관련 추가 기록
@@ -620,7 +691,7 @@ include ../../source/skeleton.jade
                     li CURRENT_DATE
                     li CURRENT_TIME
                     li CURRENT_TIMESTAMP
-                    ↓ Hibernate
+                    | ↓ Hibernate
                     li YEAR(), MONTH(), DAY(), HOUR(), MINUTE(), SECOND()
                 h4 컬렉션
                 ul
@@ -714,6 +785,9 @@ include ../../source/skeleton.jade
             +asCode('java', 'Criteria 사용').
                 var team = cQuery.from(Team.class);
                 builder.between(team.get(Team_.id), 100L, 1000L);
+            div
+                h4 메타 모델 자동 생성
+                p "jpa model generator" 검색하면 여러 외부 라이브러리 또는 IDE 애드온이 검색되니 참고
 
     h1.marker Spring Data JPA 사용
     div

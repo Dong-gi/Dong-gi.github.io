@@ -378,6 +378,10 @@ function updateMarkerList() {
             if (headerTags.has(target.tagName))
                 target.innerHTML = `${prefix}${target.innerHTML}`
         }
+        for (let h of document.querySelectorAll('h1,h2,h3,h4,h5,h6')) {
+            if (!/^\d+\./.test(h.innerText))
+                h.classList.add('w3-margin-left')
+        }
     })
 }
 

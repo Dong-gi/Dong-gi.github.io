@@ -207,6 +207,8 @@ include ../../source/skeleton.jade
         li G : graph, V : vertex, E : edge
         li 모든 간선의 가중치가 동일한 그래프, 또는 사이클이 없는 그래프(트리)의 탐색은 너비 우선 탐색, 깊이 우선 탐색 2개로 적절히 해결된다. 동일한 정점을 2번 조사할 필요도 없다
     div
+        h2.marker 양방향 탐색; Bidirectional search
+        p 시작점과 종점 모두를 기준으로 한 너비우선 탐색 동시 실행
         h2.marker 최단경로 찾기 : 다익스트라
         ol
             li 시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대. 간선의 가중치에 음수가 있는 경우 적용 불가
