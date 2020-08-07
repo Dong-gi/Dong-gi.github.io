@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('Git', 'Git', 'Git 정리')
-    h1.marker Git; https://git-scm.com/book/ko
+    h1 Git; https://git-scm.com/book/ko
     ul
         li Git은 각 버전 사이의 변경 사항을 기록하지 않는다.
         li.marker 커밋
@@ -12,19 +12,19 @@ include ../../source/skeleton.jade
         li HEAD는 현재 작업중인 브랜치를 가리키는 포인터(checkout으로 변경)
         li origin/ : 서버 브랜치
 
-    h1.marker Git Server
+    h1 Git Server
     ul
         li 가능 프로토콜 : Local, SSH, Git, HTTP
         li Git 호스팅 업체 : https://git.wiki.kernel.org/index.php/GitHosting
 
-    h1.marker Submodule
+    h1 Submodule
     ul
         li 관리하는 디렉터리 자체가 다른 git 저장소일 수 있다
         +asCode('shell').
             $ git submodule init
             $ git submodule update
 
-    h1.marker Git Hook
+    h1 Git Hook
     ul
         li 특정 이벤트 발생 시 실행될 스크립트들을 .git/hooks에 저장한다
         p 해당 디렉터리에는 예제 스크립트들이 존재한다

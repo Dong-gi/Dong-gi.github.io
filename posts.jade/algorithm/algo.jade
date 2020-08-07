@@ -1,7 +1,7 @@
 include ../../source/skeleton.jade
 
 +post('알고리즘 일반', '알고리즘, 자료구조', '빅-오 표기법, 자료구조, 정렬-탐색 등의 알고리즘 일반 사항들을 정리', true)
-    h1.marker 알고리즘의 평가
+    h1 알고리즘의 평가
     ol
         li 시간복잡도 : 입력의 크기에 따른 소요 시간 평가
         li 공간복잡도 : 입력의 크기에 따른 필요 메모리 평가
@@ -12,7 +12,7 @@ include ../../source/skeleton.jade
         li 세타 표기법
         p 식[\Theta(g(n)) = O(g(n)) \cap \Omega(g(n))]식
 
-    h1.marker 자료구조 : 트리
+    h1 자료구조 : 트리
     ol
         li Complete Binary Tree : 모든 leaf node의 레벨이 h 또는 h-1인 이진 트리(h는 트리의 height)
         li 이진 트리의 탐색 : (왼쪽 노드 방문, 오른쪽 노드 방문, 현재 노드 처리)의 순열 == 3!
@@ -21,7 +21,7 @@ include ../../source/skeleton.jade
         li 힙 : 상하 노드 사이에 분명한 대소관계가 존재. 우선순위 큐의 구현에 적합
 
     div
-        h2.marker AVL 트리의 회전
+        h2 AVL 트리의 회전
         ol
             li 트리에 대한 삽입/삭제 연산에 의해 좌우 서브 트리 높이 차이가 2가 될 수 있다.
             li 인접한 3개 노드의 위치 변경(회전)을 통해 이를 해소할 수 있다.
@@ -202,14 +202,14 @@ include ../../source/skeleton.jade
                             right.rotate_ll()
                             rotate_rr()
 
-    h1.marker 자료구조 : 그래프
+    h1 자료구조 : 그래프
     ul
         li G : graph, V : vertex, E : edge
         li 모든 간선의 가중치가 동일한 그래프, 또는 사이클이 없는 그래프(트리)의 탐색은 너비 우선 탐색, 깊이 우선 탐색 2개로 적절히 해결된다. 동일한 정점을 2번 조사할 필요도 없다
     div
-        h2.marker 양방향 탐색; Bidirectional search
+        h2 양방향 탐색; Bidirectional search
         p 시작점과 종점 모두를 기준으로 한 너비우선 탐색 동시 실행
-        h2.marker 최단경로 찾기 : 다익스트라
+        h2 최단경로 찾기 : 다익스트라
         ol
             li 시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대. 간선의 가중치에 음수가 있는 경우 적용 불가
             li 정의
@@ -224,12 +224,12 @@ include ../../source/skeleton.jade
                 li P에서 간선 하나만 건너 도달할 수 있는 모든 정점 P'에 대해, W(P') = min(W(P'), W(P) + W(P, P'))를 수행하고, W(P')값이 변경된 경우 P'을 Working set에 추가한다.
                 li 만약 P'이 목표 지점이라면, 최단 경로를 찾았으므로 추가 작업을 중지한다.
 
-        h2.marker 최단경로 찾기 : A*
+        h2 최단경로 찾기 : A*
         ul
             li 도착점의 추정 가중치 0부터 시작하여, 도착점으로부터 먼 정점일수록 높아지는 추정 가중치를 갖고 시작한다.
             li 다익스트라 알고리즘을 사용하되, Working set에서 작업 대상이 되는 원소를 찾을 때, 추정 가중치를 합하여 구한다는 게 차이점.
 
-        h2.marker 최단경로 찾기 : 벨만-포드
+        h2 최단경로 찾기 : 벨만-포드
         ul
             li 음수 가중치의 간선이 존재하는 경우, Working set은 정점이 아닌 간선을 대상으로 하고, 매 업데이트마다 모든 간선을 검사한다
             li 다익스트라 알고리즘과 마찬가지로 시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대
@@ -237,17 +237,17 @@ include ../../source/skeleton.jade
             p 그래프 모든 간선 P→P'에 대해, W(P') = min(W(P'), W(P) + W(P, P'))
             li |V|-1번의 업데이트로 모든 정점까지의 모든 최단경로가 구해지며, |V|번째의 업데이트로 갱신이 일어난 경우는 음수 가중치의 사이클이 존재하는 것이므로 최단 경로는 존재하지 않는다
 
-        h2.marker 무방향 그래프의 최소신장 트리 : 크루스칼
+        h2 무방향 그래프의 최소신장 트리 : 크루스칼
         ol
             li 최초 |V|개의 집합을 생성하고, 그래프 각 정점이 하나씩 포함된다
             li 집합이 하나만 남을 때까지 다음을 반복한다
             li 최소 가중치 간선을 선택 → 두 정점이 서로 다른 집합에 포함된 경우 → 두 집합을 합치고 간선은 결과에 추가
             p 간선의 두 정점이 같은 집합에 포함된 경우 간선은 버려진다
 
-    h1.marker 정렬
+    h1 정렬
     p Stability : 정렬 키가 동일한 두 요소의 순서가 정렬 후에도 유지되는 경우
     div
-        h2.marker Bubble Sort
+        h2 Bubble Sort
         +asCode('python').
             is_go_next = True
             while is_go_next:
@@ -256,12 +256,12 @@ include ../../source/skeleton.jade
                     if l[i] > l[i+1]:
                         l[i], l[i+1] = l[i+1], l[i]
                         is_go_next = True
-        h2.marker Selection Sort
+        h2 Selection Sort
         +asCode('python').
             for i in range(0, len(l)-1):
                 x = l.index(min(l[i:]))
                 l[i], l[x] = l[x], l[i]
-        h2.marker Insertion Sort
+        h2 Insertion Sort
         +asCode('python').
             for i in range(1, len(l)):
                 x = l.pop(i)
@@ -271,11 +271,11 @@ include ../../source/skeleton.jade
                         break
                 else:
                 l.insert(i, x)
-        h2.marker Merge Sort
+        h2 Merge Sort
         p 버블 소트 1단계 실행 → 부분적으로 정렬된 리스트들을 마지막 1개가 될 때까지 병합
-        h2.marker Heap Sort
+        h2 Heap Sort
         p 힙에 모두 넣고 순서대로 빼내면 정렬된다
-        h2.marker Quick Sort
+        h2 Quick Sort
         p 크기가 3 이상인 부분 리스트에 대하여, pivot을 하나 선택하여 [&lt;pivot], [=pivot], [&gt;pivot]으로 분할하는 것을 반복
         +asCode('python', '제자리 정렬 퀵소트').
             def biggest_small_index(list, min, right, pivot):
@@ -326,7 +326,7 @@ include ../../source/skeleton.jade
                 quick_sort(l1)
                 l2.sort()
                 assert l1 == l2
-        h2.marker Counting Sort
+        h2 Counting Sort
         +asCode('python').
             d = dict()
             for x in l:
@@ -335,14 +335,14 @@ include ../../source/skeleton.jade
                 else:
                     d[x] = 1
 
-    h1.marker 동기화
+    h1 동기화
     div
-        h2.marker Busy waiting
+        h2 Busy waiting
         ul
             li 다른 스레드를 대기하는 스레드가 여전히 실행 중인 경우
             p -> 불필요한 CPU 점유 발생, 동기화 기법으로 해소
             li 동기화 기법을 사용하는 것보다 그냥 대기하는 것이 짧다는 게 확실하다면 그냥 대기하면 된다
-        h2.marker Monitor
+        h2 Monitor
         p 공유 자원에 대한 배타적인 접근을 지원하는 기법
         ol
             li 자원을 요구하는 스레드는 모니터에 진입 -> 입장 큐에 등록
@@ -350,7 +350,7 @@ include ../../source/skeleton.jade
             li 스레드 종료 or 자원 사용 완료한 경우 -> 다른 스레드 실행
             li 일시 정지한 경우
             p 현재 스레드를 대기 큐 또는 입장 큐에 재등록 -> 다른 스레드 실행
-        h2.marker Semaphore
+        h2 Semaphore
         p 공유 자원에 대한 배타적인 접근을 지원하는 기법
         ol
             li 동일 자원에 대해 최대 n개의 접근이 가능
@@ -359,10 +359,10 @@ include ../../source/skeleton.jade
             li 스레드가 획득한 권한을 반환(release)
             li Monitor와 다르게, 권한 반환의 책임이 스레드에 있다
 
-    h1.marker DP; Dynamic Programming
+    h1 DP; Dynamic Programming
     p 동적계획법 := 점화식(상향식)/재귀(하향식) + 캐싱
 
-    h1.marker P-NP
+    h1 P-NP
     ol
         li 튜링 기계(TM) : 긴 테이프에 쓰여있는 여러 가지 기호들을 일정한 규칙에 따라 바꾸는 기계
         p 무한한 저장공간은 무한한 길이의 테이프로 나타나는데 이 테이프는 하나의 기호를 인쇄할 수 있는 크기의 정사각형들로 쪼개져있다. 언제든지 기계속에는 하나의 기호가 들어가있고 이를 "읽힌 기호"라고 한다. 이 기계는 "읽힌 기호"를 바꿀 수 있는데 그 기계의 행동은 오직 읽힌 기호만이 결정한다. 테이프는 앞뒤로 움직일 수 있어서 모든 기호들은 적어도 한번씩은 기계에게 읽힐 것이다.

@@ -815,7 +815,7 @@ class SFUtil {
      * @returns {Function} Debounced function
      */
     static debounce(f, t, opt) {
-        opt = opt || {}
+        opt = opt || {lastCall: Date.now()}
         return function (args) {
             let previousCall = opt.lastCall
             opt.lastCall = Date.now()
@@ -871,12 +871,13 @@ class SFUtil {
      * @returns {Function} Throttled function
      */
     static throttle(f, t, opt) {
-        opt = opt || {}
+        opt = opt || {lastCall: Date.now()}
         return function (args) {
             let previousCall = opt.lastCall
-            opt.lastCall = Date.now()
-            if (!previousCall || (!!opt && !!opt.fast) || (opt.lastCall - previousCall) > t) {
+            let now = Date.now()
+            if (!previousCall || (!!opt && !!opt.fast) || (now - previousCall) > t) {
                 f(args)
+                opt.lastCall = now
             }
         }
     }
@@ -1137,6 +1138,14 @@ td.sorting-table-head-white:after,th.sorting-table-head-white:after{content:attr
         document.body.append(a)
         a.click()
         a.remove()
+    }
+    static isElementInViewport (element) {
+        element = element.$ || element
+        let rect = element.getBoundingClientRect()
+        return  rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
     }
     /**
      * Open a link via anchor tag with specific url and target

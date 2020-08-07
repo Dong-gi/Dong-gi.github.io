@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('JVM 옵션 및 성능 관련사항', 'JVM, Java Performance', 'JVM 옵션 및 성능 관련사항 정리')
-    h1.marker JVM 파라미터
+    h1 JVM 파라미터
     ol
         li Boolean flag
         +asCode('shell').
@@ -10,7 +10,7 @@ include ../../source/skeleton.jade
         li Value flag
         +asCode('shell') -XX:FlagName=value
     div
-        h2.marker 주요 플래그
+        h2 주요 플래그
         ul
             li 최대 코드 캐시 크기 : 기본값 32 or 48M
             +asCode('shell') -XX:ReservedCodeCacheSize=N
@@ -49,7 +49,7 @@ include ../../source/skeleton.jade
             li GC 병렬 스레드 개수
             +asCode('shell') -XX:ParallelGCThreads=N
     
-    h1.marker Java 옵션(JAVA_OPTS)
+    h1 Java 옵션(JAVA_OPTS)
     ol
         li user.timezone 프로퍼티 기본값 지정
         +asCode('shell') $ java -Duser.timezone=Asia/Seoul
@@ -64,7 +64,7 @@ include ../../source/skeleton.jade
                 # server  : 서버로 작동할지 여부
                 # suspend : 디버거 부착까지 기다릴지 여부
     
-    h1.marker jcmd Since Java 8
+    h1 jcmd Since Java 8
     p JDK 기본제공 분석 도구
     ol
         li 자바 프로세스 목록
@@ -80,7 +80,7 @@ include ../../source/skeleton.jade
         li 쓰레드 덤프
         +asCode('shell') $ jcmd {pid} Thread.print
     
-    h1.marker jhsdb Since Java 9
+    h1 jhsdb Since Java 9
     p
         | JDK 기본제공 디버거; Java Hotspot Debugger
         +asA('https://docs.oracle.com/javase/9/tools/jhsdb.htm')
@@ -97,7 +97,7 @@ include ../../source/skeleton.jade
             # debugd 리모트 디버그 서버 시작
             $ jhsdb debugd [options] pid [server-id]|[option] executable core [server-id]
     
-    h1.marker 기타
+    h1 기타
     ul
         li
             | OpenJDK Tool 

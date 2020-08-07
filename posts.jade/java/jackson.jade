@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('Jackson', 'Jackson', 'Jackson 정리')
-    h1.marker 자료
+    h1 자료
     ol
         li: +asA('https://github.com/FasterXML/jackson-databind')
         li: +asA('https://github.com/FasterXML/jackson-docs')
@@ -8,7 +8,7 @@ include ../../source/skeleton.jade
         li: +asA('http://www.javadoc.io/doc/com.fasterxml.jackson.core/jackson-databind')
         li: +asA('https://www.baeldung.com/jackson')
 
-    h1.marker JSON
+    h1 JSON
     ul
         li
             | public 필드 또는 public setter가 존재하는 POJO
@@ -43,7 +43,7 @@ include ../../source/skeleton.jade
             li Non-ASCII 이스케이프 : JsonMapper.Builder#configure(JsonWriteFeature.ESCAPE_NON_ASCII, true)
             li 애너테이션 기반 설정 : @JsonProperty("newName"), @JsonIgnoreProperties({ "foo", "bar" }), @JsonCreator, @JsonSetter, @JsonGetter, ...
 
-    h1.marker YAML, CSV, XML...
+    h1 YAML, CSV, XML...
     ol
         li: +asA('https://github.com/FasterXML/jackson-dataformats-binary')
         li compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.10.1'
@@ -54,7 +54,7 @@ include ../../source/skeleton.jade
         li compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-properties', version: '2.10.1'
         li compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-avro', version: '2.10.1'
 
-    h1.marker Android ProGuard 관련 설정
+    h1 Android ProGuard 관련 설정
     +asA('https://github.com/FasterXML/jackson-docs/wiki/JacksonOnAndroid')
     +asCode().
         # Proguard configuration for Jackson 2.x

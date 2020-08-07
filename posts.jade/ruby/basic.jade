@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('Ruby Basic', 'Ruby, Tutorial', '루비 기초 정리')
-    h1.marker 개요
+    h1 개요
     ul
         li 오픈소스, 객체지향, 스크립트 프로그래밍 언어의 일종
         li: +asA('https://www.ruby-lang.org/', 'www.ruby-lang.org')
@@ -53,9 +53,9 @@ include ../../source/skeleton.jade
                 td: +asCode('ruby') my_variable = 1
                 td: +asCode('java') var myVariable = 1;
 
-    h1.marker 문법
+    h1 문법
     div
-        h2.marker 스코프
+        h2 스코프
         ul
             li Class level
             li Module level
@@ -63,7 +63,7 @@ include ../../source/skeleton.jade
             li Block level
             li Top level(앞의 것들 외 나머지)
 
-        h2.marker 문장
+        h2 문장
         ul
             li 주석 : #
             li 라인
@@ -91,7 +91,7 @@ include ../../source/skeleton.jade
 
                 line2
 
-        h2.marker 연산자
+        h2 연산자
         ul
             li 동등 비교 ==
             p ==는 내용물이 같으면 true 반환. 인스턴스 주소 비교에는 equal? 메서드 이용
@@ -146,7 +146,7 @@ include ../../source/skeleton.jade
                 end
             li 메서드 호출 시 . 대신 :: 사용 가능
 
-        h2.marker 제어식
+        h2 제어식
         ul
             li if
             +asCode('ruby', 'if 1').
@@ -281,7 +281,7 @@ include ../../source/skeleton.jade
             +asCode('ruby', 'rescue 2').
                 expression1 rescue expression2    # expression1 도중 StandardError 발생한 경우, expression2 평가값 반환
 
-        h2.marker 변수
+        h2 변수
         ul
             li 지역변수 선언에 별도 키워드 필요없음
             +asCode('ruby') msg = "Hello World"
@@ -380,7 +380,7 @@ include ../../source/skeleton.jade
                 +tds('ENV', '환경 변수')
                 +tds('RUBY_VERSION', '루비 실행 버전')
 
-        h2.marker 메서드
+        h2 메서드
         ul
             li 메서드 정의
             +asCode('ruby').
@@ -421,7 +421,7 @@ include ../../source/skeleton.jade
                     # ...
                 end
 
-        h2.marker 블록
+        h2 블록
         ul
             li block
             +asCode('ruby', 'block 1 - do~end').
@@ -459,7 +459,7 @@ include ../../source/skeleton.jade
                 # 대상이 Proc 인스턴스가 아닌 경우, 인스턴스의 to_proc 메서드 결과를 블록으로 전달한다
                 my_method &amp;Proc.new {|var_name| ... }
 
-        h2.marker 클래스
+        h2 클래스
         ul
             li 클래스 정의
             +asCode('ruby').
@@ -500,7 +500,7 @@ include ../../source/skeleton.jade
                     end
                 end
 
-        h2.marker 모듈
+        h2 모듈
         ul
             li 인스턴스화 불가. 상속 불가. 내부에 다른 모듈 및 클래스 정의 가능
             +asCode('ruby').
@@ -551,7 +551,7 @@ include ../../source/skeleton.jade
                 test1
                 test2
 
-        h2.marker 내장 자료형
+        h2 내장 자료형
         ul
             li 수 : Numeric ← Fixnum, Bignum, Float
             p 0b111, 0777, 0o777, 0xfff, 3.14e+3, 1_234 표기 가능
@@ -634,13 +634,13 @@ include ../../source/skeleton.jade
                 times3.call(3)  # 9
                 times5.call(3)  # 15
 
-    h1.marker 표준 라이브러리
+    h1 표준 라이브러리
     div
-        h2.marker module Kernel
+        h2 module Kernel
         div
-            h3.marker IO
+            h3 IO
             div
-                h4.marker 문자열 IO
+                h4 문자열 IO
                 ul
                     li
                         | gets(sep=$/) -> string | nil
@@ -671,7 +671,7 @@ include ../../source/skeleton.jade
                         br
                         | printf(format_string, *arguments) -> nil
                     +asCode('ruby') (io || $stdout).write(sprintf(format_string, *arguments))
-            h3.marker 실행/프로세스
+            h3 실행/프로세스
             ul
                 li eval
                 p 동적으로 코드 평가
@@ -734,7 +734,7 @@ include ../../source/skeleton.jade
                     p
                         +asA('https://docs.ruby-lang.org/en/2.0.0/Kernel.html#method-i-spawn')
                         |  참고
-            h3.marker 외부 소스 코드 로드
+            h3 외부 소스 코드 로드
             ul
                 li require(path)
                 ul

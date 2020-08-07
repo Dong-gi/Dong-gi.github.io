@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('Annotation Processing API', 'Java, Annotation Processing', 'Annotation Processing API 정리')
-    h1.marker 참고 자료
+    h1 참고 자료
     ol
         li: +asA('https://docs.oracle.com/en/java/javase/12/docs/api/java.compiler/javax/annotation/processing/package-summary.html')
         li: +asA('https://cloudogu.com/en/blog/Java-Annotation-Processors_1-Intro')
@@ -8,7 +8,7 @@ include ../../source/skeleton.jade
         li: +asA('https://medium.com/@iammert/annotation-processing-dont-repeat-yourself-generate-your-code-8425e60c6657')
         li: +asA('https://pluu.github.io/blog/android/2015/12/24/annotation-processing-api/')
 
-    h1.marker 애너테이션 처리 절차
+    h1 애너테이션 처리 절차
     ol
         li 컴파일러가 소스 파일에서 발견한 각 annotated element들에 대해 적절한(@SupportedAnnotationTypes) 프로세서를 호출한다
         p 애너테이션 프로세서들은 미리 컴파일러에 알려져야 한다.
@@ -16,20 +16,20 @@ include ../../source/skeleton.jade
         li 라운드에서 더 이상 새로운 소스 파일 생성이 없다면 애너테이션 처리는 종료된다.
         li 애너테이션 프로세서는 연관 정보(~Environment)가 담긴 객체들을 넘겨 받는다
 
-    h1.marker @Documented @Target(TYPE) @Retention(RUNTIME) @interface SupportedAnnotationTypes Since 1.6
+    h1 @Documented @Target(TYPE) @Retention(RUNTIME) @interface SupportedAnnotationTypes Since 1.6
     +asCode('java').
         String[] value
             // 지원하는 애너테이션 타입 목록.
             // 와일드카드 * 사용 가능. 모듈을 지정하려면 "module_name/"를 앞에 붙이면 된다
 
-    h1.marker interface ProcessingEnvironment Since 1.6
+    h1 interface ProcessingEnvironment Since 1.6
     +asCode('java').
         Map&lt;String,String> getOptions() // 프로세서에 특정된 옵션들
         Messager getMessager()             // 에러, 경고, 알림을 보고할 메신저
         Filer getFiler()                   // 새로운 소스 파일을 만들기 위한 파일러
         SourceVersion getSourceVersion()
 
-    h1.marker interface RoundEnvironmnent Since 1.6
+    h1 interface RoundEnvironmnent Since 1.6
     +asCode('java').
         boolean processingOver() // 이번 라운드의 결과가 다음 라운드로 넘어갈 것인지 여부
         boolean errorRaised()    // 이전 라운드에서 에러가 발생했는지 여부
@@ -37,7 +37,7 @@ include ../../source/skeleton.jade
         Set&lt;? extends Element> getElementsAnnotatedWith(TypeElement a)
             // + 오버로딩 + getElementsAnnotatedWithAny Since 9
 
-    h1.marker interface Processor Since 1.6
+    h1 interface Processor Since 1.6
     ol
         li 서브클래스는 외부에서 생성하기 위한 기본 생성자를 하나 가져야 한다
         li 생성된 후, init 메서드를 통해 적절한 ProcessingEnvironment를 제공받는다
@@ -49,13 +49,13 @@ include ../../source/skeleton.jade
             br
             | 모든 애터네이션(*)을 처리할 수 있다고 했지만, 애너테이션된 요소를 발견하지 못한 경우에만 annotations가 비어있을 수 있다
 
-    h1.marker abstract class AbstractProcessor implements Processor Since 1.6
+    h1 abstract class AbstractProcessor implements Processor Since 1.6
     +asCode('java').
         Set&lt;String> getSupportedOptions()         // @SupportedOptions가 있다면 해당 값 반환. 없으면 빈 집합
         Set&lt;String> getSupportedAnnotationTypes() // @SupportedAnnotationTypes가 있다면 해당 값 반환. 없으면 빈 집합. 9 미만이면 모듈 prefix는 제거된다
         SourceVersion getSupportedSourceVersion()    // @SupportedSourceVersion이 있다면 해당 값 반환. 없으면 RELEASE_6
 
-    h1.marker IDE에서 애너테이션 프로세싱 켜기
+    h1 IDE에서 애너테이션 프로세싱 켜기
     ol
         li Eclipse : 프로젝트 설정 변경
         +w3img('/imgs/20191128_134424.png')
@@ -63,7 +63,7 @@ include ../../source/skeleton.jade
         li Android Studio : 안드로이드 스튜디오(프로젝트 X) 설정 변경
         +w3img('/imgs/20191128_133722.png')
 
-    h1.marker javac -processor 이용 예
+    h1 javac -processor 이용 예
     ol
         li
             | 애너테이션 정의 :
@@ -96,7 +96,7 @@ include ../../source/skeleton.jade
             Note: Skipping generated file 'io.github.donggi.annotation.test.MyTargetTestGenerated'
             Note: [ROUND  3] It's my turn.
 
-    h1.marker javac -cp 이용 예
+    h1 javac -cp 이용 예
     ol
         li 위 "javac -processor 이용 예" 프로젝트 그대로 jar 빌드
         li
@@ -110,14 +110,14 @@ include ../../source/skeleton.jade
             Note: [ROUND  1] It's my turn.
             // 이하 생략
 
-    h1.marker Eclipse에서 프로세서 jar 이용 예
+    h1 Eclipse에서 프로세서 jar 이용 예
     ol
         li 위 "javac -cp 이용 예" jar 그대로 이용.
         li 위 "IDE에서 애너테이션 프로세싱 켜기"와 같이 애너테이션 프로세싱 허용하고 jar 등록
         li 소스 작성에 따라 자동적으로 호출되고, Error Log 뷰에 아래와 같이 표시된다
         +w3img('/imgs/20191128_170023.png')
 
-    h1.marker Eclipse Gradle 프로젝트 예
+    h1 Eclipse Gradle 프로젝트 예
     ol
         table.marker
             caption 프로젝트 구성

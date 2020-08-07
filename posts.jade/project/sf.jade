@@ -1,11 +1,11 @@
 include ../../source/skeleton.jade
 +post('SF Document', 'SF, Webapp Framework, HTML Framework', 'Why do more? Here\'s Simplest html Framework.')
-    h1.marker SF; Simplest HTML Framework
+    h1 SF; Simplest HTML Framework
     div
-        h2.marker Goal
+        h2 Goal
         p The most simplest HTML library
 
-        h2.marker Versions
+        h2 Versions
         table
             +ths('version', 'size', 'link')
             tr
@@ -25,7 +25,7 @@ include ../../source/skeleton.jade
                 td 2.02KB
                 td: +asA('https://github.com/Dong-gi/SF/releases/download/0.1.3/sf.min.js')
         
-        h2.marker Terms
+        h2 Terms
         ol
             li SFNode
             ul
@@ -35,16 +35,16 @@ include ../../source/skeleton.jade
             li App instance
             p SFNode returned by SF.build
 
-    h1.marker Demos
+    h1 Demos
     div
-        h2.marker Version 0.1.3
+        h2 Version 0.1.3
         div
-            h3.marker Get app instance
+            h3 Get app instance
             +asCode('javascript').
                 const app = SF.build()              // root = document.querySelector('[sf]')
                 const app = SF.build(document.body) // root = document.body
             
-            h3.marker Hello World
+            h3 Hello World
             +asCode('javascript').
                 const app = SF.build();
                 app.head.$title.innerText = 'Title : Hello World';
@@ -52,7 +52,7 @@ include ../../source/skeleton.jade
             +codeBtn('/Repositories/JavaScript/SF/demo1.html', 'html')
             +asA('/Repositories/JavaScript/SF/demo1.html', 'View on new tab')&attributes({ target: '_blank' })
 
-            h3.marker Template Example 1
+            h3 Template Example 1
             +asCode('javascript').
                 const Card = app.newTemplate(templateName, htmlMaker)
                     // templateName : anything which can be used as map's key
@@ -65,14 +65,14 @@ include ../../source/skeleton.jade
             +codeBtn('/Repositories/JavaScript/SF/demo2.html', 'nohighlight') View live here
             +asA('/Repositories/JavaScript/SF/demo2.html', 'View on new tab')&attributes({ target: '_blank' })
 
-            h3.marker Template Example 2 : Roman numeral calculator
+            h3 Template Example 2 : Roman numeral calculator
             +codeBtn('/Repositories/JavaScript/SF/demo3.html', 'html')
             +codeBtn('/Repositories/JavaScript/SF/demo3.html', 'nohighlight') View live here
             +asA('/Repositories/JavaScript/SF/demo3.html', 'View on new tab')&attributes({ target: '_blank' })
 
-        h2.marker Version 0.2.2
+        h2 Version 0.2.2
         div
-            h3.marker Form Binding Example
+            h3 Form Binding Example
             +asCode('javascript').
                 const app = SF.build(document.getElementById('demo4-1'));
                 const boundForm = SF.bindForm(app['demo4-1-form']);
@@ -81,15 +81,15 @@ include ../../source/skeleton.jade
             +codeBtn('/Repositories/JavaScript/SF/demo4.html', 'nohighlight') View live here
             +asA('/Repositories/JavaScript/SF/demo4.html', 'View on new tab')&attributes({ target: '_blank' })
 
-            h3.marker Object Binding Example
+            h3 Object Binding Example
             +asCode('javascript') SF.bindTwoWay(x, y);
             +codeBtn('/Repositories/JavaScript/SF/demo5.html', 'html')
             +codeBtn('/Repositories/JavaScript/SF/demo5.html', 'nohighlight') View live here
             +asA('/Repositories/JavaScript/SF/demo5.html', 'View on new tab')&attributes({ target: '_blank' })
 
-        h2.marker Version 0.3.2
+        h2 Version 0.3.2
         div
-            h3.marker DataGrid Example 1 : CSV. One data per one line.
+            h3 DataGrid Example 1 : CSV. One data per one line.
             +asCode('javascript').
                 SF.asDataGrid(csv);
                 DataGrid.fromCSV(csv);
@@ -97,31 +97,31 @@ include ../../source/skeleton.jade
             +codeBtn('/Repositories/JavaScript/SF/demo6.html', 'nohighlight') View live here
             +asA('/Repositories/JavaScript/SF/demo6.html', 'View on new tab')&attributes({ target: '_blank' })
             
-            h3.marker DataGrid Example 2 : CSV. Has multiple line quoted data.
+            h3 DataGrid Example 2 : CSV. Has multiple line quoted data.
             +codeBtn('/Repositories/JavaScript/SF/demo7.html', 'html')
             +codeBtn('/Repositories/JavaScript/SF/demo7.html', 'nohighlight') View live here
             +asA('/Repositories/JavaScript/SF/demo7.html', 'View on new tab')&attributes({ target: '_blank' })
             
-            h3.marker DataGrid Example 3 : Array of Array, Array of Object
+            h3 DataGrid Example 3 : Array of Array, Array of Object
             +codeBtn('/Repositories/JavaScript/SF/demo8.html', 'html')
             +codeBtn('/Repositories/JavaScript/SF/demo8.html', 'nohighlight') View live here
             +asA('/Repositories/JavaScript/SF/demo8.html', 'View on new tab')&attributes({ target: '_blank' })
             
-            h3.marker DataGrid Example 4 : Object of Array, Object of Object
+            h3 DataGrid Example 4 : Object of Array, Object of Object
             +codeBtn('/Repositories/JavaScript/SF/demo9.html', 'html')
             +codeBtn('/Repositories/JavaScript/SF/demo9.html', 'nohighlight') View live here
             +asA('/Repositories/JavaScript/SF/demo9.html', 'View on new tab')&attributes({ target: '_blank' })
 
-        h2.marker Version 0.4.0
+        h2 Version 0.4.0
         div
-            h3.marker SFUtil.compareString()
+            h3 SFUtil.compareString()
             p Do natural string compare
             +asCode('javascript').
                 let list = ['video-10.mp4', 'video-1.mp4', 'video-5.mp4', '2020-2-15', '2020-2', '2020', '2020-02-8', '$1,234.00', '$-1,234.00', '1,200.00', '-1200']
                 list.sort((i1, i2) => i1.compareString(i2))
                 JSON.stringify(list)
                 >> ["$-1,234.00","-1200","1,200.00","$1,234.00","2020","2020-2","2020-02-8","2020-2-15","video-1.mp4","video-5.mp4","video-10.mp4"]
-            h3.marker SFUtil.makeLSlikeText()
+            h3 SFUtil.makeLSlikeText()
             p return 'ls -R' like text
             +asCode('javascript').
                 let o = {
@@ -148,23 +148,23 @@ include ../../source/skeleton.jade
                 root/dir1:
                 file11
                 file22
-            h3.marker SFUtil.highlight()
+            h3 SFUtil.highlight()
             +codeBtn('/Repositories/JavaScript/SF/demo10.html', 'html')
             +codeBtn('/Repositories/JavaScript/SF/demo10.html', 'nohighlight') View live here
             +asA('/Repositories/JavaScript/SF/demo10.html', 'View on new tab')&attributes({ target: '_blank' })
-            h3.marker SFUtil.showSnackbar()
+            h3 SFUtil.showSnackbar()
             +codeBtn('/Repositories/JavaScript/SF/demo11.html', 'html')
             +codeBtn('/Repositories/JavaScript/SF/demo11.html', 'nohighlight') View live here
             +asA('/Repositories/JavaScript/SF/demo11.html', 'View on new tab')&attributes({ target: '_blank' })
-            h3.marker SFUtil.addHoverContent()
+            h3 SFUtil.addHoverContent()
             +codeBtn('/Repositories/JavaScript/SF/demo12.html', 'html')
             +codeBtn('/Repositories/JavaScript/SF/demo12.html', 'nohighlight') View live here
             +asA('/Repositories/JavaScript/SF/demo12.html', 'View on new tab')&attributes({ target: '_blank' })
-            h3.marker SFUtil.addInputSelection()
+            h3 SFUtil.addInputSelection()
             +codeBtn('/Repositories/JavaScript/SF/demo13.html', 'html')
             +codeBtn('/Repositories/JavaScript/SF/demo13.html', 'nohighlight') View live here
             +asA('/Repositories/JavaScript/SF/demo13.html', 'View on new tab')&attributes({ target: '_blank' })
-            h3.marker
+            h3
                 | SFUtil.copyElementToClipboard()
                 br
                 | SFUtil.copyTextToCilpboard()
@@ -172,7 +172,7 @@ include ../../source/skeleton.jade
             +codeBtn('/Repositories/JavaScript/SF/demo14.html', 'nohighlight') View live here
             +asA('/Repositories/JavaScript/SF/demo14.html', 'View on new tab')&attributes({ target: '_blank' })
 
-    h1.marker Change Logs
+    h1 Change Logs
     table
         tr
             th(pre-sort=1, sort-order='▲') version

@@ -1,6 +1,6 @@
 include ../../../source/skeleton.jade
 +post('템플릿 작성 가이드 2.3.28', 'FreeMarker, Template, Guide', '템플릿 작성 가이드 2.3.28 정리')
-    h1.marker 시작하기
+    h1 시작하기
     ul
         li
             | 템플릿은 임의의 텍스트 파일이 될 수 있으며, HTML로 한정되지 않는다.
@@ -16,7 +16,7 @@ include ../../../source/skeleton.jade
             +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[17, 23]') Java »
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_001_hello_world.ftl', 'xml', '[1, 12, 15, 26]') FTL + 결과 »
 
-    h1.marker Undefined Variable Error 방지.
+    h1 Undefined Variable Error 방지.
     ul
         li FreeMarker는 null 예외나 찾을 수 없는 식별자 예외를 동일하게 "undefined variable" error를 발생시킨다.
         li
@@ -28,7 +28,7 @@ include ../../../source/skeleton.jade
         li 검사 범위 설정 : ()
         p a.b.c! 또는 a.b.c??는 c의 존재 여부만 체크하지만, (a.b.c)! 또는 (a.b.c)??는 데이터 모델 구조상 모든 노드의 존재 여부를 체크한다.
 
-    h1.marker 이스케이프
+    h1 이스케이프
     ul
         li 적절히 설정되었다면 ${...}을 통해 출력되는 &, &lt;, >, ", ' 등은 자동으로 이스케이프 처리된다.
             +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[32, 38]') Java »
@@ -36,7 +36,7 @@ include ../../../source/skeleton.jade
         li .ftlh 파일을 이용하면 HTML에 맞추어 자동으로 이스케이프 처리된다.
         li .ftlx 파일을 이용하면 XML에 맞추어 자동으로 이스케이프 처리된다.
 
-    h1.marker 타입
+    h1 타입
     ul
         li.marker Scalar
         ul
@@ -60,7 +60,7 @@ include ../../../source/skeleton.jade
             li FreeMarker에서 method/function은 일급 객체다.
             li 사용자 정의 directive 역시 subroutine이며, 일급 객체다.
 
-    h1.marker 템플릿 - 구문
+    h1 템플릿 - 구문
     ul
         li.marker 리터럴
         ul
@@ -108,7 +108,7 @@ include ../../../source/skeleton.jade
         li.marker Built-ins: name?upper_case, path?ensure_starts_with('/')
         li.marker Method call: repeat("What", 3)
 
-    h1.marker 사용자 정의 directive
+    h1 사용자 정의 directive
     ol
         li 기본 정의 : macro
             +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[67, 72]') Java »
@@ -125,7 +125,7 @@ include ../../../source/skeleton.jade
             +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[88, 93]') Java »
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_010_macro.ftl', 'xml', '[1, 37, 41, 58]') FTL + 결과 »
 
-    h1.marker 변수
+    h1 변수
     p 값을 변경할 수 없는 FreeMarker 데이터 모델과 다르게, 값을 변경할 수 있는 변수를 이용할 수 있다.
     ul
         li "plain" variable : 템플릿 내에 선언되어 해당 템플릿 안에서 참조 가능. &lt;#assign x = 1>
@@ -133,7 +133,7 @@ include ../../../source/skeleton.jade
         li Loop variable : list와 같은 directive에 의해 자동으로 만들어지는 변수
         li Global variable : Global directive로 선언하여 어느 템플릿에서든 참조 가능. Global 변수는 같은 이름의 데이터 모델을 가린다. &lt;#global x = 1>
 
-    h1.marker Namespace
+    h1 Namespace
     ol
         li 템플릿에서 선언된 변수(매크로, 함수 포함)들에 대한 유니크한 이름과의 매핑
         li import : include와는 다르게, 템플릿 네임스페이스에 대한 접근을 가능하게 하는 해시를 생성한다.
@@ -147,7 +147,7 @@ include ../../../source/skeleton.jade
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_012_footer.ftl', 'xml') 라이브러리 ftl »
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_012_main.ftl', 'xml', '[1, 3, 6, 8]') 메인 ftl + 결과 »
 
-    h1.marker 공백 처리
+    h1 공백 처리
     ol
         p 템플릿 처리 후 불필요한 공백이 많이 발생하기 때문에, 이를 다루는 방법을 몇 가지 제공한다.
         li 설정 변경

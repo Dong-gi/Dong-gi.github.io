@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('확률', '확률, 확률분포, 추정', '대학 확률 정리 문서', true)
-    h1.marker 확률
+    h1 확률
     ul
         li.marker 표본평균; Mean : 식[\overline{x}=\sum_{i=1}^n{x_i \over n}]식
         li
@@ -38,29 +38,29 @@ include ../../source/skeleton.jade
             |     \iff & P(A\cap B)=P(A)P(B)
             | \end{gather*}
 
-    h1.marker 확률분포
+    h1 확률분포
     div
-        h2.marker 확률변수; Random variable
+        h2 확률변수; Random variable
         p ::= 표본공간의 원소를 실수로 대응하는 함수.
         p 식[P(X=x)]식 ::= 확률변수 식[X]식의 값이 식[x]식일 확률
-        h2.marker 확률질량함수; Probability mass function
+        h2 확률질량함수; Probability mass function
         p ::= 이산확률변수 식[X]식에 대하여 아래를 만족하는 함수 식[f(x)]식
         ol
             li 식[f(x)=P(X=x)]식
             li 식[f(x)\ge 0]식
             li 식[\sum f(x)=1]식
-        h2.marker 확률밀도함수; Probability density function
+        h2 확률밀도함수; Probability density function
         p ::= 연속확률변수 식[X]식에 대하여 아래를 만족하는 함수 식[f(x)]식
         ol
             li 식[f(x)\ge 0]식
             li 식[P(a\le X \le b)=\int_a^b f(x)dx]식
             p 등호의 유무는 중요하지 않다
             li 식[\int_{-\infty}^{\infty} f(x)dx=1]식
-        h2.marker 누적분포함수; Cumulative distribution function
+        h2 누적분포함수; Cumulative distribution function
         ol
             li 이산확률변수 식[X]식에 대하여, 식[F(x)=P(X\le x)=\sum_{t\le x}f(t)]식
             li 연속확률변수 식[X]식에 대하여, 식[F(x)=P(X\le x)=\int_{-\infty}^{x}f(t)dt]식
-        h2.marker 결합분포 식[f(x,y)]식
+        h2 결합분포 식[f(x,y)]식
         ul
             li 결합확률분포 : 이산확률변수 식[X, Y]식에 대하여,
             ol
@@ -72,17 +72,17 @@ include ../../source/skeleton.jade
                 li 식[f(x,y)\ge 0]식
                 li 식[P((X,Y)\in A)=\iint_A f(x,y)dx dy]식
                 li 식[\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}f(x,y)dx dy]식
-        h2.marker 주변분포; Marginal distribution
+        h2 주변분포; Marginal distribution
         ol
             p 결합분포에서 하나의 확률변수만 고려한 확률 식[g(x), h(y)]식
             li 이산확률 : 식[g(x)=\sum_y f(x,y)]식
             li 연속확률 : 식[g(x)=\int_{-\infty}^{\infty}f(x,y)dy]식
-        h2.marker 조건부 분포; Conditional distribution
+        h2 조건부 분포; Conditional distribution
         ol
             li 식[f(y|x)={f(x,y) \over g(x)}]식
             li 이산확률 : 식[P(a\le Y\le b|X=x)=\sum_{a\le y\le b}f(y|x)]식
             li 연속확률 : 식[P(a\le Y\le b|X=x)=\int_{a}^{b}f(y|x)dx]식
-        h2.marker 통계적 독립 : 두 확률변수 식[X, Y]식가 독립
+        h2 통계적 독립 : 두 확률변수 식[X, Y]식가 독립
         p
             | \begin{gather*}
             |     \iff & f(x,y)=g(x)h(y) \\
@@ -113,34 +113,34 @@ include ../../source/skeleton.jade
             p 확률변수 X에 종속된 확률변수 식[g(X)]식에 대하여,
             li 이산확률 : 식[\sigma_{g(X)}^2 = E((g(X)-\mu_{g(X)})^2) = \sum (g(x)-\mu_{g(X)})^2f(x)]식
             li 연속확률 : 식[\sigma_{g(X)}^2 = E((g(X)-\mu_{g(X)})^2) = \int_{-\infty}^{\infty}(g(x)-\mu_{g(X)})^2f(x)dx]식
-        h2.marker 공분산; Covariance
+        h2 공분산; Covariance
         ol
             p 두 확률변수 사이의 선형적 관계를 보여준다. 따라서 비선형적 관계를 가진 확률변수에 대한 공분산은 별 의미가 없다
             li 이산확률 : 식[\sigma_{XY}=E((X-\mu_X)(Y-\mu_Y))=\sum_x\sum_y (x-\mu_X)(y-\mu_Y)f(x,y)]식
             li 연속확률 : 식[\sigma_{XY}=E((X-\mu_X)(Y-\mu_Y))=\int_{-\infty}^{\infty}\int_{-\infty}^{\infty} (x-\mu_X)(y-\mu_Y)f(x,y)dxdy]식
             li 식[\sigma_{XY}=E(XY)-\mu_X\mu_Y]식
             p 선형적 관계를 갖는 확률변수에 대한 공분산이 0이라면, 두 확률변수는 독립이다
-        h2.marker 상관 계수; Correlation coefficient
+        h2 상관 계수; Correlation coefficient
         p 식[-1\le \rho_{XY}={\sigma_{XY} \over \sigma_X\sigma_Y} \le 1]식. 확률변수의 측정단위와 무관하게 두 확률변수 사이의 선형적 관계를 보여준다. 식[Y=aX+b]식와 같은 일차종속인 경우 식[\rho_{XY} = \pm 1]식
-        h2.marker 확률변수의 선형결합
+        h2 확률변수의 선형결합
         ol
             li 식[E(aX+b)=aE(X)+b]식
             li 식[E(g(X)\pm h(X)) = E(g(X)\pm E(h(X))]식
             li 식[X, Y]식가 독립 식[\iff E(XY)=E(X)E(Y)]식
             li 식[\rho_{aX+bY+c}^2 = a^2\rho_X^2+b^2\rho_Y^2+2ab\rho_{XY}]식
-        h2.marker 체비쇼프 부등식; Chebyshev's inequality
+        h2 체비쇼프 부등식; Chebyshev's inequality
         p 평균으로부터 k 표준편차 이상 떨어진 자료들은 식[1/k^2]식 이상 차지하지 않는다. 식[P(|X-\mu|\ge k\sigma)\le 1/k^2]식
-        h2.marker 이산균등분포; Discrete uniform distribution
+        h2 이산균등분포; Discrete uniform distribution
         ol
             li 식[f(x;n)={1 \over n}]식 ::= 이산확률변수 X에 대하여, 임의의 식[x]식가 될 확률 식[P(X=x_i)]식이 식[{1 \over n}]식로 동일한 경우
             li 평균 식[\mu={1 \over n}\sum x_i]식
             li 분산 식[\sigma^2={1 \over n}\sum (x_i-\mu)^2]식
-        h2.marker 베르누이 시행; Bernoulli trial
+        h2 베르누이 시행; Bernoulli trial
         ol
             li 시행의 결과는 둘 중 하나만 가능
             li 각 시행에서 성공확률은 항상 일정
             li 각 시행은 서로 독립
-        h2.marker 이항분포; Binomial distribution
+        h2 이항분포; Binomial distribution
         ul
             li 이항확률변수; Binomial random variable : n번의 베르누이 시행에서의 성공횟수 X
             li 이항분포 식[b(x;n,p)=\begin{pmatrix}n \\ x\end{pmatrix}p^x q^{n-x}]식
@@ -150,21 +150,21 @@ include ../../source/skeleton.jade
             p n번째 성공이 일어날 때까지의 시행횟수 X의 확률분포 식[b^*(x;n,p)=\begin{pmatrix}x-1 \\ n-1\end{pmatrix}p^n q^{x-n}]식
             li 기하분포; Geometric distribution
             p 첫번째 성공이 일어날 때까지의 시행횟수 X의 확률분포 식[g(x;p)=pq^{x-1}]식, 평균 식[\mu=1/p]식, 분산 식[\sigma^2={1-p \over p^2}]식
-        h2.marker 초기하분포; Hypergeometric distribution
+        h2 초기하분포; Hypergeometric distribution
         ol
             li 초기하확률변수 : 크기가 식[N]식인 모집단의 k개가 성공, 나머지는 실패일 때 n개를 비복원으로 뽑았을 때 나온 성공의 개수 X
             li 초기하분포 식[h(x;N,n,k)={\begin{pmatrix}k \\ x\end{pmatrix}\begin{pmatrix}N-k \\ N-x\end{pmatrix} \over \begin{pmatrix}N \\ n\end{pmatrix}}]식
             li 평균 식[\mu = {nk \over N}]식
             li 분산 식[\sigma^2={N-n \over N-1}\cdot n \cdot {k \over N}\left(1-{k \over N}\right)]식
             li 식[n/N\le 0.05]식이면 이항분포 식[b(x;n,k/N)]식으로 근사 가능
-        h2.marker 푸아송 분포; Poisson distribution
+        h2 푸아송 분포; Poisson distribution
         ol
             li 푸아송 확률변수 : 특정 기간 t동안 사건이 평균적으로 식[\lambda]식번 발생하고, 이것이 다른 기간과 독립적일때, 사건이 발생한 횟수 X
             li 평균 식[\mu=\lambda t]식 ← 기간에 따른 평균 발생비율은 항상 일정하므로
             li 푸아송 분포 식[p(x;\lambda t)={e^{-\lambda t}(\lambda t)^x \over x!}]식
             li 분산 식[\sigma^2 = \lambda t]식
             li 이항분포의 n이 매우 크고, p가 0에 가까우면 식[\mu=np]식인 푸아송 분포로 근사 가능
-        h2.marker 정규분포; Normal distribution
+        h2 정규분포; Normal distribution
         ol
             li 평균 식[\mu]식, 표준편차 식[\sigma]식
             li 정규분포 식[X \sim N(\mu,\sigma^2)]식 : 식[n(x;\mu,\sigma)={1 \over \sqrt{2\pi}\sigma}e^{-{1 \over 2\sigma^2}(x-\mu)^2}]식
@@ -172,7 +172,7 @@ include ../../source/skeleton.jade
             p 정규화 : 식[Z={X-\mu \over \sigma}]식
             li 이항분포 식[b(x;n,p)]식는 정규분포 식[n(x;np,\sqrt{npq})]식를 근사적으로 따른다
             p 식[P(X\le x)=\sum_{k=0}^x b(k;n,p)\approx P(Z \le {{x+0.5-np} \over \sqrt{npq}})]식 ← +0.5는 결과를 실제에 가깝게 하는 연속성 수정(Continuity correction)
-        h2.marker 감마분포
+        h2 감마분포
         ol
             li 감마함수 식[\Gamma(\alpha)=\int_0^{\infty}x^{\alpha-1}e^{-x}dx]식
             p 자연수 n에 대하여 식[\Gamma(n)=(n-1)!]식, 식[\Gamma(1/2)=\sqrt{\pi}]식
@@ -202,7 +202,7 @@ include ../../source/skeleton.jade
                     | 0 & \mbox{else} \end{matrix}\right.]식
                 li 평균 식[\mu=k]식
                 li 분산 식[\sigma^2=2k]식
-        h2.marker 확률변수 변환
+        h2 확률변수 변환
         ol
             li 이산확률변수 식[X, Y]식가 일대일 대응관계 식[y=u(x), x=u^{-1}(y)]식라면, 식[Y]식의 확률분포는 식[g(y)=f(u^{-1}(y))]식
             li
@@ -225,7 +225,7 @@ include ../../source/skeleton.jade
                 | 연속확률변수 식[X, Y]식에 대해, 식[u:X\to Y]식는 일대일 함수지만 역함수는 존재하지 않는 경우.
                 | 만일 식[X]식을 빈틈없이 나눈 각 구간마다 부분적인 역함수 식[x_1=w_1(y), \cdots, x_k=w_k(y)]식가 존재한다면,
                 | 식[Y]식의 확률분포는 식[g(y)=\sum f(w_i(y))|J_i|]식 ← 식[J_i={\partial{x_i} \over \partial{y}}]식
-        h2.marker 적률; Moment
+        h2 적률; Moment
         ol
             li 적률 ::= 확률변수 거듭제곱의 평균 식[m_n = E(X^n)]식
             li 적률생성함수 ::= 식[M_X(t)=E(e^{tX})]식
@@ -245,7 +245,7 @@ include ../../source/skeleton.jade
             li 식[X_1,\cdots,X_n]식이 독립이면서 카이제곱분포를 따를 때, 식[Y=X_1+\cdots+X_n]식은 자유도가 식[v=v_1+\cdots+v_n]식인 카이제곱분포를 따른다
             li 식[X_1,\cdots,X_n]식이 독립이면서 정규분포를 따를 때, 식[Y=\sum ({X_i-\mu_i \over \sigma_i})^2]식는 자유도 식[v=n]식인 카이제곱분포를 따른다
 
-    h1.marker 추정
+    h1 추정
     p 표본 식[X_i]식, 표본평균 식[\overline{X}=\sum{X_i}/n]식, 표본분산 식[S^2={\sum(X_i-\overline{X})^2 \over (n-1)}={1 \over n(n-1)}[n\sum X_i^2 - (\sum X_i)^2]]식
     div
         h2 t-분포
@@ -261,7 +261,7 @@ include ../../source/skeleton.jade
                 | n이 충분히 크다면 식[\chi^2={(n-1)S^2 \over \sigma^2}]식는 카이제곱분포 식[f(x; n-1)]식를 따른다
             li 식[T={Z \over \sqrt{V/(n-1)}}]식는 자유도 n-1인 t-분포를 따른다
             p 모집단의 분산을 모를 때 모평균의 추정에 이용할 수 있다.
-        h2.marker F-분포
+        h2 F-분포
         ul
             li 자유도가 각각 식[v_1, v_2]식인 두 카이제곱변수 식[V_1, V_2]식에 대하여, 식[F={V_1/v_1 \over V_2/v_2}]식는 자유도가 식[(v_1, v_2)]식인 F-분포를 따른다
             li: +asA('https://math200.tistory.com/47', 'F-분포표 보는 법')

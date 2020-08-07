@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('tomcat', 'tomcat', 'tomcat 정리')
-    h1.marker 기본 명령어
+    h1 기본 명령어
     ol
         li 실행 : bin\startup.bat
         li 종료 : bin\shotdown.bat
@@ -17,14 +17,14 @@ include ../../source/skeleton.jade
         li 애플리케이션 배포 및 취소
         p webapps 디렉터리에 war 파일을 옮기면 자동으로 압축을 푼다. 반대로 삭제하면 자동으로 정리한다. 또는 관리자 페이지의 deploy/undeploy를 이용.
 
-    h1.marker 톰캣 JVM 실행 인코딩/문자셋 설정
+    h1 톰캣 JVM 실행 인코딩/문자셋 설정
     ol
         li catalina.bat
         +asCode('bash') set "JAVA_OPTS=%JAVA_OPTS% -Dfile.encoding=UTF-8 -Dfile.client.encoding=UTF-8 -Dclient.encoding.override=UTF-8"
         li catalina.sh
         +asCode('bash') JAVA_OPTS="$JAVA_OPTS -Dfile.encoding=UTF-8 -Dfile.client.encoding=UTF-8 -Dclient.encoding.override=UTF-8"
 
-    h1.marker 톰캣 리모트 디버깅 설정
+    h1 톰캣 리모트 디버깅 설정
     ol
         li catalina.bat
         +asCode('bash') set "JAVA_OPTS=-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=*:54433,server=y,suspend=n"
@@ -35,12 +35,12 @@ include ../../source/skeleton.jade
         +w3img('/imgs/20190731_143749.png')
         +w3img('/imgs/20190731_143815.png')
 
-    h1.marker 서버 URI 인코딩 설정 : conf/server.xml
+    h1 서버 URI 인코딩 설정 : conf/server.xml
     +asCode('xml').
         &lt;Connector port="8080" protocol="HTTP/1.1" connectionTimeout="20000" redirectPort="8443" URIEncoding="UTF-8" />
         &lt;Connector port="8009" protocol="AJP/1.3" redirectPort="8443" URIEncoding="UTF-8" />
 
-    h1.marker 톰캣 utf8 필터 설정 : {APP_NAME}/web.xml
+    h1 톰캣 utf8 필터 설정 : {APP_NAME}/web.xml
     +asCode('xml').
         &lt;filter>
             &lt;filter-name>setCharacterEncodingFilter&lt;/filter-name>

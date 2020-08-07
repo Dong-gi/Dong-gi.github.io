@@ -1,8 +1,8 @@
 include ../../source/skeleton.jade
 +post('Android', 'Android', 'Android 정리')
-    h1.marker 시작하기
+    h1 시작하기
     div
-        h2.marker Hello World
+        h2 Hello World
         ol
             li 기본 설정대로 프로젝트를 생성하면 아래의 4개 주요 파일을 볼 수 있다.
             li MainActivity.java
@@ -23,7 +23,7 @@ include ../../source/skeleton.jade
                 +codeBtn('/Repositories/Android/Project01/build.gradle', 'gradle') Project Gradle »
                 +codeBtn('/Repositories/Android/Project01/app/build.gradle', 'gradle') "app" module Gradle »
 
-        h2.marker 앱 컴포넌트
+        h2 앱 컴포넌트
         ol
             li Activity : UI가 있는 단일 화면. 액티비티는 한 번에 하나만 실행할 수 있다.
             p Project window » 우클릭 » New » Activity : 자동으로 매니페스트에도 추가된다.
@@ -46,7 +46,7 @@ include ../../source/skeleton.jade
                 li 브로드캐스트 인텐트 : 브로드캐스트 리시버로 등록된 모든 수신자에게 전송
             li Fragment : Deprecated in API level 28
 
-        h2.marker 매니페스트
+        h2 매니페스트
         ol
             li 구성 요소 선언, 요구 권한 식별, 최소 API 레벨 선언 등
             p &lt;activity>, &lt;service>, &lt;receiver>, &lt;provider>
@@ -84,7 +84,7 @@ include ../../source/skeleton.jade
                     &lt;/intent-filter>
                 &lt;/activity>
 
-        h2.marker UI
+        h2 UI
         ol
             li 안드로이드 UI는 layout(ViewGroup 객체)들과 widget(View 객체)들의 계층으로 이루어진다.
             li 길이 단위
@@ -144,7 +144,7 @@ include ../../source/skeleton.jade
             |  is licensed by
             +asA('http://creativecommons.org/licenses/by/3.0/', 'CC 3.0 BY')
 
-    h1.marker SQLite
+    h1 SQLite
     ol
         li https://developer.android.com/jetpack/androidx/releases/room
         li https://developer.android.com/training/data-storage/room
@@ -154,17 +154,17 @@ include ../../source/skeleton.jade
         +codeBtn('/Repositories/Android/Project06/app/src/main/java/io/github/donggi/project06/DB.java', 'java') DB.java »
         +codeBtn('/Repositories/Android/Project06/app/src/main/java/io/github/donggi/project06/MainActivity.java', 'java') MainActivity.java »
 
-    h1.marker 권한 요청
+    h1 권한 요청
     +codeBtn('/Repositories/Android/Project03/app/src/main/java/io/github/donggi/project03/MainActivity.java', 'java') MainActivity.java »
     +codeBtn('/Repositories/Android/Project03/app/src/main/AndroidManifest.xml', 'xml') AndroidManifest.xml »
 
-    h1.marker 알림 보내기
+    h1 알림 보내기
     p
         | 매니페스트 설정 불필요
         +codeBtn('/Repositories/Android/Project02/app/src/main/res/layout/activity_main.xml', 'xml') activity_main.xml »
         +codeBtn('/Repositories/Android/Project02/app/src/main/java/io/github/donggi/project02/MainActivity.java', 'java') MainActivity.java »
 
-    h1.marker SensorManager
+    h1 SensorManager
     ul
         li https://developer.android.com/guide/topics/sensors/sensors_overview.html?hl=ko
         li SensorManager, Sensor, SensorEvent, SensorEventListener
@@ -181,18 +181,18 @@ include ../../source/skeleton.jade
                 lastDetected = System.currentTimeMillis();
             }
 
-    h1.marker Location Manager
+    h1 Location Manager
     +asCode('xml').
         &lt;uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
         &lt;uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     div
-        h2.marker 위치 소스 provider
+        h2 위치 소스 provider
         ol
             li GPS : LocationManager.GPS_PROVIDER, 오차 ~수십 미터, 배터리 소모 많음, 긴 TTFF(Time To First Fix). ACCESS_FINE_LOCATION 권한 필요
             li 기지국 : LocationManager.NETWORK_PROVIDER, 오차 ~수백 미터, 짧은 TTFF, 적은 배터리 소모. ACCESS_COARSE_LOCATION 권한 필요
             li LocationManager.PASSIVE_PROVIDER : 다른 앱이 요청한 위치 정보를 사용, ACCESS_FINE_LOCATION 권한 필요
 
-        h2.marker LocationManager
+        h2 LocationManager
         ol
             li List&lt;String> getProviders (boolean enabledOnly)
             li void requestLocationUpdates(String provider, long minTime, float minDistance, LocationListener listener) + removeUpdates
@@ -207,7 +207,7 @@ include ../../source/skeleton.jade
             p expiration : 기한 내에 도착하지 못하면 알림 취소. -1이면 무기한.
             p intent로 KEY_PROXIMITY_ENTERING이라는 boolean 값 전달. true면 들어가는 것, false면 나가는 것.
 
-        h2.marker LocationListener
+        h2 LocationListener
         ol
             li void onLocationChanged(Location location)
             li void onProviderEnabled(String provider) + onProviderDisabled
@@ -217,7 +217,7 @@ include ../../source/skeleton.jade
             p GPS를 이용하도록 설정했음에도 신호가 수신되지 않는 경우 등.
             p status : LocationProvider.OUT_OF_SERVICE, LocationProvider.TEMPORARILY_UNAVAILABLE, LocationProvider.AVAILABLE
 
-    h1.marker 백그라운드, 절전 모드에서의 실행
+    h1 백그라운드, 절전 모드에서의 실행
     ol
         li CPU 항상 켜기 필요 권한 : android.permission.WAKE_LOCK
         +asCode('java').
@@ -240,7 +240,7 @@ include ../../source/skeleton.jade
             // 반복 알람 : setRepeating(int type, long triggerAtMillis, long intervalMillis, PendingIntent operation)
             // Since 19 : 모든 반복 알람은 부정확하다.
         div
-            h3.marker 알람 type
+            h3 알람 type
             ol
                 li RTC : System#currentTimeMillis로 얻어지는 시각 기준
                 li ELAPSED_REALTIME : SystemClock#elapsedRealtime로 얻어지는, 부팅 후 경과 시간 기준
@@ -258,7 +258,7 @@ include ../../source/skeleton.jade
             br
             | 사용자 정의 Application을 사용하는 경우, 매니페스트의 name 속성을 변경해주고, getApplication() 결과를 캐스팅해야 한다.
 
-    h1.marker ProGuard
+    h1 ProGuard
     ol
         li 코드 최적화 및 난독화
         li build.gradle의 안드로이드 영역에 아래를 추가
@@ -270,5 +270,5 @@ include ../../source/skeleton.jade
                 }
             }
 
-    h1.marker 최적화
+    h1 최적화
     +asA('https://developer.android.com/topic/performance')

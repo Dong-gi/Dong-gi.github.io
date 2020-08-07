@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('Python 3.8 시작하기', 'Python', 'Python 3.8 정리')
-    h1.marker 설치
+    h1 설치
     ol
         li: +asA('https://www.python.org/')
         li 설치경로(예. C:\Program Files\Python36, /usr/local/bin/python3.7)를 path 환경변수에 추가
@@ -16,18 +16,18 @@ include ../../source/skeleton.jade
             br
             | 단, 유닉스 셔뱅 줄(#!/usr/bin/env python3)이 있는 경우엔 2번째 줄에 들어간다.
 
-    h1.marker 자료형
+    h1 자료형
     ul
         li 파이썬 변수는 동적 자료형(실행중 변경 가능)으로, type() 함수를 통해 자료형을 확인할 수 있다.
         li 변수 선언이 따로 필요없으며, 식별자만 있으면 변수로써 이용할 수 있다.
     div
-        h2.marker bool
+        h2 bool
         ol
             li True, False
             li bool 연산 : and, or, not
             li False로 간주되는 값 : None, 0, 0.0, '', [], (), {}, set()
 
-        h2.marker int
+        h2 int
         ol
             li 모든 정수는 int형이며, 크기 제한은 없다.
             li 정수는 0으로 시작할 수 없다.
@@ -38,7 +38,7 @@ include ../../source/skeleton.jade
                 | int() : 형변환, 소수점이나 지수가 표현된 문자열은 정수로 변환 불가
                 +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[1,9]')
 
-        h2.marker float
+        h2 float
         ol
             li 부동소수도 +, -, *, /, //, **, %, divmod() 모두 가능하다.
             li float 정밀도는 그대로 가진다.
@@ -46,10 +46,10 @@ include ../../source/skeleton.jade
                 | float() : 형변환, 소수점이나 지수가 표현된 문자열은 정수로 변환 불가
                 +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[12,17]')
 
-        h2.marker complex
+        h2 complex
         p 복소수 a + bj
 
-        h2.marker str
+        h2 str
         ol
             li 파이썬 문자열은 상수(불변)다. 리터럴로 ''와 ""모두 사용 가능하다.
             li
@@ -87,7 +87,7 @@ include ../../source/skeleton.jade
                 | replace() : 부분 문자열 대체
                 +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[52,53]')
 
-        h2.marker Formatted string literal(aka. f-string) Since 3.6
+        h2 Formatted string literal(aka. f-string) Since 3.6
         ul
             li
                 | f_string ::= (
@@ -139,7 +139,7 @@ include ../../source/skeleton.jade
             li precision ::= digit+
             li type ::= "b" | "c" | "d" | "e" | "E" | "f" | "F" | "g" | "G" | "n" | "o" | "s" | "x" | "X" | "%"
 
-        h2.marker list
+        h2 list
         p
             | 가변 시퀀스
             +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[56,57]') 생성 : [], list()
@@ -150,13 +150,13 @@ include ../../source/skeleton.jade
             +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[87,91]') 정렬
             +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[93,109]') 복사
 
-        h2.marker tuple
+        h2 tuple
         p
             | 불변 시퀀스. 불변이므로 딕셔너리의 키로 사용 가능.
             +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[112,116]') 생성, 병합
             +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[118,121,191,198]') 튜플 패킹/언패킹
 
-        h2.marker collections.namedtuple
+        h2 collections.namedtuple
         p
             | collections.namedtuple(typename, field_names, verbose=False, rename=False)
             br
@@ -164,19 +164,19 @@ include ../../source/skeleton.jade
             br
             | _fields, _make(iterable), _asdict()
 
-        h2.marker set
+        h2 set
         p
             +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[124,131]') 생성, 요소 추가
             +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[133,143]') 원소 포함 여부
             +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[145,158]') 집합 연산
 
-        h2.marker dict
+        h2 dict
         p
             +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[161,178]') 생성, 병합
             +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[180,183]') 키-값 얻기
             +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[185,189]') 복사
 
-    h1.marker 구문
+    h1 구문
     p
         +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[1,2]') 라인 유지 \
         +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[4,10]') if ~ elif ~ else
@@ -212,7 +212,7 @@ include ../../source/skeleton.jade
         li Monkey patching
         p 소스 코드를 건드리지 않고 런타임에 클래스나 모듈을 변경하는 행위
 
-    h1.marker 함수
+    h1 함수
     ol
         li 파이썬의 함수는 일급 객체다.
         li
@@ -250,7 +250,7 @@ include ../../source/skeleton.jade
             +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[153,169]') 함수 데커레이터
             +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[171,184]') 클래스 데커레이터
 
-    h1.marker namespace
+    h1 namespace
     ol
         li 네임스페이스 : "속성 이름 - 객체 이름" 매핑
         li 메인 프로그램은 전역 네임스페이스를 정의
@@ -265,13 +265,13 @@ include ../../source/skeleton.jade
             |  출처 : 
             +asA('https://docs.python.org/3/tutorial/classes.html#scopes-and-namespaces-example')
 
-    h1.marker 예외
+    h1 예외
     p
         +codeBtn('/Repositories/Python/Basic/try_except.py', 'python', '[1,5]') try: ~ except:
         +codeBtn('/Repositories/Python/Basic/try_except.py', 'python', '[7,11]') except ExceptionType as name:
         +codeBtn('/Repositories/Python/Basic/try_except.py', 'python', '[13,20]') raise MyException("Don't Worry")
 
-    h1.marker 모듈
+    h1 모듈
     ol
         li 모듈 : 파이썬 파일 하나
         li 패키지 : __init__.py 파일을 포함하는 디렉터리
@@ -289,13 +289,13 @@ include ../../source/skeleton.jade
         li 모듈 탐색 경로 추가 sys.path.append('/usr/me/some_directory')
         li dir()을 이용해 모듈에 정의된 것들을 확인할 수 있다.
 
-    h1.marker pass
+    h1 pass
     ol
         li 빈 루프를 표현할 때 이용
         li 빈 클래스를 표현할 때 이용
         li 빈 함수를 표현할 때 이용
 
-    h1.marker 클래스
+    h1 클래스
     p
         +codeBtn('/Repositories/Python/Basic/class_example.py', 'python', '[1,8]') 클래스 예
         +codeBtn('/Repositories/Python/Basic/class_example.py', 'python', '[10,12]') 속성 삭제 del
@@ -310,7 +310,7 @@ include ../../source/skeleton.jade
         li 다중 상속
         p 메서드 결정 순서(Method Resolution Order)는 __mro__ 속성을 따른다.
 
-    h1.marker 가상 환경
+    h1 가상 환경
     ol
         li 서로 다른 프로젝트들이 서로 다른 버전의 패키지 의존성을 가질 수 있다. 이를 유연하게 지원하도록 가상 환경을 만들 수 있다.
         li 최신 파이썬 버전에는 venv 모듈이 포함되어 있다.
@@ -319,7 +319,7 @@ include ../../source/skeleton.jade
         li Windows에서 실행 : my-env1\Scripts\activate.bat
         li Unix에서 실행 : source my-env1/bin/activate
 
-    h1.marker pip
+    h1 pip
     ol
         li pip : 파이썬 패키지 설치, 제거에 관한 프로그램
         li
@@ -335,7 +335,7 @@ include ../../source/skeleton.jade
         pip freeze > requirements.txt
         pip install -r requirements.txt
 
-    h1.marker __debug__와 assert
+    h1 __debug__와 assert
     ol
         li __debug__는 파이썬이 -O 옵션으로 시작되지 않았다면 참이 되는 상수다. 인터프리터 실행 시 설정된다.
         li -O 옵션으로 시작한 경우, __debug__에 대한 조건부 코드와 assert문이 제거된다.
@@ -352,7 +352,7 @@ include ../../source/skeleton.jade
                 if not expression1:
                     raise AssertionError(expression2)
 
-    h1.marker weakref
+    h1 weakref
     ol
         li
             | 약한 참조 : 캐시와 같이 객체 카운트를 증가시키지 않고 객체를 참조.
@@ -360,7 +360,7 @@ include ../../source/skeleton.jade
         li WeakValueDictionary : 약한 참조를 값으로 가지는 가변 매핑. 객체가 GC 수집되면 키가 자동으로 제거된다. + WeakSet
         li weakref.finalize(참조변수, 콜백) # 객체 소멸시 실행될 콜백 등록
 
-    h1.marker Python 3.7
+    h1 Python 3.7
     ol
         li CPython UTF-8 강제 설정
         p -X utf8 옵션 또는 PYTHONUTF8 환경 변수 설정
@@ -371,7 +371,7 @@ include ../../source/skeleton.jade
         p 단순 DTO 클래스에 대해 __repr__(), __eq__(), __hash__()를 자동 생성한다.
         li 일반적인 dict는 삽입 순대로 정렬된다(공식 스펙)
 
-    h1.marker Python 3.8
+    h1 Python 3.8
     ol
         li 새로운 할당 연산 := Since 3.8
         +asCode('python') if (x := True):

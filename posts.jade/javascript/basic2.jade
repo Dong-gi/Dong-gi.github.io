@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('브라우저 JavaScript', '브라우저, JavaScript', '브라우저 JavaScript 정리')
-    h1.marker BOM; Browser Object Model
+    h1 BOM; Browser Object Model
     ul
         li window
         p
@@ -22,7 +22,7 @@ include ../../source/skeleton.jade
         li document
         p window.document와 동일. 표시되는 페이지 내용과 연관
 
-    h1.marker DOM; Document Object Model
+    h1 DOM; Document Object Model
     p
         | Icons made by
         +asA('http://www.freepik.com', 'Freepik')
@@ -40,16 +40,16 @@ include ../../source/skeleton.jade
         +codeBtn('/posts/javascript/selector_example.html', 'nohighlight') Query selector 예시
         +codeBtn('/posts/javascript/selector_example.html', 'html') Query selector 예시 코드
 
-    h1.marker 이벤트 모델
+    h1 이벤트 모델
     div
-        h2.marker DOM 이벤트 흐름
+        h2 DOM 이벤트 흐름
         p 이벤트 캡처링 → 타깃 → 이벤트 버블링
         ul
             li 이벤트 캡처링 : 최상위 노드로부터 이벤트가 전달되는 과정
             p 캡처링 단계에서 리스너의 호출 기본값은 false. 동작을 위해 addEventListener()의 옵션 매개변수를 지정해야 한다
             li 이벤트 버블링 : 최하위 노드로부터 이벤트가 전달되는 과정
 
-        h2.marker JavaScript 이벤트 핸들러 설정
+        h2 JavaScript 이벤트 핸들러 설정
         ol
             li EventTarget : Element, Document, Window, XMLHttpRequest
             li EventTarget.addEventListener() : 이벤트 핸들러 추가
@@ -57,12 +57,12 @@ include ../../source/skeleton.jade
             li EventTarget.removeEventListener() : 이벤트 핸들러 제거
 
 
-    h1.marker 브라우저 저장소
+    h1 브라우저 저장소
     p
         +codeBtn('/posts/javascript/storage_example.html', 'nohighlight') 저장소 예시
         +codeBtn('/posts/javascript/storage_example.html', 'html') 저장소 예시 코드
 
-    h1.marker 웹 워커
+    h1 웹 워커
     ol
         li 메인 페이지와 별개의 스코프에서 백그라운드에서 실행되는 작업자
         +asCode('javascript').
@@ -75,7 +75,7 @@ include ../../source/skeleton.jade
         p 페이지에서 보낸 메시지를 알기 위해서 onmesage 이벤트 핸들러를 등록한다.
         +asCode('javascript') self.onmessage = ...
 
-    h1.marker 웹 소켓
+    h1 웹 소켓
     ol
         li 오래 지속되는 하나의 연결을 이용해 완전한 양방향 통신을 제공한다.
         li 프로토콜은 ws(비보안), wss(보안)
@@ -95,7 +95,7 @@ include ../../source/skeleton.jade
 
         connection.close(); // close 이벤트 객체는 wasClean, code, reason 프로퍼티 존재
 
-    h1.marker 함수 감속
+    h1 함수 감속
     p 윈도우 resize, scroll 이벤트처럼 연속적으로 발생하지만 연속적으로 처리할 필요가 없는 경우, 타이머를 등록한 뒤 로직이 실행되도록 하고, 로직이 실행되기 전에 재호출되면 기존 타이머를 제거하고 타이머를 재등록하는 기법
     +asCode('javascript').
         function throttle(f, t, opt) {
@@ -119,7 +119,7 @@ include ../../source/skeleton.jade
             }
         }   
 
-    h1.marker AJAX; Asynchronous JavaScript and XML + JSONP
+    h1 AJAX; Asynchronous JavaScript and XML + JSONP
     ol
         li 핵심 기술은 XMLHttpRequest; XHR
         li Ajax 이벤트
@@ -171,7 +171,7 @@ include ../../source/skeleton.jade
         // jQuery Ajax 옵션
         //     async, complete(xhr, status), data, error(xhr, status, error), jsonp, jsonpCallback, success(data, status, xhr), timeout, type, url
 
-    h1.marker 파일 API
+    h1 파일 API
     ol
         li 이전에는 자바스크립트에서 로컬 파일에 접근하는 것이 불가능했지만, 사용자가 입력 태그에 직접 설정한 파일에 대해 읽기가 가능해졌다.
         p
@@ -194,7 +194,7 @@ include ../../source/skeleton.jade
         li FileReader
         +asCode('javascript') readAsText(file, encoding), readAsDataURL(file), readAsBinaryString(file), readAsArrayBuffer(file)
 
-    h1.marker 잡다한 코드
+    h1 잡다한 코드
     ul
         li 특정 노드로 스크롤 이동
         +asCode('javascript') node.scrollIntoView()

@@ -1,12 +1,12 @@
 include ../../source/skeleton.jade
 +post('CSS', 'CSS', 'CSS 정리')
-    h1.marker Tips
+    h1 Tips
     ul
         li.marker 폰트 크기 균일화
         p :root pseudo 요소로 1rem 단위 설정.
         +asCode('css') :root { font-size: 16px; }
 
-    h1.marker 문법
+    h1 문법
     ul
         li.marker 선택자
         ol
@@ -53,7 +53,7 @@ include ../../source/skeleton.jade
             | Syntax::= @media not|only mediatype and (media feature and|or|not mediafeature) { CSS-Code; }
             +asA('https://www.w3schools.com/cssref/css3_pr_mediaquery.asp')
 
-    h1.marker 디자인
+    h1 디자인
     ul
         li.marker 공통 속성
         ol
@@ -120,7 +120,7 @@ include ../../source/skeleton.jade
                 +asA('https://www.w3schools.com/css/css3_multiple_columns.asp', '참고')
             li 사용자가 크기 조절 resize: none|both|horizontal|vertical|initial|inherit;
 
-    h1.marker 변형
+    h1 변형
     ol
         li
             | 2D 변형 » translate(), rotate(), scale(), skewX(), skewY(), matrix()

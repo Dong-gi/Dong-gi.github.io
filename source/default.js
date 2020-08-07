@@ -7,6 +7,7 @@ const posts = {list: [
 { category: 'JVM',                 file: '/posts/java/effective_java.html',                 title: '1-6 『Effective Java』' },
 { category: 'JVM',                 file: '/posts/java/java_ee.html',                        title: '2-1 JavaEE' },
 { category: 'JVM',                 file: '/posts/java/jpa.html',                            title: '2-2 JPA; Java Persistence API' },
+{ category: 'JVM',                 file: '/posts/java/spring_framework.html',               title: '2-3 Spring Framework' },
 { category: 'JVM',                 file: '/posts/java/javafx.html',                         title: '3 JavaFX' },
 { category: 'JVM',                 file: '/posts/java/android.html',                        title: '4 Android' },
 { category: 'JVM',                 file: '/posts/single/groovy.html',                       title: '5 Groovy' },
@@ -115,11 +116,10 @@ const posts = {list: [
 { category: 'Project',             file: '/posts/single/demo3.html',                        title: '로마숫자 사칙연산 계산기' },
 { category: 'Ruby',                file: '/posts/ruby/basic.html',                          title: '1 Ruby Basic' },
 
-{ category: '♻작성중,보류',        file: '/posts/java/jpa.html',                            title: 'JPA; Java Persistence API' },
 { category: '♻작성중,보류',        file: '/posts/algorithm/mcs.html',                       title: '컴퓨터공학도를 위한 수학' },
 { category: '♻작성중,보류',        file: '/posts/single/redis.html',                        title: 'Redis' },
 { category: '♻작성중,보류',        file: '/posts/single/unity.html',                        title: 'Unity' },
-{ category: '♻작성중,보류',        file: '/posts/java/java_ee.html',                        title: 'JavaEE' },
+{ category: '♻작성중,보류',        file: '/posts/java/spring_framework.html',               title: 'Spring Framework' },
 { category: '♻작성중,보류',        file: '/posts/java/apache.commons.math.html',            title: 'Apache Commons Math 3.6.1' },
 { category: '♻작성중,보류',        file: '/posts/java/guava.html',                          title: 'Guava 23.0' },
 { category: '♻작성중,보류',        file: '/posts/single/quantum_computer.html',             title: '양자 컴퓨터' },
@@ -138,6 +138,15 @@ window.addEventListener('load', () => {
     updatePostList()
     insertDisqusThread()
     updateMarkerList()
+    window.onscroll = SFUtil.debounce(function () {
+        if (document.getElementById('sidebar').style.display == 'none') return;
+        for (let marker of document.querySelectorAll('.marker')) {
+            if (SFUtil.isElementInViewport(marker)) {
+                document.querySelector(`li[marker-id=${marker.getAttribute('marker-id')}]`).scrollIntoView()
+                return;
+            }
+        }
+    }, 300)
     document.getElementById('query').onkeyup = SFUtil.debounce(queryUpdated, 500)
     SFUtil.addOrderedTableFunctionality()
 
@@ -326,6 +335,9 @@ function insertDisqusThread() {
 }
 
 function updateMarkerList() {
+    for (let h of document.querySelectorAll('h1,h2,h3,h4,h5,h6'))
+        h.classList.add('marker')
+
     let markerMap = { markers: [] }
     let id = new Date().getTime()
     for (let marker of document.querySelectorAll('.marker')) {
@@ -377,10 +389,6 @@ function updateMarkerList() {
             let target = document.querySelector(`.marker[marker-id=${li.getAttribute('marker-id')}]`)
             if (headerTags.has(target.tagName))
                 target.innerHTML = `${prefix}${target.innerHTML}`
-        }
-        for (let h of document.querySelectorAll('h1,h2,h3,h4,h5,h6')) {
-            if (!/^\d+\./.test(h.innerText))
-                h.classList.add('w3-margin-left')
         }
     })
 }

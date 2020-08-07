@@ -1,10 +1,10 @@
 include ../../source/skeleton.jade
 +post('C#.NET', 'C#, .NET', 'C#.NET 문법 정리')
-    h1.marker .NET Framework 개요
+    h1 .NET Framework 개요
     div
         h2 프레임워크
         p 제어 역전이 있는 대규모 라이브러리. 프로그램의 초기화부터 종료까지 직접 관리하며, 개발자는 일부분만 작성.
-        h2.marker CLI; Common Language Infrastructure
+        h2 CLI; Common Language Infrastructure
         p 닷넷 표준 규약. 자바와 마찬가지로 CLI 사양을 준수한 구현체에서 동작하는 파일은 다른 구현체에서도 실행된다.
         ul
             li CIL; Common Intermediate Language == IL. 중간 언어
@@ -23,7 +23,7 @@ include ../../source/skeleton.jade
             p
                 | 여러 모듈이 하나의 어셈블리를 구성하는 경우, 모듈 중 하나는 모듈의 목록을 관리하는 매니페스트 데이터를 갖는다. 매니페스트를 포함하는 경우 확장자는 exe/dll, 그 외의 모듈은 보통
                 | netmodule이지만, 일반적으로 모든 어셈블리는 1개의 파일로 구성된다.
-        h2.marker 닷넷 구현체
+        h2 닷넷 구현체
         ul
             li .NET Framework
             p CLR; Common Language Runtime + BCL; Base Class Library
@@ -34,18 +34,18 @@ include ../../source/skeleton.jade
             li Mono
             p 현재는 자마린에서 개발 중. 윈도우, macOS, 리눅스, 솔라리스, 안드로이드, 엑스박스 360 등에서 실행 가능
 
-    h1.marker 개발 환경
+    h1 개발 환경
     ol
         li 윈도우에는 기본적으로 닷넷 프레임워크가 설치돼있다. 또는 비주얼 스튜디오 설치 시 같이 설치된다.
         li C# 컴파일러 : C:\Windows\Microsoft.NET\...\csc.exe
         li 닷넷 역컴파일러 : .NET Reflector(유료), JustDecompile(무료) 등
         li IDE : Visual Studio, Visual Studio for Mac, Visual Studio Code, Xamarin Studio, Rider
 
-    h1.marker 문법
+    h1 문법
     div
-        h2.marker 기본 자료형
+        h2 기본 자료형
         div
-            h3.marker 정수형
+            h3 정수형
             table.no-sort
                 tr
                     td sbyte
@@ -79,7 +79,7 @@ include ../../source/skeleton.jade
                     td ulong
                     td unsigned long
                     td System.UInt64
-            h3.marker 실수형
+            h3 실수형
             table.no-sort
                 tr
                     td float
@@ -95,7 +95,7 @@ include ../../source/skeleton.jade
                     td System.Decimal
             h3 숫자 리터럴
             p 16진수 표현 0xFFFF, 2진수 표현 0b1010, 구분 문자 '_' 사용 가능
-            h3.marker 문자형
+            h3 문자형
             table.no-sort
                 tr
                     td char
@@ -126,7 +126,7 @@ include ../../source/skeleton.jade
                     td System.Boolean
             h3 Boolean 연산 &&, ||는 Short-circuit
 
-        h2.marker 배열
+        h2 배열
         ul
             li 배열 초기화시 기본값으로 채워진다.
             li 다차원 배열 [,] : 배열 차원 고정. 메모리 상에서는 일차원 배열처럼 존재.
@@ -138,7 +138,7 @@ include ../../source/skeleton.jade
                 int[,] arr4 = new int[2, 2];
                 int[,] arr5 = new int[,] { { 1, 2 }, { 3, 4 } };
 
-        h2.marker 형변환
+        h2 형변환
         ul
             li 암시적 형변환 : 보다 큰 정의의 자료형으로 자동 변환.
             p Boxing : Value type 데이터를 Reference type으로 변환. 컴파일러가 묵시적으로 수행.
@@ -147,7 +147,7 @@ include ../../source/skeleton.jade
             li if (o is Mammal m) { }
             li as 연산자를 이용한 명시적 변환은, null을 허용하는 참조 자료형만 가능하다.
 
-        h2.marker 구문
+        h2 구문
         ul
             li if ~ else if ~ else
             li switch
@@ -172,15 +172,15 @@ include ../../source/skeleton.jade
                 try {} catch () when (!filePath.Contains(".tmp")) {} // when 필터를 사용하는 경우, 같은 타입을 여러 번 catch 가능
                 try {} finally { iDisposable.Dispose(); } // 다음과 동일 : using(var iDisposable = ~) { }
 
-        h2.marker 네임스페이스
+        h2 네임스페이스
         +asCode('cs').
             namespace MyProgram.Model { }
             using System.Collections.Generic;
             using static MyProgram.Model.Constants;
 
-    h1.marker 객체지향
+    h1 객체지향
     div
-        h2.marker 클래스
+        h2 클래스
         ul
             li
                 | 프로퍼티 → (히든) 필드에 대한 getter/setter 메서드
@@ -191,7 +191,7 @@ include ../../source/skeleton.jade
             li partial class ClassName {} : 프로젝트 내 여러 파일에 걸쳐 클래스 작성 가능
             li 접근 제한자 → public, protected(파생 클래스까지), private, internal(같은 어셈블리), protected internal
         div
-            h3.marker 상속
+            h3 상속
             ul
                 li class SubClass : BaseClass
                 li is 연산자로 호환 여부 확인 가능
@@ -208,7 +208,7 @@ include ../../source/skeleton.jade
                     | 모든 값 형식의 조상은 System.ValueType
                     br
                     | 모든 배열의 조상은 System.Array : Sort(), BinarySearch&lt;T>(), IndexOf(), ..., Length, Rank
-            h3.marker 다형성
+            h3 다형성
             ul
                 li virtual, override 키워드를 사용해 명시한다. virtual 메서드는 body를 정의해야 한다.
                 li new : 부모 메서드 숨기기. override와 달리 형 변환을 통해 부모 메서드에 접근 가능.
@@ -223,7 +223,7 @@ include ../../source/skeleton.jade
                     public static implicit operator 타입2(타입1 변수1) {};
                     public static explicit operator 타입2(타입1 변수1) {};
 
-        h2.marker 델리게이트
+        h2 델리게이트
         ul
             li
                 | 메서드를 참조하는 자료형
@@ -250,20 +250,20 @@ include ../../source/skeleton.jade
                 +asCode('cs') public event EventHandler SomeEvent = delegate { };
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/EventExample.cs', 'cs')
 
-        h2.marker 인터페이스
+        h2 인터페이스
         ol
             li 인터페이스도 프로퍼티를 가질 수 있다(get/set 지정만 가능). 구현하는 클래스에서 프로퍼티를 구현한다.
             li class SubClass : BaseClass, Interface1, Interface2, ...
             li interface Interface1 : Interface2
 
-        h2.marker 구조체 struct
+        h2 구조체 struct
         ol
             li 사용자 정의 ValueType.
             li ValueType이므로 생성자 호출 없이 선언만으로 초기화가 진행된다. 사용되는 기본 생성자는 컴파일러가 자동으로 추가하며, 재정의할 수 없다.
             li 모든 타입은 Object의 파생 클래스이므로, 구조체도 new 키워드로 인스턴스를 생성할 수 있다. 인자를 받는 생성자는 모든 필드를 초기화해야 한다.
             li ValueType이므로 할당 시 깊은 복사가 이루어진다.
 
-        h2.marker 열거형 enum
+        h2 열거형 enum
         ol
             li 정수형을 상속받아 정의할 수 있는 ValueType. 기본 int
             li [Flags] // 열거형을 비트필드로 이용하는 애트리뷰트
@@ -272,7 +272,7 @@ include ../../source/skeleton.jade
             var authority = READ | WRITE;
             Console.WriteLine(authority.HasFlag(WRITE));
 
-        h2.marker 제네릭
+        h2 제네릭
         ul
             li Generic Method
             +asCode('cs') public void Write&lt;T>(T value) => OnWrite(value?.ToString() ?? "");
@@ -289,9 +289,9 @@ include ../../source/skeleton.jade
             li 제네릭 별명
             +asCode('cs') using Commands = System.Collections.Generic.Dictionary&lt;string, System.Windows.Input.ICommand>;
 
-    h1.marker 추가 기능 ~ C# 8.0 (2019. 02. 12)
+    h1 추가 기능 ~ C# 8.0 (2019. 02. 12)
     div
-        h2.marker 타입
+        h2 타입
         ol
             li.marker BigInteger : 크기 제한없는 정수. 연산자 오버로딩 덕에 편리
             li.marker dynamic : 파이썬처럼 타입 검사를 런타임에 하여 Duck-typing을 가능하게 한다.
@@ -299,7 +299,7 @@ include ../../source/skeleton.jade
             li.marker var : 지역변수 초기화시 사용 가능한 자동형식
             li.marker Nullable&lt;T> : null을 허용하는 래퍼 클래스. int?는 Nullable&lt;int>와 동일하다.
         div
-            h3.marker 튜플 : System.ValueTuple
+            h3 튜플 : System.ValueTuple
             ul
                 li 익명 튜플 : 멤버의 기본 이름은 Item1, Item2, ...
                 +asCode('cs') var unnamed = ("one", "two");
@@ -357,7 +357,7 @@ include ../../source/skeleton.jade
                     var rect = new Rectangle(1, 2, 3, 4);
                     var (_, _, w, h) = rect;
 
-        h2.marker 연산자
+        h2 연산자
         ul
             li.marker await : 피연산자가 나타내는 비동기 작업이 완료될 때까지 바깥쪽 비동기 메서드의 평가를 일시 중단
             li.marker default(Type) : 타입에 대한 기본값/인스턴스 반환한다.
@@ -396,7 +396,7 @@ include ../../source/skeleton.jade
                 Range phrase = 1..4;
                 var text = words[phrase];
 
-        h2.marker 한정자
+        h2 한정자
         ul
             li.marker async : 메서드, 람다식, 익명 메서드(delegate 연산자)를 비동기로 지정.
             ul
@@ -436,7 +436,7 @@ include ../../source/skeleton.jade
                 br
                 | 관련 클래스 : System.Runtime.InteropServices.Marshal
 
-        h2.marker 메서드
+        h2 메서드
         ol
             li.marker 매개변수 명시
             +asCode('cs') Divide(a: 10, b: 3, q: out q, r: out r);
@@ -461,7 +461,7 @@ include ../../source/skeleton.jade
                                 [CallerLineNumber] int lineNumber = 0) { }
             li Main 메서드에 async 허용
 
-        h2.marker 구문
+        h2 구문
         ol
             li.marker
                 | 인덱서 구문 : 하나 이상의 인수로 참조되는 속성을 반환. string, List&lt;T> 등은 인덱서를 구현함.
@@ -478,7 +478,7 @@ include ../../source/skeleton.jade
             li.marker 전처리 지시문 #define, #undef, #if, #elif, #else, #endif, ..., #region, #endregion
             li.marker fixed 문 : unsafe 컨텍스트에서, GC가 변수를 재배치하지 않도록 하여 포인터의 유효함을 보장한다
         div
-            h3.marker yield 반복기
+            h3 yield 반복기
             +asCode('cs').
                 public static IEnumerable&lt;int> InfiniteSeries(int limit) {
                     var num = 0;
@@ -500,7 +500,7 @@ include ../../source/skeleton.jade
                     }
                 }
 
-            h3.marker LINQ; Language INtegrated Query
+            h3 LINQ; Language INtegrated Query
             ol
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/LinqExample.cs', 'cs')
                 li MoreLinq 패키지에서 추가적인 편의성을 제공한다.
@@ -543,7 +543,7 @@ include ../../source/skeleton.jade
                     var compiledFunc = lambda.Compile();
                     Console.WriteLine(compiledFunc(3));
 
-        h2.marker Attribute
+        h2 Attribute
         ol
             li
                 | 자바의 애너테이션처럼 요소를 장식한다.
@@ -561,7 +561,7 @@ include ../../source/skeleton.jade
                 | 적용 대상 명시 : assembly, module, type, method, property, field, event, param, return, typevar
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs', '[23, 24]')
 
-        h2.marker App.config
+        h2 App.config
         ol
             li supportedRuntime
             p 실행에 필요한 닷넷 버전 지정. 비주얼 스튜디오가 자동으로 추가해주는듯
@@ -570,13 +570,13 @@ include ../../source/skeleton.jade
             +codeBtn('/Repositories/VisualStudio/CSharp/Basic/App.config', 'xml') App.config »
             +codeBtn('/Repositories/VisualStudio/CSharp/Basic/Program.cs', 'cs') Program.cs »
 
-        h2.marker 디버그 모드
+        h2 디버그 모드
         ol
             li 전처리 상수 #if DEBUG ... #endif
             li [Conditional("DEBUG")] 적용된 클래스, 메서드는 릴리스 빌드 시 포함되지 않는다
             li System.Diagnostics.Debug.WriteLine() : 디버그 출력
 
-        h2.marker Reflection 리플렉션
+        h2 Reflection 리플렉션
         ul
             li AppDomain → Assembly ← Module ← Type
             p AppDomain : EXE 프로세스 내에서 CLR에 의해 구현된 격리 공간. 최초 실행 시 기본적으로 1개 생성(AppDomain.CurrentDomain).
@@ -599,7 +599,7 @@ include ../../source/skeleton.jade
                 li ILGenerator.Emit()으로 메서드 내용 추가
                 li TypeBuilder.CrateType()으로 인스턴스 생성 가능
 
-        h2.marker 재귀 패턴 매칭 Since C# 8.0
+        h2 재귀 패턴 매칭 Since C# 8.0
         +asCode('cs').
             int? x = null;
             if (x is int n1)
@@ -667,7 +667,7 @@ include ../../source/skeleton.jade
                     _ => Quadrant.Unknown
                 };
 
-    h1.marker .NET 정규표현식
+    h1 .NET 정규표현식
     ul
         p Java와 동일한 부분은 생략
         li \nn 또는 \nnn : 8진수 ASCII

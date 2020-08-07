@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('Docker', 'Docker', 'Docker 정리')
-    h1.marker 시작하기
+    h1 시작하기
     ol
         li 도커 엔진(Apache 2.0 license)은 REST API로 통신하는 서버-클라이언트로 구성된다
         li.marker Docker daemon
@@ -22,7 +22,7 @@ include ../../source/skeleton.jade
                 +asA('https://docs.docker.com/engine/reference/builder/', 'Dockerfile')
                 |  : 이미지 빌드 절차
 
-    h1.marker Dockerfile
+    h1 Dockerfile
     ul
         li.marker Format
         ul
@@ -124,11 +124,11 @@ include ../../source/skeleton.jade
             li SHELL ["executable", "param1", "param2"]
             li RUN, CMD, ENTRYPOINT 기본 쉘 변경
 
-    h1.marker
+    h1
         | Commands 
         +asA('https://docs.docker.com/engine/reference/commandline/docker/')
     div
-        h2.marker docker build : 절차대로 이미지 생성
+        h2 docker build : 절차대로 이미지 생성
         +asCode('shell').
             $ docker build [OPTIONS] PATH | URL | -
             $ docker image build [OPTIONS] PATH | URL | -
@@ -194,7 +194,7 @@ include ../../source/skeleton.jade
                 li 예. 텍스트 입력
                 +asCode('shell') $ curl example.com/remote/Dockerfile | docker build -f - .
 
-        h2.marker docker commit : 컨테이너로부터 이미지 생성
+        h2 docker commit : 컨테이너로부터 이미지 생성
         +asCode('shell').
             $ docker commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
             
@@ -205,7 +205,7 @@ include ../../source/skeleton.jade
             --message, -m # 커밋 메시지
             --pause, -p   # 커밋 도중 컨테이너 일시 정지(default true)
 
-        h2.marker docker tag : 이미지 태그 설정
+        h2 docker tag : 이미지 태그 설정
         +asCode('shell') $ docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
         ol
             li 예.
@@ -215,13 +215,13 @@ include ../../source/skeleton.jade
             li Private repository로 푸시하려면 해당 주소를 붙여줘야 한다
             +asCode('shell') $ docker tag 0e5574283393 myregistryhost:5000/fedora/httpd:version1.0
 
-        h2.marker docker push : 이미지 업로드
+        h2 docker push : 이미지 업로드
         +asCode('shell').
             $ docker push [OPTIONS] NAME[:TAG]
             $ docker image push [OPTIONS] NAME[:TAG]
         p 이미지를 저장소로 업로드한다. 올바른 이미지 태그에 대해서는 docker tag 명령 참고
 
-        h2.marker docker run : 컨테이너 생성 후 실행
+        h2 docker run : 컨테이너 생성 후 실행
         +asCode('shell').
             $ docker run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
             $ docker container run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
@@ -253,7 +253,7 @@ include ../../source/skeleton.jade
                 --stop-timeout  # 지정 시간 경과 뒤 종료
                 --privileged    # 컨테이너에 모든 커널 작업 권한 부여
         div
-            h3.marker Dockerfile 오버라이딩
+            h3 Dockerfile 오버라이딩
             +asCode('shell').
                 CMD                   # r run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
                 ENTRYPOINT            # --entrypoint=""
@@ -265,7 +265,7 @@ include ../../source/skeleton.jade
                 USER                  # -u="", --user=""
                 WORKDIR               # -w=""
 
-        h2.marker docker rm : 컨테이너 제거
+        h2 docker rm : 컨테이너 제거
         +asCode('shell').
             $ docker rm [OPTIONS] CONTAINER [CONTAINER...]
             $ docker container rm [OPTIONS] CONTAINER [CONTAINER...]
@@ -278,7 +278,7 @@ include ../../source/skeleton.jade
             li 예. 중지한 컨테이너 모두 제거
             +asCode('shell') $ docker rm $(docker ps -a -q)
 
-        h2.marker 파일 복사
+        h2 파일 복사
         ol
             li docker-machine scp
             +asCode('shell').
@@ -295,7 +295,7 @@ include ../../source/skeleton.jade
                 # 예. 디렉터리 복사
                 $ docker cp directory/ web:/root/
 
-        h2.marker docker ps : 컨테이너 리스트
+        h2 docker ps : 컨테이너 리스트
         +asCode('shell').
             $ docker ps [OPTIONS]
             
@@ -306,7 +306,7 @@ include ../../source/skeleton.jade
                          # $ docker ps --format "{{.ID}}: {{.Command}}"
             --size, -s   # 전체 파일 크기 표시
 
-        h2.marker docker images : 이미지 리스트
+        h2 docker images : 이미지 리스트
         +asCode('shell').
             $ docker images [OPTIONS] [REPOSITORY[:TAG]]
             
@@ -314,12 +314,12 @@ include ../../source/skeleton.jade
             --all, -a # 중간 이미지도 표시
             --digests # Digest 표시
 
-        h2.marker docker start : 컨테이너 시작
+        h2 docker start : 컨테이너 시작
         +asCode('shell').
             $ docker start [OPTIONS] CONTAINER [CONTAINER...]
             $ docker container start [OPTIONS] CONTAINER [CONTAINER...]
 
-        h2.marker docker search : Docker Hub 이미지 검색
+        h2 docker search : Docker Hub 이미지 검색
         +asCode('shell').
             $ docker search [OPTIONS] TERM
             
@@ -327,7 +327,7 @@ include ../../source/skeleton.jade
             --filter stars=3            # 최소 3성 이상
             --filter "is-official=true" # 공식 이미지만
 
-        h2.marker docker pull : 저장소 이미지 다운로드
+        h2 docker pull : 저장소 이미지 다운로드
         +asCode('shell').
             $ docker pull [OPTIONS] NAME[:TAG|@DIGEST]
             
@@ -335,10 +335,10 @@ include ../../source/skeleton.jade
             $ docker pull ubuntu@sha256:45b23dee08af5e43a7fea6c4cf9c25ccf269ee113168c19722f87876677c5cb2
             $ docker pull myregistry.local:5000/testing/test-image
 
-        h2.marker docker rmi : 이미지 제거
+        h2 docker rmi : 이미지 제거
         +asCode('shell') $ docker rmi [OPTIONS] IMAGE [IMAGE...]
 
-        h2.marker docker attach : 컨테이너에 스트림 연결
+        h2 docker attach : 컨테이너에 스트림 연결
         +asCode('shell').
             # STDIN, STDOUT, STDERR를 실행 중인 컨테이너에 연결한다
             $ docker attach [OPTIONS] CONTAINER
@@ -349,7 +349,7 @@ include ../../source/skeleton.jade
                           # -it 옵션으로 실행중이라면, Ctrl + P, Ctrl + Q로 컨테이너를 정지하지 않고 나올 수 있다
             --no-stdin    # STDIN은 연결하지 않음
 
-        h2.marker docker exec : 컨테이너 안에서 명령 실행
+        h2 docker exec : 컨테이너 안에서 명령 실행
         +asCode('shell').
             $ docker exec [OPTIONS] CONTAINER COMMAND [ARG...]
             $ docker container exec [OPTIONS] CONTAINER COMMAND [ARG...]
@@ -363,11 +363,11 @@ include ../../source/skeleton.jade
         +asCode('shell').
             docker-machine ssh dbvm -- docker exec postgres1 /bin/bash /home/postgres/something.sh
 
-    h1.marker 컨테이너 오케스트레이션
+    h1 컨테이너 오케스트레이션
     div
-        h2.marker Kubernetes; K8s
+        h2 Kubernetes; K8s
         p Empty
-        h2.marker Swarm
+        h2 Swarm
         +asCode().
             $ docker swarm init
 

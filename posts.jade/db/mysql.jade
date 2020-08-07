@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('MySQL 정리', 'MySQL', 'MySQL 주요 내용 정리')
-    h1.marker 프로시저
+    h1 프로시저
     ul
         li 프로시저 호출
         ol
@@ -24,7 +24,7 @@ include ../../source/skeleton.jade
             p 예. 유저의 소지 아이템과 관련된 i_user_item 테이블에 대하여, user_1에는 i_user_item_1, i_user_item_5, ..., i_user_item_29까지 존재
             li 가정 2 : 각 테이블에 데이터 입력 시, 테이블 suffix는 user_id % 32 + 1로 결정된다
 
-    h1.marker 이벤트
+    h1 이벤트
     ol
         li.marker 서버 실행 중 이벤트 사용 설정
         +asCode('sql').
@@ -50,7 +50,7 @@ include ../../source/skeleton.jade
             SHOW PROCESSLIST;
             SHOW EVENTS;
 
-    h1.marker CSV 입출력
+    h1 CSV 입출력
     ul
         li CSV로부터 입력
         +asCode('sql') LOAD DATA LOCAL INFILE "/~.csv" replace into table table_name fields terminated by ',' enclosed by '\"' IGNORE 1 LINES;
@@ -76,7 +76,7 @@ include ../../source/skeleton.jade
                     document.getElementById('mysql-csv-column-convert-out-textarea').value = columnClauses.join(',\n\n');
                 });
 
-    h1.marker 자잘한 것들
+    h1 자잘한 것들
     ul
         li.marker 테이블 컬럼 순서 변경
         +asCode('sql').

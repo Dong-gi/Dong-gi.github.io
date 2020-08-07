@@ -1,15 +1,15 @@
 include ../../source/skeleton.jade
 +post('Apache Commons Collections', 'Apache Commons Collections', 'Apache Commons Collections 정리')
-    h1.marker org.apache.commons.collections4
+    h1 org.apache.commons.collections4
     div
-        h2.marker 컬렉션 자료형 인터페이스
+        h2 컬렉션 자료형 인터페이스
         div
-            h3.marker interface BoundedCollection&lt;E> extends Collection&lt;E> Since 3.0
+            h3 interface BoundedCollection&lt;E> extends Collection&lt;E> Since 3.0
             ol
                 li 크기 제한을 갖는 컬렉션
                 li isFull(), maxSize()
 
-            h3.marker interface Bag&lt;E> extends Collection&lt;E> Since 2.0
+            h3 interface Bag&lt;E> extends Collection&lt;E> Since 2.0
             ol
                 li 컬렉션이 보유한 객체에 대한 갯수를 유지한다.
                 li 예를 들어, Bag {a, b, c, a} 인스턴스에 대해 getCount(a) == 2, uniqueSet() == {a, b, c}
@@ -36,12 +36,12 @@ include ../../source/skeleton.jade
                 boolean retainAll(Collection&lt;?> coll)
                     // coll에 포함된 요소만 Bag에 유지하되, coll에 존재하는 개수만큼만 최대로 유지한다.
 
-            h3.marker interface SortedBag&lt;E> extends Bag&lt;E> Since 2.0
+            h3 interface SortedBag&lt;E> extends Bag&lt;E> Since 2.0
 
-            h3.marker interface MultiSet&lt;E> extends Collection&lt;E> Since 4.1
+            h3 interface MultiSet&lt;E> extends Collection&lt;E> Since 4.1
             p Bag과 유사하지만, Collection API를 좀 더 적절하게 따른다.
             div
-                h4.marker static interface MultiSet.Entry&lt;E>
+                h4 static interface MultiSet.Entry&lt;E>
                 p MultiSet의 변경 불가능한 원소를 표현한다
                 +asCode('java').
                     E getElement()
@@ -50,22 +50,22 @@ include ../../source/skeleton.jade
                         // 둘 다 null이거나, 개수까지 일치할 때 true
                     int hashCode()
 
-            h3.marker interface IterableMap&lt;K, V> extends Map&lt;K, V>, Put&lt;K, V>, IterableGet&lt;K, V> Since 3.0
+            h3 interface IterableMap&lt;K, V> extends Map&lt;K, V>, Put&lt;K, V>, IterableGet&lt;K, V> Since 3.0
             p MapIterator를 지원하는 Map
 
-            h3.marker interface IterableSortedMap&lt;K, V> extends SortedMap&lt;K, V>, OrderedMap&lt;K, V> Since 4.0
+            h3 interface IterableSortedMap&lt;K, V> extends SortedMap&lt;K, V>, OrderedMap&lt;K, V> Since 4.0
 
-            h3.marker interface BoundedMap&lt;K, V> extends IterableMap&lt;K, V> Since 3.0
+            h3 interface BoundedMap&lt;K, V> extends IterableMap&lt;K, V> Since 3.0
 
-            h3.marker interface BidiMap&lt;K, V> extends IterableMap&lt;K, V> Since 3.0
+            h3 interface BidiMap&lt;K, V> extends IterableMap&lt;K, V> Since 3.0
             ol
                 li 키와 값이 일대일 대응을 만족하도록 강제하여, 값을 통한 키의 탐색이 가능하게 한다.
                 li 값을 통한 키의 탐색은 키를 통한 값의 탐색과 동일한 성능으로 이루어져야 한다.
                 li 키와 값의 위치를 뒤집은 BidiMap을 반환하는 inverseBidiMap() 연산도 지원한다
 
-            h3.marker interface SortedBidiMap&lt;K, V> extends OrderedBidiMap&lt;K, V>, SortedMap&lt;K, V> Since 3.0
+            h3 interface SortedBidiMap&lt;K, V> extends OrderedBidiMap&lt;K, V>, SortedMap&lt;K, V> Since 3.0
 
-            h3.marker interface MultiValuedMap&lt;K, V> Since 4.1
+            h3 interface MultiValuedMap&lt;K, V> Since 4.1
             ol
                 li 각 키에 대한 값을 컬렉션에 보관하는 맵을 정의한다
                 li 키를 통해 얻은 컬렉션의 변경 가능 여부는 정해지지 않는다.
@@ -84,36 +84,36 @@ include ../../source/skeleton.jade
                         | MapIterator&lt;K, V> mapIterator()
                         +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/MultiValuedMapTest.java', 'java', '[27,45]')
 
-            h3.marker interface ListValuedMap&lt;K, V> extends MultiValuedMap&lt;K, V> Since 4.1 + SetValuedMap
+            h3 interface ListValuedMap&lt;K, V> extends MultiValuedMap&lt;K, V> Since 4.1 + SetValuedMap
             p List를 컨테이너로 이용하는 것 외의 변경은 없다.
 
-            h3.marker interface OrderedMap&lt;K, V> extends IterableMap&lt;K, V> Since 3.0
+            h3 interface OrderedMap&lt;K, V> extends IterableMap&lt;K, V> Since 3.0
 
-            h3.marker interface OrderedBidiMap&lt;K, V> extends BidiMap&lt;K, V>, OrderedMap&lt;K, V> Since 3.0
+            h3 interface OrderedBidiMap&lt;K, V> extends BidiMap&lt;K, V>, OrderedMap&lt;K, V> Since 3.0
 
-            h3.marker interface KeyValue&lt;K, V> Since 3.0
+            h3 interface KeyValue&lt;K, V> Since 3.0
 
-            h3.marker interface Trie&lt;K, V> extends IterableSortedMap&lt;K, V> Since 4.0
+            h3 interface Trie&lt;K, V> extends IterableSortedMap&lt;K, V> Since 4.0
             p
                 | Prefix tree에 대해 정의한다.
                 +w3img('https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Trie_example.svg/1024px-Trie_example.svg.png')
                 +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/TrieTest.java', 'java', '[13,32]')
 
-        h2.marker 컬렉션 연산 인터페이스
+        h2 컬렉션 연산 인터페이스
         div
-            h3.marker interface Unmodifiable Since 3.0
+            h3 interface Unmodifiable Since 3.0
             p 컬렉션 변경 연산이 제공되지 않음을 표시하는 마커 인터페이스
 
-            h3.marker interface Get&lt;K, V> Since 4.0
+            h3 interface Get&lt;K, V> Since 4.0
             p Map 인터페이스의 읽기 기능에 대한 정의를 담고 있다. 라고 적혀있지만 remove(Object) 메서드는 여기에 있다.
 
-            h3.marker interface IterableGet&lt;K, V> extends Get&lt;K, V> Since 4.0
+            h3 interface IterableGet&lt;K, V> extends Get&lt;K, V> Since 4.0
             p 이 인터페이스를 구현한 Map은 mapIterator() 메서드를 통해 MapIterator&lt;K, V>를 제공한다.
 
-            h3.marker interface Put&lt;K, V> Since 4.0
+            h3 interface Put&lt;K, V> Since 4.0
             p Map 인터페이스의 쓰기 기능에 대한 정의를 담고 있다.  Put(K, V)는 V가 아닌 Object를 반환함에 유의.
 
-            h3.marker class FluentIterable&lt;E> implements Iterable&lt;E> Since 4.1
+            h3 class FluentIterable&lt;E> implements Iterable&lt;E> Since 4.1
             ol
                 li 스트림의 중간 연산들을 컬렉션에 직접 적용할 수 있는 기능을 제공한다. 기저 컬렉션에 대한 뷰를 반환하기 때문에 변형을 거쳐도 부하가 적다.
                 li 스트림의 종결 연산처럼, 뷰의 요소들로 구성된 새로운 컬렉션을 반환하는 기능을 제공한다.
@@ -154,10 +154,10 @@ include ../../source/skeleton.jade
                 void forEach(Closure&lt;? super E> closure)
                 void copyInto(Collection&lt;? super E> collection)
 
-            h3.marker interface OrderedIterator&lt;E> extends Iterator&lt;E> Since 3.0
+            h3 interface OrderedIterator&lt;E> extends Iterator&lt;E> Since 3.0
             p 역방향 순회를 추가로 지원한다
 
-            h3.marker interface MapIterator&lt;K, V> extends Iterator&lt;K> Since 3.0
+            h3 interface MapIterator&lt;K, V> extends Iterator&lt;K> Since 3.0
             ol
                 li Map에 대한 이터레이터를 정의한다.
                 li 이 인터페이스를 구현한 Map은 내부에서 데이터를 Entry 객체로 유지하지 않는다(불필요한 객체 생성 방지).
@@ -168,19 +168,19 @@ include ../../source/skeleton.jade
                 void remove() // 지원하지 않을 수 있다.
                 V setValue()  // 지원하지 않을 수 있다.
 
-            h3.marker interface OrderedMapIterator&lt;K, V> extends MapIterator&lt;K, V>, OrderedIterator&lt;K>
+            h3 interface OrderedMapIterator&lt;K, V> extends MapIterator&lt;K, V>, OrderedIterator&lt;K>
 
-            h3.marker interface ResettableIterator&lt;E> extends Iterator&lt;E> Since 3.0
+            h3 interface ResettableIterator&lt;E> extends Iterator&lt;E> Since 3.0
             +asCode('java').
                 void reset()
                     // 이너레이터가 생성됐을 때 초기 위치로 돌아간다.
 
-            h3.marker interface ResettableListIterator&lt;E> extends ListIterator&lt;E>, ResettableIterator&lt;E>, OrderedIterator&lt;E> Since 3.0
+            h3 interface ResettableListIterator&lt;E> extends ListIterator&lt;E>, ResettableIterator&lt;E>, OrderedIterator&lt;E> Since 3.0
             p 재사용 가능
 
-        h2.marker 유틸리티 클래스
+        h2 유틸리티 클래스
         div
-            h3.marker class BagUtils Since 2.1
+            h3 class BagUtils Since 2.1
             +asCode('java').
                 static final Bag EMPTY_BAG
                 static final Bag EMPTY_SORTED_BAG
@@ -194,7 +194,7 @@ include ../../source/skeleton.jade
                 static &lt;E> Bag&lt;E> predicatedBag(Bag&lt;E> bag, Predicate&lt;? super E> predicate)        // 아이템 추가 전 테스트 추가
                 static &lt;E> Bag&lt;E> transformingBag(Bag&lt;E> bag, Transformer&lt;? super E, ? extends E>) // 아이템 추가 전 변환기 추가
 
-            h3.marker class CollectionUtils Since 1.0
+            h3 class CollectionUtils Since 1.0
             ol
                 li public static final Collection EMPTY_COLLECTION
                 li static &lt;T> Collection&lt;T> emptyIfNull(Collection&lt;T> collection)
@@ -268,7 +268,7 @@ include ../../source/skeleton.jade
                 li static &lt;E> Collection&lt;E> transformingCollection(Collection&lt;E> collection, Transformer&lt;? super E, ? extends E> transformer)
                 p 변환 로직 추가
 
-            h3.marker class ComparatorUtils Since 2.1
+            h3 class ComparatorUtils Since 2.1
             +asCode('java').
                 public static final Comparator NATURAL_COMPARATOR
                 
@@ -279,13 +279,13 @@ include ../../source/skeleton.jade
                 static &lt;I, O> Comparator&lt;I> transformedComparator(Comparator&lt;O> comparator, Transformer&lt;? super I, ? extends O> fransformer)
                 static &lt;E> E min(E o1, E o2, Comparator&lt;E> comparator) + max
 
-            h3.marker class EnumerationUtils Since 3.0
+            h3 class EnumerationUtils Since 3.0
             +asCode('java').
                 static&lt;T> T get(Enumeration&lt;T> e, int index) // Since 4.1
                 static&lt;T> List&lt;E> toList(Enumeration&lt;? extends E> enumeration)
                 static List&lt;String> toList(StringTokenizer stringTokenizer)
 
-            h3.marker class IterableUtils Since 4.1
+            h3 class IterableUtils Since 4.1
             +asCode('java').
                 // + IteratorUtils
                 static &lt;E> Iterable&lt;E> emptyIterable()
@@ -318,7 +318,7 @@ include ../../source/skeleton.jade
                 static &lt;E> List&lt;E> toList(Iterable&lt;E> iterable)
                 static &lt;E> String toString(Iterable&lt;E> iterable)
 
-            h3.marker class ListUtils Since 1.0
+            h3 class ListUtils Since 1.0
             +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/ListUtilsTest.java', 'java')
             +asCode('java').
                 static &lt;T> List&lt;T> emptyIfNull(List&lt;T> list)
@@ -348,7 +348,7 @@ include ../../source/skeleton.jade
                 static int hashCodeForList(Collection&lt;?> list)
                 static &lt;T> int indexOf(List&lt;T> list, Predicate&lt;T> predicate)
 
-            h3.marker class MapUtils Since 1.0
+            h3 class MapUtils Since 1.0
             ol
                 li static &lt;K, V> V getObject(Map&lt;? super K, V> map, K key)
                 p map이 null이면 null 반환
@@ -378,7 +378,7 @@ include ../../source/skeleton.jade
                 +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', 'java', '[17,32,70,85]')
                 li static &lt;K, V> IterableMap&lt;K, V> iterableMap(Map&lt;K, V> map) // Since 4.0 + SortedMap 버전
 
-            h3.marker class MultiMapUtils Since 4.1
+            h3 class MultiMapUtils Since 4.1
             +asCode('java').
                 static &lt;K, V> MultiValuedMap&lt;K, V> emptyIfNull(MultiValuedMap&lt;K, V> map)
                 static &lt;K, V> Collection&lt;V> getCollection(MultiValuedMap&lt;K, V> map, K key)
@@ -388,13 +388,13 @@ include ../../source/skeleton.jade
                 static &lt;K, V> MultiValuedMap&lt;K, V> unmodifiableMultiValuedMap(MultiValuedMap&lt;? extends K, ? extends V> map)
                     // + transformedMultiValuedMap
 
-            h3.marker class MultiSetUtils Since 4.1
+            h3 class MultiSetUtils Since 4.1
             +asCode('java').
                 static &lt;E> MultiSet&lt;E> synchronizedMultiSet(MultiSet&lt;E> multiset)
                 static &lt;E> MultiSet&lt;E> unmodifiableMultiSet(MultiSet&lt;? extends E> multiset)
                 static &lt;E> MultiSet&lt;E> predicatedMultiSet(MultiSet&lt;E> multiset, Predicate&lt;? super E> predicate)
 
-            h3.marker class PredicateUtils Since 3.0
+            h3 class PredicateUtils Since 3.0
             +asCode('java').
                 static &lt;T> Predicate&lt;T> exceptionPredicate()
                     // + true, false
@@ -412,12 +412,12 @@ include ../../source/skeleton.jade
                     // + nullsFalse, nullsTrue
                 static &lt;T> Predicate&lt;T> transformedPredicate(Transformer&lt;? super T, ? extends T> transformer, Predicate&lt;? super T> predicate) // Since 3.1
 
-            h3.marker class QueueUtils Since 4.0
+            h3 class QueueUtils Since 4.0
             +asCode('java').
                 static &lt;E> Queue&lt;E> synchronizedQueue(Queue&lt;E> queue) // Since 4.2
                 static &lt;E> Queue&lt;E> unmodifiableQueue(QUeue&lt;? extends E> queue) + predicated, tranforming
 
-            h3.marker class SetUtils Since 2.1
+            h3 class SetUtils Since 2.1
             +asCode('java').
                 static &lt;E> SetUtils.SetView&lt;E> difference(Set&lt;? extends E> a, Set&lt;? extends E> b) // Since 4.1
                     // 차집합 a-b. + disjunction(대칭 차집합), intersection(교집합), union(합집합)
@@ -429,15 +429,15 @@ include ../../source/skeleton.jade
                 static &lt;E> Set&lt;E> orderedSet(Set&lt;E> set)
                     // + predicatedSet, predicatedNavigableSet Since 4.1, predicatedSortedSet, synchroizedSet, synchronizedSortedSet, transformedSet, transformedSortedSet, transformedNavigableSet Since 4.1, unmodifiableSet, unmodifiableNavigableSet Since 4.1, unmodifiableSortedSet
             div
-                h4.marker abstract static class SetUtils.SetView extends AbstractSet&lt;E> Since 4.1
+                h4 abstract static class SetUtils.SetView extends AbstractSet&lt;E> Since 4.1
                 +asCode('java').
                     &lt;S extends Set&lt;E>> void copyInto(S set)
                     Set&lt;E> toSet()
 
-            h3.marker class SplitMapUtils Since 4.0
+            h3 class SplitMapUtils Since 4.0
             p Put, Get을 구현한 객체를 Map으로 변환한다
 
-    h1.marker org.apache.commons.collections4.bag
+    h1 org.apache.commons.collections4.bag
     ol
         li class HashBag&lt;E> extends AbstractMapBag&lt;E> implements Serializable Since 3.0
         p 저장소로 HashMap을 이용하는 표준 Bag 구현을 제공한다.
@@ -454,7 +454,7 @@ include ../../source/skeleton.jade
         li class TransformedBag&lt;E> extends TransformedCollection&lt;E> implements Bag&lt;E> Since 3.0 + TransformedSortedBag
         p Bag 인스턴스의 요소 변환 제약을 거는 팩터리 메서드를 제공한다. 기존 요소를 포함하여 변환하는 경우 transformedBag(...) // Since 4.0, 신규 요소들만 변환하는 경우 transformingBag(...) // Since 4.0
 
-    h1.marker org.apache.commons.collections4.bidimap
+    h1 org.apache.commons.collections4.bidimap
     ol
         li class DualHashBidiMap&lt;K, V> extends AbstractDualBidiMap&lt;K, V> implements Serializable Since 3.0 + DualLinkedHashBidiMap Since 4.0, DualTreeBidiMap Since 3.0
         p 2개의 HashMap 인스턴스를 이용한 BidiMap 구현을 제공한다.
@@ -463,7 +463,7 @@ include ../../source/skeleton.jade
         li class UnmodifiableBidiMap&lt;K, V> extends AbstractBidiMapDecorator&lt;K, V> implements Unmodifiable Since 3.0 + UnmodifiableOrderedBidiMap, UnmodifiableSortedBidiMap
         p 인스턴스가 변경되지 않도록 래핑하는 팩터리 메서드 unmodifiableBidiMap(...) // Since 4.0을 제공한다.
 
-    h1.marker org.apache.commons.collections4.collection
+    h1 org.apache.commons.collections4.collection
     ol
         li class CompositeCollection&lt;E> implements Collection&lt;E>, Serializable Since 3.0
         p 다른 컬렉션(들)에 대해 하나의 뷰를 제공하는 장식자 컬렉션 구현. 뷰에 대한 add/remove 연산이 기저 컬렉션에 적용돼야 한다면 CompositeCollection.CollectionMutator를 제공해야 한다.
@@ -478,7 +478,7 @@ include ../../source/skeleton.jade
         li final class UnmodifiableCollection&lt;E> extends AbstractCollectionDecorator&lt;E> implements Unmodifiable Since 3.0 + UnmodifiableBoundedCollection
         p 컬렉션이 변경되지 않도록 래핑하는 팩터리 메서드 제공
 
-    h1.marker org.apache.commons.collections4.comparators
+    h1 org.apache.commons.collections4.comparators
     ol
         li final class Boolean Comparator implements Comparator&lt;Boolean>, Serializable SInce 3.0
         p Boolean 정렬을 위한 비교자를 제공한다
@@ -493,7 +493,7 @@ include ../../source/skeleton.jade
         li class ReverseComparator&lt;E> implements Comparator&lt;E>, Serializable Since 2.0
         li class TransformingComparator&lt;I, O> implements Comparator&lt;I>, Serializable Since 2.1
 
-    h1.marker org.apache.commons.collections4.iterators
+    h1 org.apache.commons.collections4.iterators
     ol
         li class ArrayIterator&lt;E> implements ResettableIterator&lt;E> Since 1.0
         p 배열에 대한 이터레이터 제공. + ArrayListIterator(java.util.ListIterator 프로토콜 추가 제공), ObjectArrayIterator, ObjectArrayListIterator
@@ -525,7 +525,7 @@ include ../../source/skeleton.jade
         li class PermutationIterator&lt;E> implements Iterator&lt;List&lt;E>> Since 4.0
         p 순열을 조회하는 이터레이터를 제공한다.
 
-    h1.marker org.apache.commons.collections4.keyvalue
+    h1 org.apache.commons.collections4.keyvalue
     ol
         li class MultiKey&lt;K> implements Serializable Since 3.0
         p 여러 키 값을 하나의 키로 이용할 수 있게 해준다. 이를 통해 다중 맵을 이용하지 않고 문제를 해결할 수 있다.
@@ -535,7 +535,7 @@ include ../../source/skeleton.jade
         p 맵과 결합된 Map.Entry
         li final class UnmodifiableMapEntry&lt;K, V> extends AbstractMapEntry&lt;K, V> implements Unmodifiable Since 3.0
 
-    h1.marker org.apache.commons.collections4.list
+    h1 org.apache.commons.collections4.list
     ol
         li class CursorableLinkedList&lt;E> extends AbstractLinkedList&lt;E> implements Serializable Since 1.0
         p ListIterator를 통한 동시 수정이 가능한 리스트 구현을 제공한다. listIterator(), cursor() 메서드로 Cursor 객체를 얻을 수 있다.
@@ -551,7 +551,7 @@ include ../../source/skeleton.jade
         p 임의 인덱스 삽입/제거에 최적화된 리스트 구현 제공.add, get, iterator만 이용한다면 ArrayList가 좋다
         li final class UnmodifiableList&lt;E> extends AbstractSerializableListDecorator&lt;E> implements Unmodifiable Since 3.0
 
-    h1.marker org.apache.commons.collections4.map
+    h1 org.apache.commons.collections4.map
     ol
         li class CaseInsensitiveMap&lt;K, V> extends AbstractHashedMap&lt;K, V> implements Serializable, Cloneable Since 3.0
         p 키의 삽입, 비교 시 모두 소문자로 변환된다. keySet() 역시 소문자로 변환된 키를 반환한다
@@ -582,26 +582,26 @@ include ../../source/skeleton.jade
         p 변결할 수 없는 entry 집합을 반환하는 팩터리 메서드 제공 + UnmodifiableMap, UnmodifiableOrderedMap, UnmodifiableSortedMap
         li class EntrySetToMapIteratorAdapter&lt;K, V> implements MapIterator&lt;K, V>, ResettableIterator Since 4.0
 
-    h1.marker org.apache.commons.collections4.multimap
+    h1 org.apache.commons.collections4.multimap
     ol
         li class ArrayListValuedHashMap&lt;K, V> extends AbstractListValuedMap&lt;K, V> implements Serializable SInce 4.1 + HashSetValuedHashMap
         li class TransformedMultiValuedMap&lt;K, V> extends AbstractMultiValuedMapDecorator&lt;K, V> Since 4.1
         li final class UnmodifiableMultiValuedMap&lt;K, V> extends AbstractMultiValuedMapDecorator&lt;K, V> implements Unmodifiable Since 4.1
 
-    h1.marker org.apache.commons.collections4.multiset
+    h1 org.apache.commons.collections4.multiset
     ol
         li class HashMultiSet&lt;E> extends AbstractMapMultiSet&lt;E> implements Serializable Since 4.1
         li class PredicatedMultiSet&lt;E> extends PredicatedCollection&lt;E> implements MultiSet&lt;E> Since 4.1
         li class SynchronizedMultiSet&lt;E> extends SynchronizedCollection&lt;E> implements MultiSet&lt;E> Since 4.1
         li final class UnmodifiableMultiSet&lt;E> extends AbstractMultiSetDecorator&lt;E> implements Unmodifiable Since 4.1
 
-    h1.marker org.apache.commons.collections4.queue
+    h1 org.apache.commons.collections4.queue
     ol
         li class CircularFifoQueue&lt;E> extends AbstractCollection&lt;E> implements Queue&lt;E>, BoundedCollection&lt;E>, Serializable Since 4.0
         p 고정 크기의 큐로써 가장 마지막 요소가 null이면 덮어쓴다
         li PredicatedQueue, SynchronizedQueue, TransformedQueue, UnmodifiableQueue
 
-    h1.marker org.apache.commons.collections4.set
+    h1 org.apache.commons.collections4.set
     ol
         li class CompositeSet&lt;E> implements Set&lt;E>, Serializable Since 3.0
         p 여러 셋에 대한 하나의 뷰를 제공. 뷰에 대한 연산이 기저 셋에 적용돼야 한다면 CompositeSet.SetMutator를 제공해야 한다

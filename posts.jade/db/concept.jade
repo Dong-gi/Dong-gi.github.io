@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('DB 개념', 'DB, 무결성, 정규화', 'DB 공통 개념 정리')
-    h1.marker DB
+    h1 DB
     ul
         li DB에 저장되는 데이터의 특징
         p Integrated Data, Stored Data, Operational Data, Shared Data
@@ -21,7 +21,7 @@ include ../../source/skeleton.jade
             li Internal schema
             p 내부 스키마. 데이터베이스의 물리적 구조
 
-    h1.marker 키
+    h1 키
     ol
         li 각 튜플을 구분하는 기준이 되는 속성들의 집합. 기본적으로 키의 중복은 허용되지 않는다.
         li Super key : 속성들의 집합으로 이루어진 키. 모든 튜플에 대해 유일해야 한다(유일성).
@@ -30,7 +30,7 @@ include ../../source/skeleton.jade
         li Alternate key : 후보키. 기본키 외의 후보키
         li Foreign key : 외래키. 다른 릴레이션의 기본키를 참조하는 속성의 집합
 
-    h1.marker 무결성
+    h1 무결성
     ol
         li NULL 무결성 : 특정 속성 값이 NULL이 될 수 없는 규정
         li 고유 무결성 : 각 속성의 값이 유일해야 한다는 규정(둘 이상의 값을 가질 수 없다)
@@ -40,20 +40,20 @@ include ../../source/skeleton.jade
         li 참조 무결성 : 외래키 값은 NULL이거나 참조 릴레이션의 기본키 값과 동일해야 한다는 규정
         li 개체 무결성 : 기본키를 구성하는 어떤 속성도 NULL일 수 없다는 규정
 
-    h1.marker 관계대수
+    h1 관계대수
     ol
         li 원하는 정보를 어떻게 유도하는가를 기술하는 절차적 언어
         li SELECT : 특정 조건을 만족하는 튜플의 부분집합을 구한다.
         li PROJECT : 릴레이션의 특정 속성만을 추출.
         li JOIN(⋈) : 공통 속성을 중심으로 2개의 릴레이션을 하나로 . CARTESIAN PRODUCT연산을 수행한 다음 SELECT 연산을 수행한 것과 같다.
 
-    h1.marker Anomaly; 이상
+    h1 Anomaly; 이상
     ol
         li 삽입 이상 : 의도치 않게 삽입 불가
         li 삭제 이상 : 의도치 않게 다른 값들도 삭제
         li 갱신 이상 : 일부만 갱신되어 정보 불일치
 
-    h1.marker 정규화
+    h1 정규화
     ul
         li 함수적 종속
         ul
@@ -72,7 +72,7 @@ include ../../source/skeleton.jade
             li 제5정규형 5NF : 모든 조인 종속이 후보키를 통해서만 성립.
             li 역정규화 : 지나친 정규화는 응답 속도를 저하시키므로, 어느 정도는 테이블을 합치는 것.
 
-    h1.marker 트랜잭션
+    h1 트랜잭션
     ul
         li 하나의 논리적 기능을 수행하기 위한 일련의 연산 집합으로, 작업의 단위. 정상적으로 종료될 경우 COMMIT, 아니면 ROLLBACK
         li 특성
@@ -83,7 +83,7 @@ include ../../source/skeleton.jade
             li 영속성(Durability) : 트랜잭션의 결과는 영구히 저장되고 반영된다.
         li 상태 : 활동(Active), 실패(Failed), 철회(Aborted), 부분 완료(Partially Committed), 완료
 
-    h1.marker 회복
+    h1 회복
     ol
         p 트랜잭션 수행 중 장애가 발생하여 이전의 정상 상태로 복구하는 작업.
         li 연기 갱신 기법 : 트랜잭션이 완료된 후에야 실질적으로 갱신
@@ -92,7 +92,7 @@ include ../../source/skeleton.jade
         li 검사점 기법 : 검사점을 로그에 기록. 장애시 마지막 검사점부터 회복 수행
         li 미디어 회복 기법 : 데이터베이스를 안전한 저장 장치에 덤프해 놓는다.
 
-    h1.marker 병행 제어
+    h1 병행 제어
     ol
         li 동시에 여러 개의 트랜잭션을 병행 수행할 때 실행되는 트랜잭션들이 일관성을 파괴하지 않도록 트랜잭션 간 상호 작용을 제어.
         li 잠금(Lock) : 한 트랜잭션에 사용되는 데이터를 다른 트랜잭션이 접근하지 못하게 함.

@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('HTML', 'HTML', 'HTML 정리', true)
-    h1.marker 태그
+    h1 태그
     ul
         li 문서 요소의 타입을 나타내는 이름으로, 사용자가 임의로 만들 수도 있다.
         li 태그는 &lt;과 > 사이에 이름을 적음으로써 표현되며, 여는 태그와 닫는 태그 사이에 내용이 포함될 수 있다.
@@ -12,7 +12,7 @@ include ../../source/skeleton.jade
             li &lt;title>&lt;/title> : 제목표시줄에 표시될 제목
             li &lt;body>&lt;/body> : page content
 
-    h1.marker 속성
+    h1 속성
     ol
         li 모든 HTML 태그는 속성을 가질 수 있다. 속성은 여는 태그 내부에 이름='값' 쌍으로 표현한다.
         li 속성 값을 표현하기 위해 '', "" 모두 이용 가능하다. 아래는 대표적인 속성들이다.
@@ -24,7 +24,7 @@ include ../../source/skeleton.jade
             li id : 태그에 고유한 id를 부여한다.
             li class : 태그에 특정 그룹의 class를 부여한다.
 
-    h1.marker 기본 태그
+    h1 기본 태그
     ul
         li heading : h1 ~ h6
         li paragraph : p
@@ -83,7 +83,7 @@ include ../../source/skeleton.jade
         li base : 페이지에서 사용하는 모든 상대주소의 시작점
         p 예. &lt;base href:"https://dong-gi.github.io/" target="_blank">
 
-    h1.marker Form
+    h1 Form
     ol
         li form은 HTML 페이지로부터 데이터를 전송하기 위한 정형화된 틀이다. form 내부는 input 태그들로 채워진다.
         li &lt;input type=""> : text, password, radio, checkbox, submit, reset...
@@ -95,7 +95,7 @@ include ../../source/skeleton.jade
         li 입력 요소 속성 : name, max, maxlength, min, pattern, readonly, required, disabled, size, ...
         +asA('https://www.w3schools.com/html/html_form_attributes.asp')
 
-    h1.markerHTML5
+    h1HTML5
     ul
         li 시맨틱; Semantic
         p HTML5 이전의 웹페이지들은 table 태그를 주로 사용하여 디자인했다. 중첩된 table들로 이루어진 웹페이지는 검색 엔진을 비롯한 프로그램이 기계적으로 의미를 찾기 어려워 HTML5는 문서에 대한 의미를 태그가 포함하는 방향을 모색했다.
@@ -128,7 +128,7 @@ include ../../source/skeleton.jade
         +asA('https://www.w3schools.com/graphics/default.asp', 'Graphic')
         +asA('https://www.w3schools.com/html/html_object.asp', 'Plug-in')
 
-    h1.marker Canvas
+    h1 Canvas
     ul
         li canvas를 지원하지 않는 브라우저를 위해 안에 fallback content(대체 텍스트 또는 DOM)를 적어주면 좋다
         li
@@ -136,7 +136,7 @@ include ../../source/skeleton.jade
             +codeBtn('/posts/front/canvas/draw1.js', 'javascript')
         li 캔버스의 기본 그리기 요소는 직사각형과 path(일련의 점들을 선분으로 연결) 두 가지
     div
-        h2.marker
+        h2
             | interface
             +asA('https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement', 'HTMLCanvasElement')
             |  : HTMLElement
@@ -148,11 +148,11 @@ include ../../source/skeleton.jade
             p type : default 'image/png', encoderOptions : default 0.92, 이미지 퀄리티[0, 1]
             li toBlob(callback[, mimeType][, qualityArgument])
             p callback : Blob을 먹는 함수, mimeType : default 'image/png', qualityArgument : 이미지 퀄리티[0, 1]
-        h2.marker
+        h2
             | interface
             +asA('https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D', 'CanvasRenderingContext2D')
         div
-            h3.marker 사각형 그리기
+            h3 사각형 그리기
             ul
                 li clearRect(x, y, width, height)
                 p 지정 사각형을 rgba(0,0,0,0)로 초기화. 이후 path를 그릴 땐 beginPath()를 다시 호출해야 함에 유의.
@@ -160,7 +160,7 @@ include ../../source/skeleton.jade
                 p 지정 사각형을 현재 fillStyle로 채우기 == rect() + fill()
                 li strokeRect(x, y, width, height)
                 p 지정 사각형에 현재 strokeStyle로 외각선 그리기 == rect() + stroke()
-            h3.marker 텍스트 그리기
+            h3 텍스트 그리기
             ul
                 li fillText(text, x, y[, maxWidth])
                 p 텍스트를 그리고 글자 내부는 현재 fillStyle로 채운다.
@@ -171,7 +171,7 @@ include ../../source/skeleton.jade
                     | 텍스트를 그린 결과가 어떻게 될지 미리 알 수 있는
                     +asA('https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics', 'TextMetrics')
                     |  객체 반환.
-            h3.marker path 생성
+            h3 path 생성
             ul
                 p 아래 메서드들은 실제 그리기 작업을 수행하지는 않는다.
                 li beginPath() : 그리기 시작 명시
@@ -199,7 +199,7 @@ include ../../source/skeleton.jade
                 li ellipse(x, y, radiusX, radiusY, rotation, startAngle, endAngle[, anticlockwise])
                 p rotation은 라디안 단위의 값으로, 해당 값만큼 타원을 회전시킨다
                 li rect(x, y, width, height)
-            h3.marker path 그리기
+            h3 path 그리기
             ul
                 li
                     | fill([fillRule])
@@ -241,7 +241,7 @@ include ../../source/skeleton.jade
                     br
                     | isPointInStroke(path, x, y)
                 p 정점이 현재 또는 지정된 path의 외각선 위에 있는지 판별한다
-            h3.marker path 스타일
+            h3 path 스타일
             ul
                 li lineWidth : default 1.0
                 li lineCap : 종점 표시 종류. 'butt'(default), 'round', 'square'
@@ -252,13 +252,13 @@ include ../../source/skeleton.jade
                     | 선분 요소와 공백(gap)의 길이로 이루어진 배열. 원소가 홀수개라면 자동으로 뒤에 똑같은 배열이 덧붙여져 짝수 크기가 된다.
                     br
                     | + lineDashOffset : 선분을 그리기 시작할 offset. default 0.0
-            h3.marker 텍스트 스타일
+            h3 텍스트 스타일
             ul
                 li font : default '10px sans-serif'
                 li textAlign : 'start'(default), 'end', 'left', 'right', 'center'
                 li textBaseline : 'top', 'hanging', 'middle', 'alphabetic'(default), 'ideographic', 'bottom'
                 li direction : 'inherit'(default), 'ltr'(left to right), 'rtl'
-            h3.marker fillStyle, strokeStyle
+            h3 fillStyle, strokeStyle
             ol
                 p default '#000', 값으로 가능한 타입은 아래 3가지.
                 li DOMString : CSS 색상으로 파싱될 수 있는 문자열
@@ -274,22 +274,22 @@ include ../../source/skeleton.jade
                     ul
                         li image : HTMLImageElement, SVGImageElement, HTMLVideoElement, HTMLCanvasElement, ImageBitmap, OffscreenCanvas
                         li repetition : 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat'
-            h3.marker 그림자 그리기
+            h3 그림자 그리기
             ul
                 li shadowBlur : default 0
                 li shadowColor : CSS 색상으로 파싱될 수 있는 문자열
                 li shadowOffsetX : default 0
                 li shadowOffsetY : default 0
-            h3.marker 이미지 그리기
+            h3 이미지 그리기
             ul
                 li
                     | drawImage(image, dx, dy);
                     +codeBtn('/posts/front/canvas/draw2.js', 'javascript')
                 li drawImage(image, dx, dy, dWidth, dHeight);
                 li drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
-            h3.marker 변환
+            h3 변환
             div
-                h4.marker DOMMatrix
+                h4 DOMMatrix
                 ul
                     li 2D 및 3D 변환을 나타내는 4x4 행렬
                     li 속성
@@ -316,16 +316,16 @@ include ../../source/skeleton.jade
                 li translate(x, y)
                 p 현재의 dx, dy에 각각 x, y만큼 추가한다
 
-            h3.marker 전역 속성
+            h3 전역 속성
             ul
                 li globalAlpha
                 p 캔버스에 그려지기 전에 도형, 이미지 등에 적용되는 투명도. default 1.0
                 li: +asA('https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation', 'globalCompositeOperation')
                 p 캔버스의 기존 내용에 새로운 도형, 이미지를 추가할 때의 합성 방법. 기본값은 덮어쓰기('source-over').
 
-            h3.marker 비트 조작
+            h3 비트 조작
             div
-                h4.marker ImageData
+                h4 ImageData
                 ul
                     li 캔버스 비트 배열 정보를 갖는 인터페이스. CanvasRenderingContext2D 메서드 또는 생성자로 인스턴스를 얻을 수 있다
                     li 생성자
@@ -348,7 +348,7 @@ include ../../source/skeleton.jade
                     | createImageData(imagedata)
                 p RGBA(0, 0, 0, 0)으로 채워진 새 ImageData 인스턴스를 반환한다. imagedata로 호출한 경우, imagedata의 width, height만 사용된다
 
-            h3.marker 상태 저장/복구
+            h3 상태 저장/복구
             ul
                 li canvas : 연관 HTMLCanvasElement 객체. null일 수 있음
                 li save()
@@ -357,7 +357,7 @@ include ../../source/skeleton.jade
 
     canvas#tutorial-canvas(width='100%', height='33%') 연습용 캔버스
 
-    h1.marker 참고
+    h1 참고
     ul
         li: +asA('https://www.w3.org/TR/2dcontext/')
         li: +asA('https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API')

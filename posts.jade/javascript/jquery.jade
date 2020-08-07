@@ -1,7 +1,7 @@
 include ../../source/skeleton.jade
 +post('jQuery', 'jQuery', 'jQuery 정리')
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js")
-    h1.marker jQuery 시작하기
+    h1 jQuery 시작하기
     div
         table.marker
             caption 선택자
@@ -108,7 +108,7 @@ include ../../source/skeleton.jade
         // .parseXML()
         $.parseXML('&lt;tag1>&lt;tag2>aa&lt;/tag2>&lt;tag2>bb&lt;/tag2>&lt;/tag1>')
 
-    h1.marker 애니메이션
+    h1 애니메이션
     p
         +codeBtn('/posts/javascript/animation_example.html', 'nohighlight') 애니메이션 예시
         +codeBtn('/posts/javascript/animation_example.html', 'html')
@@ -118,7 +118,7 @@ include ../../source/skeleton.jade
         li stop() : 애니메이션 정지
         li delay() : 애니메이션 지연
 
-    h1.marker 이벤트
+    h1 이벤트
     ol
         li 이벤트 강제 발생
         +asCode('javascript').
@@ -131,7 +131,7 @@ include ../../source/skeleton.jade
             li: +asCode('javascript') .one(events[, selector][, data], handler)
             p 핸들러가 한 번만 이벤트를 처리한다.
 
-    h1.marker jQuery UI
+    h1 jQuery UI
     p
         +codeBtn('/posts/javascript/jquery_ui_example.html', 'nohighlight') 예시
         +codeBtn('/posts/javascript/jquery_ui_example.html', 'html')

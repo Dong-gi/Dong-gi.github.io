@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('PostgreSQL 서버 관리', 'PostgreSQL', 'PostgreSQL 서버 관리 정리')
-    h1.marker 데이터베이스 클러스터 생성
+    h1 데이터베이스 클러스터 생성
     ul
         li 파일 시스템 관점에서 데이터베이스 클러스터는 모든 데이터가 저장되는 단일 디렉터리다.
         li 일반적인 위치 : /usr/local/pgsql/data, /var/lib/pgsql/data
@@ -13,7 +13,7 @@ include ../../source/skeleton.jade
         li 인코딩 지정
         +asCode('shell') $ initdb -D /usr/local/pgsql/data -E utf8 --no-locale
 
-    h1.marker 서버 시작
+    h1 서버 시작
     ul
         li 포그라운드에서 실행 : -D 옵션이 없으면 PGDATA 환경 변수를 이용한다. 이도 없으면 구동 실패
         +asCode('shell') $ postgres -D /usr/local/pgsql/data
@@ -25,7 +25,7 @@ include ../../source/skeleton.jade
         li 포트 지정
         +asCode('shell') $ postgres -p 56789
 
-    h1.marker 서버 종료
+    h1 서버 종료
     +asCode('shell') $ pg_ctl [-w] [-D datadir] [-m [s[mart]|f[ast]|i[mmediate]]] stop
     ul
         li SIGTERM : smart
@@ -35,7 +35,7 @@ include ../../source/skeleton.jade
         li SIGQUIT : immediate
         p 모든 자식 프로세스에 SIGQUIT을 전달하고 대기한다. 5초 이내에 종료되지 않으면 SIGKILL로 즉시 종료하고, 자신도 정상적인 중지 절차없이 중지한다. 다음 서버 시작 시 복구 작업이 진행된다.
 
-    h1.marker 데이터베이스 클러스터 업데이트
+    h1 데이터베이스 클러스터 업데이트
     p PostgreSQL의 버전은 major.minor로 구성된다. 10부터는 major 버전이 단일 숫자지만, 그 외는 9.5, 9.6과 같이 두 영역이 major 버전이다. minor 버전 차이는 클러스터 구조에 영향을 미치지 않기 때문에 실행 파일만 바꾸면 업그레이드가 완료된다
     ul
         li pg_dumpall을 통한 업그레이드
@@ -57,7 +57,7 @@ include ../../source/skeleton.jade
         li pg_upgrade를 통한 업그레이드
         p 다른 메이저 버전으로 현재 위치에 마이그레이션할 수 있다.
 
-    h1.marker 암호화 옵션
+    h1 암호화 옵션
     ol
         li 패스워드 암호화
         p 데이터베이스 유저 암호는 해시값만 저장되며, SCRAM, MD5 방식 로그인의 경우 서버에 전송되기 전에 클라이언트에서 해싱을 수행하므로 평문을 알아내기는 어렵다. SCRAM이 MD5보다 안전하다고 한다
@@ -70,7 +70,7 @@ include ../../source/skeleton.jade
         li 클라이언트 측 암호화
         p 서버를 신뢰할 수 없는 경우 클라이언트가 데이터를 암호화한다
 
-    h1.marker SSL을 사용한 TCP/IP 연결 보호
+    h1 SSL을 사용한 TCP/IP 연결 보호
     ol
         li 기본 설정 : postgresql.confg에서 ssl을 on으로 설정
         p SSL 모드에서 시작하려면 서버 인증서가 포함된 파일과 개인 키가 있어야 한다. 이 파일들은 각각 서버 데이터 디렉터리에서 server.crt, server.key일 것으로 예상되지만, ssl_cert_file, ssl_key_file 환경 변수로 위치와 이름을 지정할 수 있다

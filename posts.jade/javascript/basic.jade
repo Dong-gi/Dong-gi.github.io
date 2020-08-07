@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('코어 JavaScript', 'JavaScript', '코어 JavaScript 정리')
-    h1.marker 식별자
+    h1 식별자
     ol
         li
             | 식별자 : '_', '$' 허용.
@@ -17,7 +17,7 @@ include ../../source/skeleton.jade
             | 상수 선언 : const 식별자;
             +codeBtn('/Repositories/JavaScript/Basic/type.js', 'javascript', '[4,4]')
 
-    h1.marker 자료형
+    h1 자료형
     ul
         li Object
         ol
@@ -67,7 +67,7 @@ include ../../source/skeleton.jade
         li WeakSet
         p 값은 반드시 객체여야 하며, GC 대상이 된다.
 
-    h1.marker 연산자
+    h1 연산자
     ol
         li Boolean 연산자 : !, &&, ||
         p &&, ||는 short circuit 연산.
@@ -89,7 +89,7 @@ include ../../source/skeleton.jade
             +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'javascript', '[51,65]') 객체 해체 할당 »
             +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'javascript', '[69,71]') 객체 메서드 해체 할당 »
 
-    h1.marker Syntax
+    h1 Syntax
     ol
         li if...[else if...][else...]
         li while, do...while
@@ -103,7 +103,7 @@ include ../../source/skeleton.jade
         li try ~ catch ~ finally
         p 예외 처리. throw는 임의의 타입을 던질 수 있다. try 뒤에 catch 또는 finally가 하나라도 있어야 한다.
 
-    h1.marker Function
+    h1 Function
     ol
         li 오버로딩 불가. 함수 호출 시 매개변수 길이 불일치해도 됨.
         li arguments 객체를 통해 매개변수에 접근.(람다는 불가능)
@@ -128,7 +128,7 @@ include ../../source/skeleton.jade
             | 즉시 실행 함수 표현 IIFE; Immediately Invoked Function Expression
             +codeBtn('/Repositories/JavaScript/Basic/function.js', 'javascript', '[12,17]')
 
-    h1.marker Class
+    h1 Class
     ol
         li 클래스는 본질적으로 함수다. 단순히 문법적 편의성이 더해졌을 뿐.
         p
@@ -147,7 +147,7 @@ include ../../source/skeleton.jade
             Object.preventExtensions() // 객체 확장 금지. 새 프로퍼티 추가만 금지
         p: +codeBtn('/Repositories/JavaScript/Basic/class.js', 'javascript', '[42,70]') 접근자 프로퍼티 + 객체 보호 예 »
     div
-        h2.marker 프록시
+        h2 프록시
         p
             +asA('https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler#Methods', '참고자료')
             +codeBtn('/Repositories/JavaScript/Basic/class.js', 'javascript', '[73,85]') 프록시 예 »
@@ -192,7 +192,7 @@ include ../../source/skeleton.jade
                 th construct()
                 td A trap for the new operator.
 
-    h1.marker Iterator, Generator
+    h1 Iterator, Generator
     p
         | 해체 할당과 마찬가지로 파이썬에서 가져온 아이디어들 중 하나
         +codeBtn('/Repositories/JavaScript/Basic/iterator.js', 'javascript') 이터레이션 프로토콜 예 »
@@ -203,7 +203,7 @@ include ../../source/skeleton.jade
         li 제너레이터 함수를 호출하면 제너레이터 객체를 받는다.
         li 제너레이터의 실행을 재개하는 3가지 메서드 : next(), send(), throw()
 
-    h1.marker 비동기 처리
+    h1 비동기 처리
     ol
         li 전통적 방식 : 콜백
         p
@@ -225,7 +225,7 @@ include ../../source/skeleton.jade
             | 함수 정의 앞에 async 키워드를 사용하면 함수 내에서 await를 사용할 수 있다. 이때, 함수는 Promise가 결정될 때까지 일시 중지.
             +codeBtn('/Repositories/JavaScript/Basic/async.js', 'javascript') async.js »
 
-    h1.marker 정규표현식
+    h1 정규표현식
     ul
         li 정규표현식(RegExp) 리터럴 /X/
         p /123/gm과 new RegExp('123', 'gm')는 의미적으로 동일하다

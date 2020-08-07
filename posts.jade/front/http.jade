@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('HTTP', 'HTTP', 'HTTP 정리')
-    h1.marker 도서 정보
+    h1 도서 정보
     .w3-row
         .w3-col.s2.w3-center
             +w3img('http://seoji.nl.go.kr/fu/ecip/dbfiles/CIP_FILES_TBL/4096969_3.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
@@ -10,12 +10,12 @@ include ../../source/skeleton.jade
                 +tds('ISBN 정보', '978-89-6626-120-8 [13000]')
                 +tds('ISBN-A', 'https://doi.org/10.978.896626/1208')
                 +tds('발행사항', '인사이트, 발행일 : 20141215')
-    h1.marker 내용
+    h1 내용
     div
-        h2.marker 보안 요건
+        h2 보안 요건
         p 기밀성 confidentiality, 무결성 integrity, 가용성 availability, 인증 authentication, 부인 방지 NonRepudiation
 
-        h2.marker 소스 간 자원 공유 CORS;Cross-Origin Resource Sharing
+        h2 소스 간 자원 공유 CORS;Cross-Origin Resource Sharing
         ol
             li 본문이 text/plain이고, 커스텀 헤더가 없는 GET, POST 요청에는 Origin 헤더가 추가된다.
             li Origin 헤더에는 요청을 보내는 페이지의 소스(프로토콜, 도메인, 포트)가 있으며, 서버는 이를 근거로 응답할 지 여부를 정한다.
@@ -40,7 +40,7 @@ include ../../source/skeleton.jade
             p Authorization 헤더 : 인증 알고리즘, 사용자 이름, 비밀번호
             li 200 OK
 
-        h2.marker 다이제스트 인증
+        h2 다이제스트 인증
         ol
             li 비밀번호를 네트워크를 통해 보내지 않는다.
             p 비밀번호를 비가역적으로 뒤섞은 지문(fingerprint), 요약(digest)을 보낸다.
@@ -74,7 +74,7 @@ include ../../source/skeleton.jade
                 li nonce = BASE64(timestamp H(timestamp":"ETag":"private_key))
                 li cnonce : 클라이언트가 서버를 인증할 목적으로 생성.
 
-        h2.marker HTTPS
+        h2 HTTPS
         ul
             li 디지털 서명
             p 메시지가 위/변조되지 않았음을 입증하는 체크섬
@@ -87,7 +87,7 @@ include ../../source/skeleton.jade
             li 암호(chipher)
             p 보통 연결을 수립할 때는 느린 공개키 암호를 사용하고, 이후 메시지 전송에는 빠른 대칭키 암호를 사용.
 
-        h2.marker MIME 타입
+        h2 MIME 타입
         ol
             p 형식: Type/SubType; variable=value
             li application/*

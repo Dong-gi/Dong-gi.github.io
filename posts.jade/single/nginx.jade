@@ -1,15 +1,15 @@
 include ../../source/skeleton.jade
 +post('NGINX', 'NGINX', 'NGINX 정리')
-    h1.marker NGINX?
+    h1 NGINX?
     p HTTP 서버 + 메일 프록시 + 리버스 프록시 +  로드 밸런서
 
-    h1.marker nginx.conf : 메인 설정
+    h1 nginx.conf : 메인 설정
     +asCode().
         http {
             include /etc/nginx/sites-enabled/*; # 활성 서버
         }
 
-    h1.marker HTTP 서버 설정
+    h1 HTTP 서버 설정
     +asCode().
         server {
             listen 0.0.0.0:9090 default_server;        # IPv4
@@ -40,7 +40,7 @@ include ../../source/skeleton.jade
             }
         }
 
-    h1.marker 리버스 프록시 설정
+    h1 리버스 프록시 설정
     +asCode().
         server {
             listen 0.0.0.0:55555;
@@ -56,5 +56,5 @@ include ../../source/skeleton.jade
             }
         }
 
-    h1.marker 변경된 설정 적용
+    h1 변경된 설정 적용
     +asCode('shell') $ nginx -s reload

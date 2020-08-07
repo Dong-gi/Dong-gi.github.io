@@ -1,13 +1,13 @@
 include ../../source/skeleton.jade
 +post('디자인 패턴 + 리팩터링', '디자인 패턴, 리팩터링', '디자인 패턴 + 리팩터링 정리')
-    h1.marker 기술 부채
+    h1 기술 부채
     ol
         li 기술 부채
         p 개발자가 임시방편을 선택하면 기술은 부채를 지게 된다. 누적된 기술 부채가 너무 커서 제품을 포기해야 하는 상황을 기술 파산이라고 한다.
         li 기술 부채 요소
         p 코드 부채, 설계 부채, 테스트 부채, 문서 부채
 
-    h1.marker 소프트웨어 설계 원칙
+    h1 소프트웨어 설계 원칙
     ol
         li 계층 원칙 : 계층적인 추상화 조직 생성
         li 캡슐화 원칙 : 관심사 분리, 정보 은닉
@@ -16,7 +16,7 @@ include ../../source/skeleton.jade
         li OCP; Open/Close Principle
         p 모듈은 확장에는 열려야 하지만, 변경에는 닫혀야 한다. 특히 모듈은 코드 변경 없이 새로운 요구 사항을 지원할 수 있어야 한다. 일단 타입 구현을 완료하면 타입은 버그 수정을 위해서만 변경 가능하다
 
-    h1.marker 디자인 패턴
+    h1 디자인 패턴
     ol
         li Abstract Factory
         p
@@ -59,7 +59,7 @@ include ../../source/skeleton.jade
         p 동일한 계열의 알고리즘들을 캡슐화하여 상호 교환할 수 있도록 한다
         li Scott Meyers : All non-leaf classes should be abstract
 
-    h1.marker 리팩터링
+    h1 리팩터링
     ol
         li 자주 쓰이지 않는 코드의 성능 향상에 얽매이지 말 것.
         li 주석을 적는 대신 주석이 설명하는 부분을 메서드로 추출

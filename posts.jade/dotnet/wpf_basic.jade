@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('WPF 기초', 'C#, .NET, WPF', 'WPF 기초 정리')
-    h1.marker 실습 1
+    h1 실습 1
     ol
         li XAML(eXtensible Application Markup Language)로 컨트롤을 작성하는 것과 코드에서 생성하는 것은 결과적으로 동일하다.
         li Blend에서 디자인을 따로 할 수 있다. 분업-협업 가능.
@@ -13,7 +13,7 @@ include ../../source/skeleton.jade
         +codeBtn('/Repositories/VisualStudio/CSharp/WpfApp1/MainWindow.xaml', 'xml') MainWindow.xaml »
         +codeBtn('/Repositories/VisualStudio/CSharp/WpfApp1/MainWindow.xaml.cs', 'cs') MainWindow.xaml.cs »
 
-    h1.marker 실습 2
+    h1 실습 2
     ol
         li Modal : 자식 윈도우가 종료되기 전까지 부모 윈도우는 비활성화.
         li Modeless : 자식 윈도우와 부모 윈도우가 별개로 동작.
@@ -28,7 +28,7 @@ include ../../source/skeleton.jade
         +codeBtn('/Repositories/VisualStudio/CSharp/WpfApp3/MainWindow.xaml', 'xml') MainWindow.xaml »
         +codeBtn('/Repositories/VisualStudio/CSharp/WpfApp3/MainWindow.xaml.cs', 'cs') MainWindow.xaml.cs »
 
-    h1.marker 레이아웃
+    h1 레이아웃
     ol
         li
             | 디자이너도 아니고... 종류만 알아보고 넘어간다.
@@ -40,7 +40,7 @@ include ../../source/skeleton.jade
         li VirtualizingPanel : Panel에 대한 추상 클래스.
         li WrapPanel : 자식 요소들을 좌에서 우로 차례대로 배치하다, 패널의 경계를 넘어서면 다음 줄(바로 아래)로 넘겨 배치한다.
 
-    h1.marker 리소스
+    h1 리소스
     ol
         li xaml 내부에 정적 리소스 정의 : &lt;Window.Resources>&lt;/Window.Resources>
         li ResourceDictionary : xaml에 리소스들을 정의하고 이를 별개의 파일로 분리.
@@ -49,32 +49,32 @@ include ../../source/skeleton.jade
         +codeBtn('/Repositories/VisualStudio/CSharp/WpfApp4/Dictionary1.xaml', 'xml') Dictionary1.xaml »
         +codeBtn('/Repositories/VisualStudio/CSharp/WpfApp4/MainWindow.xaml', 'xml') MainWindow.xaml »
 
-    h1.marker 컨트롤
+    h1 컨트롤
     ol
         li (ButtonBase ← Button, (ToggleButton ← CheckBox, RadioButton))
         li ListBox, ComboBox, ListView, TreeView
         li Menu, Toolbar / TabControl, Expander, GroupBox / Slider, ScrollBar
         li TextBox, RichTextBox, PasswordBox
 
-    h1.marker 이벤트
+    h1 이벤트
     ol
         li Event Tunneling : 부모 컨트롤로부터 자식 컨트롤로 Preview 접두어가 붙은 이벤트가 전달됨.
         li Event Bubbling : 이벤트 센더는 이벤트를 처리하고 이를 다시 부모로 전달
         li 1,2와 같은 이벤트를 RoutedEvent라고 하며, 따라서 이벤트 핸들러의 파라미터로 RoutedEventArgs가 넘겨진다.
 
-    h1.marker Command
+    h1 Command
     ol
         li 이벤트 핸들러를 xaml과 독립적으로 작성하는 것을 가능하게 해준다.
         li ICommand를 구현하며 CanExecute(), Execute(), CanExecuteChanged를 정의한다.
         li 내장 명령 : ApplicationCommands, ComponentCommands, MediaCommands, NavigationCommands, EditingCommands
         li 명령 바인딩 : System.Windows.Interactivity.WPF 패키지 설치/이용
 
-    h1.marker 트리거
+    h1 트리거
     p
         | 특정 조건에 따라 스타일을 적용시키는 방법.
         +codeBtn('/Repositories/VisualStudio/CSharp/WpfApp5/MainWindow.xaml', 'xml') MainWindow.xaml »
 
-    h1.marker 바인딩
+    h1 바인딩
     ul
         li MVVM : Model - View - ViewModel
         li View의 컨트롤들을 ViewModel과 바인딩 : Control의 값 변경 + 이벤트를 ViewModel에 통지, Model의 값 변경을 View에 통지.
@@ -135,7 +135,7 @@ include ../../source/skeleton.jade
         p 여러 소스로부터 얻어진 객체들을 하나의 타깃 객체로 변환. IMultiValueConverter 인터페이스 구현
             +codeBtn('/Repositories/VisualStudio/CSharp/WpfApp6/RgbToColorConverter.cs', 'cs')
 
-    h1.marker 기타
+    h1 기타
     ol
         li Invokes method on main UI thread
         +asCode('cs').

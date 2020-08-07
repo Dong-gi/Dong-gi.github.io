@@ -1,13 +1,13 @@
 include ../../source/skeleton.jade
 +post('Python Built-in Types', 'Python, Built-in, Type', 'Python 내장 자료형 정리')
-    h1.marker 진리값 판별
+    h1 진리값 판별
     p 모든 객체는 if 조건, while 조건, Boolean 연산에 이용하기 위한 진리값 판별이 가능하다.
     p 기본적으로 __bool__() 메서드가 false를 반환하거나 __len__() 메서드가 0을 반환하지 않는 객체는 참이다.
 
-    h1.marker 논리 연산
+    h1 논리 연산
     p and(short-circuit), or(short-circuit), not
 
-    h1.marker 비교 연산
+    h1 비교 연산
     ol
         li &lt;, &lt;=, >, >=, ==, !=, is(object identity), is not
         li 연속적인 비교가 가능하다.
@@ -15,7 +15,7 @@ include ../../source/skeleton.jade
         li __eq__() 메서드를 정의하지 않는 이상 인스턴스들은 보통 같지 않다고 판별된다
         li __lt__(), __le__(), __gt__(), __ge__() 등을 충분히 정의하지 않으면 정렬이 불가능하다. 보통 __lt__()와 __eq__()로 충분하다.
 
-    h1.marker 숫자 타입
+    h1 숫자 타입
     +asCode('python').
         int                # 정밀도는 제한이 없다.
         float              # 관련 정보는 sys.float_info를 통해 확인할 수 있다.
@@ -69,7 +69,7 @@ include ../../source/skeleton.jade
         # Hashing
         #     해시값은 modulo P 안에서 선택된다. P는 고정된 소수로, sys.hash_info에서 확인 가능
 
-    h1.marker Iterator Types
+    h1 Iterator Types
     +asCode('python').
         container.__iter__()
             # container가 iteration을 지원하려면 정의해야 한다.
@@ -79,13 +79,13 @@ include ../../source/skeleton.jade
         iterator.__next__()
             # 다음 요소 반환. 없으면 StopIteration 발생.
     div
-        h2.marker Generator Types
+        h2 Generator Types
         p
             | generator는 iterator protocol을 쉽게 제공한다. container의 __iter__()가 generator로 정의된 경우, 자동으로 __iter__()와 __next__()를 지원하는 iterator 객체를 반환한다.
             +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[143,150]') 예시 1 »
             +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[70,76]') 예시 2»
 
-    h1.marker Sequence Types
+    h1 Sequence Types
     ul
         li list, tuple, range # 3가지 기본 시퀀스 타입
         li.marker Common Sequence Operations
@@ -135,7 +135,7 @@ include ../../source/skeleton.jade
             li collections.abc.MutableSequence는 사용자 정의 sequence 타입의 연산 정의를 도와준다.
             li 슬라이스에 대한 할당(s[i:j:k] = t)은 길이가 일치해야 한다
 
-    h1.marker Text Sequence Type
+    h1 Text Sequence Type
     p
         | str 객체 또는 유니코드 시퀀스 strings로 표현하며, 모두 내용은 변경 불가능하다.
         +codeBtn('/Repositories/Python/Basic/format_map_example.py', 'python') format_map 예시 »
@@ -201,7 +201,7 @@ include ../../source/skeleton.jade
         zfill(width)
             # '0'을 문자열 앞에 붙인다. 처음 등장하는 '+', '-'는 위치 유지.
 
-    h1.marker Binary Sequence Types
+    h1 Binary Sequence Types
     ul
         li bytes, bytearray, memoryview
         p 핵심 자료형은 bytes, bytearray며, memoryview는 다른 이진 객체를 복사하지 않고 buffer protocol을 통해 접근한다.
@@ -277,9 +277,9 @@ include ../../source/skeleton.jade
             f_contiguous # Since 3.3, 메모리가 Fortran contiguous인지
             contiguous   # Since 3.3, 메모리가 contiguous인지
 
-    h1.marker Set Types
+    h1 Set Types
     div
-        h2.marker
+        h2
             | class set([iterable])
             br
             | class frozenset([iterable])
@@ -313,9 +313,9 @@ include ../../source/skeleton.jade
             pop()         # 임의 원소 삭제
             clear()
 
-    h1.marker Mapping Types
+    h1 Mapping Types
     div
-        h2.marker
+        h2
             | class dict(**kwarg)
             br
             | class dict(mapping, **kwarg)
@@ -331,7 +331,7 @@ include ../../source/skeleton.jade
 
             a == b == c == d == e
         div
-            h3.marker Dictionary Operations
+            h3 Dictionary Operations
             +asCode('python').
                 len(d)
                 d[key]
@@ -365,7 +365,7 @@ include ../../source/skeleton.jade
 
                 # Since 3.8 → dict 순서를 reversed()로 뒤집을 수 있다
 
-            h3.marker Dictionary view objects
+            h3 Dictionary view objects
             p dict.keys(), dict.values(), dict.items()로 반환된 뷰. dict의 변화는 뷰에도 반영된다.
             +asCode('python').
                 len(dictview)
@@ -373,7 +373,7 @@ include ../../source/skeleton.jade
                 x in dictview
                 reversed(dictview) # Since 3.8
 
-    h1.marker Context Manager Types
+    h1 Context Manager Types
     ul
         li with statement
         p Context manager가 정의한 runtime context를 지원
@@ -382,7 +382,7 @@ include ../../source/skeleton.jade
         li contextmanager.__exit__(exc_type, exc_val, exc_tb)
         p 억제된 예외가 있는지 여부 반환. True면 인자에 예외 타입, 값, traceback 정보가 넘어간다.
 
-    h1.marker Special Attributes
+    h1 Special Attributes
     +asCode('python').
         object.__dict__
         instance.__class__

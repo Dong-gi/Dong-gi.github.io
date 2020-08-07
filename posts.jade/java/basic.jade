@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('Java 시작하기', 'Java', 'Java 정리')
-    h1.marker 개발 환경
+    h1 개발 환경
     ol
         li JDK 설치
         p
@@ -14,7 +14,7 @@ include ../../source/skeleton.jade
         li IDE 설치
         p Eclipse, IntelliJ Community 등 취향에 맞게 설치한다.
 
-        h2.marker Eclipse 환경 설정 : Window » Preferences
+        h2 Eclipse 환경 설정 : Window » Preferences
         ul
             li 폰트 설정
             p General - Appearance - Colors and Fonts : Basic - Text Font 및 기타 폰트를 시력에 맞게 설정
@@ -28,7 +28,7 @@ include ../../source/skeleton.jade
             li JDK 설정
             p Java - Installed JREs : jre가 아닌 jdk로 설정
 
-    h1.marker 이클립스 HelloWorld 프로젝트
+    h1 이클립스 HelloWorld 프로젝트
     ol
         li 프로젝트 생성
         p
@@ -51,7 +51,7 @@ include ../../source/skeleton.jade
             br
             | 콘솔 결과창이 보이지 않는다면 Window - Show View - Console 선택
 
-    h1.marker 개발 과정
+    h1 개발 과정
     ol
         | "»" 우측은 산출물.
         li 코딩 » .java 소스 코드
@@ -69,7 +69,7 @@ include ../../source/skeleton.jade
             br
             | jar.exe : Java ARchive. 프로그램 실행에 관련된 파일들을 .jar파일로 압축
 
-    h1.marker 주석
+    h1 주석
     ol
         li 주석(Comment)은 프로그래머를 위한 것으로, 컴파일러는 무시하는 문장들이다.
         li // : '//'부터 줄의 끝까지 무시한다.
@@ -77,7 +77,7 @@ include ../../source/skeleton.jade
             | /* */ : '/*'와 '*/' 사이의 모든 텍스트를 무시한다.
             +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/Comment.java', 'java')
 
-    h1.marker 식별자
+    h1 식별자
     ul
         li 식별자(Identifier)는 의미 있는 코드에 붙이는 이름을 의미한다. 의미 있는 코드에는 변수(Variable), 상수(Constant), 메서드, 클래스 등이 있다.
         li 자바 식별자는 '_', '$'의 사용을 허용한다. 단, '_' 단독으로는 사용할 수 없다.
@@ -85,7 +85,7 @@ include ../../source/skeleton.jade
             | 식별자 관례 : 상수는 SNAKE_CASE, 상수를 제외한 식별자는 camelCase 이용. 클래스는 CamelCase.
             +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/Identifier.java', 'java')
 
-    h1.marker 자료형, 연산
+    h1 자료형, 연산
     ul
         li 자료형은 메모리 상에서 값이 표현되는 형식을 정의한다.
         li 기본 자료형(Base Type; Primitive Type)
@@ -122,7 +122,7 @@ include ../../source/skeleton.jade
             li Checked Casting
             p 경고 없이 명시적으로 형변환하는 것. clazz.cast(object)를 이용한다.
 
-    h1.marker 구문
+    h1 구문
     p if, for, while, do-while, switch, try-catch, try-with-resource
     ul
         li switch 조건식에 정수(char 포함), String, Enum이 허용된다.
@@ -133,14 +133,14 @@ include ../../source/skeleton.jade
         +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/Syntax.java', 'java', '[43, 46]') enhanced for
         +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java', 'java') try-with-resource
 
-    h1.marker Varargs
+    h1 Varargs
     ul
         li 가변 길이 매개변수 선언 : Type... 배열명
         p
             | 나열된 매개변수들이 하나의 배열로 넘겨지며, 배열 자체를 넘길 수 있다.
             +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/VarArgs.java', 'java')
 
-    h1.marker 제한자(Modifier)
+    h1 제한자(Modifier)
     ol
         li 접근 제한자 : 부모의 것보다 접근 범위를 넓힐 수는 있지만, 축소할 수는 없다.
         ul
@@ -167,7 +167,7 @@ include ../../source/skeleton.jade
             li Method : All
             li Variable : final, private, protected, public, static, default
 
-    h1.marker JUnit
+    h1 JUnit
     p
         | 단위 테스트에 사용되는 라이브러리
         +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/JUnitExample.java', 'java')

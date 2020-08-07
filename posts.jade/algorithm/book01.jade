@@ -1,7 +1,7 @@
 include ../../source/skeleton.jade
 
 +post('알고리즘 도감', '알고리즘 도감', '알고리즘 도감 독서 기록')
-    h1.marker 도서 정보
+    h1 도서 정보
     .w3-row
         .w3-col.s2.w3-center
             +w3img('http://seoji.nl.go.kr/fu/ecip/dbfiles/CIP_FILES_TBL/6534360_3.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
@@ -10,15 +10,15 @@ include ../../source/skeleton.jade
                 +tds('표제/저자사항', '알고리즘 도감 / 이시다 모리테루,미야자키 쇼이치 지음 ;김완섭 옮김')
                 +tds('ISBN 정보', '979-11-88621-12-5 [93000]')
                 +tds('발행사항', 'Jpub(제이펍) , 발행일 : 20180209')
-    h1.marker 정리
+    h1 정리
     div
-        h2.marker 문자열 검색; Boyer-Moore
+        h2 문자열 검색; Boyer-Moore
         p
             | 예. abcxdezcabacabac에서 abac 검색
             br
             | 처음 검색 인덱스 0. 마지막 위치의 x는 패턴에 없는 문자이므로 다음 검색 인덱스는 1이 아닌 4.
 
-        h2.marker 디피-헬만 키 교환법
+        h2 디피-헬만 키 교환법
         p 두 키 K1, K2를 합성하는, 교환법칙이 성립하는(F(k1, k2) == F(k2, k1)) 함수 F가 있을 때, 두 대화 참여자 A, B의 키 생성 절차는 아래와 같다.
         ol
             li A가 B에게 공개키 P를 전달
@@ -32,10 +32,10 @@ include ../../source/skeleton.jade
             li A는 B에게 G^X mod P를, B는 A에게 G^Y mod P를 전달
             li A, B는 이제 각각 (G^Y mod P)^X mod P, (G^X mod P)^Y mod P == G^(XY) mod P를 공유한다.
 
-        h2.marker 메시지 인증 코드; MAC(Message Authentication Code)
+        h2 메시지 인증 코드; MAC(Message Authentication Code)
         p 암호문과 키를 이용해 만든 MAC를 암호문과 같이 전달하면 수신측은 암호문 또는 키의 변조를 감지해낼 수 있다. 흔히 사용되는 것은 암호문과 키를 해싱하여 MAC을 생성하는 HMAC
 
-        h2.marker 전자 서명
+        h2 전자 서명
         ol
             li A는 메시지(평문이든 다른 암호문이든 무관), 비밀키, 공개키를 준비.
             p 키 생성 알고리즘 G : 서명자의 (비밀키, 공개키)쌍을 생성한다.

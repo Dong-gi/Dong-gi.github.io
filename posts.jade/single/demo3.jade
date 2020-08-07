@@ -265,7 +265,7 @@ include ../../source/skeleton.jade
             }
         }
 
-    h1.marker 문제
+    h1 문제
     ol
         li
             +asA('https://www.synapsoft.co.kr/', '사이냅소프트')
@@ -273,10 +273,10 @@ include ../../source/skeleton.jade
         li 로마 숫자에 대한 사칙 연산을 수행하는 계산기
         li 입출력 숫자의 범위는 모두 [I, XXXIX]로 제한된다
     
-    h1.marker 풀이 1 : 매핑 이용
+    h1 풀이 1 : 매핑 이용
     #calc1
     div
-        h2.marker 해설
+        h2 해설
         ol
             li
                 +codeBtn('/posts.jade/single/demo3.jade', 'text') 전체 코드 보기
@@ -295,10 +295,10 @@ include ../../source/skeleton.jade
             li 아라비아 숫자 → 로마 숫자
             +asCode('javascript') ValidRomanNums[num]
     
-    h1.marker 풀이 2 : 파서/포매터 이용
+    h1 풀이 2 : 파서/포매터 이용
     #calc2
     div
-        h2.marker 해설
+        h2 해설
         ol
             li
                 +codeBtn('/posts.jade/single/demo3.jade', 'text') 전체 코드 보기
@@ -372,7 +372,7 @@ include ../../source/skeleton.jade
                     return formatRoman.memo[num];
                 }
                 formatRoman.memo = new Map();   // 파서와 마찬가지로 캐싱
-    h1.marker SF; Simple HTML Framework
+    h1 SF; Simple HTML Framework
     p
         | 이 문제의 풀이에는 개인적으로 작성한 HTML 라이브러리를 적용했습니다. 자세한 내용은 다음의 링크를 참고해주세요.
         +asA('/posts/project/sf.html')

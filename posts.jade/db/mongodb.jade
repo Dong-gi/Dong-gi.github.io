@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('MongoDB 정리', 'MongoDB, NoSQL, BSON', 'MongoDB 주요 내용 정리')
-    h1.marker MongoDB
+    h1 MongoDB
     ol
         li NoSQL 데이터베이스의 한 종류. 데이터를 BSON(Binary JSON)으로 취급하며, SQL을 지원하지 않는다.
         +asA('https://docs.mongodb.com/manual/reference/sql-comparison/')
@@ -23,7 +23,7 @@ include ../../source/skeleton.jade
         li 최대 쿼리 결과 크기는 BSON 문서가 허용하는 16MB
         p 이를 초과하는 문서가 필요하다면 GridFS API를 이용. mongofiles 명령 또는 드라이버 참고.
 
-    h1.marker BSON Specification
+    h1 BSON Specification
     ol
         +asA('http://bsonspec.org/spec.html')
         li Basic Types
@@ -288,7 +288,7 @@ include ../../source/skeleton.jade
                 td Code w/ scope
                 td
 
-    h1.marker mongo Shell
+    h1 mongo Shell
     ul
         li mongo
         p 기본 포트 27017
@@ -313,7 +313,7 @@ include ../../source/skeleton.jade
             +asA('https://docs.mongodb.com/manual/core/transactions/', '트랜잭션')
             +asA('https://docs.mongodb.com/manual/reference/aggregation-variables/', 'Aggregation variables')
     div
-        h2.marker help
+        h2 help
         table.no-sort
             tr
                 td db.help()
@@ -382,9 +382,9 @@ include ../../source/skeleton.jade
                 td exit
                 td
 
-        h2.marker db.mycoll.find().help()
+        h2 db.mycoll.find().help()
         div
-            h3.marker find([object predicate][, object projection])
+            h3 find([object predicate][, object projection])
             +asCode('javascript') let coll = db.myCollection;
             table.no-sort
                 tr
@@ -454,7 +454,7 @@ include ../../source/skeleton.jade
                     td coll.find().size()
                     td limit(), skip() 적용
 
-            h3.marker Cursor methods
+            h3 Cursor methods
             p db.mycoll.find()는 이터레이터(Cursor)를 반환한다. 단, mongo 쉘에서 var 변수에 할당하지 않은 경우 자동으로 결과를 출력하고 끝냄에 유의.
             table.no-sort
                 tr
@@ -467,7 +467,7 @@ include ../../source/skeleton.jade
                     td cursor.noCursorTimeout()
                     td 이 경우 커서를 모두 순회하거나, 수동으로 close()를 호출해야만 한다.
 
-        h2.marker db.mycoll.help()
+        h2 db.mycoll.help()
         +asCode('javascript') let coll = db.myCollection;
         table.no-sort
             tr
@@ -527,7 +527,7 @@ include ../../source/skeleton.jade
                 td coll.renameCollection('newName')
                 td
 
-    h1.marker Aggregation
+    h1 Aggregation
     ul
         li aggregate
         +asCode('javascript').

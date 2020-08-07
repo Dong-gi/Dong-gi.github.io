@@ -1,8 +1,8 @@
 include ../../source/skeleton.jade
 +post('PostgreSQL SQL 언어', 'PostgreSQL, SQL', 'PostgreSQL SQL 언어 정리')
-    h1.marker SQL Syntax
+    h1 SQL Syntax
     div
-        h2.marker Lexical Structure
+        h2 Lexical Structure
         ul
             li.marker 식별자와 키워드
             ol
@@ -23,28 +23,28 @@ include ../../source/skeleton.jade
                     END;
                     $$ LANGUAGE plpgsql;
 
-        h2.marker Value Expressions
+        h2 Value Expressions
         div
-            h3.marker 열 참조
+            h3 열 참조
             +asCode('sql').
                 -- correlation은 테이블 이름이나 alias
                 correlation.columnname
-            h3.marker 위치 매개변수 : 함수 정의의 매개변수 위치를 이용해 변수 참조
+            h3 위치 매개변수 : 함수 정의의 매개변수 위치를 이용해 변수 참조
             +asCode('sql').
                 -- 문자열을 2번 반복해서 반환하는 함수
                 CREATE OR REPLACE FUNCTION test(text) RETURNS text AS $body$ SELECT $1 || $1 $body$ LANGUAGE sql;
-            h3.marker 배열 요소 참조
+            h3 배열 요소 참조
             +asCode('sql').
                 -- subscript는 integer 값을 내는 표현식
                 expression[subscript]
                 expression[lower_subscript:upper_subscript]
-            h3.marker 필드 선택
+            h3 필드 선택
             +asCode('sql').
                 -- 특정 행의 열 참조. expression은 row type 또는 열집합
                 expression.fieldname
                 -- 일반적으로 expression은 괄호로 감싸져야 하지만, 테이블이나 위치 매개변수의 경우 생략할 수 있다.
                 -- .*로 모든 필드를 얻을 수 있다.
-            h3.marker 집계 함수 호출
+            h3 집계 함수 호출
             ol
                 li 집계 함수(aggregate function)란 여러 입력 행들을 하나의 결과행으로 줄이는 함수.
                 li 집계 함수 호출 형태
@@ -67,7 +67,7 @@ include ../../source/skeleton.jade
                     -- 실제 호출 예
                     SELECT count(*) AS unfiltered, count(*) FILTER (WHERE num &lt; 5) AS filtered FROM generate_series(1,10) AS num;
                 li: +asA('http://postgresql.kr/docs/9.6/functions-aggregate.html', '내장 집계 함수 목록')
-            h3.marker 윈도우 함수 호출
+            h3 윈도우 함수 호출
             ol
                 li 윈도우 함수는 집계 함수와 비슷하지만, 입력 행들이 결과에 그대로 나타난다.
                 li 윈도우 함수 호출 형태
@@ -108,7 +108,7 @@ include ../../source/skeleton.jade
                     li EXCLUDE NO OTHERS
                 li expression은 윈도우 함수 호출을 포함하지 않아야 한다.
                 li: +asA('http://postgresql.kr/docs/9.6/functions-window.html#FUNCTIONS-WINDOW-TABLE', '내장 윈도우 함수 목록')
-            h3.marker Collation Expressions
+            h3 Collation Expressions
             +asCode('sql').
                 -- 로캐일에 따른 정렬
                 SELECT * FROM tbl WHERE ... ORDER BY a COLLATE "C"; -- 결과 정렬
@@ -124,9 +124,9 @@ include ../../source/skeleton.jade
                     db_name=# CREATE DATABASE [db_name] LC_COLLATE 'C';
                     -- 데이터베이스는 생성될 때 기본적으로 template1 데이터베이스를 복제하여 생성된다. 하지만 이는 로캐일이 이미 설정되어 충돌하여 에러가 발생할 수 있다.
                     db_name=# CREATE DATABASE [db_name] TEMPLATE template0 LC_COLLATE 'C';
-            h3.marker Scalar Subqueries : 한 행 또는 한 컬럼을 반환하는, 괄호에 감싸인 SELECT 쿼리
+            h3 Scalar Subqueries : 한 행 또는 한 컬럼을 반환하는, 괄호에 감싸인 SELECT 쿼리
             +asCode('sql') SELECT name, (SELECT max(pop) FROM cities WHERE cities.state = states.name) FROM states;
-            h3.marker 배열 생성자
+            h3 배열 생성자
             +asCode('sql').
                 SELECT ARRAY[1,2,3+4];
                 SELECT ARRAY[1,2,22.7]::integer[];
@@ -136,7 +136,7 @@ include ../../source/skeleton.jade
                 SELECT ARRAY(SELECT oid FROM pg_proc WHERE proname LIKE 'bytea%');
                 CREATE TABLE arr(f1 int[], f2 int[]);
                 INSERT INTO arr VALUES (ARRAY[[1,2],[3,4]], ARRAY[[5,6],[7,8]]);
-            h3.marker 행 생성자
+            h3 행 생성자
             +asCode('sql').
                 SELECT ROW(1,2.5,'this is a test');
                 SELECT ROW(t.*, 42) FROM t; -- t는 행 값
@@ -150,7 +150,7 @@ include ../../source/skeleton.jade
                 -- Now we need a cast to indicate which function to call:
                 SELECT getf1(ROW(1,2.5,'this is a test')::mytable);
                 SELECT getf1(CAST(ROW(11,'this is a test',2.5) AS myrowtype));
-            h3.marker Expression Evaluation Rules
+            h3 Expression Evaluation Rules
             ol
                 li SELECT true OR somefunc();와 SELECT somefunc() OR ture; 모두 somefunc()가 호출되지 않는다. short-circuit 연산과는 다르다.
                 li SELECT ... WHERE CASE WHEN x > 0 THEN y/x > 1.5 ELSE false END;
@@ -159,7 +159,7 @@ include ../../source/skeleton.jade
                     | 주의. IMMUTABLE 함수는 값이 먼저 평가되기 때문에, 실제로 x가 항상 0보다 크더라도 1/0이 미리 평가되어 에러가 발생한다.
                     +asA('http://postgresql.kr/docs/current/xfunc-volatility.html', 'xfunc-volatility')
 
-        h2.marker 함수 호출
+        h2 함수 호출
         +asCode('sql').
             -- PostgreSQL의 함수의 인자는 이름과 위치 둘 다로 참조할 수 있다.
             CREATE FUNCTION concat_lower_or_upper(a text, b text, uppercase boolean DEFAULT false) RETURNS text AS $$
@@ -177,16 +177,16 @@ include ../../source/skeleton.jade
             p 키워드 인자는 나머지보다 뒤에 위치해야 한다.
             +asCode('sql') SELECT concat_lower_or_upper('Hello', 'World', uppercase => true);
 
-    h1.marker Data Definition
+    h1 Data Definition
     div
-        h2.marker Default Values
+        h2 Default Values
         +asCode('sql').
             -- 기본값에 표현식을 사용할 수 있다. 가장 흔히 쓰이는 것은 timestamp 열이 CURRENT_TIMESTAMP 값을 갖게 하는 것.
             CREATE TABLE products (
                 product_no integer DEFAULT nextval('products_product_no_seq'),
                 ...
             );
-        h2.marker Constraints
+        h2 Constraints
         ol
             li.marker Check Constraints
             +asCode('sql').
@@ -250,11 +250,11 @@ include ../../source/skeleton.jade
                     quantity integer,
                     PRIMARY KEY (product_no, order_id)
                 );
-        h2.marker System Columns
+        h2 System Columns
         p
             | oid : object_id. 테이블을 WITH OIDS로 생성하거나, default with oids이 설정된 경우 생성되는 열. 타입 이름도 oid.
             +asA('http://postgresql.kr/docs/9.6/ddl-system-columns.html')
-        h2.marker Modifying Tables
+        h2 Modifying Tables
         ol
             li.marker Adding a Column
             +asCode('sql').
@@ -287,14 +287,14 @@ include ../../source/skeleton.jade
             +asCode('sql') ALTER TABLE products RENAME COLUMN product_no TO product_number;
             li.marker Renaming a Table
             +asCode('sql') ALTER TABLE products RENAME TO items;
-        h2.marker Privileges
+        h2 Privileges
         p 권한 : SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER, CREATE, CONNECT, TEMPORARY, EXECUTE, USAGE &lt;&lt; ALL
         +asCode('sql').
             GRANT UPDATE ON table_name TO username;
             REVOKE ALL ON table_name FROM username;
             GRANT SELECT ON ALL TABLES IN SCHEMA public TO user;
             GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO user;
-        h2.marker
+        h2
             | Row Security Policies
             +asA('http://postgresql.kr/docs/current/ddl-rowsecurity.html', 'ddl-rowsecurity')
         +asCode('sql').
@@ -302,7 +302,7 @@ include ../../source/skeleton.jade
             CREATE TABLE accounts (manager text, company text, contact_email text);
             ALTER TABLE accounts ENABLE ROW LEVEL SECURITY;
             CREATE POLICY account_managers ON accounts TO managers USING (manager = current_user);
-        h2.marker Schemas
+        h2 Schemas
         +asCode('sql').
             CREATE SCHEMA myschema; -- Schema의 테이블은 schema.table 또는 database.schema.table로 접근
             CREATE TABLE myschema.mytable ( ... );
@@ -311,7 +311,7 @@ include ../../source/skeleton.jade
             -- 모든 새 데이터베이스는 public이라는 스키마를 갖고 있다. 따라서 아래 두 문장은 서로 같다.
             CREATE TABLE products ( ... );
             CREATE TABLE public.products ( ... );
-        h2.marker Table Partitioning
+        h2 Table Partitioning
         ul
             li 개요
             ol
@@ -337,7 +337,7 @@ include ../../source/skeleton.jade
                 li 가지치기 옵션이 켜있는 경우, 파티셔닝된 테이블의 정의(인덱스의 정의가 아니라)를 살펴, 스캔하지 않아도 되는 테이블들은 제외한다.
                 li 가지치기 시점 : 쿼리 플랜 초기화 시, 쿼리 플랜 실행 중(Append 노드 타입에 한하여)
 
-    h1.marker Data Manipulation
+    h1 Data Manipulation
     ol
         li Inserting Data, Updating Data, Deleting Data
         p DB - PostgreSQL 시작하기 - SQL 언어 참고
@@ -347,11 +347,11 @@ include ../../source/skeleton.jade
             UPDATE products SET price = price * 1.10 WHERE price &lt;= 99.99 RETURNING name, price AS new_price;
             DELETE FROM products WHERE obsoletion_date = 'today' RETURNING *;
 
-    h1.marker Queries
+    h1 Queries
     div
-        h2.marker Table Expressions
+        h2 Table Expressions
         div
-            h3.marker FROM 절
+            h3 FROM 절
             ul
                 li 일반
                 +asCode('sql') FROM table_reference [, table_reference [, ...]]
@@ -388,7 +388,7 @@ include ../../source/skeleton.jade
                     -- unknown_log 테이블로부터 각 로그의 첫 30글자, 삽입 시각, 로그 길이를 가져오기
                     SELECT substring(log.log, 1, 30), log.insert_datetime, len FROM unknown_log log LEFT JOIN LATERAL LENGTH(log.log) len ON true;
                     -- LEFT JOIN ON true == CROSS JOIN. 사실 LATERAL 빼도 잘 동작하며, 실제로 사용할 일이 있을진 모르겠음...
-            h3.marker WHERE 절
+            h3 WHERE 절
             ol
                 li.marker GROUPING SETS
                 p 한 테이블에 대해 같은 조건으로 여러 그룹에 대해 SELECT해야하는 경우, 이를 한 번에 질의할 수 있다.
@@ -406,41 +406,41 @@ include ../../source/skeleton.jade
                     GROUP BY a, CUBE (b, c), GROUPING SETS (d, e)
                     -- ((a, d), (a, e), (a, b, d), (a, b, e), ..., (a, b, c, e))
                 li GROUP BY 절에서 행 생성자의 이용은 ROW(a, b)를 통해 할 수 있다
-        h2.marker Select Lists
+        h2 Select Lists
         +asCode('sql') SELECT DISTINCT select_list ...
         p 각 열집합에 대해 고유한 행들만 선택한다
         +asCode('sql') SELECT DISTINCT ON (expression [, expression ...]) select_list ...
         p 모든 행에 대해 expression이 평가된다. 두 행의 모든 평가값이 같은 경우 두 행은 같다고 간주한다.
 
-        h2.marker Combining Queries
+        h2 Combining Queries
         +asCode('sql').
             query1 UNION [ALL] query2
             query1 INTERSECT [ALL] query2
             query1 EXCEPT [ALL] query2
 
-        h2.marker Sorting Rows
+        h2 Sorting Rows
         ul
             +asCode('sql') ORDER BY sort_expression1 [ASC | DESC] [NULLS { FIRST | LAST }] [, sort_expression2 ...]
             li ASC, DESC : 기본값은 ASC
             li NULLS FIRST, NULLS LAST
             p null값에 대한 정렬 순서를 의미하며, 기본값은 ASC의 경우 NULLS LAST, DESC의 경우 NULLS FIRST
 
-        h2.marker LIMIT and OFFSET
+        h2 LIMIT and OFFSET
         ul
             +asCode('sql') SELECT select_list FROM table_expression [ ORDER BY ... ] [ LIMIT { number | ALL } ] [ OFFSET number ]
             li LIMIT : 출력 행의 개수 제한
             li OFFSET : 산출된 순서대로 n개 행을 출력하지 않고 무시
 
-        h2.marker VALUES Lists
+        h2 VALUES Lists
         ul
             li VALUES ( expression [, ...] ) [, ...]
             +asCode('sql') SELECT * FROM (VALUES (1, 'one'), (2, 'two'), (3, 'three')) AS t (num,letter);
             li 실제 디스크 상에 테이블을 만들지 않으면서 상수 테이블을 만드는 방법.
             li 문법적으로 "SELECT select_list FROM table_expression"과 동일하게 취급된다.
 
-        h2.marker WITH Queries
+        h2 WITH Queries
         div
-            h3.marker SELECT in WITH
+            h3 SELECT in WITH
             ul
                 li 여러 개의 SELECT 서브 쿼리를 날리는 대신 WITH을 이용하여 분리할 수 있다.
                 +asCode('sql') with tmp1 AS (SELECT ...), tmp2 AS (SELECT ...) SELECT ... WHERE tmp1...
@@ -489,15 +489,15 @@ include ../../source/skeleton.jade
                         SELECT g.id, g.link, g.data, sg.depth + 1 FROM graph g, search_graph sg WHERE g.id = sg.link
                     ) SELECT * FROM search_graph;
 
-            h3.marker Data-Modifying Statements in WITH
+            h3 Data-Modifying Statements in WITH
             p INSERT, UPDATE, DELETE를 WITH과 함께 사용할 수 있다.
             +asCode('sql').
                 WITH moved_rows AS ( DELETE FROM products WHERE isnert_datetime &lt; '2010-11-01' RETURNING * )
                 INSERT INTO products_log SELECT * FROM moved_rows;
 
-    h1.marker Data Types
+    h1 Data Types
     div
-        h2.marker Numeric Types
+        h2 Numeric Types
         table.no-sort
             tr
                 th Name
@@ -560,7 +560,7 @@ include ../../source/skeleton.jade
             li serial
             p serial 타입은 1부터 시작하여 자동으로 1씩 증가하는 정수에 대한 표현 편의를 제공한다. 9.6 버전에서는 sequence를 이용함으로써 구현한다.
 
-        h2.marker Character Types
+        h2 Character Types
         table.no-sort
             tr
                 th Name
@@ -575,7 +575,7 @@ include ../../source/skeleton.jade
                 td text
                 td 가변 길이 문자열
 
-        h2.marker Binary Data Type : bytea
+        h2 Binary Data Type : bytea
         ol
             li 로캐일에 의존하지 않는 이진 문자열을 표현한다
             li bytea의 출력에는 'hex', 'escape' 두 가지 방식(bytea_output)이 있으며, 기본값은 'hex'로 설정되어 있다.
@@ -583,7 +583,7 @@ include ../../source/skeleton.jade
                 li hex : 각 바이트를 16진수 2자리로 표현. 예. '\xDEADBEEF'
                 li escape : 출력 가능 아스키 문자(32 ~ 126)는 있는 그대로, 백슬래시는 \\, 그 외는 \xxx로 표현한다. 예. 'abc klm *\251T'
 
-        h2.marker Date/Time Types
+        h2 Date/Time Types
         table.no-sort
             tr
                 th Name
@@ -671,15 +671,15 @@ include ../../source/skeleton.jade
                     td time
                     td 00:00:00.00 UTC
 
-        h2.marker boolean, bool
+        h2 boolean, bool
         ol
             li TRUE, 't', 'true', 'y', 'yes', 'on', '1'
             li FALSE, 'f', 'false', 'n', 'no', 'off', '0'
 
-        h2.marker Enumerated Types
+        h2 Enumerated Types
         +asCode('sql') CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy'); -- 대소문자 구분한다
 
-        h2.marker Geometric Types
+        h2 Geometric Types
         table.no-sort
             tr
                 th Name
@@ -727,7 +727,7 @@ include ../../source/skeleton.jade
                 td Circle
                 td &lt;(x, y), r>
 
-        h2.marker JSON Types : json, jsonb
+        h2 JSON Types : json, jsonb
         ul
             li jsonb : 이진 포맷으로 저장하여 입력 시 조금 느리지만, 처리는 json보다 빠르다.
             li 배열 포함 여부 확인 예. SELECT '[1, 2, 3]'::jsonb @> '[3, 1]'::jsonb;
@@ -735,7 +735,7 @@ include ../../source/skeleton.jade
             li key의 존재 유무 확인 예. SELECT '{"foo": "bar"}'::jsonb ? 'foo';
             li key로 접근 예. select '{"key":"value"}'::jsonb -> 'key';
 
-        h2.marker Array
+        h2 Array
         ul
             li 배열 타입 정의
             p PostgreSQL은 배열 크기를 제한하지 않는다.
@@ -780,7 +780,7 @@ include ../../source/skeleton.jade
                     SELECT * FROM dims;
             li: +asA('http://postgresql.kr/docs/current/functions-array.html', 'functions-array.html')
 
-        h2.marker Composite Types
+        h2 Composite Types
         ol
             +asCode('sql') CREATE TYPE complex AS ( r float4, i float4 );
             li 테이블을 만들면 그와 동일한 이름의 타입이 생성된다.
@@ -793,7 +793,7 @@ include ../../source/skeleton.jade
             li SET 바로 다음엔 괄호가 없어도 되지만, 등호 다음엔 필요하다.
             +asCode('sql') UPDATE table_name SET complex_column.r = (complex_column).r + 1 WHERE ...;
 
-        h2.marker Range Types
+        h2 Range Types
         ol
             li int4range — Range of integer
             li int8range — Range of bigint
@@ -804,13 +804,13 @@ include ../../source/skeleton.jade
             +asA('http://postgresql.kr/docs/current/functions-range.html#RANGE-OPERATORS-TABLE', 'RANGE-OPERATORS-TABLE')
             +asA('http://postgresql.kr/docs/current/functions-range.html#RANGE-FUNCTIONS-TABLE', 'RANGE-FUNCTIONS-TABLE')
 
-        h2.marker Domain Types
+        h2 Domain Types
         p 기저 타입을 토대로 제약을 추가하여 새로 정의하는 타입
         +asCode('sql') CREATE DOMAIN non_negative_int AS integer CHECK (VALUE >= 0);
 
-    h1.marker Functions and Operations
+    h1 Functions and Operations
     div
-        h2.marker Logical Operators
+        h2 Logical Operators
         ol
             li AND, OR, NOT
             li NULL도 논리 상태로 이용한다
@@ -820,7 +820,7 @@ include ../../source/skeleton.jade
                 li TRUE OR NULL == TRUE
                 li FALSE OR NULL == NULL
                 li NULL AND NULL == NULL OR NULL == NOT NULL == NULL
-        h2.marker Comparison Functions and Operators
+        h2 Comparison Functions and Operators
         ol
             li &lt;, >, &lt;=, >=, =, &lt;> or !=
             li a [NOT] BETWEEN x AND y
@@ -830,7 +830,7 @@ include ../../source/skeleton.jade
             li expression IS [NOT] NULL
             li boolean_expression IS [NOT] TRUE // FALSE, UNKNOWN
 
-        h2.marker Mathematical Functions and Operators
+        h2 Mathematical Functions and Operators
         ol
             li +, -, *, /, %, @(절댓값)
             li ^(거듭제곱), |/(제곱근), ||/(삼중근), !(팩토리얼, 후위), !!(팩토리얼, 전위)
@@ -838,9 +838,9 @@ include ../../source/skeleton.jade
             li abs(x), sqrt(x), cbrt(x), ceil(x), floor(x), exp(x), div(x, y), round(x, y), ...
             li random() : x ∈ [0.0, 1.0), setseed(dp) : dp ∈ [-1.0, 1.0]
 
-        h2.marker String Functions and Operators
+        h2 String Functions and Operators
         div
-            h3.marker 문자열 변형
+            h3 문자열 변형
             ul
                 li 문자열 연결 연산자 ||
                 p 비문자열도 피연산자 중 한쪽이 될 수 있다
@@ -859,7 +859,7 @@ include ../../source/skeleton.jade
                 li repeat(string, number)
                 li reverse(string)
 
-            h3.marker 문자열 길이 관련
+            h3 문자열 길이 관련
             ul
                 li bit_length(string) : 문자열 비트 수
                 li octet_length(string) : 문자열 바이트 수
@@ -868,7 +868,7 @@ include ../../source/skeleton.jade
                 li length(string) : 문자열 문자 수
                 li length(string | bytea, encoding) : 문자열 문자 수
 
-            h3.marker 검색
+            h3 검색
             ol
                 li replace(src_string, target_string, dest_string)
                 li position(substring in string) : substring의 위치 반환
@@ -891,7 +891,7 @@ include ../../source/skeleton.jade
                 li translate(string, from, to)
                 p 문자열 각 문자에 대하여, from[i]에 일치하는 문자를 to[i]로 교체한다.
 
-            h3.marker 인코딩 관련
+            h3 인코딩 관련
             ol
                 li pg_client_encoding() : 현재 인코딩 이름 반환
                 li ascii(string)
@@ -913,7 +913,7 @@ include ../../source/skeleton.jade
                 li set_bit(string, offset, newvalue), set_byte(string, offset, newvalue)
                 li md5(string), sha256(bytea), sha512(bytea)
 
-        h2.marker Bit String Operators
+        h2 Bit String Operators
         table.no-sort
             tr
                 th Operator
@@ -956,9 +956,9 @@ include ../../source/skeleton.jade
                 td B'10001' >> 2
                 td 00100
 
-        h2.marker Pattern matching
+        h2 Pattern matching
         div
-            h3.marker LIKE
+            h3 LIKE
             ol
                 li 전체 문자열이 패턴과 일치하는지 여부를 판별한다
                 li Syntax
@@ -974,7 +974,7 @@ include ../../source/skeleton.jade
                 p PostgreSQL 고유의 ILIKE : 대소문자 구별없는 LIKE
                 p LIKE = ~~, ILIKE = ~~*, NOT LIKE = !~~, NOT ILIKE = !~~*
 
-            h3.marker SIMILAR TO 정규표현식
+            h3 SIMILAR TO 정규표현식
             ol
                 li LIKE와 비슷하나, 패턴으로 SQL 표준 정규표현식을 이용한다
                 p LIKE와 마찬가지로 전체 문자열이 패턴과 일치해야 한다.
@@ -993,21 +993,21 @@ include ../../source/skeleton.jade
                     li () : 그루핑
                     li [] : 글자 집합
 
-            h3.marker POSIX 정규표현식
+            h3 POSIX 정규표현식
             div
-                h4.marker 용어
+                h4 용어
                 ol
                     li RE; 정규표현식 : 정규표현식은 |로 구분되는 브랜치들로 구성된다. 임의의 브랜치와 일치하는 부분 문자열은 매칭 결과가 된다
                     li Branch : 브랜치는 quantified atom 또는 constraint들로 구성된다. 구성요소 순서대로 매칭을 시도하며, 빈 브랜치는 빈 문자열과 매칭된다.
                     li Quantified atom : quantifier가 붙은 atom
                     li Constraint : 길이 0인 문자열이 매칭되지만, 특별한 위치와 의미를 지닌다.
-                h4.marker 연산자
+                h4 연산자
                 ol
                     li ~ : case sensitive match
                     li ~* : case insensitive match
                     li !~ : case sensitive 'not' match
                     li !~* : case insensitive 'not' match
-                h4.marker Atom
+                h4 Atom
                 ol
                     li (re) : 정규표현식 re를 매칭하며, 그루핑 번호가 붙는다
                     li (?:re) : re에 대해 매칭은 하지만, 그루핑 번호는 붙지 않는다(non-capturing set)
@@ -1017,7 +1017,7 @@ include ../../source/skeleton.jade
                     li \c : c는 alphanumeric 문자. 이스케이핑된다.
                     li { : 뒤에 숫자가 오는 경우 정규표현식 quantifier가 된다.
                     li x : 문자 x 자체에 매칭된다
-                h4.marker Quantifier
+                h4 Quantifier
                 ol
                     li * : 0 or more
                     li + : 1 or more
@@ -1031,7 +1031,7 @@ include ../../source/skeleton.jade
                     li {m}? : non-greedy version of {m}
                     li {m,}? : non-greedy version of {m,}
                     li {m,n}? : non-greedy version of {m,n}
-                h4.marker Constraint
+                h4 Constraint
                 ol
                     li ^ : 문자열의 시작에 매칭된다.
                     li $ : 문자열의 끝에 매칭된다.
@@ -1044,14 +1044,14 @@ include ../../source/skeleton.jade
                     li (?&lt;=re) : positive lookahead. 매칭된 부분문자열의 끝부터 재탐색한다
                     li (?&lt;!re) : negative lookahead. 매칭된 부분문자열의 끝이 아닌 위치부터 재탐색한다
                     p Lookahead와 lookbehind는 back reference를 포함할 수 없으며, 모든 괄호는 non-capturing으로 간주된다.
-                h4.marker 문자 이스케이프
+                h4 문자 이스케이프
                 ol
                     li \a(alert character), \b(backspace), \f, \n, \r, \t, \v(수직 탭), \0
                     li \B : \\
                     li \cX : X는 임의 문자. 하위 5개 비트가 같고 나머지 비트가 모두 0
                     li \uFFFF, \UFFFFFFFF : 유니코드 코드포인트. DB 인코딩에 따라 달라진다...
                     li \xFFF, \xy(8진수 2개), \xyz(8진수 3개)
-                h4.marker 클래스 약어 이스케이프
+                h4 클래스 약어 이스케이프
                 p alnum, alpha, blank, cntrl, digit, graph, lower, print, punct, space, upper, xdigit
                 ol
                     li \d : [[:digit:]]
@@ -1060,7 +1060,7 @@ include ../../source/skeleton.jade
                     li \D : [^[:digit:]]
                     li \S : [^[:space:]]
                     li \W : [^[alnum:]_] // underscore included
-                h4.marker Constraint 이스케이프
+                h4 Constraint 이스케이프
                 ol
                     li \A : 문자열 시작, \Z : 문자열 끝
                     p ^, $와 다르게 멀티 라인 처리 지원 x
@@ -1068,9 +1068,9 @@ include ../../source/skeleton.jade
                     li \M : 단어 끝
                     li \y : 단어 시작 또는 끝
                     li \Y : not \y
-                h4.marker Back reference
+                h4 Back reference
                 p \m[nn] : m은 nonzero digit. n은 추가적인 자릿수
-                h4.marker Option letter
+                h4 Option letter
                 p 정규표현식 플래그에 사용되는 문자들은 아래와 같다
                 ol
                     li c : 대소문자 구분 (overrides operator type)
@@ -1080,7 +1080,7 @@ include ../../source/skeleton.jade
                     li p : 부분적 멀티 라인 처리. ^와 $는 멀티 라인 처리 x
                     li w : 부분적 멀티 라인 처리. ^와 $는 멀티 라인 처리 o
 
-        h2.marker Formatting Functions
+        h2 Formatting Functions
         ol
             +asA('http://postgresql.kr/docs/current/functions-formatting.html', 'functions-formatting.html')
             li to_char()
@@ -1088,9 +1088,9 @@ include ../../source/skeleton.jade
             li to_number()
             li to_timestamp()
 
-        h2.marker Date/Time Functions and Operators
+        h2 Date/Time Functions and Operators
         div
-            h3.marker Date/Time Operators
+            h3 Date/Time Operators
             table.no-sort
                 tr
                     th Operator
@@ -1183,7 +1183,7 @@ include ../../source/skeleton.jade
                         | (date '2000-01-01', make_interval(years => 1)) overlaps (date '2000-07-07', date '2000-08-08')
                     td t
 
-            h3.marker Date/Time Functions
+            h3 Date/Time Functions
             table.no-sort
                 tr
                     th Function
@@ -1366,10 +1366,10 @@ include ../../source/skeleton.jade
                     td justify_interval(interval '1 mon -1 hour')
                     td 29 days 23:00:00
 
-        h2.marker JSON Functions and Operators
+        h2 JSON Functions and Operators
         div
             +asA('http://postgresql.kr/docs/current/functions-json.html', 'functions-json.html')
-            h3.marker json and jsonb Operators
+            h3 json and jsonb Operators
             table.no-sort
                 tr
                     th Operator
@@ -1414,7 +1414,7 @@ include ../../source/skeleton.jade
                     td '{"a":[1,2,3],"b":[4,5,6]}'::json#>>'{a,2}'
                     td 3
 
-        h2.marker Sequence Manipulation Functions
+        h2 Sequence Manipulation Functions
         ol
             li currval(regclass) : 지정된 sequence의 가장 최근 반환된 nextval
             li lastval() : 가장 최근 반환된 임의 sequence의 nextval
@@ -1422,7 +1422,7 @@ include ../../source/skeleton.jade
             li setval(regclass, bigint) : sequence의 현재값 설정
             p regclass는 pg_class 시스템 카탈로그에 저장된 sequence의 OID며, 이를 직접 찾을 필요는 없다. '' 사이에 식별자를 넣어주면 알아서 변환해준다.
 
-        h2.marker Conditional Expressions
+        h2 Conditional Expressions
         ol
             li case
             +asCode('sql') case when condition then result [when ...] [else result] end
@@ -1437,7 +1437,7 @@ include ../../source/skeleton.jade
             li least
             +asCode('sql') least(value [, ...])
 
-        h2.marker Subquery Expressions
+        h2 Subquery Expressions
         ol
             li exists
             p exists(subquery) : 서브쿼리가 한 행 이상 반환하면 true, 아니면 false
@@ -1454,24 +1454,24 @@ include ../../source/skeleton.jade
             li Single-row Comparison
             p row_constructor operator (subquery) : subquery는 row_constructor와 같은 개수의 컬럼을 반환해야 한다.
 
-        h2.marker Series Generating Functions
+        h2 Series Generating Functions
         ol
             li generate_series(start, stop)
             li generate_series(start, stop, step)
             li generate_series(start, stop interval)
 
-        h2.marker System Information Functions
+        h2 System Information Functions
         +asA('http://postgresql.kr/docs/current/functions-info.html', 'functions-info.html')
 
-    h1.marker 동시성 제어
+    h1 동시성 제어
     div
-        h2.marker 소개
+        h2 소개
         ol
             li PostgreSQL은 다중버전 모델 MVCC(Multiversion Concurrency Control)을 이용해서 동시성 처리를 관리한다
             p 각 트랜잭션의 시작을 기점으로 자료를 각각의 스냅샷(데이터베이스 버전)으로 처리해서 세션이 사용한다. 이렇게 하면 최소한의 잠금을 사용하여 트랜잭션 격리가 이루어진다.
             li MVCC와 별개로 개발자가 이용할 수 있는 테이블, 행 단위 잠금 기능을 제공한다
 
-        h2.marker 트랜잭션 격리
+        h2 트랜잭션 격리
         ul
             li SQL 표준 트랜잭션 격리 수준; Transaction Isolation Level
             ul
@@ -1517,7 +1517,7 @@ include ../../source/skeleton.jade
                     td 불가능
                     td 불가능
         div
-            h3.marker Read Committed 격리 수준
+            h3 Read Committed 격리 수준
             ol
                 li PostgreSQL 기본 격리 수준
                 li for update/share 절 없는 select 쿼리는 쿼리 실행 전 마지막으로 커밋된 자료를 읽는다.
@@ -1525,7 +1525,7 @@ include ../../source/skeleton.jade
                 p 현재 트랜잭션에서 업데이트한 자료는 커밋되지 않았더라도 다시 읽을 때 갱신된 값으로 가져온다.
                 li update, delete, select for update/share 쿼리는 타깃 행을 찾는 것까지는 select 쿼리와 동일하다
                 p 실행 시각을 기준으로 발견한 타깃 행이 변경/삭제/잠금 중인 경우 커밋이나 롤백되기를 기다린다. 행이 변경된 경우 where 절이 재평가되고 갱신된 행을 대상으로 쿼리 실행, 삭제된 경우 무시, 롤백된 경우 기존 행을 대상으로 쿼리가 실행된다.
-            h3.marker Repeatable Read 격리 수준
+            h3 Repeatable Read 격리 수준
             ol
                 li 트랜잭션 실행 전 마지막으로 커밋된 자료만을 본다.
                 p 물론 현재 트랜잭션에서 업데이트한 자료는 커밋되지 않았더라도 다시 읽을 때 갱신된 값으로 가져온다.
@@ -1535,7 +1535,7 @@ include ../../source/skeleton.jade
                 p 읽기만 하는 트랜잭션은 직렬화 실패가 일어날 수 없다.
                 li 트랜잭션 시작 시각을 기준으로 DB에 대한 엄격한 정적 뷰를 보장하지만, 동시 실행되는 트랜잭션에 의해 일부 불일치가 발생할 수 있다.
                 p 예를 들어 다른 트랜잭션에서 여러 연관 테이블의 행들을 순차적으로 업데이트하는 와중에 읽기를 수행하는 경우, 시간적으로는 일관적이지만, 논리적으로는 일관적이지 않은 데이터를 읽게될 수 있다.
-            h3.marker Serializable 격리 수준
+            h3 Serializable 격리 수준
             ol
                 li 커밋된 모든 트랜잭션들을 하나씩 순차적으로 실행한다.
                 li 이걸로 모든 이상 발생 가능성이 차단되는 것이 아니기 떄문에, 여전히 트랜잭션 직렬화 실패에 대한 대응이 필요하다
@@ -1547,7 +1547,7 @@ include ../../source/skeleton.jade
                     +asA('http://postgresql.kr/docs/current/runtime-config-locks.html#GUC-MAX-PRED-LOCKS-PER-TRANSACTION', 'GUC-MAX-PRED-LOCKS-PER-TRANSACTION')
                     li 릴레이션 수준 잠금이 설정되는 것을 방지하기 위해 인덱스 스캔을 이용한다.
 
-        h2.marker Explicit Locking
+        h2 Explicit Locking
         ol
             li Table-level Locks
             p 아래 표는 테이블 수준 잠금의 종류와, 각 요청된 잠금 수준에 대해 이미 설정된 잠금으로 인해 요청이 처리되지 않는 경우를 보여준다. 테이블 잠금은 LOCK 명령어로 획득할 수 있다
@@ -1655,7 +1655,7 @@ include ../../source/skeleton.jade
                 li FOR KEY SHARE
                 p FOR SHARE와 비슷. select for no key update 명령은 막지 않는다
 
-    h1.marker Performance Tips
+    h1 Performance Tips
     ul
         li Populating a Database
         ol

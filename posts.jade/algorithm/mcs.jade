@@ -17,15 +17,15 @@ include ../../source/skeleton.jade
                         | . This work is available under the terms of the 
                         +asA('http://creativecommons.org/licenses/by-sa/3.0/', 'Creative Commons Attribution-ShareAlike 3.0 license.')
 
-    h1.marker Proofs
+    h1 Proofs
     div
         h2 Introduction
         p
             strong 정의.
             |  명제(proposition)에 대한 수학적 증명이란, 기본 공리(axiom)들로부터 명제에 도달하는 일련의 논리적 연역(deduction)이다.
-        h2.marker What is a Proof?
+        h2 What is a Proof?
         div
-            h3.marker Propositions
+            h3 Propositions
             p
                 strong 정의.
                 |  명제(proposition)란 참 또는 거짓인 문장이다.
@@ -35,20 +35,20 @@ include ../../source/skeleton.jade
                 br
                 | 이를 아래와 같이 표현할 수 있다
                 | \[\forall a, b, c, d \in \mathbb{Z}^+. a^4+b^4+c^4 \ne d^4.\]
-            h3.marker Predicates
+            h3 Predicates
             p
                 strong 정의.
                 |  Predicate ::= 변수에 의해 진리값이 결정되는 문제
             p
                 | 예. 식[P(n) ::= \text{"n은 완전제곱수다"}]식
-            h3.marker The Axiomatic Method
+            h3 The Axiomatic Method
             p
                 strong 정의.
                 ul
                     li 정리(Theorem) ::= 중요한 참 명제
                     li 보조정리(Lemma) ::= 이후 명제를 증명하는 데 필요한 예비 명제
                     li 따름정리(Corollary) ::= 정리로부터 쉽게 도출되는 명제
-            h3.marker Our Axioms
+            h3 Our Axioms
             div
                 p
                     strong 정의.
@@ -66,7 +66,7 @@ include ../../source/skeleton.jade
                 p
                     strong Rule.
                     |  식[{\operatorname{NOT}(Q) \implies \operatorname{NOT}(P) \over P \implies Q}]식
-            h3.marker Proving an Implication
+            h3 Proving an Implication
             div
                 h4 Method #1
                 ol
@@ -76,7 +76,7 @@ include ../../source/skeleton.jade
                 ol
                     li 다음과 같이 쓴다. "대우명제를 통해 증명한다"
                     li 식[{\operatorname{NOT}(Q) \implies \operatorname{NOT}(P)}]식을 Method #1으로 증명한다
-            h3.marker Proving an "If and Only If"
+            h3 Proving an "If and Only If"
             div
                 h4 Method #1
                 ol
@@ -87,9 +87,9 @@ include ../../source/skeleton.jade
                 ol
                     li 다음과 같이 쓴다. "We construct a chain of if-and-only-if implications."
                     li 어떠한 식(들)이 P와 동치임을 보이고, 다시 Q와도 동치임을 보인다.
-            h3.marker Proof by Cases
+            h3 Proof by Cases
             p 명제가 가능한 모든 경우의 수에 대해 성립함을 보일 수 있다면 참임을, 단 하나의 경우라도 거짓임을 보인다면 거짓임을 증명할 수 있다.
-            h3.marker Proof by Contradiction
+            h3 Proof by Contradiction
             ol
                 li 다음과 같이 쓴다. "모순(Contradiction)을 통해 증명한다."
                 li 다음과 같이 쓴다. "P가 거짓이라고 가정한다"
@@ -108,10 +108,10 @@ include ../../source/skeleton.jade
                     | 두 식을 모두 거듭제곱하면 식[2 = n^2 / d^2]식이 성립하며, 따라서 식[2d^2 = n^2]식이다. 이는 n이 2의 배수여야 함을 의미하며, 또다시 식[2d^2]식는 4의 배수여야 함을 의미한다.
                     br
                     | 결국 n과 d모두 2의 배수여야 하지만, 이는 식[n / d]식이 기약분수라는 것에 위배된다. 이는 모순이며, 따라서 식[\sqrt{2}]식는 무리수다.
-            h3.marker Good Proofs in Practice
+            h3 Good Proofs in Practice
             ul
                 li 증명은 계산이 아니라 에세이다.
-            h3.marker Problems
+            h3 Problems
             div
                 h4 Problem 1.1.
                 p
@@ -194,12 +194,12 @@ include ../../source/skeleton.jade
                     | Give an example of two distinct positive integers m, n such that
                     |  식[n^2]식 is a multiple of m, but n is not a multiple of m. How about having m be less than n?
                 p → m = 4, n = 6
-        h2.marker The Well Ordering Principle
+        h2 The Well Ordering Principle
         div
             p
                 strong Definition.
                 |  The <i>Well Ordering Principle(WOP)</i> ::= Every <i>nonempty</i> set of <i>nonnegative integers</i> has a <i>smallest</i> element.
-            h3.marker Template for WOP Proofs
+            h3 Template for WOP Proofs
             p WOP을 이용해 식[P(n)\text{ is true for all }n \in \mathbb{N}]식을 증명하기
             ol
                 li P(n)의 반례집합 C를 정의한다. 식[C ::= \left\{n \in \mathbb{N} | \operatorname{NOT}(P(n))\text{ is true.}\right\}]식
@@ -225,7 +225,7 @@ include ../../source/skeleton.jade
                     |  양변에 c를 더하면 식[1+2+\cdots+c=(c-1)c/2 + c=c(c+1)/2]식이므로, 식[c \notin C]식이다.
                     br
                     | 이는 c가 C의 최소 원소라는 것에 모순이므로, C는 공집합이며, 따라서 명제는 항상 참이다.
-            h3.marker Factoring into Primes
+            h3 Factoring into Primes
             p
                 +pos('Theorem 2.3.1.')
                 strong Theorem 2.3.1.
@@ -237,7 +237,7 @@ include ../../source/skeleton.jade
                 br
                 |  n이 C의 최소원소기 때문에 식[a, b \notin C]식며, 따라서 a, b 각각은 소인수분해 가능하다.
                 |  따라서 식[n = ab]식 역시 소인수분해 가능하며, 이는 C가 원소를 가질 수 없음을 의미한다.
-            h3.marker Well Ordered Sets
+            h3 Well Ordered Sets
             p
                 strong Definition.
                 |  Well ordered set ::= 어떤 숫자 집합에 대하여, 공집합이 아닌 모든 부분집합이 최소 원소를 갖는 경우
@@ -304,7 +304,7 @@ include ../../source/skeleton.jade
                     br
                     | 이제 S의 원소 중 식[n_s+f, f\in\mathbb{F}]식꼴로 표현 가능한 원소들에 대해, 가능한 모든 f의 집합은 WOP에 의해 최소원소 식[f_s]식를 가짐을 알 수 있다.
                     |  이를 통해 식[n_s+f_s]식가 S의 최소원소임을 알 수 있다.
-            h3.marker Problems
+            h3 Problems
             div
                 h4 Problem 2.5.
                 p
@@ -376,9 +376,9 @@ include ../../source/skeleton.jade
                         | \end{align*}
                         |  이때, 식[c-1 \ge 3]식이므로 부등식은 성립하지 않는다.
                         |  따라서 C는 공집합이며, 명제는 참이다.
-        h2.marker Logical Formulas
+        h2 Logical Formulas
         div
-            h3.marker Propositions from Propositions
+            h3 Propositions from Propositions
             p Propositional variables 또는 Boolean variable은 T(true) 또는 F(false) 값만 가질 수 있는 변수다.
             div
                 h4 IMPLIES
@@ -397,7 +397,7 @@ include ../../source/skeleton.jade
                     +tds('T', 'F', 'F')
                     +tds('F', 'T', 'F')
                     +tds('F', 'F', 'T')
-            h3.marker Propositional Logic in Computer Programs
+            h3 Propositional Logic in Computer Programs
             div
                 h4 Cryptic Notation
                 table
@@ -420,7 +420,7 @@ include ../../source/skeleton.jade
                     tr
                         td P XOR Q
                         td 식[P \oplus Q]식
-            h3.marker Equivalence and Validity
+            h3 Equivalence and Validity
             div
                 h4 Implications and Contrapositives
                 ul
@@ -434,7 +434,7 @@ include ../../source/skeleton.jade
                     li
                         i Satisfiable
                         |  formula : 변수에 따라 참/거짓이 바뀌는 명제
-            h3.marker The Algebra of Propositions
+            h3 The Algebra of Propositions
             div
                 h4 Propositions in Normal Form
                 p
@@ -472,11 +472,11 @@ include ../../source/skeleton.jade
                 ul
                     li A IMPLIES B = NOT(A) OR B
                     li 식을 정규화할 때, 식[(\overline{A} \lor \overline{B}) \land (\overline{A} \lor \overline{C})]식처럼 변수에만 NOT이 적용되었다면 드모르간의 법칙을 이용해 확장할 필요가 없다
-            h3.marker The SAT Problem
+            h3 The SAT Problem
             p
                 strong SAT
                 |  ::= 명제가 참일 수 있는 지(satisfiable)에 대한 일반적인 결정 문제
-            h3.marker Predicate Formulas
+            h3 Predicate Formulas
             div
                 h4 Quantifiers
                 ul
@@ -490,7 +490,7 @@ include ../../source/skeleton.jade
                 p 서로 다른 종류의 한정 문구 순서를 변경하면 의미가 바뀔 수 있다
                 h4 Variables Over One Domain
                 p 모든 변수의 정의역이 동일하다면 표기에서 생략할 수 있다. 예. 식[\forall{x}\exists{y}.P(x, y)]식
-            h3.marker Problems
+            h3 Problems
             div
                 h4 Problem 3.6.
                 p
@@ -523,180 +523,180 @@ include ../../source/skeleton.jade
                         br
                         | Visualized as digital circuits, the above adders consist of a sequence of single-digit half-adders or adders strung together in series. These circuits mimic ordinary pencil-and-paper addition, where a carry into a column is calculated directly from the carry into the previous column, and the carries have to ripple across all the columns before the carry into the final column is determined. Circuits with this design are called ripple-carry adders. Ripple-carry adders are easy to understand and remember and require a nearly minimal number of operations. But the higherorder output bits and the final carry take time proportional to n to reach their final values.
                     li (c) How many of each of the propositional operations does your adder from part (b) use to calculate the sum?
-        h2.marker Mathematical Data Types
+        h2 Mathematical Data Types
         div
-            h3.marker Sets
-            h3.marker Sequences
-            h3.marker Functions
-            h3.marker Binary Relations
-            h3.marker Finite Cardinality
-        h2.marker Induction
+            h3 Sets
+            h3 Sequences
+            h3 Functions
+            h3 Binary Relations
+            h3 Finite Cardinality
+        h2 Induction
         div
-            h3.marker Ordinary Induction
-            h3.marker Strong Induction
-            h3.marker Strong Inductions vs. Induction vs. Well Ordering
-        h2.marker State Machines
+            h3 Ordinary Induction
+            h3 Strong Induction
+            h3 Strong Inductions vs. Induction vs. Well Ordering
+        h2 State Machines
         div
-            h3.marker States and Transitions
-            h3.marker The Invariant Principle
-            h3.marker Partial Correctness &amp; Termination
-            h3.marker The Stable Marriage Problem
-        h2.marker Recursive Data Types
+            h3 States and Transitions
+            h3 The Invariant Principle
+            h3 Partial Correctness &amp; Termination
+            h3 The Stable Marriage Problem
+        h2 Recursive Data Types
         div
-            h3.marker Recursive Definitions and Structural Induction
-            h3.marker Strings of Matched Brackets
-            h3.marker Recursive Functions on Nonnegative Integers
-            h3.marker Arithmetic Expressions
-            h3.marker Games as a Recursive Data Type
-            h3.marker Induction in Computer Science
-        h2.marker Infinite Sets
+            h3 Recursive Definitions and Structural Induction
+            h3 Strings of Matched Brackets
+            h3 Recursive Functions on Nonnegative Integers
+            h3 Arithmetic Expressions
+            h3 Games as a Recursive Data Type
+            h3 Induction in Computer Science
+        h2 Infinite Sets
         div
-            h3.marker Infinite Cardinality
-            h3.marker The Halting Problem
-            h3.marker The Logic of Sets
-            h3.marker Does All This Really Work?
-    h1.marker Structures
+            h3 Infinite Cardinality
+            h3 The Halting Problem
+            h3 The Logic of Sets
+            h3 Does All This Really Work?
+    h1 Structures
     div
         h2 Introduction
-        h2.marker Number Theory
+        h2 Number Theory
         div
-            h3.marker Divisibility
-            h3.marker The Greatest Common Divisor
-            h3.marker Prime Mysteries
-            h3.marker The Fundamental Theorem of Arithmetic
-            h3.marker Alan Turing
-            h3.marker Modular Arithmetic
-            h3.marker Remainder Arithmetic
-            h3.marker Turing's Code (Version 2.0)
-            h3.marker Multiplicative Inverses and Cancelling
-            h3.marker Euler's Theorem
-            h3.marker RSA Public Key Encryption
-            h3.marker What has SAT got to do with it?
-            h3.marker Problems
-        h2.marker Directed graphs &amp; Partial Orders
+            h3 Divisibility
+            h3 The Greatest Common Divisor
+            h3 Prime Mysteries
+            h3 The Fundamental Theorem of Arithmetic
+            h3 Alan Turing
+            h3 Modular Arithmetic
+            h3 Remainder Arithmetic
+            h3 Turing's Code (Version 2.0)
+            h3 Multiplicative Inverses and Cancelling
+            h3 Euler's Theorem
+            h3 RSA Public Key Encryption
+            h3 What has SAT got to do with it?
+            h3 Problems
+        h2 Directed graphs &amp; Partial Orders
         div
-            h3.marker Vertex Degrees
-            h3.marker Walks and Paths
-            h3.marker Adjacency Matrices
-            h3.marker Walk Relations
-            h3.marker Directed Acyclic Graphs &amp; Scheduling
-            h3.marker Partial Orders
-            h3.marker Representing Partial Orders by Set Containment
-            h3.marker Linear Orders
-            h3.marker Product Orders
-            h3.marker Equivalence Relations
-            h3.marker Summary of Relational Properties
-            h3.marker Problems
-        h2.marker Communication Networks
+            h3 Vertex Degrees
+            h3 Walks and Paths
+            h3 Adjacency Matrices
+            h3 Walk Relations
+            h3 Directed Acyclic Graphs &amp; Scheduling
+            h3 Partial Orders
+            h3 Representing Partial Orders by Set Containment
+            h3 Linear Orders
+            h3 Product Orders
+            h3 Equivalence Relations
+            h3 Summary of Relational Properties
+            h3 Problems
+        h2 Communication Networks
         div
-            h3.marker Routing
-            h3.marker Routing Measures
-            h3.marker Network Designs
-        h2.marker Simple Graphs
+            h3 Routing
+            h3 Routing Measures
+            h3 Network Designs
+        h2 Simple Graphs
         div
-            h3.marker Vertex Adjacency and Degrees
-            h3.marker Sexual Demographics in America
-            h3.marker Some Common Graphs
-            h3.marker Isomorphism
-            h3.marker Bipartite Graphs &amp; Matchings
-            h3.marker Coloring
-            h3.marker Walks in Simple Graphs
-            h3.marker Connectivity
-            h3.marker Special Walks and Tours
-            h3.marker k-connected Graphs
-            h3.marker Forests &amp; Trees
-            h3.marker Problems
-        h2.marker Planar Graphs
+            h3 Vertex Adjacency and Degrees
+            h3 Sexual Demographics in America
+            h3 Some Common Graphs
+            h3 Isomorphism
+            h3 Bipartite Graphs &amp; Matchings
+            h3 Coloring
+            h3 Walks in Simple Graphs
+            h3 Connectivity
+            h3 Special Walks and Tours
+            h3 k-connected Graphs
+            h3 Forests &amp; Trees
+            h3 Problems
+        h2 Planar Graphs
         div
-            h3.marker Drawing Graphs in the Plane
-            h3.marker Definitions of Planar Graphs
-            h3.marker Euler's Formula
-            h3.marker Bounding the Number of Edges in a Plannar Graph
-            h3.marker Returning to 식[K_5]식 and 식[K_{3,3}]식
-            h3.marker Coloring Planar Graphs
-            h3.marker Classifying Polyhedra
-            h3.marker Another Characterization for Planar Graphs
-    h1.marker Counting
+            h3 Drawing Graphs in the Plane
+            h3 Definitions of Planar Graphs
+            h3 Euler's Formula
+            h3 Bounding the Number of Edges in a Plannar Graph
+            h3 Returning to 식[K_5]식 and 식[K_{3,3}]식
+            h3 Coloring Planar Graphs
+            h3 Classifying Polyhedra
+            h3 Another Characterization for Planar Graphs
+    h1 Counting
     div
         h2 Introduction
-        h2.marker Sums and Asymptotics
+        h2 Sums and Asymptotics
         div
-            h3.marker The Value of an Annuity
-            h3.marker Sums of Powers
-            h3.marker Approximating Sums
-            h3.marker Hanging Out Over the Edge
-            h3.marker Products
-            h3.marker Double Trouble
-            h3.marker Asymptotic Notation
-        h2.marker Cardinality Rules
+            h3 The Value of an Annuity
+            h3 Sums of Powers
+            h3 Approximating Sums
+            h3 Hanging Out Over the Edge
+            h3 Products
+            h3 Double Trouble
+            h3 Asymptotic Notation
+        h2 Cardinality Rules
         div
-            h3.marker Counting One Thing by Counting Another
-            h3.marker Counting Sequences
-            h3.marker The Generalized Product Rule
-            h3.marker The Division Rule
-            h3.marker Counting Subsets
-            h3.marker Sequences with Repetitions
-            h3.marker Counting Practice: Poker Hands
-            h3.marker The Pigeonhole Principle
-            h3.marker Inclusion-Exclusion
-            h3.marker Combinatorial Proofs
-            h3.marker Problems
-        h2.marker Generating Functions
+            h3 Counting One Thing by Counting Another
+            h3 Counting Sequences
+            h3 The Generalized Product Rule
+            h3 The Division Rule
+            h3 Counting Subsets
+            h3 Sequences with Repetitions
+            h3 Counting Practice: Poker Hands
+            h3 The Pigeonhole Principle
+            h3 Inclusion-Exclusion
+            h3 Combinatorial Proofs
+            h3 Problems
+        h2 Generating Functions
         div
-            h3.marker Infinite Series
-            h3.marker Counting with Generating Functions
-            h3.marker Partial Fractions
-            h3.marker Solving Linear Recurrences
-            h3.marker Formal Power Series
-            h3.marker Problems
-    h1.marker Probability
+            h3 Infinite Series
+            h3 Counting with Generating Functions
+            h3 Partial Fractions
+            h3 Solving Linear Recurrences
+            h3 Formal Power Series
+            h3 Problems
+    h1 Probability
     div
         h2 Introduction
-        h2.marker Events and Probability Spaces
+        h2 Events and Probability Spaces
         div
-            h3.marker Let's Make a Deal
-            h3.marker The Four Step Method
-            h3.marker Strange Dice
-            h3.marker The Birthday Principle
-            h3.marker Set Theory and Probability
-            h3.marker Problems
-        h2.marker Conditional Probability
+            h3 Let's Make a Deal
+            h3 The Four Step Method
+            h3 Strange Dice
+            h3 The Birthday Principle
+            h3 Set Theory and Probability
+            h3 Problems
+        h2 Conditional Probability
         div
-            h3.marker Month Hall Confusion
-            h3.marker Definition and Notation
-            h3.marker The Four-Step Method for Conditional Probability
-            h3.marker Why Tree Diagrams Work
-            h3.marker The Law of Total Probability
-            h3.marker Simpson's Paradox
-            h3.marker Independence
-            h3.marker Mutual Independence
-            h3.marker Probability versus Confidence
-        h2.marker Random Variables
+            h3 Month Hall Confusion
+            h3 Definition and Notation
+            h3 The Four-Step Method for Conditional Probability
+            h3 Why Tree Diagrams Work
+            h3 The Law of Total Probability
+            h3 Simpson's Paradox
+            h3 Independence
+            h3 Mutual Independence
+            h3 Probability versus Confidence
+        h2 Random Variables
         div
-            h3.marker Random Variable Examples
-            h3.marker Independence
-            h3.marker Distribution Functions
-            h3.marker Great Expectations
-            h3.marker Linearity of Expectation
-        h2.marker Deviation from the Mean
+            h3 Random Variable Examples
+            h3 Independence
+            h3 Distribution Functions
+            h3 Great Expectations
+            h3 Linearity of Expectation
+        h2 Deviation from the Mean
         div
-            h3.marker Markov's Theorem
-            h3.marker Chebyshev's Theorem
-            h3.marker Properties of Variance
-            h3.marker Estimation by Random Sampling
-            h3.marker Confidence in an Estimation
-            h3.marker Sums of Random Variables
-            h3.marker Really Great Expectations
-        h2.marker Random Walks
+            h3 Markov's Theorem
+            h3 Chebyshev's Theorem
+            h3 Properties of Variance
+            h3 Estimation by Random Sampling
+            h3 Confidence in an Estimation
+            h3 Sums of Random Variables
+            h3 Really Great Expectations
+        h2 Random Walks
         div
-            h3.marker Gambler's Ruin
-            h3.marker Random Walks on Graphs
-    h1.marker Recurrences
+            h3 Gambler's Ruin
+            h3 Random Walks on Graphs
+    h1 Recurrences
         h2 Introduction
-        h2.marker Recurrences
+        h2 Recurrences
         div
-            h3.marker The Towers of Hanoi
-            h3.marker Merge Sort
-            h3.marker Linear Recurrences
-            h3.marker Divide-and-Conquer Recurrences
-            h3.marker A Feel for Recurrences
+            h3 The Towers of Hanoi
+            h3 Merge Sort
+            h3 Linear Recurrences
+            h3 Divide-and-Conquer Recurrences
+            h3 A Feel for Recurrences

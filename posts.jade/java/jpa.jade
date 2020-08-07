@@ -1,8 +1,8 @@
 include ../../source/skeleton.jade
 +post('JPA', 'JPA, Java Persistence API, Hibernate, Spring Data JPA', 'JPA; Java Persistence API 정리')
-    h1.marker JPA?
+    h1 JPA?
     div
-        h2.marker 정의
+        h2 정의
         ul
             li
                 strong Java Persistence API
@@ -12,15 +12,15 @@ include ../../source/skeleton.jade
             li 객체 상속 관계 사용 가능
             li 객체 참조 관계 유지 가능
 
-        h2.marker JPA 사용
+        h2 JPA 사용
         p Hibernate와 같은 JPA 구현체(JPA Provider)를 이용하거나, 직접 구현하여 이용하면 된다
         
-        h2.marker Spring Data JPA
+        h2 Spring Data JPA
         p JPA에 대한 추상화된 모듈을 제공하여 보다 쉬운 사용을 가능하게 한다
 
-    h1.marker JPA 사용 정리
+    h1 JPA 사용 정리
     div
-        h2.marker 예시 코드
+        h2 예시 코드
         table
             +ths('설명', '링크')
             tr
@@ -136,9 +136,9 @@ include ../../source/skeleton.jade
                     +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithCue3.java', 'java', null, true)
                     +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithActor3.java', 'java', null, true)
 
-        h2.marker EntityManager
+        h2 EntityManager
         div
-            h3.marker Persistence context; 영속 컨텍스트
+            h3 Persistence context; 영속 컨텍스트
             ul
                 li DB에서 읽어오거나 DB로 삽입하고자 추가한 객체들은 영속 객체(Persistence object)들로, EntityManager가 관리하는 영속 컨텍스트에 보관된다
                 p 트랜잭션(@Transactional 포함) 안에서 엔티티 수정 시 트랜잭션 커밋 시점에 자동 반영. 또는 flush()로 즉시 반영.
@@ -153,15 +153,15 @@ include ../../source/skeleton.jade
                     li Managed : 변경이 존재하면 DB에 반영됨
                     li Detached : EntityManager가 닫혔거나, 롤백되어 분리된 상태. 변경이 DB에 반영되지 않음
                     li Removed : 커밋 또는 flush() 호출 시 DB에서 삭제
-            h3.marker EntityManager를 직접 관리하는 경우
+            h3 EntityManager를 직접 관리하는 경우
             ol
                 li EntityMaganerFactory를 만든다
                 li EntityManager가 필요할 때마다 팩터리로부터 하나 생성하고, 사용한 뒤에 직접 닫는다
                 li 트랜잭션이 여러 메서드에 걸쳐있는 경우, 동일한 EntityManager를 이용함을 직접 보장해야 한다
                 p 메서드 파라미터로 넘기거나 ThreadLocal을 이용하거나... 구현은 자유
-            h3.marker EntityManager를 컨테이너에서 관리하는 경우
+            h3 EntityManager를 컨테이너에서 관리하는 경우
             p @PersistenceContext로 현재 EntityManager 인스턴스를 주입받으면 된다. Spring Data JPA 에서는 @Autowired도 가능
-            h3.marker 메서드
+            h3 메서드
             ul
                 li void persist(Object entity)
                 p 객체를 영속 컨텍스트에 등록하여 변경이 DB에 반영되도록 한다.
@@ -190,7 +190,7 @@ include ../../source/skeleton.jade
                 p 영속 컨텍스트의 객체를 잠근다.
                 //- Query createQuery(String qlString)
                 //- https://javaee.github.io/javaee-spec/javadocs/javax/persistence/EntityManager.html
-        h2.marker @Entity
+        h2 @Entity
         ul
             li DB 입출력 단위
             li 기본 생성자 필수. @Id 최소 한 개 지정 필수
@@ -200,13 +200,13 @@ include ../../source/skeleton.jade
             public class MMonster {}
             @Entity(name = "m_monster_v2")
             public class MMonster {}
-        h2.marker @Table
+        h2 @Table
         ul
             li @Entity 클래스에 name, catalog, index, schema, UniqueConstraint 설정 추가
             li name 속성만 필요하다면 @Entity에 직접 설정 가능
-        h2.marker @Id
+        h2 @Id
         p 기본키 컬럼 명시. 기본 타입 + Wrapper 타입, Date, BigInteger, BigDecimal 타입만(should) 가능
-        h2.marker @GeneratedValue, @SequenceGenerator, @TableGenerator
+        h2 @GeneratedValue, @SequenceGenerator, @TableGenerator
         ul
             +asCode('java', '기본키 자동 설정').
                 @Id
@@ -233,9 +233,9 @@ include ../../source/skeleton.jade
                 )
                 @GeneratedValue(generator = "gen_name")
                 private Long userId;
-        h2.marker @Temporal
+        h2 @Temporal
         p date, time, timestamp 컬럼 명시. 각각 java.sql.Date, java.sql.Time, java.sql.Timestamp에 매핑
-        h2.marker @Column
+        h2 @Column
         ul
             | 필드 또는 getter 메서드에 대해 컬럼 명시.
             li name : 컬럼 이름
@@ -249,16 +249,16 @@ include ../../source/skeleton.jade
                 @Column(insertable = false, updatable = false)
                     // ↑ false면 쿼리 실행 후 컬럼 값이 변경되도 객체에 반영되지 않음
                 private Date addDate;
-        h2.marker @Transient 또는 transient 한정자
+        h2 @Transient 또는 transient 한정자
         p 해당 필드는 persistence 대상에서 제외
-        h2.marker @Enumerated
+        h2 @Enumerated
         p enum 매핑 : EnumType.ORDINAL, STRING 2가지만 가능
-        h2.marker @Convert, @Converter
+        h2 @Convert, @Converter
         p
             | 커스텀 컨버터 지정 
             +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/ApiLog.java', 'java', [19], true)
             +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/enums/ApiResultCode.java', 'java', [9], true)
-        h2.marker @DynamicInsert, @DynamicUpdate
+        h2 @DynamicInsert, @DynamicUpdate
         ul
             li Non-null 컬럼만 insert, update 시 이용.
             li 세션 당 최초 1번만 적용된다.
@@ -266,15 +266,15 @@ include ../../source/skeleton.jade
             +codeBtn('/Repositories/STS/jpa-example/src/test/java/io/github/donggi/jpa/dao/UserDaoTests.java', 'java', [35,47], true)
             +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/User1.java', 'java', [19], true)
 
-        h2.marker 다른 엔티티/값 포함
+        h2 다른 엔티티/값 포함
         div
-            h3.marker Value Class
+            h3 Value Class
             ul
                 li 여타 언어들의 ValueType에 해당하는 클래스
                 p 값을 이용해 다른 인스턴스와 비교하며, 자기 자신을 변경하지 않는다
                 li 값을 변경하는 연산은 새 인스턴스를 반환한다
                 li JPA에서는 @Embeddable 클래스로 Value Class를 정의한다
-            h3.marker 유의사항
+            h3 유의사항
             ul
                 li 엔티티 포함이 많아질수록 코드 결합도가 증가한다
                 li 모든 테이블이 엔티티인 것은 아니다.
@@ -299,7 +299,7 @@ include ../../source/skeleton.jade
                 h4 @org.hibernate.annotations.OrderBy
                 p JPA의 것과 다르게 JPQL order by 절을 이용해 DBMS가 정렬하도록 한다
                 +asCode('java') @OrderBy("score desc")
-            h3.marker @Embedded로 @Embeddable 타입 포함
+            h3 @Embedded로 @Embeddable 타입 포함
             ul
                 li
                     | 엔티티 필드 일부를 하나의 @Embeddable 클래스로 묶을 수 있다. 
@@ -312,12 +312,12 @@ include ../../source/skeleton.jade
                     | @Embeddable 클래스의 필드 일부도 다른 @Embeddable 클래스로 묶을 수 있다.
                     +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/PricePair.java', 'java', [12], true)
                     +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Item3.java', 'java', [12], true)
-            h3.marker @Embeddable 클래스로 복합키 정의
+            h3 @Embeddable 클래스로 복합키 정의
             p
                 | 복합키 클래스는 Serializable 인터페이스를 구현하고, equals(), hashCode()를 적절히 재정의해야 한다. 
                 +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/ItemInfo3Key.java', 'java', [12], true)
                 +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/ItemInfo3.java', 'java', [10], true)
-            h3.marker @SecondaryTable 포함
+            h3 @SecondaryTable 포함
             ul
                 li 포함하는 대상은 secondary table, 포함하는 쪽은 primary table
                 li
@@ -331,9 +331,9 @@ include ../../source/skeleton.jade
                     +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/ItemInfo.java', 'java', [9], true)
                     +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Item5.java', 'java', [18], true)
                 li Select에 이용되는 쿼리는 left outer join이다.
-            h3.marker 엔티티 사이의 1:1, 1:N, N:1, M:N 매핑
+            h3 엔티티 사이의 1:1, 1:N, N:1, M:N 매핑
             div
-                h4.marker @OneToOne
+                h4 @OneToOne
                 ul
                     li
                         | 1→1 단방향 매핑 
@@ -347,7 +347,7 @@ include ../../source/skeleton.jade
                         +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserCard2.java', 'java', [13], true)
                         +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserWithCard1.java', 'java', [13], true)
                     +asCode('java') @OneToOne(mappedBy = "fieldName")
-                h4.marker @ManyToOne, @OneToMany
+                h4 @ManyToOne, @OneToMany
                 ul
                     li
                         | N→1 단방향 매핑 
@@ -361,7 +361,7 @@ include ../../source/skeleton.jade
                     li
                         | 1→N 단방향 매핑 
                         +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/UserWithCard3.java', 'java', [16], true)
-                h4.marker @JoinTable
+                h4 @JoinTable
                 ul
                     li JoinTable? : 검색에 필요한 두 테이블의 키 컬럼만 모은 테이블
                     li
@@ -369,10 +369,10 @@ include ../../source/skeleton.jade
                         +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/GuildWithMember.java', 'java', null, true)
                     li @OneToMany 대신 @ManyToMany 이용 가능
                     li mappedBy를 이용해 양방향 매핑 가능
-                h4.marker fetch 속성 - 쿼리 지연 실행
+                h4 fetch 속성 - 쿼리 지연 실행
                 p Default로 처음부터 연관 테이블을 함께 조회(left outer join)한다. fetch 속성으로 변경할 수 있다.
                 +asCode('java') @OneToOne(fetch = FetchType.LAZY)
-                h4.marker cascade 속성 - 영속성 전이 규칙
+                h4 cascade 속성 - 영속성 전이 규칙
                 ul
                     li 기본값은 {}으로 아무런 추가 작업이 없다
                     li CascadeType.PERSIST : EntityManager::persist 시 연관 엔티티도 추가
@@ -382,7 +382,7 @@ include ../../source/skeleton.jade
                     li CascadeType.MERGE : EntityManager::merge 시 연관 엔티티도 추가
                     li CascadeType.ALL
 
-            h3.marker @ElementCollection으로 프로젝션
+            h3 @ElementCollection으로 프로젝션
             ul
                 li
                     | Embeddable 클래스도 가져올 수 있다 
@@ -392,38 +392,38 @@ include ../../source/skeleton.jade
                     +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/dao/GachaOddsDao.java', 'java', [12], true)
                     +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/GachaOdds.java', 'java', [12], true)
 
-        h2.marker 클래스 상속과 테이블 매핑
+        h2 클래스 상속과 테이블 매핑
         div
-            h3.marker InheritanceType.SINGLE_TABLE
+            h3 InheritanceType.SINGLE_TABLE
             p
                 | 클래스 계층 구조가 하나의 테이블을 공유하고, 각각 일부분씩 매핑. 구분을 위한 컬럼(@DiscriminatorColumn) 존재 
                 +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Voice1.java', 'java', [17], true)
                 +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithCue1.java', 'java', [10], true)
                 +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithActor1.java', 'java', [10], true)
                 +codeBtn('/Repositories/STS/jpa-example/src/main/resources/ddl/jpa_voice.sql', 'sql', null, true)
-            h3.marker InheritanceType.JOINED
+            h3 InheritanceType.JOINED
             p
                 | 각 클래스는 키를 공유하는 별개의 테이블에 대응 
                 +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Voice2.java', 'java', [14], true)
                 +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithCue2.java', 'java', [11], true)
                 +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithActor2.java', 'java', [11], true)
                 +codeBtn('/Repositories/STS/jpa-example/src/main/resources/ddl/jpa_voice.sql', 'sql', null, true)
-            h3.marker InheritanceType.TABLE_PER_CLASS
+            h3 InheritanceType.TABLE_PER_CLASS
             p
                 | 각 클래스는 별개 테이블에 대응 → 키 관리에 유의 
                 +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/Voice3.java', 'java', [14], true)
                 +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithCue3.java', 'java', [11], true)
                 +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/VoiceWithActor3.java', 'java', [11], true)
                 +codeBtn('/Repositories/STS/jpa-example/src/main/resources/ddl/jpa_voice.sql', 'sql', null, true)
-            h3.marker @MappedSuperclass - 공유 컬럼 정의
+            h3 @MappedSuperclass - 공유 컬럼 정의
             p
                 | add_date, upd_date 같은 일반적인 공유 컬럼을 한 곳에 정의할 수 있다 
                 +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/User3.java', 'java', [6], true)
                 +codeBtn('/Repositories/STS/jpa-example/src/main/java/io/github/donggi/jpa/entity/AbstractUser3.java', 'java', [17], true)
 
-        h2.marker 트랜잭션
+        h2 트랜잭션
         div
-            h3.marker RESOURCE_LOCAL 타입 트랜잭션
+            h3 RESOURCE_LOCAL 타입 트랜잭션
             ul
                 li JPA의 EntityTransaction을 이용한 트랜잭션 처리
                 li Spring Data JPA는 공유 EntityManager 인스턴스로 직접 트랜잭션 관리하는 것을 허용하지 않는다.
@@ -437,7 +437,7 @@ include ../../source/skeleton.jade
                         // java.lang.IllegalStateException: Not allowed to create transaction on shared EntityManager - use Spring transactions or EJB CMT instead
                         manager.getTransaction().commit();
                     }
-            h3.marker JTA(Java Transaction API) 타입 트랜잭션
+            h3 JTA(Java Transaction API) 타입 트랜잭션
             ul
                 li 직접 트랜잭션을 관리하는 경우
                 +asCode('java').
@@ -469,7 +469,7 @@ include ../../source/skeleton.jade
                     void updateUser() {
                         assertTrue(manager.isJoinedToTransaction());
                     }
-            h3.marker 잠금
+            h3 잠금
             div
                 h4 선점 잠금; Pessimistic lock; select for update
                 p 트랜잭션 내에서, 차후 수정을 위해 미리 행을 잠근다.
@@ -493,7 +493,7 @@ include ../../source/skeleton.jade
                         private Integer ver;
                     }
 
-        h2.marker 하이버네이트 관련 추가 기록
+        h2 하이버네이트 관련 추가 기록
         ul
             li 지연 로딩된 프록시 인스턴스의 실제 클래스 반환
             +asCode('java') HibernateProxyHelper.getClassWithoutInitializingProxy(proxy)
@@ -515,9 +515,9 @@ include ../../source/skeleton.jade
                 @Synchronize({"Entity1", "Entity2"}) // Subselect 실행 전에 Entity1, Entity2 타입 엔티티 중 변경이 있는 것은 DB에 반영
                 public class ClassName {}
 
-    h1.marker JPA Query
+    h1 JPA Query
     div
-        h2.marker JPQL; JPA Query Language
+        h2 JPQL; JPA Query Language
         ul
             li SQL과 유사한 쿼리 언어로, 테이블-컬럼 대신 엔티티-속성 이름을 이용한다
             +asCode('sql').
@@ -541,7 +541,7 @@ include ../../source/skeleton.jade
                 query = entityManager.createQuery("update User set level = level + 1");
                 query.executeUpdate();
         div
-            h3.marker select 절
+            h3 select 절
             ul
                 li select 절은 반환할 매핑에 대한 완전한 정보를 가져야 한다. 따라서 "select *"은 유효한 문법이 아니다.
             +asCode('sql').
@@ -553,7 +553,7 @@ include ../../source/skeleton.jade
                 select distinct name from Card
                 
                 select new io.github.donggi.jpa.entity.GachaOdds$Minimal(id.seqNo, objectId, odd) from jpa_gacha_odds
-            h3.marker from 절(조인)
+            h3 from 절(조인)
             ul
                 li where 절에서 엔티티의 필드가 다른 엔티티를 참조하는 경우, 자동으로 join된다
                 li join 명시
@@ -573,7 +573,7 @@ include ../../source/skeleton.jade
                     li distinct 사용없이 "select e1 from Entity1 e1 join fetch e1.field e2"를 실행한 리스트의 e1과 e2의 개수는 같음에 유의
                     li distinct 사용없이 "select e1 from Entity1 e1 join fetch e1.field e2"를 페이징 실행하면 중복을 제거함에 유의
                     p 데이터가 많은 경우 큰 오버헤드 발생
-            h3.marker where 절
+            h3 where 절
             +asCode('sql').
                 where x.field = 0
                 where x.field &lt;> 0
@@ -597,7 +597,7 @@ include ../../source/skeleton.jade
 
                 query = entityManager.createQuery("... where x.field = :obj");
                 query.setParameter("obj", obj);
-            h3.marker group by 절
+            h3 group by 절
             div
                 h4 집계함수 없이 사용 == distinct
                 +asCode('sql') select x.id from X x group by x.id
@@ -617,26 +617,26 @@ include ../../source/skeleton.jade
                     where u.addDate > '2020-01-02'
                     group by u.type
                     having count(u) > 100
-            h3.marker order by 절
+            h3 order by 절
             ul
                 li select 절에 정의한 매핑에 포함되거나, 그로부터 직접 도달할 수 있는 필드만 이용 가능하다.
                 li 또, 정렬 가능하기 위해 필드의 타입은 Comparable해야 한다
             +asCode('sql').
                 order by x.field
                 order by x.field1 desc, x.field2
-            h3.marker 페이징
+            h3 페이징
             +asCode('java').
                 query = entityManager.createQuery(...);
                 query.setFirstResult(10); // 10번째부터
                 query.setMaxResults(3);   // 최대 3개 획득
-            h3.marker 서브쿼리
+            h3 서브쿼리
             p where, having 절에서 사용 가능
             +asCode('sql').
                 where exists(select ...)
                 where 100 > all(select ...)
                 where 100 = any(select ...)
                 where x.field in (select ...)
-            h3.marker 조건식
+            h3 조건식
             ul
                 li case when condition then expr1 else expr2 end
                 li case target when expr1 then expr2 else expr3 end
@@ -644,7 +644,7 @@ include ../../source/skeleton.jade
                 p 최초로 null이 아닌 것 반환. SQL의 IFNULL 대신 사용 가능
                 li nullif(expr1, expr2)
                 p 두 값이 같으면 null. 다르면 expr1
-            h3.marker 리터럴
+            h3 리터럴
             table
                 +ths('타입', '표기')
                 tr
@@ -667,7 +667,7 @@ include ../../source/skeleton.jade
                 tr
                     td Enum
                     td package.EnumName.FIELD_NAME
-            h3.marker 함수
+            h3 함수
             div
                 h4 문자열
                 ul
@@ -706,7 +706,7 @@ include ../../source/skeleton.jade
                 ul
                     li type(x) : x의 타입
                     li treat(x as Entity) : x를 Entity로 캐스팅
-        h2.marker Criteria
+        h2 Criteria
         ul
             li 문자열 대신 Java API로 쿼리 동적 생성
             +asCode('java').
@@ -766,7 +766,7 @@ include ../../source/skeleton.jade
                 builder::isEmpty, isMember, in, size
                 builder::currentDate, currentTime, currentTimestamp
         div
-            h3.marker @StaticMetamodel
+            h3 @StaticMetamodel
             p 엔티티 필드에 대한 메타데이터를 제공하여 Criteria 이용시 정적인 타입 체크를 강화해준다
             +asCode('java', '엔티티').
                 @Entity
@@ -789,7 +789,7 @@ include ../../source/skeleton.jade
                 h4 메타 모델 자동 생성
                 p "jpa model generator" 검색하면 여러 외부 라이브러리 또는 IDE 애드온이 검색되니 참고
 
-    h1.marker Spring Data JPA 사용
+    h1 Spring Data JPA 사용
     div
         h2 JpaRepository&lt;Entity, ID>
         ul

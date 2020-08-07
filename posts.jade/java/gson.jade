@@ -1,13 +1,13 @@
 include ../../source/skeleton.jade
 +post('Gson', 'Gson', 'Gson 정리')
-    h1.marker 자료
+    h1 자료
     ol
         li: +asA('https://github.com/google/gson')
         li: +asA('https://www.javadoc.io/doc/com.google.code.gson/gson')
         li: +asA('https://memorynotfound.com/gson-tutorials/')
         li: +asA('https://github.com/google/gson/blob/master/UserGuide.md')
 
-    h1.marker JSON
+    h1 JSON
     ul
         li
             | public 필드 또는 public setter가 존재하는 POJO
@@ -36,7 +36,7 @@ include ../../source/skeleton.jade
             p TypeAdapter, InstanceCreator, JsonSerializer, JsonDeserializer 중 하나 이상의 조합
             li 속성명 임의 설정 : @SerializedName("custom_naming")
 
-    h1.marker Android ProGuard 관련 설정
+    h1 Android ProGuard 관련 설정
     +asCode('ini').
         ##---------------Begin: proguard configuration for Gson  ----------
         # 출처 : https://github.com/google/gson/blob/master/examples/android-proguard-example/proguard.cfg

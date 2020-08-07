@@ -1,13 +1,13 @@
 include ../../source/skeleton.jade
 +post('Python 3.8 데이터 모델', 'Python, Data Model', 'Python 3.8 데이터 모델 정리')
-    h1.marker Objects, values, and types
+    h1 Objects, values, and types
     ol
         li 모든 객체는 id, type, value를 갖는다.
         li id는 생성된 후에는 불변하며, CPython의 경우 id(obj)는 obj의 메모리 주소다.
         li type(obj)으로 obj의 타입을 얻을 수 있으며, id와 마찬가지로 불변하다.
         li Container : 다른 객체에 대한 참조를 포함하는 객체
 
-    h1.marker The standard type hierarchy
+    h1 The standard type hierarchy
     ul
         li None
         p 식별자 "None"으로 이 타입의 싱글톤 객체를 얻을 수 있다. 값이 없음을 알리기 위해 사용된다.
@@ -18,7 +18,7 @@ include ../../source/skeleton.jade
             | 리터럴 ... 이나 식별자 "Ellipsis"로 이 타입의 싱글톤 객체를 얻을 수 있다. 다음은 NumPy에서 "전체 차원"을 의미하는 ...
             +codeBtn('/Repositories/Python/Basic/data_model.py', 'python', '[1,1,10,39]')
     div
-        h2.marker numbers.Number; 수
+        h2 numbers.Number; 수
         ol
             li.marker numbers.Integral; 정수
             ol
@@ -32,13 +32,13 @@ include ../../source/skeleton.jade
             li.marker numbers.Real (float) : double precision 부동 소수
             li.marker numbers.Complex : 실수부, 허수부 모두 float인 복소수.
 
-        h2.marker 시퀀스
+        h2 시퀀스
         ol
             li 음이 아닌 정수로 인덱싱(seq[i]) 될 수 있는 유한 길이의 순서 있는 집합
             li 내장함수 len(seq)는 시퀀스가 가진 항목의 수를 반환한다
             li seq[i:j], seq[i:j:k] 슬라이싱 지원
         div
-            h3.marker 불변 시퀀스
+            h3 불변 시퀀스
             ol
                 li.marker 문자열
                 ul
@@ -61,7 +61,7 @@ include ../../source/skeleton.jade
                     li 리터럴 생성 : b'Hello World'
                     li 생성자 이용 : bytes()
 
-            h3.marker 가변 시퀀스
+            h3 가변 시퀀스
             ol
                 li Subscription(seq[i])과 슬라이싱은 대입문과 del 문의 대상으로 사용될 수 있다
                 li list
@@ -87,13 +87,13 @@ include ../../source/skeleton.jade
                 li asyncio 모듈
                 p Queue, LifoQueue, PriorityQueue, JoinableQueue
 
-        h2.marker 집합
+        h2 집합
         ol
             li 중복없는 불변 객체들의 순서없는 유한집합. 인덱싱할 수는 없지만 이터레이팅은 가능하다.
             li 가변 집합 set과 불변 집합 frozenset이 있다.
             li a | b 합, a & b 교, a - b 차
 
-        h2.marker 매핑
+        h2 매핑
         ol
             li 임의의 인덱스 집합으로 인덱싱되는 객체들의 유한집합. 매핑에서 인덱스 표기법 map[k]는 매핑 map에서 k로 인덱스 되는 객체를 선택한다. 이는 표현식에 사용되거나 del 문의 대상이 될 수 있다.
             li 내장 매핑형은 dict 하나가 존재하며, 키로 사용할 수 있는 것은 불변 객체뿐 ─ 키의 해시값이 불변할 것을 요구하기 때문 ─ 이다.
@@ -110,7 +110,7 @@ include ../../source/skeleton.jade
             collections.UserDict
                 # 상속하여 확장하기 위한 용도. 내부에 data 객체를 갖는다.
 
-        h2.marker Callable type; 호출 가능 타입
+        h2 Callable type; 호출 가능 타입
         ol
             li 사용자 정의 함수
             table.marker
@@ -184,7 +184,7 @@ include ../../source/skeleton.jade
             li Class instance
             p 클래스에서 __call__() 메서드를 정의하면 클래스 인스턴스를 콜러블로 만들 수 있다
 
-    h1.marker 특별 메서드
+    h1 특별 메서드
     p
         | 특별 메서드를 구현하면 사용자 정의 객체도 내장형 객체처럼 작동하게 된다.
         | 사용자 정의 클래스의 묵시적인 특수 메서드 호출은 메서드가 인스턴스 딕셔너리가 아닌 객체의 형에 정의되어 있을 때만 올바르게 작동함이
@@ -196,7 +196,7 @@ include ../../source/skeleton.jade
         li numbers
         p Number, Complex, Real, Rational, Integral
     div
-        h2.marker Basic customization
+        h2 Basic customization
         ul
             li.marker object.__new__(clazz[, ...])
             ol
@@ -241,7 +241,7 @@ include ../../source/skeleton.jade
                 li 재정의하지 않은 경우, __len__()이 정의됐다면 return __len__() != 0
                 li 재정의하지 않았고, __len__()도 없다면 참으로 취급
 
-        h2.marker Customizing attribute access
+        h2 Customizing attribute access
         ol
             li.marker object.__getattribute__(self, name)
             ol
@@ -257,7 +257,7 @@ include ../../source/skeleton.jade
             li.marker object.__dir__(self)
             p 객체에 dir()이 호출될 때 호출된다. 시퀀스를 반환해야 한다.
         div
-            h3.marker Customizing module attribute access
+            h3 Customizing module attribute access
             p
                 | 모듈 수준의 __getattr__, __dir__ 정의 가능. 다른 특별 메서드들도 정의해주고 싶다면 모듈 객체의 __class__ 속성을 types.ModuleType의 서브 클래스로 설정.
                 +asA('https://docs.python.org/ko/3/reference/datamodel.html#customizing-module-attribute-access', '참고자료 1')
@@ -266,7 +266,7 @@ include ../../source/skeleton.jade
                 +codeBtn('/Repositories/Python/Basic/test_module.py', 'python') test_module.py »
                 +codeBtn('/Repositories/Python/Basic/module_example.py', 'python') module_example.py »
 
-            h3.marker Implementing Descriptors
+            h3 Implementing Descriptors
             p 다음의 메서드들은, 메서드가 정의된 클래스의 인스턴스가 소유자(owner) 클래스에 등장할 때만 적용된다. 속성(attribute)들은 소유자 클래스의 __dict__의 키로 이용되는 속성을 가리킨다.
             ol
                 li.marker object.__get__(self, instance, owner)
@@ -281,7 +281,7 @@ include ../../source/skeleton.jade
                     | 소유자 클래스 owner가 생성될 때 호출되어 이 디스크립터를 name에 할당한다.
                     +codeBtn('/Repositories/Python/Basic/descriptor_example.py', 'python') descriptor_example.py »
             div
-                h4.marker 디스크립터 호출
+                h4 디스크립터 호출
                 ol
                     li 디스크립터 : __get__(), __set__(), __delete__() 중 하나라도 정의한 클래스
                     ul
@@ -310,7 +310,7 @@ include ../../source/skeleton.jade
                         li Super 결합
                         p super(Child, obj).method() → obj.__class__.__mro__에서 Child 바로 다음 나오는 베이스 클래스 Parent를 찾은 뒤, Parent.__dict__['method'].__get__(obj, obj.__class__)
 
-            h3.marker object.__slots__
+            h3 object.__slots__
             ol
                 li 멤버를 명시적으로 선언하고 __dict__와 __weakref__ 생성을 거부할 수 있다. 이를 통해 공간 절약 + 속성 접근 속도 향상을 기대할 수 있다.
                 li __slots__가 없는 클래스를 상속하면 인스턴스의 __dict__와 __weakref__ 속성은 항상 존재한다
@@ -322,7 +322,7 @@ include ../../source/skeleton.jade
                 li 부모가 선언한 __slots__는 자식 클래스에도 제공된다
                 p 자식 클래스가 __slots__(새로 추가되는 변수명만 포함)을 정의하지 않으면 __dict__와 __weakref__를 갖게 된다
 
-        h2.marker Customizing class creation
+        h2 Customizing class creation
         ol
             li.marker
                 i classmethod
@@ -365,7 +365,7 @@ include ../../source/skeleton.jade
                 li in 연산자를 위해 매핑, 시퀀스 모두 __contains__()를 구현하도록 권장
                 li 이터레이션을 위해 매핑, 시퀀스 모두 __iter__()를 구현하도록 권장
             div
-                h4.marker 메서드 목록
+                h4 메서드 목록
                 ol
                     li object.__len__(self) : 내장함수 len()에서 호출. __bool__()을 정의하지 않은 경우 이를 이용한다
                     li object.__length_hist__(self) Since 3.4 : operator.length_hint()에서 호출. 추정값을 반환하면 된다
@@ -414,7 +414,7 @@ include ../../source/skeleton.jade
                 br
                 | __copy__(), __deepcopy__()를 구현하면 copy(), deepcopy() 동작을 제어할 수 있다.
 
-    h1.marker Coroutine
+    h1 Coroutine
     ol
         li.marker Generator Coroutine
         p yield문의 실행 제어 효과를 이용한 비동기 처리 구문

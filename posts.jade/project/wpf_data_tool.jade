@@ -1,10 +1,10 @@
 include ../../source/skeleton.jade
 +post('WPF 데이터 툴', 'WPF', 'WPF 데이터 툴 정리')
-    h1.marker 기존 프로젝트
+    h1 기존 프로젝트
     div
-        h2.marker 외부 실행 흐름
+        h2 외부 실행 흐름
         +w3img('/imgs/20190719_100711.png')
-        h2.marker 문제점
+        h2 문제점
         ol
             li 불필요한 중복 작업
             ul
@@ -21,11 +21,11 @@ include ../../source/skeleton.jade
                 li 업그레이드 작업 시 프로젝트 내부 모델 수정 외에 별도의 템플릿 수정이 필요
                 li 템플릿을 이용하는 방식은 하나의 모델 버전만 지원 가능
 
-    h1.marker 통합 프로젝트
+    h1 통합 프로젝트
     div
-        h2.marker 외부 실행 흐름
+        h2 외부 실행 흐름
         +w3img('/imgs/20190719_103028.png')
-        h2.marker 주요 수정 사항
+        h2 주요 수정 사항
         ol
             li C# WinForm 프로젝트 2개를 단일 C#.NET WPF 프로젝트로 옮기면서 MVVM 구조로 재설계
             li 단일 프로젝트에서 여러 모델 버전 동시 지원
@@ -35,7 +35,7 @@ include ../../source/skeleton.jade
             p 각 작업들을 서비스 클래스의 메서드로 변경하였고, 커맨드 패턴을 이용하여 백그라운드 스레드로 자동 구성하도록 변경.
             li 투박한 디자인 대신 머티리얼 디자인으로 UX 개선
             li DB IO 낭비 개선, 엑셀 시트 작성 개선, 기타 지속적인 리팩터링
-        h2.marker 버전 2 프로젝트
+        h2 버전 2 프로젝트
         ol
             li 브라우저 연계 기능 추가
             li 원클릭 배포(CDN 이용)
@@ -43,7 +43,7 @@ include ../../source/skeleton.jade
             +w3img('/imgs/20200527_074143.png', '트레이 메뉴 추가').marker
             +w3img('/imgs/20200527_074112.png', '브라우저 화면').marker
             +w3img('/imgs/20200527_074127.png', '쿼리 결과 확인').marker
-        h2.marker Google Sheets API 이용
+        h2 Google Sheets API 이용
         ol
             li 일정 변경에 안전한 데이터 작업이 가능하도록, 날짜 자동 변환 기능 추가.
             li 변환된 일정 이름이 무엇인지, 얼마큼 더하거나 뺐는지 메모로 기록

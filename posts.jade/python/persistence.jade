@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('Python Data Persistence', 'pickle, shelve, sqlite3', 'Python Data Persistence 정리')
-    h1.marker pickle : 파이썬 객체 직렬화
+    h1 pickle : 파이썬 객체 직렬화
     ul
         li 오염된 데이터를 unpickle하는 것만으로 실행에 치명적일 수 있음에 주의
         li 지원 타입
@@ -34,7 +34,7 @@ include ../../source/skeleton.jade
             loads(bytes_object, *, fix_imports=True, encoding="ASCII", errors="strict", buffers=None)
                 // bytes로부터 역직렬화
 
-    h1.marker shelve : pickle을 이용해 dict과 유사한 형식으로 직렬화
+    h1 shelve : pickle을 이용해 dict과 유사한 형식으로 직렬화
     ul
         li open(filename, flag='c', protocol=None, writeback=False)
         p flag : 'r'(기존 파일 읽기 전용), 'w'(기존 파일 읽기/쓰기), 'c'(읽기/쓰기, 기존 파일 없으면 생성), 'n'(읽기/쓰기, 항상 새 파일 생성)
@@ -43,7 +43,7 @@ include ../../source/skeleton.jade
             with shelve.open('spam') as db:
                 db['eggs'] = 'eggs'
 
-    h1.marker sqlite3
+    h1 sqlite3
     +asCode('python').
         conn = sqlite3.connect('example.db') # 파일 시스템
         conn = sqlite3.connect(':memory:') # in-memory

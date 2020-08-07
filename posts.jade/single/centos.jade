@@ -1,12 +1,12 @@
 include ../../source/skeleton.jade
 +post('CentOS', 'Linux, CentOS', 'CentOS 정리')
-    h1.marker 주의사항
+    h1 주의사항
     ol
         li CentOS-7-x86_64-Minimal-1810을 VMware에 설치하여 실습한 내용을 정리한 것임
         li 따라서 별도 표시가 없는 한, 아래 각 컨텐츠는 CentOS 7 버전에 해당하는 내용임
         +asA('https://centoshelp.org/resources/commands/linux-system-commands/')
 
-    h1.marker 부팅 과정
+    h1 부팅 과정
     ol
         li BIOS 실행
         li POST 수행 : 장치 검사, 초기화
@@ -17,7 +17,7 @@ include ../../source/skeleton.jade
         li init 프로세스 중에 /etc/rc.d/rc.local 스크립트를 실행한다
         p 해당 파일은 호환을 위해 아직 남아있지만, 사용자 정의 systemd 서비스나 udev 규칙을 만드는 것이 권장된다
 
-    h1.marker shutdown : 시스템 종료
+    h1 shutdown : 시스템 종료
     +asCode('shell') $ shutdown [OPTIONS...] time [warning-message]
     ol
         li -H : 시스템 종료
@@ -31,14 +31,14 @@ include ../../source/skeleton.jade
         p +number 단위(기본: 분)를 지정하려면 접미사 "s", "sec", "m", "min", "h", "hour" 이용
         li warning-message : 로그인한 유저들에게 보낼 브로드캐스팅 메시지
 
-    h1.marker init : 일시적인 runlevel 변경
+    h1 init : 일시적인 runlevel 변경
     +asCode('shell') $ init runlevel
     ol
         li runlevel : 0(종료), 6(재부팅), 1(복구), 2(multiuser without NFS), 3(multiuser; TUI), 5(X11; GUI)
         li 시스템 기본 runlevel 확인
         +asCode('shell') $ systemctl get-default
 
-    h1.marker 사용자 관리
+    h1 사용자 관리
     ol
         li useradd : 사용자 추가
         +asCode('shell') $ useradd [options] USER_NAME
@@ -75,7 +75,7 @@ include ../../source/skeleton.jade
         p !!는 비밀번호가 설정되지 않았음을 의미
         li 사용자의 홈디렉터리는 /etc/skel의 파일을 /home/${USER_NAME}에 복사하여 만들어진다
 
-    h1.marker 파일 시스템
+    h1 파일 시스템
     ol
         li 디렉터리 구조
         table
@@ -182,7 +182,7 @@ include ../../source/skeleton.jade
             br
             | -h(링크 자체 대신, 링크가 가리키는 파일을 압축한다)
 
-    h1.marker 서비스 관리
+    h1 서비스 관리
     table
         tr
             th 구분
@@ -221,7 +221,7 @@ include ../../source/skeleton.jade
             td ls /etc/init.d
             td systemctl --type service
 
-    h1.marker 패키지 관리
+    h1 패키지 관리
     ol
         li RPM : Redhat Package Manager
         p {package_name}-{version}-{release}.{architecture}.rpm
@@ -233,7 +233,7 @@ include ../../source/skeleton.jade
             br
             | Commands : clean(캐시 삭제), check-update, downgrade, erase, info, install, list, reinstall, search, update, version, 등...
 
-    h1.marker EPEL(Extra Packages for Enterprise Linux) 허용
+    h1 EPEL(Extra Packages for Enterprise Linux) 허용
     ol
         li 서드 파티 패키지를 설치하려면 EPEL을 허용해야 한다
         li RHEL 6.x / CentOS 6.x
@@ -243,7 +243,7 @@ include ../../source/skeleton.jade
         p 또는
         +asCode('shell') $ yum install epel-release.noarch
 
-    h1.marker 시간 관련
+    h1 시간 관련
     ol
         li date : 시각 출력/변경
         +asCode('shell').
@@ -262,7 +262,7 @@ include ../../source/skeleton.jade
         p NTP : Network Time Protocol. 시간 동기화를 위한 프로토콜.
         +asA('https://zetawiki.com/wiki/공용_NTP_서버_목록')
 
-    h1.marker crond : 작업 예약
+    h1 crond : 작업 예약
     +asCode('shell').
         $ systemctl status crond # 상태 확인
         $ crontab -l             # 작업 목록 출력
@@ -273,7 +273,7 @@ include ../../source/skeleton.jade
         li crontab path 설정
         +asCode() PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
-    h1.marker 프로세스 관련
+    h1 프로세스 관련
     ol
         li ps : 프로세스 출력. Process Snapshot
         +asCode('shell') $ ps -ef # -e(전체 프로세스), -f(full-format)
@@ -299,7 +299,7 @@ include ../../source/skeleton.jade
                 li 2>&1 : strerr를 stdout으로 출력 - 따라서 같이 버림
                 li & : 백그라운드로 실행
 
-    h1.marker 메모리 관련
+    h1 메모리 관련
     ol
         li vmstat : Report virtual memory statistics
         +asCode('shell') $ vmstat 1 # 1초마다 출력
@@ -312,13 +312,13 @@ include ../../source/skeleton.jade
                 # -h : human-readable output
                 # -s 1 : 1초마다
 
-    h1.marker 환경변수
+    h1 환경변수
     +asCode('shell').
         $ printenv [VAR_NAMES]
         $ echo $VAR_NAME
         $ export VAR_NAME[=value]
 
-    h1.marker 쉘
+    h1 쉘
     ol
         li 종류
         ul
@@ -332,7 +332,7 @@ include ../../source/skeleton.jade
         li 특별 전역 변수
         p $?(마지막 명령 리턴값), $>(프로세스의 사용자 ID), $0(현재 Perl 스크립트 이름), 등...
 
-    h1.marker FTP Server : vsftpd
+    h1 FTP Server : vsftpd
     ol
         li 설치
         +asCode('shell') $ yum install vsftpd
@@ -379,7 +379,7 @@ include ../../source/skeleton.jade
                 pasv_max_port=50010
             li 방화벽에서 [pasv_min_port,pasv_max_port]/tcp 허용
 
-    h1.marker SELinux
+    h1 SELinux
     ol
         li SELinux 모드 : enforce, permissive, disable
         p
@@ -395,15 +395,15 @@ include ../../source/skeleton.jade
             $ yum install setroubleshoot
             $ sealert -a /var/log/audit/audit.log
 
-    h1.marker /etc/hosts
+    h1 /etc/hosts
     p: strong address hostname[[ alias1]...]
     +asCode().
         127.0.0.1   localhost localhost4
         ::1         localhost localhost6
 
-    h1.marker vi
+    h1 vi
     div
-        h2.marker 모드
+        h2 모드
         ol
             li 처음 vi를 실행하면 normal mode(command mode)
             p insert mode와 visual mode에서 esc를 누르면 normal mode로 회귀.
@@ -412,26 +412,26 @@ include ../../source/skeleton.jade
             li :를 누르고 명령어 실행
             p :set nu # 줄 번호 표시
 
-        h2.marker 저장
+        h2 저장
         ol
             li :w
             li :w! 덮어쓰기
             li :w 파일명 // 새 파일인 경우
             li :saveas 파일명
 
-        h2.marker 종료
+        h2 종료
         ol
             li :q
             li :wq : 저장 후 종료
             li :q! : 저장하지 않고 종료
 
-        h2.marker 이동
+        h2 이동
         div
             +asA('https://vim.rtorr.com/lang/ko/', 'Vim Cheat Sheet »')
             img.w3-round(src='http://cfile8.uf.tistory.com/image/141F57474F4732890DE706')
             img.w3-round(src='https://bitbucket.org/tednaleid/vim-shortcut-wallpaper/raw/6f25ec82f84640e991a08345e6a28ec12f1d16a2/vim-shortcuts.png')
 
-        h2.marker vim
+        h2 vim
         ol
             li 열기
             ul
@@ -450,7 +450,7 @@ include ../../source/skeleton.jade
                     br
                     | a 는 마우스를 사용하겠다는 것이고 c 는 마우스를 사용치 않겠다는 것 같은데, c 로 해놔도 마우스로 커서 옮기고 스크롤하는 것 등은 잘 되더군요.. 출처 : https://kldp.org/node/129456
 
-        h2.marker 전체 지우기
+        h2 전체 지우기
         ol
             li gg    첫줄로 이동
             li dG    현재 줄부터 마지막 줄 까지 삭제

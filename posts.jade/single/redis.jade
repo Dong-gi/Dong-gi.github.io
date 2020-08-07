@@ -1,18 +1,18 @@
 include ../../source/skeleton.jade
 +post('Redis', 'Redis', 'Redis 정리')
-    h1.marker 참고자료
+    h1 참고자료
     ul
         li: +asA('https://redis.io/documentation', '공식 문서')
         li: +asA('http://redisgate.kr/', '레디스 엔터프라이즈 버전')
         li: +asA('https://github.com/redis-essentials/book', 'Redis Essentials')
 
-    h1.marker Redis
+    h1 Redis
     ul
         li 인메모리 저장소 + 물리 장치 백업
         li 메시지 브로커 기능 보유 : Pub/Sub
         li BSD 라이선스
     div
-        h2.marker redis-server/redis-cli
+        h2 redis-server/redis-cli
         ol
             li 서버 실행
             +asCode('shell').
@@ -31,10 +31,10 @@ include ../../source/skeleton.jade
                 > help
                 > help @&lt;group>
                 > help &lt;command>
-        h2.marker: +asA('https://redis.io/commands')
+        h2: +asA('https://redis.io/commands')
         p Redis 명령어들은 연관성에 따라 그룹에 묶여있다
         div
-            h3.marker String
+            h3 String
             table
                 +ths('분류','명령','사용','설명')
                 tr
@@ -215,7 +215,7 @@ include ../../source/skeleton.jade
                             +asCode('shell').
                                 > stralgo lcs strings humble-bundle bundle-humble
                                 "ble-ule"
-            h3.marker List
+            h3 List
             p 값은 입력된 순서대로 저장되고, 값이 하나도 없으면 키가 삭제된다
             table
                 +ths('분류','명령','사용','설명')
@@ -304,7 +304,7 @@ include ../../source/skeleton.jade
                     td BRPOPLPUSH
                     td BRPOPLPUSH source destination timeout
                     td 리스트에 값이 있으면 rpoplpush 실행, 없으면 timeout(초)만큼 대기
-            h3.marker Set
+            h3 Set
             table
                 +ths('분류','명령','사용','설명')
                 tr
@@ -385,7 +385,7 @@ include ../../source/skeleton.jade
                     td SMOVE
                     td SMOVE source destination member
                     td member가 source에 포함된다면 destination으로 이동하고 1 반환. 아니면 0
-            h3.marker Sorted Set
+            h3 Sorted Set
             p key-value 관계에 정렬을 위한 score가 추가된다. key-(score, value), 같은 score 사이에서는 value를 기준으로 정렬된다
             table
                 +ths('분류','명령','사용','설명')
@@ -532,7 +532,7 @@ include ../../source/skeleton.jade
                     td BZPOPMIN
                     td BZPOPMIN key [key ...] timeout
                     td 작은 원소부터 pop. 없으면 timeout(초)만큼 대기
-            h3.marker Hash
+            h3 Hash
             p 하나의 key에 대해 여러(40억개) field-value 쌍을 가질 수 있다
             table
                 +ths('분류','명령','사용','설명')
@@ -609,7 +609,7 @@ include ../../source/skeleton.jade
                     td HSTRLEN
                     td HSTRLEN key field
                     td value의 바이트 길이 반환
-            h3.marker Stream Since 5.0
+            h3 Stream Since 5.0
             p 스트림 : 온도, Memory, Log 등 동종 데이터의 연속적인 발생. 이전 값을 수정하지 않고, 새로 추가되기만 한다.
             ul
                 li 동종 : key로 구분한다
@@ -683,7 +683,7 @@ include ../../source/skeleton.jade
                         li XINFO CONSUMERS key group : 소비자 정보
                         li XINFO GROUPS key : 소비자그룹 정보
                         li XINFO HELP : 도움말
-            h3.marker Generic; 공통 키 연산
+            h3 Generic; 공통 키 연산
             table
                 +ths('명령','사용','설명')
                 tr
@@ -980,7 +980,7 @@ include ../../source/skeleton.jade
             transactions > MULTI
             transactions > UNWATCH
             transactions > WATCH key [key ...]
-        h2.marker Data type
+        h2 Data type
         ol
             li (바이너리) 문자열
     +hoverTemplate()#glob-style-pattern

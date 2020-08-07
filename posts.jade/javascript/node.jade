@@ -1,8 +1,8 @@
 include ../../source/skeleton.jade
 +post('Node', 'Node, NPM, mongodb, jade, express', 'Node 정리')
-    h1.marker NPM
+    h1 NPM
     div
-        h2.marker 버전 정의
+        h2 버전 정의
         ul
             li npm 패키지 버전 : Major.Minor.Patch
             ol
@@ -17,7 +17,7 @@ include ../../source/skeleton.jade
             p >=1.2.2 &lt;=1.4.4와 동일
             li 1.2.x : 와일드카드
 
-        h2.marker 프로젝트 의존성 관리
+        h2 프로젝트 의존성 관리
         +asCode('shell').
             $ npm init    # package.json 생성
             $ npm install # package.json대로 의존 라이브러리 설치
@@ -26,7 +26,7 @@ include ../../source/skeleton.jade
             $ npm install name --save
             $ npm install name --save-dev
         div
-            h3.marker package.json
+            h3 package.json
             p 아래 예시는 다른 패키지의 것들을 맘대로 섞은 것임
             +asCode('javascript').
                 {
@@ -82,14 +82,14 @@ include ../../source/skeleton.jade
                     }
                 }
 
-        h2.marker 패키지 배포
+        h2 패키지 배포
         +asCode('shell').
             $ npm publish
             $ npm version patch # 패치 버전 1 증가
             $ npm version minor # 마이너 버전 1 증가
             $ npm unpublish     # 배포 중단
 
-    h1.marker TypeScript
+    h1 TypeScript
     ol
         li JavaScript에 타입이 추가된 수퍼셋. 컴파일하면 자바스크립트 코드가 된다
         +asCode('shell').
@@ -99,7 +99,7 @@ include ../../source/skeleton.jade
         li VS Code의 타입스크립트 컴파일러를 npm 패키지로 설정
         p "typescript.tsdk": "C:/Users/name/AppData/Roaming/npm/node_modules/typescript/bin/tsc"
 
-    h1.marker 디버깅
+    h1 디버깅
     ul
         li 코드 사이에 중단점 삽입
         +asCode('javascript') debugger;
@@ -121,14 +121,14 @@ include ../../source/skeleton.jade
             li help
             li .exit
 
-    h1.marker Lib/Cluster
+    h1 Lib/Cluster
     ul
         li 멀티 코어 CPU의 성능을 이용하기 위해, 동일한 로직을 이용하는 멀티 프로세스 생성/관리 기능 제공
         li 프로세스는 마스터(cluster.isMaster)와 워커로 구성.
         li 자식(워커) 프로세스들은 부모 프로세스와 TCP 연결을 공유할 수 있다.
         +codeBtn('/Repositories/Node/cluster.test.js', 'javascript')
 
-    h1.marker Lib/Console
+    h1 Lib/Console
     +asCode('javascript').
         console.log(any data[, any ...args])
             // + info, debug, warn, error
@@ -162,7 +162,7 @@ include ../../source/skeleton.jade
             // console.log(...label)실행 후, 다음 출력부터는 앞에 공백 2개 추가
             // + groupEnd
 
-    h1.marker Lib/Events
+    h1 Lib/Events
     ul
         li class EventEmitter
         ul
@@ -204,7 +204,7 @@ include ../../source/skeleton.jade
                 for await (const event of on(emitter, 'foo')) {}
             })
 
-    h1.marker Lib/Globals
+    h1 Lib/Globals
     ul
         li this == global
         li TextDecoder Since 11 == util.TextDecoder
@@ -222,7 +222,7 @@ include ../../source/skeleton.jade
         li queueMicrotask(Function callback) Since 11
         p "microtask queue"는 V8 엔진이 관리하며, 동작은 process.nextTick()과 유사하다. 이벤트 루프 어느 페이즈에서든지 "next tick queue"가 항상 "microtask queue"보다 먼저 실행된다.
 
-    h1.marker Lib/Modules
+    h1 Lib/Modules
     ol
         li require(string id)
         ul
@@ -259,7 +259,7 @@ include ../../source/skeleton.jade
             p 최초 exports는 module.exports를 가리키므로, exports에 다른 객체를 할당하는 경우, 해당 부분은 외부와 공유되지 않는다. 외부에 공유하려면 module.exports = exports = newObject
             li 모듈 안에서는 __filename, __dirname을 편리하게 획득
 
-    h1.marker Lib/Process
+    h1 Lib/Process
     ul
         li Event 'beforeExit'
         p 정상 종료 전, process.exitCode를 인자로 콜백이 호출된다. process.exit() 등으로 종료하는 경우 호출되지 않는다. 콜백에서 비동기 호출로 프로그램 종료를 지연시킬 수 있다.
@@ -287,7 +287,7 @@ include ../../source/skeleton.jade
             | Stream process.stdin, stdout, stderr 
             +codeBtn('/Repositories/Node/process.sample.js', 'javascript')
 
-    h1.marker 3rd/express : Web Framework
+    h1 3rd/express : Web Framework
     ul
         li 정적 리소스 제공에는 Nginx, CDN, Amazon S3 등을 고려함이 좋다
         li Quick start
@@ -348,7 +348,7 @@ include ../../source/skeleton.jade
         li 세션
         p cookie-parser, express-session 모듈 이용
 
-    h1.marker 3rd/forever : 종료 시 자동 재시작
+    h1 3rd/forever : 종료 시 자동 재시작
     ul
         li 스크립트 영구 실행
         li forever 모듈을 코드에서 호출하는 경우, forever-monitor가 도움이 된다
@@ -378,7 +378,7 @@ include ../../source/skeleton.jade
                 }
             ]
 
-    h1.marker 3rd/Jade : 템플릿 엔진
+    h1 3rd/Jade : 템플릿 엔진
     ul
         li jade -P // Pretty
         p 기본 옵션은 불필요한 공백 제거
@@ -417,7 +417,7 @@ include ../../source/skeleton.jade
             +codeBtn('/Repositories/Node/jade-start/doc7.main2.jade', 'text') main 예시1 »
             +codeBtn('/Repositories/Node/jade-start/doc7.main2.html', 'text') 결과1 »
 
-    h1.marker 3rd/mocha : 테스트 프레임워크
+    h1 3rd/mocha : 테스트 프레임워크
     ul
         li 설치
         +asCode('shell').
@@ -451,7 +451,7 @@ include ../../source/skeleton.jade
         li this.retries(n) : (행위) 테스트에서 재시도를 하도록 설정
         li 시간 제한 : this.timeout(n), setTimeout(done, 300)
 
-    h1.marker 3rd/mongodb : MongoDB 공식 드라이버
+    h1 3rd/mongodb : MongoDB 공식 드라이버
     ul
         li http://mongodb.github.io/node-mongodb-native/3.6/tutorials/
         li http://mongodb.github.io/node-mongodb-native/3.6/api/

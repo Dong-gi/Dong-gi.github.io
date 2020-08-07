@@ -1,6 +1,6 @@
 include ../../source/skeleton.jade
 +post('AWS', 'AWS', 'AWS 정리')
-    h1.marker 서비스 종류
+    h1 서비스 종류
     ol
         li EC2; Elastic Compute Cloud
         p OS를 포함한 컴퓨팅 머신.
@@ -40,7 +40,7 @@ include ../../source/skeleton.jade
         li CloudWatch
         p AWS 리소스 및 애플리케이션 모니터링
 
-    h1.marker 싱글 웹서버
+    h1 싱글 웹서버
     ol
         li 규모가 작은 경우, API 게이트웨이 + 람다 조합이 더 저렴할 수 있다
         li EC2 인스턴스 생성
@@ -67,14 +67,14 @@ include ../../source/skeleton.jade
             br
             | 연결된 EBS, EIP 삭제
 
-    h1.marker VPC
+    h1 VPC
     ol
         li AWS 리전에 대해 가상 네트워크 작성
         li 가용 영역(AZ; Available Zone)
         p 각 AWS 리전은 최소 2개 이상의 가용영역으로 구성되며, 각 AZ는 서로의 장애로부터 격리된다
         li 각 AZ 안에 서브넷을 작성할 수 있다
 
-    h1.marker 서버 다중화
+    h1 서버 다중화
     ol
         li ELB 설정
         p

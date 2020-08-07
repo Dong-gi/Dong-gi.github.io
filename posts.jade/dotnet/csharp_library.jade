@@ -1,12 +1,12 @@
 include ../../source/skeleton.jade
 +post('C# 라이브러리', 'C#, .NET, 라이브러리', 'C#.NET 라이브러리 정리')
-    h1.marker 표준 입출력
+    h1 표준 입출력
     ol
         li Console.Read() : 한 글자
         li Console.ReadLine() : 한 줄
         li Console.Write(), Console.WriteLine()
 
-    h1.marker 텍스트
+    h1 텍스트
     ol
         li String.Format ::= {N[, W][: formatCharacter]}
         ul
@@ -18,13 +18,13 @@ include ../../source/skeleton.jade
         li System.Text.Encoding : Encoding.UTF8.GetBytes()
         li System.Text.RegularExpressions.Regex
 
-    h1.marker 시간
+    h1 시간
     ol
         li System.DateTime : 닷넷 시간 기준은 1년 1월 1일. Tick 간격은 천만 분의 일초
         li System.TimeSpan : DateTime의 - 연산 결과
         li System.Diagnostics.Stopwatch
 
-    h1.marker 직렬화
+    h1 직렬화
     ul
         li System.BitConverter
         p 기본 타입의 직렬화/역직렬화 제공. 리틀/빅 엔디언 구분 필요
@@ -40,14 +40,14 @@ include ../../source/skeleton.jade
         li System.Runtime.Serialization.Json.DataContractJsonSerializer
         +asCode('cs') new DataContractJsonSerializer(typeof(ClassName)).WriteObject()
 
-    h1.marker 스트림
+    h1 스트림
     ul
         li System.IO.MemoryStream : 바이트 단위 스트림
         li System.IO.StreamWriter, StreamReader
         li System.IO.BinaryWriter, BinaryReader
         li System.IO.FileStream : 비동기 메서드 BeginRead, EndRead, BeginWrite, EndWrite
 
-    h1.marker 파일
+    h1 파일
     ul
         li System.IO.File, System.IO.Directory : 클래스 메서드
         li System.IO.FileInfo, System.IO.DirectoryInfo : 인스턴스 메서드
@@ -56,7 +56,7 @@ include ../../source/skeleton.jade
             li Path.Combine() : 경로 접합 시에 디렉터리 구분 문자를 넣어야 되는지 알아서 판단해서 처리해준다
             li 임시 폴더/파일에 관한 기능 제공
 
-    h1.marker Collection
+    h1 Collection
     ul
         li System.Collections.ArrayList : Object에 대한 동적 배열은 List
         li System.Collections.Hashtable : Object 키-값 쌍 저장은 Dictionary
@@ -69,7 +69,7 @@ include ../../source/skeleton.jade
             +asCode('cs') new List&lt;int> {0, 1, 2}
             li Since C# 6.0 : 확장 메서드로 Add()가 정의됐으면 {} 초기화 가능
 
-    h1.marker 스레딩
+    h1 스레딩
     ul
         li System.Threading.Thread
         ul
@@ -134,7 +134,7 @@ include ../../source/skeleton.jade
             void DoSomething(int i) => Console.WriteLine(i);
             Parallel.For(0, 100, DoSomething);
 
-    h1.marker 네트워킹
+    h1 네트워킹
     ul
         li System.Net.IPAddress
         li System.Net.IPEndPoint : IPAddress + port
@@ -144,7 +144,7 @@ include ../../source/skeleton.jade
         li System.Net.HttpWebRequest : WebRequest.Create() as HttpWebRequest
         li System.Net.WebClient
 
-    h1.marker DB : ADO.NET
+    h1 DB : ADO.NET
     ul
         li ADO.NET : DBMS 통신 닷넷 구현 라이브러리. 각 DBMS마다 만들어진 걸 이용하면 된다. 아래의 공통 인터페이스를 구현한다.
         li System.Data.IDbConnection
@@ -189,7 +189,7 @@ include ../../source/skeleton.jade
             li https://dev.mysql.com/doc/visual-studio/en/visual-studio-entity-framework.html
             li https://stackoverflow.com/q/32045852/7369515
 
-    h1.marker 윈도우 레지스트리
+    h1 윈도우 레지스트리
     +asCode('cs').
         Registry.ClassesRoot : HKEY_CLASSES_ROOT
         Registry.CurrentUser : HEKY_CURRENT_USER

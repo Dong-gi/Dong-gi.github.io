@@ -1,12 +1,12 @@
 include ../../source/skeleton.jade
 +post('Raspberry Pi 3 + OpenCV(python)', 'Raspberry Pi 3, OpenCV(python)', 'Raspberry Pi 3에서의 OpenCV(python) 실습 정리')
-    h1.marker 개요
+    h1 개요
     div
         Raspberry Pi 3 + Raspbian + OpenCV 3.3(python) 실습 내용 정리
         +asA('https://www.pyimagesearch.com/2017/09/04/raspbian-stretch-install-opencv-3-python-on-your-raspberry-pi/')
         +asA('http://www.nitc.ac.in/electrical/ipg/python/opencv-python-tutroals.pdf')
 
-    h1.marker Python PiCamera 라이브러리 이용 예
+    h1 Python PiCamera 라이브러리 이용 예
     ol
         li.marker
             | start_preview(), stop_preview()
@@ -33,13 +33,13 @@ include ../../source/skeleton.jade
             | capture to an OpenCV object
             +codeBtn('/Repositories/Raspbian/start08.py', 'python')
 
-    h1.marker Picamera with OpenCV 예
+    h1 Picamera with OpenCV 예
     ol
         li.marker
             | fps change by resolution
             +codeBtn('/Repositories/Raspbian/cam01.py', 'python')
         div
-            h3.marker 테스트 결과
+            h3 테스트 결과
             | // jpeg quality [0, 100] default 85
             br
             | // resolution can not changed in running
@@ -67,7 +67,7 @@ include ../../source/skeleton.jade
             | fps change by ISO(sensitivity to light), default 0
             +codeBtn('/Repositories/Raspbian/cam02.py', 'python')
         div
-            h3.marker 테스트 결과
+            h3 테스트 결과
             | // ISO can not changed in running
             br
             | // if ISO > 0 : exposure_mode property becomes non-functional
@@ -99,7 +99,7 @@ include ../../source/skeleton.jade
             | awb_mode(auto-white-balance), default 'auto'
             +codeBtn('/Repositories/Raspbian/cam03.py', 'python')
         div
-            h3.marker 테스트 결과
+            h3 테스트 결과
             | // awb_mode can changed in running
             br
             | // possible values can be obtained from PiCamera.AWB_MODES
@@ -126,7 +126,7 @@ include ../../source/skeleton.jade
             br
             | (600x400, awb_mode:incandescent) : 10.42fps
     div
-        h2.marker 카메라 동작 중에 변경할 수 있는 picamera 인자들
+        h2 카메라 동작 중에 변경할 수 있는 picamera 인자들
         ol
             li brightness // [0, 100], default 50
             li color_effects // (u, v) tuple where u, v are in [0, 255] // ex. (128, 128) => black and white
@@ -144,7 +144,7 @@ include ../../source/skeleton.jade
             li hflip : default False
             li vflip : default False
 
-    h1.marker 영상처리 이론
+    h1 영상처리 이론
     ol
         li.marker Image Operation : [0, 255]의 값만 사용된다.
         ul
@@ -260,7 +260,7 @@ include ../../source/skeleton.jade
             li Top Hat : Open - 원본
             li Black Hat : Closing - 원본
 
-    h1.marker 영상처리 관련 Python 라이브러리
+    h1 영상처리 관련 Python 라이브러리
     ol
         li NumPy : 다차원 배열 처리
         li SciPy : 다양한 거리 계산 함수, kd-tree 지원
@@ -274,7 +274,7 @@ include ../../source/skeleton.jade
         li h5py : NumPy array 저장 지원
         li scikit-image : 신기술이 곧잘 지원된다.(효율적이라곤 단정할 수 없음)
 
-    h1.marker OpenCV for Python 실습
+    h1 OpenCV for Python 실습
     ol
         li.marker cv 전체 속성 출력 : help(cv2.Attr)
         li.marker
@@ -307,7 +307,7 @@ include ../../source/skeleton.jade
             +codeBtn('/Repositories/Raspbian/cv08.py', 'python')
         p OpenCV의 HSV 색공간은 [0, 179], [0, 255], [0, 255]이므로 다른 범위를 쓰는 프로그램은 정규화 필요
         div
-            h3.marker HSV에서의 색상 추출
+            h3 HSV에서의 색상 추출
             ul
                 li green = np.uint8([[[0, 255, 0]]])
                 li hsv_green = cv2.cvtColor(green, cv2.COLOR_BGR2HSV)
@@ -360,7 +360,7 @@ include ../../source/skeleton.jade
             | cv2::findContours
             +codeBtn('/Repositories/Raspbian/cv15.py', 'python')
 
-    h1.marker 테스트용 이미지 수집
+    h1 테스트용 이미지 수집
     +asCode('javascript').
         // 웹브라우저 콘솔에서 jQuery 추가
         let script = document.createElement('script');
@@ -377,7 +377,7 @@ include ../../source/skeleton.jade
         hiddenElement.download = 'urls.txt';
         hiddenElement.click();
 
-    h1.marker 실습 과제
+    h1 실습 과제
     ol
         li.marker
             | 정면 얼굴 및 눈 검출 시도
@@ -389,7 +389,7 @@ include ../../source/skeleton.jade
             +codeBtn('/Repositories/Raspbian/cctv02-2.py', 'python')
             +codeBtn('/Repositories/Raspbian/cctv02-3.py', 'python')
             +codeBtn('/Repositories/Raspbian/cctv02-4.py', 'python')
-            h3.marker 화재 검출?
+            h3 화재 검출?
             ul
                 li CCTV → 가시광선 영역
                 li 화재 특성
