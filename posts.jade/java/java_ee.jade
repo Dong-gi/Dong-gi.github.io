@@ -43,7 +43,7 @@ include ../../source/skeleton.jade
         h2 개발 환경
         ol
             li
-                +asA('http://openjdk.java.net/install/', 'OpenJDK')
+                +asA('https://sdkman.io/jdks', 'JDK')
                 |  설치
             li
                 +asA('https://tomcat.apache.org/', '톰캣')
@@ -70,44 +70,55 @@ include ../../source/skeleton.jade
             h3 이클립스 Dynamic Web Project
             ol
                 li New Project » Web » Dynamic Web Project » Target runtime에 톰캣 설정
-                +w3img('/imgs/20180929_220300.png')
                 li 코드 작성
-                +w3img('/imgs/20180929_220301.png')
-                +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello1.java', 'java') Hello1.java »
-                +codeBtn('/Repositories/Eclipse/app1/src/main/webapp/WEB-INF/web.xml', 'xml') web.xml »
+                +w3img('/imgs/20200808_184623.png', '프로젝트 구조')
+                +codeBtn('/Repositories/STS/app1/src/io/github/donggi/app1/controller/HelloController.java', 'java', [11], true)
+                +codeBtn('/Repositories/STS/app1/webapp/WEB-INF/web.xml', 'xml', null, true)
                 li web.xml
                 p
                     | web.xml은 배포 설명자로, 서블릿 및 서블릿 매핑, 필터 등을 정의한다.
                     |  이클립스 프로젝트 생성 마법사로 web.xml을 생성하면 자동으로 welcome-file-list를 구성해주는데, welcome-file-list에 정의된 welcome-file을 순서대로 찾아 기본 페이지로 보여준다.
                 li 실행
-                +w3img('/imgs/20180929_220302.png')
-                p 또는 Export » WAR file를 선택하여, 톰캣 webapps 디렉터리에 옮긴 후 배치되기를 기다린 뒤 브라우저에서 실행.
+                +w3img('/imgs/20200808_184839.png', 'Debug on Server')
+                +w3img('/imgs/20200808_185012.png', '브라우저 화면')
+                p 또는 Export » WAR file를 선택하여, 톰캣 webapps 디렉터리에 옮긴 후 배치되기를 기다린 뒤 브라우저에서 확인.
                 li 이클립스 내부에서 실행하는 경우 웹 애플리케이션 배포 위치
-                p ${PROJECT_ROOT}\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Web01\WEB-INF
+                p ${PROJECT_ROOT}\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps
 
             h3 톰캣에 직접 배치
             ol
                 li
-                    | 위와 동일하게 HelloWorld.java 작성 
-                    +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello1.java', 'java') Hello1.java »
+                    | 위와 동일하게 HelloController.java 작성 
+                    +codeBtn('/Repositories/STS/app1/src/io/github/donggi/app1/controller/HelloController.java', 'java', [11], true)
                 li 컴파일
                 ul
                     li 톰캣 lib를 클래스패스로 넘기는 경우
-                    +asCode('shell') javac -encoding UTF-8 -cp "C:\apache-tomcat-8.0.52\lib\servlet-api.jar" HelloWorld.java
+                    +asCode('shell') javac -encoding UTF-8 -cp "C:\apache-tomcat-8.0.52\lib\servlet-api.jar" HelloController.java
                     li JDK의 jre/lib/ext에 servlet-api.jar를 붙여넣은 경우
-                    +asCode('shell') javac -encoding UTF-8 HelloWorld.java
+                    +asCode('shell') javac -encoding UTF-8 HelloController.java
                 li 컴파일된 클래스 파일을 webapps/${웹모듈명}/WEB-INF/classes/${패키지 경로}/ 에 저장
                 li
                     | 동일한 배포 설명자 web.xml을 WEB-INF에 작성하고 실행 
-                    +codeBtn('/Repositories/Eclipse/app1/src/main/webapp/WEB-INF/web.xml', 'xml') web.xml »
+                    +codeBtn('/Repositories/STS/app1/webapp/WEB-INF/web.xml', 'xml', null, true)
 
             h3 이클립스 Maven 프로젝트
             ol
                 li New Project » Maven » Maven Project » maven-archetype-webapp
-                +w3img('/imgs/20180930_154849.png')
                 p webapp 아티팩트로 프로젝트를 만들면 Hello World를 출력하는 index.jsp가 생성된다.
                 li Maven Install, 빌드하여 war 파일이 생성되면 톰캣 webapps 디렉터리에 붙여넣고 배치되기를 기다린 뒤 브라우저에서 실행
                 p maven이 pom.xml에 정의된 라이브러리를 /users/유저이름/.m2 폴더에 다운로드한다.
+
+            h3 이클립스 Gradle 프로젝트
+            ol
+                li
+                    | New Project » Gradle Project 
+                    +codeBtn('/Repositories/STS/mvc-xml1/build.gradle', 'gradle', null, true)
+                li 코드 작성
+                +w3img('/imgs/20200808_185701.png', '프로젝트 구조')
+                +codeBtn('/Repositories/STS/mvc-xml1/src/main/java/io/github/donggi/mvc1/controller/HelloController.java', 'java', [11], true)
+                +codeBtn('/Repositories/STS/mvc-xml1/src/main/webapp/WEB-INF/web.xml', 'xml', null, true)
+                li 실행
+                +w3img('/imgs/20200808_185608.png', '브라우저 화면')
 
         h2 서블릿 생애 주기
         ol
@@ -115,13 +126,13 @@ include ../../source/skeleton.jade
             li init()
             li 각 요청마다 service() 호출
             li destroy()
-            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/LifeCycle.java', 'java')
+            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/LifeCycle.java', 'java', [17])
 
         h2 web.xml 대신 애너테이션으로 서블릿 기술
         ol
             li WebServlet 애너테이션으로 배포설명자 web.xml 대신 간결하게 서블릿을 기술할 수 있다.
-            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello2.java', 'java') value
-            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello3.java', 'java') initParams
+            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello2.java', 'java', [11]) value
+            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello3.java', 'java', [12]) initParams
             li name : 배포설명자의 servlet-name에 해당.
             li urlPatterns : 배포설명자의 url-pattern들의 배열에 해당.
             li value : urlPatterns 요소와 동일하게 동작하기 때문에, 서블릿 매핑만을 기술할 거라면 편하게 WebServlet("/hello")처럼 기술할 수 있다.
@@ -130,7 +141,7 @@ include ../../source/skeleton.jade
             li loadOnStartup : 컨테이너가 애플리케이션을 시작할 때, 클라이언트의 요청이 없어도 미리 해당 서블릿을 인스턴스화 한다.
             p
                 | Non-negative 정수로 설정하며, 0에 가까울수록 우선 초기화
-                +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello5.java', 'java') loadOnStartup
+                +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello5.java', 'java', [10]) loadOnStartup
 
         h2 JDBC 예시
         ol
@@ -141,12 +152,12 @@ include ../../source/skeleton.jade
                 li 또는 프로젝트에 직접 포함
             li 사용하기 전에 드라이버 클래스 로드
             li DataSource 직접 사용하기
-                +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello4.java', 'java')
+                +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello4.java', 'java', [16])
             ul
                 li url : JDBC 연결 문자열로, 옵션은 각 JDBC마다 제공하는 것이 다르다
                 li
                     | 위 예시코드에서는 Apache Commons DBCP를 이용. 
-                    +asA('https://commons.apache.org/proper/commons-dbcp/guide/index.html')
+                    +asA('https://commons.apache.org/proper/commons-dbcp/guide/index.html') 링크
                 +asCode('java').
                     BasicDataSource.initialSize                 // 최초 커넥션 수 + maxActive, maxIdle, minIdle
                     BasicDataSource.maxWait                     // 풀에 커넥션이 없을 때 대기하는 최대 시간(ms). 음수면 무기한
@@ -162,13 +173,13 @@ include ../../source/skeleton.jade
                     &lt;res-type>javax.sql.DataSource&lt;/res-type>
                     &lt;res-auth>Container&lt;/res-auth>
                 &lt;/resource-ref>
-            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello6.java', 'java') 서블릿 »
+            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello6.java', 'java', [15]) 서블릿 »
 
     h1 서블릿
     div
         h2 다른 페이지로 이동/호출
         ol
-            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/CallOther.java', 'java')
+            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/CallOther.java', 'java', [13])
             li 다른 페이지로 이동
             ul
                 li Refresh : 응답 페이지를 보여준 뒤 클라이언트가 나중에 다시 요청하도록 한다.
@@ -195,16 +206,16 @@ include ../../source/skeleton.jade
             li 필터 체인 : 하나의 페이지에 대해 여러 필터가 정의된 경우, 정의된 순서대로 필터가 호출된다.
             li 배포 설명자에 명시 :
                 +codeBtn('/Repositories/Eclipse/app1/src/main/webapp/WEB-INF/web.xml', 'xml') web.xml »
-                +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/filter/DoNothing.java', 'java')
+                +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/filter/DoNothing.java', 'java', [14])
             li 애너테이션으로 명시 :
-                +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/filter/DoNothing2.java', 'java')
+                +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/filter/DoNothing2.java', 'java', [16])
 
         h2 래퍼
         ol
             li Http 요청/응답을 감싸는 사용자 정의 객체
             li 각각 HttpServletRequestWrapper, HttpServletResponseWrapper를 상속하면 된다.
-            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/request/RequestWrapper.java', 'java') MyRequestWrapper.java »
-            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/response/ResponseWrapper.java', 'java') MyResponseWrapper.java »
+            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/request/RequestWrapper.java', 'java', [6], true)
+            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/response/ResponseWrapper.java', 'java', [6], true)
 
         h2 JSP
         ol

@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+    id 'eclipse-wtp'
+    id 'war'
+}
+
+group = 'io.github.donggi'
+version = '0.0.1'
+sourceCompatibility = JavaVersion.VERSION_13
+
+eclipse {
+    project.natures "org.springsource.ide.eclipse.gradle.core.nature"
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
+	providedCompile 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.3'
+}

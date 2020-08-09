@@ -1473,33 +1473,20 @@ include ../../source/skeleton.jade
             li DispatcherServlet은 클라이언트 요청을 받아 다른 컴포넌트로 처리를 넘긴다.
             li 각 DispatcherServlet은 하나의 WebApplicationContext를 갖는다
             li 여타 서블릿과 마찬가지로 자바 설정이나 web.xml로 선언해야 한다
-            +asCode('java', '자바 설정 예').
-                public class MyWebApplicationInitializer implements WebApplicationInitializer {
-                    @Override
-                    public void onStartup(ServletContext servletCxt) {
-                        // Load Spring web application configuration
-                        var ac = new AnnotationConfigWebApplicationContext();
-                        ac.register(AppConfig.class);
-                        ac.refresh();
+        div
+            h3 자바 설정 Since 3.0 - WebApplicationInitializer 정의 예
+            +codeBtn('/Repositories/STS/mvc-java1/src/main/java/io/github/donggi/mvc/config/Initializer.java', 'java', [9], true)
+            p 정상적으로 완료되면 실행 시 로그에 "INFO: 1 Spring WebApplicationInitializers detected on classpath"처럼 기록된다. 자동으로 스캔되지 않는 경우 /META-INF/services/javax.servlet.ServletContainerInitializer 파일에 해당 클래스 명시
 
-                        // Create and register the DispatcherServlet
-                        var servlet = new DispatcherServlet(ac);
-                        ServletRegistration.Dynamic registration = servletCxt.addServlet("app", servlet);
-                        registration.setLoadOnStartup(1);
-                        registration.addMapping("/app/*");
-                    }
-                }
-            +asCode('xml', 'web.xml 예').
-                &lt;web-app>
-                    &lt;listener>
-                        &lt;listener-class>org.springframework.web.context.ContextLoaderListener&lt;/listener-class>
-                    &lt;/listener>
-
-                    &lt;context-param>
-                        &lt;param-name>contextConfigLocation&lt;/param-name>
-                        &lt;param-value>/WEB-INF/app-context.xml&lt;/param-value>
-                    &lt;/context-param>
-
+            h3 web.xml 기술 예
+            +codeBtn('/Repositories/STS/mvc-xml2/src/main/webapp/WEB-INF/web.xml', 'xml', null, true)
+            +codeBtn('/Repositories/STS/mvc-xml2/src/main/webapp/WEB-INF/app-servlet.xml', 'xml', null, true)
+            ul
+                li 기본적으로 {서블릿_이름}-servlet.xml 설정을 읽어온다.
+                p {서블릿_이름}-servlet == default namespace
+                li 다른 파일(들)을 로드하고 싶거나, 아예 로드하고 싶지 않은 경우 contextConfigLocation 조정
+                p 각 경로들은 ','로 구분하면 된다. 클래스패스에 있는 파일은 classpath:conf.xml처럼 지정하면 된다.
+                +asCode('xml', '추가 로드 x').
                     &lt;servlet>
                         &lt;servlet-name>app&lt;/servlet-name>
                         &lt;servlet-class>org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class>
@@ -1507,64 +1494,59 @@ include ../../source/skeleton.jade
                             &lt;param-name>contextConfigLocation&lt;/param-name>
                             &lt;param-value>&lt;/param-value>
                         &lt;/init-param>
-                        &lt;load-on-startup>1&lt;/load-on-startup>
                     &lt;/servlet>
+                li xml에서 ConfigurableWebApplicationContext 구현 클래스를 지정하고 싶은 경우, contextClass 조정
+                p 기본값은 XmlWebApplicationContext
 
-                    &lt;servlet-mapping>
-                        &lt;servlet-name>app&lt;/servlet-name>
-                        &lt;url-pattern>/app/*&lt;/url-pattern>
-                    &lt;/servlet-mapping>
-                &lt;/web-app>
-            div
-                h3 Context Hierarchy
-                ul
-                    li 일반적으로 하나의 WebApplicationContext로 충분하지만, 루트 WebApplicationContext를 DispatcherServlet들이 공유하고, 각각은 자식 WebApplicationContext를 갖는 계층 구조로도 구성 가능하다
-                    li 루트 WebApplicationContext는 전형적으로 Repository, Service 등 여러 Servlet 사이에서 공유될 빈들을 갖는다
-                    p 이들은 자식 WebApplicationContext로 상속되며, 필요에 따라 재정의(override)할 수 있다
-                    +asCode('java', '자바 구성 예').
-                        public class MyWebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
-                            @Override
-                            protected Class&lt;?>[] getRootConfigClasses() {
-                                return new Class&lt;?>[] { RootConfig.class };
-                            }
+            h3 Context Hierarchy
+            ul
+                li 일반적으로 하나의 WebApplicationContext로 충분하지만, 루트 WebApplicationContext를 DispatcherServlet들이 공유하고, 각각은 자식 WebApplicationContext를 갖는 계층 구조로도 구성 가능하다
+                li 루트 WebApplicationContext는 전형적으로 Repository, Service 등 여러 Servlet 사이에서 공유될 빈들을 갖는다
+                p 이들은 자식 WebApplicationContext로 상속되며, 필요에 따라 재정의(override)할 수 있다
+                li
+                    | 자바 구성 예 
+                    +codeBtn('/Repositories/STS/mvc-java2/src/main/java/io/github/donggi/mvc/config/App1Initializer.java', 'java', [5], true)
+                    +codeBtn('/Repositories/STS/mvc-java2/src/main/java/io/github/donggi/mvc/config/App2Initializer.java', 'java', [5], true)
+                li
+                    | web.xml 예 
+                    +codeBtn('/Repositories/STS/mvc-xml3/src/main/webapp/WEB-INF/web.xml', 'xml', null, true)
 
-                            @Override
-                            protected Class&lt;?>[] getServletConfigClasses() {
-                                // rootConfig로 충분하면 null 반환
-                                return new Class&lt;?>[] { App1Config.class };
-                            }
+            h3 Special Bean Types
+            p
+                | DispatcherServlet이 요청을 처리하도록 전달하는 빈들을 Special Bean이라고 하며, 정의하지 않은 경우 
+                +asA('https://github.com/spring-projects/spring-framework/blob/master/spring-webmvc/src/main/resources/org/springframework/web/servlet/DispatcherServlet.properties', '기본값')
+                | 이 사용된다
+            table
+                +ths('타입', '설명')
+                +tds('HandlerMapping', '요청 URI -> 핸들러 매핑. @RequestMapping, @GetMapping, ...')
+                +tds('HandlerAdapter', '핸들러의 구현에 상관없이 DispatcherServlet이 호출할 수 있도록 래퍼 제공')
+                +tds('HandlerExceptionResolver', '예외 발생 시 처리 전략')
+                +tds('ViewResolver', '핸들러가 렌더링할 View 이름을 반환하면 적절한 View를 선택')
+                +tds('LocaleResolver, LocaleContextResolver', '클라이언트 Locale 선택')
+                +tds('ThemeResolver', '개인화된 테마 선택')
+                +tds('MultipartResolver', 'Multi-part 요청 처리 api 제공')
+                +tds('FlashMapManager', '요청 간 FlashMap 인스턴스 공유 기능 제공')
 
-                            @Override
-                            protected String[] getServletMappings() {
-                                return new String[] { "/app1/*" };
-                            }
-                        }
-                    +asCode('xml', 'web.xml 예').
-                        &lt;web-app>
-                            &lt;listener>
-                                &lt;listener-class>org.springframework.web.context.ContextLoaderListener&lt;/listener-class>
-                            &lt;/listener>
+            h3 Processing; 요청 처리 절차
+            ol
+                li 요청에 맞는 WebApplicationContext가 검색되어 바운딩
+                li LocaleResolver 바운딩
+                li ThemeResolver 바운딩
+                li Multi-part 요청이라면 MultipartHttpServletRequest로 래핑
+                li 요청에 대한 핸들러 호출
 
-                            &lt;context-param>
-                                &lt;param-name>contextConfigLocation&lt;/param-name>
-                                &lt;param-value>/WEB-INF/root-context.xml&lt;/param-value>
-                            &lt;/context-param>
-
-                            &lt;servlet>
-                                &lt;servlet-name>app1&lt;/servlet-name>
-                                &lt;servlet-class>org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class>
-                                &lt;init-param>
-                                    &lt;param-name>contextConfigLocation&lt;/param-name>
-                                    &lt;param-value>/WEB-INF/app1-context.xml&lt;/param-value>
-                                &lt;/init-param>
-                                &lt;load-on-startup>1&lt;/load-on-startup>
-                            &lt;/servlet>
-
-                            &lt;servlet-mapping>
-                                &lt;servlet-name>app1&lt;/servlet-name>
-                                &lt;url-pattern>/app1/*&lt;/url-pattern>
-                            &lt;/servlet-mapping>
-                        &lt;/web-app>
+            h3 Interception
+            p 핸들러 요청에 대한 전/후 처리를 추가할 수 있다
+            +asCode('java', 'interface HandlerInterceptor').
+                default boolean preHandle(request, response, handler);
+                    // DispatcherServlet이 핸들러를 결정하고, 아직 HandlerAdapter가 핸들러를 호출하지 않은 시점에 실행된다
+                    // 다음 처리로 진행한다면 true. false를 반환한 경우, DispatcherServlet은 여기서 response로 모든 응답을 했다고 간주한다
+                default void postHandle(request, response, handler, @Nullable modelAndView);
+                    // HandlerAdapter가 핸들러를 호출하고, 아직 DispatcherServlet이 뷰를 렌더링하지 않은 시점에 실행된다
+                    // 전달된 modelAndView에 다른 모델 객체들을 추가해도 된다
+                default void afterCompletion(request, response, handler, @Nullable ex)
+                    // 모든 처리가 완료되었으므로 자원 정리 등의 작업을 수행해도 된다
+                    // preHandle()이 성공적으로 true를 반환한 경우에도 실행된다
         h2 Filters
         h2 Annotated Controllers
         h2 Functional Endpoints
@@ -1575,6 +1557,28 @@ include ../../source/skeleton.jade
         h2 HTTP Caching
         h2 View Technologies
         h2 MVC Config
+        div
+            h3 MVC 구성 켜기
+            ol
+                li Java 기반 설정
+                +asCode('java').
+                    @Configuration
+                    @EnableWebMvc
+                    public class WebConfig { }
+                li XML 기반 설정
+                +asCode('xml') &lt;mvc:annotation-driven>
+            h3 Type Conversion
+            h3 Validation
+            h3 Interceptors
+            h3 Content Types
+            h3 Message Converters
+            h3 View Controllers
+            h3 View Resolvers
+            h3 Static Resources
+            h3 Default Servlet
+            h3 Path Matching
+            h3 Advanced Java Config
+            h3 Advanced XML Config
         h2 HTTP/2
         h2 REST Clients
         h2 Testing
@@ -1584,17 +1588,6 @@ include ../../source/skeleton.jade
     details
         summary Spring MVC
         ol
-            li DispatcherServlet : 클라이언트 요청을 받아 컨트롤러에 처리를 넘긴다.
-            | 각 DispatcherServlet은 하나의 WebApplicationContext를 갖는다
-            +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/web.xml', 'xml') WEB-INF/web.xml
-            br
-            | 기본적으로 {서블릿_이름}-servlet.xml 설정을 읽어온다
-            +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/dispatcher-servlet.xml', 'xml') WEB-INF/dispatcher-servlet.xml
-            br
-            | 설정 파일을 직접 지정하려면 DispatcherServlet의 "contextConfigLocation" init-param을 지정하면 된다. 각 경로들은 ',', ' ', '\n' 등으로 구분하면 된다. 클래스패스에 있는 파일은 classpath:conf.xml처럼 지정하면 된다
-            br
-            | 여러 DispatcherServlet을 이용하면서도 두 WebApplicationContext이 공통적으로 가져야 하는 빈이 있다면 ContextLoaderListener를 설정하면 된다
-            +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/applicationContext.xml', 'xml') WEB-INF/applicationContext.xml
             li HandlerMapping : 클라이언트의 요청 URL을 어떤 컨트롤러가 처리할 지 결정한다.
             ul
                 li 요청 URL의 매핑을 항상 전체 경로로만 하려는 경우
