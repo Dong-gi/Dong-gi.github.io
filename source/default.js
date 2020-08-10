@@ -164,6 +164,8 @@ window.addEventListener('load', () => {
                 top: SFUtil.getOffsetTop(target) - document.getElementById('nav').clientHeight
             }
             setTimeout(() => window.scrollTo(arg), 100)
+            while (!target.clientHeight)
+                target = target.parentElement
             SFUtil.highlight(target)
         }
     }

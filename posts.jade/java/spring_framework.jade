@@ -1523,7 +1523,6 @@ include ../../source/skeleton.jade
                 +tds('HandlerExceptionResolver', '예외 발생 시 처리 전략')
                 +tds('ViewResolver', '핸들러가 렌더링할 View 이름을 반환하면 적절한 View를 선택')
                 +tds('LocaleResolver, LocaleContextResolver', '클라이언트 Locale 선택')
-                +tds('ThemeResolver', '개인화된 테마 선택')
                 +tds('MultipartResolver', 'Multi-part 요청 처리 api 제공')
                 +tds('FlashMapManager', '요청 간 FlashMap 인스턴스 공유 기능 제공')
 
@@ -1536,7 +1535,9 @@ include ../../source/skeleton.jade
                 li 요청에 대한 핸들러 호출
 
             h3 Interception
-            p 핸들러 요청에 대한 전/후 처리를 추가할 수 있다
+            p
+                | 핸들러 요청에 대한 전/후 처리를 추가할 수 있다 
+                +goto('MVC config - Interceptors')
             +asCode('java', 'interface HandlerInterceptor').
                 default boolean preHandle(request, response, handler);
                     // DispatcherServlet이 핸들러를 결정하고, 아직 HandlerAdapter가 핸들러를 호출하지 않은 시점에 실행된다
@@ -1547,15 +1548,165 @@ include ../../source/skeleton.jade
                 default void afterCompletion(request, response, handler, @Nullable ex)
                     // 모든 처리가 완료되었으므로 자원 정리 등의 작업을 수행해도 된다
                     // preHandle()이 성공적으로 true를 반환한 경우에도 실행된다
+
+            h3 Exceptions
+            div
+                h4 HandlerExceptionResolver 종류
+                ul
+                    li SimpleMappingExceptionResolver
+                    p 예외 클래스 -> 뷰 이름 매핑
+                    li DefaultHandlerExceptionResolver
+                    p 예외 -> HTTP 상태 코드 매핑
+                    li ResponseStatusExceptionResolver
+                    p 예외 발생 메서드 또는 발생한 예외 클래스의 @ResponseStatus -> HTTP 상태 코드 매핑
+                    li ExceptionHandlerExceptionResolver
+                    p
+                        | @Controller 또는 @ControllerAdvice 클래스의 @ExceptionHandler 메서드가 예외 처리 
+                        +goto('Annotated Controllers - Exceptions')
+                h4.fake Chain of Resolvers
+                p 여러 HandlerExceptionResolver 빈을 정의하면 order 및 정의된 순서에 따라 호출되는 체인을 구성할 수 있다
+                h4.fake Container Error Page
+                p 예외가 처리되지 않았고, 응답 상태가 에러(4xx, 5xx)인 경우를 위해 기본 에러 페이지를 지정할 수 있다
+                +asCode('xml', 'web.xml').
+                    &lt;error-page>
+                        &lt;exception-type>java.lang.Throwable&lt;/exception-type> // 옵션
+                        &lt;location>/path/url&lt;/location>
+                    &lt;/error-page>
+            h3 View Resolution
+            div
+                h4 ViewResolver 종류
+                ul
+                    +goto('View Technologies')
+                    +goto('MVC config - View Resolvers')
+                    li AbstractCachingViewResolver
+                    p 뷰 인스턴스를 캐시하여 이용한다. cache 속성을 이용해 전체 캐시를 끄거나, removeFromCache()로 일부 뷰만 캐시에서 제거할 수 있다
+                    li XmlViewResolver, BeanNameViewResolver
+                    p 현재 컨텍스트에서 뷰 이름과 일치하는 빈을 뷰로 이용한다. XmlViewResolver은 따로 지정하지 않으면 기본으로 /WEB-INF/views.xml를 로드한다
+                    li ResourceBundleViewResolver
+                    p ResourceBundle(기본 리소스 파일 : views.properties)에 저장된 빈 정보로 뷰를 찾는다. 정확히는 [viewname].(class) 속성을 뷰 클래스로, [viewname].url 속성을 뷰 url로 이용한다.
+                    li UrlBasedViewResolver
+                    p Url 경로 그대로의 위치에 존재하는 파일을 뷰로 이용한다.
+                    +asCode('xml', '')
+                    li InternalResourceViewResolver
+                    p UrlBasedViewResolver의 서브클래스로, InternalResourceView(Servlet, JSP) 파일을 뷰로 이용한다. 그 외 서브클래스 ─ TilesViewResolver, XsltViewResolver, FreeMarkerViewResolver ─ 들도 존재
+                    +asCode('xml').
+                        &lt;bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                            &lt;property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/> // ← JSTL 이용하는 경우
+                            &lt;property name="prefix" value="/WEB-INF/view/" />
+                            &lt;property name="suffix" value=".jsp" />
+                        &lt;/bean>
+                    li ContentNegotiatingViewResolver
+                    p 컨텐츠 협상이 가능한 ViewResolver. 다른 ViewResolver들이 고른 View 중, contentType이 요청과 일치하는 것을 선택한다
+                h4.fake Handling
+                ul
+                    li 여러 ViewResolver를 이용 가능
+                    p order 속성으로 순서를 제어할 수 있다.
+                    li null을 반환하면 뷰를 찾지 못했음을 의미한다.
+                    p InternalResourceViewResolver는 마지막에 동작해야 한다
+                h4 Redirecting
+                ul
+                    li UrlBasedViewResolver 및 서브클래스를 이용하는 경우, 뷰 이름 앞에 redirect:를 붙이면 리다이렉션을 수행한다
+                    p 예. redirect:/myapp/some/resource
+                    li redirect:https://myhost.com/some 처럼 외부 절대경로 이용 가능
+                h4 Forwarding
+                ul
+                    li UrlBasedViewResolver 및 서브클래스를 이용하는 경우, 뷰 이름 앞에 forward:를 붙이면 포워딩을 수행한다
+                    li RequestDispatcher.forward()를 호출하는 InternalResourceView 인스턴스를 생성하므로 JSP만 사용하는 경우는 유용하지 않음
+                    p 다른 종류의 뷰를 이용하지만 서블릿/JSP로 포워딩이 필요한 경우에 적합
+            h3 Multipart Resolver
+            p Multi-part 요청을 처리하려면 DispatcherServlet에 "multipartResolver" 이름의 MultipartResolver 빈을 정의해야 한다
         h2 Filters
         h2 Annotated Controllers
+        div
+            h3 Handler Methods
+            +pos('ResponseEntity') 작성 필요
+            +pos('Redirect Attributes') 작성 필요
+            +pos('Flash Attributes') 작성 필요
+            +pos('@SessionAttribute') 작성 필요
+            +pos('@RequestAttribute') 작성 필요
+            +pos('@ResponseBody') 작성 필요
+            h3
+                | Exceptions
+                +pos('Annotated Controllers - Exceptions')
+            ul
+                li @Controller, @ControllerAdvice 클래스는 예외 처리를 위한 @ExceptionHandler 메서드를 가질 수 있다.
+                li
+                    | 발생한 최상위 예외 또는 가장 가까운 원인 예외 타입을 기준으로 매칭된다 
+                    +codeBtn('/Repositories/STS/mvc-java4/src/main/java/io/github/donggi/mvc/controller/HelloController.java', 'java', [11], true)
+                li 둘 이상의 예외 타입을 처리하려는 경우, 공통 부모 클래스를 인자로 하면 된다.
+                li value 속성으로 특정 예외들을 명시 가능
+                +asCode('java') @ExceptionHandler({FileSystemException.class, RemoteException.class})
+            div
+                h4.fake Method Arguments
+                table
+                    caption 가능한 메서드 인자
+                    +tds('Argument', 'Description')
+                    +tds('Exception', '발생 예외. 임의 서브클래스 사용 가능')
+                    +tds('HandlerMethod', '예외 발생 메서드')
+                    +tds('WebRequest, NativeWebRequest', '요청에 대한 일반적인 접근 제공')
+                    +tds('ServletRequest, ServletResponse', 'HttpServletRequest, MultipartRequest 등 임의 서브클래스 사용 가능')
+                    +tds('HttpSession', '세션이 반드시 존재하도록 한다. 동시성이 필요한 경우 RequestMappingHandlerAdapter 인스턴스의 synchronizeOnSession를 true로 설정')
+                    +tds('Principal', '현재 인증 유저')
+                    +tds('HttpMethod', 'HTTP 요청 타입')
+                    +tds('Locale, TimeZone, ZoneId', '현재 로캐일, 타임존')
+                    +tds('OutputStream, Writer', '응답을 직접 쓰려는 경우 사용')
+                    +tds('Map, Model, ModelMap', '예외 응답을 위한 모델. 항상 비어있음')
+                    tr
+                        td RedirectAttributes
+                        td
+                            | 리다이렉션 쿼리에 덧붙일 속성
+                            +goto('Redirect Attributes')
+                            |, 리다이렉션 이후 요청까지 임시로 저장할 속성
+                            +goto('Flash Attributes')
+                    tr
+                        td @SessionAttribute
+                        td
+                            | 세션에 저장된 임의 인스턴스 접근 
+                            +goto('@SessionAttribute')
+                    tr
+                        td @RequestAttribute
+                        td
+                            | 임의 요청 속성 접근 
+                            +goto('@RequestAttribute')
+                h4.fake Return Values
+                table
+                    caption 가능한 반환값
+                    +tds('Return', 'Description')
+                    tr
+                        td @ResponseBody
+                        td
+                            | HttpMessageConverter 인스턴스가 반환값을 적절히 응답에 쓴다 
+                            +goto('@ResponseBody')
+                    tr
+                        td HttpEntity&lt;B>, ResponseEntity&lt;B>
+                        td
+                            | HTTP 헤더와 바디를 포함한 전체 응답을 반환하면 HttpMessageConverter가 적절히 응답에 쓴다 
+                            +goto('ResponseEntity')
+                    +tds('String', '뷰 이름을 반환하면 ViewResolver가 적절히 뷰를 선택한다')
+                    +tds('View', '렌더링할 뷰')
+                    +tds('Map, Model, @ModelAttribute AnyType', '묵시적 모델에 추가될 속성')
+                    +tds('ModelAndView', '뷰 + 모델')
+                    tr
+                        td void
+                        td
+                            | void 리턴, null 리턴이 아래 상황에서 이루어졌다면 응답이 완료됐다고 간주한다
+                            ul
+                                li ServletResponse, OutputStream 인자를 메서드로 받은 경우
+                                li @ResponseStatus를 갖는 경우
+                                li 컨트롤러가 ETag, lastModified를 설정한 경우
+                            | 그 외의 경우 "no response body"(REST 컨트롤러), 기본 뷰(HTTP 컨트롤러)를 의미한다
+                h4.fake REST API 전역 예외 처리
+                p @ControllerAdvice 클래스가 ResponseEntityExceptionHandler를 상속함으로써 스프링 내부 예외를 자동으로 처리하고 ResponseEntity로 반환할 수 있다
         h2 Functional Endpoints
         h2 URI Links
         h2 Asynchronous Requests
         h2 CORS
         h2 Web Security
         h2 HTTP Caching
-        h2 View Technologies
+        h2
+            | View Technologies
+            +pos('View Technologies')
+        +codeBtn('/Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/config/ThymeleafConfig.java', 'java', [21]) Thymeleaf 예
         h2 MVC Config
         div
             h3 MVC 구성 켜기
@@ -1569,11 +1720,24 @@ include ../../source/skeleton.jade
                 +asCode('xml') &lt;mvc:annotation-driven>
             h3 Type Conversion
             h3 Validation
-            h3 Interceptors
+            h3
+                | Interceptors
+                +pos('MVC config - Interceptors')
+            ol
+                li
+                    | Java 기반 설정 예 
+                    +codeBtn('/Repositories/STS/mvc-java3/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [19])
+                p addInterceptors(InterceptorRegistry)를 재정의하여 추가
+                li
+                    | XML 기반 설정 예 
+                    +codeBtn('/Repositories/STS/mvc-xml4/src/main/webapp/WEB-INF/app-servlet.xml', 'xml', null, true)
+                p mvc:interceptors 태그 안에 작성
             h3 Content Types
             h3 Message Converters
             h3 View Controllers
-            h3 View Resolvers
+            h3
+                | View Resolvers
+                +pos('MVC config - View Resolvers')
             h3 Static Resources
             h3 Default Servlet
             h3 Path Matching
