@@ -34,19 +34,6 @@ public class FileController {
         mv.addObject("message", files.stream().map(x -> String.format("'%s' : %s, %dbytes", x.getOriginalFilename(), x.getContentType(), x.getSize())).collect(Collectors.joining("<br>")));
         return mv;
     }
-/*
- * 전체 컨트롤러에 적용되는 SimpleMappingExceptionResolver 대신에,
- * 컨트롤러 클래스가 org.springframework.web.servlet.HandlerExceptionResolver 인터페이스를 구현할 수 있다.
-
-    @Override
-    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
-            Exception ex) {
-        var mv = new ModelAndView();
-        mv.setViewName("hello");
-        mv.addObject("message", ex.getMessage());
-        return mv;
-    }
-*/
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     public String download() {

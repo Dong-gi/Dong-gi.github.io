@@ -1586,7 +1586,6 @@ include ../../source/skeleton.jade
                     p ResourceBundle(기본 리소스 파일 : views.properties)에 저장된 빈 정보로 뷰를 찾는다. 정확히는 [viewname].(class) 속성을 뷰 클래스로, [viewname].url 속성을 뷰 url로 이용한다.
                     li UrlBasedViewResolver
                     p Url 경로 그대로의 위치에 존재하는 파일을 뷰로 이용한다.
-                    +asCode('xml', '')
                     li InternalResourceViewResolver
                     p UrlBasedViewResolver의 서브클래스로, InternalResourceView(Servlet, JSP) 파일을 뷰로 이용한다. 그 외 서브클래스 ─ TilesViewResolver, XsltViewResolver, FreeMarkerViewResolver ─ 들도 존재
                     +asCode('xml').
@@ -1615,9 +1614,70 @@ include ../../source/skeleton.jade
                     p 다른 종류의 뷰를 이용하지만 서블릿/JSP로 포워딩이 필요한 경우에 적합
             h3 Multipart Resolver
             p Multi-part 요청을 처리하려면 DispatcherServlet에 "multipartResolver" 이름의 MultipartResolver 빈을 정의해야 한다
+            ul
+                li commons-fileupload
+                ul
+                    li
+                        | JavaConfig 예 
+                        +codeBtn('/Repositories/STS/mvc-java5/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [13], true)
+                        +codeBtn('/Repositories/STS/mvc-java5/src/main/java/io/github/donggi/mvc/controller/FileController.java', 'java', [17], true)
+                    li
+                        | xml 예 
+                        +codeBtn('/Repositories/STS/mvc-xml5/src/main/webapp/WEB-INF/app-servlet.xml', 'xml', null, true)
+                li Since Servlet 3.0
+                ol
+                    li Initializer에서 MultipartConfigElement 추가, 또는 web.xml에 multipart-config 추가
+                    li StandardServletMultipartResolver 빈 정의
+                ul
+                    li
+                        | JavaConfig 예 
+                        +codeBtn('/Repositories/STS/mvc-java6/src/main/java/io/github/donggi/mvc/config/Initializer.java', 'java', [10], true)
+                        +codeBtn('/Repositories/STS/mvc-java6/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [13], true)
+                    li
+                        | xml 예 
+                        +codeBtn('/Repositories/STS/mvc-xml6/src/main/webapp/WEB-INF/web.xml', 'xml', null, true)
+                        +codeBtn('/Repositories/STS/mvc-xml6/src/main/webapp/WEB-INF/app-servlet.xml', 'xml', null, true)
+            h3 Logging - Sensitive Data
+            p 기본적으로 요청 인자와 헤더는 로깅하지 않는다. 로깅하려면 DispatcherServlet의 enableLoggingRequestDetails를 true로 설정하면 된다
+            +asCode('java').
+                public class Initializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+                    @Override
+                    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+                        registration.setInitParameter("enableLoggingRequestDetails", "true");
+                    }
+                }
+            +asCode('xml').
+                &lt;servlet>
+                    &lt;servlet-class>org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class>
+                    &lt;init-param>
+                        &lt;param-name>enableLoggingRequestDetails&lt;/param-name>
+                        &lt;param-value>true&lt;/param-value>
+                    &lt;/init-param>
+                &lt;/servlet>
+
         h2 Filters
+        div
+            h3 Form Data
+            p FormContentFilter를 이용하면 HTTP PUT, PATCH, DELETE 요청으로 온 application/x-www-form-urlencoded 내용을 ServletRequest.getParameter*()로 접근할 수 있다
+            h3 Forwarded Headers
+            ul
+                li 프록시 서버를 거치는 경우 실제 클라이언트의 주소는 Forwarded 헤더 ─ X-Forwarded-Host, X-Forwarded-Port, ... ─ 로 옮겨진다
+                li ForwardedHeaderFilter를 이용하면 요청의 주소를 Forwarded 헤더의 것으로 변경하고 Forwarded 헤더를 지운다
+                p 요청을 래핑해야 하므로, 다른 가장 먼저 실행될 필요가 있다
+                li Forwarded 헤더가 공격자로부터 삽입된 것이라면 이를 사용하지 않고 삭제만 해야한다
+                p ForwardedHeaderFilter의 removeOnly 속성을 true로 설정하면 된다
+                li AbstractAnnotationConfigDispatcherServletInitializer를 이용하는 경우, DispatcherType.REQUEST, ASYNC, ERROR 모두에 대해 실행된다
+                p 그 외의 경우 DispatcherType.REQUEST에 대해서만 동작한다
+            h3 CORS
+            p
+                | Controller 클래스에 애너테이션을 붙여 CORS 설정을 할 수 있지만, Spring Security를 이용하는 경우 CorsFilter를 이용해 Security보다 먼저 실행되도록 설정할 것이 권장된다 
+                +goto('CORS')
         h2 Annotated Controllers
         div
+            h3 Declaration
+            ul
+                li @Controller : WebApplicationContext에서 웹 요청 처리자로 간주된다
+                li @RestController : @Controller + 클래스 수준 @ResponseBody
             h3 Handler Methods
             +pos('ResponseEntity') 작성 필요
             +pos('Redirect Attributes') 작성 필요
@@ -1700,7 +1760,9 @@ include ../../source/skeleton.jade
         h2 Functional Endpoints
         h2 URI Links
         h2 Asynchronous Requests
-        h2 CORS
+        h2
+            | CORS
+            +pos('CORS')
         h2 Web Security
         h2 HTTP Caching
         h2

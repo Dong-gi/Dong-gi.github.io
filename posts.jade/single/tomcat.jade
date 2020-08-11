@@ -35,13 +35,13 @@ include ../../source/skeleton.jade
         +w3img('/imgs/20190731_143749.png')
         +w3img('/imgs/20190731_143815.png')
 
-    h1 서버 URI 인코딩 설정 : conf/server.xml
-    +asCode('xml').
+    h1 서버 URI 인코딩 설정
+    +asCode('xml', 'conf/server.xml').
         &lt;Connector port="8080" protocol="HTTP/1.1" connectionTimeout="20000" redirectPort="8443" URIEncoding="UTF-8" />
         &lt;Connector port="8009" protocol="AJP/1.3" redirectPort="8443" URIEncoding="UTF-8" />
 
-    h1 톰캣 utf8 필터 설정 : {APP_NAME}/web.xml
-    +asCode('xml').
+    h1 톰캣 utf8 필터 설정
+    +asCode('xml', '{APP_NAME}/web.xml').
         &lt;filter>
             &lt;filter-name>setCharacterEncodingFilter&lt;/filter-name>
             &lt;filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter&lt;/filter-class>
@@ -55,3 +55,9 @@ include ../../source/skeleton.jade
             &lt;filter-name>setCharacterEncodingFilter&lt;/filter-name>
             &lt;url-pattern>/*&lt;/url-pattern>
         &lt;/filter-mapping>
+
+    h1 파일 업로드 크기 제한
+    +asCode('xml', 'conf/server.xml').
+        &lt;Connector
+            port="8080" protocol="HTTP/1.1" connectionTimeout="20000" redirectPort="8443"
+            maxSwallowSize="-1" /> // -1은 무제한. 적당히 바이트 단위로 설정
