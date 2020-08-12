@@ -150,7 +150,17 @@ window.addEventListener('load', () => {
     document.getElementById('query').onkeyup = SFUtil.debounce(queryUpdated, 500)
     SFUtil.addOrderedTableFunctionality()
 
+    for (let goto of document.querySelectorAll('.goto')) {
+        goto.addEventListener('mousedown', function (e) {
+            localStorage.setItem(`${location.href}-lastPos`, window.scrollY)
+        })
+    }
     window.onpopstate = function (e) {
+        if (localStorage.getItem(`${location.href}-lastPos`)) {
+            window.scrollTo({ top: localStorage.getItem(`${location.href}-lastPos`) })
+            localStorage.removeItem(`${location.href}-lastPos`)
+            return;
+        }
         let goto = /#(pos-?\d+)/.exec(location.hash)
         if (goto) {
             let target = document.getElementById(goto[1])

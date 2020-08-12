@@ -2,16 +2,13 @@ package io.github.donggi.mvc.controller;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServlet;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class HelloController extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-    
+public class HelloController {
     @RequestMapping("/hello1")
     public void hello1() {
         throw new RuntimeException("Runtime Exception@/hello1");

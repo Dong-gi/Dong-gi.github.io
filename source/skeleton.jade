@@ -77,7 +77,7 @@ mixin pos(name)
     span(id=`pos${name.hashCode()}`, style='padding:0!important;margin:0!important;width:0!important;height:0!important;overflow:hidden!important')
 
 mixin goto(name)
-    +asA(`#pos${name.hashCode()}`, `Goto - ${name}`)&attributes({ target: '_self' })
+    +asA(`#pos${name.hashCode()}`, `Goto - ${name}`).goto&attributes({ target: '_self' })
 
 mixin post(title, keywords, description, useMJX, noAds)
     html(lnag='ko')

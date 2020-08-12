@@ -5,7 +5,6 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,13 +12,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class HelloController extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-    
+public class HelloController {
     @Resource(name = "rootMsg")
     private String rootMsg;
     @Resource(name = "app2Msg")
     private String app2Msg;
+
 
     @RequestMapping("/hello")
     public void hello(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

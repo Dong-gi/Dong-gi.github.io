@@ -8,7 +8,6 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 
 public class Initializer implements WebApplicationInitializer {
-
     @Override
     public void onStartup(ServletContext servletCxt) {
         // WebApplicationContext 로드
