@@ -1570,6 +1570,15 @@ include ../../source/skeleton.jade
                 ul
                     li SimpleMappingExceptionResolver
                     p 예외 클래스 -> 뷰 이름 매핑
+                    +asCode('xml').
+                        &lt;bean id="exceptionResolver"
+                            class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+                            &lt;property name="exceptionMappings">
+                                &lt;props>
+                                    &lt;prop key="MaxUploadSizeExceededException"> error &lt;/prop>
+                                &lt;/props>
+                            &lt;/property>
+                        &lt;/bean>
                     li DefaultHandlerExceptionResolver
                     p 예외 -> HTTP 상태 코드 매핑
                     li ResponseStatusExceptionResolver
@@ -1676,7 +1685,7 @@ include ../../source/skeleton.jade
             p AbstractRequestLoggingFilter, CharacterEncodingFilter, CorsFilter, FormContentFilter, ForwardedHeaderFilter, HiddenHttpMethodFilter, HttpPutFormContentFilter, MultipartFilter, OpenEntityManagerInViewFilter, OpenSessionInViewFilter, RelativeRedirectFilter, RequestContextFilter, ShallowEtagHeaderFilter
             div
                 h4 Default Encoding
-                p HttpServletRequest request에 대하여 아래를 수행한다
+                p CharacterEncodingFilter는 HttpServletRequest 변수 request에 대하여 아래를 수행한다
                 +asCode('java').
                     if (isForceRequestEncoding() || request.getCharacterEncoding() == null) {
                         request.setCharacterEncoding(encoding);
@@ -1834,10 +1843,10 @@ include ../../source/skeleton.jade
                         td @MatrixVariable
                         td
                             | URI 상의 이름-값 쌍 획득 
-                            +goto('MatrixVariable')
+                            +goto('Matrix Variables')
                     tr
                         td @RequestParam
-                        td 서블릿 요청 파라미터 획득. Multi-part 파일도 가능.
+                        td 서블릿 요청 파라미터(URL query, Form data 모두 해당) 획득. Multi-part 파일도 가능.
                     tr
                         td @RequestHeader
                         td 요청 헤더 획득
@@ -1963,7 +1972,40 @@ include ../../source/skeleton.jade
                     | , @Controller, @ControllerAdvice에만 적용되는 변환기를 등록하려면 
                     +goto('DataBinder')
                     |  참고
-            +pos('MatrixVariable') 작성 필요
+                h4
+                    | Matrix Variables
+                    +pos('Matrix Variables')
+                ul
+                    li
+                        | Java Config 
+                        +codeBtn('/Repositories/STS/mvc-java7/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [10], true)
+                    li
+                        | XML Config 
+                        +codeBtn('/Repositories/STS/mvc-xml7/src/main/webapp/WEB-INF/app-servlet.xml', 'xml', null, true)
+                    li
+                        | Matrix Variable 예 
+                        +codeBtn('/Repositories/STS/mvc-java7/src/main/java/io/github/donggi/mvc/controller/MatrixController.java', 'java', [18,29], true)
+                    li
+                        | 각 path part 모두 matrix variable을 가질 수 있다 
+                        +codeBtn('/Repositories/STS/mvc-java7/src/main/java/io/github/donggi/mvc/controller/MatrixController.java', 'java', [32,44], true)
+                    li
+                        | 각 path part 별로 matrix variable을 모아 받을 수 있다
+                        +codeBtn('/Repositories/STS/mvc-java7/src/main/java/io/github/donggi/mvc/controller/MatrixController.java', 'java', [47,65], true)
+                h4 @RequestParam
+                ul
+                    li
+                        | Get 요청 query 예 
+                        +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [22,32], true)
+                    li
+                        | 배열 또는 리스트를 이용해 동일 이름의 파라미터들을 모을 수 있다 
+                        +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [35,45], true)
+                    li
+                        | Map&lt;String, String&gt;, MultiValueMap&lt;String, String&gt;로 전체 파라미터를 모을 수 있다 
+                        +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [48,58,61,71], true)
+                    li
+                        | Post 요청 json 예 
+                        +codeBtn('/Repositories/STS/mvc-java8/build.gradle', 'gradle', [31,31], true)
+                        +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [87,91,74,83], true)
             +pos('ResponseEntity') 작성 필요
             +pos('Redirect Attributes') 작성 필요
             +pos('Flash Attributes') 작성 필요
@@ -1978,6 +2020,7 @@ include ../../source/skeleton.jade
                 | 전역적인 변환기 등록은 
                 +goto('MVC config - Type Conversion')
                 |  참고
+            +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/advice/InitAdvice.java', 'java') 예시
             h3
                 | Exceptions
                 +pos('Annotated Controllers - Exceptions')
@@ -1989,6 +2032,9 @@ include ../../source/skeleton.jade
                 li 둘 이상의 예외 타입을 처리하려는 경우, 공통 부모 클래스를 인자로 하면 된다.
                 li value 속성으로 특정 예외들을 명시 가능
                 +asCode('java') @ExceptionHandler({FileSystemException.class, RemoteException.class})
+                li
+                    | @ControllerAdvice 예 
+                    +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/advice/UnhandledExceptionAdvice.java', 'java', [6], true)
             div
                 h4.fake Method Arguments
                 table
@@ -2128,79 +2174,23 @@ include ../../source/skeleton.jade
         h2 Other Web Frameworks
 
     details
-        summary Spring MVC
-        ol
-            li HandlerMapping : 클라이언트의 요청 URL을 어떤 컨트롤러가 처리할 지 결정한다.
-            ul
-                li 요청 URL의 매핑을 항상 전체 경로로만 하려는 경우
-                | 스프링 설정에서 아래 2개의 기본 구현체의 alwaysUseFullPath 설정을 변경
-                br
-                | &lt;bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" p:alwaysUseFullPath="true"/>
-                br
-                | &lt;bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" p:alwaysUseFullPath="true"/>
-                li RESTful URI
-                    +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/HelloController.java', 'java') 예시
         details
             summary @RequestMapping 사용 시 가능한 파라미터 타입
             ol
-                li 서블릿 API 관련 : (Http)ServletRequest, (Http)ServletResponse, HttpSession
-                    +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/HelloController.java', 'java') 예시
-                li 요청 Locale : java.util.Locale
-                li 요청/응답 직접 액세스 : InputStream, Reader, OutputStream, Writer
-                li URI 템플릿 변수 : @PathVariable
-                li HTTP 요청 파라미터 : @RequestParam
-                li HTTP 요청 헤더 : @RequestHeader
-                li HTTP 쿠키 : @CookieValue
-                li HTTP 요청 : @RequestBody
-                li 뷰에 전달할 모델 : Map, Model, ModelMap
                 li POJO : 각 POJO 클래스
                     +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/LoginController.java', 'java') 예시1
                     +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view/login.jsp', 'xml') login.jsp
                     +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/BulkLoginController.java', 'java') 예시2
                     +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view/bulkLogin.jsp', 'xml') bulkLogin.jsp
-                li Multipart 폼 데이터 예시
-                | CommonsMultipartResolver 이용(commons-fileupload 패키지 의존)
-                +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/dispatcher-servlet.xml', 'xml') WEB-INF/dispatcher-servlet.xml
-                +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view/upload.jsp', 'xml') upload.jsp
-                +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/FileController.java', 'java') FileController
                 li POJO로의 바인딩 결과 : Errors, BindingResult
                 +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/LoginController.java', 'java') @Valid, @InitBinder 예시
                 +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/validator/LoginRequestValidator.java', 'java') Validator 예시
-                li SessionStatus
-        ol
-            li Controller : 클라이언트의 요청을 처리한 뒤 결과를 DispatcherServlet에 넘긴다.
-                +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/HelloController.java', 'java') 예시
         details
             summary 컨트롤러 메서드의 반환 타입
             ol
-                li ModelAndView : 뷰 정보 + 모델 정보
-                li Model, Map : 모델 정보. 뷰 이름은 요청 URL로부터 결정(RequestToViewNameTranslator)된다.
-                li String : 뷰 이름
-                li View : 뷰 인스턴스(org.springframework.web.servlet.View)
-                li void : 메서드가 (Http)ServletRequest를 매개변수로 받는다면 직접 응답을 처리한다고 가정한다. 그 외의 경우, 뷰 이름은 요청 URL로부터 결정.
                 li 메서드에 @ResponseBody가 적용된 경우 반환 객체를 HTTP 응답으로(HttpMessageConverter) 전송한다.
                     | AJAX에 유용.
                     +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/EtcController.java', 'java') 예시
-                li 뷰 이름을 통한 리다이렉트 : "redirect:" 접두어 활용. 상대 경로, 절대 경로 모두 가능
-        ol
-            li ModelAndView : 컨트롤러의 처리 결과와 뷰 생성에 필요한 정보
-            li ViewResolver : 생성할 뷰를 결정한다.
-            li View : 컨트롤러의 처리 결과를 클라이언트에 보낼 형태로 생성한다
-            li 예외 처리
-            ul
-                li 기본 예외 페이지 설정 :
-                    +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/web.xml', 'xml') WEB-INF/web.xml
-                    +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/view/error.jsp', 'xml') error.jsp
-                li 컨트롤러 내부 @ExceptionHandler 메서드 선언 :
-                    +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/HelloController.java', 'java') 예시
-                li 컨트롤러 HandlerExceptionResolver 인터페이스 구현 :
-                    +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/FileController.java', 'java') 예시
-                li SimpleMappingExceptionResolver로 전체 컨트롤러 특정 예외를 특정 뷰로 연결 :
-                    +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/webapp/WEB-INF/dispatcher-servlet.xml', 'xml') WEB-INF/dispatcher-servlet.xml
-                li @ControllerAdvice를 이요한 특정 패키지/클래스/인터페이스 예외 처리 :
-                    +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/advice/UnhandledExceptionAdvice.java', 'java') 예시
-            li 사용자 정의 PropertyEditor
-                +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/advice/InitAdvice.java', 'java') 예시
     li Spring 트랜잭션 사용하기
     ul
         li 관련 클래스
