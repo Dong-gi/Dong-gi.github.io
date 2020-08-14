@@ -7,7 +7,7 @@
         </layout>
     </appender>
 
-    <root level="VERVOSE">
+    <root level="TRACE">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>

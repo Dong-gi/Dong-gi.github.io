@@ -1325,6 +1325,7 @@ Repositories/STS/mvc-java8/settings.gradle
 Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/config/AppConfig.java
 Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/config/Initializer.java
 Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java
+Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller2.java
 Repositories/STS/mvc-java8/src/main/resources/logback.xml
 Repositories/STS/mvc-xml1/.classpath
 Repositories/STS/mvc-xml1/.gitattributes

@@ -458,7 +458,7 @@ include ../../source/skeleton.jade
                         li CNF(Conjunctive normal form) : 식이 거짓이 되는 행들을 AND로 연결한다
                         | 식[(\overline{A} \lor B \lor C) \land (A \lor \overline{B} \lor \overline{C}) \land (A \lor \overline{B} \lor C) \land (A \lor B \lor \overline{C}) \land (A \lor B \lor C)]식
                 h4 Proving Equivalences
-                table
+                table.no-sort
                     +tds('교환법칙 of AND', '식[A \\land B = B \\land A]식')
                     +tds('결합법칙 of AND', '식[(A \\land B) \\land C = A \\land (B \\land C)]식')
                     +tds('항등원 of AND', '식[T \\land A = A]식')

@@ -73,13 +73,24 @@ public class Controller {
     
     @PostMapping("/request5")
     @ResponseStatus(HttpStatus.OK)
-    public void request5(@RequestBody Request request) {
+    public void request5(Request request) {
         log.debug(request.toString());
 /*
-20:42:51.166 [http-nio-8080-exec-3] DEBUG o.s.web.servlet.DispatcherServlet - POST "/mvc-java8/app/request2", parameters={}
-20:42:51.173 [http-nio-8080-exec-3] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to io.github.donggi.mvc.controller.Controller#request2(Request)
-20:42:51.374 [http-nio-8080-exec-3] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json" to [Request(text=안녕 세상!, num=123)]
-20:42:51.395 [http-nio-8080-exec-3] DEBUG i.g.donggi.mvc.controller.Controller - Request(text=안녕 세상!, num=123)
+10:23:44.141 [http-nio-8080-exec-8] DEBUG o.s.web.servlet.DispatcherServlet - POST "/mvc-java8/app/request5?text=%EC%95%88%EB%85%95%20%EC%84%B8%EC%83%81!&num=123", parameters={masked}
+10:23:44.146 [http-nio-8080-exec-8] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to io.github.donggi.mvc.controller.Controller#request5(Request)
+10:23:44.217 [http-nio-8080-exec-8] DEBUG i.g.donggi.mvc.controller.Controller - Request(text=안녕 세상!, num=123)
+ */
+    }
+    
+    @PostMapping("/request6")
+    @ResponseStatus(HttpStatus.OK)
+    public void request6(@RequestBody Request request) {
+        log.debug(request.toString());
+/*
+10:29:49.003 [http-nio-8080-exec-14] DEBUG o.s.web.servlet.DispatcherServlet - POST "/mvc-java8/app/request6", parameters={}
+10:29:49.004 [http-nio-8080-exec-14] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to io.github.donggi.mvc.controller.Controller#request6(Request)
+10:29:49.175 [http-nio-8080-exec-14] DEBUG o.s.w.s.m.m.a.RequestResponseBodyMethodProcessor - Read "application/json" to [Request(text=안녕 세상!, num=123)]
+10:29:49.176 [http-nio-8080-exec-14] DEBUG i.g.donggi.mvc.controller.Controller - Request(text=안녕 세상!, num=123)
  */
     }
 }

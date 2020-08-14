@@ -1875,8 +1875,9 @@ include ../../source/skeleton.jade
                     tr
                         td @ModelAttribute
                         td
-                            | 기저에 존재하는 모델 획득(없으면 생성). 기저와 바인딩되며, 존재하는 검증도 수행된다. 
+                            | 기저 모델에 존재하는 객체 획득(없으면 생성). 기저와 바인딩되며, 존재하는 검증도 수행된다. 
                             +goto('@ModelAttribute')
+                            | . 바인딩을 원하지 않는 경우 @ModelAttribute(binding=false) 설정
                     tr
                         td Errors, BindingResult
                         td @ModelAttribute 인자의 검증 및 바인딩 수행 시 발생한 예외 획득. @RequestBody 또는 @RequestPart 검증 시 발생한 예외 획득. 각 Errors, BindingResult 인자는 검증 대상 바로 다음에 위치해야 한다.
@@ -1900,7 +1901,11 @@ include ../../source/skeleton.jade
                             +goto('@RequestAttribute')
                     tr
                         td 임의 타입
-                        td 위 타입 중 어느 것에도 일치하지 않는 단순 타입은 @RequestParam, 그 외에는 @ModelAttribute
+                        td
+                            | 위 타입 중 어느 것에도 일치하지 않는 단순 타입은 @RequestParam, 그 외에는 @ModelAttribute
+                            br
+                            +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [98,102,74,82]) 예1
+                            +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller2.java', 'java', [30,34,45,53]) 예2
                 h4 Return Values
                 table
                     +ths('Return Type', 'Description')
@@ -1991,7 +1996,7 @@ include ../../source/skeleton.jade
                     li
                         | 각 path part 별로 matrix variable을 모아 받을 수 있다
                         +codeBtn('/Repositories/STS/mvc-java7/src/main/java/io/github/donggi/mvc/controller/MatrixController.java', 'java', [47,65], true)
-                h4 @RequestParam
+                h4 @RequestParam, @RequestBody
                 ul
                     li
                         | Get 요청 query 예 
@@ -2005,13 +2010,56 @@ include ../../source/skeleton.jade
                     li
                         | Post 요청 json 예 
                         +codeBtn('/Repositories/STS/mvc-java8/build.gradle', 'gradle', [31,31], true)
-                        +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [87,91,74,83], true)
+                        +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [98,102,85,94], true)
+                h4 @RequestHeader
+                p
+                    | 특정 이름의 헤더, 또는 전체 헤더 ─ Map&lt;String, String&gt;, MultiValueMap&lt;String, String&gt;, HttpHeaders ─ 획득 가능 
+                    +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller2.java', 'java', [21,27], true)
+                h4
+                    | @ModelAttribute
+                    +pos('@ModelAttribute')
+                ol
+                    | @ModelAttribute로 선언된 인자는 아래 순서에 따라 획득된다
+                    li 이미 Model에 추가된 객체
+                    li
+                        | @SessionAttribute로 저장된 객체
+                        +goto('@SessionAttribute')
+                    li
+                        | URI path variable로부터 변환(Converter) 
+                        +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller2.java', 'java', [30,34,35,43], true)
+                    li 기본생성자 호출
+                    li Primary 생성자 호출. 생성 인자는 서블릿 요청으로부터 결정
+                h4
+                    | @SessionAttributes, @SessionAttribute
+                    +pos('@SessionAttribute')
+                ul
+                    li
+                        | @SessionAttributes는 자동으로 세션에 객체를 저장하고, 완료 시 제거하는 기능을 제공한다 
+                        +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller3.java', 'java', [15,40,41,56], true)
+                    li
+                        | @SessionAttribute로 세션 객체를 획득할 수 있다 
+                        +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller4.java', 'java', [13,35,36,45], true)
+                h4
+                    | @RequestAttribute
+                    +pos('@RequestAttribute')
+                p
+                    | Filter, HandlerInterceptor 등에 의해 추가된 속성을 획득할 수 있다 
+                    +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/interceptor/Controller5Interceptor.java', 'java', [9,15], true)
+                    +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller5.java', 'java', [14,31], true)
+                h4
+                    | Redirect Attributes
+                    +pos('Redirect Attributes')
+                ul
+                    li
+                        | 기본적으로 Model의 속성들은 리다이렉트 URL에 포함된다 
+                        +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller6.java', 'java', [38,44,21,26,46,50,27,31,52,56], true)
+                    li
+                        | 속성의 자동 추가를 원하지 않는다면, @RequestMapping 메서드에서 RedirectAttributes 매개변수를 명시적으로 이용하면 된다
+                        +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller6.java', 'java', [38,44,32,37,58,62], true)
+                    li 전역적으로 설정을 변경하려면 RequestMappingHandlerAdapter의 ignoreDefaultModelOnRedirect 속성을 true로 변경하면 된다
+                    p 하위 호환을 위해 false가 기본값이다
             +pos('ResponseEntity') 작성 필요
-            +pos('Redirect Attributes') 작성 필요
             +pos('Flash Attributes') 작성 필요
-            +pos('@SessionAttribute') 작성 필요
-            +pos('@ModelAttribute') 작성 필요
-            +pos('@RequestAttribute') 작성 필요
             +pos('@ResponseBody') 작성 필요
             h3
                 | DataBinder
