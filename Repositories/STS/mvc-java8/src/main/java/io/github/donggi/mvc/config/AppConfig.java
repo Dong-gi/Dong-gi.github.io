@@ -14,7 +14,7 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 import io.github.donggi.mvc.interceptor.Controller5Interceptor;
 
-@ComponentScan(basePackages = "io.github.donggi.mvc.controller, io.github.donggi.mvc.service")
+@ComponentScan(basePackages = "io.github.donggi.mvc.aop, io.github.donggi.mvc.controller, io.github.donggi.mvc.service")
 @EnableWebMvc
 @Configuration
 public class AppConfig implements WebMvcConfigurer {

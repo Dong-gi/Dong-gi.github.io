@@ -1661,6 +1661,8 @@ include ../../source/skeleton.jade
                         | xml 예 
                         +codeBtn('/Repositories/STS/mvc-xml6/src/main/webapp/WEB-INF/web.xml', 'xml', null, true)
                         +codeBtn('/Repositories/STS/mvc-xml6/src/main/webapp/WEB-INF/app-servlet.xml', 'xml', null, true)
+                li @RequestParam으로 Map&lt;String, MultipartFile>, MultiValueMap&lt;String, MultipartFile>도 가능
+                li Since Servlet 3.0 : MultipartFile 대신 javax.servlet.http.Part 이용 가능
             h3 Logging - Sensitive Data
             p 기본적으로 요청 인자와 헤더는 로깅하지 않는다. 로깅하려면 DispatcherServlet의 enableLoggingRequestDetails를 true로 설정하면 된다
             +asCode('java').
@@ -1858,7 +1860,7 @@ include ../../source/skeleton.jade
                         td HTTP 요청 body 획득. HttpMessageConverter를 통해 지정 타입으로 변환된다
                     tr
                         td HttpEntity&lt;B&gt;
-                        td 요청 헤더 + body 획득. body는 HttpMessageConverter를 통해 지정 타입으로 변환된다
+                        td 요청 헤더(HttpHeaders) + body(B) 획득. body는 HttpMessageConverter를 통해 지정 타입으로 변환된다
                     tr
                         td @RequestPart
                         td multipart/form-data 요청 획득. 각 part는 HttpMessageConverter를 통해 지정 타입으로 변환된다
@@ -1917,7 +1919,7 @@ include ../../source/skeleton.jade
                     tr
                         td HttpEntity&lt;B&gt;, ResponseEntity&lt;B&gt;
                         td
-                            | HTTP 헤더와 바디를 포함한 전체 응답을 반환하면 HttpMessageConverter가 적절히 응답에 쓴다
+                            | HTTP 헤더(HttpHeaders)와 바디(B)를 포함한 전체 응답을 반환하면 HttpMessageConverter가 적절히 응답에 쓴다
                             +goto('ResponseEntity')
                     tr
                         td HttpHeaders
@@ -2008,7 +2010,7 @@ include ../../source/skeleton.jade
                         | Map&lt;String, String&gt;, MultiValueMap&lt;String, String&gt;로 전체 파라미터를 모을 수 있다 
                         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [48,58,61,71], true)
                     li
-                        | Post 요청 json 예 
+                        | Post 요청 Jackson JSON 예 
                         +codeBtn('/Repositories/STS/mvc-java8/build.gradle', 'gradle', [31,31], true)
                         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [98,102,85,94], true)
                 h4 @RequestHeader
@@ -2058,17 +2060,54 @@ include ../../source/skeleton.jade
                         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller6.java', 'java', [38,44,32,37,58,62], true)
                     li 전역적으로 설정을 변경하려면 RequestMappingHandlerAdapter의 ignoreDefaultModelOnRedirect 속성을 true로 변경하면 된다
                     p 하위 호환을 위해 false가 기본값이다
-            +pos('ResponseEntity') 작성 필요
-            +pos('Flash Attributes') 작성 필요
-            +pos('@ResponseBody') 작성 필요
+                h4
+                    | Flash Attributes
+                    +pos('Flash Attributes')
+                ul
+                    li Flash attribute는 다음 요청에서 소비하기 위해 일시적으로 세션에 저장하는 데이터다. 주로 리다이렉션 처리에 이용된다
+                    li 임시 속성을 담는 데 FlashMap이 이용되고, FlashMapManager이 FlashMap을 관리한다
+                    li FlashMap은 이전 요청으로부터 전달되는 input, 다음 요청으로 전달할 output으로 구분된다
+                    li
+                        | @RequestMapping 메서드에서는 input-output FlashMap을 직접 이용하지 않고 RedirectAttributes를 획득하여 사용하면 된다 
+                        +goto('Redirect Attributes')
+                    li RedirectView는 FlashMap 인스턴스에 대해 리다이렉트 URL과 시각을 기록함으로써, 실제 리다이렉트된 요청에 임시 속성을 전달하게 한다
+                    p 그럼에도 불구하고 비동기적으로 빈번하게 요청이 들어오는 경우, 실제로 전달되어야 할 곳이 아닌 다른 요청에 임시 속성을 전달될 가능성이 있다
+                h4
+                    | @ResponseBody
+                    +pos('@ResponseBody')
+                ul
+                    li 메서드에 @ResponseBody가 적용된 경우 반환 객체를 HTTP 응답으로(HttpMessageConverter) 전송한다. AJAX에 유용.
+                    li
+                        | Jackson JSON 예 
+                        +codeBtn('/Repositories/STS/mvc-java8/build.gradle', 'gradle', [31,31], true)
+                        +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller7.java', 'java', [9], true)
+                h4
+                    | ResponseEntity
+                    +pos('ResponseEntity')
+                p
+                    | 예 
+                    +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller8.java', 'java', [10], true)
+            h3 Model
+            ul
+                li
+                    | @Controller 또는 @ControllerAdvice 클래스의 메서드에 @ModelAttribute를 적용하면 @RequestMapping 전에 호출되어 모델을 구성한다 
+                    +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller9.java', 'java', [12], true)
+                li @ControllerAdvice 안에서 이용하는 경우 여러 컨트롤러에 공유하는 효과가 있다
+                li @ModelAttribute 메서드는 @RequestMapping 메서드가 사용하는 매개변수 타입들을 사용할 수 있다 ─ @ModelAttribute, 요청 body 관련 부분 제외
             h3
                 | DataBinder
                 +pos('DataBinder')
-            p
-                | 전역적인 변환기 등록은 
-                +goto('MVC config - Type Conversion')
-                |  참고
-            +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/advice/InitAdvice.java', 'java') 예시
+            ul
+                li @Controller, @ControllerAdvice 클래스는 @InitBinder 메서드에서 WebDataBinder 인스턴스를 초기화할 수 있다
+                p
+                    | 이를 통해 PropertyEditor, Converter, Formatter를 등록할 수 있다 
+                    +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/aop/Controller10Advice.java', 'java', [12], true)
+                    +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller10.java', 'java', [12], true)
+                li @InitBinder 메서드는 @RequestMapping 메서드가 사용하는 매개변수 타입들을 사용할 수 있다 ─ @ModelAttribute 제외
+                li
+                    | 전역적인 변환기 등록은 
+                    +goto('MVC config - Type Conversion')
+                    |  참고
             h3
                 | Exceptions
                 +pos('Annotated Controllers - Exceptions')
@@ -2144,7 +2183,43 @@ include ../../source/skeleton.jade
                             | 그 외의 경우 "no response body"(REST 컨트롤러), 기본 뷰(HTTP 컨트롤러)를 의미한다
                 h4.fake REST API 전역 예외 처리
                 p @ControllerAdvice 클래스가 ResponseEntityExceptionHandler를 상속함으로써 스프링 내부 예외를 자동으로 처리하고 ResponseEntity로 반환할 수 있다
+            h3 Controller Advice
+            ul
+                li @ExceptionHandler, @InitBinder, @ModelAttribute 메서드는 @Controller 뿐만 아니라 @ControllerAdvice, @RestControllerAdvice 클래스도 가질 수 있다
+                p 적용 범위를 제한하지 않은 경우(default) 모든 요청에 적용된다
+                li @RestControllerAdvice = @ControllerAdvice + @ResponseBody로, @ExceptionHandler 메서드가 응답을 반환함을 의미한다
+                li @ExceptionHandler 메서드는 @Controller의 것이 먼저 실행되고, @InitBinder, @ModelAttribute 메서드는 @Controller의 것이 나중에 실행된다
         h2 Functional Endpoints
+        div
+            h3 Overview
+            ul
+                li WebMvc.fn에서 HTTP 요청은 HandlerFunction을 통해 처리된다
+                +asCode('java', '@FunctionalInterface HandlerFunction').
+                    // org.springframework.web.servlet.function Since 5.2
+                    T handle(ServerRequest request)
+                    // org.springframework.web.reactive.function.server Since 5.0
+                    Mono&lt;T&gt; handle(ServerRequest request)
+                li HTTP 요청에 대한 HandlerFunction의 선택은 RouterFunction을 통해 이루어진다
+                +asCode('java', '@FunctionalInterface RouterFunction').
+                    // org.springframework.web.servlet.function Since 5.2
+                    Optional&lt;HandlerFunction&lt;T>> route(ServerRequest request)
+                    // org.springframework.web.reactive.function.server Since 5.0
+                    Mono&lt;HandlerFunction&lt;T>> route(ServerRequest request)
+                li 정의된 RouterFunction 빈들은 RouterFunction#andOther()를 통해 합쳐진다
+                li
+                    | RouterFunctions.route()가 RouterFunction 빌더를 제공한다 
+                    +codeBtn('/Repositories/STS/mvc-java9/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', null, true)
+                    +codeBtn('/Repositories/STS/mvc-java9/src/main/java/io/github/donggi/mvc/handler/Handler1.java', 'java', [9], true)
+            h3 HandlerFunction
+            ul
+                li ServerRequest
+                p
+                    | HTTP 요청에 대한 불변 객체. HTTP 요청 방식, URI, 헤더, 쿼리 인자, 요청 본문(body)을 제공한다 
+                    +codeBtn('/Repositories/STS/mvc-java9/src/main/java/io/github/donggi/mvc/handler/Handler2.java', 'java', [19], true)
+                li ServerResponse
+                p
+                    | HTTP 응답에 대한 불변 객체. 
+                    +codeBtn('/Repositories/STS/mvc-java9/src/main/java/io/github/donggi/mvc/handler/Handler2.java', 'java', [19], true)
         h2 URI Links
         h2 Asynchronous Requests
         div
@@ -2233,12 +2308,6 @@ include ../../source/skeleton.jade
                 li POJO로의 바인딩 결과 : Errors, BindingResult
                 +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/LoginController.java', 'java') @Valid, @InitBinder 예시
                 +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/validator/LoginRequestValidator.java', 'java') Validator 예시
-        details
-            summary 컨트롤러 메서드의 반환 타입
-            ol
-                li 메서드에 @ResponseBody가 적용된 경우 반환 객체를 HTTP 응답으로(HttpMessageConverter) 전송한다.
-                    | AJAX에 유용.
-                    +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/controller/EtcController.java', 'java') 예시
     li Spring 트랜잭션 사용하기
     ul
         li 관련 클래스
@@ -2286,10 +2355,6 @@ include ../../source/skeleton.jade
                 | gradle app-name:bootJar -x test
                 li bootJar 실행
                 | java -jar -Dspring.profiles.active=dev app-name.jar
-                li 디버그 포트 열기
-                | -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=55555,suspend=n
-                br
-                | suspend=y로 하는 경우, 디버그 연결까지 실행을 대기한다, 허용 서브넷 명시 : address=*:55555, address=0.0.0.0:55555
         details(open='')
             summary application.properties 서버 포트 지정
             | server.port=18080
