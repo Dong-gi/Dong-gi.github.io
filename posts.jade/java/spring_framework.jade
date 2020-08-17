@@ -1967,9 +1967,7 @@ include ../../source/skeleton.jade
                             +goto('HTTP Streaming')
                     tr
                         td Reactive types — Reactor, RxJava, or others through ReactiveAdapterRegistry
-                        td
-                            | 한 번에 여러 값을 전송하는 경우 DeferredResult 대안. 
-                            +goto('Reactive Types')
+                        td 한 번에 여러 값을 전송하는 경우 DeferredResult 대안.
                 h4 Type Conversion
                 p
                     | 문자열로 표현되는 요청 인자 ─ @RequestParam, @RequestHeader, @PathVariable, @MatrixVariable, @CookieValue ─ 들을 String 외의 타입으로 받으려면 변환이 필요하다
@@ -2220,30 +2218,250 @@ include ../../source/skeleton.jade
                 p
                     | HTTP 응답에 대한 불변 객체. 
                     +codeBtn('/Repositories/STS/mvc-java9/src/main/java/io/github/donggi/mvc/handler/Handler2.java', 'java', [19], true)
+            h3 RouterFunction
+            ul
+                li RequestPredicates 유틸리티 클래스가 유용한 RequestPredicate들을 제공한다
+                p RequestPredicate#and, or을 이용해 여러 predicate을 조합할 수 있다
+                li 각 라우터는 순서대로 평가되고, 가장 처음으로 매칭되는 핸들러가 요청을 처리한다
+                li 중첩 경로에 대한 라우팅 예
+                +asCode('java').
+                    import static org.springframework.web.servlet.function.RouterFunctions.route;
+                    
+                    route()
+                        .path("/person", builder -> builder
+                            .GET("/{id}", accept(APPLICATION_JSON), handler::getPerson)
+                            .GET("", accept(APPLICATION_JSON), handler::listPeople)
+                            .POST("/person", handler::createPerson))
+                        .build();
+                    
+                    route()
+                        .path("/person", b1 -> b1
+                            .nest(accept(APPLICATION_JSON), b2 -> b2
+                                .GET("/{id}", handler::getPerson)
+                                .GET("", handler::listPeople))
+                            .POST("/person", handler::createPerson))
+                        .build();
+            h3 Filtering Handler Functions
+            p before, after, filter를 이용해 사전/사후 작업을 정의할 수 있다
+            +asCode('java').
+                route()
+                    .path("/person", b1 -> b1
+                        .nest(accept(APPLICATION_JSON), b2 -> b2
+                            .GET("/{id}", handler::getPerson)
+                            .GET("", handler::listPeople)
+                            .before(request -> ServerRequest.from(request).header("X-RequestHeader", "Value").build()))
+                        .POST("/person", handler::createPerson))
+                    .after((request, response) -> logResponse(response)) 
+                    .build();
         h2 URI Links
+        div
+            h3 UriComponents
+            +asCode('java').
+                var uriComponents = UriComponentsBuilder
+                                        .fromUriString("https://example.com/hotels/{hotel}")
+                                        .queryParam("q", "{q}").encode().build();
+                URI uri = uriComponents.expand("Westin", "123").toUri();
+            +asCode('java').
+                URI uri = UriComponentsBuilder
+                            .fromUriString("https://example.com/hotels/{hotel}?q={q}")
+                            .build("Westin", "123");
+            h3 UriBuilder
+            +asCode('java').
+                var baseUrl = "https://example.com";
+                var uriBuilderFactory = new DefaultUriBuilderFactory(baseUrl);
+                URI uri = uriBuilderFactory.uriString("/hotels/{hotel}")
+                            .queryParam("q", "{q}").build("Westin", "123");
+            h3 URI Encoding
+            ul
+                li UriComponentsBuilder#encode()
+                p URI 템플릿을 먼저 인코딩. URI 변수들은 할당되는대로 인코딩
+                li UriComponents#encode()
+                p URI 변수들이 할당된 후 전체 인코딩
+                li DefaultUriBuilderFactory#setEncodingMode()
+                ul
+                    li EncodingMode.TEMPLATE_AND_VALUES Since 5.0.8 : URI 템플릿을 먼저 인코딩. URI 변수들은 할당되는대로 인코딩
+                    li EncodingMode.URI_COMPONENT : URI 변수들이 할당된 후 전체 인코딩
+                    li EncodingMode.VALUES_ONLY : URI 변수만 UriUtils#encodeUriVariables()으로 인코딩
+                    li EncodingMode.NONE : 인코딩 안 함
+            h3 Relative Servlet Requests
+            +asCode('java').
+                HttpServletRequest request;
+                // Re-uses host, scheme, port, path and query string...
+                var builder = ServletUriComponentsBuilder.fromRequest(request)
+                                .replaceQueryParam("accountId", "{id}")
+                                .build().expand("123").encode();
+            h3 Links in Controllers
+            +asCode('java').
+                @Controller
+                @GetMapping("/path1/{val1}")
+                public class C {
+                    @GetMapping("/path2/{val2}")
+                    public ModelAndView methodName() { }
+                }
+
+                var uriComponents = MvcUriComponentsBuilder
+                                        .fromMethodName(C.class, "methodName", "value2")
+                                        .buildAndExpand("value1");
+            +asCode('java').
+                UriComponentsBuilder base = ServletUriComponentsBuilder.fromCurrentContextPath().path("/en");
+                MvcUriComponentsBuilder builder = MvcUriComponentsBuilder.relativeTo(base);
         h2 Asynchronous Requests
         div
+            h3 Configuration
+            p 요청 비동기 처리를 위해 서블릿 컨테이너 수준의 옵션을 설정해야 한다.
+            div
+                h4.fake Servlet Container
+                ul
+                    li Java Config
+                    p AbstractAnnotationConfigDispatcherServletInitializer를 이용하면 된다
+                    li web.xml
+                    ul
+                        li DispatcherServlet, Filter 정의에 &lt;async-supported>true&lt;/async-supported>
+                        li 필터 매핑에 &lt;dispatcher>ASYNC&lt;/dispatcher>
+                h4.fake Spring MVC
+                ul
+                    li Java Config
+                    p WebMvcConfigurer의 configureAsyncSupport 재정의
+                    li XML Config
+                    p &lt;mvc:annotation-driven> 안에 &lt;async-support> 정의
+                ul
+                    | ↓ 설정 가능한 옵션들
+                    li timeout : 설정하지 않으면 서블릿 컨테이너의 것이 적용된다
+                    p timeout은 DeferredResult, ResponseBodyEmitter, SseEmitter, WebAsyncTask 각각에서도 설정 가능하다
+                    li AsyncTaskExecutor : 설정하지 않으면 SimpleAsyncTaskExecutor가 이용된다
+                    li DeferredResultProcessingInterceptor, CallableProcessingInterceptor
             h3
                 | DeferredResult
                 +pos('DeferredResult')
+            p
+                | 별개 스레드에서 값을 쓴다 
+                +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller1.java', 'java', [9], true)
             h3
                 | Callable
                 +pos('Callable')
+            p
+                | Callable에서 값을 반환한다 
+                +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller2.java', 'java', [7], true)
+            h3 Processing
+            div
+                h4 Interception
+                ul
+                    li
+                        | WebMvcConfigurer 예 
+                        +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [12], true)
+                        +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/interceptor/DeferredResultInterceptor.java', 'java', [8], true)
+                        +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/interceptor/CallableInterceptor.java', 'java', [9], true)
+                    li
+                        | DeferredResult#onTimeout 예 
+                        +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller3.java', 'java', [9], true)
+                    li
+                        | WebAsyncTask 예 
+                        +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller4.java', 'java', [7], true)
+                h4 Compared to WebFlux
+                ul
+                    li Servlet 3.0에 추가된 비동기 처리는 Filter-Servlet 체인에서 벗어나 ─ 컨테이너 스레드는 해제된다 ─ 결과를 대기한다
+                    p 응답을 쓰기 위해 별도 스레드가 이용되며, IO 자체는 blocking이다
+                    li 반면 WebFlux는 Servlet API를 따르지 않으며, 최초 설계부터 비동기적이다
+                    p 요청 처리에 대한 모든 단계가 비동기적으로 처리될 수 있다. IO는 non-blocking이다
             h3
                 | HTTP Streaming
                 +pos('HTTP Streaming')
-            h3
-                | Reactive Types
-                +goto('Reactive Types')
+            div
+                h4 ResponseBodyEmitter
+                p
+                    | 각 객체들은 HttpMessageConverter를 통해 변환된다. 
+                    +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller5.java', 'java', [9], true)
+                h4 SseEmitter
+                p
+                    | ResponseBodyEmitter의 서브클래스로, Server-Sent Events를 지원한다. 
+                    +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller6.java', 'java', [10], true)
+                h4 StreamingResponseBody
+                p
+                    | Converter를 거치지 않고 OutputStream에 직접 쓴다
+                    +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller7.java', 'java', [7], true)
+            h3 Disconnects
+            p Servlet API는 클라이언트 연결 종료를 통지하지 않음에 유의.
         h2
             | CORS
             +pos('CORS')
-        h2 Web Security
+        div
+            h3 @CrossOrigin
+            ul
+                | ↓ 기본 설정
+                li 모든 origin 허용
+                li 모든 header 허용
+                li 매핑에 일치하는 모든 HTTP method 허용
+                li allowedCredentials 비허용
+                li maxAge 30분
+            h3 Global Configuration
+            ul
+                li Java Configuration
+                +asCode('java').
+                    @Configuration
+                    @EnableWebMvc
+                    public class WebConfig implements WebMvcConfigurer {
+                        @Override
+                        public void addCorsMappings(CorsRegistry registry) {
+                            registry.addMapping("/api1/**")...;
+                            registry.addMapping("/api2/**")...;
+                        }
+                    }
+                li XML Configuration
+                +asCode('xml').
+                    &lt;mvc:cors>
+                        &lt;mvc:mapping path="/api/**"
+                            allowed-origins="https://domain1.com, https://domain2.com"
+                            allowed-methods="GET, PUT"
+                            allowed-headers="header1, header2, header3"
+                            exposed-headers="header1, header2" allow-credentials="true"
+                            max-age="123" />
+                        &lt;mvc:mapping path="/resources/**"
+                            allowed-origins="https://domain1.com" />
+                    &lt;/mvc:cors>
+            h3 CorsFilter
+            +asCode('java').
+                var config = new CorsConfiguration();
+                config.setAllowCredentials(true);
+                config.addAllowedOrigin("https://domain1.com");
+                config.addAllowedHeader("*");
+                config.addAllowedMethod("*");
+
+                var source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", config);
+
+                var filter = new CorsFilter(source);
         h2 HTTP Caching
+        div
+            h3 CacheControl
+            p Cache-Control 헤더 정보를 의미한다
+            +asCode('java').
+                // Cache for an hour - "Cache-Control: max-age=3600"
+                CacheControl.maxAge(1, TimeUnit.HOURS);
+                // Prevent caching - "Cache-Control: no-store"
+                CacheControl.noStore();
+            h3 Controllers
+            +asCode('java').
+                @RequestMapping(...)
+                public ResponseEntity&lt;Something> method(...) {
+                    return ResponseEntity
+                            .ok()
+                            .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
+                            ...;
+                }
         h2
             | View Technologies
             +pos('View Technologies')
-        +codeBtn('/Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/config/ThymeleafConfig.java', 'java', [21]) Thymeleaf 예
+        div
+            h3 Thymeleaf
+            p
+                | Spring MVC 연동은 Thymeleaf 프로젝트가 관리한다. 다음 빈들이 필요하다 ─ ServletContextTemplateResolver, SpringTemplateEngine, ThymeleafViewResolver 
+                +codeBtn('/Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/config/ThymeleafConfig.java', 'java', [21], true)
+            h3 FreeMarker
+            p
+                | 예 
+                +codeBtn('/Repositories/STS/mvc-java11/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [12], true)
+                +codeBtn('/Repositories/STS/mvc-java11/src/main/java/io/github/donggi/mvc/controller/MyController.java', 'java', [7], true)
+                +codeBtn('/Repositories/STS/mvc-java11/src/main/webapp/WEB-INF/freemarker/hello.ftl', 'html', null, true)
         h2 MVC Config
         div
             h3 MVC 구성 켜기
