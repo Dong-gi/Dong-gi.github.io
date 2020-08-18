@@ -1699,7 +1699,7 @@ include ../../source/skeleton.jade
                     li 프록시 서버를 거치는 경우 실제 클라이언트의 주소는 Forwarded 헤더 ─ X-Forwarded-Host, X-Forwarded-Port, ... ─ 로 옮겨진다
                     li ForwardedHeaderFilter를 이용하면 요청의 주소를 Forwarded 헤더의 것으로 변경하고 Forwarded 헤더를 지운다
                     p 요청을 래핑해야 하므로, 다른 가장 먼저 실행될 필요가 있다
-                    li Forwarded 헤더가 공격자로부터 삽입된 것이라면 이를 사용하지 않고 삭제만 해야한다
+                    li Forwarded 헤더가 공격자로부터 삽입된 것이라면 이를 사용하지 않고 삭제만 해야한��
                     p ForwardedHeaderFilter의 removeOnly 속성을 true로 설정하면 된다
                     li AbstractAnnotationConfigDispatcherServletInitializer를 이용하는 경우, DispatcherType.REQUEST, ASYNC, ERROR 모두에 대해 실행된다
                     p 그 외의 경우 DispatcherType.REQUEST에 대해서만 동작한다
@@ -2462,6 +2462,27 @@ include ../../source/skeleton.jade
                 +codeBtn('/Repositories/STS/mvc-java11/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [12], true)
                 +codeBtn('/Repositories/STS/mvc-java11/src/main/java/io/github/donggi/mvc/controller/MyController.java', 'java', [7], true)
                 +codeBtn('/Repositories/STS/mvc-java11/src/main/webapp/WEB-INF/freemarker/hello.ftl', 'html', null, true)
+            h3 JSP, JSTL
+            div
+                h4.fake View Resolvers
+                p
+                    | ResourceBundleViewResolver 예 
+                    +codeBtn('/Repositories/STS/mvc-java12/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [13], true)
+                    +codeBtn('/Repositories/STS/mvc-java12/src/main/webapp/WEB-INF/classes/my_views.properties', 'ini', null, true)
+                    +codeBtn('/Repositories/STS/mvc-java12/src/main/java/io/github/donggi/mvc/controller/Controller1.java', 'java', [7], true)
+                    br
+                    | InternalResourceViewResolver 예 
+                    +codeBtn('/Repositories/STS/mvc-java13/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [13], true)
+                    +codeBtn('/Repositories/STS/mvc-java13/src/main/java/io/github/donggi/mvc/controller/Controller1.java', 'java', [7], true)
+                h4.fake JSPs versus JSTL
+                p
+                    | JSTL(JSP Standard Tag Library)을 이용할 때에는 뷰 클래스로 JstlView를 이용해야 한다 
+                    +codeBtn('/Repositories/STS/mvc-java12/build.gradle', 'gradle', [31,31], true)
+                h4.fake Spring’s JSP Tag Library
+                p
+                    | spring-webmvc.jar 안의 spring.tld에 스프리이 제공하는 태그 정의가 담겨 있다. 또는 
+                    +asA('https://docs.spring.io/spring-framework/docs/5.2.8.RELEASE/javadoc-api/org/springframework/web/servlet/tags/package-summary.html#package.description')
+                    |  참고
         h2 MVC Config
         div
             h3 MVC 구성 켜기
@@ -2476,18 +2497,25 @@ include ../../source/skeleton.jade
             h3
                 | Type Conversion
                 +pos('MVC config - Type Conversion')
-            p
-                | @Controller, @ControllerAdvice에만 적용되는 변환기를 등록하려면 
-                +goto('DataBinder')
-                |  참고
+            ul
+                li
+                    | @Controller, @ControllerAdvice에만 적용되는 변환기를 등록하려면 
+                    +goto('DataBinder')
+                    |  참고
+                li
+                    | 전역 Java Configuration 예 
+                    +codeBtn('/Repositories/STS/mvc-java14/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [10], true)
+                li XML에서는 FormattingConversionServiceFactoryBean 빈을 정의하면 된다
             h3 Validation
+            ul
+                li 
             h3
                 | Interceptors
                 +pos('MVC config - Interceptors')
             ol
                 li
                     | Java 기반 설정 예 
-                    +codeBtn('/Repositories/STS/mvc-java3/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [19])
+                    +codeBtn('/Repositories/STS/mvc-java3/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [19], true)
                 p addInterceptors(InterceptorRegistry)를 재정의하여 추가
                 li
                     | XML 기반 설정 예 
