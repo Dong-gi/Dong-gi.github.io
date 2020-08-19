@@ -466,9 +466,9 @@ include ../../source/skeleton.jade
                     +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello28Test.java', 'java', [8]) Context
                 p 빈 생성 절차를 XML보다 Java로 표현하는 것이 효율적인 경우, FactoryBean을 컨테이너에 등록할 수 있다
 
-            h3 Annotation 기반 설정
+            h3 Annotation Configuration
             ul
-                li XML 기반 설정과 같이 이용하는 경우, Annotation 기반 처리가 먼저 이뤄짐에 유의.
+                li XML Configuration과 같이 이용하는 경우, Annotation 기반 처리가 먼저 이뤄짐에 유의.
                 li
                     | context:annotation-config 
                     +codeBtn('/Repositories/STS/app2/src/main/resource/anno01.xml', 'xml') XML
@@ -969,7 +969,7 @@ include ../../source/skeleton.jade
                     // 예. WebApplicationContext -> ServletContextResource
             h3 Resource 주입
             ul
-                li XML 기반 설정에서, Resource 타입 property의 value로 URL 문자열이 가능하다
+                li XML Configuration에서, Resource 타입 property의 value로 URL 문자열이 가능하다
                 li 일반적으로 ApplicationContext 생성자 자체도 URL 문자열 (배열)로 초기화 가능하다
                 li ClassPathXmlApplicationContext 생성자에 클래스와 파일명 배열을 같이 보내면, 자동으로 클래스 위치에서 파일을 찾는다
                 li ApplicationContext 생성자 및 PathMatcher 유틸리티 클래스는 와일드카드를 사용할 수 있다
@@ -1004,6 +1004,7 @@ include ../../source/skeleton.jade
             ul
                 li
                     +asA('https://beanvalidation.org/', 'Java Bean Validation API')
+                    +pos('Bean Validation')
                     | 예 
                     +codeBtn('/Repositories/STS/spring-core/src/main/java/io/github/donggi/bean/Test2Bean.java', 'java', [9]) Bean1
                     +codeBtn('/Repositories/STS/spring-core/src/main/java/io/github/donggi/bean/Test2Bean2.java', 'java', [10]) Bean2
@@ -1601,7 +1602,6 @@ include ../../source/skeleton.jade
                 h4 ViewResolver 종류
                 ul
                     +goto('View Technologies')
-                    +goto('MVC config - View Resolvers')
                     li AbstractCachingViewResolver
                     p 뷰 인스턴스를 캐시하여 이용한다. cache 속성을 이용해 전체 캐시를 끄거나, removeFromCache()로 일부 뷰만 캐시에서 제거할 수 있다
                     li XmlViewResolver, BeanNameViewResolver
@@ -2487,12 +2487,12 @@ include ../../source/skeleton.jade
         div
             h3 MVC 구성 켜기
             ol
-                li Java 기반 설정
+                li Java Configuration
                 +asCode('java').
                     @Configuration
                     @EnableWebMvc
                     public class WebConfig { }
-                li XML 기반 설정
+                li XML Configuration
                 +asCode('xml') &lt;mvc:annotation-driven>
             h3
                 | Type Conversion
@@ -2508,38 +2508,137 @@ include ../../source/skeleton.jade
                 li XML에서는 FormattingConversionServiceFactoryBean 빈을 정의하면 된다
             h3 Validation
             ul
-                li 
+                li
+                    +goto('Bean Validation')
+                    | (예. Hibernate Validator)가 클래스패스에 존재한다면 LocalValidatorFactoryBean이 전역적으로 등록되어 @Valid, Validated를 컨트롤러 메서드에서 사용할 수 있다
+                p 직접 LocalValidatorFactoryBean를 정의하는 경우, @Primary를 붙여 충돌을 피해야 한다
+                li 전역 Validator 설정
+                ul
+                    li Java Configuration
+                    +asCode('java').
+                        @Configuration
+                        @EnableWebMvc
+                        public class WebConfig implements WebMvcConfigurer {                        
+                            @Override
+                            public Validator getValidator() { }
+                        }
+                    li XML Configuration
+                    +asCode('xml').
+                        &lt;mvc:annotation-driven validator="globalValidator"/>
+                li 컨트롤러 수준 Validator 설정
+                +asCode('java').
+                    @Controller
+                    public class MyController {
+                        @InitBinder
+                        protected void initBinder(WebDataBinder binder) { }
+                    }
             h3
                 | Interceptors
                 +pos('MVC config - Interceptors')
             ol
                 li
-                    | Java 기반 설정 예 
+                    | Java Configuration 예 
                     +codeBtn('/Repositories/STS/mvc-java3/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [19], true)
                 p addInterceptors(InterceptorRegistry)를 재정의하여 추가
                 li
-                    | XML 기반 설정 예 
+                    | XML Configuration 예 
                     +codeBtn('/Repositories/STS/mvc-xml4/src/main/webapp/WEB-INF/app-servlet.xml', 'xml', null, true)
                 p mvc:interceptors 태그 안에 작성
             h3
                 | Content Types
                 +pos('MVC config - Content Types')
+            ul
+                li
+                    | ContentNegotiationConfigurer를 이용해 확장자별 응답 Content-Type을 조정할 수 있다 
+                    +codeBtn('/Repositories/STS/mvc-java15/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [10], true)
+                    +codeBtn('/Repositories/STS/mvc-java15/src/main/java/io/github/donggi/mvc/controller/Controller1.java', 'java', [7], true)
+                li XML Configuration
+                p ContentNegotiationManagerFactoryBean 빈 정의
             h3 Message Converters
-            h3 View Controllers
-            h3
-                | View Resolvers
-                +pos('MVC config - View Resolvers')
+            ul
+                li WebMvcConfigurer#configureMessageConverters() 재정의
+                p 이 메서드에서 컨버터를 추가하는 경우, Spring MVC 기본 컨버터들은 등록되지 않는다
+                li WebMvcConfigurer#extendMessageConverters() 재정의
+                p Spring MVC 기본 컨버터 등록 후 호출되어 사용자 컨버터 등록, 컨버터 수정 등 작업 가능
+                li Spring MVC 기본 컨버터
+                ul
+                    li StringHttpMessageConverter, FormHttpMessageConverter 등 기본 등록
+                    li 클래스패스에 존재하는 라이브러리에 맞춰 MappingJacksonHttpMessageConverter 등 등록
             h3 Static Resources
+            +asCode('java').
+                @Configuration
+                @EnableWebMvc
+                public class AppConfig implements WebMvcConfigurer {
+                    @Override
+                    public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+                        registry.addResourceHandler("/img/**").addResourceLocations("file:static/img/","classpath:/static/img/").setCachePeriod(31556926);
+                        registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/");
+                        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
+                    }
+                }
+            +asCode('xml').
+                &lt;mvc:resources mapping="/resources/**" location="/public, classpath:/static/" cache-period="31556926" />
             h3 Default Servlet
+            ul
+                li DispatcherServlet이 "/" ─ 즉, 모든 요청을 받으면서도 static 리소스 또한 처리할 수 있다.
+                li Java Configuration
+                +asCode('java').
+                    @Configuration
+                    @EnableWebMvc
+                    public class WebConfig implements WebMvcConfigurer {
+                        @Override
+                        public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+                            configurer.enable("myCustomDefaultServlet");
+                        }
+                    }
+                li XML Configuration
+                +asCode('xml') &lt;mvc:default-servlet-handler default-servlet-name="myCustomDefaultServlet"/>
             h3
                 | Path Matching
                 +pos('MVC config - Path Matching')
+            ul
+                li
+                    +asA('https://docs.spring.io/spring-framework/docs/5.2.8.RELEASE/javadoc-api/org/springframework/web/servlet/config/annotation/PathMatchConfigurer.html')
+                    | 를 이용해 여러 옵션을 설정할 수 있다
+                li Java Configuration
+                +asCode('java').
+                    @Configuration
+                    @EnableWebMvc
+                    public class WebConfig implements WebMvcConfigurer {
+                        @Override
+                        public void configurePathMatch(PathMatchConfigurer configurer) {
+                            configurer
+                                .setUseTrailingSlashMatch(false)
+                                .setUseRegisteredSuffixPatternMatch(true);
+                        }
+                    }
+                li XML Configuration
+                +asCode('xml').
+                    &lt;mvc:annotation-driven>
+                        &lt;mvc:path-matching trailing-slash="false" registered-suffixes-only="true"/>
+                    &lt;/mvc:annotation-driven>
             h3 Advanced Java Config
-            h3 Advanced XML Config
-        h2 HTTP/2
+            p @EnableWebMvc는 DelegatingWebMvcConfiguration를 임포트하며, 이는 아래 작업을 수행한다
+            ul
+                li Spring MVC 기본 설정
+                li WebMvcConfigurer 탐지 후 각 설정 메서드 호출
+            p 고급 설정을 원하는 경우 @EnableWebMvc를 제거하고 DelegatingWebMvcConfiguration를 직접 상속하면 된다.
         h2 REST Clients
-        h2 Testing
+        div
+            h3 RestTemplate
+            p 동기적인 HTTP 요청을 수행한다. Spring 5.0부터는 WebClient를 대신 이용할 것이 권장된다
+            h3 WebClient Since 5.0
+            ul
+                li Non-blocking, 리액티브 HTTP 클라이언트.
+                p 동기적인 요청도 가능
+                li 함수형 스타일로, Java 8 람다 사용 가능
+                li 테스트를 위한 WebTestClient도 존재
         h2 WebSockets
+        div
+            h3 Introduction to WebSocket
+            ul
+                li WebSocket 프로토콜은 1개의 클라이언트-서버 TCP 연결 위에서 전이중, 양방향 통신 채널을 수립하는 표준을 제공한다
+                li HTTP와 별개 프로토콜이지만, 80/443 포트를 그대로 이용하여 방화벽 차단에 안전하다
         h2 Other Web Frameworks
 
     details
