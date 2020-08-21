@@ -1,0 +1,22 @@
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ws</title>
+    <script src="./js/sockjs.js"></script>
+</head>
+
+<body>
+    <script>
+    let sock = new SockJS("/mvc-java16/app/ws/echo")
+    sock.onopen = function () {
+        sock.onmessage = function (e) {
+            document.body.innerText = `${document.body.innerText}\n${e.data}`
+        }
+        sock.send("Hello World")
+        sock.send("안녕 세상")
+    }
+    </script>
+</body>
+
+</html>

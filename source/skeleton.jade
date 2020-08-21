@@ -80,7 +80,7 @@ mixin goto(name)
     +asA(`#pos${name.hashCode()}`, `Goto - ${name}`).goto&attributes({ target: '_self' })
 
 mixin post(title, keywords, description, useMJX, noAds)
-    html(lnag='ko')
+    html(lang='ko')
         head
             meta(charset='UTF-8')
             meta(name='viewport', content='width=device-width, initial-scale=1')
