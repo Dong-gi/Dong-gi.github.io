@@ -1004,7 +1004,7 @@ include ../../source/skeleton.jade
                 li
                     | Spring MVC 예 
                     +codeBtn('/Repositories/STS/mvc-java18/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', null, true)
-                    +codeBtn('/Repositories/STS/mvc-java18/src/main/java/io/github/donggi/mvc/controller/Controller1.java', 'java', [21], true)
+                    +codeBtn('/Repositories/STS/mvc-java18/src/main/java/io/github/donggi/mvc/controller/Login.java', 'java', [21], true)
                     +codeBtn('/Repositories/STS/mvc-java18/src/main/java/io/github/donggi/mvc/validator/LoginRequestValidator.java', 'java', null, true)
                     +codeBtn('/Repositories/STS/mvc-java18/src/main/resources/i18n/msg.properties', 'properties', null, true)
             h3 애너테이션 기반 검증
@@ -1616,7 +1616,21 @@ include ../../source/skeleton.jade
                     li ResourceBundleViewResolver
                     p ResourceBundle(기본 리소스 파일 : views.properties)에 저장된 빈 정보로 뷰를 찾는다. 정확히는 [viewname].(class) 속성을 뷰 클래스로, [viewname].url 속성을 뷰 url로 이용한다.
                     li UrlBasedViewResolver
-                    p Url 경로 그대로의 위치에 존재하는 파일을 뷰로 이용한다.
+                    ul
+                        li Url 경로에 대응하는 파일을 뷰로 이용한다.
+                        li setContentType()으로 기본 Content-Type 헤더 설정 가능 ─ JVM 기본 인코딩이 잘못된 경우 이걸로 수정 가능
+                        +asCode('java').
+                            @ComponentScan(basePackages = "io.github.donggi.mvc.controller, io.github.donggi.mvc.service")
+                            @EnableWebMvc
+                            @Configuration
+                            public class AppConfig implements WebMvcConfigurer {
+                                @Override
+                                public void configureViewResolvers(ViewResolverRegistry registry) {
+                                    var resolver = new FreeMarkerViewResolver("", ".ftl");
+                                    resolver.setContentType("text/html;charset=UTF-8");
+                                    registry.viewResolver(resolver);
+                                }
+                            }
                     li InternalResourceViewResolver
                     p UrlBasedViewResolver의 서브클래스로, InternalResourceView(Servlet, JSP) 파일을 뷰로 이용한다. 그 외 서브클래스 ─ TilesViewResolver, XsltViewResolver, FreeMarkerViewResolver ─ 들도 존재
                     +asCode('xml').
@@ -1894,7 +1908,7 @@ include ../../source/skeleton.jade
                             br
                             | 예 
                             +codeBtn('/Repositories/STS/mvc-java18/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', null, true)
-                            +codeBtn('/Repositories/STS/mvc-java18/src/main/java/io/github/donggi/mvc/controller/Controller1.java', 'java', [21], true)
+                            +codeBtn('/Repositories/STS/mvc-java18/src/main/java/io/github/donggi/mvc/controller/Login.java', 'java', [21], true)
                             +codeBtn('/Repositories/STS/mvc-java18/src/main/java/io/github/donggi/mvc/validator/LoginRequestValidator.java', 'java', null, true)
                             +codeBtn('/Repositories/STS/mvc-java18/src/main/resources/i18n/msg.properties', 'properties', null, true)
                     tr

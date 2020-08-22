@@ -237,6 +237,13 @@ include ../../source/skeleton.jade
                 li
                     | Inner property, Array index 예 
                     +codeBtn('/Repositories/STS/mvc-java18/src/main/webapp/WEB-INF/view/bulkLogin.jsp', 'xml', null, true)
+                li spring:htmlEscape
+                p 페이지(PageContext) 수준에서 html 이스케이프 여부 설정
+                +asCode('xml') &lt;spring:htmlEscape defaultHtmlEscape="true"/>
+                li
+                    | spring:message 예 
+                    +codeBtn('/Repositories/STS/mvc-java18/src/main/webapp/WEB-INF/view/message.jsp', 'xml', null, true)
+                    +codeBtn('/Repositories/STS/mvc-java18/src/main/resources/i18n/msg.properties', 'properties', null, true)
         h2 데이터 저장소
         ol
             li ServletContext

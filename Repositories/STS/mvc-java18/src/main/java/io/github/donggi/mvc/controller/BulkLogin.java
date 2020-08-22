@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import io.github.donggi.mvc.request.BulkLoginRequest;
 
 @Controller
-public class Controller2 {
+public class BulkLogin {
     @GetMapping("/bulkLogin")
     public String login() {
         return "bulkLogin";

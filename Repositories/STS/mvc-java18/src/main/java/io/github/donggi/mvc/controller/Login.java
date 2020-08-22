@@ -19,7 +19,7 @@ import io.github.donggi.mvc.request.LoginRequest;
 import io.github.donggi.mvc.validator.LoginRequestValidator;
 
 @Controller
-public class Controller1 implements ApplicationContextAware {
+public class Login implements ApplicationContextAware {
     private ApplicationContext context;
 
     @InitBinder
