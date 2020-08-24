@@ -1,0 +1,19 @@
+include ../../source/skeleton.jade
++post('Netty', 'Netty', 'Netty 정리')
+    h1 참고 문서
+    ul
+        li: +asA('https://netty.io/4.1/api/index.html', 'Netty Doc')
+        li: +asA('https://github.com/hatemogi/netty-startup')
+
+    h1 주요 인터페이스
+    div
+        h2 Channel
+        p I/O 작업을 지원하는 네트워크 연결. 모든 I/O 작업은 비동기적으로 실행되어 ChannelFuture를 즉시 반환한다
+        h2 ChannelFuture
+        ul
+            li Channel의 I/O 작업 결과
+            li 가능한 상태 : Uncompleted(!isDone), Success(isDone &amp;&amp; isSuccess), Failed(isDone &amp;&amp; cause != null), Cacelled(isDone &amp;&amp; isCancelled)
+            li addListener(s) 메서드를 이용해 콜백 설정 가능
+        h2 ChannelHandler
+        ul
+            li I/O 이벤트 수신

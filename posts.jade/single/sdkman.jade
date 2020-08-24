@@ -26,6 +26,10 @@ include ../../source/skeleton.jade
                 export SDKMAN_DIR="/usr/local/sdkman"
                 [[ -s "/usr/local/sdkman/bin/sdkman-init.sh" ]] && source "/usr/local/sdkman/bin/sdkman-init.sh"
                 cd ~
+            li 환경변수 설정(예. JAVA)
+            +asCode('shell', '.bash_profile').
+                export JAVA_HOME '$SDKMAN_DIR/candidates/java/current'
+                export JDK_HOME '$JAVA_HOME/bin'
 
 
     h1 sdk help

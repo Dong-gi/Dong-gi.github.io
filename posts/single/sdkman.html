@@ -7,7 +7,8 @@ $ chmod -R +x /usr/local/sdkman/src/</div><li>사용자 로그인 시 자동으�
 cd ~
 export SDKMAN_DIR="/usr/local/sdkman"
 [[ -s "/usr/local/sdkman/bin/sdkman-init.sh" ]] && source "/usr/local/sdkman/bin/sdkman-init.sh"
-cd ~
+cd ~</div><li>환경변수 설정(예. JAVA)</li><p><strong>↓ .bash_profile</strong></p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">export JAVA_HOME '$SDKMAN_DIR/candidates/java/current'
+export JDK_HOME '$JAVA_HOME/bin'
 
 </div></ol></ol><h1>sdk help</h1><p><strong>↓ shell</strong></p><div lan="shell" class="as-code code-div w3-leftbar w3-border-green">Usage: sdk &lt;command> [candidate] [version]
        sdk offline &lt;enable|disable>
