@@ -17,3 +17,17 @@ include ../../source/skeleton.jade
         h2 ChannelHandler
         ul
             li I/O 이벤트 수신
+            li ChannelInboundHandler, ChannelOutboundHandler
+        h2 ChannelHandlerContext
+        ul
+            li ChannelHandler는 Context를 통해 ChannelPipeline 및 다른 핸들러와 상호작용한다.
+            p ChannelHandler는 여러 ChannelPipeline에 등록될 수 있으므로, Context 또한 여러 개 가질 수 있다
+            li 이벤트 통지 : ChannelPipeline 상의 다음 핸들러에 이벤트 전달
+            li Pipeline 수정 : pipeline()으로 ChannelPipeline를 획득하여 직접 수정 가능
+            li 나중에 사용 : 획득한 ChannelHandlerContext는 다른 스레드에서도 사용 가능하다
+            li 상태 저장 : attr(AttributeKey)로 상태 저장 및 공유
+        h2 ChannelPipeline
+        ul
+            li 하나의 Channel 상에서 inbound 이벤트와 outbound 작업을 처리하는 ChannelHandler 리스트
+            p 각 Channel 생성 시 자동으로 ChannelPipeline을 신규로 하나 갖는다
+            li Inbound 핸들러는 순서대로, outbound 핸들러는 역순으로 실행된다

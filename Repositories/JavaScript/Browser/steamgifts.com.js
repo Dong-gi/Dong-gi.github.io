@@ -43,6 +43,7 @@ async function procesGiveawayItems() {
         }
         await partialCustomSleep();
     }
+    $('.fa-angle-right').click();
 }
 
 async function enterGiveaway(url) {
