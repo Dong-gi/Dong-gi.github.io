@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    jcenter()
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+dependencies {
+	compile 'io.netty:netty-all:4.1.51.Final'
+    compile 'org.slf4j:slf4j-api:1.7.30'
+	compile 'org.slf4j:slf4j-simple:1.7.30'
+	compileOnly 'org.projectlombok:lombok:1.18.12'
+	annotationProcessor 'org.projectlombok:lombok:1.18.12'
+	testImplementation 'junit:junit:4.12'
+}

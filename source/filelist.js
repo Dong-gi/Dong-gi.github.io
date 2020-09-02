@@ -2093,6 +2093,7 @@ posts.jade/java/jni.jade
 posts.jade/java/jpa.jade
 posts.jade/java/logback.jade
 posts.jade/java/lombok.jade
+posts.jade/java/netty.jade
 posts.jade/java/oop.jade
 posts.jade/java/performance.jade
 posts.jade/java/spring_framework.jade
@@ -2213,6 +2214,7 @@ posts/java/jni.html
 posts/java/jpa.html
 posts/java/logback.html
 posts/java/lombok.html
+posts/java/netty.html
 posts/java/oop.html
 posts/java/performance.html
 posts/java/spring_framework.html
