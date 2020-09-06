@@ -20,37 +20,29 @@ public class DiscardServer implements AutoCloseable {
 
     public DiscardServer(int port) {
         this.port = port;
-        bossGroup = new NioEventLoopGroup(); // (1)
+        bossGroup = new NioEventLoopGroup();
         workerGroup = new NioEventLoopGroup();
     }
 
     public Channel start() {
-        var b = new ServerBootstrap(); // (2)
-        b.group(bossGroup, workerGroup)
-        .channel(NioServerSocketChannel.class) // (3)
-        .childHandler(new ChannelInitializer<SocketChannel>() { // (4)
-            @Override
-            public void initChannel(SocketChannel ch) throws Exception {
-                ch.pipeline()
-                    .addLast(new DiscardServerHandler());
-            }
-        })
-        .option(ChannelOption.SO_BACKLOG, 128)          // (5)
-        .childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
+        var b = new ServerBootstrap();
+        b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
+                .childHandler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    public void initChannel(SocketChannel ch) throws Exception {
+                        ch.pipeline().addLast(new DiscardServerHandler("server"));
+                    }
+                }).option(ChannelOption.SO_BACKLOG, 128)
+                .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-        // Bind and start to accept incoming connections.
         ChannelFuture f = null;
         try {
             f = b.bind(port).sync();
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
-        } // (7)
+        }
         log.info("Server listening :{}", port);
 
-        // Wait until the server socket is closed.
-        // In this example, this does not happen, but you can do that to gracefully
-        // shut down your server.
         ch = f.channel();
         return ch;
     }
@@ -61,5 +53,5 @@ public class DiscardServer implements AutoCloseable {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         });
-    } 
+    }
 }

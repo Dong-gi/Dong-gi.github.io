@@ -11,6 +11,35 @@ include ../../source/skeleton.jade
         li 비동기, event-driven 네트워크 애플리케이션 프레임워크
         li FTP, SMTP, HTTP, WebSocket 등 주요 프로토콜 구현 제공
 
+    h1 예. Discard Server
+    div
+        h2 Server Handler
+        ul
+            li 코드 
+                +codeBtn('/Repositories/STS/netty-tutorial/src/main/java/test1/DiscardServerHandler.java', 'java', [10], true)
+            li ByteBuf를 비롯한 reference-counted 객체들은 명시적인 해제가 필요하다.
+        h2 Server
+        ul
+            li 코드 
+                +codeBtn('/Repositories/STS/netty-tutorial/src/main/java/test1/DiscardServer.java', 'java', [13], true)
+            li 서버는 이벤트 루프가 2개 필요하다
+            p 들어오는 연결을 처리하는 boss + 각 연결의 데이터를 처리하는 worker
+            li ServerBootstrap 서버 작성을 도와주는 헬퍼 클래스
+            ul
+                li channel(Class) : 연결을 어떤 Channel로 받을 지 지정 == 서버 채널
+                li childHandler(ChannelHandler) : 새로운 연결(=자식 채널)이 수립될 때마다 설정 진행
+                li option(ChannelOption, T) : 서버 채널 옵션 설정
+                p
+                    +asA('https://netty.io/4.1/api/io/netty/channel/ChannelOption.html')
+                    | , 
+                    +asA('https://netty.io/4.1/api/io/netty/channel/ChannelConfig.html')
+                    |  참고
+                li childOption(ChannelOption, T) : 자식 채널 옵션 설정
+                li bind(...) : PC의 모든 NIC에 대해 바인딩 수행
+        h2 Test
+        p 코드 
+            +codeBtn('/Repositories/STS/netty-tutorial/src/test/java/test1/NettyTest.java', 'java', [15], true)
+
     h1 주요 인터페이스
     div
         h2 Channel
