@@ -81,6 +81,7 @@ include ../../source/skeleton.jade
         li 프로토콜은 ws(비보안), wss(보안)
         li 웹 소켓은 동일 소스 정책이 적용되지 않으므로, 연결을 수락할지는 완전히 서버의 권한
         li 이벤트 종류 : open, message, error, close
+        li 연결 유효성 확인을 위해 주기적으로 ping-pong을 주고받는 것이 권장된다
     +asCode('javascript').
         let connection = new WebSocket("ws://host-address/page_or_function_name");
         // new WebSocket("wss://secure.example.com/chat", {"chat.v1", "chat.v2"});

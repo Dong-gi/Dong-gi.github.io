@@ -5,7 +5,7 @@ gtag('config', 'UA-143098403-1');</script></head><body><div id="sidebar" class="
 worker.postMessage("start!"); // 작업 시작. JSON 구조로 직렬화 가능한 값은 모두 전달 가능
 worker.terminate(); // 즉시 종료
 worker.onmesage = ...
-worker.onerror ...</div><li>웹 워커 내부에서 전역 객체는 worker 자체</li><p>페이지에서 보낸 메시지를 알기 위해서 onmesage 이벤트 핸들러를 등록한다.</p><p><strong>↓ javascript</strong></p><div lan="javascript" class="as-code code-div w3-leftbar w3-border-green">self.onmessage = ...</div></ol><h1>웹 소켓</h1><ol><li>오래 지속되는 하나의 연결을 이용해 완전한 양방향 통신을 제공한다.</li><li>프로토콜은 ws(비보안), wss(보안)</li><li>웹 소켓은 동일 소스 정책이 적용되지 않으므로, 연결을 수락할지는 완전히 서버의 권한</li><li>이벤트 종류 : open, message, error, close</li></ol><p><strong>↓ javascript</strong></p><div lan="javascript" class="as-code code-div w3-leftbar w3-border-green">let connection = new WebSocket("ws://host-address/page_or_function_name");
+worker.onerror ...</div><li>웹 워커 내부에서 전역 객체는 worker 자체</li><p>페이지에서 보낸 메시지를 알기 위해서 onmesage 이벤트 핸들러를 등록한다.</p><p><strong>↓ javascript</strong></p><div lan="javascript" class="as-code code-div w3-leftbar w3-border-green">self.onmessage = ...</div></ol><h1>웹 소켓</h1><ol><li>오래 지속되는 하나의 연결을 이용해 완전한 양방향 통신을 제공한다.</li><li>프로토콜은 ws(비보안), wss(보안)</li><li>웹 소켓은 동일 소스 정책이 적용되지 않으므로, 연결을 수락할지는 완전히 서버의 권한</li><li>이벤트 종류 : open, message, error, close</li><li>연결 유효성 확인을 위해 주기적으로 ping-pong을 주고받는 것이 권장된다</li></ol><p><strong>↓ javascript</strong></p><div lan="javascript" class="as-code code-div w3-leftbar w3-border-green">let connection = new WebSocket("ws://host-address/page_or_function_name");
 // new WebSocket("wss://secure.example.com/chat", {"chat.v1", "chat.v2"});
 // connection.readyState === WebSocket.OPEN // CONNECTING, OPEN, CLOSING, CLOSED
 // connection.bufferedAmount : 전송 대기중인 크기
