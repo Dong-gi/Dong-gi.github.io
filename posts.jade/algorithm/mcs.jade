@@ -518,11 +518,70 @@ include ../../source/skeleton.jade
                         |   s_i =& a_i\text{ XOR }c_i \\
                         |   c_{i+1} =& a_i\text{ AND }c_i
                         | \end{align*}
-                    li
-                        | (b) Write similar definitions for the digits and carries in the sum of two n + 1-bit binary numbers 식[a_n,\cdots,a_1,a_0]식 and 식[b_n,\cdots,b_1,b_0]식.
-                        br
-                        | Visualized as digital circuits, the above adders consist of a sequence of single-digit half-adders or adders strung together in series. These circuits mimic ordinary pencil-and-paper addition, where a carry into a column is calculated directly from the carry into the previous column, and the carries have to ripple across all the columns before the carry into the final column is determined. Circuits with this design are called ripple-carry adders. Ripple-carry adders are easy to understand and remember and require a nearly minimal number of operations. But the higherorder output bits and the final carry take time proportional to n to reach their final values.
+                    li (b) Write similar definitions for the digits and carries in the sum of two n + 1-bit binary numbers 식[a_n,\cdots,a_1,a_0]식 and 식[b_n,\cdots,b_1,b_0]식.
+                    p
+                        | \begin{align*}
+                        |   c_0 =& 0 \\
+                        |   s_i =& a_i\text{ XOR }b_i\text{ XOR }c_i \\
+                        |   c_{i+1} =& (a_i\text{ AND }b_i)\text{ OR }(b_i\text{ AND }c_i)\text{ OR }(c_i\text{ AND }a_i)
+                        | \end{align*}
                     li (c) How many of each of the propositional operations does your adder from part (b) use to calculate the sum?
+                    p To add two n bit numbers, (2+5)n times unit operations are needed
+                h4 Problem 3.17.
+                p
+                    | A half dozen different operators may appear in propositional formulas, but just
+                    |  AND, OR, and NOT are enough to do the job. That is because each of the operators
+                    |  is equivalent to a simple formula using only these three operators. For example,
+                    |  A IMPLIES B is equivalent to NOT(A) OR B. So all occurences of IMPLIES in a
+                    |  formula can be replaced using just NOT and OR.
+                ul
+                    li
+                        | (a) Write formulas using only AND, OR, NOT that are equivalent to each of A IFF B
+                        |  and A XOR B. Conclude that every propositional formula is equivalent to an AND-OR-NOT formula.
+                    ul
+                        li A iff B = (A and B) or (not(A) and not(B))
+                        li A xor B = (A and not(B)) or (not(A) and B)
+                    li (b) Explain why you don’t even need AND.
+                    p A and B = not(not(A) or not(B))
+                    li
+                        | (c) Explain how to get by with the single operator NAND where A NAND B is
+                        |  equivalent by definition to NOT(A AND B)
+                    ul
+                        li A and B = (A nand B) nand (A nand B)
+                        li not(A) = A nand A
+                        li
+                            | A or B = not(not(A) and not(B)) = X nand X
+                            br
+                            | where X = (Y nand Z) nand (Y nand Z), Y = A nand A, Z = B nand B
+                h4 Problem 3.18.
+                p
+                    | The propositional connective NOR is defined by the rule
+                    br
+                    | P NOR Q ::= NOT(P) AND NOT(Q)
+                    br
+                    | Explain why every propositional formula—possibly involving any of the usual operators such as IMPLIES, XOR, . . .—is equivalent to one whose only connective is NOR.
+                ul
+                    li not(A) = A nor A
+                    li A or B = not(A nor B) = (A nor b) nor (A nor b)
+                    li
+                        | A and b = not(not(A) or not(B)) = X nor X
+                        br
+                        | where X = (Y nor Z) nor (Y nor Z), Y = A nor A, Z = B nor B
+                h4 Problem 3.19.
+                p
+                    | Explain how to read off a conjunctive form for a propositional formula directly
+                    |  from a disjunctive form for its complement.
+                p
+                    | → Any DNF 식[P_1\text{ OR }P_2\text{ OR }\cdots\text{ OR }P_n]식, where 식[P_i=Q_{i1}\text{ AND }Q_{i2}\text{ AND }\cdots\text{ AND }Q_{im_i}]식
+                    br
+                    | \begin{align*}
+                    |    & \text{ NOT}(P_1\text{ OR }P_2\text{ OR }\cdots\text{ OR }P_n) \\
+                    |   =& \text{ NOT}(P_1)\text{ AND }\text{ NOT}(P_2)\text{ AND }\cdots\text{ AND }\text{ NOT}(P_n) \\
+                    |   =& (\text{ NOT}(Q_{11})\text{ OR }\text{ NOT}(Q_{12})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{1m_1})))\text{ AND } \\
+                    |    & (\text{ NOT}(Q_{21})\text{ OR }\text{ NOT}(Q_{22})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{2m_1})))\text{ AND } \\
+                    |    & \vdots \\
+                    |    & (\text{ NOT}(Q_{n1})\text{ OR }\text{ NOT}(Q_{n2})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{2n_1})))
+                    | \end{align*}
         h2 Mathematical Data Types
         div
             h3 Sets
