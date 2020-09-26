@@ -36,5 +36,8 @@ var target = mStream.ToArray();</div><p><strong>↓ C# 복호화</strong></p><di
     var length = cStream.Read(buf, 0, buf.Length);
     fStream.Write(buf, 0, length);
 } // 블록을 추가하여 모든 스트림이 알아서 닫히도록 구성
-</div></ol><h1>우분투 WebSocket 서버의 연결이 일정 개수 이상 수립되지 않음</h1><div><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://serverfault.com/questions/361416/increasing-the-number-of-outbound-tcp-connections">increasing-the-number-of-outbound-tcp-connections</a><p><strong>↓ /etc/security/limits.conf 수정 예</strong></p><div lan="properties" class="as-code code-div w3-leftbar w3-border-green">&lt;user> soft nofile 8192
-&lt;user> hard nofile 65000</div></div></div><hr>&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="/LICENSE">LICENSE</a></div></body></html>
+</div></ol><h1>Linux WebSocket 서버의 연결이 일정 개수 이상 수립되지 않음</h1><div><a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="https://serverfault.com/questions/361416/increasing-the-number-of-outbound-tcp-connections">increasing-the-number-of-outbound-tcp-connections</a><p><strong>↓ /etc/security/limits.conf 수정 예</strong></p><div lan="properties" class="as-code code-div w3-leftbar w3-border-green"># soft &lt;= hard
+* soft nofile 50000
+* hard nofile 50000
+&lt;user> soft nofile 50000
+&lt;user> hard nofile 50000</div></div></div><hr>&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.<a class="w3-btn w3-round w3-round-xxlarge w3-small w3-green" href="/LICENSE">LICENSE</a></div></body></html>

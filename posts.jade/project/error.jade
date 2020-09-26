@@ -111,9 +111,12 @@ include ../../source/skeleton.jade
                 fStream.Write(buf, 0, length);
             } // 블록을 추가하여 모든 스트림이 알아서 닫히도록 구성
 
-    h1 우분투 WebSocket 서버의 연결이 일정 개수 이상 수립되지 않음
+    h1 Linux WebSocket 서버의 연결이 일정 개수 이상 수립되지 않음
     div
         +asA('https://serverfault.com/questions/361416/increasing-the-number-of-outbound-tcp-connections')
         +asCode('properties', '/etc/security/limits.conf 수정 예').
-            &lt;user> soft nofile 8192
-            &lt;user> hard nofile 65000
+            # soft &lt;= hard
+            * soft nofile 50000
+            * hard nofile 50000
+            &lt;user> soft nofile 50000
+            &lt;user> hard nofile 50000

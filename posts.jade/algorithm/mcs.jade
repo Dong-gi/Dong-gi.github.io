@@ -582,12 +582,104 @@ include ../../source/skeleton.jade
                     |    & \vdots \\
                     |    & (\text{ NOT}(Q_{n1})\text{ OR }\text{ NOT}(Q_{n2})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{2n_1})))
                     | \end{align*}
+                h4 Problem 3.32.
+                p
+                    | The goal of this problem is to translate some assertions about binary strings into
+                    |  logic notation. The domain of discourse is the set of all finite-length binary strings:
+                    |  λ, 0, 1, 00, 01, 10, 11, 000, 001, . . . . (Here λ denotes the empty string.) In your
+                    |  translations, you may use all the ordinary logic symbols (including =), variables,
+                    | and the binary symbols 0, 1.
+                    br
+                    | A string like 01x0y of binary symbols and variables denotes the concatenation
+                    |  of the symbols and the binary strings represented by the variables. For example, if
+                    |  the value of x is 011 and the value of y is 1111, then the value of 01x0y is the
+                    |  binary string 0101101111.
+                ul
+                    li (a) x consists of three copies of some string.
+                    p → 식[\exists{y}. x=yyy]식
+                    li (b) x is an even-length string of 0’s.
+                    p
+                        | → let CONCAT(a, b, c, ...) = abc...
+                        br
+                        | let REPT(a, n) = CONCAT(a, REPT(a, n-1)) = CONCAT(aa, REPT(a, n-2)) = CONCAT(aa...a, REPT(a, 0)) = CONCAT(aa...a, λ) = aa...a
+                        br
+                        | x = REPT(00, n) where n \in N
+                    li (c) x does not contain both a 0 and a 1.
+                    p → x = λ
+                    li (d) x is the binary representation of 식[2^k + 1]식 for some integer 식[k \ge 0]식.
+                    p → x = 1 or CONCAT(1, REPT(0, n), 1) where 식[n \in \mathbb{N}]식
         h2 Mathematical Data Types
         div
             h3 Sets
+            div
+                h4 Some Popular Sets
+                ul
+                    li 식[\emptyset]식 : Empty set
+                    li 식[\mathbb{N}]식 : Nonnegative integers
+                    li 식[\mathbb{Z}]식 : Integers
+                    li 식[\mathbb{Q}]식 : Rational numbers
+                    li 식[\mathbb{R}]식 : Real numbers
+                    li 식[\mathbb{C}]식 : Complex numbers
+                h4 Comparing and Combining Sets
+                ul
+                    li 식[S \subseteq T]식 : S is a subset of T
+                    li 식[S \subset T]식 : S is a strict subset of T
+                    li Union : 식[x \in A \cup B\text{　　iff　　}x \in A\text{ OR }x \in B]식
+                    li Intersection : 식[x \in A \cap B\text{　　iff　　}x \in A\text{ AND }x \in B]식
+                    li Difference : 식[x \in A - B\text{　　iff　　}x \in A\text{ AND }x \notin B]식
+                    li Complement : 식[\overline{A} ::= D - A]식 where D is domain set
+                h4 Power Set
+                p pow(A) ::= The set of all the subsets of a set A
             h3 Sequences
+            ul
+                li A sequence is a list of objects called terms or components. e.g. (a, b, c)
+                li λ ::= empty sequence
+                li Cartesian product of sets, 식[S_1\times S_2\times\cdots\times S_n]식, is a new set consisting of all sequences where the first component is drawn from S1, the second from S2, and so forth.
+                li 식[S^n = S\times S\times\cdots\times S]식
             h3 Functions
+            div
+                h4 Domains and Images
+                ul
+                    li 식[f:A\rightarrow B]식 indicates that f is a function with domain, A, and codomain, B
+                    li Partial function : function is not defined for some elements in the domain
+                    li Total function : function is defined for every element in the domain
+                    li range(f) ::= f(domain(f))
+                    li image of S under f ::= f(S) where 식[S \subseteq A]식
+                h4 Function Composition
+                p
+                    +pos('Definition 4.3.1.')
+                    strong Definition 4.3.1.
+                    |  For functions 식[f:A\rightarrow B]식 and 식[g:B\rightarrow C]식, the composition, 식[g\circ f]식 is defined by the rule: 식[\forall{x}\in A, (g\circ f)(x) ::= g(f(x))]식
             h3 Binary Relations
+            p
+                +pos('Definition 4.4.1.')
+                strong Definition 4.4.1.
+                |  A binary relation, R, constists of a set, A, called the domain of R, a set, B, called the codomain of R, and a subset of 식[A\times B]식 called the graph of R
+            ul
+                li Also said to be "relation between A and B", "relation from A to B"
+                li 식[R:A\rightarrow B]식
+                li "a R b" means the pair (a, b) is in the graph of R
+            div
+                h4 Relation Diagrams
+                p
+                    +pos('Definition 4.4.2.')
+                    strong Definition 4.4.2.
+                    |  A binary relation, R, is:
+                ul
+                    li function when it has the [식[\le]식1 arrow out] property
+                    li surjective when it has the [식[\ge]식1 arrows in] property
+                    li total when it has the [식[\ge]식1 arrows out] property
+                    li injective when it has the [식[\le]식1 arrows in] property
+                    li bijective when it has both the [=1 arrows in] and the [=1 arrows out] property
+                h4 Relational Images
+                p
+                    +pos('Definition 4.4.5.')
+                    strong Definition 4.4.5.
+                    |  The inverse, 식[R^{-1}]식 of a relation 식[R:A\rightarrow B]식 is the relation from B to A defined by the rule: 식[b R^{-1} a\text{　　iff　　}a R b]식
+                p
+                    +pos('Definition 4.4.6.')
+                    strong Definition 4.4.6.
+                    |  The image of a set under the relation,  식[R^{-1}]식, is called the inverse image of the set.
             h3 Finite Cardinality
         h2 Induction
         div
