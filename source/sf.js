@@ -327,7 +327,7 @@ class SF {
                 obj[element.name] = Array.from(element.files)
             else if (element.type && element.type.toLowerCase() == 'radio') {
                 if (name) {
-                    let checkedElement = form.querySelector(`input[name=${name}][type=radio]:not([disabled]):checked`)
+                    let checkedElement = form.querySelector(`input[name="${name}"][type=radio]:not([disabled]):checked`)
                     obj[element.name] = (!checkedElement) || checkedElement.value
                 } else
                     obj[element.name] = element.checked
@@ -340,7 +340,7 @@ class SF {
         }
         let r = {}
         if (name) {
-            innerFormToObject(form.querySelector(`[name=${name}]`), r)
+            innerFormToObject(form.querySelector(`[name="${name}"]`), r)
         } else {
             let qInput = 'input[name]:not([disabled]):not([type=radio]):not([type=checkbox])'
             let qRadio = 'input[name][type=radio]:not([disabled]):checked'
@@ -360,14 +360,14 @@ class SF {
      */
     static jsonToForm(form, json, name) {
         function innerToForm(form, obj, name) {
-            let target = form.querySelector(`[name=${name}]`)
+            let target = form.querySelector(`[name="${name}"]`)
             if (!target) return
             switch (target.tagName) {
                 case 'INPUT':
                     switch ((target.type || '').toLowerCase()) {
                         case 'file': return
                         case 'radio':
-                            target = form.querySelector(`[name=${name}][value=${json[name]}]`)
+                            target = form.querySelector(`[name="${name}"][value="${json[name]}"]`)
                             return target && (target.checked = Boolean(json[name]))
                         case 'checkbox':
                             return target.checked = Boolean(json[name])
@@ -381,9 +381,9 @@ class SF {
                         option.selected = false
                     if (Array.isArray(obj[name])) {
                         for (let value of obj[name])
-                            target.querySelector(`option[value=${value}]`).selected = true
+                            target.querySelector(`option[value="${value}"]`).selected = true
                     } else if (obj[name]) {
-                        target.querySelector(`option[value=${obj[name]}]`).selected = Boolean(obj[name])
+                        target.querySelector(`option[value="${obj[name]}"]`).selected = Boolean(obj[name])
                     }
                     return
             }
