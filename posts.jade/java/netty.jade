@@ -13,11 +13,13 @@ include ../../source/skeleton.jade
 
     h1 예. Discard Server
     div
+        h2 개요
+        p TCP 서버. 클라이언트 메시지를 받으면 무시.
         h2 Server Handler
         ul
             li 코드 
                 +codeBtn('/Repositories/STS/netty-tutorial/src/main/java/test1/DiscardServerHandler.java', 'java', [10], true)
-            li ByteBuf를 비롯한 reference-counted 객체들은 명시적인 해제가 필요하다.
+            li ByteBuf를 비롯한 ReferenceCounted 객체들은 명시적인 해제가 필요하다.
         h2 Server
         ul
             li 코드 
@@ -39,6 +41,22 @@ include ../../source/skeleton.jade
         h2 Test
         p 코드 
             +codeBtn('/Repositories/STS/netty-tutorial/src/test/java/test1/NettyTest.java', 'java', [15], true)
+
+    h2 예. Echo Server
+    div
+        h2 개요
+        p TCP 서버. 클라이언트 메시지를 받으면 그대로 응답.
+        h2 Server Handler
+        ul
+            li 코드 
+                +codeBtn('/Repositories/STS/netty-tutorial/src/main/java/test2/EchoServerHandler.java', 'java', [9], true)
+        h2 Server
+        ul
+            li 코드 
+                +codeBtn('/Repositories/STS/netty-tutorial/src/main/java/test2/EchoServer.java', 'java', [13], true)
+        h2 Test
+        p 코드 
+            +codeBtn('/Repositories/STS/netty-tutorial/src/test/java/test2/NettyTest.java', 'java', [18], true)
 
     h1 주요 인터페이스
     div
@@ -66,3 +84,16 @@ include ../../source/skeleton.jade
             li 하나의 Channel 상에서 inbound 이벤트와 outbound 작업을 처리하는 ChannelHandler 리스트
             p 각 Channel 생성 시 자동으로 ChannelPipeline을 신규로 하나 갖는다
             li Inbound 핸들러는 순서대로, outbound 핸들러는 역순으로 실행된다
+
+    h1 ByteBuf
+    ul
+        li java.nio.ByteBuffer와 유사하다. 읽기/쓰기 위치를 각각 관리하므로 flip() 연산 불필요
+        li Unpooled 클래스가 ByteBuf 생성에 관한 유틸리티를 제공한다
+        li ReferenceCounted 인터페이스를 구현하며, 명시적인 retain/release 호출이 필요하다
+        ul
+            li 최초 생성 시 refCnt = 1
+            li retain() -> refCnt++
+            li release() -> refCnt--
+            li refCnt가 0이 된 객체는 해제된다
+            li ReferenceCounted를 구현한 컨테이너는 ReferenceCounted 원소들에 대해 retain()을 하며, 컨테이너 소멸 시 각각에 대해 release() 호출한다
+            

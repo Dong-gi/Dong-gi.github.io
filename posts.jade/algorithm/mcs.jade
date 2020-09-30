@@ -681,7 +681,28 @@ include ../../source/skeleton.jade
                     strong Definition 4.4.6.
                     |  The image of a set under the relation,  식[R^{-1}]식, is called the inverse image of the set.
             h3 Finite Cardinality
+            p
+                +pos('Definition 4.5.1.')
+                strong Definition 4.5.1.
+                |  If A is a finite set, the cardinality(= size) |A| is the number of elements in A
+            p
+                +pos('Definition 4.5.2.')
+                strong Definition 4.5.2.
+                |  Let A, B be sets. Then
+            ul
+                li A surj B iff there is a surjective function from A to B
+                li A inj B iff there is an injective total relation from A to B
+                li A bij B iff there is a bijection from A to B
+            p
+                +pos('Theorem 4.5.4.')
+                strong Theorem 4.5.4.
+                |  [Mapping Rules] For finite sets A, B,
+            ul
+                li A surj B iff |A| >= |B|
+                li A inj B iff |A| &lt;= |B|
+                li A bij B iff |A| = |B|
         h2 Induction
+        | 139p
         div
             h3 Ordinary Induction
             h3 Strong Induction

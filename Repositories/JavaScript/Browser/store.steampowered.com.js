@@ -74,7 +74,7 @@ async function processGame() {
             isPass = !!game.disPrice && game.disPrice == 0;
             reason = '유료';
         }
-        let removeVRonly = true;       // VR 전용 제거
+        let removeVRonly = false;       // VR 전용 제거
         if (isPass && removeVRonly) {
             isPass = !/VR 전용/gm.test(game.optionNode.parentElement.innerText);
             reason = 'VR 전용';
