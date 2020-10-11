@@ -23,6 +23,8 @@ jobs:
 
     - name: Checkout submodules
       uses: jwsi/submodule-checkout@v1
+      #with:
+      #  ssh-key: ${{secrets.XXX}}
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
@@ -35,14 +37,7 @@ jobs:
         java-version: 13
         server-id: github
         settings-path: ${{github.workspace}}
-    - name: test1
-      run: echo $(pwd)
-    - name: test2
-      working-directory: ./Repositories/STS/reminder
-      run: echo $(pwd)
-    - name: test3
-      working-directory: ./Repositories/STS/reminder
-      run: echo $(ls)
+
     - name: Gradle build - reminder
       working-directory: ./Repositories/STS/reminder
       run: bash ./gradlew bootJar
