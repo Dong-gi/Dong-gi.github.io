@@ -1,8 +1,13 @@
 name: "CodeQL"
 
 on:
-  push:
-    branches: [master]
+  #push:
+  #  branches: [master]
+  workflow_dispatch:
+    inputs:
+      check_out_hash:
+        description: 'Commit Hash'
+        required: true
 
 jobs:
   analyze:
