@@ -1,5 +1,6 @@
 const fileText = `
 .gitattributes
+.github/workflows/codeql-analysis.yml
 .gitignore
 .gitmodules
 404.html
@@ -1630,7 +1631,10 @@ Repositories/STS/netty-tutorial/gradlew.bat
 Repositories/STS/netty-tutorial/settings.gradle
 Repositories/STS/netty-tutorial/src/main/java/test1/DiscardServer.java
 Repositories/STS/netty-tutorial/src/main/java/test1/DiscardServerHandler.java
+Repositories/STS/netty-tutorial/src/main/java/test2/EchoServer.java
+Repositories/STS/netty-tutorial/src/main/java/test2/EchoServerHandler.java
 Repositories/STS/netty-tutorial/src/test/java/test1/NettyTest.java
+Repositories/STS/netty-tutorial/src/test/java/test2/NettyTest.java
 Repositories/STS/reactive-webflux/.gitignore
 Repositories/STS/reactive-webflux/.mvn/wrapper/MavenWrapperDownloader.java
 Repositories/STS/reactive-webflux/.mvn/wrapper/maven-wrapper.jar
