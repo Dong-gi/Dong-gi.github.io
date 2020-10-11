@@ -21,6 +21,9 @@ jobs:
       with:
         ref: ${{github.event.inputs.check_out_hash}}
 
+    - name: Checkout submodules
+      uses: jwsi/submodule-checkout@v1
+
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:
