@@ -32,7 +32,9 @@ jobs:
         java-version: 13
         server-id: github
         settings-path: ${{github.workspace}}
-
+    - name: test ls
+      working-directory: ./Repositories/STS/reminder
+      run: echo $(ls)
     - name: Gradle build - reminder
       working-directory: ./Repositories/STS/reminder
       run: bash ./gradlew bootJar
