@@ -55,14 +55,21 @@ include ../../source/skeleton.jade
         +asCode('shell') $ java -Duser.timezone=Asia/Seoul
         li 인코딩 관련 설정
         +asCode('shell') $ java -Dfile.encoding=UTF-8 -Dfile.client.encoding=UTF-8 -Dclient.encoding.override=UTF-8
-        li
-            | 리모트 디버깅 설정 
-            +asA('https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/introclientissues005.html')
+        li 리모트 디버깅 설정
+        ul
+            li 링크 : 
+                +asA('https://stackoverflow.com/a/22631355', 'StackOverflow answer')
+                +asA('https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/introclientissues005.html', 'Java technote')
         +asCode('shell').
+            # Before JDK 1.4
+            $ java -Xnoagent -Djava.compiler=NONE -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=6006
+            # For JDK 1.4
             $ java -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=*:54433,server=y,suspend=n
                 # address : 수신 허용 범위
                 # server  : 서버로 작동할지 여부
                 # suspend : 디버거 부착까지 기다릴지 여부
+            # After JDK 1.4
+            $ java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=6006
     
     h1 jcmd Since Java 8
     p JDK 기본제공 분석 도구
