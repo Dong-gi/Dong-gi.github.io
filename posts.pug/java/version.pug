@@ -1,0 +1,123 @@
+include ../../source/skeleton.pug
++post('Java 버전별 추가사항', 'Java, Version', 'Java 버전별 추가사항 정리')
+    h1 Java 8
+    ul
+        li 람다 표현식 추가
+        li Pipeline과 Stream 추가
+        li 인터페이스에 Default Method 추가
+        li
+            | Type Annotation 추가.
+            +asA('https://checkerframework.org/')
+        ul
+            li @NonNull : 컴파일러가 null이 대입되는지 확인
+            li @ReadOnly : 컴파일러가 쓰기 작업이 있는지 확인
+            li @Regex : 컴파일러가 정규표현식 검증
+            li @Untainted : 오염되지 않은(@Untainted) 값임을 명시. 또는 그러한 값만을 받아들임을 명시
+            li @Tainted : 값이 오염된(@Tainted) 가능성이 있음을 명시. 또는 오염된 값도 받아들임을 명시
+            li @m : 미터, 초 등의 단위 체크
+        li Collection API 강화
+
+    h1 스트림
+    ul
+        li Collection, Array » Stream 생성 » 중간 연산 » 최종 연산 또는 결과
+        li 요소들을 저장하지 않아 스트림 연산이 끝나면 재사용할 수 없다.
+        li Collection.parallelStream » 멀티 코어 프로세싱 가능
+        li lazy evaluation : 최종연산 없이 중간연산을 실행하지 않음.
+        li: +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/StreamExample.java', 'java')
+
+    h1 Java 9
+    ol
+        li REPL로 JShell이 추가되었다 : 코드를 한줄씩 실행하면서 검사할 수 있다.
+        +asA('https://docs.oracle.com/javase/9/jshell/toc.htm')
+        li Collection factory method 추가 : List.of(...) 등
+        li
+            | try-with-resources 구문 변동 : final한(final 변수 or 변수 초기화 후 변경 없음) resource는 별개의 선언 없이 그대로 이용할 수 있다.
+            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java', 'java')
+        li 타입 추론 강화로 diamond 연산자 &lt;>가 익명 클래스도 지원
+        li "_"는 더 이상 유효한 식별자가 아니게 되었다.
+        li private 인터페이스 메서드 지원
+    div
+        h2 Java Platform Module System(JPMS) 도입
+        ol
+            li 모듈 : 패키지 집합의 응집도가 충분하다면, 모듈로 그룹화될 수 있다.
+            ul
+                li Ordinary compilation unit; 일반 컴파일 단위(일반 .java 파일) 정의
+                +asCode().
+                    [패키지 정의]
+                    {임포트 선언}
+                    {타입(클래스, 인터페이스 등) 정의}
+                li 이름 있는 모듈에 연관되지 않는 ordinary compilation unit들은 모두 하나의 익명 모듈에 연관된다.
+            li 모듈 컴파일 단위 정의
+            +asCode().
+                {임포트 선언}
+                모듈 정의
+            li 모듈 정의
+            +asCode().
+                {Annotation}
+                [open] module ModuleName {
+                    {ModuleDirective}
+                }
+            ul
+                li 모듈 이름은 패키지처럼 하나 이상의 자바 식별자를 '.'으로 구분하여 나타낸다.
+                li open 한정자가 없으면 일반 모듈 : 컴파일타임과 런타임에 명시적으로 export된 패키지들에 대한 권한만 외부에 부여
+                li open 한정자가 있는 열린 모듈 : 컴파일타임엔 명시적으로 export된 것만, 런타임엔 모든 패키지에 대한 권한을 외부에 부여
+                li Reflection을 통해서도 같은 접근 권한을 얻을 수 있다.
+            li 모듈 명세 ModuleDirective 정의
+            +asCode().
+                requires { RequiresModifier } ModuleName;           // 모듈 의존성
+                exports PackageName [to ModuleName {, ModuleName}]; // 외부에서 접근할 수 있는 패키지
+                opens PackageName [to ModuleName {, ModuleName}];   // 외부에서 접근할 수 있는 패키지
+                uses TypeName;                                      // 사용하는 서비스
+                provides TypeName with TypeName {, TypeName};       // 제공하는 서비스
+            li RequiresModifier : transitive | static
+            ul
+                li transitive : 외부에서 의존하는 모듈은 transitive 키워드가 붙은 모듈도 의존한다.
+                li static : 컴파일 타임엔 항상 의존성을 갖고, 런타임엔 선택적.
+            li java.base 모듈은 최상의 모듈로, 아무런 의존성이 없다.
+
+        h2 모듈 예시 코드.
+        +asA('https://wiki.eclipse.org/Java9/Examples', '참고자료')
+        ol
+            li 먼저, 결과물의 디렉터리 구조를 보면 src 루트에 module-info.java가 존재함을 볼 수 있다.
+            +w3img('/imgs/20180827_230700.png')
+            +codeBtn('/Repositories/Eclipse/TestModule1/src/module-info.java', 'java') TestModule1/src/module-info.java »
+            li second라는 이름의 모듈이 필요함을 정의했고, second 모듈을 찾기 위해서 TestModule2 프로젝트를 참조하도록 설정해야 한다.
+            +w3img('/imgs/20180827_230710.png')
+            li second 모듈에서는 hello 패키지를 외부에서 사용할 수 있게 정의.
+            +codeBtn('/Repositories/Eclipse/TestModule2/src/module-info.java', 'java') TestModule2/src/module-info.java »
+            li
+                +codeBtn('/Repositories/Eclipse/TestModule2/src/hello/HelloWorld.java', 'java') hello.HelloWorld »
+                +codeBtn('/Repositories/Eclipse/TestModule1/src/test/Test.java', 'java') 를 first 모듈에서 사용하는 예 »
+
+    h1 Java 10
+    ol
+        li 타입 추론 강화로 지역 변수의 타입 선언에 var를 이용할 수 있게 되었다.
+        ul
+            li 지역변수를 선언하면서 초기화할 때 이용 가능
+            li 강화된 for 루프 인덱스에 이용 가능
+            li 기존 for 루프 인덱스에 이용 가능
+            li
+                | try-with-resources 변수에 이용 가능
+                +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java', 'java')
+        li 변경 불가능한 collection 생성 메서드 추가 : toUnmodifiableList 등
+        li javadoc 커맨드라인 옵션에 --add-stylesheet 추가 : 여러 css 이용 가능
+
+    h1 Java 11
+    ol
+        li HTTP/2, WebSocket API를 지원하는 java.net.http 표준 모듈 추가
+        li 람다의 암시적인 매개변수 선언에 var 키워드 사용 가능
+        +asCode('java') (@NonNull var x, @NonNull var y) -> x.process(y);
+        li 유니코드 10.0 지원
+        li 단일 파일 프로그램(Standalone)에 대해 간편한 실행 가능
+        +asCode('shell') java Name.java [params] # Name.java를 컴파일하고 즉시 실행
+        li TLS 1.3 지원
+
+    h1 Java 12
+    p
+        | Switch 표현식(Preview)
+        +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/SwitchExpression.java', 'java')
+
+    h1 Java 13
+    ol
+        li Switch 표현식(Preview) : Java 12의 break 대신 yield 사용
+        li """를 이용한 여러 줄 문자열 리터럴 사용(Preview)

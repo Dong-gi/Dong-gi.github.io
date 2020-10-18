@@ -1,0 +1,20 @@
+include ../../../source/skeleton.pug
+
++post('judge.koreatech 1034번, 1041번 풀이', 'algorithm, judge.koreatech, 1034번, 1041번', 'judge.koreatech.ac.kr 1034번, 1041번 문제 풀이')
+    h1 1034: 최소 이동거리 - Small
+    div
+        p 1차원 직선상에서, 조별 모임을 하기 위해서는 조원이 모두가 모임 장소로 이동을 해야 하는데, 전체가 이동하는 이동 거리의 합을 최소로 하고 싶습니다.
+        h2 풀이
+        ol
+            li 어느 지점으로 모이든 해당 지점에 대하여 서로 반대방향에 있는 두 사람의 이동거리 합은 동일하다.
+            li 따라서 최적의 지점은 다음 두 조건을 모두 만족하는 경우다.
+                ol
+                    li (왼쪽에 있는 사람 수) &lt;= (왼쪽에 있지 않은 사람 수)
+                    li (오른쪽에 있는 사람 수) &lt;= (오른쪽에 있지 않은 사람 수)
+            +codeBtn('/Repositories/Single/koreatech/Main1034.java', 'java')
+
+    h1 1041: 최소 이동거리 구하기 - 2차원
+    div
+        h2 풀이
+        p 이동을 x, y축 각각 하므로 1034번의 풀이를 각 축에 적용함으로써 해결할 수 있다. 1034, 1035와 달리 값 리스트의 정렬이 필요하다.
+            +codeBtn('/Repositories/Single/koreatech/Main1041.java', 'java')

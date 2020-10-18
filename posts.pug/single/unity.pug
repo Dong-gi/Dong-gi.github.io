@@ -1,0 +1,97 @@
+include ../../source/skeleton.pug
++post('Unity', 'Unity', 'Unity 정리')
+    h1 Visual Studio 단축키
+    ol
+        li Ctrl + Shift + M : 이벤트 핸들러 골격 생성
+
+    h1 Asset
+    ol
+        li
+            | 유니티 표준 에셋 : 
+            +asA('https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-32351')
+
+    h1 Component
+    ol
+        li Animation
+        p Window - Animation - Create
+        li Animator
+        ul
+            li Window - Animator : 애니메이션 상태도를 편집할 수 있다.
+            li 기본 노드 : Entry(애니메이션 시작), Any State(상태와 무관), Exit(애니메이션 종료)
+            li Animator.SetTrigger() : 트리거 설정하여 애니메이션 상태를 전이시킨다
+            li Animator.speed : 재생 속도
+        li Empty GameComponent
+        p Transform 컴포넌트만 가진 게임 객체. 형식상의 부모 컴포넌트로 이용하거나, 다른 작업의 기준점으로 이용할 수 있다.
+        li Outlet
+        p public GameObject 필드를 선언하면 Inspector에 해당 필드가 표시되고, 다른 컴포넌트를 드래그-앤-드롭하여 참조를 설정할 수 있다.
+        li GetComponent&lt;T>() : 구성 컴포넌트 획득.
+        li Rigidbody.AddForce() : 외력 작용. F = ma이므로, 강체의 질량에 따라 추가되는 가속도가 달라진다
+        li Rigidbody.velocity : 속도 벡터
+        li Scene
+        p 사용하는 Scene은 File - Build Settings - Project에 등록
+        p SceneManager
+        li Transform.localScale
+        p 배율. 음수로 변경하면 스프라이트 반전 가능
+        li Transform.LookAt() : 추적
+        li Transform.Rotate() : 회전
+        li Transform.Translate() : 위치 이동
+
+    h1 Event Handler
+    ol
+        li OnCollisionEnter(Collision) : 3D 충돌 발생 시 호출
+        p 충돌체 Collider는 컴포넌트트의 래퍼 컴포넌트로, 유니티에서는 Box Collider, Sphere Collider, Capsule Collider 세 종류의 기본 충돌체를 제공한다. Collider는 IsTrigger 속성을 가지며, True인 경우 충돌의 감지(OnTriggerEnter)는 되지만 물리적인 효과(OnCollisionEnter)는 발생하지 않는다.
+        li Start() : 첫 프레임 Update 전에 호출
+        li Update() : 매 프레임마다 호출
+
+    h1 Debug
+    ol
+        li Debug.Break() : 일시정지
+        li Debug.Log() : 로깅
+
+    h1 Image
+    ol
+        li Image Type을 Filled로 설정하면 이미지를 동적으로 일부분만 그릴 수 있다.
+
+    h1 Input
+    ol
+        li Input.GetButton() : 유니티 정의 입력이 들어왔는지 여부 반환. Edit - Project Settings - Input
+        li Input.GetKey(KeyCode.UpArrow) : 키 눌렸는지 여부 반환
+        li Input.GetAxis("Horizontal") : ↔ 방향 입력이 얼마큼 입력됐는지 반환. [-1.0, 1.0]
+        li Input.GetAxis("Vertical") : ↕ 방향 입력이 얼마큼 입력됐는지 반환. [-1.0, 1.0]
+
+    h1 Object
+    ol
+        li GameObject.Find() : 주어진 이름의 GameObject 인스턴스 검색
+        li Object.Instantiate() : 유니티 객체 생성
+        li Object.Destroy() : 유니티 객체 해제
+
+    h1 Physics
+    ol
+        li Collider
+        p 충돌 판정에 이용
+        li Rigidbody
+        p
+            | 힘 계산에 이용
+            br
+            | Constraints - Freeze Rotation : 회전 방지
+        li Physics.Raycast() : 정의된 광선에 다른 객체가 존재하는지 검색한다
+
+    h1 Time
+    ol
+        li Time.deltaTime : 프레임 갱신 간격(초)
+
+    h1 uGUI
+    ol
+        li Create - UI - Text, Image, Button...
+        p Canvas, EventSystem이 Hierarchy에 추가된다. EventSystem은 사용자 입력과 UI를 연결해주는 오브젝트다.
+        li using UnityEngine.UI;
+        p 스크립트에서 uGUI를 이용하기 위해 필요
+
+    h1 Unity 2D
+    ol
+        li 게임 오브젝트는 레이어 번호(order in layer)를 갖는다. z-index와 비슷.
+
+    h1 Vector3
+    ol
+        li Vector3.forward : Vector3(0, 0, 1)
+        p + back, right, left, down, up

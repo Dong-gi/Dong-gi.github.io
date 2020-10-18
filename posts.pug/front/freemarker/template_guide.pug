@@ -1,0 +1,156 @@
+include ../../../source/skeleton.pug
++post('템플릿 작성 가이드 2.3.28', 'FreeMarker, Template, Guide', '템플릿 작성 가이드 2.3.28 정리')
+    h1 시작하기
+    ul
+        li
+            | 템플릿은 임의의 텍스트 파일이 될 수 있으며, HTML로 한정되지 않는다.
+            br
+            | 출력 텍스트의 아래 요소들은 FreeMarker에서 처리되고, 나머지는 있는 그대로 출력된다.
+        li ${...} : FreeMarker는 출력 텍스트에서 이 부분을 중괄호 안 표현식의 값으로 치환한다. Interpolation이라고 부른다.
+        li FTL(FreeMarker Template Language) 태그 == directive : HTML 태그와 유사하지만, #으로 시작한다. 사용자 정의 태그는 @으로 시작한다. 출력에 포함되지 않는다.
+        p Directive 예 : &lt;#if>, &lt;#elseif>, &lt;#else>, ...
+        li 주석 : &lt;#-- -->. HTML 주석과 다르게 출력에 포함되지 않는다.
+        li Built-in : FreeMarker 데이터 모델이 지원하는 메서드.
+        p
+            | Built-in 예 : ?upper_case, ?length, ?size, ...
+            +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[17, 23]') Java »
+            +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_001_hello_world.ftl', 'xml', '[1, 12, 15, 26]') FTL + 결과 »
+
+    h1 Undefined Variable Error 방지.
+    ul
+        li FreeMarker는 null 예외나 찾을 수 없는 식별자 예외를 동일하게 "undefined variable" error를 발생시킨다.
+        li
+            | 기본값 설정 : !
+            br
+            | 존재 여부 확인 : ??
+            +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[25, 30]') Java »
+            +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_002_hello.ftl', 'xml', '[1, 14, 17, 30]') FTL + 결과 »
+        li 검사 범위 설정 : ()
+        p a.b.c! 또는 a.b.c??는 c의 존재 여부만 체크하지만, (a.b.c)! 또는 (a.b.c)??는 데이터 모델 구조상 모든 노드의 존재 여부를 체크한다.
+
+    h1 이스케이프
+    ul
+        li 적절히 설정되었다면 ${...}을 통해 출력되는 &, &lt;, >, ", ' 등은 자동으로 이스케이프 처리된다.
+            +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[32, 38]') Java »
+            +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_003_escape.ftl', 'xml', '[1, 13, 16, 28]') FTL + 결과 »
+        li .ftlh 파일을 이용하면 HTML에 맞추어 자동으로 이스케이프 처리된다.
+        li .ftlx 파일을 이용하면 XML에 맞추어 자동으로 이스케이프 처리된다.
+
+    h1 타입
+    ul
+        li.marker Scalar
+        ul
+            p
+                +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[40, 46]') Java »
+                +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_004_type.ftl', 'xml', '[1, 13, 16, 28]') FTL + 결과 »
+            li String : 문자열 리터럴은 "", '' 둘 다 이용 가능.
+            li Number : 단일 숫자 타입을 이용하기 때문에, 3/2가 1로 평가되는 일은 없다.
+            li Boolean : true or false
+            li Date : Date | Time | Date-time
+        li.marker Container
+        ul
+            +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[48, 58]') Java »
+            +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_005_type.ftl', 'xml', '[1, 14, 17, 30]') FTL + 결과 »
+            li Hash : (String 키, 임의 값) 쌍 저장.
+            li Sequence : 요소들을 일렬로 저장. 0부터 시작하는 인덱스 존재. 요소들의 타입을 같지 않아도 된다.
+            p Hash인 동시에 Sequence일 수 있다.
+            li Collection : 제한된 sequence로 크기에 접근할 수 없고, 인덱스 참조도 안 되지만 &lt;#list>에 이용될 수 있다.
+        li.marker Subroutines
+        ul
+            li FreeMarker에서 method/function은 일급 객체다.
+            li 사용자 정의 directive 역시 subroutine이며, 일급 객체다.
+
+    h1 템플릿 - 구문
+    ul
+        li.marker 리터럴
+        ul
+            p
+                +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[60, 65]') Java »
+                +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_006_syntax.ftl', 'xml', '[9, 31, 44, 67]') FTL + 결과 »
+            li 문자열 : "", '' 모두 가능. 이스케이핑 가능(유니코드 : \xXXXX). Raw string 표현을 위해 접두 문자 'r' 사용 가능.
+            li 숫자 : 10진수 표현만 가능. 지수 표현 불가능. 소수점 앞 '0' 생략 불가능.
+            li Boolean : true, false
+            li Sequence : [] 안에 각 표현식을 콤마로 구분한다.
+            li Range
+            p Range 표현식 자체가 []를 포함하지는 않는다. 할당하고자 할 때는 [] 안에 range 표현식을 작성해야 한다.
+            ul
+                li start .. end
+                li start ..&lt; end or start ..! end
+                li start ..* length Since 2.3.21
+                li start ..
+            li Hash : {"key": "value", keyStringExpression: valueExpression}
+        li.marker 변수 참조
+        ul
+            li Top-level variables: user
+            li Hash: user.name, user["name"]
+            li Sequence: products[5]
+            li Special variables: .variable_name
+        li.marker 문자열 연산
+        ul
+            li Interpolation : "Hello ${user}!"
+            p 문자열 내부에서 Interpolation이 이용되는 경우, 자동 이스케이핑 대상에서 제외된다.
+            li Concatenation : "Hello " + user + "!"
+            p Interpolation, concatenation 모두 로캐일 설정에 의해 변화된다. 로캐일과 무관하게 처리하려면 "someUrl?id=" + id?c 처럼 ?c를 붙인다.
+            li Getting a character: name[0], name?string[0]
+            p 문자 타입은 없으므로, 반환값은 길이 1 문자열이다.
+            li String slice: name[range]
+            p name이 string인 동시에 sequence인 경우, sequence 슬라이싱이 이뤄진다. 문자열로서 슬라이싱되려면 ?string[range]로 명시해야 된다.
+        li.marker Sequence operation
+        ul
+            li Concatenation: users + ["guest"]
+            li Sequence slice: name[range]
+        li.marker Hash operation
+        ul
+            li Concatenation: passwords + { "joe": "secret42" }
+        li Arithmetical calculations: (x * 1.5 + 10) / 2 - y % 100
+        li Comparison: x == y, x != y, x &lt; y, x > y, x &lt;= y, x >= y, x lt y, x lte y, x gt y, x gte y, ...etc.
+        li Logical operations: !registered && (firstVisit || fromEurope)
+        li.marker Built-ins: name?upper_case, path?ensure_starts_with('/')
+        li.marker Method call: repeat("What", 3)
+
+    h1 사용자 정의 directive
+    ol
+        li 기본 정의 : macro
+            +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[67, 72]') Java »
+            +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_007_macro.ftl', 'xml', '[1, 15, 19, 28]') FTL + 결과 »
+        li 매개변수
+            +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[74, 79]') Java »
+            +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_008_macro.ftl', 'xml', '[1, 16, 20, 30]') FTL + 결과 »
+        li Nested content
+        p
+            | 매크로 매개변수는 nested content에서 참조할 수 없다.
+            +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[81, 86]') Java »
+            +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_009_macro.ftl', 'xml', '[1, 16, 20, 30]') FTL + 결과 »
+        li Nested content with 출력 전용 변수
+            +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[88, 93]') Java »
+            +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_010_macro.ftl', 'xml', '[1, 37, 41, 58]') FTL + 결과 »
+
+    h1 변수
+    p 값을 변경할 수 없는 FreeMarker 데이터 모델과 다르게, 값을 변경할 수 있는 변수를 이용할 수 있다.
+    ul
+        li "plain" variable : 템플릿 내에 선언되어 해당 템플릿 안에서 참조 가능. &lt;#assign x = 1>
+        li Local variable : 매크로나 함수 안에서 선언되어 그 안에서만 참조 가능. &lt;#local x = 1>
+        li Loop variable : list와 같은 directive에 의해 자동으로 만들어지는 변수
+        li Global variable : Global directive로 선언하여 어느 템플릿에서든 참조 가능. Global 변수는 같은 이름의 데이터 모델을 가린다. &lt;#global x = 1>
+
+    h1 Namespace
+    ol
+        li 템플릿에서 선언된 변수(매크로, 함수 포함)들에 대한 유니크한 이름과의 매핑
+        li import : include와는 다르게, 템플릿 네임스페이스에 대한 접근을 가능하게 하는 해시를 생성한다.
+        p
+            | import된 템플릿의 네임스페이스는 템플릿의 path로 구분되며, 같은 path로 여러 번 import 하더라도 같은 해시를 갖게 된다.
+            +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[95, 100]') Java »
+            +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_011_footer.ftl', 'xml') 라이브러리 ftl »
+            +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_011_main.ftl', 'xml', '[1,5,7,10]') 메인 ftl + 결과 »
+        li auto import : 메인 템플릿(다른 곳에서 include/import되지 않는 top-level 템플릿)에 자동으로 import
+            +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[102, 109]') Java »
+            +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_012_footer.ftl', 'xml') 라이브러리 ftl »
+            +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_012_main.ftl', 'xml', '[1, 3, 6, 8]') 메인 ftl + 결과 »
+
+    h1 공백 처리
+    ol
+        p 템플릿 처리 후 불필요한 공백이 많이 발생하기 때문에, 이를 다루는 방법을 몇 가지 제공한다.
+        li 설정 변경
+        +asCode('java') Configuration#setWhitespaceStripping()
+        li Directive 사용
+        p compress directive는 템플릿 처리 결과를 직접 가공한다. single_line 매개변수에 true를 보내면 결과를 한 줄로 요약한다.

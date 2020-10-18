@@ -1,0 +1,63 @@
+include ../../source/skeleton.pug
+
++post('SDKMAN', 'SDKMAN', 'SDKMAN 설치, 사용법 정리')
+    h1 SDKMAN?
+    p SDKMAN은 SDK 관리자로서, 여러 버전의 동일 SDK를 병렬로 설치하고 특정 버전을 골라 사용할 수 있게 해준다.
+    
+    h1 설치
+    ol
+        li 자동설치
+        +asCode('shell') $ curl -s "https://get.sdkman.io" | bash
+        li 스크린 안내대로 나머지 설치 진행
+        +asCode('shell') $ source "/root/.sdkman/bin/sdkman-init.sh"
+        li 모든 유저가 SDKMAN을 사용할 수 있게 설치
+        ol
+            li 사용자 디렉터리가 아닌 곳에 설치
+            +asCode('shell') $ export SDKMAN_DIR="/usr/local/sdkman" && curl -s "https://get.sdkman.io" | bash
+            li sdkman-init.sh 실행에 필요한 권한 부여
+            +asCode('shell').
+                $ chmod -R +x /usr/local/sdkman/bin/
+                $ chmod -R +x /usr/local/sdkman/src/
+            li 사용자 로그인 시 자동으로 sdkman-init.sh 실행하도록 설정
+            +asCode('shell', '.bashrc').
+                #...
+                #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+                cd ~
+                export SDKMAN_DIR="/usr/local/sdkman"
+                [[ -s "/usr/local/sdkman/bin/sdkman-init.sh" ]] && source "/usr/local/sdkman/bin/sdkman-init.sh"
+                cd ~
+            li 환경변수 설정(예. JAVA)
+            +asCode('shell', '.bash_profile').
+                export JAVA_HOME '$SDKMAN_DIR/candidates/java/current'
+                export JDK_HOME '$JAVA_HOME/bin'
+
+
+    h1 sdk help
+    +asCode('shell').
+        Usage: sdk &lt;command> [candidate] [version]
+               sdk offline &lt;enable|disable>
+        
+            candidate  :  설치할 SDK; groovy, scala, grails, gradle, kotlin, ...
+            version    :  지정하지 않으면 가장 최근 안정 버전
+            local-path :  설치 위치 지정(옵션)
+
+            commands:
+               install   or i    &lt;candidate> [version] [local-path]
+               uninstall or rm   &lt;candidate> &lt;version>
+               list      or ls   [candidate]                        # 설치 가능 목록
+               update                                               # 설치 가능 목록 갱신
+               upgrade   or ug   [candidate]                        # 최신이 아닌 SDK 목록
+               broadcast or b                                       # 최근 갱신된 SDK 목록
+               
+               use       or u    &lt;candidate> &lt;version>              # 현재 터미널에서 사용할 SDK 버전 지정
+               default   or d    &lt;candidate> [version]              # SDK 기본 버전 지정
+               current   or c    [candidate]                        # 지정된 SDK 버전 목록
+               
+               home      or h    &lt;candidate> &lt;version>              # SDK에 대한 홈 디렉터리 설정
+                                                                    # 현재 터미널에서 .sdkmanrc 파일의 설정 사용
+               env       or e    [init]                             # init : 디렉터리에 .sdkmanrc 파일 생성
+               
+               selfupdate        [force]                            # force : SDKMAN 재설치
+               flush             &lt;broadcast|archives|temp>          # SDKMAN 캐시 정리
+        
+

@@ -1,0 +1,32 @@
+include ../../source/skeleton.pug
++post('DB, Cache Index', '', '')
+    table.marker
+        caption DB, Cache Index
+        +ths('내용', '링크')
+        tr
+            td DB 공통 개념
+            td: +asA('/posts/db/concept.html')
+        tr
+            td PostgreSQL 시작하기
+            td: +asA('/posts/db/psql_tutorial.html')
+        tr
+            td PostgreSQL SQL 언어
+            td: +asA('/posts/db/psql_sql.html')
+        tr
+            td PostgreSQL 서버 프로그래밍
+            td: +asA('/posts/db/psql_programming.html')
+        tr
+            td PostgreSQL 서버 관리
+            td: +asA('/posts/db/psql_admin.html')
+        tr
+            td PostgreSQL → SQLite3 마이그레이션
+            td: +asA('/posts/db/psql_to_sqlite.html')
+        tr
+            td MySQL
+            td: +asA('/posts/db/mysql.html')
+        tr
+            td MongoDB
+            td: +asA('/posts/db/mongodb.html')
+        tr
+            td Redis
+            td: +asA('/posts/single/redis.html')

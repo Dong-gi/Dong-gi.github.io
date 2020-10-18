@@ -1,0 +1,112 @@
+include ../../source/skeleton.pug
++post('JVM 옵션 및 성능 관련사항', 'JVM, Java Performance', 'JVM 옵션 및 성능 관련사항 정리')
+    h1 JVM 파라미터
+    ol
+        li Boolean flag
+        +asCode('shell').
+            XX:+FlagName
+            XX:-FlagName
+        
+        li Value flag
+        +asCode('shell') -XX:FlagName=value
+    div
+        h2 주요 플래그
+        ul
+            li 최대 코드 캐시 크기 : 기본값 32 or 48M
+            +asCode('shell') -XX:ReservedCodeCacheSize=N
+            li 힙 전체 크기
+            +asCode('shell').
+                -XmsN # 초기값
+                -XmxN # 최대값
+            li 힙 = Young Generation + Old Generation
+            p Young Generation이 큰 경우 : 덜 자주 수집되고, 더 적은 객체가 Old Generation으로 이동. 대신 Old Generation이 작아 풀 GC는 더 자주 일어난다
+            ul
+                li Young Generation
+                ol
+                    li Eden Space : 최초 객체 생성
+                    li Survivor Space : Eden에서 수집 제외
+                    p From, To 두 단계로 구분되며, 이후 Tenured로 이동
+                li Tenured : Survivor에서 수집 제외
+                li Permanent Generation
+                ul
+                    li 객체 GC 대상이 아닌 영역으로, PermGen이라고도 한다.
+                    li 클래스 정의, String 상수 등 불변 객체들을 갖는다.
+                    li Java 8에서 Metaspace로 변경됐다
+                    p 크기 한계(MaxMetaspaceSize)에 도달하면 dead class 정보는 삭제된다
+            +asCode('shell').
+                -XX:NewSize=N       # Young Generation 초기 크기
+                -XX:MaxNewSize=N    # Young Generation 최대 크기
+                -XmnN               # NewSize, MaxNewSize 동일하게 설정
+                -XX:NewRatio=N      # (Young Generation 초기 크기) = (힙 초기 크기) / (1 + NewRatio)
+                -XX:SurvivorRatio=N # (Young Generation 크기) = N * (Survivor Space 크기)
+
+                -XX:+HeapDumpOnOutOfMemoryError # 메모리 부족시 힙 덤프 생성
+                -XX:HeapDumpPath={path}         # 힙 덤프 작성 위치
+                -XX:+HeapDumpBeforeFullGC       # 풀 GC 전에 힙 덤프 생성
+                -XX:+HeapDumpAfterFullGC        # 풀 GC 후에 힙 덤프 생성
+                -XX:GCHeapFreeLimit=N           # 풀 GC로 힙의 N% 이상 해제되면 OK
+
+            li GC 병렬 스레드 개수
+            +asCode('shell') -XX:ParallelGCThreads=N
+    
+    h1 Java 옵션(JAVA_OPTS)
+    ol
+        li user.timezone 프로퍼티 기본값 지정
+        +asCode('shell') $ java -Duser.timezone=Asia/Seoul
+        li 인코딩 관련 설정
+        +asCode('shell') $ java -Dfile.encoding=UTF-8 -Dfile.client.encoding=UTF-8 -Dclient.encoding.override=UTF-8
+        li 리모트 디버깅 설정
+        ul
+            li 링크 : 
+                +asA('https://stackoverflow.com/a/22631355', 'StackOverflow answer')
+                +asA('https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/introclientissues005.html', 'Java technote')
+        +asCode('shell').
+            # Before JDK 1.4
+            $ java -Xnoagent -Djava.compiler=NONE -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=6006
+            # For JDK 1.4
+            $ java -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=*:54433,server=y,suspend=n
+                # address : 수신 허용 범위
+                # server  : 서버로 작동할지 여부
+                # suspend : 디버거 부착까지 기다릴지 여부
+            # After JDK 1.4
+            $ java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=6006
+    
+    h1 jcmd Since Java 8
+    p JDK 기본제공 분석 도구
+    ol
+        li 자바 프로세스 목록
+        +asCode('shell') $ jcmd
+        li 사용 가능 명령
+        +asCode('shell') $ jcmd {pid} help
+        li 힙 히스토그램
+        +asCode('shell') $ jcmd {pid} GC.class_histogram
+        li 힙 덤프
+        +asCode('shell') $ jcmd {pid} GC.heap_dump ./out.hprof
+        li 시스템 프로퍼티
+        +asCode('shell') $ jcmd {pid} VM.system_properties
+        li 쓰레드 덤프
+        +asCode('shell') $ jcmd {pid} Thread.print
+    
+    h1 jhsdb Since Java 9
+    p
+        | JDK 기본제공 디버거; Java Hotspot Debugger
+        +asA('https://docs.oracle.com/javase/9/tools/jhsdb.htm')
+    ol
+        li JVM에 디버거 부착 시 실행이 일시중지됨에 유의
+        li 사용
+        +asCode('shell').
+            # clhsdb 커맨드라인 디버거
+            $ jhsdb clhsdb [--pid pid | --exe executable --core coredump]
+            
+            # hsdb GUI 디버거
+            $ jhsdb hsdb [--pid pid | --exe executable --core coredump]
+            
+            # debugd 리모트 디버그 서버 시작
+            $ jhsdb debugd [options] pid [server-id]|[option] executable core [server-id]
+    
+    h1 기타
+    ul
+        li
+            | OpenJDK Tool 
+            +asA('http://openjdk.java.net/projects/code-tools/')
+        li 컴퓨터의 엔트로피를 이용하는 SecureRandom, SSL연결은 엔트로피를 사용할 수 있을 때까지 대기하므로 성능 테스트시 유의해야 한다
