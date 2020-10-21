@@ -279,17 +279,13 @@ Repositories/Eclipse/Basic/jni/Test.java
 Repositories/Eclipse/Basic/jni/test.c
 Repositories/Eclipse/Basic/src/io/github/donggi/AnonymousClass.java
 Repositories/Eclipse/Basic/src/io/github/donggi/ClassExample.java
-Repositories/Eclipse/Basic/src/io/github/donggi/Comment.java
 Repositories/Eclipse/Basic/src/io/github/donggi/EnumExample.java
 Repositories/Eclipse/Basic/src/io/github/donggi/ExceptionExample.java
 Repositories/Eclipse/Basic/src/io/github/donggi/FoldTest.java
 Repositories/Eclipse/Basic/src/io/github/donggi/Generic.java
 Repositories/Eclipse/Basic/src/io/github/donggi/Generic2.java
 Repositories/Eclipse/Basic/src/io/github/donggi/HangulUtility.java
-Repositories/Eclipse/Basic/src/io/github/donggi/HelloWorld.java
-Repositories/Eclipse/Basic/src/io/github/donggi/Identifier.java
 Repositories/Eclipse/Basic/src/io/github/donggi/Interface.java
-Repositories/Eclipse/Basic/src/io/github/donggi/JUnitExample.java
 Repositories/Eclipse/Basic/src/io/github/donggi/Lambda.java
 Repositories/Eclipse/Basic/src/io/github/donggi/Lambda2.java
 Repositories/Eclipse/Basic/src/io/github/donggi/Nested.java
@@ -299,10 +295,6 @@ Repositories/Eclipse/Basic/src/io/github/donggi/OptionalExample.java
 Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java
 Repositories/Eclipse/Basic/src/io/github/donggi/StreamExample.java
 Repositories/Eclipse/Basic/src/io/github/donggi/SwitchExpression.java
-Repositories/Eclipse/Basic/src/io/github/donggi/Syntax.java
-Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java
-Repositories/Eclipse/Basic/src/io/github/donggi/TypeExample.java
-Repositories/Eclipse/Basic/src/io/github/donggi/VarArgs.java
 Repositories/Eclipse/FreeMarker/.classpath
 Repositories/Eclipse/FreeMarker/.project
 Repositories/Eclipse/FreeMarker/resource/template/t_001_hello_world.ftl
@@ -594,6 +586,16 @@ Repositories/Eclipse/spring-transaction/pom.xml
 Repositories/Eclipse/spring-transaction/src/main/java/io/github/donggi/service/NameService.java
 Repositories/Eclipse/spring-transaction/src/main/resources/applicationContext.xml
 Repositories/Eclipse/spring-transaction/src/test/java/Test.java
+Repositories/Gradle/JUnit-Example/.gitattributes
+Repositories/Gradle/JUnit-Example/.gitignore
+Repositories/Gradle/JUnit-Example/build.gradle
+Repositories/Gradle/JUnit-Example/gradle/wrapper/gradle-wrapper.jar
+Repositories/Gradle/JUnit-Example/gradle/wrapper/gradle-wrapper.properties
+Repositories/Gradle/JUnit-Example/gradlew
+Repositories/Gradle/JUnit-Example/gradlew.bat
+Repositories/Gradle/JUnit-Example/settings.gradle
+Repositories/Gradle/JUnit-Example/src/main/java/x/App.java
+Repositories/Gradle/JUnit-Example/src/test/java/x/AppTest.java
 Repositories/Gradle/project-00/.gitattributes
 Repositories/Gradle/project-00/.gitignore
 Repositories/Gradle/project-00/.project
@@ -1773,6 +1775,19 @@ Repositories/Single/koreatech/Main1057.java
 Repositories/Single/koreatech/Main1058.java
 Repositories/Single/koreatech/Main1060.java
 Repositories/Single/koreatech/Main1095.java
+Repositories/Single/tutorial/ArrayExample.java
+Repositories/Single/tutorial/BooleanExample.java
+Repositories/Single/tutorial/CharExample.java
+Repositories/Single/tutorial/Comment.java
+Repositories/Single/tutorial/EnhancedFor.java
+Repositories/Single/tutorial/HelloWorld.java
+Repositories/Single/tutorial/Identifier.java
+Repositories/Single/tutorial/LabelFor.java
+Repositories/Single/tutorial/NumberExample.java
+Repositories/Single/tutorial/StringExample.java
+Repositories/Single/tutorial/Switch.java
+Repositories/Single/tutorial/TryWithResource.java
+Repositories/Single/tutorial/VarArgs.java
 Repositories/Unity/Project 1/Assembly-CSharp.csproj
 Repositories/Unity/Project 1/Assets/EmptyObject.cs
 Repositories/Unity/Project 1/Assets/EmptyObject.cs.meta
@@ -2053,7 +2068,6 @@ index.html
 index.pug
 posts.pug/algorithm/ai.pug
 posts.pug/algorithm/algo.pug
-posts.pug/algorithm/book01.pug
 posts.pug/algorithm/koreatech/1003.pug
 posts.pug/algorithm/koreatech/1008.pug
 posts.pug/algorithm/koreatech/1010.pug
@@ -2116,7 +2130,6 @@ posts.pug/java/jpa.pug
 posts.pug/java/logback.pug
 posts.pug/java/lombok.pug
 posts.pug/java/netty.pug
-posts.pug/java/oop.pug
 posts.pug/java/performance.pug
 posts.pug/java/spring_framework.pug
 posts.pug/java/version.pug

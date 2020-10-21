@@ -1,6 +1,4 @@
-package io.github.donggi;
-
-public class TryWithResources {
+public class TryWithResource {
     static class MyAutoCloseable implements AutoCloseable {
         @Override
         public void close() {
@@ -17,14 +15,16 @@ public class TryWithResources {
         }
 
         // 자바 1.7
-        try (MyAutoCloseable in = new MyAutoCloseable()) {}
+        try (MyAutoCloseable in = new MyAutoCloseable()) {
+        }
 
         // 자바 9
         MyAutoCloseable my2 = new MyAutoCloseable();
-        try (my2; MyAutoCloseable my3 = new MyAutoCloseable()) {}
+        try (my2; MyAutoCloseable my3 = new MyAutoCloseable()) {
+        }
 
         // 자바 10
-        try (var my3 = new MyAutoCloseable()) {}
+        try (var my3 = new MyAutoCloseable()) {
+        }
     }
-
 }
