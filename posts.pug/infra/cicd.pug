@@ -1,0 +1,73 @@
+include ../../source/skeleton.pug
++post('CI/CD', 'CI, CD', 'CI/CD 정리')
+    h1 GitHub Action + AWS Auto Scaling
+    ol
+        li 기준 AMI 생성
+        p 모든 구성이 완료된 EC2 인스턴스로부터 이미지 생성
+        li AMI를 이용하는 launch template 생성
+        li Launch template으로 인스턴스 생성 시 CodeDeploy 실행하도록 User data 설정
+        +asCode('shell').
+            #!/bin/bash
+            aws configure set default.region ${xxx}
+            aws deploy create-deployment --application-name ${xxx} --deployment-config-name ${xxx} --deployment-group-name ${xxx} --s3-location bucket=${bucket_name},bundleType=zip,key=${s3_object_key}
+        li Launch template - User data 에서 사용할 CodeDeploy 생성
+        li 빌드를 zip으로 S3에 올리고 CodeDeploy를 실행하도록 GitHub Action 구성
+        p 구성 편의를 위해 S3 key는 상수 이용
+        +asCode('yaml').
+            name: Prod Deployment
+            env:
+              PROJECT_NAME: prod_deploy
+              AWS_BUCKET_NAME: ${{secrets.S3_DEPLOY_BUCKET_NAME}}
+
+            on:
+              push:
+                branches: [ prod ]
+              workflow_dispatch:
+                inputs:
+                  check_out_hash:
+                    description: 'Commit Hash'
+                    required: true
+
+            jobs:
+              build:
+                runs-on: ubuntu-latest
+
+                steps:
+                - name: Checkout
+                  uses: actions/checkout@v2
+                  with:
+                    ref: ${{ github.event.inputs.check_out_hash }}
+
+                - name: Make properties file with secrets
+                  run: bash create_prod_properties.sh ${{secrets.PASSWORD}} $GITHUB_SHA
+
+                - uses: actions/cache@v2
+                  with:
+                    path: |
+                      ~/.gradle/caches
+                      ~/.gradle/wrapper
+                    key: ${{ runner.os }}-gradle-$PROJECT_NAME-${{ hashFiles('**/*.gradle*') }}
+                    restore-keys: |
+                      ${{ runner.os }}-gradle-$PROJECT_NAME-
+
+                - name: Build bootJar
+                  run: bash ./gradlew bootJar
+
+                - name: Make zip file
+                  run: zip -j ./app.zip ./appspec.yml ./build/libs/app.jar
+                  shell: bash
+
+                - name: Configure AWS credentials
+                  uses: aws-actions/configure-aws-credentials@v1
+                  with:
+                    aws-access-key-id: ${{secrets.S3_DEPLOY_ACCESS_KEY}}
+                    aws-secret-access-key: ${{secrets.S3_DEPLOY_SECRET_KEY}}
+                    aws-region: us-east-2
+
+                - name: Upload to S3
+                  run: aws s3 cp --region us-east-2 ./app.zip s3://$AWS_BUCKET_NAME/$PROJECT_NAME/app.zip
+
+                - name: Code Deploy
+                  run: aws deploy create-deployment --application-name xxx --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name xxx --s3-location bucket=$AWS_BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/app.zip
+
+        li Launch template을 이용하는 auto scaling group 생성

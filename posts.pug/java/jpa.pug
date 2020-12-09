@@ -904,6 +904,14 @@ include ../../source/skeleton.pug
         +asCode('java').
             @Query("select new io.github.donggi.jpa.entity.GachaOdds$Minimal(id.seqNo, objectId, odd) from jpa_gacha_odds where id.gachaId = :gachaId")
             public List&lt;GachaOdds.Minimal> findMinimalOdds(@Param("gachaId") Long gachaId);
+
+            // + SpEL
+            @Modifying
+            @Transactional
+            @Query(value = "insert into match_info (accouunt_id, friend_id, match_id) values (:#{#me.key.myID}, :#{#me.key.frID}, :#{#me.matchID}), (:#{#fr.key.myID}, :#{#fr.key.frID}, :#{#fr.matchID})", nativeQuery = true)
+            public void createNewMatch(@Param("me") MatchInfo me, @Param("fr") MatchInfo fr);
+
+
         h2 페이징
         ul
             li Pageable

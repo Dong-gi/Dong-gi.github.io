@@ -51,6 +51,7 @@ const posts = {list: [
     { category: 'Infra',               file: '/posts/single/rpi.html',                          title: 'Raspberry Pi 3 + OpenCV(python)' },
     { category: 'Infra',               file: '/posts/single/sdkman.html',                       title: 'SDKMAN; The Software Development Kit Manager' },
     { category: 'Infra',               file: '/posts/single/tomcat.html',                       title: 'tomcat' },
+    { category: 'Infra',               file: '/posts/infra/cicd.html',                          title: 'CI/CD' },
     { category: 'Infra/DB',            file: '/posts/db/concept.html',                          title: '1 DB 기초' },
     { category: 'Infra/DB',            file: '/posts/db/psql_tutorial.html',                    title: '2-1 PostgreSQL 시작하기' },
     { category: 'Infra/DB',            file: '/posts/db/psql_sql.html',                         title: '2-2 PostgreSQL SQL 언어' },

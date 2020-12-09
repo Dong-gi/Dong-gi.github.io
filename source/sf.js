@@ -1033,8 +1033,8 @@ class SFUtil {
         node.onmousedown = (div => function (e) {
             document.querySelectorAll('.sf-input-selection').forEach((node, idx, nodeList) => node.style.display = 'none')
             div.style.display = 'block'
-            div.style.top = e.pageY
-            div.style.left = e.pageX
+            div.style.top = e.pageY + 'px'
+            div.style.left = e.pageX + 'px'
             div.style.maxWidth = window.innerWidth - e.clientX;
             div.style.maxHeight = window.innerHeight - e.clientY;
             div.style.overflow = 'auto';

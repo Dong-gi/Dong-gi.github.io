@@ -116,7 +116,13 @@ include ../../source/skeleton.pug
         +asA('https://serverfault.com/questions/361416/increasing-the-number-of-outbound-tcp-connections')
         +asCode('properties', '/etc/security/limits.conf 수정 예').
             # soft &lt;= hard
-            * soft nofile 50000
-            * hard nofile 50000
-            &lt;user> soft nofile 50000
-            &lt;user> hard nofile 50000
+            * soft nofile 500000
+            * hard nofile 500000
+            &lt;user> soft nofile 500000
+            &lt;user> hard nofile 500000
+        ul
+            li RHEL 7 기준, limis.conf 적용 후 /etc/security/limits.d/20-nproc.conf의 설정으로 값이 변경될 수 있으니, 같이 수정 필요하다고 함.
+            li 별개로 전체 시스템의 파일 수 제한도 확인
+            +asCode('bash') sysctl fs.file-max
+            li 시스템 backlog 조정 // 웹서버에서 별도로 설정이 필요할 수 있음
+            +asCode('bash') sysctl -w net.core.netdev_max_backlog="2048"
