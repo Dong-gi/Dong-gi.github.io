@@ -1,5 +1,14 @@
 include ../../source/skeleton.pug
 +post('CI/CD', 'CI, CD', 'CI/CD 정리')
+    h1 TeamCity
+    div
+        h2 Concepts
+        ul
+            li TeamCity Server
+            p 연결된 build agent들을 관리. 큐잉된 빌드 작업들을 agent에 분배. 빌드 결과들은 DB(기본 내장 but 외부 서버 설정 권장)에 저장된다
+            li Build Agent
+            p 실제 빌드 절차를 실행하는 프로그램.
+
     h1 GitHub Action + AWS Auto Scaling
     ol
         li 기준 AMI 생성
