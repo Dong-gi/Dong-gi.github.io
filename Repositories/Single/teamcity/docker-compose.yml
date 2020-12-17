@@ -1,0 +1,17 @@
+version: "3.0"
+
+services:
+  server:
+    image: jetbrains/teamcity-server
+    ports:
+      - 18111:8111
+    volumes:
+      - ./data:/data/teamcity_server/datadir
+      - ./logs:/opt/teamcity/logs
+
+  worker:
+    image: jetbrains/teamcity-agent
+    environment:
+      SERVER_URL: server:18111
+    volumes:
+      - ./config:/data/teamcity_agent/conf
