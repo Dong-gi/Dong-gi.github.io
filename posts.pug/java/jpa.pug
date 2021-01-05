@@ -908,7 +908,7 @@ include ../../source/skeleton.pug
             // + SpEL
             @Modifying
             @Transactional
-            @Query(value = "insert into match_info (accouunt_id, friend_id, match_id) values (:#{#me.key.myID}, :#{#me.key.frID}, :#{#me.matchID}), (:#{#fr.key.myID}, :#{#fr.key.frID}, :#{#fr.matchID})", nativeQuery = true)
+            @Query(value = "insert into match_info (accouunt_id, friend_id, match_id) values (:&#x23;{&#x23;me.key.myID}, :&#x23;{&#x23;me.key.frID}, :&#x23;{&#x23;me.matchID}), (:&#x23;{&#x23;fr.key.myID}, :&#x23;{&#x23;fr.key.frID}, :&#x23;{&#x23;fr.matchID})", nativeQuery = true)
             public void createNewMatch(@Param("me") MatchInfo me, @Param("fr") MatchInfo fr);
 
 
