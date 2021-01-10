@@ -24,8 +24,7 @@ include ../../source/skeleton.pug
         li -P : 시스템 종료 + 전원 차단(하드웨어 지원 필요)
         li -r : 재부팅
         li -c : 대기중인 shutdown 취소
-        li
-            | time : now | +
+        li time : now | +
             i number
             |  | yymmddhhmm
         p +number 단위(기본: 분)를 지정하려면 접미사 "s", "sec", "m", "min", "h", "hour" 이용
@@ -43,29 +42,29 @@ include ../../source/skeleton.pug
         li useradd : 사용자 추가
         +asCode('shell') $ useradd [options] USER_NAME
         p -d(HOME_DIR), -g(group id or name), -p(password), -D(기본값 출력/설정), 등...
-        
+
         li passwd : 비밀번호 설정
         +asCode('shell') $ passwd [options] USER_NAME
         p -d(삭제), -l(잠금), -u(잠금 해제), -e(강제 만료)
-        
+
         li usermod : 사용자 수정
         +asCode('shell') $ usermod [options] USER_NAME
         p -d(HOME_DIR), -m(HOME_DIR 변경 시 파일 이동), -L(잠금), -p(password), 등...
-        
+
         li userdel : 사용자 삭제
         +asCode('shell') $ userdel [options] USER_NAME
-        
+
         li groupadd : 사용자 그룹 추가
         +asCode('shell') $ groupadd [options] GROUP_NAME
         p -g(수동 GID), -p(password)
-        
+
         li groupdel : 사용자 그룹 삭제
         +asCode('shell') $ groupdel [options] GROUP_NAME
-        
+
         li su : 다른 사용자 권한 사용
         +asCode('shell') $ su [options] [-] [USER_NAME [arg]...]
         p 다른 사용자의 권한으로 쉘을 실행한다. USER_NAME이 없으면 root로 간주한다. 단순히 '-'만 있으면 '-l'과 동일하다.
-        
+
         li 사용자 목록 : /etc/passwd
         +asCode().
             ID:Password(x):UID:GID:Comment:HOME_DIR:SHELL
@@ -87,19 +86,19 @@ include ../../source/skeleton.pug
             +tds('/media', '이동식 디스크')
             +tds('/usr', '응용프로그램')
             +tds('/var', '자주 변경')
-        
+
         li I-node
         p 파일의 이름을 제외한 모든 정보. ID는 각 파일에 고유하게 부여된다
-        
+
         li pwd : 작업 디렉터리 절대경로 출력. Print working directory
         +asCode('shell') $ pwd
-        
+
         li cd : 작업 디렉터리 변경
         +asCode('shell').
             $ cd            # 자신의 HOME_DIR로
             $ cd DIR        # 지정 디렉터리로
             $ cd ~USER_NAME # 유저 HOME_DIR로
-        
+
         li ls : 파일 목록 출력
         +asCode('shell') $ ls [options] [paths]
         ul
@@ -110,11 +109,11 @@ include ../../source/skeleton.pug
                 d rwx r-x r-x # 디렉터리, 소유자 권한, 그룹 권한, 기타 사용자 권한 755(read, write, execute)
                 - rw- r-- r-- # 파일, (상동) 644
                 l r-- r-- r-- # 링크, (상동) 444
-        
+
         li mkdir : 디렉터리 생성
         +asCode('shell') $ mkdir [options] [directories]
         p -m(권한, 기본 755), -p(경로상의 모든 디렉터리 생성)
-        
+
         li rm : 파일 삭제
         +asCode('shell') $ rm [options] [paths]
         ul
@@ -122,11 +121,11 @@ include ../../source/skeleton.pug
             p -f(파일이 없으면 무시), -i(각 파일 삭제 확인), -r(재귀 실행), 등...
             li 예. my_dir 디렉터리 및 내부 파일 모두 삭제
             +asCode('shell') $ rm -rf ./my_dir
-        
+
         li touch : 파일 시각 변경
         +asCode('shell') $ touch [options] [files]
         p 각 파일에 대해 시간 정보를 현재 시각으로 변경한다. 파일이 없으면 생성한다(크기 0).
-        
+
         li 파일 권한 변경
         +asCode('shell').
             $ chmod [options] 8진수 [paths]
@@ -140,33 +139,32 @@ include ../../source/skeleton.pug
 
             # 예. tmp/ 디렉터리 하위 전체 소유 그룹 변경
             $ chgrp -R readonly ./tmp/
-        
+
         li cp : 파일 복사
         +asCode('shell').
             $ cp [options] source dest_path
             $ cp [options] [sources] [target_directory]
         p -a(파일 속성 유지), -b(목적지에 이미 있으면 백업하고 복사), -r(재귀 실행), -s(심볼릭 링크 생성), 등...
-        
+
         li mv : cp + 원본 삭제
-        
+
         li cat : 파일 텍스트 출력
         +asCode('shell') $ cat [options] [files]
         p -n(줄 번호), -E(줄 끝에 $), -s(반복적인 빈 라인 생략), -T(탭을 ^T로 표기)
-        
+
         li find
         p 파일명 표현에 와일드카드 *, ?가 허용된다. 표현식 앞에 !이나 -not을 붙일 수 있다. 표현식들 사이를 -and, -or로 엮을 수 있다.
-        
+
         li grep : 텍스트 검색
         +asCode('shell') $ grep [options] pattern [files]
         p -E(ERE), -G(BRE), -P(Perl Regexp), -e(정규표현식), -i(ignore case), -w(패턴에 단어 전체가 매칭되는 경우만), -x(패턴에 줄 전체가 매칭되는 경우만), -m(최대 출력 개수), -n(줄 번호 같이 출력), -o(매칭된 부분만 출력), -l(매칭된 파일들의 이름만 출력), -L(매칭되지 않는 파일들의 이름만 출력), -A(매칭 후 n개 라인도 출력), -B(매칭 전 n개 라인도 출력) 등...
-        
+
         li | : 파이프라인
         p 프로세스들의 출력과 입력을 잇는 파이프라인을 구성한다.
         +asCode('shell') $ history | grep psql
-        
+
         li 리다이렉션
-        p
-            | > : 파일이 없다면 생성하고, 있다면 덮어쓴다
+        p > : 파일이 없다면 생성하고, 있다면 덮어쓴다
             br
             | >> : 파일이 없다면 생성하고, 있다면 append
             br
@@ -175,8 +173,7 @@ include ../../source/skeleton.pug
         +asCode('shell').
             $ tar [options] file       # 압축해제
             $ tar [options] file paths # 압축
-        p
-            | Main Operation : -A(append), -r(append), -c(create), -d(파일 시스템과의 차분 출력), -t(목록 출력), -u(update), -x(압축해제)
+        p Main Operation : -A(append), -r(append), -c(create), -d(파일 시스템과의 차분 출력), -t(목록 출력), -u(update), -x(압축해제)
             br
             | 포맷 : --bzip2, --xz, --lzip, --lzma, --gzip
             br
@@ -228,8 +225,7 @@ include ../../source/skeleton.pug
         +asCode('shell') $ rpm [options]
         p -a(전체 패키지 검증), -i(install), -U(설치 또는 upgrade), -F(기존 패키지 upgrade), -v(verbose), -h(진행과정을 #로), -e(erase), -qa(설치된 패키지 목록), -qi(패키지 상세 정보) 등...
         li yum
-        p
-            | 인터넷 저장소로부터 패키지를 다운로드하여 설치. 의존 패키지까지 자동 설치한다.
+        p 인터넷 저장소로부터 패키지를 다운로드하여 설치. 의존 패키지까지 자동 설치한다.
             br
             | Commands : clean(캐시 삭제), check-update, downgrade, erase, info, install, list, reinstall, search, update, version, 등...
 
@@ -249,10 +245,10 @@ include ../../source/skeleton.pug
         +asCode('shell').
             $ date                # 현재 시각 출력
             $ date "+%Y-%m-%d %T" # 포맷 지정
-            
+
             $ date -s time_string # 시각 변경
             $ date -s "2019-01-01 12:34:56"
-        
+
         li
             +asA('https://nxmnpg.lemoda.net/8/ntpdate', 'ntpdate')
             |  : 시각 동기화
@@ -277,19 +273,18 @@ include ../../source/skeleton.pug
     ol
         li ps : 프로세스 출력. Process Snapshot
         +asCode('shell') $ ps -ef # -e(전체 프로세스), -f(full-format)
-        
+
         li kill : 프로세스 종료
         +asCode('shell') $ kill -9 pid # -9(강제종료)
-        
+
         li top : 실행 중인 작업 보기.
-        
+
         li 백그라운드 작업
         ul
             li Ctrl + Z : 현재 프로세스를 백그라운드로 전환하고 suspend
             li bg : 백그라운드 job으로 계속 실행 ↔ fg
             li jobs : 백그라운드 job 리스트
-            p
-                | 명령행 끝에 &를 붙이면 즉시 백그라운드 job으로 실행시킬 수 있다
+            p 명령행 끝에 &를 붙이면 즉시 백그라운드 job으로 실행시킬 수 있다
                 br
                 | 현재 터미널 세션이 종료해도 n번 백그라운드 job을 계속하게 하려는 경우 : disown -h %n
             li nohup name.sh > /dev/null 2>&1 &
@@ -303,7 +298,7 @@ include ../../source/skeleton.pug
     ol
         li vmstat : Report virtual memory statistics
         +asCode('shell') $ vmstat 1 # 1초마다 출력
-        
+
         li free : Display amount of free and used memory in the system.
         +asCode('shell').
             $ free -m -w -h -s 1
@@ -336,12 +331,12 @@ include ../../source/skeleton.pug
     ol
         li 설치
         +asCode('shell') $ yum install vsftpd
-        
+
         li 설정 : /etc/vsftpd/vsftpd.conf
         +asCode('ini').
             anonymous_enable=NO # 익명 차단
             listen_ipv6=NO # IPv4 사용
-        
+
         li 방화벽 허용
         +asCode('shell').
             $ firewall-cmd --permanent --add-service=ftp
@@ -349,12 +344,12 @@ include ../../source/skeleton.pug
             $ firewall-cmd --reload
             # ↓ 잘 됐는지 확인
             $ firewall-cmd --zone=public --list-all
-        
+
         li SELinux 관련 정책 확인
         +asCode('shell').
             $ getsebool -a | grep ftp
             $ setsebool ftp_home_dir on # 필요한 권한은 허용
-        
+
         li 시스템 시작
         +asCode('shell').
             $ systemctl enable vsftpd
@@ -362,13 +357,13 @@ include ../../source/skeleton.pug
     ul
         li root 로그인 허용
         p /etc/vsftpd/ftpusers, /etc/vsftpd/user_list에서 root 제거
-        
+
         li 사용자 홈 디렉터리 외부 접근 허용
         p /etc/vsftpd/chroot_list : chroot_list_enable=YES
-        
+
         li Active Mode 사용 : 20포트
         p /etc/vsftpd/vsftpd.conf : pasv_enable=NO
-        
+
         li Passive Mode 사용
         ol
             li /etc/vsftpd/vsftpd.conf
@@ -382,8 +377,7 @@ include ../../source/skeleton.pug
     h1 SELinux
     ol
         li SELinux 모드 : enforce, permissive, disable
-        p
-            | setenforce 1 # enforce로 임시 변경
+        p setenforce 1 # enforce로 임시 변경
             br
             | setenforce 0 # permissive로 임시 변경
             br
@@ -443,8 +437,7 @@ include ../../source/skeleton.pug
             ul
                 li 복사 : Ctrl + Insert
                 li 붙여넣기 : Shift + Insert
-                p
-                    | ~/.vimrc 에서
+                p ~/.vimrc 에서
                     br
                     | set mouse=a 로 되어있던게 문제였습니다. set mouse=c 로 변경하니까 vim 에서 텍스트의 복사하기 붙여넣기 잘 되는군요.
                     br

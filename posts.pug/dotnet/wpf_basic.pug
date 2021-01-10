@@ -30,8 +30,7 @@ include ../../source/skeleton.pug
 
     h1 레이아웃
     ol
-        li
-            | 디자이너도 아니고... 종류만 알아보고 넘어간다.
+        li 디자이너도 아니고... 종류만 알아보고 넘어간다.
             +asA('https://docs.microsoft.com/en-us/dotnet/framework/wpf/advanced/layout', 'MS WPF Docs - Layout »')
         li Canvas : 캔버스 내부의 상대 좌표를 이용해 자식 요소들을 배치한다.
         li DockPanel : Top, Left, Bottom, Right에 자식 요소들을 배치.
@@ -70,8 +69,7 @@ include ../../source/skeleton.pug
         li 명령 바인딩 : System.Windows.Interactivity.WPF 패키지 설치/이용
 
     h1 트리거
-    p
-        | 특정 조건에 따라 스타일을 적용시키는 방법.
+    p 특정 조건에 따라 스타일을 적용시키는 방법.
         +codeBtn('/Repositories/VisualStudio/CSharp/WpfApp5/MainWindow.xaml', 'xml') MainWindow.xaml »
 
     h1 바인딩
@@ -105,8 +103,7 @@ include ../../source/skeleton.pug
             li Resources에 객체 생성 후 참조
             +codeBtn('/Repositories/VisualStudio/CSharp/WpfApp6/MyClock.cs', 'cs')
             +codeBtn('/Repositories/VisualStudio/CSharp/WpfApp6/MainWindow.xaml', 'xml') MainWindow.xaml »
-        li
-            | 코드에서 바인딩 설정
+        li 코드에서 바인딩 설정
             +codeBtn('/Repositories/VisualStudio/CSharp/WpfApp6/MainWindow.xaml.cs', 'cs')
         li IValueConverter : 데이터가 바인딩 소스에서 타깃으로 전달될 때 변환 수행
         +asCode('cs').
@@ -142,6 +139,5 @@ include ../../source/skeleton.pug
             await System.Windows.Application.Current.Dispatcher.BeginInvoke(action);
         +asCode('cs').
             Dispatcher.Invoke(DispatcherPriority.Normal, new WaitCallback(func), parameter)
-        li
-            | DispatcherTimer : 타이머 작업
+        li DispatcherTimer : 타이머 작업
             +codeBtn('/Repositories/VisualStudio/CSharp/WpfApp6/MyClock.cs', 'cs')

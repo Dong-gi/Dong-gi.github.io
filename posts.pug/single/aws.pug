@@ -44,15 +44,13 @@ include ../../source/skeleton.pug
     ol
         li 규모가 작은 경우, API 게이트웨이 + 람다 조합이 더 저렴할 수 있다
         li EC2 인스턴스 생성
-        p
-            | Auto-assign Public IP : Disable // 자동 할당되는 IP는 인스턴스가 시작할 때마다 변경된다
+        p Auto-assign Public IP : Disable // 자동 할당되는 IP는 인스턴스가 시작할 때마다 변경된다
             br
             | Shutdown behavior : Stop // Terminate는 OS 정지 후 EC2 인스턴스 삭제
             br
             | Enable termination protection : 실수로 인스턴스 삭제되는 것을 방지
         li EC2 보안 그룹 설정
-        p
-            | SSH | TCP | 22 | 작업 IP
+        p SSH | TCP | 22 | 작업 IP
             br
             | HTTP | TCP | 80 | 0.0.0.0/0
             br
@@ -62,8 +60,7 @@ include ../../source/skeleton.pug
         li 도메인 연결 : Route 53
         p Create Record Set → Name : FQDN, Type : CNAME - Canon name, Value : EIP
         li EC2 인스턴스 삭제 시
-        p
-            | Enable termination protection 해제 후 Terminate
+        p Enable termination protection 해제 후 Terminate
             br
             | 연결된 EBS, EIP 삭제
 
@@ -77,15 +74,13 @@ include ../../source/skeleton.pug
     h1 서버 다중화
     ol
         li ELB 설정
-        p
-            | ELB는 엔드 유저의 요청을 받아야 하므로 0.0.0.0/0 소스 허용
+        p ELB는 엔드 유저의 요청을 받아야 하므로 0.0.0.0/0 소스 허용
             br
             | EC2 인스턴스 등은 ELB를 거친 연결만 허용하도록 보안 그룹 소스 변경
             br
             | ELB의 로드밸런서 프로토콜을 HTTPS, 인스턴스의 프로토콜을 HTTP로 하면 ELB가 SSL 처리를 모두 담당
         li RDS의 DB 다중화(Master-Standby)
-        p
-            | 관리 콘솔 → RDS 설정 → DB 서브넷 그룹 작성 : 두 AZ 각각에 작성한 서브넷을 그루핑
+        p 관리 콘솔 → RDS 설정 → DB 서브넷 그룹 작성 : 두 AZ 각각에 작성한 서브넷을 그루핑
             br
             | RDS 인스턴스 생성 시 멀티-AZ 옵션으로 DB 서브넷 그룹 지정
             br

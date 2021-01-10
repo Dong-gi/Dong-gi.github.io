@@ -22,19 +22,19 @@ include ../../source/skeleton.pug
             ul
                 li Dependency란?
                 p 객체가 정상적인 작동을 위해 필요로 하는 다른 객체
-                
+
                 li IoC(Inversion of Control), DI(Dependency Injection)란?
                 ul
                     li 객체 인스턴스화, 프로퍼티 설정을 Spring IoC 컨테이너가 대신 해준다.
                     li 의존성을 컨테이너가 주입(DI)한다.
                     li 의존성을 외부에서 설정하므로 제어의 역전(IoC)이 존재한다.
-                
+
                 li Bean이란?
                 p Spring IoC 컨테이너가 관리하는 인스턴스. 그 외 임의 인스턴스를 지칭해도 무방
-                
+
                 li 연관 패키지
                 p org.springframework.beans, org.springframework.context
-                
+
                 li ApplicationContext → BeanFactory 인터페이스
                 ul
                     li BeanFactory : 임의 타입 객체를 관리할 수 있는, DI 관련 최상위 인터페이스.
@@ -93,11 +93,10 @@ include ../../source/skeleton.pug
                     new XmlBeanDefinitionReader(context).loadBeanDefinitions("services.xml", "daos.xml");
                     new GroovyBeanDefinitionReader(context).loadBeanDefinitions("services.groovy", "daos.groovy");
                     context.refresh();
-            
+
             h3 Bean Overview
             table.no-sort
-                caption
-                    | 빈을 정의하는 요소 
+                caption 빈을 정의하는 요소 
                     +asA('https://docs.spring.io/spring/docs/5.3.0-SNAPSHOT/javadoc-api/org/springframework/beans/factory/config/BeanDefinition.html')
                 +tds('Class')
                 +tds('Name')
@@ -139,8 +138,7 @@ include ../../source/skeleton.pug
                         &lt;ref bean="beanName"/>
                     &lt;/constructor-arg>
                 ul
-                    li
-                        | index, type, name은 모호성을 피하기 위해 사용하는 옵션 프로퍼티이며, name을 이용하는 경우 debug 컴파일하거나, 
+                    li index, type, name은 모호성을 피하기 위해 사용하는 옵션 프로퍼티이며, name을 이용하는 경우 debug 컴파일하거나, 
                         +asA('https://docs.oracle.com/javase/8/docs/api/java/beans/ConstructorProperties.html')
                         | 를 이용해 이름을 탐색할 수 있게 해야한다.
                     li constructor-arg를 이용한 생성자 주입 예
@@ -149,13 +147,11 @@ include ../../source/skeleton.pug
                     +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello17Test.java', 'java', [8]) Context
                     li xmlns:c를 이용한 생성자 주입 예
                     ul
-                        li
-                            | 생성자 인자 이름을 알 수 있는 경우 예 : 
+                        li 생성자 인자 이름을 알 수 있는 경우 예 : 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java', [7]) Bean
                             +codeBtn('/Repositories/STS/app2/src/main/resource/Beans26.xml', 'xml') XML
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello17Test2.java', 'java', [8]) Context
-                        li
-                            | 생성자 인자 이름을 알 수 없는 경우 예 : 
+                        li 생성자 인자 이름을 알 수 없는 경우 예 : 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java', [7]) Bean
                             +codeBtn('/Repositories/STS/app2/src/main/resource/Beans32.xml', 'xml') XML
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello17Test4.java', 'java', [8]) Context
@@ -192,16 +188,14 @@ include ../../source/skeleton.pug
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello17Test3.java', 'java', [8]) Context
                     tr
                         td 의존 빈 주입
-                        td
-                            | property, constructor-arg 태그 안에서 이용하는 bean 태그들은 id, name이 필요없으며, 지정해도 무시된다.
+                        td property, constructor-arg 태그 안에서 이용하는 bean 태그들은 id, name이 필요없으며, 지정해도 무시된다.
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java', [5]) Bean1
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java', [7]) Bean2
                             +codeBtn('/Repositories/STS/app2/src/main/resource/Beans7.xml', 'xml') XML
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello4Test3.java', 'java', [8]) Context
                     tr
                         td 의존 컬렉션 주입
-                        td
-                            | 자바 기본 타입 및 String은 문자열로부터 알아서 변환되어 주입된다.
+                        td 자바 기본 타입 및 String은 문자열로부터 알아서 변환되어 주입된다.
                             |  반면 배열, List, Properties, Map 등은 전용 태그를 이용하거나, 다른 팩터리 메서드를 빌려 설정해야 한다.
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello5.java', 'java', [10]) Bean
                             +codeBtn('/Repositories/STS/app2/src/main/resource/Beans8.xml', 'xml') XML
@@ -221,13 +215,11 @@ include ../../source/skeleton.pug
                     tr
                         td parent 속성을 통한 상속
                         td
-                            p
-                                | 값 상속 예 : 
+                            p 값 상속 예 : 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java', [5]) Bean
                                 +codeBtn('/Repositories/STS/app2/src/main/resource/Beans11.xml', 'xml') XML
                                 +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello1Test3.java', 'java', [8]) Context
-                            p
-                                | 컬렉션 상속(merge="true") 예 : 
+                            p 컬렉션 상속(merge="true") 예 : 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello5.java', 'java', [10]) Bean
                                 +codeBtn('/Repositories/STS/app2/src/main/resource/Beans31.xml', 'xml') XML
                                 +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello5Test4.java', 'java', [11]) Context
@@ -268,8 +260,7 @@ include ../../source/skeleton.pug
                         td
                             +pos('depends-on')
                             | depends-on을 이용한 빈 생성 순서 설정
-                        td
-                            | has-a 관계보다 약한 의존 관계에서, depends-on을 이용해 특정 빈이 먼저 생성되도록 강제할 수 있다.
+                        td has-a 관계보다 약한 의존 관계에서, depends-on을 이용해 특정 빈이 먼저 생성되도록 강제할 수 있다.
                             |  양쪽 빈 모두 싱글톤인 경우, 객체 소멸 순서도 정해진다.
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello20.java', 'java', [5]) Bean
                             +codeBtn('/Repositories/STS/app2/src/main/resource/Beans34.xml', 'xml') XML
@@ -295,8 +286,7 @@ include ../../source/skeleton.pug
                     li beans 정의 시 default-autowire-candidates를 이용해 autowire 주입물을 제한할 수 있다
                     +asCode('xml') &lt;beans ... default-autowire-candidates="*Service,*Dao" />
                     li bean 정의 시 primary 속성을 true로 하면, 최우선 autowire 주입물이 된다
-                    li
-                        | 예시 
+                    li 예시 
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello15.java', 'java', [7]) Bean1
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello16.java', 'java', [7]) Bean2
                         +codeBtn('/Repositories/STS/app2/src/main/resource/Beans12.xml', 'xml') XML
@@ -322,8 +312,7 @@ include ../../source/skeleton.pug
                 +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/entity/PerSession.java', 'java', [8]) Bean per Session
                 +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/controller/ScopeController.java', 'java', [27,40,42,55]) Controller
                 li 기본적으로 빈에 주입된 의존 객체는 컨테이너에 의해 다시 설정되지 않는다.
-                p
-                    | 만일 스코프가 더 좁은 빈을 의존하지만 참조 시마다 새로운 인스턴스가 필요한 경우, 해당 메서드를 재정의하거나, aop:scoped-proxy를 이용하면 된다.
+                p 만일 스코프가 더 좁은 빈을 의존하지만 참조 시마다 새로운 인스턴스가 필요한 경우, 해당 메서드를 재정의하거나, aop:scoped-proxy를 이용하면 된다.
                     |  AOP proxy 인스턴스는 직렬화 가능하며, 직렬화 전 참조 객체와 역직렬화 후 참조 객체는 동일하다.
                 p 다른 방법으로 ObjectFactory#getObject(), ObjectProvider(→ ObjectFactory)의 getIfAvailable(), getIfUnique()을 이용할 수도 있다
                 p
@@ -369,51 +358,42 @@ include ../../source/skeleton.pug
             div
                 h4 Lifecycle Callback
                 ul
-                    li
-                        | InitializingBean, DisposableBean 예 
+                    li InitializingBean, DisposableBean 예 
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello2.java', 'java', [8]) Bean
                         +codeBtn('/Repositories/STS/app2/src/main/resource/Beans2.xml', 'xml') XML
                         +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello2Test.java', 'java', [8]) Context
-                    li
-                        | Lifecycle 예 
+                    li Lifecycle 예 
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello29.java', 'java', [8]) Bean
                         +codeBtn('/Repositories/STS/app2/src/main/resource/Beans46.xml', 'xml') XML
                         +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello29Test.java', 'java', [8]) Context
-                    li
-                        | init-method, destroy-method 예 
+                    li init-method, destroy-method 예 
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello3.java', 'java', [5]) Bean
                         +codeBtn('/Repositories/STS/app2/src/main/resource/Beans3.xml', 'xml') XML
                         +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello3Test.java', 'java', [8]) Context
-                    li
-                        | destroy-method로 (inferred)를 설정하면 public close() 또는 shutdown()을 찾아 실행한다 
+                    li destroy-method로 (inferred)를 설정하면 public close() 또는 shutdown()을 찾아 실행한다 
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello23.java', 'java', [5]) Bean
                         +codeBtn('/Repositories/STS/app2/src/main/resource/Beans38.xml', 'xml') XML
                         +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello23Test.java', 'java', [8]) Context
-                    li
-                        | default-init-method, default-destroy-method 예 
+                    li default-init-method, default-destroy-method 예 
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello24.java', 'java', [3]) Bean
                         +codeBtn('/Repositories/STS/app2/src/main/resource/Beans39.xml', 'xml') XML
                         +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello24Test.java', 'java', [8]) Context
-                    li
-                        | JSR-250 : @PostConstruct, @PreDestroy 예 
+                    li JSR-250 : @PostConstruct, @PreDestroy 예 
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno21.java', 'java', [8]) Bean
                         +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno21Test.java', 'java', [8]) Context
                     li 위 설정들은 중복이 가능하며, 서로 다른 메서드들로 설정된 경우 아래 순서대로 실행된다
                     ul
                         li @PostConstruct → InitializingBean → init-method
                         li @PreDestroy → DisposableBean → destroy-method
-                    li
-                        | ConfigurableApplicationContext#registerShutdownHook 예 
+                    li ConfigurableApplicationContext#registerShutdownHook 예 
                         +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello4Test.java', 'java', [9]) Context
                 h4 Aware
                 ul
-                    li
-                        | ApplicationContextAware 인터페이스를 구현한 경우, 빈 생성 후 어떤 컨텍스트가 만들었는지 알 수 있다. 
+                    li ApplicationContextAware 인터페이스를 구현한 경우, 빈 생성 후 어떤 컨텍스트가 만들었는지 알 수 있다. 
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello25.java', 'java', [9]) Bean
                         +codeBtn('/Repositories/STS/app2/src/main/resource/Beans40.xml', 'xml') XML
                         +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello25Test.java', 'java', [8]) Context
-                    li
-                        | BeanNameAware 인터페이스를 구현한 경우, 빈 생성 후 어떤 이름으로 만들었는지 알 수 있다. 
+                    li BeanNameAware 인터페이스를 구현한 경우, 빈 생성 후 어떤 이름으로 만들었는지 알 수 있다. 
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello26.java', 'java', [6]) Bean
                         +codeBtn('/Repositories/STS/app2/src/main/resource/Beans41.xml', 'xml') XML
                         +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello26Test.java', 'java', [8]) Context
@@ -432,8 +412,7 @@ include ../../source/skeleton.pug
             h3 컨테이너 확장
             p ApplicationContext를 직접 상속하지 않고, 여러 인터페이스 구현체를 등록함으로써 기능 확장이 가능하다.
             ul
-                li
-                    | BeanPostProcessor 
+                li BeanPostProcessor 
                     +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello27.java', 'java', [8]) Bean
                     +codeBtn('/Repositories/STS/app2/src/main/resource/Beans42.xml', 'xml') XML
                     +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello27Test.java', 'java', [8]) Context
@@ -442,16 +421,14 @@ include ../../source/skeleton.pug
                 li BeanFactoryPostProcessor
                 p 빈을 생성하기 전에 컨테이너 관련 설정을 변경할 수 있다. 여러 BeanFactoryPostProcessor를 등록하는 경우, order 속성(Ordered 인터페이스)으로 순서를 제어할 수 있다
                 ul
-                    li
-                        | PropertySourcesPlaceholderConfigurer 예 
+                    li PropertySourcesPlaceholderConfigurer 예 
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java', [5]) Bean1
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java', [7]) Bean2
                         +codeBtn('/Repositories/STS/app2/src/main/resource/Beans43.xml', 'xml') XML
                         +codeBtn('/Repositories/STS/app2/src/main/resource/beans43-1.properties', 'properties') properties1
                         +codeBtn('/Repositories/STS/app2/src/main/resource/beans43-2.properties', 'properties') properties2
                         +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello17Test5.java', 'java', [8]) Context
-                    li
-                        | PropertyOverrideConfigurer 예 
+                    li PropertyOverrideConfigurer 예 
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java', [5]) Bean1
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java', [7]) Bean2
                         +codeBtn('/Repositories/STS/app2/src/main/resource/Beans44.xml', 'xml') XML
@@ -459,8 +436,7 @@ include ../../source/skeleton.pug
                         +codeBtn('/Repositories/STS/app2/src/main/resource/beans43-2.properties', 'properties') properties2
                         +codeBtn('/Repositories/STS/app2/src/main/resource/beans44.properties', 'properties') properties3
                         +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello17Test6.java', 'java', [8]) Context
-                li
-                    | FactoryBean 예 
+                li FactoryBean 예 
                     +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello28.java', 'java', [6]) Bean
                     +codeBtn('/Repositories/STS/app2/src/main/resource/Beans45.xml', 'xml') XML
                     +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello28Test.java', 'java', [8]) Context
@@ -469,16 +445,13 @@ include ../../source/skeleton.pug
             h3 Annotation Configuration
             ul
                 li XML Configuration과 같이 이용하는 경우, Annotation 기반 처리가 먼저 이뤄짐에 유의.
-                li
-                    | context:annotation-config 
+                li context:annotation-config 
                     +codeBtn('/Repositories/STS/app2/src/main/resource/anno01.xml', 'xml') XML
                 p ↑ 컨테이너에 등록된 빈에 대하여 애너테이션 처리
-                li
-                    | context:component-scan 
+                li context:component-scan 
                     +codeBtn('/Repositories/STS/app2/src/main/resource/anno02.xml', 'xml') XML
                 p ↑ 기준 패키지의 모든 클래스를 탐색하여 자동으로 빈 등록, DI, 기타 애너테이션 처리
-                li
-                    | XML을 아예 사용하지 않고도 구성 가능하다 
+                li XML을 아예 사용하지 않고도 구성 가능하다 
                     +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno02.java', 'java', [11]) Bean
                     +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno02Test2.java', 'java', [14]) Context
                 li @Autowired, @Inject, @Value, @Resource는 BeanPostProcessor 구현체가 처리하므로, 사용자 정의 BeanPostProcessor 또는 BeanFactoryPostProcessor 클래스 안에서 해당 애너테이션들을 적용할 수 없다. 대신 @Bean을 이용해야 한다.
@@ -495,8 +468,7 @@ include ../../source/skeleton.pug
                         li @Service : Service layer
                         li @Controller : Presentation layer
                         li @Configuration : @Bean 메서드들을 갖는 구성 클래스
-                        p
-                            | @Configuration 클래스 안에서 형제 @Bean 메서드 호출은 의존 관계의 정의를 의미한다 
+                        p @Configuration 클래스 안에서 형제 @Bean 메서드 호출은 의존 관계의 정의를 의미한다 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno26.java', 'java', [6]) Configuration
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno26Test.java', 'java', [8]) Context
                         li @RestController = @Controller + @ResponseBody
@@ -521,8 +493,7 @@ include ../../source/skeleton.pug
                         +pos('@Profile')
                         | @Profile
                     td xml: beans profile=""
-                    td
-                        | @Conditional(value=org.springframework.context.annotation.ProfileCondition.class)
+                    td @Conditional(value=org.springframework.context.annotation.ProfileCondition.class)
                         br
                         | → active profile을 기준으로 초기화 진행 여부를 판단한다
                         +goto('profile 표현식')
@@ -531,50 +502,41 @@ include ../../source/skeleton.pug
                     td xml: autowire
                     td: ul
                         li 적용 위치 : CONSTRUCTOR, FIELD, METHOD, PARAMETER
-                        li
-                            | CONSTRUCTOR 적용 예 
+                        li CONSTRUCTOR 적용 예 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno03.java', 'java', [12]) Bean
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno03Test.java', 'java', [8]) Context
                         p Since 4.3 : 기본 생성자가 없으면서 여러 생성자가 존재하는 경우에만 생성자에 @Autowired 적용 필요
-                        li
-                            | FIELD 적용 예 
+                        li FIELD 적용 예 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno01.java', 'java', [6]) Bean
                             +codeBtn('/Repositories/STS/app2/src/main/resource/anno01.xml', 'xml') XML
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno01Test.java', 'java', [8]) Context
                         li 특정 타입 T의 배열(T[])/컬렉션(Collection&lt;T>)/맵(Map&lt;String, T>에 적용한 경우, 해당 타입의 모든 빈을 목록으로 설정해준다.
                         p 타깃 타입이 org.springframework.core.Ordered를 구현했거나, @Order, @Priority를 갖고 있으면 정렬하여 설정해준다
                         ul
-                            li
-                                | Array FIELD 적용 예 
+                            li Array FIELD 적용 예 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno02.java', 'java', [11]) Bean
                                 +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno02Test.java', 'java', [10]) Context
-                            li
-                                | Set FIELD 적용 예 
+                            li Set FIELD 적용 예 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno05.java', 'java', [14]) Bean
                                 +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno05Test.java', 'java', [10]) Context
-                            li
-                                | Map FIELD 적용 예 
+                            li Map FIELD 적용 예 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno06.java', 'java', [13]) Bean
                                 +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno06Test.java', 'java', [8]) Context
                         li required = false
                         ul
-                            li
-                                | FIELD, METHOD에 required = false 적용 예 
+                            li FIELD, METHOD에 required = false 적용 예 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno07.java', 'java', [14]) Bean
                                 +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno07Test.java', 'java', [8]) Context
                             p 의존 객체가 하나라도 누락되면 호출을 생략한다. → 따라서 기본값 그대로 남는다.
                             li 팩터리 메서드, CONSTRUCTOR에 required = false 적용
                             p 배열, Collection, Map인자로 매칭되는 빈이 없는 경우, empty 인스턴스를 넘겨 호출한다.
-                            li
-                                | ↑ 이는 @Autowired가 없는 단일 생성자를 갖는 일반 클래스에도 적용된다 
+                            li ↑ 이는 @Autowired가 없는 단일 생성자를 갖는 일반 클래스에도 적용된다 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno08.java', 'java', [9]) Bean
                                 +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno08Test.java', 'java', [10]) Context
-                        li
-                            | METHOD 적용 예 
+                        li METHOD 적용 예 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno04.java', 'java', [12]) Bean
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno04Test.java', 'java', [8]) Context
-                        li
-                            | 인자가 있든 없든 호출되길 원한다면 Optional 또는 @Nullable(Since 5.0)을 이용하면 된다 
+                        li 인자가 있든 없든 호출되길 원한다면 Optional 또는 @Nullable(Since 5.0)을 이용하면 된다 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno09.java', 'java', [11]) Bean
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno09Test.java', 'java', [8]) Context
                         li 아래의 인터페이스 및 연관 구현 클래스에 대한 @Autowired 필드는 실행 환경에 따라 적절히 주입된다.
@@ -582,123 +544,100 @@ include ../../source/skeleton.pug
                 tr
                     td @Primary
                     td xml: primary="true"
-                    td
-                        | 특정 빈을 우선적으로 주입하도록 설정한다 
+                    td 특정 빈을 우선적으로 주입하도록 설정한다 
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno10.java', 'java', [14]) Bean
                         +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno10Test.java', 'java', [8]) Context
                 tr
                     td @Qualifier
-                    td
-                        | xml: qualifier value="xxx"
+                    td xml: qualifier value="xxx"
                         br
                         | xml: qualifier type="x.y.Z" value="xxx"
                     td: ul
-                        li
-                            | 빈을 구별할 수 있는 값을 설정한다. 빈 이름은 default qualifier로 이용됨에 유의. 
+                        li 빈을 구별할 수 있는 값을 설정한다. 빈 이름은 default qualifier로 이용됨에 유의. 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno11.java', 'java', [13]) Bean
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno11Test.java', 'java', [8]) Context
                         li Qualifier는 고유할 필요가 없으며, 배열/컬렉션/맵 주입 시 qualifier가 일치하는 모든 빈들이 멤버로 할당된다
                         li @Autowired와 같이 사용하는 경우, 타입 기반 매칭이 먼저 수행됨에 유의. Qualifier 매칭만 수행하려는 경우 JSR-250의 @Resource를 이용할 것.
-                        li
-                            | 사용자 정의 @Qualifier를 이용할 수 있다 
+                        li 사용자 정의 @Qualifier를 이용할 수 있다 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno12.java', 'java', [19]) Bean
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno12Test.java', 'java', [8]) Context
-                        li
-                            | 사용자 정의 @Qualifier는 값 없이도 빈 특정이 가능할 수 있다 
+                        li 사용자 정의 @Qualifier는 값 없이도 빈 특정이 가능할 수 있다 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno13.java', 'java', [17]) Bean
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno13Test.java', 'java', [8]) Context
-                        li
-                            | 사용자 정의 @Qualifier는 다른 타입 속성들을 가질 수 있다 
+                        li 사용자 정의 @Qualifier는 다른 타입 속성들을 가질 수 있다 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno14.java', 'java', [17]) Bean
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno14Test.java', 'java', [8]) Context
-                        li
-                            | Generic도 일종의 타입 Qualifier로 이용할 수 있다
+                        li Generic도 일종의 타입 Qualifier로 이용할 수 있다
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno15.java', 'java', [11]) Bean
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno15Test.java', 'java', [8]) Context
                 tr
                     td @Resource
                     td xml: ref="beanName"
                     td: ul
-                        li
-                            | 빈 이름을 기준으로 주입한다 
+                        li 빈 이름을 기준으로 주입한다 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno16.java', 'java', [12]) Bean
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno16Test.java', 'java', [8]) Context
                         li name 속성을 지정하지 않으면 field 또는 parameter 이름을 기준으로 찾는다
-                        li
-                            | 이름을 기준으로 찾지 못하면 타입을 기준으로 다시 찾는다 
+                        li 이름을 기준으로 찾지 못하면 타입을 기준으로 다시 찾는다 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno17.java', 'java', [12]) Bean
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno17Test.java', 'java', [8]) Context
                 tr
                     td @Value
-                    td
-                        | xml: context:property-placeholder
+                    td xml: context:property-placeholder
                         +pos('property-placeholder')
                     td: ul
-                        li
-                            | 외부 *.properties 파일 기반으로 값 주입 
+                        li 외부 *.properties 파일 기반으로 값 주입 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno18.java', 'java', [10]) Bean
                             +codeBtn('/Repositories/STS/app2/src/main/resource/anno18.properties', 'properties') properties
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno18Test.java', 'java', [8]) Context
                         li @Bean static 메서드로 PropertySourcesPlaceholderConfigurer 인스턴스를 반환하면 커스터마이징 가능하다
                         li Spring Boot 애플리케이션은 기본적으로 application.properties, application.yml 파일을 읽는 PropertySourcesPlaceholderConfigurer 빈을 갖는다
                         li 프로퍼티 문자열 → Java Type으로의 변환
-                        p
-                            | BeanPostProcessor는 ConversionService를 이용해 타입 변환을 수행한다. 커스텀 컨버터를 등록하면 사용자 정의 타입으로의 변환도 가능하다 
+                        p BeanPostProcessor는 ConversionService를 이용해 타입 변환을 수행한다. 커스텀 컨버터를 등록하면 사용자 정의 타입으로의 변환도 가능하다 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno19.java', 'java', [14]) Bean
                             +codeBtn('/Repositories/STS/app2/src/main/resource/anno19.properties', 'properties') properties
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno19Test.java', 'java', [8]) Context
-                        li
-                            | SpEL 표현식도 가능하다 
+                        li SpEL 표현식도 가능하다 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno20.java', 'java', [10]) Bean
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno20Test.java', 'java', [8]) Context
                 tr
                     td @PostConstruct
                     td xml: init-method
-                    td
-                        | 빈 생성 후 호출 
+                    td 빈 생성 후 호출 
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno21.java', 'java', [8]) Bean
                         +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno21Test.java', 'java', [8]) Context
                 tr
                     td @PreDestroy
                     td xml: destroy-method
-                    td
-                        | 빈 소멸 시 호출
+                    td 빈 소멸 시 호출
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno21.java', 'java', [8]) Bean
                         +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno21Test.java', 'java', [8]) Context
                 tr
                     td @ComponentScan
                     td xml: context:component-scan base-package=""
                     td: ul
-                        li
-                            | 스캔 범위를 확장한다 
+                        li 스캔 범위를 확장한다 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno22.java', 'java', [6]) Configuration
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/rare/Rare1.java', 'java', [5]) Bean
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno22Test.java', 'java', [9]) Context
-                        li
-                            | includeFilters == xml: context:include-filter 
+                        li includeFilters == xml: context:include-filter 
                         p ↑ 명시적으로 매칭되는 클래스만 스캔
-                        li
-                            | excludeFilters == xml: context:exclude-filter
+                        li excludeFilters == xml: context:exclude-filter
                         p ↑ 매칭되는 클래스는 스캔 제외
                         li useDefaultFilters=false == xml: use-default-filters="false"
                         p ↑ @Component, @Repository, @Service 등을 자동으로 찾지 않는다.
                         li 필터 종류
                         ul
-                            li
-                                | annotation(default) : 타입에 특정 애너테이션이 붙어있는지? 
+                            li annotation(default) : 타입에 특정 애너테이션이 붙어있는지? 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno23.java', 'java', [11]) Configuration
-                            li
-                                | assignable : 특정 타입으로 할당 가능한지? 
+                            li assignable : 특정 타입으로 할당 가능한지? 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno23.java', 'java', [11]) Configuration
-                            li
-                                | aspectj : 클래스 경로가 AspectJ 표현식에 일치하는지? 
+                            li aspectj : 클래스 경로가 AspectJ 표현식에 일치하는지? 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno24.java', 'java', [8]) Configuration
                             +asCode('gradle', 'AspectJ 관련 jar들을 포함해야 한다. Spring Boot 예') implementation 'org.springframework.boot:spring-boot-starter-aop'
-                            li
-                                | regex : 클래스 경로가 정규표현식에 일치하는지? 
+                            li regex : 클래스 경로가 정규표현식에 일치하는지? 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno24.java', 'java', [8]) Configuration
-                            li
-                                | custom : TypeFilter 구현 클래스 지정 
+                            li custom : TypeFilter 구현 클래스 지정 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno25.java', 'java', [8]) Configuration
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/scan/ScanFilter.java', 'java', [9]) TypeFilter
                                 +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno25Test.java', 'java', [8]) Context
@@ -718,21 +657,17 @@ include ../../source/skeleton.pug
                     td
                         span.hover-content(template-id='template-jsr330') JSR-330
                         ul
-                            li
-                                | @Autowire와 마찬가지로 필드, 메서드, 생성자에 적용 가능 
+                            li @Autowire와 마찬가지로 필드, 메서드, 생성자에 적용 가능 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/jsr330/Anno01.java', 'java', [9]) Configuration
                                 +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/jsr330/Anno01Test.java', 'java', [8]) Context
-                            li
-                                | @Named로 이름 지정 가능 
+                            li @Named로 이름 지정 가능 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/jsr330/Anno02.java', 'java', [10]) Configuration
                                 +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/jsr330/Anno02Test.java', 'java', [8]) Context
                             p @Named는 주입/생성 빈 이름 모두에 사용할 수 있다
-                            li
-                                | Provider를 이용하여 지연된 접근, 짧은 scope 빈 접근 가능 
+                            li Provider를 이용하여 지연된 접근, 짧은 scope 빈 접근 가능 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/jsr330/Anno03.java', 'java', [12]) Configuration
                                 +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/jsr330/Anno03Test.java', 'java', [10]) Context
-                            li
-                                | Optional 또는 @Nullable도 사용 가능 
+                            li Optional 또는 @Nullable도 사용 가능 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/jsr330/Anno04.java', 'java', [13]) Configuration
                                 +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/jsr330/Anno04Test.java', 'java', [8]) Context
                 tr
@@ -757,16 +692,14 @@ include ../../source/skeleton.pug
                     td @Import, @ImportResource
                     td xml: import
                     td: ul
-                        li
-                            | @Import : @Configuration에서 다른 @Configuration 임포트 
+                        li @Import : @Configuration에서 다른 @Configuration 임포트 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno27.java', 'java', [7]) Configuration
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno27Test.java', 'java', [8]) Context
                         +asCode('java').
                             @Configuration
                             @Import({OtherConfiguration.class})
                             public class MyConfiguration {}
-                        li
-                            | @ImportResource : @Configuration 다른 xml 임포트 
+                        li @ImportResource : @Configuration 다른 xml 임포트 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno28.java', 'java', [7]) Configuration
                             +codeBtn('/Repositories/STS/app2/src/main/resource/anno28.xml', 'xml') XML
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno28Test.java', 'java', [8]) Context
@@ -774,7 +707,7 @@ include ../../source/skeleton.pug
                             @Configuration
                             @ImportResource("file:src/main/resource/otherConfig.xml")
                             public class MyConfiguration {}
-                            
+
                             @Configuration
                             @ImportResource("classpath:/otherConfig.xml")
                             public class MyConfiguration {}
@@ -806,19 +739,16 @@ include ../../source/skeleton.pug
                 tr
                     td @EnableLoadTimeWeaving
                     td xml: context:load-time-weaver
-                    td
-                        | LoadTimeWeaverAware를 구현한 빈은 LoadTimeWeaver 인스턴스를 인자로 받는다
+                    td LoadTimeWeaverAware를 구현한 빈은 LoadTimeWeaver 인스턴스를 인자로 받는다
                         +goto('Spring AOP')
 
             h3 Environment
             ul
                 li Environment 인터페이스는 profile, properties 정보를 컨테이너에 제공한다
                 +pos('profile 표현식')
-                li
-                    | Profile 표현에 !(not), &amp;(and), |(or) 가능. 
+                li Profile 표현에 !(not), &amp;(and), |(or) 가능. 
                     +goto('@Profile')
-                p
-                    | 예. production &amp; (us-east | eu-central)
+                p 예. production &amp; (us-east | eu-central)
                     br
                     | xml 표현식에서 !는 가능하지만 &amp;, |는 포함할 수 없다. 대신 beans profiles=""를 중첩하여 &amp; 효과를 얻을 수는 있다
                 li Profile 활성화
@@ -832,8 +762,7 @@ include ../../source/skeleton.pug
                 li StandardEnvironment(→ AbstractEnvironment) 기본으로 포함되는 properties 항목들
                 p JVM system properties (System.getProperties()) + 환경 변수 (System.getenv()). 시스템 속성이 환경 변수보다 우선 검색된다
                 li StandardServletEnvironment(→ StandardEnvironment) 추가 제공 properties
-                p
-                    | Servlet config + Servlet context parameter + JndiPropertySource(Optional).
+                p Servlet config + Servlet context parameter + JndiPropertySource(Optional).
                     br
                     | 우선 순위 : ServletConfig ← ServletContext parameter ← JNDI ← JVM system properties ← 환경 변수
                 li PropertySource 추가
@@ -871,8 +800,7 @@ include ../../source/skeleton.pug
                     ul
                         li Locale ENGLISH = createConstant("en", ""); → xxx_en.properties
                         li Locale US = createConstant("en", "US"); → xxx_en_US.properties
-                    li
-                        | 예시 코드 
+                    li 예시 코드 
                         +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/config/I18nConfig.java', 'java', [8]) Configuration
                         +codeBtn('/Repositories/STS/ioc-example/src/main/resources/i18n/templates_en.properties', 'properties') templates_en.properties
                         +codeBtn('/Repositories/STS/ioc-example/src/main/resources/i18n/templates_ko.properties', 'properties') templates_ko.properties
@@ -890,14 +818,12 @@ include ../../source/skeleton.pug
                         +tds('ContextClosedEvent', 'ConfigurableApplicationContext#close() 또는 JVM 종료')
                         +tds('RequestHandledEvent', 'HTTP 요청 처리 완료')
                         +tds('ServletRequestHandledEvent', 'RequestHandledEvent + 서블릿 정보')
-                    li
-                        | 예시 
+                    li 예시 
                         +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/event/MyEvent1.java', 'java', [7]) Event
                         +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/event/MyEvent1Publisher.java', 'java', [7]) Publisher
                         +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/event/MyEvent1Listener1.java', 'java', [8]) Listener
                         +codeBtn('/Repositories/STS/ioc-example/src/test/java/io/github/donggi/example/event/Event1Tests.java', 'java', [8]) Test
-                    li
-                        | @EventListener 예시 
+                    li @EventListener 예시 
                         +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/event/MyEvent2.java', 'java', [7]) Event
                         +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/event/MyEvent2Publisher.java', 'java', [7]) Publisher
                         +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/event/MyEvent2Listener1.java', 'java', [8]) Listener1
@@ -996,13 +922,11 @@ include ../../source/skeleton.pug
                     //      이를 이용해 MessageSource로부터 보다 적절한 메시지를 가져올 수 있다
                     // ValidationUtils를 이용하면 구현에 도움이 된다
             ul
-                li
-                    | 예시 코드 
+                li 예시 코드 
                     +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno29.java', 'java', [19]) Bean
                     +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/anno29_ko.properties', 'properties') message
                     +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno29Test.java', 'java', [8]) Context
-                li
-                    | Spring MVC 예 
+                li Spring MVC 예 
                     +codeBtn('/Repositories/STS/mvc-java18/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', null, true)
                     +codeBtn('/Repositories/STS/mvc-java18/src/main/java/io/github/donggi/mvc/controller/Login.java', 'java', [21], true)
                     +codeBtn('/Repositories/STS/mvc-java18/src/main/java/io/github/donggi/mvc/validator/LoginRequestValidator.java', 'java', null, true)
@@ -1035,8 +959,7 @@ include ../../source/skeleton.pug
             h3 PropertyEditor의 Object ↔ String 변환
             ul
                 li Something 클래스와 같은 패키지에 PropertyEditor를 구현한 SomethingEditor가 존재하면 자동으로 사용된다
-                p
-                    | 예시 코드 
+                p 예시 코드 
                     +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno30.java', 'java', [8]) Bean
                     +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno30DataEditor.java', 'java', [5]) Editor
                     +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno30Test.java', 'java', [8]) Context
@@ -1050,10 +973,10 @@ include ../../source/skeleton.pug
                     +tds('LocaleEditor', 'String ↔ Locale. BeanWrapperImpl 기본 등록')
                     +tds('PropertiesEditor', 'String → Properties. BeanWrapperImpl 기본 등록')
                     +tds('URLEditor', 'String → URL. BeanWrapperImpl 기본 등록')
-                    
+
                     +tds('CustomBooleanEditor', 'String ↔ Boolean. BeanWrapperImpl 기본 등록 & 덮어쓰기 가능')
                     +tds('CustomNumberEditor', 'String ↔ Number. BeanWrapperImpl 기본 등록 & 덮어쓰기 가능')
-                    
+
                     +tds('CustomCollectionEditor', 'source Collection → target Collection')
                     +tds('CustomDateEditor', 'String ↔ Date. 커스텀 DateFormat 사용 가능.')
                     +tds('PatternEditor', 'String ↔ Pattern')
@@ -1161,8 +1084,7 @@ include ../../source/skeleton.pug
                 li FormatterRegistry, FormatterRegistrar : 포매터 등록을 위한 인터페이스
                 +asA('https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/web.html#mvc-config-conversion')
                 li Annotation-driven Formatting
-                p
-                    | AnnotationFormatterFactory를 이용한다. 예시 코드 
+                p AnnotationFormatterFactory를 이용한다. 예시 코드 
                     +codeBtn('/Repositories/STS/spring-core/src/main/java/io/github/donggi/bean/Test1Bean.java', 'java', [10]) Bean
                     +codeBtn('/Repositories/STS/spring-core/src/main/java/io/github/donggi/anno/Test1FormatAnnotationFormatterFactory.java', 'java', [16]) FormatterFactory
                     +codeBtn('/Repositories/STS/spring-core/src/main/java/io/github/donggi/config/Test1Config.java', 'java', [14]) Config
@@ -1410,10 +1332,10 @@ include ../../source/skeleton.pug
                                 void sampleGenericMethod(T param);
                                 void sampleGenericCollectionMethod(Collection&lt;T> param);
                             }
-                            
+
                             @Before("execution(* ..Sample+.sampleGenericMethod(*)) &amp;&amp; args(param)")
                             public void beforeSampleMethod(MyType param) { ... } // ← 가능
-                            
+
                             @Before("execution(* ..Sample+.sampleGenericCollectionMethod(*)) &amp;&amp; args(param)")
                             public void beforeSampleMethod(Collection&lt;MyType> param) { ... } // ← 불가능
                 li.marker Aspect 인스턴스화 종류
@@ -1447,8 +1369,7 @@ include ../../source/skeleton.pug
                 li 자동으로 capacity 증가
                 li 버퍼에 대한 ByteBuffer, InputStream, OutputStream 뷰 제공
             li PooledDataBuffer
-            p
-                | Direct 버퍼의 생성/소멸 시간이 Non-direct 버퍼에 비해 길다는 단점을 해소하기 위해 만들어졌다.
+            p Direct 버퍼의 생성/소멸 시간이 Non-direct 버퍼에 비해 길다는 단점을 해소하기 위해 만들어졌다.
                 br
                 | → 버퍼에 대한 참조 카운터를 유지함으로써 버퍼를 재활용할 수 있게 해준다.
                 br
@@ -1526,17 +1447,14 @@ include ../../source/skeleton.pug
                 li 일반적으로 하나의 WebApplicationContext로 충분하지만, 루트 WebApplicationContext를 DispatcherServlet들이 공유하고, 각각은 자식 WebApplicationContext를 갖는 계층 구조로도 구성 가능하다
                 li 루트 WebApplicationContext는 전형적으로 Repository, Service 등 여러 Servlet 사이에서 공유될 빈들을 갖는다
                 p 이들은 자식 WebApplicationContext로 상속되며, 필요에 따라 재정의(override)할 수 있다
-                li
-                    | 자바 구성 예 
+                li 자바 구성 예 
                     +codeBtn('/Repositories/STS/mvc-java2/src/main/java/io/github/donggi/mvc/config/App1Initializer.java', 'java', [5], true)
                     +codeBtn('/Repositories/STS/mvc-java2/src/main/java/io/github/donggi/mvc/config/App2Initializer.java', 'java', [5], true)
-                li
-                    | web.xml 예 
+                li web.xml 예 
                     +codeBtn('/Repositories/STS/mvc-xml3/src/main/webapp/WEB-INF/web.xml', 'xml', null, true)
 
             h3 Special Bean Types
-            p
-                | DispatcherServlet이 요청을 처리하도록 전달하는 빈들을 Special Bean이라고 하며, 정의하지 않은 경우 
+            p DispatcherServlet이 요청을 처리하도록 전달하는 빈들을 Special Bean이라고 하며, 정의하지 않은 경우 
                 +asA('https://github.com/spring-projects/spring-framework/blob/master/spring-webmvc/src/main/resources/org/springframework/web/servlet/DispatcherServlet.properties', '기본값')
                 | 이 사용된다
             table
@@ -1558,8 +1476,7 @@ include ../../source/skeleton.pug
                 li 요청에 대한 핸들러 호출
 
             h3 Interception
-            p
-                | 핸들러 요청에 대한 전/후 처리를 추가할 수 있다 
+            p 핸들러 요청에 대한 전/후 처리를 추가할 수 있다 
                 +goto('MVC config - Interceptors')
             +asCode('java', 'interface HandlerInterceptor').
                 default boolean preHandle(request, response, handler);
@@ -1592,8 +1509,7 @@ include ../../source/skeleton.pug
                     li ResponseStatusExceptionResolver
                     p 예외 발생 메서드 또는 발생한 예외 클래스의 @ResponseStatus -> HTTP 상태 코드 매핑
                     li ExceptionHandlerExceptionResolver
-                    p
-                        | @Controller 또는 @ControllerAdvice 클래스의 @ExceptionHandler 메서드가 예외 처리 
+                    p @Controller 또는 @ControllerAdvice 클래스의 @ExceptionHandler 메서드가 예외 처리 
                         +goto('Annotated Controllers - Exceptions')
                 h4.fake Chain of Resolvers
                 p 여러 HandlerExceptionResolver 빈을 정의하면 order 및 정의된 순서에 따라 호출되는 체인을 구성할 수 있다
@@ -1662,24 +1578,20 @@ include ../../source/skeleton.pug
             ul
                 li commons-fileupload
                 ul
-                    li
-                        | JavaConfig 예 
+                    li JavaConfig 예 
                         +codeBtn('/Repositories/STS/mvc-java5/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [13], true)
                         +codeBtn('/Repositories/STS/mvc-java5/src/main/java/io/github/donggi/mvc/controller/FileController.java', 'java', [16], true)
-                    li
-                        | xml 예 
+                    li xml 예 
                         +codeBtn('/Repositories/STS/mvc-xml5/src/main/webapp/WEB-INF/app-servlet.xml', 'xml', null, true)
                 li Since Servlet 3.0
                 ol
                     li Initializer에서 MultipartConfigElement 추가, 또는 web.xml에 multipart-config 추가
                     li StandardServletMultipartResolver 빈 정의
                 ul
-                    li
-                        | JavaConfig 예 
+                    li JavaConfig 예 
                         +codeBtn('/Repositories/STS/mvc-java6/src/main/java/io/github/donggi/mvc/config/Initializer.java', 'java', [10], true)
                         +codeBtn('/Repositories/STS/mvc-java6/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [13], true)
-                    li
-                        | xml 예 
+                    li xml 예 
                         +codeBtn('/Repositories/STS/mvc-xml6/src/main/webapp/WEB-INF/web.xml', 'xml', null, true)
                         +codeBtn('/Repositories/STS/mvc-xml6/src/main/webapp/WEB-INF/app-servlet.xml', 'xml', null, true)
                 li @RequestParam으로 Map&lt;String, MultipartFile>, MultiValueMap&lt;String, MultipartFile>도 가능
@@ -1725,8 +1637,7 @@ include ../../source/skeleton.pug
                     li AbstractAnnotationConfigDispatcherServletInitializer를 이용하는 경우, DispatcherType.REQUEST, ASYNC, ERROR 모두에 대해 실행된다
                     p 그 외의 경우 DispatcherType.REQUEST에 대해서만 동작한다
                 h4 CORS
-                p
-                    | Controller 클래스에 애너테이션을 붙여 CORS 설정을 할 수 있지만, Spring Security를 이용하는 경우 CorsFilter를 이용해 Security보다 먼저 실행되도록 설정할 것이 권장된다 
+                p Controller 클래스에 애너테이션을 붙여 CORS 설정을 할 수 있지만, Spring Security를 이용하는 경우 CorsFilter를 이용해 Security보다 먼저 실행되도록 설정할 것이 권장된다 
                     +goto('CORS')
         h2 Annotated Controllers
         div
@@ -1771,8 +1682,7 @@ include ../../source/skeleton.pug
                     public Pet findPet(@PathVariable Long ownerId, @PathVariable Long petId);
                         // 컴파일된 클래스에 매개변수 이름이 그대로 남아있다면 @PathVariable에 이름 설정 불필요
                 ul
-                    li
-                        | 기본 타입과 Date 등 일부 클래스로는 자동으로 변환이 가능하다. 전역적인 변환기를 등록하려면 
+                    li 기본 타입과 Date 등 일부 클래스로는 자동으로 변환이 가능하다. 전역적인 변환기를 등록하려면 
                         +goto('MVC config - Type Conversion')
                         | , @Controller, @ControllerAdvice에만 적용되는 변환기를 등록하려면 
                         +goto('DataBinder')
@@ -1781,15 +1691,13 @@ include ../../source/skeleton.pug
                         +goto('property-placeholder')
                         | 와 같은 ${...} 표현식 사용 가능. 앱 시작 시 평가된다.
                 h4.fake Pattern Comparison
-                p
-                    | URL 하나가 여러 패턴에 매칭되는 경우, 가장 일반적이지 않은 패턴이 선택된다. 우선순위는 
+                p URL 하나가 여러 패턴에 매칭되는 경우, 가장 일반적이지 않은 패턴이 선택된다. 우선순위는 
                     +asA('https://docs.spring.io/spring-framework/docs/5.2.8.RELEASE/javadoc-api/org/springframework/util/AntPathMatcher.AntPatternComparator.html')
                     |  참고
                 h4 Suffix Match
                 ul
                     li Before 5.3 : 기본적으로 .* 접미사 매칭이 수행된다. 예를 들어 패턴 "/person"은 "/person.pdf" 같은 URL도 매칭한다. 
-                    li
-                        | 기능을 끄려면 PathMatchConfigurer.useSuffixPatternMatching(false) 
+                    li 기능을 끄려면 PathMatchConfigurer.useSuffixPatternMatching(false) 
                         +goto('MVC config - Path Matching')
                         | , ContentNegotiationConfigurer.favorPathExtension(false) 
                         +goto('MVC config - Content Types')
@@ -1824,8 +1732,7 @@ include ../../source/skeleton.pug
             h3 Handler Methods
             div
                 h4 Method Arguments
-                ol
-                    | 아래 조건을 모두 만족하는 경우, java.util.Optional을 결합하여 사용할 수 있다
+                ol 아래 조건을 모두 만족하는 경우, java.util.Optional을 결합하여 사용할 수 있다
                     li required 속성이 있는 @RequestParam, @RequestHeader 등의 애너테이션이 적용됨
                     li required=false임
                 table
@@ -1859,13 +1766,11 @@ include ../../source/skeleton.pug
                         td 응답을 직접 쓰려는 경우 사용
                     tr
                         td @PathVariable
-                        td
-                            | URI 경로 획득 
+                        td URI 경로 획득 
                             +goto('URI Patterns')
                     tr
                         td @MatrixVariable
-                        td
-                            | URI 상의 이름-값 쌍 획득 
+                        td URI 상의 이름-값 쌍 획득 
                             +goto('Matrix Variables')
                     tr
                         td @RequestParam
@@ -1890,21 +1795,18 @@ include ../../source/skeleton.pug
                         td 렌더링에 사용할 모델
                     tr
                         td RedirectAttributes
-                        td
-                            | 리다이렉션 쿼리에 덧붙일 속성
+                        td 리다이렉션 쿼리에 덧붙일 속성
                             +goto('Redirect Attributes')
                             |, 리다이렉션 이후 요청까지 임시로 저장할 속성
                             +goto('Flash Attributes')
                     tr
                         td @ModelAttribute
-                        td
-                            | 기저 모델에 존재하는 객체 획득(없으면 생성). 기저와 바인딩되며, 존재하는 검증도 수행된다. 
+                        td 기저 모델에 존재하는 객체 획득(없으면 생성). 기저와 바인딩되며, 존재하는 검증도 수행된다. 
                             +goto('@ModelAttribute')
                             | . 바인딩을 원하지 않는 경우 @ModelAttribute(binding=false) 설정
                     tr
                         td Errors, BindingResult
-                        td
-                            | @ModelAttribute 인자의 검증 및 바인딩 수행 시 발생한 예외 획득. @RequestBody 또는 @RequestPart 검증 시 발생한 예외 획득. 각 Errors, BindingResult 인자는 검증 대상 바로 다음에 위치해야 한다.
+                        td @ModelAttribute 인자의 검증 및 바인딩 수행 시 발생한 예외 획득. @RequestBody 또는 @RequestPart 검증 시 발생한 예외 획득. 각 Errors, BindingResult 인자는 검증 대상 바로 다음에 위치해야 한다.
                             br
                             | 예 
                             +codeBtn('/Repositories/STS/mvc-java18/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', null, true)
@@ -1913,26 +1815,22 @@ include ../../source/skeleton.pug
                             +codeBtn('/Repositories/STS/mvc-java18/src/main/resources/i18n/msg.properties', 'properties', null, true)
                     tr
                         td SessionStatus + class-level @SessionAttributes
-                        td
-                            | Form 처리가 완료되면 @SessionAttributes로 저장 중인 값을 정리하기 위한 SessionStatus 획득 
+                        td Form 처리가 완료되면 @SessionAttributes로 저장 중인 값을 정리하기 위한 SessionStatus 획득 
                             +goto('@SessionAttribute')
                     tr
                         td UriComponentsBuilder
                         td 요청 host, port, scheme, context path, servlet mapping으로 구성된 builder 획득
                     tr
                         td @SessionAttribute
-                        td
-                            | 세션에 저장된 임의 인스턴스 접근 
+                        td 세션에 저장된 임의 인스턴스 접근 
                             +goto('@SessionAttribute')
                     tr
                         td @RequestAttribute
-                        td
-                            | 임의 요청 속성 접근 
+                        td 임의 요청 속성 접근 
                             +goto('@RequestAttribute')
                     tr
                         td 임의 타입
-                        td
-                            | 위 타입 중 어느 것에도 일치하지 않는 단순 타입은 @RequestParam, 그 외에는 @ModelAttribute
+                        td 위 타입 중 어느 것에도 일치하지 않는 단순 타입은 @RequestParam, 그 외에는 @ModelAttribute
                             br
                             +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [98,102,74,82]) 예1
                             +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller2.java', 'java', [30,34,45,53]) 예2
@@ -1941,13 +1839,11 @@ include ../../source/skeleton.pug
                     +ths('Return Type', 'Description')
                     tr
                         td @ResponseBody
-                        td
-                            | HttpMessageConverter 인스턴스가 반환값을 적절히 응답에 쓴다 
+                        td HttpMessageConverter 인스턴스가 반환값을 적절히 응답에 쓴다 
                             +goto('@ResponseBody')
                     tr
                         td HttpEntity&lt;B&gt;, ResponseEntity&lt;B&gt;
-                        td
-                            | HTTP 헤더(HttpHeaders)와 바디(B)를 포함한 전체 응답을 반환하면 HttpMessageConverter가 적절히 응답에 쓴다
+                        td HTTP 헤더(HttpHeaders)와 바디(B)를 포함한 전체 응답을 반환하면 HttpMessageConverter가 적절히 응답에 쓴다
                             +goto('ResponseEntity')
                     tr
                         td HttpHeaders
@@ -1966,8 +1862,7 @@ include ../../source/skeleton.pug
                         td 뷰 + 모델
                     tr
                         td void
-                        td
-                            | void 리턴, null 리턴이 아래 상황에서 이루어졌다면 응답이 완료됐다고 간주한다
+                        td void 리턴, null 리턴이 아래 상황에서 이루어졌다면 응답이 완료됐다고 간주한다
                             ul
                                 li ServletResponse, OutputStream 인자를 메서드로 받은 경우
                                 li @ResponseStatus를 갖는 경우
@@ -1975,30 +1870,25 @@ include ../../source/skeleton.pug
                             | 그 외의 경우 "no response body"(REST 컨트롤러), 기본 뷰(HTTP 컨트롤러)를 의미한다
                     tr
                         td DeferredResult&lt;V&gt;, ListenableFuture&lt;V&gt;, CompletionStage&lt;V&gt;, CompletableFuture&lt;V&gt;
-                        td
-                            | 위 임의 타입을 임의 스레드에서 비동기적으로 반환 
+                        td 위 임의 타입을 임의 스레드에서 비동기적으로 반환 
                             +goto('DeferredResult')
                     tr
                         td Callable&lt;V&gt;
-                        td
-                            | 위 임의 타입을 Spring MVC 관리 스레드에서 비동기적으로 반환 
+                        td 위 임의 타입을 Spring MVC 관리 스레드에서 비동기적으로 반환 
                             +goto('Callable')
                     tr
                         td ResponseBodyEmitter, SseEmitter
-                        td
-                            | 비동기적으로 객체를 전달하면 HttpMessageConverter가 변환하여 쓴다. ResponseEntity의 body로 이용 가능. 
+                        td 비동기적으로 객체를 전달하면 HttpMessageConverter가 변환하여 쓴다. ResponseEntity의 body로 이용 가능. 
                             +goto('HTTP Streaming')
                     tr
                         td StreamingResponseBody
-                        td
-                            | 비동기적으로 OutputStream에 쓴다. ResponseEntity의 body로 이용 가능. 
+                        td 비동기적으로 OutputStream에 쓴다. ResponseEntity의 body로 이용 가능. 
                             +goto('HTTP Streaming')
                     tr
                         td Reactive types — Reactor, RxJava, or others through ReactiveAdapterRegistry
                         td 한 번에 여러 값을 전송하는 경우 DeferredResult 대안.
                 h4 Type Conversion
-                p
-                    | 문자열로 표현되는 요청 인자 ─ @RequestParam, @RequestHeader, @PathVariable, @MatrixVariable, @CookieValue ─ 들을 String 외의 타입으로 받으려면 변환이 필요하다
+                p 문자열로 표현되는 요청 인자 ─ @RequestParam, @RequestHeader, @PathVariable, @MatrixVariable, @CookieValue ─ 들을 String 외의 타입으로 받으려면 변환이 필요하다
                     br
                     | 기본 타입과 Date 등 일부 클래스는 자동으로 변환이 가능하다. 전역적인 변환기를 등록하려면 
                     +goto('MVC config - Type Conversion')
@@ -2009,51 +1899,38 @@ include ../../source/skeleton.pug
                     | Matrix Variables
                     +pos('Matrix Variables')
                 ul
-                    li
-                        | Java Config 
+                    li Java Config 
                         +codeBtn('/Repositories/STS/mvc-java7/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [10], true)
-                    li
-                        | XML Config 
+                    li XML Config 
                         +codeBtn('/Repositories/STS/mvc-xml7/src/main/webapp/WEB-INF/app-servlet.xml', 'xml', null, true)
-                    li
-                        | Matrix Variable 예 
+                    li Matrix Variable 예 
                         +codeBtn('/Repositories/STS/mvc-java7/src/main/java/io/github/donggi/mvc/controller/MatrixController.java', 'java', [18,29], true)
-                    li
-                        | 각 path part 모두 matrix variable을 가질 수 있다 
+                    li 각 path part 모두 matrix variable을 가질 수 있다 
                         +codeBtn('/Repositories/STS/mvc-java7/src/main/java/io/github/donggi/mvc/controller/MatrixController.java', 'java', [32,44], true)
-                    li
-                        | 각 path part 별로 matrix variable을 모아 받을 수 있다
+                    li 각 path part 별로 matrix variable을 모아 받을 수 있다
                         +codeBtn('/Repositories/STS/mvc-java7/src/main/java/io/github/donggi/mvc/controller/MatrixController.java', 'java', [47,65], true)
                 h4 @RequestParam, @RequestBody
                 ul
-                    li
-                        | Get 요청 query 예 
+                    li Get 요청 query 예 
                         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [22,32], true)
-                    li
-                        | 배열 또는 리스트를 이용해 동일 이름의 파라미터들을 모을 수 있다 
+                    li 배열 또는 리스트를 이용해 동일 이름의 파라미터들을 모을 수 있다 
                         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [35,45], true)
-                    li
-                        | Map&lt;String, String&gt;, MultiValueMap&lt;String, String&gt;로 전체 파라미터를 모을 수 있다 
+                    li Map&lt;String, String&gt;, MultiValueMap&lt;String, String&gt;로 전체 파라미터를 모을 수 있다 
                         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [48,58,61,71], true)
-                    li
-                        | Post 요청 Jackson JSON 예 
+                    li Post 요청 Jackson JSON 예 
                         +codeBtn('/Repositories/STS/mvc-java8/build.gradle', 'gradle', [31,31], true)
                         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [98,102,85,94], true)
                 h4 @RequestHeader
-                p
-                    | 특정 이름의 헤더, 또는 전체 헤더 ─ Map&lt;String, String&gt;, MultiValueMap&lt;String, String&gt;, HttpHeaders ─ 획득 가능 
+                p 특정 이름의 헤더, 또는 전체 헤더 ─ Map&lt;String, String&gt;, MultiValueMap&lt;String, String&gt;, HttpHeaders ─ 획득 가능 
                     +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller2.java', 'java', [21,27], true)
                 h4
                     | @ModelAttribute
                     +pos('@ModelAttribute')
-                ol
-                    | @ModelAttribute로 선언된 인자는 아래 순서에 따라 획득된다
+                ol @ModelAttribute로 선언된 인자는 아래 순서에 따라 획득된다
                     li 이미 Model에 추가된 객체
-                    li
-                        | @SessionAttribute로 저장된 객체
+                    li @SessionAttribute로 저장된 객체
                         +goto('@SessionAttribute')
-                    li
-                        | URI path variable로부터 변환(Converter) 
+                    li URI path variable로부터 변환(Converter) 
                         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller2.java', 'java', [30,34,35,43], true)
                     li 기본생성자 호출
                     li Primary 생성자 호출. 생성 인자는 서블릿 요청으로부터 결정
@@ -2061,28 +1938,23 @@ include ../../source/skeleton.pug
                     | @SessionAttributes, @SessionAttribute
                     +pos('@SessionAttribute')
                 ul
-                    li
-                        | @SessionAttributes는 자동으로 세션에 객체를 저장하고, 완료 시 제거하는 기능을 제공한다 
+                    li @SessionAttributes는 자동으로 세션에 객체를 저장하고, 완료 시 제거하는 기능을 제공한다 
                         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller3.java', 'java', [15,40,41,56], true)
-                    li
-                        | @SessionAttribute로 세션 객체를 획득할 수 있다 
+                    li @SessionAttribute로 세션 객체를 획득할 수 있다 
                         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller4.java', 'java', [13,35,36,45], true)
                 h4
                     | @RequestAttribute
                     +pos('@RequestAttribute')
-                p
-                    | Filter, HandlerInterceptor 등에 의해 추가된 속성을 획득할 수 있다 
+                p Filter, HandlerInterceptor 등에 의해 추가된 속성을 획득할 수 있다 
                     +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/interceptor/Controller5Interceptor.java', 'java', [9,15], true)
                     +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller5.java', 'java', [14,31], true)
                 h4
                     | Redirect Attributes
                     +pos('Redirect Attributes')
                 ul
-                    li
-                        | 기본적으로 Model의 속성들은 리다이렉트 URL에 포함된다 
+                    li 기본적으로 Model의 속성들은 리다이렉트 URL에 포함된다 
                         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller6.java', 'java', [38,44,21,26,46,50,27,31,52,56], true)
-                    li
-                        | 속성의 자동 추가를 원하지 않는다면, @RequestMapping 메서드에서 RedirectAttributes 매개변수를 명시적으로 이용하면 된다
+                    li 속성의 자동 추가를 원하지 않는다면, @RequestMapping 메서드에서 RedirectAttributes 매개변수를 명시적으로 이용하면 된다
                         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller6.java', 'java', [38,44,32,37,58,62], true)
                     li 전역적으로 설정을 변경하려면 RequestMappingHandlerAdapter의 ignoreDefaultModelOnRedirect 속성을 true로 변경하면 된다
                     p 하위 호환을 위해 false가 기본값이다
@@ -2093,8 +1965,7 @@ include ../../source/skeleton.pug
                     li Flash attribute는 다음 요청에서 소비하기 위해 일시적으로 세션에 저장하는 데이터다. 주로 리다이렉션 처리에 이용된다
                     li 임시 속성을 담는 데 FlashMap이 이용되고, FlashMapManager이 FlashMap을 관리한다
                     li FlashMap은 이전 요청으로부터 전달되는 input, 다음 요청으로 전달할 output으로 구분된다
-                    li
-                        | @RequestMapping 메서드에서는 input-output FlashMap을 직접 이용하지 않고 RedirectAttributes를 획득하여 사용하면 된다 
+                    li @RequestMapping 메서드에서는 input-output FlashMap을 직접 이용하지 않고 RedirectAttributes를 획득하여 사용하면 된다 
                         +goto('Redirect Attributes')
                     li RedirectView는 FlashMap 인스턴스에 대해 리다이렉트 URL과 시각을 기록함으로써, 실제 리다이렉트된 요청에 임시 속성을 전달하게 한다
                     p 그럼에도 불구하고 비동기적으로 빈번하게 요청이 들어오는 경우, 실제로 전달되어야 할 곳이 아닌 다른 요청에 임시 속성을 전달될 가능성이 있다
@@ -2103,20 +1974,17 @@ include ../../source/skeleton.pug
                     +pos('@ResponseBody')
                 ul
                     li 메서드에 @ResponseBody가 적용된 경우 반환 객체를 HTTP 응답으로(HttpMessageConverter) 전송한다. AJAX에 유용.
-                    li
-                        | Jackson JSON 예 
+                    li Jackson JSON 예 
                         +codeBtn('/Repositories/STS/mvc-java8/build.gradle', 'gradle', [31,31], true)
                         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller7.java', 'java', [9], true)
                 h4
                     | ResponseEntity
                     +pos('ResponseEntity')
-                p
-                    | 예 
+                p 예 
                     +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller8.java', 'java', [10], true)
             h3 Model
             ul
-                li
-                    | @Controller 또는 @ControllerAdvice 클래스의 메서드에 @ModelAttribute를 적용하면 @RequestMapping 전에 호출되어 모델을 구성한다 
+                li @Controller 또는 @ControllerAdvice 클래스의 메서드에 @ModelAttribute를 적용하면 @RequestMapping 전에 호출되어 모델을 구성한다 
                     +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller9.java', 'java', [12], true)
                 li @ControllerAdvice 안에서 이용하는 경우 여러 컨트롤러에 공유하는 효과가 있다
                 li @ModelAttribute 메서드는 @RequestMapping 메서드가 사용하는 매개변수 타입들을 사용할 수 있다 ─ @ModelAttribute, 요청 body 관련 부분 제외
@@ -2125,13 +1993,11 @@ include ../../source/skeleton.pug
                 +pos('DataBinder')
             ul
                 li @Controller, @ControllerAdvice 클래스는 @InitBinder 메서드에서 WebDataBinder 인스턴스를 초기화할 수 있다
-                p
-                    | 이를 통해 PropertyEditor, Converter, Formatter를 등록할 수 있다 
+                p 이를 통해 PropertyEditor, Converter, Formatter를 등록할 수 있다 
                     +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/aop/Controller10Advice.java', 'java', [12], true)
                     +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller10.java', 'java', [12], true)
                 li @InitBinder 메서드는 @RequestMapping 메서드가 사용하는 매개변수 타입들을 사용할 수 있다 ─ @ModelAttribute 제외
-                li
-                    | 전역적인 변환기 등록은 
+                li 전역적인 변환기 등록은 
                     +goto('MVC config - Type Conversion')
                     |  참고
             h3
@@ -2139,14 +2005,12 @@ include ../../source/skeleton.pug
                 +pos('Annotated Controllers - Exceptions')
             ul
                 li @Controller, @ControllerAdvice 클래스는 예외 처리를 위한 @ExceptionHandler 메서드를 가질 수 있다.
-                li
-                    | 발생한 최상위 예외 또는 가장 가까운 원인 예외 타입을 기준으로 매칭된다 
+                li 발생한 최상위 예외 또는 가장 가까운 원인 예외 타입을 기준으로 매칭된다 
                     +codeBtn('/Repositories/STS/mvc-java4/src/main/java/io/github/donggi/mvc/controller/HelloController.java', 'java', [10], true)
                 li 둘 이상의 예외 타입을 처리하려는 경우, 공통 부모 클래스를 인자로 하면 된다.
                 li value 속성으로 특정 예외들을 명시 가능
                 +asCode('java') @ExceptionHandler({FileSystemException.class, RemoteException.class})
-                li
-                    | @ControllerAdvice 예 
+                li @ControllerAdvice 예 
                     +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/advice/UnhandledExceptionAdvice.java', 'java', [6], true)
             div
                 h4.fake Method Arguments
@@ -2165,20 +2029,17 @@ include ../../source/skeleton.pug
                     +tds('Map, Model, ModelMap', '예외 응답을 위한 모델. 항상 비어있음')
                     tr
                         td RedirectAttributes
-                        td
-                            | 리다이렉션 쿼리에 덧붙일 속성
+                        td 리다이렉션 쿼리에 덧붙일 속성
                             +goto('Redirect Attributes')
                             |, 리다이렉션 이후 요청까지 임시로 저장할 속성
                             +goto('Flash Attributes')
                     tr
                         td @SessionAttribute
-                        td
-                            | 세션에 저장된 임의 인스턴스 접근 
+                        td 세션에 저장된 임의 인스턴스 접근 
                             +goto('@SessionAttribute')
                     tr
                         td @RequestAttribute
-                        td
-                            | 임의 요청 속성 접근 
+                        td 임의 요청 속성 접근 
                             +goto('@RequestAttribute')
                 h4.fake Return Values
                 table
@@ -2186,13 +2047,11 @@ include ../../source/skeleton.pug
                     +tds('Return', 'Description')
                     tr
                         td @ResponseBody
-                        td
-                            | HttpMessageConverter 인스턴스가 반환값을 적절히 응답에 쓴다 
+                        td HttpMessageConverter 인스턴스가 반환값을 적절히 응답에 쓴다 
                             +goto('@ResponseBody')
                     tr
                         td HttpEntity&lt;B>, ResponseEntity&lt;B>
-                        td
-                            | HTTP 헤더와 바디를 포함한 전체 응답을 반환하면 HttpMessageConverter가 적절히 응답에 쓴다 
+                        td HTTP 헤더와 바디를 포함한 전체 응답을 반환하면 HttpMessageConverter가 적절히 응답에 쓴다 
                             +goto('ResponseEntity')
                     +tds('String', '뷰 이름을 반환하면 ViewResolver가 적절히 뷰를 선택한다')
                     +tds('View', '렌더링할 뷰')
@@ -2200,8 +2059,7 @@ include ../../source/skeleton.pug
                     +tds('ModelAndView', '뷰 + 모델')
                     tr
                         td void
-                        td
-                            | void 리턴, null 리턴이 아래 상황에서 이루어졌다면 응답이 완료됐다고 간주한다
+                        td void 리턴, null 리턴이 아래 상황에서 이루어졌다면 응답이 완료됐다고 간주한다
                             ul
                                 li ServletResponse, OutputStream 인자를 메서드로 받은 경우
                                 li @ResponseStatus를 갖는 경우
@@ -2232,19 +2090,16 @@ include ../../source/skeleton.pug
                     // org.springframework.web.reactive.function.server Since 5.0
                     Mono&lt;HandlerFunction&lt;T>> route(ServerRequest request)
                 li 정의된 RouterFunction 빈들은 RouterFunction#andOther()를 통해 합쳐진다
-                li
-                    | RouterFunctions.route()가 RouterFunction 빌더를 제공한다 
+                li RouterFunctions.route()가 RouterFunction 빌더를 제공한다 
                     +codeBtn('/Repositories/STS/mvc-java9/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', null, true)
                     +codeBtn('/Repositories/STS/mvc-java9/src/main/java/io/github/donggi/mvc/handler/Handler1.java', 'java', [9], true)
             h3 HandlerFunction
             ul
                 li ServerRequest
-                p
-                    | HTTP 요청에 대한 불변 객체. HTTP 요청 방식, URI, 헤더, 쿼리 인자, 요청 본문(body)을 제공한다 
+                p HTTP 요청에 대한 불변 객체. HTTP 요청 방식, URI, 헤더, 쿼리 인자, 요청 본문(body)을 제공한다 
                     +codeBtn('/Repositories/STS/mvc-java9/src/main/java/io/github/donggi/mvc/handler/Handler2.java', 'java', [19], true)
                 li ServerResponse
-                p
-                    | HTTP 응답에 대한 불변 객체. 
+                p HTTP 응답에 대한 불변 객체. 
                     +codeBtn('/Repositories/STS/mvc-java9/src/main/java/io/github/donggi/mvc/handler/Handler2.java', 'java', [19], true)
             h3 RouterFunction
             ul
@@ -2254,14 +2109,14 @@ include ../../source/skeleton.pug
                 li 중첩 경로에 대한 라우팅 예
                 +asCode('java').
                     import static org.springframework.web.servlet.function.RouterFunctions.route;
-                    
+
                     route()
                         .path("/person", builder -> builder
                             .GET("/{id}", accept(APPLICATION_JSON), handler::getPerson)
                             .GET("", accept(APPLICATION_JSON), handler::listPeople)
                             .POST("/person", handler::createPerson))
                         .build();
-                    
+
                     route()
                         .path("/person", b1 -> b1
                             .nest(accept(APPLICATION_JSON), b2 -> b2
@@ -2352,8 +2207,7 @@ include ../../source/skeleton.pug
                     p WebMvcConfigurer의 configureAsyncSupport 재정의
                     li XML Config
                     p &lt;mvc:annotation-driven> 안에 &lt;async-support> 정의
-                ul
-                    | ↓ 설정 가능한 옵션들
+                ul ↓ 설정 가능한 옵션들
                     li timeout : 설정하지 않으면 서블릿 컨테이너의 것이 적용된다
                     p timeout은 DeferredResult, ResponseBodyEmitter, SseEmitter, WebAsyncTask 각각에서도 설정 가능하다
                     li AsyncTaskExecutor : 설정하지 않으면 SimpleAsyncTaskExecutor가 이용된다
@@ -2361,29 +2215,24 @@ include ../../source/skeleton.pug
             h3
                 | DeferredResult
                 +pos('DeferredResult')
-            p
-                | 별개 스레드에서 값을 쓴다 
+            p 별개 스레드에서 값을 쓴다 
                 +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller1.java', 'java', [9], true)
             h3
                 | Callable
                 +pos('Callable')
-            p
-                | Callable에서 값을 반환한다 
+            p Callable에서 값을 반환한다 
                 +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller2.java', 'java', [7], true)
             h3 Processing
             div
                 h4 Interception
                 ul
-                    li
-                        | WebMvcConfigurer 예 
+                    li WebMvcConfigurer 예 
                         +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [12], true)
                         +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/interceptor/DeferredResultInterceptor.java', 'java', [8], true)
                         +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/interceptor/CallableInterceptor.java', 'java', [9], true)
-                    li
-                        | DeferredResult#onTimeout 예 
+                    li DeferredResult#onTimeout 예 
                         +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller3.java', 'java', [9], true)
-                    li
-                        | WebAsyncTask 예 
+                    li WebAsyncTask 예 
                         +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller4.java', 'java', [7], true)
                 h4 Compared to WebFlux
                 ul
@@ -2396,16 +2245,13 @@ include ../../source/skeleton.pug
                 +pos('HTTP Streaming')
             div
                 h4 ResponseBodyEmitter
-                p
-                    | 각 객체들은 HttpMessageConverter를 통해 변환된다. 
+                p 각 객체들은 HttpMessageConverter를 통해 변환된다. 
                     +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller5.java', 'java', [9], true)
                 h4 SseEmitter
-                p
-                    | ResponseBodyEmitter의 서브클래스로, Server-Sent Events를 지원한다. 
+                p ResponseBodyEmitter의 서브클래스로, Server-Sent Events를 지원한다. 
                     +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller6.java', 'java', [10], true)
                 h4 StreamingResponseBody
-                p
-                    | Converter를 거치지 않고 OutputStream에 직접 쓴다
+                p Converter를 거치지 않고 OutputStream에 직접 쓴다
                     +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller7.java', 'java', [7], true)
             h3 Disconnects
             p Servlet API는 클라이언트 연결 종료를 통지하지 않음에 유의.
@@ -2414,8 +2260,7 @@ include ../../source/skeleton.pug
             +pos('CORS')
         div
             h3 @CrossOrigin
-            ul
-                | ↓ 기본 설정
+            ul ↓ 기본 설정
                 li 모든 origin 허용
                 li 모든 header 허용
                 li 매핑에 일치하는 모든 HTTP method 허용
@@ -2481,20 +2326,17 @@ include ../../source/skeleton.pug
             +pos('View Technologies')
         div
             h3 Thymeleaf
-            p
-                | Spring MVC 연동은 Thymeleaf 프로젝트가 관리한다. 다음 빈들이 필요하다 ─ ServletContextTemplateResolver, SpringTemplateEngine, ThymeleafViewResolver 
+            p Spring MVC 연동은 Thymeleaf 프로젝트가 관리한다. 다음 빈들이 필요하다 ─ ServletContextTemplateResolver, SpringTemplateEngine, ThymeleafViewResolver 
                 +codeBtn('/Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/config/ThymeleafConfig.java', 'java', [21], true)
             h3 FreeMarker
-            p
-                | 예 
+            p 예 
                 +codeBtn('/Repositories/STS/mvc-java11/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [12], true)
                 +codeBtn('/Repositories/STS/mvc-java11/src/main/java/io/github/donggi/mvc/controller/MyController.java', 'java', [7], true)
                 +codeBtn('/Repositories/STS/mvc-java11/src/main/webapp/WEB-INF/freemarker/hello.ftl', 'html', null, true)
             h3 JSP, JSTL
             div
                 h4.fake View Resolvers
-                p
-                    | ResourceBundleViewResolver 예 
+                p ResourceBundleViewResolver 예 
                     +codeBtn('/Repositories/STS/mvc-java12/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [13], true)
                     +codeBtn('/Repositories/STS/mvc-java12/src/main/webapp/WEB-INF/classes/my_views.properties', 'ini', null, true)
                     +codeBtn('/Repositories/STS/mvc-java12/src/main/java/io/github/donggi/mvc/controller/Controller1.java', 'java', [7], true)
@@ -2503,12 +2345,10 @@ include ../../source/skeleton.pug
                     +codeBtn('/Repositories/STS/mvc-java13/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [13], true)
                     +codeBtn('/Repositories/STS/mvc-java13/src/main/java/io/github/donggi/mvc/controller/Controller1.java', 'java', [7], true)
                 h4.fake JSPs versus JSTL
-                p
-                    | JSTL(JSP Standard Tag Library)을 이용할 때에는 뷰 클래스로 JstlView를 이용해야 한다 
+                p JSTL(JSP Standard Tag Library)을 이용할 때에는 뷰 클래스로 JstlView를 이용해야 한다 
                     +codeBtn('/Repositories/STS/mvc-java12/build.gradle', 'gradle', [31,31], true)
                 h4.fake Spring’s JSP Tag Library
-                p
-                    | spring-webmvc.jar 안의 spring.tld에 스프리이 제공하는 태그 정의가 담겨 있다. 또는 
+                p spring-webmvc.jar 안의 spring.tld에 스프리이 제공하는 태그 정의가 담겨 있다. 또는 
                     +asA('https://docs.spring.io/spring-framework/docs/5.2.8.RELEASE/javadoc-api/org/springframework/web/servlet/tags/package-summary.html#package.description')
                     |  참고
         h2 MVC Config
@@ -2526,12 +2366,10 @@ include ../../source/skeleton.pug
                 | Type Conversion
                 +pos('MVC config - Type Conversion')
             ul
-                li
-                    | @Controller, @ControllerAdvice에만 적용되는 변환기를 등록하려면 
+                li @Controller, @ControllerAdvice에만 적용되는 변환기를 등록하려면 
                     +goto('DataBinder')
                     |  참고
-                li
-                    | 전역 Java Configuration 예 
+                li 전역 Java Configuration 예 
                     +codeBtn('/Repositories/STS/mvc-java14/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [10], true)
                 li XML에서는 FormattingConversionServiceFactoryBean 빈을 정의하면 된다
             h3 Validation
@@ -2564,20 +2402,17 @@ include ../../source/skeleton.pug
                 | Interceptors
                 +pos('MVC config - Interceptors')
             ol
-                li
-                    | Java Configuration 예 
+                li Java Configuration 예 
                     +codeBtn('/Repositories/STS/mvc-java3/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [19], true)
                 p addInterceptors(InterceptorRegistry)를 재정의하여 추가
-                li
-                    | XML Configuration 예 
+                li XML Configuration 예 
                     +codeBtn('/Repositories/STS/mvc-xml4/src/main/webapp/WEB-INF/app-servlet.xml', 'xml', null, true)
                 p mvc:interceptors 태그 안에 작성
             h3
                 | Content Types
                 +pos('MVC config - Content Types')
             ul
-                li
-                    | ContentNegotiationConfigurer를 이용해 확장자별 응답 Content-Type을 조정할 수 있다 
+                li ContentNegotiationConfigurer를 이용해 확장자별 응답 Content-Type을 조정할 수 있다 
                     +codeBtn('/Repositories/STS/mvc-java15/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [10], true)
                     +codeBtn('/Repositories/STS/mvc-java15/src/main/java/io/github/donggi/mvc/controller/Controller1.java', 'java', [7], true)
                 li XML Configuration
@@ -2800,14 +2635,12 @@ include ../../source/skeleton.pug
             div
                 h4 Overview
                 p SockJS는 웹소켓 연결에 실패하더라도 HTTP 기반의 에뮬레이션을 통해 애플리케이션 API를 지원한다.
-                ul
-                    | SockJS의 구성
+                ul SockJS의 구성
                     li SockJS Protocol
                     li SockJS JavsScript client
                     li SockJS server implementation : spring-websocket이 이에 해당
                     p spring-websocket 4.1부터는 SockJS Java client도 포함
-                p
-                    | SockJS 클라이언트는 GET /info 요청으로 서버 정보를 획득한 후, 전송 수단을 선택한다.
+                p SockJS 클라이언트는 GET /info 요청으로 서버 정보를 획득한 후, 전송 수단을 선택한다.
                     |  가능한 경우 WebSocket을 사용하고, 그 외엔 브라우저 별로 지원되는 HTTP 스트리밍, 최후에는 HTTP (long) polling을 이용한다.
                     br
                     | 각 브라우저별 지원 사항은 
@@ -2822,7 +2655,7 @@ include ../../source/skeleton.pug
                     li session-id : SockJS 세션
                     li transport : 전송 타입(websocket, xhr-streaming)
                 p 서버는 세션 수립 후 'o'(open frame), 25초(default) 동안 idle이면 'h'(heartbeat frame), 종결 시 'c'(close frame)를 전송한다
-                
+
                 h4 Enabling SockJS
                 +asCode('java', 'Java Configuration').
                     @Configuration
@@ -2849,7 +2682,7 @@ include ../../source/skeleton.pug
                     li Access-Control-Allow-Methods : 지원 타입(TransportType)으로 설정
                     li Access-Control-Max-Age : 31536000(1년)
                 p CORS 설정에서 WebSocket endpoint prefix를 제외하여 SockJsService가 처리하도록 하는 걸 고려해볼 것
-                
+
                 h4 SockJsClient
                 p 브라우저 없이 직접 WebSocket 서버에 연결하는 클라이언트를 제공한다. 지원 타입은 websocket, xhr-streaming, xhr-polling.
                 ul
@@ -2875,26 +2708,22 @@ include ../../source/skeleton.pug
                     COMMAND
                     header1:value1
                     header2:value2
-                    
+
                     Body^@
-                ul
-                    | Command 종류
+                ul Command 종류
                     li SEND : 클라이언트 -> 서버 전송
                     li SUBSCRIBE : 클라이언트 -> 서버 구독
                     li MESSAGE : 서버 -> 클라이언트 브로드캐스트
                 p 이하 생략 - 사용하게 되면 정리
             h3 Spring WebSocket 예
             ul
-                li
-                    | javax.websocket-api, spring-websocket 필요 
+                li javax.websocket-api, spring-websocket 필요 
                     +codeBtn('/Repositories/STS/mvc-java16/build.gradle', 'gradle', [27,27,35,35], true)
-                li
-                    | @EnableWebSocket + WebSocketHandler 예 
+                li @EnableWebSocket + WebSocketHandler 예 
                     +codeBtn('/Repositories/STS/mvc-java16/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [15], true)
                     +codeBtn('/Repositories/STS/mvc-java16/src/main/java/io/github/donggi/mvc/ws/Echo.java', 'java', [10], true)
                     +codeBtn('/Repositories/STS/mvc-java16/src/main/webapp/static/ws.html', 'html', null, true)
-                li
-                    | @ServerEndpoint 예
+                li @ServerEndpoint 예
                     +codeBtn('/Repositories/STS/mvc-java17/src/main/java/io/github/donggi/mvc/ws/Echo.java', 'java', [20], true)
                     +codeBtn('/Repositories/STS/mvc-java17/src/main/webapp/static/ws.html', 'html', null, true)
 
@@ -2919,8 +2748,7 @@ include ../../source/skeleton.pug
         ul
             li 라이브러리 버전 관리, 로깅, DataSource 등의 일반적인 설정을 자동화하고, 사용자는 필요한 부분만 변경하면 된다
             li 톰캣 등 WAS 내장하여 실행 가능
-            li
-                | 모듈화된 기능들을 
+            li 모듈화된 기능들을 
                 +asA('https://start.spring.io/', '조합')
                 | 하여 빠르게 신규 프로젝트 시작 가능
         details
@@ -2954,11 +2782,11 @@ include ../../source/skeleton.pug
                     bootJar {
                         enabled = false
                     }
-                    
+
                     jar {
                         enabled = true
                     }
-                    
+
         details(open='')
             summary application.properties 서버 포트 지정
             | server.port=18080

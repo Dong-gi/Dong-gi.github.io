@@ -36,15 +36,13 @@ include ../../source/skeleton.pug
     h1 이클립스 HelloWorld 프로젝트
     ol
         li 프로젝트 생성
-        p
-            | "File" 메뉴 클릭, 또는 "Package Explorer"에서 우클릭 - New - Java Project.
+        p "File" 메뉴 클릭, 또는 "Package Explorer"에서 우클릭 - New - Java Project.
             br
             | 없으면 New - Other... - Java - Java Project를 선택
             br
             +w3img('/imgs/20180826_213734.png')
         li Main 클래스 생성
-        p
-            | "Package Explorer"의 해당 프로젝트에서 우클릭 - New - Class
+        p "Package Explorer"의 해당 프로젝트에서 우클릭 - New - Class
             br
             +w3img('/imgs/20180826_214148.png')
             br
@@ -57,20 +55,17 @@ include ../../source/skeleton.pug
             | 콘솔 결과창이 보이지 않는다면 Window - Show View - Console 선택
 
     h1 개발 과정
-    ol
-        | "»" 우측은 산출물.
+    ol "»" 우측은 산출물.
         li 코딩 » .java 소스 코드
         li 컴파일 by 컴파일러 » .class 바이트 코드 = 중간 언어
         p javac.exe가 담당. javap.exe는 그 반대(역어셈블러).
         li 해석 by JVM 인터프리터 » 기계어
-        p
-            | java.exe가 담당.
+        p java.exe가 담당.
             br
             | JIT(Just-In-Time) : 한 번 해석한 바이트 코드를 다시 해석하지 않고, 이전에 해석된 기계어를 가져다 이용.
         li 실행 by CPU
         li 참고
-        p
-            | javadoc.exe : 주석 html 문서 생성
+        p javadoc.exe : 주석 html 문서 생성
             br
             | jar.exe : Java ARchive. 프로그램 실행에 관련된 파일들을 .jar파일로 압축
 
@@ -78,24 +73,21 @@ include ../../source/skeleton.pug
     ol
         li 주석(Comment)은 프로그래머를 위한 것으로, 컴파일러는 무시하는 문장들이다.
         li // : '//'부터 줄의 끝까지 무시한다.
-        li
-            | /* */ : '/*'와 '*/' 사이의 모든 텍스트를 무시한다.
+        li /* */ : '/*'와 '*/' 사이의 모든 텍스트를 무시한다.
             +codeBtn('/Repositories/Single/tutorial/Comment.java', 'java')
 
     h1 식별자
     ul
         li 식별자(Identifier)는 의미 있는 코드에 붙이는 이름을 의미한다. 의미 있는 코드에는 변수(Variable), 상수(Constant), 메서드, 클래스 등이 있다.
         li 자바 식별자는 '_', '$'의 사용을 허용한다. 단, '_' 단독으로는 사용할 수 없다.
-        li
-            | 식별자 관례 : 상수는 SNAKE_CASE, 상수를 제외한 식별자는 camelCase 이용. 클래스는 CamelCase.
+        li 식별자 관례 : 상수는 SNAKE_CASE, 상수를 제외한 식별자는 camelCase 이용. 클래스는 CamelCase.
             +codeBtn('/Repositories/Single/tutorial/Identifier.java', 'java')
 
     h1 자료형, 연산
     ul
         li 자료형은 메모리 상에서 값이 표현되는 형식을 정의한다.
         li 기본 자료형(Base Type; Primitive Type)
-        p
-            | 참조 자료형이 아닌 자바의 8가지 기본 자료형은 메모리 상에 값이 그대로 존재한다. boolean, char, byte, short, int, long, float, double
+        p 참조 자료형이 아닌 자바의 8가지 기본 자료형은 메모리 상에 값이 그대로 존재한다. boolean, char, byte, short, int, long, float, double
             br
             | 식별자 없이 값 자체를 나타내는 코드를 리터럴(Literal)이라 부른다. 각 자료형의 리터럴과 적용되는 연산은 아래의 예시 코드 참고.
             br
@@ -103,8 +95,7 @@ include ../../source/skeleton.pug
             +codeBtn('/Repositories/Single/tutorial/CharExample.java', 'java')
             +codeBtn('/Repositories/Single/tutorial/NumberExample.java', 'java')
         li 참조 자료형(Reference Type)
-        p
-            | 메모리의 주소를 통해 값에 접근한다. C/C++의 포인터와 같지만, 자바는 포인터 연산을 지원하지는 않는다.
+        p 메모리의 주소를 통해 값에 접근한다. C/C++의 포인터와 같지만, 자바는 포인터 연산을 지원하지는 않는다.
             br
             +codeBtn('/Repositories/Single/tutorial/StringExample.java', 'java')
             +codeBtn('/Repositories/Single/tutorial/ArrayExample.java', 'java')
@@ -112,8 +103,7 @@ include ../../source/skeleton.pug
         p 기본 자료형 변수는 정적 할당, 참조 자료형 변수는 동적 할당된다. 동적 할당된 객체들은 자동으로 GC 대상이 된다.
         ul
             li 정적 할당
-            p
-                | 컴파일러가 메모리 점유를 정확하게 예측할 수 있는 (지역)변수를 생성하는 방법으로, 선언과 동시에 스택 영역에 할당되어 코드 블록이 끝나는 순간 해제된다.
+            p 컴파일러가 메모리 점유를 정확하게 예측할 수 있는 (지역)변수를 생성하는 방법으로, 선언과 동시에 스택 영역에 할당되어 코드 블록이 끝나는 순간 해제된다.
                 br
                 | 클로저 Closure : 동적 할당되어 유지되는 객체 안에 정적 할당되는 변수를 선언하여 정적 변수의 소멸 시기를 스코프 밖으로 지연시키는 것.
             li 동적 할당
@@ -141,8 +131,7 @@ include ../../source/skeleton.pug
     h1 Varargs
     ul
         li 가변 길이 매개변수 선언 : Type... 배열명
-        p
-            | 나열된 매개변수들이 하나의 배열로 넘겨지며, 배열 자체를 넘길 수 있다.
+        p 나열된 매개변수들이 하나의 배열로 넘겨지며, 배열 자체를 넘길 수 있다.
             +codeBtn('/Repositories/Single/tutorial/VarArgs.java', 'java')
 
     h1 제한자(Modifier)
@@ -185,15 +174,13 @@ include ../../source/skeleton.pug
         li 초기화 블록
         ul
             li class initializer : 클래스 내의 static {} 블록으로, 클래스 로드시 한 번 호출된다.
-            li
-                | instance initializer : 클래스 내의 {} 블록으로, 객체 생성시 한 번 호출된다.
+            li instance initializer : 클래스 내의 {} 블록으로, 객체 생성시 한 번 호출된다.
                 +codeBtn('/Repositories/Single/tutorial/ClassExample.java', 'java') 초기화 블록, 상속, 다형성 예시 »
         li this : 객체 자신을 가리키는 키워드. this()를 통해 다른 생성자 호출, this.methodName()을 통해 다른 메서드 호출, ClassName.this를 통해 가려진 영역의 객체 참조.
         li super : 부모 클래스를 가리키는 키워드. super()를 통해 부모 메서드 호출, super.methodName()을 통해 다른 메서드 호출
         li 자바는 오버라이드를 명시하지 않아도 재정의한 메서드를 호출해준다.(= Dynamic method dispatch)
         li instanceof 연산자로 호환 여부 확인 가능
-        li
-            | {}를 이용해 간단하게 익명클래스를 작성할 수 있다.
+        li {}를 이용해 간단하게 익명클래스를 작성할 수 있다.
             +codeBtn('/Repositories/Single/tutorial/AnonymousClass.java', 'java') 익명클래스 객체 예시 »
 
     h1 인터페이스
@@ -248,12 +235,10 @@ include ../../source/skeleton.pug
             li java.util.function 패키지에 유용한 FunctionalInterface들이 정의되어 있다.
             li 기존의 인터페이스에 static 메서드가 추가되었다. 예) Comparator.comparing
         li 익명 메서드 Lambda : FunctionalInterface의 메서드만을 명시함으로써 익명 객체를 생성한다.
-        p
-            | 시그니처를 간소화하는 것은 어디까지나 정의가 분명할 때뿐이다.
+        p 시그니처를 간소화하는 것은 어디까지나 정의가 분명할 때뿐이다.
             +codeBtn('/Repositories/Single/tutorial/Lambda2.java', 'java')
         li 메서드 참조를 이용해 기정의된 메서드를 람다로 이용할 수 있다. '::' 연산자를 이용한다.
-        li
-            | 생성자 참조 » "::new". 배열 생성자 int[]::new도 가능.
+        li 생성자 참조 » "::new". 배열 생성자 int[]::new도 가능.
             +codeBtn('/Repositories/Single/tutorial/Lambda.java', 'java')
 
     h1 Object 클래스
@@ -265,8 +250,7 @@ include ../../source/skeleton.pug
             li Object.clone()의 접근제한자는 protected이다. 이는 얕은 복사본의 이용으로 원본 객체까지 변경되는 것을 막기 위함이다.
             li clone()을 재정의할 때, Cloneable 마커 인터페이스를 구현하는데, 마커 인터페이스는 추상 메소드 없이, 클래스가 단순히 해당 기능을 가짐을 나타낸다.
         li boolean equals(Object obj)
-        p
-            | Object 클래스의 equals 구현 : return this == obj;
+        p Object 클래스의 equals 구현 : return this == obj;
             br
             | equals()를 오버라이드할 경우 non-null 참조 변수들에 대해 아래의 원칙을 만족해야 한다.
         ol
@@ -286,8 +270,7 @@ include ../../source/skeleton.pug
         +codeBtn('/Repositories/Single/tutorial/ObjectExample.java', 'java') 예시 : clone, equals, hashCode, toString, compareTo »
         +codeBtn('/Repositories/Single/tutorial/Notify.java', 'java') 예시 : notify, wait »
         li @Deprecated(since="9") protected void finalize()
-        p
-            | 객체 폐기 메서드였던 것.
+        p 객체 폐기 메서드였던 것.
             br
             | 대안 : Non-heap 리소스를 갖는 객체들에 대하여 명시적인 자원 해제 메서드를 지원해야 하며, 가능하면 AutoCloseable을 구현한다.
             | java.lang.ref.Cleaner, java.lang.ref.PhantomReference는 참조되지 않는 객체를 해제하는 데 유연한 방법을 
@@ -323,30 +306,25 @@ include ../../source/skeleton.pug
         li 부모보다 많은 종류의 예외를 공표할 수 없다.
 
     h1 옵션 타입
-    p
-        | Optional&lt;T> : T 타입의 존재 여부를 포함하는 T타입 컨테이너
+    p Optional&lt;T> : T 타입의 존재 여부를 포함하는 T타입 컨테이너
         +codeBtn('/Repositories/Single/tutorial/OptionalExample.java', 'java')
 
     h1 제네릭
     ul
         li 여러 타입을 기본 요소로 할 수 있는 범용 클래스/인터페이스 작성을 위한 문법.
         li A가 B의 서브타입일 때, A[]는 B[]의 서브타입이지만, G&lt;A>는 G&lt;B>의 서브타입이 아니다.
-        p
-            | Erasure : 컴파일 시 제네릭 타입을 모두 지우고 바운드 타입으로(명시되지 않았다면 Object) 변경한다. javap를 통해 이를 확인할 수 있다.
+        p Erasure : 컴파일 시 제네릭 타입을 모두 지우고 바운드 타입으로(명시되지 않았다면 Object) 변경한다. javap를 통해 이를 확인할 수 있다.
             br
             | 자식 메서드의 Erasure가 부모와 다를 때 부모 메서드는 bridge 메서드가 되어 자식의 Erasure를 이용하는 메서드를 호출한다. 이 과정에서 리턴 타입만 다른 메서드들이 생성될 수 있지만, 바이트 코드 단계기 때문에 에러가 발생되지 않고 잘 처리된다.
         li 메서드에서는 와일드카드 '?'를 이용하여 임의 제네릭 타입을 매개변수로 받을 수 있다.
         li 제네릭을 통한 객체 생성 불가. 제네릭을 static 요소에서 이용하는 데 제한.
-        li
-            | 제네릭 타입의 선언, 제네릭 리스트 일부 구현, 바운드된 타입 매개변수 선언
+        li 제네릭 타입의 선언, 제네릭 리스트 일부 구현, 바운드된 타입 매개변수 선언
             +codeBtn('/Repositories/Single/tutorial/Generic.java', 'java')
-        li
-            | 비제네릭 클래스의 제네릭 생성자 선언, 비제네릭 클래스 - 제네릭 클래스 상속
+        li 비제네릭 클래스의 제네릭 생성자 선언, 비제네릭 클래스 - 제네릭 클래스 상속
             +codeBtn('/Repositories/Single/tutorial/Generic2.java', 'java')
 
     h1 JUnit
-    p
-        | 단위 테스트에 사용되는 라이브러리
+    p 단위 테스트에 사용되는 라이브러리
         +codeBtn('/Repositories/Gradle/JUnit-Example/src/test/java/x/AppTest.java', 'java')
     +asCode('shell', '실행 결과').
         $ ./gradlew test -i

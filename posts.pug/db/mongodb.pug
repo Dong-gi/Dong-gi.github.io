@@ -145,8 +145,7 @@ include ../../source/skeleton.pug
                 td
                 td |
                 td "\x0B" e_name cstring cstring
-                td
-                    | 각각 정규표현식 패턴,
+                td 각각 정규표현식 패턴,
                     span.hover-content(template-id='template-mongodb-bson-regex-option') 옵션(알파벳 순)
                 td regex
             tr
@@ -538,7 +537,7 @@ include ../../source/skeleton.pug
         li mapReduce
         +asCode('javascript').
             db.mycoll.mapReduce(mappingFunc, reduceFunc, {query: filterObj, out: "outName"})
-            
+
             db.mycoll.mapReduce(
                 function() { emit(groupKey, value); },
                 function(key, values) { return aggrValue; }

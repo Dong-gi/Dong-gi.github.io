@@ -3,8 +3,7 @@ include ../../source/skeleton.pug
     h1 BOM; Browser Object Model
     ul
         li window
-        p
-            | 브라우저 윈도우를 가리키는 객체
+        p 브라우저 윈도우를 가리키는 객체
             +codeBtn('/Repositories/JavaScript/Browser/window_open.js', 'javascript') Window#open
             +codeBtn('/Repositories/JavaScript/Browser/window_resizeto.js', 'javascript') Window#resizeTo
             +codeBtn('/Repositories/JavaScript/Browser/window_popup.js', 'javascript') Window#alert, confirm, prompt
@@ -12,8 +11,7 @@ include ../../source/skeleton.pug
         li screen
         p window.screen과 동일. 표시되는 화면과 연관
         li location
-        p
-            | window.location과 동일. 현재 페이지 URL과 연관
+        p window.location과 동일. 현재 페이지 URL과 연관
             +codeBtn('/Repositories/JavaScript/Browser/location.js', 'javascript')
         li history
         p window.history와 동일. 페이지 기록과 연관
@@ -23,8 +21,7 @@ include ../../source/skeleton.pug
         p window.document와 동일. 표시되는 페이지 내용과 연관
 
     h1 DOM; Document Object Model
-    p
-        | Icons made by
+    p Icons made by
         +asA('http://www.freepik.com', 'Freepik')
         |  from
         +asA('http://www.flaticon.com', 'www.flaticon.com')
@@ -175,8 +172,7 @@ include ../../source/skeleton.pug
     h1 파일 API
     ol
         li 이전에는 자바스크립트에서 로컬 파일에 접근하는 것이 불가능했지만, 사용자가 입력 태그에 직접 설정한 파일에 대해 읽기가 가능해졌다.
-        p
-            | 로컬 파일 접근을 허용하는 브라우저에서 &lt;input type="file"> 요소의 files 프로퍼티는 FileList 객체다.
+        p 로컬 파일 접근을 허용하는 브라우저에서 &lt;input type="file"> 요소의 files 프로퍼티는 FileList 객체다.
             | FileList는 길이 0 이상의 File 객체 목록이며, File 객체는 name과 lastModifiedDate 프로퍼티가 있는 Blob 객체다.
         li 아래 입력 필드에 아무 파일이나(이왕이면 이미지로) 드롭해보세요
         p
@@ -188,8 +184,7 @@ include ../../source/skeleton.pug
             li postMessage()로 웹 워커에 blob을 보낼 수 있다
             li XMLHttpRequest.send()로 blob을 보낼 수 있다
             li URL.createObjectURL()로 blob:// 주소를 가져올 수 있으며, 이 url은 DOM이나 CSS를 활용할 수 있다
-            p
-                | Blob URL 삭제 : URL.revokeObjectURL()
+            p Blob URL 삭제 : URL.revokeObjectURL()
                 +codeBtn('/Repositories/JavaScript/Browser/blob_example.js', 'javascript')
             li FileReader 객체를 사용하면 Blob 내용을 비동기적으로 문자열이나 ArrayBuffer로 추출할 수 있다
         li FileReader

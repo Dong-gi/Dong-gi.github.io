@@ -51,12 +51,11 @@ include ../../source/skeleton.pug
             static &lt;T> boolean isSorted(T[] array, Comparator&lt;T> comparator) // Since 3.4
 
         h2 class BitField Since 2.0
-        p
-            | 클래스 인스턴스 내부에 비트값들을 저장하지 않고, 외부 int, short, byte에 대한 마스킹 연산을 지원한다
+        p 클래스 인스턴스 내부에 비트값들을 저장하지 않고, 외부 int, short, byte에 대한 마스킹 연산을 지원한다
             +codeBtn('/Repositories/Eclipse/apache-commons-lang-example/src/test/java/BitFieldTest.java', 'java')
         +asCode('java').
             public BitField(int mask)
-            
+
             int getValue(int holder)            // 마스크 비트에 해당하는 비트들을 우측으로 시프트하여 값 반환
             int getRawValue(int holder)         // 마스크 비트에 해당하는 비트들의 위치 그대로 값 반환
             int set(int holder)                 // + clear
@@ -79,7 +78,7 @@ include ../../source/skeleton.pug
         +asCode('java').
             ClassPathUtils.toFullyQualifiedName(StringUtils.class, "StringUtils.properties")
                 == "org.apache.commons.lang3.StringUtils.properties"
-            
+
             ClassPathUtils.toFullyQualifiedPath(StringUtils.class, "StringUtils.properties")
                 == "org/apache/commons/lang3/StringUtils.properties"
 
@@ -119,8 +118,7 @@ include ../../source/skeleton.pug
                 // + max, compare, median(중앙값), mode(최빈값)
 
         h2 class RandomUtils Since 3.3
-        p
-            | java.util.Random 인스턴스를 생성하는 귀찮음을 해소해줄 수 있다. 성능/정확성을 위해
+        p java.util.Random 인스턴스를 생성하는 귀찮음을 해소해줄 수 있다. 성능/정확성을 위해
             +asA('https://commons.apache.org/proper/commons-rng/commons-rng-core/javadocs/api-1.2/overview-summary.html', 'Commons RNG')
             | 를 고려해봄이 좋다
         +asCode('java').
@@ -129,8 +127,7 @@ include ../../source/skeleton.pug
             static int nextInt(int startInclusive, int endExclusive) // + long, double, float
 
         h2 class RandomStringUtils Since 1.0
-        p
-            | 스레드-안전. 간단한 랜덤 문자열 생성. 정교한 작업이 필요하다면
+        p 스레드-안전. 간단한 랜덤 문자열 생성. 정교한 작업이 필요하다면
             +asA('https://commons.apache.org/proper/commons-text/javadocs/api-release/', 'commons-text')
             |  RandomStringGenerator 이용
         +asCode('java').
@@ -273,16 +270,13 @@ include ../../source/skeleton.pug
                     li n분 동안 m개 이상의 실패가 발생하면 l분간 상태를 OPEN으로 천이.
                     li 분당 요청이 n개 이하로 떨어지면 상태를 CLOSED로 천이
                 li public EventCountCircuitBreaker(int threshold, long checkInterval, TimeUnit checkUnit)
-                p
-                    | 기준 이벤트 카운트/인터벌 모두 공유. 초당 최대 5개의 처리를 하는
+                p 기준 이벤트 카운트/인터벌 모두 공유. 초당 최대 5개의 처리를 하는
                     +codeBtn('/Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', 'java', '[11,32]')
                 li public EventCountCircuitBreaker(int openingThreshold, long checkInterval, TimeUnit checkUnit, int closingThreshold)
-                p
-                    | 기준 인터벌을 공유. 초당 5개 이상의 요청이 발생하면 OPEN, 초당 2개 이하로 떨어지면(부정확) CLOSE하는
+                p 기준 인터벌을 공유. 초당 5개 이상의 요청이 발생하면 OPEN, 초당 2개 이하로 떨어지면(부정확) CLOSE하는
                     +codeBtn('/Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', 'java', '[34,61]')
                 li public EventCountCircuitBreaker(int openingThreshold, long openingInterval, TimeUnit openingUnit, int closingThreshold, long closingInterval, TimeUnit closingUnit)
-                p
-                    | 초당 5번 이상 실패하면 2초간 OPEN하는
+                p 초당 5번 이상 실패하면 2초간 OPEN하는
                     +codeBtn('/Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', 'java', '[63,90]')
 
         h2 Initializer
@@ -295,8 +289,7 @@ include ../../source/skeleton.pug
             h3
                 | abstract class AtomicInitializer&lt;T> implements ConcurrentInitializer&lt;T> Since 3.0
             ol
-                li
-                    | 『Effective Java』에서 소개하는
+                li 『Effective Java』에서 소개하는
                     +codeBtn('/posts/java/effective_java.html', 'nohighlight') 객체 필드 초기화 지연
                     | 과 유사한 형태의 로직으로, AtomicReference를 이용해 단 한 번만 객체가 초기화됨을 보장한다
                 li protected abstrct T initialize()
@@ -316,8 +309,7 @@ include ../../source/skeleton.pug
 
             h3 abstract class LazyInitializer&lt;T> implements ConcurrentInitializer&lt;T> Since 3.0
             ol
-                li
-                    | 『Effective Java』에서 소개하는
+                li 『Effective Java』에서 소개하는
                     +codeBtn('posts/java/effective_java.html', 'nohighlight') 객체 필드 초기화 지연
                     | 로직을 이용해 늦은 초기화를 지원한다
                 li protected abstract T initialize()

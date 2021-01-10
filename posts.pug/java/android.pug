@@ -6,20 +6,16 @@ include ../../source/skeleton.pug
         ol
             li 기본 설정대로 프로젝트를 생성하면 아래의 4개 주요 파일을 볼 수 있다.
             li MainActivity.java
-            p
-                | 앱을 실행하면 이 클래스의 인스턴스가 실행되고 layout을 로드한다.
+            p 앱을 실행하면 이 클래스의 인스턴스가 실행되고 layout을 로드한다.
                 +codeBtn('/Repositories/Android/Project01/app/src/main/java/io/github/donggi/project01/MainActivity.java', 'java') MainActivity.java »
             li activity_main.xml
-            p
-                | 액티비티의 UI를 정의한다.
+            p 액티비티의 UI를 정의한다.
                 +codeBtn('/Repositories/Android/Project01/app/src/main/res/layout/activity_main.xml', 'xml') activity_main.xml »
             li AndroidManifest.xml
-            p
-                | 앱의 기본적인 특성을 기술하고, 각 컴포넌트를 정의한다.
+            p 앱의 기본적인 특성을 기술하고, 각 컴포넌트를 정의한다.
                 +codeBtn('/Repositories/Android/Project01/app/src/main/AndroidManifest.xml', 'xml') AndroidManifest.xml »
             li build.gradle
-            p
-                | 앱의 컴파일과 빌드에 관한 구성 설정.
+            p 앱의 컴파일과 빌드에 관한 구성 설정.
                 +codeBtn('/Repositories/Android/Project01/build.gradle', 'gradle') Project Gradle »
                 +codeBtn('/Repositories/Android/Project01/app/build.gradle', 'gradle') "app" module Gradle »
 
@@ -97,8 +93,7 @@ include ../../source/skeleton.pug
             li View
             ul
                 li 버튼, 텍스트 박스 등의 UI 요소
-                p
-                    | TextView, EditText, Button, ImageView, Switch, ...
+                p TextView, EditText, Button, ImageView, Switch, ...
                     +codeBtn('/Repositories/Android/Project04/app/src/main/res/layout/activity_main2.xml', 'xml')
                 li id 속성 : @[+]id/ID
                 p ID를 할당할 때는 +를 앞에 붙여 R 클래스의 상수로 등록되도록 한다.
@@ -117,8 +112,7 @@ include ../../source/skeleton.pug
                 p orientation 속성으로 horizontal | vertical 지정
                 p gravity 속성으로 정렬 가능. center_horizontal(0x01), left(0x03), right(0x05), fill_horizontal(0x07), center_vertical(0x10), top(0x30), bottom(0x50), fill_vertical(0x70), center(0x11), fill(0x77)
                 p baselineAligned 속성으로 요소들의 아래 줄을 일치시킬 지 여부를 지정할 수 있다
-                p
-                    | 요소의 layout_weight 속성으로 너비/높이를 일정 비율씩 나눠가질 수 있다.
+                p 요소의 layout_weight 속성으로 너비/높이를 일정 비율씩 나눠가질 수 있다.
                     +codeBtn('/Repositories/Android/Project04/app/src/main/res/layout/activity_main.xml', 'xml')
                 li GridLayout
                 p 화면의 가로/세로(columnCount/rowCount)를 잘라 만든 격자를 이용해 배치.
@@ -131,8 +125,7 @@ include ../../source/skeleton.pug
             +codeBtn('/Repositories/Android/Project05/app/src/main/res/layout/activity_main.xml', 'xml') activity_main.xml »
             +codeBtn('/Repositories/Android/Project05/app/src/main/java/io/github/donggi/project05/MainActivity.java', 'java') MainActivity.java »
             li BottomNavigationView
-            p
-                | com.google.android.material:material 포함.
+            p com.google.android.material:material 포함.
                 +codeBtn('/Repositories/Android/Project04/app/build.gradle', 'gradle') "app" module Gradle »
                 +codeBtn('/Repositories/Android/Project04/app/src/main/res/layout/activity_main4.xml', 'xml') activity xml »
                 +codeBtn('/Repositories/Android/Project04/app/src/main/res/layout/navigator.xml', 'xml') navigator xml »
@@ -159,8 +152,7 @@ include ../../source/skeleton.pug
     +codeBtn('/Repositories/Android/Project03/app/src/main/AndroidManifest.xml', 'xml') AndroidManifest.xml »
 
     h1 알림 보내기
-    p
-        | 매니페스트 설정 불필요
+    p 매니페스트 설정 불필요
         +codeBtn('/Repositories/Android/Project02/app/src/main/res/layout/activity_main.xml', 'xml') activity_main.xml »
         +codeBtn('/Repositories/Android/Project02/app/src/main/java/io/github/donggi/project02/MainActivity.java', 'java') MainActivity.java »
 
@@ -196,13 +188,11 @@ include ../../source/skeleton.pug
         ol
             li List&lt;String> getProviders (boolean enabledOnly)
             li void requestLocationUpdates(String provider, long minTime, float minDistance, LocationListener listener) + removeUpdates
-            p
-                | minTime : 업데이트 간 최소 시간(ms), minDistance : 업데이트 간 최소 거리(m)
+            p minTime : 업데이트 간 최소 시간(ms), minDistance : 업데이트 간 최소 거리(m)
                 +codeBtn('/Repositories/Android/Project07/app/src/main/java/io/github/donggi/project07/example/LocationExample.java', 'java') LocationExample.java »
             li void requestSingleUpdate (String provider, PendingIntent intent)
             li void addProximityAlert (double latitude, double longitude, float radius, long expiration, PendingIntent intent) + removeProximityAlert
-            p
-                | 근접 경보. 등록한 영역에 들어가거나 나갈 때 인텐트로 알림. ACCESS_FINE_LOCATION 권한 필요
+            p 근접 경보. 등록한 영역에 들어가거나 나갈 때 인텐트로 알림. ACCESS_FINE_LOCATION 권한 필요
                 +codeBtn('/Repositories/Android/Project07/app/src/main/java/io/github/donggi/project07/example/ProximityAlertExample.java', 'java') ProximityAlertExample.java »
             p expiration : 기한 내에 도착하지 못하면 알림 취소. -1이면 무기한.
             p intent로 KEY_PROXIMITY_ENTERING이라는 boolean 값 전달. true면 들어가는 것, false면 나가는 것.
@@ -227,8 +217,7 @@ include ../../source/skeleton.pug
             // business logic
             lock.release();
         li 화면 항상 켜기
-        p
-            | xml : android:keepScreenOn="true" 또는
+        p xml : android:keepScreenOn="true" 또는
             br
             | java : getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         li 주기적인 백그라운드 알람
@@ -253,8 +242,7 @@ include ../../source/skeleton.pug
         li AsyncTask
         p onPreExecute(), onProgressUpdate, onPostExecute : 메인 스레드에서 실행된다
         li Application 객체를 통한 공유
-        p
-            | 안드로이드 애플리케이션은 항상 Application 컴포넌트를 하나 갖고 있으며, Context#getApplication로 접근 가능하다
+        p 안드로이드 애플리케이션은 항상 Application 컴포넌트를 하나 갖고 있으며, Context#getApplication로 접근 가능하다
             br
             | 사용자 정의 Application을 사용하는 경우, 매니페스트의 name 속성을 변경해주고, getApplication() 결과를 캐스팅해야 한다.
 

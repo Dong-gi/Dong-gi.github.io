@@ -44,8 +44,7 @@ include ../../source/skeleton.pug
         li 이후 getSupportedAnnotationTypes, getSupportedOptions, getSupportedSourceVersion이 한번씩 호출된다
         li 대상을 찾은 경우 process 메서드를 호출한다; Processor 인스턴스는 전체 라운드에서 한 번만 생성된다
         li: +asCode('java') boolean process(Set&lt;? extends TypeElement> annotations, RoundEnvironmnent roundEnv)
-        p
-            | 처리하는 애너테이션이 설정된 요소들을 받아 처리한다. 처리했다면 true를 반환하고, 이번 라운드에서 해당 요소들은 더 이상 다른 프로세서들이 처리할 수 없다.
+        p 처리하는 애너테이션이 설정된 요소들을 받아 처리한다. 처리했다면 true를 반환하고, 이번 라운드에서 해당 요소들은 더 이상 다른 프로세서들이 처리할 수 없다.
             br
             | 모든 애터네이션(*)을 처리할 수 있다고 했지만, 애너테이션된 요소를 발견하지 못한 경우에만 annotations가 비어있을 수 있다
 
@@ -65,18 +64,15 @@ include ../../source/skeleton.pug
 
     h1 javac -processor 이용 예
     ol
-        li
-            | 애너테이션 정의 :
+        li 애너테이션 정의 :
             +codeBtn('/Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/MyTarget.java', 'java') MyTarget »
-        li
-            | 애너테이션 프로세서 정의 :
+        li 애너테이션 프로세서 정의 :
             +codeBtn('/Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/processor/MyTargetProcessor.java', 'java') MyTargetProcessor »
         li 애너테이션 컴파일
         +asCode('shell') D:\>javac -encoding UTF-8 io/github/donggi/annotation/MyTarget.java
         li 애너테이션 프로세서 컴파일
         +asCode('shell') D:\>javac -encoding UTF-8 io/github/donggi/annotation/processor/MyTargetProcessor.java
-        li
-            | 애너테이션 프로세서 지정하여 컴파일
+        li 애너테이션 프로세서 지정하여 컴파일
             +codeBtn('/Repositories/Eclipse/annotation-processing1/src/main/java/io/github/donggi/annotation/test/MyTargetTest.java', 'java') MyTargetTest »
         +asCode('shell').
             D:\>javac -encoding UTF-8 -processor io.github.donggi.annotation.processor.MyTargetProcessor io/github/donggi/annotation/test/MyTargetTest.java
@@ -99,8 +95,7 @@ include ../../source/skeleton.pug
     h1 javac -cp 이용 예
     ol
         li 위 "javac -processor 이용 예" 프로젝트 그대로 jar 빌드
-        li
-            | META-INF/services/javax.annotation.processing.Processor 파일에 애너테이션 프로세서 클래스
+        li META-INF/services/javax.annotation.processing.Processor 파일에 애너테이션 프로세서 클래스
             +codeBtn('/Repositories/Eclipse/annotation-processing1/src/main/resources/META-INF/services/javax.annotation.processing.Processor', 'text') 명시 »
         +w3img('/imgs/20191128_164401.png')
         +w3img('/imgs/20191128_164656.png')

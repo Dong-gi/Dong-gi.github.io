@@ -10,22 +10,17 @@ include ../../source/skeleton.pug
 
     h1 JSON
     ul
-        li
-            | public 필드 또는 public setter가 존재하는 POJO
+        li public 필드 또는 public setter가 존재하는 POJO
             +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[32,49]') 예1 »
             +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[52,68]') 예2 »
-        li
-            | 제네릭 List, Map도 가능.
+        li 제네릭 List, Map도 가능.
             +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[70,77]')
-        li
-            | JSON 노드 수정.
+        li JSON 노드 수정.
             +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[79,91]')
-        li
-            | JSON 직렬화/역직렬화에 직접 관여할 수 있다.
+        li JSON 직렬화/역직렬화에 직접 관여할 수 있다.
             +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[93,106]') 예1 »
             +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[108,117]') 예2 »
-        li
-            | 직렬화/역직렬화 관련 옵션
+        li 직렬화/역직렬화 관련 옵션
             +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[119,145]') 예1 »
             +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[147,162]') 예2 »
             +codeBtn('/Repositories/Eclipse/jackson/src/test/java/jackson/JsonTest.java', 'java', '[164,174]') 예3 »

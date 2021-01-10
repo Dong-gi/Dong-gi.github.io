@@ -8,8 +8,7 @@ include ../../source/skeleton.pug
         li.marker Docker client
         p CLI 클라이언트로 docker 커맨드가 사용된다. 도커 서버, 클라이언트는 서로 별개의 호스트에서 작동할 수 있다
         li Docker registry
-        p
-            | 이미지 저장소.
+        p 이미지 저장소.
             +asA('https://hub.docker.com/', 'Docker Hub')
             | 는 누구나 이용할 수 있는 퍼블릭 레지스트리로, 도커에서 기본적으로 검색하는 저장소다
         p Private registry 생성
@@ -132,7 +131,7 @@ include ../../source/skeleton.pug
         +asCode('shell').
             $ docker build [OPTIONS] PATH | URL | -
             $ docker image build [OPTIONS] PATH | URL | -
-            
+
             # OPTIONS
             --build-arg                  # 빌드 환경변수 설정
             --compress                   # 컨텍스트 gzip 압축
@@ -197,7 +196,7 @@ include ../../source/skeleton.pug
         h2 docker commit : 컨테이너로부터 이미지 생성
         +asCode('shell').
             $ docker commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
-            
+
             # OPTIONS
             --author, -a  # 저자
             --change, -c  # 새 이미지에 적용할 INSTRUCTION 추가
@@ -240,13 +239,13 @@ include ../../source/skeleton.pug
                 --name        # 컨테이너 이름 할당. 지정하지 않는 경우 docker 데몬이 랜덤하게 할당
                 --pid         # 기본적으로 각 컨테이너는 별개의 프로세스 네임스페이스에서 실행된다.
                               # --pid=host, --pid="container:{name|id}"를 이용해 네임스페이스 공유 가능
-                
+
                 --network=""                        # bridge(default), none, container:&lt;name|id>, host(빠름)
                                                     # host      : --mac-address 무효
                                                     # container : --add-host, --hostname, --dns, --dns-search, --dns-option, --mac-address, --publish, --publish-all, --expose 무효
                 --add-host=""                       # host:IP형식으로 적으면 /etc/hosts에 추가한다
                 --ip="", --ip6="", --mac-address="" # 주소 할당
-                
+
                 --restart       # no(default), on-failure[:max-retries](0이 아닌 상태로 종료된 경우 재시작), always(항상 재시작), unless-stopped(명시적으로 stop하기 전까지 항상 재시작)
                 --rm            # 컨테이너 종료 시 삭제
                 --memory="", -m # 메모리 제한. 최소 4m
@@ -269,7 +268,7 @@ include ../../source/skeleton.pug
         +asCode('shell').
             $ docker rm [OPTIONS] CONTAINER [CONTAINER...]
             $ docker container rm [OPTIONS] CONTAINER [CONTAINER...]
-            
+
             # OPTIONS
             --force, -f   # 실행 중인 컨테이너 중지 후 제거
             --link, -l    # 링크 제거
@@ -298,7 +297,7 @@ include ../../source/skeleton.pug
         h2 docker ps : 컨테이너 리스트
         +asCode('shell').
             $ docker ps [OPTIONS]
-            
+
             # OPTIONS
             --all, -a    # 실행중이지 않은 컨테이너도 표시
             --filter, -f # 옵션은 https://docs.docker.com/engine/reference/commandline/ps/#filtering 참고
@@ -309,7 +308,7 @@ include ../../source/skeleton.pug
         h2 docker images : 이미지 리스트
         +asCode('shell').
             $ docker images [OPTIONS] [REPOSITORY[:TAG]]
-            
+
             # OPTIONS
             --all, -a # 중간 이미지도 표시
             --digests # Digest 표시
@@ -322,7 +321,7 @@ include ../../source/skeleton.pug
         h2 docker search : Docker Hub 이미지 검색
         +asCode('shell').
             $ docker search [OPTIONS] TERM
-            
+
             # OPTIONS
             --filter stars=3            # 최소 3성 이상
             --filter "is-official=true" # 공식 이미지만
@@ -330,7 +329,7 @@ include ../../source/skeleton.pug
         h2 docker pull : 저장소 이미지 다운로드
         +asCode('shell').
             $ docker pull [OPTIONS] NAME[:TAG|@DIGEST]
-            
+
             $ docker pull ubuntu:14.04
             $ docker pull ubuntu@sha256:45b23dee08af5e43a7fea6c4cf9c25ccf269ee113168c19722f87876677c5cb2
             $ docker pull myregistry.local:5000/testing/test-image
@@ -343,7 +342,7 @@ include ../../source/skeleton.pug
             # STDIN, STDOUT, STDERR를 실행 중인 컨테이너에 연결한다
             $ docker attach [OPTIONS] CONTAINER
             $ docker container attach [OPTIONS] CONTAINER
-            
+
             # OPTIONS
             --detach-keys # 스트림 연결 해제 키 재설정
                           # -it 옵션으로 실행중이라면, Ctrl + P, Ctrl + Q로 컨테이너를 정지하지 않고 나올 수 있다

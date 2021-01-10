@@ -103,8 +103,7 @@ include ../../source/skeleton.pug
         p header, nav, section, article, aside, footer, ...
         +asA('https://www.w3schools.com/html/html5_semantic_elements.asp')
         li 시맨틱 CSS
-        p
-            | HTML5로 접어들면서 HTML 태그들은 골격만을 정의하고, 디자인은 JavaScript와 CSS로 보다 확실히 분리되었다. 디자인의 특징은 의미 범주가 같은 것들을(class) 비슷하게 표현한다는 것이며, 따라서 CSS 선택자들은 문서의 의미 정보를 내포하고 있다고 할 수 있다.
+        p HTML5로 접어들면서 HTML 태그들은 골격만을 정의하고, 디자인은 JavaScript와 CSS로 보다 확실히 분리되었다. 디자인의 특징은 의미 범주가 같은 것들을(class) 비슷하게 표현한다는 것이며, 따라서 CSS 선택자들은 문서의 의미 정보를 내포하고 있다고 할 수 있다.
             br
             | Bootstrap, W3C.CSS과 같은 인기 있는 CSS Framework들을 사용하면 체계적으로 정의된 클래스들 덕분에 수월하게 문서의 의미 정보를 뽑아낼 수 있다.
         li 반응형 웹
@@ -131,8 +130,7 @@ include ../../source/skeleton.pug
     h1 Canvas
     ul
         li canvas를 지원하지 않는 브라우저를 위해 안에 fallback content(대체 텍스트 또는 DOM)를 적어주면 좋다
-        li
-            | 스크립트에서 canvas의 지원을 확인하는 방법 : DOM이 HTMLCanvasElement 클래스인지 확인
+        li 스크립트에서 canvas의 지원을 확인하는 방법 : DOM이 HTMLCanvasElement 클래스인지 확인
             +codeBtn('/posts/front/canvas/draw1.js', 'javascript')
         li 캔버스의 기본 그리기 요소는 직사각형과 path(일련의 점들을 선분으로 연결) 두 가지
     div
@@ -167,8 +165,7 @@ include ../../source/skeleton.pug
                 li strokeText(text, x, y,[, maxWidth])
                 p 텍스트를 그리고 글자 외각선은 현재 fillStyle로 채운다.
                 li measureText(text)
-                p
-                    | 텍스트를 그린 결과가 어떻게 될지 미리 알 수 있는
+                p 텍스트를 그린 결과가 어떻게 될지 미리 알 수 있는
                     +asA('https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics', 'TextMetrics')
                     |  객체 반환.
             h3 path 생성
@@ -179,13 +176,11 @@ include ../../source/skeleton.pug
                 li moveTo(x, y) : path 조각의 시작점을 설정
                 li lineTo(x, y) : 마지막 정점으로부터 (x, y)까지의 선분을 추가.
                 li bazierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
-                p
-                    | 마지막 정점으로부터 (x, y)까지를 잇는, 2개의 조절점을 이용하는
+                p 마지막 정점으로부터 (x, y)까지를 잇는, 2개의 조절점을 이용하는
                     +asA('https://ko.wikipedia.org/wiki/베지에_곡선', '베지에 곡선')
                     | 을 추가한다.
                 li quadraticCurveTo(cpx, cpy, x, y)
-                p
-                    | 마지막 정점으로부터 (x, y)까지를 잇는, 1개의 조절점을 이용하는
+                p 마지막 정점으로부터 (x, y)까지를 잇는, 1개의 조절점을 이용하는
                     +asA('https://ko.wikipedia.org/wiki/베지에_곡선', '베지에 곡선')
                     | 을 추가한다.
                 li arc(x, y, radius, startAngle, endAngle[, anticlockwise])
@@ -201,43 +196,35 @@ include ../../source/skeleton.pug
                 li rect(x, y, width, height)
             h3 path 그리기
             ul
-                li
-                    | fill([fillRule])
+                li fill([fillRule])
                     br
                     | fill(path[, fillRule])
-                ul
-                    | 현재 또는 지정된 path의 영역 내부를 칠한다.
-                    li
-                        | fillRule : '
+                ul 현재 또는 지정된 path의 영역 내부를 칠한다.
+                    li fillRule : '
                         +asA('https://en.wikipedia.org/wiki/Nonzero-rule', 'nonzero')
                         | '(default) | '
                         +asA('https://en.wikipedia.org/wiki/Even-odd_rule', 'evenodd')
                         | '
-                    li
-                        | path :
+                    li path :
                         +asA('https://developer.mozilla.org/en-US/docs/Web/API/Path2D', 'Path2D')
                         |  인스턴스
                 li stroke([path])
                 p 현재 또는 지정된 path의 외각선을 그린다(outline)
-                li
-                    | drawFocusIfNeeded(element)
+                li drawFocusIfNeeded(element)
                     br
                     | drawFocusIfNeeded(path, element)
                 p element가 focus를 얻은 상태면 현재 또는 지정된 path 주변에 강조선을 그린다
                 li scrollPathIntoView([path])
                 p Experimental. Element.scrollIntoView()와 유사하게, 현재 또는 지정된 path가 스크린에 표시되도록 스크롤을 이동한다.
-                li
-                    | clip([fillRule])
+                li clip([fillRule])
                     br
                     | clip(path[, fillRule])
                 p fillRule은 fill()과 동일. 현재 또는 지정된 path를 관심영역으로 설정한다. 이후의 그리기는 관심영역 내부의 것만 렌더링된다.
-                li
-                    | isPointInPath(x, y[, fillRule])
+                li isPointInPath(x, y[, fillRule])
                     br
                     | isPointInPath(path, x, y[, fillRule])
                 p fillRule은 fill()과 동일. 정점이 현재 또는 지정된 path의 내부에 있는지 판별한다
-                li
-                    | isPointInStroke(x, y)
+                li isPointInStroke(x, y)
                     br
                     | isPointInStroke(path, x, y)
                 p 정점이 현재 또는 지정된 path의 외각선 위에 있는지 판별한다
@@ -248,8 +235,7 @@ include ../../source/skeleton.pug
                 li lineJoin : 교점 표시 종류. 'round', 'bevel', 'miter'(default)
                 p + miterLimit
                 li getLineDash() + setter
-                p
-                    | 선분 요소와 공백(gap)의 길이로 이루어진 배열. 원소가 홀수개라면 자동으로 뒤에 똑같은 배열이 덧붙여져 짝수 크기가 된다.
+                p 선분 요소와 공백(gap)의 길이로 이루어진 배열. 원소가 홀수개라면 자동으로 뒤에 똑같은 배열이 덧붙여져 짝수 크기가 된다.
                     br
                     | + lineDashOffset : 선분을 그리기 시작할 offset. default 0.0
             h3 텍스트 스타일
@@ -282,8 +268,7 @@ include ../../source/skeleton.pug
                 li shadowOffsetY : default 0
             h3 이미지 그리기
             ul
-                li
-                    | drawImage(image, dx, dy);
+                li drawImage(image, dx, dy);
                     +codeBtn('/posts/front/canvas/draw2.js', 'javascript')
                 li drawImage(image, dx, dy, dWidth, dHeight);
                 li drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
@@ -299,13 +284,11 @@ include ../../source/skeleton.pug
                         li m11, m12, ..., m43, m44 : 행렬 성분. double
                         li a, b, c, d, e, f : 2D 변환에 사용되는 값. 차례로 2x2 변환행렬, dx, dy에 해당하며, m11, m12, m21, m22, m41, m42에 대응한다
             ul
-                li
-                    | setTransform(a, b, c, d, e, f)
+                li setTransform(a, b, c, d, e, f)
                     br
                     | setTransform(matrix) + getTransform()
                 li transform(a, b, c, d, e, f)
-                p
-                    |old = ctx.getTransform();
+                p old = ctx.getTransform();
                     br
                     | 식[m_{old} = \begin{bmatrix} old.a & old.c & old.e \\ old.b & old.d & old.f \\ 0 & 0 & 1 \end{bmatrix}]식
                     br
@@ -342,8 +325,7 @@ include ../../source/skeleton.pug
                 p 지정 사각형 영역의 정보를 가진 ImageData 반환. 여기서 지정한 사각형은 변환 행렬의 영향을 받지 않으며, 캔버스 바깥을 포함하는 경우 RGBA(0, 0, 0, 0)로 채워진다
                 li putImageData(imageData, dx, dy[, dirtyX, dirtyY, dirtyWidth, dirtyHeight])
                 p 지정 위치에 imageData를 덮어쓴다. dirty* 매개변수로 그릴 imageData 영역을 지정할 수 있다.
-                li
-                    | createImageData(width, height)
+                li createImageData(width, height)
                     br
                     | createImageData(imagedata)
                 p RGBA(0, 0, 0, 0)으로 채워진 새 ImageData 인스턴스를 반환한다. imagedata로 호출한 경우, imagedata의 width, height만 사용된다

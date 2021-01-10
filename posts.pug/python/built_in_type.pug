@@ -80,8 +80,7 @@ include ../../source/skeleton.pug
             # 다음 요소 반환. 없으면 StopIteration 발생.
     div
         h2 Generator Types
-        p
-            | generator는 iterator protocol을 쉽게 제공한다. container의 __iter__()가 generator로 정의된 경우, 자동으로 __iter__()와 __next__()를 지원하는 iterator 객체를 반환한다.
+        p generator는 iterator protocol을 쉽게 제공한다. container의 __iter__()가 generator로 정의된 경우, 자동으로 __iter__()와 __next__()를 지원하는 iterator 객체를 반환한다.
             +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[143,150]') 예시 1 »
             +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[70,76]') 예시 2»
 
@@ -136,8 +135,7 @@ include ../../source/skeleton.pug
             li 슬라이스에 대한 할당(s[i:j:k] = t)은 길이가 일치해야 한다
 
     h1 Text Sequence Type
-    p
-        | str 객체 또는 유니코드 시퀀스 strings로 표현하며, 모두 내용은 변경 불가능하다.
+    p str 객체 또는 유니코드 시퀀스 strings로 표현하며, 모두 내용은 변경 불가능하다.
         +codeBtn('/Repositories/Python/Basic/format_map_example.py', 'python') format_map 예시 »
         +codeBtn('/Repositories/Python/Basic/translate_example.py', 'python') translate 예시 »
     +asCode('python').

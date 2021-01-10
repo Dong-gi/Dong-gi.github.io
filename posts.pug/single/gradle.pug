@@ -18,7 +18,7 @@ include ../../source/skeleton.pug
             $ gradle           --continuous            # 입력 소스 변경 시 자동 실행
                                                        # 빌드 로직 변경은 자동으로 반영되지 않음. 수동으로 재실행해야 함(6.4 문서 기준)
                                                        # 자동 빌드의 종료는 Ctrl+D 또는 kill
-            
+
             $ gradle           -D{propName}={value}    # JVM 시스템 속성
                                                        # 루트 프로젝트의 gradle.properties에서 'systemProp.' 접두 포함하여 지정 가능
             $ gradle           -Dgradle.wrapperUser={user}         # gradlew HTTP 인증 정보
@@ -29,13 +29,13 @@ include ../../source/skeleton.pug
             $ gradle           -Dorg.gradle.jvmargs={args}         # JVM 전달 인자
             #                  -Dorg.gradle.jvmargs="-Xmx1g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
             $ gradle           -Dorg.gradle.java.home={path}       # JAVA_HOME
-                                                       
+
             $ gradle           -P{propName}={value}    # 프로젝트 속성
                                                        # ORG_GRADLE_PROJECT_{propName}={value} 환경 변수로도 설정 가능
                                                        # 설정 파일의 org.gradle.project.{propName}={value} 로도 설정 가능
                                                        # 존재하지 않는 프로젝트 속성 참조 시 빌드 실패함에 유의
                                                        # Project#hasProperty(String) 이용
-            
+
             $ gradle tasks                             # 작업 목록 출력
             $ gradle help      --task clean            # 작업 도움말
             $ gradle init                              # 프로젝트 스켈레톤 생성
@@ -57,7 +57,7 @@ include ../../source/skeleton.pug
                         println msg
                     }
                 }
-            
+
             h3 Task dependencies; 작업 의존
             +asCode('gradle').
                 task hello {
@@ -87,7 +87,7 @@ include ../../source/skeleton.pug
                 I depend on some tasks
                 task ':doSomething' end
                 task ':bye' end
-            
+
             h3 Dynamic tasks; 동적 작업 정의
             +asCode('gradle').
                 [2, 4, 6].each {
@@ -98,7 +98,7 @@ include ../../source/skeleton.pug
                         }
                     }
                 }
-                
+
             h3 Groovy DSL shortcut notations; 그루비 축약 표현
             +asCode('gradle').
                 task hello {}
@@ -111,10 +111,10 @@ include ../../source/skeleton.pug
                 doFirst
                 doLast1
                 doLast2
-                
+
                 BUILD SUCCESSFUL in 7s
                 1 actionable task: 1 executed
-            
+
             h3 Extra task properties; 사용자 정의 속성 정의
             +asCode('gradle').
                 task _init { ext.author = 'Donggi Kim' }
@@ -123,7 +123,7 @@ include ../../source/skeleton.pug
                         println "Author is '${_init.author}'"
                     }
                 }
-            
+
             h3 Using methods; 사용자 정의 메서드 이용
             +asCode('gradle').
                 task _init { ext.author = 'Donggi Kim' }
@@ -134,7 +134,7 @@ include ../../source/skeleton.pug
                         println "Author is '${_init.author}'"
                     }
                 }
-                
+
                 String runningDir() {
                     new File('').getAbsolutePath()
                 }
@@ -147,24 +147,24 @@ include ../../source/skeleton.pug
                 Running dir is /root/.gradle/daemon/6.4
                 Project dir is /workspace/donggi-github/Dong-gi.github.io/Repositories/Gradle/project-01
                 Author is 'Donggi Kim'
-                
+
                 BUILD SUCCESSFUL in 7s
                 1 actionable task: 1 executed
 
             h3 Default tasks; 기본 실행 작업
             +asCode('gradle').
                 defaultTasks 'hello'
-                
+
                 task hello {
                     doLast {
                         println 'hello world'
                     }
                 }
-                
+
             h3 External dependencies; 스크립트에서 외부 클래스 사용
             +asCode('gradle').
                 import org.apache.commons.codec.binary.Base64
-                
+
                 buildscript {
                     repositories {
                         mavenCentral()
@@ -174,7 +174,7 @@ include ../../source/skeleton.pug
                         classpath 'commons-codec:commons-codec:1.2'
                     }
                 }
-                
+
                 task encode {
                     doLast {
                         def byte[] encodedString = new Base64().encode('hello world\n'.getBytes())
@@ -182,21 +182,20 @@ include ../../source/skeleton.pug
                     }
                 }
             ol
-                li
-                    | buildscript() 메서드는 
+                li buildscript() 메서드는 
                     +asA('https://docs.gradle.org/current/javadoc/org/gradle/api/initialization/dsl/ScriptHandler.html')
                     |  인스턴스를 구성한다.
                 li 프로젝트의 buildscript()는 모든 서브 프로젝트에도 적용된다
-            
+
             h3 외부 스크립트 포함
             +asCode('gradle') apply from ${filePath | url}
-            
+
             h3 작업 설명
             +asCode('gradle').
                 task hello {
                     group = 'Core'
                     description = 'Say hello'
-                    
+
                     doLast {
                         println 'hello world'
                     }
@@ -209,23 +208,23 @@ include ../../source/skeleton.pug
                 ----------
                 hello - Say hello
                 ...
-            
+
             h3 기존 작업 덮어쓰기
             +asCode('gradle').
                 plugins {
                     id 'base'
                 }
-                
+
                 task clean(type: Delete, overwrite: true) {
                     doLast {
                         println 'I like cleaning'
                     }
                 }
-            
+
             h3 특정 조건을 만족하는 경우에만 실행
             +asCode('gradle').
                 def p = this
-                
+
                 task hello() {
                     onlyIf {
                         p.hasProperty('userName')
@@ -237,24 +236,21 @@ include ../../source/skeleton.pug
             p 결과 ↓
             +asCode('shell').
                 $ gradle hello --daemon -PuserName="World"
-                
+
                 > Task :hello
                 Hello World!
-                
+
         h2 빌드 절차
         div
             h3 Initialization
             ul
-                li
-                    | 어떤 프로젝트들을 빌드해야 하는지 결정하고, 
+                li 어떤 프로젝트들을 빌드해야 하는지 결정하고, 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html')
                     |  인스턴스를 만든다.
-                li
-                    | 루트 프로젝트에 존재하는 settings.gradle 스크립트(-c 또는 --settings-file 옵션으로 다른 파일 지정 가능)가 실행된다.
+                li 루트 프로젝트에 존재하는 settings.gradle 스크립트(-c 또는 --settings-file 옵션으로 다른 파일 지정 가능)가 실행된다.
                     +codeBtn('/Repositories/Eclipse/annotation-processing3/settings.gradle', 'gradle')
                     +asA('https://docs.gradle.org/current/userguide/multi_project_builds.html#multi_project_builds')
-                li
-                    | -I 또는 --init-script 옵션을 지정하는 경우, 
+                li -I 또는 --init-script 옵션을 지정하는 경우, 
                     +asA('https://docs.gradle.org/current/userguide/init_scripts.html#init_scripts')
                     | 를 실행한다
                 li USER_HOME/.gradle/ 에 init.gradle을 작성하면 초기화 시 실행된다.
@@ -269,8 +265,7 @@ include ../../source/skeleton.pug
                             }
                         }
                     }
-                p
-                    | ↑ 이를 자동으로 적용하려면, gradle을 새로 압축하여 gradlew에서 이용하면 된다.
+                p ↑ 이를 자동으로 적용하려면, gradle을 새로 압축하여 gradlew에서 이용하면 된다.
                     br
                     | gradle wrapper 생성 후, gradle-wrapper.properties에
                     br
@@ -300,7 +295,7 @@ include ../../source/skeleton.pug
                         println "${project} Succeeded"
                 }
                 // + gradle.beforeProject, ProjectsLoaded, buildFinished, projectsEvaluated, settingsEvaluated
-        
+
         h2 기본 작업
         div
             h3: +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html')
@@ -337,7 +332,7 @@ include ../../source/skeleton.pug
                 li 예1.
                 +asCode('gradle').
                     apply plugin: 'java'
-                    
+
                     task runApp(type: JavaExec) {
                         classpath = sourceSets.main.runtimeClasspath
                         main = 'package.Main'
@@ -346,13 +341,13 @@ include ../../source/skeleton.pug
                 li 예2.
                 +asCode('gradle').
                     apply plugin: 'java'
-                    
+
                     jar {
                         manifest {
                             attributes('Main-Class': 'package.Main')
                         }
                     }
-                    
+
                     task runExecutableJar(type: JavaExec) {
                         classpath = files(tasks.jar)
                         args 'appArg1'
@@ -362,7 +357,7 @@ include ../../source/skeleton.pug
                 plugins {
                     id 'base'
                 }
-                
+
                 task zip(type: Zip) {
                     group = 'Project 01'
                     description = 'src 디렉터리를 out.zip으로 압축한다'
@@ -378,54 +373,42 @@ include ../../source/skeleton.pug
             h3 Script blocks
             ul
                 li allprojects {}
-                p
-                    | 프로젝트 및 서브 프로젝트 설정 
+                p 프로젝트 및 서브 프로젝트 설정 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:allprojects(groovy.lang.Closure)')
                 li artifacts {}
-                p
-                    | 빌드 출력물 설정 
+                p 빌드 출력물 설정 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:artifacts(groovy.lang.Closure)')
                 li buildscript {}
-                p
-                    | 클래스패스 설정 
+                p 클래스패스 설정 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:buildscript(groovy.lang.Closure)')
                 li configurations {}
-                p
-                    | 프로젝트 관련 설정 
+                p 프로젝트 관련 설정 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:configurations(groovy.lang.Closure)')
                 li dependencies {}
-                p
-                    | 프로젝트 의존성 설정 
+                p 프로젝트 의존성 설정 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:dependencies(groovy.lang.Closure)')
                 li repositories {}
-                p
-                    | 저장소 설정 
+                p 저장소 설정 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:repositories(groovy.lang.Closure)')
                 li subprojects {}
-                p
-                    | 서브프로젝트 설정 
+                p 서브프로젝트 설정 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:subprojects(groovy.lang.Closure)')
                 li application {}
-                p
-                    | application 플러그인으로 추가된다. 
+                p application 플러그인으로 추가된다. 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.plugins.JavaApplication.html')
                     |  설정.
                 li eclipse {}
-                p
-                    | eclipse 플러그인으로 추가된다. 
+                p eclipse 플러그인으로 추가된다. 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.plugins.ide.eclipse.model.EclipseModel.html')
                     |  설정.
                 li idea {}
-                p
-                    | idea 플러그인으로 추가된다. 
+                p idea 플러그인으로 추가된다. 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.plugins.ide.idea.model.IdeaModel.html')
                     |  설정.
                 li sourceSets {}
-                p
-                    | java 플러그인으로 추가된다. 소스셋 설정.
+                p java 플러그인으로 추가된다. 소스셋 설정.
                 li visualStudio {}
-                p
-                    | visual-studio 플러그인으로 추가된다. 
+                p visual-studio 플러그인으로 추가된다. 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.ide.visualstudio.VisualStudioRootExtension.html')
                     |  설정.
             h3 Properties
@@ -450,19 +433,19 @@ include ../../source/skeleton.pug
                     def tree = fileTree('src')
                     tree.include('**/*.java')
                     tree.exclude('**/*Test.java')
-                    
+
                     def newTree = tree.matching { include('**/*.jpg') }
-                    
+
                     tree.visit { fileDetail -> ... }
                     tree.visit(new FileVisitor() {
                         void visitDir(FileVisitDetails detail) {}
                         void visitFile(FileVisitDetails detail) {}
                     })
-                
+
                 WorkResult                  copy (?)                   // 기본 작업 Copy와 동일
                 WorkResult                  delete (action)            // 기본 작업 Delete와 동일
                 File                        mkdir (Object path)        // 경로 상 필요한 모든 디렉터리 생성
-        
+
         h2 Dependency configuration
         +asCode('gradle').
             repositories {
@@ -505,7 +488,7 @@ include ../../source/skeleton.pug
                         println it.absolutePath
                     }
                 }
-            
+
         h2 멀티 프로젝트 설정
         div
             h3 종류
@@ -571,7 +554,7 @@ include ../../source/skeleton.pug
                 task testSet1Test(type: Test) {
                     testClassesDir = sourceSets.testSet1.output.classesDir
                     classpath = sourceSets.testSet1.runtimeClasspath
-                    
+
                     reports.html.destination = file("${reports.html.destination}/testSet1")
                     reports.junitXml.destination = file("${reports.junitXml.destination}/testSet1")
                 }
@@ -625,7 +608,7 @@ include ../../source/skeleton.pug
                 systemProp.https.proxyUser=user
                 systemProp.https.proxyPassword=password
                 systemProp.https.nonProxyHosts=*.nonproxyrepos.com|localhost
-        
+
         h2
             | Gradle 성능 
             +asA('https://docs.gradle.org/current/userguide/organizing_gradle_projects.html#organizing_gradle_projects')
@@ -634,16 +617,16 @@ include ../../source/skeleton.pug
             p --scan 옵션으로 실행하면 된다. 서로 다른 gradle 버전의 출력이 같은지 비교하는 데도 이용 가능
             +asCode('shell') $ gradle build --scan
             +w3img('/imgs/20200518_112155.png', 'Gradle build scan result example')
-            
+
             li 프로젝트에 항상 settings.gradle을 둘 것
             p 매 실행 시마다 settings.gradle이 있는지 찾으므로, 빈 파일이라도 만들어 두는 것이 좋다
-            
+
             li gradle.properties를 모든 프로젝트에 적용시키려는 경우
             p GRADLE_USER_HOME 디렉터리에 위치시키면 된다
-            
+
             li 각 작업의 출력 디렉터리는 혼자만 사용함이 바람직하다
             p 여러 작업이 동일한 출력 디렉터리를 이용하는 경우, 전체 빌드가 느려지고 빌드 캐시가 무용지물이 된다.
-        
+
         h2 디버깅
         p 기본 설정 : suspend=y,address=5005
         +asCode('shell') $ gradle myTask --debug-jvm
@@ -664,7 +647,7 @@ include ../../source/skeleton.pug
                     suspend = false
                 }
             }
-        
+
         h2 안드로이드
         div
             h3 Build variant; 빌드 변형
@@ -678,14 +661,13 @@ include ../../source/skeleton.pug
                 li assemblePro : 모든 pro 변형 빌드
                 li assembleDebug : 모든 debug 변형 빌드
                 li assembleProDebug : ProDebug만 발드
-    
+
     h1 Gradle 플러그인
     ol
         +asA('https://docs.gradle.org/current/userguide/plugin_reference.html')
         li 플러그인은 Gradle 코어 기능을 확장하여 새로운 작업, 데이터 모델을 이용하게 한다
         li 플러그인은 프로젝트와 무관하게 사용 가능하다
-        li
-            | 플러그인의 적용
+        li 플러그인의 적용
             +asA('https://docs.gradle.org/current/javadoc/org/gradle/api/Plugin.html#apply-T-')
             | 은 여러 번 호출해도 부작용이 없다
         li 사용할 플러그인 이름은 Fully qualified name이어야 하지만, 특별히 정의된 짧은 이름도 사용할 수 있다.
@@ -704,8 +686,7 @@ include ../../source/skeleton.pug
                     id 'java'
                 }
             ol
-                li
-                    | 플러그인 포털
+                li 플러그인 포털
                     +asA('https://plugins.gradle.org/')
                     |  또는 사용자 지정 저장소로부터 포함
                 ul
@@ -718,7 +699,7 @@ include ../../source/skeleton.pug
                     +asCode('gradle').
                         // settings.gradle
                         include 'hello1', 'hello2', 'bye'
-                        
+
                         // build.gradle
                         plugins {
                             id 'com.example.hello' version '1.0.0' apply false
@@ -729,7 +710,7 @@ include ../../source/skeleton.pug
                                 apply plugin: 'com.example.hello'
                             }
                         }
-                        
+
                         // bye/build.gradle
                         plugins {
                             id 'com.example.bye'
@@ -750,32 +731,28 @@ include ../../source/skeleton.pug
                         }
                     }
                 li 스크립트 안의 클래스로 정의(스크립트 외부 사용은 불가)
-                
+
         h2 base 플러그인
         div
             h3 Task
             ul
                 li clean
-                p
-                    | 출력 디렉터리(기본값 build/)
+                p 출력 디렉터리(기본값 build/)
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:buildDir')
                     | 를 정리한다.
-                
-        
+
+
         h2 Java 플러그인
         div
             h3 Task
             ul
-                li
-                    | clean - 
+                li clean - 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Delete.html')
                 p build 디렉터리 제거
-                li
-                    | clean{TaskName} - 
+                li clean{TaskName} - 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Delete.html')
                 p 해당 작업 출력 제거
-                li
-                    | compileJava - 
+                li compileJava - 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.compile.JavaCompile.html')
                 ul
                     li Depends on : 컴파일 경로를 변경하는 모든 작업 + jar
@@ -792,27 +769,24 @@ include ../../source/skeleton.pug
                             options.listFiles = true     // 컴파일 대상 목록 출력 여부(기본 false)
                             options.warnings = false     // 경고 출력할 지 여부(기본 true)
                         }
-                        
+
                         // 또는
                         tasks.withType(JavaCompile) {
                             options.encoding = 'UTF-8'
                         }
-                        
-                        
-                li
-                    | processResources - 
+
+
+                li processResources - 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html')
                 p 프로덕션(main 소스셋) 리소스를 지정 디렉터리로 복사
                 li classes
                 p Depends on : compileJava, processResources
                 p 원한다면 추가 작업을 덧붙여도 된다.
-                li
-                    | jar - 
+                li jar - 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Jar.html')
                 p Depends on : classes
                 p main 소스 셋의 클래스 및 리소스로 프로덕션용 jar 빌드
-                li
-                    | javadoc - 
+                li javadoc - 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.javadoc.Javadoc.html')
                 p Depends on : classes
                 +asCode('gradle').
@@ -820,30 +794,25 @@ include ../../source/skeleton.pug
                         options.links << 'https://docs.oracle.com/en/java/javase/12/docs/api/'
                     }
                 p API 문서 생성
-                li
-                    | compileTestJava - 
+                li compileTestJava - 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.compile.JavaCompile.html')
                 p 테스트 .java 소스 코드 컴파일
-                li
-                    | processTestResources - 
+                li processTestResources - 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html')
                 p 테스트 리소스를 지정 디렉터리로 복사
                 li testClasses
                 p Depends on : compileTestJava, processTestResources
                 p 원한다면 추가 작업을 덧붙여도 된다.
-                li
-                    | test - 
+                li test - 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.testing.Test.html')
                 p Depends on : testClasses + test runtime classpath를 생성하는 작업들
                 p JUnit 또는 TestNG로 단위 테스트 진행
             h3 SourceSet Task
             ul
-                li
-                    | compile{SourceSet}Java - 
+                li compile{SourceSet}Java - 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.compile.JavaCompile.html')
                 p Depends on : 해당 소스셋의 컴파일 경로를 변경하는 모든 작업
-                li
-                    | process{SourceSet}Resources - 
+                li process{SourceSet}Resources - 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html')
                 p 해당 소스셋의 리소스들을 복사
                 li {sourceSet}Classes
@@ -896,14 +865,13 @@ include ../../source/skeleton.pug
                             runtimeClasspath = output + compileClasspath
                         }
                     }
-                    
+
                     dependencies {
                         newSetCompile 'a:b:c'
                         newSetRuntime 'a:b:c'
                     }
             h3 Contributed extension
-            p
-                | 가능한 버전은 다음 링크 참고 
+            p 가능한 버전은 다음 링크 참고 
                 +asA('https://docs.gradle.org/current/javadoc/org/gradle/api/JavaVersion.html')
             +asCode('gradle').
                 java { // 모든 작업에 적용된다. 특정 작업만 적용하려면 해당 작업의 속성 변경
@@ -925,8 +893,7 @@ include ../../source/skeleton.pug
                 li implementation : 프로덕션 컴파일에 필요. 외부에 API로 노출하지는 않음
                 li api : 프로덕션 컴파일에 필요. 외부에 API로도 노출
                 li testImplementation : 테스트 컴파일에 필요
-                li
-                    | 위 기본 설정으로부터 확장 가능 : 
+                li 위 기본 설정으로부터 확장 가능 : 
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.artifacts.Configuration.html#org.gradle.api.artifacts.Configuration:extendsFrom(org.gradle.api.artifacts.Configuration[])')
 
         h2 java-library 플러그인
@@ -952,13 +919,13 @@ include ../../source/skeleton.pug
         +asCode('gradle').
             applicationName = 'test'
             mainClassName = 'a.b.C'
-            
+
             run {
                 standardInput = System.in
             }
-            
+
             // distZip : jar 빌드 후 실행 스크립트 파일 생성
-        
+
         h2 War 플러그인
         +asCode('gradle').
             // providedCompile : main 소스셋 컴파일 시 필요하지만, war 파일에서는 제외할 것들
@@ -973,12 +940,12 @@ include ../../source/skeleton.pug
             }
             dependencies {
                 compile group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
-                
+
                 providedCompile '' // 빌드 시 사용 && 출력에 미포함
                 compile ''         // 빌드 시 사용 && 출력에 포함
                 testCompile 'junit:junit:4.11'     // 테스트에만 필요
             }
-        
+
         h2 사용자 정의 플러그인
         ol
             li 빌드 스크립트에 플러그인 클래스 정의하면 즉시 사용 가능
@@ -1009,16 +976,16 @@ include ../../source/skeleton.pug
     +asCode('gradle').
         # 프로젝트 디렉터리에 wrapper 자동 생성. 생성된 jar 파일이 버전 관리 시 제외되지 않도록 유의
         $ gradle wrapper
-        
+
         # 버전 지정
         $ gradle wrapper --gradle-version=6.4
-        
+
         # wrapper 버전 업그레이드
         $ ./gradlew wrapper --gradle-version=6.4
-        
+
         # 커스텀 그래들 지정
         --gradle-distribution-url
-        
+
         # 해시 지정
         --gradle-distribution-sha256-sum
 

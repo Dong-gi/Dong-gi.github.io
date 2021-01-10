@@ -292,7 +292,7 @@ include ../../source/skeleton.pug
                     if len(list) > 1:
                         quick_sort(list, 0, len(list)-1, list[0])
                     return
-                
+
                 # 2개인 경우는 단순 스왑
                 if end - start == 1:
                     if list[start] > list[end]:
@@ -392,8 +392,7 @@ include ../../source/skeleton.pug
         h2 정리
         div
             h3 문자열 검색; Boyer-Moore
-            p
-                | 예. abcxdezcabacabac에서 abac 검색
+            p 예. abcxdezcabacabac에서 abac 검색
                 br
                 | 처음 검색 인덱스 0. 마지막 위치의 x는 패턴에 없는 문자이므로 다음 검색 인덱스는 1이 아닌 4.
 

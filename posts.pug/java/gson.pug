@@ -9,21 +9,17 @@ include ../../source/skeleton.pug
 
     h1 JSON
     ul
-        li
-            | public 필드 또는 public setter가 존재하는 POJO
+        li public 필드 또는 public setter가 존재하는 POJO
             +codeBtn('/Repositories/Eclipse/gson/src/test/java/gson/Test.java', 'java', '[26,43]') 예1 »
             +codeBtn('/Repositories/Eclipse/gson/src/test/java/gson/Test.java', 'java', '[45,61]') 예2 »
-        li
-            | 제네릭 List, Map도 가능.
+        li 제네릭 List, Map도 가능.
             +codeBtn('/Repositories/Eclipse/gson/src/test/java/gson/Test.java', 'java', '[64,70]')
-        li
-            | JSON 노드 수정.
+        li JSON 노드 수정.
             +codeBtn('/Repositories/Eclipse/gson/src/test/java/gson/Test.java', 'java', '[73,89]')
         li
             +codeBtn('/Repositories/Eclipse/gson/src/test/java/gson/Test.java', 'java', '[92,101]') JsonWriter »
             +codeBtn('/Repositories/Eclipse/gson/src/test/java/gson/Test.java', 'java', '[104,109]') JsonParser »
-        li
-            | 직렬화/역직렬화 관련 옵션
+        li 직렬화/역직렬화 관련 옵션
             +codeBtn('/Repositories/Eclipse/gson/src/test/java/gson/Test.java', 'java', '[111,133]') 예1 »
             +codeBtn('/Repositories/Eclipse/gson/src/test/java/gson/Test.java', 'java', '[135,145]') 예2 »
         ul

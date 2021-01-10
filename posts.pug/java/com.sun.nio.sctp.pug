@@ -74,13 +74,11 @@ include ../../source/skeleton.pug
         h2 class SctpStandardSocketOptions Since 1.7
         ol
             li static final SctpSocketOption&lt;Boolean> SCTP_DISABLE_FRAGMENTS
-            p
-                | 메시지 파편화를 사용할 지 여부. 파편화를 사용하지 않으면 PMTU보다 큰 메시지의 송신에는 에러가 발생한다
+            p 메시지 파편화를 사용할 지 여부. 파편화를 사용하지 않으면 PMTU보다 큰 메시지의 송신에는 에러가 발생한다
                 br
                 | PMTU : Path MTU : 경로 중 가장 작은 MTU값
             li static final SctpSocketOption&lt;Boolean> SCTP_EXPLICIT_COMPLETE
-            p
-                | 메시지 종결을 명시적으로 할 지 여부. 사용하는 경우, 메시지의 마지막 송신은 MessageInfo#isComplete가 true를 반환해야 한다.
+            p 메시지 종결을 명시적으로 할 지 여부. 사용하는 경우, 메시지의 마지막 송신은 MessageInfo#isComplete가 true를 반환해야 한다.
                 | 기본값은 false며 이는 각 전송을 완결로 간주된다. 옵션의 지원 여부는 자바 구현체에 달렸다
             li static final SctpSocketOption&lt;Integer> SCTP_FRAGMENT_INTERLEAVE
             ul
@@ -101,8 +99,7 @@ include ../../source/skeleton.pug
             li static final SctpSocketOption&lt;Integer> SO_RCVBUF
             p SctpChannel에서 이 값은 수신측 window size에 영향을 미친다. SctpMultiChannel에서 이 값은 각 association에 묶인 수신측 버퍼의 크기, 또는 전체 수신 버퍼의 크기에 영향을 미칠 수 있다
             li static final SctpSocketOption&lt;Integer> SO_LINGER
-            p
-                | 초 단위의 linger interval : 소켓이 닫힐 때, 아직 못 보낸 데이터를 보내거나, 보낼 수 없다고 판단하기까지 대기하는 timeout
+            p 초 단위의 linger interval : 소켓이 닫힐 때, 아직 못 보낸 데이터를 보내거나, 보낼 수 없다고 판단하기까지 대기하는 timeout
                 br
                 | 음수면 이 옵션을 사용하지 않으며, 기본값은 음수다. 최댓값은 시스템 종속적이며, 그보다 큰 값을 설정하면 시스템 최댓값이 설정된다.
         div
@@ -116,8 +113,7 @@ include ../../source/skeleton.pug
     ol
         li 메시지에 대한 부가 정보를 제공한다. 메시지 전송 시 createOutgoing 메서드를 이용해 부가 정보를 제공함이 바람직하다
         li static MessageInfo createOutgoing(SocketAddress address, int streamNumber)
-        p
-            | streamNumber : 메시지를 보낼 스트림 번호
+        p streamNumber : 메시지를 보낼 스트림 번호
             br
             | address : SctpChannel에서는 적절한 피어 주소, 또는 primary 주소를 의미하는 null. SctpMultiChannel에서는 association을 결정하기 위한 피어 주소이며, association이 없으면 하나 수립된다
             br
@@ -184,8 +180,7 @@ include ../../source/skeleton.pug
                 li abstract &lt;T> T getOption(SctpSocketOption&lt;T> name) + setOption, supportedOptions
                 li final int validOps() : SelectionKey.OP_CONNECT | SelectionKey.OP_READ | SelectionKey.OP_WRITE
                 li abstract &lt;T> MessageInfo receive(ByteBuffer dst, T attachment, NotificationHandler&lt;T7gt; handler)
-                p
-                    | 논-블로킹 모드에서는 메시지나 알림이 아직 가용상태가 아니라면 즉시 null이 반환된다
+                p 논-블로킹 모드에서는 메시지나 알림이 아직 가용상태가 아니라면 즉시 null이 반환된다
                     br
                     | dst에 공간이 부족하거나, 기저 input 버퍼가 완결된 메시지를 갖고 있지 않다면 반환된 MessageInfo의 isComplete 메서드는 false를 반환한다. 이 상태에서 이 메서드를 한 번 더 호출하면 메시지를 완전히 소비한다.
                     br
@@ -195,8 +190,7 @@ include ../../source/skeleton.pug
                     br
                     | 이 메서드는 임의 시점에 호출될 수 있다. 다른 스레드가 이미 받기를 시작했다면 해당 연산이 종료되기까지 블록된다
                 li abstract int send(ByteBuffer src, MessageInfo messageInfo)
-                p
-                    | 기저 output 버퍼에 충분한 공간이 있다면 src는 하나의 메시지로 전송된다. SCTP_EXPLICIT_COMPLETE 옵션이 켜 있지 않다면, 메시지의 전송은 원자적이다.
+                p 기저 output 버퍼에 충분한 공간이 있다면 src는 하나의 메시지로 전송된다. SCTP_EXPLICIT_COMPLETE 옵션이 켜 있지 않다면, 메시지의 전송은 원자적이다.
                     br
                     | 메시지는 messageInfo.streamNumber()로 정의된 스트림 번호로 전송된다. 이 메서드는 임의 시점에 호출될 수 있다. 다른 스레드가 이미 전송을 시작했다면 해당 연산이 종료되기까지 블록된다
                     br
@@ -226,8 +220,7 @@ include ../../source/skeleton.pug
                 li abstract &lt;T> MessageInfo receive(ByteBuffer buffer, T attachment, NotificationHandler&lt;T> handler)
                 p SctpChannel 설명과 동일
                 li abstract int send(ByteBuffer buffer, MessageInfo messageInfo)
-                p
-                    | 채널이 바인드되지 않았다면 먼저 bind(null, 0)을 호출. 피어와 수립된 association이 없으면 자동으로 하나 수립. 새로운 association이 수립되면 AssociationChangeEvent.COMM_UP AssociationChangeNotification 알림이 도착한다
+                p 채널이 바인드되지 않았다면 먼저 bind(null, 0)을 호출. 피어와 수립된 association이 없으면 자동으로 하나 수립. 새로운 association이 수립되면 AssociationChangeEvent.COMM_UP AssociationChangeNotification 알림이 도착한다
                     br
                     | 기저 output 버퍼에 충분한 공간이 있다면 하나의 메시지로 전송된다. SCTP_EXPLICIT_COMPLETE 옵션이 없다면 전송은 원자적이다
                     br

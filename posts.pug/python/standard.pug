@@ -597,8 +597,7 @@ include ../../source/skeleton.pug
                         td Format
                         td timespec
                     tr
-                        td
-                            | 'seconds' # microsecond == 0
+                        td 'seconds' # microsecond == 0
                             br
                             | 'microseconds' # microsecond > 0
                         td 'auto'
@@ -804,8 +803,7 @@ include ../../source/skeleton.pug
                 td 요일 - 1(월요일) ~ 7(일요일), ISO 8601
             tr
                 td %V
-                td
-                    | 주(월요일 기준) - 연중 n번째, ISO 8601 : 01 ~ 53
+                td 주(월요일 기준) - 연중 n번째, ISO 8601 : 01 ~ 53
                     br
                     | 01번째 주는 1월 4일을 포함
 
@@ -1135,8 +1133,7 @@ include ../../source/skeleton.pug
                 span.hover-content(template-id='template-python-collections-abc-iter') __iter__
                 | ,
                 span.hover-content(template-id='template-python-collections-abc-len') __len__
-            td
-                | __le__, __lt__, __eq__,__ne__, __gt__, __ge__,__and__, __or__, __sub__, __xor__, isdisjoint
+            td __le__, __lt__, __eq__,__ne__, __gt__, __ge__,__and__, __or__, __sub__, __xor__, isdisjoint
         tr
             td MutableSet
             td Set
@@ -1245,8 +1242,7 @@ include ../../source/skeleton.pug
     +hoverTemplate()#template-python-collections-abc-iterable
         ul
             li isinstance(obj, Iterable) : Iterable로 등록되었거나 __iter__()를 가지면 True
-            li
-                | iter(obj) :
+            li iter(obj) :
                 span.hover-content(template-id='template-python-collections-abc-getitem') __getitem__
                 | ()으로 순회하는 클래스도 감지 가능. 순회 가능하지 않으면 예외 발생.
     +hoverTemplate()#template-python-collections-abc-iter
@@ -1608,8 +1604,7 @@ include ../../source/skeleton.pug
                 td x가 음이 아닌 정수일 때만 x!
             tr
                 td fmod(x, y)
-                td
-                    | C 라이브러리대로 동작.
+                td C 라이브러리대로 동작.
                     br
                     | |x - n*y| &lt; |y|를 만족하는 정수 n을 찾고 그 나머지(부호는 x와 동일)를 반환.
             tr
@@ -1632,8 +1627,7 @@ include ../../source/skeleton.pug
                 td 0이 아닌 정수 a, b에 대해, 양의 최대공약수 반환
             tr
                 td isclose(a, b, *, rel_tol=1e-09, abs_tol=0.0) Since 3.5
-                td
-                    | a, b가 충분히 가까운지 여부.
+                td a, b가 충분히 가까운지 여부.
                     br
                     | rel_tol는 절대값이 더 큰쪽에 적용될 최대 허용 오차 비율
             tr
@@ -1846,8 +1840,7 @@ include ../../source/skeleton.pug
         p object를 times번 순회하는 Iterator 반환. times가 지정되지 않은 경우 무한 반복. 불필요한 동일 객체를 여러번 만들지 않게 해준다.
         li product(*iterables, repeat=1)
         p 순서쌍을 순회하는 Iterator 반환. 예를 들어 product(i1, i2) == ((x, y) for x in i1 for y in i2)
-        li
-            | islice(iterable, stop)
+        li islice(iterable, stop)
             br
             | islice(iterable, start, stop[, step])
         ol
@@ -1884,8 +1877,7 @@ include ../../source/skeleton.pug
             li 최초 프로퍼티 접근 시 실행된 반환값이 프로퍼티의 값으로 고정된다.
         li cmp_to_key(func) Since 3.2
         p 인자 2개를 먹고 int를 반환하는 비교 함수를 인자 1개를 먹고 정렬키를 반환하는 함수로 변환해 반환한다
-        li
-            | @lru_cache(user_function)
+        li @lru_cache(user_function)
             br
             | @lru_cache(maxsize=128, typed=False)
         ul
@@ -1912,17 +1904,14 @@ include ../../source/skeleton.pug
         p 메서드의 인자 일부를 고정시켜 반환한다. func는 descriptor 또는 callable.
         li reduce(function, iterable[, initializer])
         li @singledispatch
-        p
-            | 함수의 오버로딩을 가능하게 해준다. 최소 한 개의 positional 인자가 필요하며, 이 인자의 타입을 기준으로 호출을 나눈다.
+        p 함수의 오버로딩을 가능하게 해준다. 최소 한 개의 positional 인자가 필요하며, 이 인자의 타입을 기준으로 호출을 나눈다.
             +codeBtn('/Repositories/Python/Library/functools_singledispatch.py', 'python') 예시 코드 »
         li class singledispatchmethod(func) Since 3.8
         p 메서드의 오버로딩을 가능하게 해준다. @singledispatch 참고
-        li
-            | update_wrapper(wrapper, wrapped, assigned=WRAPPER_ASSIGNMENTS, updated=WRAPPER_UPDATES)
+        li update_wrapper(wrapper, wrapped, assigned=WRAPPER_ASSIGNMENTS, updated=WRAPPER_UPDATES)
             br
             | @wraps(wrapped, assigned=WRAPPER_ASSIGNMENTS, updated=WRAPPER_UPDATES)
-        p
-            | 래핑된 함수를 래핑 전 함수처럼 보이도록 변경한다.
+        p 래핑된 함수를 래핑 전 함수처럼 보이도록 변경한다.
             +codeBtn('/Repositories/Python/Library/functools_wraps.py', 'python') 예시 코드 »
 
 

@@ -2,19 +2,16 @@ include ../../source/skeleton.pug
 +post('코어 JavaScript', 'JavaScript', '코어 JavaScript 정리')
     h1 식별자
     ol
-        li
-            | 식별자 : '_', '$' 허용.
+        li 식별자 : '_', '$' 허용.
             +codeBtn('/Repositories/JavaScript/Basic/type.js', 'javascript', '[1,1]')
         li 변수 선언
         ul
             li let 식별자;
-            p
-                | 일반적인 지역변수와 동일. 선언된 순간부터 해당 코드 블록이 끝날때까지 유효. 중첩된 코드 블록에서 같은 식별자의 변수를 선언하여 밖의 변수를 가릴 수 있다.
+            p 일반적인 지역변수와 동일. 선언된 순간부터 해당 코드 블록이 끝날때까지 유효. 중첩된 코드 블록에서 같은 식별자의 변수를 선언하여 밖의 변수를 가릴 수 있다.
                 +codeBtn('/Repositories/JavaScript/Basic/type.js', 'javascript', '[2,2]')
             li var 식별자;
             p 선언 전에 참조하는 경우, 선언을 끌어올려 undefined를 할당해준다. 함수 스코프에서 동작하지만, 중첩된 코드 블록에서 재정의하여 가릴 수 없다.
-        li
-            | 상수 선언 : const 식별자;
+        li 상수 선언 : const 식별자;
             +codeBtn('/Repositories/JavaScript/Basic/type.js', 'javascript', '[4,4]')
 
     h1 자료형
@@ -23,14 +20,12 @@ include ../../source/skeleton.pug
         ol
             li 객체 리터럴 : {}
             li delete 키워드로 프로퍼티 제거 가능.
-            li
-                | JSON.stringify(), JSON.parse(), Object.keys()
+            li JSON.stringify(), JSON.parse(), Object.keys()
                 +codeBtn('/Repositories/JavaScript/Basic/type.js', 'javascript', '[11,15]')
         li String
         ol
             li 문자 리터럴 : \xFF, \uFFFF
-            li
-                | 문자열 리터럴 : '', "", ``(문자열 템플릿)
+            li 문자열 리터럴 : '', "", ``(문자열 템플릿)
                 +codeBtn('/Repositories/JavaScript/Basic/type.js', 'javascript', '[4,5,17,17]')
         li Number
         ol
@@ -43,12 +38,10 @@ include ../../source/skeleton.pug
         li Undefined
         li Null
         li Symbol
-        p
-            | ES6부터 도입된 타입. 그 무엇과도 같지 않은 유일한 토큰을 나타낸다.
+        p ES6부터 도입된 타입. 그 무엇과도 같지 않은 유일한 토큰을 나타낸다.
             +codeBtn('/Repositories/JavaScript/Basic/type.js', 'javascript', '[7,9]')
         li 배열 : []
-        p
-            | 자바스크립트의 배열은 모두 동적 배열. 변수와 마찬가지로 타입을 가리지 않는다.
+        p 자바스크립트의 배열은 모두 동적 배열. 변수와 마찬가지로 타입을 가리지 않는다.
             +codeBtn('/Repositories/JavaScript/Basic/array.js', 'javascript')
         li Map
         +asCode('javascript').
@@ -72,11 +65,9 @@ include ../../source/skeleton.pug
         li Boolean 연산자 : !, &&, ||
         p &&, ||는 short circuit 연산.
         li 비트 연산자 : ~, &, |, ^, &lt;&lt;, >>, >>>
-        li
-            | ,연산자 : 순서대로 평가하여 마지막 표현식의 결과가 할당됨
+        li ,연산자 : 순서대로 평가하여 마지막 표현식의 결과가 할당됨
             +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'javascript', '[9,10]')
-        li
-            | in 연산자 : 객체에 해당 프로퍼티가 존재하는지 여부 반환.
+        li in 연산자 : 객체에 해당 프로퍼티가 존재하는지 여부 반환.
             +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'javascript', '[12,12]')
         p 객체에 직접 정의된 프로퍼티는 hasOwnProperty() 메서드 이용
         li instanceof 연산자 : 객체 호환 여부 반환.
@@ -93,8 +84,7 @@ include ../../source/skeleton.pug
     ol
         li if...[else if...][else...]
         li while, do...while
-        li
-            | for
+        li for
             +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'javascript', '[1,7]')
         li switch : 조건으로 변수가 아닌 일반 표현식도 가능
         li for(let attr in obj) {} : 객체 프로퍼티 순회
@@ -121,11 +111,9 @@ include ../../source/skeleton.pug
         li 익명 함수 let f = function () {}
         li 화살표 표기법 let f = () => {}
         li 클로저 Closure
-        p
-            | 함수 할당에 의해 접근할 수 있는 스코프가 늘어나는 것.
+        p 함수 할당에 의해 접근할 수 있는 스코프가 늘어나는 것.
             +codeBtn('/Repositories/JavaScript/Basic/function.js', 'javascript', '[2,8]')
-        li
-            | 즉시 실행 함수 표현 IIFE; Immediately Invoked Function Expression
+        li 즉시 실행 함수 표현 IIFE; Immediately Invoked Function Expression
             +codeBtn('/Repositories/JavaScript/Basic/function.js', 'javascript', '[12,17]')
 
     h1 Class
@@ -136,8 +124,7 @@ include ../../source/skeleton.pug
             +codeBtn('/Repositories/JavaScript/Basic/class.js', 'javascript', '[18,19]') 상속 예 »
             +codeBtn('/Repositories/JavaScript/Basic/class.js', 'javascript', '[22,39]') 믹스인 예 »
         li 전역 객체
-        p
-            | Object, Array, String, Global, Math
+        p Object, Array, String, Global, Math
             br
             | Global 객체를 직접 획득하는 건 불가능 : isNaN(), isFinite(), parseInt(), parseFloat(), encodeURI(), encodeURIComponent(), eval()
         li 객체 보호
@@ -193,8 +180,7 @@ include ../../source/skeleton.pug
                 td A trap for the new operator.
 
     h1 Iterator, Generator
-    p
-        | 해체 할당과 마찬가지로 파이썬에서 가져온 아이디어들 중 하나
+    p 해체 할당과 마찬가지로 파이썬에서 가져온 아이디어들 중 하나
         +codeBtn('/Repositories/JavaScript/Basic/iterator.js', 'javascript') 이터레이션 프로토콜 예 »
         +codeBtn('/Repositories/JavaScript/Basic/generator.js', 'javascript') 제너레이터 예 »
     ul
@@ -206,23 +192,20 @@ include ../../source/skeleton.pug
     h1 비동기 처리
     ol
         li 전통적 방식 : 콜백
-        p
-            | setTimeout(), setInterval(), clearInterval()
+        p setTimeout(), setInterval(), clearInterval()
             br
             | Error-first Callback : 콜백 첫번째 매개변수를 err로 사용하는 것.
             br
             | Callback Hell : 연속적으로 콜백이 다른 콜백을 호출하여 관리하기 어려워지는 상황
         li Promise
-        p
-            | 실행의 종료를 보장. 실행 상태(성공, 실패)에 따라 다른 콜백을 적절히 호출. 적절한 예외 처리도 지원 가능.
+        p 실행의 종료를 보장. 실행 상태(성공, 실패)에 따라 다른 콜백을 적절히 호출. 적절한 예외 처리도 지원 가능.
             br
             | Promise의 생성은 resolve, reject 콜백을 매개변수로 받는 함수를 작성하기만 하면 된다.
             +codeBtn('/Repositories/JavaScript/Basic/promise.js', 'javascript') promise.js »
             br
             | Promise.all(), Promise.race(), ...
         li async, await
-        p
-            | 함수 정의 앞에 async 키워드를 사용하면 함수 내에서 await를 사용할 수 있다. 이때, 함수는 Promise가 결정될 때까지 일시 중지.
+        p 함수 정의 앞에 async 키워드를 사용하면 함수 내에서 await를 사용할 수 있다. 이때, 함수는 Promise가 결정될 때까지 일시 중지.
             +codeBtn('/Repositories/JavaScript/Basic/async.js', 'javascript') async.js »
 
     h1 정규표현식
@@ -230,8 +213,7 @@ include ../../source/skeleton.pug
         li 정규표현식(RegExp) 리터럴 /X/
         p /123/gm과 new RegExp('123', 'gm')는 의미적으로 동일하다
         li Flag : g(global), i(ignoreCase), m(multiline), s(.이 newline도 매칭 Since ES2018)
-        p
-            | global 플래그를 이용하는 경우, RegExp.lastIndex로 검색 위치를 기록하며, 해당 위치부터 재탐색한다.
+        p global 플래그를 이용하는 경우, RegExp.lastIndex로 검색 위치를 기록하며, 해당 위치부터 재탐색한다.
             | 따라서 global RegExp에 동일 문자열을 반복적으로 test()하는 경우 true, false가 토글되는 현상을 경험할 수도 있다
         p ↓ 자바와 동일한 부분은 생략했음
         li Greedy 수량사
@@ -247,8 +229,7 @@ include ../../source/skeleton.pug
         li 관련 메서드
         ul
             li RegExp#test() : 패턴이 검색되는지 여부
-            li
-                | RegExp#exec() : 매칭되는 인덱스들을 배열로 반환.
+            li RegExp#exec() : 매칭되는 인덱스들을 배열로 반환.
                 | 매칭 시작 index, 검색 텍스트 input 프로퍼티를 가진다. [i] 접근으로 캡처 그룹을 가져올 수 있다.
             +asCode('javascript') /1/gm.exec('1 12 123') // ["1", index: 0, input: "1 12 123", groups: undefined]
             li String#search(regexp) : 처음 매칭된 인덱스 반환

@@ -6,7 +6,7 @@ include ../../source/skeleton.pug
         +asCode('shell').
             XX:+FlagName
             XX:-FlagName
-        
+
         li Value flag
         +asCode('shell') -XX:FlagName=value
     div
@@ -48,7 +48,7 @@ include ../../source/skeleton.pug
 
             li GC 병렬 스레드 개수
             +asCode('shell') -XX:ParallelGCThreads=N
-    
+
     h1 Java 옵션(JAVA_OPTS)
     ol
         li user.timezone 프로퍼티 기본값 지정
@@ -70,7 +70,7 @@ include ../../source/skeleton.pug
                 # suspend : 디버거 부착까지 기다릴지 여부
             # After JDK 1.4
             $ java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=6006
-    
+
     h1 jcmd Since Java 8
     p JDK 기본제공 분석 도구
     ol
@@ -86,10 +86,9 @@ include ../../source/skeleton.pug
         +asCode('shell') $ jcmd {pid} VM.system_properties
         li 쓰레드 덤프
         +asCode('shell') $ jcmd {pid} Thread.print
-    
+
     h1 jhsdb Since Java 9
-    p
-        | JDK 기본제공 디버거; Java Hotspot Debugger
+    p JDK 기본제공 디버거; Java Hotspot Debugger
         +asA('https://docs.oracle.com/javase/9/tools/jhsdb.htm')
     ol
         li JVM에 디버거 부착 시 실행이 일시중지됨에 유의
@@ -97,16 +96,15 @@ include ../../source/skeleton.pug
         +asCode('shell').
             # clhsdb 커맨드라인 디버거
             $ jhsdb clhsdb [--pid pid | --exe executable --core coredump]
-            
+
             # hsdb GUI 디버거
             $ jhsdb hsdb [--pid pid | --exe executable --core coredump]
-            
+
             # debugd 리모트 디버그 서버 시작
             $ jhsdb debugd [options] pid [server-id]|[option] executable core [server-id]
-    
+
     h1 기타
     ul
-        li
-            | OpenJDK Tool 
+        li OpenJDK Tool 
             +asA('http://openjdk.java.net/projects/code-tools/')
         li 컴퓨터의 엔트로피를 이용하는 SecureRandom, SSL연결은 엔트로피를 사용할 수 있을 때까지 대기하므로 성능 테스트시 유의해야 한다

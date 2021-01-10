@@ -58,13 +58,13 @@ include ../../source/skeleton.pug
                     # 접속 중인 유저들을 방해하지 않고 백업한다
                     # 스크립트 평문으로 백업하는 경우, 임의 위치에서 psql로 복구 실행 가능
                     # 다른 포맷으로 백업하는 경우, 복구에 pg_restore를 이용해야 한다.
-                
+
                 Connection options:
                   -d, --dbname=DBNAME      # 지정하지 않으면 PGDATABASE 이용. 없으면 유저 이름
                   -h, --host=HOSTNAME      # 지정하지 않으면 PGHOST 이용. 없으면 기본값
                   -p, --port=PORT          # 지정하지 않으면 PGPORT 이용. 없으면 기본값
                   -U, --username=NAME      # 지정하지 않으면 PGUSER 이용. 없으면 기본값
-                  
+
                 General options:
                   -f, --file=FILENAME          # 출력 파일 또는 디렉터리output file or directory name
                   -F, --format=c|d|t|p         # 출력 포맷. 각각 custom, directory, tar, plain text(default)
@@ -73,7 +73,7 @@ include ../../source/skeleton.pug
                   -v, --verbose                verbose mode
                   -Z, --compress=0-9           compression level for compressed formats
                   --lock-wait-timeout=TIMEOUT  fail after waiting TIMEOUT for a table lock
-                  
+
                 Options controlling the output content:
                   -a, --data-only              dump only the data, not the schema
                   -b, --blobs                  include large objects in dump

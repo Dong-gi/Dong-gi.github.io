@@ -88,8 +88,7 @@ include ../../source/skeleton.pug
         h2 super([type[, object-or-type]])
         ul
             li 메서드 호출을 상위 클래스로 연결하는 프록시 객체를 반환한다.
-            p
-                | 예. type(obj).__mro__의 순서가 D → C → B → A → object일 때, super(C, obj)의 탐색 순서는 B → A → object.
+            p 예. type(obj).__mro__의 순서가 D → C → B → A → object일 때, super(C, obj)의 탐색 순서는 B → A → object.
                 +codeBtn('/Repositories/Python/Basic/super_example.py', 'python')
             li object-or-type이 객체인 경우 isinstance(obj, type) == True, 타입인 경우 issubclass(type2, type) == True를 만족해야 한다
 
@@ -135,8 +134,7 @@ include ../../source/skeleton.pug
             li file : write(string) 메서드를 가진 객체
             li Since 3.3 flush 추가 : 강제 flush 여부
         h2 ascii(object)
-        p
-            | 객체의 문자열 표현(repr())을 반환한다. ASCII 문자가 아닌 경우 이스케이프된다.
+        p 객체의 문자열 표현(repr())을 반환한다. ASCII 문자가 아닌 경우 이스케이프된다.
             +codeBtn('/Repositories/Python/Basic/built_in_function_example.py', 'python', '[1,1]')
         h2 repr(object)
         p object에 대한 문자열 표현을 반환한다. 여러 타입들이 object == eval(repr(object))를 만족하며, 그 외의 경우 &lt;> 사이에 객체 정보가 담긴다. __repr__()를 재정의하여 결과를 변경할 수 있다.
@@ -263,8 +261,7 @@ include ../../source/skeleton.pug
         h2 open(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None)
         ul
             li 파일을 열고 file 객체를 반환한다. 텍스트 모드의 경우 io.TextIOBase, 이진 모드의 경우 io.BufferedIOBase
-            li
-                | file :
+            li file :
                 +asA('https://docs.python.org/3/glossary.html#term-path-like-object', 'path-like object')
                 | . file이 file descriptor인 경우, closefd가 False면 반환된 객체가 닫혀도 descriptor를 닫지 않는다
             li mode : r(읽기, default), w(쓰기, 파일 처음부터), x(없으면 생성), a(이어 쓰기), b(이진), t(텍스트, default), +(읽기+쓰기)

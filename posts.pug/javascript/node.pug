@@ -234,8 +234,7 @@ include ../../source/skeleton.pug
             p 따라서 require.main === module로 현재 모듈이 메인인지 판별 가능하다
             li 모듈 사이에 require() 사이클이 존재하는 경우, 초기화 완료되지 않은 exports 객체를 반환하여 무한 반복을 방지한다
             li 모듈을 /usr/lib/node_modules/{name}/{version} 경로로 관리하면 효율적인 require() 가능
-            li
-                | require
+            li require
                 +asA('https://nodejs.org/dist/latest-v12.x/docs/api/modules.html#modules_all_together', '알고리즘')
             p 확장자 없는 파일 X, X.js 파일, X.json 파일, X.node 파일, X/index.js 디렉터리, X/package.json 디렉터리 등을 적절히 처리
             li 선두 '/', './', '../' 없이 요구된 모듈
@@ -283,8 +282,7 @@ include ../../source/skeleton.pug
         li integer process.pid
         li integer process.ppid Since 9.2, Since 8.10
         p 부모 프로세스 PID
-        li
-            | Stream process.stdin, stdout, stderr 
+        li Stream process.stdin, stdout, stderr 
             +codeBtn('/Repositories/Node/process.sample.js', 'javascript')
 
     h1 3rd/express : Web Framework
@@ -383,34 +381,27 @@ include ../../source/skeleton.pug
         li jade -P // Pretty
         p 기본 옵션은 불필요한 공백 제거
         li ↓ 아래 코드들은 1.11.0 버전 결과임
-        li
-            | 주석
+        li 주석
             +codeBtn('/Repositories/Node/jade-start/doc1.jade', 'text')
             +codeBtn('/Repositories/Node/jade-start/doc1.html', 'text') 결과 »
-        li
-            | Plain Text
+        li Plain Text
             +codeBtn('/Repositories/Node/jade-start/doc2.jade', 'text')
             +codeBtn('/Repositories/Node/jade-start/doc2.html', 'text') 결과 »
-        li
-            | 코드 실행
+        li 코드 실행
             +codeBtn('/Repositories/Node/jade-start/doc3.jade', 'text')
             +codeBtn('/Repositories/Node/jade-start/doc3.html', 'text') 결과 »
-        li
-            | 태그 속성
+        li 태그 속성
             +codeBtn('/Repositories/Node/jade-start/doc4.jade', 'text')
             +codeBtn('/Repositories/Node/jade-start/doc4.html', 'text') 결과 »
-        li
-            | 다른 문서 포함
+        li 다른 문서 포함
             +codeBtn('/Repositories/Node/jade-start/doc5.main.jade', 'text') main
             +codeBtn('/Repositories/Node/jade-start/doc5.part.jade', 'text') part
             +codeBtn('/Repositories/Node/jade-start/doc5.text.html', 'text') text
             +codeBtn('/Repositories/Node/jade-start/doc5.main.html', 'text') 결과 »
-        li
-            | 템플릿 - mixin
+        li 템플릿 - mixin
             +codeBtn('/Repositories/Node/jade-start/doc6.jade', 'text')
             +codeBtn('/Repositories/Node/jade-start/doc6.html', 'text') 결과 »
-        li
-            | 템플릿 - extends
+        li 템플릿 - extends
             +codeBtn('/Repositories/Node/jade-start/doc7.template.jade', 'text') template
             +codeBtn('/Repositories/Node/jade-start/doc7.main.jade', 'text') main 예시1 »
             +codeBtn('/Repositories/Node/jade-start/doc7.main.html', 'text') 결과1 »

@@ -49,8 +49,7 @@ include ../../source/skeleton.pug
             li 변수 사용
             +asCode('css') p { color: var(--my-var2); }
         li meadia query
-        p
-            | Syntax::= @media not|only mediatype and (media feature and|or|not mediafeature) { CSS-Code; }
+        p Syntax::= @media not|only mediatype and (media feature and|or|not mediafeature) { CSS-Code; }
             +asA('https://www.w3schools.com/cssref/css3_pr_mediaquery.asp')
 
     h1 디자인
@@ -70,8 +69,7 @@ include ../../source/skeleton.pug
                 li 두께 border-width: width; » 색상 border-color: color; » 곡률 border-radius: radius;
                 li 방향별로 설정 가능 : top, bottom, left, right
                 li margin 밖의 외곽선 outline도 존재.
-            li
-                | 외부 여백 margin: auto | size | % | inherit;
+            li 외부 여백 margin: auto | size | % | inherit;
                 br
                 | 내부 여백 padding: size | % | inherit;
             li 너비 width: auto | size | %, 높이 height: auto | size | %
@@ -87,25 +85,21 @@ include ../../source/skeleton.pug
             li 들여쓰기 text-indent: size
             li 자간 letter-spacing: size, 단어 간격 word-spacing: size
             li 글자 크기 font-size: size, 줄 간격을 포함한 높이 line-height: size(배율)
-            li
-                | 글자 두께 font-weight: normal|bold|bolder|lighter|number|initial|inherit;
+            li 글자 두께 font-weight: normal|bold|bolder|lighter|number|initial|inherit;
                 br
                 | 그림자 text-shadow: h-shadow v-shadow blur-radius color|none|initial|inherit;
             li 폰트 font-family: family-name|generic-family|initial|inherit;
-            li
-                | 영역을 벗어난 텍스트 처리 text-overflow, text-break, text-wrap
+            li 영역을 벗어난 텍스트 처리 text-overflow, text-break, text-wrap
                 +asA('https://www.w3schools.com/css/css3_text_effects.asp', '참고')
         li 리스트
         ol
             li 리스트 아이템 이미지 마크 설정 list-style-image: none|url|initial|inherit;
-            li
-                | 리스트 아이템 마커 타입 list-style-type: value;
+            li 리스트 아이템 마커 타입 list-style-type: value;
                 +asA('https://www.w3schools.com/cssref/pr_list-style-type.asp', '참고')
             li 리스트 아이템 마커 위치 list-style-position: inside | outside;
         li.marker 보여주기 속성
         ol
-            li
-                | display: none | block | inline | inline-block(너비/높이 속성을 가질 수 있다)
+            li display: none | block | inline | inline-block(너비/높이 속성을 가질 수 있다)
                 +asA('https://www.w3schools.com/cssref/pr_class_display.asp', '참고')
             li visibility: visible | hidden(자리는 차지) | collapse | initial | inherit;
             li 위치 position: static | relative | fixed | absolute | sticky;
@@ -115,22 +109,17 @@ include ../../source/skeleton.pug
             li float 요소를 배제하여 구분된 영역 이용 clear: none | left | right | both | inherit;
             li 불투명도 opacity: [0.0-1.0]; 또는 RGBA 이용
             li box-shadow: none|h-offset v-offset blur spread color |inset|initial|inherit;
-            li
-                | 다단
+            li 다단
                 +asA('https://www.w3schools.com/css/css3_multiple_columns.asp', '참고')
             li 사용자가 크기 조절 resize: none|both|horizontal|vertical|initial|inherit;
 
     h1 변형
     ol
-        li
-            | 2D 변형 » translate(), rotate(), scale(), skewX(), skewY(), matrix()
+        li 2D 변형 » translate(), rotate(), scale(), skewX(), skewY(), matrix()
             +asA('https://www.w3schools.com/css/css3_2dtransforms.asp', '참고')
-        li
-            | 3D 변형 » rotateX(), rotateY(), rotateZ()
+        li 3D 변형 » rotateX(), rotateY(), rotateZ()
             +asA('https://www.w3schools.com/css/css3_3dtransforms.asp', '참고')
-        li
-            | 전개 » transition
+        li 전개 » transition
             +asA('https://www.w3schools.com/css/css3_transitions.asp', '여기로')
-        li
-            | 애니메이션 »
+        li 애니메이션 »
             +asA('https://www.w3schools.com/css/css3_animations.asp', '여기로')

@@ -20,8 +20,7 @@ include ../../source/skeleton.pug
             li 모듈
             p 어셈블리는 1개 이상의 모듈로 구성되며, 하나의 모듈은 하나의 파일에 대응된다.
             li 매니페스트
-            p
-                | 여러 모듈이 하나의 어셈블리를 구성하는 경우, 모듈 중 하나는 모듈의 목록을 관리하는 매니페스트 데이터를 갖는다. 매니페스트를 포함하는 경우 확장자는 exe/dll, 그 외의 모듈은 보통
+            p 여러 모듈이 하나의 어셈블리를 구성하는 경우, 모듈 중 하나는 모듈의 목록을 관리하는 매니페스트 데이터를 갖는다. 매니페스트를 포함하는 경우 확장자는 exe/dll, 그 외의 모듈은 보통
                 | netmodule이지만, 일반적으로 모든 어셈블리는 1개의 파일로 구성된다.
         h2 닷넷 구현체
         ul
@@ -108,8 +107,7 @@ include ../../source/skeleton.pug
             h3 문자열 리터럴
             ul
                 li @"" : \ 이스케이프를 하지 않는다. ""로 일반 문자열의 \"를 대신할 수 있다
-                li
-                    | $"" Since C# 6 : 간편한 포맷 문자열을 제공한다. {
+                li $"" Since C# 6 : 간편한 포맷 문자열을 제공한다. {
                     i 표현식
                     | [,
                     i alignment
@@ -182,8 +180,7 @@ include ../../source/skeleton.pug
     div
         h2 클래스
         ul
-            li
-                | 프로퍼티 → (히든) 필드에 대한 getter/setter 메서드
+            li 프로퍼티 → (히든) 필드에 대한 getter/setter 메서드
                 +codeBtn('/Repositories/VisualStudio/csharp_property.cs', 'cs') ViewModel에서의 사용 예 »
             li 익명 객체 → new { PropertyName = value } : 생성 후 읽기만 가능
             li 정적 생성자 → static 클래스이름() { }
@@ -195,15 +192,13 @@ include ../../source/skeleton.pug
             ul
                 li class SubClass : BaseClass
                 li is 연산자로 호환 여부 확인 가능
-                li
-                    | this 키워드 : 클래스의 현재 인스턴스
+                li this 키워드 : 클래스의 현재 인스턴스
                     br
                     | base 키워드 : 부모 클래스 메서드 또는 생성자 호출
                     +codeBtn('/Repositories/VisualStudio/csharp_base_keyword.cs', 'cs')
                 li sealed 키워드 → 상속/재정의 불가
                 li 부모 클래스 인스턴스를 자식 클래스로 다운캐스팅 불가.
-                li
-                    | 모든 자료형의 조상은 System.Object : ToString(), GetType(), Equals(), GetHashCode()
+                li 모든 자료형의 조상은 System.Object : ToString(), GetType(), Equals(), GetHashCode()
                     br
                     | 모든 값 형식의 조상은 System.ValueType
                     br
@@ -212,8 +207,7 @@ include ../../source/skeleton.pug
             ul
                 li virtual, override 키워드를 사용해 명시한다. virtual 메서드는 body를 정의해야 한다.
                 li new : 부모 메서드 숨기기. override와 달리 형 변환을 통해 부모 메서드에 접근 가능.
-                li
-                    | abstract class : 인스턴스화 불가능
+                li abstract class : 인스턴스화 불가능
                     br
                     | abstract method : 서브 클래스에서 반드시 override
                 li 연산자 오버로딩
@@ -225,8 +219,7 @@ include ../../source/skeleton.pug
 
         h2 델리게이트
         ul
-            li
-                | 메서드를 참조하는 자료형
+            li 메서드를 참조하는 자료형
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/DelegateExample.cs', 'cs')
             li 델리게이트로 변환될 수 있는 익명 메서드 생성
             ol
@@ -431,8 +424,7 @@ include ../../source/skeleton.pug
                 br
                 | readonly struct : 모든 필드가 readonly인 struct
             li.marker unsafe : unsafe로 한정한 타입, 메서드, 블록에서는 포인터를 사용할 수 있다.
-            p
-                | 컴파일 시 -unsafe 옵션을 지정해야 한다 : 비주얼 스튜디오는 "프로젝트 속성 - 빌드 - 안전하지 않은 코드 허용"
+            p 컴파일 시 -unsafe 옵션을 지정해야 한다 : 비주얼 스튜디오는 "프로젝트 속성 - 빌드 - 안전하지 않은 코드 허용"
                 br
                 | 관련 클래스 : System.Runtime.InteropServices.Marshal
 
@@ -545,20 +537,15 @@ include ../../source/skeleton.pug
 
         h2 Attribute
         ol
-            li
-                | 자바의 애너테이션처럼 요소를 장식한다.
+            li 자바의 애너테이션처럼 요소를 장식한다.
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs') AttributeExample.cs 전체 코드 »
-            li
-                | 사용자 정의 특성은 System.Attribute를 상속하여 만든다.
+            li 사용자 정의 특성은 System.Attribute를 상속하여 만든다.
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs', '[12, 19]')
-            li
-                | 명명시 Attribute를 접미하고, 실제 사용할 땐 생략 가능하다.
+            li 명명시 Attribute를 접미하고, 실제 사용할 땐 생략 가능하다.
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs', '[21, 24]')
-            li
-                | 특성 적용 대상 제한 : System.AttributeUsage 생성자에 AttributeTargets 전달. 생략시 기본값은 AttributeTargets.All
+            li 특성 적용 대상 제한 : System.AttributeUsage 생성자에 AttributeTargets 전달. 생략시 기본값은 AttributeTargets.All
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs', '[12, 13]')
-            li
-                | 적용 대상 명시 : assembly, module, type, method, property, field, event, param, return, typevar
+            li 적용 대상 명시 : assembly, module, type, method, property, field, event, param, return, typevar
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs', '[23, 24]')
 
         h2 App.config

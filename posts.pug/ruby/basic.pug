@@ -229,7 +229,7 @@ include ../../source/skeleton.pug
                 for key, val in {a: 1, b: 2}
                     # ...
                 end
-            
+
             li 반복 구문 대체 메서드
             +asCode('ruby', 'Kernel#loop').
                 loop do
@@ -332,16 +332,14 @@ include ../../source/skeleton.pug
                 +tds('$`', '마지막으로 정규식에 매치된 문자열 시작 위치 전까지의 문자열')
                 +tds("$'", '마지막으로 정규식에 매치된 문자열 종료 위치 후부터의 문자열')
                 tr
-                    td
-                        | $PROGRAM_NAME
+                    td $PROGRAM_NAME
                         br
                         | $*
                         br
                         | $FILENAME
                         br
                         | $&lt;
-                    td
-                        | 실행 중인 스크립트 이름
+                    td 실행 중인 스크립트 이름
                         br
                         | 스크립트 실행 인자
                         br
@@ -642,8 +640,7 @@ include ../../source/skeleton.pug
             div
                 h4 문자열 IO
                 ul
-                    li
-                        | gets(sep=$/) -> string | nil
+                    li gets(sep=$/) -> string | nil
                         br
                         | gets(limit) -> string | nil
                         br
@@ -666,8 +663,7 @@ include ../../source/skeleton.pug
                         li 인자가 없는 경우 $_ 출력
                     li sprintf(format_string, *arguments) -> string
                     +asCode('text', 'C언어와 유사') %[flags][width][.precision]type
-                    li
-                        | printf(io, format_string, *arguments) -> nil
+                    li printf(io, format_string, *arguments) -> nil
                         br
                         | printf(format_string, *arguments) -> nil
                     +asCode('ruby') (io || $stdout).write(sprintf(format_string, *arguments))
@@ -686,12 +682,10 @@ include ../../source/skeleton.pug
                 p SystemExit 예외를 발생하여 루비 프로세스 종료 절차를 시작한다.
                 li exit!(status=false)
                 p 현재 루비 프로세스를 즉시 종료한다. 종료 핸들러는 호출되지 않는다.
-                li
-                    | trap(signal, command) -> obj
+                li trap(signal, command) -> obj
                     br
                     | trap(signal) {| | block } -> obj
-                ul
-                    | 시스템 신호 처리 핸들러 등록
+                ul 시스템 신호 처리 핸들러 등록
                     li signal
                     ol
                         li "SIGALRM", "SIGUSR1" 등의 신호 이름.

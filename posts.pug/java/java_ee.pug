@@ -3,8 +3,7 @@ include ../../source/skeleton.pug
     h1 JavaEE
     ol
         li Java Enterprise Edition은 동적 웹 애플리케이션 개발을 위한 자바 플랫폼이다.
-        p
-            | JavaSE와는 문서 페이지가 다르다. 
+        p JavaSE와는 문서 페이지가 다르다. 
             +asA('https://javaee.github.io/javaee-spec/javadocs/')
         li WAR(Web Application Archive) : JavaEE 웹 애플리케이션을 위한 압축 파일
         p 전통적인 war 파일 구조 ↓
@@ -28,14 +27,12 @@ include ../../source/skeleton.pug
                     ㄴ JSP 태그 라이브러리 설명자
             ㄴ 기타 웹에서 접근 가능한 파일
         li 서블릿
-        p
-            | 자바로 구현된 CGI(Common Gateway Interface; 웹 서버와 프로그램 사이의 통신 규약).
+        p 자바로 구현된 CGI(Common Gateway Interface; 웹 서버와 프로그램 사이의 통신 규약).
             |  JCP(Java Community Process)에서 제정한 Servlet Specification을 따라야 한다.
         li 서블릿 컨테이너
         p 서블릿의 생애를 관리하는 프로그램(예. 톰캣)
         li JSP
-        p
-            | 전용 태그 "&lt;% %>"를 이용해 HTML 문서에 자바 코드를 삽입.
+        p 전용 태그 "&lt;% %>"를 이용해 HTML 문서에 자바 코드를 삽입.
             |  컨테이너가 자동으로 컴파일 하며, 서블릿 클래스와 달리 수정사항이 있어도 다시 빌드할 필요가 없다.
 
     h1 톰캣 배포 프로젝트
@@ -59,9 +56,9 @@ include ../../source/skeleton.pug
                 li IntelliJ 프로젝트에 톰캣 구성 추가
                 +asCode().
                     도구 모음에서 Run/Debug Configurations 아이콘(아래방향 화살표)을 누른 다음 Edit Configurations 클릭
-                    
+
                     대화상자가 열리면 + 버튼 클릭 후 Tomcat Server를 Local로 추가.
-                    
+
                     배포할 아티팩트를 선택하지 않았다는 경고가 표시되면 Deployment 탭을 누르고 "Deploy at the server setup" 머리글 아래의 + 버튼 클릭.
                     Artifact를 누르고 확장된 war 파일 아티팩트를 누른 다음 OK. 배포를 위한 "Application context"이름을 서버를 기준으로 한 상대 주소로 변경(예. /my-app)
 
@@ -75,8 +72,7 @@ include ../../source/skeleton.pug
                 +codeBtn('/Repositories/STS/app1/src/io/github/donggi/app1/controller/HelloController.java', 'java', [11], true)
                 +codeBtn('/Repositories/STS/app1/webapp/WEB-INF/web.xml', 'xml', null, true)
                 li web.xml
-                p
-                    | web.xml은 배포 설명자로, 서블릿 및 서블릿 매핑, 필터 등을 정의한다.
+                p web.xml은 배포 설명자로, 서블릿 및 서블릿 매핑, 필터 등을 정의한다.
                     |  이클립스 프로젝트 생성 마법사로 web.xml을 생성하면 자동으로 welcome-file-list를 구성해주는데, welcome-file-list에 정의된 welcome-file을 순서대로 찾아 기본 페이지로 보여준다.
                 li 실행
                 +w3img('/imgs/20200808_184839.png', 'Debug on Server')
@@ -87,8 +83,7 @@ include ../../source/skeleton.pug
 
             h3 톰캣에 직접 배치
             ol
-                li
-                    | 위와 동일하게 HelloController.java 작성 
+                li 위와 동일하게 HelloController.java 작성 
                     +codeBtn('/Repositories/STS/app1/src/io/github/donggi/app1/controller/HelloController.java', 'java', [11], true)
                 li 컴파일
                 ul
@@ -97,8 +92,7 @@ include ../../source/skeleton.pug
                     li JDK의 jre/lib/ext에 servlet-api.jar를 붙여넣은 경우
                     +asCode('shell') javac -encoding UTF-8 HelloController.java
                 li 컴파일된 클래스 파일을 webapps/${웹모듈명}/WEB-INF/classes/${패키지 경로}/ 에 저장
-                li
-                    | 동일한 배포 설명자 web.xml을 WEB-INF에 작성하고 실행 
+                li 동일한 배포 설명자 web.xml을 WEB-INF에 작성하고 실행 
                     +codeBtn('/Repositories/STS/app1/webapp/WEB-INF/web.xml', 'xml', null, true)
 
             h3 이클립스 Maven 프로젝트
@@ -110,8 +104,7 @@ include ../../source/skeleton.pug
 
             h3 이클립스 Gradle 프로젝트
             ol
-                li
-                    | New Project » Gradle Project 
+                li New Project » Gradle Project 
                     +codeBtn('/Repositories/STS/mvc-xml1/build.gradle', 'gradle', null, true)
                 li 코드 작성
                 +w3img('/imgs/20200808_185701.png', '프로젝트 구조')
@@ -139,8 +132,7 @@ include ../../source/skeleton.pug
             li initParams : 배포설명자의 init-param들의 배열에 해당.
             p GenericServlet#getInitParameter로 참조할 수 있으며, 이 메서드는 ServletConfig#getInitParameter를 호출한다. ServletConfig는 GenericServlet#getServletConfig 메서드로 참조할 수 있다.
             li loadOnStartup : 컨테이너가 애플리케이션을 시작할 때, 클라이언트의 요청이 없어도 미리 해당 서블릿을 인스턴스화 한다.
-            p
-                | Non-negative 정수로 설정하며, 0에 가까울수록 우선 초기화
+            p Non-negative 정수로 설정하며, 0에 가까울수록 우선 초기화
                 +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello5.java', 'java', [10]) loadOnStartup
 
         h2 JDBC 예시
@@ -155,8 +147,7 @@ include ../../source/skeleton.pug
                 +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello4.java', 'java', [16])
             ul
                 li url : JDBC 연결 문자열로, 옵션은 각 JDBC마다 제공하는 것이 다르다
-                li
-                    | 위 예시코드에서는 Apache Commons DBCP를 이용. 
+                li 위 예시코드에서는 Apache Commons DBCP를 이용. 
                     +asA('https://commons.apache.org/proper/commons-dbcp/guide/index.html') 링크
                 +asCode('java').
                     BasicDataSource.initialSize                 // 최초 커넥션 수 + maxActive, maxIdle, minIdle
@@ -190,8 +181,7 @@ include ../../source/skeleton.pug
                 li Forward
                 ul
                     li 호출하는 페이지로 제어를 넘기기 때문에 해당 페이지가 종료되도 제어가 되돌아오지 않는다.
-                    p
-                        | 따라서 forward를 호출하는 측은 getWriter()를 이용하지 말아야 한다.
+                    p 따라서 forward를 호출하는 측은 getWriter()를 이용하지 말아야 한다.
                         |  + 호출자 자신과 동일한 페이지/서블릿을 호출할 수 있다.
                     li forward는 서버 내에서 요청/응답 객체를 넘겨주므로 별도의 인코딩 없이 텍스트나 다른 객체를 추가하여 넘겨줄 수 있다.
                 li Include
@@ -234,21 +224,18 @@ include ../../source/skeleton.pug
         div
             h3 JSP with Spring MVC
             ul
-                li
-                    | Inner property, Array index 예 
+                li Inner property, Array index 예 
                     +codeBtn('/Repositories/STS/mvc-java18/src/main/webapp/WEB-INF/view/bulkLogin.jsp', 'xml', null, true)
                 li spring:htmlEscape
                 p 페이지(PageContext) 수준에서 html 이스케이프 여부 설정
                 +asCode('xml') &lt;spring:htmlEscape defaultHtmlEscape="true"/>
-                li
-                    | spring:message 예 
+                li spring:message 예 
                     +codeBtn('/Repositories/STS/mvc-java18/src/main/webapp/WEB-INF/view/message.jsp', 'xml', null, true)
                     +codeBtn('/Repositories/STS/mvc-java18/src/main/resources/i18n/msg.properties', 'properties', null, true)
         h2 데이터 저장소
         ol
             li ServletContext
-            p
-                | 애플리케이션 수준 공유 데이터. GenericServlet#getServletContext로 참조할 수 있다. JSP에서는 application 변수.
+            p 애플리케이션 수준 공유 데이터. GenericServlet#getServletContext로 참조할 수 있다. JSP에서는 application 변수.
                 br
                 | initParams : 앱 초기화 매개변수. 모든 서블릿이 ServletContext#getInitParameter로 참조할 수 있다.
             +asCode('xml').
@@ -258,8 +245,7 @@ include ../../source/skeleton.pug
                     &lt;param-value>Context Param&lt;/param-value>
                 &lt;/context-param>
             li ServletConfig
-            p
-                | 서블릿 수준 공유 데이터. GenericServlet#getServletConfig로 참조할 수 있다. JSP에서는 config 변수.
+            p 서블릿 수준 공유 데이터. GenericServlet#getServletConfig로 참조할 수 있다. JSP에서는 config 변수.
                 br
                 | initParams : 서블릿 초기화 매개변수. 서블릿 내에서 GenericServlet#getInitParameter로 참조할 수 있다.
             li 당연하지만, 서블릿 static 멤버도 서블릿 수준 공유 가능

@@ -17,18 +17,18 @@ include ../../source/skeleton.pug
             +asCode('java').
                 int getCount(Object object)
                     // object 보유 갯수 반환. 없으면 0
-                
+
                 boolean add(E object)
                     // object의 사본이 uniqueSet()에 있다면 카운트만 1 증가하고 false 반환.
                     // uniqueSet()에 없다면 사본 추가 → 카운트 1 설정 → true 반환.
                 boolean add(E object, int nCopies)
-                
+
                 boolean remove(Object object)
                     // object를 모두 제거하고, 컬렉션의 변동이 있다면 true를 반환한다.
                 boolean remove(Object object, int nCopies)
-                
+
                 Set&lt;E> uniqueSet()
-                
+
                 boolean containsAll(Collection&lt;?> coll)
                     // coll의 모든 요소가 uniqueSet()에 존재하고, 각 요소에 대한 getCount(Object)가 coll에 존재하는 개수보다 크거나 같은 경우 true 반환
                 boolean removeAll(Collection&lt;?> coll)
@@ -73,15 +73,13 @@ include ../../source/skeleton.pug
                 h4 Method Detail
                 ol
                     li Collection, Map을 직접 상속하진 않지만, 동일한 메서드들은 생략
-                    li
-                        | boolean containsValue(Object value)
+                    li boolean containsValue(Object value)
                         +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/MultiValuedMapTest.java', 'java', '[17,24]')
                     li boolean putAll(K key, Iterable&lt;? extends V> values)
                     p 맵이 변경되면 true
                     li boolean removeMapping(Object Key, Object item)
                     li Map&lt;K, Collection&lt;V>> asMap()
-                    li
-                        | MapIterator&lt;K, V> mapIterator()
+                    li MapIterator&lt;K, V> mapIterator()
                         +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/MultiValuedMapTest.java', 'java', '[27,45]')
 
             h3 interface ListValuedMap&lt;K, V> extends MultiValuedMap&lt;K, V> Since 4.1 + SetValuedMap
@@ -94,8 +92,7 @@ include ../../source/skeleton.pug
             h3 interface KeyValue&lt;K, V> Since 3.0
 
             h3 interface Trie&lt;K, V> extends IterableSortedMap&lt;K, V> Since 4.0
-            p
-                | Prefix tree에 대해 정의한다.
+            p Prefix tree에 대해 정의한다.
                 +w3img('https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Trie_example.svg/1024px-Trie_example.svg.png')
                 +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/TrieTest.java', 'java', '[13,32]')
 
@@ -123,13 +120,13 @@ include ../../source/skeleton.pug
                     // + (T...), (Iterable&lt;T>)
                 FluentIterable&lt;E> append(E... elements)
                     // + Iterable&lt;T>
-                
+
                 FluentIterable&lt;E> collate(Iterable&lt;? extends E> other[, Comparator&lt;? super E> comparator])
                     // (현재 뷰의 원소들 + other에 포함된 원소들)로 구성된 새로운 뷰를 반환한다.
                     // 비교자를 받는 메서드로 정렬 순서를 지정할 수 있으며, 지정되지 않은 경우 자연스러운 순서(ComparatorUtils.NATURAL_COMPARATOR)가 이용된다.
                 FluentIterable&lt;E> eval()
                     // 현재 뷰에 대한 독립적인 새로운 뷰를 반환한다.
-                
+
                 FluentIterable&lt;E> filter(Predicate&lt;? super E> predicate)
                 FluentIterable&lt;E> limit(long maxSize)
                 FluentIterable&lt;E> loop()
@@ -140,17 +137,17 @@ include ../../source/skeleton.pug
                 FluentIterable&lt;E> unmodifiable()
                 FluentIterable&lt;E> zip(Iterable&lt;? extends E> other)
                     // + Iterable... : 각 이터러블을 순서대로 순회
-                
+
                 Enumeration&lt;E> asEnumeration()
                 List&lt;E> toList()
                 E[] toArray(Class&lt;E> arrayClass)
-                
+
                 boolean allMatch(Predicate&lt;? super E> predicate) + anyMatch
                 boolean isEmpty()
                 boolean contains(Object object)
                 E get(int position)
                 int size()
-                
+
                 void forEach(Closure&lt;? super E> closure)
                 void copyInto(Collection&lt;? super E> collection)
 
@@ -187,7 +184,7 @@ include ../../source/skeleton.pug
 
                 static &lt;E> Bag&lt;E> collectionBag(Bag&lt;E> bag)
                     // Since 4.0 : Collection API를 따르는 백
-                
+
                 // 아래의 함수들에 대하여, SortedBag 버전이 존재한다
                 static &lt;E> Bag&lt;E> synchronizedBag(Bag&lt;E> bag)                                         // 스레드-안전
                 static &lt;E> Bag&lt;E&Gt; unmodifiableBag(Bag&lt;? extends E> bag)                            // 변경 불가능한 뷰
@@ -204,8 +201,7 @@ include ../../source/skeleton.pug
                 p subtract에 한하여 3번째 인자로 Predicate을 받는 함수가 존재한다(Since 4.0)
                 h4 각 원소의 cardinality
                 ul
-                    li
-                        | union :
+                    li union :
                         +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/CollectionUtilsTest.java', 'java', '[18,30]') a, b중 큰 쪽과 같다
                     li intersection : a, b중 작은 쪽과 같다
                     li disjunction : cardinality_of_union - cardinality_of_intersection
@@ -219,14 +215,12 @@ include ../../source/skeleton.pug
                 li static boolean isProperSubCollection(Collection&lt;?> a, Collection&lt;?> b)
                 p isSubCollection() && cardinality_of_b > cardinality_of_a를 만족하는 원소가 적어도 하나 존재
                 li static boolean isEqualCollection(Collection&lt;?> a, Collection&lt;?> b)
-                li
-                    | static &lt;T> boolean filter(Iterable&lt;T> collection, Predicate&lt;? super T> predicate)
+                li static &lt;T> boolean filter(Iterable&lt;T> collection, Predicate&lt;? super T> predicate)
                     br
                     | static &lt;T> boolean filterInverse(Iterable&lt;T> collection, Predicate&lt;? super T> predicate)
                 p 필터 조건에 만족되지 않는 원소들은 collection에서 제거된다.
                 li static &lt;C> void transform(Collection&lt;C> collection, Transformer&lt;? super C, ? extends C> transformer)
-                li
-                    | static &lt;O> Collection&lt;O> select(Iterable&lt;? extends O> inputCollection, Predicate&lt;? super O> predicate)
+                li static &lt;O> Collection&lt;O> select(Iterable&lt;? extends O> inputCollection, Predicate&lt;? super O> predicate)
                     br
                     | static &lt;O> Collection&lt;O> selectRejected(Iterable&lt;? extends O> inputCollection, Predicate&lt;? super O> predicate)
                     br
@@ -235,26 +229,22 @@ include ../../source/skeleton.pug
                     | static &lt;O, R extends Collection&lt;? super O>> R selectRejected(Iterable&lt;? extends O> inputCollection, Predicate&lt;? super O> predicate, R outputCollection)
                     br
                     | static &lt;O, R extends Collection&lt;? super O>> R select(Iterable&lt;? extends O> inputCollection, Predicate&lt;? super O> predicate, R outputCollection, R rejectedCollection) // Since 4.1
-                li
-                    | static &lt;I, O> Collection&lt;O> collect(Iterable&lt;I> inputCollection, Transformer&lt;? super I, ? extends O> transformer)
+                li static &lt;I, O> Collection&lt;O> collect(Iterable&lt;I> inputCollection, Transformer&lt;? super I, ? extends O> transformer)
                     br
                     | static &lt;I, O> Collection&lt;O> collect(Iterator&lt;I> inputIterator, Transformer&lt;? super I, ? extends O> transformer)
                     br
                     | static &lt;I, O, R extends Collection&lt;? super O>> R collect(Iterable&lt;I> inputCollection, Transformer&lt;? super I, ? extends O> transformer, R outputCollection)
                     br
                     | static &lt;I, O, R extends Collection&lt;? super O>> R collect(Iterator&lt;I> inputIterator, Transformer&lt;? super I, ? extends O> transformer, R outputCollection)
-                li
-                    | static &lt;T> boolean addIgnoreNull(Collection&lt;T> collection, T object) // Since 3.2
+                li static &lt;T> boolean addIgnoreNull(Collection&lt;T> collection, T object) // Since 3.2
                     br
                     | static &lt;C> boolean addAll(Collection&lt;C> collection, Iterable&lt;? extends C> iterable) + Iterator, Enumeration, C...
-                li
-                    | static int size(Object object) // Since 3.1
+                li static int size(Object object) // Since 3.1
                     br
                     | static boolean sizeIsEmpty(Object object) // Since 3.2
                 p Collection, Map, Array, Iterator, Enumeration 지원
                 li static void reverseArray(Object[] array)
-                li
-                    | static &lt;O extends Comparable&lt;? super O>> List&lt;O> collate(Iterable&lt;? extends O> a, Iterable&lt;? extends O> b, boolean includeDuplicates) // Since 4.0
+                li static &lt;O extends Comparable&lt;? super O>> List&lt;O> collate(Iterable&lt;? extends O> a, Iterable&lt;? extends O> b, boolean includeDuplicates) // Since 4.0
                     br
                     | static &lt;O extends Comparable&lt;? super O>> List&lt;O> collate(Iterable&lt;? extends O> a, Iterable&lt;? extends O> b, Comparator&lt;? super O> c, boolean includeDuplicates) // Since 4.0
                 p 2개의 정렬된 컬렉션을 하나의 정렬된 컬렉션으로 반환
@@ -271,7 +261,7 @@ include ../../source/skeleton.pug
             h3 class ComparatorUtils Since 2.1
             +asCode('java').
                 public static final Comparator NATURAL_COMPARATOR
-                
+
                 static &lt;E> Comparator&lt;E> chainedComparator(Comparator&lt;E>... comparators)
                 static &lt;E> Comparator&lt;E> reversedComparator(Comparator&lt;E> comparator)
                 static &lt;E> Comparator&lt;Boolean> booleanComparator(boolean trueFirst)
@@ -290,7 +280,7 @@ include ../../source/skeleton.pug
                 // + IteratorUtils
                 static &lt;E> Iterable&lt;E> emptyIterable()
                 static &lt;E> Iterable&lt;E> emptyIfNull(Iterable&lt;E> iterable)
-                
+
                 static &lt;E> Iterable&lt;E> chainedIterable(Iterable&lt;? extends E> a, Iterable&lt;? extends E> b)
                 static &lt;E> Iterable&lt;E> filteredIterable(Iterable&lt;E> iterable, Predicate&lt;? super E> predicate)
                 static &lt;E> Iterable&lt;E> boundedIterable(Iterable&lt;E> iterable, long maxSize)
@@ -301,7 +291,7 @@ include ../../source/skeleton.pug
                 static &lt;E> Iterable&lt;E> uniqueIterable(Iterable&lt;E> iterable)
                 static &lt;E> Iterable&lt;E> unmodifiableIterable(Iterable&lt;E> iterable)
                 static &lt;E> Iterable&lt;E> zippingIterable(Iterable&lt;? extends E> a, Iterable&lt;? extends E> b)
-                
+
                 static &lt;E> void forEach(Iterable&lt;E> iterable, Closure&lt;? super E> closure)
                 static &lt;E> E forEachButLast(Iterable&lt;E> iterable, Closure&lt;? super E> closure)
                 static &lt;E> E find(Iterable&lt;E> iterable, Predicate&lt;? super E> predicate)
@@ -323,7 +313,7 @@ include ../../source/skeleton.pug
             +asCode('java').
                 static &lt;T> List&lt;T> emptyIfNull(List&lt;T> list)
                 static &lt;T> List&lt;T> defaultIfNull(List&lt;T> list, List&lt;T> defaultList) // Since 4.0
-                
+
                 static &lt;T> List&lt;T> intersection(List&lt;? extends E> list1, List&lt;? extends E> list2)
                 static &lt;T> List&lt;T> subtract(List&lt;? extends E> list1, List&lt;? extends E> list2)
                 static &lt;T> List&lt;T> union(List&lt;? extends E> list1, List&lt;? extends E> list2)
@@ -333,7 +323,7 @@ include ../../source/skeleton.pug
                 static &lt;T> List&lt;T> retainAll(Collection&lt;T> collection, Collection&lt;?> retain) // Since 3.2
                 static &lt;T> List&lt;T> removeAll(Collection&lt;T> collection, Collection&lt;?> remove) // Since 3.2
                 static &lt;T> List&lt;T> longestCommonSubsequence(List&lt;T> a, List&lt;T> b) // Since 4.0
-                
+
                 static &lt;T> List&lt;T> unmodifiableList(List&lt;? extends E> list)
                 static &lt;T> List&lt;T> predicatedList(List&lt;E> list, Predicate&lt;E> predicate)
                 static &lt;T> List&lt;T> transformedList(List&lt;E> list, Transformer&lt;? super E, ? extends E> transformer)
@@ -341,9 +331,9 @@ include ../../source/skeleton.pug
                     // 요청된 인덱스에 한해서만 객체를 생성한다. 빈 구역은 null로 채워진다.
                 static &lt;T> List&lt;T> fixedSizeList(List&lt;T> list) // 요소의 추가/삭제 불가
                 static &lt;T> List&lt;T> synchronizedList(List&lt;E> list)
-                
+
                 static &lt;T> List&lt;List&lt;T>> partition(List&lt;T> list, int size) // Since 4.0
-                
+
                 static boolean isEqualList(Collection&lt;?> list1, Collection&lt;?> list2)
                 static int hashCodeForList(Collection&lt;?> list)
                 static &lt;T> int indexOf(List&lt;T> list, Predicate&lt;T> predicate)
@@ -353,8 +343,7 @@ include ../../source/skeleton.pug
                 li static &lt;K, V> V getObject(Map&lt;? super K, V> map, K key)
                 p map이 null이면 null 반환
                 li static &lt;K> String getString(Map&lt;? super K, ?> map, K key)
-                p
-                    | 조회된 객체에 대하여 toString() 호출. map이 null이면 null 반환. key가 map에 없어도 null 반환.
+                p 조회된 객체에 대하여 toString() 호출. map이 null이면 null 반환. key가 map에 없어도 null 반환.
                     | + Boolean, Number, Byte, Short, Integer, Long, Float, Double, Map, Object
                     +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', 'java', '[17,32,35,42]')
                 li static &lt;K, V> Properties toProperties(Map&lt;K, V> map)
@@ -362,8 +351,7 @@ include ../../source/skeleton.pug
                 li static void verbosePrint(PrintStream out, Object label, Map&lt;?, ?> map)
                 +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', 'java', '[17,32,45,62]')
                 li static &lt;K, V> Map&lt;K, V> invertMap(Map&lt;K, V> map)
-                p
-                    | 키-값 위치를 바꾼 새 HashMap 반환
+                p 키-값 위치를 바꾼 새 HashMap 반환
                     +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', 'java', '[17,32,65,67]')
                 li static &lt;K> void safeAddToMap(Map&lt;? super K, Object> map, K key, Object value)
                 p null 삽입 거부
@@ -486,8 +474,7 @@ include ../../source/skeleton.pug
         p Comparable에 대한 Comparator를 반환하는 유틸리티 메서드를 제공한다
         li class ComparatorChain&lt;E> implements Comparator&lt;E>, Serializable Since 2.0
         li class FixedOrderComparator&lt;T> implements Comparator&lt;T>, Serializable Since 3.0
-        p
-            | 객체들의 고정된 순서를 비교하는 비교자를 제공한다.
+        p 객체들의 고정된 순서를 비교하는 비교자를 제공한다.
             +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/ComparatorTest.java', 'java')
         li class NullComparator&lt;E> implements Comparator&lt;E>, Serializable Since 2.0
         li class ReverseComparator&lt;E> implements Comparator&lt;E>, Serializable Since 2.0
@@ -519,8 +506,7 @@ include ../../source/skeleton.pug
         li class CollatingIterator&lt;E> implements Iterator&lt;E> Since 2.1
         p 여러 이터레이터들을 특정 순서대로 소비하는 래퍼를 제공. + ZippingIterator(각 이터레이터 1개씩 순회 조회), IteratorChain(넘겨진 순서대로 소비), LazyIteratorChain
         li class ObjectGraphIterator&lt;E> implements Iterator&lt;E> Since 3.1
-        p
-            | 이터레이터들로 구성된 객체를 하나의 이터레이터로 순회할 수 있는 기능을 제공한다.
+        p 이터레이터들로 구성된 객체를 하나의 이터레이터로 순회할 수 있는 기능을 제공한다.
             +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/IteratorTest.java', 'java')
         li class PermutationIterator&lt;E> implements Iterator&lt;List&lt;E>> Since 4.0
         p 순열을 조회하는 이터레이터를 제공한다.

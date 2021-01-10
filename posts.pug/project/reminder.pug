@@ -12,8 +12,7 @@ include ../../source/skeleton.pug
             ul
                 li 무료 서비스를 이용하였기 때문에, 최초 진입 시 앱 구동을 위해 다소 시간이 소요될 수 있습니다. 이후 접속은 원활히 진행됩니다.
                 li 무료 서비스기 때문에, 종료 후 업로드된 파일들은 삭제됩니다.
-            li
-                | GitHub 저장소 링크 : 
+            li GitHub 저장소 링크 : 
                 +asA('https://github.com/Dong-gi/Reminder')
 
         h2 기술 스택
@@ -33,7 +32,7 @@ include ../../source/skeleton.pug
                     boolean noAuth = ((MethodSignature) jp.getSignature()).getMethod().isAnnotationPresent(NoAuthAction.class);
                     if (noAuth)
                         return jp.proceed();
-                    
+
                     // ↓ 인증이 필요한 요청은 세션이 수립되었는지 확인
                     HttpServletRequest servletRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
                     LocalShare.SESSION.set(servletRequest.getSession());
@@ -49,7 +48,7 @@ include ../../source/skeleton.pug
                     // ...
                     if (noToken)
                         return jp.proceed();
-            
+
                     String clientToken = servletRequest.getHeader(Texts.SERVLET_REQUEST_TOKEN_HEADER).trim();
                     LocalShare.SESSION.get().setAttribute(
                         SessionKey.REQUEST_TOKEN,
@@ -82,8 +81,7 @@ include ../../source/skeleton.pug
             li 자동 로그인
             p 자동 로그인을 허용한 경우, 토큰 만료 시각을 2222년으로 설정하여 이후 요청에 이용할 수 있게 했습니다.
             li SF; Simple HTML Framework
-            p
-                | 이 문제의 풀이에는 개인적으로 작성한 HTML 라이브러리를 적용했습니다. 자세한 내용은 다음의 링크를 참고해주세요.
+            p 이 문제의 풀이에는 개인적으로 작성한 HTML 라이브러리를 적용했습니다. 자세한 내용은 다음의 링크를 참고해주세요.
                 +asA('/posts/project/sf.html')
 
         h2 스크린샷

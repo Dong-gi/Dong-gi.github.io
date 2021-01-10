@@ -7,10 +7,10 @@ include ../../source/skeleton.pug
     div
         h2 설치(SDKMAN)
         +asCode('shell') $ sdk install groovy
-        
+
         h2 실행
         +asCode('shell') $ groovy FileName.groovy # '.groovy' 생략 가능
-        
+
         h2 컴파일
         p .class 파일을 생성한다
         +asCode('shell') $ groovyc FileName.groovy
@@ -26,10 +26,10 @@ include ../../source/skeleton.pug
                 p 임의의 문자열 상수 표현 및 GString 표현을 '.' 이후의 식별자로 이용할 수 있다.
                 +asCode('groovy').
                     def map = [:]
-                    
+
                     map.' a b c ' = 'abc'
                     assert map." a b c " == 'abc'
-                    
+
                     def firstName = "Homer"
                     map."Simpson-${firstName}" = "Homer Simpson"
                     assert map.'Simpson-Homer' == "Homer Simpson"
@@ -47,7 +47,7 @@ include ../../source/skeleton.pug
                     +asCode('groovy').
                         def text = 'Hello World'
                         def text2 = "${text}${text}"
-                        
+
                         assert text2.toString() == text + text
                     li 모호하지 않은 경우, .표현식은 {}를 생략할 수 있다.
                     +asCode('groovy').
@@ -74,12 +74,12 @@ include ../../source/skeleton.pug
                 def list = [1, 2, 3] // default : ArrayList
                 def list2 = [1, 2, 3] as LinkedList
                 LinkedList list3 = [1, 2, 3]
-                
+
                 assert list[-1] == 3
-                
+
                 list << 4 // append
                 assert list[3] == 4
-                
+
                 assert list[1, 3] == [2, 4]
                 assert list[1..3] == [2, 3, 4]
             h3 Arrays
@@ -93,7 +93,7 @@ include ../../source/skeleton.pug
                 map.key3 = 'value3'
                 assert map[2] == 'value2'
                 assert map.key1 == map['key1']
-        
+
         h2 Operators
         div
             h3 Relational operators
@@ -128,20 +128,20 @@ include ../../source/skeleton.pug
                 +asCode('groovy').
                     def f = '123'.&length
                     assert f() == 3
-                    
+
                     def something(int x) { x * 2 }
                     def something(str) { "${str} ${str}" }
                     f = this.&something
                     assert f(123) == 246
                     assert f('123') == '123 123'
-                    
+
                     f = Integer.&new // Since 3.0.0
                     assert f(123) == 123
             h3 Regex expression
             +asCode('groovy').
                 def p = ~/regex/
                 assert p instanceof Pattern // java.util.regex.Pattern
-                
+
                 def m = text ==~ /match/
                 assert m instanceof Boolean
             h3 Other operators
@@ -156,7 +156,7 @@ include ../../source/skeleton.pug
                     ]
                     assert data*.key1 == ['1-1', null, '2-1']
                     assert data.collectNested { it?.key1 } == ['1-1', null, '2-1']
-                    
+
                     data = [data, data]
                     assert data.collectNested { it?.key1 } == [['1-1', null, '2-1'], ['1-1', null, '2-1']]
                 li Spreading method arguments
@@ -233,12 +233,12 @@ include ../../source/skeleton.pug
                 +tds('+x', 'positive')
                 +tds('-x', 'negative')
                 +tds('~x', 'betwiseNegate')
-        
+
         h2 Program structure
         div
             h3 Package names
             +asCode('groovy') package com.xxx
-            
+
             h3 Imports
             +asCode('groovy') import x.y.Z
             p Default imports
@@ -260,13 +260,13 @@ include ../../source/skeleton.pug
             +asCode('groovy').
                 def x = 1     // 동적 타입 변수. 컴파일된 클래스의 run() 내부 지역 변수가 된다.
                 x = 'hello'
-                
+
                 int x = 1     // 정적 타입 변수. 컴파일된 클래스의 run() 내부 지역 변수가 된다.
-                
+
                 x = 1         // 스크립트 클래스에 바인딩되어 클래스 내부 어디서든 접근 가능
-                
+
                 @Field x = 1  // 컴파일된 클래스의 필드가 된다.
-        
+
         h2 Object orientation
         div
             h3 Types
@@ -288,14 +288,14 @@ include ../../source/skeleton.pug
                             "{name:'${name}',age:${age}}"
                         }
                     }
-                    
+
                     def p1 = new Person('p1', 11)
                     def p2 = ['p2', 22] as Person
                     Person p3 = ['p3', 33]
                     // no-arg 생성자는 아래와 같은 호출 가능
                     def p4 = new Person(age: 44, name: 'p4')
                     def p5 = new Person([age: 55, name: 'p5'])
-                    
+
                     println([p1, p2, p3, p4, p5])
                     /*
                     arg constructor called
@@ -316,20 +316,20 @@ include ../../source/skeleton.pug
                     li Meta-annotations
                     +asCode('groovy').
                         import groovy.transform.AnnotationCollector
-                        
+
                         @Service
                         @Transactional
                         @AnnotationCollector
                         @interface TransactionalService {}
             h3 Traits
             p Interface와 AbstractClass를 섞은 느낌
-        
+
         h2 Closures
         div
             h3 Syntax
             +asCode('groovy').
                 { [params -> ] statements }
-                
+
                 next = { x++ }
                 plus = { a, b -> a + b }
                 minus = { int a, int b -> return a - b }
@@ -345,7 +345,7 @@ include ../../source/skeleton.pug
                     def p = new Person(name: 'Norman')
                     toUpper.delegate = p
                     assert toUpper() == 'NORMAN'
-                    
+
                     toUpper = { name.toUpperCase() }
                     p = new Person(name: 'Norman')
                     toUpper.delegate = p
@@ -371,7 +371,7 @@ include ../../source/skeleton.pug
                 +asCode('groovy').
                     def facto = { n, r = 1g -> n &lt; 2? r : facto.trampoline(n-1, n * r) }
                     facto = facto.trampoline()
-        
+
         h2 Semantics
         div
             h3 Statements

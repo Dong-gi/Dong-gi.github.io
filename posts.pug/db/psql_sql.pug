@@ -155,8 +155,7 @@ include ../../source/skeleton.pug
                 li SELECT true OR somefunc();와 SELECT somefunc() OR ture; 모두 somefunc()가 호출되지 않는다. short-circuit 연산과는 다르다.
                 li SELECT ... WHERE CASE WHEN x > 0 THEN y/x > 1.5 ELSE false END;
                 li SELECT CASE WHEN x > 0 THEN x ELSE 1/0 END FROM tab;
-                p
-                    | 주의. IMMUTABLE 함수는 값이 먼저 평가되기 때문에, 실제로 x가 항상 0보다 크더라도 1/0이 미리 평가되어 에러가 발생한다.
+                p 주의. IMMUTABLE 함수는 값이 먼저 평가되기 때문에, 실제로 x가 항상 0보다 크더라도 1/0이 미리 평가되어 에러가 발생한다.
                     +asA('http://postgresql.kr/docs/current/xfunc-volatility.html', 'xfunc-volatility')
 
         h2 함수 호출
@@ -251,8 +250,7 @@ include ../../source/skeleton.pug
                     PRIMARY KEY (product_no, order_id)
                 );
         h2 System Columns
-        p
-            | oid : object_id. 테이블을 WITH OIDS로 생성하거나, default with oids이 설정된 경우 생성되는 열. 타입 이름도 oid.
+        p oid : object_id. 테이블을 WITH OIDS로 생성하거나, default with oids이 설정된 경우 생성되는 열. 타입 이름도 oid.
             +asA('http://postgresql.kr/docs/9.6/ddl-system-columns.html')
         h2 Modifying Tables
         ol
@@ -544,8 +542,7 @@ include ../../source/skeleton.pug
             ol
                 li p(precision) : 유효숫자 수
                 li s(scale) : 소수 정밀도
-                p
-                    | 예. 3.141592의 precision = 7, scale = 6.
+                p 예. 3.141592의 precision = 7, scale = 6.
                     br
                     | 정수는 scale = 0인 numeric으로 간주해도 무방
                 li NUMERIC(precision) : scale = 0
@@ -899,8 +896,7 @@ include ../../source/skeleton.pug
                 li chr(int)
                 p 주어진 코드값에 대한 문자를 반환한다. UTF8 문자에 대해서는 유니코드 코드 포인트를 인자로 전달하고, 그 외의 경우엔 아스키 코드를 인자로 전달해야 한다. 0은 입력으로 허용되지 않는다.
                 li convert(string | bytea, src_encoding, dest_encoding)
-                p
-                    | 가능한 빌트인 변환 목록 :
+                p 가능한 빌트인 변환 목록 :
                     +asA('http://postgresql.kr/docs/current/functions-string.html#CONVERSION-NAMES', '#CONVERSION-NAMES')
                 li convert_from(string | bytea, src_encoding) : dest_encoding = DB 인코딩
                 li convert_to(string | bytea, dest_encoding) : src_encoding = DB 인코딩
@@ -1174,13 +1170,11 @@ include ../../source/skeleton.pug
                     td interval '00:40:00'
                 tr
                     td overlaps
-                    td
-                        | (date '2000-01-01', date '2000-12-31') overlaps (date '2000-07-07', date '2000-08-08')
+                    td (date '2000-01-01', date '2000-12-31') overlaps (date '2000-07-07', date '2000-08-08')
                     td t
                 tr
                     td overlaps
-                    td
-                        | (date '2000-01-01', make_interval(years => 1)) overlaps (date '2000-07-07', date '2000-08-08')
+                    td (date '2000-01-01', make_interval(years => 1)) overlaps (date '2000-07-07', date '2000-08-08')
                     td t
 
             h3 Date/Time Functions
@@ -1270,8 +1264,7 @@ include ../../source/skeleton.pug
                 tr
                     td at time zone
                     td timestamptz
-                    td
-                        | Convert timestamp to timestamptz
+                    td Convert timestamp to timestamptz
                         +asA('https://en.wikipedia.org/wiki/List_of_tz_database_time_zones', 'wiki/List_of_tz')
                     td timestamp '2000-01-01 00:00:00' at time zone 'Asia/Seoul'
                     td 1999-12-31 07:00:00-08

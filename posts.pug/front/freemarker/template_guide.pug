@@ -2,8 +2,7 @@ include ../../../source/skeleton.pug
 +post('템플릿 작성 가이드 2.3.28', 'FreeMarker, Template, Guide', '템플릿 작성 가이드 2.3.28 정리')
     h1 시작하기
     ul
-        li
-            | 템플릿은 임의의 텍스트 파일이 될 수 있으며, HTML로 한정되지 않는다.
+        li 템플릿은 임의의 텍스트 파일이 될 수 있으며, HTML로 한정되지 않는다.
             br
             | 출력 텍스트의 아래 요소들은 FreeMarker에서 처리되고, 나머지는 있는 그대로 출력된다.
         li ${...} : FreeMarker는 출력 텍스트에서 이 부분을 중괄호 안 표현식의 값으로 치환한다. Interpolation이라고 부른다.
@@ -11,16 +10,14 @@ include ../../../source/skeleton.pug
         p Directive 예 : &lt;#if>, &lt;#elseif>, &lt;#else>, ...
         li 주석 : &lt;#-- -->. HTML 주석과 다르게 출력에 포함되지 않는다.
         li Built-in : FreeMarker 데이터 모델이 지원하는 메서드.
-        p
-            | Built-in 예 : ?upper_case, ?length, ?size, ...
+        p Built-in 예 : ?upper_case, ?length, ?size, ...
             +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[17, 23]') Java »
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_001_hello_world.ftl', 'xml', '[1, 12, 15, 26]') FTL + 결과 »
 
     h1 Undefined Variable Error 방지.
     ul
         li FreeMarker는 null 예외나 찾을 수 없는 식별자 예외를 동일하게 "undefined variable" error를 발생시킨다.
-        li
-            | 기본값 설정 : !
+        li 기본값 설정 : !
             br
             | 존재 여부 확인 : ??
             +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[25, 30]') Java »
@@ -117,8 +114,7 @@ include ../../../source/skeleton.pug
             +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[74, 79]') Java »
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_008_macro.ftl', 'xml', '[1, 16, 20, 30]') FTL + 결과 »
         li Nested content
-        p
-            | 매크로 매개변수는 nested content에서 참조할 수 없다.
+        p 매크로 매개변수는 nested content에서 참조할 수 없다.
             +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[81, 86]') Java »
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_009_macro.ftl', 'xml', '[1, 16, 20, 30]') FTL + 결과 »
         li Nested content with 출력 전용 변수
@@ -137,8 +133,7 @@ include ../../../source/skeleton.pug
     ol
         li 템플릿에서 선언된 변수(매크로, 함수 포함)들에 대한 유니크한 이름과의 매핑
         li import : include와는 다르게, 템플릿 네임스페이스에 대한 접근을 가능하게 하는 해시를 생성한다.
-        p
-            | import된 템플릿의 네임스페이스는 템플릿의 path로 구분되며, 같은 path로 여러 번 import 하더라도 같은 해시를 갖게 된다.
+        p import된 템플릿의 네임스페이스는 템플릿의 path로 구분되며, 같은 path로 여러 번 import 하더라도 같은 해시를 갖게 된다.
             +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[95, 100]') Java »
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_011_footer.ftl', 'xml') 라이브러리 ftl »
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_011_main.ftl', 'xml', '[1,5,7,10]') 메인 ftl + 결과 »
