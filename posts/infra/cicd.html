@@ -18,8 +18,7 @@ services:
       SERVER_URL: server:18111
     volumes:
       - ./config:/data/teamcity_agent/conf
-
-</div></div><h1>GitHub Action + AWS Auto Scaling</h1><ol><li>기준 AMI 생성</li><p>모든 구성이 완료된 EC2 인스턴스로부터 이미지 생성</p><li>AMI를 이용하는 launch template 생성</li><li>Launch template으로 인스턴스 생성 시 CodeDeploy 실행하도록 User data 설정</li><p><strong>↓ shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">#!/bin/bash
+</div><h2>Configure and Run Build</h2><ol><li>Project 생성</li><li>Build configuration 생성</li><li>Build step 추가</li><li>Build 실행</li></ol></div><h1>GitHub Action + AWS Auto Scaling</h1><ol><li>기준 AMI 생성</li><p>모든 구성이 완료된 EC2 인스턴스로부터 이미지 생성</p><li>AMI를 이용하는 launch template 생성</li><li>Launch template으로 인스턴스 생성 시 CodeDeploy 실행하도록 User data 설정</li><p><strong>↓ shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">#!/bin/bash
 aws configure set default.region ${xxx}
 aws deploy create-deployment --application-name ${xxx} --deployment-config-name ${xxx} --deployment-group-name ${xxx} --s3-location bucket=${bucket_name},bundleType=zip,key=${s3_object_key}</div><li>Launch template - User data 에서 사용할 CodeDeploy 생성</li><li>빌드를 zip으로 S3에 올리고 CodeDeploy를 실행하도록 GitHub Action 구성</li><p>구성 편의를 위해 S3 key는 상수 이용</p><p><strong>↓ yaml</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="yaml">name: Prod Deployment
 env:

@@ -4,7 +4,7 @@ const posts = {list: [
     { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1010.html',            title: '소수(Prime) 관련 문제' },
     { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1011.html',            title: '동적계획법(DP) 문제' },
     { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1018.html',            title: '1018: 문자열 거리 최소화 하기' },
-    { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1034.html',            title: '1034,1041: 최소 이동 거리' },
+    { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1034.html',            title: '1034, 1041: 최소 이동 거리' },
     { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1048.html',            title: '1048: AP 배분' },
     { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1095.html',            title: '1095: 자연스러운 정렬' },
     { category: 'Algorithm',           file: '/posts/algorithm/algo.html',                      title: '1 알고리즘 이론' },
@@ -14,11 +14,10 @@ const posts = {list: [
     { category: 'Algorithm',           file: '/posts/algorithm/ai.html',                        title: '5 AI' },
 
     { category: 'JVM',                 file: '/posts/java/basic.html',                          title: '1-1 Java 시작하기' },
-    { category: 'JVM',                 file: '/posts/java/oop.html',                            title: '1-2 Java 객체지향' },
-    { category: 'JVM',                 file: '/posts/java/version.html',                        title: '1-3 Java 버전별 추가사항' },
-    { category: 'JVM',                 file: '/posts/java/performance.html',                    title: '1-4 JVM 옵션 및 성능 관련사항' },
-    { category: 'JVM',                 file: '/posts/java/jni.html',                            title: '1-5 Java Native Interface' },
-    { category: 'JVM',                 file: '/posts/java/effective_java.html',                 title: '1-6 『Effective Java』' },
+    { category: 'JVM',                 file: '/posts/java/version.html',                        title: '1-2 Java 버전별 추가사항' },
+    { category: 'JVM',                 file: '/posts/java/performance.html',                    title: '1-3 JVM 옵션 및 성능 관련사항' },
+    { category: 'JVM',                 file: '/posts/java/jni.html',                            title: '1-4 Java Native Interface' },
+    { category: 'JVM',                 file: '/posts/java/effective_java.html',                 title: '1-5 『Effective Java』' },
     { category: 'JVM',                 file: '/posts/java/java_ee.html',                        title: '2-1 JavaEE' },
     { category: 'JVM',                 file: '/posts/java/jpa.html',                            title: '2-2 JPA; Java Persistence API' },
     { category: 'JVM',                 file: '/posts/java/spring_framework.html',               title: '2-3 Spring Framework' },
@@ -220,7 +219,7 @@ function convertAsCodeDiv(divs) {
         // console.log(code)
         div.innerHTML = ''
         fillCodeDiv(div, div.getAttribute('lan'), code)
-        div.style.maxHeight = window.innerHeight / 2
+        div.style.maxHeight = window.innerHeight / 2 + 'px'
         div.classList.remove('as-code')
     }
 }
@@ -441,6 +440,7 @@ function insertCodeDiv(id) {
 
                 posts.codes[id] = this.responseText
                 fillCodeDiv(div, lan, this.responseText, button.getAttribute('displayRange'))
+                div.style.maxHeight = window.innerHeight / 2 + 'px'
 
                 if (lan != 'nohighlight') {
                     let modal = '<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-blue">모달로 보기</button>'.asSF().$
@@ -464,7 +464,7 @@ function insertCodeDiv(id) {
         } else {
             let div = document.getElementById(`code-div-${id}`)
             SFUtil.toggleClass(div, ['w3-hide'])
-            div.style.maxHeight = window.innerHeight / 2
+            div.style.maxHeight = window.innerHeight / 2 + 'px'
         }
     }
 }

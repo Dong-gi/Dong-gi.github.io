@@ -1,7 +1,4 @@
-package io.github.donggi;
-
 public class Notify {
-
     private static final Object LOCK = new Object();
 
     public static void main(String[] args) {
@@ -37,5 +34,4 @@ public class Notify {
         } catch (Exception e) {}
         th2.start();
     }
-
 }

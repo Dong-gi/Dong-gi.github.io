@@ -1,7 +1,4 @@
-package io.github.donggi;
-
 public class ObjectExample {
-
     public static void main(String[] args) throws Exception {
         var main1 = new Main();
         var main2 = main1.clone();
@@ -27,14 +24,14 @@ public class ObjectExample {
         @Override
         public Main clone() {
             // 얕은 복사가 필요하다면 Object.clone()을 이용한다.
-            Main main = null;
             try {
-                main = (Main) super.clone();
+                var main = (Main) super.clone();
                 main.string = new String(string);
+                return main;
             } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
+                // swallow
+                return null;
             }
-            return main;
         }
 
         // equals()와 hashCode()를 함께 override해야한다.
@@ -42,7 +39,7 @@ public class ObjectExample {
         public boolean equals(Object o) {
             if (o == this)
                 return true;
-            if (!(o instanceof Main))
+            if ((o instanceof Main) == false)
                 return false;
             var main = (Main) o;
             return main.num == num && main.string.equals(string);

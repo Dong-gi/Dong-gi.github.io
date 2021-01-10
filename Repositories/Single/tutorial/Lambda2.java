@@ -1,7 +1,4 @@
-package io.github.donggi;
-
 public class Lambda2 {
-
     @FunctionalInterface
     interface Joiner{
         String join(String s1, String s2);
@@ -25,10 +22,10 @@ public class Lambda2 {
     }
 
     public static void main(String[] args) {
-        test((String x, String y) -> x+ "," + y);
-        test((Joiner)((x, y) -> x+ " " + y));
+        test((String x, String y) -> x + "," + y);
+        test((Joiner) ((x, y) -> x + " " + y));
 
-        Adder adder = (x,y)->x+y;
+        Adder adder = (x,y) -> x + y;
         test(adder);
     }
 }

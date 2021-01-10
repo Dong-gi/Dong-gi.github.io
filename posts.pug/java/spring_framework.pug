@@ -2946,6 +2946,19 @@ include ../../source/skeleton.pug
                 | gradle app-name:bootJar -x test
                 li bootJar 실행
                 | java -jar -Dspring.profiles.active=dev app-name.jar
+            p multi project 구조에서 bootJar 빌드에 실패하는 경우
+            ul
+                li: +asA('https://stackoverflow.com/questions/47598848/spring-boot-multi-module-project-with-gradle-doesnt-build')
+                li 부트 프로젝트가 아닌 프로젝트들에는 아래처럼 설정
+                +asCode('gradle').
+                    bootJar {
+                        enabled = false
+                    }
+                    
+                    jar {
+                        enabled = true
+                    }
+                    
         details(open='')
             summary application.properties 서버 포트 지정
             | server.port=18080

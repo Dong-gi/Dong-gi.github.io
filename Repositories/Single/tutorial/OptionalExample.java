@@ -1,10 +1,7 @@
-package io.github.donggi;
-
 import java.util.Random;
 import java.util.Optional;
 
 public class OptionalExample {
-
     public static void main(String[] args) {
         for (var i = 0; i < 10; ++i) {
             var isOrNot = Optional.ofNullable(get());

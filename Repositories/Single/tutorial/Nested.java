@@ -1,11 +1,3 @@
-package io.github.donggi;
-
-interface Actable {
-    default void act() {
-        System.out.println("Outer Interface");
-    }
-}
-
 public class Nested {
     // 정적 멤버 클래스
     static class Inner1 {
@@ -43,12 +35,13 @@ public class Nested {
         };
         in1.print();
 
-        // Main.Actable이 참조된다.
+        // Nested.Actable이 참조된다.
         new Actable() {
             private String msg = "Hello World";
 
             @Override
             public void act() {
+                Actable.super.act();
                 System.out.println(msg);
             }
         }.act();
@@ -57,5 +50,11 @@ public class Nested {
         // 자신을 둘러싸고 있는 영역의 final 변수를 이용할 수 있다.
         final class LocalClass implements Actable {}
         new LocalClass().act();
+    }
+}
+
+interface Actable {
+    default void act() {
+        System.out.println("Outer Interface");
     }
 }
