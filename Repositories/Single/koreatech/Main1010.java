@@ -1,9 +1,6 @@
-package koreatech;
-
 import java.util.*;
 
-public class Main1010 {
-
+class Main1010 {
     private static boolean[] isPrime;
 
     public static void main(String[] args) throws Exception {
@@ -54,5 +51,4 @@ public class Main1010 {
         }
         return answer.toArray(new Integer[0]);
     }
-
 }

@@ -1,9 +1,6 @@
-package koreatech;
-
 import java.util.*;
 
-public class Main1060 {
-
+class Main1060 {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         char[] cs = in.next().toCharArray();

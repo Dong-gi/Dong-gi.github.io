@@ -1,4 +1,4 @@
-public class Switch {
+class Switch {
     public static void main(String[] args) {
         var var1 = 0;
         switch (var1) {

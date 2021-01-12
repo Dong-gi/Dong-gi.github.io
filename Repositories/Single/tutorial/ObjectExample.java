@@ -1,4 +1,4 @@
-public class ObjectExample {
+class ObjectExample {
     public static void main(String[] args) throws Exception {
         var main1 = new Main();
         var main2 = main1.clone();

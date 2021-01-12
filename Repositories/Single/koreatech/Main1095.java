@@ -1,9 +1,6 @@
-package koreatech;
-
 import java.util.*;
 
 public class Main1095 {
-
     static class NaturalName implements Comparable {
         private static volatile int serial = 0;
         String originalName;
@@ -91,5 +88,4 @@ public class Main1095 {
             System.out.println(name);
         }
     }
-
 }

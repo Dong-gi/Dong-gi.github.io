@@ -1,4 +1,4 @@
-public class TryWithResource {
+class TryWithResource {
     static class MyAutoCloseable implements AutoCloseable {
         @Override
         public void close() {

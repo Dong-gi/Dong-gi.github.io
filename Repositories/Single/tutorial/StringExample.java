@@ -1,4 +1,4 @@
-public class StringExample {
+class StringExample {
     public static void main(String[] args) {
         String s = "Hello World";
         s = s + 123 + false;

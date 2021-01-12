@@ -1,9 +1,6 @@
-package koreatech;
-
 import java.util.*;
 
-public class Main1016 {
-
+class Main1016 {
     private static int[] primes;
 
     public static void main(String[] args) {
@@ -50,5 +47,4 @@ public class Main1016 {
         }catch(Exception e) {}
         primes = Arrays.copyOf(primes, size);
     }
-
 }

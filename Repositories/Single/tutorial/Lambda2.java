@@ -1,4 +1,4 @@
-public class Lambda2 {
+class Lambda2 {
     @FunctionalInterface
     interface Joiner{
         String join(String s1, String s2);

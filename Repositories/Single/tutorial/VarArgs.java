@@ -1,4 +1,4 @@
-public class VarArgs {
+class VarArgs {
     public static void main(String[] args) {
         System.out.println(sum(1, 2, 3, 4));
         System.out.println(sum(new int[] { 1, 2, 3, 4 }));

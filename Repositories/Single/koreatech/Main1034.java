@@ -1,9 +1,6 @@
-package koreatech;
-
 import java.util.*;
 
-public class Main1034 {
-
+class Main1034 {
     private static ArrayList<Integer> positions = new ArrayList<>();
     private static ArrayList<Integer> values = new ArrayList<>();
 
@@ -46,5 +43,4 @@ public class Main1034 {
             distance += Math.abs(item - checkPoint);
         System.out.println(distance);
     }
-
 }

@@ -1,9 +1,6 @@
-package koreatech;
-
 import java.util.*;
 
-public class Main1048 {
-
+class Main1048 {
     static class AP {
         int idx;
         float numOfServe;

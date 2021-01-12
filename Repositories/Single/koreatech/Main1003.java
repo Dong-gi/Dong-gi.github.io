@@ -1,9 +1,6 @@
-package koreatech;
-
 import java.util.*;
 
-public class Main1003 {
-
+class Main1003 {
     private static HashSet<Integer> one = new HashSet<>();
     private static HashSet<Integer> two = new HashSet<>();
     private static HashSet<Integer> three = new HashSet<>();
@@ -51,5 +48,4 @@ public class Main1003 {
 
         System.out.println(count);
     }
-
 }

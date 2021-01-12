@@ -1,9 +1,6 @@
-package koreatech;
-
 import java.util.*;
 
-public class Main1017 {
-
+class Main1017 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int testCase = scanner.nextInt();
@@ -28,5 +25,4 @@ public class Main1017 {
         Arrays.sort(nums);
         return nums[nums.length-1];
     }
-
 }

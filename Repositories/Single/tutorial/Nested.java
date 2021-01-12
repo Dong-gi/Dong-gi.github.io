@@ -1,4 +1,4 @@
-public class Nested {
+class Nested {
     // 정적 멤버 클래스
     static class Inner1 {
         public void print() {

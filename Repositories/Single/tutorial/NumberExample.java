@@ -1,4 +1,4 @@
-public class NumberExample {
+class NumberExample {
     public static void main(String[] args) {
         short s; // 2bytes, -2^15 ~ 2^15-1
         s = 012;

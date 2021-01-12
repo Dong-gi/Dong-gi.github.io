@@ -30,7 +30,7 @@ include ../../source/skeleton.pug
             +asA('https://docs.oracle.com/javase/9/jshell/toc.htm')
         li Collection factory method 추가 : List.of(...) 등
         li try-with-resources 구문 변동 : final한(final 변수 or 변수 초기화 후 변경 없음) resource는 별개의 선언 없이 그대로 이용할 수 있다.
-            +codeBtn('/Repositories/Single/tutorial/TryWithResources.java', 'java')
+            +codeBtn('/Repositories/Single/tutorial/TryWithResource.java', 'java')
         li 타입 추론 강화로 diamond 연산자 &lt;>가 익명 클래스도 지원
         li "_"는 더 이상 유효한 식별자가 아니게 되었다.
         li private 인터페이스 메서드 지원
@@ -74,7 +74,7 @@ include ../../source/skeleton.pug
             li java.base 모듈은 최상의 모듈로, 아무런 의존성이 없다.
 
         h2 모듈 예시 코드.
-        +asA('https://wiki.eclipse.org/Java9/Examples', '참고자료')
+            +asA('https://wiki.eclipse.org/Java9/Examples', '참고자료')
         ol
             li 먼저, 결과물의 디렉터리 구조를 보면 src 루트에 module-info.java가 존재함을 볼 수 있다.
             +w3img('/imgs/20180827_230700.png')
@@ -89,31 +89,98 @@ include ../../source/skeleton.pug
 
     h1 Java 10
     ol
-        li 타입 추론 강화로 지역 변수의 타입 선언에 var를 이용할 수 있게 되었다.
+        li
+            +asA('https://openjdk.java.net/jeps/286')
+            | 타입 추론 강화로 지역 변수의 타입 선언에 var를 이용할 수 있게 되었다.
         ul
             li 지역변수를 선언하면서 초기화할 때 이용 가능
             li 강화된 for 루프 인덱스에 이용 가능
             li 기존 for 루프 인덱스에 이용 가능
             li try-with-resources 변수에 이용 가능
-                +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java', 'java')
+                +codeBtn('/Repositories/Single/tutorial/TryWithResource.java', 'java')
         li 변경 불가능한 collection 생성 메서드 추가 : toUnmodifiableList 등
         li javadoc 커맨드라인 옵션에 --add-stylesheet 추가 : 여러 css 이용 가능
 
     h1 Java 11
     ol
-        li HTTP/2, WebSocket API를 지원하는 java.net.http 표준 모듈 추가
-        li 람다의 암시적인 매개변수 선언에 var 키워드 사용 가능
+        li
+            +asA('https://openjdk.java.net/jeps/318')
+            | Epsilon : 기능없는 GC
+        p 메모리 할당만 하는 GC. 힙 고갈 시 JVM 셧다운.
+        li
+            +asA('https://openjdk.java.net/jeps/321')
+            | HTTP/2, WebSocket API를 지원하는 java.net.http 표준 모듈 추가
+        li
+            +asA('https://openjdk.java.net/jeps/323')
+            | 람다의 암시적인 매개변수 선언에 var 키워드 사용 가능
         +asCode('java') (@NonNull var x, @NonNull var y) -> x.process(y);
-        li 유니코드 10.0 지원
-        li 단일 파일 프로그램(Standalone)에 대해 간편한 실행 가능
+        li
+            +asA('https://openjdk.java.net/jeps/324')
+            | 디피-헬만 키 교환보다 효율적이고 안전한
+            +asA('https://tools.ietf.org/html/rfc7748')
+            | 의 구현
+        li
+            +asA('https://openjdk.java.net/jeps/327')
+            | 유니코드 10.0 지원
+        li
+            +asA('https://openjdk.java.net/jeps/330')
+            | 단일 파일 프로그램(Standalone)에 대해 간편한 실행 가능
         +asCode('shell') java Name.java [params] # Name.java를 컴파일하고 즉시 실행
-        li TLS 1.3 지원
-
-    h1 Java 12
-    p Switch 표현식(Preview)
-        +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/SwitchExpression.java', 'java')
+        li
+            +asA('https://openjdk.java.net/jeps/332')
+            | TLS 1.3 지원
 
     h1 Java 13
     ol
-        li Switch 표현식(Preview) : Java 12의 break 대신 yield 사용
-        li """를 이용한 여러 줄 문자열 리터럴 사용(Preview)
+        li
+            +asA('https://openjdk.java.net/jeps/353')
+            | java.net.Socket, java.net.ServerSocket 재구현
+
+    h1 Java 14
+    ol
+        li
+            +asA('https://openjdk.java.net/jeps/352')
+            | 비휘발성 메모리에 매핑하는 ByteBuffer 추가.
+        p jdk.nio.mapmode.ExtendedMapMode 이용
+        li
+            +asA('https://openjdk.java.net/jeps/358')
+            | 친절한 NullPointerException
+        p 누가 null인지 출력해준다. 출력에 사용되는 이름들은 바이트코드에 있는 정보이므로, 정확한 설명을 얻으려면 컴파일 시 필드명을 모두 남기도록 해야한다.
+        li
+            +asA('https://openjdk.java.net/jeps/361')
+            | Switch expressions
+        ul
+            +codeBtn('/Repositories/Single/tutorial/SwitchExpression.java', 'java')
+            li Arrow labels
+            p "case L ->" 레이블 추가. "case L:" 레이블은 break;를 만나지 않으면 다음 레이블의 것도 실행되지만, -> 레이블은 항상 우측 식/문장/블록만 실행
+            li Switch expressions
+            p switch 문을 rValue로 이용할 수 있다.
+            li Yielding a value
+            p Switch expression을 위해 코드 블록이 필요한 경우, 값을 산출하는 식/문장 앞에 yield를 적시하면 된다.
+            li Exhaustiveness
+            p Switch expression은 항상 값을 반환해야 한다. 보통의 경우 default 케이스 이용하면 충분.
+
+    h1 Java 15
+    ol
+        li
+            +asA('https://openjdk.java.net/jeps/373')
+            | java.net.DatagramSocket, java.net.MulticastSocket 재구현
+        li
+            +asA('https://openjdk.java.net/jeps/377')
+            | ZGC: A Scalable Low-Latency Garbage Collector
+        li
+            +asA('https://openjdk.java.net/jeps/378')
+            | Text block
+        li
+            +asA('https://openjdk.java.net/jeps/379')
+            | Shenandoah: A Low-Pause-Time Garbage Collector
+        p """를 이용해 여러 줄에 걸쳐 문자열 상수 작성 가능. ', " 이스케이프가 필요없어 편리.
+        li String.formatted​(Object... args) 메서드 추가로 타이핑 용이
+
+    h1 Java 16
+    ol
+        li
+            +asA('https://openjdk.java.net/jeps/380')
+            | Unix-domain (AF_UNIX) socket 지원
+        p 프로세스 간 통신에 있어 loopback을 이용한 TCP/IP보다 좋은 성능/보안을 제공한다. 컨테이너 환경에서 특히 유용할 것으로 기대.
+        li 21년 3월 출시 일반 출시 이후 재작성.

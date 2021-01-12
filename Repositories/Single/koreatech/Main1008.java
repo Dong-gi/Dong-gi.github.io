@@ -1,9 +1,6 @@
-package koreatech;
-
 import java.util.*;
 
-public class Main1008 {
-
+class Main1008 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int testCase = scanner.nextInt();
@@ -34,5 +31,4 @@ public class Main1008 {
             System.out.println(")");
         }
     }
-
 }

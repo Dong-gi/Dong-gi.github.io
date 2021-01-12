@@ -1,9 +1,6 @@
-package koreatech;
-
 import java.util.*;
 
-public class Main1041 {
-
+class Main1041 {
     private static ArrayList<Integer> xPositions = new ArrayList<>();
     private static ArrayList<Integer> yPositions = new ArrayList<>();
     private static ArrayList<Integer> xValues = new ArrayList<>();

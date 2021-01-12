@@ -1,9 +1,6 @@
-package koreatech;
-
 import java.util.*;
 
-public class Main1018 {
-
+class Main1018 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int testCase = scanner.nextInt();
@@ -21,5 +18,4 @@ public class Main1018 {
             System.out.println(arr1.length - index[index.length-1]);
         }
     }
-
 }
