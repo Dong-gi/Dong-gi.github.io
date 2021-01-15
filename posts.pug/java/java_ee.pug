@@ -6,18 +6,18 @@ include ../../source/skeleton.pug
         p JavaSE와는 문서 페이지가 다르다. 
             +asA('https://javaee.github.io/javaee-spec/javadocs/')
         li WAR(Web Application Archive) : JavaEE 웹 애플리케이션을 위한 압축 파일
-        p 전통적인 war 파일 구조 ↓
+        p 전형적인 war 파일 구조 ↓
         +asCode().
             웹앱 루트
             ㄴ META-INF
                 ㄴ MANIFEST.MF
-                ㄴ 컨테이너 지원
+                ㄴ 컨테이너 리소스
             ㄴ WEB-INF : 웹에서 접근 불가
                 ㄴ classes
                     ㄴ META-INF
-                        ㄴ 애플리케이션 자원
-                    ㄴ 자바 .class 파일 및 자원
-                ㄴ i88n
+                        ㄴ 애플리케이션 리소스
+                    ㄴ 자바 .class 파일 및 리소스
+                ㄴ i18n
                     ㄴ 국제화 파일
                 ㄴ lib
                     ㄴ 번들 jar 파일

@@ -280,7 +280,6 @@ Repositories/Eclipse/Basic/jni/test.c
 Repositories/Eclipse/Basic/src/io/github/donggi/FoldTest.java
 Repositories/Eclipse/Basic/src/io/github/donggi/HangulUtility.java
 Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java
-Repositories/Eclipse/Basic/src/io/github/donggi/SwitchExpression.java
 Repositories/Eclipse/FreeMarker/.classpath
 Repositories/Eclipse/FreeMarker/.project
 Repositories/Eclipse/FreeMarker/resource/template/t_001_hello_world.ftl
@@ -1791,6 +1790,7 @@ Repositories/Single/tutorial/OptionalExample.java
 Repositories/Single/tutorial/StreamExample.java
 Repositories/Single/tutorial/StringExample.java
 Repositories/Single/tutorial/Switch.java
+Repositories/Single/tutorial/SwitchExpression.java
 Repositories/Single/tutorial/TryWithResource.java
 Repositories/Single/tutorial/VarArgs.java
 Repositories/Unity/Project 1/Assembly-CSharp.csproj

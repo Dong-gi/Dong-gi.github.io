@@ -260,3 +260,15 @@ include ../../source/skeleton.pug
 
     h1 최적화
     +asA('https://developer.android.com/topic/performance')
+
+    h1 몽키 테스트
+    ul
+        li: +asA('https://dzone.com/articles/how-can-perform-monkey-testing-in-android-app')
+        li CLI
+        +asCode('shell') adb shell monkey -p package.name -v 1000 > log.txt
+        li Android Studio
+        ol
+            li File - Settings - Plugins > Install MonkeyMaster
+            li Run application
+            li Click 'Monkey' at the bottom bar > '+' button > Select device > OK
+            li Click 'Play' button > Fill popup > Run
