@@ -51,6 +51,7 @@ const posts = {list: [
     { category: 'Infra',               file: '/posts/single/sdkman.html',                       title: 'SDKMAN; The Software Development Kit Manager' },
     { category: 'Infra',               file: '/posts/single/tomcat.html',                       title: 'tomcat' },
     { category: 'Infra',               file: '/posts/infra/cicd.html',                          title: 'CI/CD' },
+    { category: 'Infra',               file: '/posts/infra/oauth.html',                         title: 'OAuth' },
     { category: 'Infra/DB',            file: '/posts/db/concept.html',                          title: '1 DB 기초' },
     { category: 'Infra/DB',            file: '/posts/db/psql_tutorial.html',                    title: '2-1 PostgreSQL 시작하기' },
     { category: 'Infra/DB',            file: '/posts/db/psql_sql.html',                         title: '2-2 PostgreSQL SQL 언어' },
@@ -117,6 +118,7 @@ const posts = {list: [
     { category: 'Ruby',                file: '/posts/ruby/basic.html',                          title: '1 Ruby Basic' },
 
     { category: '♻작성중,보류',        file: '/posts/algorithm/mcs.html',                       title: '컴퓨터공학도를 위한 수학' },
+    { category: '♻작성중,보류',        file: '/posts/infra/oauth.html',                         title: 'OAuth' },
     { category: '♻작성중,보류',        file: '/posts/single/redis.html',                        title: 'Redis' },
     { category: '♻작성중,보류',        file: '/posts/single/unity.html',                        title: 'Unity' },
     { category: '♻작성중,보류',        file: '/posts/java/spring_framework.html',               title: 'Spring Framework' },

@@ -1,0 +1,26 @@
+include ../../source/skeleton.pug
++post('OAuth', 'OAuth, OAuth2', 'OAuth 정리')
+    h1 개요
+    div OAuth(Open Authorization)는 3rd party에게 유저를 대신하여 특정 private resource에 대한 특정 권한을 특정 기간 동안 이용할 수 있는 토큰을 발행함으로써,
+        |  인증과 권한 부여 두 가지 기능을 모두 수행한다.
+
+    h1 역할
+    ul
+        li Resource owner : 자원에 대한 권한을 부여할 수 있는 주체. 보통 사용자.
+        li Client : Resource server에 자원을 요청하고, 이를 이용한 서비스를 제공하는 애플리케이션
+        li Resource server : 자원에 대한 서비스 API를 제공하는 서버
+        li Authorization server : 인증된 Client에 권한을 부여하는 서버
+    p 단일 Authorization server에 대해 여러 Resource server가 존재하더라도 검증 문제가 발생하지 않는다; SSO 용이.
+
+    h1 권한 승인 절차
+    ol
+        li Client -> Resource owner : 권한 요청
+        li Resource owner --> Client : 권한 승인
+        li Client -> Authorization server : 토큰 요청
+        p Client는 미리 Authorization server에 등록되거나, 요청 내 정보로 검증되어 신뢰할 수 있음이 보장된다
+        li Authorization server --> Client : 토큰 발행(access token + refresh token)
+        p refresh token은 access token 만료 등의 사유로 신규 access token을 발급받기 위해 요청할 때 사용
+        li Client -> Resource server : 자원 요청
+        li Resource server -> Authorization server : 토큰 검증 요청
+        li Authorization server --> Resource server : 토큰 검증
+        li Resource server --> Client : 자원 전송
