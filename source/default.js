@@ -42,7 +42,7 @@ const posts = {list: [
     { category: 'JVM/Library',         file: '/posts/java/logback.html',                        title: '6 Logback with SLF4J' },
     { category: 'JVM/Library',         file: '/posts/java/guava.html',                          title: '7 Guava 23.0' },
     { category: 'Infra',               file: '/posts/single/aws.html',                          title: 'AWS' },
-    { category: 'Infra',               file: '/posts/single/centos.html',                       title: 'CentOS' },
+    { category: 'Infra',               file: '/posts/infra/linux.html',                         title: 'Linux' },
     { category: 'Infra',               file: '/posts/single/docker.html',                       title: 'Docker' },
     { category: 'Infra',               file: '/posts/single/git.html',                          title: 'Git' },
     { category: 'Infra',               file: '/posts/single/gradle.html',                       title: 'Gradle' },

@@ -271,8 +271,6 @@ Repositories/Config/LICENSE
 Repositories/Config/config-client.properties
 Repositories/Config/test.xml
 Repositories/Config/webapp.properties
-Repositories/Eclipse/Algorithm/.classpath
-Repositories/Eclipse/Algorithm/.project
 Repositories/Eclipse/Basic/.classpath
 Repositories/Eclipse/Basic/.project
 Repositories/Eclipse/Basic/jni/Test.java
@@ -2115,6 +2113,7 @@ posts.pug/front/freemarker/xml_guide.pug
 posts.pug/front/html.pug
 posts.pug/front/http.pug
 posts.pug/infra/cicd.pug
+posts.pug/infra/oauth.pug
 posts.pug/java/android.pug
 posts.pug/java/apache.commons.collections.pug
 posts.pug/java/apache.commons.lang.pug

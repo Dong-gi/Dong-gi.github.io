@@ -1,10 +1,105 @@
 include ../../source/skeleton.pug
-+post('CentOS', 'Linux, CentOS', 'CentOS 정리')
-    h1 주의사항
-    ol
-        li CentOS-7-x86_64-Minimal-1810을 VMware에 설치하여 실습한 내용을 정리한 것임
-        li 따라서 별도 표시가 없는 한, 아래 각 컨텐츠는 CentOS 7 버전에 해당하는 내용임
-        +asA('https://centoshelp.org/resources/commands/linux-system-commands/')
++post('Linux', 'Linux, AmazonLinux, CentOS', 'Linux 정리')
+    h1 참고자료
+    ul
+        li: +asA('https://tldp.org/', 'The Linux Documentation Project')
+        li: +asA('https://centoshelp.org/resources/commands/linux-system-commands/', 'CentOS - commands')
+    div
+        h2: +asA('https://tldp.org/guides.html', 'LDP Guides')
+        ul
+            li: +asA('https://tldp.org/LDP/abs/html/index.html', 'Advancd Bash-Scripting Guide; 03/2014')
+            p Public Domain. No copyright!
+            li: +asA('https://tldp.org/LDP/Bash-Beginners-Guide/html/index.html', 'Bash Guide for Beginners; 12/2008')
+            details
+                summary Copyright
+                +asCode('text').
+                    * Copyright (c) 2002-2007, Machtelt Garrels
+                    * All rights reserved.
+                    * Redistribution and use in source and binary forms, with or without
+                    * modification, are permitted provided that the following conditions are met:
+                    *
+                    *     * Redistributions of source code must retain the above copyright
+                    *       notice, this list of conditions and the following disclaimer.
+                    *     * Redistributions in binary form must reproduce the above copyright
+                    *       notice, this list of conditions and the following disclaimer in the
+                    *       documentation and/or other materials provided with the distribution.
+                    *     * Neither the name of the author, Machtelt Garrels, nor the
+                    *       names of its contributors may be used to endorse or promote products
+                    *       derived from this software without specific prior written permission.
+                    *
+                    * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS "AS IS" AND ANY
+                    * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+                    * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+                    * DISCLAIMED. IN NO EVENT SHALL THE AUTHOR AND CONTRIBUTORS BE LIABLE FOR ANY
+                    * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+                    * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+                    * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+                    * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+                    * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+                    * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+            li: +asA('https://tldp.org/LDP/intro-linux/html/index.html', 'Introduction to Linux; 06/2008')
+            details
+                summary Copyright
+                +asCode('text').
+                    * Copyright (c) 2002-2007, Machtelt Garrels
+                    * All rights reserved.
+                    * Redistribution and use in source and binary forms, with or without
+                    * modification, are permitted provided that the following conditions are met:
+                    *
+                    *     * Redistributions of source code must retain the above copyright
+                    *       notice, this list of conditions and the following disclaimer.
+                    *     * Redistributions in binary form must reproduce the above copyright
+                    *       notice, this list of conditions and the following disclaimer in the
+                    *       documentation and/or other materials provided with the distribution.
+                    *     * Neither the name of the author, Machtelt Garrels, nor the
+                    *       names of its contributors may be used to endorse or promote products
+                    *       derived from this software without specific prior written permission.
+                    *
+                    * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS "AS IS" AND ANY
+                    * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+                    * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+                    * DISCLAIMED. IN NO EVENT SHALL THE AUTHOR AND CONTRIBUTORS BE LIABLE FOR ANY
+                    * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+                    * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+                    * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+                    * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+                    * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+                    * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+        h2 Linux(kernel) Manual
+        ul
+            li: +asA('https://www.kernel.org/doc/man-pages/')
+            li: +asA('https://tldp.org/manpages/man.html')
+
+    h1 Linux 개요
+    div
+        h2 History
+        ul
+            li 표준이 없던 초창기. 크고 비싼 컴퓨터들은 제각기의 운영체제를 갖고 있었고, 한 컴퓨터에서 작동하는 프로그램이 다른 컴퓨터에서 작동할 것이라는 보장도 할 수 없었다.
+            li Bell Labs에서 재사용 가능한 C 기반의 운영체제 UNIX를 개발했다.
+            li UNIX를 이용함으로써 각 시스템을 위한 전용 코드의 작성을 줄일 수 있게 되었다. <- 이 전용 코드가 바로 커널(kernel)
+            li Linux는 리눅스 커널(리누스 토발즈 최초 개발)을 이용하는 UNIX 구현체로, 다수의 GNU tool을 이용한다.
+
+        h2 Quickstart
+        div
+            h3 Absolute basics
+            div
+                h4 commands
+                p ls, cd, passwd, file filename, cat textfile, pwd, exit, logout, man command, info command, whatis command, apropos string, command --help
+                h4 Bash features
+                p
+                    | Ctrl+A : 커서를 맨 앞으로
+                    | C : 실행 중인 프로그램 종료
+                    | D : 현재 쉘 로그아웃
+                    | E : 커서를 맨 끝으로
+                    | H : backspace
+                    | L : Clear
+                    | R : 히스토리 탐색
+                    | Z : 실행 중인 프로그램 일시 정지
+                    | ArrowLeft, ArrowRight : 커서 이동
+                    | ArrowUp, ArrowDown : 히스토리 탐색
+                    | Shift+PageUp/PageDown : 터미널 버퍼 이동
+                    | Tab : 자동 완성
+                    | Tab Tab : 완성 가능 목록
 
     h1 부팅 과정
     ol
@@ -75,17 +170,38 @@ include ../../source/skeleton.pug
         li 사용자의 홈디렉터리는 /etc/skel의 파일을 /home/${USER_NAME}에 복사하여 만들어진다
 
     h1 파일 시스템
+    +asCode() UNIX에서 모든 것은 파일이다. 파일이 아닌 것이 있다면, 프로세스다.
     ol
+        li 파일 종류
+        ul
+            li regular file(-) : 일반적인 데이터(텍스트, 바이너리)를 갖는 파일
+            li directory(d) : 다른 파일의 목록을 갖는 파일
+            li special file(c) : IO에 이용. 대부분 /dev 경로에 존재
+            li link(l) : 다른 파일/디렉터리를 가리키는 파일
+            li socket(s) : 프로세스 간 통신에 이용. TCP/IP 소켓과 유사
+            li named pipe(p) : 프로세스 간 통신에 이용. 네트워크 소켓 semantic를 사용하지 않음
+            li block device(b) : 하드디스크, DVD 등 블록/섹터 단위 IO 장치파일
+
         li 디렉터리 구조
         table
-            +ths('path', '목적')
-            +tds('/bin', '명령어')
-            +tds('/dev', '장치 파일')
+            +ths('디렉터리', '내용')
+            +tds('/bin', '시스템, 관리자, 일반 사용가 모두가 공유하는 명령어')
+            +tds('/boot', '시동에 필요한 파일')
+            +tds('/dev', '주변장치파일')
             +tds('/etc', '환경설정')
+            +tds('/home', '유저 개인 파일')
             +tds('/lib', '라이브러리, 커널 모듈')
-            +tds('/media', '이동식 디스크')
-            +tds('/usr', '응용프로그램')
-            +tds('/var', '자주 변경')
+            +tds('/mnt, /media', '보조기억장치 mount point')
+            +tds('/net', '원격 파일 시스템 mount point')
+            +tds('/opt', '3rd party 프로그램')
+            +tds('/proc', '시스템 리소스 정보')
+            +tds('/root', '관리자 전용 홈 디렉터리')
+            +tds('/sbin', '시스템 및 관리자용 프로그램')
+            +tds('/tmp', '임시 파일. 재부팅 시 삭제되므로 저장용으로 사용하지 말 것')
+            +tds('/usr', '응용(not system)프로그램')
+            +tds('/var', '자주 변경하는 파일')
+
+        li 자신의 홈 디렉터리 확인 : echo $HOME
 
         li I-node
         p 파일의 이름을 제외한 모든 정보. ID는 각 파일에 고유하게 부여된다
@@ -271,18 +387,26 @@ include ../../source/skeleton.pug
 
     h1 프로세스 관련
     ol
+        li 새 프로세스 실행
+        ol
+            li fork : 새 프로세스는 기존 프로세스(parent)가 PID만 다른 복제본을 생성함으로써 만들어진다.
+            li exec : 새 프로세스의 정보로 주소 공간을 덮어쓴다
+
         li ps : 프로세스 출력. Process Snapshot
         +asCode('shell') $ ps -ef # -e(전체 프로세스), -f(full-format)
 
+        li w : 로그인한 유저와 무엇을 실행중인지 출력
+
         li kill : 프로세스 종료
-        +asCode('shell') $ kill -9 pid # -9(강제종료)
+        +asCode('shell') $ kill -9 pid # 15(일반 종료), 2(종료; 무시 가능), 9(강제종료; 무시 불가), 1(구성 파일 다시 읽기; 데몬 프로세스)
 
         li top : 실행 중인 작업 보기.
 
         li 백그라운드 작업
         ul
+            li %n : 모든 백그라운드 프로세스는 번호를 할당받으며, %n으로 참조할 수 있다
             li Ctrl + Z : 현재 프로세스를 백그라운드로 전환하고 suspend
-            li bg : 백그라운드 job으로 계속 실행 ↔ fg
+            li bg : 백그라운드 job으로 계속 실행 ↔ fg %n
             li jobs : 백그라운드 job 리스트
             p 명령행 끝에 &를 붙이면 즉시 백그라운드 job으로 실행시킬 수 있다
                 br
@@ -312,21 +436,52 @@ include ../../source/skeleton.pug
         $ printenv [VAR_NAMES]
         $ echo $VAR_NAME
         $ export VAR_NAME[=value]
+        # export PATH="$PATH:/usr/java/jdk-13.0.2/bin
 
     h1 쉘
     ol
+        li 유저의 기본 쉘은 /etc/passwd에 설정된다
+        li echo $SHELL : 사용중인 쉘 확인
         li 종류
         ul
             li Login shell
-            p 최초 실행 시 유저명과 비밀번호를 묻고 진입하는 쉘. 자동으로 .profile을 실행하고, bash의 경우 .bash_profile도 실행된다
+            p 최초 실행 시 유저명과 비밀번호를 묻고 진입하는 쉘.
             li Non login shell
-            p 기존 쉘에서 새로 시작한 쉘. 자동으로 .profile을 실행하고, bash의 경우 .bashrc도 실행된다.
-        li 스크립트
+            p 기존 쉘에서 인증없이 새로 시작한 쉘.
+
+    h1 Bash
+    div        
+        h2 자동 실행 스크립트
+        ul
+            li Login shell : /etc/profile, ~/.bash_profile, ~/.bash_login or ~/.profile, ~/.bash_logout
+            li Non login shell : ~/.bashrc
+            p ~/.bashrc 파일은 ~/.bash_profile or ~/.profile에서 자동으로 포함한다
+        h2 Commands
+        ul
+            li echo
+            p end-of-line 문자를 덧붙여 stdout으로 단순 출력. 항상 0 종료
+            li printf
+            p 포맷대로 stdout 출력. 처리에 따라 종료 상태 다를 수 있음.
+        h2 스크립트 디버깅
+        ul
+            li 전체 스크립트 : bash -x filename
+            li 일부분 : 스크립트 내에서 플래그 조정
+            +asCode('shell').
+                # ...
+                set -x # start debugging
+                w
+                set +x # stop debugging
+            li 현재 쉘에서 직접 플래그 조정
+            ul
+                li set -f : disable file name generation using metacaracters
+                li set -v : print shell input lines
+                li set -x : print command traces before executing command
+        p 스크립트
         +codeBtn('/Repositories/sh/0_basic.sh', 'bash')
         +codeBtn('/Repositories/sh/0_basic.txt', 'text') 실행 결과 »
-        li 특별 전역 변수
+        p 특별 전역 변수
         p $?(마지막 명령 리턴값), $>(프로세스의 사용자 ID), $0(현재 Perl 스크립트 이름), 등...
-
+        // https://tldp.org/LDP/Bash-Beginners-Guide/html/chap_03.html 부터
     h1 FTP Server : vsftpd
     ol
         li 설치
@@ -397,6 +552,8 @@ include ../../source/skeleton.pug
 
     h1 vi
     div
+        +asA('https://vim.rtorr.com/lang/ko/', 'Vim Cheat Sheet »')
+
         h2 모드
         ol
             li 처음 vi를 실행하면 normal mode(command mode)
@@ -404,7 +561,9 @@ include ../../source/skeleton.pug
             li i를 누르면 insert mode
             li v를 누르면 visual mode
             li :를 누르고 명령어 실행
-            p :set nu # 줄 번호 표시
+            ul
+                li :set nu # 줄 번호 표시
+                li :syn on, :syn enable # 키워드 및 문맥 강조
 
         h2 저장
         ol
@@ -421,9 +580,7 @@ include ../../source/skeleton.pug
 
         h2 이동
         div
-            +asA('https://vim.rtorr.com/lang/ko/', 'Vim Cheat Sheet »')
             img.w3-round(src='http://cfile8.uf.tistory.com/image/141F57474F4732890DE706')
-            img.w3-round(src='https://bitbucket.org/tednaleid/vim-shortcut-wallpaper/raw/6f25ec82f84640e991a08345e6a28ec12f1d16a2/vim-shortcuts.png')
 
         h2 vim
         ol
@@ -443,7 +600,14 @@ include ../../source/skeleton.pug
                     br
                     | a 는 마우스를 사용하겠다는 것이고 c 는 마우스를 사용치 않겠다는 것 같은데, c 로 해놔도 마우스로 커서 옮기고 스크롤하는 것 등은 잘 되더군요.. 출처 : https://kldp.org/node/129456
 
-        h2 전체 지우기
+        h2 지우기
         ol
-            li gg    첫줄로 이동
-            li dG    현재 줄부터 마지막 줄 까지 삭제
+            li n dd : 커서로부터 n 줄 삭제
+            li n dw : 커서로부터 n 단어 삭제
+            li gg -> dG : 첫줄로 이동 -> 끝까지 삭제
+
+    h1: +asA('https://tldp.org/HOWTO/HOWTO-INDEX/index.html', 'Linux HOWTO')
+    div
+        h2: +asA('https://tldp.org/HOWTO/HOWTO-INDEX/os.html', 'The Linux OS')
+        div
+            h3 Getting Started
