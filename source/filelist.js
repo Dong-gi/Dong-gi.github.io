@@ -2113,6 +2113,7 @@ posts.pug/front/freemarker/xml_guide.pug
 posts.pug/front/html.pug
 posts.pug/front/http.pug
 posts.pug/infra/cicd.pug
+posts.pug/infra/linux.pug
 posts.pug/infra/oauth.pug
 posts.pug/java/android.pug
 posts.pug/java/apache.commons.collections.pug
@@ -2162,7 +2163,6 @@ posts.pug/python/persistence.pug
 posts.pug/python/standard.pug
 posts.pug/ruby/basic.pug
 posts.pug/single/aws.pug
-posts.pug/single/centos.pug
 posts.pug/single/demo3.pug
 posts.pug/single/docker.pug
 posts.pug/single/fp.pug
@@ -2234,6 +2234,8 @@ posts/front/freemarker/xml_guide.html
 posts/front/html.html
 posts/front/http.html
 posts/infra/cicd.html
+posts/infra/linux.html
+posts/infra/oauth.html
 posts/java/android.html
 posts/java/apache.commons.collections.html
 posts/java/apache.commons.lang.html

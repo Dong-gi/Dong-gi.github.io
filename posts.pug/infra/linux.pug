@@ -453,9 +453,10 @@ include ../../source/skeleton.pug
     div        
         h2 자동 실행 스크립트
         ul
-            li Login shell : /etc/profile, ~/.bash_profile, ~/.bash_login or ~/.profile, ~/.bash_logout
+            li Login shell : /etc/profile, ~/.bash_profile or ~/.bash_login or ~/.profile, ~/.bash_logout
+            p /etc/profile은 /etc/bash.bashrc, /etc/profile.d/*.sh 들도 실행한다
             li Non login shell : ~/.bashrc
-            p ~/.bashrc 파일은 ~/.bash_profile or ~/.profile에서 자동으로 포함한다
+            p ~/.bashrc 파일은 보통 ~/.bash_profile, ~/.profile 등에서도 실행한다
         h2 Commands
         ul
             li echo
@@ -479,9 +480,207 @@ include ../../source/skeleton.pug
         p 스크립트
         +codeBtn('/Repositories/sh/0_basic.sh', 'bash')
         +codeBtn('/Repositories/sh/0_basic.txt', 'text') 실행 결과 »
-        p 특별 전역 변수
-        p $?(마지막 명령 리턴값), $>(프로세스의 사용자 ID), $0(현재 Perl 스크립트 이름), 등...
-        // https://tldp.org/LDP/Bash-Beginners-Guide/html/chap_03.html 부터
+        
+        h2 변수
+        div
+            h3 전역 변수
+            ul
+                li 모든 쉘에서 접근 가능
+                li env 또는 printenv 명령으로 목록 확인 가능
+            h3 지역 변수
+            ul
+                li 현재 쉘에서만 접근 가능
+                li 목록 확인
+                +asCode('shell').
+                    (set -o posix; set | sort) > set.sorted
+                    (printenv | sort) > printenv.sorted
+                    diff set.sorted printenv.sorted | grep "<" | awk '{ print $2 }'
+                li 변수 선언
+                +asCode('shell').
+                    varName="value"
+                    let varName="value"
+                li 변수 전달
+                +asCode('shell').
+                    # child process에서 사용할 수 있게 된다
+                    export varName
+                    export varName="value"
+            h3 예약 변수
+            table.no-sort
+                +ths('name', 'definition')
+                +tds('BASH', 'bash의 절대경로')
+                +tds('BASH_ENV', '로그인 쉘에서, 파일로 설정된 경우, 쉘 스크립트를 실행하기 전에 먼저 읽는다')
+                +tds('BASH_VERSION', 'bash 버전')
+                +tds('BASH_VERSINFO', 'bash 버전 정보에 대한 읽기 전용 수열')
+                +tds('COLUMNS', '터미널 출력 너비')
+                +tds('COMP_CWORD', '$COMP_WORDS에서 현재 커서가 위치하는 단어의 index')
+                +tds('COMP_LINE', '현재 커맨드 라인')
+                +tds('COMP_POINT', '현재 커맨드에서 커서 상대 위치')
+                +tds('COMP_WORDS', '현재 커맨드를 배열로')
+                tr
+                    td COMPREPLY
+                    td 제시할 자동완성 단어 배열
+                        +asA('https://devmanual.gentoo.org/tasks-reference/completion/index.html', '예시')
+                +tds('EUID', '명령을 실행 중인 현재 유저의 ID')
+                +tds('FUNCNAME', '현재 실행 중인 쉘 함수 이름')
+                +tds('GROUPS', '현재 유저가 속한 그룹으로 구성된 배열')
+                +tds('HISTFILE', '커맨드 이력. 기본값 ~/.bash_history')
+                +tds('HISTFILESIZE', '저장할 최대 이력 수')
+                +tds('HOME', '현재 유저의 home directory. ~ 기호로도 획득 가능')
+                +tds('HOSTFILE', '/etc/hosts와 동일한 포맷의 파일을 지정하면, 호스트 구성에 사용')
+                +tds('HOSTNAME', '현재 호스트')
+                +tds('HOSTTYPE', '머신 종류; e.g. x86_64')
+                +tds('LANG', 'LC_* 변수에서 지정하지 않은 경우, 이 로캐일이 사용된다')
+                +tds('LC_ALL', 'LANG 및 다른 모든 LC_* 변수에 우선한다')
+                +tds('LC_COLLATE', '파일명, 패턴 비교에 사용하는 로캐일')
+                +tds('LC_CTYPE', '파일명, 패턴 등의 문자 로캐일')
+                +tds('LC_MESSAGES', '"$" 해석에 사용할 로캐일')
+                +tds('LC_NUMERIC', '숫자 표현에 사용할 로캐일')
+                +tds('LINENO', '현재 라인 번호')
+                +tds('MACHTYPE', 'CPU-COMPANY-SYSTEM')
+                +tds('MAIL', 'MAILPATH가 설정되지 않은 경우, MAIL이 가리키는 파일에 신규 메일이 있으면 bash가 알려준다')
+                +tds('MAILCHECK', '메일 확인 주기(초)')
+                +tds('MAILPATH', ':으로 구별된 MAIL 파일들. 신규 메일이 있으면 bash가 알려준다')
+                +tds('OLDPWD', '이전 PWD')
+                +tds('OPTARG', 'getopts가 마지막으로 처리한 옵션 인자의 값')
+                +tds('OPTIND', 'getopts가 마지막으로 처리한 옵션 인자의 인덱스')
+                +tds('OSTYPE', 'e.g. linux-gnu')
+                +tds('PATH', ':으로 구별된 디렉터리들. 커맨드가 존재하는지 shell이 찾아본다')
+                +tds('PIPESTATUS', '가장 최근 포그라운드에서 종료된 프로세스들의 종료 코드 배열')
+                +tds('PPID', '현재 쉘의 PPID')
+                +tds('PROMPT_COMMAND', '매 PS1 출력 전에 실행할 명령')
+                +tds('PS1', 'Prompt string 1; Primary; default "\\s-\\v\\$ "')
+                +tds('PS2', 'Prompt string 2; Secondary; "> "')
+                +tds('PS3', 'select 커맨드에 사용되는 prompt. default "#?"')
+                +tds('PS4', '-x 옵션으로 커맨드 라인 실행 전에 echo 출력할 때 사용할 prefix; default "+ "')
+                +tds('PWD', 'Print Working Directory')
+                +tds('RANDOM', '0 ~ 32767 사이 임의 정수; 할당하는 경우 seed로 전달된다')
+                +tds('REPLY', 'read로 읽어온 문자열')
+                +tds('SECONDS', '쉘 시작 후 ?초')
+                +tds('SHELLOPTS', ':으로 구별된, 활성 쉘 옵션들')
+                +tds('SHLVL', '부모 bash 인스턴스 수 + 1')
+                +tds('TMOUT', 'read 제한 시간(초)')
+                +tds('UID', '실제 현재 유저 ID')
+            h3 특별 변수
+            table.no-sort
+                +ths('character', 'definition')
+                +tds('$#', '$1~$9, ${10}~로 n번째 실행 인자 획득. $# 자체는 매개변수 개수 획득')
+                +tds('$?', '마지막 포그라운드 프로세스 종료 상태')
+                +tds('$$', '쉘 PID')
+                +tds('$!', '가장 최근 백그라운드 PID')
+                +tds('$0', '쉘 or 스크립트 이름')
+
+        h2 Quoting
+        ul
+            li \ : 다음 글자를 리터럴로 간주
+            li '' : 내부 문자열을 리터럴로 간주
+            li "" : 내부 문자열을 리터럴로 간주; 단 $, `, \ 제외. 여러줄에 걸쳐 작성 가능.
+
+        h2 Expansion
+        ol
+            li 각 커맨드 토큰들은 순서대로 해석되며, 모든 해석이 끝난 뒤 quote가 제거된다
+            li Brace expansion
+            +asCode('shell').
+                echo ab{c,d,e}fg
+                # abcfg abdfg abefg
+            li Tilde expansion
+            +asCode('shell').
+                echo ~          # 현재 유저의 home directory
+                echo ~USER_NAME # 특정 유저의 home directory
+                echo ~+         # PWD
+                echo ~-         # OLDPWD
+            li Parameter(and variable) expansion
+            ul
+                li ${VAR_NAME}, $VAR_NAME
+                p {}는 옵션이다. ${INSTALL_DIR}_old/ 처럼 뒤에 곧바로 다른 문자가 오는 경우 구분을 위해 사용
+                li ${VAR_NAME:=value}
+                p 변수가 존재하지 않으면 초기화하고 반환
+                li $0~$9, ${10}~
+                p n번째 실행 인자 획득. 2글자 넘어가면 {} 필수
+            li Command substitution : $(command), `command`
+            +asCode('shell').
+                # command 실행 결과(STDOUT)로 치환
+                echo $(echo $(echo abcd))
+            li Arithmetic expansion : $(( EXPRESSION )), $[ EXPRESSION ]
+            ul
+                li EXPRESSION은 "로 감싸인 걸로 간주된다. " 자체는 특별한 의미를 갖지 않는다.
+                li EXPRESSION 내부 토큰들도 parameter expansion, command substitution, quote removal을 거친다
+                li EXPRESSION은 중첩될 수 있다
+                li EXPRESSION 연산은 고정폭 정수로 행해지며, overflow 검사는 하지 않는다.
+                li 0으로 시작하는 상수는 8진수, 0x는 16진수로 간주된다.
+                li 2#10 ~ 64#12abAB@_ 표기로 2~64진법 표현 가능. 36진법 이하에서 대소문자는 구별되지 않는다.
+            table.no-sort
+                caption Operators
+                +tds('VAR++, VAR--', '단항 연산(후위)')
+                +tds('++VAR, --VAR', '단항 연산(전위)')
+                +tds('-, +', '단항 연산')
+                +tds('!, ~', '논리/비트 NOT')
+                +tds('**', '거듭제곱')
+                +tds('*, /, %', '곱, 몫, 나머지')
+                +tds('+, -', '이항 연산')
+                +tds('<<, >>', '비트 이동')
+                +tds('<=, >=, <, >', '비교 연산')
+                +tds('==, !=', '동등 비교')
+                +tds('&', '비트 AND')
+                +tds('^', '비트 XOR')
+                +tds('|', '비트 OR')
+                +tds('&&', '논리 AND')
+                +tds('||', '논리 OR')
+                +tds('expr ? expr : expr', '삼항 연산')
+                +tds('=, *=, /=, %=, +=, -=, <<=, >>=, &=, ^=, |=', '대입 연산')
+                +tds(',', '표현식 구별. 가장 마지막 표현식 결과가 리턴된다')
+            li Process substitution
+            ul
+                li x &lt;(COMMAND_LIST) y : COMMAND_LIST대로 프로세스를 실행하고, 그 결과를 갖는 임시 파일(/dev/fd/N)과 y를 순서대로 x의 인자로 전달
+                +asCode('shell') cat &lt;(ls -a) &lt;(ls -al)
+                li x &gt;(COMMAND_LIST) y : x /dev/fd/N y를 실행하고, /dev/fd/N는 다시 COMMAND_LIST 프로세스의 인자로 전달
+                +asCode('shell').
+                    tar -cf >(cat) test.sh tmp.txt
+                    # test.sh0000774000000000000000000000002614004476247011101 0ustar  rootroot
+                    # Content of 'test.sh'
+                    # tmp.txt0000664000000000000000000000002614004476253011122 0ustar  rootroot
+                    # Content of 'tmp.txt'
+            li Word splitting
+            ul
+                li Parameter expansion, command substitution, arithmetic expansion의 결과에 대해 단어를 분할한다
+                li 단어의 분할은 IFS 변수(Internal Field Separator)에 설정(기본값 ' \t\n')된 문자들을 구분자로 하여 진행된다.
+                +asCode('shell').
+                    wiz$ echo $IFS
+                    
+                    wiz$ IFS=123
+                    wiz$ str=a1b2c3d4e5
+                    wiz$ echo $str
+                    a b c d4e5
+                    wiz$ echo "$str"
+                    a1b2c3d4e5
+                    wiz$ echo $IFS
+                      
+                    wiz$ echo "$IFS"
+                    123
+                    wiz$ IFS=' \t\n'
+                    wiz$ echo $str
+                    a1b2c3d4e5
+            li File name expansion
+            +asCode('shell').
+                $ echo t* # 배열로 반환
+                test.sh tmp.txt
+            +asCode('shell', 'test.sh').
+                echo $1
+                echo $#
+            +asCode('shell').
+                root@goorm:/workspace/donggi-github# cat <("${PWD}/"t*)
+                /workspace/donggi-github/tmp.txt
+                1
+                root@goorm:/workspace/donggi-github# cat <("${PWD}/"t*.sh)
+                
+                0
+
+        h2 Aliases
+        ul
+            li 목록 확인 : alias
+            li 설정 : alias text='COMMAND_LIST'
+            li 해제 : unalias text
+            li alias는 자식 프로세스에 상속되지 않는다
+
     h1 FTP Server : vsftpd
     ol
         li 설치
