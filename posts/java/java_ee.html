@@ -1,16 +1,16 @@
 <html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="google-site-verification" content="aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM"><meta name="author" content="Donggi Kim &lt;hi.donggi@gmail.com&gt;"><meta name="keywords" content="JavaEE, Servlet, tomcat, JSP"><meta name="description" content="JavaEE 정리"><title>JavaEE</title><link id="w3css" rel="stylesheet" href="/source/w3.css"><link id="highlight-style" rel="stylesheet" href="/source/xcode.css"><link id="default-style" rel="stylesheet" href="/source/default.css"><script id="highlight-js" src="/source/highlight.pack.js"></script><script id="default-js" src="/source/default.min.js"></script><script id="dsq-count-scr" src="//donggi.disqus.com/count.js" async></script><script id="kakao-ads" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script><script id="google-ads" data-ad-client="ca-pub-7897366614471210" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script><script id="google-analytics" src="https://www.googletagmanager.com/gtag/js?id=UA-143098403-1" async></script><script>window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', 'UA-143098403-1');</script></head><body><div class="w3-bar-block w3-sidebar w3-animate-left" id="sidebar"><hr><a class="w3-bar-item w3-button" href="javascript:closeSidebar();">Close &times;</a><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><div class="w3-center"><ins class="kakao_ad_area" style="display:none;" data-ad-unit="DAN-1k1r635zxb6g3" data-ad-width="300" data-ad-height="250"></ins></div><hr><div id="file-list"></div><hr></div><div id="main"><div class="w3-bar w3-blue w3-large" id="nav" style="position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle"><button class="w3-bar-item w3-button w3-hover-theme" onclick="toggleSidebar()">&#9776;</button><input class="w3-bar-item" id="query" type="text" placeholder="search" style="max-width:35%"><a class="w3-bar-item w3-button w3-hover-theme" href="/">Home</a></div><div class="w3-padding" id="contents"><h1>JavaEE</h1><ol><li>Java Enterprise Edition은 동적 웹 애플리케이션 개발을 위한 자바 플랫폼이다.</li><p>JavaSE와는 문서 페이지가 다르다. <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://javaee.github.io/javaee-spec/javadocs/">Reference</a></p><li>WAR(Web Application Archive) : JavaEE 웹 애플리케이션을 위한 압축 파일</li><p>전통적인 war 파일 구조 ↓</p><p><strong>↓ text</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">웹앱 루트
+gtag('config', 'UA-143098403-1');</script></head><body><div class="w3-bar-block w3-sidebar w3-animate-left" id="sidebar"><hr><a class="w3-bar-item w3-button" href="javascript:closeSidebar();">Close &times;</a><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><div class="w3-center"><ins class="kakao_ad_area" style="display:none;" data-ad-unit="DAN-1k1r635zxb6g3" data-ad-width="300" data-ad-height="250"></ins></div><hr><div id="file-list"></div><hr></div><div id="main"><div class="w3-bar w3-blue w3-large" id="nav" style="position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle"><button class="w3-bar-item w3-button w3-hover-theme" onclick="toggleSidebar()">&#9776;</button><input class="w3-bar-item" id="query" type="text" placeholder="search" style="max-width:35%"><a class="w3-bar-item w3-button w3-hover-theme" href="/">Home</a></div><div class="w3-padding" id="contents"><h1>JavaEE</h1><ol><li>Java Enterprise Edition은 동적 웹 애플리케이션 개발을 위한 자바 플랫폼이다.</li><p>JavaSE와는 문서 페이지가 다르다. <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://javaee.github.io/javaee-spec/javadocs/">Reference</a></p><li>WAR(Web Application Archive) : JavaEE 웹 애플리케이션을 위한 압축 파일</li><p>전형적인 war 파일 구조 ↓</p><p><strong>↓ text</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">웹앱 루트
 ㄴ META-INF
     ㄴ MANIFEST.MF
-    ㄴ 컨테이너 지원
+    ㄴ 컨테이너 리소스
 ㄴ WEB-INF : 웹에서 접근 불가
     ㄴ classes
         ㄴ META-INF
-            ㄴ 애플리케이션 자원
-        ㄴ 자바 .class 파일 및 자원
-    ㄴ i88n
+            ㄴ 애플리케이션 리소스
+        ㄴ 자바 .class 파일 및 리소스
+    ㄴ i18n
         ㄴ 국제화 파일
     ㄴ lib
         ㄴ 번들 jar 파일

@@ -60,6 +60,21 @@ include ../../source/skeleton.pug
             li GC 병렬 스레드 개수
             +asCode('shell') -XX:ParallelGCThreads=N
 
+            li GC logging
+            +asCode('shell').
+                -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:/var/log/app/gc.log # ~ Java 8
+                -Xlog:gc*:file=/var/log/app/gc.log                                     # Java 9 ~
+
+            li Heap dump
+            +asCode('shell') -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/log/app/heap-dump.hprof
+            p 분석 툴 예:
+                +asA('https://heaphero.io/', 'HeapHero')
+
+            li Default networking timeout
+            +asCode('shell').
+                -Dsun.net.client.defaultConnectTimeout=2000 # 2000ms
+                -Dsun.net.client.defaultReadTimeout=2000    # 2000ms
+
     h1 Java 옵션(JAVA_OPTS)
     ol
         li user.timezone 프로퍼티 기본값 지정

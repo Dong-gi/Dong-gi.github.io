@@ -271,8 +271,6 @@ Repositories/Config/LICENSE
 Repositories/Config/config-client.properties
 Repositories/Config/test.xml
 Repositories/Config/webapp.properties
-Repositories/Eclipse/Algorithm/.classpath
-Repositories/Eclipse/Algorithm/.project
 Repositories/Eclipse/Basic/.classpath
 Repositories/Eclipse/Basic/.project
 Repositories/Eclipse/Basic/jni/Test.java
@@ -280,7 +278,6 @@ Repositories/Eclipse/Basic/jni/test.c
 Repositories/Eclipse/Basic/src/io/github/donggi/FoldTest.java
 Repositories/Eclipse/Basic/src/io/github/donggi/HangulUtility.java
 Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java
-Repositories/Eclipse/Basic/src/io/github/donggi/SwitchExpression.java
 Repositories/Eclipse/FreeMarker/.classpath
 Repositories/Eclipse/FreeMarker/.project
 Repositories/Eclipse/FreeMarker/resource/template/t_001_hello_world.ftl
@@ -1791,6 +1788,7 @@ Repositories/Single/tutorial/OptionalExample.java
 Repositories/Single/tutorial/StreamExample.java
 Repositories/Single/tutorial/StringExample.java
 Repositories/Single/tutorial/Switch.java
+Repositories/Single/tutorial/SwitchExpression.java
 Repositories/Single/tutorial/TryWithResource.java
 Repositories/Single/tutorial/VarArgs.java
 Repositories/Unity/Project 1/Assembly-CSharp.csproj
@@ -2115,6 +2113,8 @@ posts.pug/front/freemarker/xml_guide.pug
 posts.pug/front/html.pug
 posts.pug/front/http.pug
 posts.pug/infra/cicd.pug
+posts.pug/infra/linux.pug
+posts.pug/infra/oauth.pug
 posts.pug/java/android.pug
 posts.pug/java/apache.commons.collections.pug
 posts.pug/java/apache.commons.lang.pug
@@ -2163,7 +2163,6 @@ posts.pug/python/persistence.pug
 posts.pug/python/standard.pug
 posts.pug/ruby/basic.pug
 posts.pug/single/aws.pug
-posts.pug/single/centos.pug
 posts.pug/single/demo3.pug
 posts.pug/single/docker.pug
 posts.pug/single/fp.pug
@@ -2235,6 +2234,8 @@ posts/front/freemarker/xml_guide.html
 posts/front/html.html
 posts/front/http.html
 posts/infra/cicd.html
+posts/infra/linux.html
+posts/infra/oauth.html
 posts/java/android.html
 posts/java/apache.commons.collections.html
 posts/java/apache.commons.lang.html
