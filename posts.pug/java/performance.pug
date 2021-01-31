@@ -1,5 +1,16 @@
 include ../../source/skeleton.pug
-+post('JVM 옵션 및 성능 관련사항', 'JVM, Java Performance', 'JVM 옵션 및 성능 관련사항 정리')
++post('JVM 옵션 및 성능 관련사항', 'JVM, Java, Performance', 'JVM 옵션 및 성능 관련사항 정리')
+    h1 성능 지표
+    table
+        +ths('EN', 'KR', 'e.g.')
+        +tds('Throughput', '처리율', '초당 처리된 트랜잭션')
+        +tds('Latency', '지연', '평균 요청 처리 시간')
+        +tds('Capacity', '수용량', '최대 동시 처리 가능 요청 수')
+        +tds('Utilization', '사용률', '평균 CPU 사용률')
+        +tds('Efficiency', '효율', 'throughput / 비용')
+        +tds('Scalability', '확장성', '리소스 추가에 따른 throughput 향상 정도')
+        +tds('Degradation', '저하', '부하 증가에 따른 throughput 감소 정도')
+
     h1 JVM 파라미터
     ol
         li Boolean flag
@@ -102,6 +113,25 @@ include ../../source/skeleton.pug
 
             # debugd 리모트 디버그 서버 시작
             $ jhsdb debugd [options] pid [server-id]|[option] executable core [server-id]
+
+    h1: +asA('https://visualvm.github.io/index.html', 'VisualVM')
+    div
+        h2 개요
+        p 커맨드라인 JDK 툴과 가벼운 프로파일 기능을 포함하는 자바 프로세스 시각화 툴
+
+        h2 Remote 프로세스 연결
+        ol
+            li Add Remote Host
+            p 호스트 주소 입력
+            li Add JMX Connection or Add jstatd Connection
+            +asCode('shell', 'JMX 활성화').
+                -Dcom.sun.management.jmxremote.local.only=false \
+                -Dcom.sun.management.jmxremote.host=172.159.246.217 \ # ifconfig로 확인
+                -Dcom.sun.management.jmxremote.port=11099 \
+                -Dcom.sun.management.jmxremote.rmi.port=11099 \
+                -Dcom.sun.management.jmxremote.ssl=false \
+                -Dcom.sun.management.jmxremote.authenticate=false \
+                -Djava.rmi.server.hostname=172.159.246.217 \
 
     h1 기타
     ul
