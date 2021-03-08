@@ -2312,7 +2312,9 @@ posts/single/temp1.html
 posts/single/tomcat.html
 posts/single/unity.html
 posts/single/vi.html
+printenv.sorted
 robots.txt
+set.sorted
 sitemap/sitemap.txt
 source/default.css
 source/default.js
