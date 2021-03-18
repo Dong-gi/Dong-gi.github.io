@@ -113,6 +113,7 @@ include ../../source/skeleton.pug
                 +asA('https://heaphero.io/', 'heaphero')
 
             li GC 관련
+            +asCode('bash').
                 -XX:ParallelGCThreads=N         # 병렬 스레드 개수
                 -XX:GCHeapFreeLimit=N           # 풀 GC로 힙의 N% 이상 해제되면 OK
                 -XX:MaxTenuringThreshold=N      # 테뉴어드 영역으로 승격되기 전까지 통과해야 하는 수집 횟수

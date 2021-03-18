@@ -2004,8 +2004,6 @@ Repositories/VisualStudio/CSharp/WpfDataTool/packages.config
 Repositories/VisualStudio/csharp_base_keyword.cs
 Repositories/VisualStudio/csharp_interpolated_string.cs
 Repositories/VisualStudio/csharp_property.cs
-Repositories/sh/0_basic.sh
-Repositories/sh/0_basic.txt
 ads.txt
 build_site.sh
 google17afeae5a0bb8a4d.html
@@ -2312,9 +2310,7 @@ posts/single/temp1.html
 posts/single/tomcat.html
 posts/single/unity.html
 posts/single/vi.html
-printenv.sorted
 robots.txt
-set.sorted
 sitemap/sitemap.txt
 source/default.css
 source/default.js
