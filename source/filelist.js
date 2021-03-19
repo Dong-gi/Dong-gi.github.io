@@ -2004,8 +2004,6 @@ Repositories/VisualStudio/CSharp/WpfDataTool/packages.config
 Repositories/VisualStudio/csharp_base_keyword.cs
 Repositories/VisualStudio/csharp_interpolated_string.cs
 Repositories/VisualStudio/csharp_property.cs
-Repositories/sh/0_basic.sh
-Repositories/sh/0_basic.txt
 ads.txt
 build_site.sh
 google17afeae5a0bb8a4d.html

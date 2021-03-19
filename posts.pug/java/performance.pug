@@ -113,6 +113,7 @@ include ../../source/skeleton.pug
                 +asA('https://heaphero.io/', 'heaphero')
 
             li GC 관련
+            +asCode('bash').
                 -XX:ParallelGCThreads=N         # 병렬 스레드 개수
                 -XX:GCHeapFreeLimit=N           # 풀 GC로 힙의 N% 이상 해제되면 OK
                 -XX:MaxTenuringThreshold=N      # 테뉴어드 영역으로 승격되기 전까지 통과해야 하는 수집 횟수
@@ -157,14 +158,14 @@ include ../../source/skeleton.pug
                 +asA('https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/introclientissues005.html', 'Java technote')
         +asCode('shell').
             # Before JDK 1.4
-            $ java -Xnoagent -Djava.compiler=NONE -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=6006
+            $ java -Xnoagent -Djava.compiler=NONE -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address="*:55555"
             # For JDK 1.4
-            $ java -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=*:54433,server=y,suspend=n
+            $ java -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address="*:55555",server=y,suspend=n
                 # address : 수신 허용 범위
                 # server  : 서버로 작동할지 여부
                 # suspend : 디버거 부착까지 기다릴지 여부
             # After JDK 1.4
-            $ java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=6006
+            $ java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address="*:55555"
 
     h1 jcmd Since Java 8
     p JDK 기본제공 분석 도구

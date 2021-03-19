@@ -3,176 +3,119 @@ include ../../source/skeleton.pug
     h1 참고자료
     ul
         li: +asA('https://tldp.org/', 'The Linux Documentation Project')
+        ul
+            li: +asA('https://tldp.org/guides.html', 'LDP Guides')
+            ol
+                li: +asA('https://tldp.org/LDP/abs/html/index.html', 'Advancd Bash-Scripting Guide; 03/2014')
+                p Public Domain. No copyright!
+                li: +asA('https://tldp.org/LDP/Bash-Beginners-Guide/html/index.html', 'Bash Guide for Beginners; 12/2008')
+                details
+                    summary Copyright
+                    +asCode('text').
+                        * Copyright (c) 2002-2007, Machtelt Garrels
+                        * All rights reserved.
+                        * Redistribution and use in source and binary forms, with or without
+                        * modification, are permitted provided that the following conditions are met:
+                        *
+                        *     * Redistributions of source code must retain the above copyright
+                        *       notice, this list of conditions and the following disclaimer.
+                        *     * Redistributions in binary form must reproduce the above copyright
+                        *       notice, this list of conditions and the following disclaimer in the
+                        *       documentation and/or other materials provided with the distribution.
+                        *     * Neither the name of the author, Machtelt Garrels, nor the
+                        *       names of its contributors may be used to endorse or promote products
+                        *       derived from this software without specific prior written permission.
+                        *
+                        * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS "AS IS" AND ANY
+                        * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+                        * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+                        * DISCLAIMED. IN NO EVENT SHALL THE AUTHOR AND CONTRIBUTORS BE LIABLE FOR ANY
+                        * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+                        * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+                        * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+                        * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+                        * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+                        * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+                li: +asA('https://tldp.org/LDP/intro-linux/html/index.html', 'Introduction to Linux; 06/2008')
+                details
+                    summary Copyright
+                    +asCode('text').
+                        * Copyright (c) 2002-2007, Machtelt Garrels
+                        * All rights reserved.
+                        * Redistribution and use in source and binary forms, with or without
+                        * modification, are permitted provided that the following conditions are met:
+                        *
+                        *     * Redistributions of source code must retain the above copyright
+                        *       notice, this list of conditions and the following disclaimer.
+                        *     * Redistributions in binary form must reproduce the above copyright
+                        *       notice, this list of conditions and the following disclaimer in the
+                        *       documentation and/or other materials provided with the distribution.
+                        *     * Neither the name of the author, Machtelt Garrels, nor the
+                        *       names of its contributors may be used to endorse or promote products
+                        *       derived from this software without specific prior written permission.
+                        *
+                        * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS "AS IS" AND ANY
+                        * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+                        * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+                        * DISCLAIMED. IN NO EVENT SHALL THE AUTHOR AND CONTRIBUTORS BE LIABLE FOR ANY
+                        * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+                        * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+                        * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+                        * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+                        * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+                        * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+        li: +asA('https://www.gnu.org/manual/', 'GNU Manual')
+        li: +asA('https://www.kernel.org/doc/man-pages/', 'Linux man-pages')
         li: +asA('https://centoshelp.org/resources/commands/linux-system-commands/', 'CentOS - commands')
+
+    h1 Linux History
+    ul
+        li 표준이 없던 초창기. 크고 비싼 컴퓨터들은 제각기의 운영체제를 갖고 있었고, 한 컴퓨터에서 작동하는 프로그램이 다른 컴퓨터에서 작동할 것이라는 보장도 할 수 없었다.
+        li Bell Labs에서 재사용 가능한 C 기반의 운영체제 UNIX를 개발했다.
+        li UNIX를 이용함으로써 각 시스템을 위한 전용 코드의 작성을 줄일 수 있게 되었다. &lt;- 이 전용 코드가 바로 커널(kernel)
+        li Linux는 리눅스 커널(리누스 토발즈 최초 개발)을 이용하는 UNIX 구현체로, 다수의 GNU tool을 이용한다.
+
+    h1 시스템 ON/OFF
     div
-        h2: +asA('https://tldp.org/guides.html', 'LDP Guides')
-        ul
-            li: +asA('https://tldp.org/LDP/abs/html/index.html', 'Advancd Bash-Scripting Guide; 03/2014')
-            p Public Domain. No copyright!
-            li: +asA('https://tldp.org/LDP/Bash-Beginners-Guide/html/index.html', 'Bash Guide for Beginners; 12/2008')
-            details
-                summary Copyright
-                +asCode('text').
-                    * Copyright (c) 2002-2007, Machtelt Garrels
-                    * All rights reserved.
-                    * Redistribution and use in source and binary forms, with or without
-                    * modification, are permitted provided that the following conditions are met:
-                    *
-                    *     * Redistributions of source code must retain the above copyright
-                    *       notice, this list of conditions and the following disclaimer.
-                    *     * Redistributions in binary form must reproduce the above copyright
-                    *       notice, this list of conditions and the following disclaimer in the
-                    *       documentation and/or other materials provided with the distribution.
-                    *     * Neither the name of the author, Machtelt Garrels, nor the
-                    *       names of its contributors may be used to endorse or promote products
-                    *       derived from this software without specific prior written permission.
-                    *
-                    * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS "AS IS" AND ANY
-                    * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-                    * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-                    * DISCLAIMED. IN NO EVENT SHALL THE AUTHOR AND CONTRIBUTORS BE LIABLE FOR ANY
-                    * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-                    * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-                    * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-                    * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-                    * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-                    * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-            li: +asA('https://tldp.org/LDP/intro-linux/html/index.html', 'Introduction to Linux; 06/2008')
-            details
-                summary Copyright
-                +asCode('text').
-                    * Copyright (c) 2002-2007, Machtelt Garrels
-                    * All rights reserved.
-                    * Redistribution and use in source and binary forms, with or without
-                    * modification, are permitted provided that the following conditions are met:
-                    *
-                    *     * Redistributions of source code must retain the above copyright
-                    *       notice, this list of conditions and the following disclaimer.
-                    *     * Redistributions in binary form must reproduce the above copyright
-                    *       notice, this list of conditions and the following disclaimer in the
-                    *       documentation and/or other materials provided with the distribution.
-                    *     * Neither the name of the author, Machtelt Garrels, nor the
-                    *       names of its contributors may be used to endorse or promote products
-                    *       derived from this software without specific prior written permission.
-                    *
-                    * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS "AS IS" AND ANY
-                    * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-                    * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-                    * DISCLAIMED. IN NO EVENT SHALL THE AUTHOR AND CONTRIBUTORS BE LIABLE FOR ANY
-                    * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-                    * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-                    * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-                    * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-                    * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-                    * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-        h2 Linux(kernel) Manual
-        ul
-            li: +asA('https://www.kernel.org/doc/man-pages/')
-            li: +asA('https://tldp.org/manpages/man.html')
+        h2 부팅 과정
+        ol
+            li BIOS 실행
+            li POST 수행 &lt;- 장치 검사, 초기화
+            li 부트로더 실행 : 커널 로드. BIOS 종료
+            p GRUB : GNU 프로젝트의 부트로더. 대부분 운영 체제의 커널을 불러올 수 있다
+            li init 프로세스 실행 : /etc/inittab
+            p: strong systemd가 사용되는 경우, inittab은 사용되지 않는다
+            li init 프로세스 중에 /etc/rc.d/rc.local 스크립트를 실행한다
+            p
+                strong 해당 파일은 호환을 위해 아직 남아있지만, 사용자 정의 systemd 서비스나 udev 규칙을 만드는 것이 권장된다
+                +goto('service')
 
-    h1 Linux 개요
-    div
-        h2 History
-        ul
-            li 표준이 없던 초창기. 크고 비싼 컴퓨터들은 제각기의 운영체제를 갖고 있었고, 한 컴퓨터에서 작동하는 프로그램이 다른 컴퓨터에서 작동할 것이라는 보장도 할 수 없었다.
-            li Bell Labs에서 재사용 가능한 C 기반의 운영체제 UNIX를 개발했다.
-            li UNIX를 이용함으로써 각 시스템을 위한 전용 코드의 작성을 줄일 수 있게 되었다. <- 이 전용 코드가 바로 커널(kernel)
-            li Linux는 리눅스 커널(리누스 토발즈 최초 개발)을 이용하는 UNIX 구현체로, 다수의 GNU tool을 이용한다.
+        h2 shutdown : 시스템 종료
+        p: strong 리눅스는 무정지 목적으로 설계됨에 유의
+        +asCode('shell') $ shutdown [OPTIONS...] time [warning-message]
+        ol
+            li -H : 시스템 종료
+            li -P : 시스템 종료 + 전원 차단(하드웨어 지원 필요)
+            li -r : 재부팅
+            li -c : 대기중인 shutdown 취소
+            li time : now | +
+                i number
+                |  | yymmddhhmm
+            p +number 단위(기본: 분)를 지정하려면 접미사 "s", "sec", "m", "min", "h", "hour" 이용
+            li warning-message : 로그인한 유저들에게 보낼 브로드캐스팅 메시지
 
-        h2 Quickstart
-        div
-            h3 Absolute basics
-            div
-                h4 commands
-                p ls, cd, passwd, file filename, cat textfile, pwd, exit, logout, man command, info command, whatis command, apropos string, command --help
-                h4 Bash features
-                p
-                    | Ctrl+A : 커서를 맨 앞으로
-                    | C : 실행 중인 프로그램 종료
-                    | D : 현재 쉘 로그아웃
-                    | E : 커서를 맨 끝으로
-                    | H : backspace
-                    | L : Clear
-                    | R : 히스토리 탐색
-                    | Z : 실행 중인 프로그램 일시 정지
-                    | ArrowLeft, ArrowRight : 커서 이동
-                    | ArrowUp, ArrowDown : 히스토리 탐색
-                    | Shift+PageUp/PageDown : 터미널 버퍼 이동
-                    | Tab : 자동 완성
-                    | Tab Tab : 완성 가능 목록
+        h2 init : 일시적인 runlevel 변경
+        +asCode('shell').
+            $ init runlevel
+            # runlevel : 0(종료), 6(재부팅), 1(복구), 2(multiuser without NFS), 3(multiuser; TUI), 5(X11; GUI)
 
-    h1 부팅 과정
-    ol
-        li BIOS 실행
-        li POST 수행 : 장치 검사, 초기화
-        li 부트로더 실행 : 커널 로드. BIOS 종료
-        p GRUB : GNU 프로젝트의 부트로더. 대부분 운영 체제의 커널을 불러올 수 있다
-        li init 프로세스 실행 : /etc/inittab
-        p systemd가 사용되는 경우, inittab은 사용되지 않는다
-        li init 프로세스 중에 /etc/rc.d/rc.local 스크립트를 실행한다
-        p 해당 파일은 호환을 위해 아직 남아있지만, 사용자 정의 systemd 서비스나 udev 규칙을 만드는 것이 권장된다
-
-    h1 shutdown : 시스템 종료
-    +asCode('shell') $ shutdown [OPTIONS...] time [warning-message]
-    ol
-        li -H : 시스템 종료
-        li -P : 시스템 종료 + 전원 차단(하드웨어 지원 필요)
-        li -r : 재부팅
-        li -c : 대기중인 shutdown 취소
-        li time : now | +
-            i number
-            |  | yymmddhhmm
-        p +number 단위(기본: 분)를 지정하려면 접미사 "s", "sec", "m", "min", "h", "hour" 이용
-        li warning-message : 로그인한 유저들에게 보낼 브로드캐스팅 메시지
-
-    h1 init : 일시적인 runlevel 변경
-    +asCode('shell') $ init runlevel
-    ol
-        li runlevel : 0(종료), 6(재부팅), 1(복구), 2(multiuser without NFS), 3(multiuser; TUI), 5(X11; GUI)
-        li 시스템 기본 runlevel 확인
-        +asCode('shell') $ systemctl get-default
-
-    h1 사용자 관리
-    ol
-        li useradd : 사용자 추가
-        +asCode('shell') $ useradd [options] USER_NAME
-        p -d(HOME_DIR), -g(group id or name), -p(password), -D(기본값 출력/설정), 등...
-
-        li passwd : 비밀번호 설정
-        +asCode('shell') $ passwd [options] USER_NAME
-        p -d(삭제), -l(잠금), -u(잠금 해제), -e(강제 만료)
-
-        li usermod : 사용자 수정
-        +asCode('shell') $ usermod [options] USER_NAME
-        p -d(HOME_DIR), -m(HOME_DIR 변경 시 파일 이동), -L(잠금), -p(password), 등...
-
-        li userdel : 사용자 삭제
-        +asCode('shell') $ userdel [options] USER_NAME
-
-        li groupadd : 사용자 그룹 추가
-        +asCode('shell') $ groupadd [options] GROUP_NAME
-        p -g(수동 GID), -p(password)
-
-        li groupdel : 사용자 그룹 삭제
-        +asCode('shell') $ groupdel [options] GROUP_NAME
-
-        li su : 다른 사용자 권한 사용
-        +asCode('shell') $ su [options] [-] [USER_NAME [arg]...]
-        p 다른 사용자의 권한으로 쉘을 실행한다. USER_NAME이 없으면 root로 간주한다. 단순히 '-'만 있으면 '-l'과 동일하다.
-
-        li 사용자 목록 : /etc/passwd
-        +asCode().
-            ID:Password(x):UID:GID:Comment:HOME_DIR:SHELL
-            root:x:0:0:root:/root:/bin/bash
-            dgkim:x:1000:1000:dgkim:/home/dgkim:/bin/bash
-        li 비밀번호 목록 : /etc/shadow
-        p !!는 비밀번호가 설정되지 않았음을 의미
-        li 사용자의 홈디렉터리는 /etc/skel의 파일을 /home/${USER_NAME}에 복사하여 만들어진다
+            # 시스템 기본 runlevel 확인
+            $ systemctl get-default
 
     h1 파일 시스템
     +asCode() UNIX에서 모든 것은 파일이다. 파일이 아닌 것이 있다면, 프로세스다.
-    ol
-        li 파일 종류
+    div
+        h2 파일 종류
         ul
             li regular file(-) : 일반적인 데이터(텍스트, 바이너리)를 갖는 파일
             li directory(d) : 다른 파일의 목록을 갖는 파일
@@ -182,7 +125,7 @@ include ../../source/skeleton.pug
             li named pipe(p) : 프로세스 간 통신에 이용. 네트워크 소켓 semantic를 사용하지 않음
             li block device(b) : 하드디스크, DVD 등 블록/섹터 단위 IO 장치파일
 
-        li 디렉터리 구조
+        h2 디렉터리 구조
         table
             +ths('디렉터리', '내용')
             +tds('/bin', '시스템, 관리자, 일반 사용가 모두가 공유하는 명령어')
@@ -201,101 +144,11 @@ include ../../source/skeleton.pug
             +tds('/usr', '응용(not system)프로그램')
             +tds('/var', '자주 변경하는 파일')
 
-        li 자신의 홈 디렉터리 확인 : echo $HOME
-
-        li I-node
+        h2 I-node
         p 파일의 이름을 제외한 모든 정보. ID는 각 파일에 고유하게 부여된다
 
-        li pwd : 작업 디렉터리 절대경로 출력. Print working directory
-        +asCode('shell') $ pwd
-
-        li cd : 작업 디렉터리 변경
-        +asCode('shell').
-            $ cd            # 자신의 HOME_DIR로
-            $ cd DIR        # 지정 디렉터리로
-            $ cd ~USER_NAME # 유저 HOME_DIR로
-
-        li ls : 파일 목록 출력
-        +asCode('shell') $ ls [options] [paths]
-        ul
-            li options
-            p -a(.로 시작하는 경로 포함), -c(with -lt: 시간순, with -l: 이름순), -X(확장자순), -S(크기순), -r(역정렬), -l(자세히), 등...
-            li 출력 예
-            +asCode('shell').
-                d rwx r-x r-x # 디렉터리, 소유자 권한, 그룹 권한, 기타 사용자 권한 755(read, write, execute)
-                - rw- r-- r-- # 파일, (상동) 644
-                l r-- r-- r-- # 링크, (상동) 444
-
-        li mkdir : 디렉터리 생성
-        +asCode('shell') $ mkdir [options] [directories]
-        p -m(권한, 기본 755), -p(경로상의 모든 디렉터리 생성)
-
-        li rm : 파일 삭제
-        +asCode('shell') $ rm [options] [paths]
-        ul
-            li options
-            p -f(파일이 없으면 무시), -i(각 파일 삭제 확인), -r(재귀 실행), 등...
-            li 예. my_dir 디렉터리 및 내부 파일 모두 삭제
-            +asCode('shell') $ rm -rf ./my_dir
-
-        li touch : 파일 시각 변경
-        +asCode('shell') $ touch [options] [files]
-        p 각 파일에 대해 시간 정보를 현재 시각으로 변경한다. 파일이 없으면 생성한다(크기 0).
-
-        li 파일 권한 변경
-        +asCode('shell').
-            $ chmod [options] 8진수 [paths]
-            # 예. 모든 .sh 파일 실행 권한 부여
-            $ chmod +x *.sh
-            # 예. bin/ 디렉터리 하위 전체에 실행 권한 부여
-            $ chmod -R +x ./bin/
-
-            # 예. tmp/ 디렉터리 하위 전체 소유자 변경
-            $ chown -R readonly ./tmp/
-
-            # 예. tmp/ 디렉터리 하위 전체 소유 그룹 변경
-            $ chgrp -R readonly ./tmp/
-
-        li cp : 파일 복사
-        +asCode('shell').
-            $ cp [options] source dest_path
-            $ cp [options] [sources] [target_directory]
-        p -a(파일 속성 유지), -b(목적지에 이미 있으면 백업하고 복사), -r(재귀 실행), -s(심볼릭 링크 생성), 등...
-
-        li mv : cp + 원본 삭제
-
-        li cat : 파일 텍스트 출력
-        +asCode('shell') $ cat [options] [files]
-        p -n(줄 번호), -E(줄 끝에 $), -s(반복적인 빈 라인 생략), -T(탭을 ^T로 표기)
-
-        li find
-        p 파일명 표현에 와일드카드 *, ?가 허용된다. 표현식 앞에 !이나 -not을 붙일 수 있다. 표현식들 사이를 -and, -or로 엮을 수 있다.
-
-        li grep : 텍스트 검색
-        +asCode('shell') $ grep [options] pattern [files]
-        p -E(ERE), -G(BRE), -P(Perl Regexp), -e(정규표현식), -i(ignore case), -w(패턴에 단어 전체가 매칭되는 경우만), -x(패턴에 줄 전체가 매칭되는 경우만), -m(최대 출력 개수), -n(줄 번호 같이 출력), -o(매칭된 부분만 출력), -l(매칭된 파일들의 이름만 출력), -L(매칭되지 않는 파일들의 이름만 출력), -A(매칭 후 n개 라인도 출력), -B(매칭 전 n개 라인도 출력) 등...
-
-        li | : 파이프라인
-        p 프로세스들의 출력과 입력을 잇는 파이프라인을 구성한다.
-        +asCode('shell') $ history | grep psql
-
-        li 리다이렉션
-        p > : 파일이 없다면 생성하고, 있다면 덮어쓴다
-            br
-            | >> : 파일이 없다면 생성하고, 있다면 append
-            br
-            | &lt; : 파일로부터 표준 입력을 받는다
-        li tar : 압축
-        +asCode('shell').
-            $ tar [options] file       # 압축해제
-            $ tar [options] file paths # 압축
-        p Main Operation : -A(append), -r(append), -c(create), -d(파일 시스템과의 차분 출력), -t(목록 출력), -u(update), -x(압축해제)
-            br
-            | 포맷 : --bzip2, --xz, --lzip, --lzma, --gzip
-            br
-            | -h(링크 자체 대신, 링크가 가리키는 파일을 압축한다)
-
     h1 서비스 관리
+        +pos('service')
     table
         tr
             th 구분
@@ -333,111 +186,75 @@ include ../../source/skeleton.pug
             td 서비스 목록
             td ls /etc/init.d
             td systemctl --type service
-
-    h1 패키지 관리
-    ol
-        li RPM : Redhat Package Manager
-        p {package_name}-{version}-{release}.{architecture}.rpm
-        +asCode('shell') $ rpm [options]
-        p -a(전체 패키지 검증), -i(install), -U(설치 또는 upgrade), -F(기존 패키지 upgrade), -v(verbose), -h(진행과정을 #로), -e(erase), -qa(설치된 패키지 목록), -qi(패키지 상세 정보) 등...
-        li yum
-        p 인터넷 저장소로부터 패키지를 다운로드하여 설치. 의존 패키지까지 자동 설치한다.
-            br
-            | Commands : clean(캐시 삭제), check-update, downgrade, erase, info, install, list, reinstall, search, update, version, 등...
-
-    h1 EPEL(Extra Packages for Enterprise Linux) 허용
-    ol
-        li 서드 파티 패키지를 설치하려면 EPEL을 허용해야 한다
-        li RHEL 6.x / CentOS 6.x
-        +asCode('shell') $ rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
-        li RHEL 7.x / CentOS 7.x
-        +asCode('shell') $ rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-        p 또는
-        +asCode('shell') $ yum install epel-release.noarch
-
-    h1 시간 관련
-    ol
-        li date : 시각 출력/변경
-        +asCode('shell').
-            $ date                # 현재 시각 출력
-            $ date "+%Y-%m-%d %T" # 포맷 지정
-
-            $ date -s time_string # 시각 변경
-            $ date -s "2019-01-01 12:34:56"
-
-        li
-            +asA('https://nxmnpg.lemoda.net/8/ntpdate', 'ntpdate')
-            |  : 시각 동기화
-        +asCode('shell').
-            $ ntpdate server    # 동기화
-            $ ntpdate -d server # 오차 출력
-        p NTP : Network Time Protocol. 시간 동기화를 위한 프로토콜.
-        +asA('https://zetawiki.com/wiki/공용_NTP_서버_목록')
-
-    h1 crond : 작업 예약
-    +asCode('shell').
-        $ systemctl status crond # 상태 확인
-        $ crontab -l             # 작업 목록 출력
-            # -e : edit
-            # -u : 사용자 지정
-    ul
-        li 유저가 아닌 시스템 단위의 작업은 /etc/crontab 직접 수정
-        li crontab path 설정
-        +asCode() PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
-
-    h1 프로세스 관련
-    ol
-        li 새 프로세스 실행
+    div
+        h2 init 사용자 정의 서비스
         ol
-            li fork : 새 프로세스는 기존 프로세스(parent)가 PID만 다른 복제본을 생성함으로써 만들어진다.
-            li exec : 새 프로세스의 정보로 주소 공간을 덮어쓴다
+            li 서비스 작성
+            +asCode('bash', '/etc/init.d/my').
+                #!/bin/bash
+                # chkconfig: 2345 20 30
+                # description: My Custom Service
+                
+                LOG=/var/log/my.log
+                
+                start() {
+                    echo 'Service started...' >> $LOG
+                }
+                
+                stop() {
+                    echo 'Service stopped...' >> $LOG
+                }
+                
+                case "$1" in
+                    start)
+                        start
+                        ;;
+                    stop)
+                        stop
+                        ;;
+                    restart)
+                        stop
+                        start
+                        ;;
+                    status)
+                        echo "OK"
+                        ;;
+                    *)
+                        echo "Usage: $0 {start|stop|restart|status}"
+                esac
+                
+                exit 0
 
-        li ps : 프로세스 출력. Process Snapshot
-        +asCode('shell') $ ps -ef # -e(전체 프로세스), -f(full-format)
+            p
+                strong chkconfig: 2345 20 30
+                |  -> runlevel이 {2, 3, 4, 5} 중 하나면 실행. 시작 우선순위 20, 종료 우선순위 30
 
-        li w : 로그인한 유저와 무엇을 실행중인지 출력
+            li 실행 권한 부여
+            +asCode('shell') $ chmod +x /etc/init.d/my
 
-        li kill : 프로세스 종료
-        +asCode('shell') $ kill -9 pid # 15(일반 종료), 2(종료; 무시 가능), 9(강제종료; 무시 불가), 1(구성 파일 다시 읽기; 데몬 프로세스)
+            li 자동 실행 설정
+            +asCode('shell') $ chkconfig my on
 
-        li top : 실행 중인 작업 보기.
+        h2 systemd 사용자 정의 서비스
+        ol
+            li 서비스 작성
+            +asCode('bash', '/etc/systemd/system/myd.service').
+                [Unit]
+                Description=My Daemon
+                
+                [Service]
+                Type=simple
+                ExecStart=/root/my.sh
+                Restart=on-failure
+                
+                [Install]
+                WantedBy=multi-user.target
 
-        li 백그라운드 작업
-        ul
-            li %n : 모든 백그라운드 프로세스는 번호를 할당받으며, %n으로 참조할 수 있다
-            li Ctrl + Z : 현재 프로세스를 백그라운드로 전환하고 suspend
-            li bg : 백그라운드 job으로 계속 실행 ↔ fg %n
-            li jobs : 백그라운드 job 리스트
-            p 명령행 끝에 &를 붙이면 즉시 백그라운드 job으로 실행시킬 수 있다
-                br
-                | 현재 터미널 세션이 종료해도 n번 백그라운드 job을 계속하게 하려는 경우 : disown -h %n
-            li nohup name.sh > /dev/null 2>&1 &
-            ul
-                li nohup : 세션이 종료해도 프로세스는 계속 실행
-                li > /dev/null : stdout은 버림
-                li 2>&1 : strerr를 stdout으로 출력 - 따라서 같이 버림
-                li & : 백그라운드로 실행
+            li 최초 서비스 실행
+            +asCode('shell') $ systemctl start myd
 
-    h1 메모리 관련
-    ol
-        li vmstat : Report virtual memory statistics
-        +asCode('shell') $ vmstat 1 # 1초마다 출력
-
-        li free : Display amount of free and used memory in the system.
-        +asCode('shell').
-            $ free -m -w -h -s 1
-                # -m : 메가바이트 단위
-                # -w : wide output
-                # -h : human-readable output
-                # -s 1 : 1초마다
-
-    h1 환경변수
-    +asCode('shell').
-        $ printenv [VAR_NAMES]
-        $ echo $VAR_NAME
-        $ export VAR_NAME[=value]
-        # export PATH="$PATH:/usr/java/jdk-13.0.2/bin
-
+            li 자동 실행 설정
+            +asCode('shell') $ systemctl enable myd
     h1 쉘
     ol
         li 유저의 기본 쉘은 /etc/passwd에 설정된다
@@ -450,24 +267,205 @@ include ../../source/skeleton.pug
             p 기존 쉘에서 인증없이 새로 시작한 쉘.
 
     h1 Bash
-    div        
+    div
+        h2 Special character
+        table.no-sort
+            +tds('#', '주석 시작')
+            +tds(';', '커맨드 구분자')
+            +tds(';;', 'case 옵션 종결자')
+            tr
+                td ;;&amp;, ;&amp;
+                td case 옵션 종결자 Since bash 4
+                    +goto('case')
+            tr
+                td .
+                td
+                    ul
+                        li 커맨드로 사용 : source 커맨드와 동일
+                        li 파일명 접두에 위치 : ls에는 보여지지 않음
+                        li 정규표현식 : 임의 글자에 매칭
+            tr
+                td ""
+                td partial quoting
+                    +goto('quoting')
+            tr
+                td ''
+                td full quoting
+                    +goto('quoting')
+            tr
+                td ,
+                td
+                    ul
+                        li 연산자 : 산술 연산이 순서대로 처리되고, 마지막 결과를 반환
+                        li 대소문자 변환 in 
+                            +goto('parameter substitution')
+                            |  Since bash 4
+            +tds('\\', '이스케이프. 바로 뒤의 문자를 리터럴로 취급')
+            +tds('/', '파일 경로 구분자')
+            tr
+                td ``
+                td: +goto('command substitution')
+            +tds(':', '아무것도 하지않는 null command')
+            +tds('*', 'GLOB 패턴 매칭에서, 해당 디렉터리 내 임의 파일명에 매칭')
+            +tds('?', 'GLOB 패턴 매칭에서, 임의 1글자에 매칭')
+            +tds('(command1; command2; ...)', 'Command group. 새 서브쉘에서 커맨드를 실행한다; 따라서 외부에서 참조 불가')
+            tr
+                td {x,y,z,...}, {a..z}
+                td: +goto('brace expansion')
+            tr
+                td {}
+                td 코드 블록 정의. 컨텍스트는 유지되므로 외부에서도 변수 참조 가능. 코드 블록에 대해 IO 리디렉션 가능
+                    +asCode('bash').
+                        {
+                            echo 'hello'
+                            echo 'world'
+                        } >> test.log
+            tr
+                td [ EXPRESSION ], [[ EXPRESSION ]]
+                td: +goto('test')
+            +tds('$[ EXPRESSION ]', 'Deprecated. 정수 연산')
+            +tds('(( EXPRESSION ))', '정수 연산')
+            tr
+                td 리다이렉션
+                td: ul
+                    li >
+                    +asCode('shell').
+                        $ script.sh > test.log
+                        # STDOUT을 test.log로. 파일이 없다면 생성하고, 있다면 덮어쓴다.
+                        
+                        $ script.sh >&2
+                        # STDOUT을 STDERR(2)로
+                        
+                        $ script.sh > test.log 2>&1
+                        # STDOUT을 test.log로 && STDERR(2)를 STDOUT(1)으로
+                    li &amp;>
+                    +asCode('shell').
+                        $ not_exist.sh &> /dev/null # STDOUT, STDERR 모두 /dev/null로(==버림)
+                        $ echo $?                   # non-zero
+                    li >>
+                    +asCode('shell').
+                        $ script.sh >> test.log
+                        # STDOUT을 test.log로. 파일이 없다면 생성하고, 있다면 append
+                    li &lt; : 파일을 STDIN으로.
+                    li &lt;>
+                    +asCode('bash').
+                        LOG_FILE=test.log
+                        echo '1234567890' > $LOG_FILE
+                        
+                        exec 777<> $LOG_FILE # open file and assign FD 777
+                        
+                        read -n 4 <&777
+                        echo -n "." >&777    # write without new line
+                        
+                        exec 777>&-   # close output FD 777
+                        cat $LOG_FILE # 1234.67890
+            tr
+                td &lt;&lt;
+                td
+                    strong here document
+                    ul
+                        li limit string 사이의 문자열을 COMMAND의 STDIN으로 리다이렉션
+                        +asCode('bash').
+                            COMMAND &lt;&lt;EOF
+                            command1
+                            command2
+                            ...
+                            EOF
+                            # EOF 외 다른 문자열도 limit string으로 사용 가능.
+                            # 동일한 텍스트를 갖는 파일(input)을 `COMMAND &lt; input`으로 실행하는 것과 유사하다
+                        li here document 내부에서 parameter substitution을 수행한다
+                        +asCode('bash').
+                            x=3
+                            cat &lt;&lt;END
+                            Hello~
+                            x=$x
+                            END    # x=3
+                        li limit string을 따옴표로 감싸면 parameter substitution을 수행하지 않는다
+                        +asCode('bash').
+                            x=3
+                            cat &lt;&lt;END
+                            Hello~
+                            x=$x
+                            END    # x=$x
+                        li 동일 스크립트 내의 함수 입력으로 사용할 수 있다
+                        +asCode('bash').
+                            set_variables ()
+                            {
+                                read a
+                                read b
+                                read c
+                            }
+                            print_variables ()
+                            {
+                                echo "a=$a, b=$b, c=$c"
+                            }
+                            
+                            set_variables &lt;&lt;DATA1
+                            123
+                            456
+                            789
+                            DATA1
+                            
+                            print_variables    # a=123, b=456, c=789
+                            
+                            set_variables &lt;&lt;DATA2
+                            321
+                            654
+                            987
+                            DATA2
+                            
+                            print_variables    # a=321, b=654, c=987
+            tr
+                td &lt;&lt;&lt;
+                td
+                    strong here string
+                    +asCode('bash').
+                        # here document의 축약 버전
+                        COMMAND &lt;&lt;&lt; text
+                        
+                        x=123
+                        bash &lt;&lt;&lt; "echo Hello World. x=$x"
+                        
+                        # COMMAND &lt;&lt;&lt; $WORD 와 다를 바 없다
+                        text="echo Hello World. x=$x"
+                        bash &lt;&lt;&lt; $text
+            +tds('|', '파이프라인. 이전 커맨드의 STDOUT을 다음 커맨드 또는 쉘의 STDIN으로 연결')
+            +tds('&&', 'COMMAND1 && COMMAND2 : COMMAND1이 성공할 때만 COMMAND2 실행')
+            tr
+                td -
+                td
+                    p file 대신 STDIN으로부터 읽도록 또는 STDOUT으로 쓰도록 리다이렉션
+                    +asCode('shell').
+                        # STDIN을 STDOUT으로 echo
+                        $ cat -
+                    +asCode('bash').
+                        # /source/directory 를 /dest/directory 로 복사
+                        (cd /source/directory &amp;&amp; tar cf - . ) | (cd /dest/directory &amp;&amp; tar xpvf -)
+            tr
+                td 제어 문자
+                td: ul
+                    li Ctrl + A : 커서를 커맨드 라인 맨 앞으로
+                    li Ctrl + C : 포그라운드 작업 종료
+                    li Ctrl + D : Shell 로그아웃 or EOF or STDIN 입력 종료
+                    li Ctrl + L : clear
+                    li Ctrl + U : 커맨드 라인의 커서 앞부분 제거. 설정에 따라, 전체 라인을 지우는 경우도 있다
+                    li Ctrl + V : 직후 입력된 제어 문자 1개를 텍스트로 입력
+                    li Ctrl + W : 커서 앞 단어 제거
+                    li Ctrl + Y : Ctrl + U, Ctrl + W로 제거한 텍스트 붙여넣기
+                    li Ctrl + Z : 포그라운드 작업 일시정지
+
         h2 자동 실행 스크립트
         ul
             li Login shell : /etc/profile, ~/.bash_profile or ~/.bash_login or ~/.profile, ~/.bash_logout
             p /etc/profile은 /etc/bash.bashrc, /etc/profile.d/*.sh 들도 실행한다
             li Non login shell : ~/.bashrc
             p ~/.bashrc 파일은 보통 ~/.bash_profile, ~/.profile 등에서도 실행한다
-        h2 Commands
-        ul
-            li echo
-            p end-of-line 문자를 덧붙여 stdout으로 단순 출력. 항상 0 종료
-            li printf
-            p 포맷대로 stdout 출력. 처리에 따라 종료 상태 다를 수 있음.
+
         h2 스크립트 디버깅
         ul
             li 전체 스크립트 : bash -x filename
             li 일부분 : 스크립트 내에서 플래그 조정
-            +asCode('shell').
+            +asCode('bash').
                 # ...
                 set -x # start debugging
                 w
@@ -477,38 +475,61 @@ include ../../source/skeleton.pug
                 li set -f : disable file name generation using metacaracters
                 li set -v : print shell input lines
                 li set -x : print command traces before executing command
-        p 스크립트
-        +codeBtn('/Repositories/sh/0_basic.sh', 'bash')
-        +codeBtn('/Repositories/sh/0_basic.txt', 'text') 실행 결과 »
         
-        h2 변수
+        h2 변수, 매개변수
         div
-            h3 전역 변수
+            p bash의 변수는 엄밀한 타입이 없다 - 모두 문자열. 숫자로만 구성된 경우, 일부 컨텍스트에서 산술 연산을 수행한다.
+
+            h3 Variable substitution
+            p 변수 이름을 이용해 값을 참조하는 것. $를 이름 앞에 붙임으로써 이루어진다.
+            div
+                h4 Indirect referencing Since bash 2
+                +asCode('bash').
+                    x=other
+                    other="Hello World"
+                    
+                    echo "Direct x=$x"
+                    echo "Indirect x=${!x}"
+
+            h3 변수 할당
             ul
-                li 모든 쉘에서 접근 가능
+                strong 공백에 주의해야 한다
+                li name=123  # OK. "name" 변수에 123 할당
+                li name =123 # NG. "name" 커맨드를 "=123"를 인자로 실행
+                li name= 123 # NG. 환경 변수 name=""으로 "123" 커맨드 실행
+
+            h3 환경 변수
+            ul
+                li 프로세스의 실행에 영향을 줄 수 있는 변수들
+                li 각 프로세스는 하나의 '환경' - 환경 변수 집합을 가지며, 자식 프로세스는 최초 실행 시 이를 상속받는다.
                 li env 또는 printenv 명령으로 목록 확인 가능
+
             h3 지역 변수
             ul
-                li 현재 쉘에서만 접근 가능
+                li 현재 쉘 | 코드 블록 | 함수 내에서만 접근 가능
                 li 목록 확인
                 +asCode('shell').
-                    (set -o posix; set | sort) > set.sorted
-                    (printenv | sort) > printenv.sorted
-                    diff set.sorted printenv.sorted | grep "<" | awk '{ print $2 }'
+                    $ (set -o posix; set | sort) > set.sorted
+                    $ (printenv | sort) > printenv.sorted
+                    $ diff set.sorted printenv.sorted | grep "<" | awk '{ print $2 }'
                 li 변수 선언
                 +asCode('shell').
-                    varName="value"
-                    let varName="value"
-                li 변수 전달
+                    $ varName="value"
+                    $ let varName="value"
+                li 환경 변수로 전달
                 +asCode('shell').
                     # child process에서 사용할 수 있게 된다
-                    export varName
-                    export varName="value"
+                    $ export varName
+                    $ export varName="value"
+                    $ export PATH="$PATH:/usr/java/jdk-13.0.2/bin
+
             h3 예약 변수
             table.no-sort
                 +ths('name', 'definition')
                 +tds('BASH', 'bash의 절대경로')
                 +tds('BASH_ENV', '로그인 쉘에서, 파일로 설정된 경우, 쉘 스크립트를 실행하기 전에 먼저 읽는다')
+                +tds('BASHPID', '현재 bash PID')
+                +tds('BASH_SUBSHELL', 'subshell level Since bash 3')
                 +tds('BASH_VERSION', 'bash 버전')
                 +tds('BASH_VERSINFO', 'bash 버전 정보에 대한 읽기 전용 수열')
                 +tds('COLUMNS', '터미널 출력 너비')
@@ -522,13 +543,22 @@ include ../../source/skeleton.pug
                         +asA('https://devmanual.gentoo.org/tasks-reference/completion/index.html', '예시')
                 +tds('EUID', '명령을 실행 중인 현재 유저의 ID')
                 +tds('FUNCNAME', '현재 실행 중인 쉘 함수 이름')
+                +tds('GLOBIGNORE', 'glob 매칭에서 제외할 패턴 목록')
                 +tds('GROUPS', '현재 유저가 속한 그룹으로 구성된 배열')
                 +tds('HISTFILE', '커맨드 이력. 기본값 ~/.bash_history')
                 +tds('HISTFILESIZE', '저장할 최대 이력 수')
-                +tds('HOME', '현재 유저의 home directory. ~ 기호로도 획득 가능')
+                tr
+                    td HOME
+                    td: ul
+                        li 현재 유저의 home directory
+                        li '~'로도 획득 가능
+                        li 홈디렉터리는 /etc/skel의 파일을 /home/${USER_NAME}에 복사하여 만들어진다
                 +tds('HOSTFILE', '/etc/hosts와 동일한 포맷의 파일을 지정하면, 호스트 구성에 사용')
                 +tds('HOSTNAME', '현재 호스트')
                 +tds('HOSTTYPE', '머신 종류; e.g. x86_64')
+                tr
+                    td IFS
+                    td: +goto('Word splitting')
                 +tds('LANG', 'LC_* 변수에서 지정하지 않은 경우, 이 로캐일이 사용된다')
                 +tds('LC_ALL', 'LANG 및 다른 모든 LC_* 변수에 우선한다')
                 +tds('LC_COLLATE', '파일명, 패턴 비교에 사용하는 로캐일')
@@ -560,16 +590,94 @@ include ../../source/skeleton.pug
                 +tds('SHLVL', '부모 bash 인스턴스 수 + 1')
                 +tds('TMOUT', 'read 제한 시간(초)')
                 +tds('UID', '실제 현재 유저 ID')
+
             h3 특별 변수
             table.no-sort
                 +ths('character', 'definition')
-                +tds('$#', '$1~$9, ${10}~로 n번째 실행 인자 획득. $# 자체는 매개변수 개수 획득')
-                +tds('$?', '마지막 포그라운드 프로세스 종료 상태')
+                +tds('$1~$9, ${10}~', 'n번째 실행 인자 반환')
+                +tds('$#', '실행 인자 개수 반환')
+                +tds('$*', '전체 실행 인자. 전체 인자를 \' \'로 조인한 문자열로 취급')
+                tr
+                    td $@
+                    td 전체 실행 인자. 인자 각각을 한 문자열로 취급
+                        +asCode('shell').
+                            $ bash test.sh "hello world" hello world
+
+                            Listing args with "$*":
+                            Arg #1 = hello world hello world
+
+                            Listing args with "$@":
+                            Arg #1 = hello world
+                            Arg #2 = hello
+                            Arg #3 = world
+                +tds('$?', '마지막 포그라운드 프로세스/함수/스크립트 종료 상태')
                 +tds('$$', '쉘 PID')
                 +tds('$!', '가장 최근 백그라운드 PID')
                 +tds('$0', '쉘 or 스크립트 이름')
 
+            h3 declare로 변수 선언
+                +pos('declare')
+            +asCode('shell') $ declare OPTION(S) VAR_NAME=value
+            ul
+                li -a : 배열
+                li -f : 이름에 해당하는 함수 정의 출력
+                li -i : 정수
+                li -p : 이름에 해당하는 변수 정의 출력
+                li -r : 읽기 전용 변수로 고정
+                li -x : export
+                li 옵션에 - 대신 +를 쓰면 해당 옵션을 끈다
+
+            h3 Array
+            ul
+                li 배열 길이 제한 없음
+                li 임의 인덱스 할당 가능
+                li 배열 선언 + 초기화
+                +asCode('shell') $ arr=(value1 value2 valueN)
+                li 암시적 배열 변수 선언
+                +asCode('shell') $ arr[3]=value
+                li 배열 참조
+                +asCode('shell').
+                    $ echo ${arr[*]}
+                    $ echo ${arr[2]}
+
+            h3 변수에 대한 연산
+                +pos('parameter substitution')
+            ul
+                li ${VAR_NAME^} : 첫번째 글자를 대문자로. Since bash 4
+                li ${VAR_NAME^^} : 전부 대문자로. Since bash 4
+                li ${VAR_NAME,} : 첫번째 글자를 소문자로. Since bash 4
+                li ${VAR_NAME,,} : 전부 소문자로. Since bash 4
+                li ${#VAR_NAME} | ${#*}, ${#@} | ${#arr[*]}, ${#arr[@]} : 변수 값의 길이 | 인자 개수 | 배열 길이
+                li ${VAR_NAME-WORD} : 변수가 없으면 WORD 반환
+                li ${VAR_NAME:-WORD} : 변수가 없거나 null이면 WORD 반환
+                li ${VAR_NAME=WORD} : 변수가 없으면 WORD 할당 후 반환
+                li ${VAR_NAME:=WORD} : 변수가 없거나 null이면 WORD 할당 후 반환
+                li ${VAR_NAME?WORD} : 변수가 없으면 실행 위치와 WORD 출력 후 exit code 1로 종료
+                li ${VAR_NAME:?WORD} : 변수가 없거나 null이면 실행 위치와 WORD 출력 후 exit code 1로 종료
+                li ${VAR_NAME+WORD} : 변수가 존재하면 WORD 반환. 아니면 null
+                li ${VAR_NAME:+WORD} : 변수가 존재하고 non-null이면 WORD 반환. 아니면 null
+                li ${VAR_NAME:OFFSET:LENGTH} : OFFSET(0 based index)부터 LENGTH(생략 시 끝까지)개 문자 출력
+                li ${VAR_NAME#WORD} : 접두 WORD패턴(shortest) 삭제
+                li ${VAR_NAME##WORD} : 접두 WORD패턴(longest) 삭제
+                li ${VAR_NAME%WORD} : 접미 WORD패턴(shortest) 삭제
+                li ${VAR_NAME%%WORD} : 접미 WORD패턴(longest) 삭제
+                +asCode('shell').
+                    $ arr=(aaab aabb abbb bbbb)
+                    $ echo ${arr[*]#a*}
+                    aab abb bbb bbbb
+                    $ echo ${arr[*]##a*}
+                    bbbb
+                    $ echo ${arr[*]%*b}
+                    aaa aab abb bbb
+                    $ echo ${arr[*]%%*b}
+                li ${VAR_NAME/PATTERN/REPLACEMENT} : 최초 1회 치환
+                li ${VAR_NAME/#PATTERN/REPLACEMENT} : 접두와 일치하는 경우 치환
+                li ${VAR_NAME/%PATTERN/REPLACEMENT} : 접미와 일치하는 경우 치환
+                li ${VAR_NAME//PATTERN/REPLACEMENT} : 전체 치환
+                li ${!prefix*}, ${!prefix@} : 접두가 일치하는 모든 변수 이름 배열 반환
+
         h2 Quoting
+            +pos('quoting')
         ul
             li \ : 다음 글자를 리터럴로 간주
             li '' : 내부 문자열을 리터럴로 간주
@@ -579,15 +687,19 @@ include ../../source/skeleton.pug
         ol
             li 각 커맨드 토큰들은 순서대로 해석되며, 모든 해석이 끝난 뒤 quote가 제거된다
             li Brace expansion
+                +pos('brace expansion')
             +asCode('shell').
-                echo ab{c,d,e}fg
-                # abcfg abdfg abefg
+                $ echo ab{c,d,e}fg      # abcfg abdfg abefg
+                $ mv name.{txt,txt.old}
+                $ for n in {1..20}; do echo $n; done
+                $ for n in log-{100..20}.txt; do echo $n; done
+                $ for n in {z..A}; do echo $n; done
             li Tilde expansion
             +asCode('shell').
-                echo ~          # 현재 유저의 home directory
-                echo ~USER_NAME # 특정 유저의 home directory
-                echo ~+         # PWD
-                echo ~-         # OLDPWD
+                $ echo ~          # 현재 유저의 home directory
+                $ echo ~USER_NAME # 특정 유저의 home directory
+                $ echo ~+         # PWD
+                $ echo ~-         # OLDPWD
             li Parameter(and variable) expansion
             ul
                 li ${VAR_NAME}, $VAR_NAME
@@ -597,9 +709,10 @@ include ../../source/skeleton.pug
                 li $0~$9, ${10}~
                 p n번째 실행 인자 획득. 2글자 넘어가면 {} 필수
             li Command substitution : $(command), `command`
+                +pos('command substitution')
             +asCode('shell').
                 # command 실행 결과(STDOUT)로 치환
-                echo $(echo $(echo abcd))
+                $ echo $(echo $(echo abcd))
             li Arithmetic expansion : $(( EXPRESSION )), $[ EXPRESSION ]
             ul
                 li EXPRESSION은 "로 감싸인 걸로 간주된다. " 자체는 특별한 의미를 갖지 않는다.
@@ -629,48 +742,50 @@ include ../../source/skeleton.pug
                 +tds('=, *=, /=, %=, +=, -=, <<=, >>=, &=, ^=, |=', '대입 연산')
                 +tds(',', '표현식 구별. 가장 마지막 표현식 결과가 리턴된다')
             li Process substitution
+                +pos('Process substitution')
             ul
                 li x &lt;(COMMAND_LIST) y : COMMAND_LIST대로 프로세스를 실행하고, 그 결과를 갖는 임시 파일(/dev/fd/N)과 y를 순서대로 x의 인자로 전달
-                +asCode('shell') cat &lt;(ls -a) &lt;(ls -al)
+                +asCode('shell') $ cat &lt;(ls -a) &lt;(ls -al)
                 li x &gt;(COMMAND_LIST) y : x /dev/fd/N y를 실행하고, /dev/fd/N는 다시 COMMAND_LIST 프로세스의 인자로 전달
                 +asCode('shell').
-                    tar -cf >(cat) test.sh tmp.txt
+                    $ tar -cf >(cat) test.sh tmp.txt
                     # test.sh0000774000000000000000000000002614004476247011101 0ustar  rootroot
                     # Content of 'test.sh'
                     # tmp.txt0000664000000000000000000000002614004476253011122 0ustar  rootroot
                     # Content of 'tmp.txt'
             li Word splitting
+                +pos('Word splitting')
             ul
                 li Parameter expansion, command substitution, arithmetic expansion의 결과에 대해 단어를 분할한다
-                li 단어의 분할은 IFS 변수(Internal Field Separator)에 설정(기본값 ' \t\n')된 문자들을 구분자로 하여 진행된다.
+                li 단어의 분할은 IFS(Internal Field Separator) 변수에 설정(기본값 ' \t\n')된 문자들을 구분자로 하여 진행된다.
                 +asCode('shell').
-                    wiz$ echo $IFS
+                    $ echo $IFS
                     
-                    wiz$ IFS=123
-                    wiz$ str=a1b2c3d4e5
-                    wiz$ echo $str
+                    $ IFS=123
+                    $ str=a1b2c3d4e5
+                    $ echo $str
                     a b c d4e5
-                    wiz$ echo "$str"
+                    $ echo "$str"
                     a1b2c3d4e5
-                    wiz$ echo $IFS
+                    $ echo $IFS
                       
-                    wiz$ echo "$IFS"
+                    $ echo "$IFS"
                     123
-                    wiz$ IFS=' \t\n'
-                    wiz$ echo $str
+                    $ IFS=' \t\n'
+                    $ echo $str
                     a1b2c3d4e5
             li File name expansion
             +asCode('shell').
                 $ echo t* # 배열로 반환
                 test.sh tmp.txt
             +asCode('shell', 'test.sh').
-                echo $1
-                echo $#
+                $ echo $1
+                $ echo $#
             +asCode('shell').
-                root@goorm:/workspace/donggi-github# cat <("${PWD}/"t*)
+                $ cat <("${PWD}/"t*)
                 /workspace/donggi-github/tmp.txt
                 1
-                root@goorm:/workspace/donggi-github# cat <("${PWD}/"t*.sh)
+                $ cat <("${PWD}/"t*.sh)
                 
                 0
 
@@ -681,13 +796,737 @@ include ../../source/skeleton.pug
             li 해제 : unalias text
             li alias는 자식 프로세스에 상속되지 않는다
 
+        h2 POSIX 정규표현식
+        table.no-sort
+            +tds('^', 'line 시작')
+            +tds('$', 'line 끝')
+            +tds('\\b', 'word 경계')
+            +tds('\\B', 'not \\b. 즉 2글자 이상의 word 내부')
+            +tds('\\<', 'word 시작')
+            +tds('\\>', 'word 끝')
+            tr
+                td [:CLASS:]
+                td: ul
+                    li 보통 [[:CLASS:]]처럼 2겹으로 감싸야 된다.
+                    li alnum, alpha, ascii, blank, cntrl, digit, graph, lower, print, punct, space, upper, word, xdigit
+
+        h2 Test
+            +pos('test')
+        div
+            h3 if - General
+            ul
+                li 가장 단순한 구문
+                +asCode('bash').
+                    if TEST-COMMANDS; then COMMANDS; fi
+                    # TEST-COMMANDS가 성공적으로 종료(exit code==0)하면 then 실행
+                    
+                    if true; then echo hello; fi
+                    if false; then echo hello; fi
+                li 조건식
+                table
+                    +ths('식', 'TRUE')
+                    +tds('[ -a FILE ]', 'deprecated. FILE 존재')
+                    +tds('[ -b FILE ]', 'FILE 존재 && block device')
+                    +tds('[ -c FILE ]', 'FILE 존재 && character device')
+                    +tds('[ -d FILE ]', 'FILE 존재 && directory')
+                    +tds('[ -e FILE ]', 'FILE 존재')
+                    +tds('[ -f FILE ]', 'FILE 존재 && regular file')
+                    +tds('[ -g FILE ]', 'FILE 존재 && SGID bit set; 해당 디렉터리에 생성된 파일은 자동으로 디렉터리 소유 그룹의 것이 된다')
+                    +tds('[ -h FILE ]', 'FILE 존재 && symbolic link')
+                    +tds('[ -k FILE ]', 'FILE 존재 && sticky bit set; 파일에 설정된 경우, 빠른 접근을 위해 캐시 메모리에 저장된다. 디렉터리에 설정된 경우, 해당 디렉터리에 쓰기 권한을 가진 유저(디렉터리 소유자, root 제외)는 자기가 소유한 파일에 대해서만 변경 가능하다')
+                    +tds('[ -p FILE ]', 'FILE 존재 && pipe')
+                    +tds('[ -r FILE ]', 'FILE 존재 && redable')
+                    +tds('[ -s FILE ]', 'FILE 존재 && size > 0')
+                    tr
+                        td [ -t FD ]
+                        td FD가 터미널에 연결됨
+                            +asCode('bash').
+                                if [ -t 0 ]; then echo hello; fi # STDIN
+                                if [ -t 1 ]; then echo hello; fi # STDOUT
+                                if [ -t 2 ]; then echo hello; fi # STDERR
+                    +tds('[ -u FILE ]', 'FILE 존재 && SUID bit set; 바이너리를 누가 실행하든 지정 유저 권한으로 실행된다')
+                    +tds('[ -w FILE ]', 'FILE 존재 && writable')
+                    +tds('[ -x FILE ]', 'FILE 존재 && executable')
+                    +tds('[ -O FILE ]', 'FILE 존재 && 현재(effective) 유저가 소유')
+                    +tds('[ -G FILE ]', 'FILE 존재 && 현재(effective) 그룹이 소유')
+                    +tds('[ -L FILE ]', 'FILE 존재 && symbolic link')
+                    +tds('[ -N FILE ]', 'FILE 존재 && 마지막으로 읽은 시점 이후에 수정됨')
+                    +tds('[ -S FILE ]', 'FILE 존재 && socket')
+                    +tds('[ FILE1 -nt FILE2 ]', 'Newer than ::= FILE1이 FILE2보다 최근에 수정됨 || FILE1은 있지만 FILE2는 없음')
+                    +tds('[ FILE1 -ot FILE2 ]', 'Older than ::= FILE1이 FILE2보다 이전에 수정됨 || FILE2는 있지만 FILE1은 없음')
+                    +tds('[ "$a" -eq "$b" ]', '산술 비교; equal to')
+                    +tds('[ "$a" -ne "$b" ]', '산술 비교; not equal to')
+                    +tds('[ "$a" -gt "$b" ]', '산술 비교; greater than')
+                    +tds('[ "$a" -ge "$b" ]', '산술 비교; greater than or equal to')
+                    +tds('[ "$a" -lt "$b" ]', '산술 비교; less than')
+                    +tds('[ "$a" -le "$b" ]', '산술 비교; less than or equal to')
+                    +tds('(( "$a" > "$b" ))', '산술 비교; greater than')
+                    +tds('(( "$a" >= "$b" ))', '산술 비교; greater than or equal to')
+                    +tds('(( "$a" < "$b" ))', '산술 비교; less than')
+                    +tds('(( "$a" <= "$b" ))', '산술 비교; less than or equal to')
+                    +tds('[ "$a" == "$b" ]', '문자열; equal to')
+                    +tds('[ "$a" != "$b" ]', '문자열; not equal to')
+                    +tds('[ "$a" \\< "$b" ], [[ "$a" < "$b" ]]', '현재 로캐일상 문자열 a가 앞섬')
+                    +tds('[ "$a" \\> "$b" ], [[ "$a" > "$b" ]]', '현재 로캐일상 문자열 b가 앞섬')
+                    +tds('[ -z "$a" ]', '문자열 길이 == 0')
+                    +tds('[ -n "$a" ] or [ "$a" ]', '문자열 길이 > 0')
+                    +tds('[ -o OPTIONNAME ]', '쉘 옵션이 켜 있음')
+                    +tds('[ ! EXPRESSION ]', 'not EXPRESSION')
+                    +tds('[ (EXPRESSION) ]', '연산 우선순위 조정 가능')
+                    +tds('[ EXPRESSION1 -a EXPRESSION2 ], [[ EXPRESSION1 && EXPRESSION2 ]]', 'and; &&는 short-circuit')
+                    +tds('[ EXPRESSION1 -o EXPRESSION2 ], [[ EXPRESSION1 || EXPRESSION2 ]]', 'or; ||는 short-circuit')
+            h3 if - Advanced
+            ul
+                li [] vs [[]]
+                ul
+                    li [[]] Since bash 2.02
+                    li []는 "test" 커맨드와 동일하지만, [[]]는 커맨드가 아닌 키워드.
+                    li [[]]는 변수 값에 대한 word splitting을 수행하지 않는다
+                    li [[]]는 file name expansion을 수행하지 않는다
+                    li [[]]는 glob 패턴 매칭 수행
+                    +asCode('bash') if [[ "hello" == h* ]]; then echo hello; fi
+                li (()), let
+                p 산술연산을 수행하고, 그 결과가 0이 아니면 0 종료.
+                +asCode('bash').
+                    (( 0 &amp;&amp; 1 ))
+                    echo $?                # 1
+                    let "x = (( 0 &amp;&amp; 1))"
+                    echo $x                # 0
+                    echo $?                # 1
+                li else
+                +asCode('bash') if ...; then ... else ... fi
+                li elif
+                +asCode('bash') if ...; then ... elif ...; then ... fi
+                li if 구문 중첩 가능
+            h3 case
+                +pos('case')
+            ul
+                li ;; -> case 옵션 종결 &amp;&amp; case 구문 종료.
+                li ;;&amp; -> case 옵션 종결 &amp;&amp; 다음 패턴 검사 실행. Since bash 4
+                li ;&amp; -> case 옵션 종결 &amp;&amp; 다음 옵션 무조건 실행. Since bash 4
+            +asCode('bash').
+                case "$1" in
+                    start) # POSIX range, class 사용 가능
+                        start
+                        ;;
+                    restart)
+                        stop
+                        sleep 5
+                        start
+                        ;;
+                    *)
+                        echo "Usage $0 {start|restart}"
+                        exit 1
+                esac
+
+                case $num in
+                    10 | 20 ) echo $num' is 10 or 20';;
+                    *) echo $num' is not 10 nor 20';;
+                esac
+
+        h2 Repetitive tasks
+        div
+            h3 for
+            +asCode('bash').
+                for NAME; do COMMANDS; done         # 실행 인자 순회
+                for NAME in LIST; do COMMANDS; done # LIST 순회
+                
+                # e.g.
+                for n in 10 20 30; do echo $n; done
+                for n in {1..20}; do echo $n; done
+                for n in log-{100..20}.txt; do echo $n; done
+                for n in {z..A}; do echo $n; done
+                for f in *; do cp "$f" "$f.bak"; done
+            h3 select
+            +asCode('bash').
+                select NAME; do COMMANDS; done         # 실행 인자 중 선택
+                select NAME in LIST; do COMMANDS; done # LIST 중 선택
+            ol
+                li stderr에 목록 출력 -> PS3 출력 -> stdin으로부터 한 줄 입력
+                li 입력이 숫자로 구성되었고, 해당하는 항목이 존재하는 경우 : NAME에 항목 설정, REPLY에 입력 라인 설정
+                li 입력이 비어있는 경우, goto 1
+                li 입력이 EOF인 경우 반복 종료
+                li 그 외의 경우 NAME은 null string, REPLY에 입력 라인 설정
+            h3 while
+            +asCode('bash') while CONTROL-COMMAND; do COMMANDS; done
+            h3 until
+            +asCode('bash') until TEST-COMMAND; do COMMANDS; done
+            h3 break
+            p 즉시 반복 중단
+            h3 continue
+            p 즉시 다음 순회로
+            h3 shift
+            +asCode('bash').
+                shift   # $1 인자 버려짐
+                shift 3 # $1, $2 인자 버려짐
+                
+                while (( "$#" ));
+                do
+                    echo $1
+                    shift
+                done
+
+        h2 Function
+        +asCode('bash').
+            # 선언 1
+            function FUNCNAME { COMMANDS; }
+            # 선언 2
+            FUNCNAME () { COMMANDS; }
+            # 호출 1
+            FUNCNAME
+            # 호출 2
+            FUNCNAME param1 param2 # <- 함수 안에서 $1, $2, ...로 접근
+            # 호출 3
+            test () {
+                return 33
+            }
+            
+            test
+            echo $?
+            val=$?
+            
+            exit $val
+
+        h2 Catching signal
+        div
+            h3 Signal
+            table.no-sort
+                +tds('SIGHUP', '1', 'Hangup')
+                +tds('SIGINT', '2', 'Interrupt frmo keyboard; Ctrl+C')
+                +tds('SIGKILL', '9', 'Kill; 강제 종료')
+                +tds('SIGTERM', '15', 'Termination; 정상 종료')
+                +tds('SIGSTOP', '17, 19, 23', 'Stop')
+            p SIGKILL, SIGSTOP은 잡거나, 지연시키거나, 무시할 수 없다
+            h3 Trap
+            +asCode('bash').
+                trap COMMANDS SIGNALS
+                # e.g.
+                trap "{ echo \"Good Bye!\"; exit 255; }" EXIT
+                exit 0
+            ul
+                li SIGNALS 중의 신호를 감지하면 COMMANDS가 실행된다
+                li SIGNALS ::= 신호 이름(SIG 접두 생략 가능) 또는 정수
+
+    h1 Commands
+    div
+        h2 기타
+        div
+            h3 :
+            p 아무것도 하지 않는 null 명령.
+
+            h3 read
+            p 표준입력으로부터 변수 할당; 변수명 지정하지 않은 경우 REPLY 예약 변수로 접근 가능
+
+            h3 let
+            p 변수에 대한 산술 연산 수행
+
+            h3 eval
+            p 인자를 모아 실행한다. 각 인자는 실행하기 전에 평가된다.
+            +asCode('bash').
+                a='$b'
+                b='$c'
+                c=d
+                
+                echo $a             # $b
+                eval echo $a        # $c
+                eval eval echo $a   # d
+
+            h3 set
+            ul
+                li set value1 value2 ... : positional parameter 초기화
+                li set -abCefhmnuvx, set +abCefhmnuvx : 쉘 속성 변경
+
+            h3 unset : 변수 제거
+
+            h3 export
+            p 자식 프로세스의 환경 변수로 전달
+
+            h3 declare, typeset
+            +goto('declare')
+
+            h3 readonly
+            p 변수를 변경할 수 없게 설정한다
+
+            h3 source, .
+            ul
+                li 커맨드 라인에서 호출시 해당 스크립트 실행
+                li 스크립트 내에서 호출시 해당 파일 텍스트를 삽입
+
+            h3 exit : 스크립트/쉘 종료.
+
+            h3 exec
+            ol
+                li fork : 새 프로세스는 기존 프로세스(parent)가 PID만 다른 복제본을 생성함으로써 만들어진다.
+                li exec : 지정 커맨드 정보로 현재 프로세스 주소 공간을 덮어쓴다
+
+            h3 caller
+            p 함수 내에서 사용하면 호출자 정보를 표준 출력
+
+            h3 true : 0으로 즉시 종료
+
+            h3 false : 1로 즉시 종료
+
+            h3 type
+            p 변수, 커맨드 등에 대한 식별 정보를 표준 출력
+            
+            h3 help
+            p builtin에 대한 설명 확인
+            
+            h3 uname : 시스템 정보
+            
+            h3 yes
+            p 끊임없이 y(지정 가능)를 표준 출력
+            
+            h3 tee
+            p 파이프라인을 끊지 않으면서 파일로도 저장
+
+        h2 메모리 관련
+        div
+            h3 vmstat : Virtual memory statistics
+            +asCode('shell') $ vmstat 1 # 1초마다 출력
+    
+            h3 free : 메모리 사용 현황
+            +asCode('shell').
+                $ free -m -w -h -s 1
+                    # -m : 메가바이트 단위
+                    # -w : wide output
+                    # -h : human-readable output
+                    # -s 1 : 1초마다
+
+        h2 프로세스 관련
+        div
+            h3 ps : Process Snapshot
+            +asCode('shell') $ ps -ef # -e(전체 프로세스), -f(full-format)
+
+            h3 top : 실행 중인 작업 보기.
+
+            h3 Job
+            ul
+                li 백그라운드 프로세스는 별개 job 번호를 할당받는다
+                li 커맨드 또는 루프 뒤에 &amp;를 붙이면 백그라운드 job으로 실행한다.
+                li Job 식별자
+                table
+                    +tds('Notation', 'Meaning')
+                    +tds('%N', 'Job number [N]')
+                    +tds('%S', 'Invocation (command-line) of job begins with string S')
+                    +tds('%?S', 'Invocation (command-line) of job contains within it string S')
+                    +tds('%%', '"current" job (last job stopped in foreground or started in background)')
+                    +tds('%+', '"current" job (last job stopped in foreground or started in background)')
+                    +tds('%-', 'Last job')
+                    +tds('$!', 'Last background process')
+            h3 jobs
+            p 백그라운드 job 리스트
+
+            h3 disown
+            ol
+                li job을 쉘의 job table에서 제거
+                li -h : job table에서 제거하지는 않지만, 쉘이 종료해도 SIGHUP 신호를 보내지 않음으로써 job 계속 실행
+
+            h3 nohup
+            p SIGHUP 신호를 무시하고 계속 실행
+            +asCode('shell') $ nohup name.sh &amp;>/dev/null &amp;
+
+            h3 bg ↔ fg %n
+            p 백그라운드 job으로 계속 실행 ↔ 포그라운드로 전환
+            
+            h3 nice : 백그라운드 job 우선순위 변경
+            p 19(lowest), -20(highest); 음수 우선순위는 root만 설정할 수 있다.
+
+            h3 wait, wait PID, wait %n
+            p 전체 백그라운드 job/특정 프로세스/특정 백그라운드 job 종료 대기
+
+            h3 suspend, Ctrl + Z
+            p 현재 프로세스를 백그라운드로 전환하고 일시정지
+
+            h3 logout : 로그인 쉘 종료
+            
+            h3 kill : 프로세스 종료
+            +asCode('shell').
+                $ kill -9 pid # 15(일반 종료), 2(종료; 무시 가능), 9(강제종료; 무시 불가), 1(구성 파일 다시 읽기; 데몬 프로세스)
+                $ kill %n     # 백그라운드 잡 종료
+
+            h3 crond : 작업 예약
+            +asCode('shell').
+                $ systemctl status crond # 상태 확인
+                $ crontab -l             # 작업 목록 출력
+                    # -e : edit
+                    # -u : 사용자 지정
+            ul
+                li 유저가 아닌 시스템 단위의 작업은 /etc/crontab 직접 수정
+                li crontab path 설정
+                +asCode() PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
+
+        h2 파일 관련
+        div
+            h3 cd
+            p Working directory 변경
+            +asCode('shell').
+                $ cd            # 자신의 HOME_DIR로
+                $ cd DIR        # 지정 디렉터리로
+                $ cd ~USER_NAME # 유저 HOME_DIR로
+
+            h3 pwd
+            p Print Working Directory
+
+            h3 pushd, popd, dirs
+            p Working directory 스태킹
+
+            h3 du : 디렉터리 크기 출력(재귀)
+            +asCode('shell') $ du | sort -nr | head
+            
+            h3 df : 파일시스템 사용률
+            
+            h3 stat : 파일 속성
+            
+            h3 ls : 파일 목록
+            p -a(.로 시작하는 경로 포함), -c(with -lt: 시간순, with -l: 이름순), -X(확장자순), -S(크기순), -r(역정렬), -l(자세히), 등...
+            +asCode('text', '출력 예').
+                d rwx r-x r-x # 디렉터리, 소유자 권한, 그룹 권한, 기타 사용자 권한 755(read, write, execute)
+                - rw- r-- r-- # 파일, (상동) 644
+                l r-- r-- r-- # 링크, (상동) 444
+
+            h3 cat, tac
+            ul
+                li cat : 파일을 순서대로 위-gt;아래 라인 순으로 표준 출력
+                p -n(줄 번호), -E(줄 끝에 $), -s(반복적인 빈 라인 생략), -T(탭을 ^T로 표기)
+                +asCode('shell') $ cat file1 file2 file3 &gt; file123
+                li tac : 파일을 순서대로 아래-&gt;위 라인 순으로 표준 출력
+
+            h3 rev
+            p 파일 위-&gt;아래 라인을 순서대로 뒤집어 표준 출력
+            
+            h3 cp : 파일 복사
+            p -a(파일 속성 유지), -b(목적지에 이미 있으면 백업하고 복사), -r(재귀 실행), -s(심볼릭 링크 생성), ...
+            +asCode('shell').
+                $ cp [options] source dest_path
+                $ cp [options] [sources] [target_directory]
+
+            h3 mv : cp + 원본 삭제
+
+            h3 rm : 파일 삭제
+            p -f(파일이 없으면 무시), -i(각 파일 삭제 확인), -r(재귀 실행), 등...
+            +asCode('shell', 'my_dir 디렉터리 및 내부 파일 모두 삭제') $ rm -rf ./my_dir
+
+            h3 rmdir : 빈 디렉터리 삭제
+
+            h3 mkdir : 디렉터리 생성
+            p -m(권한, 기본 755), -p(경로상의 모든 디렉터리 생성)
+
+            h3 파일 권한 변경
+            +asCode('shell').
+                $ chmod [options] 8진수 [paths]
+                # 예. 모든 .sh 파일 실행 권한 부여
+                $ chmod +x *.sh
+                # 예. bin/ 디렉터리 하위 전체에 실행 권한 부여
+                $ chmod -R +x ./bin/
+    
+                # 예. tmp/ 디렉터리 하위 전체 소유자 변경
+                $ chown -R readonly ./tmp/
+    
+                # 예. tmp/ 디렉터리 하위 전체 소유 그룹 변경
+                $ chgrp -R readonly ./tmp/
+
+            h3 chattr : 파일 속성 변경
+            +asCode('bash').
+                chattr +i name.txt # 켜진 경우, 파일 변경 불가. root에서만 속성 on/off 가능.
+                chattr +s name.txt # 켜진 경우, 파일을 지우면 블록을 0으로 쓴다
+                chattr +c name.txt # 켜진 경우, 자동 압축
+
+            h3 ln : 링크 생성
+            +asCode('bash').
+                ln old_file hard_link # hard link
+                    # mirror copy. old_file 이름을 변경해도 참조 지속.
+                    # inode 동일.
+                    # 다른 파일시스템의 파일 참조 불가
+                    # 디렉터리 참조 불가
+                ln -s old_file soft_link # soft link
+                    # file name 참조. old_file 이름을 변경하면 참조 불가.
+                    # inode 다름.
+                    # 다른 파일시스템, 디렉터리 참조 가능
+
+            h3 find : 파일 찾기
+            ul
+                li 파일명 패턴으로 GLOB 가능
+                li 표현식 앞에 !이나 -not을 붙일 수 있다.
+                li 표현식들 사이를 -and, -or로 엮을 수 있다.
+            +asCode('bash').
+                # home directory 이하(재귀)의 모든 *.txt 파일 찾기
+                find ~/ -name '*.txt'
+                
+                # home directory 이하(재귀)의 모든 *.txt 파일 출력
+                find ~/ -name '*.txt' -exec cat {} \;
+
+                # 24시간 내에 수정된 모든 파일 찾기
+                find ./ -mtime -1
+                # ctime : last attribute change time
+                # atime : last access time
+                
+                # 24시간 전에 수정된 모든 파일 찾기
+                find ./ ! -mtime -1
+
+                # 5분 내에 수정된 모든 파일 찾기
+                find ./ -mmin -5
+                # cmin, amin
+                
+                # full path가 정규식에 일치하는 모든 파일 찾기
+                find ./ -regex '.*/.*\.pug'
+            
+            h3 touch
+            p 파일 access, modification 시각을 현재로 변경. 파일이 없으면 생성한다(크기 0).
+
+            h3 man, info : 커맨드, 유틸리티 도움말
+
+            h3 sum, cksum, md5sum, sha1sum : 체크섬 계산
+
+            h3 tar : 압축
+            +asCode('shell').
+                $ tar [options] file       # 압축해제
+                $ tar [options] file paths # 압축
+            ul
+                li Main Operation : -A(append), -r(append), -c(create), -d(파일 시스템과의 차분 출력), -t(목록 출력), -u(update), -x(압축해제)
+                li 포맷 : --bzip2, --xz, --lzip, --lzma, --gzip
+                li -h(링크 자체 대신, 링크가 가리키는 파일을 압축한다)
+
+        h2 시간 관련
+        div
+            h3 date : 시각 출력/변경
+            +asCode('shell').
+                $ date                # 현재 시각 출력
+                $ date "+%Y-%m-%d %T" # 포맷 지정
+    
+                $ date -s time_string # 시각 변경
+                $ date -s "2019-01-01 12:34:56"
+    
+            h3
+                +asA('https://nxmnpg.lemoda.net/8/ntpdate', 'ntpdate')
+                |  : 시각 동기화
+            +asCode('shell').
+                $ ntpdate server    # 동기화
+                $ ntpdate -d server # 오차 출력
+            p NTP : Network Time Protocol. 시간 동기화를 위한 프로토콜.
+                +asA('https://zetawiki.com/wiki/공용_NTP_서버_목록')
+
+            h3 cal : 달력 출력
+            +asCode('shell') $ cal [[month] year]
+
+            h3 sleep : do nothing
+
+            h3 usleep : 마이크로초 단위 sleep
+
+        h2 텍스트 관련
+        div
+            h3 echo
+            ul
+                li 표현식 또는 변수를 newline 문자를 덧붙여 표준 출력
+                li 항상 0 종료
+                li -e : 이스케이프 해석
+                li -n : newline 문자를 끝에 붙이지 않음
+
+            h3 printf
+            p 포맷대로 표준 출력. 처리에 따라 종료 상태 다를 수 있음.
+
+            h3 xargs -n $num : 줄당 최대 $num개 열로 출력
+            
+            h3 fold -w $num : 줄당 최대 $num 글자로 출력
+            p -s 옵션 사용 시, 가능하면 단어 중간에 라인을 바꾸지 않게 조정한다
+
+            h3 sort : 오름차순 정렬
+            p -r : 내림차순 정렬
+
+            h3 uniq : 중복 제거
+            p -c : 카운트
+            
+            h3 wc : 단어 개수
+            p -w(단어 개수만), -l(줄 개수만), -c(바이트 크기만), -m(문자 개수만), -L(가장 긴 라인의 길이만)
+
+            h3 expand : tab -&gt; space
+            
+            h3 unexpand : space -&gt; tab
+            
+            h3 head : 파일 위 n(default 10)줄 출력
+            
+            h3 tail : 파일 아래 n(default 10)줄 출력
+            p -f : 변경 추적
+            
+            h3 tr : 텍스트 치환
+            +asCode('shell').
+                # 치환
+                echo "a1b2c3d4e5" | tr '[:alpha:]' +
+                # ==&gt; +1+2+3+4+5
+                echo "a1b2c3d4e5" | tr 'b-d' '7-9'
+                # ==&gt; a1728394e5
+
+                # 반전
+                echo "a1b2c3d4e5" | tr -c '[:alpha:]' +
+                # ==&gt; a+b+c+d+e++
+                # 줄바꿈 문자도 변경됨에 주목
+
+                # 삭제
+                echo "abcdef" | tr -d 'b-d'
+                # ==&gt; aef
+
+                # 축약
+                echo "abbbbcccd" | tr --squeeze-repeats 'a-b'
+                # ==&gt; abcccd
+            
+            h3 nl : 줄 번호 매기기(빈 줄 제외)
+            
+            h3 diff : 두 텍스트 파일 비교
+            
+            h3 diff3 : 세 텍스트 파일 비교
+
+            h3 grep : 텍스트 검색
+            +asCode('shell') $ grep [options] pattern [files]
+            p -E(ERE), -G(BRE), -P(Perl Regexp), -e(정규표현식), -i(ignore case), -w(패턴에 단어 전체가 매칭되는 경우만), -x(패턴에 줄 전체가 매칭되는 경우만), -m(최대 출력 개수), -n(줄 번호 같이 출력), -o(매칭된 부분만 출력), -l(매칭된 파일들의 이름만 출력), -L(매칭되지 않는 파일들의 이름만 출력), -A(매칭 후 n개 라인도 출력), -B(매칭 전 n개 라인도 출력) 등...
+
+            h3 sed; Stream EDitor
+            div
+                p sed는 표준 입력 또는 파일로부터 편집을 수행(원본 수정은 없다)하고 표준 출력한다.
+                table.no-sort
+                    caption Commands
+                    +tds('a\\text', '각 줄 아래에 text를 쓴다')
+                    +tds('c\\text', '각 줄을 text로 치환')
+                    +tds('/pattern/d', '패턴이 포함된 줄 지우기')
+                    +tds('3d', '3번째 줄 지우기')
+                    +tds('2,4d', '2~4번째 줄 지우기')
+                    +tds('2,$d', '2~마지막 줄 지우기')
+                    +tds('i\\text', '각 줄 위에 text를 쓴다')
+                    +tds('/pattern/p', 'pattern이 매칭되는 줄만 출력')
+                    +tds('s/pattern/replacement/', '찾아 바꾸기; 줄당 최초 1회')
+                    +tds('2,4s/pattern/replacement/', '찾아 바꾸기; 2~4줄에서 각 줄당 최초 1회')
+                    +tds('2,/pattern1/s/pattern2/replacement/', '찾아 바꾸기; 2줄부터 pattern1이 존재하는 줄까지, 각 줄당 최초 1회')
+                    +tds('/pattern1/,/pattern2/s/pattern3/replacement/', '찾아 바꾸기; pattern1이 존재하는 줄부터 pattern2가 존재하는 줄까지, 각 줄당 최초 1회')
+                    +tds('s/pattern/replacement/gi', '찾아 바꾸기; 대소문자 구별없이(i), 해당 줄의 모든 매칭(g)에 대해 변환 수행')
+                    +tds('y/letters1/letters2/', 'tr과 유사. 글자 치환 수행')
+                    +tds('3q', '3줄까지만 처리하고 종료')
+                table.no-sort
+                    caption Options
+                    +tds('-e script', 'script 커맨드들도 실행한다')
+                    +tds('-f script-file', 'script-file의 커맨드들도 실행한다')
+                    +tds('-n', '매칭 라인만 출력')
+    
+            h3 awk
+            div
+                h4 개요
+                p 스트림 편집 프로그램; 및 프로그래밍 언어
+                +asCode('shell').
+                    $ awk { PROGRAM } inputFile(s)        # 각 파일 모든 라인들에 대해 PROGRAM 실행
+                    $ awk '/REGEX/(gmi) { PROGRAM } inputFile(s) # 각 파일 REGEX 일치 라인들에 대해 PROGRAM 실행
+                    $ awk -f programFile inputFile(s)
+                
+                h4 print
+                ul
+                    li default input field separator ::= [ \t]+
+                    li $1, $2, ... ::= 라인의 i번째 필드
+                    li $0 ::= 라인 전체
+                    +asCode('shell') $ ls -al | awk '{ print $9 }'
+                    li formatting
+                    +asCode('shell') $ ls -al | awk '{ print $9 " with formatting -> [" $9 "]" }'
+                    li 전처리/후처리
+                    +asCode('shell') $ ls -al | awk 'BEGIN { print "Hello\n" } { print $9 } END { print "Bye\n" }'
+    
+                h4 variable
+                ul
+                    li FS : field separator
+                    +asCode('shell') $ ls -al | awk 'BEGIN { FS="t+" } { print $1 }'
+                    li OFS : output field separator
+                    li ORS : output record separator
+                    li NR : number of record
+                    +asCode('shell') $ ls -alh | awk 'BEGIN { OFS=" = "; ORS="\n>>> line " } { print NR "\n" $9,$5 "B" }'
+                    li User defined variable
+                    +asCode('shell') $ ls -al | awk 'BEGIN { totalSize=0 } { totalSize=totalSize + $5 } END { print "Total size = " totalSize "bytes" }'
+
+        h2 네트워크 관련
+        div
+            h3 curl : 유저 상호작용 없이 다양한 프로토콜 통신
+            
+            h3 wget : 유저 상호작용 없이 웹, ftp 파일 다운로드
+            
+            h3 ssh : Secure shell
+            
+            h3 ifconfig : 네트워크 인터페이스 정보
+            
+            h3 netstat : 네트워크 사용 정보
+            +asCode('shell') $ netstat -anp | grep 10080
+
+        h2 산술
+        div
+            h3 factor : 소인수분해
+            
+            h3 awk를 이용한 부동소수 연산
+            +asCode('shell') $ echo 1234567 | awk '{ printf("%3.7f\n", sqrt($1)) }'
+
+        h2 사용자 관련
+        div
+            h3 w, who, users : 로그인한 유저 목록
+            
+            h3 groups : 현재 유저가 속한 그룹 목록
+            
+            h3 useradd : 사용자 추가
+            +asCode('shell') $ useradd [options] USER_NAME
+            p -d(HOME_DIR), -g(group id or name), -p(password), -D(기본값 출력/설정), 등...
+    
+            h3 passwd : 비밀번호 설정
+            +asCode('shell') $ passwd [options] USER_NAME
+            p -d(삭제), -l(잠금), -u(잠금 해제), -e(강제 만료)
+    
+            h3 usermod : 사용자 수정
+            +asCode('shell') $ usermod [options] USER_NAME
+            p -d(HOME_DIR), -m(HOME_DIR 변경 시 파일 이동), -L(잠금), -p(password), 등...
+    
+            h3 userdel : 사용자 삭제
+            +asCode('shell') $ userdel [options] USER_NAME
+    
+            h3 groupadd : 사용자 그룹 추가
+            +asCode('shell') $ groupadd [options] GROUP_NAME
+            p -g(수동 GID), -p(password)
+    
+            h3 groupdel : 사용자 그룹 삭제
+            +asCode('shell') $ groupdel [options] GROUP_NAME
+    
+            h3 su : 다른 사용자 권한으로 실행
+            +asCode('shell') $ su [options] [-] [USER_NAME [arg]...]
+            p USER_NAME이 없으면 root. 단순히 '-'만 있으면 '-l'과 동일하다.
+    
+            h3 사용자 목록 : /etc/passwd
+            +asCode().
+                ID:Password(x):UID:GID:Comment:HOME_DIR:SHELL
+                root:x:0:0:root:/root:/bin/bash
+                dgkim:x:1000:1000:dgkim:/home/dgkim:/bin/bash
+
+            h3 비밀번호 목록 : /etc/shadow
+            p !!는 비밀번호가 설정되지 않았음을 의미
+
+
+        h2 패키지 관련
+        div
+            h3 RPM : Redhat Package Manager
+            p {package_name}-{version}-{release}.{architecture}.rpm
+            +asCode('shell') $ rpm [options]
+            p -a(전체 패키지 검증), -i(install), -U(설치 또는 upgrade), -F(기존 패키지 upgrade), -v(verbose), -h(진행과정을 #로), -e(erase), -qa(설치된 패키지 목록), -qi(패키지 상세 정보) 등...
+
+            h3 yum
+            ul
+                li 인터넷 저장소로부터 패키지를 다운로드하여 설치. 의존 패키지까지 자동 설치한다.
+                li Commands : clean(캐시 삭제), check-update, downgrade, erase, info, install, list, reinstall, search, update, version, 등...
+    
+            h3 EPEL(Extra Packages for Enterprise Linux) 허용
+            ol
+                li 서드 파티 패키지를 설치하려면 EPEL을 허용해야 한다
+                li RHEL 6.x / CentOS 6.x
+                +asCode('shell') $ rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+                li RHEL 7.x / CentOS 7.x
+                +asCode('shell') $ rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+                p 또는
+                +asCode('shell') $ yum install epel-release.noarch
+
     h1 FTP Server : vsftpd
     ol
         li 설치
         +asCode('shell') $ yum install vsftpd
 
         li 설정 : /etc/vsftpd/vsftpd.conf
-        +asCode('ini').
+        +asCode('properties').
             anonymous_enable=NO # 익명 차단
             listen_ipv6=NO # IPv4 사용
 
@@ -721,7 +1560,7 @@ include ../../source/skeleton.pug
         li Passive Mode 사용
         ol
             li /etc/vsftpd/vsftpd.conf
-            +asCode('ini').
+            +asCode('properties').
                 connect_from_port_20=NO
                 pasv_enable=YES
                 pasv_min_port=50000
@@ -777,10 +1616,6 @@ include ../../source/skeleton.pug
             li :wq : 저장 후 종료
             li :q! : 저장하지 않고 종료
 
-        h2 이동
-        div
-            img.w3-round(src='http://cfile8.uf.tistory.com/image/141F57474F4732890DE706')
-
         h2 vim
         ol
             li 열기
@@ -804,9 +1639,3 @@ include ../../source/skeleton.pug
             li n dd : 커서로부터 n 줄 삭제
             li n dw : 커서로부터 n 단어 삭제
             li gg -> dG : 첫줄로 이동 -> 끝까지 삭제
-
-    h1: +asA('https://tldp.org/HOWTO/HOWTO-INDEX/index.html', 'Linux HOWTO')
-    div
-        h2: +asA('https://tldp.org/HOWTO/HOWTO-INDEX/os.html', 'The Linux OS')
-        div
-            h3 Getting Started
