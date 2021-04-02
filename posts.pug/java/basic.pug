@@ -249,6 +249,7 @@ include ../../source/skeleton.pug
             li 객체의 복사본을 생성하여 반환한다.(얕은 복사)
             li Object.clone()의 접근제한자는 protected이다. 이는 얕은 복사본의 이용으로 원본 객체까지 변경되는 것을 막기 위함이다.
             li clone()을 재정의할 때, Cloneable 마커 인터페이스를 구현하는데, 마커 인터페이스는 추상 메소드 없이, 클래스가 단순히 해당 기능을 가짐을 나타낸다.
+            p implements Cloneable 지정하지 않으면 super.clone() 호출 시 CloneNotSupportedException 발생
         li boolean equals(Object obj)
         p Object 클래스의 equals 구현 : return this == obj;
             br

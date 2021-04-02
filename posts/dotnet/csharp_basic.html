@@ -171,6 +171,37 @@ if (msg is string { Length: 5 } five)
         var (_, _) => Quadrant.OnBorder,
         _ => Quadrant.Unknown
     };
+</div></div><h1><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://devblogs.microsoft.com/dotnet/c-9-0-on-the-record/">C# 9.0</a></h1><div><h2>Init-only properties</h2><p>초기화 이후엔 프로퍼티에 할당 불가</p><p><strong>↓ C#</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="C#">public class Person
+{
+    public string? FirstName { get; init; }
+    public string? LastName { get; init; }
+}
+</div><h2>Init accessors and readonly fields</h2><p><strong>↓ C#</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="C#">public class Person
+{
+    private readonly string name;
+    
+    public string Name
+    {
+        get => name;
+        init => name = (value ?? "Anonymous");
+    }
+}
+</div><h2>Records</h2><ul><li>class 키워드 대신 record 키워드로 선언하는 경우, 유사 값-타입이 된다.</li><li>Equals 메서드에서 값을 기반으로 비교를 수행한다</li><li>다른 record를 상속할 수 있다</li><li>Positional records</li><p>Init-only properties, 생성자, deconstructor를 자동으로 생성한다</p><p><strong>↓ C#</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="C#">public record Person(string FirstName, string LastName);
+
+var person = new Person("Donggi", "Kim");
+var (firstName, lastName) = person;
+
+// 상속
+public record Student(string FirstName, string LastName, int ID) : Person(FirstName, LastName);
+</div></ul><h2>Top-level programs</h2><p>단일 파일 프로그램에 한해, Main() 정의없이 즉시 본문 작성 가능. await 가능</p><p><strong>↓ C#</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="C#">using System;
+
+Console.WriteLine("Hello World");
+</div><h2>With-expressions</h2><p>변경 불가능한 데이터 인스턴스의 일부만 변경한 복제본 생성에 사용</p><p><strong>↓ C#</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="C#">var newPerson = person with { LastName = "AI" };
+</div><h2>Target-typed new expressions</h2><p><strong>↓ C#</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="C#">Point[] ps = { new (1, 2), new (3, 4) };
+</div><h2>Covariant returns</h2><p>메서드 상속 시 리턴 타입을 더욱 좁히는 것이 허용된다</p><p><strong>↓ C#</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="C#">class Tiger : Animal
+{
+    public override Meat GetFood() => ...;
+}
 </div></div><h1>.NET 정규표현식</h1><ul><p>Java와 동일한 부분은 생략</p><li>\nn 또는 \nnn : 8진수 ASCII</li><li>\w : \p{L} | \p{Mn} | \p{Nd} | \p{Pc}</li><li>\Z : \z | (?=\n)</li><li>(?&lt;name>X) == (?'name'X)</li><ul><li>\k'name'역참조 가능. replace에서 ${name}참조 가능, GroupCollection의 인덱서로 참조 가능</li><li>그룹 오버로딩 가능 : (?&lt;1>a)(?&lt;1>\1b) // 스택처럼 정의가 쌓이며 '-name'으로 가장 최근 정의 삭제 가능</li></ul><li class="marker">균형 조정 그룹; Balancing group</li><ul><li>(?&lt;name1-name2>X) == (?'name1-name2'X)</li><p>name1은 현재 그룹(Optional)이고, name2는 이전에 정의된 그룹. 균형 조정 그룹은 마지막(백트래킹) name2 정의를 삭제하고, name1에 name2와 name1 사이 간격을 저장한다.</p><p><strong>↓ cs</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="cs">var html = "&lt;html>&lt;body>Hello&lt;p>World&lt;/p>olleH&lt;/body>&lt;/html>Plain Text&lt;script>console.log('hello world');&lt;/script>Plain Text&lt;yes>Text&lt;/no>";
 Console.WriteLine($"All text : {html}");
 foreach (Match match in Regex.Matches(html, @"&lt;(?'tag'\w+)>(.(?&lt;!&lt;/\k&lt;tag>>))*(?'-tag'&lt;/\k&lt;tag>>)", RegexOptions.IgnoreCase))

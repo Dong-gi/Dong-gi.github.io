@@ -1849,6 +1849,7 @@ Repositories/VisualStudio/CSharp/Notifycation/Properties/Resources.Designer.cs
 Repositories/VisualStudio/CSharp/Notifycation/Properties/Resources.resx
 Repositories/VisualStudio/CSharp/Notifycation/Properties/Settings.Designer.cs
 Repositories/VisualStudio/CSharp/Notifycation/Properties/Settings.settings
+Repositories/VisualStudio/CSharp/Notifycation/packages.config
 Repositories/VisualStudio/CSharp/SimpleCapture/SimpleCapture/App.config
 Repositories/VisualStudio/CSharp/SimpleCapture/SimpleCapture/App.xaml
 Repositories/VisualStudio/CSharp/SimpleCapture/SimpleCapture/App.xaml.cs

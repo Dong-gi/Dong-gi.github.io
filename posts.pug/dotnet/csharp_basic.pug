@@ -654,6 +654,70 @@ include ../../source/skeleton.pug
                     _ => Quadrant.Unknown
                 };
 
+    h1: +asA('https://devblogs.microsoft.com/dotnet/c-9-0-on-the-record/', 'C# 9.0')
+    div
+        h2 Init-only properties
+        p 초기화 이후엔 프로퍼티에 할당 불가
+        +asCode('C#').
+            public class Person
+            {
+                public string? FirstName { get; init; }
+                public string? LastName { get; init; }
+            }
+            
+        h2 Init accessors and readonly fields
+        +asCode('C#').
+            public class Person
+            {
+                private readonly string name;
+                
+                public string Name
+                {
+                    get => name;
+                    init => name = (value ?? "Anonymous");
+                }
+            }
+
+        h2 Records
+        ul
+            li class 키워드 대신 record 키워드로 선언하는 경우, 유사 값-타입이 된다.
+            li Equals 메서드에서 값을 기반으로 비교를 수행한다
+            li 다른 record를 상속할 수 있다
+            li Positional records
+            p Init-only properties, 생성자, deconstructor를 자동으로 생성한다
+            +asCode('C#').
+                public record Person(string FirstName, string LastName);
+                
+                var person = new Person("Donggi", "Kim");
+                var (firstName, lastName) = person;
+                
+                // 상속
+                public record Student(string FirstName, string LastName, int ID) : Person(FirstName, LastName);
+
+        h2 Top-level programs
+        p 단일 파일 프로그램에 한해, Main() 정의없이 즉시 본문 작성 가능. await 가능
+        +asCode('C#').
+            using System;
+            
+            Console.WriteLine("Hello World");
+        
+        h2 With-expressions
+        p 변경 불가능한 데이터 인스턴스의 일부만 변경한 복제본 생성에 사용
+        +asCode('C#').
+            var newPerson = person with { LastName = "AI" };
+            
+        h2 Target-typed new expressions
+        +asCode('C#').
+            Point[] ps = { new (1, 2), new (3, 4) };
+            
+        h2 Covariant returns
+        p 메서드 상속 시 리턴 타입을 더욱 좁히는 것이 허용된다
+        +asCode('C#').
+            class Tiger : Animal
+            {
+                public override Meat GetFood() => ...;
+            }
+
     h1 .NET 정규표현식
     ul
         p Java와 동일한 부분은 생략

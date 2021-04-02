@@ -1,4 +1,499 @@
 include ../../source/skeleton.pug
 +post('Guava', 'Guava', 'Guava 정리')
-    | https://github.com/google/guava/wiki
-    | https://guava.dev/releases/23.0/api/docs/
+    h1 References
+    ul
+        li: +asA('https://github.com/google/guava/wiki')
+        li: +asA('https://javadoc.io/doc/com.google.guava/guava/latest/index.html', 'javadoc')
+    
+    h1 com.google.common.base        
+    div
+        p: strong Basic utility libraries and interfaces.
+        h2 문자열 관련
+        div
+            h3 class Joiner Since 2.0
+            ul
+                li 각 객체의 toString() 결과를 Appendable 객체에 append
+                li skipNulls(), useForNull(String) 설정이 없는 경우, null 인자에 대해 NullPointerException 발생
+            +asCode('java').
+                static Joiner on(String separator) + 오버로딩
+                Joiner skipNulls()
+                Joiner useForNull(String nullText)
+                
+                Joiner.MapJoiner withKeyValueSeparator(String keyValueSeparator) + 오버로딩
+                
+                &lt;A extends Appendable&gt; appendTo(A appendable, ...)
+                StringBuilder appendTo(StringBuilder builder, ...)
+                
+                String join(...)
+            
+            h3 static final class Joiner.MapJoiner Since 2.0
+            p Map.Entry를 append하기 위한 Joiner
+            
+            h3 final class Splitter Since 1.0
+            p 고정된 구분자(패턴)을 이용해 겹치지 않는 부분 문자열 획득
+            +asCode('java').
+                static Splitter fixedLength(int length)   // 고정 길이로 자르기
+                static Splitter on(Pattern separatorPattern) + 오버로딩
+                
+                Splitter limit(int maxItems)
+                Splitter omitEmptyStrings()
+                Splitter trimResults()                    // 연속되는 공백 문자 제거
+                Splitter trimResults(CharMatcher trimmer) // trimmer에 해당하는 모든 연속적인 문자 제거
+                
+                Splitter.MapSplitter withKeyValueSeparator(Splitter keyValueSplitter) + 오버로딩
+                
+                Iterable&lt;String&gt; split(CharSequence sequence)
+                List&lt;String&gt; splitToList(CharSequence sequence) Since 15.0
+                Stream&lt;String&gt; splitToStream(CharSequence sequence) Since 28.2
+            
+            h3 static final class Splitter.MapSplitter Since 10.0
+            p Joiner.MapJoiner의 역함수
+            
+            h3 final class Strings Since 3.0
+            +asCode('java').
+                static String nullToEmpty(String string)
+                static String emptyToNull(String string)
+                static boolean isNullOrEmpty(String string)
+                
+                static String repeat(String string, int count)
+                static String padStart(String string, int minLength, char padChar) + padEnd
+                static String commonPrefix(CharSequence a, CharSequence b) + commonSuffix Since 11.0
+        
+        h2 ETC
+        div
+            h3 abstract class Converter&lt;A,B&gt; implements Function&lt;A,B&gt; Since 16.0
+            p A -&gt; B, B -&gt; A 양방향 변환이 존재할 때, 그 변환
+            +asCode('java').
+                static &lt;A,B&gt; Converter&lt;A,B&gt; from(Function&lt;? super A,? extends B&gt; forwardFunction, Function&lt;? super B,? extends A&gt; backwordFunction) Since 17.0
+                
+                B convert(A a) // null은 항상 null로
+                Iterable&lt;B&gt; convertAll(Iterable&lt;? extends A&gt; fromIterable)
+                Converter&lt;B,A&gt; reverse()
+                &lt;C&gt; Converter&lt;A,C&gt; andThen(Converter&lt;B,C&gt; secondConverter)
+            
+            h3 final class Defaults Since 1.0
+            +asCode('java').
+                static &lt;T&gt; T defaultValue(Class&lt;T&gt; type)
+                // 자바 언어 명세에 따라 임의 타입에 대한 기본값을 반환한다
+            
+            h3 final class Enums Since 9.0
+            +asCode('java').
+                static Field getField(Enum&lt;?&gt; enumValue) Since 12.0
+                static &lt;T extends Enum&lt;T&gt;&gt; Optional&lt;T&gt; getIfPresent(Class&lt;T&gt; enumClass, String value) Since 12.0
+                static &lt;T extends Enum&lt;T&gt;&gt; Converter&lt;String,T&gt; stringConverter(Class&lt;T&gt; enumClass) Since 16.0
+                // Enum.name()을 이용한 Converter 반환
+            
+            h3 final class MoreObjects Since 18.0
+            +asCode('java').
+                static &lt;T&gt; T firstNonNull(T first, T second)
+                    // 둘 중 null이 아닌 것 반환. 둘 다 null이면 NullPointerException
+            
+            h3 final class Preconditions Since 2.0
+            ul
+                li 사전조건이 충족되지 않은 경우에만 예외 메시지 포매팅을 수행한다
+                p 다만 메서드 인자는 항상 계산 수행된다. 이마저도 피하고 싶다면 try ... catch 구문을 이용하면 된다.
+                li 포매팅 문자열은 %s만 지원한다
+            +asCode('java').
+                static void checkArgument(boolean expression, errorMessage(Template)[, errorMessageArgs])
+                    // 메서드 매개변수 테스트
+                static void checkState(boolean expression, errorMessage(Template)[, errorMessageArgs])
+                    // 인스턴스 상태 테스트
+                static &lt;T extends Object&gt; checkNotNull(T obj, errorMessage(Template)[, errorMessageArgs])
+            
+            h3 final class Stopwatch Since 10.0
+            ul
+                li System.nanoTime()을 이용하여 경과 시간 측정
+                +asCode('java', 'Android의 경우').
+                    // 앱이 슬립 상태가 되면 더 이상 실행되지 않으므로,
+                    Stopwatch.createStarted(
+                        new Ticker() {
+                            public long read() {
+                                return android.os.SystemClock.elapsedRealtimeNanos();
+                            }
+                        });
+                li 벽시계 System.currentTimeMillis()는 근사값이며, 주기적인 조정을 거치므로 부정확하다
+            +asCode('java').
+                static Stopwatch createStarted() + 오버로딩
+                static Stopwatch createUnstarted() + 오버로딩
+                
+                Stopwatch start() + stop, reset
+                boolean isRunning()
+                
+                Duration elapsed()
+                long elapsed(TimeUnit desiredUnit)
+            
+            h3 final class Suppliers Since 2.0
+            +asCode('java').
+                static &lt;F,T&gt; Supplier&lt;T&gt; compose(Function&lt;? super F,T&gt;, Supplier&lt;F&gt; supplier)
+                static &lt;T&gt; Supplier&lt;T&gt; memoize(Supplier&lt;T&gt; delegate)
+                static &lt;T&gt; Supplier&lt;T&gt; memoizeWithExpiration(Supplier&lt;T&gt; delegate, long duration, TimeUnit unit)
+                static &lt;T&gt; Supplier&lt;T&gt; ofInstance(T instance)
+                static &lt;T&gt; Function&lt;Supplier&lt;T&gt;,T&gt; supplierFunction()
+                static &lt;T&gt; Supplier&lt;T&gt; synchronizedSupplier(Supplier&lt;T&gt; delegate)
+            
+            h3 final class Throwables Since 1.0
+            +asCode('java').
+                static String getStackTraceAsString(Throwable throwable)
+            
+            h3 final class Verify Since 17.0
+            ul
+                li 사전조건이 충족되지 않은 경우에만 예외 메시지 포매팅을 수행한다
+                p 다만 메서드 인자는 항상 계산 수행된다. 이마저도 피하고 싶다면 try ... catch 구문을 이용하면 된다.
+                li 포매팅 문자열은 %s만 지원한다
+            +asCode('java').
+                static void verify(boolean expression, errorMessage(Template)[, errorMessageArgs])
+                static &lt;T&gt; T verifyNotNull(T reference, errorMessage(Template)[, errorMessageArgs])
+    
+    h1 com.google.common.cache        
+    div
+        p: strong This package contains caching utilities.
+        h2.fake Interfaces
+        div
+            h3 interface Cache&lt;K,V&gt; Since 10.0
+            p 스레드-안전한 캐시. 보통 CacheBuilder로 인스턴스 획득
+            +asCode('java').
+                V getIfPresent(Object key) Since 11.0
+                V get(K key, Callable&lt;? extends V&gt; loader) Since 11.0
+                    // 캐시에 없으면 loader를 통해 새로 저장하고 반환
+                ImmutableMap&lt;K,V&gt; getAllPresent(Iterable&lt;?&gt; keys) Since 11.0
+                ConcurrentMap&lt;K,V&gt; asMap()
+                
+                void put(K key, V value) Since 11.0
+                void putAll(Map&lt;? extends K,? extends V&gt; m) Since 12.0
+                
+                void invalidate(Object key)
+                void invalidateAll(Ierable&lt;?&gt; keys) Since 11.0 + 오버로딩
+                
+                long size()
+                CacheStats stats()
+                    // 구현에 따라 기록 여부가 다를 수 있다.
+                    // CacheBuilder의 경우, recordStats()를 호출한 경우에만 기록
+                
+                void cleanUp() // 구현에 따라 필요한 경우, 정리 연산 수행.
+            
+            h3 interface LoadingCache&lt;K,V&gt; extends Cache&lt;K,V&gt;, Function&lt;K,V&gt; Since 11.0
+            p 키가 캐시에 없는 경우(벌크 연산 getAll 포함) loader를 통해 새로 저장하고 반환한다.
+            +asCode('java').
+                V get(K key)        // getUnchecked(K)의 경우 RuntimeException을 던진다
+                ImmutableMap&lt;K,V&gt; getAll(Iterable&lt;? extends K&gt; keys)
+                void refresh(K key) // loader를 통해 값을 갱신한다
+        
+        h2.fake classes
+        div
+            h3 final class CacheBuilder&lt;K,V&gt; Since 10.0
+            ul
+                li 자동 loading 설정 가능
+                li LRU 옵션 설정 가능
+                li 마지막 접근/쓰기 후 t 시간 경과하면 자동 삭제 설정 가능
+                li 키/값 자동 WeakReference 래핑 설정 가능
+                p WeakReference 사용 설정된 경우, equals() 대신 identity(==) 비교를 이용한다.
+                li 삭제된 엔트리에 대한 리스너 설정 가능
+                li 캐시 통계 기록 가능
+                li CacheBuilder를 통해 만든 캐시는 직렬화/역직렬화 가능하다. 다만, 캐시 설정 정보만 저장/복원된다
+                li refresh 연산은 기본적으로 LoadingCache.refresh(K) -&gt; CacheLoader.reload(K, V)를 통해 수행된다
+            +asCode('java').
+                &lt;K1 extends K,V1 extends V&gt; CacheBuilder&lt;K1,V1&gt; weigher(Weigher&lt;? super K1,? super V1&gt; weigher) Since 11.0
+                    // Weigher : (key, value) 쌍으로부터 상대적인 우선순위를 반환. 낮을수록 높다
+                    // 호출 객체와 다른 객체가 반환되나, 둘 다 이용 가능하다. 다만 반환된 제네릭 객체는 타입-안전이 보장된다.
+                CacheBuilder&lt;K,V&gt; ticker(Ticker ticker)
+                    // 지정하지 않은 경우 System.nanoTime()을 기본 사용
+                &lt;K1 extends K,V1 extends V&gt; CacheBuilder&lt;K1,V1&gt; removalListener(RemovalListener&lt;? super K1,? super V1&gt; listener)
+                    // 이 안에서 발생하는 예외는 전파되지 않고 Logger로만 기록된다
+                    // GC로 인해 제거된 경우, 키/값은 null일 수 있다
+                
+                &lt;K1 extends K,V1 extends V&gt; Cache&lt;K1,V1&gt; build()
+                &lt;K1 extends K,V1 extends V&gt; LoadingCache&lt;K1,V1&gt; build(CacheLoader&lt;? super K1,V1&gt; loader)
+            
+            h3 final class CacheBuilderSpec Since 12.0
+            ul
+                li 캐시 설정을 외주화할 수 있다
+                +asCode('java').
+                    var spec = "maximumSize=10000,expireAfterWrite=10m";
+                    var graphs = CacheBuilder.from(spec)
+                        .removalListener(MY_LISTENER)
+                        .build(
+                            new CacheLoader<Key, Graph>() {
+                                public Graph load(Key key) throws AnyException {
+                                    return createExpensiveGraph(key);
+                                }
+                            });
+                li Duration은 정수 + [smhd]로 표현
+            table.no-sort
+                +tds('concurrencyLevel=[integer]', 'CacheBuilder.concurrencyLevel')
+                +tds('initialCapacity=[integer]', 'CacheBuilder.initialCapacity')
+                +tds('maximumSize=[long]', 'CacheBuilder.maximumSize')
+                +tds('maximumWeight=[long]', 'CacheBuilder.maximumWeight')
+                +tds('expireAfterAccess=[duration]', 'CacheBuilder.expireAfterAccess(Duration)')
+                +tds('expireAfterWrite=[duration]', 'CacheBuilder.expireAfterWrite(Duration)')
+                +tds('refreshAfterWrite=[duration]', 'CacheBuilder.refreshAfterWrite(Duration)')
+                +tds('weakKeys', 'CacheBuilder.weakKeys()')
+                +tds('softValues', 'CacheBuilder.softValues()')
+                +tds('weakValues', 'CacheBuilder.weakValues()')
+                +tds('recordStats', 'CacheBuilder.recordStats()')
+            
+            h3 abstract class CacheLoader&lt;K,V&gt; Since 10.0
+            ul
+                li LoadingCache에 사용되는 값 생성기
+                li 보통 load(K)만 구현하는 것으로 충분하다. 나머지는 선택적.
+            +asCode('java').
+                static &lt;K,V&gt; CacheLoader&lt;K,V&gt; from(Function&lt;K,V&gt; function) + 오버로딩
+                
+                static &lt;K,V&gt; CacheLoader&lt;K,V&gt; asyncReloading(CacheLoader&lt;K,V&gt; loader, Executor executor)
+                
+                abstract V load(K key)                           // 최초 값 생성
+                ListenableFuture&lt;V&gt; reload(K key, V value) // 기존 값을 대체할 값 생성
+            
+            h3 final class RemovalListeners Since 10.0
+            +asCode('java').
+                static &lt;K,V&gt; RemovalListener&lt;K,V&gt; asynchronus(RemovalListener&lt;K,V&gt; listener, Executor executor)
+            
+            h3 Cache 대리자
+            p ForwardingCache, ForwadingCache.SimpleForwardingCache, ForwadingLoadingCache, ForwadingLoadingCache.SimpleForwardingLoadingCache
+
+    h1 com.google.common.collect        
+    div
+        p: strong This package contains generic collection interfaces and implementations, and other utilities for working with collections.
+        h2 Collection types
+        div
+            h3 abstract class ImmutableCollection&lt;E&gt; extends AbstractCollection&lt;E&gt; implements Serializable Since 2.0
+            ul
+                li 래핑한 collection을 변경하면 내용이 바뀌는 Collections.unmodifiableCollection()보다 강력
+                li null 원소를 허용하지 않는다
+                li 스레드-안전하다
+                li ImmutableList, ImmutableSet, ImmutableSortedSet, ImmutableMap, ImmutableSortedMap, ImmutableBiMap, ImmutableMultiset, ImmutableMultimap, ImmutableListMultimap, ImmutableSetMultimap, ImmutableTable
+
+            h3 interface BiMap&lt;K,V&gt; extends Map&lt;K,V&gt; Since 2.0
+            ul
+                li 1:1 대응 관계를 표현한다
+                li 구현체 : HashBiMap(K, V 둘 다 해시 가능), EnumBiMap(두 enum 간 대응), EnumHashBiMap
+            +asCode('java').
+                V forcePut(K key, V value) // put(K, V) 실행 전에 value와 관계된 모든 엔트리 제거
+                                           // 반환값 : 기존 key에 대응됐던 값
+                BiMap&lt;V,K&gt; inverse() // 반대 방향 뷰 반환
+            
+            h3 interface Multiset&lt;E&gt; extends Collection&lt;E&gt; Since 2.0
+            ul
+                li Bag으로도 불리는 자료형. 값의 중복을 허용(최대 Integer.MAX_VALUE)한다.
+                li 구현체 : HashMultiset(HashMap을 구현에 이용), LinkedHashMultiset(결정적 iteration), TreeMultiset(iteration 정렬 지정), EnumMultiset(모든 연산이 상수 시간), ConcurrentHashMultiset(동시성 추가, null 비허용)
+
+            h3 interface Multimap&lt;K,V&gt; Since 2.0
+            ul
+                li 하나의 키에 대해 여러 값을 매핑.
+                li ListMultimap : List를 이용해 값 삽입 순서를 보존. 엔트리 중복 가능
+                p 관련 구현체 : ArrayListMultimap, LinkedListMultimap
+                li SetMultimap : Set을 이용해 값 중복 제거.
+                p 관련 구현체 : HashMultimap, LinkedHashMultimap(삽입 순 iteration)
+                li SortedSetMultimap : 값집합을 정렬한 SetMultimap
+                p 관련 구현체 : TreeMultimap(키/값 각각 정렬)
+            +asCode('java').
+                Map&lt;K,Collection&lt;V&gt;&gt; asMap()
+                Multiset&lt;K&gt; keys()
+                Collection&lt;V&gt; replaceValues(K key, Iterable&lt;? extends V&gt; values)
+                // 이하 생략
+            +asCode('java', 'Value uniqueness - ListMultimap').
+                var m = MultimapBuilder.hashKeys().linkedListValues().<Integer, Integer>build();
+                m.put(1, 3);
+                m.put(2, 3);
+                m.put(1, 1);
+                m.put(1, 2);
+                m.put(1, 1);
+
+                assertEquals(5, m.size()); // 같은 키에 대한 값 중복 제거 X
+                assertEquals(5, m.values().size());
+            +asCode('java', 'Value uniqueness - SetMultimap').
+                var m = MultimapBuilder.hashKeys().hashSetValues().<Integer, Integer>build();
+                m.put(1, 3);
+                m.put(2, 3);
+                m.put(1, 1);
+                m.put(1, 2);
+                m.put(1, 1);
+                
+                assertEquals(4, m.size()); // 같은 키에 대하여는 값 중복 제거
+                assertEquals(4, m.values().size()); // 같은 키에 대해서만 값 중복 제거
+            
+            h3 interface Table&lt;R,C,V&gt; Since 7.0
+            ul
+                li (행 key, 열 key) 쌍에 대한 값을 보존.
+                li Sparse 데이터 표현에 좋다
+                li 행/열 모두로 조회 가능하지만, 일부 구현은 열로 조회하는 경우 성능이 좋지 않을 수 있다.
+                li 메서드가 반환한 모든 Collection/Map은 테이블에 대한 writable view다
+                p: strong 구현에 따라 테이블 변경 메서드를 지원하지 않거나, 메서드가 반환한 Collection/Map이 writable하지 않을 수 있다
+                li 구현체 : ArrayTable(고정 크기 2차원 배열 이용), HashBasedTable(linked hash table 이용), TreeBasedTable(행/열 키 각각을 정렬)
+            +asCode('java').
+                Set&lt;Table.Cell&lt;R,C,V&gt;&gt; cellSet()
+                Map&lt;C,V&gt; row(R rowKey) + column
+                Map&lt;R,Map&lt;C,V&gt;&gt; rowMap() + columnMap
+            
+            h3 interface ClassToInstanceMap&lt;B&gt; extends Map&lt;Class&lt;? extends B&gt;,B&gt; Since 2.0
+            ul
+                li Class -&gt; instance 매핑
+                p int.class와 Integer.class는 서로 다르므로, 서로 다른 값을 가리킬 수 있다
+                li 제네릭 매핑에는 TypeToInstanceMap을 이용하면 된다.
+                li 구현체 : ImmutableClassToInstanceMap, MutableClassToInstanceMap
+        
+        h2 Utility
+        div
+            h3 final class Collections2 Since 2.0
+            +asCode('java').
+                static &lt;E&gt; Collection&lt;List&lt;E&gt;&gt; permutations(Collection&lt;E&gt; elements)
+                    // + orderedPermutations
+
+            h3 final class Iterators + Iterables Since 2.0
+            +asCode('java').
+                // 변환
+                static &lt;T&gt; Enumeration&lt;T&gt; asEnumeration(Iterator&lt;T&gt; iterator)
+                static &lt;T&gt; Iterator&lt;T&gt; cycle(T... elements) + 오버로딩, forArray, forEnumeration
+                static &lt;T&gt; PeekingIterator&lt;T&gt; peekingIterator(Iterator&lt;? extends T&gt; iterator)
+                static &lt;T&gt; T[] toArray(Iterator&lt;? extends T&gt; iterator, Class&lt;T&gt; type)
+                
+                // 변경
+                static int advance(Iterator&lt;?&gt; iterator, int numberToAdvance)
+                static &lt;T&gt; Iterator&lt;T&gt; concat(...)
+                static &lt;T&gt; Iterator&lt;T&gt; limit(Iterator&lt;T&gt;, int limitSize)
+                static &lt;T&gt; Iterator&lt;T&gt; consumingIterator(Iterator&lt;T&gt; iterator)
+                    // 원소를 소비하면서 삭제. Iterator.remove()를 지원해줘야 다음 next()가 동작한다
+                static &lt;T&gt; UnmodifiableIterator&lt;T&gt; filter(Iterator&lt;?&gt; unfiltered, Class&lt;T&gt; desiredType) + 오버로딩
+                static &lt;T&gt; UnmodifiableIterator&lt;T&gt; mergeSorted(...)
+                static &lt;T&gt; UnmodifiableIterator&lt;List&lt;T&gt;&gt; partition(...) + paddedPartition
+                static &lt;F,T&gt; Iterator&lt;T&gt; transform(Iterator&lt;F&gt; fromIterator, Function&lt;? super F,? extends T&gt; function)
+                
+                // 이용
+                static &lt;T&gt; boolean addAll(Collection&lt;T&gt; addTo, Iterator&lt;? extends T&gt; iterator)
+                    // + removeAll, retainAll, removeIf
+                static &lt;T&gt; boolean all(Iterator&lt;T&gt; iterator, Predicate&lt;? super T&gt; predicate)
+                    // + any, contains, elementsEqual
+                static &lt;T&gt; T find(Iterator&lt;T&gt; iterator, Predicate&lt;? super T&gt; predicate)
+                    // + 오버로딩, tryFind
+                static int frequency(Iterator&lt;?&gt; iterator, Object element
+                    // + indexOf, size
+                static &lt;T&gt; T get(Iterator&lt;? extends T&gt; iterator, int position, T defaultValue)
+                    // + 오버로딩, getLast, getNext, getOnlyElement
+            
+            h3 final class Lists Since 2.0
+            p Cartesian product, (Array|Linked|CopyOnWrite)List 생성 등
+            
+            h3 final class Maps Since 2.0
+            p Set과 Function&lt;K,V&gt;를 이용한 Map 생성, 두 Map 사이의 차분, 필터링, 신규 맵 생성 등
+            
+            h3 final class Multimaps Since 2.0
+            p Map&lt;K, Collection&lt;V&gt;&gt;로 변환, 필터링, Multimap&lt;V,K&gt;로 변환, 엔트리 일괄 변경 등
+            
+            h3 final class Multisets Since 2.0
+            p Multiset 사이의 포함 관계, difference, sum, union 등
+            
+            h3 final class ObjectArrays Since 2.0
+            p 배열 접합, 새 배열 할당
+            
+            h3 final class Queues Since 11.0
+            p (Blocking)Queue, ArrayDeque, PriorityQueue 생성 등
+            
+            h3 final class Sets Since 2.0
+            p Cartesian product, 신규 집합 생성 등
+            
+            h3 final class Tables Since 7.0
+            p 값 일괄 변경, transpose(행-열 뒤집기) 등
+        
+        h2 Collection builders
+        div
+            h3 final class MapMaker
+            ul
+                li 유사 ConcurrentHashMap을 만든다
+                li weakKeys()를 지정하는 경우 equals() 대신 identity(==) 비교를 이용한다.
+            +asCode()
+        
+        h2 Ranges
+        div
+            h3 abstract class DiscreteDomain&lt;C extends Comparable&gt; Since 10.0
+            p 이산 자료형 전체 범위를 표현한다. 예를 들어, 정수 전체 집합은 표현할 수 있지만, 소수 전체 집합은 표현할 수 없다
+            +asCode('java').
+                static DiscreteDomain&lt;BigInteger&gt; bigIntegers()
+                    // + integers, longs
+                
+                C maxValue() + minValue             // 없으면 NoSuchElementException.
+                abstract C next(C value) + previous // 없으면 null.
+            
+            h3 final class Range&lt;C extends Comparable&gt; implements Predicate&lt;C&gt;, Serializable Since 10.0
+            ul
+                li 대소 관계가 있는 자료형에 대해, 임계값을 이용해 범위 1개를 표현한다.
+                li (a..b), [a..b], (a..b], [a..b), (a..inf), [a..inf), (-inf..b), (-inf..b], (-inf..inf)
+            
+            h3 abstract class ContiguousSet&lt;C extends Comparable&gt; extends ImmutableSortedSet&lt;C&gt; Since 10.0
+            p DiscreteDomain 상에서의 Range 하나를 표현한다
+            
+            h3 interface RangeMap&lt;K extends Comparable,V&gt; Since 14.0
+            p Range -&gt; V 매핑을 표현한다
+        
+        h2 Forwawrding collections
+        div
+            h3 abstract class ForwardingObject Since 2.0
+            ul
+                li 장식자 패턴 구현을 위한 최상위 추상 클래스
+                li delegate()는 장식할 인스턴스를 반환하면 된다
+                li hashCode(), equals(Object)는 backing object로 포워딩하지 않는다.
+                p 필요하다면 ForwardingList 같은 interface-specific 서브클래스를 이용하거나, 직접 재정의하면 된다.
+        
+        h2 Others
+        div
+            h3 interface Interner&lt;E&gt; Since 3.0
+            p 임의 불변 타입에서 String.intern()과 유사한 기능을 제공함을 표현
+            
+            h3 final class Interners Since 3.0
+            +asCode('java').
+                static &lt;E&gt; Interner&lt;E&gt; newStrongInterner() + weak
+                static Interners.InternerBuilder newBuilder()
+            
+            h3 final class MinMaxPriorityQueue&lt;E&gt; extends AbstractQueue&lt;E&gt; Since 8.0
+            ul
+                li A double-ended priority queue.
+                p 최소 원소에 대해서도 상수 시간 접근이 가능하며, 최소 원소에 대한 연산도 지원
+                li 크기 제한을 설정하는 경우, 크기가 초과될 때마다
+    
+    h1 com.google.common.escape        
+    div
+        p: strong Interfaces, utilities, and simple implementations of escapers and encoders.
+    
+    h1 com.google.common.eventbus        
+    div
+        p: strong The EventBus allows publish-subscribe-style communication between components without requiring the components to explicitly register with one another (and thus be aware of each other).
+    
+    h1 com.google.common.graph        
+    div
+        p: strong An API for representing graph (node and edge) data.
+    
+    h1 com.google.common.hash        
+    div
+        p: strong Hash functions and related structures.
+    
+    h1 com.google.common.html        
+    div
+        p: strong Escapers for HTML.
+    
+    h1 com.google.common.io        
+    div
+        p: strong This package contains utility methods and classes for working with Java I/O; for example input streams, output streams, readers, writers, and files.
+    
+    h1 com.google.common.math        
+    div
+        p: strong Arithmetic functions operating on primitive values and BigInteger instances.
+    
+    h1 com.google.common.net        
+    div
+        p: strong This package contains utility methods and classes for working with net addresses (numeric IP and domain names).
+    
+    h1 com.google.common.primitives        
+    div
+        p: strong Static utilities for working with the eight primitive types and void, and value types for treating them as unsigned.
+    
+    h1 com.google.common.reflect        
+    div
+        p: strong This package contains utilities to work with Java reflection.
+        h2 interface TypeToInstanceMap&lt;B&gt; extends Map&lt;TypeToken&lt;? extends B&gt;,B&gt; Since 13.0
+        p TypeToken -&gt; instance 매핑
+    
+    h1 com.google.common.util.concurrent        
+    div
+        p: strong Concurrency utilities.
+    
+    h1 com.google.common.xml        
+    div
+        p: strong Escapers for XML.

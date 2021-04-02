@@ -27,7 +27,7 @@ include ../../source/skeleton.pug
     h1 Java 9
     ol
         li REPL로 JShell이 추가되었다 : 코드를 한줄씩 실행하면서 검사할 수 있다.
-            +asA('https://docs.oracle.com/javase/9/jshell/toc.htm')
+            +asA('https://docs.oracle.com/javase/9/jshell/toc.htm', 'guide')
         li Collection factory method 추가 : List.of(...) 등
         li try-with-resources 구문 변동 : final한(final 변수 or 변수 초기화 후 변경 없음) resource는 별개의 선언 없이 그대로 이용할 수 있다.
             +codeBtn('/Repositories/Single/tutorial/TryWithResource.java', 'java')
@@ -175,12 +175,55 @@ include ../../source/skeleton.pug
             +asA('https://openjdk.java.net/jeps/379')
             | Shenandoah: A Low-Pause-Time Garbage Collector
         p """를 이용해 여러 줄에 걸쳐 문자열 상수 작성 가능. ', " 이스케이프가 필요없어 편리.
-        li String.formatted​(Object... args) 메서드 추가로 타이핑 용이
+        li String.formatted(Object... args) 메서드 추가로 타이핑 용이
 
     h1 Java 16
     ol
         li
             +asA('https://openjdk.java.net/jeps/380')
             | Unix-domain (AF_UNIX) socket 지원
-        p 프로세스 간 통신에 있어 loopback을 이용한 TCP/IP보다 좋은 성능/보안을 제공한다. 컨테이너 환경에서 특히 유용할 것으로 기대.
-        li 21년 3월 출시 일반 출시 이후 재작성.
+        ul
+            li 프로세스 간 통신에 있어 loopback을 이용한 TCP/IP보다 좋은 성능/보안을 제공한다. 컨테이너 환경에서 특히 유용할 것으로 기대.
+            li SocketChannel, ServerSocketChannel에서 지원
+        li
+            +asA('https://openjdk.java.net/jeps/392')
+            | jpackage tool
+        ul
+            li Windows(msi, exe), macOS(pkg, dmg), Linux(deb, rpm) 빌드 가능
+            li Cross compilation 지원 없음.
+            p e.g. Windows 빌드를 뽑으려면 Windows에서 실행해야 한다
+            li: +asA('https://docs.oracle.com/en/java/javase/15/docs/specs/man/jpackage.html', 'manual')
+        +asCode('shell').
+            # Non-modular application
+            $ jpackage --name myapp --input lib --main-jar main.jar --main-class myapp.Main
+            
+            # type 지정
+            $ jpackage --name myapp --input lib --main-jar main.jar --type pkg
+        li
+            +asA('https://openjdk.java.net/jeps/394')
+            | Pattern Matching for instanceof
+        +asCode('java') if (obj instanceof Point p) { p.move(1, 3); }
+        li
+            +asA('https://openjdk.java.net/jeps/395')
+            | Record; Simple immutale data class
+        ul
+            li 모든 record는 java.lang.Record를 상속한다
+            li 명시하지 않아도 final 클래스며, abstract일 수 없다.
+            li record를 구성하는 각 불변값들을 record component라고 한다
+            li record component 정의부를 header라고 한다
+            li equals, getter, hashCode, toString 자동 구현
+            li 암시적 생성자는 record class와 동일한 접근 레벨로 선언된다
+            li Generic 클래스로 선언 가능
+            li static method, field 선언 가능
+            li record 클래스, record component를 애너테이션으로 장식 가능
+            li record 클래스 인스턴스는 직렬화/역직렬화 가능하지만, write/readObject 등으로 커스터마이징되지 않는다.
+            li Local record 클래스 선언 가능. Nested record 클래스와 마찬가지로 명시하지 않아도 static
+            ul
+                li 따라서 local record 클래스 내부에서, 이를 포함하는 메서드의 그 어떤 변수도 접근 불가.
+                li Local enum, local interface 역시 명시하지 않아도 static
+            li Inner class는 record 클래스 타입의 static 멤버를 가질 수 있다
+        +asCode('java') record Point2D(int x, int y) {}
+
+    h1 Java 17
+    ol
+        li 21년 9월 출시 예정
