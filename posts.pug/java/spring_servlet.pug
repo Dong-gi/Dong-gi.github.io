@@ -1,0 +1,1334 @@
+include ../../source/skeleton.pug
++post('Spring Servlet', 'Spring MVC, WebSocket, SockJS, STOMP Messaging', 'Spring Reactive 정리')
+    h1 Spring Web MVC
+    ul
+        li Servlet API 기반으로 빌드하고 Servlet container로 배포하는 웹 애플리케이션 개발 프레임워크
+        li 리액티브 스트림 기반의 Spring WebFlux가 Spring Framework 5.0에 추가되었다
+    
+    h1 DispatcherServlet
+    ul
+        li DispatcherServlet은 클라이언트 요청을 받아 다른 컴포넌트로 처리를 넘긴다.
+        li 각 DispatcherServlet은 하나의 WebApplicationContext를 갖는다
+        li 여타 서블릿과 마찬가지로 자바 설정이나 web.xml로 선언해야 한다
+    div
+        h2 자바 설정 Since 3.0 - WebApplicationInitializer 정의 예
+        +codeBtn('/Repositories/STS/mvc-java1/src/main/java/io/github/donggi/mvc/config/Initializer.java', 'java', [9], true)
+        p 정상적으로 완료되면 실행 시 로그에 "INFO: 1 Spring WebApplicationInitializers detected on classpath"처럼 기록된다. 자동으로 스캔되지 않는 경우 /META-INF/services/javax.servlet.ServletContainerInitializer 파일에 해당 클래스 명시
+
+        h2 web.xml 기술 예
+        +codeBtn('/Repositories/STS/mvc-xml2/src/main/webapp/WEB-INF/web.xml', 'xml', null, true)
+        +codeBtn('/Repositories/STS/mvc-xml2/src/main/webapp/WEB-INF/app-servlet.xml', 'xml', null, true)
+        ul
+            li 기본적으로 {서블릿_이름}-servlet.xml 설정을 읽어온다.
+            p {서블릿_이름}-servlet == default namespace
+            li 다른 파일(들)을 로드하고 싶거나, 아예 로드하고 싶지 않은 경우 contextConfigLocation 조정
+            p 각 경로들은 ','로 구분하면 된다. 클래스패스에 있는 파일은 classpath:conf.xml처럼 지정하면 된다.
+            +asCode('xml', '추가 로드 x').
+                &lt;servlet>
+                    &lt;servlet-name>app&lt;/servlet-name>
+                    &lt;servlet-class>org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class>
+                    &lt;init-param>
+                        &lt;param-name>contextConfigLocation&lt;/param-name>
+                        &lt;param-value>&lt;/param-value>
+                    &lt;/init-param>
+                &lt;/servlet>
+            li xml에서 ConfigurableWebApplicationContext 구현 클래스를 지정하고 싶은 경우, contextClass 조정
+            p 기본값은 XmlWebApplicationContext
+            +asCode('xml').
+                &lt;servlet>
+                    &lt;servlet-name>app&lt;/servlet-name>
+                    &lt;servlet-class>org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class>
+                    &lt;init-param>
+                        &lt;param-name>contextClass&lt;/param-name>
+                        &lt;param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext&lt;/param-value>
+                    &lt;/init-param>
+                    &lt;init-param>
+                        &lt;param-name>contextConfigLocation&lt;/param-name>
+                        &lt;param-value>package..ClassName&lt;/param-value>
+                    &lt;/init-param>
+                &lt;/servlet>
+
+        h2 Context Hierarchy
+        ul
+            li 일반적으로 하나의 WebApplicationContext로 충분하지만, 루트 WebApplicationContext를 DispatcherServlet들이 공유하고, 각각은 자식 WebApplicationContext를 갖는 계층 구조로도 구성 가능하다
+            li 루트 WebApplicationContext는 전형적으로 Repository, Service 등 여러 Servlet 사이에서 공유될 빈들을 갖는다
+            p 이들은 자식 WebApplicationContext로 상속되며, 필요에 따라 재정의(override)할 수 있다
+            li 자바 구성 예 
+                +codeBtn('/Repositories/STS/mvc-java2/src/main/java/io/github/donggi/mvc/config/App1Initializer.java', 'java', [5], true)
+                +codeBtn('/Repositories/STS/mvc-java2/src/main/java/io/github/donggi/mvc/config/App2Initializer.java', 'java', [5], true)
+            li web.xml 예 
+                +codeBtn('/Repositories/STS/mvc-xml3/src/main/webapp/WEB-INF/web.xml', 'xml', null, true)
+
+        h2 Special Bean Types
+        p DispatcherServlet이 요청을 처리하도록 전달하는 빈들을 Special Bean이라고 하며, 정의하지 않은 경우 
+            +asA('https://github.com/spring-projects/spring-framework/blob/master/spring-webmvc/src/main/resources/org/springframework/web/servlet/DispatcherServlet.properties', '기본값')
+            | 이 사용된다
+        table
+            +ths('타입', '설명')
+            +tds('HandlerMapping', '요청 URI -> 핸들러 매핑. @RequestMapping, @GetMapping, ...')
+            +tds('HandlerAdapter', '핸들러의 구현에 상관없이 DispatcherServlet이 호출할 수 있도록 래퍼 제공')
+            +tds('HandlerExceptionResolver', '예외 발생 시 처리 전략')
+            +tds('ViewResolver', '핸들러가 렌더링할 View 이름을 반환하면 적절한 View를 선택')
+            +tds('LocaleResolver, LocaleContextResolver', '클라이언트 Locale 선택')
+            +tds('MultipartResolver', 'Multi-part 요청 처리 api 제공')
+            +tds('FlashMapManager', '요청 간 FlashMap 인스턴스 공유 기능 제공')
+
+        h2 Processing; 요청 처리 절차
+        ol
+            li 요청에 맞는 WebApplicationContext가 검색되어 바운딩
+            li LocaleResolver 바운딩
+            li ThemeResolver 바운딩
+            li Multi-part 요청이라면 MultipartHttpServletRequest로 래핑
+            li 요청에 대한 핸들러 호출
+
+        h2 Interception
+        p 핸들러 요청에 대한 전/후 처리를 추가할 수 있다 
+            +goto('MVC config - Interceptors')
+        +asCode('java', 'interface HandlerInterceptor').
+            default boolean preHandle(request, response, handler);
+                // DispatcherServlet이 핸들러를 결정하고, 아직 HandlerAdapter가 핸들러를 호출하지 않은 시점에 실행된다
+                // 다음 처리로 진행한다면 true. false를 반환한 경우, DispatcherServlet은 여기서 response로 모든 응답을 했다고 간주한다
+            default void postHandle(request, response, handler, @Nullable modelAndView);
+                // HandlerAdapter가 핸들러를 호출하고, 아직 DispatcherServlet이 뷰를 렌더링하지 않은 시점에 실행된다
+                // 전달된 modelAndView에 다른 모델 객체들을 추가해도 된다
+            default void afterCompletion(request, response, handler, @Nullable ex)
+                // 모든 처리가 완료되었으므로 자원 정리 등의 작업을 수행해도 된다
+                // preHandle()이 성공적으로 true를 반환한 경우에도 실행된다
+
+        h2 Exceptions
+        div
+            h3 HandlerExceptionResolver 종류
+            ul
+                li SimpleMappingExceptionResolver
+                p 예외 클래스 -> 뷰 이름 매핑
+                +asCode('xml').
+                    &lt;bean id="exceptionResolver"
+                        class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+                        &lt;property name="exceptionMappings">
+                            &lt;props>
+                                &lt;prop key="MaxUploadSizeExceededException"> error &lt;/prop>
+                            &lt;/props>
+                        &lt;/property>
+                    &lt;/bean>
+                li DefaultHandlerExceptionResolver
+                p 예외 -> HTTP 상태 코드 매핑
+                li ResponseStatusExceptionResolver
+                p 예외 발생 메서드 또는 발생한 예외 클래스의 @ResponseStatus -> HTTP 상태 코드 매핑
+                li ExceptionHandlerExceptionResolver
+                p @Controller 또는 @ControllerAdvice 클래스의 @ExceptionHandler 메서드가 예외 처리 
+                    +goto('Annotated Controllers - Exceptions')
+            h3.fake Chain of Resolvers
+            p 여러 HandlerExceptionResolver 빈을 정의하면 order 및 정의된 순서에 따라 호출되는 체인을 구성할 수 있다
+            h3.fake Container Error Page
+            p 예외가 처리되지 않았고, 응답 상태가 에러(4xx, 5xx)인 경우를 위해 기본 에러 페이지를 지정할 수 있다
+            +asCode('xml', 'web.xml').
+                &lt;error-page>
+                    &lt;exception-type>java.lang.Throwable&lt;/exception-type> // 옵션
+                    &lt;location>/path/url&lt;/location>
+                &lt;/error-page>
+        h2 View Resolution
+        div
+            h3 ViewResolver 종류
+            ul
+                +goto('View Technologies')
+                li AbstractCachingViewResolver
+                p 뷰 인스턴스를 캐시하여 이용한다. cache 속성을 이용해 전체 캐시를 끄거나, removeFromCache()로 일부 뷰만 캐시에서 제거할 수 있다
+                li XmlViewResolver, BeanNameViewResolver
+                p 현재 컨텍스트에서 뷰 이름과 일치하는 빈을 뷰로 이용한다. XmlViewResolver은 따로 지정하지 않으면 기본으로 /WEB-INF/views.xml를 로드한다
+                li ResourceBundleViewResolver
+                p ResourceBundle(기본 리소스 파일 : views.properties)에 저장된 빈 정보로 뷰를 찾는다. 정확히는 [viewname].(class) 속성을 뷰 클래스로, [viewname].url 속성을 뷰 url로 이용한다.
+                li UrlBasedViewResolver
+                ul
+                    li Url 경로에 대응하는 파일을 뷰로 이용한다.
+                    li setContentType()으로 기본 Content-Type 헤더 설정 가능 ─ JVM 기본 인코딩이 잘못된 경우 이걸로 수정 가능
+                    +asCode('java').
+                        @ComponentScan(basePackages = "io.github.donggi.mvc.controller, io.github.donggi.mvc.service")
+                        @EnableWebMvc
+                        @Configuration
+                        public class AppConfig implements WebMvcConfigurer {
+                            @Override
+                            public void configureViewResolvers(ViewResolverRegistry registry) {
+                                var resolver = new FreeMarkerViewResolver("", ".ftl");
+                                resolver.setContentType("text/html;charset=UTF-8");
+                                registry.viewResolver(resolver);
+                            }
+                        }
+                li InternalResourceViewResolver
+                p UrlBasedViewResolver의 서브클래스로, InternalResourceView(Servlet, JSP) 파일을 뷰로 이용한다. 그 외 서브클래스 ─ TilesViewResolver, XsltViewResolver, FreeMarkerViewResolver ─ 들도 존재
+                +asCode('xml').
+                    &lt;bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                        &lt;property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/> // ← JSTL 이용하는 경우
+                        &lt;property name="prefix" value="/WEB-INF/view/" />
+                        &lt;property name="suffix" value=".jsp" />
+                    &lt;/bean>
+                li ContentNegotiatingViewResolver
+                p 컨텐츠 협상이 가능한 ViewResolver. 다른 ViewResolver들이 고른 View 중, contentType이 요청과 일치하는 것을 선택한다
+            h3.fake Handling
+            ul
+                li 여러 ViewResolver를 이용 가능
+                p order 속성으로 순서를 제어할 수 있다.
+                li null을 반환하면 뷰를 찾지 못했음을 의미한다.
+                p InternalResourceViewResolver는 마지막에 동작해야 한다
+            h3 Redirecting
+            ul
+                li UrlBasedViewResolver 및 서브클래스를 이용하는 경우, 뷰 이름 앞에 redirect:를 붙이면 리다이렉션을 수행한다
+                p 예. redirect:/myapp/some/resource
+                li redirect:https://myhost.com/some 처럼 외부 절대경로 이용 가능
+            h3 Forwarding
+            ul
+                li UrlBasedViewResolver 및 서브클래스를 이용하는 경우, 뷰 이름 앞에 forward:를 붙이면 포워딩을 수행한다
+                li RequestDispatcher.forward()를 호출하는 InternalResourceView 인스턴스를 생성하므로 JSP만 사용하는 경우는 유용하지 않음
+                p 다른 종류의 뷰를 이용하지만 서블릿/JSP로 포워딩이 필요한 경우에 적합
+        h2 Multipart Resolver
+        p Multi-part 요청을 처리하려면 DispatcherServlet에 "multipartResolver" 이름의 MultipartResolver 빈을 정의해야 한다
+        ul
+            li commons-fileupload
+            ul
+                li JavaConfig 예 
+                    +codeBtn('/Repositories/STS/mvc-java5/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [13], true)
+                    +codeBtn('/Repositories/STS/mvc-java5/src/main/java/io/github/donggi/mvc/controller/FileController.java', 'java', [16], true)
+                li xml 예 
+                    +codeBtn('/Repositories/STS/mvc-xml5/src/main/webapp/WEB-INF/app-servlet.xml', 'xml', null, true)
+            li Since Servlet 3.0
+            ol
+                li Initializer에서 MultipartConfigElement 추가, 또는 web.xml에 multipart-config 추가
+                li StandardServletMultipartResolver 빈 정의
+            ul
+                li JavaConfig 예 
+                    +codeBtn('/Repositories/STS/mvc-java6/src/main/java/io/github/donggi/mvc/config/Initializer.java', 'java', [10], true)
+                    +codeBtn('/Repositories/STS/mvc-java6/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [13], true)
+                li xml 예 
+                    +codeBtn('/Repositories/STS/mvc-xml6/src/main/webapp/WEB-INF/web.xml', 'xml', null, true)
+                    +codeBtn('/Repositories/STS/mvc-xml6/src/main/webapp/WEB-INF/app-servlet.xml', 'xml', null, true)
+            li @RequestParam으로 Map&lt;String, MultipartFile>, MultiValueMap&lt;String, MultipartFile>도 가능
+            li Since Servlet 3.0 : MultipartFile 대신 javax.servlet.http.Part 이용 가능
+        h2 Logging - Sensitive Data
+        p 기본적으로 요청 인자와 헤더는 로깅하지 않는다. 로깅하려면 DispatcherServlet의 enableLoggingRequestDetails를 true로 설정하면 된다
+        +asCode('java').
+            public class Initializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+                @Override
+                protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+                    registration.setInitParameter("enableLoggingRequestDetails", "true");
+                }
+            }
+        +asCode('xml').
+            &lt;servlet>
+                &lt;servlet-class>org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class>
+                &lt;init-param>
+                    &lt;param-name>enableLoggingRequestDetails&lt;/param-name>
+                    &lt;param-value>true&lt;/param-value>
+                &lt;/init-param>
+            &lt;/servlet>
+
+    h1 Filters
+    div
+        h2.fake OncePerRequestFilter 서브클래스
+        p AbstractRequestLoggingFilter, CharacterEncodingFilter, CorsFilter, FormContentFilter, ForwardedHeaderFilter, HiddenHttpMethodFilter, HttpPutFormContentFilter, MultipartFilter, OpenEntityManagerInViewFilter, OpenSessionInViewFilter, RelativeRedirectFilter, RequestContextFilter, ShallowEtagHeaderFilter
+        div
+            h3 Default Encoding
+            p CharacterEncodingFilter는 HttpServletRequest 변수 request에 대하여 아래를 수행한다
+            +asCode('java').
+                if (isForceRequestEncoding() || request.getCharacterEncoding() == null) {
+                    request.setCharacterEncoding(encoding);
+                }
+            h3 Form Data
+            p FormContentFilter를 이용하면 HTTP PUT, PATCH, DELETE 요청으로 온 application/x-www-form-urlencoded 내용을 ServletRequest.getParameter*()로 접근할 수 있다
+            h3 Forwarded Headers
+            ul
+                li 프록시 서버를 거치는 경우 실제 클라이언트의 주소는 Forwarded 헤더 ─ X-Forwarded-Host, X-Forwarded-Port, ... ─ 로 옮겨진다
+                li ForwardedHeaderFilter를 이용하면 요청의 주소를 Forwarded 헤더의 것으로 변경하고 Forwarded 헤더를 지운다
+                p 요청을 래핑해야 하므로, 가장 먼저 실행될 필요가 있다
+                li Forwarded 헤더가 공격자로부터 삽입된 것이라면 이를 사용하지 않고 삭제만 해야한다.
+                p ForwardedHeaderFilter의 removeOnly 속성을 true로 설정하면 된다
+                li AbstractAnnotationConfigDispatcherServletInitializer를 이용하는 경우, DispatcherType.REQUEST, ASYNC, ERROR 모두에 대해 실행된다
+                p 그 외의 경우 DispatcherType.REQUEST에 대해서만 동작한다
+            h3 CORS
+            p Controller 클래스에 애너테이션을 붙여 CORS 설정을 할 수 있지만, Spring Security를 이용하는 경우 CorsFilter를 이용해 Security보다 먼저 실행되도록 설정할 것이 권장된다 
+                +goto('CORS')
+    h1 Annotated Controllers
+    div
+        h2 Declaration
+        ul
+            li @Controller : WebApplicationContext에서 웹 요청 처리자로 간주된다
+            li @RestController : @Controller + 클래스 수준 @ResponseBody
+        h2 Request Mapping
+        ul
+            li 컨트롤러 클래스 및 메서드에 @RequestMapping을 붙여 어떤 요청을 처리하는지 명시
+            +asCode('java').
+                @RequestMapping("/file/*")
+                public class FileController {
+                    @RequestMapping(value = "/upload", method = RequestMethod.GET)
+                    public String upload() { }
+                }
+            li HTTP 요청에 따라 @GetMapping, @PostMapping, @PutMapping, @DeleteMapping, @PatchMapping 존재
+        div
+            h3 URI Patterns
+            +pos('URI Patterns')
+            table
+                tr
+                    th Pattern
+                    th Description
+                tr
+                    td ?
+                    td 임의 1글자
+                tr
+                    td *
+                    td 1개 경로 조각 내의 임의 0개 이상 글자
+                tr
+                    td **
+                    td 0개 이상의 연속적인 경로 조각
+                tr
+                    td {name}
+                    td 1개 경로 조각을 name 변수로 획득
+                tr
+                    td {name:regex}
+                    td 경로가 정규식에 일치하면 해당 부분을 name 변수로 획득
+            +asCode('java').
+                @GetMapping("/owners/{ownerId}/pets/{petId}")
+                public Pet findPet(@PathVariable Long ownerId, @PathVariable Long petId);
+                    // 컴파일된 클래스에 매개변수 이름이 그대로 남아있다면 @PathVariable에 이름 설정 불필요
+            ul
+                li 기본 타입과 Date 등 일부 클래스로는 자동으로 변환이 가능하다. 전역적인 변환기를 등록하려면 
+                    +goto('MVC config - Type Conversion')
+                    | , @Controller, @ControllerAdvice에만 적용되는 변환기를 등록하려면 
+                    +goto('DataBinder')
+                    |  참고
+                li
+                    +goto('property-placeholder')
+                    | 와 같은 ${...} 표현식 사용 가능. 앱 시작 시 평가된다.
+            h3.fake Pattern Comparison
+            p URL 하나가 여러 패턴에 매칭되는 경우, 가장 일반적이지 않은 패턴이 선택된다. 우선순위는 
+                +asA('https://docs.spring.io/spring-framework/docs/5.2.8.RELEASE/javadoc-api/org/springframework/util/AntPathMatcher.AntPatternComparator.html')
+                |  참고
+            h3 Suffix Match
+            ul
+                li Before 5.3 : 기본적으로 .* 접미사 매칭이 수행된다. 예를 들어 패턴 "/person"은 "/person.pdf" 같은 URL도 매칭한다. 
+                li 기능을 끄려면 PathMatchConfigurer.useSuffixPatternMatching(false) 
+                    +goto('MVC config - Path Matching')
+                    | , ContentNegotiationConfigurer.favorPathExtension(false) 
+                    +goto('MVC config - Content Types')
+                    | 를 호출해야 한다
+                li 브라우저의 Accept 헤더를 일관적으로 해석하지 못하던 때에는 필수적이었지만, 요즘은 그렇지 않다. 5.3 버전부터는 기본적으로 false로 설정된다
+                li RFD 공격을 예방하기 위해, 아래를 모두 만족하는 경우 응답 헤더에 Content-Disposition:inline;filename=f.txt를 설정한다
+                ol
+                    li URL에 파일 확장자가 존재
+                    li 확장자가 안전하지 않고 컨텐츠 협상 대상도 아닌 경우
+            h3 Media Types
+            ul
+                li Content-Type:application/json만 처리
+                +asCode('java') @PostMapping(path = "/pets", consumes = "application/json")
+                li Content-Type:application/json만 처리 안 함
+                +asCode('java') @PostMapping(path = "/pets", consumes = "!application/json")
+                li Accept:application/json만 처리
+                +asCode('java') @GetMapping(path = "/pets/{petId}", produces = "application/json")
+                li Accept:application/json만 처리 안 함
+                +asCode('java') @GetMapping(path = "/pets/{petId}", produces = "!application/json")
+                li 클래스 수준의 consumes, produces 가능.
+                p 클래스와 메서드 모두에 적용하는 경우, 메서드의 것만 적용
+                li MediaType 클래스에 APPLICATION_JSON_UTF8_VALUE 등 상수 존재
+            h3 Parameters, Headers
+            ul
+                li 요청 파라미터에 myParam이 존재하는 경우만 처리
+                +asCode('java') @GetMapping(path = "/pets/{petId}", params = "myParam")
+                li 요청 파라미터에 myParam이 존재하지 않는 경우만 처리
+                +asCode('java') @GetMapping(path = "/pets/{petId}", params = "!myParam")
+                li 요청 파라미터에 myParam 값이 "myValue"인 경우만 처리
+                +asCode('java') @GetMapping(path = "/pets/{petId}", params = "myParam=myValue")
+                li 헤더의 경우 params 대신 headers 이용
+        h2 Handler Methods
+        div
+            h3 Method Arguments
+            ol 아래 조건을 모두 만족하는 경우, java.util.Optional을 결합하여 사용할 수 있다
+                li required 속성이 있는 @RequestParam, @RequestHeader 등의 애너테이션이 적용됨
+                li required=false임
+            table
+                +ths('Argument', 'Description')
+                tr
+                    td WebRequest, NativeWebRequest
+                    td 서블릿 API를 직접 사용하지 않고 요청에 대한 일반적인 접근 제공
+                tr
+                    td ServletRequest, ServletResponse
+                    td HttpServletRequest, MultipartRequest 등 임의 서브클래스 사용 가능
+                tr
+                    td HttpSession
+                    td 세션이 반드시 존재하도록 한다. 동시성이 필요한 경우 RequestMappingHandlerAdapter 인스턴스의 synchronizeOnSession를 true로 설정
+                tr
+                    td PushBuilder
+                    td HTTP/2 리소스 푸시를 위한 Servlet 4.0 push builder API 제공. 클라이언트가 HTTP/2를 지원하지 않으면 null
+                tr
+                    td Principal
+                    td 현재 인증 유저
+                tr
+                    td HttpMethod
+                    td HTTP 요청 타입
+                tr
+                    td Locale, TimeZone, ZoneId
+                    td 현재 로캐일, 타임존
+                tr
+                    td InputStream, Reader
+                    td Raw 요청 접근
+                tr
+                    td OutputStream, Writer
+                    td 응답을 직접 쓰려는 경우 사용
+                tr
+                    td @PathVariable
+                    td URI 경로 획득 
+                        +goto('URI Patterns')
+                tr
+                    td @MatrixVariable
+                    td URI 상의 이름-값 쌍 획득 
+                        +goto('Matrix Variables')
+                tr
+                    td @RequestParam
+                    td 서블릿 요청 파라미터(URL query, Form data 모두 해당) 획득. Multi-part 파일도 가능.
+                tr
+                    td @RequestHeader
+                    td 요청 헤더 획득
+                tr
+                    td @CookieValue
+                    td 쿠키 획득
+                tr
+                    td @RequestBody
+                    td HTTP 요청 body 획득. HttpMessageConverter를 통해 지정 타입으로 변환된다
+                tr
+                    td HttpEntity&lt;B&gt;
+                    td 요청 헤더(HttpHeaders) + body(B) 획득. body는 HttpMessageConverter를 통해 지정 타입으로 변환된다
+                tr
+                    td @RequestPart
+                    td multipart/form-data 요청 획득. 각 part는 HttpMessageConverter를 통해 지정 타입으로 변환된다
+                tr
+                    td Map, Model, ModelMap
+                    td 렌더링에 사용할 모델
+                tr
+                    td RedirectAttributes
+                    td 리다이렉션 쿼리에 덧붙일 속성
+                        +goto('Redirect Attributes')
+                        |, 리다이렉션 이후 요청까지 임시로 저장할 속성
+                        +goto('Flash Attributes')
+                tr
+                    td @ModelAttribute
+                    td 기저 모델에 존재하는 객체 획득(없으면 생성). 기저와 바인딩되며, 존재하는 검증도 수행된다. 
+                        +goto('@ModelAttribute')
+                        | . 바인딩을 원하지 않는 경우 @ModelAttribute(binding=false) 설정
+                tr
+                    td Errors, BindingResult
+                    td @ModelAttribute 인자의 검증 및 바인딩 수행 시 발생한 예외 획득. @RequestBody 또는 @RequestPart 검증 시 발생한 예외 획득. 각 Errors, BindingResult 인자는 검증 대상 바로 다음에 위치해야 한다.
+                        br
+                        | 예 
+                        +codeBtn('/Repositories/STS/mvc-java18/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', null, true)
+                        +codeBtn('/Repositories/STS/mvc-java18/src/main/java/io/github/donggi/mvc/controller/Login.java', 'java', [21], true)
+                        +codeBtn('/Repositories/STS/mvc-java18/src/main/java/io/github/donggi/mvc/validator/LoginRequestValidator.java', 'java', null, true)
+                        +codeBtn('/Repositories/STS/mvc-java18/src/main/resources/i18n/msg.properties', 'properties', null, true)
+                tr
+                    td SessionStatus + class-level @SessionAttributes
+                    td Form 처리가 완료되면 @SessionAttributes로 저장 중인 값을 정리하기 위한 SessionStatus 획득 
+                        +goto('@SessionAttribute')
+                tr
+                    td UriComponentsBuilder
+                    td 요청 host, port, scheme, context path, servlet mapping으로 구성된 builder 획득
+                tr
+                    td @SessionAttribute
+                    td 세션에 저장된 임의 인스턴스 접근 
+                        +goto('@SessionAttribute')
+                tr
+                    td @RequestAttribute
+                    td 임의 요청 속성 접근 
+                        +goto('@RequestAttribute')
+                tr
+                    td 임의 타입
+                    td 위 타입 중 어느 것에도 일치하지 않는 단순 타입은 @RequestParam, 그 외에는 @ModelAttribute
+                        br
+                        +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [98,102,74,82]) 예1
+                        +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller2.java', 'java', [30,34,45,53]) 예2
+            h3 Return Values
+            table
+                +ths('Return Type', 'Description')
+                tr
+                    td @ResponseBody
+                    td HttpMessageConverter 인스턴스가 반환값을 적절히 응답에 쓴다 
+                        +goto('@ResponseBody')
+                tr
+                    td HttpEntity&lt;B&gt;, ResponseEntity&lt;B&gt;
+                    td HTTP 헤더(HttpHeaders)와 바디(B)를 포함한 전체 응답을 반환하면 HttpMessageConverter가 적절히 응답에 쓴다
+                        +goto('ResponseEntity')
+                tr
+                    td HttpHeaders
+                    td 응답 헤더 반환. body는 empty.
+                tr
+                    td String
+                    td 뷰 이름을 반환하면 ViewResolver가 적절히 뷰를 선택한다
+                tr
+                    td View
+                    td 렌더링할 뷰
+                tr
+                    td Map, Model, @ModelAttribute AnyType
+                    td 묵시적 모델에 추가될 속성
+                tr
+                    td ModelAndView
+                    td 뷰 + 모델
+                tr
+                    td void
+                    td void 리턴, null 리턴이 아래 상황에서 이루어졌다면 응답이 완료됐다고 간주한다
+                        ul
+                            li ServletResponse, OutputStream 인자를 메서드로 받은 경우
+                            li @ResponseStatus를 갖는 경우
+                            li 컨트롤러가 ETag, lastModified를 설정한 경우
+                        | 그 외의 경우 "no response body"(REST 컨트롤러), 기본 뷰(HTTP 컨트롤러)를 의미한다
+                tr
+                    td DeferredResult&lt;V&gt;, ListenableFuture&lt;V&gt;, CompletionStage&lt;V&gt;, CompletableFuture&lt;V&gt;
+                    td 위 임의 타입을 임의 스레드에서 비동기적으로 반환 
+                        +goto('DeferredResult')
+                tr
+                    td Callable&lt;V&gt;
+                    td 위 임의 타입을 Spring MVC 관리 스레드에서 비동기적으로 반환 
+                        +goto('Callable')
+                tr
+                    td ResponseBodyEmitter, SseEmitter
+                    td 비동기적으로 객체를 전달하면 HttpMessageConverter가 변환하여 쓴다. ResponseEntity의 body로 이용 가능. 
+                        +goto('HTTP Streaming')
+                tr
+                    td StreamingResponseBody
+                    td 비동기적으로 OutputStream에 쓴다. ResponseEntity의 body로 이용 가능. 
+                        +goto('HTTP Streaming')
+                tr
+                    td Reactive types — Reactor, RxJava, or others through ReactiveAdapterRegistry
+                    td 한 번에 여러 값을 전송하는 경우 DeferredResult 대안.
+            h3 Type Conversion
+            p 문자열로 표현되는 요청 인자 ─ @RequestParam, @RequestHeader, @PathVariable, @MatrixVariable, @CookieValue ─ 들을 String 외의 타입으로 받으려면 변환이 필요하다
+                br
+                | 기본 타입과 Date 등 일부 클래스는 자동으로 변환이 가능하다. 전역적인 변환기를 등록하려면 
+                +goto('MVC config - Type Conversion')
+                | , @Controller, @ControllerAdvice에만 적용되는 변환기를 등록하려면 
+                +goto('DataBinder')
+                |  참고
+            h3
+                | Matrix Variables
+                +pos('Matrix Variables')
+            ul
+                li Java Config 
+                    +codeBtn('/Repositories/STS/mvc-java7/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [10], true)
+                li XML Config 
+                    +codeBtn('/Repositories/STS/mvc-xml7/src/main/webapp/WEB-INF/app-servlet.xml', 'xml', null, true)
+                li Matrix Variable 예 
+                    +codeBtn('/Repositories/STS/mvc-java7/src/main/java/io/github/donggi/mvc/controller/MatrixController.java', 'java', [18,29], true)
+                li 각 path part 모두 matrix variable을 가질 수 있다 
+                    +codeBtn('/Repositories/STS/mvc-java7/src/main/java/io/github/donggi/mvc/controller/MatrixController.java', 'java', [32,44], true)
+                li 각 path part 별로 matrix variable을 모아 받을 수 있다
+                    +codeBtn('/Repositories/STS/mvc-java7/src/main/java/io/github/donggi/mvc/controller/MatrixController.java', 'java', [47,65], true)
+            h3 @RequestParam, @RequestBody
+            ul
+                li Get 요청 query 예 
+                    +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [22,32], true)
+                li 배열 또는 리스트를 이용해 동일 이름의 파라미터들을 모을 수 있다 
+                    +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [35,45], true)
+                li Map&lt;String, String&gt;, MultiValueMap&lt;String, String&gt;로 전체 파라미터를 모을 수 있다 
+                    +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [48,58,61,71], true)
+                li Post 요청 Jackson JSON 예 
+                    +codeBtn('/Repositories/STS/mvc-java8/build.gradle', 'gradle', [31,31], true)
+                    +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [98,102,85,94], true)
+            h3 @RequestHeader
+            p 특정 이름의 헤더, 또는 전체 헤더 ─ Map&lt;String, String&gt;, MultiValueMap&lt;String, String&gt;, HttpHeaders ─ 획득 가능 
+                +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller2.java', 'java', [21,27], true)
+            h3
+                | @ModelAttribute
+                +pos('@ModelAttribute')
+            ol @ModelAttribute로 선언된 인자는 아래 순서에 따라 획득된다
+                li 이미 Model에 추가된 객체
+                li @SessionAttribute로 저장된 객체
+                    +goto('@SessionAttribute')
+                li URI path variable로부터 변환(Converter) 
+                    +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller2.java', 'java', [30,34,35,43], true)
+                li 기본생성자 호출
+                li Primary 생성자 호출. 생성 인자는 서블릿 요청으로부터 결정
+            h3
+                | @SessionAttributes, @SessionAttribute
+                +pos('@SessionAttribute')
+            ul
+                li @SessionAttributes는 자동으로 세션에 객체를 저장하고, 완료 시 제거하는 기능을 제공한다 
+                    +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller3.java', 'java', [15,40,41,56], true)
+                li @SessionAttribute로 세션 객체를 획득할 수 있다 
+                    +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller4.java', 'java', [13,35,36,45], true)
+            h3
+                | @RequestAttribute
+                +pos('@RequestAttribute')
+            p Filter, HandlerInterceptor 등에 의해 추가된 속성을 획득할 수 있다 
+                +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/interceptor/Controller5Interceptor.java', 'java', [9,15], true)
+                +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller5.java', 'java', [14,31], true)
+            h3
+                | Redirect Attributes
+                +pos('Redirect Attributes')
+            ul
+                li 기본적으로 Model의 속성들은 리다이렉트 URL에 포함된다 
+                    +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller6.java', 'java', [38,44,21,26,46,50,27,31,52,56], true)
+                li 속성의 자동 추가를 원하지 않는다면, @RequestMapping 메서드에서 RedirectAttributes 매개변수를 명시적으로 이용하면 된다
+                    +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller6.java', 'java', [38,44,32,37,58,62], true)
+                li 전역적으로 설정을 변경하려면 RequestMappingHandlerAdapter의 ignoreDefaultModelOnRedirect 속성을 true로 변경하면 된다
+                p 하위 호환을 위해 false가 기본값이다
+            h3
+                | Flash Attributes
+                +pos('Flash Attributes')
+            ul
+                li Flash attribute는 다음 요청에서 소비하기 위해 일시적으로 세션에 저장하는 데이터다. 주로 리다이렉션 처리에 이용된다
+                li 임시 속성을 담는 데 FlashMap이 이용되고, FlashMapManager이 FlashMap을 관리한다
+                li FlashMap은 이전 요청으로부터 전달되는 input, 다음 요청으로 전달할 output으로 구분된다
+                li @RequestMapping 메서드에서는 input-output FlashMap을 직접 이용하지 않고 RedirectAttributes를 획득하여 사용하면 된다 
+                    +goto('Redirect Attributes')
+                li RedirectView는 FlashMap 인스턴스에 대해 리다이렉트 URL과 시각을 기록함으로써, 실제 리다이렉트된 요청에 임시 속성을 전달하게 한다
+                p 그럼에도 불구하고 비동기적으로 빈번하게 요청이 들어오는 경우, 실제로 전달되어야 할 곳이 아닌 다른 요청에 임시 속성을 전달될 가능성이 있다
+            h3
+                | @ResponseBody
+                +pos('@ResponseBody')
+            ul
+                li 메서드에 @ResponseBody가 적용된 경우 반환 객체를 HTTP 응답으로(HttpMessageConverter) 전송한다. AJAX에 유용.
+                li Jackson JSON 예 
+                    +codeBtn('/Repositories/STS/mvc-java8/build.gradle', 'gradle', [31,31], true)
+                    +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller7.java', 'java', [9], true)
+            h3
+                | ResponseEntity
+                +pos('ResponseEntity')
+            p 예 
+                +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller8.java', 'java', [10], true)
+        h2 Model
+        ul
+            li @Controller 또는 @ControllerAdvice 클래스의 메서드에 @ModelAttribute를 적용하면 @RequestMapping 전에 호출되어 모델을 구성한다 
+                +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller9.java', 'java', [12], true)
+            li @ControllerAdvice 안에서 이용하는 경우 여러 컨트롤러에 공유하는 효과가 있다
+            li @ModelAttribute 메서드는 @RequestMapping 메서드가 사용하는 매개변수 타입들을 사용할 수 있다 ─ @ModelAttribute, 요청 body 관련 부분 제외
+        h2
+            | DataBinder
+            +pos('DataBinder')
+        ul
+            li @Controller, @ControllerAdvice 클래스는 @InitBinder 메서드에서 WebDataBinder 인스턴스를 초기화할 수 있다
+            p 이를 통해 PropertyEditor, Converter, Formatter를 등록할 수 있다 
+                +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/aop/Controller10Advice.java', 'java', [12], true)
+                +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller10.java', 'java', [12], true)
+            li @InitBinder 메서드는 @RequestMapping 메서드가 사용하는 매개변수 타입들을 사용할 수 있다 ─ @ModelAttribute 제외
+            li 전역적인 변환기 등록은 
+                +goto('MVC config - Type Conversion')
+                |  참고
+        h2
+            | Exceptions
+            +pos('Annotated Controllers - Exceptions')
+        ul
+            li @Controller, @ControllerAdvice 클래스는 예외 처리를 위한 @ExceptionHandler 메서드를 가질 수 있다.
+            li 발생한 최상위 예외 또는 가장 가까운 원인 예외 타입을 기준으로 매칭된다 
+                +codeBtn('/Repositories/STS/mvc-java4/src/main/java/io/github/donggi/mvc/controller/HelloController.java', 'java', [10], true)
+            li 둘 이상의 예외 타입을 처리하려는 경우, 공통 부모 클래스를 인자로 하면 된다.
+            li value 속성으로 특정 예외들을 명시 가능
+            +asCode('java') @ExceptionHandler({FileSystemException.class, RemoteException.class})
+            li @ControllerAdvice 예 
+                +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/advice/UnhandledExceptionAdvice.java', 'java', [6], true)
+        div
+            h3.fake Method Arguments
+            table
+                caption 가능한 메서드 인자
+                +tds('Argument', 'Description')
+                +tds('Exception', '발생 예외. 임의 서브클래스 사용 가능')
+                +tds('HandlerMethod', '예외 발생 메서드')
+                +tds('WebRequest, NativeWebRequest', '서블릿 API를 직접 사용하지 않고 요청에 대한 일반적인 접근 제공')
+                +tds('ServletRequest, ServletResponse', 'HttpServletRequest, MultipartRequest 등 임의 서브클래스 사용 가능')
+                +tds('HttpSession', '세션이 반드시 존재하도록 한다. 동시성이 필요한 경우 RequestMappingHandlerAdapter 인스턴스의 synchronizeOnSession를 true로 설정')
+                +tds('Principal', '현재 인증 유저')
+                +tds('HttpMethod', 'HTTP 요청 타입')
+                +tds('Locale, TimeZone, ZoneId', '현재 로캐일, 타임존')
+                +tds('OutputStream, Writer', '응답을 직접 쓰려는 경우 사용')
+                +tds('Map, Model, ModelMap', '예외 응답을 위한 모델. 항상 비어있음')
+                tr
+                    td RedirectAttributes
+                    td 리다이렉션 쿼리에 덧붙일 속성
+                        +goto('Redirect Attributes')
+                        |, 리다이렉션 이후 요청까지 임시로 저장할 속성
+                        +goto('Flash Attributes')
+                tr
+                    td @SessionAttribute
+                    td 세션에 저장된 임의 인스턴스 접근 
+                        +goto('@SessionAttribute')
+                tr
+                    td @RequestAttribute
+                    td 임의 요청 속성 접근 
+                        +goto('@RequestAttribute')
+            h3.fake Return Values
+            table
+                caption 가능한 반환값
+                +tds('Return', 'Description')
+                tr
+                    td @ResponseBody
+                    td HttpMessageConverter 인스턴스가 반환값을 적절히 응답에 쓴다 
+                        +goto('@ResponseBody')
+                tr
+                    td HttpEntity&lt;B>, ResponseEntity&lt;B>
+                    td HTTP 헤더와 바디를 포함한 전체 응답을 반환하면 HttpMessageConverter가 적절히 응답에 쓴다 
+                        +goto('ResponseEntity')
+                +tds('String', '뷰 이름을 반환하면 ViewResolver가 적절히 뷰를 선택한다')
+                +tds('View', '렌더링할 뷰')
+                +tds('Map, Model, @ModelAttribute AnyType', '묵시적 모델에 추가될 속성')
+                +tds('ModelAndView', '뷰 + 모델')
+                tr
+                    td void
+                    td void 리턴, null 리턴이 아래 상황에서 이루어졌다면 응답이 완료됐다고 간주한다
+                        ul
+                            li ServletResponse, OutputStream 인자를 메서드로 받은 경우
+                            li @ResponseStatus를 갖는 경우
+                            li 컨트롤러가 ETag, lastModified를 설정한 경우
+                        | 그 외의 경우 "no response body"(REST 컨트롤러), 기본 뷰(HTTP 컨트롤러)를 의미한다
+            h3.fake REST API 전역 예외 처리
+            p @ControllerAdvice 클래스가 ResponseEntityExceptionHandler를 상속함으로써 스프링 내부 예외를 자동으로 처리하고 ResponseEntity로 반환할 수 있다
+        h2 Controller Advice
+        ul
+            li @ExceptionHandler, @InitBinder, @ModelAttribute 메서드는 @Controller 뿐만 아니라 @ControllerAdvice, @RestControllerAdvice 클래스도 가질 수 있다
+            p 적용 범위를 제한하지 않은 경우(default) 모든 요청에 적용된다
+            li @RestControllerAdvice = @ControllerAdvice + @ResponseBody로, @ExceptionHandler 메서드가 응답을 반환함을 의미한다
+            li @ExceptionHandler 메서드는 @Controller의 것이 먼저 실행되고, @InitBinder, @ModelAttribute 메서드는 @Controller의 것이 나중에 실행된다
+    h1 Functional Endpoints
+    div
+        h2 Overview
+        ul
+            li WebMvc.fn에서 HTTP 요청은 HandlerFunction을 통해 처리된다
+            +asCode('java', '@FunctionalInterface HandlerFunction').
+                // org.springframework.web.servlet.function Since 5.2
+                T handle(ServerRequest request)
+                // org.springframework.web.reactive.function.server Since 5.0
+                Mono&lt;T&gt; handle(ServerRequest request)
+            li HTTP 요청에 대한 HandlerFunction의 선택은 RouterFunction을 통해 이루어진다
+            +asCode('java', '@FunctionalInterface RouterFunction').
+                // org.springframework.web.servlet.function Since 5.2
+                Optional&lt;HandlerFunction&lt;T>> route(ServerRequest request)
+                // org.springframework.web.reactive.function.server Since 5.0
+                Mono&lt;HandlerFunction&lt;T>> route(ServerRequest request)
+            li 정의된 RouterFunction 빈들은 RouterFunction#andOther()를 통해 합쳐진다
+            li RouterFunctions.route()가 RouterFunction 빌더를 제공한다 
+                +codeBtn('/Repositories/STS/mvc-java9/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', null, true)
+                +codeBtn('/Repositories/STS/mvc-java9/src/main/java/io/github/donggi/mvc/handler/Handler1.java', 'java', [9], true)
+        h2 HandlerFunction
+        ul
+            li ServerRequest
+            p HTTP 요청에 대한 불변 객체. HTTP 요청 방식, URI, 헤더, 쿼리 인자, 요청 본문(body)을 제공한다 
+                +codeBtn('/Repositories/STS/mvc-java9/src/main/java/io/github/donggi/mvc/handler/Handler2.java', 'java', [19], true)
+            li ServerResponse
+            p HTTP 응답에 대한 불변 객체. 
+                +codeBtn('/Repositories/STS/mvc-java9/src/main/java/io/github/donggi/mvc/handler/Handler2.java', 'java', [19], true)
+        h2 RouterFunction
+        ul
+            li RequestPredicates 유틸리티 클래스가 유용한 RequestPredicate들을 제공한다
+            p RequestPredicate#and, or을 이용해 여러 predicate을 조합할 수 있다
+            li 각 라우터는 순서대로 평가되고, 가장 처음으로 매칭되는 핸들러가 요청을 처리한다
+            li 중첩 경로에 대한 라우팅 예
+            +asCode('java').
+                import static org.springframework.web.servlet.function.RouterFunctions.route;
+
+                route()
+                    .path("/person", builder -> builder
+                        .GET("/{id}", accept(APPLICATION_JSON), handler::getPerson)
+                        .GET("", accept(APPLICATION_JSON), handler::listPeople)
+                        .POST("/person", handler::createPerson))
+                    .build();
+
+                route()
+                    .path("/person", b1 -> b1
+                        .nest(accept(APPLICATION_JSON), b2 -> b2
+                            .GET("/{id}", handler::getPerson)
+                            .GET("", handler::listPeople))
+                        .POST("/person", handler::createPerson))
+                    .build();
+        h2 Filtering Handler Functions
+        p before, after, filter를 이용해 사전/사후 작업을 정의할 수 있다
+        +asCode('java').
+            route()
+                .path("/person", b1 -> b1
+                    .nest(accept(APPLICATION_JSON), b2 -> b2
+                        .GET("/{id}", handler::getPerson)
+                        .GET("", handler::listPeople)
+                        .before(request -> ServerRequest.from(request).header("X-RequestHeader", "Value").build()))
+                    .POST("/person", handler::createPerson))
+                .after((request, response) -> logResponse(response)) 
+                .build();
+    h1 URI Links
+    div
+        h2 UriComponents
+        +asCode('java').
+            var uriComponents = UriComponentsBuilder
+                                    .fromUriString("https://example.com/hotels/{hotel}")
+                                    .queryParam("q", "{q}").encode().build();
+            URI uri = uriComponents.expand("Westin", "123").toUri();
+        +asCode('java').
+            URI uri = UriComponentsBuilder
+                        .fromUriString("https://example.com/hotels/{hotel}?q={q}")
+                        .build("Westin", "123");
+        h2 UriBuilder
+        +asCode('java').
+            var baseUrl = "https://example.com";
+            var uriBuilderFactory = new DefaultUriBuilderFactory(baseUrl);
+            URI uri = uriBuilderFactory.uriString("/hotels/{hotel}")
+                        .queryParam("q", "{q}").build("Westin", "123");
+        h2 URI Encoding
+        ul
+            li UriComponentsBuilder#encode()
+            p URI 템플릿을 먼저 인코딩. URI 변수들은 할당되는대로 인코딩
+            li UriComponents#encode()
+            p URI 변수들이 할당된 후 전체 인코딩
+            li DefaultUriBuilderFactory#setEncodingMode()
+            ul
+                li EncodingMode.TEMPLATE_AND_VALUES Since 5.0.8 : URI 템플릿을 먼저 인코딩. URI 변수들은 할당되는대로 인코딩
+                li EncodingMode.URI_COMPONENT : URI 변수들이 할당된 후 전체 인코딩
+                li EncodingMode.VALUES_ONLY : URI 변수만 UriUtils#encodeUriVariables()으로 인코딩
+                li EncodingMode.NONE : 인코딩 안 함
+        h2 Relative Servlet Requests
+        +asCode('java').
+            HttpServletRequest request;
+            // Re-uses host, scheme, port, path and query string...
+            var builder = ServletUriComponentsBuilder.fromRequest(request)
+                            .replaceQueryParam("accountId", "{id}")
+                            .build().expand("123").encode();
+        h2 Links in Controllers
+        +asCode('java').
+            @Controller
+            @GetMapping("/path1/{val1}")
+            public class C {
+                @GetMapping("/path2/{val2}")
+                public ModelAndView methodName() { }
+            }
+
+            var uriComponents = MvcUriComponentsBuilder
+                                    .fromMethodName(C.class, "methodName", "value2")
+                                    .buildAndExpand("value1");
+        +asCode('java').
+            UriComponentsBuilder base = ServletUriComponentsBuilder.fromCurrentContextPath().path("/en");
+            MvcUriComponentsBuilder builder = MvcUriComponentsBuilder.relativeTo(base);
+    h1 Asynchronous Requests
+    div
+        h2 Configuration
+        p 요청 비동기 처리를 위해 서블릿 컨테이너 수준의 옵션을 설정해야 한다.
+        div
+            h3.fake Servlet Container
+            ul
+                li Java Config
+                p AbstractAnnotationConfigDispatcherServletInitializer를 이용하면 된다
+                li web.xml
+                ul
+                    li DispatcherServlet, Filter 정의에 &lt;async-supported>true&lt;/async-supported>
+                    li 필터 매핑에 &lt;dispatcher>ASYNC&lt;/dispatcher>
+            h3.fake Spring MVC
+            ul
+                li Java Config
+                p WebMvcConfigurer의 configureAsyncSupport 재정의
+                li XML Config
+                p &lt;mvc:annotation-driven> 안에 &lt;async-support> 정의
+            ul ↓ 설정 가능한 옵션들
+                li timeout : 설정하지 않으면 서블릿 컨테이너의 것이 적용된다
+                p timeout은 DeferredResult, ResponseBodyEmitter, SseEmitter, WebAsyncTask 각각에서도 설정 가능하다
+                li AsyncTaskExecutor : 설정하지 않으면 SimpleAsyncTaskExecutor가 이용된다
+                li DeferredResultProcessingInterceptor, CallableProcessingInterceptor
+        h2
+            | DeferredResult
+            +pos('DeferredResult')
+        p 별개 스레드에서 값을 쓴다 
+            +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller1.java', 'java', [9], true)
+        h2
+            | Callable
+            +pos('Callable')
+        p Callable에서 값을 반환한다 
+            +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller2.java', 'java', [7], true)
+        h2 Processing
+        div
+            h3 Interception
+            ul
+                li WebMvcConfigurer 예 
+                    +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [12], true)
+                    +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/interceptor/DeferredResultInterceptor.java', 'java', [8], true)
+                    +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/interceptor/CallableInterceptor.java', 'java', [9], true)
+                li DeferredResult#onTimeout 예 
+                    +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller3.java', 'java', [9], true)
+                li WebAsyncTask 예 
+                    +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller4.java', 'java', [7], true)
+            h3 Compared to WebFlux
+            ul
+                li Servlet 3.0에 추가된 비동기 처리는 Filter-Servlet 체인에서 벗어나 ─ 컨테이너 스레드는 해제된다 ─ 결과를 대기한다
+                p 응답을 쓰기 위해 별도 스레드가 이용되며, IO 자체는 blocking이다
+                li 반면 WebFlux는 Servlet API를 따르지 않으며, 최초 설계부터 비동기적이다
+                p 요청 처리에 대한 모든 단계가 비동기적으로 처리될 수 있다. IO는 non-blocking이다
+        h2
+            | HTTP Streaming
+            +pos('HTTP Streaming')
+        div
+            h3 ResponseBodyEmitter
+            p 각 객체들은 HttpMessageConverter를 통해 변환된다. 
+                +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller5.java', 'java', [9], true)
+            h3 SseEmitter
+            p ResponseBodyEmitter의 서브클래스로, Server-Sent Events를 지원한다. 
+                +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller6.java', 'java', [10], true)
+            h3 StreamingResponseBody
+            p Converter를 거치지 않고 OutputStream에 직접 쓴다
+                +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller7.java', 'java', [7], true)
+        h2 Disconnects
+        p Servlet API는 클라이언트 연결 종료를 통지하지 않음에 유의.
+    h1
+        | CORS
+        +pos('CORS')
+    div
+        h2 @CrossOrigin
+        ul ↓ 기본 설정
+            li 모든 origin 허용
+            li 모든 header 허용
+            li 매핑에 일치하는 모든 HTTP method 허용
+            li allowedCredentials 비허용
+            li maxAge 30분
+        h2 Global Configuration
+        ul
+            li Java Configuration
+            +asCode('java').
+                @Configuration
+                @EnableWebMvc
+                public class WebConfig implements WebMvcConfigurer {
+                    @Override
+                    public void addCorsMappings(CorsRegistry registry) {
+                        registry.addMapping("/api1/**")...;
+                        registry.addMapping("/api2/**")...;
+                    }
+                }
+            li XML Configuration
+            +asCode('xml').
+                &lt;mvc:cors>
+                    &lt;mvc:mapping path="/api/**"
+                        allowed-origins="https://domain1.com, https://domain2.com"
+                        allowed-methods="GET, PUT"
+                        allowed-headers="header1, header2, header3"
+                        exposed-headers="header1, header2" allow-credentials="true"
+                        max-age="123" />
+                    &lt;mvc:mapping path="/resources/**"
+                        allowed-origins="https://domain1.com" />
+                &lt;/mvc:cors>
+        h2 CorsFilter
+        +asCode('java').
+            var config = new CorsConfiguration();
+            config.setAllowCredentials(true);
+            config.addAllowedOrigin("https://domain1.com");
+            config.addAllowedHeader("*");
+            config.addAllowedMethod("*");
+
+            var source = new UrlBasedCorsConfigurationSource();
+            source.registerCorsConfiguration("/**", config);
+
+            var filter = new CorsFilter(source);
+    h1 HTTP Caching
+    div
+        h2 CacheControl
+        p Cache-Control 헤더 정보를 의미한다
+        +asCode('java').
+            // Cache for an hour - "Cache-Control: max-age=3600"
+            CacheControl.maxAge(1, TimeUnit.HOURS);
+            // Prevent caching - "Cache-Control: no-store"
+            CacheControl.noStore();
+        h2 Controllers
+        +asCode('java').
+            @RequestMapping(...)
+            public ResponseEntity&lt;Something> method(...) {
+                return ResponseEntity
+                        .ok()
+                        .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
+                        ...;
+            }
+    h1
+        | View Technologies
+        +pos('View Technologies')
+    div
+        h2 Thymeleaf
+        p Spring MVC 연동은 Thymeleaf 프로젝트가 관리한다. 다음 빈들이 필요하다 ─ ServletContextTemplateResolver, SpringTemplateEngine, ThymeleafViewResolver 
+            +codeBtn('/Repositories/STS/reminder/src/main/java/io/github/donggi/reminder/config/ThymeleafConfig.java', 'java', [21], true)
+        h2 FreeMarker
+        p 예 
+            +codeBtn('/Repositories/STS/mvc-java11/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [12], true)
+            +codeBtn('/Repositories/STS/mvc-java11/src/main/java/io/github/donggi/mvc/controller/MyController.java', 'java', [7], true)
+            +codeBtn('/Repositories/STS/mvc-java11/src/main/webapp/WEB-INF/freemarker/hello.ftl', 'html', null, true)
+        h2 JSP, JSTL
+        div
+            h3.fake View Resolvers
+            p ResourceBundleViewResolver 예 
+                +codeBtn('/Repositories/STS/mvc-java12/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [13], true)
+                +codeBtn('/Repositories/STS/mvc-java12/src/main/webapp/WEB-INF/classes/my_views.properties', 'ini', null, true)
+                +codeBtn('/Repositories/STS/mvc-java12/src/main/java/io/github/donggi/mvc/controller/Controller1.java', 'java', [7], true)
+                br
+                | InternalResourceViewResolver 예 
+                +codeBtn('/Repositories/STS/mvc-java13/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [13], true)
+                +codeBtn('/Repositories/STS/mvc-java13/src/main/java/io/github/donggi/mvc/controller/Controller1.java', 'java', [7], true)
+            h3.fake JSPs versus JSTL
+            p JSTL(JSP Standard Tag Library)을 이용할 때에는 뷰 클래스로 JstlView를 이용해야 한다 
+                +codeBtn('/Repositories/STS/mvc-java12/build.gradle', 'gradle', [31,31], true)
+            h3.fake Spring’s JSP Tag Library
+            p spring-webmvc.jar 안의 spring.tld에 스프리이 제공하는 태그 정의가 담겨 있다. 또는 
+                +asA('https://docs.spring.io/spring-framework/docs/5.2.8.RELEASE/javadoc-api/org/springframework/web/servlet/tags/package-summary.html#package.description')
+                |  참고
+    h1 MVC Config
+    div
+        h2 MVC 구성 켜기
+        ol
+            li Java Configuration
+            +asCode('java').
+                @Configuration
+                @EnableWebMvc
+                public class WebConfig { }
+            li XML Configuration
+            +asCode('xml') &lt;mvc:annotation-driven>
+        h2
+            | Type Conversion
+            +pos('MVC config - Type Conversion')
+        ul
+            li @Controller, @ControllerAdvice에만 적용되는 변환기를 등록하려면 
+                +goto('DataBinder')
+                |  참고
+            li 전역 Java Configuration 예 
+                +codeBtn('/Repositories/STS/mvc-java14/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [10], true)
+            li XML에서는 FormattingConversionServiceFactoryBean 빈을 정의하면 된다
+        h2 Validation
+        ul
+            li
+                +goto('Bean Validation')
+                | (예. Hibernate Validator)가 클래스패스에 존재한다면 LocalValidatorFactoryBean이 전역적으로 등록되어 @Valid, Validated를 컨트롤러 메서드에서 사용할 수 있다
+            p 직접 LocalValidatorFactoryBean를 정의하는 경우, @Primary를 붙여 충돌을 피해야 한다
+            li 전역 Validator 설정
+            ul
+                li Java Configuration
+                +asCode('java').
+                    @Configuration
+                    @EnableWebMvc
+                    public class WebConfig implements WebMvcConfigurer {                        
+                        @Override
+                        public Validator getValidator() { }
+                    }
+                li XML Configuration
+                +asCode('xml').
+                    &lt;mvc:annotation-driven validator="globalValidator"/>
+            li 컨트롤러 수준 Validator 설정
+            +asCode('java').
+                @Controller
+                public class MyController {
+                    @InitBinder
+                    protected void initBinder(WebDataBinder binder) { }
+                }
+        h2
+            | Interceptors
+            +pos('MVC config - Interceptors')
+        ol
+            li Java Configuration 예 
+                +codeBtn('/Repositories/STS/mvc-java3/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [19], true)
+            p addInterceptors(InterceptorRegistry)를 재정의하여 추가
+            li XML Configuration 예 
+                +codeBtn('/Repositories/STS/mvc-xml4/src/main/webapp/WEB-INF/app-servlet.xml', 'xml', null, true)
+            p mvc:interceptors 태그 안에 작성
+        h2
+            | Content Types
+            +pos('MVC config - Content Types')
+        ul
+            li ContentNegotiationConfigurer를 이용해 확장자별 응답 Content-Type을 조정할 수 있다 
+                +codeBtn('/Repositories/STS/mvc-java15/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [10], true)
+                +codeBtn('/Repositories/STS/mvc-java15/src/main/java/io/github/donggi/mvc/controller/Controller1.java', 'java', [7], true)
+            li XML Configuration
+            p ContentNegotiationManagerFactoryBean 빈 정의
+        h2 Message Converters
+        ul
+            li WebMvcConfigurer#configureMessageConverters() 재정의
+            p 이 메서드에서 컨버터를 추가하는 경우, Spring MVC 기본 컨버터들은 등록되지 않는다
+            li WebMvcConfigurer#extendMessageConverters() 재정의
+            p Spring MVC 기본 컨버터 등록 후 호출되어 사용자 컨버터 등록, 컨버터 수정 등 작업 가능
+            li Spring MVC 기본 컨버터
+            ul
+                li StringHttpMessageConverter, FormHttpMessageConverter 등 기본 등록
+                li 클래스패스에 존재하는 라이브러리에 맞춰 MappingJacksonHttpMessageConverter 등 등록
+        h2 Static Resources
+        +asCode('java').
+            @Configuration
+            @EnableWebMvc
+            public class AppConfig implements WebMvcConfigurer {
+                @Override
+                public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+                    registry.addResourceHandler("/img/**").addResourceLocations("file:static/img/","classpath:/static/img/").setCachePeriod(31556926);
+                    registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/");
+                    registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
+                }
+            }
+        +asCode('xml').
+            &lt;mvc:resources mapping="/resources/**" location="/public, classpath:/static/" cache-period="31556926" />
+        h2 Default Servlet
+        ul
+            li DispatcherServlet이 "/" ─ 즉, 모든 요청을 받으면서도 static 리소스 또한 처리할 수 있다.
+            li Java Configuration
+            +asCode('java').
+                @Configuration
+                @EnableWebMvc
+                public class WebConfig implements WebMvcConfigurer {
+                    @Override
+                    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+                        configurer.enable("myCustomDefaultServlet");
+                    }
+                }
+            li XML Configuration
+            +asCode('xml') &lt;mvc:default-servlet-handler default-servlet-name="myCustomDefaultServlet"/>
+        h2
+            | Path Matching
+            +pos('MVC config - Path Matching')
+        ul
+            li
+                +asA('https://docs.spring.io/spring-framework/docs/5.2.8.RELEASE/javadoc-api/org/springframework/web/servlet/config/annotation/PathMatchConfigurer.html')
+                | 를 이용해 여러 옵션을 설정할 수 있다
+            li Java Configuration
+            +asCode('java').
+                @Configuration
+                @EnableWebMvc
+                public class WebConfig implements WebMvcConfigurer {
+                    @Override
+                    public void configurePathMatch(PathMatchConfigurer configurer) {
+                        configurer
+                            .setUseTrailingSlashMatch(false)
+                            .setUseRegisteredSuffixPatternMatch(true);
+                    }
+                }
+            li XML Configuration
+            +asCode('xml').
+                &lt;mvc:annotation-driven>
+                    &lt;mvc:path-matching trailing-slash="false" registered-suffixes-only="true"/>
+                &lt;/mvc:annotation-driven>
+        h2 Advanced Java Config
+        p @EnableWebMvc는 DelegatingWebMvcConfiguration를 임포트하며, 이는 아래 작업을 수행한다
+        ul
+            li Spring MVC 기본 설정
+            li WebMvcConfigurer 탐지 후 각 설정 메서드 호출
+        p 고급 설정을 원하는 경우 @EnableWebMvc를 제거하고 DelegatingWebMvcConfiguration를 직접 상속하면 된다.
+    h1 REST Clients
+    div
+        h2 RestTemplate
+        p 동기적인 HTTP 요청을 수행한다. Spring 5.0부터는 WebClient를 대신 이용할 것이 권장된다
+        h2 WebClient Since 5.0
+        ul
+            li Non-blocking, 리액티브 HTTP 클라이언트.
+            p 동기적인 요청도 가능
+            li 함수형 스타일로, Java 8 람다 사용 가능
+            li 테스트를 위한 WebTestClient도 존재
+    h1 WebSockets
+    div
+        h2 Introduction to WebSocket
+        ul
+            li WebSocket 프로토콜은 1개의 클라이언트-서버 TCP 연결 위에서 전이중, 양방향 통신 채널을 수립하는 표준을 제공한다
+            li 저수준 전송 프로토콜로, 클라이언트-서버 상호 합의된 임의 형태의 데이터 전송이 가능하다
+            p Sec-WebSocket-Protocol 헤더로 미리 전송 형태를 합의할 수 있다
+            li HTTP/1.1 업그레이드 기능을 이용해 기존 HTTP/HTTPS를 웹 소켓 연결 WS/WSS로 그대로 전환
+            p 사용하던 80/443포트 그대로 연결하므로 방화벽의 차단에도 안전. 프록시 서버가 HTTP 업그레이드를 처리하지 않는다면 WSS를 이용.
+            li WebSocket 서버 앞에 Nginx와 같은 웹서버가 존재하는 경우, 업그레이드 요청을 전달하도록 설정 필요
+            p 마찬가지로 클라우드 환경에서도 별도 설정이 필요할 수 있다
+            li 외부 프록시가 장기간 idle한 연결을 강제로 끊을 수도 있음에 유의
+        h2 WebSocket API Since JavaEE 7
+        div
+            h3.fake javax.websocket : 클라이언트/서버 공통 기능
+            ul
+                li WebSocketContainer
+                p 웹소켓 클라이언트 기능. connectToServer()
+                li ContainerProvider
+                p WebSocketContainer 인스턴스 획득을 위한 getWebSocketContainer()
+                li @ClientEndpoint
+                p POJO가 클라이언트측 웹소켓임을 나타낸다. @OnOpen, @OnClose, @OnError, @OnMessage 메서드를 가질 수 있다
+                li @OnOpen, @OnClose
+                p 선택적 Session 매개변수, 선택적 EndpointConfig 매개변수, 0 ~ n개 @PathParam String 매개변수를 가질 수 있다
+                li @OnError
+                p 선택적 Session 매개변수, Throwable 매개변수, 0 ~ n개 @PathParam String 매개변수를 가질 수 있다
+                li @interface OnMessage
+                p 선택적 Session 매개변수, 0 ~ n개 @PathParam String 매개변수, 아래 중 하나의 메시지 매개변수를 가질 수 있다
+                ol
+                    li 텍스트 메시지 처리
+                    ul
+                        li 전체 메시지 String
+                        li 메시지로부터 변환되는 Java primitive or class
+                        li 메시지 청크 String and boolean pair : 마지막 메시지는 true
+                        li 전체 메시지 Reader
+                        li Decoder.Text or Decoder.TextStream
+                    li 이진 메시지 처리
+                    ul
+                        li 전체 메시지 byte[] or ByteBuffer
+                        li 메시지 청크 (byte[] or ByteBuffer) and boolean pair : 마지막 메시지는 true
+                        li 전체 메시지 InputStream
+                        li Decoder.Binary or Decoder.BinaryStream
+                    li 퐁 메시지 처리 : PongMessage
+            h3.fake javax.websocket.server : 서버 전용 기능
+            ul
+                li ServerContainer extends WebSocketContainer
+                p ServerEndpointConfig 인스턴스 또는 @ServerEndpoint 클래스 등록
+        h2 Spring WebSocket API
+        div
+            h3 WebSocketHandler
+            ul
+                li 서버측 WebSocket을 생성하려면 WebSocketHandler, TextWebSocketHandler, BinaryWebSocketHandler를 상속하면 된다
+                li WebSocketHandler 등록 - Java Configuration
+                +asCode('java').
+                    @Configuration
+                    @EnableWebSocket
+                    public class WebSocketConfig implements WebSocketConfigurer {
+                        @Override
+                        public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+                            registry.addHandler(myHandler, "/myHandler");
+                        }
+                    }
+                li WebSocketHandler 등록 - XML Configuration
+                +asCode('xml').
+                    &lt;websocket:handlers>
+                        &lt;websocket:mapping path="/myHandler" handler="myHandler"/>
+                    &lt;/websocket:handlers>
+                li 동시성이 요구되는 경우, ConcurrentWebSocketSessionDecorator를 이용해 한 번에 한 스레드만 WebSocketSession를 이용해 전송하게 할 수 있다
+                li WebSocketHandlerDecorator를 이용해 WebSocketHandler를 장식할 수 있다
+                p ExceptionWebSocketHandlerDecorator는 임의 WebSocketHandler 메서드에서 처리되지 않은 예외 발생 시 1011 상태로 세션을 종료한다
+            h3 WebSocket Handshake
+            ul
+                li HandshakeInterceptor를 이용해 WebSocket 연결 수립 전후 작업을 정의할 수 있다
+                li HttpSessionHandshakeInterceptor 등록 - Java Configuration
+                +asCode('java').
+                    @Configuration
+                    @EnableWebSocket
+                    public class WebSocketConfig implements WebSocketConfigurer {
+                        @Override
+                        public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+                            registry.addHandler(myHandler, "/myHandler").addInterceptors(new HttpSessionHandshakeInterceptor());
+                        }
+                    }
+                li HttpSessionHandshakeInterceptor 등록 - XML Configuration
+                +asCode('xml').
+                    &lt;websocket:handlers>
+                        &lt;websocket:mapping path="/myHandler" handler="myHandler"/>
+                        &lt;websocket:handshake-interceptors>
+                            &lt;bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
+                        &lt;/websocket:handshake-interceptors>
+                    &lt;/websocket:handlers>
+                li 연결 수립 자체에 참여해야 한다면 DefaultHandshakeHandler를 상속하면 된다
+            h3 Deployment
+            p Spring MVC를 사용하지 않더라도, WebSocketHttpRequestHandler를 이용해 웹소켓 요청을 처리할 수 있다
+            h3 Server Configuration
+            ul
+                li 버퍼 사이즈, idle timeout 등의 설정이 가능하다
+                li Tomcat, WildFly, GlassFish 설정을 위해 ServletServerContainerFactoryBean를 정의할 수 있다
+                li Jetty 설정을 위해 WebSocketServerFactory 인스턴스를 DefaultHandshakeHandler에 삽입할 수 있다
+                +asCode('java').
+                    @Configuration
+                    @EnableWebSocket
+                    public class WebSocketConfig implements WebSocketConfigurer {
+                        @Override
+                        public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+                            registry.addHandler(echoWebSocketHandler(), "/echo").setHandshakeHandler(handshakeHandler());
+                        }
+                        @Bean
+                        public DefaultHandshakeHandler handshakeHandler() {
+                            WebSocketPolicy policy = new WebSocketPolicy(WebSocketBehavior.SERVER);
+                            policy.setInputBufferSize(8192);
+                            policy.setIdleTimeout(600000);
+                            return new DefaultHandshakeHandler(new JettyRequestUpgradeStrategy(new WebSocketServerFactory(policy)));
+                        }
+                    }
+                li 클라이언트 설정을 위해 WebSocketContainerFactoryBean (XML) 또는 ContainerProvider.getWebSocketContainer() (Java configuration)를 사용할 수 있다
+            h3 Allowed Origins
+            ul
+                li Since 4.1.5 : 기본적으로 같은 origin 요청만 허용
+                p X-Frame-Options 헤더가 SAMEORIGIN으로 설정된다
+                li 모든 origin 허용 : *로 설정
+                li 일부 origin 허용 : http://, https://로 시작하는 origin들을 설정
+                +asCode('java', 'Java Configuration').
+                    @Configuration
+                    @EnableWebSocket
+                    public class WebSocketConfig implements WebSocketConfigurer {
+                        @Override
+                        public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+                            registry.addHandler(myHandler(), "/myHandler").setAllowedOrigins("https://mydomain.com");
+                        }
+                    }
+                +asCode('xml', 'XML Configuration').
+                    &lt;websocket:handlers allowed-origins="https://mydomain.com">
+                        &lt;websocket:mapping path="/myHandler" handler="myHandler" />
+                    &lt;/websocket:handlers>
+        h2 SockJS Fallback
+        div
+            h3 Overview
+            p SockJS는 웹소켓 연결에 실패하더라도 HTTP 기반의 에뮬레이션을 통해 애플리케이션 API를 지원한다.
+            ul SockJS의 구성
+                li SockJS Protocol
+                li SockJS JavsScript client
+                li SockJS server implementation : spring-websocket이 이에 해당
+                p spring-websocket 4.1부터는 SockJS Java client도 포함
+            p SockJS 클라이언트는 GET /info 요청으로 서버 정보를 획득한 후, 전송 수단을 선택한다.
+                |  가능한 경우 WebSocket을 사용하고, 그 외엔 브라우저 별로 지원되는 HTTP 스트리밍, 최후에는 HTTP (long) polling을 이용한다.
+                br
+                | 각 브라우저별 지원 사항은 
+                +asA('https://github.com/sockjs/sockjs-client/#supported-transports-by-browser-html-served-from-http-or-https', '#supported-transports-by-browser')
+                |  참고. 각 전송 방법의 차이는 
+                +asA('https://spring.io/blog/2012/05/08/spring-mvc-3-2-preview-techniques-for-real-time-updates/')
+                |  참고.
+            p 모든 요청 URL은 아래의 꼴을 따른다
+            +asCode() https://host:port/myApp/myEndpoint/{server-id}/{session-id}/{transport}
+            ul
+                li server-id : 요청을 클러스터로 묶을 경우에만 사용
+                li session-id : SockJS 세션
+                li transport : 전송 타입(websocket, xhr-streaming)
+            p 서버는 세션 수립 후 'o'(open frame), 25초(default) 동안 idle이면 'h'(heartbeat frame), 종결 시 'c'(close frame)를 전송한다
+
+            h3 Enabling SockJS
+            +asCode('java', 'Java Configuration').
+                @Configuration
+                @EnableWebSocket
+                public class WebSocketConfig implements WebSocketConfigurer {
+                    @Override
+                    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+                        registry.addHandler(myHandler(), "/myHandler").withSockJS();
+                    }
+                }
+            +asCode('xml', 'XML Configuration').
+                &lt;websocket:handlers>
+                    &lt;websocket:mapping path="/myHandler" handler="myHandler"/>
+                    &lt;websocket:sockjs/>
+                &lt;/websocket:handlers>
+            p Spring MVC를 사용하지 않더라도, SockJsHttpRequestHandler를 이용해 SockJS를 이용할 수 있다
+
+            h3 SockJS and CORS
+            p CORS가 이미 허용된 경우, CORS를 허용하지 않는 경우(AbstractSockJsService#setSuppressCors(true)) 아래 설정을 하지 않는다
+            ul
+                li Access-Control-Allow-Origin : 요청 Origin 헤더로 설정
+                li Access-Control-Allow-Credentials : true
+                li Access-Control-Request-Headers : 요청 헤더 값으로 설정
+                li Access-Control-Allow-Methods : 지원 타입(TransportType)으로 설정
+                li Access-Control-Max-Age : 31536000(1년)
+            p CORS 설정에서 WebSocket endpoint prefix를 제외하여 SockJsService가 처리하도록 하는 걸 고려해볼 것
+
+            h3 SockJsClient
+            p 브라우저 없이 직접 WebSocket 서버에 연결하는 클라이언트를 제공한다. 지원 타입은 websocket, xhr-streaming, xhr-polling.
+            ul
+                li websocket : Transport 이용
+                p WebSocketTransport의 생성에는 StandardWebSocketClient(JSR-356), JettyWebSocketClient(Jetty 9+), 임의 WebSocketClient 구현체 사용 가능
+                li xhr : XhrTransport 이용
+                ul
+                    li RestTemplateXhrTransport : HTTP 요청에 Spring RestTemplate 사용
+                    li JettyXhrTransport : HTTP 요청에 Jetty HttpClient 사용
+                +asCode('java', 'SockJsClient 생성 및 연결').
+                    var transports = new ArrayList&lt;Transport>(2);
+                    transports.add(new WebSocketTransport(new StandardWebSocketClient()));
+                    transports.add(new RestTemplateXhrTransport());
+
+                    var sockJsClient = new SockJsClient(transports);
+                    sockJsClient.doHandshake(new MyWebSocketHandler(), "ws://example.com:8080/sockjs");
+        h2 STOMP
+        p WebSocket 통신은 text 또는 binary 메시지 전송으로 이루어지며, 원활한 통신을 위해 sub-protocol을 이용할 수 있다
+        div
+            h3 Overview
+            p STOMP(Simple Text Oriented Messaging Protocol)는 양방향 네트워크 상에서 메시지 전송을 위한 최소 규격을 정의한다.
+            +asCode('text', 'STOMP Frame').
+                COMMAND
+                header1:value1
+                header2:value2
+
+                Body^@
+            ul Command 종류
+                li SEND : 클라이언트 -> 서버 전송
+                li SUBSCRIBE : 클라이언트 -> 서버 구독
+                li MESSAGE : 서버 -> 클라이언트 브로드캐스트
+            p 이하 생략 - 사용하게 되면 정리
+        h2 Spring WebSocket 예
+        ul
+            li javax.websocket-api, spring-websocket 필요 
+                +codeBtn('/Repositories/STS/mvc-java16/build.gradle', 'gradle', [27,27,35,35], true)
+            li @EnableWebSocket + WebSocketHandler 예 
+                +codeBtn('/Repositories/STS/mvc-java16/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [15], true)
+                +codeBtn('/Repositories/STS/mvc-java16/src/main/java/io/github/donggi/mvc/ws/Echo.java', 'java', [10], true)
+                +codeBtn('/Repositories/STS/mvc-java16/src/main/webapp/static/ws.html', 'html', null, true)
+            li @ServerEndpoint 예
+                +codeBtn('/Repositories/STS/mvc-java17/src/main/java/io/github/donggi/mvc/ws/Echo.java', 'java', [20], true)
+                +codeBtn('/Repositories/STS/mvc-java17/src/main/webapp/static/ws.html', 'html', null, true)

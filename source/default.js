@@ -21,6 +21,8 @@ const posts = {list: [
     { category: 'JVM',                 file: '/posts/java/java_ee.html',                        title: '2-1 JavaEE' },
     { category: 'JVM',                 file: '/posts/java/jpa.html',                            title: '2-2 JPA; Java Persistence API' },
     { category: 'JVM',                 file: '/posts/java/spring_framework.html',               title: '2-3 Spring Framework' },
+    { category: 'JVM',                 file: '/posts/java/spring_servlet.html',                 title: '2-3-5 Web Servlet' },
+    { category: 'JVM',                 file: '/posts/java/spring_reactive.html',                title: '2-3-6 Web Reactive' },
     { category: 'JVM',                 file: '/posts/java/javafx.html',                         title: '3 JavaFX' },
     { category: 'JVM',                 file: '/posts/java/android.html',                        title: '4 Android' },
     { category: 'JVM',                 file: '/posts/single/groovy.html',                       title: '5 Groovy' },
@@ -116,17 +118,6 @@ const posts = {list: [
     { category: 'Project',             file: '/posts/project/reminder.html',                    title: '할일 목록 - Spring Boot 토이 프로젝트' },
     { category: 'Project',             file: '/posts/single/demo3.html',                        title: '로마숫자 사칙연산 계산기' },
     { category: 'Ruby',                file: '/posts/ruby/basic.html',                          title: '1 Ruby Basic' },
-
-    { category: '♻작성중,보류',        file: '/posts/algorithm/mcs.html',                       title: '컴퓨터공학도를 위한 수학' },
-    { category: '♻작성중,보류',        file: '/posts/infra/oauth.html',                         title: 'OAuth' },
-    { category: '♻작성중,보류',        file: '/posts/single/redis.html',                        title: 'Redis' },
-    { category: '♻작성중,보류',        file: '/posts/single/unity.html',                        title: 'Unity' },
-    { category: '♻작성중,보류',        file: '/posts/java/spring_framework.html',               title: 'Spring Framework' },
-    { category: '♻작성중,보류',        file: '/posts/java/apache.commons.math.html',            title: 'Apache Commons Math 3.6.1' },
-    { category: '♻작성중,보류',        file: '/posts/java/guava.html',                          title: 'Guava 30.1' },
-    { category: '♻작성중,보류',        file: '/posts/single/quantum_computer.html',             title: '양자 컴퓨터' },
-    { category: '♻작성중,보류',        file: '/posts/algorithm/ai.html',                        title: 'AI' },
-    { category: '♻작성중,보류',        file: '/posts/ruby/basic.html',                          title: 'Ruby Basic' },
 ], codes: {}}
 
 window.addEventListener('load', () => {

@@ -1832,7 +1832,7 @@ static Callable&lt;Object> callable(PrivilegedExceptionAction&lt;?> action)
 static &lt;T> Callable&lt;T> privilegedCallable(Callable&lt;T> callable)
     // 호출되면 callable을 현재 access control context에서 실행. AccessController.doPrivileged에서 호출되어야 한다.
 static &lt;T> Callable&lt;T> privilegedCallableUsingCurrentClassLoader(Callable&lt;T> callable)
-</div></div><h2>리액티브 스트림</h2><p>https://github.com/reactive-streams/reactive-streams-jvm</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">final class Flow { // Since 9
+</div></div><h2>리액티브 스트림<span id="pos-1912716076" style="padding:0!important;margin:0!important;width:0!important;height:0!important;overflow:hidden!important"></span></h2><p>https://github.com/reactive-streams/reactive-streams-jvm</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">final class Flow { // Since 9
     static int defaultBufferSize() // 256
 }
 @FunctionalInterface static interface Flow.Publisher&lt;T> {
