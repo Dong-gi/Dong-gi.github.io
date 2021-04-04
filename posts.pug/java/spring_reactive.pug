@@ -124,7 +124,18 @@ include ../../source/skeleton.pug
                         td WebSessionManager
                         td 0..1
                         td WebSession 인스턴스 관리. ServerWebExchange로 획득 가능. 기본값 DefaultWebSessionManager
-                            +codeBtn('/Repositories/STS/webflux/src/main/java/tutorial/webflux/action/DefaultSessionAction.java', 'java')
+                            +codeBtn('/Repositories/STS/webflux/src/main/java/tutorial/webflux/action/CookieAndSessionAction.java', 'java')
+                            details
+                                summary 실행 스크린샷
+                                +w3img('/imgs/2021-04-04 154616.png', '최초 get 헤더')
+                                +w3img('/imgs/2021-04-04 154628.png', '최초 get body')
+                                +w3img('/imgs/2021-04-04 154648.png', '1번째 set')
+                                +w3img('/imgs/2021-04-04 154709.png', '2번째 set')
+                                +w3img('/imgs/2021-04-04 154726.png', '2번째 get 헤더')
+                                +w3img('/imgs/2021-04-04 154740.png', '2번째 get body')
+                            p Redis를 이용해 세션을 관리하고 싶은 경우 : spring-session-data-redis 사용 고려
+                                +asA('https://docs.spring.io/spring-session/docs/2.4.2/reference/html5/#samples')
+                                +asA('https://www.baeldung.com/spring-session-reactive')
                     +tds('serverCodecConfigurer', 'ServerCodecConfigurer', '0..1', 'form, multipart 데이터를 파싱하는 HttpMessageReader 인스턴스에 접근. ServerWebExchange로 획득 가능. 기본값 ServerCodecConfigurer.create()')
                     +tds('localeContextResolver', 'LocaleContextResolver', '0..1', 'ServerWebExchange로 획득 가능. 기본값 AcceptHeaderLocaleContextResolver')
                     +tds('forwardedHeaderTransformer', 'ForwardedHeaderTransformer', '0..1', '프록시가 추가한 forwarded 헤더 조작. 기본적으로 사용되지 않는다.')
@@ -153,6 +164,46 @@ include ../../source/skeleton.pug
                 +codeBtn('/Repositories/STS/webflux/src/main/java/tutorial/webflux/action/SimpleExceptionAction.java', 'java')
 
             h3 Codecs
+            ul
+                li Encoder, Decoder는 HTTP 스펙과 무관하게, 임의 타입과 DataBuffer 사이의 변환을 정의한다
+                li HttpMessageReader, HttpMessageWriter는 HTTP 메시지의 읽기/쓰기를 담당한다
+                li Encoder는 EncoderHttpMessageWriter로, Decoder는 DecoderHttpMessageReader로 래핑 가능하다
+                li DataBuffer는 기존 byte buffer들(Netty의 ByteBuf, java.nio.ByteBuffer, ...)에 대한 추상화다.
+            p spring-core 모듈은 byte[], ByteBuffer, DataBuffer, Resource, String에 대한 encoder/decoder를 제공하고, spring-web 모듈은 Jackson JSON, Jackson Smile(binary JSON), JAXB2 encoder/decoder 및 HTTP(form, multipart, ...) reader/writer를 제공한다
+            p 전형적으로 ClientCodecConfigurer, ServerCodecConfigurer를 이용해 코덱을 커스터마이징한다. 
+                +goto('HTTP message codecs')
+            div
+                h4.fake Jackson JSON
+                ul
+                    li Jackson 라이브러리가 존재하는 경우, JSON 및 binary JSON(Smile)이 지원된다
+                    li Jackson2Decoder의 동작
+                    ol
+                        li Jackson의 비동기, 논블로킹 파서가 하나의 JSON 객체를 표현하는 TokenBuffer로 바이트 스트림을 모은다.
+                        li 각 TokenBuffer는 Jackson의 ObjectMapper로 넘겨져 고수준 객체로 변환된다.
+                        li single-value publisher(e.g. Mono)의 디코딩의 경우, TokenBuffer가 하나만 필요하다.
+                        li multi-value publisher(e.g. Flux)의 디코딩의 경우, 각 TokenBuffer가 객체를 구성할 수 있게 되면 ObjectMapper로 전달된다. 입력 컨텐츠로 JSON 배열, line-delimited JSON(application/stream+json)이 가능하다.
+                    li Jackson2Encoder의 동작
+                    ol
+                        li single-value publisher(e.g. Mono)는 바로 ObjectMapper에서 직렬화한다.
+                        li multi-value publisher를 application/json로 직렬화하는 경우, Flux#collectToList()의 반환 컬렉션을 직렬화한다.
+                        li application/x-ndjson, application/stream+x-jackson-smile 같은 스트리밍 타입으로 multi-value publisher를 직렬화하는 경우, line-delimited JSON 포맷으로 각 값을 따로 write, flush한다.
+                        li SSE의 경우, 이벤트가 발생할 때마다 Jackson2Encoder를 1회 호출하고 flush하여 저지연을 보장한다.
+                    li 커스텀 JsonSerializer 등록
+                    +asCode('java').
+                        @JsonComponent
+                        public class EntityResponseSerializer&lt;T&gt; extends JsonSerializer&lt;EntityResponse&lt;T&gt;&gt; {
+                            @Override
+                            public void serialize(EntityResponse&lt;T&gt; value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+                                var v = value.entity();
+                                if (v == null)
+                                    gen.writeNull();
+                                else if (v instanceof String)
+                                    gen.writeString((String) v);
+                                else
+                                    gen.writeObject(v);
+                            }
+                        }
+
             h3 Logging
 
         h2 DispatcherHandler
@@ -189,3 +240,8 @@ include ../../source/skeleton.pug
             +goto('CORS')
         h2 Web Security
         h2 View Technologies
+        h2 HTTP Caching
+        h2 WebFlux Config
+        div
+            h3 HTTP message codecs
+                +pos('HTTP message codecs')
