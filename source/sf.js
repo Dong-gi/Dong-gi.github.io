@@ -480,7 +480,10 @@ class DataGrid {
      */
     static fromCSV(text, opt) {
         opt = opt || {}
-        opt.delimiter = opt.delimiter || (text.split('\n', 1)[0].replace(',', '').length < text.split('\n', 1)[0].replace('\t', '').length ? ',' : '\\t')
+        if (!opt.delimiter) {
+            let firstLine = text.split('\n', 1)[0];
+            opt.delimiter = firstLine.replace(/,/g, '').length < firstLine.replace(/\t/g, '').length ? ',' : '\\t';
+        }
         opt.quote = opt.quote || '"'
         opt.escape = opt.escape || '\\\\'
 
@@ -815,7 +818,7 @@ class SFUtil {
      * @returns {Function} Debounced function
      */
     static debounce(f, t, opt) {
-        opt = opt || {lastCall: Date.now()}
+        opt = opt || { lastCall: Date.now() }
         return function (args) {
             let previousCall = opt.lastCall
             opt.lastCall = Date.now()
@@ -871,7 +874,7 @@ class SFUtil {
      * @returns {Function} Throttled function
      */
     static throttle(f, t, opt) {
-        opt = opt || {lastCall: Date.now()}
+        opt = opt || { lastCall: Date.now() }
         return function (args) {
             let previousCall = opt.lastCall
             let now = Date.now()
@@ -945,7 +948,7 @@ class SFUtil {
 @keyframes sf-fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}
 @-webkit-keyframes sf-fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}
 @keyframes sf-fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}</style>`.asSF().$)
-        if (parent)        
+        if (parent)
             parent = parent.$ || parent
         let snackbar = `<div id="sf-snackbar" class="show">${text}</div>`.asSF().$;
         (parent || document.body).append(snackbar)
@@ -1139,13 +1142,13 @@ td.sorting-table-head-white:after,th.sorting-table-head-white:after{content:attr
         a.click()
         a.remove()
     }
-    static isElementInViewport (element) {
+    static isElementInViewport(element) {
         element = element.$ || element
         let rect = element.getBoundingClientRect()
-        return  rect.top >= 0 &&
-                rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        return rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
     }
     /**
      * Open a link via anchor tag with specific url and target
