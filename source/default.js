@@ -208,7 +208,7 @@ function addHoverContents(targets) {
 
 function convertAsCodeDiv(divs) {
     for (let div of divs) {
-        let code = div.innerHTML.trim().replace(/&amp;/gm, '&').replace(/&lt;/gm, '<').replace(/&gt;/gm, '>')
+        let code = div.innerHTML.trim().replace(/&lt;/gm, '<').replace(/&gt;/gm, '>').replace(/&amp;/gm, '&')
         // console.log(code)
         div.innerHTML = ''
         fillCodeDiv(div, div.getAttribute('lan'), code)
