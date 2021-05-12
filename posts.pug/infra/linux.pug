@@ -1487,7 +1487,11 @@ include ../../source/skeleton.pug
             h3 su : 다른 사용자 권한으로 실행
             +asCode('shell') $ su [options] [-] [USER_NAME [arg]...]
             p USER_NAME이 없으면 root. 단순히 '-'만 있으면 '-l'과 동일하다.
-    
+
+            h3 sudo : 다른 사용자 권한으로 실행
+            +asCode('shell') $ sudo -u USER_NAME COMMAND
+            p 유저 지정하지 않으면 superuser로 실행
+
             h3 사용자 목록 : /etc/passwd
             +asCode().
                 ID:Password(x):UID:GID:Comment:HOME_DIR:SHELL
