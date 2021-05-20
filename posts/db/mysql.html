@@ -22,7 +22,7 @@ SHOW EVENTS;
                         WHEN CAST($1 AS CHAR) = "" THEN "\\"\\""
                         WHEN (INSTR(IFNULL(CAST($1 AS CHAR), ""), "\\n") = 0 AND INSTR(IFNULL(CAST($1 AS CHAR), ""), ",") = 0) THEN IFNULL($1, "")
                         ELSE CONCAT("\\"", $1, "\\"")
-                    END AS $1`.replace("\n", "").replace(/\s{2,}/gm, ' ');
+                    END AS $1`.replace(/\n/gm, "").replace(/\s{2,}/gm, ' ');
 document.getElementById('mysql-csv-column-convert-in-textarea').addEventListener('input', function (e) {
     let columnClauses = [];
     for(let column of this.value.match(/\w+/gm))

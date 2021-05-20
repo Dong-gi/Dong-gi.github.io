@@ -481,7 +481,7 @@ include ../../source/skeleton.pug
             p DBMS 버전에 맞춰 설정 필요
             +asCode('ini') spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQL10Dialect
             li 로깅 관련 설정
-            +asCode('ini').
+            +asCode('ini', 'application.properties').
                 spring.jpa.properties.hibernate.show_sql=true           # 실행 sql 출력
                 spring.jpa.properties.hibernate.format_sql=true         # sql 보기 좋게 출력
                 spring.jpa.properties.hibernate.use_sql_comments=true   # sql 주석 출력

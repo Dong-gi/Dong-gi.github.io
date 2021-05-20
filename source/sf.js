@@ -289,7 +289,8 @@ class SF {
     }
     /**
      * @param {HTMLElement} form HTML <FORM> element
-     * @returns {Function} callback (String name, Object value, HTMLElement src) => ?
+     * @param {Function} callback (String name, Object value, HTMLElement src) => ?
+     * @returns {Function} EventListener (e) => ?
      */
     static observeForm(form, callback) {
         return ((form) => function (e) {

@@ -24,6 +24,15 @@ include ../../source/skeleton.pug
             $ git submodule init
             $ git submodule update
 
+    h1 Command
+    ul
+        li git checkout &lt;branch|commit_hash&gt;
+        p 작업 지점 변경
+        li git log [filepath]
+        p 전체[또는 특정 파일] 변경 기록 확인
+        li git cherry-pick &lt;commit_hash&gt;
+        p 다른 브랜치의 특정 커밋의 변경분만 현재 작업 지점에 반영
+
     h1 Git Hook
     ul
         li 특정 이벤트 발생 시 실행될 스크립트들을 .git/hooks에 저장한다
