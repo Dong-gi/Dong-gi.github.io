@@ -61,7 +61,7 @@ public class Something {
     @Version
     private Integer ver;
 }
-</div></div></div><h2>하이버네이트 관련 추가 기록</h2><ul><li>지연 로딩된 프록시 인스턴스의 실제 클래스 반환</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">HibernateProxyHelper.getClassWithoutInitializingProxy(proxy)</div><li>쿼리 생성 설정</li><p>DBMS 버전에 맞춰 설정 필요</p><p><strong>↓ ini</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="ini">spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQL10Dialect</div><li>로깅 관련 설정</li><p><strong>↓ ini</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="ini">spring.jpa.properties.hibernate.show_sql=true           # 실행 sql 출력
+</div></div></div><h2>하이버네이트 관련 추가 기록</h2><ul><li>지연 로딩된 프록시 인스턴스의 실제 클래스 반환</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">HibernateProxyHelper.getClassWithoutInitializingProxy(proxy)</div><li>쿼리 생성 설정</li><p>DBMS 버전에 맞춰 설정 필요</p><p><strong>↓ ini</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="ini">spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQL10Dialect</div><li>로깅 관련 설정</li><p><strong>↓ application.properties</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="ini">spring.jpa.properties.hibernate.show_sql=true           # 실행 sql 출력
 spring.jpa.properties.hibernate.format_sql=true         # sql 보기 좋게 출력
 spring.jpa.properties.hibernate.use_sql_comments=true   # sql 주석 출력
 logging.level.org.hibernate.type.descriptor.sql=trace   # 컬럼 값 출력</div><li>@Subselect</li><p>쿼리 결과를 엔티티로 사용할 수 있게 해준다.</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">@Entity
