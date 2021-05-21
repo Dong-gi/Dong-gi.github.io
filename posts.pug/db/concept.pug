@@ -25,9 +25,9 @@ include ../../source/skeleton.pug
     ol
         li 각 튜플을 구분하는 기준이 되는 속성들의 집합. 기본적으로 키의 중복은 허용되지 않는다.
         li Super key : 속성들의 집합으로 이루어진 키. 모든 튜플에 대해 유일해야 한다(유일성).
-        li Candidate key : 수퍼키 + 최소성 만족(키를 구성하는 속성 중 하나라도 없으면 키로써 작동하지 못하는 상태)
+        li Candidate key : 후보키. 수퍼키 + 최소성 만족(키를 구성하는 속성 중 하나라도 없으면 키로써 작동하지 못하는 상태)
         li Primary key : 기본키. 후보키 중에서 선택된 키. NULL일 수 없다.
-        li Alternate key : 후보키. 기본키 외의 후보키
+        li Alternate key : 기본키 외의 후보키
         li Foreign key : 외래키. 다른 릴레이션의 기본키를 참조하는 속성의 집합
 
     h1 무결성

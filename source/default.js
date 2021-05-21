@@ -3,7 +3,6 @@ const posts = {list: [
     { category: 'Algorithm',           file: '/posts/algorithm/mcs.html',                       title: '2 컴퓨터공학도를 위한 수학' },
     { category: 'Algorithm',           file: '/posts/algorithm/linear_algebra.html',            title: '3 선형대수' },
     { category: 'Algorithm',           file: '/posts/algorithm/probability.html',               title: '4 확률' },
-    { category: 'Algorithm',           file: '/posts/algorithm/ai.html',                        title: '5 AI' },
     { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1003.html',            title: '1003: 0을 만들자' },
     { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1008.html',            title: '1008: 순환 소수' },
     { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1010.html',            title: '소수(Prime) 관련 문제' },

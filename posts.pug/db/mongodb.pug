@@ -3,8 +3,8 @@ include ../../source/skeleton.pug
     h1 MongoDB
     ol
         li NoSQL 데이터베이스의 한 종류. 데이터를 BSON(Binary JSON)으로 취급하며, SQL을 지원하지 않는다.
-        +asA('https://docs.mongodb.com/manual/reference/sql-comparison/')
         table.no-sort
+            caption: +asA('https://docs.mongodb.com/manual/reference/sql-comparison/', 'SQL comparison')
             tr
                 th RDBMS
                 th MongoDB
@@ -17,9 +17,9 @@ include ../../source/skeleton.pug
             tr
                 td Join
                 td Embedding, Linking
-        +asA('https://docs.mongodb.com/manual/installation/')
-        li 서비스 등록이 안 됐길래 그냥 직접 실행함
-        +asCode('shell') $ mongod --fork -f /etc/mongod.conf
+        li 설치 : 
+            +asA('https://docs.mongodb.com/manual/installation/', 'https://docs.mongodb.com/manual/installation/')
+        +asCode('shell', '서버 직접 실행') $ mongod --fork -f /etc/mongod.conf
         li 최대 쿼리 결과 크기는 BSON 문서가 허용하는 16MB
         p 이를 초과하는 문서가 필요하다면 GridFS API를 이용. mongofiles 명령 또는 드라이버 참고.
 
