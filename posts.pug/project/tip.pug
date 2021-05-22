@@ -1,5 +1,55 @@
 include ../../source/skeleton.pug
 +post('잡다한 팁', 'Tip', '잡다한 팁')
+    h1 PostgreSQL
+    ul
+        li: +asA('http://postgresql.kr/docs/current/sql-commands.html', '명령어 목록')
+        li.marker timezone 변경
+        ol
+            li postgresql.conf의 log_timezone, timezone 설정 변경
+            li SELECT pg_reload_conf();
+            li alter database db_name set timezone to 'Asia/Seoul';
+        li.marker postgres 유저 비밀번호를 모를 때
+        ol
+            li pg_hba.conf 파일을 비밀번호 없이 접속할 수 있도록 trust로 변경 후 접속(서비스 재시작 필요)
+            li 비밀번호 설정 후 pg_hba.conf 다시 원복
+        li.marker 모든 테이블에 대한 권한 부여
+        ul
+            li: +asCode('sql') GRANT SELECT ON ALL TABLES IN SCHEMA public TO user;
+            li: +asCode('sql') GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO user;
+            li 이후 추가되는 테이블에도 적용하려면 기본 권한을 변경
+            +asCode('sql') ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO user;
+            li 실제로 적용됐는지 확인
+            +asCode('sql') select * from information_schema.role_table_grants where table_name = 'table_name';
+        li.marker dblink 재활용
+        +asCode('sql').
+            SELECT dblink_connect('myconn', 'hostaddr=1.2.3.4 port=5432 dbname=history user=readonly password=password');
+            (SELECT account_id, last_login_date FROM v_account WHERE account_id IN
+                (SELECT r.account_id FROM dblink('myconn', 'SELECT account_id, sum(amount) as total_amount FROM v_payment_history WHERE status=2 GROUP BY account_id HAVING sum(amount) >= 10000') AS r(account_id BIGINT, total_amount BIGINT))
+            ) UNION ...
+        li.marker 시각 차이 획득
+        +asCode('sql') select abs(extract (epoch from (insert_datetime - '2019-07-04 19:39:55'::timestamp)));
+        li.marker 커넥션 정리
+        +asCode('sql') select pg_terminate_backend(pid) from pg_stat_activity where client_addr = '10.0.2.2';
+        li.marker
+            | AWS Redshift와 드라이버 충돌될 때 jdbc 연결 쿼리에
+            +asA('https://www.simba.com/products/Redshift/doc/JDBC_InstallGuide/content/jdbc/re/options/opensourcesubprotocoloverride.htm', 'OpenSourceSubProtocolOverride=true')
+            | 추가
+        li.marker 테이블 목록 획득
+        +asCode('sql') select * from information_schema.tables
+        li.marker 테이블 정보 획득
+        +asCode('sql') select * from information_schema.columns where table_name = '{tableName}'
+        li.marker 테이블 기본 키 획득
+        +asCode('sql').
+            SELECT pg_attribute.attname as column FROM pg_index, pg_class, pg_attribute, pg_namespace
+            WHERE 
+                pg_class.oid = '{tableName}'::regclass AND 
+                indrelid = pg_class.oid AND 
+                nspname = 'public' AND 
+                pg_class.relnamespace = pg_namespace.oid AND 
+                pg_attribute.attrelid = pg_class.oid AND 
+                pg_attribute.attnum = any(pg_index.indkey)
+            AND indisprimary;
+
     h1 이클립스 단축키
     ol
         li Ctrl + Shift + L : 전체 단축키 목록

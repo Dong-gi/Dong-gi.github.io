@@ -61,7 +61,7 @@ const posts = {list: [
     { category: 'Infra/DB',            file: '/posts/db/psql_to_sqlite.html',                   title: '2-5 PostgreSQL → SQLite3 마이그레이션' },
     { category: 'Infra/DB',            file: '/posts/db/mysql.html',                            title: '3 MySQL' },
     { category: 'Infra/DB',            file: '/posts/db/mongodb.html',                          title: '4 MongoDB' },
-    { category: 'Infra/DB',            file: '/posts/single/redis.html',                        title: '5 Redis' },
+    { category: 'Infra/DB',            file: '/posts/db/redis.html',                            title: '5 Redis' },
     { category: 'Topic',               file: '/posts/single/fp.html',                           title: 'FP; Functional Programming' },
     { category: 'Topic',               file: '/posts/single/interview.html',                    title: '개발자 면접 준비' },
     { category: 'Topic',               file: '/posts/single/refactoring.html',                  title: '디자인 패턴 + 리팩터링' },
@@ -116,7 +116,9 @@ const posts = {list: [
     { category: 'Project',             file: '/posts/project/sf.html',                          title: 'SF; Simplest html Framework' },
     { category: 'Project',             file: '/posts/project/reminder.html',                    title: '할일 목록 - Spring Boot 토이 프로젝트' },
     { category: 'Project',             file: '/posts/single/demo3.html',                        title: '로마숫자 사칙연산 계산기' },
-    { category: 'Ruby',                file: '/posts/ruby/basic.html',                          title: '1 Ruby Basic' },
+
+    { category: 'Zzz 🚮', file: '/posts/algorithm/ai.html', title: 'AI' },
+    { category: 'Zzz 🚮', file: '/posts/ruby/basic.html', title: 'Ruby Basic' },
 ], codes: {}}
 
 window.addEventListener('load', () => {

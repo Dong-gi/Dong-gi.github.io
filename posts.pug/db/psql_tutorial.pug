@@ -4,8 +4,8 @@ include ../../source/skeleton.pug
     div
         h2 설치
         ul
-            li: +asA('http://postgresql.kr/docs/current/index.html')
-            li: +asA('https://www.postgresql.org/download/')
+            li: +asA('http://postgresql.kr/docs/current/index.html', '한국어 문서')
+            li: +asA('https://www.postgresql.org/download/', 'Download page')
             li: +asA('https://wiki.postgresql.org/wiki/Frequently_Asked_Questions')
         div
             h3 PostgreSQL 9.6 on CentOS 6.9
@@ -47,70 +47,43 @@ include ../../source/skeleton.pug
         p postgres라는 이름의 서버 프로세스가 항시 실행되면서 클라이언트의 연결 요청 시 이를 처리하고, 연결 수립 시 하위 프로세스를 생성하여 할당한다.
 
         h2 데이터베이스 사용하기
-        ul
-            li 데이터베이스 사용 방법
+        div
+            h3 사용 방법
             ol
                 li psql : PostgreSQL 대화형 터미널 프로그램
                 li pgAdmin : PostgreSQL GUI 클라이언트 프로그램
-            li.marker 백업 - pg_dump
-            +asCode('shell').
+
+            h3 백업 - pg_dump
+            +asCode('text').
                 $ pg_dump [connection-option...] [option...]
                     # 접속 중인 유저들을 방해하지 않고 백업한다
-                    # 스크립트 평문으로 백업하는 경우, 임의 위치에서 psql로 복구 실행 가능
-                    # 다른 포맷으로 백업하는 경우, 복구에 pg_restore를 이용해야 한다.
+                    # 평문(plain text)으로 백업하는 경우, 임의 위치에서 psql로 복원 가능
+                    # 다른 포맷으로 백업하는 경우, 복원에 pg_restore를 이용해야 한다.
+                    # 포맷이 directory인 경우(-Fd)에만 병렬 백업이 가능하다
 
-                Connection options:
-                  -d, --dbname=DBNAME      # 지정하지 않으면 PGDATABASE 이용. 없으면 유저 이름
-                  -h, --host=HOSTNAME      # 지정하지 않으면 PGHOST 이용. 없으면 기본값
-                  -p, --port=PORT          # 지정하지 않으면 PGPORT 이용. 없으면 기본값
-                  -U, --username=NAME      # 지정하지 않으면 PGUSER 이용. 없으면 기본값
-
-                General options:
-                  -f, --file=FILENAME          # 출력 파일 또는 디렉터리output file or directory name
-                  -F, --format=c|d|t|p         # 출력 포맷. 각각 custom, directory, tar, plain text(default)
-                                               # 포맷이 directory인 경우(-Fd)에만 병렬 백업이 가능하다
-                  -j, --jobs=NUM               use this many parallel jobs to dump
-                  -v, --verbose                verbose mode
-                  -Z, --compress=0-9           compression level for compressed formats
-                  --lock-wait-timeout=TIMEOUT  fail after waiting TIMEOUT for a table lock
-
-                Options controlling the output content:
-                  -a, --data-only              dump only the data, not the schema
-                  -b, --blobs                  include large objects in dump
-                  -c, --clean                  clean (drop) database objects before recreating
-                  -C, --create                 include commands to create database in dump
-                  -E, --encoding=ENCODING      dump the data in encoding ENCODING
-                  -n, --schema=SCHEMA          # 지정 스키마만 포함. 와일드카드(*) 사용 가능
-                  -N, --exclude-schema=SCHEMA  # 지정 스키마 제외. 와일드카드(*) 사용 가능
-                  -o, --oids                   include OIDs in dump
-                  -O, --no-owner               skip restoration of object ownership in plain-text format
-                  -s, --schema-only            dump only the schema, no data
-                  -S, --superuser=NAME         superuser user name to use in plain-text format
-                  -t, --table=TABLE            # 지정 테이블만 포함. 와일드카드(*) 사용 가능
-                  -T, --exclude-table=TABLE    # 지정 테이블 제외. 와일드카드(*) 사용 가능
-                  -x, --no-privileges          do not dump privileges (grant/revoke)
+                Options:
+                  -a, --data-only              데이터만 백업
+                  -C, --create                 데이터베이스 생성 쿼리도 포함
+                  -n, --schema=SCHEMA          지정 스키마만 포함. 와일드카드(*) 사용 가능
+                  -N, --exclude-schema=SCHEMA  지정 스키마 제외. 와일드카드(*) 사용 가능
+                  -s, --schema-only            스키마만 백업
+                  -t, --table=TABLE            지정 테이블만 포함. 와일드카드(*) 사용 가능
+                  -T, --exclude-table=TABLE    지정 테이블 제외. 와일드카드(*) 사용 가능
                   --column-inserts             dump data as INSERT commands with column names
                   --disable-dollar-quoting     disable dollar quoting, use SQL standard quoting
-                  --disable-triggers           disable triggers during data-only restore
-                  --enable-row-security        enable row security (dump only content user has access to)
-                  --exclude-table-data=TABLE   do NOT dump data for the named table(s)
-                  --if-exists                  use IF EXISTS when dropping objects
                   --inserts                    dump data as INSERT commands, rather than COPY
-                  --no-security-labels         do not dump security label assignments
-                  --no-synchronized-snapshots  do not use synchronized snapshots in parallel jobs
-                  --no-tablespaces             do not dump tablespace assignments
-                  --no-unlogged-table-data     do not dump unlogged table data
                   --quote-all-identifiers      quote all identifiers, even if not key words
-                  --section=SECTION            dump named section (pre-data, data, or post-data)
-            li.marker 백업 - pg_dumpall
+
+            h3 백업 - pg_dumpall
             p 전체 DB를 하나의 스크립트 텍스트 파일로 백업.
-            li.marker 복구
+
+            h3 복원
             +asCode('shell').
                 db_name=# \i filename
                 $ psql -f filename
                 $ psql &lt; filename
                 $ pg_restore [connection-option...] [option...] [filename]
-        div
+
             h3 psql을 이용한 데이터베이스 사용
             ul
                 +asCode('shell') psql [options...] [dbname [username]]
@@ -150,29 +123,27 @@ include ../../source/skeleton.pug
 
                 h4 psql 명령어
                 +asCode('sql').
-                        -- 사용 가능한 데이터베이스 리스트
-                        db_name=# \l
-                        -- 데이터베이스 연결
-                        db_name=# \c db_name
-                        -- 테이블 리스트. 처럼 패턴 사용 가능 + \dv, ...
-                        db_name=# \dt *account*
-                        -- 테이블, 뷰 등 여러가지 리스트. 마찬가지로 패턴 사용 가능
-                        db_name=# \d
-                        -- describe table, view, sequence, or index
-                        db_name=# \d name
-                        -- file_name으로 출력
-                        db_name=# \o file_name
-                        -- file_name 실행
-                        db_name=# \i file_name
-                        -- 접속 종료
-                        db_name=# \q
+                    -- 사용 가능한 데이터베이스 리스트
+                    db_name=# \l
+                    -- 데이터베이스 연결
+                    db_name=# \c db_name
+                    -- 테이블 리스트. 처럼 패턴 사용 가능 + \dv, ...
+                    db_name=# \dt *account*
+                    -- 테이블, 뷰 등 여러가지 리스트. 마찬가지로 패턴 사용 가능
+                    db_name=# \d
+                    -- describe table, view, sequence, or index
+                    db_name=# \d name
+                    -- file_name으로 출력
+                    db_name=# \o file_name
+                    -- file_name 실행
+                    db_name=# \i file_name
+                    -- 접속 종료
+                    db_name=# \q
 
             h3 외부 접속 허용
             ul
-                li iptables 규칙 추가
+                li /etc/sysconfig/iptables 규칙 추가
                 ol
-                    p /etc/sysconfig/iptables
-                    +asA('https://webdir.tistory.com/170', '참고자료')
                     li 규칙 추가
                     p PostgreSQL 서버의 포트(--dport 5432)로 들어오는(INPUT) tcp 패킷(-p tcp)을 허용(ACCEPT)하는 규칙을 추가(-A).
                     p strong 규칙의 순서가 중요하므로, 앞선 규칙에서 패킷이 폐기되지 않도록 주의
@@ -182,7 +153,7 @@ include ../../source/skeleton.pug
                     li iptable 재시작
                     +asCode('shell') $ service iptables restart
                 li /home/postgres/pgsql/data/postgres.conf 수정
-                +asCode('ini').
+                +asCode('properties', 'postgres.conf').
                     # 변경 전
                     listen_addresses='localhost'
                     #port=5432
@@ -191,7 +162,7 @@ include ../../source/skeleton.pug
                     listen_addresses='*'
                     port=5432
                 li /home/postgres/pgsql/data/pg_hba.conf
-                +asCode('ini').
+                +asCode('properties', 'pg_hba.conf').
                     # 보통 서브넷을 특정
                     192.168.0.0/24
                     # 전체 접근 가능
@@ -223,8 +194,8 @@ include ../../source/skeleton.pug
 
         h2 테이블에 자료 입력하기
         +asCode('sql').
-            -- 숫자가 아닌 자료형은 ‘’안에 적는다.
-            INSERT INTO weather VALUES (‘San Francisco’, 46, 50, 0.25, ‘1994-11-27’);
+            -- 숫자가 아닌 자료형은 ''안에 적는다.
+            INSERT INTO weather VALUES ('San Francisco', 46, 50, 0.25, '1994-11-27');
 
             -- 여러 개 입력 시 콤마로 구분
             INSERT INTO weather (city, temp_lo, temp_hi, prcp, date) VALUES ('San Francisco', 43, 57, 0.0, '1994-11-29'), ('San Francisco', 43, 57, 0.0, '1994-11-29');
@@ -256,7 +227,7 @@ include ../../source/skeleton.pug
         +asCode('sql').
             SELECT * FROM weather;
             SELECT city, (temp_hi+temp_lo)/2 AS temp_avg FROM weather;
-            SELECT * FROM weather WHERE city = ‘San Francisco’ AND prop > 0.0;
+            SELECT * FROM weather WHERE city = 'San Francisco' AND prop > 0.0;
             SELECT * FROM weather ORDER BY city, temp_lo;
             SELECT DISTINCT city FROM weather;
 
@@ -278,14 +249,14 @@ include ../../source/skeleton.pug
             SELECT city FROM weather WHERE temp_lo = (SELECT max(temp_lo) FROM weather);
             SELECT city, max(temp_lo) FROM weather GROUP BY city;
             SELECT city, max(temp_lo) FROM weather GROUP BY city HAVING max(temp_lo) &lt; 40;
-            SELECT city, max(temp_lo) FROM weather WHERE city LIKE ’S%’ GROUP BY city;
+            SELECT city, max(temp_lo) FROM weather WHERE city LIKE 'S%' GROUP BY city;
 
         h2 자료 갱신
-        +asCode('sql') UPDATE weather SET temp_hi = temp_hi - 2, temp_lo = temp_lo - 2 WHERE date > ‘1994-11-28’;
+        +asCode('sql') UPDATE weather SET temp_hi = temp_hi - 2, temp_lo = temp_lo - 2 WHERE date > '1994-11-28';
 
         h2 자료 삭제
         +asCode('sql').
-            DELETE FROM weather WHERE city = ‘Hayward’;
+            DELETE FROM weather WHERE city = 'Hayward';
             DELETE FROM weather;
 
     h1 고급 기능
@@ -368,53 +339,3 @@ include ../../source/skeleton.pug
             +asCode('sql').
                 -- 수도를 빼고 도시 고도 500ft 초과의 도시 검색.
                 SELECT name, altitude FROM ONLY cities WHERE altitude > 500;
-
-    h1 PostgreSQL 팁
-    ul
-        li: +asA('http://postgresql.kr/docs/current/sql-commands.html', '명령어 목록')
-        li.marker timezone 변경
-        ol
-            li postgresql.conf의 log_timezone, timezone 설정 변경
-            li SELECT pg_reload_conf();
-            li alter database db_name set timezone to 'Asia/Seoul';
-        li.marker postgres 유저 비밀번호를 모를 때
-        ol
-            li pg_hba.conf 파일을 비밀번호 없이 접속할 수 있도록 trust로 변경 후 접속(서비스 재시작 필요)
-            li 비밀번호 설정 후 pg_hba.conf 다시 원복
-        li.marker 모든 테이블에 대한 권한 부여
-        ul
-            li: +asCode('sql') GRANT SELECT ON ALL TABLES IN SCHEMA public TO user;
-            li: +asCode('sql') GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO user;
-            li 이후 추가되는 테이블에도 적용하려면 기본 권한을 변경
-            +asCode('sql') ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO user;
-            li 실제로 적용됐는지 확인
-            +asCode('sql') select * from information_schema.role_table_grants where table_name = 'table_name';
-        li.marker dblink 재활용
-        +asCode('sql').
-            SELECT dblink_connect('myconn', 'hostaddr=1.2.3.4 port=5432 dbname=history user=readonly password=password');
-            (SELECT account_id, last_login_date FROM v_account WHERE account_id IN
-                (SELECT r.account_id FROM dblink('myconn', 'SELECT account_id, sum(amount) as total_amount FROM v_payment_history WHERE status=2 GROUP BY account_id HAVING sum(amount) >= 10000') AS r(account_id BIGINT, total_amount BIGINT))
-            ) UNION ...
-        li.marker 시각 차이 획득
-        +asCode('sql') select abs(extract (epoch from (insert_datetime - '2019-07-04 19:39:55'::timestamp)));
-        li.marker 커넥션 정리
-        +asCode('sql') select pg_terminate_backend(pid) from pg_stat_activity where client_addr = '10.0.2.2';
-        li.marker
-            | AWS Redshift와 드라이버 충돌될 때 jdbc 연결 쿼리에
-            +asA('https://www.simba.com/products/Redshift/doc/JDBC_InstallGuide/content/jdbc/re/options/opensourcesubprotocoloverride.htm', 'OpenSourceSubProtocolOverride=true')
-            | 추가
-        li.marker 테이블 목록 획득
-        +asCode('sql') select * from information_schema.tables
-        li.marker 테이블 정보 획득
-        +asCode('sql') select * from information_schema.columns where table_name = '{tableName}'
-        li.marker 테이블 기본 키 획득
-        +asCode('sql').
-            SELECT pg_attribute.attname as column FROM pg_index, pg_class, pg_attribute, pg_namespace
-            WHERE 
-                pg_class.oid = '{tableName}'::regclass AND 
-                indrelid = pg_class.oid AND 
-                nspname = 'public' AND 
-                pg_class.relnamespace = pg_namespace.oid AND 
-                pg_attribute.attrelid = pg_class.oid AND 
-                pg_attribute.attnum = any(pg_index.indkey)
-            AND indisprimary;

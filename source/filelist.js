@@ -2113,7 +2113,6 @@ posts.pug/book/007.pug
 posts.pug/book/008.pug
 posts.pug/book/009.pug
 posts.pug/db/concept.pug
-posts.pug/db/index.pug
 posts.pug/db/mongodb.pug
 posts.pug/db/mysql.pug
 posts.pug/db/psql_admin.pug
@@ -2121,6 +2120,7 @@ posts.pug/db/psql_programming.pug
 posts.pug/db/psql_sql.pug
 posts.pug/db/psql_to_sqlite.pug
 posts.pug/db/psql_tutorial.pug
+posts.pug/db/redis.pug
 posts.pug/dotnet/csharp_basic.pug
 posts.pug/dotnet/csharp_library.pug
 posts.pug/dotnet/index.pug
@@ -2195,7 +2195,6 @@ posts.pug/single/infra.pug
 posts.pug/single/interview.pug
 posts.pug/single/nginx.pug
 posts.pug/single/quantum_computer.pug
-posts.pug/single/redis.pug
 posts.pug/single/refactoring.pug
 posts.pug/single/rpi.pug
 posts.pug/single/sdkman.pug
@@ -2241,6 +2240,7 @@ posts/db/psql_programming.html
 posts/db/psql_sql.html
 posts/db/psql_to_sqlite.html
 posts/db/psql_tutorial.html
+posts/db/redis.html
 posts/dotnet/csharp_basic.html
 posts/dotnet/csharp_library.html
 posts/dotnet/index.html

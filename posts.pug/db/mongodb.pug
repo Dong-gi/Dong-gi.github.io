@@ -23,9 +23,8 @@ include ../../source/skeleton.pug
         li 최대 쿼리 결과 크기는 BSON 문서가 허용하는 16MB
         p 이를 초과하는 문서가 필요하다면 GridFS API를 이용. mongofiles 명령 또는 드라이버 참고.
 
-    h1 BSON Specification
+    h1: +asA('http://bsonspec.org/spec.html', 'BSON Specification')
     ol
-        +asA('http://bsonspec.org/spec.html')
         li Basic Types
         table.no-sort
             tr
@@ -290,9 +289,8 @@ include ../../source/skeleton.pug
     h1 mongo Shell
     ul
         li mongo
-        p 기본 포트 27017
         +asCode('shell').
-            $ mongo --port 28015
+            $ mongo --port 28015          # 기본 포트 27017
             $ mongo "mongodb://host:port"
             $ mongo --password "mongodb://username@host:port"
             $ mongo --ssl --host replA/mongodb0.example.com.local:27017,mongodb1.example.com.local:27017,mongodb2.example.com.local:27017
