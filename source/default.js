@@ -363,7 +363,7 @@ function updateMarkerList() {
         SFUtil.highlight(target)
         setTimeout(((target) => function () {
             window.scrollTo({
-                top: target.offsetTop - document.getElementById('nav').clientHeight
+                top: SFUtil.getOffsetTop(target) - document.getElementById('nav').clientHeight
             })
         })(target), isNarrow() ? 444 : 0)
     }, true, (_, markerId) => {
@@ -373,8 +373,11 @@ function updateMarkerList() {
 
         let main = document.querySelector('div#contents')
         let level = 0
+        const skipTagNames = new Set(['THEAD', 'TBODY', 'TR', 'SPAN'])
         while (target.parentElement != main) {
             target = target.parentElement
+            if (skipTagNames.has(target.tagName))
+                continue
             level += 1
         }
         li.classList.add(`margin-left-${level}`)
