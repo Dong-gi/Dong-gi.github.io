@@ -413,6 +413,7 @@ include ../../source/skeleton.pug
             h3 메시지 인증 코드; MAC(Message Authentication Code)
             p 암호문과 키를 이용해 만든 MAC를 암호문과 같이 전달하면 수신측은 암호문 또는 키의 변조를 감지해낼 수 있다. 흔히 사용되는 것은 암호문과 키를 해싱하여 MAC을 생성하는 HMAC
 
+            +pos('전자 서명')
             h3 전자 서명
             ol
                 li A는 메시지(평문이든 다른 암호문이든 무관), 비밀키, 공개키를 준비.

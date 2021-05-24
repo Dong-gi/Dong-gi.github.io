@@ -2021,6 +2021,7 @@ Repositories/VisualStudio/csharp_interpolated_string.cs
 Repositories/VisualStudio/csharp_property.cs
 ads.txt
 build_site.sh
+docker-compose.yml
 google17afeae5a0bb8a4d.html
 imgs/20180826_213734.png
 imgs/20180826_214148.png
@@ -2123,7 +2124,6 @@ posts.pug/db/psql_tutorial.pug
 posts.pug/db/redis.pug
 posts.pug/dotnet/csharp_basic.pug
 posts.pug/dotnet/csharp_library.pug
-posts.pug/dotnet/index.pug
 posts.pug/dotnet/wpf_basic.pug
 posts.pug/front/css.pug
 posts.pug/front/freemarker/built_in.pug
@@ -2145,7 +2145,6 @@ posts.pug/java/com.sun.nio.sctp.pug
 posts.pug/java/effective_java.pug
 posts.pug/java/gson.pug
 posts.pug/java/guava.pug
-posts.pug/java/index.pug
 posts.pug/java/jackson.pug
 posts.pug/java/java.base.pug
 posts.pug/java/java_ee.pug

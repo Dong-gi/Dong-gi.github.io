@@ -1,33 +1,25 @@
 include ../../source/skeleton.pug
-+post('Apache Commons Collections', 'Apache Commons Collections', 'Apache Commons Collections 정리')
++post('Apache Commons Collections 4.4', 'Apache Commons Collections', 'Apache Commons Collections 정리')
     h1 org.apache.commons.collections4
     div
         h2 컬렉션 자료형 인터페이스
         div
-            h3 interface BoundedCollection&lt;E> extends Collection&lt;E> Since 3.0
+            h3 BoundedCollection&lt;E> Since 3.0
             ol
                 li 크기 제한을 갖는 컬렉션
                 li isFull(), maxSize()
 
-            h3 interface Bag&lt;E> extends Collection&lt;E> Since 2.0
+            h3 Bag&lt;E> Since 2.0
             ol
                 li 컬렉션이 보유한 객체에 대한 갯수를 유지한다.
                 li 예를 들어, Bag {a, b, c, a} 인스턴스에 대해 getCount(a) == 2, uniqueSet() == {a, b, c}
                 li Bag의 메서드는 Collection API와 다르게 작동하므로, Collection으로 참조하지 않는 것이 바람직하다
             +asCode('java').
-                int getCount(Object object)
-                    // object 보유 갯수 반환. 없으면 0
-
                 boolean add(E object)
                     // object의 사본이 uniqueSet()에 있다면 카운트만 1 증가하고 false 반환.
                     // uniqueSet()에 없다면 사본 추가 → 카운트 1 설정 → true 반환.
-                boolean add(E object, int nCopies)
-
                 boolean remove(Object object)
                     // object를 모두 제거하고, 컬렉션의 변동이 있다면 true를 반환한다.
-                boolean remove(Object object, int nCopies)
-
-                Set&lt;E> uniqueSet()
 
                 boolean containsAll(Collection&lt;?> coll)
                     // coll의 모든 요소가 uniqueSet()에 존재하고, 각 요소에 대한 getCount(Object)가 coll에 존재하는 개수보다 크거나 같은 경우 true 반환
@@ -36,58 +28,45 @@ include ../../source/skeleton.pug
                 boolean retainAll(Collection&lt;?> coll)
                     // coll에 포함된 요소만 Bag에 유지하되, coll에 존재하는 개수만큼만 최대로 유지한다.
 
-            h3 interface SortedBag&lt;E> extends Bag&lt;E> Since 2.0
+            h3 SortedBag&lt;E> Since 2.0
+            p Comparator&lt;? super E>를 이용해 원소 정렬
 
-            h3 interface MultiSet&lt;E> extends Collection&lt;E> Since 4.1
+            h3 MultiSet&lt;E> Since 4.1
             p Bag과 유사하지만, Collection API를 좀 더 적절하게 따른다.
-            div
-                h4 static interface MultiSet.Entry&lt;E>
-                p MultiSet의 변경 불가능한 원소를 표현한다
-                +asCode('java').
-                    E getElement()
-                    int getCount()
-                    boolean equals(Object o)
-                        // 둘 다 null이거나, 개수까지 일치할 때 true
-                    int hashCode()
 
-            h3 interface IterableMap&lt;K, V> extends Map&lt;K, V>, Put&lt;K, V>, IterableGet&lt;K, V> Since 3.0
-            p MapIterator를 지원하는 Map
+            h3 IterableMap&lt;K, V> Since 3.0
+            p 엔트리 집합을 만들지 않고 MapIterator를 지원
 
-            h3 interface IterableSortedMap&lt;K, V> extends SortedMap&lt;K, V>, OrderedMap&lt;K, V> Since 4.0
+            h3 IterableSortedMap&lt;K, V> Since 4.0
+            p
+                +goto('SortedMap', 'java.base.html')
+                |  + 
+                +goto('OrderedMap')
 
-            h3 interface BoundedMap&lt;K, V> extends IterableMap&lt;K, V> Since 3.0
+            h3 BoundedMap&lt;K, V> Since 3.0
+            p 크기 제한이 있는 맵
 
-            h3 interface BidiMap&lt;K, V> extends IterableMap&lt;K, V> Since 3.0
+            h3 BidiMap&lt;K, V> Since 3.0
             ol
                 li 키와 값이 일대일 대응을 만족하도록 강제하여, 값을 통한 키의 탐색이 가능하게 한다.
                 li 값을 통한 키의 탐색은 키를 통한 값의 탐색과 동일한 성능으로 이루어져야 한다.
                 li 키와 값의 위치를 뒤집은 BidiMap을 반환하는 inverseBidiMap() 연산도 지원한다
 
-            h3 interface SortedBidiMap&lt;K, V> extends OrderedBidiMap&lt;K, V>, SortedMap&lt;K, V> Since 3.0
+            h3 SortedBidiMap&lt;K, V> Since 3.0
+            p 값에 대한 Comparator를 갖고 있어, inverseBidiMap() 또한 SortedBidiMap
 
-            h3 interface MultiValuedMap&lt;K, V> Since 4.1
+            h3 MultiValuedMap&lt;K, V> Since 4.1
             ol
-                li 각 키에 대한 값을 컬렉션에 보관하는 맵을 정의한다
+                li 키에 대한 값들을 컬렉션에 보관하는 맵을 정의한다
                 li 키를 통해 얻은 컬렉션의 변경 가능 여부는 정해지지 않는다.
-            div
-                h4 Method Detail
-                ol
-                    li Collection, Map을 직접 상속하진 않지만, 동일한 메서드들은 생략
-                    li boolean containsValue(Object value)
-                        +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/MultiValuedMapTest.java', 'java', '[17,24]')
-                    li boolean putAll(K key, Iterable&lt;? extends V> values)
-                    p 맵이 변경되면 true
-                    li boolean removeMapping(Object Key, Object item)
-                    li Map&lt;K, Collection&lt;V>> asMap()
-                    li MapIterator&lt;K, V> mapIterator()
-                        +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/MultiValuedMapTest.java', 'java', '[27,45]')
+                li ListValuedMap&lt;K, V> + SetValuedMap
 
-            h3 interface ListValuedMap&lt;K, V> extends MultiValuedMap&lt;K, V> Since 4.1 + SetValuedMap
-            p List를 컨테이너로 이용하는 것 외의 변경은 없다.
+            +pos('OrderedMap')
+            h3 OrderedMap&lt;K, V> Since 3.0
+            p 키를 정렬하여 보존하고, 앞뒤로 순회 가능한 맵
 
-            h3 interface OrderedMap&lt;K, V> extends IterableMap&lt;K, V> Since 3.0
-
-            h3 interface OrderedBidiMap&lt;K, V> extends BidiMap&lt;K, V>, OrderedMap&lt;K, V> Since 3.0
+            h3 OrderedBidiMap&lt;K, V> Since 3.0
+            p inverseBidiMap() 또한 OrderedBidiMap
 
             h3 interface KeyValue&lt;K, V> Since 3.0
 

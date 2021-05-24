@@ -8,9 +8,9 @@ include ../../../source/skeleton.pug
         li Configuration 인스턴스 생성
         li Data-model 생성
         ul
-            li java.lang.String
-            li java.lang.Number
-            li java.lang.Boolean
+            li String
+            li Number
+            li Boolean
             li java.util.Date
             li java.util.Map
             li Custom Beans
@@ -27,60 +27,31 @@ include ../../../source/skeleton.pug
         h2 Container
         div
             h3 Hash
-            div
-                h4 interface TemplateHashModel extends TemplateModel
-                ol
-                    li TemplateModel get(java.lang.String key)
-                    li boolean isEmpty()
-                h4 interface TemplateHashModelEx extends TemplateHashModel
-                ol
-                    li int size()
-                    li TemplateCollectionModel keys()
-                    li TemplateCollectionModel values()
-                h4 interface TemplateHashModelEx2 extends TemplateHashModelEx
-                ol
-                    li static interface TemplateHashModelEx2.KeyValuePair
-                    li static interface TemplateHashModelEx2.KeyValuePairIterator
-                    li TemplateHashModelEx2.KeyValuePairIterator keyValuePairIterator()
-                h4 class SimpleHash extends WrappingTemplateModel implements TemplateHashModelEx2, java.io.Serializable
-                ol
-                    li public SimpleHash(ObjectWrapper wrapper)
-                    li public SimpleHash(java.util.Map map, ObjectWrapper wrapper)
-                    li protected java.util.Map copyMap(java.util.Map map)
-                    li void put(java.lang.String key, java.lang.Object value)
-                    li boolean containsKey(java.lang.String key)
-                    li void remove(java.lang.String key)
-                    li void putAll(java.util.Map m)
-                    li java.util.Map toMap()
+            +asCode('java').
+                interface TemplateHashModel extends TemplateModel  {
+                    TemplateModel get(String key)
+                    boolean isEmpty()
+                }
+
             h3 Sequence
-            div
-                h4 interface TemplateSequenceModel extends TemplateModel
-                ol
-                    li TemplateModel get(int index)
-                    li int size()
-                h4 class SimpleSequence extends WrappingTemplateModel implements TemplateSequenceModel, java.io.Serializable
-                ol
-                    li public SimpleSequence(TemplateCollectionModel tcm)
-                    li public SimpleSequence(ObjectWrapper wrapper)
-                    li public SimpleSequence(int capacity, ObjectWrapper wrapper) Since 2.3.21
-                    li public SimpleSequence(java.util.Collection collection, ObjectWrapper wrapper)
-                    li void add(java.lang.Object obj)
-                    li SimpleSequence synchronizedWrapper()
+            +asCode('java').
+                interface TemplateSequenceModel extends TemplateModel {
+                    TemplateModel get(int index)
+                    int size()
+                }
+
             h3 Collection
-            div
-                h4 interface TemplateCollectionModel extends TemplateModel
-                ol
-                    li TemplateModelIterator iterator()
-                h4 class SimpleCollection extends WrappingTemplateModel implements TemplateCollectionModel, java.io.Serializable
-                ol
-                    li: strong public SimpleCollection(java.util.Collection collection, ObjectWrapper wrapper)
-                    li: strong public SimpleCollection(java.util.Iterator iterator, ObjectWrapper wrapper)
-                    li public SimpleCollection(java.lang.Iterable iterable, ObjectWrapper wrapper)
+            +asCode('java').
+                interface TemplateCollectionModel extends TemplateModel {
+                    TemplateModelIterator iterator()
+                }
+
         h2 Method
         div
-            h3 interface TemplateMethodModelEx extends TemplateMethodModel
-            ol
-                li java.lang.Object exec(java.util.List arguments)
+            +asCode('java').
+                interface TemplateMethodModelEx extends TemplateMethodModel {
+                    Object exec(List arguments)
+                }
             +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/ProgrammerGuilde.java', 'java', '[18, 26]') Java »
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_013_method.ftl', 'xml', '[1, 1, 3, 3]') FTL + 결과 »
 
@@ -88,14 +59,14 @@ include ../../../source/skeleton.pug
         div
             h3 interface ObjectWrapper
             ol
-                li TemplateModel wrap(java.lang.Object obj)
+                li TemplateModel wrap(Object obj)
             h3 interface ObjectWrapperAndUnwrapper extends ObjectWrapper
             ol
-                li static final java.lang.Object CANT_UNWRAP_TO_TARGET_CLASS
+                li static final Object CANT_UNWRAP_TO_TARGET_CLASS
                 p unwrap은 가능하지만, 결과물이 타깃 클래스 인스턴스가 아닐 수 있음을 표시. 아니면 null
-                li java.lang.Object unwrap(TemplateModel tm)
+                li Object unwrap(TemplateModel tm)
                 p unwrap 실패의 의미로 null을 반환하지 말 것.
-                li java.lang.Object tryUnwrapTo(TemplateModel tm, java.lang.Class targetClass)
+                li Object tryUnwrapTo(TemplateModel tm, Class targetClass)
                 p targetClass가 Object.class가 아닌 경우, 변환이 안 될 것 같으면 CANT_UNWRAP_TO_TARGET_CLASS 반환.
             h3 class DefaultObjectWrapper extends BeansWrapper
             p FreeMarker에서 기본으로 사용하는 ObjectWrapper. Configuration#getDefaultObjectWrapper 또는 DefaultObjectWrapperBuilder#build로 획득.
@@ -106,7 +77,7 @@ include ../../../source/skeleton.pug
         p 모든 템플릿이 공유하는 변수(함수와 directive도 변수임을 상기) 설정. Configuration#setSharedVariable
         li Setting
         p locale, number_format, default_encoding, template_exception_handler, date_format, time_format, datetime_format, time_zone, url_escaping_charset 등
-        +asA('https://freemarker.apache.org/docs/api/freemarker/template/Configuration.html#setSetting-java.lang.String-java.lang.String-', '참고자료')
+            +asA('https://freemarker.apache.org/docs/api/freemarker/template/Configuration.html#setSetting-String-String-')
         li.marker Template loading
         ul
             li 템플릿 로더 설정
@@ -127,8 +98,7 @@ include ../../../source/skeleton.pug
             li 여러 장소에서 로드
             p Configuration#setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[] { loader1, loader2, ... }))
         li.marker Template caching
-
-            | 로드된 템플릿은 캐시된다. 기본 갱신 주기는 5초며, Configuration으로 설정 가능. 클래스 로더를 이용하는 경우 갱신 파악에 문제가 있을 수 있다.
+        p 로드된 템플릿은 캐시된다. 기본 갱신 주기는 5초며, Configuration으로 설정 가능. 클래스 로더를 이용하는 경우 갱신 파악에 문제가 있을 수 있다.
             br
             | getTemplate을 호출하면 캐시에 저장되고, 템플릿 파일이 삭제되면 캐시에서도 삭제된다.
             br

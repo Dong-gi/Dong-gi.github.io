@@ -52,7 +52,6 @@ const posts = {list: [
     { category: 'Infra',               file: '/posts/single/sdkman.html',                       title: 'SDKMAN; The Software Development Kit Manager' },
     { category: 'Infra',               file: '/posts/single/tomcat.html',                       title: 'tomcat' },
     { category: 'Infra',               file: '/posts/infra/cicd.html',                          title: 'CI/CD' },
-    { category: 'Infra',               file: '/posts/infra/oauth.html',                         title: 'OAuth' },
     { category: 'Infra/DB',            file: '/posts/db/concept.html',                          title: '1 DB 기초' },
     { category: 'Infra/DB',            file: '/posts/db/psql_tutorial.html',                    title: '2-1 PostgreSQL 시작하기' },
     { category: 'Infra/DB',            file: '/posts/db/psql_sql.html',                         title: '2-2 PostgreSQL SQL 언어' },
@@ -78,16 +77,16 @@ const posts = {list: [
     { category: '.NET',                file: '/posts/dotnet/csharp_basic.html',                 title: '1-1 C# 기초' },
     { category: '.NET',                file: '/posts/dotnet/csharp_library.html',               title: '1-2 C# 라이브러리' },
     { category: '.NET',                file: '/posts/dotnet/wpf_basic.html',                    title: '2 WPF 기초' },
-    { category: '.NET',                file: '/posts/single/unity.html',                        title: '3 Unity' },
     { category: '.NET',                file: '/posts/project/wpf_data_tool.html',               title: 'x 데이터 작업 툴 - C#.NET, WPF' },
     { category: 'JavaScript',          file: '/posts/javascript/basic.html',                    title: '1-1 코어 JavaScript' },
     { category: 'JavaScript',          file: '/posts/javascript/basic2.html',                   title: '1-2 브라우저 JavaScript' },
     { category: 'JavaScript',          file: '/posts/javascript/jquery.html',                   title: '1-3 jQuery' },
     { category: 'JavaScript',          file: '/posts/javascript/node.html',                     title: '2 Node' },
     { category: 'JavaScript',          file: '/posts/project/sf.html',                          title: 'x SF; Simplest html Framework' },
-    { category: 'Web',                 file: '/posts/front/http.html',                          title: '1 HTTP 1.1' },
-    { category: 'Web',                 file: '/posts/front/html.html',                          title: '2 HTML' },
-    { category: 'Web',                 file: '/posts/front/css.html',                           title: '3 CSS' },
+    { category: 'Web',                 file: '/posts/front/http.html',                          title: 'HTTP 1.1' },
+    { category: 'Web',                 file: '/posts/front/html.html',                          title: 'HTML' },
+    { category: 'Web',                 file: '/posts/front/css.html',                           title: 'CSS' },
+    { category: 'Web',                 file: '/posts/infra/oauth.html',                         title: 'OAuth' },
     { category: 'Web',                 file: '/posts/single/nginx.html',                        title: 'x Nginx' },
     { category: 'Web',                 file: '/posts/single/tomcat.html',                       title: 'x tomcat' },
     { category: 'Web',                 file: '/posts/javascript/basic2.html',                   title: 'x 브라우저 JavaScript' },
@@ -119,6 +118,7 @@ const posts = {list: [
 
     { category: 'Zzz 🚮', file: '/posts/algorithm/ai.html', title: 'AI' },
     { category: 'Zzz 🚮', file: '/posts/ruby/basic.html', title: 'Ruby Basic' },
+    { category: 'Zzz 🚮', file: '/posts/single/unity.html', title: 'Unity' },
 ], codes: {}}
 
 window.addEventListener('load', () => {
