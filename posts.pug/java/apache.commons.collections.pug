@@ -11,15 +11,16 @@ include ../../source/skeleton.pug
 
             h3 Bag&lt;E> Since 2.0
             ol
-                li 컬렉션이 보유한 객체에 대한 갯수를 유지한다.
+                li 컬렉션이 보유한 객체에 대한 개수를 유지한다.
                 li 예를 들어, Bag {a, b, c, a} 인스턴스에 대해 getCount(a) == 2, uniqueSet() == {a, b, c}
-                li Bag의 메서드는 Collection API와 다르게 작동하므로, Collection으로 참조하지 않는 것이 바람직하다
+                li Bag의 일부 메서드는 Collection API와 다르게 작동하므로, Collection으로 참조하지 않을 것을 권장하고 있다
             +asCode('java').
                 boolean add(E object)
-                    // object의 사본이 uniqueSet()에 있다면 카운트만 1 증가하고 false 반환.
+                    // uniqueSet()에 있다면 카운트만 1 증가하고 false 반환.
                     // uniqueSet()에 없다면 사본 추가 → 카운트 1 설정 → true 반환.
                 boolean remove(Object object)
                     // object를 모두 제거하고, 컬렉션의 변동이 있다면 true를 반환한다.
+                boolean remove(Object object, int nCopies)
 
                 boolean containsAll(Collection&lt;?> coll)
                     // coll의 모든 요소가 uniqueSet()에 존재하고, 각 요소에 대한 getCount(Object)가 coll에 존재하는 개수보다 크거나 같은 경우 true 반환
@@ -53,12 +54,12 @@ include ../../source/skeleton.pug
                 li 키와 값의 위치를 뒤집은 BidiMap을 반환하는 inverseBidiMap() 연산도 지원한다
 
             h3 SortedBidiMap&lt;K, V> Since 3.0
-            p 값에 대한 Comparator를 갖고 있어, inverseBidiMap() 또한 SortedBidiMap
+            p 키, 값 모두에 대한 Comparator를 갖고 있어, inverseBidiMap() 또한 SortedBidiMap
 
             h3 MultiValuedMap&lt;K, V> Since 4.1
             ol
                 li 키에 대한 값들을 컬렉션에 보관하는 맵을 정의한다
-                li 키를 통해 얻은 컬렉션의 변경 가능 여부는 정해지지 않는다.
+                li 키를 통해 얻은 컬렉션의 변경 가능 여부는 구현에 따라 다를 수 있다
                 li ListValuedMap&lt;K, V> + SetValuedMap
 
             +pos('OrderedMap')
@@ -68,99 +69,63 @@ include ../../source/skeleton.pug
             h3 OrderedBidiMap&lt;K, V> Since 3.0
             p inverseBidiMap() 또한 OrderedBidiMap
 
-            h3 interface KeyValue&lt;K, V> Since 3.0
-
-            h3 interface Trie&lt;K, V> extends IterableSortedMap&lt;K, V> Since 4.0
+            h3 Trie&lt;K, V> Since 4.0
             p Prefix tree에 대해 정의한다.
-                +w3img('https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Trie_example.svg/1024px-Trie_example.svg.png')
                 +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/TrieTest.java', 'java', '[13,32]')
+                +w3img('https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Trie_example.svg/1024px-Trie_example.svg.png')&attributes({style:'max-width:300px'})
 
         h2 컬렉션 연산 인터페이스
         div
-            h3 interface Unmodifiable Since 3.0
+            h3 Unmodifiable Since 3.0
             p 컬렉션 변경 연산이 제공되지 않음을 표시하는 마커 인터페이스
 
-            h3 interface Get&lt;K, V> Since 4.0
+            h3 Get&lt;K, V> Since 4.0
             p Map 인터페이스의 읽기 기능에 대한 정의를 담고 있다. 라고 적혀있지만 remove(Object) 메서드는 여기에 있다.
 
-            h3 interface IterableGet&lt;K, V> extends Get&lt;K, V> Since 4.0
+            h3 IterableGet&lt;K, V> Since 4.0
             p 이 인터페이스를 구현한 Map은 mapIterator() 메서드를 통해 MapIterator&lt;K, V>를 제공한다.
 
-            h3 interface Put&lt;K, V> Since 4.0
+            h3 Put&lt;K, V> Since 4.0
             p Map 인터페이스의 쓰기 기능에 대한 정의를 담고 있다.  Put(K, V)는 V가 아닌 Object를 반환함에 유의.
 
-            h3 class FluentIterable&lt;E> implements Iterable&lt;E> Since 4.1
-            ol
-                li 스트림의 중간 연산들을 컬렉션에 직접 적용할 수 있는 기능을 제공한다. 기저 컬렉션에 대한 뷰를 반환하기 때문에 변형을 거쳐도 부하가 적다.
-                li 스트림의 종결 연산처럼, 뷰의 요소들로 구성된 새로운 컬렉션을 반환하는 기능을 제공한다.
+            h3 FluentIterable&lt;E> Since 4.1
+            p Stream과 유사한 기능을 제공하는 Iterable 
             +asCode('java').
-                static &lt;T> FluentIterable&lt;T> empty()
-                static &lt;T> FluentIterable&lt;T> of(T singleton)
-                    // + (T...), (Iterable&lt;T>)
+                FluentIterable&lt;E> eval() // 독립적인 새로운 뷰 반환
                 FluentIterable&lt;E> append(E... elements)
-                    // + Iterable&lt;T>
-
                 FluentIterable&lt;E> collate(Iterable&lt;? extends E> other[, Comparator&lt;? super E> comparator])
-                    // (현재 뷰의 원소들 + other에 포함된 원소들)로 구성된 새로운 뷰를 반환한다.
-                    // 비교자를 받는 메서드로 정렬 순서를 지정할 수 있으며, 지정되지 않은 경우 자연스러운 순서(ComparatorUtils.NATURAL_COMPARATOR)가 이용된다.
-                FluentIterable&lt;E> eval()
-                    // 현재 뷰에 대한 독립적인 새로운 뷰를 반환한다.
+                    // 현재 뷰 + other로 구성된 새로운 뷰를 정렬하여 반환
+                    // comparator 지정하지 않은 경우 ComparatorUtils.NATURAL_COMPARATOR 사용
 
-                FluentIterable&lt;E> filter(Predicate&lt;? super E> predicate)
-                FluentIterable&lt;E> limit(long maxSize)
                 FluentIterable&lt;E> loop()
                 FluentIterable&lt;E> reverse()
                 FluentIterable&lt;E> skip(long elementsToSkip)
                 &lt;O> FluentIterable&lt;O> transform(Transformer&lt;? super E, ? extends O> transformer)
                 FluentIterable&lt;E> unique()
-                FluentIterable&lt;E> unmodifiable()
-                FluentIterable&lt;E> zip(Iterable&lt;? extends E> other)
-                    // + Iterable... : 각 이터러블을 순서대로 순회
+                FluentIterable&lt;E> zip(Iterable&lt;? extends E> others...)
 
-                Enumeration&lt;E> asEnumeration()
-                List&lt;E> toList()
-                E[] toArray(Class&lt;E> arrayClass)
-
-                boolean allMatch(Predicate&lt;? super E> predicate) + anyMatch
-                boolean isEmpty()
                 boolean contains(Object object)
                 E get(int position)
-                int size()
 
-                void forEach(Closure&lt;? super E> closure)
-                void copyInto(Collection&lt;? super E> collection)
-
-            h3 interface OrderedIterator&lt;E> extends Iterator&lt;E> Since 3.0
+            h3 OrderedIterator&lt;E> Since 3.0
             p 역방향 순회를 추가로 지원한다
 
-            h3 interface MapIterator&lt;K, V> extends Iterator&lt;K> Since 3.0
+            h3 MapIterator&lt;K, V> Since 3.0
             ol
-                li Map에 대한 이터레이터를 정의한다.
-                li 이 인터페이스를 구현한 Map은 내부에서 데이터를 Entry 객체로 유지하지 않는다(불필요한 객체 생성 방지).
-                li Entry 대신 키를 이용해 순회하며, getValue(), setValue() 연산을 지원한다.
-            +asCode('java').
-                K getKey()
-                V getValue()
-                void remove() // 지원하지 않을 수 있다.
-                V setValue()  // 지원하지 않을 수 있다.
+                li 이 인터페이스를 제공하는 Map은 내부에서 데이터를 Entry 객체로 유지하지 않는다(불필요한 객체 생성 방지).
+                p Entry 대신 키를 이용해 순회
+                li remove(), setValue() 연산은 구현에 따라 지원하지 않을 수 있다.
 
-            h3 interface OrderedMapIterator&lt;K, V> extends MapIterator&lt;K, V>, OrderedIterator&lt;K>
+            h3 OrderedMapIterator&lt;K, V> Since 3.0
+            p OrderedMap에 대한 MapIterator
 
-            h3 interface ResettableIterator&lt;E> extends Iterator&lt;E> Since 3.0
-            +asCode('java').
-                void reset()
-                    // 이너레이터가 생성됐을 때 초기 위치로 돌아간다.
-
-            h3 interface ResettableListIterator&lt;E> extends ListIterator&lt;E>, ResettableIterator&lt;E>, OrderedIterator&lt;E> Since 3.0
-            p 재사용 가능
+            h3 ResettableIterator&lt;E> Since 3.0 + ResettableListIterator
+            p reset() : Iterator가 생성됐을 때 초기 위치로 돌아간다.
 
         h2 유틸리티 클래스
         div
-            h3 class BagUtils Since 2.1
+            h3 BagUtils Since 2.1
             +asCode('java').
-                static final Bag EMPTY_BAG
-                static final Bag EMPTY_SORTED_BAG
-
                 static &lt;E> Bag&lt;E> collectionBag(Bag&lt;E> bag)
                     // Since 4.0 : Collection API를 따르는 백
 
@@ -170,239 +135,78 @@ include ../../source/skeleton.pug
                 static &lt;E> Bag&lt;E> predicatedBag(Bag&lt;E> bag, Predicate&lt;? super E> predicate)        // 아이템 추가 전 테스트 추가
                 static &lt;E> Bag&lt;E> transformingBag(Bag&lt;E> bag, Transformer&lt;? super E, ? extends E>) // 아이템 추가 전 변환기 추가
 
-            h3 class CollectionUtils Since 1.0
-            ol
-                li public static final Collection EMPTY_COLLECTION
-                li static &lt;T> Collection&lt;T> emptyIfNull(Collection&lt;T> collection)
-                p collection이 null이면 EMPTY_COLLECTION, 그 외엔 collection 자체 반환
-                li static &lt;T> Collection&lt;O> union(Iterable&lt;? extends O> a, Iterable&lt;? extends O> b)
-                p a, b의 합집합 표현을 반환한다. + intersection, disjunction(대칭 차집합), subtract
-                p subtract에 한하여 3번째 인자로 Predicate을 받는 함수가 존재한다(Since 4.0)
-                h4 각 원소의 cardinality
-                ul
-                    li union :
-                        +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/CollectionUtilsTest.java', 'java', '[18,30]') a, b중 큰 쪽과 같다
-                    li intersection : a, b중 작은 쪽과 같다
-                    li disjunction : cardinality_of_union - cardinality_of_intersection
-                    li subtract : cardinality_of_a - cardinality_of_b
-                li static boolean containsAll(Collection&lt;?> coll1, Collection&lt;?> coll2) // Since 4.0
-                p coll1이 coll2의 모든 원소를 포함하는지 여부를 반환한다. 각 원소에 대한 cardinality는 고려 대상이 아니다.
-                li static boolean containsAny(Collection&lt;?> coll1, Collection&lt;?> coll2) // Since 2.1
-                li static &lt;?O> Map&lt;O, Integer> getCardinalityMap(Iterable&lt;? extends O> coll)
-                li static boolean isSubCollection(Collection&lt;?> a, Collection&lt;?> b)
-                p a가 b의 부분 컬렉션인지(cardinality 고려) 여부 반환
-                li static boolean isProperSubCollection(Collection&lt;?> a, Collection&lt;?> b)
-                p isSubCollection() && cardinality_of_b > cardinality_of_a를 만족하는 원소가 적어도 하나 존재
-                li static boolean isEqualCollection(Collection&lt;?> a, Collection&lt;?> b)
-                li static &lt;T> boolean filter(Iterable&lt;T> collection, Predicate&lt;? super T> predicate)
-                    br
-                    | static &lt;T> boolean filterInverse(Iterable&lt;T> collection, Predicate&lt;? super T> predicate)
-                p 필터 조건에 만족되지 않는 원소들은 collection에서 제거된다.
-                li static &lt;C> void transform(Collection&lt;C> collection, Transformer&lt;? super C, ? extends C> transformer)
-                li static &lt;O> Collection&lt;O> select(Iterable&lt;? extends O> inputCollection, Predicate&lt;? super O> predicate)
-                    br
-                    | static &lt;O> Collection&lt;O> selectRejected(Iterable&lt;? extends O> inputCollection, Predicate&lt;? super O> predicate)
-                    br
-                    | static &lt;O, R extends Collection&lt;? super O>> R select(Iterable&lt;? extends O> inputCollection, Predicate&lt;? super O> predicate, R outputCollection)
-                    br
-                    | static &lt;O, R extends Collection&lt;? super O>> R selectRejected(Iterable&lt;? extends O> inputCollection, Predicate&lt;? super O> predicate, R outputCollection)
-                    br
-                    | static &lt;O, R extends Collection&lt;? super O>> R select(Iterable&lt;? extends O> inputCollection, Predicate&lt;? super O> predicate, R outputCollection, R rejectedCollection) // Since 4.1
-                li static &lt;I, O> Collection&lt;O> collect(Iterable&lt;I> inputCollection, Transformer&lt;? super I, ? extends O> transformer)
-                    br
-                    | static &lt;I, O> Collection&lt;O> collect(Iterator&lt;I> inputIterator, Transformer&lt;? super I, ? extends O> transformer)
-                    br
-                    | static &lt;I, O, R extends Collection&lt;? super O>> R collect(Iterable&lt;I> inputCollection, Transformer&lt;? super I, ? extends O> transformer, R outputCollection)
-                    br
-                    | static &lt;I, O, R extends Collection&lt;? super O>> R collect(Iterator&lt;I> inputIterator, Transformer&lt;? super I, ? extends O> transformer, R outputCollection)
-                li static &lt;T> boolean addIgnoreNull(Collection&lt;T> collection, T object) // Since 3.2
-                    br
-                    | static &lt;C> boolean addAll(Collection&lt;C> collection, Iterable&lt;? extends C> iterable) + Iterator, Enumeration, C...
-                li static int size(Object object) // Since 3.1
-                    br
-                    | static boolean sizeIsEmpty(Object object) // Since 3.2
-                p Collection, Map, Array, Iterator, Enumeration 지원
-                li static void reverseArray(Object[] array)
-                li static &lt;O extends Comparable&lt;? super O>> List&lt;O> collate(Iterable&lt;? extends O> a, Iterable&lt;? extends O> b, boolean includeDuplicates) // Since 4.0
-                    br
-                    | static &lt;O extends Comparable&lt;? super O>> List&lt;O> collate(Iterable&lt;? extends O> a, Iterable&lt;? extends O> b, Comparator&lt;? super O> c, boolean includeDuplicates) // Since 4.0
-                p 2개의 정렬된 컬렉션을 하나의 정렬된 컬렉션으로 반환
-                li static &lt;E> Collection&lt;List&lt;E>> permutations(COllection&lt;E> collection) // Since 4.0
-                p 구성 요소들에 대한 순열을 반환한다. 사이즈가 큰 경우, PermutationIterator를 이용하면 된다.
-                li static &lt;C> Collection&lt;C> retainAll(Collection&lt;C> collection, Collection&lt;?> retain) // Since 3.2
-                p retain에 담긴 요소들만으로 구성된 컬렉션을 반환한다. 반환된 컬렉션 각 요소의 cardinality는 기존과 동일하다. retain 컬렉션의 탐색 속도가 빠를수록 함수 완료가 빨라진다
-                li static &lt;E> Collection&lt;E> removeAll(Collection&lt;E> collection, Collection&lt;?> remove) // Since 4.0
-                li static &lt;C> Collection&lt;C> predicatedCollection(Collection&lt;C> collection, Predicate&lt;? super C> predicate)
-                p 삽입 제약 추가
-                li static &lt;E> Collection&lt;E> transformingCollection(Collection&lt;E> collection, Transformer&lt;? super E, ? extends E> transformer)
-                p 변환 로직 추가
-
-            h3 class ComparatorUtils Since 2.1
+            h3 CollectionUtils Since 1.0
             +asCode('java').
-                public static final Comparator NATURAL_COMPARATOR
+                static &lt;T> Collection&lt;O> union(Iterable&lt;? extends O> a, Iterable&lt;? extends O> b)
+                    // a, b의 합집합(Multiset; Bag) 표현을 반환한다. + intersection, disjunction(대칭 차집합), subtract
+                    // Since 4.0; subtract에 한하여 3번째 인자로 Predicate을 받는 함수가 존재한다
 
-                static &lt;E> Comparator&lt;E> chainedComparator(Comparator&lt;E>... comparators)
-                static &lt;E> Comparator&lt;E> reversedComparator(Comparator&lt;E> comparator)
-                static &lt;E> Comparator&lt;Boolean> booleanComparator(boolean trueFirst)
-                static &lt;E> Comparator&lt;E> nullLowComparator(Comparator&lt;E> comparator)
-                static &lt;I, O> Comparator&lt;I> transformedComparator(Comparator&lt;O> comparator, Transformer&lt;? super I, ? extends O> fransformer)
-                static &lt;E> E min(E o1, E o2, Comparator&lt;E> comparator) + max
+                    // 각 원소의 cardinality
+                    // union : a, b중 큰 쪽과 같다
+                    // intersection : a, b중 작은 쪽과 같다
+                    // disjunction : cardinality_of_union - cardinality_of_intersection
+                    // subtract : cardinality_of_a - cardinality_of_b
 
-            h3 class EnumerationUtils Since 3.0
+                static boolean containsAny(Collection&lt;?> coll1, Collection&lt;?> coll2) // Since 2.1
+                static boolean containsAll(Collection&lt;?> coll1, Collection&lt;?> coll2)
+                    // Since 4.0; coll1이 coll2의 모든 원소를 포함하는지 여부를 반환한다. 각 원소에 대한 cardinality는 고려 대상이 아니다.
+
+                static &lt;?O> Map&lt;O, Integer> getCardinalityMap(Iterable&lt;? extends O> coll)
+                static boolean isSubCollection(Collection&lt;?> a, Collection&lt;?> b)
+                    // a가 b의 부분 컬렉션인지(cardinality 고려) 여부 반환
+                static boolean isProperSubCollection(Collection&lt;?> a, Collection&lt;?> b)
+                    // isSubCollection() && cardinality_of_b > cardinality_of_a를 만족하는 원소가 적어도 하나 존재
+                static boolean isEqualCollection(Collection&lt;?> a, Collection&lt;?> b)
+                
+                static &lt;E> Collection&lt;List&lt;E>> permutations(COllection&lt;E> collection)
+                    // Since 4.0; 구성 요소들에 대한 순열을 반환한다. 사이즈가 큰 경우, PermutationIterator를 이용
+                
+                static &lt;C> Collection&lt;C> retainAll(Collection&lt;C> collection, Collection&lt;?> retain)
+                    // Since 3.2; retain에 담긴 요소들만으로 구성된 컬렉션을 반환한다. 반환된 컬렉션 각 요소의 cardinality는 기존과 동일하다. retain 컬렉션의 탐색 속도가 빠를수록 함수 완료가 빨라진다
+                
+                static &lt;C> Collection&lt;C> predicatedCollection(Collection&lt;C> collection, Predicate&lt;? super C> predicate)
+                    // 삽입 제약 추가
+
+            h3 IterableUtils Since 4.1
+            p + IteratorUtils. 접합, 변환, 순회 관련 다양한 유틸리티 제공
+
+            h3 ListUtils Since 1.0
             +asCode('java').
-                static&lt;T> T get(Enumeration&lt;T> e, int index) // Since 4.1
-                static&lt;T> List&lt;E> toList(Enumeration&lt;? extends E> enumeration)
-                static List&lt;String> toList(StringTokenizer stringTokenizer)
-
-            h3 class IterableUtils Since 4.1
-            +asCode('java').
-                // + IteratorUtils
-                static &lt;E> Iterable&lt;E> emptyIterable()
-                static &lt;E> Iterable&lt;E> emptyIfNull(Iterable&lt;E> iterable)
-
-                static &lt;E> Iterable&lt;E> chainedIterable(Iterable&lt;? extends E> a, Iterable&lt;? extends E> b)
-                static &lt;E> Iterable&lt;E> filteredIterable(Iterable&lt;E> iterable, Predicate&lt;? super E> predicate)
-                static &lt;E> Iterable&lt;E> boundedIterable(Iterable&lt;E> iterable, long maxSize)
-                static &lt;E> Iterable&lt;E> loopingIterable(Iterable&lt;E> iterable)
-                static &lt;E> Iterable&lt;E> reversedIterable(Iterable&lt;E> iterable)
-                static &lt;E> Iterable&lt;E> skippingIterable(Iterable&lt;E> iterable, long elementsToSkip)
-                static &lt;I, O> Iterable&lt;O> transformedIterable(Iterable&lt;I> iterable, Transformer&lt;? super I, ? extends O> transformer)
-                static &lt;E> Iterable&lt;E> uniqueIterable(Iterable&lt;E> iterable)
-                static &lt;E> Iterable&lt;E> unmodifiableIterable(Iterable&lt;E> iterable)
-                static &lt;E> Iterable&lt;E> zippingIterable(Iterable&lt;? extends E> a, Iterable&lt;? extends E> b)
-
-                static &lt;E> void forEach(Iterable&lt;E> iterable, Closure&lt;? super E> closure)
-                static &lt;E> E forEachButLast(Iterable&lt;E> iterable, Closure&lt;? super E> closure)
-                static &lt;E> E find(Iterable&lt;E> iterable, Predicate&lt;? super E> predicate)
-                static &lt;E> int indexOf(Iterable&lt;E> iterable, Predicate&lt;? super E> predicate)
-                static &lt;E> boolean matchesAll(Iterable&lt;E> iterable, Predicate&lt;? super E> predicate) + matchesAny
-                static &lt;E> long countMatches(Iterable&lt;E> input, Predicate&lt;? super E> predicate)
-                static boolean isEmpty(Iterable&lt;?> iterable)
-                static &lt;E> boolean contains(Iterable&lt;E> iterable, Object object)
-                static &lt;E, T extends E> int frequency(Iterable&lt;E> iterable, T obj)
-                static &lt;T> T get(Iterable&lt;T> iterable, int index)
-                static &lt;T> T first(Iterable&lt;T> iterable) // Since 4.2
-                satic int size(Iterable&lt;?> iterable)
-                static &lt;O> List&lt;List&lt;O>> partition(Iterable&lt;? extends O> iterable, Predicate&lt;? super O> predicate)
-                static &lt;E> List&lt;E> toList(Iterable&lt;E> iterable)
-                static &lt;E> String toString(Iterable&lt;E> iterable)
-
-            h3 class ListUtils Since 1.0
-            +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/ListUtilsTest.java', 'java')
-            +asCode('java').
-                static &lt;T> List&lt;T> emptyIfNull(List&lt;T> list)
-                static &lt;T> List&lt;T> defaultIfNull(List&lt;T> list, List&lt;T> defaultList) // Since 4.0
-
                 static &lt;T> List&lt;T> intersection(List&lt;? extends E> list1, List&lt;? extends E> list2)
-                static &lt;T> List&lt;T> subtract(List&lt;? extends E> list1, List&lt;? extends E> list2)
-                static &lt;T> List&lt;T> union(List&lt;? extends E> list1, List&lt;? extends E> list2)
-                static &lt;T> List&lt;T> sum(List&lt;? extends E> list1, List&lt;? extends E> list2) : union - intersection
-                static &lt;T> List&lt;T> select(Collection&lt;? extends T> inputCollection, Predicate&lt;? super T> predicate) // Since 4.0
-                static &lt;T> List&lt;T> selectRejected(Collection&lt;? extends T> inputCollection, Predicate&lt;? super T> predicate) // Since 4.0
-                static &lt;T> List&lt;T> retainAll(Collection&lt;T> collection, Collection&lt;?> retain) // Since 3.2
-                static &lt;T> List&lt;T> removeAll(Collection&lt;T> collection, Collection&lt;?> remove) // Since 3.2
+                    // + subtract, union, sum(union - intersection)
+
                 static &lt;T> List&lt;T> longestCommonSubsequence(List&lt;T> a, List&lt;T> b) // Since 4.0
 
-                static &lt;T> List&lt;T> unmodifiableList(List&lt;? extends E> list)
-                static &lt;T> List&lt;T> predicatedList(List&lt;E> list, Predicate&lt;E> predicate)
-                static &lt;T> List&lt;T> transformedList(List&lt;E> list, Transformer&lt;? super E, ? extends E> transformer)
                 static &lt;T> List&lt;T> lazyList(List&lt;E> list, Factory&lt;? extends E> factory)
                     // 요청된 인덱스에 한해서만 객체를 생성한다. 빈 구역은 null로 채워진다.
-                static &lt;T> List&lt;T> fixedSizeList(List&lt;T> list) // 요소의 추가/삭제 불가
-                static &lt;T> List&lt;T> synchronizedList(List&lt;E> list)
 
                 static &lt;T> List&lt;List&lt;T>> partition(List&lt;T> list, int size) // Since 4.0
 
-                static boolean isEqualList(Collection&lt;?> list1, Collection&lt;?> list2)
-                static int hashCodeForList(Collection&lt;?> list)
-                static &lt;T> int indexOf(List&lt;T> list, Predicate&lt;T> predicate)
-
-            h3 class MapUtils Since 1.0
-            ol
-                li static &lt;K, V> V getObject(Map&lt;? super K, V> map, K key)
-                p map이 null이면 null 반환
-                li static &lt;K> String getString(Map&lt;? super K, ?> map, K key)
-                p 조회된 객체에 대하여 toString() 호출. map이 null이면 null 반환. key가 map에 없어도 null 반환.
-                    | + Boolean, Number, Byte, Short, Integer, Long, Float, Double, Map, Object
-                    +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', 'java', '[17,32,35,42]')
-                li static &lt;K, V> Properties toProperties(Map&lt;K, V> map)
-                li static Map&lt;String, Object> toMap(ResourceBundle resourceBundle)
-                li static void verbosePrint(PrintStream out, Object label, Map&lt;?, ?> map)
-                +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', 'java', '[17,32,45,62]')
-                li static &lt;K, V> Map&lt;K, V> invertMap(Map&lt;K, V> map)
-                p 키-값 위치를 바꾼 새 HashMap 반환
-                    +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', 'java', '[17,32,65,67]')
-                li static &lt;K> void safeAddToMap(Map&lt;? super K, Object> map, K key, Object value)
-                p null 삽입 거부
-                li static &lt;K, V> Map&lt;K, V> emptyIfNull(Map&lt;K, V> map)
-                li static &lt;K, V> Map&lt;K, V> synchronizedMap(Map&lt;K, V> map) + SortedMap 버전
-                li static &lt;K, V> Map&lt;K, V> unmodifiableMap(Map&lt;? extends K, ? extends V> map) + SortedMap 버전
-                li static &lt;K, V> IterableMap&lt;K, V> predicatedMap(Map&lt;K, V> map, Predicate&lt;? super K> keyPred, Predicate&lt;? super V> valuePred) + transformedMap + SortedMap 버전
-                li static &lt;K, V> IterableMap&lt;K, V> fixedSizeMap(Map&lt;K, V> map) + SortedMap 버전
-                li static &lt;K, V> IterableMap&lt;K, V> lazyMap(Map&lt;K, V> map, Factory&lt;? extends V> factory) + SortedMap 버전
-                li static &lt;K, V> OrderedMap&lt;K, V> orderedMap(Map&lt;K, V> map)
-                li static &lt;K, V> void populateMap(Map&lt;K, V> map, Iterable&lt;? extends V> elements, Transformer&lt;V, K> keyTransformer)
-                +codeBtn('/Repositories/Eclipse/apache-commons-collections-example/src/test/java/MapUtilsTest.java', 'java', '[17,32,70,85]')
-                li static &lt;K, V> IterableMap&lt;K, V> iterableMap(Map&lt;K, V> map) // Since 4.0 + SortedMap 버전
-
-            h3 class MultiMapUtils Since 4.1
+            h3 MapUtils Since 1.0
             +asCode('java').
-                static &lt;K, V> MultiValuedMap&lt;K, V> emptyIfNull(MultiValuedMap&lt;K, V> map)
-                static &lt;K, V> Collection&lt;V> getCollection(MultiValuedMap&lt;K, V> map, K key)
-                    // + getValuesAsList, Set, Bag
-                static &lt;K, V> ListValuedMap&lt;K, V&gt newListValuedHashMap()
-                    // + Set
-                static &lt;K, V> MultiValuedMap&lt;K, V> unmodifiableMultiValuedMap(MultiValuedMap&lt;? extends K, ? extends V> map)
-                    // + transformedMultiValuedMap
+                static &lt;K> String getString(Map&lt;? super K, ?> map, K key)
+                    // 조회된 객체에 대하여 toString() 호출. map이 null이면 null 반환. key가 map에 없어도 null 반환.
+                    // + Boolean, Number, Byte, Short, Integer, Long, Float, Double, Map, Object
 
-            h3 class MultiSetUtils Since 4.1
+                static &lt;K, V> Properties toProperties(Map&lt;K, V> map)
+                static Map&lt;String, Object> toMap(ResourceBundle resourceBundle)
+
+                static &lt;K, V> Map&lt;K, V> invertMap(Map&lt;K, V> map)
+                    // 키-값 위치를 바꾼 새 HashMap 반환
+
+                static void verbosePrint(PrintStream out, Object label, Map&lt;?, ?> map)
+                    // + debugPrint
+
+            h3 MultiMapUtils Since 4.1
             +asCode('java').
-                static &lt;E> MultiSet&lt;E> synchronizedMultiSet(MultiSet&lt;E> multiset)
-                static &lt;E> MultiSet&lt;E> unmodifiableMultiSet(MultiSet&lt;? extends E> multiset)
-                static &lt;E> MultiSet&lt;E> predicatedMultiSet(MultiSet&lt;E> multiset, Predicate&lt;? super E> predicate)
+                static &lt;K, V> ListValuedMap&lt;K, V> newListValuedHashMap()
+                    // + newSetValuedHashMap
 
-            h3 class PredicateUtils Since 3.0
+            h3 SetUtils Since 2.1
             +asCode('java').
-                static &lt;T> Predicate&lt;T> exceptionPredicate()
-                    // + true, false
-                static &lt;T> Predicate&lt;T> nullPredicate()
-                    // + notNull
-                static &lt;T> Predicate&lt;T> equalPredicate(T value)
-                static &lt;T> Predicate&lt;T> identityPredicate(T value)
-                static &lt;T> Predicate&lt;T> instanceofPredicate(Class&lt;?> type)
-                static &lt;T> Predicate&lt;T> uniquePredicate()
-                    // 각 입력 객체에 대하여, 최초에만 true 반환
-                static &lt;T> Predicate&lt;T> andPredicate(Predicate&lt;? super T> predicate1, Predicate&lt;? super T> predicate2)
-                    // + all, or, any, either(XOR), one, neither(NOR), none, not
-                static &lt;T> Predicate&lt;T> asPredicate(Transformer&lt;? super T, Boolean> transformer)
-                static &lt;T> Predicate&lt;T> nullsExceptionPredicate(Predicate&lt;? super T> predicate)
-                    // + nullsFalse, nullsTrue
-                static &lt;T> Predicate&lt;T> transformedPredicate(Transformer&lt;? super T, ? extends T> transformer, Predicate&lt;? super T> predicate) // Since 3.1
-
-            h3 class QueueUtils Since 4.0
-            +asCode('java').
-                static &lt;E> Queue&lt;E> synchronizedQueue(Queue&lt;E> queue) // Since 4.2
-                static &lt;E> Queue&lt;E> unmodifiableQueue(QUeue&lt;? extends E> queue) + predicated, tranforming
-
-            h3 class SetUtils Since 2.1
-            +asCode('java').
-                static &lt;E> SetUtils.SetView&lt;E> difference(Set&lt;? extends E> a, Set&lt;? extends E> b) // Since 4.1
-                    // 차집합 a-b. + disjunction(대칭 차집합), intersection(교집합), union(합집합)
-                static &lt;T> int hashCodeForSet(Collection&lt;T> set)
-                static &lt;E> HashSet&lt;E> hashSet(E... items) // Since 4.3
-                static boolean isEqualSet(Collection&lt;?> set1, Collection&lt;?> set2)
-                static &lt;E> Set&lt;E> newIdentityHashSet() // Since 4.1 : ==을 이용하는 집합
-                static &lt;E> Set&lt;E> unmodifiableSet(E... items) // Since 4.3
-                static &lt;E> Set&lt;E> orderedSet(Set&lt;E> set)
-                    // + predicatedSet, predicatedNavigableSet Since 4.1, predicatedSortedSet, synchroizedSet, synchronizedSortedSet, transformedSet, transformedSortedSet, transformedNavigableSet Since 4.1, unmodifiableSet, unmodifiableNavigableSet Since 4.1, unmodifiableSortedSet
-            div
-                h4 abstract static class SetUtils.SetView extends AbstractSet&lt;E> Since 4.1
-                +asCode('java').
-                    &lt;S extends Set&lt;E>> void copyInto(S set)
-                    Set&lt;E> toSet()
-
-            h3 class SplitMapUtils Since 4.0
-            p Put, Get을 구현한 객체를 Map으로 변환한다
+                static &lt;E> SetUtils.SetView&lt;E> difference(Set&lt;? extends E> a, Set&lt;? extends E> b)
+                    // Since 4.1; 차집합 a-b
+                    // + disjunction(대칭 차집합), intersection(교집합), union(합집합)
 
     h1 org.apache.commons.collections4.bag
     ol
