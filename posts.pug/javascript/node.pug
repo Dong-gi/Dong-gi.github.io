@@ -1,5 +1,5 @@
 include ../../source/skeleton.pug
-+post('Node', 'Node, NPM, mongodb, jade, express', 'Node 정리')
++post('Node', 'Node, NPM, mongodb, pug, express', 'Node 정리')
     h1 NPM
     div
         h2 버전 정의
@@ -320,7 +320,7 @@ include ../../source/skeleton.pug
                 td app.set('views', path.join(__dirname, 'templates'))
                 td 템플릿 디렉터리
             tr
-                td app.set('view engine', 'jade')
+                td app.set('view engine', 'pug')
                 td 템플릿 확장자
         li Method 라우팅
         p path에는 regex 사용 가능
@@ -376,37 +376,37 @@ include ../../source/skeleton.pug
                 }
             ]
 
-    h1 3rd/Jade : 템플릿 엔진
+    h1 3rd/Pug : 템플릿 엔진(구 Jade)
     ul
-        li jade -P // Pretty
+        li pug -P // Pretty
         p 기본 옵션은 불필요한 공백 제거
         li ↓ 아래 코드들은 1.11.0 버전 결과임
         li 주석
-            +codeBtn('/Repositories/Node/jade-start/doc1.jade', 'text')
-            +codeBtn('/Repositories/Node/jade-start/doc1.html', 'text') 결과 »
+            +codeBtn('/Repositories/Node/pug-start/doc1.pug', 'text')
+            +codeBtn('/Repositories/Node/pug-start/doc1.html', 'text') 결과 »
         li Plain Text
-            +codeBtn('/Repositories/Node/jade-start/doc2.jade', 'text')
-            +codeBtn('/Repositories/Node/jade-start/doc2.html', 'text') 결과 »
+            +codeBtn('/Repositories/Node/pug-start/doc2.pug', 'text')
+            +codeBtn('/Repositories/Node/pug-start/doc2.html', 'text') 결과 »
         li 코드 실행
-            +codeBtn('/Repositories/Node/jade-start/doc3.jade', 'text')
-            +codeBtn('/Repositories/Node/jade-start/doc3.html', 'text') 결과 »
+            +codeBtn('/Repositories/Node/pug-start/doc3.pug', 'text')
+            +codeBtn('/Repositories/Node/pug-start/doc3.html', 'text') 결과 »
         li 태그 속성
-            +codeBtn('/Repositories/Node/jade-start/doc4.jade', 'text')
-            +codeBtn('/Repositories/Node/jade-start/doc4.html', 'text') 결과 »
+            +codeBtn('/Repositories/Node/pug-start/doc4.pug', 'text')
+            +codeBtn('/Repositories/Node/pug-start/doc4.html', 'text') 결과 »
         li 다른 문서 포함
-            +codeBtn('/Repositories/Node/jade-start/doc5.main.jade', 'text') main
-            +codeBtn('/Repositories/Node/jade-start/doc5.part.jade', 'text') part
-            +codeBtn('/Repositories/Node/jade-start/doc5.text.html', 'text') text
-            +codeBtn('/Repositories/Node/jade-start/doc5.main.html', 'text') 결과 »
+            +codeBtn('/Repositories/Node/pug-start/doc5.main.pug', 'text') main
+            +codeBtn('/Repositories/Node/pug-start/doc5.part.pug', 'text') part
+            +codeBtn('/Repositories/Node/pug-start/doc5.text.html', 'text') text
+            +codeBtn('/Repositories/Node/pug-start/doc5.main.html', 'text') 결과 »
         li 템플릿 - mixin
-            +codeBtn('/Repositories/Node/jade-start/doc6.jade', 'text')
-            +codeBtn('/Repositories/Node/jade-start/doc6.html', 'text') 결과 »
+            +codeBtn('/Repositories/Node/pug-start/doc6.pug', 'text')
+            +codeBtn('/Repositories/Node/pug-start/doc6.html', 'text') 결과 »
         li 템플릿 - extends
-            +codeBtn('/Repositories/Node/jade-start/doc7.template.jade', 'text') template
-            +codeBtn('/Repositories/Node/jade-start/doc7.main.jade', 'text') main 예시1 »
-            +codeBtn('/Repositories/Node/jade-start/doc7.main.html', 'text') 결과1 »
-            +codeBtn('/Repositories/Node/jade-start/doc7.main2.jade', 'text') main 예시1 »
-            +codeBtn('/Repositories/Node/jade-start/doc7.main2.html', 'text') 결과1 »
+            +codeBtn('/Repositories/Node/pug-start/doc7.template.pug', 'text') template
+            +codeBtn('/Repositories/Node/pug-start/doc7.main.pug', 'text') main 예시1 »
+            +codeBtn('/Repositories/Node/pug-start/doc7.main.html', 'text') 결과1 »
+            +codeBtn('/Repositories/Node/pug-start/doc7.main2.pug', 'text') main 예시1 »
+            +codeBtn('/Repositories/Node/pug-start/doc7.main2.html', 'text') 결과1 »
 
     h1 3rd/mocha : 테스트 프레임워크
     ul
