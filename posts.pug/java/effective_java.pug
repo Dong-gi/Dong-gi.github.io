@@ -37,6 +37,7 @@ include ../../source/skeleton.pug
             private static class FieldHolder {
                 static final FieldType field = computeFieldValue();
             }
+        +pos('객체 필드 초기화 지연')
         li 객체 필드 초기화 지연
         +asCode('java').
             private volatile FieldType field;

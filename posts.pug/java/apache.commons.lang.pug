@@ -1,39 +1,31 @@
 include ../../source/skeleton.pug
-+post('Apache Commons Lang', 'Apache Commons Lang', 'Apache Commons Lang 정리')
++post('Apache Commons Lang 3.9', 'Apache Commons Lang', 'Apache Commons Lang 정리')
     h1 org.apache.commons.lang3 Since 1.0
     div
-        h2 class AnotationUtils Since 3.0
+        h2 AnotationUtils Since 3.0
         p 스레드-안전. 애너테이션 (프록시) 인스턴스에 관한 유틸리티를 제공한다
         +asCode('java').
             static boolean equals(Annotation a1, Annotation a2) // Annotation.equals(Object)의 문서대로 처리해준다
             static int hashCode(Annotation a)                   // Annotation.hashCode()의 문서대로 처리해준다
             static String toString(Annotation a)                // Annotation.toString()의 문서대로 처리해준다
 
-        h2 class ArchUtils Since 3.6
-        p java.lang.System "os.arch" 프로퍼티에 관한 유틸리티를 제공한다
-        +asCode('java').
-            static Processor getProcessor()             // 현재 JVM의 프로세서 정보를 반환
-            static Processor getProcessor(String value) // value는 "os.arch" 프로퍼티의 반환값과 유사해야 한다
+        h2 ArchUtils Since 3.6
+        p "os.arch" 시스템 프로퍼티에 관한 유틸리티를 제공한다
+        +asCode('java') static Processor getProcessor()
 
-        h2 class ArrayUtils Since 2.0
+        h2 ArrayUtils Since 2.0
         p 스레드-안전. null에 관대한 배열 유틸리티를 제공한다.
         +asCode('java').
-            public static final Object[] EMPTY_OBJECT_ARRAY
-            public static final Class&lt;?>[] EMPTY_CLASS_ARRAY
-            public static final long[] EMPTY_LONG_ARRAY
-            public static final Long[] EMPTY_LONG_OBJECT_ARRAY // + ...
-
-            static &lt;T> boolean isArrayIndexValid(T[] array, int index) // Since 3.8
+            static &lt;T> boolean isArrayIndexValid(T[] array, int index)    // Since 3.8
             static String toString(Object array, String stringIfNull)     // + toStringArray
-            static int hashCode(Object array)
-            static Map&lt;Object, Object> toMap(Object[] array)           // 각 원소는 Map.Entry거나 배열이여야 하며, 배열인 경우 원소가 2개 이상 있어야 한다(1번째는 키, 2번째는 값)
-            static &lt;T> T[] toArray(T... items)                         // Since 3.0
-            static &lt;T> T[] clone(T[] array)                            // 얕은 복사 수행
-            static &lt;T> T[] nullToEmpty(T[] array, Class&lt;T[]> type)  // Since 3.5
+            static Map&lt;Object, Object> toMap(Object[] array)
+                // 각 원소는 Map.Entry거나 배열이여야 하며, 배열인 경우 원소가 2개 이상 있어야 한다(1번째는 키, 2번째는 값)
+            static &lt;T> T[] toArray(T... items)                            // Since 3.0
+            static &lt;T> T[] clone(T[] array)                               // 얕은 복사 수행
+            static &lt;T> T[] nullToEmpty(T[] array, Class&lt;T[]> type)        // Since 3.5
                 // 방어적 프로그래밍 기법 : array가 null이면 같은 타입의 빈 배열을 반환한다. null이 아니면 그대로 반환.
             static &lt;T> T[] subarray(T[] array, int startIndexInclusive, int endIndexExclusive)
             static boolean isSameLength(Object[] array1, Object[] array2) // null은 카운트 제외
-            static int getLength(Object array)                            // null이면 0
             static boolean isSameType(Object array1, Object array2)       // 배열이 같은 타입인지 반환한다. 다차원 배열 타입도 처리된다
             static void shuffle(Object[] array)                           // Since 3.6
             static void reverse(Object[] array, int startIndexInclusive, int endIndexExclusive)
@@ -43,38 +35,28 @@ include ../../source/skeleton.pug
             static int indexOf(Object[] array, Object objectToFind, int startIndex) 
                 // null에 대하여 INDEX_NOT_FOUND(-1)를 반환한다
                 // + lastIndexOf, contains
-            static char[] toPrimitive(Character[] array, char valueForNull)
-            static Character[] toObject(char[] array)
-            static boolean isEmpty(Object[] array)                        // Since 2.1, null이면 true + isNotEmpty
-            static &lt;T> T[] addAll(T[] array1, T... array2)             // Since 2.1
+            static &lt;T> T[] addAll(T[] array1, T... array2)                   // Since 2.1
                 // + add, remove, removeElement, removeAll, removeElements, removeAllOccurences, insert
             static &lt;T> boolean isSorted(T[] array, Comparator&lt;T> comparator) // Since 3.4
 
-        h2 class BitField Since 2.0
+        h2 BitField Since 2.0
         p 클래스 인스턴스 내부에 비트값들을 저장하지 않고, 외부 int, short, byte에 대한 마스킹 연산을 지원한다
             +codeBtn('/Repositories/Eclipse/apache-commons-lang-example/src/test/java/BitFieldTest.java', 'java')
         +asCode('java').
-            public BitField(int mask)
-
             int getValue(int holder)            // 마스크 비트에 해당하는 비트들을 우측으로 시프트하여 값 반환
             int getRawValue(int holder)         // 마스크 비트에 해당하는 비트들의 위치 그대로 값 반환
             int set(int holder)                 // + clear
             int setValue(int holder, int value) // 마스크 비트에 value를 설정한 후의 값을 반환
             boolean isSet(int holder)           // 마스크 비트에 해당하는 비트들 중 하나라도 설정되었다면 true
-                // + isAllSet
 
-        h2 class BooleanUtils Since 2.0
-        p 스레드-안전. boolean, Boolean에 관한 유틸리티 제공
+        h2 BooleanUtils Since 2.0
         +asCode('java').
-            static boolean toBoolean(Boolean bool, boolean valueIfNull)
-            static boolean toBoolean(String str)
-                // 대소문자 무관. true : "true", "on", "y", "t", "yes". toBooleanObject(String)에서는 키워드 외의 문자열에 대해서 null 반환
             static String toStringTrueFalse(boolean bool)
                 // + toStringOnOff, toStringYesNo
             static boolean and(boolean... array)
                 // Since 3.0.1 + or, xor
 
-        h2 class ClassPathUtils Since 3.3
+        h2 ClassPathUtils Since 3.3
         +asCode('java').
             ClassPathUtils.toFullyQualifiedName(StringUtils.class, "StringUtils.properties")
                 == "org.apache.commons.lang3.StringUtils.properties"
@@ -82,42 +64,25 @@ include ../../source/skeleton.pug
             ClassPathUtils.toFullyQualifiedPath(StringUtils.class, "StringUtils.properties")
                 == "org/apache/commons/lang3/StringUtils.properties"
 
-        h2 class Functions
+        h2 Functions
         p 예외를 허용하는 함수 유틸리티. 내부에서 발생한 예외는 RuntimeException으로 감싸여 전달된다
         +asCode('java').
-            @FunctionalInterface static interface Functions.FailableConsumer&lt;O, T extends Throwable>
-            @FunctionalInterface static interface Functions.FailableFunction&lt;I, O, T extends Throwable>
-            @FunctionalInterface static interface Functions.FailablePredicate&lt;O, T extends Throwable>
-            @FunctionalInterface static interface Functions.FailableRunnable&lt;T extends Throwable>
-            @FunctionalInterface static interface Functions.FailableCallable&lt;O, T extends Throwable>
-            @FunctionalInterface static interface Functions.FailableBiConsumer&lt;O1, O2, T extends Throwable>
-            @FunctionalInterface static interface Functions.FailableBiFunction&lt;I1, I2, O, T extends Throwable>
-            @FunctionalInterface static interface Functions.FailableBiPredicate&lt;O1, O2, T extends Throwable>
-
-            static &lt;T extends Throwable> void run(Functions.FailableRunnable&lt;T> pRunnable)
+            static &lt;T extends Throwable> void run(FailableRunnable&lt;T> pRunnable)
                 // + call(Callable), accept(Consumer), apply(Function), test(Predicate)
-            @SafeVarargs static void tryWithResources(Functions.FailableRunnable&lt;? extends Throwable> pAction, Functions.FailableRunnable&lt;? extends Throwable>... pResources)
+            static void tryWithResources(FailableRunnable&lt;? extends Throwable> pAction, FailableRunnable&lt;? extends Throwable>... pResources)
                 // AutoCloseable하지 않은 객체들에 대해, pAction 실행 후 성공/실패 여부와 무관하게 pResources가 제공된 순서대로 실행됨을 보장한다.
             static RuntimeException rethrow(Throwable pThrowable)
-                // 사용 예시
-                throw rethrow(e);
+                // 사용 예 : throw rethrow(e);
 
-        h2 class ObjectUtils Since 1.0
-        p 스레드-안전. 객체 관련 유틸리티를 제공한다
+        h2 ObjectUtils Since 1.0
         +asCode('java').
-            static boolean isEmpty(Object object)
-                // CharSequence : length() == 0
-                // Array : length == 0
-                // Collection : size() == 0
-                // Map : size() == 0
-                // Since 3.9 + isNotEmpty
             static &lt;T> T defaultIfNull(T object, T defaultValue)
-            @SafeVarargs static &lt;T> T firstNonNull(T... values) // Since 3.0
-            static boolean anyNotNull(Object... values)            // Since 3.5 + allNotNull
-            @SafeVarargs static &lt;T extends Comparable&lt;? super T>> T min (T... values)
+            static &lt;T> T firstNonNull(T... values) // Since 3.0
+            static boolean anyNotNull(Object... values) // Since 3.5 + allNotNull
+            static &lt;T extends Comparable&lt;? super T>> T min (T... values)
                 // + max, compare, median(중앙값), mode(최빈값)
 
-        h2 class RandomUtils Since 3.3
+        h2 RandomUtils Since 3.3
         p java.util.Random 인스턴스를 생성하는 귀찮음을 해소해줄 수 있다. 성능/정확성을 위해
             +asA('https://commons.apache.org/proper/commons-rng/commons-rng-core/javadocs/api-1.2/overview-summary.html', 'Commons RNG')
             | 를 고려해봄이 좋다
@@ -126,7 +91,7 @@ include ../../source/skeleton.pug
             static byte[] nextBytes(int count)
             static int nextInt(int startInclusive, int endExclusive) // + long, double, float
 
-        h2 class RandomStringUtils Since 1.0
+        h2 RandomStringUtils Since 1.0
         p 스레드-안전. 간단한 랜덤 문자열 생성. 정교한 작업이 필요하다면
             +asA('https://commons.apache.org/proper/commons-text/javadocs/api-release/', 'commons-text')
             |  RandomStringGenerator 이용
@@ -139,14 +104,14 @@ include ../../source/skeleton.pug
             static String randomGraph(int minLengthInclusive, int maxLengthExclusive)        // Since 3.5 + randomPrint
                 // 공백 문자를 제외한, 눈에 보이는 문자들(POSIX [:graph:] )로만 구성
             static String random(int count, String chars)
-            // ...
 
-        h2 final class Range&lt;T> implements Serializable Since 3.0
+        h2 Range&lt;T> Since 3.0
         p 스레드-안전. 비교 가능한 객체의 구간을 정의한다.
         +asCode('java').
             static &lt;T> Range&lt;T> is(T element, Comparator&lt;T> comparator)
                 // 구간의 최소/최댓값 모두 element로 설정한 구간을 반환한다
             static &lt;T> Range&lt;T> between(T fromInclusive, T toInclusive, Comparator&lt;T> comparator)
+
             T getMinimum()
                 // + getMaximum, getComparator
             boolean contains(T element)
@@ -155,12 +120,12 @@ include ../../source/skeleton.pug
                 // isBefore면 -1, contains면 0, isAfter면 1
             Range&lt;T> intersectionWith(Range&lt;T> other) // Since 3.0.1
 
-        h2 class RegExUtils Since 3.8
+        h2 RegExUtils Since 3.8
         +asCode('java').
             static String removeAll(String text, String regex)
                 // + removeFirst, removePattern(removeAll + Pattern.DOTALL 옵션), replaceAll, replaceFirst, replacePattern(replaceAll + Pattern.DOTALL 옵션)
 
-        h2 class SerializationUtils Since 1.0
+        h2 SerializationUtils Since 1.0
         p 스레드-안전. 직렬화/역직렬화 유틸리티 제공
         +asCode('java').
             static &lt;T extends Serializable> T clone(T object)  // 직렬화를 이용한 deep clone
@@ -168,7 +133,7 @@ include ../../source/skeleton.pug
             static byte[] serialize(Serializable obj)
             static &lt;T> T deserialize(byte[] objectData)
 
-        h2 class StringUtils Since 1.0
+        h2 StringUtils Since 1.0
         p 스레드-안전. null 안전한 String 유틸리티 제공
         +asCode('java').
             static String normalizeSpace(String str)                                                 // Since 3.0
@@ -184,14 +149,14 @@ include ../../source/skeleton.pug
                 // + containsAny, containsOnly(검색 대상 문자들로만 구성됐는지 여부), containsNone, startWithAny, endsWithAny
             static int indexOf(CharSequence seq, CharSequence searchSeq, int startPos)               // Since 3.0
                 // + lastIndexOf, indexOfAny, indexOfAnyBut(검색 대상 문자에 해당하지 않는 최초의 인덱스)
-            static int ordinalIndexOf(CharSequence str, CharSequence searchStr, int ordinal)         // Since 3.0 + lastOrdinalIndexOf
-                // ordinal번째로 검색된 위치를 반환
+            static int ordinalIndexOf(CharSequence str, CharSequence searchStr, int ordinal)         // Since 3.0
+                // ordinal번째로 검색된 위치를 반환. + lastOrdinalIndexOf
             static String left(String str, int len)                                                  // + right, mid, center, abbreviate
             static String substringBefore(String str, String separator)                              // Since 2.0
                 // + substringAfter, substringBeforeLast, substringAfterLast, substringBetween, substringsBetween
             static String[] splitByWholeSeparator(String str, String separator, int max)
                 // + splitPreserveAllTokens, splitByWholeSeparatorPreserveAllTokens, splitByCharacterType
-            @SafeVarargs static &lt;T> String join(T... elements)
+            static &lt;T> String join(T... elements)                                                 // + joinWith
             static String deleteWhitespace(String str)
                 // + removeStart, removeEnd, remove, replaceOnce, replaceEach, replaceEachRepeatedly(문자열이 containsNone을 만족할 때까지 반복), replaceChars
             static String overlay(String str, String overlay, int start, int end)                    // Since 2.0
@@ -200,9 +165,9 @@ include ../../source/skeleton.pug
                 // + reverse, reverseDelimited
             static String getCommonPrefix(String... strs)                                            // Since 2.4
             static String appendIfMissing(String str, CharSequence suffix, CharSequence... suffixes) // Since 3.2 + prependIfMissing
-            static String wrap(String str, String wrapWith)                                          // Since 3.4 + + wrapIfMissing, unwrap
+            static String wrap(String str, String wrapWith)                                          // Since 3.4 + wrapIfMissing, unwrap
 
-        h2 class SystemUtils Since 1.0
+        h2 SystemUtils Since 1.0
         p 스레드-안전. java.lang.System에 관한 헬퍼 제공
         +asCode('java').
             public static final String JAVA_HOME      // Since Java 1.1
@@ -212,7 +177,7 @@ include ../../source/skeleton.pug
             public static final boolean IS_OS_WINDOWS // Since 2.0
             // ...
 
-        h2 class Validate Since 2.0
+        h2 Validate Since 2.0
         p 스레드-안전. 인자 평가에 관한 유틸리티를 제공한다
         +asCode('java').
             static void isTrue(boolean expression, String format, Object... values)
@@ -221,22 +186,15 @@ include ../../source/skeleton.pug
             static &lt;T> T[] noNullElements(T[] array, String format, Object... values)
             static &lt;T> T[] validIndex(T[] array, int index, String format, Object... values) // Since 3.0
             static void matchesPattern(CharSequence input, String pattern)                      // Since 3.0
-            static &lt;T> void inclusiveBetween(T start, T end, Comparable&lt;T> value)         // Since 3.0 + + exclusiveBetween
+            static &lt;T> void inclusiveBetween(T start, T end, Comparable&lt;T> value)         // Since 3.0 + exclusiveBetween
             static void isInstanceOf(Class&lt;?> type, Object obj)                              // Since 3.0
             static void isAssignableFrom(Class&lt;?> superType, Class&lt;?> type)               // Since 3.0
 
-    h1 org.apache.commons.lang3.arch Since 3.6
-    div
-        h2 class Processor Since 3.6
-        +asCode('java').
-            static enum Processor.Arch { BIT_32, BIT_64, UNKNOWN }
-            static enum Processor.Type { IA_64, PPC, UNKNOWN, X86 }
-
-    h1 org.apache.commons.lang3.concurrent
+    h1 ...concurrent
     div
         h2 CircuitBreaker
         div
-            h3 interface CircuitBreaker&lt;T> Since 3.5
+            h3 CircuitBreaker&lt;T> Since 3.5
             ol
                 li
                     +asA('https://martinfowler.com/bliki/CircuitBreaker.html', 'CircuitBreaker')
@@ -245,24 +203,19 @@ include ../../source/skeleton.pug
                 li 회로에서 가져온 개념이므로 close가 가용, open이 불가를 의미한다
             +asCode('java').
                 boolean isOpen()
-                void close() + open
+                void close() // + open
                 boolean checkState()
                     // 가용 상태를 재확인하여 필요하다면 상태를 변경한다.
                 boolean incrementAndCheckState(T increment)
                     // checkState()에 인자가 필요한 경우 이용한다
 
-            h3 abstract class AbstractCircuitBreaker&lt;T> implements CircuitBreaker&lt;T> Since 3.5
-            +asCode('java').
-                void addChangeListener(PropertyChangeListener listener)
-                void removeChangeListener(PropertyChangeListener listener)
-
-            h3 class ThresholdCircuitBreaker extends AbstractCircuitBreaker&lt;Long> Since 3.5
+            h3 ThresholdCircuitBreaker Since 3.5
             p 스레드-안전. 1회용 CircuitBreaker를 제공한다. 물론 close()로 강제로 천이시킬 수 있다
             +asCode('java').
                 public ThresholdCircuitBreaker(long threshold)
                 long getThreshold()
 
-            h3 class EventCountCircuitBreaker extends AbstractCircuitBreaker&lt;Integer> Since 3.5
+            h3 EventCountCircuitBreaker Since 3.5
             ol
                 li 카운트와 인터벌을 가지고 아래와 같은 서비스를 제공할 수 있다. 카운팅은 외부에서 직접해야함에 유의
                 ul
@@ -271,70 +224,52 @@ include ../../source/skeleton.pug
                     li 분당 요청이 n개 이하로 떨어지면 상태를 CLOSED로 천이
                 li public EventCountCircuitBreaker(int threshold, long checkInterval, TimeUnit checkUnit)
                 p 기준 이벤트 카운트/인터벌 모두 공유. 초당 최대 5개의 처리를 하는
-                    +codeBtn('/Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', 'java', '[11,32]')
+                    +codeBtn('/Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', 'java', '[11,32]') 예시
                 li public EventCountCircuitBreaker(int openingThreshold, long checkInterval, TimeUnit checkUnit, int closingThreshold)
                 p 기준 인터벌을 공유. 초당 5개 이상의 요청이 발생하면 OPEN, 초당 2개 이하로 떨어지면(부정확) CLOSE하는
-                    +codeBtn('/Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', 'java', '[34,61]')
+                    +codeBtn('/Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', 'java', '[34,61]') 예시
                 li public EventCountCircuitBreaker(int openingThreshold, long openingInterval, TimeUnit openingUnit, int closingThreshold, long closingInterval, TimeUnit closingUnit)
                 p 초당 5번 이상 실패하면 2초간 OPEN하는
-                    +codeBtn('/Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', 'java', '[63,90]')
+                    +codeBtn('/Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java', 'java', '[63,90]') 예시
 
         h2 Initializer
         div
-            h3 interface ConcurrentInitializer&lt;T> Since 3.0
-            ol
-                li 스레드-안전한 초기화 로직을 의미한다
-                li T get()
+            h3 ConcurrentInitializer&lt;T> Since 3.0
+            p 스레드-안전한 초기화 로직을 의미한다
 
-            h3
-                | abstract class AtomicInitializer&lt;T> implements ConcurrentInitializer&lt;T> Since 3.0
-            ol
-                li 『Effective Java』에서 소개하는
-                    +codeBtn('/posts/java/effective_java.html', 'nohighlight') 객체 필드 초기화 지연
-                    | 과 유사한 형태의 로직으로, AtomicReference를 이용해 단 한 번만 객체가 초기화됨을 보장한다
-                li protected abstrct T initialize()
+            h3 AtomicInitializer&lt;T> Since 3.0
+            p 『Effective Java』에서 소개하는
+                +goto('객체 필드 초기화 지연', 'effective_java.html')
+                | 과 유사한 형태의 로직으로, AtomicReference를 이용해 단 한 번만 객체가 초기화됨을 보장한다
 
-            h3 abstract class AtomicSafeInitializer&lt;T> implements ConcurrentInitializer&lt;T> Since 3.0
-            p AtomicInitializer와 다르가 initialize()가 단 한 번만 호출됨이 보장된다
+            h3 AtomicSafeInitializer&lt;T> Since 3.0
+            p AtomicInitializer + initialize()가 단 한 번만 호출됨이 보장된다
 
-            h3 abstract class BackgroundInitializer&lt;T> implements ConcurrentInitializer&lt;T> Since 3.0
+            h3 BackgroundInitializer&lt;T> Since 3.0
             p 내부적으로 ExecutorService와 Future를 이용해 백그라운드 초기화 작업을 지원한다. start()로 초기화를 다른 스레드에서 시작시키고, get()을 통해 블로킹할 수 있다.
             +asCode('java').
-                final ExecutorService getExternalExecutor()
                 boolean start()
                     // 단 한 번만 실행됨이 보장된다. 최초에만 true, 나머지는 false 반환.
                 boolean isStarted()
                     // == (future != null)
                 Future&lt;T> getFuture()
 
-            h3 abstract class LazyInitializer&lt;T> implements ConcurrentInitializer&lt;T> Since 3.0
-            ol
-                li 『Effective Java』에서 소개하는
-                    +codeBtn('posts/java/effective_java.html', 'nohighlight') 객체 필드 초기화 지연
-                    | 로직을 이용해 늦은 초기화를 지원한다
-                li protected abstract T initialize()
+            h3 abstract class LazyInitializer&lt;T> Since 3.0
+            p 『Effective Java』에서 소개하는
+                +goto('객체 필드 초기화 지연', 'effective_java.html')
+                | 로직을 이용해 늦은 초기화를 지원한다
 
-            h3 class ConstantInitializer&lt;T> implements ConcurrentInitializer&lt;T> Since 3.0
-            p 항상 같은 객체/값을 반환하는 ConcurrentInitializer 콘크리트 클래스
+            h3 ConstantInitializer&lt;T> Since 3.0
+            p 항상 같은 값을 반환하는 ConcurrentInitializer 콘크리트 클래스
 
-            h3 class CallableBackgroundInitializer&lt;T> extends BackgroundInitializer&lt;T> Since 3.0
+            h3 CallableBackgroundInitializer&lt;T> Since 3.0
             p Callable을 이용한 BackgroundInitializer 콘크리트 클래스
 
-            h3 class MultiBackgroundInitializer extends BackgroundInitializer&lt;MultiBackgroundInitializer.MultiBackgroundInitializerResults> Since 3.0
+            h3 MultiBackgroundInitializer Since 3.0
             p 병렬로 초기화 작업을 진행한다
-            +asCode('java').
-                public MultiBackgroundInitializer(ExecutorService exec)
-                    // 명시하지 않으면 내부 ExecutorService 사용
-                void addInitializer(String name, BackgroundInitializer&lt;?> init)
-            div
-                h4 static class MultiBackgroundInitializer.MultiBackgroundInitializerResults
-                +asCode('java').
-                    BackgroundInitializer&lt;?> getInitializer(String name)
-                    boolean isException(String name)
-                        // + isSuccessful, getResultObject, getException
-                    Set&lt;String> initializerNames()
+            +asCode('java') void addInitializer(String name, BackgroundInitializer&lt;?> init)
 
-        h2 class TimedSemaphore Since 3.0
+        h2 TimedSemaphore Since 3.0
         p 시간 당 소비자 수를 제한하는 세마포어를 제공한다
         +asCode('java').
             final void setLimit(int limit)
@@ -343,9 +278,9 @@ include ../../source/skeleton.pug
             boolean tryAcquire() // Since 3.5
                 // 순번을 얻을 수 있다면 얻은 뒤 true를 반환하고, 아니면 false를 반환한다. true를 받았다면 즉시 다음으로 진행하면 된다
 
-    h1 org.apache.commons.lang3.event Since 3.0
+    h1 ...event Since 3.0
     div
-        h2 class EventListenerSupport&lt;L> implements Serializable Since 3.0
+        h2 EventListenerSupport&lt;L> Since 3.0
         p 이벤트 리스터들을 관리하고, 일괄 통지하는 기능을 제공한다
         +asCode('java').
             static &lt;T> EventListenerSupport&lt;T> create(Class&lt;T> listenerInterface)
@@ -356,19 +291,19 @@ include ../../source/skeleton.pug
             void removeListener(L listener)
             L[] getListeners()
 
-        h2 class EventUtils Since 3.0
+        h2 EventUtils Since 3.0
         +asCode('java').
             static &lt;L> void addEventListener(Object eventSource, Class&lt;L> listenerType, L listener)
                 // eventSource의 "add" + listenerType.getSimpleName()에 해당하는 메서드로 listener 등록
             static &lt;L> void bindEventsToMethod(Object target, String methodName, Object eventSource, Class&lt;L> listenerType, String... eventTypes)
-                // addEventListener를 호출한다. 이때 listener는 target의 methodName 메서드를 호출하는 프록시다. eventTypes는 listenerType 인터페이스 중 어떤 메서드들에 대해 동작할 지를 의미하며, 비어 있는 경우 모든 메서드에 대해 동작한다.
+                // addEventListener를 호출한다. 등록하는 listener는 target의 methodName 메서드를 호출하는 프록시
+                // eventTypes는 listenerType 인터페이스 중 어떤 메서드들에 대해 동작할 지를 의미하며, 비어 있는 경우 모든 메서드에 대해 동작한다.
 
-    h1 org.apache.commons.lang3.exception Since 1.0
+    h1 ...exception Since 1.0
     div
-        h2 class ExceptionUtils Since 1.0
+        h2 ExceptionUtils Since 1.0
         +asCode('java').
             static Throwable getRootCause(Throwable throwable)
-            static void printRootCauseStackTrace(Throwable throwable, PrintWriter writer) // Since 2.0
             static &lt;R> R rethrow(Throwable throwable)
                 // R은 장식. throwable을 즉시 throw한다. 아래와 같이 제네릭을 이용하여 CheckedException을 컴파일러로부터 숨긴다. 메서드 시그니처의 불필요한 throws 절과 예외 체인의 불필요한 "Caused by" 항목을 제거할 수 있다. 자바의 예외 처리 방법에 벗어나는 감이 있지만, 라이브러리 개발에는 유용하다.
                 @SuppressWarnings("unchecked")
@@ -378,68 +313,57 @@ include ../../source/skeleton.pug
             static &lt;R> R wrapAndThrow(Throwable throwable)
                 // throwable이 RuntimeException, Error의 인스턴스면 각각 해당 타입으로 throw하고, 나머지는 UndeclaredThrowableException로 throw한다. 결과적으로 Error를 제외하면 모두 RuntimeException으로 throw하는 셈
 
-    h1 org.apache.commons.lang3.math Since 2.0
+    h1 ...math Since 2.0
     div
-        h2 final class Fraction extends Number implements Comparable&lt;Fraction> Since 2.0
+        h2 Fraction Since 2.0
         p int 분자/분모를 이용한다. BigInteger 구현은 Commons Math BigFraction을 이용
 
-        h2 class NumberUtils Since 2.0
+        h2 NumberUtils Since 2.0
         +asCode('java').
             static int toInt(String str, int defaultValue) // Since 2.1
                 // null과 빈 문자열은 defaultValue를 반환. 지정되지 않은 경우 0
                 // + toLong, toFloat, toDouble, toByte, toShort
             static BigDecimal toScaledBigDecimal(String value) // Since 3.8
-                // RoundingMode.HALF_EVEN으로 소수점 2째자리까지만 남긴다
+                // RoundingMode.HALF_EVEN으로 소수점 둘째 자리까지만 남긴다
             static Number createNumber(String str)
                 // 0x, -0x, #, -#로 시작하면 16진수로 간주.
                 // 타입 정보를 명시하지 않은 경우, 정수는 Integer, Long(8자 이상), BigInteger(16자 이상)로 변환, 소수는 Float, Double, BigDecimal로 변환된다
                 // + createFloat, createDouble, createInteger, ...
 
-    h1 org.apache.commons.lang3.mutable Since 2.1
+    h1 ...mutable Since 2.1
     div
-        h2 interface Mutable&lt;T> Since 2.1
+        h2 Mutable&lt;T> Since 2.1
         p java.lang에서 제공하는 기본 타입의 래퍼들이 변경할 수 없는 것에 반해, 변경할 수 있는 T 타입 래퍼를 제공한다.
         +asCode('java').
             T getValue() // + setValue
 
-            class MutableBoolean implements Mutable&lt;Boolean>, Serializable, Comparable&lt;MutableBoolean> Since 2.2
-            class MutableInt extends Number implements Comparable&lt;MutableInt>, Mutable&lt;Number> Since 2.1
-            class MutableObject&lt;T> implements Mutable&lt;T>, Serializable Since 2.1
+            class MutableBoolean Since 2.2
+            class MutableInt Since 2.1
+            class MutableObject&lt;T> Since 2.1
 
-    h1 org.apache.commons.lang3.reflect Since 3.0
-    div
-        h2 interface Typed&lt;T> Since 3.2
-        p "타입을 가짐"에 대한 일반화
-        +asCode('java') Type getType()
-
-        h2 abstract class TypeLiteral&lt;T> implements Typed&lt;T> Since 3.2
-        ol
-            li JavaDoc에서는 유용하다고 하는데... 런타임에서 제네릭 정보가 남아있지 않기 때문에 그게 그거일듯... Type에서 Class로 변환하는 방법도 딱히 없으니...
-            | 이거 쓸 바엔
-            +codeBtn('/Repositories/Eclipse/apache-commons-lang-example/src/test/java/TypeTest.java', 'java') 예시 코드
-            | 를 사용하는 게 나을듯
+    h1 ...reflect Since 3.0
     p 사용할 일 생기면 정리 : TypeUtils, FieldUtils, ConstructorUtils, MethodUtils
 
-    h1 org.apache.commons.lang3.time Since 2.0
+    h1 ...time Since 2.0
     div
-        h2 interface DateParser Since 3.2
+        h2 DateParser Since 3.2
         +asCode('java').
             Date parse(String source)
             String getPattern()
 
-        h2 interface DatePrinter Since 3.2
+        h2 DatePrinter Since 3.2
         +asCode('java').
             String format(long millis)
             &lt;B extends Appendable> B format(long millis, B buf) // Since 3.5
 
-        h2 class FastDateFormat extends Format implements DateParser, DatePrinter Since 2.0
+        h2 FastDateFormat Since 2.0
         p SimpleDateFormat의 고속, 스레드-안전한 버전
         +asCode('java').
             static FastDateFormat getInstance(String pattern)
             static FastDateFormat getDateTimeInstance(int dateStyle, int timeStyle, TimeZone timeZone) // Since 2.1
                 // 스타일 : FULL, LONG, MEDIUM, SHORT
 
-        h2 class DateFormatUtils Since 2.0
+        h2 DateFormatUtils Since 2.0
         +asCode('java').
             public static final FastDateFormat ISO_8601_EXTENDED_DATETIME_FORMAT           // Since 3.5, yyyy-MM-dd'T'HH:mm:ss
             public static final FastDateFormat ISO_8601_EXTENDED_DATETIME_TIME_ZONE_FORMAT // Since 3.5, yyyy-MM-dd'T'HH:mm:ssZZ
@@ -448,7 +372,7 @@ include ../../source/skeleton.pug
             public static final FastDateFormat ISO_8601_EXTENDED_TIME_TIME_ZONE_FORMAT     // Since 3.5, HH:mm:ssZZ
             public static final FastDateFormat SMTP_DATETIME_FORMAT                        // EEE, dd MMM yyyy HH:mm:ss Z
 
-        h2 class DateUtils Since 2.0
+        h2 DateUtils Since 2.0
         +asCode('java').
             static boolean isSameDay(Calendar cal1, Calendar cal2)                     // Since 2.1
             static boolean isSameInstant(Calendar cal1, Calendar cal2)                 // Since 2.1
@@ -462,7 +386,7 @@ include ../../source/skeleton.pug
             static Date round(Calendar date, int field)
                 // + truncate, ceiling
 
-        h2 class StopWatch Since 2.0
+        h2 StopWatch Since 2.0
         +asCode('java').
             static StopWatch createStarted() // Since 3.5
             void start()
@@ -474,12 +398,12 @@ include ../../source/skeleton.pug
             long getStartTime()              // Since 2.4
             String toString()
 
-    h1 org.apache.commons.lang3.tuple Since 3.0
+    h1 ...tuple Since 3.0
     +asCode('java').
-        abstract class Pair&lt;L, R> implements Map.Entry&lt;L, R>, Comparable&lt;Pare&lt;L, R>>, Serializable Since 3.0
-        final class ImmutablePair&lt;L, R> extends Pair&lt;L, R> Since 3.0
-        class MutablePair&lt;L, R> extends Pair&lt;L, R> Since 3.0
+        class Pair&lt;L, R> // Since 3.0
+        class ImmutablePair&lt;L, R> // Since 3.0
+        class MutablePair&lt;L, R> // Since 3.0
 
-        abstract class Triple&lt;L, M, R> implements Comparable&lt;Triple&lt;L, M, R>>, Serializable Since 3.2
-        final class ImmutableTriple&lt;L, M, R> extends Triple&lt;L, M, R> Since 3.2
-        class MutableTriple&lt;L, M, R> extends Triple&lt;L, M, R> Since 3.2
+        class Triple&lt;L, M, R> // Since 3.2
+        class ImmutableTriple&lt;L, M, R> // Since 3.2
+        class MutableTriple&lt;L, M, R> // Since 3.2
