@@ -228,14 +228,14 @@ include ../../source/skeleton.pug
             // 1회 정시 알람 : setExact(int type, long triggerAtMillis, PendingIntent operation) + 오버로딩
             manager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+5000, pendingIntent);
             // 반복 알람 : setRepeating(int type, long triggerAtMillis, long intervalMillis, PendingIntent operation)
-            // Since 19 : 모든 반복 알람은 부정확하다.
+            // 모든 반복 알람은 부정확하다.
         div
             h3 알람 type
             ol
                 li RTC : System#currentTimeMillis로 얻어지는 시각 기준
                 li ELAPSED_REALTIME : SystemClock#elapsedRealtime로 얻어지는, 부팅 후 경과 시간 기준
                 li RTC_WAKEUP, ELAPSED_REALTIME_WAKEUP : *_WAKEUP 타입은 기기가 자고 있으면 깨워서 실행시킨다
-        li Doze 모드 Since 23
+        li Doze 모드
         p 네트워크 액세스 정지. WAKE_LOCK 무시. AlarmManager 경보 무시. Wi-Fi 검색 X, JobScheduler 실행 X, AbstractThreadedSyncAdapter 실행 X
         ul
             li AlarmManager#setAndAllowWhileIdle, setExactAndAllowWhileIdle를 사용해야 한다

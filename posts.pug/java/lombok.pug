@@ -97,7 +97,7 @@ include ../../source/skeleton.pug
         li toBuilder 옵션을 이용해 기존 객체로부터 시작하는 toBuilder 메서드를 생성할 수 있다.
         li @Builder.ObtainVia를 필드/매개변수에 적용하면 해당 메서드로부터 값을 얻는다
         li 기타 옵션 : builderClassName, buildMethodName, builderMethodName
-        li Since 1.16.16 : @Builder.Default를 필드/매개변수에 붙이면 빌드 세션에서 초기화하지 않아도 기본값으로 설정한다
+        li @Builder.Default를 필드/매개변수에 붙이면 빌드 세션에서 초기화하지 않아도 기본값으로 설정한다
 
     h1 @SneakyThrows
     ol
@@ -112,7 +112,7 @@ include ../../source/skeleton.pug
         li 인스턴스 메서드에 붙으면 $lock 객체를, static 메서드에 붙으면 $LOCK 객체를 이용해 키워드와 동일한 동작을 한다.
         li @Synchronized("ownFieldName")처럼 다른 객체를 이용해 동기화할 수도 있다.
 
-    h1 @With Since 1.18.10
+    h1 @With
     ol
         li 변경 불가능한 객체의 일부 필드만 변경한 복사본을 반환하는 메서드를 생성한다
         li non-static 필드 전체를 인자로 받는 생성자가 필요하다
@@ -123,12 +123,12 @@ include ../../source/skeleton.pug
     ol
         li 클래스에 log 필드를 자동으로 생성해준다
         li @CommonsLog : private static final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog(LogExample.class);
-        li @Flogger Since 1.16.24 : private static final com.google.common.flogger.FluentLogger log = com.google.common.flogger.FluentLogger.forEnclosingClass();
+        li @Flogger : private static final com.google.common.flogger.FluentLogger log = com.google.common.flogger.FluentLogger.forEnclosingClass();
         li @JBossLog : private static final org.jboss.logging.Logger log = org.jboss.logging.Logger.getLogger(LogExample.class);
         li @Log : private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(LogExample.class.getName());
         li @Log4j : private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(LogExample.class);
         li @Log4j2 : private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(LogExample.class);
         li @Slf4j : private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LogExample.class);
         li @XSlf4j : private static final org.slf4j.ext.XLogger log = org.slf4j.ext.XLoggerFactory.getXLogger(LogExample.class);
-        li @CustomLog Since 1.18.10 : private static final com.foo.your.Logger log = com.foo.your.LoggerFactory.createYourLogger(LogExample.class);
+        li @CustomLog : private static final com.foo.your.Logger log = com.foo.your.LoggerFactory.createYourLogger(LogExample.class);
         p lombok.config 파일에 lombok.log.custom.declaration = com.foo.your.Logger com.foo.your.LoggerFactory.createYourLog(TYPE) 필요

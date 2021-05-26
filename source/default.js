@@ -60,7 +60,7 @@ const posts = {list: [
     { category: 'Infra/DB',            file: '/posts/db/psql_to_sqlite.html',                   title: '2-5 PostgreSQL → SQLite3 마이그레이션' },
     { category: 'Infra/DB',            file: '/posts/db/mysql.html',                            title: '3 MySQL' },
     { category: 'Infra/DB',            file: '/posts/db/mongodb.html',                          title: '4 MongoDB' },
-    { category: 'Infra/DB',            file: '/posts/db/redis.html',                            title: '5 Redis' },
+    { category: 'Infra/DB',            file: '/posts/db/redis.html',                            title: '5 Redis 6' },
     { category: 'Topic',               file: '/posts/single/fp.html',                           title: 'FP; Functional Programming' },
     { category: 'Topic',               file: '/posts/single/interview.html',                    title: '개발자 면접 준비' },
     { category: 'Topic',               file: '/posts/single/refactoring.html',                  title: '디자인 패턴 + 리팩터링' },

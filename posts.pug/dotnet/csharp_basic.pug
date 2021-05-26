@@ -664,13 +664,13 @@ include ../../source/skeleton.pug
                 public string? FirstName { get; init; }
                 public string? LastName { get; init; }
             }
-            
+
         h2 Init accessors and readonly fields
         +asCode('C#').
             public class Person
             {
                 private readonly string name;
-                
+
                 public string Name
                 {
                     get => name;
@@ -687,10 +687,10 @@ include ../../source/skeleton.pug
             p Init-only properties, 생성자, deconstructor를 자동으로 생성한다
             +asCode('C#').
                 public record Person(string FirstName, string LastName);
-                
+
                 var person = new Person("Donggi", "Kim");
                 var (firstName, lastName) = person;
-                
+
                 // 상속
                 public record Student(string FirstName, string LastName, int ID) : Person(FirstName, LastName);
 
@@ -698,18 +698,18 @@ include ../../source/skeleton.pug
         p 단일 파일 프로그램에 한해, Main() 정의없이 즉시 본문 작성 가능. await 가능
         +asCode('C#').
             using System;
-            
+
             Console.WriteLine("Hello World");
-        
+
         h2 With-expressions
         p 변경 불가능한 데이터 인스턴스의 일부만 변경한 복제본 생성에 사용
         +asCode('C#').
             var newPerson = person with { LastName = "AI" };
-            
+
         h2 Target-typed new expressions
         +asCode('C#').
             Point[] ps = { new (1, 2), new (3, 4) };
-            
+
         h2 Covariant returns
         p 메서드 상속 시 리턴 타입을 더욱 좁히는 것이 허용된다
         +asCode('C#').

@@ -76,7 +76,7 @@ include ../../source/skeleton.pug
             li replace() : 부분 문자열 대체
                 +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[52,53]')
 
-        h2 Formatted string literal(aka. f-string) Since 3.6
+        h2 Formatted string literal(aka. f-string)
         ul
             li f_string ::= (
                 i literal_char
@@ -337,10 +337,10 @@ include ../../source/skeleton.pug
 
     h1 Python 3.8
     ol
-        li 새로운 할당 연산 := Since 3.8
+        li 새로운 할당 연산 :=
         +asCode('python') if (x := True):
         p 처럼 할당 후 사용이 가능
-        li 키워드 매개변수 비허용 / Since 3.8
+        li 키워드 매개변수 비허용 /
         +asCode('python') def func(a, b, /, c, d, *, e, f):
         p a, b는 키워드 인자로 보낼 수 없다
         li f-string : 디버깅을 위한 자기 서술적 문자열 표기법

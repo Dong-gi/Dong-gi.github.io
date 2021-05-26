@@ -2,13 +2,13 @@ include ../../source/skeleton.pug
 +post('Apache Commons Math 3.6.1', 'Apache Commons Math', 'Apache Commons Math 정리')
     h1: +asA('https://commons.apache.org/proper/commons-math/javadocs/api-3.6.1/index.html', 'org.apache.commons.math3')
     div
-        h2 Field&lt;T> Since 2.0
+        h2 Field&lt;T>
         +asCode('java').
             T getZero() // 체의 덧셈 항등원
             T getOne()  // 체의 곱셈 항등원
             Class&lt;? extends FieldElement&lt;T>> getRuntimeClass()
 
-        h2 FieldElement&lt;T> Since 2.0
+        h2 FieldElement&lt;T>
         p add, subtract, negate(덧셈 역원), multiply, divide, reciprocal(곱셈 역원), getField
 
     h1 ...analysis
@@ -46,7 +46,7 @@ include ../../source/skeleton.pug
 
     h1 ...primes
     div
-        h2 Primes Since 3.2
+        h2 Primes
         +asCode('java').
             static boolean isPrime(int n)
             static int nextPrime(int n)
@@ -83,13 +83,13 @@ include ../../source/skeleton.pug
                 // 오버플로 감지시 예외 발생 + mulAndCheck, subAndCheck, pow
             static int gcd(int p, int q) // + lcm
 
-        h2 Combinations Since 3.3
+        h2 Combinations
         p 조합
 
-        h2 CombinatoricsUtils Since 3.3
+        h2 CombinatoricsUtils
         +asCode('java').
             static long binomialCoefficient(int n, int k) // 이항계수
             static long factorial(int n)
 
-        h2 FastMatth Since 2.2
+        h2 FastMatth
         p Math, StrictMath 보다 빠른 유틸리티
