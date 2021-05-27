@@ -36,7 +36,7 @@ function debounce(f, t, opt) {
         }
         this.lastCallTimer = setTimeout(() => f(args), t);
     }
-}   
+}
 </div><h1>AJAX; Asynchronous JavaScript and XML + JSONP</h1><ol><li>핵심 기술은 XMLHttpRequest; XHR</li><li>Ajax 이벤트</li><ul><li>loadstart : 응답의 첫 번째 바이트를 수신</li><li>progress : 응답 수신 중 계속 발생</li><li>error : 요청에 에러가 있을 때</li><li>abort : abort() 호출해 연결을 종료했을 때</li><li>load : 응답을 완전히 받았을 때</li><li>loadend : 통신 종료. error, abort, load보다 나중에 발생</li></ul><li>JSONP : JSON with Padding</li><p>Cross origin 제약이 적용되지 않는다. &lt;script src="~.js">&lt;/script>, &lt;script src="~.json">&lt;/script>도 JSONP 통신의 일종</p></ol><p><strong>↓ javascript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="javascript">// XMLHttpRequest 예
 let request = new XMLHttpRequest();
 // XMLHttpRequest.open(method, url, async, user, password)

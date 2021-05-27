@@ -117,7 +117,7 @@ include ../../source/skeleton.pug
                 re.split(r'(.*)', '')
 
             re.findall(pattern, string, flags=0)
-                # 문자열을 좌에서 우로 스캔하며 매칭된, 겹치지 않는 부분 문자열들을 리스트로 반환한다. 패턴에 그룹이 있는 경우 튜플로 표현된다.            
+                # 문자열을 좌에서 우로 스캔하며 매칭된, 겹치지 않는 부분 문자열들을 리스트로 반환한다. 패턴에 그룹이 있는 경우 튜플로 표현된다.
             re.finditer(pattern, string, flags=0)
                 # findall과 동일한 방식으로 매칭하면서 match 객체를 하나씩 yield
 
@@ -135,7 +135,7 @@ include ../../source/skeleton.pug
 
         h2 Regular Expression Objects
         p 컴파일된 RE 객체는 아래의 메서드와 속성을 지원한다. 각 메서드는 re 모듈의 함수와 유사하다
-        +asCode('python').    
+        +asCode('python').
             regex.search(string[, pos[, endpos]])
                 # pos가 지정되더라도 '^'는 실제 문자열 시작에만 매칭된다.
                 # endpos가 지정된 호출과 rx.search(string[:endpos], pos)는 동등하다
