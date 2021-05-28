@@ -597,14 +597,72 @@ include ../../source/skeleton.pug
         li PercentEscaper, UrlEscapers : Escaper 제공
 
     h1 ...primitives
-    div
-        p: strong Static utilities for working with the eight primitive types and void, and value types for treating them as unsigned.
+    ul
+        li Array : ImmutableIntArray, ImmutableLongArray, ImmutableDoubleArray
+        li Type : UnsignedInteger, UnsignedLong	
+        li Utility : Booleans, ..., Doubles, Primitives, UnsignedLongs
 
     h1 ...reflect
     div
-        p: strong This package contains utilities to work with Java reflection.
         h2 TypeToInstanceMap&lt;B&gt;
-        p TypeToken -&gt; instance 매핑
+        ul
+            li TypeToken -&gt; instance 매핑
+            li ImmutableTypeToInstanceMap&lt;B>, MutableTypeToInstanceMap&lt;B>
+
+        h2 ClassPath
+        p ClassLoader로부터 모든 클래스, 리소스 스캔
+
+        h2 Reflection
+        +asCode('java').
+            static String getPackageName​(Class&lt;?> clazz)
+            static String getPackageName​(String classFullName)
+                // 클래스 이름만 파싱하여 패키지 이름을 판단한다
+            
+            static &lt;T> T newProxy​(Class&lt;T> interfaceType, InvocationHandler handler)
+                // 단일 인터페이스 프록시 생성에 편리
+
+        h2 TypeToken&lt;T>
+        +asCode('java').
+            // 인스턴스 획득 1
+            new TypeToken&lt;List&lt;String>>() {}
+            // 인스턴스 획득 2
+            abstract class IKnowMyType&lt;T> {
+                TypeToken&lt;T> type = new TypeToken&lt;T>(getClass()) {};
+            }
+            new IKnowMyType&lt;String>() {}.type => String
+
+            final &lt;X> TypeToken&lt;T> where​(TypeParameter&lt;X> typeParam, TypeToken&lt;X> typeArg)
+                // 동적으로 제네릭 타입을 치환
+                // e.g.
+                static &lt;K, V> TypeToken&lt;Map&lt;K, V>> mapOf(TypeToken&lt;K> keyType, TypeToken&lt;V> valueType) {
+                  return new TypeToken&lt;Map&lt;K, V>>() {}
+                      .where(new TypeParameter&lt;K>() {}, keyType)
+                      .where(new TypeParameter&lt;V>() {}, valueType);
+                }
+            
+            final TypeToken&lt;?> resolveType​(Type type)
+                // 제네릭 실제 타입 획득
+                // e.g.
+                new TypeToken&lt;List&lt;String>>() {}.resolveType(List.class.getMethod("get", int.class).getGenericReturnType())
+                    == String.class
+            
+            final TypeToken.TypeSet getTypes()
+                // 현재 타입 + 선조 타입 + 구현 인터페이스
+                // e.g. List&lt;String> =>
+                // [java.util.List&lt;java.lang.String>, java.util.Collection&lt;java.lang.String>, java.lang.Iterable&lt;java.lang.String>]
+
+            final TypeToken&lt;? super T> getSupertype​(Class&lt;? super T> superclass)
+            final TypeToken&lt;? extends T> getSubtype​(Class&lt;?> subclass)
+                // e.g.
+                var type1 = new TypeToken&lt;List&lt;String>>() {};
+                var type2 = type1.getSupertype(Iterable.class); == java.lang.Iterable&lt;java.lang.String>
+                var type3 = type2.getSubtype(List.class);       == java.util.List&lt;java.lang.String>
+            
+            final @Nullable TypeToken<?> getComponentType()
+                // 배열 원소 타입 반환
+
+            // + wrap, unwrap
+            // + isSupertypeOf, isSubtypeOf, isArray, isPrimitive
 
     h1 ...util.concurrent
     div
