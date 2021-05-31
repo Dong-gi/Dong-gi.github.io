@@ -658,15 +658,122 @@ include ../../source/skeleton.pug
                 var type2 = type1.getSupertype(Iterable.class); == java.lang.Iterable&lt;java.lang.String>
                 var type3 = type2.getSubtype(List.class);       == java.util.List&lt;java.lang.String>
             
-            final @Nullable TypeToken<?> getComponentType()
-                // 배열 원소 타입 반환
+            final @Nullable TypeToken&lt;?> getComponentType()
+                // 배열 원소 타입 반성
+
+            final Invokable&lt;T,​Object> method​(Method method)
+            final Invokable&lt;T,​T> constructor​(Constructor&lt;?> constructor)
 
             // + wrap, unwrap
             // + isSupertypeOf, isSubtypeOf, isArray, isPrimitive
 
     h1 ...util.concurrent
     div
-        p: strong Concurrency utilities.
+        h2 ListenableFuture&lt;V>
+        ul
+            li 연산 완료 리스너(들)을 가질 수 있는 Future
+            p JavaScript의 promise 체인과 유사한 로직 작성을 돕기 위해 개발됐다
+            li 이미 완료된 경우, 추가되는 리스너는 즉시 실행된다
+            li 리스너를 실행할 Executor 지정 가능
+        +asCode('java') void addListener​(Runnable listener, Executor executor)
+
+        h2 FluentFuture&lt;V>
+        p ListenableFuture에 체인 기능 추가
+
+        h2 SettableFuture&lt;V>
+        p 결과를 외부에서 설정 가능한 ListenableFuture
+
+        h2 Futures
+        +asCode('java').
+            static &lt;V> ListenableFuture&lt;V> immediateFuture​(@Nullable V value)
+            static ListenableFuture&lt;Void> immediateVoidFuture()
+            static &lt;V> ListenableFuture&lt;V> immediateFailedFuture​(Throwable throwable)
+            static &lt;V> ListenableFuture&lt;V> immediateCancelledFuture()
+
+            static &lt;O> ListenableFuture&lt;O> submit​(Callable&lt;O> callable, Executor executor)
+            static ListenableFuture&lt;Void> submit​(Runnable runnable, Executor executor)
+            static &lt;O> ListenableFuture&lt;O> submitAsync​(AsyncCallable&lt;O> callable, Executor executor)
+            static &lt;O> ListenableFuture&lt;O> scheduleAsync​(AsyncCallable&lt;O> callable, Duration delay, ScheduledExecutorService executorService)
+            
+            static &lt;V,​X extends Throwable> ListenableFuture&lt;V> catching​(ListenableFuture&lt;? extends V> input, Class&lt;X> exceptionType, Function&lt;? super X,​? extends V> fallback, Executor executor)
+            static &lt;V,​X extends Throwable> ListenableFuture&lt;V> catchingAsync​(ListenableFuture&lt;? extends V> input, Class&lt;X> exceptionType, AsyncFunction&lt;? super X,​? extends V> fallback, Executor executor)
+
+            static &lt;V> ListenableFuture&lt;V> withTimeout​(ListenableFuture&lt;V> delegate, Duration time, ScheduledExecutorService scheduledExecutor)
+            static &lt;I,​O> ListenableFuture&lt;O> transform​(ListenableFuture&lt;I> input, Function&lt;? super I,​? extends O> function, Executor executor)
+            static &lt;I,​O> ListenableFuture&lt;O> transformAsync​(ListenableFuture&lt;I> input, AsyncFunction&lt;? super I,​? extends O> function, Executor executor)
+            static &lt;I,​O> Future&lt;O> lazyTransform​(Future&lt;I> input, Function&lt;? super I,​? extends O> function)
+                // get() 호출이 있을 때 function 호출
+            
+            static &lt;V> ListenableFuture&lt;List&lt;V>> allAsList​(ListenableFuture&lt;? extends V>... futures)
+            static &lt;V> ListenableFuture&lt;List&lt;V>> successfulAsList​(ListenableFuture&lt;? extends V>... futures)
+            static &lt;T> ImmutableList&lt;ListenableFuture&lt;T>> inCompletionOrder​(Iterable&lt;? extends ListenableFuture&lt;? extends T>> futures)
+
+            static &lt;V> Futures.FutureCombiner&lt;V> whenAllComplete​(ListenableFuture&lt;? extends V>... futures)
+            static &lt;V> Futures.FutureCombiner&lt;V> whenAllSucceed​(ListenableFuture&lt;? extends V>... futures)
+
+            static &lt;V> ListenableFuture&lt;V> nonCancellationPropagating​(ListenableFuture&lt;V> future)
+                // 출력 tufure를 취소해도 입력 future를 취소하지 않음
+
+            static &lt;V> void addCallback​(ListenableFuture&lt;V> future, FutureCallback&lt;? super V> callback, Executor executor)
+            static &lt;V> V getDone​(Future&lt;V> future)
+        
+        h2 Futures.FutureCombiner&lt;V>
+        p 다른 ListenableFuture들의 결과들을 이용하는 ListenableFuture
+        +asCode('java').
+            &lt;C> ListenableFuture&lt;C> callAsync​(AsyncCallable&lt;C> combiner, Executor executor)
+            &lt;C> ListenableFuture&lt;C> call​(Callable&lt;C> combiner, Executor executor)
+            ListenableFuture&lt;?> run​(Runnable combiner, Executor executor)
+
+            // e.g.
+            Futures.whenAllSucceed(loginDateFuture, recentCommandsFuture)
+                .call(
+                    () ->
+                        new UsageHistory(
+                            username,
+                            Futures.getDone(loginDateFuture),
+                            Futures.getDone(recentCommandsFuture)),
+                    executor);
+
+        h2 ListeningExecutorService
+        p Future 대신 ListenableFuture를 반환하는 ExecutorService
+
+        h2 ListeningScheduledExecutorService
+        p ScheduledFuture 대신 ListenableScheduledFuture를 반환하는 ScheduledExecutorService
+
+        h2 Callables
+        +asCode('java') static &lt;T> AsyncCallable&lt;T> asAsyncCallable​(Callable&lt;T> callable, ListeningExecutorService listeningExecutorService)
+
+        h2 ClosingFuture&lt;V>
+        +asCode('java').
+            // 비동기 연산에 사용된 자원을 자동으로 닫게 해준다
+            ClosingFuture.submit(
+                    closer -> closer.eventuallyClose(database.newTransaction(), closingExecutor), executor)
+                .transformAsync((closer, transaction) -> transaction.queryClosingFuture("..."), executor)
+                .transform((closer, result) -> result.get("userName"), directExecutor())
+                .catching(DBException.class, e -> "no user", directExecutor())
+                .finishToFuture();
+
+        h2 CycleDetectingLockFactory
+        p lock 요구 시 사이클을 감지하는 ReentrantLock, ReentrantReadWriteLock 인스턴스 생성
+
+        h2 Service
+        ul
+            li 가동 상태(NEW -> STARTING -> RUNNING -> STOPPING -> TERMINATED / FAILED)와 연관 메서드를 갖는 객체
+            li 중간 구현체 : AbstractExecutionThreadService, AbstractIdleService, AbstractScheduledService, AbstractService
+
+        h2 ServiceManager
+        p 서비스 집합 관리자
+
+        h2 TimeLimiter
+        ul
+            li 메서드 호출 제한 시간을 둔다
+            li 구현체 : SimpleTimeLimiter
+
+        h2 RateLimiter
+        p 초당 permit 사용량을 제한한 세마포어
+
+        h2 ThreadFactoryBuilder
+        p 스레드 이름, daemon 여부, 우선순위 등 설정 간소화
 
     h1 ...xml.XmlEscapers
     p Escapers for XML.

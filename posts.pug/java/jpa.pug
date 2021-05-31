@@ -791,8 +791,8 @@ include ../../source/skeleton.pug
                     td findByLastnameOrFirstname
                     td … where x.lastname = ?1 or x.firstname = ?2
                 tr
-                    td Is</code>, <code>Equals
-                    td findByFirstname</code>,<code>findByFirstnameIs</code>,<code>findByFirstnameEquals
+                    td Is, Equals
+                    td findByFirstname,findByFirstnameIs,findByFirstnameEquals
                     td … where x.firstname = ?1
                 tr
                     td Between
@@ -823,11 +823,11 @@ include ../../source/skeleton.pug
                     td findByStartDateBefore
                     td … where x.startDate &lt; ?1
                 tr
-                    td IsNull</code>, <code>Null
+                    td IsNull, Null
                     td findByAge(Is)Null
                     td … where x.age is null
                 tr
-                    td IsNotNull</code>, <code>NotNull
+                    td IsNotNull, NotNull
                     td findByAge(Is)NotNull
                     td … where x.age not null
                 tr
@@ -841,15 +841,15 @@ include ../../source/skeleton.pug
                 tr
                     td StartingWith
                     td findByFirstnameStartingWith
-                    td … where x.firstname like ?1</code> (parameter bound with appended <code>%</code>)</p>
+                    td … where x.firstname like ?1 (parameter bound with appended %)
                 tr
                     td EndingWith
                     td findByFirstnameEndingWith
-                    td … where x.firstname like ?1</code> (parameter bound with prepended <code>%</code>)</p>
+                    td … where x.firstname like ?1 (parameter bound with prepended %)
                 tr
                     td Containing
                     td findByFirstnameContaining
-                    td … where x.firstname like ?1</code> (parameter bound wrapped in <code>%</code>)</p>
+                    td … where x.firstname like ?1 (parameter bound wrapped in %)
                 tr
                     td OrderBy
                     td findByAgeOrderByLastnameDesc

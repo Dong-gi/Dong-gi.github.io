@@ -352,9 +352,9 @@ include ../../source/skeleton.pug
                         LOG_FILE=test.log
                         echo '1234567890' > $LOG_FILE
 
-                        exec 777<> $LOG_FILE # open file and assign FD 777
+                        exec 777&lt;> $LOG_FILE # open file and assign FD 777
 
-                        read -n 4 <&777
+                        read -n 4 &lt;&777
                         echo -n "." >&777    # write without new line
 
                         exec 777>&-   # close output FD 777
@@ -511,7 +511,7 @@ include ../../source/skeleton.pug
                 +asCode('shell').
                     $ (set -o posix; set | sort) > set.sorted
                     $ (printenv | sort) > printenv.sorted
-                    $ diff set.sorted printenv.sorted | grep "<" | awk '{ print $2 }'
+                    $ diff set.sorted printenv.sorted | grep "&lt;" | awk '{ print $2 }'
                 li 변수 선언
                 +asCode('shell').
                     $ varName="value"
@@ -782,10 +782,10 @@ include ../../source/skeleton.pug
                 $ echo $1
                 $ echo $#
             +asCode('shell').
-                $ cat <("${PWD}/"t*)
+                $ cat &lt;("${PWD}/"t*)
                 /workspace/donggi-github/tmp.txt
                 1
-                $ cat <("${PWD}/"t*.sh)
+                $ cat &lt;("${PWD}/"t*.sh)
 
                 0
 
@@ -975,7 +975,7 @@ include ../../source/skeleton.pug
             # 호출 1
             FUNCNAME
             # 호출 2
-            FUNCNAME param1 param2 # <- 함수 안에서 $1, $2, ...로 접근
+            FUNCNAME param1 param2 # &lt;- 함수 안에서 $1, $2, ...로 접근
             # 호출 3
             test () {
                 return 33

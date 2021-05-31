@@ -211,4 +211,104 @@ static String getFileExtension​(Path path)
 static String getNameWithoutExtension​(Path path)
 static void deleteRecursively​(Path path, RecursiveDeleteOption... options)
 static void deleteDirectoryContents​(Path path, RecursiveDeleteOption... options)
-</div><h2>LineReader</h2><p>\n, \r, \r\n 무관하게 한 줄씩 읽을 수 있게 해준다</p><h2>Resources</h2><p>클래스패스 상의 리소스에 접근하는 유틸리티를 제공한다</p></div><h1>...math</h1><ul><li>IntMath, LongMath, DoubleMath, BigIntegerMath, BigDecimalMath</li><li>Quantiles : 분위수 계산</li></ul><h1>...net</h1><ul><li>HttpHeaders, MediaType : 상수 제공</li><li>PercentEscaper, UrlEscapers : Escaper 제공</li></ul><h1>...primitives</h1><div><p><strong>Static utilities for working with the eight primitive types and void, and value types for treating them as unsigned.</strong></p></div><h1>...reflect</h1><div><p><strong>This package contains utilities to work with Java reflection.</strong></p><h2>TypeToInstanceMap&lt;B&gt;</h2><p>TypeToken -&gt; instance 매핑</p></div><h1>...util.concurrent</h1><div><p><strong>Concurrency utilities.</strong></p></div><h1>...xml.XmlEscapers</h1><p>Escapers for XML.</p><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7897366614471210" data-ad-slot="6629226643" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({})</script></div><hr>&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.<a class="w3-btn w3-round-xxlarge w3-small w3-green" href="/LICENSE">LICENSE</a></div></body></html>
+</div><h2>LineReader</h2><p>\n, \r, \r\n 무관하게 한 줄씩 읽을 수 있게 해준다</p><h2>Resources</h2><p>클래스패스 상의 리소스에 접근하는 유틸리티를 제공한다</p></div><h1>...math</h1><ul><li>IntMath, LongMath, DoubleMath, BigIntegerMath, BigDecimalMath</li><li>Quantiles : 분위수 계산</li></ul><h1>...net</h1><ul><li>HttpHeaders, MediaType : 상수 제공</li><li>PercentEscaper, UrlEscapers : Escaper 제공</li></ul><h1>...primitives</h1><ul><li>Array : ImmutableIntArray, ImmutableLongArray, ImmutableDoubleArray</li><li>Type : UnsignedInteger, UnsignedLong	</li><li>Utility : Booleans, ..., Doubles, Primitives, UnsignedLongs</li></ul><h1>...reflect</h1><div><h2>TypeToInstanceMap&lt;B&gt;</h2><ul><li>TypeToken -&gt; instance 매핑</li><li>ImmutableTypeToInstanceMap&lt;B>, MutableTypeToInstanceMap&lt;B></li></ul><h2>ClassPath</h2><p>ClassLoader로부터 모든 클래스, 리소스 스캔</p><h2>Reflection</h2><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static String getPackageName​(Class&lt;?> clazz)
+static String getPackageName​(String classFullName)
+    // 클래스 이름만 파싱하여 패키지 이름을 판단한다
+
+static &lt;T> T newProxy​(Class&lt;T> interfaceType, InvocationHandler handler)
+    // 단일 인터페이스 프록시 생성에 편리
+</div><h2>TypeToken&lt;T></h2><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">// 인스턴스 획득 1
+new TypeToken&lt;List&lt;String>>() {}
+// 인스턴스 획득 2
+abstract class IKnowMyType&lt;T> {
+    TypeToken&lt;T> type = new TypeToken&lt;T>(getClass()) {};
+}
+new IKnowMyType&lt;String>() {}.type => String
+
+final &lt;X> TypeToken&lt;T> where​(TypeParameter&lt;X> typeParam, TypeToken&lt;X> typeArg)
+    // 동적으로 제네릭 타입을 치환
+    // e.g.
+    static &lt;K, V> TypeToken&lt;Map&lt;K, V>> mapOf(TypeToken&lt;K> keyType, TypeToken&lt;V> valueType) {
+      return new TypeToken&lt;Map&lt;K, V>>() {}
+          .where(new TypeParameter&lt;K>() {}, keyType)
+          .where(new TypeParameter&lt;V>() {}, valueType);
+    }
+
+final TypeToken&lt;?> resolveType​(Type type)
+    // 제네릭 실제 타입 획득
+    // e.g.
+    new TypeToken&lt;List&lt;String>>() {}.resolveType(List.class.getMethod("get", int.class).getGenericReturnType())
+        == String.class
+
+final TypeToken.TypeSet getTypes()
+    // 현재 타입 + 선조 타입 + 구현 인터페이스
+    // e.g. List&lt;String> =>
+    // [java.util.List&lt;java.lang.String>, java.util.Collection&lt;java.lang.String>, java.lang.Iterable&lt;java.lang.String>]
+
+final TypeToken&lt;? super T> getSupertype​(Class&lt;? super T> superclass)
+final TypeToken&lt;? extends T> getSubtype​(Class&lt;?> subclass)
+    // e.g.
+    var type1 = new TypeToken&lt;List&lt;String>>() {};
+    var type2 = type1.getSupertype(Iterable.class); == java.lang.Iterable&lt;java.lang.String>
+    var type3 = type2.getSubtype(List.class);       == java.util.List&lt;java.lang.String>
+
+final @Nullable TypeToken&lt;?> getComponentType()
+    // 배열 원소 타입 반성
+
+final Invokable&lt;T,​Object> method​(Method method)
+final Invokable&lt;T,​T> constructor​(Constructor&lt;?> constructor)
+
+// + wrap, unwrap
+// + isSupertypeOf, isSubtypeOf, isArray, isPrimitive
+</div></div><h1>...util.concurrent</h1><div><h2>ListenableFuture&lt;V></h2><ul><li>연산 완료 리스너(들)을 가질 수 있는 Future</li><p>JavaScript의 promise 체인과 유사한 로직 작성을 돕기 위해 개발됐다</p><li>이미 완료된 경우, 추가되는 리스너는 즉시 실행된다</li><li>리스너를 실행할 Executor 지정 가능</li></ul><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">void addListener​(Runnable listener, Executor executor)</div><h2>FluentFuture&lt;V></h2><p>ListenableFuture에 체인 기능 추가</p><h2>SettableFuture&lt;V></h2><p>결과를 외부에서 설정 가능한 ListenableFuture</p><h2>Futures</h2><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static &lt;V> ListenableFuture&lt;V> immediateFuture​(@Nullable V value)
+static ListenableFuture&lt;Void> immediateVoidFuture()
+static &lt;V> ListenableFuture&lt;V> immediateFailedFuture​(Throwable throwable)
+static &lt;V> ListenableFuture&lt;V> immediateCancelledFuture()
+
+static &lt;O> ListenableFuture&lt;O> submit​(Callable&lt;O> callable, Executor executor)
+static ListenableFuture&lt;Void> submit​(Runnable runnable, Executor executor)
+static &lt;O> ListenableFuture&lt;O> submitAsync​(AsyncCallable&lt;O> callable, Executor executor)
+static &lt;O> ListenableFuture&lt;O> scheduleAsync​(AsyncCallable&lt;O> callable, Duration delay, ScheduledExecutorService executorService)
+
+static &lt;V,​X extends Throwable> ListenableFuture&lt;V> catching​(ListenableFuture&lt;? extends V> input, Class&lt;X> exceptionType, Function&lt;? super X,​? extends V> fallback, Executor executor)
+static &lt;V,​X extends Throwable> ListenableFuture&lt;V> catchingAsync​(ListenableFuture&lt;? extends V> input, Class&lt;X> exceptionType, AsyncFunction&lt;? super X,​? extends V> fallback, Executor executor)
+
+static &lt;V> ListenableFuture&lt;V> withTimeout​(ListenableFuture&lt;V> delegate, Duration time, ScheduledExecutorService scheduledExecutor)
+static &lt;I,​O> ListenableFuture&lt;O> transform​(ListenableFuture&lt;I> input, Function&lt;? super I,​? extends O> function, Executor executor)
+static &lt;I,​O> ListenableFuture&lt;O> transformAsync​(ListenableFuture&lt;I> input, AsyncFunction&lt;? super I,​? extends O> function, Executor executor)
+static &lt;I,​O> Future&lt;O> lazyTransform​(Future&lt;I> input, Function&lt;? super I,​? extends O> function)
+    // get() 호출이 있을 때 function 호출
+
+static &lt;V> ListenableFuture&lt;List&lt;V>> allAsList​(ListenableFuture&lt;? extends V>... futures)
+static &lt;V> ListenableFuture&lt;List&lt;V>> successfulAsList​(ListenableFuture&lt;? extends V>... futures)
+static &lt;T> ImmutableList&lt;ListenableFuture&lt;T>> inCompletionOrder​(Iterable&lt;? extends ListenableFuture&lt;? extends T>> futures)
+
+static &lt;V> Futures.FutureCombiner&lt;V> whenAllComplete​(ListenableFuture&lt;? extends V>... futures)
+static &lt;V> Futures.FutureCombiner&lt;V> whenAllSucceed​(ListenableFuture&lt;? extends V>... futures)
+
+static &lt;V> ListenableFuture&lt;V> nonCancellationPropagating​(ListenableFuture&lt;V> future)
+    // 출력 tufure를 취소해도 입력 future를 취소하지 않음
+
+static &lt;V> void addCallback​(ListenableFuture&lt;V> future, FutureCallback&lt;? super V> callback, Executor executor)
+static &lt;V> V getDone​(Future&lt;V> future)
+</div><h2>Futures.FutureCombiner&lt;V></h2><p>다른 ListenableFuture들의 결과들을 이용하는 ListenableFuture</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">&lt;C> ListenableFuture&lt;C> callAsync​(AsyncCallable&lt;C> combiner, Executor executor)
+&lt;C> ListenableFuture&lt;C> call​(Callable&lt;C> combiner, Executor executor)
+ListenableFuture&lt;?> run​(Runnable combiner, Executor executor)
+
+// e.g.
+Futures.whenAllSucceed(loginDateFuture, recentCommandsFuture)
+    .call(
+        () ->
+            new UsageHistory(
+                username,
+                Futures.getDone(loginDateFuture),
+                Futures.getDone(recentCommandsFuture)),
+        executor);
+</div><h2>ListeningExecutorService</h2><p>Future 대신 ListenableFuture를 반환하는 ExecutorService</p><h2>ListeningScheduledExecutorService</h2><p>ScheduledFuture 대신 ListenableScheduledFuture를 반환하는 ScheduledExecutorService</p><h2>Callables</h2><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static &lt;T> AsyncCallable&lt;T> asAsyncCallable​(Callable&lt;T> callable, ListeningExecutorService listeningExecutorService)</div><h2>ClosingFuture&lt;V></h2><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">// 비동기 연산에 사용된 자원을 자동으로 닫게 해준다
+ClosingFuture.submit(
+        closer -> closer.eventuallyClose(database.newTransaction(), closingExecutor), executor)
+    .transformAsync((closer, transaction) -> transaction.queryClosingFuture("..."), executor)
+    .transform((closer, result) -> result.get("userName"), directExecutor())
+    .catching(DBException.class, e -> "no user", directExecutor())
+    .finishToFuture();
+</div><h2>CycleDetectingLockFactory</h2><p>lock 요구 시 사이클을 감지하는 ReentrantLock, ReentrantReadWriteLock 인스턴스 생성</p><h2>Service</h2><ul><li>가동 상태(NEW -> STARTING -> RUNNING -> STOPPING -> TERMINATED / FAILED)와 연관 메서드를 갖는 객체</li><li>중간 구현체 : AbstractExecutionThreadService, AbstractIdleService, AbstractScheduledService, AbstractService</li></ul><h2>ServiceManager</h2><p>서비스 집합 관리자</p><h2>TimeLimiter</h2><ul><li>메서드 호출 제한 시간을 둔다</li><li>구현체 : SimpleTimeLimiter</li></ul><h2>RateLimiter</h2><p>초당 permit 사용량을 제한한 세마포어</p><h2>ThreadFactoryBuilder</h2><p>스레드 이름, daemon 여부, 우선순위 등 설정 간소화</p></div><h1>...xml.XmlEscapers</h1><p>Escapers for XML.</p><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7897366614471210" data-ad-slot="6629226643" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({})</script></div><hr>&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.<a class="w3-btn w3-round-xxlarge w3-small w3-green" href="/LICENSE">LICENSE</a></div></body></html>

@@ -435,7 +435,7 @@ tasks.withType(JavaCompile) {
 }
 
 </div></ul><li>processResources - <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html">org.gradle.api.tasks.Copy</a></li><p>프로덕션(main 소스셋) 리소스를 지정 디렉터리로 복사</p><li>classes</li><p>Depends on : compileJava, processResources</p><p>원한다면 추가 작업을 덧붙여도 된다.</p><li>jar - <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Jar.html">org.gradle.api.tasks.bundling.Jar</a></li><p>Depends on : classes</p><p>main 소스 셋의 클래스 및 리소스로 프로덕션용 jar 빌드</p><li>javadoc - <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.javadoc.Javadoc.html">org.gradle.api.tasks.javadoc.Javadoc</a></li><p>Depends on : classes</p><p><strong>↓ gradle</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="gradle">javadoc {
-    options.links << 'https://docs.oracle.com/en/java/javase/12/docs/api/'
+    options.links &lt;&lt; 'https://docs.oracle.com/en/java/javase/12/docs/api/'
 }</div><p>API 문서 생성</p><li>compileTestJava - <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.compile.JavaCompile.html">org.gradle.api.tasks.compile.JavaCompile</a></li><p>테스트 .java 소스 코드 컴파일</p><li>processTestResources - <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html">org.gradle.api.tasks.Copy</a></li><p>테스트 리소스를 지정 디렉터리로 복사</p><li>testClasses</li><p>Depends on : compileTestJava, processTestResources</p><p>원한다면 추가 작업을 덧붙여도 된다.</p><li>test - <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.testing.Test.html">org.gradle.api.tasks.testing.Test</a></li><p>Depends on : testClasses + test runtime classpath를 생성하는 작업들</p><p>JUnit 또는 TestNG로 단위 테스트 진행</p></ul><h3>SourceSet Task</h3><ul><li>compile{SourceSet}Java - <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.compile.JavaCompile.html">org.gradle.api.tasks.compile.JavaCompile</a></li><p>Depends on : 해당 소스셋의 컴파일 경로를 변경하는 모든 작업</p><li>process{SourceSet}Resources - <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html">org.gradle.api.tasks.Copy</a></li><p>해당 소스셋의 리소스들을 복사</p><li>{sourceSet}Classes</li><p>Depends on : compile{SourceSet}Java, process{SourceSet}Resources</p></ul><h3>Project layout</h3><ul><li>기본(default) 구조</li><p><strong>↓ text</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">src/main/java      : 프로덕션 소스 코드
 src/main/resources : 프로덕션 리소스
 src/test/java      : 테스트 소스 코드
@@ -480,7 +480,7 @@ run {
 // distZip : jar 빌드 후 실행 스크립트 파일 생성
 </div><h2>War 플러그인</h2><p><strong>↓ gradle</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="gradle">// providedCompile : main 소스셋 컴파일 시 필요하지만, war 파일에서는 제외할 것들
 // providedRuntime : main 소스셋 실행 시 필요하지만, war 파일에서는 제외할 것들</div><p><strong>↓ gradle</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="gradle">clean {
-    delete << 'src/main/tmp' // clean 작업 시 'src/main/tmp' 디렉터리도 정리
+    delete &lt;&lt; 'src/main/tmp' // clean 작업 시 'src/main/tmp' 디렉터리도 정리
 }
 // 패키지 저장소 명시
 repositories {

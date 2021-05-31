@@ -791,7 +791,7 @@ include ../../source/skeleton.pug
                 p Depends on : classes
                 +asCode('gradle').
                     javadoc {
-                        options.links << 'https://docs.oracle.com/en/java/javase/12/docs/api/'
+                        options.links &lt;&lt; 'https://docs.oracle.com/en/java/javase/12/docs/api/'
                     }
                 p API 문서 생성
                 li compileTestJava - 
@@ -932,7 +932,7 @@ include ../../source/skeleton.pug
             // providedRuntime : main 소스셋 실행 시 필요하지만, war 파일에서는 제외할 것들
         +asCode('gradle').
             clean {
-                delete << 'src/main/tmp' // clean 작업 시 'src/main/tmp' 디렉터리도 정리
+                delete &lt;&lt; 'src/main/tmp' // clean 작업 시 'src/main/tmp' 디렉터리도 정리
             }
             // 패키지 저장소 명시
             repositories {

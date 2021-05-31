@@ -30,7 +30,7 @@ function debounce(f, t, opt) {
     return function (args) {
         let previousCall = this.lastCall;
         this.lastCall = Date.now();
-        if (previousCall && ((this.lastCall - previousCall) <= t)) {
+        if (previousCall && ((this.lastCall - previousCall) &lt;= t)) {
             if (!opt || !opt.fast)
                 clearTimeout(this.lastCallTimer);
         }
