@@ -1,22 +1,24 @@
 include ../../source/skeleton.pug
-+post('java.base 모듈 12', 'Java, Base, JDK12', 'JDK12 java.base 모듈 정리')
++post('java.base 모듈 16', 'Java, java.base, JDK16', 'JDK16 java.base 모듈 정리')
     h1 java.io
     div
-        h2 interface Closeable extends AutoCloseable
+        h2 Closeable
         ol
             li 데이터의 출발지나 목적지를 닫을 수 있으면 Closeable하다.
             li void close()
-            p 스트림 및 이와 관련된 시스템 자원을 해제한다. 이미 호출되었다면 아무 일도 하지 않는다.
-                br
-                | close() 실패했을 때, 예외를 던지는 대신 사용하던 자원을 모두 포기하고 Closeable 객체 내부적으로 '닫혔다(closed)'고 마크하길 권장한다.
-        h2 interface Flushable
+            p.
+                스트림 및 이와 관련된 시스템 자원을 해제한다. 이미 호출되었다면 아무 일도 하지 않는다.<br>
+                close() 실패했을 때, 예외를 던지는 대신 사용하던 자원을 모두 포기하고 Closeable 객체 내부적으로 '닫혔다(closed)'고 마크하길 권장한다.
+
+        h2 Flushable
         ol
             li Flush할 수 있는 데이터 목적지는 Flushable하다.
             li void flush()
             p 버퍼에 저장된 데이터를 스트림에 모두 써 보낸다.
-        h2 final class Console implements Flushable
+
+        h2 Console
         ol
-            li JVM이 컨트롤할 수 있는 문자 기반 콘솔에 대한 접근 제공. 콘솔 존재 여부는 하위 플랫폼에 의존적이며, 싱글톤으로 System.console()을 통해 얻을 수 있다. 만일 가용한 콘솔이 없다면 null이 넘겨진다.
+            li JVM이 컨트롤할 수 있는 문자 기반 콘솔에 대한 접근 제공. 콘솔 존재 여부는 하위 플랫폼에 의존적이며, 싱글톤으로 System.console()을 통해 얻을 수 있다. 만일 가용한 콘솔이 없다면 null이 반환된다.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/ConsoleExample.java', 'java')
             li 콘솔에 대한 읽기/쓰기 작업은 모두 원자적으로 이루어지며, 따라서 다른 스레드가 대기할 가능성이 있다.
             li 콘솔에 대한 close()는 실제로 아무런 영향을 미치지 않는다.
@@ -26,14 +28,15 @@ include ../../source/skeleton.pug
             PrintWriter writer() // 유니크한 PrintWriter 객체 반환
             Reader reader()      // 유니크한 Reader 객체 반환
             char[] readPassword(String fmt, Object... args)
-            char[] readPassword()
+
         h2 바이트 단위 IO 관련
         div
-            h3 interface DataInput
+            h3 DataInput
             ol
                 li binary stream으로부터 바이트들을 읽고, 또 이를 자바 기본 타입 또는 String으로 만들어 반환하는 기능을 제공한다.
                 li 읽기는 1바이트 단위로 이루어진다.
-                li Modified UTF-8 : DataInput과 DataOutput 인터페이스는 수정된 UTF-8을 이용한다.
+                li.marker Modified UTF-8
+                p DataInput과 DataOutput 인터페이스는 수정된 UTF-8을 이용한다.
                 ul
                     li '\u0001' ~ '\u007F'는 1바이트(0???????)로 표현한다.
                     li null('\u0000'), '\u0080' ~ '\u07FF'는 2바이트(110????? 10??????)로 표현한다.
@@ -52,21 +55,21 @@ include ../../source/skeleton.pug
                     // 구한 길이만큼의 바이트를 읽으면서 상기한 Modified UTF-8에 맞춰 String을 만든다.
                     // 길이만큼의 바이트를 다 읽기 전에 EOF를 만나면 예외를 던진다.
 
-            h3 interface DataOutput
+            h3 DataOutput
             p DataInput과 대칭
 
-            h3 abstract class InputStream implements Closeable
+            h3 InputStream
             ol
                 li 바이트 단위 읽기에 대한 최상위 추상 클래스
                 li 작업이 끝날 때까지 스레드가 블록되며, 스트림이 비동기적으로 닫히거나, 인터럽트가 발생하는 경우에 대해 대처하지 않는다.
             +asCode('java').
-                static InputStream nullInputStream() Since 11
+                static InputStream nullInputStream()
                     // 아무것도 읽지 않는 InputStream을 반환한다. 반환된 스트림은 처음부터 열려 있고, 마치 스트림의 끝에 도달한 것처럼 작동한다. 일반 InputSteram과 마찬가지로 close()를 통해 닫는다.
 
-                long transferTo(OutputStream out) Since 9
+                long transferTo(OutputStream out)
                     // 입력 스트림의 모든 바이트를 읽어들여 out에 쓴다. 총 전송 바이트 수를 반환하며, 스트림을 닫는 작업을 하진 않는다.
-                byte[] readAllBytes() Since 9
-                byte[] readNBytes(int len) Since 11
+                byte[] readAllBytes()
+                byte[] readNBytes(int len)
 
                 long skip(long n)
                     // 실제로 건너뛴 바이트 수를 반환. 음수 매개변수에 대해 0을 반환한다. 서브클래스들의 구현은 이와 다를 수 있다.
