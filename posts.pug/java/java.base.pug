@@ -81,23 +81,23 @@ include ../../source/skeleton.pug
                 void mark(int readlimit)   // 현재 위치 마킹
                 void reset()               // 마지막 마킹 위치로 이동
 
-            h3 abstract class OutputStream implements Closeable, Flushable
+            h3 OutputStream
             ol
                 li 바이트 단위 쓰기에 대한 최상위 추상 클래스
             +asCode('java').
-                static OutputStream nullOutputStream() Since 11
+                static OutputStream nullOutputStream()
                     // 실제로 데이터를 쓰지는 않는 OutputStream 객체를 반환한다.
 
-            h3 class FilterInputStream extends InputStream
+            h3 FilterInputStream
             p 다른 InputStream에 대한 필터 장식자 정의 클래스로, 추가적인 메서드는 없다.
 
-            h3 class FilterOutputStream extends OutputStream
+            h3 FilterOutputStream
             p 다른 OutputStream에 대한 필터 장식자 정의 클래스로, 추가적인 메서드는 없다.
 
-            h3 class ByteArrayInputStream extends InputStream
+            h3 ByteArrayInputStream
             p 내부 버퍼 byte[] buf에 대한 읽기 연산을 지원하는 InputStream
 
-            h3 class ByteArrayOutputStream extends OutputStream
+            h3 ByteArrayOutputStream
             p 내부 버퍼 byte[] buf에 대해 쓰기 연산을 지원하는 OutputStream. 버퍼 크기는 자동으로 확장된다.
             +asCode('java').
                 void writeTo(OutputStream out)
@@ -108,7 +108,7 @@ include ../../source/skeleton.pug
                 int size()
                 String toString(String charsetName)
 
-            h3 class BufferedInputStream extends FilterInputStream
+            h3 BufferedInputStream
             p 다른 입력 스트림에 버퍼를 제공하여 mark와 reset이 가능하게 해준다.
             +asCode('java').
                 protected byte[] buf
@@ -116,54 +116,56 @@ include ../../source/skeleton.pug
                 protected int marklimit, markpos, pos
                     // |pos - markpos| &lt; marklimit면 markpos는 -1(기본값)이 된다.
 
-            h3 class BufferedOutputStream extends FilterOutputStream
+            h3 BufferedOutputStream
             p 다른 출력 스트림에 버퍼를 제공하여, 시스템 쓰기 작업이 빈번하게 일어나지 않게 해준다.
 
-            h3 class DataInputStream extends FilterInputStream implements DataInput
+            h3 DataInputStream
             p 플랫폼 독립적인 자바 기본 타입 읽기를 정의한 DataInput을 구현한 장식자 클래스(FilterInputStream).
             +asCode('java').
                 static final String readUTF(DataInput in)
                     // Modified UTF-8을 이용하여 in 스트림으로부터 String을 해석해 반환한다.
-            h3 class DataOutputStream extends FilterOutputStream implements DataOutput
+            h3 DataOutputStream
             p 플랫폼 독립적인 자바 기본 타입 쓰기를 정의한 DataOutput을 구현한 장식자 클래스(FilterOutputStream)
             +asCode('java').
                 protected int written
                     // 현재까지 쓴 바이트 수. 오버플로될 경우 Integer.MAX_VALUE로 설정된다.
                 final int size() == return written;
-            h3 class PrintStream extends FilterOutputStream implements Appendable, Closeable
+            h3 PrintStream
             p OutputStream, File에 기본 타입 및 각종 문자열을 쓰는 기능을 제공한다.
             p autoFlush : 바이트 배열을 다 쓰거나, 새 줄 문자, '\n'을 쓰면 자동으로 flush()
             +asCode('java').
                     boolean checkError()
                         // flush()한 다음 오류 상태를 검사한다. 예외를 던지지 않으므로 이 메서드로 확인해야 한다. 스트림에 InterruptedIOException이 발생하면 Thread.currentThread().interrupt()를 실행한다.
-            h3 class PipedInputStream extends InputStream
+            h3 PipedInputStream
             p PipedOutputStream과 연결되어 바이트들을 받는 InputStream. PipedOutputStream과 별개의 스레드에서 동작해야 한다.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PipedStreamExample.java', 'java')
-            h3 class PipedOutputStream extends OutputStream
+            h3 PipedOutputStream
             p 연결된 PipedInputStream으로 바이트들을 보내는 OutputStream. PipedInputStream과 별개의 스레드에서 동작해야 한다.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PipedStreamExample.java', 'java')
-            h3 class SequenceInputStream extends InputStream
+            h3 SequenceInputStream
             p 여러 InputStream을 이어붙인듯이 활용하는 InputStream.
-            h3 class PushbackInputStream extends FilterInputStream
+            h3 PushbackInputStream
             p 이미 읽은 것을 취소하고 다시 읽을 수 있는 기능을 지원한다. 이전에 읽은 내용을 저장하지는 않으므로, 덮어쓰기처럼 이용할 수 있다.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PushBackExample.java', 'java')
-            h3 class FileInputStream extends InputStream
+            h3 FileInputStream
             p: +codeBtn('/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java', 'java')
             +asCode('java').
                 FileChannel getChannel()
                     // 유니크한 FileChannel을 반환하며, 채널에서의 위치는 스트림에서 읽어들인 만큼과 같다.
-            h3 class FileOutputStream extends OutputStream
+            h3 FileOutputStream
             p: +codeBtn('/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java', 'java')
             +asCode('java').
                 FileChannel getChannel()
                     // 유니크한 FileChannel을 반환하며, 채널에서의 위치는 스트림에서 쓴 바이트 수와 같다(append 모드가 아닐 경우). append 모드에서는 파일의 크기와 채널의 위치가 동일하다.
         h2 객체 IO(직렬화) 관련
         div
-            h3 interface ObjectInput extends DataInput, AutoCloseable
+            h3 ObjectInput
             p DataInput을 통해 기본 자료형을 읽어오고, 추가적으로 객체를 읽어오는 작업을 지원한다.
-            h3 interface ObjectOutput extends DataOutput, AutoCloseable
+
+            h3 ObjectOutput
             p DataOutput에 추가로 객체 쓰기 작업을 지원한다.
-            h3 interface Serializable
+
+            h3 Serializable
             ol
                 li 직렬화와 역질렬화를 지원하는 마커 인터페이스. ObjectInputStream, ObjectOutputStream의 메서드들을 이용해 알아서 저장/복구한다.
                     +codeBtn('/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java', 'java')
@@ -179,28 +181,36 @@ include ../../source/skeleton.pug
                 +asCode('java').
                     // 정의되지 않은 경우 기본값을 사용하지만, 명시할 것을 권장하고 있다.
                     ANY-ACCESS-MODIFIER static final long serialVersionUID = (version number)L;
-            h3 interface Externalizable extends Serializable
+
+            h3 Externalizable
             ol
-                li 객체 직렬화를 직접 구현하고자 할 때 이를 구현한다. 객체 직렬화는 빈 객체를 만든 뒤 각 속성의 값을 쓰므로 기본 생성자가 필요하다.
+                li 객체 직렬화/역직렬화를 직접 구현하고자 할 때 이를 구현한다. 객체 직렬화는 빈 객체를 만든 뒤 각 속성의 값을 쓰므로 기본 생성자가 필요하다.
                     +codeBtn('/Repositories/Eclipse/JavaSE/src/io/ExternalizableExample.java', 'java')
             +asCode('java').
                 void writeExternal(ObjectOutput out) # 객체를 out에 쓴다.
                 void readExternal(ObjectInput in)    # in으로 객체를 생성한다.
-            h3 class ObjectInputStream extends InputStream implements ObjectInput, ObjectStreamConstants
+
+            h3 ObjectInputStream
             p 객체 읽기에 관한 InputStream.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java', 'java')
-            h3 class ObjectOutputStream extends OutputStream implements OjbectOutput, ObjectStreamConstants
+
+            h3 ObjectOutputStream
             p 객체 쓰기에 관한 OutputStream.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java', 'java')
 
+            h3 ObjectInputFilter
+            ul
+                li 객체 역직렬화 사전 검사
+                li ObjectInputStream::setObjectInputFilter​
+
         h2 문자 단위 IO 관련
         div
-            h3 abstract class Reader implements Readable, Closeable
+            h3 Reader
             ol
                 li char 단위 읽기에 대한 최상위 추상 클래스
                 li 서브클래스들은 read(char[], int, int)와 close()만 구현해도 된다.
             +asCode('java').
-                static Reader nullReader() Since 11
+                static Reader nullReader()
                     // 아무 것도 읽지 않는 Reader 객체를 반환한다.
 
                 int read()
@@ -217,30 +227,30 @@ include ../../source/skeleton.pug
 
                 // 마킹 관련 : InputStream과 유사
 
-                long transterTo(Writer out) Since 10
+                long transterTo(Writer out)
                     // 모든 글자를 읽어 out에 쓴다. 전송한 글자 수를 반환한다.
-            h3 abstract class Writer implements Appendable, Closeable, Flushable
+            h3 Writer
             ol
                 li char 단위 쓰기에 대한 취상위 추상 클래스
                 li Appendable하므로 편리함이 크다.
             +asCode('java').
-                static Writer nullWriter() Since 11
+                static Writer nullWriter()
                     // 아무것도 쓰지 않는 Writer 객체를 반환한다.
 
                 void write(int c)
                     // 하위 16비트만 쓴고 나머지는 무시한다.
-            h3 class InputStreamReader extends Reader
+            h3 InputStreamReader
             p InputStream에 대해 Reader 작업을 지원해주는 bridge 클래스.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/BufferedReaderExample.java', 'java')
-            h3 class OutputStreamWriter extends Writer
+            h3 OutputStreamWriter
             p OutputStream에 Writer 작업을 지원해주는 bridge 클래스.
-            h3 abstract class FilterReader extends Reader
+            h3 FilterReader
             p 다른 Reader에 대한 필터 장식자 정의 클래스로, 추가적인 메서드는 없다.
-            h3 abstract class FilterWriter extends Writer
+            h3 FilterWriter
             p 다른 Writer에 대한 필터 장식자 정의 클래스로, 추가적인 메서드는 없다.
-            h3 class CharArrayReader extends Reader
+            h3 CharArrayReader
             p 내부 버퍼 char[] buf에 대한 읽기 연산을 지원하는 Reader
-            h3 class CharArrayWriter extends Writer
+            h3 CharArrayWriter
             p 내부 버퍼 char[] buf에 대해 쓰기 연산을 지원하는 Writer. 버퍼 크기는 자동으로 확장된다.
             +asCode('java').
                 void writeTo(Writer out)
@@ -248,50 +258,50 @@ include ../../source/skeleton.pug
                 void reset()
                     // 버퍼를 비우고 재활용한다.
                 char[] toCharArray()
-            h3 class StringReader extends Reader
+            h3 StringReader
             p String에 대해 읽기 연산을 수행하는 Reader.
-            h3 class StringWriter extends Writer
+            h3 StringWriter
             p 내부 StringBuffer에 쓰기 연산을 지원하는 Writer.
-            h3 class BufferedReader extends Reader
+            h3 BufferedReader
             p 다른 Reader에 대한 버퍼를 제공하여, 시스템 읽기 작업이 빈번하게 일어나지 않게 해준다.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/BufferedReaderExample.java', 'java')
             +asCode('java').
                 String readLine()         // EOF도 줄의 끝으로 간주
                 Stream&lt;String> lines()
-            h3 class BufferedWriter extends Writer
+            h3 BufferedWriter
             p Writer에 버퍼를 제공하여 시스템 쓰기 작업이 빈번하게 일어나지 않도록 한다.
             +asCode('java').
                 void newLine() // 줄 바꿈 문자열은 시스템 속성 line.separator로 결정된다.
-            h3 class LineNumberReader extends BufferedReader
+            h3 LineNumberReader
             p Reader가 줄 끝을 만날때마다 라인을 카운트하는 클래스. 처음 시작은 0.
             +asCode('java').
                 void setLineNumber(int lineNumber) // 읽기 위치가 이동하는 건 아니다
                 int getLineNumber()
-            h3 class PrintWriter extends Writer
+            h3 PrintWriter
             p PrintStream의 Writer 버전. 텍스트 출력 스트림에 객체들을 정형화된 텍스트로 쓰는 기능을 제공한다.
-            h3 class PipedReader extends Reader
+            h3 PipedReader
             p PipedInputStream과 유사.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PipedReaderExample.java', 'java')
-            h3 class PipedWriter extends Writer
+            h3 PipedWriter
             p PipedOutputStream과 유사.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PipedReaderExample.java', 'java')
-            h3 class PushbackReader extends FilterReader
+            h3 PushbackReader
             p PushbackInputStream과 비슷.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PushBackExample.java', 'java')
-            h3 class FileReader extends InputStreamReader
+            h3 FileReader
             | 특별한 내용 없음
-            h3 class FileWriter extends OutputStreamWriter
+            h3 FileWriter
             | 특별한 내용 없음
 
         h2 파일 관련
         div
-            h3 @FunctionalInterface interface FileFilter
-            p 파일 패스 필터링에 사용되며 File#listFiles의 매개변수로 객체가 넘겨진다.
+            h3 FileFilter
+            p 파일 경로 필터링에 사용되며 File#listFiles의 매개변수로 객체가 넘겨진다.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/FileFilterExample.java', 'java')
-            h3 @FunctionalInterface interface FilenameFilter
+            h3 FilenameFilter
             p 특정 디렉터리에서의 파일명 필터링에 사용되며 FileDialog#setFilenameFilter, File#list, File#listFiles의 매개변수로 객체가 넘겨진다.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/FilenameFilterExample.java', 'java')
-            h3 class File implements Serializable, Comparable&lt;file&gt;
+            h3 File
             ol
                 li 추상화된 파일 및 디렉터리 경로에 대한 추상화된 표현 제공.(물리적 저장 장치 » 경로 문자열 » File 객체)
                 li 경로 문자열은 절대 경로, 상대 경로 둘 다 허용된다. 상대 경로의 기준 위치는 System속성 "user.dir"로 얻을 수 있다.
@@ -328,7 +338,7 @@ include ../../source/skeleton.pug
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/FileFilterExample.java', 'java') FileFilter 예
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/FilenameFilterExample.java', 'java') FilenameFilter 예
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/FileExample.java', 'java') File 예
-            h3 final class FilePermission extends Permission implements Serializable
+            h3 FilePermission
             p 파일 및 디렉터리에 관한 권한을 표현하는 클래스.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/FilePermissionExample.java', 'java')
             ul
@@ -343,7 +353,7 @@ include ../../source/skeleton.pug
                     // 객체의 권한이 인자의 권한을 내포하는지 여부 반환
                 PermissionCollection newPermissionCollection()
                     // 예. 컬렉션에 다음 두 가지 권한─("/tmp/-", "read"), ("/tmp/scratch/foo", "write")─들이 있을 때, 이에 대한 implies메서드에 권한 ("/tmp/scratch/foo", "read,write")을 넘겨준 결과는 true를 반환해야 한다.
-            h3 class RandomAccessFile implements DataOutput, DataInput, Closeable
+            h3 RandomAccessFile
             p 읽기/쓰기 가능한 임의 접근 파일. 읽기/쓰기의 기준 위치 file pointer가 존재.
                 br
                 | 읽기로 예정된 바이트들을 모두 읽기 전에 EOF를 만나면 EOFException 발생.
@@ -365,14 +375,14 @@ include ../../source/skeleton.pug
 
     h1 java.lang
     div
-        h2 interface Appendable
+        h2 Appendable
         p 유니코드 CharSequence 또는 char 값을 덧붙일 수 있는 객체를 표현한다.
-        h2 interface AutoCloseable
+        h2 AutoCloseable
         p 자동으로 자원을 해제하는 객체를 표현한다. try-with-resources 블록에 사용되면 close()가 자동으로 호출된다. IO 작업이 없는 것들을 try-with-resources 블록에 이용하는 것은 불필요한 일이다.
             +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java', 'java')
-        h2 interface Cloneable
+        h2 Cloneable
         p Object#clone()을 재정의했음을 나타내는 마커 인터페이스.
-        h2 interface Comparable&lt;T>
+        h2 Comparable&lt;T>
         ol
             li 자연스러운 순서로 클래스의 모든 객체를 정렬할 수 있음을 표현.
             li 이를 구현한 클래스 객체들의 List, array는 Collections.sort, Arrays.sort로 각각 정렬할 수 있다.
@@ -385,7 +395,7 @@ include ../../source/skeleton.pug
                 return this - o;
                 // o보다 앞서면(작으면) 음수, 같으면 0, 뒤면(크면) 양수 반환.
             }
-        h2 interface Iterable&lt;T>
+        h2 Iterable&lt;T>
         p 이를 구현한 클래스 객체는 enhanced for statement의 순회 대상이 될 수 있다.
             +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/IterableExample.java', 'java')
         +asCode('java').
@@ -396,7 +406,7 @@ include ../../source/skeleton.pug
                 // 기본 구현 : for(T t : this) action.accept(t);
             default Spliterator&lt;T> spliterator()
                 // 기본 구현은 Sliterator의 모든 사항을 구현하지 않으므로 재정의하는 것이 더 좋은 성능을 보인다.
-        h2 interface ProcessHandle extends Comparable&lt;processhandle&gt; Since 9
+        h2 ProcessHandle
         ol
             li native process들에 대한 제어 제공. 프로세스 생애 모니터링, 자식 프로세스 나열, 프로세스 정보 얻기, 프로세스 종료 등.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/ProcessHandleExample.java', 'java')
@@ -424,7 +434,7 @@ include ../../source/skeleton.pug
             long pid()
             boolean isAlive() // PID가 유효하면 alive로 간주
         div
-            h3 static interface ProcessHandle.Info Since 9
+            h3 ProcessHandle.Info
             +asCode('java').
                 Optional&lt;String> command()            // 실행가능한 경로 반환
                 Optional&lt;String> commandLine()        // command()와 arguments()의 결과를 공백으로 구분한 결과 반환
@@ -432,16 +442,16 @@ include ../../source/skeleton.pug
                 Optional&lt;Instant> startInstant()      // 프로세스의 시작 시각 반환
                 Optional&lt;Duration> totalCpuDuration() // CPU 사용 시간 반환
                 Optional&lt;String> user()               // 프로세스 유저 반환
-        h2 interface Readable
+        h2 Readable
         p Readable은 문자들에 대한 소스다.
             +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/ReadableExample.java', 'java')
         +asCode('java').
             int read(CharBuffer cb)
                 // 문자들을 그대로 cb에 put()을 통해 저장한다. cb에 대한 어떠한 사전처리도 없다. 저장한 char 개수를 반환하며, 소스의 끝이면 -1을 반환한다.
-        h2 @FunctionalInterface interface Runnable
+        h2 Runnable
         p Runnable은 한 스레드로서 실행되도록 구현돼야 한다. Thread의 run()만을 재정의할 때 사용한다.
             +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/RunnableExample.java', 'java')
-        h2 class SecurityManager
+        h2 SecurityManager
         ol
             li 보안 정책을 구현할 수 있는 클래스. 전형적인 확인 절차는 아래와 같다.
             +asCode('java').
@@ -453,7 +463,7 @@ include ../../source/skeleton.pug
             Object getSecurityContext()           // 현재 실행 환경을 캡슐화한 객체 반환.
             ThreadGroup getThreadGroup()          // 새로운 스레드를 생성할 수 있는 스레드그룹 반환
             void checkPermission(Permission perm) // checkXXX()
-        h2 final class Math, StrictMath
+        h2 Math, StrictMath
         +asCode('java').
             static double IEEEremainder(double f1, double f2)
 
@@ -462,8 +472,8 @@ include ../../source/skeleton.pug
             // 오버플로우되면 예외
             addExact, substractExact, multiplyExact, incrementExact, decrementExact, negateExact, toIntExact
 
-            static long multiplyFull(int x, int y)   // Since 9
-            static long multiplyHigh(long x, long y) // Since 9, 상위 64개 비트를 반환
+            static long multiplyFull(int x, int y)
+            static long multiplyHigh(long x, long y) // 상위 64개 비트를 반환
 
             floorDiv(x, y)
                 // x/y에 가장 가까운 최대 정수를 반환
@@ -471,10 +481,10 @@ include ../../source/skeleton.pug
             floorMod(x, y)
                 // x - (floorDiv(x, y) * y)를 반환한다. 부호는 y와 같다.
             fma(a, b, c)
-                // Since 9, a * b + c에 가장 가까운 float, double을 반환
+                // a * b + c에 가장 가까운 float, double을 반환
         h2 공유 변수 관련
         div
-            h3 abstract class ClassValue&lt;T>
+            h3 ClassValue&lt;T>
             p 임의 타입에 대하여, 필요할 때에 연산된 값을 가져오도록 지원. 해당 값은 해당 타입에 대해 일관성을 갖는다.
             +asCode('java').
                 protected abstract T computeValue(Class&lt;?> type)
@@ -483,30 +493,30 @@ include ../../source/skeleton.pug
                     // 값이 계산되지 않은 상태에서 여러 스레드들이 경합을 벌일 경우, 임의 스레드의 결과값을 모두에 반환한다.
                 void remove(Class&lt;?> type)
                     // 다음 get 호출 시 값을 새로 계산하도록 한다
-            h3 class ThreadLocal&lt;T>
+            h3 ThreadLocal&lt;T>
             p 스레드 단위의 지역 변수를 제공한다. 호출 지점과 관계없이 한 스레드 내부에서 변수를 공유한다.
             +asCode('java').
                 protected T initialValue()
                     // 초기값이 설정되지 않은 상태에서 최초 get() 호출에 의해 불린다. remove() 호출 후의 get() 요청으로 다시 불린다.
                 static &lt;S> ThreadLocal&lt;S> withInitial(Supplier&lt;? extends S> supplier)
                     // supplier로 초기값이 설정되는 ThreadLocal 반환.
-            h3 class InheritableThreadLocal&lt;T> extends ThreadLocal&lt;T>
+            h3 InheritableThreadLocal&lt;T>
             p ThreadLocal에 상속성을 부여. 자식 스레드는 부모의 thread-local 변수들을 모두 상속받고 시작한다. childValue 메서드를 재정의함으로써 부모의 값과 다르게 설정할 수도 있다.
 
         h2 타입 관련
         div
-            h3 interface CharSequence
+            h3 CharSequence
             p 일련의 char 값들을 표현한다. equals(), hashCode()에 대한 규약이 없어, 두 CharSequence 객체를 비교하는 결과는 정의되어 있지 않으며, 따라서 set이나 map의 키로 이용하기에 부적절하다.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/CharSequenceExample.java', 'java')
             +asCode('java').
-                static int compare(CharSequence cs1, CharSequence cs2) Since 11
+                static int compare(CharSequence cs1, CharSequence cs2)
                     // 두 CharSequence를 사전순으로 비교한다.
 
                 default IntStream chars()
                     // char들을 int로 0패딩하여 스트림 생성. 두 char로 쪼개진 유니코드 보충 평면의 문자를 하나로 합치진 않는다.
                 default IntStream codePoints()
                     // 유니코드 값들을 스트림으로 생성. 보충 평면의 문자는 Character.toCodePoint 메서드를 통해 하나의 int 값으로 형성.
-            h3 final class Boolean implements Serializable, Comparable&lt;Boolean>
+            h3 Boolean
             p 원시 타입 boolean의 wrapper 클래스. 람다 활용을 위한 static 메서드들을 제공한다.
             +asCode('java').
                 static boolean parseBoolean(String s)
@@ -519,9 +529,9 @@ include ../../source/skeleton.pug
 
                 int compareTo(Boolean b)
                     // TRUE.compareTo(FALSE) > 0, FALSE.compareTo(TRUE) &lt; 0
-            h3 abstract class Number implements Serializable
+            h3 Number
             p 수에 관한 최상위 추상 wrapper 클래스
-            h3 final class Byte extends Number implements Comparable&lt;Byte>
+            h3 Byte
             p 기본 타입 byte에 대한 wrapper 클래스. 람다 활용을 위한 static 메서드들을 제공한다.
             +asCode('java').
                 static byte parseByte(String s, int radix)
@@ -535,10 +545,10 @@ include ../../source/skeleton.pug
                     //     Sign: '-', '+'
 
                 static int compare(byte x, byte y)
-                static int compareUnsigned(byte x, byte y) Since 9
+                static int compareUnsigned(byte x, byte y)
                 static int toUnsignedInt(byte x)
                 static long toUnsignedLong(byte x)
-            h3 final class Character implements Serializable, Comparable&lt;Character>
+            h3 Character
             ol
                 li 기본타입 char에 대한 wrapper 클래스. 추가적으로 문자 집합(소문자, 숫자 등) 정의, 변환 기능을 갖는다.
                 li 유니코드 표준 8.0.0을 따른다.(JDK 9 기준)
@@ -564,7 +574,7 @@ include ../../source/skeleton.pug
                     // 이름 반환 : Character.UnicodeBlock.of(codePoint).toString().replace('_', ' ') + " " + Integer.toHexString(codePoint).toUpperCase(Locale.ROOT);
                     // 정의되어 있지 않으면 null 반환
                 static int codePointOf(String name)
-                    // Since 9, 정의되어 있지 않으면 예외
+                    // 정의되어 있지 않으면 예외
 
                 static boolean isValidCodePoint(int codePoint)
                 static int getType(int codePoint)
@@ -588,7 +598,7 @@ include ../../source/skeleton.pug
                 static int charCount(int codePoint)
                     // 표현에 필요한 char 수(1 or 2)
                 static char[] toChars(int codePoint)
-                static String toString(int codePoint) Since 11
+                static String toString(int codePoint)
 
                 static char reverseBytes(char ch)
                 static int toCodePoint(char high, char low)
@@ -607,10 +617,10 @@ include ../../source/skeleton.pug
                 static char forDigit(int digit, int radix)
                 static int getNumericValue(int codePoint)
             div
-                h4 static class Character.Subset
+                h4 Character.Subset
                 p 이 클래스의 객체는 유니코드 문자 집합을 표현한다. Character 클래스 내부에서 정의한 문자 집합은 Character.UnicodeBlock뿐이다.
                 +asCode('java') final String toString() // name 반환
-                h4 static final class Character.UnicodeBlock extends Character.Subset
+                h4 Character.UnicodeBlock
                 p 유니코드 문자 블록. 각 문자들은 최대 하나의 유니코드 블록에 포함된다.
                 +asCode('java').
                     static Character.UnicodeBlock ARABIC, GREEK, HANGUL // 등
@@ -618,13 +628,13 @@ include ../../source/skeleton.pug
                     static Character.UnicodeBlock of(char c)            // c가 속한 유니코드 블록 반환
                     static final Character.UnicodeBlock forName(String blockName)
                         // 블록 이름이 변경된 경우, 변경 전/후 이름 둘 다 사용할 수 있다.
-                h4 static enum Character.UnicodeScript
+                h4 Character.UnicodeScript
                 p 유니코드 표준 스크립트 이름 정의를 표현. 모든 문자는 하나의 스크립트(각 언어|INHERITED|COMMON|UNKNOWN)에 할당된다.
                 +asCode('java').
                     ARABIC, GREEK, HANGUL // 등
 
                     static Character.UnicodeScript of(int codePoint)
-            h3 final class Double extends Number implements Comparable&lt;Double>, Constable, ConstantDesc
+            h3 Double
             p 기본 타입 double에 대한 wrapper 클래스. 람다 활용을 위한 static 메서드들을 제공한다.
             +asCode('java').
                 public static final double POSITIVE_INFINITY // Double.longBitsToDouble(0x7ff0000000000000L)
@@ -649,14 +659,14 @@ include ../../source/skeleton.pug
                 int compareTo(Double anotherDouble)
                     // Double.NaN > Double.POSITIVE_INFINITY
                     // 0.0d > -0.0d
-            h3 final class Integer extends Number implements Comparable&lt;Integer>
+            h3 Integer
             p 기본 타입 int에 대한 wrapper 클래스. 람다 활용을 위한 static 메서드들을 제공한다.
             +asCode('java').
                 static String toString(int i, int radix)
                     // + toUnsignedString, toBinaryString, toOctalString, toHexString
                     // radix in [Character.MIN_RADIX, Character.MAX_RADIX]
                 static int parseInt(CharSequence s, int beginIndex, int endIndex, int radix)
-                    // Since 9, [beginIndex, endIndex)
+                    // [beginIndex, endIndex)
                     // + parseUnsignedInt, valueOf
                     // 파싱 중 CharSequence 변경에 대한 조치를 하지 않음
                 static Integer decode(String nm) // Byte#decode 참고
@@ -678,7 +688,7 @@ include ../../source/skeleton.pug
                 static int rotateLeft(int i, int distance) // + rotateRight
                 static int reverse(int i)
                 static int reverseBytes(int i)             // 바이트 단위로 뒤집기
-            h3 final class String implements Serializable, Comparable&lt;String>, CharSequence, Constable, ConstantDesc
+            h3 String
             ol
                 li 유니코드 보충 평면 문자는 surrogate pairs로써 2자리를 차지한다.
                 li 로캐일을 고려한 문자열 비교는 Collator 클래스를 이용.
@@ -691,7 +701,7 @@ include ../../source/skeleton.pug
                 static String valueOf(Object obj) : obj.toString()
 
                 boolean isEmpty() // 길이가 0인지 여부
-                boolean isBlank() // Since 11, 비거나 공백 문자로만 이루어졌는지 여부
+                boolean isBlank() // 비거나 공백 문자로만 이루어졌는지 여부
 
                 byte[] getBytes(Charset charset)
                     // 문자셋이 지정되지 않은 경우, 플랫폼 기본 문자셋을 이용한다. 기본 문자셋을 변경하려면 JVM 옵션을 조정하면 된다.
@@ -717,13 +727,13 @@ include ../../source/skeleton.pug
                 static String join(CharSequence delimiter, CharSequence... elements)
 
                 String trim()             // 시작과 끝의 공백(&lt;= U+0020) 제거
-                String strip()            // Since 11, + stripLeading, stripTrailing. 공백 제거
-                Stream&lt;String> lines() // Since 11, 줄 끝(\n, \r, \r\n) 기준으로 분리
-                String indent(int n)      // Since 12, 각 줄이 n개의 공백으로 시작하도록 조정하고, 줄 끝을 \n로 정규화한다. n이 음수인 경우, 최대 n개의 앞선 공백을 제거한다.
+                String strip()            // + stripLeading, stripTrailing. 공백 제거
+                Stream&lt;String> lines() // 줄 끝(\n, \r, \r\n) 기준으로 분리
+                String indent(int n)      // 각 줄이 n개의 공백으로 시작하도록 조정하고, 줄 끝을 \n로 정규화한다. n이 음수인 경우, 최대 n개의 앞선 공백을 제거한다.
 
-                &lt;R> R transform(Function&lt;? super String, ? extends R> f) // Since 12
-                String repeat(int count) // Since 11
-            h3 final class StringBuffer implements Serializable, Comparable&lt;StringBuffer>, CharSequence
+                &lt;R> R transform(Function&lt;? super String, ? extends R> f)
+                String repeat(int count)
+            h3 StringBuffer
             p 스레드-안전한 변경 가능한 문자열.
             +asCode('java').
                 void trimToSize()
@@ -732,32 +742,20 @@ include ../../source/skeleton.pug
                     // 새로운 크기의 문자열에 기존 문자열을 복사. 남는 부분은 '\u0000'(null)로 채워진다.
                 void ensureCapacity(int minimumCapacity)
                 StringBuffer reverse()
-            h3 final class StringBuilder implements Serializable, Comparable&lt;StringBuilder>, CharSequence
+            h3 StringBuilder
             p StringBuffer의 비동기화 버전.
-            h3 abstract class Enum&lt;E extends Enum&lt;E>> implements Constable, Comparable&lt;E>, Serializable
-            p 모든 enum의 베이스. Enum을 집합이나 맵의 키로 이용하면 효율적인 구현을 얻을 수 있다.
-            +asCode('java').
-                final String name()
-                final int ordinal()
-                final Class&lt;E> getDeclaringClass()
-                static &lt;T extends Enum&lt;T>> T valueOf(Class&lt;T> enumType, String name)
-            div
-                h4 static final class Enum.EnumDesc&lt;E extends Enum&lt;E>> extends DynamicConstantDesc&lt;E> Since 12
-                +asCode('java') static &lt;E extends Enum&lt;E>> Enum.EnumDesc&lt;E> of(ClassDesc enumClass, String constantName) Since 12
-            h3 class Throwable implements Serializable
-            p 모든 에러와 예외의 조상.
 
         h2 클래스 관련
         +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/ClassExample.java', 'java')
         div
-            h3 final class Class&lt;T> implements Serializable, GenericDeclaration, Type, AnnotatedElement, TypeDescriptor.OfField&lt;Class&lt;?>>, Constable
+            h3 Class&lt;T>
             div
                 h4 Nest
                 p Nest는 같은 런타임 패키지 안의, private member에 접근 가능한 클래스와 인터페이스의 집합.
                     | Nest에 속한 클래스, 인터페이스를 nestmate라 부르고, 하나의 nest에서 하나의 nestmate는 host 역할을 하고 나머지 nestmate 목록을 갖는다.
                 +asCode('java').
-                    Class&lt;?> getNestHost() Since 11
-                    Class&lt;?>[] getNestMembers() Since 11
+                    Class&lt;?> getNestHost()
+                    Class&lt;?>[] getNestMembers()
             +asCode('java').
                 // ClassLoader 관련
                 ClassLoader getClassLoader()
@@ -765,18 +763,14 @@ include ../../source/skeleton.pug
                 URL getResource(String name)
                 static Class&lt;?> forName(String className)
                     // 로드된 클래스는 초기화가 진행된다.
-                static Class&lt;?> forName(String name, boolean initialize, ClassLoader loader)
                 static Class&lt;?> forName(Module module, String name)
-                    // Since 9, 주어진 모듈에서 binary name을 가진 클래스를 반환한다.
+                    // 주어진 모듈에서 binary name을 가진 클래스를 반환한다.
                     // 클래스를 초기화하지 않으며, 클래스를 찾을 수 없으면 null을 반환한다.
                     // 참고 : https://docs.oracle.com/javase/9/docs/api/java/lang/ClassLoader.html#name
 
                 // 타입 관련
                 T cast(Object obj)
                     // obj를 호출한 Class 객체와 같은 타입으로 변환
-                &lt;U> Class&lt;? extends U> asSubclass(Class&lt;U> clazz)
-                    // 호출한 Class 객체의 타입을 변환한다. 반환되는 변수는 현재 객체를 참조한다.
-                    // U : 변환하고자 하는 타입, clazz : 변환하고자 하는 타입 Class 객체
                 boolean isInstance(Object obj)
                     // instanceof 연산자의 동적인 형태. 원시타입 클래스 객체는 false만 반환한다.
                 boolean isAssignableFrom(Class&lt;?> cls)
@@ -786,7 +780,7 @@ include ../../source/skeleton.pug
                     // wrapper 클래스는 원시타입이 아님에 유의 : Integer.class != Integer.TYPE, Integer.TYPE == int.class
                 boolean isSynthetic()
                     // Synthetic class : 명시적/암시적으로 생성자가 정의되지 않은 채 생성된 클래스
-                boolean isNestmateOf(Class&lt;?> c) // Since 11
+                boolean isNestmateOf(Class&lt;?> c)
 
                 // 클래스 이름 관련
                 String toGenericString()
@@ -800,10 +794,10 @@ include ../../source/skeleton.pug
                     // Local class, 익명 클래스, 또는 이들의 배열은 canonical name이 없어 null을 반환한다.
 
                 // 리플렉션 관련
-                Module getModule() // Since 9
+                Module getModule()
                 Package getPackage()
                 String getPackageName()
-                    // Since 9, 익명 패키지면 빈 문자열 반환. 배열 클래스의 경우 원소 타입이 속한 패키지 이름 반환. 원시 타입 또는 void의 경우 "java.lang" 반환.
+                    // 익명 패키지면 빈 문자열 반환. 배열 클래스의 경우 원소 타입이 속한 패키지 이름 반환. 원시 타입 또는 void의 경우 "java.lang" 반환.
                 Class&lt;?>[] getClasses()
                     // public 멤버로 정의된 클래스, 인터페이스 Class 객체 배열 반환.
                     // + getFields, getMethods, getConstructors
@@ -818,10 +812,8 @@ include ../../source/skeleton.pug
                 Method getEnclosingMethod()
                     // 이 클래스가 메서드 내부에서 정의된 경우, 해당 메서드를 반환한다.
                     // + getEnclosingConstructor, getDeclaringClass, getEnclosingClass
-                int getModifiers()
-                    // java.lang.reflect.Modifier
                 boolean isAnnotationPresent(Class&lt;? extends Annotation> annotationClass)
-            h3 abstract class ClassLoader extends Object
+            h3 ClassLoader
             ol
                 li 전형적으로, 로드할 클래스 이름을 파일명으로 변환하여 ".class"파일을 읽어온다.
                 li 모든 Class 객체들은 ClassLoader에 대한 참조를 갖고 있다.
@@ -848,11 +840,11 @@ include ../../source/skeleton.pug
                     br
                     | "java.lang.String", "javax.swing.JSpinner$DefaultEditor", "java.security.KeyStore$Builder$FileBuilder$1", "java.net.URLClassLoader$3$1"
             +asCode('java').
-                protected ClassLoader(String name, ClassLoader parent) Since 9
+                protected ClassLoader(String name, ClassLoader parent)
                     // parent가 null일 경우, 해당 클래스 로더가 모든 플랫폼 클래스를 볼 수 있다는 보장은 없다.
                     // name : class loader's name; or null if not named
                 String getName()
-                    // Since 9, 클래스 로더 이름 반환. 없으면 null
+                    // 클래스 로더 이름 반환. 없으면 null
 
                 Class&lt;?> loadClass(String name) // == loadClass(name, false)
                 protected Class&lt;?> loadClass(String name, boolean resolve)
@@ -864,19 +856,19 @@ include ../../source/skeleton.pug
                      // 4. 재정의되지 않은 이상, getClassLoadingLock()을 통해 메서드는 동기화된다.
                 protected final void resolveClass(Class&lt;?> c) : 클래스를 링크한다.
 
-                static ClassLoader getPlatformClassLoader() // Since 9
+                static ClassLoader getPlatformClassLoader()
                 static ClassLoader getSystemClassLoader()
                     // 시스템 클래스 로더를 반환하며, 이는 새롭게 정의되는 클래스 로더들의 default delegation parent다.
 
                 // 리소스 관련
                 URL getResource(String name)
                 Enumeration&lt;URL> getResources(String name)
-                Stream&lt;URL> resources(String name) // Since 9
+                Stream&lt;URL> resources(String name)
                 static URL getSystemResource(String name)
                 static Enumeration&lt;URL> getSystemResources(String name)
                 InputStream getResourceAsStream(String name)
                 static InputStream getSystemResourceAsStream(String name)
-            h3 final class Module implements AnnotatedElement Since 9
+            h3 Module
             p 이름 있는 모듈에 속하지 않은 모든 타입은 각 클래스 로더의 익명 모듈에 속한다.
             +asCode('java').
                 InputStream getResourceAsStream(String name)
@@ -884,7 +876,7 @@ include ../../source/skeleton.pug
 
         h2 프로그램 실행 단위
         div
-            h3 class Thread implements Runnable
+            h3 Thread
             ol
                 li 스레드는 실행 우선순위를 가지며, 그 초깃값은 스레드를 생성한 스레드의 것과 같다. 데몬 스레드로부터 생성된 스레드도 데몬 스레드다.
                 li JVM이 시작되면 하나의 non-daemon 스레드가 존재하며, 전형적으로 main 메서드를 호출한다. JVM은 다음의 상황 중 하나라도 일어나기 전까지 실행을 계속한다.
@@ -927,7 +919,7 @@ include ../../source/skeleton.pug
                 static void setDefaultUncaughtExceptionHandler(Thread.UncaughtExceptionHandler eh)
                 void        setUncaughtExceptionHandler(Thread.UncaughtExceptionHandler eh)
             div
-                h4 static void onSpinWait() Since 9
+                h4 static void onSpinWait()
                 p Spin-wait 루프에서 조건이 충족되어 루프를 벗어나기를 기다린다.
                 +asCode('java').
                     class EventHandler {
@@ -944,14 +936,14 @@ include ../../source/skeleton.pug
                              . . .
                         }
                     }
-                h4 static enum Thread.State
+                h4 Thread.State
                 p NEW, RUNNABLE, BLOCKED, WAITING, TIMED_WAITING, TERMINATED
-                h4 @FunctionalInterface static interface Thread.UncaughtExceptionHandler
+                h4 Thread.UncaughtExceptionHandler
                 ol
                     li 처리되지 않은 예외로 인해 스레드가 종료되는 상황을 대비한 핸들러. 그러한 상황에서, 먼저 Thread.getUncaughtExceptionHandler()를 통해 얻은 핸들러에 해당 스레드와 예외 객체를 전달한다.
                     li 만일 스레드에 핸드러가 설정되지 않은 경우, ThreadGroup의 핸들러를 이용하며, ThreadGroup에도 없는 경우 default 핸들러를 이용할 수 있다.
 
-            h3 class ThreadGroup implements Thread.UncaughtExceptionHandler
+            h3 ThreadGroup
             +asCode('java').
                 final void setDaemon(boolean daemon)
                     // 데몬 스레드 그룹은 마지막 스레드나 스레드 그룹이 파괴되면 자동으로 파괴된다.
@@ -962,7 +954,7 @@ include ../../source/skeleton.pug
                 final void interrupt() // 그룹의 모든 스레드에 인터럽트
                 final void destroy()   // 그룹과 하위 모든 그룹을 파괴
 
-            h3 abstract class Process
+            h3 Process
             p ProcessBuilder.start, Runtime.exec으로 시작된 native process들에 대한 제어 제공.
             +asCode('java').
                 abstract OutputStream getOutputStream()
@@ -978,7 +970,6 @@ include ../../source/skeleton.pug
                 Process destroyForcibly() // 강제, 즉시 종료.
                 boolean isAlive()
 
-                // Since 9
                 long pid()
                 boolean supportsNormalTermination()
                 CompletableFuture&lt;Process> onExit()
@@ -987,7 +978,7 @@ include ../../source/skeleton.pug
                 Stream&lt;ProcessHandle> children()
                 Stream&lt;ProcessHandle> descendants()
 
-            h3 final class ProcessBuilder
+            h3 ProcessBuilder
             p 이 클래스는 스레드-안전하지 않다.
             +asCode('java').
                 ProcessBuilder command(String... command)
@@ -1001,20 +992,20 @@ include ../../source/skeleton.pug
                 Process start()
 
                 static List&lt;Process> startPipeline(List&lt;ProcessBuilder> builders)
-                    // Since 9, 프로세스들의 표준 출력을 다음 프로세스의 표준 입력으로 연결한다.
+                    // 프로세스들의 표준 출력을 다음 프로세스의 표준 입력으로 연결한다.
             div
                 h4 abstract static class ProcessBuilder.Redirect
                 p 서브프로세스의 입력 소스 또는 출력 방향을 표현한다.
                 +asCode('java').
                     public static final ProcessBuilder.Redirect PIPE    // 현재 프로세스와 파이프로 연결
                     public static final ProcessBuilder.Redirect INHERIT // 현재 프로세스의 것과 동일
-                    public static final ProcessBuilder.Redirect DISCARD // Since 9, 출력 버림
+                    public static final ProcessBuilder.Redirect DISCARD // 출력 버림
 
                     static ProcessBuilder.Redirect from(File file)
                     static ProcessBuilder.Redirect to(File file) // file의 이전 내용은 새로운 쓰기 작업에 의해 버려진다.
                     static ProcessBuilder.Redirect appendTo(File file)
                 div
-                    h5 static enum ProcessBuilder.Redirect.Type
+                    h5 ProcessBuilder.Redirect.Type
                     +asCode('java').
                         APPEND, // Redirect.appendTo(File)
                         INHERIT,
@@ -1022,7 +1013,7 @@ include ../../source/skeleton.pug
                         READ, // Redirect.from(File)
                         WRITE // Redirect.to(File)
 
-            h3 class Runtime
+            h3 Runtime
             p 모든 Java 애플리케이션은 하나의 Runtime 인스턴스를 가진다.
             +asCode('java').
                 static Runtime getRuntime()
@@ -1043,7 +1034,7 @@ include ../../source/skeleton.pug
                 void runFinalization()
                     // 소멸 대기중인 모든 객체 소멸
 
-            h3 final class System
+            h3 System
             +asCode('java').
                 public static final InputStream in // + out, err
                 static void setIn(InputStream in)  // + setOut, setErr
@@ -1057,30 +1048,30 @@ include ../../source/skeleton.pug
                 static String setProperty(String key, String value)
                 static String clearProperty(String key)
                 static String getenv(String name) // 환경변수
-                static System.Logger getLogger(String name) // Since 9
+                static System.Logger getLogger(String name)
                 static void exit(int status)
             div
-                h4 static interface System.Logger Since 9
+                h4 System.Logger
                 +asCode('java').
                     String getName()
                     boolean isLoggable(System.Logger.Level level)
                     default void log(System.Logger.Level level, String msg)
                 div
-                    h5 static enum System.Logger.Level Since 9
+                    h5 System.Logger.Level
                     +asCode('java') ALL(Integer.MIN_VALUE), TRACE(400), DEBUG(500), INFO(800), WARNING(900), ERROR(1000), OFF(Integer.MAX_VALUE)
 
-                h4 abstract static class System.LoggerFinder Since 9
+                h4 System.LoggerFinder
                 ul
                     li 로거의 생성, 관리, 구성에 관한 서비스 제공.
                     li 기본 구현 : java.logging 모듈이 있는 경우 java.util.logging이용. 없으면 INFO 수준으로 표준 에러 출력
 
-            h3 final class StackWalker Since 9
+            h3 StackWalker
             p 현재 스레드의 StackFrame에 대한 스트림을 열고 특정 작업을 수행한다. 스트림은 실행 지점인 맨 위 frame부터 아래로 내려가면서 작업한다.
             +asCode('java').
                 static StackWalker getInstance(...)
                     // 기본 설정 : 숨겨진 프레임 생략. 클래스 정보 미포함.
 
-                &lt;T> T walk(Function&lt;? super Stream&lt;StackWalker.StackFrame>, ? extends T> function)
+                &lt;T> T walk(Function&lt;? super Stream&lt;StackWalker.StackFrame>, ?
                     // 예. 현재 스레드의 상위 10개 스택 프레임 가져오기.
                     StackWalker.getInstance().walk(s -> s.limit(10).collect(Collectors.toList()));
                 void forEach(Consumer&lt; super StackWalker.StackFrame> action)
@@ -1089,13 +1080,13 @@ include ../../source/skeleton.pug
                     // 이 메서드를 호출하는 호출자의 클래스 객체를 반환.
                     // Util#getResourceBundle 메서드는 이 메서드를 통해 얻은 호출자의 클래스로부터 클래스 로더를 얻고, 클래스 로더를 통해 리소스를 로드한다.
             div
-                h4 static enum StackWalker.Option Since 9
+                h4 StackWalker.Option
                 +asCode('java').
                     RETAIN_CLASS_REFERENCE // StackFrame에 클래스 정보 유지
                     SHOW_HIDDEN_FRAMES     // 숨겨진 프레임 표시.
                     SHOW_REFLECT_FRAMES    // reflection 프레임 표시
 
-                h4 static interface StackWalker.StackFrame Since 9
+                h4 StackWalker.StackFrame
                 p 각 StackFrame 객체는 StackWalker로부터 반환된, 메서드 호출을 표현한다.
                 +asCode('java').
                     String            getMethodName()       // 메서드 이름 반환.
@@ -1103,25 +1094,25 @@ include ../../source/skeleton.pug
                     Class&lt;?>       getDeclaringClass()   // 메서드가 정의된 클래스 객체 반환. Option.RETAIN_CLASS_REFERENCE 설정 필요
                     StackTraceElement toStackTraceElement() // 프레임에 관한 StackTraceElement 반환.
 
-            h3 final class StackTraceElement implements Serializable
+            h3 StackTraceElement
             +asCode('java').
                 String  getFileName()
                 int     getLineNumber()
                 String  getMethodName()
                 String  getClassName()
-                String  getClassLoaderName() // Since 9
-                String  getModuleName() // Since 9
+                String  getClassLoaderName()
+                String  getModuleName()
 
     h1 java.lang.annotation
     div
-        h2 interface Annotation
+        h2 Annotation
         p 이 인터페이스를 구현하는 것으로 새로운 애너테이션을 정의할 순 없다.
 
-        h2 enum ElementType
+        h2 ElementType
         p 애너테이션이 적용되는 요소를 표현한다.
-        +asCode('java') TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VALIABLE, ANNOTATION_TYPE, PACKAGE, TYPE_PARAMETER, MODULE // Since 9
+        +asCode('java') TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VALIABLE, ANNOTATION_TYPE, PACKAGE, TYPE_PARAMETER, MODULE
 
-        h2 enum RetentionPolicy
+        h2 RetentionPolicy
         p 애너테이션 유지 정책.
         +asCode('java').
             SOURCE  // 컴파일러가 제거
@@ -1144,14 +1135,14 @@ include ../../source/skeleton.pug
         h2 @Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Target
         p 애너테이션을 적용할 요소들을 표현한다. 여러 개(또는 0개)일 경우 배열 리터럴 표기 {}를 이용한다. value ← ElementType[]
 
-    h1 java.lang.module Since 9
+    h1 java.lang.module
     div
-        h2 interface ModuleFinder Since 9
+        h2 ModuleFinder
         ol
             li Module Resolution : 모듈들의 연관 관계를 계산하는 작업. 각 모듈의 필요(requires) 모듈들을 반복적으로 찾아내고 관계 그래프를 구한다.
             li ModuleFinder는 module resolution과 service binding(Configuration#resolveAndBind)에서 모듈을 찾는 데 이용된다.
 
-        h2 interface ModuleReader Extends Closeable Since 9
+        h2 ModuleReader
         p 모듈 내용에 대한 접근 제공.
         +asCode('java').
             Optional&lt;URI> find(String name)
@@ -1163,23 +1154,37 @@ include ../../source/skeleton.pug
     div
         h2 Package Summary
         ol
-            li 참조 객체에 관한 클래스를 제공한다
+            li
+                +asA('https://web.archive.org/web/20061130103858/http://weblogs.java.net/blog/enicholas/archive/2006/05/understanding_w.html', 'java.net 포스트')
+                +asA('https://d2.naver.com/helloworld/329631', 'NAVER 개발 포스트')
+            li 다른 객체(referent)를 참조하는 reference object를 이용해 GC 절차 일부와 상호작용할 수 있다
             li 3단계의 참조 레벨을 제공한다 : Soft > Weak > Phantom
             li 객체 참조 레벨
-            ul
+            ol
                 li Strongly reachable
-                p 참조 객체의 조회없이 객체에 직접 접근 가능한 스레드가 존재. 객체를 생성한 스레드가 이 레벨에 해당
+                ul
+                    li Reference object 없이 객체에 직접 접근 가능한 스레드가 존재
+                    p e.g. 객체를 생성한 스레드, 객체를 매개변수로 받아 실행 중인 스레드 등
                 li Softly reachable
-                p Not strongly reachable && Soft 참조 객체의 조회로 객체에 접근 가능
+                ul
+                    li Not strongly reachable && Soft reference object가 객체를 참조 중
+                    li 마지막으로 strongly reachable한 이후 기간, 여유 힙 크기, JVM 옵션(-XX:SoftRefLRUPolicyMSPerMB)에 따라 GC 여부가 결정된다
+                    li 지정한 경우, GC 대상으로 판별된 즉시(약간의 지연은 있을 수 있다) ReferenceQueue에 등록된다
                 li Weakly reachable
-                p Not strongly reachable && Not softly reachable && Weak 참조 객체의 조회로 객체에 접근 가능.
-                    |  약한 참조가 해제되면 대상 객체는 소멸(finilization) 대상이 된다.
+                ul
+                    li Not strongly reachable && Not softly reachable && Weak reference object가 객체를 참조 중
+                    li Referent는 GC 대상이며, 따라서 get()은 null을 반환할 수 있다
+                    li 지정한 경우, GC 대상으로 판별된 즉시(약간의 지연은 있을 수 있다) ReferenceQueue에 등록된다
                 li Phantom reachable
-                p Not strongly reachable && Not softly reachable && Not weakly reachable && 객체는 소멸됐지만 Phantom 참조 객체가 참조하는 중
+                ul
+                    li Not strongly reachable && Not softly reachable && Not weakly reachable && 객체는 소멸(finalize)됐지만 Phantom reference object가 참조 중
+                    li Finalization 이후 ReferenceQueue에 등록된다
+                    li 객체 소멸 감지를 위해 존재하므로, get()은 항상 null을 반환한다
+                    li ReferenceQueue에서 꺼낸 뒤, 메모리 해제를 위해 clear()를 호출해야 한다
                 li Unreachable
-                p 참조 불가능하며, 따라서 메모리 해제 대상이 된다.
+                p 참조 불가능하며, 따라서 GC 대상이 된다.
 
-        h2 final class Cleaner Since 9
+        h2 Cleaner
         ol
             li 객체 참조와 관련 정리 작업을 관리한다.
             p 객체가 phantom reachable 상태로 변했음을 통지받으면 정리 작업이 실행된다. 참조 레벨의 변경을 통지받기 위해 PhantomReference와 ReferenceQueue를 이용한다.
@@ -1194,27 +1199,27 @@ include ../../source/skeleton.pug
             static Cleaner create()
             Cleaner.Cleanable register(Object obj, Runnable action)
         div
-            h3 static interface Cleaner.Cleanable Since 9
+            h3 Cleaner.Cleanable
             +asCode('java').
                 void clean()
                     // cleanable을 등록 취소하고 정리 작업을 실행한다. 반복 호출되도 정리 작업은 최대 1번만 실행된다.
 
-        h2 class ReferenceQueue&lt;T>
-        p 참조 큐. 참조 레벨 변화를 감지하면 GC가 참조 객체를 큐에 추가한다
+        h2 ReferenceQueue&lt;T>
+        p 참조 큐. 참조 레벨 변화를 감지하면 GC가 reference object를 큐에 추가한다
         +asCode('java').
-            Reference&lt;? extends T> poll()
-                // 참조 객체가 즉시 사용 가능하면 큐에서 제거하고 반환한다. 그 외의 경우 즉시 null을 반환한다.
-            Reference&lt;? extends T> remove(long timeout)
-                // 다음 참조 객체를 규에서 제거하고 반환한다. 그 다음 참조 객체가 사용 가능해질 때까지 최대 timeout 만큼 대기한다
+            Reference&lt;?
+                // reference object가 즉시 사용 가능하면 큐에서 제거하고 반환한다. 그 외의 경우 즉시 null을 반환한다.
+            Reference&lt;?
+                // 다음 reference object를 규에서 제거하고 반환한다. 그 다음 reference object가 사용 가능해질 때까지 최대 timeout 만큼 대기한다
 
-        h2 abstract class Reference&lt;T>
+        h2 Reference&lt;T>
         p GC와 상호작용하기 위한 메서드들을 정의한다. 이 클래스를 직접 상속하지 않아야 한다
         +asCode('java').
             T get()
                 // 참조하는 객체를 반환한다
             void clear()
             boolean enqueue()
-                // 참조 객체를 정리하고 등록된 큐에 넣는다
+                // reference object를 정리하고 등록된 큐에 넣는다
                 // + isEnqueued
         div
             h3 Sub Classes
@@ -1232,14 +1237,14 @@ include ../../source/skeleton.pug
             p 다만, 원소가 존재한다면 instanceof, Class#isInstanse, Class#isAssignableFrom을 이용한 판별은 가능하다.
             li 따라서 제네릭 타입에 대한 직접적인 연산은 모두 무효하다.
 
-        h2 final class Array
+        h2 Array
         p 동적으로 자바 배열을 생성하고 접근하는 static 메서드들을 제공.
         +asCode('java').
             static Object newInstance(Class&lt;?> componentType, int length)
             static Object get(Object array, int index)
                 // + getBoolean, getByte, ..., + set...
 
-        h2 class Modifier
+        h2 Modifier
         +asCode('java').
             public static final int PUBLIC, PRIVATE, PROTECTED, STATIC, FINAL, SYNCHRONIZED, VOLATILE, TRANSIENT, NATIVE, INTERFACE, ABSTRACT, STRICT
             static int classModifiers()
@@ -1255,7 +1260,7 @@ include ../../source/skeleton.pug
             interface AnnotatedElement               // 애너테이트된 요소를 표현
             interface AnnotatedType extends AnnotatedElement {
                 default AnnotatedType getAnnotatedOwnerType();
-                    // Since 9, 이 타입이 멤버로 속해있는, 애너테이트된 타입 반환. 예를 들어 이 타입이 @TA O&lt;T>.I&lt;S>라면, @TA O&lt;T>를 반환.
+                    // 이 타입이 멤버로 속해있는, 애너테이트된 타입 반환. 예를 들어 이 타입이 @TA O&lt;T>.I&lt;S>라면, @TA O&lt;T>를 반환.
                     // null이 반환되는 경우 ↓
                     //     타입이 top-level이거나 local 클래스, 익명 클래스, 기본 자료형, void인 경우.
                     //     타입이 AnnotatedArrayType, AnnotatedTypeVariable, AnnotatedWildcardType의 인스턴스인 경우.
@@ -1271,50 +1276,49 @@ include ../../source/skeleton.pug
 
         h2 클래스 멤버 관련
         div
-            h3 interface Member
+            h3 Member
             p 하나의 멤버(필드나 메서드) 또는 생성자를 가리킨다.
             +asCode('java') boolean isSynthetic() // 컴파일러에 의해 만들어진 멤버인지 여부
 
-            h3 class AccessibleObject implements AnnotatedElement
+            h3 AccessibleObject
             p Field, Method, Constructor의 base 클래스. 리플렉트된 객체를 사용하기 전에 suppressing check 표시한다.
             +asCode('java').
                 void setAccessible(boolean flag)
                 static void setAccessible(AccessibleObject[] array, boolean flag)
                     // 배열의 각 원소들을 setAccessible(boolean)으로 설정할 수 있을 때, 한번에 하기 위한 메서드
 
-                // Since 9
                 final boolean canAccess(Object obj)
                 final boolean trySetAccessible()
                     // accessible flag 값을 반환한다. 실패할 경우 예외를 발생하지 않고 false를 반환.
 
-            h3 final class Field extends AccessibleObject implements Member
+            h3 Field
             +asCode('java').
                 boolean isEnumConstant()
                 void set(Object obj, Object value)
                     // + get, setBoolean, getBoolean, ...
 
-            h3 abstract class Executable extends AccessibleObject implements Member, GenericDeclaration
+            h3 Executable
             p Method, Constructor의 공통 기능
             +asCode('java').
                 abstract Class&lt;?>[] getParameterTypes()
                 Parameter[] getParameters()
 
-            h3 final class Method extends Executable
+            h3 Method
             +asCode('java').
                 Class&lt;&?> getReturnType()
                 Object invoke(Object obj, Object... args)
 
-            h3 final class Constructor&lt;T> extends Executable
+            h3 Constructor&lt;T>
             +asCode('java') T newInstance(Object... initargs)
 
-            h3 final class Parameter implements AnnotatedElement
+            h3 Parameter
             p 메서드 인자에 관한 정보.
 
-            h3 interface InvocationHandler
+            h3 InvocationHandler
             p Proxy 인스턴스의 invocation handler에서 구현하는 인터페이스.
             +asCode('java') Object invoke(Object proxy, Method method, Object[] args)
 
-            h3 class Proxy implements Serializable
+            h3 Proxy
             ul
                 li Proxy는 인터페이스 익명 객체처럼 행동하면서 사용자 정의 메서드를 호출할 수 있는 객체를 생성하는 static 메서드를 제공한다.
                 +asCode('java').
@@ -1330,7 +1334,7 @@ include ../../source/skeleton.pug
 
     h1 java.math
     div
-        h2 class BigDecimal extends Number implements Comparable&lt;BigDecimal>
+        h2 BigDecimal
         p 임의 정밀도의 변경할 수 없는 10진 정수와 32비트 정수인 지수로 십진수를 표현한다.
         +asCode('java').
             public static final BigDecimal ZERO, ONE, TEN
@@ -1346,12 +1350,12 @@ include ../../source/skeleton.pug
             BigDecimal[] divideAndRemainder(BigDecimal divisor)
             // + sqrt, pow, abs, negate, scale, precision, unscaledValue, round, movePointRight, scaleByPowerOfTen, ...
 
-        h2 class BigInteger extends Number implements Comparable&lt;BigInteger>
+        h2 BigInteger
         p 변경할 수 없는 임의 길이의 정수. -2^(Integer.MAX_VALUE) ~ 2^(Integer.MAX_VALUE)
         +asCode('java').
-            public static final BigInteger ZERO, ONE, TWO /* Since 9 */, TEN
+            public static final BigInteger ZERO, ONE, TWO, TEN
 
-            public BigInteger(int signum, byte[] magnitude, int off, int len) Since 9
+            public BigInteger(int signum, byte[] magnitude, int off, int len)
             public BigInteger(String val, int radix)
             public BigInteger(int numBits, Random rnd) : [0 ~ 2^numBits) 사이 난수
             public BigInteger(int bitLength, int certainty, Random rnd)
@@ -1363,9 +1367,9 @@ include ../../source/skeleton.pug
                 // 이 BigInteger보다 큰 첫 소수(아마도)를 반환한다. 합성수일 가능성은 2^(-100)을 넘지 않는다.
 
             // BigDecimal에는 없는 메서드
-            sqrtAndRemainder() Since 9, gcd(BigInteger), modPow(BigInteger, BigInteger), shiftLeft(int), and(BigInteger), testBit(int), setBit(n), flipBit(int)
+            sqrtAndRemainder(), gcd(BigInteger), modPow(BigInteger, BigInteger), shiftLeft(int), and(BigInteger), testBit(int), setBit(n), flipBit(int)
 
-        h2 final class MathContext implements Serializable
+        h2 MathContext
         p 정밀도, 반올림 모드를 캡슐화한 변경 불가능한 객체.
         +asCode('java').
             public static final MathContext UNLIMITED
@@ -1376,7 +1380,7 @@ include ../../source/skeleton.pug
             int getPrecision()
             RoundingMode getRoundingMode()
 
-        h2 enum RoundingMode
+        h2 RoundingMode
         ul
             li CEILING, FLOOR, UP : 0에서 멀어지도록 선택
             li DOWN : 0에 가까워지도록 선택
@@ -1387,7 +1391,7 @@ include ../../source/skeleton.pug
     div
         h2 Address
         div
-            h3 class InetAddress implements Serializable
+            h3 InetAddress
             p IP 주소를 표현하며, IPv4, IPv6 각각에 대응하는 서브 클래스가 있다. 서브 클래스를 직접 이용하는 일은 별로 없을 거라고 한다.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/net/InetAddressTest.java', 'java')
             +asCode('java').
@@ -1397,24 +1401,24 @@ include ../../source/skeleton.pug
                 static InetAddress[] getAllByName(String host)
                 byte[] getAddress()
 
-            h3 abstract class SocketAddress implements Serializable
+            h3 SocketAddress
             p 프로토콜과 무관한 소켓 주소를 의미.
 
-            h3 class InetSocketAddress extends SocketAddress
+            h3 InetSocketAddress
             p IP 소켓 주소[(IP 주소 or 호스트 이름) + 포트]를 표현.
             +asCode('java').
                 public InetSocketAddress(int port)                   // port가 0이면 바인드시 자동 할당.
                 public InetSocketAddress(InetAddress addr, int port) // addr이 null이면 와일드카드 할당
                 public InetSocketAddress(String hostname, int port)
 
-            h3 class InterfaceAddress
+            h3 InterfaceAddress
             ol
                 li IPv4 : IP 주소 + 서브넷 마스크 + 브로드캐스트 주소
                 li IPv6 : IP 주소 + network prefix length
 
         h2 Connection
         div
-            h3 abstract class URLConnection
+            h3 URLConnection
             ol
                 p URL이 지정하는 원격지와의 연결을 정의하며, 일반적으로 아래 단계에 따라 사용된다
                 li openConnection 메서드를 통해 연결 객체 획득
@@ -1427,14 +1431,14 @@ include ../../source/skeleton.pug
                     br
                     | 자주 사용되는 헤더 필드 접근 메서드 : getContentEncoding, getContentLength, getContentType, getDate, getExpiration, getLastModified
 
-            h3 abstract class HttpURLConnection extends URLConnection
+            h3 HttpURLConnection
             ol
                 li HttpURLConnection은 요청을 1회만 하지만, 기저 네트워크 연결은 다른 인스턴스가 공유할 수 있다
                 li public static final int HTTP_OK, HTTP_BAD_REQUEST, HTTP_NOT_FOUND, ...
                 li int getResponseCode()
                     +codeBtn('/Repositories/Eclipse/JavaSE/src/net/HttpURLConnectionTest.java', 'java')
 
-            h3 abstract class JarURLConnection extends URLConnection
+            h3 JarURLConnection
             ol
                 li 원격지 jar에 대한 연결을 제공한다
                 li JarEntry 표기 : jar:http://www.foo.com/bar/baz.jar!/COM/foo/Quux.class
@@ -1443,10 +1447,10 @@ include ../../source/skeleton.pug
 
         h2 Socket
         div
-            h3 interface SocketOptions
+            h3 SocketOptions
             +asCode('java').
                 @Native static final int SO_REUSEPORT
-                    // Since 9, 여러 소켓이 같은 주소와 포트를 listen할 수 있는지 여부.
+                    // 여러 소켓이 같은 주소와 포트를 listen할 수 있는지 여부.
                 @Native static final int SO_LINGER
                     // TCP 소켓 linger-on-close timeout 설정. 0이면 즉시 강제 종료. 양수면 최대 65,535까지 종료 대기. 그 외엔 일반적인 종료 절차.
                 @Native static final int SO_TIMEOUT
@@ -1460,7 +1464,7 @@ include ../../source/skeleton.pug
                 void setOption(int optID, Object value)
                     // + getOption, ...
 
-            h3 class Socket implements Closeable
+            h3 Socket
             p TCP 클라이언트 소켓
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/net/SocketTest.java', 'java')
             +asCode('java').
@@ -1471,12 +1475,11 @@ include ../../source/skeleton.pug
                     // SocketChannel#open 또는 ServerSocketChannel#accept로 생성된 경우에만 존재.
                 InputStream getInputStream() + getOutputStream
 
-                // Since 9
                 &lt;T> Socket setOption(SocketOption&lt;T> name, T value)
                 &lt;T> T getOption(SocketOption&lt;T> name)
                 Set&lt;SocketOption&lt;?>> supportedOptions()
 
-            h3 class ServerSocket implements Closeable
+            h3 ServerSocket
             p TCP 서버 소켓
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/net/SocketTest.java', 'java')
             +asCode('java').
@@ -1491,12 +1494,11 @@ include ../../source/skeleton.pug
                 static void setSocketFactory(SocketImplFactory fac)
                 void setPerformancePreferences(int connectionTime, int latency, int bandwidth)
 
-                // Since 9
                 &lt;T> ServerSocket setOption(SocketOption&lt;T> name, T value)
                 &lt;T> T getOption(SocketOption&lt;T> name)
                 Set&lt;SocketOption&lt;?>> supportedOptions()
 
-            h3 class DatagramSocket implements Closeable
+            h3 DatagramSocket
             p UDP 소켓을 정의한다
             +asCode('java').
                 void bind(SocketAddress addr)
@@ -1518,12 +1520,11 @@ include ../../source/skeleton.pug
 
                 static void setDatagramSocketImplFactory(DatagramSocketImplFactory fac)
 
-                // Since 9
                 &lt;T> DatagramSocket setOption(SocketOption&lt;T> name, T value)
                     // + getOption, 각종 옵션 setter/getter
                 Set&lt;SocketOption&lt;?>> supportedOptions()
 
-            h3 class MulticastSocket extends DatagramSocket
+            h3 MulticastSocket
             ol
                 li 멀티캐스트 데이터그램 소켓을 제공한다.
                 li 멀티캐스트 그룹 ::= Class D IP 주소 + UDP 포트
@@ -1541,14 +1542,14 @@ include ../../source/skeleton.pug
                 s.receive(new DatagramPacket(buf, buf.length));
                 s.leaveGroup(group);
 
-            h3 final class DatagramPacket
+            h3 DatagramPacket
             ol
                 li UDP 패킷을 정의한다. 송신용 생성자는 byte[]와 길이 정보가 필요하고, 수신용 생성자는 주소 정보가 추가로 필요하다.
                 li 패킷 데이터, 길이, 주소 각각에 대한 getter/setter 제공
 
         h2 URI
         div
-            h3 final class URI implements Comparable&lt;URI>, Serializable
+            h3 URI
             div
                 h4 URI syntax and components
                 ol
@@ -1571,7 +1572,7 @@ include ../../source/skeleton.pug
                     li Relativization : Resolution의 역.
                     p 임의의 정규화된 두 URI u, v에 대하여, u.relativize(u.resolve(v)).equals(v)와 u.resolve(u.relativize(v)).equals(v)는 항상 성립한다.
 
-            h3 final class URL implements Serializable
+            h3 URL
             p 인스턴스 생성 시, URI와 다르게 정의된 scheme에 대한 핸들러를 찾기 때문에, 핸들러를 찾지 못하면 예외가 발생한다
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/net/HttpURLConnectionTest.java', 'java')
             +asCode('java').
@@ -1582,24 +1583,24 @@ include ../../source/skeleton.pug
                 final InputStream openStream() // == openConnection().getInputStream()
                 final Object getContent()      // == openConnection().getContent()
 
-            h3 class URLDecoder
-            +asCode('java') static String decode(String s, Charset charset) // Since 10
+            h3 URLDecoder
+            +asCode('java') static String decode(String s, Charset charset)
 
-            h3 class URLEncoder
-            +asCode('java') static String encode(String s, Charset charset) // Since 10
+            h3 URLEncoder
+            +asCode('java') static String encode(String s, Charset charset)
 
-            h3 class URLClassLoader extends SecureClassLoader implements Closeable
+            h3 URLClassLoader
             p URL을 이용한 클래스 로더를 제공한다
 
-        h2 final class NetworkInterface
+        h2 NetworkInterface
         p 이름과 할당된 IP 주소들로 구성된 Network Interface 표현.
             +codeBtn('/Repositories/Eclipse/JavaSE/src/net/NetworkInterfaceTest.java', 'java')
         +asCode('java').
             static Stream&lt;NetworkInterface> networkInterfaces()
-                // Since 9, + getNetworkInterfaces
+                // + getNetworkInterfaces
 
             Stream&lt;InetAdress> inetAddresses()
-                // Since 9, + getInetAddresses
+                // + getInetAddresses
             byte[] getHardwareAddress()
                 // 보통 MAC 주소
 
@@ -1607,7 +1608,7 @@ include ../../source/skeleton.pug
     div
         h2 버퍼 관련
         div
-            h3 abstract class Buffer
+            h3 Buffer
             ol
                 li 버퍼는 일련의 유한한 기본 자료형 원소들의 나열.
                 ul
@@ -1632,13 +1633,12 @@ include ../../source/skeleton.pug
                 abstract boolean isDirect()
                     // Direct 버퍼(즉시 읽기/쓰기)인지 여부
 
-                // Since 9
                 abstract Buffer slice()
                     // 현재 버퍼의 현재 위치부터 시작하는 부분 버퍼 생성(내용 공유). direct, read-only 속성을 공유.
                 abstract Buffer duplicate()
                     // 복사본(내용 공유) 반환.
 
-            h3 abstract class ByteBuffer extends Buffer implements Comparable&lt;ByteBuffer>
+            h3 ByteBuffer
             ol
                 li 다음 연산을 정의.
                 ul
@@ -1662,21 +1662,21 @@ include ../../source/skeleton.pug
                 abstract CharBuffer asCharBuffer() // + short, int, long, float, double
 
                 final int alignmentOffset(int index, int unitSize)
-                    // Since 9, index % unitSize를 반환한다. 0이 아니면 unitSize 단위로 자르기 부적합하다는 의미. unitSize는 2의 거듭제곱이어야 한다.
+                    // index % unitSize를 반환한다. 0이 아니면 unitSize 단위로 자르기 부적합하다는 의미. unitSize는 2의 거듭제곱이어야 한다.
                 final ByteBuffer alignedSlice(int unitSize)
-                    // Since 9, 현재 버퍼를 unitSize 크기씩 잘라 view 버퍼를 생성(BIG_ENDIAN)한다.
+                    // 현재 버퍼를 unitSize 크기씩 잘라 view 버퍼를 생성(BIG_ENDIAN)한다.
                     // 현재 위치가 unitSize의 배수가 아니라면 바로 다음 배수 위치부터 포함하며, limit도 unitSize 배수에 맞춰 끊는다.
 
-                int mismatch(ByteBuffer that) Since 11
+                int mismatch(ByteBuffer that)
                     // 두 바이트 버퍼의 현재 읽기 위치들을 시작 위치로 하여, 바이트 값이 다른 최초 index를 반환한다.
 
-            h3 abstract class MappedByteBuffer extends ByteBuffer
+            h3 MappedByteBuffer
             p FileChannel#map 메서드로 생성되는 direct 바이트 버퍼. 기저 파일이 (외부에서) 변경되면 버퍼 내용도 변경된다. 역도 성립
             +asCode('java').
                 final BappedByteBuffer load()  // 파일 내용을 메모리에 적재한다
                 final MappedByteBuffer force() //강제로 버퍼 변경 내용을 파일에 쓴다.
 
-            h3 abstract class CharBuffer extends Buffer implements Comparable&lt;CharBuffer>, Appendable, CharSequence, Readable
+            h3 CharBuffer
             ol
                 li + ShortBuffer, DoubleBuffer
                 li 다음 연산을 정의
@@ -1685,7 +1685,7 @@ include ../../source/skeleton.pug
                     li char 시퀀스에 대한 bulk get/set
                     li compact : ByteBuffer의 설명과 동일
 
-        h2 final class ByteOrder
+        h2 ByteOrder
         +asCode('java').
             public static final ByteOrder BIG_ENDIAN, LITTLE_ENDIAN
             static ByteOrder nativeOrder()
@@ -1694,30 +1694,30 @@ include ../../source/skeleton.pug
     div
         h2 채널 인터페이스
         div
-            h3 interface Channel extends Closeable
+            h3 Channel
             p 채널이란 독립적인 IO를 수행할 수 있는 개체에 대한 연결이다.
             +asCode('java') boolean isOpen()
 
-            h3 interface ReadableByteChannel extends Channel
+            h3 ReadableByteChannel
             +asCode('java').
                 int read(ByteBuffer dst)
                     // dst.remaining()만큼 읽어 dst에 저장. 읽은 바이트 개수를 반환. 스트림의 끝이면 -1.
 
-            h3 interface WritableByteChannel extends Channel
+            h3 WritableByteChannel
             +asCode('java').
                 int write(ByteBuffer src)
                     // src.remaining() 부분을 채널에 쓴다.
 
-            h3 interface ByteChannel extends ReadableByteChannel, WritableByteChannel
+            h3 ByteChannel
             p 바이트 단위 읽기/쓰기 모두 가능한 채널.
 
-            h3 interface AsynchronousChannel extends Channel
+            h3 AsynchronousChannel
             p 비동기 I/O를 지원하는 채널. close()도 비동기적으로 수행되며, 도중/이후 작업은 AsynchronousCloseException 발생시키면 된다
 
-            h3 interface InterruptibleChannel extends Channel
+            h3 InterruptibleChannel
             p "instanceof InterruptibleChannel" IFF "비동기적으로 close() 메서드를 통해 인터럽트되고 닫을 수 있는 채널"
 
-            h3 interface AsynchronousByteChannel extends AsynchronousChannel
+            h3 AsynchronousByteChannel
             p 비동기 IO를 지원하는 바이트 채널
             +asCode('java').
                 &lt;A> void read(ByteBuffer dst, A attachment, CompletionHandler&lt;Integer, ? super A> handler)
@@ -1725,38 +1725,38 @@ include ../../source/skeleton.pug
                 Future&lt;Integer> read(ByteBuffer dst)
                     // 반환된 Future#get 메서드로 읽은 바이트 수를 얻을 수 있다.
 
-            h3 interface ScatteringByteChannel extends ReadableByteChannel
+            h3 ScatteringByteChannel
             p 채널의 바이트들을 여러 버퍼에 순서대로 저장. 네트워크 헤더나 파일 메타데이터처럼 고정 길이의 헤더를 읽는 데 유용.
             +asCode('java').
                 long read(ByteBuffer[] dsts, int offset, int length)
                     // dsts[offset]부터 length개의 버퍼가 각각의 remaining()만큼씩 바이트를 읽어 가져간다.
 
-            h3 interface GatheringByteChannel extends WritableByteChannel
+            h3 GatheringByteChannel
             +asCode('java').
                 long write(ByteBuffer[] srcs, int offset, int length)
                     // srcs[offset]부터 length개의 버퍼의 remaining() 부분을 채널에 쓴다.
 
-            h3 interface SeekableByteChannel extends ByteChannel
+            h3 SeekableByteChannel
             p 현재 위치를 기억하는 바이트 채널.
             +asCode('java').
                 SeekableByteChannel truncate(long size)
                     // 채널에 연결된 개체의 크기를 size로 조정. size가 현재보다 작은 경우 나머지는 버려진다(position이 size보다 큰 경우 size로 조정된다). size가 현재 이상인 경우 아무 변경 없다.
 
-            h3 interface NetworkChannel extends Channel
+            h3 NetworkChannel
             p 네트워크 소켓에 대한 채널
 
-            h3 interface MulticastChannel extends NetworkChannel
+            h3 MulticastChannel
             p IP 계층 멀티캐스팅 가능한 채널
 
         h2 비동기 채널 관련
         div
-            h3 interface CompletionHandler&lt;V, A>
+            h3 CompletionHandler&lt;V, A>
             p 비동기 I/O 작업의 결과를 소비하는 소비자
             +asCode('java').
                 void completed(V result, A attachment)   // 성공시 호출
                 void failed(Throwable exc, A attachment) // 실패시 호출
 
-            h3 abstract class AsynchronousChannelGroup
+            h3 AsynchronousChannelGroup
             p 그룹 지정되지 않은 비동기 채널들은 시스템 기본 그룹에 묶인다.
             p 시스템 속성에 따라 생성된 ThreadFactory가 비동기 작업을 실행할 데몬 스레드들을 만든다.
             +asCode('java').
@@ -1772,7 +1772,7 @@ include ../../source/skeleton.pug
                     // shutdown() + 모든 열린 채널들을 닫는다. 실행 중인 CompletionHandler들은 끝날 때까지 기다린다. 도중에 다른 스레드에서 이 메서드를 호출하는 경우, 현재 작업이 완료될 때까지 블록된다; 더 불러도 추가 작업은 없다.
                 abstract boolean awaitTermination(long timeout, TimeUnit unit)
 
-            h3 abstract class AsynchronousFileChannel implements AsynchronousChannel
+            h3 AsynchronousFileChannel
             ol
                 li 파일에 대한 비동기 채널. I/O의 기준이 되는 현재 위치를 갖고 있지 않으며, 메서드에서 지정한다
                 li 생성된 채널들은 스레드-안전하며, 완료 핸들러들은 별개의 스레드에서 실행됨이 보장된다.
@@ -1797,7 +1797,7 @@ include ../../source/skeleton.pug
                 abstract &lt;A> void write(ByteBuffer src, long position, A attachment, CompletionHandler&lt;Integer, ? super A> handler)
                     // position > size()인 경우, 그 사이 바이트 값은 쓰레기 값이다.
 
-            h3 abstract class AsynchronousServerSocketChannel implements AsynchronousChannel, NetworkChannel
+            h3 AsynchronousServerSocketChannel
             ol
                 li 스트림 지향 읽기 소켓 채널
                     +codeBtn('/Repositories/Eclipse/JavaSE/src/nio/AsynchronousSocketChannelTest.java', 'java')
@@ -1813,7 +1813,7 @@ include ../../source/skeleton.pug
                 abstract &lt;A> void accept(A attachment, CompletionHandler&lt;AsynchronousSocketChannel, ? super A> handler)
                     // 신규 연결된 AsynchronousSocketChannel은 현재 채널과 동일한 채널 그룹에 묶인다. 그룹이 닫힌 경우, 신규 연결도 닫히고 ShutdownChannelGroupException
 
-            h3 abstract class AsynchronousSocketChannel implements AsynchronousByteChannel, NetworkChannel
+            h3 AsynchronousSocketChannel
             ol
                 li 스트림 지향 소켓 채널. open 팩터리 메서드로 직접 열거나(Unbound), AsynchronousServerSocketChannel#accept로 열 수(Bound) 있다.
                     +codeBtn('/Repositories/Eclipse/JavaSE/src/nio/AsynchronousSocketChannelTest.java', 'java')
@@ -1839,7 +1839,7 @@ include ../../source/skeleton.pug
 
         h2 채널 클래스
         div
-            h3 final class Channels
+            h3 Channels
             p 채널과 스트림에 관한 유틸리티 클래스.
             +asCode('java').
                 static InputStream newInputStream(ReadableByteChannel ch)
@@ -1860,19 +1860,19 @@ include ../../source/skeleton.pug
                 static Writer newWriter(WritableByteChannel ch, Charset charset)
                     // 채널이 논-블로킹 모드면 쓰기 시 예외 발생. 버퍼링 지원. 닫으면 채널도 닫힌다
 
-            h3 abstract class FileChannel extends AbstractInterruptibleChannel implements SeekableByteChannel, GatheringByteChannel, ScatteringByteChannel
+            h3 FileChannel
             +asCode('java').
                 abstract MappedByteBuffer map(FileChannel.MapMode mode, long position, long size)
                     // 매핑 : 파일의 일부분을 메모리에 올려놓고 작업. 큰 파일은 이쪽이 효율이 좋다
                     // READ_ONLY : 변경 불가, READ_WHITE : 변경이 기저 파일에 전파, PRIVATE : 변경이 전파되지 않음
 
-            h3 abstract class ServerSocketChannel extends AbstractSelectableChannel implements NetworkChannel
+            h3 ServerSocketChannel
             p 스트림-지향 읽기 소켓 채널. AsynchronousServerSocketChannel 참고.
 
-            h3 abstract class SocketChannel extends AbstractSelectableChannel implements ByteChannel, ScatteringByteChannel, GatheringByteChannel, NetworkChannel
+            h3 SocketChannel
             p 스트림-지향 소켓 채널. AsynchronousSocketChannel 참고.
 
-            h3 abstract class DatagramChannel extends AbstractSelectableChannel implements ByteChannel, ScatteringByteChannel, GatheringByteChannel, MulticastChannel
+            h3 DatagramChannel
             ol
                 li 데이터그램-지향 소켓 채널
                 li 기존 데이터그램 소켓에서 채널을 얻는 방법은 없으며, open 팩터리 메서드로 획득해야 한다
@@ -1883,7 +1883,7 @@ include ../../source/skeleton.pug
                 static DatagramChannel open()
                     // IP 멀티캐스팅에 이용하려는 경우, 멀티캐스트 그룹 타입을 ProtocolFamily에 지정해줘야 한다
 
-            h3 abstract class SelectableChannel extends AbstractInterruptibleChannel implements Channel
+            h3 SelectableChannel
             ol
                 li 스레드-안전. Selector를 통해 멀티플렉싱될 수 있는 채널을 정의한다
                 li Selector에 등록함으로써 SelectionKey가 발행된다. 나가는 건 마음대로 할 수 없다.
@@ -1903,12 +1903,12 @@ include ../../source/skeleton.pug
                 abstract Object blockingLock()
                     // configureBlocking, register 메서드에서 동기화에 이용되는 객체를 반환한다
 
-        h2 abstract class Pipe
+        h2 Pipe
         ol
             li 2개 채널로 이루어진 단방향 파이프를 정의한다
             p SinkChannel : 쓰기 전용, SourceChannel : 읽기 전용
 
-        h2 abstract class FileLock implements AutoCloseable
+        h2 FileLock
         ol
             li Adivisory Lock : 응용 프로그램이 잠금을 직접 확인하고, 알아서 읽기/쓰기를 수행할 지 결정한다.
             li Mandatory Lock : 커널이 잠금을 관리하기 때문에, 관련되지 않은 프로세스는 접근 불가
@@ -1918,7 +1918,7 @@ include ../../source/skeleton.pug
             li Some network filesystems, 잠금 영역 크기가 하드웨어 페이지 크기의 배수인 경우에만 매핑을 지원함에 유의
             li Some network filesystems, 2^30 또는 2^31 이상 크기에 대한 잠금을 지원하지 않음에 유의
 
-        h2 abstract class MembershipKey
+        h2 MembershipKey
         p IP 멀티캐스트 그룹에 대한 멤버십을 표현한다
         +asCode('java').
             abstract boolean isValid()
@@ -1932,7 +1932,7 @@ include ../../source/skeleton.pug
                 // OS가 소스 필터링을 적용하지만, 적용되지 않은 멤버십에 대하여 이를 호출하면 특정 소스를 차단할 수 있다
             abstract NetworkInterface networkInterface()
 
-        h2 abstract class Selector implements Closeable
+        h2 Selector
         ol
             li SelectableChannel에 대한 멀티플렉서. 스레드-안전
             li SelectableChannel을 등록하면 SelectionKey가 발행되며, 3가지 집합으로 관리된다
@@ -1961,14 +1961,14 @@ include ../../source/skeleton.pug
                 // 논-블로킹으로 선택한다. 선택 연산으로 ready set이 업데이트된 키의 수를 반환한다. 이전 wakeup()의 영향을 제거한다
             abstract int select(long timeout)
                 // 블로킹으로 선택한다. timeout이 지정되지 않은 경우엔 무기한. 적어도 하나의 채널이 선택되면 반환한다.
-            int selectNow(Consumer&lt;SelectionKey> action) Since 11
+            int selectNow(Consumer&lt;SelectionKey> action)
                 // 논-블로킹으로 키를 소비한다. 소비된 유니크한 키의 개수를 반환한다. 이전 wakeup()의 영향을 제거한다
-            int select(Consumer&lt;SelectionKey> action, long timeout) Since 11
+            int select(Consumer&lt;SelectionKey> action, long timeout)
                 // 블로킹으로 키를 소비한다. 소비된 유니크한 키의 개수를 반환한다. 시간 초과 되거나, 적어도 하나의 채널이 선택되면 wakeup()으로 깨어난다
             abstract Selector wakeup()
                 // 아직 반환하지 않은 선택 연산이 즉시 반환하도록 한다. 현재 실행 중인 선택 연산이 없다면 다음 선택 연산(selectNow 제외)에 대해 적용된다.
 
-        h2 abstract class SelectionKey
+        h2 SelectionKey
         ol
             li SelectableChannel이 Selector에 등록됨을 나타내는 토큰. 채널이나 Selector가 닫히면서 cancel 메서드로 닫히기 전까지 유효
             li 각 SelectionKey는 2가지 연산 집합을 갖는다. 각 집합은 int로 표현되고, 설정된 비트는 채널이 해당 연산을 지원함을 의미한다
@@ -1990,7 +1990,7 @@ include ../../source/skeleton.pug
 
     h1 java.nio.charset
     div
-        h2 abstract class Charset implements Comparable&lt;Charset>
+        h2 Charset
         +asCode('java').
             static SortedMap&lt;String, Charset> availableCharsets()
             static boolean isSupported(String charsetName)
@@ -2001,7 +2001,7 @@ include ../../source/skeleton.pug
             abstract CharsetDecoder newDecoder()   // + newEncoder
             final CharBuffer decode(ByteBuffer bb) // + encode
 
-        h2 abstract class CharsetDecoder
+        h2 CharsetDecoder
         p 바이트열을 문자열로 변환.
         +asCode('java').
             final CharBuffer decode(ByteBuffer in)
@@ -2009,7 +2009,7 @@ include ../../source/skeleton.pug
 
             final float averageCharsPerByte() // + maxCharsPerByte
 
-        h2 abstract class CharsetEncoder
+        h2 CharsetEncoder
         p 문자열을 바이트열로 변환.
         +asCode('java').
             final ByteBuffer encode(CharBuffer in)
@@ -2017,40 +2017,40 @@ include ../../source/skeleton.pug
 
             final float averageBytesPerChar() // + maxBytesPerChar
 
-        h3 final class StandardCharsets
+        h3 StandardCharsets
         p 표준 문자집합 : US-ASCII(= ISO646-US), ISO-8859-1(= ISO-LATIN-1), UTF-8, UTF-16BE, UTF-16LE, UTF-16
 
     h1 java.nio.file
     div
         h2 파일 감시 관련
         div
-            h3 interface Watchable
+            h3 Watchable
             p WatchService에 등록되어 그 변화나 이벤트가 감시될 수 있는 객체. 정의된 register 메서드는 등록되었음을 WatchKey 객체로 반환한다.
             +asCode('java') WatchKey register(WatchService watcher, WatchEvent.Kind&lt;?>... events)
 
-            h3 interface WatchEvent&lt;T>
+            h3 WatchEvent&lt;T>
             +asCode('java').
                 WatchEvent.Kind&lt;T> kind()
                 int count() // 1보다 크면 반복 이벤트
                 T context()
             div
-                h4 static interface WatchEvent.Kind&lt;T>
+                h4 WatchEvent.Kind&lt;T>
                 p 식별을 위한 이벤트 종류
 
-                h4 static interface WatchEvent.Modifier
+                h4 WatchEvent.Modifier
                 p Watchable 객체가 어떻게 등록되었는지
 
-            h3 final class StandardWatchEventKinds
+            h3 StandardWatchEventKinds
             ol
                 li public static final WatchEvent.Kind&lt;Object> OVERFLOW : 자리가 없어 이벤트가 버려짐.
                 li public static final WatchEvent.Kind&lt;Path> ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY : 디렉터리 생성/삭제/변경
 
-            h3 interface WatchKey
+            h3 WatchKey
             ol
                 li WatchService에 Watchable 객체가 등록되었음을 표현하는 토큰.
                 li 처음 생성되면 ready 상태. 이벤트를 감지하면 reset()되기 전까지 signalled 상태가 되고, WatchService 큐에 진입하여 처리된다. reset()되면 다시 ready.
 
-            h3 interface WatchService extends Closeable
+            h3 WatchService
             p 스레드-안전. FileSystem#newWatchService 메서드로 획득한다
             +asCode('java').
                 WatchKey poll()
@@ -2062,12 +2062,12 @@ include ../../source/skeleton.pug
 
         h2 파일 순회 관련
         div
-            h3 interface DirectoryStream&lt;T> extends Closeable, Iterable&lt;T>
+            h3 DirectoryStream&lt;T>
             ol
                 li Files#newDirectoryStream 메서드로 획득
                 li 일회용 이터러블이다. 2번째 호출부터는 IllegalStateException 발생
 
-            h3 interface SecureDirectoryStream&lt;T> extends DirectoryStream&lt;T>
+            h3 SecureDirectoryStream&lt;T>
             ol
                 li 열린 디렉터리에 대한 상대 경로를 이용한 연산들을 추가로 지원한다
                 li OS에서 이를 지원한다면, Files#newDirectoryStream 메서드로 획득한 DirectoryStream은 SecureDirectoryStream이다
@@ -2084,17 +2084,17 @@ include ../../source/skeleton.pug
                 void move(T srcpath, SecureDirectoryStream&lt;T> targetdir, T targetpath)
                     // ATOMIC_MOVE 옵션이 적용된 Files#move와 비슷하게 작업한다. 현재 디렉터리를 기준으로, 파일 하나를 다른 디렉터리에 대한 상대경로가 지정하는 위치에 원자적으로 옮긴다
 
-            h3 interface FileVisitor&lt;T>
+            h3 FileVisitor&lt;T>
             p Files#walkFileTree 메서드에 사용
 
-            h3 class SimpleFileVisitor&lt;T> implements FileVisitor&lt;T>
+            h3 SimpleFileVisitor&lt;T>
             ol
                 li preVisitDirectory : CONTINUE 반환
                 li visitFile : CONTINUE 반환
                 li visitFileFailed : rethrow
                 li postVisitDirectory : 예외없으면 CONTINUE, 있으면 rethrows
 
-            h3 enum FileVisitResult
+            h3 FileVisitResult
             ol
                 li CONTINUE : 순회 계속.
                 li TERMINATE : 순회 종료
@@ -2104,12 +2104,12 @@ include ../../source/skeleton.pug
 
         h2 옵션 관련
         div
-            h3 interface CopyCption
-            h3 enum StandardCopyOption implements CopyOption
+            h3 CopyCption
+            h3 StandardCopyOption
             +asCode('java') REPLACE_EXISTING, COPY_ATTRIBUTES, ATOMIC_MOVE
 
-            h3 interface OpenOption
-            h3 enum StandardOpenOption implements OpenOption
+            h3 OpenOption
+            h3 StandardOpenOption
             ol
                 li READ : 읽기
                 li WRITE : 쓰기
@@ -2122,24 +2122,23 @@ include ../../source/skeleton.pug
                 li SYNC : 파일 내용 및 메타데이터의 변경을 동기적으로 물리 장치에 기록한다
                 li DSYNC : 파일 내용 변경을 동기적으로 물리 장치에 기록한다
 
-            h3 enum FileVisitOption
+            h3 FileVisitOption
             p FOLLOW_LINKS : 심볼릭 링크를 따라 들어가는 경우
 
-            h3 enum LinkOption implements OpenOption, CopyOption
+            h3 LinkOption
             p NOFOLLOW_LINKS : 심볼릭 링크를 따라 들어가지 않는 경우
 
         h2 파일 시스템 관련
         div
-            h3 interface Path extends Comparable&lt;Path>, Iterable&lt;Path>, Watchable
+            h3 Path
             p 파일 경로를 가리킨다. 사용자 정의 파일 시스템을 개발하기 위해 만들어짐.
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/nio/PathTest.java', 'java')
             +asCode('java').
                 static Path of(String first, String... more)
-                    // Since 11
                     // 예. FileSystem#getSeparator == "/"일때, of("/foo", "bar", "gus") → "/foo/bar/gus"
 
                 static Path of(URI uri)
-                    // Since 11 ↔ toUri
+                    // ↔ toUri
 
                 FileSystem getFileSystem()
                     // 이 Path를 만든 FileSystem 반환
@@ -2155,7 +2154,7 @@ include ../../source/skeleton.pug
                 Path relativize(Path other)
                     // 호출한 path를 기준으로, other에 도달하는 상대경로를 반환한다
 
-            h3 final class Files
+            h3 Files
             +asCode('java').
                 static InputStream newInputStream(Path path, OpenOption... options)
                     // + newOutputStream, newByteChannel, newBufferedReader, newBufferedWriter
@@ -2172,7 +2171,7 @@ include ../../source/skeleton.pug
 
                 static bolean isSameFile(Path path, Path path2)
                 static long mismatch(Path path, Path path2)
-                    // Since 12, 두 파일이 불일치하는 최초의 바이트 위치를 반환한다. 같으면 -1L.
+                    // 두 파일이 불일치하는 최초의 바이트 위치를 반환한다. 같으면 -1L.
 
                 static byte[] readAllBytes(Path path)
                     // + readString Since 11, lines, readAllLines
@@ -2189,7 +2188,7 @@ include ../../source/skeleton.pug
                     // + walkFileTree
                 static Stream&lt;Path> find(Path start, int maxDepth, BiPredicate&lt;Path, BasicFileAttributes> matcher, FIleVisitOption... options)
 
-            h3 final class FileSystems
+            h3 FileSystems
             p FileSystem 팩터리
             +asCode('java').
                 static FileSystem getDefault()
@@ -2200,10 +2199,10 @@ include ../../source/skeleton.pug
     div
         h2 암호적으로 안전한 난수 생성기
         div
-            h3 interface SecureRandomParameters Since 9
+            h3 SecureRandomParameters
             p SecureRandom 메서드 인자임을 나타내는 마커 인터페이스
 
-            h3 class SecureRandom extends Random
+            h3 SecureRandom
             ol
                 li 비결정적인 출력을 위해, 전달되는 시드 역시 예측할 수 없어야 한다
                 p 시드를 제공하지 않은 경우, 최초 nextBytes 호출 시 구현체에서 정의하는 엔트로피 소스로부터 시드를 선택한다
@@ -2213,16 +2212,15 @@ include ../../source/skeleton.pug
                 static SecureRandom getInstance(String algorithm)
                     // https://docs.oracle.com/en/java/javase/12/docs/specs/security/standard-names.html#securerandom-number-generation-algorithms
                 static SecureRandom getInstance(String algorithm, SecureRandomParameters params)
-                    // Since 9
                     // SecureRandom.getInstance("DRBG", DrbgParameters.instantiation(128, RESEED_ONLY, null));
                 static SecureRandomParameters getInstanceStrong()
 
                 void reseed()
-                    // Since 9, 엔트로피 소스로부터 시드 재선택
+                    // 엔트로피 소스로부터 시드 재선택
                 void nextBytes(byte[] bytes)
                     // + generateSeed
 
-            h3 class DrbgParameters Since 9
+            h3 DrbgParameters
             ol
                 li DRBG; Deterministic Random Bit Generator 이용을 위한 파라미터
                 p 기본 파라미터 외에 직접 지정하고 싶은 경우, 메서드의 SecureRandomParameters 파라미터로 넘기면 된다
@@ -2238,7 +2236,6 @@ include ../../source/skeleton.pug
             div
                 h4 Nested Classes
                 +asCode('java').
-                    // Since 9
                     static final class DrbgParameters.Instantiation implements SecureRandomParameters
                         // DRBG 인스턴스 생성 시 사용.
                     static enum DrbgParameters.Capability {
@@ -2251,7 +2248,7 @@ include ../../source/skeleton.pug
 
     h1 java.text
     div
-        h2 abstract class Format implements Serializable, Cloneable
+        h2 Format
         ol
             li 자바에서 제공하는 주요 Format 서브 클래스는 DateFormat, MessageFormat, NumberFormat
             li 콘크리트 서브 클래스는 아래 3개 메서드를 반드시 구현해야 한다
@@ -2260,7 +2257,7 @@ include ../../source/skeleton.pug
                 formatToCharacterIterator(Object)
                 parseObject(String, ParsePosition)
 
-        h2 final class Normalizer
+        h2 Normalizer
         ol
             li 유니코드
                 +asA('https://ko.wikipedia.org/wiki/유니코드_정규화', '정규화/역정규화')
@@ -2273,21 +2270,21 @@ include ../../source/skeleton.pug
             static String normalize(CharSequence src, Normalizer.Form form)
                 // + isNormalized
 
-        h2 abstract class NumberFormat extends Format
+        h2 NumberFormat
         p: +codeBtn('/Repositories/Eclipse/JavaSE/src/text/NumberFormatTest.java', 'java')
         +asCode('java').
-            static enum NumberFormat.Style { // Since 12
+            static enum NumberFormat.Style {
                 SHORT, LONG
             }
-            static class NumberFormat.Field extends Format.Field {
-                INTEGER(정수부), FRACTION(분수), EXPONENT(지수부), DECIMAL_SEPARATOR(소수 구분 기호), SIGN(부호), GROUPING_SEPARATOR(단위 구분 문자), EXPONENT_SYMBOL, PERCENT, PERMILLE, CURRENCY, EXPONENT_SIGN, PREFIX Since 12, SUFFIX Since 12
+            static class NumberFormat.Field
+                INTEGER(정수부), FRACTION(분수), EXPONENT(지수부), DECIMAL_SEPARATOR(소수 구분 기호), SIGN(부호), GROUPING_SEPARATOR(단위 구분 문자), EXPONENT_SYMBOL, PERCENT, PERMILLE, CURRENCY, EXPONENT_SIGN, PREFIX, SUFFIX
             }
 
             static final NumberFormat getInstance(Locale inLocale)
                 // + getNumberInstance : 범용
                 // + getIntegerInstance : 포맷에 HALF_EVEN을 이용하고, 파싱은 정수부만
 
-        h2 class SimpleDateFormat extends DateFormat
+        h2 SimpleDateFormat
         table
             tr
                 th 문자
@@ -2401,7 +2398,7 @@ include ../../source/skeleton.pug
                 td ISO 8601 time zone
                 td -08; -0800; -08:00
 
-        h2 class MessageFormat extends Format
+        h2 MessageFormat
         +asCode('java').
             MessageFormatPattern ::= String | MessageFormatPattern FormatElement String
             FormatElement        ::= { ArgumentIndex[, FormatType[, FormatStyle]] }
@@ -2481,7 +2478,7 @@ include ../../source/skeleton.pug
 
     h1 java.time
     div
-        h2 abstract class Clock
+        h2 Clock
         p 시간대(time-zone)을 이용한 현재의 date와 time 제공. 지정하지 않는 이상, 시계 내부의 시각은 계속 변한다.
             +codeBtn('/Repositories/Eclipse/JavaSE/src/time/ClockTest.java', 'java')
         +asCode('java').
@@ -2492,7 +2489,7 @@ include ../../source/skeleton.pug
 
             static Clock tick(Clock baseClock, Duration tickDuration)
                 // 지정된 시계의 tick 단위를 조정. 예를 들어 1분이 지정된 경우, 1분 미만의 값은 버려진다.
-                // tickMillis(ZoneId zone) Since 9 == tick(system(zone), Duration.ofMillis(1))
+                // tickMillis(ZoneId zone) == tick(system(zone), Duration.ofMillis(1))
 
             static Clock fixed(Instant fixedInstant, ZoneId zone)
                 // 현재 시각으로 멈춘 시계 반환
@@ -2501,7 +2498,7 @@ include ../../source/skeleton.pug
             abstract Clock withZone(ZoneId zone)
                 // 지정된 시간대에 현재 시계의 복사본을 생성하여 반환한다. 따라서 시각 자체는 조정하지 않는다.
 
-        h2 final class Duration implements TemporalAmount, Comparable&lt;Duration>, Serializable
+        h2 Duration
         p: +codeBtn('/Repositories/Eclipse/JavaSE/src/time/DurationTest.java', 'java')
         +asCode('java').
             static Duration of(long amount, TemporalUnit unit)
@@ -2517,7 +2514,7 @@ include ../../source/skeleton.pug
             Duration withNanos(int nanoOfSecond)
                 // 나노초 단위만 nanoOfSecond로 변경
 
-        h2 final class Instant implements Temporal, TemporalAdjuster, Comparable&lt;Instant>, Serializable
+        h2 Instant
         p Epoch(1970-01-01 00:00:00)를 기준으로 한 초(long)와 나노초(int)로 시각을 표현한다. 음수면 epoch 이전
         +asCode('java').
             public static final Instant EPOCH, MIN(아주 먼 옛날), MAX(아주 먼 미래)
@@ -2527,19 +2524,19 @@ include ../../source/skeleton.pug
                 // DateTimeFormatter.ISO_INSTANT
                 // 예. 2007-12-03T10:15:30.00Z)
 
-        h2 enum DayOfWeek implements TemporalAccessor, TemporalAdjuster
+        h2 DayOfWeek
         +asCode('java').
             public static final DayOfWeek MONDAY ~ SUNDAY
             int getValue() // ISO-8601. 1(MONDAY) ~ 7(SUNDAY)
 
-        h2 enum Month implements TemporalAccessor, TemporalAdjuster
+        h2 Month
         +asCode('java').
             public static final Month JANUARY ~ DECEMBER
             int getValue() // ISO-8601. 1(JANUARY) ~ 12(DECEMBER)
 
     h1 java.time.format
     div
-        h2 final class DateTimeFormatter
+        h2 DateTimeFormatter
         p: +asA('https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/time/format/DateTimeFormatter.html#predefined', 'DateTimeFormatter.html#predefined')
         table
             tr
@@ -2629,7 +2626,7 @@ include ../../source/skeleton.pug
         div
             h3 컬렉션 자료형 인터페이스
             div
-                h4 interface Collection&lt;E> extends Iterable&lt;E>
+                h4 Collection&lt;E>
                 ol
                     li 컬렉션 최소 연산을 정의.
                     li 서브 컬렉션을 작성할 때, 인자없는 생성자와 Collection 인자 하나만 받는 생성자를 각각 작성하도록 권장한다
@@ -2657,12 +2654,12 @@ include ../../source/skeleton.pug
                     &lt;T> T[] toArray(T[] a)
                         // 사용 : toArray(new Clazz[0])
                     default &lt;T> T[] toArray(IntFunction&lt;T[]> generator)
-                        // Since 11, 사용 : toArray(Clazz[]::new)
+                        // 사용 : toArray(Clazz[]::new)
 
                     default Stream&lt;E> stream()
                     default Stream&lt;E> parallelStream()
 
-                h4 interface Queue&lt;E> extends Collection&lt;E>
+                h4 Queue&lt;E>
                 +asCode('java').
                     boolean add(E e)   // 추가할 수 없으면 예외 발생. 따라서 반환이 있다면 그 값은 항상 true
                     boolean offer(E e) // 예외 발생하지 않는 add
@@ -2673,7 +2670,7 @@ include ../../source/skeleton.pug
                     E element()        // 앞쪽 원소 하나 제거하지 않고 가져오기. 없으면 예외.
                     E peek()           // 앞쪽 원소 하나 제거하지 않고 가져오기. 없으면 null.
 
-                h4 interface Deque&lt;E> extends Queue&lt;E>
+                h4 Deque&lt;E>
                 p 양방향 삽입/삭제 가능한 Queue
                 +asCode('java').
                     boolean removeFirstOccurrence(Object o)
@@ -2681,7 +2678,7 @@ include ../../source/skeleton.pug
                     Iterator&lt;E> descendingIterator()
                         // iterator()의 역순
 
-                h4 interface List&lt;E> extends Collection&lt;E>
+                h4 List&lt;E>
                 +asCode('java').
                     default void replaceAll(UnaryOperator&lt;E> operator)
                         // 모든 원소를 연산 결과로 대체
@@ -2706,7 +2703,7 @@ include ../../source/skeleton.pug
                     static &lt;E> List&lt;E> of() // Since 9
                     static &lt;E> List&lt;E> copyOf(Collection&lt;? extends E> coll) // Since 10
 
-                h4 interface Set&lt;E> extends Collection&lt;E>
+                h4 Set&lt;E>
                 p Unmodifiable Set
                 ul
                     li Set#of, Set#copyOf는 null 허용하지 않는 변경 불가능한 집합을 반환한다.
@@ -2715,7 +2712,7 @@ include ../../source/skeleton.pug
                     static &lt;E> Set&lt;E> of() // Since 9
                     static &lt;E> Set&lt;E> copyOf(Collection&lt;? extends E> coll) // Since 10
 
-                h4 interface SortedSet&lt;E> extends Set&lt;E>
+                h4 SortedSet&lt;E>
                 p 원소가 정렬된 Set. 다음 4가지 생성자를 구현할 것을 권장. (void), (Comparator), (Collection), (SortedSet)
                 +asCode('java').
                     SortedSet&lt;E> subSet(E fromElement, E toElement)
@@ -2723,7 +2720,7 @@ include ../../source/skeleton.pug
                         // + headSet, tailSet
                     E first() // + last
 
-                h4 interface NavigableSet&lt;E> extends SortedSet&lt;E>
+                h4 NavigableSet&lt;E>
                 +asCode('java').
                     E lower(E e)
                         // e보다 작은 원소들 중 최댓값을 반환. 없으면 null
@@ -2732,7 +2729,7 @@ include ../../source/skeleton.pug
                     NavigableSet&lt;E> descendingSet()
                     Iterator&lt;E> descendingIterator()
 
-                h4 interface Map&lt;K, V>
+                h4 Map&lt;K, V>
                 ul
                     li default V getOrDefault(Object key, V defaultValue)
                         +codeBtn('/Repositories/Eclipse/JavaSE/src/util/MapExample.java', 'java', '[12,16]')
@@ -2761,20 +2758,21 @@ include ../../source/skeleton.pug
                         p 변경 불가능한 맵은 키와 값 모두 null을 허용하지 않으며, 모든 키와 값이 serializable하면 맵도 그러하다.
                         li Map.Entry#entry 메서드는 변경 불가능한 엔트리를 반환한다.
                 div
-                    h5 static interface Map.Entry&lt;K, V>
+                    h5 Map.Entry&lt;K, V>
                     +asCode('java').
                         static &lt;K extends Comparable&lt;? super K>, V> Comparator&lt;Map.Entry&lt;K, V>> comparingByKey()
                             // 키를 자연스러운 순서로 비교하는 비교자 반환. 인자 있는 함수의 경우 해당 비교자를 이용.
                             // + comparingByValue
 
-                h4 interface SortedMap&lt;K, V> extends Map&lt;K, V>
+                +pos('SortedMap')
+                h4 SortedMap&lt;K, V>
                 p 키가 정렬된 Map. 다음 4가지 생성자를 구현할 것을 권장. (void), (Comparator), (Map), (SortedMap)
                 +asCode('java').
                     SortedMap&lt;K, V> subMap(K fromKey, K toKey)
                         // 지정된 범위의 키만으로 구성된 서브 맵 반환. toKey는 미포함
                         // + headMap, tailMap
 
-                h4 interface NavigableMap&lt;K, V> extends SortedMap&lt;K, V>
+                h4 NavigableMap&lt;K, V>
                 +asCode('java').
                     Map.Entry&lt;K, V> lowerEntry(K key)
                         // key보다 작은 키들 중 최댓값에 대한 entry 반환. 없으면 null
@@ -2789,13 +2787,13 @@ include ../../source/skeleton.pug
 
             h3 컬렉션 연산 인터페이스
             div
-                h4 interface Enumeration&lt;E>
+                h4 Enumeration&lt;E>
                 +asCode('java').
                     boolean hasMoreElements()
                     E nextElement()
-                    default Iterator&lt;E> asIterator() // Since 9
+                    default Iterator&lt;E> asIterator()
 
-                h4 interface Iterator&lt;E>
+                h4 Iterator&lt;E>
                 +asCode('java').
                     boolean hasNext()
                     E next()
@@ -2803,7 +2801,7 @@ include ../../source/skeleton.pug
                         // 마지막으로 반환된 원소를 제거. next() 호출 뒤 한 번만 호출 가능.
                     default void forEachRemaining(Consumer&lt;? super E> action)
 
-                h4 interface ListIterator&lt;E> extends Iterator&lt;E>
+                h4 ListIterator&lt;E>
                 p 양방향으로 이동 가능한 iterator.
                 +asCode('java').
                     boolean hasPrevious()
@@ -2812,17 +2810,17 @@ include ../../source/skeleton.pug
                     void set(E e)   // 마지막으로 반환된 요소를 변경
                     void add(E e)   // next()로 반환될 요소 바로전에 삽입.
 
-                h4 interface PrimitiveIterator&lt;T, T_CONS> extends Iterator&lt;T>
+                h4 PrimitiveIterator&lt;T, T_CONS>
                 ol
                     li 기본 타입의 박싱을 회피하기 위한 이터레이터를 제공한다
                     li OfInt, OfLong, OfDouble이 제공된다
                 div
-                    h5 static interface PrimitiveIterator.OfInt extends PrimitiveIterator&lt;Integer, IntConsumer>
+                    h5 PrimitiveIterator.OfInt
                     +asCode('java').
                         int nextInt()
                         default void forEachRemaining(IntConsumer action)
 
-                h4 interface Spliterator&lt;T>
+                h4 Spliterator&lt;T>
                 ol
                     li Iterator와 마찬가지로 순회를 위한 기능을 제공한다. Iterator와 달리 병렬 순회가 가능하며, 순회 메서드가 hasNext(), next()로 이분화되지 않는다.
                     li 병렬 순회하려는 경우, 동일 Spliterator 객체를 이용하지 말고, 다른 스레드는 trySplit()을 통해 얻은 객체로 순회해야 한다.
@@ -2845,33 +2843,33 @@ include ../../source/skeleton.pug
                     default Comparator&lt;? super T> getComparator()
                         // 이 spliterator의 소스가 Comparator를 이용해 정렬된(SORTED) 경우, 해당 Comparator를 반환한다. 그 외엔 null, 또는 IllegalStateException
                 div
-                    h5 static interface Spliterator.OfInt extends Spliterator.OfPrimitive&lt;Integer, IntConsumer, Spliterator.OfInt>
+                    h5 Spliterator.OfInt
                     +asCode('java').
                         default boolean tryAdvance(Consumer&lt;? super Integer> action)
                             // action이 IntConsumer 인스턴스면 형변환되어 사용된다.
                             // + forEachRemaining
 
-                h4 interface RandomAccess
+                h4 RandomAccess
                 p 빠른(보통 상수 시간) 임의 접근이 가능한 List를 나타내는 마커 인터페이스
 
             h3 컬렉션 자료형 콘크리트 클래스
             div
-                h4 static class AbstractMap.SimpleEntry&lt;K, V> implements Map.Entry&lt;K, V>, Serializable
+                h4 AbstractMap.SimpleEntry&lt;K, V>
                 +asCode('java') public SimpleEntry(K key, V value)
 
-                h4 static class AbstractMap.SimpleImmutableEntry&lt;K, V> implements Map.Entry&lt;K, V>, Serializable
+                h4 AbstractMap.SimpleImmutableEntry&lt;K, V>
                 +asCode('java') public SimpleImmutableEntry(K key, V value)
 
-                h4 class ArrayDeque&lt;E> extends AbstractCollection&lt;E> implements Deque&lt;E>, Cloneable, Serializable
+                h4 ArrayDeque&lt;E>
                 p 가변 길이 배열로 구현한 Deque. 스레드-안전하지 않음.
 
-                h4 class ArrayList&lt;E> extends AbstractList&lt;E> implements List&lt;E>, RandomAccess, Cloneable, Serializable
+                h4 ArrayList&lt;E>
                 p 가변 길이 배열로 구현한 List. 스레드-안전하지 않음.
 
-                h4 class Vector&lt;E> extends AbstractList&lt;E> implements List&lt;E>, RandomAccess, Cloneable, Serializable
+                h4 Vector&lt;E>
                 p ArrayList와 달리 스레드-안전하다.
 
-                h4 class BitSet implements Cloneable, Serializable
+                h4 BitSet
                 p 각 비트의 기본값은 false. 스레드-안전하지 않음.
                 +asCode('java').
                     void andNot(BitSet set)
@@ -2884,10 +2882,10 @@ include ../../source/skeleton.pug
                     int cardinality() // true 비트 수
                     int length()      // the index of the highest set bit
 
-                h4 class EnumMap&lt;K extends Enum&lt;K>, V> extends AbstractMap&lt;K, V> implements Serializable, Cloneable
+                h4 EnumMap&lt;K extends Enum&lt;K>, V>
                 p Enum을 키로 이용.
 
-                h4 abstract class EnumSet&lt;E extends Enum&lt;E>> extends AbstractSet&lt;E> implements Cloneable, Serializable
+                h4 EnumSet&lt;E extends Enum&lt;E>>
                 +asCode('java').
                     static &lt;E extends Enum&lt;E>> EnumSet&lt;E> of(E e)
                     static &lt;E extends Enum&lt;E>> EnumSet&lt;E> range(E from, E to)
@@ -2896,50 +2894,50 @@ include ../../source/skeleton.pug
                     static &lt;E extends Enum&lt;E>> EnumSet&lt;E> complementOf(EnumSet&lt;E> s)   // 여집합 반환
                     static &lt;E extends Enum&lt;E>> EnumSet&lt;E> copyOf(Collection&lt;E> c)
 
-                h4 class HashMap&lt;K, V> extends AbstractMap&lt;K, V> implements Map&lt;K, V>, Cloneable, Serializable
+                h4 HashMap&lt;K, V>
                 p 스레드-안전하지 않음.
 
-                h4 class HashSet&lt;E> extends AbstractSet&lt;E> implements Set&lt;E>, Cloneable, Serializable
+                h4 HashSet&lt;E>
                 p 스레드-안전하지 않음.
 
-                h4 class IdentityHashMap&lt;K, V> extends AbstractMap&lt;K, V> implements Map&lt;K, V>, Serializable, Cloneable
+                h4 IdentityHashMap&lt;K, V>
                 p 스레드-안전하지 않다. 일반적으로 (k1==null ? k2==null : k1.equals(k2))로 키를 비교하는 것과 달리 (k1==k2)로 비교한다.
                 p keySet()으로 반환되는 Set&lt;K>, values()로 반환되는 Collection&lt;V>, entrySet()으로 반환되는 Set&lt;Map.Entry&lt;K, V>> 모두 원소의 비교를 == 연산으로 한다.
 
-                h4 class LinkedList&lt;E> entends AbstractSequentialList&lt;E> implements List&lt;E>, Deque&lt;E>, Cloneable, Serializable
+                h4 LinkedList&lt;E>
                 p List와 Deque을 모두 구현. 스레드-안전하지 않음.
 
-                h4 class LinkedHashMap&lt;K, V> extends HashMap&lt;K, V> implements Map&lt;K, V>
+                h4 LinkedHashMap&lt;K, V>
                 p 키가 삽입된 순서대로 원소를 유지하는 이중 연결 리스트를 가진다. 키가 존재하는 상황에서 put() 호출로 순서가 변경되지 않는다. 스레드-안전하지 않다.
                 +asCode('java').
                     public LinkedHashMap(int initialCapacity, float loadFactor, boolean accessOrder)
                         // accessOrder == true ? 접근 빈도로 정렬 : 삽입 순서로 정렬
 
-                h4 class LinkedHashSet extends HashSet&lt;E> implements Set&lt;E>, Cloneable, Serializable
+                h4 LinkedHashSet&lt;E>
                 p 삽입된 순서대로 원소를 유지하는 이중 연결 리스트를 가진다. 원소가 존재하는 상황에서 add() 호출로 순서가 변경되지 않는다. 스레드-안전하지 않다.
 
-                h4 class PriorityQueue&lt;E> extends AbstractQueue&lt;E> implements Serializable
+                h4 PriorityQueue&lt;E>
                 p 우선순위 힙에 기반한 unbounded 우선순위 큐. head가 가장 우선순위가 작은 원소.
 
-                h4 class Stack&lt;E> extends Vector&lt;E>
+                h4 Stack&lt;E>
                 p LIFO 스택.
                 +asCode('java') int search(Object o) // top으로부터 거리 반환
 
-                h4 class TreeMap&lt;K, V> extends AbstractMap&lt;K, V> implements NavigableMap&lt;K, V>, Cloneable, Serializable
+                h4 TreeMap&lt;K, V>
                 p Red-Black tree(이진 탐색 트리의 일종) 기반의 NavigableMap 구현. log(n) 시간의 작업을 보장한다. 스레드-안전하지 않다.
 
-                h4 class TreeSet&lt;E> extends AbstractSet&lt;E> implements NavigableSet&lt;E>, Cloneable, Serializable
+                h4 TreeSet&lt;E>
                 p TreeMap 기반의 NavigableSet 구현. 스레드-안전하지 않다.
 
-                h4 class WeakHashMap&lt;K, V> extends AbstractMap&lt;K, V> implements Map&lt;K, V>
+                h4 WeakHashMap&lt;K, V>
                 p key의 존재 여부는 key가 GC 대상이 되는 것에 영향이 없다. key 객체가 유효하지 않게 되면 자동으로 맵에서 삭제한다. key, value 모두에 null을 허용한다. 단, value가 key의 참조를 가지지 않도록 유의해야 한다. 스레드-안전하지 않다.
 
-                h4 class Hashtable&lt;K, V&gt; extends Dictionary&lt;K, V> implements Map&lt;K, V>, Cloneable, Serializable
+                h4 Hashtable&lt;K, V&gt;
                 p 스레드-안전한 해시 테이블 구현. 스레드-안전할 필요가 없으면 HashMap, 높은 동시성이 요구되는 경우엔 ConcurrentHashMap을 이용하는 것이 좋다.
 
             h3 유틸리티 클래스
             div
-                h4 class Collections
+                h4 Collections
                 +asCode('java').
                     public static final Set EMPTY_SET   // 변경 불가
                     public static final List EMPTY_LIST // 변경 불가
@@ -2993,7 +2991,7 @@ include ../../source/skeleton.pug
                     static &lt;T> Queue&lt;T> asLifoQueue(Deque&lt;T> deque)
                         // deque에 대한 LIFO view를 Queue로 반환한다.
 
-                h4 final class Spliterators
+                h4 Spliterators
                 +asCode('java').
                     static &lt;T> Spliterator&lt;T> emptySpliterator()
                         // + emptyIntSpliterator, emptyLongSpliterator, emptyDoubleSpliterator
@@ -3005,12 +3003,12 @@ include ../../source/skeleton.pug
                     static &lt;T> Iterator&lt;T> iterator(Spliterator&lt;? extends T> spliterator)
                         // Iterator로 래핑한 후에 spliterator를 사용하면 안 된다.        
                 div
-                    h5 abstract static class Spliterators.AbstractSpliterator&lt;T> implements Spliterator&lt;T>
+                    h5 Spliterators.AbstractSpliterator&lt;T>
                     p estimateSize(), characteristics(), trySplit()을 구현한 추상 클래스
 
         h2 객체, 배열 관련
         div
-            h3 @FunctionalInterface interface Comparator&lt;T>
+            h3 Comparator&lt;T>
             +asCode('java').
                 default Comparator&lt;T> reversed()
 
@@ -3030,7 +3028,7 @@ include ../../source/skeleton.pug
                     // 정렬에 이용할 키를 생성하는 함수와, 키를 이용해 비교하는 비교자를 넘기면 둘을 포함하는 T타입 비교자를 반환.
                     // + comparingInt, Long, Double
 
-            h3 class Arrays
+            h3 Arrays
             +asCode('java').
                 // 정렬, 검색
                 static void sort(int[] a)
@@ -3078,7 +3076,7 @@ include ../../source/skeleton.pug
                 static int deepHashCode(Object[] a)
                     // 원소가 배열인 경우, 해당 원소의 해시를 deepHashCode로 구한다. 자기 자신을 포함하는 배열 등은 적합하지 않다.
 
-            h3 final class Objects
+            h3 Objects
             +asCode('java').
                 // 비교
                 static boolean deepEquals(Object a, Object b)
@@ -3101,7 +3099,7 @@ include ../../source/skeleton.pug
                 static &lt;T> T requireNonNullElse(T obj, T defaultObj) // Since 9
                 static &lt;T> T requireNonNullElseGet(T obj, Supplier&lt;? extends T> supplier) // Since 9
 
-                // index Since 9
+                // index
                 static int checkIndex(int index, int length)
                     // index가 [0, length)에 존재하면 그대로 반환. 아니면 예외 발생.
                 static int checkFromToIndex(int fromIndex, int toIndex, int length)
@@ -3109,7 +3107,7 @@ include ../../source/skeleton.pug
                 static int checkFromIndexSize(int fromIndex, int size, int length)
                     // subrange [fromIndex, fromIndex + size)가 [0, length)에 포함되면 fromIndex 반환. 아니면 예외 발생.
 
-            h3 final class Optional&lt;T> + OptionalInt, OptionalDouble, OptionalLong
+            h3 Optional&lt;T> + OptionalInt, OptionalDouble, OptionalLong
             p null을 허용하지 않는 객체에 대한 컨테이너. value-based므로 identity-sensitive한 연산은 피해야 한다.
             +asCode('java').
                 static &lt;T> Optional&lt;T> empty()
@@ -3123,17 +3121,17 @@ include ../../source/skeleton.pug
                 Optional&lt;T> or(Supplier&lt;? extends Optional&lt;? extends T>> supplier)
                     // Since 9, 값이 존재하면 그대로 반환. 없으면 제공되는 값 반환.
                 T orELseThrow()
-                    // Since 10, 값이 없으면 NoSuchElementException
+                    // 값이 없으면 NoSuchElementException
 
                 boolean isPresent()
-                    // + isEmpty Since 11
+                    // + isEmpty
                 void ifPresent(Consumer&lt;? super T> action)
-                void ifPresentOrElse(Consumer&lt;? super T> action, Runnable emptyAction) // Since 9
+                void ifPresentOrElse(Consumer&lt;? super T> action, Runnable emptyAction)
 
                 Optional&lt;T> filter(Predicate&lt;? super T> predicate)
                     // 값이 존재하고 필터를 통과하면 그대로 반환. 아니면 빈 컨테이너 반환
                 Stream&lt;T> stream()
-                    // Since 9, 값이 존재하면 해당 값 하나만 포함하는 스트림 반환. 없으면 빈 스트림 반환.
+                    // 값이 존재하면 해당 값 하나만 포함하는 스트림 반환. 없으면 빈 스트림 반환.
 
                 &lt;U> Optional&lt;U> map(Function&lt;? super T, ? extends U> mapper)
                 &lt;U> Optional&lt;U> flatMap(Function&lt;? super T, ? extends Optional&lt;? extends U>> mapper)
@@ -3141,13 +3139,13 @@ include ../../source/skeleton.pug
 
         h2 시간 관련
         div
-            h3 class Date implements Serializable, Cloneable, Comparable&lt;Date>
+            h3 Date
             +asCode('java').
                 long getTime()
                 boolean before(Date when)
                 static Date from(Instant instant)
 
-            h3 abstract class Calendar implements Serializable, Cloneable, Comparable&lt;Calendar>
+            h3 Calendar
             ol
                 li 관대함(Leniency) : 범위를 벗어나는 값도 받아들이며, 나중에 정규화한다. 예를 들어 1월 32일은 2월 1일이 된다.
                 li add와 roll : add는 오버플로되면 다음 단위가 변하지만, roll은 modulo연산처럼 해당 단위만 변한다.
@@ -3180,7 +3178,7 @@ include ../../source/skeleton.pug
                     // default false
                     // getWeekYear(), setWeekDate(int,int,int), getWeeksInWeekYear() 등을 지원하는지 여부.
             div
-                h4 static class Calendar.Builder
+                h4 Calendar.Builder
                 +asCode('java').
                     Calendar.Builder setInstant(long instant) // 밀리초
                     Calendar.Builder set(int field, int value)
@@ -3189,7 +3187,7 @@ include ../../source/skeleton.pug
                     Calendar.Builder setTimeZone(TimeZone zone)
                     Calendar.Builder setLenient(boolean lenient) : build()에서 사용된다
 
-            h3 class GregorianCalendar extends Calendar
+            h3 GregorianCalendar
             p GregorianCalendar는 아래 메서드를 지원한다.
             +asCode('java').
                 int getWeekYear()
@@ -3199,7 +3197,7 @@ include ../../source/skeleton.pug
                 int getActualMaximum(int field)
                 int getActualMinimum(int field)
 
-            h3 class Timer
+            h3 Timer
             ol
                 li 백그라운드 스레드에서 미래에 실행될 작업들을 스케쥴링하는 기능을 제공한다. 작업은 일회용일수도, 일정한 주기를 가지고 반복될 수도 있다. 한 타이머의 모든 작업들은 하나의 백그라운드 스레드를 공유하기 때문에, 작업의 실행은 직렬적이며, 따라서 각 작업들은 가능한 한 빠르게 종료되어야 한다. 그렇지 않은 경우, 뒤에 대기하는 모든 작업이 밀려 제대로 실행되지 않을 수 있다.
                 li 스레드-안전하다. 정시성을 보장하지 않는다. 스케쥴은 Object.wait(long) 메서드를 통해 이루어진다. java.util.concurrent 패키지의 ScheduledThreadPoolExecutor가 더 나은 대안으로 이용될 수 있다.
@@ -3220,7 +3218,7 @@ include ../../source/skeleton.pug
                 int purge()
                     // 호출할 일이 거의 없는 메서드. 많은 작업을 한번에 취소한 경우, 취소한 작업들을 제거하여 참조가 없는 경우 GC 대상이 되도록 한다.
 
-            h3 abstract class TimerTask implements Runnable
+            h3 TimerTask
             p Timer 작업으로 사용하기 위한 Runnable
             ol
                 li boolean cancel()
@@ -3237,7 +3235,7 @@ include ../../source/skeleton.pug
 
         h2 숫자 관련
         div
-            h3 class DoubleSummaryStatistics implements DoubleConsumer + IntSummaryStatistics, LongSummaryStatistics
+            h3 DoubleSummaryStatistics
             ol
                 li double에 관한 통계를 모은 상태 객체. 스트림과 함께 사용되도록 설계되었다.
                 +asCode('java').
@@ -3246,11 +3244,11 @@ include ../../source/skeleton.pug
             +asCode('java').
                 public DoubleSummaryStatistics()
                     // 개수 0, 합계 0, 최솟값 Double.POSITIVE_INFINITY, 최댓값 Double.NEGATIVE_INFINITY, 평균 0인 객체 생성.
-                    // + (long count, double min, double max, double sum) Since 10
+                    // + (long count, double min, double max, double sum)
                 void accept(double value)
                     // 요약 정보에 value를 추가
 
-            h3 class Random implements Serializable
+            h3 Random
             +asCode('java').
                 public Random()
                     // 의사난수 생성기. 스레드-안전하지만 성능 저하 가능성이 있으므로 ThreadLocalRandom을 고려할 것.
@@ -3264,7 +3262,7 @@ include ../../source/skeleton.pug
                 IntStream ints() // == ints(Long.MAX_VALUE)
                 IntStream ints(long streamSize, int randomNumberOrigin, int randomNumberBound) // [origin, bound)
 
-            h3 final class SplittableRandom
+            h3 SplittableRandom
             +asCode('java').
                 public SplittableRandom()
                     // 분열하는 의사난수 생성기. 스레드-안전하지 않으며, 분열하여 스레드들이 각자 하나씩 갖도록 설계되었다.
@@ -3274,7 +3272,7 @@ include ../../source/skeleton.pug
 
         h2 문자열 및 국제화 관련
         div
-            h3 class Base64
+            h3 Base64
             p Base64 인코더와 디코더를 반환하는 유틸리티. RFC 2045, 4648
             +asCode('java').
                 static Base64.Encoder getEncoder()
@@ -3285,7 +3283,7 @@ include ../../source/skeleton.pug
                 static Base64.Decoder getUrlDecoder()
                 static Base64.Decoder getMimeDecoder()
             div
-                h4 static class Base64.Encoder
+                h4 Base64.Encoder
                 +asCode('java').
                     byte[] encode(byte[] src)
                     String encodeToString(byte[] src)
@@ -3293,15 +3291,15 @@ include ../../source/skeleton.pug
                     OutputStream wrap(OutputStream os)
                     Base64.Encoder withoutPadding()
 
-                h4 static class Base64.Decoder
+                h4 Base64.Decoder
                 +asCode('java').
                     byte[] decode(byte[] src)
                     InputStream wrap(InputStream is)
 
-            h3 final class Locale implements Cloneable, Serializable
+            h3 Locale
             p public static final Locale US, ENGLISH, KOREA, KOREAN, ...
 
-            h3 final class Scanner implements Iterator&lt;String>, Closeable
+            h3 Scanner
             ol
                 li 정규 표현식을 통해 원시 타입과 String을 분리해내는 간단한 text scanner.
                 li 지정되지 않은 경우, 기본 구분자 패턴은 공백 문자(Character::isWhitespace)
@@ -3329,14 +3327,14 @@ include ../../source/skeleton.pug
                 MatchResult match()
                     // 가장 최근의 매칭 결과를 반환한다. MatchResult는 각종 next, findInLine, findWithinHorizon, skip 메서드의 성공적인 실행으로 설정된다.
                 Stream&lt;MatchResult> findAll(Pattern pattern)
-                    // Since 9, 스트림의 MatchResult 순서는 findWithinHorizon(pattern, 0), match()를 반복적으로 호출한 것과 동일하다.
+                    // 스트림의 MatchResult 순서는 findWithinHorizon(pattern, 0), match()를 반복적으로 호출한 것과 동일하다.
 
                 Stream&lt;String> tokens()
-                    // Since 9, 구분자로 자른 문자열들의 스트림을 반환한다
+                    // 구분자로 자른 문자열들의 스트림을 반환한다
                 Scanner reset()
                     // scanner.useDelimiter("\\p{javaWhitespace}+").useLocale(Locale.getDefault(Locale.Category.FORMAT)).useRadix(10);
 
-        h2 class Properties extends Hashtable&lt;Object, Object>
+        h2 Properties
         p stream을 통해 로드/저장되는 영구적인 속성값들을 표현. 기본값으로 이용하기 위해 다른 Properties를 포함할 수 있다. 스레드-안전하다.
         +asCode('java').
             Object setProperty(String key, String value)
@@ -3349,7 +3347,7 @@ include ../../source/skeleton.pug
             void loadFromXML(InputStream in)
             void storeToXML(OutputStream os, String comment)
 
-        h2 final class UUID implements Serializable, Comparable&lt;UUID>
+        h2 UUID
         p + com.fasterxml.uuid, com.datastax.cassandra
         +asCode('java').
             public UUID(long mostSigBits, long leastSigBits)
@@ -3379,15 +3377,15 @@ include ../../source/skeleton.pug
 
     h1 java.util.concurrent
     div
-        h2 @FunctionalInterface interface Callable&lt;V>
+        h2 Callable&lt;V>
         +asCode('java') V call() // 매개변수 없는, 결과를 반환하는 작업을 정의. Runnable과 달리 checked 예외를 던져도 된다.
 
-        h2 interface ThreadFactory
+        h2 ThreadFactory
         +asCode('java') Thread newThread(Runnable r)
 
         h2 비동기 자료형 관련
         div
-            h3 interface Future&lt;V>
+            h3 Future&lt;V>
             p 비동기적 계산의 결과를 표현. 결과는 오직 get 메서드로만 얻을 수 있으며, 필요하다면 결과가 준비될 때까지 블록시킨다.
             +asCode('java').
                 boolean cancel(boolean mayInterruptIfRunning)
@@ -3398,11 +3396,11 @@ include ../../source/skeleton.pug
                 V get(long timeout, TimeUnit unit)
                     // 결과가 준비될 때까지 최대 timeout만큼 대기
 
-            h3 interface RunnableFuture&lt;V> extends Runnable, Future&lt;V>
+            h3 RunnableFuture&lt;V>
             p Runnable한 Future. 즉 비동기 연산과 그 결과를 표현한다.
             +asCode('java') void run() // Future로 하여금 결과를 설정하도록 한다.
 
-            h3 class FutureTask&lt;V> implements RunnableFuture&lt;V>
+            h3 FutureTask&lt;V>
             +asCode('java').
                 public FutureTask(Callable&lt;V> callable)
                 public FutureTask(Runnable runnable, V result)
@@ -3411,16 +3409,16 @@ include ../../source/skeleton.pug
                 protected void set(V v)         // 결과 설정
                 protected boolean runAndReset() // 반복 실행 목적
 
-            h3 interface Delayed extends Comparable&lt;Delayed>
+            h3 Delayed
             p 객체가 일정 지연 뒤 작동함을 마킹하는 인터페이스. 이를 구현할 땐 compareTo를 반드시 같이 구현해야 한다.
 
-            h3 interface ScheduledFuture&lt;V> extends Delayed, Future&lt;V>
+            h3 ScheduledFuture&lt;V>
             p ScheduledExecutorService의 스케쥴링 결과.
 
-            h3 interface RunnableScheduledFuture&lt;V> extends RunnableFuture&lt;V>, ScheduledFuture&lt;V>
+            h3 RunnableScheduledFuture&lt;V>
             p Runnable한 ScheduledFuture
 
-            h3 interface CompletionStage&lt;T>
+            h3 CompletionStage&lt;T>
             ol
                 li 비동기적일 수 있는 계산 단계. 다른 CompletionStage가 완료된 뒤 어떠한 동작을 수행하거나 값을 계산한다.
                 p Stage에서 수행되는 연산은 Function, Consumer, Runnable로 표현되어야 한다. 각각은 apply, accept, run 메서드로 stage에 제공된다.
@@ -3461,7 +3459,7 @@ include ../../source/skeleton.pug
 
                 CompletableFuture&lt;T> toCompletableFuture()
 
-            h3 class CompletableFuture&lt;T> impliments Future&lt;T>, CompletionStage&lt;T>
+            h3 CompletableFuture&lt;T>
             ol
                 li CompletionStage로 이용될 수 있는, 명시적으로 종료(값과 상태를 설정)되는 Future.
                 li 둘 이상의 스레드가 complete, completeExceptionally, cancel을 호출할 경우, 하나만 성공한다.
@@ -3499,7 +3497,6 @@ include ../../source/skeleton.pug
                 int getNumberOfDependents()
                     // 종료 대기중인 CompletableFuture의 개수 추정. 동기화가 아닌 시스템 모니터링을 위해 설계됨.
 
-                // Since 9
                 static Executor delayedExecutor(long delay, TimeUnit unit)
                     // 주어진 딜레이 이후에 executor로 작업을 제출하는 새로운 Executor 반환.
                 static &lt;U> CompletionStage&lt;U> completedStage(U value)
@@ -3525,10 +3522,10 @@ include ../../source/skeleton.pug
                 CompletableFuture&lt;T> completeOnTimeout(T value, long timeout, TimeUnit unit)
                     // 이 CompletableFuture가 주어진 시간 내에 종료되지 않은 경우, value로 종료한다.
             div
-                h4 static interface CompletableFuture.AsynchronousCompletionTask
+                h4 CompletableFuture.AsynchronousCompletionTask
                 p 비동기 메서드에서 생성된 비동기 작업을 나타내는 마커 인터페이스
 
-            h3 abstract class ForkJoinTask&lt;V> implements Future&lt;V>, Serializable
+            h3 ForkJoinTask&lt;V>
             ol
                 li ForkJoinPool의 실행 단위. 일반적인 스레드보다 훨씬 가벼운 유사-스레드
                 li 메인 ForkJoinTask가 존재하여 다른 subtask들을 실행한다
@@ -3554,19 +3551,19 @@ include ../../source/skeleton.pug
                     // + isCompletedAbnormally
                 final Throwable getException()
 
-            h3 abstract class RecursiveAction extends ForkJoinTask&lt;Void>
+            h3 RecursiveAction
             p 재귀적이며 결과없는 ForkJoinTask
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/concurrent/RecursiveActionTest.java', 'java')
                 br
                 | 코드 출처 : https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/util/concurrent/RecursiveAction.html
 
-            h3 abstract class RecursiveTask&lt;V> extends ForkJoinTask&lt;V>
+            h3 RecursiveTask&lt;V>
             p 재귀적이며 결과가 있는 ForkJoinTask
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/concurrent/RecursiveTaskTest.java', 'java')
                 br
                 | 코드 출처 : https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/util/concurrent/RecursiveTask.html
 
-            h3 abstract class CountedCompleter&lt;T> extends ForkJoinTask&lt;T>
+            h3 CountedCompleter&lt;T>
             ol
                 li 다른 작업들을 기다린 뒤 트리거로 작업을 시작하는 ForkJoinTask
                 li Concrete 서브클래스들은 compute() 메서드를 반드시 재정의해야 하며, 되도록이면 반환하기 전에 tryComplete()을 호출해야 한다
@@ -3608,12 +3605,12 @@ include ../../source/skeleton.pug
 
         h2 Executor 관련
         div
-            h3 interface Executor
+            h3 Executor
             ol
                 li 전달받은 Runnable을 실행하는 객체. Executor 자체가 스레드의 병행성을 부여하진 않으며, 구현에서 호출자와 다른 스레드 공간을 마련해주어야 한다.
                 li void execute(Runnable command)
 
-            h3 interface ExecutorService extends Executor
+            h3 ExecutorService
             ol
                 li java.util.concurrent 패키지의 기본적인 Executor 구현.
                     +codeBtn('/Repositories/Eclipse/JavaSE/src/concurrent/ExecutorServiceTest.java', 'java')
@@ -3644,7 +3641,7 @@ include ../../source/skeleton.pug
                 &lt;T> T invokeAny(Collection&lt;? extends Callable&lt;>> tasks, long timeout, TimeUnit unit)
                     // timeout되면 TimeoutException 발생
 
-            h3 interface ScheduledExecutorService extends ExecutorService
+            h3 ScheduledExecutorService
             p 실행 전에 딜레이를 두거나, 주기적으로 실행을 반복할 수 있는 ExecutorService
             +asCode('java').
                 ScheduledFuture&lt;?> schedule(Runnable command, long delay, TimeUnit unit)
@@ -3654,10 +3651,10 @@ include ../../source/skeleton.pug
                 ScheduledFuture&lt;?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit)
                     // scheduleAtFixedRate와 달리, 이전 작업이 완료된 후 다음 작업이 시작된다.
 
-            h3 abstract class AbstractExecutorService implements ExecutorService
+            h3 AbstractExecutorService
             p submit, invokeAny, invokeAll 메서드 구현. 반환하는 RunnableFuture에는 FutureTask 이용.
 
-            h3 class ThreadPoolExecutor extends AbstractExecutorService
+            h3 ThreadPoolExecutor
             ol
                 li 각 작업들은 스레드풀의 별개 스레드에서 실행된다
                 li Core and maximum pool sizes
@@ -3718,10 +3715,10 @@ include ../../source/skeleton.pug
                 long getTaskCount()          // 실행 스케쥴된 작업의 총 개수의 근사치 반환
                 long getCompletedTaskCount() // 실행 완료된 작업의 총 개수의 근사치 반환
             div
-                h4 interface RejectedExecutionHandler
+                h4 RejectedExecutionHandler
                 p ThreadPoolExecutor에서 실행되지 않은 작업에 대한 처리를 위해 사용.
 
-            h3 class ScheduledThreadPoolExecutor extends ThreadPoolExecutor implements ScheduledExecutorService
+            h3 ScheduledThreadPoolExecutor
             +asCode('java').
                 void setContinueExistingPeriodicTasksAfterShutdownPolicy(boolean value)
                     // 기본값 false. true면 shutdownNow가 호출되거나 이 정책이 false가 될 때까지 주기 작업을 계속 실행한다
@@ -3732,7 +3729,7 @@ include ../../source/skeleton.pug
                 void setRemoveOnCancelPolicy(boolean value)
                     // 기본값 false. 취소된 작업을 즉시 큐에서 제거할 것인지, 또는 해당하는 딜레이 후 제거할 것인지 설정.
 
-            h3 interface CompletionService&lt;V>
+            h3 CompletionService&lt;V>
             p 생산자가 작업들을 추가하면, 소비자는 그것이 완료된 순서대로 이용할 수 있다.
             +asCode('java').
                 Future&lt;V> submit(Callable&lt;V> task)
@@ -3743,16 +3740,16 @@ include ../../source/skeleton.pug
                     // 완료된 작업을 가져온다. 없으면 null.
                 Futur&lt;V> poll(long timeout, TimeUnit unit)
 
-            h3 class ExecutorCompletionService&lt;V> impliments CompletionService&lt;V&gt
+            h3 ExecutorCompletionService&lt;V>
             p CompletionService 구현. 주어진 Executor를 실행에 이용한다. 완료되는 순서대로 작업을 take 메서드로 접근할 수 있는 큐에 배치한다.
 
-            h3 class ForkJoinWorkerThread extends Thread
+            h3 ForkJoinWorkerThread
             p ForkJoinPool에서 ForkJoinTask를 실행하는 스레드
             +asCode('java').
                 int getPoolIndex()
                     // 풀 안에서 이 스레드의 번호(Unique)
 
-            h3 class ForkJoinPool extends AbstractExecutorService
+            h3 ForkJoinPool
             ol
                 li ForkJoinTask에 관한 ExecutorService. Non-ForkJoinTask 호출자도 이용할 수 있는 메서드를 제공한다
                 p execute(ForkJoinTask), invoke(ForkJoinTask), submit(ForkJoinTask)
@@ -3774,17 +3771,17 @@ include ../../source/skeleton.pug
                 void execute(ForkJoinTask&lt;?> task)
                 &lt;T> ForkJoinTask&lt;T> submit(ForkJoinTask&lt;T> task)
             div
-                h4 static interface ForkJoinPool.ForkJoinWorkerThreadFactory
+                h4 ForkJoinPool.ForkJoinWorkerThreadFactory
                 +asCode('java') ForkJoinWorkerThread newThread(ForkJoinPool pool)
 
-                h4 static interface ForkJoinPool.ManagedBlocker
+                h4 ForkJoinPool.ManagedBlocker
                 +asCode('java').
                     boolean block()
                         // 필요한 만큼 현재 스레드를 블록시킨다. 추가적인 블로킹이 필요하지 않으면 true 반환
                     boolean isReleasable
                         // 블로킹이 필요없으면 true 반환
 
-            h3 class Executors
+            h3 Executors
             +asCode('java').
                 // ExecutorService 관련
                 static ExecutorService newFixedThreadPool(int nThreads)
@@ -3892,7 +3889,7 @@ include ../../source/skeleton.pug
                 li Subscription은 반드시 무제한적인 request 호출을 허용해야 한다. n == Long.MAX_VALUE
 
         div
-            h3 class SubmissionPublisher&lt;T> implements Flow.Publisher&lt;T>, AutoCloseable Since 9
+            h3 SubmissionPublisher&lt;T>
             +asCode('java').
                 public SubmissionPublisher(Executor executor, int maxBufferCapacity, BiConsumer&lt;? super Flow.Subscriber&lt;? super T>, ? super Throwable> handler)
                     // executor : 비동기적으로 구독자에게 전달하는 데 쓰일 Executor
@@ -3918,7 +3915,7 @@ include ../../source/skeleton.pug
 
         h2 Blocking 컬렉션
         div
-            h3 interface BlockingQueue&lt;E> extends Queue&lt;E>
+            h3 BlockingQueue&lt;E>
             ol
                 li 기본적으로 스레드-안전하지만, addAll 따위의 bulk 연산은 특별히 표시되지 않는 한 그렇지 않다.
                 li 요소를 획득할 때, 큐가 비어있는 경우 블로킹. 요소를 추가할 때, 큐에 빈 자리가 있을 때까지 블로킹
@@ -3953,25 +3950,25 @@ include ../../source/skeleton.pug
                 int drainTo(Collection&lt;? super E> c)
                     // 모든 원소를 c로 옮긴다
 
-            h3 class ArrayBlockingQueue&lt;E> extends AbstractQueue&lt;E> implements BlockingQueue&lt;E>, Serializable
+            h3 ArrayBlockingQueue&lt;E>
             ol
                 li 크기가 고정된 기저 배열을 이용한 BlockingQueue
                 li 기본적으로 삽입을 기다리는 스레드들 사이의 처리 순서는 보장되지 않지만, fairness를 설정하면 FIFO 순으로 처리된다
                 li Collection, Iterator의 모든 선택적 연산을 구현했다.
 
-            h3 class LinkedBlockingQueue&lt;E> extends AbstractQueue&lt;E> implements BlockingQueue&lt;E>, Serializable
+            h3 LinkedBlockingQueue&lt;E>
             ol
                 li 크기를 고정할 수 있는 연결된 BlockingQueue
                 li Collection, Iterator의 모든 선택적 연산을 구현했다
 
-            h3 class PriorityBlockingQueue&lt;E> extends AbstractQueue&lt;E> implements BlockingQueue&lt;E>, Serializable
+            h3 PriorityBlockingQueue&lt;E>
             ol
                 li 크기 제한 없고, PriorityQueue와 비슷한 정렬을 이용한 BlockingQueue
                 li Collection, Iterator의 모든 선택적 연산을 구현했다
                 p 다만 iterator(), spliterator()로 제공되는 인스턴스들은 순회하는 순서를 보장하지 않는다. 순차적인 순회를 원한다면 Arrays.sort(queue.toArray())를 고려할 것
                 li 같은 우선순위의 원소 사이의 정렬은 정의되지 않았다
 
-            h3 class SynchronousQueue&lt;E> extends AbstractQueue&lt;E> implements BlockingQueue&lt;E>, Serializable
+            h3 SynchronousQueue&lt;E>
             ol
                 li 서로 연관된 삽입 연산과 삭제 연산 한 쌍이 동시에 존재할 때까지 연산을 블로킹한다
                 li Collection, Iterator의 모든 선택적 연산을 구현했지만, 빈 컬렉션처럼 동작한다
@@ -3979,13 +3976,13 @@ include ../../source/skeleton.pug
                 public SynchronousQueue(boolean fair)
                     // fair : 대기하는 스레드들이 순서대로 처리된다. 지정되지 않으면 false
 
-            h3 class DelayQueue&lt;E extends Delayed> extends AbstractQueue&lt;E> implements BlockingQueue&lt;E>
+            h3 DelayQueue&lt;E extends Delayed>
             ol
                 li Delayed 요소들로 구성된, 크기 제한없는 BlockingQueue. 요소의 지연 시간이 만료되어야 큐로부터 획득 가능하다
                 p 요소가 만료됐음은 getDelay(TimeUnit.NANOSECONDS) 리턴값이 0 이하일 때로 판정
                 li Collection, Iterator의 모든 선택적 연산을 구현했다
 
-            h3 interface BlockingDeque&lt;E> extends BlockingQueue&lt;E>, Deque&lt;E>
+            h3 BlockingDeque&lt;E>
             p 요소를 획득할 때, 덱이 비어있는 경우 블로킹. 요소를 추가할 때, 덱에 빈 자리가 있을 때까지 블로킹
             table
                 tr
@@ -4033,12 +4030,12 @@ include ../../source/skeleton.pug
                     td -
                     td -
 
-            h3 class LinkedBlockingDeque&lt;E> extends AbstractQueue&lt;E> implements BlockingDeque&lt;E>, Serializable
+            h3 LinkedBlockingDeque&lt;E>
             ol
                 li 크기를 제한할 수 있는 BlockingDeque.
                 li Collection, Iterator의 모든 선택적 연산을 구현했다
 
-            h3 interface TransferQueue&lt;E> extends BlockingQueue&lt;E>
+            h3 TransferQueue&lt;E>
             ol
                 li 생산자가 소비자가 소비할 때까지 대기할 수 있는 BlockingQueue.
                 li 기존의 BlockingQueue와 SynchronousQueue 기능 모두를 선택적으로 이용할 수 있다
@@ -4050,7 +4047,7 @@ include ../../source/skeleton.pug
                 boolean tryTransfer(E e, long timeout, TimeUnit unit)
                     // timeout이 지나도록 대기 중인 소비자가 없다면 false를 반환한다
 
-            h3 class LinkedTransferQueue&lt;E> extends AbstractQueue&lt;E> implements TransferQueue&lt;E>, Serializable
+            h3 LinkedTransferQueue&lt;E>
             ol
                 li 크기 제한없고 연결된 TransferQueue.
                 li size 계산에 순회가 필요하므로 정확하지 않을 수 있다
@@ -4059,38 +4056,38 @@ include ../../source/skeleton.pug
 
         h2 Non-Blocking 컬렉션
         div
-            h3 class CopyOnWriteArrayList&lt;E> implements List&lt;E>, RandomAccess, Cloneable, Serializable
+            h3 CopyOnWriteArrayList&lt;E>
             ol
                 li 스레드-안전한 ArrayList
                 li add, set 등의 연산마다 새로운 배열을 만든다. 따라서 일반적인 용도로는 매우 나쁘다
                 li iterator는 생성된 시점의 snapshot을 순회함이 보장되지만, iterator를 통한 요소의 변경은 불가하다
 
-            h3 class CopyOnWriteArraySet&lt;E> extends AbstractSet&lt;E> implements Serializable
+            h3 CopyOnWriteArraySet&lt;E>
             p 모든 연산에 CopyOnWriteArrayList를 사용하는 Set
 
-            h3 class ConcurrentLinkedQueue&lt;E> extends AbstractQueue&lt;E> implements Queue&lt;E>, Serializable
+            h3 ConcurrentLinkedQueue&lt;E>
             ol
                 li 크기 제한 없고, 스레드-안전한 연결된 Queue
                 li size 계산에 순회가 필요하므로, 오차가 있을 수 있다
                 li addAll 따위의 bulk 연산은 원자적으로 실행되지 않을 수 있다
                 li Collection, Iterator의 모든 선택적 연산을 구현했다.
 
-            h3 class ConcurrentlinkedDeque&lt;E> extends AbstractCollection&lt;E> implements Deque&lt;E>, Serializable
+            h3 ConcurrentlinkedDeque&lt;E>
             ol
                 li 크기 제한 없고, 스레드-안전한 연결된 Deque
                 li size 계산에 순회가 필요하므로, 오차가 있을 수 있다
                 li addAll 따위의 bulk 연산은 원자적으로 실행되지 않을 수 있다
                 li Collection, Iterator의 모든 선택적 연산을 구현했다.
 
-            h3 interface ConcurrentMap&lt;K, V> extends Map&lt;K, V>
+            h3 ConcurrentMap&lt;K, V>
             ol
                 li 스레드-안전, 작업의 원자성 보장
                 p Map의 각 연산, Map이 반환하는 컬렉션들의 연산 모두 재정의해야 한다
 
-            h3 interface ConcurrentNavigableMap&lt;K, V> extends ConcurrentMap&lt;K, V>, NavigableMap&lt;K, V>
+            h3 ConcurrentNavigableMap&lt;K, V>
             p NavigableMap 연산을 지원하는 ConcurrentMap
 
-            h3 class ConcurrentHashMap&lt;K, V> extends AbstractMap&lt;K, V> implements ConcurrentMap&lt;K, V>, Serializable
+            h3 ConcurrentHashMap&lt;K, V>
             ol
                 li 읽기 연산에 대해서는 완전한 동시성을, 갱신 연산에 대해서는 높은 수준의 동시성을 제공
                 p Hashtable의 모든 연산을 구현했다. 읽기 연산에 대해 원소를 잠그지는 않으며, 테이블 전체를 잠기는 기능 또한 없다. 가져간 원소를 사용하려고 하는 시점에는 맵에서 제거됐을 수도 있다.
@@ -4111,7 +4108,7 @@ include ../../source/skeleton.pug
                 &lt;U> U reduce(long parallelismThreshold, BiFunction&lt;? super K, ? super V, ? extends U> transformer, BiFunction&lt;? super U, ? super U, ? extends U> reducer)
                     // + reduceToDouble ~ Int, reduceKeys, reduceKeysToDouble ~ Int, reduceValues, reduceValuesToDouble ~ Int, reduceEntries, reduceEntriesToDouble ~ Int
 
-            h3 class ConcurrentSkipListMap&lt;K,V> extends AbstractMap&lt;K,V> implements ConcurrentNavigableMap&lt;K,V>, Cloneable, Serializable
+            h3 ConcurrentSkipListMap&lt;K,V>
             ol
                 li ConcurrentNavigableMap 구현체. 평균 log(n) 시간이 소요되는, 스레드-안전한
                     +asA('http://en.wikipedia.org/wiki/Skip_list', 'SkipList')
@@ -4123,7 +4120,7 @@ include ../../source/skeleton.pug
                 public ConcurrentSkipListMap(Comparator&lt;? super K> comparator)
                     // 지정하지 않은 경우, 자연스러운 정렬을 이용한다
 
-            h3 class ConcurrentSkipListSet&lt;E> extends AbstractSet&lt;E> implements NavigableSet&lt;E>, Cloneable, Serializable
+            h3 ConcurrentSkipListSet&lt;E>
             p ConcurrentSkipListMap을 이용한 NavigableSet
             +asCode('java').
                 public ConcurrentSkipListSet(Comparator&lt;? super E> comparator)
@@ -4131,7 +4128,7 @@ include ../../source/skeleton.pug
 
         h2 실행 기법
         div
-            h3 class Semaphore implements Serializable
+            h3 Semaphore
             ol
                 li 제한된 수의 접근 권한을 acquire()로 획득, release()로 반환.
                 p fairness : acquire()호출 순서대로 권한 획득.
@@ -4152,7 +4149,7 @@ include ../../source/skeleton.pug
                 final boolean hasQueuedThreads()
                 final int getQueueLength()
 
-            h3 class CountDownLatch
+            h3 CountDownLatch
             p count가 0일 될때까지(원하는 작업들이 완료될 때까지), 1개 이상의 스레드가 대기하는 동기화 제공.
             +asCode('java').
                 public CountDownLatch(int count)
@@ -4164,7 +4161,7 @@ include ../../source/skeleton.pug
                 void countDown()
                     // --count, count가 0이면 대기하는 모든 스레드를 깨운다
 
-            h3 class CyclicBarrier
+            h3 CyclicBarrier
             p 스레드들이 공통의 목적이 달성되기까지 함께 대기. 그 목적을 barrier라고 하며, barrier를 재사용할 수 있어 cyclic하다.
             +asCode('java').
                 public CyclicBarrier(int parties, Runnable barrierAction)
@@ -4180,7 +4177,7 @@ include ../../source/skeleton.pug
                     // barrier를 초기 상태로 재설정한다. 이미 대기 중인 스레드가 있다면 BrokenBarrierException 발생. 부서진 barrier를 재사용하려면 별도의 동기화가 필요하므로, 차라리 새로 하나 만들자
                 int getNumberWaiting()
 
-            h3 class Exchanger&lt;V>
+            h3 Exchanger&lt;V>
             p 두 스레드가 같은 시점에 값을 서로 교환하도록 해준다.
             +asCode('java').
                 V exchange(V x) throws InterruptedException
@@ -4188,7 +4185,7 @@ include ../../source/skeleton.pug
                 V exchange(V x, long timeout, TimeUnit unit) throws InterruptedException, TimeoutException
                     // timeout 초과 시 TimeoutException 발생
 
-            h3 class Phaser
+            h3 Phaser
             ol
                 li 재사용 가능한 동기화 barrier. CyclicBarrier, CountDownLatch 기능에 더해 보다 유연한 메서드 제공
                 li CyclicBarrier와 다르게 각 회전마다 총 대기하는 스레드 수가 다를 수 있다
@@ -4218,11 +4215,11 @@ include ../../source/skeleton.pug
                 final int getPhase()
                     // 현재 phase 번호를 반환한다. Phaser가 종료됐다면 음수(마지막 phase 번호 + Integer.MAX_VALUE)를 반환한다
 
-        h2 class ThreadLocalRandom extends Random
+        h2 ThreadLocalRandom
         p 현재 스레드에 격리된 난수 생성기
         +asCode('java') static ThreadLocalRandom current()
 
-        h2 enum TimeUnit
+        h2 TimeUnit
         +asCode('java').
             NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS
 
@@ -4243,7 +4240,7 @@ include ../../source/skeleton.pug
             li AtomicBoolean, AtomicInteger 등은 일반적인 Boolean, Integer 등을 대신할 수 없다
             li 메모리 장벽을 만나면 CPU 코어의 캐시값이 RAM으로 반영된다
 
-        h2 abstract class VarHandle implements Constable Since 9
+        h2 VarHandle
         ol
             li java.lang.invoke 패키지 멤버임
             li 하나의 변수, 매개변수, 필드 등에 대한 동적인 타입 참조. plain 읽기/쓰기, volatile 읽기/쓰기, compare-and-set 접근을 지원한다
@@ -4301,7 +4298,7 @@ include ../../source/skeleton.pug
             static void storeStoreFence()
                 // 장벽 이전의 store 연산이 장벽 이후의 store 뒤로 재배치되지 않음
         div
-            h3 static enum VarHandle.AccessMode
+            h3 VarHandle.AccessMode
             table
                 tr
                     th GET
@@ -4397,40 +4394,40 @@ include ../../source/skeleton.pug
                     th GET_AND_BITWISE_XOR_ACQUIRE
                     td VarHandle.getAndBitwiseXorAcquire
 
-        h2 class AtomicBoolean implements Serializable + AtomicInteger, AtomicLong, AtomicReference
+        h2 AtomicBoolean
         +asCode('java').
             public AtomicBoolean(boolean initialValue)
                 // 지정하지 않으면 false
 
             final boolean get()                                                     // VarHandle#getVolatile
             final boolean compareAndSet(boolean expectedValue, boolean newValue)    // VarHandle#compareAndSet
-            boolean weakCompareAndSetPlain(boolean expectedValue, boolean newValue) // Since 9, VarHandle#weakCompareAndSetPlain
+            boolean weakCompareAndSetPlain(boolean expectedValue, boolean newValue) // VarHandle#weakCompareAndSetPlain
             final void set(boolean newValue)                                        // VarHandle#setVolatile
             final void lazySet(boolean newValue)                                    // VarHandle#setRelease
             final boolean getAndSet(boolean newValue)                               // VarHandle#getAndSet
-            final boolean getPlain()                                                // Since 9, VarHandle#get
-            final void setPlain(boolean newValue)                                   // Since 9, VarHandle#set
-            final boolean getOpaque()                                               // Since 9, VarHandle#getOpaque
-            final void setOpaque(boolean newValue)                                  // Since 9, VarHandle#setOpaque
-            final boolean getAcquire()                                              // Since 9, VarHandle#getAcquire
-            final void setRelease(boolean newValue)                                 // Since 9, VarHandle#setRelease
+            final boolean getPlain()                                                // VarHandle#get
+            final void setPlain(boolean newValue)                                   // VarHandle#set
+            final boolean getOpaque()                                               // VarHandle#getOpaque
+            final void setOpaque(boolean newValue)                                  // VarHandle#setOpaque
+            final boolean getAcquire()                                              // VarHandle#getAcquire
+            final void setRelease(boolean newValue)                                 // VarHandle#setRelease
             final boolean compareAndExchange(boolean expectedValue, boolean newValue)
-                // Since 9, 메모리 영향은 VarHandle#compareAndExchange와 같다.
+                // 메모리 영향은 VarHandle#compareAndExchange와 같다.
                 //  + ~Acquire, ~Release
             final boolean weakCompareAndSetVolatile(boolean expectedValue, boolean newValue)
-                // Since 9, 메모리 영향은 VarHandle#weakCompareAndSet와 같다
+                // 메모리 영향은 VarHandle#weakCompareAndSet와 같다
                 // + ~Acquire, ~Release
 
-        h2 class AtomicIntegerArray implements Serializable + AtomicLongArray, AtomicReferenceArray
+        h2 AtomicIntegerArray
         p 인덱스를 추가로 받는 것 외에, 지원하는 메서드들은 AtomicInteger와 같다.
 
-        h2 abstract class AtomicIntegerFieldUpdater&lt;T> + AtomicLongFieldUpdater, AtomicReferenceFieldUpdater
+        h2 AtomicIntegerFieldUpdater&lt;T> + AtomicLongFieldUpdater, AtomicReferenceFieldUpdater
         ol
             li 지정된 volatile int 필드를 atomic 연산으로 갱신.
             p 해당 필드를 단일 업데이터로만 접근한다면, compareAndSet 메서드들이 원자적으로 작동됨이 보장된다
             li 지원하는 메서드는 AtomicInteger와 유사하다.
 
-        h2 class AtomicMarkableReference&lt;V>
+        h2 AtomicMarkableReference&lt;V>
         p 원자적으로 갱신되는 마커 bit와 객체 참조 쌍
         +asCode('java').
             public AtomicMarkableReference(V initialRef, boolean initialMark)
@@ -4446,7 +4443,7 @@ include ../../source/skeleton.pug
             boolean attemptMark(V expectedReference, boolean newMark)
                 // 기존 참조가 예상과 동일(==)하다면, 마커 bit를 원자적으로 갱신하고 true 반환. 그 외엔 false
 
-        h2 class AtomicStampedReference&lt;V>
+        h2 AtomicStampedReference&lt;V>
         p 원자적으로 갱신되는 index와 참조 쌍
         +asCode('java').
             public AtomicStampedReference(V initialRef, int initialStamp)
@@ -4462,7 +4459,7 @@ include ../../source/skeleton.pug
             boolean attempStamp(V expectedReference, int newStamp)
                 //기존 참조가 예상과 동일(==)하다면, 인덱스를 원자적으로 갱신하고 true 반환. 그 외엔 false
 
-        h2 class LongAdder extends Number implements Serializable + DoubleAdder
+        h2 LongAdder
         ol
             li 초깃값 0으로 시작하는 스레드-안전한 합계.
             p 합의 순서는 정의되지 않으므로 순서에 상관 없는 경우에 이용해야 한다.
@@ -4474,7 +4471,7 @@ include ../../source/skeleton.pug
             void reset()
             long sumThenReset()
 
-        h2 class LongAccumulator extends Number implements Serializable + DoubleAccumulator
+        h2 LongAccumulator
         ol
             li 특정 값과 특정 함수로 갱신되는 long 값 유지.
             p 주어진 accumulatorFunction은 부작용이 없어야 한다.
@@ -4488,35 +4485,35 @@ include ../../source/skeleton.pug
     div
         h2 Consumer
         div
-            h3 @FunctionalInterface interface Consumer&lt;T>
+            h3 Consumer&lt;T>
             p 인자를 하나 먹고 아무것도 반환하지 않는 소비자.
             +asCode('java').
                 void accept(T t)
                 default Consumer&lt;T> andThen(Consumer&lt;? super T> after)
                     // 이 소비자 다음에 after가 소비하는 병합된 소비자 반환.
 
-            h3 @FunctionalInterface interface DoubleConsumer + int, long
+            h3 DoubleConsumer + int, long
 
-            h3 @FunctionalInterface interface BiConsumer&lt;T, U>
+            h3 BiConsumer&lt;T, U>
             p 인자 두개를 먹고 아무것도 뱉지 않는 소비자.
             +asCode('java').
                 void accept(T t, U u)
                 default BiConsumer&lt;T, U> andThen(BiConsumer&lt;? super T, ? super U> after)
                     // 현재 소비자가 작업을 마치면 after가 실행되는 새로운 소비자 반환.
 
-            h3 @FunctionalInterface interface ObjDoubleConsumer&lt;T> + int, long
+            h3 ObjDoubleConsumer&lt;T> + int, long
 
         h2 Supplier
         div
-            h3 @FunctionalInterface interface Supplier&lt;T>
+            h3 Supplier&lt;T>
             +asCode('java') T get()
 
-            h3 @FunctionalInterface interface BooleanSupplier + int, double, long
+            h3 BooleanSupplier + int, double, long
             +asCode('java') boolean getAsBoolean()
 
         h2 Function, Operator
         div
-            h3 @FunctionalInterface interface Function&lt;T, R>
+            h3 Function&lt;T, R>
             p 인자 하나를 먹고 결과 하나를 뱉는 함수.
             +asCode('java').
                 R apply(T t)
@@ -4525,16 +4522,16 @@ include ../../source/skeleton.pug
                 static &lt;T> Function&lt;T, T> identity()
                     // 입력 인자 그대로 반환하는 함수.
 
-            h3 @FunctionalInterface interface IntFunction&lt;R> + double, long
+            h3 IntFunction&lt;R> + double, long
             +asCode('java') R apply(int value)
 
-            h3 @FunctionalInterface interface DoubleToIntFunction + double, int, long 간의 모든 상호 변환
+            h3 DoubleToIntFunction + double, int, long 간의 모든 상호 변환
             +asCode('java') int applyAsInt(double value)
 
-            h3 @FunctionalInterface interface UnaryOperator&lt;T> extends Function&lt;T, T>
+            h3 UnaryOperator&lt;T>
             +asCode('java') static &lt;T> UnaryOperator&lt;T> identity()
 
-            h3 @FunctionalInterface interface DoubleUnaryOperator + int, long
+            h3 DoubleUnaryOperator + int, long
             +asCode('java').
                 double applyAsDouble(double operand)
                 default DoubleUnaryOperator compose(DoubleUnaryOperator before)
@@ -4542,33 +4539,33 @@ include ../../source/skeleton.pug
                 static DoubleUnaryOperator identity()
                     // 항상 입력값 그대로 반환하는 단항 연산자 반환.
 
-            h3 @FunctionalInterface interface ToDoubleFunction&lt;T>
+            h3 ToDoubleFunction&lt;T>
             +asCode('java') double applyAsDouble(T value) // + int, long
 
-            h3 @FunctionalInterface interface BiFunction&lt;T, U, R>
+            h3 BiFunction&lt;T, U, R>
             p 인자 두개를 먹고 값을 반환하는 함수.
             +asCode('java').
-                default &lt;V> BiFunction&lt;T, U, V> andThen(Function&lt;? super R, ? extends V> after)
+                default &lt;V> BiFunction&lt;T, U, V> andThen(Function&lt;? super R, ?
                     // 함수가 실행되고 난 결과를 after가 처리하는 새로운 함수 반환.
 
-            h3 @FunctionalInterface interface ToDoubleBiFunction&lt;T, U>
+            h3 ToDoubleBiFunction&lt;T, U>
             details double applyAsDouble(T t, U u) // + int, long
 
-            h3 @FunctionalInterface interface BinaryOperator extends BiFunction&lt;T, T, T>
+            h3 BinaryOperator
             p 같은 타입의 인자 두개를 먹고 같은 타입의 값을 반환하는 함수.
             +asCode('java').
                 static &lt;T> BinaryOperator&lt;T> minBy(Comparator&lt;? super T> comparator)
                     // 주어진 comparator에 따라 둘 중 작은 것을 반환하는 함수를 생성.
                     // + maxBy
 
-            h3 @FunctionalInterface interface DoubleBinaryOperator
+            h3 DoubleBinaryOperator
             +asCode('java').
                 double applyAsDouble(double left, double right)
                     // double 두개를 먹고 double 하나를 반환하는 함수. + int, long
 
         h2 Predicate
         div
-            h3 @FunctionalInterface interface Predicate&lt;T>
+            h3 Predicate&lt;T>
             +asCode('java').
                 boolean test(T t)
                 default Predicate&lt;T> and(Predicate&lt;? super T> other)
@@ -4577,11 +4574,11 @@ include ../../source/skeleton.pug
                 static &lt;T> Predicate&lt;T> isEqual(Object targetRef)
                     // Object.equals(Object, Object)를 이용해 비교하는 Predicate 반환
 
-            h3 @FunctionalInterface interface DoublePredicate + int, long
+            h3 DoublePredicate + int, long
             +asCode('java').
                 default DoublePredicate negate()
 
-            h3 @FunctionalInterface interface BiPredicate&lt;T, U>
+            h3 BiPredicate&lt;T, U>
             p 인자 두개를 먹고 가부를 판단하는 함수.
             +asCode('java').
                 default BiPredicate&lt;T, U> and(BiPredicate&lt;? super T, ? super U> other)
@@ -4591,7 +4588,7 @@ include ../../source/skeleton.pug
 
     h1 java.util.regex
     div
-        h2 interface MatchResult
+        h2 MatchResult
         p 정규표현식 매칭 결과. group의 의미에 대해선 Pattern 참고.
             +codeBtn('/Repositories/Eclipse/JavaSE/src/regex/MatchResultExample.java', 'java')
         +asCode('java').
@@ -4603,7 +4600,7 @@ include ../../source/skeleton.pug
             String group(int group) // group번째 매치된 결과 반환
             int groupCount()        // 매치된 group 개수 반환
 
-        h2 final class Pattern implements Serializable
+        h2 Pattern
         +asCode('java').
             public static final int UNIX_LINES       // 줄끝 '\n'만 ., ^, $에서 동작. (?d) 플래그도 같은 의미.
             public static final int CASE_INSENSITIVE // 대소문자 구분 없음. (?i) 플래그도 같은 의미.
@@ -4757,7 +4754,7 @@ include ../../source/skeleton.pug
                 li (?&lt;=X) : Positive lookbehind, (?&lt;!X) : Negative lookbehind
                 li (?>X) : Non-capturing group + Possessive
 
-        h2 final class Matcher implements MatchResult
+        h2 Matcher
         p Pattern으로부터 만들어지는 매칭 엔진으로, 아래 세 가지 작업을 수행한다.
         ol
             li matches() : 전체 입력에 대해 패턴 매칭
@@ -4765,7 +4762,7 @@ include ../../source/skeleton.pug
             li find() : 입력의 다음 부분 패턴 매칭
         +asCode('java').
             MatchResult toMatchResult()
-            Stream&lt;MatchResult> results() // Since 9
+            Stream&lt;MatchResult> results()
 
             Matcher usePattern(Pattern newPattern)
             Matcher reset()
@@ -4786,7 +4783,7 @@ include ../../source/skeleton.pug
 
             String replaceAll(String replacement)
                 // 입력 소스의 모든 매칭되는 부분을 replacement로 변경.
-            String replaceAll(Function&lt;MatchResult, String> replacer) // Since 9
+            String replaceAll(Function&lt;MatchResult, String> replacer)
             String replaceFirst(String replacement)
 
             Matcher region(int start, int end)
@@ -4799,7 +4796,7 @@ include ../../source/skeleton.pug
 
     h1 java.util.stream
     div
-        h2 interface BaseStream&lt;T, S extends BaseStream&lt;T, S>> extends AutoCloseable
+        h2 BaseStream&lt;T, S
         +asCode('java').
             Iterator&lt;T> iterator()
             Spliterator&lt;T> spliterator()
@@ -4809,19 +4806,19 @@ include ../../source/skeleton.pug
             S unordered()  // 순서 없는 스트림 반환(어쩌면 자기 자신)
             S onClose(Runnable closeHandler)
 
-        h2 interface DoubleStream extends BaseStream&lt;Double, DoubleStream>
+        h2 DoubleStream
         +asCode('java').
             double sum()
             OptionalDouble min(), max(), average(), findFirst(), findAny()
             DoubleSummaryStatistics SummaryStatistics()
             Stream&lt;Double> boxed()
 
-        h2 interface IntStream extends BaseStream&lt;Integer, Integer> + LongStream
+        h2 IntStream
         +asCode('java').
             static IntStream range(int startInclusive, int endExclusive)
             static IntStream rangeClosed(int startInclusive, int endInclusive)
 
-        h2 interface Stream&lt;T> extends BaseStream&lt;T, Stream&lt;T>>
+        h2 Stream&lt;T>
         ol
             li 2가지 스트림 연산
             ul
@@ -4843,7 +4840,7 @@ include ../../source/skeleton.pug
             static &lt;T> Stream.Builder&lt;T> builder()
             static &lt;T> Stream&lt;T> empty()
             static &lt;T> Stream&lt;T> of(T t)
-            static &lt;T> Stream&lt;T> ofNullable(T t) // Since 9
+            static &lt;T> Stream&lt;T> ofNullable(T t)
             @SafeVarargs static &lt;T> Stream&lt;T> of(T... values)
             static &lt;T> Stream&lt;T> iterate(T seed, UnaryOperator&lt;T> f)
             static &lt;T> Stream&lt;T> iterate(T seed, Predicate&lt;? super T> hasNext, UnaryOperator&lt;T> next) // Since 9
@@ -4880,12 +4877,12 @@ include ../../source/skeleton.pug
             Stream&lt;T> skip(long n)
                 // n개를 버린 나머지로 스트림을 구성해 반환한다. 더 없으면 빈 스트림이 반환된다.
             default Stream&lt;T> takeWhile(Predicate&lt;? super T> predicate)
-                // Since 9, 요소들을 하나씩 검사하여, predicate을 만족하지 않는 요소가 나오기 전까지로 구성된 스트림을 반환한다.
+                // 요소들을 하나씩 검사하여, predicate을 만족하지 않는 요소가 나오기 전까지로 구성된 스트림을 반환한다.
                 // 순서 있는 스트림에 대하여는 조건을 만족하는 최장 길이 접두 요소들을 얻게 되며, 순서 없는 스트림은 조건을 만족하는 부분 집합을 얻게 된다.
                 // short-circuiting stateful 중간 연산.
                 // 일반적으로 연산이 저렴하지만, 순서 있는 병렬 스트림에 대하여는 최장 길이 접두 요소들을 찾기 위해 연산이 비싸지므로, 허용된다면 순서 없는 스트림 소스(generate(Supplier))를 이용하거나, BaseStream.unordered()를 이용해 순서를 없애는 것이 성능에 도움이 될 것이다.
             default Stream&lt;T> dropWhile(Predicate&lt;? super T> predicate)
-                // Since 9, stateful 중간 연산.
+                // stateful 중간 연산.
 
 
             // 종결 연산
@@ -4941,13 +4938,13 @@ include ../../source/skeleton.pug
                 // short-circuiting 종결 연산.
                 // + findAny
         div
-            h3 static interface Stream.Builder&lt;T>
+            h3 Stream.Builder&lt;T>
             +asCode('java').
                 void accept(T t)
                 default Stream.Builder&lt;T> add(T t)
                 Stream&lt;T> build()
 
-        h2 final class StreamSupport
+        h2 StreamSupport
         +asCode('java').
             static &lt;T> Stream&lt;T> stream(Spliterator&lt;T> spliterator, boolean parallel)
             static &lt;T> Stream&lt;T> stream(Supplier&lt;? extends Spliterator&lt;T>> supplier, int characteristics, boolean parallel)
@@ -4957,7 +4954,7 @@ include ../../source/skeleton.pug
             static IntStream intStream(Supplier&lt;? extends Spliterator.OfInt> supplier, int characteristics, boolean parallel)
                 // characteristics = supplier.get().characteristics()
 
-        h2 interface Collector&lt;T, A, R>
+        h2 Collector&lt;T, A, R>
         +asCode('java').
             static enum Collector.Characteristics {
                 CONCURRENT, IDENTITY_FINISH, UNORDERED;
@@ -4975,7 +4972,7 @@ include ../../source/skeleton.pug
 
             static &lt;T, A, R> Collector&lt;T, A, R> of(Supplier&lt;A> supplier, BiConsumer&lt;A, T> accumulator, BinaryOperator&lt;A> combiner, Function&lt;A, R> finisher, Collector.Characteristics... characteristics)
 
-        h2 final class Collectors
+        h2 Collectors
         +asCode('java').
             static &lt;T, C extends Collection&lt;T>> Collector&lt;T, ?, C> toCollection(Supplier&lt;C> collectionFactory)
                 // collectionFactory로 생성한 Collection 객체에 원소들을 만나는 순서대로 집어넣는 Collector 반환.
@@ -5018,21 +5015,21 @@ include ../../source/skeleton.pug
 
     h1 java.util.zip
     div
-        h2 interface Checksum
+        h2 Checksum
         +asCode('java').
             void update(int b)
-            default void update(byte[] b) // Since 9
+            default void update(byte[] b)
             void update(byte[] b, int off, int len)
-            default void update(ByteBuffer buffer) // Since 9
+            default void update(ByteBuffer buffer)
             long getValue()
             void reset()
         ol
             p 구현 클래스
-            li class Adler32 implements Checksum
-            li class CRC32 implements Checksum
-            li class CRC32C implements Checksum Since 9
+            li class Adler32
+            li class CRC32
+            li class CRC32C
 
-        h2 class ZipInputStream extends InflaterInputStream
+        h2 ZipInputStream
         +asCode('java').
             public ZipInputStream(InputStream in, Charset charset)
 
@@ -5042,7 +5039,7 @@ include ../../source/skeleton.pug
             int available()
                 // EOF를 만났으면 0, 아니면 1
 
-        h2 class ZipOutputStream extends DeflaterOutputStream
+        h2 ZipOutputStream
         +asCode('java').
             public ZipOutputStream(OutputStream out, Charset charset)
 
@@ -5057,7 +5054,7 @@ include ../../source/skeleton.pug
             void finish()
                 // 쓰기를 종료하고 스트림을 닫는다. 동일한 출력 스트림에 여러 필터를 적용한 경우에 사용.
 
-        h2 class ZipEntry implements Cloneable
+        h2 ZipEntry
         +asCode('java').
             public ZipEntry(String name)
             public ZipEntry(ZipEntry e) // e로 필드를 채운다.
@@ -5077,7 +5074,7 @@ include ../../source/skeleton.pug
                 // 이름이 "/"로 끝나면 디렉터리.
             Object clone()
 
-        h2 class ZipFile implements Closeable
+        h2 ZipFile
         +asCode('java').
             public ZipFile(File file, int mode)
                 // UTF-8
@@ -5098,12 +5095,12 @@ include ../../source/skeleton.pug
 
     h1 javax.net
     div
-        h2 abstract class SocketFactory
+        h2 SocketFactory
         +asCode('java').
             static SocketFactory getDefault()
             Socker createSocket(String host, int port)
 
-        h2 abstract class ServerSocketFactory
+        h2 ServerSocketFactory
         +asCode('java').
             static ServerSocketFactory getDefault()
             ServerSocker createServerSocket(int port)

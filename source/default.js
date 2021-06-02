@@ -26,7 +26,7 @@ const posts = {list: [
     { category: 'JVM',                 file: '/posts/java/android.html',                        title: '4 Android' },
     { category: 'JVM',                 file: '/posts/single/groovy.html',                       title: '5 Groovy' },
     { category: 'JVM',                 file: '/posts/project/reminder.html',                    title: 'x 할일 목록 - Spring Boot 토이 프로젝트' },
-    { category: 'JVM/Library',         file: '/posts/java/java.base.html',                      title: '1-1 java.base 12' },
+    { category: 'JVM/Library',         file: '/posts/java/java.base.html',                      title: '1-1 java.base 16' },
     { category: 'JVM/Library',         file: '/posts/java/javax.annotation.processing.html',    title: '1-2 Annotation Processing API' },
     { category: 'JVM/Library',         file: '/posts/java/com.sun.nio.sctp.html',               title: '1-3 com.sun.nio.sctp Since 1.7' },
     { category: 'JVM/Library',         file: '/posts/java/lombok.html',                         title: '2 lombok 1.18.10' },
