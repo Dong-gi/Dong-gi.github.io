@@ -2,7 +2,7 @@ include ../../source/skeleton.pug
 +post('MongoDB 정리', 'MongoDB, NoSQL, BSON', 'MongoDB 주요 내용 정리')
     h1 MongoDB
     ol
-        li NoSQL 데이터베이스의 한 종류. 데이터를 BSON(Binary JSON)으로 취급하며, SQL을 지원하지 않는다.
+        li NoSQL 데이터베이스의 한 종류. 데이터를 BSON(Binary JSON)으로 취급하며, SQL을 지원하지 않는다
         table.no-sort
             caption: +asA('https://docs.mongodb.com/manual/reference/sql-comparison/', 'SQL comparison')
             tr
@@ -21,7 +21,7 @@ include ../../source/skeleton.pug
             +asA('https://docs.mongodb.com/manual/installation/', 'https://docs.mongodb.com/manual/installation/')
         +asCode('shell', '서버 직접 실행') $ mongod --fork -f /etc/mongod.conf
         li 최대 쿼리 결과 크기는 BSON 문서가 허용하는 16MB
-        p 이를 초과하는 문서가 필요하다면 GridFS API를 이용. mongofiles 명령 또는 드라이버 참고.
+        p 이를 초과하는 문서가 필요하다면 GridFS API를 이용. mongofiles 명령 또는 드라이버 참고
 
     h1: +asA('http://bsonspec.org/spec.html', 'BSON Specification')
     ol
@@ -452,17 +452,17 @@ include ../../source/skeleton.pug
                     td limit(), skip() 적용
 
             h3 Cursor methods
-            p db.mycoll.find()는 이터레이터(Cursor)를 반환한다. 단, mongo 쉘에서 var 변수에 할당하지 않은 경우 자동으로 결과를 출력하고 끝냄에 유의.
+            p db.mycoll.find()는 이터레이터(Cursor)를 반환한다. 단, mongo 쉘에서 var 변수에 할당하지 않은 경우 자동으로 결과를 출력하고 끝냄에 유의
             table.no-sort
                 tr
                     td cursor.forEach()
                     td
                 tr
                     td cursor.toArray()
-                    td 커서를 모두 순회하고 메모리에 올린다.
+                    td 커서를 모두 순회하고 메모리에 올린다
                 tr
                     td cursor.noCursorTimeout()
-                    td 이 경우 커서를 모두 순회하거나, 수동으로 close()를 호출해야만 한다.
+                    td 이 경우 커서를 모두 순회하거나, 수동으로 close()를 호출해야만 한다
 
         h2 db.mycoll.help()
         +asCode('javascript') let coll = db.myCollection;
@@ -501,7 +501,7 @@ include ../../source/skeleton.pug
                 td 여러 개 변경
             tr
                 td coll.replaceOne(filter, update, options) Since 3.2
-                td 1개 대치. _id는 변경되지 않는다.
+                td 1개 대치. _id는 변경되지 않는다
             tr
                 td coll.deleteOne() Since 3.2
                 td 1개 삭제
@@ -513,13 +513,13 @@ include ../../source/skeleton.pug
                 td 전부 삭제
             tr
                 td: span.hover-content(template-id='template-mongodb-bulk-write') coll.bulkWrite()
-                td insertOne, updateOne, updateMany, replaceOne, deleteOne, deleteMany 혼용.
+                td insertOne, updateOne, updateMany, replaceOne, deleteOne, deleteMany 혼용
             tr
                 td coll.createIndex()
-                td 인덱스가 없으면 생성.
+                td 인덱스가 없으면 생성
             tr
                 td db.getSiblingDB()
-                td 현재 연결을 변경하지 않고 다른 DB 연결 획득.
+                td 현재 연결을 변경하지 않고 다른 DB 연결 획득
             tr
                 td coll.renameCollection('newName')
                 td

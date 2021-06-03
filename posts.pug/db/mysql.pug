@@ -4,12 +4,12 @@ include ../../source/skeleton.pug
     ul
         li 프로시저 호출
         ol
-            li CREATE PROCEDURE로 정의된 내장 프로시저를 호출한다.
+            li CREATE PROCEDURE로 정의된 내장 프로시저를 호출한다
             +asCode('sql') CALL sp_name([parameter[, ...]])
-            li 매개변수가 없다면 괄호를 생략할 수 있다.
+            li 매개변수가 없다면 괄호를 생략할 수 있다
             +asCode('sql') CALL sp_name[()]
-            li OUT, INOUT 매개변수를 출력으로 이용할 수 있다. 이는 프로시저 내부에서의 호출에서도 유효하다.
-            p PREPARE와 EXECUTE를 이용한 prepared CALL 구문에서는 IN, OUT, INOUT 인자에 placeholder를 이용할 수 있다.
+            li OUT, INOUT 매개변수를 출력으로 이용할 수 있다. 이는 프로시저 내부에서의 호출에서도 유효하다
+            p PREPARE와 EXECUTE를 이용한 prepared CALL 구문에서는 IN, OUT, INOUT 인자에 placeholder를 이용할 수 있다
             +asCode('sql').
                 mysql> SET @increment = 10;
                 mysql> PREPARE s FROM 'CALL p(?, ?)';
@@ -58,7 +58,7 @@ include ../../source/skeleton.pug
             li 기본 명령
             +asCode('sql') SELECT select_clause FROM table_expression INTO OUTFILE "~.csv" FIELDS TERMINATED BY "," LINES TERMINATED BY "\n";
             li 출력 가능 경로 확인 : SHOW VARIABLES LIKE 'secure_file%';
-            li 기본 출력은 멀티 라인 텍스트를 \로 연결하여 출력하고, null값을 \N로 출력한다. 아래 툴을 이용하면, 멀티 라인 문자열과 빈 문자열만 ""로 감싸고, null값은 비워서 표현하는 select_clause를 얻을 수 있다.
+            li 기본 출력은 멀티 라인 텍스트를 \로 연결하여 출력하고, null값을 \N로 출력한다. 아래 툴을 이용하면, 멀티 라인 문자열과 빈 문자열만 ""로 감싸고, null값은 비워서 표현하는 select_clause를 얻을 수 있다
             textarea#mysql-csv-column-convert-in-textarea(style='width: 100%') column1, colmun2
             textarea#mysql-csv-column-convert-out-textarea(style='width: 100%;min-height: 200px')
             script.

@@ -170,7 +170,7 @@ include ../../source/skeleton.pug
             +asCode('ruby', 'unless 2') ... unless expression # false면 앞 문장 실행
 
             li case
-            p when 절과 최초로 일치(===)하는 블록만 실행.
+            p when 절과 최초로 일치(===)하는 블록만 실행
             +asCode('ruby', 'case 1').
                 r = case expression # 마지막 평가값 반환
                 when 'value'
@@ -679,16 +679,16 @@ include ../../source/skeleton.pug
                     eval "str + ' Fred'"                     # "hello Fred"
                     eval "str + ' Fred'", get_binding("bye") # "bye Fred"
                 li exit(status=true)
-                p SystemExit 예외를 발생하여 루비 프로세스 종료 절차를 시작한다.
+                p SystemExit 예외를 발생하여 루비 프로세스 종료 절차를 시작한다
                 li exit!(status=false)
-                p 현재 루비 프로세스를 즉시 종료한다. 종료 핸들러는 호출되지 않는다.
+                p 현재 루비 프로세스를 즉시 종료한다. 종료 핸들러는 호출되지 않는다
                 li trap(signal, command) -> obj
                     br
                     | trap(signal) {| | block } -> obj
                 ul 시스템 신호 처리 핸들러 등록
                     li signal
                     ol
-                        li "SIGALRM", "SIGUSR1" 등의 신호 이름.
+                        li "SIGALRM", "SIGUSR1" 등의 신호 이름
                         li 선두 "SIG"는 생략해도 된다
                         li :EXIT, "EXIT", 0에 대해 처리를 등록하면 루비 프로세스 정상 종료 전 호출된다
                     li command
@@ -719,7 +719,7 @@ include ../../source/skeleton.pug
                 p 현재 프로세스에서 커맨드 실행 후 종료
                 li spawn([**env,] *command [,**opt]) -> pid
                 ul
-                    li 자식 프로세스로 명령을 실행하고 PID를 반환한다.
+                    li 자식 프로세스로 명령을 실행하고 PID를 반환한다
                     li env
                     ol
                         li key => value : 환경변수 설정
@@ -741,8 +741,8 @@ include ../../source/skeleton.pug
                 p 호출하는 파일이 존재하는 디렉터리를 기준으로 한 상대경로의 파일을 실행한다
                 li load(filename, wrap=false) -> true
                 ul
-                    li 같은 filename에 대해 반복 호출하면, 스크립트도 반복 실행된다.
-                    li wrap=true로 지정하면 익명 모듈 안에서 실행한다.
+                    li 같은 filename에 대해 반복 호출하면, 스크립트도 반복 실행된다
+                    li wrap=true로 지정하면 익명 모듈 안에서 실행한다
                 li autoload(module, filename) -> nil
                 p module(String or symbol)을 처음으로 접근하는 순간 require(filename) 실행
                 li autoload?(name, inherit=true) -> String or nil

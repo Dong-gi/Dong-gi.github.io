@@ -15,15 +15,15 @@ include ../../source/skeleton.pug
         p Window - Animation - Create
         li Animator
         ul
-            li Window - Animator : 애니메이션 상태도를 편집할 수 있다.
+            li Window - Animator : 애니메이션 상태도를 편집할 수 있다
             li 기본 노드 : Entry(애니메이션 시작), Any State(상태와 무관), Exit(애니메이션 종료)
             li Animator.SetTrigger() : 트리거 설정하여 애니메이션 상태를 전이시킨다
             li Animator.speed : 재생 속도
         li Empty GameComponent
-        p Transform 컴포넌트만 가진 게임 객체. 형식상의 부모 컴포넌트로 이용하거나, 다른 작업의 기준점으로 이용할 수 있다.
+        p Transform 컴포넌트만 가진 게임 객체. 형식상의 부모 컴포넌트로 이용하거나, 다른 작업의 기준점으로 이용할 수 있다
         li Outlet
-        p public GameObject 필드를 선언하면 Inspector에 해당 필드가 표시되고, 다른 컴포넌트를 드래그-앤-드롭하여 참조를 설정할 수 있다.
-        li GetComponent&lt;T>() : 구성 컴포넌트 획득.
+        p public GameObject 필드를 선언하면 Inspector에 해당 필드가 표시되고, 다른 컴포넌트를 드래그-앤-드롭하여 참조를 설정할 수 있다
+        li GetComponent&lt;T>() : 구성 컴포넌트 획득
         li Rigidbody.AddForce() : 외력 작용. F = ma이므로, 강체의 질량에 따라 추가되는 가속도가 달라진다
         li Rigidbody.velocity : 속도 벡터
         li Scene
@@ -38,7 +38,7 @@ include ../../source/skeleton.pug
     h1 Event Handler
     ol
         li OnCollisionEnter(Collision) : 3D 충돌 발생 시 호출
-        p 충돌체 Collider는 컴포넌트트의 래퍼 컴포넌트로, 유니티에서는 Box Collider, Sphere Collider, Capsule Collider 세 종류의 기본 충돌체를 제공한다. Collider는 IsTrigger 속성을 가지며, True인 경우 충돌의 감지(OnTriggerEnter)는 되지만 물리적인 효과(OnCollisionEnter)는 발생하지 않는다.
+        p 충돌체 Collider는 컴포넌트트의 래퍼 컴포넌트로, 유니티에서는 Box Collider, Sphere Collider, Capsule Collider 세 종류의 기본 충돌체를 제공한다. Collider는 IsTrigger 속성을 가지며, True인 경우 충돌의 감지(OnTriggerEnter)는 되지만 물리적인 효과(OnCollisionEnter)는 발생하지 않는다
         li Start() : 첫 프레임 Update 전에 호출
         li Update() : 매 프레임마다 호출
 
@@ -49,7 +49,7 @@ include ../../source/skeleton.pug
 
     h1 Image
     ol
-        li Image Type을 Filled로 설정하면 이미지를 동적으로 일부분만 그릴 수 있다.
+        li Image Type을 Filled로 설정하면 이미지를 동적으로 일부분만 그릴 수 있다
 
     h1 Input
     ol
@@ -81,13 +81,13 @@ include ../../source/skeleton.pug
     h1 uGUI
     ol
         li Create - UI - Text, Image, Button...
-        p Canvas, EventSystem이 Hierarchy에 추가된다. EventSystem은 사용자 입력과 UI를 연결해주는 오브젝트다.
+        p Canvas, EventSystem이 Hierarchy에 추가된다. EventSystem은 사용자 입력과 UI를 연결해주는 오브젝트다
         li using UnityEngine.UI;
         p 스크립트에서 uGUI를 이용하기 위해 필요
 
     h1 Unity 2D
     ol
-        li 게임 오브젝트는 레이어 번호(order in layer)를 갖는다. z-index와 비슷.
+        li 게임 오브젝트는 레이어 번호(order in layer)를 갖는다. z-index와 비슷
 
     h1 Vector3
     ol

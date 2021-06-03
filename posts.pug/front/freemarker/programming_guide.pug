@@ -22,7 +22,7 @@ include ../../../source/skeleton.pug
         h2 Scalar
         p 각 스칼라 타입은 Template
             i TypeName
-            | Model 인터페이스에 해당한다.
+            | Model 인터페이스에 해당한다
         p Boolean, Number, String, Date-like(Date, Time, Date-time)
         h2 Container
         div
@@ -65,11 +65,11 @@ include ../../../source/skeleton.pug
                 li static final Object CANT_UNWRAP_TO_TARGET_CLASS
                 p unwrap은 가능하지만, 결과물이 타깃 클래스 인스턴스가 아닐 수 있음을 표시. 아니면 null
                 li Object unwrap(TemplateModel tm)
-                p unwrap 실패의 의미로 null을 반환하지 말 것.
+                p unwrap 실패의 의미로 null을 반환하지 말 것
                 li Object tryUnwrapTo(TemplateModel tm, Class targetClass)
-                p targetClass가 Object.class가 아닌 경우, 변환이 안 될 것 같으면 CANT_UNWRAP_TO_TARGET_CLASS 반환.
+                p targetClass가 Object.class가 아닌 경우, 변환이 안 될 것 같으면 CANT_UNWRAP_TO_TARGET_CLASS 반환
             h3 class DefaultObjectWrapper extends BeansWrapper
-            p FreeMarker에서 기본으로 사용하는 ObjectWrapper. Configuration#getDefaultObjectWrapper 또는 DefaultObjectWrapperBuilder#build로 획득.
+            p FreeMarker에서 기본으로 사용하는 ObjectWrapper. Configuration#getDefaultObjectWrapper 또는 DefaultObjectWrapperBuilder#build로 획득
 
     h1 Configuration
     ol
@@ -90,27 +90,27 @@ include ../../../source/skeleton.pug
                     br
                     | setServletContextForTemplateLoading(servletContext, path) == setTemplateLoader(new WebappTemplateLoader(sctxt, path))
                 li Configuration#setServletContextForTemplateLoading
-                p ServletContext#getResource를 이용해 템플릿 로드. 압축 상태의 war에서도 잘 동작. WEB-INF/web.xml에 *.ftl등 템플릿 확장자 설정해야 함.
+                p ServletContext#getResource를 이용해 템플릿 로드. 압축 상태의 war에서도 잘 동작. WEB-INF/web.xml에 *.ftl등 템플릿 확장자 설정해야 함
                 li Configuration#setTemplateLoader
-                p 직접 TemplateLoader를 구현했거나, 템플릿 로더의 설정을 변경하여 이용해야 하는 경우 이용.
+                p 직접 TemplateLoader를 구현했거나, 템플릿 로더의 설정을 변경하여 이용해야 하는 경우 이용
                     br
-                    | * 이미 URLTemplateLoader이 구현돼있으니 괜한 뻘짓할 필요 없다.
+                    | * 이미 URLTemplateLoader이 구현돼있으니 괜한 뻘짓할 필요 없다
             li 여러 장소에서 로드
             p Configuration#setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[] { loader1, loader2, ... }))
         li.marker Template caching
-        p 로드된 템플릿은 캐시된다. 기본 갱신 주기는 5초며, Configuration으로 설정 가능. 클래스 로더를 이용하는 경우 갱신 파악에 문제가 있을 수 있다.
+        p 로드된 템플릿은 캐시된다. 기본 갱신 주기는 5초며, Configuration으로 설정 가능. 클래스 로더를 이용하는 경우 갱신 파악에 문제가 있을 수 있다
             br
-            | getTemplate을 호출하면 캐시에 저장되고, 템플릿 파일이 삭제되면 캐시에서도 삭제된다.
+            | getTemplate을 호출하면 캐시에 저장되고, 템플릿 파일이 삭제되면 캐시에서도 삭제된다
             br
-            | 기본적으로 MruCacheStorage가 이용된다.
+            | 기본적으로 MruCacheStorage가 이용된다
         ul
             li MruCacheStorage : strong part + soft part 2단계 캐싱
             li Strong part : JVM에 의해 정리되지 않는 캐시
             li Soft part : JVM에 의해 정리될 수 있는 캐시
-            li 디폴트 옵션은 strong 0, soft Integer.MAX_VALUE.
+            li 디폴트 옵션은 strong 0, soft Integer.MAX_VALUE
             p 변경하려면 Configuration#setCacheStorage(new freemarker.cache.MruCacheStorage(20, 250)) 또는 Configuration#setSetting(Configuration.CACHE_STORAGE_KEY, "strong:20, soft:250")
 
     h1 보안 권한
-    p 보안 설정한 JVM으로 실행하는 경우 권한을 부여해야 한다.
+    p 보안 설정한 JVM으로 실행하는 경우 권한을 부여해야 한다
         +codeBtn('/posts/front/freemarker/freemarker_permission.txt', 'text')
 

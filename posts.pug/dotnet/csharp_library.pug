@@ -11,7 +11,7 @@ include ../../source/skeleton.pug
         li String.Format ::= {N[, W][: formatCharacter]}
         ul
             li N : 매개 변수 위치 지정. 0부터 시작
-            li W : 출력될 자릿수 폭. '-'를 붙이면 왼쪽 정렬.
+            li W : 출력될 자릿수 폭. '-'를 붙이면 왼쪽 정렬
             li formatCharacter : d(10진수, DateTime), n(천 단위 구분 10진수), e(지수 표기), f(소수), g(e, f중 간략한 형태), p(백분율), x(16진수)
         li String Interpolation : "C# 시작하기 - 문법 - 기본 자료형 - 문자열 리터럴" 참고
         li System.Text.StringBuilder
@@ -31,12 +31,12 @@ include ../../source/skeleton.pug
         li System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
         ul
             li new BinaryFormatter().Serialize()
-            li [Serializable] 특성 표기한 사용자 정의 클래스 직렬화.
+            li [Serializable] 특성 표기한 사용자 정의 클래스 직렬화
             li 직렬화에 배제할 요소는 [NonSerialized] 특성 표기
         li System.Xml.Serialization.XmlSerializer
         ul
             li new XmlSerializer(typeof(ClassName)).Serialize()
-            li 기본 생성자가 있는 public 클래스의 public 필드에 대해 직렬화 제공.
+            li 기본 생성자가 있는 public 클래스의 public 필드에 대해 직렬화 제공
         li System.Runtime.Serialization.Json.DataContractJsonSerializer
         +asCode('cs') new DataContractJsonSerializer(typeof(ClassName)).WriteObject()
 
@@ -61,11 +61,11 @@ include ../../source/skeleton.pug
         li System.Collections.ArrayList : Object에 대한 동적 배열은 List
         li System.Collections.Hashtable : Object 키-값 쌍 저장은 Dictionary
         li System.Collections.SortedList + SortedDictionary
-        p Hashtable과 유사. 삽입과 동시에 키를 기준으로 정렬이 이루어진다.
+        p Hashtable과 유사. 삽입과 동시에 키를 기준으로 정렬이 이루어진다
         li System.Collections.Stack + Queue
         li 컬렉션 초기화 구문
         ul
-            li ICollection&lt;T> 타입은 {}로 초기화 가능.
+            li ICollection&lt;T> 타입은 {}로 초기화 가능
             +asCode('cs') new List&lt;int> {0, 1, 2}
             li Since C# 6.0 : 확장 메서드로 Add()가 정의됐으면 {} 초기화 가능
 
@@ -80,9 +80,9 @@ include ../../source/skeleton.pug
         li System.Threading.ThreadPool
         li System.Threading.EventWaitHandle
         ul
-            li EventWaitHandle은 대기중인 스레드를 깨울 수 있다.
-            li EventWaitHandle 인스턴스는 Signal, Non-signal 두 가지 상태를 가지며, 상태 전이 메서드도 Set(→ Signal), Reset(→ Non-signal) 2가지가 있다.
-            li 스레드가 WaitOne 메서드를 호출하면 이벤트가 Signal 상태가 될 때까지 대기한다.
+            li EventWaitHandle은 대기중인 스레드를 깨울 수 있다
+            li EventWaitHandle 인스턴스는 Signal, Non-signal 두 가지 상태를 가지며, 상태 전이 메서드도 Set(→ Signal), Reset(→ Non-signal) 2가지가 있다
+            li 스레드가 WaitOne 메서드를 호출하면 이벤트가 Signal 상태가 될 때까지 대기한다
             li EventResetMode : 자동(Set 호출 뒤 자동으로 Non-signal 상태로 전이), 수동(Reset 직접 호출)
             p 자동 리셋의 경우 대기하는 스레드 중 하나만 깨우고 상태를 변경한다
         li System.Threading.Interlocked : int, long에 대한 원자 연산 제공
@@ -103,7 +103,7 @@ include ../../source/skeleton.pug
                 isDone = false;
                 // ToDo
                 isDone = true;
-                // Monitor#Pulse : Waiting Queue의 첫번째 스레드를 깨워 Ready Queue로 입력.
+                // Monitor#Pulse : Waiting Queue의 첫번째 스레드를 깨워 Ready Queue로 입력
                 Monitor.Pulse(myLock);
             }
         li 비동기 처리 System.Threading.Tasks.Task
@@ -146,7 +146,7 @@ include ../../source/skeleton.pug
 
     h1 DB : ADO.NET
     ul
-        li ADO.NET : DBMS 통신 닷넷 구현 라이브러리. 각 DBMS마다 만들어진 걸 이용하면 된다. 아래의 공통 인터페이스를 구현한다.
+        li ADO.NET : DBMS 통신 닷넷 구현 라이브러리. 각 DBMS마다 만들어진 걸 이용하면 된다. 아래의 공통 인터페이스를 구현한다
         li System.Data.IDbConnection
         li 트랜잭션 1
         +asCode('cs').
@@ -182,7 +182,7 @@ include ../../source/skeleton.pug
             new SqlDataAdapter("select * from t_account", sqlConnection).Fill(dataSet, "t_account");
         li ORM
         ul
-            li MS SQL 서버 또는 Azure와 연결하여 자동으로 모델을 구성할 수 있다.
+            li MS SQL 서버 또는 Azure와 연결하여 자동으로 모델을 구성할 수 있다
             li 추가 - 새 항목 - [데이터] ADO.NET 엔터티 데이터 모델
             li MySQL, PostgreSQL도 확장을 설치하거나 하면 된다는 것 같은데...
             li https://dev.mysql.com/downloads/windows/visualstudio/

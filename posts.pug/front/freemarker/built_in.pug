@@ -32,9 +32,9 @@ include ../../../source/skeleton.pug
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_015_chop_linebreak.ftl', 'xml') FTL »
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_015.ftl', 'xml', '[11, 15]') 결과 »
         li trim
-        p 전후의 연속적인 공백 문자를 제거한다.
+        p 전후의 연속적인 공백 문자를 제거한다
         li index_of, last_index_of
-        p 정규표현식은 지원하지 않는다.
+        p 정규표현식은 지원하지 않는다
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_015_index_of.html', 'xml') FTL »
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_015.ftl', 'xml', '[25, 28]') 결과 »
         li contains
@@ -55,11 +55,11 @@ include ../../../source/skeleton.pug
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_015.ftl', 'xml', '[29, 32]') 결과 »
         ul
             li keep_after
-            | 처음 부분 문자열과 일치하는 부분까지 제거한 나머지 반환. 일치하는 부분이 없으면 빈 문자열, 부분 문자열 길이가 0이면 원본 그대로 반환.
+            | 처음 부분 문자열과 일치하는 부분까지 제거한 나머지 반환. 일치하는 부분이 없으면 빈 문자열, 부분 문자열 길이가 0이면 원본 그대로 반환
             li keep_after_last
             | 마지막으로 부분 문자열과 일치하는 부분까지 제거한 나머지 반환
             li keep_before
-            | 처음 부분 문자열과 일치하는 위치 전까지 반환. 일치하는 부분이 없으면 원본 그대로, 부분 문자열 길이가 0이면 빈 문자열 반환.
+            | 처음 부분 문자열과 일치하는 위치 전까지 반환. 일치하는 부분이 없으면 원본 그대로, 부분 문자열 길이가 0이면 빈 문자열 반환
             li keep_before_last
             | 마지막으로 부분 문자열과 일치하는 위치 전까지 반환
         li left_pad, right_pad
@@ -70,15 +70,15 @@ include ../../../source/skeleton.pug
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_015_esc.ftl', 'xml') FTL »
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_015.ftl', 'xml', '[24, 24]') 결과 »
         li j_string, js_string, json_string, url, url_path
-        p 각각 Java, JavaScript, JSON, url 문자열 표현에 맞게 이스케이프한다.
+        p 각각 Java, JavaScript, JSON, url 문자열 표현에 맞게 이스케이프한다
             br
-            | url_path는 '/'를 이스케이프하지 않는다.
+            | url_path는 '/'를 이스케이프하지 않는다
         li matches, groups
-        p 반환 값은 multi-type.
+        p 반환 값은 multi-type
             br
             | boolean : 전체 문자열이 매칭되는지 여부
             br
-            | sequence : 길이 0 이상의, 매칭되는 부분 문자열 시퀀스. 기대하는 바와는 다르게, 매칭되는 부분 문자열 전후의 다른 문자열이 포함될 수 있다.
+            | sequence : 길이 0 이상의, 매칭되는 부분 문자열 시퀀스. 기대하는 바와는 다르게, 매칭되는 부분 문자열 전후의 다른 문자열이 포함될 수 있다
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_015_matches.html', 'xml') FTL »
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_015.ftl', 'xml', '[34, 62]') 결과 »
         li replace
@@ -171,11 +171,11 @@ include ../../../source/skeleton.pug
         li round, floor, ceiling
         p round : 끝자리가 5인 경우 올림한다
         li string
-        p ${x?string} : ${x}와 동일.
+        p ${x?string} : ${x}와 동일
             br
             | string.currency, string.percent, string.computer
             br
-            | 자바 숫자 문자열 포맷을 지원한다.
+            | 자바 숫자 문자열 포맷을 지원한다
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_016.html', 'xml', '[1, 2, 4, 5]') FTL + 결과 »
 
     h1 Built-ins for date(time)
@@ -233,7 +233,7 @@ include ../../../source/skeleton.pug
     h1 Etc built-ins
     ol
         li switch
-        p switch directive의 인라인 버전. 모든 타입에 대해 작동한다.
+        p switch directive의 인라인 버전. 모든 타입에 대해 작동한다
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_020_switch.html', 'xml') FTL »
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_020.html', 'xml', '[4, 7]') 결과 »
         li byte, double, float, int, long, short

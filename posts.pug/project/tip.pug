@@ -3,7 +3,7 @@ include ../../source/skeleton.pug
     h1 CSS
     ul
         li.marker 폰트 크기 균일화
-        p :root pseudo 요소로 1rem 단위 설정.
+        p :root pseudo 요소로 1rem 단위 설정
         +asCode('css') :root { font-size: 16px; }
 
     h1 PostgreSQL
@@ -126,7 +126,7 @@ include ../../source/skeleton.pug
     ul
         li.marker 단축키로 날짜 입력
         +asA('https://marketplace.visualstudio.com/items?itemName=jsynowiec.vscode-insertdatestring')
-        p 를 설치하면, Ctrl + Shift + I를 이용해 곧바로 날짜 문자열을 입력할 수 있다.
+        p 를 설치하면, Ctrl + Shift + I를 이용해 곧바로 날짜 문자열을 입력할 수 있다
         li.marker 파일 탐색 뷰에서 현재 문서 자동 추적 중지
         +w3img('/imgs/20190330_214623.png')
         li.marker 특정 언어 포매터 설정
@@ -189,7 +189,7 @@ include ../../source/skeleton.pug
     h1 Visual Studio
     ol
         li.marker 리소스 디렉터리 전체 출력 디렉터리에 복사
-        p 예시(temp 디렉터리 하위 항목 모두 복사)처럼 프로젝트 파일 편집.
+        p 예시(temp 디렉터리 하위 항목 모두 복사)처럼 프로젝트 파일 편집
         +asCode('xml').
             &lt;ItemGroup>
                 &lt;Content Include="temp\**">
@@ -208,7 +208,7 @@ include ../../source/skeleton.pug
     h1 Google Play Store 인앱 결제 상품 변경 사항을 바로 적용
     ol
         li 변경할 부분들을 모두 변경한 다음 상품을 '비활성' 상태로 저장
-        li 상품을 다시 '활성' 상태로 저장하면 변경 사항이 즉시 반영된다.
+        li 상품을 다시 '활성' 상태로 저장하면 변경 사항이 즉시 반영된다
 
     h1 SVG 크기가 안 맞을 때
     ol
@@ -216,7 +216,7 @@ include ../../source/skeleton.pug
         p XML로 서술되는 벡터 그래픽. 예 
             +asA('https://image.flaticon.com/icons/svg/53/53260.svg')
         li html 노드로 설정한 크기에 맞게 출력되지 않는 경우
-        p svg 파일을 텍스트 에디터로 열어 width, height 속성을 삭제하고, 대신 viewBox 등으로 출력 범위를 지정.
+        p svg 파일을 텍스트 에디터로 열어 width, height 속성을 삭제하고, 대신 viewBox 등으로 출력 범위를 지정
         +asCode('xml') &lt;svg width="" height=""> → &lt;svg viewBox="0 0 100 100">
 
     h1 기레기 고소 방법

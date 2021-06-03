@@ -7,7 +7,7 @@ include ../../source/skeleton.pug
             +codeBtn('/Repositories/JavaScript/Browser/window_open.js', 'javascript') Window#open
             +codeBtn('/Repositories/JavaScript/Browser/window_resizeto.js', 'javascript') Window#resizeTo
             +codeBtn('/Repositories/JavaScript/Browser/window_popup.js', 'javascript') Window#alert, confirm, prompt
-        p window.onload : 문서를 전부 로드했을 때 실행되는 이벤트 리스너.
+        p window.onload : 문서를 전부 로드했을 때 실행되는 이벤트 리스너
         li screen
         p window.screen과 동일. 표시되는 화면과 연관
         li location
@@ -69,12 +69,12 @@ include ../../source/skeleton.pug
             worker.onmesage = ...
             worker.onerror ...
         li 웹 워커 내부에서 전역 객체는 worker 자체
-        p 페이지에서 보낸 메시지를 알기 위해서 onmesage 이벤트 핸들러를 등록한다.
+        p 페이지에서 보낸 메시지를 알기 위해서 onmesage 이벤트 핸들러를 등록한다
         +asCode('javascript') self.onmessage = ...
 
     h1 웹 소켓
     ol
-        li 오래 지속되는 하나의 연결을 이용해 완전한 양방향 통신을 제공한다.
+        li 오래 지속되는 하나의 연결을 이용해 완전한 양방향 통신을 제공한다
         li 프로토콜은 ws(비보안), wss(보안)
         li 웹 소켓은 동일 소스 정책이 적용되지 않으므로, 연결을 수락할지는 완전히 서버의 권한
         li 이벤트 종류 : open, message, error, close
@@ -171,9 +171,9 @@ include ../../source/skeleton.pug
 
     h1 파일 API
     ol
-        li 이전에는 자바스크립트에서 로컬 파일에 접근하는 것이 불가능했지만, 사용자가 입력 태그에 직접 설정한 파일에 대해 읽기가 가능해졌다.
-        p 로컬 파일 접근을 허용하는 브라우저에서 &lt;input type="file"> 요소의 files 프로퍼티는 FileList 객체다.
-            | FileList는 길이 0 이상의 File 객체 목록이며, File 객체는 name과 lastModifiedDate 프로퍼티가 있는 Blob 객체다.
+        li 이전에는 자바스크립트에서 로컬 파일에 접근하는 것이 불가능했지만, 사용자가 입력 태그에 직접 설정한 파일에 대해 읽기가 가능해졌다
+        p 로컬 파일 접근을 허용하는 브라우저에서 &lt;input type="file"> 요소의 files 프로퍼티는 FileList 객체다
+            | FileList는 길이 0 이상의 File 객체 목록이며, File 객체는 name과 lastModifiedDate 프로퍼티가 있는 Blob 객체다
         li 아래 입력 필드에 아무 파일이나(이왕이면 이미지로) 드롭해보세요
         p
             input#basic2-input-files1(type='file', multiple)

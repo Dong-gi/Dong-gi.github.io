@@ -2,7 +2,7 @@ include ../../source/skeleton.pug
 +post('PostgreSQL 서버 관리', 'PostgreSQL', 'PostgreSQL 서버 관리 정리')
     h1 데이터베이스 클러스터 생성
     ul
-        li 파일 시스템 관점에서 데이터베이스 클러스터는 모든 데이터가 저장되는 단일 디렉터리다.
+        li 파일 시스템 관점에서 데이터베이스 클러스터는 모든 데이터가 저장되는 단일 디렉터리다
         li 일반적인 위치 : /usr/local/pgsql/data, /var/lib/pgsql/data
         li 위치 지정
         ol
@@ -29,11 +29,11 @@ include ../../source/skeleton.pug
     +asCode('shell') $ pg_ctl [-w] [-D datadir] [-m [s[mart]|f[ast]|i[mmediate]]] stop
     ul
         li SIGTERM : smart
-        p 기존 세션의 정상적인 종료를 허용하지만, 새로운 연결은 허용하지 않는다.
+        p 기존 세션의 정상적인 종료를 허용하지만, 새로운 연결은 허용하지 않는다
         li SIGINT : fast(default)
-        p 새로운 연결을 허용하지 않고, 모든 서버 프로세스에 SIGTERM을 전송한다. 이로써 트랜잭션이 중단되고 즉시 종료된다.
+        p 새로운 연결을 허용하지 않고, 모든 서버 프로세스에 SIGTERM을 전송한다. 이로써 트랜잭션이 중단되고 즉시 종료된다
         li SIGQUIT : immediate
-        p 모든 자식 프로세스에 SIGQUIT을 전달하고 대기한다. 5초 이내에 종료되지 않으면 SIGKILL로 즉시 종료하고, 자신도 정상적인 중지 절차없이 중지한다. 다음 서버 시작 시 복구 작업이 진행된다.
+        p 모든 자식 프로세스에 SIGQUIT을 전달하고 대기한다. 5초 이내에 종료되지 않으면 SIGKILL로 즉시 종료하고, 자신도 정상적인 중지 절차없이 중지한다. 다음 서버 시작 시 복구 작업이 진행된다
 
     h1 데이터베이스 클러스터 업데이트
     p PostgreSQL의 버전은 major.minor로 구성된다. 10부터는 major 버전이 단일 숫자지만, 그 외는 9.5, 9.6과 같이 두 영역이 major 버전이다. minor 버전 차이는 클러스터 구조에 영향을 미치지 않기 때문에 실행 파일만 바꾸면 업그레이드가 완료된다
@@ -55,7 +55,7 @@ include ../../source/skeleton.pug
         li 새 서버를 다른 디렉터리에 설치하고, 이전 서버와 다른 포트에서 병렬 실행하는 경우
         +asCode('shell') $ pg_dumpall -p 5432 | psql -d postgres -p 5433
         li pg_upgrade를 통한 업그레이드
-        p 다른 메이저 버전으로 현재 위치에 마이그레이션할 수 있다.
+        p 다른 메이저 버전으로 현재 위치에 마이그레이션할 수 있다
 
     h1 암호화 옵션
     ol
@@ -75,7 +75,7 @@ include ../../source/skeleton.pug
         li 기본 설정 : postgresql.confg에서 ssl을 on으로 설정
         p SSL 모드에서 시작하려면 서버 인증서가 포함된 파일과 개인 키가 있어야 한다. 이 파일들은 각각 서버 데이터 디렉터리에서 server.crt, server.key일 것으로 예상되지만, ssl_cert_file, ssl_key_file 환경 변수로 위치와 이름을 지정할 수 있다
         li OpenSSL 설정
-        p PostgreSQL은 openssl version-d로 출력되는 디렉터리에서 openssl.cnf를 찾는다. OPENSSL_CONF 환경 변수로 직접 지정할 수 있다.
+        p PostgreSQL은 openssl version-d로 출력되는 디렉터리에서 openssl.cnf를 찾는다. OPENSSL_CONF 환경 변수로 직접 지정할 수 있다
         p PostgreSQL에서 사용할 알고리즘은 postgresql.conf의 ssl_ciphers를 변경하여 지정할 수 있다
         li 인증서 생성
         +asCode('shell').

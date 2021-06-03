@@ -7,7 +7,6 @@ include ../../source/skeleton.pug
 
     h1 ...base
     div
-        p: strong Basic utility libraries and interfaces.
         h2 문자(열) 관련
         div
             h3 Ascii
@@ -96,7 +95,7 @@ include ../../source/skeleton.pug
             h3 Preconditions
             ul
                 li 사전조건이 충족되지 않은 경우에만 예외 메시지 포매팅을 수행한다
-                p 다만 메서드 인자는 항상 계산 수행된다. 이마저도 피하고 싶다면 try ... catch 구문을 이용하면 된다.
+                p 다만 메서드 인자는 항상 계산 수행된다. 이마저도 피하고 싶다면 try ... catch 구문을 이용하면 된다
                 li 포매팅 문자열은 %s만 지원한다
             +asCode('java').
                 static void checkArgument(boolean expression, errorMessage(Template)[, errorMessageArgs])
@@ -142,7 +141,7 @@ include ../../source/skeleton.pug
             h3 Verify
             ul
                 li 사전조건이 충족되지 않은 경우에만 예외 메시지 포매팅을 수행한다
-                p 다만 메서드 인자는 항상 계산 수행된다. 이마저도 피하고 싶다면 try ... catch 구문을 이용하면 된다.
+                p 다만 메서드 인자는 항상 계산 수행된다. 이마저도 피하고 싶다면 try ... catch 구문을 이용하면 된다
                 li 포매팅 문자열은 %s만 지원한다
             +asCode('java').
                 static void verify(boolean expression, errorMessage(Template)[, errorMessageArgs])
@@ -150,110 +149,108 @@ include ../../source/skeleton.pug
 
     h1 ...cache
     div
-        p: strong This package contains caching utilities.
-            h3 Cache&lt;K,V&gt;
-            p 스레드-안전한 캐시. 보통 CacheBuilder로 인스턴스 획득
+        h2 Cache&lt;K,V&gt;
+        p 스레드-안전한 캐시. 보통 CacheBuilder로 인스턴스 획득
+        +asCode('java').
+            V getIfPresent(Object key)
+            V get(K key, Callable&lt;? extends V> loader)
+                // 캐시에 없으면 loader를 통해 새로 저장하고 반환
+            ImmutableMap&lt;K,V&gt; getAllPresent(Iterable&lt;?&gt; keys)
+            ConcurrentMap&lt;K,V&gt; asMap()
+
+            void put(K key, V value)
+            void putAll(Map&lt;? extends K,​? extends V> m)
+
+            void invalidate(Object key)
+            void invalidateAll(Ierable&lt;?&gt; keys)
+
+            long size()
+            CacheStats stats()
+                // 구현에 따라 기록 여부가 다를 수 있다
+                // CacheBuilder의 경우, recordStats()를 호출한 경우에만 기록
+
+            void cleanUp()
+                // 구현에 따라 필요한 경우, 정리 연산 수행
+
+        h2 LoadingCache&lt;K,V&gt;
+        p 키가 캐시에 없는 경우(벌크 연산 getAll 포함) loader를 통해 새로 저장하고 반환한다
+        +asCode('java').
+            V get(K key)        // getUnchecked(K)의 경우 RuntimeException을 던진다
+            ImmutableMap&lt;K,V&gt; getAll(Iterable&lt;? extends K&gt; keys)
+            void refresh(K key) // loader를 통해 값을 갱신한다
+
+        h2 CacheBuilder&lt;K,V&gt;
+        ul
+            li 자동 loading 설정 가능
+            li LRU 옵션 설정 가능
+            li 마지막 접근/쓰기 후 t 시간 경과하면 자동 삭제 설정 가능
+            li 키/값 자동 WeakReference 래핑 설정 가능
+            p WeakReference 사용 설정된 경우, equals() 대신 identity(==) 비교를 이용한다
+            li 삭제된 엔트리에 대한 리스너 설정 가능
+            li 캐시 통계 기록 가능
+            li CacheBuilder를 통해 만든 캐시는 직렬화/역직렬화 가능하다. 다만, 캐시 설정 정보만 저장/복원된다
+            li refresh 연산은 기본적으로 LoadingCache.refresh(K) -&gt; CacheLoader.reload(K, V)를 통해 수행된다
+        +asCode('java').
+            &lt;K1 extends K,V1 extends V&gt; CacheBuilder&lt;K1,V1&gt; weigher(Weigher&lt;? super K1,? super V1&gt; weigher)
+                // Weigher : (key, value) 쌍으로부터 상대적인 우선순위를 반환. 낮을수록 높다
+                // 호출 객체와 다른 객체가 반환되나, 둘 다 이용 가능하다. 다만 반환된 제네릭 객체는 타입-안전이 보장된다
+            CacheBuilder&lt;K,V&gt; ticker(Ticker ticker)
+                // 지정하지 않은 경우 System.nanoTime()을 기본 사용
+            &lt;K1 extends K,V1 extends V&gt; CacheBuilder&lt;K1,V1&gt; removalListener(RemovalListener&lt;? super K1,? super V1&gt; listener)
+                // 이 안에서 발생하는 예외는 전파되지 않고 Logger로만 기록된다
+                // GC로 인해 제거된 경우, 키/값은 null일 수 있다
+
+            &lt;K1 extends K,V1 extends V&gt; Cache&lt;K1,V1&gt; build()
+            &lt;K1 extends K,V1 extends V&gt; LoadingCache&lt;K1,V1&gt; build(CacheLoader&lt;? super K1,V1&gt; loader)
+
+        h2 CacheBuilderSpec
+        ul
+            li 캐시 설정을 외주할 수 있다
             +asCode('java').
-                V getIfPresent(Object key)
-                V get(K key, Callable&lt;? extends V> loader)
-                    // 캐시에 없으면 loader를 통해 새로 저장하고 반환
-                ImmutableMap&lt;K,V&gt; getAllPresent(Iterable&lt;?&gt; keys)
-                ConcurrentMap&lt;K,V&gt; asMap()
+                var spec = "maximumSize=10000,expireAfterWrite=10m";
+                var graphs = CacheBuilder.from(spec)
+                    .removalListener(MY_LISTENER)
+                    .build(
+                        new CacheLoader&lt;Key, Graph>() {
+                            public Graph load(Key key) throws AnyException {
+                                return createExpensiveGraph(key);
+                            }
+                        });
+            li Duration은 정수 + [smhd]로 표현
+        table.no-sort
+            +tds('concurrencyLevel=[integer]', 'CacheBuilder.concurrencyLevel')
+            +tds('initialCapacity=[integer]', 'CacheBuilder.initialCapacity')
+            +tds('maximumSize=[long]', 'CacheBuilder.maximumSize')
+            +tds('maximumWeight=[long]', 'CacheBuilder.maximumWeight')
+            +tds('expireAfterAccess=[duration]', 'CacheBuilder.expireAfterAccess(Duration)')
+            +tds('expireAfterWrite=[duration]', 'CacheBuilder.expireAfterWrite(Duration)')
+            +tds('refreshAfterWrite=[duration]', 'CacheBuilder.refreshAfterWrite(Duration)')
+            +tds('weakKeys', 'CacheBuilder.weakKeys()')
+            +tds('softValues', 'CacheBuilder.softValues()')
+            +tds('weakValues', 'CacheBuilder.weakValues()')
+            +tds('recordStats', 'CacheBuilder.recordStats()')
 
-                void put(K key, V value)
-                void putAll(Map&lt;? extends K,​? extends V> m)
+        h2 CacheLoader&lt;K,V&gt;
+        ul
+            li LoadingCache에 사용되는 값 생성기
+            li 보통 load(K)만 구현하는 것으로 충분하다. 나머지는 선택적
+        +asCode('java').
+            static &lt;K,V&gt; CacheLoader&lt;K,V&gt; from(Function&lt;K,V&gt; function)
 
-                void invalidate(Object key)
-                void invalidateAll(Ierable&lt;?&gt; keys)
+            static &lt;K,V&gt; CacheLoader&lt;K,V&gt; asyncReloading(CacheLoader&lt;K,V&gt; loader, Executor executor)
+                // reload()가 동기적인 경우에만 유용
 
-                long size()
-                CacheStats stats()
-                    // 구현에 따라 기록 여부가 다를 수 있다.
-                    // CacheBuilder의 경우, recordStats()를 호출한 경우에만 기록
+            abstract V load(K key)                           // 최초 값 생성
+            ListenableFuture&lt;V&gt; reload(K key, V value) // 기존 값을 대체할 값 생성
 
-                void cleanUp()
-                    // 구현에 따라 필요한 경우, 정리 연산 수행.
+        h2 RemovalListeners
+        +asCode('java') static &lt;K,V&gt; RemovalListener&lt;K,V&gt; asynchronus(RemovalListener&lt;K,V&gt; listener, Executor executor)
 
-            h3 LoadingCache&lt;K,V&gt;
-            p 키가 캐시에 없는 경우(벌크 연산 getAll 포함) loader를 통해 새로 저장하고 반환한다.
-            +asCode('java').
-                V get(K key)        // getUnchecked(K)의 경우 RuntimeException을 던진다
-                ImmutableMap&lt;K,V&gt; getAll(Iterable&lt;? extends K&gt; keys)
-                void refresh(K key) // loader를 통해 값을 갱신한다
-
-            h3 CacheBuilder&lt;K,V&gt;
-            ul
-                li 자동 loading 설정 가능
-                li LRU 옵션 설정 가능
-                li 마지막 접근/쓰기 후 t 시간 경과하면 자동 삭제 설정 가능
-                li 키/값 자동 WeakReference 래핑 설정 가능
-                p WeakReference 사용 설정된 경우, equals() 대신 identity(==) 비교를 이용한다.
-                li 삭제된 엔트리에 대한 리스너 설정 가능
-                li 캐시 통계 기록 가능
-                li CacheBuilder를 통해 만든 캐시는 직렬화/역직렬화 가능하다. 다만, 캐시 설정 정보만 저장/복원된다
-                li refresh 연산은 기본적으로 LoadingCache.refresh(K) -&gt; CacheLoader.reload(K, V)를 통해 수행된다
-            +asCode('java').
-                &lt;K1 extends K,V1 extends V&gt; CacheBuilder&lt;K1,V1&gt; weigher(Weigher&lt;? super K1,? super V1&gt; weigher)
-                    // Weigher : (key, value) 쌍으로부터 상대적인 우선순위를 반환. 낮을수록 높다
-                    // 호출 객체와 다른 객체가 반환되나, 둘 다 이용 가능하다. 다만 반환된 제네릭 객체는 타입-안전이 보장된다.
-                CacheBuilder&lt;K,V&gt; ticker(Ticker ticker)
-                    // 지정하지 않은 경우 System.nanoTime()을 기본 사용
-                &lt;K1 extends K,V1 extends V&gt; CacheBuilder&lt;K1,V1&gt; removalListener(RemovalListener&lt;? super K1,? super V1&gt; listener)
-                    // 이 안에서 발생하는 예외는 전파되지 않고 Logger로만 기록된다
-                    // GC로 인해 제거된 경우, 키/값은 null일 수 있다
-
-                &lt;K1 extends K,V1 extends V&gt; Cache&lt;K1,V1&gt; build()
-                &lt;K1 extends K,V1 extends V&gt; LoadingCache&lt;K1,V1&gt; build(CacheLoader&lt;? super K1,V1&gt; loader)
-
-            h3 CacheBuilderSpec
-            ul
-                li 캐시 설정을 외주할 수 있다
-                +asCode('java').
-                    var spec = "maximumSize=10000,expireAfterWrite=10m";
-                    var graphs = CacheBuilder.from(spec)
-                        .removalListener(MY_LISTENER)
-                        .build(
-                            new CacheLoader&lt;Key, Graph>() {
-                                public Graph load(Key key) throws AnyException {
-                                    return createExpensiveGraph(key);
-                                }
-                            });
-                li Duration은 정수 + [smhd]로 표현
-            table.no-sort
-                +tds('concurrencyLevel=[integer]', 'CacheBuilder.concurrencyLevel')
-                +tds('initialCapacity=[integer]', 'CacheBuilder.initialCapacity')
-                +tds('maximumSize=[long]', 'CacheBuilder.maximumSize')
-                +tds('maximumWeight=[long]', 'CacheBuilder.maximumWeight')
-                +tds('expireAfterAccess=[duration]', 'CacheBuilder.expireAfterAccess(Duration)')
-                +tds('expireAfterWrite=[duration]', 'CacheBuilder.expireAfterWrite(Duration)')
-                +tds('refreshAfterWrite=[duration]', 'CacheBuilder.refreshAfterWrite(Duration)')
-                +tds('weakKeys', 'CacheBuilder.weakKeys()')
-                +tds('softValues', 'CacheBuilder.softValues()')
-                +tds('weakValues', 'CacheBuilder.weakValues()')
-                +tds('recordStats', 'CacheBuilder.recordStats()')
-
-            h3 CacheLoader&lt;K,V&gt;
-            ul
-                li LoadingCache에 사용되는 값 생성기
-                li 보통 load(K)만 구현하는 것으로 충분하다. 나머지는 선택적.
-            +asCode('java').
-                static &lt;K,V&gt; CacheLoader&lt;K,V&gt; from(Function&lt;K,V&gt; function)
-
-                static &lt;K,V&gt; CacheLoader&lt;K,V&gt; asyncReloading(CacheLoader&lt;K,V&gt; loader, Executor executor)
-                    // reload()가 동기적인 경우에만 유용
-
-                abstract V load(K key)                           // 최초 값 생성
-                ListenableFuture&lt;V&gt; reload(K key, V value) // 기존 값을 대체할 값 생성
-
-            h3 RemovalListeners
-            +asCode('java') static &lt;K,V&gt; RemovalListener&lt;K,V&gt; asynchronus(RemovalListener&lt;K,V&gt; listener, Executor executor)
-
-            h3 Cache 대리자
-            p ForwardingCache, ForwadingCache.SimpleForwardingCache, ForwadingLoadingCache, ForwadingLoadingCache.SimpleForwardingLoadingCache
+        h2 Cache 대리자
+        p ForwardingCache, ForwadingCache.SimpleForwardingCache, ForwadingLoadingCache, ForwadingLoadingCache.SimpleForwardingLoadingCache
 
     h1 ...collect
     div
-        p: strong This package contains generic collection interfaces and implementations, and other utilities for working with collections.
         h2 Collection types
         div
             h3 ImmutableCollection&lt;E&gt;
@@ -275,15 +272,15 @@ include ../../source/skeleton.pug
 
             h3 Multiset&lt;E&gt;
             ul
-                li Bag으로도 불리는 자료형. 값의 중복을 허용(최대 Integer.MAX_VALUE)한다.
+                li Bag으로도 불리는 자료형. 값의 중복을 허용(최대 Integer.MAX_VALUE)한다
                 li 구현체 : HashMultiset(HashMap을 구현에 이용), LinkedHashMultiset(결정적 iteration), TreeMultiset(iteration 정렬 지정), EnumMultiset(모든 연산이 상수 시간), ConcurrentHashMultiset(동시성 추가, null 비허용)
 
             h3 Multimap&lt;K,V&gt;
             ul
-                li 하나의 키에 대해 여러 값을 매핑.
+                li 하나의 키에 대해 여러 값을 매핑
                 li ListMultimap : List를 이용해 값 삽입 순서를 보존. 엔트리 중복 가능
                 p 관련 구현체 : ArrayListMultimap, LinkedListMultimap
-                li SetMultimap : Set을 이용해 값 중복 제거.
+                li SetMultimap : Set을 이용해 값 중복 제거
                 p 관련 구현체 : HashMultimap, LinkedHashMultimap(삽입 순 iteration)
                 li SortedSetMultimap : 값집합을 정렬한 SetMultimap
                 p 관련 구현체 : TreeMultimap(키/값 각각 정렬)
@@ -315,9 +312,9 @@ include ../../source/skeleton.pug
 
             h3 Table&lt;R,C,V&gt;
             ul
-                li (행 key, 열 key) 쌍에 대한 값을 보존.
+                li (행 key, 열 key) 쌍에 대한 값을 보존
                 li Sparse 데이터 표현에 좋다
-                li 행/열 모두로 조회 가능하지만, 일부 구현은 열로 조회하는 경우 성능이 좋지 않을 수 있다.
+                li 행/열 모두로 조회 가능하지만, 일부 구현은 열로 조회하는 경우 성능이 좋지 않을 수 있다
                 li 메서드가 반환한 모든 Collection/Map은 테이블에 대한 writable view다
                 p: strong 구현에 따라 테이블 변경 메서드를 지원하지 않거나, 메서드가 반환한 Collection/Map이 writable하지 않을 수 있다
                 li 구현체 : ArrayTable(고정 크기 2차원 배열 이용), HashBasedTable(linked hash table 이용), TreeBasedTable(행/열 키 각각을 정렬)
@@ -330,7 +327,7 @@ include ../../source/skeleton.pug
             ul
                 li Class -&gt; instance 매핑
                 p int.class와 Integer.class는 서로 다름에 유의
-                li 제네릭 매핑에는 TypeToInstanceMap을 이용하면 된다.
+                li 제네릭 매핑에는 TypeToInstanceMap을 이용하면 된다
                 li 구현체 : ImmutableClassToInstanceMap, MutableClassToInstanceMap
 
             h3  Queue
@@ -340,7 +337,7 @@ include ../../source/skeleton.pug
 
                 h4 MinMaxPriorityQueue&lt;E&gt;
                 ul
-                    li A double-ended priority queue.
+                    li A double-ended priority queue
                     p 최대 원소에 대해서도 상수 시간 접근이 가능하며, 최대 원소에 대한 연산도 지원
                     li 크기 제한을 설정하는 경우, 크기가 초과될 때마다 최대 원소 제거
 
@@ -354,7 +351,7 @@ include ../../source/skeleton.pug
             h3 Comparators
             +asCode('java').
                 static &lt;T,​S extends T> Comparator&lt;Iterable&lt;S>> lexicographical​(Comparator&lt;T> comparator)
-                    // Iterable을 사전순으로 정렬해준다.
+                    // Iterable을 사전순으로 정렬해준다
                     // e.g. [] &lt; [1] &lt; [1, 1] &lt; [1, 2] &lt; [2]
                     // + isInOrder, isInStrictOrder
 
@@ -407,7 +404,7 @@ include ../../source/skeleton.pug
             h3 MapMaker
             ul
                 li 유사 ConcurrentHashMap을 만든다
-                li weakKeys()를 지정하는 경우 equals() 대신 identity(==) 비교를 이용한다.
+                li weakKeys()를 지정하는 경우 equals() 대신 identity(==) 비교를 이용한다
 
             h3 Multimaps
             p Map&lt;K, Collection&lt;V&gt;&gt;로 변환, 필터링, Multimap&lt;V,K&gt;로 변환, 엔트리 일괄 변경 등
@@ -452,12 +449,12 @@ include ../../source/skeleton.pug
                 static DiscreteDomain&lt;BigInteger&gt; bigIntegers()
                     // + integers, longs
 
-                C maxValue() + minValue             // 없으면 NoSuchElementException.
-                abstract C next(C value) + previous // 없으면 null.
+                C maxValue() + minValue             // 없으면 NoSuchElementException
+                abstract C next(C value) + previous // 없으면 null
 
             h3 Range&lt;C extends Comparable>
             ul
-                li 대소 관계가 있는 자료형에 대해, 임계값을 이용해 범위 1개를 표현한다.
+                li 대소 관계가 있는 자료형에 대해, 임계값을 이용해 범위 1개를 표현한다
                 li (a..b), [a..b], (a..b], [a..b), (a..inf), [a..inf), (-inf..b), (-inf..b], (-inf..inf)
 
             h3 ContiguousSet&lt;C extends Comparable>
@@ -472,8 +469,8 @@ include ../../source/skeleton.pug
             ul
                 li 장식자 패턴 구현을 위한 최상위 추상 클래스
                 li delegate()는 장식할 인스턴스를 반환하면 된다
-                li hashCode(), equals(Object)는 backing object로 포워딩하지 않는다.
-                li ForwardingList, ForwardingMap, ... 등 interface-specific 서브클래스를 이용하거나, 직접 정의하면 된다.
+                li hashCode(), equals(Object)는 backing object로 포워딩하지 않는다
+                li ForwardingList, ForwardingMap, ... 등 interface-specific 서브클래스를 이용하거나, 직접 정의하면 된다
 
         h2 Others
         div
@@ -500,8 +497,6 @@ include ../../source/skeleton.pug
 
     h1 ...eventbus
     div
-        p: strong The EventBus allows publish-subscribe-style communication between components without requiring the components to explicitly register with one another (and thus be aware of each other).
-
         h2 @interface Subscribe
         p 이벤트 객체 하나만 인자로 받는 구독자 메서드 표시
 
@@ -521,8 +516,6 @@ include ../../source/skeleton.pug
 
     h1 ...graph
     div
-        p: strong An API for representing graph (node and edge) data.
-
         h2 Graph&lt;N&gt;
         ul
             li 지원 : 방향/무방향 그래프, self-loop 허용/비허용, 정점/간선에 대한 삽입 순서 보존/정렬/비정렬
@@ -541,18 +534,14 @@ include ../../source/skeleton.pug
 
     h1 ...hash
     div
-        p: strong Hash functions and related structures.
-
         h2 Hashing
         p adler32, crc32, crc32c, hmacMd5, hmacSha256, md5, sha512, ...
 
     h1 ...html.HtmlEscapers
-    p Escapers for HTML.
+    p Escapers for HTML
 
     h1 ...io
     div
-        p: strong This package contains utility methods and classes for working with Java I/O; for example input streams, output streams, readers, writers, and files.
-
         h2 Files
         p java.io.File에 대한 확장. java.nio.Files에서 같은 기능을 많이 제공한다
         +asCode('java').
@@ -617,7 +606,7 @@ include ../../source/skeleton.pug
             static String getPackageName​(Class&lt;?> clazz)
             static String getPackageName​(String classFullName)
                 // 클래스 이름만 파싱하여 패키지 이름을 판단한다
-            
+
             static &lt;T> T newProxy​(Class&lt;T> interfaceType, InvocationHandler handler)
                 // 단일 인터페이스 프록시 생성에 편리
 
@@ -639,13 +628,13 @@ include ../../source/skeleton.pug
                       .where(new TypeParameter&lt;K>() {}, keyType)
                       .where(new TypeParameter&lt;V>() {}, valueType);
                 }
-            
+
             final TypeToken&lt;?> resolveType​(Type type)
                 // 제네릭 실제 타입 획득
                 // e.g.
                 new TypeToken&lt;List&lt;String>>() {}.resolveType(List.class.getMethod("get", int.class).getGenericReturnType())
                     == String.class
-            
+
             final TypeToken.TypeSet getTypes()
                 // 현재 타입 + 선조 타입 + 구현 인터페이스
                 // e.g. List&lt;String> =>
@@ -657,7 +646,7 @@ include ../../source/skeleton.pug
                 var type1 = new TypeToken&lt;List&lt;String>>() {};
                 var type2 = type1.getSupertype(Iterable.class); == java.lang.Iterable&lt;java.lang.String>
                 var type3 = type2.getSubtype(List.class);       == java.util.List&lt;java.lang.String>
-            
+
             final @Nullable TypeToken&lt;?> getComponentType()
                 // 배열 원소 타입 반성
 
@@ -694,7 +683,7 @@ include ../../source/skeleton.pug
             static ListenableFuture&lt;Void> submit​(Runnable runnable, Executor executor)
             static &lt;O> ListenableFuture&lt;O> submitAsync​(AsyncCallable&lt;O> callable, Executor executor)
             static &lt;O> ListenableFuture&lt;O> scheduleAsync​(AsyncCallable&lt;O> callable, Duration delay, ScheduledExecutorService executorService)
-            
+
             static &lt;V,​X extends Throwable> ListenableFuture&lt;V> catching​(ListenableFuture&lt;? extends V> input, Class&lt;X> exceptionType, Function&lt;? super X,​? extends V> fallback, Executor executor)
             static &lt;V,​X extends Throwable> ListenableFuture&lt;V> catchingAsync​(ListenableFuture&lt;? extends V> input, Class&lt;X> exceptionType, AsyncFunction&lt;? super X,​? extends V> fallback, Executor executor)
 
@@ -703,7 +692,7 @@ include ../../source/skeleton.pug
             static &lt;I,​O> ListenableFuture&lt;O> transformAsync​(ListenableFuture&lt;I> input, AsyncFunction&lt;? super I,​? extends O> function, Executor executor)
             static &lt;I,​O> Future&lt;O> lazyTransform​(Future&lt;I> input, Function&lt;? super I,​? extends O> function)
                 // get() 호출이 있을 때 function 호출
-            
+
             static &lt;V> ListenableFuture&lt;List&lt;V>> allAsList​(ListenableFuture&lt;? extends V>... futures)
             static &lt;V> ListenableFuture&lt;List&lt;V>> successfulAsList​(ListenableFuture&lt;? extends V>... futures)
             static &lt;T> ImmutableList&lt;ListenableFuture&lt;T>> inCompletionOrder​(Iterable&lt;? extends ListenableFuture&lt;? extends T>> futures)
@@ -716,7 +705,7 @@ include ../../source/skeleton.pug
 
             static &lt;V> void addCallback​(ListenableFuture&lt;V> future, FutureCallback&lt;? super V> callback, Executor executor)
             static &lt;V> V getDone​(Future&lt;V> future)
-        
+
         h2 Futures.FutureCombiner&lt;V>
         p 다른 ListenableFuture들의 결과들을 이용하는 ListenableFuture
         +asCode('java').
@@ -776,4 +765,4 @@ include ../../source/skeleton.pug
         p 스레드 이름, daemon 여부, 우선순위 등 설정 간소화
 
     h1 ...xml.XmlEscapers
-    p Escapers for XML.
+    p Escapers for XML

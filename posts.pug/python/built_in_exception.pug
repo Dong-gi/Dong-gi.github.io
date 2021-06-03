@@ -1,10 +1,10 @@
 include ../../source/skeleton.pug
 +post('Python Built-in Exceptions', 'Python, Built-in, Exception', 'Python 내장 예외 정리')
     ul
-        li 모든 예외는 BaseException의 인스턴스. 프로그래머가 BaseException을 직접 상속할 수는 없다.
-        li 마지막으로 발생한 예외가 자동으로 __context__에 설정된다.
+        li 모든 예외는 BaseException의 인스턴스. 프로그래머가 BaseException을 직접 상속할 수는 없다
+        li 마지막으로 발생한 예외가 자동으로 __context__에 설정된다
         +asCode('python') raise new_exc from original_exc
-        p __cause__에 original_exc이 등록된다. from None을 하면 이전 예외를 새로운 것으로 교체한다.
+        p __cause__에 original_exc이 등록된다. from None을 하면 이전 예외를 새로운 것으로 교체한다
         li BaseException
         ul
             li args # 생성자로 받은 인자들로 구성된 튜플
