@@ -3,30 +3,30 @@ include ../../source/skeleton.pug
     h1 .NET Framework 개요
     div
         h2 프레임워크
-        p 제어 역전이 있는 대규모 라이브러리. 프로그램의 초기화부터 종료까지 직접 관리하며, 개발자는 일부분만 작성.
+        p 제어 역전이 있는 대규모 라이브러리. 프로그램의 초기화부터 종료까지 직접 관리하며, 개발자는 일부분만 작성
         h2 CLI; Common Language Infrastructure
-        p 닷넷 표준 규약. 자바와 마찬가지로 CLI 사양을 준수한 구현체에서 동작하는 파일은 다른 구현체에서도 실행된다.
+        p 닷넷 표준 규약. 자바와 마찬가지로 CLI 사양을 준수한 구현체에서 동작하는 파일은 다른 구현체에서도 실행된다
         ul
             li CIL; Common Intermediate Language == IL. 중간 언어
-            p IL은 자체 문법을 가지며 ILASM.EXE라는 전용 컴파일러도 있다.
+            p IL은 자체 문법을 가지며 ILASM.EXE라는 전용 컴파일러도 있다
             li CTS; Common Type System
-            p 닷넷 언어가 지켜야 할 타입의 표준. 전체를 구현하진 않아도 된다.
+            p 닷넷 언어가 지켜야 할 타입의 표준. 전체를 구현하진 않아도 된다
             li CLS; Common Language Specification
             p 닷넷 언어가 지켜야 하는 최소 사양
             li 메타데이터
-            p 실행 파일(exe/dll)은 외부에서 리플렉션을 통해 접근할 수 있는 메타데이터를 제공한다.
+            p 실행 파일(exe/dll)은 외부에서 리플렉션을 통해 접근할 수 있는 메타데이터를 제공한다
             li 어셈블리
-            p exe/dll 실행파일을 어셈블리라고 부른다.
+            p exe/dll 실행파일을 어셈블리라고 부른다
             li 모듈
-            p 어셈블리는 1개 이상의 모듈로 구성되며, 하나의 모듈은 하나의 파일에 대응된다.
+            p 어셈블리는 1개 이상의 모듈로 구성되며, 하나의 모듈은 하나의 파일에 대응된다
             li 매니페스트
             p 여러 모듈이 하나의 어셈블리를 구성하는 경우, 모듈 중 하나는 모듈의 목록을 관리하는 매니페스트 데이터를 갖는다. 매니페스트를 포함하는 경우 확장자는 exe/dll, 그 외의 모듈은 보통
-                | netmodule이지만, 일반적으로 모든 어셈블리는 1개의 파일로 구성된다.
+                | netmodule이지만, 일반적으로 모든 어셈블리는 1개의 파일로 구성된다
         h2 닷넷 구현체
         ul
             li .NET Framework
             p CLR; Common Language Runtime + BCL; Base Class Library
-            p CLR : CLI를 구현한 가상 머신. 중간 언어를 JIT 컴파일러를 이용해 기계어로 변환하고, GC를 운용한다.
+            p CLR : CLI를 구현한 가상 머신. 중간 언어를 JIT 컴파일러를 이용해 기계어로 변환하고, GC를 운용한다
             li .NET Core
             p CoreCLR + Core Library
             p 윈도우, macOS, 리눅스에서 실행 가능
@@ -35,7 +35,7 @@ include ../../source/skeleton.pug
 
     h1 개발 환경
     ol
-        li 윈도우에는 기본적으로 닷넷 프레임워크가 설치돼있다. 또는 비주얼 스튜디오 설치 시 같이 설치된다.
+        li 윈도우에는 기본적으로 닷넷 프레임워크가 설치돼있다. 또는 비주얼 스튜디오 설치 시 같이 설치된다
         li C# 컴파일러 : C:\Windows\Microsoft.NET\...\csc.exe
         li 닷넷 역컴파일러 : .NET Reflector(유료), JustDecompile(무료) 등
         li IDE : Visual Studio, Visual Studio for Mac, Visual Studio Code, Xamarin Studio, Rider
@@ -126,8 +126,8 @@ include ../../source/skeleton.pug
 
         h2 배열
         ul
-            li 배열 초기화시 기본값으로 채워진다.
-            li 다차원 배열 [,] : 배열 차원 고정. 메모리 상에서는 일차원 배열처럼 존재.
+            li 배열 초기화시 기본값으로 채워진다
+            li 다차원 배열 [,] : 배열 차원 고정. 메모리 상에서는 일차원 배열처럼 존재
             li Jagged Array [][] : 배열의 차원이 가변적
             +asCode('cs').
                 int[] arr1 = new int[3];
@@ -138,12 +138,12 @@ include ../../source/skeleton.pug
 
         h2 형변환
         ul
-            li 암시적 형변환 : 보다 큰 정의의 자료형으로 자동 변환.
-            p Boxing : Value type 데이터를 Reference type으로 변환. 컴파일러가 묵시적으로 수행.
-            li 명시적 변환 : 괄호 이용.
-            p Unboxing : Reference type 데이터를 Value type으로 변환. 캐스팅을 통해 명시적으로 수행.
+            li 암시적 형변환 : 보다 큰 정의의 자료형으로 자동 변환
+            p Boxing : Value type 데이터를 Reference type으로 변환. 컴파일러가 묵시적으로 수행
+            li 명시적 변환 : 괄호 이용
+            p Unboxing : Reference type 데이터를 Value type으로 변환. 캐스팅을 통해 명시적으로 수행
             li if (o is Mammal m) { }
-            li as 연산자를 이용한 명시적 변환은, null을 허용하는 참조 자료형만 가능하다.
+            li as 연산자를 이용한 명시적 변환은, null을 허용하는 참조 자료형만 가능하다
 
         h2 구문
         ul
@@ -157,8 +157,8 @@ include ../../source/skeleton.pug
             li 점프
             p break, continue, goto(관례상 레이블은 대문자로만), return, throw
             li checked/unchecked 블록
-            p 기본적으로는 프로그램 실행 시 오버플로/언더플로를 무시한다.
-            p checked/unchecked 블록은 이를 각각 명시적인 예외로 처리/비처리 하도록 한다.
+            p 기본적으로는 프로그램 실행 시 오버플로/언더플로를 무시한다
+            p checked/unchecked 블록은 이를 각각 명시적인 예외로 처리/비처리 하도록 한다
             +codeBtn('/Repositories/VisualStudio/CSharp/Basic/CheckedExample.cs', 'cs', '[13, 39]')
             li 예외 처리
             +asCode('cs').
@@ -184,7 +184,7 @@ include ../../source/skeleton.pug
                 +codeBtn('/Repositories/VisualStudio/csharp_property.cs', 'cs') ViewModel에서의 사용 예 »
             li 익명 객체 → new { PropertyName = value } : 생성 후 읽기만 가능
             li 정적 생성자 → static 클래스이름() { }
-            p 첫 번째 인스턴스가 만들어지거나 정적 멤버가 참조되기 전에 자동으로 호출된다.
+            p 첫 번째 인스턴스가 만들어지거나 정적 멤버가 참조되기 전에 자동으로 호출된다
             li partial class ClassName {} : 프로젝트 내 여러 파일에 걸쳐 클래스 작성 가능
             li 접근 제한자 → public, protected(파생 클래스까지), private, internal(같은 어셈블리), protected internal
         div
@@ -197,7 +197,7 @@ include ../../source/skeleton.pug
                     | base 키워드 : 부모 클래스 메서드 또는 생성자 호출
                     +codeBtn('/Repositories/VisualStudio/csharp_base_keyword.cs', 'cs')
                 li sealed 키워드 → 상속/재정의 불가
-                li 부모 클래스 인스턴스를 자식 클래스로 다운캐스팅 불가.
+                li 부모 클래스 인스턴스를 자식 클래스로 다운캐스팅 불가
                 li 모든 자료형의 조상은 System.Object : ToString(), GetType(), Equals(), GetHashCode()
                     br
                     | 모든 값 형식의 조상은 System.ValueType
@@ -205,8 +205,8 @@ include ../../source/skeleton.pug
                     | 모든 배열의 조상은 System.Array : Sort(), BinarySearch&lt;T>(), IndexOf(), ..., Length, Rank
             h3 다형성
             ul
-                li virtual, override 키워드를 사용해 명시한다. virtual 메서드는 body를 정의해야 한다.
-                li new : 부모 메서드 숨기기. override와 달리 형 변환을 통해 부모 메서드에 접근 가능.
+                li virtual, override 키워드를 사용해 명시한다. virtual 메서드는 body를 정의해야 한다
+                li new : 부모 메서드 숨기기. override와 달리 형 변환을 통해 부모 메서드에 접근 가능
                 li abstract class : 인스턴스화 불가능
                     br
                     | abstract method : 서브 클래스에서 반드시 override
@@ -233,28 +233,28 @@ include ../../source/skeleton.pug
                 myDelegate += obj.Func;
                 myDelegate -= obj.Func;
             li.marker Func
-            p 결과를 반환하는 메서드를 참조하는, 미리 정의된 델리게이트. 매개변수 0 ~ 16개, 총 17가지.
+            p 결과를 반환하는 메서드를 참조하는, 미리 정의된 델리게이트. 매개변수 0 ~ 16개, 총 17가지
             li.marker Action
-            p void 리턴 메서드를 참조하는, 미리 정의된 델리게이트. 매개변수 0 ~ 16개, 총 17가지.
+            p void 리턴 메서드를 참조하는, 미리 정의된 델리게이트. 매개변수 0 ~ 16개, 총 17가지
             li.marker 이벤트
             ol
-                li 일반화된 델리게이트. 간단하게 구독/해지 가능. 클래스 밖에서 호출 불가.
-                li 이벤트의 첫 번째 인자는 이벤트 발생 객체. 두 번째 인자는 EventArgs 호환 객체.
+                li 일반화된 델리게이트. 간단하게 구독/해지 가능. 클래스 밖에서 호출 불가
+                li 이벤트의 첫 번째 인자는 이벤트 발생 객체. 두 번째 인자는 EventArgs 호환 객체
                 +asCode('cs') public event EventHandler SomeEvent = delegate { };
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/EventExample.cs', 'cs')
 
         h2 인터페이스
         ol
-            li 인터페이스도 프로퍼티를 가질 수 있다(get/set 지정만 가능). 구현하는 클래스에서 프로퍼티를 구현한다.
+            li 인터페이스도 프로퍼티를 가질 수 있다(get/set 지정만 가능). 구현하는 클래스에서 프로퍼티를 구현한다
             li class SubClass : BaseClass, Interface1, Interface2, ...
             li interface Interface1 : Interface2
 
         h2 구조체 struct
         ol
             li 사용자 정의 ValueType.
-            li ValueType이므로 생성자 호출 없이 선언만으로 초기화가 진행된다. 사용되는 기본 생성자는 컴파일러가 자동으로 추가하며, 재정의할 수 없다.
-            li 모든 타입은 Object의 파생 클래스이므로, 구조체도 new 키워드로 인스턴스를 생성할 수 있다. 인자를 받는 생성자는 모든 필드를 초기화해야 한다.
-            li ValueType이므로 할당 시 깊은 복사가 이루어진다.
+            li ValueType이므로 생성자 호출 없이 선언만으로 초기화가 진행된다. 사용되는 기본 생성자는 컴파일러가 자동으로 추가하며, 재정의할 수 없다
+            li 모든 타입은 Object의 파생 클래스이므로, 구조체도 new 키워드로 인스턴스를 생성할 수 있다. 인자를 받는 생성자는 모든 필드를 초기화해야 한다
+            li ValueType이므로 할당 시 깊은 복사가 이루어진다
 
         h2 열거형 enum
         ol
@@ -287,10 +287,10 @@ include ../../source/skeleton.pug
         h2 타입
         ol
             li.marker BigInteger : 크기 제한없는 정수. 연산자 오버로딩 덕에 편리
-            li.marker dynamic : 파이썬처럼 타입 검사를 런타임에 하여 Duck-typing을 가능하게 한다.
-            li.marker IntPtr : 32/64비트 프로그램에서 각각 4/8바이트. 포인터 외에 운영체제 핸들값을 저장하는 용도로도 사용.
+            li.marker dynamic : 파이썬처럼 타입 검사를 런타임에 하여 Duck-typing을 가능하게 한다
+            li.marker IntPtr : 32/64비트 프로그램에서 각각 4/8바이트. 포인터 외에 운영체제 핸들값을 저장하는 용도로도 사용
             li.marker var : 지역변수 초기화시 사용 가능한 자동형식
-            li.marker Nullable&lt;T> : null을 허용하는 래퍼 클래스. int?는 Nullable&lt;int>와 동일하다.
+            li.marker Nullable&lt;T> : null을 허용하는 래퍼 클래스. int?는 Nullable&lt;int>와 동일하다
         div
             h3 튜플 : System.ValueTuple
             ul
@@ -353,16 +353,16 @@ include ../../source/skeleton.pug
         h2 연산자
         ul
             li.marker await : 피연산자가 나타내는 비동기 작업이 완료될 때까지 바깥쪽 비동기 메서드의 평가를 일시 중단
-            li.marker default(Type) : 타입에 대한 기본값/인스턴스 반환한다.
-            p Since C# 7.1 : default 리터럴로 기본값을 표현할 수 있다.
+            li.marker default(Type) : 타입에 대한 기본값/인스턴스 반환한다
+            p Since C# 7.1 : default 리터럴로 기본값을 표현할 수 있다
             li.marker nameof(Identifier) : 식별자 문자열 반환
             li.marker
                 | Null 조건부 연산자 ?. 및 ?[]
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/NullableExample.cs', 'cs')
             ul
-                li 피연산자가 null이 아니면 멤버 액세스 ?. 또는 요소 액세스 ?[] 연산을 적용한다.
+                li 피연산자가 null이 아니면 멤버 액세스 ?. 또는 요소 액세스 ?[] 연산을 적용한다
                 li null이면 그대로 null 반환
-                li null 조건부 연산자를 연쇄적으로 이용할 때, 중간에서 null이 반환된 경우, 나머지는 처리되지 않는다.
+                li null 조건부 연산자를 연쇄적으로 이용할 때, 중간에서 null이 반환된 경우, 나머지는 처리되지 않는다
             li.marker stackalloc : 값 형식의 배열을 스택에 할당한다. fixed 문으로 고정하지 않아도 된다. 메서드 반환 시 자동 삭제된다; 임의 해제 불가
             +asCode('cs').
                 int* numbers = stackalloc int[100]; // 포인터는 unsafe 컨텍스트를 사용해야 한다
@@ -391,7 +391,7 @@ include ../../source/skeleton.pug
 
         h2 한정자
         ul
-            li.marker async : 메서드, 람다식, 익명 메서드(delegate 연산자)를 비동기로 지정.
+            li.marker async : 메서드, 람다식, 익명 메서드(delegate 연산자)를 비동기로 지정
             ul
                 li void 리턴 : await할 수 없으며, 따라서 예외를 catch할 수 없다
                 li Task, Task&lt;TResult> : await 가능
@@ -423,7 +423,7 @@ include ../../source/skeleton.pug
                 | ref struct : 스택에 할당되는 struct. 클래스의 멤버가 될 수 없다. 인터페이스를 구현할 수 없다
                 br
                 | readonly struct : 모든 필드가 readonly인 struct
-            li.marker unsafe : unsafe로 한정한 타입, 메서드, 블록에서는 포인터를 사용할 수 있다.
+            li.marker unsafe : unsafe로 한정한 타입, 메서드, 블록에서는 포인터를 사용할 수 있다
             p 컴파일 시 -unsafe 옵션을 지정해야 한다 : 비주얼 스튜디오는 "프로젝트 속성 - 빌드 - 안전하지 않은 코드 허용"
                 br
                 | 관련 클래스 : System.Runtime.InteropServices.Marshal
@@ -438,12 +438,12 @@ include ../../source/skeleton.pug
                 | 가변 길이 매개변수 params
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/ParamsExample.cs', 'cs', '[11, 17]')
             li.marker
-                | 확장 메서드 : 기존 클래스에 static method 추가됨.
+                | 확장 메서드 : 기존 클래스에 static method 추가됨
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/ExtensionExample.cs', 'cs')
             li.marker 람다 식 사용 확장 : 생성자, 소멸자, 이벤트 add/remove, 속성 set, 인덱서 set
             li.marker 메서드 안에 지역 함수 정의 가능
             p static 지역 함수로 선언하면 외부 변수 참조 불가
-            li.marker extern 메서드 : 메서드의 body가 없어도 컴파일 되도록 한다.
+            li.marker extern 메서드 : 메서드의 body가 없어도 컴파일 되도록 한다
             p 호출할 메서드가 있는 dll을 [DllImport] Attribute로 지정해주면 해당 메서드를 호출한다. http://www.pinvoke.net/
             li.marker Caller information
             +asCode('cs').
@@ -456,7 +456,7 @@ include ../../source/skeleton.pug
         h2 구문
         ol
             li.marker
-                | 인덱서 구문 : 하나 이상의 인수로 참조되는 속성을 반환. string, List&lt;T> 등은 인덱서를 구현함.
+                | 인덱서 구문 : 하나 이상의 인수로 참조되는 속성을 반환. string, List&lt;T> 등은 인덱서를 구현함
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/IndexerExample.cs', 'cs')
             li.marker switch case 필터 Since C# 7.0
             +asCode('cs').
@@ -495,7 +495,7 @@ include ../../source/skeleton.pug
             h3 LINQ; Language INtegrated Query
             ol
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/LinqExample.cs', 'cs')
-                li MoreLinq 패키지에서 추가적인 편의성을 제공한다.
+                li MoreLinq 패키지에서 추가적인 편의성을 제공한다
                 li from : LINQ query는 from으로 시작한다. from의 대상은 IEnumarable&lt;T>
                 p LINQ query 결과도 IEnumerable&lt;T>
                 li where + bool 판정식
@@ -537,11 +537,11 @@ include ../../source/skeleton.pug
 
         h2 Attribute
         ol
-            li 자바의 애너테이션처럼 요소를 장식한다.
+            li 자바의 애너테이션처럼 요소를 장식한다
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs') AttributeExample.cs 전체 코드 »
-            li 사용자 정의 특성은 System.Attribute를 상속하여 만든다.
+            li 사용자 정의 특성은 System.Attribute를 상속하여 만든다
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs', '[12, 19]')
-            li 명명시 Attribute를 접미하고, 실제 사용할 땐 생략 가능하다.
+            li 명명시 Attribute를 접미하고, 실제 사용할 땐 생략 가능하다
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs', '[21, 24]')
             li 특성 적용 대상 제한 : System.AttributeUsage 생성자에 AttributeTargets 전달. 생략시 기본값은 AttributeTargets.All
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs', '[12, 13]')
@@ -680,7 +680,7 @@ include ../../source/skeleton.pug
 
         h2 Records
         ul
-            li class 키워드 대신 record 키워드로 선언하는 경우, 유사 값-타입이 된다.
+            li class 키워드 대신 record 키워드로 선언하는 경우, 유사 값-타입이 된다
             li Equals 메서드에서 값을 기반으로 비교를 수행한다
             li 다른 record를 상속할 수 있다
             li Positional records
@@ -731,7 +731,7 @@ include ../../source/skeleton.pug
         li.marker 균형 조정 그룹; Balancing group
         ul
             li (?&lt;name1-name2>X) == (?'name1-name2'X)
-            p name1은 현재 그룹(Optional)이고, name2는 이전에 정의된 그룹. 균형 조정 그룹은 마지막(백트래킹) name2 정의를 삭제하고, name1에 name2와 name1 사이 간격을 저장한다.
+            p name1은 현재 그룹(Optional)이고, name2는 이전에 정의된 그룹. 균형 조정 그룹은 마지막(백트래킹) name2 정의를 삭제하고, name1에 name2와 name1 사이 간격을 저장한다
             +asCode('cs').
                 var html = "&lt;html>&lt;body>Hello&lt;p>World&lt;/p>olleH&lt;/body>&lt;/html>Plain Text&lt;script>console.log('hello world');&lt;/script>Plain Text&lt;yes>Text&lt;/no>";
                 Console.WriteLine($"All text : {html}");

@@ -38,7 +38,7 @@ include ../../source/skeleton.pug
     h1 확률분포
     div
         h2 확률변수; Random variable
-        p ::= 표본공간의 원소를 실수로 대응하는 함수.
+        p ::= 표본공간의 원소를 실수로 대응하는 함수
         p 식[P(X=x)]식 ::= 확률변수 식[X]식의 값이 식[x]식일 확률
         h2 확률질량함수; Probability mass function
         p ::= 이산확률변수 식[X]식에 대하여 아래를 만족하는 함수 식[f(x)]식
@@ -211,7 +211,7 @@ include ../../source/skeleton.pug
                 | x_2 = w_2(y_1,y_2)\end{gather*}]식라면, 식[Y_1,Y_2]식의 결합확률분포는 식[g(y_1,y_2)=f(w_1(y_1,y_2),w_2(y_1,y_2))|J|]식
             p 이때, 식[J]식는 야코비 행렬(Jacobian matrix)로 식[|J|=\begin{vmatrix} {\partial{x_1} \over \partial{y_1}} & {\partial{x_1} \over \partial{y_2}} \\
                 | {\partial{x_2} \over \partial{y_1}} & {\partial{x_2} \over \partial{y_2}}\end{vmatrix}]식
-            li 연속확률변수 식[X, Y]식에 대해, 식[u:X\to Y]식는 일대일 함수지만 역함수는 존재하지 않는 경우.
+            li 연속확률변수 식[X, Y]식에 대해, 식[u:X\to Y]식는 일대일 함수지만 역함수는 존재하지 않는 경우
                 | 만일 식[X]식을 빈틈없이 나눈 각 구간마다 부분적인 역함수 식[x_1=w_1(y), \cdots, x_k=w_k(y)]식가 존재한다면,
                 | 식[Y]식의 확률분포는 식[g(y)=\sum f(w_i(y))|J_i|]식 ← 식[J_i={\partial{x_i} \over \partial{y}}]식
         h2 적률; Moment
@@ -240,13 +240,13 @@ include ../../source/skeleton.pug
         ol
             li.marker 중심극한정리; Central limit theorem
             p 평균이 식[\mu]식, 분산이 식[\sigma^2]식인 모집단으로부터, 크기 n인 표본을 추출했을 때,
-                | n이 충분히 크다면 식[Z = {\overline{X}-\mu \over \sigma/\sqrt{n}}]식는 표준정규분포를 따른다.
-                | 이때 식[\overline{X}]식는 표본평균.
+                | n이 충분히 크다면 식[Z = {\overline{X}-\mu \over \sigma/\sqrt{n}}]식는 표준정규분포를 따른다
+                | 이때 식[\overline{X}]식는 표본평균
             li.marker Cochran's theorem
             p 식[N(\mu, \sigma^2)]식를 따르는 정규모집단으로부터 크기 n인 표본을 추출했을 때,
                 | n이 충분히 크다면 식[\chi^2={(n-1)S^2 \over \sigma^2}]식는 카이제곱분포 식[f(x; n-1)]식를 따른다
             li 식[T={Z \over \sqrt{V/(n-1)}}]식는 자유도 n-1인 t-분포를 따른다
-            p 모집단의 분산을 모를 때 모평균의 추정에 이용할 수 있다.
+            p 모집단의 분산을 모를 때 모평균의 추정에 이용할 수 있다
         h2 F-분포
         ul
             li 자유도가 각각 식[v_1, v_2]식인 두 카이제곱변수 식[V_1, V_2]식에 대하여, 식[F={V_1/v_1 \over V_2/v_2}]식는 자유도가 식[(v_1, v_2)]식인 F-분포를 따른다

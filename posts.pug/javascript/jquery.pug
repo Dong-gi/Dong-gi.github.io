@@ -70,7 +70,7 @@ include ../../source/skeleton.pug
                     td(colspan='2') :contains("subStr")|eq(n)|gt(n)|lt(n)|has("tagName")|not("selector")|nth-child(2n+3)
     +asCode('javascript').
         jQuery === $
-            // $.noConflict()를 호출하면 $를 사용할 수 없다.
+            // $.noConflict()를 호출하면 $를 사용할 수 없다
 
         // 문서 준비 완료 이벤트 핸들러 등록
         $(document).ready(() => {})
@@ -127,9 +127,9 @@ include ../../source/skeleton.pug
         li 이벤트 핸들러 추가/제거
         ol
             li: +asCode('javascript') .on(events[, selector][, data], handler)
-            p selector가 null이거나 제공되지 않은 경우, 선택된 노드들에 대해 이벤트 핸들러 추가. selector가 제공된 경우 선택자에 매칭되는 후손 노드(미래에 추가되는 것들도 포함)들에 핸들러가 연결된다.
+            p selector가 null이거나 제공되지 않은 경우, 선택된 노드들에 대해 이벤트 핸들러 추가. selector가 제공된 경우 선택자에 매칭되는 후손 노드(미래에 추가되는 것들도 포함)들에 핸들러가 연결된다
             li: +asCode('javascript') .one(events[, selector][, data], handler)
-            p 핸들러가 한 번만 이벤트를 처리한다.
+            p 핸들러가 한 번만 이벤트를 처리한다
 
     h1 jQuery UI
     p

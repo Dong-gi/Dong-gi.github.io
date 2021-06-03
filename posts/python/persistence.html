@@ -9,7 +9,7 @@ load(file, *, fix_imports=True, encoding="ASCII", errors="strict", buffers=None)
     // == Unpickler(file).load()
 loads(bytes_object, *, fix_imports=True, encoding="ASCII", errors="strict", buffers=None)
     // bytes로부터 역직렬화
-</div></ul><h1>shelve : pickle을 이용해 dict과 유사한 형식으로 직렬화</h1><ul><li>open(filename, flag='c', protocol=None, writeback=False)</li><p>flag : 'r'(기존 파일 읽기 전용), 'w'(기존 파일 읽기/쓰기), 'c'(읽기/쓰기, 기존 파일 없으면 생성), 'n'(읽기/쓰기, 항상 새 파일 생성)</p><li>close()를 명시적으로 호출하거나, with을 이용해 자동으로 호출되도록 해야 한다.</li><p><strong>↓ python</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="python">with shelve.open('spam') as db:
+</div></ul><h1>shelve : pickle을 이용해 dict과 유사한 형식으로 직렬화</h1><ul><li>open(filename, flag='c', protocol=None, writeback=False)</li><p>flag : 'r'(기존 파일 읽기 전용), 'w'(기존 파일 읽기/쓰기), 'c'(읽기/쓰기, 기존 파일 없으면 생성), 'n'(읽기/쓰기, 항상 새 파일 생성)</p><li>close()를 명시적으로 호출하거나, with을 이용해 자동으로 호출되도록 해야 한다</li><p><strong>↓ python</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="python">with shelve.open('spam') as db:
     db['eggs'] = 'eggs'
 </div></ul><h1>sqlite3</h1><p><strong>↓ python</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="python">conn = sqlite3.connect('example.db') # 파일 시스템
 conn = sqlite3.connect(':memory:') # in-memory

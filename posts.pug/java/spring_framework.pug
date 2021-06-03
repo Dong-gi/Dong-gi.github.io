@@ -7,10 +7,10 @@ include ../../source/skeleton.pug
         +asA('https://docs.spring.io/spring-framework/docs/current/javadoc-api/', 'javadoc-api')
         h2 Overview
         ul
-            li 상용 Java 앱 개발을 위한 JavaEE 대안 프레임워크. 다른 JVM 언어 ─ Groovy, Kotlin ─ 도 지원한다.
+            li 상용 Java 앱 개발을 위한 JavaEE 대안 프레임워크. 다른 JVM 언어 ─ Groovy, Kotlin ─ 도 지원한다
             p JavaEE보다 신규 사양의 결정, 신규 기능의 추가가 빠르다
             li Spring Framework 5에 추가된 WebFlux는 서블릿 컨테이너 대신 Netty 등의 리액티브 스트림 서버를 이용한다
-            li Spring Framework는 순환적인 패키지 참조가 없는, 고도로 표준화된 코드를 유지한다.
+            li Spring Framework는 순환적인 패키지 참조가 없는, 고도로 표준화된 코드를 유지한다
             li 빠른 시작
             +asA('https://start.spring.io/', 'Spring Boot initializer')
             +asA('https://spring.io/guides#topical-guides')
@@ -26,9 +26,9 @@ include ../../source/skeleton.pug
 
                 li IoC(Inversion of Control), DI(Dependency Injection)란?
                 ul
-                    li 객체 인스턴스화, 프로퍼티 설정을 Spring IoC 컨테이너가 대신 해준다.
-                    li 의존성을 컨테이너가 주입(DI)한다.
-                    li 의존성을 외부에서 설정하므로 제어의 역전(IoC)이 존재한다.
+                    li 객체 인스턴스화, 프로퍼티 설정을 Spring IoC 컨테이너가 대신 해준다
+                    li 의존성을 컨테이너가 주입(DI)한다
+                    li 의존성을 외부에서 설정하므로 제어의 역전(IoC)이 존재한다
 
                 li Bean이란?
                 p Spring IoC 컨테이너가 관리하는 인스턴스. 그 외 임의 인스턴스를 지칭해도 무방
@@ -38,11 +38,11 @@ include ../../source/skeleton.pug
 
                 li ApplicationContext → BeanFactory 인터페이스
                 ul
-                    li BeanFactory : 임의 타입 객체를 관리할 수 있는, DI 관련 최상위 인터페이스.
-                    li ApplicationContext : AOP, 이벤트 발행 등 상용 애플리케이션에 쓰일 특징을 추가로 주입한다.
+                    li BeanFactory : 임의 타입 객체를 관리할 수 있는, DI 관련 최상위 인터페이스
+                    li ApplicationContext : AOP, 이벤트 발행 등 상용 애플리케이션에 쓰일 특징을 추가로 주입한다
 
             h3 Container Overview
-            p ApplicationContext는 메타데이터(XML, Java annotation Since 2.5, Java code Since 3.0)에 기술된 대로 클래스를 인스턴스화하고, 의존성을 주입한다.
+            p ApplicationContext는 메타데이터(XML, Java annotation Since 2.5, Java code Since 3.0)에 기술된 대로 클래스를 인스턴스화하고, 의존성을 주입한다
             ol
                 li IoC 메타데이터 작성
                 li IoC Container 인스턴스화
@@ -77,7 +77,7 @@ include ../../source/skeleton.pug
                             &lt;import resource="other.xml"/>
                             &lt;import resource="dir/other.xml"/>
                         &lt;/beans>
-                    p ↑ resource의 경로는 '/'로 시작하더라도 항상 현재 디렉터리에 대한 상대경로로 해석된다.
+                    p ↑ resource의 경로는 '/'로 시작하더라도 항상 현재 디렉터리에 대한 상대경로로 해석된다
 
                 h4 Groovy DSL 메타데이터
                 +asCode('groovy', 'services.groovy').
@@ -141,7 +141,7 @@ include ../../source/skeleton.pug
                 ul
                     li index, type, name은 모호성을 피하기 위해 사용하는 옵션 프로퍼티이며, name을 이용하는 경우 debug 컴파일하거나, 
                         +asA('https://docs.oracle.com/javase/8/docs/api/java/beans/ConstructorProperties.html')
-                        | 를 이용해 이름을 탐색할 수 있게 해야한다.
+                        | 를 이용해 이름을 탐색할 수 있게 해야한다
                     li constructor-arg를 이용한 생성자 주입 예
                     +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java', [7]) Bean
                     +codeBtn('/Repositories/STS/app2/src/main/resource/Beans25.xml', 'xml') XML
@@ -189,15 +189,15 @@ include ../../source/skeleton.pug
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello17Test3.java', 'java', [8]) Context
                     tr
                         td 의존 빈 주입
-                        td property, constructor-arg 태그 안에서 이용하는 bean 태그들은 id, name이 필요없으며, 지정해도 무시된다.
+                        td property, constructor-arg 태그 안에서 이용하는 bean 태그들은 id, name이 필요없으며, 지정해도 무시된다
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello1.java', 'java', [5]) Bean1
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello17.java', 'java', [7]) Bean2
                             +codeBtn('/Repositories/STS/app2/src/main/resource/Beans7.xml', 'xml') XML
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello4Test3.java', 'java', [8]) Context
                     tr
                         td 의존 컬렉션 주입
-                        td 자바 기본 타입 및 String은 문자열로부터 알아서 변환되어 주입된다.
-                            |  반면 배열, List, Properties, Map 등은 전용 태그를 이용하거나, 다른 팩터리 메서드를 빌려 설정해야 한다.
+                        td 자바 기본 타입 및 String은 문자열로부터 알아서 변환되어 주입된다
+                            |  반면 배열, List, Properties, Map 등은 전용 태그를 이용하거나, 다른 팩터리 메서드를 빌려 설정해야 한다
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello5.java', 'java', [10]) Bean
                             +codeBtn('/Repositories/STS/app2/src/main/resource/Beans8.xml', 'xml') XML
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello5Test.java', 'java', [11]) Context
@@ -261,8 +261,8 @@ include ../../source/skeleton.pug
                         td
                             +pos('depends-on')
                             | depends-on을 이용한 빈 생성 순서 설정
-                        td has-a 관계보다 약한 의존 관계에서, depends-on을 이용해 특정 빈이 먼저 생성되도록 강제할 수 있다.
-                            |  양쪽 빈 모두 싱글톤인 경우, 객체 소멸 순서도 정해진다.
+                        td has-a 관계보다 약한 의존 관계에서, depends-on을 이용해 특정 빈이 먼저 생성되도록 강제할 수 있다
+                            |  양쪽 빈 모두 싱글톤인 경우, 객체 소멸 순서도 정해진다
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello20.java', 'java', [5]) Bean
                             +codeBtn('/Repositories/STS/app2/src/main/resource/Beans34.xml', 'xml') XML
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello20Test.java', 'java', [10]) Context
@@ -282,7 +282,7 @@ include ../../source/skeleton.pug
                         +tds('byName', '이름이 일치하는 빈을 주입한다')
                         +tds('byType', '타입이 일치하는 빈을 주입한다. 일치하는 빈이 2개 이상이면 에러, 0개면 미설정')
                         +tds('constructor', '생성자에 적용되는 byType')
-                    li 명시된 의존성은 항상 autowire보다 우선이며, 자바 기본 타입은 autowire 할 수 없다.
+                    li 명시된 의존성은 항상 autowire보다 우선이며, 자바 기본 타입은 autowire 할 수 없다
                     li bean 정의 시 autowire-candidate 속성을 false로 하면, type 매치 주입물이 되지 않는다
                     li beans 정의 시 default-autowire-candidates를 이용해 autowire 주입물을 제한할 수 있다
                     +asCode('xml') &lt;beans ... default-autowire-candidates="*Service,*Dao" />
@@ -295,7 +295,7 @@ include ../../source/skeleton.pug
 
             h3 Bean Scope
             ul
-                li 빈의 유효 기간을 설정할 수 있다. 아래 6가지는 빈 설정 시 기본으로 이용할 수 있는 목록이다.
+                li 빈의 유효 기간을 설정할 수 있다. 아래 6가지는 빈 설정 시 기본으로 이용할 수 있는 목록이다
                 table
                     +ths('Scope', '설명')
                     +tds('singleton', '기본값. 컨테이너에서 하나의 인스턴스만 생성')
@@ -304,7 +304,7 @@ include ../../source/skeleton.pug
                     +tds('session', 'HTTP 세션마다 새 인스턴스 생성. Web 관련 ApplicationContext에서 지정 가능')
                     +tds('application', 'ServletContext마다 새 인스턴스 생성. Web 관련 ApplicationContext에서 지정 가능')
                     +tds('websocket', 'WebSocket마다 새 인스턴스 생성. Web 관련 ApplicationContext에서 지정 가능')
-                li Spring 3.0부터 스레드 단위로 인스턴스를 생성하는 SimpleThreadScope가 추가되었다.
+                li Spring 3.0부터 스레드 단위로 인스턴스를 생성하는 SimpleThreadScope가 추가되었다
                 p ConfigurableBeanFactory.registerScope(String, Scope) 또는 CustomScopeConfigurer로 사용 가능
                 +pos('scope 예')
                 li request, session, application 예
@@ -312,13 +312,13 @@ include ../../source/skeleton.pug
                 +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/entity/PerRequest.java', 'java', [8]) Bean per Request
                 +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/entity/PerSession.java', 'java', [8]) Bean per Session
                 +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/controller/ScopeController.java', 'java', [27,40,42,55]) Controller
-                li 기본적으로 빈에 주입된 의존 객체는 컨테이너에 의해 다시 설정되지 않는다.
-                p 만일 스코프가 더 좁은 빈을 의존하지만 참조 시마다 새로운 인스턴스가 필요한 경우, 해당 메서드를 재정의하거나, aop:scoped-proxy를 이용하면 된다.
-                    |  AOP proxy 인스턴스는 직렬화 가능하며, 직렬화 전 참조 객체와 역직렬화 후 참조 객체는 동일하다.
+                li 기본적으로 빈에 주입된 의존 객체는 컨테이너에 의해 다시 설정되지 않는다
+                p 만일 스코프가 더 좁은 빈을 의존하지만 참조 시마다 새로운 인스턴스가 필요한 경우, 해당 메서드를 재정의하거나, aop:scoped-proxy를 이용하면 된다
+                    |  AOP proxy 인스턴스는 직렬화 가능하며, 직렬화 전 참조 객체와 역직렬화 후 참조 객체는 동일하다
                 p 다른 방법으로 ObjectFactory#getObject(), ObjectProvider(→ ObjectFactory)의 getIfAvailable(), getIfUnique()을 이용할 수도 있다
                 p
                     span.hover-content(template-id='template-jsr330') JSR-330
-                    | 에서는 Provider가 위와 비슷한 기능을 제공한다.
+                    | 에서는 Provider가 위와 비슷한 기능을 제공한다
                 table.no-sort
                     tr
                         td 아무 설정 없는 예
@@ -411,14 +411,14 @@ include ../../source/skeleton.pug
                     +tds('ServletContextAware', 'ServletContext')
 
             h3 컨테이너 확장
-            p ApplicationContext를 직접 상속하지 않고, 여러 인터페이스 구현체를 등록함으로써 기능 확장이 가능하다.
+            p ApplicationContext를 직접 상속하지 않고, 여러 인터페이스 구현체를 등록함으로써 기능 확장이 가능하다
             ul
                 li BeanPostProcessor 
                     +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello27.java', 'java', [8]) Bean
                     +codeBtn('/Repositories/STS/app2/src/main/resource/Beans42.xml', 'xml') XML
                     +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello27Test.java', 'java', [8]) Context
-                p 인스턴스 생성 후, 초기화 콜백 호출 전/후 작업을 추가할 수 있다. 여러 BeanPostProcessor를 등록하는 경우, order 속성(Ordered 인터페이스)으로 실행 순서를 제어할 수 있다.
-                p ApplicationContext#addBeanPostProcessor를 이용해 직접 등록하는 경우, Ordered 인터페이스를 구현해도 무시하며, 직접 등록된 순서대로 실행된다. 자동으로 탐색된 다른 BeanPostProcessor들보다 항상 먼저 실행된다.
+                p 인스턴스 생성 후, 초기화 콜백 호출 전/후 작업을 추가할 수 있다. 여러 BeanPostProcessor를 등록하는 경우, order 속성(Ordered 인터페이스)으로 실행 순서를 제어할 수 있다
+                p ApplicationContext#addBeanPostProcessor를 이용해 직접 등록하는 경우, Ordered 인터페이스를 구현해도 무시하며, 직접 등록된 순서대로 실행된다. 자동으로 탐색된 다른 BeanPostProcessor들보다 항상 먼저 실행된다
                 li BeanFactoryPostProcessor
                 p 빈을 생성하기 전에 컨테이너 관련 설정을 변경할 수 있다. 여러 BeanFactoryPostProcessor를 등록하는 경우, order 속성(Ordered 인터페이스)으로 순서를 제어할 수 있다
                 ul
@@ -445,7 +445,7 @@ include ../../source/skeleton.pug
 
             h3 Annotation Configuration
             ul
-                li XML Configuration과 같이 이용하는 경우, Annotation 기반 처리가 먼저 이뤄짐에 유의.
+                li XML Configuration과 같이 이용하는 경우, Annotation 기반 처리가 먼저 이뤄짐에 유의
                 li context:annotation-config 
                     +codeBtn('/Repositories/STS/app2/src/main/resource/anno01.xml', 'xml') XML
                 p ↑ 컨테이너에 등록된 빈에 대하여 애너테이션 처리
@@ -455,7 +455,7 @@ include ../../source/skeleton.pug
                 li XML을 아예 사용하지 않고도 구성 가능하다 
                     +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno02.java', 'java', [11]) Bean
                     +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno02Test2.java', 'java', [14]) Context
-                li @Autowired, @Inject, @Value, @Resource는 BeanPostProcessor 구현체가 처리하므로, 사용자 정의 BeanPostProcessor 또는 BeanFactoryPostProcessor 클래스 안에서 해당 애너테이션들을 적용할 수 없다. 대신 @Bean을 이용해야 한다.
+                li @Autowired, @Inject, @Value, @Resource는 BeanPostProcessor 구현체가 처리하므로, 사용자 정의 BeanPostProcessor 또는 BeanFactoryPostProcessor 클래스 안에서 해당 애너테이션들을 적용할 수 없다. 대신 @Bean을 이용해야 한다
                 li Since JDK 9 : 스캔 대상 패키지가 module-info에서 exports 됐는지, non-public 메서드를 호출해야 되는 패키지가 opens(exports 말고) 됐는지 확인 필요
             table
                 +ths('Annotation', '대응 코드', '예시 코드')
@@ -483,7 +483,7 @@ include ../../source/skeleton.pug
                         li name으로 빈 별명을 설정할 수 있다
                         li initMethod를 설정할 수 있다 ← 메서드 바디에서 호출하면 되므로 쓸 일은 별로 없을듯
                         li destroyMethod를 설정할 수 있다
-                        p 기본값은 "(inferred)"로, 자동으로 public close() 또는 shutdown()을 찾아 실행한다. 아무것도 호출하고 싶지 않다면 ""로 설정하면 된다.
+                        p 기본값은 "(inferred)"로, 자동으로 public close() 또는 shutdown()을 찾아 실행한다. 아무것도 호출하고 싶지 않다면 ""로 설정하면 된다
                         p JNDI로 가져온 리소스 ─ 특히 DataSource들은 외부에서 생애가 관리되므로 destroyMethod="" 설정함이 바람직하다
                 tr
                     td @Conditional
@@ -511,7 +511,7 @@ include ../../source/skeleton.pug
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno01.java', 'java', [6]) Bean
                             +codeBtn('/Repositories/STS/app2/src/main/resource/anno01.xml', 'xml') XML
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno01Test.java', 'java', [8]) Context
-                        li 특정 타입 T의 배열(T[])/컬렉션(Collection&lt;T>)/맵(Map&lt;String, T>에 적용한 경우, 해당 타입의 모든 빈을 목록으로 설정해준다.
+                        li 특정 타입 T의 배열(T[])/컬렉션(Collection&lt;T>)/맵(Map&lt;String, T>에 적용한 경우, 해당 타입의 모든 빈을 목록으로 설정해준다
                         p 타깃 타입이 org.springframework.core.Ordered를 구현했거나, @Order, @Priority를 갖고 있으면 정렬하여 설정해준다
                         ul
                             li Array FIELD 적용 예 
@@ -528,9 +528,9 @@ include ../../source/skeleton.pug
                             li FIELD, METHOD에 required = false 적용 예 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno07.java', 'java', [14]) Bean
                                 +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno07Test.java', 'java', [8]) Context
-                            p 의존 객체가 하나라도 누락되면 호출을 생략한다. → 따라서 기본값 그대로 남는다.
+                            p 의존 객체가 하나라도 누락되면 호출을 생략한다. → 따라서 기본값 그대로 남는다
                             li 팩터리 메서드, CONSTRUCTOR에 required = false 적용
-                            p 배열, Collection, Map인자로 매칭되는 빈이 없는 경우, empty 인스턴스를 넘겨 호출한다.
+                            p 배열, Collection, Map인자로 매칭되는 빈이 없는 경우, empty 인스턴스를 넘겨 호출한다
                             li ↑ 이는 @Autowired가 없는 단일 생성자를 갖는 일반 클래스에도 적용된다 
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno08.java', 'java', [9]) Bean
                                 +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno08Test.java', 'java', [10]) Context
@@ -540,7 +540,7 @@ include ../../source/skeleton.pug
                         li 인자가 있든 없든 호출되길 원한다면 Optional 또는 @Nullable(Since 5.0)을 이용하면 된다 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno09.java', 'java', [11]) Bean
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno09Test.java', 'java', [8]) Context
-                        li 아래의 인터페이스 및 연관 구현 클래스에 대한 @Autowired 필드는 실행 환경에 따라 적절히 주입된다.
+                        li 아래의 인터페이스 및 연관 구현 클래스에 대한 @Autowired 필드는 실행 환경에 따라 적절히 주입된다
                         p BeanFactory, ApplicationContext, Environment, ResourceLoader, ApplicationEventPublisher, MessageSource
                 tr
                     td @Primary
@@ -558,7 +558,7 @@ include ../../source/skeleton.pug
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno11.java', 'java', [13]) Bean
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno11Test.java', 'java', [8]) Context
                         li Qualifier는 고유할 필요가 없으며, 배열/컬렉션/맵 주입 시 qualifier가 일치하는 모든 빈들이 멤버로 할당된다
-                        li @Autowired와 같이 사용하는 경우, 타입 기반 매칭이 먼저 수행됨에 유의. Qualifier 매칭만 수행하려는 경우 JSR-250의 @Resource를 이용할 것.
+                        li @Autowired와 같이 사용하는 경우, 타입 기반 매칭이 먼저 수행됨에 유의. Qualifier 매칭만 수행하려는 경우 JSR-250의 @Resource를 이용할 것
                         li 사용자 정의 @Qualifier를 이용할 수 있다 
                             +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno12.java', 'java', [19]) Bean
                             +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno12Test.java', 'java', [8]) Context
@@ -626,7 +626,7 @@ include ../../source/skeleton.pug
                         li excludeFilters == xml: context:exclude-filter
                         p ↑ 매칭되는 클래스는 스캔 제외
                         li useDefaultFilters=false == xml: use-default-filters="false"
-                        p ↑ @Component, @Repository, @Service 등을 자동으로 찾지 않는다.
+                        p ↑ @Component, @Repository, @Service 등을 자동으로 찾지 않는다
                         li 필터 종류
                         ul
                             li annotation(default) : 타입에 특정 애너테이션이 붙어있는지? 
@@ -643,11 +643,11 @@ include ../../source/skeleton.pug
                                 +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/scan/ScanFilter.java', 'java', [9]) TypeFilter
                                 +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno25Test.java', 'java', [8]) Context
                         li nameGenerator == xml: name-generator
-                        p 스프링 기본 네이밍이 맞지 않는 경우 BeanNameGenerator 구현체를 직접 제공해도 된다. 특히 같은 이름의 클래스가 여러 패키지에 존재하는 경우, 클래스 풀네임을 이름으로 제공하는 FullyQualifiedAnnotationBeanNameGenerator(Since 5.2.3)도 고려해봄직하다.
+                        p 스프링 기본 네이밍이 맞지 않는 경우 BeanNameGenerator 구현체를 직접 제공해도 된다. 특히 같은 이름의 클래스가 여러 패키지에 존재하는 경우, 클래스 풀네임을 이름으로 제공하는 FullyQualifiedAnnotationBeanNameGenerator(Since 5.2.3)도 고려해봄직하다
                         li scopeResolver == xml: scope-resolver
-                        p 애너테이션 기반 스코핑이 불충분하다면, 직접 ScopeMetadataResolver 구현체를 제공할 수 있다.
+                        p 애너테이션 기반 스코핑이 불충분하다면, 직접 ScopeMetadataResolver 구현체를 제공할 수 있다
                         li scopedProxy == xml: scoped-proxy
-                        p singleton 외 스코프 빈에 대한 기본 프록시 설정 가능.
+                        p singleton 외 스코프 빈에 대한 기본 프록시 설정 가능
                         ul
                             li NO : default. 프록시 없음
                             li INTERFACES : 인터페이스 프록시 생성. JDK 동적 프록시 이용
@@ -676,19 +676,19 @@ include ../../source/skeleton.pug
                     td @Component
                     td 
                         span.hover-content(template-id='template-jsr330') JSR-330.
-                        |  타입에 적용하는 경우 자동 생성 대상임을 나타낸다. 속성으로 이름을 지정하지 않는 경우 자동으로 할당된다.
+                        |  타입에 적용하는 경우 자동 생성 대상임을 나타낸다. 속성으로 이름을 지정하지 않는 경우 자동으로 할당된다
                 tr
                     td @Singleton
                     td @Scope("singleton")
                     td 
                         span.hover-content(template-id='template-jsr330') JSR-330
-                        | 의 기본 scope는 prototype이지만, 스프링 컨테이너는 singleton으로 처리한다. 따라서 이 애너테이션은 사용자 정의 스코프 정의에만 이용하면 된다.
+                        | 의 기본 scope는 prototype이지만, 스프링 컨테이너는 singleton으로 처리한다. 따라서 이 애너테이션은 사용자 정의 스코프 정의에만 이용하면 된다
                 tr
                     td @Qualifier, @Named
                     td @Qualifier
                     td 
                         span.hover-content(template-id='template-jsr330') JSR-330.
-                        |  javax.inject.Qualifier는 사용자 정의 Qualifier를 위해 존재하며, @Named는 String qualifier 구현체로 이용할 수 있다.
+                        |  javax.inject.Qualifier는 사용자 정의 Qualifier를 위해 존재하며, @Named는 String qualifier 구현체로 이용할 수 있다
                 tr
                     td @Import, @ImportResource
                     td xml: import
@@ -831,7 +831,7 @@ include ../../source/skeleton.pug
                         +codeBtn('/Repositories/STS/ioc-example/src/main/java/io/github/donggi/example/event/MyEvent2Listener2.java', 'java', [8]) Listener2
                         +codeBtn('/Repositories/STS/ioc-example/src/test/java/io/github/donggi/example/event/Event2Tests.java', 'java', [8]) Test
                     li 이벤트 핸들러가 다른 이벤트를 반환하는 경우, 해당 이벤트가 발행된다. 이벤트에 대한 컬렉션을 반환하면, 각각이 모두 발행된다
-                    p 단, @Async 메서드는 수동으로 발행해야 한다.
+                    p 단, @Async 메서드는 수동으로 발행해야 한다
                     li @Order로 리스너 호출 순서를 제어할 수 있다
                     li @EventListener > condition에 사용 가능한 SpEL 이벤트 메타데이터
                     table
@@ -844,8 +844,8 @@ include ../../source/skeleton.pug
                     li Resource ::= java.net.URL을 포함한 클래스 패스 또는 파일 시스템 상의 리소스
                     li ApplicationContext는 그 자체로 ResourceLoader며, 저수준 Resource 획득을 쉽게 해준다
                     li ResourceLoaderAware를 구현한 빈들은 초기화 시 ApplicationContext를 ResourceLoader로 전달받는다
-                    li ClassPathXmlAPplicationContext에 간단한 경로로 리소스를 질의하는 경우, 클래스 패스 상의 리소스를 찾는다.
-                    p 애매한 경우, 명시적으로 classpath:, file: 등 URL을 지정해야 한다.
+                    li ClassPathXmlAPplicationContext에 간단한 경로로 리소스를 질의하는 경우, 클래스 패스 상의 리소스를 찾는다
+                    p 애매한 경우, 명시적으로 classpath:, file: 등 URL을 지정해야 한다
 
         h2 Resources
         div
@@ -853,7 +853,7 @@ include ../../source/skeleton.pug
             +asCode('java').
                 boolean             exists()            // 리소스의 실재 여부는 이 메서드로 확인해야 한다
                 boolean             isReadable()
-                boolean             isOpen()            // InputStream이 이미 열렸는지 여부.
+                boolean             isOpen()            // InputStream이 이미 열렸는지 여부
                                                         // true면 InputStream을 한 번만 읽고 닫아야 한다
                 boolean             isFile()
 
@@ -883,7 +883,7 @@ include ../../source/skeleton.pug
                 li InputStreamResource
                 p 지정 IputStream으로부터 Resource 생성. isOpen()이 true를 반환한다. 다른 구현체를 이용할 수 있다면 그쪽을 사용하는 편이 좋다
                 li ByteArrayResource
-                p 주어진 byte 배열로부터 Resource 생성. 여러번 읽기 가능.
+                p 주어진 byte 배열로부터 Resource 생성. 여러번 읽기 가능
             h3 ResourceLoader
             +asCode('java').
                 static String       CLASSPATH_URL_PREFIX    // "classpath:"
@@ -904,10 +904,10 @@ include ../../source/skeleton.pug
                     li "file:C:/some/path/*-context.xml", "classpath*:com/mycompany/**/applicationContext.xml"
                     li XML관련 ApplicationContext는 "classpath*:" 접두를 사용할 수 있다. 의미는 모든 클래스패스 리소스 검색
                     +asCode('java') new ClassPathXmlApplicationContext("classpath*:conf/appContext.xml");
-                    p 내부적으로 ClassLoader.getResources()를 이용한다. jar 파일에서 리소스를 로드하는 경우, getClass().getClassLoader().getResources()를 직접 호출했을 때와 비교하여 차이가 있으면 서버 설정을 조정하거나 해야 한다.
+                    p 내부적으로 ClassLoader.getResources()를 이용한다. jar 파일에서 리소스를 로드하는 경우, getClass().getClassLoader().getResources()를 직접 호출했을 때와 비교하여 차이가 있으면 서버 설정을 조정하거나 해야 한다
                     li "jar:" 리소스들은 java.net.JarURLConnection을 필요로 하기 때문에, 일부 환경에서 실패할 수 있음에 유의
-                li 이전 버전과의 호환성을 위해, FileSystemApplicationContext 자체가 ResourceLoader 역할을 하는 경우, 절대 경로도 상대 경로로 해석함에 유의.
-                p 절대 경로로 리소스를 지정하려면 "file:///path/file.ext" 처럼 "file:" 접두를 사용해 UrlResource로 가져오도록 해야 한다.
+                li 이전 버전과의 호환성을 위해, FileSystemApplicationContext 자체가 ResourceLoader 역할을 하는 경우, 절대 경로도 상대 경로로 해석함에 유의
+                p 절대 경로로 리소스를 지정하려면 "file:///path/file.ext" 처럼 "file:" 접두를 사용해 UrlResource로 가져오도록 해야 한다
 
         h2 데이터 검증, 바인딩, 타입 변환
         div
@@ -918,7 +918,7 @@ include ../../source/skeleton.pug
                 void validate(Object target, Errors errors)
                     // Errors.reject*()를 이용해 오류 정보 전달
                     // Errors의 각 거부 항목들은 이름-에러코드 쌍으로 구성된다. 예. ("x", "is.null")
-                    // DefaultMessageCodesResolver는 에러 정보를 토대로 새 에러코드도 등록한다.
+                    // DefaultMessageCodesResolver는 에러 정보를 토대로 새 에러코드도 등록한다
                     //      예. ("x", "is.null") → is.null.x, is.null.float, is.null
                     //      이를 이용해 MessageSource로부터 보다 적절한 메시지를 가져올 수 있다
                     // ValidationUtils를 이용하면 구현에 도움이 된다
@@ -1034,8 +1034,8 @@ include ../../source/skeleton.pug
                 ul
                     li source는 non-null임이 보장된다
                     li 실패한 경우 IllegalArgumentException을 던지면 된다
-                    li convert 메서드는 스레드-안전해야 한다.
-                    li core.convert.support 서브 패키지에서 여러 범용 컨버터를 제공한다.
+                    li convert 메서드는 스레드-안전해야 한다
+                    li core.convert.support 서브 패키지에서 여러 범용 컨버터를 제공한다
                 li 동일 소스로부터 여러 타입으로의 변환이 필요한 경우 ConverterFactory를 이용하면 좋다
                 +asCode('java', 'interface ConverterFactory<S, R>') &lt;T extends R&gt; Converter&lt;S, T&gt; getConverter(Class&lt;T&gt; targetType);
                 li n:m 변환을 한번에 지원하려면 GenericConverter가 유용할 수 있다
@@ -1059,7 +1059,7 @@ include ../../source/skeleton.pug
                     li 대부분의 ConversionService 구현 클래스들은 ConverterRegistry 역시 구현하며, 이를 통해 컨버터를 등록할 수 있다
                     li core.convert.support 서브 패키지에서 일반적인 GenericConversionService 클래스를 제공한다
                     li core.convert.support 서브 패키지에서 ConversionService 생성을 위한 ConversionServiceFactory 클래스를 제공한다
-                    li IoC 컨테이너에 설정된 ConversionService는 관리되는 임의 빈에서 직접 사용할 수 있다.
+                    li IoC 컨테이너에 설정된 ConversionService는 관리되는 임의 빈에서 직접 사용할 수 있다
                 +asCode('xml', '기본 ConversionService 등록') &lt;bean class="org.springframework.context.support.ConversionServiceFactoryBean"/>
                 +asCode('xml', '기본 + 사용자 컨버터 추가').
                     &lt;bean class="org.springframework.context.support.ConversionServiceFactoryBean">
@@ -1104,7 +1104,7 @@ include ../../source/skeleton.pug
                 parser.parseExpression("name").getValue(String.class);               // get result value as String
                 parser.parseExpression("name").getValue(obj);                        // get obj.name via obj.getName()
                 parser.parseExpression("name == 'Bob'").getValue(obj, Boolean.class) // get (obj.getName().equals("Bob"))
-            p 속도 향상을 위해 컴파일러를 켤 수 있다.
+            p 속도 향상을 위해 컴파일러를 켤 수 있다
             +asCode('java').
                 new SpelParserConfiguration(SpelCompilerMode.IMMEDIATE, ...);
                 // OFF(default), IMMEDIATE(즉시 컴파일), MIXED(나중에 컴파일, 컴파일 표현식 실패 시 다시 인터프리팅 해석)
@@ -1174,20 +1174,20 @@ include ../../source/skeleton.pug
                 li Advice : Join Point에서 실행되는 코드
                 li Pointcut : 일치하는 Join Point에 대한
                     +asA('https://www.eclipse.org/aspectj/doc/next/progguide/semantics-pointcuts.html', '정규 표현식')
-                | Advice는 Pointcut과 연관되며, 일치하는 모든 Join Point에서 실행된다.
+                | Advice는 Pointcut과 연관되며, 일치하는 모든 Join Point에서 실행된다
                 li Weaving : Advice 코드를 삽입
                 | 세 가지 Weaving 방식 : 컴파일 타임 위빙, 클래스 로드 타임 위빙, 런타임 위빙
 
             h3 Spring AOP
             ul
                 li Spring은 프록시를 만들어 Aspect의 실행을 삽입한다
-                p 따라서 final이거나, 정의되지 않은 메서드는 Aspect 삽입이 불가능하다.
+                p 따라서 final이거나, 정의되지 않은 메서드는 Aspect 삽입이 불가능하다
                 li JDK 프록시는 public 인터페이스 메서드만, CGLIB 프록시는 public, protected 인터페이스/클래스 메서드에 삽입 가능
                 +asCode('java', 'CGLIB 고정 - java') @EnableAspectJAutoProxy(proxyTargetClass=true)
                 +asCode('xml','CGLIB 고정 - xml').
                     &lt;aop:config proxy-target-class="true">&lt;/aop:config>
                     &lt;aop:aspectj-autoproxy proxy-target-class="true"/>
-                li 프록시가 새 인터페이스를 구현하도록 변경(Introduction)하는 것은 가능하다.
+                li 프록시가 새 인터페이스를 구현하도록 변경(Introduction)하는 것은 가능하다
                 li Aspect 적용 순서 정의
                 p @Order(xml에서는 order 속성)를 적용하거나 Ordered 인터페이스 구현
 
@@ -1222,14 +1222,14 @@ include ../../source/skeleton.pug
                         private void inTrading() {} 
                         @Pointcut("anyPublicOperation() &amp;&amp; inTrading()")
                         private void tradingOperation() {} 
-                    li public Pointcut 표현식은 외부에서도 이용 가능하므로, 정의를 중앙화할 수 있다.
+                    li public Pointcut 표현식은 외부에서도 이용 가능하므로, 정의를 중앙화할 수 있다
                     li execution 표현식
                     +asCode().
                         execution(modifires-pattern? return-type-pattern declaring-type-pattern?name-pattern(param-pattern) throws-pattern?)
                             return-type-pattern     *는 임의 반환 타입에 매칭
-                            declaring-type-pattern  메서드가 정의된 타입 지정. 마지막은 '.'으로 끝나야 한다.
+                            declaring-type-pattern  메서드가 정의된 타입 지정. 마지막은 '.'으로 끝나야 한다
                             name-pattern            메서드 이름 지정
-                            param-pattern           ()는 무인자, (..)는 임의 타입 및 길이 인자, (*)는 해당 자리의 임의 타입 인자.
+                            param-pattern           ()는 무인자, (..)는 임의 타입 및 길이 인자, (*)는 해당 자리의 임의 타입 인자
                 li.marker 각 advice별 예시 코드(XML)
                 table.no-sort
                     tr
@@ -1239,7 +1239,7 @@ include ../../source/skeleton.pug
                             +codeBtn('/Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans2.xml', 'xml') Config
                             +codeBtn('/Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/BeforeAdviceTest.java', 'java', [7]) Test
                             br
-                            | Before advice에서 예외를 던지면 실제 메서드는 호출되지 않는 효과가 있다.
+                            | Before advice에서 예외를 던지면 실제 메서드는 호출되지 않는 효과가 있다
                     tr
                         td After returning
                         td
@@ -1356,7 +1356,7 @@ include ../../source/skeleton.pug
             li @NonNullFields : 패키지 수준으로 필드에 @NonNull 기본 적용
 
         h2 Data Bufferes and Codecs Since 5.0
-        p java.nio 패키지에서 Buffer를 제공하지만, 여러 라이브러리들은 그전부터 자체적인 버퍼 api를 정의해 사용해왔다. 스프링은 이러한 불일치를 해소하기 위해 추상화된 API를 제공한다.
+        p java.nio 패키지에서 Buffer를 제공하지만, 여러 라이브러리들은 그전부터 자체적인 버퍼 api를 정의해 사용해왔다. 스프링은 이러한 불일치를 해소하기 위해 추상화된 API를 제공한다
         ul
             li DataBufferFactory
             p 2가지 방법으로 버퍼 생성이 가능하다. WebFlux에서는 ServerHttpResponse, ClientHttpRequest를 통해 팩터리에 접근한다
@@ -1370,9 +1370,9 @@ include ../../source/skeleton.pug
                 li 자동으로 capacity 증가
                 li 버퍼에 대한 ByteBuffer, InputStream, OutputStream 뷰 제공
             li PooledDataBuffer
-            p Direct 버퍼의 생성/소멸 시간이 Non-direct 버퍼에 비해 길다는 단점을 해소하기 위해 만들어졌다.
+            p Direct 버퍼의 생성/소멸 시간이 Non-direct 버퍼에 비해 길다는 단점을 해소하기 위해 만들어졌다
                 br
-                | → 버퍼에 대한 참조 카운터를 유지함으로써 버퍼를 재활용할 수 있게 해준다.
+                | → 버퍼에 대한 참조 카운터를 유지함으로써 버퍼를 재활용할 수 있게 해준다
                 br
                 | retain()으로 참조를 얻고, release()로 반환 → DataBufferUtils에서 편의 메서드 제공
             li DataBUfferUtils
@@ -1501,11 +1501,11 @@ include ../../source/skeleton.pug
                 +w3img('/imgs/20191009_124647.png')
         ol
             li @Async
-            | 메서드를 스프링이 관리하는 ThreadExecutor에서 비동기적으로 실행하는 프록시를 생성한다.
+            | 메서드를 스프링이 관리하는 ThreadExecutor에서 비동기적으로 실행하는 프록시를 생성한다
             +codeBtn('/Repositories/STS/web-app/src/main/java/io/github/donggi/WebAppApplication.java', 'java') @EnableAsync »
             +codeBtn('/Repositories/STS/web-app/src/main/java/io/github/donggi/controller/SleepController.java', 'java') @Async »
             li @Scheduled
-            | 메서드를 명시적으로 호출하지 않아도 스케쥴대로 실행된다.
+            | 메서드를 명시적으로 호출하지 않아도 스케쥴대로 실행된다
             +codeBtn('/Repositories/STS/web-app/src/main/java/io/github/donggi/WebAppApplication.java', 'java') @EnableScheduling »
             +codeBtn('/Repositories/STS/web-app/src/main/java/io/github/donggi/controller/HelloController.java', 'java') @Scheduled »
 

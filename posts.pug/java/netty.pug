@@ -14,12 +14,12 @@ include ../../source/skeleton.pug
     h1 예. Discard Server
     div
         h2 개요
-        p TCP 서버. 클라이언트 메시지를 받으면 무시.
+        p TCP 서버. 클라이언트 메시지를 받으면 무시
         h2 Server Handler
         ul
             li 코드 
                 +codeBtn('/Repositories/STS/netty-tutorial/src/main/java/test1/DiscardServerHandler.java', 'java', [10], true)
-            li ByteBuf를 비롯한 ReferenceCounted 객체들은 명시적인 해제가 필요하다.
+            li ByteBuf를 비롯한 ReferenceCounted 객체들은 명시적인 해제가 필요하다
         h2 Server
         ul
             li 코드 
@@ -45,7 +45,7 @@ include ../../source/skeleton.pug
     h2 예. Echo Server
     div
         h2 개요
-        p TCP 서버. 클라이언트 메시지를 받으면 그대로 응답.
+        p TCP 서버. 클라이언트 메시지를 받으면 그대로 응답
         h2 Server Handler
         ul
             li 코드 
@@ -73,7 +73,7 @@ include ../../source/skeleton.pug
             li ChannelInboundHandler, ChannelOutboundHandler
         h2 ChannelHandlerContext
         ul
-            li ChannelHandler는 Context를 통해 ChannelPipeline 및 다른 핸들러와 상호작용한다.
+            li ChannelHandler는 Context를 통해 ChannelPipeline 및 다른 핸들러와 상호작용한다
             p ChannelHandler는 여러 ChannelPipeline에 등록될 수 있으므로, Context 또한 여러 개 가질 수 있다
             li 이벤트 통지 : ChannelPipeline 상의 다음 핸들러에 이벤트 전달
             li Pipeline 수정 : pipeline()으로 ChannelPipeline를 획득하여 직접 수정 가능

@@ -1,7 +1,7 @@
 include ../../source/skeleton.pug
 +post('PostgreSQL → SQLite3 마이그레이션', 'PostgreSQL, SQLite3, 마이그레이션', 'PostgreSQL로부터 SQLite3로 마이그레이션하는 절차 정리')
     h1 SQLite에 테이블 생성
-    p PostgreSQL DDL Dump에서 아래 사항들을 수정하면 SQLite에서 그대로 테이블 생성에 이용할 수 있다.
+    p PostgreSQL DDL Dump에서 아래 사항들을 수정하면 SQLite에서 그대로 테이블 생성에 이용할 수 있다
     ol
         li true → t
         li false → f
@@ -27,7 +27,7 @@ include ../../source/skeleton.pug
 
     h1 기타
     ul
-        li SQLite Studio 프로그램은 import/export 기능을 UI로 지원.
+        li SQLite Studio 프로그램은 import/export 기능을 UI로 지원
         li SQLite에서 csv 출력
         +asCode('sql').
             .headers on

@@ -70,10 +70,10 @@ include ../../source/skeleton.pug
 
     h1 Linux History
     ul
-        li 표준이 없던 초창기. 크고 비싼 컴퓨터들은 제각기의 운영체제를 갖고 있었고, 한 컴퓨터에서 작동하는 프로그램이 다른 컴퓨터에서 작동할 것이라는 보장도 할 수 없었다.
-        li Bell Labs에서 재사용 가능한 C 기반의 운영체제 UNIX를 개발했다.
+        li 표준이 없던 초창기. 크고 비싼 컴퓨터들은 제각기의 운영체제를 갖고 있었고, 한 컴퓨터에서 작동하는 프로그램이 다른 컴퓨터에서 작동할 것이라는 보장도 할 수 없었다
+        li Bell Labs에서 재사용 가능한 C 기반의 운영체제 UNIX를 개발했다
         li UNIX를 이용함으로써 각 시스템을 위한 전용 코드의 작성을 줄일 수 있게 되었다. &lt;- 이 전용 코드가 바로 커널(kernel)
-        li Linux는 리눅스 커널(리누스 토발즈 최초 개발)을 이용하는 UNIX 구현체로, 다수의 GNU tool을 이용한다.
+        li Linux는 리눅스 커널(리누스 토발즈 최초 개발)을 이용하는 UNIX 구현체로, 다수의 GNU tool을 이용한다
 
     h1 시스템 ON/OFF
     div
@@ -113,7 +113,7 @@ include ../../source/skeleton.pug
             $ systemctl get-default
 
     h1 파일 시스템
-    +asCode() UNIX에서 모든 것은 파일이다. 파일이 아닌 것이 있다면, 프로세스다.
+    +asCode() UNIX에서 모든 것은 파일이다. 파일이 아닌 것이 있다면, 프로세스다
     div
         h2 파일 종류
         ul
@@ -262,9 +262,9 @@ include ../../source/skeleton.pug
         li 종류
         ul
             li Login shell
-            p 최초 실행 시 유저명과 비밀번호를 묻고 진입하는 쉘.
+            p 최초 실행 시 유저명과 비밀번호를 묻고 진입하는 쉘
             li Non login shell
-            p 기존 쉘에서 인증없이 새로 시작한 쉘.
+            p 기존 쉘에서 인증없이 새로 시작한 쉘
 
     h1 Bash
     div
@@ -331,7 +331,7 @@ include ../../source/skeleton.pug
                     li >
                     +asCode('shell').
                         $ script.sh > test.log
-                        # STDOUT을 test.log로. 파일이 없다면 생성하고, 있다면 덮어쓴다.
+                        # STDOUT을 test.log로. 파일이 없다면 생성하고, 있다면 덮어쓴다
 
                         $ script.sh >&2
                         # STDOUT을 STDERR(2)로
@@ -346,7 +346,7 @@ include ../../source/skeleton.pug
                     +asCode('shell').
                         $ script.sh >> test.log
                         # STDOUT을 test.log로. 파일이 없다면 생성하고, 있다면 append
-                    li &lt; : 파일을 STDIN으로.
+                    li &lt; : 파일을 STDIN으로
                     li &lt;>
                     +asCode('bash').
                         LOG_FILE=test.log
@@ -371,7 +371,7 @@ include ../../source/skeleton.pug
                             command2
                             ...
                             EOF
-                            # EOF 외 다른 문자열도 limit string으로 사용 가능.
+                            # EOF 외 다른 문자열도 limit string으로 사용 가능
                             # 동일한 텍스트를 갖는 파일(input)을 `COMMAND &lt; input`으로 실행하는 것과 유사하다
                         li here document 내부에서 parameter substitution을 수행한다
                         +asCode('bash').
@@ -478,10 +478,10 @@ include ../../source/skeleton.pug
 
         h2 변수, 매개변수
         div
-            p bash의 변수는 엄밀한 타입이 없다 - 모두 문자열. 숫자로만 구성된 경우, 일부 컨텍스트에서 산술 연산을 수행한다.
+            p bash의 변수는 엄밀한 타입이 없다 - 모두 문자열. 숫자로만 구성된 경우, 일부 컨텍스트에서 산술 연산을 수행한다
 
             h3 Variable substitution
-            p 변수 이름을 이용해 값을 참조하는 것. $를 이름 앞에 붙임으로써 이루어진다.
+            p 변수 이름을 이용해 값을 참조하는 것. $를 이름 앞에 붙임으로써 이루어진다
             div
                 h4 Indirect referencing Since bash 2
                 +asCode('bash').
@@ -501,7 +501,7 @@ include ../../source/skeleton.pug
             h3 환경 변수
             ul
                 li 프로세스의 실행에 영향을 줄 수 있는 변수들
-                li 각 프로세스는 하나의 '환경' - 환경 변수 집합을 가지며, 자식 프로세스는 최초 실행 시 이를 상속받는다.
+                li 각 프로세스는 하나의 '환경' - 환경 변수 집합을 가지며, 자식 프로세스는 최초 실행 시 이를 상속받는다
                 li env 또는 printenv 명령으로 목록 확인 가능
 
             h3 지역 변수
@@ -681,7 +681,7 @@ include ../../source/skeleton.pug
         ul
             li \ : 다음 글자를 리터럴로 간주
             li '' : 내부 문자열을 리터럴로 간주
-            li "" : 내부 문자열을 리터럴로 간주; 단 $, `, \ 제외. 여러줄에 걸쳐 작성 가능.
+            li "" : 내부 문자열을 리터럴로 간주; 단 $, `, \ 제외. 여러줄에 걸쳐 작성 가능
 
         h2 Expansion
         ol
@@ -715,12 +715,12 @@ include ../../source/skeleton.pug
                 $ echo $(echo $(echo abcd))
             li Arithmetic expansion : $(( EXPRESSION )), $[ EXPRESSION ]
             ul
-                li EXPRESSION은 "로 감싸인 걸로 간주된다. " 자체는 특별한 의미를 갖지 않는다.
+                li EXPRESSION은 "로 감싸인 걸로 간주된다. " 자체는 특별한 의미를 갖지 않는다
                 li EXPRESSION 내부 토큰들도 parameter expansion, command substitution, quote removal을 거친다
                 li EXPRESSION은 중첩될 수 있다
-                li EXPRESSION 연산은 고정폭 정수로 행해지며, overflow 검사는 하지 않는다.
-                li 0으로 시작하는 상수는 8진수, 0x는 16진수로 간주된다.
-                li 2#10 ~ 64#12abAB@_ 표기로 2~64진법 표현 가능. 36진법 이하에서 대소문자는 구별되지 않는다.
+                li EXPRESSION 연산은 고정폭 정수로 행해지며, overflow 검사는 하지 않는다
+                li 0으로 시작하는 상수는 8진수, 0x는 16진수로 간주된다
+                li 2#10 ~ 64#12abAB@_ 표기로 2~64진법 표현 가능. 36진법 이하에서 대소문자는 구별되지 않는다
             table.no-sort
                 caption Operators
                 +tds('VAR++, VAR--', '단항 연산(후위)')
@@ -757,7 +757,7 @@ include ../../source/skeleton.pug
                 +pos('Word splitting')
             ul
                 li Parameter expansion, command substitution, arithmetic expansion의 결과에 대해 단어를 분할한다
-                li 단어의 분할은 IFS(Internal Field Separator) 변수에 설정(기본값 ' \t\n')된 문자들을 구분자로 하여 진행된다.
+                li 단어의 분할은 IFS(Internal Field Separator) 변수에 설정(기본값 ' \t\n')된 문자들을 구분자로 하여 진행된다
                 +asCode('shell').
                     $ echo $IFS
 
@@ -807,7 +807,7 @@ include ../../source/skeleton.pug
             tr
                 td [:CLASS:]
                 td: ul
-                    li 보통 [[:CLASS:]]처럼 2겹으로 감싸야 된다.
+                    li 보통 [[:CLASS:]]처럼 2겹으로 감싸야 된다
                     li alnum, alpha, ascii, blank, cntrl, digit, graph, lower, print, punct, space, upper, word, xdigit
 
         h2 Test
@@ -880,13 +880,13 @@ include ../../source/skeleton.pug
                 li [] vs [[]]
                 ul
                     li [[]] Since bash 2.02
-                    li []는 "test" 커맨드와 동일하지만, [[]]는 커맨드가 아닌 키워드.
+                    li []는 "test" 커맨드와 동일하지만, [[]]는 커맨드가 아닌 키워드
                     li [[]]는 변수 값에 대한 word splitting을 수행하지 않는다
                     li [[]]는 file name expansion을 수행하지 않는다
                     li [[]]는 glob 패턴 매칭 수행
                     +asCode('bash') if [[ "hello" == h* ]]; then echo hello; fi
                 li (()), let
-                p 산술연산을 수행하고, 그 결과가 0이 아니면 0 종료.
+                p 산술연산을 수행하고, 그 결과가 0이 아니면 0 종료
                 +asCode('bash').
                     (( 0 &amp;&amp; 1 ))
                     echo $?                # 1
@@ -901,7 +901,7 @@ include ../../source/skeleton.pug
             h3 case
                 +pos('case')
             ul
-                li ;; -> case 옵션 종결 &amp;&amp; case 구문 종료.
+                li ;; -> case 옵션 종결 &amp;&amp; case 구문 종료
                 li ;;&amp; -> case 옵션 종결 &amp;&amp; 다음 패턴 검사 실행. Since bash 4
                 li ;&amp; -> case 옵션 종결 &amp;&amp; 다음 옵션 무조건 실행. Since bash 4
             +asCode('bash').
@@ -1012,7 +1012,7 @@ include ../../source/skeleton.pug
         h2 기타
         div
             h3 :
-            p 아무것도 하지 않는 null 명령.
+            p 아무것도 하지 않는 null 명령
 
             h3 read
             p 표준입력으로부터 변수 할당; 변수명 지정하지 않은 경우 REPLY 예약 변수로 접근 가능
@@ -1021,7 +1021,7 @@ include ../../source/skeleton.pug
             p 변수에 대한 산술 연산 수행
 
             h3 eval
-            p 인자를 모아 실행한다. 각 인자는 실행하기 전에 평가된다.
+            p 인자를 모아 실행한다. 각 인자는 실행하기 전에 평가된다
             +asCode('bash').
                 a='$b'
                 b='$c'
@@ -1052,11 +1052,11 @@ include ../../source/skeleton.pug
                 li 커맨드 라인에서 호출시 해당 스크립트 실행
                 li 스크립트 내에서 호출시 해당 파일 텍스트를 삽입
 
-            h3 exit : 스크립트/쉘 종료.
+            h3 exit : 스크립트/쉘 종료
 
             h3 exec
             ol
-                li fork : 새 프로세스는 기존 프로세스(parent)가 PID만 다른 복제본을 생성함으로써 만들어진다.
+                li fork : 새 프로세스는 기존 프로세스(parent)가 PID만 다른 복제본을 생성함으로써 만들어진다
                 li exec : 지정 커맨드 정보로 현재 프로세스 주소 공간을 덮어쓴다
 
             h3 caller
@@ -1098,12 +1098,12 @@ include ../../source/skeleton.pug
             h3 ps : Process Snapshot
             +asCode('shell') $ ps -ef # -e(전체 프로세스), -f(full-format)
 
-            h3 top : 실행 중인 작업 보기.
+            h3 top : 실행 중인 작업 보기
 
             h3 Job
             ul
                 li 백그라운드 프로세스는 별개 job 번호를 할당받는다
-                li 커맨드 또는 루프 뒤에 &amp;를 붙이면 백그라운드 job으로 실행한다.
+                li 커맨드 또는 루프 뒤에 &amp;를 붙이면 백그라운드 job으로 실행한다
                 li Job 식별자
                 table
                     +tds('Notation', 'Meaning')
@@ -1130,7 +1130,7 @@ include ../../source/skeleton.pug
             p 백그라운드 job으로 계속 실행 ↔ 포그라운드로 전환
 
             h3 nice : 백그라운드 job 우선순위 변경
-            p 19(lowest), -20(highest); 음수 우선순위는 root만 설정할 수 있다.
+            p 19(lowest), -20(highest); 음수 우선순위는 root만 설정할 수 있다
 
             h3 wait, wait PID, wait %n
             p 전체 백그라운드 job/특정 프로세스/특정 백그라운드 job 종료 대기
@@ -1228,27 +1228,27 @@ include ../../source/skeleton.pug
 
             h3 chattr : 파일 속성 변경
             +asCode('bash').
-                chattr +i name.txt # 켜진 경우, 파일 변경 불가. root에서만 속성 on/off 가능.
+                chattr +i name.txt # 켜진 경우, 파일 변경 불가. root에서만 속성 on/off 가능
                 chattr +s name.txt # 켜진 경우, 파일을 지우면 블록을 0으로 쓴다
                 chattr +c name.txt # 켜진 경우, 자동 압축
 
             h3 ln : 링크 생성
             +asCode('bash').
                 ln old_file hard_link # hard link
-                    # mirror copy. old_file 이름을 변경해도 참조 지속.
-                    # inode 동일.
+                    # mirror copy. old_file 이름을 변경해도 참조 지속
+                    # inode 동일
                     # 다른 파일시스템의 파일 참조 불가
                     # 디렉터리 참조 불가
                 ln -s old_file soft_link # soft link
-                    # file name 참조. old_file 이름을 변경하면 참조 불가.
-                    # inode 다름.
+                    # file name 참조. old_file 이름을 변경하면 참조 불가
+                    # inode 다름
                     # 다른 파일시스템, 디렉터리 참조 가능
 
             h3 find : 파일 찾기
             ul
                 li 파일명 패턴으로 GLOB 가능
-                li 표현식 앞에 !이나 -not을 붙일 수 있다.
-                li 표현식들 사이를 -and, -or로 엮을 수 있다.
+                li 표현식 앞에 !이나 -not을 붙일 수 있다
+                li 표현식들 사이를 -and, -or로 엮을 수 있다
             +asCode('bash').
                 # home directory 이하(재귀)의 모든 *.txt 파일 찾기
                 find ~/ -name '*.txt'
@@ -1303,7 +1303,7 @@ include ../../source/skeleton.pug
             +asCode('shell').
                 $ ntpdate server    # 동기화
                 $ ntpdate -d server # 오차 출력
-            p NTP : Network Time Protocol. 시간 동기화를 위한 프로토콜.
+            p NTP : Network Time Protocol. 시간 동기화를 위한 프로토콜
                 +asA('https://zetawiki.com/wiki/공용_NTP_서버_목록')
 
             h3 cal : 달력 출력
@@ -1323,7 +1323,7 @@ include ../../source/skeleton.pug
                 li -n : newline 문자를 끝에 붙이지 않음
 
             h3 printf
-            p 포맷대로 표준 출력. 처리에 따라 종료 상태 다를 수 있음.
+            p 포맷대로 표준 출력. 처리에 따라 종료 상태 다를 수 있음
 
             h3 xargs -n $num : 줄당 최대 $num개 열로 출력
 
@@ -1381,7 +1381,7 @@ include ../../source/skeleton.pug
 
             h3 sed; Stream EDitor
             div
-                p sed는 표준 입력 또는 파일로부터 편집을 수행(원본 수정은 없다)하고 표준 출력한다.
+                p sed는 표준 입력 또는 파일로부터 편집을 수행(원본 수정은 없다)하고 표준 출력한다
                 table.no-sort
                     caption Commands
                     +tds('a\\text', '각 줄 아래에 text를 쓴다')
@@ -1486,7 +1486,7 @@ include ../../source/skeleton.pug
 
             h3 su : 다른 사용자 권한으로 실행
             +asCode('shell') $ su [options] [-] [USER_NAME [arg]...]
-            p USER_NAME이 없으면 root. 단순히 '-'만 있으면 '-l'과 동일하다.
+            p USER_NAME이 없으면 root. 단순히 '-'만 있으면 '-l'과 동일하다
 
             h3 sudo : 다른 사용자 권한으로 실행
             +asCode('shell') $ sudo -u USER_NAME COMMAND
@@ -1511,7 +1511,7 @@ include ../../source/skeleton.pug
 
             h3 yum
             ul
-                li 인터넷 저장소로부터 패키지를 다운로드하여 설치. 의존 패키지까지 자동 설치한다.
+                li 인터넷 저장소로부터 패키지를 다운로드하여 설치. 의존 패키지까지 자동 설치한다
                 li Commands : clean(캐시 삭제), check-update, downgrade, erase, info, install, list, reinstall, search, update, version, 등...
 
             h3 EPEL(Extra Packages for Enterprise Linux) 허용
@@ -1599,7 +1599,7 @@ include ../../source/skeleton.pug
         h2 모드
         ol
             li 처음 vi를 실행하면 normal mode(command mode)
-            p insert mode와 visual mode에서 esc를 누르면 normal mode로 회귀.
+            p insert mode와 visual mode에서 esc를 누르면 normal mode로 회귀
             li i를 누르면 insert mode
             li v를 누르면 visual mode
             li :를 누르고 명령어 실행
@@ -1634,7 +1634,7 @@ include ../../source/skeleton.pug
                 li 붙여넣기 : Shift + Insert
                 p ~/.vimrc 에서
                     br
-                    | set mouse=a 로 되어있던게 문제였습니다. set mouse=c 로 변경하니까 vim 에서 텍스트의 복사하기 붙여넣기 잘 되는군요.
+                    | set mouse=a 로 되어있던게 문제였습니다. set mouse=c 로 변경하니까 vim 에서 텍스트의 복사하기 붙여넣기 잘 되는군요
                     br
                     | a 는 마우스를 사용하겠다는 것이고 c 는 마우스를 사용치 않겠다는 것 같은데, c 로 해놔도 마우스로 커서 옮기고 스크롤하는 것 등은 잘 되더군요.. 출처 : https://kldp.org/node/129456
 

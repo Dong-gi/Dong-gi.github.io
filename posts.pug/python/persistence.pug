@@ -38,7 +38,7 @@ include ../../source/skeleton.pug
     ul
         li open(filename, flag='c', protocol=None, writeback=False)
         p flag : 'r'(기존 파일 읽기 전용), 'w'(기존 파일 읽기/쓰기), 'c'(읽기/쓰기, 기존 파일 없으면 생성), 'n'(읽기/쓰기, 항상 새 파일 생성)
-        li close()를 명시적으로 호출하거나, with을 이용해 자동으로 호출되도록 해야 한다.
+        li close()를 명시적으로 호출하거나, with을 이용해 자동으로 호출되도록 해야 한다
         +asCode('python').
             with shelve.open('spam') as db:
                 db['eggs'] = 'eggs'

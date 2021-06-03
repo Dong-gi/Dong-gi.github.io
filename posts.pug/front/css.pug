@@ -4,9 +4,9 @@ include ../../source/skeleton.pug
     ul
         li.marker 선택자
         ol
-            li CSS는 HTML 태그 요소를 선택하여 디자인 속성을 정의한다.
+            li CSS는 HTML 태그 요소를 선택하여 디자인 속성을 정의한다
             +asCode('css') 선택자 { 속성: 값; ... }
-            li 선택자는 태그 이름, 속성의 나열로 구성된다.
+            li 선택자는 태그 이름, 속성의 나열로 구성된다
             +asCode('css') tag_name, #id, .class, [attr=value], ...
         li.marker 속성 선택자
         ol
@@ -24,7 +24,7 @@ include ../../source/skeleton.pug
             li 다음 모든 형제 : '~'
         li.marker 가상 클래스
         ol
-            li 요소들의 상태들을 정의한 Pseudo-Class가 존재한다. 일반 클래스와 달리 ':'으로 구별한다.
+            li 요소들의 상태들을 정의한 Pseudo-Class가 존재한다. 일반 클래스와 달리 ':'으로 구별한다
             li a: active, hover, link, visited
             li input: checked, disabled, enabled, focus, in-range, out-of-range, valid, invalid, read-only, read-write, required, optional
             li :first-child, last-child, nth-child(n), nth-last-child(n)
@@ -62,7 +62,7 @@ include ../../source/skeleton.pug
             ul
                 li 두께 border-width: width; » 색상 border-color: color; » 곡률 border-radius: radius;
                 li 방향별로 설정 가능 : top, bottom, left, right
-                li margin 밖의 외곽선 outline도 존재.
+                li margin 밖의 외곽선 outline도 존재
             li 외부 여백 margin: auto | size | % | inherit;
                 br
                 | 내부 여백 padding: size | % | inherit;

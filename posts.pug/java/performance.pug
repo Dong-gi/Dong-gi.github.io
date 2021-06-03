@@ -18,7 +18,7 @@ include ../../source/skeleton.pug
             li STW; Stop the world
             p GC를 위해 모든 애플리케이션 스레드를 정지하는 것
             li Safepoint
-            p GC를 위해 스레드가 중단될 수 있는 지점. 스레드 내 고정된 자료구조를 볼 수 있다. JVM이 강제로 스레드를 safepoint 상태로 바꿀 수는 없다. 대신 스레드가 safepoint 상태에서 벗어나지 못하게 할 수는 있다.
+            p GC를 위해 스레드가 중단될 수 있는 지점. 스레드 내 고정된 자료구조를 볼 수 있다. JVM이 강제로 스레드를 safepoint 상태로 바꿀 수는 없다. 대신 스레드가 safepoint 상태에서 벗어나지 못하게 할 수는 있다
 
         h2 힙 = Young Generation + Old Generation
         ul
@@ -31,8 +31,8 @@ include ../../source/skeleton.pug
             li Tenured(Old) : Survivor에서 수집 제외된 객체들
             li Permanent Generation
             ul
-                li 객체 GC 대상이 아닌 영역으로, PermGen이라고도 한다.
-                li 클래스 정의, String 상수 등 불변 객체들을 갖는다.
+                li 객체 GC 대상이 아닌 영역으로, PermGen이라고도 한다
+                li 클래스 정의, String 상수 등 불변 객체들을 갖는다
                 li Java 8에서 Metaspace로 변경됐다
                 p 크기 한계(MaxMetaspaceSize)에 도달하면 dead class 정보는 삭제된다
 
@@ -47,20 +47,20 @@ include ../../source/skeleton.pug
         h2 GC 종류
         ul
             li 병렬 GC
-            p 되도록 STW를 줄이기 위해 병렬 스레드 이용. 가능한 경우 애플리케이션과 동시 실행.
+            p 되도록 STW를 줄이기 위해 병렬 스레드 이용. 가능한 경우 애플리케이션과 동시 실행
             li Parallel GC
             p 단순한 영 세대용 병렬 GC
             li ParNew GC
             p CMS GC와 함께 사용할 목적으로 Parallel GC를 변형한 것
             li ParallelOld GC
-            p 올드 세대용 병렬 GC. 객체를 재배치하여 메모리 단편화가 발생하지 않는다.
+            p 올드 세대용 병렬 GC. 객체를 재배치하여 메모리 단편화가 발생하지 않는다
             li CMS; Concurrent Mark Sweep
             +asCode('bash').
                 java ... -XX:+UseConcMarkSweepGC
                 # ParNew GC도 같이 작동한다
             ul
-                li 올드 영역 GC의 STW를 짧게 하기 위해 개발됨.
-                li 메모리 압착을 하지 않아 단편화 발생 가능.
+                li 올드 영역 GC의 STW를 짧게 하기 위해 개발됨
+                li 메모리 압착을 하지 않아 단편화 발생 가능
                 li 올드 영역 메모리가 아예 부족해진 경우(CMF; Concurrent Mode Failure) ParallelOld GC 실행
             li G1; Garbage First
             +asCode('bash').

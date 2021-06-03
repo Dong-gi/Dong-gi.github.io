@@ -4,9 +4,9 @@ include ../../source/skeleton.pug
     ol
         li https://stackoverflow.com/questions/908489/eclipse-java-code-completion-not-working
         li Windows - Preferences - Java - Editor - Content Assist - Advanced
-        p ↑ 그냥 설정에 proposal 입력하면 바로 필터링된다.
+        p ↑ 그냥 설정에 proposal 입력하면 바로 필터링된다
             br
-            | 하여튼 해당 부분에서 자동 완성 제안에 표시되지 않은 항목이 있다면 체크하고 적용한다.
+            | 하여튼 해당 부분에서 자동 완성 제안에 표시되지 않은 항목이 있다면 체크하고 적용한다
         li 만약 위 설정에 문제가 없는 경우
         p {WORKSPACE_DIRECTORY}/.metadata/.plugins/org.eclipse.jdt.core
             br
@@ -63,9 +63,9 @@ include ../../source/skeleton.pug
     ol
         li 예외 종료된 도커 컨테이너가 아래와 같이 실행되지 않을 때
         +asCode() Error response from daemon: container "83a7208d6b68d3d97be501b47d6a4bb28245b086f25eda819dec93a8d40320a3": already exists
-        li 아래 명령으로 컨테이너의 잔존 메타데이터를 지우면 다시 시작할 수 있다.
+        li 아래 명령으로 컨테이너의 잔존 메타데이터를 지우면 다시 시작할 수 있다
         +asCode('shell') docker-containerd-ctr --namespace moby --address /var/run/docker/containerd/docker-containerd.sock c rm [container_id]
-        p container_id는 전체를 넘겨줘야 하고, address 옵션값은 정확한 경로로 넘겨줘야 한다.
+        p container_id는 전체를 넘겨줘야 하고, address 옵션값은 정확한 경로로 넘겨줘야 한다
 
     h1 C# 인증 오류 해결 : 무조건 신뢰하는 방향
     +asCode('cs').
@@ -78,7 +78,7 @@ include ../../source/skeleton.pug
 
     h1 java.text.ParseException: Unparseable date: "2028-07-25 15:00:00"
     ol
-        li 아스키 공백 문자(32)가 맞는지 확인한다.
+        li 아스키 공백 문자(32)가 맞는지 확인한다
         +w3img('/imgs/20200227_143848.png')
         +w3img('/imgs/20200227_145006.png')
 
@@ -92,7 +92,7 @@ include ../../source/skeleton.pug
     h1 암호화 오류. Padding is invalid and cannot be removed
     ol
         +asA('https://www.red-gate.com/simple-talk/blogs/oh-no-my-paddings-invalid/')
-        li 스트림을 직접 이용하는 경우, flush 완료됐는지 확인이 필요하다.
+        li 스트림을 직접 이용하는 경우, flush 완료됐는지 확인이 필요하다
         +asCode('cs', 'C# 암호화').
             var source = File.ReadAllBytes("source_file");
             using var aes = Aes.Create();
@@ -130,7 +130,7 @@ include ../../source/skeleton.pug
             &lt;user> soft nofile 500000
             &lt;user> hard nofile 500000
         ul
-            li RHEL 7 기준, limis.conf 적용 후 /etc/security/limits.d/20-nproc.conf의 설정으로 값이 변경될 수 있으니, 같이 수정 필요하다고 함.
+            li RHEL 7 기준, limis.conf 적용 후 /etc/security/limits.d/20-nproc.conf의 설정으로 값이 변경될 수 있으니, 같이 수정 필요하다고 함
             li 별개로 전체 시스템의 파일 수 제한도 확인
             +asCode('bash') sysctl fs.file-max
             li 시스템 backlog 조정 // 웹서버에서 별도로 설정이 필요할 수 있음
