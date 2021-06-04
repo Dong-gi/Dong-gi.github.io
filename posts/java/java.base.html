@@ -1,9 +1,7 @@
 <html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="google-site-verification" content="aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM"><meta name="author" content="Donggi Kim &lt;hi.donggi@gmail.com&gt;"><meta name="keywords" content="Java, java.base, JDK16"><meta name="description" content="JDK16 java.base 모듈 정리"><title>java.base 모듈 16</title><link id="w3css" rel="stylesheet" href="/source/w3.css"><link id="highlight-style" rel="stylesheet" href="/source/xcode.css"><link id="default-style" rel="stylesheet" href="/source/default.css"><script id="highlight-js" src="/source/highlight.pack.js"></script><script id="default-js" src="/source/default.min.js"></script><script id="dsq-count-scr" src="//donggi.disqus.com/count.js" async></script><script id="kakao-ads" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script><script id="google-ads" data-ad-client="ca-pub-7897366614471210" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" async></script><script id="google-analytics" src="https://www.googletagmanager.com/gtag/js?id=UA-143098403-1" async></script><script>window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', 'UA-143098403-1');</script></head><body><div class="w3-bar-block w3-sidebar w3-animate-left" id="sidebar"><hr><a class="w3-bar-item w3-button" href="javascript:closeSidebar();">Close &times;</a><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><div class="w3-center"><ins class="kakao_ad_area" style="display:none;" data-ad-unit="DAN-1k1r635zxb6g3" data-ad-width="300" data-ad-height="250"></ins></div><hr><div id="file-list"></div><hr></div><div id="main"><div class="w3-bar w3-blue w3-large" id="nav" style="position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle"><button class="w3-bar-item w3-button w3-hover-theme" onclick="toggleSidebar()">&#9776;</button><input class="w3-bar-item" id="query" type="text" placeholder="search" style="max-width:35%"><a class="w3-bar-item w3-button w3-hover-theme" href="/">Home</a></div><div class="w3-padding" id="contents"><h1>java.io</h1><div><h2>IO 종단점</h2><div><h3>Closeable</h3><ol><li>데이터의 출발지나 목적지를 닫을 수 있으면 Closeable</li><li>void close()</li><p>스트림 및 이와 관련된 시스템 자원을 해제한다. 이미 호출되었다면 아무 일도 하지 않는다.<br>
-close() 실패했을 때, 예외를 던지는 대신 사용하던 자원을 모두 포기하고 Closeable 객체 내부적으로 '닫혔다(closed)'고 마크하길 권장한다
-</p></ol><h3>Flushable</h3><ol><li>flush 가능한 데이터 목적지는 Flushable</li><li>void flush()</li><p>버퍼에 저장된 데이터를 스트림에 모두 써 보낸다</p></ol></div><h2>바이트 단위 IO</h2><div><h3>DataInput</h3><ol><li>binary stream으로부터 바이트들을 읽고, 또 이를 자바 기본 타입 또는 String으로 만들어 반환하는 기능 정의</li><li>읽기는 1바이트 단위로 이루어진다</li><li class="marker">Modified UTF-8</li><p>DataInput과 DataOutput 인터페이스는 수정된 UTF-8을 이용한다</p><ul><li>'\u0001' ~ '\u007F'는 1바이트(0???????)로 표현한다</li><li>null('\u0000'), '\u0080' ~ '\u07FF'는 2바이트(110????? 10??????)로 표현한다</li><li>'\u0800' ~ '\uFFFF'는 3바이트(1110??? 10?????? 10??????)로 표현한다</li></ul></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">String readLine()
+gtag('config', 'UA-143098403-1');</script></head><body><div class="w3-bar-block w3-sidebar w3-animate-left" id="sidebar"><hr><a class="w3-bar-item w3-button" href="javascript:closeSidebar();">Close &times;</a><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><div class="w3-center"><ins class="kakao_ad_area" style="display:none;" data-ad-unit="DAN-1k1r635zxb6g3" data-ad-width="300" data-ad-height="250"></ins></div><hr><div id="file-list"></div><hr></div><div id="main"><div class="w3-bar w3-blue w3-large" id="nav" style="position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle"><button class="w3-bar-item w3-button w3-hover-theme" onclick="toggleSidebar()">&#9776;</button><input class="w3-bar-item" id="query" type="text" placeholder="search" style="max-width:35%"><a class="w3-bar-item w3-button w3-hover-theme" href="/">Home</a></div><div class="w3-padding" id="contents"><h1>java.io</h1><div><h2>IO 종단점</h2><div><h3>Closeable</h3><ol><li>데이터의 출발지나 목적지를 닫을 수 있으면 Closeable</li><li>void close()</li><p>스트림 및 이와 관련된 시스템 자원을 해제한다. 이미 호출되었다면 아무 일도 하지 않는다<br>close() 실패했을 때, 예외를 던지는 대신 사용하던 자원을 모두 포기하고 Closeable 객체 내부적으로 '닫혔다(closed)'고 마크하길 권장한다</p></ol><h3>Flushable</h3><ol><li>flush 가능한 데이터 목적지는 Flushable</li><li>void flush()</li><p>버퍼에 저장된 데이터를 스트림에 모두 써 보낸다</p></ol></div><h2>바이트 단위 IO</h2><div><h3>DataInput</h3><ol><li>binary stream으로부터 바이트들을 읽고, 또 이를 자바 기본 타입 또는 String으로 만들어 반환하는 기능 정의</li><li>읽기는 1바이트 단위로 이루어진다</li><li class="marker">Modified UTF-8</li><p>DataInput과 DataOutput 인터페이스는 수정된 UTF-8을 이용한다</p><ul><li>'\u0001' ~ '\u007F'는 1바이트(0???????)로 표현한다</li><li>null('\u0000'), '\u0080' ~ '\u07FF'는 2바이트(110????? 10??????)로 표현한다</li><li>'\u0800' ~ '\uFFFF'는 3바이트(1110??? 10?????? 10??????)로 표현한다</li></ul></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">String readLine()
     // 줄의 끝이나 파일 끝을 만나기까지의 문자열을 반환한다
     // 각 바이트들을 0 패딩하여 char로 변환하므로, 유니코드를 읽기는 부적합하다
     // 아무것도 읽지 못한 경우, 빈 문자열이 아닌 null이 반환된다
@@ -32,40 +30,38 @@ int available()
 boolean markSupported()    // mark, reset 메서드를 지원하는지 여부 반환. 기본 false
 void mark(int readlimit)   // 현재 위치 마킹
 void reset()               // 마지막 마킹 위치로 이동
-</div><h3>OutputStream</h3><ol><li>바이트 단위 쓰기에 대한 최상위 추상 클래스</li></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static OutputStream nullOutputStream()
+</div><h3>OutputStream</h3><p>바이트 단위 쓰기에 대한 최상위 추상 클래스</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static OutputStream nullOutputStream()
     // 실제로 데이터를 쓰지는 않는 OutputStream 객체를 반환한다
-</div><h3>InputStream 장식자</h3><div><h4>FilterInputStream</h4><p>아무 기능 추가 없는 장식자</p><h4>BufferedInputStream</h4><p>버퍼를 이용해 mark(), reset() 지원</p><h4>DataInputStream</h4><p>DataInput을 구현 제공</p></div><h3>OutputStream 장식자</h3><div><h4>FilterOutputStream</h4><p>아무 기능 추가 없는 장식자</p><h4>BufferedOutputStream</h4><p>버퍼를 이용해 쓰기 작업이 빈번하게 일어나지 않게 해준다</p><h4>DataOutputStream</h4><p>DataOutput 구현 제공</p></div><h3>ByteArrayInputStream</h3><p>내부 버퍼 byte[] buf에 대한 읽기 연산을 지원하는 InputStream</p><h3>ByteArrayOutputStream</h3><p>내부 버퍼 byte[] buf에 대해 쓰기 연산을 지원하는 OutputStream. 버퍼 크기는 자동으로 확장된다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">void writeTo(OutputStream out)  // 버퍼를 out에 모두 쓴다. == out.write(buf, 0, count)
+</div><h3>ByteArrayInputStream</h3><p>내부 버퍼 byte[] buf에 대한 읽기 연산을 지원하는 InputStream</p><h3>ByteArrayOutputStream</h3><p>내부 버퍼 byte[] buf에 대해 쓰기 연산을 지원하는 OutputStream. 버퍼 크기는 자동으로 확장된다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">void writeTo(OutputStream out)  // 버퍼를 out에 모두 쓴다. == out.write(buf, 0, count)
 byte[] toByteArray()            // 사본 반환
 void reset()                    // 버퍼 처음부터 재활용
 String toString​(Charset charset)
-</div><h3>PrintStream</h3><p>OutputStream, File에 기본 타입 및 각종 문자열을 쓰는 기능을 제공한다</p><p>autoFlush : 바이트 배열을 다 쓰거나, 새 줄 문자, '\n'을 쓰면 자동으로 flush()</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">boolean checkError()
-    // flush()한 다음 오류 상태를 검사한다. 예외를 던지지 않으므로 이 메서드로 확인해야 한다. 스트림에 InterruptedIOException이 발생하면 Thread.currentThread().interrupt()를 실행한다</div><h3>PipedInputStream</h3><p>PipedOutputStream과 연결되어 바이트들을 받는 InputStream. PipedOutputStream과 별개의 스레드에서 동작해야 한다<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/PipedStreamExample.java" lan="java">PipedStreamExample.java</button></p><h3>PipedOutputStream</h3><p>연결된 PipedInputStream으로 바이트들을 보내는 OutputStream. PipedInputStream과 별개의 스레드에서 동작해야 한다<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/PipedStreamExample.java" lan="java">PipedStreamExample.java</button></p><h3>SequenceInputStream</h3><p>여러 InputStream을 이어붙인듯이 활용하는 InputStream</p><h3>PushbackInputStream</h3><p>이미 읽은 것을 취소하고 다시 읽을 수 있는 기능을 지원한다. 이전에 읽은 내용을 저장하지는 않으므로, 덮어쓰기처럼 이용할 수 있다<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/PushBackExample.java" lan="java">PushBackExample.java</button></p><h3>FileInputStream</h3><p>파일을 읽는 InputStream <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java" lan="java">SerializableExample.java</button></p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">FileChannel getChannel()
+</div><h3>PipedInputStream</h3><p>PipedOutputStream를 소스로 하는 InputStream. PipedOutputStream과 별개 스레드에서 동작해야 한다 <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/PipedStreamExample.java" lan="java">PipedStreamExample.java</button></p><h3>PipedOutputStream</h3><p>PipedInputStream에 쓰는 OutputStream. PipedInputStream과 별개 스레드에서 동작해야 한다 <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/PipedStreamExample.java" lan="java">PipedStreamExample.java</button></p><h3>SequenceInputStream</h3><p>여러 InputStream을 이어붙인듯이 활용하는 InputStream</p><h3>FileInputStream</h3><p>파일을 읽는 InputStream <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java" lan="java">SerializableExample.java</button></p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">FileChannel getChannel()
     // 유니크한 FileChannel을 반환하며, 채널에서의 위치는 스트림에서 읽어들인 만큼과 같다
 </div><h3>FileOutputStream</h3><p>파일에 쓰는 OutputStream <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java" lan="java">SerializableExample.java</button></p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">FileChannel getChannel()
     // 유니크한 FileChannel을 반환하며, 채널에서의 위치는 스트림에서 쓴 바이트 수와 같다(append 모드가 아닐 경우)
     // append 모드에서는 파일의 크기와 채널의 위치가 동일하다
-</div></div><h2>객체 IO(직렬화/역직렬화)</h2><div><h3>Serializable</h3><ol><li>직렬화와 역질렬화를 지원하는 마커 인터페이스. ObjectInputStream, ObjectOutputStream의 메서드들을 이용해 알아서 저장/복구한다<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java" lan="java">SerializableExample.java</button></li><li>직렬화하지 않을 멤버는 transient 키워드로 표시한다</li><li>직접 구현하고 싶다면 Externalizable 인터페이스를 구현하거나, 다음의 메서드들을 작성한다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">private void writeObject(java.io.ObjectOutputStream out) // out에 알아서 객체 표현 바이트들을 쓰면 된다
-private void readObject(java.io.ObjectInputStream in)    // in에서 바이트들을 읽어와 알아서 객체를 생성하면 된다
-private void readObjectNoData()                          // 객체들의 버전이 다르거나, 기타 이유로 객체를 초기화할 필요가 있는 경우 사용</div><li>대체 객체를 이용해 저장 : ANY-ACCESS-MODIFIER Object writeReplace()</li><li>대체 객체를 이용해 복구 : ANY-ACCESS-MODIFIER Object readResolve()</li><li>클래스 버전</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">// 정의되지 않은 경우 기본값을 사용하지만, 명시할 것을 권장하고 있다
+</div><h3>InputStream 장식자</h3><div><h4>FilterInputStream</h4><p>아무 기능 추가 없는 장식자</p><h4>BufferedInputStream</h4><p>버퍼를 이용해 mark(), reset() 지원</p><h4>DataInputStream</h4><p>DataInput을 구현 제공</p><span id="pos-1147391479" style="padding:0!important;margin:0!important;width:0!important;height:0!important;overflow:hidden!important"></span><h4>PushbackInputStream</h4><ul><li>이미 읽은 것을 취소하고 다시 읽을 수 있는 기능을 지원한다</li><li>이전에 읽은 내용을 저장하지는 않으므로, 덮어쓰기처럼 이용할 수 있다 <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/PushBackExample.java" lan="java">PushBackExample.java</button></li></ul></div><h3>OutputStream 장식자</h3><div><h4>FilterOutputStream</h4><p>아무 기능 추가 없는 장식자</p><h4>BufferedOutputStream</h4><p>버퍼를 이용해 쓰기 작업이 빈번하게 일어나지 않게 해준다</p><h4>DataOutputStream</h4><p>DataOutput 구현 제공</p><span id="pos1334583405" style="padding:0!important;margin:0!important;width:0!important;height:0!important;overflow:hidden!important"></span><h4>PrintStream</h4><ul><li>OutputStream, File에 기본 타입 및 각종 문자열을 쓰는 기능 제공</li><li>autoFlush : 바이트 배열을 다 쓰거나, 새 줄 문자, '\n'을 쓰면 자동으로 flush()</li></ul><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">boolean checkError()
+    // flush()한 다음 오류 상태를 검사한다. 예외를 던지지 않으므로 이 메서드로 확인해야 한다
+    // 스트림에 InterruptedIOException이 발생하면 Thread.currentThread().interrupt()를 실행한다
+</div></div></div><h2>객체 IO(직렬화/역직렬화)</h2><div><h3>Serializable</h3><ol><li>직렬화와 역질렬화를 지원하는 마커 인터페이스. ObjectInputStream, ObjectOutputStream의 메서드들을 이용해 알아서 저장/복구한다<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java" lan="java">SerializableExample.java</button></li><li>직렬화하지 않을 멤버는 transient 키워드로 표시한다</li><li>직접 구현하고 싶다면 Externalizable 인터페이스를 구현하거나, 다음의 메서드들을 작성한다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">@Serial private void writeObject(java.io.ObjectOutputStream out) // out에 알아서 객체 표현 바이트들을 쓰면 된다
+@Serial private void readObject(java.io.ObjectInputStream in)    // in에서 바이트들을 읽어와 알아서 객체를 생성하면 된다
+@Serial private void readObjectNoData()                          // 객체들의 버전이 다르거나, 기타 이유로 객체를 초기화할 필요가 있는 경우 사용</div><li>대체 객체를 이용해 저장 : @Serial ANY-ACCESS-MODIFIER Object writeReplace()</li><li>대체 객체를 이용해 복구 : @Serial ANY-ACCESS-MODIFIER Object readResolve()</li><li>클래스 버전</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">// 정의되지 않은 경우 기본값을 사용하지만, 명시할 것을 권장하고 있다
 ANY-ACCESS-MODIFIER static final long serialVersionUID = (version number)L;
 </div></ol><h3>Externalizable</h3><ul><li>객체 직렬화/역직렬화를 직접 구현하고자 할 때 이를 구현한다</li><li>객체 직렬화는 빈 객체를 만든 뒤 각 속성의 값을 쓰므로 기본 생성자가 필요하다<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/ExternalizableExample.java" lan="java">ExternalizableExample.java</button></li></ul><h3>ObjectInputStream</h3><p>역직렬화 관련 InputStream <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java" lan="java">SerializableExample.java</button></p><h3>ObjectOutputStream</h3><p>직렬화 관련 OutputStream <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/SerializableExample.java" lan="java">SerializableExample.java</button></p></div><h2>문자 단위 IO 관련</h2><div><h3>Console</h3><ol><li>JVM이 컨트롤할 수 있는 문자 기반 콘솔에 대한 접근 제공. 콘솔 존재 여부는 하위 플랫폼에 의존적이며, 싱글톤으로 System.console()을 통해 얻을 수 있다. 만일 가용한 콘솔이 없다면 null이 반환된다. <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/ConsoleExample.java" lan="java">ConsoleExample.java</button></li><li>콘솔에 대한 읽기/쓰기 작업은 모두 원자적으로 이루어지며, 따라서 다른 스레드가 대기할 가능성이 있다</li><li>콘솔에 대한 close()는 아무런 영향이 없다</li><li>유닉스의 Ctrl+D, 윈도우의 Ctrl+Z와 같은 종료 문자를 만나면 읽기 메서드는 null을 반환한다</li><li>보안 유의 : 패스워드와 같은 중요한 데이터를 읽을 때, readPassword(...) 메서드를 이용하고, 반환된 char[]는 사용 후 수동으로 0 초기화</li></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">PrintWriter writer() // 유니크한 PrintWriter 객체 반환
 Reader reader()      // 유니크한 Reader 객체 반환
-</div><h3>Reader</h3><ol><li>char 단위 읽기에 대한 최상위 추상 클래스</li><li>서브클래스들은 read(char[], int, int)와 close()만 구현해도 된다</li></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static Reader nullReader()
+</div><h3>Reader</h3><p>char 단위 읽기에 대한 최상위 추상 클래스</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static Reader nullReader()
     // 아무 것도 읽지 않는 Reader 객체를 반환한다
 
 int read()
     // char 하나를 읽고 int로 반환. 스트림의 끝이라면 -1을 반환한다
-int read(char[] cbuf)
-abstract int read(char[] cbuf, int off, int len)
-    // 실제로 읽은 글자 수를 반환
-
-long skip(long n)
-    // 실제로 건너 뛴 글자 수(바이트 수x) 반환
-
 boolean ready()
     // 다음 read()가 블록되지 않음을 보장하면 true, 보장하지 못하면 false
 
-// 마킹 관련 : InputStream과 유사
+// 마킹 관련
+boolean markSupported()         // mark, reset 메서드를 지원하는지 여부 반환. 기본 false
+void mark(int readAheadLimit)   // 현재 위치 마킹
+void reset()                    // 마지막 마킹 위치로 이동
 
 long transterTo(Writer out)
     // 모든 글자를 읽어 out에 쓴다. 전송한 글자 수를 반환한다</div><h3>Writer</h3><ol><li>char 단위 쓰기에 대한 취상위 추상 클래스</li><li>Appendable하므로 편리함이 크다</li></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static Writer nullWriter()
@@ -76,9 +72,9 @@ void write(int c)
 </div><h3>InputStreamReader</h3><p>InputStream에 대해 Reader 작업을 지원해주는 bridge 클래스 <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/BufferedReaderExample.java" lan="java">BufferedReaderExample.java</button></p><h3>OutputStreamWriter</h3><p>OutputStream에 Writer 작업을 지원해주는 bridge 클래스</p><h3>CharArrayReader</h3><p>내부 버퍼 char[] buf에 대한 읽기 연산을 지원하는 Reader</p><h3>CharArrayWriter</h3><p>내부 버퍼 char[] buf에 대해 쓰기 연산을 지원하는 Writer. 버퍼 크기는 자동으로 확장된다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">void writeTo(Writer out)    // out에 버퍼의 모든 내용을 쓴다
 void reset()                // 버퍼를 처음부터 재활용
 char[] toCharArray()        // 사본 반환
-</div><h3>StringReader</h3><p>String에 대해 읽기 연산을 수행하는 Reader</p><h3>StringWriter</h3><p>내부 StringBuffer에 쓰기 연산을 지원하는 Writer</p><h3>Reader 장식자</h3><div><h4>FilterReader</h4><p>아무 기능 추가 없는 장식자</p><h4>BufferedReader</h4><p>버퍼를 이용해 mark(), reset()를 지원하고, 기저 Reader에 대한 읽기 작업이 빈번하게 일어나지 않게 해준다 <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/BufferedReaderExample.java" lan="java">BufferedReaderExample.java</button></p></div><h3>Writer 장식자</h3><div><h4>FilterWriter</h4><p>아무 기능 추가 없는 장식자</p><h4>BufferedWriter</h4><p>버퍼를 이용해 기저 Writer에 대한 쓰기 작업이 빈번하게 일어나지 않도록 한다</p><h4>LineNumberReader</h4><p>줄 끝을 만날때마다 카운트</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">void setLineNumber(int lineNumber) // 읽고 있는 위치가 이동하는 건 아니다
+</div><h3>StringReader</h3><p>String을 읽는 Reader</p><h3>StringWriter</h3><p>StringBuffer에 쓰는 Writer</p><h3>PipedReader</h3><p>PipedWriter를 소스로 하는 Reader <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/PipedReaderExample.java" lan="java">PipedReaderExample.java</button></p><h3>PipedWriter</h3><p>PipedReader로 쓰는 Writer <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/PipedReaderExample.java" lan="java">PipedReaderExample.java</button></p><h3>FileReader</h3><p>파일을 읽는 Reader</p><h3>FileWriter</h3><p>파일에 쓰는 Writer</p><h3>Reader 장식자</h3><div><h4>FilterReader</h4><p>아무 기능 추가 없는 장식자</p><h4>BufferedReader</h4><p>버퍼를 이용해 mark(), reset()를 지원하고, 기저 Reader에 대한 읽기 작업이 빈번하게 일어나지 않게 해준다 <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/BufferedReaderExample.java" lan="java">BufferedReaderExample.java</button></p></div><h3>Writer 장식자</h3><div><h4>FilterWriter</h4><p>아무 기능 추가 없는 장식자</p><h4>BufferedWriter</h4><p>버퍼를 이용해 기저 Writer에 대한 쓰기 작업이 빈번하게 일어나지 않도록 한다</p><h4>LineNumberReader</h4><p>줄 끝을 만날때마다 카운트</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">void setLineNumber(int lineNumber) // 읽고 있는 위치가 이동하는 건 아니다
 int getLineNumber()
-</div></div><h3>PrintWriter</h3><p>PrintStream의 Writer 버전. 텍스트 출력 스트림에 객체들을 정형화된 텍스트로 쓰는 기능을 제공한다</p><h3>PipedReader</h3><p>PipedInputStream과 유사<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/PipedReaderExample.java" lan="java">PipedReaderExample.java</button></p><h3>PipedWriter</h3><p>PipedOutputStream과 유사<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/PipedReaderExample.java" lan="java">PipedReaderExample.java</button></p><h3>PushbackReader</h3><p>PushbackInputStream과 비슷<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/PushBackExample.java" lan="java">PushBackExample.java</button></p><h3>FileReader</h3><p>파일을 읽는 Reader</p><h3>FileWriter</h3><p>파일에 쓰는 Writer</p></div><h2>파일 관련</h2><div><h3>File</h3><ol><li>추상화된 파일 및 디렉터리 경로에 대한 추상화된 표현 제공; 물리적 저장 장치 » 경로 문자열 » File 객체</li><li>경로 문자열은 절대 경로, 상대 경로 둘 다 허용된다. 상대 경로의 기준 위치는 System속성 "user.dir"로 얻을 수 있다</li><li>보다 많은 기능을 제공하는 java.nio.file 패키지가 존재한다</li></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">public static final char separatorChar
+</div><h4>PushbackReader</h4><p><a class="w3-btn w3-round-xxlarge w3-small w3-green goto" href="#pos-1147391479" target="_self">Goto - PushbackInputStream</a>과 비슷 <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/PushBackExample.java" lan="java">PushBackExample.java</button></p><h4>PrintWriter</h4><ul><li><a class="w3-btn w3-round-xxlarge w3-small w3-green goto" href="#pos1334583405" target="_self">Goto - PrintStream</a>의 Writer 버전</li><li>다른 OutputStream, Writer, 파일에 기본 타입 및 각종 문자열을 쓰는 기능을 제공</li><li>PrintStream과 마찬가지로 checkError()로 실패를 확인해야 한다</li></ul></div></div><h2>파일 관련</h2><div><h3>File</h3><ol><li>추상화된 파일 및 디렉터리 경로에 대한 추상화된 표현 제공; 물리적 저장 장치 » 경로 문자열 » File 객체</li><li>경로 문자열은 절대 경로, 상대 경로 둘 다 허용된다. 상대 경로의 기준 위치는 System속성 "user.dir"로 얻을 수 있다</li><li>보다 많은 기능을 제공하는 java.nio.file 패키지가 존재한다</li></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">public static final char separatorChar
 public static final String separator
     // 시스템 속성 "file.separator", UNIX : '/', Windows : '\\'
 public static final char pathSeparatorChar
@@ -92,31 +88,16 @@ static File[] listRoots()
 static File createTempFile(String prefix, String suffix)
     // (특정) 디렉터리에 새로운 빈 파일을 만들어 반환한다
     // deleteOnExit()을 통해 자동으로 정리되어야 한다
-    // prefix : 의미 있는 접두어, suffix : null이면 ".tmp"</div><p><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/FileFilterExample.java" lan="java">FileFilter 예</button><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/FilenameFilterExample.java" lan="java">FilenameFilter 예</button><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/FileExample.java" lan="java">File 예</button></p><h3>RandomAccessFile</h3><p>읽기/쓰기 가능한 임의 접근 파일. 읽기/쓰기의 기준 위치 file pointer가 존재<br>읽기로 예정된 바이트들을 모두 읽기 전에 EOF를 만나면 EOFException 발생</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">RandomAccessFile(String name, String mode)
-    // mode : "r", "rw", "rws"(파일 내용 및 메타데이터 변경을 곧바로 반영), "rwd"(파일 내용 변경을 곧바로 반영)
-
-int read() // InputStream.read()와 동일
-
-long getFilePointer()
+    // prefix : 의미 있는 접두어, suffix : null이면 ".tmp"</div><p><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/FileFilterExample.java" lan="java">FileFilter 예</button><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/FilenameFilterExample.java" lan="java">FilenameFilter 예</button><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/io/FileExample.java" lan="java">File 예</button></p><h3>RandomAccessFile</h3><ul><li>읽기(DataInput)/쓰기(DataOutput) 가능한 임의 접근 파일</li><li>mode : "r" | "rw" | "rws"(파일 내용 및 메타데이터 변경을 곧바로 반영) | "rwd"(파일 내용 변경을 곧바로 반영)</li><li>읽기/쓰기의 기준 위치가 되는 file pointer가 존재</li><li>읽기로 예정된 바이트들을 모두 읽기 전에 EOF를 만나면 EOFException 발생</li></ul><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">long getFilePointer()
 void seek(long pos) // file pointer 설정
 
 long length()
 void setLength(long newLength)
-    // 기존 크기 > newLength && getFilePointer() > newLength
-    //     → 자르고, file pointer = newLength
-    // 기존 크기 &lt; newLength
-    //     → 확장. 확장한 영역의 데이터는 초기화되지 않는다
-</div></div></div><h1>java.lang</h1><div><h2>Appendable</h2><p>유니코드 CharSequence 또는 char 값을 덧붙일 수 있는 객체를 표현한다</p><h2>AutoCloseable</h2><p>자동으로 자원을 해제하는 객체를 표현한다. try-with-resources 블록에 사용되면 close()가 자동으로 호출된다. IO 작업이 없는 것들을 try-with-resources 블록에 이용하는 것은 불필요한 일이다<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java" lan="java">TryWithResources.java</button></p><h2>Cloneable</h2><p>Object::clone()을 재정의했음을 나타내는 마커 인터페이스</p><h2>Comparable&lt;T></h2><ol><li>자연스러운 순서로 클래스의 모든 객체를 정렬할 수 있음을 표현</li><li>이를 구현한 클래스 객체들의 List, array는 Collections.sort, Arrays.sort로 각각 정렬할 수 있다</li><li>이를 구현한 클래스 객체들은 Comparator 정의 없이 SortedMap, SortedSet의 키로 이용할 수 있다</li><li>null은 객체가 아니므로 equals(null)이 false를 리턴하는 것과 달리 compareTo(null)은 NullPointerException을 내보내는 것이 바람직하다</li><li>다음 성질을 만족하도록 구현함이 권장된다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">(e1.compareTo(e2) == 0) == e1.equals(e2)</div></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">int compareTo(T o) {
-    return this - o;
-    // o보다 앞서면(작으면) 음수, 같으면 0, 뒤면(크면) 양수 반환
-}</div><h2>Iterable&lt;T></h2><p>이를 구현한 클래스 객체는 enhanced for statement의 순회 대상이 될 수 있다<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/lang/IterableExample.java" lan="java">IterableExample.java</button></p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">Iterator&lt;T> iterator()
-    // 구현한 클래스 인스턴스를 반환하면 된다
-default void forEach(Consumer&lt;? super T> action)
-    // 순회하면서 action을 적용한다
-    // 기본 구현 : for(T t : this) action.accept(t);
-default Spliterator&lt;T> spliterator()
-    // 기본 구현은 Sliterator의 모든 사항을 구현하지 않으므로 재정의하는 것이 더 좋은 성능을 보인다</div><h2>ProcessHandle</h2><ol><li>native process들에 대한 제어 제공. 프로세스 생애 모니터링, 자식 프로세스 나열, 프로세스 정보 얻기, 프로세스 종료 등<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/lang/ProcessHandleExample.java" lan="java">ProcessHandleExample.java</button></li><li>프로세스 ID는 OS가 할당한 것으로, 값의 범위는 OS에 의존적이다</li><li>ProcessHandle 객체는 다음 팩터리 메서드로 반환된다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">current(), of(long), children(), descendants(), parent(), allProcesses()
-parent() // zombie 상태의 프로세스는 보통 parent가 없다</div><li>SecurityManager의 RuntimePermission("manageProcess")만큼의 제어 권한을 갖는다</li><li>ProcessHandle 객체들을 비교할 때는 equals, compareTo 메서드를 이용해야 한다</li></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">ProcessHandle.Info info()
+    // 기존 크기 > newLength         → 자르기
+    // getFilePointer() > newLength → file pointer = newLength
+    // 기존 크기 &lt; newLength         → 확장. 확장한 영역의 데이터는 초기화되지 않는다
+
+</div></div></div><h1>java.lang</h1><div><h2>AutoCloseable</h2><ul><li>자동으로 자원을 해제하는 객체를 표현한다</li><li>try-with-resources 블록에 사용되면 close()가 자동으로 호출된다 <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java" lan="java">TryWithResources.java</button></li><li>IO 작업이 없는 것들을 try-with-resources 블록에 이용하는 것은 불필요한 일이다</li></ul><h2>Comparable&lt;T></h2><ol><li>인스턴스를 정렬하는 자연스러운 순서 정의</li><li>이를 구현한 클래스 객체들의 List, array는 Collections.sort, Arrays.sort로 각각 정렬할 수 있다</li><li>이를 구현한 클래스 객체들은 Comparator 정의 없이 SortedMap, SortedSet의 키로 이용할 수 있다</li><li>null은 객체가 아니므로 equals(null)이 false를 리턴하는 것과 달리 compareTo(null)은 NullPointerException을 내보내는 것이 바람직하다</li><li>다음 성질을 만족하도록 구현함이 권장된다<p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">(e1.compareTo(e2) == 0) == e1.equals(e2)</div></li></ol><h2>Iterable&lt;T></h2><p>이를 구현한 클래스 객체는 enhanced for statement의 순회 대상이 될 수 있다</p><h2>ProcessHandle</h2><ol><li>native process들에 대한 제어 제공</li><p>프로세스 생애 모니터링, 자식 프로세스 나열, 프로세스 정보 얻기, 프로세스 종료 등 <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/lang/ProcessHandleExample.java" lan="java">ProcessHandleExample.java</button></p><li>ProcessHandle 객체는 다음 팩터리 메서드로 반환된다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">current(), of(long), children(), descendants(), parent(), allProcesses()</div><li>SecurityManager의 RuntimePermission("manageProcess")만큼의 제어 권한을 갖는다</li><li>ProcessHandle 객체들을 비교할 때는 equals, compareTo 메서드를 이용해야 한다</li></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">ProcessHandle.Info info()
 
 boolean supportsNormalTermination()
     // destroy() 메서드가 정상적으로 프로세스를 종료하는지 여부. false면 프로세스를 강제로 즉시 종료함을 의미
@@ -135,8 +116,8 @@ Optional&lt;String> commandLine()        // command()와 arguments()의 결과�
 Optional&lt;String[]> arguments()        // 프로세스의 인자 반환
 Optional&lt;Instant> startInstant()      // 프로세스의 시작 시각 반환
 Optional&lt;Duration> totalCpuDuration() // CPU 사용 시간 반환
-Optional&lt;String> user()               // 프로세스 유저 반환</div></div><h2>Readable</h2><p>Readable은 문자들에 대한 소스다<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/lang/ReadableExample.java" lan="java">ReadableExample.java</button></p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">int read(CharBuffer cb)
-    // 문자들을 그대로 cb에 put()을 통해 저장한다. cb에 대한 어떠한 사전처리도 없다. 저장한 char 개수를 반환하며, 소스의 끝이면 -1을 반환한다</div><h2>Runnable</h2><p>Runnable은 한 스레드로서 실행되도록 구현돼야 한다. Thread의 run()만을 재정의할 때 사용한다<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/lang/RunnableExample.java" lan="java">RunnableExample.java</button></p><h2>SecurityManager</h2><ol><li>보안 정책을 구현할 수 있는 클래스. 전형적인 확인 절차는 아래와 같다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">SecurityManager security = System.getSecurityManager();
+Optional&lt;String> user()               // 프로세스 유저 반환
+</div></div><h2>SecurityManager</h2><ol><li>보안 정책을 구현할 수 있는 클래스. 전형적인 확인 절차는 아래와 같다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">SecurityManager security = System.getSecurityManager();
 if (security != null) {
     security.checkXXX(argument, . . . );
 }</div></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">Object getSecurityContext()           // 현재 실행 환경을 캡슐화한 객체 반환
@@ -165,52 +146,48 @@ void remove(Class&lt;?> type)
     // 다음 get 호출 시 값을 새로 계산하도록 한다</div><h3>ThreadLocal&lt;T></h3><p>스레드 단위의 지역 변수를 제공한다. 호출 지점과 관계없이 한 스레드 내부에서 변수를 공유한다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">protected T initialValue()
     // 초기값이 설정되지 않은 상태에서 최초 get() 호출에 의해 불린다. remove() 호출 후의 get() 요청으로 다시 불린다
 static &lt;S> ThreadLocal&lt;S> withInitial(Supplier&lt;? extends S> supplier)
-    // supplier로 초기값이 설정되는 ThreadLocal 반환</div><h3>InheritableThreadLocal&lt;T></h3><p>ThreadLocal에 상속성을 부여. 자식 스레드는 부모의 thread-local 변수들을 모두 상속받고 시작한다. childValue 메서드를 재정의함으로써 부모의 값과 다르게 설정할 수도 있다</p></div><h2>타입 관련</h2><div><h3>CharSequence</h3><p>일련의 char 값들을 표현한다. equals(), hashCode()에 대한 규약이 없어, 두 CharSequence 객체를 비교하는 결과는 정의되어 있지 않으며, 따라서 set이나 map의 키로 이용하기에 부적절하다<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/lang/CharSequenceExample.java" lan="java">CharSequenceExample.java</button></p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static int compare(CharSequence cs1, CharSequence cs2)
-    // 두 CharSequence를 사전순으로 비교한다
+    // supplier로 초기값이 설정되는 ThreadLocal 반환</div><h3>InheritableThreadLocal&lt;T></h3><p>ThreadLocal에 상속성을 부여. 자식 스레드는 부모의 thread-local 변수들을 모두 상속받고 시작한다. childValue 메서드를 재정의함으로써 부모의 값과 다르게 설정할 수도 있다</p></div><h2>타입 관련</h2><div><ul><li>각 래퍼 클래스의 TYPE 필드는 기본 타입 클래스 인스턴스를 가리킨다</li><p>e.g. Boolean.TYPE == boolean.class</p><li>각 래퍼 클래스의 valueOf() 함수는 기본 타입에 대해 래핑을 수행하며, 일부는 캐싱을 이용해 빠르게 수행한다</li><li>숫자 래퍼 클래스들은 MIN_VALUE, MAX_VALUE, SIZE(비트 크기), BYTES(바이트 크기) 필드를 갖는다</li><li>byte[] -> 다른 수 타입 변환을 원하는 경우, ByteBuffer 이용</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">ByteBuffer.wrap(new byte[] { 1, 1, 1, 1 }).getInt()</div><li>Boolean, Integer, Long은 시스템 속성 관련 유틸리티를 제공한다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static X getX(String name, X defaultVal)</div><li>몇몇 래퍼 클래스들은 아래와 같은 비트 함수를 제공한다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static X highestOneBit(X i)            // + lowestOneBit
+static X numberOfLeadingZeros(X i)     // + numberOfTrailingZeros
+static X bitCount(X i)
+static X rotateLeft(X i, int distance) // + rotateRight
+static X reverse(X i)
+static X reverseBytes(X i)             // 바이트 단위로 뒤집기</div><li>정수 래퍼 클래스들은 아래와 같은 String 파싱을 제공한다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static Z parseZ(String s, int radix)
+static Z valueOf(String s, int radix)
+    // 예외
+    //      s가 null이거나 길이가 0
+    //      s에 radix진수가 아닌 문자가 포함(단, s가 2글자 이상일 때 첫 '-', '+'는 가능)
+    //      radix가 [Character.MIN_RADIX, Character.MAX_RADIX] 범위를 벗어날 때
+    //      값이 Z를 벗어날 때
+static Z decode(String nm)
+    // 다음 문법으로 표현된 10진수, 16진수, 8진수를 parseZ()를 이용해 디코딩한다. 공백 비허용
+    //      (Sign?)(10진수)
+    //      (Sign?)(0x | 0X | #)(16진수)
+    //      (Sign?)0(8진수)
+    //      Sign: '-', '+'</div><li>정수 래퍼 클래스들은 몇몇 unsigned 함수를 제공한다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static int compareUnsigned(Z x, Z y)
+static Z divideUnsigned(Z dividend, Z divisor)
+static Z parseUnsigned(...)
+static Z remainderUnsigned(Z dividend, Z divisor)
+static int toUnsignedInt(Z x)
+static long toUnsignedLong(Z x)
+static String toUnsignedString(Z i)
+</div></ul><h3>CharSequence</h3><ul><li>일련의 char 값들을 표현 <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/lang/CharSequenceExample.java" lan="java">CharSequenceExample.java</button></li><li>equals(), hashCode()에 대한 규약이 없어, set이나 map의 키로 이용하기에 부적절하다</li></ul><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static int compare(CharSequence cs1, CharSequence cs2)
+    // 사전순으로 비교
 
 default IntStream chars()
     // char들을 int로 0패딩하여 스트림 생성. 두 char로 쪼개진 유니코드 보충 평면의 문자를 하나로 합치진 않는다
 default IntStream codePoints()
-    // 유니코드 값들을 스트림으로 생성. 보충 평면의 문자는 Character.toCodePoint 메서드를 통해 하나의 int 값으로 형성</div><h3>Boolean</h3><p>원시 타입 boolean의 wrapper 클래스. 람다 활용을 위한 static 메서드들을 제공한다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static boolean parseBoolean(String s)
-    // s가 null이 아니고 대소문자 구분없이 "true"와 일치하면 true 반환
-static Boolean valueOf(String s)
-    // == valueOf(parseBoolean(s))
-
-static boolean getBoolean(String name)
-    // name에 해당하는 system property가 존재하고, 대소문자 구분없이 "true"와 일치하면 true 반환
-
-int compareTo(Boolean b)
-    // TRUE.compareTo(FALSE) > 0, FALSE.compareTo(TRUE) &lt; 0</div><h3>Number</h3><p>수에 관한 최상위 추상 wrapper 클래스</p><h3>Byte</h3><p>기본 타입 byte에 대한 wrapper 클래스. 람다 활용을 위한 static 메서드들을 제공한다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static byte parseByte(String s, int radix)
-    // 예외 : s가 null이거나 길이가 0일 때. s에 radix진수가 아닌 문자가 포함될 때(단, s가 2글자 이상일 때 첫 '-', '+'는 가능). radix가 [Character.MIN_RADIX, Character.MAX_RADIX] 범위를 벗어날 때, 값이 byte를 벗어날 때
-static Byte valueOf(String s, int radix)
-static Byte decode(String nm)
-    // 다음 문법으로 표현된 10진수, 16진수, 8진수를 parseByte()를 이용해 디코딩한다. 공백을 허용하지 않는다
-    //     (Sign?)(10진수)
-    //     (Sign?)(0x | 0X | #)(16진수)
-    //     (Sign?)0(8진수)
-    //     Sign: '-', '+'
-
-static int compare(byte x, byte y)
-static int compareUnsigned(byte x, byte y)
-static int toUnsignedInt(byte x)
-static long toUnsignedLong(byte x)</div><h3>Character</h3><ol><li>기본타입 char에 대한 wrapper 클래스. 추가적으로 문자 집합(소문자, 숫자 등) 정의, 변환 기능을 갖는다</li><li>유니코드 표준 8.0.0을 따른다.(JDK 9 기준)</li><ul><li>16비트 고정폭으로 값을 표현하며, 유효한 범위는 U+0000 부터 U+10FFFF까지(= Unicode scalar value).</li><ol><li>[U+0000, U+FFFF] == 기본 문자 평면(BMP; Basic Multilingual Plane)</li><li>(U+FFFF, ~) == 보충 문자 평면(supplementary characters)</li></ol><li>자바 플랫폼은 보충 평면의 문자들은 2개의 char의 쌍으로 표현한다</li><li>하위 21개 비트를 이용하여 int 하나로 모든 유니코드 code point를 표현할 수 있다</li></ul><li>int를 받는 메서드는 모든 유니코드를 처리할 수 있지만, char만을 받는 메서드는 보충 평면 문자를 처리하지 못한다</li><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/lang/CharacterExample.java" lan="java">CharacterExample.java</button></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static final char MIN_HIGH_SURROGATE          // \uD800
-static final char MAX_HIGH_SURROGATE          // \uDBFF
-static final char MIN_LOW_SURROGATE           // \uDC00
-static final char MAX_LOW_SURROGATE           // \uDFFF
-static final int MIN_SUPPLEMENTARY_CODE_POINT // U+10000
-static final int MIN_CODE_POINT               // U+0000
-static final int MAX_CODE_POINT               // U+10FFFF
-
-static String getName(int codePoint)
+    // 유니코드 값들을 스트림으로 생성. 보충 평면의 문자는 Character.toCodePoint 메서드를 통해 하나의 int 값으로 형성
+</div><h3>Character</h3><ol><li>문자 집합(소문자, 숫자 등) 정의, 변환 기능을 제공한다</li><li>유니코드 표준을 따른다</li><ul><li>유효한 범위는 U+0000(MIN_CODE_POINT)부터 U+10FFFF(MAX_CODE_POINT)까지(== Unicode scalar value) <button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/lang/CharacterExample.java" lan="java">CharacterExample.java</button></li><ol><li>[U+0000, U+FFFF] == 기본 문자 평면(BMP; Basic Multilingual Plane)</li><li>[U+10000 == MIN_SUPPLEMENTARY_CODE_POINT, ~) == 보충 문자 평면(supplementary characters)</li></ol><li>자바 플랫폼은 보충 평면의 문자들은 2개의 char의 쌍으로 표현한다</li><p>이때 첫번째 char는 high-surrogate([MIN_HIGH_SURROGATE, MAX_HIGH_SURROGATE]), 두번째 char는 low-surrogate([MIN_LOW_SURROGATE, MAX_LOW_SURROGATE]) 범위 안의 값이다</p><li>하위 21개 비트를 이용하여 int 하나로 모든 유니코드 code point를 표현할 수 있다</li></ul><li>int를 받는 메서드는 모든 유니코드를 처리할 수 있지만, char만을 받는 메서드는 보충 평면 문자를 처리하지 못한다</li></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static String getName(int codePoint)
     // 이름 반환 : Character.UnicodeBlock.of(codePoint).toString().replace('_', ' ') + " " + Integer.toHexString(codePoint).toUpperCase(Locale.ROOT);
-    // 정의되어 있지 않으면 null 반환
+    // 정의되어 있지 않으면 null
 static int codePointOf(String name)
     // 정의되어 있지 않으면 예외
 
 static boolean isValidCodePoint(int codePoint)
+    // + isBmpCodePoint, isSupplementaryCodePoint, isHighSurrogate, isLowSurrogate
 static int getType(int codePoint)
 static byte getDirectionality(char ch)
-    // 문자 표시 순서를 반환한다. DIRECTIONALITY_UNDEFINED, DIRECTIONALITY_LEFT_TO_RIGHT 등
+    // 문자 표시 순서 : DIRECTIONALITY_UNDEFINED, DIRECTIONALITY_LEFT_TO_RIGHT 등
 static boolean isMirrored(char ch)
     // 좌우 대칭되는 문자가 존재하는지 여부
 
@@ -231,7 +208,6 @@ static int charCount(int codePoint)
 static char[] toChars(int codePoint)
 static String toString(int codePoint)
 
-static char reverseBytes(char ch)
 static int toCodePoint(char high, char low)
 static int codePointAt(CharSequence seq, int index)
     // + codePointBefore, highSurrogate, lowSurrogate
@@ -246,13 +222,15 @@ static int toLowerCase(int codePoint)
 
 static int digit(int codePoint, int radix)
 static char forDigit(int digit, int radix)
-static int getNumericValue(int codePoint)</div><div><h4>Character.Subset</h4><p>이 클래스의 객체는 유니코드 문자 집합을 표현한다. Character 클래스 내부에서 정의한 문자 집합은 Character.UnicodeBlock뿐이다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">final String toString() // name 반환</div><h4>Character.UnicodeBlock</h4><p>유니코드 문자 블록. 각 문자들은 최대 하나의 유니코드 블록에 포함된다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static Character.UnicodeBlock ARABIC, GREEK, HANGUL // 등
+static int getNumericValue(int codePoint)</div><div><h4>Character.Subset</h4><p>이 클래스의 객체는 유니코드 문자 집합을 표현한다. Character 클래스 내부에서 정의한 문자 집합은 Character.UnicodeBlock뿐이다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">final String toString() // name 반환</div><h4>Character.UnicodeBlock</h4><p>유니코드 문자 블록. 각 문자들은 최대 하나의 유니코드 블록에 포함된다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">public static Character.UnicodeBlock ARABIC, GREEK, HANGUL, ...
 
-static Character.UnicodeBlock of(char c)            // c가 속한 유니코드 블록 반환
+static Character.UnicodeBlock of(char c)
 static final Character.UnicodeBlock forName(String blockName)
-    // 블록 이름이 변경된 경우, 변경 전/후 이름 둘 다 사용할 수 있다</div><h4>Character.UnicodeScript</h4><p>유니코드 표준 스크립트 이름 정의를 표현. 모든 문자는 하나의 스크립트(각 언어|INHERITED|COMMON|UNKNOWN)에 할당된다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">ARABIC, GREEK, HANGUL // 등
+    // 블록 이름이 변경된 경우, 변경 전/후 이름 둘 다 사용할 수 있다
+</div><h4>Character.UnicodeScript</h4><p>유니코드 표준 스크립트 이름 정의. 모든 문자는 하나의 스크립트(각 언어|INHERITED|COMMON|UNKNOWN)에 할당된다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">public static final Character.UnicodeScript ARABIC, GREEK, HANGUL, ...
 
-static Character.UnicodeScript of(int codePoint)</div></div><h3>Double</h3><p>기본 타입 double에 대한 wrapper 클래스. 람다 활용을 위한 static 메서드들을 제공한다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">public static final double POSITIVE_INFINITY // Double.longBitsToDouble(0x7ff0000000000000L)
+static Character.UnicodeScript of(int codePoint)
+</div></div><h3>Double</h3><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">public static final double POSITIVE_INFINITY // Double.longBitsToDouble(0x7ff0000000000000L)
 public static final double NEGATIVE_INFINITY // Double.longBitsToDouble(0xfff0000000000000L)
 public static final double NaN               // Double.longBitsToDouble(0x7ff8000000000000L)
 public static final double MAX_VALUE         // Double.longBitsToDouble(0x7fefffffffffffffL), 0x1.fffffffffffffP+1023
@@ -261,9 +239,7 @@ public static final double MIN_NORMAL        // Double.longBitsToDouble(0x001000
 public static final double MIN_VALUE         // Double.longBitsToDouble(0x1L), 0x0.0000000000001P-1022
     // 가장 작은 양수 표현
 
-static Double valueOf(String s) // + parseDouble
 static String toHexString(double d)
-
 static long doubleToLongBits(double value)
     // double 표현 그대로 long으로 전환. 63번 비트는 부호, 62-52번 비트는 지수, 51-0번 비트는 진수
 static long doubleToRawLongBits(double value)
@@ -273,36 +249,14 @@ static double longBitsToDouble(long bits)
 
 int compareTo(Double anotherDouble)
     // Double.NaN > Double.POSITIVE_INFINITY
-    // 0.0d > -0.0d</div><h3>Integer</h3><p>기본 타입 int에 대한 wrapper 클래스. 람다 활용을 위한 static 메서드들을 제공한다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static String toString(int i, int radix)
+    // 0.0d > -0.0d
+</div><h3>Integer</h3><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static String toString(int i, int radix)
     // + toUnsignedString, toBinaryString, toOctalString, toHexString
-    // radix in [Character.MIN_RADIX, Character.MAX_RADIX]
-static int parseInt(CharSequence s, int beginIndex, int endIndex, int radix)
-    // [beginIndex, endIndex)
-    // + parseUnsignedInt, valueOf
-    // 파싱 중 CharSequence 변경에 대한 조치를 하지 않음
-static Integer decode(String nm) // Byte::decode 참고
-
-static Integer getInteger(String nm, int val)
-    // 시스템 속성값을 decode 메서드로 변환하여 반환
-    // nm : property name, val : 기본값
-
-// unsigned 연산
-static int compareUnsigned(int x, int y)
-static long toUnsignedLong(int x)
-static int divideUnsigned(int dividend, int divisor)
-static int remainderUnsigned(int dividend, int divisor)
-
-// bit 연산
-static int highestOneBit(int i)            // + lowestOneBit
-static int numberOfLeadingZeros(int i)     // + numberOfTrailingZeros
-static int bitCount(int i)
-static int rotateLeft(int i, int distance) // + rotateRight
-static int reverse(int i)
-static int reverseBytes(int i)             // 바이트 단위로 뒤집기</div><h3>String</h3><ol><li>유니코드 보충 평면 문자는 surrogate pairs로써 2자리를 차지한다</li><li>로캐일을 고려한 문자열 비교는 Collator 클래스를 이용</li><li>람다 활용을 위한 static 메서드들을 제공한다</li></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static final Comparator&lt;String> CASE_INSENSITIVE_ORDER
+</div><h3>String</h3><p>로캐일을 고려한 문자열 비교는 Collator 클래스를 이용하면 된다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static final Comparator&lt;String> CASE_INSENSITIVE_ORDER
     // 대소문자 구분없는 비교자. 직렬화 가능
 
 static String format(String format, Object... args)
-static String valueOf(Object obj) : obj.toString()
+static String valueOf(Object obj)
 
 boolean isEmpty() // 길이가 0인지 여부
 boolean isBlank() // 비거나 공백 문자로만 이루어졌는지 여부
@@ -336,13 +290,17 @@ Stream&lt;String> lines() // 줄 끝(\n, \r, \r\n) 기준으로 분리
 String indent(int n)      // 각 줄이 n개의 공백으로 시작하도록 조정하고, 줄 끝을 \n로 정규화한다. n이 음수인 경우, 최대 n개의 앞선 공백을 제거한다
 
 &lt;R> R transform(Function&lt;? super String, ? extends R> f)
-String repeat(int count)</div><h3>StringBuffer</h3><p>스레드-안전한 변경 가능한 문자열</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">void trimToSize()
+String repeat(int count)
+</div><h3>StringBuffer</h3><p>스레드-안전한 변경 가능한 문자열</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">void trimToSize()
     // 버퍼 크기를 줄여 문자열 크기에 맞춘다
 void setLength(int newLength)
     // 새로운 크기의 문자열에 기존 문자열을 복사. 남는 부분은 '\u0000'(null)로 채워진다
 void ensureCapacity(int minimumCapacity)
-StringBuffer reverse()</div><h3>StringBuilder</h3><p>StringBuffer의 비동기화 버전</p></div><h2>클래스 관련</h2><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/lang/ClassExample.java" lan="java">ClassExample.java</button><div><h3>Class&lt;T></h3><div><h4>Nest</h4><p>Nest는 같은 런타임 패키지 안의, private member에 접근 가능한 클래스와 인터페이스의 집합Nest에 속한 클래스, 인터페이스를 nestmate라 부르고, 하나의 nest에서 하나의 nestmate는 host 역할을 하고 나머지 nestmate 목록을 갖는다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">Class&lt;?> getNestHost()
-Class&lt;?>[] getNestMembers()</div></div><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">// ClassLoader 관련
+StringBuffer reverse()
+</div><h3>StringBuilder</h3><p>StringBuffer의 비동기화 버전</p></div><h2>클래스 관련</h2><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/lang/ClassExample.java" lan="java">ClassExample.java</button><div><h3>Class&lt;T></h3><div><h4>Nest</h4><p>Nest는 같은 런타임 패키지 안의, private member에 접근 가능한 클래스와 인터페이스의 집합. Nest에 속한 클래스, 인터페이스를 nestmate라 부르고, 하나의 nest에서 하나의 nestmate는 host 역할을 하고 나머지 nestmate 목록을 갖는다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">Class&lt;?> getNestHost()
+Class&lt;?>[] getNestMembers()
+boolean isNestmateOf​(Class&lt;?> c)
+</div></div><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">// ClassLoader 관련
 ClassLoader getClassLoader()
 InputStream getResourceAsStream(String name)
 URL getResource(String name)
@@ -361,7 +319,7 @@ boolean isInstance(Object obj)
 boolean isAssignableFrom(Class&lt;?> cls)
     // cls 타입 객체를 현재 클래스의 참조 변수로 참조할 수 있는지 여부 반환
 boolean isInterface()
-    // + isArray, isPrimitive, isAnnotation, isEnum, isAnonymousClass, isLocalClass, isMemberClass
+    // + isArray, isPrimitive, isAnnotation, isEnum, isAnonymousClass, isLocalClass, isMemberClass, isRecord
     // wrapper 클래스는 원시타입이 아님에 유의 : Integer.class != Integer.TYPE, Integer.TYPE == int.class
 boolean isSynthetic()
     // Synthetic class : 명시적/암시적으로 생성자가 정의되지 않은 채 생성된 클래스
@@ -372,32 +330,31 @@ String toGenericString()
     // 접근한정자 및 타입 포함하여 반환
 String getName()
     // 배열의 경우 차원마다 '['를 붙이며, 배열 원소 타입을 아래와 같이 인코딩한다
-    // boolean : Z, byte : B, char : C, class or interface : L{className};, double : D, float : F, int : I, long : J, short : S
+    // boolean : Z, byte : B, char : C, class : L{className};, double : D, float : F, int : I, long : J, short : S
 String getSimpleName()
     // 익명 클래스면 빈 문자열 반환
 String getCanonicalName()
     // Local class, 익명 클래스, 또는 이들의 배열은 canonical name이 없어 null을 반환한다
 
 // 리플렉션 관련
-Module getModule()
-Package getPackage()
-String getPackageName()
-    // 익명 패키지면 빈 문자열 반환. 배열 클래스의 경우 원소 타입이 속한 패키지 이름 반환. 원시 타입 또는 void의 경우 "java.lang" 반환
 Class&lt;?>[] getClasses()
     // public 멤버로 정의된 클래스, 인터페이스 Class 객체 배열 반환
     // + getFields, getMethods, getConstructors
-    // + getField(String name), getMethod, getConstructor
-Class&lt;?>[] getDeclaredClasses() + getDeclaredFields, getDeclaredMethods, getDeclaredConstructors
+Class&lt;?>[] getDeclaredClasses()
     // 상속된 것을 제외하고, 호출하는 클래스 내부에 정의된 public, protected, default, private 클래스와 인터페이스들을 반환한다
-    // + getDeclaredField, getDeclaredMethod, getDeclaredConstructor
-T[] getEnumConstants()
+    // + getDeclaredFields, getDeclaredMethods, getDeclaredConstructors
 
 Class&lt;?> getComponentType()
     // 배열 원소 타입 클래스 객체 반환. 배열이 아닌 경우 null 반환
 Method getEnclosingMethod()
     // 이 클래스가 메서드 내부에서 정의된 경우, 해당 메서드를 반환한다
     // + getEnclosingConstructor, getDeclaringClass, getEnclosingClass
-boolean isAnnotationPresent(Class&lt;? extends Annotation> annotationClass)</div><h3>ClassLoader</h3><ol><li>전형적으로, 로드할 클래스 이름을 파일명으로 변환하여 ".class"파일을 읽어온다</li><li>모든 Class 객체들은 ClassLoader에 대한 참조를 갖고 있다</li><li>배열의 경우 런타임에 Class 객체가 생성되며, 이때 Class.getClassLoader()는 원소의 것과 동일하다</li><li>클래스를 로드하는 것 외에, 자원(.class 파일, 구성 파일, 이미지 등)을 배치하는 책임도 진다</li><li>Delegation model : ClassLoader 객체들은 각기 parent class loader를 갖는다. 클래스나 자원을 찾기 전에 parent를 먼저 조사하게 된다</li><li>동시 로딩을 지원하는 parallel capable class loader들은 클래스 초기화 시 registerAsParallelCapable()를 통해 등록해야 한다. ClassLoader 클래스는 기본적으로 등록되나, 서브클래스들도 자신을 등록해야 한다</li><li>계층구조가 약한 delegation model의 경우 클래스 로더들이 parallel capable하지 않으면 deadlock 발생 가능성이 있다</li><li>Run-time Built-in Class Loaders</li><ul><li>Bootstrap class loader : JVM 내장 클래스 로더. 보통 null이며, parent가 없다</li><li>Platform class loader : Java SE APIs, JDK-specific run-time classes</li><li>System class loader, a.k.a Application class loader : Used to define classes on the application class path, module path, and JDK-specific tools</li></ul><li>파일이 아닌 네트워크 같은 다른 소스로부터 클래스를 로드할 경우, defineClass()를 통해 Class 객체를 얻고 Constructor.newInstance()를 통해 클래스 객체를 생성하면 된다</li><li>네트워크 클래스 로더는 findClass(), loadClassData() 메서드를 반드시 작성해야 한다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">public Class findClass(String name) {
+
+ &lt;A extends Annotation> A getAnnotation​(Class&lt;A> annotationClass)
+boolean isAnnotationPresent(Class&lt;? extends Annotation> annotationClass)
+
+// record 관련
+RecordComponent[] getRecordComponents()</div><h3>ClassLoader</h3><ol><li>전형적으로, 로드할 클래스 이름을 파일명으로 변환하여 ".class"파일을 읽어온다</li><li>모든 Class 객체들은 ClassLoader에 대한 참조를 갖고 있다</li><li>배열의 경우 런타임에 Class 객체가 생성되며, 이때 Class.getClassLoader()는 원소의 것과 동일하다</li><li>클래스를 로드하는 것 외에, 자원(.class 파일, 구성 파일, 이미지 등)을 배치하는 책임도 진다</li><li>Delegation model : ClassLoader 객체들은 각기 parent class loader를 갖는다. 클래스나 자원을 찾기 전에 parent를 먼저 조사하게 된다</li><li>동시 로딩을 지원하는 parallel capable class loader들은 클래스 초기화 시 registerAsParallelCapable()를 통해 등록해야 한다. ClassLoader 클래스는 기본적으로 등록되나, 서브클래스들도 자신을 등록해야 한다</li><li>계층구조가 약한 delegation model의 경우 클래스 로더들이 parallel capable하지 않으면 deadlock 발생 가능성이 있다</li><li>Run-time Built-in Class Loaders</li><ul><li>Bootstrap class loader : JVM 내장 클래스 로더. 보통 null이며, parent가 없다</li><li>Platform class loader : Java SE APIs, JDK-specific run-time classes</li><li>System class loader, a.k.a Application class loader : Used to define classes on the application class path, module path, and JDK-specific tools</li></ul><li>파일이 아닌 네트워크 같은 다른 소스로부터 클래스를 로드할 경우, defineClass()를 통해 Class 객체를 얻고 Constructor.newInstance()를 통해 클래스 객체를 생성하면 된다</li><li>네트워크 클래스 로더는 findClass(), loadClassData() 메서드를 반드시 작성해야 한다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">public Class findClass(String name) {
     byte[] b = loadClassData(name);
     return defineClass(name, b, 0, b.length);
 }
@@ -555,10 +512,8 @@ static void setProperties(Properties props) // getProperties
 static String setProperty(String key, String value)
 static String clearProperty(String key)
 static String getenv(String name) // 환경변수
-static System.Logger getLogger(String name)
-static void exit(int status)</div><div><h4>System.Logger</h4><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">String getName()
-boolean isLoggable(System.Logger.Level level)
-default void log(System.Logger.Level level, String msg)</div><div><h5>System.Logger.Level</h5><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">ALL(Integer.MIN_VALUE), TRACE(400), DEBUG(500), INFO(800), WARNING(900), ERROR(1000), OFF(Integer.MAX_VALUE)</div></div><h4>System.LoggerFinder</h4><ul><li>로거의 생성, 관리, 구성에 관한 서비스 제공</li><li>기본 구현 : java.logging 모듈이 있는 경우 java.util.logging이용. 없으면 INFO 수준으로 표준 에러 출력</li></ul></div><h3>StackWalker</h3><p>현재 스레드의 StackFrame에 대한 스트림을 열고 특정 작업을 수행한다. 스트림은 실행 지점인 맨 위 frame부터 아래로 내려가면서 작업한다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static StackWalker getInstance(...)
+static void exit(int status)
+</div><h3>StackWalker</h3><p>현재 스레드의 StackFrame에 대한 스트림을 열고 특정 작업을 수행한다. 스트림은 실행 지점인 맨 위 frame부터 아래로 내려가면서 작업한다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static StackWalker getInstance(...)
     // 기본 설정 : 숨겨진 프레임 생략. 클래스 정보 미포함
 
 &lt;T> T walk(Function&lt;? super Stream&lt;StackWalker.StackFrame>, ?

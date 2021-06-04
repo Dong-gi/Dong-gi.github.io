@@ -8,9 +8,9 @@ include ../../source/skeleton.pug
             ol
                 li 데이터의 출발지나 목적지를 닫을 수 있으면 Closeable
                 li void close()
-                p.
-                    스트림 및 이와 관련된 시스템 자원을 해제한다. 이미 호출되었다면 아무 일도 하지 않는다.<br>
-                    close() 실패했을 때, 예외를 던지는 대신 사용하던 자원을 모두 포기하고 Closeable 객체 내부적으로 '닫혔다(closed)'고 마크하길 권장한다
+                p 스트림 및 이와 관련된 시스템 자원을 해제한다. 이미 호출되었다면 아무 일도 하지 않는다
+                    br
+                    | close() 실패했을 때, 예외를 던지는 대신 사용하던 자원을 모두 포기하고 Closeable 객체 내부적으로 '닫혔다(closed)'고 마크하길 권장한다
 
             h3 Flushable
             ol
@@ -71,33 +71,10 @@ include ../../source/skeleton.pug
                 void reset()               // 마지막 마킹 위치로 이동
 
             h3 OutputStream
-            ol
-                li 바이트 단위 쓰기에 대한 최상위 추상 클래스
+            p 바이트 단위 쓰기에 대한 최상위 추상 클래스
             +asCode('java').
                 static OutputStream nullOutputStream()
                     // 실제로 데이터를 쓰지는 않는 OutputStream 객체를 반환한다
-
-            h3 InputStream 장식자
-            div
-                h4 FilterInputStream
-                p 아무 기능 추가 없는 장식자
-
-                h4 BufferedInputStream
-                p 버퍼를 이용해 mark(), reset() 지원
-
-                h4 DataInputStream
-                p DataInput을 구현 제공
-
-            h3 OutputStream 장식자
-            div
-                h4 FilterOutputStream
-                p 아무 기능 추가 없는 장식자
-
-                h4 BufferedOutputStream
-                p 버퍼를 이용해 쓰기 작업이 빈번하게 일어나지 않게 해준다
-
-                h4 DataOutputStream
-                p DataOutput 구현 제공
 
             h3 ByteArrayInputStream
             p 내부 버퍼 byte[] buf에 대한 읽기 연산을 지원하는 InputStream
@@ -110,23 +87,16 @@ include ../../source/skeleton.pug
                 void reset()                    // 버퍼 처음부터 재활용
                 String toString​(Charset charset)
 
-            h3 PrintStream
-            p OutputStream, File에 기본 타입 및 각종 문자열을 쓰는 기능을 제공한다
-            p autoFlush : 바이트 배열을 다 쓰거나, 새 줄 문자, '\n'을 쓰면 자동으로 flush()
-            +asCode('java').
-                    boolean checkError()
-                        // flush()한 다음 오류 상태를 검사한다. 예외를 던지지 않으므로 이 메서드로 확인해야 한다. 스트림에 InterruptedIOException이 발생하면 Thread.currentThread().interrupt()를 실행한다
             h3 PipedInputStream
-            p PipedOutputStream과 연결되어 바이트들을 받는 InputStream. PipedOutputStream과 별개의 스레드에서 동작해야 한다
+            p PipedOutputStream를 소스로 하는 InputStream. PipedOutputStream과 별개 스레드에서 동작해야 한다 
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PipedStreamExample.java', 'java')
+
             h3 PipedOutputStream
-            p 연결된 PipedInputStream으로 바이트들을 보내는 OutputStream. PipedInputStream과 별개의 스레드에서 동작해야 한다
+            p PipedInputStream에 쓰는 OutputStream. PipedInputStream과 별개 스레드에서 동작해야 한다 
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PipedStreamExample.java', 'java')
+
             h3 SequenceInputStream
             p 여러 InputStream을 이어붙인듯이 활용하는 InputStream
-            h3 PushbackInputStream
-            p 이미 읽은 것을 취소하고 다시 읽을 수 있는 기능을 지원한다. 이전에 읽은 내용을 저장하지는 않으므로, 덮어쓰기처럼 이용할 수 있다
-                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PushBackExample.java', 'java')
 
             h3 FileInputStream
             p 파일을 읽는 InputStream 
@@ -143,6 +113,45 @@ include ../../source/skeleton.pug
                     // 유니크한 FileChannel을 반환하며, 채널에서의 위치는 스트림에서 쓴 바이트 수와 같다(append 모드가 아닐 경우)
                     // append 모드에서는 파일의 크기와 채널의 위치가 동일하다
 
+            h3 InputStream 장식자
+            div
+                h4 FilterInputStream
+                p 아무 기능 추가 없는 장식자
+
+                h4 BufferedInputStream
+                p 버퍼를 이용해 mark(), reset() 지원
+
+                h4 DataInputStream
+                p DataInput을 구현 제공
+
+                +pos('PushbackInputStream')
+                h4 PushbackInputStream
+                ul
+                    li 이미 읽은 것을 취소하고 다시 읽을 수 있는 기능을 지원한다
+                    li 이전에 읽은 내용을 저장하지는 않으므로, 덮어쓰기처럼 이용할 수 있다 
+                        +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PushBackExample.java', 'java')
+
+            h3 OutputStream 장식자
+            div
+                h4 FilterOutputStream
+                p 아무 기능 추가 없는 장식자
+
+                h4 BufferedOutputStream
+                p 버퍼를 이용해 쓰기 작업이 빈번하게 일어나지 않게 해준다
+
+                h4 DataOutputStream
+                p DataOutput 구현 제공
+
+                +pos('PrintStream')
+                h4 PrintStream
+                ul
+                    li OutputStream, File에 기본 타입 및 각종 문자열을 쓰는 기능 제공
+                    li autoFlush : 바이트 배열을 다 쓰거나, 새 줄 문자, '\n'을 쓰면 자동으로 flush()
+                +asCode('java').
+                    boolean checkError()
+                        // flush()한 다음 오류 상태를 검사한다. 예외를 던지지 않으므로 이 메서드로 확인해야 한다
+                        // 스트림에 InterruptedIOException이 발생하면 Thread.currentThread().interrupt()를 실행한다
+
         h2 객체 IO(직렬화/역직렬화)
         div
             h3 Serializable
@@ -152,11 +161,11 @@ include ../../source/skeleton.pug
                 li 직렬화하지 않을 멤버는 transient 키워드로 표시한다
                 li 직접 구현하고 싶다면 Externalizable 인터페이스를 구현하거나, 다음의 메서드들을 작성한다
                 +asCode('java').
-                    private void writeObject(java.io.ObjectOutputStream out) // out에 알아서 객체 표현 바이트들을 쓰면 된다
-                    private void readObject(java.io.ObjectInputStream in)    // in에서 바이트들을 읽어와 알아서 객체를 생성하면 된다
-                    private void readObjectNoData()                          // 객체들의 버전이 다르거나, 기타 이유로 객체를 초기화할 필요가 있는 경우 사용
-                li 대체 객체를 이용해 저장 : ANY-ACCESS-MODIFIER Object writeReplace()
-                li 대체 객체를 이용해 복구 : ANY-ACCESS-MODIFIER Object readResolve()
+                    @Serial private void writeObject(java.io.ObjectOutputStream out) // out에 알아서 객체 표현 바이트들을 쓰면 된다
+                    @Serial private void readObject(java.io.ObjectInputStream in)    // in에서 바이트들을 읽어와 알아서 객체를 생성하면 된다
+                    @Serial private void readObjectNoData()                          // 객체들의 버전이 다르거나, 기타 이유로 객체를 초기화할 필요가 있는 경우 사용
+                li 대체 객체를 이용해 저장 : @Serial ANY-ACCESS-MODIFIER Object writeReplace()
+                li 대체 객체를 이용해 복구 : @Serial ANY-ACCESS-MODIFIER Object readResolve()
                 li 클래스 버전
                 +asCode('java').
                     // 정의되지 않은 경우 기본값을 사용하지만, 명시할 것을 권장하고 있다
@@ -192,26 +201,20 @@ include ../../source/skeleton.pug
                 Reader reader()      // 유니크한 Reader 객체 반환
 
             h3 Reader
-            ol
-                li char 단위 읽기에 대한 최상위 추상 클래스
-                li 서브클래스들은 read(char[], int, int)와 close()만 구현해도 된다
+            p char 단위 읽기에 대한 최상위 추상 클래스
             +asCode('java').
                 static Reader nullReader()
                     // 아무 것도 읽지 않는 Reader 객체를 반환한다
 
                 int read()
                     // char 하나를 읽고 int로 반환. 스트림의 끝이라면 -1을 반환한다
-                int read(char[] cbuf)
-                abstract int read(char[] cbuf, int off, int len)
-                    // 실제로 읽은 글자 수를 반환
-
-                long skip(long n)
-                    // 실제로 건너 뛴 글자 수(바이트 수x) 반환
-
                 boolean ready()
                     // 다음 read()가 블록되지 않음을 보장하면 true, 보장하지 못하면 false
 
-                // 마킹 관련 : InputStream과 유사
+                // 마킹 관련
+                boolean markSupported()         // mark, reset 메서드를 지원하는지 여부 반환. 기본 false
+                void mark(int readAheadLimit)   // 현재 위치 마킹
+                void reset()                    // 마지막 마킹 위치로 이동
 
                 long transterTo(Writer out)
                     // 모든 글자를 읽어 out에 쓴다. 전송한 글자 수를 반환한다
@@ -244,9 +247,24 @@ include ../../source/skeleton.pug
                 char[] toCharArray()        // 사본 반환
 
             h3 StringReader
-            p String에 대해 읽기 연산을 수행하는 Reader
+            p String을 읽는 Reader
+
             h3 StringWriter
-            p 내부 StringBuffer에 쓰기 연산을 지원하는 Writer
+            p StringBuffer에 쓰는 Writer
+
+            h3 PipedReader
+            p PipedWriter를 소스로 하는 Reader 
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PipedReaderExample.java', 'java')
+
+            h3 PipedWriter
+            p PipedReader로 쓰는 Writer 
+                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PipedReaderExample.java', 'java')
+            
+            h3 FileReader
+            p 파일을 읽는 Reader
+
+            h3 FileWriter
+            p 파일에 쓰는 Writer
 
             h3 Reader 장식자
             div
@@ -271,23 +289,20 @@ include ../../source/skeleton.pug
                     void setLineNumber(int lineNumber) // 읽고 있는 위치가 이동하는 건 아니다
                     int getLineNumber()
 
-            h3 PrintWriter
-            p PrintStream의 Writer 버전. 텍스트 출력 스트림에 객체들을 정형화된 텍스트로 쓰는 기능을 제공한다
-            h3 PipedReader
-            p PipedInputStream과 유사
-                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PipedReaderExample.java', 'java')
-            h3 PipedWriter
-            p PipedOutputStream과 유사
-                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PipedReaderExample.java', 'java')
-            h3 PushbackReader
-            p PushbackInputStream과 비슷
-                +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PushBackExample.java', 'java')
-            
-            h3 FileReader
-            p 파일을 읽는 Reader
+                h4 PushbackReader
+                p
+                    +goto('PushbackInputStream')
+                    | 과 비슷 
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PushBackExample.java', 'java')
 
-            h3 FileWriter
-            p 파일에 쓰는 Writer
+                h4 PrintWriter
+                ul
+                    li
+                        +goto('PrintStream')
+                        | 의 Writer 버전
+                    li 다른 OutputStream, Writer, 파일에 기본 타입 및 각종 문자열을 쓰는 기능을 제공
+                    li PrintStream과 마찬가지로 checkError()로 실패를 확인해야 한다
+
 
         h2 파일 관련
         div
@@ -318,67 +333,50 @@ include ../../source/skeleton.pug
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/io/FileExample.java', 'java') File 예
 
             h3 RandomAccessFile
-            p 읽기/쓰기 가능한 임의 접근 파일. 읽기/쓰기의 기준 위치 file pointer가 존재
-                br
-                | 읽기로 예정된 바이트들을 모두 읽기 전에 EOF를 만나면 EOFException 발생
+            ul
+                li 읽기(DataInput)/쓰기(DataOutput) 가능한 임의 접근 파일
+                li mode : "r" | "rw" | "rws"(파일 내용 및 메타데이터 변경을 곧바로 반영) | "rwd"(파일 내용 변경을 곧바로 반영)
+                li 읽기/쓰기의 기준 위치가 되는 file pointer가 존재
+                li 읽기로 예정된 바이트들을 모두 읽기 전에 EOF를 만나면 EOFException 발생
             +asCode('java').
-                RandomAccessFile(String name, String mode)
-                    // mode : "r", "rw", "rws"(파일 내용 및 메타데이터 변경을 곧바로 반영), "rwd"(파일 내용 변경을 곧바로 반영)
-
-                int read() // InputStream.read()와 동일
-
                 long getFilePointer()
                 void seek(long pos) // file pointer 설정
 
                 long length()
                 void setLength(long newLength)
-                    // 기존 크기 > newLength && getFilePointer() > newLength
-                    //     → 자르고, file pointer = newLength
-                    // 기존 크기 &lt; newLength
-                    //     → 확장. 확장한 영역의 데이터는 초기화되지 않는다
+                    // 기존 크기 > newLength         → 자르기
+                    // getFilePointer() > newLength → file pointer = newLength
+                    // 기존 크기 &lt; newLength         → 확장. 확장한 영역의 데이터는 초기화되지 않는다
+
 
     h1 java.lang
     div
-        h2 Appendable
-        p 유니코드 CharSequence 또는 char 값을 덧붙일 수 있는 객체를 표현한다
         h2 AutoCloseable
-        p 자동으로 자원을 해제하는 객체를 표현한다. try-with-resources 블록에 사용되면 close()가 자동으로 호출된다. IO 작업이 없는 것들을 try-with-resources 블록에 이용하는 것은 불필요한 일이다
-            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java', 'java')
-        h2 Cloneable
-        p Object::clone()을 재정의했음을 나타내는 마커 인터페이스
+        ul
+            li 자동으로 자원을 해제하는 객체를 표현한다
+            li try-with-resources 블록에 사용되면 close()가 자동으로 호출된다 
+                +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java', 'java')
+            li IO 작업이 없는 것들을 try-with-resources 블록에 이용하는 것은 불필요한 일이다
+
         h2 Comparable&lt;T>
         ol
-            li 자연스러운 순서로 클래스의 모든 객체를 정렬할 수 있음을 표현
+            li 인스턴스를 정렬하는 자연스러운 순서 정의
             li 이를 구현한 클래스 객체들의 List, array는 Collections.sort, Arrays.sort로 각각 정렬할 수 있다
             li 이를 구현한 클래스 객체들은 Comparator 정의 없이 SortedMap, SortedSet의 키로 이용할 수 있다
             li null은 객체가 아니므로 equals(null)이 false를 리턴하는 것과 달리 compareTo(null)은 NullPointerException을 내보내는 것이 바람직하다
             li 다음 성질을 만족하도록 구현함이 권장된다
-            +asCode('java') (e1.compareTo(e2) == 0) == e1.equals(e2)
-        +asCode('java').
-            int compareTo(T o) {
-                return this - o;
-                // o보다 앞서면(작으면) 음수, 같으면 0, 뒤면(크면) 양수 반환
-            }
+                +asCode('java') (e1.compareTo(e2) == 0) == e1.equals(e2)
+
         h2 Iterable&lt;T>
         p 이를 구현한 클래스 객체는 enhanced for statement의 순회 대상이 될 수 있다
-            +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/IterableExample.java', 'java')
-        +asCode('java').
-            Iterator&lt;T> iterator()
-                // 구현한 클래스 인스턴스를 반환하면 된다
-            default void forEach(Consumer&lt;? super T> action)
-                // 순회하면서 action을 적용한다
-                // 기본 구현 : for(T t : this) action.accept(t);
-            default Spliterator&lt;T> spliterator()
-                // 기본 구현은 Sliterator의 모든 사항을 구현하지 않으므로 재정의하는 것이 더 좋은 성능을 보인다
+
         h2 ProcessHandle
         ol
-            li native process들에 대한 제어 제공. 프로세스 생애 모니터링, 자식 프로세스 나열, 프로세스 정보 얻기, 프로세스 종료 등
+            li native process들에 대한 제어 제공
+            p 프로세스 생애 모니터링, 자식 프로세스 나열, 프로세스 정보 얻기, 프로세스 종료 등 
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/ProcessHandleExample.java', 'java')
-            li 프로세스 ID는 OS가 할당한 것으로, 값의 범위는 OS에 의존적이다
             li ProcessHandle 객체는 다음 팩터리 메서드로 반환된다
-            +asCode('java').
-                current(), of(long), children(), descendants(), parent(), allProcesses()
-                parent() // zombie 상태의 프로세스는 보통 parent가 없다
+            +asCode('java') current(), of(long), children(), descendants(), parent(), allProcesses()
             li SecurityManager의 RuntimePermission("manageProcess")만큼의 제어 권한을 갖는다
             li ProcessHandle 객체들을 비교할 때는 equals, compareTo 메서드를 이용해야 한다
         +asCode('java').
@@ -406,15 +404,7 @@ include ../../source/skeleton.pug
                 Optional&lt;Instant> startInstant()      // 프로세스의 시작 시각 반환
                 Optional&lt;Duration> totalCpuDuration() // CPU 사용 시간 반환
                 Optional&lt;String> user()               // 프로세스 유저 반환
-        h2 Readable
-        p Readable은 문자들에 대한 소스다
-            +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/ReadableExample.java', 'java')
-        +asCode('java').
-            int read(CharBuffer cb)
-                // 문자들을 그대로 cb에 put()을 통해 저장한다. cb에 대한 어떠한 사전처리도 없다. 저장한 char 개수를 반환하며, 소스의 끝이면 -1을 반환한다
-        h2 Runnable
-        p Runnable은 한 스레드로서 실행되도록 구현돼야 한다. Thread의 run()만을 재정의할 때 사용한다
-            +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/RunnableExample.java', 'java')
+
         h2 SecurityManager
         ol
             li 보안 정책을 구현할 수 있는 클래스. 전형적인 확인 절차는 아래와 같다
@@ -469,81 +459,88 @@ include ../../source/skeleton.pug
 
         h2 타입 관련
         div
+            ul
+                li 각 래퍼 클래스의 TYPE 필드는 기본 타입 클래스 인스턴스를 가리킨다
+                p e.g. Boolean.TYPE == boolean.class
+                li 각 래퍼 클래스의 valueOf() 함수는 기본 타입에 대해 래핑을 수행하며, 일부는 캐싱을 이용해 빠르게 수행한다
+                li 숫자 래퍼 클래스들은 MIN_VALUE, MAX_VALUE, SIZE(비트 크기), BYTES(바이트 크기) 필드를 갖는다
+                li byte[] -> 다른 수 타입 변환을 원하는 경우, ByteBuffer 이용
+                +asCode('java') ByteBuffer.wrap(new byte[] { 1, 1, 1, 1 }).getInt()
+                li Boolean, Integer, Long은 시스템 속성 관련 유틸리티를 제공한다
+                +asCode('java') static X getX(String name, X defaultVal)
+                li 몇몇 래퍼 클래스들은 아래와 같은 비트 함수를 제공한다
+                +asCode('java').
+                    static X highestOneBit(X i)            // + lowestOneBit
+                    static X numberOfLeadingZeros(X i)     // + numberOfTrailingZeros
+                    static X bitCount(X i)
+                    static X rotateLeft(X i, int distance) // + rotateRight
+                    static X reverse(X i)
+                    static X reverseBytes(X i)             // 바이트 단위로 뒤집기
+                li 정수 래퍼 클래스들은 아래와 같은 String 파싱을 제공한다
+                +asCode('java').
+                    static Z parseZ(String s, int radix)
+                    static Z valueOf(String s, int radix)
+                        // 예외
+                        //      s가 null이거나 길이가 0
+                        //      s에 radix진수가 아닌 문자가 포함(단, s가 2글자 이상일 때 첫 '-', '+'는 가능)
+                        //      radix가 [Character.MIN_RADIX, Character.MAX_RADIX] 범위를 벗어날 때
+                        //      값이 Z를 벗어날 때
+                    static Z decode(String nm)
+                        // 다음 문법으로 표현된 10진수, 16진수, 8진수를 parseZ()를 이용해 디코딩한다. 공백 비허용
+                        //      (Sign?)(10진수)
+                        //      (Sign?)(0x | 0X | #)(16진수)
+                        //      (Sign?)0(8진수)
+                        //      Sign: '-', '+'
+                li 정수 래퍼 클래스들은 몇몇 unsigned 함수를 제공한다
+                +asCode('java').
+                    static int compareUnsigned(Z x, Z y)
+                    static Z divideUnsigned(Z dividend, Z divisor)
+                    static Z parseUnsigned(...)
+                    static Z remainderUnsigned(Z dividend, Z divisor)
+                    static int toUnsignedInt(Z x)
+                    static long toUnsignedLong(Z x)
+                    static String toUnsignedString(Z i)
+
             h3 CharSequence
-            p 일련의 char 값들을 표현한다. equals(), hashCode()에 대한 규약이 없어, 두 CharSequence 객체를 비교하는 결과는 정의되어 있지 않으며, 따라서 set이나 map의 키로 이용하기에 부적절하다
-                +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/CharSequenceExample.java', 'java')
+            ul
+                li 일련의 char 값들을 표현 
+                    +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/CharSequenceExample.java', 'java')
+                li equals(), hashCode()에 대한 규약이 없어, set이나 map의 키로 이용하기에 부적절하다
             +asCode('java').
                 static int compare(CharSequence cs1, CharSequence cs2)
-                    // 두 CharSequence를 사전순으로 비교한다
+                    // 사전순으로 비교
 
                 default IntStream chars()
                     // char들을 int로 0패딩하여 스트림 생성. 두 char로 쪼개진 유니코드 보충 평면의 문자를 하나로 합치진 않는다
                 default IntStream codePoints()
                     // 유니코드 값들을 스트림으로 생성. 보충 평면의 문자는 Character.toCodePoint 메서드를 통해 하나의 int 값으로 형성
-            h3 Boolean
-            p 원시 타입 boolean의 wrapper 클래스. 람다 활용을 위한 static 메서드들을 제공한다
-            +asCode('java').
-                static boolean parseBoolean(String s)
-                    // s가 null이 아니고 대소문자 구분없이 "true"와 일치하면 true 반환
-                static Boolean valueOf(String s)
-                    // == valueOf(parseBoolean(s))
 
-                static boolean getBoolean(String name)
-                    // name에 해당하는 system property가 존재하고, 대소문자 구분없이 "true"와 일치하면 true 반환
-
-                int compareTo(Boolean b)
-                    // TRUE.compareTo(FALSE) > 0, FALSE.compareTo(TRUE) &lt; 0
-            h3 Number
-            p 수에 관한 최상위 추상 wrapper 클래스
-            h3 Byte
-            p 기본 타입 byte에 대한 wrapper 클래스. 람다 활용을 위한 static 메서드들을 제공한다
-            +asCode('java').
-                static byte parseByte(String s, int radix)
-                    // 예외 : s가 null이거나 길이가 0일 때. s에 radix진수가 아닌 문자가 포함될 때(단, s가 2글자 이상일 때 첫 '-', '+'는 가능). radix가 [Character.MIN_RADIX, Character.MAX_RADIX] 범위를 벗어날 때, 값이 byte를 벗어날 때
-                static Byte valueOf(String s, int radix)
-                static Byte decode(String nm)
-                    // 다음 문법으로 표현된 10진수, 16진수, 8진수를 parseByte()를 이용해 디코딩한다. 공백을 허용하지 않는다
-                    //     (Sign?)(10진수)
-                    //     (Sign?)(0x | 0X | #)(16진수)
-                    //     (Sign?)0(8진수)
-                    //     Sign: '-', '+'
-
-                static int compare(byte x, byte y)
-                static int compareUnsigned(byte x, byte y)
-                static int toUnsignedInt(byte x)
-                static long toUnsignedLong(byte x)
             h3 Character
             ol
-                li 기본타입 char에 대한 wrapper 클래스. 추가적으로 문자 집합(소문자, 숫자 등) 정의, 변환 기능을 갖는다
-                li 유니코드 표준 8.0.0을 따른다.(JDK 9 기준)
+                li 문자 집합(소문자, 숫자 등) 정의, 변환 기능을 제공한다
+                li 유니코드 표준을 따른다
                 ul
-                    li 16비트 고정폭으로 값을 표현하며, 유효한 범위는 U+0000 부터 U+10FFFF까지(= Unicode scalar value).
+                    li 유효한 범위는 U+0000(MIN_CODE_POINT)부터 U+10FFFF(MAX_CODE_POINT)까지(== Unicode scalar value) 
+                        +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/CharacterExample.java', 'java')
                     ol
                         li [U+0000, U+FFFF] == 기본 문자 평면(BMP; Basic Multilingual Plane)
-                        li (U+FFFF, ~) == 보충 문자 평면(supplementary characters)
+                        li [U+10000 == MIN_SUPPLEMENTARY_CODE_POINT, ~) == 보충 문자 평면(supplementary characters)
                     li 자바 플랫폼은 보충 평면의 문자들은 2개의 char의 쌍으로 표현한다
+                    p 이때 첫번째 char는 high-surrogate([MIN_HIGH_SURROGATE, MAX_HIGH_SURROGATE]), 두번째 char는 low-surrogate([MIN_LOW_SURROGATE, MAX_LOW_SURROGATE]) 범위 안의 값이다
                     li 하위 21개 비트를 이용하여 int 하나로 모든 유니코드 code point를 표현할 수 있다
                 li int를 받는 메서드는 모든 유니코드를 처리할 수 있지만, char만을 받는 메서드는 보충 평면 문자를 처리하지 못한다
-                +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/CharacterExample.java', 'java')
             +asCode('java').
-                static final char MIN_HIGH_SURROGATE          // \uD800
-                static final char MAX_HIGH_SURROGATE          // \uDBFF
-                static final char MIN_LOW_SURROGATE           // \uDC00
-                static final char MAX_LOW_SURROGATE           // \uDFFF
-                static final int MIN_SUPPLEMENTARY_CODE_POINT // U+10000
-                static final int MIN_CODE_POINT               // U+0000
-                static final int MAX_CODE_POINT               // U+10FFFF
-
                 static String getName(int codePoint)
                     // 이름 반환 : Character.UnicodeBlock.of(codePoint).toString().replace('_', ' ') + " " + Integer.toHexString(codePoint).toUpperCase(Locale.ROOT);
-                    // 정의되어 있지 않으면 null 반환
+                    // 정의되어 있지 않으면 null
                 static int codePointOf(String name)
                     // 정의되어 있지 않으면 예외
 
                 static boolean isValidCodePoint(int codePoint)
+                    // + isBmpCodePoint, isSupplementaryCodePoint, isHighSurrogate, isLowSurrogate
                 static int getType(int codePoint)
                 static byte getDirectionality(char ch)
-                    // 문자 표시 순서를 반환한다. DIRECTIONALITY_UNDEFINED, DIRECTIONALITY_LEFT_TO_RIGHT 등
+                    // 문자 표시 순서 : DIRECTIONALITY_UNDEFINED, DIRECTIONALITY_LEFT_TO_RIGHT 등
                 static boolean isMirrored(char ch)
                     // 좌우 대칭되는 문자가 존재하는지 여부
 
@@ -564,7 +561,6 @@ include ../../source/skeleton.pug
                 static char[] toChars(int codePoint)
                 static String toString(int codePoint)
 
-                static char reverseBytes(char ch)
                 static int toCodePoint(char high, char low)
                 static int codePointAt(CharSequence seq, int index)
                     // + codePointBefore, highSurrogate, lowSurrogate
@@ -584,22 +580,24 @@ include ../../source/skeleton.pug
                 h4 Character.Subset
                 p 이 클래스의 객체는 유니코드 문자 집합을 표현한다. Character 클래스 내부에서 정의한 문자 집합은 Character.UnicodeBlock뿐이다
                 +asCode('java') final String toString() // name 반환
+
                 h4 Character.UnicodeBlock
                 p 유니코드 문자 블록. 각 문자들은 최대 하나의 유니코드 블록에 포함된다
                 +asCode('java').
-                    static Character.UnicodeBlock ARABIC, GREEK, HANGUL // 등
+                    public static Character.UnicodeBlock ARABIC, GREEK, HANGUL, ...
 
-                    static Character.UnicodeBlock of(char c)            // c가 속한 유니코드 블록 반환
+                    static Character.UnicodeBlock of(char c)
                     static final Character.UnicodeBlock forName(String blockName)
                         // 블록 이름이 변경된 경우, 변경 전/후 이름 둘 다 사용할 수 있다
+
                 h4 Character.UnicodeScript
-                p 유니코드 표준 스크립트 이름 정의를 표현. 모든 문자는 하나의 스크립트(각 언어|INHERITED|COMMON|UNKNOWN)에 할당된다
+                p 유니코드 표준 스크립트 이름 정의. 모든 문자는 하나의 스크립트(각 언어|INHERITED|COMMON|UNKNOWN)에 할당된다
                 +asCode('java').
-                    ARABIC, GREEK, HANGUL // 등
+                    public static final Character.UnicodeScript ARABIC, GREEK, HANGUL, ...
 
                     static Character.UnicodeScript of(int codePoint)
+
             h3 Double
-            p 기본 타입 double에 대한 wrapper 클래스. 람다 활용을 위한 static 메서드들을 제공한다
             +asCode('java').
                 public static final double POSITIVE_INFINITY // Double.longBitsToDouble(0x7ff0000000000000L)
                 public static final double NEGATIVE_INFINITY // Double.longBitsToDouble(0xfff0000000000000L)
@@ -610,9 +608,7 @@ include ../../source/skeleton.pug
                 public static final double MIN_VALUE         // Double.longBitsToDouble(0x1L), 0x0.0000000000001P-1022
                     // 가장 작은 양수 표현
 
-                static Double valueOf(String s) // + parseDouble
                 static String toHexString(double d)
-
                 static long doubleToLongBits(double value)
                     // double 표현 그대로 long으로 전환. 63번 비트는 부호, 62-52번 비트는 지수, 51-0번 비트는 진수
                 static long doubleToRawLongBits(double value)
@@ -623,46 +619,20 @@ include ../../source/skeleton.pug
                 int compareTo(Double anotherDouble)
                     // Double.NaN > Double.POSITIVE_INFINITY
                     // 0.0d > -0.0d
+
             h3 Integer
-            p 기본 타입 int에 대한 wrapper 클래스. 람다 활용을 위한 static 메서드들을 제공한다
             +asCode('java').
                 static String toString(int i, int radix)
                     // + toUnsignedString, toBinaryString, toOctalString, toHexString
-                    // radix in [Character.MIN_RADIX, Character.MAX_RADIX]
-                static int parseInt(CharSequence s, int beginIndex, int endIndex, int radix)
-                    // [beginIndex, endIndex)
-                    // + parseUnsignedInt, valueOf
-                    // 파싱 중 CharSequence 변경에 대한 조치를 하지 않음
-                static Integer decode(String nm) // Byte::decode 참고
-
-                static Integer getInteger(String nm, int val)
-                    // 시스템 속성값을 decode 메서드로 변환하여 반환
-                    // nm : property name, val : 기본값
-
-                // unsigned 연산
-                static int compareUnsigned(int x, int y)
-                static long toUnsignedLong(int x)
-                static int divideUnsigned(int dividend, int divisor)
-                static int remainderUnsigned(int dividend, int divisor)
-
-                // bit 연산
-                static int highestOneBit(int i)            // + lowestOneBit
-                static int numberOfLeadingZeros(int i)     // + numberOfTrailingZeros
-                static int bitCount(int i)
-                static int rotateLeft(int i, int distance) // + rotateRight
-                static int reverse(int i)
-                static int reverseBytes(int i)             // 바이트 단위로 뒤집기
+                
             h3 String
-            ol
-                li 유니코드 보충 평면 문자는 surrogate pairs로써 2자리를 차지한다
-                li 로캐일을 고려한 문자열 비교는 Collator 클래스를 이용
-                li 람다 활용을 위한 static 메서드들을 제공한다
+            p 로캐일을 고려한 문자열 비교는 Collator 클래스를 이용하면 된다
             +asCode('java').
                 static final Comparator&lt;String> CASE_INSENSITIVE_ORDER
                     // 대소문자 구분없는 비교자. 직렬화 가능
 
                 static String format(String format, Object... args)
-                static String valueOf(Object obj) : obj.toString()
+                static String valueOf(Object obj)
 
                 boolean isEmpty() // 길이가 0인지 여부
                 boolean isBlank() // 비거나 공백 문자로만 이루어졌는지 여부
@@ -697,6 +667,7 @@ include ../../source/skeleton.pug
 
                 &lt;R> R transform(Function&lt;? super String, ? extends R> f)
                 String repeat(int count)
+
             h3 StringBuffer
             p 스레드-안전한 변경 가능한 문자열
             +asCode('java').
@@ -706,6 +677,7 @@ include ../../source/skeleton.pug
                     // 새로운 크기의 문자열에 기존 문자열을 복사. 남는 부분은 '\u0000'(null)로 채워진다
                 void ensureCapacity(int minimumCapacity)
                 StringBuffer reverse()
+
             h3 StringBuilder
             p StringBuffer의 비동기화 버전
 
@@ -715,11 +687,12 @@ include ../../source/skeleton.pug
             h3 Class&lt;T>
             div
                 h4 Nest
-                p Nest는 같은 런타임 패키지 안의, private member에 접근 가능한 클래스와 인터페이스의 집합
-                    | Nest에 속한 클래스, 인터페이스를 nestmate라 부르고, 하나의 nest에서 하나의 nestmate는 host 역할을 하고 나머지 nestmate 목록을 갖는다
+                p Nest는 같은 런타임 패키지 안의, private member에 접근 가능한 클래스와 인터페이스의 집합. Nest에 속한 클래스, 인터페이스를 nestmate라 부르고, 하나의 nest에서 하나의 nestmate는 host 역할을 하고 나머지 nestmate 목록을 갖는다
                 +asCode('java').
                     Class&lt;?> getNestHost()
                     Class&lt;?>[] getNestMembers()
+                    boolean isNestmateOf​(Class&lt;?> c)
+
             +asCode('java').
                 // ClassLoader 관련
                 ClassLoader getClassLoader()
@@ -740,7 +713,7 @@ include ../../source/skeleton.pug
                 boolean isAssignableFrom(Class&lt;?> cls)
                     // cls 타입 객체를 현재 클래스의 참조 변수로 참조할 수 있는지 여부 반환
                 boolean isInterface()
-                    // + isArray, isPrimitive, isAnnotation, isEnum, isAnonymousClass, isLocalClass, isMemberClass
+                    // + isArray, isPrimitive, isAnnotation, isEnum, isAnonymousClass, isLocalClass, isMemberClass, isRecord
                     // wrapper 클래스는 원시타입이 아님에 유의 : Integer.class != Integer.TYPE, Integer.TYPE == int.class
                 boolean isSynthetic()
                     // Synthetic class : 명시적/암시적으로 생성자가 정의되지 않은 채 생성된 클래스
@@ -751,32 +724,31 @@ include ../../source/skeleton.pug
                     // 접근한정자 및 타입 포함하여 반환
                 String getName()
                     // 배열의 경우 차원마다 '['를 붙이며, 배열 원소 타입을 아래와 같이 인코딩한다
-                    // boolean : Z, byte : B, char : C, class or interface : L{className};, double : D, float : F, int : I, long : J, short : S
+                    // boolean : Z, byte : B, char : C, class : L{className};, double : D, float : F, int : I, long : J, short : S
                 String getSimpleName()
                     // 익명 클래스면 빈 문자열 반환
                 String getCanonicalName()
                     // Local class, 익명 클래스, 또는 이들의 배열은 canonical name이 없어 null을 반환한다
 
                 // 리플렉션 관련
-                Module getModule()
-                Package getPackage()
-                String getPackageName()
-                    // 익명 패키지면 빈 문자열 반환. 배열 클래스의 경우 원소 타입이 속한 패키지 이름 반환. 원시 타입 또는 void의 경우 "java.lang" 반환
                 Class&lt;?>[] getClasses()
                     // public 멤버로 정의된 클래스, 인터페이스 Class 객체 배열 반환
                     // + getFields, getMethods, getConstructors
-                    // + getField(String name), getMethod, getConstructor
-                Class&lt;?>[] getDeclaredClasses() + getDeclaredFields, getDeclaredMethods, getDeclaredConstructors
+                Class&lt;?>[] getDeclaredClasses()
                     // 상속된 것을 제외하고, 호출하는 클래스 내부에 정의된 public, protected, default, private 클래스와 인터페이스들을 반환한다
-                    // + getDeclaredField, getDeclaredMethod, getDeclaredConstructor
-                T[] getEnumConstants()
+                    // + getDeclaredFields, getDeclaredMethods, getDeclaredConstructors
 
                 Class&lt;?> getComponentType()
                     // 배열 원소 타입 클래스 객체 반환. 배열이 아닌 경우 null 반환
                 Method getEnclosingMethod()
                     // 이 클래스가 메서드 내부에서 정의된 경우, 해당 메서드를 반환한다
                     // + getEnclosingConstructor, getDeclaringClass, getEnclosingClass
+                
+                 &lt;A extends Annotation> A getAnnotation​(Class&lt;A> annotationClass)
                 boolean isAnnotationPresent(Class&lt;? extends Annotation> annotationClass)
+
+                // record 관련
+                RecordComponent[] getRecordComponents()
             h3 ClassLoader
             ol
                 li 전형적으로, 로드할 클래스 이름을 파일명으로 변환하여 ".class"파일을 읽어온다
@@ -1012,22 +984,7 @@ include ../../source/skeleton.pug
                 static String setProperty(String key, String value)
                 static String clearProperty(String key)
                 static String getenv(String name) // 환경변수
-                static System.Logger getLogger(String name)
                 static void exit(int status)
-            div
-                h4 System.Logger
-                +asCode('java').
-                    String getName()
-                    boolean isLoggable(System.Logger.Level level)
-                    default void log(System.Logger.Level level, String msg)
-                div
-                    h5 System.Logger.Level
-                    +asCode('java') ALL(Integer.MIN_VALUE), TRACE(400), DEBUG(500), INFO(800), WARNING(900), ERROR(1000), OFF(Integer.MAX_VALUE)
-
-                h4 System.LoggerFinder
-                ul
-                    li 로거의 생성, 관리, 구성에 관한 서비스 제공
-                    li 기본 구현 : java.logging 모듈이 있는 경우 java.util.logging이용. 없으면 INFO 수준으로 표준 에러 출력
 
             h3 StackWalker
             p 현재 스레드의 StackFrame에 대한 스트림을 열고 특정 작업을 수행한다. 스트림은 실행 지점인 맨 위 frame부터 아래로 내려가면서 작업한다
