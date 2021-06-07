@@ -725,6 +725,7 @@ Repositories/Python/Basic/scope_example.py
 Repositories/Python/Basic/special_method.py
 Repositories/Python/Basic/super_example.py
 Repositories/Python/Basic/syntax.py
+Repositories/Python/Basic/test.py
 Repositories/Python/Basic/test_module.py
 Repositories/Python/Basic/tobytes_example.py
 Repositories/Python/Basic/translate_example.py
@@ -2178,7 +2179,6 @@ posts.pug/python/built_in_exception.pug
 posts.pug/python/built_in_function.pug
 posts.pug/python/built_in_type.pug
 posts.pug/python/data_model.pug
-posts.pug/python/index.pug
 posts.pug/python/pandas.pug
 posts.pug/python/persistence.pug
 posts.pug/python/standard.pug

@@ -421,7 +421,7 @@ include ../../source/skeleton.pug
         +asCode('java').
             static double IEEEremainder(double f1, double f2)
 
-            static double rint(double d) // rount to even
+            static double rint(double d) // round to even
 
             // 오버플로우되면 예외
             addExact, substractExact, multiplyExact, incrementExact, decrementExact, negateExact, toIntExact
@@ -430,12 +430,13 @@ include ../../source/skeleton.pug
             static long multiplyHigh(long x, long y) // 상위 64개 비트를 반환
 
             floorDiv(x, y)
-                // x/y에 가장 가까운 최대 정수를 반환
+                // x/y 이하 최대 정수
                 // Integer.MIN_VALUE, Long.MIN_VALUE를 -1로 나누는 경우는 오버플로우가 발생하고, 각각 Integer.MIN_VALUE, Long.MIN_VALUE를 반환한다
             floorMod(x, y)
                 // x - (floorDiv(x, y) * y)를 반환한다. 부호는 y와 같다
             fma(a, b, c)
                 // a * b + c에 가장 가까운 float, double을 반환
+
         h2 공유 변수 관련
         div
             h3 ClassValue&lt;T>
@@ -455,7 +456,7 @@ include ../../source/skeleton.pug
                 static &lt;S> ThreadLocal&lt;S> withInitial(Supplier&lt;? extends S> supplier)
                     // supplier로 초기값이 설정되는 ThreadLocal 반환
             h3 InheritableThreadLocal&lt;T>
-            p ThreadLocal에 상속성을 부여. 자식 스레드는 부모의 thread-local 변수들을 모두 상속받고 시작한다. childValue 메서드를 재정의함으로써 부모의 값과 다르게 설정할 수도 있다
+            p ThreadLocal에 상속성을 부여. 자식 스레드는 부모의 thread-local 변수들을 초기값으로 상속받고 시작한다. childValue 메서드를 재정의함으로써 부모의 값과 다르게 설정할 수도 있다
 
         h2 타입 관련
         div
@@ -624,7 +625,7 @@ include ../../source/skeleton.pug
             +asCode('java').
                 static String toString(int i, int radix)
                     // + toUnsignedString, toBinaryString, toOctalString, toHexString
-                
+
             h3 String
             p 로캐일을 고려한 문자열 비교는 Collator 클래스를 이용하면 된다
             +asCode('java').
@@ -687,7 +688,9 @@ include ../../source/skeleton.pug
             h3 Class&lt;T>
             div
                 h4 Nest
-                p Nest는 같은 런타임 패키지 안의, private member에 접근 가능한 클래스와 인터페이스의 집합. Nest에 속한 클래스, 인터페이스를 nestmate라 부르고, 하나의 nest에서 하나의 nestmate는 host 역할을 하고 나머지 nestmate 목록을 갖는다
+                ul
+                    li Nest는 같은 런타임 패키지 안의, private member에 접근 가능한 클래스와 인터페이스의 집합
+                    li Nest에 속한 클래스, 인터페이스를 nestmate라 부르고, 하나의 nest에서 하나의 nestmate는 host 역할을 하고 나머지 nestmate 목록을 갖는다
                 +asCode('java').
                     Class&lt;?> getNestHost()
                     Class&lt;?>[] getNestMembers()
@@ -698,12 +701,7 @@ include ../../source/skeleton.pug
                 ClassLoader getClassLoader()
                 InputStream getResourceAsStream(String name)
                 URL getResource(String name)
-                static Class&lt;?> forName(String className)
-                    // 로드된 클래스는 초기화가 진행된다
-                static Class&lt;?> forName(Module module, String name)
-                    // 주어진 모듈에서 binary name을 가진 클래스를 반환한다
-                    // 클래스를 초기화하지 않으며, 클래스를 찾을 수 없으면 null을 반환한다
-                    // 참고 : https://docs.oracle.com/javase/9/docs/api/java/lang/ClassLoader.html#name
+                static Class&lt;?> forName(String name, boolean initialize, ClassLoader loader)
 
                 // 타입 관련
                 T cast(Object obj)
@@ -714,10 +712,7 @@ include ../../source/skeleton.pug
                     // cls 타입 객체를 현재 클래스의 참조 변수로 참조할 수 있는지 여부 반환
                 boolean isInterface()
                     // + isArray, isPrimitive, isAnnotation, isEnum, isAnonymousClass, isLocalClass, isMemberClass, isRecord
-                    // wrapper 클래스는 원시타입이 아님에 유의 : Integer.class != Integer.TYPE, Integer.TYPE == int.class
-                boolean isSynthetic()
-                    // Synthetic class : 명시적/암시적으로 생성자가 정의되지 않은 채 생성된 클래스
-                boolean isNestmateOf(Class&lt;?> c)
+                    // wrapper 클래스는 원시타입이 아님에 유의 : Integer.class != Integer.TYPE == int.class
 
                 // 클래스 이름 관련
                 String toGenericString()
@@ -749,6 +744,7 @@ include ../../source/skeleton.pug
 
                 // record 관련
                 RecordComponent[] getRecordComponents()
+
             h3 ClassLoader
             ol
                 li 전형적으로, 로드할 클래스 이름을 파일명으로 변환하여 ".class"파일을 읽어온다
@@ -771,39 +767,35 @@ include ../../source/skeleton.pug
                         return defineClass(name, b, 0, b.length);
                     }
                     private byte[] loadClassData(String name) { /**/ }
+                +pos('Binary names')
                 li Binary names
                 p ClassLoader 메서드에 전달하는 String 타입 클래스 이름은 아래와 같은 형식을 따라야 한다
-                    br
-                    | "java.lang.String", "javax.swing.JSpinner$DefaultEditor", "java.security.KeyStore$Builder$FileBuilder$1", "java.net.URLClassLoader$3$1"
+                ul
+                    li "java.lang.String"
+                    li "javax.swing.JSpinner$DefaultEditor"
+                    li "java.security.KeyStore$Builder$FileBuilder$1"
+                    li "java.net.URLClassLoader$3$1"
             +asCode('java').
-                protected ClassLoader(String name, ClassLoader parent)
-                    // parent가 null일 경우, 해당 클래스 로더가 모든 플랫폼 클래스를 볼 수 있다는 보장은 없다
-                    // name : class loader's name; or null if not named
-                String getName()
-                    // 클래스 로더 이름 반환. 없으면 null
-
-                Class&lt;?> loadClass(String name) // == loadClass(name, false)
-                protected Class&lt;?> loadClass(String name, boolean resolve)
-                     // 1. findLoadedClass(String)로 이미 로드됐나 확인
-                     // 없으면 : parent 혹은 VM의 클래스 로더의 loadClass를 호출
-                     // 없으면 : findClass(String) 호출
-                     // 2. 위를 통해 클래스를 찾았고, resolve가 true면 resolveClass(Class) 호출
-                     // 3. ClassLoader의 서브클래스들은 이 메서드가 아닌 findClass(String)을 재정의하면 된다
-                     // 4. 재정의되지 않은 이상, getClassLoadingLock()을 통해 메서드는 동기화된다
-                protected final void resolveClass(Class&lt;?> c) : 클래스를 링크한다
-
                 static ClassLoader getPlatformClassLoader()
                 static ClassLoader getSystemClassLoader()
                     // 시스템 클래스 로더를 반환하며, 이는 새롭게 정의되는 클래스 로더들의 default delegation parent다
 
+                Class&lt;?> loadClass(String name)
+                    // == loadClass(name, false)
+                protected Class&lt;?> loadClass(String name, boolean resolve)
+                    // 1. findLoadedClass(String)로 이미 로드됐나 확인
+                    //     없으면 : parent 혹은 VM의 클래스 로더의 loadClass를 호출
+                    //     없으면 : findClass(String) 호출
+                    // 2. 위를 통해 클래스를 찾았고, resolve가 true면 resolveClass(Class) 호출
+                    // 3. ClassLoader의 서브클래스들은 이 메서드가 아닌 findClass(String)을 재정의하면 된다
+                    // 4. 재정의되지 않은 이상, getClassLoadingLock()을 통해 메서드는 동기화된다
+                protected final void resolveClass(Class&lt;?> c)
+                    // 클래스를 링크(초기화)한다
+
                 // 리소스 관련
-                URL getResource(String name)
-                Enumeration&lt;URL> getResources(String name)
-                Stream&lt;URL> resources(String name)
-                static URL getSystemResource(String name)
-                static Enumeration&lt;URL> getSystemResources(String name)
-                InputStream getResourceAsStream(String name)
-                static InputStream getSystemResourceAsStream(String name)
+                ? *Resource*(String name)
+                    // name은 '/'으로 구분된 경로
+
             h3 Module
             p 이름 있는 모듈에 속하지 않은 모든 타입은 각 클래스 로더의 익명 모듈에 속한다
             +asCode('java').
@@ -930,7 +922,7 @@ include ../../source/skeleton.pug
                 static List&lt;Process> startPipeline(List&lt;ProcessBuilder> builders)
                     // 프로세스들의 표준 출력을 다음 프로세스의 표준 입력으로 연결한다
             div
-                h4 abstract static class ProcessBuilder.Redirect
+                h4 ProcessBuilder.Redirect
                 p 서브프로세스의 입력 소스 또는 출력 방향을 표현한다
                 +asCode('java').
                     public static final ProcessBuilder.Redirect PIPE    // 현재 프로세스와 파이프로 연결
@@ -938,7 +930,7 @@ include ../../source/skeleton.pug
                     public static final ProcessBuilder.Redirect DISCARD // 출력 버림
 
                     static ProcessBuilder.Redirect from(File file)
-                    static ProcessBuilder.Redirect to(File file) // file의 이전 내용은 새로운 쓰기 작업에 의해 버려진다
+                    static ProcessBuilder.Redirect to(File file)        // file의 이전 내용은 새로운 쓰기 작업에 의해 버려진다
                     static ProcessBuilder.Redirect appendTo(File file)
                 div
                     h5 ProcessBuilder.Redirect.Type
@@ -946,8 +938,8 @@ include ../../source/skeleton.pug
                         APPEND, // Redirect.appendTo(File)
                         INHERIT,
                         PIPE,
-                        READ, // Redirect.from(File)
-                        WRITE // Redirect.to(File)
+                        READ,   // Redirect.from(File)
+                        WRITE   // Redirect.to(File)
 
             h3 Runtime
             p 모든 Java 애플리케이션은 하나의 Runtime 인스턴스를 가진다

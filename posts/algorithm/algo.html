@@ -183,10 +183,21 @@ for _ in range(1, 1000):
     l2 = [x for x in l1]
     quick_sort(l1)
     l2.sort()
-    assert l1 == l2</div><h2>Counting Sort</h2><p><strong>↓ python</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="python">d = dict()
+    assert l1 == l2</div><h2>선택</h2><ul><li>n개의 입력에서 i번째로 작은 원소를 찾는 알고리즘</li><li>퀵소트의 분할 알고리즘에서, pivot을 기준으로 분할을 수행하면 pivot이 전체 중 몇 번째로 작은 원소인지 알 수 있음을 이용</li><li>그러나 퀵소트 알고리즘 그대로 이용할 경우, 최악의 경우 수행시간이 O(n^2)가 된다</li></ul><h2>Counting Sort</h2><p>n개 입력의 최대 원소 k에 대한 배열에 원소의 개수를 기록함으로써 정렬. 총 소요 시간은 O(n) + O(k)</p><p><strong>↓ python</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="python">size = max(l) + 1
+count = [0] * size
+result = [x for x in l]
 for x in l:
-    if x in d:
-        d[x] += 1
-    else:
-        d[x] = 1
+    count[x] += 1
+
+resultIdx = 0
+for num in range(size):
+    for _ in range(count[num]):
+        result[resultIdx] = num
+        resultIdx += 1</div><h2>Radix sort</h2><p>n개의 입력이 모두 k 자릿수 이하인 경우, 가장 낮은 자리부터 차례대로 stable 정렬. 총 소요 시간은 O(kn)</p><p><strong>↓ python</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="python">size = len(str(max(l)))
+radixList = [[] for _ in range(10)]
+for radix in range(size):
+    for x in l:
+        radixList[(x // (10 ** radix)) % 10].append(x)
+    l = [n for subList in radixList for n in subList]
+    radixList = [[] for _ in range(10)]
 </div></div><ins class="adsbygoogle" style="display:block;text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-7897366614471210" data-ad-slot="4044599363"></ins><h1>동기화</h1><div><h2>Busy waiting</h2><ul><li>다른 스레드를 대기하는 스레드가 여전히 실행 중인 경우</li><p>-> 불필요한 CPU 점유 발생, 동기화 기법으로 해소</p><li>동기화 기법을 사용하는 것보다 그냥 대기하는 것이 짧다는 게 확실하다면 그냥 대기하면 된다</li></ul><h2>Monitor</h2><p>공유 자원에 대한 배타적인 접근을 지원하는 기법</p><ol><li>자원을 요구하는 스레드는 모니터에 진입 -> 입장 큐에 등록</li><li>입장 큐에서 하나의 스레드만 꺼내 실행</li><li>스레드 종료 or 자원 사용 완료한 경우 -> 다른 스레드 실행</li><li>일시 정지한 경우</li><p>현재 스레드를 대기 큐 또는 입장 큐에 재등록 -> 다른 스레드 실행</p></ol><h2>Semaphore</h2><p>공유 자원에 대한 배타적인 접근을 지원하는 기법</p><ol><li>동일 자원에 대해 최대 n개의 접근이 가능</li><li>스레드가 자원에 대해 x개의 접근을 요구(acquire)</li><p>획득할 때까지 대기 or 획득 실패하면 바로 false 반환</p><li>스레드가 획득한 권한을 반환(release)</li><li>Monitor와 다르게, 권한 반환의 책임이 스레드에 있다</li></ol></div><h1>DP; Dynamic Programming</h1><p>동적계획법 := 점화식(상향식)/재귀(하향식) + 캐싱</p><h1>P-NP</h1><ol><li>튜링 기계(TM) : 긴 테이프에 쓰여있는 여러 가지 기호들을 일정한 규칙에 따라 바꾸는 기계</li><p>무한한 저장공간은 무한한 길이의 테이프로 나타나는데 이 테이프는 하나의 기호를 인쇄할 수 있는 크기의 정사각형들로 쪼개져있다. 언제든지 기계속에는 하나의 기호가 들어가있고 이를 "읽힌 기호"라고 한다. 이 기계는 "읽힌 기호"를 바꿀 수 있는데 그 기계의 행동은 오직 읽힌 기호만이 결정한다. 테이프는 앞뒤로 움직일 수 있어서 모든 기호들은 적어도 한번씩은 기계에게 읽힐 것이다</p><li>P : 결정론적 튜링 기계로 다항 시간 안에 풀 수 있는 결정 문제</li><p>문제에 대한 해답을 다항 시간 안에 풀 수 있음</p><li>NP : 비결정론적 튜링 기계로 다항 시간 안에 풀 수 있는 결정 문제. P⊆NP</li><p>해답이 맞는지 틀린지에 대한 결정 문제를 다항 시간 안에 풀 수 있음</p><li>NP-Hard : 다음을 만족하는 결정 문제 C. 모든 NP 문제가 다항 시간 안에 C로 변환될 수 있다. NP-난해 문제는 최소한 모든 NP문제만큼 어렵다</li><p>Halting problem : 프로그램과 입력값이 주어졌을 때, 프로그램이 정지할 지 아니면 영원히 계산할 지 결정하는 문제</p><li>NP-Complete : NP-Hard and C ∈ NP</li><p>어떤 NP-완전 문제가 P에 속한다면 P=NP를 증명하게 된다, 반대로 P에 속하지 않으면 P≠NP를 증명하게 된다</p><p>SAT(SATisfiability problem) : 어떠한 변수들로 이루어진 논리식이 주어졌을 때, 그 논리식이 참이 되는 변수값이 존재하는지를 찾는 문제</p></ol><h1>보안</h1><div><h2>디피-헬만 키 교환법</h2><p>두 키 K1, K2를 합성하는, 교환법칙이 성립하는(F(k1, k2) == F(k2, k1)) 함수 F가 있을 때, 두 대화 참여자 A, B의 키 생성 절차는 아래와 같다</p><ol><li>A가 B에게 공개키 P를 전달</li><li>A, B가 각각 비밀키 SA, SB를 준비</li><li>A는 B에게 F(P, SA)를, B는 A에게 F(P, SB)를 전달</li><li>A, B는 이제 각각 F(P, SB, SA), F(P, SA, SB)를 이용하여 대화를 암호화할 수 있다</li></ol><p>중간에 공개된 키들을 모두 가로채더라도, P, F(P, SA), F(P, SB)만으로는 F(P, SA, SB)를 만들어낼 수 없다. 아래는 RSA키 생성 절차</p><ol><li>A가 B에게 (소수 P, 생성자 G) 전달</li><li>A, B가 각각 비밀키 X, Y를 준비. (X, Y &lt; P-2)</li><li>A는 B에게 G^X mod P를, B는 A에게 G^Y mod P를 전달</li><li>A, B는 이제 각각 (G^Y mod P)^X mod P, (G^X mod P)^Y mod P == G^(XY) mod P를 공유한다</li></ol><h2>메시지 인증 코드; MAC(Message Authentication Code)</h2><p>암호문과 키를 이용해 만든 MAC를 암호문과 같이 전달하면 수신측은 암호문 또는 키의 변조를 감지해낼 수 있다. 흔히 사용되는 것은 암호문과 키를 해싱하여 MAC을 생성하는 HMAC</p><span id="pos1566902653" style="padding:0!important;margin:0!important;width:0!important;height:0!important;overflow:hidden!important"></span><h2>전자 서명</h2><ol><li>A는 메시지(평문이든 다른 암호문이든 무관), 비밀키, 공개키를 준비</li><p>키 생성 알고리즘 G : 서명자의 (비밀키, 공개키)쌍을 생성한다</p><li>A는 B에게 공개키를 전달</li><li>A는 비밀키를 사용해 메시지를 암호화. 이것이 전자 서명</li><p>서명 생성 알고리즘 S : 메시지와 비밀키를 입력받으면 서명을 생성한다</p><li>A는 메시지와 전자 서명을 B에게 전달</li><li>B는 공개키를 이용해 암호문을 복호화하여 전자 서명과 일치하는지 확인</li><p>서명 검증 알고리즘 V : 메시지, 공개키, 서명을 입력받으면 승인/거부를 출력한다</p></ol></div><h1>기타</h1><div><h2>문자열 검색; Boyer-Moore</h2><p>예. abcxdezcabacabac에서 abac 검색<br>처음 검색 인덱스 0. 마지막 위치의 x는 패턴에 없는 문자이므로 다음 검색 인덱스는 1이 아닌 4</p></div><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7897366614471210" data-ad-slot="6629226643" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({})</script></div><hr>&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.<a class="w3-btn w3-round-xxlarge w3-small w3-green" href="/LICENSE">LICENSE</a></div></body></html>
