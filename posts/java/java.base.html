@@ -124,7 +124,7 @@ if (security != null) {
 ThreadGroup getThreadGroup()          // 새로운 스레드를 생성할 수 있는 스레드그룹 반환
 void checkPermission(Permission perm) // checkXXX()</div><h2>Math, StrictMath</h2><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static double IEEEremainder(double f1, double f2)
 
-static double rint(double d) // rount to even
+static double rint(double d) // round to even
 
 // 오버플로우되면 예외
 addExact, substractExact, multiplyExact, incrementExact, decrementExact, negateExact, toIntExact
@@ -133,12 +133,13 @@ static long multiplyFull(int x, int y)
 static long multiplyHigh(long x, long y) // 상위 64개 비트를 반환
 
 floorDiv(x, y)
-    // x/y에 가장 가까운 최대 정수를 반환
+    // x/y 이하 최대 정수
     // Integer.MIN_VALUE, Long.MIN_VALUE를 -1로 나누는 경우는 오버플로우가 발생하고, 각각 Integer.MIN_VALUE, Long.MIN_VALUE를 반환한다
 floorMod(x, y)
     // x - (floorDiv(x, y) * y)를 반환한다. 부호는 y와 같다
 fma(a, b, c)
-    // a * b + c에 가장 가까운 float, double을 반환</div><h2>공유 변수 관련</h2><div><h3>ClassValue&lt;T></h3><p>임의 타입에 대하여, 필요할 때에 연산된 값을 가져오도록 지원. 해당 값은 해당 타입에 대해 일관성을 갖는다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">protected abstract T computeValue(Class&lt;?> type)
+    // a * b + c에 가장 가까운 float, double을 반환
+</div><h2>공유 변수 관련</h2><div><h3>ClassValue&lt;T></h3><p>임의 타입에 대하여, 필요할 때에 연산된 값을 가져오도록 지원. 해당 값은 해당 타입에 대해 일관성을 갖는다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">protected abstract T computeValue(Class&lt;?> type)
     // type에 대하여, 최초 get 메서드 호출 시 한 번만 호출되며, 이후 remove 메서드 호출이 없으면 더 이상 불리지 않는다
 T get(Class&lt;?> type)
     // 값이 계산되지 않은 상태에서 여러 스레드들이 경합을 벌일 경우, 임의 스레드의 결과값을 모두에 반환한다
@@ -146,7 +147,7 @@ void remove(Class&lt;?> type)
     // 다음 get 호출 시 값을 새로 계산하도록 한다</div><h3>ThreadLocal&lt;T></h3><p>스레드 단위의 지역 변수를 제공한다. 호출 지점과 관계없이 한 스레드 내부에서 변수를 공유한다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">protected T initialValue()
     // 초기값이 설정되지 않은 상태에서 최초 get() 호출에 의해 불린다. remove() 호출 후의 get() 요청으로 다시 불린다
 static &lt;S> ThreadLocal&lt;S> withInitial(Supplier&lt;? extends S> supplier)
-    // supplier로 초기값이 설정되는 ThreadLocal 반환</div><h3>InheritableThreadLocal&lt;T></h3><p>ThreadLocal에 상속성을 부여. 자식 스레드는 부모의 thread-local 변수들을 모두 상속받고 시작한다. childValue 메서드를 재정의함으로써 부모의 값과 다르게 설정할 수도 있다</p></div><h2>타입 관련</h2><div><ul><li>각 래퍼 클래스의 TYPE 필드는 기본 타입 클래스 인스턴스를 가리킨다</li><p>e.g. Boolean.TYPE == boolean.class</p><li>각 래퍼 클래스의 valueOf() 함수는 기본 타입에 대해 래핑을 수행하며, 일부는 캐싱을 이용해 빠르게 수행한다</li><li>숫자 래퍼 클래스들은 MIN_VALUE, MAX_VALUE, SIZE(비트 크기), BYTES(바이트 크기) 필드를 갖는다</li><li>byte[] -> 다른 수 타입 변환을 원하는 경우, ByteBuffer 이용</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">ByteBuffer.wrap(new byte[] { 1, 1, 1, 1 }).getInt()</div><li>Boolean, Integer, Long은 시스템 속성 관련 유틸리티를 제공한다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static X getX(String name, X defaultVal)</div><li>몇몇 래퍼 클래스들은 아래와 같은 비트 함수를 제공한다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static X highestOneBit(X i)            // + lowestOneBit
+    // supplier로 초기값이 설정되는 ThreadLocal 반환</div><h3>InheritableThreadLocal&lt;T></h3><p>ThreadLocal에 상속성을 부여. 자식 스레드는 부모의 thread-local 변수들을 초기값으로 상속받고 시작한다. childValue 메서드를 재정의함으로써 부모의 값과 다르게 설정할 수도 있다</p></div><h2>타입 관련</h2><div><ul><li>각 래퍼 클래스의 TYPE 필드는 기본 타입 클래스 인스턴스를 가리킨다</li><p>e.g. Boolean.TYPE == boolean.class</p><li>각 래퍼 클래스의 valueOf() 함수는 기본 타입에 대해 래핑을 수행하며, 일부는 캐싱을 이용해 빠르게 수행한다</li><li>숫자 래퍼 클래스들은 MIN_VALUE, MAX_VALUE, SIZE(비트 크기), BYTES(바이트 크기) 필드를 갖는다</li><li>byte[] -> 다른 수 타입 변환을 원하는 경우, ByteBuffer 이용</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">ByteBuffer.wrap(new byte[] { 1, 1, 1, 1 }).getInt()</div><li>Boolean, Integer, Long은 시스템 속성 관련 유틸리티를 제공한다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static X getX(String name, X defaultVal)</div><li>몇몇 래퍼 클래스들은 아래와 같은 비트 함수를 제공한다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static X highestOneBit(X i)            // + lowestOneBit
 static X numberOfLeadingZeros(X i)     // + numberOfTrailingZeros
 static X bitCount(X i)
 static X rotateLeft(X i, int distance) // + rotateRight
@@ -256,6 +257,7 @@ int compareTo(Double anotherDouble)
     // 대소문자 구분없는 비교자. 직렬화 가능
 
 static String format(String format, Object... args)
+String formatted​(Object... args)
 static String valueOf(Object obj)
 
 boolean isEmpty() // 길이가 0인지 여부
@@ -286,8 +288,9 @@ static String join(CharSequence delimiter, CharSequence... elements)
 
 String trim()             // 시작과 끝의 공백(&lt;= U+0020) 제거
 String strip()            // + stripLeading, stripTrailing. 공백 제거
-Stream&lt;String> lines() // 줄 끝(\n, \r, \r\n) 기준으로 분리
+Stream&lt;String> lines()    // 줄 끝(\n, \r, \r\n) 기준으로 분리
 String indent(int n)      // 각 줄이 n개의 공백으로 시작하도록 조정하고, 줄 끝을 \n로 정규화한다. n이 음수인 경우, 최대 n개의 앞선 공백을 제거한다
+String stripIndent()      // 모든 줄이 공유하는 불필요한 들여쓰기 제거
 
 &lt;R> R transform(Function&lt;? super String, ? extends R> f)
 String repeat(int count)
@@ -297,19 +300,14 @@ void setLength(int newLength)
     // 새로운 크기의 문자열에 기존 문자열을 복사. 남는 부분은 '\u0000'(null)로 채워진다
 void ensureCapacity(int minimumCapacity)
 StringBuffer reverse()
-</div><h3>StringBuilder</h3><p>StringBuffer의 비동기화 버전</p></div><h2>클래스 관련</h2><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/lang/ClassExample.java" lan="java">ClassExample.java</button><div><h3>Class&lt;T></h3><div><h4>Nest</h4><p>Nest는 같은 런타임 패키지 안의, private member에 접근 가능한 클래스와 인터페이스의 집합. Nest에 속한 클래스, 인터페이스를 nestmate라 부르고, 하나의 nest에서 하나의 nestmate는 host 역할을 하고 나머지 nestmate 목록을 갖는다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">Class&lt;?> getNestHost()
+</div><h3>StringBuilder</h3><p>StringBuffer의 비동기화 버전</p></div><h2>클래스 관련</h2><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/JavaSE/src/lang/ClassExample.java" lan="java">ClassExample.java</button><div><h3>Class&lt;T></h3><div><h4>Nest</h4><ul><li>Nest는 같은 런타임 패키지 안의, private member에 접근 가능한 클래스와 인터페이스의 집합</li><li>Nest에 속한 클래스, 인터페이스를 nestmate라 부르고, 하나의 nest에서 하나의 nestmate는 host 역할을 하고 나머지 nestmate 목록을 갖는다</li></ul><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">Class&lt;?> getNestHost()
 Class&lt;?>[] getNestMembers()
 boolean isNestmateOf​(Class&lt;?> c)
 </div></div><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">// ClassLoader 관련
 ClassLoader getClassLoader()
 InputStream getResourceAsStream(String name)
 URL getResource(String name)
-static Class&lt;?> forName(String className)
-    // 로드된 클래스는 초기화가 진행된다
-static Class&lt;?> forName(Module module, String name)
-    // 주어진 모듈에서 binary name을 가진 클래스를 반환한다
-    // 클래스를 초기화하지 않으며, 클래스를 찾을 수 없으면 null을 반환한다
-    // 참고 : https://docs.oracle.com/javase/9/docs/api/java/lang/ClassLoader.html#name
+static Class&lt;?> forName(String name, boolean initialize, ClassLoader loader)
 
 // 타입 관련
 T cast(Object obj)
@@ -320,10 +318,7 @@ boolean isAssignableFrom(Class&lt;?> cls)
     // cls 타입 객체를 현재 클래스의 참조 변수로 참조할 수 있는지 여부 반환
 boolean isInterface()
     // + isArray, isPrimitive, isAnnotation, isEnum, isAnonymousClass, isLocalClass, isMemberClass, isRecord
-    // wrapper 클래스는 원시타입이 아님에 유의 : Integer.class != Integer.TYPE, Integer.TYPE == int.class
-boolean isSynthetic()
-    // Synthetic class : 명시적/암시적으로 생성자가 정의되지 않은 채 생성된 클래스
-boolean isNestmateOf(Class&lt;?> c)
+    // wrapper 클래스는 원시타입이 아님에 유의 : Integer.class != Integer.TYPE == int.class
 
 // 클래스 이름 관련
 String toGenericString()
@@ -354,38 +349,31 @@ Method getEnclosingMethod()
 boolean isAnnotationPresent(Class&lt;? extends Annotation> annotationClass)
 
 // record 관련
-RecordComponent[] getRecordComponents()</div><h3>ClassLoader</h3><ol><li>전형적으로, 로드할 클래스 이름을 파일명으로 변환하여 ".class"파일을 읽어온다</li><li>모든 Class 객체들은 ClassLoader에 대한 참조를 갖고 있다</li><li>배열의 경우 런타임에 Class 객체가 생성되며, 이때 Class.getClassLoader()는 원소의 것과 동일하다</li><li>클래스를 로드하는 것 외에, 자원(.class 파일, 구성 파일, 이미지 등)을 배치하는 책임도 진다</li><li>Delegation model : ClassLoader 객체들은 각기 parent class loader를 갖는다. 클래스나 자원을 찾기 전에 parent를 먼저 조사하게 된다</li><li>동시 로딩을 지원하는 parallel capable class loader들은 클래스 초기화 시 registerAsParallelCapable()를 통해 등록해야 한다. ClassLoader 클래스는 기본적으로 등록되나, 서브클래스들도 자신을 등록해야 한다</li><li>계층구조가 약한 delegation model의 경우 클래스 로더들이 parallel capable하지 않으면 deadlock 발생 가능성이 있다</li><li>Run-time Built-in Class Loaders</li><ul><li>Bootstrap class loader : JVM 내장 클래스 로더. 보통 null이며, parent가 없다</li><li>Platform class loader : Java SE APIs, JDK-specific run-time classes</li><li>System class loader, a.k.a Application class loader : Used to define classes on the application class path, module path, and JDK-specific tools</li></ul><li>파일이 아닌 네트워크 같은 다른 소스로부터 클래스를 로드할 경우, defineClass()를 통해 Class 객체를 얻고 Constructor.newInstance()를 통해 클래스 객체를 생성하면 된다</li><li>네트워크 클래스 로더는 findClass(), loadClassData() 메서드를 반드시 작성해야 한다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">public Class findClass(String name) {
+RecordComponent[] getRecordComponents()
+</div><h3>ClassLoader</h3><ol><li>전형적으로, 로드할 클래스 이름을 파일명으로 변환하여 ".class"파일을 읽어온다</li><li>모든 Class 객체들은 ClassLoader에 대한 참조를 갖고 있다</li><li>배열의 경우 런타임에 Class 객체가 생성되며, 이때 Class.getClassLoader()는 원소의 것과 동일하다</li><li>클래스를 로드하는 것 외에, 자원(.class 파일, 구성 파일, 이미지 등)을 배치하는 책임도 진다</li><li>Delegation model : ClassLoader 객체들은 각기 parent class loader를 갖는다. 클래스나 자원을 찾기 전에 parent를 먼저 조사하게 된다</li><li>동시 로딩을 지원하는 parallel capable class loader들은 클래스 초기화 시 registerAsParallelCapable()를 통해 등록해야 한다. ClassLoader 클래스는 기본적으로 등록되나, 서브클래스들도 자신을 등록해야 한다</li><li>계층구조가 약한 delegation model의 경우 클래스 로더들이 parallel capable하지 않으면 deadlock 발생 가능성이 있다</li><li>Run-time Built-in Class Loaders</li><ul><li>Bootstrap class loader : JVM 내장 클래스 로더. 보통 null이며, parent가 없다</li><li>Platform class loader : Java SE APIs, JDK-specific run-time classes</li><li>System class loader, a.k.a Application class loader : Used to define classes on the application class path, module path, and JDK-specific tools</li></ul><li>파일이 아닌 네트워크 같은 다른 소스로부터 클래스를 로드할 경우, defineClass()를 통해 Class 객체를 얻고 Constructor.newInstance()를 통해 클래스 객체를 생성하면 된다</li><li>네트워크 클래스 로더는 findClass(), loadClassData() 메서드를 반드시 작성해야 한다</li><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">public Class findClass(String name) {
     byte[] b = loadClassData(name);
     return defineClass(name, b, 0, b.length);
 }
-private byte[] loadClassData(String name) { /**/ }</div><li>Binary names</li><p>ClassLoader 메서드에 전달하는 String 타입 클래스 이름은 아래와 같은 형식을 따라야 한다<br>"java.lang.String", "javax.swing.JSpinner$DefaultEditor", "java.security.KeyStore$Builder$FileBuilder$1", "java.net.URLClassLoader$3$1"</p></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">protected ClassLoader(String name, ClassLoader parent)
-    // parent가 null일 경우, 해당 클래스 로더가 모든 플랫폼 클래스를 볼 수 있다는 보장은 없다
-    // name : class loader's name; or null if not named
-String getName()
-    // 클래스 로더 이름 반환. 없으면 null
-
-Class&lt;?> loadClass(String name) // == loadClass(name, false)
-protected Class&lt;?> loadClass(String name, boolean resolve)
-     // 1. findLoadedClass(String)로 이미 로드됐나 확인
-     // 없으면 : parent 혹은 VM의 클래스 로더의 loadClass를 호출
-     // 없으면 : findClass(String) 호출
-     // 2. 위를 통해 클래스를 찾았고, resolve가 true면 resolveClass(Class) 호출
-     // 3. ClassLoader의 서브클래스들은 이 메서드가 아닌 findClass(String)을 재정의하면 된다
-     // 4. 재정의되지 않은 이상, getClassLoadingLock()을 통해 메서드는 동기화된다
-protected final void resolveClass(Class&lt;?> c) : 클래스를 링크한다
-
-static ClassLoader getPlatformClassLoader()
+private byte[] loadClassData(String name) { /**/ }</div><span id="pos-1291483511" style="padding:0!important;margin:0!important;width:0!important;height:0!important;overflow:hidden!important"></span><li>Binary names</li><p>ClassLoader 메서드에 전달하는 String 타입 클래스 이름은 아래와 같은 형식을 따라야 한다</p><ul><li>"java.lang.String"</li><li>"javax.swing.JSpinner$DefaultEditor"</li><li>"java.security.KeyStore$Builder$FileBuilder$1"</li><li>"java.net.URLClassLoader$3$1"</li></ul></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static ClassLoader getPlatformClassLoader()
 static ClassLoader getSystemClassLoader()
     // 시스템 클래스 로더를 반환하며, 이는 새롭게 정의되는 클래스 로더들의 default delegation parent다
 
+Class&lt;?> loadClass(String name)
+    // == loadClass(name, false)
+protected Class&lt;?> loadClass(String name, boolean resolve)
+    // 1. findLoadedClass(String)로 이미 로드됐나 확인
+    //     없으면 : parent 혹은 VM의 클래스 로더의 loadClass를 호출
+    //     없으면 : findClass(String) 호출
+    // 2. 위를 통해 클래스를 찾았고, resolve가 true면 resolveClass(Class) 호출
+    // 3. ClassLoader의 서브클래스들은 이 메서드가 아닌 findClass(String)을 재정의하면 된다
+    // 4. 재정의되지 않은 이상, getClassLoadingLock()을 통해 메서드는 동기화된다
+protected final void resolveClass(Class&lt;?> c)
+    // 클래스를 링크(초기화)한다
+
 // 리소스 관련
-URL getResource(String name)
-Enumeration&lt;URL> getResources(String name)
-Stream&lt;URL> resources(String name)
-static URL getSystemResource(String name)
-static Enumeration&lt;URL> getSystemResources(String name)
-InputStream getResourceAsStream(String name)
-static InputStream getSystemResourceAsStream(String name)</div><h3>Module</h3><p>이름 있는 모듈에 속하지 않은 모든 타입은 각 클래스 로더의 익명 모듈에 속한다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">InputStream getResourceAsStream(String name)
+? *Resource*(String name)
+    // name은 '/'으로 구분된 경로
+</div><h3>Module</h3><p>이름 있는 모듈에 속하지 않은 모든 타입은 각 클래스 로더의 익명 모듈에 속한다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">InputStream getResourceAsStream(String name)
     // 해당 모듈의 리소스를 스트림으로 반환. name은 '/'으로 구분된 경로
 </div></div><h2>프로그램 실행 단위</h2><div><h3>Thread</h3><ol><li>스레드는 실행 우선순위를 가지며, 그 초깃값은 스레드를 생성한 스레드의 것과 같다. 데몬 스레드로부터 생성된 스레드도 데몬 스레드다</li><li>JVM이 시작되면 하나의 non-daemon 스레드가 존재하며, 전형적으로 main 메서드를 호출한다. JVM은 다음의 상황 중 하나라도 일어나기 전까지 실행을 계속한다</li><ul><li>Runtime 클래스의 exit 메서드 호출, 또는 SecurityManager의 exit 허용</li><li>모든 데몬 스레드가 아닌 스레드들의 종료 : run 메서드의 반환이든 예외 발생이든 관계없이</li></ul></ol><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">public static final int MIN_PRIORITY
 public static final int NORM_PRIORITY
@@ -433,15 +421,7 @@ void        setUncaughtExceptionHandler(Thread.UncaughtExceptionHandler eh)</div
         // Read event from some source and process it
         ...
     }
-}</div><h4>Thread.State</h4><p>NEW, RUNNABLE, BLOCKED, WAITING, TIMED_WAITING, TERMINATED</p><h4>Thread.UncaughtExceptionHandler</h4><ol><li>처리되지 않은 예외로 인해 스레드가 종료되는 상황을 대비한 핸들러. 그러한 상황에서, 먼저 Thread.getUncaughtExceptionHandler()를 통해 얻은 핸들러에 해당 스레드와 예외 객체를 전달한다</li><li>만일 스레드에 핸드러가 설정되지 않은 경우, ThreadGroup의 핸들러를 이용하며, ThreadGroup에도 없는 경우 default 핸들러를 이용할 수 있다</li></ol></div><h3>ThreadGroup</h3><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">final void setDaemon(boolean daemon)
-    // 데몬 스레드 그룹은 마지막 스레드나 스레드 그룹이 파괴되면 자동으로 파괴된다
-
-int activeCount()
-int enumerate(...)
-
-final void interrupt() // 그룹의 모든 스레드에 인터럽트
-final void destroy()   // 그룹과 하위 모든 그룹을 파괴
-</div><h3>Process</h3><p>ProcessBuilder.start, Runtime.exec으로 시작된 native process들에 대한 제어 제공</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">abstract OutputStream getOutputStream()
+}</div><h4>Thread.State</h4><p>NEW, RUNNABLE, BLOCKED, WAITING, TIMED_WAITING, TERMINATED</p><h4>Thread.UncaughtExceptionHandler</h4><ol><li>처리되지 않은 예외로 인해 스레드가 종료되는 상황을 대비한 핸들러. 그러한 상황에서, 먼저 Thread.getUncaughtExceptionHandler()를 통해 얻은 핸들러에 해당 스레드와 예외 객체를 전달한다</li><li>만일 스레드에 핸드러가 설정되지 않은 경우, ThreadGroup의 핸들러를 이용하며, ThreadGroup에도 없는 경우 default 핸들러를 이용할 수 있다</li></ol></div><h3>Process</h3><p>ProcessBuilder.start, Runtime.exec으로 시작된 native process들에 대한 제어 제공</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">abstract OutputStream getOutputStream()
     // + getInputStream, getErrorStream
 
 abstract int waitFor()
@@ -472,17 +452,17 @@ ProcessBuilder redirectErrorStream(boolean redirectErrorStream)
 Process start()
 
 static List&lt;Process> startPipeline(List&lt;ProcessBuilder> builders)
-    // 프로세스들의 표준 출력을 다음 프로세스의 표준 입력으로 연결한다</div><div><h4>abstract static class ProcessBuilder.Redirect</h4><p>서브프로세스의 입력 소스 또는 출력 방향을 표현한다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">public static final ProcessBuilder.Redirect PIPE    // 현재 프로세스와 파이프로 연결
+    // 프로세스들의 표준 출력을 다음 프로세스의 표준 입력으로 연결한다</div><div><h4>ProcessBuilder.Redirect</h4><p>서브프로세스의 입력 소스 또는 출력 방향을 표현한다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">public static final ProcessBuilder.Redirect PIPE    // 현재 프로세스와 파이프로 연결
 public static final ProcessBuilder.Redirect INHERIT // 현재 프로세스의 것과 동일
 public static final ProcessBuilder.Redirect DISCARD // 출력 버림
 
 static ProcessBuilder.Redirect from(File file)
-static ProcessBuilder.Redirect to(File file) // file의 이전 내용은 새로운 쓰기 작업에 의해 버려진다
+static ProcessBuilder.Redirect to(File file)        // file의 이전 내용은 새로운 쓰기 작업에 의해 버려진다
 static ProcessBuilder.Redirect appendTo(File file)</div><div><h5>ProcessBuilder.Redirect.Type</h5><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">APPEND, // Redirect.appendTo(File)
 INHERIT,
 PIPE,
-READ, // Redirect.from(File)
-WRITE // Redirect.to(File)
+READ,   // Redirect.from(File)
+WRITE   // Redirect.to(File)
 </div></div></div><h3>Runtime</h3><p>모든 Java 애플리케이션은 하나의 Runtime 인스턴스를 가진다</p><p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static Runtime getRuntime()
 
 void exit(int status)
