@@ -323,7 +323,9 @@ Repositories/Eclipse/FreeMarker/resource/template/t_020_switch.html
 Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java
 Repositories/Eclipse/FreeMarker/src/io/github/donggi/ProgrammerGuilde.java
 Repositories/Eclipse/JavaSE/.classpath
+Repositories/Eclipse/JavaSE/.factorypath
 Repositories/Eclipse/JavaSE/.project
+Repositories/Eclipse/JavaSE/pom.xml
 Repositories/Eclipse/JavaSE/src/concurrent/CompletionStageTest.java
 Repositories/Eclipse/JavaSE/src/concurrent/CountedCompleterTest.java
 Repositories/Eclipse/JavaSE/src/concurrent/ExecutorServiceTest.java

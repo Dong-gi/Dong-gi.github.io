@@ -122,7 +122,7 @@ include ../../source/skeleton.pug
                 p 버퍼를 이용해 mark(), reset() 지원
 
                 h4 DataInputStream
-                p DataInput을 구현 제공
+                p DataInput 구현 제공
 
                 +pos('PushbackInputStream')
                 h4 PushbackInputStream
@@ -275,14 +275,6 @@ include ../../source/skeleton.pug
                 p 버퍼를 이용해 mark(), reset()를 지원하고, 기저 Reader에 대한 읽기 작업이 빈번하게 일어나지 않게 해준다 
                     +codeBtn('/Repositories/Eclipse/JavaSE/src/io/BufferedReaderExample.java', 'java')
 
-            h3 Writer 장식자
-            div
-                h4 FilterWriter
-                p 아무 기능 추가 없는 장식자
-
-                h4 BufferedWriter
-                p 버퍼를 이용해 기저 Writer에 대한 쓰기 작업이 빈번하게 일어나지 않도록 한다
-
                 h4 LineNumberReader
                 p 줄 끝을 만날때마다 카운트
                 +asCode('java').
@@ -294,6 +286,14 @@ include ../../source/skeleton.pug
                     +goto('PushbackInputStream')
                     | 과 비슷 
                     +codeBtn('/Repositories/Eclipse/JavaSE/src/io/PushBackExample.java', 'java')
+
+            h3 Writer 장식자
+            div
+                h4 FilterWriter
+                p 아무 기능 추가 없는 장식자
+
+                h4 BufferedWriter
+                p 버퍼를 이용해 기저 Writer에 대한 쓰기 작업이 빈번하게 일어나지 않도록 한다
 
                 h4 PrintWriter
                 ul
@@ -355,7 +355,7 @@ include ../../source/skeleton.pug
         ul
             li 자동으로 자원을 해제하는 객체를 표현한다
             li try-with-resources 블록에 사용되면 close()가 자동으로 호출된다 
-                +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/TryWithResources.java', 'java')
+                +codeBtn('/Repositories/Single/tutorial/TryWithResource.java', 'java')
             li IO 작업이 없는 것들을 try-with-resources 블록에 이용하는 것은 불필요한 일이다
 
         h2 Comparable&lt;T>
@@ -471,12 +471,12 @@ include ../../source/skeleton.pug
                 +asCode('java') static X getX(String name, X defaultVal)
                 li 몇몇 래퍼 클래스들은 아래와 같은 비트 함수를 제공한다
                 +asCode('java').
-                    static X highestOneBit(X i)            // + lowestOneBit
-                    static X numberOfLeadingZeros(X i)     // + numberOfTrailingZeros
-                    static X bitCount(X i)
-                    static X rotateLeft(X i, int distance) // + rotateRight
+                    static int highestOneBit(X i)           // + lowestOneBit
+                    static int numberOfLeadingZeros(X i)    // + numberOfTrailingZeros
+                    static int bitCount(X i)
+                    static X rotateLeft(X i, int distance)  // + rotateRight
                     static X reverse(X i)
-                    static X reverseBytes(X i)             // 바이트 단위로 뒤집기
+                    static X reverseBytes(X i)              // 바이트 단위로 뒤집기
                 li 정수 래퍼 클래스들은 아래와 같은 String 파싱을 제공한다
                 +asCode('java').
                     static Z parseZ(String s, int radix)
@@ -577,26 +577,6 @@ include ../../source/skeleton.pug
                 static int digit(int codePoint, int radix)
                 static char forDigit(int digit, int radix)
                 static int getNumericValue(int codePoint)
-            div
-                h4 Character.Subset
-                p 이 클래스의 객체는 유니코드 문자 집합을 표현한다. Character 클래스 내부에서 정의한 문자 집합은 Character.UnicodeBlock뿐이다
-                +asCode('java') final String toString() // name 반환
-
-                h4 Character.UnicodeBlock
-                p 유니코드 문자 블록. 각 문자들은 최대 하나의 유니코드 블록에 포함된다
-                +asCode('java').
-                    public static Character.UnicodeBlock ARABIC, GREEK, HANGUL, ...
-
-                    static Character.UnicodeBlock of(char c)
-                    static final Character.UnicodeBlock forName(String blockName)
-                        // 블록 이름이 변경된 경우, 변경 전/후 이름 둘 다 사용할 수 있다
-
-                h4 Character.UnicodeScript
-                p 유니코드 표준 스크립트 이름 정의. 모든 문자는 하나의 스크립트(각 언어|INHERITED|COMMON|UNKNOWN)에 할당된다
-                +asCode('java').
-                    public static final Character.UnicodeScript ARABIC, GREEK, HANGUL, ...
-
-                    static Character.UnicodeScript of(int codePoint)
 
             h3 Double
             +asCode('java').
@@ -685,19 +665,8 @@ include ../../source/skeleton.pug
             p StringBuffer의 비동기화 버전
 
         h2 클래스 관련
-        +codeBtn('/Repositories/Eclipse/JavaSE/src/lang/ClassExample.java', 'java')
         div
             h3 Class&lt;T>
-            div
-                h4 Nest
-                ul
-                    li Nest는 같은 런타임 패키지 안의, private member에 접근 가능한 클래스와 인터페이스의 집합
-                    li Nest에 속한 클래스, 인터페이스를 nestmate라 부르고, 하나의 nest에서 하나의 nestmate는 host 역할을 하고 나머지 nestmate 목록을 갖는다
-                +asCode('java').
-                    Class&lt;?> getNestHost()
-                    Class&lt;?>[] getNestMembers()
-                    boolean isNestmateOf​(Class&lt;?> c)
-
             +asCode('java').
                 // ClassLoader 관련
                 ClassLoader getClassLoader()
@@ -746,6 +715,15 @@ include ../../source/skeleton.pug
 
                 // record 관련
                 RecordComponent[] getRecordComponents()
+            div
+                h4 Nest
+                ul
+                    li Nest는 같은 런타임 패키지 안의, private member에 접근 가능한 클래스와 인터페이스의 집합
+                    li Nest에 속한 클래스, 인터페이스를 nestmate라 부르고, 하나의 nest에서 하나의 nestmate는 host 역할을 하고 나머지 nestmate 목록을 갖는다
+                    +asCode('java').
+                        Class&lt;?> getNestHost()
+                        Class&lt;?>[] getNestMembers()
+                        boolean isNestmateOf​(Class&lt;?> c)
 
             h3 ClassLoader
             ol
@@ -990,23 +968,6 @@ include ../../source/skeleton.pug
                     SHOW_HIDDEN_FRAMES     // 숨겨진 프레임 표시
                     SHOW_REFLECT_FRAMES    // reflection 프레임 표시
 
-                h4 StackWalker.StackFrame
-                p 각 StackFrame 객체는 StackWalker로부터 반환된, 메서드 호출을 표현한다
-                +asCode('java').
-                    String            getMethodName()       // 메서드 이름 반환
-                    String            getClassName()        // 메서드가 정의된 클래스의 binary name 반환
-                    Class&lt;?>       getDeclaringClass()   // 메서드가 정의된 클래스 객체 반환. Option.RETAIN_CLASS_REFERENCE 설정 필요
-                    StackTraceElement toStackTraceElement() // 프레임에 관한 StackTraceElement 반환
-
-            h3 StackTraceElement
-            +asCode('java').
-                String  getFileName()
-                int     getLineNumber()
-                String  getMethodName()
-                String  getClassName()
-                String  getClassLoaderName()
-                String  getModuleName()
-
     h1 java.lang.annotation
     div
         h2 Annotation
@@ -1023,36 +984,21 @@ include ../../source/skeleton.pug
             CLASS   // 컴파일러가 클래스 파일에 기록(default)
             RUNTIME // 클래스 파일에 기록하고 JVM 런타임에도 유지. 따라서 리플렉션 가능
 
-        h2 @Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Documented
+        h2 @Documented
         p @Documented가 다른 애너테이션 타입 A에 존재하면, @A로 꾸며진 요소의 공개적인 서명으로 인식하여 JavaDoc에 포함된다
 
-        h2 @Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Inherited
+        h2 @Inherited
         p Superclass의 애너테이션을 상속함을 표시. 클래스에만 유효한 애너테이션이다
 
-        h2 @Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Repeatable
-        p 애너테이션을 반복적으로 정의할 수 있음을 표현
-            +asA('https://docs.oracle.com/javase/tutorial/java/annotations/repeating.html', '참고자료')
+        h2 @Repeatable
+        p 애너테이션을 반복적으로 정의할 수 있음을 표현 
+            +asA('https://docs.oracle.com/javase/tutorial/java/annotations/repeating.html')
 
-        h2 @Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Retention
+        h2 @Retention
         p 애너테이션을 얼마나 유지할 지 표현. value ← RetentionPolicy
 
-        h2 @Documented @Retention(RUNTIME) @Target(ANNOTATION_TYPE) @interface Target
+        h2 @Target
         p 애너테이션을 적용할 요소들을 표현한다. 여러 개(또는 0개)일 경우 배열 리터럴 표기 {}를 이용한다. value ← ElementType[]
-
-    h1 java.lang.module
-    div
-        h2 ModuleFinder
-        ol
-            li Module Resolution : 모듈들의 연관 관계를 계산하는 작업. 각 모듈의 필요(requires) 모듈들을 반복적으로 찾아내고 관계 그래프를 구한다
-            li ModuleFinder는 module resolution과 service binding(Configuration::resolveAndBind)에서 모듈을 찾는 데 이용된다
-
-        h2 ModuleReader
-        p 모듈 내용에 대한 접근 제공
-        +asCode('java').
-            Optional&lt;URI> find(String name)
-            default Optional&lt;InputStream> open(String name)
-            default Optional&lt;ByteBuffer> read(String name)
-            Stream&lt;String> list()
 
     h1 java.lang.ref
     div
@@ -1063,7 +1009,6 @@ include ../../source/skeleton.pug
                 +asA('https://d2.naver.com/helloworld/329631', 'NAVER 개발 포스트')
             li 다른 객체(referent)를 참조하는 reference object를 이용해 GC 절차 일부와 상호작용할 수 있다
             li 3단계의 참조 레벨을 제공한다 : Soft > Weak > Phantom
-            li 객체 참조 레벨
             ol
                 li Strongly reachable
                 ul
@@ -1073,12 +1018,12 @@ include ../../source/skeleton.pug
                 ul
                     li Not strongly reachable && Soft reference object가 객체를 참조 중
                     li 마지막으로 strongly reachable한 이후 기간, 여유 힙 크기, JVM 옵션(-XX:SoftRefLRUPolicyMSPerMB)에 따라 GC 여부가 결정된다
-                    li 지정한 경우, GC 대상으로 판별된 즉시(약간의 지연은 있을 수 있다) ReferenceQueue에 등록된다
+                    li ReferenceQueue를 지정한 경우, GC 대상으로 판별된 즉시(약간의 지연은 있을 수 있다) 등록된다
                 li Weakly reachable
                 ul
                     li Not strongly reachable && Not softly reachable && Weak reference object가 객체를 참조 중
                     li Referent는 GC 대상이며, 따라서 get()은 null을 반환할 수 있다
-                    li 지정한 경우, GC 대상으로 판별된 즉시(약간의 지연은 있을 수 있다) ReferenceQueue에 등록된다
+                    li ReferenceQueue를 지정한 경우, GC 대상으로 판별된 즉시(약간의 지연은 있을 수 있다) 등록된다
                 li Phantom reachable
                 ul
                     li Not strongly reachable && Not softly reachable && Not weakly reachable && 객체는 소멸(finalize)됐지만 Phantom reference object가 참조 중
@@ -1119,38 +1064,44 @@ include ../../source/skeleton.pug
         h2 Reference&lt;T>
         p GC와 상호작용하기 위한 메서드들을 정의한다. 이 클래스를 직접 상속하지 않아야 한다
         +asCode('java').
-            T get()
-                // 참조하는 객체를 반환한다
+            static void reachabilityFence​(Object ref)
+                // ref가 가리키는 객체를 strongly reachable하게 고정하여
+                // 적어도 이 메서드 호출이 끝날 때 까지는 GC 대상이 아니게 한다
+
+            T get()                         // referent를 반환한다(즉, hard reference)
+            final boolean refersTo(T obj)   // referent == obj ?
             void clear()
-            boolean enqueue()
-                // reference object를 정리하고 등록된 큐에 넣는다
-                // + isEnqueued
-        div
-            h3 Sub Classes
-            +asCode('java').
-                class SoftReference&lt;T> extends Reference&lt;T>
-                class WeakReference&lt;T> extends Reference&lt;T>
-                class PhantomReference&lt;T> extends Reference&lt;T>
+            boolean enqueue()               // clear() 후 지정된 큐에 넣는다
+
+            class SoftReference&lt;T> extends Reference&lt;T>
+            class WeakReference&lt;T> extends Reference&lt;T>
+            class PhantomReference&lt;T> extends Reference&lt;T>
 
     h1 java.lang.reflect
     div
         h2 자바 제네릭 제약사항
         ol
-            li 자바의 제네릭은 컴파일 과정에서 모두 Object 또는 바운드된 클래스로 교체된다
+            li 자바의 제네릭은 컴파일 과정에서 모두 Object 또는 바운드된 클래스로 교체(type erasure)된다
             li 따라서 List&lt;T> 참조 변수만 가지고 T가 어떤 타입인지 런타임에 알아내는 방법은 없다
             p 다만, 원소가 존재한다면 instanceof, Class::isInstanse, Class::isAssignableFrom을 이용한 판별은 가능하다
             li 따라서 제네릭 타입에 대한 직접적인 연산은 모두 무효하다
-
-        h2 Array
-        p 동적으로 자바 배열을 생성하고 접근하는 static 메서드들을 제공
-        +asCode('java').
-            static Object newInstance(Class&lt;?> componentType, int length)
-            static Object get(Object array, int index)
-                // + getBoolean, getByte, ..., + set...
+            li 제네릭에 대한 익명 클래스는 정의에 사용된 타입 인자를 알 수 있다
+            +asCode('java').
+                (ParameterizedType) new ArrayList&lt;String>().getClass().getGenericSuperclass();
+                    // java.util.AbstractList&lt;E>
+                ((ParameterizedType) new ArrayList&lt;String>().getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+                    // E
+                (ParameterizedType) new ArrayList&lt;String>() {}.getClass().getGenericSuperclass();
+                    // java.util.ArrayList&lt;java.lang.String>
+                ((ParameterizedType) new ArrayList&lt;String>() {}.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+                    // class java.lang.String
 
         h2 Modifier
         +asCode('java').
-            public static final int PUBLIC, PRIVATE, PROTECTED, STATIC, FINAL, SYNCHRONIZED, VOLATILE, TRANSIENT, NATIVE, INTERFACE, ABSTRACT, STRICT
+            public static final int PUBLIC, PRIVATE, PROTECTED, STATIC,
+                                    FINAL, SYNCHRONIZED, VOLATILE, TRANSIENT,
+                                    NATIVE, INTERFACE, ABSTRACT, STRICT
+            
             static int classModifiers()
                 // 사용할 수 있는 제한자들을 OR하여 반환
                 // + interfaceModifiers, constructorModifiers, ...
@@ -1164,7 +1115,8 @@ include ../../source/skeleton.pug
             interface AnnotatedElement               // 애너테이트된 요소를 표현
             interface AnnotatedType extends AnnotatedElement {
                 default AnnotatedType getAnnotatedOwnerType();
-                    // 이 타입이 멤버로 속해있는, 애너테이트된 타입 반환. 예를 들어 이 타입이 @TA O&lt;T>.I&lt;S>라면, @TA O&lt;T>를 반환
+                    // 이 타입을 멤버로 갖는, 애너테이트된 타입 반환.
+                    // e.g. 이 타입이 @XXX O&lt;T>.I&lt;S>라면, @XXX O&lt;T>를 반환
                     // null이 반환되는 경우 ↓
                     //     타입이 top-level이거나 local 클래스, 익명 클래스, 기본 자료형, void인 경우
                     //     타입이 AnnotatedArrayType, AnnotatedTypeVariable, AnnotatedWildcardType의 인스턴스인 경우
@@ -1288,7 +1240,7 @@ include ../../source/skeleton.pug
         ul
             li CEILING, FLOOR, UP : 0에서 멀어지도록 선택
             li DOWN : 0에 가까워지도록 선택
-            li HALF_UP, HALF_DOWN, HALF_EVEN : 가장 인접한 두 이웃들이 같은 거리에 있는 경우(*5인 경우), 각각 큰/작은/짝수 이웃을 선택
+            li HALF_UP, HALF_DOWN, HALF_EVEN : 가장 인접한 두 이웃들이 같은 거리에 있는 경우(.5인 경우), 각각 큰/작은/짝수 이웃을 선택
             li UNNECESSARY : 올림이나 내림이 필요없는 상태. 그 외엔 ArithmeticException 발생
 
     h1 java.net
@@ -1303,6 +1255,7 @@ include ../../source/skeleton.pug
                 static InetAddress getByAddress(byte[] addr)
                 static InetAddress getByName(String host)
                 static InetAddress[] getAllByName(String host)
+
                 byte[] getAddress()
 
             h3 SocketAddress
