@@ -355,7 +355,6 @@ Repositories/Eclipse/JavaSE/src/net/InetAddressTest.java
 Repositories/Eclipse/JavaSE/src/net/NetworkInterfaceTest.java
 Repositories/Eclipse/JavaSE/src/net/SocketTest.java
 Repositories/Eclipse/JavaSE/src/nio/AsynchronousSocketChannelTest.java
-Repositories/Eclipse/JavaSE/src/nio/ByteBufferExample.java
 Repositories/Eclipse/JavaSE/src/nio/PathTest.java
 Repositories/Eclipse/JavaSE/src/nio/sctp/SctpChannelTest.java
 Repositories/Eclipse/JavaSE/src/regex/MatchResultExample.java
