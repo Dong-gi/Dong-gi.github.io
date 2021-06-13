@@ -1,0 +1,7 @@
+컨테이너 로그 : /var/lib/docker/containers/${containerId}/${containerId}-json.log
+docker logs : 컨테이너 로그 확인
+  --tail ${n}
+  --since ${timestamp}
+  -f : 실시간 확인
+  -t : 타임스탬프 출력
+
