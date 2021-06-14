@@ -2426,8 +2426,8 @@ include ../../source/skeleton.pug
             h3 Date
             +asCode('java').
                 long getTime()
-                boolean before(Date when)
-                static Date from(Instant instant)
+                boolean before(Date when) + after, compareTo
+                static Date from(Instant instant) + toInstant
 
             h3 Calendar
             ol
@@ -2444,23 +2444,14 @@ include ../../source/skeleton.pug
                     p public static final int ALL_STYLES, SHORT, LONG, NARROW_FORMAT, ...
             +asCode('java').
                 static Calendar getInstance()
-                static Locale[] getAvailableLocales()
-                static Set&lt;String> getAvailableCalendarTypes()
 
                 // 달력의 현재 시점을 저장하고 있으므로, 시각 비교, 설정 등의 연산 제공
                 final Date getTime()
                 int get(int field)
                 abstract void add(int field, int amount)
                 void roll(int field, int amount)
-                abstract void roll(int field, boolean up) // 1 기본단위만큼 up/down
 
                 boolean isLenient()
-                int getFirstDayOfWeek()
-                int getMinimalDaysInFirstWeek()
-                    // 첫 주의 시작이 1월 1일인 경우 1, 그 외의 경우 7
-                boolean isWeekDateSupported()
-                    // default false
-                    // getWeekYear(), setWeekDate(int,int,int), getWeeksInWeekYear() 등을 지원하는지 여부
             div
                 h4 Calendar.Builder
                 +asCode('java').
@@ -2469,7 +2460,7 @@ include ../../source/skeleton.pug
                     Calendar.Builder setFields(int... fieldValuePairs)
                         // 예: setFields(Calendar.YEAR, 2013, Calendar.MONTH, Calendar.DECEMBER, Calendar.DAY_OF_MONTH, 23)
                     Calendar.Builder setTimeZone(TimeZone zone)
-                    Calendar.Builder setLenient(boolean lenient) : build()에서 사용된다
+                    Calendar.Builder setLenient(boolean lenient)
 
             h3 GregorianCalendar
             p GregorianCalendar는 아래 메서드를 지원한다
@@ -2499,8 +2490,6 @@ include ../../source/skeleton.pug
                     // period가 이전 task 종료가 아닌 최초 실행 시점을 기준으로 작동한다. 따라서 어떤 이유로 이전 작업이 지연된 경우, 시간당 작업률을 맞추기 위해 이후 작업이 연속적으로 실행될 수 있다
                 void cancel()
                     // 타이머를 종료한다. 스케쥴된 모든 작업을 버리고, 현재 실행중인 작업에는 간섭하지 않는다. 타이머 종료 후 백그라운드 스레드도 우아하게 종료되어 GC 대상이 된다. 이후 더 이상의 스케쥴은 불가능하다
-                int purge()
-                    // 호출할 일이 거의 없는 메서드. 많은 작업을 한번에 취소한 경우, 취소한 작업들을 제거하여 참조가 없는 경우 GC 대상이 되도록 한다
 
             h3 TimerTask
             p Timer 작업으로 사용하기 위한 Runnable
@@ -2525,6 +2514,7 @@ include ../../source/skeleton.pug
                 +asCode('java').
                     var stats = doubleStream.collect(DoubleSummaryStatistics::new, DoubleSummaryStatistics::accept, DoubleSummaryStatistics::combine);
                     var stats = people.stream().collect(Collectors.summarizingDouble(Person::getWeight));
+                li + IntSummaryStatistics, LongSummaryStatistics
             +asCode('java').
                 public DoubleSummaryStatistics()
                     // 개수 0, 합계 0, 최솟값 Double.POSITIVE_INFINITY, 최댓값 Double.NEGATIVE_INFINITY, 평균 0인 객체 생성
@@ -2533,10 +2523,8 @@ include ../../source/skeleton.pug
                     // 요약 정보에 value를 추가
 
             h3 Random
+            p 의사난수 생성기. 스레드-안전하지만 성능 저하 가능성이 있으므로 ThreadLocalRandom을 고려
             +asCode('java').
-                public Random()
-                    // 의사난수 생성기. 스레드-안전하지만 성능 저하 가능성이 있으므로 ThreadLocalRandom을 고려할 것
-
                 void nextBytes(byte[] bytes)
                 double nextGaussian()
                     // 평균 0, 표준분산 1인 정규분포 난수 반환
@@ -2547,10 +2535,8 @@ include ../../source/skeleton.pug
                 IntStream ints(long streamSize, int randomNumberOrigin, int randomNumberBound) // [origin, bound)
 
             h3 SplittableRandom
+            p 분열하는 의사난수 생성기. 스레드-안전하지 않으며, 분열하여 스레드들이 각자 하나씩 갖도록 설계되었다
             +asCode('java').
-                public SplittableRandom()
-                    // 분열하는 의사난수 생성기. 스레드-안전하지 않으며, 분열하여 스레드들이 각자 하나씩 갖도록 설계되었다
-
                 SplittableRandom split()
                     // 분열. 상태를 공유하진 않지만, 생성한 난수는 통계적으로 유사한 속성을 갖는다
 
@@ -2562,26 +2548,13 @@ include ../../source/skeleton.pug
                 static Base64.Encoder getEncoder()
                 static Base64.Encoder getUrlEncoder()
                 static Base64.Encoder getMimeEncoder()
-                static Base64.Encoder getMimeEncoder(int lineLength, byte[] lineSeparator)
-                static Base64.Decoder getDecoder()
-                static Base64.Decoder getUrlDecoder()
-                static Base64.Decoder getMimeDecoder()
-            div
-                h4 Base64.Encoder
-                +asCode('java').
-                    byte[] encode(byte[] src)
-                    String encodeToString(byte[] src)
-                        // new String(encode(src), StandardCharsets.ISO_8859_1)
-                    OutputStream wrap(OutputStream os)
-                    Base64.Encoder withoutPadding()
-
-                h4 Base64.Decoder
-                +asCode('java').
-                    byte[] decode(byte[] src)
-                    InputStream wrap(InputStream is)
 
             h3 Locale
-            p public static final Locale US, ENGLISH, KOREA, KOREAN, ...
+            +asCode('java').
+                public static final Locale US, ENGLISH, KOREA, KOREAN, ...
+
+                static Locale getDefault()
+                static Locale[] getAvailableLocales()
 
             h3 Scanner
             ol
@@ -2716,9 +2689,6 @@ include ../../source/skeleton.pug
         h2 Callable&lt;V>
         +asCode('java') V call() // 매개변수 없는, 결과를 반환하는 작업을 정의. Runnable과 달리 checked 예외를 던져도 된다
 
-        h2 ThreadFactory
-        +asCode('java') Thread newThread(Runnable r)
-
         h2 비동기 자료형 관련
         div
             h3 Future&lt;V>
@@ -2728,7 +2698,6 @@ include ../../source/skeleton.pug
                     // 작업을 취소한다. 결과를 기다리고 있던 스레드들은 CancellationException 발생
                     // 작업이 완료됐거나 이미 취소된 경우 false 반환
                     // 이 메서드가 종료된 후의 isDone()은 항상 true
-                boolean isDone()
                 V get()
                     // 결과가 준비될 때까지 대기
                 V get(long timeout, TimeUnit unit)
@@ -2759,7 +2728,7 @@ include ../../source/skeleton.pug
             h3 CompletionStage&lt;T>
             ol
                 li 비동기적일 수 있는 계산 단계. 다른 CompletionStage가 완료된 뒤 어떠한 동작을 수행하거나 값을 계산한다
-                p Stage에서 수행되는 연산은 Function, Consumer, Runnable로 표현되어야 한다. 각각은 apply, accept, run 메서드로 stage에 제공된다
+                p 
                     br
                     | 연산에 넘겨지는 인자는 트리거 stage의 결과이며, 이를 통해 연산의 pipeline을 만들 수 있다
                     +codeBtn('/Repositories/Eclipse/JavaSE/src/concurrent/CompletionStageTest.java', 'java')
@@ -2800,6 +2769,21 @@ include ../../source/skeleton.pug
             h3 CompletableFuture&lt;T>
             ol
                 li CompletionStage로 이용될 수 있는, 명시적으로 종료(값과 상태를 설정)되는 Future
+                +asCode('java').
+                    CompletableFuture.supplyAsync(() -> 123).thenApplyAsync((n) -> {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        System.out.println(n);
+                        return n * 2;
+                    }).thenApplyAsync((n) -> {
+                        System.out.println(n);
+                        return n * 2;
+                    }).get();
+                li Stage에서 수행되는 연산은 Function, Consumer, Runnable로 표현되어야 한다
+                p 각각 apply, accept, run 메서드로 stage에 제공된다
                 li 둘 이상의 스레드가 complete, completeExceptionally, cancel을 호출할 경우, 하나만 성공한다
                 li non-async 메서드로 등록된 작업은 현재 CompletableFuture가 완료된 스레드 또는 호출자에서 실행된다
                 li 명시적인 Executor 없이 async 메서드로 등록된 작업은 ForkJoinPool::commonPool에서 수행
@@ -2808,12 +2792,25 @@ include ../../source/skeleton.pug
                 li 전반적인 계산에 대한 직접적인 제어를 할 수 없어서 cancel()의 호출은 completeExceptionally(new CancellationException()) 호출과 동일하다
                 li 서브클래스들은 각자의 클래스 인스턴스를 반환하도록 newIncompletableFuture 메서드를 재정의해야 한다
             +asCode('java').
+                static Executor delayedExecutor(long delay, TimeUnit unit)
+                    // 주어진 딜레이 이후에 executor로 작업을 제출하는 새로운 Executor 반환
+
                 static &lt;U> CompletableFuture&lt;U> supplyAsync(Supplier&lt;U> supplier)
                     // supplier의 결과를 가지고 비동기 종료되는 CompletableFuture 반환
                 static CompletableFuture&lt;Void> runAsync(Runnable runnable)
                     // runnable을 실행하고 비동기 종료되는 CompletableFuture 반환
                 static &lt;U> CompletableFuture&lt;U> completedFuture(U value)
                     // 이미 특정 값으로 종료된 CompletableFuture 반환
+
+                static &lt;U> CompletionStage&lt;U> completedStage(U value)
+                    // 주어진 value로 이미 종료된 새로운 CompletionStage 반환
+                static &lt;U> CompletableFuture&lt;U> failedFuture(Throwable ex)
+                    // 주어진 예외로 이미 종료된 새로운 CompletableFuture 객체 반환
+                static &lt;U> CompletionStage&lt;U> failedStage(Throwable ex)
+                    // 주어진 예외로 이미 종료된 새로운 CompletionStage 반환
+                &lt;U> CompletableFuture&lt;U> newIncompletableFuture()
+                    // 완료되지 않은 새로운 CompletableFuture 객체를 반환한다. 서브클래스들은 각자의 클래스 인스턴스를 반환하도록 newIncompletableFuture 메서드를 재정의해야 한다
+
                 static CompletableFuture&lt;Void> allOf(CompletableFuture&lt;?>... cfs)
                     // 모든 cfs가 종료되면 완료되는 새로운 CompletableFuture 객체 반환. 하나라도 예외 종료되면 반환된 CompletableFuture도 그러하다. cfs가 빈 경우, null로 종료된다
                 static CompletableFuture&lt;Object> anyOf(CompletableFuture&lt;?>... cfs)
@@ -2825,6 +2822,12 @@ include ../../source/skeleton.pug
                     // 종료되었다면 결과 값 반환, 또는 발생한 예외 던지기. 아니면 valueIfAbsent 반환
                 boolean complete(T value)
                     // 종료되지 않았다면 get()과 연관 메서드들의 반환값을 value로 설정. 이 호출로 CompletableFuture가 완료 상태로 천이되었다면 true 반환
+                CompletableFuture&lt;T> completeAsync(Supplier&lt;? extends T> supplier)
+                    // 이 CompletableFuture를 supplier의 결과값으로 종료한다
+                CompletableFuture&lt;T> orTimeout(long timeout, TimeUnit unit)
+                    // 이 CompletableFuture가 주어진 시간 내에 종료되지 않은 경우, TimeoutException으로 예외 종료한다
+                CompletableFuture&lt;T> completeOnTimeout(T value, long timeout, TimeUnit unit)
+                    // 이 CompletableFuture가 주어진 시간 내에 종료되지 않은 경우, value로 종료한다
                 boolean completeExceptionally(Throwable ex)
                     // 종료되지 않았다면 get()과 연관 메서드들이 주어진 예외를 던지도록 한다. 이 호출로 CompletableFuture가 완료 상태로 천이되었다면 true 반환
 
@@ -2835,33 +2838,11 @@ include ../../source/skeleton.pug
                 int getNumberOfDependents()
                     // 종료 대기중인 CompletableFuture의 개수 추정. 동기화가 아닌 시스템 모니터링을 위해 설계됨
 
-                static Executor delayedExecutor(long delay, TimeUnit unit)
-                    // 주어진 딜레이 이후에 executor로 작업을 제출하는 새로운 Executor 반환
-                static &lt;U> CompletionStage&lt;U> completedStage(U value)
-                    // 주어진 value로 이미 종료된 새로운 CompletionStage 반환
-                static &lt;U> CompletableFuture&lt;U> failedFuture(Throwable ex)
-                    // 주어진 예외로 이미 종료된 새로운 CompletableFuture 객체 반환
-                static &lt;U> CompletionStage&lt;U> failedStage(Throwable ex)
-                    // 주어진 예외로 이미 종료된 새로운 CompletionStage 반환
-                &lt;U> CompletableFuture&lt;U> newIncompletableFuture()
-                    // 완료되지 않은 새로운 CompletableFuture 객체를 반환한다. 서브클래스들은 각자의 클래스 인스턴스를 반환하도록 newIncompletableFuture 메서드를 재정의해야 한다
-                Executor defaultExecutor()
-
                 CompletableFuture&lt;T> copy()
                     // 정상적으로 종료되었다면, 같은 값을 갖는 종료된 CompletableFuture 반환
                     // 예외 종료되었다면, 해당 예외를 원인으로 한 CompletionException으로 예외 종료된 CompletableFuture 반환. 동작은 thenApply(x -> x)와 같다
                 CompletionStage&lt;T> minimalCompletionStage()
                     // CompletionStage에 정의된 메서드만 이용 가능. 재정의되지 않았다면 toCompletableFuture() 메서드를 통해 그 외의 메서드에 접근 가능하다
-
-                CompletableFuture&lt;T> completeAsync(Supplier&lt;? extends T> supplier)
-                    // 이 CompletableFuture를 supplier의 결과값으로 종료한다
-                CompletableFuture&lt;T> orTimeout(long timeout, TimeUnit unit)
-                    // 이 CompletableFuture가 주어진 시간 내에 종료되지 않은 경우, TimeoutException으로 예외 종료한다
-                CompletableFuture&lt;T> completeOnTimeout(T value, long timeout, TimeUnit unit)
-                    // 이 CompletableFuture가 주어진 시간 내에 종료되지 않은 경우, value로 종료한다
-            div
-                h4 CompletableFuture.AsynchronousCompletionTask
-                p 비동기 메서드에서 생성된 비동기 작업을 나타내는 마커 인터페이스
 
             h3 ForkJoinTask&lt;V>
             ol
@@ -3552,10 +3533,6 @@ include ../../source/skeleton.pug
                     // 계층 구조에 속해있다면, 모든 phaser가 종료된다
                 final int getPhase()
                     // 현재 phase 번호를 반환한다. Phaser가 종료됐다면 음수(마지막 phase 번호 + Integer.MAX_VALUE)를 반환한다
-
-        h2 ThreadLocalRandom
-        p 현재 스레드에 격리된 난수 생성기
-        +asCode('java') static ThreadLocalRandom current()
 
         h2 TimeUnit
         +asCode('java').
