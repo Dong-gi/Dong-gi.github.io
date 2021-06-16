@@ -3587,6 +3587,7 @@ include ../../source/skeleton.pug
         ol
             li 초깃값 0으로 시작하는 스레드-안전한 합계
             p 합의 순서는 정의되지 않으므로 순서에 상관 없는 경우에 이용해야 한다
+            li + DoubleAdder
         +asCode('java').
             void add(long x)
             void increment()
@@ -3599,6 +3600,7 @@ include ../../source/skeleton.pug
         ol
             li 특정 값과 특정 함수로 갱신되는 long 값 유지
             p 주어진 accumulatorFunction은 부작용이 없어야 한다
+            li + DoubleAccumulator
         +asCode('java').
             void accumulate(long x)
             long get()
@@ -3606,114 +3608,39 @@ include ../../source/skeleton.pug
             long getThenReset()
 
     h1 java.util.function
-    div
-        h2 Consumer
-        div
-            h3 Consumer&lt;T>
-            p 인자를 하나 먹고 아무것도 반환하지 않는 소비자
-            +asCode('java').
-                void accept(T t)
-                default Consumer&lt;T> andThen(Consumer&lt;? super T> after)
-                    // 이 소비자 다음에 after가 소비하는 병합된 소비자 반환
+    ul
+        li Consumer : void accept(T)
+        li IntConsumer : void accept(int)
+        li BiConsumer : void accept(T, U)
+        li ObjIntConsumer : void accept​(T, int)
 
-            h3 DoubleConsumer + int, long
+        li Supplier : T get()
+        li IntSupplier : int getAsInt()
 
-            h3 BiConsumer&lt;T, U>
-            p 인자 두개를 먹고 아무것도 뱉지 않는 소비자
-            +asCode('java').
-                void accept(T t, U u)
-                default BiConsumer&lt;T, U> andThen(BiConsumer&lt;? super T, ? super U> after)
-                    // 현재 소비자가 작업을 마치면 after가 실행되는 새로운 소비자 반환
+        li Function : R apply(T)
+        li IntFunction : R apply(int)
+        li DoubleToIntFunction : int applyAsInt(double)
+        p + double, int, long 간의 모든 상호 변환
 
-            h3 ObjDoubleConsumer&lt;T> + int, long
+        li UnaryOperator : T apply(T)
+        li IntUnaryOperator : int applyAsInt​(int)
+        li ToIntFunction : int applyAsInt​(T)
 
-        h2 Supplier
-        div
-            h3 Supplier&lt;T>
-            +asCode('java') T get()
+        li BiFunction : R apply​(T, U)
+        li ToIntBiFunction : int applyAsInt​(T, U)
 
-            h3 BooleanSupplier + int, double, long
-            +asCode('java') boolean getAsBoolean()
+        li BinaryOperator : T apply​(T, T)
+        li IntBinaryOperator : int applyAsInt​(int, int)
 
-        h2 Function, Operator
-        div
-            h3 Function&lt;T, R>
-            p 인자 하나를 먹고 결과 하나를 뱉는 함수
-            +asCode('java').
-                R apply(T t)
-                default &lt;V> Function&V, R> compose(Function&lt;? super V, ? extends T> before)
-                default &lt;V> Function&lt;T, V> andThen(Function&lt;? super R, ? extends V> after)
-                static &lt;T> Function&lt;T, T> identity()
-                    // 입력 인자 그대로 반환하는 함수
+        li Predicate : boolean test(T)
+        li IntPredicate : boolean test​(int)
 
-            h3 IntFunction&lt;R> + double, long
-            +asCode('java') R apply(int value)
-
-            h3 DoubleToIntFunction + double, int, long 간의 모든 상호 변환
-            +asCode('java') int applyAsInt(double value)
-
-            h3 UnaryOperator&lt;T>
-            +asCode('java') static &lt;T> UnaryOperator&lt;T> identity()
-
-            h3 DoubleUnaryOperator + int, long
-            +asCode('java').
-                double applyAsDouble(double operand)
-                default DoubleUnaryOperator compose(DoubleUnaryOperator before)
-                default DoubleUnaryOperator andThen(DoubleUnaryOperator after)
-                static DoubleUnaryOperator identity()
-                    // 항상 입력값 그대로 반환하는 단항 연산자 반환
-
-            h3 ToDoubleFunction&lt;T>
-            +asCode('java') double applyAsDouble(T value) // + int, long
-
-            h3 BiFunction&lt;T, U, R>
-            p 인자 두개를 먹고 값을 반환하는 함수
-            +asCode('java').
-                default &lt;V> BiFunction&lt;T, U, V> andThen(Function&lt;? super R, ?
-                    // 함수가 실행되고 난 결과를 after가 처리하는 새로운 함수 반환
-
-            h3 ToDoubleBiFunction&lt;T, U>
-            details double applyAsDouble(T t, U u) // + int, long
-
-            h3 BinaryOperator
-            p 같은 타입의 인자 두개를 먹고 같은 타입의 값을 반환하는 함수
-            +asCode('java').
-                static &lt;T> BinaryOperator&lt;T> minBy(Comparator&lt;? super T> comparator)
-                    // 주어진 comparator에 따라 둘 중 작은 것을 반환하는 함수를 생성
-                    // + maxBy
-
-            h3 DoubleBinaryOperator
-            +asCode('java').
-                double applyAsDouble(double left, double right)
-                    // double 두개를 먹고 double 하나를 반환하는 함수. + int, long
-
-        h2 Predicate
-        div
-            h3 Predicate&lt;T>
-            +asCode('java').
-                boolean test(T t)
-                default Predicate&lt;T> and(Predicate&lt;? super T> other)
-                default Predicate&lt;T> or(Predicate&lt;? super T> other)
-
-                static &lt;T> Predicate&lt;T> isEqual(Object targetRef)
-                    // Object.equals(Object, Object)를 이용해 비교하는 Predicate 반환
-
-            h3 DoublePredicate + int, long
-            +asCode('java').
-                default DoublePredicate negate()
-
-            h3 BiPredicate&lt;T, U>
-            p 인자 두개를 먹고 가부를 판단하는 함수
-            +asCode('java').
-                default BiPredicate&lt;T, U> and(BiPredicate&lt;? super T, ? super U> other)
-                    // A short-circuiting logical AND of this predicate and other
-                    // + or
-                default BiPredicate&lt;T, U> negate()
+        li BiPredicate : boolean test​(T, U)
 
     h1 java.util.regex
     div
         h2 MatchResult
-        p 정규표현식 매칭 결과. group의 의미에 대해선 Pattern 참고
+        p 정규표현식 매칭 결과. group의 의미에 대해선 Pattern 참고 
             +codeBtn('/Repositories/Eclipse/JavaSE/src/regex/MatchResultExample.java', 'java')
         +asCode('java').
             int start()             // 매치된 결과의 시작 인덱스 반환
@@ -3734,10 +3661,10 @@ include ../../source/skeleton.pug
             public static final int DOTALL           // .이 줄 끝도 포함하여 매치; 기본 동작은 줄 끝 문자는 미포함. (?s) 플래그도 같은 의미
             public static final int UNICODE_CASE     // CASE_INSENSITIVE 플래그가 유니코드 표준 상에서 동작한다; 기본은 US-ASCII에서만 동작. (?u) 플래그도 같은 의미
 
-
             static Pattern compile(String regex)
             static boolean matches(String regex, CharSequence input) // 1회용
             static String quote(String s) // s를 매칭할 수 있는 정규표현식 리터럴 문자열 표현을 반환
+
             Predicate&lt;String> asPredicate()
             Stream&lt;String> splitAsStream(CharSequence input)
         div
@@ -3797,7 +3724,7 @@ include ../../source/skeleton.pug
                     +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[48,48]')
                 li [a-z&&[^bc]] : 차집합(A and not(B) == A - B)
                     +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[49,49]')
-            h3 Predefined character classe
+            h3 Predefined character class
             ul
                 li . : 임의 문자. DOTALL 플래그가 있으면 line terminator도 매칭
                 li \d : [0-9], \D : [^\d]
@@ -3805,7 +3732,7 @@ include ../../source/skeleton.pug
                 li \h : 수평 공백 [ \t\xA0\u1680\u180e\u2000-\u200a\u202f\u205f\u3000], \H : [^\h]
                 li \v : 수직 공백 [\n\x0B\f\r\x85\u2028\u2029], \V : [^\v]
                 li \w : Word character, \W : [^w]
-            h3 java.lang.Character class
+            h3 Character class
             ul
                 li \p{javaLowerCase} : Character.isLowerCase()
                 li \p{javaUpperCase} : Character.isUpperCase()
@@ -3814,29 +3741,23 @@ include ../../source/skeleton.pug
             h3 Unicode class
             ul
                 li \R : 임의 줄바꿈 문자열 \u000D\u000A|[\u000A\u000B\u000C\u000D\u0085\u2028\u2029]
-                li \X : Any Unicode extended grapheme cluster
-                li \b{g} : A Unicode extended grapheme cluster boundary
+                li \p{IsLatin} : script
+                li \p{InGreek} : block
+                li \p{Lu} : category
+                li \p{IsAlphabetic} : binary property
+                li \p{Sc} : 통화 단위
                 li \P{expr} == [^\p{expr}]
-                | \p{IsLatin} : Latin
-                strong script
-                | , \p{InGreek} : Greek
-                strong block
-                | , \p{Lu} : Uppercase letter(
-                strong category
-                | ), \p{IsAlphabetic} :
-                strong binary property
-                | , \p{Sc} : Currency symbol
             h3 Boundary matcher
             ul
                 li ^ : 줄 시작, $ : 줄 끝
                 li \b : 단어 경계, \B : 비단어 경계
                 li \A : The beginning of the input
                 li \G : The end of the previous match
-                li \z » The end of the input
+                li \z : The end of the input
             h3 Greedy quantifier
             ul
-                p 처음에 매치할 수 있는 만큼 최대한 매치. 그 다음 요소의 매칭이 없으면 백트래킹
-                    +asA('https://stackoverflow.com/questions/5319840/greedy-vs-reluctant-vs-possessive-quantifiers', '참고자료')
+                p 처음에 매치할 수 있는 만큼 최대한 매치. 그 다음 요소의 매칭이 없으면 백트래킹 
+                    +asA('https://stackoverflow.com/questions/5319840/greedy-vs-reluctant-vs-possessive-quantifiers')
                 li X? : X, once or not at all
                 li X* : X, zero or more times
                 li X+ : X, one or more times
@@ -3844,11 +3765,9 @@ include ../../source/skeleton.pug
                 li X{n,} : X, at least n times
                 li X{n,m} : X, at least n but not more than m times
             h3 Reluctant quantifier
-            p 처음에 최소한만 매치. 그 다음 요소의 매칭이 없으면 백트래킹
-                | X??, X*?, X+?, X{n}?, X{n,}?, X{n,m}?
+            p 처음에 최소한만 매치. 그 다음 요소의 매칭이 없으면 백트래킹; X??, X*?, X+?, X{n}?, X{n,}?, X{n,m}?
             h3 Possessive quantifier
-            p Greedy quantifier와 같지만, 백트래킹은 없다
-                | X?+, X*+, X++, X{n}+, X{n,}+, X{n,m}+
+            p Greedy quantifier와 같지만, 백트래킹은 없다; X?+, X*+, X++, X{n}+, X{n,}+, X{n,m}+
             h3 Logical operation
             ul
                 li XY : X followed by Y
@@ -3867,19 +3786,19 @@ include ../../source/skeleton.pug
                 li \E : Nothing, but ends quoting started by \Q
             h3 Special construct
             ul
-                li (?&lt;name>X) : X, as a named-capturing group
+                li (?&lt;name>X) : X, as a named-capturing group 
                     +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[59,71]')
                 li (?:X) : X, as a non-capturing group
                 li (?idmsuxU-idmsuxU) : 각 플래그를 켜거나 끈다
                 li (?idmsux-idmsux:X) : 주어진 플래그로 non-capturing group X를 매칭한다
-                li (?=X) : Positive lookahead, (?!X) : Negative lookahead
-                +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[51,57]')
-                +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[87,102]') 금칙어 판별
+                li (?=X) : Positive lookahead, (?!X) : Negative lookahead 
+                    +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[51,57]')
+                    +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[87,102]') 금칙어 판별
                 li (?&lt;=X) : Positive lookbehind, (?&lt;!X) : Negative lookbehind
                 li (?>X) : Non-capturing group + Possessive
 
         h2 Matcher
-        p Pattern으로부터 만들어지는 매칭 엔진으로, 아래 세 가지 작업을 수행한다
+        p Pattern.matcher(CharSequence)로부터 만들어지는 매칭 엔진으로, 아래 세 가지 작업을 수행한다
         ol
             li matches() : 전체 입력에 대해 패턴 매칭
             li lookingAt() : 입력 시작부분 패턴 매칭
@@ -3903,7 +3822,7 @@ include ../../source/skeleton.pug
                 // 3. 현재 matcher의 append position을 end()로 설정
             StringBuffer appendTail(StringBuffer sb)
                 // 입력 소스의 append position부터를 sb에 추가
-                // appendReplacement 메서드를 호출한 뒤에 이를 호출하여 남머지 부분을 복사할 목적으로 만들어짐
+                // appendReplacement 메서드를 호출한 뒤에 이를 호출하여 나머지 부분을 복사할 목적으로 만들어짐
 
             String replaceAll(String replacement)
                 // 입력 소스의 모든 매칭되는 부분을 replacement로 변경
@@ -3920,7 +3839,7 @@ include ../../source/skeleton.pug
 
     h1 java.util.stream
     div
-        h2 BaseStream&lt;T, S
+        h2 BaseStream&lt;T, S extends BaseStream&lt;T,​S>>
         +asCode('java').
             Iterator&lt;T> iterator()
             Spliterator&lt;T> spliterator()
@@ -3958,16 +3877,13 @@ include ../../source/skeleton.pug
                 p 요소의 연산 과정에 상태의 보존이 필요한 경우. sorted, distinct 등
                     br
                     | 이러한 연산을 사용하기 위해선 스트림 전체 인풋이 필요할 수 있으며, 병렬 스트림에서는 요구되는 버퍼의 크기가 늘어나게 된다
-            +codeBtn('/Repositories/Eclipse/JavaSE/src/util/FlatMapExample.java', 'java')
         +asCode('java').
-            // 팩터리 메서드
-            static &lt;T> Stream.Builder&lt;T> builder()
             static &lt;T> Stream&lt;T> empty()
             static &lt;T> Stream&lt;T> of(T t)
             static &lt;T> Stream&lt;T> ofNullable(T t)
-            @SafeVarargs static &lt;T> Stream&lt;T> of(T... values)
+            static &lt;T> Stream&lt;T> of(T... values)
             static &lt;T> Stream&lt;T> iterate(T seed, UnaryOperator&lt;T> f)
-            static &lt;T> Stream&lt;T> iterate(T seed, Predicate&lt;? super T> hasNext, UnaryOperator&lt;T> next) // Since 9
+            static &lt;T> Stream&lt;T> iterate(T seed, Predicate&lt;? super T> hasNext, UnaryOperator&lt;T> next)
             static &lt;T> Stream&lt;T> generate(Supplier&lt;? extends T> s)
             static &lt;T> Stream&lt;T> concat(Stream&lt;? extends T> a, Stream&lt;? extends T> b)
 
@@ -3975,14 +3891,13 @@ include ../../source/skeleton.pug
             // 중간 연산
             Stream&lt;T> filter(Predicate&lt;? super T> predicate)
                 // predicate이 true인 요소만 남긴다
-
             &lt;R> Stream&lt;R> map(Function&lt;? super T, ? extends R> mapper)
                 // mapper : 하나의 T 변수에서 하나의 R 변수로 대응하는 변환
             IntStream mapToInt(ToIntFunction&lt;? super T> mapper)
                 // + long, double
             &lt;R> Stream&lt;R> flatMap(Function&lt;? super T, ? extends Stream&lt;? extends R>> mapper)
                 // mapper : 하나의 T 변수에서 여러 R 변수(R 스트림)로 대응하는 변환
-                // mapper를 이용해 만들어진 여러 R 스트림을 일렬로 펴서(flattening) 하나의 R 스트림으로 변환. mapper가 null을 반환하면 빈 스트림을 대신 이용된다
+                // mapper를 이용해 만들어진 여러 R 스트림을 일렬로 펴서(flattening) 하나의 R 스트림으로 변환. mapper가 null을 반환하면 빈 스트림을 대신 이용
                 // 최종적으로 반환되는 스트림 외의 모든 중간 스트림은 닫힌다
             IntStream flatMapToInt(Function&lt;? super T, ? extends IntStream> mapper )
                 // + long, double
@@ -4011,7 +3926,7 @@ include ../../source/skeleton.pug
 
             // 종결 연산
             void forEach(Consumer&lt;? super T> action)
-            void forEachOrdered(Consumer&lt;? super T> action
+            void forEachOrdered(Consumer&lt;? super T> action)
                 // 순서 있는 스트림의 경우, 이를 이용하면 요소의 순서대로 소비자가 실행된다
 
             Object[] toArray()
@@ -4026,13 +3941,13 @@ include ../../source/skeleton.pug
                     result = accumulator.apply(result, element);
                 return result;
             }
-            Optional&lt;T> reduce(BinaryOperator&lt;T> accumulator
+            Optional&lt;T> reduce(BinaryOperator&lt;T> accumulator)
                 // 하나의 T로 축약하는 종결 연산. 처음 연산 결과는 null이며, 스트림 첫 번째 요소를 만나면 치환된다. 이후는 reduce(T, BinaryOperator)와 같다
             &lt;U> U reduce(U identity, BiFunction&lt;U, ? super T, U> accumulator, BinaryOperator&lt;U> combiner)
                 // 하나의 U 변수로 축약하는 종결 연산. 연산은 reduce(T, BinaryOperator)와 동일한데, identity 값은 combiner 연산에 대한 항등원이어야 한다
                 // 다시 말해, 임의의 U 타입 변수 u에 대하여 u == combiner(identity, u)를 만족해야 한다
                 // 이는 연산 과정에서 다음의 검사를 통해 검증된다. combiner.apply(u, accumulator.apply(identity, t)) == accumulator.apply(u, t)
-                // 이렇게 복잡하게 하는 것보다는 map과 reduce를 쪼개 이용하는 것이 훨씬 간결하므로 유념
+                // 이것보다는 map과 reduce를 쪼개 이용하는 것이 훨씬 간결
 
             &lt;R> R collect(Supplier&lt;R> supplier, BiConsumer&lt;R, ? super T> accumulator, BiConsumer&lt;R, R> combiner)
                 // 하나의 R 변수로 축약하는 종결 연산. reduce와 다르게 R 자체가 결과값에 대한 가변적인 컨테이너(ArrayList, String 등)가 되어야 한다. 아래와 동치다
@@ -4043,7 +3958,7 @@ include ../../source/skeleton.pug
                     accumulator.accept(result, element);
                 return result;
             }
-                // 메서드 참조 예
+                // 용례
             {
                 collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
                 collect(StringBuilder::new, StringBuilder::append, StringBuilder::append);
@@ -4052,7 +3967,7 @@ include ../../source/skeleton.pug
                 // collect(Supplier, BiConsumer, BiConsumer)의 매개변수를 캡슐화한 Collector를 이용
                 // Collectors 유틸리티 클래스에 이미 정의된 Collector들이 있으니 편하게 이용 가능
 
-            Optional&lt;T> min(Comparator&lt;? super T> comparator) // + max
+            Optional&lt;T> min(Comparator&lt;? super T> comparator)
             long count()
                 // 개수를 반환하는 종결 연산
             boolean anyMatch(Predicate&lt;? super T> predicate)
@@ -4061,12 +3976,6 @@ include ../../source/skeleton.pug
             Optional&lt;T> findFirst()
                 // short-circuiting 종결 연산
                 // + findAny
-        div
-            h3 Stream.Builder&lt;T>
-            +asCode('java').
-                void accept(T t)
-                default Stream.Builder&lt;T> add(T t)
-                Stream&lt;T> build()
 
         h2 StreamSupport
         +asCode('java').
@@ -4076,7 +3985,6 @@ include ../../source/skeleton.pug
             static IntStream intStream(Spliterator.OfInt spliterator, boolean parallel)
                 // + long, double
             static IntStream intStream(Supplier&lt;? extends Spliterator.OfInt> supplier, int characteristics, boolean parallel)
-                // characteristics = supplier.get().characteristics()
 
         h2 Collector&lt;T, A, R>
         +asCode('java').
@@ -4091,7 +3999,7 @@ include ../../source/skeleton.pug
             BinaryOperator&lt;A> combiner()
                 // 두 결과 컨테이너를 받아 하나로 반환하는 함수
             Function&lt;A, R> finisher()
-                // 결과 컨테이너로부터 최종 결과 R으로 변환하는 함수 반환
+                // 결과 컨테이너로부터 최종 결과 R로 변환하는 함수 반환
             Set&lt;Collector.Characteristics> characteristics()
 
             static &lt;T, A, R> Collector&lt;T, A, R> of(Supplier&lt;A> supplier, BiConsumer&lt;A, T> accumulator, BinaryOperator&lt;A> combiner, Function&lt;A, R> finisher, Collector.Characteristics... characteristics)
@@ -4099,59 +4007,30 @@ include ../../source/skeleton.pug
         h2 Collectors
         +asCode('java').
             static &lt;T, C extends Collection&lt;T>> Collector&lt;T, ?, C> toCollection(Supplier&lt;C> collectionFactory)
-                // collectionFactory로 생성한 Collection 객체에 원소들을 만나는 순서대로 집어넣는 Collector 반환
             static &lt;T> Collector&lt;T, ?, List&lt;T>> toList()
-                // 새로운 List 객체에 입력 원소들을 모두 담아 반환하는 Collector. 반환된 List의 타입, 변경 가능 여부, 직렬화, 스레드-안전 그 무엇도 보장하지 않음
-            static &lt;T> Collector&lt;T, ?, List&lt;T>> toUnmodifiableList() // Since 10
+                // 반환된 List의 타입, 변경 가능 여부, 직렬화, 스레드-안전 그 무엇도 보장하지 않음
+            static &lt;T> Collector&lt;T, ?, List&lt;T>> toUnmodifiableList()
             static &lt;T> Collector&lt;T, ? Set&lt;T>> toSet()
-                // 새로운 Set 객체에 입력 원소들을 모두 담아 반환하는 Collector. 반환된 Set의 타입, 변경 가능 여부, 직렬화, 스레드-안전 그 무엇도 보장하지 않음
-            static &lt;T> Collector&lt;T, ?, Set&lt;T>> toUnmodifiableSet() // Since 10
+                // 반환된 Set의 타입, 변경 가능 여부, 직렬화, 스레드-안전 그 무엇도 보장하지 않음
+            static &lt;T> Collector&lt;T, ?, Set&lt;T>> toUnmodifiableSet()
+            static &lt;T, K, U> Collector&lt;T, ?, Map&lt;K, U>> toMap(Function&lt;? super T, ? extends K> keyMapper, Function&lt;? super T, ? extends U> valueMapper)
+            static &lt;T, K, U> Collector&lt;T, ?, Map&lt;K, U>> toUnmodifiableMap(Function&lt;? super T, ? extends K> keyMapper, Function&lt;? super T, ? extends U> valueMapper) // Since 10
+            static &lt;T, K, U> Collector&lt;T, ?, ConcurrentMap&lt;K, U>> toConcurrentMap(Function&lt;? super T, ? extends K> keyMapper, Function&lt;? super T, ? extends U> valueMapper)
 
             static Collector&lt;CharSequence, ?, String> joining()
-                // String에 만나는 순서대로 덧붙이는 Collector
-
-            static &lt;T, U, A, R> Collector&lt;T, ?, R> mapping(Function&lt;? super T, ? extends U> mapper, Collector&lt;? super U, A, R> downstream)
-                // U 타입 원소에 대한 Collector에 T 타입 원소를 mapper를 통해 U 타입으로 변환하여 받아들이는 Collector
-            static &lt;T, U, A, R> Collector&lt;T, ?, R> flatMapping(Function&lt;? super T, ? extends Stream&lt;? extends U>> mapper, Collector&lt;? super U, A, R> downstream) // Since 9
-                // Flat mapper는 입력 요소를 0개 이상의 요소를 담은 stream으로 만들어내며, downstream에 투입되면 해당 stream은 닫힌다.(null인 경우 빈 스트림을 대신 이용한다)
-
-            static &lt;T, A, R> Collector&lt;T, ?, R> filtering(Predicate&lt;? super T> predicate, Collector&lt;? super T, A, R> downstream) Since 9
-                // 동일한 입력 타입 T 원소를 받아 predicate을 만족하면 downstream에 투입하는 Collector
-
-            static &lt;T, A, R, RR> Collector&lt;T, A, RR> collectingAndThen(Collector&lt;T, A, R> downstream, Function&lt;R, RR> finisher)
-
-            static &lt;T> Collector&lt;T, ?, Long> counting()
-            static &lt;T> Collector&lt;T, ?, Optional&lt;T>> minBy(Comparator&lt;? super T> comparator)
-            static &lt;T> Collector&lt;T, ?, Optional&lt;T>> maxBy(Comparator&lt;? super T> comparator)
-            static &lt;T> Collector&lt;T, ?, Integer> summingInt(ToIntFunction&lt;? super T> mapper) // + Long, Double
-            static &lt;T> Collector&lt;T, ?, Double> averagingInt(ToIntFunction&lt;? super T> mapper) // + Long, Double
-            static &lt;T> Collector&lt;T, ?, IntSummaryStatistics> summarizingInt(ToIntFunction&lt;? super T> mapper) // + Long, Double
-            static &lt;T> Collector&lt;T, ? T> reducing(T identity, BinaryOperator&lt;T> op)
-                // reducing 설명은 DoubleStream 참고
 
             static &lt;T, K> Collector&lt;T, ?, Map&lt;K, List&lt;T>>> groupingBy(Function&lt;? super T, ? extends K> classifier)
             static &lt;T, K> Collector&lt;T, ?, ConcurrentMap&lt;K, List&lt;T>>> groupingByConcurrent(Function&lt;? super T, ? extends K> classifier)
             static &lt;T> Collector&lt;T, ?, Map&lt;Boolean, List&lt;T>>> partitioningBy(Predicate&lt;? super T> predicate)
-            static &lt;T, K, U> Collector&lt;T, ?, Map&lt;K, U>> toMap(Function&lt;? super T, ? extends K> keyMapper, Function&lt;? super T, ? extends U> valueMapper)
-            static &lt;T, K, U> Collector&lt;T, ?, Map&lt;K, U>> toUnmodifiableMap(Function&lt;? super T, ? extends K> keyMapper, Function&lt;? super T, ? extends U> valueMapper) // Since 10
-            static &lt;T, K, U> Collector&lt;T, ?, ConcurrentMap&lt;K, U>> toConcurrentMap(Function&lt;? super T, ? extends K> keyMapper, Function&lt;? super T, ? extends U> valueMapper)
 
 
     h1 java.util.zip
     div
         h2 Checksum
+        p 구현 클래스 : Adler32, CRC32, CRC32C
         +asCode('java').
-            void update(int b)
             default void update(byte[] b)
-            void update(byte[] b, int off, int len)
-            default void update(ByteBuffer buffer)
             long getValue()
-            void reset()
-        ol
-            p 구현 클래스
-            li class Adler32
-            li class CRC32
-            li class CRC32C
 
         h2 ZipInputStream
         +asCode('java').
@@ -4187,7 +4066,8 @@ include ../../source/skeleton.pug
             ZipEntry setLastModifiedTime(FileTime time)
             ZipEntry setLastAccessTime(FileTime time)
             ZipEntry setCreationTime(FileTime time)
-            void setSize(long size) // 비압축 크기 설정
+            void setSize(long size)
+                // 비압축 크기 설정
             void setCompressedSize(long csize)
             void setCrc(long crc)
             void setMethod(int method)
@@ -4196,7 +4076,6 @@ include ../../source/skeleton.pug
             void setComment(String comment)
             boolean isDirectory()
                 // 이름이 "/"로 끝나면 디렉터리
-            Object clone()
 
         h2 ZipFile
         +asCode('java').
@@ -4210,12 +4089,20 @@ include ../../source/skeleton.pug
                 // ZipFile이 닫히면 이 메서드가 반환한 모든 스트림도 같이 닫힌다
             Enumeration&lt;? extends ZipEntry> entries()
             Stream&lt;? extends ZipEntry> stream()
-            int size() // entry 개수
+            int size()
+                // entry 개수
 
 
     h1 javax.crypto
-    | EMPTY
+    ul
+        li 비밀키 인스턴스 획득
+        +asCode('java') new SecretKeySpec("secret".getBytes(StandardCharsets.UTF_8), "HmacSHA256");
 
+        li 메시지 해시 검사
+        +asCode('java').
+            var mac = Mac.getInstance("HmacSHA256");
+            mac.init(key; e.g. new SecretKeySpec(...);
+            var hash = new String(mac.doFinal("message".getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
 
     h1 javax.net
     div
@@ -4231,4 +4118,4 @@ include ../../source/skeleton.pug
 
 
     h1 javax.net.ssl
-    | EMPTY
+    p HttpsURLConnection

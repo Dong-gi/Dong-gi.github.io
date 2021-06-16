@@ -2149,6 +2149,7 @@ posts.pug/java/gson.pug
 posts.pug/java/guava.pug
 posts.pug/java/jackson.pug
 posts.pug/java/java.base.pug
+posts.pug/java/java.net.http.pug
 posts.pug/java/java_ee.pug
 posts.pug/java/javafx.pug
 posts.pug/java/javax.annotation.processing.pug
@@ -2272,6 +2273,7 @@ posts/java/guava.html
 posts/java/index.html
 posts/java/jackson.html
 posts/java/java.base.html
+posts/java/java.net.http.html
 posts/java/java_ee.html
 posts/java/javafx.html
 posts/java/javax.annotation.processing.html

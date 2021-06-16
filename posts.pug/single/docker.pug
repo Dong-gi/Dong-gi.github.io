@@ -264,6 +264,18 @@ include ../../source/skeleton.pug
                 USER                  # -u="", --user=""
                 WORKDIR               # -w=""
 
+        h2 docker logs : 로그 출력
+        p 컨테이너 로그 : /var/lib/docker/containers/${containerId}/${containerId}-json.log
+        +asCode('shell').
+            $ docker logs [OPTIONS] CONTAINER
+
+            # OPTIONS
+            -n ${n}                 # 마지막 n개 줄만
+            --since ${timestamp}    # timestamp 이후 로그만; ISO 포맷(e.g. 2013-01-02T13:23:37Z) or 상대적 표현(e.g. 42m)
+            --until ${timestamp}    # timestamp 이전 로그만
+            -f                      # 실시간 확인
+            -t                      # 타임스탬프 출력
+
         h2 docker rm : 컨테이너 제거
         +asCode('shell').
             $ docker rm [OPTIONS] CONTAINER [CONTAINER...]
