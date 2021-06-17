@@ -2166,7 +2166,6 @@ posts.pug/java/spring_servlet.pug
 posts.pug/java/version.pug
 posts.pug/javascript/basic.pug
 posts.pug/javascript/basic2.pug
-posts.pug/javascript/index.pug
 posts.pug/javascript/jquery.pug
 posts.pug/javascript/node.pug
 posts.pug/project/error.pug
