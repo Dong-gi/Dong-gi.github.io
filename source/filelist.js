@@ -2192,17 +2192,14 @@ posts.pug/single/fp.pug
 posts.pug/single/git.pug
 posts.pug/single/gradle.pug
 posts.pug/single/groovy.pug
-posts.pug/single/infra.pug
 posts.pug/single/interview.pug
 posts.pug/single/nginx.pug
 posts.pug/single/quantum_computer.pug
 posts.pug/single/refactoring.pug
 posts.pug/single/rpi.pug
 posts.pug/single/sdkman.pug
-posts.pug/single/temp1.pug
 posts.pug/single/tomcat.pug
 posts.pug/single/unity.pug
-posts.pug/single/vi.pug
 posts/algorithm/ai.html
 posts/algorithm/algo.html
 posts/algorithm/book01.html

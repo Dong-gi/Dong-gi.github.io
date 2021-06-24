@@ -96,3 +96,10 @@ include ../../source/skeleton.pug
             li release() -> refCnt--
             li refCnt가 0이 된 객체는 해제된다
             li ReferenceCounted를 구현한 컨테이너는 ReferenceCounted 원소들에 대해 retain()을 하며, 컨테이너 소멸 시 각각에 대해 release() 호출한다
+
+    h1 WS; 웹 소켓
+    div
+        h2 Frame 크기 제한 변경(기본 64KB)
+        ul
+            li WebSocketClientHandshaker 생성자로 조정
+            li 연관 팩터리 : WebSocketClientHandshakerFactory, WebSocketServerHandshakerFactory
