@@ -230,6 +230,7 @@ include ../../source/skeleton.pug
             +asCode('shell').
                 # 성공 예시
                 docker run --name postgres1 -p 5452:5432 -d -it --privileged=true --network="my-net" --ip="172.18.0.2" -e "POSTGRES_PASSWORD=password" postgres:9.5
+                docker run --name idl -d -it -v C:\Users\supergene\Documents\super_pop\assets\idl:/root/idl node:latest
             li OPTIONS
             +asCode('shell').
                 --publish, -p # 포트 포워딩. -p 80:8080, -p 8888:8080/tcp
