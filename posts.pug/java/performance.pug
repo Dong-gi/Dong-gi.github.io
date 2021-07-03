@@ -36,7 +36,7 @@ include ../../source/skeleton.pug
                 li Java 8에서 Metaspace로 변경됐다
                 p 크기 한계(MaxMetaspaceSize)에 도달하면 dead class 정보는 삭제된다
 
-        h2 GC 선정 시 유의사항
+        h2 GC 알고리즘 선정 시 유의사항
         ul
             li 각 GC로 인한 중단 기간
             li 처리율 : 전체 런타임 대비 GC 시간
@@ -118,19 +118,19 @@ include ../../source/skeleton.pug
                 -XX:GCHeapFreeLimit=N           # 풀 GC로 힙의 N% 이상 해제되면 OK
                 -XX:MaxTenuringThreshold=N      # 테뉴어드 영역으로 승격되기 전까지 통과해야 하는 수집 횟수
 
-                # GC logging
+                # JDK 8 GC logging
                 -XX:+PrintGCDetails             # GC 이벤트 로깅 ON
                 -XX:+PrintTenuringDistribution  # 상세 정보 포함
                 -XX:+PrintGCTimeStamps          # VM 이후 경과한 시간
                 -XX:+PrintGCDateStamps          # 이벤트 시각(벽시계 기준)
-
-                -Xloggc:/var/log/app/gc.log         # ~ Java 8
-                -Xlog:gc*:file=/var/log/app/gc.log  # Java 9 ~
-
-                # 로그 파일 순환 관련
+                -XX:+PrintGCApplicationStoppedTime
+                -Xloggc:/var/log/app/gc.log
                 -XX:+UseGCLogFileRotation
                 -XX:+NumberOfGCLogFiles=10
                 -XX:+GCLogFileSize=10m
+                
+                # JDK 9+ GC logging
+                -Xlog:gc*,gc+age=trace,safepoint:file=/var/log/app/gc.log:utctime,pid,tags:filecount=10,filesize=10m
             p GC 로그는 
                 +asA('https://github.com/chewiebug/GCViewer')
                 |  등으로 시각화 가능

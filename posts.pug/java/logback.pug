@@ -15,3 +15,10 @@ include ../../source/skeleton.pug
     +codeBtn('/Repositories/STS/logback-gradle/src/main/resources/logback.xml', 'xml') logback.xml »
     +codeBtn('/Repositories/STS/logback-gradle/src/main/resources/logback-appenders.xml', 'xml') logback-appenders.xml »
     +codeBtn('/Repositories/STS/logback-gradle/src/main/java/io/github/donggi/LogbackGradleApplication.java', 'java')
+
+    h1 logback-spring.xml
+    ul
+        li 스프링 부트 프로젝트에서는 profile별로 따로 설정 파일을 작성하지 않아도 된다 
+            +codeBtn('/Repositories/Single/20210616/logback-spring.xml', 'xml')
+        li 기본 설정 파일명을 재정의하고 싶다면,
+        +asCode('properties', 'application.properties') logging.config=classpath:looooooooooog.xml

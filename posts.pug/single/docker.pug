@@ -231,6 +231,7 @@ include ../../source/skeleton.pug
             +asCode('shell').
                 # 성공 예시
                 docker run --name postgres1 -p 5452:5432 -d -it --privileged=true --network="my-net" --ip="172.18.0.2" -e "POSTGRES_PASSWORD=password" postgres:9.5
+                docker run --name idl -d -it -v C:\Users\supergene\Documents\super_pop\assets\idl:/root/idl node:latest
             li OPTIONS
             +asCode('shell').
                 --publish, -p # 포트 포워딩. -p 80:8080, -p 8888:8080/tcp
@@ -264,6 +265,18 @@ include ../../source/skeleton.pug
                 VOLUME                # -v, --volume=[host-src:]container-dest[:&lt;options>]
                 USER                  # -u="", --user=""
                 WORKDIR               # -w=""
+
+        h2 docker logs : 로그 출력
+        p 컨테이너 로그 : /var/lib/docker/containers/${containerId}/${containerId}-json.log
+        +asCode('shell').
+            $ docker logs [OPTIONS] CONTAINER
+
+            # OPTIONS
+            -n ${n}                 # 마지막 n개 줄만
+            --since ${timestamp}    # timestamp 이후 로그만; ISO 포맷(e.g. 2013-01-02T13:23:37Z) or 상대적 표현(e.g. 42m)
+            --until ${timestamp}    # timestamp 이전 로그만
+            -f                      # 실시간 확인
+            -t                      # 타임스탬프 출력
 
         h2 docker rm : 컨테이너 제거
         +asCode('shell').

@@ -1760,6 +1760,7 @@ Repositories/STS/webflux/src/main/java/tutorial/webflux/action/SimpleExceptionAc
 Repositories/STS/webflux/src/main/resources/application.properties
 Repositories/STS/webflux/src/main/resources/logback.xml
 Repositories/STS/webflux/src/test/java/tutorial/webflux/WebfluxApplicationTests.java
+Repositories/Single/20210616/logback-spring.xml
 Repositories/Single/Rename.java
 Repositories/Single/koreatech/Main1003.java
 Repositories/Single/koreatech/Main1008.java
@@ -2149,6 +2150,7 @@ posts.pug/java/gson.pug
 posts.pug/java/guava.pug
 posts.pug/java/jackson.pug
 posts.pug/java/java.base.pug
+posts.pug/java/java.net.http.pug
 posts.pug/java/java_ee.pug
 posts.pug/java/javafx.pug
 posts.pug/java/javax.annotation.processing.pug
@@ -2164,7 +2166,6 @@ posts.pug/java/spring_servlet.pug
 posts.pug/java/version.pug
 posts.pug/javascript/basic.pug
 posts.pug/javascript/basic2.pug
-posts.pug/javascript/index.pug
 posts.pug/javascript/jquery.pug
 posts.pug/javascript/node.pug
 posts.pug/project/error.pug
@@ -2191,17 +2192,14 @@ posts.pug/single/fp.pug
 posts.pug/single/git.pug
 posts.pug/single/gradle.pug
 posts.pug/single/groovy.pug
-posts.pug/single/infra.pug
 posts.pug/single/interview.pug
 posts.pug/single/nginx.pug
 posts.pug/single/quantum_computer.pug
 posts.pug/single/refactoring.pug
 posts.pug/single/rpi.pug
 posts.pug/single/sdkman.pug
-posts.pug/single/temp1.pug
 posts.pug/single/tomcat.pug
 posts.pug/single/unity.pug
-posts.pug/single/vi.pug
 posts/algorithm/ai.html
 posts/algorithm/algo.html
 posts/algorithm/book01.html
@@ -2272,6 +2270,7 @@ posts/java/guava.html
 posts/java/index.html
 posts/java/jackson.html
 posts/java/java.base.html
+posts/java/java.net.http.html
 posts/java/java_ee.html
 posts/java/javafx.html
 posts/java/javax.annotation.processing.html

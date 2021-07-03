@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<configuration>
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} %.-1level [%thread] [%logger{0}] %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<springProfile name="local,dev">
+		<appender name="LOGGER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<file>logs/server.log</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+				<fileNamePattern>logs/server-%d{yyyyMMdd-HHmm}-%i.log</fileNamePattern>
+				<maxFileSize>16MB</maxFileSize>
+				<maxHistory>64</maxHistory>
+			</rollingPolicy>
+			<encoder>
+				<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %.-1level [%thread] [%logger{0}] %msg%n</pattern>
+			</encoder>
+		</appender>
+	</springProfile>
+
+	<springProfile name="prod">
+		<appender name="LOGGER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<file>logs/server.log</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+				<fileNamePattern>logs/server-%d{yyyyMMdd-HHmm}-%i.log.gz</fileNamePattern>
+				<maxFileSize>32MB</maxFileSize>
+				<maxHistory>512</maxHistory>
+			</rollingPolicy>
+			<encoder>
+				<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %.-1level [%thread] [%logger{0}] %msg%n</pattern>
+			</encoder>
+		</appender>
+	</springProfile>
+
+	<logger name="org.springframework" additivity="true">
+		<appender-ref ref="LOGGER" />
+		<springProfile name="local,dev">
+			<appender-ref ref="CONSOLE" />
+		</springProfile>
+	</logger>
+
+	<springProfile name="local,dev">
+		<root level="TRACE"></root>
+	</springProfile>
+	<springProfile name="prod">
+		<root level="DEBUG"></root>
+	</springProfile>
+</configuration>

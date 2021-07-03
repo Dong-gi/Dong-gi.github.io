@@ -50,7 +50,15 @@ ENV                   # -e, --env, --env-file
 VOLUME                # -v, --volume=[host-src:]container-dest[:&lt;options>]
 USER                  # -u="", --user=""
 WORKDIR               # -w=""
-</div></div><h2>docker rm : 컨테이너 제거</h2><p><strong>↓ shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker rm [OPTIONS] CONTAINER [CONTAINER...]
+</div></div><h2>docker logs : 로그 출력</h2><p>컨테이너 로그 : /var/lib/docker/containers/${containerId}/${containerId}-json.log</p><p><strong>↓ shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker logs [OPTIONS] CONTAINER
+
+# OPTIONS
+-n ${n}                 # 마지막 n개 줄만
+--since ${timestamp}    # timestamp 이후 로그만; ISO 포맷(e.g. 2013-01-02T13:23:37Z) or 상대적 표현(e.g. 42m)
+--until ${timestamp}    # timestamp 이전 로그만
+-f                      # 실시간 확인
+-t                      # 타임스탬프 출력
+</div><h2>docker rm : 컨테이너 제거</h2><p><strong>↓ shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker rm [OPTIONS] CONTAINER [CONTAINER...]
 $ docker container rm [OPTIONS] CONTAINER [CONTAINER...]
 
 # OPTIONS
