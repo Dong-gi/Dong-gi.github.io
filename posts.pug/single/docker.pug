@@ -138,6 +138,7 @@ include ../../source/skeleton.pug
             --disable-content-trust true # 이미지 검증 생략
             --file, -f                   # Dockerfile 파일명. 기본값은 'PATH/Dockerfile'
             --label                      # 이미지 메타데이터 설정
+            --no-cache                   # 빌드 캐시 미사용
             --tag, -t                    # 이미지 태그 설정
         ol
             li 향상된 기능을 제공하는 moby/buildkit을 이용하려면(Since 18.09) 실행 전에 환경 변수 DOCKER_BUILDKIT=1를 설정하면 된다
@@ -336,6 +337,7 @@ include ../../source/skeleton.pug
 
         h2 docker rmi : 이미지 제거
         +asCode('shell') $ docker rmi [OPTIONS] IMAGE [IMAGE...]
+        p 컨테이너가 이미지를 사용중임에도 -f 옵션으로 강제로 이미지를 삭제하려고 하는 경우, 이미지의 이름만 제거되어 &lt;none>으로 변경된다. 이들을 dangling 이미지라고 부르며, 사용하지 않는 dangling 이미지들은 docker image prune으로 삭제할 수 있다
 
         h2 docker attach : 컨테이너에 스트림 연결
         +asCode('shell').
