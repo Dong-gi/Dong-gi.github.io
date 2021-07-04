@@ -1,0 +1,38 @@
+include ../../source/skeleton.pug
++post('Network', 'Network, TCP/IP, HTTP, HTTP1.1, HTTP2, HTTP3', 'Network 정리')
+    h1 TCP/IP 4계층
+    ol
+        li Application : HTTP, FTP, DNS, SMTP, ...
+        li Transport : TCP, UDP
+        li Internet : IP, ARP, ICMP, ...
+        p (가변적인) 논리적 주소를 갖는 두 호스트 간의 통신
+        li Link : MAC; CSMA/CD, CSMA/CA, ...
+        p 고정적인 물리적 주소를 갖는 두 노드 간의 통신
+
+    h1 IP
+    div
+        h2 IPv4
+        ul
+            li 32bit : [0-255].[0-255].[0-255].[0-255]
+            li Subnet
+            ul
+                li 주소 소유자는 예약한 특정 접두 주소(subnet mask)를 제외한 나머지 부분을 자유롭게 할당하여 사용할 수 있다
+                li A-class : 앞 8비트를 예약하고, 나머지 24비트를 자유롭게 할당. e.g. 123.0.0.0/8
+                li B-class : 앞 16비트를 예약하고, 나머지 16비트를 자유롭게 할당. e.g. 123.123.0.0/8
+                li 기타 관용적인 사설 네트워크 서브넷 : 10.0.0.0/8, 192.168.0.0/24
+        
+        h2 IPv6
+        ul
+            li 128bit : [0-ffff]:[0-ffff]:[0-ffff]:[0-ffff]:[0-ffff]:[0-ffff]:[0-ffff]:[0-ffff]
+            li 접두 0은 제거할 수 있다 + 반복 적용 가능; 0123:A:0123 == 123:A:123
+            li 0:0(:0)*은 :으로 축약할 수 있다 + 전체 주소에 대해 1회만 적용 가능; A:0:0:B == A::B
+
+    h1 TCP
+    div
+        h2 특징
+        ul
+            li Reliable
+            p 패킷 순서 보장. ack 응답 및 응답 시간제한, 재전송 기능 제공
+            li Full-duplex
+            li Connection-oriented
+            

@@ -45,6 +45,7 @@ const posts = {list: [
     { category: 'JVM/Library',         file: '/posts/java/guava.html',                          title: 'Guava 30.1' },
     { category: 'Infra',               file: '/posts/single/aws.html',                          title: 'AWS' },
     { category: 'Infra',               file: '/posts/infra/linux.html',                         title: 'Linux' },
+    { category: 'Infra',               file: '/posts/infra/network.html',                       title: 'Network' },
     { category: 'Infra',               file: '/posts/single/docker.html',                       title: 'Docker' },
     { category: 'Infra',               file: '/posts/single/git.html',                          title: 'Git' },
     { category: 'Infra',               file: '/posts/single/gradle.html',                       title: 'Gradle' },

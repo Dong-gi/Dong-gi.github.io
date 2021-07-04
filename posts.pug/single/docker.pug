@@ -230,8 +230,8 @@ include ../../source/skeleton.pug
             li 옵션 순서에 따라 실행에 실패하기도 한다...
             +asCode('shell').
                 # 성공 예시
-                docker run --name postgres1 -p 5452:5432 -d -it --privileged=true --network="my-net" --ip="172.18.0.2" -e "POSTGRES_PASSWORD=password" postgres:9.5
-                docker run --name idl -d -it -v C:\Users\supergene\Documents\super_pop\assets\idl:/root/idl node:latest
+                docker run --name my-postgres -p 5432:5432 -d -it --privileged=true --network="my-net" -e "POSTGRES_PASSWORD=xxx" -e PGDATA=/var/lib/postgresql/data/pgdata -v /free100/postgres:/var/lib/postgresql/data postgres
+                docker run --name node-rendezvous -p 50000:50000/udp -p 50001:50001 -d -it --network="my-net" -v $PWD/Dong-gi.github.io/Repositories/Rendezvous/:/home/node/app node
             li OPTIONS
             +asCode('shell').
                 --publish, -p # 포트 포워딩. -p 80:8080, -p 8888:8080/tcp
