@@ -1,6 +1,7 @@
 include ../../source/skeleton.pug
 
 +post('알고리즘 일반', '알고리즘, 자료구조', '빅-오 표기법, 자료구조, 정렬-탐색 등 알고리즘 일반 사항 정리', true)
+    script#qrcode-js(src="/source/qrcode.min.js")
     h1 알고리즘의 평가
     ol
         li 시간복잡도 : 입력의 크기에 따른 소요 시간 평가
@@ -202,7 +203,6 @@ include ../../source/skeleton.pug
                             right.rotate_ll()
                             rotate_rr()
 
-    +ad()
     h1 자료구조 - 그래프
     ul
         li G : graph, V : vertex, E : edge
@@ -393,7 +393,6 @@ include ../../source/skeleton.pug
             li 그래프의 정점 개수가 0이 될때까지, 임의 정점을 선택하여 깊이 우선 탐색을 이용해 방문한 정점을 제거
             li 제거한 정점들을 역순으로 나열하면 정렬 완료
 
-    +ad()
     h1 동기화
     div
         h2 Busy waiting
@@ -452,7 +451,36 @@ include ../../source/skeleton.pug
             li A, B는 이제 각각 (G^Y mod P)^X mod P, (G^X mod P)^Y mod P == G^(XY) mod P를 공유한다
 
         h2 메시지 인증 코드; MAC(Message Authentication Code)
-        p 암호문과 키를 이용해 만든 MAC를 암호문과 같이 전달하면 수신측은 암호문 또는 키의 변조를 감지해낼 수 있다. 흔히 사용되는 것은 암호문과 키를 해싱하여 MAC을 생성하는 HMAC
+        div
+            p 암호문과 키를 이용해 만든 MAC를 암호문과 같이 전달하면 수신측은 암호문 또는 키의 변조를 감지해낼 수 있다. 흔히 사용되는 것은 암호문과 키를 해싱하여 MAC을 생성하는 HMAC
+            h3 TOTP(Time-based One-time Password)
+            ul
+                li 일정 시간 동안 유효한 OTP를 생성하여 인증하는 알고리즘; 즉, 시간이 검증 대상 메시지가 된다
+                li 비밀키 외에, 비밀번호 구분을 위한 추가 정보를 
+                    +asA('https://github.com/google/google-authenticator/wiki/Key-Uri-Format', 'URI')
+                    |에 설정할 수 있다
+                +asCode('text', 'uri') otpauth://totp/${issuer}:${user}?secret=${privateKey}&amp;issuer=${issuer}&amp;algorithm=SHA1&amp;digits=6&amp;period=30
+                ul
+                    li issuer : 서비스 제공자. e.g. Microsoft, LlinkedIn, Amazon Web Service, gmail...
+                    li user : 사용자. e.g. hi.donggi@gmail.com, Donggi Kim, wiz - hi.donggi@gmail.com, ...
+                    li privateKey : Base32 인코딩 문자열. 패딩 불필요
+                    li algorithm : SHA1(default), SHA256, SHA512
+                    li digits : OTP 길이; 6(default)
+                    li period : OTP 유효 시간(초); 30(default)
+                li 구현 예시 코드 : 
+                    +codeBtn('/Repositories/Single/202107/TOTP.java', 'java')
+                #totp-qr
+                script.
+                    new QRCode(document.getElementById('totp-qr'), {
+                    	text: 'otpauth://totp/issuer:user?secret=ORSXG5BANNSXSIBRGIZTINJWG44DSMBB&issuer=issuer&algorithm=SHA1&digits=6&period=30',
+                    	width: 128,
+                    	height: 128
+                    })
+                li 참고 자료
+                ul
+                    li: +asA('https://rootprojects.org/authenticator/', 'Authenticator Test')
+                    li: +asA('https://datatracker.ietf.org/doc/html/rfc6238#appendix-A', 'rfc6238#appendix-A')
+                    li: +asA('https://github.com/jchambers/java-otp/blob/df28bfab5be1cd9ef8a6383c35c71644d7bdcf6b/src/main/java/com/eatthepath/otp/HmacOneTimePasswordGenerator.java')
 
         +pos('전자 서명')
         h2 전자 서명

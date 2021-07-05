@@ -1,8 +1,5 @@
 - String.prototype.hashCode=function(){let e,t,o=0;if(0===this.length)return o;for(e=0;e<this.length;e++)o=(o<<5)-o+(t=this.charCodeAt(e)),o|=0;return o};
 
-mixin ad()
-    ins.adsbygoogle(style="display:block;text-align:center;",data-ad-layout="in-article",data-ad-format="fluid",data-ad-client="ca-pub-7897366614471210",data-ad-slot="4044599363")
-
 mixin asA(href, text)
     - if (!text && /#/.test(href)) { text = href.replace(/.*#/, '') }
     - if (!text && /\//.test(href)) { text = href.replace(/.*\//, '') }
@@ -43,6 +40,13 @@ mixin pos(name)
 mixin post(title, keywords, description, useMJX, noAds)
     html(lang='ko')
         head
+            script#google-analytics(src='https://www.googletagmanager.com/gtag/js?id=UA-143098403-1', async)
+            script.
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'UA-143098403-1');
+
             meta(charset='UTF-8')
             meta(name='viewport', content='width=device-width, initial-scale=1')
             meta(name='google-site-verification', content='aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM')
@@ -59,7 +63,6 @@ mixin post(title, keywords, description, useMJX, noAds)
             script#default-js(src='/source/default.min.js')
             script#dsq-count-scr(src='//donggi.disqus.com/count.js',async)
             if useMJX
-                link#mjx-style(rel="stylesheet", href="/source/mjx-chtml.css")
                 script#MathJax-script(src='/source/tex-chtml.js',async)
                 script.
                     MathJax = {
@@ -68,15 +71,6 @@ mixin post(title, keywords, description, useMJX, noAds)
                             inlineMath: [['식[', ']식']]
                         }
                     };
-            if !noAds
-                script#kakao-ads(src='//t1.daumcdn.net/kas/static/ba.min.js', async)
-                script#google-ads(data-ad-client='ca-pub-7897366614471210', src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', async)
-                script#google-analytics(src='https://www.googletagmanager.com/gtag/js?id=UA-143098403-1', async)
-                script.
-                    window.dataLayer = window.dataLayer || [];
-                    function gtag(){dataLayer.push(arguments);}
-                    gtag('js', new Date());
-                    gtag('config', 'UA-143098403-1');
         body
             .w3-bar-block.w3-sidebar.w3-animate-left#sidebar
                 hr
@@ -85,9 +79,6 @@ mixin post(title, keywords, description, useMJX, noAds)
                 #marker-list
                 hr
                 #post-list
-                if !noAds
-                    hr
-                    .w3-center: ins.kakao_ad_area(style="display:none;",data-ad-unit="DAN-1k1r635zxb6g3",data-ad-width="300",data-ad-height="250")
                 hr
                 #file-list
                 hr
@@ -99,11 +90,26 @@ mixin post(title, keywords, description, useMJX, noAds)
                 #contents.w3-padding
                     if block
                         block
-                    ins.adsbygoogle(style='display:block',data-ad-client='ca-pub-7897366614471210',data-ad-slot='6629226643',data-ad-format='auto',data-full-width-responsive='true')
-                    script (adsbygoogle = window.adsbygoogle || []).push({})
                 hr
-                |&copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved.
-                +asA('/LICENSE')
+                ul
+                    li &copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved. 
+                        +asA('/LICENSE', 'MIT License')
+                    li
+                        +asA('https://www.w3schools.com/w3css')
+                        |  : No license
+                    li
+                        +asA('https://highlightjs.org/', 'highlight.js')
+                        |  : 
+                        +asA('https://github.com/highlightjs/highlight.js/blob/main/LICENSE', 'BSD-3-Clause License')
+                    li
+                        +asA('https://github.com/mathjax/MathJax')
+                        |  : 
+                        +asA('https://github.com/mathjax/MathJax/blob/master/LICENSE', 'Apache License 2.0')
+                    li
+                        +asA('https://github.com/davidshimjs/qrcodejs')
+                        |  : 
+                        +asA('https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE', 'MIT License')
+
 
 mixin tds(...cells)
     tr&attributes(attributes)
