@@ -42,7 +42,7 @@ echo 'post 빌드 완료'
 pug --doctype html index.pug
 echo 'index 빌드 완료'
 
-cd Repositories/SF/
+cd Repositories/JavaScript/SF/
 /bin/bash build.sh
 echo 'SF 빌드 완료'
 

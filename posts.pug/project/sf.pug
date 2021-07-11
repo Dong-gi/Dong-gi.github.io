@@ -49,8 +49,8 @@ include ../../source/skeleton.pug
                 const app = SF.build();
                 app.head.$title.innerText = 'Title : Hello World';
                 app.body.innerText = 'Body : Hello World';
-            +codeBtn('/Repositories/JavaScript/SF/demo1.html', 'html')
-            +asA('/Repositories/JavaScript/SF/demo1.html', 'View on new tab')&attributes({ target: '_blank' })
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo1.html', 'html')
+            +asA('/Repositories/JavaScript/SF/demo/demo1.html', 'View on new tab')&attributes({ target: '_blank' })
 
             h3 Template Example 1
             +asCode('javascript').
@@ -61,14 +61,14 @@ include ../../source/skeleton.pug
                     // element      : HTMLElement
                 app.$.append(Card(callback).$)
                     // callback     : SFNode, ... -> ?
-            +codeBtn('/Repositories/JavaScript/SF/demo2.html', 'html')
-            +codeBtn('/Repositories/JavaScript/SF/demo2.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo2.html', 'View on new tab')&attributes({ target: '_blank' })
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo2.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo2.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo/demo2.html', 'View on new tab')&attributes({ target: '_blank' })
 
             h3 Template Example 2 : Roman numeral calculator
-            +codeBtn('/Repositories/JavaScript/SF/demo3.html', 'html')
-            +codeBtn('/Repositories/JavaScript/SF/demo3.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo3.html', 'View on new tab')&attributes({ target: '_blank' })
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo3.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo3.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo/demo3.html', 'View on new tab')&attributes({ target: '_blank' })
 
         h2 Version 0.2.2
         div
@@ -77,15 +77,15 @@ include ../../source/skeleton.pug
                 const app = SF.build(document.getElementById('demo4-1'));
                 const boundForm = SF.bindForm(app['demo4-1-form']);
             p Changed from <mark>0.4.0</mark> : SF.formToObject set input[type=file] as File[]
-            +codeBtn('/Repositories/JavaScript/SF/demo4.html', 'html')
-            +codeBtn('/Repositories/JavaScript/SF/demo4.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo4.html', 'View on new tab')&attributes({ target: '_blank' })
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo4.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo4.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo/demo4.html', 'View on new tab')&attributes({ target: '_blank' })
 
             h3 Object Binding Example
             +asCode('javascript') SF.bindTwoWay(x, y);
-            +codeBtn('/Repositories/JavaScript/SF/demo5.html', 'html')
-            +codeBtn('/Repositories/JavaScript/SF/demo5.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo5.html', 'View on new tab')&attributes({ target: '_blank' })
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo5.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo5.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo/demo5.html', 'View on new tab')&attributes({ target: '_blank' })
 
         h2 Version 0.3.2
         div
@@ -93,24 +93,24 @@ include ../../source/skeleton.pug
             +asCode('javascript').
                 SF.asDataGrid(csv);
                 DataGrid.fromCSV(csv);
-            +codeBtn('/Repositories/JavaScript/SF/demo6.html', 'html')
-            +codeBtn('/Repositories/JavaScript/SF/demo6.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo6.html', 'View on new tab')&attributes({ target: '_blank' })
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo6.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo6.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo/demo6.html', 'View on new tab')&attributes({ target: '_blank' })
 
             h3 DataGrid Example 2 : CSV. Has multiple line quoted data
-            +codeBtn('/Repositories/JavaScript/SF/demo7.html', 'html')
-            +codeBtn('/Repositories/JavaScript/SF/demo7.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo7.html', 'View on new tab')&attributes({ target: '_blank' })
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo7.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo7.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo/demo7.html', 'View on new tab')&attributes({ target: '_blank' })
 
             h3 DataGrid Example 3 : Array of Array, Array of Object
-            +codeBtn('/Repositories/JavaScript/SF/demo8.html', 'html')
-            +codeBtn('/Repositories/JavaScript/SF/demo8.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo8.html', 'View on new tab')&attributes({ target: '_blank' })
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo8.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo8.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo/demo8.html', 'View on new tab')&attributes({ target: '_blank' })
 
             h3 DataGrid Example 4 : Object of Array, Object of Object
-            +codeBtn('/Repositories/JavaScript/SF/demo9.html', 'html')
-            +codeBtn('/Repositories/JavaScript/SF/demo9.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo9.html', 'View on new tab')&attributes({ target: '_blank' })
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo9.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo9.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo/demo9.html', 'View on new tab')&attributes({ target: '_blank' })
 
         h2 Version 0.4.0
         div
@@ -149,28 +149,28 @@ include ../../source/skeleton.pug
                 file11
                 file22
             h3 SFUtil.highlight()
-            +codeBtn('/Repositories/JavaScript/SF/demo10.html', 'html')
-            +codeBtn('/Repositories/JavaScript/SF/demo10.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo10.html', 'View on new tab')&attributes({ target: '_blank' })
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo10.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo10.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo/demo10.html', 'View on new tab')&attributes({ target: '_blank' })
             h3 SFUtil.showSnackbar()
-            +codeBtn('/Repositories/JavaScript/SF/demo11.html', 'html')
-            +codeBtn('/Repositories/JavaScript/SF/demo11.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo11.html', 'View on new tab')&attributes({ target: '_blank' })
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo11.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo11.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo/demo11.html', 'View on new tab')&attributes({ target: '_blank' })
             h3 SFUtil.addHoverContent()
-            +codeBtn('/Repositories/JavaScript/SF/demo12.html', 'html')
-            +codeBtn('/Repositories/JavaScript/SF/demo12.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo12.html', 'View on new tab')&attributes({ target: '_blank' })
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo12.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo12.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo/demo12.html', 'View on new tab')&attributes({ target: '_blank' })
             h3 SFUtil.addInputSelection()
-            +codeBtn('/Repositories/JavaScript/SF/demo13.html', 'html')
-            +codeBtn('/Repositories/JavaScript/SF/demo13.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo13.html', 'View on new tab')&attributes({ target: '_blank' })
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo13.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo13.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo/demo13.html', 'View on new tab')&attributes({ target: '_blank' })
             h3
                 | SFUtil.copyElementToClipboard()
                 br
                 | SFUtil.copyTextToCilpboard()
-            +codeBtn('/Repositories/JavaScript/SF/demo14.html', 'html')
-            +codeBtn('/Repositories/JavaScript/SF/demo14.html', 'nohighlight') View live here
-            +asA('/Repositories/JavaScript/SF/demo14.html', 'View on new tab')&attributes({ target: '_blank' })
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo14.html', 'html')
+            +codeBtn('/Repositories/JavaScript/SF/demo/demo14.html', 'nohighlight') View live here
+            +asA('/Repositories/JavaScript/SF/demo/demo14.html', 'View on new tab')&attributes({ target: '_blank' })
 
     h1 Change Logs
     table
