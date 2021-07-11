@@ -1,0 +1,15 @@
+[submodule "Repositories/Config"]
+	path = Repositories/Config
+	url = https://github.com/Dong-gi/Config
+[submodule "Repositories/STS/Reminder"]
+	path = Repositories/STS/Reminder
+	url = https://github.com/Dong-gi/Reminder.git
+[submodule "Repositories/JavaScript/SF"]
+	path = Repositories/JavaScript/SF
+	url = https://github.com/Dong-gi/SF
+[submodule "Repositories/Node/Rendezvous"]
+	path = Repositories/Node/Rendezvous
+	url = https://github.com/Dong-gi/rendezvous.git
+[submodule "Repositories/Android/CCTV"]
+	path = Repositories/Android/CCTV
+	url = https://github.com/Dong-gi/CCTV.git
