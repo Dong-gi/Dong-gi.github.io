@@ -4,6 +4,7 @@ include ../../source/skeleton.pug
     ol
         li Application : HTTP, FTP, DNS, SMTP, ...
         li Transport : TCP, UDP
+        p 프로세스 간의 통신
         li Internet : IP, ARP, ICMP, ...
         p (가변적인) 논리적 주소를 갖는 두 호스트 간의 통신
         li Link : MAC; CSMA/CD, CSMA/CA, ...
@@ -14,12 +15,14 @@ include ../../source/skeleton.pug
         h2 IPv4
         ul
             li 32bit : [0-255].[0-255].[0-255].[0-255]
-            li Subnet
+            li Subnet & CIDR
             ul
                 li 주소 소유자는 예약한 특정 접두 주소(subnet mask)를 제외한 나머지 부분을 자유롭게 할당하여 사용할 수 있다
                 li A-class : 앞 8비트를 예약하고, 나머지 24비트를 자유롭게 할당. e.g. 123.0.0.0/8
                 li B-class : 앞 16비트를 예약하고, 나머지 16비트를 자유롭게 할당. e.g. 123.123.0.0/8
                 li 기타 관용적인 사설 네트워크 서브넷 : 10.0.0.0/8, 192.168.0.0/24
+                li CIDR; Classless Inter-Domain Routing
+                p 클래스없이 주소 블록 할당. e.g. 123.123.123.123/7
         
         h2 IPv6
         ul
@@ -27,12 +30,73 @@ include ../../source/skeleton.pug
             li 접두 0은 제거할 수 있다 + 반복 적용 가능; 0123:A:0123 == 123:A:123
             li 0:0(:0)*은 :으로 축약할 수 있다 + 전체 주소에 대해 1회만 적용 가능; A:0:0:B == A::B
 
+    h1 UDP
+    div
+        h2 특징
+        ul
+            li 비연결형
+            p 특정 소켓으로의 전송, 임의 소켓으로부터의 수신 기능만 존재. 각 데이터그램은 모두 독립적이며, 65507 바이트보다 큰 메시지를 알아서 쪼개고 합치지 않는다.
+            li 신뢰성 없음
+            p 확인응답 없음 + 데이터그램 오류 탐지 시 단순 폐기
+        h2 Datagram
+        p Source port 16비트 | Destination port 16비트 | Total length(최대 65507바이트) 16비트 | Checksum 16비트 | Data
+
+
     h1 TCP
     div
         h2 특징
         ul
-            li Reliable
+            li 연결 지향
+            p 연결 지속되는 채널을 이용해 스트림 전송. 스트림은 패킷들로 나눠지고, 이때 패킷은 IP 계층 전송 단위에 맞게 세그먼트로 표현된다
+            li 송신 버퍼 + 수신 버퍼를 이용한 생산/소비 균형 조절
+            li 신뢰성 있음
             p 패킷 순서 보장. ack 응답 및 응답 시간제한, 재전송 기능 제공
-            li Full-duplex
-            li Connection-oriented
+            li 전이중 통신
+            p 동시에 양방향으로 패킷 전송 가능
             
+        h2 연결 수립; 3-way handshaking
+        ol
+            li A -> B : SYN 세그먼트(#seq=a)
+            li B -> A : SYN + ACK 세그먼트(#seq=b,#ack=a+1)
+            li A -> B : ACK 세그먼트(#seq=a+1,#ack=b+1)
+            p 양쪽이 동시에 연결을 요구하더라도 연결은 하나만 수립된다
+
+        h2 연결 종료; 3-way handshaking
+        ol
+            li A -> B : FIN 세그먼트(#seq=a,#ack=b)
+            li B -> A : FIN + ACK 세그먼트(#seq=b,#ack=a+1)
+            li A -> B : ACK 세그먼트(#seq=a+1,#ack=b+1)
+
+        h2 연결 종료; 4-way handshaking
+        ol
+            p 데이터를 보낼 게 남아있다면, FIN 요청은 수락한 뒤, 데이터를 마저 보낸 후 FIN 응답한다
+            li A -> B : FIN 세그먼트(#seq=a,#ack=b1)
+            li B -> A : FIN + ACK 세그먼트(#seq=b1,#ack=a+1)
+            li 남은 데이터 전송
+            ul
+                li B -> A : 데이터 세그먼트
+                li A -> B : ACK 세그먼트
+            li B -> A : FIN 세그먼트(#seq=b2,#ack=a+1)
+            li A -> B : ACK 세그먼트(#seq=a+1,#ack=b2+1)
+
+        h2 TCP 소켓 상태
+        +w3img('https://upload.wikimedia.org/wikipedia/commons/f/f6/Tcp_state_diagram_fixed_new.svg')
+        ul
+            li CLOSED : 연결 없음
+            li LISTEN : Passive open; 서버 소켓 개방 -> SYN 대기
+            li SYN SENT : Active open; 클라이언트 SYN 전송 -> ACK 대기
+            li SYN RECEIVED : SYN+ACK 전송 -> ACK 대기
+            li ESTABLISHED : 연결 수립. 데이터 전송 가능
+            li FIN WAIT 1 : 클라이언트가 ESTABLISHED 상태에서 연결 종료하기로 결정 -> 1번째 FIN 전송 -> ACK 대기
+            li FIN WAIT 2 : FIN WAIT 1에서 ACK 수신 -> 2번째 FIN 대기
+            li CLOSING : FIN WAIT 1 상태에서 FIN 수신 == 동시 종료 결정
+            li TIME WAIT : 연결 종료; 일정 시간 후 CLOSED 천이
+            li CLOSE WAIT : 서버가 ESTABLISHED 상태에서 1번째 FIN 수신 -> ACK 전송 -> 애플리케이션의 소켓 연결 종료 대기
+            li LAST ACK : CLOSE WAIT 상태에서 연결 종료 결정 -> 2번째 FIN 전송 -> ACK 대기
+
+            h3 RST 세그먼트
+            ul
+                li 연결 요청 거부 -> 즉시 CLOSED 천이
+                li 기존 연결 중단 -> 즉시 CLOSED 천이
+                li 휴지 상태 연결 종료 -> 즉시 CLOSED 천이
+                li RST 세그먼트를 수신한 쪽도 즉시 CLOSED 천이
