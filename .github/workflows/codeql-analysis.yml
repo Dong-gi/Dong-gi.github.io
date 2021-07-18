@@ -16,9 +16,9 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix:
-        language: ['java', 'javascript', 'python']
-        # https://docs.github.com/en/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#overriding-automatic-language-detection
+      #matrix:
+      #  language: ['java', 'javascript', 'python']
+      #  https://docs.github.com/en/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#overriding-automatic-language-detection
 
     steps:
     - name: Checkout repository
@@ -36,16 +36,16 @@ jobs:
       with:
         languages: ${{matrix.language}}
 
-    - name: Set up JDK 13
-      uses: actions/setup-java@v1.4.3
-      with:
-        java-version: 13
-        server-id: github
-        settings-path: ${{github.workspace}}
+    #- name: Set up JDK 13
+    #  uses: actions/setup-java@v1.4.3
+    #  with:
+    #    java-version: 13
+    #    server-id: github
+    #    settings-path: ${{github.workspace}}
 
-    - name: Gradle build - reminder
-      working-directory: ./Repositories/STS/reminder
-      run: bash ./gradlew bootJar
+    #- name: Gradle build - reminder
+    #  working-directory: ./Repositories/STS/reminder
+    #  run: bash ./gradlew bootJar
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
