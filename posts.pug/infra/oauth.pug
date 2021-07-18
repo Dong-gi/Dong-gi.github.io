@@ -12,7 +12,17 @@ include ../../source/skeleton.pug
         li Authorization server : 인증된 Client에 권한을 부여하는 서버
         p 단일 Authorization server에 대해 여러 Resource server가 존재하더라도 검증 문제가 발생하지 않는다; SSO 용이
 
-    h1 권한 승인 절차
+    h1 비신뢰 클라이언트; implicit grant
+    p 비신뢰 클라이언트로 보내진 모든 정보는 public 읽기가 가능하다고 간주해야 한다. 따라서 authorization code를 저장할 수 없고, 단기적 또는 1회용 access code를 발급하여 사용하게 해야 한다. 대신 구현이 간단하다는 장점은 존재한다
+    ol
+        li Client -> Authorization server -> Resource owner : 권한 요청
+        li Resource owner --> Authorization server --> Client : 권한 승인; Client는 access code를 받는다
+        li Client -> Resource server : 자원 요청
+        li Resource server -> Authorization server : 토큰 검증 요청
+        li Authorization server --> Resource server : 토큰 검증
+        li Resource server --> Client : 자원 전송
+
+    h1 신뢰 클라이언트; authorization code grant
     ol
         li Client -> Authorization server -> Resource owner : 권한 요청
         li Resource owner --> Authorization server --> Client : 권한 승인; Client는 authorization code를 받는다
