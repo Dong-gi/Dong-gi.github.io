@@ -30,7 +30,7 @@ include ../../source/skeleton.pug
             li 접두 0은 제거할 수 있다 + 반복 적용 가능; 0123:A:0123 == 123:A:123
             li 0:0(:0)*은 :으로 축약할 수 있다 + 전체 주소에 대해 1회만 적용 가능; A:0:0:B == A::B
 
-    h1 UDP
+    h1 UDP; User Datagram Protocol
     div
         h2 특징
         ul
@@ -42,7 +42,7 @@ include ../../source/skeleton.pug
         p Source port 16비트 | Destination port 16비트 | Total length(최대 65507바이트) 16비트 | Checksum 16비트 | Data
 
 
-    h1 TCP
+    h1 TCP; Transmission Control Protocol
     div
         h2 특징
         ul
@@ -100,3 +100,113 @@ include ../../source/skeleton.pug
                 li 기존 연결 중단 -> 즉시 CLOSED 천이
                 li 휴지 상태 연결 종료 -> 즉시 CLOSED 천이
                 li RST 세그먼트를 수신한 쪽도 즉시 CLOSED 천이
+
+    h1 SCTP; Stream Control Transport Protocol
+    div
+        h2 정의
+        ul
+            li Association ::= 두 SCTP 종단점 사이의 연결
+            ul
+                li 서버, 클라이언트 각각은 SCTP 헤더의 VT(Verification Tag)에 각자의 association 구별을 위한 32비트 값을 설정한다
+                p 즉, 양쪽에서 전송하는 VT는 서로 다를 수 있다
+                li 서버, 클라이언트 각각은 수신한 VT와 동일한 값으로 응답 패킷의 VT를 설정한다
+                p 따라서, 응답받은 쪽은 응답 VT를 이용해 어떤 association으로 보냈는지 판별 가능
+                li 따라서 TCP와 달리, 같은 소켓으로부터 패킷이 오더라도 실제로 유효한 연결(association)에 해당하는 패킷인지 구별할 수 있다
+            li Chunk ::= SCTP의 데이터 전송 단위
+            p TCP의 스트림과 달리, 단편화가 이뤄지더라도 메시지의 시작과 끝이 명확히 구분된다
+
+        h2 특징
+        ul
+            li 하나의 association 내에서 다중스트림 지원
+            p 스트림 하나가 블록되더라도 다른 스트림들은 전송을 계속할 수 있다
+            li Multi-homing 지원
+            p Primary 주소가 비가용 상태가 되더라도 alternative 주소를 통해 연결을 지속할 수 있다
+            li TCP와 마찬가지로 전이중, 신뢰성 있는 통신 제공
+            p + 흐름 제어, 오류 제어, 혼잡 제어 기능 제공
+            li TCP는 제어 정보를 헤더로 이용하는 반면, SCTP는 제어 정보 또한 하나의 chunk로 전송한다
+            p 따라서 SCTP는 12바이트 고정 헤더를 사용한다
+            li 하나의 SCTP 패킷이 여러 chunk들을 포함할 수 있다
+            p 이때 각 chunk들은 각각 다른 스트림에 속할 수 있다
+            li TCP의 ACK, FIN 세그먼트와 달리, SCTP의 확인 응답 등에 이용되는 제어 chunk는 TSN을 필요로 하지 않는다
+            p 제어 chunk는 다른 종류의 제어 chunk에 의해 응답되고, 일부는 아예 응답이 필요하지 않다
+            li Numbering
+            ul
+                li 스트림은 16비트 SI(Stream Identifier)를 갖는다
+                li DATA Chunk 전송 순서를 위해 순차적인 32비트 TSN(Transmission Sequence Number)을 사용한다
+                li 스트림 내 chunk 순서를 표시하기 위해 SSN(Stream Sequence Number)을 사용한다
+                p SI와 SSN을 이용해 chunk가 목적지에 도달하면 적절한 스트림에 전달되어 올바른 순서에 놓인다
+
+        h2 Chunk 종류
+        table.no-sort
+            +tds('0', 'DATA', 'User data. TSN을 사용하는 유일한 chunk type')
+            +tds('1', 'INIT', 'Association 시작. 다른 chunk와 같이 보낼 수 없다')
+            +tds('2', 'INIT ACK', 'INIT에 대한 확인응답. 다른 chunk와 같이 보낼 수 없다')
+            +tds('10', 'COOKIE ECHO', 'INIT ACK에 포함된 쿠키를 되돌려 보낸다')
+            +tds('11', 'COOKIE ACK', 'COOKIE ECHO에 대한 확인응답')
+            +tds('3', 'SACK', '데이터 chunk에 대한 확인응답')
+            +tds('4', 'HEARTBEAT', '살아있는 지 문의')
+            +tds('5', 'HEARTBEAT ACK', 'HEARTBEAT에 대한 확인응답')
+            +tds('7', 'SHUTDOWN', 'Association 종료')
+            +tds('8', 'SHUTDOWN ACK', 'SHUTDOWN에 대한 확인응답')
+            +tds('14', 'SHUTDOWN COMPLETE', 'SHUTDOWN ACK에 대한 확인응답')
+            +tds('9', 'ERROR', '수신한 패킷에서 오류를 검출한 경우')
+            +tds('6', 'ABORT', '오류로 인해 association을 종결해야 하는 경우')
+            +tds('192', 'FORWARD TSN', '누적 TSN을 조정하려는 경우')
+
+        h2 쿠키를 이용한 SYN 플러딩 방지
+        ul
+            li SCTP는 COOKIE ECHO chunk를 받은 후에야 비로소 리소스를 할당한다
+            li COOKIE ECHO가 실제로 INIT -> INIT ACK를 거쳤다는 것을 검증하기 위해, 쿠키에는 서버의 비밀키가 연관된 digest가 담긴다
+
+        h2 상태 천이 다이어그램
+        +w3img('/imgs/SCTP-state-diagram.png')
+        ul
+            li Closed : Association 없음
+            li Cookie Wait : INIT 보낸 후 INIT ACK에 포함된 쿠키 대기 중
+            li Cookie Echoed : COOKIE ECHO 보낸 후 COOKIE ACK 대기 중
+            li Established : COOKIE ACK를 받아 association 수립
+            li Shutdown Pending : close 신호를 받아 SHUTDOWN을 보내기 전에, 남은 데이터 chunk를 보내는 중
+            li Shutdown Sent : 남은 데이터 chunk가 없어 SHUTDOWN 전송하고 SHUTDOWN ACK 대기; 이후 데이터 chunk는 전송되지 않는다
+            li Shutdown Received : SHUTDOWN 수신. 남은 데이터 chunk가 있다면 마저 보낸 뒤 SHUTDOWN ACK 전송; 이후 데이터 chunk는 전송되지 않는다
+            li Shutdown Ack Sent : SHUTDOWN ACK를 보내고 SHUTDOWN COMPLETE 대기
+
+    h1 HTTP
+    div
+        h2 HTTP/0.9
+        p GET 메서드(요청 헤더도 없음)로 HTML 텍스트를 가져오는 기능 제공
+
+        h2 HTTP/1.0
+        ul
+            li PUT 등 다른 요청 메서드 지원
+            li 요청 헤더 지원
+            li 응답 코드 추가
+            li 리다이렉션 지원
+            li 컨텐츠 인코딩(압축 포함) 제공
+            li 조건부 요청
+
+        h2 HTTP/1.1
+        ul
+            li Host 헤더 필수 지정
+            li 동일 서버에 대한 여러 요청을 하나의 커넥션으로 순차적으로 수행 가능
+            li OPTIONS 메서드 지원
+            li Upgrade 헤더 지원
+            li cacheability 헤더 확장
+
+        h2 HTTP/2
+        ul
+            li 요청 헤더 압축 지원
+            li 동일 서버에 대해 하나의 커넥션으로 여러 요청 동시 수행 가능
+
+        h2 성능 최적화
+        ul
+            li DNS prefetch
+            +asCode('html') &lt;link rel="dns-prefetch" href="//...com"&gt;
+            li TLS preconnect
+            +asCode('html') &lt;link rel="preconnect" href="//...com" crossorigin&gt;
+            li 리다이렉션하지 않기
+            li 클라이언트에 캐싱하기
+            li onload 이벤트 전에 js가 실행되야 하는 경우
+            +asCode('html') &lt;script async src="...js"&gt;
+            li DOM 로드 후에 js를 실행해도 되는 경우
+            +asCode('html') &lt;script defer src="...js"&gt;
+            li 디바이스 해상도에 맞추어 이미지 다운로드
