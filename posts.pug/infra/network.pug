@@ -239,6 +239,15 @@ include ../../source/skeleton.pug
                     li Stream Identifier : 프레임이 속한 스트림 표시
                 li x번 스트림으로 요청된 프레임은 동일한 x번 스트림을 통해 응답받는다
 
+        h2 HTTP/3
+        ul
+            li TCP 대신 UDP 기반 프로토콜, QUIC(
+                +asA('https://datatracker.ietf.org/doc/html/rfc9000')
+                |)으로 전환
+            p HTTP/2가 애플리케이션 계층의 HOL 문제를 해소했지만, 여전히 TCP 자체의 HOL 문제가 남아있었다
+            li TCP가 제공하는 혼잡 제어 등의 기능이 커널 공간에서 동작하는 반면, HTTP/3은 유저 공간에서 실행하는 대신 알고리즘을 자주 업데이트 가능
+            li TLS 대신 이에 상응하는 DTLS를 이용해 보안 통신 가능
+
         h2 성능 최적화
         ul
             li DNS prefetch
