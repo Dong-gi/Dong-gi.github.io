@@ -68,10 +68,52 @@ include ../../source/skeleton.pug
 
     h1 VPC
     ol
-        li AWS 리전에 대해 가상 네트워크 작성
-        li 가용 영역(AZ; Available Zone)
-        p 각 AWS 리전은 최소 2개 이상의 가용영역으로 구성되며, 각 AZ는 서로의 장애로부터 격리된다
-        li 각 AZ 안에 서브넷을 작성할 수 있다
+        +w3img('/imgs/security-diagram.png')
+        li AWS 계정 생성시 VPC, 서브넷, 라우팅 테이블, 인터넷 게이트웨이, 네트워크 ACL 등은 가용 리전 및 AZ에 대해 기본적으로 생성된다
+        p NAT 게이트웨이 등 사용자가 필요에 의해 직접 추가하는 리소스들은 추가 요금이 발생함에 유의
+        li VPC; Virtual Private Cloud
+        p AWS 계정 및 AWS 리전에 대해 고유한 전용 네트워크
+        li AZ; Availability Zone, 가용 영역
+        p AWS 리전은 2개 이상의 가용 영역으로 구성되며, 각 AZ는 서로의 장애로부터 물리적으로 격리된다
+        li Subnet
+        ul
+            li VPC 내 할당 가능한 IP 주소 영역의 일부. AZ 안에 서브넷을 작성할 수 있으며, 다른 AZ와 공유되지 않는다
+            li Private subnet 안에서 생성된 인스턴스에는 public IP가 부여되지 않는다
+            p 또는 인스턴스 실행 시 public IP 부여 여부를 결정할 수 있으며, 인터넷 게이트웨이와 연결되지 않은 라우팅 테이블에 서브넷을 연결하면 결과적으로 public IP가 없는 것과 같은 효과를 갖는다
+        li Route table
+        p VPC 내부↔외부 네트워크 트래픽을 제어하는 규칙 정의. 라우팅 테이블 : 서브넷 = 1 : N 관계
+        li Internet gateway
+        ul
+            li VPC 내부와 외부 인터넷 사이의 연결 통로
+            li VPC 내 인스턴스 → 외부 인터넷 : 트래픽의 송신 주소를 인스턴스의 public IP/Elastic IP로 설정
+            li 외부 인터넷 → VPC 내 인스턴스 : 트래픽의 수신 주소를 인스턴스의 private IP로 설정
+        li NAT gateway
+        ul
+            li private 서브넷 내의 인스턴스가 외부 인터넷과 연결을 맺을 수 있도록 해준다
+            p 외부 인터넷이 먼저 연결을 시작할 수는 없다
+            li VPC 내 인스턴스 → 외부 인터넷 : 트래픽의 송신 주소를 NAT의 Elastic IP로 설정
+            li 외부 인터넷 → VPC 내 인스턴스 : 트래픽의 수신 주소를 인스턴스의 private IP로 설정
+        li VPC endpoint
+        p 인터넷 게이트웨이를 거치지 않고, VPC 내 인스턴스와 AWS 서비스 또는 엔드포인트 서비스 사이의 직접적인 연결 지원
+        li NIC; Network Interface Controller
+        p 서브넷 내에서, 특정 보안 그룹 집합을 갖는 NIC를 생성할 수 있다. 인스턴스 : NIC = 1 : N 관계이며, 결과적으로 인스턴스는 N개의 private IP 주소를 할당받는다
+        li Network ACL; Network Access Control List
+        p 서브넷(들)에 대한 선택적인 방화벽 계층
+        table
+            caption 보안 그룹과 네트워크 ACL 비교
+            +ths('Security group', 'Network ACL')
+            +tds('인스턴스 단위 동작', '서브넷 단위 동작')
+            +tds('허가 규칙만 존재', '허가 + 거부 규칙 존재')
+            +tds('Is stateful: 응답은 무조건 허가', 'Is stateless: 응답도 규칙에 의해 허가되어야 한다')
+            +tds('규칙은 순서 없이 모두 평가', '규칙은 우선순위에 의해 순차적으로 평가')
+            +tds('적용된 인스턴스에 한해 적용', '서브넷에 포함된 모든 인스턴스에 자동 적용(따라서 선택적인 보안 계층을 제공함을 의미)')
+        li VPC peering connection
+        p 두 VPC(서로 다른 AWS 계정이어도 됨) 사이의 연결 지원. 인터넷 게이트웨이, VPN을 거치지 않고 각자의 private IP를 이용하여 AWS backbone을 통해 다이렉트로 암호화된 통신 가능
+        li Client VPN
+        p OpenVPN을 이용한 사용자 PC와 VPC 사이의 VPN 지원. private IP 주소를 이용한 인스턴스 접근이 가능해진다
+        li Site-to-Site VPN
+        p VPC와 사용자 네트워크 사이의 VPN 터널 유지
+
 
     h1 서버 다중화
     ol
