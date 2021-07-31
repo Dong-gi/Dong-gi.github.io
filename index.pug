@@ -10,6 +10,40 @@ include ./source/skeleton.pug
     h1.marker Hello World!
     p 방문을 환영합니다. 포트폴리오겸, 개인적으로 공부한 것들을 정리하는 사이트입니다.
 
+    h1.marker 최근 수정된 포스트
+    ul#recently-changed-posts
+    script.
+        let changedPosts = []
+        let notDeletedPosts = new Set()
+        for (let line of recentChangedPosts.split('\n').reverse()) {
+            let parts = line.split('\t')
+            if (parts.length != 2)
+                continue
+            changedPosts.push(parts[1])
+            switch (parts[0]) {
+                case 'D':
+                    notDeletedPosts.delete(parts[1])
+                    break
+                case 'A':
+                case 'M':
+                    notDeletedPosts.add(parts[1])
+                    break
+            }
+        }
+        let renderedCount = 0
+        for (let post of changedPosts.reverse()) {
+            if (notDeletedPosts.has(post)) {
+                notDeletedPosts.delete(post)
+                let url = '/' + post
+                let registeredPosts = posts.list.filter(o => o.file == url)
+                if (registeredPosts.length == 0)
+                    continue
+                document.getElementById('recently-changed-posts').appendChild(`<li><a href="${url}">${registeredPosts[0].title}</a></li>`.asSF().$)
+                if (renderedCount++ > 15)
+                    break
+            }
+        }
+
     h1.marker 경력
     table
         tr
@@ -18,7 +52,7 @@ include ./source/skeleton.pug
         tr
             td 2020-08
             td.hover-content(template-id='template-index-3') 슈퍼진 입사
-        +tds('2020-07', '산업기능요원 복무 만료@세시소프트')
+        +tds('2020-07', '산업기능요원 복무만료@세시소프트')
         tr
             td 2018-06
             td.hover-content(template-id='template-index-2') 산업기능요원 복무 시작@세시소프트
@@ -28,31 +62,39 @@ include ./source/skeleton.pug
             td.hover-content(template-id='template-index-1') 직업능력개발훈련교사 자격증 취득
         +tds('2017-11', '정보처리기사 취득')
 
-    h1.marker 수정사항
-    div
-        table
-            tr
-                th(pre-sort=1, sort-order='▲') 날짜
-                th 내용
-            +tds('2020-10-18', 'Jade -> Pug 업데이트')
-            +tds('2020-05-09', '기존 HTML -> Jade 템플릿 변경 완료')
-            +tds('2020-04-22', 'Jade 템플릿 적용 시작')
-            +tds('2020-01-16', 'GoormIDE로 이전')
-
-
     +hoverTemplate()#template-index-1
         ul
             li 통신서비스 3급
             li 정보기술개발 3급
             li 전자기기개발 3급
             li 전자기기일반 3급
+
     +hoverTemplate()#template-index-2
         ol
-            li 모바일 게임 3종 API 서버(tomcat) 유지보수
+            li
+                +asA('https://namu.wiki/w/꿈왕국과 잠자는 100명의 왕자님')
+                |  서버 유지보수; Rest API(SpringBoot + Spring Web), Admin(SpringBoot + Spring Web + Thymeleaf)
+            li
+                +asA('https://namu.wiki/w/노을빛 세계에서 너와 노래를…')
+                |  서버 유지보수; Rest API(Servlet), Admin(Servlet)
+            li
+                +asA('https://play.google.com/store/apps/details?id=com.sesisoft.kamurai&hl=ko&gl=US', '카무라이 트라이브')
+                |  서버 유지보수; Rest API(Servlet), Admin(Servlet + FreeMarker)
             li 게임 이벤트 데이터 작업을 위한 사내 
                 +asA('/posts/project/wpf_data_tool.html', 'WPF 애플리케이션')
                 |  개발
+
     +hoverTemplate()#template-index-3
         ol
-            li Puzzle Wizard 서버 개발
-            |API 서버(WebSocket), Admin 서버(REST)
+            li
+                +asA('https://fb.gg/play/puzzle_wizard', 'Puzzle Wizard')
+                |  서버 개발; 웹소켓(SpringBoot + Netty), Admin(SpringBoot + Spring Web)
+            li
+                +asA('https://fb.gg/play/super_pop', 'Super Pop')
+                |  서버 개발; 웹소켓(SpringBoot + Netty), Admin(SpringBoot + Spring Web)
+            li
+                +asA('https://fb.gg/play/omg_minigames', '123 Minigames')
+                |  서버 개발; Rest API(SpringBoot + Spring Reactive Web), Admin(SpringBoot + Spring Web)
+            li
+                +asA('https://developers.facebook.com/docs/games/instant-games/getting-started/bot-setup/', '페이스북 게임 봇')
+                |  + 유저 로깅 API 서버(Node + Express) 개발

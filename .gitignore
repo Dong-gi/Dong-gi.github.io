@@ -6,9 +6,13 @@
 .vs
 .vscode
 
-node_modules
+**/build/libs/
+**/build/reports/
+**/build/test-results/
+**/build/tmp/
 debug
 Logs
+node_modules
 packages
 RemoteSystemsTempFiles
 Servers
