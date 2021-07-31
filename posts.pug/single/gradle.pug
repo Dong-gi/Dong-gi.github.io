@@ -1,7 +1,7 @@
 include ../../source/skeleton.pug
 +post('Gradle', 'Gradle', 'Gradle 정리')
     h1
-        | Gradle 
+        |Gradle 
         +asA('https://docs.gradle.org/current/userguide/userguide.html')
     ol
         li 스크립트를 이용해 유연한 빌드 자동화 툴
@@ -47,7 +47,7 @@ include ../../source/skeleton.pug
         h2 build.gradle
         div
             h3
-                | Task; 작업 
+                |Task; 작업 
                 +asA('https://docs.gradle.org/current/userguide/custom_tasks.html')
                 +asA('https://docs.gradle.org/current/userguide/more_about_tasks.html')
             +asCode('gradle').
@@ -252,7 +252,7 @@ include ../../source/skeleton.pug
                     +asA('https://docs.gradle.org/current/userguide/multi_project_builds.html#multi_project_builds')
                 li -I 또는 --init-script 옵션을 지정하는 경우, 
                     +asA('https://docs.gradle.org/current/userguide/init_scripts.html#init_scripts')
-                    | 를 실행한다
+                    |를 실행한다
                 li USER_HOME/.gradle/ 에 init.gradle을 작성하면 초기화 시 실행된다
                 li USER_HOME/.gradle/init.d/, GRADLE_HOME/init.d/ 에 임의 .gradle 스크립트를 넣으면 초기화 시 실행된다
                 p 후자는 커스텀 gradle 배포에 이용하면 된다
@@ -267,9 +267,9 @@ include ../../source/skeleton.pug
                     }
                 p ↑ 이를 자동으로 적용하려면, gradle을 새로 압축하여 gradlew에서 이용하면 된다
                     br
-                    | gradle wrapper 생성 후, gradle-wrapper.properties에
+                    |gradle wrapper 생성 후, gradle-wrapper.properties에
                     br
-                    | distributionUrl=${customGradleUrl}
+                    |distributionUrl=${customGradleUrl}
             h3 Configuration
             p Project 인스턴스의 설정이 진행된다. 빌드될 각 프로젝트의 build.gradle 스크립트가 실행된다
             h3 Execution
@@ -610,7 +610,7 @@ include ../../source/skeleton.pug
                 systemProp.https.nonProxyHosts=*.nonproxyrepos.com|localhost
 
         h2
-            | Gradle 성능 
+            |Gradle 성능 
             +asA('https://docs.gradle.org/current/userguide/organizing_gradle_projects.html#organizing_gradle_projects')
         ol
             li Build scan
@@ -669,7 +669,7 @@ include ../../source/skeleton.pug
         li 플러그인은 프로젝트와 무관하게 사용 가능하다
         li 플러그인의 적용
             +asA('https://docs.gradle.org/current/javadoc/org/gradle/api/Plugin.html#apply-T-')
-            | 은 여러 번 호출해도 부작용이 없다
+            |은 여러 번 호출해도 부작용이 없다
         li 사용할 플러그인 이름은 Fully qualified name이어야 하지만, 특별히 정의된 짧은 이름도 사용할 수 있다
         p 예. JavaPlugin → 'java'
         li groovy, java, kotlin으로 작성 가능
@@ -739,7 +739,7 @@ include ../../source/skeleton.pug
                 li clean
                 p 출력 디렉터리(기본값 build/)
                     +asA('https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:buildDir')
-                    | 를 정리한다
+                    |를 정리한다
 
 
         h2 Java 플러그인

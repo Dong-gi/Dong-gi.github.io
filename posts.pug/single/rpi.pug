@@ -9,122 +9,122 @@ include ../../source/skeleton.pug
     h1 Python PiCamera 라이브러리 이용 예
     ol
         li.marker
-            | start_preview(), stop_preview()
+            |start_preview(), stop_preview()
             +codeBtn('/Repositories/Raspbian/start01.py', 'python')
         li.marker
-            | brightness
+            |brightness
             +codeBtn('/Repositories/Raspbian/start02.py', 'python')
         li.marker
-            | resolution, start_recording(), wait_recording(), stop_recording()
+            |resolution, start_recording(), wait_recording(), stop_recording()
             +codeBtn('/Repositories/Raspbian/start03.py', 'python')
         li.marker
-            | capture(), exposure_compensation, exposure_mode, meter_mode, image_effect
+            |capture(), exposure_compensation, exposure_mode, meter_mode, image_effect
             +codeBtn('/Repositories/Raspbian/start04.py', 'python')
         li.marker
-            | exif_tags
+            |exif_tags
             +codeBtn('/Repositories/Raspbian/start05.py', 'python')
         li.marker
-            | capture_continuous()
+            |capture_continuous()
             +codeBtn('/Repositories/Raspbian/start06.py', 'python')
         li.marker
-            | capture_sequence(use_video_port=True)
+            |capture_sequence(use_video_port=True)
             +codeBtn('/Repositories/Raspbian/start07.py', 'python')
         li.marker
-            | capture to an OpenCV object
+            |capture to an OpenCV object
             +codeBtn('/Repositories/Raspbian/start08.py', 'python')
 
     h1 Picamera with OpenCV 예
     ol
         li.marker
-            | fps change by resolution
+            |fps change by resolution
             +codeBtn('/Repositories/Raspbian/cam01.py', 'python')
         div
             h3 테스트 결과
-            | // jpeg quality [0, 100] default 85
+            |// jpeg quality [0, 100] default 85
             br
-            | // resolution can not changed in running
+            |// resolution can not changed in running
             br
-            | (320x240) : 14.05fps
+            |(320x240) : 14.05fps
             br
-            | (480x272) : 12.78fps
+            |(480x272) : 12.78fps
             br
-            | (600x400) : 10.94fps
+            |(600x400) : 10.94fps
             br
-            | (800x600) : 7.72fps
+            |(800x600) : 7.72fps
             br
-            | (1024x768) : 5.68fps
+            |(1024x768) : 5.68fps
             br
-            | (1280x960) : 4.22fps
+            |(1280x960) : 4.22fps
             br
-            | (1366x768) : 4.88fps
+            |(1366x768) : 4.88fps
             br
-            | (1440x900) : 4.11fps
+            |(1440x900) : 4.11fps
             br
-            | (1600x900) : 3.81fps
+            |(1600x900) : 3.81fps
             br
-            | (1920x1080) : 2.56fps
+            |(1920x1080) : 2.56fps
         li.marker
-            | fps change by ISO(sensitivity to light), default 0
+            |fps change by ISO(sensitivity to light), default 0
             +codeBtn('/Repositories/Raspbian/cam02.py', 'python')
         div
             h3 테스트 결과
-            | // ISO can not changed in running
+            |// ISO can not changed in running
             br
-            | // if ISO > 0 : exposure_mode property becomes non-functional
+            |// if ISO > 0 : exposure_mode property becomes non-functional
             br
-            | (600x400, ISO:0) : 10.35fps
+            |(600x400, ISO:0) : 10.35fps
             br
-            | (600x400, ISO:100) : 11.20fps
+            |(600x400, ISO:100) : 11.20fps
             br
-            | (600x400, ISO:200) : 10.55fps
+            |(600x400, ISO:200) : 10.55fps
             br
-            | (600x400, ISO:400) : 11.04fps
+            |(600x400, ISO:400) : 11.04fps
             br
-            | (600x400, ISO:800) : 11.03fps
+            |(600x400, ISO:800) : 11.03fps
             br
-            | (600x400, ISO:1600) : 10.20fps
+            |(600x400, ISO:1600) : 10.20fps
             br
-            | (1600x900, ISO:0) : 3.80fps
+            |(1600x900, ISO:0) : 3.80fps
             br
-            | (1600x900, ISO:100) : 3.77fps
+            |(1600x900, ISO:100) : 3.77fps
             br
-            | (1600x900, ISO:200) : 3.81fps
+            |(1600x900, ISO:200) : 3.81fps
             br
-            | (1600x900, ISO:400) : 3.73fps
+            |(1600x900, ISO:400) : 3.73fps
             br
-            | (1600x900, ISO:800) : 3.68fps
+            |(1600x900, ISO:800) : 3.68fps
             br
-            | (1600x900, ISO:1600) : 3.54fps
+            |(1600x900, ISO:1600) : 3.54fps
         li.marker
-            | awb_mode(auto-white-balance), default 'auto'
+            |awb_mode(auto-white-balance), default 'auto'
             +codeBtn('/Repositories/Raspbian/cam03.py', 'python')
         div
             h3 테스트 결과
-            | // awb_mode can changed in running
+            |// awb_mode can changed in running
             br
-            | // possible values can be obtained from PiCamera.AWB_MODES
+            |// possible values can be obtained from PiCamera.AWB_MODES
             br
-            | // {'cloudy': 3, 'auto': 1, 'tungsten': 5, 'flash': 8, 'horizon': 9, 'fluorescent': 6, 'incandescent': 7, 'shade': 4, 'off': 0, 'sunlight': 2}
+            |// {'cloudy': 3, 'auto': 1, 'tungsten': 5, 'flash': 8, 'horizon': 9, 'fluorescent': 6, 'incandescent': 7, 'shade': 4, 'off': 0, 'sunlight': 2}
             br
-            | (600x400, awb_mode:horizon) : 10.28fps
+            |(600x400, awb_mode:horizon) : 10.28fps
             br
-            | (600x400, awb_mode:off) : 11.97fps
+            |(600x400, awb_mode:off) : 11.97fps
             br
-            | (600x400, awb_mode:cloudy) : 10.19fps
+            |(600x400, awb_mode:cloudy) : 10.19fps
             br
-            | (600x400, awb_mode:shade) : 10.86fps
+            |(600x400, awb_mode:shade) : 10.86fps
             br
-            | (600x400, awb_mode:fluorescent) : 10.55fps
+            |(600x400, awb_mode:fluorescent) : 10.55fps
             br
-            | (600x400, awb_mode:tungsten) : 10.63fps
+            |(600x400, awb_mode:tungsten) : 10.63fps
             br
-            | (600x400, awb_mode:auto) : 10.71fps
+            |(600x400, awb_mode:auto) : 10.71fps
             br
-            | (600x400, awb_mode:flash) : 10.46fps
+            |(600x400, awb_mode:flash) : 10.46fps
             br
-            | (600x400, awb_mode:sunlight) : 10.57fps
+            |(600x400, awb_mode:sunlight) : 10.57fps
             br
-            | (600x400, awb_mode:incandescent) : 10.42fps
+            |(600x400, awb_mode:incandescent) : 10.42fps
     div
         h2 카메라 동작 중에 변경할 수 있는 picamera 인자들
         ol
@@ -157,18 +157,18 @@ include ../../source/skeleton.pug
         li.marker 감마 보정 : 인간의 지각은 비선형적으로 이루어진다; 작은 자극의 변화에 더 민감
         p 이를 선형적으로 부호화할 경우 사람의 눈에는 어두운 부분의 변화가 커지는 Posterization이 발생한다
             br
-            | y =  cx^γ 연산을 통해 차후 발생하는 왜곡의 역을 미리 수행하여 결과를 보정할 수 있다
+            |y =  cx^γ 연산을 통해 차후 발생하는 왜곡의 역을 미리 수행하여 결과를 보정할 수 있다
         li.marker Image Histogram : 전체 픽셀 중, 각 값에 해당하는 픽셀의 수를 그래프로 표시
         ul
             li Histogram Stretching
             p 영상의 히스토그램 분포가 특정 구간에 집중될 때, 이를 펼쳐 명암비를 높이면 보기 좋아진다
-                | ← 가장 작은 값을 0으로, 가장 큰 값을 255로 비례적으로 보정
+                |← 가장 작은 값을 0으로, 가장 큰 값을 255로 비례적으로 보정
                 br
-                | ← 잡음을 피하기 위해 위아래 일정 구간을 버리고 전체의 95%만을 이용할 수도 있다
+                |← 잡음을 피하기 위해 위아래 일정 구간을 버리고 전체의 95%만을 이용할 수도 있다
             li Histogram Equalization
             p [0, 255] 값이 균등하게 나타나도록 조정. contrast 증가 효과
                 br
-                | ← 극단적으로 밝은/어두운 영역은 따로따로 처리 : adaptive histogram equalization
+                |← 극단적으로 밝은/어두운 영역은 따로따로 처리 : adaptive histogram equalization
             li 두 컬러 히스토그램이 유사하면 실제 이미지도 유사하다
         li.marker 비트 평면 분할 : 8개의 비트들 각각에 대해 AND하여 영상 분할
         p 보통 최상위 비트 평면이 가장 유의미하고, 최하위 비트 평면이 가장 무의미
@@ -177,7 +177,7 @@ include ../../source/skeleton.pug
         li.marker 마스크를 이용한 필터링
         p 예. 3x3 마스크 [[m(-1, -1), m(-1, 0), m(-1, 1)], [m(0, -1), m(0, 0), m(0, 1)], [m(1, -1), m(1, 0), m(1, 1)]]에 대하여,
             br
-            | (r, c) 픽셀의 변화 : after(r, c) = sum_i(sum_j(m(i, j) * before(r + i, c + j))) ← convolution과 동일
+            |(r, c) 픽셀의 변화 : after(r, c) = sum_i(sum_j(m(i, j) * before(r + i, c + j))) ← convolution과 동일
         ul
             li 평균 필터 : 1/9 * [[1, 1, 1], [1, 1, 1], [1, 1, 1]]
             li 가중 평균 필터 : 1/16 * [[1, 2, 1], [2, 4, 2], [1, 2, 1]]
@@ -189,7 +189,7 @@ include ../../source/skeleton.pug
         li.marker 잡음 생성
         p 가우시안 잡음 : 잡음이 영상 전체에 분포되고, 그 분포가 가우스 분포를 따르는 경우
             br
-            | 소금&후추 잡음 : 잡음이 영상 임의의 위치에, 0 또는 255 값으로 분포하는 경우
+            |소금&후추 잡음 : 잡음이 영상 임의의 위치에, 0 또는 255 값으로 분포하는 경우
         li.marker 잡음 제거를 위한 비등방성 필터
         p Median Filter : 주변 픽셀 중 중앙값으로 대체
         li.marker 영상의 기하학적 변환
@@ -224,10 +224,10 @@ include ../../source/skeleton.pug
         li 해리스 코너 포인트 검출
         p 영상이 회전하거나 크기가 다소 변해도 코너는 동일한 위치에서 검출되기 때문에, 영상의 유사점을 찾는 데도 이용된다
             br
-            | * 코너는 사물과 사물, 사물과 배경 사이에 위치한다
+            |* 코너는 사물과 사물, 사물과 배경 사이에 위치한다
             br
-            | → 영상에서 윈도우를 움직이며 픽셀값 변화를 관찰한다
-            | → 변화가 없으면 사물/배경 내부, 한쪽 방향으로만 변화가 있으면 엣지, 여러 방향에서 변화하면 코너
+            |→ 영상에서 윈도우를 움직이며 픽셀값 변화를 관찰한다
+            |→ 변화가 없으면 사물/배경 내부, 한쪽 방향으로만 변화가 있으면 엣지, 여러 방향에서 변화하면 코너
         li.marker 색공간
         ul
             li RBG to Gray : Y = 0.299R + 0.587G + 0.114B // (4988*R + 9617*G + 1868*B)>>14
@@ -235,7 +235,7 @@ include ../../source/skeleton.pug
             li YUV model : Y 밝기, U 파란색, V 빨간색
         li.marker 이진화 임계값 결정
         p 임의의 T 설정. T보다 작은 픽셀값 평균 μ1과 T보다 큰 픽셀 평균 μ2에 대해, 
-            | T = (μ1 + μ2) / 2 ← T의 변화가 없을 때까지 반복
+            |T = (μ1 + μ2) / 2 ← T의 변화가 없을 때까지 반복
         li.marker 외곽선 추적
         p 주변 8개 이웃을 모두 고려한다
         ol
@@ -271,31 +271,31 @@ include ../../source/skeleton.pug
     ol
         li.marker cv 전체 속성 출력 : help(cv2.Attr)
         li.marker
-            | imread(), imshow(), waitKey(), namedWindow(), destroyWindow(), destroyAllWindows(), imwrite()
+            |imread(), imshow(), waitKey(), namedWindow(), destroyWindow(), destroyAllWindows(), imwrite()
             +codeBtn('/Repositories/Raspbian/cv01.py', 'python')
         p mode : IMREAD_ANYCOLOR, IMREAD_ANYDEPTH, IMREAD_COLOR, IMREAD_GRAYSCALE, IMREAD_IGNORE_ORIENTATION, IMREAD_LOAD_GDAL, IMREAD_REDUCED_COLOR_2, IMREAD_REDUCED_COLOR_4, IMREAD_REDUCED_COLOR_8, IMREAD_REDUCED_GRAYSCALE_2, IMREAD_REDUCED_GRAYSCALE_4, IMREAD_REDUCED_GRAYSCALE_8, IMREAD_UNCHANGED
         li.marker
-            | pyplot::imshow(), xticks(), yticks(), show()
+            |pyplot::imshow(), xticks(), yticks(), show()
             +codeBtn('/Repositories/Raspbian/cv02.py', 'python')
         p Matplotlib : 
             +asA('https://matplotlib.org/api/pyplot_api.html')
         li.marker
-            | VideoWriter(), VideoCapture()
+            |VideoWriter(), VideoCapture()
             +codeBtn('/Repositories/Raspbian/cv03.py', 'python')
         li.marker
-            | line(), rectangle(), circle(), ellipse(), polylines(), putText()
+            |line(), rectangle(), circle(), ellipse(), polylines(), putText()
             +codeBtn('/Repositories/Raspbian/cv04.py', 'python')
         li.marker
-            | mouse event
+            |mouse event
             +codeBtn('/Repositories/Raspbian/cv05.py', 'python')
         li.marker
-            | numpy 이용한 ROI 설정, 컬러 추출, border 설정
+            |numpy 이용한 ROI 설정, 컬러 추출, border 설정
             +codeBtn('/Repositories/Raspbian/cv06.py', 'python')
         li.marker
-            | cv2::add(), addWeighted() ← Blending, cvtColor(), bitwise_and|or|not|xor()
+            |cv2::add(), addWeighted() ← Blending, cvtColor(), bitwise_and|or|not|xor()
             +codeBtn('/Repositories/Raspbian/cv07.py', 'python')
         li.marker
-            | HSV
+            |HSV
             +codeBtn('/Repositories/Raspbian/cv08.py', 'python')
         p OpenCV의 HSV 색공간은 [0, 179], [0, 255], [0, 255]이므로 다른 범위를 쓰는 프로그램은 정규화 필요
         div
@@ -307,13 +307,13 @@ include ../../source/skeleton.pug
                 li low_green = np.array([hue-10, 100, 100])
                 li high_green = np.array([hue+10, 255, 255])
         li.marker
-            | Image Thresholding
+            |Image Thresholding
             +codeBtn('/Repositories/Raspbian/cv09.py', 'python')
         p cv2::threshold() : THRESH_BINARY, THRESH_BINARY_INV, THRESH_MASK, *THRESH_OTSU, THRESH_TOZERO, THRESH_TOZERO_INV, THRESH_TRIANGLE, THRESH_TRUNC
             br
-            | cv2::adaptiveThreshold() : ADAPTIVE_THRESH_GAUSSIAN_C, ADAPTIVE_THRESH_MEAN_C
+            |cv2::adaptiveThreshold() : ADAPTIVE_THRESH_GAUSSIAN_C, ADAPTIVE_THRESH_MEAN_C
         li.marker
-            | Geometric Transformations of Images
+            |Geometric Transformations of Images
             +codeBtn('/Repositories/Raspbian/cv10.py', 'python')
         ul
             li.marker cv2::warpAffine() takes a 2x3 transformation matrix
@@ -329,24 +329,24 @@ include ../../source/skeleton.pug
             li.marker cv2::resize()
             p interpolation 보간 : INTER_AREA for shrinking, INTER_CUBIC (slow) & INTER_LINEAR for zooming, INTER_LINEAR for default
                 br
-                | 크기를 지정하거나 배율을 지정 : resize(img, None, fx=2, fy=3) == resize(img, (2*width, 2*height))
+                |크기를 지정하거나 배율을 지정 : resize(img, None, fx=2, fy=3) == resize(img, (2*width, 2*height))
         li.marker
-            | filter
+            |filter
             +codeBtn('/Repositories/Raspbian/cv11.py', 'python')
         p LPF(low-pass filter) : 노이즈 제거, blurring
             br
-            | HPF(high-pass filter) : edge 검출
+            |HPF(high-pass filter) : edge 검출
         li.marker
-            | Morphological Transformations
+            |Morphological Transformations
             +codeBtn('/Repositories/Raspbian/cv12.py', 'python')
         li.marker
-            | Image Gradients
+            |Image Gradients
             +codeBtn('/Repositories/Raspbian/cv13.py', 'python')
         li.marker
-            | Image Pyramids
+            |Image Pyramids
             +codeBtn('/Repositories/Raspbian/cv14.py', 'python')
         li.marker
-            | cv2::findContours
+            |cv2::findContours
             +codeBtn('/Repositories/Raspbian/cv15.py', 'python')
 
     h1 테스트용 이미지 수집
@@ -369,10 +369,10 @@ include ../../source/skeleton.pug
     h1 실습 과제
     ol
         li.marker
-            | 정면 얼굴 및 눈 검출 시도
+            |정면 얼굴 및 눈 검출 시도
             +codeBtn('/Repositories/Raspbian/cctv01.py', 'python')
         li.marker
-            | 화재 검출 시도
+            |화재 검출 시도
             +codeBtn('/Repositories/Raspbian/cctv02.py', 'python')
         div
             +codeBtn('/Repositories/Raspbian/cctv02-2.py', 'python')

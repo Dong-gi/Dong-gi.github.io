@@ -40,7 +40,7 @@ include ../../source/skeleton.pug
         li 프로젝트 생성
         p "File" 메뉴 클릭, 또는 "Package Explorer"에서 우클릭 - New - Java Project
             br
-            | 없으면 New - Other... - Java - Java Project를 선택
+            |없으면 New - Other... - Java - Java Project를 선택
             br
             +w3img('/imgs/20180826_213734.png')
         li Main 클래스 생성
@@ -48,13 +48,13 @@ include ../../source/skeleton.pug
             br
             +w3img('/imgs/20180826_214148.png')
             br
-            | Name에는 "HelloWorld"(공백 없음에 유의)를 적고, public static void main(String[] args)를 체크
+            |Name에는 "HelloWorld"(공백 없음에 유의)를 적고, public static void main(String[] args)를 체크
         li 실행
         p
             +codeBtn('/Repositories/Single/tutorial/HelloWorld.java', 'java')
             |  와 같이 코드를 작성하고 Run
             br
-            | 콘솔 결과창이 보이지 않는다면 Window - Show View - Console 선택
+            |콘솔 결과창이 보이지 않는다면 Window - Show View - Console 선택
 
     h1 개발 과정
     ol "»" 우측은 산출물
@@ -64,12 +64,12 @@ include ../../source/skeleton.pug
         li 해석 by JVM 인터프리터 » 기계어
         p java.exe가 담당
             br
-            | JIT(Just-In-Time) : 한 번 해석한 바이트 코드를 다시 해석하지 않고, 이전에 해석된 기계어를 가져다 이용
+            |JIT(Just-In-Time) : 한 번 해석한 바이트 코드를 다시 해석하지 않고, 이전에 해석된 기계어를 가져다 이용
         li 실행 by CPU
         li 참고
         p javadoc.exe : 주석 html 문서 생성
             br
-            | jar.exe : Java ARchive. 프로그램 실행에 관련된 파일들을 .jar파일로 압축
+            |jar.exe : Java ARchive. 프로그램 실행에 관련된 파일들을 .jar파일로 압축
 
     h1 주석
     ol
@@ -91,7 +91,7 @@ include ../../source/skeleton.pug
         li 기본 자료형(Base Type; Primitive Type)
         p 참조 자료형이 아닌 자바의 8가지 기본 자료형은 메모리 상에 값이 그대로 존재한다. boolean, char, byte, short, int, long, float, double
             br
-            | 식별자 없이 값 자체를 나타내는 코드를 리터럴(Literal)이라 부른다. 각 자료형의 리터럴과 적용되는 연산은 아래의 예시 코드 참고
+            |식별자 없이 값 자체를 나타내는 코드를 리터럴(Literal)이라 부른다. 각 자료형의 리터럴과 적용되는 연산은 아래의 예시 코드 참고
             br
             +codeBtn('/Repositories/Single/tutorial/BooleanExample.java', 'java')
             +codeBtn('/Repositories/Single/tutorial/CharExample.java', 'java')
@@ -107,7 +107,7 @@ include ../../source/skeleton.pug
             li 정적 할당
             p 컴파일러가 메모리 점유를 정확하게 예측할 수 있는 (지역)변수를 생성하는 방법으로, 선언과 동시에 스택 영역에 할당되어 코드 블록이 끝나는 순간 해제된다
                 br
-                | 클로저 Closure : 동적 할당되어 유지되는 객체 안에 정적 할당되는 변수를 선언하여 정적 변수의 소멸 시기를 스코프 밖으로 지연시키는 것
+                |클로저 Closure : 동적 할당되어 유지되는 객체 안에 정적 할당되는 변수를 선언하여 정적 변수의 소멸 시기를 스코프 밖으로 지연시키는 것
             li 동적 할당
             p 동적으로 할당되는 객체들은 힙 영역에 생성되며, 그 참조가 유지되는 한 프로그램 종료시까지 유지된다
         li 형변환 Type Casting
@@ -254,7 +254,7 @@ include ../../source/skeleton.pug
         li boolean equals(Object obj)
         p Object 클래스의 equals 구현 : return this == obj;
             br
-            | equals()를 오버라이드할 경우 non-null 참조 변수들에 대해 아래의 원칙을 만족해야 한다
+            |equals()를 오버라이드할 경우 non-null 참조 변수들에 대해 아래의 원칙을 만족해야 한다
         ol
             li x.equals(null) == false
             li Reflexive : x.equals(x) == true
@@ -274,8 +274,8 @@ include ../../source/skeleton.pug
         li @Deprecated(since="9") protected void finalize()
         p 객체 폐기 메서드였던 것
             br
-            | 대안 : Non-heap 리소스를 갖는 객체들에 대하여 명시적인 자원 해제 메서드를 지원해야 하며, 가능하면 AutoCloseable을 구현한다
-            | java.lang.ref.Cleaner, java.lang.ref.PhantomReference는 참조되지 않는 객체를 해제하는 데 유연한 방법을 
+            |대안 : Non-heap 리소스를 갖는 객체들에 대하여 명시적인 자원 해제 메서드를 지원해야 하며, 가능하면 AutoCloseable을 구현한다
+            |java.lang.ref.Cleaner, java.lang.ref.PhantomReference는 참조되지 않는 객체를 해제하는 데 유연한 방법을 
             +asA('https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/lang/ref/Cleaner.html', '제공한다')
 
     h1 패키지
@@ -317,7 +317,7 @@ include ../../source/skeleton.pug
         li A가 B의 서브타입일 때, A[]는 B[]의 서브타입이지만, G&lt;A>는 G&lt;B>의 서브타입이 아니다
         p Erasure : 컴파일 시 제네릭 타입을 모두 지우고 바운드 타입으로(명시되지 않았다면 Object) 변경한다. javap를 통해 이를 확인할 수 있다
             br
-            | 자식 메서드의 Erasure가 부모와 다를 때 부모 메서드는 bridge 메서드가 되어 자식의 Erasure를 이용하는 메서드를 호출한다. 이 과정에서 리턴 타입만 다른 메서드들이 생성될 수 있지만, 바이트 코드 단계기 때문에 에러가 발생되지 않고 잘 처리된다
+            |자식 메서드의 Erasure가 부모와 다를 때 부모 메서드는 bridge 메서드가 되어 자식의 Erasure를 이용하는 메서드를 호출한다. 이 과정에서 리턴 타입만 다른 메서드들이 생성될 수 있지만, 바이트 코드 단계기 때문에 에러가 발생되지 않고 잘 처리된다
         li 메서드에서는 와일드카드 '?'를 이용하여 임의 제네릭 타입을 매개변수로 받을 수 있다
         li 제네릭을 통한 객체 생성 불가. 제네릭을 static 요소에서 이용하는 데 제한
         li 제네릭 타입의 선언, 제네릭 리스트 일부 구현, 바운드된 타입 매개변수 선언

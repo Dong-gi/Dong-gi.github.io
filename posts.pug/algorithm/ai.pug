@@ -48,7 +48,7 @@ include ../../source/skeleton.pug
         ol
             li leaf가 아닌 노드들은 데이터를 분류하기 위한 질문을 가진다
             span.hover-content(template-id='template-ai-impurity') 불순도
-            | 가 가장 작은 질문이 선택된다
+            |가 가장 작은 질문이 선택된다
             li leaf 노드는 클래스(회귀 모델에서는 확률값)를 가진다
             li 데이터는 루트 노드로부터 진입하여 질문에 따라 자식 노드로 이동한다
             li 정확성을 높이는 방안
@@ -85,9 +85,9 @@ include ../../source/skeleton.pug
             li 선형 이진 분류기
             li 모든 벡터(데이터)의 차원이 동일한 경우, 적절한 원점을 설정해 만든 n차원 공간에서
                 span.hover-content(template-id='template-ai-margin') margin
-                | 이 최대인
+                |이 최대인
                 span.hover-content(template-id='template-ai-hyperplane') 초평면
-                | 을 찾는다
+                |을 찾는다
             li 초평면의 법선 식[w]식, 초평면과 원점 사이의 거리 식[b]식, 임의 데이터 식[x]식에 대하여 식[f(x)=w \cdot x + b]식의 부호가 클래스를 결정한다
             li n차원 공간 [식[x_1, \cdots, x_n]식]에서는 초평면을 찾기 어렵지만, 적절히 차원을 늘리면 [식[x_1, \cdots, x_n, x_{n+1}, \cdots]식] 초평면을 찾기 쉬워질 수 있다
             ul
@@ -100,9 +100,9 @@ include ../../source/skeleton.pug
     +hoverTemplate()#template-ai-impurity
         |불순도 Impurity : 분류된 범주에 다른 범주의 데이터가 섞여있는 정도. 없으면 최소
         br
-        | 엔트로피 Entropy : 불순도를 수치화한 것. 식[-\sum_{k}P_k \log_{2}P_k]식. 식[P_k]식는 클래스 k로 분류된 데이터 중 실제로 클래스가 k인 데이터의 비율
+        |엔트로피 Entropy : 불순도를 수치화한 것. 식[-\sum_{k}P_k \log_{2}P_k]식. 식[P_k]식는 클래스 k로 분류된 데이터 중 실제로 클래스가 k인 데이터의 비율
     +hoverTemplate()#template-ai-margin
-        | margin : 초평면과 가장 가까운 데이터 사이의 거리
+        |margin : 초평면과 가장 가까운 데이터 사이의 거리
     +hoverTemplate()#template-ai-hyperplane
-        | 초평면(超平面, 영어: hyperplane)은 3차원 공간 속의 평면을 일반화하여 얻는 개념이다
+        |초평면(超平面, 영어: hyperplane)은 3차원 공간 속의 평면을 일반화하여 얻는 개념이다
         +asA('https://ko.wikipedia.org/wiki/%EC%B4%88%ED%8F%89%EB%A9%B4_(%EC%88%98%ED%95%99)', '위키피디아')

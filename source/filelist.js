@@ -2188,7 +2188,6 @@ imgs/spring-mvc-and-webflux-venn.png
 index.html
 index.pug
 posts.pug/algorithm/ai.pug
-posts.pug/algorithm/algo.pug
 posts.pug/algorithm/koreatech/1003.pug
 posts.pug/algorithm/koreatech/1008.pug
 posts.pug/algorithm/koreatech/1010.pug
@@ -2309,6 +2308,7 @@ posts/algorithm/koreatech/1060.html
 posts/algorithm/koreatech/1095.html
 posts/algorithm/linear_algebra.html
 posts/algorithm/mcs.html
+posts/algorithm/overview.html
 posts/algorithm/probability.html
 posts/book/001.html
 posts/book/002.html
@@ -2431,6 +2431,7 @@ posts/single/temp1.html
 posts/single/tomcat.html
 posts/single/unity.html
 posts/single/vi.html
+pugs/algorithm/overview.pug
 robots.txt
 sitemap/sitemap.txt
 source/default.css

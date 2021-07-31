@@ -3,15 +3,14 @@
 mixin asA(href, text)
     - if (!text && /#/.test(href)) { text = href.replace(/.*#/, '') }
     - if (!text && /\//.test(href)) { text = href.replace(/.*\//, '') }
-    - if (!text) { text = 'Reference' }
-    - text = text.replace(/\.(html?|jsp|php|asp|do|js|css|txt|java)$/, '')
+    - if (!text) { text = href }
     +w3a()&attributes({ href: href })&attributes(attributes)= text
 
 mixin asCode(lan, title)
     - lan = lan || 'text'
     - title = title || lan
     p: strong
-        | ↓ 
+        |↓ 
         = title
     .as-code.code-div.w3-leftbar.w3-border-green(lan=lan)
         if block
@@ -92,7 +91,7 @@ mixin post(title, keywords, description, useMJX, noAds)
                         block
                 hr
                 ul
-                    li &copy; 2020. <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> all rights reserved. 
+                    li &copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a>. 
                         +asA('/LICENSE', 'MIT License')
                     li
                         +asA('https://www.w3schools.com/w3css')
@@ -147,6 +146,6 @@ mixin w3img(src, alt)
         - if (alt && alt.length > 0)
             br
             strong
-                | &lt;이미지 - 
+                |&lt;이미지 - 
                 = alt
-                | >
+                |>

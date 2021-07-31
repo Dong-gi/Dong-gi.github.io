@@ -293,7 +293,7 @@ include ../../source/skeleton.pug
             GRANT SELECT ON ALL TABLES IN SCHEMA public TO user;
             GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO user;
         h2
-            | Row Security Policies
+            |Row Security Policies
             +asA('http://postgresql.kr/docs/current/ddl-rowsecurity.html', 'ddl-rowsecurity')
         +asCode('sql').
             -- 관리자 그룹에 속한 사용자가, 자신과 관련한 행만 접근
@@ -544,7 +544,7 @@ include ../../source/skeleton.pug
                 li s(scale) : 소수 정밀도
                 p 예. 3.141592의 precision = 7, scale = 6
                     br
-                    | 정수는 scale = 0인 numeric으로 간주해도 무방
+                    |정수는 scale = 0인 numeric으로 간주해도 무방
                 li NUMERIC(precision) : scale = 0
                 li NUMERIC : 임의 유효숫자, 소수 정밀도의 10진수 모두 저장 가능
                 p 무한히 큰 수를 지원하진 않는다. 소수점 전 131072 자리, 소수점 후 16383 자리까지 지원

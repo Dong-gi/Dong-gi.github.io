@@ -6,7 +6,7 @@ buildOnePost() {
         return 1
     fi
     dirPath=`dirname "$filePath"`
-    outDirPath=${dirPath/posts.pug/posts}
+    outDirPath=${dirPath/pugs/posts}
     pug --doctype html --out $outDirPath/ $filePath
 }
 
@@ -33,9 +33,9 @@ echo 'js 압축 완료'
 # need pug-cli
 if (( $# > 0 )) && (( $1 > 0 ))
 then
-    find posts.pug/ -name '*.pug' -and -mmin -$1 | while read file; do buildOnePost "$file"; done
+    find pugs/ -name '*.pug' -and -mmin -$1 | while read file; do buildOnePost "$file"; done
 else
-    pug --doctype html --out posts/ posts.pug/
+    pug --doctype html --out posts/ pugs/
 fi
 echo 'post 빌드 완료'
 

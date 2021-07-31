@@ -4,7 +4,7 @@ include ../../../source/skeleton.pug
     ul
         li 템플릿은 임의의 텍스트 파일이 될 수 있으며, HTML로 한정되지 않는다
             br
-            | 출력 텍스트의 아래 요소들은 FreeMarker에서 처리되고, 나머지는 있는 그대로 출력된다
+            |출력 텍스트의 아래 요소들은 FreeMarker에서 처리되고, 나머지는 있는 그대로 출력된다
         li ${...} : FreeMarker는 출력 텍스트에서 이 부분을 중괄호 안 표현식의 값으로 치환한다. Interpolation이라고 부른다
         li FTL(FreeMarker Template Language) 태그 == directive : HTML 태그와 유사하지만, #으로 시작한다. 사용자 정의 태그는 @으로 시작한다. 출력에 포함되지 않는다
         p Directive 예 : &lt;#if>, &lt;#elseif>, &lt;#else>, ...
@@ -19,7 +19,7 @@ include ../../../source/skeleton.pug
         li FreeMarker는 null 예외나 찾을 수 없는 식별자 예외를 동일하게 "undefined variable" error를 발생시킨다
         li 기본값 설정 : !
             br
-            | 존재 여부 확인 : ??
+            |존재 여부 확인 : ??
             +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/Basic.java', 'java', '[25, 30]') Java »
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_002_hello.ftl', 'xml', '[1, 14, 17, 30]') FTL + 결과 »
         li 검사 범위 설정 : ()

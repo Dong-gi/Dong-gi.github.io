@@ -237,7 +237,7 @@ include ../../source/skeleton.pug
             li ServletContext
             p 애플리케이션 수준 공유 데이터. GenericServlet#getServletContext로 참조할 수 있다. JSP에서는 application 변수
                 br
-                | initParams : 앱 초기화 매개변수. 모든 서블릿이 ServletContext#getInitParameter로 참조할 수 있다
+                |initParams : 앱 초기화 매개변수. 모든 서블릿이 ServletContext#getInitParameter로 참조할 수 있다
             +asCode('xml').
                 &lt;!-- web.xml -->
                 &lt;context-param>
@@ -247,7 +247,7 @@ include ../../source/skeleton.pug
             li ServletConfig
             p 서블릿 수준 공유 데이터. GenericServlet#getServletConfig로 참조할 수 있다. JSP에서는 config 변수
                 br
-                | initParams : 서블릿 초기화 매개변수. 서블릿 내에서 GenericServlet#getInitParameter로 참조할 수 있다
+                |initParams : 서블릿 초기화 매개변수. 서블릿 내에서 GenericServlet#getInitParameter로 참조할 수 있다
             li 당연하지만, 서블릿 static 멤버도 서블릿 수준 공유 가능
             li HttpSession
             p 세션 수준 공유 데이터. HttpServletRequest#getSession으로 참조할 수 있다. JSP에서는 session 변수

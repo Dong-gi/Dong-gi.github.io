@@ -263,7 +263,7 @@ include ../../source/skeleton.pug
             li 파일을 열고 file 객체를 반환한다. 텍스트 모드의 경우 io.TextIOBase, 이진 모드의 경우 io.BufferedIOBase
             li file :
                 +asA('https://docs.python.org/3/glossary.html#term-path-like-object', 'path-like object')
-                | . file이 file descriptor인 경우, closefd가 False면 반환된 객체가 닫혀도 descriptor를 닫지 않는다
+                |. file이 file descriptor인 경우, closefd가 False면 반환된 객체가 닫혀도 descriptor를 닫지 않는다
             li mode : r(읽기, default), w(쓰기, 파일 처음부터), x(없으면 생성), a(이어 쓰기), b(이진), t(텍스트, default), +(읽기+쓰기)
             li encoding : 텍스트 모드에서만 사용. 주어지지 않은 경우 locale.getpreferredencoding(False) 이용
             p 가능한 인코딩 목록은 codecs 모듈에 정의됨

@@ -11,9 +11,9 @@ include ../../source/skeleton.pug
         li 소스 코드 인코딩
         p 기본 UTF-8. 변경하려면 파일 첫 줄에 주석 추가
             br
-            | 예. # -*- coding: cp1252 -*-
+            |예. # -*- coding: cp1252 -*-
             br
-            | 단, 유닉스 셔뱅 줄(#!/usr/bin/env python3)이 있는 경우엔 2번째 줄에 들어간다
+            |단, 유닉스 셔뱅 줄(#!/usr/bin/env python3)이 있는 경우엔 2번째 줄에 들어간다
 
     h1 자료형
     ul
@@ -51,23 +51,23 @@ include ../../source/skeleton.pug
             li 파이썬 문자열은 상수(불변)다. 리터럴로 ''와 ""모두 사용 가능하다
             li + : 문자열 결합 연산자
                 br
-                | * : 문자열 복제 연산자
+                |* : 문자열 복제 연산자
                 br
-                | 문자열 리터럴은 단순히 공백을 기준으로 나열만 해도 연결된다
+                |문자열 리터럴은 단순히 공백을 기준으로 나열만 해도 연결된다
                 +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[20,22]')
             li ''' 또는 """로 열고 닫음으로써 여러 줄의 문자열 리터럴을 작성할 수 있다. 이진 문자열도 가능하다
                 +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[23,26]')
             li r'' → Raw String 리터럴. 이스케이프하지 않는다
             li str() : 사람이 읽기 편한 형태로 객체의 문자열 표현 반환
                 br
-                | repr() : 개발자를 위한 형태로 객체의 문자열 표현 반환. repr() 그대로 객체를 복원할 수 있도록 하자
+                |repr() : 개발자를 위한 형태로 객체의 문자열 표현 반환. repr() 그대로 객체를 복원할 수 있도록 하자
             li str은 시퀀스이므로 슬라이싱
                 +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[28,33]') 가능
                 |  , len() 이용
                 +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[35,35]') 가능
             li split() : 분리. 기본은 공백 문자
                 br
-                | join() : 문자열 접합
+                |join() : 문자열 접합
                 +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[37,40]')
             li strip() : 앞뒤 문자열 제거. 기본은 공백 제거
                 +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[42,43]')
@@ -88,9 +88,9 @@ include ../../source/skeleton.pug
                 i f_expression
                 |  [!
                 i conversion
-                | ] [:
+                |] [:
                 i format_spec
-                | ] "}"
+                |] "}"
             li f_expression : 값을 산출하는 표현식
                 +codeBtn('/Repositories/Python/Basic/f_string.py', 'python', '[1,2]')
             li conversion ::= "s" | "r" | "a"
@@ -99,19 +99,19 @@ include ../../source/skeleton.pug
             li f_expression이 산출한 값이 conversion을 거쳐 __format__(format_spec)으로 포매팅된다
             li format_spec ::= [[
                 i fill
-                | ]
+                |]
                 i align
-                | ][
+                |][
                 i sign
-                | ][#][0][
+                |][#][0][
                 i width
-                | ][
+                |][
                 i grouping_option
-                | ][.
+                |][.
                 i precision
-                | ][
+                |][
                 i type
-                | ]
+                |]
             li fill ::= 임의_문자
             li align ::= "&lt;" | ">" | "=" | "^"
                 +codeBtn('/Repositories/Python/Basic/f_string.py', 'python', '[13,17]')
@@ -140,9 +140,9 @@ include ../../source/skeleton.pug
         h2 collections.namedtuple
         p collections.namedtuple(typename, field_names, verbose=False, rename=False)
             br
-            | 각 필드를 주어진 이름으로 접근할 수 있는 tuple의 서브클래스를 반환한다. DTO 작성에 유용
+            |각 필드를 주어진 이름으로 접근할 수 있는 tuple의 서브클래스를 반환한다. DTO 작성에 유용
             br
-            | _fields, _make(iterable), _asdict()
+            |_fields, _make(iterable), _asdict()
 
         h2 set
         p
@@ -183,7 +183,7 @@ include ../../source/skeleton.pug
             p 같은 오프셋의 요소들로 튜플을 생성. 시퀀스가 하나라도 끝나면 순회 종료
                 +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[48,49]')
                 br
-                | 길이가 긴 시퀀스를 기준으로 하는 itertools.zip_longest()도 존재
+                |길이가 긴 시퀀스를 기준으로 하는 itertools.zip_longest()도 존재
             li comprehension : 순회를 통해 리스트, 딕셔너리, 셋 등 생성
                 +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[52,89]')
             p 파이썬 3에서 comprehension은 함수처럼 고유한 지역 범위를 가진다
@@ -195,7 +195,7 @@ include ../../source/skeleton.pug
         li 파이썬의 함수는 일급 객체다
         li 함수 정의 def
             i func_name
-            | ():
+            |():
             +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[91,100]')
         +asCode('python') def func(a, b, *, c = None):
         p * 뒷부분은 키워드 인자로만 보낼 수 있다
@@ -290,7 +290,7 @@ include ../../source/skeleton.pug
         li pip : 파이썬 패키지 설치, 제거에 관한 프로그램
         li 기본적으로
             +asA('https://pypi.org/')
-            | 의 패키지들이 대상이다
+            |의 패키지들이 대상이다
     +asCode('shell').
         pip install requests
         pip install requests==2.6.0
@@ -351,4 +351,4 @@ include ../../source/skeleton.pug
         li python -m asyncio
         p 로 실행하면 asyncio.run()을 호출할 필요없이 최상위 수준에서 await 구문을 이용할 수 있다
             br
-            | compile() 빌트인 함수에 ast.PyCF_ALLOW_TOP_LEVEL_AWAIT를 넘기면 최상위 레벨에서 await, async for, async with 사용이 허용된다
+            |compile() 빌트인 함수에 ast.PyCF_ALLOW_TOP_LEVEL_AWAIT를 넘기면 최상위 레벨에서 await, async for, async with 사용이 허용된다

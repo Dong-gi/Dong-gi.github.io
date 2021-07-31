@@ -80,7 +80,7 @@ include ../../source/skeleton.pug
     ol
         li
             +asA('https://openjdk.java.net/jeps/286')
-            | 타입 추론 강화로 지역 변수의 타입 선언에 var를 이용할 수 있게 되었다
+            |타입 추론 강화로 지역 변수의 타입 선언에 var를 이용할 수 있게 되었다
         ul
             li 지역변수를 선언하면서 초기화할 때 이용 가능
             li 강화된 for 루프 인덱스에 이용 가능
@@ -93,44 +93,44 @@ include ../../source/skeleton.pug
     ol
         li
             +asA('https://openjdk.java.net/jeps/318')
-            | Epsilon : 기능없는 GC
+            |Epsilon : 기능없는 GC
         p 메모리 할당만 하는 GC. 힙 고갈 시 JVM 셧다운
         li
             +asA('https://openjdk.java.net/jeps/321')
-            | HTTP/2, WebSocket API를 지원하는 java.net.http 표준 모듈 추가
+            |HTTP/2, WebSocket API를 지원하는 java.net.http 표준 모듈 추가
         li
             +asA('https://openjdk.java.net/jeps/323')
-            | 람다의 암시적인 매개변수 선언에 var 키워드 사용 가능
+            |람다의 암시적인 매개변수 선언에 var 키워드 사용 가능
         +asCode('java') (@NonNull var x, @NonNull var y) -> x.process(y);
         li
             +asA('https://openjdk.java.net/jeps/324')
-            | 디피-헬만 키 교환보다 효율적이고 안전한
+            |디피-헬만 키 교환보다 효율적이고 안전한
             +asA('https://tools.ietf.org/html/rfc7748')
-            | 의 구현
+            |의 구현
         li
             +asA('https://openjdk.java.net/jeps/327')
-            | 유니코드 10.0 지원
+            |유니코드 10.0 지원
         li
             +asA('https://openjdk.java.net/jeps/330')
-            | 단일 파일 프로그램(Standalone)에 대해 간편한 실행 가능
+            |단일 파일 프로그램(Standalone)에 대해 간편한 실행 가능
         +asCode('shell') java Name.java [params] # Name.java를 컴파일하고 즉시 실행
         li
             +asA('https://openjdk.java.net/jeps/332')
-            | TLS 1.3 지원
+            |TLS 1.3 지원
 
     h1 Java 14
     ol
         li
             +asA('https://openjdk.java.net/jeps/352')
-            | 비휘발성 메모리에 매핑하는 ByteBuffer 추가
+            |비휘발성 메모리에 매핑하는 ByteBuffer 추가
         p jdk.nio.mapmode.ExtendedMapMode 이용
         li
             +asA('https://openjdk.java.net/jeps/358')
-            | 친절한 NullPointerException
+            |친절한 NullPointerException
         p 누가 null인지 출력해준다. 출력에 사용되는 이름들은 바이트코드에 있는 정보이므로, 정확한 설명을 얻으려면 컴파일 시 필드명을 모두 남기도록 해야한다
         li
             +asA('https://openjdk.java.net/jeps/361')
-            | Switch expressions
+            |Switch expressions
         ul
             +codeBtn('/Repositories/Single/tutorial/SwitchExpression.java', 'java')
             li Arrow labels
@@ -146,27 +146,27 @@ include ../../source/skeleton.pug
     ol
         li
             +asA('https://openjdk.java.net/jeps/377')
-            | ZGC: A Scalable Low-Latency Garbage Collector
+            |ZGC: A Scalable Low-Latency Garbage Collector
         li
             +asA('https://openjdk.java.net/jeps/378')
-            | Text block
+            |Text block
         p """를 이용해 여러 줄에 걸쳐 문자열 상수 작성 가능. ', " 이스케이프가 필요없어 편리
         li
             +asA('https://openjdk.java.net/jeps/379')
-            | Shenandoah: A Low-Pause-Time Garbage Collector
+            |Shenandoah: A Low-Pause-Time Garbage Collector
         li String.formatted(Object... args) 메서드 추가로 타이핑 용이
 
     h1 Java 16
     ol
         li
             +asA('https://openjdk.java.net/jeps/380')
-            | Unix-domain (AF_UNIX) socket 지원
+            |Unix-domain (AF_UNIX) socket 지원
         ul
             li 프로세스 간 통신에 있어 loopback을 이용한 TCP/IP보다 좋은 성능/보안을 제공한다. 컨테이너 환경에서 특히 유용할 것으로 기대
             li SocketChannel, ServerSocketChannel에서 지원
         li
             +asA('https://openjdk.java.net/jeps/392')
-            | jpackage tool
+            |jpackage tool
         ul
             li Windows(msi, exe), macOS(pkg, dmg), Linux(deb, rpm) 빌드 가능
             li Cross compilation 지원 없음
@@ -180,11 +180,11 @@ include ../../source/skeleton.pug
             $ jpackage --name myapp --input lib --main-jar main.jar --type pkg
         li
             +asA('https://openjdk.java.net/jeps/394')
-            | Pattern Matching for instanceof
+            |Pattern Matching for instanceof
         +asCode('java') if (obj instanceof Point p) { p.move(1, 3); }
         li
             +asA('https://openjdk.java.net/jeps/395')
-            | Record; Simple immutale data class
+            |Record; Simple immutale data class
         ul
             li 모든 record는 java.lang.Record를 상속한다
             li 명시하지 않아도 final 클래스며, abstract일 수 없다

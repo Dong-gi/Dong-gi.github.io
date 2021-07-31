@@ -42,9 +42,9 @@ include ../../source/skeleton.pug
         li.marker 커넥션 정리
         +asCode('sql') select pg_terminate_backend(pid) from pg_stat_activity where client_addr = '10.0.2.2';
         li.marker
-            | AWS Redshift와 드라이버 충돌될 때 jdbc 연결 쿼리에
+            |AWS Redshift와 드라이버 충돌될 때 jdbc 연결 쿼리에
             +asA('https://www.simba.com/products/Redshift/doc/JDBC_InstallGuide/content/jdbc/re/options/opensourcesubprotocoloverride.htm', 'OpenSourceSubProtocolOverride=true')
-            | 추가
+            |추가
         li.marker 테이블 목록 획득
         +asCode('sql') select * from information_schema.tables
         li.marker 테이블 정보 획득

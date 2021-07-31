@@ -220,7 +220,7 @@ include ../../source/skeleton.pug
         li 화면 항상 켜기
         p xml : android:keepScreenOn="true" 또는
             br
-            | java : getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            |java : getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         li 주기적인 백그라운드 알람
         +asCode('java').
             AlarmManager manager = (AlarmManager)getSystemService(ALARM_SERVICE);
@@ -245,7 +245,7 @@ include ../../source/skeleton.pug
         li Application 객체를 통한 공유
         p 안드로이드 애플리케이션은 항상 Application 컴포넌트를 하나 갖고 있으며, Context#getApplication로 접근 가능하다
             br
-            | 사용자 정의 Application을 사용하는 경우, 매니페스트의 name 속성을 변경해주고, getApplication() 결과를 캐스팅해야 한다
+            |사용자 정의 Application을 사용하는 경우, 매니페스트의 name 속성을 변경해주고, getApplication() 결과를 캐스팅해야 한다
 
     h1 ProGuard
     ol

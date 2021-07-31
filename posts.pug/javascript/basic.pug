@@ -126,7 +126,7 @@ include ../../source/skeleton.pug
         li 전역 객체
         p Object, Array, String, Global, Math
             br
-            | Global 객체를 직접 획득하는 건 불가능 : isNaN(), isFinite(), parseInt(), parseFloat(), encodeURI(), encodeURIComponent(), eval()
+            |Global 객체를 직접 획득하는 건 불가능 : isNaN(), isFinite(), parseInt(), parseFloat(), encodeURI(), encodeURIComponent(), eval()
         li 객체 보호
         +asCode('javascript').
             Object.freeze()            // 객체 동결. 읽기만 가능
@@ -194,16 +194,16 @@ include ../../source/skeleton.pug
         li 전통적 방식 : 콜백
         p setTimeout(), setInterval(), clearInterval()
             br
-            | Error-first Callback : 콜백 첫번째 매개변수를 err로 사용하는 것
+            |Error-first Callback : 콜백 첫번째 매개변수를 err로 사용하는 것
             br
-            | Callback Hell : 연속적으로 콜백이 다른 콜백을 호출하여 관리하기 어려워지는 상황
+            |Callback Hell : 연속적으로 콜백이 다른 콜백을 호출하여 관리하기 어려워지는 상황
         li Promise
         p 실행의 종료를 보장. 실행 상태(성공, 실패)에 따라 다른 콜백을 적절히 호출. 적절한 예외 처리도 지원 가능
             br
-            | Promise의 생성은 resolve, reject 콜백을 매개변수로 받는 함수를 작성하기만 하면 된다
+            |Promise의 생성은 resolve, reject 콜백을 매개변수로 받는 함수를 작성하기만 하면 된다
             +codeBtn('/Repositories/JavaScript/Basic/promise.js', 'javascript') promise.js »
             br
-            | Promise.all(), Promise.race(), ...
+            |Promise.all(), Promise.race(), ...
         li async, await
         p 함수 정의 앞에 async 키워드를 사용하면 함수 내에서 await를 사용할 수 있다. 이때, 함수는 Promise가 결정될 때까지 일시 중지
             +codeBtn('/Repositories/JavaScript/Basic/async.js', 'javascript') async.js »
@@ -214,7 +214,7 @@ include ../../source/skeleton.pug
         p /123/gm과 new RegExp('123', 'gm')는 의미적으로 동일하다
         li Flag : g(global), i(ignoreCase), m(multiline), s(.이 newline도 매칭 Since ES2018)
         p global 플래그를 이용하는 경우, RegExp.lastIndex로 검색 위치를 기록하며, 해당 위치부터 재탐색한다
-            | 따라서 global RegExp에 동일 문자열을 반복적으로 test()하는 경우 true, false가 토글되는 현상을 경험할 수도 있다
+            |따라서 global RegExp에 동일 문자열을 반복적으로 test()하는 경우 true, false가 토글되는 현상을 경험할 수도 있다
         p ↓ 자바와 동일한 부분은 생략했음
         li Greedy 수량사
         p ?, *, +, {n}, {n, }, {n, m}
@@ -230,7 +230,7 @@ include ../../source/skeleton.pug
         ul
             li RegExp#test() : 패턴이 검색되는지 여부
             li RegExp#exec() : 매칭되는 인덱스들을 배열로 반환
-                | 매칭 시작 index, 검색 텍스트 input 프로퍼티를 가진다. [i] 접근으로 캡처 그룹을 가져올 수 있다
+                |매칭 시작 index, 검색 텍스트 input 프로퍼티를 가진다. [i] 접근으로 캡처 그룹을 가져올 수 있다
             +asCode('javascript') /1/gm.exec('1 12 123') // ["1", index: 0, input: "1 12 123", groups: undefined]
             li String#search(regexp) : 처음 매칭된 인덱스 반환
             li String#match(regexp) : 매칭되는 모든 부분문자열 반환

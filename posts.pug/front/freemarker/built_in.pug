@@ -55,13 +55,13 @@ include ../../../source/skeleton.pug
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_015.ftl', 'xml', '[29, 32]') 결과 »
         ul
             li keep_after
-            | 처음 부분 문자열과 일치하는 부분까지 제거한 나머지 반환. 일치하는 부분이 없으면 빈 문자열, 부분 문자열 길이가 0이면 원본 그대로 반환
+            |처음 부분 문자열과 일치하는 부분까지 제거한 나머지 반환. 일치하는 부분이 없으면 빈 문자열, 부분 문자열 길이가 0이면 원본 그대로 반환
             li keep_after_last
-            | 마지막으로 부분 문자열과 일치하는 부분까지 제거한 나머지 반환
+            |마지막으로 부분 문자열과 일치하는 부분까지 제거한 나머지 반환
             li keep_before
-            | 처음 부분 문자열과 일치하는 위치 전까지 반환. 일치하는 부분이 없으면 원본 그대로, 부분 문자열 길이가 0이면 빈 문자열 반환
+            |처음 부분 문자열과 일치하는 위치 전까지 반환. 일치하는 부분이 없으면 원본 그대로, 부분 문자열 길이가 0이면 빈 문자열 반환
             li keep_before_last
-            | 마지막으로 부분 문자열과 일치하는 위치 전까지 반환
+            |마지막으로 부분 문자열과 일치하는 위치 전까지 반환
         li left_pad, right_pad
         p 기본적으로 공백으로 채운다
         li esc
@@ -72,13 +72,13 @@ include ../../../source/skeleton.pug
         li j_string, js_string, json_string, url, url_path
         p 각각 Java, JavaScript, JSON, url 문자열 표현에 맞게 이스케이프한다
             br
-            | url_path는 '/'를 이스케이프하지 않는다
+            |url_path는 '/'를 이스케이프하지 않는다
         li matches, groups
         p 반환 값은 multi-type
             br
-            | boolean : 전체 문자열이 매칭되는지 여부
+            |boolean : 전체 문자열이 매칭되는지 여부
             br
-            | sequence : 길이 0 이상의, 매칭되는 부분 문자열 시퀀스. 기대하는 바와는 다르게, 매칭되는 부분 문자열 전후의 다른 문자열이 포함될 수 있다
+            |sequence : 길이 0 이상의, 매칭되는 부분 문자열 시퀀스. 기대하는 바와는 다르게, 매칭되는 부분 문자열 전후의 다른 문자열이 포함될 수 있다
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_015_matches.html', 'xml') FTL »
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_015.ftl', 'xml', '[34, 62]') 결과 »
         li replace
@@ -173,9 +173,9 @@ include ../../../source/skeleton.pug
         li string
         p ${x?string} : ${x}와 동일
             br
-            | string.currency, string.percent, string.computer
+            |string.currency, string.percent, string.computer
             br
-            | 자바 숫자 문자열 포맷을 지원한다
+            |자바 숫자 문자열 포맷을 지원한다
             +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_016.html', 'xml', '[1, 2, 4, 5]') FTL + 결과 »
 
     h1 Built-ins for date(time)
@@ -200,9 +200,9 @@ include ../../../source/skeleton.pug
         li join
         p join(separator[], empty_value[, list_ending]])
             br
-            | * empty_value : 시퀀스가 빈 경우 대체 문자열. 기본값 ""
+            |* empty_value : 시퀀스가 빈 경우 대체 문자열. 기본값 ""
             br
-            | * list_ending : 시퀀스가 비지 않은 경우 종결 문자열. 기본값 ""
+            |* list_ending : 시퀀스가 비지 않은 경우 종결 문자열. 기본값 ""
         li sort
         p 모든 요소가 문자열 | 숫자 | date-(time) | boolean일 때만 작동
         li sort_by

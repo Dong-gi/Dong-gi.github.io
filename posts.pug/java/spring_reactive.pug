@@ -20,7 +20,7 @@ include ../../source/skeleton.pug
                 li Processor extends Subscriber, Publisher : 발행자 + 구독자
             h3
                 +asA('https://projectreactor.io/', '리액터')
-                | 의 발행자 Processor
+                |의 발행자 Processor
             ul
                 li reactor.core.publisher.Mono : 0..1개의 이벤트 발행
                 li reactor.core.publisher.Flux : 0..n개의 이벤트 발행
@@ -49,12 +49,12 @@ include ../../source/skeleton.pug
             h3 Reactive API
             p 리액티브 스트림의 저수준 API를 사용자가 직접 이용하기에는 부적절하다. 이에 WebFlux는 
                 +asA('https://projectreactor.io/', '리액터')
-                | 를 채택하였다
+                |를 채택하였다
 
             h3 Programming Models
             p WebFlux는 HTTP 추상화, 지원 서버(Netty 등)를 위한 
                 +goto('HttpHandler')
-                | , Servlet API에 대응하는 
+                |, Servlet API에 대응하는 
                 +goto('WebHandler API')
                 |  등을 포함하며, 이를 기초로 2가지 프로그래밍 모델을 지원한다
             ul

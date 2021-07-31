@@ -10,7 +10,7 @@ include ../../source/skeleton.pug
         li Docker registry
         p 이미지 저장소
             +asA('https://hub.docker.com/', 'Docker Hub')
-            | 는 누구나 이용할 수 있는 퍼블릭 레지스트리로, 도커에서 기본적으로 검색하는 저장소다
+            |는 누구나 이용할 수 있는 퍼블릭 레지스트리로, 도커에서 기본적으로 검색하는 저장소다
         p Private registry 생성
         +asCode('shell') $ docker service create --name registry -p 5000:5000 registry
         li Docker object
@@ -124,7 +124,7 @@ include ../../source/skeleton.pug
             li RUN, CMD, ENTRYPOINT 기본 쉘 변경
 
     h1
-        | Commands 
+        |Commands 
         +asA('https://docs.docker.com/engine/reference/commandline/docker/')
     div
         h2 docker build : 절차대로 이미지 생성

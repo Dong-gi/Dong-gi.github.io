@@ -83,7 +83,7 @@ include ../../source/skeleton.pug
                     td KEYS pattern
                     td
                         span.hover-content(template-id='glob-style-pattern') pattern(GLOB style)
-                        | 에 일치하는 키 목록 반환
+                        |에 일치하는 키 목록 반환
                 tr
                     td.marker MIGRATE
                     td MIGRATE host port key|"" destination-db timeout [COPY] [REPLACE] [AUTH password] [KEYS key [key ...]]
@@ -164,7 +164,7 @@ include ../../source/skeleton.pug
                     td: ul
                         li
                             span.hover-content(template-id='glob-style-pattern') pattern(GLOB style)
-                            | 에 일치하는 키 목록을 count(기본 10)개씩 잘랐을 때, cursor번째 페이지 반환
+                            |에 일치하는 키 목록을 count(기본 10)개씩 잘랐을 때, cursor번째 페이지 반환
                         li TYPE : 값이 type에 해당하는 키만 검색
                 tr
                     td.marker SORT
@@ -532,7 +532,7 @@ include ../../source/skeleton.pug
                     td SSCAN key cursor [MATCH pattern] [COUNT count]
                     td 집합이 큰 경우, 조회를 작은 단위(cursor)로 나누어 수행한다
                         span.hover-content(template-id='glob-style-pattern') pattern(GLOB style)
-                        | 이 있다면 일치하는 원소만 반환
+                        |이 있다면 일치하는 원소만 반환
                 tr
                     td.marker SRANDMEMBER
                     td SRANDMEMBER key [count]
@@ -673,7 +673,7 @@ include ../../source/skeleton.pug
                     td ZSCAN key cursor [MATCH pattern] [COUNT count]
                     td 집합이 큰 경우, 조회를 작은 단위(cursor)로 나누어 수행한다
                         span.hover-content(template-id='glob-style-pattern') pattern(GLOB style)
-                        | 이 있다면 일치하는 원소만 반환
+                        |이 있다면 일치하는 원소만 반환
                 tr
                     td.marker ZPOPMAX
                     td ZPOPMAX key [count]
@@ -736,7 +736,7 @@ include ../../source/skeleton.pug
                     td HSCAN key cursor [MATCH pattern] [COUNT count]
                     td 일정 개수(count)씩 field-value 목록 조회
                         span.hover-content(template-id='glob-style-pattern') pattern(GLOB style)
-                        | 이 지정된 경우 field에 적용된다
+                        |이 지정된 경우 field에 적용된다
                 tr
                     td.marker HEXISTS
                     td HEXISTS key field

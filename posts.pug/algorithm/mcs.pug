@@ -13,7 +13,7 @@ include ../../source/skeleton.pug
                     td Copyright
                     td 2017, Eric Lehman, F Tom Leighton, 
                         +asA('http://people.csail.mit.edu/meyer', 'Albert R Meyer')
-                        | . This work is available under the terms of the 
+                        |. This work is available under the terms of the 
                         +asA('http://creativecommons.org/licenses/by-sa/3.0/', 'Creative Commons Attribution-ShareAlike 3.0 license.')
 
     h1 Proofs
@@ -32,8 +32,8 @@ include ../../source/skeleton.pug
                 strong Conjecture.
                 |  [오일러 추측] 방정식 식[a^4+b^4+c^4=d^4]식을 만족하는 양의 정수 식[a, b, c, d]식는 존재하지 않는다
                 br
-                | 이를 아래와 같이 표현할 수 있다
-                | \[\forall a, b, c, d \in \mathbb{Z}^+. a^4+b^4+c^4 \ne d^4.\]
+                |이를 아래와 같이 표현할 수 있다
+                |\[\forall a, b, c, d \in \mathbb{Z}^+. a^4+b^4+c^4 \ne d^4.\]
             h3 Predicates
             p
                 strong 정의
@@ -103,9 +103,9 @@ include ../../source/skeleton.pug
                     i Proof.
                     |  모순을 통해 증명한다. 식[\sqrt{2}]식가 유리수라면, 이를 표현할 수 있는 기약분수 식[n / d]식이 존재해야 한다
                     br
-                    | 두 식을 모두 거듭제곱하면 식[2 = n^2 / d^2]식이 성립하며, 따라서 식[2d^2 = n^2]식이다. 이는 n이 2의 배수여야 함을 의미하며, 또다시 식[2d^2]식는 4의 배수여야 함을 의미한다
+                    |두 식을 모두 거듭제곱하면 식[2 = n^2 / d^2]식이 성립하며, 따라서 식[2d^2 = n^2]식이다. 이는 n이 2의 배수여야 함을 의미하며, 또다시 식[2d^2]식는 4의 배수여야 함을 의미한다
                     br
-                    | 결국 n과 d모두 2의 배수여야 하지만, 이는 식[n / d]식이 기약분수라는 것에 위배된다. 이는 모순이며, 따라서 식[\sqrt{2}]식는 무리수다
+                    |결국 n과 d모두 2의 배수여야 하지만, 이는 식[n / d]식이 기약분수라는 것에 위배된다. 이는 모순이며, 따라서 식[\sqrt{2}]식는 무리수다
             h3 Good Proofs in Practice
             ul
                 li 증명은 계산이 아니라 에세이다
@@ -115,23 +115,23 @@ include ../../source/skeleton.pug
                 p Albert announces to his class that he plans to surprise them with a quiz sometime
                     |  next week.
                     br
-                    | His students first wonder if the quiz could be on Friday of next week. They
+                    |His students first wonder if the quiz could be on Friday of next week. They
                     |  reason that it can’t: if Albert didn’t give the quiz before Friday, then by midnight
                     |  Thursday, they would know the quiz had to be on Friday, and so the quiz wouldn’t
                     |  be a surprise any more.
                     br
-                    | Next the students wonder whether Albert could give the surprise quiz Thursday.
+                    |Next the students wonder whether Albert could give the surprise quiz Thursday.
                     |  They observe that if the quiz wasn’t given before Thursday, it would have to be
                     |  given on the Thursday, since they already know it can’t be given on Friday. But
                     |  having figured that out, it wouldn’t be a surprise if the quiz was on Thursday either.
                     br
-                    | Similarly, the students reason that the quiz can’t be on Wednesday, Tuesday, or
+                    |Similarly, the students reason that the quiz can’t be on Wednesday, Tuesday, or
                     |  Monday. Namely, it’s impossible for Albert to give a surprise quiz next week. All
                     |  the students now relax, having concluded that Albert must have been bluffing. And
                     |  since no one expects the quiz, that’s why, when Albert gives it on Tuesday next
                     |  week, it really is a surprise!
                     br
-                    | What, if anything, do you think is wrong with the students’ reasoning?
+                    |What, if anything, do you think is wrong with the students’ reasoning?
                 p → '다음 주 금요일이 시험날이 될 수 없다'는 결론은 '금요일 전까지 시험을 내지 않았다'는 가정이 참일 때만 유효하며, 해당 가정의 진리값은 실제로 다음 주 금요일 자정을 넘기지 않는 이상 알 수 없으므로, 적절한 수학적 명제로 볼 수 없다
                 h4 Problem 1.3.
                 p What's going on here?
@@ -153,15 +153,15 @@ include ../../source/skeleton.pug
                     |  about the following proof of this fact. What’s the objection, and how would you fix it?
                 p
                     i Bogus proof.
-                    | \begin{align*}
-                    |   {a+b \over 2} \ge & \sqrt{ab}, && so \\
-                    |   a+b \ge & 2\sqrt{ab}, && so \\
-                    |   a^2+2ab+b^2 \ge & 4ab, && so \\
-                    |   a^2-2ab+b^2 \ge & 0, && so \\
-                    |   (a-b)^2 \ge & 0 && \text{which we know is true.}
-                    | \end{align*}
+                    |\begin{align*}
+                    |  {a+b \over 2} \ge & \sqrt{ab}, && so \\
+                    |  a+b \ge & 2\sqrt{ab}, && so \\
+                    |  a^2+2ab+b^2 \ge & 4ab, && so \\
+                    |  a^2-2ab+b^2 \ge & 0, && so \\
+                    |  (a-b)^2 \ge & 0 && \text{which we know is true.}
+                    |\end{align*}
                     br
-                    | The last statement is true because a - b is a real number, and the square of a real
+                    |The last statement is true because a - b is a real number, and the square of a real
                     |  number is never negative. This proves the claim.
                 p → 증명해야 하는 명제를 가정에서 참으로 이용하고 있으므로 시작부터 잘못된 증명이다. 또, 증명 순서가 반대로 됐다
                 h4 Problem 1.7.
@@ -169,15 +169,15 @@ include ../../source/skeleton.pug
                     |  whatever familiar facts about integers and primes you need, but explicitly state such facts.
                 p → 모순을 통해 증명한다. 식[\operatorname{log}_{7}n]식이 정수가 아닌 유리수라면, 이를 표현할 수 있는 기약분수 식[{a \over b}]식이 존재해야 한다
                     br
-                    | 식[\operatorname{log}_{7}n = {a \over b} \iff n = 7^{a \over b} \iff n^b=7^a]식
+                    |식[\operatorname{log}_{7}n = {a \over b} \iff n = 7^{a \over b} \iff n^b=7^a]식
                     br
-                    | 따라서 n은 7의 배수여야 한다. n을 소인수분해하면 식[n=2^{x_1} \cdot 3^{x_2} \cdot 5^{x_3} \cdot 7^{x_4} \cdots prime_k^{x_k} = 7^a]식
+                    |따라서 n은 7의 배수여야 한다. n을 소인수분해하면 식[n=2^{x_1} \cdot 3^{x_2} \cdot 5^{x_3} \cdot 7^{x_4} \cdots prime_k^{x_k} = 7^a]식
                     br
-                    | 이때, 우변의 식[7^a]식은 7외의 소수로 나눌 수 없으므로 식[n=2^{0} \cdot 3^{0} \cdot 5^{0} \cdot 7^{x_4} \cdots prime_k^{0} = 7^{x_4}]식
+                    |이때, 우변의 식[7^a]식은 7외의 소수로 나눌 수 없으므로 식[n=2^{0} \cdot 3^{0} \cdot 5^{0} \cdot 7^{x_4} \cdots prime_k^{0} = 7^{x_4}]식
                     br
-                    | 따라서 식[n^b = 7^{x_4 b} = 7^a]식이며, 식[x_4 b = a \iff {a \over b} = x_4]식이다. 하지만 이는 식[a \over b]식가 기약분수라는 가정에 위배된다
+                    |따라서 식[n^b = 7^{x_4 b} = 7^a]식이며, 식[x_4 b = a \iff {a \over b} = x_4]식이다. 하지만 이는 식[a \over b]식가 기약분수라는 가정에 위배된다
                     br
-                    | 이는 모순이며, 따라서 식[\operatorname{log}_{7}n]식은 정수거나 무리수이다
+                    |이는 모순이며, 따라서 식[\operatorname{log}_{7}n]식은 정수거나 무리수이다
                 h4 Problem 1.9.
                 p If we raise an irrational number to an irrational power, can the result be rational?
                     |  Show that it can by considering 식[\sqrt{2}^{\sqrt{2}}]식 and arguing by cases.
@@ -211,11 +211,11 @@ include ../../source/skeleton.pug
                 li n > 1.
                 p 반례집합 식[C ::= \left\{n \in \mathbb{N}|1+2+\cdots+n\ne n(n+1)/2\right\}]식이 공집합임을 보여 증명한다
                     br
-                    | 먼저 C가 원소를 가진다고 가정하자. WOP에 의해 C에는 최소 원소 c > 1이 존재한다
+                    |먼저 C가 원소를 가진다고 가정하자. WOP에 의해 C에는 최소 원소 c > 1이 존재한다
                     |  이때, c-1 > 0이므로 식[1+2+\cdots+(c-1)=(c-1)c/2]식가 성립한다
                     |  양변에 c를 더하면 식[1+2+\cdots+c=(c-1)c/2 + c=c(c+1)/2]식이므로, 식[c \notin C]식이다
                     br
-                    | 이는 c가 C의 최소 원소라는 것에 모순이므로, C는 공집합이며, 따라서 명제는 항상 참이다
+                    |이는 c가 C의 최소 원소라는 것에 모순이므로, C는 공집합이며, 따라서 명제는 항상 참이다
             h3 Factoring into Primes
             p
                 +pos('Theorem 2.3.1.')
@@ -255,7 +255,7 @@ include ../../source/skeleton.pug
                 i Proof.
                 |  정수 집합이 lower bound로 식[b \in \mathbb{R}]식를 갖는 경우, 정수 식[n = \lfloor b \rfloor]식 역시 집합의 lower bound다. 따라서 
                 +goto('Theorem 2.4.1.')
-                | 에 의하여 집합이 well ordered set임을 알 수 있다
+                |에 의하여 집합이 well ordered set임을 알 수 있다
             p
                 +pos('Corollary 2.4.4.')
                 strong Corollary 2.4.4.
@@ -273,16 +273,16 @@ include ../../source/skeleton.pug
                 i Proof.
                 |  유한집합 크기에 관한 WOP로 증명한다
                 br
-                | 최소 원소를 갖지 않는 유한 실수 집합의 크기 n에 대한 집합 C를 생각하자. WOP에 의해 C는 최소 원소 m을 갖는다. 이때, 원소가 하나인 집합이 최소 원소를 가짐은 자명하므로 식[m\ge 2]식다
+                |최소 원소를 갖지 않는 유한 실수 집합의 크기 n에 대한 집합 C를 생각하자. WOP에 의해 C는 최소 원소 m을 갖는다. 이때, 원소가 하나인 집합이 최소 원소를 가짐은 자명하므로 식[m\ge 2]식다
                 br
-                | 이제 원소를 m개 갖는 유한 실수 집합 F를 생각하자. F의 임의 원소 식[r_0]식를 F에서 제거한 집합 F'이라고 하자. 이때, F'의 크기는 m보다 작으므로 최소 원소 식[r_1]식을 가진다
+                |이제 원소를 m개 갖는 유한 실수 집합 F를 생각하자. F의 임의 원소 식[r_0]식를 F에서 제거한 집합 F'이라고 하자. 이때, F'의 크기는 m보다 작으므로 최소 원소 식[r_1]식을 가진다
                 br
-                | 따라서 식[r_0, r_1]식 중 작은 값이 F의 최소 원소가 되며, C는 공집합이다
+                |따라서 식[r_0, r_1]식 중 작은 값이 F의 최소 원소가 되며, C는 공집합이다
             div
                 h4 A Different Well Ordered Set
                 p n/(n+1) 꼴로 표현되는 집합 식[\mathbb{F}]식는 well ordered set이다
-                    | \[{0 \over 1},{1 \over 2},{2 \over 3},\cdots,{n \over n+1},\cdots\]
-                    | 간단하게 분자가 가장 작은 원소가 최소 원소다
+                    |\[{0 \over 1},{1 \over 2},{2 \over 3},\cdots,{n \over n+1},\cdots\]
+                    |간단하게 분자가 가장 작은 원소가 최소 원소다
                 p
                     +pos('Lemma 2.4.6.')
                     strong Lemma 2.4.6.
@@ -292,7 +292,7 @@ include ../../source/skeleton.pug
                     |  식[\mathbb{N}+\mathbb{F}]식의 공집합이 아닌 임의 부분집합 S를 생각한다. S의 임의 원소는 식[n+f, n\in\mathbb{N},f\in\mathbb{F}]식로 표현 가능하다
                     |  가능한 모든 n의 집합은 WOP에 의해 최소원소 식[n_s]식를 갖는다
                     br
-                    | 이제 S의 원소 중 식[n_s+f, f\in\mathbb{F}]식꼴로 표현 가능한 원소들에 대해, 가능한 모든 f의 집합은 WOP에 의해 최소원소 식[f_s]식를 가짐을 알 수 있다
+                    |이제 S의 원소 중 식[n_s+f, f\in\mathbb{F}]식꼴로 표현 가능한 원소들에 대해, 가능한 모든 f의 집합은 WOP에 의해 최소원소 식[f_s]식를 가짐을 알 수 있다
                     |  이를 통해 식[n_s+f_s]식가 S의 최소원소임을 알 수 있다
             h3 Problems
             div
@@ -301,10 +301,10 @@ include ../../source/skeleton.pug
                     |  integers to the equation: \[4a^3+2b^3=c^3\]
                 p → 가능한 모든 해에 대하여, 식[s = a+b+c]식의 집합 S을 생각해보자. 만약 해가 존재한다면 WOP에 의해 S는 최소 원소 식[s_m=a_m+b_m+c_m]식가 존재한다
                     br
-                    | 식[4a^3+2b^3=c^3]식의 양변을 2로 나누면 식[2a^3+b^3=c^3/2]식이며, 이를 통해 c가 2의 배수(식[c=2c']식)임을 알 수 있다. 식[2a^3+b^3=4c'^3]식
+                    |식[4a^3+2b^3=c^3]식의 양변을 2로 나누면 식[2a^3+b^3=c^3/2]식이며, 이를 통해 c가 2의 배수(식[c=2c']식)임을 알 수 있다. 식[2a^3+b^3=4c'^3]식
                     |  마찬가지로 b, a도 2의 배수임을 알 수 있으며, 이제 식[a_m/2, b_m/2, c_m/2]식도 방정식의 해임을 보여 S가 공집합임을 보이겠다
                     br
-                    | 식[4(a_m/2)^3+2(b_m/2)^3=(c_m/2)^3]식의 양변에 8을 곱하면 식[4a_m^3+2b_m^3=c_m^3]식이며, 따라서 식[s_m]식은 S의 최소 원소가 아니다
+                    |식[4(a_m/2)^3+2(b_m/2)^3=(c_m/2)^3]식의 양변에 8을 곱하면 식[4a_m^3+2b_m^3=c_m^3]식이며, 따라서 식[s_m]식은 S의 최소 원소가 아니다
                     |  이는 S가 공집함임을 보여주며, 따라서 방정식의 해는 존재하지 않는다
                 h4 Problem 2.6.
                 p You are given a series of envelopes, respectively containing 1, 2, 4, ..., 식[2^m]식 dollars.
@@ -312,16 +312,16 @@ include ../../source/skeleton.pug
                     ul
                         strong Property
                         i  m
-                        | : For any nonnegative integer less than 식[2^{m+1}]식, there is a
+                        |: For any nonnegative integer less than 식[2^{m+1}]식, there is a
                         |  selection of envelopes whose contents add up to exactly that number
                         |  of dollars.
-                    | Use the Well Ordering Principle (WOP) to prove that Property m holds for all
-                    | nonnegative integers m.
+                    |Use the Well Ordering Principle (WOP) to prove that Property m holds for all
+                    |nonnegative integers m.
                 p → 우선, 1, 2, 4, ..., 식[2^m]식 달러는 각각의 봉투에 대응하므로 반례가 될 수 없다
                     |  따라서 반례 집합 C의 최소 원소 c를 2진법으로 표현했을 때, 식[{b_{m-1}b_{m-2}\cdots b_2b_1b_0}_{(2)}]식 중 적어도 2개의 자리수가 1이어야 한다
                     |  이 중 자리수가 1인 최소 자리수가 식[b_i]식일 때, 식[c-2^i = {b_{m-1}b_{m-2}\cdots b_{i+1}0b_{i-1}\cdots b_2b_1b_0}_{(2)}]식이며, 봉투들의 합계로 표현 가능하며, 식[2^i]식 봉투는 그 중에 포함되지 않는다
                     br
-                    | 이때, 식[c-2^i]식에 사용된 봉투 조합에 식[2^i]식 봉투를 포함하면 c달러가 되며, 이는 c가 반례 집합의 원소라는 것에 모순이다
+                    |이때, 식[c-2^i]식에 사용된 봉투 조합에 식[2^i]식 봉투를 포함하면 c달러가 되며, 이는 c가 반례 집합의 원소라는 것에 모순이다
                     |  따라서 C는 공집합이며, 속성 m은 참이다
                 h4 Problem 2.7.
                 p Use the Well Ordering Principle to prove that any integer greater than or equal to 8
@@ -333,8 +333,8 @@ include ../../source/skeleton.pug
                 h4 Problem 2.10.
                 p Use the Well Ordering Principle to prove that
                     +pos('(2.6)')
-                    | \begin{align*}n\le 3^{n/3} && (2.6)\end{align*}
-                    | for every nonnegative integer n.
+                    |\begin{align*}n\le 3^{n/3} && (2.6)\end{align*}
+                    |for every nonnegative integer n.
                 ul 부등식은 식[n^3 \le 3^n]식과 동치다
                     li n = 0. 식[0 \le 1]식
                     li n = 1. 식[1 \le 3]식
@@ -343,18 +343,18 @@ include ../../source/skeleton.pug
                     li 식[n \ge 4]식
                     p 반례 집합 C의 최소 원소 c가 존재한다고 가정하자. 식[c^3 \gt 3^c]식
                         br
-                        | c-1은 부등식이 성립한다. 식[(c-1)^3 \le 3^{c-1}]식
+                        |c-1은 부등식이 성립한다. 식[(c-1)^3 \le 3^{c-1}]식
                         br
-                        | 양변에 식[{c \over c-1}^3]식을 곱하면 식[c^3 \le {c \over c-1}^3 3^{c-1}]식
+                        |양변에 식[{c \over c-1}^3]식을 곱하면 식[c^3 \le {c \over c-1}^3 3^{c-1}]식
                         br
-                        | 따라서 식[{c \over c-1}^3 3^{c-1} \gt 3^c]식이 성립해야 한다
+                        |따라서 식[{c \over c-1}^3 3^{c-1} \gt 3^c]식이 성립해야 한다
                         br
-                        | \begin{align*}
-                        |   \iff & {c \over c-1}^3 = \left(1 + {1 \over c-1}\right)^3 \gt 3 \\
-                        |   \iff & {1 + {1 \over c-1}} \gt 1.44\cdots \\
-                        |   \iff & {1 \over c-1} \gt 0.44\cdots \\
-                        |   \iff & 1 \gt (c-1)\cdot 0.44\cdots
-                        | \end{align*}
+                        |\begin{align*}
+                        |  \iff & {c \over c-1}^3 = \left(1 + {1 \over c-1}\right)^3 \gt 3 \\
+                        |  \iff & {1 + {1 \over c-1}} \gt 1.44\cdots \\
+                        |  \iff & {1 \over c-1} \gt 0.44\cdots \\
+                        |  \iff & 1 \gt (c-1)\cdot 0.44\cdots
+                        |\end{align*}
                         |  이때, 식[c-1 \ge 3]식이므로 부등식은 성립하지 않는다
                         |  따라서 C는 공집합이며, 명제는 참이다
         h2 Logical Formulas
@@ -434,9 +434,9 @@ include ../../source/skeleton.pug
                         +tds('F', 'F', 'F', 'F')
                     ul
                         li DNF(Disjunctive normal form) : 식이 참이 되는 행들을 OR로 연결한다
-                        | 식[(A \land B \land C) \lor (A \land B \land \overline{C}) \lor (A \land \overline{B} \land C)]식
+                        |식[(A \land B \land C) \lor (A \land B \land \overline{C}) \lor (A \land \overline{B} \land C)]식
                         li CNF(Conjunctive normal form) : 식이 거짓이 되는 행들을 AND로 연결한다
-                        | 식[(\overline{A} \lor B \lor C) \land (A \lor \overline{B} \lor \overline{C}) \land (A \lor \overline{B} \lor C) \land (A \lor B \lor \overline{C}) \land (A \lor B \lor C)]식
+                        |식[(\overline{A} \lor B \lor C) \land (A \lor \overline{B} \lor \overline{C}) \land (A \lor \overline{B} \lor C) \land (A \lor B \lor \overline{C}) \land (A \lor B \lor C)]식
                 h4 Proving Equivalences
                 table.no-sort
                     +tds('교환법칙 of AND', '식[A \\land B = B \\land A]식')
@@ -475,33 +475,33 @@ include ../../source/skeleton.pug
                 h4 Problem 3.6.
                 p Propositional logic comes up in digital circuit design using the convention that T corresponds to 1 and F to 0. A simple example is a 2-bit half-adder circuit. This circuit has 3 binary inputs, a1, a0, b, and 3 binary outputs, c, s1, s0. The 2-bit word 식[a_1a_0]식 gives the binary representation of an integer k between 0 and 3. The 3-bit word 식[cs_1s_0]식 gives the binary representation of k C b. The third output bit c is called the final carry bit.
                     br
-                    | So if k and b were both 1, then the value of 식[a_1a_0]식 would be 01 and the value of the output 식[cs_1s_0]식 would 010, namely, the 3-bit binary representation of 1 + 1.
+                    |So if k and b were both 1, then the value of 식[a_1a_0]식 would be 01 and the value of the output 식[cs_1s_0]식 would 010, namely, the 3-bit binary representation of 1 + 1.
                     br
-                    | In fact, the final carry bit equals 1 only when all three binary inputs are 1, that is, when k = 3 and b = 1. In that case, the value of 식[cs_1s_0]식 is 100, namely, the binary representation of 3 + 1.
+                    |In fact, the final carry bit equals 1 only when all three binary inputs are 1, that is, when k = 3 and b = 1. In that case, the value of 식[cs_1s_0]식 is 100, namely, the binary representation of 3 + 1.
                     br
-                    | This 2-bit half-adder could be described by the following formulas:
+                    |This 2-bit half-adder could be described by the following formulas:
                     br
-                    | \begin{align*}
-                    |   c_0 =& b \\
-                    |   s_0 =& a_0\text{ XOR }c_0 \\
-                    |   c_1 =& a_0\text{ AND }c_0 && \text{the carry into column 1} \\
-                    |   s_1 =& a_1\text{ XOR }c_1 \\
-                    |   c_2 =& a_1\text{ AND }c_1 && \text{the carry into column 2} \\
-                    |   c   =& c_2
-                    | \end{align*}
+                    |\begin{align*}
+                    |  c_0 =& b \\
+                    |  s_0 =& a_0\text{ XOR }c_0 \\
+                    |  c_1 =& a_0\text{ AND }c_0 && \text{the carry into column 1} \\
+                    |  s_1 =& a_1\text{ XOR }c_1 \\
+                    |  c_2 =& a_1\text{ AND }c_1 && \text{the carry into column 2} \\
+                    |  c   =& c_2
+                    |\end{align*}
                 ul
                     li (a) Generalize the above construction of a 2-bit half-adder to an n + 1 bit half-adder with inputs 식[a_n,\cdots,a_1,a_0]식 and b and outputs 식[c,s_n,\cdots,s_1,s_0]식. That is, give simple formulas for 식[s_i]식 and 식[c_i]식 for 식[0 \le i \le n + 1]식, where 식[c_i]식 is the carry into column i + 1, and 식[c = c_{n+1}]식
                     p \begin{align*}
-                        |   c_0 =& b \\
-                        |   s_i =& a_i\text{ XOR }c_i \\
-                        |   c_{i+1} =& a_i\text{ AND }c_i
-                        | \end{align*}
+                        |  c_0 =& b \\
+                        |  s_i =& a_i\text{ XOR }c_i \\
+                        |  c_{i+1} =& a_i\text{ AND }c_i
+                        |\end{align*}
                     li (b) Write similar definitions for the digits and carries in the sum of two n + 1-bit binary numbers 식[a_n,\cdots,a_1,a_0]식 and 식[b_n,\cdots,b_1,b_0]식
                     p \begin{align*}
-                        |   c_0 =& 0 \\
-                        |   s_i =& a_i\text{ XOR }b_i\text{ XOR }c_i \\
-                        |   c_{i+1} =& (a_i\text{ AND }b_i)\text{ OR }(b_i\text{ AND }c_i)\text{ OR }(c_i\text{ AND }a_i)
-                        | \end{align*}
+                        |  c_0 =& 0 \\
+                        |  s_i =& a_i\text{ XOR }b_i\text{ XOR }c_i \\
+                        |  c_{i+1} =& (a_i\text{ AND }b_i)\text{ OR }(b_i\text{ AND }c_i)\text{ OR }(c_i\text{ AND }a_i)
+                        |\end{align*}
                     li (c) How many of each of the propositional operations does your adder from part (b) use to calculate the sum?
                     p To add two n bit numbers, (2+5)n times unit operations are needed
                 h4 Problem 3.17.
@@ -525,40 +525,40 @@ include ../../source/skeleton.pug
                         li not(A) = A nand A
                         li A or B = not(not(A) and not(B)) = X nand X
                             br
-                            | where X = (Y nand Z) nand (Y nand Z), Y = A nand A, Z = B nand B
+                            |where X = (Y nand Z) nand (Y nand Z), Y = A nand A, Z = B nand B
                 h4 Problem 3.18.
                 p The propositional connective NOR is defined by the rule
                     br
-                    | P NOR Q ::= NOT(P) AND NOT(Q)
+                    |P NOR Q ::= NOT(P) AND NOT(Q)
                     br
-                    | Explain why every propositional formula—possibly involving any of the usual operators such as IMPLIES, XOR, . . .—is equivalent to one whose only connective is NOR.
+                    |Explain why every propositional formula—possibly involving any of the usual operators such as IMPLIES, XOR, . . .—is equivalent to one whose only connective is NOR.
                 ul
                     li not(A) = A nor A
                     li A or B = not(A nor B) = (A nor b) nor (A nor b)
                     li A and b = not(not(A) or not(B)) = X nor X
                         br
-                        | where X = (Y nor Z) nor (Y nor Z), Y = A nor A, Z = B nor B
+                        |where X = (Y nor Z) nor (Y nor Z), Y = A nor A, Z = B nor B
                 h4 Problem 3.19.
                 p Explain how to read off a conjunctive form for a propositional formula directly
                     |  from a disjunctive form for its complement.
                 p → Any DNF 식[P_1\text{ OR }P_2\text{ OR }\cdots\text{ OR }P_n]식, where 식[P_i=Q_{i1}\text{ AND }Q_{i2}\text{ AND }\cdots\text{ AND }Q_{im_i}]식
                     br
-                    | \begin{align*}
-                    |    & \text{ NOT}(P_1\text{ OR }P_2\text{ OR }\cdots\text{ OR }P_n) \\
-                    |   =& \text{ NOT}(P_1)\text{ AND }\text{ NOT}(P_2)\text{ AND }\cdots\text{ AND }\text{ NOT}(P_n) \\
-                    |   =& (\text{ NOT}(Q_{11})\text{ OR }\text{ NOT}(Q_{12})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{1m_1})))\text{ AND } \\
-                    |    & (\text{ NOT}(Q_{21})\text{ OR }\text{ NOT}(Q_{22})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{2m_1})))\text{ AND } \\
-                    |    & \vdots \\
-                    |    & (\text{ NOT}(Q_{n1})\text{ OR }\text{ NOT}(Q_{n2})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{2n_1})))
-                    | \end{align*}
+                    |\begin{align*}
+                    |   & \text{ NOT}(P_1\text{ OR }P_2\text{ OR }\cdots\text{ OR }P_n) \\
+                    |  =& \text{ NOT}(P_1)\text{ AND }\text{ NOT}(P_2)\text{ AND }\cdots\text{ AND }\text{ NOT}(P_n) \\
+                    |  =& (\text{ NOT}(Q_{11})\text{ OR }\text{ NOT}(Q_{12})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{1m_1})))\text{ AND } \\
+                    |   & (\text{ NOT}(Q_{21})\text{ OR }\text{ NOT}(Q_{22})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{2m_1})))\text{ AND } \\
+                    |   & \vdots \\
+                    |   & (\text{ NOT}(Q_{n1})\text{ OR }\text{ NOT}(Q_{n2})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{2n_1})))
+                    |\end{align*}
                 h4 Problem 3.32.
                 p The goal of this problem is to translate some assertions about binary strings into
                     |  logic notation. The domain of discourse is the set of all finite-length binary strings:
                     |  λ, 0, 1, 00, 01, 10, 11, 000, 001, . . . . (Here λ denotes the empty string.) In your
                     |  translations, you may use all the ordinary logic symbols (including =), variables,
-                    | and the binary symbols 0, 1.
+                    |and the binary symbols 0, 1.
                     br
-                    | A string like 01x0y of binary symbols and variables denotes the concatenation
+                    |A string like 01x0y of binary symbols and variables denotes the concatenation
                     |  of the symbols and the binary strings represented by the variables. For example, if
                     |  the value of x is 011 and the value of y is 1111, then the value of 01x0y is the
                     |  binary string 0101101111.
@@ -568,9 +568,9 @@ include ../../source/skeleton.pug
                     li (b) x is an even-length string of 0’s.
                     p → let CONCAT(a, b, c, ...) = abc...
                         br
-                        | let REPT(a, n) = CONCAT(a, REPT(a, n-1)) = CONCAT(aa, REPT(a, n-2)) = CONCAT(aa...a, REPT(a, 0)) = CONCAT(aa...a, λ) = aa...a
+                        |let REPT(a, n) = CONCAT(a, REPT(a, n-1)) = CONCAT(aa, REPT(a, n-2)) = CONCAT(aa...a, REPT(a, 0)) = CONCAT(aa...a, λ) = aa...a
                         br
-                        | x = REPT(00, n) where n \in N
+                        |x = REPT(00, n) where n \in N
                     li (c) x does not contain both a 0 and a 1.
                     p → x = λ
                     li (d) x is the binary representation of 식[2^k + 1]식 for some integer 식[k \ge 0]식
@@ -669,7 +669,7 @@ include ../../source/skeleton.pug
                 li A inj B iff |A| &lt;= |B|
                 li A bij B iff |A| = |B|
         h2 Induction
-        | 139p
+        |139p
         div
             h3 Ordinary Induction
             h3 Strong Induction

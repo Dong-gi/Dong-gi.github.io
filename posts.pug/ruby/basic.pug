@@ -334,18 +334,18 @@ include ../../source/skeleton.pug
                 tr
                     td $PROGRAM_NAME
                         br
-                        | $*
+                        |$*
                         br
-                        | $FILENAME
+                        |$FILENAME
                         br
-                        | $&lt;
+                        |$&lt;
                     td 실행 중인 스크립트 이름
                         br
-                        | 스크립트 실행 인자
+                        |스크립트 실행 인자
                         br
-                        | $&lt; 파일명
+                        |$&lt; 파일명
                         br
-                        | 실행 인자 또는 STDIN으로 지정된 파일
+                        |실행 인자 또는 STDIN으로 지정된 파일
                         +asCode('ruby', 'test.rb').
                             puts %($PROGRAM_NAME : &#x23;{$PROGRAM_NAME})
                             puts %($*            : &#x23;{$*})
@@ -642,9 +642,9 @@ include ../../source/skeleton.pug
                 ul
                     li gets(sep=$/) -> string | nil
                         br
-                        | gets(limit) -> string | nil
+                        |gets(limit) -> string | nil
                         br
-                        | gets(sep, limit) -> string | nil
+                        |gets(sep, limit) -> string | nil
                     ul
                         li ARGV의 파일 또는 $stdin으로부터 문자열을 입력받는다
                         li 반환값은 $_ 변수에 저장된다
@@ -665,7 +665,7 @@ include ../../source/skeleton.pug
                     +asCode('text', 'C언어와 유사') %[flags][width][.precision]type
                     li printf(io, format_string, *arguments) -> nil
                         br
-                        | printf(format_string, *arguments) -> nil
+                        |printf(format_string, *arguments) -> nil
                     +asCode('ruby') (io || $stdout).write(sprintf(format_string, *arguments))
             h3 실행/프로세스
             ul
@@ -684,7 +684,7 @@ include ../../source/skeleton.pug
                 p 현재 루비 프로세스를 즉시 종료한다. 종료 핸들러는 호출되지 않는다
                 li trap(signal, command) -> obj
                     br
-                    | trap(signal) {| | block } -> obj
+                    |trap(signal) {| | block } -> obj
                 ul 시스템 신호 처리 핸들러 등록
                     li signal
                     ol

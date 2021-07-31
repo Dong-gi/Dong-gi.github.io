@@ -24,9 +24,9 @@ include ../../source/skeleton.pug
                 li int : 크기 제약 없는 정수
                 li bool : 
                     +codeBtn('/Repositories/Python/Basic/data_model.py', 'python', '[42,45]') int의 subtype
-                    | 이며, True, False는 대부분 상황에서
+                    |이며, True, False는 대부분 상황에서
                     +codeBtn('/Repositories/Python/Basic/data_model.py', 'python', '[46,47]') 1, 0처럼 동작
-                    | 한다
+                    |한다
             li.marker numbers.Real (float) : double precision 부동 소수
             li.marker numbers.Complex : 실수부, 허수부 모두 float인 복소수
 
@@ -68,13 +68,13 @@ include ../../source/skeleton.pug
                 li 확장 모듈 array, collections는 추가적인 가변 시퀀스 타입을 제공한다
                 p array.array : frombytes(), fromfile(), fromlist(), tobytes(), tofile(), tolist(), byteswap(), typecode
                     br
-                    | collections.deque : append()와 popleft()는 원자성을 갖는다. 초과되면 오래된 항목을 버린다
+                    |collections.deque : append()와 popleft()는 원자성을 갖는다. 초과되면 오래된 항목을 버린다
                 li bisect 모듈
                 p 정렬된 시퀀스에 대하여, 정렬을 유지한 채로 삽입 등의 연산이 이뤄지도록 해준다
                 li memoryview
                 p 버퍼 프로토콜을 지원하는 객체의 메모리 뷰를 만든다. 버퍼 프로토콜을 지원하는 내장 객체에는 bytes와 bytearray가 있다
                     br
-                    | 기저 객체가 쓰기 가능하면, 메모리 뷰는 일차원 슬라이스 대입을 지원한다. 크기 변경은 허용되지 않는다
+                    |기저 객체가 쓰기 가능하면, 메모리 뷰는 일차원 슬라이스 대입을 지원한다. 크기 변경은 허용되지 않는다
                 li queue 모듈
                 p Queue, LifoQueue, PriorityQueue : 초과되면 빈 공간이 생길 때까지 대기
                 li multiprocessing 모듈
@@ -181,7 +181,7 @@ include ../../source/skeleton.pug
 
     h1 특별 메서드
     p 특별 메서드를 구현하면 사용자 정의 객체도 내장형 객체처럼 작동하게 된다
-        | 사용자 정의 클래스의 묵시적인 특수 메서드 호출은 메서드가 인스턴스 딕셔너리가 아닌 객체의 형에 정의되어 있을 때만 올바르게 작동함이
+        |사용자 정의 클래스의 묵시적인 특수 메서드 호출은 메서드가 인스턴스 딕셔너리가 아닌 객체의 형에 정의되어 있을 때만 올바르게 작동함이
         +codeBtn('/Repositories/Python/Basic/special_method.py', 'python') 보장된다
     p 특별 메서드를 직접 구현하기보다는 ABC를 상속하는 것이 낫다
     ul
@@ -281,12 +281,12 @@ include ../../source/skeleton.pug
                         p 보통 데이터 디스크립터는 __get__()과 __set__()을 모두 정의한다. 이 경우 데이터 디스크립터는 인스턴스의 __dict__에 있는 값보다 우선한다
                             br
                             +asA('https://docs.python.org/ko/3/library/functions.html#property', 'property() 함수')
-                            | 는 데이터 디스크립터로 구현되기 때문에, 인스턴스가 property의 동작을 변경할 수 없다. property는 __set__()을 자동 구현하므로, 읽기 전용 속성을 만들기 쉽다
+                            |는 데이터 디스크립터로 구현되기 때문에, 인스턴스가 property의 동작을 변경할 수 없다. property는 __set__()을 자동 구현하므로, 읽기 전용 속성을 만들기 쉽다
                             +codeBtn('/Repositories/Python/Basic/property_example.py', 'python', '[1,17,20,35]') property_example.py »
                         li Non-data descriptor : 인스턴스 __dict__보다 우선순위가 낮다
                         p 파이썬 메서드(staticmethod(), classmethod() 포함)는 비데이터 디스크립터로 구현되기 때문에, 인스턴스가 메서드를 새로 정의하거나 덮어쓸 수 있다. 따라서 같은 클래스의 다른 인스턴스들과는 다른 동작을 할 수 있다
                             br
-                            | → 모든 사용자 정의 함수는 __get__() 메서드가 정의된 디스크립터다. 사용자 정의 함수가 객체의 메서드로 바인드되고, 바인딩된 메서드 객체는 __call__() 메서드를 가지며, __self__ 속성을 첫 번째 인자로 전달해서 __func__ 속성이 참조하는 원래 함수를 호출한다
+                            |→ 모든 사용자 정의 함수는 __get__() 메서드가 정의된 디스크립터다. 사용자 정의 함수가 객체의 메서드로 바인드되고, 바인딩된 메서드 객체는 __call__() 메서드를 가지며, __self__ 속성을 첫 번째 인자로 전달해서 __func__ 속성이 참조하는 원래 함수를 호출한다
                     li.marker 속성 접근(obj.name) 기본 절차
                     p obj.__dict__['name'] → type(obj).__dict__['name'] → type(obj)의 메타 클래스를 제외한 베이스 클래스 조회
                     li.marker 속성 접근 기본 절차 대신 디스크립터가 호출되는 경우
@@ -319,7 +319,7 @@ include ../../source/skeleton.pug
                 |  object.__init_subclass__(cls)
             p 클래스를 상속하는 경우, 베이스 클래스의 __init_subclass__가 호출된다. 클래스 데코레이터는 직접 적용할 클래스를 지정해줘야 하지만, __init_subclass__는 미래에 정의될 모든 서브 클래스에 적용된다
                 br
-                | 새 클래스에 주어진 키워드 인자들(metaclass 제외)은 부모 클래스의 __init_subclass__로 전달된다. __init_subclass__에서는 필요한 키워드 인자들만 사용하고, 나머지는 베이스 클래스로 전달해야 한다
+                |새 클래스에 주어진 키워드 인자들(metaclass 제외)은 부모 클래스의 __init_subclass__로 전달된다. __init_subclass__에서는 필요한 키워드 인자들만 사용하고, 나머지는 베이스 클래스로 전달해야 한다
                 +codeBtn('/Repositories/Python/Basic/init_subclass.py', 'python')
             li.marker metaclass
             ol
@@ -375,7 +375,7 @@ include ../../source/skeleton.pug
                 li +, -, *, @(내적, matmul), /, //, %, divmod(), pow(), **, &lt;&lt;, >>, &, ^, |
                 p object.__add__(self, other), __sub__, __mul__, __matmul__, __truediv__, __floordiv__, __mod__, __divmod__, __pow__, __lshift__, __rshift__, __and__, __xor__, __or__
                     br
-                    | 연산자 우측에 있을 때도 동작하도록 하려면 object.__radd__(self, other), __rsub__, ...
+                    |연산자 우측에 있을 때도 동작하도록 하려면 object.__radd__(self, other), __rsub__, ...
                 li +=, -=, *=, @=, ...
                 p object.__iadd__(self, other), __isub__, ...
                 li 일항 연산 +, -, abs(), ~
@@ -387,7 +387,7 @@ include ../../source/skeleton.pug
                 li 내장 함수 round(), math 모듈 trunc(), floor(), ceil()
                 p object.__round__(self[, ndigits]), __trunc__(self), __floor__, __ceil__
                     br
-                    | __int__()가 정의되지 않은 경우, 내장 함수 int()는 __trunc__()를 사용한다
+                    |__int__()가 정의되지 않은 경우, 내장 함수 int()는 __trunc__()를 사용한다
             li.marker with문
             ol
                 li 컨텍스트 관리 객체의 __enter__(), __exit__() 메서드가 반드시 호출됨을 보장한다
@@ -398,7 +398,7 @@ include ../../source/skeleton.pug
             li.marker 객체 복사
             p from copy import deepcopy
                 br
-                | __copy__(), __deepcopy__()를 구현하면 copy(), deepcopy() 동작을 제어할 수 있다
+                |__copy__(), __deepcopy__()를 구현하면 copy(), deepcopy() 동작을 제어할 수 있다
 
     h1 Coroutine
     ol

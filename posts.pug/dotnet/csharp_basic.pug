@@ -21,7 +21,7 @@ include ../../source/skeleton.pug
             p 어셈블리는 1개 이상의 모듈로 구성되며, 하나의 모듈은 하나의 파일에 대응된다
             li 매니페스트
             p 여러 모듈이 하나의 어셈블리를 구성하는 경우, 모듈 중 하나는 모듈의 목록을 관리하는 매니페스트 데이터를 갖는다. 매니페스트를 포함하는 경우 확장자는 exe/dll, 그 외의 모듈은 보통
-                | netmodule이지만, 일반적으로 모든 어셈블리는 1개의 파일로 구성된다
+                |netmodule이지만, 일반적으로 모든 어셈블리는 1개의 파일로 구성된다
         h2 닷넷 구현체
         ul
             li .NET Framework
@@ -109,11 +109,11 @@ include ../../source/skeleton.pug
                 li @"" : \ 이스케이프를 하지 않는다. ""로 일반 문자열의 \"를 대신할 수 있다
                 li $"" Since C# 6 : 간편한 포맷 문자열을 제공한다. {
                     i 표현식
-                    | [,
+                    |[,
                     i alignment
-                    | ][:
+                    |][:
                     i formatString
-                    | ]}
+                    |]}
                     +codeBtn('/Repositories/VisualStudio/csharp_interpolated_string.cs', 'cs')
                 li Since C# 8 : @$"", $@"" 모두 유효. 이전에는 $@""만 가능
             h3 Boolean
@@ -194,24 +194,24 @@ include ../../source/skeleton.pug
                 li is 연산자로 호환 여부 확인 가능
                 li this 키워드 : 클래스의 현재 인스턴스
                     br
-                    | base 키워드 : 부모 클래스 메서드 또는 생성자 호출
+                    |base 키워드 : 부모 클래스 메서드 또는 생성자 호출
                     +codeBtn('/Repositories/VisualStudio/csharp_base_keyword.cs', 'cs')
                 li sealed 키워드 → 상속/재정의 불가
                 li 부모 클래스 인스턴스를 자식 클래스로 다운캐스팅 불가
                 li 모든 자료형의 조상은 System.Object : ToString(), GetType(), Equals(), GetHashCode()
                     br
-                    | 모든 값 형식의 조상은 System.ValueType
+                    |모든 값 형식의 조상은 System.ValueType
                     br
-                    | 모든 배열의 조상은 System.Array : Sort(), BinarySearch&lt;T>(), IndexOf(), ..., Length, Rank
+                    |모든 배열의 조상은 System.Array : Sort(), BinarySearch&lt;T>(), IndexOf(), ..., Length, Rank
             h3 다형성
             ul
                 li virtual, override 키워드를 사용해 명시한다. virtual 메서드는 body를 정의해야 한다
                 li new : 부모 메서드 숨기기. override와 달리 형 변환을 통해 부모 메서드에 접근 가능
                 li abstract class : 인스턴스화 불가능
                     br
-                    | abstract method : 서브 클래스에서 반드시 override
+                    |abstract method : 서브 클래스에서 반드시 override
                 li 연산자 오버로딩
-                | public static 반환타입 operator 연산자(타입1 변수1, 타입2 변수2) {}
+                |public static 반환타입 operator 연산자(타입1 변수1, 타입2 변수2) {}
                 li 형 변환 정의
                 +asCode('cs').
                     public static implicit operator 타입2(타입1 변수1) {};
@@ -357,7 +357,7 @@ include ../../source/skeleton.pug
             p Since C# 7.1 : default 리터럴로 기본값을 표현할 수 있다
             li.marker nameof(Identifier) : 식별자 문자열 반환
             li.marker
-                | Null 조건부 연산자 ?. 및 ?[]
+                |Null 조건부 연산자 ?. 및 ?[]
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/NullableExample.cs', 'cs')
             ul
                 li 피연산자가 null이 아니면 멤버 액세스 ?. 또는 요소 액세스 ?[] 연산을 적용한다
@@ -420,13 +420,13 @@ include ../../source/skeleton.pug
                 int.TryParse("12", out var result);
                 int.TryParse("21", out var _); // 출력 무시
             li.marker
-                | ref struct : 스택에 할당되는 struct. 클래스의 멤버가 될 수 없다. 인터페이스를 구현할 수 없다
+                |ref struct : 스택에 할당되는 struct. 클래스의 멤버가 될 수 없다. 인터페이스를 구현할 수 없다
                 br
-                | readonly struct : 모든 필드가 readonly인 struct
+                |readonly struct : 모든 필드가 readonly인 struct
             li.marker unsafe : unsafe로 한정한 타입, 메서드, 블록에서는 포인터를 사용할 수 있다
             p 컴파일 시 -unsafe 옵션을 지정해야 한다 : 비주얼 스튜디오는 "프로젝트 속성 - 빌드 - 안전하지 않은 코드 허용"
                 br
-                | 관련 클래스 : System.Runtime.InteropServices.Marshal
+                |관련 클래스 : System.Runtime.InteropServices.Marshal
 
         h2 메서드
         ol
@@ -435,10 +435,10 @@ include ../../source/skeleton.pug
             li.marker 선택적 매개변수
             +asCode('cs') Method(int a = 0, int b = 0) {}
             li.marker
-                | 가변 길이 매개변수 params
+                |가변 길이 매개변수 params
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/ParamsExample.cs', 'cs', '[11, 17]')
             li.marker
-                | 확장 메서드 : 기존 클래스에 static method 추가됨
+                |확장 메서드 : 기존 클래스에 static method 추가됨
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/ExtensionExample.cs', 'cs')
             li.marker 람다 식 사용 확장 : 생성자, 소멸자, 이벤트 add/remove, 속성 set, 인덱서 set
             li.marker 메서드 안에 지역 함수 정의 가능
@@ -456,7 +456,7 @@ include ../../source/skeleton.pug
         h2 구문
         ol
             li.marker
-                | 인덱서 구문 : 하나 이상의 인수로 참조되는 속성을 반환. string, List&lt;T> 등은 인덱서를 구현함
+                |인덱서 구문 : 하나 이상의 인수로 참조되는 속성을 반환. string, List&lt;T> 등은 인덱서를 구현함
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/IndexerExample.cs', 'cs')
             li.marker switch case 필터 Since C# 7.0
             +asCode('cs').

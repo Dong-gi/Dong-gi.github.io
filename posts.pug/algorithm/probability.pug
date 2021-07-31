@@ -4,9 +4,9 @@ include ../../source/skeleton.pug
     ul
         li.marker 표본평균; Mean : 식[\overline{x}=\sum_{i=1}^n{x_i \over n}]식
         li 중앙값; Median : 자료가 정렬되어 있을 때,
-            | 식[\tilde{x}=\left\{\begin{matrix}
-            | x_{(n+1)/2} & \mbox{if n is odd} \\
-            | {1 \over 2}(x_{n/2}+x_{n/2+1}) & \mbox{if n is even} \end{matrix}\right.]식
+            |식[\tilde{x}=\left\{\begin{matrix}
+            |x_{(n+1)/2} & \mbox{if n is odd} \\
+            |{1 \over 2}(x_{n/2}+x_{n/2+1}) & \mbox{if n is even} \end{matrix}\right.]식
         li 절사평균; Trimmed mean 식[\overline{x}_{\operatorname{tr}(n)}]식 ::= 자료의 상/하위 n%를 버린 나머지에 대한 평균
         li 표본분산; Variance : 식[s^2=\sum_{i=1}^n{(x_i-\overline{x})^2 \over n-1}]식. 이때, 식[s]식는 표본표준편차(Standard deviation)
         li.marker 순열; Permutation : n개의 서로 다른 대상 중 r개를 선택해 일렬로 세우는 경우의 수 식[{}_n P_{r}={n! \over (n-r)!}]식
@@ -20,20 +20,20 @@ include ../../source/skeleton.pug
         li.marker 조합; Combination : n개의 대상 중 r개를 순서를 고려하지 않고 선택하는 경우의 수. 식[\begin{pmatrix}n \\ r,n-r\end{pmatrix}=\begin{pmatrix}n \\ r\end{pmatrix}={n! \over r!(n-r)!}]식
         li.marker 조건부 확률; Conditional probability : 사상 A가 발생한 상태에서 사상 B가 발생할 확률 식[P(B|A)={P(A \cap B) \over P(A)}]식
         p 식[\begin{gather*}
-            |     \implies P(A \cap B)=P(A)P(B|A)=P(B)P(A|B) \\
-            |     \implies P(A_1\cap\cdots\cap A_n)=P(A_1)P(A_2|A_1)\cdots P(A_n|A_1\cap\cdots\cap A_{n-1})
-            | \end{gather*}]식
+            |    \implies P(A \cap B)=P(A)P(B|A)=P(B)P(A|B) \\
+            |    \implies P(A_1\cap\cdots\cap A_n)=P(A_1)P(A_2|A_1)\cdots P(A_n|A_1\cap\cdots\cap A_{n-1})
+            |\end{gather*}]식
         li.marker 전확률 정리; Law of total probability
         p 사상 식[B_1, \cdots, B_k]식가 표본공간을 빈틈없이 분할할 때, 식[P(A)=\sum_{i=1}^n P(B_i \cap A)=\sum_{i=1}^n P(B_i)P(A|B_i)]식
         li.marker 베이즈 정리; Bayes' theorem
         p 사상 식[B_1, \cdots, B_k]식가 표본공간을 빈틈없이 분할할 때, 식[P(B_i|A)={P(B_i\cap A) \over P(A)}={P(B_i)P(A|B_i) \over \sum_{i=1}^n P(B_i)P(A|B_i)}]식
         li.marker 독립; Independent
         p 두 사상 A, B가 독립
-            | \begin{gather*}
-            |     \iff & P(B|A)=P(B) \\
-            |     \iff & P(A|B)=P(A) \\
-            |     \iff & P(A\cap B)=P(A)P(B)
-            | \end{gather*}
+            |\begin{gather*}
+            |    \iff & P(B|A)=P(B) \\
+            |    \iff & P(A|B)=P(A) \\
+            |    \iff & P(A\cap B)=P(A)P(B)
+            |\end{gather*}
 
     h1 확률분포
     div
@@ -81,10 +81,10 @@ include ../../source/skeleton.pug
             li 연속확률 : 식[P(a\le Y\le b|X=x)=\int_{a}^{b}f(y|x)dx]식
         h2 통계적 독립 : 두 확률변수 식[X, Y]식가 독립
         p \begin{gather*}
-            |     \iff & f(x,y)=g(x)h(y) \\
-            |     \iff & f(y|x)=h(y) \\
-            |     \iff & f(x|y)=g(x)
-            | \end{gather*}
+            |    \iff & f(x,y)=g(x)h(y) \\
+            |    \iff & f(y|x)=h(y) \\
+            |    \iff & f(x|y)=g(x)
+            |\end{gather*}
         h2 확률분포의 평균 = 기대값; Expected value
         ol
             li 이산확률 : 식[\mu=E(X)=\sum xf(x)]식
@@ -96,8 +96,8 @@ include ../../source/skeleton.pug
             summary 예제
             ol
                 li Q. 확률변수 X의 밀도함수가 식[f(x)= \left\{\begin{matrix}
-                    | x & 0\le x\le \sqrt{2} \\
-                    | 0 & \mbox{else} \end{matrix}\right.]식일때, 식[g(X)=2X-1]식의 기대값을 구하라
+                    |x & 0\le x\le \sqrt{2} \\
+                    |0 & \mbox{else} \end{matrix}\right.]식일때, 식[g(X)=2X-1]식의 기대값을 구하라
                 li 풀이. 식[E(2X-1)=\int_{0}^{\sqrt{2}}(2x-1)xdx=\int_{0}^{\sqrt{2}}(2x^2-x)dx=4\sqrt{2}/3-1]식
         h2 확률분포의 분산
         ol
@@ -171,14 +171,14 @@ include ../../source/skeleton.pug
             li 감마함수 식[\Gamma(\alpha)=\int_0^{\infty}x^{\alpha-1}e^{-x}dx]식
             p 자연수 n에 대하여 식[\Gamma(n)=(n-1)!]식, 식[\Gamma(1/2)=\sqrt{\pi}]식
             li 감마분포; Gamma distribution 식[f(x;\alpha,\theta)=\left\{\begin{matrix}
-                | {x^{\alpha-1}e^{-x/\theta} \over \theta^\alpha\Gamma(\alpha)} & \mbox{if x > 0} \\
-                | 0 & \mbox{else} \end{matrix}\right.]식
+                |{x^{\alpha-1}e^{-x/\theta} \over \theta^\alpha\Gamma(\alpha)} & \mbox{if x > 0} \\
+                |0 & \mbox{else} \end{matrix}\right.]식
             li 평균 식[\mu=\alpha\theta]식
             li 분산 식[\sigma^2=\alpha\theta^2]식
             li.marker
-                | 지수분포; Exponential distribution 식[f(x;\theta)=\left\{\begin{matrix}
-                | {e^{-x/\theta} \over \theta} & \mbox{if x > 0} \\
-                | 0 & \mbox{else} \end{matrix}\right.]식
+                |지수분포; Exponential distribution 식[f(x;\theta)=\left\{\begin{matrix}
+                |{e^{-x/\theta} \over \theta} & \mbox{if x > 0} \\
+                |0 & \mbox{else} \end{matrix}\right.]식
             ol
                 li 식[\theta=1/\lambda]식로 두면, 식[f(x;1/\lambda)=\lambda e^{-\lambda x}]식
                 li 푸아송 사건이 발생하지 않을 확률 식[p(0;\lambda t)=e^{-\lambda t}]식
@@ -190,39 +190,39 @@ include ../../source/skeleton.pug
             li.marker 카이제곱 분포; Chi-squared distribution
             ol
                 li 식[\alpha=k/2, \theta=2]식인 감마분포와 동일하다. 식[f(x;k)=\left\{\begin{matrix}
-                    | {x^{k/2-1}e^{-x/2} \over 2^{k/2}\Gamma(k/2)} & \mbox{if x > 0} \\
-                    | 0 & \mbox{else} \end{matrix}\right.]식
+                    |{x^{k/2-1}e^{-x/2} \over 2^{k/2}\Gamma(k/2)} & \mbox{if x > 0} \\
+                    |0 & \mbox{else} \end{matrix}\right.]식
                 li 평균 식[\mu=k]식
                 li 분산 식[\sigma^2=2k]식
         h2 확률변수 변환
         ol
             li 이산확률변수 식[X, Y]식가 일대일 대응관계 식[y=u(x), x=u^{-1}(y)]식라면, 식[Y]식의 확률분포는 식[g(y)=f(u^{-1}(y))]식
             li 이산확률변수 식[X_1,X_2,Y_1,Y_2]식가 일대일 대응관계 식[\begin{gather*}
-                | y_1 = u_1(x_1,x_2) \\
-                | y_2 = u_2(x_1,x_2) \\
-                | x_1 = w_1(y_1,y_2) \\
-                | x_2 = w_2(y_1,y_2)\end{gather*}]식라면, 식[Y_1,Y_2]식의 결합확률분포는 식[g(y_1,y_2)=f(w_1(y_1,y_2),w_2(y_1,y_2))]식
+                |y_1 = u_1(x_1,x_2) \\
+                |y_2 = u_2(x_1,x_2) \\
+                |x_1 = w_1(y_1,y_2) \\
+                |x_2 = w_2(y_1,y_2)\end{gather*}]식라면, 식[Y_1,Y_2]식의 결합확률분포는 식[g(y_1,y_2)=f(w_1(y_1,y_2),w_2(y_1,y_2))]식
             li 연속확률변수 식[X, Y]식가 일대일 대응관계 식[y=u(x), x=u^{-1}(y)]식라면, 식[Y]식의 확률분포는 식[g(y)=f(u^{-1}(y))|{\partial{u^{-1}(y)} \over \partial{y}}|]식
             li 연속확률변수 식[X, Y]식가 일대일 대응관계 식[\begin{gather*}
-                | y_1 = u_1(x_1,x_2) \\
-                | y_2 = u_2(x_1,x_2) \\
-                | x_1 = w_1(y_1,y_2) \\
-                | x_2 = w_2(y_1,y_2)\end{gather*}]식라면, 식[Y_1,Y_2]식의 결합확률분포는 식[g(y_1,y_2)=f(w_1(y_1,y_2),w_2(y_1,y_2))|J|]식
+                |y_1 = u_1(x_1,x_2) \\
+                |y_2 = u_2(x_1,x_2) \\
+                |x_1 = w_1(y_1,y_2) \\
+                |x_2 = w_2(y_1,y_2)\end{gather*}]식라면, 식[Y_1,Y_2]식의 결합확률분포는 식[g(y_1,y_2)=f(w_1(y_1,y_2),w_2(y_1,y_2))|J|]식
             p 이때, 식[J]식는 야코비 행렬(Jacobian matrix)로 식[|J|=\begin{vmatrix} {\partial{x_1} \over \partial{y_1}} & {\partial{x_1} \over \partial{y_2}} \\
-                | {\partial{x_2} \over \partial{y_1}} & {\partial{x_2} \over \partial{y_2}}\end{vmatrix}]식
+                |{\partial{x_2} \over \partial{y_1}} & {\partial{x_2} \over \partial{y_2}}\end{vmatrix}]식
             li 연속확률변수 식[X, Y]식에 대해, 식[u:X\to Y]식는 일대일 함수지만 역함수는 존재하지 않는 경우
-                | 만일 식[X]식을 빈틈없이 나눈 각 구간마다 부분적인 역함수 식[x_1=w_1(y), \cdots, x_k=w_k(y)]식가 존재한다면,
-                | 식[Y]식의 확률분포는 식[g(y)=\sum f(w_i(y))|J_i|]식 ← 식[J_i={\partial{x_i} \over \partial{y}}]식
+                |만일 식[X]식을 빈틈없이 나눈 각 구간마다 부분적인 역함수 식[x_1=w_1(y), \cdots, x_k=w_k(y)]식가 존재한다면,
+                |식[Y]식의 확률분포는 식[g(y)=\sum f(w_i(y))|J_i|]식 ← 식[J_i={\partial{x_i} \over \partial{y}}]식
         h2 적률; Moment
         ol
             li 적률 ::= 확률변수 거듭제곱의 평균 식[m_n = E(X^n)]식
             li 적률생성함수 ::= 식[M_X(t)=E(e^{tX})]식
             p \begin{align*}
-                |     M_X(t)
-                |     &= \int_{-\infty}^\infty e^{tx} f(x)\,\mathrm{d}x \\
-                |     &= \int_{-\infty}^\infty \left( 1+ tx + \frac{t^2x^2}{2!} + \cdots\right) f(x)\,\mathrm{d}x \\
-                |     &= 1 + tm_1 + \frac{t^2m_2}{2!} +\cdots
-                | \end{align*}
+                |    M_X(t)
+                |    &= \int_{-\infty}^\infty e^{tx} f(x)\,\mathrm{d}x \\
+                |    &= \int_{-\infty}^\infty \left( 1+ tx + \frac{t^2x^2}{2!} + \cdots\right) f(x)\,\mathrm{d}x \\
+                |    &= 1 + tm_1 + \frac{t^2m_2}{2!} +\cdots
+                |\end{align*}
             li 적률생성함수로 적률 생성 : 식[m_n = \left.\frac{d^nM_X(t)}{dt^n}\right|_{t=0}]식
             li 확률변수 식[X, Y]식의 적률생성함수가 일치 식[\implies]식 식[X, Y]식의 확률분포는 동일
             li 식[M_{aX}(t)=M_X(at)]식
@@ -239,11 +239,11 @@ include ../../source/skeleton.pug
         ol
             li.marker 중심극한정리; Central limit theorem
             p 평균이 식[\mu]식, 분산이 식[\sigma^2]식인 모집단으로부터, 크기 n인 표본을 추출했을 때,
-                | n이 충분히 크다면 식[Z = {\overline{X}-\mu \over \sigma/\sqrt{n}}]식는 표준정규분포를 따른다
-                | 이때 식[\overline{X}]식는 표본평균
+                |n이 충분히 크다면 식[Z = {\overline{X}-\mu \over \sigma/\sqrt{n}}]식는 표준정규분포를 따른다
+                |이때 식[\overline{X}]식는 표본평균
             li.marker Cochran's theorem
             p 식[N(\mu, \sigma^2)]식를 따르는 정규모집단으로부터 크기 n인 표본을 추출했을 때,
-                | n이 충분히 크다면 식[\chi^2={(n-1)S^2 \over \sigma^2}]식는 카이제곱분포 식[f(x; n-1)]식를 따른다
+                |n이 충분히 크다면 식[\chi^2={(n-1)S^2 \over \sigma^2}]식는 카이제곱분포 식[f(x; n-1)]식를 따른다
             li 식[T={Z \over \sqrt{V/(n-1)}}]식는 자유도 n-1인 t-분포를 따른다
             p 모집단의 분산을 모를 때 모평균의 추정에 이용할 수 있다
         h2 F-분포

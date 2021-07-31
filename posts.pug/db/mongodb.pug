@@ -581,11 +581,11 @@ include ../../source/skeleton.pug
                 td u
                 td \w, \W 등이 유니코드에 따라 매칭
     +hoverTemplate()#template-mongodb-bson-array
-        | 예. ['red', 'blue']는 {'0': 'red', '1': 'blue'}로 표현된다
+        |예. ['red', 'blue']는 {'0': 'red', '1': 'blue'}로 표현된다
     +hoverTemplate()#template-mongodb-min-key
-        | 항상 다른 것보다 작다고 간주됨
+        |항상 다른 것보다 작다고 간주됨
     +hoverTemplate()#template-mongodb-max-key
-        | 항상 다른 것보다 크다고 간주됨
+        |항상 다른 것보다 크다고 간주됨
     +hoverTemplate().as-code#template-mongodb-help-connect&attributes({lan: 'javascript'}).
         const mongo = new Mongo('host[:port]');
         const mydb = mongo.getDB('mydb');

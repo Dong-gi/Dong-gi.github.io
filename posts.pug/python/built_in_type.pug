@@ -278,9 +278,9 @@ include ../../source/skeleton.pug
     h1 Set Types
     div
         h2
-            | class set([iterable])
+            |class set([iterable])
             br
-            | class frozenset([iterable])
+            |class frozenset([iterable])
         ul
             li 해시 가능한 순서 없는 collection. frozenset은 불변이며, 다른 set의 원소가 될 수 있다
             li 연산자 버전이 있는 메서드들은 인자로 iterable도 받을 수 있다
@@ -314,11 +314,11 @@ include ../../source/skeleton.pug
     h1 Mapping Types
     div
         h2
-            | class dict(**kwarg)
+            |class dict(**kwarg)
             br
-            | class dict(mapping, **kwarg)
+            |class dict(mapping, **kwarg)
             br
-            | class dict(iterable, **kwarg)
+            |class dict(iterable, **kwarg)
         p mapping 객체는 해시 가능한 값을 임의 객체로 매핑한다
         +asCode('python').
             a = dict(one=1, two=2, three=3)

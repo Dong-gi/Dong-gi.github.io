@@ -441,7 +441,7 @@ include ../../source/skeleton.pug
                     li @Transactional 메서드가 다른 @Transactional 메서드를 호출하고, 해당 메서드에서 롤백이 발생하면 default로 전역 롤백한다
                     p
                         +asA('https://docs.spring.io/spring/docs/5.2.8.RELEASE/javadoc-api/org/springframework/transaction/support/AbstractPlatformTransactionManager.html#setGlobalRollbackOnParticipationFailure-boolean-')
-                        | 로 변경 가능
+                        |로 변경 가능
                 +asCode('java').
                     @Test
                     @Transactional
@@ -637,9 +637,9 @@ include ../../source/skeleton.pug
                     td 시각
                     td DATE {d '2000-01-01'}
                         br
-                        | TIME {t '12:34:56'}
+                        |TIME {t '12:34:56'}
                         br
-                        | TIMESTAMP {ts '2000-01-01 12:34:56.789'}
+                        |TIMESTAMP {ts '2000-01-01 12:34:56.789'}
                 tr
                     td Boolean
                     td true, false
@@ -670,7 +670,7 @@ include ../../source/skeleton.pug
                     li CURRENT_DATE
                     li CURRENT_TIME
                     li CURRENT_TIMESTAMP
-                    | ↓ Hibernate
+                    |↓ Hibernate
                     li YEAR(), MONTH(), DAY(), HOUR(), MINUTE(), SECOND()
                 h4 컬렉션
                 ul
