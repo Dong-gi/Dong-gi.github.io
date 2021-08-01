@@ -1,0 +1,208 @@
+include ../../../source/skeleton.pug
++post('Java 버전별 추가사항', 'Java, Version', 'Java 버전별 추가사항 정리')
+    h1 Java 8
+    ul
+        li 람다 표현식 추가
+        li 인터페이스에 Default method 정의 가능
+    div
+        h2 Stream
+        ul
+            li Collection, Array » Stream 생성 » 중간 연산 » 최종 연산 
+                +codeBtn('/Repositories/Single/tutorial/StreamExample.java', 'java')
+            p 스트림 연산은 새로운 스트림을 반환하며, 연산이 끝난 스트림을 재사용할 수 없다
+            li Parallel stream » 멀티 코어 프로세싱 가능
+            p ForkJoinPool을 이용해 작업 분할
+            li lazy evaluation : 최종연산 없이는 중간연산을 실행하지 않음
+
+    h1 Java 9
+    ol
+        li REPL로 JShell이 추가되었다 : 코드를 한줄씩 실행하면서 검사할 수 있다
+            +asA('https://docs.oracle.com/javase/9/jshell/toc.htm', 'guide')
+        li try-with-resources 구문 변동 : final한(final 변수 or 변수 초기화 후 변경 없음) resource는 별개의 선언 없이 그대로 이용할 수 있다
+            +codeBtn('/Repositories/Single/tutorial/TryWithResource.java', 'java')
+        li 타입 추론 강화로 diamond 연산자 &lt;>가 익명 클래스도 지원
+        li "_"는 더 이상 유효한 식별자가 아니게 되었다
+        li private 인터페이스 메서드 정의 가능
+    div
+        h2 Java Platform Module System(JPMS) 도입
+        ol
+            li 모듈 : 패키지 집합의 응집도가 충분하다면, 모듈로 그룹화될 수 있다
+            ul
+                li Ordinary compilation unit; 일반 컴파일 단위(일반 .java 파일) 정의
+                +asCode().
+                    [패키지 정의]
+                    {임포트 선언}
+                    {타입(클래스, 인터페이스 등) 정의}
+                li 이름 있는 모듈에 연관되지 않는 ordinary compilation unit들은 모두 하나의 익명 모듈에 연관된다
+            li 모듈 컴파일 단위 정의
+            +asCode().
+                {임포트 선언}
+                모듈 정의
+            li 모듈 정의
+            +asCode().
+                {Annotation}
+                [open] module ModuleName {
+                    {ModuleDirective}
+                }
+            ul
+                li 모듈 이름은 패키지처럼 하나 이상의 자바 식별자를 '.'으로 구분하여 나타낸다
+                li open 한정자가 없으면 일반 모듈 : 컴파일타임과 런타임에 명시적으로 export된 패키지들에 대한 권한만 외부에 부여
+                li open 한정자가 있는 열린 모듈 : 컴파일타임엔 명시적으로 export된 것만, 런타임엔 모든 패키지에 대한 권한을 외부에 부여
+                li Reflection을 통해서도 같은 접근 권한을 얻을 수 있다
+            li 모듈 명세; ModuleDirective 정의
+            +asCode().
+                requires { RequiresModifier } ModuleName;           // 모듈 의존성
+                exports PackageName [to ModuleName {, ModuleName}]; // 외부에서 접근할 수 있는 패키지
+                opens PackageName [to ModuleName {, ModuleName}];   // 외부에서 접근할 수 있는 패키지
+                uses TypeName;                                      // 사용하는 서비스
+                provides TypeName with TypeName {, TypeName};       // 제공하는 서비스
+            li RequiresModifier : transitive | static
+            ul
+                li transitive : 외부에서 의존하는 모듈은 transitive 키워드가 붙은 모듈도 의존한다
+                li static : 컴파일 타임엔 항상 의존성을 갖고, 런타임엔 선택적
+            li java.base 모듈은 최상의 모듈로, 아무런 의존성이 없다
+
+        h2 모듈 예시 코드
+            +asA('https://wiki.eclipse.org/Java9/Examples', '참고자료')
+        ol
+            li 먼저, 결과물의 디렉터리 구조를 보면 src 루트에 module-info.java가 존재함을 볼 수 있다
+            +w3img('/imgs/20180827_230700.png')
+            +codeBtn('/Repositories/Eclipse/TestModule1/src/module-info.java', 'java') TestModule1/src/module-info.java »
+            li second라는 이름의 모듈이 필요함을 정의했고, second 모듈을 찾기 위해서 TestModule2 프로젝트를 참조하도록 설정해야 한다
+            +w3img('/imgs/20180827_230710.png')
+            li second 모듈에서는 hello 패키지를 외부에서 사용할 수 있게 정의
+            +codeBtn('/Repositories/Eclipse/TestModule2/src/module-info.java', 'java') TestModule2/src/module-info.java »
+            li
+                +codeBtn('/Repositories/Eclipse/TestModule2/src/hello/HelloWorld.java', 'java') hello.HelloWorld »
+                +codeBtn('/Repositories/Eclipse/TestModule1/src/test/Test.java', 'java') 를 first 모듈에서 사용하는 예 »
+
+    h1 Java 10
+    ol
+        li
+            +asA('https://openjdk.java.net/jeps/286')
+            |타입 추론 강화로 지역 변수의 타입 선언에 var를 이용할 수 있게 되었다
+        ul
+            li 지역변수를 선언하면서 초기화할 때 이용 가능
+            li 강화된 for 루프 인덱스에 이용 가능
+            li 기존 for 루프 인덱스에 이용 가능
+            li try-with-resources 변수에 이용 가능
+                +codeBtn('/Repositories/Single/tutorial/TryWithResource.java', 'java')
+        li javadoc 커맨드라인 옵션에 --add-stylesheet 추가 : 여러 css 이용 가능
+
+    h1 Java 11
+    ol
+        li
+            +asA('https://openjdk.java.net/jeps/318')
+            |Epsilon : 기능없는 GC
+        p 메모리 할당만 하는 GC. 힙 고갈 시 JVM 셧다운
+        li
+            +asA('https://openjdk.java.net/jeps/321')
+            |HTTP/2, WebSocket API를 지원하는 java.net.http 표준 모듈 추가
+        li
+            +asA('https://openjdk.java.net/jeps/323')
+            |람다의 암시적인 매개변수 선언에 var 키워드 사용 가능
+        +asCode('java') (@NonNull var x, @NonNull var y) -> x.process(y);
+        li
+            +asA('https://openjdk.java.net/jeps/324')
+            |디피-헬만 키 교환보다 효율적이고 안전한
+            +asA('https://tools.ietf.org/html/rfc7748')
+            |의 구현
+        li
+            +asA('https://openjdk.java.net/jeps/327')
+            |유니코드 10.0 지원
+        li
+            +asA('https://openjdk.java.net/jeps/330')
+            |단일 파일 프로그램(Standalone)에 대해 간편한 실행 가능
+        +asCode('shell') java Name.java [params] # Name.java를 컴파일하고 즉시 실행
+        li
+            +asA('https://openjdk.java.net/jeps/332')
+            |TLS 1.3 지원
+
+    h1 Java 14
+    ol
+        li
+            +asA('https://openjdk.java.net/jeps/352')
+            |비휘발성 메모리에 매핑하는 ByteBuffer 추가
+        p jdk.nio.mapmode.ExtendedMapMode 이용
+        li
+            +asA('https://openjdk.java.net/jeps/358')
+            |친절한 NullPointerException
+        p 누가 null인지 출력해준다. 출력에 사용되는 이름들은 바이트코드에 있는 정보이므로, 정확한 설명을 얻으려면 컴파일 시 필드명을 모두 남기도록 해야한다
+        li
+            +asA('https://openjdk.java.net/jeps/361')
+            |Switch expressions
+        ul
+            +codeBtn('/Repositories/Single/tutorial/SwitchExpression.java', 'java')
+            li Arrow labels
+            p "case L ->" 레이블 추가. "case L:" 레이블은 break;를 만나지 않으면 다음 레이블의 것도 실행되지만, -> 레이블은 항상 우측 식/문장/블록만 실행
+            li Switch expressions
+            p switch 문을 rValue로 이용할 수 있다
+            li Yielding a value
+            p Switch expression을 위해 코드 블록이 필요한 경우, 값을 산출하는 식/문장 앞에 yield를 적시하면 된다
+            li Exhaustiveness
+            p Switch expression은 항상 값을 반환해야 한다. 보통의 경우 default 케이스 이용하면 충분
+
+    h1 Java 15
+    ol
+        li
+            +asA('https://openjdk.java.net/jeps/377')
+            |ZGC: A Scalable Low-Latency Garbage Collector
+        li
+            +asA('https://openjdk.java.net/jeps/378')
+            |Text block
+        p """를 이용해 여러 줄에 걸쳐 문자열 상수 작성 가능. ', " 이스케이프가 필요없어 편리
+        li
+            +asA('https://openjdk.java.net/jeps/379')
+            |Shenandoah: A Low-Pause-Time Garbage Collector
+        li String.formatted(Object... args) 메서드 추가로 타이핑 용이
+
+    h1 Java 16
+    ol
+        li
+            +asA('https://openjdk.java.net/jeps/380')
+            |Unix-domain (AF_UNIX) socket 지원
+        ul
+            li 프로세스 간 통신에 있어 loopback을 이용한 TCP/IP보다 좋은 성능/보안을 제공한다. 컨테이너 환경에서 특히 유용할 것으로 기대
+            li SocketChannel, ServerSocketChannel에서 지원
+        li
+            +asA('https://openjdk.java.net/jeps/392')
+            |jpackage tool
+        ul
+            li Windows(msi, exe), macOS(pkg, dmg), Linux(deb, rpm) 빌드 가능
+            li Cross compilation 지원 없음
+            p e.g. Windows 빌드를 뽑으려면 Windows에서 실행해야 한다
+            li: +asA('https://docs.oracle.com/en/java/javase/15/docs/specs/man/jpackage.html', 'manual')
+        +asCode('shell').
+            # Non-modular application
+            $ jpackage --name myapp --input lib --main-jar main.jar --main-class myapp.Main
+
+            # type 지정
+            $ jpackage --name myapp --input lib --main-jar main.jar --type pkg
+        li
+            +asA('https://openjdk.java.net/jeps/394')
+            |Pattern Matching for instanceof
+        +asCode('java') if (obj instanceof Point p) { p.move(1, 3); }
+        li
+            +asA('https://openjdk.java.net/jeps/395')
+            |Record; Simple immutale data class
+        ul
+            li 모든 record는 java.lang.Record를 상속한다
+            li 명시하지 않아도 final 클래스며, abstract일 수 없다
+            li record를 구성하는 각 불변값들을 record component라고 한다
+            li record component 정의부를 header라고 한다
+            li equals, getter, hashCode, toString 자동 구현
+            li 암시적 생성자는 record class와 동일한 접근 레벨로 선언된다
+            li Generic 클래스로 선언 가능
+            li static method, field 선언 가능
+            li record 클래스, record component를 애너테이션으로 장식 가능
+            li record 클래스 인스턴스는 직렬화/역직렬화 가능하지만, write/readObject 등으로 커스터마이징되지 않는다
+            li Local record 클래스 선언 가능. Nested record 클래스와 마찬가지로 명시하지 않아도 static
+            ul
+                li 따라서 local record 클래스 내부에서, 이를 포함하는 메서드의 그 어떤 변수도 접근 불가
+                li Local enum, local interface 역시 명시하지 않아도 static
+            li Inner class는 record 클래스 타입의 static 멤버를 가질 수 있다
+        +asCode('java') record Point2D(int x, int y) {}
+
+    h1 Java 17
+    ol
+        li 21년 9월 출시 예정

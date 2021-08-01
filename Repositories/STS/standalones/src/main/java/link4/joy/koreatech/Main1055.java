@@ -1,0 +1,19 @@
+package link4.joy.koreatech;
+
+import java.util.*;
+
+class Main1055 {
+    public static void main(String[] args) {
+        @SuppressWarnings("resource")
+        final Scanner in = new Scanner(System.in);
+        final int numOfTestCase = Integer.parseInt(in.nextLine().trim());
+
+        int[] results = new int[101];
+        results[0] = results[1] = 1;
+        for (int i = 2; i <= 100; ++i)
+            results[i] = (results[i - 2] * 2 % 1_000_000_007 + results[i - 1]) % 1_000_000_007;
+
+        for (int testCase = 0; testCase < numOfTestCase; ++testCase)
+            System.out.println(results[Integer.parseInt(in.nextLine().trim())]);
+    }
+}

@@ -1,0 +1,422 @@
+include ../../../source/skeleton.pug
++post('Groovy', 'Groovy', 'Groovy 정리')
+    h1
+        |Groovy 
+        +asA('http://groovy-lang.org/single-page-documentation.html')
+    p Java 파생 스크립트 언어
+    div
+        h2 설치(SDKMAN)
+        +asCode('shell') $ sdk install groovy
+
+        h2 실행
+        +asCode('shell') $ groovy FileName.groovy # '.groovy' 생략 가능
+
+        h2 컴파일
+        p .class 파일을 생성한다
+        +asCode('shell') $ groovyc FileName.groovy
+
+    h1 Language Specification
+    p Java 스펙과 다른 것만 기술한다
+    div
+        h2 Syntax
+        div
+            h3 Identifiers
+            ol
+                li Quoted identifiers
+                p 임의의 문자열 상수 표현 및 GString 표현을 '.' 이후의 식별자로 이용할 수 있다
+                +asCode('groovy').
+                    def map = [:]
+
+                    map.' a b c ' = 'abc'
+                    assert map." a b c " == 'abc'
+
+                    def firstName = "Homer"
+                    map."Simpson-${firstName}" = "Homer Simpson"
+                    assert map.'Simpson-Homer' == "Homer Simpson"
+            h3 Strings
+            ol
+                li Single-quoted string : 'text'
+                li Triple-single-quoted string : '''text'''
+                ul
+                    li 여러 줄에 걸친 텍스트 문자열 표현 가능
+                    li 들여쓰기 공백도 포함되므로 유의 ─ String#stripIndent 등을 이용하여 지울 수 있다
+                    li 줄 끝에 \를 쓰면 \n를 삽입하지 않는다
+                li groovy.lang.GString; String interpolation
+                ul
+                    li 보간 ${}식에는 임의 표현식 ─ 심지어 여러 문장도 가능하다. 반환 없는 문장에 대해서는 null이 채워지고, 여러 문장인 경우 마지막 문장의 평가값만 문자열 보간에 이용된다
+                    +asCode('groovy').
+                        def text = 'Hello World'
+                        def text2 = "${text}${text}"
+
+                        assert text2.toString() == text + text
+                    li 모호하지 않은 경우, .표현식은 {}를 생략할 수 있다
+                    +asCode('groovy').
+                        def obj = [id: 123, name: 'abc']
+                        assert "$obj.id, $obj.name" == '123, abc'
+                    li $ 자체를 표현하고 싶은 경우 \$로 이스케이프
+                    li GString의 평가값이 String과 같아도 해시코드는 서로 다르다
+                li Triple-double-quoted string : """text"""
+                p Interpolation 가능
+                li Slashy string : /text/
+                p Interpolation 가능. \를 이스케이프하지 않는다. 대신 / 자체를 표현하려면 \/로 이스케이프. 여러 줄 문자열 가능
+            h3 Characters
+            +asCode('groovy').
+                char c1 = 'a'
+                def c2 = 'b' as char
+                def c3 = (char)'c'
+            h3 Numbers
+            ul
+                li BigInteger/BigDecimal literal : 1234g
+                li Double literal : 1234d
+                li Power operator : x**y
+            h3 Lists
+            +asCode('groovy').
+                def list = [1, 2, 3] // default : ArrayList
+                def list2 = [1, 2, 3] as LinkedList
+                LinkedList list3 = [1, 2, 3]
+
+                assert list[-1] == 3
+
+                list &lt;&lt; 4 // append
+                assert list[3] == 4
+
+                assert list[1, 3] == [2, 4]
+                assert list[1..3] == [2, 3, 4]
+            h3 Arrays
+            +asCode('groovy').
+                def arr = [1, 2, 3] as int[]
+                int[] arr2 = [1, 2, 3]
+            h3 Maps
+            +asCode('groovy').
+                def map = [:]                       // empty map
+                map = [key1: 'value1', 2: 'value2'] // LinkedHashMap
+                map.key3 = 'value3'
+                assert map[2] == 'value2'
+                assert map.key1 == map['key1']
+
+        h2 Operators
+        div
+            h3 Relational operators
+            ul
+                li == : equal
+                li === : identical Since 3.0.0
+                p is 연산자와 동일
+            h3 Conditional operators
+            ul
+                li Elvis operator
+                +asCode('groovy').
+                    displayName = user.name ?: 'Anonymous'
+                    displayTitle ?= 'Default' // Since 3.0.0
+            h3 Object operators
+            ul
+                +asCode('groovy').
+                    class Account {
+                        public String name
+                        Account(String name) { this.name = name }
+                        String getName() { "name: ${name}" }
+                    }
+                li Safe navigation operator : ?.
+                +asCode('groovy').
+                    def account = null
+                    assert account?.name == null
+                li Direct field access operator : @
+                +asCode('groovy').
+                    def account = new Account('HHH')
+                    assert account.name != account.@name
+                li Method pointer operator : .&
+                p 메서드를 가리키는 groovy.lang.Closure 인스턴스를 반환한다
+                +asCode('groovy').
+                    def f = '123'.&length
+                    assert f() == 3
+
+                    def something(int x) { x * 2 }
+                    def something(str) { "${str} ${str}" }
+                    f = this.&something
+                    assert f(123) == 246
+                    assert f('123') == '123 123'
+
+                    f = Integer.&new // Since 3.0.0
+                    assert f(123) == 123
+            h3 Regex expression
+            +asCode('groovy').
+                def p = ~/regex/
+                assert p instanceof Pattern // java.util.regex.Pattern
+
+                def m = text ==~ /match/
+                assert m instanceof Boolean
+            h3 Other operators
+            ul
+                li Spread(-dot) operator
+                p 컬렉션에 대한 프로젝션 반환. 컬렉션의 collect와 유사
+                +asCode('groovy').
+                    def data = [
+                        [key1: '1-1', key2: '1-2'],
+                        null,
+                        [key1: '2-1', key2: '2-1']
+                    ]
+                    assert data*.key1 == ['1-1', null, '2-1']
+                    assert data.collectNested { it?.key1 } == ['1-1', null, '2-1']
+
+                    data = [data, data]
+                    assert data.collectNested { it?.key1 } == [['1-1', null, '2-1'], ['1-1', null, '2-1']]
+                li Spreading method arguments
+                +asCode('groovy').
+                    def f(int x, int y, int z) { "${x}, ${y}, ${z}" }
+                    def args = [1, 2, 3]
+                    assert f(*args) == '1, 2, 3'
+                li Spread list elements
+                +asCode('groovy').
+                    def l = [1, 2, 3]
+                    l = [*l, 4, *l]
+                    assert l.size() == 7
+                li Spread map elements
+                +asCode('groovy').
+                    def data = [1:2, 3:4]
+                    data = [*:data, 5:6, *:data, 1:7]
+                    assert data.size() == 3
+                    assert data[1] == 7
+                li Range operator
+                p next(), previous()가 정의된 임의 Comparable로 range를 구성할 수 있다
+                +asCode('groovy').
+                    def range = 0..5
+                    assert range instanceof List
+                    assert (0..5).collect() == [0, 1, 2, 3, 4, 5]
+                    assert (0..&lt;5).collect() == [0, 1, 2, 3, 4]
+                li Subscript operator
+                p getAt(int), putAt(int, value)를 정의하면 아래 연산이 가능
+                +asCode('groovy').
+                    def list = [1, 2, 3, 4]
+                    assert list[2] == 3
+                    list[1..3] = [4, 3, 2]
+                    assert list == [1, 4, 3, 2]
+                    list[0..2] = [9, 8, 7, 6]
+                    assert list == [9, 8, 7, 6, 2]
+                li Spaceship operator
+                p &lt;=> == compareTo
+                li Safe index operator : ?[] Since 3.0.0
+                +asCode('groovy').
+                    def arr = null
+                    def x = arr?[123] // null에 대한 getAt은 모두 null
+                    arr?[123] = 123   // null에 대한 setAt은 모두 무시
+                li Membership operator : in
+                +asCode('groovy').
+                    def list = [1, 2, 3]
+                    assert (1 in list)
+                ul
+                    li List에 대하여 in == contains()
+                    li 그 외엔 in == isCase()
+                li Coercion operator : as
+                p 대상 타입이 소스와 동일하더라도 새 인스턴스를 생성함에 유의. asType() 메서드로 사용자정의 변환 가능
+                +asCode('groovy') x as String
+            h3 Operator overloading
+            table
+                +ths('operator', 'method')
+                +tds('+', 'plus')
+                +tds('-', 'minus')
+                +tds('*', 'multiply')
+                +tds('/', 'div')
+                +tds('%', 'mod')
+                +tds('**', 'power')
+                +tds('|', 'or')
+                +tds('&', 'and')
+                +tds('^', 'xor')
+                +tds('as', 'asType')
+                +tds('obj()', 'call')
+                +tds('obj[x]', 'getAt')
+                +tds('obj[x] = y', 'putAt')
+                +tds('x in y', 'isCase')
+                +tds('<<', 'leftShift')
+                +tds('>>', 'rightShift')
+                +tds('>>>', 'rightShiftUnsigned')
+                +tds('++', 'next')
+                +tds('--', 'previous')
+                +tds('+x', 'positive')
+                +tds('-x', 'negative')
+                +tds('~x', 'betwiseNegate')
+
+        h2 Program structure
+        div
+            h3 Package names
+            +asCode('groovy') package com.xxx
+
+            h3 Imports
+            +asCode('groovy') import x.y.Z
+            p Default imports
+            +asCode('groovy').
+                import java.lang.*
+                import java.util.*
+                import java.io.*
+                import java.net.*
+                import groovy.lang.*
+                import groovy.util.*
+                import java.math.BigInteger
+                import java.math.BigDecimal
+            h3 Scripts versus classes
+            p Groovy는 스크립트와 Java 클래스 작성 모두를 허용하며, 스크립트는 컴파일 시 클래스로 변환된다
+            ul
+                li 스크립트의 함수 선언은 자동으로 컴파일된 클래스의 멤버가 된다
+                li 나머지 스크립트는 컴파일된 클래스의 run() 바디가 된다
+            h3 Variables
+            +asCode('groovy').
+                def x = 1     // 동적 타입 변수. 컴파일된 클래스의 run() 내부 지역 변수가 된다
+                x = 'hello'
+
+                int x = 1     // 정적 타입 변수. 컴파일된 클래스의 run() 내부 지역 변수가 된다
+
+                x = 1         // 스크립트 클래스에 바인딩되어 클래스 내부 어디서든 접근 가능
+
+                @Field x = 1  // 컴파일된 클래스의 필드가 된다
+
+        h2 Object orientation
+        div
+            h3 Types
+            ul
+                li Constructors
+                +asCode('groovy').
+                    class Person {
+                        String name
+                        Integer age
+                        Person() {
+                            println('no-arg constructor called')
+                        }
+                        Person(name, age) {
+                            this.name = name
+                            this.age = age
+                            println('arg constructor called')
+                        }
+                        String toString() {
+                            "{name:'${name}',age:${age}}"
+                        }
+                    }
+
+                    def p1 = new Person('p1', 11)
+                    def p2 = ['p2', 22] as Person
+                    Person p3 = ['p3', 33]
+                    // no-arg 생성자는 아래와 같은 호출 가능
+                    def p4 = new Person(age: 44, name: 'p4')
+                    def p5 = new Person([age: 55, name: 'p5'])
+
+                    println([p1, p2, p3, p4, p5])
+                    /*
+                    arg constructor called
+                    arg constructor called
+                    arg constructor called
+                    no-arg constructor called
+                    no-arg constructor called
+                    [{name:'p1',age:11}, {name:'p2',age:22}, {name:'p3',age:33}, {name:'p4',age:44}, {name:'p5',age:55}]
+                    */
+                li Annotation
+                +asCode('groovy').
+                    @interface Status {
+                        int statusCode() default 200
+                    }
+                    @Status(statusCode=503)
+                    internalError() {}
+                ul
+                    li Meta-annotations
+                    +asCode('groovy').
+                        import groovy.transform.AnnotationCollector
+
+                        @Service
+                        @Transactional
+                        @AnnotationCollector
+                        @interface TransactionalService {}
+            h3 Traits
+            p Interface와 AbstractClass를 섞은 느낌
+
+        h2 Closures
+        div
+            h3 Syntax
+            +asCode('groovy').
+                { [params -> ] statements }
+
+                next = { x++ }
+                plus = { a, b -> a + b }
+                minus = { int a, int b -> return a - b }
+                concat = { String... args -> args.join(',') }
+            h3 Delegation strategy
+            ul
+                li this : 클로저를 갖는 클래스 인스턴스
+                li owner : 클로저를 갖는 클래스 또는 클로저 인스턴스
+                li delegate : 사용자가 임의로 설정할 공유값. 기본값은 owner
+                +asCode('groovy').
+                    class Person { String name }
+                    def toUpper = { delegate.name.toUpperCase() }
+                    def p = new Person(name: 'Norman')
+                    toUpper.delegate = p
+                    assert toUpper() == 'NORMAN'
+
+                    toUpper = { name.toUpperCase() }
+                    p = new Person(name: 'Norman')
+                    toUpper.delegate = p
+                    assert toUpper() == 'NORMAN'
+                li Closure.resolveStrategy
+                p delegate를 생략했을 때, 어느 것을 먼저 찾을 것인지
+                ul
+                    li Closure.OWNER_FIRST : owner 먼저. owner에 없으면 delegate
+                    li Closure.DELEGATE_FIRST : delegate 먼저. delegate에 없으면 owner
+                    li Closure.OWNER_ONLY, DELEGATE_ONLY
+                    li Closure.TO_SELF : Closure 서브클래스를 직접 작성하는 경우, Closure 인스턴스 자체
+            h3 Closures in GStrings
+            +asCode('groovy') "x = ${-> x}" // 나중에(사용할 때마다) 평가된다
+            h3 Functional programming
+            ul
+                li Left currying : Closure.curry(...)
+                li Right currying : Closure.rcurry(...)
+                li Index based currying : Closure.ncurry(idx, value, ...)
+                li Memoization : Closure.memoize()
+                p memoizeAtMost, memoizeAtLeast, memoizeBetween
+                li Composition : beforeClosure >> afterClosure, afterClosure &lt;&lt; beforeClosure
+                li Trampoline : 재귀 호출 쌓이는 스택을 회피하기 위해 클로저를 반복적 호출로 변환
+                +asCode('groovy').
+                    def facto = { n, r = 1g -> n &lt; 2? r : facto.trampoline(n-1, n * r) }
+                    facto = facto.trampoline()
+
+        h2 Semantics
+        div
+            h3 Statements
+            ul
+                li Multiple assignment
+                +asCode('groovy').
+                    def (x, y, z) = [1, 2]
+                    assert z == null
+                li Object destructing with multiple assignment
+                p getAt/putAt 메서드를 정의하면 객체에 대한 복수 할당이 가능하다
+                +asCode('groovy').
+                    class Rect {
+                        double w
+                        double h
+                        double getAt(int idx) {
+                            switch(idx) {
+                            case 0: return w
+                            case 1: return h
+                            }
+                        }
+                    }
+                    def (w, h) = new Rect(w=123d,h=456d)
+                    print([w, h])
+                li switch/case
+                +asCode('groovy').
+                    switch(x) {
+                        case "aaa":
+                        break
+                        case 123:
+                        case [1, 3, 2.333, true]:
+                        case 20..30:
+                        case ~/regex/:
+                        case { x > 10 }:
+                        case Number:
+                        default:
+                    }
+                li Looping structures
+                +asCode('groovy').
+                    for (int i = 0; i &lt; 3; i++)
+                    for (i in 0..9)
+                    for (i in [100, 90, 92])
+                    for (i in array)
+                    for (entry in map)
+                    for(c in 'string')
+
+    h1 기타 링크
+    ul
+        li: +asA('http://docs.groovy-lang.org/next/html/documentation/working-with-collections.html', '컬렉션 문서')

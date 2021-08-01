@@ -1,0 +1,205 @@
+include ../../../source/skeleton.pug
++post('C# 라이브러리', 'C#, .NET, 라이브러리', 'C#.NET 라이브러리 정리')
+    h1 표준 입출력
+    ol
+        li Console.Read() : 한 글자
+        li Console.ReadLine() : 한 줄
+        li Console.Write(), Console.WriteLine()
+
+    h1 텍스트
+    ol
+        li String.Format ::= {N[, W][: formatCharacter]}
+        ul
+            li N : 매개 변수 위치 지정. 0부터 시작
+            li W : 출력될 자릿수 폭. '-'를 붙이면 왼쪽 정렬
+            li formatCharacter : d(10진수, DateTime), n(천 단위 구분 10진수), e(지수 표기), f(소수), g(e, f중 간략한 형태), p(백분율), x(16진수)
+        li String Interpolation : "C# 시작하기 - 문법 - 기본 자료형 - 문자열 리터럴" 참고
+        li System.Text.StringBuilder
+        li System.Text.Encoding : Encoding.UTF8.GetBytes()
+        li System.Text.RegularExpressions.Regex
+
+    h1 시간
+    ol
+        li System.DateTime : 닷넷 시간 기준은 1년 1월 1일. Tick 간격은 천만 분의 일초
+        li System.TimeSpan : DateTime의 - 연산 결과
+        li System.Diagnostics.Stopwatch
+
+    h1 직렬화
+    ul
+        li System.BitConverter
+        p 기본 타입의 직렬화/역직렬화 제공. 리틀/빅 엔디언 구분 필요
+        li System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+        ul
+            li new BinaryFormatter().Serialize()
+            li [Serializable] 특성 표기한 사용자 정의 클래스 직렬화
+            li 직렬화에 배제할 요소는 [NonSerialized] 특성 표기
+        li System.Xml.Serialization.XmlSerializer
+        ul
+            li new XmlSerializer(typeof(ClassName)).Serialize()
+            li 기본 생성자가 있는 public 클래스의 public 필드에 대해 직렬화 제공
+        li System.Runtime.Serialization.Json.DataContractJsonSerializer
+        +asCode('cs') new DataContractJsonSerializer(typeof(ClassName)).WriteObject()
+
+    h1 스트림
+    ul
+        li System.IO.MemoryStream : 바이트 단위 스트림
+        li System.IO.StreamWriter, StreamReader
+        li System.IO.BinaryWriter, BinaryReader
+        li System.IO.FileStream : 비동기 메서드 BeginRead, EndRead, BeginWrite, EndWrite
+
+    h1 파일
+    ul
+        li System.IO.File, System.IO.Directory : 클래스 메서드
+        li System.IO.FileInfo, System.IO.DirectoryInfo : 인스턴스 메서드
+        li System.IO.Path
+        ul
+            li Path.Combine() : 경로 접합 시에 디렉터리 구분 문자를 넣어야 되는지 알아서 판단해서 처리해준다
+            li 임시 폴더/파일에 관한 기능 제공
+
+    h1 Collection
+    ul
+        li System.Collections.ArrayList : Object에 대한 동적 배열은 List
+        li System.Collections.Hashtable : Object 키-값 쌍 저장은 Dictionary
+        li System.Collections.SortedList + SortedDictionary
+        p Hashtable과 유사. 삽입과 동시에 키를 기준으로 정렬이 이루어진다
+        li System.Collections.Stack + Queue
+        li 컬렉션 초기화 구문
+        ul
+            li ICollection&lt;T> 타입은 {}로 초기화 가능
+            +asCode('cs') new List&lt;int> {0, 1, 2}
+            li Since C# 6.0 : 확장 메서드로 Add()가 정의됐으면 {} 초기화 가능
+
+    h1 스레딩
+    ul
+        li System.Threading.Thread
+        ul
+            li thread.Start(obj) : 인자 하나를 받고 스레드 시작
+            li thread.Abort() : 스레드 강제 종료
+            li thread.Join() : 스레드 종료 대기
+            li thread.Interrupt() : 스레드가 WaitJoinSleep 상태일 때 종료
+        li System.Threading.ThreadPool
+        li System.Threading.EventWaitHandle
+        ul
+            li EventWaitHandle은 대기중인 스레드를 깨울 수 있다
+            li EventWaitHandle 인스턴스는 Signal, Non-signal 두 가지 상태를 가지며, 상태 전이 메서드도 Set(→ Signal), Reset(→ Non-signal) 2가지가 있다
+            li 스레드가 WaitOne 메서드를 호출하면 이벤트가 Signal 상태가 될 때까지 대기한다
+            li EventResetMode : 자동(Set 호출 뒤 자동으로 Non-signal 상태로 전이), 수동(Reset 직접 호출)
+            p 자동 리셋의 경우 대기하는 스레드 중 하나만 깨우고 상태를 변경한다
+        li System.Threading.Interlocked : int, long에 대한 원자 연산 제공
+        li System.Threading.Monitor 스레드 간 동기화
+        +asCode('cs').
+            Monitor.Enter(/* ojbect */);
+            try { /* body */ } finally{ Monitor.Exit(/* object */); }
+        li Monitor 구문과 동치인 lock 블록
+        +asCode('cs') lock (/* object */) { /* body */ }
+        li lock 블록과 Monitor를 혼용하여 대기 스레드들을 직접 관리
+        +asCode('cs').
+            readonly var myLock = new object();
+            var isDone = false;
+            lock (myLock)
+            {
+                // Monitor#Wait : 스레드를 WaitSleepJoin 상태로 만들고 lock을 해제한 뒤 Waiting Queue로 진입
+                while(!isDone) { Monitor.Wait(myLock); }
+                isDone = false;
+                // ToDo
+                isDone = true;
+                // Monitor#Pulse : Waiting Queue의 첫번째 스레드를 깨워 Ready Queue로 입력
+                Monitor.Pulse(myLock);
+            }
+        li 비동기 처리 System.Threading.Tasks.Task
+        +asCode('cs').
+            var task = new Task(() => { Thread.Sleep(1000); Console.WriteLine("Async"); });
+            task.start(); task.Wait();
+        +asCode('cs').
+            var task = Task.Run(() => { Thread.Sleep(1000); Console.WriteLine("Async"); });
+            task.Wait();
+        +asCode('cs') await Task.Run(() => { Thread.Sleep(1000); Console.WriteLine("Async"); });
+        ul
+            li await Task.Delay() : 입력시간 후 태스크 반환
+            li Task.WaitAll(t1, t2, ...)
+            li await Task.WhenAll(t1, t2, ...)
+            li Task.Factory.StartNew()
+            li Task.Factory.StartNew&lt;TResult>()
+        li 비동기 실행 결과 취합 Task&lt;TResult&gt:
+        +asCode('cs').
+            var task = Task&lt;List&lt;int>>.Run(() => {
+                Thread.Sleep(1000);
+                return new List&lt;int> { 2 };
+            });
+            var myList = new List&lt;int>(new int[] { 1 });
+            task.Wait();
+            myList.AddRange(task.Result);
+        li 병렬 처리 System.Threading.Tasks.Parallel
+        +asCode('cs').
+            void DoSomething(int i) => Console.WriteLine(i);
+            Parallel.For(0, 100, DoSomething);
+
+    h1 네트워킹
+    ul
+        li System.Net.IPAddress
+        li System.Net.IPEndPoint : IPAddress + port
+        li System.Net.Dns : Dns.GetHostEntry()
+        li System.Net.Sockets.Socket
+        p Socket(IPv4/6, Stream, Tcp) or Socket(IPv4/6, Dgram, Udp)
+        li System.Net.HttpWebRequest : WebRequest.Create() as HttpWebRequest
+        li System.Net.WebClient
+
+    h1 DB : ADO.NET
+    ul
+        li ADO.NET : DBMS 통신 닷넷 구현 라이브러리. 각 DBMS마다 만들어진 걸 이용하면 된다. 아래의 공통 인터페이스를 구현한다
+        li System.Data.IDbConnection
+        li 트랜잭션 1
+        +asCode('cs').
+            using(var transaction = sqlConnection.BeginTransaction) {
+                var command = new SqlCommand();
+                command.Connection = sqlConnection;
+                command.Transaction = transaction;
+                // ...
+                transaction.Commit();
+            }
+        li 트랜잭션 2
+        +asCode('cs').
+            using(var sqlConnection = new SqlConnection(connectionString);
+                var transactionScope = new TransactionScope()) {
+                sqlConnection.Open();
+                // ...
+                transactionScope.Complete();
+            }
+        li System.Data.IDbCommand : DB 서버로 쿼리 전달
+        ul
+            li ExecuteNonQuery : INSERT, UPDATE, DELETE → 영향 받은 행의 수 반환
+            li ExecuteScalar : SELECT → 단일값 반환
+            li ExecuteReader : SELECT → 다중 레코드 반환
+        li System.Data.IDataReader : 쿼리 결과 해석
+        li System.Data.IDbDataParameter : Parameterized command에 사용될 매개변수
+        +asCode('cs').
+            var email = new SqlParameter("email", SqlDbType.NVarChar, 120);
+            sqlCommand.CommandText = "INSERT INTO t_account(account_id, email) VALUES(@account_id, @email)";
+        li System.Data.IDbDataAdapter
+        p System.Data.DataTable ↔ 닷넷 클래스(POCO; 자바의 POJO와 유사한 개념) 사이의 어댑터
+        +asCode('cs').
+            var dataSet = new DataSet();
+            new SqlDataAdapter("select * from t_account", sqlConnection).Fill(dataSet, "t_account");
+        li ORM
+        ul
+            li MS SQL 서버 또는 Azure와 연결하여 자동으로 모델을 구성할 수 있다
+            li 추가 - 새 항목 - [데이터] ADO.NET 엔터티 데이터 모델
+            li MySQL, PostgreSQL도 확장을 설치하거나 하면 된다는 것 같은데...
+            li https://dev.mysql.com/downloads/windows/visualstudio/
+            li https://dev.mysql.com/doc/visual-studio/en/visual-studio-entity-framework.html
+            li https://stackoverflow.com/q/32045852/7369515
+
+    h1 윈도우 레지스트리
+    +asCode('cs').
+        Registry.ClassesRoot : HKEY_CLASSES_ROOT
+        Registry.CurrentUser : HEKY_CURRENT_USER
+        Registry.LocalMachine : HKEY_LOCAL_MACHINE
+        Registry.Users : HKEY_USERS
+        Registry.CurrentConfig : HKEY_CURRENT_CONFIG
+        Registry.LocalMachine.OpenSubKey(@"HARDWARE\DESCRIPTION\System\BIOS").GetValue("Key")
+        Registry.LocalMachine.OpenSubKey(@"HARDWARE\DESCRIPTION\System\BIOS", true).SetValue("Key", value)
+        REG_SZ → string
+        REG_BINARY → byte[]
+        REG_DWORD → int
+        REG_QWORD → long
+        REG_MULTI_SZ → string[]

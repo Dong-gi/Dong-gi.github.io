@@ -1,0 +1,356 @@
+include ../../../source/skeleton.pug
++post('JavaEE', 'JavaEE, Servlet, tomcat, JSP', 'JavaEE 정리')
+    h1 JavaEE
+    ol
+        li Java Enterprise Edition은 동적 웹 애플리케이션 개발을 위한 자바 플랫폼이다
+        p JavaSE와는 문서 페이지가 다르다. 
+            +asA('https://javaee.github.io/javaee-spec/javadocs/')
+        li WAR(Web Application Archive) : JavaEE 웹 애플리케이션을 위한 압축 파일
+        p 전형적인 war 파일 구조 ↓
+        +asCode().
+            웹앱 루트
+            ㄴ META-INF
+                ㄴ MANIFEST.MF
+                ㄴ 컨테이너 리소스
+            ㄴ WEB-INF : 웹에서 접근 불가
+                ㄴ classes
+                    ㄴ META-INF
+                        ㄴ 애플리케이션 리소스
+                    ㄴ 자바 .class 파일 및 리소스
+                ㄴ i18n
+                    ㄴ 국제화 파일
+                ㄴ lib
+                    ㄴ 번들 jar 파일
+                ㄴ tags
+                    ㄴ JSP 태그 파일
+                ㄴ tld
+                    ㄴ JSP 태그 라이브러리 설명자
+            ㄴ 기타 웹에서 접근 가능한 파일
+        li 서블릿
+        p 자바로 구현된 CGI(Common Gateway Interface; 웹 서버와 프로그램 사이의 통신 규약).
+            |  JCP(Java Community Process)에서 제정한 Servlet Specification을 따라야 한다
+        li 서블릿 컨테이너
+        p 서블릿의 생애를 관리하는 프로그램(예. 톰캣)
+        li JSP
+        p 전용 태그 "&lt;% %>"를 이용해 HTML 문서에 자바 코드를 삽입
+            |  컨테이너가 자동으로 컴파일 하며, 서블릿 클래스와 달리 수정사항이 있어도 다시 빌드할 필요가 없다
+
+    h1 톰캣 배포 프로젝트
+    div
+        h2 개발 환경
+        ol
+            li
+                +asA('https://sdkman.io/jdks', 'JDK')
+                |  설치
+            li
+                +asA('https://tomcat.apache.org/', '톰캣')
+                |  설치
+            li IDE(이클립스, STS 등) 설치
+            ul
+                li 이클립스에 톰캣 추가
+                +asCode() Windows » Preferences » Server » Runtime Environments » Add » Apache
+                li 이클립스 프로젝트에 톰캣 구성 추가
+                +asCode() 프로젝트 Server 속성에 추가
+                li IntelliJ에 톰캣 추가
+                +asCode() Settings » Application Servers » + » 톰캣 홈 디렉터리 추가
+                li IntelliJ 프로젝트에 톰캣 구성 추가
+                +asCode().
+                    도구 모음에서 Run/Debug Configurations 아이콘(아래방향 화살표)을 누른 다음 Edit Configurations 클릭
+
+                    대화상자가 열리면 + 버튼 클릭 후 Tomcat Server를 Local로 추가
+
+                    배포할 아티팩트를 선택하지 않았다는 경고가 표시되면 Deployment 탭을 누르고 "Deploy at the server setup" 머리글 아래의 + 버튼 클릭
+                    Artifact를 누르고 확장된 war 파일 아티팩트를 누른 다음 OK. 배포를 위한 "Application context"이름을 서버를 기준으로 한 상대 주소로 변경(예. /my-app)
+
+        h2 Hello World 프로젝트
+        div
+            h3 이클립스 Dynamic Web Project
+            ol
+                li New Project » Web » Dynamic Web Project » Target runtime에 톰캣 설정
+                li 코드 작성
+                +w3img('/imgs/20200808_184623.png', '프로젝트 구조')
+                +codeBtn('/Repositories/STS/app1/src/io/github/donggi/app1/controller/HelloController.java', 'java', [11], true)
+                +codeBtn('/Repositories/STS/app1/webapp/WEB-INF/web.xml', 'xml', null, true)
+                li web.xml
+                p web.xml은 배포 설명자로, 서블릿 및 서블릿 매핑, 필터 등을 정의한다
+                    |  이클립스 프로젝트 생성 마법사로 web.xml을 생성하면 자동으로 welcome-file-list를 구성해주는데, welcome-file-list에 정의된 welcome-file을 순서대로 찾아 기본 페이지로 보여준다
+                li 실행
+                +w3img('/imgs/20200808_184839.png', 'Debug on Server')
+                +w3img('/imgs/20200808_185012.png', '브라우저 화면')
+                p 또는 Export » WAR file를 선택하여, 톰캣 webapps 디렉터리에 옮긴 후 배치되기를 기다린 뒤 브라우저에서 확인
+                li 이클립스 내부에서 실행하는 경우 웹 애플리케이션 배포 위치
+                p ${PROJECT_ROOT}\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps
+
+            h3 톰캣에 직접 배치
+            ol
+                li 위와 동일하게 HelloController.java 작성 
+                    +codeBtn('/Repositories/STS/app1/src/io/github/donggi/app1/controller/HelloController.java', 'java', [11], true)
+                li 컴파일
+                ul
+                    li 톰캣 lib를 클래스패스로 넘기는 경우
+                    +asCode('shell') javac -encoding UTF-8 -cp "C:\apache-tomcat-8.0.52\lib\servlet-api.jar" HelloController.java
+                    li JDK의 jre/lib/ext에 servlet-api.jar를 붙여넣은 경우
+                    +asCode('shell') javac -encoding UTF-8 HelloController.java
+                li 컴파일된 클래스 파일을 webapps/${웹모듈명}/WEB-INF/classes/${패키지 경로}/ 에 저장
+                li 동일한 배포 설명자 web.xml을 WEB-INF에 작성하고 실행 
+                    +codeBtn('/Repositories/STS/app1/webapp/WEB-INF/web.xml', 'xml', null, true)
+
+            h3 이클립스 Maven 프로젝트
+            ol
+                li New Project » Maven » Maven Project » maven-archetype-webapp
+                p webapp 아티팩트로 프로젝트를 만들면 Hello World를 출력하는 index.jsp가 생성된다
+                li Maven Install, 빌드하여 war 파일이 생성되면 톰캣 webapps 디렉터리에 붙여넣고 배치되기를 기다린 뒤 브라우저에서 실행
+                p maven이 pom.xml에 정의된 라이브러리를 /users/유저이름/.m2 폴더에 다운로드한다
+
+            h3 이클립스 Gradle 프로젝트
+            ol
+                li New Project » Gradle Project 
+                    +codeBtn('/Repositories/STS/mvc-xml1/build.gradle', 'gradle', null, true)
+                li 코드 작성
+                +w3img('/imgs/20200808_185701.png', '프로젝트 구조')
+                +codeBtn('/Repositories/STS/mvc-xml1/src/main/java/io/github/donggi/mvc1/controller/HelloController.java', 'java', [11], true)
+                +codeBtn('/Repositories/STS/mvc-xml1/src/main/webapp/WEB-INF/web.xml', 'xml', null, true)
+                li 실행
+                +w3img('/imgs/20200808_185608.png', '브라우저 화면')
+
+        h2 서블릿 생애 주기
+        ol
+            li 서블릿 컨테이너에 의해 최초로 로드되어 인스턴스 생성
+            li init()
+            li 각 요청마다 service() 호출
+            li destroy()
+            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/LifeCycle.java', 'java', [17])
+
+        h2 web.xml 대신 애너테이션으로 서블릿 기술
+        ol
+            li WebServlet 애너테이션으로 배포설명자 web.xml 대신 간결하게 서블릿을 기술할 수 있다
+            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello2.java', 'java', [11]) value
+            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello3.java', 'java', [12]) initParams
+            li name : 배포설명자의 servlet-name에 해당
+            li urlPatterns : 배포설명자의 url-pattern들의 배열에 해당
+            li value : urlPatterns 요소와 동일하게 동작하기 때문에, 서블릿 매핑만을 기술할 거라면 편하게 WebServlet("/hello")처럼 기술할 수 있다
+            li initParams : 배포설명자의 init-param들의 배열에 해당
+            p GenericServlet#getInitParameter로 참조할 수 있으며, 이 메서드는 ServletConfig#getInitParameter를 호출한다. ServletConfig는 GenericServlet#getServletConfig 메서드로 참조할 수 있다
+            li loadOnStartup : 컨테이너가 애플리케이션을 시작할 때, 클라이언트의 요청이 없어도 미리 해당 서블릿을 인스턴스화 한다
+            p Non-negative 정수로 설정하며, 0에 가까울수록 우선 초기화
+                +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello5.java', 'java', [10]) loadOnStartup
+
+        h2 JDBC 예시
+        ol
+            li 드라이버 설치
+            ul
+                li 톰캣 lib(예. C:\apache-tomcat-8.0.52\lib)에 복사
+                li 또는 웹 애플리케이션 lib(${프로젝트}\WebContent\WEB-INF\lib)에 복사
+                li 또는 프로젝트에 직접 포함
+            li 사용하기 전에 드라이버 클래스 로드
+            li DataSource 직접 사용하기
+                +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello4.java', 'java', [16])
+            ul
+                li url : JDBC 연결 문자열로, 옵션은 각 JDBC마다 제공하는 것이 다르다
+                li 위 예시코드에서는 Apache Commons DBCP를 이용. 
+                    +asA('https://commons.apache.org/proper/commons-dbcp/guide/index.html') 링크
+                +asCode('java').
+                    BasicDataSource.initialSize                 // 최초 커넥션 수 + maxActive, maxIdle, minIdle
+                    BasicDataSource.maxWait                     // 풀에 커넥션이 없을 때 대기하는 최대 시간(ms). 음수면 무기한
+                    BasicDataSource.minEvictableIdleTimeMillis  // 설정된 것 이상 비활성 상태인 커넥션은 정리될 수 있다
+                                                                // + timeBetweenEvictionRunsMillis, numTestsPerEvictionRun
+                    BasicDataSource.testOnBorrow                // 커넥션을 가져올 때, 유효한 지 검사할 지 여부
+                                                                // + testOnReturn, testWhileIdle
+            li context.xml 리소스로 DataSource 정의하기
+            +codeBtn('/Repositories/Eclipse/app1/src/main/webapp/META-INF/context.xml', 'xml') context.xml »
+            +asCode('xml', 'web.xml » resource-ref').
+                &lt;resource-ref>
+                    &lt;res-ref-name>jdbc/MySQL/localhost/test&lt;/res-ref-name>
+                    &lt;res-type>javax.sql.DataSource&lt;/res-type>
+                    &lt;res-auth>Container&lt;/res-auth>
+                &lt;/resource-ref>
+            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/Hello6.java', 'java', [15]) 서블릿 »
+
+    h1 서블릿
+    div
+        h2 다른 페이지로 이동/호출
+        ol
+            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/servlet/CallOther.java', 'java', [13])
+            li 다른 페이지로 이동
+            ul
+                li Refresh : 응답 페이지를 보여준 뒤 클라이언트가 나중에 다시 요청하도록 한다
+                li Redirect : 응답 페이지 없이 바로 다른 url을 요청하도록 한다
+                p 따라서 redirect의 경우에는 getWriter()를 이용하지 말아야 한다
+            li 다른 페이지 호출
+            ul
+                li Forward
+                ul
+                    li 호출하는 페이지로 제어를 넘기기 때문에 해당 페이지가 종료되도 제어가 되돌아오지 않는다
+                    p 따라서 forward를 호출하는 측은 getWriter()를 이용하지 말아야 한다
+                        |  + 호출자 자신과 동일한 페이지/서블릿을 호출할 수 있다
+                    li forward는 서버 내에서 요청/응답 객체를 넘겨주므로 별도의 인코딩 없이 텍스트나 다른 객체를 추가하여 넘겨줄 수 있다
+                li Include
+                ul
+                    li Forward와 달리 호출된 페이지가 종료되면 제어가 돌아온다
+                    p 때문에 호출자와 동일한 페이지/서블릿을 호출할 수 없다
+                    li 호출된 페이지와 호출한 페이지 사이의 출력 HTML 코드 조각 순서를 맞추기 위해 flush()를 적절히 호출해줘야 한다
+
+        h2 필터
+        ol
+            li 웹 브라우저가 웹 컴포넌트를 호출하면, 필터가 사전작업을 수행하고 웹 컴포넌트를 호출
+            li 필터 체인 : 하나의 페이지에 대해 여러 필터가 정의된 경우, 정의된 순서대로 필터가 호출된다
+            li 배포 설명자에 명시 :
+                +codeBtn('/Repositories/Eclipse/app1/src/main/webapp/WEB-INF/web.xml', 'xml') web.xml »
+                +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/filter/DoNothing.java', 'java', [14])
+            li 애너테이션으로 명시 :
+                +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/filter/DoNothing2.java', 'java', [16])
+
+        h2 래퍼
+        ol
+            li Http 요청/응답을 감싸는 사용자 정의 객체
+            li 각각 HttpServletRequestWrapper, HttpServletResponseWrapper를 상속하면 된다
+            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/request/RequestWrapper.java', 'java', [6], true)
+            +codeBtn('/Repositories/Eclipse/app1/src/main/java/io/github/donggi/response/ResponseWrapper.java', 'java', [6], true)
+
+        h2 JSP
+        ol
+            li JSP 파일은 클라이언트 요청으로 필요해지면 HttpJspPage 인터페이스를 구현한 서블릿 클래스로 컴파일되고, 해당 서블릿이 요청을 처리한다
+            li JSP 파일의 본문은 HttpJspPage#_jspService 메서드의 본문이 된다
+            li HttpJspPage → JspPage → Servlet
+            p JspPage 인터페이스는 jspInit(), jspDestroy()를 정의한다
+            li JSP 태그
+                +codeBtn('/Repositories/Eclipse/app1/src/main/webapp/jsp/Hello.jsp', 'xml') Hello.jsp »
+            ul
+                li &lt;%@ %> : 지시자; Directive : page, taglib, include 3종류가 있다
+                li &lt;% %> : Scriptlet : 일반 자바 코드를 작성하면 된다. _jspService 메서드 안의 코드로, 매개변수를 포함한 아래의 변수들을 참조할 수 있다
+                +w3img('/imgs/20190912_191500.png')
+                li &lt;%! %> : 선언문; Declaration : 서블릿 클래스의 멤버 정의
+                li &lt;%= %> : Expression : out#print 또는 out#write에 들어갈 값을 반환하는 문장을 작성하면 된다
+        div
+            h3 JSP with Spring MVC
+            ul
+                li Inner property, Array index 예 
+                    +codeBtn('/Repositories/STS/mvc-java18/src/main/webapp/WEB-INF/view/bulkLogin.jsp', 'xml', null, true)
+                li spring:htmlEscape
+                p 페이지(PageContext) 수준에서 html 이스케이프 여부 설정
+                +asCode('xml') &lt;spring:htmlEscape defaultHtmlEscape="true"/>
+                li spring:message 예 
+                    +codeBtn('/Repositories/STS/mvc-java18/src/main/webapp/WEB-INF/view/message.jsp', 'xml', null, true)
+                    +codeBtn('/Repositories/STS/mvc-java18/src/main/resources/i18n/msg.properties', 'properties', null, true)
+        h2 데이터 저장소
+        ol
+            li ServletContext
+            p 애플리케이션 수준 공유 데이터. GenericServlet#getServletContext로 참조할 수 있다. JSP에서는 application 변수
+                br
+                |initParams : 앱 초기화 매개변수. 모든 서블릿이 ServletContext#getInitParameter로 참조할 수 있다
+            +asCode('xml').
+                &lt;!-- web.xml -->
+                &lt;context-param>
+                    &lt;param-name>name&lt;/param-name>
+                    &lt;param-value>Context Param&lt;/param-value>
+                &lt;/context-param>
+            li ServletConfig
+            p 서블릿 수준 공유 데이터. GenericServlet#getServletConfig로 참조할 수 있다. JSP에서는 config 변수
+                br
+                |initParams : 서블릿 초기화 매개변수. 서블릿 내에서 GenericServlet#getInitParameter로 참조할 수 있다
+            li 당연하지만, 서블릿 static 멤버도 서블릿 수준 공유 가능
+            li HttpSession
+            p 세션 수준 공유 데이터. HttpServletRequest#getSession으로 참조할 수 있다. JSP에서는 session 변수
+            li ServletRequest
+            p (클라이언트 요청 처리) 스레드 수준 공유 데이터. 서블릿마다 자동으로 공유되지는 않으며, 직접 전달해야 한다
+            li 각 클라이언트의 요청이 별개의 스레드에서 실행되므로, ThreadLocal이 유용할 수 있다
+            li JspContext
+            p _jspService()에서 자동 선언하는 pageContext 지역변수(). JSP 실행하는 동안 유효
+
+        h2 javax.servlet 이벤트 리스너
+        p 이벤트 리스너 구현 클래스는 배포 설명자에 서술되거나, @WebListener를 표기하거나, ServletContext#addListener로 등록돼야 한다
+        ul
+            li @WebListener 표기 가능 리스너 : ServletContextListener, ServletContextAttributeListener, ServletRequestListener, ServletRequestAttributeListener, HttpSessionListener, HttpSessionAttributeListener, HttpSessionIdListener
+            li ServletContext#addListener 등록 가능 리스너 : ServletContextAttributeListener, ServletRequestListener, ServletRequestAttributeListener, HttpSessionAttributeListener, HttpSessionIdListener, HttpSessionListene
+            p ServletContext 인스턴스가 ServletContainerInitializer#onStartup()으로 설정됐다면 ServletContextListener도 등록 가능
+        table
+            caption 종류
+            +ths('분류', '이벤트', '인터페이스', '메서드', '설명')
+            +tds('웹앱', 'ServletContextEvent', 'ServletContextListener Since Servlet 2.3', 'contextInitialized', '웹앱 초기화')
+            +tds('웹앱', 'ServletContextEvent', 'ServletContextListener Since Servlet 2.3', 'contextDestroyed', '웹앱 종료')
+            +tds('웹앱 속성', 'ServletContextAttributeEvent', 'ServletContextAttributeListener Since Servlet 2.3', 'attributeAdded', '속성 추가')
+            +tds('웹앱 속성', 'ServletContextAttributeEvent', 'ServletContextAttributeListener Since Servlet 2.3', 'attributeRemoved', '속성 제거')
+            +tds('웹앱 속성', 'ServletContextAttributeEvent', 'ServletContextAttributeListener Since Servlet 2.3', 'attributeReplaced', '속성 변경')
+            +tds('요청', 'ServletRequestEvent', 'ServletRequestListener Since Servlet 2.4', 'requestInitialized', '요청이 웹앱 스코프에 진입')
+            +tds('요청', 'ServletRequestEvent', 'ServletRequestListener Since Servlet 2.4', 'requestDestroyed', '요청이 웹앱 스코프를 벗어남')
+            +tds('요청 속성', 'ServletRequestAttributeEvent', 'ServletRequestAttributeListener Since Servlet 2.4', 'attributeAdded', '속성 추가')
+            +tds('요청 속성', 'ServletRequestAttributeEvent', 'ServletRequestAttributeListener Since Servlet 2.4', 'attributeRemoved', '속성 제거')
+            +tds('요청 속성', 'ServletRequestAttributeEvent', 'ServletRequestAttributeListener Since Servlet 2.4', 'attributeReplaced', '속성 변경')
+            +tds('세션', 'HttpSessionEvent', 'HttpSessionListener Since Servlet 2.3', 'sessionCreated', '세션 생성')
+            +tds('세션', 'HttpSessionEvent', 'HttpSessionListener Since Servlet 2.3', 'sessionDestroyed', '세션 폐기')
+            +tds('세션 속성', 'HttpSessionEvent', 'HttpSessionIdListener Since Servlet 3.1', 'sessionIdChanged', '세션 ID 변경')
+            +tds('세션 속성', 'HttpSessionBindingEvent', 'HttpSessionAttributeListener Since Servlet 2.3', 'attributeAdded', '속성 추가')
+            +tds('세션 속성', 'HttpSessionBindingEvent', 'HttpSessionAttributeListener Since Servlet 2.3', 'attributeRemoved', '속성 제거')
+            +tds('세션 속성', 'HttpSessionBindingEvent', 'HttpSessionAttributeListener Since Servlet 2.3', 'attributeReplaced', '속성 변경')
+            +tds('세션 속성', 'HttpSessionBindingEvent', 'HttpSessionBindingListener', 'valueBound', 'HttpSessionBindingListener를 구현한 인스턴스가 세션의 setAttribute()로 추가되면 호출')
+            tr
+                td 세션 속성
+                td HttpSessionBindingEvent
+                td HttpSessionBindingListener
+                td valueUnbound
+                td: ul
+                    p HttpSessionBindingListener를 구현한 인스턴스가
+                    li 세션의 removeAttribute()로 제거된 경우
+                    li invalidate()로 세션이 만료된 경우
+                    li 시간 초과로 세션이 만료된 경우 호출
+            +tds('요청 스트림', 'void', 'ReadListener Since Servlet 3.1', 'onDataAvailable', 'HTTP 요청 데이터 읽기가 가능해지는 시점에 한 번 호출')
+            +tds('요청 스트림', 'void', 'ReadListener Since Servlet 3.1', 'onAllDataRead', '블로킹 없이 모든 요청 데이터를 읽을 수 있을 때 호출')
+            +tds('요청 스트림', 'Throwable', 'ReadListener Since Servlet 3.1', 'onError', '요청 처리에 예외가 발생한 경우 호출')
+            +tds('응답 스트림', 'void', 'WriteListener Since Servlet 3.1', 'onWritePossible', '응답 쓰기가 가능해지는 시점에 한 번 호출')
+            +tds('응답 스트림', 'Throwable', 'WriteListener Since Servlet 3.1', 'onError', 'non-blocking 쓰기 중 발생한 예외 처리')
+            +tds('비동기 처리', 'AsyncEvent', 'AsyncListener Since Servlet 3.0', 'onStartAsync', '비동기 작업 시작')
+            +tds('비동기 처리', 'AsyncEvent', 'AsyncListener Since Servlet 3.0', 'onComplete', '비동기 작업 완료')
+            +tds('비동기 처리', 'AsyncEvent', 'AsyncListener Since Servlet 3.0', 'onTimeout', '비동기 작업 시간초과')
+            +tds('비동기 처리', 'AsyncEvent', 'AsyncListener Since Servlet 3.0', 'onError', '비동기 작업 중 예외가 발생')
+        ul
+            li ReadListener 설정 : ServerRequest#getInputStream → ServerInputStream#setReadListener
+            li WriteListener 설정 : ServerResponse#getOutputStream → ServerOutputStream#setWriteListener
+            li AsyncListener 설정 : ServletRequest#startAsync → AsyncContext#addListener
+
+    h1 MyBatis
+    div
+        h2 mybatis-config.xml
+        ol
+            li DTD
+            +asCode('xml') &lt;!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+            li ELEMENT configuration (properties?, settings?, typeAliases?, typeHandlers?, objectFactory?, objectWrapperFactory?, reflectorFactory?, plugins?, environments?, databaseIdProvider?, mappers?)
+            li properties 예
+            +asCode('xml').
+                &lt;properties url="mybatis.properties"/>
+                &lt;!-- resource : 파일이 클래스 패스에 있는 경우
+                     url      : 다른 경로에 있는 경우 -->
+            li 로거 settings
+            +asCode('xml').
+                &lt;setting name="logImpl" value=""/>
+                &lt;!-- value : SLF4J, LOG4J, LOG4J2, JDK_LOGGING, COMMONS_LOGGING, STDOUT_LOGGING, NO_LOGGING, Qualified class path -->
+            li typeAliases : SQL 매퍼 파일의 매개변수/리턴 타입의 별명을 지정
+            p built-in 별명 : _int(int), int(java.lang.Integer), date(java.util.Date) 등
+            li environments : 실행 환경(environment) 정의
+            ul
+                li environment » transactionManager » type 속성 : JDBC(MyBatis에서 트랜잭션 관리), MANAGED(서버나 서블릿 컨테이너에서 트랜잭션 관리)
+                li environment » dataSource » type 속성 : UNPOOLED(매 요청마다 새 커넥션 생성), POOLED(커넥션 풀링), JNDI(서버나 서블릿 컨테이너의 데이터 소스 사용)
+                +asCode('xml', 'POOLED').
+                    &lt;dataSource type="POOLED">
+                        &lt;property name="driver" value="org.postgresql.Driver"/>
+                        &lt;property name="url" value="jdbc:postgresql://localhost:5432/log"/>
+                        &lt;property name="username" value="name"/>
+                        &lt;property name="password" value="password"/>
+                    &lt;/dataSource>
+                +asCode('xml', 'JNDI').
+                    &lt;dataSource type="JNDI">
+                        &lt;property name="data_source" value="jdbc/MySQL/localhost/test"/>
+                    &lt;/dataSource>
+            li mappers : 각 매퍼(mapper) 파일 정의
+            +asCode('xml').
+                &lt;mappers>
+                    &lt;mapper resource="SomeMapper.xml"/>
+                    &lt;!-- resource : 파일이 클래스 패스에 있는 경우
+                         url      : 다른 경로에 있는 경우 -->
+                &lt;/mappers>
+        h2 mapper.xml
+        +asCode('xml').
+            &lt;if test="condition">sql&lt;/if>
+            &lt;choose> &lt;when test="condition">sql&lt;/when> &lt;otherwise>sql&lt;/otherwise>
+            &lt;where> &lt;if test="condition">sql&lt;/when> &lt;/where>
+            &lt;set> &lt;if test="condition">sql&lt;/if> &lt;/set>
+            &lt;foreach item="item" index...

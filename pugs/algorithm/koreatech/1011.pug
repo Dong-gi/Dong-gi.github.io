@@ -1,0 +1,57 @@
+include ../../../source/skeleton.pug
+
++post('동적 계획법 문제 풀이', 'algorithm, judge.koreatech, 동적계획법, 1011, 1017, 1055, 1056, 1057, 1060', 'judge.koreatech.ac.kr 1011, 1017, 1055, 1056, 1057, 1060 동적계획법 문제 풀이')
+    h1 1011: 징검다리
+    div
+        p 강을 건너기 위해서는 징검다리를 지나가야하는데, 징검다리에 씌여있는 숫자만큼의 금액을 징검다리를 건너는데 지불을 해야 한다. 징검다리를 건너가는데 드는 최소 비용을 구해주자
+        h2 풀이
+        p (이번 단계 최솟값) = (이전 3개 단계중 최솟값) + (이번 단계 비용)
+            +codeBtn('/Repositories/STS/standalones/src/main/java/link4/joy/koreatech/Main1011.java', 'java')
+
+    h1 1017: 돈을 줍자
+    div
+        p 길을 걷고 있는데, 천사가 나타나서 가는 길에 돈을 뿌려 놓았다. 그리고는 하는 말이 "마음껏 돈을 가져가세요, 하지만 연속해서 3개의 돈을 주우면 지옥에 가게 됩니다"
+        h2 풀이
+        p 제한 조건은 3개 연속으로만 줍지 않으면 되기 때문에, 3칸을 한 단위로 하여 한 단위씩 기대최댓값을 구하면 된다
+            +codeBtn('/Repositories/STS/standalones/src/main/java/link4/joy/koreatech/Main1017.java', 'java')
+
+    h1 1055: 판 채우기
+    div
+        h2 풀이
+        ol
+            li P(0) = 1
+            li P(1) = 1
+            li P(n) = P(n-2) * 2 + P(n-1)
+            +codeBtn('/Repositories/STS/standalones/src/main/java/link4/joy/koreatech/Main1055.java', 'java')
+
+    h1 1056: 화장실 타일 채우기
+    div
+        h2 풀이
+        ol
+            li P(0) = 1
+            li P(1) = 1
+            li P(n) = P(n-2) + P(n-1)
+            +codeBtn('/Repositories/STS/standalones/src/main/java/link4/joy/koreatech/Main1056.java', 'java')
+
+    h1 1057: 걸기 쉬운 전화번호
+    div
+        h2 풀이
+        ol
+            li P[0][0], ..., P[0][9] = 1
+            li P[i][0] = P[i-1][8]
+            li P[i][1] = P[i-1][2] + P[i-1][4]
+            li P[i][2] = P[i-1][1] + P[i-1][3] + P[i-1][5]
+            li P[i][3] = P[i-1][2] + P[i-1][6]
+            li P[i][4] = P[i-1][1] + P[i-1][5] + P[i-1][7]
+            li P[i][5] = P[i-1][2] + P[i-1][4] + P[i-1][6] + P[i-1][8]
+            li P[i][6] = P[i-1][3] + P[i-1][5] + P[i-1][9]
+            li P[i][7] = P[i-1][4] + P[i-1][8]
+            li P[i][8] = P[i-1][5] + P[i-1][7] + P[i-1][9] + P[i-1][0]
+            li P[i][9] = P[i-1][6] + P[i-1][8]
+            +codeBtn('/Repositories/STS/standalones/src/main/java/link4/joy/koreatech/Main1057.java', 'java')
+
+    h1 1060: 팰린드롬 만들기
+    div
+        p 어떤 단어가 주어졌을 때, 이 단어를 팰린드롬으로 만들기 위해서는 최소 몇개의 글자를 더 추가하면 될까요?
+        h2 풀이
+        +codeBtn('/Repositories/STS/standalones/src/main/java/link4/joy/koreatech/Main1060.java', 'java')

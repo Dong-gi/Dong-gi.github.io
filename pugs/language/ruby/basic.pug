@@ -1,0 +1,813 @@
+include ../../../source/skeleton.pug
++post('Ruby Basic', 'Ruby, Tutorial', '루비 기초 정리')
+    h1 개요
+    ul
+        li 오픈소스, 객체지향, 스크립트 프로그래밍 언어의 일종
+        li: +asA('https://www.ruby-lang.org/', 'www.ruby-lang.org')
+        li 모든 변수는 객체로 존재한다
+        li 실행
+        +asCode('shell').
+            $ ruby [filename]
+            $ ruby -e 'code line' [[-e 'code line']...]
+        li REPL
+        +asCode('shell').
+            $ irb
+            irb(main):001:0> 'hello'
+            => "hello"
+            irb(main):002:0> %x(ls -al)
+        li 종류
+        ul
+            li CRuby, MRI(Matz's Ruby Interpreter) : Ruby 참조 구현
+            li JRuby : JVM에서 동작하며, Java 라이브러리 이용 가능
+            +asCode('ruby').
+                include Java
+                import java.util.List
+                # ...
+            li MacRuby : Objective-C 런타임에서 동작하며, Cocoa 프레임워크 이용 가능
+        li 코딩 규약
+        table
+            +ths('분류', 'Ruby', 'Java')
+            tr
+                td 클래스, 모듈
+                td: +asCode('ruby').
+                    class MyClass
+                    end
+
+                    module MyModule
+                    end
+                td: +asCode('java') class MyClass {}
+            tr
+                td 메서드
+                td: +asCode('ruby').
+                    def my_method
+                    end
+
+                    def open?
+                        true
+                    end
+                td: +asCode('java').
+                    void myMethod() {}
+                    boolean isOpen() { return true; }
+            tr
+                td 변수
+                td: +asCode('ruby') my_variable = 1
+                td: +asCode('java') var myVariable = 1;
+
+    h1 문법
+    div
+        h2 스코프
+        ul
+            li Class level
+            li Module level
+            li Method level
+            li Block level
+            li Top level(앞의 것들 외 나머지)
+
+        h2 문장
+        ul
+            li 주석 : #
+            li 라인
+            p 기본적으로 라인 당 식 하나. 여러 식을 한 라인에 기술하려면 ;로 구분
+            li 코드 인코딩 지정
+            +asCode('ruby') # encoding: utf-8
+            li 프로그램 끝 : __END__
+            p __END__ 이후는 실행되지 않는다
+            +asCode('ruby', 'test.rb').
+                puts DATA
+                puts DATA.fileno
+                DATA.each_line do |line|
+                    puts line
+                end
+                __END__
+                line1
+
+                line2
+            +asCode('shell').
+                wiz@DESKTOP-FPFPV4B MINGW64 /d
+                $ ruby test.rb
+                #&lt;File:0x00000000051e2530>
+                3
+                line1
+
+                line2
+
+        h2 연산자
+        ul
+            li 동등 비교 ==
+            p ==는 내용물이 같으면 true 반환. 인스턴스 주소 비교에는 equal? 메서드 이용
+            li 동등 비교 ===
+            ul
+                li 기본적으로 ==과 동일
+                li Pattern === value # 매칭되면 true
+                li Range === value # range에 포함되면 true
+                li Proc === params # params를 인자로 실행한 결과 반환
+                li Module, Class === value # 인스턴스가 호환되면 true
+            li push 연산 &lt;&lt;
+            p 배열, String, Integers 각각에 대해 서로 다른 동작 수행
+            li 비교 연산 a &lt;=> b
+            ul
+                li 1 : a가 b보다 뒤에 있음(a > b)
+                li 0 : a와 b는 동일 순서
+                li -1 : a가 b보다 앞에 있음(a &lt; b)
+            li a ||= 10
+            p 변수 a가 아직 존재하지 않거나, false, nil이면 10을 할당
+            +asCode('ruby') (defined?(a) &amp;&amp; a) ? a : a = 10
+            li 다중 할당
+            +asCode('ruby').
+                a, b = 1, 2
+                a, b = [1, 2, 3]
+                a, b, c = [1, 2]    # c == nil
+                a, *rest = [1, 2, 3, 4, 5]
+            li 배열 해체 *
+            +asCode('ruby').
+                def plus(a, b)
+                    a + b
+                end
+                plus *[1, 2]
+            li nil safe 참조 연산 &amp;.
+            p receiver가 nil이면 참조를 수행하지 않음
+            li 정규식 매칭 text =~ pattern, text !~ pattern
+            li 사용자 정의 연산자
+            p 정의 가능 연산자 : | ^ &amp; &lt;=> == =~ &lt;&lt; -@ + - * / % ** ~ [] []= ` != 등
+            +asCode('ruby').
+                class Point
+                    attr_accessor :x
+                    attr_accessor :y
+
+                    def initialize(x = 0, y = 0)
+                        self.x = x
+                        self.y = y
+                    end
+                    def -@      # 단항 연산자는 뒤에 @가 붙는다
+                        self.x *= -1
+                        self.y *= -1
+                        self
+                    end
+                end
+            li 메서드 호출 시 . 대신 :: 사용 가능
+
+        h2 제어식
+        ul
+            li if
+            +asCode('ruby', 'if 1').
+                r = if expression1 # false, nil 외의 모든 값은 true로 간주
+                    # ...
+                elsif expression2
+                    # ...
+                else
+                    # ...
+                end                # 마지막 평가된 식의 값을 반환
+            +asCode('ruby', 'if 2') ... if expression # true면 앞 문장 실행
+            +asCode('ruby', 'if 3') if expression1 then ... elsif expression2 then ... else ... end
+
+            li unless
+            +asCode('ruby', 'unless 1').
+                r = unless expression # false면 실행
+                    # ...
+                else                  # elsif에 대응하는 키워드는 없다
+                    # ...
+                end                   # 마지막 평가된 식의 값을 반환
+            +asCode('ruby', 'unless 2') ... unless expression # false면 앞 문장 실행
+
+            li case
+            p when 절과 최초로 일치(===)하는 블록만 실행
+            +asCode('ruby', 'case 1').
+                r = case expression # 마지막 평가값 반환
+                when 'value'
+                    # ...
+                when 'value1', 'value2'
+                    # ...
+                when /pattern/
+                    # ...
+                when ClassName
+                    # ...
+                else
+                    # div
+                end
+            +asCode('ruby', 'case 2').
+                case                      # 식을 지정하지 않은 경우, 최초로 true가 되는 when 블록 실행
+                when expression1 then ... # then을 이용해 한 줄로 표기 가능
+                when expression2 then ...
+                else ...
+                end
+
+            li while, until
+            +asCode('ruby', 'while').
+                while expression
+                    # ... true인 동안 반복
+                end
+
+                ... while expression # true인 동안 앞문장 반복
+
+                begin
+                    # ... 적어도 1번은 실행된다
+                end while expression
+            +asCode('ruby', 'until').
+                until expression
+                    # ... false인 동안 반복
+                end
+
+                ... until expression # false인 동안 앞문장 반복
+
+                begin
+                    # ... 적어도 1번은 실행된다
+                end until expression
+
+            li for
+            p each 메서드를 가진 객체는 for 순회 가능
+            +asCode('ruby', 'for 1').
+                for val in %w(word1 word2 word3)
+                    # ...
+                end
+
+                puts val # 계속 사용 가능
+            +asCode('ruby', 'for 2').
+                for item in {a: 1, b: 2}
+                    puts item[0], item[1] # 각각 키-값
+                end
+
+                for key, val in {a: 1, b: 2}
+                    # ...
+                end
+
+            li 반복 구문 대체 메서드
+            +asCode('ruby', 'Kernel#loop').
+                loop do
+                    # ... 무한 루프
+                end
+            +asCode('ruby', 'Integer#times').
+                5.times do
+                    # ...
+                end
+
+            li 점프
+            ul
+                li break[ expression]
+                ol
+                    li 루프 안에서 : 표현식의 값으로 루프 종료
+                    li yield 호출 안에서 : 표현식의 값으로 메서드 종료
+                li next[ expression]
+                ol
+                    li 루프 안에서 : 다음 루프 실행
+                    li yield 호출 안에서 : 표현식의 값으로 yield 종료
+                li catch/throw
+                +asCode('ruby').
+                    r = catch :label1 do
+                        # ...
+                        r = catch :label2 do
+                            if ?
+                                throw label2 return_value # 특정 catch 블록 종료
+                            else
+                                throw label1              # 반환값 지정 없으면 nil
+                        end
+                    end
+
+            li 예외 처리
+            p 예외 처리 구문은 메서드, 클래스, 모듈 정의 모두에서 사용 가능
+            +asCode('ruby', 'rescue 1').
+                r = begin                         # begin, rescue, else 절의 마지막으로 평가된 식의 값을 반환
+                    1 / 0
+                    raise 'message'               # RuntimeError
+                    raise StandardError 'message' # StandardError
+                rescue Class1, Class2 => e
+                    retry                         # 예외 발생 블록 처음부터 다시 실행
+                rescue                            # 클래스 지정없는 경우, StandardError로 간주
+                    raise                         # 다시 전파
+                else                              # 예외 발생하지 않은 경우 실행
+                    # ...
+                ensure                            # 다른 언어의 finally 기능
+                    # ...
+                end
+            +asCode('ruby', 'rescue 2').
+                expression1 rescue expression2    # expression1 도중 StandardError 발생한 경우, expression2 평가값 반환
+
+        h2 변수
+        ul
+            li 지역변수 선언에 별도 키워드 필요없음
+            +asCode('ruby') msg = "Hello World"
+            li 전역변수 prefix : $
+            +asCode('ruby').
+                $size = 10  # 전역변수 할당
+                $not_exists # 존재하지 않는 전역변수 참조는 nil 반환
+            li 상수 : SNAKE_CASE
+            +asCode('ruby').
+                SIZE = 10
+                SIZE = 20   # 실행됨. Warning 출력
+            li 인스턴스 변수 : @
+            +asCode('ruby').
+                class ClassName
+                    def length=(length)
+                        @length = length
+                    end
+                    def length
+                        @length
+                    end
+                end
+
+                class Point
+                    attr_accessor :x, :y     # getter, setter 모두 생성
+                    attr_reader   :readonly  # getter만 생성
+                    attr_write    :writeonly # setter만 생성
+                end
+            li 내장 변수
+            table
+                +ths('이름', '설명')
+                +tds('$stdin', '표준 입력. default STDIN')
+                +tds('$stdout, $>', '표준 출력. default STDOUT')
+                +tds('$stderr', '표준 에러. default STDERR')
+                +tds('$/, $-0', '입력의 줄바꿈 문자열. default \\n')
+                +tds('$SAFE', '현재 스레드 safe level')
+                +tds('$!', '마지막 발생한 예외 객체')
+                +tds('$@', '마지막 발생한 예외의 Backtrace')
+                +tds('$$', '실행 중인 루비 프로세스 PID')
+                +tds('$?', '마지막으로 종료된 프로세스 exit code')
+                +tds('$:, $LOAD_PATH, $-I', '스크립트 탐색 디렉터리')
+                +tds('$LOADED_FEATURES, $"', 'require로 읽은 파일들')
+                +tds('$DEBUG', '디버그 모드로 실행된 경우 true')
+                +tds('$VERBOSE', 'nil이면 경고 출력 x, false면 중요 경고 출력, true면 모든 경고 출력')
+                +tds('$~', '마지막으로 정규식에 매치된 MatchData')
+                +tds('$1, $2, ...', '마지막으로 정규식에 매치된 각 그룹들')
+                +tds('$+', '마지막으로 정규식에 매치된 마지막 그룹')
+                +tds('$&', '마지막으로 정규식에 매치된 문자열')
+                +tds('$`', '마지막으로 정규식에 매치된 문자열 시작 위치 전까지의 문자열')
+                +tds("$'", '마지막으로 정규식에 매치된 문자열 종료 위치 후부터의 문자열')
+                tr
+                    td $PROGRAM_NAME
+                        br
+                        |$*
+                        br
+                        |$FILENAME
+                        br
+                        |$&lt;
+                    td 실행 중인 스크립트 이름
+                        br
+                        |스크립트 실행 인자
+                        br
+                        |$&lt; 파일명
+                        br
+                        |실행 인자 또는 STDIN으로 지정된 파일
+                        +asCode('ruby', 'test.rb').
+                            puts %($PROGRAM_NAME : &#x23;{$PROGRAM_NAME})
+                            puts %($*            : &#x23;{$*})
+                            puts %($FILENAME     : &#x23;{$FILENAME})
+                            puts %($&lt;            : &#x23;{$&lt;})
+                            puts %(ARGF read\n-----\n&#x23;{$&lt;.read}\n-----)
+                        +asCode('shell').
+                            $ ruby test.rb test.rb Games/Breach.exe
+                            $PROGRAM_NAME : test.rb
+                            $*            : ["test.rb", "Games/Breach.exe"]
+                            $FILENAME     : test.rb
+                            $&lt;            : ARGF
+                            ARGF read
+                            -----
+                            puts %($PROGRAM_NAME : &#x23;{$PROGRAM_NAME})
+                            puts %($*            : &#x23;{$*})
+                            puts %($FILENAME     : &#x23;{$FILENAME})
+                            puts %($&lt;            : &#x23;{$&lt;})
+                            puts %(ARGF read\n-----\n&#x23;{$&lt;.read}\n-----)
+                            MZP      ��  �       @
+                            -----
+            li 내장 상수
+            table
+                +ths('이름', '설명')
+                +tds('STDIN', '$stdin 기본값')
+                +tds('STDOUT', '$stdout 기본값')
+                +tds('STDERR', '$stderr 기본값')
+                +tds('ARGV', '== $*')
+                +tds('ARGF', '== $<')
+                +tds('ENV', '환경 변수')
+                +tds('RUBY_VERSION', '루비 실행 버전')
+
+        h2 메서드
+        ul
+            li 메서드 정의
+            +asCode('ruby').
+                def method_name
+                    # 무인자 메서드 본문
+                end
+                def method_name(arg1, arg2 = default_value, *arg3, arg4: default_value, **arg5, &amp;arg6)
+                    # 순서대로 일반 인자, 기본값 인자, 가변 인자, 키워드 인자, 해시 인자, 블록 인자
+                end
+            li 키워드 인자 전달 예
+            +asCode('ruby').
+                def test(n1: 1, n2: 2, **opt)
+                    puts %(&#x23;{n1}, &#x23;{n2}, &#x23;{opt})
+                end
+
+                test n1: 10, n2: 20                 # 10, 20, {}
+                test n1: 11, n2: 22, n3: 33, n4: 44 # 11, 22, {:n3=>33, :n4=>44}
+            li 접근 한정자
+            ul
+                li public : 지정하지 않은 경우 사용되는 기본값
+                li private : 인스턴스 내에서만 호출 가능
+                li protected : 서브 클래스 인스턴스에서까지 호출 가능
+            li 메서드 정의 취소
+            +asCode('ruby') undef method_name1, method_name2
+            li 메서드 별명
+            +asCode('ruby') alias new_name old_name
+            li 반환값
+            p 기본적으로 마지막 평가된 식의 값이 반환값. 도중에 반환하려면 return 키워드 이용
+            li 메서드 호출 시 괄호 필요없음
+            +asCode('ruby') receiver.method_name arg
+            li Top level 메서드 호출 시 receiver 필요없음
+            li 메서드 내부에서 receiver를 self 키워드로 참조 가능
+            li 메서드 내부의 receiver 지정없는 메서드 호출은 self를 receiver로 간주
+            li Singleton method
+            p 특정 인스턴스에만 정의된 메서드
+            +asCode('ruby').
+                def obj.method_name
+                    # ...
+                end
+
+        h2 블록
+        ul
+            li block
+            +asCode('ruby', 'block 1 - do~end').
+                do |var_name|
+                    # ...
+                end
+            +asCode('ruby', 'block 2 - {}').
+                {|var_name1, var_name2, *var_name3|
+                    # ...
+                }
+            li 블록의 매개변수 개수가 실제 호출보다 많거나 적어도 에러가 없다
+            li 블록을 받는 메서드
+            +asCode('ruby', 'code 1').
+                def my_method
+                    if block_given? # 메서드에 블록이 주어졌는지 판별하는 내장 메서드
+                        r = yield   # 블록을 직접 호출
+                    end
+                end
+
+                my_method do |var_name|
+                    # ...
+                end
+            +asCode('ruby', 'code 2').
+                def my_method(&amp;block)
+                    if block            # 블록을 Proc 객체로 받음
+                        r = block.call  # Proc 객체를 통해 블록 실행
+                    end
+                end
+
+                my_method do |var_name|
+                    # ...
+                end
+
+                # &amp;를 붙여 Proc 인스턴스를 블록으로 전달할 수 있다
+                # 대상이 Proc 인스턴스가 아닌 경우, 인스턴스의 to_proc 메서드 결과를 블록으로 전달한다
+                my_method &amp;Proc.new {|var_name| ... }
+
+        h2 클래스
+        ul
+            li 클래스 정의
+            +asCode('ruby').
+                class ClassName
+                    class InnerClass # 가능
+                    end
+                end
+            li 생성자 호출
+            +asCode('ruby').
+                var_name = ClassName.new
+                var_name = ClassName::InnerClass.new
+            li 생성자 정의
+            +asCode('ruby').
+                class ClassName
+                    def initialize(arg1, arg2, ...)
+                        # ...
+                    end
+                end
+            li 클래스 메서드 정의
+            +asCode('ruby').
+                class ClassName
+                    def self.method_name(arg1, arg2, ...)
+                        # ...
+                    end
+                end
+            li 클래스 변수
+            +asCode('ruby').
+                class ClassName
+                    @@var_name = 10
+                end
+            li 상속
+            p 상속 관계를 지정하지 않은 클래스는 Object를 상속한다
+            +asCode('ruby').
+                class SubClass &lt; SuperClass
+                    def method_name
+                        super   # 부모 메서드 호출
+                        # ...
+                    end
+                end
+
+        h2 모듈
+        ul
+            li 인스턴스화 불가. 상속 불가. 내부에 다른 모듈 및 클래스 정의 가능
+            +asCode('ruby').
+                module MyModule
+                    class MyClass
+                    end
+
+                    def self.singleton_method # 모듈 수준 싱글톤 메서드 가능
+                    end
+                end
+
+                o = MyModule::MyClass.new
+                MyModule.singleton_method
+            li Mixin : 모듈 메서드를 클래스 인스턴스 메서드로 추가
+            +asCode('ruby').
+                module MyModule
+                    def method_name
+                    end
+                end
+
+                class MyClass
+                    include MyModule
+
+                    def method_name
+                        super
+                        # ...
+                    end
+                end
+
+                MyClass.new.method_name
+            li 모듈 메서드를 인스턴스의 싱글톤 메서드로 추가
+            +asCode('ruby') obj.extend ModuleName
+            li 모듈 함수 : 모듈명 없이 호출 가능
+            +asCode('ruby').
+                module MyModule
+                    module_function
+
+                    def test1
+                    end
+                    def test2
+                    end
+                end
+
+                MyModule.test1
+                MyModule.test2
+
+                include MyModule
+                test1
+                test2
+
+        h2 내장 자료형
+        ul
+            li 수 : Numeric ← Fixnum, Bignum, Float
+            p 0b111, 0777, 0o777, 0xfff, 3.14e+3, 1_234 표기 가능
+            li 문자열 : String
+            ul
+                li '', "" 모두 가능하며, ""는 안에 보간식 &#x23;{...} 사용 가능
+                li 여러 줄 문자열(Heredoc)
+                +asCode('ruby').
+                    sql = &lt;&lt;SQL  # 식별자는 적절히 변경 가능
+                    select * from table1, table2
+                    where
+                        table1.col1 = table2.col2 and
+                        table1.col2 > &#x23;{size}
+                    SQL
+                +asCode('ruby').
+                    text = &lt;&lt;'TEXT'
+                        \이스케이프되지 않음
+                        &#x23;{보간식} 평가하지 않음
+                    TEXT
+                li % String
+                ul
+                    li 괄호로 (), [], {}, &lt;> 사용 가능
+                    p 또는 임의 non-alphanumeric 문자 사용 가능
+                    +asCode('ruby') %|123| == '123'
+                    li 소문자 : 보간식 평가 x, \이스케이프 x
+                    li %q : 문자열
+                    li %s : 심볼
+                    li %r : 정규식
+                    li %x : Shell 명령 실행 결과
+                    +asCode('ruby') %x(ls -al)
+                    li %i : Array of Symbols
+                    li %w : Array of Strings
+            li 심볼
+            p :로 시작하는 변경 불가능한 문자열. 식별자로 사용 불가능한 문자를 포함하는 경우 따옴표 사용 필요
+            +asCode('ruby').
+                :my_simbol
+                :'my-simbol'
+            li 배열 : []
+            +asCode('ruby').
+                arr = [0, 1, 2, 3]
+                arr[10]      # nil
+                arr[-1]      # 음수 인덱스 가능
+                arr[10] = 10 # 중간은 nil로 채워진다
+
+                %w(word1 word2 word3)       # 문자열 배열
+                %i(symbol1 symbol2 symbol3) # 심볼 배열
+            li 해시
+            +asCode('ruby').
+                scores = {
+                    'name1' => 10,
+                    'name2' => 20,
+                    :symbol1 => 100
+                }
+                scores['name3'] = 30
+                scores['anonymous'] # nil
+
+                symbol_only = {s1: 1, s2: 2, s3: 3}
+            li range
+            +asCode('ruby').
+                (1..5)      # 1, 2, 3, 4, 5
+                (1...5)     # 1, 2, 3, 4
+
+                Time.at(from)..Time.at(to)
+                ('a'..'f')
+            li 정규식; RegExp
+            +asCode('ruby').
+                pattern = /\d+/
+                pattern = %r(/var/log/tomcat/.+) # 보간식 사용 가능
+            li Proc : 특정 지역변수들에 바운드된 호출 가능한 코드 블록
+            +asCode('ruby').
+                def gen_times(factor)
+                    Proc.new {|n| n*factor } # 생성 1
+                    proc {|n| n*factor }     # 생성 2
+                    ->(n) { n*factor }       # 생성 3
+                end
+
+                times3 = gen_times(3)
+                times5 = gen_times(5)
+
+                times3.call(3)  # 9
+                times5.call(3)  # 15
+
+    h1 표준 라이브러리
+    div
+        h2 module Kernel
+        div
+            h3 IO
+            div
+                h4 문자열 IO
+                ul
+                    li gets(sep=$/) -> string | nil
+                        br
+                        |gets(limit) -> string | nil
+                        br
+                        |gets(sep, limit) -> string | nil
+                    ul
+                        li ARGV의 파일 또는 $stdin으로부터 문자열을 입력받는다
+                        li 반환값은 $_ 변수에 저장된다
+                        li limit을 지정하면 최대 limit 바이트만 읽는다
+                        li gets(sep=nil) -> 파일 한 개를 모두 읽어 반환
+                        li 파일 끝에 도달한 경우 nil 반환
+                    li #p(*obj) -> [obj, ...]
+                    p 각 인자의 inspect() 결과를 줄바꿈 문자와 함께 $stdout으로 출력
+                    li #puts(*obj) -> nil
+                    p 각 인자의 to_s() 결과를 줄바꿈 문자와 함께 $stdout으로 출력
+                    li #print(*obj) -> nil
+                    ul
+                        li 각 인자의 to_s() 결과를 $stdout으로 출력
+                        li $, != nil이면 구분자로 출력
+                        li $\ != nil이면 마지막에 출력
+                        li 인자가 없는 경우 $_ 출력
+                    li sprintf(format_string, *arguments) -> string
+                    +asCode('text', 'C언어와 유사') %[flags][width][.precision]type
+                    li printf(io, format_string, *arguments) -> nil
+                        br
+                        |printf(format_string, *arguments) -> nil
+                    +asCode('ruby') (io || $stdout).write(sprintf(format_string, *arguments))
+            h3 실행/프로세스
+            ul
+                li eval
+                p 동적으로 코드 평가
+                +asCode('ruby').
+                    def get_binding(str)
+                        binding
+                    end
+                    str = "hello"
+                    eval "str + ' Fred'"                     # "hello Fred"
+                    eval "str + ' Fred'", get_binding("bye") # "bye Fred"
+                li exit(status=true)
+                p SystemExit 예외를 발생하여 루비 프로세스 종료 절차를 시작한다
+                li exit!(status=false)
+                p 현재 루비 프로세스를 즉시 종료한다. 종료 핸들러는 호출되지 않는다
+                li trap(signal, command) -> obj
+                    br
+                    |trap(signal) {| | block } -> obj
+                ul 시스템 신호 처리 핸들러 등록
+                    li signal
+                    ol
+                        li "SIGALRM", "SIGUSR1" 등의 신호 이름
+                        li 선두 "SIG"는 생략해도 된다
+                        li :EXIT, "EXIT", 0에 대해 처리를 등록하면 루비 프로세스 정상 종료 전 호출된다
+                    li command
+                    ol
+                        li "IGNORE", "SIG_IGN" : 신호 무시
+                        li "DEFAULT", "RUBY_DFL" : 루비 기본 핸들러가 처리
+                        li "SYSTEM_DEFAULT" : 시스템 기본 핸들러가 처리
+                        li 그 외의 경우 command(Proc 인스턴스) 또는 block 호출
+                +asCode('ruby').
+                    trap(0, proc { puts "Terminating: &#x23;{$$}" })
+                    trap("CLD")  { puts "Child died" }
+                li `cmd` -> string
+                ul
+                    li cmd를 실행하여 결과를 반환한다
+                    li %x 문자열도 이 메서드를 이용한다
+                    li 종료된 프로세스는 $?에 저장된다
+                li system([**env,] *command [,**opt]) -> true | false | nil
+                ul
+                    li 명령을 실행하여 0으로 종료하면 true, 그 외 종료는 false, 실패는 nil
+                    li 종료된 프로세스는 $?에 저장된다
+                    li command 형태
+                    ol
+                        li 쉘에서 실행할 문장 전체
+                        li command_name, arg1, arg2, ... # no shell
+                        li [command_name, argv0], arg1, arg2 ... # no shell
+                    li env, opt로 주어지는 해시는 Kernel.exec(), Kernel.spawn()과 동일
+                li exec([**env,] *command [,**opt])
+                p 현재 프로세스에서 커맨드 실행 후 종료
+                li spawn([**env,] *command [,**opt]) -> pid
+                ul
+                    li 자식 프로세스로 명령을 실행하고 PID를 반환한다
+                    li env
+                    ol
+                        li key => value : 환경변수 설정
+                        li key => nil : 환경변수 삭제
+                    li opt
+                    p
+                        +asA('https://docs.ruby-lang.org/en/2.0.0/Kernel.html#method-i-spawn')
+                        |  참고
+            h3 외부 소스 코드 로드
+            ul
+                li require(path)
+                ul
+                    li 절대경로 이용 가능
+                    li $LOAD_PATH 내장변수의 디렉터리를 기준으로 한 상대경로 이용 가능
+                    li ./, ../ 상대경로는 실행 디렉터리 기준
+                    li 파일을 찾지 못한 경우, 설치된 gems 중 매칭되는 것이 있는지 찾는다
+                    li 같은 path에 대해 중복으로 실행하지 않는다
+                li require_relative(string) -> true | false
+                p 호출하는 파일이 존재하는 디렉터리를 기준으로 한 상대경로의 파일을 실행한다
+                li load(filename, wrap=false) -> true
+                ul
+                    li 같은 filename에 대해 반복 호출하면, 스크립트도 반복 실행된다
+                    li wrap=true로 지정하면 익명 모듈 안에서 실행한다
+                li autoload(module, filename) -> nil
+                p module(String or symbol)을 처음으로 접근하는 순간 require(filename) 실행
+                li autoload?(name, inherit=true) -> String or nil
+                p autoload로 name이 등록된 경우, 해당 filename 반환
+                +asCode('ruby').
+                    autoload(:B, "b")
+                    autoload?(:B)     # "b"
+            //- ::URI
+            //- ::open
+            //- ::open_uri_original_open
+            //- #Array
+            //- #BigDecimal
+            //- #Complex
+            //- #Float
+            //- #Hash
+            //- #Integer
+            //- #JSON
+            //- #Pathname
+            //- #Rational
+            //- #String
+            //- #URI
+            //- #__callee__
+            //- #__dir__
+            //- #__method__
+            //- #abort
+            //- #at_exit
+            //- #binding
+            //- #block_given?
+            //- #callcc
+            //- #caller
+            //- #caller_locations
+            //- #catch
+            //- #chomp
+            //- #chop
+            //- #fail
+            //- #fork
+            //- #format
+            //- #gem
+            //- #gets
+            //- #global_variables
+            //- #gsub
+            //- #iterator?
+            //- #j
+            //- #jj
+            //- #lambda
+            //- #local_variables
+            //- #loop
+            //- #open
+            //- #open_uri_original_open
+            //- #pretty_inspect
+            //- #proc
+            //- #putc
+            //- #raise
+            //- #rand
+            //- #readline
+            //- #readlines
+            //- #scanf
+            //- #select
+            //- #set_trace_func
+            //- #sleep
+            //- #srand
+            //- #sub
+            //- #test
+            //- #throw
+            //- #trace_var
+            //- #untrace_var
+            //- #warn
+            //- #y

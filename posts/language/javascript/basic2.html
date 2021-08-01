@@ -1,0 +1,87 @@
+<html lang="ko"><head><script id="google-analytics" src="https://www.googletagmanager.com/gtag/js?id=UA-143098403-1" async></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-143098403-1');
+</script><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="google-site-verification" content="aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM"><meta name="author" content="Donggi Kim &lt;hi.donggi@gmail.com&gt;"><meta name="keywords" content="브라우저, JavaScript"><meta name="description" content="브라우저 JavaScript 정리"><title>브라우저 JavaScript</title><link id="w3css" rel="stylesheet" href="/source/w3.css"><link id="highlight-style" rel="stylesheet" href="/source/xcode.css"><link id="default-style" rel="stylesheet" href="/source/default.css"><script id="highlight-js" src="/source/highlight.pack.js"></script><script id="default-js" src="/source/default.min.js"></script><script id="dsq-count-scr" src="//donggi.disqus.com/count.js" async></script></head><body><div class="w3-bar-block w3-sidebar w3-animate-left" id="sidebar"><hr><a class="w3-bar-item w3-button" href="javascript:closeSidebar();">Close &times;</a><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><div id="file-list"></div><hr></div><div id="main"><div class="w3-bar w3-blue w3-large" id="nav" style="position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle"><button class="w3-bar-item w3-button w3-hover-theme" onclick="toggleSidebar()">&#9776;</button><input class="w3-bar-item" id="query" type="text" placeholder="search" style="max-width:35%"><a class="w3-bar-item w3-button w3-hover-theme" href="/">Home</a></div><div class="w3-padding" id="contents"><h1>BOM; Browser Object Model</h1><ul><li>window</li><p>브라우저 윈도우를 가리키는 객체<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/JavaScript/Browser/window_open.js" lan="javascript">Window#open</button><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/JavaScript/Browser/window_resizeto.js" lan="javascript">Window#resizeTo</button><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/JavaScript/Browser/window_popup.js" lan="javascript">Window#alert, confirm, prompt</button></p><p>window.onload : 문서를 전부 로드했을 때 실행되는 이벤트 리스너</p><li>screen</li><p>window.screen과 동일. 표시되는 화면과 연관</p><li>location</li><p>window.location과 동일. 현재 페이지 URL과 연관<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/JavaScript/Browser/location.js" lan="javascript">location.js</button></p><li>history</li><p>window.history와 동일. 페이지 기록과 연관</p><li>navigator</li><p>window.navigator와 동일. 브라우저 자체와 연관</p><li>document</li><p>window.document와 동일. 표시되는 페이지 내용과 연관</p></ul><h1>DOM; Document Object Model</h1><p>Icons made by<a class="w3-btn w3-round-xxlarge w3-small w3-green" href="http://www.freepik.com">Freepik</a> from<a class="w3-btn w3-round-xxlarge w3-small w3-green" href="http://www.flaticon.com">www.flaticon.com</a> is licensed by<a class="w3-btn w3-round-xxlarge w3-small w3-green" href="http://creativecommons.org/licenses/by/3.0/">CC 3.0 BY</a></p><div id="basic2-div1"><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/JavaScript/Browser/dom_example1.js" lan="javascript">DOM 예시 1</button><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/JavaScript/Browser/dom_example2.js" lan="javascript">DOM 예시 2</button><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/posts/javascript/audio_example.html" lan="nohighlight">Audio 예시</button><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/posts/javascript/audio_example.html" lan="html">Audio 예시 코드</button><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/posts/javascript/form_example.html" lan="nohighlight">Form 예시</button><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/posts/javascript/form_example.html" lan="html">Form 예시 코드</button><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/posts/javascript/selector_example.html" lan="nohighlight">Query selector 예시</button><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/posts/javascript/selector_example.html" lan="html">Query selector 예시 코드</button></div><h1>이벤트 모델</h1><div><h2>DOM 이벤트 흐름</h2><p>이벤트 캡처링 → 타깃 → 이벤트 버블링</p><ul><li>이벤트 캡처링 : 최상위 노드로부터 이벤트가 전달되는 과정</li><p>캡처링 단계에서 리스너의 호출 기본값은 false. 동작을 위해 addEventListener()의 옵션 매개변수를 지정해야 한다</p><li>이벤트 버블링 : 최하위 노드로부터 이벤트가 전달되는 과정</li></ul><h2>JavaScript 이벤트 핸들러 설정</h2><ol><li>EventTarget : Element, Document, Window, XMLHttpRequest</li><li>EventTarget.addEventListener() : 이벤트 핸들러 추가</li><li>EventTarget.dispatchEvent() : 처리할 이벤트 추가</li><li>EventTarget.removeEventListener() : 이벤트 핸들러 제거</li></ol></div><h1>브라우저 저장소</h1><p><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/posts/javascript/storage_example.html" lan="nohighlight">저장소 예시</button><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/posts/javascript/storage_example.html" lan="html">저장소 예시 코드</button></p><h1>웹 워커</h1><ol><li>메인 페이지와 별개의 스코프에서 백그라운드에서 실행되는 작업자</li><p><strong>↓ javascript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="javascript">let worker = new Worker("filename.js");
+worker.postMessage("start!"); // 작업 시작. JSON 구조로 직렬화 가능한 값은 모두 전달 가능
+worker.terminate(); // 즉시 종료
+worker.onmesage = ...
+worker.onerror ...</div><li>웹 워커 내부에서 전역 객체는 worker 자체</li><p>페이지에서 보낸 메시지를 알기 위해서 onmesage 이벤트 핸들러를 등록한다</p><p><strong>↓ javascript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="javascript">self.onmessage = ...</div></ol><h1>웹 소켓</h1><ol><li>오래 지속되는 하나의 연결을 이용해 완전한 양방향 통신을 제공한다</li><li>프로토콜은 ws(비보안), wss(보안)</li><li>웹 소켓은 동일 소스 정책이 적용되지 않으므로, 연결을 수락할지는 완전히 서버의 권한</li><li>이벤트 종류 : open, message, error, close</li><li>연결 유효성 확인을 위해 주기적으로 ping-pong을 주고받는 것이 권장된다</li></ol><p><strong>↓ javascript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="javascript">let connection = new WebSocket("ws://host-address/page_or_function_name");
+// new WebSocket("wss://secure.example.com/chat", {"chat.v1", "chat.v2"});
+// connection.readyState === WebSocket.OPEN // CONNECTING, OPEN, CLOSING, CLOSED
+// connection.bufferedAmount : 전송 대기중인 크기
+
+connection.send("Hello World");
+connection.onmessage = function(event) { event.data ... }
+// onopen, onclose, onerror
+// onclose 이벤트 종료코드 1000외는 모두 비정상 종료 : http://tools.ietf.org/html/rfc6455#section-7.4
+// onmessage 이벤트 data 프로퍼티 : 메시지가 텍스트면 문자열, 메시지가 바이너리고 connection.binaryType이 "blob"(기본)이면 Blob, 메시지가 바이너리고 connection.binaryType이 "arraybuffer"면 ArrayBuffer
+
+connection.close(); // close 이벤트 객체는 wasClean, code, reason 프로퍼티 존재
+</div><h1>함수 감속</h1><p>윈도우 resize, scroll 이벤트처럼 연속적으로 발생하지만 연속적으로 처리할 필요가 없는 경우, 타이머를 등록한 뒤 로직이 실행되도록 하고, 로직이 실행되기 전에 재호출되면 기존 타이머를 제거하고 타이머를 재등록하는 기법</p><p><strong>↓ javascript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="javascript">function throttle(f, t, opt) {
+    return function (args) {
+        let previousCall = this.lastCall;
+        this.lastCall = Date.now();
+        if (!previousCall || (!!opt && !!opt.fast) || (this.lastCall - previousCall) > t) {
+            f(args);
+        }
+    }
+}
+function debounce(f, t, opt) {
+    return function (args) {
+        let previousCall = this.lastCall;
+        this.lastCall = Date.now();
+        if (previousCall && ((this.lastCall - previousCall) &lt;= t)) {
+            if (!opt || !opt.fast)
+                clearTimeout(this.lastCallTimer);
+        }
+        this.lastCallTimer = setTimeout(() => f(args), t);
+    }
+}
+</div><h1>AJAX; Asynchronous JavaScript and XML + JSONP</h1><ol><li>핵심 기술은 XMLHttpRequest; XHR</li><li>Ajax 이벤트</li><ul><li>loadstart : 응답의 첫 번째 바이트를 수신</li><li>progress : 응답 수신 중 계속 발생</li><li>error : 요청에 에러가 있을 때</li><li>abort : abort() 호출해 연결을 종료했을 때</li><li>load : 응답을 완전히 받았을 때</li><li>loadend : 통신 종료. error, abort, load보다 나중에 발생</li></ul><li>JSONP : JSON with Padding</li><p>Cross origin 제약이 적용되지 않는다. &lt;script src="~.js">&lt;/script>, &lt;script src="~.json">&lt;/script>도 JSONP 통신의 일종</p></ol><p><strong>↓ javascript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="javascript">// XMLHttpRequest 예
+let request = new XMLHttpRequest();
+// XMLHttpRequest.open(method, url, async, user, password)
+request.open('GET', './index.html', false);
+request.send();
+console.log(request.responseText);
+
+// FormData를 보낼 수 있다
+let data = new FormData();
+data.append("key", "value");
+let data = new FormData(document.forms[0]);
+request.send(data);
+// Blob, BufferSource, FormData, URLSearchParams, ReadableStream, USVString 전송 가능
+
+// jQuery Ajax 구문
+//     Ajax 간편 표기 : $.get(), $.post(), $.getJSON(), $.getScript(), $(selector).load()
+$.ajax({ type: 'get', url: './index.html', success: (data) => console.log(data) });
+$.ajax({
+    type: 'post',
+    dataType: 'json',
+    url: 'http://donggi.dothome.co.kr/add_comment.php',
+    data: { path: path, comment: comment },
+    success: (data) => {
+        if (data === "OK") {
+            showSnackbar("등록 성공", $('body'));
+            $(posts.contents[id]).find('input.form-control').val('');
+            getComment(path);
+        } else {
+            showSnackbar("60초당 1번씩 등록 가능", $('body'));
+        }
+    },
+    error: (request, status, error) => {
+        showSnackbar("등록 실패.", $('body'));
+    }
+});
+// jQuery Ajax 옵션
+//     async, complete(xhr, status), data, error(xhr, status, error), jsonp, jsonpCallback, success(data, status, xhr), timeout, type, url
+</div><h1>파일 API</h1><ol><li>이전에는 자바스크립트에서 로컬 파일에 접근하는 것이 불가능했지만, 사용자가 입력 태그에 직접 설정한 파일에 대해 읽기가 가능해졌다</li><p>로컬 파일 접근을 허용하는 브라우저에서 &lt;input type="file"> 요소의 files 프로퍼티는 FileList 객체다FileList는 길이 0 이상의 File 객체 목록이며, File 객체는 name과 lastModifiedDate 프로퍼티가 있는 Blob 객체다</p><li>아래 입력 필드에 아무 파일이나(이왕이면 이미지로) 드롭해보세요</li><p><input id="basic2-input-files1" type="file" multiple><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/JavaScript/Browser/file_example.js" lan="javascript">file_example.js</button></p><li>File, Blob 객체를 slice하면 Blob 객체가 반환된다</li><li>BLOB; BInary Large Object</li><ul><li>postMessage()로 웹 워커에 blob을 보낼 수 있다</li><li>XMLHttpRequest.send()로 blob을 보낼 수 있다</li><li>URL.createObjectURL()로 blob:// 주소를 가져올 수 있으며, 이 url은 DOM이나 CSS를 활용할 수 있다</li><p>Blob URL 삭제 : URL.revokeObjectURL()<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/JavaScript/Browser/blob_example.js" lan="javascript">blob_example.js</button></p><li>FileReader 객체를 사용하면 Blob 내용을 비동기적으로 문자열이나 ArrayBuffer로 추출할 수 있다</li></ul><li>FileReader</li><p><strong>↓ javascript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="javascript">readAsText(file, encoding), readAsDataURL(file), readAsBinaryString(file), readAsArrayBuffer(file)</div></ol><h1>잡다한 코드</h1><ul><li>특정 노드로 스크롤 이동</li><p><strong>↓ javascript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="javascript">node.scrollIntoView()</div><li>특정 위치로 스크롤 이동</li><p><strong>↓ javascript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="javascript">window.scrollTo({ top: 123 })</div><li>페이지 갱신없이 히스토리 변경</li><p><strong>↓ javascript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="javascript">// 이동
+window.history.pushState({ html: path, pageTitle: document.title }, document.title, `${location.origin}${path}`);
+// 뒤로가기 이벤트 리슨
+window.onpopstate = function(e) {
+    let postQuery = e.state.html.match(/[?&]post=([^&]+)/);
+    if (!!postQuery) {
+        document.title = e.state.pageTitle;
+        scrollToPost(postQuery[1]);
+    }
+};</div></ul></div><hr><ul><li>&copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a>. <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="/LICENSE">MIT License</a></li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://www.w3schools.com/w3css">w3css</a> : No license</li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://highlightjs.org/">highlight.js</a> : <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause License</a></li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/mathjax/MathJax">MathJax</a> : <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache License 2.0</a></li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/davidshimjs/qrcodejs">qrcodejs</a> : <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE">MIT License</a></li></ul></div></body></html>

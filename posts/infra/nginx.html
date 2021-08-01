@@ -1,0 +1,49 @@
+<html lang="ko"><head><script id="google-analytics" src="https://www.googletagmanager.com/gtag/js?id=UA-143098403-1" async></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-143098403-1');
+</script><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="google-site-verification" content="aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM"><meta name="author" content="Donggi Kim &lt;hi.donggi@gmail.com&gt;"><meta name="keywords" content="NGINX"><meta name="description" content="NGINX 정리"><title>NGINX</title><link id="w3css" rel="stylesheet" href="/source/w3.css"><link id="highlight-style" rel="stylesheet" href="/source/xcode.css"><link id="default-style" rel="stylesheet" href="/source/default.css"><script id="highlight-js" src="/source/highlight.pack.js"></script><script id="default-js" src="/source/default.min.js"></script><script id="dsq-count-scr" src="//donggi.disqus.com/count.js" async></script></head><body><div class="w3-bar-block w3-sidebar w3-animate-left" id="sidebar"><hr><a class="w3-bar-item w3-button" href="javascript:closeSidebar();">Close &times;</a><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><div id="file-list"></div><hr></div><div id="main"><div class="w3-bar w3-blue w3-large" id="nav" style="position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle"><button class="w3-bar-item w3-button w3-hover-theme" onclick="toggleSidebar()">&#9776;</button><input class="w3-bar-item" id="query" type="text" placeholder="search" style="max-width:35%"><a class="w3-bar-item w3-button w3-hover-theme" href="/">Home</a></div><div class="w3-padding" id="contents"><h1>NGINX?</h1><p>HTTP 서버 + 메일 프록시 + 리버스 프록시 +  로드 밸런서</p><h1>nginx.conf : 메인 설정</h1><p><strong>↓ text</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">http {
+    include /etc/nginx/sites-enabled/*; # 활성 서버
+}
+</div><h1>HTTP 서버 설정</h1><p><strong>↓ text</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">server {
+    listen 0.0.0.0:9090 default_server;        # IPv4
+    listen 0.0.0.0:80 default_server;
+    listen [::]:9090 default_server;   # IPv6
+    listen [::]:80 default_server;
+    access_log /var/log/nginx/default.server.log;
+    # Root directory
+    root /workspace/donggi-github/Dong-gi.github.io/;
+    # 처리할 요청 호스트
+    server_name _;
+    # ↓ Routings
+    location ~ github\.io {
+        rewrite .*github\.io/?(.*) /$1;
+    }
+    location ~ /.git/ {
+        return 404;
+    }
+    location ~* \.(js|css|png|gif|jpg|jpeg)$ {
+        expires 30d;
+    }
+    location / {
+        expires -1;
+        add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+        try_files $uri $uri/ =404;
+        charset utf-8;
+        autoindex on;
+    }
+}
+</div><h1>리버스 프록시 설정</h1><p><strong>↓ text</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">server {
+    listen 0.0.0.0:55555;
+    listen [::]:55555;
+    access_log /var/log/nginx/express.log;
+    server_name _;
+    location / {
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-NginX-Proxy true;
+        proxy_pass http://127.0.0.1:3000/;
+    }
+}
+</div><h1>변경된 설정 적용</h1><p><strong>↓ shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ nginx -s reload</div></div><hr><ul><li>&copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a>. <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="/LICENSE">MIT License</a></li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://www.w3schools.com/w3css">w3css</a> : No license</li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://highlightjs.org/">highlight.js</a> : <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause License</a></li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/mathjax/MathJax">MathJax</a> : <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache License 2.0</a></li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/davidshimjs/qrcodejs">qrcodejs</a> : <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE">MIT License</a></li></ul></div></body></html>
