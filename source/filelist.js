@@ -17,9 +17,33 @@ Repositories/Android/CCTV/LICENSE
 Repositories/Android/CCTV/app/.gitignore
 Repositories/Android/CCTV/app/build.gradle
 Repositories/Android/CCTV/app/proguard-rules.pro
-Repositories/Android/CCTV/app/src/androidTest/java/link/joy/cctv/ExampleInstrumentedTest.java
+Repositories/Android/CCTV/app/src/androidTest/java/link4/joy/cctv/ExampleInstrumentedTest.java
 Repositories/Android/CCTV/app/src/main/AndroidManifest.xml
-Repositories/Android/CCTV/app/src/main/java/link/joy/cctv/MainActivity.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/cctv/AppSettings.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/cctv/MainActivity.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/cctv/PermissionChecker.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/cctv/entity/AbstractAppState.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/cctv/entity/AppState.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/cctv/entity/FlashState.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/cctv/entity/TelegramBotCommands.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/cctv/entity/YoutubeState.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/telegram/bot/TelegramBot.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/telegram/bot/TelegramBotCommand.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/telegram/bot/consts/ParseMode.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/telegram/bot/req/SendMessageRequest.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/telegram/bot/req/SendPhotoRequest.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/telegram/bot/req/SetMyCommandsRequest.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/telegram/bot/res/BaseResponse.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/telegram/bot/res/GetUpdatesResponse.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/telegram/bot/res/SendMessageResponse.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/telegram/bot/type/BotCommand.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/telegram/bot/type/Chat.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/telegram/bot/type/KeyboardButton.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/telegram/bot/type/Message.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/telegram/bot/type/ReplyKeyboardMarkup.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/telegram/bot/type/ReplyMarkup.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/telegram/bot/type/Update.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/telegram/bot/type/User.java
 Repositories/Android/CCTV/app/src/main/res/drawable-v24/ic_launcher_foreground.xml
 Repositories/Android/CCTV/app/src/main/res/drawable/ic_launcher_background.xml
 Repositories/Android/CCTV/app/src/main/res/layout/activity_main.xml
@@ -39,7 +63,7 @@ Repositories/Android/CCTV/app/src/main/res/values-night/themes.xml
 Repositories/Android/CCTV/app/src/main/res/values/colors.xml
 Repositories/Android/CCTV/app/src/main/res/values/strings.xml
 Repositories/Android/CCTV/app/src/main/res/values/themes.xml
-Repositories/Android/CCTV/app/src/test/java/link/joy/cctv/ExampleUnitTest.java
+Repositories/Android/CCTV/app/src/test/java/link4/joy/cctv/ExampleUnitTest.java
 Repositories/Android/CCTV/build.gradle
 Repositories/Android/CCTV/gradle.properties
 Repositories/Android/CCTV/gradle/wrapper/gradle-wrapper.jar
@@ -1828,12 +1852,15 @@ Repositories/STS/telegram-bot-java7/LICENSE
 Repositories/STS/telegram-bot-java7/README.md
 Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/TelegramBot$1.class
 Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/TelegramBot.class
+Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/TelegramBotCommand.class
 Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/consts/ParseMode.class
 Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/req/SendMessageRequest.class
 Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/req/SendPhotoRequest.class
+Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/req/SetMyCommandsRequest.class
 Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/res/BaseResponse.class
 Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/res/GetUpdatesResponse.class
 Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/res/SendMessageResponse.class
+Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/type/BotCommand.class
 Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/type/Chat.class
 Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/type/KeyboardButton.class
 Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/type/Message.class
@@ -1841,6 +1868,10 @@ Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/type/ReplyKe
 Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/type/ReplyMarkup.class
 Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/type/Update.class
 Repositories/STS/telegram-bot-java7/bin/main/link4/joy/telegram/bot/type/User.class
+Repositories/STS/telegram-bot-java7/bin/test/link4/joy/telegram/bot/TelegramBotCommands$1.class
+Repositories/STS/telegram-bot-java7/bin/test/link4/joy/telegram/bot/TelegramBotCommands$2.class
+Repositories/STS/telegram-bot-java7/bin/test/link4/joy/telegram/bot/TelegramBotCommands.class
+Repositories/STS/telegram-bot-java7/bin/test/link4/joy/telegram/bot/TelegramBotTest$1.class
 Repositories/STS/telegram-bot-java7/bin/test/link4/joy/telegram/bot/TelegramBotTest.class
 Repositories/STS/telegram-bot-java7/bin/test/photo.jpg
 Repositories/STS/telegram-bot-java7/build.gradle
@@ -1850,12 +1881,15 @@ Repositories/STS/telegram-bot-java7/gradlew
 Repositories/STS/telegram-bot-java7/gradlew.bat
 Repositories/STS/telegram-bot-java7/settings.gradle
 Repositories/STS/telegram-bot-java7/src/main/java/link4/joy/telegram/bot/TelegramBot.java
+Repositories/STS/telegram-bot-java7/src/main/java/link4/joy/telegram/bot/TelegramBotCommand.java
 Repositories/STS/telegram-bot-java7/src/main/java/link4/joy/telegram/bot/consts/ParseMode.java
 Repositories/STS/telegram-bot-java7/src/main/java/link4/joy/telegram/bot/req/SendMessageRequest.java
 Repositories/STS/telegram-bot-java7/src/main/java/link4/joy/telegram/bot/req/SendPhotoRequest.java
+Repositories/STS/telegram-bot-java7/src/main/java/link4/joy/telegram/bot/req/SetMyCommandsRequest.java
 Repositories/STS/telegram-bot-java7/src/main/java/link4/joy/telegram/bot/res/BaseResponse.java
 Repositories/STS/telegram-bot-java7/src/main/java/link4/joy/telegram/bot/res/GetUpdatesResponse.java
 Repositories/STS/telegram-bot-java7/src/main/java/link4/joy/telegram/bot/res/SendMessageResponse.java
+Repositories/STS/telegram-bot-java7/src/main/java/link4/joy/telegram/bot/type/BotCommand.java
 Repositories/STS/telegram-bot-java7/src/main/java/link4/joy/telegram/bot/type/Chat.java
 Repositories/STS/telegram-bot-java7/src/main/java/link4/joy/telegram/bot/type/KeyboardButton.java
 Repositories/STS/telegram-bot-java7/src/main/java/link4/joy/telegram/bot/type/Message.java
@@ -2605,6 +2639,127 @@ source/xcode.css
 `;
 const recentChangedPosts = `
 M	posts/algorithm/ai.html
+M	posts/algorithm/koreatech/1003.html
+M	posts/algorithm/koreatech/1008.html
+M	posts/algorithm/koreatech/1010.html
+M	posts/algorithm/koreatech/1011.html
+M	posts/algorithm/koreatech/1018.html
+M	posts/algorithm/koreatech/1034.html
+M	posts/algorithm/koreatech/1048.html
+M	posts/algorithm/koreatech/1060.html
+M	posts/algorithm/koreatech/1095.html
+M	posts/algorithm/linear_algebra.html
+M	posts/algorithm/mcs.html
+M	posts/algorithm/overview.html
+M	posts/algorithm/probability.html
+A	posts/infra/aws.html
+A	posts/infra/db/concept.html
+A	posts/infra/db/mongodb.html
+A	posts/infra/db/mysql.html
+A	posts/infra/db/psql_admin.html
+A	posts/infra/db/psql_programming.html
+A	posts/infra/db/psql_sql.html
+A	posts/infra/db/psql_to_sqlite.html
+A	posts/infra/db/psql_tutorial.html
+A	posts/infra/db/redis.html
+A	posts/infra/docker.html
+A	posts/infra/git.html
+A	posts/infra/gradle.html
+M	posts/infra/network.html
+A	posts/infra/nginx.html
+A	posts/infra/sdkman.html
+A	posts/infra/web/css.html
+A	posts/infra/web/html.html
+A	posts/infra/web/http.html
+A	posts/infra/web/network.html
+A	posts/infra/web/oauth.html
+A	posts/language/.net/csharp_basic.html
+A	posts/language/.net/csharp_library.html
+A	posts/language/.net/wpf_basic.html
+A	posts/language/java/android.html
+A	posts/language/java/apache.commons.collections.html
+A	posts/language/java/apache.commons.lang.html
+A	posts/language/java/apache.commons.math.html
+A	posts/language/java/apache.commons.rng.html
+A	posts/language/java/basic.html
+A	posts/language/java/com.sun.nio.sctp.html
+A	posts/language/java/effective_java.html
+A	posts/language/java/freemarker_built_in.html
+A	posts/language/java/freemarker_programming_guide.html
+A	posts/language/java/freemarker_template_guide.html
+A	posts/language/java/freemarker_xml_guide.html
+A	posts/language/java/gson.html
+A	posts/language/java/guava.html
+A	posts/language/java/jackson.html
+A	posts/language/java/java.base.html
+A	posts/language/java/java.net.http.html
+A	posts/language/java/java_ee.html
+A	posts/language/java/javafx.html
+A	posts/language/java/javax.annotation.processing.html
+A	posts/language/java/jni.html
+A	posts/language/java/jpa.html
+A	posts/language/java/logback.html
+A	posts/language/java/lombok.html
+A	posts/language/java/netty.html
+A	posts/language/java/performance.html
+A	posts/language/java/spring_framework.html
+A	posts/language/java/spring_reactive.html
+A	posts/language/java/spring_servlet.html
+A	posts/language/java/version.html
+A	posts/language/javascript/basic.html
+A	posts/language/javascript/basic2.html
+A	posts/language/javascript/jquery.html
+A	posts/language/javascript/node.html
+A	posts/language/jvm/android.html
+A	posts/language/jvm/apache.commons.collections.html
+A	posts/language/jvm/apache.commons.lang.html
+A	posts/language/jvm/apache.commons.math.html
+A	posts/language/jvm/apache.commons.rng.html
+A	posts/language/jvm/basic.html
+A	posts/language/jvm/com.sun.nio.sctp.html
+A	posts/language/jvm/effective_java.html
+A	posts/language/jvm/freemarker_built_in.html
+A	posts/language/jvm/freemarker_programming_guide.html
+A	posts/language/jvm/freemarker_template_guide.html
+A	posts/language/jvm/freemarker_xml_guide.html
+A	posts/language/jvm/groovy.html
+A	posts/language/jvm/gson.html
+A	posts/language/jvm/guava.html
+A	posts/language/jvm/jackson.html
+A	posts/language/jvm/java.base.html
+A	posts/language/jvm/java.net.http.html
+A	posts/language/jvm/java_ee.html
+A	posts/language/jvm/javafx.html
+A	posts/language/jvm/javax.annotation.processing.html
+A	posts/language/jvm/jni.html
+A	posts/language/jvm/jpa.html
+A	posts/language/jvm/logback.html
+A	posts/language/jvm/lombok.html
+A	posts/language/jvm/netty.html
+A	posts/language/jvm/performance.html
+A	posts/language/jvm/spring_framework.html
+A	posts/language/jvm/spring_reactive.html
+A	posts/language/jvm/spring_servlet.html
+A	posts/language/jvm/version.html
+A	posts/language/python/basic.html
+A	posts/language/python/built_in_constant.html
+A	posts/language/python/built_in_exception.html
+A	posts/language/python/built_in_function.html
+A	posts/language/python/built_in_type.html
+A	posts/language/python/data_model.html
+A	posts/language/python/pandas.html
+A	posts/language/python/persistence.html
+A	posts/language/python/standard.html
+A	posts/language/ruby/basic.html
+A	posts/topic/demo3.html
+A	posts/topic/fp.html
+A	posts/topic/interview.html
+A	posts/topic/quantum_computer.html
+A	posts/topic/refactoring.html
+A	posts/topic/rpi.html
+A	posts/topic/tomcat.html
+A	posts/topic/unity.html
+M	posts/algorithm/ai.html
 M	posts/algorithm/algo.html
 M	posts/algorithm/koreatech/1003.html
 M	posts/algorithm/koreatech/1008.html
@@ -2942,5 +3097,4 @@ M	posts/single/sdkman.html
 M	posts/single/tomcat.html
 M	posts/single/unity.html
 M	posts/single/vi.html
-M	posts/java/java.base.html
 `;
