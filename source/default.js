@@ -264,7 +264,7 @@ function updatePostList() {
         }
         category.posts.push(post.title)
     }
-    let url = URL.createObjectURL(new Blob([SFUtil.makeLSlikeText('카테고리', categoryMap, 'posts')], {
+    let url = URL.createObjectURL(new Blob([SFUtil.makeLSlikeText('Category', categoryMap, 'posts')], {
         type: 'text/plain;charset=utf-8;'
     }))
     new DKFileList(url, '#post-list', null, true, (category, title) => {
@@ -327,7 +327,7 @@ function updateMarkerList() {
         marker.setAttribute('marker-id', `marker-${id++}`)
         markerMap.markers.push(marker.getAttribute('marker-id'))
     }
-    let url = URL.createObjectURL(new Blob([SFUtil.makeLSlikeText('컨텐츠', markerMap, 'markers')], {
+    let url = URL.createObjectURL(new Blob([SFUtil.makeLSlikeText('Content', markerMap, 'markers')], {
         type: 'text/plain;charset=utf-8;'
     }))
     new DKFileList(url, '#marker-list', (_, markerId) => {

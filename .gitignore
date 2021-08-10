@@ -1,3 +1,6 @@
+!*.class
+!gradle-wrapper.jar
+
 .gradle
 .idea
 .metadata
