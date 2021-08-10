@@ -2234,6 +2234,11 @@ imgs/2021-04-04 154709.png
 imgs/2021-04-04 154726.png
 imgs/2021-04-04 154740.png
 imgs/SCTP-state-diagram.png
+imgs/cctv-doc-1.png
+imgs/cctv-doc-2.png
+imgs/cctv-doc-3.png
+imgs/cctv-doc-4.png
+imgs/cctv-doc-5.jpg
 imgs/kanna.gif
 imgs/security-diagram.png
 imgs/spring-mvc-and-webflux-venn.png
@@ -2435,6 +2440,7 @@ posts/language/python/pandas.html
 posts/language/python/persistence.html
 posts/language/python/standard.html
 posts/language/ruby/basic.html
+posts/project/cctv.html
 posts/project/error.html
 posts/project/igaworks_push.html
 posts/project/igaworks_push.js
@@ -2573,6 +2579,7 @@ pugs/language/python/pandas.pug
 pugs/language/python/persistence.pug
 pugs/language/python/standard.pug
 pugs/language/ruby/basic.pug
+pugs/project/cctv.pug
 pugs/project/error.pug
 pugs/project/igaworks_push.pug
 pugs/project/reminder.pug
@@ -2630,6 +2637,7 @@ source/w3.css
 source/xcode.css
 `;
 const recentChangedPosts = `
+A	posts/project/cctv.html
 M	posts/algorithm/ai.html
 M	posts/algorithm/koreatech/1003.html
 M	posts/algorithm/koreatech/1008.html
@@ -2995,98 +3003,4 @@ M	posts/java/java.base.html
 M	posts/java/version.html
 M	posts/algorithm/algo.html
 M	posts/java/java.base.html
-M	posts/algorithm/ai.html
-M	posts/algorithm/algo.html
-M	posts/algorithm/koreatech/1003.html
-M	posts/algorithm/koreatech/1008.html
-M	posts/algorithm/koreatech/1010.html
-M	posts/algorithm/koreatech/1011.html
-M	posts/algorithm/koreatech/1018.html
-M	posts/algorithm/koreatech/1034.html
-M	posts/algorithm/koreatech/1048.html
-M	posts/algorithm/linear_algebra.html
-M	posts/algorithm/mcs.html
-M	posts/algorithm/probability.html
-M	posts/book/001.html
-M	posts/book/002.html
-M	posts/book/003.html
-M	posts/book/004.html
-M	posts/book/005.html
-M	posts/book/006.html
-M	posts/book/007.html
-M	posts/book/008.html
-M	posts/db/concept.html
-M	posts/db/mongodb.html
-M	posts/db/mysql.html
-M	posts/db/psql_admin.html
-M	posts/db/psql_sql.html
-M	posts/db/psql_to_sqlite.html
-M	posts/db/psql_tutorial.html
-M	posts/db/redis.html
-M	posts/dotnet/csharp_basic.html
-M	posts/dotnet/csharp_library.html
-M	posts/dotnet/wpf_basic.html
-M	posts/front/css.html
-M	posts/front/freemarker/built_in.html
-M	posts/front/freemarker/programming_guide.html
-M	posts/front/freemarker/template_guide.html
-M	posts/front/html.html
-M	posts/front/http.html
-M	posts/infra/cicd.html
-M	posts/infra/linux.html
-M	posts/infra/oauth.html
-M	posts/java/android.html
-M	posts/java/apache.commons.collections.html
-M	posts/java/apache.commons.lang.html
-M	posts/java/basic.html
-M	posts/java/com.sun.nio.sctp.html
-M	posts/java/effective_java.html
-M	posts/java/gson.html
-M	posts/java/guava.html
-M	posts/java/jackson.html
-M	posts/java/java.base.html
-M	posts/java/java_ee.html
-M	posts/java/javafx.html
-M	posts/java/javax.annotation.processing.html
-M	posts/java/jni.html
-M	posts/java/jpa.html
-M	posts/java/lombok.html
-M	posts/java/netty.html
-M	posts/java/performance.html
-M	posts/java/spring_framework.html
-M	posts/java/spring_reactive.html
-M	posts/java/spring_servlet.html
-M	posts/java/version.html
-M	posts/javascript/basic.html
-M	posts/javascript/basic2.html
-M	posts/javascript/jquery.html
-M	posts/javascript/node.html
-M	posts/project/error.html
-M	posts/project/igaworks_push.html
-M	posts/project/reminder.html
-M	posts/project/tip.html
-M	posts/project/wpf_data_tool.html
-M	posts/python/basic.html
-M	posts/python/built_in_constant.html
-M	posts/python/built_in_exception.html
-M	posts/python/built_in_function.html
-M	posts/python/built_in_type.html
-M	posts/python/data_model.html
-M	posts/python/persistence.html
-M	posts/python/standard.html
-M	posts/ruby/basic.html
-M	posts/single/aws.html
-M	posts/single/demo3.html
-M	posts/single/docker.html
-M	posts/single/git.html
-M	posts/single/gradle.html
-M	posts/single/groovy.html
-M	posts/single/interview.html
-M	posts/single/quantum_computer.html
-M	posts/single/refactoring.html
-M	posts/single/rpi.html
-M	posts/single/sdkman.html
-M	posts/single/tomcat.html
-M	posts/single/unity.html
-M	posts/single/vi.html
 `;

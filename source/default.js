@@ -88,6 +88,7 @@ const posts = {
         { category: 'Language/Python', file: '/posts/language/python/persistence.html', title: 'Python Data Persistence' },
         { category: 'Language/Python/Library', file: '/posts/language/python/pandas.html', title: 'pandas : 데이터 처리' },
         { category: 'Language/Python/Library', file: '/posts/language/python/standard.html', title: '표준 라이브러리' },
+        { category: 'Project', file: '/posts/project/cctv.html', title: '* Android CCTV = Telegram Bot + YouTube' },
         { category: 'Project', file: '/posts/project/error.html', title: '예외/오류 해결' },
         { category: 'Project', file: '/posts/project/reminder.html', title: '* 할일 목록 - Spring Boot 토이 프로젝트' },
         { category: 'Project', file: '/posts/project/sf.html', title: '* SF; Simplest html Framework' },
