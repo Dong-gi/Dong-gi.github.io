@@ -11,7 +11,6 @@ Repositories/Android/CCTV/.idea/compiler.xml
 Repositories/Android/CCTV/.idea/gradle.xml
 Repositories/Android/CCTV/.idea/jarRepositories.xml
 Repositories/Android/CCTV/.idea/misc.xml
-Repositories/Android/CCTV/.idea/runConfigurations.xml
 Repositories/Android/CCTV/.idea/vcs.xml
 Repositories/Android/CCTV/LICENSE
 Repositories/Android/CCTV/app/.gitignore
@@ -21,7 +20,8 @@ Repositories/Android/CCTV/app/src/androidTest/java/link4/joy/cctv/ExampleInstrum
 Repositories/Android/CCTV/app/src/main/AndroidManifest.xml
 Repositories/Android/CCTV/app/src/main/ic_launcher-playstore.png
 Repositories/Android/CCTV/app/src/main/java/link4/joy/cctv/AppSettings.java
-Repositories/Android/CCTV/app/src/main/java/link4/joy/cctv/AutoStartService.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/cctv/BootCompleteReceiver.java
+Repositories/Android/CCTV/app/src/main/java/link4/joy/cctv/CheckTelegramService.java
 Repositories/Android/CCTV/app/src/main/java/link4/joy/cctv/MainActivity.java
 Repositories/Android/CCTV/app/src/main/java/link4/joy/cctv/PermissionChecker.java
 Repositories/Android/CCTV/app/src/main/java/link4/joy/cctv/entity/AbstractAppState.java
@@ -1834,6 +1834,7 @@ Repositories/STS/standalones/src/main/java/link4/joy/koreatech/Main1057.java
 Repositories/STS/standalones/src/main/java/link4/joy/koreatech/Main1058.java
 Repositories/STS/standalones/src/main/java/link4/joy/koreatech/Main1060.java
 Repositories/STS/standalones/src/main/java/link4/joy/koreatech/Main1095.java
+Repositories/STS/sts-format.xml
 Repositories/STS/telegram-bot-java7/.classpath
 Repositories/STS/telegram-bot-java7/.gitattributes
 Repositories/STS/telegram-bot-java7/.gitignore
@@ -2444,6 +2445,7 @@ posts/project/cctv.html
 posts/project/error.html
 posts/project/igaworks_push.html
 posts/project/igaworks_push.js
+posts/project/privacy.html
 posts/project/reminder.html
 posts/project/sf.html
 posts/project/snippets.html
@@ -2582,6 +2584,7 @@ pugs/language/ruby/basic.pug
 pugs/project/cctv.pug
 pugs/project/error.pug
 pugs/project/igaworks_push.pug
+pugs/project/privacy.pug
 pugs/project/reminder.pug
 pugs/project/sf.pug
 pugs/project/snippets.pug
@@ -2637,6 +2640,8 @@ source/w3.css
 source/xcode.css
 `;
 const recentChangedPosts = `
+M	posts/project/cctv.html
+A	posts/project/privacy.html
 M	posts/project/cctv.html
 A	posts/project/cctv.html
 M	posts/algorithm/ai.html
@@ -3003,5 +3008,4 @@ M	posts/java/java.base.html
 M	posts/java/java.base.html
 M	posts/java/version.html
 M	posts/algorithm/algo.html
-M	posts/java/java.base.html
 `;
