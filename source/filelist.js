@@ -8,6 +8,7 @@ LICENSE
 README.md
 Repositories/Android/CCTV/.gitignore
 Repositories/Android/CCTV/.idea/compiler.xml
+Repositories/Android/CCTV/.idea/deploymentTargetDropDown.xml
 Repositories/Android/CCTV/.idea/gradle.xml
 Repositories/Android/CCTV/.idea/jarRepositories.xml
 Repositories/Android/CCTV/.idea/misc.xml
@@ -805,6 +806,11 @@ Repositories/Python/Basic/weakref_example.py
 Repositories/Python/Library/functools_singledispatch.py
 Repositories/Python/Library/functools_wraps.py
 Repositories/Python/Library/pandas_1.py
+Repositories/Python/ml/code_1.py
+Repositories/Python/ml/code_2.py
+Repositories/Python/ml/code_3.py
+Repositories/Python/ml/code_4.py
+Repositories/Python/ml/code_5.py
 Repositories/Raspbian/cam01.py
 Repositories/Raspbian/cam02.py
 Repositories/Raspbian/cam03.py
@@ -2641,6 +2647,7 @@ source/xcode.css
 `;
 const recentChangedPosts = `
 M	posts/project/cctv.html
+M	posts/project/cctv.html
 A	posts/project/privacy.html
 M	posts/project/cctv.html
 A	posts/project/cctv.html
@@ -3007,5 +3014,4 @@ M	posts/java/java.base.html
 M	posts/java/java.base.html
 M	posts/java/java.base.html
 M	posts/java/version.html
-M	posts/algorithm/algo.html
 `;

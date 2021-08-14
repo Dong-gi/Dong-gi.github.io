@@ -1,31 +1,50 @@
 include ../../source/skeleton.pug
-+post('AI 공부하다 만 것', 'AI, scikit-learn, Classification', '인공지능(AI) 공부하다 그만둔 것. 저는 프로그래밍이나 열심히 할게요. 수학과 파이팅!', true)
-    h1 참고 자료
-    table.no-sort
-        tr
-            td
-            td: +asA('https://bkshin.tistory.com/category/머신러닝')
-        tr
-            td
-            td: +asA('https://datascienceschool.net/view-notebook/')
-        tr
-            td
-            td: +asA('https://developers.google.com/machine-learning/crash-course/ml-intro?hl=ko')
-        tr
-            td
-            td: +asA('http://hunkim.github.io/ml/')
-        tr
-            td
-            td: +asA('https://github.com/golbin/TensorFlow-Tutorials')
-        tr
-            td
-            td: +asA('https://www.cs.ox.ac.uk/people/nando.defreitas/machinelearning/')
-        tr
-            td
-            td: +asA('https://scikit-learn.org/stable/tutorial/')
-        tr
-            td
-            td: +asA('https://www.udacity.com/course/intro-to-tensorflow-for-deep-learning--ud187')
++post('AI', 'AI, scikit-learn, Classification, Deep Learning', 'AI; 인공지능', true)
+    h1 퍼셉트론; Perceptron
+    ul
+        li 입력 노드들의 입력과 가중치를 곱한 것을 모두 합한 값이 임계값보다 크면 뉴런이 활성화, 크지 않으면 비활성화
+        li 단층 퍼셉트론은 공간을 선형적으로 잘라 이분법으로 분류한다
+        p 예. 입력이 2개인 AND 게이트 
+            +codeBtn('/Repositories/Python/ml/code_1.py', 'python')
+        li 다층 퍼셉트론 : 다른 퍼셉트론의 출력을 입력으로 이용하는 퍼셉트론
+        p 예. 입력이 2개인 NAND 게이트
+            +codeBtn('/Repositories/Python/ml/code_2.py', 'python')
+
+    h1 신경망; Neural network
+    div
+        h2 뉴런; Neuron
+        ul
+            li 신경망을 구성하는 노드로, 입출력 계층을 형성한다. 이때, raw 입력을 받는 계층을 입력층, 최종 출력하는 계층을 출력층, 나머지 중간을 은닉층이라고 부른다.
+            li 입력층 외의 뉴런들은 각 입력에 가중치가 존재한다
+            li 뉴런은 입출력 사이에 2개의 함수를 거친다
+            ol
+                li 식[\Sigma ::= x_{1}w_{1} + x_{2}w_{2} + \cdots + x_{n}w_{n} + b = a]식
+                p 입력(x) * 가중치(w) 쌍들과 편향(b; bias)의 합
+                li Activation function : 식[y = h(a)]식
+                p 예를 들어, 퍼셉트론은 activation function으로 step function을 이용하는 뉴런이다
+                    +codeBtn('/Repositories/Python/ml/code_3.py', 'python')
+
+        h2 Sigmoid function
+        ul
+            li 단조 증가하는 S자 곡선을 갖는 함수로, 인공 신경망 뉴런의 activatino function으로 이용된다
+            li Logistic function; 식[f(x) = {1 \over 1 + e^{-x}}]식
+                +codeBtn('/Repositories/Python/ml/code_4.py', 'python')
+            li Hyperbolic tangent; 식[f(x) = \operatorname{tanh}x = {e^x - e^{-x} \over e^x + e^{-x}}]식
+            li Arctangent function; 식[f(x) = \operatorname{arctan}x]식
+            li Error function; 식[f(x) = \operatorname{erf}(x) = {2 \over \sqrt{\pi}} \int_{0}^{x} e^{-t^2} dt]식
+            li Generalised logistic function; 식[f(x) = (1 + e^{-x})^{-\alpha}, \alpha \gt 0]식
+            li 식[f(x) = {x \over (1 + |x|^k)^{1/k}}]식
+
+        h2 ReLU(Rectified Linear Unit) function
+        p 0을 넘는 입력을 그대로 출력하는 함수로, 인공 신경망 뉴런의 activatino function으로 이용된다
+        p 식[h(a) = \left\{\begin{matrix} a & (a \gt 0) \\ 0 & (a \le 0) \end{matrix}\right.]식 
+            +codeBtn('/Repositories/Python/ml/code_5.py', 'python')
+
+        h2 신경망 연산은 행렬의 내적으로 수행할 수 있다
+        ul
+            li i : i번째 계층(0부터 시작)
+            li 식[w^{i}_{nm}]식 : i-1계층 m번 뉴런 -> i계층 n번 뉴런 가중치
+            li 식[b^{i}_{n}]식 : i계층 n번 bias
 
     h1 scikit-learn
     ol
