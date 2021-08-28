@@ -29,6 +29,7 @@ const posts = {
         { category: 'Infra/DB', file: '/posts/infra/db/psql_sql.html', title: 'PostgreSQL SQL 언어' },
         { category: 'Infra/DB', file: '/posts/infra/db/psql_tutorial.html', title: 'PostgreSQL 시작하기' },
         { category: 'Infra/DB', file: '/posts/infra/db/psql_to_sqlite.html', title: 'PostgreSQL → SQLite3 마이그레이션' },
+        { category: 'Infra/DB', file: '/posts/infra/db/RabbitMQ.html', title: 'RabbitMQ' },
         { category: 'Infra/DB', file: '/posts/infra/db/redis.html', title: 'Redis 6' },
         { category: 'Infra/Web', file: '/posts/infra/web/css.html', title: 'CSS' },
         { category: 'Infra/Web', file: '/posts/infra/web/html.html', title: 'HTML' },

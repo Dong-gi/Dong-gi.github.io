@@ -1,0 +1,35 @@
+include ../../../source/skeleton.pug
++post('RabbitMQ', 'RabbitMQ', 'RabbitMQ 사용 정리')
+    h1: +asA('https://www.rabbitmq.com/changelog.html', 'RabbitMQ')
+    ul
+        li Erlang으로 작성된 메시지 큐
+        li AMQP를 기본으로 구현하고, STOMP, MQTT 프로토콜 및 WebSocket 플러그인을 제공한다
+        li: +asA('https://www.rabbitmq.com/api-guide.html')
+        li: +asA('https://www.rabbitmq.com/rabbitmqctl.8.html', 'rabbitmqctl Document')
+
+    h1 로컬 테스트 환경
+    p Docker : 
+        +codeBtn('/Repositories/STS/rabbitmq-tutorial/docker-compose.yml', 'yml')
+    +asCode('shell').
+        $ rabbitmqctl add_user tutorial tutorial
+        Adding user "tutorial" ...
+        Done. Don't forget to grant the user permissions to some virtual hosts! See 'rabbitmqctl help set_permissions' to learn more.
+        $ rabbitmqctl set_permissions -p / tutorial ".*" ".*" ".*"
+        Setting permissions for user "tutorial" in vhost "/" ...
+
+    h1 AMQP; Advanced Message Queuing Protocol
+    div
+        h2 AMP 모델
+        ul
+            li Queue : 복수의 메시지 큐를 이용한다
+            li Exchange : 메시지 브로커(여기서는 RabbitMQ)에 들어온 메시지를 적절한 큐에 전달한다
+            li Binding : 메시지로부터 적절한 큐를 찾는 평가 규칙
+            p 단순하게 사용하는 경우, 메시지의 routing-key를 큐의 이름으로 설정할 수 있다
+
+        h2 통신 규약
+        ul
+            li 채널 : 하나의 AMQP 연결은 여러 채널을 이용해 대화를 수행한다
+            li 클래스 & 메서드 : AMQP 명령은 Connection.Start처럼 클래스와 메서드로 구별된다
+            li 프레임 : 프레임 유형 | 채널 번호 | 프레임 바이트 크기 | 페이로드 | 0xce
+
+        

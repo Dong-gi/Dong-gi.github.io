@@ -1,0 +1,48 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.0-SNAPSHOT'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'link4.joy'
+version = '1'
+sourceCompatibility = '15'
+targetCompatibility = '15'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+dependencies {
+	implementation 'com.rabbitmq:amqp-client:5.13.0'
+
+	// Managed by SpringBoot
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.slf4j:slf4j-api'
+    implementation 'ch.qos.logback:logback-classic'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+
+test {
+	useJUnitPlatform()
+}

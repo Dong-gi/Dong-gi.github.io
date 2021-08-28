@@ -1,0 +1,10 @@
+version: "2.0"
+
+services:
+  rabbit:
+    image: rabbitmq:3.9
+    ports:
+      - 5672:5672
+    volumes:
+      #/etc/rabbitmq/rabbitmq.config
+      - ./local_db:/var/lib/rabbitmq

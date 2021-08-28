@@ -8,7 +8,6 @@ LICENSE
 README.md
 Repositories/Android/CCTV/.gitignore
 Repositories/Android/CCTV/.idea/compiler.xml
-Repositories/Android/CCTV/.idea/deploymentTargetDropDown.xml
 Repositories/Android/CCTV/.idea/gradle.xml
 Repositories/Android/CCTV/.idea/jarRepositories.xml
 Repositories/Android/CCTV/.idea/misc.xml
@@ -1748,6 +1747,30 @@ Repositories/STS/netty-tutorial/src/main/java/test2/EchoServerHandler.java
 Repositories/STS/netty-tutorial/src/test/java/HttpClientTest.java
 Repositories/STS/netty-tutorial/src/test/java/test1/NettyTest.java
 Repositories/STS/netty-tutorial/src/test/java/test2/NettyTest.java
+Repositories/STS/rabbitmq-tutorial/.classpath
+Repositories/STS/rabbitmq-tutorial/.gitignore
+Repositories/STS/rabbitmq-tutorial/.project
+Repositories/STS/rabbitmq-tutorial/bin/main/application.properties
+Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/TutorialApplication.class
+Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/action/MQ1Action.class
+Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/config/RabbitMQConfig.class
+Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/config/RabbitMQProperties.class
+Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/mq/MQ1.class
+Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/res/StaticResponse.class
+Repositories/STS/rabbitmq-tutorial/build.gradle
+Repositories/STS/rabbitmq-tutorial/docker-compose.yml
+Repositories/STS/rabbitmq-tutorial/gradle/wrapper/gradle-wrapper.jar
+Repositories/STS/rabbitmq-tutorial/gradle/wrapper/gradle-wrapper.properties
+Repositories/STS/rabbitmq-tutorial/gradlew
+Repositories/STS/rabbitmq-tutorial/gradlew.bat
+Repositories/STS/rabbitmq-tutorial/settings.gradle
+Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/TutorialApplication.java
+Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/action/MQ1Action.java
+Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/config/RabbitMQConfig.java
+Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/config/RabbitMQProperties.java
+Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/MQ1.java
+Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/res/StaticResponse.java
+Repositories/STS/rabbitmq-tutorial/src/main/resources/application.properties
 Repositories/STS/reactive-webflux/.gitignore
 Repositories/STS/reactive-webflux/.mvn/wrapper/MavenWrapperDownloader.java
 Repositories/STS/reactive-webflux/.mvn/wrapper/maven-wrapper.jar
@@ -2307,6 +2330,7 @@ posts/front/html.html
 posts/front/http.html
 posts/infra/aws.html
 posts/infra/cicd.html
+posts/infra/db/RabbitMQ.html
 posts/infra/db/concept.html
 posts/infra/db/mongodb.html
 posts/infra/db/mysql.html
@@ -2520,6 +2544,7 @@ pugs/book/008.pug
 pugs/book/009.pug
 pugs/infra/aws.pug
 pugs/infra/cicd.pug
+pugs/infra/db/RabbitMQ.pug
 pugs/infra/db/concept.pug
 pugs/infra/db/mongodb.pug
 pugs/infra/db/mysql.pug
@@ -2646,6 +2671,7 @@ source/w3.css
 source/xcode.css
 `;
 const recentChangedPosts = `
+M	posts/algorithm/ai.html
 M	posts/project/cctv.html
 M	posts/project/cctv.html
 A	posts/project/privacy.html
@@ -3012,6 +3038,4 @@ M	posts/algorithm/algo.html
 M	posts/java/java.base.html
 M	posts/java/java.base.html
 M	posts/java/java.base.html
-M	posts/java/java.base.html
-M	posts/java/version.html
 `;
