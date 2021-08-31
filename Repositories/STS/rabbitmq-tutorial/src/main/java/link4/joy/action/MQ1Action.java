@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 @RestController
 public class MQ1Action {
 
-    @GetMapping("/q89q347gtb89q3g47btv89q7b3g4t7vgeqwo8rgvtpqw8e7/update/{sha}")
-    public Mono<Object> newMessage(@PathVariable("sha") String sha) {
-        return Mono.just(StaticResponse.OK); }
+    @GetMapping("/mq1/{msg}")
+    public Mono<Object> newMessage(@PathVariable("msg") String msg) { return Mono.just(StaticResponse.OK); }
+
 }
