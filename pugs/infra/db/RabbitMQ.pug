@@ -32,4 +32,9 @@ include ../../../source/skeleton.pug
             li 클래스 & 메서드 : AMQP 명령은 Connection.Start처럼 클래스와 메서드로 구별된다
             li 프레임 : 프레임 유형 | 채널 번호 | 프레임 바이트 크기 | 페이로드 | 0xce
 
-        
+        h2 예. Exchange와 Queue를 정의하고 Binding 설정
+        ul
+            li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/resources/application.properties', 'properties')
+            li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/config/RabbitMQProperties.java', 'java')
+            li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/config/RabbitMQConfig.java', 'java')
+            li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/MQ1.java', 'java')

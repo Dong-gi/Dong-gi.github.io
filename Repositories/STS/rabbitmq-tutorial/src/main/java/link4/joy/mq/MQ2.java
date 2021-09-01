@@ -8,14 +8,16 @@ import org.springframework.stereotype.Component;
 
 import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.MessageProperties;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class MQ1 {
+public class MQ2 {
 
-    public static final String EXCHANGE_NAME = "MQ1";
-    public static final String QUEUE_NAME = "MQ1";
+    public static final String EXCHANGE_NAME = "MQ2";
+    public static final String QUEUE_NAME = "MQ2";
     public static final String ROUTING_KEY = QUEUE_NAME;
 
     @Resource(name = "rabbitMQChannel")
@@ -28,6 +30,10 @@ public class MQ1 {
         ch.queueDeclare(QUEUE_NAME, false, false, false, null);
         ch.queueBind(QUEUE_NAME, EXCHANGE_NAME, ROUTING_KEY);
         log.info("Queue({}) bound to exchange({})", QUEUE_NAME, EXCHANGE_NAME);
+    }
+
+    public void publishMessage(String msg) throws IOException {
+        localChannel.get().basicPublish(EXCHANGE_NAME, ROUTING_KEY, MessageProperties.TEXT_PLAIN, msg.getBytes());
     }
 
 }
