@@ -1,6 +1,8 @@
 package link4.joy.mq;
 
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
@@ -14,10 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class MQ2 {
+public class MQ3 {
 
-    public static final String EXCHANGE_NAME = "MQ2";
-    public static final String QUEUE_NAME = "MQ2";
+    public static final String EXCHANGE_NAME = "MQ3";
+    public static final String QUEUE_NAME = "MQ3";
     public static final String ROUTING_KEY = QUEUE_NAME;
 
     @Resource(name = "rabbitMQChannel")
@@ -31,11 +33,22 @@ public class MQ2 {
         ch.queueBind(QUEUE_NAME, EXCHANGE_NAME, ROUTING_KEY);
         log.info("Queue({}) bound to exchange({})", QUEUE_NAME, EXCHANGE_NAME);
 
-        ch.basicConsume(QUEUE_NAME, new MQ2Consumer(ch));
+        ch.basicConsume(QUEUE_NAME, new MQ3Consumer(ch));
     }
 
     public void publishMessage(String msg) throws IOException {
-        localChannel.get().basicPublish(EXCHANGE_NAME, ROUTING_KEY, MessageProperties.TEXT_PLAIN, msg.getBytes());
+        var ch = localChannel.get();
+        ch.confirmSelect();
+        ch.basicPublish(EXCHANGE_NAME, ROUTING_KEY, MessageProperties.TEXT_PLAIN, msg.getBytes());
+        try {
+            if (ch.waitForConfirms(100))
+                log.info("Message[{}] <<< publish ACK", msg);
+            else
+                log.info("Message[{}] <<< publish NACK", msg);
+        } catch (InterruptedException | TimeoutException e) {
+            log.info("Message[{}] <<< publish UNKNOWN", msg);
+        }
+
     }
 
 }

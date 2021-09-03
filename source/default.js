@@ -393,7 +393,7 @@ function getMarkerName(marker) {
         default:
             name = marker.textContent
     }
-    return name.replace(/\//gm, '\\')
+    return name
 }
 
 function queryUpdated(e) {

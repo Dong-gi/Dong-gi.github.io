@@ -5,21 +5,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import link4.joy.mq.MQ2;
+import link4.joy.mq.MQ3;
 import link4.joy.res.StaticResponse;
 import reactor.core.publisher.Mono;
 
 @RestController
-public class MQ2Action {
+public class MQ3Action {
 
     @Autowired
-    private MQ2 mq2;
+    private MQ3 mq3;
 
-    @GetMapping("/mq2/{msg}")
+    @GetMapping("/mq3/{msg}")
     public Mono<Object> newMessage(@PathVariable("msg") String msg) {
         return Mono.fromCallable(() -> {
             if (msg != null && msg.length() > 0)
-                mq2.publishMessage(msg);
+                mq3.publishMessage(msg);
             return StaticResponse.OK;
         });
     }
