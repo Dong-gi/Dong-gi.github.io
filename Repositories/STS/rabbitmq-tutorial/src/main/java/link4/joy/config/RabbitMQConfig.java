@@ -76,4 +76,20 @@ public class RabbitMQConfig {
             }
         };
     }
+
+    @Bean
+    ThreadLocal<Channel> rabbitMQTransactionalChannel() {
+        return new ThreadLocal<>() {
+            @Override
+            protected Channel initialValue() {
+                try {
+                    var channel = rabbitMQConnection().createChannel();
+                    rabbitMQChannels.add(channel);
+                    return channel;
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+    }
 }

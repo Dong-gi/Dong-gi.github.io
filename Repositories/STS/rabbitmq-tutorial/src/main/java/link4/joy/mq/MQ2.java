@@ -29,9 +29,9 @@ public class MQ2 {
         ch.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.DIRECT);
         ch.queueDeclare(QUEUE_NAME, false, false, false, null);
         ch.queueBind(QUEUE_NAME, EXCHANGE_NAME, ROUTING_KEY);
-        log.info("Queue({}) bound to exchange({})", QUEUE_NAME, EXCHANGE_NAME);
+        log.info("Queue({}) bound to exchange({}) with {}", QUEUE_NAME, EXCHANGE_NAME, ROUTING_KEY);
 
-        ch.basicConsume(QUEUE_NAME, new MQ2Consumer(ch));
+        ch.basicConsume(QUEUE_NAME, new SimpleConsumer(ch));
     }
 
     public void publishMessage(String msg) throws IOException {

@@ -1755,14 +1755,22 @@ Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/TutorialApplication.class
 Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/action/DefaultAction.class
 Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/action/MQ2Action.class
 Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/action/MQ3Action.class
+Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/action/MQ4Action.class
+Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/action/MQ5Action.class
+Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/action/MQ6Action.class
 Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/config/RabbitMQConfig$1.class
+Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/config/RabbitMQConfig$2.class
 Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/config/RabbitMQConfig.class
 Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/config/RabbitMQProperties.class
+Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/mq/FallbackConsumer.class
+Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/mq/FallbackMQ.class
 Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/mq/MQ1.class
 Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/mq/MQ2.class
-Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/mq/MQ2Consumer.class
 Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/mq/MQ3.class
-Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/mq/MQ3Consumer.class
+Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/mq/MQ4.class
+Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/mq/MQ5.class
+Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/mq/MQ6.class
+Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/mq/SimpleConsumer.class
 Repositories/STS/rabbitmq-tutorial/bin/main/link4/joy/res/StaticResponse.class
 Repositories/STS/rabbitmq-tutorial/bin/main/logback.xml
 Repositories/STS/rabbitmq-tutorial/build.gradle
@@ -1776,13 +1784,20 @@ Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/TutorialApplication.j
 Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/action/DefaultAction.java
 Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/action/MQ2Action.java
 Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/action/MQ3Action.java
+Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/action/MQ4Action.java
+Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/action/MQ5Action.java
+Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/action/MQ6Action.java
 Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/config/RabbitMQConfig.java
 Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/config/RabbitMQProperties.java
+Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/FallbackConsumer.java
+Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/FallbackMQ.java
 Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/MQ1.java
 Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/MQ2.java
-Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/MQ2Consumer.java
 Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/MQ3.java
-Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/MQ3Consumer.java
+Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/MQ4.java
+Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/MQ5.java
+Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/MQ6.java
+Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/SimpleConsumer.java
 Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/res/StaticResponse.java
 Repositories/STS/rabbitmq-tutorial/src/main/resources/application.properties
 Repositories/STS/rabbitmq-tutorial/src/main/resources/logback.xml
@@ -2687,6 +2702,8 @@ source/xcode.css
 `;
 const recentChangedPosts = `
 M	posts/infra/db/RabbitMQ.html
+M	posts/language/jvm/basic.html
+M	posts/infra/db/RabbitMQ.html
 A	posts/infra/db/RabbitMQ.html
 M	posts/project/cctv.html
 M	posts/algorithm/ai.html
@@ -3052,6 +3069,4 @@ M	posts/java/logback.html
 M	posts/java/java.base.html
 A	posts/java/java.net.http.html
 M	posts/single/docker.html
-M	posts/algorithm/algo.html
-M	posts/java/java.base.html
 `;

@@ -12,11 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class MQ1 {
+public class FallbackMQ {
 
-    public static final String EXCHANGE_NAME = "MQ1";
-    public static final String QUEUE_NAME = "MQ1";
-    public static final String ROUTING_KEY = QUEUE_NAME;
+    public static final String EXCHANGE_NAME = "FallbackMQ";
+    public static final String QUEUE_NAME = "FallbackMQ";
+    public static final String ROUTING_KEY = "";
 
     @Resource(name = "rabbitMQChannel")
     private ThreadLocal<Channel> localChannel;
@@ -24,10 +24,12 @@ public class MQ1 {
     @PostConstruct
     void postConstruct() throws IOException {
         var ch = localChannel.get();
-        ch.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.DIRECT);
+        ch.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
         ch.queueDeclare(QUEUE_NAME, false, false, false, null);
         ch.queueBind(QUEUE_NAME, EXCHANGE_NAME, ROUTING_KEY);
         log.info("Queue({}) bound to exchange({}) with {}", QUEUE_NAME, EXCHANGE_NAME, ROUTING_KEY);
+
+        ch.basicConsume(QUEUE_NAME, new FallbackConsumer(ch));
     }
 
 }

@@ -11,17 +11,17 @@ import lombok.extern.slf4j.Slf4j;
 import com.rabbitmq.client.AMQP.BasicProperties;
 
 @Slf4j
-public class MQ2Consumer extends DefaultConsumer {
+public class FallbackConsumer extends DefaultConsumer {
 
-    public MQ2Consumer(Channel channel) { super(channel); }
+    public FallbackConsumer(Channel channel) { super(channel); }
 
     @Override
     public void handleDelivery(String consumerTag, Envelope envelope, BasicProperties properties, byte[] body)
         throws IOException {
         var deliveryTag = envelope.getDeliveryTag();
-        log.info(new StringBuilder().append("consumerTag=").append(consumerTag).append(", deliveryTag=")
-            .append(deliveryTag).append(", routingKey=").append(envelope.getRoutingKey()).append(", body=")
-            .append(new String(body)).toString());
+        log.info(new StringBuilder("Fallback >> exchange=").append(envelope.getExchange()).append(", consumerTag=")
+            .append(consumerTag).append(", deliveryTag=").append(deliveryTag).append(", routingKey=")
+            .append(envelope.getRoutingKey()).append(", body=").append(new String(body)).toString());
         getChannel().basicAck(deliveryTag, false);
     }
 }

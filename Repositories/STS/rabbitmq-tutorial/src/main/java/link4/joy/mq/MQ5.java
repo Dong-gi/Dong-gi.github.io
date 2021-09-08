@@ -1,7 +1,7 @@
 package link4.joy.mq;
 
 import java.io.IOException;
-import java.util.concurrent.TimeoutException;
+import java.util.HashMap;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -16,19 +16,21 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class MQ3 {
+public class MQ5 {
 
-    public static final String EXCHANGE_NAME = "MQ3";
-    public static final String QUEUE_NAME = "MQ3";
+    public static final String EXCHANGE_NAME = "MQ5";
+    public static final String QUEUE_NAME = "MQ5";
     public static final String ROUTING_KEY = QUEUE_NAME;
 
-    @Resource(name = "rabbitMQChannel")
+    @Resource(name = "rabbitMQTransactionalChannel")
     private ThreadLocal<Channel> localChannel;
 
     @PostConstruct
     void postConstruct() throws IOException {
         var ch = localChannel.get();
-        ch.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.DIRECT);
+        var args = new HashMap<String, Object>();
+        args.put("alternate-exchange", FallbackMQ.EXCHANGE_NAME);
+        ch.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.DIRECT, false, false, args);
         ch.queueDeclare(QUEUE_NAME, false, false, false, null);
         ch.queueBind(QUEUE_NAME, EXCHANGE_NAME, ROUTING_KEY);
         log.info("Queue({}) bound to exchange({}) with {}", QUEUE_NAME, EXCHANGE_NAME, ROUTING_KEY);
@@ -38,17 +40,19 @@ public class MQ3 {
 
     public void publishMessage(String msg) throws IOException {
         var ch = localChannel.get();
-        ch.confirmSelect();
-        ch.basicPublish(EXCHANGE_NAME, ROUTING_KEY, MessageProperties.TEXT_PLAIN, msg.getBytes());
-        try {
-            if (ch.waitForConfirms(100))
-                log.info("Message[{}] <<< publish ACK", msg);
-            else
-                log.info("Message[{}] <<< publish NACK", msg);
-        } catch (InterruptedException | TimeoutException e) {
-            log.info("Message[{}] <<< publish UNKNOWN", msg);
-        }
+        ch.txSelect();
+        ch.basicPublish(EXCHANGE_NAME, ROUTING_KEY, MessageProperties.TEXT_PLAIN,
+            msg.getBytes());
 
+        switch ((int) (System.currentTimeMillis() % 2)) {
+            case 0:
+                ch.txCommit();
+                break;
+            case 1:
+                log.info("Message rejected forcibly");
+                ch.txRollback();
+                break;
+        }
     }
 
 }

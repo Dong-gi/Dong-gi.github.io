@@ -4,6 +4,7 @@ include ../../../source/skeleton.pug
     ul
         li Erlang으로 작성된 메시지 큐
         li AMQP를 기본으로 구현하고, STOMP, MQTT 프로토콜 및 WebSocket 플러그인을 제공한다
+        li: +asA('https://www.rabbitmq.com/getstarted.html', 'Tutorial')
         li: +asA('https://www.rabbitmq.com/api-guide.html')
         li: +asA('https://www.rabbitmq.com/rabbitmqctl.8.html', 'rabbitmqctl Document')
 
@@ -22,7 +23,33 @@ include ../../../source/skeleton.pug
         h2 AMP 모델
         ul
             li Queue : 복수의 메시지 큐를 이용한다
+            h3 Queue option
+            ul
+                li 큐 설정은 불변이므로, 설정을 변경하려면 큐를 삭제하고 다시 만들어야 한다
+                li auto-delete : 모든 소비자와의 연결 종료 > 큐 자동 제거
+                li exclusive : 단일 소비자만 연결 허용 > 연결 종료 > 큐 자동 제거
+                li x-expires : 지정 ms 동안 미사용 시 큐 자동 제거
+                li durable : 메시지에 delivery-mode=2 설정이 없어도 디스크에 저장
+                li x-message-ttl : 지정 ms 동안 소비되지 않은 메시지 만료; 
+                    +goto('DLX')
+                    |  설정 시 DLX로 라우팅된다
+                li x-max-length : 지정된 개수의 메시지까지만 보관. 초과시 가장 오래된 메시지 만료; 
+                    +goto('DLX')
+                    |  설정 시 DLX로 라우팅된다
             li Exchange : 메시지 브로커(여기서는 RabbitMQ)에 들어온 메시지를 적절한 큐에 전달한다
+            h3 Exchange type
+            ul
+                li direct : 바인드된 큐 중, 지정된 routing-key에 해당하는 모든 큐에 전달
+                li fanout : 바인드된 모든 큐에 전달
+                li topic : 바인드된 큐 중, 지정된 routing-key가 패턴에 매치하는 모든 큐에 전달
+                ul
+                    li * 와일드카드 : .을 제외한 임의 문자열 == /[^.]+/
+                    li # 와일드카드 : 해당 위치 이후, .을 포함한 전체 문자열 == /.*$/
+                li headers : 바인드된 큐 중, 헤더 키-값 조건에 맞는 모든 큐에 전달 
+                    +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/MQ6.java', 'java')
+                ul
+                    li x-match="any" : 하나라도 일치하면 라우팅
+                    li x-match="all" : 모두 일치해야 라우팅
             li Binding : 메시지로부터 적절한 큐를 찾는 평가 규칙
             p 단순하게 사용하는 경우, 메시지의 routing-key를 큐의 이름으로 설정할 수 있다
 
@@ -43,14 +70,27 @@ include ../../../source/skeleton.pug
         ul
             li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/action/MQ2Action.java', 'java')
             li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/MQ2.java', 'java')
-            li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/MQ2Consumer.java', 'java')
+            ul
+                li channel.basicPublish(...)
+                li channel.basicConsume(...)
+                ul
+                    li channel.basicCancel(consumerTag)을 호출하기 전까지 RabbitMQ로부터 메시지를 수신한다
+                    li 소비자 등록 시 no-ack=true로 설정하면, RabbitMQ가 수신 응답을 기다리지 않는다
+                    li 소비자 생성 시 auto-ack를 설정하면, 수신 메시지에 대해 ack를 자동으로 응답한다
+                    li 클라이언트측 수신 소켓 버퍼 크기 조정 관련 참고사항 : 
+                        +goto('수신한 패킷이 버려짐', '/posts/project/error.html')
+            li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/SimpleConsumer.java', 'java')
+            p Basic.Ack 시 multiple=true로 설정하면, 이전 모든 메시지에 대해 Ack하는 것과 동일하다
             li GET http://localhost:55555/mq2/%EC%95%88%EB%85%95~%20%EC%84%B8%EC%83%81
             +asCode().
-                17:04:47.517 I [pool-1-thread-4] [MQ2Consumer] consumerTag=amq.ctag-_VyO09IlpPD_f544-EMNnQ, deliveryTag=1, routingKey=MQ2, body=안녕~ 세상
-                17:04:56.811 I [pool-1-thread-5] [MQ2Consumer] consumerTag=amq.ctag-_VyO09IlpPD_f544-EMNnQ, deliveryTag=2, routingKey=MQ2, body=안녕~ 세상
+                10:05:19.801 I [pool-1-thread-7] [SimpleConsumer] exchange=MQ2, consumerTag=amq.ctag-DKpzPbkDiYCgN_39fSVgMg, deliveryTag=1, routingKey=MQ2, body=안녕~ 세상
+                10:05:25.821 I [pool-1-thread-8] [SimpleConsumer] exchange=MQ2, consumerTag=amq.ctag-DKpzPbkDiYCgN_39fSVgMg, deliveryTag=2, routingKey=MQ2, body=안녕~ 세상
         div
             h3: +asA(' https://www.rabbitmq.com/publishers.html#message-properties')
-            p 아래 테이블에서 "app-specific"은 RabbitMQ 코어에서 기본으로 사용하지 않는, 생산자-소비자 사이의 약속임을 의미한다. 예를 들어, content-encoding이 무엇이든 AMQP는 이진 메시지를 그대로 전달하고, 각 소비자는 자기가 받아들이는 content-encoding과 일치하는 메시지만 ack하여 소비할 수 있다
+            ul
+                li 아래 테이블에서 "app-specific"은 RabbitMQ 코어에서 기본으로 사용하지 않는, 생산자-소비자 사이의 약속임을 의미한다. 예를 들어, content-encoding이 무엇이든 AMQP는 이진 메시지를 그대로 전달하고, 각 소비자는 자기가 받아들이는 content-encoding과 일치하는 메시지만 ack하여 소비할 수 있다
+                li Queue 정의 시 durable=true로 설정하면, 해당 큐에서는 모든 메시지가 delivery-mode=2로 전달된 것처럼 디스크에 저장한다
+                p 디스크에 저장된 메시지는, 메시지에 대한 참조 카운트가 0이 되면 삭제된다
             table
                 +ths('Property', 'Type', 'Description', 'Required?')
                 +tds('delivery-mode', '1 or 2', '2(persistent; 메시지를 디스크에 저장), 1(transient; 메시지 별도 저장 안 함)', 'Yes')
@@ -95,12 +135,72 @@ include ../../../source/skeleton.pug
 
         h2 예. 메시지 발행에 대한 결과 수신
         ul
+            li <strong>ACK는 메시지 발행을 보장</strong>하지만, 그 외의 상태가 메시지 <strong>미발행/미수신을 보장하지는 않음</strong>에 유의
+            p ACK가 아니어도 메시지가 발행-수신될 수 있다
             li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/action/MQ3Action.java', 'java')
             li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/MQ3.java', 'java')
-            li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/MQ3Consumer.java', 'java')
+            p channel.waitForConfirms(ms)
+            li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/SimpleConsumer.java', 'java')
             li GET http://localhost:55555/mq3/%EC%95%88%EB%85%95~%20%EC%84%B8%EC%83%81
             +asCode().
-                22:36:01.099 I [reactor-http-nio-2] [MQ3] Message[안녕~ 세상] <<< publish UNKNOWN
-                22:36:02.009 I [pool-1-thread-6] [MQ3Consumer] consumerTag=amq.ctag-3l2T-TGTcBfu7udP89je-w, deliveryTag=2, routingKey=MQ3, body=안녕~ 세상
-                22:36:07.983 I [reactor-http-nio-2] [MQ3] Message[안녕~ 세상] <<< publish ACK
-                22:36:07.983 I [pool-1-thread-7] [MQ3Consumer] consumerTag=amq.ctag-3l2T-TGTcBfu7udP89je-w, deliveryTag=3, routingKey=MQ3, body=안녕~ 세상
+                10:05:48.799 I [reactor-http-nio-2] [MQ3] Message[안녕~ 세상] <<< publish UNKNOWN
+                10:05:48.799 I [pool-1-thread-9] [SimpleConsumer] exchange=MQ3, consumerTag=amq.ctag-_lNyNthMsgokgSwUllxE6Q, deliveryTag=3, routingKey=MQ3, body=안녕~ 세상
+                10:05:52.115 I [reactor-http-nio-2] [MQ3] Message[안녕~ 세상] <<< publish ACK
+                10:05:52.115 I [pool-1-thread-10] [SimpleConsumer] exchange=MQ3, consumerTag=amq.ctag-_lNyNthMsgokgSwUllxE6Q, deliveryTag=4, routingKey=MQ3, body=안녕~ 세상
+
+        h2 예. direct 익스체인지를 fallback으로 사용
+        ul
+            li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/action/MQ4Action.java', 'java')
+            li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/FallbackMQ.java', 'java')
+            li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/MQ4.java', 'java')
+            p Exchange 정의 시 alternate-exchange 속성 설정
+            li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/FallbackConsumer.java', 'java')
+            li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/SimpleConsumer.java', 'java')
+            li GET http://localhost:55555/mq4/%EC%95%88%EB%85%95~%20%EC%84%B8%EC%83%81
+            +asCode().
+                10:27:01.393 I [pool-1-thread-7] [FallbackConsumer] Fallback >> exchange=MQ4, consumerTag=amq.ctag-juY9fQmTnu43a0lnBYF0IQ, deliveryTag=1, routingKey=NON_REGISTERED_ROUTING_KEY, body=안녕~ 세상
+                10:27:18.795 I [pool-1-thread-8] [FallbackConsumer] Fallback >> exchange=MQ4, consumerTag=amq.ctag-juY9fQmTnu43a0lnBYF0IQ, deliveryTag=2, routingKey=NON_REGISTERED_ROUTING_KEY, body=안녕~ 세상
+
+        h2 예. 트랜잭션을 이용한 메시지 발행 보장
+        ul
+            li 트랜잭션은 단일 큐에 대한 작업만 원자적으로 수행함에 유의
+            p <strong>메시지 전달 보장</strong>이 아님에 유의
+            li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/action/MQ5Action.java', 'java')
+            li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/MQ5.java', 'java')
+            p channel.txSelect() ~ txCommit() / txRollback()
+            li: +codeBtn('/Repositories/STS/rabbitmq-tutorial/src/main/java/link4/joy/mq/SimpleConsumer.java', 'java')
+            li GET http://localhost:55555/mq5/%EC%95%88%EB%85%95~%20%EC%84%B8%EC%83%81
+            +asCode().
+                12:07:44.882 I [pool-1-thread-10] [SimpleConsumer] exchange=MQ5, consumerTag=amq.ctag-fdWv9vjJw47g9U_x_jHxWw, deliveryTag=3, routingKey=MQ5, body=안녕~ 세상
+                12:07:47.475 I [reactor-http-nio-2] [MQ5] Message rejected forcibly
+
+    h2 RabbitMQ 확장 기능
+    div
+        h3 Basic.Nack
+        p Basic.Reject가 메시지 1건에 대해 거부할 때, Nack는 이전 메시지를 포함하여 거부한다
+
+        h3 Credit
+        ul
+            li 새로운 연결이 수립되면, 연결에 일정량의 credit을 할당한다
+            li 연결로부터 RPC를 수신하면 제공된 credit에서 일정량을 차감한다
+            li 수신된 RPC를 처리하면 차감된 credit을 복구한다
+            li 소지한 credit이 부족한 경우, 수신한 RPC를 폐기한다
+            p credit으로 인한 가용/비가용 상태 변경은 Connection.Blocked, Connection.Unblocked 메서드로 알려준다
+
+        +pos('DLX')
+        h3 DLX; Dead-Letter Exchange
+        ul
+            li 큐 정의 시 x-dead-letter-exchange를 설정하면, 거부된 메시지를 해당 exchange로 라우팅한다
+            li 큐 정의 시 추가로 x-dead-letter-routing-key를 설정하면, 거부된 메시지의 routing-key를 해당 값으로 설정하여 DLX로 라우팅한다
+            li 큐에 x-message-ttl이 설정된 경우, 만료된 메시지 역시 DLX로 라우팅된다
+
+        h3 HA;Highly Available 큐
+        ul
+            li RabbitMQ 클러스터 노드 사이에 마스터-슬레이브 관계를 형성하고, 슬레이브 큐는 마스터 큐를 미러링한다
+            li 미러링 종류
+            ul
+                li all : 클러스터 내 모든 노드가 복제본을 공유
+                li exactly : min(총 노드 수, 지정 노드 수)개의 노드가 복제본을 공유
+                li nodes : 지정한 노드들끼리 복제본을 공유
+            li HA 큐에 대한 트랜잭션은, 모든 활성 미러링 큐가 일치할 때까지 응답을 대기한다
+
