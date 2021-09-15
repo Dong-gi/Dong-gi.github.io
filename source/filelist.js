@@ -1982,6 +1982,17 @@ Repositories/STS/webflux/src/main/resources/logback.xml
 Repositories/STS/webflux/src/test/java/tutorial/webflux/WebfluxApplicationTests.java
 Repositories/Single/20210616/logback-spring.xml
 Repositories/Single/Rename.java
+Repositories/Single/docker-elk/.env
+Repositories/Single/docker-elk/.gitignore
+Repositories/Single/docker-elk/LICENSE
+Repositories/Single/docker-elk/docker-compose.yml
+Repositories/Single/docker-elk/elasticsearch/Dockerfile
+Repositories/Single/docker-elk/elasticsearch/config/elasticsearch.yml
+Repositories/Single/docker-elk/kibana/Dockerfile
+Repositories/Single/docker-elk/kibana/config/kibana.yml
+Repositories/Single/docker-elk/logstash/Dockerfile
+Repositories/Single/docker-elk/logstash/config/logstash.yml
+Repositories/Single/docker-elk/logstash/pipeline/logstash.conf
 Repositories/Single/teamcity/.gitignore
 Repositories/Single/teamcity/docker-compose.yml
 Repositories/Single/tutorial/AnonymousClass.java
@@ -2371,6 +2382,7 @@ posts/infra/db/psql_to_sqlite.html
 posts/infra/db/psql_tutorial.html
 posts/infra/db/redis.html
 posts/infra/docker.html
+posts/infra/elk.html
 posts/infra/git.html
 posts/infra/gradle.html
 posts/infra/linux.html
@@ -2585,6 +2597,7 @@ pugs/infra/db/psql_to_sqlite.pug
 pugs/infra/db/psql_tutorial.pug
 pugs/infra/db/redis.pug
 pugs/infra/docker.pug
+pugs/infra/elk.pug
 pugs/infra/git.pug
 pugs/infra/gradle.pug
 pugs/infra/linux.pug
@@ -2701,6 +2714,8 @@ source/w3.css
 source/xcode.css
 `;
 const recentChangedPosts = `
+M	posts/infra/db/RabbitMQ.html
+M	posts/project/error.html
 M	posts/infra/db/RabbitMQ.html
 M	posts/language/jvm/basic.html
 M	posts/infra/db/RabbitMQ.html
@@ -3066,7 +3081,4 @@ M	posts/java/version.html
 M	posts/single/aws.html
 M	posts/java/javax.annotation.processing.html
 M	posts/java/logback.html
-M	posts/java/java.base.html
-A	posts/java/java.net.http.html
-M	posts/single/docker.html
 `;

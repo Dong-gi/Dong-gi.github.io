@@ -38,6 +38,7 @@ const posts = {
         { category: 'Infra', file: '/posts/infra/aws.html', title: 'AWS' },
         { category: 'Infra', file: '/posts/infra/cicd.html', title: 'CI/CD' },
         { category: 'Infra', file: '/posts/infra/docker.html', title: 'Docker' },
+        { category: 'Infra', file: '/posts/infra/elk.html', title: 'ELK Stack' },
         { category: 'Infra', file: '/posts/infra/git.html', title: 'Git' },
         { category: 'Infra', file: '/posts/infra/gradle.html', title: 'Gradle' },
         { category: 'Infra', file: '/posts/infra/linux.html', title: 'Linux' },

@@ -179,6 +179,28 @@ include ../../../source/skeleton.pug
         h3 Basic.Nack
         p Basic.Reject가 메시지 1건에 대해 거부할 때, Nack는 이전 메시지를 포함하여 거부한다
 
+        h3 Exchange.Bind
+        p Exchange에서 바로 큐로 라우팅하지 않고, 다른 exchange로 라우팅하여 n단계 라우팅을 가능하게 한다
+
+        h3 Consistent Hash Exchange
+        p 메시지 로드 밸런싱 또는 샤딩을 수행한다
+
+        h3 Cluster
+        div
+            h4 클러스터 런타임 상태
+            p Exchange, queue, binding, virtual host, user, policy 등
+
+            h4 클러스터 노드
+            ul
+                li 디스크 노드 : 클러스터 런타임 상태를 RAM과 디스크 모두에 저장
+                ul
+                    li 디스크 노드는 클러스터 재접속 시 디스크 정보를 이용해 장애를 복구한다
+                    li 클러스터를 구성하려면 최소 1개의 디스크 노드가 필요하다
+                    li 여러 디스크 노드가 장애 상태가 되고, 과반이 공유 상태에 동의하지 않는 경우, 정상 노드만 먼저 재시작하면 된다
+                li 램 노드 : 클러스터 런타임 상태를 RAM에만 저장
+                li 클러스터 구성 예
+                p 메인 디스크 노드 1(rabbitmq-management 플러그인 사용), 보조 디스크 노드 1(rabbitmq-management 플러그인 사용), 램 노드 N
+
         h3 Credit
         ul
             li 새로운 연결이 수립되면, 연결에 일정량의 credit을 할당한다
@@ -204,3 +226,25 @@ include ../../../source/skeleton.pug
                 li nodes : 지정한 노드들끼리 복제본을 공유
             li HA 큐에 대한 트랜잭션은, 모든 활성 미러링 큐가 일치할 때까지 응답을 대기한다
 
+        h3 MQTT; MQ Telemetry Transport
+        ul
+            li MQTT 플러그인을 사용하면, MQTT 클라이언트들이 RabbitMQ를 통해 메시지를 발행-구독할 수 있다
+            li MQTT는 불안정한 네트워크에서의 짧은 메시지 송수신에 적합함에 유의
+
+        h3 STOMP; Streaming Text Oriented Message Protocol
+        ul
+            li STOMP 플러그인을 사용하면, STOMP 클라이언트들이 RabbitMQ를 통해 메시지를 발행-구독할 수 있다
+            li destination="/queue/xxx"으로 메시지를 발행하면, RabbitMQ는 xxx 큐로 메시지를 라우팅한다; 큐가 없으면 auto-delete 큐가 생성된다
+            p 소비할 때도 destination="/queue/xxx"
+            li destination="/amq/queue/xxx"으로 메시지를 발행하면, RabbitMQ는 사용자 정의 xxx 큐로 메시지를 라우팅한다
+            p 소비할 때도 destination="/amq/queue/xxx"
+            li destination="/exchange/xxx/yyy"으로 메시지를 발행하면, RabbitMQ는 사용자 정의 xxx 익스체인지에 yyy 라우팅 키로 메시지를 라우팅한다; 큐가 없으면 auto-delete 큐가 생성된다
+            p 소비할 때도 destination="/exchange/xxx/yyy"
+            li destination="/topic/xxx"으로 메시지를 발행하면, RabbitMQ는 amp.topic 익스체인지에 xxx 라우팅 키로 메시지를 라우팅한다; 큐가 없으면 auto-delete 큐가 생성된다
+            p amp.topic 익스체인지에 바인드된 모든 큐가 라우팅 검사 대상. 소비할 때도 destination="/topic/xxx"를 이용하고, xxx에 와일드카드(#, *) 사용 가능
+            li reply-to="xxx" 헤더로 응답 메시지를 발행하면, RabbitMQ는 요청 메시지 발행자만 1회 구독 가능(exclusive &amp;&amp; auto-delete)한 큐를 자동으로 생성하여 라우팅한다
+            li STOMP 발행 메시지 헤더 중, AMQP 메시지 속성으로 정의된 키-값들은 자동으로 AMQP 메시지 속성으로 설정된다
+            p AMQP 메시지 속성들은 자동으로 STOMP 구독 메시지 헤더로 설정된다
+
+        h3 Web STOMP
+        p 기본 15670 포트로 동작하는 WebSocket 호환 HTTP 서버 + 이와 STOMP 통신하는 웹 브라우저용 SockJS 기반 클라이어트

@@ -1,0 +1,39 @@
+include ../../source/skeleton.pug
++post('ELK', 'ELK', 'ELK Stack 정리')
+    h1 ELK Stack
+    ol
+        li Elasticsearch : JSON 기반 분산형 RESTful 검색 엔진
+        li Logstash : 로그 수집 파이프라인
+        li Kibana : 데이터 시각화 툴
+
+    h1 Elastic Stack
+    ul
+        li ELK Stack에 Beats가 추가되면서 새로 Elastic Stack으로 명명되었다
+        li Beats : 다양한 시스템으로부터 Logstash나 Elasticsearch로 데이터 전달
+
+    h1 환경 설정
+    ul
+        li
+            +asA('https://github.com/deviantony/docker-elk', '간편한 개발을 위한 docker-compose')
+            +codeBtn('/Repositories/Single/docker-elk/docker-compose.yml', 'yml')
+        li: +asA('https://www.elastic.co/guide/en/elasticsearch/reference/7.5/docker.html', 'Docker로 프로덕션 환경을 구성하려는 경우')
+        li Windows에서 docker-compose로 구성하려는 경우...
+        +asCode('shell', 'git-shell').
+            # 관리자 권한으로 실행
+            $ docker-machine create --driver hyperv --hyperv-virtual-switch "Default Switch" elk
+
+            $ docker-machine ssh elk
+                $ sudo sysctl -w vm.max_map_count=262144
+
+            $ docker-machine env elk
+                export DOCKER_TLS_VERIFY="1"
+                export DOCKER_HOST="tcp://172.23.70.237:2376"
+                export DOCKER_CERT_PATH="C:\Users\wiz\.docker\machine\machines\elk"
+                export DOCKER_MACHINE_NAME="elk"
+                export COMPOSE_CONVERT_WINDOWS_PATHS="true"
+                # Run this command to configure your shell:
+                # eval $("C:\Users\wiz\bin\docker-machine.exe" env elk)
+
+            $ eval $("C:\Users\wiz\bin\docker-machine.exe" env elk)
+            $ docker-compose up -d --build
+        li: +asA('https://www.elastic.co/guide/index.html', '수동 설치를 포함한 전체 가이드')
