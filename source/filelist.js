@@ -2715,6 +2715,9 @@ source/xcode.css
 `;
 const recentChangedPosts = `
 M	posts/infra/db/RabbitMQ.html
+A	posts/infra/elk.html
+M	posts/language/jvm/spring_framework.html
+M	posts/infra/db/RabbitMQ.html
 M	posts/project/error.html
 M	posts/infra/db/RabbitMQ.html
 M	posts/language/jvm/basic.html
@@ -3079,6 +3082,4 @@ M	posts/single/interview.html
 M	posts/java/performance.html
 M	posts/java/version.html
 M	posts/single/aws.html
-M	posts/java/javax.annotation.processing.html
-M	posts/java/logback.html
 `;

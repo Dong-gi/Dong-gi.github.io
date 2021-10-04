@@ -5,7 +5,13 @@ include ../../source/skeleton.pug
         li EC2; Elastic Compute Cloud
         p OS를 포함한 컴퓨팅 머신
         li EBS; Elastic Block Store
-        p EC2를 위한 스토리지
+        p EC2를 위한 스토리지(SSD)
+        li EFS; Elastic File System
+        ul
+            li 용량 제약 없는 분산 네트워크 파일 시스템
+            li 동시에 수천 개의 인스턴스가 사용할 수 있다
+            li EBS보다 지연시간은 느리지만, 단위 시간당 처리량은 높다
+            p 높은 IOPS에는 부적합
         li Elastic Beanstalk
         p 웹 앱 배포. Java, .NET, PHP, Node, Python, Ruby, Go, Docker...
         li S3; Simple Storage Service
@@ -37,6 +43,11 @@ include ../../source/skeleton.pug
         ul
             li AWS 계정 관리
             li: +asA('https://gist.github.com/shortjared/4c1e3fe52bdfa47522cfe5b41e5d6f22', 'List of AWS Service Principals')
+        li Organizations
+        ul
+            li 조직을 나누어 각 조직에 멤버 계정을 생성해 할당할 수 있다
+            li 각 조직에 대한 정책을 정의할 수 있다
+            li 단일 마스터 계정이 모든 비용을 지불한다
         li CloudTrail
         p AWS 계정 활동 감시
         li CloudWatch
