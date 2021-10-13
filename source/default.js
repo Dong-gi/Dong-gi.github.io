@@ -1,3 +1,9 @@
+//- &#x23; for #
+//- +codeBtn('/Repositories/', 'java')
+//- +asA('href', 'innerText')
+//- +w3img('/imgs/', 'alt')
+//- +hoverTemplate()#template-id
+//- span.hover-content(template-id='template-id'
 const posts = {
     list: [
         { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1003.html', title: '1003: 0을 만들자' },

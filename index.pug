@@ -1,10 +1,3 @@
-//- &#x23; for #
-//- +codeBtn('/Repositories/', 'java')
-//- +asA('href', 'innerText')
-//- +w3img('/imgs/', 'alt')
-//- +hoverTemplate()#template-id
-//- span.hover-content(template-id='template-id'
-
 include ./source/skeleton.pug
 +post('한 걸음씩...', 'blog, programming', '프로그래밍 블로그를 지향하는 정적 사이트')
     h1.marker Hello World!
@@ -85,16 +78,28 @@ include ./source/skeleton.pug
                 |  개발
 
     +hoverTemplate()#template-index-3
-        ol
-            li
-                +asA('https://fb.gg/play/puzzle_wizard', 'Puzzle Wizard')
-                |  서버 개발; 웹소켓(SpringBoot + Netty), Admin(SpringBoot + Spring Web)
-            li
-                +asA('https://fb.gg/play/super_pop', 'Super Pop')
-                |  서버 개발; 웹소켓(SpringBoot + Netty), Admin(SpringBoot + Spring Web)
-            li
-                +asA('https://fb.gg/play/omg_minigames', '123 Minigames')
-                |  서버 개발; Rest API(SpringBoot + Spring Reactive Web), Admin(SpringBoot + Spring Web)
-            li
-                +asA('https://developers.facebook.com/docs/games/instant-games/getting-started/bot-setup/', '페이스북 게임 봇')
-                |  + 유저 로깅 API 서버(Node + Express) 개발
+        h1.w3-large.fake: +asA('https://fb.gg/play/puzzle_wizard', 'Puzzle Wizard')
+        ul
+            li 웹소켓 서버(SpringBoot + Netty + MySQL + Redis) 개발
+            li Admin(SpringBoot + Spring Web + PostgreSQL) 개발
+        h1.w3-large.fake: +asA('https://fb.gg/play/super_pop', 'Super Pop')
+        ul
+            li 웹소켓 서버(SpringBoot + Netty + MySQL + Redis) 개발
+            li Admin(SpringBoot + Spring Web + PostgreSQL) 개발
+        h1.w3-large.fake: +asA('https://fb.gg/play/omg_minigames', '123 Minigames')
+        ul
+            li Rest API 서버(SpringBoot + Spring Reactive Web + PostgreSQL) 개발
+            li Admin(SpringBoot + Spring Web + PostgreSQL) 개발
+        h1.w3-large.fake: +asA('https://fb.gg/play/the_puzzle', 'The Puzzle')
+        ul
+            li Rest API 서버(SpringBoot + Spring Reactive Web + PostgreSQL + Redis) 개발
+            li Admin(SpringBoot + Spring Web + PostgreSQL) 개발
+        h1.w3-large.fake 기타
+        ul
+            li: +asA('https://developers.facebook.com/docs/games/instant-games/getting-started/bot-setup/', '페이스북 게임 봇')
+                |  관련, 봇메시지 예약/전송 cron job 개발(Node)
+            li: +asA('https://developers.facebook.com/docs/games/social-and-retention/features/tournaments/instant-games', '인스턴트 토너먼트')
+                |  관련, 랭킹 서버 개발(Node + Express)
+            li: +asA('https://fb.gg/play/doge_dodge', 'DOGE Dodge')
+                |  관련, API 서버(Node + Express) 개발
+            li Data Studio를 이용한 KPI 리포트 작성

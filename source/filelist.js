@@ -2310,6 +2310,7 @@ imgs/cctv-doc-2.png
 imgs/cctv-doc-3.png
 imgs/cctv-doc-4.png
 imgs/cctv-doc-5.jpg
+imgs/elk_a_cluster_1.png
 imgs/kanna.gif
 imgs/security-diagram.png
 imgs/spring-mvc-and-webflux-venn.png
@@ -2714,6 +2715,9 @@ source/w3.css
 source/xcode.css
 `;
 const recentChangedPosts = `
+M	posts/infra/aws.html
+M	posts/infra/elk.html
+M	posts/language/jvm/basic.html
 M	posts/infra/db/RabbitMQ.html
 A	posts/infra/elk.html
 M	posts/language/jvm/spring_framework.html
@@ -3079,7 +3083,4 @@ M	posts/single/unity.html
 M	posts/algorithm/algo.html
 M	posts/java/netty.html
 M	posts/single/interview.html
-M	posts/java/performance.html
-M	posts/java/version.html
-M	posts/single/aws.html
 `;
