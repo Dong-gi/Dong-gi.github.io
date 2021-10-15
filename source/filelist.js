@@ -2023,6 +2023,7 @@ Repositories/VisualStudio/csharp_property.cs
 ads.txt
 build_site.sh
 docker-compose.yml
+favicon.ico
 google17afeae5a0bb8a4d.html
 imgs/20180826_213734.png
 imgs/20180826_214148.png
@@ -2087,6 +2088,7 @@ imgs/2021-04-04 154648.png
 imgs/2021-04-04 154709.png
 imgs/2021-04-04 154726.png
 imgs/2021-04-04 154740.png
+imgs/20211015_195905.jpg
 imgs/SCTP-state-diagram.png
 imgs/cctv-doc-1.png
 imgs/cctv-doc-2.png
@@ -2124,6 +2126,11 @@ posts/book/006.html
 posts/book/007.html
 posts/book/008.html
 posts/book/009.html
+posts/daily_life/business.html
+posts/daily_life/car.html
+posts/daily_life/house.html
+posts/daily_life/labor.html
+posts/daily_life/link.html
 posts/db/concept.html
 posts/db/example/mysql_select_all_table.sql
 posts/db/example/pgsql_export_csv.sql
@@ -2369,6 +2376,7 @@ pugs/book/007.pug
 pugs/book/008.pug
 pugs/book/009.pug
 pugs/daily_life/business.pug
+pugs/daily_life/car.pug
 pugs/daily_life/house.pug
 pugs/daily_life/labor.pug
 pugs/infra/aws.pug
@@ -2501,6 +2509,11 @@ source/w3.css
 source/xcode.css
 `;
 const recentChangedPosts = `
+A	posts/daily_life/business.html
+A	posts/daily_life/car.html
+A	posts/daily_life/house.html
+A	posts/daily_life/labor.html
+A	posts/daily_life/link.html
 M	posts/infra/aws.html
 M	posts/infra/elk.html
 M	posts/language/jvm/basic.html
@@ -2866,7 +2879,4 @@ M	posts/single/rpi.html
 M	posts/single/sdkman.html
 M	posts/single/tomcat.html
 M	posts/single/unity.html
-M	posts/algorithm/algo.html
-M	posts/java/netty.html
-M	posts/single/interview.html
 `;

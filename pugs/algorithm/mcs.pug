@@ -1,7 +1,9 @@
 include ../../source/skeleton.pug
 
 +post('Mathematics for Computer Science', 'MCS, Mathematics', 'Mathematics for Computer Science 정리', true)
-    h1 도서 정보
+    h1
+        +asA('/files/mcs.pdf', '도서')
+        |  정보
     .w3-row
         .w3-col.s2.w3-center
             +w3img('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQew5ZrEOtvLqafGH3aEaTctFKCSV4qjsRoZS4tT7Ci_lJXjSIV', '도서 이미지')&attributes({style: 'max-height:210px'})
