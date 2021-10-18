@@ -2514,6 +2514,19 @@ source/w3.css
 source/xcode.css
 `;
 const recentChangedPosts = `
+M	posts/algorithm/overview.html
+M	posts/daily_life/car.html
+A	posts/daily_life/death.html
+M	posts/daily_life/house.html
+A	posts/daily_life/stock.html
+M	posts/infra/db/psql_tutorial.html
+M	posts/infra/linux.html
+M	posts/infra/nginx.html
+M	posts/infra/web/css.html
+M	posts/infra/web/network.html
+M	posts/project/error.html
+M	posts/project/snippets.html
+M	posts/project/tip.html
 M	posts/algorithm/mcs.html
 M	posts/daily_life/house.html
 A	posts/daily_life/business.html
@@ -2776,6 +2789,4 @@ M	posts/infra/network.html
 M	posts/infra/oauth.html
 M	posts/infra/network.html
 M	posts/project/sf.html
-M	posts/infra/oauth.html
-M	posts/project/tip.html
 `;
