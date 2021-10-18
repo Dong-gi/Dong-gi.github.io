@@ -1491,6 +1491,8 @@ include ../../source/skeleton.pug
             h3 sudo : 다른 사용자 권한으로 실행
             +asCode('shell') $ sudo -u USER_NAME COMMAND
             p 유저 지정하지 않으면 superuser로 실행
+            p cf. sudo 없이 docker 실행할 수 있도록 docker 유저 그룹에 ec2-user 추가
+            +asCode('shell') $ sudo usermod -a -G docker ec2-user
 
             h3 사용자 목록 : /etc/passwd
             +asCode().

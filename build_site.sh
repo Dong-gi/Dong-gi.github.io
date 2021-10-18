@@ -23,7 +23,9 @@ cd `dirname "$fullFilePath"`
 
 # start
 echo "const fileText = \`" > source/filelist.js
-git ls-files --recurse-submodules >> source/filelist.js
+# 오라클 리눅스 git 버전이 낮음..
+# git ls-files --recurse-submodules >> source/filelist.js
+git ls-files >> source/filelist.js
 echo "\`;" >> source/filelist.js
 
 echo "const recentChangedPosts = \`" >> source/filelist.js

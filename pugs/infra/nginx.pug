@@ -30,6 +30,7 @@ include ../../source/skeleton.pug
             }
             location ~* \.(js|css|png|gif|jpg|jpeg)$ {
                 expires 30d;
+                add_header Cache-Control "no-cache";
             }
             location / {
                 expires -1;

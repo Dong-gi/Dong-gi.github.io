@@ -24,6 +24,7 @@ gtag('config', 'UA-143098403-1');
     }
     location ~* \.(js|css|png|gif|jpg|jpeg)$ {
         expires 30d;
+        add_header Cache-Control "no-cache";
     }
     location / {
         expires -1;

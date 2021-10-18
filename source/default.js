@@ -20,8 +20,10 @@ const posts = {
         { category: 'Algorithm', file: '/posts/algorithm/probability.html', title: '확률' },
         { category: 'Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
         { category: 'Life', file: '/posts/daily_life/car.html', title: '차' },
+        { category: 'Life', file: '/posts/daily_life/death.html', title: '장례' },
         { category: 'Life', file: '/posts/daily_life/house.html', title: '부동산' },
         { category: 'Life', file: '/posts/daily_life/labor.html', title: '근로' },
+        { category: 'Life', file: '/posts/daily_life/stock.html', title: '주식' },
         { category: 'Topic/Book', file: '/posts/book/001.html', title: '1만 시간의 재발견' },
         { category: 'Topic/Book', file: '/posts/book/002.html', title: '마음의 탄생' },
         { category: 'Topic/Book', file: '/posts/book/003.html', title: '생각하는 삶을 위한 철학의 역사' },
@@ -222,21 +224,22 @@ function updateSidebar() {
         openSidebar()
     document.getElementById('sidebar').style.width = '333px'
 
-    let fileMap = { files: [] }
+    let fileMap = { ':files/': [] }
     for (let file of fileText.trim().replace(/\r/gm, '').split('\n').sort(SFUtil.compareString)) {
         let subMap = fileMap
         let dirs = file.split('/')
         let filename = dirs.pop()
         for (let dir of dirs) {
             if (!subMap.hasOwnProperty(dir)) {
-                subMap[dir] = {}
-                subMap[dir].files = []
+                subMap[dir] = {
+                    ':files/': []
+                }
             }
             subMap = subMap[dir]
         }
-        subMap.files.push(filename)
+        subMap[':files/'].push(filename)
     }
-    let url = URL.createObjectURL(new Blob([SFUtil.makeLSlikeText('git', fileMap, 'files')], {
+    let url = URL.createObjectURL(new Blob([SFUtil.makeLSlikeText('git', fileMap, ':files/')], {
         type: 'text/plain;charset=utf-8;'
     }))
     new DKFileList(url, '#file-list', null, false, null, true, () => {

@@ -22,7 +22,8 @@ include ../../../source/skeleton.pug
             li 자식 : '>'
             li 바로 다음 형제 : '+'
             li 다음 모든 형제 : '~'
-        li.marker 가상 클래스
+        li.marker 가상 클래스 
+            +asA('https://developer.mozilla.org/ko/docs/Web/CSS/Pseudo-classes')
         ol
             li 요소들의 상태들을 정의한 Pseudo-Class가 존재한다. 일반 클래스와 달리 ':'으로 구별한다
             li a: active, hover, link, visited

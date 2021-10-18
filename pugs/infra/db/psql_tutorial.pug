@@ -5,6 +5,7 @@ include ../../../source/skeleton.pug
         h2 설치
         ul
             li: +asA('http://postgresql.kr/docs/current/index.html', '한국어 문서')
+            li: +asA('http://postgresql.kr/docs/current/sql-commands.html', '명령어 목록')
             li: +asA('https://www.postgresql.org/download/', 'Download page')
             li: +asA('https://wiki.postgresql.org/wiki/Frequently_Asked_Questions')
         div
@@ -116,10 +117,26 @@ include ../../../source/skeleton.pug
                     +asCode('shell').
                         postgres=# \password username
                         postgres=# alter user username with password 'new_password';
+                    li 유저 비밀번호를 잊은 경우
+                    ol
+                        li pg_hba.conf 파일을 비밀번호 없이 접속할 수 있도록 trust로 변경 후 접속(서비스 재시작 필요)
+                        li 비밀번호 설정 후 pg_hba.conf 다시 원복
                     li DB 생성 후 권한 부여
                     +asCode('shell').
                         postgres=# create database db_name ENCODING 'UTF-8';
                         postgres=# GRANT ALL PRIVILEGES ON DATABASE db_name TO username;
+                    li 테이블 권한 부여
+                    ul
+                        li 단일 테이블 권한 부여
+                        +asCode('sql') grant all privileges on table_name to user;
+                        li 스키마 내 전체 테이블 권한 부여
+                        +asCode('sql') GRANT SELECT ON ALL TABLES IN SCHEMA public TO user;
+                        li 스키마 내 전체 함수 권한 부여
+                        +asCode('sql') GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO user;
+                        li 신규 테이블 기본 권한 변경
+                        +asCode('sql') ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO user;
+                        li 실제로 적용됐는지 확인
+                        +asCode('sql') select * from information_schema.role_table_grants where table_name = 'table_name';
 
                 h4 psql 명령어
                 +asCode('sql').
@@ -172,6 +189,23 @@ include ../../../source/skeleton.pug
                     + local all all md5 # 로컬 서버에서도 암호를 이용해 접속하도록 변경
                 li PostgreSQL 서버 restart
 
+            h3 timezone 변경
+            ol
+                li postgresql.conf의 log_timezone, timezone 설정 변경
+                li SELECT pg_reload_conf();
+                li alter database db_name set timezone to 'Asia/Seoul';
+
+            h3 외부 DB 연결 이용
+            ul
+                li dblink 사용 설정
+                +asCode('sql') CREATE EXTENSION dblink;
+                li dblink 재사용
+                +asCode('sql').
+                    SELECT dblink_connect('myconn', 'hostaddr=1.2.3.4 port=5432 dbname=history user=readonly password=password');
+                    (SELECT player_id, last_login_time FROM v_account WHERE player_id IN
+                        (SELECT r.player_id FROM dblink('myconn', 'SELECT player_id, sum(amount) as total_amount FROM v_payment_history WHERE status=2 GROUP BY player_id HAVING sum(amount) >= 10000') AS r(player_id BIGINT, total_amount BIGINT))
+                    ) UNION ...
+
     h1 SQL 언어
     p 클러스터 : 하나의 서버가 관리하는 데이터베이스 집합 단위
     div
@@ -180,7 +214,7 @@ include ../../../source/skeleton.pug
            li 생성
            +asCode('sql').
                CREATE TABLE t_account (
-                   account_id bigint NOT NULL,
+                   player_id bigint NOT NULL,
                    lv integer NOT NULL,
                    nickname text NOT NULL,
                    start_game_date timestamp with time zone NOT NULL
@@ -213,7 +247,7 @@ include ../../../source/skeleton.pug
             COPY weather FROM '/home/user/weather.txt' WITH csv;
 
             -- COPY from STDIN
-            COPY t_account_0 (account_id, lv, nickname, start_game_date) FROM stdin;
+            COPY t_account_0 (player_id, lv, nickname, start_game_date) FROM stdin;
             1\t1\t'test'\t2017-03-31 12:06:06.446+09
             2\t2\t'test2'\t2017-03-31 12:06:06.446+09
             \.
