@@ -24,6 +24,7 @@ const posts = {
         { category: 'Life', file: '/posts/daily_life/house.html', title: '부동산' },
         { category: 'Life', file: '/posts/daily_life/labor.html', title: '근로' },
         { category: 'Life', file: '/posts/daily_life/stock.html', title: '주식' },
+        { category: 'Life/ETC', file: '/posts/daily_life/baron.html', title: 'Baron 킥보드 매뉴얼' },
         { category: 'Topic/Book', file: '/posts/book/001.html', title: '1만 시간의 재발견' },
         { category: 'Topic/Book', file: '/posts/book/002.html', title: '마음의 탄생' },
         { category: 'Topic/Book', file: '/posts/book/003.html', title: '생각하는 삶을 위한 철학의 역사' },
