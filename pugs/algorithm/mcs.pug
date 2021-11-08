@@ -1,12 +1,13 @@
 include ../../source/skeleton.pug
 
 +post('Mathematics for Computer Science', 'MCS, Mathematics', 'Mathematics for Computer Science 정리', true)
-    h1
+    p.fake-h1
+        |0. 
         +asA('/files/mcs.pdf', '도서')
-        |  정보
+        |　정보
     .w3-row
         .w3-col.s2.w3-center
-            +w3img('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQew5ZrEOtvLqafGH3aEaTctFKCSV4qjsRoZS4tT7Ci_lJXjSIV', '도서 이미지')&attributes({style: 'max-height:210px'})
+            +w3img('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQew5ZrEOtvLqafGH3aEaTctFKCSV4qjsRoZS4tT7Ci_lJXjSIV', '도서')&attributes({style: 'max-height:210px'})
         .w3-col.s10
             table.no-sort
                 +tds('표제/저자사항', 'Mathematics for Computer Science / Eric Lehman, F Thomson Leighton, Albert R Meyer')
@@ -18,157 +19,280 @@ include ../../source/skeleton.pug
                         |. This work is available under the terms of the 
                         +asA('http://creativecommons.org/licenses/by-sa/3.0/', 'Creative Commons Attribution-ShareAlike 3.0 license.')
 
-    h1 Proofs
+    p.fake-h1 I. Proofs
+    hr
     div
-        h2 Introduction
+        p.fake-h2 Introduction
+        +pos('증명')
         p
-            strong 정의
-            |  명제(proposition)에 대한 수학적 증명이란, 기본 공리(axiom)들로부터 명제에 도달하는 일련의 논리적 연역(deduction)이다
+            |　간단히 말해 증명은 참을 수립하는 과정이다. "참"은 보는 사람, 분야에 따라 다르기 때문에 수학적 증명 역시 자기만의 정의를 갖는다.<br>
+            strong 정의.
+            |　명제(proposition)에 대한 수학적 증명이란, 기본 공리(axiom)들과 이미 증명된 다른 명제들로부터 결론에 도달하는 일련의 논리적 연역(deduction)이다
+        ul
+            li 귀납(Induction) : 관찰된 사실들로부터 결론을 도출하는 과정
+            |e.g. 모든 백조는 하얗다
+            li 연역(Deduction) : 참인 전제들로부터 결론을 도출하는 과정
+            |참고. 수학적 귀납법은 연역논증이다
+
+        +pos('1')
         h2 What is a Proof?
         div
+            +pos('1.1')
             h3 Propositions
             p
-                strong 정의
-                |  명제(proposition)란 참 또는 거짓인 문장이다
+                strong 정의.
+                |　명제(proposition)란 참 또는 거짓인 문장이다<br>
+                |　예를 들어, 다음 2개 문장은 모두 명제다. 첫 번째는 참이고, 두 번째는 거짓이다.
+            +pos('1.1.1')
+            p
+                strong 명제 1.1.1.
+                |　2 + 3 = 5
+            +pos('1.1.2')
+            p
+                strong 명제 1.1.2.
+                |　1 + 1 = 3<br>
+                |　참/거짓이 되는 문장에는 제한이 없을 것 같지만, 실제로는 "미술관은 어디로 가면 되나요?", "A학점 주세요!"와 같은 문장들과, 진리값이 상황에 따라 변하는 "지금은 5시야", "내일 증시는 상승 마감할 거야" 같은 문장들은 명제가 될 수 없다.<br>
+                |　불행히도 명제의 참과 거짓을 밝히는 일이 항상 쉽지만은 않다.
+            +pos('1.1.3')
+            p
+                strong 주장 1.1.3.
+                |　음이 아닌 모든 정수 n에 대하여, n^2 + n + 41은 소수(prime)다.
+            p
+                |　이 명제를 실험해보자. Let<br>
+                |\[p(n) ::= n^2 + n + 41\]
+                |　p(0) = 41부터 시작하여, p(1) = 43, ..., p(39) = 1601까지 모두 소수임을 확인할 수 있다.<br>
+                |　그러나 p(40) = 41 * 41은 소수가 아니다. 따라서 
+                +goto('1.1.3')
+                |은 거짓이다. 사실 음이 아닌 모든 정수를 소수로 매핑하는 다항식(상수식 제외)은 존재할 수 없지만, 여기서 말하고자 하는 바는 무한 집합을 대상으로 하는 명제를 유한한 표본들─개수가 많더라도─만으로 검증하기는 일반적으로 요원하다는 점이다.<br>
+                |　위처럼 모든 숫자 또는 특정한 종류의 모든 항목에 대한 명제는 매우 흔하며, 이를 위한 특별한 표기도 존재한다. 이를 이용하면 
+                +goto('1.1.3')
+                |은 아래와 같이 표기할 수 있다.
+                |\[\forall n \in \mathbb{N}.\ \text{p(n) is prime}\]
+                |　여기서 기호 식[\forall]식은 "for all"라고 읽고, 식[\mathbb{N}]식은 음이 아닌 정수 집합을 의미한다.
             p
                 strong Conjecture.
-                |  [오일러 추측] 방정식 식[a^4+b^4+c^4=d^4]식을 만족하는 양의 정수 식[a, b, c, d]식는 존재하지 않는다
-                br
+                |　[오일러 추측] 방정식 식[a^4+b^4+c^4=d^4]식을 만족하는 양의 정수 a, b, c, d는 존재하지 않는다
+            p
                 |이를 아래와 같이 표현할 수 있다
-                |\[\forall a, b, c, d \in \mathbb{Z}^+. a^4+b^4+c^4 \ne d^4.\]
+                |\[\forall a, b, c, d \in \mathbb{Z}^+.\ a^4+b^4+c^4 \ne d^4.\]
+                |<br>　한편 이 명제는 거짓으로 판명되었다. a = 95800, b = 217519, c = 414560, d = 422481
+            +pos('1.1.4')
+            p
+                strong 명제 1.1.4 (Four Color Theorem).
+                |　모든 평면 지도는 4가지 색으로 모든 인접한 두 지역의 색이 서로 다르도록 칠할 수 있다.
+            p 　이 명제가 참이라는 것을 증명하는 데 컴퓨터가 사용되었다. 증명해야 하는 데이터 셋이 크다면 컴퓨터의 사용은 필수불가결한데, 컴퓨터의 계산에 오차가 존재하지 않는다고 보장할 수 있는 사람은 존재하지 않는다. 그렇다고 방대한 데이터를 일일이 검산할 사람 역시 존재하지 않는다.
+            +pos('1.1.5')
+            p
+                strong 명제 1.1.5 (Fermat's Last Theorem).
+                |　식[n \in \mathbb{N}.\ n > 2.\ x^n + y^n = z^n]식을 만족하는 양의 정수 x, y, z는 존재하지 않는다.
+            p 　페르마는 이 명제를 적으면서 여백이 부족해 증명을 적지 않았다고 한다. 1994년 영국의 수학자 Andrew Wiles가 명제가 참임을 증명했고, 이 증명은 여백에 적을만한 분량은 아니었다.
+                |<br>　마지막으로 간결하지만 아직 증명되지 않은 명제를 살펴보자.
+            +pos('1.1.6')
+            p
+                strong 추측 1.1.6 (Goldbach).
+                |　2보다 큰 모든 정수는 2개의 소수의 합으로 표현할 수 있다.
+            p 　골드바흐의 추측은 10^18까지 참임이 알려져 있지만, 전체가 참인지는 아직 증명되지 않았다.
+
+            +pos('1.2')
             h3 Predicates
             p
                 strong 정의
-                |  Predicate ::= 변수에 의해 진리값이 결정되는 문제
-            p 예. 식[P(n) ::= \text{"n은 완전제곱수다"}]식
+                |　Predicate ::= 변수에 의해 진리값이 결정되는 문제
+            p 　예. 식[P(n) ::= \text{"n은 완전제곱수다"}]식
+                |<br>　일반적인 수학 함수와 다르게, 출력은 항상 true 또는 false다.
+            
+            +pos('1.3')
             h3 The Axiomatic Method
-            p
-                strong 정의
-                ul
-                    li 정리(Theorem) ::= 중요한 참 명제
-                    li 보조정리(Lemma) ::= 이후 명제를 증명하는 데 필요한 예비 명제
-                    li 따름정리(Corollary) ::= 정리로부터 쉽게 도출되는 명제
+            p 　표준 증명 절차는 유클리드가 기원전에 발명했다. 그는 부정할 수 없는 5가지 기하학에 관한 추측을 기반으로 증명했는데, 예컨데 "임의의 2개의 점 사이에는 1개의 직선이 존재한다"가 그 중 하나다. 이처럼 자명하게 참인 명제를 공리(axiom)라 한다.
+                +goto('증명')
+                |에 사용되는 이미 증명된 명제들은 그 역할과 비중에 따라 몇 가지 용어들로 참조된다.
+            ul
+                li 정리(Theorem) ::= 중요한 참 명제
+                li 보조정리(Lemma) ::= 이후 명제를 증명하는 데 필요한 예비 명제
+                li 따름정리(Corollary) ::= 정리로부터 쉽게 도출되는 명제
+            |　위 용어들을 엄격하게 구별하여 사용할 필요는 없다.
+
+            +pos('1.4')
             h3 Our Axioms
             div
                 p
-                    strong 정의
-                    |  Implication ::= 식[\text{"If }P\text{, then }Q\text{"}]식처럼 조건을 갖는 명제
-                    |  종종 식[P\text{ IMPLIES }Q]식, 식[P \longrightarrow Q]식로 표현한다
-                p 증명을 간결하게 하기 위해 아래의 공리(Axiom)들을 증명없이 이용한다
-                h4 Logical Deductions
+                    strong 정의.
+                    |　Implication ::= "If P, then Q."처럼 조건을 갖는 명제
+                    |<br>　종종 식[P\text{ IMPLIES }Q]식, 식[P \longrightarrow Q]식로 표현한다
+                p 　증명을 간결하게 하기 위해 중등 수학의 공리(Axiom)들을 증명없이 이용한다
+                
+                +pos('1.4.1')
+                h4.fake Logical Deductions
+                p 　논리적 연역(logical deduction) 또는 추론 규칙(inference rule)은 이미 증명된 명제들로부터 새로운 명제를 증명하는 데 이용된다.
+                    |<br>　기초가 되는 규칙은 <i>긍정 논법(modus ponens)</i>으로, P와 P IMPLIES Q가 참이라면 Q도 참이라는 규칙이다.
+                    |<br>　긍정 논법은 아래와 같이 표현할 수 있다.
                 p
                     strong Rule.
-                    |  식[{P, P \implies Q \over Q}]식
-                    p ↑ 식[{P, P \implies Q}]식 모두 참이면 식[Q]식도 참이라는 의미
+                    |\[{P, P \implies Q \over Q}\]
+                    |<br>　이 표기법은 선분 위의 문장들(antecedents)이 참으로 증명되면, 선분 아래 문장(conclusion, consequent) 역시 참으로 간주할 수 있음을 나타낸다.
+                    |<br>　이외에도 자연스럽고 간결한 추론 규칙들이 존재한다.
                 p
                     strong Rule.
-                    |  식[{P \implies Q, Q \implies R \over P \implies R}]식
+                    |\[{P \implies Q, Q \implies R \over P \implies R}\]
                 p
                     strong Rule.
-                    |  식[{\operatorname{NOT}(Q) \implies \operatorname{NOT}(P) \over P \implies Q}]식
+                    |\[{\operatorname{NOT}(Q) \implies \operatorname{NOT}(P) \over P \implies Q}\]
+            
+            +pos('1.5')
             h3 Proving an Implication
             div
-                h4 Method #1
+                h4.fake Method #1
                 ol
                     li 다음과 같이 쓴다. "P가 참이라고 가정한다"
                     li Q가 논리적으로 도출됨을 보인다
-                h4 Method #2
+                p.fake-h4 Example
+                +pos('1.5.1')
+                p
+                    strong 정리 1.5.1.
+                    |　If 0&lt;=x&lt;=2, then 식[-x^3 + 4x + 1 \gt 0]식.
+                p 　증명을 써내려가기에 앞서, 왜 이것이 참인지 구상해야 한다.
+                    |<br>　왼쪽 부등식은 x=0인 경우를 포함하며, 이 때 오른쪽 부등식은 1 > 0으로 참이다. 다음으로, 0 &lt; x &lt;=2의 구간에서, 4x는 식[-x^3]식보다 지배적(식[-x^3+4x \ge 0]식)이다. 따라서 [0, 2] 전체 구간에서 오른쪽 부등식은 참일 것 같다.
+                    |<br>　여기서 "참일 것 같다"는 부분을 논리적으로 견고한 표현으로 바꾸어야 하는데, 인수분해가 이를 도와준다
+                    |\[-x^3 + 4x + 1 = x(2 - x)(2 + x) + \gt 0\]
+                    |<i>Proof.</i> 0&lt;=x&lt;=2가 참이라고 가정하자. 그러면 x, 2-x, 2+x 모두 음이 아니며, 따라서 이들의 곱도 음이 아니다.
+                    |<br>이에 1을 더하면 양수임이 명백하며, 따라서 명제는 참이다.
+                p.w3-right-align ■
+
+                h4.fake Method #2 - 대우 증명
                 ol
                     li 다음과 같이 쓴다. "대우명제를 통해 증명한다"
                     li 식[{\operatorname{NOT}(Q) \implies \operatorname{NOT}(P)}]식을 Method #1으로 증명한다
+                p.fake-h4 Example
+                +pos('1.5.2')
+                p
+                    strong 정리 1.5.2.
+                    |　r이 무리수면, 식[\sqrt{r}]식도 무리수다.
+                p <i>Proof.</i> 대우명제를 통해 증명한다: 식[\sqrt{r}]식이 유리수면, r도 유리수다.
+                    |<br>식[\sqrt{r}]식이 유리수라고 가정하자. 그러면 식[\sqrt{r}]식 = m / n을 만족하는 두 정수 m, n이 존재한다.
+                    |<br>이때 양변을 제곱하면: r = m^2 / n^2
+                    |<br>m과 n이 모두 정수이므로 m^2, n^2도 모두 정수이며, 따라서 r도 유리수이다.
+                p.w3-right-align ■
+
+            +pos('1.6')
             h3 Proving an "If and Only If"
             div
-                h4 Method #1
+                h4.fake Method #1
                 ol
                     li 다음과 같이 쓴다. "식[P \implies Q]식과 그 역을 증명한다."
-                    li 다음과 같이 쓴다. "먼저 식[P \implies Q]식를 증명한다". 이후 증명
-                    li 다음과 같이 쓴다. "다음으로 식[Q \implies P]식를 증명한다". 이후 증명
-                h4 Method #2
+                    li 다음과 같이 쓴다. "먼저 식[P \implies Q]식를 증명한다". 이후 
+                        +goto('1.5')
+                        |대로 증명
+                    li 다음과 같이 쓴다. "다음으로 식[Q \implies P]식를 증명한다". 이후 
+                        +goto('1.5')
+                        |대로 증명
+                h4.fake Method #2 : Iff 체인
                 ol
-                    li 다음과 같이 쓴다. "We construct a chain of if-and-only-if implications."
+                    li 다음과 같이 쓴다. "If-and-only-if 조건 명제의 체인을 만든다."
                     li 어떠한 식(들)이 P와 동치임을 보이고, 다시 Q와도 동치임을 보인다
+                p.fake-h4 Example
+                +pos('(1.3)')
+                p 　표본 x1, ..., xn에 대한 표준편차는 다음과 같이 정의된다:
+                    |\[\begin{align}\sqrt{(x_1 - \mu)^2 + \cdots + (x_n - \mu)^2 \over n} \tag*{(1.3)}\end{align}\]
+                +pos('1.6.1')
+                p
+                    strong 정리 1.6.1.
+                    |　표본 x1, ..., xn에 대한 표준편차는 0이다 iff 모든 표본이 평균과 같다
+                p <i>Proof.</i> "iff" 조건 명제의 체인을 만든다. 표준 편차 
+                    +goto('(1.3)')
+                    |가 0인 조건식으로부터 시작한다.
+                +pos('(1.4)')
+                p \[\begin{align}\sqrt{(x_1 - \mu)^2 + \cdots + (x_n - \mu)^2 \over n} = 0 \tag*{(1.4)}\end{align}\]
+                p 　오직 0만 제곱근이 0이므로, 
+                    +goto('(1.4)')
+                    |　iff
+                +pos('(1.5)')
+                p \[\begin{align}(x_1 - \mu)^2 + \cdots + (x_n - \mu)^2 = 0 \tag*{(1.5)}\end{align}\]
+                p 　실수의 제곱은 항상 음이 아니므로, 
+                    +goto('(1.5)')
+                    |　좌변의 모든 항도 음이 아니다. 따라서
+                    +goto('(1.5)')
+                    |　iff
+                +pos('(1.6)')
+                p \[\begin{align}\text{(1.5) 좌변의 모든 항 }(x_i - \mu)^2 \text{은 0이다.} \tag*{(1.6)}\end{align}\]
+                p 　이때, 식[(x_i-\mu)^2 = 0 \iff x_i = \mu]식이므로,
+                    +goto('(1.6)')
+                    |가 참이다 iff
+                p \[\text{모든 } x_i = \mu\]
+                p.w3-right-align ■
+
+            +pos('1.7')
             h3 Proof by Cases
             p 명제가 가능한 모든 경우의 수에 대해 성립함을 보일 수 있다면 참임을, 단 하나의 경우라도 거짓임을 보인다면 거짓임을 증명할 수 있다
+
+            +pos('1.8')
             h3 Proof by Contradiction
+            p 간접 증명(indirect proof)이라고도 한다.
             ol
                 li 다음과 같이 쓴다. "모순(Contradiction)을 통해 증명한다."
                 li 다음과 같이 쓴다. "P가 거짓이라고 가정한다"
-                li 논리적으로 모순임을 보인다
+                li 논리적으로 모순임(거짓임이 알려진 명제가 참이 됨)을 보인다
                 li 다음과 같이 쓴다. "이는 모순이며, 따라서 P는 참이다"
             div
-                h4 Example
+                p.fake-h4 Example
+                +pos('1.8.1')
                 p
-                    +pos('Theorem 1.8.1.')
-                    strong Theorem 1.8.1.
-                    |  식[\sqrt{2}]식는 무리수다
-                p
-                    i Proof.
-                    |  모순을 통해 증명한다. 식[\sqrt{2}]식가 유리수라면, 이를 표현할 수 있는 기약분수 식[n / d]식이 존재해야 한다
-                    br
-                    |두 식을 모두 거듭제곱하면 식[2 = n^2 / d^2]식이 성립하며, 따라서 식[2d^2 = n^2]식이다. 이는 n이 2의 배수여야 함을 의미하며, 또다시 식[2d^2]식는 4의 배수여야 함을 의미한다
-                    br
-                    |결국 n과 d모두 2의 배수여야 하지만, 이는 식[n / d]식이 기약분수라는 것에 위배된다. 이는 모순이며, 따라서 식[\sqrt{2}]식는 무리수다
+                    strong 정리 1.8.1.
+                    |　식[\sqrt{2}]식는 무리수다
+                p <i>Proof.</i>　모순을 통해 증명한다. 명제가 거짓이라 가정하자. 식[\sqrt{2}]식가 유리수라면, 이를 표현할 수 있는 기약분수 식[n / d]식이 존재해야 한다
+                    |<br>　양변을 제곱하면 식[2 = n^2 / d^2]식이 성립하며, 따라서 식[2d^2 = n^2]식이다. 이는 n이 2의 배수여야 함을 의미하며, 또다시 식[2d^2]식는 4의 배수여야 함을 의미한다
+                    |<br>　결국 n과 d모두 2의 배수여야 하지만, 이는 식[n / d]식이 기약분수라는 것에 위배된다. 이는 모순이며, 따라서 식[\sqrt{2}]식는 무리수다
+                p.w3-right-align ■
+
+            +pos('1.9')
             h3 Good Proofs in Practice
-            ul
-                li 증명은 계산이 아니라 에세이다
+            p 증명은 계산이 아니라 에세이다
+
             h3 Problems
             div
-                h4 Problem 1.1.
-                p Albert announces to his class that he plans to surprise them with a quiz sometime
-                    |  next week.
-                    br
-                    |His students first wonder if the quiz could be on Friday of next week. They
-                    |  reason that it can’t: if Albert didn’t give the quiz before Friday, then by midnight
-                    |  Thursday, they would know the quiz had to be on Friday, and so the quiz wouldn’t
-                    |  be a surprise any more.
-                    br
-                    |Next the students wonder whether Albert could give the surprise quiz Thursday.
-                    |  They observe that if the quiz wasn’t given before Thursday, it would have to be
-                    |  given on the Thursday, since they already know it can’t be given on Friday. But
-                    |  having figured that out, it wouldn’t be a surprise if the quiz was on Thursday either.
-                    br
-                    |Similarly, the students reason that the quiz can’t be on Wednesday, Tuesday, or
-                    |  Monday. Namely, it’s impossible for Albert to give a surprise quiz next week. All
-                    |  the students now relax, having concluded that Albert must have been bluffing. And
-                    |  since no one expects the quiz, that’s why, when Albert gives it on Tuesday next
-                    |  week, it really is a surprise!
-                    br
-                    |What, if anything, do you think is wrong with the students’ reasoning?
-                p → '다음 주 금요일이 시험날이 될 수 없다'는 결론은 '금요일 전까지 시험을 내지 않았다'는 가정이 참일 때만 유효하며, 해당 가정의 진리값은 실제로 다음 주 금요일 자정을 넘기지 않는 이상 알 수 없으므로, 적절한 수학적 명제로 볼 수 없다
-                h4 Problem 1.3.
+                h4.fake Problem 1.1.
+                p 　Albert는 그의 강의에서 다음 주에 서프라이즈 퀴즈를 치를 것을 예고했다.
+                    |<br>　학생들은 먼저 다음 주 금요일에 퀴즈가 있을 지 생각해봤다. 그리고 그럴 수 없다고 추론했다: 만약 금요일 전까지 서프라이즈 퀴즈가 없었다면, 퀴즈는 당연히 금요일에 치뤄질 것이고, 이는 더 이상 서프라이즈가 아니기 때문이다.
+                    |<br>　다음으로 학생들은 퀴즈가 목요일에 있을 지 생각해봤다. 목요일 전까지 퀴즈가 없었다면, 금요일은 퀴즈가 없을 것이므로 당연히 목요일에 퀴즈를 치룰 것이고, 이 또한 이제 서프라이즈가 아니다. 마찬가지로 학생들은 수요일, 화요일, 월요일도 서프라이즈가 될 수 없음을 추론했고, 따라서 다음 주에 서프라이즈 퀴즈를 치루는 것은 불가능하다는 결론에 이르렀다. 즉 Albert는 허풍으로 퀴즈를 예고한 것이다.
+                    |<br>　학생들의 추론에 문제가 존재하는가?
+                p → '다음 주 금요일이 시험날이 될 수 없다'는 중간 결론은 '금요일 전까지 시험을 내지 않았다'는 가정이 참일 때만 유효하며, 해당 가정의 진리값은 실제로 다음 주 금요일 자정을 넘기지 않는 이상 알 수 없으므로, 적절한 수학적 명제로 볼 수 없다. 또한 부적절한 추론 결과인 '다음 주 금요일이 시험날이 아니다'를 이용한 이후의 모든 추론 역시 적절하지 않다.
+
+                h4.fake Problem 1.3.
                 p What's going on here?
-                p \[1=\sqrt{1}=\sqrt{(-1)(-1)}=\sqrt{-1}\sqrt{-1}=\left(\sqrt{-1}\right)^2=-1\]
-                ol
-                    li Precisely identify and explain the mistake(s) in this <i>bogus</i> proof.
-                    p 식[\sqrt{ab} = \sqrt{a}\sqrt{b}]식는 식[a,b\in \mathbb{R}^{0+}]식인 경우만 성립한다. 따라서 식[\sqrt{(-1)(-1)}=\sqrt{-1}\sqrt{-1}]식 이후의 추론은 모두 잘못됐다
-                    li Prove (correctly) that if 1 = -1, then 2 = 1.
-                    p 1 = -1 양변에 1을 더하면 2 = 0. 다시 양변에 2로 나누면 1 = 0. 따라서 2 = 0 = 1이 성립한다
-                h4 Problem 1.4.
+                    | \[1=\sqrt{1}=\sqrt{(-1)(-1)}=\sqrt{-1}\sqrt{-1}=\left(\sqrt{-1}\right)^2=-1\]
+                p <strong>(a)</strong> Precisely identify and explain the mistake(s) in this <i>bogus</i> proof.
+                |식[\sqrt{ab} = \sqrt{a}\sqrt{b}]식는 식[a,b\in \mathbb{R}^{0+}]식인 경우만 성립한다. 따라서 식[\sqrt{(-1)(-1)}=\sqrt{-1}\sqrt{-1}]식 이후의 추론은 모두 잘못됐다
+                p <strong>(b)</strong> Prove (correctly) that if 1 = -1, then 2 = 1.
+                |1 = -1 양변에 1을 더하면 2 = 0. 다시 양변에 2로 나누면 1 = 0. 따라서 2 = 0 = 1이 성립한다
+                p <strong>(c)</strong> 모든 양의 실수 r은 양과 음의 2가지 제곱근을 가진다. 실수의 곱셈에 관한 성질을 이용해 양의 실수 r, s에 대하여 다음이 성립함을 보여라.
+                    |\[\sqrt{rs}=\sqrt{r}\sqrt{s}\]
+                |주어진 식의 우변을 제곱하면 식[\sqrt{r}\sqrt{s}\sqrt{r}\sqrt{s}]식이다. 곱셈에 관한 교환법칙에 의해 식[\sqrt{r}\sqrt{s}\sqrt{r}\sqrt{s}=\sqrt{r}\sqrt{r}\sqrt{s}\sqrt{s}]식이고, 곱셈에 관한 결합법칙에 의해 식[\sqrt{r}\sqrt{r}\sqrt{s}\sqrt{s}=(\sqrt{r}\sqrt{r})(\sqrt{s}\sqrt{s})=rs]식이다. 양변에서 양의 제곱근을 취하면, 곱셈에 관한 결합법칙에 의해 식[\sqrt{\sqrt{r}\sqrt{s}\sqrt{r}\sqrt{s}} = \sqrt{(\sqrt{r}\sqrt{s})(\sqrt{r}\sqrt{s})} = \sqrt{r}\sqrt{s} = \sqrt{rs}]식임을 알 수 있다.
+
+                h4.fake Problem 1.4.
                 p Identify exactly where the bugs are in each of the following bogus proofs.
-                ol
-                    li <i>Bogus proof</i> : 식[1¢ = $0.01 = ($0.1)^2 = (10¢)^2 = 100¢ = $1]식
-                    p 식[$0.01 = $(0.1)^2]식, 식[($0.1)^2=$^2(0.1)^2]식 각각은 성립하지만 식[$ \ne 1]식이므로 식[$0.01 = ($0.1)^2]식은 성립하지 않는다
-                h4 Problem 1.5.
+                p <strong>(b)</strong> <i>Bogus proof</i> : 식[1¢ = $0.01 = ($0.1)^2 = (10¢)^2 = 100¢ = $1]식 ■
+                |식[$0.01 = $(0.1)^2]식, 식[$^2(0.1)^2=($0.1)^2]식 각각은 성립하지만 식[$ \ne 1, $ \ne 0]식이므로 식[$(0.1)^2 = $^2(0.1)^2]식은 성립하지 않는다
+
+                h4.fake Problem 1.5.
                 p It's a fact that the Arithmetic Mean is at least as large as the Geometric Mean,
-                    |  namely, 식[{a+b \over 2} \ge \sqrt{ab}]식
-                    |  for all nonnegative real numbers a and b. But there’s something objectionable
-                    |  about the following proof of this fact. What’s the objection, and how would you fix it?
+                    |　namely, 식[{a+b \over 2} \ge \sqrt{ab}]식
+                    |　for all nonnegative real numbers a and b. But there’s something objectionable
+                    |　about the following proof of this fact. What’s the objection, and how would you fix it?
                 p
                     i Bogus proof.
                     |\begin{align*}
-                    |  {a+b \over 2} \ge & \sqrt{ab}, && so \\
-                    |  a+b \ge & 2\sqrt{ab}, && so \\
-                    |  a^2+2ab+b^2 \ge & 4ab, && so \\
-                    |  a^2-2ab+b^2 \ge & 0, && so \\
-                    |  (a-b)^2 \ge & 0 && \text{which we know is true.}
+                    |　{a+b \over 2} \ge & \sqrt{ab}, && so \\
+                    |　a+b \ge & 2\sqrt{ab}, && so \\
+                    |　a^2+2ab+b^2 \ge & 4ab, && so \\
+                    |　a^2-2ab+b^2 \ge & 0, && so \\
+                    |　(a-b)^2 \ge & 0 && \text{which we know is true.}
                     |\end{align*}
                     br
                     |The last statement is true because a - b is a real number, and the square of a real
-                    |  number is never negative. This proves the claim.
+                    |　number is never negative. This proves the claim.
                 p → 증명해야 하는 명제를 가정에서 참으로 이용하고 있으므로 시작부터 잘못된 증명이다. 또, 증명 순서가 반대로 됐다
-                h4 Problem 1.7.
+                h4.fake Problem 1.7.
                 p Show that 식[\operatorname{log}_{7}n]식 is either an integer or irrational, where n is a positive integer. Use
-                    |  whatever familiar facts about integers and primes you need, but explicitly state such facts.
+                    |　whatever familiar facts about integers and primes you need, but explicitly state such facts.
                 p → 모순을 통해 증명한다. 식[\operatorname{log}_{7}n]식이 정수가 아닌 유리수라면, 이를 표현할 수 있는 기약분수 식[{a \over b}]식이 존재해야 한다
                     br
                     |식[\operatorname{log}_{7}n = {a \over b} \iff n = 7^{a \over b} \iff n^b=7^a]식
@@ -180,19 +304,19 @@ include ../../source/skeleton.pug
                     |따라서 식[n^b = 7^{x_4 b} = 7^a]식이며, 식[x_4 b = a \iff {a \over b} = x_4]식이다. 하지만 이는 식[a \over b]식가 기약분수라는 가정에 위배된다
                     br
                     |이는 모순이며, 따라서 식[\operatorname{log}_{7}n]식은 정수거나 무리수이다
-                h4 Problem 1.9.
+                h4.fake Problem 1.9.
                 p If we raise an irrational number to an irrational power, can the result be rational?
-                    |  Show that it can by considering 식[\sqrt{2}^{\sqrt{2}}]식 and arguing by cases.
+                    |　Show that it can by considering 식[\sqrt{2}^{\sqrt{2}}]식 and arguing by cases.
                 p → 임의 정수 n, 임의 유리수 r, 임의 무리수 i에 대하여 식[r^{{n \over i} \cdot i}=r^n]식이 성립한다
-                h4 Problem 1.16.
+                h4.fake Problem 1.16.
                 p Give an example of two distinct positive integers m, n such that
-                    |  식[n^2]식 is a multiple of m, but n is not a multiple of m. How about having m be less than n?
+                    |　식[n^2]식 is a multiple of m, but n is not a multiple of m. How about having m be less than n?
                 p → m = 4, n = 6
         h2 The Well Ordering Principle
         div
             p
                 strong Definition.
-                |  The <i>Well Ordering Principle(WOP)</i> ::= Every <i>nonempty</i> set of <i>nonnegative integers</i> has a <i>smallest</i> element.
+                |　The <i>Well Ordering Principle(WOP)</i> ::= Every <i>nonempty</i> set of <i>nonnegative integers</i> has a <i>smallest</i> element.
             h3 Template for WOP Proofs
             p WOP을 이용해 식[P(n)\text{ is true for all }n \in \mathbb{N}]식을 증명하기
             ol
@@ -204,7 +328,7 @@ include ../../source/skeleton.pug
             p
                 +pos('Theorem 2.2.1.')
                 strong Theorem 2.2.1.
-                |  식[\forall n \in \mathbb{N}. 1 + 2 + \cdots + n = n(n+1)/2]식
+                |　식[\forall n \in \mathbb{N}. 1 + 2 + \cdots + n = n(n+1)/2]식
             p
                 i Proof.
             ul
@@ -214,66 +338,66 @@ include ../../source/skeleton.pug
                 p 반례집합 식[C ::= \left\{n \in \mathbb{N}|1+2+\cdots+n\ne n(n+1)/2\right\}]식이 공집합임을 보여 증명한다
                     br
                     |먼저 C가 원소를 가진다고 가정하자. WOP에 의해 C에는 최소 원소 c > 1이 존재한다
-                    |  이때, c-1 > 0이므로 식[1+2+\cdots+(c-1)=(c-1)c/2]식가 성립한다
-                    |  양변에 c를 더하면 식[1+2+\cdots+c=(c-1)c/2 + c=c(c+1)/2]식이므로, 식[c \notin C]식이다
+                    |　이때, c-1 > 0이므로 식[1+2+\cdots+(c-1)=(c-1)c/2]식가 성립한다
+                    |　양변에 c를 더하면 식[1+2+\cdots+c=(c-1)c/2 + c=c(c+1)/2]식이므로, 식[c \notin C]식이다
                     br
                     |이는 c가 C의 최소 원소라는 것에 모순이므로, C는 공집합이며, 따라서 명제는 항상 참이다
             h3 Factoring into Primes
             p
                 +pos('Theorem 2.3.1.')
                 strong Theorem 2.3.1.
-                |  1보다 큰 모든 자연수는 소수의 곱으로 표현할 수 있다 ─ 소인수분해 가능하다
+                |　1보다 큰 모든 자연수는 소수의 곱으로 표현할 수 있다 ─ 소인수분해 가능하다
             p
                 i Proof.
-                |  반례집합 C가 원소를 가진다고 가정하자. WOP에 의해 C에는 최소 원소 n > 1이 존재한다
-                |  이때, n은 소수일 수 없으므로 식[1 &lt; a, b &lt; n]식를 만족하는 두 자연수 a, b의 곱이다
+                |　반례집합 C가 원소를 가진다고 가정하자. WOP에 의해 C에는 최소 원소 n > 1이 존재한다
+                |　이때, n은 소수일 수 없으므로 식[1 &lt; a, b &lt; n]식를 만족하는 두 자연수 a, b의 곱이다
                 br
-                |  n이 C의 최소원소기 때문에 식[a, b \notin C]식며, 따라서 a, b 각각은 소인수분해 가능하다
-                |  따라서 식[n = ab]식 역시 소인수분해 가능하며, 이는 C가 원소를 가질 수 없음을 의미한다
+                |　n이 C의 최소원소기 때문에 식[a, b \notin C]식며, 따라서 a, b 각각은 소인수분해 가능하다
+                |　따라서 식[n = ab]식 역시 소인수분해 가능하며, 이는 C가 원소를 가질 수 없음을 의미한다
             h3 Well Ordered Sets
             p
                 strong Definition.
-                |  Well ordered set ::= 어떤 숫자 집합에 대하여, 공집합이 아닌 모든 부분집합이 최소 원소를 갖는 경우
+                |　Well ordered set ::= 어떤 숫자 집합에 대하여, 공집합이 아닌 모든 부분집합이 최소 원소를 갖는 경우
             p
                 +pos('Theorem 2.4.1.')
                 strong Theorem 2.4.1.
-                |  음이 아닌 임의 정수 n에 대하여, 집합 식[S=\left\{m \in \mathbb{N}|m\ge -n\right\}]식는 well ordered set이다
+                |　음이 아닌 임의 정수 n에 대하여, 집합 식[S=\left\{m \in \mathbb{N}|m\ge -n\right\}]식는 well ordered set이다
             p
                 i Proof.
-                |  S의 모든 원소에 n을 더한 새로운 집합 S+n을 생각해보자. WOP에 의해 S+n은 0 이상의 최소 원소를 가진다. 또, S+n의 공집합이 아닌 부분집합 역시 WOP에 의해 0 이상의 최소 원소를 가진다
+                |　S의 모든 원소에 n을 더한 새로운 집합 S+n을 생각해보자. WOP에 의해 S+n은 0 이상의 최소 원소를 가진다. 또, S+n의 공집합이 아닌 부분집합 역시 WOP에 의해 0 이상의 최소 원소를 가진다
                 br
-                |  다시 S+n 집합의 모든 원소에 n을 뺀 집합 S를 생각해보면, S와 공집합이 아닌 S의 모든 부분집합은 -n 이상의 최소 원소를 가짐을 알 수 있다
+                |　다시 S+n 집합의 모든 원소에 n을 뺀 집합 S를 생각해보면, S와 공집합이 아닌 S의 모든 부분집합은 -n 이상의 최소 원소를 가짐을 알 수 있다
             p
                 +pos('Theorem 2.4.2.')
                 strong Theorem 2.4.2.
-                |  실수 집합 S의 하한(lower bound) ::= 식[\forall s \in S. s \ge b]식를 만족하는 실수 b
+                |　실수 집합 S의 하한(lower bound) ::= 식[\forall s \in S. s \ge b]식를 만족하는 실수 b
                 br
-                |  실수 집합 S의 상한(upper bound) ::= 식[\forall s \in S. s \le b]식를 만족하는 실수 b
+                |　실수 집합 S의 상한(upper bound) ::= 식[\forall s \in S. s \le b]식를 만족하는 실수 b
             p
                 +pos('Corollary 2.4.3.')
                 strong Corollary 2.4.3.
-                |  Lower bound를 갖는 임의의 정수 집합은 well ordered set이다
+                |　Lower bound를 갖는 임의의 정수 집합은 well ordered set이다
             p
                 i Proof.
-                |  정수 집합이 lower bound로 식[b \in \mathbb{R}]식를 갖는 경우, 정수 식[n = \lfloor b \rfloor]식 역시 집합의 lower bound다. 따라서 
+                |　정수 집합이 lower bound로 식[b \in \mathbb{R}]식를 갖는 경우, 정수 식[n = \lfloor b \rfloor]식 역시 집합의 lower bound다. 따라서 
                 +goto('Theorem 2.4.1.')
                 |에 의하여 집합이 well ordered set임을 알 수 있다
             p
                 +pos('Corollary 2.4.4.')
                 strong Corollary 2.4.4.
-                |  Upper bound를 갖는 임의의 정수 집합은 최대 원소가 존재한다
+                |　Upper bound를 갖는 임의의 정수 집합은 최대 원소가 존재한다
             p
                 i Proof.
-                |  정수 집합 S가 upper bound로 식[b \in \mathbb{R}]식를 가질 때, 모든 원소에 -1을 곱한 집합 -S를 생각해보자. 
+                |　정수 집합 S가 upper bound로 식[b \in \mathbb{R}]식를 가질 때, 모든 원소에 -1을 곱한 집합 -S를 생각해보자. 
                 +goto('Corollary 2.4.3.')
-                |  에 의해 -S가 최소 원소 -m를 가짐을 알 수 있으며, 다시 -S의 모든 원소에 -1을 곱한 집합 S는 최대 원소 m을 가짐을 알 수 있다
+                |　에 의해 -S가 최소 원소 -m를 가짐을 알 수 있으며, 다시 -S의 모든 원소에 -1을 곱한 집합 S는 최대 원소 m을 가짐을 알 수 있다
             p
                 +pos('Lemma 2.4.5.')
                 strong Lemma 2.4.5.
-                |  공집합이 아닌 모든 유한 실수 집합은 well ordered set이다
+                |　공집합이 아닌 모든 유한 실수 집합은 well ordered set이다
             p
                 i Proof.
-                |  유한집합 크기에 관한 WOP로 증명한다
+                |　유한집합 크기에 관한 WOP로 증명한다
                 br
                 |최소 원소를 갖지 않는 유한 실수 집합의 크기 n에 대한 집합 C를 생각하자. WOP에 의해 C는 최소 원소 m을 갖는다. 이때, 원소가 하나인 집합이 최소 원소를 가짐은 자명하므로 식[m\ge 2]식다
                 br
@@ -281,58 +405,58 @@ include ../../source/skeleton.pug
                 br
                 |따라서 식[r_0, r_1]식 중 작은 값이 F의 최소 원소가 되며, C는 공집합이다
             div
-                h4 A Different Well Ordered Set
+                h4.fake A Different Well Ordered Set
                 p n/(n+1) 꼴로 표현되는 집합 식[\mathbb{F}]식는 well ordered set이다
                     |\[{0 \over 1},{1 \over 2},{2 \over 3},\cdots,{n \over n+1},\cdots\]
                     |간단하게 분자가 가장 작은 원소가 최소 원소다
                 p
                     +pos('Lemma 2.4.6.')
                     strong Lemma 2.4.6.
-                    |  식[\mathbb{N}+\mathbb{F}]식는 well ordered set이다
+                    |　식[\mathbb{N}+\mathbb{F}]식는 well ordered set이다
                 p
                     i Proof.
-                    |  식[\mathbb{N}+\mathbb{F}]식의 공집합이 아닌 임의 부분집합 S를 생각한다. S의 임의 원소는 식[n+f, n\in\mathbb{N},f\in\mathbb{F}]식로 표현 가능하다
-                    |  가능한 모든 n의 집합은 WOP에 의해 최소원소 식[n_s]식를 갖는다
+                    |　식[\mathbb{N}+\mathbb{F}]식의 공집합이 아닌 임의 부분집합 S를 생각한다. S의 임의 원소는 식[n+f, n\in\mathbb{N},f\in\mathbb{F}]식로 표현 가능하다
+                    |　가능한 모든 n의 집합은 WOP에 의해 최소원소 식[n_s]식를 갖는다
                     br
                     |이제 S의 원소 중 식[n_s+f, f\in\mathbb{F}]식꼴로 표현 가능한 원소들에 대해, 가능한 모든 f의 집합은 WOP에 의해 최소원소 식[f_s]식를 가짐을 알 수 있다
-                    |  이를 통해 식[n_s+f_s]식가 S의 최소원소임을 알 수 있다
+                    |　이를 통해 식[n_s+f_s]식가 S의 최소원소임을 알 수 있다
             h3 Problems
             div
-                h4 Problem 2.5.
+                h4.fake Problem 2.5.
                 p Use the Well Ordering Principle to prove that there is no solution over the positive
-                    |  integers to the equation: \[4a^3+2b^3=c^3\]
+                    |　integers to the equation: \[4a^3+2b^3=c^3\]
                 p → 가능한 모든 해에 대하여, 식[s = a+b+c]식의 집합 S을 생각해보자. 만약 해가 존재한다면 WOP에 의해 S는 최소 원소 식[s_m=a_m+b_m+c_m]식가 존재한다
                     br
                     |식[4a^3+2b^3=c^3]식의 양변을 2로 나누면 식[2a^3+b^3=c^3/2]식이며, 이를 통해 c가 2의 배수(식[c=2c']식)임을 알 수 있다. 식[2a^3+b^3=4c'^3]식
-                    |  마찬가지로 b, a도 2의 배수임을 알 수 있으며, 이제 식[a_m/2, b_m/2, c_m/2]식도 방정식의 해임을 보여 S가 공집합임을 보이겠다
+                    |　마찬가지로 b, a도 2의 배수임을 알 수 있으며, 이제 식[a_m/2, b_m/2, c_m/2]식도 방정식의 해임을 보여 S가 공집합임을 보이겠다
                     br
                     |식[4(a_m/2)^3+2(b_m/2)^3=(c_m/2)^3]식의 양변에 8을 곱하면 식[4a_m^3+2b_m^3=c_m^3]식이며, 따라서 식[s_m]식은 S의 최소 원소가 아니다
-                    |  이는 S가 공집함임을 보여주며, 따라서 방정식의 해는 존재하지 않는다
-                h4 Problem 2.6.
+                    |　이는 S가 공집함임을 보여주며, 따라서 방정식의 해는 존재하지 않는다
+                h4.fake Problem 2.6.
                 p You are given a series of envelopes, respectively containing 1, 2, 4, ..., 식[2^m]식 dollars.
-                    |  Define
+                    |　Define
                     ul
                         strong Property
                         i  m
                         |: For any nonnegative integer less than 식[2^{m+1}]식, there is a
-                        |  selection of envelopes whose contents add up to exactly that number
-                        |  of dollars.
+                        |　selection of envelopes whose contents add up to exactly that number
+                        |　of dollars.
                     |Use the Well Ordering Principle (WOP) to prove that Property m holds for all
                     |nonnegative integers m.
                 p → 우선, 1, 2, 4, ..., 식[2^m]식 달러는 각각의 봉투에 대응하므로 반례가 될 수 없다
-                    |  따라서 반례 집합 C의 최소 원소 c를 2진법으로 표현했을 때, 식[{b_{m-1}b_{m-2}\cdots b_2b_1b_0}_{(2)}]식 중 적어도 2개의 자리수가 1이어야 한다
-                    |  이 중 자리수가 1인 최소 자리수가 식[b_i]식일 때, 식[c-2^i = {b_{m-1}b_{m-2}\cdots b_{i+1}0b_{i-1}\cdots b_2b_1b_0}_{(2)}]식이며, 봉투들의 합계로 표현 가능하며, 식[2^i]식 봉투는 그 중에 포함되지 않는다
+                    |　따라서 반례 집합 C의 최소 원소 c를 2진법으로 표현했을 때, 식[{b_{m-1}b_{m-2}\cdots b_2b_1b_0}_{(2)}]식 중 적어도 2개의 자리수가 1이어야 한다
+                    |　이 중 자리수가 1인 최소 자리수가 식[b_i]식일 때, 식[c-2^i = {b_{m-1}b_{m-2}\cdots b_{i+1}0b_{i-1}\cdots b_2b_1b_0}_{(2)}]식이며, 봉투들의 합계로 표현 가능하며, 식[2^i]식 봉투는 그 중에 포함되지 않는다
                     br
                     |이때, 식[c-2^i]식에 사용된 봉투 조합에 식[2^i]식 봉투를 포함하면 c달러가 되며, 이는 c가 반례 집합의 원소라는 것에 모순이다
-                    |  따라서 C는 공집합이며, 속성 m은 참이다
-                h4 Problem 2.7.
+                    |　따라서 C는 공집합이며, 속성 m은 참이다
+                h4.fake Problem 2.7.
                 p Use the Well Ordering Principle to prove that any integer greater than or equal to 8
-                    |  can be represented as the sum of nonnegative integer multiples of 3 and 5.
+                    |　can be represented as the sum of nonnegative integer multiples of 3 and 5.
                 ul 8 이상의 임의 정수를 식[8 + 3x + i]식으로 표현할 수 있다. 식[x \in \mathbb{N}, i \in \{0, 1, 2\}]식
                     li 8 + 3x + 0 = 5 + 3(x + 1)
                     li 8 + 3x + 1 = 3(x + 3)
                     li 8 + 3x + 2 = 5*2 + 3x
-                h4 Problem 2.10.
+                h4.fake Problem 2.10.
                 p Use the Well Ordering Principle to prove that
                     +pos('(2.6)')
                     |\begin{align*}n\le 3^{n/3} && (2.6)\end{align*}
@@ -352,19 +476,19 @@ include ../../source/skeleton.pug
                         |따라서 식[{c \over c-1}^3 3^{c-1} \gt 3^c]식이 성립해야 한다
                         br
                         |\begin{align*}
-                        |  \iff & {c \over c-1}^3 = \left(1 + {1 \over c-1}\right)^3 \gt 3 \\
-                        |  \iff & {1 + {1 \over c-1}} \gt 1.44\cdots \\
-                        |  \iff & {1 \over c-1} \gt 0.44\cdots \\
-                        |  \iff & 1 \gt (c-1)\cdot 0.44\cdots
+                        |　\iff & {c \over c-1}^3 = \left(1 + {1 \over c-1}\right)^3 \gt 3 \\
+                        |　\iff & {1 + {1 \over c-1}} \gt 1.44\cdots \\
+                        |　\iff & {1 \over c-1} \gt 0.44\cdots \\
+                        |　\iff & 1 \gt (c-1)\cdot 0.44\cdots
                         |\end{align*}
-                        |  이때, 식[c-1 \ge 3]식이므로 부등식은 성립하지 않는다
-                        |  따라서 C는 공집합이며, 명제는 참이다
+                        |　이때, 식[c-1 \ge 3]식이므로 부등식은 성립하지 않는다
+                        |　따라서 C는 공집합이며, 명제는 참이다
         h2 Logical Formulas
         div
             h3 Propositions from Propositions
             p Propositional variables 또는 Boolean variable은 T(true) 또는 F(false) 값만 가질 수 있는 변수다
             div
-                h4 IMPLIES
+                h4.fake IMPLIES
                 table
                     caption truth table
                     +ths('P', 'Q', 'P IMPLIES Q')
@@ -372,7 +496,7 @@ include ../../source/skeleton.pug
                     +tds('T', 'F', 'F')
                     +tds('F', 'T', 'T')
                     +tds('F', 'F', 'T')
-                h4 If and Only If
+                h4.fake If and Only If
                 table
                     caption truth table
                     +ths('P', 'Q', 'P IFF Q')
@@ -382,7 +506,7 @@ include ../../source/skeleton.pug
                     +tds('F', 'F', 'T')
             h3 Propositional Logic in Computer Programs
             div
-                h4 Cryptic Notation
+                h4.fake Cryptic Notation
                 table
                     +ths('English', 'Symbolic Notation')
                     tr
@@ -405,24 +529,24 @@ include ../../source/skeleton.pug
                         td 식[P \oplus Q]식
             h3 Equivalence and Validity
             div
-                h4 Implications and Contrapositives
+                h4.fake Implications and Contrapositives
                 ul
                     li 명제의 역 == Converse
                     li 명제의 대우 == Contrapositive
-                h4 Validity and Satisfiability
+                h4.fake Validity and Satisfiability
                 ul
                     li
                         i Valid
-                        |  formula : 항상 참인 명제
+                        |　formula : 항상 참인 명제
                     li
                         i Satisfiable
-                        |  formula : 변수에 따라 참/거짓이 바뀌는 명제
+                        |　formula : 변수에 따라 참/거짓이 바뀌는 명제
             h3 The Algebra of Propositions
             div
-                h4 Propositions in Normal Form
+                h4.fake Propositions in Normal Form
                 p
                     strong Theorem 3.4.1.
-                    |  모든 명제 식은 그와 동치인 DNF, CNF가 존재한다
+                    |　모든 명제 식은 그와 동치인 DNF, CNF가 존재한다
                 p 예. A AND (B OR C)
                     table
                         +ths('A', 'B', 'C', 'A AND (B OR C)')
@@ -439,7 +563,7 @@ include ../../source/skeleton.pug
                         |식[(A \land B \land C) \lor (A \land B \land \overline{C}) \lor (A \land \overline{B} \land C)]식
                         li CNF(Conjunctive normal form) : 식이 거짓이 되는 행들을 AND로 연결한다
                         |식[(\overline{A} \lor B \lor C) \land (A \lor \overline{B} \lor \overline{C}) \land (A \lor \overline{B} \lor C) \land (A \lor B \lor \overline{C}) \land (A \lor B \lor C)]식
-                h4 Proving Equivalences
+                h4.fake Proving Equivalences
                 table.no-sort
                     +tds('교환법칙 of AND', '식[A \\land B = B \\land A]식')
                     +tds('결합법칙 of AND', '식[(A \\land B) \\land C = A \\land (B \\land C)]식')
@@ -457,24 +581,24 @@ include ../../source/skeleton.pug
             h3 The SAT Problem
             p
                 strong SAT
-                |  ::= 명제가 참일 수 있는 지(satisfiable)에 대한 일반적인 결정 문제
+                |　::= 명제가 참일 수 있는 지(satisfiable)에 대한 일반적인 결정 문제
             h3 Predicate Formulas
             div
-                h4 Quantifiers
+                h4.fake Quantifiers
                 ul
                     li for all : 식[\forall]식
                     li there exists : 식[\exists]식
                     li Universal quantification : 명제가 항상 참인 한정
                     li Existential quantification : 명제가 참일 수 있는 한정
-                h4 Mixing Quantifiers
+                h4.fake Mixing Quantifiers
                 p 예. 식[\forall{n}\in\text{Evens }\exists{p}\in\text{Primes }\exists{q}\in\text{Primes. }n=p+q]식
-                h4 Order of Quantifiers
+                h4.fake Order of Quantifiers
                 p 서로 다른 종류의 한정 문구 순서를 변경하면 의미가 바뀔 수 있다
-                h4 Variables Over One Domain
+                h4.fake Variables Over One Domain
                 p 모든 변수의 정의역이 동일하다면 표기에서 생략할 수 있다. 예. 식[\forall{x}\exists{y}.P(x, y)]식
             h3 Problems
             div
-                h4 Problem 3.6.
+                h4.fake Problem 3.6.
                 p Propositional logic comes up in digital circuit design using the convention that T corresponds to 1 and F to 0. A simple example is a 2-bit half-adder circuit. This circuit has 3 binary inputs, a1, a0, b, and 3 binary outputs, c, s1, s0. The 2-bit word 식[a_1a_0]식 gives the binary representation of an integer k between 0 and 3. The 3-bit word 식[cs_1s_0]식 gives the binary representation of k C b. The third output bit c is called the final carry bit.
                     br
                     |So if k and b were both 1, then the value of 식[a_1a_0]식 would be 01 and the value of the output 식[cs_1s_0]식 would 010, namely, the 3-bit binary representation of 1 + 1.
@@ -484,51 +608,51 @@ include ../../source/skeleton.pug
                     |This 2-bit half-adder could be described by the following formulas:
                     br
                     |\begin{align*}
-                    |  c_0 =& b \\
-                    |  s_0 =& a_0\text{ XOR }c_0 \\
-                    |  c_1 =& a_0\text{ AND }c_0 && \text{the carry into column 1} \\
-                    |  s_1 =& a_1\text{ XOR }c_1 \\
-                    |  c_2 =& a_1\text{ AND }c_1 && \text{the carry into column 2} \\
-                    |  c   =& c_2
+                    |　c_0 =& b \\
+                    |　s_0 =& a_0\text{ XOR }c_0 \\
+                    |　c_1 =& a_0\text{ AND }c_0 && \text{the carry into column 1} \\
+                    |　s_1 =& a_1\text{ XOR }c_1 \\
+                    |　c_2 =& a_1\text{ AND }c_1 && \text{the carry into column 2} \\
+                    |　c   =& c_2
                     |\end{align*}
                 ul
                     li (a) Generalize the above construction of a 2-bit half-adder to an n + 1 bit half-adder with inputs 식[a_n,\cdots,a_1,a_0]식 and b and outputs 식[c,s_n,\cdots,s_1,s_0]식. That is, give simple formulas for 식[s_i]식 and 식[c_i]식 for 식[0 \le i \le n + 1]식, where 식[c_i]식 is the carry into column i + 1, and 식[c = c_{n+1}]식
                     p \begin{align*}
-                        |  c_0 =& b \\
-                        |  s_i =& a_i\text{ XOR }c_i \\
-                        |  c_{i+1} =& a_i\text{ AND }c_i
+                        |　c_0 =& b \\
+                        |　s_i =& a_i\text{ XOR }c_i \\
+                        |　c_{i+1} =& a_i\text{ AND }c_i
                         |\end{align*}
                     li (b) Write similar definitions for the digits and carries in the sum of two n + 1-bit binary numbers 식[a_n,\cdots,a_1,a_0]식 and 식[b_n,\cdots,b_1,b_0]식
                     p \begin{align*}
-                        |  c_0 =& 0 \\
-                        |  s_i =& a_i\text{ XOR }b_i\text{ XOR }c_i \\
-                        |  c_{i+1} =& (a_i\text{ AND }b_i)\text{ OR }(b_i\text{ AND }c_i)\text{ OR }(c_i\text{ AND }a_i)
+                        |　c_0 =& 0 \\
+                        |　s_i =& a_i\text{ XOR }b_i\text{ XOR }c_i \\
+                        |　c_{i+1} =& (a_i\text{ AND }b_i)\text{ OR }(b_i\text{ AND }c_i)\text{ OR }(c_i\text{ AND }a_i)
                         |\end{align*}
                     li (c) How many of each of the propositional operations does your adder from part (b) use to calculate the sum?
                     p To add two n bit numbers, (2+5)n times unit operations are needed
-                h4 Problem 3.17.
+                h4.fake Problem 3.17.
                 p A half dozen different operators may appear in propositional formulas, but just
-                    |  AND, OR, and NOT are enough to do the job. That is because each of the operators
-                    |  is equivalent to a simple formula using only these three operators. For example,
-                    |  A IMPLIES B is equivalent to NOT(A) OR B. So all occurences of IMPLIES in a
-                    |  formula can be replaced using just NOT and OR.
+                    |　AND, OR, and NOT are enough to do the job. That is because each of the operators
+                    |　is equivalent to a simple formula using only these three operators. For example,
+                    |　A IMPLIES B is equivalent to NOT(A) OR B. So all occurences of IMPLIES in a
+                    |　formula can be replaced using just NOT and OR.
                 ul
                     li (a) Write formulas using only AND, OR, NOT that are equivalent to each of A IFF B
-                        |  and A XOR B. Conclude that every propositional formula is equivalent to an AND-OR-NOT formula.
+                        |　and A XOR B. Conclude that every propositional formula is equivalent to an AND-OR-NOT formula.
                     ul
                         li A iff B = (A and B) or (not(A) and not(B))
                         li A xor B = (A and not(B)) or (not(A) and B)
                     li (b) Explain why you don’t even need AND.
                     p A and B = not(not(A) or not(B))
                     li (c) Explain how to get by with the single operator NAND where A NAND B is
-                        |  equivalent by definition to NOT(A AND B)
+                        |　equivalent by definition to NOT(A AND B)
                     ul
                         li A and B = (A nand B) nand (A nand B)
                         li not(A) = A nand A
                         li A or B = not(not(A) and not(B)) = X nand X
                             br
                             |where X = (Y nand Z) nand (Y nand Z), Y = A nand A, Z = B nand B
-                h4 Problem 3.18.
+                h4.fake Problem 3.18.
                 p The propositional connective NOR is defined by the rule
                     br
                     |P NOR Q ::= NOT(P) AND NOT(Q)
@@ -540,30 +664,30 @@ include ../../source/skeleton.pug
                     li A and b = not(not(A) or not(B)) = X nor X
                         br
                         |where X = (Y nor Z) nor (Y nor Z), Y = A nor A, Z = B nor B
-                h4 Problem 3.19.
+                h4.fake Problem 3.19.
                 p Explain how to read off a conjunctive form for a propositional formula directly
-                    |  from a disjunctive form for its complement.
+                    |　from a disjunctive form for its complement.
                 p → Any DNF 식[P_1\text{ OR }P_2\text{ OR }\cdots\text{ OR }P_n]식, where 식[P_i=Q_{i1}\text{ AND }Q_{i2}\text{ AND }\cdots\text{ AND }Q_{im_i}]식
                     br
                     |\begin{align*}
-                    |   & \text{ NOT}(P_1\text{ OR }P_2\text{ OR }\cdots\text{ OR }P_n) \\
-                    |  =& \text{ NOT}(P_1)\text{ AND }\text{ NOT}(P_2)\text{ AND }\cdots\text{ AND }\text{ NOT}(P_n) \\
-                    |  =& (\text{ NOT}(Q_{11})\text{ OR }\text{ NOT}(Q_{12})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{1m_1})))\text{ AND } \\
-                    |   & (\text{ NOT}(Q_{21})\text{ OR }\text{ NOT}(Q_{22})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{2m_1})))\text{ AND } \\
-                    |   & \vdots \\
-                    |   & (\text{ NOT}(Q_{n1})\text{ OR }\text{ NOT}(Q_{n2})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{2n_1})))
+                    |　 & \text{ NOT}(P_1\text{ OR }P_2\text{ OR }\cdots\text{ OR }P_n) \\
+                    |　=& \text{ NOT}(P_1)\text{ AND }\text{ NOT}(P_2)\text{ AND }\cdots\text{ AND }\text{ NOT}(P_n) \\
+                    |　=& (\text{ NOT}(Q_{11})\text{ OR }\text{ NOT}(Q_{12})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{1m_1})))\text{ AND } \\
+                    |　 & (\text{ NOT}(Q_{21})\text{ OR }\text{ NOT}(Q_{22})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{2m_1})))\text{ AND } \\
+                    |　 & \vdots \\
+                    |　 & (\text{ NOT}(Q_{n1})\text{ OR }\text{ NOT}(Q_{n2})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{2n_1})))
                     |\end{align*}
-                h4 Problem 3.32.
+                h4.fake Problem 3.32.
                 p The goal of this problem is to translate some assertions about binary strings into
-                    |  logic notation. The domain of discourse is the set of all finite-length binary strings:
-                    |  λ, 0, 1, 00, 01, 10, 11, 000, 001, . . . . (Here λ denotes the empty string.) In your
-                    |  translations, you may use all the ordinary logic symbols (including =), variables,
+                    |　logic notation. The domain of discourse is the set of all finite-length binary strings:
+                    |　λ, 0, 1, 00, 01, 10, 11, 000, 001, . . . . (Here λ denotes the empty string.) In your
+                    |　translations, you may use all the ordinary logic symbols (including =), variables,
                     |and the binary symbols 0, 1.
                     br
                     |A string like 01x0y of binary symbols and variables denotes the concatenation
-                    |  of the symbols and the binary strings represented by the variables. For example, if
-                    |  the value of x is 011 and the value of y is 1111, then the value of 01x0y is the
-                    |  binary string 0101101111.
+                    |　of the symbols and the binary strings represented by the variables. For example, if
+                    |　the value of x is 011 and the value of y is 1111, then the value of 01x0y is the
+                    |　binary string 0101101111.
                 ul
                     li (a) x consists of three copies of some string.
                     p → 식[\exists{y}. x=yyy]식
@@ -581,7 +705,7 @@ include ../../source/skeleton.pug
         div
             h3 Sets
             div
-                h4 Some Popular Sets
+                h4.fake Some Popular Sets
                 ul
                     li 식[\emptyset]식 : Empty set
                     li 식[\mathbb{N}]식 : Nonnegative integers
@@ -589,7 +713,7 @@ include ../../source/skeleton.pug
                     li 식[\mathbb{Q}]식 : Rational numbers
                     li 식[\mathbb{R}]식 : Real numbers
                     li 식[\mathbb{C}]식 : Complex numbers
-                h4 Comparing and Combining Sets
+                h4.fake Comparing and Combining Sets
                 ul
                     li 식[S \subseteq T]식 : S is a subset of T
                     li 식[S \subset T]식 : S is a strict subset of T
@@ -597,7 +721,7 @@ include ../../source/skeleton.pug
                     li Intersection : 식[x \in A \cap B\text{　　iff　　}x \in A\text{ AND }x \in B]식
                     li Difference : 식[x \in A - B\text{　　iff　　}x \in A\text{ AND }x \notin B]식
                     li Complement : 식[\overline{A} ::= D - A]식 where D is domain set
-                h4 Power Set
+                h4.fake Power Set
                 p pow(A) ::= The set of all the subsets of a set A
             h3 Sequences
             ul
@@ -607,57 +731,57 @@ include ../../source/skeleton.pug
                 li 식[S^n = S\times S\times\cdots\times S]식
             h3 Functions
             div
-                h4 Domains and Images
+                h4.fake Domains and Images
                 ul
                     li 식[f:A\rightarrow B]식 indicates that f is a function with domain, A, and codomain, B
                     li Partial function : function is not defined for some elements in the domain
                     li Total function : function is defined for every element in the domain
                     li range(f) ::= f(domain(f))
                     li image of S under f ::= f(S) where 식[S \subseteq A]식
-                h4 Function Composition
+                h4.fake Function Composition
                 p
                     +pos('Definition 4.3.1.')
                     strong Definition 4.3.1.
-                    |  For functions 식[f:A\rightarrow B]식 and 식[g:B\rightarrow C]식, the composition, 식[g\circ f]식 is defined by the rule: 식[\forall{x}\in A, (g\circ f)(x) ::= g(f(x))]식
+                    |　For functions 식[f:A\rightarrow B]식 and 식[g:B\rightarrow C]식, the composition, 식[g\circ f]식 is defined by the rule: 식[\forall{x}\in A, (g\circ f)(x) ::= g(f(x))]식
             h3 Binary Relations
             p
                 +pos('Definition 4.4.1.')
                 strong Definition 4.4.1.
-                |  A binary relation, R, constists of a set, A, called the domain of R, a set, B, called the codomain of R, and a subset of 식[A\times B]식 called the graph of R
+                |　A binary relation, R, constists of a set, A, called the domain of R, a set, B, called the codomain of R, and a subset of 식[A\times B]식 called the graph of R
             ul
                 li Also said to be "relation between A and B", "relation from A to B"
                 li 식[R:A\rightarrow B]식
                 li "a R b" means the pair (a, b) is in the graph of R
             div
-                h4 Relation Diagrams
+                h4.fake Relation Diagrams
                 p
                     +pos('Definition 4.4.2.')
                     strong Definition 4.4.2.
-                    |  A binary relation, R, is:
+                    |　A binary relation, R, is:
                 ul
                     li function when it has the [식[\le]식1 arrow out] property
                     li surjective when it has the [식[\ge]식1 arrows in] property
                     li total when it has the [식[\ge]식1 arrows out] property
                     li injective when it has the [식[\le]식1 arrows in] property
                     li bijective when it has both the [=1 arrows in] and the [=1 arrows out] property
-                h4 Relational Images
+                h4.fake Relational Images
                 p
                     +pos('Definition 4.4.5.')
                     strong Definition 4.4.5.
-                    |  The inverse, 식[R^{-1}]식 of a relation 식[R:A\rightarrow B]식 is the relation from B to A defined by the rule: 식[b R^{-1} a\text{　　iff　　}a R b]식
+                    |　The inverse, 식[R^{-1}]식 of a relation 식[R:A\rightarrow B]식 is the relation from B to A defined by the rule: 식[b R^{-1} a\text{　　iff　　}a R b]식
                 p
                     +pos('Definition 4.4.6.')
                     strong Definition 4.4.6.
-                    |  The image of a set under the relation,  식[R^{-1}]식, is called the inverse image of the set.
+                    |　The image of a set under the relation,  식[R^{-1}]식, is called the inverse image of the set.
             h3 Finite Cardinality
             p
                 +pos('Definition 4.5.1.')
                 strong Definition 4.5.1.
-                |  If A is a finite set, the cardinality(= size) |A| is the number of elements in A
+                |　If A is a finite set, the cardinality(= size) |A| is the number of elements in A
             p
                 +pos('Definition 4.5.2.')
                 strong Definition 4.5.2.
-                |  Let A, B be sets. Then
+                |　Let A, B be sets. Then
             ul
                 li A surj B iff there is a surjective function from A to B
                 li A inj B iff there is an injective total relation from A to B
@@ -665,7 +789,7 @@ include ../../source/skeleton.pug
             p
                 +pos('Theorem 4.5.4.')
                 strong Theorem 4.5.4.
-                |  [Mapping Rules] For finite sets A, B,
+                |　[Mapping Rules] For finite sets A, B,
             ul
                 li A surj B iff |A| >= |B|
                 li A inj B iff |A| &lt;= |B|
@@ -696,9 +820,11 @@ include ../../source/skeleton.pug
             h3 The Halting Problem
             h3 The Logic of Sets
             h3 Does All This Really Work?
-    h1 Structures
+
+    p.fake-h1 II. Structures
+    hr
     div
-        h2 Introduction
+        p.fake-h2 Introduction
         h2 Number Theory
         div
             h3 Divisibility
@@ -757,9 +883,11 @@ include ../../source/skeleton.pug
             h3 Coloring Planar Graphs
             h3 Classifying Polyhedra
             h3 Another Characterization for Planar Graphs
-    h1 Counting
+
+    p.fake-h1 III. Counting
+    hr
     div
-        h2 Introduction
+        p.fake-h2 Introduction
         h2 Sums and Asymptotics
         div
             h3 The Value of an Annuity
@@ -790,9 +918,11 @@ include ../../source/skeleton.pug
             h3 Solving Linear Recurrences
             h3 Formal Power Series
             h3 Problems
-    h1 Probability
+
+    p.fake-h1 IV. Probability
+    hr
     div
-        h2 Introduction
+        p.fake-h2 Introduction
         h2 Events and Probability Spaces
         div
             h3 Let's Make a Deal
@@ -832,8 +962,11 @@ include ../../source/skeleton.pug
         div
             h3 Gambler's Ruin
             h3 Random Walks on Graphs
-    h1 Recurrences
-        h2 Introduction
+
+    p.fake-h1 V. Recurrences
+    hr
+    div
+        p.fake-h2 Introduction
         h2 Recurrences
         div
             h3 The Towers of Hanoi

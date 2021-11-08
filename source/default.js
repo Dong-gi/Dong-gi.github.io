@@ -143,33 +143,44 @@ window.addEventListener('load', () => {
     for (let goto of document.querySelectorAll('.goto')) {
         goto.addEventListener('mousedown', function (e) {
             localStorage.setItem(`${location.href}-lastPos`, window.scrollY)
+            localStorage.setItem('gotoEvent', true)
+            setTimeout(() => localStorage.removeItem('gotoEvent'), 1000)
         })
     }
     window.onpopstate = function (e) {
-        if (localStorage.getItem(`${location.href}-lastPos`)) {
+        if (!localStorage.getItem('gotoEvent') && localStorage.getItem(`${location.href}-lastPos`)) {
             window.scrollTo({ top: localStorage.getItem(`${location.href}-lastPos`) })
-            localStorage.removeItem(`${location.href}-lastPos`)
-            return;
+            return
         }
-        let goto = /#(pos-?\d+)/.exec(location.hash)
-        if (goto) {
-            let target = document.getElementById(goto[1])
+
+        let pos = /#(pos-?\d+)/.exec(location.hash)
+        if (pos) {
+            let target = document.getElementById(pos[1])
             let parent = target
             while (parent.tagName != 'BODY') {
                 if (parent.tagName == 'DETAILS')
                     parent.open = true
                 parent = parent.parentElement
             }
-            let arg = {
-                top: SFUtil.getOffsetTop(target) - document.getElementById('nav').clientHeight
-            }
-            setTimeout(() => window.scrollTo(arg), 100)
-            while (!target.clientHeight)
+            while (!target.clientHeight) {
+                if (target.nextSibling && target.nextSibling.clientHeight) {
+                    target = target.nextSibling
+                    break
+                }
                 target = target.parentElement
-            SFUtil.highlight(target)
+            }
+            goto(target)
         }
     }
 })
+
+function goto(target) {
+    SFUtil.highlight(target)
+    let arg = {
+        top: SFUtil.getOffsetTop(target) - document.getElementById('nav').clientHeight
+    }
+    setTimeout(() => window.scrollTo(arg), 100)
+}
 
 function mutationCallback(mutations, observer) {
     for (let mutation of mutations) {
@@ -215,7 +226,7 @@ function convertAsCodeDiv(divs) {
 }
 
 function isNarrow() {
-    return document.getElementById('nav').clientWidth <= 600
+    return document.getElementById('nav').clientWidth <= 1234
 }
 
 function updateSidebar() {
@@ -348,8 +359,6 @@ function updateMarkerList() {
         type: 'text/plain;charset=utf-8;'
     }))
     new DKFileList(url, '#marker-list', (_, markerId) => {
-        if (isNarrow())
-            closeSidebar()
         let target = document.querySelector(`.marker[marker-id=${markerId}]`)
         let parent = target
         while (parent.tagName != 'BODY') {
@@ -357,12 +366,7 @@ function updateMarkerList() {
                 parent.open = true
             parent = parent.parentElement
         }
-        SFUtil.highlight(target)
-        setTimeout(((target) => function () {
-            window.scrollTo({
-                top: SFUtil.getOffsetTop(target) - document.getElementById('nav').clientHeight
-            })
-        })(target), isNarrow() ? 444 : 0)
+        goto(target)
     }, true, (_, markerId) => {
         let target = document.querySelector(`.marker[marker-id=${markerId}]`)
         let name = getMarkerName(target)

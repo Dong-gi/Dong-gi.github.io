@@ -2098,6 +2098,8 @@ imgs/cctv-doc-4.png
 imgs/cctv-doc-5.jpg
 imgs/elk_a_cluster_1.png
 imgs/kanna.gif
+imgs/manual-baron-1.jpg
+imgs/manual-baron-2.jpg
 imgs/security-diagram.png
 imgs/spring-mvc-and-webflux-venn.png
 index.html
@@ -2127,6 +2129,7 @@ posts/book/006.html
 posts/book/007.html
 posts/book/008.html
 posts/book/009.html
+posts/daily_life/baron.html
 posts/daily_life/business.html
 posts/daily_life/car.html
 posts/daily_life/death.html
@@ -2378,6 +2381,7 @@ pugs/book/006.pug
 pugs/book/007.pug
 pugs/book/008.pug
 pugs/book/009.pug
+pugs/daily_life/baron.pug
 pugs/daily_life/business.pug
 pugs/daily_life/car.pug
 pugs/daily_life/death.pug
@@ -2514,6 +2518,8 @@ source/w3.css
 source/xcode.css
 `;
 const recentChangedPosts = `
+A	posts/daily_life/baron.html
+M	posts/project/privacy.html
 M	posts/algorithm/overview.html
 M	posts/daily_life/car.html
 A	posts/daily_life/death.html
@@ -2788,5 +2794,4 @@ M	posts/single/aws.html
 M	posts/infra/network.html
 M	posts/infra/oauth.html
 M	posts/infra/network.html
-M	posts/project/sf.html
 `;
