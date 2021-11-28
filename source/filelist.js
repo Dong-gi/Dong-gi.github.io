@@ -2518,6 +2518,7 @@ source/w3.css
 source/xcode.css
 `;
 const recentChangedPosts = `
+M	posts/algorithm/mcs.html
 A	posts/daily_life/baron.html
 M	posts/project/privacy.html
 M	posts/algorithm/overview.html
@@ -2793,5 +2794,4 @@ M	posts/infra/network.html
 M	posts/single/aws.html
 M	posts/infra/network.html
 M	posts/infra/oauth.html
-M	posts/infra/network.html
 `;

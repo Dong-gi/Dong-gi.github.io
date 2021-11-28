@@ -4,7 +4,7 @@ include ../../source/skeleton.pug
     p.fake-h1
         |0. 
         +asA('/files/mcs.pdf', '도서')
-        |　정보
+        |정보
     .w3-row
         .w3-col.s2.w3-center
             +w3img('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQew5ZrEOtvLqafGH3aEaTctFKCSV4qjsRoZS4tT7Ci_lJXjSIV', '도서')&attributes({style: 'max-height:210px'})
@@ -24,120 +24,92 @@ include ../../source/skeleton.pug
     div
         p.fake-h2 Introduction
         +pos('증명')
-        p
-            |　간단히 말해 증명은 참을 수립하는 과정이다. "참"은 보는 사람, 분야에 따라 다르기 때문에 수학적 증명 역시 자기만의 정의를 갖는다.<br>
-            strong 정의.
-            |　명제(proposition)에 대한 수학적 증명이란, 기본 공리(axiom)들과 이미 증명된 다른 명제들로부터 결론에 도달하는 일련의 논리적 연역(deduction)이다
+        p 간단히 말해 증명은 참을 수립하는 과정이다. "참"은 보는 사람, 분야에 따라 다르기 때문에 수학적 증명 역시 자기만의 정의를 갖는다.
+        p <strong>정의.</strong> 명제(proposition)에 대한 수학적 증명이란, 기본 공리(axiom)들과 이미 증명된 다른 명제들로부터 결론에 도달하는 일련의 논리적 연역(deduction)이다
         ul
             li 귀납(Induction) : 관찰된 사실들로부터 결론을 도출하는 과정
-            |e.g. 모든 백조는 하얗다
+            p e.g. 모든 백조는 하얗다
             li 연역(Deduction) : 참인 전제들로부터 결론을 도출하는 과정
-            |참고. 수학적 귀납법은 연역논증이다
+            p 참고. 수학적 귀납법은 연역논증이다
 
         +pos('1')
         h2 What is a Proof?
         div
             +pos('1.1')
             h3 Propositions
-            p
-                strong 정의.
-                |　명제(proposition)란 참 또는 거짓인 문장이다<br>
-                |　예를 들어, 다음 2개 문장은 모두 명제다. 첫 번째는 참이고, 두 번째는 거짓이다.
+            p <strong>정의.</strong> 명제(proposition)란 참 또는 거짓인 문장이다
+            p 예를 들어, 다음 2개 문장은 모두 명제다. 첫 번째는 참이고, 두 번째는 거짓이다.
             +pos('1.1.1')
-            p
-                strong 명제 1.1.1.
-                |　2 + 3 = 5
+            p <strong>명제 1.1.1.</strong> 2 + 3 = 5
             +pos('1.1.2')
-            p
-                strong 명제 1.1.2.
-                |　1 + 1 = 3<br>
-                |　참/거짓이 되는 문장에는 제한이 없을 것 같지만, 실제로는 "미술관은 어디로 가면 되나요?", "A학점 주세요!"와 같은 문장들과, 진리값이 상황에 따라 변하는 "지금은 5시야", "내일 증시는 상승 마감할 거야" 같은 문장들은 명제가 될 수 없다.<br>
-                |　불행히도 명제의 참과 거짓을 밝히는 일이 항상 쉽지만은 않다.
+            p <strong>명제 1.1.2.</strong> 1 + 1 = 3
+            p 참/거짓이 되는 문장에는 제한이 없을 것 같지만, 실제로는 "미술관은 어디로 가면 되나요?", "A학점 주세요!"와 같은 문장들과, 진리값이 상황에 따라 변하는 "지금은 5시야", "내일 증시는 상승 마감할 거야" 같은 문장들은 명제가 될 수 없다.
+            p 불행히도 명제의 참과 거짓을 밝히는 일이 항상 쉽지만은 않다.
             +pos('1.1.3')
-            p
-                strong 주장 1.1.3.
-                |　음이 아닌 모든 정수 n에 대하여, n^2 + n + 41은 소수(prime)다.
-            p
-                |　이 명제를 실험해보자. Let<br>
+            p <strong>주장 1.1.3.</strong> 음이 아닌 모든 정수 n에 대하여, n^2 + n + 41은 소수(prime)다.
+            p 이 명제를 실험해보자. Let
                 |\[p(n) ::= n^2 + n + 41\]
-                |　p(0) = 41부터 시작하여, p(1) = 43, ..., p(39) = 1601까지 모두 소수임을 확인할 수 있다.<br>
-                |　그러나 p(40) = 41 * 41은 소수가 아니다. 따라서 
+                |p(0) = 41부터 시작하여, p(1) = 43, ..., p(39) = 1601까지 모두 소수임을 확인할 수 있다.
+                |<br>그러나 p(40) = 41 * 41은 소수가 아니다. 따라서 
                 +goto('1.1.3')
-                |은 거짓이다. 사실 음이 아닌 모든 정수를 소수로 매핑하는 다항식(상수식 제외)은 존재할 수 없지만, 여기서 말하고자 하는 바는 무한 집합을 대상으로 하는 명제를 유한한 표본들─개수가 많더라도─만으로 검증하기는 일반적으로 요원하다는 점이다.<br>
-                |　위처럼 모든 숫자 또는 특정한 종류의 모든 항목에 대한 명제는 매우 흔하며, 이를 위한 특별한 표기도 존재한다. 이를 이용하면 
+                |은 거짓이다. 사실 음이 아닌 모든 정수를 소수로 매핑하는 다항식(상수식 제외)은 존재할 수 없지만, 여기서 말하고자 하는 바는 무한 집합을 대상으로 하는 명제를 유한한 표본들─개수가 많더라도─만으로 검증하기는 일반적으로 요원하다는 점이다.
+            p 위처럼 모든 숫자 또는 특정한 종류의 모든 항목에 대한 명제는 매우 흔하며, 이를 위한 특별한 표기도 존재한다. 이를 이용하면 
                 +goto('1.1.3')
                 |은 아래와 같이 표기할 수 있다.
                 |\[\forall n \in \mathbb{N}.\ \text{p(n) is prime}\]
-                |　여기서 기호 식[\forall]식은 "for all"라고 읽고, 식[\mathbb{N}]식은 음이 아닌 정수 집합을 의미한다.
-            p
-                strong Conjecture.
-                |　[오일러 추측] 방정식 식[a^4+b^4+c^4=d^4]식을 만족하는 양의 정수 a, b, c, d는 존재하지 않는다
-            p
-                |이를 아래와 같이 표현할 수 있다
+                |여기서 기호 식[\forall]식은 "for all"라고 읽고, 식[\mathbb{N}]식은 음이 아닌 정수 집합을 의미한다.
+            p <strong>추측 (오일러 추측).</strong> 방정식 식[a^4+b^4+c^4=d^4]식을 만족하는 양의 정수 a, b, c, d는 존재하지 않는다
+            p 이를 아래와 같이 표현할 수 있다
                 |\[\forall a, b, c, d \in \mathbb{Z}^+.\ a^4+b^4+c^4 \ne d^4.\]
-                |<br>　한편 이 명제는 거짓으로 판명되었다. a = 95800, b = 217519, c = 414560, d = 422481
+                |한편 이 명제는 거짓으로 판명되었다. a = 95800, b = 217519, c = 414560, d = 422481
             +pos('1.1.4')
-            p
-                strong 명제 1.1.4 (Four Color Theorem).
-                |　모든 평면 지도는 4가지 색으로 모든 인접한 두 지역의 색이 서로 다르도록 칠할 수 있다.
-            p 　이 명제가 참이라는 것을 증명하는 데 컴퓨터가 사용되었다. 증명해야 하는 데이터 셋이 크다면 컴퓨터의 사용은 필수불가결한데, 컴퓨터의 계산에 오차가 존재하지 않는다고 보장할 수 있는 사람은 존재하지 않는다. 그렇다고 방대한 데이터를 일일이 검산할 사람 역시 존재하지 않는다.
+            p <strong>명제 1.1.4 (Four Color Theorem).</strong> 모든 평면 지도는 4가지 색으로 모든 인접한 두 지역의 색이 서로 다르도록 칠할 수 있다.
+            p 이 명제가 참이라는 것을 증명하는 데 컴퓨터가 사용되었다. 증명해야 하는 데이터 셋이 크다면 컴퓨터의 사용은 필수불가결한데, 컴퓨터의 계산에 오차가 존재하지 않는다고 보장할 수 있는 사람은 존재하지 않는다. 그렇다고 방대한 데이터를 일일이 검산할 사람 역시 존재하지 않는다.
             +pos('1.1.5')
-            p
-                strong 명제 1.1.5 (Fermat's Last Theorem).
-                |　식[n \in \mathbb{N}.\ n > 2.\ x^n + y^n = z^n]식을 만족하는 양의 정수 x, y, z는 존재하지 않는다.
-            p 　페르마는 이 명제를 적으면서 여백이 부족해 증명을 적지 않았다고 한다. 1994년 영국의 수학자 Andrew Wiles가 명제가 참임을 증명했고, 이 증명은 여백에 적을만한 분량은 아니었다.
-                |<br>　마지막으로 간결하지만 아직 증명되지 않은 명제를 살펴보자.
+            p <strong>명제 1.1.5 (Fermat's Last Theorem).</strong> 식[n \in \mathbb{N}.\ n > 2.\ x^n + y^n = z^n]식을 만족하는 양의 정수 x, y, z는 존재하지 않는다.
+            p 페르마는 이 명제를 적으면서 여백이 부족해 증명을 적지 않았다고 한다. 1994년 영국의 수학자 Andrew Wiles가 명제가 참임을 증명했고, 이 증명은 여백에 적을만한 분량은 아니었다.
+            p 마지막으로 간결하지만, 아직 증명되지 않은 명제를 살펴보자.
             +pos('1.1.6')
-            p
-                strong 추측 1.1.6 (Goldbach).
-                |　2보다 큰 모든 정수는 2개의 소수의 합으로 표현할 수 있다.
-            p 　골드바흐의 추측은 10^18까지 참임이 알려져 있지만, 전체가 참인지는 아직 증명되지 않았다.
+            p <strong>추측 1.1.6 (Goldbach).</strong> 2보다 큰 모든 정수는 2개의 소수의 합으로 표현할 수 있다.
+            p 골드바흐의 추측은 10^18까지 참임이 알려져 있지만, 전체가 참인지는 아직 증명되지 않았다.
+
 
             +pos('1.2')
             h3 Predicates
-            p
-                strong 정의
-                |　Predicate ::= 변수에 의해 진리값이 결정되는 문제
-            p 　예. 식[P(n) ::= \text{"n은 완전제곱수다"}]식
-                |<br>　일반적인 수학 함수와 다르게, 출력은 항상 true 또는 false다.
-            
+            p <strong>정의.</strong> Predicate ::= 변수에 의해 진리값이 결정되는 문제
+            p 일반적인 수학 함수와 다르게, 출력은 항상 true 또는 false다.
+                |<br>예. P(n) ::= "n은 완전제곱수다"
+
+
             +pos('1.3')
             h3 The Axiomatic Method
-            p 　표준 증명 절차는 유클리드가 기원전에 발명했다. 그는 부정할 수 없는 5가지 기하학에 관한 추측을 기반으로 증명했는데, 예컨데 "임의의 2개의 점 사이에는 1개의 직선이 존재한다"가 그 중 하나다. 이처럼 자명하게 참인 명제를 공리(axiom)라 한다.
+            p 표준 증명 절차는 유클리드가 기원전에 발명했다. 그는 부정할 수 없는 5가지 기하학에 관한 추측을 기반으로 증명했는데, 예컨데 "임의의 2개의 점 사이에는 1개의 직선이 존재한다"가 그 중 하나다. 이처럼 자명하게 참인 명제를 공리(axiom)라 한다.
                 +goto('증명')
                 |에 사용되는 이미 증명된 명제들은 그 역할과 비중에 따라 몇 가지 용어들로 참조된다.
             ul
                 li 정리(Theorem) ::= 중요한 참 명제
                 li 보조정리(Lemma) ::= 이후 명제를 증명하는 데 필요한 예비 명제
                 li 따름정리(Corollary) ::= 정리로부터 쉽게 도출되는 명제
-            |　위 용어들을 엄격하게 구별하여 사용할 필요는 없다.
+            p 위 용어들을 엄격하게 구별하여 사용할 필요는 없다.
+
 
             +pos('1.4')
             h3 Our Axioms
             div
-                p
-                    strong 정의.
-                    |　Implication ::= "If P, then Q."처럼 조건을 갖는 명제
-                    |<br>　종종 식[P\text{ IMPLIES }Q]식, 식[P \longrightarrow Q]식로 표현한다
-                p 　증명을 간결하게 하기 위해 중등 수학의 공리(Axiom)들을 증명없이 이용한다
-                
+                p <strong>정의.</strong> Implication ::= "If P, then Q."처럼 조건을 갖는 명제
+                p 종종 식[P\text{ IMPLIES }Q]식, 식[P \longrightarrow Q]식로 표현한다
+                p 증명을 간결하게 하기 위해 여기서는 중등 수학의 공리(Axiom)들을 증명없이 이용한다
+
                 +pos('1.4.1')
                 h4.fake Logical Deductions
-                p 　논리적 연역(logical deduction) 또는 추론 규칙(inference rule)은 이미 증명된 명제들로부터 새로운 명제를 증명하는 데 이용된다.
-                    |<br>　기초가 되는 규칙은 <i>긍정 논법(modus ponens)</i>으로, P와 P IMPLIES Q가 참이라면 Q도 참이라는 규칙이다.
-                    |<br>　긍정 논법은 아래와 같이 표현할 수 있다.
-                p
-                    strong Rule.
-                    |\[{P, P \implies Q \over Q}\]
-                    |<br>　이 표기법은 선분 위의 문장들(antecedents)이 참으로 증명되면, 선분 아래 문장(conclusion, consequent) 역시 참으로 간주할 수 있음을 나타낸다.
-                    |<br>　이외에도 자연스럽고 간결한 추론 규칙들이 존재한다.
-                p
-                    strong Rule.
-                    |\[{P \implies Q, Q \implies R \over P \implies R}\]
-                p
-                    strong Rule.
-                    |\[{\operatorname{NOT}(Q) \implies \operatorname{NOT}(P) \over P \implies Q}\]
-            
+                p 논리적 연역(logical deduction) 또는 추론 규칙(inference rule)은 이미 증명된 명제들로부터 새로운 명제를 증명하는 데 이용된다.
+                p 기초가 되는 규칙은 <i>긍정 논법(modus ponens)</i>으로, P와 P IMPLIES Q가 참이라면 Q도 참이라는 규칙이다. 긍정 논법은 아래와 같이 표현할 수 있다.
+                p <strong>규칙.</strong> \[{P, P \implies Q \over Q}\]
+                p 이 표기법은 선분 위의 문장들(antecedents)이 참으로 증명되면, 선분 아래 문장(conclusion, consequent) 역시 참으로 간주할 수 있음을 나타낸다. 이외에도 자연스럽고 간결한 추론 규칙들이 존재한다.
+                p <strong>규칙.</strong> \[{P \implies Q, Q \implies R \over P \implies R}\]
+                p <strong>규칙.</strong> \[{\operatorname{NOT}(Q) \implies \operatorname{NOT}(P) \over P \implies Q}\]
+
+
             +pos('1.5')
             h3 Proving an Implication
             div
@@ -147,14 +119,12 @@ include ../../source/skeleton.pug
                     li Q가 논리적으로 도출됨을 보인다
                 p.fake-h4 Example
                 +pos('1.5.1')
-                p
-                    strong 정리 1.5.1.
-                    |　If 0&lt;=x&lt;=2, then 식[-x^3 + 4x + 1 \gt 0]식.
-                p 　증명을 써내려가기에 앞서, 왜 이것이 참인지 구상해야 한다.
-                    |<br>　왼쪽 부등식은 x=0인 경우를 포함하며, 이 때 오른쪽 부등식은 1 > 0으로 참이다. 다음으로, 0 &lt; x &lt;=2의 구간에서, 4x는 식[-x^3]식보다 지배적(식[-x^3+4x \ge 0]식)이다. 따라서 [0, 2] 전체 구간에서 오른쪽 부등식은 참일 것 같다.
-                    |<br>　여기서 "참일 것 같다"는 부분을 논리적으로 견고한 표현으로 바꾸어야 하는데, 인수분해가 이를 도와준다
+                p <strong>정리 1.5.1.</strong> If 0&lt;=x&lt;=2, then 식[-x^3 + 4x + 1 \gt 0]식.
+                p 증명을 써내려가기에 앞서, 왜 이것이 참인지 구상해야 한다. 왼쪽 부등식은 x=0인 경우를 포함하며, 이 때 오른쪽 부등식은 1 > 0으로 참이다. 다음으로, 0 &lt; x &lt;=2의 구간에서, 4x는 식[-x^3]식보다 지배적(식[-x^3+4x \ge 0]식)이다. 따라서 [0, 2] 전체 구간에서 오른쪽 부등식은 참일 것 같다.
+                p 여기서 "참일 것 같다"는 부분을 논리적으로 견고한 표현으로 바꾸어야 하는데, 인수분해가 이를 도와준다
                     |\[-x^3 + 4x + 1 = x(2 - x)(2 + x) + \gt 0\]
-                    |<i>Proof.</i> 0&lt;=x&lt;=2가 참이라고 가정하자. 그러면 x, 2-x, 2+x 모두 음이 아니며, 따라서 이들의 곱도 음이 아니다.
+                p <i>증명.</i> 0&lt;=x&lt;=2가 참이라고 가정하자.
+                    |<br>그러면 x, 2-x, 2+x 모두 음이 아니며, 따라서 이들의 곱도 음이 아니다.
                     |<br>이에 1을 더하면 양수임이 명백하며, 따라서 명제는 참이다.
                 p.w3-right-align ■
 
@@ -164,10 +134,8 @@ include ../../source/skeleton.pug
                     li 식[{\operatorname{NOT}(Q) \implies \operatorname{NOT}(P)}]식을 Method #1으로 증명한다
                 p.fake-h4 Example
                 +pos('1.5.2')
-                p
-                    strong 정리 1.5.2.
-                    |　r이 무리수면, 식[\sqrt{r}]식도 무리수다.
-                p <i>Proof.</i> 대우명제를 통해 증명한다: 식[\sqrt{r}]식이 유리수면, r도 유리수다.
+                p <strong>정리 1.5.2.</strong> r이 무리수면, 식[\sqrt{r}]식도 무리수다.
+                p <i>증명.</i> 대우명제를 통해 증명한다: 식[\sqrt{r}]식이 유리수면, r도 유리수다.
                     |<br>식[\sqrt{r}]식이 유리수라고 가정하자. 그러면 식[\sqrt{r}]식 = m / n을 만족하는 두 정수 m, n이 존재한다.
                     |<br>이때 양변을 제곱하면: r = m^2 / n^2
                     |<br>m과 n이 모두 정수이므로 m^2, n^2도 모두 정수이며, 따라서 r도 유리수이다.
@@ -190,34 +158,20 @@ include ../../source/skeleton.pug
                     li 다음과 같이 쓴다. "If-and-only-if 조건 명제의 체인을 만든다."
                     li 어떠한 식(들)이 P와 동치임을 보이고, 다시 Q와도 동치임을 보인다
                 p.fake-h4 Example
-                +pos('(1.3)')
                 p 　표본 x1, ..., xn에 대한 표준편차는 다음과 같이 정의된다:
                     |\[\begin{align}\sqrt{(x_1 - \mu)^2 + \cdots + (x_n - \mu)^2 \over n} \tag*{(1.3)}\end{align}\]
                 +pos('1.6.1')
                 p
                     strong 정리 1.6.1.
                     |　표본 x1, ..., xn에 대한 표준편차는 0이다 iff 모든 표본이 평균과 같다
-                p <i>Proof.</i> "iff" 조건 명제의 체인을 만든다. 표준 편차 
-                    +goto('(1.3)')
-                    |가 0인 조건식으로부터 시작한다.
-                +pos('(1.4)')
-                p \[\begin{align}\sqrt{(x_1 - \mu)^2 + \cdots + (x_n - \mu)^2 \over n} = 0 \tag*{(1.4)}\end{align}\]
-                p 　오직 0만 제곱근이 0이므로, 
-                    +goto('(1.4)')
-                    |　iff
-                +pos('(1.5)')
-                p \[\begin{align}(x_1 - \mu)^2 + \cdots + (x_n - \mu)^2 = 0 \tag*{(1.5)}\end{align}\]
-                p 　실수의 제곱은 항상 음이 아니므로, 
-                    +goto('(1.5)')
-                    |　좌변의 모든 항도 음이 아니다. 따라서
-                    +goto('(1.5)')
-                    |　iff
-                +pos('(1.6)')
-                p \[\begin{align}\text{(1.5) 좌변의 모든 항 }(x_i - \mu)^2 \text{은 0이다.} \tag*{(1.6)}\end{align}\]
-                p 　이때, 식[(x_i-\mu)^2 = 0 \iff x_i = \mu]식이므로,
-                    +goto('(1.6)')
-                    |가 참이다 iff
-                p \[\text{모든 } x_i = \mu\]
+                p <i>증명.</i> "iff" 조건 명제의 체인을 만든다. 표준 편차 (1.3)가 0인 조건식으로부터 시작한다.
+                    |\[\begin{align}\sqrt{(x_1 - \mu)^2 + \cdots + (x_n - \mu)^2 \over n} = 0 \tag*{(1.4)}\end{align}\]
+                    |　오직 0만 제곱근이 0이므로, (1.4) iff
+                    |\[\begin{align}(x_1 - \mu)^2 + \cdots + (x_n - \mu)^2 = 0 \tag*{(1.5)}\end{align}\]
+                    |　실수의 제곱은 항상 음이 아니므로, (1.5) 좌변의 모든 항도 음이 아니다. 따라서 (1.5) iff
+                    |\[\begin{align}\text{(1.5) 좌변의 모든 항 }(x_i - \mu)^2 \text{은 0이다.} \tag*{(1.6)}\end{align}\]
+                    |　이때, 식[(x_i-\mu)^2 = 0 \iff x_i = \mu]식이므로, (1.6)가 참이다 iff
+                    |\[\text{모든 } x_i = \mu\]
                 p.w3-right-align ■
 
             +pos('1.7')
@@ -238,7 +192,7 @@ include ../../source/skeleton.pug
                 p
                     strong 정리 1.8.1.
                     |　식[\sqrt{2}]식는 무리수다
-                p <i>Proof.</i>　모순을 통해 증명한다. 명제가 거짓이라 가정하자. 식[\sqrt{2}]식가 유리수라면, 이를 표현할 수 있는 기약분수 식[n / d]식이 존재해야 한다
+                p <i>증명.</i>　모순을 통해 증명한다. 명제가 거짓이라 가정하자. 식[\sqrt{2}]식가 유리수라면, 이를 표현할 수 있는 기약분수 식[n / d]식이 존재해야 한다
                     |<br>　양변을 제곱하면 식[2 = n^2 / d^2]식이 성립하며, 따라서 식[2d^2 = n^2]식이다. 이는 n이 2의 배수여야 함을 의미하며, 또다시 식[2d^2]식는 4의 배수여야 함을 의미한다
                     |<br>　결국 n과 d모두 2의 배수여야 하지만, 이는 식[n / d]식이 기약분수라는 것에 위배된다. 이는 모순이며, 따라서 식[\sqrt{2}]식는 무리수다
                 p.w3-right-align ■
@@ -259,7 +213,7 @@ include ../../source/skeleton.pug
                 h4.fake Problem 1.3.
                 p What's going on here?
                     | \[1=\sqrt{1}=\sqrt{(-1)(-1)}=\sqrt{-1}\sqrt{-1}=\left(\sqrt{-1}\right)^2=-1\]
-                p <strong>(a)</strong> Precisely identify and explain the mistake(s) in this <i>bogus</i> proof.
+                p <strong>(a)</strong> Precisely identify and explain the mistake(s) in this <i>bogus</i> 증명.
                 |식[\sqrt{ab} = \sqrt{a}\sqrt{b}]식는 식[a,b\in \mathbb{R}^{0+}]식인 경우만 성립한다. 따라서 식[\sqrt{(-1)(-1)}=\sqrt{-1}\sqrt{-1}]식 이후의 추론은 모두 잘못됐다
                 p <strong>(b)</strong> Prove (correctly) that if 1 = -1, then 2 = 1.
                 |1 = -1 양변에 1을 더하면 2 = 0. 다시 양변에 2로 나누면 1 = 0. 따라서 2 = 0 = 1이 성립한다
@@ -273,37 +227,32 @@ include ../../source/skeleton.pug
                 |식[$0.01 = $(0.1)^2]식, 식[$^2(0.1)^2=($0.1)^2]식 각각은 성립하지만 식[$ \ne 1, $ \ne 0]식이므로 식[$(0.1)^2 = $^2(0.1)^2]식은 성립하지 않는다
 
                 h4.fake Problem 1.5.
-                p It's a fact that the Arithmetic Mean is at least as large as the Geometric Mean,
-                    |　namely, 식[{a+b \over 2} \ge \sqrt{ab}]식
-                    |　for all nonnegative real numbers a and b. But there’s something objectionable
-                    |　about the following proof of this fact. What’s the objection, and how would you fix it?
+                p 　음이 아닌 임의의 두 실수 a, b에 대한 산술 평균은 기하 평균 이상이다.
+                    |\[{a+b \over 2} \ge \sqrt{ab}\]
+                    |　다음 증명 과정 중의 문제점을 찾고, 바르게 고치시오
                 p
-                    i Bogus proof.
+                    i Bogus 증명.
                     |\begin{align*}
-                    |　{a+b \over 2} \ge & \sqrt{ab}, && so \\
-                    |　a+b \ge & 2\sqrt{ab}, && so \\
-                    |　a^2+2ab+b^2 \ge & 4ab, && so \\
-                    |　a^2-2ab+b^2 \ge & 0, && so \\
-                    |　(a-b)^2 \ge & 0 && \text{which we know is true.}
+                    |   {a+b \over 2} \ge & \sqrt{ab}, && so \\
+                    |   a+b \ge & 2\sqrt{ab}, && so \\
+                    |   a^2+2ab+b^2 \ge & 4ab, && so \\
+                    |   a^2-2ab+b^2 \ge & 0, && so \\
+                    |   (a-b)^2 \ge & 0 && \text{which we know is true.}
                     |\end{align*}
-                    br
-                    |The last statement is true because a - b is a real number, and the square of a real
-                    |　number is never negative. This proves the claim.
+                    |<br>　a - b가 실수고, 실수의 거듭제곱은 음이 아니므로 마지막 문장은 참이다. 따라서 명제는 참이다.
+                p.w3-right-align ■
                 p → 증명해야 하는 명제를 가정에서 참으로 이용하고 있으므로 시작부터 잘못된 증명이다. 또, 증명 순서가 반대로 됐다
+
                 h4.fake Problem 1.7.
-                p Show that 식[\operatorname{log}_{7}n]식 is either an integer or irrational, where n is a positive integer. Use
-                    |　whatever familiar facts about integers and primes you need, but explicitly state such facts.
+                p 　양의 정수 n에 대하여, 식[\operatorname{log}_{7}n]식이 항상 정수 또는 무리수임을 증명하시오. 익숙한 수학적 사실들을 이용하되, 증명에 명시할 것.
                 p → 모순을 통해 증명한다. 식[\operatorname{log}_{7}n]식이 정수가 아닌 유리수라면, 이를 표현할 수 있는 기약분수 식[{a \over b}]식이 존재해야 한다
-                    br
-                    |식[\operatorname{log}_{7}n = {a \over b} \iff n = 7^{a \over b} \iff n^b=7^a]식
-                    br
-                    |따라서 n은 7의 배수여야 한다. n을 소인수분해하면 식[n=2^{x_1} \cdot 3^{x_2} \cdot 5^{x_3} \cdot 7^{x_4} \cdots prime_k^{x_k} = 7^a]식
-                    br
-                    |이때, 우변의 식[7^a]식은 7외의 소수로 나눌 수 없으므로 식[n=2^{0} \cdot 3^{0} \cdot 5^{0} \cdot 7^{x_4} \cdots prime_k^{0} = 7^{x_4}]식
-                    br
-                    |따라서 식[n^b = 7^{x_4 b} = 7^a]식이며, 식[x_4 b = a \iff {a \over b} = x_4]식이다. 하지만 이는 식[a \over b]식가 기약분수라는 가정에 위배된다
-                    br
-                    |이는 모순이며, 따라서 식[\operatorname{log}_{7}n]식은 정수거나 무리수이다
+                    |<br>\[\operatorname{log}_{7}n = {a \over b} \iff n = 7^{a \over b} \iff n^b=7^a\]
+                    |<br>　따라서 n은 7의 배수여야 한다. n을 소인수분해하면 식[n=2^{x_1} \cdot 3^{x_2} \cdot 5^{x_3} \cdot 7^{x_4} \cdots prime_k^{x_k} = 7^a]식
+                    |<br>　이때, 우변의 식[7^a]식은 7외의 소수로 나눌 수 없으므로 식[n=2^{0} \cdot 3^{0} \cdot 5^{0} \cdot 7^{x_4} \cdots prime_k^{0} = 7^{x_4}]식
+                    |<br>　따라서 식[n^b = 7^{x_4 b} = 7^a]식이며, 식[x_4 b = a \iff {a \over b} = x_4]식이다. 하지만 이는 식[a \over b]식가 기약분수라는 가정에 위배된다
+                    |<br>　이는 모순이며, 따라서 식[\operatorname{log}_{7}n]식은 정수거나 무리수이다
+                p.w3-right-align ■
+
                 h4.fake Problem 1.9.
                 p If we raise an irrational number to an irrational power, can the result be rational?
                     |　Show that it can by considering 식[\sqrt{2}^{\sqrt{2}}]식 and arguing by cases.
@@ -330,7 +279,7 @@ include ../../source/skeleton.pug
                 strong Theorem 2.2.1.
                 |　식[\forall n \in \mathbb{N}. 1 + 2 + \cdots + n = n(n+1)/2]식
             p
-                i Proof.
+                i 증명.
             ul
                 li n = 0. 0 = 0(0+1)/2
                 li n = 1. 1 = 1(1+1)/2
@@ -348,7 +297,7 @@ include ../../source/skeleton.pug
                 strong Theorem 2.3.1.
                 |　1보다 큰 모든 자연수는 소수의 곱으로 표현할 수 있다 ─ 소인수분해 가능하다
             p
-                i Proof.
+                i 증명.
                 |　반례집합 C가 원소를 가진다고 가정하자. WOP에 의해 C에는 최소 원소 n > 1이 존재한다
                 |　이때, n은 소수일 수 없으므로 식[1 &lt; a, b &lt; n]식를 만족하는 두 자연수 a, b의 곱이다
                 br
@@ -363,7 +312,7 @@ include ../../source/skeleton.pug
                 strong Theorem 2.4.1.
                 |　음이 아닌 임의 정수 n에 대하여, 집합 식[S=\left\{m \in \mathbb{N}|m\ge -n\right\}]식는 well ordered set이다
             p
-                i Proof.
+                i 증명.
                 |　S의 모든 원소에 n을 더한 새로운 집합 S+n을 생각해보자. WOP에 의해 S+n은 0 이상의 최소 원소를 가진다. 또, S+n의 공집합이 아닌 부분집합 역시 WOP에 의해 0 이상의 최소 원소를 가진다
                 br
                 |　다시 S+n 집합의 모든 원소에 n을 뺀 집합 S를 생각해보면, S와 공집합이 아닌 S의 모든 부분집합은 -n 이상의 최소 원소를 가짐을 알 수 있다
@@ -378,7 +327,7 @@ include ../../source/skeleton.pug
                 strong Corollary 2.4.3.
                 |　Lower bound를 갖는 임의의 정수 집합은 well ordered set이다
             p
-                i Proof.
+                i 증명.
                 |　정수 집합이 lower bound로 식[b \in \mathbb{R}]식를 갖는 경우, 정수 식[n = \lfloor b \rfloor]식 역시 집합의 lower bound다. 따라서 
                 +goto('Theorem 2.4.1.')
                 |에 의하여 집합이 well ordered set임을 알 수 있다
@@ -387,7 +336,7 @@ include ../../source/skeleton.pug
                 strong Corollary 2.4.4.
                 |　Upper bound를 갖는 임의의 정수 집합은 최대 원소가 존재한다
             p
-                i Proof.
+                i 증명.
                 |　정수 집합 S가 upper bound로 식[b \in \mathbb{R}]식를 가질 때, 모든 원소에 -1을 곱한 집합 -S를 생각해보자. 
                 +goto('Corollary 2.4.3.')
                 |　에 의해 -S가 최소 원소 -m를 가짐을 알 수 있으며, 다시 -S의 모든 원소에 -1을 곱한 집합 S는 최대 원소 m을 가짐을 알 수 있다
@@ -396,7 +345,7 @@ include ../../source/skeleton.pug
                 strong Lemma 2.4.5.
                 |　공집합이 아닌 모든 유한 실수 집합은 well ordered set이다
             p
-                i Proof.
+                i 증명.
                 |　유한집합 크기에 관한 WOP로 증명한다
                 br
                 |최소 원소를 갖지 않는 유한 실수 집합의 크기 n에 대한 집합 C를 생각하자. WOP에 의해 C는 최소 원소 m을 갖는다. 이때, 원소가 하나인 집합이 최소 원소를 가짐은 자명하므로 식[m\ge 2]식다
@@ -414,7 +363,7 @@ include ../../source/skeleton.pug
                     strong Lemma 2.4.6.
                     |　식[\mathbb{N}+\mathbb{F}]식는 well ordered set이다
                 p
-                    i Proof.
+                    i 증명.
                     |　식[\mathbb{N}+\mathbb{F}]식의 공집합이 아닌 임의 부분집합 S를 생각한다. S의 임의 원소는 식[n+f, n\in\mathbb{N},f\in\mathbb{F}]식로 표현 가능하다
                     |　가능한 모든 n의 집합은 WOP에 의해 최소원소 식[n_s]식를 갖는다
                     br
@@ -458,7 +407,6 @@ include ../../source/skeleton.pug
                     li 8 + 3x + 2 = 5*2 + 3x
                 h4.fake Problem 2.10.
                 p Use the Well Ordering Principle to prove that
-                    +pos('(2.6)')
                     |\begin{align*}n\le 3^{n/3} && (2.6)\end{align*}
                     |for every nonnegative integer n.
                 ul 부등식은 식[n^3 \le 3^n]식과 동치다
