@@ -1,4 +1,3 @@
-# prepare
 buildOnePost() {
     filePath=$1
     if [[ $filePath == *\/ ]]
@@ -21,7 +20,6 @@ fi
 pushd $PWD
 cd `dirname "$fullFilePath"`
 
-# start
 echo "const fileText = \`" > source/filelist.js
 # 오라클 리눅스 git 버전이 낮음..
 # git ls-files --recurse-submodules >> source/filelist.js
