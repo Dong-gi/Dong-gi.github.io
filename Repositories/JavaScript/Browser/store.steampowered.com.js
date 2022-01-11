@@ -90,7 +90,7 @@ async function processGame() {
     if (isPass) {
         await sleep(369 * 3);
         let gameHovers = document.querySelector('div#global_hover_content').children;
-        const ngKeywords = ['비주얼노벨', 'RTS', '경영', '자원관리', 'sim', '건설', '스포츠', '레이싱', '체스', '세계대전', '텍스트기반', '시뮬레이션', '협동', '밈', 'JRPG', '교육', '드라마', '타워디펜스'];
+        const ngKeywords = ['비주얼노벨', 'RTS', '경영', '자원관리', 'sim', '건설', '스포츠', '레이싱', '체스', '세계대전', '텍스트기반', '시뮬레이션', '협동', '밈', 'JRPG', '교육', '드라마', '타워디펜스', '클릭', '로그라이크', '소울', '정밀'];
         for (let i = gameHovers.length - 1; i >= 0; --i) {
             let hover = gameHovers[i];
             if (/none/.test(hover.style.display)) {
