@@ -2735,6 +2735,7 @@ source/w3.css
 source/xcode.css
 `;
 const recentChangedPosts = `
+M	posts/infra/nginx.html
 M	posts/algorithm/mcs.html
 M	posts/daily_life/stock.html
 M	posts/algorithm/mcs.html
@@ -3009,6 +3010,4 @@ M	posts/single/rpi.html
 M	posts/single/sdkman.html
 M	posts/single/tomcat.html
 M	posts/single/unity.html
-M	posts/infra/network.html
-M	posts/single/aws.html
 `;

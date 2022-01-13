@@ -90,24 +90,22 @@ mixin post(title, keywords, description, useMJX, noAds)
                     if block
                         block
                 hr
-                ul
-                    li &copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a>. 
-                        +asA('/LICENSE', 'MIT License')
-                    li
-                        +asA('https://www.w3schools.com/w3css')
-                        |  : No license
-                    li
-                        +asA('https://highlightjs.org/', 'highlight.js')
-                        |  : 
-                        +asA('https://github.com/highlightjs/highlight.js/blob/main/LICENSE', 'BSD-3-Clause License')
-                    li
-                        +asA('https://github.com/mathjax/MathJax')
-                        |  : 
-                        +asA('https://github.com/mathjax/MathJax/blob/master/LICENSE', 'Apache License 2.0')
-                    li
-                        +asA('https://github.com/davidshimjs/qrcodejs')
-                        |  : 
-                        +asA('https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE', 'MIT License')
+                p &copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a>@
+                    +asA('/LICENSE', 'MIT License')
+                    |  / 
+                    +asA('https://www.w3schools.com/w3css')
+                    |@No license / 
+                    +asA('https://highlightjs.org/', 'highlight.js')
+                    |@
+                    +asA('https://github.com/highlightjs/highlight.js/blob/main/LICENSE', 'BSD-3-Clause License')
+                    |  / 
+                    +asA('https://github.com/mathjax/MathJax')
+                    |@
+                    +asA('https://github.com/mathjax/MathJax/blob/master/LICENSE', 'Apache License 2.0')
+                    |  / 
+                    +asA('https://github.com/davidshimjs/qrcodejs')
+                    |@
+                    +asA('https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE', 'MIT License')
 
 
 mixin tds(...cells)
