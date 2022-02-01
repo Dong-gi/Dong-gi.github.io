@@ -140,3 +140,26 @@ include ../../source/skeleton.pug
             |RDS 인스턴스 생성 시 멀티-AZ 옵션으로 DB 서브넷 그룹 지정
             br
             |RDS는 강제 업그레이드가 실행될 수 있으며, 멀티-AZ를 이용하는 경우, 스탠바이 서버부터 업그레이드되어 새로운 마스터가 된다
+    h1 EC2
+    div
+        h2 Amazon Linux 2 이미지
+        div
+            h3 CodeDeploy agent 설치
+            +asCode('shell').
+                $ sudo yum install ruby -y
+                $ sudo yum install wget -y
+
+                # 리전에 따라 아래 url은 달라짐
+                $ wget https://aws-codedeploy-ap-northeast-2.s3.amazonaws.com/latest/install
+                $ chmod +x ./install
+                $ sudo ./install auto
+                $ sudo service codedeploy-agent status
+
+            h3 JDK(corretto) 설치
+            +asCode('shell').
+                $ sudo rpm --import https://yum.corretto.aws/corretto.key 
+                $ sudo curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo
+                $ sudo yum install -y java-17-amazon-corretto-devel
+
+            h3 aws configure
+            p 인스턴스 내에서 aws cli 명령을 실행하려는 경우, 미리 자격 증명을 설정하는 것이 편리하다
