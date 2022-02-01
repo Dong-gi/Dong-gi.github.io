@@ -4,16 +4,18 @@
 //- +w3img('/imgs/', 'alt')
 //- +hoverTemplate()#template-id
 //- span.hover-content(template-id='template-id'
+
+//- sitemap 제작
+//- a = document.createElement('a')
+//- a.href = URL.createObjectURL(new Blob([posts.list.map(x => `https://dong-gi.github.io${x.file}`).join('\n')], {
+//-     type: 'text/plain;charset=utf-8;'
+//- }))
+//- a.target = '_blank'
+//- a.download = 'sitemap.txt'
+//- document.body.append(a)
+//- a.click()
 const posts = {
     list: [
-        { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1003.html', title: '1003: 0을 만들자' },
-        { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1008.html', title: '1008: 순환 소수' },
-        { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1010.html', title: '소수(Prime) 관련 문제' },
-        { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1011.html', title: '동적계획법(DP) 문제' },
-        { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1018.html', title: '1018: 문자열 거리 최소화 하기' },
-        { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1034.html', title: '1034, 1041: 최소 이동 거리' },
-        { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1048.html', title: '1048: AP 배분' },
-        { category: 'Algorithm/KOREATECH', file: '/posts/algorithm/koreatech/1095.html', title: '1095: 자연스러운 정렬' },
         { category: 'Algorithm', file: '/posts/algorithm/linear_algebra.html', title: '선형대수' },
         { category: 'Algorithm', file: '/posts/algorithm/mcs.html', title: '컴퓨터공학도를 위한 수학' },
         { category: 'Algorithm', file: '/posts/algorithm/overview.html', title: '알고리즘 개요' },
@@ -126,7 +128,6 @@ window.addEventListener('load', () => {
 
     updateSidebar()
     updatePostList()
-    insertDisqusThread()
     updateMarkerList()
     window.onscroll = SFUtil.debounce(function () {
         if (document.getElementById('sidebar').style.display == 'none') return;
@@ -235,28 +236,6 @@ function updateSidebar() {
     else
         openSidebar()
     document.getElementById('sidebar').style.width = '333px'
-
-    let fileMap = { ':files/': [] }
-    for (let file of fileText.trim().replace(/\r/gm, '').split('\n').sort(SFUtil.compareString)) {
-        let subMap = fileMap
-        let dirs = file.split('/')
-        let filename = dirs.pop()
-        for (let dir of dirs) {
-            if (!subMap.hasOwnProperty(dir)) {
-                subMap[dir] = {
-                    ':files/': []
-                }
-            }
-            subMap = subMap[dir]
-        }
-        subMap[':files/'].push(filename)
-    }
-    let url = URL.createObjectURL(new Blob([SFUtil.makeLSlikeText('git', fileMap, ':files/')], {
-        type: 'text/plain;charset=utf-8;'
-    }))
-    new DKFileList(url, '#file-list', null, false, null, true, () => {
-        document.querySelector('#file-list>details').open = false
-    })
 }
 
 function openSidebar() {
@@ -316,33 +295,6 @@ function updatePostList() {
             document.querySelector('#post-list details').open = true
         }
     })
-}
-
-function insertDisqusThread() {
-    let parent = document.querySelector('div#contents')
-    if (!!document.querySelector('div#disqus_thread')) {
-        DISQUS.reset({
-            reload: true,
-            config: function () {
-                this.page.url = `https://dong-gi.github.io${location.pathname}`
-                this.page.identifier = location.pathname
-            }
-        })
-        parent.append(document.querySelector('div#disqus_thread'))
-        return
-    }
-
-    parent.append('<div id="disqus_thread" class="w3-padding-16"></div>'.asSF().$)
-    eval(`var disqus_config = function () {
-            this.page.url = 'https://dong-gi.github.io${location.pathname}';
-            this.page.identifier = '${location.pathname}';
-        };
-        (function() {
-            var d = document, s = d.createElement('script');
-            s.src = 'https://donggi.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            document.querySelector('div#disqus_thread').append(s);
-        })();`)
 }
 
 function updateMarkerList() {

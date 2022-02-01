@@ -60,7 +60,6 @@ mixin post(title, keywords, description, useMJX, noAds)
             link#default-style(rel="stylesheet", href="/source/default.css")
             script#highlight-js(src="/source/highlight.pack.js")
             script#default-js(src='/source/default.min.js')
-            script#dsq-count-scr(src='//donggi.disqus.com/count.js',async)
             if useMJX
                 script#MathJax-script(src='/source/tex-chtml.js',async)
                 script.
@@ -79,9 +78,28 @@ mixin post(title, keywords, description, useMJX, noAds)
                 hr
                 #post-list
                 hr
-                #file-list
+                details(open='open').w3-small.file-list
+                    summary LICENSE
+                    ul
+                        li &copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> → 
+                            +asA('/LICENSE', 'MIT License')
+                        li
+                            +asA('https://www.w3schools.com/w3css')
+                            |  → No license
+                        li
+                            +asA('https://highlightjs.org/', 'highlight.js')
+                            |  → 
+                            +asA('https://github.com/highlightjs/highlight.js/blob/main/LICENSE', 'BSD-3-Clause License')
+                        li
+                            +asA('https://github.com/mathjax/MathJax')
+                            |  → 
+                            +asA('https://github.com/mathjax/MathJax/blob/master/LICENSE', 'Apache License 2.0')
+                        li
+                            +asA('https://github.com/davidshimjs/qrcodejs')
+                            |  → 
+                            +asA('https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE', 'MIT License')
                 hr
-            #main
+            article#main
                 .w3-bar.w3-blue.w3-large#nav(style='position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle')
                     button.w3-bar-item.w3-button.w3-hover-theme(onclick='toggleSidebar()') &#9776;
                     input.w3-bar-item#query(type='text',placeholder='search',style='max-width:35%')
@@ -89,23 +107,7 @@ mixin post(title, keywords, description, useMJX, noAds)
                 #contents.w3-padding
                     if block
                         block
-                hr
-                p &copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a>@
-                    +asA('/LICENSE', 'MIT License')
-                    |  / 
-                    +asA('https://www.w3schools.com/w3css')
-                    |@No license / 
-                    +asA('https://highlightjs.org/', 'highlight.js')
-                    |@
-                    +asA('https://github.com/highlightjs/highlight.js/blob/main/LICENSE', 'BSD-3-Clause License')
-                    |  / 
-                    +asA('https://github.com/mathjax/MathJax')
-                    |@
-                    +asA('https://github.com/mathjax/MathJax/blob/master/LICENSE', 'Apache License 2.0')
-                    |  / 
-                    +asA('https://github.com/davidshimjs/qrcodejs')
-                    |@
-                    +asA('https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE', 'MIT License')
+            hr
 
 
 mixin tds(...cells)

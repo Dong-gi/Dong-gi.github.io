@@ -20,11 +20,7 @@ fi
 pushd $PWD
 cd `dirname "$fullFilePath"`
 
-echo "const fileText = \`" > source/filelist.js
-git ls-files --recurse-submodules >> source/filelist.js
-echo "\`;" >> source/filelist.js
-
-echo "const recentChangedPosts = \`" >> source/filelist.js
+echo "const recentChangedPosts = \`" > source/filelist.js
 git log --name-status -20 posts | grep .html >> source/filelist.js
 echo "\`;" >> source/filelist.js
 
