@@ -2735,6 +2735,8 @@ source/w3.css
 source/xcode.css
 `;
 const recentChangedPosts = `
+M	posts/algorithm/koreatech/1003.html
+M	posts/infra/aws.html
 M	posts/algorithm/mcs.html
 M	posts/daily_life/death.html
 M	posts/algorithm/ai.html
@@ -2898,5 +2900,4 @@ M	posts/project/cctv.html
 M	posts/project/cctv.html
 A	posts/project/privacy.html
 M	posts/project/cctv.html
-A	posts/project/cctv.html
 `;
