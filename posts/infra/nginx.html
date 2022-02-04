@@ -2,14 +2,14 @@
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'UA-143098403-1');
-</script><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="google-site-verification" content="aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM"><meta name="author" content="Donggi Kim &lt;hi.donggi@gmail.com&gt;"><meta name="keywords" content="NGINX"><meta name="description" content="NGINX 정리"><title>NGINX</title><link id="w3css" rel="stylesheet" href="/source/w3.css"><link id="highlight-style" rel="stylesheet" href="/source/xcode.css"><link id="default-style" rel="stylesheet" href="/source/default.css"><script id="highlight-js" src="/source/highlight.pack.js"></script><script id="default-js" src="/source/default.min.js"></script></head><body><div class="w3-bar-block w3-sidebar w3-animate-left" id="sidebar"><hr><a class="w3-bar-item w3-button" href="javascript:closeSidebar();">Close &times;</a><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><details class="w3-small file-list" open="open"><summary>LICENSE</summary><ul><li>&copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> → <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="/LICENSE">MIT License</a></li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://www.w3schools.com/w3css">w3css</a> → No license</li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://highlightjs.org/">highlight.js</a> → <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause License</a></li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/mathjax/MathJax">MathJax</a> → <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache License 2.0</a></li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/davidshimjs/qrcodejs">qrcodejs</a> → <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE">MIT License</a></li></ul></details><hr></div><article id="main"><div class="w3-bar w3-blue w3-large" id="nav" style="position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle"><button class="w3-bar-item w3-button w3-hover-theme" onclick="toggleSidebar()">&#9776;</button><input class="w3-bar-item" id="query" type="text" placeholder="search" style="max-width:35%"><a class="w3-bar-item w3-button w3-hover-theme" href="/">Home</a></div><div class="w3-padding" id="contents"><h1>NGINX?</h1><p>HTTP 서버 + 메일 프록시 + 리버스 프록시 + 로드 밸런서</p><h1>HTTP -> HTTPS 리다이렉션 설정</h1><p><strong>↓ nginx</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="nginx">server {
+</script><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="google-site-verification" content="aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM"><meta name="author" content="Donggi Kim &lt;hi.donggi@gmail.com&gt;"><meta name="keywords" content="NGINX"><meta name="description" content="NGINX 정리"><title>NGINX</title><link id="w3css" rel="stylesheet" href="/source/w3.css"><link id="highlight-style" rel="stylesheet" href="/source/xcode.css"><link id="default-style" rel="stylesheet" href="/source/default.css"><script id="highlight-js" src="/source/highlight.pack.js"></script><script id="default-js" src="/source/default.min.js"></script></head><body><div class="w3-bar-block w3-sidebar w3-animate-left" id="sidebar"><hr><a class="w3-bar-item w3-button" href="javascript:closeSidebar();">Close &times;</a><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><details class="w3-small file-list" open="open"><summary>LICENSE</summary><ul><li>&copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> →<a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE">MIT License</a></li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://www.w3schools.com/w3css">w3css</a> → No license</li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://highlightjs.org/">highlight.js</a> →<a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause License</a></li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/mathjax/MathJax">MathJax</a> →<a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache License 2.0</a></li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/davidshimjs/qrcodejs">qrcodejs</a> →<a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE">MIT License</a></li></ul></details><hr></div><article id="main"><div class="w3-bar w3-blue w3-large" id="nav" style="position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle"><button class="w3-bar-item w3-button w3-hover-theme" onclick="toggleSidebar()">&#9776;</button><input class="w3-bar-item" id="query" type="text" placeholder="search" style="max-width:35%"><a class="w3-bar-item w3-button w3-hover-theme" href="/">Home</a></div><div class="w3-padding" id="contents"><h1>NGINX?</h1><p>HTTP 서버 + 메일 프록시 + 리버스 프록시 + 로드 밸런서</p><h1>HTTP -> HTTPS 리다이렉션 설정</h1><p><strong>↓nginx</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="nginx">server {
     listen       0.0.0.0:80;
     listen       [::]:80;
     server_name  localhost g50.4joy.link;
 
     return 301 https://g50.4joy.link$request_uri;
 }
-</div><h1>Static HTTPS 서버 설정</h1><p><strong>↓ nginx</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="nginx">server {
+</div><h1>Static HTTPS 서버 설정</h1><p><strong>↓nginx</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="nginx">server {
     listen       0.0.0.0:443 ssl;
     listen       [::]:443 ssl;
     server_name  g50.4joy.link;
@@ -35,7 +35,7 @@ gtag('config', 'UA-143098403-1');
         root   /usr/share/nginx/html;
     }
 }
-</div><h1>리버스 프록시 설정</h1><p><strong>↓ nginx</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="nginx">location / {
+</div><h1>리버스 프록시 설정</h1><p><strong>↓nginx</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="nginx">location / {
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header Host $http_host;
@@ -44,11 +44,11 @@ gtag('config', 'UA-143098403-1');
 
     charset utf-8;
 }
-</div><h1>Basic Auth 설정</h1><p><strong>↓ shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ sudo htpasswd -c /.../.htpasswd username</div><p><strong>↓ nginx</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="nginx">location /password {
+</div><h1>Basic Auth 설정</h1><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ sudo htpasswd -c /.../.htpasswd username</div><p><strong>↓nginx</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="nginx">location /password {
     auth_basic              "Input Password";
     auth_basic_user_file    /.../.htpasswd;
 
     root    /.../;
     charset utf-8;
 }
-</div><h1>변경된 설정 적용</h1><p><strong>↓ shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ nginx -s reload</div></div></article><hr></body></html>
+</div><h1>변경된 설정 적용</h1><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ nginx -s reload</div></div></article><hr></body></html>
