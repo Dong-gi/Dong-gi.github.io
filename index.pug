@@ -27,7 +27,7 @@ include ./source/skeleton.pug
         for (let post of changedPosts.reverse()) {
             if (notDeletedPosts.has(post)) {
                 notDeletedPosts.delete(post)
-                let url = '/' + post
+                let url = '/' + post.replace(/^pugs/, 'posts').replace(/\.pug$/, '.html')
                 let registeredPosts = posts.list.filter(o => o.file == url)
                 if (registeredPosts.length == 0)
                     continue
@@ -73,7 +73,7 @@ include ./source/skeleton.pug
             li
                 +asA('https://play.google.com/store/apps/details?id=com.sesisoft.kamurai&hl=ko&gl=US', '카무라이 트라이브')
                 |  서버 유지보수; Rest API(Servlet), Admin(Servlet + FreeMarker)
-            li 게임 이벤트 데이터 작업을 위한 사내 
+            li 게임 이벤트 데이터 작업을 위한 사내
                 +asA('/posts/project/wpf_data_tool.html', 'WPF 애플리케이션')
                 |  개발
 

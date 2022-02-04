@@ -21,7 +21,7 @@ pushd $PWD
 cd `dirname "$fullFilePath"`
 
 echo "const recentChangedPosts = \`" > source/filelist.js
-git log --name-status -20 posts | grep .html >> source/filelist.js
+git log --name-status -20 pugs | grep .pug >> source/filelist.js
 echo "\`;" >> source/filelist.js
 
 echo '파일 목록 갱신 완료'
