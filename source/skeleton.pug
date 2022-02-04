@@ -10,7 +10,7 @@ mixin asCode(lan, title)
     - lan = lan || 'text'
     - title = title || lan
     p: strong
-        |↓ 
+        |↓
         = title
     .as-code.code-div.w3-leftbar.w3-border-green(lan=lan)
         if block
@@ -81,22 +81,22 @@ mixin post(title, keywords, description, useMJX, noAds)
                 details(open='open').w3-small.file-list
                     summary LICENSE
                     ul
-                        li &copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> → 
-                            +asA('/LICENSE', 'MIT License')
+                        li &copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> →
+                            +asA('https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE', 'MIT License')
                         li
                             +asA('https://www.w3schools.com/w3css')
                             |  → No license
                         li
                             +asA('https://highlightjs.org/', 'highlight.js')
-                            |  → 
+                            |  →
                             +asA('https://github.com/highlightjs/highlight.js/blob/main/LICENSE', 'BSD-3-Clause License')
                         li
                             +asA('https://github.com/mathjax/MathJax')
-                            |  → 
+                            |  →
                             +asA('https://github.com/mathjax/MathJax/blob/master/LICENSE', 'Apache License 2.0')
                         li
                             +asA('https://github.com/davidshimjs/qrcodejs')
-                            |  → 
+                            |  →
                             +asA('https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE', 'MIT License')
                 hr
             article#main
@@ -146,6 +146,6 @@ mixin w3img(src, alt)
         - if (alt && alt.length > 0)
             br
             strong
-                |&lt;이미지 - 
+                |&lt;이미지 -
                 = alt
                 |>
