@@ -20,7 +20,7 @@ include ../../source/skeleton.pug
             li (코드 포인트 - '가'0xAC00) % 28 = 종성 인덱스
             li (코드 포인트 - 종성 인덱스 - '가'0xAC00) / 28 % 21 = 중성 인덱스
             li ((코드 포인트 - 종성 인덱스 - '가'0xAC00) / 28 - 중성 인덱스) / 21 = 초성 인덱스
-        li 조사 처리 예시 코드 
+        li 조사 처리 예시 코드
             +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/HangulUtility.java', 'java')
 
     h1 Common - year, month, day로부터 요일 구하기
@@ -60,7 +60,7 @@ include ../../source/skeleton.pug
             |스팀 게임 자동으로 "제외하기"
             +codeBtn('/Repositories/JavaScript/Browser/store.steampowered.com.js', 'javascript') 스크립트
 
-    h1 HTML, JavaScript - 이미지 파일 인코딩/디코딩
+    h1 HTML, JavaScript - 이미지 인코딩/디코딩
     ul
         li XOR를 이용한
             +codeBtn('/Repositories/JavaScript/Browser/decode.js', 'javascript') 인코딩/디코딩
@@ -72,6 +72,9 @@ include ../../source/skeleton.pug
 
     h1 HTML, JavaScript - 테이블 정렬
     +codeBtn('/Repositories/JavaScript/Browser/ordered-table.js', 'javascript')
+
+    h1 Java - 파일명 일괄 변경
+    +codeBtn('/Repositories/Single/20220207/Rename.java', 'java')
 
     h1 JavaScript, Google Apps Script
     ul
@@ -134,11 +137,11 @@ include ../../source/skeleton.pug
         li.marker 테이블 기본 키 획득
         +asCode('sql').
             SELECT pg_attribute.attname as column FROM pg_index, pg_class, pg_attribute, pg_namespace
-            WHERE 
-                pg_class.oid = '{tableName}'::regclass AND 
-                indrelid = pg_class.oid AND 
-                nspname = 'public' AND 
-                pg_class.relnamespace = pg_namespace.oid AND 
-                pg_attribute.attrelid = pg_class.oid AND 
+            WHERE
+                pg_class.oid = '{tableName}'::regclass AND
+                indrelid = pg_class.oid AND
+                nspname = 'public' AND
+                pg_class.relnamespace = pg_namespace.oid AND
+                pg_attribute.attrelid = pg_class.oid AND
                 pg_attribute.attnum = any(pg_index.indkey)
             AND indisprimary;

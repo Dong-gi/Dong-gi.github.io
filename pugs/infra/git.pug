@@ -32,6 +32,8 @@ include ../../source/skeleton.pug
         p 전체[또는 특정 파일] 변경 기록 확인
         li git cherry-pick &lt;commit_hash&gt;
         p 다른 브랜치의 특정 커밋의 변경분만 현재 작업 지점에 반영
+        li git merge --no-ff develop
+        p fast-forward가 가능하더라도 새 커밋으로 머지
 
     h1 Git Hook
     ul
@@ -48,7 +50,7 @@ include ../../source/skeleton.pug
 
     h1 GitHub Code scanning
     ul
-        li 링크 : 
+        li 링크 :
             +asA('https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/enabling-code-scanning-for-a-repository')
         li 저장소 > Security > Code scanning 활성화
         li codeql-analysis.yml로 조정 가능
@@ -58,7 +60,7 @@ include ../../source/skeleton.pug
         h2 개요
         ul
             li GitHub 저장소에서 즉시 테스트, 빌드, 배포 등 임의 workflow를 실행하는 서비스
-            li 초보자를 위한 템플릿 제공 : 
+            li 초보자를 위한 템플릿 제공 :
                 +asA('https://github.com/actions/starter-workflows')
 
         h2 주요 개념
@@ -88,9 +90,9 @@ include ../../source/skeleton.pug
                     +asA('https://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html#tag_20_25_07', 'POSIX cron syntax')
                     |로 일치하는 UTC 시각에 실행시킬 수 있다. 설정할 수 있는 최소 간격은 매 5분마다 실행하는 것. non-standard 예약어는 사용할 수 없다
                 ul
-                    li cron 신택스 생성 및 다음 실행 시각 확인 : 
+                    li cron 신택스 생성 및 다음 실행 시각 확인 :
                         +asA('https://crontab.guru/')
-                    li cron 신택스 예시 : 
+                    li cron 신택스 예시 :
                         +asA('https://crontab.guru/examples.html')
                 table
                     +ths('Reserved word', 'Description')
@@ -131,5 +133,5 @@ include ../../source/skeleton.pug
                         td GITHUB_REF 브랜치의 마지막 커밋
                         td 지정 브랜치
 
-            p 이하 생략 : 
+            p 이하 생략 :
                 +asA('https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows')

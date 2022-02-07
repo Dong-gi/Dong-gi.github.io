@@ -15,7 +15,7 @@ public class Rename {
         var dirs = new LinkedList<File>();
         dirs.add(new File("./"));
 
-        while (!dirs.isEmpty()) {
+        while (dirs.isEmpty() == false) {
             var dir = dirs.remove(0);
             for (var file : dir.listFiles()) {
                 if (file.isDirectory()) {
@@ -25,11 +25,8 @@ public class Rename {
                 var matcher = pattern.matcher(file.getName());
                 if (matcher.matches()) {
                     var toFile = new File(file.getParentFile(), matcher.replaceAll(to));
-                    if (!file.renameTo(toFile)) {
+                    if (!file.renameTo(toFile))
                         System.out.printf("Rename fail from [%s] to [%s]\n", file, toFile);
-                    } else {
-                        System.out.printf("Rename success from [%s] to [%s]\n", file, toFile);
-                    }
                 }
             }
         }
