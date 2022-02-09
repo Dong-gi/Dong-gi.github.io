@@ -61,14 +61,16 @@ include ../../source/skeleton.pug
             +codeBtn('/Repositories/JavaScript/Browser/store.steampowered.com.js', 'javascript') 스크립트
 
     h1 HTML, JavaScript - 이미지 인코딩/디코딩
+    ol
+        li 비트열 a, b에 대하여 (a ^ b) ^ b = a임을 이용
+        li 인코딩 ::= 기존 데이터의 각 바이트에 대하여, data[i] ^= mask[i]
+        li 디코딩 ::= 인코딩된 데이터 각 바이트에 대하여, data[i] ^= mask[i]
+        li 따라서 XOR에 이용하는 mask만 정확히 재현할 수 있다면 빠르게 in-place 인코딩/디코딩이 가능하다
     ul
-        li XOR를 이용한
-            +codeBtn('/Repositories/JavaScript/Browser/decode.js', 'javascript') 인코딩/디코딩
-        ol
-            li 비트열 a, b에 대하여 (a ^ b) ^ b = a임을 이용
-            li 인코딩 ::= 기존 데이터의 각 바이트에 대하여, data[i] ^= pattern[i]
-            li 디코딩 ::= 인코딩된 데이터 각 바이트에 대하여, data[i] ^= pattern[i]
-            li 따라서 XOR에 이용하는 pattern만 정확히 재현할 수 있다면 빠르게 in-place 인코딩/디코딩이 가능하다
+        li: +codeBtn('/Repositories/Single/20220209/imageEncoding.html', 'nohighlight') View live here
+        li
+            +codeBtn('/Repositories/Single/20220209/imageEncoding.html', 'javascript', '[45,66]') encode()
+            +codeBtn('/Repositories/Single/20220209/imageEncoding.html', 'javascript', '[68,87]') decode()
 
     h1 HTML, JavaScript - 테이블 정렬
     +codeBtn('/Repositories/JavaScript/Browser/ordered-table.js', 'javascript')

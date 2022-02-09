@@ -1,0 +1,91 @@
+<html>
+
+<body>
+    <div id="imageEncoding-body">
+        <button onclick="imageEncoding_encode()">Encode</button> <button
+            onclick="imageEncoding_decode()">Decode</button>
+        <hr>
+        <img id="imageEncoding-img">
+        <hr>
+    </div>
+    <script>
+        let xhr = new XMLHttpRequest()
+        xhr.responseType = 'blob'
+        xhr.overrideMimeType('application/octet-stream')
+
+        let buf = new ArrayBuffer(0)
+        xhr.addEventListener('load', function (e1) {
+            let reader = new FileReader()
+            reader.addEventListener('loadend', function (e2) {
+                buf = e2.target.result
+                imageEncoding_drawImage('INIT')
+            })
+            reader.readAsArrayBuffer(e1.target.response)
+        })
+        xhr.open('GET', '/imgs/20191128_164656.png', true)
+        xhr.send()
+
+        function imageEncoding_drawImage(prefix) {
+            let img = document.getElementById('imageEncoding-img')
+            img.src = URL.createObjectURL(new Blob([buf]))
+            let p = document.createElement('p')
+            p.textContent = `${prefix} >> ` + new TextDecoder().decode(buf).substr(0, 50)
+            document.getElementById('imageEncoding-body').append(p)
+            document.getElementById('imageEncoding-body').append(document.createElement('hr'))
+        }
+
+        const headerSize = 10
+        function imageEncoding_isEncoded(dataView) {
+            for (let i = 0; i < headerSize; ++i)
+                if (dataView.getInt8(i) != i)
+                    return false
+            return true
+        }
+
+        function imageEncoding_encode() {
+            let view = new DataView(buf)
+            if (imageEncoding_isEncoded(view)) {
+                imageEncoding_drawImage('Already Encoded')
+                return
+            }
+
+            let fileSize = view.byteLength
+            let out = new DataView(new ArrayBuffer(fileSize + headerSize))
+            for (let i = 0; i < headerSize; ++i)
+                out.setInt8(i, i)
+
+            let x = 1856330900n, y = 664327927n, z = 2039651803n
+            for (let i = 0; i < fileSize; ++i) {
+                // 여기선 계산을 64비트로 제한했음
+                let mask = BigInt.asUintN(64, (x ^ (x >> 17n)) ^ (z ^ (z >> 19n)))
+                out.setInt8(i + headerSize, Number(BigInt.asIntN(8, BigInt(view.getInt8(i)) ^ mask)))
+                x = y, y = z, z = mask
+            }
+            buf = out.buffer
+            imageEncoding_drawImage('Encoded')
+        }
+
+        function imageEncoding_decode() {
+            let view = new DataView(buf)
+            if (!imageEncoding_isEncoded(view)) {
+                imageEncoding_drawImage('Not Encoded')
+                return
+            }
+
+            let fileSize = view.byteLength
+            let out = new DataView(new ArrayBuffer(fileSize - headerSize))
+
+            let x = 1856330900n, y = 664327927n, z = 2039651803n
+            for (let i = headerSize; i < fileSize; ++i) {
+                // 여기선 계산을 64비트로 제한했음
+                let mask = BigInt.asUintN(64, (x ^ (x >> 17n)) ^ (z ^ (z >> 19n)))
+                out.setInt8(i - headerSize, Number(BigInt.asIntN(8, BigInt(view.getInt8(i)) ^ mask)))
+                x = y, y = z, z = mask
+            }
+            buf = out.buffer
+            imageEncoding_drawImage('Decoded')
+        }
+    </script>
+</body>
+
+</html>

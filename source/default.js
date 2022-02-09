@@ -402,7 +402,10 @@ function insertCodeDiv(id) {
 
                 if (lan == 'javascript') {
                     let script = '<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-green">실행</button>'.asSF().$
-                    script.onclick = () => eval(posts.codes[id])
+                    script.onclick = ((id) => function (e) {
+                        let code = Array.from(document.querySelectorAll(`#code-div-${id} li`)).map(li => li.textContent).join('\n')
+                        eval(code)
+                    })(id)
                     button.after(script)
                 }
             })(button))
@@ -424,30 +427,55 @@ function fillCodeDiv(div, lan, text, displayRange) {
         let code = text.replace(/\t/gm, '    ')
         code = code.replace(/ /gm, '  ')
 
-        let lines = null
-        if (lan === 'text')
-            lines = code.split(/\n/gm)
-        else
-            lines = hljs.highlight(lan, code)['value'].split(/\n/gm)
-
-        let ol = document.createElement('ol')
+        let lines = code.split(/\n/gm)
+        let displayParts = []
         displayRange = JSON.parse(displayRange || '[1, 100000000]') || [1, 100000000]
         if (displayRange.length % 2 == 1)
             displayRange.push(100000000)
         displayRange = displayRange.reverse()
 
         while (displayRange.length > 0) {
+            let displayLines = []
             let displayStart = displayRange.pop() - 1
             let displayEnd = displayRange.pop()
-            for (let idx = displayStart; idx < displayEnd && idx < lines.length; ++idx) {
-                if (lan === 'text') {
+            for (let idx = displayStart; idx < displayEnd && idx < lines.length; ++idx)
+                displayLines.push(lines[idx])
+
+            let commonBlankSize = 0
+            for (let checkIdx = 0; checkIdx < displayLines[0].length; ++checkIdx) {
+                let isContinue = true
+                for (let line of displayLines) {
+                    if (/\S/.test(line.charAt(checkIdx)))
+                        isContinue = false
+                    if (!isContinue)
+                        break
+                }
+                if (!isContinue)
+                    break
+                commonBlankSize++
+            }
+
+            if (commonBlankSize > 0) {
+                for (let idx = 0; idx < displayLines.length; ++idx)
+                    displayLines[idx] = displayLines[idx].substr(commonBlankSize)
+            }
+
+            if (lan != 'text')
+                displayLines = hljs.highlight(lan, displayLines.join('\n'))['value'].split(/\n/gm)
+            displayParts.push(displayLines)
+        }
+
+        let ol = document.createElement('ol')
+        for (let displayLines of displayParts) {
+            for (let line of displayLines) {
+                if (lan == 'text') {
                     let li = document.createElement('li')
-                    li.innerText = lines[idx].replace(/  /gm, '\u00A0')
+                    li.innerText = line.replace(/  /gm, '\u00A0')
                     ol.append(li)
                 } else
-                    ol.append(`<li>${lines[idx].replace(/  /gm, '&nbsp;')}</li>`.asSF().$)
+                    ol.append(`<li>${line.replace(/  /gm, '&nbsp;')}</li>`.asSF().$)
             }
-            if (displayRange.length > 0)
+            if (displayLines != displayParts[displayParts.length - 1])
                 ol.append(document.createElement('hr'))
         }
         div.append(ol)
