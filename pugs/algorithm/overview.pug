@@ -259,7 +259,7 @@ include ../../source/skeleton.pug
         h2 DAG(사이클 없는 방향 그래프)에서의 최단경로 찾기
         ol
             li 시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대
-            li 시작점부터 종점까지에 대해 
+            li 시작점부터 종점까지에 대해
                 +goto('위상 정렬')
                 |  수행
             li 정렬한 순서대로 정점을 방문하여 가중치 갱신
@@ -467,10 +467,10 @@ include ../../source/skeleton.pug
             h3 TOTP(Time-based One-time Password)
             ul
                 li 일정 시간 동안 유효한 OTP를 생성하여 인증하는 알고리즘; 즉, 시간이 검증 대상 메시지가 된다
-                li 비밀키 외에, 비밀번호 구분을 위한 추가 정보를 
+                li 비밀키 외에, 비밀번호 구분을 위한 추가 정보를
                     +asA('https://github.com/google/google-authenticator/wiki/Key-Uri-Format', 'URI')
                     |에 설정할 수 있다
-                +asCode('text', 'uri') otpauth://totp/${issuer}:${user}?secret=${privateKey}&amp;issuer=${issuer}&amp;algorithm=SHA1&amp;digits=6&amp;period=30
+                +asCode('text', 'URI') otpauth://totp/${issuer}:${user}?secret=${privateKey}&amp;issuer=${issuer}&amp;algorithm=SHA1&amp;digits=6&amp;period=30
                 ul
                     li issuer : 서비스 제공자. e.g. Microsoft, LlinkedIn, Amazon Web Service, gmail...
                     li user : 사용자. e.g. hi.donggi@gmail.com, Donggi Kim, wiz - hi.donggi@gmail.com, ...
@@ -478,7 +478,7 @@ include ../../source/skeleton.pug
                     li algorithm : SHA1(default), SHA256, SHA512
                     li digits : OTP 길이; 6(default)
                     li period : OTP 유효 시간(초); 30(default)
-                li 구현 예시 코드 : 
+                li 구현 예시 코드 :
                     +codeBtn('/Repositories/STS/standalones/src/main/java/link4/joy/TOTP.java', 'java')
                 #totp-qr
                 script.
@@ -492,6 +492,25 @@ include ../../source/skeleton.pug
                     li: +asA('https://rootprojects.org/authenticator/', 'Authenticator Test')
                     li: +asA('https://datatracker.ietf.org/doc/html/rfc6238#appendix-A', 'rfc6238#appendix-A')
                     li: +asA('https://github.com/jchambers/java-otp/blob/df28bfab5be1cd9ef8a6383c35c71644d7bdcf6b/src/main/java/com/eatthepath/otp/HmacOneTimePasswordGenerator.java')
+
+            h3 JWT(JSON Web Token)
+                +asA('https://datatracker.ietf.org/doc/html/rfc7519')
+            div
+                h4 Online JWS Tester :
+                    +asA('https://jwt.io/', 'jwt.io')
+                h4 개요
+                ul
+                    li JWT는 (JSON) 메시지를 URL Safe한 형태로 웹 상에서 전달하고, 메시지의 무결성을 검증할 수 있는 표현에 대한 명세다
+                    li JWT 문자열로 JWS(
+                        +asA('https://datatracker.ietf.org/doc/html/rfc7515')
+                        |) Compact Serialization 또는 JWE(
+                        +asA('https://datatracker.ietf.org/doc/html/rfc7516')
+                        |) Compact Serialization이 가능하다
+                //- JWT는 메시지로 평문이 가능, JWE는 기본적으로 메시지가 암호화 <- 맞음?
+                //- https://bitbucket.org/authentication-app-blog/jwe-encrypt-decrypt-app-blog/src/development/src/main/java/com/cmbk/jwe/manager/service/EncrypyDecryptJweToken.java
+                //- https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt/9.19
+                //- https://bitbucket.org/connect2id/nimbus-jose-jwt/src/master/
+
 
         +pos('전자 서명')
         h2 전자 서명

@@ -322,7 +322,7 @@ function updateMarkerList() {
     }, true, (_, markerId) => {
         let target = document.querySelector(`.marker[marker-id=${markerId}]`)
         let name = getMarkerName(target)
-        let li = `<li class="${target.classList.contains('fake') ? 'w3-hide' : ''}" title="${name}" marker-id="${markerId}">${name.substr(0, 25)}</li>`.asSF().$
+        let li = `<li class="${target.classList.contains('fake') ? 'w3-hide' : ''}" title="${name}" marker-id="${markerId}">${name.substr(0, 50)}</li>`.asSF().$
 
         let main = document.querySelector('div#contents')
         let level = 0

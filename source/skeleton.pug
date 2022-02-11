@@ -1,9 +1,7 @@
 - String.prototype.hashCode=function(){let e,t,o=0;if(0===this.length)return o;for(e=0;e<this.length;e++)o=(o<<5)-o+(t=this.charCodeAt(e)),o|=0;return o};
 
 mixin asA(href, text)
-    - if (!text && /#/.test(href)) { text = href.replace(/.*#/, '') }
-    - if (!text && /\//.test(href)) { text = href.replace(/.*\//, '') }
-    - if (!text) { text = href }
+    - if (!text) { text = href.replace(/\/$/, '').replace(/^.+\//, ''); if (/#/.test(href) == false) { text = text.replace(/\..+$/, '') } }
     +w3a()&attributes({ href: href })&attributes(attributes)= text
 
 mixin asCode(lan, title)

@@ -121,7 +121,7 @@ CREATE TABLE order_items (
     order_id integer REFERENCES orders ON DELETE CASCADE, -- 참조하는 행이 삭제되면 같이 삭제됨
     quantity integer,
     PRIMARY KEY (product_no, order_id)
-);</div></ol><h2>System Columns</h2><p>oid : object_id. 테이블을 WITH OIDS로 생성하거나, default with oids이 설정된 경우 생성되는 열. 타입 이름도 oid<a class="w3-btn w3-round-xxlarge w3-small w3-green" href="http://postgresql.kr/docs/9.6/ddl-system-columns.html">ddl-system-columns.html</a></p><h2>Modifying Tables</h2><ol><li class="marker">Adding a Column</li><p><strong>↓sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">ALTER TABLE products ADD COLUMN description text;
+);</div></ol><h2>System Columns</h2><p>oid : object_id. 테이블을 WITH OIDS로 생성하거나, default with oids이 설정된 경우 생성되는 열. 타입 이름도 oid<a class="w3-btn w3-round-xxlarge w3-small w3-green" href="http://postgresql.kr/docs/9.6/ddl-system-columns.html">ddl-system-columns</a></p><h2>Modifying Tables</h2><ol><li class="marker">Adding a Column</li><p><strong>↓sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">ALTER TABLE products ADD COLUMN description text;
 ALTER TABLE products ADD COLUMN description text CHECK (description != '');</div><li class="marker">Removing a Column</li><p><strong>↓sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">ALTER TABLE products DROP COLUMN description;
 -- 외래키로 참조중인 경우, 제약을 명시해줘야 반영된다
 ALTER TABLE products DROP COLUMN description CASCADE;</div><li class="marker">Adding a Constraint</li><p><strong>↓sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">ALTER TABLE products ADD CHECK (name != '');

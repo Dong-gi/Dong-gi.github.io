@@ -1,5 +1,18 @@
 include ../../source/skeleton.pug
 +post('Code Snippets', 'Snippet', 'Code Snippet 모음')
+    h1 Common - 소수 찾기
+    ul
+        li 에라토스테네스의 체 : 
+            +codeBtn('/Repositories/Single/20220209/FindPrime.java', 'java')
+        li Library 지원
+        +asCode('java').
+            var i = BigInteger.valueOf(10000000000000L);
+            for (var count = 0; count < 100; ++count) {
+                // 합성수일 가능성은 2^(-100)을 넘지 않는다
+                i = i.nextProbablePrime();
+                System.out.println(i);
+            }
+
     h1 Common - 양의 정수 n이 2의 거듭제곱인지 판별
     +asCode('java') (n &amp; (n - 1)) == 0
 

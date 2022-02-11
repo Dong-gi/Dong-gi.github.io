@@ -165,6 +165,11 @@ include ../../source/skeleton.pug
             h3 aws configure
             p 인스턴스 내에서 aws cli 명령을 실행하려는 경우, 미리 자격 증명을 설정하는 것이 편리하다
 
+            h3 시작 템플릿 > 사용자 데이터에서 CodeDeploy 실행
+            +asCode('bash').
+                #!/bin/bash
+                aws deploy create-deployment --application-name AppName --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name GroupName --s3-location bucket=BucketName,bundleType=zip,key=ObjectKey
+
     h1 CloudFront
     div
         h2 캐시 정책 TTL 관련
@@ -182,6 +187,17 @@ include ../../source/skeleton.pug
                 li 로드밸런서를 통해 직접 통신한 경우 190-200ms로 균일한 응답시간 확인
                 li CDN을 거친 경우, 일부 요청은 10% 정도 빨리 응답(175ms 내외)되었지만, 절반 정도는 2배 이상 소요(670ms 내외)되었다.
             li 각 응답 캐시 시간을 Cache-Control: max-age 헤더로 조정
-                +asA('https://aws.amazon.com/ko/premiumsupport/knowledge-center/cloudfront-cache-files-time/', '참고 문서')
+                +asA('https://aws.amazon.com/ko/premiumsupport/knowledge-center/cloudfront-cache-files-time/')
             li 쿼리 스트링 캐시 정책 조정
-                +asA('https://aws.amazon.com/ko/premiumsupport/knowledge-center/cloudfront-cache-files-time/', '참고 문서')
+                +asA('https://docs.aws.amazon.com/ko_kr/AmazonCloudFront/latest/DeveloperGuide/QueryStringParameters.html')
+
+    h1 특이 현상
+    div
+        h2 CPU 사용률이 100을 초과하는 현상(2022-01-21)
+        p EC2 및 ElastiCache(Redis)에서 발생하였으며, 이 때문에 Auto Scaling 그룹의 자동 조정 정책 지표를 인스턴스 평균 CPU 사용률 대신 평균 ALB 요청 수로 변경함
+        +w3img('/imgs/photo_2022-02-10 16.08.44.jpeg', 'EC2 스크린샷')
+        +w3img('/imgs/photo_2022-02-10 16.16.52.jpeg', 'Redis 스크린샷')
+
+        h2 WAF 규칙 적용 후 평균 응답 시간(P95, P99 포함 전부)이 획기적으로 단축된 것으로 보고되는 현상(2022-01-16)
+        p ALB 통계에 포함되는 처리 시간 일부가 WAF 규칙 평가로 옮겨가서?
+        +w3img('/imgs/photo_2022-02-10 16.21.20.jpeg')

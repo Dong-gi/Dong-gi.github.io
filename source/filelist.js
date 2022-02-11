@@ -1,4 +1,5 @@
 const recentChangedPosts = `
+M	pugs/project/snippets.pug
 M	pugs/infra/aws.pug
 M	pugs/infra/git.pug
 M	pugs/project/snippets.pug
@@ -56,5 +57,4 @@ M	pugs/infra/db/RabbitMQ.pug
 A	pugs/infra/db/RabbitMQ.pug
 M	pugs/project/cctv.pug
 M	pugs/algorithm/ai.pug
-M	pugs/project/cctv.pug
 `;
