@@ -1,6 +1,8 @@
 !*.class
 !gradle-wrapper.jar
 
+package-lock.json
+
 .gradle
 .idea
 .metadata
