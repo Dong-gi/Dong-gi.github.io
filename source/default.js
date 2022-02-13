@@ -16,6 +16,7 @@
 //- a.click()
 const posts = {
     list: [
+        { category: 'Algorithm', file: '/posts/algorithm/acmicpc.html', title: 'ACM-ICPC 문제' },
         { category: 'Algorithm', file: '/posts/algorithm/linear_algebra.html', title: '선형대수' },
         { category: 'Algorithm', file: '/posts/algorithm/mcs.html', title: '컴퓨터공학도를 위한 수학' },
         { category: 'Algorithm', file: '/posts/algorithm/overview.html', title: '알고리즘 개요' },
