@@ -10,34 +10,34 @@ include ../../source/skeleton.pug
     ol
         li.marker
             |start_preview(), stop_preview()
-            +codeBtn('/Repositories/Raspbian/start01.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/start01.py', 'python')
         li.marker
             |brightness
-            +codeBtn('/Repositories/Raspbian/start02.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/start02.py', 'python')
         li.marker
             |resolution, start_recording(), wait_recording(), stop_recording()
-            +codeBtn('/Repositories/Raspbian/start03.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/start03.py', 'python')
         li.marker
             |capture(), exposure_compensation, exposure_mode, meter_mode, image_effect
-            +codeBtn('/Repositories/Raspbian/start04.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/start04.py', 'python')
         li.marker
             |exif_tags
-            +codeBtn('/Repositories/Raspbian/start05.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/start05.py', 'python')
         li.marker
             |capture_continuous()
-            +codeBtn('/Repositories/Raspbian/start06.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/start06.py', 'python')
         li.marker
             |capture_sequence(use_video_port=True)
-            +codeBtn('/Repositories/Raspbian/start07.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/start07.py', 'python')
         li.marker
             |capture to an OpenCV object
-            +codeBtn('/Repositories/Raspbian/start08.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/start08.py', 'python')
 
     h1 Picamera with OpenCV 예
     ol
         li.marker
             |fps change by resolution
-            +codeBtn('/Repositories/Raspbian/cam01.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cam01.py', 'python')
         div
             h3 테스트 결과
             |// jpeg quality [0, 100] default 85
@@ -65,7 +65,7 @@ include ../../source/skeleton.pug
             |(1920x1080) : 2.56fps
         li.marker
             |fps change by ISO(sensitivity to light), default 0
-            +codeBtn('/Repositories/Raspbian/cam02.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cam02.py', 'python')
         div
             h3 테스트 결과
             |// ISO can not changed in running
@@ -97,7 +97,7 @@ include ../../source/skeleton.pug
             |(1600x900, ISO:1600) : 3.54fps
         li.marker
             |awb_mode(auto-white-balance), default 'auto'
-            +codeBtn('/Repositories/Raspbian/cam03.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cam03.py', 'python')
         div
             h3 테스트 결과
             |// awb_mode can changed in running
@@ -272,31 +272,31 @@ include ../../source/skeleton.pug
         li.marker cv 전체 속성 출력 : help(cv2.Attr)
         li.marker
             |imread(), imshow(), waitKey(), namedWindow(), destroyWindow(), destroyAllWindows(), imwrite()
-            +codeBtn('/Repositories/Raspbian/cv01.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cv01.py', 'python')
         p mode : IMREAD_ANYCOLOR, IMREAD_ANYDEPTH, IMREAD_COLOR, IMREAD_GRAYSCALE, IMREAD_IGNORE_ORIENTATION, IMREAD_LOAD_GDAL, IMREAD_REDUCED_COLOR_2, IMREAD_REDUCED_COLOR_4, IMREAD_REDUCED_COLOR_8, IMREAD_REDUCED_GRAYSCALE_2, IMREAD_REDUCED_GRAYSCALE_4, IMREAD_REDUCED_GRAYSCALE_8, IMREAD_UNCHANGED
         li.marker
             |pyplot::imshow(), xticks(), yticks(), show()
-            +codeBtn('/Repositories/Raspbian/cv02.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cv02.py', 'python')
         p Matplotlib : 
             +asA('https://matplotlib.org/api/pyplot_api.html')
         li.marker
             |VideoWriter(), VideoCapture()
-            +codeBtn('/Repositories/Raspbian/cv03.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cv03.py', 'python')
         li.marker
             |line(), rectangle(), circle(), ellipse(), polylines(), putText()
-            +codeBtn('/Repositories/Raspbian/cv04.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cv04.py', 'python')
         li.marker
             |mouse event
-            +codeBtn('/Repositories/Raspbian/cv05.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cv05.py', 'python')
         li.marker
             |numpy 이용한 ROI 설정, 컬러 추출, border 설정
-            +codeBtn('/Repositories/Raspbian/cv06.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cv06.py', 'python')
         li.marker
             |cv2::add(), addWeighted() ← Blending, cvtColor(), bitwise_and|or|not|xor()
-            +codeBtn('/Repositories/Raspbian/cv07.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cv07.py', 'python')
         li.marker
             |HSV
-            +codeBtn('/Repositories/Raspbian/cv08.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cv08.py', 'python')
         p OpenCV의 HSV 색공간은 [0, 179], [0, 255], [0, 255]이므로 다른 범위를 쓰는 프로그램은 정규화 필요
         div
             h3 HSV에서의 색상 추출
@@ -308,13 +308,13 @@ include ../../source/skeleton.pug
                 li high_green = np.array([hue+10, 255, 255])
         li.marker
             |Image Thresholding
-            +codeBtn('/Repositories/Raspbian/cv09.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cv09.py', 'python')
         p cv2::threshold() : THRESH_BINARY, THRESH_BINARY_INV, THRESH_MASK, *THRESH_OTSU, THRESH_TOZERO, THRESH_TOZERO_INV, THRESH_TRIANGLE, THRESH_TRUNC
             br
             |cv2::adaptiveThreshold() : ADAPTIVE_THRESH_GAUSSIAN_C, ADAPTIVE_THRESH_MEAN_C
         li.marker
             |Geometric Transformations of Images
-            +codeBtn('/Repositories/Raspbian/cv10.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cv10.py', 'python')
         ul
             li.marker cv2::warpAffine() takes a 2x3 transformation matrix
             ol
@@ -332,22 +332,22 @@ include ../../source/skeleton.pug
                 |크기를 지정하거나 배율을 지정 : resize(img, None, fx=2, fy=3) == resize(img, (2*width, 2*height))
         li.marker
             |filter
-            +codeBtn('/Repositories/Raspbian/cv11.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cv11.py', 'python')
         p LPF(low-pass filter) : 노이즈 제거, blurring
             br
             |HPF(high-pass filter) : edge 검출
         li.marker
             |Morphological Transformations
-            +codeBtn('/Repositories/Raspbian/cv12.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cv12.py', 'python')
         li.marker
             |Image Gradients
-            +codeBtn('/Repositories/Raspbian/cv13.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cv13.py', 'python')
         li.marker
             |Image Pyramids
-            +codeBtn('/Repositories/Raspbian/cv14.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cv14.py', 'python')
         li.marker
             |cv2::findContours
-            +codeBtn('/Repositories/Raspbian/cv15.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cv15.py', 'python')
 
     h1 테스트용 이미지 수집
     +asCode('javascript').
@@ -370,14 +370,14 @@ include ../../source/skeleton.pug
     ol
         li.marker
             |정면 얼굴 및 눈 검출 시도
-            +codeBtn('/Repositories/Raspbian/cctv01.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cctv01.py', 'python')
         li.marker
             |화재 검출 시도
-            +codeBtn('/Repositories/Raspbian/cctv02.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cctv02.py', 'python')
         div
-            +codeBtn('/Repositories/Raspbian/cctv02-2.py', 'python')
-            +codeBtn('/Repositories/Raspbian/cctv02-3.py', 'python')
-            +codeBtn('/Repositories/Raspbian/cctv02-4.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cctv02-2.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cctv02-3.py', 'python')
+            +codeBtn('/Repositories/Python/Raspbian/cctv02-4.py', 'python')
             h3 화재 검출?
             ul
                 li CCTV → 가시광선 영역
@@ -389,5 +389,5 @@ include ../../source/skeleton.pug
                 li 화재의 종류
                 p A급 화재 : 일반가연물 화재, B급 화재 : 유류 및 가스화재, C급 화재 : 전기화재, D급 화재 : 금속화재, F급/K급 화재 : 식용유화재
         li.marker 소켓 전송
-        +codeBtn('/Repositories/Raspbian/sender.py', 'python')
-        +codeBtn('/Repositories/Raspbian/socket02.py', 'python')
+        +codeBtn('/Repositories/Python/Raspbian/sender.py', 'python')
+        +codeBtn('/Repositories/Python/Raspbian/socket02.py', 'python')
