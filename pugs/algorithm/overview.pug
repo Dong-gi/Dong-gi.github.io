@@ -532,8 +532,9 @@ include ../../source/skeleton.pug
                     li algorithm : SHA1(default), SHA256, SHA512
                     li digits : OTP 길이; 6(default)
                     li period : OTP 유효 시간(초); 30(default)
-                li 구현 예시 코드 :
-                    +codeBtn('/Repositories/STS/standalones/src/main/java/link4/joy/TOTP.java', 'java')
+                li 구현 예시 :
+                    +codeBtn('/Repositories/STS/TOTP-example/src/main/java/link4/joy/TOTP.java', 'java')
+                    +codeBtn('/Repositories/STS/TOTP-example/src/test/java/link4/joy/TOTPTests.java', 'java')
                 #totp-qr
                 script.
                     new QRCode(document.getElementById('totp-qr'), {

@@ -1,4 +1,9 @@
 const recentChangedPosts = `
+M	pugs/language/jvm/android.pug
+M	pugs/topic/rpi.pug
+M	pugs/language/jvm/javafx.pug
+M	pugs/language/jvm/logback.pug
+M	pugs/project/snippets.pug
 M	pugs/algorithm/overview.pug
 M	pugs/algorithm/overview.pug
 M	pugs/infra/aws.pug
@@ -52,12 +57,4 @@ A	pugs/daily_life/labor.pug
 M	pugs/infra/aws.pug
 M	pugs/infra/elk.pug
 M	pugs/language/jvm/basic.pug
-M	pugs/infra/db/RabbitMQ.pug
-A	pugs/infra/elk.pug
-M	pugs/language/jvm/spring_framework.pug
-M	pugs/infra/db/RabbitMQ.pug
-M	pugs/project/error.pug
-M	pugs/infra/db/RabbitMQ.pug
-M	pugs/language/jvm/basic.pug
-M	pugs/infra/db/RabbitMQ.pug
 `;
