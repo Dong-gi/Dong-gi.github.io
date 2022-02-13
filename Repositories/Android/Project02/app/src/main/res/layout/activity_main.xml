@@ -10,6 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="sendNotification"
-        android:text="Send a Notification"/>
+        android:text="Send a Notification" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

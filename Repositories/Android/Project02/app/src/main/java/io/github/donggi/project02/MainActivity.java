@@ -21,14 +21,14 @@ public class MainActivity extends AppCompatActivity {
         final int NOTIFICATION_ID = 1111;
         final String NOTIFICATION_CHANNEL_ID = "Notification from MainActivity";
 
-        NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Notification.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Example Notifications", NotificationManager.IMPORTANCE_HIGH);
             notificationChannel.enableVibration(false);
             notificationManager.createNotificationChannel(notificationChannel);
             builder = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID);
-        } else{
+        } else {
             builder = new Notification.Builder(this);
         }
         builder.setSmallIcon(R.drawable.ic_launcher_background).setContentTitle("Title").setContentText("Text");

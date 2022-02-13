@@ -9,16 +9,16 @@ import androidx.core.content.ContextCompat;
 
 public class PermissionChecker {
 
-    private final Activity activity;
-    private static PermissionChecker checker;
     private static final Object LOCK = new Object();
+    private static PermissionChecker checker;
+    private final Activity activity;
 
     private PermissionChecker(Activity activity) {
         this.activity = activity;
     }
 
     public static PermissionChecker getInstance(Activity activity) {
-        if(checker != null)
+        if (checker != null)
             return checker;
         synchronized (LOCK) {
             checker = new PermissionChecker(activity);
@@ -27,15 +27,11 @@ public class PermissionChecker {
     }
 
     public boolean checkPermission(String permission) {
-        switch( ContextCompat.checkSelfPermission(activity, permission)) {
-            case PackageManager.PERMISSION_GRANTED:
-                return true;
-        }
-        return false;
+        return ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED;
     }
 
     public void requestPermission(String dialogMessage, String permission) {
-        if(checkPermission(permission))
+        if (checkPermission(permission))
             return;
         new AlertDialog.Builder(activity)
                 .setMessage(dialogMessage)
@@ -49,7 +45,7 @@ public class PermissionChecker {
         final int REQUEST_CODE = (short) permission.hashCode();
         ActivityCompat.requestPermissions(
                 activity,
-                new String[]{ permission },
+                new String[]{permission},
                 REQUEST_CODE
         );
     }

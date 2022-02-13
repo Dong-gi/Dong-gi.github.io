@@ -1,9 +1,7 @@
 package io.github.donggi.project04;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -20,5 +18,4 @@ public class Main4Activity extends AppCompatActivity {
         super.onRestart();
         startActivity(new Intent(Main4Activity.this, MainActivity.class));
     }
-
 }

@@ -20,7 +20,9 @@ public class AccelerometerExample {
             if (method.getName().startsWith("get")) {
                 try {
                     Log.d(TAG, String.format("%s : %s", method.getName(), method.invoke(accel)));
-                } catch (Exception e) { }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -29,8 +31,10 @@ public class AccelerometerExample {
             public void onSensorChanged(SensorEvent event) {
                 Log.d(TAG, Arrays.toString(event.values));
             }
+
             @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) { }
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            }
         }, accel, SensorManager.SENSOR_DELAY_NORMAL);
     }
 }

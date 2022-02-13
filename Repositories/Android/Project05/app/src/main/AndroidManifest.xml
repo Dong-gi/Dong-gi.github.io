@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
             android:label="Use an activity like a dialog"
             android:theme="@android:style/Theme.Material.Dialog">
             <intent-filter>

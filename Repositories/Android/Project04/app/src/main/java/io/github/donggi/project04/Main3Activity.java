@@ -24,7 +24,6 @@ public class Main3Activity extends AppCompatActivity {
         startActivity(new Intent(Main3Activity.this, Main4Activity.class));
     }
 
-
     public void button1_Click(View view) {
         Toast.makeText(this, "Button 1", Toast.LENGTH_SHORT).show();
     }

@@ -10,18 +10,18 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="버튼1"
-        android:onClick="button1_Click"/>
+        android:onClick="button1_Click"
+        android:text="버튼1" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="버튼2"/>
+        android:text="버튼2" />
 
     <Button
         android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="버튼3"/>
+        android:text="버튼3" />
 </LinearLayout>

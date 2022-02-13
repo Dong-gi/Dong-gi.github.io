@@ -10,17 +10,17 @@
     <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textOn="On"
-        android:textOff="Off"/>
+        android:textOff="Off"
+        android:textOn="On" />
 
     <Switch
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="체크박스"/>
+        android:text="체크박스" />
 
     <RadioGroup
         android:layout_width="match_parent"
@@ -30,17 +30,18 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="라디오버튼1"/>
+            android:text="라디오버튼1" />
+
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="라디오버튼2"/>
+            android:text="라디오버튼2" />
     </RadioGroup>
 
     <RatingBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:numStars="5"
-        android:stepSize="0.5"/>
+        android:stepSize="0.5" />
 
 </LinearLayout>

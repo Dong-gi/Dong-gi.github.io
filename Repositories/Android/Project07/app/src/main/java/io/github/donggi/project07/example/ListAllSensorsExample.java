@@ -9,8 +9,8 @@ public class ListAllSensorsExample {
     private static final String TAG = ListAllSensorsExample.class.getCanonicalName();
 
     public ListAllSensorsExample(Context context) {
-        SensorManager manager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
-        for(Sensor sensor : manager.getSensorList(Sensor.TYPE_ALL))
+        SensorManager manager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        for (Sensor sensor : manager.getSensorList(Sensor.TYPE_ALL))
             Log.d(TAG, sensor.toString());
     }
 /*

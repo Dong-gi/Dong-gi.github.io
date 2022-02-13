@@ -1,5 +1,6 @@
 package io.github.donggi.project03;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -28,10 +29,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkPermission() {
         // ContextCompat.checkSelfPermission()은 sdk 23부터 도입되었지만, 이전 버전에서도 잘 작동(권한 있음으로 리턴)한다고 함.
-        switch( ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA)) {
-            case PackageManager.PERMISSION_GRANTED:
-                Log.d(TAG, "이미 권한 있음");
-                return;
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "이미 권한 있음");
+            return;
         }
 
         Log.d(TAG, "권한이 없으므로 접근 권한 안내");
@@ -53,25 +53,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_FOR_CAMERA_PERMISSION:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(MainActivity.this, "권한 감사합니다", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d(TAG, "권한 거부됨. 사용자가 직접 부여해야 함.");
-                    new AlertDialog.Builder(MainActivity.this)
-                            .setMessage("권한 부족으로 불안정 할 수 있으니 권한 주세요 ㅠㅠ")
-                            .setPositiveButton("설정", (x, y) ->
-                                    startActivity(new Intent()
-                                            .setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                                            .setData(Uri.fromParts("package", getPackageName(), null))))
-                            .setNegativeButton("싫어", (x, y) -> {})
-                            .create()
-                            .show();
-                }
-                return;
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_FOR_CAMERA_PERMISSION) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(MainActivity.this, "권한 감사합니다", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.d(TAG, "권한 거부됨. 사용자가 직접 부여해야 함.");
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage("권한 부족으로 불안정 할 수 있으니 권한 주세요 ㅠㅠ")
+                        .setPositiveButton("설정", (x, y) ->
+                                startActivity(new Intent()
+                                        .setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                        .setData(Uri.fromParts("package", getPackageName(), null))))
+                        .setNegativeButton("싫어", (x, y) -> {
+                        })
+                        .create()
+                        .show();
+            }
         }
     }
 }
