@@ -282,7 +282,7 @@ include ../../../source/skeleton.pug
         li integer process.pid
         li integer process.ppid Since 9.2, Since 8.10
         p 부모 프로세스 PID
-        li Stream process.stdin, stdout, stderr 
+        li Stream process.stdin, stdout, stderr
             +codeBtn('/Repositories/Node/process.sample.js', 'javascript')
 
     h1 3rd/express : Web Framework
@@ -345,6 +345,13 @@ include ../../../source/skeleton.pug
             +asCode('javascript') app.use('/static', express.static(path.join(__dirname, 'ag3t9a23gt')));
         li 세션
         p cookie-parser, express-session 모듈 이용
+
+    h1 3rd/fastify : Web Framework
+    ul
+        li 보다 효율적으로 요청을 처리하는 웹 프레임워크
+        p 테스트 조건 하에서, 초당 5만건 이상의 Hello World 응답 처리
+        li CORS만 적용한 기본 프로젝트 예.
+            +codeBtn('/Repositories/Node/fastify-start/app.js', 'javascript')
 
     h1 3rd/forever : 종료 시 자동 재시작
     ul
@@ -447,4 +454,3 @@ include ../../../source/skeleton.pug
         li http://mongodb.github.io/node-mongodb-native/3.6/tutorials/
         li http://mongodb.github.io/node-mongodb-native/3.6/api/
         +codeBtn('/Repositories/Node/express-start/test/mongodb.test.js', 'javascript')
-

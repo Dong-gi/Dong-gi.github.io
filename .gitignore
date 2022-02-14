@@ -1,6 +1,8 @@
 !*.class
 !gradle-wrapper.jar
 
+*.log
+
 package-lock.json
 
 .gradle
