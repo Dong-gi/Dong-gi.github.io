@@ -3,6 +3,15 @@ include ../../source/skeleton.pug
     h1 NGINX?
     p HTTP 서버 + 메일 프록시 + 리버스 프록시 + 로드 밸런서
 
+    h1 관련 명령
+    +asCode('shell').
+        $ systemctl start nginx                                     # nginx 서비스 시작
+        $ systemctl status nginx.service                            # nginx 서비스 상태 확인
+        $ nginx -s reload                                           # 변경된 설정 적용
+        $ chcon -R -t httpd_sys_content_t Dong-gi.github.io/        # 웹 서버 읽기 가능한 컨텍스트 적용
+        $ chcon -R -t httpd_sys_rw_content_t Dong-gi.github.io/     # 웹 서버 쓰기 가능한 컨텍스트 적용
+        $ setsebool -P httpd_can_network_connect 1                  # 프록시 설정
+
     h1 HTTP -> HTTPS 리다이렉션 설정
     +asCode('nginx').
         server {
@@ -65,6 +74,3 @@ include ../../source/skeleton.pug
             root    /.../;
             charset utf-8;
         }
-
-    h1 변경된 설정 적용
-    +asCode('shell') $ nginx -s reload
