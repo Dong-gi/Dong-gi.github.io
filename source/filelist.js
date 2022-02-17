@@ -1,4 +1,7 @@
 const recentChangedPosts = `
+M	pugs/infra/nginx.pug
+M	pugs/algorithm/acmicpc.pug
+M	pugs/infra/linux.pug
 M	pugs/algorithm/overview.pug
 M	pugs/infra/db/psql_programming.pug
 M	pugs/infra/web/network.pug
@@ -40,19 +43,4 @@ M	pugs/daily_life/stock.pug
 M	pugs/algorithm/mcs.pug
 A	pugs/daily_life/baron.pug
 M	pugs/project/privacy.pug
-M	pugs/algorithm/overview.pug
-M	pugs/daily_life/car.pug
-A	pugs/daily_life/death.pug
-M	pugs/daily_life/house.pug
-A	pugs/daily_life/stock.pug
-M	pugs/infra/db/psql_tutorial.pug
-M	pugs/infra/linux.pug
-M	pugs/infra/nginx.pug
-M	pugs/infra/web/css.pug
-M	pugs/infra/web/network.pug
-M	pugs/project/error.pug
-M	pugs/project/snippets.pug
-M	pugs/project/tip.pug
-M	pugs/algorithm/mcs.pug
-M	pugs/daily_life/house.pug
 `;
