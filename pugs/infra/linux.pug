@@ -297,7 +297,7 @@ include ../../source/skeleton.pug
                 td
                     ul
                         li 연산자 : 산술 연산이 순서대로 처리되고, 마지막 결과를 반환
-                        li 대소문자 변환 in 
+                        li 대소문자 변환 in
                             +goto('parameter substitution')
                             |  Since bash 4
             +tds('\\', '이스케이프. 바로 뒤의 문자를 리터럴로 취급')
@@ -1014,6 +1014,10 @@ include ../../source/skeleton.pug
             h3 :
             p 아무것도 하지 않는 null 명령
 
+            h3 history
+            p 명령 실행 내역
+            +asCode('shell', '기록 지우기') $ history -c; &gt; $HISTFILE
+            
             h3 read
             p 표준입력으로부터 변수 할당; 변수명 지정하지 않은 경우 REPLY 예약 변수로 접근 가능
 

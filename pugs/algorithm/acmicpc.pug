@@ -43,3 +43,11 @@ include ../../source/skeleton.pug
         li n번째 대각선에 위치하는 분수의 (분자) + (분모) == n + 1
         li 홀수 번째 대각선은 n/1, 짝수 번째 대각선은 1/n부터 시작
         li: +codeBtn('/Repositories/Single/acmicpc/1193/Main.java', 'java')
+
+    h1 1463 1로 만들기
+    ul
+        li let P(n) ::= n을 1로 만드는 데 필요한 최소 연산 수
+        li 정의에 의해, P(3n) = P(n) + 1, P(2n) = P(n) + 1, P(n+1) = P(n) + 1
+        li 1부터 시작하여 정의에 따라 1,000,000까지 한 번씩만 방문하면 모든 답을 구할 수 있다
+        p 정의상 P(n)은 최소 연산 수기 때문에, 한 번 P(n)를 계산했다면 다시 계산할 필요가 없다
+        li: +codeBtn('/Repositories/Single/acmicpc/1463/Main.java', 'java')
