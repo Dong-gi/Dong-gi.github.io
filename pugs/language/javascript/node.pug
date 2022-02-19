@@ -222,6 +222,49 @@ include ../../../source/skeleton.pug
         li queueMicrotask(Function callback) Since 11
         p "microtask queue"는 V8 엔진이 관리하며, 동작은 process.nextTick()과 유사하다. 이벤트 루프 어느 페이즈에서든지 "next tick queue"가 항상 "microtask queue"보다 먼저 실행된다
 
+    h1 Lib/HTTP, HTTPS
+    ul
+        li HTTP, HTTPS Client 예
+        +asCode('javascript').
+            const express = require('express')
+            const http = require('http')
+            const https = require('https')
+
+            const app = express()
+
+            app.get('/**', (req, res, next) => {
+                let url = req.params.url
+
+                if (url.startsWith('https')) {
+                    https.get(url, {
+                        headers: {
+                            'accept-encoding': 'gzip'
+                        }
+                    }, (res2) => {
+                        let bufs = []
+                        res2.on('data', buf => bufs.push(buf))
+                        res2.on('end', () => {
+                            res.set(res2.headers)
+                            res.send(Buffer.concat(bufs))
+                        })
+                    })
+                } else if (url.startsWith('http')) {
+                        http.get(url, {
+                            headers: {
+                                'accept-encoding': 'gzip'
+                            }
+                        }, (res2) => {
+                            let bufs = []
+                            res2.on('data', buf => bufs.push(buf))
+                            res2.on('end', () => {
+                                res.set(res2.headers)
+                                res.send(Buffer.concat(bufs))
+                            })
+                        })
+                } else
+                    res.send('OK')
+            })
+
     h1 Lib/Modules
     ol
         li require(string id)

@@ -12,7 +12,8 @@ include ../../../source/skeleton.pug
         li 메시지 브로커 기능 보유 : Pub/Sub
         li BSD 라이선스
     div
-        h2 redis-server/redis-cli
+        h2 redis-server/
+            +asA('https://redis.io/topics/rediscli', 'redis-cli')
         ol
             li 서버 실행
             +asCode('shell') $ redis-server --port 27017
@@ -23,6 +24,8 @@ include ../../../source/skeleton.pug
                 > help
                 > help @&lt;group>
                 > help &lt;command>
+            li 여러 키 삭제
+            +asCode('shell') $ redis-cli --scan --pattern 'xxx_*' | xargs redis-cli DEL
 
         h2 Data type
         ol
@@ -330,7 +333,7 @@ include ../../../source/skeleton.pug
                 tr
                     td.marker GETEX
                     td GETEX key [EX seconds|PX milliseconds|EXAT timestamp|PXAT milliseconds-timestamp|PERSIST]
-                    td GET 실행 후, 
+                    td GET 실행 후,
                         +goto('키 수명')
                         |  변경
                 tr

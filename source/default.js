@@ -113,6 +113,7 @@ const posts = {
         { category: 'Project', file: '/posts/project/snippets.html', title: '코드 조각' },
         { category: 'Project', file: '/posts/project/tip.html', title: '잡다한 팁' },
         { category: 'Project', file: '/posts/project/wpf_data_tool.html', title: '* 데이터 작업 툴 - C#.NET, WPF' },
+        { category: 'Topic', file: '/posts/topic/docker_mailserver.html', title: 'Docker Mail Server 설치' },
         { category: 'Topic', file: '/posts/topic/fp.html', title: 'FP; Functional Programming' },
         { category: 'Topic', file: '/posts/topic/interview.html', title: '개발자 경력 관리' },
         { category: 'Topic', file: '/posts/topic/refactoring.html', title: '디자인 패턴 + 리팩터링' },
