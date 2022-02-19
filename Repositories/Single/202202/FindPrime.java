@@ -11,6 +11,8 @@ public class FindPrime {
 
     private static void findPrimes() {
         Arrays.fill(IS_PRIME, 2, FIND_PRIME_UPPER_BOUND, true);
+        for (var i = 4; i <= FIND_PRIME_UPPER_BOUND; i += 2)
+            IS_PRIME[i] = false;
         for (var i = 3; i * i <= FIND_PRIME_UPPER_BOUND; i += 2) {
             if (IS_PRIME[i]) {
                 for (int j = i; i * j <= FIND_PRIME_UPPER_BOUND; j += 2)
