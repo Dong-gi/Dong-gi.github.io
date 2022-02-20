@@ -1,12 +1,12 @@
 include ../../source/skeleton.pug
 
 +post('ACM-ICPC', '알고리즘, ACM-ICPC', 'ACM-ICPC 풀이 정리', true)
-    h1 1002 터렛
+    h1 1002 터렛 > 기하학
     ul
         li XY 평면에 존재하는 두 원 사이의 교점의 개수는? 0, 1, 2, 무한대 중 하나
         li: +codeBtn('/Repositories/Single/acmicpc/1002/Main.java', 'java')
 
-    h1 1003 피보나치 함수
+    h1 1003 피보나치 함수 > 이산수학
     ul
         li 정의
         ul
@@ -23,13 +23,13 @@ include ../../source/skeleton.pug
             li answer(n, 1) == answer(n-2, 1) + answer(n-1, 1)
         li: +codeBtn('/Repositories/Single/acmicpc/1003/Main.java', 'java')
 
-    h1 1004 어린 왕자
+    h1 1004 어린 왕자 > 기하학
     ul
         li 시점과 종점 모두 행성계 밖에 있는 경우 : 지나갈 필요 없음
         li 시점과 종점 모두 행성계 안에 있는 경우 : 지나갈 필요 없음
         li: +codeBtn('/Repositories/Single/acmicpc/1004/Main.java', 'java')
 
-    h1 1011 Fly me to the Alpha Centauri
+    h1 1011 Fly me to the Alpha Centauri > 이산수학
     ul
         li x → y 도달하는 동안 이동하는 수열 (m1, m2, m3, ..., mx) 중에서 불연속적으로 수를 뽑아서,
         p (1, 2, 3, ..., n-1, n, n-1, ..., 3, 2, 1)을 항상 만들 수 있다; 2n - 1번 이동
@@ -37,14 +37,20 @@ include ../../source/skeleton.pug
         li 나머지가 0이 아니라면 [1, n-1] 중 하나로 1번 이동
         li: +codeBtn('/Repositories/Single/acmicpc/1011/Main.java', 'java')
 
-    h1 1193 분수찾기
+    h1 1193 분수찾기 > 이산수학
     ul
         li n번째(1부터 카운트) 대각선에 위치하는 분수는 n개
         li n번째 대각선에 위치하는 분수의 (분자) + (분모) == n + 1
         li 홀수 번째 대각선은 n/1, 짝수 번째 대각선은 1/n부터 시작
         li: +codeBtn('/Repositories/Single/acmicpc/1193/Main.java', 'java')
 
-    h1 1463 1로 만들기
+    h1 1260 DFS, BFS > 그래프
+    ul
+        li DFS 탐색 중인 모든 정점은 DFS 탐색을 적용
+        li BFS 탐색 중인 모든 정점은 BFS 탐색을 적용; 다음 레벨의 모든 정점을 정렬해서 큐를 구성하는 건 NG
+        li: +codeBtn('/Repositories/Single/acmicpc/1260/Main.java', 'java')
+
+    h1 1463 1로 만들기 > 이산수학
     ul
         li let P(n) ::= n을 1로 만드는 데 필요한 최소 연산 수
         li 정의에 의해, P(3n) = P(n) + 1, P(2n) = P(n) + 1, P(n+1) = P(n) + 1

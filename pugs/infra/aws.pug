@@ -124,7 +124,9 @@ include ../../source/skeleton.pug
         p OpenVPN을 이용한 사용자 PC와 VPC 사이의 VPN 지원. private IP 주소를 이용한 인스턴스 접근이 가능해진다
         li Site-to-Site VPN
         p VPC와 사용자 네트워크 사이의 VPN 터널 유지
-
+        li Traffic Mirroring
+        p 두 EC2 인스턴스 사이의 트래픽을 미러링할 수 있다. ALB도 AWS 관리 EC2 인스턴스이므로, EC2 - ALB 사이의 트래픽도 확인할 수 있다.
+            +asA('https://sjakthol.github.io/posts/alb-vpc-traffic-mirroring/', '참고 자료')
 
     h1 서버 다중화
     ol
@@ -190,6 +192,22 @@ include ../../source/skeleton.pug
                 +asA('https://aws.amazon.com/ko/premiumsupport/knowledge-center/cloudfront-cache-files-time/')
             li 쿼리 스트링 캐시 정책 조정
                 +asA('https://docs.aws.amazon.com/ko_kr/AmazonCloudFront/latest/DeveloperGuide/QueryStringParameters.html')
+
+    h1 Lambda
+    div
+        h2 Lambda@Edge
+        ul
+            li CloudFront 요청/응답으로 트리거되는 람다 함수
+            p 원본 이미지 1개에 대하여, 여러 사이즈의 캐시 응답을 생성하는 예시 :
+                +asA('https://aws.amazon.com/ko/blogs/networking-and-content-delivery/resizing-images-with-amazon-cloudfront-lambdaedge-aws-cdn-blog/')
+            li Lambda Layer는 지원되지 않는다
+        div
+            h3.fake 가능한 실행 지점
+            ol
+                li Viewer Request : CloudFront가 요청을 받아, 캐시를 검사하는 시점에 실행
+                li Origin Request : 캐시에 항목이 없어 원본(origin)을 요청하는 시점에 실행
+                li Origin Response : 원본(origin) 응답을 받은 이후, 캐시에 적재하기 전에 실행
+                li Viewer Response : 응답을 엔드 유저에게 전달하기 전에 실행
 
     h1 특이 현상
     div

@@ -190,6 +190,12 @@ include ../../../source/skeleton.pug
         li FileReader
         +asCode('javascript') readAsText(file, encoding), readAsDataURL(file), readAsBinaryString(file), readAsArrayBuffer(file)
 
+    h1 유용한 스크립트
+    ul
+        li: +asA('https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js', 'CryptoJS')
+        p 연관 포스트로 이동 : 
+            +goto('CryptoJS', 'node.html')
+
     h1 잡다한 코드
     ul
         li 특정 노드로 스크롤 이동

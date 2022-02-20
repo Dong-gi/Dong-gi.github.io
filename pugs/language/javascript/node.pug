@@ -328,6 +328,14 @@ include ../../../source/skeleton.pug
         li Stream process.stdin, stdout, stderr
             +codeBtn('/Repositories/Node/process.sample.js', 'javascript')
 
+    +pos('CryptoJS')
+    h1 3rd/CryptoJS
+    p 해싱, 암/복호화, 인코딩/디코딩 관련 함수 제공
+    ul
+        li: +asA('https://www.npmjs.com/package/crypto-js', 'npm - crypto-js')
+        li: +asA('https://cryptojs.gitbook.io/', 'CryptoJS document')
+        li: +asA('https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js', '브라우저용 스크립트')
+
     h1 3rd/express : Web Framework
     ul
         li 정적 리소스 제공에는 Nginx, CDN, Amazon S3 등을 고려함이 좋다
