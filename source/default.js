@@ -37,6 +37,7 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/007.html', title: '키르케고르 실존 극장' },
         { category: 'Topic/Book', file: '/posts/book/008.html', title: 'Gamification by Design' },
         { category: 'Topic/Book', file: '/posts/book/009.html', title: '인지 편향' },
+        { category: 'Topic/Book', file: '/posts/book/010.html', title: '애자일 & 스크럼 프로젝트 관리' },
         { category: 'Infra/DB', file: '/posts/infra/db/concept.html', title: 'DB 기초 개념' },
         { category: 'Infra/DB', file: '/posts/infra/db/mongodb.html', title: 'MongoDB' },
         { category: 'Infra/DB', file: '/posts/infra/db/mysql.html', title: 'MySQL' },
