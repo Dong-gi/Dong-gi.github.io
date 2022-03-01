@@ -122,6 +122,8 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/009.html', title: '인지 편향' },
         { category: 'Topic/Book', file: '/posts/book/010.html', title: '애자일 & 스크럼 프로젝트 관리' },
         { category: 'Topic/Book', file: '/posts/book/011.html', title: '나는 뇌가 아니다' },
+        { category: 'Topic/Book', file: '/posts/book/012.html', title: '우리는 어떻게 바뀌고 있는가' },
+        { category: 'Topic/Book', file: '/posts/book/013.html', title: '위험한 생각들' },
     ], codes: {}
 }
 
