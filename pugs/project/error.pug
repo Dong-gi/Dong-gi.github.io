@@ -60,6 +60,14 @@ include ../../source/skeleton.pug
             +asCode('shell') --add-opens java.base/jdk.internal.misc=ALL-UNNAMED
             li: +asA('https://stackoverflow.com/questions/57885828/netty-cannot-access-class-jdk-internal-misc-unsafe', '참고')
 
+        h2 java.io.EOFException: Unexpected end of ZLIB input stream
+        ul
+            li at java.base/java.util.zip.GZIPInputStream.read
+            li ch.qos.logback.core.rolling.helper.CompressionMode.GZ 사용 시 간헐적으로 압축 누락 발생
+
+        h2 java.lang.NoClassDefFoundError
+        p 컨테이너로 jar 실행 중인 상태에서 jar 파일을 교체했지만 컨테이너 재시작은 하지 않은 경우 발생 가능?
+
         h2 java.text.ParseException: Unparseable date: "2028-07-25 15:00:00"
         ol
             li 아스키 공백 문자(32)가 맞는지 확인한다
