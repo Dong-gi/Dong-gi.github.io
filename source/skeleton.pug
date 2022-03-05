@@ -24,7 +24,7 @@ mixin codeBtn(path, lan, displayRange)
             = path.split('/').pop()
 
 mixin goto(name, post)
-    +asA(`${post || ''}#pos${name.hashCode()}`, `Goto - ${name}`).goto&attributes({ target: post ? '_blank' : '_self' })
+    +asA(`${post || ''}#pos${name.hashCode()}`, `${name}`).goto&attributes({ target: post ? '_blank' : '_self' })
 
 mixin hoverTemplate()
     div.w3-container.w3-leftbar.w3-border-green.w3-white.hover-template&attributes(attributes)
