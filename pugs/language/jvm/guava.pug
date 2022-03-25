@@ -297,8 +297,7 @@ include ../../../source/skeleton.pug
                 m.put(1, 2);
                 m.put(1, 1);
 
-                assertEquals(5, m.size()); // 같은 키에 대한 값 중복 제거 X
-                assertEquals(5, m.values().size());
+                assertEquals(5, m.size()); // 키-값 쌍 중복 제거 X
             +asCode('java', 'Value uniqueness - SetMultimap').
                 var m = MultimapBuilder.hashKeys().hashSetValues().&lt;Integer, Integer>build();
                 m.put(1, 3);
@@ -307,8 +306,7 @@ include ../../../source/skeleton.pug
                 m.put(1, 2);
                 m.put(1, 1);
 
-                assertEquals(4, m.size()); // 같은 키에 대하여는 값 중복 제거
-                assertEquals(4, m.values().size()); // 같은 키에 대해서만 값 중복 제거
+                assertEquals(4, m.size()); // 키-값 쌍 중복 제거 O
 
             h3 Table&lt;R,C,V&gt;
             ul
@@ -588,7 +586,7 @@ include ../../../source/skeleton.pug
     h1 ...primitives
     ul
         li Array : ImmutableIntArray, ImmutableLongArray, ImmutableDoubleArray
-        li Type : UnsignedInteger, UnsignedLong	
+        li Type : UnsignedInteger, UnsignedLong
         li Utility : Booleans, ..., Doubles, Primitives, UnsignedLongs
 
     h1 ...reflect

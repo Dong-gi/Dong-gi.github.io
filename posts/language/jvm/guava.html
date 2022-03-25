@@ -125,16 +125,14 @@ m.put(1, 1);
 m.put(1, 2);
 m.put(1, 1);
 
-assertEquals(5, m.size()); // 같은 키에 대한 값 중복 제거 X
-assertEquals(5, m.values().size());</div><p><strong>↓Value uniqueness - SetMultimap</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">var m = MultimapBuilder.hashKeys().hashSetValues().&lt;Integer, Integer>build();
+assertEquals(5, m.size()); // 키-값 쌍 중복 제거 X</div><p><strong>↓Value uniqueness - SetMultimap</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">var m = MultimapBuilder.hashKeys().hashSetValues().&lt;Integer, Integer>build();
 m.put(1, 3);
 m.put(2, 3);
 m.put(1, 1);
 m.put(1, 2);
 m.put(1, 1);
 
-assertEquals(4, m.size()); // 같은 키에 대하여는 값 중복 제거
-assertEquals(4, m.values().size()); // 같은 키에 대해서만 값 중복 제거
+assertEquals(4, m.size()); // 키-값 쌍 중복 제거 O
 </div><h3>Table&lt;R,C,V&gt;</h3><ul><li>(행 key, 열 key) 쌍에 대한 값을 보존</li><li>Sparse 데이터 표현에 좋다</li><li>행/열 모두로 조회 가능하지만, 일부 구현은 열로 조회하는 경우 성능이 좋지 않을 수 있다</li><li>메서드가 반환한 모든 Collection/Map은 테이블에 대한 writable view다</li><p><strong>구현에 따라 테이블 변경 메서드를 지원하지 않거나, 메서드가 반환한 Collection/Map이 writable하지 않을 수 있다</strong></p><li>구현체 : ArrayTable(고정 크기 2차원 배열 이용), HashBasedTable(linked hash table 이용), TreeBasedTable(행/열 키 각각을 정렬)</li></ul><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">Set&lt;Table.Cell&lt;R,C,V&gt;&gt; cellSet()
 Map&lt;C,V&gt; row(R rowKey) + column
 Map&lt;R,Map&lt;C,V&gt;&gt; rowMap() + columnMap
@@ -212,7 +210,7 @@ static String getFileExtension​(Path path)
 static String getNameWithoutExtension​(Path path)
 static void deleteRecursively​(Path path, RecursiveDeleteOption... options)
 static void deleteDirectoryContents​(Path path, RecursiveDeleteOption... options)
-</div><h2>LineReader</h2><p>\n, \r, \r\n 무관하게 한 줄씩 읽을 수 있게 해준다</p><h2>Resources</h2><p>클래스패스 상의 리소스에 접근하는 유틸리티를 제공한다</p></div><h1>...math</h1><ul><li>IntMath, LongMath, DoubleMath, BigIntegerMath, BigDecimalMath</li><li>Quantiles : 분위수 계산</li></ul><h1>...net</h1><ul><li>HttpHeaders, MediaType : 상수 제공</li><li>PercentEscaper, UrlEscapers : Escaper 제공</li></ul><h1>...primitives</h1><ul><li>Array : ImmutableIntArray, ImmutableLongArray, ImmutableDoubleArray</li><li>Type : UnsignedInteger, UnsignedLong	</li><li>Utility : Booleans, ..., Doubles, Primitives, UnsignedLongs</li></ul><h1>...reflect</h1><div><h2>TypeToInstanceMap&lt;B&gt;</h2><ul><li>TypeToken -&gt; instance 매핑</li><li>ImmutableTypeToInstanceMap&lt;B>, MutableTypeToInstanceMap&lt;B></li></ul><h2>ClassPath</h2><p>ClassLoader로부터 모든 클래스, 리소스 스캔</p><h2>Reflection</h2><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static String getPackageName​(Class&lt;?> clazz)
+</div><h2>LineReader</h2><p>\n, \r, \r\n 무관하게 한 줄씩 읽을 수 있게 해준다</p><h2>Resources</h2><p>클래스패스 상의 리소스에 접근하는 유틸리티를 제공한다</p></div><h1>...math</h1><ul><li>IntMath, LongMath, DoubleMath, BigIntegerMath, BigDecimalMath</li><li>Quantiles : 분위수 계산</li></ul><h1>...net</h1><ul><li>HttpHeaders, MediaType : 상수 제공</li><li>PercentEscaper, UrlEscapers : Escaper 제공</li></ul><h1>...primitives</h1><ul><li>Array : ImmutableIntArray, ImmutableLongArray, ImmutableDoubleArray</li><li>Type : UnsignedInteger, UnsignedLong</li><li>Utility : Booleans, ..., Doubles, Primitives, UnsignedLongs</li></ul><h1>...reflect</h1><div><h2>TypeToInstanceMap&lt;B&gt;</h2><ul><li>TypeToken -&gt; instance 매핑</li><li>ImmutableTypeToInstanceMap&lt;B>, MutableTypeToInstanceMap&lt;B></li></ul><h2>ClassPath</h2><p>ClassLoader로부터 모든 클래스, 리소스 스캔</p><h2>Reflection</h2><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static String getPackageName​(Class&lt;?> clazz)
 static String getPackageName​(String classFullName)
     // 클래스 이름만 파싱하여 패키지 이름을 판단한다
 
