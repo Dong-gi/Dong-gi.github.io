@@ -317,131 +317,156 @@ include ../../../source/skeleton.pug
             +pos('UNLINK')
             h3 UNLINK
             +asCode('text', 'syntax') UNLINK key [key ...]
-            p DEL과 달리 값을 백그라운드 스레드에서 삭제. 개수가 많을수록 UNLINK가 더 빠르다
+            ul
+                li 키 공간에서 키를 삭제한 개수를 반환
+                li
+                    +goto('DEL')
+                    |과 다르게 메모리 해제를 별도 스레드에서 진행(논-블로킹)하기 때문에, 지울 개수가 많을수록 UNLINK가 더 빠르다
 
             +pos('WAIT')
             h3 WAIT
-            +asCode('text', 'syntax') WAIT numreplicas timeout
+            +asCode('text', 'syntax') WAIT numreplicas timeout-milliseconds
             ul
                 li 이전 모든 write 명령이 numreplicas개의 복제본에 도달하기까지 최대 timeout 밀리초 대기
                 li 도달한 복제본 개수 반환
 
-        h2 Strings
+        h2 String
         div
             +pos('APPEND')
             h3 APPEND
             +asCode('text', 'syntax') APPEND key value
-            p 키가 이미 존재하면 append, 없으면 set. 연산 후의 문자열 길이 반환
-
-            +pos('BITCOUNT')
-            h3 BITCOUNT
-            +asCode('text', 'syntax') BITCOUNT key [start end]
             ul
-                li 문자열 내 set bit 개수 반환
-                li Closed range [start, end] 인덱스로 음수 가능
-
-            +pos('BITFIELD')
-            h3 BITFIELD
-            +asCode('text', 'syntax') BITFIELD key [GET type offset] [SET type offset value] [INCRBY type offset increment] [OVERFLOW WRAP|SAT|FAIL]
-            td
-                ul
-                    li 문자열을 비트 배열로 간주하여 GET, SET, INCRBY 연산들을 수행한다
-                    li type : 부호 있는 64비트, 부호 없는 63비트까지 가능
-                    p 예. i5(부호 있는 5비트), u4(부호 없는 4비트)
-                    li offset : 시작 위치. 정수만 이용하는 경우 bit단위, #를 붙이면 type 크기 단위
-                    li OVERFLOW : WRAP(default, 오버/언더플로우 비트 무시), SAT(오버/언더플로우 시 최대/최소값으로), FAIL(실패, NULL 반환)
-                    p OVERFLOW 이후 등장하는 INCRBY 명령에만 영향을 미침에 주의
-                    li 반환 : SET(이전 값), GET(현재 값), INCRBY(신규 값)
-                +asCode('shell', 'redis-cli').
-                    127.0.0.1:27017> set time ''
-                    OK
-                    127.0.0.1:27017> bitfield time SET u6 #0 11 SET u6 #1 33 SET u6 #2 55 GET u6 #0 GET u6 #1 GET u6 #2 INCRBY u6 #0 1 INCRBY u6 #1 1 INCRBY u6 #2 1
-                    1) (integer) 0
-                    2) (integer) 0
-                    3) (integer) 0
-                    4) (integer) 11
-                    5) (integer) 33
-                    6) (integer) 55
-                    7) (integer) 12
-                    8) (integer) 34
-                    9) (integer) 56
-
-            +pos('BITOP')
-            h3 BITOP
-            +asCode('text', 'syntax') BITOP operation destkey key [key ...]
-            p 소스 키들의 값에 대한 AND, OR, XOR, NOT 결과를 destkey에 저장한다
-
-            +pos('BITPOS')
-            h3 BITPOS
-            +asCode('text', 'syntax') BITPOS key bit [start] [end]
-            p bit와 일치하는 인덱스를 [start, end] 사이(음수 인덱스 가능)에서 구한다. 없는 경우 -1 반환
+                li 키가 존재하고 값이 문자열이면 append
+                li 키가 존재하고 값이 문자열이 아니면 에러
+                li 키가 없으면 set
+                li 연산 후의 문자열 길이 반환
 
             +pos('DECR')
             h3 DECR
             +asCode('text', 'syntax') DECR key
-            p 주어진 키의 정수 1 감소. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환
+            ul
+                li 주어진 키의 정수 1 감소 후 반환
+                p 키가 없으면 0으로 간주
+                li 값이 signed 64bit 범위 밖이면 에러
 
             +pos('DECRBY')
             h3 DECRBY
             +asCode('text', 'syntax') DECRBY key decrement
-            p 주어진 키의 정수 decrement 감소. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환
+            ul
+                li 주어진 키의 정수 decrement 감소 후 반환
+                p 키가 없으면 0으로 간주
+                li 값이 signed 64bit 범위 밖이면 에러
 
             +pos('GET')
             h3 GET
             +asCode('text', 'syntax') GET key
-            p key에 대한 값을 반환한다. 없으면 nil
-
-            +pos('GETBIT')
-            h3 GETBIT
-            +asCode('text', 'syntax') GETBIT key offset
-            p offset번째 비트를 반환
+            ul
+                li key가 없으면 nil 반환
+                li key의 값이 문자열이면 해당 값 반환
+                li 그 외는 에러
 
             +pos('GETDEL')
             h3 GETDEL
             +asCode('text', 'syntax') GETDEL key
-            p GET 실행 후 DEL(IFF key가 존재하고, 값이 string일 경우에만)
+            ul
+                li GET 실행 후 DEL(key가 존재하고, 값이 string일 경우) 실행
+                li GET 실행 결과 반환
 
             +pos('GETEX')
             h3 GETEX
-            +asCode('text', 'syntax') GETEX key [EX seconds|PX milliseconds|EXAT timestamp|PXAT milliseconds-timestamp|PERSIST]
-            p GET 실행 후,
-                +goto('키 수명')
-                |  변경
+            +asCode('text', 'syntax') GETEX key [EX seconds|PX milliseconds|EXAT unix-time-seconds|PXAT unix-time-milliseconds|PERSIST]
+            ul
+                li GET 실행 후 ttl 변경. GET 실행 결과 반환
+                li EX, PX : ttl(상대 시간)
+                li EXAT, PXAT : ttl(절대 시각)
+                li PERSIST : ttl 제거
 
             +pos('GETRANGE')
             h3 GETRANGE
             +asCode('text', 'syntax') GETRANGE key start end
-            p key에 대하여, 문자열의 [start, end] 만큼 반환한다. 음수 인덱스 가능
+            ul
+                li key에 대하여, 문자열의 부분 문자열 [start, end] 반환
+                li 음수 인덱스 가능. 문자열 길이를 초과하는 범위는 무시
 
             +pos('GETSET')
-            h3 GETSET
+            h3 GETSET; Deprecated since 6.2.0
             +asCode('text', 'syntax') GETSET key value
-            p SET 실행 후, 이전 값 반환
+            ul
+                li SET 실행 후, 이전 값 반환
+                li Since 6.2.0 : SET 명령의 GET 옵션 사용
 
             +pos('INCR')
             h3 INCR
             +asCode('text', 'syntax') INCR key
-            p 주어진 키의 정수 1 증가. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환
+            ul
+                li 주어진 키의 정수 1 증가 후 반환
+                p 키가 없으면 0으로 간주
+                li 값이 signed 64bit 범위 밖이면 에러
 
             +pos('INCRBY')
             h3 INCRBY
             +asCode('text', 'syntax') INCRBY key increment
-            p 주어진 키의 정수 increment 증가. 없으면 0. 값은 signed 64bit. 연산 후의 값 반환
+            ul
+                li 주어진 키의 정수 increment 증가 후 반환
+                p 키가 없으면 0으로 간주
+                li 값이 signed 64bit 범위 밖이면 에러
 
             +pos('INCRBYFLOAT')
             h3 INCRBYFLOAT
             +asCode('text', 'syntax') INCRBYFLOAT key increment
-            p 주어진 키의 실수 increment(음수 가능) 만큼 변경. 없으면 0. 값은 double. 연산 후의 값 문자열로 반환
+            ul
+                li 주어진 키의 실수 increment(음수 가능) 증가 후 반환
+                p 키가 없으면 0으로 간주
+                li 값이 double 범위 밖이면 에러
+
+            +pos('LCS')
+            h3 LCS Since 6.0.0 or 7.0.0
+            +asCode('text', 'syntax').
+                # Since 6.0.0
+                STRALGO LCS [KEYS ...] [STRINGS ...] [LEN] [IDX] [MINMATCHLEN len] [WITHMATCHLEN]
+                # Since 7.0.0
+                LCS key1 key2 [LEN] [IDX] [MINMATCHLEN len] [WITHMATCHLEN]
+            ul
+                li 두 문자열의 LCS(Longest common subsequence)를 구한다
+                +asCode('shell', 'redis-cli').
+                    127.0.0.1:6379> set key1 humble-bundle
+                    OK
+                    127.0.0.1:6379> set key2 bundle-humble
+                    OK
+                    127.0.0.1:6379> stralgo lcs keys key1 key2
+                    "ble-ule"
+                    127.0.0.1:6379> stralgo lcs strings humble-bundle bundle-humble
+                    "ble-ule"
+                li LEN : 길이만을 원하는 경우
+                li IDX : LCS 각 부분 시퀀스의 [시작, 종료] 위치를 역순으로 반환
+                li IDX MINMATCHLEN : LCS 부분 시퀀스 중, 최소 길이를 만족하는 것만 반환
+                li IDX WITHMATCHLEN : LCS 각 부분 시퀀스의 길이도 반환
+                +asCode('shell', 'redis-cli').
+                    127.0.0.1:6379> stralgo lcs strings humble-bundle xbundle-humble idx minmatchlen 2
+                    1) "matches"
+                    2) 1) 1) 1) (integer) 11
+                             2) (integer) 12
+                          2) 1) (integer) 12
+                             2) (integer) 13
+                       2) 1) 1) (integer) 4
+                             2) (integer) 6
+                          2) 1) (integer) 5
+                             2) (integer) 7
+                    3) "len"
+                    4) (integer) 7
+
+                    // 2) 1) 1) : "humble-bundle"의 "le"
+                    // 2) 1) 2) : "xbundle-humble"의 "le"
 
             +pos('MGET')
             h3 MGET
             +asCode('text', 'syntax') MGET key [key ...]
             p 각 키에 대해 get 하여 배열로 반환
-                +asCode('shell', 'redis-cli').
-                    127.0.0.1:27017> mget k1 k2 not_exists_key
-                    1) "v1"
-                    2) "v2"
-                    3) (nil)
+            +asCode('shell', 'redis-cli').
+                127.0.0.1:27017> mget k1 k2 not_exists_key
+                1) "v1"
+                2) "v2"
+                3) (nil)
 
             +pos('MSET')
             h3 MSET
@@ -456,32 +481,25 @@ include ../../../source/skeleton.pug
             +pos('PSETEX')
             h3 PSETEX
             +asCode('text', 'syntax') PSETEX key milliseconds value
-            p 밀리초 단위 SETEX
+            p 밀리초 단위
+                +goto('SETEX')
 
             +pos('SET')
             h3 SET
-            +asCode('text', 'syntax') SET key value [EX seconds|PX milliseconds|EXAT timestamp|PXAT milliseconds-timestamp|KEEPTTL] [NX|XX] [GET]
+            +asCode('text', 'syntax') SET key value [EX seconds|PX milliseconds|EXAT unix-time-seconds|PXAT unix-time-milliseconds|KEEPTTL] [NX|XX] [GET]
             ul
                 li 원자적으로 key에 대하여 value를 할당한다. 이전에 설정한 값, 유효 기간을 덮어쓴다
-                +pos('키 수명')
-                li EX seconds : 유효 기간(s)
-                li PX milliseconds : 유효 기간(ms)
-                li EXAT timestamp-seconds : 만료 시각(s)
-                li PXAT timestamp-milliseconds : 만료 시각(ms)
-                li NX : 신규 키일 때만 설정 // 이를 이용해 잠금 구현 가능
+                li EX, PX : ttl(상대 시각)
+                li EXAT, PXAT : ttl(절대 시각)
+                li NX : 신규 키일 때만 설정
                 li XX : 중복 키일 때만 설정
-                li KEEPTTL : 이전 유효 기간을 유지
+                li KEEPTTL : 이전 ttl 유지
                 li GET : 이전 값 반환(없으면 nil)
-
-            +pos('SETBIT')
-            h3 SETBIT
-            +asCode('text', 'syntax') SETBIT key offset value
-            p offset번째 비트를 value(0 | 1)로 변경. 이전 비트값 반환
 
             +pos('SETEX')
             h3 SETEX
             +asCode('text', 'syntax') SETEX key seconds value
-            p == SET key value EX seconds
+            p "SET key value EX seconds"와 동일
 
             +pos('SETNX')
             h3 SETNX
@@ -493,37 +511,194 @@ include ../../../source/skeleton.pug
             +pos('SETRANGE')
             h3 SETRANGE
             +asCode('text', 'syntax') SETRANGE key offset value
-            p key에 대하여, offset(>=0) 위치부터 value로 덮어쓴다. 빈 자리는 \x00으로 채워지며, 설정 후 문자열 길이를 반환한다
-                +asCode('shell', 'redis-cli').
-                    127.0.0.1:27017> set msg hello
-                    OK
-                    127.0.0.1:27017> setrange msg 8 hello
-                    (integer) 13
-                    127.0.0.1:27017> get msg
-                    "hello\x00\x00\x00hello"
-
-            +pos('STRALGO')
-            h3 STRALGO
-            +asCode('text', 'syntax') STRALGO algo-name arg [arg ...]
-            td
-                ol
-                    li STRALGO LCS [KEYS ...] [STRINGS ...] [LEN]
-                    p 두 문자열의 공통 시퀀스를 구한다
-                    +asCode('shell', 'redis-cli').
-                        > stralgo lcs strings humble-bundle bundle-humble
-                        "ble-ule"
+            ul
+                li key에 대하여, offset(0부터 시작) 위치부터 value의 길이만큼 value로 덮어쓴다
+                li offset이 기존 문자열을 초과하는 경우 빈 자리는 \x00으로 채워진다
+                li key가 존재하지 않는 경우, 값을 빈 문자열로 간주하고 실행한다
+                li 설정 후 문자열 길이를 반환한다
+                li
+                    +goto('GETRANGE')
+                    |와 함께 O(1) 접근 가능한 공유 배열로 이용할 수 있다
+            +asCode('shell', 'redis-cli').
+                127.0.0.1:27017> set msg hello
+                OK
+                127.0.0.1:27017> setrange msg 8 hello
+                (integer) 13
+                127.0.0.1:27017> get msg
+                "hello\x00\x00\x00hello"
 
             +pos('STRLEN')
             h3 STRLEN
             +asCode('text', 'syntax') STRLEN key
-            p 문자열 길이 반환. 값이 없어도 0
-                +asCode('shell', 'redis-cli').
-                    127.0.0.1:27017> strlen not_exists_key
-                    (integer) 0
+            ul
+                li 문자열 길이 반환
+                li key가 존재하지 않으면 0
+                li 값이 문자열이 아니면 에러
+
+        h2 Bitmap
+        div
+            +pos('BITCOUNT')
+            h3 BITCOUNT
+            +asCode('text', 'syntax') BITCOUNT key [start end [BYTE|BIT]]
+            ul
+                li 문자열 내 set bit 개수 반환
+                li start, end : 음수를 허용하는 두 인덱스로 표현되는 닫힌 구간 [start, end]으로 탐색 구간 지정 가능
+                li BYTE, BIT : 탐색 구간에 사용되는 start, end의 단위 지정
+
+            +pos('BITFIELD')
+            h3 BITFIELD
+            +asCode('text', 'syntax') BITFIELD key [GET encoding offset] [SET encoding offset value] [INCRBY encoding offset increment] [OVERFLOW WRAP|SAT|FAIL]
+            ul
+                li 문자열을 비트열로 간주하여 GET, SET, INCRBY 연산들을 수행한다
+                p GET 서브 명령 실행 시, 문자열을 벗어난 범위의 비트열은 0으로 간주한다
+                li encoding : 부호 있는 64비트, 부호 없는 63비트까지 가능
+                p e.g. i5(부호 있는 5비트), u4(부호 없는 4비트)
+                li offset : 0부터 시작하는 시작 위치. 정수만 이용하는 경우 bit단위, #를 붙이면 encoding 크기 단위
+                li OVERFLOW : WRAP(default, 오버/언더플로우 비트 무시), SAT(오버/언더플로우 시 최대/최소값으로), FAIL(실패, nil 반환)
+                p OVERFLOW 이후 등장하는 INCRBY 서브 명령에만 영향을 미침에 유의
+                li 반환 : SET(이전 값), GET(현재 값), INCRBY(신규 값)
+            +asCode('shell', 'redis-cli').
+                127.0.0.1:27017> bitfield time SET u6 #0 11 SET u6 #1 33 SET u6 #2 55 GET u6 #0 GET u6 #1 GET u6 #2 INCRBY u6 #0 1 INCRBY u6 #1 1 INCRBY u6 #2 1
+                1) (integer) 0
+                2) (integer) 0
+                3) (integer) 0
+                4) (integer) 11
+                5) (integer) 33
+                6) (integer) 55
+                7) (integer) 12
+                8) (integer) 34
+                9) (integer) 56
+
+            +pos('BITFIELD_RO')
+            h3 BITFIELD_RO Since 6.2.0
+            +asCode('text', 'syntax') BITFIELD_RO key GET encoding offset
+            p 읽기 전용 복제본에서 마스터로 명령이 리디렉션되는 것을 방지하기 위한 읽기 전용 BITFIELD
+
+            +pos('BITOP')
+            h3 BITOP
+            +asCode('text', 'syntax') BITOP operation destkey key [key ...]
+            p 소스 키들의 값에 대한 AND, OR, XOR, NOT 결과를 destkey에 저장한다
+            +asCode('shell', 'redis-cli').
+                127.0.0.1:6379> set key1 "humble-bundle"
+                OK
+                127.0.0.1:6379> set key2 "bundle-humble"
+                OK
+                127.0.0.1:6379> bitop and key3 key1 key2
+                (integer) 13
+                127.0.0.1:6379> get key3
+                "`ul`le-`ul`le"
+
+            +pos('BITPOS')
+            h3 BITPOS
+            +asCode('text', 'syntax') BITPOS key bit [start [end [BYTE|BIT]]]
+            ul
+                li bit와 일치하는 인덱스를 닫힌 구간 [start, end] 사이(음수 인덱스 가능)에서 구한다
+                li BYTE, BIT : 탐색 구간에 사용되는 start, end의 단위 지정
+                li Set bit을 못찾은 경우 -1 반환
+                li 구간 지정 없이 Clear bit을 못찾은 경우 비트열 길이 반환
+                p 문자열을 초과하는 부분을 0 비트열로 간주하기 때문
+                li 구간 지정했지만 Clear bit을 못찾은 경우 -1 반환
+            +asCode('shell', 'redis-cli').
+                127.0.0.1:6379> set key "\x00\xff"
+                OK
+                127.0.0.1:6379> bitpos key 0
+                (integer) 0
+                127.0.0.1:6379> bitpos key 0 1
+                (integer) 16
+                127.0.0.1:6379> bitpos key 0 1 1
+                (integer) -1
+                127.0.0.1:6379> bitpos key 1
+                (integer) 8
+                127.0.0.1:6379> bitpos key 1 1
+                (integer) 8
+
+            +pos('GETBIT')
+            h3 GETBIT
+            +asCode('text', 'syntax') GETBIT key offset
+            p offset(0부터 시작)번째 비트 반환. 문자열을 넘어선 범위는 0으로 간주
+
+            +pos('SETBIT')
+            h3 SETBIT
+            +asCode('text', 'syntax') SETBIT key offset value
+            p offset(0부터 시작)번째 비트를 value(0 | 1)로 변경. 이전 비트값 반환
 
         h2 List
         p 값은 입력된 순서대로 저장되고, 값이 하나도 없으면 키가 삭제된다
         div
+            +pos('BLMOVE')
+            h3 BLMOVE Since 6.2.0
+            +asCode('text', 'syntax') BLMOVE source destination LEFT|RIGHT LEFT|RIGHT timeout-seconds
+            ul
+                li
+                    +goto('LMOVE')
+                    |의 블로킹 버전
+                li source 리스트가 비어있는 경우, 최대 timeout만큼 대기한다
+
+            +pos('BLMPOP')
+            h3 BLMPOP Since 7.0.0
+            +asCode('text', 'syntax') BLMPOP timeout-seconds numkeys key [key ...] LEFT|RIGHT [COUNT count]
+            ul
+                li
+                    +goto('LMPOP')
+                    |의 블로킹 버전
+                li 모든 리스트가 비어있는 경우, 최대 timeout만큼 대기한다
+
+            +pos('BLPOP')
+            h3 BLPOP
+            +asCode('text', 'syntax') BLPOP key [key ...] timeout-seconds
+            ul
+                li
+                    +goto('LPOP')
+                    |의 블로킹 버전
+                p 지정한 리스트들을 순회하여, 최초로 발견된 왼쪽 값 삭제 후 반환
+                li 모든 리스트가 비어있는 경우, 최대 timeout만큼 대기
+                li BLPOP 경합 시 처리 우선순위에 대해서는 공식 문서 참고 :
+                    +asA('https://redis.io/commands/blpop/')
+
+            +pos('BRPOP')
+            h3 BRPOP
+            +asCode('text', 'syntax') BRPOP key [key ...] timeout-seconds
+            ul
+                li
+                    +goto('RPOP')
+                    |의 블로킹 버전
+                li 기타 설명은
+                    +goto('BLPOP')
+                    |과 동일
+
+            +pos('BRPOPLPUSH')
+            h3 BRPOPLPUSH; Deprecated since 6.2.0
+            +asCode('text', 'syntax') BRPOPLPUSH source destination timeout-seconds
+            ul
+                li
+                    +goto('RPOPLPUSH')
+                    |의 블로킹 버전
+                li source 리스트가 비어있는 경우, 최대 timeout만큼 대기한다
+                li Since 6.2.0 :
+                    +goto('BLMOVE')
+
+            +pos('LINDEX')
+            h3 LINDEX
+            +asCode('text', 'syntax') LINDEX key index
+            p index(음수 가능) 번째 값 반환
+
+            +pos('LMOVE')
+            h3 LMOVE Since 6.2.0
+            +asCode('text', 'syntax') LMOVE source destination LEFT|RIGHT LEFT|RIGHT
+            p 원자적으로 source의 LEFT|RIGHT 원소를 반환한 다음 삭제하고, destination의 LEFT|RIGHT에 추가한다
+            +asCode('shell', 'redis-cli').
+                127.0.0.1:6379> lpush list1 x1 x2 x3
+                (integer) 3
+                127.0.0.1:6379> lpush list2 y1 y2 y3
+                (integer) 3
+                127.0.0.1:6379> lmove list1 list2 left right
+                "x3"
+
+            +pos('LMPOP')
+            h3 LMPOP Since 7.0.0
+            +asCode('text', 'syntax') LMPOP numkeys key [key ...] LEFT|RIGHT [COUNT count]
+            p 비어있지 않은 최초 리스트에서 최대 count개 원소를 반환하고 제거
+
             +pos('LPUSH')
             h3 LPUSH
             +asCode('text', 'syntax') LPUSH key element [element ...]
@@ -546,28 +721,13 @@ include ../../../source/skeleton.pug
 
             +pos('LPOP')
             h3 LPOP
-            +asCode('text', 'syntax') LPOP key
-            p 리스트 왼쪽 값 삭제 후 반환
+            +asCode('text', 'syntax') LPOP key [count]
+            p 리스트 왼쪽 값 count(기본 1)개 삭제 후 반환
 
             +pos('RPOP')
             h3 RPOP
             +asCode('text', 'syntax') RPOP key
             p 리스트 오른쪽 값 삭제 후 반환
-
-            +pos('BLPOP')
-            h3 BLPOP
-            +asCode('text', 'syntax') BLPOP key [key ...] timeout
-            p 지정한 리스트들을 순회하여, 최초로 발견된 왼쪽 값 삭제 후 반환. 없으면 timeout(초)만큼 대기
-
-            +pos('BRPOP')
-            h3 BRPOP
-            +asCode('text', 'syntax') BRPOP key [key ...] timeout
-            p 지정한 리스트들을 순회하여, 최초로 발견된 오른쪽 값 삭제 후 반환. 없으면 timeout(초)만큼 대기
-
-            +pos('LINDEX')
-            h3 LINDEX
-            +asCode('text', 'syntax') LINDEX key index
-            p index(음수 가능) 번째 값 반환
 
             +pos('LRANGE')
             h3 LRANGE
@@ -600,14 +760,12 @@ include ../../../source/skeleton.pug
             p [start, stop] 범위(음수 인덱스 가능)만 남기고 나머지 삭제
 
             +pos('RPOPLPUSH')
-            h3 RPOPLPUSH
+            h3 RPOPLPUSH; Deprecated since 6.2.0
             +asCode('text', 'syntax') RPOPLPUSH source destination
-            p 원자적으로 rpop + lpush 실행
-
-            +pos('BRPOPLPUSH')
-            h3 BRPOPLPUSH
-            +asCode('text', 'syntax') BRPOPLPUSH source destination timeout
-            p 리스트에 값이 있으면 rpoplpush 실행, 없으면 timeout(초)만큼 대기
+            ul
+                li 원자적으로 rpop + lpush 실행
+                li Since 6.2.0 :
+                    +goto('LMOVE')
 
         h2 Set
         div

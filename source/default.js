@@ -125,6 +125,7 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/012.html', title: '우리는 어떻게 바뀌고 있는가' },
         { category: 'Topic/Book', file: '/posts/book/013.html', title: '위험한 생각들' },
         { category: 'Topic/Book', file: '/posts/book/014.html', title: '어이없는 진화' },
+        { category: 'Topic/Book', file: '/posts/book/015.html', title: '컴퓨터시스템구조론' },
     ], codes: {}
 }
 
