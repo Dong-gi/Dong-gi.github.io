@@ -5,8 +5,8 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION kst_midnight(day_diff int default 0) RETURNS timestamp AS $$
+CREATE OR REPLACE FUNCTION kst_midnight(day_diff int default 0) RETURNS date AS $$
 BEGIN
-    RETURN to_timestamp(extract(epoch from now()) + (day_diff * 24 + 9) * 60 * 60)::date::timestamp;
+    RETURN to_timestamp(extract(epoch from now()) + (day_diff * 24 + 9) * 60 * 60)::date;
 END;
 $$ LANGUAGE plpgsql;
