@@ -652,7 +652,7 @@ include ../../../source/skeleton.pug
                     +goto('LMOVE')
                     |의 블로킹 버전
                 li source 리스트가 비어있는 경우, 최대 timeout만큼 대기한다
-                li timeout == 0이면 무기한 대기 가능
+                p timeout == 0이면 무기한 대기 가능
 
             +pos('BLMPOP')
             h3 BLMPOP Since 7.0.0
@@ -662,7 +662,7 @@ include ../../../source/skeleton.pug
                     +goto('LMPOP')
                     |의 블로킹 버전
                 li 모든 리스트가 비어있는 경우, 최대 timeout만큼 대기한다
-                timeout == 0이면 무기한 대기 가능
+                p timeout == 0이면 무기한 대기 가능
 
             +pos('BLPOP')
             h3 BLPOP
@@ -673,7 +673,7 @@ include ../../../source/skeleton.pug
                     |의 블로킹 버전
                 p 지정한 리스트들을 순회하여, 최초로 비어있지 않은 리스트의 왼쪽 값 삭제 후 반환
                 li 모든 리스트가 비어있는 경우, 최대 timeout만큼 대기
-                li timeout == 0이면 무기한 대기 가능
+                p timeout == 0이면 무기한 대기 가능
                 li BLPOP 경합 시 처리 우선순위에 대해서는 공식 문서 참고 :
                     +asA('https://redis.io/commands/blpop/')
 
@@ -696,7 +696,7 @@ include ../../../source/skeleton.pug
                     +goto('RPOPLPUSH')
                     |의 블로킹 버전
                 li source 리스트가 비어있는 경우, 최대 timeout만큼 대기한다
-                li timeout == 0이면 무기한 대기 가능
+                p timeout == 0이면 무기한 대기 가능
                 li Since 6.2.0 :
                     +goto('BLMOVE')
 
@@ -916,7 +916,7 @@ include ../../../source/skeleton.pug
                     +goto('ZMPOP')
                     |의 블로킹 버전
                 li 모든 sorted set이 비어있는 경우, 최대 timeout만큼 대기
-                li timeout == 0이면 무기한 대기 가능
+                p timeout == 0이면 무기한 대기 가능
 
             +pos('BZPOPMAX')
             h3 BZPOPMAX
@@ -927,7 +927,7 @@ include ../../../source/skeleton.pug
                     |의 블로킹 버전
                 li 비어있지 않은 최초의 sorted set에서 가장 높은 score를 가진 원소 반환
                 li 모든 sorted set이 비어있는 경우, 최대 timeout만큼 대기
-                li timeout == 0이면 무기한 대기 가능
+                p timeout == 0이면 무기한 대기 가능
                 li 경합 시 처리 우선순위에 대해서는 BLPOP 문서 참고 :
                     +asA('https://redis.io/commands/blpop/')
 
@@ -940,7 +940,7 @@ include ../../../source/skeleton.pug
                     |의 블로킹 버전
                 li 비어있지 않은 최초의 sorted set에서 가장 낮은 score를 가진 원소 반환
                 li 모든 sorted set이 비어있는 경우, 최대 timeout만큼 대기
-                li timeout == 0이면 무기한 대기 가능
+                p timeout == 0이면 무기한 대기 가능
                 li 경합 시 처리 우선순위에 대해서는 BLPOP 문서 참고 :
                     +asA('https://redis.io/commands/blpop/')
 
