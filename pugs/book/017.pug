@@ -1,0 +1,48 @@
+include ../../source/skeleton.pug
+
++post('클라우드 시스템을 관리하는 기술', '클라우드 시스템을 관리하는 기술', '클라우드 시스템을 관리하는 기술 독서 기록')
+    h1 도서 정보
+    .w3-row
+        .w3-col.s2.w3-center
+            +w3img('https://image.yes24.com/goods/71742125/L', '도서 이미지')&attributes({style: 'max-height:210px'})
+        .w3-col.s10
+            table.no-sort
+                +tds('표제/저자사항', '클라우드 시스템을 관리하는 기술 / 데이비드 L. 후')
+                +tds('ISBN 정보', '978-89-6263-193-7 [03550]')
+                +tds('발행사항', '에코리브르, 발행일 : 2019년 03월 29일')
+
+    h1 소개
+    ul
+        li 사업 목표 : 잘 정의된 사업 목표들은 측정 가능하며, 측정치를 자동으로 수집하여 현황판(dashboard)를 만들 수 있다
+        li 이상적인 시스템 구조
+        ul
+            li SOA(Service-oriented architecture) : 서비스를 구성하는 각 하위 시스템은 그 자체로 서비스
+            li IaC(Infrastructure as code) : 코드로 작성된 인프라를 이용해 자동으로 프로덕션 환경 구축
+        li 이상적인 릴리스 과정
+        ul
+            li 코드를 체크인하면 자동으로 기능 테스트가 실행된다
+            li 기능 테스트를 통과하면 자동으로 패키지 빌드 -> 테스트 환경 구축 -> 통합 테스트를 진행한다
+            li 통합 테스트를 통과하면 프로덕션으로 n% 롤아웃한다
+            li 장애가 검출되지 않으면 점직적으로 100% 롤아웃 전환한다
+        li 이상적인 운영
+        ul
+            li 덜 자주 발동하는 대응책들에 대해 주기적으로, 자동으로 장애를 일으킨다
+            li 개발자와 운영자는 별개의 팀이 아니다
+
+    h1 분산 세계에서의 설계
+    ul
+        li 분산 시스템의 구성요소들은 자신의 건강을 검진하고 그 결과를 가시화한다
+        li 디버깅은 코딩보다 어렵다. 설계를 단순화하는 데 들이는 시간은 운영 시 보상으로 돌아온다
+        li.marker CAP 원리
+        p Consistency, Availability, Partition resistance 모두를 보장하는 분산 시스템은 존재할 수 없다
+        ul
+            li 일관성 : 모든 노드는 특정 시점에 모두 동일한 자료를 본다 -- 연산은 원자적
+            li 가용성 : 모든 요청이 성공/실패에 대한 응답을 받는다
+            li 분리 저항 : 일부 노드가 분리되더라도 시스템이 작동한다
+            p 분리의 예 : 노드들이 두 그룹으로 분리되어 마스터 노드가 2개 이상이 되는 상황
+            li CA 시스템 예 : Oracle, MySQL, PostgreSQL
+            p ACID; Atomicity, Consistency, Isolation, Durability
+            li CP 시스템 예 : Hbase, Redis, Bigtable
+            p BASE; Basically Available Soft-state services with Eventual consistency
+            li AP 시스템 예 : Cassandra, Riak, Dynamo
+            p 일부 클라이언트가 이전 버전의 데이터를 응답받는 것을 허용

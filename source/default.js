@@ -18,7 +18,7 @@ const posts = {
     list: [
         { category: 'Algorithm', file: '/posts/algorithm/acmicpc.html', title: 'ACM-ICPC 문제' },
         { category: 'Algorithm', file: '/posts/algorithm/linear_algebra.html', title: '선형대수' },
-        { category: 'Algorithm', file: '/posts/algorithm/mcs.html', title: '컴퓨터공학도를 위한 수학' },
+        { category: ['Algorithm', 'Topic/Book'], file: '/posts/algorithm/mcs.html', title: '컴퓨터공학도를 위한 수학' },
         { category: 'Algorithm', file: '/posts/algorithm/overview.html', title: '알고리즘 개요' },
         { category: 'Algorithm', file: '/posts/algorithm/probability.html', title: '확률' },
         { category: 'Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
@@ -60,7 +60,7 @@ const posts = {
         { category: 'Language/JavaScript', file: '/posts/language/javascript/node.html', title: 'Node' },
         { category: 'Language/JVM', file: '/posts/language/jvm/android.html', title: 'Android' },
         { category: 'Language/JVM', file: '/posts/language/jvm/basic.html', title: 'Java 시작하기' },
-        { category: 'Language/JVM', file: '/posts/language/jvm/effective_java.html', title: '『Effective Java』' },
+        { category: ['Language/JVM', 'Topic/Book'], file: '/posts/language/jvm/effective_java.html', title: '『Effective Java』' },
         { category: 'Language/JVM', file: '/posts/language/jvm/groovy.html', title: 'Groovy' },
         { category: 'Language/JVM', file: '/posts/language/jvm/javax.annotation.processing.html', title: 'Annotation Processing API' },
         { category: 'Language/JVM', file: '/posts/language/jvm/jni.html', title: 'Java Native Interface' },
@@ -120,14 +120,26 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/007.html', title: '키르케고르 실존 극장' },
         { category: 'Topic/Book', file: '/posts/book/008.html', title: 'Gamification by Design' },
         { category: 'Topic/Book', file: '/posts/book/009.html', title: '인지 편향' },
-        { category: 'Topic/Book', file: '/posts/book/010.html', title: '애자일 & 스크럼 프로젝트 관리' },
+        { category: ['Topic', 'Topic/Book'], file: '/posts/book/010.html', title: '애자일 & 스크럼 프로젝트 관리' },
         { category: 'Topic/Book', file: '/posts/book/011.html', title: '나는 뇌가 아니다' },
         { category: 'Topic/Book', file: '/posts/book/012.html', title: '우리는 어떻게 바뀌고 있는가' },
         { category: 'Topic/Book', file: '/posts/book/013.html', title: '위험한 생각들' },
         { category: 'Topic/Book', file: '/posts/book/014.html', title: '어이없는 진화' },
-        { category: 'Topic/Book', file: '/posts/book/015.html', title: '컴퓨터시스템구조론' },
+        { category: ['Topic', 'Topic/Book'], file: '/posts/book/015.html', title: '컴퓨터시스템구조론' },
+        { category: 'Topic/Book', file: '/posts/book/016.html', title: '물 위를 걷고 벽을 기어오르는 법' },
+        { category: ['Topic', 'Topic/Book'], file: '/posts/book/017.html', title: '클라우드 시스템을 관리하는 기술' },
     ], codes: {}
 }
+
+posts.list = posts.list.filter(post => !Array.isArray(post.category)).concat(
+    posts.list.filter(post => Array.isArray(post.category)).flatMap(post => {
+        let arr = []
+        for (let category of post.category)
+            arr.push(Object.assign({}, post, { category: category }))
+        return arr
+    }))
+posts.list.sort((post1, post2) => SFUtil.compareString(post1.title, post2.title))
+posts.list.sort((post1, post2) => SFUtil.compareString(post1.category, post2.category))
 
 window.addEventListener('load', () => {
     new MutationObserver(mutationCallback).observe(document.body, { attributes: false, childList: true, subtree: true })
@@ -266,9 +278,6 @@ function toggleSidebar() {
 }
 
 function updatePostList() {
-    posts.list.sort((post1, post2) => SFUtil.compareString(post1.title, post2.title))
-    posts.list.sort((post1, post2) => SFUtil.compareString(post1.category, post2.category))
-
     let categoryMap = { posts: [] }
     for (let post of posts.list) {
         let category = categoryMap

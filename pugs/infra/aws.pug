@@ -1,5 +1,63 @@
 include ../../source/skeleton.pug
 +post('AWS', 'AWS', 'AWS 정리')
+    h1 참고자료
+    ul
+        li: +asA('https://docs.aws.amazon.com/index.html', 'AWS 공식 문서')
+        li: +asA('https://explore.skillbuilder.aws/learn', 'AWS 공식 - Learning Center')
+        li: +asA('https://aws.amazon.com/ko/architecture/security-identity-compliance/', 'AWS 공식 - 보안 Best Practice')
+
+    h1 IAM; Identity and Access Management
+    div
+        h2 참고자료
+        ul
+            li: +asA('https://docs.aws.amazon.com/ko_kr/IAM/latest/UserGuide/introduction.html')
+            li: +asA('https://gist.github.com/shortjared/4c1e3fe52bdfa47522cfe5b41e5d6f22', 'List of AWS Service Principals')
+
+        h2 기능
+        ul
+            li 암호나 액세스 키를 공유하지 않고도 권한 부여
+            li 세분화된 권한 관리
+            li 다른 곳에 암호가 있는 사용자에게 임시 액세스 권한 부여
+            li AWS는 PCI DSS 1 레벨1 서비스 공급자 인증을 받음
+            li IAM과 STS는 추가 비용 없이 제공됨
+
+        div
+            h3 IAM 작동 방식
+            div
+                h4.fake Terms
+                ul
+                    li IAM 리소스
+                    p 사용자, 그룹, 정책, 자격 증명 공급자 객체는 다른 AWS 서비스와 마찬가지로 IAM에서 추가, 편집, 제거 가능한 리소스다
+                    li IAM 자격 증명
+                    p 사용자(영구 자격 증명), 그룹, 역할(단기 자격 증명). 식별 및 그룹화에 사용되는 IAM 리소스 객체로, 정책을 이에 연결할 수 있다
+                    li IAM 엔터티
+                    p 사용자, 역할. AWS가 인증에 사용하는 IAM 리소스 객체
+                    li 보안 주체
+                    p AWS 루트 사용자, IAM 사용자, IAM 역할을 사용하여 AWS에 요청하는 사람 또는 애플리케이션
+
+                h4.fake Request
+                p 보안 주체가 AWS Management Console, AWS API, AWS CLI를 사용해 전송하는 요청에는 다음의 정보가 포함된다 -- 요청 컨텍스트
+                ul
+                    li 수행하고자 하는 작업
+                    li 작업 대상이 되는 AWS 리소스 객체
+                    li 요청을 보내는 보안 주체
+                    li 환경 데이터 : IP 주소, User agent, SSL 사용 여부 등
+                    li 리소스 객체와 연관된 데이터 : EC2 인스턴스 태그 등
+
+                h4.fake Authorization
+                p AWS는 요청 컨텍스트에 적용되는 각 정책을 확인하여, 하나라도 거부되는 경우 전체 요청을 거부하고 평가를 중지한다. 아래는 요청 평가에 대한 일반 규칙
+                ol
+                    li 기본적으로 모든 요청은 거부
+                    li 정책에 포함된 명시적 허용은 위 거부를 재정의
+                    li 권한 경계 또는 세션 정책이 있는 경우 위 허용을 재정의
+                    li 정책의 명시적 거부는 위 허용을 무시
+
+        h2 etc..
+        ul
+            li 동일한 IAM 사용자와 여러 정책을 연결하는 경우 가장 제한이 적은 정책이 우선
+            li EC2에 IAM 역할을 할당하면 장기 자격 증명을 인스턴스에 배포하지 않아도 된다
+            p 인스턴스 내부에서 aws cli를 직접 실행하는 경우엔 얘기가 다르다. profile을 추가로 지정해야 하고, 해당 profile로 assume role을 할 수 있는 권한이 있어야 한다
+
     h1 서비스 종류
     ol
         li EC2; Elastic Compute Cloud
@@ -39,10 +97,6 @@ include ../../source/skeleton.pug
         li Simple Notification Service
         p Pub/Sub 푸시 기반 메시징 서비스. 모바일 푸시, SMS, 이메일 등 가능
         li Simple Email Service
-        li IAM; Identity and Access Management
-        ul
-            li AWS 계정 관리
-            li: +asA('https://gist.github.com/shortjared/4c1e3fe52bdfa47522cfe5b41e5d6f22', 'List of AWS Service Principals')
         li Organizations
         ul
             li 조직을 나누어 각 조직에 멤버 계정을 생성해 할당할 수 있다
