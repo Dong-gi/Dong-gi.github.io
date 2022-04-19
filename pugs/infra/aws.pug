@@ -8,19 +8,13 @@ include ../../source/skeleton.pug
 
     h1 IAM; Identity and Access Management
     div
-        h2 참고자료
-        ul
-            li: +asA('https://docs.aws.amazon.com/ko_kr/IAM/latest/UserGuide/introduction.html')
-            li: +asA('https://gist.github.com/shortjared/4c1e3fe52bdfa47522cfe5b41e5d6f22', 'List of AWS Service Principals')
-
-        h2 기능
+        h2 IAM이란?
         ul
             li 암호나 액세스 키를 공유하지 않고도 권한 부여
             li 세분화된 권한 관리
             li 다른 곳에 암호가 있는 사용자에게 임시 액세스 권한 부여
             li AWS는 PCI DSS 1 레벨1 서비스 공급자 인증을 받음
             li IAM과 STS는 추가 비용 없이 제공됨
-
         div
             h3 IAM 작동 방식
             div
@@ -29,11 +23,13 @@ include ../../source/skeleton.pug
                     li IAM 리소스
                     p 사용자, 그룹, 정책, 자격 증명 공급자 객체는 다른 AWS 서비스와 마찬가지로 IAM에서 추가, 편집, 제거 가능한 리소스다
                     li IAM 자격 증명
-                    p 사용자(영구 자격 증명), 그룹, 역할(단기 자격 증명). 식별 및 그룹화에 사용되는 IAM 리소스 객체로, 정책을 이에 연결할 수 있다
+                    p 사용자(영구 자격 증명 사용), 그룹, 역할(임시 보안 자격 증명 사용). 식별 및 그룹화에 사용되는 IAM 리소스 객체로, 정책을 이에 연결할 수 있다
                     li IAM 엔터티
                     p 사용자, 역할. AWS가 인증에 사용하는 IAM 리소스 객체
                     li 보안 주체
                     p AWS 루트 사용자, IAM 사용자, IAM 역할을 사용하여 AWS에 요청하는 사람 또는 애플리케이션
+                    li 최소 권한 원칙
+                    p 필요한 경우에만 승격된 권한을 사용하도록 제한
 
                 h4.fake Request
                 p 보안 주체가 AWS Management Console, AWS API, AWS CLI를 사용해 전송하는 요청에는 다음의 정보가 포함된다 -- 요청 컨텍스트
@@ -52,11 +48,193 @@ include ../../source/skeleton.pug
                     li 권한 경계 또는 세션 정책이 있는 경우 위 허용을 재정의
                     li 정책의 명시적 거부는 위 허용을 무시
 
+            h3 ABAC란?
+            ul
+                li ABAC(Attribute based access control)는 보안 주체와 리소스의 태그가 일치할 때 권한을 부여한다
+                li 동종 리소스에 대한 동일 작업에 대한 정책 하나만 가지고도 각 보안 주체가 각각 필요한 리소스에만 접근할 수 있게 한다
+
+        h2 IAM 시작하기 > IAM 관리자 및 사용자 그룹 생성
+        ol
+            li 루트 사용자로 로그인
+            li 탐색 표시줄 > 내 계정 > 결제 정보에 대한 IAM 사용자 및 역할 액세스 편집 > IAM 액세스 활성
+            p 관리자 사용자가 비용 및 사용량과 상호작용하려면 위 작업 필요
+            li IAM 콘솔에서 관리자 사용자 추가. 여러 명인 경우 사용자 그룹도 추가
+            li 사용자 또는 사용자 그룹에 AdministratorAccess 정책 연결
+
+        h2 자습서
+        div
+            h3 역할을 사용하여 AWS 계정 간 권한 위임
+            ol
+                li 리소스를 가진 계정(A)에서 리소스 액세스 역할 생성
+                p 역할 생성 시, 신뢰할 수 있는 엔터티 유형으로 "다른 AWS 계정" 지정
+                li 권한을 위임받고자 하는 계정(B)에서 적절한 IAM 보안 주체에 AssumeRole 허용 정책 연결
+                +asCode('json', '인라인 정책 예').
+                    {
+                        "Version": "2012-10-17",
+                        "Statement": {
+                            "Effect": "Allow",
+                            "Action": "sts:AssumeRole",
+                            "Resource": "arn:aws:iam::ACCOUNT-A-ID:role/ROLE-NAME"
+                        }
+                    }
+                li 역할 전환 테스트
+                ul
+                    li AWS 콘솔
+                    ul
+                        li 역할 전환 시 ExternalId를 요구하지 않아야만 가능
+                        li 방법 1 : 역할 생성 시 Role Summary 페이지에서 제공된 url 사용
+                        li 방법 2 : 탐색 표시줄 > Switch Role > 계정 ID 또는 alias, 역할 이름 수동 입력
+                    li AWS CLI
+                    +asCode('shell', 'aws-cli').
+                        aws sts assume-role --role-arn "ROLE-ARN" --role-session-name "ARBITRARY-SESSION-NAME"
+
+                        # 환경 변수로 세션 키 설정
+                        export AWS_ACCESS_KEY_ID="GIVEN-BY-ASSUME-ROLE"
+                        export AWS_SECRET_ACCESS_KEY="GIVEN-BY-ASSUME-ROLE"
+                        export AWS_SESSION_TOKEN="GIVEN-BY-ASSUME-ROLE"
+                    li AWS API
+                    p AssumeRole 호출 응답으로 주어진 임시 자격 증명을 사용하여 API 호출
+
+            h3 ABAC 사용
+            ul
+                li "access-" 접두사를 가진 역할에 대해, 사용자 태그와 역할 태그가 일치하는 경우 역할 전환할 수 있는 정책 예
+                +asCode('json').
+                    {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Sid": "TutorialAssumeRole",
+                                "Effect": "Allow",
+                                "Action": "sts:AssumeRole",
+                                "Resource": "arn:aws:iam::ACCOUNT-ID:role/access-*",
+                                "Condition": {
+                                    "StringEquals": {
+                                        "iam:ResourceTag/team": "${aws:PrincipalTag/team}",
+                                        "iam:ResourceTag/project": "${aws:PrincipalTag/project}"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                li SAML 세션 태그를 이용해 역할 전환하는 정책 예
+                +asCode('json').
+                    {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Sid": "AllowSamlIdentityAssumeRole",
+                                "Effect": "Allow",
+                                "Action": [
+                                    "sts:AssumeRoleWithSAML",
+                                    "sts:TagSession"
+                                ],
+                                "Principal": {
+                                    "Federated": "arn:aws:iam::123456789012:saml-provider/ExampleCorpProvider"
+                                },
+                                "Condition": {
+                                    "StringLike": {
+                                        "aws:RequestTag/team": [
+                                            "engineer",
+                                            "qa"
+                                        ],
+                                        "aws:RequestTag/project": "*"
+                                    },
+                                    "StringEquals": {
+                                        "SAML:aud": "https://signin.aws.amazon.com/saml"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                li 보안 주체 태그와 리소스 태그가 일치하는 경우 권한을 인가하는 정책 예
+                +asCode('json').
+                    {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Sid": "AllActionsSecretsManagerSameProjectSameTeam",
+                                "Effect": "Allow",
+                                "Action": "secretsmanager:*",
+                                "Resource": "*",
+                                "Condition": {
+                                    "StringEquals": {
+                                        "aws:ResourceTag/team": "${aws:PrincipalTag/team}",
+                                        "aws:ResourceTag/project": "${aws:PrincipalTag/project}"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                li ABAC로 권한을 부여받은 보안 주체가 태그 및 리소스 기반 정책을 변경하지 못하도록 하는 정책 예
+                +asCode('json').
+                    {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Sid": "DenyUntagSecretsManagerReservedTags",
+                                "Effect": "Deny",
+                                "Action": "secretsmanager:UntagResource",
+                                "Resource": "*",
+                                "Condition": {
+                                    "ForAnyValue:StringLike": {
+                                        "aws:TagKeys": "*"
+                                    }
+                                }
+                            },
+                            {
+                                "Sid": "DenyPermissionsManagement",
+                                "Effect": "Deny",
+                                "Action": "secretsmanager:*Policy",
+                                "Resource": "*"
+                            }
+                        ]
+                    }
+
+        h2 ID
+        div
+            h3 Roles
+            p 역할을 사용할 수 있는 주체 :
+            ul
+                li 동일한 AWS 계정의 IAM 사용자
+                li 다른 AWS 계정의 IAM 사용자
+                li AWS 서비스(EC2 등)
+                li SAML 2.0, OpenID Connect 등 외부 자격 증명 공급자(IdP)에 의해 인증된 외부 사용자
+            
+
         h2 etc..
         ul
             li 동일한 IAM 사용자와 여러 정책을 연결하는 경우 가장 제한이 적은 정책이 우선
             li EC2에 IAM 역할을 할당하면 장기 자격 증명을 인스턴스에 배포하지 않아도 된다
             p 인스턴스 내부에서 aws cli를 직접 실행하는 경우엔 얘기가 다르다. profile을 추가로 지정해야 하고, 해당 profile로 assume role을 할 수 있는 권한이 있어야 한다
+            li MFA 설정 허용 정책
+            +asCode('json').
+                {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "VisualEditor0",
+                            "Effect": "Allow",
+                            "Action": [
+                                "iam:DeactivateMFADevice",
+                                "iam:DeleteVirtualMFADevice",
+                                "iam:EnableMFADevice",
+                                "iam:ResyncMFADevice",
+                                "iam:CreateVirtualMFADevice",
+                                "iam:ListMFADevices"
+                            ],
+                            "Resource": [
+                                "arn:aws:iam::123456789012:mfa/${aws:username}",
+                                "arn:aws:iam::123456789012:user/${aws:username}"
+                            ]
+                        },
+                        {
+                            "Sid": "VisualEditor1",
+                            "Effect": "Allow",
+                            "Action": "iam:ListVirtualMFADevices",
+                            "Resource": "*"
+                        }
+                    ]
+                }
 
     h1 서비스 종류
     ol
