@@ -9,6 +9,7 @@
         public string NamedArg { get; set; }
     }
 
+    [My()]
     [My("arg1")]
     [My("arg2", NamedArg = "namedArg2")]
     [field: My("arg3", NamedArg = "namedArg3")]
