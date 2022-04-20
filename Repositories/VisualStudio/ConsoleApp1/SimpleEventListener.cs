@@ -17,6 +17,9 @@ namespace ConsoleApp1
         // Called whenever an event is written.
         protected override void OnEventWritten(EventWrittenEventArgs eventData)
         {
+            if (eventData == null || eventData.Payload == null || eventData.PayloadNames == null)
+                return;
+
             // Write the contents of the event to the console.
             Console.WriteLine($"ThreadID = {eventData.OSThreadId} ID = {eventData.EventId} Name = {eventData.EventName}");
             for (int i = 0; i < eventData.Payload.Count; i++)

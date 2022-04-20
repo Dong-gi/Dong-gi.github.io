@@ -5,13 +5,15 @@ VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{181CAC32-6C7D-4770-825F-911D0542B712}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp2", "ConsoleApp2\ConsoleApp2.csproj", "{A84C860E-559E-49CF-843A-15C74FADA989}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp2", "ConsoleApp2\ConsoleApp2.csproj", "{A84C860E-559E-49CF-843A-15C74FADA989}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp3", "ConsoleApp3\ConsoleApp3.csproj", "{69190704-34D2-40D2-B90C-1DE13F0DDE4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp3", "ConsoleApp3\ConsoleApp3.csproj", "{69190704-34D2-40D2-B90C-1DE13F0DDE4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp4", "ConsoleApp4\ConsoleApp4.csproj", "{FC15C291-5657-4D65-B08B-542C85315C3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp4", "ConsoleApp4\ConsoleApp4.csproj", "{FC15C291-5657-4D65-B08B-542C85315C3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp5", "ConsoleApp5\ConsoleApp5.csproj", "{B6333D7D-C9EA-487F-8B32-2A092CD3484F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp5", "ConsoleApp5\ConsoleApp5.csproj", "{B6333D7D-C9EA-487F-8B32-2A092CD3484F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp6", "ConsoleApp6\ConsoleApp6.csproj", "{858B63C2-4803-451B-9BEB-236622637203}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{B6333D7D-C9EA-487F-8B32-2A092CD3484F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6333D7D-C9EA-487F-8B32-2A092CD3484F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6333D7D-C9EA-487F-8B32-2A092CD3484F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{858B63C2-4803-451B-9BEB-236622637203}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{858B63C2-4803-451B-9BEB-236622637203}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{858B63C2-4803-451B-9BEB-236622637203}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{858B63C2-4803-451B-9BEB-236622637203}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
