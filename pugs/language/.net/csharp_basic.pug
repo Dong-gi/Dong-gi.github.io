@@ -44,6 +44,12 @@ include ../../../source/skeleton.pug
                 ul
                     li e.g. FileStream은 관리 객체지만, 관리되지 않는 파일 핸들을 참조한다. 따라서 FileStream 사용을 마쳤다면 파일 핸들을 명시적으로 해제해야 한다
                     li 비관리 리소스를 참조하는 객체는 IDisposable 인터페이스를 구현한다. 이러한 객체를 using 문에서 사용하면 Dispose() 메서드를 자동으로 호출한다
+                    +asCode('cs').
+                        var iDisposable = new FileStream("./", FileMode.Open);
+                        try { } finally { iDisposable.Dispose(); }
+
+                        // 아래와 동일
+                        using (iDisposable = new FileStream("./", FileMode.Open)) { }
 
             h3 .NET 배포 모델
             ul
@@ -61,19 +67,16 @@ include ../../../source/skeleton.pug
                 +tds('Microsoft.Extensions.Configuration', 'Configuration')
                 +tds('Microsoft.Extensions.Logging', 'Logging')
                 +tds('Microsoft.Extensions.Options', '옵션 패턴')
-
-            h3 데이터 액세스
-            ul
-                li EF(Entity Framework) Core : ORM
-                li LINQ(Language-Integrated Query) : 데이터에 대한 선언적 코드
-
+                +tds('Microsoft.Extensions.FileSystemGlobbing', '파일 탐색')
+                +tds('Microsoft.Extensions.Http', 'HTTP')
+                +tds('Microsoft.Extensions.Localization', '지역화')
 
         h2 .NET의 새로운 기능
         div
             h3 .NET Core 2.0
             ul
                 li C# 7.1 지원
-                li .NET Standard 2.0 지원
+                li .NET Standard 2.0 구현
 
             h3 .NET Core 2.1
             ul
@@ -81,68 +84,368 @@ include ../../../source/skeleton.pug
                 ol
                     li 가능한 빨리 코드를 생성하는 계층
                     li 자주 실행되는 메서드에 대한 최적화 코드를 생성하는 계층(병렬 수행)
-                li 보다 메모리 효율적인 자료형 : Span&lt;T&gt;, Memory&lt;T&gt;
+                li 보다 메모리 효율적인 자료형 : System.Span&lt;T&gt;, System.Memory&lt;T&gt;
+                p 읽기 전용 System.ReadOnlySpan&lt;T&gt;, System.ReadOnlyMemory&lt;T&gt;도 지원
 
             h3 .NET Core 2.2
             ul
                 li EventListener 클래스를 사용하여 GC, JIT, ThreadPool 등의 런타임 모니터링 가능
-                +codeBtn('/Repositories/VisualStudio/ConsoleApp1/SimpleEventListener.cs', 'cs')
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp1/SimpleEventListener.cs', 'cs')
                 li
                     +asA('https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/host-startup-hook.md', '호스트 시작 후크')
                     |를 사용하여 Main 메서드 실행 전 코드 삽입 가능
+
+            h3 .NET Core 3.0
+            ul
+                li C# 8.0 지원
+                li .NET Standard 2.1 구현
+                li WPF 및 Windows Forms 지원
+                li 기본 Json 라이브러리 지원 : System.Text.Json
+                li HTTP/2 지원
+                li System.Index, System.Range 추가
+                li IEnumerable&lt;T&gt;의 비동기 버전 IAsyncEnumerable&lt;T&gt; 추가
+
+            h3 .NET 5
+            ul
+                li .NET Framework 4.x와의 혼동을 피하기 위해 버전 번호 4.x 생략
+                li .NET 주요 구현임을 강조하기 위해 이름에서 "Core" 삭제
+                li .NET Standard를 구현하진 않지만, .NET Standard 2.1를 지원
+                ul
+                    li .NET Standard 2.1 이후 새로운 .NET Standard 버전은 존재하지 않는다
+                    li 신규 API가 추가될 때, .NET 5+는 기능의 구현을 공유하므로 모든 .NET 5+ 앱 및 라이브러리에서 즉시 사용 가능하다
+                    p 이는 .NET Standard의 사양-구현 분리 문제를 해결한다
+                li C# 9 지원
+
+            h3 .NET 6
+            ul
+                li C# 10 지원
+                li .NET MAUI 2022년 2분기 일반 공개 예정
+                li Json 라이브러리 강화
+                p 유효성 검사 및 기본값 제공, 멤버 순서 지정, 스트림 직렬화/역직렬화 등
+                li 우선순위 큐 PriorityQueue&lt;TElement,TPriority&gt; 추가
+                li HTTP/3 Preview 지원
+                li 제네릭 형식에 대한 연산자 지원(Preview)
+
+        h2 배포 모델
+        div
+            h3 단일 파일 배포 및 실행 파일
+            ul
+                li 배포 설정 시 "Produce single file"을 설정하면 관리형 DLL을 앱과 함께 단일 실행 파일에 제공한다
+                p 실행 시 관리형 DLL이 추출되어 메모리에 로드되며, 폴더로 추출되지는 않음 Since .NET 5
+                li 네이티브 라이브러리를 단일 파일로 묶고 싶다면 IncludeNativeLibrariesForSelfExtract 플래그 이용
+                +asCode('xml', 'project.csproj') &lt;IncludeNativeLibrariesForSelfExtract&gt;true&lt;/IncludeNativeLibrariesForSelfExtract&gt;
+                li 모든 파일을 단일 파일로 묶고 싶다면 IncludeAllContentForSelfExtract 플래그 이용
+                +asCode('xml', 'project.csproj') &lt;IncludeAllContentForSelfExtract&gt;true&lt;/IncludeAllContentForSelfExtract&gt;
+                p 위 두 옵션은 앱 실행 시 클라이언트 머신의 디렉터리에 파일이 추출된다
+                ul
+                    li Linux, MacOS : $HOME/.net
+                    li Windows : %TEMP%/.net
+                    li DOTNET_BUNDLE_EXTRACT_BASE_DIR 환경변수로 제어 가능
+                li PDB 파일을 DLL에 포함
+                +asCode('xml', 'project.csproj') &lt;DebugType&gt;embedded&lt;/DebugType&gt;
+                li 단일 파일 배포시 압축 Since .NET 6
+                +asCode('xml', 'project.csproj') &lt;EnableCompressionInSingleFile&gt;true&lt;/EnableCompressionInSingleFile&gt;
+
+        h2 기본 코딩 구성 요소
+        div
+            h3 Common Type System
+            p CLR에서 사용되는 데이터 타입의 선언, 사용, 관리 방법을 정의한다
+
+            h3 .NET의 데이터 타입
+            p .NET의 모든 타입은 아래의 2가지 범주에 해당한다
+            ul
+                li Value type : value type의 인스턴스는 값 자체를 표현하며, value type의 인스턴스가 변수에 할당되는 경우 변수는 값의 사본을 갖는다
+                li Reference type : reference type의 인스턴스는 실제 값에 대한 참조(포인터와 유사)를 표현하며, reference type의 인스턴스가 변수에 할당되는 경우 변수는 동일한 참조를 갖는다
+
+            h3 클래스
+            ul
+                li 클래스는 명시적으로 지정된 다른 클래스 또는 암시적으로 System.Object에서 파생되는 참조 형식
+                li 객체가 수행할 수 있는 작업과 객체에 포함되는 데이터(필드)를 정의한다.
+
+            h3 구조체
+            ul
+                li 구조체는 System.ValueType에서 파생되는 값 형식
+                li 값 형식이므로 생성자 호출 없이 변수 선언만으로 초기화가 진행된다. 이때 사용되는 기본 생성자는 자동으로 추가되며, 재정의할 수 없다
+                p 인자를 받는 생성자를 정의할 수 있으며, 생성자는 모든 필드를 초기화해야 한다
+                li .NET의 모든 기본 데이터 타입(Boolean, Int32, ...)들도 구조체로 정의된다
+                li 명시적으로 다른 타입을 상속할 수 없으며, 구조체 자체도 다른 타입의 상속의 대상이 되지 않는다
+
+            h3 열거형
+            ul
+                li 열거형은 System.Enum에서 파생되는 값 형식으로, 기본 정수 타입의 값들에 대해 별명을 제공한다
+                li 내부 형식의 값을 형 변환 없이 열거형에 할당할 수 있다. and vice versa
+                li 메서드 정의 불가, 인터페이스 구현 불가, 프로퍼티 및 이벤트 정의 불가
+                li 열거형 자체는 기본 정수 타입에 대한 제네릭이므로, 열거형 정의에 형식 매개 변수를 사용할 수는 없다
+                li FlagsAttribute를 이용해 비트 필드라는 특수한 형태의 열거형을 정의할 수 있다
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp2/Program.cs', 'cs')
+
+            h3 인터페이스
+            ul
+                li 인터페이스는 멤버와 시그니쳐만을 정의한다
+                li 인터페이스의 멤버는 모두 추상 멤버이며, 생성자를 가질 수 없다
+                li 필드 정의 불가, 정적 멤버 정의 불가
+                li 프로퍼티 정의는 가질 수 있다. 구현은 구현 클래스에서 제공
+
+            h3 대리자
+            ul
+                li 메서드를 참조할 수 있는 참조 형식
+                +asCode('cs', '명명 대리자 인스턴스 생성').
+                    public delegate void DoSomething();
+
+                    public static void Main(string[] args)
+                    {
+                        var delegate1 = new DoSomething(() =&gt; Console.WriteLine("delegate1"));
+                        delegate1.Invoke();
+                    }
+                li 대리자는 System.Delegate → System.MulticastDelegate를 상속한다
+                li 익명 대리자 인스턴스 생성
+                ol
+                    li delegate 연산자 Since .NET Framework 2.0
+                    +asCode('cs').
+                        var arr = new int[] { 1, 2, 3, 4, 5 };
+                        Console.WriteLine(arr.Where(delegate (int n) { return n % 2 == 0; }).Sum());
+                    li 람다 Since C# 3.0
+                    +asCode('cs').
+                        var arr = new int[] { 1, 2, 3, 4, 5 };
+                        Console.WriteLine(arr.Where(n => n % 2 == 0).Sum());
+                li 미리 정의된 재사용 가능 대리자
+                ul
+                    li Action : void 리턴 메서드 참조. 매개변수 0 ~ 16개, 총 17가지
+                    li Func : 결과를 반환하는 메서드 참조. 매개변수 0 ~ 16개, 총 17가지
+                    li Predicate : bool을 반환하는 Func
+
+            h3 멤버
+            ul
+                li 필드 : 임의 타입 변수
+                li 프로퍼티 : (히든) 필드에 대한 getter/setter 메서드. 프로퍼티의 타입과 프로퍼티 내에서 참조하는 필드의 타입이 같을 필요가 없다
+                li 메서드
+                ul
+                    li 메서드 오버로딩
+                    p 메서드 시그니처는 이름과 매개 변수 목록으로 구성되며, 메서드 시그니처가 다르다면 이름이 같은 2개 이상의 메서드를 정의할 수 있다
+                    li 연산자 오버로딩
+                        +codeBtn('/Repositories/VisualStudio/ConsoleApp3/Program.cs', 'cs')
+                li 생성자
+                li 이벤트
+                p 대리자를 이용한 관찰자 패턴. 간단하게 구독/해지 가능
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp5/SomeTimer.cs', 'cs')
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp5/Program.cs', 'cs')
+                +asCode('cs').
+                    public delegate void EventHandler(object? sender, EventArgs e);
+                    public delegate void EventHandler&lt;TEventArgs&gt;(object? sender, TEventArgs e);
+                p 이벤트 핸들러 추가/제거 작업 재정의 가능
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp6/SomeTimer.cs', 'cs')
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp6/Program.cs', 'cs')
+                li 중첩 타입
+
+            h3 멤버의 특성
+            table
+                +ths('특성', '적용 대상', '설명')
+                +tds('abstract', '메서드, 프로퍼티, 이벤트', '파생 타입에서 구현 제공')
+                +tds('private, family, assembly, family and assembly, family or assembly, public', '모두', '멤버 액세스 범위 제한')
+                +tds('final', '메서드, 프로퍼티, 이벤트', '파생 타입에서 재정의 불가')
+                +tds('initialize-only', '필드', '초기화 이후 변경 불가')
+                +tds('newslot, override', '모두', '시그니처가 같은 상속된 멤버와의 상호작용. new(숨김, default, 부모 타입으로 형변환하여 숨긴 메서드 호출 가능), override(재정의)')
+                +tds('virtual', '메서드, 프로퍼티, 이벤트', '파생 타입에서 다른 구현을 제공할 수 있다. 메서드의 어떤 구현을 호출할 지 결정하는 것은 런타임에 호출을 수행하는 인스턴스의 타입. 원하는 버전의 메서드를 호출하려면 해당 타입으로 변수를 캐스팅')
+
+            h3 .NET의 타입 변환
+            ul
+                li 파생 클래스에서 부모 클래스로의 변환은 연산자 없이 자동 지원
+                li 부모 클래스에서 파생 클래스로의 변환은 연산자를 이용해 자동 지원
+                li 클래스에서 구현하는 인터페이스로의 변환은 연산자 없이 자동 지원
+                li 인터페이스에서 구현 클래스로의 변환은 연산자를 이용해 자동 지원
+                li 사용자 정의 암시적/명시적 타입 변환
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp4/Program.cs', 'cs')
+
+            h3 제네릭의 공변성(Covariance) 및 반공변성(Contravariance)
+            ul
+                li Covariance : 지정된 것보다 더 많은 파생 타입을 사용 가능
+                p e.g. IEnumerable&lt;Derived&gt; 인스턴스를 IEnumerable&lt;Base&gt; 변수에 할당 가능
+                li Contravariance : 지정된 것보다 더 일반적인 타입을 사용 가능
+                p e.g. Action&lt;Base&gt; 인스턴스를 Action&lt;Derived&gt; 변수에 할당 가능
+                li Invariance : 지정된 타입만 사용 가능
+                p e.g. List&lt;Base&gt;는 List&lt;Derived&gt; 변수에 할당 불가능. and vice versa
+            table
+                +ths('형식', '공변 형식 매개 변수', '반공변 형식 매개 변수')
+                +tds('Action<T>', '', 'Y')
+                +tds('Comparison<T>', '', 'Y')
+                +tds('Converter<TInput,TOutput>', 'Y', 'Y')
+                +tds('Func<TResult>', 'Y', '')
+                +tds('Func<T,TResult>', 'Y', 'Y')
+                +tds('IComparable<T>', '', 'Y')
+                +tds('Predicate<T>', '', 'Y')
+                +tds('IComparer<T>', '', 'Y')
+                +tds('IEnumerable<T>', 'Y', '')
+                +tds('IEnumerator<T>', 'Y', '')
+                +tds('IEqualityComparer<T>', '', 'Y')
+                +tds('IGrouping<TKey,TElement>', 'Y', '')
+                +tds('IOrderedEnumerable<TElement>', 'Y', '')
+                +tds('IOrderedQueryable<T>', 'Y', '')
+                +tds('IQueryable<T>', 'Y', '')
+
+            h3 컬렉션
+            table
+                +tds('수행할 작업', '제네릭 컬렉션 옵션', '제네릭이 아닌 컬렉션 옵션', '스레드-안전 or 불변 컬렉션 옵션')
+                +tds('키-값 쌍 저장 & 키를 통한 조회', 'Dictionary<TKey,TValue>', 'Hashtable', 'ConcurrentDictionary<TKey,TValue>, ReadOnlyDictionary<TKey,TValue>, ImmutableDictionary<TKey,TValue>')
+                +tds('임의 인덱스를 이용한 조회', 'List<T>', 'Array, ArrayList', 'ImmutableList<T>, ImmutableArray')
+                +tds('FIFO', 'Queue<T>', 'Queue', 'ConcurrentQueue<T>, ImmutableQueue<T>')
+                +tds('LIFO', 'Stack<T>', 'Stack', 'ConcurrentStack<T>, ImmutableStack<T>')
+                +tds('삽입 순서에 따른 조회', 'LinkedList<T>', '권장 사항 없음', '권장 사항 없음')
+                +tds('컬렉션 변경 감시(INotifyPropertyChanged 및 INotifyCollectionChanged 구현)', 'ObservableCollection<T>', '권장 사항 없음', '권장 사항 없음')
+                +tds('정렬된 컬렉션', 'SortedList<TKey,TValue>', 'SortedList', 'ImmutableSortedDictionary<TKey,TValue>, ImmutableSortedSet<T>')
+                +tds('집합', 'HashSet<T>, SortedSet<T>', '권장 사항 없음', 'ImmutableHashSet<T>, ImmutableSortedSet<T>')
+
+            h3 예외
+            +asCode('cs').
+                // 명시적 예외 발생
+                throw e; // e는 System.Exception 및 파생 클래스의 인스턴스
+
+                // 예외 처리
+                try { } catch { } finally { }   // 임의 예외 처리
+                try { } catch (Exception) { }   // 특정 예외 처리
+                try { } catch { throw; }        // 호출 스택으로 예외 넘기기
+                try { } catch (Exception e) { } // 특정 예외 처리. 예외 인스턴스 참조
+
+                var flag = Random.Shared.Next() % 2 == 0;
+                try { } // when 필터를 사용하는 경우, 같은 타입을 여러 번 catch 가능
+                catch (Exception) when (flag) { }
+                catch (Exception) when (!flag) { }
+
+            h3 .NET의 숫자
+            div
+                h4.fake 정수
+                table
+                    +ths('형식', '크기(바이트)', '최소값', '최대값')
+                    +tds('System.Int16', '2', '-32,768', '32,767')
+                    +tds('System.Int32', '4', '-2,147,483,648', '2,147,483,647')
+                    +tds('System.Int64', '8', '-9,223,372,036,854,775,808', '9,223,372,036,854,775,807')
+                    +tds('System.SByte', '1', '-128', '127')
+                    +tds('System.IntPtr(32비트 프로세스)', '4', '-2,147,483,647', '2,147,483,647')
+                    +tds('System.IntPtr(64비트 프로세스)', '8', '-9,223,372,036,854,775,808', '9,223,372,036,854,775,807')
+                    +tds('System.Byte', '1', '0', '255')
+                    +tds('System.UInt16', '2', '0', '65,535')
+                    +tds('System.UInt32', '4', '0', '4,294,967,295')
+                    +tds('System.UInt64', '8', '0', '18,446,744,073,709,551,615')
+                    +tds('System.UIntPtr(32비트 프로세스)', '4', '0', '4,294,967,295')
+                    +tds('System.UIntPtr(64비트 프로세스)', '8', '0', '18,446,744,073,709,551,615')
+                    +tds('BigInteger', '무제한', '-∞', '∞')
+
+                h4.fake 부동소수
+                p 부동소수는 NaN 및 무한대에 관한 특별한 클래스 멤버를 제공한다
+                table
+                    +ths('형식', '크기(바이트)', '근사 범위', '참고')
+                    +tds('System.Half', '2', '±65504', 'Since .NET 5')
+                    +tds('System.Single', '4', '±3.4 x 1038', '')
+                    +tds('System.Double', '8', '±1.7 × 10308', '')
+                    +tds('System.Decimal', '16', '±7.9228 x 1028', '')
+
+                h4.fake 복소수
+                p System.Numerics.Complex
+
+                h4.fake SIMD(Single Instruction Multiple Data)
+                ul
+                    li Vector&lt;T&gt; : 고속 병렬 처리를 위한 T 타입 1차원 벡터
+                    li Vector2, Vector3, Vector4 : Single 값에 대한 2~4차원 벡터
+                    li Matrix3x2, Matrix4x4 : 각각 3x2, 4x4 행렬
+                    li Plane : 평면
+                    li Quaternion : 3차원 물리적 회전
+
+            h3 날짜, 시간 및 표준 시간대
+            ul
+                li DateTime : UTC 기준 시각. 0001-01-01 00:00:00 ~ 9999-12-31 23:59:59
+                p 시간은 틱이라고 하는 100나노초 단위로 측정. 시각은 1년 1월 1일 자정 이후로 경과한 틱 수
+                li DateTimeOffset : DateTime + UTC로부터의 offset
+                li TimeZoneInfo : 표준 시간대
+                +asCode('cs').
+                    Console.WriteLine(DateTime.Now);            // 2022-04-20 오후 9:06:11
+                    Console.WriteLine(DateTime.UtcNow);         // 2022-04-20 오후 12:06:11
+
+                    Console.WriteLine(DateTimeOffset.Now);      // 2022-04-20 오후 9:06:11 +09:00
+                    Console.WriteLine(DateTimeOffset.UtcNow);   // 2022-04-20 오후 12:06:11 +00:00
+                    Console.WriteLine(                          // 2022-04-20 오후 9:06:11 +09:00
+                        new DateTimeOffset(DateTime.Now, TimeZoneInfo.Local.BaseUtcOffset));
+                    Console.WriteLine(                          // 2022-04-20 오후 12:06:11 +09:00
+                        new DateTimeOffset(new DateTime(DateTime.UtcNow.Ticks), TimeZoneInfo.Local.BaseUtcOffset));
+
+                    Console.WriteLine(DateTime.Now.Ticks - DateTime.UtcNow.Ticks);              // 323999999997 = 9시간
+                    Console.WriteLine(DateTimeOffset.Now.Ticks - DateTimeOffset.UtcNow.Ticks);  // 323999999942 = 9시간
+                li DateOnly Since .NET 6 : 0001-01-01 ~ 9999-12-31
+                li TimeOnly Since .NET 6 : 00:00:00 ~ 23:59:59
+
+            h3 Attribute
+            ol
+                li 자바의 애너테이션처럼 요소를 장식한다
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp7/Program.cs', 'cs')
+                li 사용자 정의 특성은 System.Attribute를 상속하여 만든다
+                li 명명시 Attribute를 접미하고, 실제 사용할 땐 생략 가능하다
+                li 특성 적용 대상 제한 : System.AttributeUsage 생성자에 AttributeTargets 전달. 생략시 기본값은 AttributeTargets.All
+                li 적용 대상 명시 : assembly, module, type, method, property, field, event, param, return, typevar
+
+        h2 데이터 액세스
+        div
+            h3 LINQ; Language Itegrated Query
+            ol
+                li 데이터에 대한 선언적 코드
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp8/Program.cs', 'cs')
+                li MoreLinq 패키지에서 추가적인 편의성을 제공한다
+                li ↓ 일반 구문
+                +asCode('text', 'syntax').
+                    from        LINQ는 from으로 시작한다
+                                from의 대상은 IEnumerable&lt;T>
+                                LINQ 결과도 IEnumerable&lt;T>
+                    where + bool 판정식
+                    orderby + 정렬 기준 [(ascending) | descending]
+                    select + 결과
+                +asCode('cs', '예시').
+                    from mQuest in mQuests
+                    where mQuest.quest_group_id.Equals(mQuestGroup.quest_group_id)
+                    orderby mQuest.quest_name
+                    select mQuest
+                li: +asA('https://docs.microsoft.com/ko-kr/dotnet/standard/parallel-programming/introduction-to-plinq', 'PLINQ')
+                ul
+                    li AsParallel() : 가능한 경우 나머지 쿼리를 병렬로 실행
+                    li AsSequential() : 나머지 쿼리를 순차적으로 실행
+                    li AsOrdered() : 나머지 쿼리에 대해, 병렬로 실행하더라도 소스 시퀀스의 순서를 유지
+                    li AsUnordered() : 나머지 쿼리에 대해 소스 시퀀스 순서와 무관하게 실행
+                    li ForAll() : 순차 실행하는 foreach와 달리, 병렬로 결과 아이템 소비
+                li LINQ 내에서의 변수 선언 예 : let x = 10
+                li 중첩 쿼리 가능
+                +asCode('cs').
+                    from student in students
+                    from score in student.Scores
+                li Grouping 결과는 IGrouping&lt;T> 형식
+                +asCode('cs').
+                    from p in profiles
+                    group p by p.Height &lt; 160 into lowGroup
+                    select new { Key = lowGroup.Key, Profiles = lowGroup };
+                li Inner Join
+                +asCode('cs').
+                    from a in A
+                    join b in B on a.X equals b.Y
+                li Outer Join
+                p inner join 결과를 임시 컬렉션으로 치환하고, 임시 컬렉션의 빈 항목을 기본 값으로 채운다
+                +asCode('cs').
+                    from profile in profiles
+                    join product in products on profile.Name equals product.Name into result
+                    from product in result.DefaultIfEmpty( new Product() { Title = "없음” } )
+                    select new { Name = profile.Name, Work = product.Title };
+                li Expression Tree : System.Linq.Expressions
+                +asCode('cs').
+                    var const1 = Expression.Constant(1);
+                    var param1 = Expression.Parameter(typeof(int), "x");
+                    var exp = Expression.Add(const1, param1);
+                    var lambda = Expression&lt;Func&lt;int, int>>.Lambda&lt;Func&lt;int, int>>(exp, new ParameterExpression[] { (ParameterExpression)param1 });
+                    var compiledFunc = lambda.Compile();
+                    Console.WriteLine(compiledFunc(3));
+
+            h3: +asA('https://docs.microsoft.com/ko-kr/dotnet/standard/data/xml/', 'System.Xml')
+            h3: +asA('https://docs.microsoft.com/ko-kr/dotnet/standard/data/sqlite/?tabs=netcore-cli', 'Microsoft.Data.Sqlite')
+            h3: +asA('https://docs.microsoft.com/ko-kr/ef/core/', 'Entity Framework(ORM)')
+
 
     h1 문법
     div
         h2 기본 자료형
         div
-            h3 정수형
-            table.no-sort
-                tr
-                    td sbyte
-                    td signed byte
-                    td System.Sbyte
-                tr
-                    td byte
-                    td unsigned byte
-                    td System.Byte
-                tr
-                    td short
-                    td signed 2bytes
-                    td System.Int16
-                tr
-                    td ushort
-                    td unsigned short
-                    td System.UInt16
-                tr
-                    td int
-                    td signed 4bytes
-                    td System.Int32
-                tr
-                    td uint
-                    td unsigned int
-                    td System.UInt32
-                tr
-                    td long
-                    td signed 8bytes
-                    td System.Int64
-                tr
-                    td ulong
-                    td unsigned long
-                    td System.UInt64
-            h3 실수형
-            table.no-sort
-                tr
-                    td float
-                    td 4바이트. 리터럴 접미사 f
-                    td System.Single
-                tr
-                    td double
-                    td 8바이트
-                    td System.Double
-                tr
-                    td decimal
-                    td 16바이트. 리터럴 접미사 m
-                    td System.Decimal
             h3 숫자 리터럴
             p 16진수 표현 0xFFFF, 2진수 표현 0b1010, 구분 문자 '_' 사용 가능
             h3 문자형
@@ -168,12 +471,7 @@ include ../../../source/skeleton.pug
                     +codeBtn('/Repositories/VisualStudio/csharp_interpolated_string.cs', 'cs')
                 li Since C# 8 : @$"", $@"" 모두 유효. 이전에는 $@""만 가능
             h3 Boolean
-            table
-                tr
-                    td bool
-                    td true or false
-                    td System.Boolean
-            h3 Boolean 연산 &&, ||는 Short-circuit
+            p Boolean 연산 &&, ||는 Short-circuit
 
         h2 배열
         ul
@@ -188,13 +486,7 @@ include ../../../source/skeleton.pug
                 int[,] arr5 = new int[,] { { 1, 2 }, { 3, 4 } };
 
         h2 형변환
-        ul
-            li 암시적 형변환 : 보다 큰 정의의 자료형으로 자동 변환
-            p Boxing : Value type 데이터를 Reference type으로 변환. 컴파일러가 묵시적으로 수행
-            li 명시적 변환 : 괄호 이용
-            p Unboxing : Reference type 데이터를 Value type으로 변환. 캐스팅을 통해 명시적으로 수행
-            li if (o is Mammal m) { }
-            li as 연산자를 이용한 명시적 변환은, null을 허용하는 참조 자료형만 가능하다
+        p as 연산자를 이용한 명시적 변환은, null을 허용하는 참조 자료형만 가능하다
 
         h2 구문
         ul
@@ -211,15 +503,6 @@ include ../../../source/skeleton.pug
             p 기본적으로는 프로그램 실행 시 오버플로/언더플로를 무시한다
             p checked/unchecked 블록은 이를 각각 명시적인 예외로 처리/비처리 하도록 한다
             +codeBtn('/Repositories/VisualStudio/CSharp/Basic/CheckedExample.cs', 'cs', '[13, 39]')
-            li 예외 처리
-            +asCode('cs').
-                throw e; // e는 System.Exception 및 파생 클래스의 인스턴스
-                try {} catch {} finally {}
-                try {} catch (ExceptionType) {}
-                try {} catch { throw; }
-                try {} catch (ExceptionType e) {}
-                try {} catch () when (!filePath.Contains(".tmp")) {} // when 필터를 사용하는 경우, 같은 타입을 여러 번 catch 가능
-                try {} finally { iDisposable.Dispose(); } // 다음과 동일 : using(var iDisposable = ~) { }
 
         h2 네임스페이스
         +asCode('cs').
@@ -242,6 +525,7 @@ include ../../../source/skeleton.pug
             h3 상속
             ul
                 li class SubClass : BaseClass
+                li interface Interface1 : Interface2
                 li is 연산자로 호환 여부 확인 가능
                 li this 키워드 : 클래스의 현재 인스턴스
                     br
@@ -254,74 +538,9 @@ include ../../../source/skeleton.pug
                     |모든 값 형식의 조상은 System.ValueType
                     br
                     |모든 배열의 조상은 System.Array : Sort(), BinarySearch&lt;T>(), IndexOf(), ..., Length, Rank
-            h3 다형성
-            ul
-                li virtual, override 키워드를 사용해 명시한다. virtual 메서드는 body를 정의해야 한다
-                li new : 부모 메서드 숨기기. override와 달리 형 변환을 통해 부모 메서드에 접근 가능
-                li abstract class : 인스턴스화 불가능
-                    br
-                    |abstract method : 서브 클래스에서 반드시 override
-                li 연산자 오버로딩
-                |public static 반환타입 operator 연산자(타입1 변수1, 타입2 변수2) {}
-                li 형 변환 정의
-                +asCode('cs').
-                    public static implicit operator 타입2(타입1 변수1) {};
-                    public static explicit operator 타입2(타입1 변수1) {};
-
-        h2 델리게이트
-        ul
-            li 메서드를 참조하는 자료형
-                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/DelegateExample.cs', 'cs')
-            li 델리게이트로 변환될 수 있는 익명 메서드 생성
-            ol
-                li delegate 연산자 → delegate (int a, int b) { return a + b; }
-                li 람다 Since C# 3 → (a, b) => a + b;
-            li 델리게이트에는 BeginInvoke 및 EndInvoke 메서드가 자동으로 추가되며, 이를 통해 임의 메서드를 비동기 호출할 수 있다
-            +codeBtn('/Repositories/VisualStudio/CSharp/Basic/DelegateExample.cs', 'cs', '[12, 22, 49, 64]') 비동기 호출 예 »
-            +codeBtn('/Repositories/VisualStudio/CSharp/Basic/DelegateExample.cs', 'cs', '[12, 22, 66, 86]') 비동기 호출 대기 예 »
-            li 델리게이트 체인
-            +asCode('cs').
-                myDelegate += obj.Func;
-                myDelegate -= obj.Func;
-            li.marker Func
-            p 결과를 반환하는 메서드를 참조하는, 미리 정의된 델리게이트. 매개변수 0 ~ 16개, 총 17가지
-            li.marker Action
-            p void 리턴 메서드를 참조하는, 미리 정의된 델리게이트. 매개변수 0 ~ 16개, 총 17가지
-            li.marker 이벤트
-            ol
-                li 일반화된 델리게이트. 간단하게 구독/해지 가능. 클래스 밖에서 호출 불가
-                li 이벤트의 첫 번째 인자는 이벤트 발생 객체. 두 번째 인자는 EventArgs 호환 객체
-                +asCode('cs') public event EventHandler SomeEvent = delegate { };
-                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/EventExample.cs', 'cs')
-
-        h2 인터페이스
-        ol
-            li 인터페이스도 프로퍼티를 가질 수 있다(get/set 지정만 가능). 구현하는 클래스에서 프로퍼티를 구현한다
-            li class SubClass : BaseClass, Interface1, Interface2, ...
-            li interface Interface1 : Interface2
-
-        h2 구조체 struct
-        ol
-            li 사용자 정의 ValueType
-            li ValueType이므로 생성자 호출 없이 선언만으로 초기화가 진행된다. 사용되는 기본 생성자는 컴파일러가 자동으로 추가하며, 재정의할 수 없다
-            li 모든 타입은 Object의 파생 클래스이므로, 구조체도 new 키워드로 인스턴스를 생성할 수 있다. 인자를 받는 생성자는 모든 필드를 초기화해야 한다
-            li ValueType이므로 할당 시 깊은 복사가 이루어진다
-
-        h2 열거형 enum
-        ol
-            li 정수형을 상속받아 정의할 수 있는 ValueType. 기본 int
-            li [Flags] // 열거형을 비트필드로 이용하는 애트리뷰트
-        +asCode('cs').
-            [Flags] enum Authority { READ = 1, WRITE = 2, EXECUTE = 4 }
-            var authority = READ | WRITE;
-            Console.WriteLine(authority.HasFlag(WRITE));
 
         h2 제네릭
         ul
-            li Generic Method
-            +asCode('cs') public void Write&lt;T>(T value) => OnWrite(value?.ToString() ?? "");
-            li Generic Class
-            +asCode('cs') public class List&lt;T> : IList&lt;T>, ICollection&lt;T>, IEnumerable&lt;T>, (생략)
             li Type Bound
             +asCode('cs').
                 class MyGenereic&lt;T, U> where T : struct where U : class { }
@@ -491,7 +710,7 @@ include ../../../source/skeleton.pug
             li.marker
                 |확장 메서드 : 기존 클래스에 static method 추가됨
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/ExtensionExample.cs', 'cs')
-            li.marker 람다 식 사용 확장 : 생성자, 소멸자, 이벤트 add/remove, 속성 set, 인덱서 set
+            li.marker 람다 식 사용 확장 : 생성자, 소멸자, 이벤트 add/remove, 프로퍼티 set, 인덱서 set
             li.marker 메서드 안에 지역 함수 정의 가능
             p static 지역 함수로 선언하면 외부 변수 참조 불가
             li.marker extern 메서드 : 메서드의 body가 없어도 컴파일 되도록 한다
@@ -507,7 +726,7 @@ include ../../../source/skeleton.pug
         h2 구문
         ol
             li.marker
-                |인덱서 구문 : 하나 이상의 인수로 참조되는 속성을 반환. string, List&lt;T> 등은 인덱서를 구현함
+                |인덱서 구문 : 하나 이상의 인수로 참조되는 프로퍼티. string, List&lt;T> 등은 인덱서를 구현함
                 +codeBtn('/Repositories/VisualStudio/CSharp/Basic/IndexerExample.cs', 'cs')
             li.marker switch case 필터 Since C# 7.0
             +asCode('cs').
@@ -542,62 +761,6 @@ include ../../../source/skeleton.pug
                         }
                     }
                 }
-
-            h3 LINQ; Language INtegrated Query
-            ol
-                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/LinqExample.cs', 'cs')
-                li MoreLinq 패키지에서 추가적인 편의성을 제공한다
-                li from : LINQ query는 from으로 시작한다. from의 대상은 IEnumarable&lt;T>
-                p LINQ query 결과도 IEnumerable&lt;T>
-                li where + bool 판정식
-                li orderby + 정렬 기준 [(ascending) | descending]
-                li select + 결과
-                +asCode('cs').
-                    from mQuest in Get&lt;MQuest>()
-                    where mQuest.quest_group_id.Equals(mQuestGroup.quest_group_id)
-                    orderby mQuest.quest_name
-                    select mQuest
-                li let : LINQ 내에서의 변수 선언; let x = 10
-                li 중첩 질의
-                +asCode('cs').
-                    from student in students
-                    from score in student.Scores
-                li Grouping : 결과는 IGrouping&lt;T> 형식
-                +asCode('cs').
-                    from p in profiles
-                    group p by p.Height &lt; 160 into lowGroup
-                    select new { Key = lowGroup.Key, Profiles = lowGroup };
-                li Inner Join
-                +asCode('cs').
-                    from a in A
-                    join b in B on a.X equals b.Y
-                li Outer Join : inner join 결과를 임시 컬렉션으로 치환하고, 임시 컬렉션의 빈 항목을 기본 값으로
-                +asCode('cs').
-                    from profile in profiles
-                    join product in products on profile.Name equals product.Name into result
-                    from product in result.DefaultIfEmpty( new Product() { Title = "없음” } )
-                    select new { Name = profile.Name, Work = product.Title };
-                li Expression Tree : System.Linq.Expressions
-                +asCode('cs').
-                    var const1 = Expression.Constant(1);
-                    var param1 = Expression.Parameter(typeof(int), "x");
-                    var exp = Expression.Add(const1, param1);
-                    var lambda = Expression&lt;Func&lt;int, int>>.Lambda&lt;Func&lt;int, int>>(exp, new ParameterExpression[] { (ParameterExpression)param1 });
-                    var compiledFunc = lambda.Compile();
-                    Console.WriteLine(compiledFunc(3));
-
-        h2 Attribute
-        ol
-            li 자바의 애너테이션처럼 요소를 장식한다
-                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs') AttributeExample.cs 전체 코드 »
-            li 사용자 정의 특성은 System.Attribute를 상속하여 만든다
-                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs', '[12, 19]')
-            li 명명시 Attribute를 접미하고, 실제 사용할 땐 생략 가능하다
-                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs', '[21, 24]')
-            li 특성 적용 대상 제한 : System.AttributeUsage 생성자에 AttributeTargets 전달. 생략시 기본값은 AttributeTargets.All
-                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs', '[12, 13]')
-            li 적용 대상 명시 : assembly, module, type, method, property, field, event, param, return, typevar
-                +codeBtn('/Repositories/VisualStudio/CSharp/Basic/AttributeExample.cs', 'cs', '[23, 24]')
 
         h2 App.config
         ol
