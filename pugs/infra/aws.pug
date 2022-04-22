@@ -193,51 +193,293 @@ include ../../source/skeleton.pug
         h2 ID
         div
             h3 Roles
-            p 역할을 사용할 수 있는 주체 :
+            div
+                h4.fake 역할을 사용할 수 있는 주체
+                ul
+                    li 동일한 AWS 계정의 IAM 사용자
+                    li 다른 AWS 계정의 IAM 사용자
+                    li AWS 서비스(EC2 등)
+                    li SAML 2.0, OpenID Connect 등 외부 자격 증명 공급자(IdP)에 의해 인증된 외부 사용자
+
+                h4.fake EC2 애플리케이션에서 역할 사용
+                p EC2 인스턴스에 IAM 역할을 할당하면 장기 자격 증명을 인스턴스에 배포하지 않아도 된다. 예를 들어, AWS Java SDK에서 인증 정보 없이 서비스 클라이언트 인스턴스 생성 시 DefaultAWSCredentialsProviderChain에 정의된 순서대로 인증 정보를 조회한다
+                ol
+                    li 환경 변수 : AWS_ACCESS_KEY, AWS_SECRET_KEY
+                    p Java SDK 외의 경우엔 AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+                    li Java System Properties : aws.accessKeyId, aws.secretKey
+                    li Web Identity Token credential
+                    li Credential profile : ~/.aws/credentials
+                    li Amazon EC2 container service로 전달되는 인증 정보
+                    li Amazon EC2 metadata service로 전달되는 인증 정보
+                p 인스턴스 내부에서 aws cli를 직접 실행하는 경우엔 얘기가 다르다. profile을 추가로 지정해야 하고, 해당 profile로 assume role할 수 있는 권한이 있어야 한다
+
+            h3 CloudTrail을 사용하여 이벤트 로깅
             ul
-                li 동일한 AWS 계정의 IAM 사용자
-                li 다른 AWS 계정의 IAM 사용자
-                li AWS 서비스(EC2 등)
-                li SAML 2.0, OpenID Connect 등 외부 자격 증명 공급자(IdP)에 의해 인증된 외부 사용자
-            
+                li CloudTrail은 IAM, STS 호출을 이벤트로 캡처한다
+                li 추적을 생성하면 이벤트를 S3 버킷으로 배포할 수 있다
+                li 추적을 생성하지 않아도 Event history에서 90일 간의 기록을 무료로 확인 가능
 
-        h2 etc..
-        ul
-            li 동일한 IAM 사용자와 여러 정책을 연결하는 경우 가장 제한이 적은 정책이 우선
-            li EC2에 IAM 역할을 할당하면 장기 자격 증명을 인스턴스에 배포하지 않아도 된다
-            p 인스턴스 내부에서 aws cli를 직접 실행하는 경우엔 얘기가 다르다. profile을 추가로 지정해야 하고, 해당 profile로 assume role을 할 수 있는 권한이 있어야 한다
-            li MFA 설정 허용 정책
-            +asCode('json').
-                {
-                    "Version": "2012-10-17",
-                    "Statement": [
+        h2 액세스 관리
+        div
+            h3 정책 및 권한
+            div
+                h4.fake 정책 유형
+                ul
+                    li 자격 증명 기반 정책 : 관리형 및 인라인 정책을 보안 주체에 연결
+                    li 리소스 기반 정책 : 인라인 정책을 리소스에 연결. e.g. S3 버킷 정책, IAM 역할 신뢰 정책
+                    li 권한 경계 : 부여할 수 있는 최대 권한 정의
+                    li Organizations SCP : 조직 단위 계정 멤버에 대한 최대 권한 정의
+                    li ACL : JSON 정책 문서 구조를 사용하지 않고, 액세스할 수 있는 보안 주체 목록으로 제어
+                    li 세션 정책 : 역할 또는 페더레이션 사용자에 대해 임시 세션을 프로그래밍 방식으로 생성할 때 파라미터로 전달하는 고급 정책
+
+                h4.fake JSON 정책 언어 문법(2012-10-17)
+                +asCode().
+                    policy  = {
+                        &lt;version_block?&gt;
+                        &lt;id_block?&gt;
+                        &lt;statement_block&gt;
+                    }
+
+                    &lt;version_block&gt; = "Version" : ("2008-10-17" | "2012-10-17")
+
+                    &lt;id_block&gt; = "Id" : &lt;policy_id_string&gt;
+
+                    &lt;statement_block&gt; = "Statement" : [ &lt;statement&gt;, &lt;statement&gt;, ... ]
+
+                    &lt;statement&gt; = {
+                        &lt;sid_block?&gt;,
+                        &lt;principal_block?&gt;,
+                        &lt;effect_block&gt;,
+                        &lt;action_block&gt;,
+                        &lt;resource_block&gt;,
+                        &lt;condition_block?&gt;
+                    }
+
+                    &lt;sid_block&gt; = "Sid" : &lt;sid_string&gt;
+
+                    &lt;effect_block&gt; = "Effect" : ("Allow" | "Deny")
+
+                    &lt;principal_block&gt; = ("Principal" | "NotPrincipal") : ("*" | &lt;principal_map&gt;)
+
+                    &lt;principal_map&gt; = { &lt;principal_map_entry&gt;, &lt;principal_map_entry&gt;, ... }
+
+                    &lt;principal_map_entry&gt; = ("AWS" | "Federated" | "Service" | "CanonicalUser") :
+                        [&lt;principal_id_string&gt;, &lt;principal_id_string&gt;, ...]
+
+                    &lt;action_block&gt; = ("Action" | "NotAction") :
+                        ("*" | [&lt;action_string&gt;, &lt;action_string&gt;, ...])
+
+                    &lt;resource_block&gt; = ("Resource" | "NotResource") :
+                        ("*" | [&lt;resource_string&gt;, &lt;resource_string&gt;, ...])
+
+                    &lt;condition_block&gt; = "Condition" : { &lt;condition_map&gt; }
+                    &lt;condition_map&gt; = {
+                        &lt;condition_type_string&gt; : { &lt;condition_key_string&gt; : &lt;condition_value_list&gt; },
+                        &lt;condition_type_string&gt; : { &lt;condition_key_string&gt; : &lt;condition_value_list&gt; }, ...
+                    }
+                    &lt;condition_value_list&gt; = [&lt;condition_value&gt;, &lt;condition_value&gt;, ...]
+                    &lt;condition_value&gt; = ("string" | "number" | "Boolean")
+                ul
+                    li Version : 정책 언어 버전
+                    li Id : 정책 식별자
+                    li Statement : 1개 이상의 세부 정책
+                    li Sid : 세부 정책 식별자. API에서 참조되는 값이 아니며, 정책에 대한 서술을 적어도 좋다
+                    li Effect : 세부 정책이 허가/거부를 나타내는 지 여부
+                    li Principal : 리소스 기반 JSON 정책에서, 허가/거부의 대상이 될 보안 주체 지정
+                    li NotPrincipal : Principal과 반대로, 여집합을 지정
+                    p "Effect": "Deny"와 함께, 지정한 보안 주체를 제외한 모든 보안 주체에 대해 명시적으로 거부하는 드문 경우에 사용
+                    li Action : 대상 작업 목록. 작업 이름은 대소문자 구별 없음. 와일드카드 * 가능
+                    li NotAction : Action과 반대로, 여집합을 지정
+                    li Resource : 대상 리소스 ARN 목록. 와일드카드 *, ? 가능
+                    li NotResource : Resource와 반대로, 여집합을 지정
+                    li Condition : 요청 컨텍스트에 대한 추가 조건 연산
+
+                h4.fake 정책 조건 연산
+                ul
+                    li 조건 키는 대소문자 구별 없음. aws:ResourceTag/<i class="w3-red">tag-key</i>처럼 키 일부를 사용자가 지정할 수 있는 경우에도 마찬가지로 대소문자 구별 없음에 유의
+                    p 조건 키로 다음 2가지가 가능:
+                        +asA('https://docs.aws.amazon.com/ko_kr/IAM/latest/UserGuide/reference_policies_condition-keys.html', '전역 조건 키')
+                        |,
+                        +asA('https://docs.aws.amazon.com/ko_kr/service-authorization/latest/reference/reference_policies_actions-resources-contextkeys.html#context_keys_table', '서비스별 조건 키')
+                    li 각 조건 키의 평가 결과는 다음 중 하나 : true, false, not present, null(빈 문자열)
+                    li 조건 연산자
+                    table.no-sort
+                        +ths('연산자', '설명', '대응 Not 연산자')
+                        +tds('문자열 조건 연산자', '정책 변수 사용 가능', '')
+                        +tds('StringEquals', '대소문자 구별한 문자열 일치', 'StringNotEquals')
+                        +tds('StringEqualsIgnoreCase', '대소문자 무시한 문자열 일치', 'StringNotEqualsIgnoreCase')
+                        +tds('StringLike', '대소문자 구별한 문자열 일치. 와일드카드 *, ? 허용', 'StringNotLike')
+                        +tds('숫자 조건 연산자', '정책 변수 사용 불가. 정수 또는 십진수 비교', '')
+                        +tds('NumericEquals', '일치', 'NumericNotEquals')
+                        +tds('NumericLessThan', '미만', 'NumericGreaterThanEquals')
+                        +tds('NumericLessThanEquals', '이하', 'NumericGreaterThan')
+                        +tds('날짜 조건 연산자', '정책 변수 사용 불가. ISO 8601 포맷 또는 UNIX epoch 비교', '')
+                        +tds('DateEquals', '일치', 'DateNotEquals')
+                        +tds('DateLessThan', '미만', 'DateGreaterThanEquals')
+                        +tds('DateLessThanEquals', '이하', 'DateGreaterThan')
+                        +tds('부울 조건 연산자', '정책 변수 사용 불가. 키를 "true" 또는 "false"와 비교', '')
+                        +tds('Bool', '일치', '')
+                        +tds('이진 조건 연산자', '정책 변수 사용 불가', '')
+                        +tds('BinaryEquals', '지정한 Base64 인코딩 표시와 바이트 단위로 일치', '')
+                        +tds('IP 주소 조건 연산자', '정책 변수 사용 불가', '')
+                        +tds('IpAddress', '지정 CIDR에 포함', 'NotIpAddress')
+                        +tds('ARN 조건 연산자', '정책 변수 사용 가능. ARN의 콜론으로 구분된 6개 구성요소 각각 별도로 확인한다', '')
+                        +tds('ArnEquals, ArnLike', '대소문자 구별한 ARN 일치. 와일드카드 *, ? 허용', 'ArnNotEquals, ArnNotLike')
+                        +tds('…IfExists 조건 연산자', 'Null을 제외한 조건 연산자 이름 끝에 IfExists를 추가하면 요청 컨텍스트에 정책 키가 없으면 true로 평가', '')
+                        +tds('Null', '정책 변수 사용 불가. 조건 키의 유무 검사', '')
+                    li 한 정책에 다수의 조건 연산자가 있는 경우 : AND 평가
+                    li 한 조건 연산자에 다수의 키가 추가된 경우 : AND 평가
+                    li 한 조건 키에 다수의 값이 포함된 경우 : OR 평가
+                    li 값 자체가 다중인 경우, 조건 집합 연산자를 사용할 수 있다
+                    ul
+                        li ForAllValues : 요청 컨텍스트의 값 집합이 지정한 조건 키 집합의 부분집합
+                        li ForAnyValue : 요청 컨텍스트의 값 집합 원소 중 하나라도 지정한 조건 키 집합의 원소
+                        +asCode().
+                            "Condition": {
+                                "ForAnyValue:StringEquals": {
+                                    "dynamodb:Attributes": [ "ID", "Message" ]
+                                }
+                            }
+
+                    li 정책 변수 및 태그
+                    ul
+                        li Resource 요소에서의 사용 : ARN의 5번째 콜론 뒷부분만
+                        +asCode() "Resource": ["arn:aws:s3:::bucket/${aws:PrincipalTag/department}"]
+                        li Condition 요소에서의 사용 : 허용되는 조건 연산자에서만
+                        +asCode().
+                            "Condition": {
+                                "StringLike": {
+                                    "iam:ResourceTag/costCenter": [ "12345", "67890" ]
+                                }
+                            }
+                        li 모든 요청에 사용할 수 있는 정보
+                        table
+                            +tds('aws:CurrentTime', '현재 시각')
+                            +tds('aws:EpochTime', '현재 시각')
+                            +tds('aws:TokenIssueTime', '임시 보안 자격 증명 발급 시각')
+                            +tds('aws:PrincipalType', '보안 주체 종류 : Account, User, FederatedUser, AssumedRole, Anonymous(S3, SNS, SQS)')
+                            +tds('aws:SecureTransport', 'SSL 요청인지 여부')
+                            +tds('aws:SourceIp', '요청자 IP')
+                            +tds('aws:UserAgent', '신뢰성이 떨어지는 클라이언트 정보')
+                            +tds('aws:userid', '보안 주체 고유 ID')
+                            +tds('aws:username', 'IAM 사용자 이름')
+                            +tds('ec2:SourceInstanceARN', 'EC2에 할당된 IAM 역할을 이용해 들어온 요청인 경우 인스턴스 ARN이 설정됨')
+                        li 서비스별 정보
+                        p s3:prefix, s3:max-keys, s3:x-amz-acl, sns:Endpoint, sns:Protocol, ...
+                        li 특수 문자 리터럴 표현
+                        ul
+                            li ${*} : 문자 * 표현
+                            li ${?} : 문자 ? 표현
+                            li ${$} : 문자 $ 표현
+                        li 변수가 없는 경우 사용할 기본값 제공
+                        +asCode() "Resource":"arn:aws:s3:::DOC-EXAMPLE-BUCKET-${aws:PrincipalTag/team, 'company-wide'}"
+
+                h4.fake: +asA('https://docs.aws.amazon.com/ko_kr/IAM/latest/UserGuide/access_policies_examples.html', '정책 예제')
+                ul
+                    li MFA 설정 허용 정책
+                    +asCode('json').
                         {
-                            "Sid": "VisualEditor0",
-                            "Effect": "Allow",
-                            "Action": [
-                                "iam:DeactivateMFADevice",
-                                "iam:DeleteVirtualMFADevice",
-                                "iam:EnableMFADevice",
-                                "iam:ResyncMFADevice",
-                                "iam:CreateVirtualMFADevice",
-                                "iam:ListMFADevices"
-                            ],
-                            "Resource": [
-                                "arn:aws:iam::123456789012:mfa/${aws:username}",
-                                "arn:aws:iam::123456789012:user/${aws:username}"
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Sid": "VisualEditor0",
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "iam:DeactivateMFADevice",
+                                        "iam:DeleteVirtualMFADevice",
+                                        "iam:EnableMFADevice",
+                                        "iam:ResyncMFADevice",
+                                        "iam:CreateVirtualMFADevice",
+                                        "iam:ListMFADevices"
+                                    ],
+                                    "Resource": [
+                                        "arn:aws:iam::123456789012:mfa/${aws:username}",
+                                        "arn:aws:iam::123456789012:user/${aws:username}"
+                                    ]
+                                },
+                                {
+                                    "Sid": "VisualEditor1",
+                                    "Effect": "Allow",
+                                    "Action": "iam:ListVirtualMFADevices",
+                                    "Resource": "*"
+                                }
                             ]
-                        },
-                        {
-                            "Sid": "VisualEditor1",
-                            "Effect": "Allow",
-                            "Action": "iam:ListVirtualMFADevices",
-                            "Resource": "*"
                         }
-                    ]
-                }
 
-    h1 서비스 종류
-    ol
+        h2 액세스 분석기
+        p IAM Access Analyzer는 외부 엔터티와 공유되는 조직 및 계정 내 리소스를 식별하여 액세스가 의도한 액세스인지, 의도하지 않은 보안 위험인지 확인할 수 있다. 모든 상용 AWS 리전에서 무료로 IAM 콘솔 및 API를 통해 이용 가능
+
+    h1 WAF, Firewall Manager, Shield
+    div
+        h2 개요
+        ul
+            li WAF(Web application firewall)
+            p 규칙(e.g. 시간-IP당 요청 수)을 기반으로 HTTP/HTTPS 요청에 대한 허용/거부(403 Forbidden) 결정
+            li Shield
+            ul
+                li DDoS 보호 서비스
+                li Shield Standard : 기본 제공
+                li Shield Advanced : 고급 기능 제공(월 3,000 USD)
+            li Firewall Manager
+            p 조직의 계정과 애플리케이션 방화 규칙에 대한 중앙 관리 서비스
+
+        h2 WAF
+        ul
+            li Web ACL : 액세스를 결정하는 규칙 리스트. 규칙은 ACL 제한 용량까지만 추가 가능
+            li Rule : 각 규칙은 조건식을 가지며, 조건식을 만족하는 요청에 대해 허용/거부/카운트/CAPTCHA 중 어느 것을 실행할 지 결정한다
+            li Rule group : 재사용 가능한 규칙
+        div
+            h3 Rule
+            div
+                h4.fake Rule action
+                ul
+                    li Allow : 요청 허용
+                    p 요청에 커스텀 헤더 추가 가능
+                    li Count : 카운터 증가. 나머지 규칙 평가
+                    p 요청에 커스텀 헤더 추가 가능. 이후 규칙 평가를 위한 커스텀 레이블 추가 가능
+                    li Block : 요청 거부
+                    li CAPTCHA : 캡차 실행
+
+                h4.fake Rule type
+                ul
+                    li Regular rule : 조건 일치 요청에 대해 개별 action 결정
+                    li Rate-based rule : 기간(5분) 중 동일 IP에 대해 임계값 초과한 요청에 대해 action 결정
+
+                h4.fake Rule statement
+                ul
+                    li 모든 요청에 대해 action 실행
+                    li IP 기반 국가 코드 일치하는 요청에 대해 action 실행
+                    li IP 집합 포함 요청에 대해 action 실행
+                    li Label 소지 요청에 대해 action 실행
+                    li Header 패턴 일치 요청에 대해 action 실행
+                    li Query 패턴 일치 요청에 대해 action 실행
+                    li URI 패턴 일치 요청에 대해 action 실행
+                    li Body 패턴 일치 요청에 대해 action 실행
+                    p 최대 8KB만 평가한다
+                    li HTTP method 패턴 일치 요청에 대해 action 실행
+                +asCode('json', 'Rule 예시').
+                    {
+                        "Name": "RequestRate-by-IP",
+                        "Priority": 0,
+                        "Statement": {
+                            "RateBasedStatement": {
+                                "Limit": 1500,
+                                "AggregateKeyType": "IP"
+                            }
+                        },
+                        "Action": {
+                            "Block": {}
+                        },
+                        "VisibilityConfig": {
+                            "SampledRequestsEnabled": true,
+                            "CloudWatchMetricsEnabled": true,
+                            "MetricName": "RequestRate-by-IP"
+                        }
+                    }
+
+    h1 기타 서비스
+    ul
+        li GuardDuty : 계정 내의 비정상적인 활동을 식별하고, 활동의 보안 관련성을 분석하며, 호출된 컨텍스트를 제공
         li EC2; Elastic Compute Cloud
         p OS를 포함한 컴퓨팅 머신
         li EBS; Elastic Block Store

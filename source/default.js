@@ -51,9 +51,8 @@ const posts = {
         { category: 'Infra', file: '/posts/infra/linux.html', title: 'Linux' },
         { category: 'Infra', file: '/posts/infra/nginx.html', title: 'Nginx' },
         { category: 'Infra', file: '/posts/infra/sdkman.html', title: 'SDKMAN; The Software Development Kit Manager' },
-        { category: 'Language/.NET', file: '/posts/language/.net/csharp_basic.html', title: 'C# 기초' },
-        { category: 'Language/.NET', file: '/posts/language/.net/csharp_library.html', title: 'C# 라이브러리' },
-        { category: 'Language/.NET', file: '/posts/language/.net/wpf_basic.html', title: 'WPF 기초' },
+        { category: 'Language/.NET', file: '/posts/language/.net/csharp_basic.html', title: 'C#.NET' },
+        { category: 'Language/.NET', file: '/posts/language/.net/wpf_basic.html', title: 'WPF' },
         { category: 'Language/JavaScript', file: '/posts/language/javascript/basic.html', title: '코어 JavaScript' },
         { category: 'Language/JavaScript', file: '/posts/language/javascript/basic2.html', title: '브라우저 JavaScript' },
         { category: 'Language/JavaScript', file: '/posts/language/javascript/jquery.html', title: 'jQuery' },
@@ -243,7 +242,7 @@ function convertAsCodeDiv(divs) {
         // console.log(code)
         div.innerHTML = ''
         fillCodeDiv(div, div.getAttribute('lan'), code)
-        div.style.maxHeight = window.innerHeight / 2 + 'px'
+        div.style.maxHeight = window.innerHeight / 3 + 'px'
         div.classList.remove('as-code')
     }
 }
@@ -402,14 +401,14 @@ function insertCodeDiv(id) {
             let path = button.title
             let xhr = new XMLHttpRequest()
             xhr.addEventListener('load', ((button) => function (e) {
-                let div = `<div id="code-div-${id}" class="w3-leftbar w3-border-green code-div" style="max-height:${window.innerHeight / 2}"></div>`.asSF().$
+                let div = `<div id="code-div-${id}" class="w3-leftbar w3-border-green code-div"></div>`.asSF().$
                 let lan = button.getAttribute('lan')
                 if (this.status != 200)
                     this.responseText = 'Ajax Failed'
 
                 posts.codes[id] = this.responseText
                 fillCodeDiv(div, lan, this.responseText, button.getAttribute('displayRange'))
-                div.style.maxHeight = window.innerHeight / 2 + 'px'
+                div.style.maxHeight = window.innerHeight / 3 + 'px'
 
                 if (lan != 'nohighlight') {
                     let modal = '<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-blue">모달로 보기</button>'.asSF().$
@@ -436,7 +435,7 @@ function insertCodeDiv(id) {
         } else {
             let div = document.getElementById(`code-div-${id}`)
             SFUtil.toggleClass(div, ['w3-hide'])
-            div.style.maxHeight = window.innerHeight / 2 + 'px'
+            div.style.maxHeight = window.innerHeight / 3 + 'px'
         }
     }
 }
