@@ -4,16 +4,16 @@ var xElement = XElement.Load("http://bbs.ruliweb.com/news/rss");
 var rss = from item in xElement.Descendants("item").AsParallel()
           select new
           {
-              Title = item.Element("title").Value,
-              Description = item.Element("description").Value,
-              PubDate = item.Element("pubDate").Value
+              Title = item.Element("title")?.Value,
+              Description = item.Element("description")?.Value,
+              PubDate = item.Element("pubDate")?.Value
           };
 
 foreach (var item in rss.Select(x => new
 {
-    Title = x.Title.Length > 30 ? x.Title.Substring(0, 30) : x.Title,
-    PubDate = x.PubDate,
-    Description = x.Description.Length > 50 ? x.Description.Substring(0, 50) : x.Description
+    Title = x.Title.Length > 30 ? x.Title[..30] : x.Title,
+    x.PubDate,
+    Description = x.Description.Length > 50 ? x.Description[..50] : x.Description
 }).Take(10))
     Console.WriteLine(@$"{nameof(item.Title)} : {item.Title}
 {nameof(item.PubDate)} : {item.PubDate}

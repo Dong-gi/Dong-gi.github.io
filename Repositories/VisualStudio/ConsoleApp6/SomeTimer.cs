@@ -2,26 +2,26 @@
 
 public class SomeTimer
 {
-    private EventHandlerList _eventHandlerList = new EventHandlerList();
+    private static readonly object s_fireEventKey = new object();
 
-    private static readonly object _fireEventKey = new object();
+    private EventHandlerList _eventHandlerList = new EventHandlerList();
+    private readonly int _periodSeconds;
+    private int _fireCount = 0;
 
     public event EventHandler<int> FireEvent
     {
         add
         {
-            _eventHandlerList.AddHandler(_fireEventKey, value);
+            _eventHandlerList.AddHandler(s_fireEventKey, value);
             Console.WriteLine($"add : {value}");
         }
         remove
         {
-            _eventHandlerList.RemoveHandler(_fireEventKey, value);
+            _eventHandlerList.RemoveHandler(s_fireEventKey, value);
             Console.WriteLine($"remove : {value}");
         }
     }
 
-    private readonly int _periodSeconds;
-    private int _count = 0;
 
     public SomeTimer(int periodSeconds)
     {
@@ -29,15 +29,14 @@ public class SomeTimer
             throw new ArgumentOutOfRangeException(nameof(periodSeconds));
 
         _periodSeconds = periodSeconds;
-
         Fire();
     }
 
     private async void Fire()
     {
         await Task.Delay(_periodSeconds * 1000);
-        if (_eventHandlerList[_fireEventKey] != null)
-            ((EventHandler<int>)_eventHandlerList[_fireEventKey])(this, ++_count);
+        if (_eventHandlerList[s_fireEventKey] is EventHandler<int> handler)
+            handler(this, ++_fireCount);
         Fire();
     }
 }

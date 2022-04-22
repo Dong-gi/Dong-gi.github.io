@@ -13,13 +13,13 @@
     [My("arg1")]
     [My("arg2", NamedArg = "namedArg2")]
     [field: My("arg3", NamedArg = "namedArg3")]
-    public int field = 0;
+    public int _field = 0;
 
     public static void Main(string[] args)
     {
-        var field = typeof(Program).GetField("field");
+        var field = typeof(Program).GetField(nameof(_field));
         if (field == null)
-            throw new NullReferenceException(nameof(field));
+            throw new NullReferenceException(nameof(_field));
 
         foreach (var attr in field.GetCustomAttributes(false))
             if (attr is MyAttribute myAttr)
