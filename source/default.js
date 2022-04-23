@@ -21,13 +21,6 @@ const posts = {
         { category: ['Algorithm', 'Topic/Book'], file: '/posts/algorithm/mcs.html', title: '컴퓨터공학도를 위한 수학' },
         { category: 'Algorithm', file: '/posts/algorithm/overview.html', title: '알고리즘 개요' },
         { category: 'Algorithm', file: '/posts/algorithm/probability.html', title: '확률' },
-        { category: 'Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
-        { category: 'Life', file: '/posts/daily_life/car.html', title: '차' },
-        { category: 'Life', file: '/posts/daily_life/death.html', title: '장례' },
-        { category: 'Life', file: '/posts/daily_life/house.html', title: '부동산' },
-        { category: 'Life', file: '/posts/daily_life/labor.html', title: '근로' },
-        { category: 'Life', file: '/posts/daily_life/stock.html', title: '주식' },
-        { category: 'Life/ETC', file: '/posts/daily_life/baron.html', title: 'Baron 킥보드 매뉴얼' },
         { category: 'Infra/DB', file: '/posts/infra/db/concept.html', title: 'DB 기초 개념' },
         { category: 'Infra/DB', file: '/posts/infra/db/mongodb.html', title: 'MongoDB' },
         { category: 'Infra/DB', file: '/posts/infra/db/mysql.html', title: 'MySQL' },
@@ -128,6 +121,13 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/016.html', title: '물 위를 걷고 벽을 기어오르는 법' },
         { category: ['Topic', 'Topic/Book'], file: '/posts/book/017.html', title: '클라우드 시스템을 관리하는 기술' },
         { category: 'Topic/Book', file: '/posts/book/018.html', title: '쇠똥구리는 은하수를 따라 걷는다' },
+        { category: 'Topic/ETC', file: '/posts/daily_life/baron.html', title: 'Baron 킥보드 매뉴얼' },
+        { category: 'Topic/Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
+        { category: 'Topic/Life', file: '/posts/daily_life/car.html', title: '차' },
+        { category: 'Topic/Life', file: '/posts/daily_life/death.html', title: '장례' },
+        { category: 'Topic/Life', file: '/posts/daily_life/house.html', title: '부동산' },
+        { category: 'Topic/Life', file: '/posts/daily_life/labor.html', title: '근로' },
+        { category: 'Topic/Life', file: '/posts/daily_life/stock.html', title: '주식' },
     ], codes: {}
 }
 
