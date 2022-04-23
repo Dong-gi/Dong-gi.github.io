@@ -127,6 +127,7 @@ const posts = {
         { category: ['Topic', 'Topic/Book'], file: '/posts/book/015.html', title: '컴퓨터시스템구조론' },
         { category: 'Topic/Book', file: '/posts/book/016.html', title: '물 위를 걷고 벽을 기어오르는 법' },
         { category: ['Topic', 'Topic/Book'], file: '/posts/book/017.html', title: '클라우드 시스템을 관리하는 기술' },
+        { category: 'Topic/Book', file: '/posts/book/018.html', title: '쇠똥구리는 은하수를 따라 걷는다' },
     ], codes: {}
 }
 
