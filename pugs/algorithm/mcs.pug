@@ -580,36 +580,48 @@ include ../../source/skeleton.pug
                 +pos('3.3.1')
                 h4.fake Implications and Contrapositives
                 ul
-                    li 명제의 역 == Converse
-                    li 명제의 대우 == Contrapositive
+                    li 명제의 대우(Contrapositive)
+                    p Implication과 그의 대우는 동치다. P IMPLIES Q == NOT(Q) IMPLIES NOT(P)
+                    li 명제의 역(Converse)
+                    p IFF는 implication과 그의 역 모두가 참인 경우와 동치다. P IFF Q == (P IMPLIES Q) AND (Q IMPLIES P)
+
+                +pos('3.3.2')
                 h4.fake Validity and Satisfiability
                 ul
-                    li
-                        i Valid
-                        |formula : 항상 참인 명제
-                    li
-                        i Satisfiable
-                        |formula : 변수에 따라 참/거짓이 바뀌는 명제
+                    li <i>Valid</i> formula : 변수와 무관하게 항상 참인 식
+                    p 두 식 F, G에 대하여, (F IFF G)가 valid면 F와 G는 동치다
+                    li <i>Satisfiable</i> formula : 변수에 따라 참/거짓이 바뀌는 식
+                    p (식 P가 satisfiable이다) IFF (NOT(P)는 valid하지 않다)
+
+            +pos('3.4')
             h3 The Algebra of Propositions
             div
+                +pos('3.4.1')
                 h4.fake Propositions in Normal Form
-                p <b>정리 3.4.1.</b> 모든 명제 식은 그와 동치인 DNF, CNF가 존재한다
-                p 예. A AND (B OR C)
-                    table.no-sort
-                        +ths('A', 'B', 'C', 'A AND (B OR C)')
-                        +tds('T', 'T', 'T', 'T')
-                        +tds('T', 'T', 'F', 'T')
-                        +tds('T', 'F', 'T', 'T')
-                        +tds('T', 'F', 'F', 'F')
-                        +tds('F', 'T', 'T', 'F')
-                        +tds('F', 'T', 'F', 'F')
-                        +tds('F', 'F', 'T', 'F')
-                        +tds('F', 'F', 'F', 'F')
-                    ul
-                        li DNF(Disjunctive normal form) : 식이 참이 되는 행들을 OR로 연결한다
-                        |식[(A \land B \land C) \lor (A \land B \land \overline{C}) \lor (A \land \overline{B} \land C)]식
-                        li CNF(Conjunctive normal form) : 식이 거짓이 되는 행들을 AND로 연결한다
-                        |식[(\overline{A} \lor B \lor C) \land (A \lor \overline{B} \lor \overline{C}) \land (A \lor \overline{B} \lor C) \land (A \lor B \lor \overline{C}) \land (A \lor B \lor C)]식
+                +pos('정리 3.4.1.')
+                p <b>정리 3.4.1.</b> 모든 명제 식은 그와 동치인 full DNF, full CNF가 존재한다
+                p e.g. A AND (B OR C)
+                table.no-sort
+                    +ths('A', 'B', 'C', 'A AND (B OR C)')
+                    +tds('T', 'T', 'T', 'T')
+                    +tds('T', 'T', 'F', 'T')
+                    +tds('T', 'F', 'T', 'T')
+                    +tds('T', 'F', 'F', 'F')
+                    +tds('F', 'T', 'T', 'F')
+                    +tds('F', 'T', 'F', 'F')
+                    +tds('F', 'F', 'T', 'F')
+                    +tds('F', 'F', 'F', 'F')
+                ul
+                    li DNF(Disjunctive normal form) : Sum-of-products. 서로 다른 변수들의 AND 절들을 OR 연산으로 연결한 것
+                    li Full DNF : 식이 참이 되는 행들을 OR로 연결한다
+                    p (A AND B AND C) OR (A AND B AND NOT(C)) OR (A AND NOT(B) AND C)
+                    li Full DNF를 보다 간결한 동치 DNF로 표현할 수 있는 경우도 있다
+                    p (A AND B) OR (A AND C)
+                    li CNF(Conjunctive normal form) : 서로 다른 변수들의 OR 절들을 AND 연산으로 연결한 것
+                    li Full CNF : 식이 거짓이 되는 행들의 NOT 표현을 AND로 연결한다
+                    p (NOT(A) OR B OR C) AND (A OR NOT(B) OR NOT(C)) AND (A OR NOT(B) OR C) AND (A OR B OR NOT(C)) AND (A OR B OR C)
+
+                +pos('3.4.2')
                 h4.fake Proving Equivalences
                 table.no-sort
                     +tds('교환법칙 of AND', '식[A \\land B = B \\land A]식')
