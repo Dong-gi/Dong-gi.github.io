@@ -6,10 +6,371 @@ include ../../source/skeleton.pug
         li: +asA('https://explore.skillbuilder.aws/learn', 'AWS 공식 - Learning Center')
         li: +asA('https://aws.amazon.com/ko/architecture/security-identity-compliance/', 'AWS 공식 - 보안 Best Practice')
 
+    h1 Auto Scaling
+    div
+        h2 크기 조정 계획
+        ul
+            li 크기 조정 계획을 지원하는 서비스들에 대한 auto scaling을 손쉽게 구성할 수 있다
+                +asA('https://docs.aws.amazon.com/ko_kr/autoscaling/application/userguide/integrated-services-list.html')
+            li Aurora : Aurora DB 클러스터의 읽기 전용 복제본 개수에 관해 설정
+            li EC2 : EC2 Auto Scaling 그룹의 용량에 관해 설정
+            li ECS : 태스크 수에 관해 설정
+            li DynamoDB : 읽기 및 쓰기 용량에 관해 설정
+            li ElastiCache for Redis : 복제본 개수에 관해 설정
+            li 각 서비스별 사용 가능한 지표가 다르다
+                +asA('https://docs.aws.amazon.com/ko_kr/autoscaling/application/userguide/application-auto-scaling-target-tracking.html')
+
+        h2 EC2 Auto Scaling
+        ul
+            li Auto Scailing 그룹의 최소 용량, 원하는 용량, 최대 용량을 지정하여 서비스 처리량 유지
+            li Auto Scailing 그룹의 인스턴스 수명 주기
+            ul
+                li Pending : 신규 인스턴스 시작
+                li Pending:Wait : autoscaling:EC2_INSTANCE_LAUNCHING 후크가 존재하는 경우 Pending에서 천이됨
+                p e.g. 새 인스턴스에 CodeDeploy 개정을 자동으로 배포할 수 있다 -- Auto Scailing 그룹을 포함하도록 배포 그룹을 생성하거나 업데이트할 때, CodeDeploy 서비스 역할을 사용하여 Auto Scailing 그룹에 수명 주기 후크를 자동 설치
+                li Pending:Proceed : 수명 주기 후크 완료 시 천이됨
+                li InService : 인스턴스 구성 완료
+                li Terminating : 인스턴스 종료 시작
+                li Terminating:Wait : autoscaling:EC2_INSTANCE_TERMINATING 후크가 존재하는 경우 Terminating에서 천이됨
+                li Terminating:Proceed : 수명 주기 후크 완료 시 천이됨
+                li Terminated : 인스턴스 종료 완료
+            li 인스턴스는 다음 중 하나가 발생할 때까지 InService 상태로 유지된다
+            ul
+                li 축소 이벤트 발생
+                li 인스턴스를 Standby 상태로 천이
+                li Auto Scailing 그룹으로부터 분리
+                li 상태 확인 실패 임계 도달
+            li Standby 상태(대기모드)
+            p 인스턴스가 실행 중인 상태에서 서비스 풀에서 분리
+            li 간편한 모니터링 및 인스턴스 자동 조정 정책(평균 CPU 사용, 인스턴스 당 요청 수, 특정 시간대 등) 지원
+
+    h1 CDK, CloudFormation
+    div
+        h2 CloudFormation이란?
+        ul
+            li 템플릿에 인프라에 필요한 모든 리소스를 기술하고, 템플릿을 이용해 CloudFormation 스택을 생성하면, 필요한 리소스들을 자동으로 프로비저닝한 후 실행한다
+            li 전체 인프라 복제를 신속히 배포할 때 유용
+            li 템플릿은 JSON 또는 YAML 포맷이어야 한다
+            li 온라인 템플릿 편집기 제공:
+                +asA('https://console.aws.amazon.com/cloudformation/designer')
+            li 업데이트 배포 가능
+            ol
+                li 템플릿 내용 또는 입력 파라미터의 변경을 제출하여 변경 집합 생성
+                li 변경 집합의 변경 사항 검토
+                p 계정 할당량, 업데이트를 지원하지 않는 리소스를 변경하려는 경우, 실행 권한이 부족한 경우를 사전에 확인하지 않음에 유의
+                li 변경 집합 시작 : 변경 사항들만 기존 스택에 적용
+
+        h2 시작하기
+        p 로컬 MySQL을 사용하는 단일 EC2 인스턴스로 WordPress 서비스 제공하는 샘플 템플릿을 통해 기본적인 사항을 알아본다
+            +asA('https://s3.us-west-2.amazonaws.com/cloudformation-templates-us-west-2/WordPress_Single_Instance.yaml', '원본 yaml')
+        +asCode('yaml').
+            AWSTemplateFormatVersion: '2010-09-09'
+
+            Description: 'AWS CloudFormation Sample Template WordPress_Single_Instance: WordPress
+              is web software you can use to create a beautiful website or blog. This template
+              installs WordPress with a local MySQL database for storage. It demonstrates using
+              the AWS CloudFormation bootstrap scripts to deploy WordPress. **WARNING** This template
+              creates an Amazon EC2 instance. You will be billed for the AWS resources used if
+              you create a stack from this template.'
+
+            Parameters:
+              DBName:
+                AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+                ConstraintDescription: must begin with a letter and contain only alphanumeric
+                  characters.
+                Default: wordpressdb
+                Description: The WordPress database name
+                MaxLength: '64'
+                MinLength: '1'
+                Type: String
+              DBPassword:
+                AllowedPattern: '[a-zA-Z0-9]*'
+                ConstraintDescription: must contain only alphanumeric characters.
+                Description: The WordPress database admin account password
+                MaxLength: '41'
+                MinLength: '8'
+                NoEcho: 'true'
+                Type: String
+              DBRootPassword:
+                AllowedPattern: '[a-zA-Z0-9]*'
+                ConstraintDescription: must contain only alphanumeric characters.
+                Description: MySQL root password
+                MaxLength: '41'
+                MinLength: '8'
+                NoEcho: 'true'
+                Type: String
+              DBUser:
+                AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+                ConstraintDescription: must begin with a letter and contain only alphanumeric
+                  characters.
+                Description: The WordPress database admin account username
+                MaxLength: '16'
+                MinLength: '1'
+                NoEcho: 'true'
+                Type: String
+              InstanceType:
+                AllowedValues:
+                - t2.micro
+                - t2.small
+                ConstraintDescription: must be a valid EC2 instance type.
+                Default: t2.small
+                Description: WebServer EC2 instance type
+                Type: String
+              KeyName:
+                ConstraintDescription: must be the name of an existing EC2 KeyPair.
+                Description: Name of an existing EC2 KeyPair to enable SSH access to the instances
+                Type: AWS::EC2::KeyPair::KeyName
+              SSHLocation:
+                AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+                ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+                Default: 0.0.0.0/0
+                Description: The IP address range that can be used to SSH to the EC2 instances
+                MaxLength: '18'
+                MinLength: '9'
+                Type: String
+
+            Mappings:
+              AWSInstanceType2Arch:
+                t2.micro:
+                  Arch: HVM64
+                t2.small:
+                  Arch: HVM64
+              AWSRegionArch2AMI:
+                us-east-1:
+                  HVM64: ami-60b6c60a
+                  HVMG2: ami-e998ea83
+                  PV64: ami-5fb8c835
+                us-west-1:
+                  HVM64: ami-d5ea86b5
+                  HVMG2: ami-943956f4
+                  PV64: ami-56ea8636
+
+            Resources:
+              WebServer:
+                Type: AWS::EC2::Instance
+                CreationPolicy:
+                  ResourceSignal:
+                    Timeout: PT15M
+                Metadata:
+                  AWS::CloudFormation::Init:
+                    configSets:
+                      wordpress_install:
+                      - install_cfn
+                      - install_wordpress
+                      - configure_wordpress
+                    configure_wordpress:
+                      commands:
+                        01_set_mysql_root_password:
+                          command: !Sub |
+                            mysqladmin -u root password '${DBRootPassword}'
+                          test: !Sub |
+                            $(mysql ${DBName} -u root --password='${DBRootPassword}' &gt;/dev/null 2&gt;&amp;1 &lt;/dev/null); (( $? != 0 ))
+                        02_create_database:
+                          command: !Sub |
+                            mysql -u root --password='${DBRootPassword}' &lt; /tmp/setup.mysql
+                          test: !Sub |
+                            $(mysql ${DBName} -u root --password='${DBRootPassword}' &gt;/dev/null 2&gt;&amp;1 &lt;/dev/null); (( $? !=0))
+                        03_configure_wordpress:
+                          command: /tmp/create-wp-config
+                          cwd: /var/www/html/wordpress
+                    install_cfn:
+                      files:
+                        /etc/cfn/cfn-hup.conf:
+                          content: !Sub |
+                            [main]
+                            stack= ${AWS::StackId}
+                            region=${AWS::Region}
+                          group: root
+                          mode: '000400'
+                          owner: root
+                        /etc/cfn/hooks.d/cfn-auto-reloader.conf:
+                          content: !Sub |
+                            [cfn-auto-reloader-hook]
+                            triggers=post.update
+                            path=Resources.WebServer.Metadata.AWS::CloudFormation::Init
+                            action=/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource WebServer --configsets wordpress_install --url https://stackbuilder.amazonaws.com
+                          group: root
+                          mode: '000400'
+                          owner: root
+                      services:
+                        sysvinit:
+                          cfn-hup:
+                            enabled: true
+                            ensureRunning: true
+                            files:
+                            - /etc/cfn/cfn-hup.conf
+                            - /etc/cfn/hooks.d/cfn-auto-reloader.conf
+                    install_wordpress:
+                      files:
+                        /tmp/create-wp-config:
+                          content: !Sub |
+                            #!/bin/bash -xe
+                            cp /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php
+                            sed -i "s/'database_name_here'/'${DBName}'/g" wp-config.php
+                            sed -i "s/'username_here'/'${DBUser}'/g" wp-config.php
+                            sed -i "s/'password_here'/'${DBPassword}'/g" wp-config.php
+                          group: root
+                          mode: '000500'
+                          owner: root
+                        /tmp/setup.mysql:
+                          content: !Sub |
+                            CREATE DATABASE ${DBName};
+                            CREATE USER '${DBUser}'@'localhost' IDENTIFIED BY '${DBPassword}';
+                            GRANT ALL ON ${DBName}.* TO '${DBUser}'@'localhost';
+                            FLUSH PRIVILEGES;
+                          group: root
+                          mode: '000400'
+                          owner: root
+                      packages:
+                        yum:
+                          httpd: []
+                          mysql: []
+                          mysql-devel: []
+                          mysql-libs: []
+                          mysql-server: []
+                          php: []
+                          php-mysql: []
+                      services:
+                        sysvinit:
+                          httpd:
+                            enabled: true
+                            ensureRunning: true
+                          mysqld:
+                            enabled: true
+                            ensureRunning: true
+                      sources:
+                        /var/www/html: http://wordpress.org/latest.tar.gz
+                Properties:
+                  ImageId: !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, Arch]]
+                  InstanceType:
+                    Ref: InstanceType
+                  KeyName:
+                    Ref: KeyName
+                  SecurityGroups:
+                  - Ref: WebServerSecurityGroup
+                  UserData:
+                    Fn::Base64: !Sub |
+                      #!/bin/bash -xe
+                      yum update -y aws-cfn-bootstrap
+                      /opt/aws/bin/cfn-init -v --stack ${AWS::StackId} --resource WebServer --configsets wordpress_install --region ${AWS::Region}
+                      /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource WebServer --region ${AWS::Region}
+
+              WebServerSecurityGroup:
+                Type: AWS::EC2::SecurityGroup
+                Properties:
+                  GroupDescription: "Enable HTTP access via port 80 locked down to the load balancer + SSH access"
+                  SecurityGroupIngress:
+                  - CidrIp: 0.0.0.0/0
+                    FromPort: '80'
+                    IpProtocol: tcp
+                    ToPort: '80'
+                  - CidrIp: !Ref SSHLocation
+                    FromPort: '22'
+                    IpProtocol: tcp
+                    ToPort: '22'
+
+            Outputs:
+              PublicIP:
+                Description: EC2 public IP
+                Value: !GetAtt WebServer.PublicIp
+              WebsiteURL:
+                Description: WordPress Website
+                Value: !Sub "http://${WebServer.PublicDnsName}/wordpress"
+
+        ol
+            li 샘플은 6개의 최상위 섹션을 갖지만(AWSTemplateFormatVersion, Description, Parameters, Mappings, Resources, Outputs), 이 중 Resources 섹셕만 필수 요소다
+            li Resources.WebServer : 템프릿 내에서 리소스 참조에 사용하는 논리적 이름
+            li Parameters : 템플릿에서 사용할 변수 정의
+            p Ref 함수로 parameter와 resource 접근
+            ul
+                li Resources.WebServer.Properties.KeyName = { Ref: "KeyName" }
+                li Resources.WebServer.Properties.SecurityGroups[0] = { Ref: "WebServerSecurityGroup" }
+            li Outputs 섹션은 스택 생성 후 출력 탭에서 확인할 수 있는 값을 정의한다
+
+        h2 샘플 템플릿
+        ul
+            li: +asA('https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/CHAP_TemplateQuickRef.html', '서비스별 샘플 템플릿')
+            li: +asA('https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-sample-templates.html', '리전별 샘플 템플릿')
+
+        h2 CDK(Cloud Development Kit)
+        p 고급 프로그래밍 언어를 이용해 인프라 작성 > CloudFormation 템플릿 자동 생성 > 스택 배포
+        h3.fake 예시 :
+            +asA('https://docs.aws.amazon.com/cdk/v2/guide/hello_world.html')
+        ol
+            li CDK 설치 :
+                +asA('https://docs.aws.amazon.com/cdk/v2/guide/cli.html')
+            +asCode('shell') npm install -g aws-cdk
+            li 앱 생성(JavaScript)
+            +asCode('shell').
+                mkdir hello-cdk
+                cd hello-cdk
+                cdk init app --language javascript
+            li ^ 정상인지 확인
+            +asCode('shell') cdk ls
+            p HelloCdkStack가 결과에 포함되어야 한다
+            li 서비스 구성요소 추가
+            +asCode('JavaScript', 'lib/hello-cdk-stack.js').
+                const cdk = require('aws-cdk-lib');
+                const s3 = require('aws-cdk-lib/aws-s3');
+
+                class HelloCdkStack extends cdk.Stack {
+                    constructor(scope, id, props) {
+                        super(scope, id, props);
+
+                        new s3.Bucket(
+                            this,               // Scope
+                            'MyFirstBucket',    // Id
+                            {                   // Properties
+                                versioned: true
+                            }
+                        );
+                    }
+                }
+
+                module.exports = { HelloCdkStack }
+            li CloudFormation 템플릿 생성
+            +asCode('shell') cdk synth
+            p YAML 포맷의 템플릿이 출력되며, cdk.out 디렉터리에 JSON 포맷 템플릿도 작성된다
+            li 스택 배포
+            +asCode('shell') cdk deploy
+            li 스택 정의 업데이트 -- 스택 삭제 시 모든 객체와 버킷을 삭제하도록
+            +asCode('JavaScript', 'lib/hello-cdk-stack.js').
+                new s3.Bucket(
+                    this,               // Scope
+                    'MyFirstBucket',    // Id
+                    {                   // Properties
+                        versioned: true,
+                        removalPolicy: cdk.RemovalPolicy.DESTROY,
+                        autoDeleteObjects: true
+                    }
+                );
+            li 변경 사항 확인
+            +asCode('shell') cdk diff
+            ul
+                li 객체 자동 삭제를 위해 Lambda 함수가 추가되는 것을 볼 수 있다
+                li 추가적으로 cdk synth의 결과를 비교해보는 것도 유용할 수 있다
+            li 스택 업데이트 배포
+            +asCode('shell') cdk deploy
+            li 스택 제거
+            +asCode('shell') cdk destroy
+
     h1 IAM; Identity and Access Management
     div
+        h2 AWS 계정
+        ul
+            li AWS 계정은 AWS의 기초적인 보안 경계, 리소스 경계, 책임 경계가 된다
+            li AWS 각 서비스 제한량 역시 AWS 계정을 기준으로 부여할 수 있다
+
+        h2 AWS Organizations
+        ul
+            li 여러 AWS 계정을 조직에 통합하여 중앙에서 관리하는 서비스
+            li 효율적인 조직 비용 관리 가능
+            li 최대 5단계의 OU(조직 그룹) 트리 구성 가능
+            li 조직 관리자가 정의한 제한은 개별 멤버 계정 관리자보다 우선
+
         h2 IAM이란?
         ul
+            li 단일 계정 내 인증 및 권한 관리 서비스
             li 암호나 액세스 키를 공유하지 않고도 권한 부여
             li 세분화된 권한 관리
             li 다른 곳에 암호가 있는 사용자에게 임시 액세스 권한 부여
@@ -213,11 +574,21 @@ include ../../source/skeleton.pug
                     li Amazon EC2 metadata service로 전달되는 인증 정보
                 p 인스턴스 내부에서 aws cli를 직접 실행하는 경우엔 얘기가 다르다. profile을 추가로 지정해야 하고, 해당 profile로 assume role할 수 있는 권한이 있어야 한다
 
+            +pos('CloudTrail을 사용하여 이벤트 로깅')
             h3 CloudTrail을 사용하여 이벤트 로깅
             ul
                 li CloudTrail은 IAM, STS 호출을 이벤트로 캡처한다
+                li 글로벌 리전 서비스가 아닌 경우, 이벤트는 한 리전에만 로깅된다
                 li 추적을 생성하면 이벤트를 S3 버킷으로 배포할 수 있다
                 li 추적을 생성하지 않아도 Event history에서 90일 간의 기록을 무료로 확인 가능
+            div
+                h4.fake CloudTrail 이벤트
+                ul
+                    li 관리 이벤트 : 관리 작업에 대한 정보
+                    p e.g. 보안 구성, 로깅 설정 등
+                    li 데이터 이벤트 : 리소스 작업에 대한 정보
+                    p e.g. 버킷 및 객체 수준 API, Lambda 실행, DynamoDB 객체 수준 API
+                    li Insignts 이벤트 : 비정상적인 API 호출 비율, 오류 비율 캡처
 
         h2 액세스 관리
         div
@@ -479,7 +850,35 @@ include ../../source/skeleton.pug
 
     h1 기타 서비스
     ul
-        li GuardDuty : 계정 내의 비정상적인 활동을 식별하고, 활동의 보안 관련성을 분석하며, 호출된 컨텍스트를 제공
+        li AppConfig
+        p 애플리케이션 런타임 환경 배포 -- StartConfigurationSession로 세션을 수립한 클라이언트는 GetLatestConfiguration을 (주기적으로) 호출하여 구성을 가져온다
+        li Chatbot
+        ul
+            li SNS(Simple Notificatino Service)로부터 Amazon Chime 또는 Slack으로의 통지
+            li Amazon Chime 또는 Slack에서 챗봇 IAM 역할로 명령 실행
+        li CLI
+        p 셸을 이용해 브라우저 기반 AWS Management Console과 동일하게 AWS 서비스와 상호작용
+        li CloudTrail
+        p 보안 주체 활동 로깅
+            +goto('CloudTrail을 사용하여 이벤트 로깅')
+        li CloudWatch
+        p AWS 리소스 및 애플리케이션 모니터링
+        li GuardDuty
+        p 계정 내의 비정상적인 활동을 식별하고, 활동의 보안 관련성을 분석하며, 호출된 컨텍스트를 제공
+        li Health
+        p AWS 인프라 이벤트(오류 발생, 복구 등), 예정된 변경 사항 및 영향 받은 리소스에 대해 안내
+        li Managed Service for Prometheus
+        p Prometheus 호환, 자동 확장 컨테이너 모니터링 서비스
+        li Network Firewall
+        p VPC 경계 트랙픽 관리 방화. 보안 그룹만으로 불충분한 경우 사용
+        li Resource Group
+        p 리소스 태그 또는 CloudFormation 스택 기반으로 리소스 그룹핑
+        li Secrets Manager
+        p 암호 중앙 관리자. 암호 검색 API 제공
+        li Security Hub
+        p 자동화된 보안 검사 -&gt; 우선순위가 높은 보안 문제 식별
+
+
         li EC2; Elastic Compute Cloud
         p OS를 포함한 컴퓨팅 머신
         li EBS; Elastic Block Store
@@ -522,12 +921,6 @@ include ../../source/skeleton.pug
             li 조직을 나누어 각 조직에 멤버 계정을 생성해 할당할 수 있다
             li 각 조직에 대한 정책을 정의할 수 있다
             li 단일 마스터 계정이 모든 비용을 지불한다
-        li CloudTrail
-        p AWS 계정 활동 감시
-        li CloudWatch
-        p AWS 리소스 및 애플리케이션 모니터링
-        li CDK; Cloud Development Kit
-        p CloudFormation 대신, 일반 프로그래밍 언어를 이용해 인프라 구성 자동화
 
     h1 싱글 웹서버
     ol
