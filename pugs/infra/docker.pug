@@ -53,7 +53,7 @@ include ../../source/skeleton.pug
         li.marker RUN
         ul
             li RUN &lt;command>
-            p 쉘(기본값 /bin/sh -c, SHELL 명령으로 변경 가능)로 실행. \로 여러 줄 작성 가능
+            p 셸(기본값 /bin/sh -c, SHELL 명령으로 변경 가능)로 실행. \로 여러 줄 작성 가능
             li RUN ["executable", "param1", "param2"]
             p JSON 배열로 파싱되어 실행에 이용된다. 반드시 "로 감싸야 하며, \ 이스케이핑에 주의해야 한다
             li RUN apt-get update와 apt-get install은 항상 한 번에 실행할 것
@@ -67,7 +67,7 @@ include ../../source/skeleton.pug
             li CMD ["executable", "param1", "param2"]
             p JSON 배열로 파싱되어 실행에 이용된다
             li CMD command param1 param2
-            p 쉘로 실행
+            p 셸로 실행
             li CMD의 목적은 컨테이너 실행 시 기본값을 제공하는 것으로, Dockerfile내에서 여러 번 작성됐더라도 마지막 것만 사용된다. 항상 동일하게 실행된다면 ENTRYPOINT 사용을 고려
             p docker run 인자로 명시하는 경우, CMD를 오버라이딩한다
         li.marker ENTRYPOINT
@@ -75,7 +75,7 @@ include ../../source/skeleton.pug
             li ENTRYPOINT ["executable", "param1", "param2"]
             p JSON 배열로 파싱되어 실행에 이용된다. CMD는 ENTRYPOINT의 매개변수로 뒤에 덧붙여진다
             li ENTRYPOINT command param1 param2
-            p 쉘 실행. CMD directive와 docker run 매개변수를 모두 무시한다. 컨테이너의 실행은 docker exec을 통해 이루어져야 한다
+            p 셸 실행. CMD directive와 docker run 매개변수를 모두 무시한다. 컨테이너의 실행은 docker exec을 통해 이루어져야 한다
         li.marker LABEL
         ul
             li LABEL &lt;key>=&lt;value>
@@ -121,7 +121,7 @@ include ../../source/skeleton.pug
         li.marker SHELL
         ul
             li SHELL ["executable", "param1", "param2"]
-            li RUN, CMD, ENTRYPOINT 기본 쉘 변경
+            li RUN, CMD, ENTRYPOINT 기본 셸 변경
 
     h1
         |Commands 

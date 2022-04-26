@@ -255,16 +255,16 @@ include ../../source/skeleton.pug
 
             li 자동 실행 설정
             +asCode('shell') $ systemctl enable myd
-    h1 쉘
+    h1 셸
     ol
-        li 유저의 기본 쉘은 /etc/passwd에 설정된다
-        li echo $SHELL : 사용중인 쉘 확인
+        li 유저의 기본 셸은 /etc/passwd에 설정된다
+        li echo $SHELL : 사용중인 셸 확인
         li 종류
         ul
             li Login shell
-            p 최초 실행 시 유저명과 비밀번호를 묻고 진입하는 쉘
+            p 최초 실행 시 유저명과 비밀번호를 묻고 진입하는 셸
             li Non login shell
-            p 기존 쉘에서 인증없이 새로 시작한 쉘
+            p 기존 셸에서 인증없이 새로 시작한 셸
 
     h1 Bash
     div
@@ -308,7 +308,7 @@ include ../../source/skeleton.pug
             +tds(':', '아무것도 하지않는 null command')
             +tds('*', 'GLOB 패턴 매칭에서, 해당 디렉터리 내 임의 파일명에 매칭')
             +tds('?', 'GLOB 패턴 매칭에서, 임의 1글자에 매칭')
-            +tds('(command1; command2; ...)', 'Command group. 새 서브쉘에서 커맨드를 실행한다; 따라서 외부에서 참조 불가')
+            +tds('(command1; command2; ...)', 'Command group. 새 서브셸에서 커맨드를 실행한다; 따라서 외부에서 참조 불가')
             tr
                 td {x,y,z,...}, {a..z}
                 td: +goto('brace expansion')
@@ -429,7 +429,7 @@ include ../../source/skeleton.pug
                         # COMMAND &lt;&lt;&lt; $WORD 와 다를 바 없다
                         text="echo Hello World. x=$x"
                         bash &lt;&lt;&lt; $text
-            +tds('|', '파이프라인. 이전 커맨드의 STDOUT을 다음 커맨드 또는 쉘의 STDIN으로 연결')
+            +tds('|', '파이프라인. 이전 커맨드의 STDOUT을 다음 커맨드 또는 셸의 STDIN으로 연결')
             +tds('&&', 'COMMAND1 && COMMAND2 : COMMAND1이 성공할 때만 COMMAND2 실행')
             tr
                 td -
@@ -470,7 +470,7 @@ include ../../source/skeleton.pug
                 set -x # start debugging
                 w
                 set +x # stop debugging
-            li 현재 쉘에서 직접 플래그 조정
+            li 현재 셸에서 직접 플래그 조정
             ul
                 li set -f : disable file name generation using metacaracters
                 li set -v : print shell input lines
@@ -506,7 +506,7 @@ include ../../source/skeleton.pug
 
             h3 지역 변수
             ul
-                li 현재 쉘 | 코드 블록 | 함수 내에서만 접근 가능
+                li 현재 셸 | 코드 블록 | 함수 내에서만 접근 가능
                 li 목록 확인
                 +asCode('shell').
                     $ (set -o posix; set | sort) > set.sorted
@@ -527,7 +527,7 @@ include ../../source/skeleton.pug
             table.no-sort
                 +ths('name', 'definition')
                 +tds('BASH', 'bash의 절대경로')
-                +tds('BASH_ENV', '로그인 쉘에서, 파일로 설정된 경우, 쉘 스크립트를 실행하기 전에 먼저 읽는다')
+                +tds('BASH_ENV', '로그인 셸에서, 파일로 설정된 경우, 셸 스크립트를 실행하기 전에 먼저 읽는다')
                 +tds('BASHPID', '현재 bash PID')
                 +tds('BASH_SUBSHELL', 'subshell level Since bash 3')
                 +tds('BASH_VERSION', 'bash 버전')
@@ -542,7 +542,7 @@ include ../../source/skeleton.pug
                     td 제시할 자동완성 단어 배열
                         +asA('https://devmanual.gentoo.org/tasks-reference/completion/index.html', '예시')
                 +tds('EUID', '명령을 실행 중인 현재 유저의 ID')
-                +tds('FUNCNAME', '현재 실행 중인 쉘 함수 이름')
+                +tds('FUNCNAME', '현재 실행 중인 셸 함수 이름')
                 +tds('GLOBIGNORE', 'glob 매칭에서 제외할 패턴 목록')
                 +tds('GROUPS', '현재 유저가 속한 그룹으로 구성된 배열')
                 +tds('HISTFILE', '커맨드 이력. 기본값 ~/.bash_history')
@@ -576,7 +576,7 @@ include ../../source/skeleton.pug
                 +tds('OSTYPE', 'e.g. linux-gnu')
                 +tds('PATH', ':으로 구별된 디렉터리들. 커맨드가 존재하는지 shell이 찾아본다')
                 +tds('PIPESTATUS', '가장 최근 포그라운드에서 종료된 프로세스들의 종료 코드 배열')
-                +tds('PPID', '현재 쉘의 PPID')
+                +tds('PPID', '현재 셸의 PPID')
                 +tds('PROMPT_COMMAND', '매 PS1 출력 전에 실행할 명령')
                 +tds('PS1', 'Prompt string 1; Primary; default "\\s-\\v\\$ "')
                 +tds('PS2', 'Prompt string 2; Secondary; "> "')
@@ -585,8 +585,8 @@ include ../../source/skeleton.pug
                 +tds('PWD', 'Print Working Directory')
                 +tds('RANDOM', '0 ~ 32767 사이 임의 정수; 할당하는 경우 seed로 전달된다')
                 +tds('REPLY', 'read로 읽어온 문자열')
-                +tds('SECONDS', '쉘 시작 후 ?초')
-                +tds('SHELLOPTS', ':으로 구별된, 활성 쉘 옵션들')
+                +tds('SECONDS', '셸 시작 후 ?초')
+                +tds('SHELLOPTS', ':으로 구별된, 활성 셸 옵션들')
                 +tds('SHLVL', '부모 bash 인스턴스 수 + 1')
                 +tds('TMOUT', 'read 제한 시간(초)')
                 +tds('UID', '실제 현재 유저 ID')
@@ -611,9 +611,9 @@ include ../../source/skeleton.pug
                             Arg #2 = hello
                             Arg #3 = world
                 +tds('$?', '마지막 포그라운드 프로세스/함수/스크립트 종료 상태')
-                +tds('$$', '쉘 PID')
+                +tds('$$', '셸 PID')
                 +tds('$!', '가장 최근 백그라운드 PID')
-                +tds('$0', '쉘 or 스크립트 이름')
+                +tds('$0', '셸 or 스크립트 이름')
 
             h3 declare로 변수 선언
                 +pos('declare')
@@ -870,7 +870,7 @@ include ../../source/skeleton.pug
                     +tds('[ "$a" \\> "$b" ], [[ "$a" > "$b" ]]', '현재 로캐일상 문자열 b가 앞섬')
                     +tds('[ -z "$a" ]', '문자열 길이 == 0')
                     +tds('[ -n "$a" ] or [ "$a" ]', '문자열 길이 > 0')
-                    +tds('[ -o OPTIONNAME ]', '쉘 옵션이 켜 있음')
+                    +tds('[ -o OPTIONNAME ]', '셸 옵션이 켜 있음')
                     +tds('[ ! EXPRESSION ]', 'not EXPRESSION')
                     +tds('[ (EXPRESSION) ]', '연산 우선순위 조정 가능')
                     +tds('[ EXPRESSION1 -a EXPRESSION2 ], [[ EXPRESSION1 && EXPRESSION2 ]]', 'and; &&는 short-circuit')
@@ -1038,7 +1038,7 @@ include ../../source/skeleton.pug
             h3 set
             ul
                 li set value1 value2 ... : positional parameter 초기화
-                li set -abCefhmnuvx, set +abCefhmnuvx : 쉘 속성 변경
+                li set -abCefhmnuvx, set +abCefhmnuvx : 셸 속성 변경
 
             h3 unset : 변수 제거
 
@@ -1056,7 +1056,7 @@ include ../../source/skeleton.pug
                 li 커맨드 라인에서 호출시 해당 스크립트 실행
                 li 스크립트 내에서 호출시 해당 파일 텍스트를 삽입
 
-            h3 exit : 스크립트/쉘 종료
+            h3 exit : 스크립트/셸 종료
 
             h3 exec
             ol
@@ -1123,8 +1123,8 @@ include ../../source/skeleton.pug
 
             h3 disown
             ol
-                li job을 쉘의 job table에서 제거
-                li -h : job table에서 제거하지는 않지만, 쉘이 종료해도 SIGHUP 신호를 보내지 않음으로써 job 계속 실행
+                li job을 셸의 job table에서 제거
+                li -h : job table에서 제거하지는 않지만, 셸이 종료해도 SIGHUP 신호를 보내지 않음으로써 job 계속 실행
 
             h3 nohup
             p SIGHUP 신호를 무시하고 계속 실행
@@ -1142,7 +1142,7 @@ include ../../source/skeleton.pug
             h3 suspend, Ctrl + Z
             p 현재 프로세스를 백그라운드로 전환하고 일시정지
 
-            h3 logout : 로그인 쉘 종료
+            h3 logout : 로그인 셸 종료
 
             h3 kill : 프로세스 종료
             +asCode('shell').
