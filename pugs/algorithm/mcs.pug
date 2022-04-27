@@ -623,66 +623,157 @@ include ../../source/skeleton.pug
 
                 +pos('3.4.2')
                 h4.fake Proving Equivalences
-                table.no-sort
-                    +tds('교환법칙 of AND', '식[A \\land B = B \\land A]식')
-                    +tds('결합법칙 of AND', '식[(A \\land B) \\land C = A \\land (B \\land C)]식')
-                    +tds('항등원 of AND', '식[T \\land A = A]식')
-                    +tds('zero of AND', '식[F \\land A = F]식')
-                    +tds('멱등 of AND', '식[A \\land A = A]식')
-                    +tds('contradiction of AND', '식[A \\land \\overline{A} = F]식')
-                    +tds('double negation', '식[\\operatorname{NOT}(\\overline{A}) = A]식')
-                    +tds('validity of OR', '식[A \\lor \\overline{A} = T]식')
-                    +tds('De Morgan for AND', '식[\\operatorname{NOT}(A \\land B) = \\overline{A} \\lor \\overline{B}]식')
-                    +tds('De Morgan for OR', '식[\\operatorname{NOT}(A \\lor B) = \\overline{A} \\land \\overline{B}]식')
                 ul
-                    li A IMPLIES B = NOT(A) OR B
-                    li 식을 정규화할 때, 식[(\overline{A} \lor \overline{B}) \land (\overline{A} \lor \overline{C})]식처럼 변수에만 NOT이 적용되었다면 드모르간의 법칙을 이용해 확장할 필요가 없다
+                    li 변수가 늘어날 때 검사해야 되는 진리표의 크기는 기하급수로 늘어난다
+                    li 두 식이 동치임을 보이는 데 진리표보다는, 대수학이 유용할 수 있다. 첫 번째 단계는 논리식에 사용되는 다양한 연산자들을 모두 AND, OR, NOT의 조합으로 변환하는 것이다
+                table.no-sort
+                    +tds('교환법칙 of AND', 'A AND B = B AND A')
+                    +tds('결합법칙 of AND', 'A AND (B AND C) = (A AND B) AND C')
+                    +tds('분배법칙 of AND over OR', 'A AND (B OR C) = (A AND B) OR (A AND C)')
+                    +tds('분배법칙 of OR over AND', 'A OR (B AND C) = (A OR B) AND (A OR C)')
+                    +tds('항등원 of AND', 'T AND A = A')
+                    +tds('zero of AND', 'F AND A = F')
+                    +tds('멱등 of AND', 'A AND A = A')
+                    +tds('contradiction of AND', 'A AND NOT(A) = F')
+                    +tds('double negation', 'NOT(NOT(A)) = A')
+                    +tds('validity of OR', 'A OR NOT(A) = T')
+                    +tds('De Morgan for AND', 'NOT(A AND B) = NOT(A) OR NOT(B)')
+                    +tds('De Morgan for OR', 'NOT(A OR B) = NOT(A) AND NOT(B)')
+
+                +pos('정리 3.4.2.')
+                p <b>정리 3.4.2.</b> 위 동치 관계를 이용하여 임의 논리식을 하나의 정규식과 동치임을 보일 수 있다
+                p 예를 들어 A, B, C 세 변수로 이루어진 논리식 NOT((A AND B) OR (A AND C))을 full DNF로 정규화하는 절차는 아래와 같다
+                ol
+                    li AND, OR, NOT 외의 연산자는 AND, OR, NOT으로 변환
+                    li 식을 AND 항의 OR 합으로 변환
+                    ul
+                        li NOT(A AND B) AND NOT(A AND C)
+                        li = (NOT(A) OR NOT(B)) AND (NOT(A) OR NOT(C))
+                        li = (NOT(A) AND (NOT(A) OR NOT(C))) OR (NOT(B) AND (NOT(A) OR NOT(C)))
+                        li = (NOT(A) AND NOT(A)) OR (NOT(A) AND NOT(C)) OR (NOT(A) AND NOT(B)) OR (NOT(B) AND NOT(C))
+                        li = NOT(A) OR (NOT(A) AND NOT(B)) OR (NOT(A) AND NOT(C)) OR (NOT(B) AND NOT(C))
+                    li 변수가 3개 미만인 AND 항은 나머지 변수를 붙여 확장
+                    ul
+                        li NOT(A) = (NOT(A) AND B AND C) OR (NOT(A) AND B AND NOT(C)) OR (NOT(A) AND NOT(B) AND C) OR (NOT(A) AND NOT(B) AND NOT(C))
+                        li (NOT(A) AND NOT(B)) = (NOT(A) AND NOT(B) AND C) OR (NOT(A) AND NOT(B) AND NOT(C))
+                        li (NOT(A) AND NOT(C)) = (NOT(A) AND B AND NOT(C)) OR (NOT(A) AND NOT(B) AND NOT(C))
+                        li (NOT(B) AND NOT(C)) = (A AND NOT(B) AND NOT(C)) OR (NOT(A) AND NOT(B) AND NOT(C))
+                    li 동일항 제거
+                    p = (A AND NOT(B) AND NOT(C)) OR (NOT(A) AND B AND C) OR (NOT(A) AND B AND NOT(C)) OR (NOT(A) AND NOT(B) AND C) OR (NOT(A) AND NOT(B) AND NOT(C))
+
+                +pos('정리 3.4.3.')
+                p <b>정리 3.4.3.</b> 두 논리식이 동치다 iff 두 논리식이 위에 제시된 공리들을 이용해 같음을 보일 수 있다
+
+            +pos('3.5')
             h3 The SAT Problem
-            p <b>SAT</b> ::= 명제가 참일 수 있는 지(satisfiable)에 대한 일반적인 결정 문제
+            ul
+                li <b>SAT</b> ::= 명제가 참일 수 있는 지(satisfiable)에 대한 일반적인 결정 문제
+                li 일반적으로 입력 크기 n에 대하여 복잡도가 다항식 이하면 효율적인 알고리즘으로 간주한다 -- O(n^a)
+                li SAT에 대한 효율적인 일반 해법은 아직 없다
+                li SAT에 대한 효율적인 해법이 등장하면 좋을 것 같지만, 심각한 문제도 동시에 발생한다 -- 기존 암호학의 무력화
+                li SAT에 대해 다항 시간 해법이 존재하지 않는다는 증명도 아직 없다 -- P vs NP 문제
+
+            +pos('3.6')
             h3 Predicate Formulas
             div
+                +pos('3.6.1')
                 h4.fake Quantifiers
                 ul
                     li for all : 식[\forall]식
                     li there exists : 식[\exists]식
-                    li Universal quantification : 명제가 항상 참인 한정
-                    li Existential quantification : 명제가 참일 수 있는 한정
+                    li Universal quantification : 명제가 항상 참이라고 한정하는 것
+                    li Existential quantification : 명제가 참일 수 있다고 한정하는 것
+
+                +pos('3.6.2')
                 h4.fake Mixing Quantifiers
-                p 예. 식[\forall{n}\in\text{Evens }\exists{p}\in\text{Primes }\exists{q}\in\text{Primes. }n=p+q]식
+                p e.g. 식[\forall{n}\in\text{Evens }\exists{p}\in\text{Primes }\exists{q}\in\text{Primes. }n=p+q]식
+
+                +pos('3.6.3')
                 h4.fake Order of Quantifiers
-                p 서로 다른 종류의 한정 문구 순서를 변경하면 의미가 바뀔 수 있다
+                p 서로 다른 종류의 한정자 순서를 변경하면 보통 명제의 의미가 달라짐에 유의
+
+                +pos('3.6.4')
                 h4.fake Variables Over One Domain
-                p 모든 변수의 정의역이 동일하다면 표기에서 생략할 수 있다. 예. 식[\forall{x}\exists{y}.P(x, y)]식
+                p 모든 변수의 정의역이 동일하다면 표기에서 생략할 수 있다
+                p e.g. 식[\forall{n}. n\in\text{Evens IMPLIES }(\exists{p}\exists{q}. p\in\text{Primes AND }q\in\text{Primes AND }n=p+q)]식
+
+                +pos('3.6.5')
+                h4.fake Negating Quantifiers
+                p De Morgan's Laws for Quantifiers
+                ul
+                    li 식[NOT(\forall{x}. P(x))]식 == 식[\exists{x}. NOT(P(x))]식
+                    li 식[NOT(\exists{x}. P(x))]식 == 식[\forall{x}. NOT(P(x))]식
+
+                +pos('3.6.6')
+                h4.fake Validity for Predicate Formulas
+                ul
+                    li 식[\exists{x}\forall{y}.P(x,y)\text{ IMPLIES }\forall{y}\exists{x}.P(x,y)]식은 항상 참
+                    li 식[\forall{x}\exists{y}.P(x,y)\text{ IMPLIES }\exists{x}\forall{y}.P(x,y)]식은 항상 참은 아님
+
             h3 Problems
             div
+                h4.fake 문제 3.3.
+                p 수학자가 학생에게 "함수가 연속이 아니면, 미분 불가능하다"라고 말했다. D를 "함수가 미분 가능하다", C를 "함수가 연속이다"라고 했을 때, 수학자의 발언은 "NOT(C) IMPLIES NOT(D)" 또는 "D IMPLIES C"로 변환할 수 있다
+                    |<br>그런데 어머니가 자식에게 "숙제를 하지 않으면, TV를 볼 수 없다"라고 말한 경우를 생각해보자. T를 "TV를 볼 수 있다", H를 "숙제를 했다"라고 했을 때, 어머니의 발언은 "NOT(H) IFF NOT(T)" 또는 "H IFF T"로 변환된다
+                    |<br>왜 똑같은 IF-THEN 구조 문장을 서로 다르게 변환하는 것이 합당한지 설명하라
+                p → 수학자의 발언은 함수의 미분 가능성을 위하여 함수의 연속을 요구하는 것이 아니다. 그러나 어머니의 발언은 TV를 보기 위해 숙제를 할 것을 요구하는 것을 내포하고 있다 -- "숙제를 하면, TV를 볼 수 있다". 즉, 어머니의 발언은 "(NOT(H) IMPLIES NOT(T)) AND (H IMPLIES T) = H IFF T"으로 변환된다.
+
+
                 h4.fake 문제 3.6.
-                p Propositional logic comes up in digital circuit design using the convention that T corresponds to 1 and F to 0. A simple example is a 2-bit half-adder circuit. This circuit has 3 binary inputs, a1, a0, b, and 3 binary outputs, c, s1, s0. The 2-bit word 식[a_1a_0]식 gives the binary representation of an integer k between 0 and 3. The 3-bit word 식[cs_1s_0]식 gives the binary representation of k C b. The third output bit c is called the final carry bit.
-                    |<br>So if k and b were both 1, then the value of 식[a_1a_0]식 would be 01 and the value of the output 식[cs_1s_0]식 would 010, namely, the 3-bit binary representation of 1 + 1.
-                    |<br>In fact, the final carry bit equals 1 only when all three binary inputs are 1, that is, when k = 3 and b = 1. In that case, the value of 식[cs_1s_0]식 is 100, namely, the binary representation of 3 + 1.
-                    |<br>This 2-bit half-adder could be described by the following formulas:
-                    |<br>\begin{align*}
-                    |c_0 =& b \\
-                    |s_0 =& a_0\text{ XOR }c_0 \\
-                    |c_1 =& a_0\text{ AND }c_0 && \text{the carry into column 1} \\
-                    |s_1 =& a_1\text{ XOR }c_1 \\
-                    |c_2 =& a_1\text{ AND }c_1 && \text{the carry into column 2} \\
-                    |c   =& c_2
+                p 이진수 덧셈 식[a_{1}a_{0}+b]식를 처리하는 2비트 반가산기는 3개 비트 식[cs_{1}c_{0}]식를 출력한다. 여기서 c는 carry bit라고 부른다 -- 다음 자릿수에 전달되어 연산에 사용되므로. 이를 아래와 같이 표현할 수 있다.
+                    |\begin{align*}
+                    |   c_0 =& b \\
+                    |   s_0 =& a_0\text{ XOR }c_0 \\
+                    |   c_1 =& a_0\text{ AND }c_0 && \text{the carry into column 1} \\
+                    |   s_1 =& a_1\text{ XOR }c_1 \\
+                    |   c_2 =& a_1\text{ AND }c_1 && \text{the carry into column 2} \\
+                    |   c   =& c_2
                     |\end{align*}
+                p <b>(a)</b> 위 논리식을 n+1비트 반가산기로 일반화하라. 즉, 식[a_{n} \cdots a_{1}a_{0}]식와 b를 입력으로 받아 식[cs_{n} \cdots s_{1}s_{0}]식를 출력한다.
+                p → \begin{align*}
+                    |   c_0 =& b \\
+                    |   s_i =& a_i\text{ XOR }c_i \\
+                    |   c_{i+1} =& a_i\text{ AND }c_i \\
+                    |   c   =& c_{n+1}
+                    |\end{align*}
+                p <b>(b)</b> 유사하게, 두 개의 n+1비트 식[a_{n} \cdots a_{1}a_{0}]식, 식[b_{n} \cdots b_{1}b_{0}]식를 입력으로 받는 가산기의 출력에 대한 일반식을 작성하라
+                p → \begin{align*}
+                    |   c_0 =& 0 \\
+                    |   s_i =& a_i\text{ XOR }b_i\text{ XOR }c_i \\
+                    |   c_{i+1} =& (a_i\text{ AND }b_i)\text{ OR }(b_i\text{ AND }c_i)\text{ OR }(c_i\text{ AND }a_i) \\
+                    |   c   =& c_{n+1}
+                    |\end{align*}
+                p <b>(c)</b> 위 <b>(b)</b>에서 작성한 계산기는 작동을 위해 몇 번의 논리 연산을 수행하는가?
+                p → 2(n+1)번의 XOR 연산, 3(n+1)번의 AND 연산, 2(n+1)번의 OR 연산을 수행한다
+
+                h4.fake 문제 3.7
                 ul
-                    li (a) Generalize the above construction of a 2-bit half-adder to an n + 1 bit half-adder with inputs 식[a_n,\cdots,a_1,a_0]식 and b and outputs 식[c,s_n,\cdots,s_1,s_0]식. That is, give simple formulas for 식[s_i]식 and 식[c_i]식 for 식[0 \le i \le n + 1]식, where 식[c_i]식 is the carry into column i + 1, and 식[c = c_{n+1}]식
-                    p \begin{align*}
-                        |c_0 =& b \\
-                        |s_i =& a_i\text{ XOR }c_i \\
-                        |c_{i+1} =& a_i\text{ AND }c_i
-                        |\end{align*}
-                    li (b) Write similar definitions for the digits and carries in the sum of two n + 1-bit binary numbers 식[a_n,\cdots,a_1,a_0]식 and 식[b_n,\cdots,b_1,b_0]식
-                    p \begin{align*}
-                        |c_0 =& 0 \\
-                        |s_i =& a_i\text{ XOR }b_i\text{ XOR }c_i \\
-                        |c_{i+1} =& (a_i\text{ AND }b_i)\text{ OR }(b_i\text{ AND }c_i)\text{ OR }(c_i\text{ AND }a_i)
-                        |\end{align*}
-                    li (c) How many of each of the propositional operations does your adder from part (b) use to calculate the sum?
-                    p To add two n bit numbers, (2+5)n times unit operations are needed
+                    li 회로의 속도 또는 지연은 입력과 출력 사이의 경로들 중 가장 게이트가 많이 존재하는 경로에 의해 결정된다
+                    li 문제 3.6의 ripple-carry 반가산기는 이전 비트의 캐리 비트가 다음 비트의 계산에 필요하므로, 반가산기의 입력을 2배로 늘릴 때마다 소요 시간도 2배로 늘어난다
+                    li 만약 가산기의 모든 비트가 동시에 계산된다면, 입력을 2배로 늘려도 소요 시간은 크게 늘지 않는다
+                    li 식[a_{3}a_{2}a_{1}a_{0} + b_{3}b_{2}b_{1}b_{0} = cs_{3}s_{2}s_{1}s_{0}]식를 수행하는 자리올림수 예측 가산기(carry-lookahead adder) 구현을 생각해보자
+                    ul
+                        li 자리올림이 발생하는 경우
+                        ul
+                            li 두 입력의 동일 자리가 모두 1이면 반드시 자리올림수가 발생한다 : G(A, B) = A AND B
+                            li 두 입력 중 하나만 1인 경우, 자리올림수가 발생할 수 있다 : P(A, B) = A XOR B
+                        li 한 자리의 계산
+                        ul
+                            li 문제 3.6 - (b)의 답과 다름 없음
+                            li 식[s_{i} = P_{i}\text{ XOR }c_{i} = a_i\text{ XOR }b_i\text{ XOR }c_i]식
+                            li 식[c_{i+1} = G_{i}\text{ OR }(P_{i}\text{ AND }c_{i}) = (a_i\text{ AND }b_i)\text{ OR }(b_i\text{ AND }c_i)\text{ OR }(c_i\text{ AND }a_i)]식
+                        li 식 전개
+                        ul
+                            li s0 = P0 XOR 0
+                            li c1 = G0
+                            li s1 = P1 XOR c1 = P1 XOR G0
+                            li c2 = G1 OR (P1 AND c1) = G1 OR (P1 AND G0)
+                            li s2 = P2 XOR c2 = P2 XOR (G1 OR (P1 AND G0))
+                            li c3 = G2 OR (P2 AND c2) = G2 OR (P2 AND (G1 OR (P1 AND G0)))
+                            li s3 = P3 XOR c3 = P3 XOR (G2 OR (P2 AND (G1 OR (P1 AND G0))))
+                            li c4 = G3 OR (P3 AND c3) = G3 OR (P3 AND (G2 OR (P2 AND (G1 OR (P1 AND G0)))))
+                        li 시간이 적게 소요되는 대신 회로 복잡도가 크게 증가한다 -- O(n^2)
+
                 h4.fake 문제 3.17.
                 p A half dozen different operators may appear in propositional formulas, but just AND, OR, and NOT are enough to do the job. That is because each of the operators is equivalent to a simple formula using only these three operators. For example, A IMPLIES B is equivalent to NOT(A) OR B. So all occurences of IMPLIES in a formula can be replaced using just NOT and OR.
                 ul
