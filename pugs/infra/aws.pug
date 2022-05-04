@@ -354,6 +354,62 @@ include ../../source/skeleton.pug
             li 스택 제거
             +asCode('shell') cdk destroy
 
+    h1 EC2
+    div
+        h2 개요
+        ul
+            li 인스턴스 : 가상 컴퓨팅 환경
+            li AMI(Amazon machine image) : 인스턴스에서 실행할 운영체제 및 소프트웨어들이 적절히 구성된 상태. 이를 이용해 동일한 상태로 여러 인스턴스들을 쉽게 만들 수 있다
+            li 인스턴스 유형 : 인스턴스의 CPU, 메모리, 스토리지, 네트워크 대역폭 구성
+            li 키 페어 : 암호화된 인스턴스 로그인 강제
+            li 인스턴스 스토어 볼륨 : 임시 데이터 저장. 인스턴스 중단, 최대 절전 모드 전환, 종료 시 삭제
+            li EBS : 영구 스토리지 볼륨
+            li 보안 그룹 : 인스턴스 방화벽 기능
+            li 탄력적 IP(EIP) : 고정 IPv4 주소
+            li
+    details
+        summary 정리 필요
+        h2 스팟 인스턴스
+        ul
+            li 미사용 중인 EC2 인스턴스 풀에서 인스턴스를 저렴하게 임대하여 사용할 수 있다
+            li 인스턴스 풀은 계속 변동되므로 스팟 요금 역시 계속 변동되고, 가장 높은 가격으로 주문한 사용자가 우선 낙찰된다
+            li 가격, 용량 등에 대한 제약사항을 설정하여 주문하는데, 수요 증가로 인하여 언제든지 종료될 수 있다
+            p 종료 2분전 발행되는 종료 공지를 이용해 인스턴스가 중단되기 전에 상태 저장, 로그 업로드 등의 작업을 할 수 있다
+            li 스팟 인스턴스 어드바이저 : 리전 - 인스턴스 유형별 중단 빈도 제공
+                +asA('https://aws.amazon.com/ko/ec2/spot/instance-advisor/')
+        h2 Amazon Linux 2
+        div
+            h3 CodeDeploy agent 설치
+            +asCode('shell').
+                $ sudo yum install ruby -y
+                $ sudo yum install wget -y
+
+                # 리전에 따라 아래 url은 달라짐
+                $ wget https://aws-codedeploy-ap-northeast-2.s3.amazonaws.com/latest/install
+                $ chmod +x ./install
+                $ sudo ./install auto
+                $ sudo service codedeploy-agent status
+
+            h3 JDK(corretto) 설치
+            +asCode('shell').
+                $ sudo rpm --import https://yum.corretto.aws/corretto.key
+                $ sudo curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo
+                $ sudo yum install -y java-17-amazon-corretto-devel
+
+            h3 aws configure
+            p 인스턴스 내에서 aws cli 명령을 실행하려는 경우, 미리 자격 증명을 설정하는 것이 편리하다
+
+            h3 시작 템플릿 > 사용자 데이터에서 CodeDeploy 실행
+            +asCode('bash').
+                #!/bin/bash
+                aws deploy create-deployment --application-name AppName --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name GroupName --s3-location bucket=BucketName,bundleType=zip,key=ObjectKey
+        h2 Amazon Linux 2022
+        ul
+            li AL2022부터 Amazon Linux의 새로운 메이저 버전은 2년마다 출시
+            li 각 메이저 버전은 총 5년 동안 지원됨 : 2년 표준 지원(분기별 마이너 업데이트) + 3년 유지 관리
+            li SELinux 기본 설정
+            li 라이브 패치 : 재부팅, 가동 중단 없이 커널 패치 가능
+
     h1 IAM; Identity and Access Management
     div
         h2 AWS 계정
@@ -780,6 +836,46 @@ include ../../source/skeleton.pug
         h2 액세스 분석기
         p IAM Access Analyzer는 외부 엔터티와 공유되는 조직 및 계정 내 리소스를 식별하여 액세스가 의도한 액세스인지, 의도하지 않은 보안 위험인지 확인할 수 있다. 모든 상용 AWS 리전에서 무료로 IAM 콘솔 및 API를 통해 이용 가능
 
+    h1 Proton
+    div
+        h2 개요
+        p 컨테이너 기반 서버리스 애플리케이션에 대한 2가지 자동화를 제공한다. 템플릿 생성, 게시, 관리에는 비용이 청구되지 않는다
+        ol
+            li 플랫폼 관리자가 정의한 IaC(infrastructure as code) 템플릿대로 인프라를 자동 구축
+            p 플랫폼 관리자는 버전 관리되는 환경 및 서비스 템플릿을 정의한다. 환경 템플릿은 서비스들이 공유하는 인프라 집합을 정의하고, 서비스 템플릿은 각 서비스가 필요로 하는 인프라 요소들을 정의한다
+            li 통합된 CI/CD 기능을 통해 코드 자동 배포
+
+        h2 시작하기
+        +w3img('/imgs/20220428_1158.png', 'Proton service diagram')
+        ul
+            li 데모:
+                +asA('https://www.youtube.com/watch?v=uQDmHRjQpTU')
+            li 샘플 코드:
+                +asA('https://github.com/aws-samples/aws-proton-sample-templates/tree/main/loadbalanced-fargate-svc')
+        ol
+            li 환경 템플릿 생성 ~ 배포
+            ul
+                li 템플릿에 필요한
+                    +asA('https://docs.aws.amazon.com/proton/latest/adminguide/parameters.html', '인자')
+                    |들을 식별 후
+                    +asA('https://docs.aws.amazon.com/proton/latest/adminguide/ag-schema.html', '스키마 파일')
+                    |로 작성
+                li IaC 파일 작성
+                ul
+                    li AWS 관리형으로 만드는 경우 : CloudFormation 템플릿 파일에,
+                        +asA('https://palletsprojects.com/p/jinja/', 'Jinja')
+                        |를 이용해 변수 사용
+                    li 고객 관리형으로 만드는 경우 :
+                        +asA('https://www.terraform.io/', 'Terraform')
+                        |템플릿 파일
+                li 스키마 + IaC + 매니페스트 파일들을 번들링
+                li 템플릿 번들을 참조하여 템플릿 생성(또는 업데이트) 후 템플릿 게시 및 배포
+            li 배포한 특정 버전의 환경 템플릿에 인자를 지정하여 환경 생성
+            li 서비스 템플릿 생성 ~ 배포
+            li 서비스 생성에 사용할 코드 저장소 - 브랜치 작성
+            li 배포한 특정 버전의 서비스 템플릿에 인자와 코드 저장소 및 브랜치를 지정하여 서비스 및 서비스 인스턴스 생성
+            li 최종적으로 개발자가 지정한 환경에 지정한 수량만큼의 서비스 인스턴스가 생성된다
+
     h1 WAF, Firewall Manager, Shield
     div
         h2 개요
@@ -872,7 +968,8 @@ include ../../source/skeleton.pug
         li Network Firewall
         p VPC 경계 트랙픽 관리 방화. 보안 그룹만으로 불충분한 경우 사용
         li Resource Group
-        p 리소스 태그 또는 CloudFormation 스택 기반으로 리소스 그룹핑
+        p 리소스들을 그룹화하여 여러 리소스에 대한 작업을 한 번에 실행. 지원하는 서비스 목록:
+            +asA('https://docs.aws.amazon.com/ARG/latest/userguide/integrated-services-list.html')
         li Secrets Manager
         p 암호 중앙 관리자. 암호 검색 API 제공
         li Security Hub
@@ -899,8 +996,6 @@ include ../../source/skeleton.pug
         p EC2 인스턴스, 컨테이너, IP 주소, Lambda 함수 등으로의 부하 분산
         li VPC; Virtual Private Cloud
         p 사용자 정의 가상 네트워크
-        li Auto Scaling
-        p 사용량에 따른 애플리케이션 규모 자동 조정
         li RDS; Relational Database Service
         p Amazon Aurora, PostgreSQL, MySQL, MariaDB, Oracle Database, SQL Server
         li Database Migration Service
@@ -1011,35 +1106,6 @@ include ../../source/skeleton.pug
             |RDS 인스턴스 생성 시 멀티-AZ 옵션으로 DB 서브넷 그룹 지정
             br
             |RDS는 강제 업그레이드가 실행될 수 있으며, 멀티-AZ를 이용하는 경우, 스탠바이 서버부터 업그레이드되어 새로운 마스터가 된다
-
-    h1 EC2
-    div
-        h2 Amazon Linux 2 이미지
-        div
-            h3 CodeDeploy agent 설치
-            +asCode('shell').
-                $ sudo yum install ruby -y
-                $ sudo yum install wget -y
-
-                # 리전에 따라 아래 url은 달라짐
-                $ wget https://aws-codedeploy-ap-northeast-2.s3.amazonaws.com/latest/install
-                $ chmod +x ./install
-                $ sudo ./install auto
-                $ sudo service codedeploy-agent status
-
-            h3 JDK(corretto) 설치
-            +asCode('shell').
-                $ sudo rpm --import https://yum.corretto.aws/corretto.key
-                $ sudo curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo
-                $ sudo yum install -y java-17-amazon-corretto-devel
-
-            h3 aws configure
-            p 인스턴스 내에서 aws cli 명령을 실행하려는 경우, 미리 자격 증명을 설정하는 것이 편리하다
-
-            h3 시작 템플릿 > 사용자 데이터에서 CodeDeploy 실행
-            +asCode('bash').
-                #!/bin/bash
-                aws deploy create-deployment --application-name AppName --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name GroupName --s3-location bucket=BucketName,bundleType=zip,key=ObjectKey
 
     h1 CloudFront
     div

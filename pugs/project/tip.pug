@@ -59,10 +59,21 @@ include ../../source/skeleton.pug
         h2: +asA('https://certbot.eff.org/', 'Certbot')
         ul
             li 무료 SSL 인증서(3개월) 제공
+            li 저장 위치 : /etc/letsencrypt/
             li DNS 레코드를 이용한 인증서 발급
             +asCode('shell') $ sudo certbot certonly -d *.4joy.link --manual --preferred-challenges dns
             p DNS 레코드 확인
             +asCode('shell') $ nslookup -q=TXT _acme-challenge.4joy.link
+            li certbot renew [--cert-name CERTNAME] [options]
+            ul
+                li 만료 30일 미만인 (모든) 인증서 갱신
+                li 인증서 이름은 certbot certificates로 확인 가능
+                li --pre-hook "service nginx stop" --post-hook "service nginx start"
+                p 인증서를 하나라도 갱신해야 하는 경우, 각 갱신 전후에 실행. hook가 실패해도 인증서 갱신은 계속 진행된다
+                li --deploy-hook DEPLOY_HOOK
+                p 갱신에 성공한 각 경우에만 실행
+                li --force-renewal
+                p 만료 기간과 무관하게 갱신
 
         h2 오라클 클라우드 > 로드밸런서 > 인증서 추가
         ul
@@ -73,7 +84,7 @@ include ../../source/skeleton.pug
     h1 SVG 크기가 안 맞을 때
     ol
         li SVG; Scalable Vector Graphics
-        p XML로 서술되는 벡터 그래픽. 예 
+        p XML로 서술되는 벡터 그래픽. 예
             +asA('https://image.flaticon.com/icons/svg/53/53260.svg')
         li html 노드로 설정한 크기에 맞게 출력되지 않는 경우
         p svg 파일을 텍스트 에디터로 열어 width, height 속성을 삭제하고, 대신 viewBox 등으로 출력 범위를 지정

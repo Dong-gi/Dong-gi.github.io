@@ -448,52 +448,57 @@ include ../../source/skeleton.pug
     h1 보안
     div
         h2 디피-헬만 키 교환법
-        p 두 키 K1, K2를 합성하는, 교환법칙이 성립하는(F(k1, k2) == F(k2, k1)) 함수 F가 있을 때, 두 대화 참여자 A, B의 키 생성 절차는 아래와 같다
-        ol
-            li A가 B에게 공개키 P를 전달
-            li A, B가 각각 비밀키 SA, SB를 준비
-            li A는 B에게 F(P, SA)를, B는 A에게 F(P, SB)를 전달
-            li A, B는 이제 각각 F(P, SB, SA), F(P, SA, SB)를 이용하여 대화를 암호화할 수 있다
-        p 중간에 공개된 키들을 모두 가로채더라도, P, F(P, SA), F(P, SB)만으로는 F(P, SA, SB)를 만들어낼 수 없다. 아래는 RSA키 생성 절차
-        ol
-            li A가 B에게 (소수 P, 생성자 G) 전달
-            li A, B가 각각 비밀키 X, Y를 준비. (X, Y &lt; P-2)
-            li A는 B에게 G^X mod P를, B는 A에게 G^Y mod P를 전달
-            li A, B는 이제 각각 (G^Y mod P)^X mod P, (G^X mod P)^Y mod P == G^(XY) mod P를 공유한다
-        p EC(타원 곡선) 키를 이용하는 키 교환 예시 코드
-        +asCode('java').
-            import javax.crypto.KeyAgreement;
-            import com.nimbusds.jose.jwk.*;
-            import com.nimbusds.jose.jwk.gen.ECKeyGenerator;
-            import com.nimbusds.jose.util.Base64URL;
+        div
+            h3.fake 키 교환 절차
+            p 두 키 K1, K2를 합성하는, 교환법칙이 성립하는(F(k1, k2) == F(k2, k1)) 함수 F가 있을 때, 두 대화 참여자 A, B의 키 생성 절차는 아래와 같다
+            ol
+                li A가 B에게 공개키 P를 전달
+                li A, B가 각각 비밀키 SA, SB를 준비
+                li A는 B에게 F(P, SA)를, B는 A에게 F(P, SB)를 전달
+                li A, B는 이제 각각 F(P, SB, SA), F(P, SA, SB)를 이용하여 대화를 암호화할 수 있다
+            p 중간에 공개된 키들을 모두 가로채더라도, P, F(P, SA), F(P, SB)만으로는 F(P, SA, SB)를 만들어낼 수 없다.
 
-            public class Main {
-                public static void main(String[] args) throws Exception {
-                    var key1 = new ECKeyGenerator(Curve.P_256)
-                        .keyUse(KeyUse.SIGNATURE)
-                        .generate();
-                    var key2 = new ECKeyGenerator(Curve.P_256)
-                        .keyUse(KeyUse.SIGNATURE)
-                        .generate();
+            h3.fake RSA 키 교환 예
+            ol
+                li A가 B에게 (소수 P, 생성자 G) 전달
+                li A, B가 각각 비밀키 X, Y를 준비. (X, Y &lt; P-2)
+                li A는 B에게 G^X mod P를, B는 A에게 G^Y mod P를 전달
+                li A, B는 이제 각각 (G^Y mod P)^X mod P, (G^X mod P)^Y mod P == G^(XY) mod P를 공유한다
 
-                    System.out.println(key1);
-                    System.out.println(key2);
-                    // {"kty":"EC","d":"iHAe66OGErA1e2WeBPO4KyzaGZR-EV1iUuNBBI60CLw","use":"sig","crv":"P-256","x":"tKsyXHOsfAnG5vIjwKDeDHa_C73_VYPJ2H2pSro1vho","y":"c9Wnk_5N93xgwBpOV71T1p-1KuvCwtblp1EKqXxc8sc"}
-                    // {"kty":"EC","d":"ynSMPN-tX9Qg_ChNxgJIY5bZT3viH1FxH_k5wfeNODc","use":"sig","crv":"P-256","x":"aZqTE0f4S29w6_VivUQRjbYM08KKUTJGGkvThsde-Gw","y":"VKwtaWv1ScPh-SQbycCK520hOUg93vGMLNdYY7j53Nk"}
+            h3.fake EC(타원 곡선) 키 교환 예
+            +asCode('java').
+                import javax.crypto.KeyAgreement;
+                import com.nimbusds.jose.jwk.*;
+                import com.nimbusds.jose.jwk.gen.ECKeyGenerator;
+                import com.nimbusds.jose.util.Base64URL;
 
-                    var ka1 = KeyAgreement.getInstance("ECDH");
-                    ka1.init(key1.toPrivateKey());
-                    ka1.doPhase(key2.toPublicKey(), true);
-                    var ka2 = KeyAgreement.getInstance("ECDH");
-                    ka2.init(key2.toPrivateKey());
-                    ka2.doPhase(key1.toPublicKey(), true);
+                public class Main {
+                    public static void main(String[] args) throws Exception {
+                        var key1 = new ECKeyGenerator(Curve.P_256)
+                            .keyUse(KeyUse.SIGNATURE)
+                            .generate();
+                        var key2 = new ECKeyGenerator(Curve.P_256)
+                            .keyUse(KeyUse.SIGNATURE)
+                            .generate();
 
-                    System.out.println(Base64URL.encode(ka1.generateSecret()));
-                    System.out.println(Base64URL.encode(ka2.generateSecret()));
-                    // eAglRUPBHQe9OMZE_NaatXxhxEGT1eUQa-dosVM87ZU
-                    // eAglRUPBHQe9OMZE_NaatXxhxEGT1eUQa-dosVM87ZU
+                        System.out.println(key1);
+                        System.out.println(key2);
+                        // {"kty":"EC","d":"iHAe66OGErA1e2WeBPO4KyzaGZR-EV1iUuNBBI60CLw","use":"sig","crv":"P-256","x":"tKsyXHOsfAnG5vIjwKDeDHa_C73_VYPJ2H2pSro1vho","y":"c9Wnk_5N93xgwBpOV71T1p-1KuvCwtblp1EKqXxc8sc"}
+                        // {"kty":"EC","d":"ynSMPN-tX9Qg_ChNxgJIY5bZT3viH1FxH_k5wfeNODc","use":"sig","crv":"P-256","x":"aZqTE0f4S29w6_VivUQRjbYM08KKUTJGGkvThsde-Gw","y":"VKwtaWv1ScPh-SQbycCK520hOUg93vGMLNdYY7j53Nk"}
+
+                        var ka1 = KeyAgreement.getInstance("ECDH");
+                        ka1.init(key1.toPrivateKey());
+                        ka1.doPhase(key2.toPublicKey(), true);
+                        var ka2 = KeyAgreement.getInstance("ECDH");
+                        ka2.init(key2.toPrivateKey());
+                        ka2.doPhase(key1.toPublicKey(), true);
+
+                        System.out.println(Base64URL.encode(ka1.generateSecret()));
+                        System.out.println(Base64URL.encode(ka2.generateSecret()));
+                        // eAglRUPBHQe9OMZE_NaatXxhxEGT1eUQa-dosVM87ZU
+                        // eAglRUPBHQe9OMZE_NaatXxhxEGT1eUQa-dosVM87ZU
+                    }
                 }
-            }
 
         h2 키 교환(Key Exchange)과 키 합의(Key Agreement)
         ul
