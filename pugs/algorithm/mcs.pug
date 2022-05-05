@@ -774,6 +774,13 @@ include ../../source/skeleton.pug
                             li c4 = G3 OR (P3 AND c3) = G3 OR (P3 AND (G2 OR (P2 AND (G1 OR (P1 AND G0)))))
                         li 시간이 적게 소요되는 대신 회로 복잡도가 크게 증가한다 -- O(n^2)
 
+                h4.fake 문제 3.15.
+                p <b>(d)</b> 논리식 집합 {P1, ..., Pk}이 consistent하다 iff 모든 논리식이 참이 되는 환경이 존재한다. 이때, "집합 {P1, ..., Pk}이 consistent하지 않다 iff S는 valid하다"를 만족하는 논리식 S를 작성하라
+                p → S = NOT(P1 AND P2 ... AND Pk)
+                ul
+                    li 집합 {P1, ..., Pk}이 consistent하지 않다면, 원소 중 하나라도 false가 존재하므로 S가 항상 true다
+                    li S가 valid하다면, (P1 AND P2 ... AND Pk)가 항상 false이므로 집합 {P1, ..., Pk}이 consistent하지 않다
+
                 h4.fake 문제 3.17.
                 p A half dozen different operators may appear in propositional formulas, but just AND, OR, and NOT are enough to do the job. That is because each of the operators is equivalent to a simple formula using only these three operators. For example, A IMPLIES B is equivalent to NOT(A) OR B. So all occurences of IMPLIES in a formula can be replaced using just NOT and OR.
                 ul
