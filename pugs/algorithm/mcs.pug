@@ -782,33 +782,31 @@ include ../../source/skeleton.pug
                     li S가 valid하다면, (P1 AND P2 ... AND Pk)가 항상 false이므로 집합 {P1, ..., Pk}이 consistent하지 않다
 
                 h4.fake 문제 3.17.
-                p A half dozen different operators may appear in propositional formulas, but just AND, OR, and NOT are enough to do the job. That is because each of the operators is equivalent to a simple formula using only these three operators. For example, A IMPLIES B is equivalent to NOT(A) OR B. So all occurences of IMPLIES in a formula can be replaced using just NOT and OR.
+                p 모든 논리식의 연산자를 AND, OR, NOT의 조합으로 치환할 수 있다
                 ul
-                    li (a) Write formulas using only AND, OR, NOT that are equivalent to each of A IFF B and A XOR B. Conclude that every propositional formula is equivalent to an AND-OR-NOT formula.
+                    li <b>(a)</b> A IFF B, A XOR B 각각에 대해 AND, OR, NOT의 조합으로만 이루어진 동치식을 작성하라
                     ul
-                        li A iff B = (A and B) or (not(A) and not(B))
-                        li A xor B = (A and not(B)) or (not(A) and B)
-                    li (b) Explain why you don’t even need AND.
-                    p A and B = not(not(A) or not(B))
-                    li (c) Explain how to get by with the single operator NAND where A NAND B is equivalent by definition to NOT(A AND B)
+                        li A IFF B = (A AND B) OR (NOT(A) AND NOT(B))
+                        li A XOR B = (A AND NOT(B)) OR (NOT(A) AND B)
+                    li <b>(b)</b> AND 연산자를 추가로 생략 가능한데, 그 이유를 설명하라
+                    p → A AND B = NOT(NOT(A) OR NOT(B))
+                    li <b>(c)</b> NAND 연산자 하나만으로 모든 연산자를 치환할 수 있는데, 그 이유를 설명하라
                     ul
-                        li A and B = (A nand B) nand (A nand B)
-                        li not(A) = A nand A
-                        li A or B = not(not(A) and not(B)) = X nand X
-                            |<br>where X = (Y nand Z) nand (Y nand Z), Y = A nand A, Z = B nand B
-                h4.fake 문제 3.18.
-                p The propositional connective NOR is defined by the rule
-                    |<br>P NOR Q ::= NOT(P) AND NOT(Q)
-                    |<br>Explain why every propositional formula—possibly involving any of the usual operators such as IMPLIES, XOR, . . .—is equivalent to one whose only connective is NOR.
-                ul
-                    li not(A) = A nor A
-                    li A or B = not(A nor B) = (A nor b) nor (A nor b)
-                    li A and b = not(not(A) or not(B)) = X nor X
-                        |<br>where X = (Y nor Z) nor (Y nor Z), Y = A nor A, Z = B nor B
+                        li A AND B = (A NAND B) NAND (A NAND B)
+                        li NOT(A) = A NAND A
+                        li A OR B = NOT(NOT(A) AND NOT(B)) = X NAND X
+                            |<br>where X = (Y NAND Z) NAND (Y NAND Z), Y = A NAND A, Z = B NAND B
+                    li <b>문제 3.18.</b> NOR 연산자 하나만으로 모든 연산자를 치환할 수 있는데, 그 이유를 설명하라
+                    ul
+                        li NOT(A) = A NOR A
+                        li A OR B = NOT(A NOR B) = (A NOR B) NOR (A NOR B)
+                        li A AND B = NOT(NOT(A) OR NOT(B)) = X NOR X
+                        |<br>where X = (Y NOR Z) NOR (Y NOR Z), Y = A NOR A, Z = B NOR B
+
                 h4.fake 문제 3.19.
-                p Explain how to read off a conjunctive form for a propositional formula directly from a disjunctive form for its complement.
-                p → Any DNF 식[P_1\text{ OR }P_2\text{ OR }\cdots\text{ OR }P_n]식, where 식[P_i=Q_{i1}\text{ AND }Q_{i2}\text{ AND }\cdots\text{ AND }Q_{im_i}]식
-                    |<br>\begin{align*}
+                p Disjunctive form 논리식으로부터 conjunctive form 논리식을 직접 도출할 수 있음을 보여라
+                p → 임의 DNF 식[P_1\text{ OR }P_2\text{ OR }\cdots\text{ OR }P_n]식, where 식[P_i=Q_{i1}\text{ AND }Q_{i2}\text{ AND }\cdots\text{ AND }Q_{im_i}]식에 대하여,
+                    |\begin{align*}
                     | & \text{ NOT}(P_1\text{ OR }P_2\text{ OR }\cdots\text{ OR }P_n) \\
                     |=& \text{ NOT}(P_1)\text{ AND }\text{ NOT}(P_2)\text{ AND }\cdots\text{ AND }\text{ NOT}(P_n) \\
                     |=& (\text{ NOT}(Q_{11})\text{ OR }\text{ NOT}(Q_{12})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{1m_1})))\text{ AND } \\
@@ -816,20 +814,42 @@ include ../../source/skeleton.pug
                     | & \vdots \\
                     | & (\text{ NOT}(Q_{n1})\text{ OR }\text{ NOT}(Q_{n2})\text{ OR }\cdots\text{ OR }\text{ NOT}(Q_{2n_1})))
                     |\end{align*}
+
                 h4.fake 문제 3.32.
-                p The goal of this problem is to translate some assertions about binary strings into logic notation. The domain of discourse is the set of all finite-length binary strings: λ, 0, 1, 00, 01, 10, 11, 000, 001, . . . . (Here λ denotes the empty string.) In your translations, you may use all the ordinary logic symbols (including =), variables, and the binary symbols 0, 1.
-                    |<br>A string like 01x0y of binary symbols and variables denotes the concatenation of the symbols and the binary strings represented by the variables. For example, if the value of x is 011 and the value of y is 1111, then the value of 01x0y is the binary string 0101101111.
+                p 이 문제는 이진 문자열에 대한 정의를 논리식으로 변환하는 걸 목표로 한다. 정의역은 모든 유한 길이 이진 문자열이다: λ(빈 문자열 표현 상수), 0, 1, 00, 01, ...
+                    |<br>문자열 표현에 사용된 변수는 앞뒤 리터럴과의 접합을 의미한다. 예를 들어, x=011, y=1111일 때 01x0y=0101101111
+                    |<br>그 외, 아래 3가지 함수를 풀이에 사용할 수 있다
+                table.no-sort
+                    +ths('이름', '논리식', '의미')
+                    tr
+                        td PREFIX(x, y)
+                        td 식[\exists{z}. xz = y]식
+                        td x is a prefix of y
+                    tr
+                        td SUBSTRING(x, y)
+                        td 식[\exists{u}\exists{v}. uxv = y]식
+                        td x is a substring of y
+                    tr
+                        td NO-1S(x)
+                        td NOT(SUBSTRING(1, x))
+                        td x is empty or a string of 0's
                 ul
-                    li (a) x consists of three copies of some string.
+                    li <b>(a)</b> x는 어떤 문자열을 3번 이어 붙인 것과 같다
                     p → 식[\exists{y}. x=yyy]식
-                    li (b) x is an even-length string of 0’s.
-                    p → let CONCAT(a, b, c, ...) = abc...
-                        |<br>let REPT(a, n) = CONCAT(a, REPT(a, n-1)) = CONCAT(aa, REPT(a, n-2)) = CONCAT(aa...a, REPT(a, 0)) = CONCAT(aa...a, λ) = aa...a
-                        |<br>x = REPT(00, n) where n \in N
-                    li (c) x does not contain both a 0 and a 1.
-                    p → x = λ
-                    li (d) x is the binary representation of 식[2^k + 1]식 for some integer 식[k \ge 0]식
-                    p → x = 1 or CONCAT(1, REPT(0, n), 1) where 식[n \in \mathbb{N}]식
+                    li <b>(b)</b> x는 0으로만 이루어진 짝수 길이 문자열이다
+                    p → PREFIX(x, 00x)
+                    li <b>(d)</b> x는 2^k + 1의 이진수 표현. k는 0이상의 정수
+                    p → x = 10 OR (1y1 where NO-1S(y))
+
+                h4.fake 문제 3.36.
+                p 다음 문장을 predicate 식으로 변환하라 : "서로 다른 학생 최대 2명에게 이메일을 보낸 학생이 있다(본인에게 보내는 것도 허용된다)"
+                    |<br>정의역은 교실 내 전체 학생 집합이며, 작성할 식에서 사용할 수 있는 predicate은 아래 2가지 뿐이다
+                ul
+                    li 동등 비교
+                    li E(x, y) ::= x는 y에게 이메일을 보냈다
+                p → let Y(x) ::= {y | E(x, y)}. 식[\exists{x}. \lceil |Y(x)| \rceil = 2]식
+
+        +pos('4')
         h2 Mathematical Data Types
         div
             h3 Sets
