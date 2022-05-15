@@ -55,17 +55,17 @@ include ../../source/skeleton.pug
             p 위처럼 모든 숫자 또는 특정한 종류의 모든 항목에 대한 명제는 매우 흔하며, 이를 위한 특별한 표기도 존재한다. 이를 이용하면
                 +goto('주장 1.1.3')
                 |은 아래와 같이 표기할 수 있다.
-                |\[\forall n \in \mathbb{N}.\ \text{p(n) is prime}\]
+                |\[\forall n \in \mathbb{N}.\quad\text{p(n) is prime.}\]
                 |여기서 기호 식[\forall]식은 "for all"라고 읽고, 식[\mathbb{N}]식은 음이 아닌 정수 집합을 의미한다.
             p <b>추측 (오일러 추측).</b> 방정식 식[a^4+b^4+c^4=d^4]식을 만족하는 양의 정수 a, b, c, d는 존재하지 않는다
             p 이를 아래와 같이 표현할 수 있다
-                |\[\forall a, b, c, d \in \mathbb{Z}^+.\ a^4+b^4+c^4 \ne d^4.\]
+                |\[\forall a, b, c, d \in \mathbb{Z}^{+}.\quad a^4+b^4+c^4 \ne d^4.\]
                 |한편 이 명제는 거짓으로 판명되었다. a = 95800, b = 217519, c = 414560, d = 422481
             +pos('명제 1.1.4')
             p <b>명제 1.1.4 (Four Color Theorem).</b> 모든 평면 지도는 4가지 색으로 모든 인접한 두 지역의 색이 서로 다르도록 칠할 수 있다.
             p 이 명제가 참이라는 것을 증명하는 데 컴퓨터가 사용되었다. 증명해야 하는 데이터 셋이 크다면 컴퓨터의 사용은 필수불가결한데, 컴퓨터의 계산에 오차가 존재하지 않는다고 보장할 수 있는 사람은 존재하지 않는다. 그렇다고 방대한 데이터를 일일이 검산할 사람 역시 존재하지 않는다.
             +pos('명제 1.1.5')
-            p <b>명제 1.1.5 (Fermat's Last Theorem).</b> 식[n \in \mathbb{N}.\ n > 2.\ x^n + y^n = z^n]식을 만족하는 양의 정수 x, y, z는 존재하지 않는다.
+            p <b>명제 1.1.5 (Fermat's Last Theorem).</b> 식[n \in \mathbb{N}.\quad n > 2.\quad x^n + y^n = z^n]식을 만족하는 양의 정수 x, y, z는 존재하지 않는다.
             p 페르마는 이 명제를 적으면서 여백이 부족해 증명을 적지 않았다고 한다. 1994년 영국의 수학자 Andrew Wiles가 명제가 참임을 증명했고, 이 증명은 여백에 적을만한 분량은 아니었다.
             p 마지막으로 간결하지만, 아직 증명되지 않은 명제를 살펴보자.
             +pos('추측 1.1.6')
@@ -157,15 +157,15 @@ include ../../source/skeleton.pug
                     li 다음과 같이 쓴다. "If-and-only-if 조건 명제의 체인을 만든다."
                     li 어떠한 식(들)이 P와 동치임을 보이고, 다시 Q와도 동치임을 보인다
                 p.fake-h4 Example
-                p 표본 x1, ..., xn에 대한 표준편차는 다음과 같이 정의된다: \[\begin{align}\sqrt{(x_1 - \mu)^2 + \cdots + (x_n - \mu)^2 \over n} \tag*{(1.3)}\end{align}\]
+                p 표본 x1, ..., xn에 대한 표준편차는 다음과 같이 정의된다: \[\sqrt{(x_1 - \mu)^2 + \cdots + (x_n - \mu)^2 \over n} \tag*{(1.3)}\]
                 +pos('정리 1.6.1')
                 p <b>정리 1.6.1.</b> 표본 x1, ..., xn에 대한 표준편차는 0이다 iff 모든 표본이 평균과 같다
                 p <i>증명.</i> "iff" 조건 명제의 체인을 만든다. 표준 편차 (1.3)가 0인 조건식으로부터 시작한다.
-                    |\[\begin{align}\sqrt{(x_1 - \mu)^2 + \cdots + (x_n - \mu)^2 \over n} = 0 \tag*{(1.4)}\end{align}\]
+                    |\[\sqrt{(x_1 - \mu)^2 + \cdots + (x_n - \mu)^2 \over n} = 0 \tag*{(1.4)}\]
                     |오직 0만 제곱근이 0이므로, (1.4) iff
-                    |\[\begin{align}(x_1 - \mu)^2 + \cdots + (x_n - \mu)^2 = 0 \tag*{(1.5)}\end{align}\]
+                    |\[(x_1 - \mu)^2 + \cdots + (x_n - \mu)^2 = 0 \tag*{(1.5)}\]
                     |실수의 제곱은 항상 음이 아니므로, (1.5) 좌변의 모든 항도 음이 아니다. 따라서 (1.5) iff
-                    |\[\begin{align}\text{(1.5) 좌변의 모든 항 }(x_i - \mu)^2 \text{은 0이다.} \tag*{(1.6)}\end{align}\]
+                    |\[\text{(1.5) 좌변의 모든 항 }(x_i - \mu)^2 \text{은 0이다.} \tag*{(1.6)}\]
                     |이때, 식[(x_i-\mu)^2 = 0 \iff x_i = \mu]식이므로, (1.6)가 참이다 iff
                     |\[\text{모든 } x_i = \mu\]
                 p.w3-right-align ■
@@ -334,7 +334,7 @@ include ../../source/skeleton.pug
                 +pos('정리 2.2.1')
                 h4.fake Summing the Integers
                 +pos('정리 2.2.1.')
-                p <b>정리 2.2.1.</b> \[\forall n \in \mathbb{N}. \sum_{1 \le i \le n} = n(n+1)/2\]
+                p <b>정리 2.2.1.</b> \[\forall n \in \mathbb{N}.\quad\sum_{1 \le i \le n} = n(n+1)/2\]
                 p <i>증명.</i> 반례집합 식[C ::= \left\{n \in \mathbb{N} | \sum_{1 \le i \le n} \ne n(n+1)/2\right\}]식가 공집합임을 보여 증명한다
                     |<br>C가 원소를 가진다고 가정하자. WOP에 의해 C에는 최소 원소 c가 존재한다. 이때, n=0일때 식[\sum_{1 \le i \le 0}=0]식이므로 c > 0이다
                     |<br>c-1 >= 0이므로, 식[\sum_{1 \le i \le (c-1)}=(c-1)c/2]식가 성립한다. 양변에 c를 더하면 식[\sum_{1 \le i \le c} = (c-1)c/2 + c = c(c+1)/2]식이므로, 식[c \notin C]식이다
@@ -446,13 +446,13 @@ include ../../source/skeleton.pug
                 p.w3-right-align ■
 
                 h4.fake 문제 2.10.
-                p WOP를 이용하여 \[\begin{align}n\le 3^{n/3} \tag*{(2.6)}\end{align}\]이 임의의 음이 아닌 정수 n에 대하여 성립함을 보여라
+                p WOP를 이용하여 \[n\le 3^{n/3} \tag*{(2.6)}\]이 임의의 음이 아닌 정수 n에 대하여 성립함을 보여라
                 p → 부등식은 식[n^3 \le 3^n]식과 동치다. 먼저 반례가 될 수 없는 경우를 살펴본다
                 ul
-                    li n = 0. 식[0 \le 1]식
-                    li n = 1. 식[1 \le 3]식
-                    li n = 2. 식[8 \le 9]식
-                    li n = 3. 식[27 \le 27]식
+                    li n = 0. 0 ≤ 1
+                    li n = 1. 1 ≤ 3
+                    li n = 2. 8 ≤ 9
+                    li n = 3. 27 ≤ 27
                 p 반례 집합 C의 최소 원소 c >= 4가 존재한다고 가정하자. 식[c^3 \gt 3^c]식. 이때, c-1은 C의 원소가 아니므로 부등식이 성립한다. 식[(c-1)^3 \le 3^{c-1}]식
                     |<br>양변에 식[\left({c \over c-1}\right)^3]식을 곱하면 식[c^3 \le \left({c \over c-1}\right)^3 3^{c-1}]식
                     |<br>따라서 식[\left({c \over c-1}\right)^3 3^{c-1} \gt 3^c]식이 성립해야 한다
@@ -686,7 +686,7 @@ include ../../source/skeleton.pug
 
                 +pos('3.6.2')
                 h4.fake Mixing Quantifiers
-                p e.g. 식[\forall{n}\in\text{Evens }\exists{p}\in\text{Primes }\exists{q}\in\text{Primes. }n=p+q]식
+                p e.g. 식[\forall{n}\in\text{Evens }\exists{p}\in\text{Primes }\exists{q}\in\text{Primes.}\quad n=p+q.]식
 
                 +pos('3.6.3')
                 h4.fake Order of Quantifiers
@@ -695,7 +695,7 @@ include ../../source/skeleton.pug
                 +pos('3.6.4')
                 h4.fake Variables Over One Domain
                 p 모든 변수의 정의역이 동일하다면 표기에서 생략할 수 있다
-                p e.g. 식[\forall{n}. n\in\text{Evens IMPLIES }(\exists{p}\exists{q}. p\in\text{Primes AND }q\in\text{Primes AND }n=p+q)]식
+                p e.g. 식[\forall{n}.\ n\in\text{Evens}\quad\text{IMPLIES}\quad(\exists{p}\exists{q}.\ p\in\text{Primes AND }q\in\text{Primes AND }n=p+q)]식
 
                 +pos('3.6.5')
                 h4.fake Negating Quantifiers
@@ -707,8 +707,8 @@ include ../../source/skeleton.pug
                 +pos('3.6.6')
                 h4.fake Validity for Predicate Formulas
                 ul
-                    li 식[\exists{x}\forall{y}.P(x,y)\text{ IMPLIES }\forall{y}\exists{x}.P(x,y)]식은 항상 참
-                    li 식[\forall{x}\exists{y}.P(x,y)\text{ IMPLIES }\exists{x}\forall{y}.P(x,y)]식은 항상 참은 아님
+                    li 식[\exists{x}\forall{y}.P(x,y)\quad\text{IMPLIES}\quad\forall{y}\exists{x}.P(x,y)]식은 항상 참
+                    li 식[\forall{x}\exists{y}.P(x,y)\quad\text{IMPLIES}\quad\exists{x}\forall{y}.P(x,y)]식은 항상 참은 아님
 
             h3 Problems
             div
@@ -852,8 +852,10 @@ include ../../source/skeleton.pug
         +pos('4')
         h2 Mathematical Data Types
         div
+            +pos('4.1')
             h3 Sets
             div
+                +pos('4.1.1')
                 h4.fake Some Popular Sets
                 ul
                     li 식[\emptyset]식 : Empty set
@@ -862,16 +864,29 @@ include ../../source/skeleton.pug
                     li 식[\mathbb{Q}]식 : Rational numbers
                     li 식[\mathbb{R}]식 : Real numbers
                     li 식[\mathbb{C}]식 : Complex numbers
+                p 어깨 글자로 쓰인 +는 집합을 양의 원소로 한정한다. 예를 들어, 식[\mathbb{R}^{+}]식는 양의 실수 집합을 의미한다. 유사하게 식[\mathbb{Z}^{-}]식는 음의 정수 집합을 의미한다.
+
+                +pos('4.1.2')
                 h4.fake Comparing and Combining Sets
                 ul
                     li 식[S \subseteq T]식 : S is a subset of T
                     li 식[S \subset T]식 : S is a strict subset of T
-                    li Union : 식[x \in A \cup B\text{　　iff　　}x \in A\text{ OR }x \in B]식
-                    li Intersection : 식[x \in A \cap B\text{　　iff　　}x \in A\text{ AND }x \in B]식
-                    li Difference : 식[x \in A - B\text{　　iff　　}x \in A\text{ AND }x \notin B]식
-                    li Complement : 식[\overline{A} ::= D - A]식 where D is domain set
+                +pos('정의 4.1.1.')
+                p <b>정의 4.1.1.</b>
+                ul
+                    li 두 집합 A, B의 union(합집합)은 정확히 A 또는 B의 모든 원소를 갖는 집합이다
+                    p 식[x \in A \cup B \qquad \text{IFF} \qquad x \in A\text{ OR }x \in B]식
+                    li 두 집합 A, B의 intersection(교집합)은 A와 B 모두에 포함되는 원소 전체로 구성된 집합이다
+                    p 식[x \in A \cap B \qquad \text{IFF} \qquad x \in A\text{ AND }x \in B]식
+                    li 두 집합 A, B의 difference(차집합)은 A에만 포함되는 원소 전체로 구성된 집합이다
+                    p 식[x \in A - B \qquad \text{IFF} \qquad x \in A\text{ AND }x \notin B]식
+                    li 정의역 D의 부분집합 A의 Complement(여집합)은 A에 포함되지 않는 D의 원소 전체로 구성된 집합이다
+                    p 식[\overline{A} ::= D - A]식
+
+                +pos('4.1.3')
                 h4.fake Power Set
-                p pow(A) ::= The set of all the subsets of a set A
+                p 집합의 모든 부분집합을 원소로 갖는 집합을 power set(멱집합)이라 한다. \[B \in \operatorname{pow}(A) \quad\text{IFF}\quad B \subseteq A.\]
+
             h3 Sequences
             ul
                 li A sequence is a list of objects called terms or components. e.g. (a, b, c)
@@ -909,7 +924,7 @@ include ../../source/skeleton.pug
                     li bijective when it has both the [=1 arrows in] and the [=1 arrows out] property
                 h4.fake Relational Images
                 +pos('Definition 4.4.5.')
-                p <b>Definition 4.4.5.</b> The inverse, 식[R^{-1}]식 of a relation 식[R:A\rightarrow B]식 is the relation from B to A defined by the rule: 식[b R^{-1} a\text{　　iff　　}a R b]식
+                p <b>Definition 4.4.5.</b> The inverse, 식[R^{-1}]식 of a relation 식[R:A\rightarrow B]식 is the relation from B to A defined by the rule: 식[b R^{-1} a \quad\text{IFF}\quad a R b]식
                 +pos('Definition 4.4.6.')
                 p <b>Definition 4.4.6.</b> The image of a set under the relation,  식[R^{-1}]식, is called the inverse image of the set.
             h3 Finite Cardinality

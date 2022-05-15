@@ -366,7 +366,106 @@ include ../../source/skeleton.pug
             li EBS : 영구 스토리지 볼륨
             li 보안 그룹 : 인스턴스 방화벽 기능
             li 탄력적 IP(EIP) : 고정 IPv4 주소
-            li
+
+        h2 AMI
+        div
+            h3 AMI 유형
+            div
+                h4.fake 시작 권한
+                ul
+                    li 퍼블릭 : 소유자는 모든 AWS 계정에 시작 권한 부여
+                    li 명시적 : 소유자는 특정 AWS 계정, 조직, 조직 단위에 시작 권한 부여
+                    li 암묵적 : 소유자만 암묵적인 시작 권한 소유
+                div
+                    h5.fake 공유 AMI 사용 시 보안 유의
+                    p 액세스 권한을 상실하는 사고를 방지하기 위해 두 개의 SSH 세션을 시작하고, 하나는 작업이 끝날 때까지 계속 유지
+                    ul
+                        li 허용되지 않은 퍼블릭 SSH 키를 확인하고 비활성화
+                        +asCode('shell') $ sudo find / -name "authorized_keys" -print -exec cat {} \;
+                        li 루트 사용자 암호 인증 비활성화
+                        +asCode('txt', 'sshd_config 파일') PermitRootLogin No
+                        p 파일 수정 후 sshd 서비스 재시작
+                        li 등록된 사용자 중 알 수 없는 계정은 모두 암호를 제거하거나 잠금 설정
+                        li 등록된 모든 cron 작업 확인
+
+                h4.fake 루트 디바이스 스토리지
+                ul
+                    li EBS 지원 AMI : 인스턴스는 EBS 스냅샷에서 생성된 별도 EBS 볼륨과 연결
+                    li 인스턴스 스토어 지원 AMI : S3에 저장된 템플릿으로부터 생성된 볼륨과 연결
+                table
+                    +ths('특성', 'EBS 지원 AMI', '인스턴스 스토어 지원 AMI')
+                    +tds('부팅 시간', '보통 1분 이하', '보통 5분 이하')
+                    +tds('루트 디바이스 크기 제한', '64TiB', '10GiB')
+                    +tds('데이터 지속성', '인스턴스를 종료해도 루트 볼륨이 지속되도록 설정 가능 -- 기본값은 삭제', '항상 인스턴스 수명 주기 동안만 유지')
+                    +tds('중지 상태', '인스턴스는 중지 상태일 수 있으며, 루트 볼륨은 EBS에 계속 유지', '인스턴스는 중지 상태일 수 없음')
+
+                h4.fake 가상화
+                ul
+                    li HVM : (추천 옵션) 완전히 가상화된 하드웨어 및 부트 세트 제공
+                    li PV : 반가상화 제공. 일부 리전에서 이전 세대 인스턴스에 한해 지원
+
+            h3 AMI 수명 주기
+            div
+                h4.fake AMI 복사
+                ul
+                    li 리전 내 또는 다른 리전으로 AMI 복사 가능
+                    li 암호화되지 않은 스냅샷을 복사할 때 암호화 설정 가능
+
+                h4.fake AMI 저장 및 복원
+                p S3로 AMI 저장 및 S3로부터 AMI 복원 가능
+
+            h3 Amazon Linux
+            div
+                h4 개요
+                ul
+                    li Amazon Linux는 EC2 애플리케이션을 위한 고성능 보안 실행 환경을 제공하도록 설계
+                    li 컨테이너 이미지도 제공:
+                        +asA('https://hub.docker.com/_/amazonlinux/')
+                    li 기본적으로 키 페어를 이용한 보안 SSH 액세스만 허용
+                    li 각 이미지는 식별을 위해 고유한 /etc/image-id 파일을 보유
+                    li EPEL(Extra Packages for Enterprise Linux) 저장소 활성화
+                    +asCode('shell') $ sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-${version}.noarch.rpm
+                    li 보안 업데이트 알림:
+                        +asA('https://alas.aws.amazon.com/', 'Amazon Linux Security Center')
+
+                h5.fake cloud-init
+                ul
+                    li
+                        +asA('https://cloudinit.readthedocs.io/en/latest/', 'cloud-init')
+                        |패키지는 클라우드 컴퓨팅 환경에서 이미지 부트스트랩을 수행하는 데 사용된다. 인스턴스 시작 시 "사용자 데이터" 필드에 작성한 작업을 cloud-init에 전달하여 초기화를 수행할 수 있다
+                    li: +asA('https://cloudinit.readthedocs.io/en/latest/topics/format.html', '사용자 데이터 포맷')
+                    p e.g. 인스턴스 시작 시 CodeDeploy 실행
+                    +asCode('bash', '사용자 데이터').
+                        #!/bin/bash
+                        aws deploy create-deployment --application-name AppName --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name GroupName --s3-location bucket=BucketName,bundleType=zip,key=ObjectKey
+
+                h4 Amazon Linux 2022
+                ul
+                    li AL2022부터 Amazon Linux의 새로운 메이저 버전은 2년마다 출시
+                    li 각 메이저 버전은 총 5년 동안 지원됨 : 2년 표준 지원(분기별 마이너 업데이트) + 3년 유지 관리
+                    li SELinux 기본 설정
+                    li 라이브 패치 : 재부팅, 가동 중단 없이 커널 패치 가능
+
+                h4.fake aws configure
+                p 인스턴스 내에서 aws cli 명령을 실행하려는 경우, 미리 자격 증명을 설정하는 것이 편리하다
+
+                h4.fake CodeDeploy agent 설치
+                +asCode('shell').
+                    $ sudo yum install ruby -y
+                    $ sudo yum install wget -y
+
+                    # 리전에 따라 아래 url은 달라짐
+                    $ wget https://aws-codedeploy-ap-northeast-2.s3.amazonaws.com/latest/install
+                    $ chmod +x ./install
+                    $ sudo ./install auto
+                    $ sudo service codedeploy-agent status
+
+                h4.fake JDK(Amazon Corretto) 설치
+                +asCode('shell').
+                    $ sudo rpm --import https://yum.corretto.aws/corretto.key
+                    $ sudo curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo
+                    $ sudo yum install -y java-17-amazon-corretto-devel
+
     details
         summary 정리 필요
         h2 스팟 인스턴스
@@ -377,38 +476,6 @@ include ../../source/skeleton.pug
             p 종료 2분전 발행되는 종료 공지를 이용해 인스턴스가 중단되기 전에 상태 저장, 로그 업로드 등의 작업을 할 수 있다
             li 스팟 인스턴스 어드바이저 : 리전 - 인스턴스 유형별 중단 빈도 제공
                 +asA('https://aws.amazon.com/ko/ec2/spot/instance-advisor/')
-        h2 Amazon Linux 2
-        div
-            h3 CodeDeploy agent 설치
-            +asCode('shell').
-                $ sudo yum install ruby -y
-                $ sudo yum install wget -y
-
-                # 리전에 따라 아래 url은 달라짐
-                $ wget https://aws-codedeploy-ap-northeast-2.s3.amazonaws.com/latest/install
-                $ chmod +x ./install
-                $ sudo ./install auto
-                $ sudo service codedeploy-agent status
-
-            h3 JDK(corretto) 설치
-            +asCode('shell').
-                $ sudo rpm --import https://yum.corretto.aws/corretto.key
-                $ sudo curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo
-                $ sudo yum install -y java-17-amazon-corretto-devel
-
-            h3 aws configure
-            p 인스턴스 내에서 aws cli 명령을 실행하려는 경우, 미리 자격 증명을 설정하는 것이 편리하다
-
-            h3 시작 템플릿 > 사용자 데이터에서 CodeDeploy 실행
-            +asCode('bash').
-                #!/bin/bash
-                aws deploy create-deployment --application-name AppName --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name GroupName --s3-location bucket=BucketName,bundleType=zip,key=ObjectKey
-        h2 Amazon Linux 2022
-        ul
-            li AL2022부터 Amazon Linux의 새로운 메이저 버전은 2년마다 출시
-            li 각 메이저 버전은 총 5년 동안 지원됨 : 2년 표준 지원(분기별 마이너 업데이트) + 3년 유지 관리
-            li SELinux 기본 설정
-            li 라이브 패치 : 재부팅, 가동 중단 없이 커널 패치 가능
 
     h1 IAM; Identity and Access Management
     div
@@ -650,7 +717,7 @@ include ../../source/skeleton.pug
         div
             h3 정책 및 권한
             div
-                h4.fake 정책 유형
+                h4 정책 유형
                 ul
                     li 자격 증명 기반 정책 : 관리형 및 인라인 정책을 보안 주체에 연결
                     li 리소스 기반 정책 : 인라인 정책을 리소스에 연결. e.g. S3 버킷 정책, IAM 역할 신뢰 정책
@@ -659,7 +726,7 @@ include ../../source/skeleton.pug
                     li ACL : JSON 정책 문서 구조를 사용하지 않고, 액세스할 수 있는 보안 주체 목록으로 제어
                     li 세션 정책 : 역할 또는 페더레이션 사용자에 대해 임시 세션을 프로그래밍 방식으로 생성할 때 파라미터로 전달하는 고급 정책
 
-                h4.fake JSON 정책 언어 문법(2012-10-17)
+                h4 JSON 정책 언어 문법(2012-10-17)
                 +asCode().
                     policy  = {
                         &lt;version_block?&gt;
@@ -721,7 +788,7 @@ include ../../source/skeleton.pug
                     li NotResource : Resource와 반대로, 여집합을 지정
                     li Condition : 요청 컨텍스트에 대한 추가 조건 연산
 
-                h4.fake 정책 조건 연산
+                h4 정책 조건 연산
                 ul
                     li 조건 키는 대소문자 구별 없음. aws:ResourceTag/<i class="w3-red">tag-key</i>처럼 키 일부를 사용자가 지정할 수 있는 경우에도 마찬가지로 대소문자 구별 없음에 유의
                     p 조건 키로 다음 2가지가 가능:
@@ -801,7 +868,7 @@ include ../../source/skeleton.pug
                         li 변수가 없는 경우 사용할 기본값 제공
                         +asCode() "Resource":"arn:aws:s3:::DOC-EXAMPLE-BUCKET-${aws:PrincipalTag/team, 'company-wide'}"
 
-                h4.fake: +asA('https://docs.aws.amazon.com/ko_kr/IAM/latest/UserGuide/access_policies_examples.html', '정책 예제')
+                h4: +asA('https://docs.aws.amazon.com/ko_kr/IAM/latest/UserGuide/access_policies_examples.html', '정책 예제')
                 ul
                     li MFA 설정 허용 정책
                     +asCode('json').
@@ -829,6 +896,30 @@ include ../../source/skeleton.pug
                                     "Effect": "Allow",
                                     "Action": "iam:ListVirtualMFADevices",
                                     "Resource": "*"
+                                }
+                            ]
+                        }
+
+                    li S3 SSL 요청 강제 정책
+                    +asCode('json').
+                        {
+                            "Id": "ExamplePolicy",
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Sid": "AllowSSLRequestsOnly",
+                                    "Action": "s3:*",
+                                    "Effect": "Deny",
+                                    "Resource": [
+                                        "arn:aws:s3:::DOC-EXAMPLE-BUCKET",
+                                        "arn:aws:s3:::DOC-EXAMPLE-BUCKET/*"
+                                    ],
+                                    "Condition": {
+                                        "Bool": {
+                                            "aws:SecureTransport": "false"
+                                        }
+                                    },
+                                    "Principal": "*"
                                 }
                             ]
                         }
@@ -994,8 +1085,6 @@ include ../../source/skeleton.pug
         p 저렴한 데이터 아카이빙 S3 스토리지
         li ELB; Elastic Load Balancing
         p EC2 인스턴스, 컨테이너, IP 주소, Lambda 함수 등으로의 부하 분산
-        li VPC; Virtual Private Cloud
-        p 사용자 정의 가상 네트워크
         li RDS; Relational Database Service
         p Amazon Aurora, PostgreSQL, MySQL, MariaDB, Oracle Database, SQL Server
         li Database Migration Service
@@ -1042,6 +1131,112 @@ include ../../source/skeleton.pug
             |연결된 EBS, EIP 삭제
 
     h1 VPC
+    div
+        h2 Client VPN
+        div
+            h3 개요
+            p VPC를 외부에 개방하지 않으면서 인증된 클라이언트와의 네트워킹을 허용하는 클라이언트 기반 VPN 서비스
+            ul
+                li Client VPN 엔드포인트
+                p Client VPN 관리자는 Client VPN 엔드포인트에 인증 정보, 클라이언트가 액세스할 수 있는 리소스를 정의
+                li VPN 클라이언트 애플리케이션
+                ul
+                    li Client VPN 엔드포인트에 연결하고 보안 VPN 연결을 설정하는 데 사용하는 애플리케이션
+                    li: +asA('https://docs.aws.amazon.com/ko_kr/vpn/latest/clientvpn-user/connect-aws-client-vpn-connect.html', 'AWS 제공 클라이언트')
+                    p 세션 수립 시 텍스트 광고 기능 제공
+                    li: +asA('https://docs.aws.amazon.com/ko_kr/vpn/latest/clientvpn-user/connect.html', 'OpenVPN 클라이언트')
+                    p SAML 기반 연동 인증의 경우 AWS에서 제공하는 클라이언트를 사용해야 함
+                li Client VPN 엔드포인트 구성 파일
+                p VPN 연결을 설정하는 데 필요한 인증 정보가 포함. VPN 클라이언트 애플리케이션에 이 파일을 로드
+                li Client VPN 네트워크 인터페이스
+                p VPC 서브넷이 Client VPN 엔드포이트와 연결될 떄 해당 서브넷에 생성되는 네트워크 인터페이스. 클라이언트에서 VPC로 보내지는 트래픽은 이 네트워크 인터페이스를 통해 소스 IP 주소가 네트워크 인터페이스의 주소로 교체된다(SNAT: Source network address translation)
+
+            h3 인증서 관리
+            ul
+                li OpenVPN easy-rsa 저장소 복제
+                +asCode('shell') $ git clone https://github.com/OpenVPN/easy-rsa.git
+                p Windows 환경에서는
+                    +asA('https://github.com/OpenVPN/easy-rsa/releases', '배포 페이지')
+                    |에서 Windows용 번들을 압축 해제하여 EasyRSA-Start.bat 실행
+
+                li 도움말 출력
+                +asCode('shell') $ ./easyrsa help [ command ]
+
+                li CA 인증서 생성
+                +asCode('shell').
+                    $ cd easy-rsa/easyrsa3
+                    $ ./easyrsa init-pki
+                    $ ./easyrsa build-ca nopass
+
+                li 서버 인증서 생성
+                +asCode('shell') $ ./easyrsa build-server-full vpn-server nopass
+
+                li Certificate Manager에 서버 인증서 등록
+                p 서버 인증서 공개키, 서버 인증서 비밀키, CA 인증서 공개키 각각 설정하여 등록
+
+                li 클라이언트 인증서 생성
+                +asCode('shell') $ ./easyrsa build-client-full test.domain.com
+
+                li Certificate Manager에 클라이언트 인증서 등록
+                ul
+                    li 클라이언트 인증서 공개키, 클라이언트 인증서 비밀키, CA 인증서 공개키 각각 설정하여 등록
+                    li 서버와 동일한 CA로 서명되었다면, 클라이언트 인증서는 등록하지 않아도 된다
+
+                li 클라이언트 제거
+                ol
+                    li revoke
+                    +asCode('shell').
+                        $ ./easyrsa revoke test.domain.com
+                        $ ./easyrsa gen-crl
+                    li Client VPN 엔드포인트 > 클라이언트 인증서 CRL 가져오기 실행
+
+            h3 클라이언트 인가
+            ul
+                li 보안 그룹을 이용해 인가된 트래픽만 허용
+                li Active Directory, SAML 등 통합된 외부 인증을 사용하는 경우엔 추가적인 규칙을 설정할 수 있다
+
+            h3 연결 핸들러
+            ul
+                li 람다를 이용하여 추가적인 검증을 수행할 수 있다
+                p 인증 정보 검증 --(성공시)--&gt; 람다 실행 --(성공시)--&gt; 인가 정책 평가
+                li 람다 예.
+                +asCode('JavaScript', 'AWSClientVPN-Auth').
+                    const https = require('https');
+
+                    exports.handler = async (event) => {
+                        let msg = `VPN Auth@${new Date().toISOString()}\n{\n`
+                        for (let attr in event)
+                            msg += `\t${attr}: ${JSON.stringify(event[attr])}\n`
+                        msg += '}'
+
+                        console.log(msg)
+
+                        return new Promise((resolve, reject) => {
+                            const req = https.request('https://hooks.slack.com/services/xxx/yyy/zzz', {
+                                method: 'POST'
+                            });
+                            req.on('error', () => resolve({
+                                "allow": false,
+                                "error-msg-on-denied-connection": "",
+                                "posture-compliance-statuses": [],
+                                "schema-version": "v2"
+                            }));
+                            req.setHeader('Content-Type', 'application/json');
+                            req.end(JSON.stringify({ text: msg }), () => resolve({
+                                "allow": true,
+                                "error-msg-on-denied-connection": "",
+                                "posture-compliance-statuses": [],
+                                "schema-version": "v2"
+                            }));
+                        });
+                    };
+
+            h3 분할 터널
+            ul
+                li 기본적으로 클라이언트의 모든 트래픽은 VPN 터널로 라우팅된다
+                li 분할 터널을 사용 설정하면 라우팅 테이블에 존재하는 목적지에 대한 트래픽만 VPN 터널로 라우팅된다
+
+            
     ol
         +w3img('/imgs/security-diagram.png')
         li AWS 계정 생성시 VPC, 서브넷, 라우팅 테이블, 인터넷 게이트웨이, 네트워크 ACL 등은 가용 리전 및 AZ에 대해 기본적으로 생성된다
