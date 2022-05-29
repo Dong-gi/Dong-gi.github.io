@@ -1017,7 +1017,7 @@ include ../../source/skeleton.pug
             h3 history
             p 명령 실행 내역
             +asCode('shell', '기록 지우기') $ history -c; &gt; $HISTFILE
-            
+
             h3 read
             p 표준입력으로부터 변수 할당; 변수명 지정하지 않은 경우 REPLY 예약 변수로 접근 가능
 
@@ -1159,6 +1159,19 @@ include ../../source/skeleton.pug
                 li 유저가 아닌 시스템 단위의 작업은 /etc/crontab 직접 수정
                 li crontab path 설정
                 +asCode() PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
+
+            h3 screen : 백그라운드에서 실행되는 가상 터미널
+            p ssh 연결이 끊어지더라도 세션에 다시 연결할 수 있다
+            ul
+                li screen 세션 시작
+                +asCode('shell') $ screen
+                li 세션이 끊어진 경우, 다시 로그인하고 사용 가능한 스크린 목록 확인
+                +asCode('shell') $ screen -ls
+                li 이전 명령에서 확인한 pid로 스크린에 연결
+                +asCode('shell') $ screen -r 17793
+                li screen 세션 종료
+                +asCode('shell') $ exit
+
 
         h2 파일 관련
         div

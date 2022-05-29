@@ -122,6 +122,7 @@ const posts = {
         { category: ['Topic', 'Topic/Book'], file: '/posts/book/017.html', title: '클라우드 시스템을 관리하는 기술' },
         { category: 'Topic/Book', file: '/posts/book/018.html', title: '쇠똥구리는 은하수를 따라 걷는다' },
         { category: 'Topic/Book', file: '/posts/book/019.html', title: '아름다움의 진화' },
+        { category: 'Topic/Book', file: '/posts/book/020.html', title: '거의 모든 것의 기원' },
         { category: 'Topic/ETC', file: '/posts/daily_life/baron.html', title: 'Baron 킥보드 매뉴얼' },
         { category: 'Topic/Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
         { category: 'Topic/Life', file: '/posts/daily_life/car.html', title: '차' },

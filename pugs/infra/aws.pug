@@ -423,31 +423,33 @@ include ../../source/skeleton.pug
                         +asA('https://hub.docker.com/_/amazonlinux/')
                     li 기본적으로 키 페어를 이용한 보안 SSH 액세스만 허용
                     li 각 이미지는 식별을 위해 고유한 /etc/image-id 파일을 보유
-                    li EPEL(Extra Packages for Enterprise Linux) 저장소 활성화
-                    +asCode('shell') $ sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-${version}.noarch.rpm
                     li 보안 업데이트 알림:
                         +asA('https://alas.aws.amazon.com/', 'Amazon Linux Security Center')
-
-                h5.fake cloud-init
-                ul
-                    li
-                        +asA('https://cloudinit.readthedocs.io/en/latest/', 'cloud-init')
-                        |패키지는 클라우드 컴퓨팅 환경에서 이미지 부트스트랩을 수행하는 데 사용된다. 인스턴스 시작 시 "사용자 데이터" 필드에 작성한 작업을 cloud-init에 전달하여 초기화를 수행할 수 있다
-                    li: +asA('https://cloudinit.readthedocs.io/en/latest/topics/format.html', '사용자 데이터 포맷')
-                    p e.g. 인스턴스 시작 시 CodeDeploy 실행
-                    +asCode('bash', '사용자 데이터').
-                        #!/bin/bash
-                        aws deploy create-deployment --application-name AppName --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name GroupName --s3-location bucket=BucketName,bundleType=zip,key=ObjectKey
+                    li 라이브 패치 제공: 재부팅, 가동 중단 없이 커널 패치 가능
+                    p x86_64 아키텍처 &amp;&amp; 커널 버전 4.14.165-131.185 이상에 한하여 지원.
+                        +asA('https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/al2-live-patching.html#working-with-live-patching', '커널 라이브 패치 적용 절차')
+                    li EPEL(Extra Packages for Enterprise Linux) 저장소 활성화
+                    +asCode('shell') $ sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-${version}.noarch.rpm
+                    li Amazon Linux 2부터 Extras Library 사용 가능
+                    p Java, PHP, R, Go, Nginx, PostgreSQL, tomcat, Docker 등 제공
+                    ul
+                        li topic 목록
+                        +asCode('shell') $ amazon-linux-extras list
+                        li topic 설치
+                        +asCode('shell') $ sudo amazon-linux-extras install topic
+                        li 지정 버전 topic 설치
+                        +asCode('shell') $ sudo amazon-linux-extras install topic=version
+                        li 설치한 topic 제거
+                        +asCode('shell') $ sudo yum remove $(yum list installed | grep amzn2extra-topic | awk '{ print $1 }')
 
                 h4 Amazon Linux 2022
                 ul
                     li AL2022부터 Amazon Linux의 새로운 메이저 버전은 2년마다 출시
                     li 각 메이저 버전은 총 5년 동안 지원됨 : 2년 표준 지원(분기별 마이너 업데이트) + 3년 유지 관리
                     li SELinux 기본 설정
-                    li 라이브 패치 : 재부팅, 가동 중단 없이 커널 패치 가능
 
                 h4.fake aws configure
-                p 인스턴스 내에서 aws cli 명령을 실행하려는 경우, 미리 자격 증명을 설정하는 것이 편리하다
+                p 인스턴스 내에서 aws cli 명령을 실행하려는 경우, AMI에 미리 자격 증명을 설정하는 것이 편리하다
 
                 h4.fake CodeDeploy agent 설치
                 +asCode('shell').
@@ -466,16 +468,184 @@ include ../../source/skeleton.pug
                     $ sudo curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo
                     $ sudo yum install -y java-17-amazon-corretto-devel
 
-    details
-        summary 정리 필요
-        h2 스팟 인스턴스
-        ul
-            li 미사용 중인 EC2 인스턴스 풀에서 인스턴스를 저렴하게 임대하여 사용할 수 있다
-            li 인스턴스 풀은 계속 변동되므로 스팟 요금 역시 계속 변동되고, 가장 높은 가격으로 주문한 사용자가 우선 낙찰된다
-            li 가격, 용량 등에 대한 제약사항을 설정하여 주문하는데, 수요 증가로 인하여 언제든지 종료될 수 있다
-            p 종료 2분전 발행되는 종료 공지를 이용해 인스턴스가 중단되기 전에 상태 저장, 로그 업로드 등의 작업을 할 수 있다
-            li 스팟 인스턴스 어드바이저 : 리전 - 인스턴스 유형별 중단 빈도 제공
-                +asA('https://aws.amazon.com/ko/ec2/spot/instance-advisor/')
+        h2 인스턴스 유형
+        div
+            h3 인스턴스 유형 이름 규칙
+            p 인스턴스 유형 이름 ::= 인스턴스 패밀리 || 세대 || 추가 기능(들)
+            table.no-sort
+                caption 추가 기능
+                +tds('a', 'AMD 프로세서')
+                +tds('g', 'AWS Graviton 프로세서')
+                +tds('i', '인텔 프로세서')
+                tr
+                    td d
+                    td: +goto('인스턴스 스토어')
+                +tds('n', '네트워크 최적화')
+                +tds('e', '추가 스토리지 또는 메모리')
+                +tds('z', '높은 클록')
+
+            h3 범용
+            ul
+                li 균형 잡힌 컴퓨팅, 메모리, 네트워킹 리소스 제공
+                li 인스턴스 패밀리 : M, T
+                li 일부 인스턴스 유형은 네트워킹 리소스를 항상 100% 활용할 수는 없음에 유의
+                p 기준 대역폭 초과 시 적립한 크레딧을 사용하여 한계 성능까지 잠시 확장 가능
+                li T 패밀리는 CPU 역시 제한
+                ul
+                    li 시간 당 적립 CPU 크레딧 = 기준 CPU 사용률(%) * vCPU 수 * 60분
+                    p 기준 CPU 사용률은 단일 vCPU 사용 기준이며, CloudWatch의 메트릭과 동일하다
+                    li 최대 누적 크레딧 = 시간 당 적립 CPU 크레딧 * 24시간
+                table
+                    +ths('인스턴스 유형', '시간 당 적립 크레딧', 'vCPU', 'vCPU당 기준 사용률')
+                    +tds('t4g.nano', '6', '2', '5%')
+                    +tds('t4g.medium', '24', '2', '20%')
+                    +tds('t4g.xlarge', '96', '4', '40%')
+
+            h3 컴퓨팅 최적화
+            ul
+                li 인스턴스 패밀리 : C
+                li 일부 인스턴스 유형은 네트워킹 리소스를 항상 100% 활용할 수는 없음에 유의
+                p 기준 대역폭 초과 시 적립한 크레딧을 사용하여 한계 성능까지 잠시 확장 가능
+
+            h3 메모리 최적화
+            ul
+                li 인스턴스 패밀리 : R, X, u-, z1d
+                li 일부 인스턴스 유형은 네트워킹 리소스를 항상 100% 활용할 수는 없음에 유의
+                p 기준 대역폭 초과 시 적립한 크레딧을 사용하여 한계 성능까지 잠시 확장 가능
+
+            h3 스토리지 최적화
+            ul
+                li 만 단위 스토리지 IOPS 제공
+                li 인스턴스 패밀리 : D, H, I
+                li 일부 인스턴스 유형은 네트워킹 리소스를 항상 100% 활용할 수는 없음에 유의
+                p 기준 대역폭 초과 시 적립한 크레딧을 사용하여 한계 성능까지 잠시 확장 가능
+
+            h3 가속 컴퓨팅
+            ul
+                li GPU 인스턴스 : G, P
+                p 그래픽 카드 드라이버가 설치된 AMI를 이용하거나, 직접 설치 필요
+                li AWS Inferentia : Inf1
+                p 기계 학습 가속
+                li FPGA : F
+                p 병렬로 처리 가능한 CPU 집약 작업 가속
+                li 일부 인스턴스 유형은 네트워킹 리소스를 항상 100% 활용할 수는 없음에 유의
+                p 기준 대역폭 초과 시 적립한 크레딧을 사용하여 한계 성능까지 잠시 확장 가능
+
+        h2 인스턴스 구입 옵션
+        div
+            h3 온디맨드 인스턴스
+            ul
+                li 인스턴스에 대한 약정 없이 사용한 초 단위로 비용 지불
+                li 인스턴스 시작~종료를 사용자가 결정
+            h3 예약 인스턴스
+            ul
+                li 특정 기간 동안 약정하여 온디맨드 인스턴스 비용 절감
+                li 약정한 기간 내에, 계약한 사양과 일치하는 온디맨드 인스턴스를 실제로 사용할 때에만 할인 효과를 볼 수 있다
+                p 할인은 1시간 당 3600초 실행 시간에 적용된다. 예를 들어, 1개 용량 예약으로 인스턴스 4개를 시간당 15분씩만 사용하는 것도 최대 할인 혜택을 받는다
+                li 통합 결제 기능으로 과금되는 경우, 예약 인스턴스 혜택이 공유된다
+            h3 스팟 인스턴스
+            ul
+                li 미사용 중인 EC2 인스턴스 풀에서 인스턴스를 저렴하게 임대하여 사용
+                li 인스턴스 풀은 계속 변동되므로 스팟 요금 역시 계속 변동되고, 가장 높은 가격으로 주문한 사용자가 우선 낙찰된다
+                li 가격, 용량 등에 대한 제약사항을 설정하여 주문하는데, 수요 증가로 인하여 언제든지 종료될 수 있다
+                ul
+                    li 중지/종료 2분전 발행되는 중단 이벤트("detail-type":"EC2 Spot Instance Interruption Warning")를 수신하여 인스턴스가 중단되기 전에 상태 저장, 로그 업로드 등의 작업을 할 수 있다
+                    p 인스턴스에 대한 중단 이벤트 발생을 보장하지는 않음에 유의
+                    li 또는 인스턴스 메타데이터의 instance-action 항목을 검색하여 중지/종료 설정이 존재하는 지 확인할 수 있다
+                    +asCode('java') EC2MetadataUtils.getInstanceAction();
+                    +asCode('shell') $ curl http://169.254.169.254/latest/meta-data/spot/instance-action
+                    li 스팟 인스턴스의 최대 절전 모드 전환 옵션을 켠 경우, 2분 유예 없이 즉시 절전 모드로 전환됨에 유의
+                    p 옵션을 켰다면, 인스턴스 시작 시 최대 절전 모드 에니전트를 실행해야 한다
+                    +asCode('bash', '사용자 데이터').
+                        #!/bin/bash
+                        /usr/bin/enable-ec2-spot-hibernation
+                li 스팟 인스턴스 어드바이저 : 리전 - 인스턴스 유형별 중단 빈도 제공
+                    +asA('https://aws.amazon.com/ko/ec2/spot/instance-advisor/')
+
+        h2 인스턴스 구성
+        div
+            h3 사용자 관리
+            p 인스턴스를 여러 사용자가 공유하고, 사용자 별로 별도 작업공간을 가져야 하는 경우, 기본 사용자(ec2-user, ...)를 공유하는 것보다 신규 사용자를 생성하는 것이 보안상 안전하다
+            ul
+                li 새 사용자가 이용할 ssh 키 생성
+                +asCode('shell') $ ssh-keygen -y -f /path_to_key_pair/key-pair-name.pem
+                li 인스턴스에서 새 사용자 추가
+                +asCode('shell', 'Amazon Linux 2') $ sudo useradd newuser
+                li 사용자 전환
+                +asCode('shell') $ sudo su - newuser
+                li ssh 공개키 추가
+                +asCode('shell').
+                    [newuser ~]$ mkdir .ssh
+                    [newuser ~]$ chmod 700 .ssh
+                    [newuser ~]$ touch .ssh/authorized_keys
+                    [newuser ~]$ chmod 600 .ssh/authorized_keys
+
+            h3 시작 시 명령 실행
+            div
+                h4.fake 사용자 데이터 및 shell 스크립트
+                p e.g. 인스턴스 시작 시 CodeDeploy 실행
+                +asCode('bash', '사용자 데이터').
+                    #!/bin/bash
+                    aws deploy create-deployment --application-name AppName --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name GroupName --s3-location bucket=BucketName,bundleType=zip,key=ObjectKey
+                ul
+                    li 사용자 데이터는 root 사용자 권한으로 실행된다
+                    li 콘솔 출력은 /var/log/cloud-init-output.log에 기록된다
+
+                h4.fake 사용자 데이터 및 cloud-init
+                ul
+                    li
+                        +asA('https://cloudinit.readthedocs.io/en/latest/', 'cloud-init')
+                        |패키지는 클라우드 컴퓨팅 환경에서 이미지 부트스트랩을 수행하는 데 사용된다. 인스턴스 시작 시 "사용자 데이터" 필드에 작성한 작업을 cloud-init에 전달하여 초기화를 수행할 수 있다
+                    li: +asA('https://cloudinit.readthedocs.io/en/latest/topics/format.html', '사용자 데이터 포맷')
+                    li: +asA('https://cloudinit.readthedocs.io/en/latest/topics/examples.html', '예제')
+                    li 콘솔 캡처
+                    +asCode('yaml', '#cloud-config') output : { all : '| tee -a /var/log/cloud-init-output.log' }
+
+            h3 인스턴스 메타데이터 서비스
+            div
+                h4.fake IMDSv2 사용
+                p IMDSv1은 일회성 요청/응답을 교환하는데, IMDSv2는 이에 토큰 헤더를 추가하여 SSRF 공격을 상당 부분 방지한다. 현재 IMDSv2 사용은 선택사항.
+                ul
+                    li 토큰 생성
+                    +asCode('shell') $ TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`
+                    li 메타데이터 검색
+                    +asCode('shell') $ curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/
+                    li 동적 데이터 검색
+                    +asCode('shell') $ curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/dynamic/
+                    li: +asA('https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/instancedata-data-categories.html', '데이터 카테고리')
+
+                h4.fake 사용 제한
+                ul
+                    li 인스턴스당 메타데이터 질의는 스로틀링되고, 동시 연결 수에도 제한이 존재한다
+                    p 매 요청마다 토큰을 새로 할당 받는 것은 좋지 않다
+                    li 쿼리에 실패한 경우, 지수 백오프 전략으로 재시도해야 한다
+
+        h2 네트워킹
+        div
+            h3 리전 및 영역
+            div
+                h4.fake 리전
+                ul
+                    li 개별 지리 영역 : us-east-1(버지니아 북부), us-east-2(오하이오), ...
+
+                h4.fake 가용 영역
+                ul
+                    li 리전 내의 격리된 위치 : us-east-1a, us-east-1b, ...
+
+                h4.fake Local Zones
+                ul
+                    li 최종 사용자에 가까운 여러 위치에 리소스를 배치 가능 : us-east-1-nyc-1a(뉴욕), us-east-1-mia-1a(마이애미), ...
+
+                h4.fake Wavelength Zone
+                ul
+                    li 통신 사업자의 5G 네트워크 엣지에 배포 : us-east-1-wl1-nyc-wlz-1(뉴욕), ...
+
+                h4.fake AWS Outposts
+                ul
+                    li AWS에서 설계한 하드웨어로 제작된 구성 가능한 완전관리형 컴퓨팅 및 스토리지 랙을 임의 데이터 센터, 코로케이션, 온프레미스 시설에서 사용
+
+        +pos('인스턴스 스토어')
+        p 인스턴스 스토어 볼륨을 사용하더라도, 루트 디바이스 볼륨은 Amazon EBS 볼륨이어야 한다
 
     h1 IAM; Identity and Access Management
     div
@@ -1236,7 +1406,7 @@ include ../../source/skeleton.pug
                 li 기본적으로 클라이언트의 모든 트래픽은 VPN 터널로 라우팅된다
                 li 분할 터널을 사용 설정하면 라우팅 테이블에 존재하는 목적지에 대한 트래픽만 VPN 터널로 라우팅된다
 
-            
+
     ol
         +w3img('/imgs/security-diagram.png')
         li AWS 계정 생성시 VPC, 서브넷, 라우팅 테이블, 인터넷 게이트웨이, 네트워크 ACL 등은 가용 리전 및 AZ에 대해 기본적으로 생성된다
