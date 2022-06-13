@@ -34,7 +34,7 @@ mixin hoverTemplate()
 mixin pos(name)
     span(id=`pos${name.hashCode()}`, style='padding:0!important;margin:0!important;width:0!important;height:0!important;overflow:hidden!important')
 
-mixin post(title, keywords, description, useMJX, noAds)
+mixin post(title, keywords, description, useMath)
     html(lang='ko')
         head
             script#google-analytics(src='https://www.googletagmanager.com/gtag/js?id=UA-143098403-1', async)
@@ -58,15 +58,9 @@ mixin post(title, keywords, description, useMJX, noAds)
             link#default-style(rel="stylesheet", href="/source/default.css")
             script#highlight-js(src="/source/highlight.pack.js")
             script#default-js(src='/source/default.min.js')
-            if useMJX
+            if useMath
                 script#MathJax-script(src='/source/tex-chtml.js',async)
-                script.
-                    MathJax = {
-                        tex: {
-                            tags: 'ams',
-                            inlineMath: [['식[', ']식']]
-                        }
-                    };
+                script MathJax={tex:{tags:'ams',inlineMath:[['식[', ']식']]}};
         body
             .w3-bar-block.w3-sidebar.w3-animate-left#sidebar
                 hr

@@ -123,6 +123,8 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/018.html', title: '쇠똥구리는 은하수를 따라 걷는다' },
         { category: 'Topic/Book', file: '/posts/book/019.html', title: '아름다움의 진화' },
         { category: 'Topic/Book', file: '/posts/book/020.html', title: '거의 모든 것의 기원' },
+        { category: 'Topic/Book', file: '/posts/book/021.html', title: '배드 사이언스' },
+        { category: 'Topic/Book', file: '/posts/book/022.html', title: '나를 나답게 만드는 것들' },
         { category: 'Topic/ETC', file: '/posts/daily_life/baron.html', title: 'Baron 킥보드 매뉴얼' },
         { category: 'Topic/Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
         { category: 'Topic/Life', file: '/posts/daily_life/car.html', title: '차' },

@@ -943,17 +943,27 @@ include ../../source/skeleton.pug
                 p 정의역 원소로부터 공역 원소로 이어지는 화살표를 이용하여 이항 관계를 도식화할 수 있다
                 +w3img('/imgs/2022-05-20 170744.png', '이항 관계 도식 예')
 
-                +pos('Definition 4.4.2.')
-                p <b>Definition 4.4.2.</b> A binary relation, R, is:
+                +pos('정의 4.4.2.')
+                p <b>정의 4.4.2.</b> 이항관계 R은
                 ul
-                    li function when it has the [식[\le]식1 arrow out] property
-                    li surjective when it has the [식[\ge]식1 arrows in] property
-                    li total when it has the [식[\ge]식1 arrows out] property
-                    li injective when it has the [식[\le]식1 arrows in] property
-                    li bijective when it has both the [=1 arrows in] and the [=1 arrows out] property
+                    li [≤1 arrow out] 속성을 가진 경우 function
+                    li [≥1 arrows in] 속성을 가진 경우 surjective
+                    li [≥1 arrows out] 속성을 가진 경우 total
+                    li [≤1 arrows in] 속성을 가진 경우 injective
+                    li [=1 arrows in], [=1 arrows out] 속성을 모두 가진 경우 bijective
+
+                +pos('4.4.2')
                 h4.fake Relational Images
-                +pos('Definition 4.4.5.')
-                p <b>Definition 4.4.5.</b> The inverse, 식[R^{-1}]식 of a relation 식[R:A\rightarrow B]식 is the relation from B to A defined by the rule: 식[b R^{-1} a \quad\text{IFF}\quad a R b]식
+                p 함수의 상 개념은 이항 관계로 바로 확장할 수 있다
+                +pos('정의 4.4.4')
+                p <b>정의 4.4.4.</b>
+                ul
+                    li 이항 관계 R에 대하여, 정의역 A의 부분집합 Y에 대한 이항 관계의 상은 R(Y)로 표기하며, Y에 대하여 이항 관계가 산출하는 공역 원소들의 집합을 의미한다
+                    li 이항 관계의 치역, range(R)은 R(A)와 같다
+
+                +pos('정의 4.4.5.')
+                p <b>정의 4.4.5.</b> 이항 관계 식[R : A \rightarrow B]식의 역, 식[R^{-1}: B \rightarrow A]식는 다음을 만족하는 이항 관계다. \[b\ R^{-1}\ a \quad\text{IFF}\quad a\ R\ b\]
+
                 +pos('Definition 4.4.6.')
                 p <b>Definition 4.4.6.</b> The image of a set under the relation,  식[R^{-1}]식, is called the inverse image of the set.
             h3 Finite Cardinality
