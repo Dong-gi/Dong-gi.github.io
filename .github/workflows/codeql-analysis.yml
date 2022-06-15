@@ -29,6 +29,10 @@ jobs:
       uses: github/codeql-action/init@v2
       with:
         languages: java, javascript, csharp, python
+        
+    - name: Build /Repositories/STS/app1
+      run: bash ./gradlew bootJar
+      working-directory: Repositories/STS/app1
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
