@@ -28,11 +28,12 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
-        languages: java, javascript, csharp, python
+        languages: javascript, python
+#        languages: java, javascript, csharp, python
         
-    - name: Build /Repositories/STS/app2
-      run: bash ./gradlew build -x test
-      working-directory: Repositories/STS/app2
+#    - name: Build /Repositories/STS/app2
+#      run: bash ./gradlew build -x test
+#      working-directory: Repositories/STS/app2
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
