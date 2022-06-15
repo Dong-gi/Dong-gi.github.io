@@ -30,9 +30,9 @@ jobs:
       with:
         languages: java, javascript, csharp, python
         
-    - name: Build /Repositories/STS/app1
-      run: bash ./gradlew bootJar
-      working-directory: Repositories/STS/app1
+    - name: Build /Repositories/STS/app2
+      run: bash ./gradlew build -x test
+      working-directory: Repositories/STS/app2
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
