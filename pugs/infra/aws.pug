@@ -724,7 +724,41 @@ include ../../source/skeleton.pug
             h4.fake EBS
             ul
                 li 데이터베이스, IO 집약적 애플리케이션 모두에 적합한 블록 수준 저장소
-                li 범용 gp3
+                li 범용 SSD(gp3)
+                ul
+                    li gp2보다 뛰어난 기본 성능(3,000IOPS, 125MB/s) 제공
+                    li 최대 16,000IOPS 및 1,000MB/s 프로비저닝 가능
+                li 범용 SSD(gp2)
+                ul
+                    li 볼륨 크기에 따른 기본 성능 제공 : 1GB당 3IOPS
+                    p 최소 100IOPS(33.33GB 이하) ~ 최대 16,000IOPS(5,334GB 이상)
+                    li 기준 성능이 3,000IOPS 미만인 볼륨은 크레딧 적립을 이용한 최대 3,000IOPS까지 성능 버스트 제공
+                li 프로비저닝된 SSD(io1, io2)
+                ul
+                    li 범용 SSD보다 낮은 장애율
+                    li 범용 SSD보다 높은 IOPS 프로비저닝 한도 제공 : Nitro 시스템의 경우 64,000IOPS, 그 외 32,000IOPS
+                    li EBS 다중 연결 지원
+                    li io2 Block Express 볼륨은 밀리초 미만 지연 시간, 더 높은 처리량, 더 큰 용량
+                li 처리량 최적화 HDD(st1)
+                ul
+                    li SSD보다 저렴한 단위 용량당 비용
+                    li 1TB 기준 처리량 : 40MB/s
+                    li 랜덤 IO의 경우, 1MB 미만이라도 1MB 크레딧으로 간주된다
+                li 콜드 HDD(sc1)
+                ul
+                    li 가장 저렴한 단위 용량당 비용
+                    li 1TB 기준 처리량 : 12MB/s
+                    li 랜덤 IO의 경우, 1MB 미만이라도 1MB 크레딧으로 간주된다
+            div
+                h5.fake EBS 다중 연결
+                ul
+                    li 동일한 가용 영역에 있는 최대 16개의 Nitro 시스템 기반 리눅스 인스턴스에 공유 볼륨 연결 가능
+                    li XFS, EXT4와 같은 파일 시스템은 동시에 액세스하도록 설계되지 않았음에 주의
+
+                h5.fake 새 볼륨 포맷 및 탑재
+                p 루트 디바이스 볼륨이 있는 EC2 인스턴스에 빈 EBS 볼륨을 /dev/sdf에 연결했다고 가정할 때,
+                ul
+                    li 
 
             +pos('인스턴스 스토어')
             h4.fake 인스턴스 스토어
