@@ -2,8 +2,8 @@
 name: "CodeQL"
 
 on:
-  #push:
-  #  branches: [master]
+  push:
+    branches: [master]
   workflow_dispatch:
     inputs:
       check_out_hash:
@@ -27,9 +27,8 @@ jobs:
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
-
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v2
+      with:
+        languages: java, javascript, csharp, python
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
