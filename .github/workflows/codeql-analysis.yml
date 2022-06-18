@@ -28,12 +28,19 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
-        languages: javascript, python
-#        languages: java, javascript, csharp, python
+        languages: java, javascript, csharp, python
         
     - name: Build /Repositories/Android/CCTV
       run: bash ./gradlew assembleDebug -x test
       working-directory: Repositories/Android/CCTV
+
+    - name: Build /Repositories/STS/Reminder
+      run: bash ./gradlew bootJar -x test
+      working-directory: Repositories/STS/Reminder
+
+    - name: Build /Repositories/Android/VisualStudio
+      run: dotnet build VisualStudio.sln
+      working-directory: Repositories/Android/VisualStudio
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
