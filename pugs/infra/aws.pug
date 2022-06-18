@@ -6,6 +6,28 @@ include ../../source/skeleton.pug
         li: +asA('https://explore.skillbuilder.aws/learn', 'AWS 공식 - Learning Center')
         li: +asA('https://aws.amazon.com/ko/architecture/security-identity-compliance/', 'AWS 공식 - 보안 Best Practice')
 
+
+    h1 App Runner
+    div
+        h2 개요
+        p 코드 저장소 또는 컨테이너 이미지로부터 웹 앱을 구동한다
+        ul
+            li Auto scailing 자동 수행
+            p 인스턴스 당 동시 처리 가능 요청 수 기준 &lt;- 직접 설정해야 함
+            li 로드 밸런싱 자동 수행
+            li 자동 갱신되는 TLS 인증서 기본 제공
+            li 앱 장기 미사용 시 일시 정지 가능 -&gt; 개발 용도로도 적합
+            li 실행 환경변수 설정 가능
+
+        h2 App Runner 배포를 위한 개발
+        ul
+            li 웹 앱은 HTTP1.1 요청을 처리해야 한다
+            p 현재 timeout은 30초
+            li 웹 앱은 상태 비저장이어야 한다 - 웹 요청 측면 및 파일 시스템 측면 모두
+            li PORT 환경 변수가 기본 제공된다
+            li App Runner 서비스에 IAM 역할 부착 가능
+
+
     h1 Auto Scaling
     div
         h2 크기 조정 계획
@@ -743,40 +765,47 @@ include ../../source/skeleton.pug
                 ul
                     li SSD보다 저렴한 단위 용량당 비용
                     li 1TB 기준 처리량 : 40MB/s
-                    li 랜덤 IO의 경우, 1MB 미만이라도 1MB 크레딧으로 간주된다
                 li 콜드 HDD(sc1)
                 ul
                     li 가장 저렴한 단위 용량당 비용
                     li 1TB 기준 처리량 : 12MB/s
-                    li 랜덤 IO의 경우, 1MB 미만이라도 1MB 크레딧으로 간주된다
             div
                 h5.fake EBS 다중 연결
                 ul
                     li 동일한 가용 영역에 있는 최대 16개의 Nitro 시스템 기반 리눅스 인스턴스에 공유 볼륨 연결 가능
                     li XFS, EXT4와 같은 파일 시스템은 동시에 액세스하도록 설계되지 않았음에 주의
 
-                h5.fake 새 볼륨 포맷 및 탑재
-                p 루트 디바이스 볼륨이 있는 EC2 인스턴스에 빈 EBS 볼륨을 /dev/sdf에 연결했다고 가정할 때,
+                h5.fake Amazon Data Lifecycle Manager
                 ul
-                    li 
+                    li EBS 스냅샷 및 AMI 생성 ~ 삭제 자동화 가능
+                    li 정책 실행 주기에 따라 이벤트가 발생하므로 CloudWatch로 모니터링 가능
+
+                h5.fake 탄력적 볼륨
+                p 사용 중인 볼륨의 크기를 늘리거나 유형을 변경할 수 있다. 인스턴스를 재시작할 필요는 없지만, 크기를 변경한 경우 파일 시스템을 확장해야 한다
+
+                h5.fake I/O 특성
+                ul
+                    li 단일 I/O의 최대 크기는 SSD의 경우 256KB, HDD의 경우 1MB
+                    li 물리적으로 연속되는 I/O 작업은 단일 I/O 작업으로 병합된다
+                    li 임의 I/O 작업은 크기가 작더라도 단일 I/O 작업으로 실행된다
+                    li IOPS 제한 외에 볼륨 처리량 제한도 존재함에 유의
+                    p I/O 단위가 크다면 IOPS 제한량보다 낮은 수준에서 처리량 제한에 도달할 수 있다. 반대로 볼륨 처리량 제한을 너무 높게 잡으면, 도달할 수도 없는 성능을 위해 추가 비용을 지불하는 셈이 된다
+                    li 적정 I/O 처리 대기열은 SSD의 경우 1000IOPS 당 1 이하
 
             +pos('인스턴스 스토어')
             h4.fake 인스턴스 스토어
-            p 인스턴스 스토어 볼륨을 사용하더라도, 루트 디바이스 볼륨은 Amazon EBS 볼륨이어야 한다
-
-            h4.fake 파일 스토리지
             ul
-                li S3
-                li EFS
-                li FSx
+                li 인스턴스 스토어는 EC2 인스턴스와 물리적으로 연결된 디스크에 위치하는 임시 스토리지
+                p 버퍼, 캐시 등과 같이 자주 변경되는 임시 파일에 적합
+                li 인스턴스 스토어 볼륨을 사용하더라도, 루트 디바이스 볼륨은 Amazon EBS 볼륨이어야 한다
+                p 일부 이전 세대 인스턴스 유형 제외
+                li 인스턴스 중지 시 인스턴스 스토어 볼륨은 초기화된다
+                li 인스턴스로부터 AMI 생성 시 인스턴스 스토어 데이터는 보존되지 않는다
 
-            h4.fake 인스턴스 볼륨 제한
+    h1 EKS
+    div
+        h2 
 
-            h4.fake 루트 디바이스 볼륨
-
-            h4.fake 디바이스 이름
-
-            h4.fake 블록 디바이스 매핑
 
 
     h1 IAM; Identity and Access Management
@@ -1352,6 +1381,8 @@ include ../../source/skeleton.pug
             +goto('CloudTrail을 사용하여 이벤트 로깅')
         li CloudWatch
         p AWS 리소스 및 애플리케이션 모니터링
+        li ECR
+        p AWS 관리형 컨테이너 이미지 레지스트리
         li GuardDuty
         p 계정 내의 비정상적인 활동을 식별하고, 활동의 보안 관련성을 분석하며, 호출된 컨텍스트를 제공
         li Health

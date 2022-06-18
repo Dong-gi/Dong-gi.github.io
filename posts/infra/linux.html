@@ -414,4 +414,57 @@ pasv_max_port=50010</div><li>방화벽에서 [pasv_min_port,pasv_max_port]/tcp �
 $ sealert -a /var/log/audit/audit.log
 </div></ol><h1>/etc/hosts</h1><p><strong>address hostname[[ alias1]...]</strong></p><p><strong>↓text</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">127.0.0.1   localhost localhost4
 ::1         localhost localhost6
-</div><h1>vi</h1><div><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://vim.rtorr.com/lang/ko/">Vim Cheat Sheet »</a><h2>모드</h2><ol><li>처음 vi를 실행하면 normal mode(command mode)</li><p>insert mode와 visual mode에서 esc를 누르면 normal mode로 회귀</p><li>i를 누르면 insert mode</li><li>v를 누르면 visual mode</li><li>:를 누르고 명령어 실행</li><ul><li>:set nu # 줄 번호 표시</li><li>:syn on, :syn enable # 키워드 및 문맥 강조</li></ul></ol><h2>저장</h2><ol><li>:w</li><li>:w! 덮어쓰기</li><li>:w 파일명 // 새 파일인 경우</li><li>:saveas 파일명</li></ol><h2>종료</h2><ol><li>:q</li><li>:wq : 저장 후 종료</li><li>:q! : 저장하지 않고 종료</li></ol><h2>vim</h2><ol><li>열기</li><ul><li>:edit 파일명</li><li>:tabnew 파일명</li><li>$ vim 파일명1 파일명2 ...</li><p>:n으로 열린 파일 선택. 파일을 탭으로 열고 싶다면 -p 옵션</p></ul><li>복사/붙여넣기</li><ul><li>복사 : Ctrl + Insert</li><li>붙여넣기 : Shift + Insert</li><p>~/.vimrc 에서<br>set mouse=a 로 되어있던게 문제였습니다. set mouse=c 로 변경하니까 vim 에서 텍스트의 복사하기 붙여넣기 잘 되는군요<br>a 는 마우스를 사용하겠다는 것이고 c 는 마우스를 사용치 않겠다는 것 같은데, c 로 해놔도 마우스로 커서 옮기고 스크롤하는 것 등은 잘 되더군요.. 출처 : https://kldp.org/node/129456</p></ul></ol><h2>지우기</h2><ol><li>n dd : 커서로부터 n 줄 삭제</li><li>n dw : 커서로부터 n 단어 삭제</li><li>gg -> dG : 첫줄로 이동 -> 끝까지 삭제</li></ol></div></div></article><hr></body></html>
+</div><h1>vi</h1><div><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://vim.rtorr.com/lang/ko/">Vim Cheat Sheet »</a><h2>모드</h2><ol><li>처음 vi를 실행하면 normal mode(command mode)</li><p>insert mode와 visual mode에서 esc를 누르면 normal mode로 회귀</p><li>i를 누르면 insert mode</li><li>v를 누르면 visual mode</li><li>:를 누르고 명령어 실행</li><ul><li>:set nu # 줄 번호 표시</li><li>:syn on, :syn enable # 키워드 및 문맥 강조</li></ul></ol><h2>저장</h2><ol><li>:w</li><li>:w! 덮어쓰기</li><li>:w 파일명 // 새 파일인 경우</li><li>:saveas 파일명</li></ol><h2>종료</h2><ol><li>:q</li><li>:wq : 저장 후 종료</li><li>:q! : 저장하지 않고 종료</li></ol><h2>vim</h2><ol><li>열기</li><ul><li>:edit 파일명</li><li>:tabnew 파일명</li><li>$ vim 파일명1 파일명2 ...</li><p>:n으로 열린 파일 선택. 파일을 탭으로 열고 싶다면 -p 옵션</p></ul><li>복사/붙여넣기</li><ul><li>복사 : Ctrl + Insert</li><li>붙여넣기 : Shift + Insert</li><p>~/.vimrc 에서<br>set mouse=a 로 되어있던게 문제였습니다. set mouse=c 로 변경하니까 vim 에서 텍스트의 복사하기 붙여넣기 잘 되는군요<br>a 는 마우스를 사용하겠다는 것이고 c 는 마우스를 사용치 않겠다는 것 같은데, c 로 해놔도 마우스로 커서 옮기고 스크롤하는 것 등은 잘 되더군요.. 출처 : https://kldp.org/node/129456</p></ul></ol><h2>지우기</h2><ol><li>n dd : 커서로부터 n 줄 삭제</li><li>n dw : 커서로부터 n 단어 삭제</li><li>gg -> dG : 첫줄로 이동 -> 끝까지 삭제</li></ol></div><h1>사용 사례</h1><div><h2>파티션 확장</h2><ul><li>lsblk 명령으로 디스크가 놀고 있는 것을 확인했고, 파티션이 LVM에 사용되고 있지 않다면 growpart 명령으로 파티션을 확장할 수 있다</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">[ec2-user ~]$ sudo growpart /dev/nvme0n1 1
+# growpart DEVICE_NAME PARTITION_NO</div><li>확장된 파티션에 맞춰 파일 시스템도 확장해야 한다<a class="w3-btn w3-round-xxlarge w3-small w3-green goto" href="#pos-333606740" target="_self">파일 시스템 확장</a></li></ul><h2>Oracle Linux에서 LVM 파티션 확장</h2><p>200GB 블록 볼륨의 150GB가 놀고 있는 상황에서 LVM 파티션을 확장하는 절차</p><ol><li>상태 확인</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">[opc@xxx]$ sudo fdisk -l
+Disk /dev/sda: 200 GiB, 214748364800 bytes, 419430400 sectors
+
+Device        Start       End   Sectors   Size Type
+/dev/sda1      2048    206847    204800   100M EFI System
+/dev/sda2    206848   2303999   2097152     1G Linux filesystem
+/dev/sda3   2304000  97675263  95371264  45.5G Linux LVM
+</div><li>파티션 추가</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">[opc@xxx]$ sudo fdisk /dev/sda
+Command (m for help): n
+# 기본값을 계속 선택하면, 비어있는 모든 섹터를 차지하는 파티션을 정의한다
+Command (m for help): w
+</div><li>논리적 볼륨 그룹 확인</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">[opc@xxx]$ sudo vgdisplay
+  --- Volume group ---
+  VG Name               ocivolume
+</div><li>논리적 볼륨 그룹에 파티션 추가 할당</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">[opc@xxx]$ sudo vgextend ocivolume /dev/sda4
+  Physical volume "/dev/sda4" successfully created.
+  Volume group "ocivolume" successfully extended
+</div><li>논리적 볼륨 확인</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">[opc@xxx]$ df -hT
+Filesystem                 Type      Size  Used Avail Use% Mounted on
+/dev/mapper/ocivolume-root xfs        36G   15G   21G  42% /
+/dev/mapper/ocivolume-oled xfs        10G  189M  9.9G   2% /var/oled
+</div><li>논리적 볼륨 확장</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">[opc@xxx]$ sudo lvextend /dev/mapper/ocivolume-root -l +100%FREE
+Size of logical volume ocivolume/root changed from 35.47 GiB (9081 extents) to 188.89 GiB (48357 extents).
+Logical volume ocivolume/root successfully resized.
+</div><span id="pos-333606740" style="padding:0!important;margin:0!important;width:0!important;height:0!important;overflow:hidden!important"></span><li>파일 시스템 확장</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">[opc@xxx]$ sudo xfs_growfs /dev/mapper/ocivolume-root
+data blocks changed from 9298944 to 49517568
+# ext 파일시스템에서는 sudo resize2fs /dev/mapper/ocivolume-root
+</div><li>적용 확인</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">[opc@xxx]$ df -hT
+Filesystem                 Type      Size  Used Avail Use% Mounted on
+/dev/mapper/ocivolume-root xfs       189G   16G  174G   9% /
+/dev/mapper/ocivolume-oled xfs        10G  189M  9.9G   2% /var/oled
+
+[opc@xxx]$ lsblk
+NAME               MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sda                  8:0    0   200G  0 disk
+|-sda1               8:1    0   100M  0 part /boot/efi
+|-sda2               8:2    0     1G  0 part /boot
+|-sda3               8:3    0  45.5G  0 part
+| |-ocivolume-root 252:0    0 188.9G  0 lvm  /
+| `-ocivolume-oled 252:1    0    10G  0 lvm  /var/oled
+`-sda4               8:4    0 153.4G  0 part
+  `-ocivolume-root 252:0    0 188.9G  0 lvm  /
+</div></ol><h2>Amazon EBS 볼륨을 Linux에서 사용</h2><p>루트 디바이스용 EBS 볼륨이 있는 EC2 인스턴스에 새로운 EBS 볼륨을 연결한 경우,</p><ol><li>상태 확인</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">[ec2-user ~]$ lsblk
+NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+xvda    202:0    0    8G  0 disk
+-xvda1  202:1    0    8G  0 part /
+xvdf    202:80   0   10G  0 disk</div><p>/dev/xvdf 디스크에는 파티션이 존재하지 않음을 알 수 있다</p><li>파일 시스템이 있는지 확인</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">[ec2-user ~]$ sudo file -s /dev/xvdf
+/dev/xvdf: data</div><p>data만 표시된다면, 파일 시스템이 없다는 의미</p><li>파일 시스템(XFS) 생성</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">[ec2-user ~]$ sudo yum install xfsprogs     # XFS 도구가 없다면 설치
+[ec2-user ~]$ sudo mkfs -t xfs /dev/xvdf
+</div><li>볼륨 탑재</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">[ec2-user ~]$ sudo mount /dev/xvdf /data</div><p>/data는 적당한 탑재 지점(디렉터리)</p><li>재부팅 시 볼륨 자동 탑재</li><ol><li>디스크 UUID 확인</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">[ec2-user ~]$ sudo blkid
+# 또는
+[ec2-user ~]$ sudo lsblk -o +UUID</div><li>/etc/fstab 추가</li><p><strong>↓/etc/fstab</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">UUID=aebf131c-6957-451e-8d34-ec978d9581ae  /data  xfs  defaults,nofail  0  2</div><li>/etc/fstab 파일이 정상적으로 설정됐는지 확인</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">[ec2-user ~]$ sudo umount /data
+[ec2-user ~]$ sudo mount -a</div></ol></ol></div></div></article><hr></body></html>

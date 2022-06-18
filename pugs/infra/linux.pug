@@ -1662,3 +1662,125 @@ include ../../source/skeleton.pug
             li n dd : 커서로부터 n 줄 삭제
             li n dw : 커서로부터 n 단어 삭제
             li gg -> dG : 첫줄로 이동 -> 끝까지 삭제
+
+    h1 사용 사례
+    div
+        h2 파티션 확장
+        ul
+            li lsblk 명령으로 디스크가 놀고 있는 것을 확인했고, 파티션이 LVM에 사용되고 있지 않다면 growpart 명령으로 파티션을 확장할 수 있다
+            +asCode('shell').
+                [ec2-user ~]$ sudo growpart /dev/nvme0n1 1
+                # growpart DEVICE_NAME PARTITION_NO
+            li 확장된 파티션에 맞춰 파일 시스템도 확장해야 한다
+                +goto('파일 시스템 확장')
+
+        h2 Oracle Linux에서 LVM 파티션 확장
+        p 200GB 블록 볼륨의 150GB가 놀고 있는 상황에서 LVM 파티션을 확장하는 절차
+        ol
+            li 상태 확인
+            +asCode('shell').
+                [opc@xxx]$ sudo fdisk -l
+                Disk /dev/sda: 200 GiB, 214748364800 bytes, 419430400 sectors
+
+                Device        Start       End   Sectors   Size Type
+                /dev/sda1      2048    206847    204800   100M EFI System
+                /dev/sda2    206848   2303999   2097152     1G Linux filesystem
+                /dev/sda3   2304000  97675263  95371264  45.5G Linux LVM
+
+            li 파티션 추가
+            +asCode('shell').
+                [opc@xxx]$ sudo fdisk /dev/sda
+                Command (m for help): n
+                # 기본값을 계속 선택하면, 비어있는 모든 섹터를 차지하는 파티션을 정의한다
+                Command (m for help): w
+
+            li 논리적 볼륨 그룹 확인
+            +asCode('shell').
+                [opc@xxx]$ sudo vgdisplay
+                  --- Volume group ---
+                  VG Name               ocivolume
+
+            li 논리적 볼륨 그룹에 파티션 추가 할당
+            +asCode('shell').
+                [opc@xxx]$ sudo vgextend ocivolume /dev/sda4
+                  Physical volume "/dev/sda4" successfully created.
+                  Volume group "ocivolume" successfully extended
+
+            li 논리적 볼륨 확인
+            +asCode('shell').
+                [opc@xxx]$ df -hT
+                Filesystem                 Type      Size  Used Avail Use% Mounted on
+                /dev/mapper/ocivolume-root xfs        36G   15G   21G  42% /
+                /dev/mapper/ocivolume-oled xfs        10G  189M  9.9G   2% /var/oled
+
+            li 논리적 볼륨 확장
+            +asCode('shell').
+                [opc@xxx]$ sudo lvextend /dev/mapper/ocivolume-root -l +100%FREE
+                Size of logical volume ocivolume/root changed from 35.47 GiB (9081 extents) to 188.89 GiB (48357 extents).
+                Logical volume ocivolume/root successfully resized.
+
+            +pos('파일 시스템 확장')
+            li 파일 시스템 확장
+            +asCode('shell').
+                [opc@xxx]$ sudo xfs_growfs /dev/mapper/ocivolume-root
+                data blocks changed from 9298944 to 49517568
+                # ext 파일시스템에서는 sudo resize2fs /dev/mapper/ocivolume-root
+
+            li 적용 확인
+            +asCode('shell').
+                [opc@xxx]$ df -hT
+                Filesystem                 Type      Size  Used Avail Use% Mounted on
+                /dev/mapper/ocivolume-root xfs       189G   16G  174G   9% /
+                /dev/mapper/ocivolume-oled xfs        10G  189M  9.9G   2% /var/oled
+
+                [opc@xxx]$ lsblk
+                NAME               MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+                sda                  8:0    0   200G  0 disk
+                |-sda1               8:1    0   100M  0 part /boot/efi
+                |-sda2               8:2    0     1G  0 part /boot
+                |-sda3               8:3    0  45.5G  0 part
+                | |-ocivolume-root 252:0    0 188.9G  0 lvm  /
+                | `-ocivolume-oled 252:1    0    10G  0 lvm  /var/oled
+                `-sda4               8:4    0 153.4G  0 part
+                  `-ocivolume-root 252:0    0 188.9G  0 lvm  /
+
+        h2 Amazon EBS 볼륨을 Linux에서 사용
+        p 루트 디바이스용 EBS 볼륨이 있는 EC2 인스턴스에 새로운 EBS 볼륨을 연결한 경우,
+        ol
+            li 상태 확인
+            +asCode('shell').
+                [ec2-user ~]$ lsblk
+                NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+                xvda    202:0    0    8G  0 disk
+                -xvda1  202:1    0    8G  0 part /
+                xvdf    202:80   0   10G  0 disk
+            p /dev/xvdf 디스크에는 파티션이 존재하지 않음을 알 수 있다
+
+            li 파일 시스템이 있는지 확인
+            +asCode('shell').
+                [ec2-user ~]$ sudo file -s /dev/xvdf
+                /dev/xvdf: data
+            p data만 표시된다면, 파일 시스템이 없다는 의미
+
+            li 파일 시스템(XFS) 생성
+            +asCode('shell').
+                [ec2-user ~]$ sudo yum install xfsprogs     # XFS 도구가 없다면 설치
+                [ec2-user ~]$ sudo mkfs -t xfs /dev/xvdf
+
+            li 볼륨 탑재
+            +asCode('shell') [ec2-user ~]$ sudo mount /dev/xvdf /data
+            p /data는 적당한 탑재 지점(디렉터리)
+
+            li 재부팅 시 볼륨 자동 탑재
+            ol
+                li 디스크 UUID 확인
+                +asCode('shell').
+                    [ec2-user ~]$ sudo blkid
+                    # 또는
+                    [ec2-user ~]$ sudo lsblk -o +UUID
+                li /etc/fstab 추가
+                +asCode('text', '/etc/fstab') UUID=aebf131c-6957-451e-8d34-ec978d9581ae  /data  xfs  defaults,nofail  0  2
+                li /etc/fstab 파일이 정상적으로 설정됐는지 확인
+                +asCode('shell').
+                    [ec2-user ~]$ sudo umount /data
+                    [ec2-user ~]$ sudo mount -a

@@ -1,18 +1,18 @@
 [submodule "Repositories/Config"]
 	path = Repositories/Config
-	url = https://github.com/Dong-gi/Config
+	url = git@github.com:Dong-gi/Config
 [submodule "Repositories/STS/Reminder"]
 	path = Repositories/STS/Reminder
-	url = https://github.com/Dong-gi/Reminder
+	url = git@github.com:Dong-gi/Reminder
 [submodule "Repositories/Node/Rendezvous"]
 	path = Repositories/Node/Rendezvous
-	url = https://github.com/Dong-gi/rendezvous
+	url = git@github.com:Dong-gi/rendezvous
 [submodule "Repositories/Android/CCTV"]
 	path = Repositories/Android/CCTV
-	url = https://github.com/Dong-gi/CCTV
+	url = git@github.com:Dong-gi/CCTV
 [submodule "Repositories/JavaScript/SF"]
 	path = Repositories/JavaScript/SF
-	url = https://github.com/Dong-gi/SF
+	url = git@github.com:Dong-gi/SF
 [submodule "Repositories/STS/telegram-bot-java7"]
 	path = Repositories/STS/telegram-bot-java7
-	url = https://github.com/Dong-gi/telegram-bot-java7
+	url = git@github.com:Dong-gi/telegram-bot-java7
