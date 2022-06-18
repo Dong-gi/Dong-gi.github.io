@@ -38,9 +38,9 @@ jobs:
       run: bash ./gradlew bootJar -x test
       working-directory: Repositories/STS/Reminder
 
-    - name: Build /Repositories/Android/VisualStudio
+    - name: Build /Repositories/VisualStudio
       run: dotnet build VisualStudio.sln
-      working-directory: Repositories/Android/VisualStudio
+      working-directory: Repositories/VisualStudio
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
