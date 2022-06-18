@@ -31,9 +31,9 @@ jobs:
         languages: javascript, python
 #        languages: java, javascript, csharp, python
         
-#    - name: Build /Repositories/STS/app2
-#      run: bash ./gradlew build -x test
-#      working-directory: Repositories/STS/app2
+    - name: Build /Repositories/Android/CCTV
+      run: bash ./gradlew assembleDebug -x test
+      working-directory: Repositories/Android/CCTV
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
