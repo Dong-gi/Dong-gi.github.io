@@ -481,23 +481,11 @@ include ../../source/skeleton.pug
                     +tds('T', 'F')
                     +tds('F', 'T')
                 table.no-sort
-                    +ths('P', 'Q', 'P AND Q')
-                    +tds('T', 'T', 'T')
-                    +tds('T', 'F', 'F')
-                    +tds('F', 'T', 'F')
-                    +tds('F', 'F', 'F')
-                table.no-sort
-                    +ths('P', 'Q', 'P OR Q')
-                    +tds('T', 'T', 'T')
-                    +tds('T', 'F', 'T')
-                    +tds('F', 'T', 'T')
-                    +tds('F', 'F', 'F')
-                table.no-sort
-                    +ths('P', 'Q', 'P XOR Q')
-                    +tds('T', 'T', 'F')
-                    +tds('T', 'F', 'T')
-                    +tds('F', 'T', 'T')
-                    +tds('F', 'F', 'F')
+                    +ths('P', 'Q', 'P AND Q', 'P OR Q', 'P XOR Q')
+                    +tds('T', 'T', 'T', 'T', 'F')
+                    +tds('T', 'F', 'F', 'T', 'T')
+                    +tds('F', 'T', 'F', 'T', 'T')
+                    +tds('F', 'F', 'F', 'F', 'F')
 
                 +pos('3.1.2')
                 h4.fake If and Only If
@@ -916,14 +904,14 @@ include ../../source/skeleton.pug
                 +pos('4.3.1')
                 h4.fake Domains and Images
                 ul
-                    li 함수는 정의역(domain)이라 부르는 집합의 원소를 공역(codomain)이라 부르는 집합의 원소로 할당하는 연산이다.\[f:A\rightarrow B\]
-                    li Partial function : 정의역 일부 원소에 대해 정의되지 않은 함수
-                    p 함수가 정의된 정의역의 원소 집합을 함수의 support라고 한다
-                    li Total function : 정의역 모든 원소에 대해 정의된 함수
+                    li 함수는 domain 집합의 원소를 codomain(공역) 집합의 원소로 할당하는 연산이다.\[f:A\rightarrow B\]
+                    li Partial function : domain 일부 원소에 대해 정의되지 않은 함수
+                    p domain에서 함수가 정의된 모든 원소의 집합을 함수의 support라고 한다
+                    li Total function : domain 모든 원소에 대해 정의된 함수
                     li range(f) ::= f(domain(f))
-                    p 치역은 함수가 산출하는 모든 공역 원소들의 집합
+                    p range(치역)는 함수가 산출하는 모든 공역 원소들의 집합
                     li image of S under f ::= f(S) where 식[S \subseteq A]식
-                    p 함수의 상은 정의역의 부분집합 S에 대하여 함수가 산출하는 공역 원소들의 집합
+                    p domain의 부분집합 S에 대한 함수의 image(상)는 함수가 산출하는 codomain 원소들의 집합
 
                 +pos('4.3.2')
                 h4.fake Function Composition
@@ -933,14 +921,14 @@ include ../../source/skeleton.pug
             +pos('4.4')
             h3 Binary Relations
             +pos('정의 4.4.1.')
-            p <b>정의 4.4.1.</b> 이항 관계 R은 다음의 요소들로 구성된다. R의 정의역 A, R의 공역 B, 식[A \times B]식의 부분집합인 R의 그래프
+            p <b>정의 4.4.1.</b> 이항 관계 R은 다음의 요소들로 구성된다. R의 domain A, R의 codomain B, 식[A \times B]식의 부분집합인 R의 그래프
             ul
                 li 함수와 마찬가지로 식[R : A \rightarrow B]식로 표기한다
                 li "a R b"는 R의 그래프에 원소 (a, b)가 존재함을 의미한다
             div
                 +pos('4.4.1')
                 h4.fake Relation Diagrams
-                p 정의역 원소로부터 공역 원소로 이어지는 화살표를 이용하여 이항 관계를 도식화할 수 있다
+                p domain 원소로부터 codomain 원소로 이어지는 화살표를 이용하여 이항 관계를 도식화할 수 있다
                 +w3img('/imgs/2022-05-20 170744.png', '이항 관계 도식 예')
 
                 +pos('정의 4.4.2.')
@@ -954,18 +942,23 @@ include ../../source/skeleton.pug
 
                 +pos('4.4.2')
                 h4.fake Relational Images
-                p 함수의 상 개념은 이항 관계로 바로 확장할 수 있다
+                p 함수의 image 개념은 이항 관계로 바로 확장할 수 있다
                 +pos('정의 4.4.4')
                 p <b>정의 4.4.4.</b>
                 ul
-                    li 이항 관계 R에 대하여, 정의역 A의 부분집합 Y에 대한 이항 관계의 상은 R(Y)로 표기하며, Y에 대하여 이항 관계가 산출하는 공역 원소들의 집합을 의미한다
+                    li 이항 관계 R에 대하여, domain A의 부분집합 Y에 대한 이항 관계의 image는 R(Y)로 표기하며, Y에 대하여 이항 관계가 산출하는 codomain 원소들의 집합을 의미한다
                     li 이항 관계의 치역, range(R)은 R(A)와 같다
 
                 +pos('정의 4.4.5.')
                 p <b>정의 4.4.5.</b> 이항 관계 식[R : A \rightarrow B]식의 역, 식[R^{-1}: B \rightarrow A]식는 다음을 만족하는 이항 관계다. \[b\ R^{-1}\ a \quad\text{IFF}\quad a\ R\ b\]
 
-                +pos('Definition 4.4.6.')
-                p <b>Definition 4.4.6.</b> The image of a set under the relation,  식[R^{-1}]식, is called the inverse image of the set.
+                +pos('정의 4.4.6.')
+                p <b>정의 4.4.6.</b>
+                ul
+                    li B의 부분집합 X에 대한 inverse image는 식[R^{-1}(X)]식로 정의된다
+                    li support(R) = 식[R^{-1}(B)]식이며, R의 'domain of definition'이라고도 부른다
+
+            +pos('4.5')
             h3 Finite Cardinality
             +pos('Definition 4.5.1.')
             p <b>Definition 4.5.1.</b> If A is a finite set, the cardinality(= size) |A| is the number of elements in A
