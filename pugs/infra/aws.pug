@@ -5,6 +5,8 @@ include ../../source/skeleton.pug
         li: +asA('https://docs.aws.amazon.com/index.html', 'AWS 공식 문서')
         li: +asA('https://explore.skillbuilder.aws/learn', 'AWS 공식 - Learning Center')
         li: +asA('https://aws.amazon.com/ko/architecture/security-identity-compliance/', 'AWS 공식 - 보안 Best Practice')
+        li: +asA('https://aws.amazon.com/ko/blogs/korea/', 'AWS 한국 블로그')
+        li: +asA('https://aws.amazon.com/ko/whitepapers/', 'AWS 백서')
 
 
     h1 App Runner
@@ -802,11 +804,35 @@ include ../../source/skeleton.pug
                 li 인스턴스 중지 시 인스턴스 스토어 볼륨은 초기화된다
                 li 인스턴스로부터 AMI 생성 시 인스턴스 스토어 데이터는 보존되지 않는다
 
-    h1 EKS
+    h1 Elastic Beanstalk
     div
-        h2 
+        h2 개요
+        ul
+            li 소스 번들로부터 웹 앱을 배포한다
+            p 지원하는 언어는 Java, .NET, PHP, Node, Python, Ruby, Go로 다양
+            li 컨테이너 기반의 App Runner와 달리, 웹 앱은 EC2 인스턴스 하나씩을 독점 사용한다
 
+        h2 개념
+        ul
+            li 애플리케이션 : Elastic Beanstalk 애플리케이션은 환경, 버전, 환경 구성을 포함한 논리적 컬렉션
+            li 애플리케이션 버전 : 웹 앱의 배포 가능한 코드에 지정된 레이블
+            li 환경 : 애플리케이션 버전을 실행하는 AWS 리소스 모음
+            ul
+                li 웹 서버 환경 : 웹 요청을 직접 받아 처리
+                li 작업자 환경 : SQS 대기열의 메시지 처리
+                p EC2 인스턴스에 자동으로 데몬이 설치되어, 데몬이 메시지를 웹 앱으로 전달한다
+            li 환경 구성 : 연관된 AWS 리소스의 작동을 정의하는 설정들
 
+        h2 Elastic Beanstalk 생성 시 만들어지는 리소스 목록
+        ul
+            li EC2 인스턴스
+            li EC2 보안 그룹 : 웹 트래픽 수신을 위한 보안 그룹
+            li 로드 밸런서
+            li EC2 Auto Scaling 그룹
+            li S3 버킷 : 소스 번들, Elastic Beanstalk 로그 저장
+            li CloudWatch 경보 : Auto Scaling 그룹 관련 경보
+            li CloudFormation 스택
+            li 도메인 이름 : subdomain.region.elasticbeanstalk.com 기본 제공
 
     h1 IAM; Identity and Access Management
     div
@@ -1308,6 +1334,7 @@ include ../../source/skeleton.pug
             ul
                 li DDoS 보호 서비스
                 li Shield Standard : 기본 제공
+                p Elastic Load Balancing(ELB), Application Load Balancer, Amazon CloudFront, Amazon Route 53에 대해 자동으로 활성화
                 li Shield Advanced : 고급 기능 제공(월 3,000 USD)
             li Firewall Manager
             p 조직의 계정과 애플리케이션 방화 규칙에 대한 중앙 관리 서비스
@@ -1381,6 +1408,8 @@ include ../../source/skeleton.pug
             +goto('CloudTrail을 사용하여 이벤트 로깅')
         li CloudWatch
         p AWS 리소스 및 애플리케이션 모니터링
+        li EC2 Image Builder
+        p AMI 또는 컨테이너 이미지 자동 빌드
         li ECR
         p AWS 관리형 컨테이너 이미지 레지스트리
         li GuardDuty
@@ -1400,18 +1429,12 @@ include ../../source/skeleton.pug
         p 자동화된 보안 검사 -&gt; 우선순위가 높은 보안 문제 식별
 
 
-        li EC2; Elastic Compute Cloud
-        p OS를 포함한 컴퓨팅 머신
-        li EBS; Elastic Block Store
-        p EC2를 위한 스토리지(SSD)
         li EFS; Elastic File System
         ul
             li 용량 제약 없는 분산 네트워크 파일 시스템
             li 동시에 수천 개의 인스턴스가 사용할 수 있다
             li EBS보다 지연시간은 느리지만, 단위 시간당 처리량은 높다
             p 높은 IOPS에는 부적합
-        li Elastic Beanstalk
-        p 웹 앱 배포. Java, .NET, PHP, Node, Python, Ruby, Go, Docker...
         li S3; Simple Storage Service
         p 99.999999999% 내구성. 크기 무제한
         li S3 Glacier
@@ -1439,29 +1462,6 @@ include ../../source/skeleton.pug
             li 각 조직에 대한 정책을 정의할 수 있다
             li 단일 마스터 계정이 모든 비용을 지불한다
 
-    h1 싱글 웹서버
-    ol
-        li 규모가 작은 경우, API 게이트웨이 + 람다 조합이 더 저렴할 수 있다
-        li EC2 인스턴스 생성
-        p Auto-assign Public IP : Disable // 자동 할당되는 IP는 인스턴스가 시작할 때마다 변경된다
-            br
-            |Shutdown behavior : Stop // Terminate는 OS 정지 후 EC2 인스턴스 삭제
-            br
-            |Enable termination protection : 실수로 인스턴스 삭제되는 것을 방지
-        li EC2 보안 그룹 설정
-        p SSH | TCP | 22 | 작업 IP
-            br
-            |HTTP | TCP | 80 | 0.0.0.0/0
-            br
-            |HTTPS | TCP | 443 | 0.0.0.0/0
-        li 고정 퍼블릭 IP(EIP; Elastic IP) 부여
-        p AWS 관리 콘솔에서 Allocate New Address → 우클릭 → Associate Address
-        li 도메인 연결 : Route 53
-        p Create Record Set → Name : FQDN, Type : CNAME - Canon name, Value : EIP
-        li EC2 인스턴스 삭제 시
-        p Enable termination protection 해제 후 Terminate
-            br
-            |연결된 EBS, EIP 삭제
 
     h1 VPC
     div
@@ -1660,6 +1660,13 @@ include ../../source/skeleton.pug
 
     h1 Lambda
     div
+        h2 개요
+        p Lambda는 상시 가동 중인 서버 없이, 요청/이벤트가 있을 때만 코드를 실행하는 컴퓨팅 서비스. 이러한 특성 상 수평적 확장이 상당히 용이하다(초당 수천 개까지)
+        ul
+            li 컨테이너 이미지로도 람다 정의 가능
+            li 데이터베이스 프록시로 연결 풀 제공
+            li EFS 마운트하여 사용 가능
+
         h2 Lambda@Edge
         ul
             li CloudFront 요청/응답으로 트리거되는 람다 함수
@@ -1677,7 +1684,7 @@ include ../../source/skeleton.pug
     h1 특이 현상
     div
         h2 CPU 사용률이 100을 초과하는 현상(2022-01-21)
-        p EC2 및 ElastiCache(Redis)에서 발생하였으며, 이 때문에 Auto Scaling 그룹의 자동 조정 정책 지표를 인스턴스 평균 CPU 사용률 대신 평균 ALB 요청 수로 변경함
+        p EC2 및 ElastiCache(Redis)에서 발생
         +w3img('/imgs/photo_2022-02-10 16.08.44.jpeg', 'EC2 스크린샷')
         +w3img('/imgs/photo_2022-02-10 16.16.52.jpeg', 'Redis 스크린샷')
 
