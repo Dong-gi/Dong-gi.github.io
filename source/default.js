@@ -130,6 +130,7 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/025.html', title: '천사들의 탐정' },
         { category: 'Topic/Book', file: '/posts/book/026.html', title: '지금부터의 내일' },
         { category: 'Topic/Book', file: '/posts/book/027.html', title: '괴도 탐정 야마네코' },
+        { category: 'Topic/Book', file: '/posts/book/028.html', title: '괴물의 야회' },
         { category: 'Topic/ETC', file: '/posts/daily_life/baron.html', title: 'Baron 킥보드 매뉴얼' },
         { category: 'Topic/Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
         { category: 'Topic/Life', file: '/posts/daily_life/car.html', title: '차' },
