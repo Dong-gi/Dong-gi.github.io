@@ -1,0 +1,117 @@
+AWS WAF
+    https://techblog.woowahan.com/2699/
+    https://d1.awsstatic.com/whitepapers/ko_KR/guidelines-implementing-aws-waf.pdf
+
+HTTP
+    https://fetch.spec.whatwg.org/
+    https://spec.whatwg.org/
+    https://www.ecma-international.org/
+    html 타 도메인 xhr 요청 차단
+    content-security-policy 헤더로 스크립트에서 로드할 수 있는 URL 제한 가능
+        content-security-policy: default-src data: blob: 'self' https://*.fbsbx.com 'unsafe-inline' *.facebook.com 'unsafe-eval' *.fbcdn.net;script-src *.facebook.com *.fbcdn.net *.facebook.net *.google-analytics.com *.google.com 127.0.0.1:* 'unsafe-inline' 'unsafe-eval' blob: data: 'self' connect.facebook.net;style-src fonts.googleapis.com *.fbcdn.net data: *.facebook.com 'unsafe-inline';connect-src *.facebook.com facebook.com *.fbcdn.net *.facebook.net wss://*.facebook.com:* wss://*.whatsapp.com:* wss://*.fbcdn.net attachment.fbsbx.com ws://localhost:* blob: *.cdninstagram.com 'self' wss://gateway.facebook.com wss://edge-chat.facebook.com wss://snaptu-d.facebook.com wss://kaios-d.facebook.com/ v.whatsapp.net *.fbsbx.com *.fb.com;font-src data: *.gstatic.com *.facebook.com *.fbcdn.net *.fbsbx.com;img-src *.fbcdn.net *.facebook.com data: https://*.fbsbx.com *.tenor.co media.tenor.com facebook.com *.cdninstagram.com fbsbx.com fbcdn.net *.giphy.com connect.facebook.net *.carriersignal.info blob: android-webview-video-poster: googleads.g.doubleclick.net www.googleadservices.com *.whatsapp.net *.fb.com *.oculuscdn.com;media-src *.cdninstagram.com blob: *.fbcdn.net *.fbsbx.com www.facebook.com *.facebook.com https://*.giphy.com data:;frame-src *.doubleclick.net *.google.com *.facebook.com www.googleadservices.com *.fbsbx.com fbsbx.com data: www.instagram.com *.fbcdn.net https://paywithmybank.com;worker-src blob: *.facebook.com data:;block-all-mixed-content;upgrade-insecure-requests;
+
+DB
+    https://aws.amazon.com/ko/blogs/database/reducing-aurora-postgresql-storage-i-o-costs/
+    http://www.dator.co.kr/hotshin/textyle/583153
+    http://www.erdcloud.com
+
+etc
+    CAP 정리
+    same-site 쿠키 설정과 origin, referer 확인
+    웹 워커에서 XHR 처리 가능
+    swagger
+    https://techblog.woowahan.com/2661/     JaCoCo
+    https://www.baeldung.com/spring-boot-jasypt
+    https://12factor.net/
+    https://www.gov.kr/portal/service/serviceInfo/PTR000050349
+    https://www.nhis.or.kr/static/html/wbma/c/wbmac0222.html
+    DDoS 모범사례 중 - 인증된 소스 IP 주소 저장. 공격 발생 시, 실제 사용자들을 분리할 수 있는 정보 획득
+        https://www.abuseipdb.com/
+
+
+* PostgreSQL
+https://wiki.postgresql.org/wiki/Performance_Optimization 포함
+https://postgresql.kr/blog/pg_phantom_read.html
+
+https://www.postgresql.org/docs/11/sql-values.html
+
+* MyBatis
+https://mybatis.org/spring/ko/transactions.html
+@Transactional(transactionManager = "transactionManagerW")
+
+* Spring Native
+
+* Distributed SQL
+
+* Azure Cosmos DB
+https://github.com/Azure/azure-cosmos-js/blob/master/samples/ItemManagement.ts
+
+* Java MS Office
+org.apache.poi
+
+* Internet
+https://www.freesoft.org/CIE/Course/index.htm
+
+* https://firebase.google.com/docs/android/setup?hl=ko
+
+* https://www.openapis.org/
+
+https://aws.amazon.com/ko/blogs/korea/page/198/
+https://aws.amazon.com/ko/whitepapers/
+https://aws.amazon.com/ko/architecture/security-identity-compliance/
+https://explore.skillbuilder.aws/learn
+
+
+h1 OSI 7계층 <- Network
+ol
+  li OSI 7계층 요약
+  table.no-sort
+    +tds('7', 'Application', '프로세스 사이의 통신 인터페이스', 'DNS, HTTP, FTP 등')
+    +tds('6', 'Presentation', '7계층 데이터 번역', '인코딩, 압축, 암호화')
+    +tds('5', 'Session', '7계층 통신이 수행될 채널을 관리', 'TCP 세션 수립/종료, SSL, TLS 등')
+    +tds('4', 'Transport', '종단(end-point)간 데이터 전송; 전송 단위: segment', 'TCP, UDP')
+    +tds('3', 'Network', '노드 사이의 데이터 전송; 전송 단위: packet', 'IP, ICMP')
+    +tds('2', 'Data link', '장치 사이의 연결을 위한 논리적 사양; 전송 단위: frame', 'Ethernet(MAC)')
+    +tds('1', 'Physical', '장치 사이의 연결을 위한 물리적 사양', '하드웨어 사양 정의')
+
+  li Encapsulation
+  p 데이터를 하위 계층에 보내기 전에, 자기 계층에서의 동작에 필요한 헤더/트레일러를 붙이는 것.
+
+  li Decapsulation
+  p 데이터를 상위 계층에 보내기 전에, 자기 계층의 헤더/트레일러를 제거하는 것.
+
+  li 정확한 전달을 위해, 상위 계층 프로토콜의 종류를 미리 알아야 하는 경우가 있다
+  ul
+    li Data link 계층의 이더넷 -> type 필드 이용; 0x0800(IPv4), ...
+    li Network 계층의 IP -> protocol 필드 이용; 6(TCP), 17(UDP), ...
+    li Transport 계층의 TCP, UDP -> port 필드 이용; 0~65535
+
+IP 패킷
+version 4비트 : 4 == IPv4
+header length 4비트 : 헤더 길이(워드 단위)
+DSCP 6비트 : 패킷 우선순위
+ECN 2비트 : 혼잡 제어
+total length 16비트 : 패킷 길이(바이트 단위). 최대 65535바이트
+ID 16비트 : 패킷 고유 번호
+flags 3비트 : 패킷 분할 가능 여부, 분할 시 최종 패킷 여부
+fragment offset 13비트 : 분할된 패킷의 원래 위치
+TTL 8비트 : 패킷 무한 루프 방지. 라우터를 거칠 때마다 1씩 감소하여 0이 되면 폐기
+protocol 8비트 : 상위 계층 프로토콜 종류
+header checksum 16비트
+source address 32비트
+destination adadress 32비트
+option 최대 40바이트
+data 최대 65515바이트
+
+TCP 세그먼트
+source port 16비트
+destinatino port 16비트
+sequence number 32비트
+acknowledgment number 32비트
+data offset 4비트 : 헤더 길이(워드 단위)
+reserved 4비트
+flags 8비트 : Sync, Ack 등
+window size 16비트
+checksum 16비트
+urgent pointer 16비트
+option 최대 40바이트

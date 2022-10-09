@@ -35,15 +35,8 @@ mixin pos(name)
     span(id=`pos${name.hashCode()}`, style='padding:0!important;margin:0!important;width:0!important;height:0!important;overflow:hidden!important')
 
 mixin post(title, keywords, description, useMath)
-    html(lang='ko')
+    html(lang='ko-KR')
         head
-            script#google-analytics(src='https://www.googletagmanager.com/gtag/js?id=UA-143098403-1', async)
-            script.
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'UA-143098403-1');
-
             meta(charset='UTF-8')
             meta(name='viewport', content='width=device-width, initial-scale=1')
             meta(name='google-site-verification', content='aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM')
@@ -53,9 +46,17 @@ mixin post(title, keywords, description, useMath)
 
             title= title
 
+            link(rel="icon", href="/imgs/favicon.png")
             link#w3css(rel="stylesheet", href="/source/w3.css")
             link#highlight-style(rel="stylesheet", href="/source/xcode.css")
             link#default-style(rel="stylesheet", href="/source/default.css")
+
+            script#google-analytics(src='https://www.googletagmanager.com/gtag/js?id=UA-143098403-1', async)
+            script.
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'UA-143098403-1');
             script#highlight-js(src="/source/highlight.pack.js")
             script#default-js(src='/source/default.min.js')
             if useMath
