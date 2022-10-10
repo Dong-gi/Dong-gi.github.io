@@ -209,6 +209,10 @@ window.addEventListener('load', () => {
             goto(target)
         }
     }
+
+    if (Array.isArray(window.wizFuncQueue))
+        for (let func of window.wizFuncQueue)
+            try { func() } catch (e) { console.log(e) }
 })
 
 function goto(target) {

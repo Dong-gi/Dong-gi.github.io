@@ -266,7 +266,7 @@ include ../../../source/skeleton.pug
 
         h2 HTTP/3
         ul
-            li TCP 대신 UDP 기반 프로토콜, QUIC(
+            li TCP 대신 UDP 기반 전송 계층 프로토콜, QUIC(
                 +asA('https://datatracker.ietf.org/doc/html/rfc9000')
                 |)으로 전환
             ul
@@ -275,7 +275,8 @@ include ../../../source/skeleton.pug
                 li QUIC은 네이티브 멀티플렉싱으로 위와 같은 문제가 발생하지 않는다
                 li QUIC 연결은 IP에 독립적이므로, WiFi와 셀룰러 네트워크 사이의 전환이 발생하는 모바일 환경에 유용
             li TCP가 제공하는 혼잡 제어 등의 기능이 커널 공간에서 동작하는 반면, HTTP/3은 유저 공간에서 실행하는 대신 알고리즘을 자주 업데이트 가능
-            li TLS 대신 이에 상응하는 DTLS를 이용해 보안 통신 가능
+            li TLS 대신 이에 상응하는 DTLS를 이용해 보안 통신 수행. 이에 더해, QUIC은 암호화되지 않은 연결을 지원하지 않는다
+            li UDP 공격에 대한 방어 : QUIC 초기 패킷은 최소 1200바이트여야 한다; 서버가 ACK 패킷을 받지 못한 경우, 요청 크기의 3배 이상을 보내지 않는다
 
         h2 MIME 타입
         ol

@@ -1,41 +1,48 @@
 include ./source/skeleton.pug
-+post('한 걸음씩...', 'blog, programming', '프로그래밍 블로그를 지향하는 정적 사이트')
++post({
+        title: '한 걸음씩...',
+        keywords: 'blog, programming',
+        description: '프로그래밍 블로그를 지향하는 정적 사이트',
+        useMath: false,
+    })
     h1.marker Hello World!
     p 방문을 환영합니다. 개인적으로 이것저것 공개적인 것들을 정리하는 사이트입니다.
 
     h1.marker 최근 수정된 포스트
     ul#recently-changed-posts
     script.
-        let changedPosts = []
-        let notDeletedPosts = new Set()
-        for (let line of recentChangedPosts.split('\n').reverse()) {
-            let parts = line.split('\t')
-            if (parts.length != 2)
-                continue
-            changedPosts.push(parts[1])
-            switch (parts[0]) {
-                case 'D':
-                    notDeletedPosts.delete(parts[1])
-                    break
-                case 'A':
-                case 'M':
-                    notDeletedPosts.add(parts[1])
-                    break
+        window.wizFuncQueue.push(() => {
+            let changedPosts = [];
+            let notDeletedPosts = new Set();
+            for (let line of recentChangedPosts.split('\n').reverse()) {
+                let parts = line.split('\t');
+                if (parts.length != 2)
+                    continue;
+                changedPosts.push(parts[1]);
+                switch (parts[0]) {
+                    case 'D':
+                        notDeletedPosts.delete(parts[1]);
+                        break;
+                    case 'A':
+                    case 'M':
+                        notDeletedPosts.add(parts[1]);
+                        break;
+                }
             }
-        }
-        let renderedCount = 0
-        for (let post of changedPosts.reverse()) {
-            if (notDeletedPosts.has(post)) {
-                notDeletedPosts.delete(post)
-                let url = '/' + post.replace(/^pugs/, 'posts').replace(/\.pug$/, '.html')
-                let registeredPosts = posts.list.filter(o => o.file == url)
-                if (registeredPosts.length == 0)
-                    continue
-                document.getElementById('recently-changed-posts').appendChild(`<li><a href="${url}">${registeredPosts[0].title}</a></li>`.asSF().$)
-                if (++renderedCount >= 10)
-                    break
+            let renderedCount = 0;
+            for (let post of changedPosts.reverse()) {
+                if (notDeletedPosts.has(post)) {
+                    notDeletedPosts.delete(post);
+                    let url = '/' + post.replace(/^pugs/, 'posts').replace(/\.pug$/, '.html');
+                    let registeredPosts = posts.list.filter(o => o.file == url);
+                    if (registeredPosts.length == 0)
+                        continue;
+                    document.getElementById('recently-changed-posts').appendChild(`<li><a href="${url}">${registeredPosts[0].title}</a></li>`.asSF().$);
+                    if (++renderedCount >= 10)
+                        break;
+                }
             }
-        }
+        });
 
     h1.marker 이력
     table

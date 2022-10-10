@@ -979,10 +979,10 @@ class SFUtil {
             if (content.style.display == 'block')
                 return;
             content.style.display = 'block';
-            content.style.top = e.pageY;
-            content.style.left = e.pageX;
-            content.style.maxWidth = window.innerWidth - e.clientX;
-            content.style.maxHeight = window.innerHeight - e.clientY;
+            content.style.top = e.pageY + 'px';
+            content.style.left = e.pageX + 'px';
+            content.style.maxWidth = (window.innerWidth - e.clientX) + 'px';
+            content.style.maxHeight = (window.innerHeight - e.clientY) + 'px';
             content.style.overflow = 'auto';
         })(target, content);
         let leave = ((target, content) => function (e) {

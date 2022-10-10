@@ -1,7 +1,25 @@
-- String.prototype.hashCode=function(){let e,t,o=0;if(0===this.length)return o;for(e=0;e<this.length;e++)o=(o<<5)-o+(t=this.charCodeAt(e)),o|=0;return o};
+-
+    if (!String.prototype.hashCode)
+        String.prototype.hashCode = function () {
+            if (this.myHash)
+                return this.myHash;
+            if(this.length == 0)
+                return this.myHash = 0;
+            let hash = 0;
+            for(let i = 0; i < this.length; i++) {
+                hash = (hash << 5) - hash + this.charCodeAt(i);
+                hash |= 0; // 32 bit 제한을 위해
+            }
+            return this.myHash = hash;
+        }
 
 mixin asA(href, text)
-    - if (!text) { text = href.replace(/\/$/, '').replace(/^.+\//, ''); if (/#/.test(href) == false) { text = text.replace(/\..+$/, '') } }
+    -
+        if (!text) {
+            text = href.replace(/\/$/, '').replace(/^.+\//, '');
+            if (/#/.test(href) == false)
+                text = text.replace(/\..+$/, '');
+        }
     +w3a()&attributes({ href: href })&attributes(attributes)= text
 
 mixin asCode(lan, title)
@@ -15,8 +33,13 @@ mixin asCode(lan, title)
             block
 
 mixin codeBtn(path, lan, displayRange)
-    - let attr = { class: 'btn-code', title: path, displayRange: displayRange, lan: lan || 'text' }
-    - if (Array.isArray(displayRange)) attr.displayRange = JSON.stringify(displayRange)
+    -
+        let attr = {
+            class: 'btn-code',
+            title: path,
+            displayRange: Array.isArray(displayRange) ? JSON.stringify(displayRange) : displayRange,
+            lan: lan || 'text'
+        }
     +w3button()&attributes(attr)&attributes(attributes)
         if block
             block
@@ -34,34 +57,41 @@ mixin hoverTemplate()
 mixin pos(name)
     span(id=`pos${name.hashCode()}`, style='padding:0!important;margin:0!important;width:0!important;height:0!important;overflow:hidden!important')
 
-mixin post(title, keywords, description, useMath)
+//-
+    options = {
+        title: string,
+        keywords: string,   <- Deprecated
+        description: string,
+        useMath: boolean,
+    }
+mixin post(options)
+    -
+        if (arguments.length == 1 && typeof arguments[0] === 'string')
+            options = { title: arguments[0] }
+        else if (arguments.length > 1)
+            options = {
+                title: arguments[0],
+                keywords: arguments[1],
+                description: arguments[2],
+                useMath: arguments[3],
+            }
+    doctype html
     html(lang='ko-KR')
         head
             meta(charset='UTF-8')
             meta(name='viewport', content='width=device-width, initial-scale=1')
             meta(name='google-site-verification', content='aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM')
             meta(name='author', content='Donggi Kim <hi.donggi@gmail.com>')
-            meta(name='keywords', content=keywords)
-            meta(name='description', content=description)
+            meta(name='description', content=options.description)
 
-            title= title
+            title= options.title
 
             link(rel="icon", href="/imgs/favicon.png")
             link#w3css(rel="stylesheet", href="/source/w3.css")
             link#highlight-style(rel="stylesheet", href="/source/xcode.css")
             link#default-style(rel="stylesheet", href="/source/default.css")
 
-            script#google-analytics(src='https://www.googletagmanager.com/gtag/js?id=UA-143098403-1', async)
-            script.
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'UA-143098403-1');
-            script#highlight-js(src="/source/highlight.pack.js")
-            script#default-js(src='/source/default.min.js')
-            if useMath
-                script#MathJax-script(src='/source/tex-chtml.js',async)
-                script MathJax={tex:{tags:'ams',inlineMath:[['식[', ']식']]}};
+            script window.wizFuncQueue = [];
         body
             .w3-bar-block.w3-sidebar.w3-animate-left#sidebar
                 hr
@@ -101,6 +131,17 @@ mixin post(title, keywords, description, useMath)
                     if block
                         block
             hr
+            script#google-analytics(src='https://www.googletagmanager.com/gtag/js?id=UA-143098403-1', async)
+            script.
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'UA-143098403-1');
+            if options.useMath
+                script#MathJax-script(src='/source/tex-chtml.js', async)
+                script MathJax={tex:{tags:'ams',inlineMath:[['식[', ']식']]}};
+            script#highlight-js(src="/source/highlight.pack.js", defer)
+            script#default-js(src='/source/default.min.js', defer)
 
 
 mixin tds(...cells)
