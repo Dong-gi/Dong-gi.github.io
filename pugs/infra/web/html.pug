@@ -1,10 +1,13 @@
 include ../../../source/skeleton.pug
 +post({
         title: 'HTML',
-        keywords: 'HTML',
         description: 'HTML 정리',
         useMath: true,
     })
+    h1 자료
+    ul
+        li: +asA('https://web.dev/learn/html/', 'web.dev > HTML 배우기')
+
     h1 태그
     ul
         li HTML 문서는 요소들의 트리로 표현된다
