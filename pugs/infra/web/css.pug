@@ -165,9 +165,19 @@ include ../../../source/skeleton.pug
                     title: 'flow-root를 사용하지 않은 경우'
                 })
                 +codeBtn({
+                    path: '/Repositories/Single/202210/19_1643.html',
+                    lan: 'html',
+                    title: '←코드'
+                })
+                +codeBtn({
                     path: '/Repositories/Single/202210/19_1646.html',
                     lan: 'nohighlight',
                     title: 'flow-root를 사용한 경우'
+                })
+                +codeBtn({
+                    path: '/Repositories/Single/202210/19_1646.html',
+                    lan: 'html',
+                    title: '←코드'
                 })
                 li table
                 p #{'<table>'} 요소처럼 취급된다. "display: table-cell;" 속성을 가진 자식들은 테이블 열이 제각기 너비를 차지하듯이 부모의 너비를 나눠갖는다. 추가로 부모 요소에서 table-layout 스타일 속성도 효과를 갖는다
@@ -203,6 +213,17 @@ include ../../../source/skeleton.pug
             ul
                 li contents
                 p 요소 자체는 박스를 생성하지 않는다. 그러나 자식 요소들과 의사 요소들은 정상적으로 박스를 생성한다. 즉, 요소는 트리 상에서만 존재하는 컨테이너가 된다
+                p 예를 들어 display: flex;는 자식 요소들만을 flex item으로 취급하는데, 자식 요소에 display: contents;를 적용하여, 손자 요소들을 flex item처럼 표시할 수 있다
+                +codeBtn({
+                    path: '/Repositories/Single/202210/19_2231.html',
+                    lan: 'nohighlight',
+                    title: 'display: contents;'
+                })
+                +codeBtn({
+                    path: '/Repositories/Single/202210/19_2231.html',
+                    lan: 'html',
+                    title: '←코드'
+                })
                 li none
                 p 레이아웃에 요소를 표시하지 않는다. 자식들에게도 상속되어 영향을 미친다. 자리는 차지하되 렌더링만 하지 않기를 원한다면 visibility 속성을 사용할 수 있다
             
@@ -220,16 +241,85 @@ include ../../../source/skeleton.pug
             
             h3 Basic concepts of flexbox
             ul
-                li flex-direction 속성으로 요소를 배치할 축을 설정할 수 있다 : row, row-reverse, column, column-reverse
                 li Flex container의 자식들(flex item)은 기본적으로 아래와 같이 배치된다
                 ul
-                    li 한 줄로 표시된다
-                    li 주 축의 시작 위치부터 배치된다
-                    li 빈 공간이 존재하더라도 주 축의 끝까지 확장되지 않는다. 반대로, 자동으로 축소될 수는 있다
-                    li 자동으로 직교 축의 끝까지 확장된다
-                    li flex-basis: auto;
-                    li flex-wrap: nowrap;
+                    li flex-direction: row; 한 줄로 표시되며, 주 축의 시작 위치부터 배치된다
+                    li flex-wrap: nowrap; 공간이 부족해도 개행하지 않고 오버플로된다
+                    li flex-grow: 0; 빈 공간이 존재하더라도 아이템 크기가 늘어나지 않는다
+                    li flex-shrink: 1; 오버플로 되는 경우 아이템 크기가 줄어들 수 있다
+                    li flex-basis: auto; 각 아이템 크기는 요소에 지정된 크기. 없으면 요소의 컨텐츠 크기
+                    li align-items: stretch; 아이템 크기를 직교 축 끝까지 확장한다
+                +codeBtn({
+                    path: '/Repositories/Single/202210/19_1739.html',
+                    lan: 'nohighlight',
+                    title: '기본 flex'
+                })
+                +codeBtn({
+                    path: '/Repositories/Single/202210/19_1739.html',
+                    lan: 'html',
+                    title: '←코드'
+                })
+                li 컨테이너 flex-direction 속성 : 요소를 배치할 축을 설정할 수 있다; row, row-reverse, column, column-reverse
+                li 컨테이너 flex-wrap 속성 : nowrap(한 줄에 다 못채우면 오버플로), wrap(한 줄에 다 못채우면 개행. 각 줄을 별개의 컨테이너로 생각해야 한다)
+                li 컨테이너 flex-flow 단축 속성 : flex-direction flex-wrap
+                li 아이템 flex-basis 속성 : 줄에 빈 공간이 존재하는 경우, 아이템 크기를 지정한 크기까지 키운다
+                p 기본값 auto : 요소에 지정된 크기가 존재하면 해당 값을 사용하고, 지정된 크기가 없으면 요소의 컨텐츠 크기를 사용한다
+                +codeBtn({
+                    path: '/Repositories/Single/202210/19_2125.html',
+                    lan: 'nohighlight',
+                    title: 'flex-basis'
+                })
+                +codeBtn({
+                    path: '/Repositories/Single/202210/19_2125.html',
+                    lan: 'html',
+                    title: '←코드'
+                })
+                li 아이템 flex-grow 속성 : 모든 아이템이 flex-basis 만큼 차지하고도 공간이 남으면, 각 가중치만큼 나눠갖는다
+                +codeBtn({
+                    path: '/Repositories/Single/202210/19_2143.html',
+                    lan: 'nohighlight',
+                    title: 'flex-grow'
+                })
+                +codeBtn({
+                    path: '/Repositories/Single/202210/19_2143.html',
+                    lan: 'html',
+                    title: '←코드'
+                })
+                li 아이템 flex-shrink 속성 : flex-grow와 다르게, 오버플로 시 수축하는 비중을 지정한다
+                li 아이템 flex 단축 속성 : flex-grow flex-shrink flex-basis
+                ul
+                    li flex: initial == flex: 0 1 auto
+                    li flex: auto == flex: 1 1 auto
+                    li flex: none == flex: 0 0 auto
+                    li flex: n == flex: n 1 0
+
             h3 Aligning Items in a Flex Container
+            ul
+                li 컨테이너 justify-content 속성 : 주 축에 대하여 아이템을 어떻게 배치할 지 지정한다
+                ul
+                    li flex-start(기본값) : 주 축의 시작 위치부터 배치한다
+                    li flex-end : 주 축의 끝부터 배치한다
+                    +codeBtn({
+                        path: '/Repositories/Single/202210/19_2207.html',
+                        lan: 'nohighlight',
+                        title: 'flex-direction: row-reverse ↔ justify-content: flex-end 차이'
+                    })
+                    +codeBtn({
+                        path: '/Repositories/Single/202210/19_2207.html',
+                        lan: 'html',
+                        title: '←코드'
+                    })
+                    li center : 가운데 정렬
+                    li space-around : 가운데 정렬 + 각 아이템 좌우에 동일한 여백
+                    li space-between : 가운데 정렬 + 각 아이템 사이에 동일한 여백
+                    li space-evenly : 가운데 정렬 + 모두 동일한 여백
+                li 컨테이너 align-items 속성 : 직교 축에 대하여 아이템을 어떻게 배치할 지 지정한다
+                ul
+                    li stretch(기본값) : 직교 축의 전체 공간을 차지한다
+                    li flex-start : 직교 축의 시작부터 자리를 차지한다
+                    li flex-end : 직교 축의 끝부터 자리를 차지한다
+                    li center : 직교 축의 중간에 위치한다
+
             h3 Controlling Ratios of Flex Items Along the Main Axis
             h3 Cross-browser Flexbox mixins
             h3 Mastering Wrapping of Flex Items
