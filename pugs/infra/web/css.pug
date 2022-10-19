@@ -81,12 +81,164 @@ include ../../../source/skeleton.pug
             li '~' : 다음 모든 형제 요소
     
     h1 The cascade
-    p 요소에 대해 둘 이상의 스타일이 존재할 때, 브라우저는 아래 순서에 따라 적용할 스타일을 결정한다
+    p 요소에 대해 둘 이상의 스타일이 존재할 때, 브라우저는 아래 순서에 따라 적용할 스타일을 결정한다.
     div
         h2 스타일의 위치와 순서
         ul
             li 동일한 CSS 안에서의 충돌 : 스크립트 뒷부분에 정의된 것이 우선
             li 두 CSS 간 충돌 : 보다 나중에 로드/정의된 것이 우선
+            li 요소 내부의 style 속성으로 지정한 것이 요소 외부의 것보다 우선
+
+        h2 선택자의 특정성
+        p 위치상 후순위 스타일이더라도, 선택자가 요소를 보다 자세하게 특정하는 경우 보다 높은 우선순위를 가질 수 있다
+        table
+            +ths('선택자', '점수', '비고')
+            +tds('*', '0', '')
+            +tds('타입', '1', '')
+            +tds('클래스, 의사 클래스, 속성', '10', ':not() 자체는 점수가 없지만, 인자로 넘겨진 선택자에 대해선 점수가 부여된다')
+            +tds('ID', '100', '')
+            +tds('inline style', '1,000', '')
+            +tds('!important', '10,000', '')
+        
+        h2 출처
+        p 우선순위가 낮은 순서부터,
+        ol
+            li 브라우저 기본 스타일
+            li OS(e.g. 기본 폰트) 또는 브라우저 확장 스타일
+            li 직접 작성된 CSS
+            li 직접 작성된 !important
+            li OS 또는 브라우저 확장 !important
+            li 브라우저 기본 !important
+        
+        h3 중요성
+        p 어떤 스타일은 기본적으로 다른 것보다 우선한다. 우선순위가 낮은 순서부터,
+        ol
+            li 일반
+            li animation
+            li !important
+            li transition
+
+    h1 상속
+    ul
+        li 일부 스타일 속성은 자식 요소로 상속된다
+        p color, font, direction, line-height, text-align, visibility 등
+        li inherit 키워드를 이용한 명시적 상속
+        +asCode('css').
+            strong { font-weight: 900; }
+            .my-class { font-weight: 500; }
+            .my-class strong { font-weight: inherit; } /* 500이 적용된다 */
+        li initial 키워드를 이용한 상속 취소(기본값 사용)
+        li unset 키워드
+        ul
+            li 속성이 상속 가능하면 inherit으로, 아니면 initial로 작동
+            li "all: unset;"으로 간편하게 모든 속성 상속 취소 가능
+
+    h1 Layout
+    div
+        h2: +asA('https://developer.mozilla.org/en-US/docs/Web/CSS/display', 'display 속성의 이해')
+        +asCode().
+            display = 
+                [ &lt;display-outside&gt; || &lt;display-inside&gt; ]         |
+                &lt;display-listitem&gt;                                |
+                &lt;display-internal&gt;                                |
+                &lt;display-box&gt;                                     |
+                &lt;display-legacy&gt;
+        div
+            h3 #{'<display-outside>'}
+            p Flow layout(기본 배치; inline/block)에서 요소를 어떻게 배치할 지 제어한다
+            ul
+                li inline
+                p 너비에 여유가 있다면 inline 요소들은 한 줄에 같이 표시된다. margin, padding 모두 무시된다.
+                li block
+                p 각 block 요소는 한 줄을 온전히 차지한다; 박스 전후에 개행을 삽입한다
+            
+            h3 #{'<display-inside>'}
+            p 자식 요소들을 내부에서 어떻게 배치할 지 제어한다
+            ul
+                li flow
+                p Flow layout에 따라 자식 요소들을 배치한다
+                li flow-root
+                p flow + 새로운 block formatting context(BFC; 블록 박스가 자리하고, float 요소가 상호작용하는 공간)를 생성한다
+                +codeBtn({
+                    path: '/Repositories/Single/202210/19_1643.html',
+                    lan: 'nohighlight',
+                    title: 'flow-root를 사용하지 않은 경우'
+                })
+                +codeBtn({
+                    path: '/Repositories/Single/202210/19_1646.html',
+                    lan: 'nohighlight',
+                    title: 'flow-root를 사용한 경우'
+                })
+                li table
+                p #{'<table>'} 요소처럼 취급된다. "display: table-cell;" 속성을 가진 자식들은 테이블 열이 제각기 너비를 차지하듯이 부모의 너비를 나눠갖는다. 추가로 부모 요소에서 table-layout 스타일 속성도 효과를 갖는다
+                li flex
+                p Flexible box layout에 따라 자식 요소들을 배치한다. 자식 요소들은 자동으로 flex item이 된다
+                li grid
+                p Grid layout에 따라 자식 요소들을 배치한다
+                li ruby
+                p #{'<ruby>'} 요소처럼 취급된다
+            
+            h3 #{'<display-listitem>'}
+            ul
+                li list-item
+                p 요소를 리스트 항목으로 취급한다
+            
+            h3 #{'<display-internal>'}
+            p table, ruby와 같이 복합 구조를 갖는 요소들의 자식들이 갖는 역할을 제어한다
+            ul
+                li table-row-group : #{'<tbody>'}에 대응
+                li table-header-group : #{'<thead>'}에 대응
+                li table-footer-group : #{'<tfoot>'}에 대응
+                li table-row : #{'<tr>'}에 대응
+                li table-cell : #{'<td>'}에 대응
+                li table-column-group : #{'<colgroup>'}에 대응
+                li table-column : #{'<col>'}에 대응
+                li table-caption : #{'<caption>'}에 대응
+                li ruby-base : #{'<ruby>'}에 대응
+                li ruby-text : #{'<rt>'}에 대응
+                li ruby-base-container : 익명 박스 생성
+                li ruby-text-container : #{'<rtc>'}에 대응
+            
+            h3 #{'<display-box>'}
+            ul
+                li contents
+                p 요소 자체는 박스를 생성하지 않는다. 그러나 자식 요소들과 의사 요소들은 정상적으로 박스를 생성한다. 즉, 요소는 트리 상에서만 존재하는 컨테이너가 된다
+                li none
+                p 레이아웃에 요소를 표시하지 않는다. 자식들에게도 상속되어 영향을 미친다. 자리는 차지하되 렌더링만 하지 않기를 원한다면 visibility 속성을 사용할 수 있다
+            
+            h3 #{'<display-legacy>'}
+            p CSS 2에서는 단일 키워드로 결합된 값들을 정의했다
+            ul
+                li inline-block : inline flow-root와 동일
+                li inline-table : inline table과 동일
+                li inline-flex : inline flex와 동일
+                li inline-grid : inline grid와 동일
+
+        h2 Flexible box layout
+        div
+            p 일직선 상에서 자식 요소들의 크기를 유연하게 조정한다 -- 크기를 넓혀 빈 공백을 채우거나, 오버플로되지 않도록 축소
+            
+            h3 Basic concepts of flexbox
+            ul
+                li flex-direction 속성으로 요소를 배치할 축을 설정할 수 있다 : row, row-reverse, column, column-reverse
+                li Flex container의 자식들(flex item)은 기본적으로 아래와 같이 배치된다
+                ul
+                    li 한 줄로 표시된다
+                    li 주 축의 시작 위치부터 배치된다
+                    li 빈 공간이 존재하더라도 주 축의 끝까지 확장되지 않는다. 반대로, 자동으로 축소될 수는 있다
+                    li 자동으로 직교 축의 끝까지 확장된다
+                    li flex-basis: auto;
+                    li flex-wrap: nowrap;
+            h3 Aligning Items in a Flex Container
+            h3 Controlling Ratios of Flex Items Along the Main Axis
+            h3 Cross-browser Flexbox mixins
+            h3 Mastering Wrapping of Flex Items
+            h3 Ordering Flex Items
+            h3 Relationship of flexbox to other layout methods
+            h3 Backwards Compatibility of Flexbox
+            h3 Typical use cases of Flexbox
+
+        h2 Grid layout
 
         li.marker 변수
         ol

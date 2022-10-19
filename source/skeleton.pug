@@ -32,19 +32,35 @@ mixin asCode(lan, title)
         if block
             block
 
-mixin codeBtn(path, lan, displayRange)
+//-
+    options = {
+        path: string,
+        lan: string,
+        displayRange: string | Array<int>,
+        title: string
+    }
+mixin codeBtn(options)
     -
+        if (arguments.length > 1 || typeof arguments[0] == 'string') {
+            options = {
+                path: arguments[0],
+                lan: arguments[1],
+                displayRange: arguments[2]
+            }
+        }
         let attr = {
             class: 'btn-code',
-            title: path,
-            displayRange: Array.isArray(displayRange) ? JSON.stringify(displayRange) : displayRange,
-            lan: lan || 'text'
+            title: options.path,
+            displayRange: Array.isArray(options.displayRange) ? JSON.stringify(options.displayRange) : options.displayRange,
+            lan: options.lan || 'text'
         }
     +w3button()&attributes(attr)&attributes(attributes)
         if block
             block
+        else if (options.title)
+            = options.title
         else
-            = path.split('/').pop()
+            = options.path.split('/').pop()
 
 mixin goto(name, post)
     +asA(`${post || ''}#pos${name.hashCode()}`, `${name}`).goto&attributes({ target: post ? '_blank' : '_self' })
