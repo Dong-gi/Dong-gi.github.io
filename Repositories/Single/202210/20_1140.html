@@ -1,0 +1,29 @@
+<div class="div-221020-1140">
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+    <div>5</div>
+    <div>6</div>
+</div>
+
+
+<style>
+    .div-221020-1140 {
+        border: solid;
+        display: flex;
+    }
+
+    .div-221020-1140 div {
+        border: inherit;
+        flex-basis: 3ch;
+    }
+
+    .div-221020-1140 div:nth-child(3) {
+        visibility: collapse;
+    }
+
+    .div-221020-1140 div:nth-child(5) {
+        visibility: hidden;
+    }
+</style>

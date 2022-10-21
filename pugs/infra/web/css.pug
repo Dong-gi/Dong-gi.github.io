@@ -262,8 +262,10 @@ include ../../../source/skeleton.pug
                 li 컨테이너 flex-direction 속성 : 요소를 배치할 축을 설정할 수 있다; row, row-reverse, column, column-reverse
                 li 컨테이너 flex-wrap 속성 : nowrap(한 줄에 다 못채우면 오버플로), wrap(한 줄에 다 못채우면 개행. 각 줄을 별개의 컨테이너로 생각해야 한다)
                 li 컨테이너 flex-flow 단축 속성 : flex-direction flex-wrap
-                li 아이템 flex-basis 속성 : 줄에 빈 공간이 존재하는 경우, 아이템 크기를 지정한 크기까지 키운다
-                p 기본값 auto : 요소에 지정된 크기가 존재하면 해당 값을 사용하고, 지정된 크기가 없으면 요소의 컨텐츠 크기를 사용한다
+                li 아이템 flex-basis 속성 : 아이템 기본 크기
+                ul
+                    li auto(기본값) : 요소에 지정된 크기가 존재하면 해당 값을 사용하고, 지정된 크기가 없으면 요소의 컨텐츠 크기(max-content 기준)를 사용한다
+                    li content : auto와 달리, 요소에 지정된 크기가 있어도 컨텐츠 크기를 사용한다
                 +codeBtn({
                     path: '/Repositories/Single/202210/19_2125.html',
                     lan: 'nohighlight',
@@ -286,6 +288,7 @@ include ../../../source/skeleton.pug
                     title: '←코드'
                 })
                 li 아이템 flex-shrink 속성 : flex-grow와 다르게, 오버플로 시 수축하는 비중을 지정한다
+                p 그러나 각 아이템은 min-content 미만으로 축소되지 않는다
                 li 아이템 flex 단축 속성 : flex-grow flex-shrink flex-basis
                 ul
                     li flex: initial == flex: 0 1 auto
@@ -293,7 +296,7 @@ include ../../../source/skeleton.pug
                     li flex: none == flex: 0 0 auto
                     li flex: n == flex: n 1 0
 
-            h3 Aligning Items in a Flex Container
+            h3 Aligning items in a flex container
             ul
                 li 컨테이너 justify-content 속성 : 주 축에 대하여 아이템을 어떻게 배치할 지 지정한다
                 ul
@@ -319,16 +322,129 @@ include ../../../source/skeleton.pug
                     li flex-start : 직교 축의 시작부터 자리를 차지한다
                     li flex-end : 직교 축의 끝부터 자리를 차지한다
                     li center : 직교 축의 중간에 위치한다
+                li 아이템 align-self 속성 : 직교 축 상에서의 아이템 배치 조정
+                li 컨테이너 align-content : 직교 축 상의 여러 flex line 간의 배치 조정
+                p stretch(기본값), flex-start, flex-end, center, space-around, space-between, space-evenly
+                li 컨테이너 gap, column-gap, row-gap : 아이템 간 간격 조정
+                li e.g. margin 속성을 이용해 특정 아이템 사이에만 여백 두기
+                +codeBtn({
+                    path: '/Repositories/Single/202210/20_1031.html',
+                    lan: 'nohighlight',
+                    title: 'flex-item { margin }'
+                })
+                +codeBtn({
+                    path: '/Repositories/Single/202210/20_1031.html',
+                    lan: 'html',
+                    title: '←코드'
+                })
 
-            h3 Controlling Ratios of Flex Items Along the Main Axis
-            h3 Cross-browser Flexbox mixins
-            h3 Mastering Wrapping of Flex Items
-            h3 Ordering Flex Items
-            h3 Relationship of flexbox to other layout methods
-            h3 Backwards Compatibility of Flexbox
-            h3 Typical use cases of Flexbox
+            h3 Ordering flex items
+            ul
+                li 아이템 order 속성 : 기본값 0. 배치 순서를 세부적으로 조정 가능
+                +codeBtn({
+                    path: '/Repositories/Single/202210/20_1050.html',
+                    lan: 'nohighlight',
+                    title: 'flex-item { order }'
+                })
+                +codeBtn({
+                    path: '/Repositories/Single/202210/20_1050.html',
+                    lan: 'html',
+                    title: '←코드'
+                })
 
         h2 Grid layout
+        div
+            h3 Basic concepts of grid layout
+            ul
+                li Flexible box가 기본적으로 1차원으로 요소들을 배치하는 것과 다르게, Grid는 2차원 배치를 기본으로 한다
+                +codeBtn({
+                    path: '/Repositories/Single/202210/20_1209.html',
+                    lan: 'nohighlight',
+                    title: '간단한 grid'
+                })
+                +codeBtn({
+                    path: '/Repositories/Single/202210/20_1209.html',
+                    lan: 'html',
+                    title: '←코드'
+                })
+                li 자식 요소가 많으면 정의된 행 또는 열의 개수를 초과하여 자동으로 다음 열 또는 행이 생성되는데, grid-auto-rows, grid-auto-columns 속성을 이용해 이러한 암묵적 그리드를 제어할 수 있다
+                +codeBtn({
+                    path: '/Repositories/Single/202210/21_1604.html',
+                    lan: 'nohighlight',
+                    title: 'grid-auto-rows'
+                })
+                +codeBtn({
+                    path: '/Repositories/Single/202210/21_1604.html',
+                    lan: 'html',
+                    title: '←코드'
+                })
+                li 그리드는 행과 열의 정의에 따른 선들이 존재하는데, 문서의 writing mode에 따라 자연스러운 순서대로 1부터 번호가 매겨진다
+                p grid-template-columns, grid-template-rows로 개수가 명시된 경우, 음수로도 지정 가능하다
+                +codeBtn({
+                    path: '/Repositories/Single/202210/21_1623.html',
+                    lan: 'nohighlight',
+                    title: 'grid line'
+                })
+                +codeBtn({
+                    path: '/Repositories/Single/202210/21_1623.html',
+                    lan: 'html',
+                    title: '←코드'
+                })
+                li 그리드 항목은 동일한 셀을 점유할 수 있다. 눈에 보이는 것은 z-index에 따라 결정된다
+            
+            h3 명명된 그리드
+            ul
+                li 명명된 영역을 정의하여 그리드를 분배할 수 있다
+                +codeBtn({
+                    path: '/Repositories/Single/202210/21_1652.html',
+                    lan: 'nohighlight',
+                    title: 'grid-template-areas'
+                })
+                +codeBtn({
+                    path: '/Repositories/Single/202210/21_1652.html',
+                    lan: 'html',
+                    title: '←코드'
+                })
+                li 명명된 영역의 경계선은 ${name}-start, ${name}-end로 참조할 수 있다
+                +codeBtn({
+                    path: '/Repositories/Single/202210/21_1703.html',
+                    lan: 'nohighlight',
+                    title: 'Implicit grid lines from named areas'
+                })
+                +codeBtn({
+                    path: '/Repositories/Single/202210/21_1703.html',
+                    lan: 'html',
+                    title: '←코드'
+                })
+                li 반복 명명된 경계선을 이용한 12열 그리드 예
+                +codeBtn({
+                    path: '/Repositories/Single/202210/21_1710.html',
+                    lan: 'nohighlight',
+                    title: 'Multiple lines with the same name with repeat()'
+                })
+                +codeBtn({
+                    path: '/Repositories/Single/202210/21_1710.html',
+                    lan: 'html',
+                    title: '←코드'
+                })
+            
+            h3 박스 정렬
+            ul
+                li 그리드의 두 축은 block axis와 inline axis로 구분된다
+                p 전자는 블록 요소가 블록 레이아웃을 따라 배치되는 방향, 후자는 텍스트를 같은 줄에서 한 글자씩 작성할 때 배치되는 방향이다
+                li 컨테이너 align-items 속성 : block axis에 따른 아이템 배치를 지정한다
+                p normal, stretch, start, center, end
+                li 컨테이너 justify-items 속성 : inline axis에 따른 아이템 배치를 지정한다
+                p normal, stretch, start, center, end
+                li 컨테이너 align-content 속성 : block axis에 따른 아이템 간격 조정
+                p normal, stretch, start(기본값), center, end, space-around, space-between, space-evenly
+                li 컨테이너 justify-content 속성 : inline axis에 따른 아이템 간격 조정
+                p normal, stretch, start(기본값), center, end, space-around, space-between, space-evenly
+                li 아이템 align-self 속성 : block axis에 따른 정렬을 지정한다
+                p auto, normal, stretch, start, center, end
+                li 아이템 justify-self 속성 : inline axis에 따른 정렬을 지정한다
+                p auto, normal, stretch, start, center, end
+                li 또는 아이템 margin: auto; 속성으로 셀 내의 위치를 조정할 수 있다
 
         li.marker 변수
         ol

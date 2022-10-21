@@ -103,9 +103,7 @@ mixin post(options)
             title= options.title
 
             link(rel="icon", href="/imgs/favicon.png")
-            link#w3css(rel="stylesheet", href="/source/w3.css")
-            link#highlight-style(rel="stylesheet", href="/source/xcode.css")
-            link#default-style(rel="stylesheet", href="/source/default.css")
+            link(rel="stylesheet", href="/source/default.css")
 
             script window.wizFuncQueue = [];
         body

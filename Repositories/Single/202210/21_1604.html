@@ -1,0 +1,22 @@
+<div class="div-221021-1604">
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+    <div>5</div>
+</div>
+
+
+<style>
+    .div-221021-1604 {
+        border: solid;
+        display: grid;
+        grid-template-columns: 2fr repeat(2, 1fr);
+        grid-auto-rows: minmax(5ch, auto);
+    }
+
+    .div-221021-1604 div {
+        border: inherit;
+        flex-basis: 3ch;
+    }
+</style>
