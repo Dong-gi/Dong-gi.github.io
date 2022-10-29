@@ -234,12 +234,14 @@ hr{border:0;border-top:1px solid #eee}
 /* End W3.CSS 4.13 */
 
 
-div{word-wrap:break-word}
+div,p,pre,ol,ul,li{word-wrap:break-word;word-break:break-all}
 h1,h2,h3,h4,h5,h6{border-bottom:1px solid #ccc}
 img{max-width:100%}
 caption{padding-top:8px!important;padding-bottom:8px!important}
 hr{border-top:3px solid rgba(0, 0, 0, .1)}
-li,summary{margin:0.5rem 0}
+br{content:'';display:block;margin:0.5rem 0}
+:not(print) li,summary{margin:0.5rem 0}
+print li,summary{margin:0}
 li:hover{background-color:antiquewhite}
 
 .margin-left-0{margin-left:24px!important}

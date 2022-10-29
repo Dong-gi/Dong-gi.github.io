@@ -6,6 +6,7 @@ include ../../../source/skeleton.pug
     })
     h1 자료
     ul
+        li: +asA('https://www.w3schools.com/css/default.asp', 'W3Schools > CSS')
         li: +asA('https://web.dev/learn/css/', 'web.dev > CSS 배우기')
         li: +asA('https://developer.mozilla.org/en-US/docs/Web/CSS', 'MDN > CSS')
 
@@ -61,10 +62,12 @@ include ../../../source/skeleton.pug
                 li input: checked, disabled, enabled, focus, in-range, out-of-range, valid, invalid, read-only, read-write, required, optional
                 li :first-child, last-child, nth-child(n), nth-last-child(n)
                 li :not(selector)
+                li :is(selector list)
+                +asCode('css') .post :is(h1, h2, h3) { line-height: 1.2; }
 
             h3.fake 의사 요소
             ul
-                li 요소의 특정 부분을 선택하거나, 요소의 앞뒤에 내용을 추가하는 데 사용한다. '::'를 이용해 의사 요소를 지정한다
+                li 요소의 특정 부분을 선택하거나, 요소의 앞뒤에 내용을 추가(content 속성을 설정한 경우, 요소가 자식 요소를 가질 수 있어야 함)하는 데 사용한다. '::'를 이용해 의사 요소를 지정한다
                 li ::first-letter : 첫 번째 글자
                 li ::first-line : 첫 번째 줄 
                 li ::marker : 리스트 아이템의 글머리 기호(또는 번호)
@@ -132,6 +135,35 @@ include ../../../source/skeleton.pug
         ul
             li 속성이 상속 가능하면 inherit으로, 아니면 initial로 작동
             li "all: unset;"으로 간편하게 모든 속성 상속 취소 가능
+
+    h1 단위
+    div
+        h2 절대 길이
+        ul
+            li cm : 센티미터
+            li mm : 밀리미터
+            li in : 인치
+            li px : 픽셀 == 1/96in
+        h2 상대 길이
+        ul
+            li em : 상속된 폰트 크기
+            li rem : 루트 요소의 폰트 크기(기본값 16px)
+            li cap : 대문자 크기
+            li ch : 반각문자 평균 너비
+            li ic : 전각문자 평균 너비
+            li lh : 요소의 줄 간격
+            li rlh : 루트 요소의 줄 간격
+            li vw : 표시영역 너비의 1%
+            li vh : 표시영역 높이의 1%
+            li vi : 표시영역 inline axis(writing mode에 따른 방향) 길이의 1%
+            li vb : 표시영역 block axis(block 요소가 추가되는 방향) 길이의 1%
+            li vmin : min(vw, vh)
+            li vmax : max(vw, vh)
+        h2 각도
+        ul
+            li deg : 60분법의 1도
+            li rad : 1 라디안
+            li turn : 1turn == 360deg
 
     h1 Layout
     div
@@ -446,84 +478,28 @@ include ../../../source/skeleton.pug
                 p auto, normal, stretch, start, center, end
                 li 또는 아이템 margin: auto; 속성으로 셀 내의 위치를 조정할 수 있다
 
-        li.marker 변수
+    h1 함수
+    div
+        h2 #{`attr( <attribute-name> )`}
+        p 해당 속성값을 획득한다
+
+        h2 calc()
+        +asCode('css').
+            .x { width: calc(100% - 2rem) }
+            .x { width: calc(var(--root-width) * 2) }
+            .x { width: calc(calc(var(--root-width) * 2) * 2) }
+
+        h2 clamp(min, val, max) == max(min, min(val, max))
+        p [min, max] 범위를 벗어나지 않으면 val 반환
+
+        h2 #{`var( <custom-property-name>, <declaration-value>?)`}
         ol
             li 변수 선언
             +asCode('css') root { --var1: 12px; --my-var2: blue; }
             li 변수 사용
             +asCode('css') p { color: var(--my-var2); }
-        li meadia query
-        p Syntax::= @media not|only mediatype and (media feature and|or|not mediafeature) { CSS-Code; }
-            +asA('https://www.w3schools.com/cssref/css3_pr_mediaquery.asp')
-
-    h1 디자인
-    ul
-        li.marker 공통 속성
-        ol
-            li 배경색 background-color: color;
-            li 배경 이미지 background-image: url("url")
-            p 이미지 잘라넣기 : 투명한 img로 자리를 차지하고, background: url('url') 시작w 시작h; 설정
-            p
-                +asA('https://www.w3schools.com/css/css3_border_images.asp', '외곽 이미지')
-                +asA('https://www.w3schools.com/css/css3_backgrounds.asp', '배경 이미지')
-                +asA('https://www.w3schools.com/css/css3_images.asp', '이미지 스타일링')
-                +asA('https://www.w3schools.com/css/css3_object-fit.asp', 'img 크기에 맞추는 방식')
-            li 외곽선 border-style: dotted | dashed | solid | double | groove | none | hidden | ...
-            ul
-                li 두께 border-width: width; » 색상 border-color: color; » 곡률 border-radius: radius;
-                li 방향별로 설정 가능 : top, bottom, left, right
-                li margin 밖의 외곽선 outline도 존재
-            li 외부 여백 margin: auto | size | % | inherit;
-                br
-                |내부 여백 padding: size | % | inherit;
-            li 너비 width: auto | size | %, 높이 height: auto | size | %
-            ul
-                li 최대 너비 max-width: none | size | %, 최대 높이 max-height: none | size | %
-                li 최소 너비 min-width: size | %, 최소 높이 min-height: size | %
-        li.marker 텍스트
-        ol
-            li 색상 color: color;
-            li 정렬 text-align: left | center | right | justify(양쪽정렬)
-            li 꾸밈선 text-decoration: none | overline | line-through | underline
-            li 대소문자 강제 text-transform: uppercase | lowercase | capitalize
-            li 들여쓰기 text-indent: size
-            li 자간 letter-spacing: size, 단어 간격 word-spacing: size
-            li 글자 크기 font-size: size, 줄 간격을 포함한 높이 line-height: size(배율)
-            li 글자 두께 font-weight: normal|bold|bolder|lighter|number|initial|inherit;
-                br
-                |그림자 text-shadow: h-shadow v-shadow blur-radius color|none|initial|inherit;
-            li 폰트 font-family: family-name|generic-family|initial|inherit;
-            li 영역을 벗어난 텍스트 처리 text-overflow, text-break, text-wrap
-                +asA('https://www.w3schools.com/css/css3_text_effects.asp', '참고')
-        li 리스트
-        ol
-            li 리스트 아이템 이미지 마크 설정 list-style-image: none|url|initial|inherit;
-            li 리스트 아이템 마커 타입 list-style-type: value;
-                +asA('https://www.w3schools.com/cssref/pr_list-style-type.asp', '참고')
-            li 리스트 아이템 마커 위치 list-style-position: inside | outside;
-        li.marker 보여주기 속성
-        ol
-            li display: none | block | inline | inline-block(너비/높이 속성을 가질 수 있다)
-                +asA('https://www.w3schools.com/cssref/pr_class_display.asp', '참고')
-            li visibility: visible | hidden(자리는 차지) | collapse | initial | inherit;
-            li 위치 position: static | relative | fixed | absolute | sticky;
-            li z축 우선순위 z-index: number;
-            li 넘침 영역 overflow, overflow-x, overflow-y: visible | hidden | scroll | auto | initial | inherit;
-            li 띄우기 float: none | left | right | initial | inherit;
-            li float 요소를 배제하여 구분된 영역 이용 clear: none | left | right | both | inherit;
-            li 불투명도 opacity: [0.0-1.0]; 또는 RGBA 이용
-            li box-shadow: none|h-offset v-offset blur spread color |inset|initial|inherit;
-            li 다단
-                +asA('https://www.w3schools.com/css/css3_multiple_columns.asp', '참고')
-            li 사용자가 크기 조절 resize: none|both|horizontal|vertical|initial|inherit;
-
-    h1 변형
-    ol
-        li 2D 변형 » translate(), rotate(), scale(), skewX(), skewY(), matrix()
-            +asA('https://www.w3schools.com/css/css3_2dtransforms.asp', '참고')
-        li 3D 변형 » rotateX(), rotateY(), rotateZ()
-            +asA('https://www.w3schools.com/css/css3_3dtransforms.asp', '참고')
-        li 전개 » transition
-            +asA('https://www.w3schools.com/css/css3_transitions.asp', '여기로')
-        li 애니메이션 »
-            +asA('https://www.w3schools.com/css/css3_animations.asp', '여기로')
+            li 첫 번째 콤마 뒤의 모든 문자열이 fallback 값이다
+            p 예를 들어 var(--foo, red, blue)에서의 fallback 값은 "red, blue"다
+        
+        h2 #{`url( <string> )`}
+        p 외부 리소스를 참조한다
