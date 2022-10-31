@@ -1,3 +1,36 @@
+&#x23; for #
++asA('href', 'innerText')
++w3img('/imgs/', 'alt')
++hoverTemplate()#template-id
+span.hover-content(template-id='template-id'
+
+
+sitemap 제작
+a = document.createElement('a')
+a.href = URL.createObjectURL(new Blob([posts.list.map(x => `https://dong-gi.github.io${x.file}`).join('\n')], {
+    type: 'text/plain;charset=utf-8;'
+}))
+a.target = '_blank'
+a.download = 'sitemap.txt'
+document.body.append(a)
+a.click()
+
+
++post({
+    title: '선형대수',
+    description: '선형대수 정리 문서',
+    useMath: true
+})
+
+
++codeBtn({
+    path: '/Repositories/Single/202210/19_1643.html',
+    lan: 'nohighlight',
+    title: 'flow-root를 사용하지 않은 경우'
+})
+
+
+
 AWS WAF
     https://techblog.woowahan.com/2699/
     https://d1.awsstatic.com/whitepapers/ko_KR/guidelines-implementing-aws-waf.pdf

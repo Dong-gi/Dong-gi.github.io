@@ -76,7 +76,7 @@ mixin pos(name)
 //-
     options = {
         title: string,
-        keywords: string,   <- Deprecated
+        keywords: string,   <- Removed
         description: string,
         useMath: boolean,
     }
@@ -87,7 +87,6 @@ mixin post(options)
         else if (arguments.length > 1)
             options = {
                 title: arguments[0],
-                keywords: arguments[1],
                 description: arguments[2],
                 useMath: arguments[3],
             }

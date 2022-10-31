@@ -1,10 +1,14 @@
 include ../../source/skeleton.pug
-+post('선형대수', '선형대수, 행렬, 벡터, 내적', '대학 선형대수 정리 문서', true)
++post({
+    title: '선형대수',
+    description: '선형대수 정리 문서',
+    useMath: true
+})
     h1 선형대수?
-    strong 1차(선형) 시스템을 다루는 대수학
+    p 1차(선형) 시스템을 다루는 대수학
 
     h1 참고문서
-    ol
+    ul
         li: +asA('http://matrix.skku.ac.kr/knou-knowls/', '성균관대 선형대수학')
         li: +asA('https://github.com/mathjax/MathJax-demos-web', 'MathJax 공식')
         li: +asA('https://oeis.org/wiki/List_of_LaTeX_mathematical_symbols', 'LaTeX 키워드')
@@ -77,8 +81,8 @@ include ../../source/skeleton.pug
                 li 한 행의 상수 배를 다른 방정식에 더하기
 
         h2 행사다리꼴 행렬(REF; Row Echelon Form matrix)
+        p 아래 두 조건을 만족하는 행렬은 행사다리꼴 행렬이다
         ol
-            p 아래 두 조건을 만족하는 행렬은 행사다리꼴 행렬이다
             li 모든 원소가 0인 행은 맨 아래에 있다
             li 나머지 행의 선행 계수는 그 위 행의 선행 계수보다 오른쪽에 있다
 

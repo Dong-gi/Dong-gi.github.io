@@ -255,6 +255,7 @@ li:hover{background-color:antiquewhite}
 .file-list{padding:0 8px!important}
 .file-list ul{padding-left:12px}
 .file-list li{margin-left:24px}
+details.file-list{margin-block:1rem 1rem}
 
 /* 포스트 영역 스타일 */
 div#contents details{margin-left:0.5em;padding-left:1.0em;border-left:6px solid rgba(0, 0, 0, .1)}

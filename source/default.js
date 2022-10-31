@@ -1,19 +1,3 @@
-//- &#x23; for #
-//- +codeBtn('/Repositories/', 'java')
-//- +asA('href', 'innerText')
-//- +w3img('/imgs/', 'alt')
-//- +hoverTemplate()#template-id
-//- span.hover-content(template-id='template-id'
-
-//- sitemap 제작
-//- a = document.createElement('a')
-//- a.href = URL.createObjectURL(new Blob([posts.list.map(x => `https://dong-gi.github.io${x.file}`).join('\n')], {
-//-     type: 'text/plain;charset=utf-8;'
-//- }))
-//- a.target = '_blank'
-//- a.download = 'sitemap.txt'
-//- document.body.append(a)
-//- a.click()
 const posts = {
     list: [
         { category: 'Algorithm', file: '/posts/algorithm/acmicpc.html', title: 'ACM-ICPC 문제' },
@@ -111,7 +95,7 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/006.html', title: '지식의 착각' },
         { category: 'Topic/Book', file: '/posts/book/007.html', title: '키르케고르 실존 극장' },
         { category: 'Topic/Book', file: '/posts/book/008.html', title: 'Gamification by Design' },
-        { category: 'Topic/Book', file: '/posts/book/009.html', title: '인지 편향' },
+        { category: 'Topic/Book', file: '/posts/book/009.html', title: '인지편향사전' },
         { category: ['Topic', 'Topic/Book'], file: '/posts/book/010.html', title: '애자일 & 스크럼 프로젝트 관리' },
         { category: 'Topic/Book', file: '/posts/book/011.html', title: '나는 뇌가 아니다' },
         { category: 'Topic/Book', file: '/posts/book/012.html', title: '우리는 어떻게 바뀌고 있는가' },
@@ -136,6 +120,8 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/031.html', title: '내가 죽인 소녀' },
         { category: 'Topic/Book', file: '/posts/book/032.html', title: '그리고 밤은 되살아난다' },
         { category: 'Topic/Book', file: '/posts/book/033.html', title: '저지먼트' },
+        { category: 'Topic/Book', file: '/posts/book/034.html', title: '검은 집' },
+        { category: 'Topic/Book', file: '/posts/book/035.html', title: '연쇄 살인마 개구리 남자' },
         { category: 'Topic/Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
         { category: 'Topic/Life', file: '/posts/daily_life/car.html', title: '차' },
         { category: 'Topic/Life', file: '/posts/daily_life/death.html', title: '장례' },
