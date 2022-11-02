@@ -1,0 +1,26 @@
+include ../../source/skeleton.pug
+
++post({
+    title: '도깨비불의 집',
+    description: '도깨비불의 집 독서 기록'
+})
+    h1 도서 정보
+    .w3-row
+        .w3-col.s2.w3-center
+            +w3img('https://image.yes24.com/goods/4115552/L', '도서 이미지')&attributes({style: 'max-height:210px'})
+        .w3-col.s10
+            table.no-sort
+                +tds('표제/저자사항', '도깨비불의 집 / 기시 유스케')
+                +tds('ISBN 정보', '978-89-01-11010-3 (04830)')
+                +tds('발행사항', '웅진씽크빅, 2010.08.31')
+
+    ul
+        li 고타(살인 현장 발견자)는 무엇 때문에 흉기를 봉투에 넣어서 창문으로 던진 거죠?
+        p 흉기가 금괴였기 때문이지요
+        li (절도 전문가) 지금은 좀 곤란합니다
+        p 왜요?<br>
+            |&gt;&gt; 지금 다른 집에 와 있습니다<br>
+            |급한 일이에요. 가능하면 그쪽에 양해를 구하고...<br>
+            |&gt;&gt; 그건 불가능합니다<br>
+            |왜죠?<br>
+            |&gt;&gt; 이 집에 사람이 없으니까요

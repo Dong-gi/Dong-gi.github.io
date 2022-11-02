@@ -1,7 +1,29 @@
 include ../../source/skeleton.pug
-+post('Docker', 'Docker', 'Docker 정리')
-    h1 시작하기
++post({
+    title: '컨테이너',
+    description: '도커, 쿠버네티스 등 컨테이너 관련 기술 정리'
+})
+    h1 Virtualization
     ol
+        li 가상화란 실재하는 무언가에 대해 동등한 추상화 수준을 제공하는, 실재와 다른 것을 만드는 행위다
+        li 가상 머신(VM; Virtual Machine) : 컴퓨터 시스템에 대한 가상화. 하이퍼바이저에 의해 관리된다
+        p 호스트 OS 상에서 하이퍼바이저가 실행되고, 게스트 OS는 하이퍼바이저를 통해 리소스를 할당받는다
+        li #[+asA('https://en.wikipedia.org/wiki/OS-level_virtualization', '운영체제 수준 가상화')] : 호스트 커널이 격리된 유저 공간을 지원하는 패러다임
+        ul
+            li 호스트 OS에서 직접 실행되므로, 가상 머신에 비해 성능 저하가 현저히 적다
+            li 격리된 유저 공간을 지칭하는 용어는 구현마다 다르다 : container(LXC, Solaris containers, Docker, Podman), zone(Solaris containers), jail, ...
+            li 구현에 따라 지원하는 기능의 수준도 다르다 : 파일 시스템 격리, CPU 제한, 메모리 제한, IO 제한 등
+        li #[+asA('https://opencontainers.org/', 'Open Container Initiative')] : 컨테이너에 관한 개방 표준을 제정하기 위한 리눅스 재단 하위 프로젝트
+        p 크게 두 가지 명세를 정의한다 : 런타임 명세 + 이미지 명세
+        li 이미지 : 컨테이너를 생성하는 데 필요한 모든 정보가 담긴 단일 이진 파일
+        ul
+            li 이미지는 읽기 전용이다
+            li 이미지는 계층들로 구별되어 있으며, 각 계층은 변경 사항만을 저장하므로 새 버전이 배포되더라도 전체 이미지 크기의 변화는 최소화된다
+            li 도커 컨테이너는 격리된 파일시스템을 할당받으며, 거기서 추가된 파일은 이미지에 전혀 영향을 미치지 않는다
+
+    h1 Docker
+    ol
+        li 도커는 컨테이너를 보다 편리하게 사용하기 위해 개발된 프로젝트
         li 도커 엔진(Apache 2.0 license)은 REST API로 통신하는 서버-클라이언트로 구성된다
         li.marker Docker daemon
         p 도커 서버는 오랫동안 실행되는 dockerd 데몬 프로세스로, Docker object들을 관리한다
@@ -127,6 +149,18 @@ include ../../source/skeleton.pug
         |Commands 
         +asA('https://docs.docker.com/engine/reference/commandline/docker/')
     div
+        h2 docker attach
+        +asCode('shell').
+            $ docker attach [OPTIONS] CONTAINER
+
+            # OPTIONS
+            --detach-keys   컨테이너로부터 스트림을 떼어낼 때 사용하는 키 시퀀스 재정의. 기본값 = CTRL-p CTRL-q
+            --no-stdin      STDIN은 부착하지 않음
+            --sig-proxy     CTRL-c를 비롯한 모든 시그널을 프로세스에 중계. 기본값 = true
+        ul
+            li 터미널의 표준 입력, 출력, 에러 스트림을 지정한 컨테이너에 부착한다
+            li 스트림을 떼어내기 위해 CTRL-c를 입력하는 경우 SIGKILL 전송으로 프로세스 종료됨에 유의
+
         h2 docker build : 절차대로 이미지 생성
         +asCode('shell').
             $ docker build [OPTIONS] PATH | URL | -
@@ -234,7 +268,7 @@ include ../../source/skeleton.pug
                 docker run --name node-rendezvous -p 50000:50000/udp -p 50001:50001 -d -it --network="my-net" -v $PWD/Dong-gi.github.io/Repositories/Rendezvous/:/home/node/app node
             li OPTIONS
             +asCode('shell').
-                --publish, -p # 포트 포워딩. -p 80:8080, -p 8888:8080/tcp
+                --publish, -p # 포트 포워딩. -p 80(호스트 가용 포트 중 하나), -p 8080:80(호스트 8080 포트), -p 8080:80/tcp(tcp만), -p 1.2.3.4:8080:80(호스트 IP 지정)
                 --detach, -d  # 지정한 경우 백그라운드 실행. 커맨드가 리턴하면 컨테이너도 종료
                               # -d를 지정하지 않은 경우(default) 포그라운드로 실행되며, STDIN, STDOUT, STDERR가 콘솔에 연결된다(default).
                 -it           # -i(--interactive, STDIN 계속 열어두기) + -t(-tty, Pseudo-tty 할당)
@@ -247,6 +281,7 @@ include ../../source/skeleton.pug
                                                     # container : --add-host, --hostname, --dns, --dns-search, --dns-option, --mac-address, --publish, --publish-all, --expose 무효
                 --add-host=""                       # host:IP형식으로 적으면 /etc/hosts에 추가한다
                 --ip="", --ip6="", --mac-address="" # 주소 할당
+                --link other_container:host_name    # 다른 컨테이너를 지정한 호스트 이름으로 참조하도록 추가
 
                 --restart       # no(default), on-failure[:max-retries](0이 아닌 상태로 종료된 경우 재시작), always(항상 재시작), unless-stopped(명시적으로 stop하기 전까지 항상 재시작)
                 --rm            # 컨테이너 종료 시 삭제

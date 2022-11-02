@@ -122,6 +122,7 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/033.html', title: '저지먼트' },
         { category: 'Topic/Book', file: '/posts/book/034.html', title: '검은 집' },
         { category: 'Topic/Book', file: '/posts/book/035.html', title: '연쇄 살인마 개구리 남자' },
+        { category: 'Topic/Book', file: '/posts/book/036.html', title: '도깨비불의 집' },
         { category: 'Topic/Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
         { category: 'Topic/Life', file: '/posts/daily_life/car.html', title: '차' },
         { category: 'Topic/Life', file: '/posts/daily_life/death.html', title: '장례' },
