@@ -149,279 +149,385 @@ include ../../source/skeleton.pug
         |Commands 
         +asA('https://docs.docker.com/engine/reference/commandline/docker/')
     div
-        h2 docker attach
-        +asCode('shell').
-            $ docker attach [OPTIONS] CONTAINER
+        h2 docker compose COMMAND
 
-            # OPTIONS
-            --detach-keys   컨테이너로부터 스트림을 떼어낼 때 사용하는 키 시퀀스 재정의. 기본값 = CTRL-p CTRL-q
-            --no-stdin      STDIN은 부착하지 않음
-            --sig-proxy     CTRL-c를 비롯한 모든 시그널을 프로세스에 중계. 기본값 = true
-        ul
-            li 터미널의 표준 입력, 출력, 에러 스트림을 지정한 컨테이너에 부착한다
-            li 스트림을 떼어내기 위해 CTRL-c를 입력하는 경우 SIGKILL 전송으로 프로세스 종료됨에 유의
-
-        h2 docker build : 절차대로 이미지 생성
-        +asCode('shell').
-            $ docker build [OPTIONS] PATH | URL | -
-            $ docker image build [OPTIONS] PATH | URL | -
-
-            # OPTIONS
-            --build-arg                  # 빌드 환경변수 설정
-            --compress                   # 컨텍스트 gzip 압축
-            --disable-content-trust true # 이미지 검증 생략
-            --file, -f                   # Dockerfile 파일명. 기본값은 'PATH/Dockerfile'
-            --label                      # 이미지 메타데이터 설정
-            --no-cache                   # 빌드 캐시 미사용
-            --tag, -t                    # 이미지 태그 설정
-        ol
-            li 향상된 기능을 제공하는 moby/buildkit을 이용하려면(Since 18.09) 실행 전에 환경 변수 DOCKER_BUILDKIT=1를 설정하면 된다
-            li 빌드 과정에서 "컨텍스트"란 지정된 PATH | URL에 존재하는 파일들을 의미한다. 빌드 과정에서 컨텍스트 임의의 파일을 참조할 수 있다
-            p .dockerignore 파일을 통해 컨텍스트에서 파일/디렉터리들을 제외할 수 있다
-            li URL은 다음 중 하나가 될 수 있다 : Git 저장소, pre-packaged tarball, plain text file
-            ul
-                li 예. container 브랜치의 docker 디렉터리 지정
-                +asCode('shell') $ docker build https://github.com/docker/rootfs.git#container:docker
-                p Git 저장소를 가리키는 경우, 해당 저장소의 서브모듈까지 재귀적으로 가져온다
-                table.no-sort
-                    tr
-                        th Build Syntax Suffix
-                        th Commit Used
-                        th Build Context Used
-                    tr
-                        td myrepo.git
-                        td refs/heads/master
-                        td /
-                    tr
-                        td myrepo.git#mytag
-                        td refs/tags/mytag
-                        td /
-                    tr
-                        td myrepo.git#mybranch
-                        td refs/heads/mybranch
-                        td /
-                    tr
-                        td myrepo.git#pull/42/head
-                        td refs/pull/42/head
-                        td /
-                    tr
-                        td myrepo.git#:myfolder
-                        td refs/heads/master
-                        td /myfolder
-                    tr
-                        td myrepo.git#master:myfolder
-                        td refs/heads/master
-                        td /myfolder
-                    tr
-                        td myrepo.git#mytag:myfolder
-                        td refs/tags/mytag
-                        td /myfolder
-                    tr
-                        td myrepo.git#mybranch:myfolder
-                        td refs/heads/mybranch
-                        td /myfolder
-                li 예. tarball 지정
-                +asCode('shell') $ docker build http://server/context.tar.gz
-                p 표준 tar 포맷이어야 한다. 압축 기법은 xz, bzip2, gzip, identity 중 하나
-                li 예. STDIN 입력
-                +asCode('shell') $ docker build - &lt; Dockerfile
-                li 예. 텍스트 입력
-                +asCode('shell') $ curl example.com/remote/Dockerfile | docker build -f - .
-
-        h2 docker commit : 컨테이너로부터 이미지 생성
-        +asCode('shell').
-            $ docker commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
-
-            # OPTIONS
-            --author, -a  # 저자
-            --change, -c  # 새 이미지에 적용할 INSTRUCTION 추가
-                          # $ docker commit --change "ENV DEBUG true" c3f279d17e0a  svendowideit/testimage:version3
-            --message, -m # 커밋 메시지
-            --pause, -p   # 커밋 도중 컨테이너 일시 정지(default true)
-
-        h2 docker tag : 이미지 태그 설정
-        +asCode('shell') $ docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
-        ol
-            li 예
-            +asCode('shell') $ docker tag 0e5574283393 fedora/httpd:version1.0
-            li Docker Hub로 올리려는 경우, {Docker Hub Id}/{Repository Name}:{tag}
-            +asCode('shell') $ docker tag bulletinboard:1.0 gordon/bulletinboard:1.0
-            li Private repository로 푸시하려면 해당 주소를 붙여줘야 한다
-            +asCode('shell') $ docker tag 0e5574283393 myregistryhost:5000/fedora/httpd:version1.0
-
-        h2 docker push : 이미지 업로드
-        +asCode('shell').
-            $ docker push [OPTIONS] NAME[:TAG]
-            $ docker image push [OPTIONS] NAME[:TAG]
-        p 이미지를 저장소로 업로드한다. 올바른 이미지 태그에 대해서는 docker tag 명령 참고
-
-        h2 docker run : 컨테이너 생성 후 실행
-        +asCode('shell').
-            $ docker run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
-            $ docker container run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
-        ol
-            li 새 컨테이너를 만들고(create) 실행(start)한 뒤, 그 안에서 명령을 실행한다
-            li 옵션 순서에 따라 실행에 실패하기도 한다...
-            +asCode('shell').
-                # 성공 예시
-                docker run --name my-postgres -p 5432:5432 -d -it --privileged=true --network="my-net" -e "POSTGRES_PASSWORD=xxx" -e PGDATA=/var/lib/postgresql/data/pgdata -v /free100/postgres:/var/lib/postgresql/data postgres
-                docker run --name node-rendezvous -p 50000:50000/udp -p 50001:50001 -d -it --network="my-net" -v $PWD/Dong-gi.github.io/Repositories/Rendezvous/:/home/node/app node
-            li OPTIONS
-            +asCode('shell').
-                --publish, -p # 포트 포워딩. -p 80(호스트 가용 포트 중 하나), -p 8080:80(호스트 8080 포트), -p 8080:80/tcp(tcp만), -p 1.2.3.4:8080:80(호스트 IP 지정)
-                --detach, -d  # 지정한 경우 백그라운드 실행. 커맨드가 리턴하면 컨테이너도 종료
-                              # -d를 지정하지 않은 경우(default) 포그라운드로 실행되며, STDIN, STDOUT, STDERR가 콘솔에 연결된다(default).
-                -it           # -i(--interactive, STDIN 계속 열어두기) + -t(-tty, Pseudo-tty 할당)
-                --name        # 컨테이너 이름 할당. 지정하지 않는 경우 docker 데몬이 랜덤하게 할당
-                --pid         # 기본적으로 각 컨테이너는 별개의 프로세스 네임스페이스에서 실행된다
-                              # --pid=host, --pid="container:{name|id}"를 이용해 네임스페이스 공유 가능
-
-                --network=""                        # bridge(default), none, container:&lt;name|id>, host(빠름)
-                                                    # host      : --mac-address 무효
-                                                    # container : --add-host, --hostname, --dns, --dns-search, --dns-option, --mac-address, --publish, --publish-all, --expose 무효
-                --add-host=""                       # host:IP형식으로 적으면 /etc/hosts에 추가한다
-                --ip="", --ip6="", --mac-address="" # 주소 할당
-                --link other_container:host_name    # 다른 컨테이너를 지정한 호스트 이름으로 참조하도록 추가
-
-                --restart       # no(default), on-failure[:max-retries](0이 아닌 상태로 종료된 경우 재시작), always(항상 재시작), unless-stopped(명시적으로 stop하기 전까지 항상 재시작)
-                --rm            # 컨테이너 종료 시 삭제
-                --memory="", -m # 메모리 제한. 최소 4m
-                --stop-timeout  # 지정 시간 경과 뒤 종료
-                --privileged    # 컨테이너에 모든 커널 작업 권한 부여
+        h2 docker container COMMAND
         div
-            h3 Dockerfile 오버라이딩
+            h3 docker container attach
+            ul
+                li 터미널의 표준 입력, 출력, 에러 스트림을 지정한 컨테이너에 부착한다
+                li 스트림을 떼어내기 위해 CTRL-c를 입력하는 경우 SIGKILL 전송으로 프로세스 종료됨에 유의
+                li CTRL-p CTRL-q으로 프로세스를 종료하지 않고 스트림을 떼어낼 수 있다. --detach-keys 옵션으로 재정의 가능
             +asCode('shell').
-                CMD                   # r run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
-                ENTRYPOINT            # --entrypoint=""
-                                      # $ --entrypoint /bin/bash example/redis -c ls -l
-                EXPOSE(incoming port) # --expose=[]
-                ENV                   # -e, --env, --env-file
-                                      # $ -e "deep=purple" -e today # 값을 지정하지 않으면 현재 값이 전파된다
-                VOLUME                # -v, --volume=[host-src:]container-dest[:&lt;options>]
-                USER                  # -u="", --user=""
-                WORKDIR               # -w=""
+                $ docker           attach [OPTIONS] CONTAINER
+                $ docker container attach [OPTIONS] CONTAINER
 
-        h2 docker logs : 로그 출력
-        p 컨테이너 로그 : /var/lib/docker/containers/${containerId}/${containerId}-json.log
-        +asCode('shell').
-            $ docker logs [OPTIONS] CONTAINER
+                # Options
+                --detach-keys   컨테이너로부터 스트림을 떼어낼 때 사용하는 키 시퀀스 재정의
+                --no-stdin      STDIN은 부착하지 않음
+                --sig-proxy     CTRL-c를 비롯한 모든 시그널을 프로세스에 중계. 기본값 = true
 
-            # OPTIONS
-            -n ${n}                 # 마지막 n개 줄만
-            --since ${timestamp}    # timestamp 이후 로그만; ISO 포맷(e.g. 2013-01-02T13:23:37Z) or 상대적 표현(e.g. 42m)
-            --until ${timestamp}    # timestamp 이전 로그만
-            -f                      # 실시간 확인
-            -t                      # 타임스탬프 출력
-
-        h2 docker rm : 컨테이너 제거
-        +asCode('shell').
-            $ docker rm [OPTIONS] CONTAINER [CONTAINER...]
-            $ docker container rm [OPTIONS] CONTAINER [CONTAINER...]
-
-            # OPTIONS
-            --force, -f   # 실행 중인 컨테이너 중지 후 제거
-            --link, -l    # 링크 제거
-            --volumes, -v # 볼륨 제거
-        ol
-            li 예. 중지한 컨테이너 모두 제거
-            +asCode('shell') $ docker rm $(docker ps -a -q)
-
-        h2 파일 복사
-        ol
-            li docker-machine scp
+            h3 docker container commit
+            ul
+                li 컨테이너로부터 이미지 생성
+                li 마운트된 볼륨의 데이터는 이미지에 포함되지 않는다
             +asCode('shell').
-                $ docker-machine scp source destination
-                # 예. 파일을 가상 머신으로 복사
-                $ docker-machine scp /root/file.war devvm:/home/docker/
-                $ # 예. 디렉터리 복사
-                docker-machine scp -r /root/directory/ devvm:/home/docker/
-            li docker cp
+                $ docker           commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
+                $ docker container commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
+
+                # Options
+                --author, -a    저자
+                --change, -c    새 이미지에 적용할 Dockerfile instruction 추가
+                                e.g. docker commit --change "ENV DEBUG=true" c3f279d17e0a  svendowideit/testimage:version3
+                --message, -m   커밋 메시지
+                --pause, -p     커밋 도중 컨테이너 일시 정지. 기본값 true
+
+            h3 docker container cp
+            ul
+                li 컨테이너와 로컬 파일 시스템 사이에서 파일 또는 폴더 복사
+                li 소스 또는 목적지 경로로 "-"를 사용하면 표준 입력 또는 출력 스트림으로 tar 압축 파일을 스트리밍할 수 있다
             +asCode('shell').
-                $ docker cp source destination
-                # 예. 파일을 컨테이너로 복사
+                $ docker           cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-
+                $ docker           cp [OPTIONS] SRC_PATH|- CONTAINER:DEST_PATH
+                $ docker container cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-
+                $ docker container cp [OPTIONS] SRC_PATH|- CONTAINER:DEST_PATH
+
+                # e.g. 로컬 파일을 컨테이너로 복사
                 $ docker cp file.war web:/usr/local/tomcat/webapps/
-                # 예. 디렉터리 복사
+
+                # e.g. 로컬 디렉터리를 컨테이너로 복사
                 $ docker cp directory/ web:/root/
 
-        h2 docker ps : 컨테이너 리스트
-        +asCode('shell').
-            $ docker ps [OPTIONS]
+            h3 docker container create
+            p 새 컨테이너를 만든다. 옵션에 대해서는 #[+goto('docker container run')] 참고
+            +asCode('shell').
+                $ docker           create [OPTIONS] IMAGE [COMMAND] [ARG...]
+                $ docker container create [OPTIONS] IMAGE [COMMAND] [ARG...]
 
-            # OPTIONS
-            --all, -a    # 실행중이지 않은 컨테이너도 표시
-            --filter, -f # 옵션은 https://docs.docker.com/engine/reference/commandline/ps/#filtering 참고
-            --format     # Go 템플릿 포맷. https://docs.docker.com/engine/reference/commandline/ps/#formatting 참고
-                         # $ docker ps --format "{{.ID}}: {{.Command}}"
-            --size, -s   # 전체 파일 크기 표시
+            h3 docker container diff
+            p 컨테이너 최초 생성 시의 파일시스템으로부터의 차분 나열
+            ul
+                li A : 추가된 파일 또는 디렉터리
+                li C : 변경된 파일 또는 디렉터리
+                li D : 삭제된 파일 또는 디렉터리
+            +asCode('shell').
+                $ docker           diff CONTAINER
+                $ docker container diff CONTAINER
 
-        h2 docker images : 이미지 리스트
-        +asCode('shell').
-            $ docker images [OPTIONS] [REPOSITORY[:TAG]]
+            h3 docker container exec
+            p 실행 중인 컨테이너 안에서 명령 실행
+            +asCode('shell').
+                $ docker           exec [OPTIONS] CONTAINER COMMAND [ARG...]
+                $ docker container exec [OPTIONS] CONTAINER COMMAND [ARG...]
 
-            # OPTIONS
-            --all, -a # 중간 이미지도 표시
-            --digests # Digest 표시
+                # e.g. docker exec -it my-server /bin/bash
 
-        h2 docker start : 컨테이너 시작
-        +asCode('shell').
-            $ docker start [OPTIONS] CONTAINER [CONTAINER...]
-            $ docker container start [OPTIONS] CONTAINER [CONTAINER...]
+                # Options
+                --detach, -d    백그라운드로 실행시킨다
+                --detach-keys   docker container attach 참고
+                --env, -e       환경 변수 설정
+                                e.g. -e VAR=1
+                --workdir, -w   워킹 디렉터리 설정
 
-        h2 docker search : Docker Hub 이미지 검색
-        +asCode('shell').
-            $ docker search [OPTIONS] TERM
+            h3 docker container export
+            p 컨테이너 파일시스템을 tar 압축 파일로 출력한다. 마운트된 볼륨은 출력 대상이 아니다
+            +asCode('shell').
+                $ docker           export [OPTIONS] CONTAINER
+                $ docker container export [OPTIONS] CONTAINER
 
-            # OPTIONS
-            --filter stars=3            # 최소 3성 이상
-            --filter "is-official=true" # 공식 이미지만
+                --output, -o    STDOUT 대신 파일로 출력하고자 하는 경우 설정
 
-        h2 docker pull : 저장소 이미지 다운로드
-        +asCode('shell').
-            $ docker pull [OPTIONS] NAME[:TAG|@DIGEST]
+            h3 docker container inspect
+            +asCode('shell').
+                $ docker container inspect [OPTIONS] CONTAINER [CONTAINER...]
 
-            $ docker pull ubuntu:14.04
-            $ docker pull ubuntu@sha256:45b23dee08af5e43a7fea6c4cf9c25ccf269ee113168c19722f87876677c5cb2
-            $ docker pull myregistry.local:5000/testing/test-image
+                --format, -f    Go 템플릿으로 출력 조정
+                
+                # e.g. IP 주소 획득
+                $ docker container inspect --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps --format '{{.ID}}' -a)
 
-        h2 docker rmi : 이미지 제거
-        +asCode('shell') $ docker rmi [OPTIONS] IMAGE [IMAGE...]
-        p 컨테이너가 이미지를 사용중임에도 -f 옵션으로 강제로 이미지를 삭제하려고 하는 경우, 이미지의 이름만 제거되어 &lt;none>으로 변경된다. 이들을 dangling 이미지라고 부르며, 사용하지 않는 dangling 이미지들은 docker image prune으로 삭제할 수 있다
+            h3 docker container kill
+            p 컨테이너(들)을 즉시 종료한다(SIGKILL)
+            +asCode('shell').
+                $ docker           kill [OPTIONS] CONTAINER [CONTAINER...]
+                $ docker container kill [OPTIONS] CONTAINER [CONTAINER...]
 
-        h2 docker attach : 컨테이너에 스트림 연결
-        +asCode('shell').
-            # STDIN, STDOUT, STDERR를 실행 중인 컨테이너에 연결한다
-            $ docker attach [OPTIONS] CONTAINER
-            $ docker container attach [OPTIONS] CONTAINER
+            h3 docker container logs
+            p 컨테이너 로그를 획득한다. 컨테이너 로깅 드라이버가 json-file 또는 journald로 생성된 경우에만 유효
+            +asCode('shell').
+                $ docker           logs [OPTIONS] CONTAINER
+                $ docker container logs [OPTIONS] CONTAINER
 
-            # OPTIONS
-            --detach-keys # 스트림 연결 해제 키 재설정
-                          # -it 옵션으로 실행중이라면, Ctrl + P, Ctrl + Q로 컨테이너를 정지하지 않고 나올 수 있다
-            --no-stdin    # STDIN은 연결하지 않음
+                # Options
+                --tail, -n      마지막 n개 줄만
+                --since         특정 시각 이후 로그만
+                                timestamp 예. --since 2013-01-02T13:23:37Z
+                                상대적 표현 예. --since 42m
+                --until         특정 시각 이전 로그만
+                --follow, -f    실시간 확인
 
-        h2 docker exec : 컨테이너 안에서 명령 실행
-        +asCode('shell').
-            $ docker exec [OPTIONS] CONTAINER COMMAND [ARG...]
-            $ docker container exec [OPTIONS] CONTAINER COMMAND [ARG...]
+            h3 docker container ls
+            p 컨테이너 목록 출력
+            +asCode('shell').
+                $ docker           ps [OPTIONS]
+                $ docker container ls [OPTIONS]
 
-            # 예. $ docker exec -it tomcat /bin/bash
-            # OPTIONS
-            --detach, -d  # 백그라운드로 실행시킨다
-            --env, -e     # 환경 변수 설정 Since 1.25
-            --workdir, -w # 워킹 디렉터리 설정 Since 1.35
-        p docker-machine 예
-        +asCode('shell').
-            docker-machine ssh dbvm -- docker exec postgres1 /bin/bash /home/postgres/something.sh
+                # Options
+                --all, -a       실행중이지 않은 컨테이너도 표시
+                --filter, -f    조건을 만족하는 컨테이너만 표시. https://docs.docker.com/engine/reference/commandline/ps/#filtering 참고
+                --format        Go 템플릿으로 출력 조정. https://docs.docker.com/engine/reference/commandline/ps/#formatting 참고
+                                e.g. --format "{{.ID}}: {{.Command}}"
 
-    h1 컨테이너 오케스트레이션
-    div
-        h2 Kubernetes; K8s
-        p Empty
-        h2 Swarm
-        +asCode().
-            $ docker swarm init
+            h3 docker container port
+            p 모든/특정 포트 매핑 정보 출력
+            +asCode('shell').
+                $ docker           port CONTAINER [PRIVATE_PORT[/PROTO]]
+                $ docker container port CONTAINER [PRIVATE_PORT[/PROTO]]
 
-            $ docker service create --name demo alpine:3.5 ping 1.1.1.1
-            $ docker service ps
-            $ docker service logs demo
-            $ docker service rm demo
-            # docker service scale
+            h3 docker container rename
+            +asCode('shell').
+                $ docker           rename CONTAINER NEW_NAME
+                $ docker container rename CONTAINER NEW_NAME
+
+            h3 docker container restart
+            p stop + start
+
+            h3 docker container rm
+            +asCode('shell').
+                $ docker           rm [OPTIONS] CONTAINER [CONTAINER...]
+                $ docker container rm [OPTIONS] CONTAINER [CONTAINER...]
+
+                # Options
+                --force, -f     실행 중인 컨테이너라도 종료(SIGKILL) 후 제거
+                --link, -l      기본 브리지 네트워크에 등록한 링크 제거
+                --volumes, -v   익명 볼륨 제거
+
+            +pos('docker container run')
+            h3 docker container run
+            +asCode('shell').
+                $ docker           run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
+                $ docker container run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
+            div
+                p 새 컨테이너를 만들고(create) 실행(start)한 뒤, 그 안에서 명령을 실행한다. 옵션 순서에 따라 실행에 실패하기도 한다...
+                +asCode('shell', '성공 예시').
+                    $ docker run --name my-postgres -p 5432:5432 -d -it --privileged=true --network="my-net" -e "POSTGRES_PASSWORD=xxx" -e PGDATA=/var/lib/postgresql/data/pgdata -v /free100/postgres:/var/lib/postgresql/data postgres
+                    $ docker run --name node-rendezvous -p 50000:50000/udp -p 50001:50001 -d -it --network="my-net" -v $PWD/Dong-gi.github.io/Repositories/Rendezvous/:/home/node/app node
+
+                h4 OPTIONS
+                +asCode('shell').
+                    --publish, -p # 포트 포워딩. -p 80(호스트 가용 포트 중 하나), -p 8080:80(호스트 8080 포트), -p 8080:80/tcp(tcp만), -p 1.2.3.4:8080:80(호스트 IP 지정)
+                    --detach, -d  # 지정한 경우 백그라운드 실행. 커맨드가 리턴하면 컨테이너도 종료
+                                  # -d를 지정하지 않은 경우(default) 포그라운드로 실행되며, STDIN, STDOUT, STDERR가 콘솔에 연결된다(default).
+                    -it           # -i(--interactive, STDIN 계속 열어두기) + -t(-tty, Pseudo-tty 할당)
+                    --name        # 컨테이너 이름 할당. 지정하지 않는 경우 docker 데몬이 랜덤하게 할당
+                    --pid         # 기본적으로 각 컨테이너는 별개의 프로세스 네임스페이스에서 실행된다
+                                  # --pid=host, --pid="container:{name|id}"를 이용해 네임스페이스 공유 가능
+
+                    --network=""                        # bridge(default), none, container:&lt;name|id>, host(빠름)
+                                                        # host      : --mac-address 무효
+                                                        # container : --add-host, --hostname, --dns, --dns-search, --dns-option, --mac-address, --publish, --publish-all, --expose 무효
+                    --add-host=""                       # host:IP형식으로 적으면 /etc/hosts에 추가한다
+                    --ip="", --ip6="", --mac-address="" # 주소 할당
+                    --link other_container:host_name    # 다른 컨테이너를 지정한 호스트 이름으로 참조하도록 추가
+
+                    --restart       # no(default), on-failure[:max-retries](0이 아닌 상태로 종료된 경우 재시작), always(항상 재시작), unless-stopped(명시적으로 stop하기 전까지 항상 재시작)
+                    --rm            # 컨테이너 종료 시 삭제
+                    --memory="", -m # 메모리 제한. 최소 4m
+                    --stop-timeout  # 지정 시간 경과 뒤 종료
+                    --privileged    # 컨테이너에 모든 커널 작업 권한 부여
+
+                h4 Dockerfile 오버라이딩
+                +asCode('shell').
+                    CMD                   # run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
+                    ENTRYPOINT            # --entrypoint=""
+                                          # $ --entrypoint /bin/bash example/redis -c ls -l
+                    EXPOSE(incoming port) # --expose=[]
+                    ENV                   # -e, --env, --env-file
+                                          # $ -e "deep=purple" -e today # 값을 지정하지 않으면 현재 값이 전파된다
+                    VOLUME                # -v, --volume=[host-src:]container-dest[:&lt;options>]
+                    USER                  # -u="", --user=""
+                    WORKDIR               # -w=""
+
+            h3 docker container start
+            p Start one or more stopped containers
+            +asCode('shell').
+                $ docker start [OPTIONS] CONTAINER [CONTAINER...]
+                $ docker container start [OPTIONS] CONTAINER [CONTAINER...]
+
+            h3 docker container stats
+            p Display a live stream of container(s) resource usage statistics
+
+            h3 docker container stop
+            p 컨테이너(들)을 중지한다. SIGTERM 신호 전송 10초 후 SIGKILL 신호 전송
+            +asCode('shell').
+                $ docker           stop [OPTIONS] CONTAINER [CONTAINER...]
+                $ docker container stop [OPTIONS] CONTAINER [CONTAINER...]
+
+                # Options
+                --time, -t  SIGKILL 전송 전 대기 시간. 기본값 10
+
+            h3 docker container top
+            p Display the running processes of a container
+
+            h3 docker container unpause
+            p Unpause all processes within one or more containers
+
+            h3 docker container update
+            p Update configuration of one or more containers
+
+            h3 docker container wait
+            p Block until one or more containers stop, then print their exit codes
+
+        h2 docker image COMMAND
+        div
+            h3 docker image build
+            p Dockerfile 절차대로 이미지 생성
+            +asCode('shell').
+                $ docker       build [OPTIONS] PATH | URL | -
+                $ docker image build [OPTIONS] PATH | URL | -
+
+                # Options
+                --build-arg                  # 빌드 환경변수 설정
+                --compress                   # 컨텍스트 gzip 압축
+                --disable-content-trust true # 이미지 검증 생략
+                --file, -f                   # Dockerfile 파일명. 기본값은 'PATH/Dockerfile'
+                --label                      # 이미지 메타데이터 설정
+                --no-cache                   # 빌드 캐시 미사용
+                --tag, -t                    # 이미지 태그 설정
+            ol
+                li 향상된 기능을 제공하는 moby/buildkit을 이용하려면(Since 18.09) 실행 전에 환경 변수 DOCKER_BUILDKIT=1를 설정하면 된다
+                li 빌드 과정에서 "컨텍스트"란 지정된 PATH | URL에 존재하는 파일들을 의미한다. 빌드 과정에서 컨텍스트 임의의 파일을 참조할 수 있다
+                p .dockerignore 파일을 통해 컨텍스트에서 파일/디렉터리들을 제외할 수 있다
+                li URL은 다음 중 하나가 될 수 있다 : Git 저장소, pre-packaged tarball, plain text file
+                ul
+                    li 예. container 브랜치의 docker 디렉터리 지정
+                    +asCode('shell') $ docker build https://github.com/docker/rootfs.git#container:docker
+                    p Git 저장소를 가리키는 경우, 해당 저장소의 서브모듈까지 재귀적으로 가져온다
+                    table.no-sort
+                        tr
+                            th Build Syntax Suffix
+                            th Commit Used
+                            th Build Context Used
+                        tr
+                            td myrepo.git
+                            td refs/heads/master
+                            td /
+                        tr
+                            td myrepo.git#mytag
+                            td refs/tags/mytag
+                            td /
+                        tr
+                            td myrepo.git#mybranch
+                            td refs/heads/mybranch
+                            td /
+                        tr
+                            td myrepo.git#pull/42/head
+                            td refs/pull/42/head
+                            td /
+                        tr
+                            td myrepo.git#:myfolder
+                            td refs/heads/master
+                            td /myfolder
+                        tr
+                            td myrepo.git#master:myfolder
+                            td refs/heads/master
+                            td /myfolder
+                        tr
+                            td myrepo.git#mytag:myfolder
+                            td refs/tags/mytag
+                            td /myfolder
+                        tr
+                            td myrepo.git#mybranch:myfolder
+                            td refs/heads/mybranch
+                            td /myfolder
+                    li 예. tarball 지정
+                    +asCode('shell') $ docker build http://server/context.tar.gz
+                    p 표준 tar 포맷이어야 한다. 압축 기법은 xz, bzip2, gzip, identity 중 하나
+                    li 예. STDIN 입력
+                    +asCode('shell') $ docker build - &lt; Dockerfile
+                    li 예. 텍스트 입력
+                    +asCode('shell') $ curl example.com/remote/Dockerfile | docker build -f - .
+
+            h3 docker image history
+            p Show the history of an image
+
+            h3 docker image import
+            p Import the contents from a tarball to create a filesystem image
+
+            h3 docker image inspect
+            p Display detailed information on one or more images
+
+            h3 docker image load
+            p Load an image from a tar archive or STDIN
+
+            h3 docker login
+            p Log in to a Docker registry
+
+            h3 docker logout
+            p Log out from a Docker registry
+
+            h3 docker image ls
+            p List images
+            +asCode('shell').
+                $ docker images [OPTIONS] [REPOSITORY[:TAG]]
+
+                # Options
+                --all, -a # 중간 이미지도 표시
+                --digests # Digest 표시
+
+            h3 docker image prune
+            p Remove unused images
+
+            h3 docker image pull
+            p Pull an image or a repository from a registry
+            +asCode('shell').
+                $ docker pull [OPTIONS] NAME[:TAG|@DIGEST]
+
+                $ docker pull ubuntu:14.04
+                $ docker pull ubuntu@sha256:45b23dee08af5e43a7fea6c4cf9c25ccf269ee113168c19722f87876677c5cb2
+                $ docker pull myregistry.local:5000/testing/test-image
+
+            h3 docker image push
+            p Push an image or a repository to a registry
+            +asCode('shell').
+                $ docker push [OPTIONS] NAME[:TAG]
+                $ docker image push [OPTIONS] NAME[:TAG]
+            p 이미지를 저장소로 업로드한다. 올바른 이미지 태그에 대해서는 docker tag 명령 참고
+
+            h3 docker image rm
+            p Remove one or more images
+            p 컨테이너가 이미지를 사용중임에도 -f 옵션으로 강제로 이미지를 삭제하려고 하는 경우, 이미지의 이름만 제거되어 &lt;none>으로 변경된다. 이들을 dangling 이미지라고 부르며, 사용하지 않는 dangling 이미지들은 docker image prune으로 삭제할 수 있다
+            +asCode('shell').
+                $ docker rmi [OPTIONS] IMAGE [IMAGE...]
+
+            h3 docker image save
+            p Save one or more images to a tar archive (streamed to STDOUT by default)
+
+            h3 docker search
+            p Search the Docker Hub for images
+            +asCode('shell').
+                $ docker search [OPTIONS] TERM
+
+                # Options
+                --filter stars=3            # 최소 3성 이상
+                --filter "is-official=true" # 공식 이미지만
+
+            h3 docker image tag
+            p Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+            +asCode('shell') $ docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
+            ol
+                li 예
+                +asCode('shell') $ docker tag 0e5574283393 fedora/httpd:version1.0
+                li Docker Hub로 올리려는 경우, {Docker Hub Id}/{Repository Name}:{tag}
+                +asCode('shell') $ docker tag bulletinboard:1.0 gordon/bulletinboard:1.0
+                li Private repository로 푸시하려면 해당 주소를 붙여줘야 한다
+                +asCode('shell') $ docker tag 0e5574283393 myregistryhost:5000/fedora/httpd:version1.0
+
+        h2 docker network
+        p Manage networks
+
+        h2 docker system
+        p Manage Docker
+
+        h2 docker volume
+        p Manage volumes

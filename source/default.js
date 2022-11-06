@@ -21,7 +21,7 @@ const posts = {
         { category: 'Infra/Web', file: '/posts/infra/web/oauth.html', title: 'OAuth' },
         { category: 'Infra', file: '/posts/infra/aws.html', title: 'AWS' },
         { category: 'Infra', file: '/posts/infra/cicd.html', title: 'CI/CD' },
-        { category: 'Infra', file: '/posts/infra/docker.html', title: 'Docker' },
+        { category: 'Infra', file: '/posts/infra/docker.html', title: 'Container' },
         { category: 'Infra', file: '/posts/infra/elk.html', title: 'ELK Stack' },
         { category: 'Infra', file: '/posts/infra/git.html', title: 'Git' },
         { category: 'Infra', file: '/posts/infra/gradle.html', title: 'Gradle' },
