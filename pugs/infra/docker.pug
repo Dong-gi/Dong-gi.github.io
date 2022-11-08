@@ -5,7 +5,7 @@ include ../../source/skeleton.pug
 })
     h1 Virtualization
     ol
-        li 가상화란 실재하는 무언가에 대해 동등한 추상화 수준을 제공하는, 실재와 다른 것을 만드는 행위다
+        li 가상화란 실재하는 무언가에 대해 동등한 추상화 수준을 제공하는, 실재와는 다른 것을 만드는 행위다
         li 가상 머신(VM; Virtual Machine) : 컴퓨터 시스템에 대한 가상화. 하이퍼바이저에 의해 관리된다
         p 호스트 OS 상에서 하이퍼바이저가 실행되고, 게스트 OS는 하이퍼바이저를 통해 리소스를 할당받는다
         li #[+asA('https://en.wikipedia.org/wiki/OS-level_virtualization', '운영체제 수준 가상화')] : 호스트 커널이 격리된 유저 공간을 지원하는 패러다임
@@ -308,20 +308,47 @@ include ../../source/skeleton.pug
                 $ docker           run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
                 $ docker container run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
             div
-                p 새 컨테이너를 만들고(create) 실행(start)한 뒤, 그 안에서 명령을 실행한다. 옵션 순서에 따라 실행에 실패하기도 한다...
+                p 새 컨테이너를 만들고(create) 실행(start)한다
                 +asCode('shell', '성공 예시').
                     $ docker run --name my-postgres -p 5432:5432 -d -it --privileged=true --network="my-net" -e "POSTGRES_PASSWORD=xxx" -e PGDATA=/var/lib/postgresql/data/pgdata -v /free100/postgres:/var/lib/postgresql/data postgres
                     $ docker run --name node-rendezvous -p 50000:50000/udp -p 50001:50001 -d -it --network="my-net" -v $PWD/Dong-gi.github.io/Repositories/Rendezvous/:/home/node/app node
 
+                h4 컨테이너 이름 명시적 할당
+                +asCode('shell').
+                    $ export CONTAINER_NAME=echo1
+                    $ docker run --name $CONTAINER_NAME --label test -p 5678 -d hashicorp/http-echo -text="Hello, I'm $CONTAINER_NAME"
+                    4b16ebb2ca48ecfce0c255b100497510e54790f6f54f970db5b203e1eb5cc4c9
+                    $ curl $(docker port $CONTAINER_NAME 5678)
+                    Hello, I'm echo1
+                    $ docker rm --force $CONTAINER_NAME
+                    echo1
+
+                h4 컨테이너 STDIN에 가상 TTY 부착
+                +asCode('shell').
+                    # TTY 부착하지 않은 경우 : /bin/bash 즉시 종료
+                    $ docker run --name linux amazonlinux:2.0.20221004.0
+                    $ docker ps -a --filter "name=linux" --format "{{.Status}}"
+                    Exited (0) 32 seconds ago
+
+                    # TTY 부착한 경우 : /bin/bash 세션 활성화
+                    $ docker run --name linux -it amazonlinux:2.0.20221004.0
+                    bash-4.2# exit 77
+                    exit
+
+                    $ echo $?
+                    77
+
+                    # TTY 부착 &amp; 백그라운드로 실행
+                    $ docker run --name linux -it -d amazonlinux:2.0.20221004.0
+                    6fb5896bcf55873a3cf6b555cbcbe4c738c5692615eb8104c488e180ca63d5b4
+                    $ docker ps -a --filter "name=linux" --format "{{.Status}}"
+                    Up 11 seconds
+
+                h4 
+
                 h4 OPTIONS
                 +asCode('shell').
                     --publish, -p # 포트 포워딩. -p 80(호스트 가용 포트 중 하나), -p 8080:80(호스트 8080 포트), -p 8080:80/tcp(tcp만), -p 1.2.3.4:8080:80(호스트 IP 지정)
-                    --detach, -d  # 지정한 경우 백그라운드 실행. 커맨드가 리턴하면 컨테이너도 종료
-                                  # -d를 지정하지 않은 경우(default) 포그라운드로 실행되며, STDIN, STDOUT, STDERR가 콘솔에 연결된다(default).
-                    -it           # -i(--interactive, STDIN 계속 열어두기) + -t(-tty, Pseudo-tty 할당)
-                    --name        # 컨테이너 이름 할당. 지정하지 않는 경우 docker 데몬이 랜덤하게 할당
-                    --pid         # 기본적으로 각 컨테이너는 별개의 프로세스 네임스페이스에서 실행된다
-                                  # --pid=host, --pid="container:{name|id}"를 이용해 네임스페이스 공유 가능
 
                     --network=""                        # bridge(default), none, container:&lt;name|id>, host(빠름)
                                                         # host      : --mac-address 무효
@@ -336,6 +363,111 @@ include ../../source/skeleton.pug
                     --stop-timeout  # 지정 시간 경과 뒤 종료
                     --privileged    # 컨테이너에 모든 커널 작업 권한 부여
 
+                    --add-host                 Add a custom host-to-IP mapping (host:ip)
+                    --attach , -a              Attach to STDIN, STDOUT or STDERR
+                    --blkio-weight             Block IO (relative weight), between 10 and 1000, or 0 to disable (default 0)
+                    --blkio-weight-device      Block IO weight (relative device weight)
+                    --cap-add                  Add Linux capabilities
+                    --cap-drop                 Drop Linux capabilities
+                    --cgroup-parent            Optional parent cgroup for the container
+                    --cgroupns                 API 1.41+ Cgroup namespace to use (host|private) 'host': Run the container in the Docker host's cgroup namespace 'private': Run the container in its own private cgroup namespace '': Use the cgroup namespace as configured by the default-cgroupns-mode option on the daemon (default)
+                    --cidfile                  Write the container ID to the file
+                    --cpu-count                CPU count (Windows only)
+                    --cpu-percent              CPU percent (Windows only)
+                    --cpu-period               Limit CPU CFS (Completely Fair Scheduler) period
+                    --cpu-quota                Limit CPU CFS (Completely Fair Scheduler) quota
+                    --cpu-rt-period            Limit CPU real-time period in microseconds
+                    --cpu-rt-runtime           Limit CPU real-time runtime in microseconds
+                    --cpu-shares , -c          CPU shares (relative weight)
+                    --cpus                     Number of CPUs
+                    --cpuset-cpus              CPUs in which to allow execution (0-3, 0,1)
+                    --cpuset-mems              MEMs in which to allow execution (0-3, 0,1)
+                    --detach , -d              Run container in background and print container ID
+                    --detach-keys              Override the key sequence for detaching a container
+                    --device                   Add a host device to the container
+                    --device-cgroup-rule       Add a rule to the cgroup allowed devices list
+                    --device-read-bps          Limit read rate (bytes per second) from a device
+                    --device-read-iops         Limit read rate (IO per second) from a device
+                    --device-write-bps         Limit write rate (bytes per second) to a device
+                    --device-write-iops        Limit write rate (IO per second) to a device
+                    --disable-content-trust    true                                       Skip image verification
+                    --dns                      Set custom DNS servers
+                    --dns-opt                  Set DNS options
+                    --dns-option               Set DNS options
+                    --dns-search               Set custom DNS search domains
+                    --domainname               Container NIS domain name
+                    --entrypoint               Overwrite the default ENTRYPOINT of the image
+                    --env , -e                 Set environment variables
+                    --env-file                 Read in a file of environment variables
+                    --expose                   Expose a port or a range of ports
+                    --gpus                     API 1.40+ GPU devices to add to the container ('all' to pass all GPUs)
+                    --group-add                Add additional groups to join
+                    --health-cmd               Command to run to check health
+                    --health-interval          Time between running the check (ms|s|m|h) (default 0s)
+                    --health-retries           Consecutive failures needed to report unhealthy
+                    --health-start-period      Start period for the container to initialize before starting health-retries countdown (ms|s|m|h) (default 0s)
+                    --health-timeout           Maximum time to allow one check to run (ms|s|m|h) (default 0s)
+                    --help                     Print usage
+                    --hostname , -h            Container host name
+                    --init                     Run an init inside the container that forwards signals and reaps processes
+                    --interactive , -i         Keep STDIN open even if not attached
+                    --io-maxbandwidth          Maximum IO bandwidth limit for the system drive (Windows only)
+                    --io-maxiops               Maximum IOps limit for the system drive (Windows only)
+                    --ip                       IPv4 address (e.g., 172.30.100.104)
+                    --ip6                      IPv6 address (e.g., 2001:db8::33)
+                    --ipc                      IPC mode to use
+                    --isolation                Container isolation technology
+                    --kernel-memory            Kernel memory limit
+                    --label , -l               Set meta data on a container
+                    --label-file               Read in a line delimited file of labels
+                    --link                     Add link to another container
+                    --link-local-ip            Container IPv4/IPv6 link-local addresses
+                    --log-driver               Logging driver for the container
+                    --log-opt                  Log driver options
+                    --mac-address              Container MAC address (e.g., 92:d0:c6:0a:29:33)
+                    --memory , -m              Memory limit
+                    --memory-reservation       Memory soft limit
+                    --memory-swap              Swap limit equal to memory plus swap: '-1' to enable unlimited swap
+                    --memory-swappiness        -1                                       Tune container memory swappiness (0 to 100)
+                    --mount                    Attach a filesystem mount to the container
+                    --name                     Assign a name to the container
+                    --net                      Connect a container to a network
+                    --net-alias                Add network-scoped alias for the container
+                    --network                  Connect a container to a network
+                    --network-alias            Add network-scoped alias for the container
+                    --no-healthcheck           Disable any container-specified HEALTHCHECK
+                    --oom-kill-disable         Disable OOM Killer
+                    --oom-score-adj            Tune host's OOM preferences (-1000 to 1000)
+                    --pid                      PID namespace to use
+                    --pids-limit               Tune container pids limit (set -1 for unlimited)
+                    --platform                 Set platform if server is multi-platform capable
+                    --privileged               Give extended privileges to this container
+                    --publish , -p             Publish a container's port(s) to the host
+                    --publish-all , -P         Publish all exposed ports to random ports
+                    --pull                     missing                                       Pull image before running ("always"|"missing"|"never")
+                    --read-only                Mount the container's root filesystem as read only
+                    --restart                  no                                       Restart policy to apply when a container exits
+                    --rm                       Automatically remove the container when it exits
+                    --runtime                  Runtime to use for this container
+                    --security-opt             Security Options
+                    --shm-size                 Size of /dev/shm
+                    --sig-proxy                true                                       Proxy received signals to the process
+                    --stop-signal              SIGTERM                                       Signal to stop a container
+                    --stop-timeout             Timeout (in seconds) to stop a container
+                    --storage-opt              Storage driver options for the container
+                    --sysctl                   Sysctl options
+                    --tmpfs                    Mount a tmpfs directory
+                    --tty , -t                 Allocate a pseudo-TTY
+                    --ulimit                   Ulimit options
+                    --user , -u                Username or UID (format: <name|uid>[:<group|gid>])
+                    --userns                   User namespace to use
+                    --uts                      UTS namespace to use
+                    --volume , -v              Bind mount a volume
+                    --volume-driver            Optional volume driver for the container
+                    --volumes-from             Mount volumes from the specified container(s)
+                    --workdir , -w             Working directory inside the container
+
+
                 h4 Dockerfile 오버라이딩
                 +asCode('shell').
                     CMD                   # run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
@@ -349,9 +481,9 @@ include ../../source/skeleton.pug
                     WORKDIR               # -w=""
 
             h3 docker container start
-            p Start one or more stopped containers
+            p 중지 상태의 컨테이너(들)을 시작한다
             +asCode('shell').
-                $ docker start [OPTIONS] CONTAINER [CONTAINER...]
+                $ docker           start [OPTIONS] CONTAINER [CONTAINER...]
                 $ docker container start [OPTIONS] CONTAINER [CONTAINER...]
 
             h3 docker container stats
