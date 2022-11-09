@@ -323,7 +323,7 @@ include ../../source/skeleton.pug
                     $ docker rm --force $CONTAINER_NAME
                     echo1
 
-                h4 컨테이너 STDIN에 가상 TTY 부착
+                h4 컨테이너 STDIN에 가상 TTY(TeleTYpewriter) 부착
                 +asCode('shell').
                     # TTY 부착하지 않은 경우 : /bin/bash 즉시 종료
                     $ docker run --name linux amazonlinux:2.0.20221004.0
@@ -344,7 +344,24 @@ include ../../source/skeleton.pug
                     $ docker ps -a --filter "name=linux" --format "{{.Status}}"
                     Up 11 seconds
 
-                h4 
+                h4 작업 디렉터리 지정
+                +asCode('shell').
+                    # 지정하지 않은 경우 : 루트 디렉터리
+                    $ docker run --rm amazonlinux:2.0.20221004.0 pwd
+                    /
+
+                    # 지정한 경우
+                    $ docker run --rm -w /home/ amazonlinux:2.0.20221004.0 pwd
+                    /home
+
+                h4 마운트
+                ul
+                    li Bind mount : 호스트 파일시스템에 직접 읽기/쓰기를 수행한다
+                    li Named volume : 영구 저장 데이터를 컨테이너로부터 분리한다. 볼륨은 도커를 이용해 관리되며, 여러 컨테이너들 및 호스트가 공유할 수 있다
+                    li tmpfs : 휘발성 데이터를 위한 tmpfs를 컨테이너에 마운트한다
+
+                +asCode('shell').
+                    $ docker run --rm --tmpfs /root/tmp:rw, amazonlinux:2.0.20221004.0 pwd
 
                 h4 OPTIONS
                 +asCode('shell').
