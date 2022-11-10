@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="ko-KR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="google-site-verification" content="aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM"><meta name="author" content="Donggi Kim &lt;hi.donggi@gmail.com&gt;"><meta name="description" content="Heroku 사용 중 발생한 문제 정리"><title>Heroku</title><link rel="icon" href="/imgs/favicon.png"><link rel="stylesheet" href="/source/default.css"><script>window.wizFuncQueue = [];</script></head><body><div class="w3-bar-block w3-sidebar w3-animate-left" id="sidebar"><hr><a class="w3-bar-item w3-button" href="javascript:closeSidebar();">Close &times;</a><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><details class="w3-small file-list" open="open"><summary>LICENSE</summary><ul><li>&copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> →<a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE">MIT License</a></li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://www.w3schools.com/w3css">w3css</a> → No license</li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://highlightjs.org/">highlight.js</a> →<a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause License</a></li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/mathjax/MathJax">MathJax</a> →<a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache License 2.0</a></li><li><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/davidshimjs/qrcodejs">qrcodejs</a> →<a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE">MIT License</a></li></ul></details><hr></div><article id="main"><div class="w3-bar w3-blue w3-large" id="nav" style="position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle"><button class="w3-bar-item w3-button w3-hover-theme" onclick="toggleSidebar()">&#9776;</button><input class="w3-bar-item" id="query" type="text" placeholder="search" style="max-width:35%"><a class="w3-bar-item w3-button w3-hover-theme" href="/">Home</a></div><div class="w3-padding" id="contents"><h1>빈번한 재시작</h1><p>기본 재시작 주기는 1일이지만, 2시간, 10분 만에 SIGTERM 신호를 보내는 경우가 존재함</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ date
+Thu Nov 10 11:31:15 KST 2022
+
+$ heroku logs --app=xxx
+2022-11-04T15:42:53.188721+00:00 heroku[web.1]: Cycling
+2022-11-04T15:42:53.191834+00:00 heroku[web.1]: State changed from up to starting
+2022-11-04T15:42:54.745019+00:00 heroku[web.1]: Stopping all processes with SIGTERM
+2022-11-04T15:42:54.935443+00:00 heroku[web.1]: Process exited with status 143
+2022-11-04T15:43:04.647817+00:00 heroku[web.1]: Starting process with command `node app`
+2022-11-04T15:43:07.865400+00:00 app[web.1]: Express server listening on 26655
+2022-11-04T15:43:08.358056+00:00 heroku[web.1]: State changed from starting to up
+
+2022-11-05T15:59:52.193485+00:00 heroku[web.1]: Cycling
+2022-11-05T15:59:52.199264+00:00 heroku[web.1]: State changed from up to starting
+2022-11-05T15:59:52.827689+00:00 heroku[web.1]: Stopping all processes with SIGTERM
+2022-11-05T15:59:53.127857+00:00 heroku[web.1]: Process exited with status 143
+2022-11-05T16:00:03.219442+00:00 heroku[web.1]: Starting process with command `node app`
+2022-11-05T16:00:05.914223+00:00 app[web.1]: Express server listening on 27518
+2022-11-05T16:00:06.014664+00:00 heroku[web.1]: State changed from starting to up
+
+2022-11-06T16:28:34.682573+00:00 heroku[web.1]: Cycling
+2022-11-06T16:28:34.684590+00:00 heroku[web.1]: State changed from up to starting
+2022-11-06T16:28:35.298049+00:00 heroku[web.1]: Stopping all processes with SIGTERM
+2022-11-06T16:28:35.536632+00:00 heroku[web.1]: Process exited with status 143
+2022-11-06T16:28:46.543968+00:00 heroku[web.1]: Starting process with command `node app`
+2022-11-06T16:28:49.632588+00:00 app[web.1]: Express server listening on 46591
+2022-11-06T16:28:50.176669+00:00 heroku[web.1]: State changed from starting to up
+
+2022-11-07T17:03:23.014423+00:00 heroku[web.1]: Cycling
+2022-11-07T17:03:23.018550+00:00 heroku[web.1]: State changed from up to starting
+2022-11-07T17:03:23.773273+00:00 heroku[web.1]: Stopping all processes with SIGTERM
+2022-11-07T17:03:23.997377+00:00 heroku[web.1]: Process exited with status 143
+2022-11-07T17:03:35.633367+00:00 heroku[web.1]: Starting process with command `node app`
+2022-11-07T17:03:38.101356+00:00 app[web.1]: Express server listening on 12207
+2022-11-07T17:03:38.542343+00:00 heroku[web.1]: State changed from starting to up
+
+2022-11-08T17:44:34.257748+00:00 heroku[web.1]: Cycling
+2022-11-08T17:44:34.260294+00:00 heroku[web.1]: State changed from up to starting
+2022-11-08T17:44:34.961998+00:00 heroku[web.1]: Stopping all processes with SIGTERM
+2022-11-08T17:44:35.349123+00:00 heroku[web.1]: Process exited with status 143
+2022-11-08T17:44:44.719748+00:00 heroku[web.1]: Starting process with command `node app`
+2022-11-08T17:44:47.333908+00:00 app[web.1]: Express server listening on 14749
+2022-11-08T17:44:47.536761+00:00 heroku[web.1]: State changed from starting to up
+
+2022-11-09T18:05:53.566487+00:00 heroku[web.1]: Cycling
+2022-11-09T18:05:53.569847+00:00 heroku[web.1]: State changed from up to starting
+2022-11-09T18:05:54.158427+00:00 heroku[web.1]: Stopping all processes with SIGTERM
+2022-11-09T18:05:54.634928+00:00 heroku[web.1]: Process exited with status 143
+2022-11-09T18:06:03.068936+00:00 heroku[web.1]: Starting process with command `node app`
+2022-11-09T18:06:05.511106+00:00 app[web.1]: Express server listening on 28627
+2022-11-09T18:06:05.944568+00:00 heroku[web.1]: State changed from starting to up
+
+2022-11-09T20:45:53.115643+00:00 heroku[web.1]: Stopping all processes with SIGTERM
+2022-11-09T20:45:53.542677+00:00 heroku[web.1]: Process exited with status 143
+2022-11-09T20:46:57.112428+00:00 heroku[web.1]: State changed from up to down
+2022-11-09T20:46:57.114989+00:00 heroku[web.1]: State changed from down to starting
+2022-11-09T20:47:08.875162+00:00 heroku[web.1]: Starting process with command `node app`
+2022-11-09T20:47:13.184638+00:00 app[web.1]: Express server listening on 52035
+2022-11-09T20:48:42.474102+00:00 heroku[web.1]: State changed from starting to up
+
+2022-11-09T20:56:48.120912+00:00 heroku[web.1]: Stopping all processes with SIGTERM
+2022-11-09T20:56:50.546725+00:00 heroku[web.1]: Process exited with status 143
+2022-11-09T20:57:19.805546+00:00 heroku[web.1]: State changed from up to down
+2022-11-09T20:57:19.807460+00:00 heroku[web.1]: State changed from down to starting
+2022-11-09T20:57:34.022542+00:00 heroku[web.1]: Starting process with command `node app`
+2022-11-09T20:57:41.713346+00:00 app[web.1]: Express server listening on 25985
+2022-11-09T20:57:45.249367+00:00 heroku[web.1]: State changed from starting to up</div></div></article><hr><script id="google-analytics" src="https://www.googletagmanager.com/gtag/js?id=UA-143098403-1" async></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-143098403-1');</script><script id="highlight-js" src="/source/highlight.pack.js" defer></script><script id="default-js" src="/source/default.min.js" defer></script></body></html>

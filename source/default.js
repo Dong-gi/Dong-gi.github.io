@@ -25,6 +25,7 @@ const posts = {
         { category: 'Infra', file: '/posts/infra/elk.html', title: 'ELK Stack' },
         { category: 'Infra', file: '/posts/infra/git.html', title: 'Git' },
         { category: 'Infra', file: '/posts/infra/gradle.html', title: 'Gradle' },
+        { category: 'Infra', file: '/posts/infra/heroku.html', title: 'Heroku' },
         { category: 'Infra', file: '/posts/infra/linux.html', title: 'Linux' },
         { category: 'Infra', file: '/posts/infra/nginx.html', title: 'Nginx' },
         { category: 'Infra', file: '/posts/infra/sdkman.html', title: 'SDKMAN; The Software Development Kit Manager' },

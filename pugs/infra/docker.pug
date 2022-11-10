@@ -356,9 +356,22 @@ include ../../source/skeleton.pug
 
                 h4 마운트
                 ul
-                    li Bind mount : 호스트 파일시스템에 직접 읽기/쓰기를 수행한다
-                    li Named volume : 영구 저장 데이터를 컨테이너로부터 분리한다. 볼륨은 도커를 이용해 관리되며, 여러 컨테이너들 및 호스트가 공유할 수 있다
-                    li tmpfs : 휘발성 데이터를 위한 tmpfs를 컨테이너에 마운트한다
+                    li Bind mount(type=bind) : 호스트 파일시스템에 직접 읽기/쓰기를 수행한다
+                    li Named volume(type=volume) : 영구 저장 데이터를 컨테이너로부터 분리한다. 볼륨은 도커를 이용해 관리되며, 여러 컨테이너들 및 호스트가 공유할 수 있다
+                    li tmpfs(type=tmpfs) : 휘발성 데이터를 위한 tmpfs를 컨테이너에 마운트한다
+                div
+                    h5.fake src 또는 source 옵션
+                    ul
+                        li type=volume : 마운트할 볼륨 이름을 지정한다. 지정하지 않으면 랜덤 문자열로 볼륨이 하나 만들어진다 -- 이러한 볼륨은 컨테이너 삭제 시 같이 삭제된다
+                        li type=bind : 필수 옵션. 마운트할 파일 또는 디렉터리를 절대경로로 지정한다
+                        li type=tmpfs : 지원하지 않는 옵션
+                    
+                    h5.fake dst 또는 destination 또는 target 옵션
+                    p 필수 옵션으로, 마운트할 컨테이너 내부 경로를 지정한다
+
+                    h5.fake readonly 또는 ro 옵션
+                    p true 또는 1 또는 값 없이 이 옵션을 설정하는 경우, 컨테이너에서는 쓰기 작업을 수행할 수 없다 
+
 
                 +asCode('shell').
                     $ docker run --rm --tmpfs /root/tmp:rw, amazonlinux:2.0.20221004.0 pwd
