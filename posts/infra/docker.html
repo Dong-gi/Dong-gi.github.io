@@ -83,33 +83,40 @@ $ docker container rm [OPTIONS] CONTAINER [CONTAINER...]
 --link, -l      기본 브리지 네트워크에 등록한 링크 제거
 --volumes, -v   익명 볼륨 제거
 </div><span id="pos379769964" style="padding:0!important;margin:0!important;width:0!important;height:0!important;overflow:hidden!important"></span><h3>docker container run</h3><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
-$ docker container run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]</div><div><p>새 컨테이너를 만들고(create) 실행(start)한다</p><p><strong>↓성공 예시</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker run --name my-postgres -p 5432:5432 -d -it --privileged=true --network="my-net" -e "POSTGRES_PASSWORD=xxx" -e PGDATA=/var/lib/postgresql/data/pgdata -v /free100/postgres:/var/lib/postgresql/data postgres
-$ docker run --name node-rendezvous -p 50000:50000/udp -p 50001:50001 -d -it --network="my-net" -v $PWD/Dong-gi.github.io/Repositories/Rendezvous/:/home/node/app node
-</div><h4>컨테이너 이름 명시적 할당</h4><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export CONTAINER_NAME=echo1
-$ docker run --name $CONTAINER_NAME --label test -p 5678 -d hashicorp/http-echo -text="Hello, I'm $CONTAINER_NAME"
+$ docker container run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]</div><div><h4>컨테이너 이름 명시적 할당</h4><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export CONTAINER_NAME=echo1
+$ docker run --name $CONTAINER_NAME -p 5678 -d hashicorp/http-echo -text="Hello, I'm $CONTAINER_NAME"
 4b16ebb2ca48ecfce0c255b100497510e54790f6f54f970db5b203e1eb5cc4c9
 $ curl $(docker port $CONTAINER_NAME 5678)
 Hello, I'm echo1
 $ docker rm --force $CONTAINER_NAME
 echo1
 </div><h4>컨테이너 STDIN에 가상 TTY(TeleTYpewriter) 부착</h4><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell"># TTY 부착하지 않은 경우 : /bin/bash 즉시 종료
-$ docker run --name linux amazonlinux:2.0.20221004.0
-$ docker ps -a --filter "name=linux" --format "{{.Status}}"
+$ export CONTAINER_NAME=linux
+$ docker run --name $CONTAINER_NAME amazonlinux:2.0.20221004.0
+$ docker ps -a --filter "name=$CONTAINER_NAME" --format "{{.Status}}"
 Exited (0) 32 seconds ago
+$ docker rm --force $CONTAINER_NAME
+linux
+
 
 # TTY 부착한 경우 : /bin/bash 세션 활성화
-$ docker run --name linux -it amazonlinux:2.0.20221004.0
+$ docker run --name $CONTAINER_NAME -it amazonlinux:2.0.20221004.0
 bash-4.2# exit 77
 exit
 
 $ echo $?
 77
+$ docker rm --force $CONTAINER_NAME
+linux
+
 
 # TTY 부착 &amp; 백그라운드로 실행
-$ docker run --name linux -it -d amazonlinux:2.0.20221004.0
+$ docker run --name $CONTAINER_NAME -it -d amazonlinux:2.0.20221004.0
 6fb5896bcf55873a3cf6b555cbcbe4c738c5692615eb8104c488e180ca63d5b4
-$ docker ps -a --filter "name=linux" --format "{{.Status}}"
+$ docker ps -a --filter "name=$CONTAINER_NAME" --format "{{.Status}}"
 Up 11 seconds
+$ docker rm --force $CONTAINER_NAME
+linux
 </div><h4>작업 디렉터리 지정</h4><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell"># 지정하지 않은 경우 : 루트 디렉터리
 $ docker run --rm amazonlinux:2.0.20221004.0 pwd
 /
@@ -117,7 +124,88 @@ $ docker run --rm amazonlinux:2.0.20221004.0 pwd
 # 지정한 경우
 $ docker run --rm -w /home/ amazonlinux:2.0.20221004.0 pwd
 /home
-</div><h4>마운트</h4><ul><li>Bind mount(type=bind) : 호스트 파일시스템에 직접 읽기/쓰기를 수행한다</li><li>Named volume(type=volume) : 영구 저장 데이터를 컨테이너로부터 분리한다. 볼륨은 도커를 이용해 관리되며, 여러 컨테이너들 및 호스트가 공유할 수 있다</li><li>tmpfs(type=tmpfs) : 휘발성 데이터를 위한 tmpfs를 컨테이너에 마운트한다</li></ul><div><h5 class="fake">src 또는 source 옵션</h5><ul><li>type=volume : 마운트할 볼륨 이름을 지정한다. 지정하지 않으면 랜덤 문자열로 볼륨이 하나 만들어진다 -- 이러한 볼륨은 컨테이너 삭제 시 같이 삭제된다</li><li>type=bind : 필수 옵션. 마운트할 파일 또는 디렉터리를 절대경로로 지정한다</li><li>type=tmpfs : 지원하지 않는 옵션</li></ul><h5 class="fake">dst 또는 destination 또는 target 옵션</h5><p>필수 옵션으로, 마운트할 컨테이너 내부 경로를 지정한다</p><h5 class="fake">readonly 또는 ro 옵션</h5><p>true 또는 1 또는 값 없이 이 옵션을 설정하는 경우, 컨테이너에서는 쓰기 작업을 수행할 수 없다 </p></div><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker run --rm --tmpfs /root/tmp:rw, amazonlinux:2.0.20221004.0 pwd
+</div><h4>마운트</h4><ul><li>Bind mount(type=bind) : 호스트 파일시스템에 직접 읽기/쓰기를 수행한다</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export CONTAINER_NAME=linux
+$ mkdir "$CONTAINER_NAME"_data
+$ touch "$CONTAINER_NAME"_data/test.txt
+$ ls "$CONTAINER_NAME"_data
+test.txt
+$ docker run --name $CONTAINER_NAME --rm -it --mount type=bind,src="$(pwd)"/"$CONTAINER_NAME"_data,dst=/home/data -w /home/ amazonlinux:2.0.20221004.0
+bash-4.2# touch data/test2.txt
+bash-4.2# ls data
+test.txt  test2.txt
+bash-4.2# exit
+exit
+
+$ ls "$CONTAINER_NAME"_data
+test.txt	test2.txt
+$ rm -rf "$CONTAINER_NAME"_data
+</div><li>Named volume(type=volume) : 영구 저장 데이터를 컨테이너로부터 분리한다. 볼륨은 도커를 이용해 관리되며, 여러 컨테이너들 및 호스트가 공유할 수 있다</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export CONTAINER_NAME=linux
+$ docker run --name $CONTAINER_NAME --rm -it --mount type=volume,src="$CONTAINER_NAME"_volume,dst=/home/data -w /home/ amazonlinux:2.0.20221004.0
+bash-4.2# touch data/test.txt
+bash-4.2# exit
+exit
+
+$ docker run --name $CONTAINER_NAME --rm -it --mount type=volume,src="$CONTAINER_NAME"_volume,dst=/home/data -w /home/ amazonlinux:2.0.20221004.0
+bash-4.2# ls data
+test.txt
+bash-4.2# exit
+exit
+
+$ docker volume rm "$CONTAINER_NAME"_volume
+linux_volume
+</div><li>tmpfs(type=tmpfs) : (Linux) 휘발성 데이터를 위한 tmpfs를 컨테이너에 마운트한다</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export CONTAINER_NAME=linux
+$ docker run --name $CONTAINER_NAME --rm -it --mount type=tmpfs,dst=/home/tmpfs,tmpfs-size=1000000 -w /home/ amazonlinux:2.0.20221004.0</div></ul><div><h5 class="fake">src 또는 source 옵션</h5><ul><li>type=volume : 마운트할 볼륨 이름을 지정한다. 지정하지 않으면 랜덤 문자열로 볼륨이 하나 만들어진다 -- 이러한 볼륨은 컨테이너 삭제 시 같이 삭제된다</li><li>type=bind : 필수 옵션. 마운트할 파일 또는 디렉터리를 절대경로로 지정한다</li><li>type=tmpfs : 지원하지 않는 옵션</li></ul><h5 class="fake">dst 또는 destination 또는 target 옵션</h5><p>필수 옵션으로, 마운트할 컨테이너 내부 경로를 지정한다</p><h5 class="fake">readonly 또는 ro 옵션</h5><p>true 또는 1 또는 값 없이 이 옵션을 설정하는 경우, 컨테이너에서는 쓰기 작업을 수행할 수 없다 </p><h5 class="fake">tmpfs-size 옵션</h5><p>바이트 크기를 지정한다. 리눅스 기본값은 무제한</p><h5 class="fake">tmpfs-mode</h5><p>파일 모드를 지정한다. 리눅스 기본값은 1777</p><h5>--mount와 --volume의 차이</h5><p>공식 문서에 따르면, --volume 옵션을 deprecate할 계획은 없지만 --mount 옵션을 사용할 것을 권장한다</p><ul><li>--mount : volume-driver, volume-opt, volume-label을 지정할 수 있다</li><li>--mount : type=bind인 경우, 호스트 경로의 파일 또는 디렉터리는 호스트에 이미 존재해야 한다</li></ul></div><h4>포트 공개</h4><ul><li>아래는 호스트 0.0.0.0의 TCP 7777 포트를 컨테이너 5678 포트와 바인드하는 예시다</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export CONTAINER_NAME=echo1
+$ docker run --name $CONTAINER_NAME -p 0.0.0.0:7777:5678/tcp -d hashicorp/http-echo -text="Hello, I'm $CONTAINER_NAME"
+c2aa4488e6b1bcd2566ba1546855cb0c76ac1a2731e7f87ea1c00f967fbe76c5
+$ curl $(docker port $CONTAINER_NAME 5678)
+Hello, I'm echo1
+$ docker rm --force $CONTAINER_NAME
+echo1</div><li>TCP 뿐만 아니라, UDP, SCTP도 지정할 수 있다</li><li>TCP 프로토콜 지정은 생략 가능하다 -&gt; 기본 tcp</li><li>호스트 0.0.0.0 주소는 생략 가능하다 -&gt; 기본 0.0.0.0</li><li>컨테이너 포트를 호스트에 바인드할 필요까지는 없는 경우, --publish, -p 옵션 대신 --expose 옵션을 사용하면 된다</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export NETWORK_NAME=test-net
+$ docker network create $NETWORK_NAME
+ca863d1405320dd0bc5d87642fa5117c167504fb8420224e30f397de6370356d
+
+$ export CONTAINER_NAME=echo1
+$ docker run --name $CONTAINER_NAME --expose 5678 --network=$NETWORK_NAME -d hashicorp/http-echo -text="Hello, I'm $CONTAINER_NAME"
+88224c89becaf3b02eccee15627b29b5c6b0d8e76dfc28ef2c5b01c5081d20c5
+$ docker port $CONTAINER_NAME 5678
+Error: No public port '5678/tcp' published for echo1
+
+$ docker run --rm -it --network=$NETWORK_NAME -e ECHO_SERVER=$CONTAINER_NAME amazonlinux:2.0.20221004.0
+bash-4.2# curl $ECHO_SERVER:5678
+Hello, I'm echo1
+bash-4.2# exit
+exit
+
+$ docker rm --force $CONTAINER_NAME
+echo1
+$ docker network rm $NETWORK_NAME
+test-net
+</div></ul><h4>환경 변수 설정</h4><ul><li>명령줄에서 지정</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker run --rm -e TXT="Hello World" amazonlinux:2.0.20221004.0 env | grep TXT
+TXT=Hello World
+</div><li>파일로 지정</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ cat test.env
+VAR1=VALUE1
+VAR2=VALUE2
+
+$ docker run --rm --env-file ./test.env amazonlinux:2.0.20221004.0 env | grep VAR
+VAR1=VALUE1
+VAR2=VALUE2
+
+$ rm test.env
+</div></ul><h4>메타데이터 설정</h4><p>컨테이너 관리를 위한 메타데이터를 설정할 수 있다</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export CONTAINER_NAME_PREFIX=linux
+$ docker run --name "$CONTAINER_NAME_PREFIX"_1 -l linux -l group=A -it -d amazonlinux:2.0.20221004.0
+509bf686eec1cd6c679bb30df9687671e001832e9b6e465a060d94a69bbf57f9
+$ docker run --name "$CONTAINER_NAME_PREFIX"_2 -l linux -l group=B -it -d amazonlinux:2.0.20221004.0
+d6ecdc605b9338dc1ab65079c65fec2d9284499be89b843b98dbf5caf83f3551
+
+$ docker ps -a --filter "label=linux" --format "{{.ID}}"
+d6ecdc605b93
+509bf686eec1
+$ docker ps -a --filter "label=group=B" --format "{{.ID}}"
+d6ecdc605b93
+
+$ docker rm --force $(docker ps -a --filter "label=linux" --format "{{.ID}}")
+d6ecdc605b93
+509bf686eec1
 </div><h4>OPTIONS</h4><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">--publish, -p # 포트 포워딩. -p 80(호스트 가용 포트 중 하나), -p 8080:80(호스트 8080 포트), -p 8080:80/tcp(tcp만), -p 1.2.3.4:8080:80(호스트 IP 지정)
 
 --network=""                        # bridge(default), none, container:&lt;name|id>, host(빠름)
