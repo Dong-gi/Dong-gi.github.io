@@ -184,7 +184,7 @@ $ docker rm --force $CONTAINER_NAME
 echo1
 $ docker network rm $NETWORK_NAME
 test-net
-</div></ul><h4>네트워크 설정; --network</h4><ul><li>none : 네트워킹 비허용</li><li>bridge : 브리지를 통해 인/아웃 트래픽 모두 허용된다</li><p>브리지(보통 이름은 docker0)가 호스트에 생성되고, veth 인터페이스가 한 쌍으로 호스트와 컨테이너에 생성된다. 동일한 브리지 네트워크에 연결된 컨테이너들은 서로의 IP를 이용해 통신할 수 있다</p><li>host : 컨테이너는 호스트의 네트워크 스택을 그대로 이용한다</li><p>가상 브리지를 거치지 않으므로, 브리지 모드에 비해 성능이 비약적으로 좋다</p><li>container:&lt;name|id&gt; : 다른 컨테이너의 네트워크 스택을 그대로 이용한다</li><li>NETWORK_NAME : 사용자 정의 네트워크에 연결한다</li></ul><h4>네트워크용 컨테이너 별명; --network-alias</h4><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export NETWORK_NAME=test-net
+</div></ul><h4>네트워크 설정; --network</h4><ul><li>none : 네트워킹 비허용</li><li>bridge : 브리지를 통해 인/아웃 트래픽 모두 허용된다</li><p>브리지(보통 이름은 docker0)가 호스트에 생성되고, veth 인터페이스가 한 쌍으로 호스트와 컨테이너에 생성된다. 동일한 브리지 네트워크에 연결된 컨테이너들은 서로의 IP를 이용해 통신할 수 있다</p><li>host : 컨테이너는 호스트의 네트워크 스택을 그대로 이용한다</li><p>가상 브리지를 거치지 않으므로, 브리지 모드에 비해 성능이 비약적으로 좋다</p><li>container:&lt;name|id&gt; : 다른 컨테이너의 네트워크 스택을 그대로 이용한다</li><li>NETWORK_NAME : 사용자 정의 네트워크에 연결한다</li></ul><h4>브리지 네트워크용 컨테이너 별명; --network-alias</h4><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export NETWORK_NAME=test-net
 $ docker network create $NETWORK_NAME
 3ba0b000e1edd73ec541421da2b65c1f6513fd9ba5e488fc20dc6a76797ea49a
 
@@ -202,6 +202,20 @@ bash-4.2# curl echo:5678
 Hello, I'm container #3
 bash-4.2# curl echo:5678
 Hello, I'm container #1
+
+bash-4.2# yum install bind-utils -y
+bash-4.2# nslookup echo
+Server:         127.0.0.11
+Address:        127.0.0.11#53
+
+Non-authoritative answer:
+Name:   echo
+Address: 172.19.0.3
+Name:   echo
+Address: 172.19.0.2
+Name:   echo
+Address: 172.19.0.4
+
 bash-4.2# exit
 exit
 
@@ -250,32 +264,14 @@ exit
 
 $ docker rm --force $CONTAINER_NAME
 echo1
-</div><h4>기타 옵션</h4><ul><li>--cpus : CPU 제한. 기본값 0.000은 무제한을 의미</li><li>--memory, -m : 메모리 제한. 최소 4m</li><li>--memory-swap : swap 영역을 포함한 메모리 제한. 기본적으로 --memory의 2배</li><li>--kernel-memory : 커널 메모리 제한</li><p>e.g. -m 500M --kernel-memory 50M : 컨테이너 메모리 제한 500M 안에 커널 메모리 제한 50M가 포함된다</p><li>--privileged : 컨테이너에 모든 커널 작업 권한 부여</li><li>--stop-timeout : 중지 대기 후 강제 중지</li><li>--sysctl : 컨테이너 커널 파라미터 변경</li><li>--ulimit &lt;type&gt;=&lt;soft limit&gt;[:&lt;hard limit&gt;]</li></ul><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">--stop-timeout  # 지정 시간 경과 뒤 종료
---privileged    # 
-
---add-host                 Add a custom host-to-IP mapping (host:ip)
---cpu-period               Limit CPU CFS (Completely Fair Scheduler) period
---cpu-quota                Limit CPU CFS (Completely Fair Scheduler) quota
---cpu-rt-period            Limit CPU real-time period in microseconds
---cpu-rt-runtime           Limit CPU real-time runtime in microseconds
---cpu-shares , -c          CPU shares (relative weight)
---cpus                     Number of CPUs
-
---entrypoint               Overwrite the default ENTRYPOINT of the image
---health-cmd               Command to run to check health
+</div><h4>기타 옵션</h4><ul><li>--cpus : CPU 제한. 기본값 0.000은 무제한을 의미</li><p>CPU가 1개 있을 때, --cpus=0.5는 지정 기간(--cpu-period, 기본 100ms) 동안 50%를 사용할 수 있음을 의미</p><li>--memory, -m : 메모리 제한. 최소 4m</li><li>--memory-swap : swap 영역을 포함한 메모리 제한. 기본적으로 --memory의 2배</li><li>--kernel-memory : 커널 메모리 제한</li><p>e.g. -m 500M --kernel-memory 50M : 컨테이너 메모리 제한 500M 안에 커널 메모리 제한 50M가 포함된다</p><li>--privileged : 컨테이너에 모든 커널 작업 권한 부여</li><li>--stop-timeout : 중지 대기 후 강제 중지</li><li>--sysctl : 컨테이너 커널 파라미터 변경</li><li>--ulimit &lt;type&gt;=&lt;soft limit&gt;[:&lt;hard limit&gt;]</li></ul><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">--health-cmd               Command to run to check health
 --health-interval          Time between running the check (ms|s|m|h) (default 0s)
 --health-retries           Consecutive failures needed to report unhealthy
 --health-start-period      Start period for the container to initialize before starting health-retries countdown (ms|s|m|h) (default 0s)
 --health-timeout           Maximum time to allow one check to run (ms|s|m|h) (default 0s)
+
 --log-driver               Logging driver for the container
 --log-opt                  Log driver options
---memory , -m              Memory limit
---memory-reservation       Memory soft limit
---memory-swap              Swap limit equal to memory plus swap: '-1' to enable unlimited swap
---memory-swappiness        -1                                       Tune container memory swappiness (0 to 100)
-               Give extended privileges to this container
---ulimit                   Ulimit options
---user , -u                Username or UID (format: <name|uid>[:<group|gid>])
 </div></div><h3>docker container start</h3><p>중지 상태의 컨테이너(들)을 시작한다</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           start [OPTIONS] CONTAINER [CONTAINER...]
 $ docker container start [OPTIONS] CONTAINER [CONTAINER...]
 </div><h3>docker container stats</h3><p>Display a live stream of container(s) resource usage statistics</p><h3>docker container stop</h3><p>컨테이너(들)을 중지한다. SIGTERM 신호 전송 10초 후 SIGKILL 신호 전송</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           stop [OPTIONS] CONTAINER [CONTAINER...]
