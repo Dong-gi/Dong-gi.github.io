@@ -144,6 +144,14 @@ include ../../source/skeleton.pug
         ul
             li SHELL ["executable", "param1", "param2"]
             li RUN, CMD, ENTRYPOINT 기본 셸 변경
+        li Multi-stage
+        p FROM은 하나의 Dockerfile 안에서 여러 번 등장할 수 있고, 매 등장마다 이전 instruction에 의한 상태는 모두 정리된다
+        +asCode('Dockerfile').
+            FROM amazonlinux:2.0.20221004.0 as build-jar
+            # jar 빌드
+
+            FROM amazoncorretto:17.0.5
+            COPY --from=build-jar /.../x.jar
 
     h1
         |Commands 
@@ -584,6 +592,83 @@ include ../../source/skeleton.pug
                     $ docker rm --force $CONTAINER_NAME
                     echo1
 
+                h4 로깅 설정; --log-driver
+                ul
+                    li none : 로그 전달 없음
+                    li local : 최소한의 오버헤드로 로컬 파일에 기록
+                    li json-file : 기본값. JSON 포맷으로 로컬 파일에 기록
+                    p 하위 호환성을 위해 기본값으로 유지되지만, 이보다 local 사용이 권장된다
+                    li syslog : 호스트의 syslog 데몬으로 전달
+                    li journald : 호스트의 journald 데몬으로 전달
+                    li gelf : GELF(Graylog Extended Log Format) 엔드포인트(Graylog, Logstash 등)으로 전달
+                    li fluentd : 호스트의 fluentd 데몬으로 전달
+                    li splunk : HTTP Event Collector를 통해 splunk에 전달
+                    li logentries : Rapid7 Logentries 서버에 전달
+                    li etwlogs : ETW(Event Tracing for Windows)로 전달
+                    li awslogs : AWS CloudWatch Logs로 전달
+                    li gcplogs : GCP Logging으로 전달
+                div
+                    h5 로그 전달 방식 조정
+                    ul
+                        li blocking : 기본값. 로그가 드라이버에 전달되기까지 블록된다
+                        li non-blocking : 로그는 드라이버가 소비하기까지, 컨테이너에 할당된 버퍼에 저장된다
+                        p 기본 버퍼 크기는 1m이며, 버퍼가 가득 찬 경우 가장 오래된 로그가 제거된다
+                        +asCode('shell') $ docker run ---log-opt mode=non-blocking --log-opt max-buffer-size=4m ...
+
+                    h5 외부로 전달되는 로그 로컬에서 확인하기
+                    p 기본적으로 외부로 전달되는 로그는 docker logs로 확인할 수 없었다. 그러나 Docker Engine 20.10부터는 듀얼 로깅이 자동으로 활성화된다
+                    ul
+                        li 외부 로깅 드라이버로 전달이 실패된 로그는 로컬에서도 확인할 수 없다
+                        li local 로깅 드라이버와 동일한 옵션을 "cache-" 접두어를 붙여 지원한다
+                        li 기본 설정은 최대 5개 파일, 각 20MB 제한(압축 전 크기)
+                        li --log-opt cache-disabled : 듀얼 로깅을 끌 수 있다. 기본값 false
+                        li --log-opt cache-max-size : 로테이션 기준 크기. 기본값 20m
+                        li --log-opt cache-max-file : 최대 유지 파일 개수. 기본값 5
+                        li --log-opt cache-compress : 압축 여부. 기본값 true
+
+                    h5 컨테이너 ID 로깅 조정
+                    ul
+                        li 로그가 어떤 컨테이너로부터 출력된 것인지 구별하기 위해, 기본적으로 컨테이너 ID의 앞 12자리가 이용된다
+                        li --log-opt tag="game-server", --log-opt tag="{{.Name}}"과 같이 이를 재정의할 수 있다
+
+                    h5 local
+                    ul
+                        li 컨테이너의 STDOUT, STDERR 출력을 로컬 파일에 기록한다
+                        li 기본 설정은 최대 5개 파일, 각 20MB 제한(압축 전 크기)
+                        li --log-opt max-size : 로테이션 기준 크기. 기본값 20m
+                        li --log-opt max-file : 최대 유지 파일 개수. 기본값 5
+                        li --log-opt compress : 압축 여부. 기본값 true
+
+                    h5 json-file
+                    ul
+                        li --log-opt max-size : 로테이션 기준 크기. 기본값 무제한
+                        li --log-opt max-file : 최대 유지 파일 개수. 기본 1
+                        li --log-opt compress : 압축 여부. 기본값 disabled
+
+                    h5 logentries
+                    ul
+                        li --log-opt logentries-token : 로그 집합 토큰 설정
+                        li --log-opt line-only : true로 설정하면 raw payload만 전달
+
+                    h5 gelf
+                    ul
+                        li --log-opt gelf-address : 필수. GELF 서버 엔드포인트. tcp/udp만 지원됨
+                        li --log-opt gelf-compression-type : UDP Only. 기본 gzip으로 설정되지만, CPU 로드가 증가하므로 none으로 설정할 것이 권장된다
+
+                    h5 awslogs
+                    ul
+                        li AWS 인증 정보를 Docker 데몬에 전달해야 한다
+                        p AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN 환경변수로 설정 가능하다. 또는 EC2에 설정한 프로파일을 자동으로 이용한다
+                        li --log-opt awslogs-region : AWS_REGION 환경변수로도 설정 가능
+                        li --log-opt awslogs-group : 로그 그룹 지정
+                        li --log-opt awslogs-stream : 지정하지 않으면 컨테이너 ID가 스트림 이름으로 사용된다
+                        li --log-opt awslogs-force-flush-interval-seconds : 기본값 5초
+
+                    h5 fluentd
+                    ul
+                        li --log-opt fluentd-address : Fluentd 데몬 소켓. 기본값 tcp://localhost:24224
+
+
                 h4 기타 옵션
                 ul
                     li --cpus : CPU 제한. 기본값 0.000은 무제한을 의미
@@ -596,15 +681,7 @@ include ../../source/skeleton.pug
                     li --stop-timeout : 중지 대기 후 강제 중지
                     li --sysctl : 컨테이너 커널 파라미터 변경
                     li --ulimit #{'<type>=<soft limit>[:<hard limit>]'}
-                +asCode('shell').
-                    --health-cmd               Command to run to check health
-                    --health-interval          Time between running the check (ms|s|m|h) (default 0s)
-                    --health-retries           Consecutive failures needed to report unhealthy
-                    --health-start-period      Start period for the container to initialize before starting health-retries countdown (ms|s|m|h) (default 0s)
-                    --health-timeout           Maximum time to allow one check to run (ms|s|m|h) (default 0s)
 
-                    --log-driver               Logging driver for the container
-                    --log-opt                  Log driver options
 
             h3 docker container start
             p 중지 상태의 컨테이너(들)을 시작한다
