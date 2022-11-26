@@ -12,7 +12,7 @@
 
     <properties>
         <commons.dbcp2.version>2.7.0</commons.dbcp2.version>
-        <mysql.version>8.0.17</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
     </properties>
 
     <dependencies>
