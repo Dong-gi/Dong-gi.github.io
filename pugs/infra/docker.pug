@@ -702,16 +702,10 @@ include ../../source/skeleton.pug
                 --time, -t  SIGKILL 전송 전 대기 시간. 기본값 10
 
             h3 docker container top
-            p Display the running processes of a container
-
-            h3 docker container unpause
-            p Unpause all processes within one or more containers
-
-            h3 docker container update
-            p Update configuration of one or more containers
-
-            h3 docker container wait
-            p Block until one or more containers stop, then print their exit codes
+            p 실행 중인 프로세스 출력
+            +asCode('shell').
+                $ docker           top CONTAINER
+                $ docker container top CONTAINER
 
         h2 docker image COMMAND
         div
@@ -725,7 +719,7 @@ include ../../source/skeleton.pug
                 --build-arg                  # 빌드 환경변수 설정
                 --compress                   # 컨텍스트 gzip 압축
                 --disable-content-trust true # 이미지 검증 생략
-                --file, -f                   # Dockerfile 파일명. 기본값은 'PATH/Dockerfile'
+                --file, -f                   # Dockerfile 위치. 기본값은 'PATH/Dockerfile'
                 --label                      # 이미지 메타데이터 설정
                 --no-cache                   # 빌드 캐시 미사용
                 --tag, -t                    # 이미지 태그 설정
@@ -733,7 +727,7 @@ include ../../source/skeleton.pug
                 li 향상된 기능을 제공하는 moby/buildkit을 이용하려면(Since 18.09) 실행 전에 환경 변수 DOCKER_BUILDKIT=1를 설정하면 된다
                 li 빌드 과정에서 "컨텍스트"란 지정된 PATH | URL에 존재하는 파일들을 의미한다. 빌드 과정에서 컨텍스트 임의의 파일을 참조할 수 있다
                 p .dockerignore 파일을 통해 컨텍스트에서 파일/디렉터리들을 제외할 수 있다
-                li URL은 다음 중 하나가 될 수 있다 : Git 저장소, pre-packaged tarball, plain text file
+                li URL은 다음 중 하나가 될 수 있다 : Git 저장소, pre-packaged tarball, plain Dockerfile text file
                 ul
                     li 예. container 브랜치의 docker 디렉터리 지정
                     +asCode('shell') $ docker build https://github.com/docker/rootfs.git#container:docker
