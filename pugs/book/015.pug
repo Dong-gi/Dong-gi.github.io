@@ -1,6 +1,9 @@
 include ../../source/skeleton.pug
 
-+post('컴퓨터시스템구조론', '컴퓨터시스템구조론', '컴퓨터시스템구조론 독서 기록')
++post({
+    title: "컴퓨터 시스템",
+    description: "컴퓨터 시스템 관련 독서 기록"
+})
     h1 도서 정보
     .w3-row
         .w3-col.s2.w3-center
@@ -10,14 +13,41 @@ include ../../source/skeleton.pug
                 +tds('표제/저자사항', '컴퓨터시스템구조론 / William Stallings')
                 +tds('ISBN 정보', '978-89-92887-15-1 [93560]')
                 +tds('발행사항', '진샘미디어, 발행일 : 2010년 07월 30일')
+    .w3-row
+        .w3-col.s2.w3-center
+            +w3img('https://image.aladin.co.kr/product/9158/95/cover500/k482535605_1.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
+        .w3-col.s10
+            table.no-sort
+                +tds('표제/저자사항', "Computer Systems - A Programmer's Perspective 3판 / Randal E Bryant, David R O’Hallaron")
+                +tds('ISBN 정보', '979-11-85475-21-9 (93560)')
+                +tds('발행사항', '퍼스트 북, 2016.08.31')
 
-    h1 소개
-    p 컴퓨터의 기본적인 기능들은 네 가지로 분류된다
+    h1 개요
     ul
-        li 데이터 처리
-        li 데이터 저장
-        li 데이터 이동
-        li 제어
+        li 컴퓨터의 기본적인 기능들은 네 가지로 분류된다
+        ul
+            li 데이터 처리
+            li 데이터 저장
+            li 데이터 이동
+            li 제어
+
+        li 운영체제는 두 가지 주요 목적을 가지고 있다
+        ol
+            li 제멋대로 동작하는 응용프로그램들이 하드웨어를 잘못 사용하는 것을 막고
+            li 응용프로그램들이 단순하고 균일한 메커니즘을 사용해 복잡한 저수준 하드웨어 장치들을 조작
+
+        li 운영체제는 이 두 가지 목표를 추상화를 통해 달성하고 있다
+        ul
+            li 파일 : 입출력장치의 추상화
+            li 가상메모리 : 메인 메모리와 디스크 입출력장치의 추상화
+            li 프로세스 : 프로세서, 메인 메모리, 입출력장치 모두의 추상화
+
+        li 프로세스는 실행 중인 프로그램에 대한 운영체제의 추상화다. 프로세스들은 하나의 시스템에서 동시에 실행될 수 있으며, 각 프로세스는 하드웨어를 배타적으로 사용하는 것처럼 느낀다.
+
+        li 커널은 운영체제 코드의 일부분으로 메모리에 상주한다. 프로그램이 운영체제에 의한 작업을 요청하면, 컴퓨터는 시스템 콜을 실행해서 커널에 제어를 넘겨준다. 그러면 커널은 요청된 작업을 수행하고 프로그램에 리턴한다. 커널은 별도의 프로세스가 아니다 -- 모든 프로세스를 관리하기 위해 시스템이 이용하는 코드와 자료 구조의 집합이다
+
+        li 가상메모리는 프로세스들이 메인 메모리 전체를 독점적으로 사용하고 있는 것 같은 환상을 제공하는 추상화다. 각 프로세스는 0부터 시작하는 주소 공간에서, 몇 개의 정의된 영역을 갖는다
+
 
     h1 컴퓨터의 발전 과정과 성능
     div
@@ -102,7 +132,7 @@ include ../../source/skeleton.pug
 
             h3.fake RAID 4
             ul
-                li RAID 3과 유사하지만, <span class="hover-content" template-id="template1">독립적인 액세스 기법</span>을 사용한다
+                li RAID 3과 유사하지만, <span class="hover-content" template-id="template2">독립적인 액세스 기법</span>을 사용한다
                 li 패리티 계산 시 모든 디스크를 읽지 않는다 -- 대신 패리티 디스크의 부하가 크다
                 p (새 피리티 비트) = (이전 패리티 비트) xor (이전 데이터 비트) xor (새 데이터 비트)
 
@@ -124,6 +154,45 @@ include ../../source/skeleton.pug
                 li RAID 10 : 두 개의 RAID 1로 RAID 0 구성
                 li RAID 01 : 두 개의 RAID 0로 RAID 1 구성
                 li RAID + Spare : 디스크 결함 시 즉시 복구에 사용될 여유 디스크를 예비
+
+    h1 정보의 표현과 처리
+    div
+        ul
+            li 리틀 엔디언 컴퓨터에서 빅 엔디언 컴퓨터로 네트워크를 통해 데이터를 보내는 경우 수신된 워드들 내 바이트 순서가 바뀔 수 있다. 때문에 송신측은 네트워크 표준 인코딩(빅 엔디언)으로 데이터를 보내고, 수신측은 네트워크 표준 데이터를 자신의 내부 표현방식으로 변환한다.
+
+        h2 IEEE 부동소수점
+        div
+            h3: +asA('https://en.wikipedia.org/wiki/IEEE_754#Rounding_rules', 'Rounding Mode')
+            ol
+                li 가까운 값으로 근사
+                ul
+                    li Round to nearest, ties to even
+                    p 가장 가까운 유효숫자로 근사한다. 만일 두 수의 중간값인 경우, 양수로 근사한다. 통계치의 바이어스를 줄이는 데 효과적이다
+                    li Round to nearest, ties away from zero
+                    p 가장 가까운 유효숫자로 근사한다. 만일 두 수의 중간값인 경우, 0에서 멀어지도록 근사한다
+
+                li 일정한 방향으로 근사
+                ul
+                    li Round toward 0(a.k.a. truncation)
+                    p 0에 가까운 방향으로 근사한다
+                    li Round toward +∞(a.k.a. rounding up, ceiling)
+                    p 양의 방향으로 근사한다
+                    li Round toward -∞(a.k.a. rounding down, floor)
+                    p 음의 방향으로 근사한다
+
+            h3 연산
+            ul
+                li 부동소수점 연산은 근삿값을 도출한다
+                p e.g. 덧셈의 교환법칙은 성립하지만 결합법칙은 성립하지 않는다. 따라서 아래의 코드를
+                +asCode().
+                    x = a + b + c;
+                    y = b + c + d;
+                p 아래와 같이 최적화하는 것은 오류다
+                +asCode().
+                    t = b + c;
+                    x = a + t;
+                    y = t + d;
+
 
     +hoverTemplate()#template1
         ul
