@@ -1,0 +1,83 @@
+include ../../source/skeleton.pug
+
++post({
+    title: '기초 수학',
+    description: '기초 수학 관련 독서 기록',
+    useMath: true
+})
+    h1 참고 도서
+    .w3-row
+        .w3-col.s2.w3-center
+            +w3img('https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788993712223.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
+        .w3-col.s10
+            table.no-sort
+                +tds('표제/저자사항', '기초수학 / 고영상 ,김경수,김동석,김명재,박천건,조동현,함윤미')
+                +tds('ISBN 정보', '978-89-93712-22-3 (93410)')
+                +tds('발행사항', '휴먼싸이언스, 2010.02.28')
+
+    h1 명제
+    ul
+        li <b>정의.</b> 명제(proposition)란 참 또는 거짓인 문장이다
+        li 명제가 갖는 값을 진리값(truth value)이라 한다 -- T(true), F(false)
+        li 변수를 갖지 않는 단순 명제를 P, Q와 같이 문자로 표현할 수 있다
+        li 명제(들)로부터 새로운 명제를 도출할 수 있다
+        table.no-sort
+            +ths('English', '한국어', 'Symbolic Notation')
+            tr
+                td NOT(P)
+                td (명제의) 부정(negation)
+                td 식[\neg{P}]식 또는 식[\overline{P}]식
+            tr
+                td P AND Q
+                td (명제의) 논리곱(conjunction)
+                td 식[P \land Q]식
+            tr
+                td P OR Q
+                td (명제의) 논리합(disjunction)
+                td 식[P \lor Q]식
+            tr
+                td P IMPLIES Q, if P then Q
+                td 조건 명제(implication)
+                td 식[P \longrightarrow Q]식
+            tr
+                td P IFF Q
+                td P는 Q이기 위한 필요충분조건, P와 Q는 동치
+                td 식[P \iff Q]식 또는 식[P \equiv Q]식
+            tr
+                td P XOR Q
+                td (명제의) 배타적 논리합
+                td 식[P \oplus Q]식
+        li 논리 연산에 관한 법칙
+        table.no-sort
+            +tds('교환법칙 of AND', 'A AND B = B AND A')
+            +tds('결합법칙 of AND', 'A AND (B AND C) = (A AND B) AND C')
+            +tds('분배법칙 of AND over OR', 'A AND (B OR C) = (A AND B) OR (A AND C)')
+            +tds('분배법칙 of OR over AND', 'A OR (B AND C) = (A OR B) AND (A OR C)')
+            +tds('항등원 of AND', 'T AND A = A')
+            +tds('zero of AND', 'F AND A = F')
+            +tds('멱등 of AND', 'A AND A = A')
+            +tds('contradiction of AND', 'A AND NOT(A) = F')
+            +tds('double negation', 'NOT(NOT(A)) = A')
+            +tds('validity of OR', 'A OR NOT(A) = T')
+            +tds('De Morgan for AND', 'NOT(A AND B) = NOT(A) OR NOT(B)')
+            +tds('De Morgan for OR', 'NOT(A OR B) = NOT(A) AND NOT(B)')
+
+    h1 집합
+
+    h1 수 체계
+
+    h1 함수
+
+    h1 방정식
+
+    h1 부등식
+
+    h1 수학적 귀납법
+
+    h1 수열
+
+    h1 극한과 연속
+
+    h1 미분
+
+    h1 적분
