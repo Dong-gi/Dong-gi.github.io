@@ -63,8 +63,40 @@ include ../../source/skeleton.pug
             +tds('De Morgan for OR', 'NOT(A OR B) = NOT(A) AND NOT(B)')
 
     h1 집합
+    ul
+        li 러셀의 역설 : 집합 S를 자기 자신을 원소로 갖지 않는 모든 집합을 원소로 하는 집합이라고 정의할 때,
+        ul
+            li S가 S의 원소가 아닌 경우 : S는 S를 원소로 가져야 한다. 이는 모순이다
+            li S가 S를 원소로 갖는 경우 : S는 S를 원소로 갖지 않아야 한다. 이는 모순이다
+        li 공리적 집합론 : 집합을 직관적으로 정의할 경우 발생하는, 위와 같은 모순이 존재하지 않도록 체계적으로 정립 -- 복잡하고 어렵다; 따라서 여기서는 직관적인 집합을 계속 이용한다
+        li 원소 e가 집합 S에 속하는 경우, 식[e \in S]식으로 표기하고, 포함되지 않는 경우 식[e \notin S]식으로 표기한다
+        li 원소를 하나도 갖지 않는 공집합은 특별히 식[\emptyset]식으로 표기한다
+        li 식[e \in S_1 \implies e \in S_2]식를 만족하는 경우, S1은 S2의 부분집합이고, 식[S_1 \subseteq S_2]식으로 표기한다
+        p 따라서, 공집합은 모든 집합의 부분집합이다
+        li 합집합 식[S_1 \cup S_2 ::= \{x | x \in S_1 \text{ or } x \in S_2\}]식
+        li 교집합 식[S_1 \cap S_2 ::= \{x | x \in S_1 \text{ and } x \in S_2\}]식
+        li 여집합 식[S^c ::= \{x | x \notin S\}]식
+        li 차집합 식[S_1 - S_2 = \{x | x \in S_1 \text{ and } x \notin S_2\} = S_1 \cap S_2^c]식
+        li |S| ::= S의 원소의 개수
 
     h1 수 체계
+    ul
+        li 식[\mathbb{N}]식 : 자연수 또는 non-zero integer 집합
+        p 보통 전자를 식[\mathbb{N}, \mathbb{Z}^{+}]식, 후자의 경우 식[\mathbb{N}_0, \mathbb{Z}_0^{+}]식으로 표기한다
+        li 식[\mathbb{Z}]식 : 정수 집합; ..., -3, -2, -1, 0, 1, 2, 3, ...
+        li 식[\mathbb{Q}]식 : 유리수 집합; 임의 두 정수의 비율
+        li 식[\mathbb{R}]식 : 실수 집합; 대소 관계가 존재하는 모든 수
+        ul
+            li 무리수 ::= 유리수가 아닌 실수
+            li 임의의 두 실수 사이에, 무한히 많은 실수가 존재한다
+            li 임의의 두 실수 사이에, 무한히 많은 유리수가 존재한다
+            li 임의의 두 실수 사이에, 무한히 많은 무리수가 존재한다
+            li 절대값 식[\left| x \right| = \left\{
+                |\begin{matrix}
+                |   x & \text{if } x \geq 0  \\
+                |   -x & \text{if } x \lt 0
+                |\end{matrix}\right.]식
+        li 식[\mathbb{C}]식 : 복소수 집합
 
     h1 함수
 
