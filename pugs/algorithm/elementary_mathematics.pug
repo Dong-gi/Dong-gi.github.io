@@ -17,7 +17,7 @@ include ../../source/skeleton.pug
 
     h1 명제
     ul
-        li <b>정의.</b> 명제(proposition)란 참 또는 거짓인 문장이다
+        li 명제(proposition)란 참 또는 거짓인 문장이다
         li 명제가 갖는 값을 진리값(truth value)이라 한다 -- T(true), F(false)
         li 변수를 갖지 않는 단순 명제를 P, Q와 같이 문자로 표현할 수 있다
         li 명제(들)로부터 새로운 명제를 도출할 수 있다
@@ -87,6 +87,7 @@ include ../../source/skeleton.pug
         li 식[\mathbb{Q}]식 : 유리수 집합; 임의 두 정수의 비율
         li 식[\mathbb{R}]식 : 실수 집합; 대소 관계가 존재하는 모든 수
         ul
+            li 임의의 실수 x에 대하여, 식[x^2 \geq 0]식이 성립한다
             li 무리수 ::= 유리수가 아닌 실수
             li 임의의 두 실수 사이에, 무한히 많은 실수가 존재한다
             li 임의의 두 실수 사이에, 무한히 많은 유리수가 존재한다
@@ -97,10 +98,58 @@ include ../../source/skeleton.pug
                 |   -x & \text{if } x \lt 0
                 |\end{matrix}\right.]식
         li 식[\mathbb{C}]식 : 복소수 집합
+        ul
+            li 식[i^2 = -1]식을 만족하는 i를 허수 단위라 한다
+            li 임의의 두 실수 a, b에 대하여 a + bi는 복소수
+            li a - bi를 a + bi의 켤레복소수라 한다
+            li 모든 계수가 실수인 다항방정식에 대하여, a + bi가 근이면, 그 켤레복소수 역시 근이다
 
     h1 함수
+    ul
+        li 함수는 domain 집합(정의역)의 원소를 codomain 집합(공역)의 원소로 할당하는 연산이다.\[f:A\rightarrow B\]
+        li 두 함수 식[f:A\rightarrow B]식, 식[g:B\rightarrow C]식에 대한 합성함수 식[g\circ f]식는 다음과 같이 정의된다: \[\forall{x}\in A. (g\circ f)(x) ::= g(f(x))\]
+        li 함수 f의 정의역 임의의 서로 다른 두 원소 x1, x2에 대하여, f(x1) != f(x2)인 경우, f는 일대일 함수(injective function)다
+        li 일대일 함수 식[f: A \rightarrow B]식는 역함수 식[f^{-1}: B \rightarrow A]식를 갖는다
+    div
+        h2 일차함수
+        ul
+            li 점 (x1, y1)을 지나고, 기울기가 a인 직선의 방정식은 y - y1 = a(x - x1)
+            li 두 점 (x1, y1), (x2, y2)를 지나는 직선의 방정식은 식[y - y_1 = {(y_2 - y_1) \over (x_2 - x_1)} (x - x_1)]식
+            li 기울기를 갖는 두 직선이 직교다 IFF 두 직선의 기울기의 곱이 -1이다
+            p <i>증명.</i> 먼저, 기울기를 갖는 두 직선이 직교면, 두 직선의 기울기의 곱이 -1임을 보인다
+                |<br>두 직선의 교점을 (x0, y0)이라고 하자. 그리고 x0가 아닌 값 c에 대하여, 두 직선이 지나는 점을 각각 (c, y1), (c, y2)라고 하자
+                |<br>그러면, 피타고라스 정리에 의해
+                |\begin{align*}
+                | & (c - x_0)^2 + (y_1 - y_0)^2 + (c - x_0)^2 + (y_2 - y_0)^2 = (y_2 - y_1)^2 \\
+                |\iff & 2(c - x_0)^2 + (y_1^2 - 2y_{1}y_{0} + y_0^2) + (y_2^2 - 2y_{2}y_{0} + y_0^2) = y_2^2 - 2y_{2}y_{1} + y_1^2 \\
+                |\iff & 2(c - x_0)^2 = - 2y_{2}y_{1} + 2y_{1}y_{0} + 2y_{2}y_{0} - 2y_0^2 \\
+                |\iff & -(c - x_0)^2 = y_{2}y_{1} - y_{1}y_{0} - y_{2}y_{0} + y_0^2 \\
+                |\iff & -(c - x_0)^2 = (y_{2} - y_0)(y_{1} - y_{0}) \\
+                |\iff & -1 = {(y_2 - y_0) \over (c - x_0)} \cdot {(y_{1} - y_{0}) \over (c - x_0)}
+                |\end{align*}
+                |<br>다음으로 두 직선의 기울기의 곱이 -1이면, 두 직선이 직교임을 보인다
+                |<br>마찬가지로 두 직선의 교점을 P0 = (x0, y0)라고 하자. 그러면, 두 직선을 아래와 같이 정의할 수 있다
+                |<br>직선 1 : y = a(x - x0) + y0
+                |<br>직선 2 : y = -1/a(x - x0) + y0
+                |<br>x0가 아닌 값 c에 대하여, 두 직선이 지나는 점은 각각 P1 = (c, a(c - x0) + y0), P2 = (c, -1/a(c - x0) + y0)이다
+                |<br>이제 P0, P1, P2 세 점으로 만들어지는 삼각형이 식[\overline{P_{1}P_{2}}^2 = \overline{P_{0}P_{1}}^2 + \overline{P_{0}P_{2}}^2]식를 만족함을 보여, 피타고라스 정리에 따라 두 직선이 직교함을 보인다
+                |<br>식[\overline{P_{1}P_{2}}^2 = (a(c - x_0) + 1/a(c - x_0))^2 = a^2(c - x_0)^2 + 2(c - x_0)^2 + 1/a^2(c - x_0)^2]식
+                |<br>식[\overline{P_{0}P_{1}}^2 + \overline{P_{0}P_{2}}^2 = a^2(c - x_0)^2 + 2(c - x_0)^2 + 1/a^2(c - x_0)^2]식
+            p.w3-right-align ■
+        h2 유리함수
+        ul
+            li 분모와 분자가 다항함수이고, 분모가 영함수가 아닌 함수 R(x) = p(x) / q(x)
+            li p(x)와 q(x)가 공통인수를 가지고 있지 않은 경우, R(x)는 기약이다
+            li R(x)가 기약이면, p(x)의 근은 R(x)의 x절편이 된다
+            li R(x)가 기약이면, q(x)의 근은 R(x)에 대한 수직점근선의 정보를 준다
+            ul
+                li 수평점근선 : 식[x \longrightarrow \infty]식일 때, 식[R(x) \longrightarrow c]식인 경우, 또는 식[x \longrightarrow -\infty]식일 때, 식[R(x) \longrightarrow c]식인 경우; y = c
+                li 수직점근선 : 식[x \longrightarrow c]식일 때, 식[|R(x)| \longrightarrow \infty]식인 경우; x = c
+                li 사선점근선 : 위 두 경우에 해당하지 않는 점근선; y = ax + b
 
     h1 방정식
+    ul
+        li 다항방정식의 근은, 다방함수 그래프의 x절편이다
 
     h1 부등식
 
