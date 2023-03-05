@@ -14,6 +14,14 @@ include ../../source/skeleton.pug
                 +tds('표제/저자사항', '기초수학 / 고영상 ,김경수,김동석,김명재,박천건,조동현,함윤미')
                 +tds('ISBN 정보', '978-89-93712-22-3 (93410)')
                 +tds('발행사항', '휴먼싸이언스, 2010.02.28')
+    .w3-row
+        .w3-col.s2.w3-center
+            +w3img('https://image.yes24.com/goods/3031659/L', '도서 이미지')&attributes({style: 'max-height:210px'})
+        .w3-col.s10
+            table.no-sort
+                +tds('표제/저자사항', '우리가 잘못 배우고 있는 수학 / 김용무')
+                +tds('ISBN 정보', '978-89-8172-709-3 (93410)')
+                +tds('발행사항', '교우사, 2007.09.15')
 
     h1 명제
     ul
@@ -69,15 +77,102 @@ include ../../source/skeleton.pug
             li S가 S의 원소가 아닌 경우 : S는 S를 원소로 가져야 한다. 이는 모순이다
             li S가 S를 원소로 갖는 경우 : S는 S를 원소로 갖지 않아야 한다. 이는 모순이다
         li 공리적 집합론 : 집합을 직관적으로 정의할 경우 발생하는, 위와 같은 모순이 존재하지 않도록 체계적으로 정립 -- 복잡하고 어렵다; 따라서 여기서는 직관적인 집합을 계속 이용한다
+        ul
+            li 실제 집합은 "주어진 조건에 의해 분명하게 결정할 수 있는 대상들로 이루어진 모임"이 아니다
+            li 집합 자체는 정의를 갖지 않는 무정의 용어(undefined term)이며, 결국 공리로 정리된 집합의 성질들을 모두 갖춘 것이 곧 집합이다
+            li 마찬가지로 원소가 집합에 속한다는 것 역시, 엄밀한 정의를 갖지 않는 무정의 관계(undefined relation)다
         li 원소 e가 집합 S에 속하는 경우, 식[e \in S]식으로 표기하고, 포함되지 않는 경우 식[e \notin S]식으로 표기한다
         li 원소를 하나도 갖지 않는 공집합은 특별히 식[\emptyset]식으로 표기한다
         li 식[e \in S_1 \implies e \in S_2]식를 만족하는 경우, S1은 S2의 부분집합이고, 식[S_1 \subseteq S_2]식으로 표기한다
-        p 따라서, 공집합은 모든 집합의 부분집합이다
+        p 따라서, 공집합은 모든 집합의 부분집합이다(가정이 항상 false이므로)
         li 합집합 식[S_1 \cup S_2 ::= \{x | x \in S_1 \text{ or } x \in S_2\}]식
         li 교집합 식[S_1 \cap S_2 ::= \{x | x \in S_1 \text{ and } x \in S_2\}]식
         li 여집합 식[S^c ::= \{x | x \notin S\}]식
         li 차집합 식[S_1 - S_2 = \{x | x \in S_1 \text{ and } x \notin S_2\} = S_1 \cap S_2^c]식
         li |S| ::= S의 원소의 개수
+
+    h1 유클리드 기하학
+    div
+        +pos('원주각')
+        h2 원주각
+        +w3img('/imgs/2023-03-05 165418.png')
+        ul
+            li 원호 식[\widehat{AB}]식에 대하여, ∠APB를 원주각, ∠AOB식을 중심각이라 한다
+            li 동일한 원호에 대하여, 점 P의 위치에 관계없이 원주각은 일정하다
+            details
+                summary 증명
+                ul
+                    li 점 O가 선분 AP, BP 사이에 존재할 때
+                    +w3img('/imgs/2023-03-05 173733.png')
+                    p 두 이등변 삼각형 APO, BPO로부터, ∠AOB = ∠AOQ + ∠BOQ = 2∠APO + 2∠BPO = 2∠APB를 얻을 수 있다
+                    li 점 O가 선분 AP 또는 BP 위에 존재할 때
+                    +w3img('/imgs/2023-03-05 173917.png')
+                    p 이등변 삼각형 BPO로부터, ∠AOB = 2∠APB를 얻을 수 있다
+                    li 점 O가 선분 AP, BP 바깥에 존재할 때
+                    +w3img('/imgs/2023-03-05 181331.png')
+                    p 두 이등변 삼각형 APO, BPO로부터, 다음 연립방정식을 세울 수 있다
+                    ol
+                        li ∠APB + ∠PAO = ∠AOB + ∠PBO
+                        li ∠PAO = ∠APB + ∠PBO
+                    p 양 변을 각각 빼면, ∠APB = ∠AOB - ∠APB. 따라서 ∠AOB = 2∠APB를 얻을 수 있다
+            li 위 증명으로부터 원주각과 중심각 사이에는 일정한 비율이 존재함을 알 수 있다 : ∠AOB = 2∠APB
+            li 서로 다른 네 점에 대하여, ∠ACB = ∠ADB이고, 점 C, D가 직선 AB에 대하여 같은 쪽에 위치한다면, 네 점을 지나는 원이 존재한다
+            li 지름에 대한 원주각의 크기는 직각이다
+            li 원에 내접하는 사각형은 마주보는 두 내각의 합이 π다
+            p 두 내각에 대응하는 두 중심각의 합이 2π이므로
+            li 접선과 현이 이루는 각
+            +w3img('/imgs/2023-03-05 181241.png')
+            p ∠APT = ∠AP'T = ∠ATQ
+        
+        h2 방멱
+        p 방멱(power of a point)은 점과 원 사이의 거리를 의미한다
+        ul
+            li 방멱정리
+            p 점 P를 지나는 직선과 원 O의 교점을 A, B라 했을 때, \[\overline{PA} \cdot \overline{PB} = |\overline{PO}^2 - r^2|\]
+            details 
+                summary 증명
+                ul
+                    li 점이 원 안에 있는 경우
+                    +w3img('/imgs/2023-03-05 204648.png')
+                    p 선분 PO의 연장선을 그려보자
+                    +w3img('/imgs/2023-03-05 205007.png')
+                    ul
+                        li ∠APC = ∠BPD
+                        li 원호 AD에 대하여 원호각 ∠ACD = ∠ABD
+                        li 원호 BC에 대하여 원호각 ∠BDC = ∠BAC
+                    p 이므로 △APC와 △DPB는 서로 닮음이다. 따라서 \begin{align*}
+                        | & \overline{PA} : \overline{PD} = \overline{PC} : \overline{PB} \\
+                        | \iff & \overline{PA} \cdot \overline{PB} = \overline{PC} \cdot \overline{PD} \\
+                        | & = (r + \overline{PO})(r - \overline{PO}) \\
+                        | & = |\overline{PO}^2 - r^2|
+                        |\end{align*}
+                    li 점이 원 위에 있는 경우
+                    p 0 = 0이므로 자명하다
+                    li 점이 원 밖에 있는 경우
+                    p 점이 원 안에 있는 경우와 마찬가지로 선분 PO의 연장선을 그려본다
+                    +w3img('/imgs/2023-03-05 213630.png')
+                    p #[+goto('원주각')]의 성질로부터, 원에 내접하는 사각형 ABDC의 마주보는 두 내각의 합이 π라는 사실을 이용하면,
+                    ul
+                        li ∠PCA = ∠PBD
+                        li ∠PAC = ∠PDB
+                    p 임을 알 수 있고, △PAC와 △PDB는 닮음이다. 따라서 \begin{align*}
+                        | & \overline{PA} : \overline{PD} = \overline{PC} : \overline{PB} \\
+                        | \iff & \overline{PA} \cdot \overline{PB} = \overline{PC} \cdot \overline{PD} \\
+                        | & = (\overline{PO} - r)(\overline{PO} + r) \\
+                        | & = |\overline{PO}^2 - r^2|
+                        |\end{align*}
+
+            li 현에 대한 방멱
+            +w3img('/imgs/2023-03-05 214319.png')
+            p \[\overline{PA} \cdot \overline{PB} = \overline{PC} \cdot \overline{PD}\]
+
+            li 할선에 대한 방멱
+            +w3img('/imgs/2023-03-05 214724.png')
+            p \[\overline{PA} \cdot \overline{PB} = \overline{PC} \cdot \overline{PD}\]
+
+            li 접선에 대한 방멱
+            +w3img('/imgs/2023-03-05 214921.png')
+            p \[\overline{PA}^2 = \overline{PC} \cdot \overline{PD}\]
 
     h1 수 체계
     ul
@@ -146,6 +241,102 @@ include ../../source/skeleton.pug
                 li 수평점근선 : 식[x \longrightarrow \infty]식일 때, 식[R(x) \longrightarrow c]식인 경우, 또는 식[x \longrightarrow -\infty]식일 때, 식[R(x) \longrightarrow c]식인 경우; y = c
                 li 수직점근선 : 식[x \longrightarrow c]식일 때, 식[|R(x)| \longrightarrow \infty]식인 경우; x = c
                 li 사선점근선 : 위 두 경우에 해당하지 않는 점근선; y = ax + b
+        h2 지수함수
+        ul 
+            li 식[a > 0, a \ne 1, f(x) = a^x]식
+            li 지수의 성질
+            ul
+                li 식[a^{x_1} \cdot a^{x_2} = a^{x_1 + x_2}]식
+                li 식[(a^x)^c =a^{cx}]식
+
+        h2 로그함수
+        ul
+            li 지수함수의 역함수 식[a > 0, a \ne 1, x > 0, y = \log_a{x}]식
+            li 자연로그의 밑 식[e = \lim_{n \to \infty}\left(1 + {1 \over n}\right)^n = 2.71828\cdots]식
+            li 자연로그함수 식[y = \log_e{x} = \ln{x}]식
+            li 로그의 성질
+            ul
+                li 식[\log_a{x_1} + \log_a{x_2} = \log_a{x_1 x_2}]식
+                p 밑이 같은 두 지수항의 곱이 지수의 합이 되는 성질을 y=x로 대칭한 것과 같다
+                li 식[\log_a{x_1} - \log_a{x_2} = \log_a{x_1 \over x_2}]식
+                li 식[c\log_a{x} = \log_a{x^c}]식
+                p 지수항의 거듭제곱이 지수의 곱이 되는 성질을 y=x로 대칭한 것과 같다
+                li 식[\log_a{b}\log_b{c} = \log_a{b^{\log_b{c}}} = \log_a{c}]식, 식[\log_b{c} = {\log_a{c} \over \log_a{b}}]식
+
+        h2 삼각함수
+        ul
+            li 각도(angle) : 두 반직선에 대하여, 시초선(initial side)으로부터 동경(terminal side)까지 반시계 방향으로 벌어진 정도
+            li 육십분법(degree) : 시초선과 동경을 일치시킨 상태에서, 동경을 반시계 방향으로 회전시켜 최초로 다시 시초선과 일치할 때의 각도를 360도로 한다
+            p 1도 = 60분, 1분 = 60초
+            li 호도법(radian) : 원호의 반지름과 호의 길이가 일치하는 시점의 중심각의 크기를 1rad이라 한다
+            ul
+                li 호도법의 단위는 생략 가능하며, 식[2\pi = 360^{\circ}]식
+                li 반지름이 r, 중심각이 θ인 원호의 길이 l = rθ, 부채꼴의 넓이 식[S = {\theta \over 2}r^2 = {1 \over 2}rl]식
+                ul
+                    li 원주가 식[2{\pi}r]식이고, 중심각의 크기와 원호의 길이가 비례한다는 사실로부터 도출할 수 있다
+                    li 원의 넓이가 식[{\pi}r^2]식이고, 중심각의 크기와 부채꼴의 넓이가 비례한다는 사실로부터 도출할 수 있다
+            li 아래와 같은 직각삼각형을 생각하자
+            +w3img('/imgs/20230305_141045.png')
+            ul
+                li sine 함수 : 식[\sin{\theta} = b / c]식
+                li cosine 함수 : 식[\cos{\theta} = a / c]식
+                +w3img('https://www.mathsisfun.com/algebra/images/sine-cosine-graph.svg', 'sin, cos 그래프')
+                p 위 그래프를 보면, 두 함수는 서로 평행이동 관계임을 직관적으로 알 수 있다
+                li tangent 함수 : 식[\tan{\theta} = b / a = \sin{\theta} / \cos{\theta}]식
+                li secant 함수 : 식[\sec{\theta} = 1 / \cos{\theta} = c / a]식
+                li cosecant 함수 : 식[\csc{\theta} = 1 / \sin{\theta} = c / b]식
+                li cotangent 함수 : 식[\cot{\theta} = 1 / \tan{\theta} = a / b]식
+                li 삼각함수들은 θ에서의 값과 2π + θ에서의 값이 일치하는 주기성을 갖는다
+                li 식[\sin^2{\theta} + \cos^2{\theta} = 1]식, 식[1 + \cot^2{\theta} = \csc^2{\theta}]식, 식[1 + \tan^2{\theta} = \sec^2{\theta}]식
+        div
+            h3 유클리드 삼각형
+            ul
+                li 삼각형은 3개의 변과, 각 변에 대한 대각 3개를 갖는다
+                li 3개 변의 길이가 주어진 경우, 그릴 수 있는 삼각형은 오직 한 종류다
+                p 임의의 꼭짓점에서 대변으로 수직선을 그어 만들어지는 2개의 직각삼각형을 이용하여 삼각형 3개 내각을 구할 수 있다
+                li 2개 변의 길이와 그 사잇각이 주어진 경우, 그릴 수 있는 삼각형은 오직 한 종류다
+                p 코사인 법칙을 이용하여 나머지 변의 길이를 구할 수 있다
+                li 1개 변의 길이와 2개의 내각(== 3개의 내각)이 주어진 경우, 그릴 수 있는 삼각형은 오직 한 종류다
+                p 사인 법칙을 이용하여 나머지 2개 변의 길이를 구할 수 있다
+
+            h3 사인법칙
+            p △ABC의 세 내각의 크기 A, B, C와 각 대변의 길이 a, b, c, 그리고 외접원의 반지름 R에 대하여 다음이 성립한다 \[{a \over \sin{A}} = {b \over \sin{B}} = {c \over \sin{C}} = 2R\]
+            details 
+                summary 증명
+                ul
+                    li 예각삼각형인 경우
+                    p △ABC의 외접원을 그리고, 꼭짓점 A를 지나는 지름을 그려보자
+                    +w3img('/imgs/2023-03-05 215420.png')
+                    p #[+goto('원주각')]의 성질에 따라 ∠BAC = ∠BA'C임을 알고 있다. 또, ∠BCA'가 직각이므로, \[a = \overline{BC} = 2R\sin{∠BA'C} = 2R\sin{A}\]
+                    p 나머지 꼭짓점에 대해서도 같은 결과를 얻을 수 있다
+
+                    li 둔각삼각형인 경우
+                    p 예각삼각형의 경우와 마찬가지로, 삼각형의 외접원을 그리고, 꼭짓점 A를 지나는 지름을 그려보자
+                    +w3img('/imgs/2023-03-05 220401.png')
+                    p 위 예갹삼각형인 경우의 증명으로부터 식[a = \overline{BC} = 2R\sin{∠BA'C}]식임을 알 수 있다
+                    p 또, #[+goto('원주각')]의 성질에 따라 ∠BA'C = π - A이며, 식[\pi/2 \lt A \lt \pi]식에 대하여 식[\sin(A) = \sin(\pi - A)]식이므로, \[a = 2R\sin{∠BA'C} = 2R\sin{A}\]
+
+                    li 직각삼각형인 경우
+                    p 직각삼각형의 빗변이 외접원의 지름이므로, 삼각비의 정의에 의해 자명하다
+
+            h3 코사인법칙
+            p △ABC의 세 내각의 크기 A, B, C와 각 대변의 길이 a, b, c에 대하여, 다음이 성립한다
+                |\begin{align*}
+                |a^2 = b^2 + c^2 - 2bc \cos{A} \\
+                |b^2 = c^2 + a^2 - 2ca \cos{B} \\
+                |c^2 = a^2 + b^2 - 2ab \cos{C} \\
+                |\end{align*}
+            details
+                summary 증명
+                ul
+                    li 예각삼각형인 경우
+                    p 꼭짓점 B에서 대변 AC로 내린 수선의 발을 H라 하자
+                    +w3img('/imgs/2023-03-05 222031.png')
+
+            h3 덧셈정리
+            ul
+                li 식[\sin(\alpha + \beta) = \sin{\alpha}\cos{\beta} + \cos{\alpha}\sin{\beta}]식
+
 
     h1 방정식
     ul
