@@ -87,9 +87,22 @@ include ../../source/skeleton.pug
         p 따라서, 공집합은 모든 집합의 부분집합이다(가정이 항상 false이므로)
         li 합집합 식[S_1 \cup S_2 ::= \{x | x \in S_1 \text{ or } x \in S_2\}]식
         li 교집합 식[S_1 \cap S_2 ::= \{x | x \in S_1 \text{ and } x \in S_2\}]식
-        li 여집합 식[S^c ::= \{x | x \notin S\}]식
+        li 여집합 식[S^c ::= \{x | x \notin S \text{ and } x \in U\}]식
+        p 여집합은 전체집합이 존재할 때만 정의된다
         li 차집합 식[S_1 - S_2 = \{x | x \in S_1 \text{ and } x \notin S_2\} = S_1 \cap S_2^c]식
-        li |S| ::= S의 원소의 개수
+        li |S| ::= S의 원소의 개수(유한집합에서)
+        ul
+            li 자연수 집합의 크기(cardinality) 식[|\mathbb{N}| = \aleph_0]식
+            li 두 집합 A, B에 대하여 일대일 대응 함수가 존재하면, 두 집합의 크기는 같다
+            li 두 집합 A, B에 대하여 A가 B보다 크지 않고, B도 A보다 크지 않으면, 두 집합의 크기는 같다(Schröder–Bernstein theorem)
+            li 짝수인 자연수 집합 E의 크기 = 식[\aleph_0]식
+            ul
+                li 일대일 함수 f : E -> N의 예 \[f(n) = n / 2\]
+                li 일대일 함수 f : N -> E의 예 \[f(n) = n * 2\]
+            li 집합 N x N의 크기 = 식[\aleph_0]식
+            ul
+                li 일대일 함수 f : N x N -> N의 예 \[f(m, n) = 2^m3^n\]
+                li 일대일 함수 f : N -> N x N의 예 \[f(n) = n\]
 
     h1 유클리드 기하학
     div
