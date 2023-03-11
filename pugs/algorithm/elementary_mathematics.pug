@@ -97,12 +97,12 @@ include ../../source/skeleton.pug
             li 두 집합 A, B에 대하여 A가 B보다 크지 않고, B도 A보다 크지 않으면, 두 집합의 크기는 같다(Schröder–Bernstein theorem)
             li 짝수인 자연수 집합 E의 크기 = 식[\aleph_0]식
             ul
-                li 일대일 함수 f : E -> N의 예 \[f(n) = n / 2\]
-                li 일대일 함수 f : N -> E의 예 \[f(n) = n * 2\]
+                li 일대일 함수 f : E → N의 예 \[f(n) = n / 2\]
+                li 일대일 함수 f : N → E의 예 \[f(n) = n * 2\]
             li 집합 N x N의 크기 = 식[\aleph_0]식
             ul
-                li 일대일 함수 f : N x N -> N의 예 \[f(m, n) = 2^m3^n\]
-                li 일대일 함수 f : N -> N x N의 예 \[f(n) = n\]
+                li 일대일 함수 f : N x N → N의 예 \[f(m, n) = 2^m3^n\]
+                li 일대일 함수 f : N → N x N의 예 \[f(n) = n\]
 
     h1 유클리드 기하학
     div
@@ -128,6 +128,7 @@ include ../../source/skeleton.pug
                         li ∠APB + ∠PAO = ∠AOB + ∠PBO
                         li ∠PAO = ∠APB + ∠PBO
                     p 양 변을 각각 빼면, ∠APB = ∠AOB - ∠APB. 따라서 ∠AOB = 2∠APB를 얻을 수 있다
+                p.w3-right-align ■
             li 위 증명으로부터 원주각과 중심각 사이에는 일정한 비율이 존재함을 알 수 있다 : ∠AOB = 2∠APB
             li 서로 다른 네 점에 대하여, ∠ACB = ∠ADB이고, 점 C, D가 직선 AB에 대하여 같은 쪽에 위치한다면, 네 점을 지나는 원이 존재한다
             li 지름에 대한 원주각의 크기는 직각이다
@@ -174,6 +175,7 @@ include ../../source/skeleton.pug
                         | & = (\overline{PO} - r)(\overline{PO} + r) \\
                         | & = |\overline{PO}^2 - r^2|
                         |\end{align*}
+                p.w3-right-align ■
 
             li 현에 대한 방멱
             +w3img('/imgs/2023-03-05 214319.png')
@@ -186,6 +188,94 @@ include ../../source/skeleton.pug
             li 접선에 대한 방멱
             +w3img('/imgs/2023-03-05 214921.png')
             p \[\overline{PA}^2 = \overline{PC} \cdot \overline{PD}\]
+
+        h2 유클리드 삼각형
+        ul
+            li 삼각형은 3개의 변과, 각 변에 대한 대각 3개를 갖는다
+            li 3개 변의 길이가 주어진 경우, 그릴 수 있는 삼각형은 오직 한 종류다
+            p 임의의 꼭짓점에서 대변으로 수직선을 그어 만들어지는 2개의 직각삼각형을 이용하여 삼각형 3개 내각을 구할 수 있다
+            li 2개 변의 길이와 그 사잇각이 주어진 경우, 그릴 수 있는 삼각형은 오직 한 종류다
+            p 코사인 법칙을 이용하여 나머지 변의 길이를 구할 수 있다
+            li 1개 변의 길이와 2개의 내각(== 3개의 내각)이 주어진 경우, 그릴 수 있는 삼각형은 오직 한 종류다
+            p 사인 법칙을 이용하여 나머지 2개 변의 길이를 구할 수 있다
+
+        div
+            h3 사인법칙
+            p △ABC의 세 내각의 크기 A, B, C와 각 대변의 길이 a, b, c, 그리고 외접원의 반지름 R에 대하여 다음이 성립한다 \[{a \over \sin{A}} = {b \over \sin{B}} = {c \over \sin{C}} = 2R\]
+            details 
+                summary 증명
+                ul
+                    li 예각삼각형인 경우
+                    p △ABC의 외접원을 그리고, 꼭짓점 A를 지나는 지름을 그려보자
+                    +w3img('/imgs/2023-03-05 215420.png')
+                    p #[+goto('원주각')]의 성질에 따라 ∠BAC = ∠BA'C임을 알고 있다. 또, ∠BCA'가 직각이므로, \[a = \overline{BC} = 2R\sin{∠BA'C} = 2R\sin{A}\]
+                    p 나머지 꼭짓점에 대해서도 같은 결과를 얻을 수 있다
+
+                    li 둔각삼각형인 경우
+                    p 예각삼각형의 경우와 마찬가지로, 삼각형의 외접원을 그리고, 꼭짓점 A를 지나는 지름을 그려보자
+                    +w3img('/imgs/2023-03-05 220401.png')
+                    p 위 예갹삼각형인 경우의 증명으로부터 식[a = \overline{BC} = 2R\sin{∠BA'C}]식임을 알 수 있다
+                    p 또, #[+goto('원주각')]의 성질에 따라 ∠BA'C = π - A이며, 식[\pi/2 \lt A \lt \pi]식에 대하여 식[\sin(A) = \sin(\pi - A)]식이므로, \[a = 2R\sin{∠BA'C} = 2R\sin{A}\]
+
+                    li 직각삼각형인 경우
+                    p 직각삼각형의 빗변이 외접원의 지름이므로, 삼각비의 정의에 의해 자명하다
+                p.w3-right-align ■
+
+            +pos('코사인법칙')
+            h3 코사인법칙
+            p △ABC의 세 내각의 크기 A, B, C와 각 대변의 길이 a, b, c에 대하여, 다음이 성립한다
+                |\begin{align*}
+                |a^2 = b^2 + c^2 - 2bc \cos{A} \\
+                |b^2 = c^2 + a^2 - 2ca \cos{B} \\
+                |c^2 = a^2 + b^2 - 2ab \cos{C} \\
+                |\end{align*}
+            details
+                summary 증명
+                p 꼭짓점 B에서 직선 AC로 내린 수선의 발을 H라 하자
+                ul
+                    li H가 A 바깥에 있을 때
+                    +w3img('/imgs/2023-03-11 123301.png')
+                    p 피타고라스의 정리로부터 \begin{align*}
+                        | & \overline{AB}^2 = \overline{BH}^2 + \overline{AH}^2 \\
+                        |\iff & c^2 = a^2\sin^2{C} + (a\cos{C} - b)^2 \\
+                        |\iff & c^2 = a^2(\sin^2{C} + \cos^2{C}) + b^2 - 2ab\cos{C} \\
+                        |\iff & c^2 = a^2 + b^2 - 2ab\cos{C} \\
+                        |\end{align*}
+
+                    li H = A일 때
+                    p 점 A에서 선분 BC로 내린 수선의 발을 H'라 하자
+                    +w3img('/imgs/2023-03-11 123715.png')
+                    p 피타고라스의 정리로부터 \begin{align*}
+                        | & \overline{AB}^2 = \overline{AH'}^2 + \overline{BH'}^2 \\
+                        |\iff & c^2 = b^2\sin^2{C} + (a - b\cos{C})^2 \\
+                        |\iff & c^2 = b^2(\sin^2{C} + \cos^2{C}) + a^2 - 2ab\cos{C} \\
+                        |\iff & c^2 = a^2 + b^2 - 2ab\cos{C} \\
+                        |\end{align*}
+
+                    li H가 선분 AC 위에 존재하고, 양쪽 끝점 어디와도 같지 않을 때
+                    +w3img('/imgs/2023-03-11 120643.png')
+                    p 피타고라스의 정리로부터 \begin{align*}
+                        | & \overline{AB}^2 = \overline{BH}^2 + \overline{AH}^2 \\
+                        |\iff & c^2 = a^2\sin^2{C} + (b - a\cos{C})^2 \\
+                        |\iff & c^2 = a^2(\sin^2{C} + \cos^2{C}) + b^2 - 2ab\cos{C} \\
+                        |\iff & c^2 = a^2 + b^2 - 2ab\cos{C} \\
+                        |\end{align*}
+
+                    li H = C일 때
+                    +w3img('/imgs/2023-03-11 124146.png')
+                    p 식[\cos(\pi/2) = 0]식이므로, 식[c^2 = a^2 + b^2 = a^2 + b^2 - 2ab\cos{C}]식
+                    
+                    li H가 C 바깥에 있을 때
+                    +w3img('/imgs/2023-03-11 124417.png')
+                    p 피타고라스의 정리로부터 \begin{align*}
+                        | & \overline{AB}^2 = \overline{BH}^2 + \overline{AH}^2 \\
+                        |\iff & c^2 = a^2\sin^2(\pi - C) + (b + a\cos(\pi - C))^2 \\
+                        |\iff & c^2 = a^2\sin^2{C} + (b - a\cos{C})^2 \\
+                        |\iff & c^2 = a^2(\sin^2{C} + \cos^2{C}) + b^2 - 2ab\cos{C} \\
+                        |\iff & c^2 = a^2 + b^2 - 2ab\cos{C} \\
+                        |\end{align*}
+                p 위에서는 꼭짓점 B와 직선 AC를 지칭하여 증명했지만, 사실 임의의 꼭짓점과 그 대변에 대하여 똑같이 성립한다
+                p.w3-right-align ■
 
     h1 수 체계
     ul
@@ -256,7 +346,7 @@ include ../../source/skeleton.pug
                 li 사선점근선 : 위 두 경우에 해당하지 않는 점근선; y = ax + b
         h2 지수함수
         ul 
-            li 식[a > 0, a \ne 1, f(x) = a^x]식
+            li 식[a \gt 0, a \ne 1, f(x) = a^x]식
             li 지수의 성질
             ul
                 li 식[a^{x_1} \cdot a^{x_2} = a^{x_1 + x_2}]식
@@ -264,8 +354,9 @@ include ../../source/skeleton.pug
 
         h2 로그함수
         ul
-            li 지수함수의 역함수 식[a > 0, a \ne 1, x > 0, y = \log_a{x}]식
+            li 지수함수의 역함수 식[a \gt 0, a \ne 1, x \gt 0, y = \log_a{x}]식
             li 자연로그의 밑 식[e = \lim_{n \to \infty}\left(1 + {1 \over n}\right)^n = 2.71828\cdots]식
+            p 추가로, 식[\lim_{n \to \infty}\left(1 + {1 \over n}\right)^n = \lim_{n \to -\infty}\left(1 + {1 \over n}\right)^n = \lim_{n \to 0}\left(1 + n\right)^{1 \over n}]식
             li 자연로그함수 식[y = \log_e{x} = \ln{x}]식
             li 로그의 성질
             ul
@@ -302,67 +393,147 @@ include ../../source/skeleton.pug
                 li 삼각함수들은 θ에서의 값과 2π + θ에서의 값이 일치하는 주기성을 갖는다
                 li 식[\sin^2{\theta} + \cos^2{\theta} = 1]식, 식[1 + \cot^2{\theta} = \csc^2{\theta}]식, 식[1 + \tan^2{\theta} = \sec^2{\theta}]식
         div
-            h3 유클리드 삼각형
-            ul
-                li 삼각형은 3개의 변과, 각 변에 대한 대각 3개를 갖는다
-                li 3개 변의 길이가 주어진 경우, 그릴 수 있는 삼각형은 오직 한 종류다
-                p 임의의 꼭짓점에서 대변으로 수직선을 그어 만들어지는 2개의 직각삼각형을 이용하여 삼각형 3개 내각을 구할 수 있다
-                li 2개 변의 길이와 그 사잇각이 주어진 경우, 그릴 수 있는 삼각형은 오직 한 종류다
-                p 코사인 법칙을 이용하여 나머지 변의 길이를 구할 수 있다
-                li 1개 변의 길이와 2개의 내각(== 3개의 내각)이 주어진 경우, 그릴 수 있는 삼각형은 오직 한 종류다
-                p 사인 법칙을 이용하여 나머지 2개 변의 길이를 구할 수 있다
-
-            h3 사인법칙
-            p △ABC의 세 내각의 크기 A, B, C와 각 대변의 길이 a, b, c, 그리고 외접원의 반지름 R에 대하여 다음이 성립한다 \[{a \over \sin{A}} = {b \over \sin{B}} = {c \over \sin{C}} = 2R\]
-            details 
-                summary 증명
-                ul
-                    li 예각삼각형인 경우
-                    p △ABC의 외접원을 그리고, 꼭짓점 A를 지나는 지름을 그려보자
-                    +w3img('/imgs/2023-03-05 215420.png')
-                    p #[+goto('원주각')]의 성질에 따라 ∠BAC = ∠BA'C임을 알고 있다. 또, ∠BCA'가 직각이므로, \[a = \overline{BC} = 2R\sin{∠BA'C} = 2R\sin{A}\]
-                    p 나머지 꼭짓점에 대해서도 같은 결과를 얻을 수 있다
-
-                    li 둔각삼각형인 경우
-                    p 예각삼각형의 경우와 마찬가지로, 삼각형의 외접원을 그리고, 꼭짓점 A를 지나는 지름을 그려보자
-                    +w3img('/imgs/2023-03-05 220401.png')
-                    p 위 예갹삼각형인 경우의 증명으로부터 식[a = \overline{BC} = 2R\sin{∠BA'C}]식임을 알 수 있다
-                    p 또, #[+goto('원주각')]의 성질에 따라 ∠BA'C = π - A이며, 식[\pi/2 \lt A \lt \pi]식에 대하여 식[\sin(A) = \sin(\pi - A)]식이므로, \[a = 2R\sin{∠BA'C} = 2R\sin{A}\]
-
-                    li 직각삼각형인 경우
-                    p 직각삼각형의 빗변이 외접원의 지름이므로, 삼각비의 정의에 의해 자명하다
-
-            h3 코사인법칙
-            p △ABC의 세 내각의 크기 A, B, C와 각 대변의 길이 a, b, c에 대하여, 다음이 성립한다
-                |\begin{align*}
-                |a^2 = b^2 + c^2 - 2bc \cos{A} \\
-                |b^2 = c^2 + a^2 - 2ca \cos{B} \\
-                |c^2 = a^2 + b^2 - 2ab \cos{C} \\
-                |\end{align*}
-            details
-                summary 증명
-                ul
-                    li 예각삼각형인 경우
-                    p 꼭짓점 B에서 대변 AC로 내린 수선의 발을 H라 하자
-                    +w3img('/imgs/2023-03-05 222031.png')
-
             h3 덧셈정리
             ul
+                li 식[\cos(\alpha + \beta) = \cos{\alpha}\cos{\beta} - \sin{\alpha}\sin{\beta}]식
                 li 식[\sin(\alpha + \beta) = \sin{\alpha}\cos{\beta} + \cos{\alpha}\sin{\beta}]식
+                li 식[\tan(\alpha + \beta) = {\tan{\alpha} + \tan{\beta} \over 1 - \tan{\alpha}\tan{\beta}}]식
+            p 따름 공식 : 삼각함수 합성
+            ul
+                li 식[a\sin\theta + b\cos\theta]식에 대하여,
+                p a 또는 b가 0이 아니면 식[\cos\alpha = {a \over \sqrt{a^2 + b^2}} \land \sin\alpha = {b \over \sqrt{a^2 + b^2}}]식를 만족하는 α가 존재하고,
+                p 식[\sqrt{a^2 + b^2} \sin(\theta + \alpha) = \sqrt{a^2 + b^2} (\sin{\theta}\cos{\alpha} + \cos{\theta}\sin{\alpha}) = a\sin\theta + b\cos\theta]식
+                li 결과적으로, 동일한 진동수를 갖고 진폭만 달라짐을 알 수 있다
+            p 따름 공식 : 곱을 합으로 변환
+            ul
+                li 식[2\sin{\alpha}\cos{\beta} = \sin(\alpha + \beta) + \sin(\alpha - \beta)]식
+                li 식[2\sin{\alpha}\sin{\beta} = \cos(\alpha - \beta) - \cos(\alpha + \beta)]식
+                li 식[2\cos{\alpha}\cos{\beta} = \cos(\alpha + \beta) + \cos(\alpha - \beta)]식
+            p 따름 공식 : 합을 곱으로 변환
+            ul
+                li 식[2\sin{\alpha + \beta \over 2}\cos{\alpha - \beta \over 2} = \sin(\alpha) + \sin(\beta)]식
+                li 식[2\sin{\alpha + \beta \over 2}\sin{\alpha - \beta \over 2} = \cos(\beta) - \cos(\alpha)]식
+                li 식[2\cos{\alpha + \beta \over 2}\cos{\alpha - \beta \over 2} = \cos(\alpha) + \cos(\beta)]식
+            details 
+                summary 증명
+                +w3img('/imgs/2023-03-11 132311.png')
+                p 단위원 위의 두 점 A, B에 대하여 선분 OA, OB가 x축과 이루는 각도를 각각 식[\alpha, \beta (\alpha \geq \beta)]식라 하자.
+                p 그러면 A, B의 좌표는 각각 식[(\cos{\alpha}, \sin{\alpha}), (\cos{\beta}, \sin{\beta})]식이고, 선분 AB의 길이는 아래 두 가지 방법으로 구할 수 있다.
+                ul
+                    li #[+goto('코사인법칙')] : 식[\overline{AB}^2 = 2 - 2\cos(\alpha - \beta)]식
+                    li 두 좌표 사이의 거리 공식 : \begin{align*}
+                        |\overline{AB}^2 & = (\cos{\alpha} - \cos{\beta})^2 + (\sin{\alpha} - \sin{\beta})^2 \\
+                        | & = (\cos^2{\alpha} + \sin^2{\alpha}) + (\cos^2{\beta} + \sin^2{\beta}) - 2(\cos{\alpha}\cos{\beta} + \sin{\alpha}\sin{\beta}) \\
+                        | & = 2 - 2(\cos{\alpha}\cos{\beta} + \sin{\alpha}\sin{\beta}) \\
+                        |\end{align*}
+                p 따라서 식[2 - 2\cos(\alpha - \beta) = 2 - 2(\cos{\alpha}\cos{\beta} + \sin{\alpha}\sin{\beta})]식이고, 양변을 정리하면
+                p 식[\cos(\alpha - \beta) = \cos{\alpha}\cos{\beta} + \sin{\alpha}\sin{\beta}]식이다.
+                ul
+                    li 식[\beta = -\gamma]식이라면, 식[\cos(\alpha + \gamma) = \cos{\alpha}\cos{\gamma} - \sin{\alpha}\sin{\gamma}]식
+                    li 식[\cos{x} = \sin(x + \pi/2)]식이므로, 
+                    ul
+                        li 식[\cos(\alpha - \beta) = \sin(\alpha - \beta + \pi/2) = \cos{\alpha}\cos{\beta} + \sin{\alpha}\sin{\beta}]식
+                        li 식[\beta = \gamma + \pi/2]식이라면, \begin{align*}
+                            |\sin(\alpha - \gamma) & = \cos{\alpha}\cos(\gamma + \pi/2) + \sin{\alpha}\sin(\gamma + \pi/2) \\
+                            | & = \cos{\alpha}\sin{\gamma + \pi} + \sin{\alpha}\cos{\gamma} \\
+                            | & = \sin{\alpha}\cos{\gamma} - \cos{\alpha}\sin{\gamma} \\
+                            |\end{align*}
+                        li 식[\gamma = -\delta]식라면, 식[\sin(\alpha + \delta) = \sin{\alpha}\cos{\delta} + \cos{\alpha}\sin{\delta}]식
+                    li \begin{align*}
+                        |\tan(\alpha + \beta) & = {\sin{\alpha}\cos{\beta} + \cos{\alpha}\sin{\beta} \over \cos{\alpha}\cos{\beta} - \sin{\alpha}\sin{\beta}} \\
+                        | & = {\tan{\alpha} + \tan{\beta} \over 1 - \tan{\alpha}\tan{\beta}} \\
+                        |\end{align*}
+                p.w3-right-align ■
+
+            h3 배각공식
+            ul
+                li 식[\cos(2\alpha) = \cos^2{\alpha} - \sin^2{\alpha}]식
+                li 식[\sin(2\alpha) = 2\sin{\alpha}\cos{\alpha}]식
+                li 식[\tan(2\alpha) = {2\tan{\alpha} \over 1 - \tan^2{\alpha}}]식
+
+            h3 반각공식
+            ul
+                li 식[\cos^2{\alpha \over 2} = {1 + \cos{\alpha} \over 2}]식
+                li 식[\sin^2{\alpha \over 2} = {1 - \cos{\alpha} \over 2}]식
+                li 식[\tan^2{\alpha \over 2} = {1 - \cos{\alpha} \over 1 + \cos{\alpha}}]식
+            details
+                summary 증명
+                p 식[\beta = 2\alpha]식일 때,
+                ol
+                    li \begin{align*}
+                        |\cos(2\alpha) & = \cos^2{\alpha} - \sin^2{\alpha} \\
+                        |\iff \cos(\beta) & = \cos^2{\beta \over 2} - \sin^2{\beta \over 2} \\
+                        | & = \cos^2{\beta \over 2} - (1 - \cos^2{\beta \over 2}) \\
+                        | & = 2\cos^2{\beta \over 2} - 1 \\
+                        |\iff \cos^2{\beta \over 2} & = {1 + \cos(\beta)\over 2} \\
+                        |\end{align*}
+                    li 식[\sin^2{\alpha \over 2} = 1 - \cos^2{\alpha \over 2} = {1 - \cos{\alpha} \over 2}]식
 
 
-    h1 방정식
+    h1 방정식과 부등식
     ul
         li 다항방정식의 근은, 다방함수 그래프의 x절편이다
-
-    h1 부등식
-
-    h1 수학적 귀납법
-
-    h1 수열
+        li 연립방정식의 근은, 모든 그래프들의 교점이다
+        li 부등식의 해공간은 그래프 위/아래로 구분되는 영역이다
 
     h1 극한과 연속
+    ul
+        li 함수의 극한
+        ul
+            li 임의의 양수 식[\epsilon \gt 0]식에 대해 적당한 양수 식[\delta \gt 0]식가 존재하여, 식[a - \delta \lt x \lt a + \delta]식인 모든 x가 식[|f(x) - b| \lt \epsilon]식을 만족하는 경우, 함수는 극한을 가지며 \[\lim_{x \to a}f(x) = b\]로 표기한다
+            li 임의의 양수 식[\epsilon \gt 0]식에 대해 충분히 큰 수 식[M \gt 0]식이 존재하여, 식[M \lt x]식인 모든 x가 식[|f(x) - b| \lt \epsilon]식을 만족하는 경우, 함수는 극한을 가지며 \[\lim_{x \to \infty}f(x) = b\]로 표기한다
+            li 임의의 양수 식[\epsilon \gt 0]식에 대해 충분히 작은 수 식[m \lt 0]식이 존재하여, 식[x \lt m]식인 모든 x가 식[|f(x) - b| \lt \epsilon]식을 만족하는 경우, 함수는 극한을 가지며 \[\lim_{x \to -\infty}f(x) = b\]로 표기한다
+        li 함수의 발산
+        p 임의의 양수 식[M \gt 0]식에 대해 적당한 양수 식[\delta \gt 0]식가 존재하여, 식[a - \delta \lt x \lt a + \delta]식인 모든 x가 식[f(x) \gt M]식을 만족하는 경우, 함수는 양의 무한대로 발산하며 \[\lim_{x \to a}f(x) = \infty\]로 표기한다
+        li 함수의 연속
+        ul
+            li 임의의 양수 식[\epsilon \gt 0]식에 대해 적당한 양수 식[\delta \gt 0]식가 존재하여, 식[a - \delta \lt x \lt a + \delta]식인 모든 x가 식[|f(x) - f(a)| \lt \epsilon]식을 만족하는 경우, 함수는 x = a에서 연속이다
+            li 즉, 다음의 경우는 함수가 x = a에서 불연속이다
+            ul
+                li x = a에서 함수가 정의되지 않은 경우
+                li 극한 식[\lim_{x \to a}f(x)]식이 존재하지 않는 경우
+                li 식[\lim_{x \to a}f(x) = f(a)]식가 성립하지 않는 경우
+            li 함수가 구간 안의 모든 x에 대해 연속이면, 함수는 구간에 대하여 연속이다
+
+        li 중간값 정리
+        p 함수 f(x)가 폐구간 [a, b]에서 연속이고, f(a) != f(b)이면, f(a) &lt; v &lt; f(b)인 모든 v에 대하여 f(c) = v를 만족하는 c가 개구간 (a, b) 안에 적어도 하나 존재한다
+        li 함수가 어떤 구간 I에서 연속이고 역함수가 존재하면, 역함수는 구간(I)에서 연속이다
+
+        li 극한값 예
+        ul
+            li 식[\lim_{x \to 0}{e^x - 1 \over x}]식
+            p 식[t = e^x - 1]식이라 하면, \begin{align*}
+                |\lim_{x \to 0}{e^x - 1 \over x} & = \lim_{t \to 0}{t \over \ln(t + 1)} \\
+                | & = \lim_{t \to 0}{1 \over \ln{(t + 1)^{1 \over t}}} \\
+                | & = {1 \over \ln{e}} \\
+                | & = 1 \\
+                |\end{align*}
+            li 식[\lim_{x \to 0}{\sin{x} \over x}]식
+            +w3img('/imgs/2023-03-11 220945.png')
+            p 반지름이 1인 원과 그 접선 BT를 생각하자. 0 &lt; x &lt; π/2에 대하여, "삼각형 OAT의 넓이 &lt; 부채꼴 OAT의 넓이 &lt; 삼각형 OBT의 넓이"가 항상 성립한다 \begin{align*}
+                | & \sin{x} / 2 \lt x / 2 \lt \tan{x} / 2 \\
+                |\iff & 1 \lt {x \over \sin{x}} \lt {1 \over \cos{x}} \\
+                |\iff & lim_{x \to 0}1 \leq lim_{x \to 0}{x \over \sin{x}} \leq lim_{x \to 0}{1 \over \cos{x}} \\
+                |\iff & 1 \leq lim_{x \to 0}{x \over \sin{x}} \leq 1 \\
+                |\iff & 1 = lim_{x \to 0}{x \over \sin{x}} \\
+                |\end{align*}
 
     h1 미분
+    ul
+        li 평균변화율
+        p 함수 y = f(x)에 대하여, x가 x1에서 x2로 변하였을 때의 평균변화율은 다음과 같이 정의된다 \[{\Delta{y} \over \Delta{x}} = {f(x_2) - f(x_1) \over x_2 - x_1}\] 또한 이것이 두 점을 지나는 직선의 기울기와 동일함을 알 수 있다
+        li 미분계수
+        p 함수 y = f(x)에 대하여,
+        ul
+            li 우극한 식[\lim_{\Delta{x} \to 0^{+}}{f(a + \Delta{x}) - f(a) \over \Delta{x}}]식이 존재하는 경우 이를 우미분계수라 한다
+            li 좌극한 식[\lim_{\Delta{x} \to 0^{-}}{f(a + \Delta{x}) - f(a) \over \Delta{x}}]식이 존재하는 경우 이를 좌미분계수라 한다
+            li 우미분게수와 좌미분계수가 동일한 경우, 이를 함수의 미분계수 == 순간변화율이라 하고 \[f'(a) = \lim_{h \to 0}{f(a + h) - f(a) \over h} = f'(x)|_{x=a} = y'|_{x=a} = {dy \over dx}|_{x=a} = {d \over dx}f(x)|_{x=a}\]으로 표기한다
+            li 또한 미분계수는 함수의 그래프에 대한 접선의 기울기와 동일하다
+            p 접선의 방정식 식[y - f(a) = f'(a)(x-a)]식
+        li 함수가 x = a에서 미분계수를 가지면, 함수는 x = a에서 미분 가능하다고 한다
+        li 또, 함수가 어떤 구간의 모든 x에 대하여 미분 가능하면, 함수가 해당 구간에서 미분 가능하다고 한다
+        li 함수가 x = a에서 미분 가능하면, 함수는 x = a에서 연속이다 -- 역은 성립하지 않는다
+    div
+        h2 미분법
 
     h1 적분

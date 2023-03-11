@@ -189,7 +189,7 @@ mixin w3button(color)
 
 mixin w3img(src, alt)
     .w3-center.w3-margin-bottom
-        img.w3-round(src=src, title=alt, alt=alt)&attributes(attributes)
+        img.w3-round(src=src, title=alt, alt=alt, loading='lazy')&attributes(attributes)
         - if (alt && alt.length > 0)
             br
             strong
