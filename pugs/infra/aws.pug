@@ -52,6 +52,8 @@ include ../../source/skeleton.pug
                 li Pending : 신규 인스턴스 시작
                 li Pending:Wait : autoscaling:EC2_INSTANCE_LAUNCHING 후크가 존재하는 경우 Pending에서 천이됨
                 p e.g. 새 인스턴스에 CodeDeploy 개정을 자동으로 배포할 수 있다 -- Auto Scailing 그룹을 포함하도록 배포 그룹을 생성하거나 업데이트할 때, CodeDeploy 서비스 역할을 사용하여 Auto Scailing 그룹에 수명 주기 후크를 자동 설치
+                +w3img('/imgs/2023-03-13 140333.png')
+                p CodeDeploy 자동 배포 시, 마지막으로 배포에 성공한 revision을 이용한다
                 li Pending:Proceed : 수명 주기 후크 완료 시 천이됨
                 li InService : 인스턴스 구성 완료
                 li Terminating : 인스턴스 종료 시작

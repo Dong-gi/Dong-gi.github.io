@@ -468,6 +468,7 @@ include ../../source/skeleton.pug
                         |\iff \cos^2{\beta \over 2} & = {1 + \cos(\beta)\over 2} \\
                         |\end{align*}
                     li 식[\sin^2{\alpha \over 2} = 1 - \cos^2{\alpha \over 2} = {1 - \cos{\alpha} \over 2}]식
+                p.w3-right-align ■
 
 
     h1 방정식과 부등식
@@ -503,6 +504,7 @@ include ../../source/skeleton.pug
                 li 식[\lim_{x \to b}g(x) = g(b)]식이므로, 임의의 양수 α에 대하여, 적당한 양수 β가 존재하여 |x - b| &lt; β인 모든 x에 대하여 |g(x) - g(b)| &lt; α를 만족한다
                 li 식[\lim_{x \to a}f(x) = b]식이므로, 위 β에 대하여, 적당한 양수 γ가 존재하여 |x - a| &lt; γ인 모든 x에 대하여 |f(x) - f(a)| &lt; β를 만족한다
                 li 따라서 |x - a| &lt; γ인 모든 x에 대하여 |g(f(x)) - g(f(a))| &lt; α를 만족하므로 식[\lim_{x \to a}g(f(x)) = g(b)]식
+            p.w3-right-align ■
 
         h2 함수의 발산
         p 임의의 양수 식[M \gt 0]식에 대해 적당한 양수 식[\delta \gt 0]식가 존재하여, 식[a - \delta \lt x \lt a + \delta]식인 모든 x가 식[f(x) \gt M]식을 만족하는 경우, 함수는 양의 무한대로 발산하며 \[\lim_{x \to a}f(x) = \infty\]로 표기한다
@@ -576,6 +578,7 @@ include ../../source/skeleton.pug
                     | & = f'(x)\lim_{h \to 0}{g(x+h)} + \lim_{h \to 0}{f(x)}g'(x) \\
                     | & = f'(x)g(x) + f(x)g'(x) \\
                     |\end{align*}
+                p.w3-right-align ■
             li 함수 f(x), g(x)가 모두 미분 가능하다면, g(x) != 0인 모든 x에 대하여 식[\left({f \over g}\right)'(x) = {f'(x)g(x) - f(x)g'(x) \over g^2(x)}]식
             details
                 summary 증명
@@ -606,6 +609,7 @@ include ../../source/skeleton.pug
                     | & = {dy \over du} \cdot {du \over dx}
                     |\end{align*}
                 p 가 성립함을 알 수 있다
+                p.w3-right-align ■
             li 함수 f와 그 역함수가 모두 미분 가능하다면, 식[{dy \over dx} \ne 0. {dx \over dy} = {1 \over {dy \over dx}}]식이다
             li 매개변수로 표현할 수 있는 함수 x=f(t), y=g(t)에 대하여, f와 g가 모두 미분 가능하다면 식[{dx \over dt} \ne 0. {dy \over dx} = {{dy \over dt} \over {dx \over dt}}]식
 
@@ -683,6 +687,7 @@ include ../../source/skeleton.pug
             li 함수의 임계점(critical point)
             p 실수 함수 f(x)와 그 도함수 f'(x)에 대하여, f'(c) = 0이거나, c에서 미분가능하지 않을 때의 점 x = c
 
+            +pos('극값에서의 도함수 값')
             li 실수 함수 f(x)가 x = c에서 미분 가능하고, 극값을 가지면 f'(c) = 0
             details
                 summary 증명
@@ -700,12 +705,41 @@ include ../../source/skeleton.pug
                         li 식[\lim_{x \to c^{-}}{f(x) - f(c) \over x - c} \leq 0]식
                         li x = c에서 미분 가능하므로, 식[0 \leq \lim_{x \to c}{f(x) - f(c) \over x - c} \leq 0]식
                         li 따라서 f'(c) = 0
+                p.w3-right-align ■
 
+            +pos('롤(Rolle)의 정리')
             li 롤(Rolle)의 정리
             p 실수 함수 f가 폐구간 [a, b]에서 연속이고, 개구간 (a, b)에서 미분 가능하고, f(a) = f(b)면, f'(c) = 0인 c가 (a, b) 안에 적어도 하나 존재한다
+            details
+                summary 증명
+                ul
+                    li 구간 (a, b)에서 f(x)의 값이 항상 동일하다면, c = (a + b) / 2에 대하여 식[\lim_{x \to c}{f(x) - f(c) \over x - c} = \lim_{x \to c}{0 \over x - c} = 0]식
+                    li 구간 (a, b)에서 f(x)의 값이 동일하지 않다면, f(x)는 이 구간에서 극대 혹은 극솟값을 가지며 이때의 x값을 c라고 하면, f'(c) = 0이다(#[+goto('극값에서의 도함수 값')])
+                p.w3-right-align ■
             p x축과 평행한 y = f(x)의 접선을 갖는 지점이 (a, b) 안에 적어도 하나 존재한다
 
             li 평균값 정리
             p 실수 함수 f가 폐구간 [a, b]에서 연속이고, 개구간 (a, b)에서 미분 가능하면 \[f'(c) = {f(b) - f(a) \over b - a}\]를 만족하는 c가 (a, b) 안에 적어도 하나 존재한다
+            details
+                summary 증명
+                p 다음과 같은 함수를 정의하자 \[h(x) = f(x)(b - a) - x\left(f(b) - f(a)\right)\]
+                p 그러면 가정에 의해 h는 [a, b]에서 연속이고, (a, b)에서 미분 가능하다
+                p 이때, h(a) = h(b)이므로 #[+goto('롤(Rolle)의 정리')]에 의해 h'(c) = 0인 c가 (a, b) 안에 적어도 하나 존재한다 \[h'(c) = f'(c)(b - a) - \left(f(b) - f(a)\right) = 0\]
+                p 따라서 식[f'(c) = {f(b) - f(a) \over b - a}]식를 만족하는 c가 (a, b) 안에 적어도 하나 존재한다
+                p.w3-right-align ■
+
+            +pos('도함수로부터 상수함수 추론')
+            li 구간 (a, b)에서 미분 가능한 함수 f(x)가, 구간에 속한 모든 x에 대하여 f'(x) = 0이면 f는 (a, b)에서 상수함수다
+            details
+                summary 증명
+                p 구간 (a, b) 안의 서로 다른 임의의 두 점 x1, x2(x1 &lt; x2)에 대하여, 평균값 정리에 의해 식[f'(c) = {f(x_2) - f(x_1) \over x_2 - x_1} = 0]식을 만족하는 c가 구간 (x1, x2) 안에 존재한다. 따라서 식[f(x_2) = f(x_1)]식
+                p.w3-right-align ■
+
+            li 두 함수 f(x), g(x)가 모두 구간 I에서 미분 가능하고, 이 구간의 모든 점에서 f'(x) = g'(x)이면 f(x) = g(x) + C, C는 상수다.
+            details
+                summary 증명
+                p 다음과 같은 함수를 정의하자 \[h(x) = f(x) - g(x)\]
+                p 가정에 의해 h(x)도 구간 I에서 미분 가능하다. 이때, 구간 I 안에서 식[h'(x) = f'(x) - g'(x) = 0]식이므로 #[+goto('도함수로부터 상수함수 추론')]에서 보였듯이 함수 h는 상수함수다. 이 상수를 C라 하면, 식[f(x) = g(x) + C]식
+                p.w3-right-align ■
 
     h1 적분
