@@ -133,6 +133,8 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/039.html', title: '악당' },
         { category: 'Topic/Book', file: '/posts/book/040.html', title: '보호받지 못한 사람들' },
         { category: 'Topic/Book', file: '/posts/book/042.html', title: '시즈카 할머니와 은령 탐정사' },
+        { category: 'Topic/Book', file: '/posts/book/043.html', title: '옆방에 킬러가 산다' },
+        { category: 'Topic/Book', file: '/posts/book/044.html', title: '시즈카 할머니와 휠체어 탐정' },
 
         { category: 'Topic/Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
         { category: 'Topic/Life', file: '/posts/daily_life/car.html', title: '차' },
