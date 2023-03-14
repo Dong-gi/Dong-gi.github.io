@@ -718,6 +718,7 @@ include ../../source/skeleton.pug
                 p.w3-right-align ■
             p x축과 평행한 y = f(x)의 접선을 갖는 지점이 (a, b) 안에 적어도 하나 존재한다
 
+            +pos('평균값 정리')
             li 평균값 정리
             p 실수 함수 f가 폐구간 [a, b]에서 연속이고, 개구간 (a, b)에서 미분 가능하면 \[f'(c) = {f(b) - f(a) \over b - a}\]를 만족하는 c가 (a, b) 안에 적어도 하나 존재한다
             details
@@ -732,7 +733,7 @@ include ../../source/skeleton.pug
             li 구간 (a, b)에서 미분 가능한 함수 f(x)가, 구간에 속한 모든 x에 대하여 f'(x) = 0이면 f는 (a, b)에서 상수함수다
             details
                 summary 증명
-                p 구간 (a, b) 안의 서로 다른 임의의 두 점 x1, x2(x1 &lt; x2)에 대하여, 평균값 정리에 의해 식[f'(c) = {f(x_2) - f(x_1) \over x_2 - x_1} = 0]식을 만족하는 c가 구간 (x1, x2) 안에 존재한다. 따라서 식[f(x_2) = f(x_1)]식
+                p 구간 (a, b) 안의 서로 다른 임의의 두 점 x1, x2(x1 &lt; x2)에 대하여, #[+goto('평균값 정리')]에 의해 식[f'(c) = {f(x_2) - f(x_1) \over x_2 - x_1} = 0]식을 만족하는 c가 구간 (x1, x2) 안에 존재한다. 따라서 식[f(x_2) = f(x_1)]식
                 p.w3-right-align ■
 
             li 두 함수 f(x), g(x)가 모두 구간 I에서 미분 가능하고, 이 구간의 모든 점에서 f'(x) = g'(x)이면 f(x) = g(x) + C, C는 상수다.
@@ -740,6 +741,32 @@ include ../../source/skeleton.pug
                 summary 증명
                 p 다음과 같은 함수를 정의하자 \[h(x) = f(x) - g(x)\]
                 p 가정에 의해 h(x)도 구간 I에서 미분 가능하다. 이때, 구간 I 안에서 식[h'(x) = f'(x) - g'(x) = 0]식이므로 #[+goto('도함수로부터 상수함수 추론')]에서 보였듯이 함수 h는 상수함수다. 이 상수를 C라 하면, 식[f(x) = g(x) + C]식
+                p.w3-right-align ■
+
+            li 도함수로부터 함수의 증감 추론
+            ul
+                li 어떤 구간에서 미분 가능한 함수 f(x)가 구간 안의 모든 x에 대하여 f'(x) &gt; 0이면, f는 해당 구간에서 증가하는 함수다
+                details
+                    summary 증명
+                    p 구간 안의 서로 다른 임의의 두 점 x1, x2(x1 &lt; x2)에 대하여, #[+goto('평균값 정리')]에 의해 식[f'(c) = {f(x_2) - f(x_1) \over x_2 - x_1} \gt 0]식을 만족하는 c가 구간 (x1, x2) 안에 존재한다. 따라서 식[f(x_2) \gt f(x_1)]식
+                    p.w3-right-align ■
+                li 어떤 구간에서 미분 가능한 함수 f(x)가 구간 안의 모든 x에 대하여 f'(x) &lt; 0이면, f는 해당 구간에서 감소하는 함수다
+                li 구간 (a, b)에서 미분 가능한 함수 f(x)에 대하여, a &lt; c &gt; b인 c가 존재하여
+                ol
+                    li (a, c) 안의 모든 x에 대하여 f'(x) &gt; 0, (c, b) 안의 모든 x에 대하여 f'(x) &lt; 0를 만족하는 경우 f는 x = c에서 극댓값을 갖는다
+                    li (a, c) 안의 모든 x에 대하여 f'(x) &lt; 0, (c, b) 안의 모든 x에 대하여 f'(x) &gt; 0를 만족하는 경우 f는 x = c에서 극솟값을 갖는다
+                    li f'(c) = 0이고 f''(c) &gt; 0이면 f는 x = c에서 극솟값을 갖는다
+                    li f'(c) = 0이고 f''(c) &lt; 0이면 f는 x = c에서 극솟값을 갖는다
+
+            +pos('코시(Cauchy) 평균값 정리')
+            li 코시(Cauchy) 평균값 정리
+            p 두 함수 f, g가 구간 [a, b]에서 연속이고, (a, b)에서 미분 가능하면 \[f'(c)\left(g(b) - g(a)\right) = g'(c)\left(f(b) - f(a)\right)\]를 만족하는 c가 (a, b) 안에 존재한다
+            details
+                summary 증명
+                p 다음과 같은 함수를 정의하자 \[h(x) = f(x)\left(g(b) - g(a)\right) - g(x)\left(f(b) - f(a)\right)\]
+                p 그러면 가정에 의해 h는 [a, b]에서 연속이고, (a, b)에서 미분 가능하다
+                p 이때, h(a) = h(b)이므로 #[+goto('롤(Rolle)의 정리')]에 의해 h'(c) = 0인 c가 (a, b) 안에 적어도 하나 존재한다 \[h'(c) = f'(c)\left(g(b) - g(a)\right) - g'(c)\left(f(b) - f(a)\right) = 0\]
+                p 따라서 식[f'(c)\left(g(b) - g(a)\right) = g'(c)\left(f(b) - f(a)\right)]식를 만족하는 c가 (a, b) 안에 적어도 하나 존재한다
                 p.w3-right-align ■
 
     h1 적분
