@@ -770,3 +770,29 @@ include ../../source/skeleton.pug
                 p.w3-right-align ■
 
     h1 적분
+    div
+        h2 부정적분
+        ul
+            li y = f(x)
+            li 식[{dy \over dx} = f'(x)]식
+            li 식[dy = f'(x) dx]식
+            li 식[y = \int f'(x) dx]식
+        div
+            h3 적분공식
+            ul
+                li 식[\int x^a dx = \left\{\begin{matrix}{1 \over a+1}x^{a+1} & (a \ne -1) \\ \log |x| & (a = -1)\end{matrix}\right.]식
+                li 식[\int a^x dx = \begin{matrix}{1 \over \log a} a^x & (a \ne 1, a \gt 0)\end{matrix}]식
+                li 치환적분법
+                p 함수 식[u = g(x)]식가 미분 가능하면, \[\int f(g(x))g'(x) dx = \int f(u){du \over dx} dx = \int f(u) du\]
+                li 부분적분법
+                p 두 함수 f, g가 미분 가능하면 \[\int f(x) \cdot g'(x) dx = f(x) \cdot g(x) - \int f'(x) \cdot g(x) dx\]
+
+        h3 정적분
+        p 곡선의 길이, 평면도형의 넓이, 입체의 부피 등을 구하는 구적문제로부터 정적분이 발달하였다
+        ul
+            li y = f(x)가 [a, b]에서 연속이면, 적분 가능하다 \[\int^b_a f(x) dx = \lim_{n \to \infty} \Sigma^n_{i=1} f(x^{*}_i) \Delta x\]
+            p 식[\Delta x = {b - a \over n}, x_{i-1} \leq x^{*}_i \leq x_i, x_i = a + i \Delta x]식
+            li f가 [a, b]에서 적분 가능하고, a &lt; c &lt; b면 \[\int^b_a f(x) dx = \int^c_a f(x) dx + \int^b_c f(x) dx\]
+            li 식[\int^a_a f(x) dx = 0]식
+            li 식[\int^b_a f(x) dx = -\int^a_b f(x) dx]식
+            li F가 f의 원시함수면 식[\int^b_a f(x) dx = F(b) - F(a) = \left[F(x)\right]^b_a]식
