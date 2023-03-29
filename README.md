@@ -1,7 +1,7 @@
 # [https://dong-gi.github.io/](https://dong-gi.github.io/)
 
 ```
-# docker run --name wiz --network=host -it --log-driver local node:19
+# docker run --name wiz -p 9080:9080 -it --log-driver local node:19
 
 # git --version
 # node --version
