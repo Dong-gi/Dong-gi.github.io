@@ -73,13 +73,69 @@ include ../../source/skeleton.pug
 
                 h4.fake The Operation Object
                 p #[+asA('https://spec.openapis.org/oas/v3.1.0#operation-object', 'Operation Object')]는 작업의 개요와 함께, 요청과 응답 형식을 정의한다
+                +asCode('yaml').
+                    paths:
+                        /endpoint1:
+                            get:
+                                summary: Do something(short)
+                                description: Do something(long)
+                                parameters:
+                                requestBody:
+                                responses:
+                            put:
+                        /endpoint2:
 
 
             h3 Content of Message Bodies: <mark>content</mark>, <mark>schema</mark>
+            p <mark>content</mark> 필드는 #[+asA('https://spec.openapis.org/oas/v3.1.0#response-object', 'Response Object')]와 #[+asA('https://spec.openapis.org/oas/v3.1.0#request-body-object', 'Request Body Object')] 모두에 사용되는, #[+asA('https://tools.ietf.org/html/rfc6838', 'RFC6838 Media Types')] -&gt; #[+asA('https://spec.openapis.org/oas/v3.1.0#media-type-object', 'Media Type Object')] 매핑 정보다
+            +asCode('yaml').
+                content:
+                    application/json:
+                        schema:
+                        examples:
+                        encoding:
+                    text/*:
+                        ...
 
             h3 Parameters and Payload of an Operation: <mark>parameters</mark>, <mark>requestBody</mark>
+            p #[+asA('https://spec.openapis.org/oas/v3.1.0#parameter-object', 'Parameter Object')]는 요청 body 외 부분에서 얻을 수 있는 변수를 정의한다
+            div
+                h4.fake Parameter Location
+                p <mark>in</mark> 속성을 이용해 파라미터의 위치를 지정한다
+                ul
+                    li query : URL 쿼리 문자열
+                    li header : HTTP 사용자 정의 헤더. 대소문자 구별하지 않음에 유의
+                    li path : URL 경로
+                    +asCode('yaml').
+                        paths:
+                            /users/{id}:
+                                get:
+                                    parameters:
+                                    - name: id
+                                      in: path
+                                      required: true
+                    li cookie : 쿠키
+
+                h4.fake Parameter Serialization Control
+                p 파라미터의 위치가 다양한 만큼 그 표현 방법도 다양하며, 따라서 직렬화/역직렬화에 필요한 포맷 정보를 <mark>style</mark> 속성에 설정할 수 있다
+                ul
+                    li 원시 타입: 예. 정수 id = 1234
+                    table
+                        +ths('style:', 'simple', 'form', 'label', 'matrix')
+                        +tds('', '1234', 'id=1234', '.1234', ';id=1234')
+                    li 배열 타입: 예. ids = [1, 2, 3]
+                    table
+                        +ths('style:', 'simple', 'form', 'label', 'matrix')
+                        +tds('explode=false', '1,2,3', 'ids=1,2,3', '.1.2.3', ';ids=1,2,3')
+                        +tds('explode=true', '1,2,3', 'ids=1&ids=2&ids=3', '.1.2.3', ';ids=1;ids=2;ids=3')
+                    li 객체 타입: 예. color = {R, G, B}
+                    table
+                        +ths('style:', 'simple', 'form', 'label', 'matrix')
+                        +tds('explode=false', 'R,1,G,2,B,3', 'color=R,1,G,2,B,3', '.R.1.G.2.B.3', ';color=R,1,G,2,B,3')
+                        +tds('explode=true', 'R=1,G=2,B=3', 'R=1&G=2&B=3', '.R=1.G=2.B=3', ';R=1;G=2;B=3')
 
             h3 Reusing Descriptions: <mark>components</mark>, <mark>$ref</mark>
+            p API 구성 요소의 재정의를 피하기 위해, 루트 객체의 <mark>components</mark> 필드에 각 요소들을 정의하고, <mark>$ref</mark> 속성으로 이를 지정하여 재사용할 수 있다
 
             h3 Providing Documentation and Examples: <mark>example</mark>, <mark>examples</mark>
 

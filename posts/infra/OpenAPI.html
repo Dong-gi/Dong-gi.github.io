@@ -6,7 +6,31 @@
         get:
         put:
     /endpoint2:
-</div><h4 class="fake">The Operation Object</h4><p><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://spec.openapis.org/oas/v3.1.0#operation-object">Operation Object</a>는 작업의 개요와 함께, 요청과 응답 형식을 정의한다</p></div><h3>Content of Message Bodies: <mark>content</mark>, <mark>schema</mark></h3><h3>Parameters and Payload of an Operation: <mark>parameters</mark>, <mark>requestBody</mark></h3><h3>Reusing Descriptions: <mark>components</mark>, <mark>$ref</mark></h3><h3>Providing Documentation and Examples: <mark>example</mark>, <mark>examples</mark></h3><h3>API Servers: <mark>servers</mark></h3></div><h2>Best Practices</h2></div></div></article><hr><script id="google-analytics" src="https://www.googletagmanager.com/gtag/js?id=UA-143098403-1" async></script><script>window.dataLayer = window.dataLayer || [];
+</div><h4 class="fake">The Operation Object</h4><p><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://spec.openapis.org/oas/v3.1.0#operation-object">Operation Object</a>는 작업의 개요와 함께, 요청과 응답 형식을 정의한다</p><p><strong>↓yaml</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="yaml">paths:
+    /endpoint1:
+        get:
+            summary: Do something(short)
+            description: Do something(long)
+            parameters:
+            requestBody:
+            responses:
+        put:
+    /endpoint2:
+
+</div></div><h3>Content of Message Bodies: <mark>content</mark>, <mark>schema</mark></h3><p><mark>content</mark> 필드는 <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://spec.openapis.org/oas/v3.1.0#response-object">Response Object</a>와 <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://spec.openapis.org/oas/v3.1.0#request-body-object">Request Body Object</a> 모두에 사용되는, <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://tools.ietf.org/html/rfc6838">RFC6838 Media Types</a> -&gt; <a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://spec.openapis.org/oas/v3.1.0#media-type-object">Media Type Object</a> 매핑 정보다</p><p><strong>↓yaml</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="yaml">content:
+    application/json:
+        schema:
+        examples:
+        encoding:
+    text/*:
+        ...
+</div><h3>Parameters and Payload of an Operation: <mark>parameters</mark>, <mark>requestBody</mark></h3><p><a class="w3-btn w3-round-xxlarge w3-small w3-green" href="https://spec.openapis.org/oas/v3.1.0#parameter-object">Parameter Object</a>는 요청 body 외 부분에서 얻을 수 있는 변수를 정의한다</p><div><h4 class="fake">Parameter Location</h4><p><mark>in</mark> 속성을 이용해 파라미터의 위치를 지정한다</p><ul><li>query : URL 쿼리 문자열</li><li>header : HTTP 사용자 정의 헤더. 대소문자 구별하지 않음에 유의</li><li>path : URL 경로</li><p><strong>↓yaml</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="yaml">paths:
+    /users/{id}:
+        get:
+            parameters:
+            - name: id
+              in: path
+              required: true</div><li>cookie : 쿠키</li></ul><h4 class="fake">Parameter Serialization Control</h4><p>파라미터의 위치가 다양한 만큼 그 표현 방법도 다양하며, 따라서 직렬화/역직렬화에 필요한 포맷 정보를 <mark>style</mark> 속성에 설정할 수 있다</p><ul><li>원시 타입: 예. 정수 id = 1234</li><table><tr><th>style:</th><th>simple</th><th>form</th><th>label</th><th>matrix</th></tr><tr><td></td><td>1234</td><td>id=1234</td><td>.1234</td><td>;id=1234</td></tr></table><li>배열 타입: 예. ids = [1, 2, 3]</li><table><tr><th>style:</th><th>simple</th><th>form</th><th>label</th><th>matrix</th></tr><tr><td>explode=false</td><td>1,2,3</td><td>ids=1,2,3</td><td>.1.2.3</td><td>;ids=1,2,3</td></tr><tr><td>explode=true</td><td>1,2,3</td><td>ids=1&amp;ids=2&amp;ids=3</td><td>.1.2.3</td><td>;ids=1;ids=2;ids=3</td></tr></table><li>객체 타입: 예. color = {R, G, B}</li><table><tr><th>style:</th><th>simple</th><th>form</th><th>label</th><th>matrix</th></tr><tr><td>explode=false</td><td>R,1,G,2,B,3</td><td>color=R,1,G,2,B,3</td><td>.R.1.G.2.B.3</td><td>;color=R,1,G,2,B,3</td></tr><tr><td>explode=true</td><td>R=1,G=2,B=3</td><td>R=1&amp;G=2&amp;B=3</td><td>.R=1.G=2.B=3</td><td>;R=1;G=2;B=3</td></tr></table></ul></div><h3>Reusing Descriptions: <mark>components</mark>, <mark>$ref</mark></h3><p>API 구성 요소의 재정의를 피하기 위해, 루트 객체의 <mark>components</mark> 필드에 각 요소들을 정의하고, <mark>$ref</mark> 속성으로 이를 지정하여 재사용할 수 있다</p><h3>Providing Documentation and Examples: <mark>example</mark>, <mark>examples</mark></h3><h3>API Servers: <mark>servers</mark></h3></div><h2>Best Practices</h2></div></div></article><hr><script id="google-analytics" src="https://www.googletagmanager.com/gtag/js?id=UA-143098403-1" async></script><script>window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'UA-143098403-1');</script><script id="highlight-js" src="/source/highlight.pack.js" defer></script><script id="default-js" src="/source/default.min.js" defer></script></body></html>
