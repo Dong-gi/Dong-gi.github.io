@@ -1,1 +1,13 @@
 # [https://dong-gi.github.io/](https://dong-gi.github.io/)
+
+```
+# docker run --name wiz --network=host -it --log-driver local node:19
+
+# git --version
+# node --version
+# curl -LO https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.tar.gz
+
+# EDIT ~/.bashrc
+# export PATH="$PATH:/home/amazon-corretto-17/bin"
+# cd ~
+```
