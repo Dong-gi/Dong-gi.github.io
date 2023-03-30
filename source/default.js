@@ -137,6 +137,7 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/044.html', title: '시즈카 할머니와 휠체어 탐정' },
         { category: 'Topic/Book', file: '/posts/book/045.html', title: '시즈카 할머니에게 맡겨줘' },
         { category: 'Topic/Book', file: '/posts/book/046.html', title: '비웃는 숙녀' },
+        { category: 'Topic/Book', file: '/posts/book/047.html', title: '웃어라, 샤일록' },
 
         { category: 'Topic/Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
         { category: 'Topic/Life', file: '/posts/daily_life/car.html', title: '차' },
