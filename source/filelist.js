@@ -1,4 +1,6 @@
 const recentChangedPosts = `
+A	pugs/book/048.pug
+A	pugs/book/049.pug
 A	pugs/book/047.pug
 M	pugs/infra/OpenAPI.pug
 M	pugs/infra/OpenAPI.pug
@@ -57,5 +59,4 @@ A	pugs/book/038.pug
 A	pugs/book/039.pug
 A	pugs/book/040.pug
 A	pugs/book/041.pug
-M	pugs/infra/docker.pug
 `;
