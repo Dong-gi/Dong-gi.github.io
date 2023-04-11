@@ -140,6 +140,7 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/047.html', title: '웃어라, 샤일록' },
         { category: 'Topic/Book', file: '/posts/book/048.html', title: '다시 비웃는 숙녀' },
         { category: 'Topic/Book', file: '/posts/book/049.html', title: '테미스의 검' },
+        { category: 'Topic/Book', file: '/posts/book/050.html', title: '작가 형사 부스지마' },
 
         { category: 'Topic/Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
         { category: 'Topic/Life', file: '/posts/daily_life/car.html', title: '차' },
