@@ -141,6 +141,10 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/048.html', title: '다시 비웃는 숙녀' },
         { category: 'Topic/Book', file: '/posts/book/049.html', title: '테미스의 검' },
         { category: 'Topic/Book', file: '/posts/book/050.html', title: '작가 형사 부스지마' },
+        { category: 'Topic/Book', file: '/posts/book/051.html', title: '네메시스의 사자' },
+        { category: 'Topic/Book', file: '/posts/book/052.html', title: '일곱색의 독' },
+        { category: 'Topic/Book', file: '/posts/book/053.html', title: '인면창 탐정' },
+        { category: 'Topic/Book', file: '/posts/book/054.html', title: '합창 미사키요스케의 귀환' },
 
         { category: 'Topic/Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
         { category: 'Topic/Life', file: '/posts/daily_life/car.html', title: '차' },

@@ -1,0 +1,19 @@
+include ../../source/skeleton.pug
+
++post({
+    title: '인면창 탐정',
+    description: '인면창 탐정 독서 기록'
+})
+    h1 도서 정보
+    .w3-row
+        .w3-col.s2.w3-center
+            +w3img('https://image.yes24.com/goods/115001363/L', '도서 이미지')&attributes({style: 'max-height:210px'})
+        .w3-col.s10
+            table.no-sort
+                +tds('표제/저자사항', '인면창 탐정 / 나카야마 시치리')
+                +tds('ISBN 정보', '979-11-89571-90-0 (05830)')
+                +tds('발행사항', '블루홀식스, 2023.03.24')
+
+    h1 독서 기록
+    ul 
+        li 자기가 책임진다는 둥 모험하라는 둥 도전하라는 둥 떠드는 놈은 대개 똥품만 잡는 놈뿐이라고
