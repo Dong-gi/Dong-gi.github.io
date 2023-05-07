@@ -145,6 +145,8 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/052.html', title: '일곱색의 독' },
         { category: 'Topic/Book', file: '/posts/book/053.html', title: '인면창 탐정' },
         { category: 'Topic/Book', file: '/posts/book/054.html', title: '합창 미사키요스케의 귀환' },
+        { category: 'Topic/Book', file: '/posts/book/055.html', title: '닥터 데스의 유산' },
+        { category: 'Topic/Book', file: '/posts/book/056.html', title: '출생지, 개미지옥' },
 
         { category: 'Topic/Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
         { category: 'Topic/Life', file: '/posts/daily_life/car.html', title: '차' },
