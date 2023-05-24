@@ -1,0 +1,20 @@
+include ../../source/skeleton.pug
+
++post({
+    title: '스완',
+    description: '스완 독서 기록'
+})
+    h1 도서 정보
+    .w3-row
+        .w3-col.s2.w3-center
+            +w3img('https://image.yes24.com/goods/93973312/L', '도서 이미지')&attributes({style: 'max-height:210px'})
+        .w3-col.s10
+            table.no-sort
+                +tds('표제/저자사항', '스완 / 오승호')
+                +tds('ISBN 정보', '979-11-89571-37-5 (05830)')
+                +tds('발행사항', '블루홀식스, 2020.11.24')
+
+    h1 독서 기록
+    ul 
+        li 고즈에는 아직 어린애야. 용서해 달라고 하지는 않겠지만, 내가 잘 말해 둘 테니 너도...
+        p 너도 뭘 어쩌라는 말일까

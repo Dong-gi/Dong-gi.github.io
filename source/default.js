@@ -147,6 +147,10 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/054.html', title: '합창 미사키요스케의 귀환' },
         { category: 'Topic/Book', file: '/posts/book/055.html', title: '닥터 데스의 유산' },
         { category: 'Topic/Book', file: '/posts/book/056.html', title: '출생지, 개미지옥' },
+        { category: 'Topic/Book', file: '/posts/book/057.html', title: '라이언 블루' },
+        { category: 'Topic/Book', file: '/posts/book/058.html', title: '히나구치 요리코의 최악의 낙하와 자포자기 캐논볼' },
+        { category: 'Topic/Book', file: '/posts/book/059.html', title: '하얀 충동' },
+        { category: 'Topic/Book', file: '/posts/book/060.html', title: '스완' },
 
         { category: 'Topic/Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
         { category: 'Topic/Life', file: '/posts/daily_life/car.html', title: '차' },
