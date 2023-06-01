@@ -9,6 +9,71 @@ include ../../source/skeleton.pug
         li: +asA('https://aws.amazon.com/ko/whitepapers/', 'AWS 백서')
 
 
+    h1 Amazon API Gateway
+    div
+        h2 개요
+        ul
+            li RESTful API : 상태 비저장 HTTP 엔드포인트를 개방하고, 클라이언트의 HTTP 요청을 적절한 백엔드에 라우팅
+            li WebSocket API : (상태 저장) WebSocket 엔드포인트를 개방하고, 클라이언트의 업스트림 메시지를 적절한 백엔드에 라우팅
+        div
+            h3 용어
+            ul
+                li API 배포
+                p API의 특정 시점 스냅샷. 클라이언트가 API를 사용하기 위해서는 배포가 하나 이상의 API 스테이지와 연결돼야 한다
+
+                li API 스테이지
+                p API 수명 주기에 대한 논리적 참조(e.g. prod, dev, v2)
+
+                li 콜백 URL
+                p 새 클라이언트와 WebSocket 연결을 수립했을 때, 콜백 URL을 이용해 백엔드에서 클라이언트로 메시지를 보낼 수 있다
+
+                li 통합 요청
+                p API Gateway 내부 인터페이스로, 클라이언트 요청을 백엔드에서 요구하는 형태로 매핑한다
+
+                li 통합 응답
+                p API Gateway 내부 인터페이스로, 백엔드 응답을 클라이언트에 맞는 형태로 매핑한다
+
+                li 매핑 템플릿
+                p [+asA('https://velocity.apache.org/engine/devel/vtl-reference.html', 'VTL(Velocity Template Language)')] 스크립트로 통합 요청/응답의 매핑을 기술한 것
+
+                li 메서드 요청
+                p REST API 공개 인터페이스로, 클라이언트 요청 형태를 정의한다
+
+                li 메서드 응답
+                p REST API 공개 인터페이스로, 클라이언트가 기대하는 응답 형태를 정의한다
+
+                li 모의 통합
+                p 통합 요청을 처리할 백엔드 없이, API Gateway에서 직접 응답을 생성한다
+
+                li 프록시 통합
+                ul
+                    li HTTP 프록시 통합 : 클라이언트와 전체 요청을 백엔드에 전달. 백엔드 전체 응답을 클라이언트에 전달한다
+                    li Lambda 프록시 통합 : 클라이언트 전체 요청을 Lambda 입력으로 전달. Lambda 출력을 HTTP 응답으로 변환한다
+                
+                li 라우팅 요청
+                p WebSocket API 공개 인터페이스로, 클라이언트의 업스트림 메시지를 정의
+
+                li 라우팅 응답
+                p WebSocket API 공개 인터페이스로, 클라이언트가 기대하는 응답 형태를 정의
+
+            h3 REST API vs HTTP API
+            p 둘 다 RESTful API 제품으로, REST API는 HTTP API보다 많은 기능을 지원하지만 대신 비용도 더 많이 든다
+            div
+                p 아래는 일부 발췌이며, 최신 사항 전체는 #[+asA('https://docs.aws.amazon.com/ko_kr/apigateway/latest/developerguide/http-api-vs-rest.html')] 참고
+                h4.fake 공개 엔드포인트 유형
+                table
+                    +ths('엔드포인트 유형', 'REST API', 'HTTP API')
+                    +tds('엣지 최적화', '✓', '')
+                    +tds('리전', '✓', '✓')
+                    +tds('프라이빗', '✓', '')
+                
+                h4.fake 보안
+                table
+                    +ths('보안 기능', 'REST API', 'HTTP API')
+                    +tds('상호 TLS 인증', '✓', '✓')
+                    +tds('클라이언트 인증서 발급', '✓', '')
+                    +tds('AWS WAF', '✓', '')
+
     h1 App Runner
     div
         h2 개요
