@@ -1,4 +1,5 @@
 const recentChangedPosts = `
+M	pugs/infra/aws.pug
 M	pugs/book/056.pug
 A	pugs/book/057.pug
 A	pugs/book/058.pug
@@ -77,5 +78,4 @@ M	pugs/book/040.pug
 M	pugs/book/041.pug
 M	pugs/book/042.pug
 M	pugs/infra/heroku.pug
-M	pugs/algorithm/elementary_mathematics.pug
 `;
