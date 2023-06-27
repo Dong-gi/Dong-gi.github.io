@@ -151,6 +151,12 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/058.html', title: '히나구치 요리코의 최악의 낙하와 자포자기 캐논볼' },
         { category: 'Topic/Book', file: '/posts/book/059.html', title: '하얀 충동' },
         { category: 'Topic/Book', file: '/posts/book/060.html', title: '스완' },
+        { category: 'Topic/Book', file: '/posts/book/061.html', title: '도덕의 시간' },
+        { category: 'Topic/Book', file: '/posts/book/062.html', title: '표정없는 검사의 분투' },
+        { category: 'Topic/Book', file: '/posts/book/063.html', title: '표류하는 세계' },
+        { category: 'Topic/Book', file: '/posts/book/064.html', title: '오전 0시의 몸값' },
+        { category: 'Topic/Book', file: '/posts/book/065.html', title: '열린 어둠' },
+        { category: 'Topic/Book', file: '/posts/book/etc.html', title: '(그럴싸한) 글귀' },
 
         { category: 'Topic/Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
         { category: 'Topic/Life', file: '/posts/daily_life/car.html', title: '차' },

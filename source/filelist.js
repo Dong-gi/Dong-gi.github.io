@@ -1,5 +1,6 @@
 const recentChangedPosts = `
 M	pugs/infra/aws.pug
+M	pugs/infra/aws.pug
 M	pugs/book/056.pug
 A	pugs/book/057.pug
 A	pugs/book/058.pug
@@ -52,30 +53,4 @@ A	pugs/book/043.pug
 A	pugs/book/044.pug
 M	pugs/algorithm/elementary_mathematics.pug
 M	pugs/algorithm/elementary_mathematics.pug
-M	pugs/book/018.pug
-M	pugs/book/019.pug
-M	pugs/book/020.pug
-M	pugs/book/021.pug
-M	pugs/book/022.pug
-M	pugs/book/023.pug
-M	pugs/book/024.pug
-M	pugs/book/025.pug
-M	pugs/book/026.pug
-M	pugs/book/027.pug
-M	pugs/book/028.pug
-M	pugs/book/029.pug
-M	pugs/book/030.pug
-M	pugs/book/031.pug
-M	pugs/book/032.pug
-M	pugs/book/033.pug
-M	pugs/book/034.pug
-M	pugs/book/035.pug
-M	pugs/book/036.pug
-M	pugs/book/037.pug
-M	pugs/book/038.pug
-M	pugs/book/039.pug
-M	pugs/book/040.pug
-M	pugs/book/041.pug
-M	pugs/book/042.pug
-M	pugs/infra/heroku.pug
 `;
