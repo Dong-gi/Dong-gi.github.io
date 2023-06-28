@@ -156,6 +156,11 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/063.html', title: '표류하는 세계' },
         { category: 'Topic/Book', file: '/posts/book/064.html', title: '오전 0시의 몸값' },
         { category: 'Topic/Book', file: '/posts/book/065.html', title: '열린 어둠' },
+        { category: 'Topic/Book', file: '/posts/book/066.html', title: '바람아 우리의 앞머리를' },
+        { category: 'Topic/Book', file: '/posts/book/067.html', title: '폭탄' },
+        { category: 'Topic/Book', file: '/posts/book/068.html', title: '추리소설가의 살인사건' },
+        { category: 'Topic/Book', file: '/posts/book/069.html', title: '류' },
+        { category: 'Topic/Book', file: '/posts/book/070.html', title: '블랙 쇼맨과 환상의 여자' },
         { category: 'Topic/Book', file: '/posts/book/etc.html', title: '(그럴싸한) 글귀' },
 
         { category: 'Topic/Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
