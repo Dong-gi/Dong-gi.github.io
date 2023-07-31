@@ -161,6 +161,12 @@ const posts = {
         { category: 'Topic/Book', file: '/posts/book/068.html', title: '추리소설가의 살인사건' },
         { category: 'Topic/Book', file: '/posts/book/069.html', title: '류' },
         { category: 'Topic/Book', file: '/posts/book/070.html', title: '블랙 쇼맨과 환상의 여자' },
+        { category: 'Topic/Book', file: '/posts/book/071.html', title: '미궁' },
+        { category: 'Topic/Book', file: '/posts/book/072.html', title: '살육에 이르는 병' },
+        { category: 'Topic/Book', file: '/posts/book/073.html', title: '샤일록의 아이들' },
+        { category: 'Topic/Book', file: '/posts/book/074.html', title: '백은의 잭' },
+        { category: 'Topic/Book', file: '/posts/book/075.html', title: '용서받지 못한 밤' },
+        { category: 'Topic/Book', file: '/posts/book/076.html', title: '형사 변호인' },
         { category: 'Topic/Book', file: '/posts/book/etc.html', title: '(그럴싸한) 글귀' },
 
         { category: 'Topic/Life', file: '/posts/daily_life/business.html', title: '개인사업자' },
