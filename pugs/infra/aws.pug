@@ -73,6 +73,15 @@ include ../../source/skeleton.pug
                     +tds('상호 TLS 인증', '✓', '✓')
                     +tds('클라이언트 인증서 발급', '✓', '')
                     +tds('AWS WAF', '✓', '')
+            
+            h3: +asA('https://docs.aws.amazon.com/ko_kr/apigateway/latest/developerguide/limits.html', '제한사항')
+            p 아래는 일부 발췌
+            p WebSocket 엔드포인트가 퍼블릭인 경우, 공격자가 새 연결 제한량의 상당량을 점유할 수 있는 문제가 있다
+            table
+                +ths('API', '리소스 또는 작업', '기본 할당량', '높일 수 있음')
+                +tds('HTTP', '최대 통합 제한 시간', '30초', '아니요')
+                +tds('WebSocket', '리전별 계정당 초당 새 연결 수', '500', '예')
+                +tds('WebSocket', '프레임 크기', '32KB', '아니요')
         
         h2 자습서
         div
@@ -198,6 +207,59 @@ include ../../source/skeleton.pug
                     li 반환 형식
                     p 문자열 형식의 JSON 객체만 반환할 수 있는 Lambda 프록시 통합과 다르게, 임의 문자열, 숫자, 부울, 이진 BLOB까지도 반환 가능
 
+
+    h1 Amazon AppFlow
+    div
+        p 두 SaaS 종단에 대하여 안전한 데이터 전송을 수행하도록 도와준다
+        p e.g. Amazon S3에서 Google BigQuery로 데이터 적재
+
+
+    h1 Amazon Athena
+    div
+        h2 개요
+        ul
+            li 표준 SQL을 이용해 Amazon S3 파일을 분석할 수 있는 대화형 쿼리 서비스
+            p S3 외에도 다양한 데이터 소스를 지원한다 : DynamoDB, CloudWatch Logs, Apache Kafka, MySQL, PostgreSQL, Google BigQuery, Redis, ...
+            li AWS 관리 콘솔 외에도 JDBC 또는 ODBC 연결, Athena CLI, AWS SDK를 통해서도 Athena를 이용할 수 있다
+
+        h2 Athena SQL
+        div
+            h3 Table, database, data catalog
+            ul
+                li Data source : 데이터베이스 그룹. <i>카탈로그</i> 라 부르는 경우도 있다
+                li Database : 테이블 그룹. <i>스키마</i> 라 부르는 경우도 있다
+                li Table : 행 또는 열 그룹으로 구성된 데이터
+            
+            h3 시작하기
+            ol
+                li Settings &gt; 쿼리 결과를 저장할 S3 위치 지정
+                li 데이터베이스 생성
+                +asCode('sql') create database logs
+                li 테이블 생성
+                +asCode('sql').
+                    create external table service_name (
+                        log_time    bigint,
+                        event       string,
+                        message     string
+                    )
+                    partitioned by (
+                        hour        string
+                    )
+                    row format serde 'org.openx.data.jsonserde.JsonSerDe'
+                    with serdeproperties ('ignore.malformed.json' = 'true')
+                    location 's3://bucket/'
+                    tblproperties
+                    (
+                        "projection.enabled" = "true",
+                        "projection.hour.type" = "date",
+                        "projection.hour.range" = "NOW-1YEARS,NOW",
+                        "projection.hour.format" = "yyyy/MM/dd/HH",
+                        "projection.hour.interval" = "1",
+                        "projection.hour.interval.unit" = "HOURS",
+                        "storage.location.template" = "s3://bucket/${hour}"
+                    );
+                li 조회
+                +asCode('sql') select * from service_name where hour = '2023/08/10/12' limit 100
 
 
     h1 App Runner
