@@ -224,10 +224,15 @@ include ../../source/skeleton.pug
 
         h2 Athena SQL
         div
-            h3 Table, database, data catalog
+            h3 용어
             ul
-                li Data source : 데이터베이스 그룹. <i>카탈로그</i> 라 부르는 경우도 있다
-                li Database : 테이블 그룹. <i>스키마</i> 라 부르는 경우도 있다
+                li Dataset : Athena가 최종적으로 읽어들이는 데이터 집합. CSV, JSON 등
+                li Metadata : dataset을 테이블로 구조화하는 정보(스키마)
+                li Data catalog 또는 Metastore : Athena 내부에서, metadata를 관리하는 시스템
+                p 기본적으로 AWS Glue Data Catalog를 지원하며, 이는 S3, Redshift, DynamoDB 등에 대한 연결 및 테이블 생성을 가능하게 해준다
+                li Data source : database 그룹
+                p 각 data source는 특정한 data catalog를 이용한다
+                li Database : 테이블 그룹
                 li Table : 행 또는 열 그룹으로 구성된 데이터
             
             h3 시작하기
@@ -261,6 +266,20 @@ include ../../source/skeleton.pug
                 li 조회
                 +asCode('sql') select * from service_name where hour = '2023/08/10/12' limit 100
 
+            h3 Data source 연결
+            div
+                h4 AWS Glue 이용
+                ul
+                    li 다른 계정의 AWS Glue를 이용할 수도 있다
+                    li 컬럼 이름은 변경 가능하지만, 테이블과 데이터베이스의 이름은 변경할 수 없다
+                    p 새로운 이름으로 다시 만들어야 한다
+                    li AWS Glue crawler 사용 시, 제외 패턴은 Athena에 적용되지 않는다
+                    p S3 버킷의 .json 파일을 제외하도록 설정해도, Athena에서 쿼리를 실행하면 모두 읽어들인다
+                    li AWS Glue crawler 사용 시, 구조가 유사한 디렉터리를 발견하면 동일 테이블의 서로 다른 파티션으로 취급할 수 있다
+                    p 서로 다른 테이블로 만들어야 하는 경우, 스캔하는 데이터 소스를 보다 명확하게 좁혀야 한다
+                h4 Hive metastore 이용
+                h4 Athena Federated Query 이용
+                h4 IAM
 
     h1 App Runner
     div
