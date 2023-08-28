@@ -34,7 +34,7 @@ include ../../source/skeleton.pug
                 p API Gateway 내부 인터페이스로, 백엔드 응답을 클라이언트에 맞는 형태로 매핑한다
 
                 li 매핑 템플릿
-                p [+asA('https://velocity.apache.org/engine/devel/vtl-reference.html', 'VTL(Velocity Template Language)')] 스크립트로 통합 요청/응답의 매핑을 기술한 것
+                p #[+asA('https://velocity.apache.org/engine/devel/vtl-reference.html', 'VTL(Velocity Template Language)')] 스크립트로 통합 요청/응답의 매핑을 기술한 것
 
                 li 메서드 요청
                 p REST API 공개 인터페이스로, 클라이언트 요청 형태를 정의한다
@@ -253,15 +253,14 @@ include ../../source/skeleton.pug
                     row format serde 'org.openx.data.jsonserde.JsonSerDe'
                     with serdeproperties ('ignore.malformed.json' = 'true')
                     location 's3://bucket/'
-                    tblproperties
-                    (
+                    tblproperties (
                         "projection.enabled" = "true",
                         "projection.hour.type" = "date",
                         "projection.hour.range" = "NOW-1YEARS,NOW",
                         "projection.hour.format" = "yyyy/MM/dd/HH",
                         "projection.hour.interval" = "1",
                         "projection.hour.interval.unit" = "HOURS",
-                        "storage.location.template" = "s3://bucket/${hour}"
+                        "storage.location.template" = "s3://bucket/${hour}/"
                     );
                 li 조회
                 +asCode('sql') select * from service_name where hour = '2023/08/10/12' limit 100
@@ -295,9 +294,31 @@ include ../../source/skeleton.pug
                 li Athena 키워드를 식별자로 이용할 때, DDL에서는 백틱으로, SELECT 문에서는 ""로 감싸야 한다
                 p AND, AS, BY, CASE, ..., WITH 등
                 li LOCATION 속성을 이용해 S3 테이블 데이터 폴더를 지정할 때, 끝에 '/'를 붙여야 한다
-                li 서브쿼리의 WHERE 절에서 파티션 키에 대한 값을 명시해도, 현재로써는 테이블의 모든 데이터를 읽는다(230825 확인)
-                li 파티션 프로젝션을 설정하지 않으면, 쿼리 실행 시 대상 파티션을 추리기 위해 GetPartitions 명령이 먼저 호출된다
-                p 이때, 파티션이 너무 많다면 성능에 악영향이 발생할 수 있다. 파티션 프로젝션을 설정하면 GetPartitions 명령 없이 대상 파티션을 추려낼 수 있다
+                li 서브쿼리에서는 WHERE 절에 파티션 키에 대한 값을 명시해도, 현재로써는 테이블의 모든 데이터를 읽는다(230825 문서 확인)
+                li 파티션 프로젝션을 설정하지 않으면(전통적인 파티션만 설정한 경우), 쿼리 실행 시 대상 파티션을 추리기 위해 GetPartitions 명령이 먼저 호출된다
+                ul
+                    li 이때 파티션이 너무 많다면 성능에 악영향이 발생할 수 있다. 파티션 프로젝션을 설정하면 GetPartitions 명령 없이 대상 파티션을 추려낼 수 있다
+                    li 반대로 쿼리 대상 파티션 중 상당수가 실제로는 존재하지 않을 경우, 파티션 프로젝션을 이용한 쿼리는 읽기를 수행한 뒤에야 파티션이 존재하지 않음을 알 수 있기 떄문에 전통적인 파티션이 더 나을 수 있다
+                li 기존 테이블에 파티션 프로젝션을 설정하려면, 파티션 컬럼이 이미 테이블에 존재해야 한다. 자동으로 추가해주지 않음에 유의
+                li: +asA('https://docs.aws.amazon.com/athena/latest/ug/partition-projection-supported-types.html')
+                li UUID와 같은 예측 불가능한 값으로도 파티셔닝할 수 있다
+                +asCode('sql').
+                    partitioned by ( device_id string )
+                    location "s3://bucket/prefix/"
+                    tblproperties (
+                        "projection.enabled" = "true",
+                        "projection.device_id.type" = "injected",
+                        "storage.location.template" = "s3://bucket/prefix/${device_id}/"
+                    )
+
+            h3 쿼리 결과로부터 테이블 생성
+            ul
+                li 문법에 대해서는 #[+asA('https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html')] 설명서 참고
+                li 특성상 CREATE TABLE(DDL) 이전에 SELECT(DML)를 수행하며, 서비스 제한량과 관련하여 DML 사용으로 집계된다
+                li 분산처리 특성상 처리 도중에 실패할 수 있는데, 해당 시점까지 만들던 테이블에 대하여는 조회가 가능하다
+                p Athena에서 쿼리 결과를 삭제하는 일은 없기 때문
+                li ORDER BY 절은 무시된다
+                li 파티셔닝된 결과 테이블을 만들 수 있다
 
 
     h1 App Runner
@@ -2086,6 +2107,8 @@ include ../../source/skeleton.pug
                 li 테스트(2021-11-26) 조건 : 요청지@서울, 서버@us-east-2
                 li 로드밸런서를 통해 직접 통신한 경우 190-200ms로 균일한 응답시간 확인
                 li CDN을 거친 경우, 일부 요청은 10% 정도 빨리 응답(175ms 내외)되었지만, 절반 정도는 2배 이상 소요(670ms 내외)되었다.
+                li HTTP/3이 활성화되어도 추가 지연이 발생하는 것은 마찬가지(2023-07-28 테스트)
+                +w3img('/imgs/2023-08-28 172044.png')
             li 각 응답 캐시 시간을 Cache-Control: max-age 헤더로 조정
                 +asA('https://aws.amazon.com/ko/premiumsupport/knowledge-center/cloudfront-cache-files-time/')
             li 쿼리 스트링 캐시 정책 조정
