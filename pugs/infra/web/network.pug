@@ -63,15 +63,15 @@ include ../../../source/skeleton.pug
 
         h2 연결 종료; 3-way handshaking
         ol
-            li A -> B : FIN 세그먼트(#seq=a,#ack=b)
+            li A -> B : FIN (+ ACK) 세그먼트(#seq=a,#ack=b)
             li B -> A : FIN + ACK 세그먼트(#seq=b,#ack=a+1)
             li A -> B : ACK 세그먼트(#seq=a+1,#ack=b+1)
 
         h2 연결 종료; 4-way handshaking
         ol
             p 데이터를 보낼 게 남아있다면, FIN 요청은 수락한 뒤, 데이터를 마저 보낸 후 FIN 응답한다
-            li A -> B : FIN 세그먼트(#seq=a,#ack=b1)
-            li B -> A : FIN + ACK 세그먼트(#seq=b1,#ack=a+1)
+            li A -> B : FIN (+ ACK) 세그먼트(#seq=a,#ack=b1)
+            li B -> A : ACK 세그먼트(#seq=b1,#ack=a+1)
             li 남은 데이터 전송
             ul
                 li B -> A : 데이터 세그먼트

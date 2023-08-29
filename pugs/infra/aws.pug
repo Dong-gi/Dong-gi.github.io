@@ -315,7 +315,7 @@ include ../../source/skeleton.pug
             ul
                 li 문법에 대해서는 #[+asA('https://docs.aws.amazon.com/athena/latest/ug/create-table-as.html')] 설명서 참고
                 li 특성상 CREATE TABLE(DDL) 이전에 SELECT(DML)를 수행하며, 서비스 제한량과 관련하여 DML 사용으로 집계된다
-                li 분산처리 특성상 처리 도중에 실패할 수 있는데, 해당 시점까지 만들던 테이블에 대하여는 조회가 가능하다
+                li 테이블 생성 도중에 실패할 수 있는데, 해당 시점까지 만들던 테이블에 대하여는 조회가 가능하다
                 p Athena에서 쿼리 결과를 삭제하는 일은 없기 때문
                 li ORDER BY 절은 무시된다
                 li 파티셔닝된 결과 테이블을 만들 수 있다
