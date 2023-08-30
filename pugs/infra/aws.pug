@@ -320,6 +320,90 @@ include ../../source/skeleton.pug
                 li ORDER BY 절은 무시된다
                 li 파티셔닝된 결과 테이블을 만들 수 있다
 
+            h3 쿼리 실행하기
+            ul
+                li AWS 콘솔에서 쿼리 계획을 확인할 수 있다
+                li 최근 쿼리 결과를 재사용하도록 설정할 수 있다
+                li 실행된 쿼리에 대한 상세 정보를 확인할 수 있다
+                li 뷰를 만들고, 테이블과 마찬가지로 권한 설정을 할 수 있다
+                li 쿼리를 저장하여 재사용할 수 있다
+                li ?를 이용하여 파라미터화된 쿼리를 실행할 수 있다
+                li 지리 정보에 관한 데이터 타입을 처리할 수 있다
+                p point, line, polygon, multiline, multipolygon
+            div
+                h4 배열 다루기
+                p 배열의 모든 원소들은 하나의 공통 타입으로 표현할 수 있어야 한다
+                +asCode('sql', '생성').
+                    select array [1, 2, 3] some_arr;
+                    select array [array [1, 2], array [3, 4]] some_arr;
+
+                +asCode('sql', '접합').
+                    select array [1, 2] || array [3, 4] some_arr;
+
+                +asCode('sql', '길이').
+                    select cardinality(array [1, 2, 3]) arr_len;
+
+                +asCode('sql', '원소 참조').
+                    -- 인덱스는 1부터 시작
+                    with tmp as (
+                        select array [1, 2, 3] arr
+                    )
+                    select arr[3] = element_at(arr, -1) from tmp;
+
+                +asCode('sql', '원소 포함 여부').
+                    select contains(array [1, 2, 3], 2);
+
+                +asCode('sql', '평탄화, 테이블화').
+                    select * from unnest(flatten(array [array [1, 2], array [3, 4]])) tmp(num);
+
+                +asCode('sql', '배열 필터링').
+                    select filter(array [1, 2, 3], n -&gt; n &gt;= 2);
+
+                +asCode('sql', '배열 정렬').
+                    select array_sort(array [1, 2, 3, 4], (x, y) -&gt; y - x);
+
+                +asCode('sql', '여러 행을 배열로 집계').
+                    select array_agg(num) arr from unnest(array [1, 2, 3, 4]) tmp(num);
+
+                +asCode('sql', '배열 원소에 대한 집계').
+                    -- reduce(array, initialState, inputFunction, outputFunction)
+                    -- 아래는 의사코드
+                    -- let result = initialState;
+                    -- for (let element of array)
+                    --     result = inputFunction(result, element)
+                    -- return outputFunction(result)
+                    select reduce(array [1, 2, 3, 4], 0, (result, num) -&gt; result + num, (result) -&gt; 'Result = ' || cast(result as varchar));
+
+                    -- 하나의 문자열로 접합
+                    select array_join(array [1, 2, 3], ', ');
+
+                h4 JSON 다루기
+                +asCode('sql', 'JSON 변환').
+                    -- JSON으로 변환
+                    select
+                        cast(123 as json) json_number,
+                        cast('text' as json) json_string,
+                        cast(true as json) json_boolean,
+                        cast(null as json) json_null,
+                        cast(array [1, 2, 3] as json) json_arr,
+                        cast(map(array ['field1', 'field2'], array [1, 2]) as json) json_obj1,
+                        cast(cast(row(123, 'hello') as row(num int, txt varchar)) as json) json_obj2
+                    -- JSON에서 변환
+                    select
+                        cast(json '123' as int) f_int,
+                        cast(json '"text"' as varchar) f_varchar,
+                        cast(json 'true' as boolean) f_boolean,
+                        cast(json 'null' as int) f_null,
+                        cast(json '[1, 2, 3]' as array(int)) f_array,
+                        cast(json '{"field1":1,"field2":2}' as map(varchar, int)) f_map,
+                        cast(json '{"num":123,"txt":"hello"}' as row(num int, txt varchar)) f_struct
+
+                +asCode('sql', 'JSON 속성 조회').
+                    select
+                        typeof(json_extract(json '{"num":123,"txt":"hello"}', '$.num')) = 'json',
+                        typeof(json_extract_scalar(json '123', '$')) = 'varchar',
+                        typeof(json_array_get(json '[1, 2, 3]', 0)) = 'json'
+
 
     h1 App Runner
     div
