@@ -7,7 +7,7 @@ span.hover-content(template-id='template-id'
 
 sitemap 제작
 a = document.createElement('a')
-a.href = URL.createObjectURL(new Blob([posts.list.map(x => `https://dong-gi.github.io${x.file}`).join('\n')], {
+a.href = URL.createObjectURL(new Blob([posts.list.map(x => `https://dong-gi.github.io${x.file}`).sort().join('\n')], {
     type: 'text/plain;charset=utf-8;'
 }))
 a.target = '_blank'

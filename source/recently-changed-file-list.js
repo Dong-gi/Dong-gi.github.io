@@ -1,5 +1,7 @@
 const recentChangedPosts = `
 M	pugs/infra/aws.pug
+M	pugs/infra/aws.pug
+M	pugs/infra/aws.pug
 M	pugs/infra/web/network.pug
 M	pugs/infra/aws.pug
 M	pugs/infra/aws.pug
@@ -42,22 +44,4 @@ A	pugs/book/054.pug
 M	pugs/daily_life/house.pug
 A	pugs/book/050.pug
 M	pugs/infra/OpenAPI.pug
-M	pugs/book/031.pug
-M	pugs/book/032.pug
-M	pugs/book/033.pug
-M	pugs/book/035.pug
-M	pugs/book/036.pug
-M	pugs/book/038.pug
-M	pugs/book/039.pug
-M	pugs/book/040.pug
-M	pugs/book/044.pug
-M	pugs/book/046.pug
-M	pugs/infra/OpenAPI.pug
-M	pugs/book/002.pug
-M	pugs/book/003.pug
-M	pugs/book/006.pug
-M	pugs/book/007.pug
-M	pugs/book/019.pug
-M	pugs/book/021.pug
-M	pugs/book/047.pug
 `;

@@ -20,13 +20,16 @@ fi
 pushd $PWD
 cd `dirname "$fullFilePath"`
 
-echo "const recentChangedPosts = \`" > source/filelist.js
-git log --name-status -20 pugs | grep .pug >> source/filelist.js
-echo "\`;" >> source/filelist.js
+node source/process-posts-json.js
+echo 'posts.json 처리 완료'
+
+echo "const recentChangedPosts = \`" > source/recently-changed-file-list.js
+git log --name-status -20 pugs | grep .pug >> source/recently-changed-file-list.js
+echo "\`;" >> source/recently-changed-file-list.js
 
 echo '파일 목록 갱신 완료'
 
-terser --compress --mangle -o source/default.min.js -- source/filelist.js source/sf.js source/default.js
+terser --compress --mangle -o source/default.min.js -- source/recently-changed-file-list.js source/sf.js source/default.js
 echo 'js 압축 완료'
 
 # need pug-cli
