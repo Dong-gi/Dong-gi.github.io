@@ -409,6 +409,18 @@ include ../../source/skeleton.pug
 
     h1 Amazon Aurora + RDS
     div
+        h2 주의/권장 사항
+        ul
+            li 클라이언트가 DNS 조회 결과를 캐시하는 경우, TTL을 짧게 설정한다. 장애 조치로 인해 프라이머리 IP 주소가 변경될 수 있다
+            +asCode('java', 'Java 예시').
+                // https://aws.amazon.com/ko/premiumsupport/knowledge-center/aurora-mysql-db-cluser-read-only-error/
+                // Aurora DNS 영역은 5초의 짧은 TTL(Time to Live)을 사용하므로 네트워크 및 클라이언트 구성에서 이를 더 이상 늘리지 않는 것이 중요합니다
+                java.security.Security.setProperty("networkaddress.cache.ttl", "5");
+            li 수동으로 장애 조치를 테스트하여, 소요되는 시간을 파악한다. 또, DB에 액세스하는 애플리케이션이 자동으로 새 프라이머리 DB 인스턴스에 연결되는지 확인한다
+            li 작업 집합이 메모리에 상주하도록 RAM을 충분히 할당하는 것이 좋다 -&gt; ReadIOPS 지표는 안정적으로 작은 값이어야 한다
+            p RDS의 경우, 인스턴스 클래스를 높였을 때 ReadIOPS가 급격히 떨어진다면 확장이 효과적이었음을 의미한다 -&gt; ReadIOPS가 급격히 떨어지지 않는 수준까지 확장한다
+            li #[+asA('https://docs.aws.amazon.com/ko_kr/AmazonRDS/latest/UserGuide/CHAP_BestPractices.html')]에서 RDS 엔진별 모범 사례 참고
+
         h2 RDS 개요
         ul
             li 관계형 데이터베이스를 쉽게 설치, 운영, 확장할 수 있는 서비스
