@@ -4,6 +4,7 @@ M	pugs/infra/aws.pug
 M	pugs/infra/aws.pug
 M	pugs/infra/aws.pug
 M	pugs/infra/aws.pug
+M	pugs/infra/aws.pug
 M	pugs/infra/web/network.pug
 M	pugs/infra/aws.pug
 M	pugs/infra/aws.pug
@@ -39,8 +40,4 @@ A	pugs/book/059.pug
 A	pugs/book/060.pug
 A	pugs/book/055.pug
 A	pugs/book/056.pug
-A	pugs/book/051.pug
-A	pugs/book/052.pug
-A	pugs/book/053.pug
-A	pugs/book/054.pug
 `;
