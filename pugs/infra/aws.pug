@@ -439,6 +439,81 @@ include ../../source/skeleton.pug
                 li 범용 gp3 : 스토리지 용량과 관계없이 성능 지정 가능. 기본 3,000IOPS &amp; 125MiB/s
                 p 볼륨 크기가 특정 임계값에 도달하면 기본 스토리지 성능이 12,000IOPS &amp; 500MiB/s로 확장된다(RDS for SQL Server 제외). 이는 4개의 볼륨을 이용하는 볼륨 스트라이핑 덕분
                 li 프로비저닝된 io1 : 사용자가 지정한 수준의 일관적인 성능 제공. 지연에 민감한 워크로드용
+        
+        h2 엔진별 RDS 기능
+        div
+            h3 블루/그린 배포
+            table
+                +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
+                +tds('O', 'O', 'X', 'X', 'X')
+            p 프로덕션 데이터베이스 환경을 별도의 스테이징 환경에 복사하고, 지속적으로 동기화 수행. 프로덕션 환경에 영향을 주지 않으면서 스테이징 환경에서 데이터베이스를 변경한 다음, 최소 중단 시간으로 스테이징 환경을 프로덕션으로 승격 가능
+
+            h3 교차 리전 자동 백업
+            table
+                +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
+                +tds('O', 'O', 'O', 'O', 'O')
+            p 자동 백업으로 생성되는 스냅샷을 다른 리전에 복제하여 보관하도록 구성할 수 있다. 기존 인스턴스에 대해 설정하려면 RDS > Automated backups > 인스턴스 선택 > Actions > 교차 리전 복제 관리
+
+            h3 리전 간 읽기 전용 복제본
+            table
+                +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
+                +tds('O', 'O', '△', 'O', '△')
+            p 소스 DB 인스턴스와 다른 리전에 읽기 전용 복제본을 생성할 수 있다
+
+            h3 데이터베이스 활동 스트림
+            table
+                +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
+                +tds('X', 'X', 'O', 'X', 'O')
+            p DB 인스턴스 감사 활동에 대한 경보를 설정하고 모니터링할 수 있다
+
+            h3 듀얼 스택 모드
+            table
+                +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
+                +tds('O', 'O', 'O', 'O', 'O')
+            p IPv6도 이용할 수 있다
+
+            h3 S3로 스냅샷 내보내기
+            table
+                +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
+                +tds('O', 'O', 'X', 'O', 'X')
+            p S3로 내보낸 스냅샷은 Amazon Athena 또는 Amazon Redshift Spectrum을 이용해 직접 분석할 수도 있다
+
+            h3 IAM 데이터베이스 인증
+            table
+                +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
+                +tds('O', 'O', 'X', 'O', 'X')
+            p 암호 대신 IAM 인증 토큰을 발급 받아 인증한다. 토큰 생성에 오버헤드가 발생하므로 초당 200개 이상의 새 인증이 필요한 경우엔 부적합할 수 있다
+
+            h3 Kerberos 인증
+            table
+                +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
+                +tds('X', 'O', 'O', 'O', 'O')
+            p Kerberos 및 Microsoft Active Directory를 이용한 외부 인증 정보로 데이터베이스에 접속 가능
+
+            h3 다중 AZ DB 클러스터
+            table
+                +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
+                +tds('X', 'O', 'X', 'O', 'X')
+            p 3개의 가용 영역을 이용(읽기 인스턴스 2대)하여 다중 AZ DB 인스턴스 배포(읽기 인스턴스 1대)에 비해 높은 고가용성, 읽기 처리 용량, 낮은 쓰기 대기 시간 지원
+
+            h3 성능 개선 도우미
+            table
+                +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
+                +tds('O', 'O', 'O', 'O', 'O')
+            p 데이터베이스 성능을 분석하는 데 도움이 되는 자료를 수집하여 시각화한다
+
+            h3 RDS Custom
+            table
+                +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
+                +tds('X', 'X', 'O', 'X', 'O')
+            p 데이터베이스 환경 및 운영 체제에 액세스하여 커스터마이징 가능
+
+            h3 RDS 프록시
+            table
+                +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
+                +tds('O', 'O', 'O', 'O', 'O')
+
+            h3 Secrets Manager 통합
 
         h2 Aurora
 
