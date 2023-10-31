@@ -415,7 +415,7 @@ include ../../source/skeleton.pug
             +asCode('java', 'Java 예시').
                 // https://aws.amazon.com/ko/premiumsupport/knowledge-center/aurora-mysql-db-cluser-read-only-error/
                 // Aurora DNS 영역은 5초의 짧은 TTL(Time to Live)을 사용하므로 네트워크 및 클라이언트 구성에서 이를 더 이상 늘리지 않는 것이 중요합니다
-                java.security.Security.setProperty("networkaddress.cache.ttl", "5");
+                java.security.Security.setProperty("networkaddress.cache.ttl", "5"); // 네트워크 연결을 수행하기 전에 설정해야 함
             li 수동으로 장애 조치를 테스트하여, 소요되는 시간을 파악한다. 또, DB에 액세스하는 애플리케이션이 자동으로 새 프라이머리 DB 인스턴스에 연결되는지 확인한다
             li 작업 집합이 메모리에 상주하도록 RAM을 충분히 할당하는 것이 좋다 -&gt; ReadIOPS 지표는 안정적으로 작은 값이어야 한다
             p RDS의 경우, 인스턴스 클래스를 높였을 때 ReadIOPS가 급격히 떨어진다면 확장이 효과적이었음을 의미한다 -&gt; ReadIOPS가 급격히 떨어지지 않는 수준까지 확장한다
@@ -494,7 +494,12 @@ include ../../source/skeleton.pug
             table
                 +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
                 +tds('X', 'O', 'X', 'O', 'X')
-            p 3개의 가용 영역을 이용(읽기 인스턴스 2대)하여 다중 AZ DB 인스턴스 배포(읽기 인스턴스 1대)에 비해 높은 고가용성, 읽기 처리 용량, 낮은 쓰기 대기 시간 지원
+            ul
+                li 3개의 가용 영역을 이용(대기 인스턴스 2대)하여 다중 AZ DB 인스턴스 배포(대기 인스턴스 1대)에 비해 높은 고가용성, 읽기 처리 용량, 낮은 쓰기 대기 시간 지원
+                li 다중 AZ DB 인스턴스 배포의 경우, 대기 인스턴스에 트랙잭션이 동기식으로 전파(때문에 처리 지연 발생)되며, 대기 인스턴스는 읽기 트래픽을 처리할 수 없다
+                p 일반적인 장애 조치 시간 : 60 ~ 120초
+                li 다중 AZ DB 클러스터 배포의 경우, 변경 사항 커밋에 하나 이상의 대기 인스턴스의 승인을 받는 반동기식 복제를 사용하고, 대기 인스턴스는 읽기 트래픽을 처리할 수 있다
+                p 일반적인 장애 조치 시간 : ~ 35초
 
             h3 성능 개선 도우미
             table
@@ -512,8 +517,14 @@ include ../../source/skeleton.pug
             table
                 +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
                 +tds('O', 'O', 'O', 'O', 'O')
+            p 원본 데이터베이스에 대한 연결 풀을 제공한다. 애플리케이션 안에서 연결을 관리하지 않는 경우, 인스턴스에서 지원하는 것보다 많은 연결을 동시에 열어두려는 경우에 적합
 
             h3 Secrets Manager 통합
+            table
+                +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
+                +tds('O', 'O', 'O', 'O', 'O')
+            p RDS 마스터 암호를 Secrets Manager에 저장하고, 정기적으로 교체할 수 있다
+
 
         h2 Aurora
 
@@ -2206,6 +2217,8 @@ include ../../source/skeleton.pug
                 +asCode('shell', 'CRL 만료 시각 확인').
                     $ openssl crl -in ~/Downloads/downloaded-client-vpn-crl.pem -noout -nextupdate
                     nextUpdate=May  9 01:52:46 2023 GMT
+                p 관련 CloudWatch 메트릭 : CrlDaysToExpiry
+                +w3img('/imgs/Screen Shot 2023-10-30 at 10.22.33 AM.png')
 
             h3 클라이언트 인가
             ul
