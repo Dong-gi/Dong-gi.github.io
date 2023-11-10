@@ -547,6 +547,29 @@ include ../../source/skeleton.pug
                 li 다중 AZ DB 클러스터의 모든 DB 인스턴스에 적용되는 파라미터
                 li 정적 파라미터 변경 : DB 클러스터를 수동으로 재부팅해야 적용
                 li 동적 파라미터 변경 : 기본적으로 변경 즉시 적용
+        
+        h2 이벤트 알림
+        p 발생한 이벤트에 대하여 전송 순서를 보장하지 않음에 유의
+        div
+            h3 이벤트 알림 구독
+            ol
+                li 어떤 범주의 이벤트를 수신할 것인지 선택 : DB 클러스터, DB 인스턴스, 파라미터 그룹, ...
+                li 어떤 이벤트를 수신할 것인지 선택 : 생성, 삭제, 장애, 장애 조치, 점검, ...
+                li 구독 대상 선택
+                li 구독 생성
+
+            h3 권한 부여
+            ul
+                li 기본적으로 SNS 주제에는 동일한 계정 내의 모든 RDS 리소스가 알림을 게시하도록 허용한다
+                li 사용자 지정 정책을 연결하여 다른 계정의 알림을 허용하거나, 특정 리소스에 대한 액세스를 제한할 수 있다 #[+asA('https://docs.aws.amazon.com/ko_kr/AmazonRDS/latest/UserGuide/USER_Events.GrantingPermissions.html')]
+
+            h3 이벤트에서 트리거되는 규칙 생성
+            ul
+                li CloudWatch > 이벤트 > 규칙 생성
+                li 서비스에 RDS, 이벤트 유형에 RDS 리소스 유형 선택
+            
+            h3 이벤트 범주 및 유형
+            p: +asA('https://docs.aws.amazon.com/ko_kr/AmazonRDS/latest/UserGuide/USER_Events.Messages.html')
 
 
     h1 App Runner
