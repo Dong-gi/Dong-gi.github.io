@@ -83,18 +83,166 @@ include ../../../source/skeleton.pug
                 }
 
         h2 패키지 배포
-        +asCode('shell').
-            $ npm publish
-            $ npm version patch # 패치 버전 1 증가
-            $ npm version minor # 마이너 버전 1 증가
-            $ npm unpublish     # 배포 중단
+        div
+            h3.fake 참고자료
+            ul
+                li: +asA('https://snyk.io/blog/best-practices-create-modern-npm-package/')
+                li: +asA('https://github.com/snyk-snippets/modern-npm-package/')
+                li: +asA('https://github.com/Dong-gi/test-231114')
 
+            h3 프로젝트 설정
+            ol
+                li 프로젝트를 위한 GitHub 저장소가 없다면 하나 생성
+                li 작업 환경에 GitHub 저장소 클론
+                li npm 프로젝트 설정이 안 됐다면 #[+asInlineCode('$ npm init', 'shell')]으로 package.json 초기화
+                li 프로젝트 이름에 GitHub 사용자/조직 이름을 포함하여 구분시키기
+                p e.g. @aws-sdk/client-s3
+            
+            h3 NPM 계정 생성
+            ol
+                li: +asA('https://www.npmjs.com/signup')
+                li #[+asInlineCode('$ npm login', 'shell')]
+            
+            h3 배포 관련 커맨드
+            +asCode('shell').
+                $ npm pack                      # 패키지 tar 생성. --dry-run 가능
+                $ npm publish --access=public   # 패키지 배포. --dry-run 가능
+                $ npm version                   # 버전 설정/증가
+                $ npm unpublish                 # 배포 중단
+
+            h3 프로덕션 사용을 위한 설정
+            div
+                h4 CommonJS와 ECMAScript Module 모두 지원하기
+                ol
+                    li #[+goto('TypeScript')] 설치
+                    li 공통 설정 파일 작성
+                    +asCode('json', 'configs/tsconfig.base.json').
+                        {
+                            "compilerOptions": {
+                                "strict": true,
+                                "esModuleInterop": true,
+                                "forceConsistentCasingInFileNames": true,
+                                "skipLibCheck": true,
+                                "checkJs": true,
+                                "allowJs": true,
+                                "declaration": true,
+                                "declarationMap": true,
+                                "allowSyntheticDefaultImports": true,
+                                "experimentalDecorators": true
+                            },
+                            "files": [
+                                "../src/index.ts"
+                            ]
+                        }
+                    li CommonJS 타입을 위한 설정 파일 작성
+                    +asCode('json', 'configs/tsconfig.cjs.json').
+                        {
+                            "extends": "./tsconfig.base.json",
+                            "compilerOptions": {
+                                "lib": [
+                                    "ES6",
+                                    "DOM"
+                                ],
+                                "target": "ES6",
+                                "module": "CommonJS",
+                                "moduleResolution": "Node",
+                                "outDir": "../lib/cjs",
+                                "declarationDir": "../lib/cjs/types"
+                            }
+                        }
+                    li ECMAScript Module 타입을 위한 설정 파일 작성
+                    +asCode('json', 'configs/tsconfig.esm.json').
+                        {
+                            "extends": "./tsconfig.base.json",
+                            "compilerOptions": {
+                                "lib": [
+                                    "ES6",
+                                    "DOM"
+                                ],
+                                "target": "ES6",
+                                "module": "ESNext",
+                                "moduleResolution": "Node10",
+                                "outDir": "../lib/esm",
+                                "declarationDir": "../lib/esm/types"
+                            }
+                        }
+                    li 빌드 산출물을 모두 포함하도록 package.json 설정
+                    +asCode('json', 'package.json').
+                        {
+                            "files": ["lib/**/*"]
+                        }
+                    li 모듈 로더에 따라 적절한 위치에서 파일을 찾도록 package.json 설정
+                    +asCode('json', 'package.json').
+                        {
+                          "exports": {
+                            ".": {
+                              "import": {
+                                "types": "./lib/esm/types/index.d.ts",
+                                "default": "./lib/esm/index.mjs"
+                              },
+                              "require": {
+                                "types": "./lib/cjs/types/index.d.ts",
+                                "default": "./lib/cjs/index.js"
+                              }
+                            }
+                          }
+                        }
+                    li CJS 산출물에 맞춰 package.json 기본값 설정
+                    +asCode('json', 'package.json').
+                        {
+                          "types": "./lib/cjs/types/index.d.ts",
+                          "main": "./lib/cjs/index.js"
+                        }
+                    li package.json에 빌드 커맨드 설정
+                    +asCode('json', 'package.json').
+                        {
+                          "scripts": {
+                            "clean": "rm -rf ./lib",
+                            "build": "npm run clean &amp;&amp; npm run build:esm &amp;&amp; npm run build:cjs",
+                            "build:cjs": "npx tsc -p ./configs/tsconfig.cjs.json",
+                            "build:esm": "npx tsc -p ./configs/tsconfig.esm.json &amp;&amp; mv ./lib/esm/index.js ./lib/esm/index.mjs"
+                          }
+                        }
+                    li 테스트 코드 작성
+                    ul
+                        li mocha 패키지 : 테스트 실행 라이브러리
+                        li chai 패키지 : assertion 라이브러리
+                        li ts-node 패키지 : TypeScript 코드 즉시 실행 라이브러리
+                        li 테스트 실행 설정
+                        +asCode('json', '.mocharc.json').
+                            {
+                                "extension": [
+                                    "ts"
+                                ],
+                                "spec": "./tests/**/*.spec.ts",
+                                "require": "ts-node/register",
+                                "parallel": true,
+                                "jobs": 8,
+                                "timeout": 60000
+                            }
+                        li tests 디렉터리에 테스트 코드 작성
+                        li package.json에 테스트 커맨드 설정
+                        +asCode('json', 'package.json').
+                            {
+                              "scripts": {
+                                "test": "export TS_NODE_PROJECT=./configs/tsconfig.cjs.json &amp;&amp; mocha"
+                              }
+                            }
+                    li 패키지를 배포하기 전에 작동하는지 확인
+                    +asCode('shell').
+                        # 라이브러리 프로젝트 디렉터리에서, 번들 생성
+                        $ npm pack
+                        # 라이브러리를 사용할 프로젝트 디렉터리에서, 번들 설치
+                        $ npm install ./path/to/package.tgz
+
+
+    +pos('TypeScript')
     h1 TypeScript
     ol
         li JavaScript에 타입이 추가된 수퍼셋. 컴파일하면 자바스크립트 코드가 된다
         +asCode('shell').
-            $ npm install -g typescript
-            $ tsc file-name.ts --target es6
+            $ npm install --save-dev typescript
+            $ npx tsc file-name.ts --target es6
         li 타입스크립트에서는 생성자 매개변수 앞에 public/private 접근한정자가 있으면 자동으로 클래스의 속성으로 선언한다
         li VS Code의 타입스크립트 컴파일러를 npm 패키지로 설정
         p "typescript.tsdk": "C:/Users/name/AppData/Roaming/npm/node_modules/typescript/bin/tsc"

@@ -265,6 +265,7 @@ div#contents .code-div{margin:8px 0}
 .code-modal .w3-modal-content{position:fixed;top:0;margin:0;max-height:100%;max-width:100%;width:100%;height:100%;overflow:auto}
 .code-div ol{margin-left:0;padding-left:40px}
 .code-div li{margin:0}
+.code-span{font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New;background-color:#ddd;word-wrap:normal;overflow:auto;padding:0.2ch 0.5ch;border-radius:0.6ch;}
 
 .hover-template li{margin:0}
 

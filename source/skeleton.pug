@@ -20,7 +20,7 @@ mixin asA(href, text)
             if (/#/.test(href) == false)
                 text = text.replace(/\..+$/, '');
         }
-    +w3a()&attributes({ href: href })&attributes(attributes)= text
+    +w3a()&attributes({ href })&attributes(attributes)= text
 
 mixin asCode(lan, title)
     - lan = lan || 'text'
@@ -31,6 +31,10 @@ mixin asCode(lan, title)
     .as-code.code-div.w3-leftbar.w3-border-green(lan=lan)
         if block
             block
+
+mixin asInlineCode(code, lan)
+    - lan = lan || 'text'
+    span.as-code.code-span&attributes({ lan })= code
 
 //-
     options = {

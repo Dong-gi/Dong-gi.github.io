@@ -91,7 +91,8 @@ function mutationCallback(mutations, observer) {
         addImageOnclick(mutation.target.querySelectorAll('img'))
         addCodeBtnOnclick(mutation.target.querySelectorAll('button.btn-code'))
         addHoverContents(mutation.target.querySelectorAll('.hover-content'))
-        convertAsCodeDiv(mutation.target.querySelectorAll('.as-code'))
+        convertAsCodeDiv(mutation.target.querySelectorAll('div.as-code'))
+        convertAsCodeSpan(mutation.target.querySelectorAll('span.as-code'))
     }
 }
 
@@ -120,11 +121,18 @@ function addHoverContents(targets) {
 function convertAsCodeDiv(divs) {
     for (let div of divs) {
         let code = div.innerHTML.trim().replace(/&lt;/gm, '<').replace(/&gt;/gm, '>').replace(/&amp;/gm, '&')
-        // console.log(code)
         div.innerHTML = ''
         fillCodeDiv(div, div.getAttribute('lan'), code)
         div.style.maxHeight = window.innerHeight / 3 + 'px'
         div.classList.remove('as-code')
+    }
+}
+
+function convertAsCodeSpan(spans) {
+    for (let span of spans) {
+        let code = span.innerHTML.trim().replace(/&lt;/gm, '<').replace(/&gt;/gm, '>').replace(/&amp;/gm, '&')
+        span.innerHTML = hljs.highlight(span.getAttribute('lan') || 'text', code)['value'];
+        span.classList.remove('as-code')
     }
 }
 
