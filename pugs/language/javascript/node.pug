@@ -130,8 +130,8 @@ include ../../../source/skeleton.pug
                                 "allowSyntheticDefaultImports": true,
                                 "experimentalDecorators": true
                             },
-                            "files": [
-                                "../src/index.ts"
+                            "include": [
+                                "../src/**/*"
                             ]
                         }
                     li CommonJS 타입을 위한 설정 파일 작성
@@ -147,7 +147,7 @@ include ../../../source/skeleton.pug
                                 "module": "CommonJS",
                                 "moduleResolution": "Node",
                                 "outDir": "../lib/cjs",
-                                "declarationDir": "../lib/cjs/types"
+                                "declarationDir": "../lib/types"
                             }
                         }
                     li ECMAScript Module 타입을 위한 설정 파일 작성
@@ -163,7 +163,7 @@ include ../../../source/skeleton.pug
                                 "module": "ESNext",
                                 "moduleResolution": "Node10",
                                 "outDir": "../lib/esm",
-                                "declarationDir": "../lib/esm/types"
+                                "declarationDir": "../lib/types"
                             }
                         }
                     li 빌드 산출물을 모두 포함하도록 package.json 설정
@@ -177,11 +177,11 @@ include ../../../source/skeleton.pug
                           "exports": {
                             ".": {
                               "import": {
-                                "types": "./lib/esm/types/index.d.ts",
+                                "types": "./lib/types/index.d.ts",
                                 "default": "./lib/esm/index.mjs"
                               },
                               "require": {
-                                "types": "./lib/cjs/types/index.d.ts",
+                                "types": "./lib/types/index.d.ts",
                                 "default": "./lib/cjs/index.js"
                               }
                             }
@@ -190,50 +190,95 @@ include ../../../source/skeleton.pug
                     li CJS 산출물에 맞춰 package.json 기본값 설정
                     +asCode('json', 'package.json').
                         {
-                          "types": "./lib/cjs/types/index.d.ts",
+                          "types": "./lib/types/index.d.ts",
                           "main": "./lib/cjs/index.js"
                         }
                     li package.json에 빌드 커맨드 설정
                     +asCode('json', 'package.json').
                         {
                           "scripts": {
-                            "clean": "rm -rf ./lib",
-                            "build": "npm run clean &amp;&amp; npm run build:esm &amp;&amp; npm run build:cjs",
+                            "clean": "rm -rf ./lib hi.donggi-test-*.tgz",
+                            "build": "npm run clean &amp;&amp; npm audit --omit dev &amp;&amp; npm run build:esm &amp;&amp; npm run build:cjs &amp;&amp; npm pack",
                             "build:cjs": "npx tsc -p ./configs/tsconfig.cjs.json",
                             "build:esm": "npx tsc -p ./configs/tsconfig.esm.json &amp;&amp; mv ./lib/esm/index.js ./lib/esm/index.mjs"
                           }
                         }
-                    li 테스트 코드 작성
-                    ul
-                        li mocha 패키지 : 테스트 실행 라이브러리
-                        li chai 패키지 : assertion 라이브러리
-                        li ts-node 패키지 : TypeScript 코드 즉시 실행 라이브러리
-                        li 테스트 실행 설정
-                        +asCode('json', '.mocharc.json').
-                            {
-                                "extension": [
-                                    "ts"
-                                ],
-                                "spec": "./tests/**/*.spec.ts",
-                                "require": "ts-node/register",
-                                "parallel": true,
-                                "jobs": 8,
-                                "timeout": 60000
+
+                h4 테스트 코드 작성
+                ul
+                    li mocha 패키지 : 테스트 실행 라이브러리
+                    li chai 패키지 : assertion 라이브러리
+                    li ts-node 패키지 : TypeScript 코드 즉시 실행 라이브러리
+                    li 테스트 실행 설정
+                    +asCode('json', '.mocharc.json').
+                        {
+                            "extension": [
+                                "ts"
+                            ],
+                            "spec": "./tests/**/*.spec.ts",
+                            "require": "ts-node/register",
+                            "parallel": true,
+                            "jobs": 8,
+                            "timeout": 5000
+                        }
+                    li tests 디렉터리에 테스트 코드 작성
+                    li package.json에 테스트 커맨드 설정
+                    +asCode('json', 'package.json').
+                        {
+                          "scripts": {
+                            "test": "env TS_NODE_PROJECT=./configs/tsconfig.cjs.json npx mocha"
+                          }
+                        }
+
+                h4 eslint 설정
+                ul
+                    li #[+asInlineCode('$ npx eslint --init', 'shell')]으로 초기화
+                    +asCode('json', '.eslintrc.json').
+                        {
+                            "env": {
+                                "browser": true,
+                                "es2021": true,
+                                "node": true,
+                                "mocha": true
+                            },
+                            "extends": [
+                                "standard"
+                            ],
+                            "parser": "@typescript-eslint/parser",
+                            "parserOptions": {
+                                "ecmaVersion": "latest",
+                                "sourceType": "module"
+                            },
+                            "plugins": [
+                                "@typescript-eslint"
+                            ],
+                            "rules": {
+                                "indent": [
+                                    "error",
+                                    4
+                                ]
                             }
-                        li tests 디렉터리에 테스트 코드 작성
-                        li package.json에 테스트 커맨드 설정
-                        +asCode('json', 'package.json').
-                            {
-                              "scripts": {
-                                "test": "export TS_NODE_PROJECT=./configs/tsconfig.cjs.json &amp;&amp; mocha"
-                              }
-                            }
-                    li 패키지를 배포하기 전에 작동하는지 확인
-                    +asCode('shell').
-                        # 라이브러리 프로젝트 디렉터리에서, 번들 생성
-                        $ npm pack
-                        # 라이브러리를 사용할 프로젝트 디렉터리에서, 번들 설치
-                        $ npm install ./path/to/package.tgz
+                        }
+                    li VS Code eslint 확장 프로그램이 낮은 버전의 기본 설치 Node를 이용하는 경우 런타임 변경
+                    +asCode('json', 'settings.json').
+                        {
+                            "eslint.runtime": "/Users/user/.nvm/versions/node/v18.16.0/bin/node"
+                        }
+                    li VS Code에서 파일 저장시 자동으로 수정사항 적용
+                    +asCode('json', 'settings.json').
+                        {
+                            "editor.codeActionsOnSave": {
+                                "source.fixAll.eslint": true
+                            },
+                            "eslint.alwaysShowStatus": true
+                        }
+
+                h4 패키지를 배포하기 전에 작동하는지 확인
+                ul
+                    li 라이브러리 프로젝트 디렉터리에서, 번들 생성
+                    +asCode('shell') $ npm pack
+                    li 라이브러리를 사용할 프로젝트 디렉터리에서, 번들 설치
+                    +asCode('shell') $ npm install file:./path/to/package.tgz
 
 
     +pos('TypeScript')
