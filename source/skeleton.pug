@@ -1,24 +1,26 @@
 -
-    if (!String.prototype.hashCode)
-        String.prototype.hashCode = function () {
-            if (this.myHash)
-                return this.myHash;
-            if(this.length == 0)
-                return this.myHash = 0;
-            let hash = 0;
-            for(let i = 0; i < this.length; i++) {
-                hash = (hash << 5) - hash + this.charCodeAt(i);
-                hash |= 0; // 32 bit 제한을 위해
-            }
-            return this.myHash = hash;
+    String.prototype.hashCode = String.prototype.hashCode || function () {
+        if (this.myHash) {
+            return this.myHash
         }
+        if(this.length === 0) {
+            return this.myHash = 0
+        }
+        let hash = 0
+        for (let i = 0; i < this.length; i++) {
+            hash = (hash << 5) - hash + this.charCodeAt(i)
+            hash |= 0 // 32 bit 제한을 위해
+        }
+        return this.myHash = hash
+    }
 
 mixin asA(href, text)
     -
         if (!text) {
-            text = href.replace(/\/$/, '').replace(/^.+\//, '');
-            if (/#/.test(href) == false)
-                text = text.replace(/\..+$/, '');
+            text = href.split('/').reverse().filter(part => part.length > 0)[0] || href
+            if (text.search('#') < 0) {
+                text = text.replace(/\..+$/, '')
+            }
         }
     +w3a()&attributes({ href })&attributes(attributes)= text
 

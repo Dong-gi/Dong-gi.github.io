@@ -105,6 +105,16 @@ include ../../source/skeleton.pug
                 +asA('https://stackoverflow.com/questions/25774999/nginx-stat-failed-13-permission-denied', '참고 2')
                 +asA('https://stackoverflow.com/questions/22586166/why-does-nginx-return-a-403-even-though-all-permissions-are-set-properly', '참고 3')
 
+    h1 Node
+    div
+        h2 Cannot find module or its corresponding type declarations
+        ol
+            li tsconfig.json의 moduleResolution 설정이 제대로 되었는지 확인
+            p 미설정한 경우, deprecated된 값(classic)이 이용된다
+            li tsconfig.json의 forceConsistentCasingInFileNames 설정을 켰는지 확인
+            li node_modules 디렉터리를 삭제하고 재설치 시도
+            li: +asA('https://bobbyhadz.com/blog/typescript-cannot-find-module', '참고 자료')
+
     h1 PostgreSQL
     div
         h2 AWS Redshift와 드라이버 충돌

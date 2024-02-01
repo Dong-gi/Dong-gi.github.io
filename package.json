@@ -1,0 +1,29 @@
+{
+  "name": "dong-gi.github.io",
+  "description": "blog",
+  "version": "1.0.0",
+  "scripts": {
+    "build-all": "npm run build-pug && npm run build-js",
+    "build-new": "npm run build-pug new && npm run build-js",
+    "build-pug": "node source/build.js",
+    "build-js": "npx terser --compress --mangle -o source/default.min.js -- source/default.js",
+    "local": "npx http-server -p 9080 -c-1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dong-gi/Dong-gi.github.io.git"
+  },
+  "author": "Donggi Kim",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Dong-gi/Dong-gi.github.io/issues"
+  },
+  "homepage": "https://dong-gi.github.io",
+  "dependencies": {
+    "pug": "^3.0.2"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "terser": "^5.27.0"
+  }
+}
