@@ -148,7 +148,7 @@ include ../../../source/skeleton.pug
             ul
                 li url : JDBC 연결 문자열로, 옵션은 각 JDBC마다 제공하는 것이 다르다
                 li 위 예시코드에서는 Apache Commons DBCP를 이용. 
-                    +asA('https://commons.apache.org/proper/commons-dbcp/guide/index.html') 링크
+                    +asA('https://commons.apache.org/proper/commons-dbcp/guide/index.html')
                 +asCode('java').
                     BasicDataSource.initialSize                 // 최초 커넥션 수 + maxActive, maxIdle, minIdle
                     BasicDataSource.maxWait                     // 풀에 커넥션이 없을 때 대기하는 최대 시간(ms). 음수면 무기한

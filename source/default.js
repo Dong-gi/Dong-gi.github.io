@@ -410,30 +410,7 @@ function toggleClass(element, classes) {
     }
 }
 
-
-fetch('/files/posts-compressed.json').then(res => {
-    return res.json()
-}).then(o => {
-    Object.assign(posts, o);
-
-    posts.list = [
-        ...posts.list.filter(post => !Array.isArray(post.category)),
-        ...posts.list.filter(post => Array.isArray(post.category))
-            .flatMap(post => post.category.map(category => Object.assign({}, post, { category: category })))
-    ].sort((post1, post2) => {
-        const r1 = naturalCompareString(post1.category, post2.category);
-        if (r1 !== 0) {
-            return r1;
-        }
-        return naturalCompareString(post1.title, post2.title);
-    })
-
-    updateSidebar()
-    updatePostList()
-    updateMarkerList()
-})
-
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
     /** @type {MutationCallback} */
     const mutationCallback = function (mutations, observer) {
         for (let mutation of mutations) {
@@ -507,7 +484,7 @@ window.addEventListener('load', () => {
             for (const codeSpan of mutation.target.querySelectorAll('span.as-code')) {
                 codeSpan.classList.remove('as-code');
                 const code = codeSpan.innerHTML.trim().replace(/&lt;/gm, '<').replace(/&gt;/gm, '>').replace(/&amp;/gm, '&');
-                codeSpan.innerHTML = hljs.highlight(codeSpan.getAttribute('lan') ?? 'text', code)['value'];
+                codeSpan.innerHTML = hljs.highlight(code, { language: codeSpan.getAttribute('lan') ?? 'text', ignoreIllegals: true })['value'];
             }
         }
     }
@@ -536,7 +513,7 @@ window.addEventListener('load', () => {
         })
     }
 
-    window.onpopstate = function (e) {
+    window.onpopstate = function () {
         if (!localStorage.getItem('gotoEvent') && localStorage.getItem(`${location.href}-lastPos`)) {
             window.scrollTo({ top: parseInt(localStorage.getItem(`${location.href}-lastPos`)) });
             return;
@@ -564,6 +541,30 @@ window.addEventListener('load', () => {
         }
         goto(target);
     }
+
+    await fetch('/files/posts-compressed.json').then(res => {
+        return res.json()
+    }).then(o => {
+        Object.assign(posts, o);
+
+        posts.list = [
+            ...posts.list.filter(post => !Array.isArray(post.category)),
+            ...posts.list.filter(post => Array.isArray(post.category))
+                .flatMap(post => post.category.map(category => Object.assign({}, post, { category: category })))
+        ].sort((post1, post2) => {
+            const r1 = naturalCompareString(post1.category, post2.category);
+            if (r1 !== 0) {
+                return r1;
+            }
+            return naturalCompareString(post1.title, post2.title);
+        });
+
+        updateSidebar();
+        updatePostList();
+        updateMarkerList();
+
+        window.onpopstate();
+    });
 })
 
 /**
@@ -660,6 +661,7 @@ function updatePostList() {
 function updateMarkerList() {
     for (let h of document.querySelectorAll('h1,h2,h3,h4,h5,h6')) {
         h.classList.add('marker');
+        h.before(asNodes(`<span class="pos-span" id="pos${stringHashCode(h.textContent)}"></span>`));
     }
 
     const details = asNodes(`<details open class="w3-small file-list"><summary>Content</summary><ul></ul></details>`);
@@ -770,7 +772,7 @@ function fillCodeDiv(div, lan, text, displayRange) {
             }
 
             if (lan !== 'text') {
-                displayLineArr = hljs.highlight(lan, displayLineArr.join('\n'))['value'].split(/\n/gm);
+                displayLineArr = hljs.highlight(displayLineArr.join('\n'), { language: lan, ignoreIllegals: true })['value'].split(/\n/gm);
             }
 
             displayPartArr.push(displayLineArr);

@@ -236,6 +236,7 @@ hr{border:0;border-top:1px solid #eee}
 
 div,p,pre,ol,ul,li{word-wrap:break-word;word-break:break-all}
 h1,h2,h3,h4,h5,h6{border-bottom:1px solid #ccc}
+.pos-span{padding:0!important;margin:0!important;width:0!important;height:0!important;overflow:hidden!important}
 img{max-width:100%}
 caption{padding-top:8px!important;padding-bottom:8px!important}
 hr{border-top:3px solid rgba(0, 0, 0, .1)}

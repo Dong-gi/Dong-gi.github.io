@@ -22,7 +22,7 @@ mixin asA(href, text)
                 text = text.replace(/\..+$/, '')
             }
         }
-    +w3a()&attributes({ href })&attributes(attributes)= text
+    a.w3-btn.w3-round-xxlarge.w3-small.w3-green&attributes({ href })&attributes(attributes)= text
 
 mixin asCode(lan, title)
     - lan = lan || 'text'
@@ -42,19 +42,19 @@ mixin asInlineCode(code, lan)
     options = {
         path: string,
         lan: string,
-        displayRange: string | Array<int>,
-        title: string
+        displayRange?: string | Array<int>,
+        title?: string
     }
 mixin codeBtn(options)
     -
-        if (arguments.length > 1 || typeof arguments[0] == 'string') {
+        if (arguments.length > 1 || typeof arguments[0] === 'string') {
             options = {
                 path: arguments[0],
                 lan: arguments[1],
                 displayRange: arguments[2]
             }
         }
-        let attr = {
+        const attr = {
             class: 'btn-code',
             title: options.path,
             displayRange: Array.isArray(options.displayRange) ? JSON.stringify(options.displayRange) : options.displayRange,
@@ -68,21 +68,20 @@ mixin codeBtn(options)
         else
             = options.path.split('/').pop()
 
-mixin goto(name, post)
-    +asA(`${post || ''}#pos${name.hashCode()}`, `${name}`).goto&attributes({ target: post ? '_blank' : '_self' })
+mixin goto(positionName, relativeLocation)
+    +asA(`${relativeLocation || ''}#pos${positionName.hashCode()}`, `${positionName}`).goto&attributes({ target: relativeLocation ? '_blank' : '_self' })
 
 mixin hoverTemplate()
     div.w3-container.w3-leftbar.w3-border-green.w3-white.hover-template&attributes(attributes)
         if block
             block
 
-mixin pos(name)
-    span(id=`pos${name.hashCode()}`, style='padding:0!important;margin:0!important;width:0!important;height:0!important;overflow:hidden!important')
+mixin pos(positionName)
+    span(class='pos-span', id=`pos${positionName.hashCode()}`)
 
 //-
     options = {
         title: string,
-        keywords: string,   <- Removed
         description: string,
         useMath: boolean,
     }
@@ -172,16 +171,6 @@ mixin ths(...cells)
     tr&attributes(attributes)
         each content, idx in cells
             th= content
-
-mixin w3a(color)
-    if color
-        a.w3-btn.w3-round-xxlarge.w3-small(class=color)&attributes(attributes)
-            if block
-                block
-    else
-        a.w3-btn.w3-round-xxlarge.w3-small.w3-green&attributes(attributes)
-            if block
-                block
 
 mixin w3button(color)
     if color

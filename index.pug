@@ -1,14 +1,19 @@
+//-
+    &#x23; for #
+
 include ./source/skeleton.pug
 
 +post({
     title: 'Blog',
-    description: '프로그래밍 블로그를 지향하는 정적 사이트'
+    description: '프로그래밍 블로그를 지향하는 정적 사이트',
+    useMath: false,
 })
 
-    h1.marker Hello World!
-    p 방문을 환영합니다. 개인적으로 이것저것 정리하는 사이트입니다.
+    h1 Hello World!
+    p 방문을 환영합니다. 개인적으로 이것저것 정리하는 곳입니다.
 
-    h1.marker 최근 수정된 포스트
+
+    h1 최근 수정된 포스트
     ul#recently-changed-posts
     script.
         const h = setInterval(() => {
@@ -16,14 +21,20 @@ include ./source/skeleton.pug
             clearInterval(h);
 
             const ul = document.getElementById('recently-changed-posts');
+            const addedFileSet = new Set();
             let renderedCount = 0;
             for (const post of posts.list.sort((a, b) => b.mtimeMs - a.mtimeMs)) {
+                if (addedFileSet.has(post.file)) {
+                    continue;
+                }
+                addedFileSet.add(post.file);
                 ul.appendChild(asNodes(`<li><a href="${post.file}">${post.title}</a></li>`));
-                if (++renderedCount >= 15) { break; }
+                if (++renderedCount >= 10) { break; }
             }
-        }, 1000);
+        }, 100);
 
-    h1.marker 이력
+
+    h1 이력
     table
         tr
             th(pre-sort=1, sort-order='▲') 시기
@@ -40,6 +51,152 @@ include ./source/skeleton.pug
             td 2018-02-06
             td.hover-content(template-id='template-index-1') 직업능력개발훈련교사 자격증 취득
         +tds('2017-11', '정보처리기사 취득')
+
+
+    h1 이벤트
+    div
+        h2 2024년 5월 - The 경기패스
+        div
+            p "K-패스"와 연계하여 추가 혜택을 지원
+            ul
+                li 경기도민이
+                li 전국 임의 대중교통을
+                li 월 15회 이상 사용한 경우
+            table.no-sort
+                +ths('계층', '환급율')
+                +tds('40세~', '20%')
+                +tds('19~39세', '30%')
+                +tds('저소득층', '53%')
+
+            p K-패스와의 차이점
+            ul
+                li K-패스 청년 연령 : 19 ~ 34세
+                li K-패스 횟수 제한 : 최대 월 60회까지 적립
+
+            p 참고 자료
+            ul
+                li: +asA('https://www.molit.go.kr/USR/NEWS/m_72/dtl.jsp?lcmspage=1&id=95088747', 'K-패스')
+                li: +asA('https://blog.naver.com/gyeonggi_gov/223331587354', 'The 경기패스')
+
+
+    h1 바로가기
+    div
+        h2 생활 서비스
+        div
+            h3.fake 인터넷
+            ul
+                li #[+asA('https://msafer.or.kr/', 'Msafer')] : 가입현황조회 / 가입제한 / 개통알림
+                li 속도 테스트 : #[+asA('https://fast.com/', 'NETFLIX 제공')], #[+asA('https://speed.cloudflare.com/', 'CloudFlare 제공')]
+
+            h3.fake 주거
+            ul
+                li #[+asA('http://www.k-apt.go.kr/', '공동주택관리 정보시스템')]
+                li #[+asA('https://irts.molit.go.kr/', '부동산거래 전자계약시스템')]
+                ul
+                    li 무자격자 불법 중개 방지
+                    li 본인인증 서명으로 대리계약 차단
+                    li 대출 우대금리 및 전세보증 보증료 인하 적용
+                    li 거래*임대차신고, 확정일자 자동신청
+
+            h3.fake 증명
+            ul
+                li #[+asA('https://www.webminwon.com/', '웹민원센터')] : 대학증명발급
+                li #[+asA('https://pd.fss.or.kr/index.html', '개인정보노출자 사고예방시스템')] : 등록시, 일부 비대면 거래 제한
+
+            h3.fake 기타
+            ul
+                li #[+asA('https://www.nhis.or.kr/static/html/wbma/c/wbmac0222.html', '재난적의료비 지원 사업')] : 중위소득 100% 이하 제한
+                li #[+asA('https://www.bokjiro.go.kr/', '복지포털 복지로')]
+                li #[+asA('https://www.ifixit.com/', 'IFIXIT')] : 사용자들이 직접 등록하는 수리 매뉴얼
+                li #[+asA('https://www.car365.go.kr/', '자동차365')] : 중고차 통합이력조회
+                li #[+asA('https://www.safetykorea.kr/release/certificationsearch', '안전관리 대상제품 조회')]
+
+        h2 개발 자료
+        div
+            h3 API / 연관 서비스
+            ul
+                li AWS
+                ul
+                    li: +asA('https://sdk.amazonaws.com/java/api/latest/', 'AWS SDK for Java, version 2')
+                    li: +asA('https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/', 'AWS SDK for JavaScript, Version 3')
+                li: +asA('https://docs.oracle.com/en/java/javase/21/docs/api/index.html', 'Java 21')
+                li: +asA('https://nodejs.org/docs/latest/api/', 'Node Latest')
+                li: +asA('https://docs.python.org/3/library/index.html', 'Python 3')
+                li: +asA('https://docs.spring.io/spring-framework/docs/current/javadoc-api/', 'Spring Latest')
+                ul
+                    li: +asA('https://start.spring.io/', 'Spring Initializr')
+                li: +asA('https://tldp.org/', 'The Linux Documentation Project')
+                li: +asA('https://developer.mozilla.org/en-US/docs/Web/API', 'Web')
+                li 코드 생성 / 검색
+                ul
+                    li #[+asA('https://www.tabnine.com/code', 'tabnine')] : Java, JavaScript 검색
+                    li #[+asA('https://www.phind.com/', 'Phind')] : 개발 전반 질문 답변 AI
+            
+            h3 Character
+            ul
+                li: +asA('https://html.spec.whatwg.org/multipage/named-characters.html', 'HTML named characters')
+                li: +asA('https://ko.wikipedia.org/wiki/%EC%9C%A0%EB%8B%88%EC%BD%94%EB%93%9C_1F000~1FFFF', '유니코드 1F000~1FFFF')
+                li: +asA('https://kr.piliapp.com/emoji/list/symbols/', '유니코드 이모티콘 해설')
+
+            h3 User Agent 해석
+            ul
+                li npm 패키지 : #[+asA('https://github.com/faisalman/ua-parser-js')]
+                li npm 패키지 : #[+asA('https://www.npmjs.com/package/node-device-detector')]
+                table.no-sort
+                    caption 기기 모델 예시
+                    +ths('ua-parser-js', 'node-device-detector')
+                    +tds('iPhone', 'iPhone 14 Plus')
+                    +tds('CPH2241', 'A54')
+                    +tds('iPad', 'iPad 6 9.7')
+                    +tds('SM-F731U', 'Galaxy Z Flip 5')
+                li 온라인 서비스 : #[+asA('https://explore.whatismybrowser.com/useragents/parse/#parse-useragent')]
+
+            h3 그래프 / 이미지
+            ul
+                li #[+asA('https://asciiflow.com/', 'asciiflow')] : 아스키 문자로만 플로 차트 구성 -&gt; 텍스트로 복사
+                li #[+asA('https://www.circuitlab.com/', 'CIRCUIT LAB')] : 온라인으로 회로도 구성
+                li #[+asA('https://www.codeproject.com/Articles/1179876/Unicode-Art')] : 이미지를 유니코드 아트로 변환
+                li #[+asA('https://github.com/ShareX/ShareX')] : 스크린 캡처/녹화 및 공유
+                li #[+asA('https://www.geogebra.org/geometry', 'GeoGebra')] : 평면기하 그리기
+                li 이미지 (손실) 압축 : #[+asA('https://github.com/xanderfrangos/crushee')], #[+asA('https://tinypng.com/', 'tinify')], #[+asA('https://squoosh.app/', 'Squoosh')]
+                li #[+asA('https://picsum.photos/', 'Lorem Picsum')] : 임의 크기 샘플 이미지 삽입
+                li Text to Diagram
+                ul
+                    li: +asA('https://text-to-diagram.com/?example=trees', '툴 비교')
+                    li: +asA('https://d2lang.com/', 'D2')
+                    li: +asA('https://plantuml.com/ko/', 'PlantUML')
+
+            h3 네트워크
+            ul
+                li #[+asA('https://checkip.amazonaws.com/', '본인 IP 주소 확인')]
+                li #[+asA('https://www.ssllabs.com/', 'SSL Labs')] : 서버 SSL 테스트 등
+                li #[+asA('https://www.abuseipdb.com/', 'AbuseIPDB')] : 악성 활동 IP 주소 조회/신고
+
+            h3 무료 리소스
+            ul
+                li #[+asA('https://www.data.go.kr/', '공공 데이터 포털')]
+                li #[+asA('https://gongu.copyright.or.kr/', '공유마당')] : 이미지, 폰트, 음악 등
+                li #[+asA('https://www.gamemadang.or.kr/', '게임마당')] : 2D/3D 그래픽
+                li #[+asA('https://assetstore.unity.com/', 'Unity Asset Store')]
+                li #[+asA('https://itch.io/game-assets/free', 'itch.io > free assets')]
+                li #[+asA('https://www.flaticon.com/', 'FLATICON')] : 아이콘, 스티커
+                li #[+asA('https://freesound.org/', 'freesound')]
+                li #[+asA('https://fonts.google.com/', 'Google Fonts')]
+                li #[+asA('https://developer.microsoft.com/ko-kr/windows/downloads/virtual-machines/')] : Windows 가상머신
+                li #[+asA('https://letsencrypt.org/ko/', "Let's Encrypt")] : 무료 TLS 인증서. 용례는 #[+goto('Certbot', 'posts/project/tip.html')] 참고
+
+            h3 지도
+            ul
+                li #[+asA('https://overturemaps.org/download/', 'Overture Maps')] : #[+asA('https://docs.overturemaps.org/#license', 'CC-BY 4.0 라이선스')]로 공개된 지도 데이터
+                p 누구와 같이 (누구라고 지적하지는 않지만) 독점적으로 지도를 사유화하지 않고, 지도 이용자들이 직접 지도 데이터 최신화에 참여하는 개방된 데이터를 목표로 한다
+
+            h3 학술자료
+            ul
+                li Library Genesis : #[+asA('https://libgen.rs/')], #[+asA('http://libgen.is/')], #[+asA('http://libgen.st/')]
+                li: +asA('https://ocw.mit.edu/', 'MIT Open Courseware')
+                li: +asA('https://www.w3schools.com/', 'W3Schools')
+                li 국내 평생학습 서비스 : #[+asA('https://www.kmooc.kr/', 'K-MOOC')], #[+asA('http://www.kocw.net/', 'KOCW')], #[+asA('https://www.step.or.kr/', 'STEP')]
+
 
     +hoverTemplate()#template-index-1
         ul
