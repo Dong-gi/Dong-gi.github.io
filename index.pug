@@ -17,7 +17,7 @@ include ./source/skeleton.pug
     ul#recently-changed-posts
     script.
         const h = setInterval(() => {
-            if (posts == null) { return; }
+            if (posts == null || !Array.isArray(posts.list)) { return; }
             clearInterval(h);
 
             const ul = document.getElementById('recently-changed-posts');

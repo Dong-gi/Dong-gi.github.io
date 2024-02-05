@@ -22,7 +22,7 @@ mixin asA(href, text)
                 text = text.replace(/\..+$/, '')
             }
         }
-    a.w3-btn.w3-round-xxlarge.w3-small.w3-green&attributes({ href })&attributes(attributes)= text
+    a.w3-btn.w3-round-xlarge.w3-small.w3-border.w3-hover-black&attributes({ href })&attributes(attributes)= text
 
 mixin asCode(lan, title)
     - lan = lan || 'text'

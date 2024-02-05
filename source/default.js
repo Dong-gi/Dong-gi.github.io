@@ -424,7 +424,6 @@ window.addEventListener('load', async () => {
             for (const codeButton of mutation.target.querySelectorAll('button.btn-code')) {
                 codeButton.classList.remove('btn-code');
                 codeButton.id = 'code-button-' + Math.random().toString().slice(2) + stringHashCode(codeButton.title);
-                console.log(codeButton.id)
                 codeButton.onclick = function (e) {
                     const button = e.target;
                     const path = button.title;
