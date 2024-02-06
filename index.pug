@@ -113,12 +113,16 @@ include ./source/skeleton.pug
 
         h2 개발 자료
         div
-            h3 API / 연관 서비스
+            h3 API / SDK / Framework
             ul
                 li AWS
                 ul
                     li: +asA('https://sdk.amazonaws.com/java/api/latest/', 'AWS SDK for Java, version 2')
                     li: +asA('https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/', 'AWS SDK for JavaScript, Version 3')
+                li Client Application
+                ul
+                    li: +asA('https://www.electronjs.org/', 'Electron') : 웹 기술로 크로스 플랫폼 앱 개발
+                li: +asA('https://html.spec.whatwg.org/multipage/', 'HTML Living Standard')
                 li: +asA('https://docs.oracle.com/en/java/javase/21/docs/api/index.html', 'Java 21')
                 li: +asA('https://nodejs.org/docs/latest/api/', 'Node Latest')
                 li: +asA('https://docs.python.org/3/library/index.html', 'Python 3')
@@ -137,6 +141,10 @@ include ./source/skeleton.pug
                 li: +asA('https://html.spec.whatwg.org/multipage/named-characters.html', 'HTML named characters')
                 li: +asA('https://ko.wikipedia.org/wiki/%EC%9C%A0%EB%8B%88%EC%BD%94%EB%93%9C_1F000~1FFFF', '유니코드 1F000~1FFFF')
                 li: +asA('https://kr.piliapp.com/emoji/list/symbols/', '유니코드 이모티콘 해설')
+
+            h3 DB
+            ul
+                li: +asA('https://db-engines.com/en/ranking', 'DB-ENGINES') : DB 엔진 순위 집계
 
             h3 User Agent 해석
             ul
@@ -171,6 +179,8 @@ include ./source/skeleton.pug
                 li #[+asA('https://checkip.amazonaws.com/', '본인 IP 주소 확인')]
                 li #[+asA('https://www.ssllabs.com/', 'SSL Labs')] : 서버 SSL 테스트 등
                 li #[+asA('https://www.abuseipdb.com/', 'AbuseIPDB')] : 악성 활동 IP 주소 조회/신고
+                li #[+asA('https://web.dev/', 'web.dev')] : 구글 주도 웹 표준화 지원
+                li #[+asA('https://www.submarinecablemap.com/', 'Submarine Cable Map')] : 해저 케이블 지도
 
             h3 무료 리소스
             ul
@@ -184,6 +194,7 @@ include ./source/skeleton.pug
                 li #[+asA('https://fonts.google.com/', 'Google Fonts')]
                 li #[+asA('https://developer.microsoft.com/ko-kr/windows/downloads/virtual-machines/')] : Windows 가상머신
                 li #[+asA('https://letsencrypt.org/ko/', "Let's Encrypt")] : 무료 TLS 인증서. 용례는 #[+goto('Certbot', 'posts/project/tip.html')] 참고
+                li #[+asA('https://neon.tech/pricing', 'NEON')] : 무료 서버리스 PostgreSQL
 
             h3 지도
             ul
