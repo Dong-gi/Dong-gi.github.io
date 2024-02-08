@@ -1,5 +1,10 @@
 include ../../../source/skeleton.pug
-+post('PostgreSQL → SQLite3 마이그레이션', 'PostgreSQL, SQLite3, 마이그레이션', 'PostgreSQL로부터 SQLite3로 마이그레이션하는 절차 정리')
+
++post({
+    title: 'PostgreSQL → SQLite3 마이그레이션',
+    description: 'PostgreSQL → SQLite3 마이그레이션 절차 정리',
+})
+
     h1 SQLite에 테이블 생성
     p PostgreSQL DDL Dump에서 아래 사항들을 수정하면 SQLite에서 그대로 테이블 생성에 이용할 수 있다
     ol

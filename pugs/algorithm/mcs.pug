@@ -1,6 +1,11 @@
 include ../../source/skeleton.pug
 
-+post('Mathematics for Computer Science', 'MCS, Mathematics', 'Mathematics for Computer Science 정리', true)
++post({
+    title: 'Mathematics for Computer Science',
+    description: 'MIT 공개 강의 > 컴퓨터공학도를 위한 수학 정리',
+    useMath: true,
+})
+
     p.fake-h1
         |0.
         +asA('https://dong-gi.github.io/files/mcs.pdf', '도서')

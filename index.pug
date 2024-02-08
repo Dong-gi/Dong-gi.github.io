@@ -121,7 +121,10 @@ include ./source/skeleton.pug
                     li: +asA('https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/', 'AWS SDK for JavaScript, Version 3')
                 li Client Application
                 ul
-                    li: +asA('https://www.electronjs.org/', 'Electron') : 웹 기술로 크로스 플랫폼 앱 개발
+                    li #[+asA('https://www.electronjs.org/', 'Electron')] : 웹 기술로 크로스 플랫폼 앱 개발
+                li Game
+                ul
+                    li #[+asA('https://github.com/pond3r/ggpo/blob/master/doc/README.md', 'GGPO')] : 입력 예측 및 롤백을 이용하여, 일정 수준의 레이턴시 차이가 있는 플레이어 사이에서도 자연스러운 실시간 PvP 지원
                 li: +asA('https://html.spec.whatwg.org/multipage/', 'HTML Living Standard')
                 li: +asA('https://docs.oracle.com/en/java/javase/21/docs/api/index.html', 'Java 21')
                 li: +asA('https://nodejs.org/docs/latest/api/', 'Node Latest')
@@ -130,7 +133,11 @@ include ./source/skeleton.pug
                 ul
                     li: +asA('https://start.spring.io/', 'Spring Initializr')
                 li: +asA('https://tldp.org/', 'The Linux Documentation Project')
-                li: +asA('https://developer.mozilla.org/en-US/docs/Web/API', 'Web')
+                li Web(Browser)
+                ul
+                    li: +asA('https://developer.mozilla.org/en-US/docs/Web/API', 'Web 표준 API')
+                    li 프로그래밍 방식으로 브라우징 : #[+asA('https://www.npmjs.com/package/puppeteer')], #[+asA('https://www.npmjs.com/package/playwright')]
+                    li 브라우저 - 특정 페이지에서 스크립트 실행 : #[+asA('https://www.tampermonkey.net/', 'Tampermonkey')]
                 li 코드 생성 / 검색
                 ul
                     li #[+asA('https://www.tabnine.com/code', 'tabnine')] : Java, JavaScript 검색
@@ -144,7 +151,7 @@ include ./source/skeleton.pug
 
             h3 DB
             ul
-                li: +asA('https://db-engines.com/en/ranking', 'DB-ENGINES') : DB 엔진 순위 집계
+                li #[+asA('https://db-engines.com/en/ranking', 'DB-ENGINES')] : DB 엔진 순위 집계
 
             h3 User Agent 해석
             ul
@@ -196,10 +203,18 @@ include ./source/skeleton.pug
                 li #[+asA('https://letsencrypt.org/ko/', "Let's Encrypt")] : 무료 TLS 인증서. 용례는 #[+goto('Certbot', 'posts/project/tip.html')] 참고
                 li #[+asA('https://neon.tech/pricing', 'NEON')] : 무료 서버리스 PostgreSQL
 
+            h3 보안
+            ul
+                li #[+asA('https://github.com/nccgroup/ScoutSuite')] : 클라우드 구성 감사 툴
+                li #[+asA('https://docs.bearer.com/quickstart/', 'bearer')] : STAT for JavaScript, TypeScript, Ruby, Java
+
             h3 지도
             ul
-                li #[+asA('https://overturemaps.org/download/', 'Overture Maps')] : #[+asA('https://docs.overturemaps.org/#license', 'CC-BY 4.0 라이선스')]로 공개된 지도 데이터
-                p 누구와 같이 (누구라고 지적하지는 않지만) 독점적으로 지도를 사유화하지 않고, 지도 이용자들이 직접 지도 데이터 최신화에 참여하는 개방된 데이터를 목표로 한다
+                li #[+asA('https://www.openstreetmap.org/about', 'OpenStreetMap')] : #[+asA('https://www.openstreetmap.org/copyright', 'ODbL 라이선스')]로 공개된 지도 데이터
+                p OSM 재단은 지도 편집자 공동체가 주도하여 무료 지도 정보를 관리/제공
+                p 연관 라이브러리 : #[+asA('https://leafletjs.com/index.html', 'Leaflet')]
+                li #[+asA('https://overturemaps.org/download/', 'Overture Maps')] : #[+asA('https://docs.overturemaps.org/#license', 'CC BY 4.0 라이선스')]로 공개된 지도 데이터
+                p OSM와는 공동체 구성원이 다르다 -- 기업, 정부/지자체, 기타 재단/법인 등
 
             h3 학술자료
             ul

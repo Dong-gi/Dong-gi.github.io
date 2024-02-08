@@ -34,9 +34,5 @@ jobs:
       run: bash ./gradlew assembleDebug -x test
       working-directory: Repositories/Android/CCTV
 
-    - name: Build /Repositories/STS/Reminder
-      run: bash ./gradlew bootJar -x test
-      working-directory: Repositories/STS/Reminder
-
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2

@@ -1,5 +1,10 @@
 include ../../source/skeleton.pug
-+post('CCTV', 'Telegram, YouTube, CCTV', 'Telegram + YouTube = CCTV')
+
++post({
+    title: 'CCTV',
+    description: 'Telegram + YouTube = CCTV',
+})
+
     h1 CCTV Tutorial
     div
         h2: +asA('https://play.google.com/store/apps/details?id=link4.joy.cctv', 'Install')

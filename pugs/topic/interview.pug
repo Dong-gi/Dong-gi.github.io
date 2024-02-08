@@ -1,6 +1,11 @@
 include ../../source/skeleton.pug
 
-+post('개발자 경력 관리', '개발자, 면접, 이력서, 자기소개서, 코딩 테스트, 준비', '개발자 생애를 잘 끝마치기 위한 글', true)
++post({
+    title: '개발자 경력 관리',
+    description: '개발자 생애를 잘 끝마치기 위한 글',
+    useMaster: true,
+})
+
     h1 참고 도서 정보
     .w3-row
         .w3-col.s2.w3-center

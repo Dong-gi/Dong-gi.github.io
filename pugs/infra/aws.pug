@@ -1,5 +1,10 @@
 include ../../source/skeleton.pug
-+post('AWS', 'AWS', 'AWS 정리')
+
++post({
+    title: 'AWS',
+    description: 'AWS 정리',
+})
+
     h1 참고자료
     ul
         li: +asA('https://docs.aws.amazon.com/index.html', 'AWS 공식 문서')
@@ -423,6 +428,7 @@ include ../../source/skeleton.pug
             li RDS 인스턴스 변경 시 재부팅이 필요한 경우가 있다 : #[+asA('https://docs.aws.amazon.com/ko_kr/AmazonRDS/latest/UserGuide/Overview.DBInstance.Modifying.html')]
             li 다중 AZ 배포를 이용하더라도, 인스턴스에 대한 데이터베이스 엔진 업그레이드는 클러스터 내 모든 인스턴스에 동시에 적용되므로 가동 중지를 피할 수 없다
             p RDS for MySQL, RDS for MariaDB의 경우 블루/그린 배포를 이용해 가동 중지를 최소화할 수 있다 -- 보통 1분 미만
+            +w3img('/imgs/20240116_121212.png', '단일 인스턴스에 필수 마이너 버전 업데이트 적용한 예').marker
 
         h2 RDS 개요
         ul
@@ -1377,6 +1383,7 @@ include ../../source/skeleton.pug
             li 소스 번들로부터 웹 앱을 배포한다
             p 지원하는 언어는 Java, .NET, PHP, Node, Python, Ruby, Go로 다양
             li 컨테이너 기반의 App Runner와 달리, 웹 앱은 EC2 인스턴스 하나씩을 독점 사용한다
+            p 제자리 업데이트의 경우, 메모리가 부족하면 시간초과되기 십상이므로 램 1GiB 짜리 인스턴스는 부적합
 
         h2 개념
         ul
@@ -1406,6 +1413,7 @@ include ../../source/skeleton.pug
             ul
                 li 소스 번들 루트 디렉터리에 .ebextensions 서브 디렉터리를 만들고, *.config 파일들을 둠으로써 Elastic Beanstalk 기본 설정을 재정의할 수 있다
                 li 가능한 값에 대해서는 다음 링크 참조 : #[+asA('https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html')]
+                li: +asA('https://github.com/awsdocs/elastic-beanstalk-samples')
 
             h3 ALB에 부여할 보안 그룹 지정
             +asCode('yaml', 'e.g. alb.config').
@@ -2156,6 +2164,7 @@ include ../../source/skeleton.pug
         p 저렴한 데이터 아카이빙 S3 스토리지
         li ELB; Elastic Load Balancing
         p EC2 인스턴스, 컨테이너, IP 주소, Lambda 함수 등으로의 부하 분산
+        p 로드 밸런서는 모든 트래픽이 거치는 지점이기 때문에, 로드 밸런서 자체도 스케일러블 해야한다 -- 때문에 비전문가가 직접 구성하는 것보단, 클라우드 관리 서비스를 이용하는 것이 단일 장애 지점을 회피할 수 있을 것
         li Database Migration Service
         p 기존 데이터베이스를 AWS RDS로 마이그레이션
         li ElastiCache
@@ -2365,18 +2374,3 @@ include ../../source/skeleton.pug
                 +asA('https://aws.amazon.com/ko/premiumsupport/knowledge-center/cloudfront-cache-files-time/')
             li 쿼리 스트링 캐시 정책 조정
                 +asA('https://docs.aws.amazon.com/ko_kr/AmazonCloudFront/latest/DeveloperGuide/QueryStringParameters.html')
-
-    h1 특이 현상
-    div
-        h2 아무 업데이트가 없던 주말 동안, 아시아 지역 CloudFront 불완전한 다운로드 비율이 절반 수준으로 개선(2023-08-25)
-        +w3img('/imgs/2023-08-25 112341.png', '요청 건수 차이 없음(위), 불완전한 다운로드 개선(아래)')
-        +w3img('/imgs/2023-08-25 112640.png', '상위 국가 요청 비율에 큰 차이 없음')
-
-        h2 CPU 사용률이 100을 초과하는 현상(2022-01-21)
-        p EC2 및 ElastiCache(Redis)에서 발생
-        +w3img('/imgs/photo_2022-02-10 16.08.44.jpeg', 'EC2 스크린샷')
-        +w3img('/imgs/photo_2022-02-10 16.16.52.jpeg', 'Redis 스크린샷')
-
-        h2 WAF 규칙 적용 후 평균 응답 시간(P95, P99 포함 전부)이 획기적으로 단축된 것으로 보고되는 현상(2022-01-16)
-        p ALB 통계에 포함되는 처리 시간 일부가 WAF 규칙 평가로 옮겨가서?
-        +w3img('/imgs/photo_2022-02-10 16.21.20.jpeg')

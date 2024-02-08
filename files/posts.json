@@ -66,11 +66,6 @@
         },
         {
             "category": "Infra",
-            "file": "/posts/infra/heroku.html",
-            "title": "Heroku"
-        },
-        {
-            "category": "Infra",
             "file": "/posts/infra/linux.html",
             "title": "Linux"
         },
@@ -399,11 +394,6 @@
             "category": "Project",
             "file": "/posts/project/error.html",
             "title": "예외/오류 해결"
-        },
-        {
-            "category": "Project",
-            "file": "/posts/project/ip2country.html",
-            "title": "IPv4 to Country"
         },
         {
             "category": "Project",
@@ -924,7 +914,7 @@
         {
             "category": "Topic/Life",
             "file": "/posts/daily_life/car.html",
-            "title": "차"
+            "title": "자동차"
         },
         {
             "category": "Topic/Life",
@@ -940,11 +930,6 @@
             "category": "Topic/Life",
             "file": "/posts/daily_life/labor.html",
             "title": "근로"
-        },
-        {
-            "category": "Topic/Life",
-            "file": "/posts/daily_life/stock.html",
-            "title": "주식"
         }
     ],
     "codes": {}

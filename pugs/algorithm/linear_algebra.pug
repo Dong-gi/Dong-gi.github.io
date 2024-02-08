@@ -1,9 +1,11 @@
 include ../../source/skeleton.pug
+
 +post({
     title: '선형대수',
-    description: '선형대수 정리 문서',
+    description: '선형대수 정리',
     useMath: true
 })
+
     h1 선형대수?
     p 1차(선형) 시스템을 다루는 대수학
 
@@ -607,8 +609,8 @@ include ../../source/skeleton.pug
     div
         h2 행렬의 닮음; Similarity
         p 크기가 같은 정사각행렬 식[A, B]식에 대해, 식[B=P^{-1}AP]식을 만족하는 가역행럴 식[P]식가 존재하는 경우, 식[A, B]식는 서로 닮았다(식[A\sim B]식)고 한다
-        details
-            summary.marker 닮음 불변량; Similarity invariant
+        details.marker
+            summary 닮음 불변량; Similarity invariant
             ol
                 p 닮음 행렬들은 아래 성질들이 일치한다
                 li 랭크 : 식[\operatorname{rank}(A)=\operatorname{rank}(P^{-1}AP)]식

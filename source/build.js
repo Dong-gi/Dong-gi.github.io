@@ -37,7 +37,7 @@ async function renderPug(from, to) {
                     post.mtimeMs = Math.floor(stats.mtimeMs)
                 }
                 if (process.argv[2] === 'new') {
-                    if (stats.ctimeMs === stats.mtimeMs) {
+                    if (stats.birthtimeMs === stats.mtimeMs) {
                         continue
                     }
                     if (Date.now() - stats.mtimeMs > 600_000) {

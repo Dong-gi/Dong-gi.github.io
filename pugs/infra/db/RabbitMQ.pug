@@ -1,5 +1,10 @@
 include ../../../source/skeleton.pug
-+post('RabbitMQ', 'RabbitMQ', 'RabbitMQ 사용 정리')
+
++post({
+    title: 'RabbitMQ',
+    description: 'RabbitMQ 정리',
+})
+
     h1: +asA('https://www.rabbitmq.com/changelog.html', 'RabbitMQ')
     ul
         li Erlang으로 작성된 메시지 큐

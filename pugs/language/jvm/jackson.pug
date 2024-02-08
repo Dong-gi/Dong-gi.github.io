@@ -1,5 +1,10 @@
 include ../../../source/skeleton.pug
-+post('Jackson', 'Jackson', 'Jackson 정리')
+
++post({
+    title: 'Jackson',
+    description: 'Jackson 정리',
+})
+
     h1 자료
     ol
         li: +asA('https://github.com/FasterXML/jackson-databind', 'GitHHub - jackson')

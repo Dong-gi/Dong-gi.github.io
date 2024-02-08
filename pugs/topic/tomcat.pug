@@ -1,5 +1,10 @@
 include ../../source/skeleton.pug
-+post('tomcat', 'tomcat', 'tomcat 정리')
+
++post({
+    title: 'tomcat',
+    description: 'tomcat 정리',
+})
+
     h1 기본 명령어
     ol
         li 실행 : bin\startup.bat

@@ -1,5 +1,10 @@
 include ../../../source/skeleton.pug
-+post('Python Built-in Exceptions', 'Python, Built-in, Exception', 'Python 내장 예외 정리')
+
++post({
+    title: 'Python Built-in Exceptions',
+    description: 'Python 내장 예외',
+})
+
     ul
         li 모든 예외는 BaseException의 인스턴스. 프로그래머가 BaseException을 직접 상속할 수는 없다
         li 마지막으로 발생한 예외가 자동으로 __context__에 설정된다

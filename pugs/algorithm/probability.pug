@@ -1,5 +1,11 @@
 include ../../source/skeleton.pug
-+post('확률', '확률, 확률분포, 추정', '대학 확률 정리 문서', true)
+
++post({
+    title: '통계학',
+    description: '통계한 정리',
+    useMath: true,
+})
+
     h1 확률
     ul
         li.marker 표본평균; Mean : 식[\overline{x}=\sum_{i=1}^n{x_i \over n}]식

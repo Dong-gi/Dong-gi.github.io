@@ -1,6 +1,11 @@
 include ../../source/skeleton.pug
 
-+post('알고리즘', '알고리즘, 자료구조, 정렬, 암호', '빅-오 표기법, 자료구조, 정렬-탐색 등 알고리즘 일반 사항 정리', true)
++post({
+    title: '알고리즘',
+    description: '알고리즘 개론',
+    useMath: true,
+})
+
     script#qrcode-js(src="/source/qrcode.min.js")
     h1 알고리즘의 평가
     ol

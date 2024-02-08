@@ -1,5 +1,10 @@
 include ../../../source/skeleton.pug
-+post('C#.NET', 'C#, .NET', 'C#.NET 정리')
+
++post({
+    title: 'C#.NET',
+    description: 'C#.NET 정리',
+})
+
     h1 작성 기준
     ul
         li 2022년 04월
@@ -1117,8 +1122,8 @@ include ../../../source/skeleton.pug
             li $+ : 마지막 캡처링 그룹
             li $_ : 전체 입력 문자열
         li 인라인 주석 : (?#comment)
-    details
-        summary.marker 지원 Unicode class : \p{name} ↔ \P{name}
+    details.marker
+        summary 지원 Unicode class : \p{name} ↔ \P{name}
         table.no-sort
             tr
                 th Category

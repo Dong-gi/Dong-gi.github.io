@@ -1,5 +1,4 @@
 AWS WAF
-    https://techblog.woowahan.com/2699/
     https://d1.awsstatic.com/whitepapers/ko_KR/guidelines-implementing-aws-waf.pdf
 
 HTTP
@@ -112,3 +111,75 @@ window size 16비트
 checksum 16비트
 urgent pointer 16비트
 option 최대 40바이트
+
+Browser Service Worker
+    If you delete or rename your service worker file, the browser won't remove the previously registered service worker from its clients. To completely remove a service worker, you need to use the getRegistrations() and the unregister() methods.
+    https://web.dev/learn/pwa/update/#updating-the-service-worker
+
+JavaScript regex
+    text.replace(/\p{Emoji_Presentation}/gu, '')
+    https://unicode.org/reports/tr18/#RL2.7
+
+Java 컬렉션 사용 유의
+    항상 복사본 반환하는 것이 안전
+    addAll, 일부 생성자에서 toArray()를 호출하며, 다른 스레드에서 해당 컬렉션을 수정 중인 경우 ArrayIndexOutOfBoundsException 발생 가능
+
+https://www.chartjs.org/
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+       <div id="sankey_basic" style="width: 900px; height: 300px;"></div>
+
+      google.charts.load('current', {'packages':['sankey']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'From');
+        data.addColumn('string', 'To');
+        data.addColumn('number', 'Weight');
+        data.addRows([
+          [ 'A', 'X', 5 ],
+          [ 'A', 'Y', 7 ],
+          [ 'A', 'Z', 6 ],
+          [ 'B', 'X', 2 ],
+          [ 'B', 'Y', 9 ],
+          [ 'B', 'Z', 4 ]
+        ]);
+
+        // Sets chart options.
+        var options = {
+          width: 600,
+        };
+
+        // Instantiates and draws our chart, passing in some options.
+        var chart = new google.visualization.Sankey(document.getElementById('sankey_basic'));
+        chart.draw(data, options);
+      }
+
+https://dzone.com/articles/a-brief-history-of-javascript?edition=745692
+    ECMAScript 5는 Firefox 4 (2011), Chrome 19 (2012), Safari 6 (2012), Opera 12.10 (2012) 및 Internet Explorer 10 (2012)
+    >> ECMAScript 3.1은 기존 코드의 구문 변경이 필요없는 업데이트 내용을 담고 있으며, ECMAScript 4 폐기 후 ECMAScript 5로 개명되었다
+
+    ECMAScript 6 (2015) & 7 (2016) : 범용 언어
+    >> ECMAScript 6는 구문 변경이 필요한 업데이트를 담고 있다
+
+https://fresh.deno.dev/
+https://bun.sh/
+    Node.js와 같이 V8을 사용하는 Deno와 달리 WebKit의 JavaScriptCore 위에 구축된 대체 JavaScript 런타임입니다
+
+https://learn.microsoft.com/ko-kr/training/
+
+https://doc.rust-kr.org/ch01-01-installation.html
+
+https://github.com/ranyitz/qnm
+
+https://practica.dev/blog/testing-the-dark-scenarios-of-your-nodejs-application/
+
+https://github.com/goldbergyoni/nodebestpractices
+
+https://jakearchibald.com/2021/cors/?utm_medium=email&_hsmi=292479638&utm_content=292479638&utm_source=hs_email
+https://itnext.io/understanding-cors-4157bf640e11
+
+타임아웃 사례
+1. http 2에서, 연결 유휴 시간이 길어지면 타임아웃이 발생하고, 요청 재시도를 최대 5회 반복해도 로드밸런서에 도달하지 않는 현상
+2. 요청 타임아웃이 발생한 뒤, 요청 재시도를 최대 5회 수행하면, 어느 시점에 모든 요청이 서버에 거의 동시에 도달하는 현상
+

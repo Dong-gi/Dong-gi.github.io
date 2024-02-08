@@ -675,7 +675,7 @@ function updateMarkerList() {
 
         const markerName = makeMarkerName(markerTarget);
         /** @type {HTMLLIElement} */
-        const markerLi = asNodes(`<li class="${markerTarget.classList.contains('fake') ? 'w3-hide' : ''}" title="${markerName}" marker-id="${markerId}">${markerName.substr(0, 50)}</li>`);
+        const markerLi = asNodes(`<li class="${markerTarget.classList.contains('fake') ? 'w3-hide' : ''}" title="${markerName}" marker-id="${markerId}">${markerName.substring(0, 50)}</li>`);
 
         let level = 0;
         let parent = markerTarget.parentElement;
@@ -699,12 +699,10 @@ function updateMarkerList() {
         markerLi.onclick = function (e) {
             const markerId = e.target.getAttribute('marker-id')
             const target = document.querySelector(`.marker[marker-id="${markerId}"]`)
-            let parent = target.parentElement;
-            while (parent.tagName !== 'BODY') {
-                if (parent.tagName === 'DETAILS') {
-                    parent.open = true;
+            for (let node = target; node.tagName !== 'BODY'; node = node.parentNode) {
+                if (node.tagName === 'DETAILS') {
+                    node.open = true;
                 }
-                parent = parent.parentElement;
             }
             goto(target);
         }
@@ -723,6 +721,7 @@ function makeMarkerName(marker) {
     switch (marker.tagName) {
         case 'IMG': return `이미지 : ${marker.alt}`;
         case 'TABLE': return `표 : ${marker.caption.textContent}`;
+        case 'DETAILS': return marker.firstChild.textContent;
         default: return marker.textContent;
     }
 }
@@ -804,8 +803,7 @@ function fillCodeDiv(div, lan, text, displayRange) {
 }
 
 function showModal(codeId) {
-    closeSidebar();
-
+    document.getElementById('main').style.display = 'none';
     let modal = document.getElementById(`code-modal-${codeId}`);
     if (modal) {
         modal.style.display = 'block';
@@ -849,11 +847,12 @@ function showModal(codeId) {
         );
     }
     footer.querySelector('button.print').onclick = function () {
-        printElement(body);
+        printElement(asNodes(`<div>${header.innerHTML}${body.innerHTML}</div>`));
     }
     for (const node of modal.querySelectorAll('.close')) {
         node.onclick = function () {
             modal.style.display = 'none';
+            document.getElementById('main').style.display = 'block';
             if (!isNarrow()) {
                 openSidebar();
             }

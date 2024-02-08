@@ -1,5 +1,10 @@
 include ../../../source/skeleton.pug
-+post('PostgreSQL 서버 프로그래밍', 'PostgreSQL, pgSQL', 'PostgreSQL 서버 프로그래밍 정리')
+
++post({
+    title: 'PostgreSQL 서버 프로그래밍',
+    description: 'PostgreSQL 서버에서 실행되는 스크립트 프로그래밍에 관한 내용 정리',
+})
+
     h1 PL/pgSQL
     ol
         li.marker: +codeBtn('/Repositories/Single/202202/pgsql_hello_world.sql', 'sql') Hello World 프로시저

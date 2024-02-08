@@ -1,5 +1,11 @@
 include ../../source/skeleton.pug
-+post('AI', 'AI, scikit-learn, Classification, Deep Learning', 'AI; 인공지능', true)
+
++post({
+    title: 'AI',
+    description: 'AI; 인공지능',
+    useMath: true,
+})
+
     h1 퍼셉트론; Perceptron
     ul
         li 입력 노드들의 입력과 가중치를 곱한 것을 모두 합한 값이 임계값보다 크면 뉴런이 활성화, 크지 않으면 비활성화

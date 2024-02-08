@@ -1,5 +1,10 @@
 include ../../../source/skeleton.pug
-+post('JNI; Java Native Interface', 'JNI', 'Java Native Interface 정리')
+
++post({
+    title: 'JNI',
+    description: 'JNI; Java Native Interface 정리',
+})
+
     ol
         li: strong 자바 코드는 보통 JNI 호출보다 더 빠르다고 한다
         li C 네이티브 코드를 이용할 클래스 컴파일 : javac Test.java → Test.class 생성
