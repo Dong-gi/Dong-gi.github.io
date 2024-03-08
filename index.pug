@@ -113,36 +113,72 @@ include ./source/skeleton.pug
 
         h2 개발 자료
         div
-            h3 API / SDK / Framework
-            ul
-                li AWS
+            h3 API / SDK / Library
+            div
+                h4.fake AWS
                 ul
                     li: +asA('https://sdk.amazonaws.com/java/api/latest/', 'AWS SDK for Java, version 2')
                     li: +asA('https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/', 'AWS SDK for JavaScript, Version 3')
-                li Client Application
+
+                h4.fake Client Application
                 ul
                     li #[+asA('https://www.electronjs.org/', 'Electron')] : 웹 기술로 크로스 플랫폼 앱 개발
-                li Game
+
+                h4.fake Game
                 ul
                     li #[+asA('https://github.com/pond3r/ggpo/blob/master/doc/README.md', 'GGPO')] : 입력 예측 및 롤백을 이용하여, 일정 수준의 레이턴시 차이가 있는 플레이어 사이에서도 자연스러운 실시간 PvP 지원
-                li: +asA('https://html.spec.whatwg.org/multipage/', 'HTML Living Standard')
-                li: +asA('https://docs.oracle.com/en/java/javase/21/docs/api/index.html', 'Java 21')
-                li: +asA('https://nodejs.org/docs/latest/api/', 'Node Latest')
-                li: +asA('https://docs.python.org/3/library/index.html', 'Python 3')
-                li: +asA('https://docs.spring.io/spring-framework/docs/current/javadoc-api/', 'Spring Latest')
+
+                h4.fake Graph
                 ul
+                    li Chart
+                    ul
+                        li: +asA('https://echarts.apache.org/en/index.html', 'Apache ECharts')
+                        li: +asA('https://www.chartjs.org/', 'Chart.js')
+                    li Text to Diagram
+                    ul
+                        li: +asA('https://text-to-diagram.com/?example=trees', '툴 비교')
+                        li: +asA('https://d2lang.com/', 'D2')
+                        li: +asA('https://plantuml.com/ko/', 'PlantUML')
+
+                h4.fake Language
+                ul
+                    li: +asA('https://docs.oracle.com/en/java/javase/21/docs/api/index.html', 'Java 21')
+                    li: +asA('https://nodejs.org/docs/latest/api/', 'Node Latest')
+                    li: +asA('https://docs.python.org/3/library/index.html', 'Python 3')
+
+                h4.fake Linux
+                ul
+                    li: +asA('https://tldp.org/', 'The Linux Documentation Project')
+
+                h4.fake Search
+                ul
+                    li #[+asA('https://www.tabnine.com/code', 'tabnine')] : Java, JavaScript 코드 검색
+                    li #[+asA('https://www.phind.com/', 'Phind')] : 개발 전반 질문 답변 AI
+
+                h4.fake Spring Framework
+                ul
+                    li: +asA('https://docs.spring.io/spring-framework/docs/current/javadoc-api/', 'Spring Latest')
                     li: +asA('https://start.spring.io/', 'Spring Initializr')
-                li: +asA('https://tldp.org/', 'The Linux Documentation Project')
-                li Web(Browser)
+
+                h4.fake Web
                 ul
+                    li: +asA('https://html.spec.whatwg.org/multipage/', 'HTML Living Standard')
                     li: +asA('https://developer.mozilla.org/en-US/docs/Web/API', 'Web 표준 API')
                     li 프로그래밍 방식으로 브라우징 : #[+asA('https://www.npmjs.com/package/puppeteer')], #[+asA('https://www.npmjs.com/package/playwright')]
-                    li 브라우저 - 특정 페이지에서 스크립트 실행 : #[+asA('https://www.tampermonkey.net/', 'Tampermonkey')]
-                li 코드 생성 / 검색
-                ul
-                    li #[+asA('https://www.tabnine.com/code', 'tabnine')] : Java, JavaScript 검색
-                    li #[+asA('https://www.phind.com/', 'Phind')] : 개발 전반 질문 답변 AI
-            
+                    li 브라우저 확장프로그램으로 특정 페이지에서 사용자 정의 스크립트 실행 : #[+asA('https://www.tampermonkey.net/', 'Tampermonkey')]
+                    li User Agent 해석
+                    ul
+                        li npm 패키지 : #[+asA('https://github.com/faisalman/ua-parser-js')]
+                        li npm 패키지 : #[+asA('https://www.npmjs.com/package/node-device-detector')]
+                        table.no-sort
+                            caption 기기 모델 예시
+                            +ths('ua-parser-js', 'node-device-detector')
+                            +tds('iPhone', 'iPhone 14 Plus')
+                            +tds('CPH2241', 'A54')
+                            +tds('iPad', 'iPad 6 9.7')
+                            +tds('SM-F731U', 'Galaxy Z Flip 5')
+                        li 온라인 서비스 : #[+asA('https://explore.whatismybrowser.com/useragents/parse/#parse-useragent')]
+
             h3 Character
             ul
                 li: +asA('https://html.spec.whatwg.org/multipage/named-characters.html', 'HTML named characters')
@@ -153,19 +189,6 @@ include ./source/skeleton.pug
             ul
                 li #[+asA('https://db-engines.com/en/ranking', 'DB-ENGINES')] : DB 엔진 순위 집계
 
-            h3 User Agent 해석
-            ul
-                li npm 패키지 : #[+asA('https://github.com/faisalman/ua-parser-js')]
-                li npm 패키지 : #[+asA('https://www.npmjs.com/package/node-device-detector')]
-                table.no-sort
-                    caption 기기 모델 예시
-                    +ths('ua-parser-js', 'node-device-detector')
-                    +tds('iPhone', 'iPhone 14 Plus')
-                    +tds('CPH2241', 'A54')
-                    +tds('iPad', 'iPad 6 9.7')
-                    +tds('SM-F731U', 'Galaxy Z Flip 5')
-                li 온라인 서비스 : #[+asA('https://explore.whatismybrowser.com/useragents/parse/#parse-useragent')]
-
             h3 그래프 / 이미지
             ul
                 li #[+asA('https://asciiflow.com/', 'asciiflow')] : 아스키 문자로만 플로 차트 구성 -&gt; 텍스트로 복사
@@ -175,11 +198,6 @@ include ./source/skeleton.pug
                 li #[+asA('https://www.geogebra.org/geometry', 'GeoGebra')] : 평면기하 그리기
                 li 이미지 (손실) 압축 : #[+asA('https://github.com/xanderfrangos/crushee')], #[+asA('https://tinypng.com/', 'tinify')], #[+asA('https://squoosh.app/', 'Squoosh')]
                 li #[+asA('https://picsum.photos/', 'Lorem Picsum')] : 임의 크기 샘플 이미지 삽입
-                li Text to Diagram
-                ul
-                    li: +asA('https://text-to-diagram.com/?example=trees', '툴 비교')
-                    li: +asA('https://d2lang.com/', 'D2')
-                    li: +asA('https://plantuml.com/ko/', 'PlantUML')
 
             h3 네트워크
             ul
