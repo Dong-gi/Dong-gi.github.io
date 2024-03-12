@@ -1,9 +1,117 @@
 include ../../../source/skeleton.pug
 
 +post({
-    title: 'ECMAScript',
-    description: '코어 JavaScript 정리',
+    title: 'JavaScript',
+    description: 'JavaScript(ECMAScript) 정리',
 })
+
+    h1 JavaScript 역사
+    div
+        h2 참고자료
+        ul
+            li: +asA('https://dzone.com/articles/a-brief-history-of-javascript')
+            li: +asA('https://en.wikipedia.org/wiki/JavaScript')
+
+        h2 현재
+        p JavaScript는 ECMAScript 표준을 준수하는 고급 프로그래밍 언어로, JIT 컴파일로 실행되는 스크립트 언어
+
+        h2 넷스케이프의 창조
+        ul
+            li 1995년. 동적 웹 콘텐츠 개발을 위해 DOM과 상호작용할 수 있는 프로그래밍 언어를 추가하기 위한 결정이 이루어졌다
+            li 넷스케이프의 "브라우저를 위한 Scheme" 개발 프로젝트에 JavaScript의 아버지 Brendan Eich도 있었다
+            p Scheme은 Lisp의 방언 중 하나
+            ul
+                li 당시 이미 넷스케이프와 썬 마이크로시스템즈는 브라우저에서 Java를 사용(자바 애플릿)할 수 있도록 계약을 체결하려는 시점이었다
+                li 따라서 새로운 언어(개발명 Mocha)를 추가하는 목적은 프로그램 개발이 아니라, HTML 안에서 동적으로 애니메이션 추가, 디자인 변경 등을 수행하는 것(작은 스크립팅 작업)이었으며, 전문 개발자가 아닌 HTML을 작성할 줄 아는 디자이너와 같은 사람들이 타깃 유저층이었다
+                li 즉, Mocha는 Java의 스크립팅 동반자가 되어야 했다. 이를 위해 Java와 유사한 구문들이 채택되었고, Scheme으로부터 멀어진 모습을 갖게 되었다
+            li 1995년 9월 베타 출시하면서 LiveScript로 이름 변경
+            li 1995년 12월 정식 출시하면서 JavaScript로 이름 변경 (썬 마이크로시스템즈와 합의)
+
+        h2 마이크로소프트의 채택
+        ul
+            li 1995년 인터넷 익스플로러(IE)를 출시한 뒤 넷스케이프와 브라우저 전쟁을 벌였다
+            li 1996년 8월 넷스케이프의 스크립트 인터프리터를 리버스 엔지니어링하여 자체 인터프리터 JScript를 출시
+            p 상표권 문제가 될 수 있기 때문에 "Java"를 그대로 사용하지 않았다
+            li 두 브라우저의 스크립트 엔진 구현이 달랐기 때문에, 같은 코드가 서로 다르게 보이는 일이 잦았다
+            p 불행히도 IE가 독점적인 위치를 차지하는 동안, 개발자는 IE를 위한 특별한 처리를 해줘야 했다
+        
+        h2 표준화 시도
+        ul
+            li 1996년 11월 넷스케이프는 브라우저 공급업체가 준수할 수 있는 표준 사양의 출발점으로 JavaScript를 ECMA International에 제출
+            li 1997년 6월 첫 번째 ECMAScript 발표
+            p 마찬가지로 상표권 문제가 있으므로 "Java"를 그대로 사용하지 않음. 이제 JavaScript는 상업적 이름일 뿐
+            li 1998년 6월 ECMAScript 2 발표
+            p ECMAScript와 JavaScript용 ISO 표준(ISO/IEC 16262) 사이의 불일치를 수정
+            li 1999년 12월 ECMAScript 3 발표
+            p 정규식, try/catch 블록, in 및 instanceof 연산자 등 추가
+
+        h2 ECMAScript 3.1과 4
+        div
+            p ECMAScript 4에 대한 작업은 버전 3이 출시되자마자 시작되었는데, 위원회에 강한 의견 차이가 대두되었다
+            ul
+                li JavaScript가 대규모 애플리케이션을 개발할 수 있는 강력한 언어가 되기 위해 새로운 기능이 필요하다
+                p vs
+                li 그러한 변경 사항은 JavaScript에 적합하지 않다
+            p 버전 4에 대한 작업은 2003년 잠시 중단되었다가, 2005년 AJAX와 XMLHttpRequest의 영향으로 새 버전에 대한 관심이 높아지면서 작업이 재개되었다. 개발이 절정에 달했을 때 버전 4에는 다음과 같은 기능들이 포함되었다
+            ul
+                li 클래스, 인터페이스, 구조체, 사용자 정의 타입, 파라미터화된 타입
+                li 패키지, 네임스페이스
+                li 반복자, 생성자
+                li 선택적 타입 주석, 선택적 정적 타입 체크
+                li ...
+            p 버전 4를 개발하는 위원회는 Adobe, Mozilla, Opera(비공식 자격), Microsoft로 구성되었는데, 대부분의 표준이 결정된 상태에서 Yahoo가 참여했다. 영향력 있는 JavaScript 개발자 Doug Crockford이 Yahoo에서 보낸 사람이었는데, 그는 버전 4의 많은 변경 사항에 대해 강력히 반대 의사를 표명했고 Microsoft로부터 강력한 지지를 받았다. 결국 버전 4 개발은 지지부진해졌고, Crockford는 모두가 동의할 수 있는 -- 구문 변경 없는 실용적인 개선사항만 담은 새로운 표준을 추진했고, 이것이 ECMAScript 3.1이다
+            p 2008년 오슬로에서 열린 회의에서 ECMAScript 3.1과 4의 미래가 결정되었다
+            ul
+                li 모든 구성원의 협력으로 ES3.1 완성에 집중
+                li 이후 ES4보다는 완화된 의미론적 및 구문론적 혁신에 대해 협력
+                li 패키지, 네임스페이스 등 웹에 적합하지 않은 제안은 제외
+        
+            h3 ActionScript
+            ul
+                li ActionScript는 ECMAScript 4 초안을 기반으로 하는 언어로, Adobe는 이를 Flash 제품군의 일부로 구현해 출시했다
+                li 때문에 Adobe는 ECMAScript 4를 강력히 지지했고, 채택을 위해 엔진을 오픈 소스(Tamarin)로 출시하기도 했다
+
+        h2 ECMAScript 5
+        ul
+            li ECMAScript 4는 이미 8년의 개발을 거쳐 특정 변형으로 인식되었으므로, 혼동을 피하기 위해 ECMAScript 3.1의 이름은 ECMAScript 5로 변경되었다
+            li 2009년 출시된 ES5는 가장 많이 지원되는 JavaScript 버전 중 하나가 되었고, 많은 트랜스파일러의 기본 컴파일 대상이 되었다
+            p Firefox 4 (2011), Chrome 19 (2012), Safari 6 (2012), Opera 12.10 (2012) 및 Internet Explorer 10 (2012)에서 전적으로 지원
+            li 수정사항
+            ul
+                li Getter/setter
+                li 배열 및 객체 리터럴에서 후행 쉼표
+                li 예약어를 프로퍼티 이름으로 허용
+                li 신규 Object 메서드 : create, defineProperty, keys, seal, freeze, ...
+                li 신규 Array 메서드 : isArray, indexOf, every, some, map, filter, reduce, ...
+                li 신규 Date 메서드 : toISOString, now, toJSON
+                li String.prototype.trim 추가
+                li JSON
+                li 불변 전역 객체 : undefined, NaN, Infinity
+                li Strict 모드
+                li ...
+
+        h2 ECMAScript 6 (2015) : 범용 언어
+        ul
+            li ECMAScript 4에서 폐기되지 않은 아이디어는 ECMAScript Harmony에서 새롭게 제안되었고, ECMAScript 2015로 이름이 바뀐 ECMAScript 6는 이러한 구문 변경이 필요한 업데이트를 담고 있다
+            p 이러한 구문 변경들은 브라우저 공급업체들이 모두 지원하기까지 상당한 시간이 소요됐고, 이로 인해 ECMAScript 2015 출시 이후 트랜스파일러의 사용이 크게 증가했다
+            li ECMAScript 2015 수정사항
+            ul
+                li let, const 변수 선언
+                li 화살표 함수와 this 키워드
+                li 클래스
+                li 객체 리터럴 개선 : 계산된 키 사용, 더 짧은 메서드 정의 등
+                li 템플릿 문자열
+                li Promise
+                li 생성자, iterable, 반복자, for..of 구문
+                li 신규 컬렉션 : Set, Map, WeakSet, WeakMap
+                li 해체 할당
+                li ...
+        
+        h2 ECMAScript 2016
+        ul
+            li 지수 연산자 **
+            li Array.prototype.includes
+
 
     h1 식별자
     ol

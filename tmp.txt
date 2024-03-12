@@ -155,13 +155,6 @@ https://www.chartjs.org/
         chart.draw(data, options);
       }
 
-https://dzone.com/articles/a-brief-history-of-javascript?edition=745692
-    ECMAScript 5는 Firefox 4 (2011), Chrome 19 (2012), Safari 6 (2012), Opera 12.10 (2012) 및 Internet Explorer 10 (2012)
-    >> ECMAScript 3.1은 기존 코드의 구문 변경이 필요없는 업데이트 내용을 담고 있으며, ECMAScript 4 폐기 후 ECMAScript 5로 개명되었다
-
-    ECMAScript 6 (2015) & 7 (2016) : 범용 언어
-    >> ECMAScript 6는 구문 변경이 필요한 업데이트를 담고 있다
-
 https://fresh.deno.dev/
 https://bun.sh/
     Node.js와 같이 V8을 사용하는 Deno와 달리 WebKit의 JavaScriptCore 위에 구축된 대체 JavaScript 런타임입니다
