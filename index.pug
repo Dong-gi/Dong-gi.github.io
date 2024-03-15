@@ -55,6 +55,18 @@ include ./source/skeleton.pug
 
     h1 이벤트
     div
+        h2 2024년 9월 - Let's Encrypt 인증서 체인 변경
+        ul
+            li 이전까지는 인증서가 널리 신뢰될 수 있도록 자체 루트 체인(ISRG Root X1)만 사용하지 않고, IdenTrust의 루트 인증서에 의해 교차 서명된 인증서를 발급함
+            li ISRG Root X1을 신뢰하는 안드로이드 기기가 93.9%까지 증가했고, 안드로이드 14부터 Google Play를 통해 OS 업데이트 필요 없이 루트 인증서를 업데이트할 수 있게됨에 따라 #[+asA('https://letsencrypt.org/2023/07/10/cross-sign-expiration.html', '2023년 7월')], 교차 서명을 종료함을 발표
+            li 2024년 2월 8일 : 기본적으로 교차 서명 제공 중단
+            li 2024년 5월 15일 : Cloudflare 발급 인증서도 교차 서명되지 않음 / 사용자 정의 인증서를 업로드해도 교차 서명된 체인 대신 ISRG Root X1 체인과 번들로 제공
+            li 2024년 9월 30일 : 교차 서명 인증서 만료
+            li 인증서로 인한 연결 오류 발생 시,
+            ul
+                li Android 7 이하 : 자체 인증서 저장소를 이용하는 FireFox 브라우저 이용
+                li #[+asA('https://help.iwinv.kr/manual/read.html?idx=867')]를 참고하여 CA 인증서 업데이트 또는 설치
+
         h2 2024년 5월 - The 경기패스
         div
             p "K-패스"와 연계하여 추가 혜택을 지원
@@ -86,7 +98,7 @@ include ./source/skeleton.pug
             h3.fake 인터넷
             ul
                 li #[+asA('https://msafer.or.kr/', 'Msafer')] : 가입현황조회 / 가입제한 / 개통알림
-                li 속도 테스트 : #[+asA('https://fast.com/', 'NETFLIX 제공')], #[+asA('https://speed.cloudflare.com/', 'CloudFlare 제공')]
+                li 속도 테스트 : #[+asA('https://fast.com/', 'NETFLIX 제공')], #[+asA('https://speed.cloudflare.com/', 'Cloudflare 제공')]
 
             h3.fake 주거
             ul
@@ -115,6 +127,10 @@ include ./source/skeleton.pug
         div
             h3 API / SDK / Library
             div
+                h4.fake API
+                ul
+                    li #[+asA('https://github.com/sahat/hackathon-starter')] : 빠른 Node 개발(특히 해커톤과 같은 경우)을 위한 각종 API 적용 예시 제공
+
                 h4.fake AWS
                 ul
                     li: +asA('https://sdk.amazonaws.com/java/api/latest/', 'AWS SDK for Java, version 2')
@@ -248,6 +264,9 @@ include ./source/skeleton.pug
                 li: +asA('https://www.w3schools.com/', 'W3Schools')
                 li 국내 평생학습 서비스 : #[+asA('https://www.kmooc.kr/', 'K-MOOC')], #[+asA('http://www.kocw.net/', 'KOCW')], #[+asA('https://www.step.or.kr/', 'STEP')]
 
+        h2 기타
+        ul
+            li #[+asA('https://www.ilovepdf.com/', 'iLovePDF')] : PDF 관련 온라인 툴
 
     +hoverTemplate()#template-index-1
         ul
