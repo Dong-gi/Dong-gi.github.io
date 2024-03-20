@@ -395,3 +395,15 @@ include ../../../source/skeleton.pug
             ul
                 li 성공한 Promise의 반환값 획득
                 li 2번째 이후로 실패한 Promise의 에러 획득
+
+            h3 BigInt
+            p #[+asInlineCode('Number.MAX_SAFE_INTEGER', 'javascript')]보다 큰 정수도 정확히 보존하는 정수 자료형
+
+            h3 globalThis
+            p 실행 환경(브라우저, Node, Deno, ...)과 무관하게 전역 컨텍스트를 통한 변수 접근 방법 제공
+
+            h3 import.meta
+            p ES 모듈을 이용하는 경우, #[+asInlineCode('import.meta.url', 'javascript')]를 이용해 모듈 URL 획득 가능
+
+            h3 export * as newName from 'module'
+            p 모듈의 defaults를 다시 노출하기만 할 때 편의 제공
