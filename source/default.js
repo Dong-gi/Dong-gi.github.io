@@ -649,7 +649,7 @@ function updatePostList() {
         const postArr = postMap.get(category);
         for (const post of postArr) {
             const isHighlight = location.href.search(post.file) >= 0;
-            ul.append(asNodes(`<li><a ${isHighlight ? 'class="w3-yellow"' : ''} href="${post.file}">${post.title}</a></li>`));
+            ul.append(asNodes(`<li><a ${isHighlight ? 'class="w3-yellow"' : ''} href="/posts/${post.file}">${post.title}</a></li>`));
         }
     }
 
@@ -670,7 +670,7 @@ function updateMarkerList() {
     const headingLevels = [0, 0, 0, 0, 0, 0, 0, 0];
     const headingTagSet = new Set(['H1', 'H2', 'H3', 'H4', 'H5', 'H6']);
     let markerId = 0;
-    for (const markerTarget of document.querySelectorAll('.marker')) {
+    for (const markerTarget of document.querySelectorAll('.marker:not(.no-marker)')) {
         markerTarget.setAttribute('marker-id', `${markerId}`);
 
         const markerName = makeMarkerName(markerTarget);

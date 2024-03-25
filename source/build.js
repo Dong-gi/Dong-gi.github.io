@@ -1,4 +1,5 @@
 const fs = require('node:fs')
+const path = require('node:path')
 const { promisify } = require('node:util')
 const pug = require('pug')
 
@@ -9,6 +10,7 @@ const renderFile = promisify(pug.renderFile)
 
 
 async function renderPug(from, to) {
+    await promisify(fs.mkdir)(path.dirname(to), { recursive: true })
     const html = await renderFile(from)
     await writeFile(to, html)
     console.log(`Rendered pug : ${from} => ${to}`)

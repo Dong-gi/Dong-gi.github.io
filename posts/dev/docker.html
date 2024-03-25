@@ -1,0 +1,311 @@
+<!DOCTYPE html><html lang="ko-KR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="google-site-verification" content="aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM"><meta name="author" content="Donggi Kim &lt;hi.donggi@gmail.com&gt;"><meta name="description" content="컨테이너 관련 정보 정리"><title>컨테이너</title><link rel="icon" href="/imgs/favicon.png"><link rel="stylesheet" href="/source/default.css"><script>window.wizFuncQueue = [];</script></head><body><div class="w3-bar-block w3-sidebar w3-animate-left" id="sidebar"><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><details class="w3-small file-list" open="open"><summary>LICENSE</summary><ul><li>&copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> →<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE">MIT License</a></li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.w3schools.com/w3css">w3css</a> → No license</li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://highlightjs.org/">highlight.js</a> →<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause License</a></li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/mathjax/MathJax">MathJax</a> →<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache License 2.0</a></li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/davidshimjs/qrcodejs">qrcodejs</a> →<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE">MIT License</a></li></ul></details><hr></div><article id="main"><div class="w3-bar w3-blue w3-large" id="nav" style="position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle"><button class="w3-bar-item w3-button w3-hover-theme" onclick="toggleSidebar()">&#9776;</button><input class="w3-bar-item" id="query" type="text" placeholder="search" style="max-width:35%"><a class="w3-bar-item w3-button w3-hover-theme" href="/">Home</a></div><div class="w3-padding" id="contents"><h1>Virtualization</h1><ol><li>가상화란 실재하는 무언가에 대해 동등한 추상화 수준을 제공하는, 실재와는 다른 것을 만드는 행위다</li><li>가상 머신(VM; Virtual Machine) : 컴퓨터 시스템에 대한 가상화. 하이퍼바이저에 의해 관리된다</li><p>호스트 OS 상에서 하이퍼바이저가 실행되고, 게스트 OS는 하이퍼바이저를 통해 리소스를 할당받는다</p><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://en.wikipedia.org/wiki/OS-level_virtualization">운영체제 수준 가상화</a> : 호스트 커널이 격리된 유저 공간을 지원하는 패러다임</li><ul><li>호스트 OS에서 직접 실행되므로, 가상 머신에 비해 성능 저하가 현저히 적다</li><li>격리된 유저 공간을 지칭하는 용어는 구현마다 다르다 : container(LXC, Solaris containers, Docker, Podman), zone(Solaris containers), jail, ...</li><li>구현에 따라 지원하는 기능의 수준도 다르다 : 파일 시스템 격리, CPU 제한, 메모리 제한, IO 제한 등</li></ul><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://opencontainers.org/">Open Container Initiative</a> : 컨테이너에 관한 개방 표준을 제정하기 위한 리눅스 재단 하위 프로젝트</li><p>크게 두 가지 명세를 정의한다 : 런타임 명세 + 이미지 명세</p><li>이미지 : 컨테이너를 생성하는 데 필요한 모든 정보가 담긴 단일 이진 파일</li><ul><li>이미지는 읽기 전용이다</li><li>이미지는 계층들로 구별되어 있으며, 각 계층은 변경 사항만을 저장하므로 새 버전이 배포되더라도 전체 이미지 크기의 변화는 최소화된다</li><li>도커 컨테이너는 격리된 파일시스템을 할당받으며, 거기서 추가된 파일은 이미지에 전혀 영향을 미치지 않는다</li></ul></ol><h1>Docker</h1><ol><li>도커는 컨테이너를 보다 편리하게 사용하기 위해 개발된 프로젝트</li><li>도커 엔진(Apache 2.0 license)은 REST API로 통신하는 서버-클라이언트로 구성된다</li><li class="marker">Docker daemon</li><p>도커 서버는 오랫동안 실행되는 dockerd 데몬 프로세스로, Docker object들을 관리한다</p><li class="marker">Docker client</li><p>CLI 클라이언트로 docker 커맨드가 사용된다. 도커 서버, 클라이언트는 서로 별개의 호스트에서 작동할 수 있다</p><li>Docker registry</li><p>이미지 저장소<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://hub.docker.com/">Docker Hub</a>는 누구나 이용할 수 있는 퍼블릭 레지스트리로, 도커에서 기본적으로 검색하는 저장소다</p><p>Private registry 생성</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker service create --name registry -p 5000:5000 registry</div><li>Docker object</li><ul><li>IMAGE : 컨테이너를 작성하는 절차를 담은 읽기 전용 템플릿</li><li>CONTAINER : 실행 가능한 IMAGE 인스턴스</li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://docs.docker.com/engine/reference/builder/">Dockerfile</a> : 이미지 빌드 절차</li></ul></ol><h1>Dockerfile</h1><ul><li class="marker">Format</li><ul><li># 주석</li><li>INSTRUCTION param...</li><p>INSTRUCTION은 대소문자 구별이 없지만, 관례적으로 대문자만 사용한다</p></ul><li class="marker">Directive</li><ul><li># directive=value 형태의 특별한 주석</li><p>directive가 아닌 줄을 읽으면 더 이상 directive를 찾지 않으므로, Dockerfile의 최상단에 있어야 한다</p><li># syntax=[remote image reference]</li><p>Buildkit을 이용하는 경우 유효</p><li># escape=`</li><p>기본값은 \</p></ul><li class="marker">환경 변수</li><ul><li>환경 변수 참조1 : $var_name 또는 ${var_name}</li><li>환경 변수 참조2 : ${var_name:-word}</li><p>환경 변수가 없다면 word가 사용된다. word는 임의의 문자열이며, 다른 환경변수를 포함할 수도 있다</p><li>환경 변수 참조3 : ${var_name:+word}</li><p>환경 변수가 있다면 word가 사용된다. 없으면 빈 문자열. word는 임의의 문자열이며, 다른 환경변수를 포함할 수도 있다</p><li>환경 변수 설정 : ENV key=value 또는 ENV key value</li><li>환경 변수 지원 명령어 : ADD, COPY, ENV, EXPOSE, FROM, LABEL, STOPSIGNAL, USER, VOLUME, WORKDIR, ONBUILD(Since 1.4)</li></ul><li class="marker">FROM</li><ul><li>FROM &lt;image>[:&lt;tag>] [AS &lt;name>]</li><li>FROM &lt;image>[@&lt;digest>] [AS &lt;name>]</li><li>한 Dockerfile 내에서 FROM을 여러 번 사용할 수 있다 : 여러 중간 이미지 + 최종 이미지</li></ul><li class="marker">RUN</li><ul><li>RUN &lt;command></li><p>셸(기본값 /bin/sh -c, SHELL 명령으로 변경 가능)로 실행. \로 여러 줄 작성 가능</p><li>RUN ["executable", "param1", "param2"]</li><p>JSON 배열로 파싱되어 실행에 이용된다. 반드시 "로 감싸야 하며, \ 이스케이핑에 주의해야 한다</p><li>RUN apt-get update와 apt-get install은 항상 한 번에 실행할 것</li><p><strong>↓text</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">RUN apt-get update && apt-get install -y \
+    package-bar \
+    package-foo=1.3.* \</div><li>RUN rm -rf /var/lib/apt/lists/*, RUN apt-get clean 등으로 캐시를 지워주면 용량에 좋다</li></ul><li class="marker">CMD</li><ul><li>CMD ["executable", "param1", "param2"]</li><p>JSON 배열로 파싱되어 실행에 이용된다</p><li>CMD command param1 param2</li><p>셸로 실행</p><li>CMD의 목적은 컨테이너 실행 시 기본값을 제공하는 것으로, Dockerfile내에서 여러 번 작성됐더라도 마지막 것만 사용된다. 항상 동일하게 실행된다면 ENTRYPOINT 사용을 고려</li><p>docker run 인자로 명시하는 경우, CMD를 오버라이딩한다</p></ul><li class="marker">ENTRYPOINT</li><ul><li>ENTRYPOINT ["executable", "param1", "param2"]</li><p>JSON 배열로 파싱되어 실행에 이용된다. CMD는 ENTRYPOINT의 매개변수로 뒤에 덧붙여진다</p><li>ENTRYPOINT command param1 param2</li><p>셸 실행. CMD directive와 docker run 매개변수를 모두 무시한다. 컨테이너의 실행은 docker exec을 통해 이루어져야 한다</p></ul><li class="marker">LABEL</li><ul><li>LABEL &lt;key>=&lt;value></li><p>이미지 메타데이터 설정. 공백이 필요하다면 "로 감싸면 된다. LABEL 하나에 여러 값을 설정하는 것은 이미지 크기에 영향을 미치지 않는다(Since 1.10)</p></ul><li class="marker">EXPOSE</li><ul><li>EXPOSE &lt;port>[/&lt;protocol>]...</li><p>리스닝하는 포트들을 명시한다(여기서 개방해주는 것은 아님). 프로토콜 기본값은 TCP. 실제 포트를 개방하기 위해서는 docker run에서 -p 옵션으로 포워딩 설정</p></ul><li class="marker">ADD</li><ul><li>ADD [--chown=&lt;user>:&lt;group>] &lt;src>... &lt;dest></li><li>ADD [--chown=&lt;user>:&lt;group>] ["&lt;src>",... "&lt;dest>"]</li><p>경로에 공백이 있는 경우 " 이용</p><li>dest로 파일들을 복사한다. 파일명 이스케이핑, 와일드카드 사용은 Go 언어 규칙을 따른다. chown이 주어지지 않으면 UID, GID 모두 0으로 설정된다. 유저와 그룹을 직접 ID로 지정한 경우, /etc/passwd, /etc/group 파일을 조사하지 않는다</li><li>src가 원격지 파일 URL인 경우, 복사된 파일의 권한은 600. 인증이 필요한 경우 wget, crul 등을 이용</li><li>컨텍스트 안의 파일들만 데몬으로 전송되므로, src는 "../something"처럼 컨텍스트 밖의 파일을 가리킬 수 없다</li><li>src가 컨텍스트 내의 tar 압축 파일인 경우, 디렉터리로 압축 해제된다</li><li>dest가 존재하지 않는 경우, 모든 필요한 디렉터리를 생성한다</li></ul><li class="marker">COPY</li><ul><li>COPY [--chown=&lt;user>:&lt;group>] &lt;src>... &lt;dest></li><li>COPY [--chown=&lt;user>:&lt;group>] ["&lt;src>",... "&lt;dest>"]</li><p>경로에 공백이 있는 경우 " 이용</p><li>ADD보다 제한됨 : 컨테이너 내부 파일만 복사 가능. 로컬 tar 자동 압축 해제 X</li><p>중간 이미지로부터 복사 예 : COPY --from=build /bin/project /bin/project</p></ul><li class="marker">VOLUME</li><ul><li>예. VOLUME /var/log /var/db</li><p>Mount point를 정의한다. 호스트나 다른 컨테이너에 마운트되어 공유될 수 있다. VOLUME 선언 이후 해당 볼륨 내 변경은 무시된다. Dockerfile 내부에서 마운트될 호스트 디렉터리를 지정할 수는 없다 → 컨테이너 생성 시 지정해야 한다</p></ul><li class="marker">WORKDIR</li><ul><li>예. WORKDIR /path/to/workdir</li><p>RUN, CMD, ENTRYPOINT, COPY, ADD의 작업 디렉터리를 설정한다</p></ul><li class="marker">ARG</li><ul><li>ARG &lt;name>[=&lt;default value>]</li><p>docker build --build-arg &lt;varname>=&lt;value>로 넘겨받는 변수를 선언한다. docker history로 넘긴 변수를 볼 수 있으므로, 비밀 정보를 이를 통해 넘기는 건 부적절하다</p><li>ARG는 빌드 단계에서만 유효하며, 새로운 FROM 이후엔 새로 선언해야 한다</li></ul><li class="marker">ONBUILD</li><ul><li>ONBUILD [INSTRUCTION]</li><p>이미지가 베이스로 이용되는 경우, 마치 FROM 이후에 바로 삽입된 것처럼 실행된다</p></ul><li class="marker">SHELL</li><ul><li>SHELL ["executable", "param1", "param2"]</li><li>RUN, CMD, ENTRYPOINT 기본 셸 변경</li></ul><li>Multi-stage</li><p>FROM은 하나의 Dockerfile 안에서 여러 번 등장할 수 있고, 매 등장마다 이전 instruction에 의한 상태는 모두 정리된다</p><p><strong>↓Dockerfile</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="Dockerfile">FROM amazonlinux:2.0.20221004.0 as build-jar
+# jar 빌드
+
+FROM amazoncorretto:17.0.5
+COPY --from=build-jar /.../x.jar
+</div></ul><h1>Commands <a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://docs.docker.com/engine/reference/commandline/docker/">docker</a></h1><div><h2>docker compose COMMAND</h2><h2>docker container COMMAND</h2><div><h3>docker container attach</h3><ul><li>터미널의 표준 입력, 출력, 에러 스트림을 지정한 컨테이너에 부착한다</li><li>스트림을 떼어내기 위해 CTRL-c를 입력하는 경우 SIGKILL 전송으로 프로세스 종료됨에 유의</li><li>CTRL-p CTRL-q으로 프로세스를 종료하지 않고 스트림을 떼어낼 수 있다. --detach-keys 옵션으로 재정의 가능</li></ul><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           attach [OPTIONS] CONTAINER
+$ docker container attach [OPTIONS] CONTAINER
+
+# Options
+--detach-keys   컨테이너로부터 스트림을 떼어낼 때 사용하는 키 시퀀스 재정의
+--no-stdin      STDIN은 부착하지 않음
+--sig-proxy     CTRL-c를 비롯한 모든 시그널을 프로세스에 중계. 기본값 = true
+</div><h3>docker container commit</h3><ul><li>컨테이너로부터 이미지 생성</li><li>마운트된 볼륨의 데이터는 이미지에 포함되지 않는다</li></ul><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
+$ docker container commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
+
+# Options
+--author, -a    저자
+--change, -c    새 이미지에 적용할 Dockerfile instruction 추가
+                e.g. docker commit --change "ENV DEBUG=true" c3f279d17e0a  svendowideit/testimage:version3
+--message, -m   커밋 메시지
+--pause, -p     커밋 도중 컨테이너 일시 정지. 기본값 true
+</div><h3>docker container cp</h3><ul><li>컨테이너와 로컬 파일 시스템 사이에서 파일 또는 폴더 복사</li><li>소스 또는 목적지 경로로 "-"를 사용하면 표준 입력 또는 출력 스트림으로 tar 압축 파일을 스트리밍할 수 있다</li></ul><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-
+$ docker           cp [OPTIONS] SRC_PATH|- CONTAINER:DEST_PATH
+$ docker container cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-
+$ docker container cp [OPTIONS] SRC_PATH|- CONTAINER:DEST_PATH
+
+# e.g. 로컬 파일을 컨테이너로 복사
+$ docker cp file.war web:/usr/local/tomcat/webapps/
+
+# e.g. 로컬 디렉터리를 컨테이너로 복사
+$ docker cp directory/ web:/root/
+</div><h3>docker container create</h3><p>새 컨테이너를 만든다. 옵션에 대해서는 <a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black goto" href="#pos379769964" target="_self">docker container run</a> 참고</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           create [OPTIONS] IMAGE [COMMAND] [ARG...]
+$ docker container create [OPTIONS] IMAGE [COMMAND] [ARG...]
+</div><h3>docker container diff</h3><p>컨테이너 최초 생성 시의 파일시스템으로부터의 차분 나열</p><ul><li>A : 추가된 파일 또는 디렉터리</li><li>C : 변경된 파일 또는 디렉터리</li><li>D : 삭제된 파일 또는 디렉터리</li></ul><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           diff CONTAINER
+$ docker container diff CONTAINER
+</div><h3>docker container exec</h3><p>실행 중인 컨테이너 안에서 명령 실행</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           exec [OPTIONS] CONTAINER COMMAND [ARG...]
+$ docker container exec [OPTIONS] CONTAINER COMMAND [ARG...]
+
+# e.g. docker exec -it my-server /bin/bash
+
+# Options
+--detach, -d    백그라운드로 실행시킨다
+--detach-keys   docker container attach 참고
+--env, -e       환경 변수 설정
+                e.g. -e VAR=1
+--workdir, -w   워킹 디렉터리 설정
+</div><h3>docker container export</h3><p>컨테이너 파일시스템을 tar 압축 파일로 출력한다. 마운트된 볼륨은 출력 대상이 아니다</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           export [OPTIONS] CONTAINER
+$ docker container export [OPTIONS] CONTAINER
+
+--output, -o    STDOUT 대신 파일로 출력하고자 하는 경우 설정
+</div><h3>docker container inspect</h3><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker container inspect [OPTIONS] CONTAINER [CONTAINER...]
+
+--format, -f    Go 템플릿으로 출력 조정
+
+# e.g. IP 주소 획득
+$ docker container inspect --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps --format '{{.ID}}' -a)
+</div><h3>docker container kill</h3><p>컨테이너(들)을 즉시 종료한다(SIGKILL)</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           kill [OPTIONS] CONTAINER [CONTAINER...]
+$ docker container kill [OPTIONS] CONTAINER [CONTAINER...]
+</div><h3>docker container logs</h3><p>컨테이너 로그를 획득한다. 컨테이너 로깅 드라이버가 json-file 또는 journald로 생성된 경우에만 유효</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           logs [OPTIONS] CONTAINER
+$ docker container logs [OPTIONS] CONTAINER
+
+# Options
+--tail, -n      마지막 n개 줄만
+--since         특정 시각 이후 로그만
+                timestamp 예. --since 2013-01-02T13:23:37Z
+                상대적 표현 예. --since 42m
+--until         특정 시각 이전 로그만
+--follow, -f    실시간 확인
+</div><h3>docker container ls</h3><p>컨테이너 목록 출력</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           ps [OPTIONS]
+$ docker container ls [OPTIONS]
+
+# Options
+--all, -a       실행중이지 않은 컨테이너도 표시
+--filter, -f    조건을 만족하는 컨테이너만 표시. https://docs.docker.com/engine/reference/commandline/ps/#filtering 참고
+--format        Go 템플릿으로 출력 조정. https://docs.docker.com/engine/reference/commandline/ps/#formatting 참고
+                e.g. --format "{{.ID}}: {{.Command}}"
+</div><h3>docker container port</h3><p>모든/특정 포트 매핑 정보 출력</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           port CONTAINER [PRIVATE_PORT[/PROTO]]
+$ docker container port CONTAINER [PRIVATE_PORT[/PROTO]]
+</div><h3>docker container rename</h3><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           rename CONTAINER NEW_NAME
+$ docker container rename CONTAINER NEW_NAME
+</div><h3>docker container restart</h3><p>stop + start</p><h3>docker container rm</h3><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           rm [OPTIONS] CONTAINER [CONTAINER...]
+$ docker container rm [OPTIONS] CONTAINER [CONTAINER...]
+
+# Options
+--force, -f     실행 중인 컨테이너라도 종료(SIGKILL) 후 제거
+--link, -l      기본 브리지 네트워크에 등록한 링크 제거
+--volumes, -v   익명 볼륨 제거
+</div><span class="pos-span" id="pos379769964"></span><h3>docker container run</h3><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
+$ docker container run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]</div><div><h4>컨테이너 이름 명시적 할당</h4><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export CONTAINER_NAME=echo1
+$ docker run --name $CONTAINER_NAME -p 5678 -d hashicorp/http-echo -text="Hello, I'm $CONTAINER_NAME"
+4b16ebb2ca48ecfce0c255b100497510e54790f6f54f970db5b203e1eb5cc4c9
+$ curl $(docker port $CONTAINER_NAME 5678)
+Hello, I'm echo1
+$ docker rm --force $CONTAINER_NAME
+echo1
+</div><h4>컨테이너 ID 파일에 기록</h4><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker run --cidfile=./echo.cid -d hashicorp/http-echo
+c64eccfa7e10f115cb7f57969060778054a18996a9c8280cfc6bd6409407354b
+$ docker rm --force $(cat echo.cid)
+c64eccfa7e10f115cb7f57969060778054a18996a9c8280cfc6bd6409407354b
+</div><h4>컨테이너 STDIN에 가상 TTY(TeleTYpewriter) 부착</h4><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell"># TTY 부착하지 않은 경우 : /bin/bash 즉시 종료
+$ export CONTAINER_NAME=linux
+$ docker run --name $CONTAINER_NAME amazonlinux:2.0.20221004.0
+$ docker ps -a --filter "name=$CONTAINER_NAME" --format "{{.Status}}"
+Exited (0) 32 seconds ago
+$ docker rm --force $CONTAINER_NAME
+linux
+
+
+# TTY 부착한 경우 : /bin/bash 세션 활성화
+$ docker run --name $CONTAINER_NAME -it amazonlinux:2.0.20221004.0
+bash-4.2# exit 77
+exit
+
+$ echo $?
+77
+$ docker rm --force $CONTAINER_NAME
+linux
+
+
+# TTY 부착 &amp; 백그라운드로 실행
+$ docker run --name $CONTAINER_NAME -it -d amazonlinux:2.0.20221004.0
+6fb5896bcf55873a3cf6b555cbcbe4c738c5692615eb8104c488e180ca63d5b4
+$ docker ps -a --filter "name=$CONTAINER_NAME" --format "{{.Status}}"
+Up 11 seconds
+$ docker rm --force $CONTAINER_NAME
+linux
+</div><h4>작업 디렉터리 지정</h4><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell"># 지정하지 않은 경우 : 루트 디렉터리
+$ docker run --rm amazonlinux:2.0.20221004.0 pwd
+/
+
+# 지정한 경우
+$ docker run --rm -w /home/ amazonlinux:2.0.20221004.0 pwd
+/home
+</div><h4>마운트</h4><ul><li>Bind mount(type=bind) : 호스트 파일시스템에 직접 읽기/쓰기를 수행한다</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export CONTAINER_NAME=linux
+$ mkdir "$CONTAINER_NAME"_data
+$ touch "$CONTAINER_NAME"_data/test.txt
+$ ls "$CONTAINER_NAME"_data
+test.txt
+$ docker run --name $CONTAINER_NAME --rm -it --mount type=bind,src="$(pwd)"/"$CONTAINER_NAME"_data,dst=/home/data -w /home/ amazonlinux:2.0.20221004.0
+bash-4.2# touch data/test2.txt
+bash-4.2# ls data
+test.txt  test2.txt
+bash-4.2# exit
+exit
+
+$ ls "$CONTAINER_NAME"_data
+test.txt	test2.txt
+$ rm -rf "$CONTAINER_NAME"_data
+</div><li>Named volume(type=volume) : 영구 저장 데이터를 컨테이너로부터 분리한다. 볼륨은 도커를 이용해 관리되며, 여러 컨테이너들 및 호스트가 공유할 수 있다</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export CONTAINER_NAME=linux
+$ docker run --name $CONTAINER_NAME --rm -it --mount type=volume,src="$CONTAINER_NAME"_volume,dst=/home/data -w /home/ amazonlinux:2.0.20221004.0
+bash-4.2# touch data/test.txt
+bash-4.2# exit
+exit
+
+$ docker run --name $CONTAINER_NAME --rm -it --mount type=volume,src="$CONTAINER_NAME"_volume,dst=/home/data -w /home/ amazonlinux:2.0.20221004.0
+bash-4.2# ls data
+test.txt
+bash-4.2# exit
+exit
+
+$ docker volume rm "$CONTAINER_NAME"_volume
+linux_volume
+</div><li>tmpfs(type=tmpfs) : (Linux) 휘발성 데이터를 위한 tmpfs를 컨테이너에 마운트한다</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export CONTAINER_NAME=linux
+$ docker run --name $CONTAINER_NAME --rm -it --mount type=tmpfs,dst=/home/tmpfs,tmpfs-size=1000000 -w /home/ amazonlinux:2.0.20221004.0</div></ul><div><h5 class="fake">src 또는 source 옵션</h5><ul><li>type=volume : 마운트할 볼륨 이름을 지정한다. 지정하지 않으면 랜덤 문자열로 볼륨이 하나 만들어진다 -- 이러한 볼륨은 컨테이너 삭제 시 같이 삭제된다</li><li>type=bind : 필수 옵션. 마운트할 파일 또는 디렉터리를 절대경로로 지정한다</li><li>type=tmpfs : 지원하지 않는 옵션</li></ul><h5 class="fake">dst 또는 destination 또는 target 옵션</h5><p>필수 옵션으로, 마운트할 컨테이너 내부 경로를 지정한다</p><h5 class="fake">readonly 또는 ro 옵션</h5><p>true 또는 1 또는 값 없이 이 옵션을 설정하는 경우, 컨테이너에서는 쓰기 작업을 수행할 수 없다 </p><h5 class="fake">tmpfs-size 옵션</h5><p>바이트 크기를 지정한다. 리눅스 기본값은 무제한</p><h5 class="fake">tmpfs-mode</h5><p>파일 모드를 지정한다. 리눅스 기본값은 1777</p><h5>--mount와 --volume의 차이</h5><p>공식 문서에 따르면, --volume 옵션을 deprecate할 계획은 없지만 --mount 옵션을 사용할 것을 권장한다</p><ul><li>--mount : volume-driver, volume-opt, volume-label을 지정할 수 있다</li><li>--mount : type=bind인 경우, 호스트 경로의 파일 또는 디렉터리는 호스트에 이미 존재해야 한다</li></ul></div><h4>포트 공개</h4><ul><li>아래는 호스트 0.0.0.0의 TCP 7777 포트를 컨테이너 5678 포트와 바인드하는 예시다</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export CONTAINER_NAME=echo1
+$ docker run --name $CONTAINER_NAME -p 0.0.0.0:7777:5678/tcp -d hashicorp/http-echo -text="Hello, I'm $CONTAINER_NAME"
+c2aa4488e6b1bcd2566ba1546855cb0c76ac1a2731e7f87ea1c00f967fbe76c5
+$ curl $(docker port $CONTAINER_NAME 5678)
+Hello, I'm echo1
+$ docker rm --force $CONTAINER_NAME
+echo1</div><li>TCP 뿐만 아니라, UDP, SCTP도 지정할 수 있다</li><li>TCP 프로토콜 지정은 생략 가능하다 -&gt; 기본 tcp</li><li>호스트 0.0.0.0 주소는 생략 가능하다 -&gt; 기본 0.0.0.0</li><li>컨테이너 포트를 호스트에 바인드할 필요까지는 없는 경우, --publish, -p 옵션 대신 --expose 옵션을 사용하면 된다</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export NETWORK_NAME=test-net
+$ docker network create $NETWORK_NAME
+ca863d1405320dd0bc5d87642fa5117c167504fb8420224e30f397de6370356d
+
+$ export CONTAINER_NAME=echo1
+$ docker run --name $CONTAINER_NAME --expose 5678 --network=$NETWORK_NAME -d hashicorp/http-echo -text="Hello, I'm $CONTAINER_NAME"
+88224c89becaf3b02eccee15627b29b5c6b0d8e76dfc28ef2c5b01c5081d20c5
+$ docker port $CONTAINER_NAME 5678
+Error: No public port '5678/tcp' published for echo1
+
+$ docker run --rm -it --network=$NETWORK_NAME -e ECHO_SERVER=$CONTAINER_NAME amazonlinux:2.0.20221004.0
+bash-4.2# curl $ECHO_SERVER:5678
+Hello, I'm echo1
+bash-4.2# exit
+exit
+
+$ docker rm --force $CONTAINER_NAME
+echo1
+$ docker network rm $NETWORK_NAME
+test-net
+</div></ul><h4>네트워크 설정; --network</h4><ul><li>none : 네트워킹 비허용</li><li>bridge : 브리지를 통해 인/아웃 트래픽 모두 허용된다</li><p>브리지(보통 이름은 docker0)가 호스트에 생성되고, veth 인터페이스가 한 쌍으로 호스트와 컨테이너에 생성된다. 동일한 브리지 네트워크에 연결된 컨테이너들은 서로의 IP를 이용해 통신할 수 있다</p><li>host : 컨테이너는 호스트의 네트워크 스택을 그대로 이용한다</li><p>가상 브리지를 거치지 않으므로, 브리지 모드에 비해 성능이 비약적으로 좋다</p><li>container:&lt;name|id&gt; : 다른 컨테이너의 네트워크 스택을 그대로 이용한다</li><li>NETWORK_NAME : 사용자 정의 네트워크에 연결한다</li></ul><h4>브리지 네트워크용 컨테이너 별명; --network-alias</h4><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export NETWORK_NAME=test-net
+$ docker network create $NETWORK_NAME
+3ba0b000e1edd73ec541421da2b65c1f6513fd9ba5e488fc20dc6a76797ea49a
+
+$ docker run --label echo --expose 5678 --network=$NETWORK_NAME --network-alias=echo -d hashicorp/http-echo -text="Hello, I'm container #1"
+99ab33a424377c8783221b598171f31f8af2647984ddbc04e11faf9e53d538c2
+$ docker run --label echo --expose 5678 --network=$NETWORK_NAME --network-alias=echo -d hashicorp/http-echo -text="Hello, I'm container #2"
+0601cb3d501b7a1d8e08004117b906b6abac24f274d3e9552552d83968c890d7
+$ docker run --label echo --expose 5678 --network=$NETWORK_NAME --network-alias=echo -d hashicorp/http-echo -text="Hello, I'm container #3"
+2c753c92d50a2f3d78f25016364c5e345fc35f8bd87bd500685c8616e6f716bb
+
+$ docker run --rm -it --network=$NETWORK_NAME amazonlinux:2.0.20221004.0
+bash-4.2# curl echo:5678
+Hello, I'm container #3
+bash-4.2# curl echo:5678
+Hello, I'm container #3
+bash-4.2# curl echo:5678
+Hello, I'm container #1
+
+bash-4.2# yum install bind-utils -y
+bash-4.2# nslookup echo
+Server:         127.0.0.11
+Address:        127.0.0.11#53
+
+Non-authoritative answer:
+Name:   echo
+Address: 172.19.0.3
+Name:   echo
+Address: 172.19.0.2
+Name:   echo
+Address: 172.19.0.4
+
+bash-4.2# exit
+exit
+
+$ docker rm --force $(docker ps -a --filter "label=echo" --format "{{.ID}}")
+2c753c92d50a
+0601cb3d501b
+99ab33a42437
+$ docker network rm $NETWORK_NAME
+test-net
+
+</div><h4>환경 변수 설정</h4><ul><li>명령줄에서 지정</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker run --rm -e TXT="Hello World" amazonlinux:2.0.20221004.0 env | grep TXT
+TXT=Hello World
+</div><li>파일로 지정</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ cat test.env
+VAR1=VALUE1
+VAR2=VALUE2
+
+$ docker run --rm --env-file ./test.env amazonlinux:2.0.20221004.0 env | grep VAR
+VAR1=VALUE1
+VAR2=VALUE2
+
+$ rm test.env
+</div></ul><h4>메타데이터 설정</h4><p>컨테이너 관리를 위한 메타데이터를 설정할 수 있다</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export CONTAINER_NAME_PREFIX=linux
+$ docker run --name "$CONTAINER_NAME_PREFIX"_1 -l linux -l group=A -it -d amazonlinux:2.0.20221004.0
+509bf686eec1cd6c679bb30df9687671e001832e9b6e465a060d94a69bbf57f9
+$ docker run --name "$CONTAINER_NAME_PREFIX"_2 -l linux -l group=B -it -d amazonlinux:2.0.20221004.0
+d6ecdc605b9338dc1ab65079c65fec2d9284499be89b843b98dbf5caf83f3551
+
+$ docker ps -a --filter "label=linux" --format "{{.ID}}"
+d6ecdc605b93
+509bf686eec1
+$ docker ps -a --filter "label=group=B" --format "{{.ID}}"
+d6ecdc605b93
+
+$ docker rm --force $(docker ps -a --filter "label=linux" --format "{{.ID}}")
+d6ecdc605b93
+509bf686eec1
+</div><h4>재시작 정책; --restart</h4><ul><li>no : 자동 재시작 없음. 기본값</li><li>on-failure[:max-retries] : 종료 코드가 0이 아닌 경우 재시작</li><li>unless-stopped : 명시적으로 컨테이너가 중지되거나, 도커 엔진 자체가 중지/재시작 되지 않는 한 재시작</li><li>always : 항상 재시작. 도커 엔진이 실행될 때도 컨테이너를 시작시킨다</li></ul><h4>컨테이너 /etc/hosts에 항목 추가</h4><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export CONTAINER_NAME=echo1
+$ docker run --name $CONTAINER_NAME -p 0.0.0.0:7777:5678/tcp -d hashicorp/http-echo -text="Hello, I'm $CONTAINER_NAME"
+580542ea2cc3b477a663a1ab54212824d7b9282d0a269605f8153c73b9d4689a
+
+$ docker run --rm --add-host=docker-host:$(ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}') -it amazonlinux:2.0.20221004.0
+bash-4.2# curl docker-host:7777
+Hello, I'm echo1
+bash-4.2# exit
+exit
+
+$ docker rm --force $CONTAINER_NAME
+echo1
+</div><h4>로깅 설정; --log-driver</h4><ul><li>none : 로그 전달 없음</li><li>local : 최소한의 오버헤드로 로컬 파일에 기록</li><li>json-file : 기본값. JSON 포맷으로 로컬 파일에 기록</li><p>하위 호환성을 위해 기본값으로 유지되지만, 이보다 local 사용이 권장된다</p><li>syslog : 호스트의 syslog 데몬으로 전달</li><li>journald : 호스트의 journald 데몬으로 전달</li><li>gelf : GELF(Graylog Extended Log Format) 엔드포인트(Graylog, Logstash 등)으로 전달</li><li>fluentd : 호스트의 fluentd 데몬으로 전달</li><li>splunk : HTTP Event Collector를 통해 splunk에 전달</li><li>logentries : Rapid7 Logentries 서버에 전달</li><li>etwlogs : ETW(Event Tracing for Windows)로 전달</li><li>awslogs : AWS CloudWatch Logs로 전달</li><li>gcplogs : GCP Logging으로 전달</li></ul><div><h5>로그 전달 방식 조정</h5><ul><li>blocking : 기본값. 로그가 드라이버에 전달되기까지 블록된다</li><li>non-blocking : 로그는 드라이버가 소비하기까지, 컨테이너에 할당된 버퍼에 저장된다</li><p>기본 버퍼 크기는 1m이며, 버퍼가 가득 찬 경우 가장 오래된 로그가 제거된다</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker run ---log-opt mode=non-blocking --log-opt max-buffer-size=4m ...</div></ul><h5>외부로 전달되는 로그 로컬에서 확인하기</h5><p>기본적으로 외부로 전달되는 로그는 docker logs로 확인할 수 없었다. 그러나 Docker Engine 20.10부터는 듀얼 로깅이 자동으로 활성화된다</p><ul><li>외부 로깅 드라이버로 전달이 실패된 로그는 로컬에서도 확인할 수 없다</li><li>local 로깅 드라이버와 동일한 옵션을 "cache-" 접두어를 붙여 지원한다</li><li>기본 설정은 최대 5개 파일, 각 20MB 제한(압축 전 크기)</li><li>--log-opt cache-disabled : 듀얼 로깅을 끌 수 있다. 기본값 false</li><li>--log-opt cache-max-size : 로테이션 기준 크기. 기본값 20m</li><li>--log-opt cache-max-file : 최대 유지 파일 개수. 기본값 5</li><li>--log-opt cache-compress : 압축 여부. 기본값 true</li></ul><h5>컨테이너 ID 로깅 조정</h5><ul><li>로그가 어떤 컨테이너로부터 출력된 것인지 구별하기 위해, 기본적으로 컨테이너 ID의 앞 12자리가 이용된다</li><li>--log-opt tag="game-server", --log-opt tag="{{.Name}}"과 같이 이를 재정의할 수 있다</li></ul><h5>local</h5><ul><li>컨테이너의 STDOUT, STDERR 출력을 로컬 파일에 기록한다</li><li>기본 설정은 최대 5개 파일, 각 20MB 제한(압축 전 크기)</li><li>--log-opt max-size : 로테이션 기준 크기. 기본값 20m</li><li>--log-opt max-file : 최대 유지 파일 개수. 기본값 5</li><li>--log-opt compress : 압축 여부. 기본값 true</li></ul><h5>json-file</h5><ul><li>--log-opt max-size : 로테이션 기준 크기. 기본값 무제한</li><li>--log-opt max-file : 최대 유지 파일 개수. 기본 1</li><li>--log-opt compress : 압축 여부. 기본값 disabled</li></ul><h5>logentries</h5><ul><li>--log-opt logentries-token : 로그 집합 토큰 설정</li><li>--log-opt line-only : true로 설정하면 raw payload만 전달</li></ul><h5>gelf</h5><ul><li>--log-opt gelf-address : 필수. GELF 서버 엔드포인트. tcp/udp만 지원됨</li><li>--log-opt gelf-compression-type : UDP Only. 기본 gzip으로 설정되지만, CPU 로드가 증가하므로 none으로 설정할 것이 권장된다</li></ul><h5>awslogs</h5><ul><li>AWS 인증 정보를 Docker 데몬에 전달해야 한다</li><p>AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN 환경변수로 설정 가능하다. 또는 EC2에 설정한 프로파일을 자동으로 이용한다</p><li>--log-opt awslogs-region : AWS_REGION 환경변수로도 설정 가능</li><li>--log-opt awslogs-group : 로그 그룹 지정</li><li>--log-opt awslogs-stream : 지정하지 않으면 컨테이너 ID가 스트림 이름으로 사용된다</li><li>--log-opt awslogs-force-flush-interval-seconds : 기본값 5초</li></ul><h5>fluentd</h5><ul><li>--log-opt fluentd-address : Fluentd 데몬 소켓. 기본값 tcp://localhost:24224</li></ul></div><h4>기타 옵션</h4><ul><li>--cpus : CPU 제한. 기본값 0.000은 무제한을 의미</li><p>CPU가 1개 있을 때, --cpus=0.5는 지정 기간(--cpu-period, 기본 100ms) 동안 50%를 사용할 수 있음을 의미</p><li>--memory, -m : 메모리 제한. 최소 4m</li><li>--memory-swap : swap 영역을 포함한 메모리 제한. 기본적으로 --memory의 2배</li><li>--kernel-memory : 커널 메모리 제한</li><p>e.g. -m 500M --kernel-memory 50M : 컨테이너 메모리 제한 500M 안에 커널 메모리 제한 50M가 포함된다</p><li>--privileged : 컨테이너에 모든 커널 작업 권한 부여</li><li>--stop-timeout : 중지 대기 후 강제 중지</li><li>--sysctl : 컨테이너 커널 파라미터 변경</li><li>--ulimit &lt;type&gt;=&lt;soft limit&gt;[:&lt;hard limit&gt;]</li></ul></div><h3>docker container start</h3><p>중지 상태의 컨테이너(들)을 시작한다</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           start [OPTIONS] CONTAINER [CONTAINER...]
+$ docker container start [OPTIONS] CONTAINER [CONTAINER...]
+</div><h3>docker container stats</h3><p>Display a live stream of container(s) resource usage statistics</p><h3>docker container stop</h3><p>컨테이너(들)을 중지한다. SIGTERM 신호 전송 10초 후 SIGKILL 신호 전송</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           stop [OPTIONS] CONTAINER [CONTAINER...]
+$ docker container stop [OPTIONS] CONTAINER [CONTAINER...]
+
+# Options
+--time, -t  SIGKILL 전송 전 대기 시간. 기본값 10
+</div><h3>docker container top</h3><p>실행 중인 프로세스 출력</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           top CONTAINER
+$ docker container top CONTAINER
+</div></div><h2>docker image COMMAND</h2><div><h3>docker image build</h3><p>Dockerfile 절차대로 이미지 생성</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker       build [OPTIONS] PATH | URL | -
+$ docker image build [OPTIONS] PATH | URL | -
+
+# Options
+--build-arg                  # 빌드 환경변수 설정
+--compress                   # 컨텍스트 gzip 압축
+--disable-content-trust true # 이미지 검증 생략
+--file, -f                   # Dockerfile 위치. 기본값은 'PATH/Dockerfile'
+--label                      # 이미지 메타데이터 설정
+--no-cache                   # 빌드 캐시 미사용
+--tag, -t                    # 이미지 태그 설정</div><ol><li>향상된 기능을 제공하는 moby/buildkit을 이용하려면(Since 18.09) 실행 전에 환경 변수 DOCKER_BUILDKIT=1를 설정하면 된다</li><li>빌드 과정에서 "컨텍스트"란 지정된 PATH | URL에 존재하는 파일들을 의미한다. 빌드 과정에서 컨텍스트 임의의 파일을 참조할 수 있다</li><p>.dockerignore 파일을 통해 컨텍스트에서 파일/디렉터리들을 제외할 수 있다</p><li>URL은 다음 중 하나가 될 수 있다 : Git 저장소, pre-packaged tarball, plain Dockerfile text file</li><ul><li>예. container 브랜치의 docker 디렉터리 지정</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker build https://github.com/docker/rootfs.git#container:docker</div><p>Git 저장소를 가리키는 경우, 해당 저장소의 서브모듈까지 재귀적으로 가져온다</p><table class="no-sort"><tr><th>Build Syntax Suffix</th><th>Commit Used</th><th>Build Context Used</th></tr><tr><td>myrepo.git</td><td>refs/heads/master</td><td>/</td></tr><tr><td>myrepo.git#mytag</td><td>refs/tags/mytag</td><td>/</td></tr><tr><td>myrepo.git#mybranch</td><td>refs/heads/mybranch</td><td>/</td></tr><tr><td>myrepo.git#pull/42/head</td><td>refs/pull/42/head</td><td>/</td></tr><tr><td>myrepo.git#:myfolder</td><td>refs/heads/master</td><td>/myfolder</td></tr><tr><td>myrepo.git#master:myfolder</td><td>refs/heads/master</td><td>/myfolder</td></tr><tr><td>myrepo.git#mytag:myfolder</td><td>refs/tags/mytag</td><td>/myfolder</td></tr><tr><td>myrepo.git#mybranch:myfolder</td><td>refs/heads/mybranch</td><td>/myfolder</td></tr></table><li>예. tarball 지정</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker build http://server/context.tar.gz</div><p>표준 tar 포맷이어야 한다. 압축 기법은 xz, bzip2, gzip, identity 중 하나</p><li>예. STDIN 입력</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker build - &lt; Dockerfile</div><li>예. 텍스트 입력</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ curl example.com/remote/Dockerfile | docker build -f - .</div></ul></ol><h3>docker image history</h3><p>Show the history of an image</p><h3>docker image import</h3><p>Import the contents from a tarball to create a filesystem image</p><h3>docker image inspect</h3><p>Display detailed information on one or more images</p><h3>docker image load</h3><p>Load an image from a tar archive or STDIN</p><h3>docker login</h3><p>Log in to a Docker registry</p><h3>docker logout</h3><p>Log out from a Docker registry</p><h3>docker image ls</h3><p>List images</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker images [OPTIONS] [REPOSITORY[:TAG]]
+
+# Options
+--all, -a # 중간 이미지도 표시
+--digests # Digest 표시
+</div><h3>docker image prune</h3><p>Remove unused images</p><h3>docker image pull</h3><p>Pull an image or a repository from a registry</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker pull [OPTIONS] NAME[:TAG|@DIGEST]
+
+$ docker pull ubuntu:14.04
+$ docker pull ubuntu@sha256:45b23dee08af5e43a7fea6c4cf9c25ccf269ee113168c19722f87876677c5cb2
+$ docker pull myregistry.local:5000/testing/test-image
+</div><h3>docker image push</h3><p>Push an image or a repository to a registry</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker push [OPTIONS] NAME[:TAG]
+$ docker image push [OPTIONS] NAME[:TAG]</div><p>이미지를 저장소로 업로드한다. 올바른 이미지 태그에 대해서는 docker tag 명령 참고</p><h3>docker image rm</h3><p>Remove one or more images</p><p>컨테이너가 이미지를 사용중임에도 -f 옵션으로 강제로 이미지를 삭제하려고 하는 경우, 이미지의 이름만 제거되어 &lt;none>으로 변경된다. 이들을 dangling 이미지라고 부르며, 사용하지 않는 dangling 이미지들은 docker image prune으로 삭제할 수 있다</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker rmi [OPTIONS] IMAGE [IMAGE...]
+</div><h3>docker image save</h3><p>Save one or more images to a tar archive (streamed to STDOUT by default)</p><h3>docker search</h3><p>Search the Docker Hub for images</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker search [OPTIONS] TERM
+
+# Options
+--filter stars=3            # 최소 3성 이상
+--filter "is-official=true" # 공식 이미지만
+</div><h3>docker image tag</h3><p>Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE</p><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]</div><ol><li>예</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker tag 0e5574283393 fedora/httpd:version1.0</div><li>Docker Hub로 올리려는 경우, {Docker Hub Id}/{Repository Name}:{tag}</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker tag bulletinboard:1.0 gordon/bulletinboard:1.0</div><li>Private repository로 푸시하려면 해당 주소를 붙여줘야 한다</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker tag 0e5574283393 myregistryhost:5000/fedora/httpd:version1.0</div></ol></div><h2>docker network</h2><p>Manage networks</p><h2>docker system</h2><p>Manage Docker</p><h2>docker volume</h2><p>Manage volumes</p></div></div></article><hr><script id="google-analytics" src="https://www.googletagmanager.com/gtag/js?id=UA-143098403-1" async></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-143098403-1');</script><script id="highlight-js" src="/source/highlight.pack.js" defer></script><script id="default-js" src="/source/default.min.js" defer></script></body></html>

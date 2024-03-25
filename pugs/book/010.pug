@@ -8,7 +8,7 @@ include ../../source/skeleton.pug
     h1 도서 정보
     .w3-row
         .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/26879914/L', '도서 이미지')&attributes({style: 'max-height:210px'})
+            +w3img('https://image.yes24.com/goods/26879914/L', '도서 이미지')&attributes({style: 'max-h예.t:210px'})
         .w3-col.s10
             table.no-sort
                 +tds('표제/저자사항', '애자일 & 스크럼 프로젝트 관리 / 이재왕')
@@ -18,7 +18,8 @@ include ../../source/skeleton.pug
 
     h1 글귀
     div
-        h2: +asA('https://agilemanifesto.org/iso/ko/manifesto.html', '애자일 소프트웨어 개발 선언')
+        h2 애자일 소프트웨어 개발 선언
+        p 출처 : #[+asA('https://agilemanifesto.org/iso/ko/manifesto.html')]
         +asCode().
             우리는 소프트웨어를 개발하고, 또 다른 사람의 개발을 도와주면서
             소프트웨어 개발의 더 나은 방법들을 찾아가고 있다.
@@ -38,7 +39,8 @@ include ../../source/skeleton.pug
             Robert C. Martin    Steve Mellor        Ken Schwaber                Jeff Sutherland
             Dave Thomas
 
-        h2: +asA('https://agilemanifesto.org/iso/ko/principles.html', '애자일 소프트웨어의 12가지 원칙')
+        h2 애자일 소프트웨어의 12가지 원칙
+        p 출처 : #[+asA('https://agilemanifesto.org/iso/ko/principles.html')]
         ol
             li 우리의 최우선 순위는, 가치 있는 소프트웨어를 일찍 그리고 지속적으로 전달해서 고객을 만족시키는 것이다.
             li 비록 개발의 후반부일지라도 요구사항 변경을 환영하라. 애자일 프로세스들은 변화를 활용해 고객의 경쟁력에 도움이 되게 한다.
@@ -59,11 +61,12 @@ include ../../source/skeleton.pug
             li 제품 개발에 필요한 업무(story)에 우선순위를 매긴 목록
             p 고객 스스로 정확히 어떤 것들을 필요로 하는 지 목록화하기 어려워한다 -> 도중의 조정은 필연적
             li User story : 고객/사용자의 가치를 제고하는 기능
-            p e.g. x는 y할 수 있어야 한다
+            p 예. x는 y할 수 있어야 한다
             li Technical story : user story를 위한 기술/관리 업무
-            p e.g. 요구 사항 분석, 인프라 설치, 리팩토링, 버그 수정, 성능 목표
+            p 예. 요구 사항 분석, 인프라 설치, 리팩토링, 버그 수정, 성능 목표
             li 업무 규모(Story point) 추정 시, 평균 역량을 기준으로, 추정이 쉬운 스토리부터, 다른 스토리와 상대적인 비율을 통해 추정한다
-            p 업무 규모를 추정할 때는 피보나치 수열을 사용하는 것이 현실적으로 잘 들어맞는다고 한다(규모가 클수록 오차도 커지므로). e.g. 5MD(Man-day)를 넘길 것 같은 업무는 8MD로 추정
+            p 업무 규모를 추정할 때는 피보나치 수열을 사용하는 것이 현실적으로 잘 들어맞는다고 한다(규모가 클수록 오차도 커지므로)
+            p 예. 5MD(Man-day)를 넘길 것 같은 업무는 8MD로 추정
 
         h2 애자일 개발 방법론
         ol

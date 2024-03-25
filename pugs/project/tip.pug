@@ -61,8 +61,9 @@ include ../../source/skeleton.pug
 
     h1 SSL 인증서
     div
-        h2: +asA('https://certbot.eff.org/', 'Certbot')
+        h2 Certbot
         ul
+            li: +asA('https://certbot.eff.org/')
             li 무료 SSL 인증서(3개월) 제공
             li 저장 위치 : /etc/letsencrypt/
             li DNS 레코드를 이용한 인증서 발급

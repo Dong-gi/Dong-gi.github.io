@@ -291,28 +291,23 @@ include ./source/skeleton.pug
                 |  개발
 
     +hoverTemplate()#template-index-3
-        h1.w3-large.fake: +asA('https://fb.gg/play/puzzle_wizard', 'Puzzle Wizard')
+        h1.no-marker 서비스
         ul
-            li 웹소켓 서버(SpringBoot + Netty + MySQL + Redis) 개발
-            li Admin(SpringBoot + Spring Web + PostgreSQL) 개발
-        h1.w3-large.fake: +asA('https://fb.gg/play/super_pop', 'Super Pop')
+            li: +asA('https://fb.gg/play/puzzle_wizard', 'Puzzle Wizard')
+            p 웹소켓 서버(SpringBoot + Netty + MySQL + Redis) 개발
+
+            li: +asA('https://fb.gg/play/super_pop', 'Super Pop')
+            p 웹소켓 서버(SpringBoot + Netty + MySQL + Redis) 개발
+        
+            li: +asA('https://fb.gg/play/omg_minigames', '123 Minigames')
+            p Rest API 서버(SpringBoot + Spring Reactive Web + PostgreSQL) 개발
+
+            li: +asA('https://fb.gg/play/the_puzzle', 'The Puzzle')
+            p Rest API 서버(SpringBoot + Spring Reactive Web + PostgreSQL + Redis) 개발
+
+        h1.no-marker 기타
         ul
-            li 웹소켓 서버(SpringBoot + Netty + MySQL + Redis) 개발
-            li Admin(SpringBoot + Spring Web + PostgreSQL) 개발
-        h1.w3-large.fake: +asA('https://fb.gg/play/omg_minigames', '123 Minigames')
-        ul
-            li Rest API 서버(SpringBoot + Spring Reactive Web + PostgreSQL) 개발
-            li Admin(SpringBoot + Spring Web + PostgreSQL) 개발
-        h1.w3-large.fake: +asA('https://fb.gg/play/the_puzzle', 'The Puzzle')
-        ul
-            li Rest API 서버(SpringBoot + Spring Reactive Web + PostgreSQL + Redis) 개발
-            li Admin(SpringBoot + Spring Web + PostgreSQL) 개발
-        h1.w3-large.fake 기타
-        ul
-            li: +asA('https://developers.facebook.com/docs/games/instant-games/getting-started/bot-setup/', '페이스북 게임 봇')
-                |  관련, 봇메시지 예약/전송 cron job 개발(Node)
-            li: +asA('https://developers.facebook.com/docs/games/social-and-retention/features/tournaments/instant-games', '인스턴트 토너먼트')
-                |  관련, 랭킹 서버 개발(Node + Express)
-            li: +asA('https://fb.gg/play/doge_dodge', 'DOGE Dodge')
-                |  관련, API 서버(Node + Express) 개발
-            li Data Studio를 이용한 KPI 리포트 작성
+            li #[+asA('https://developers.facebook.com/docs/games/instant-games/getting-started/bot-setup/', '페이스북 게임 봇')] 및 A2U 관련, 메시지 예약/전송 서버 개발
+            li 통합 Admin 개발
+            p 프론트/백엔드 분리 : Vue3 / Express
+            li Looker Studio를 이용한 KPI 리포트 작성

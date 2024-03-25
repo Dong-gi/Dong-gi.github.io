@@ -1,0 +1,1562 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: 'C#.NET',
+    description: 'C#.NET 정리',
+})
+
+    h1 작성 기준
+    ul
+        li 2022년 04월
+        li .NET 6.0
+        li C# 10
+
+    h1 .NET
+    div
+        h2 .NET 개요
+        ul
+            li .NET은 (거의) 모든 플랫폼에서 구동하는 다양한 종류의 앱을 빌드하기 위한 무료 오픈 소스 개발 플랫폼
+            li .NET은 다양한 구현체가 존재한다
+            ul
+                li 이전에 .NET Core로 불렸던 .NET 5 이상은 최신 구현으로, (거의) 모든 플랫폼에서 실행된다
+                li .NET Framework는 .NET의 이전 구현으로, Windows에서만 실행된다
+                li Mono는 Android, Mac, iOS, tvOS 및 watchOS에서 Xamarin 애플리케이션의 성능을 향상하는 런타임
+                p Unity 엔진도 지원한다. iOS를 위한 전체 사전 컴파일(AOT; Ahead-Of-Time) 컴파일) 기능도 제공
+                li UWP는 최신 Windows 앱을 빌드하는 데 사용
+            li .NET 앱은 MSBuild를 사용하여 소스 코드로부터 빌드
+            li MSBuild와 .NET CLI는 GitHub Actions, Azure DevOps 등의 CI/CD 환경에 사용 가능
+            li NuGet은 .NET을 위해 설계된 오픈 소스 패키지 관리자
+            p NuGet 패키지는 컴파일된 코드(DLL), 코드와 관련된 다른 파일 및 패키지의 버전 번호와 같은 정보가 포함된 설명이 포함된 확장명 있는 .zip파일
+        div
+            h3 .NET 실행 모델
+            p 각 .NET 구현체는 다음을 포함한다
+            ul
+                li 런타임(e.g. .NET 5 CLR)
+                li 클래스 라이브러리(e.g. .NET 5 기본 클래스 라이브러리)
+                li 필요에 따른 애플리케이션 라이브러리(e.g. WPF, Windows Forms)
+                li 개발 도구
+            div
+                h4.fake CLR(Common Language Runtime)
+                ul
+                    li .NET 앱은 CLR 환경에서 관리 코드를 실행한다
+                    li CLR은 Windows, macOS, Linux 지원을 포함하는 플랫폼 간 런타임으로, 메모리 할당 및 관리(GC)를 처리하는 가상 머신이다
+                    li 관리 코드란 CLR이 실행을 관리하는 코드로써, C/C++ 처럼 프로그래머가 모든 작업을 관리하는 비관리 코드와 대조된다
+                h4.fake JIT(Just-In-Time) 컴파일러와 IL(Intermediate Language)
+                ul
+                    li 중간 언어는 고급 .NET 언어로 작성된 코드가 컴파일된 결과물로, 모든 고급 .NET 언어 및 하드웨어에 독립적이다
+                    li CLR이 중간 언어를 JIT 처리하여 CPU를 위한 기계어 코드를 생성하고 실행한다
+                h4.fake 비관리 리소스 작업
+                ul
+                    li e.g. FileStream은 관리 객체지만, 관리되지 않는 파일 핸들을 참조한다. 따라서 FileStream 사용을 마쳤다면 파일 핸들을 명시적으로 해제해야 한다
+                    li 비관리 리소스를 참조하는 객체는 IDisposable 인터페이스를 구현한다. 이러한 객체를 using 문에서 사용하면 Dispose() 메서드를 자동으로 호출한다
+                    +asCode('cs').
+                        var iDisposable = new FileStream("./", FileMode.Open);
+                        try { } finally { iDisposable.Dispose(); }
+
+                        // 아래와 동일
+                        using (iDisposable = new FileStream("./", FileMode.Open)) { }
+
+            h3 .NET 배포 모델
+            ul
+                li 자체 포함
+                p .NET 런타임 및 라이브러리 등을 포함한 실행 파일 생성. .NET 런타임이 없는 머신에서도 실행 가능
+                li 프레임워크 종속
+                p 앱과 자체 종속성만 포함하는 .dll 파일과 실행 파일 생성. 사용자가 .NET을 설치해야 실행 가능
+
+            h3 런타임 라이브러리 확장
+            p 자주 사용되는 일부 기능은 런타임 라이브러리에 포함되지는 않지만 NuGet 패키지로 제공된다
+            table
+                +ths('NuGet 패키지', '설명서')
+                +tds('Microsoft.Extensions.Hosting', '애플리케이션 수명 관리(일반 호스트)')
+                +tds('Microsoft.Extensions.DependencyInjection', 'DI(종속성 주입)')
+                +tds('Microsoft.Extensions.Configuration', 'Configuration')
+                +tds('Microsoft.Extensions.Logging', 'Logging')
+                +tds('Microsoft.Extensions.Options', '옵션 패턴')
+                +tds('Microsoft.Extensions.FileSystemGlobbing', '파일 탐색')
+                +tds('Microsoft.Extensions.Http', 'HTTP')
+                +tds('Microsoft.Extensions.Localization', '지역화')
+
+        h2 .NET의 새로운 기능
+        div
+            h3 .NET Core 2.0
+            ul
+                li C# 7.1 지원
+                li .NET Standard 2.0 구현
+
+            h3 .NET Core 2.1
+            ul
+                li JIT 컴파일러 개선 : 계층화된 컴파일
+                ol
+                    li 가능한 빨리 코드를 생성하는 계층
+                    li 자주 실행되는 메서드에 대한 최적화 코드를 생성하는 계층(병렬 수행)
+                li 보다 메모리 효율적인 자료형 : System.Span&lt;T&gt;, System.Memory&lt;T&gt;
+                p 읽기 전용 System.ReadOnlySpan&lt;T&gt;, System.ReadOnlyMemory&lt;T&gt;도 지원
+
+            h3 .NET Core 2.2
+            ul
+                li EventListener 클래스를 사용하여 GC, JIT, ThreadPool 등의 런타임 모니터링 가능
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp1/SimpleEventListener.cs', 'cs')
+                li
+                    +asA('https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/host-startup-hook.md', '호스트 시작 후크')
+                    |를 사용하여 Main 메서드 실행 전 코드 삽입 가능
+
+            h3 .NET Core 3.0
+            ul
+                li C# 8.0 지원
+                li .NET Standard 2.1 구현
+                li WPF 및 Windows Forms 지원
+                li 기본 Json 라이브러리 지원 : System.Text.Json
+                li HTTP/2 지원
+                li System.Index, System.Range 추가
+                li IEnumerable&lt;T&gt;의 비동기 버전 IAsyncEnumerable&lt;T&gt; 추가
+
+            h3 .NET 5
+            ul
+                li .NET Framework 4.x와의 혼동을 피하기 위해 버전 번호 4.x 생략
+                li .NET 주요 구현임을 강조하기 위해 이름에서 "Core" 삭제
+                li .NET Standard를 구현하진 않지만, .NET Standard 2.1를 지원
+                ul
+                    li .NET Standard 2.1 이후 새로운 .NET Standard 버전은 존재하지 않는다
+                    li 신규 API가 추가될 때, .NET 5+는 기능의 구현을 공유하므로 모든 .NET 5+ 앱 및 라이브러리에서 즉시 사용 가능하다
+                    p 이는 .NET Standard의 사양-구현 분리 문제를 해결한다
+                li C# 9 지원
+
+            h3 .NET 6
+            ul
+                li C# 10 지원
+                li .NET MAUI 2022년 2분기 일반 공개 예정
+                li Json 라이브러리 강화
+                p 유효성 검사 및 기본값 제공, 멤버 순서 지정, 스트림 직렬화/역직렬화 등
+                li 우선순위 큐 PriorityQueue&lt;TElement,TPriority&gt; 추가
+                li HTTP/3 Preview 지원
+                li 제네릭 타입에 대한 연산자 지원(Preview)
+
+        h2 배포 모델
+        div
+            h3 단일 파일 배포 및 실행 파일
+            ul
+                li 배포 설정 시 "Produce single file"을 설정하면 관리형 DLL을 앱과 함께 단일 실행 파일에 제공한다
+                p 실행 시 관리형 DLL이 추출되어 메모리에 로드되며, 폴더로 추출되지는 않음 Since .NET 5
+                li 네이티브 라이브러리를 단일 파일로 묶고 싶다면 IncludeNativeLibrariesForSelfExtract 플래그 이용
+                +asCode('xml', 'project.csproj') &lt;IncludeNativeLibrariesForSelfExtract&gt;true&lt;/IncludeNativeLibrariesForSelfExtract&gt;
+                li 모든 파일을 단일 파일로 묶고 싶다면 IncludeAllContentForSelfExtract 플래그 이용
+                +asCode('xml', 'project.csproj') &lt;IncludeAllContentForSelfExtract&gt;true&lt;/IncludeAllContentForSelfExtract&gt;
+                p 위 두 옵션은 앱 실행 시 클라이언트 머신의 디렉터리에 파일이 추출된다
+                ul
+                    li Linux, MacOS : $HOME/.net
+                    li Windows : %TEMP%/.net
+                    li DOTNET_BUNDLE_EXTRACT_BASE_DIR 환경변수로 제어 가능
+                li PDB 파일을 DLL에 포함
+                +asCode('xml', 'project.csproj') &lt;DebugType&gt;embedded&lt;/DebugType&gt;
+                li 단일 파일 배포시 압축 Since .NET 6
+                +asCode('xml', 'project.csproj') &lt;EnableCompressionInSingleFile&gt;true&lt;/EnableCompressionInSingleFile&gt;
+
+        h2 기본 코딩 구성 요소
+        div
+            h3 Common Type System
+            p CLR에서 사용되는 데이터 타입의 선언, 사용, 관리 방법을 정의한다
+
+            h3 .NET의 데이터 타입
+            p .NET의 모든 타입은 아래의 2가지 범주에 해당한다
+            ul
+                li Value type : value type의 인스턴스는 값 자체를 표현하며, value type의 인스턴스가 변수에 할당되는 경우 변수는 값의 사본을 갖는다
+                li Reference type : reference type의 인스턴스는 실제 값에 대한 참조(포인터와 유사)를 표현하며, reference type의 인스턴스가 변수에 할당되는 경우 변수는 동일한 참조를 갖는다
+
+            h3 클래스
+            ul
+                li 클래스는 명시적으로 지정된 다른 클래스 또는 암시적으로 System.Object에서 파생되는 참조 타입
+                li 객체가 수행할 수 있는 작업과 객체에 포함되는 데이터(필드)를 정의한다.
+
+            h3 구조체
+            ul
+                li 구조체는 System.ValueType에서 파생되는 값 타입
+                li 값 타입이므로 생성자 호출 없이 변수 선언만으로 초기화가 진행된다. 이때 사용되는 기본 생성자는 자동으로 추가되며, 재정의할 수 없다
+                p 인자를 받는 생성자를 정의할 수 있으며, 생성자는 모든 필드를 초기화해야 한다
+                li .NET의 모든 기본 데이터 타입(Boolean, Int32, ...)들도 구조체로 정의된다
+                li 명시적으로 다른 타입을 상속할 수 없으며, 구조체 자체도 다른 타입의 상속의 대상이 되지 않는다
+
+            h3 열거형
+            ul
+                li 열거형은 System.Enum에서 파생되는 값 타입으로, 기본 정수 타입의 값들에 대해 별명을 제공한다
+                li 내부 타입의 값을 형 변환 없이 열거형에 할당할 수 있다. and vice versa
+                li 메서드 정의 불가, 인터페이스 구현 불가, 프로퍼티 및 이벤트 정의 불가
+                li 열거형 자체는 기본 정수 타입에 대한 제네릭이므로, 열거형 정의에 타입 매개 변수를 사용할 수는 없다
+                li FlagsAttribute를 이용해 비트 필드라는 특수한 형태의 열거형을 정의할 수 있다
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp2/Program.cs', 'cs')
+
+            h3 인터페이스
+            ul
+                li 인터페이스는 멤버와 시그니쳐만을 정의한다
+                li 인터페이스의 멤버는 모두 추상 멤버이며, 생성자를 가질 수 없다
+                li 필드 정의 불가, 정적 멤버 정의 불가
+                li 프로퍼티 정의는 가질 수 있다. 구현은 구현 클래스에서 제공
+
+            h3 대리자
+            ul
+                li 메서드를 참조할 수 있는 참조 타입
+                +asCode('cs', '명명 대리자 인스턴스 생성').
+                    public delegate void DoSomething();
+
+                    public static void Main(string[] args)
+                    {
+                        var delegate1 = new DoSomething(() =&gt; Console.WriteLine("delegate1"));
+                        delegate1.Invoke();
+                    }
+                li 대리자는 System.Delegate → System.MulticastDelegate를 상속한다
+                li 익명 대리자 인스턴스 생성
+                ol
+                    li delegate 연산자 Since .NET Framework 2.0
+                    +asCode('cs').
+                        var arr = new int[] { 1, 2, 3, 4, 5 };
+                        Console.WriteLine(arr.Where(delegate (int n) { return n % 2 == 0; }).Sum());
+                    li 람다 Since 3.0
+                    +asCode('cs').
+                        var arr = new int[] { 1, 2, 3, 4, 5 };
+                        Console.WriteLine(arr.Where(n =&gt; n % 2 == 0).Sum());
+                li 미리 정의된 재사용 가능 대리자
+                ul
+                    li Action : void 리턴 메서드 참조. 매개변수 0 ~ 16개, 총 17가지
+                    li Func : 결과를 반환하는 메서드 참조. 매개변수 0 ~ 16개, 총 17가지
+                    li Predicate : bool을 반환하는 Func
+
+            h3 멤버
+            ul
+                li 필드 : 임의 타입 변수
+                li 프로퍼티 : (히든) 필드에 대한 get/set 접근자
+                p 프로퍼티의 타입과 프로퍼티 내에서 참조하는 필드의 타입이 같을 필요는 없다
+                li 메서드
+                ul
+                    li 메서드 오버로딩
+                    p 메서드 시그니처는 이름과 매개 변수 목록으로 구성되며, 메서드 시그니처가 다르다면 이름이 같은 2개 이상의 메서드를 정의할 수 있다
+                    li 연산자 오버로딩
+                        +codeBtn('/Repositories/VisualStudio/ConsoleApp3/Program.cs', 'cs')
+                li 생성자
+                li 이벤트
+                p 대리자를 이용한 관찰자 패턴. 간단하게 구독/해지 가능
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp5/SomeTimer.cs', 'cs')
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp5/Program.cs', 'cs')
+                +asCode('cs').
+                    public delegate void EventHandler(object? sender, EventArgs e);
+                    public delegate void EventHandler&lt;TEventArgs&gt;(object? sender, TEventArgs e);
+                p 이벤트 핸들러 추가/제거 작업 재정의 가능
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp6/SomeTimer.cs', 'cs')
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp6/Program.cs', 'cs')
+                li 중첩 타입
+
+            h3 멤버의 특성
+            table
+                +ths('특성', '적용 대상', '설명')
+                +tds('abstract', '메서드, 프로퍼티, 이벤트', '파생 타입에서 구현 제공')
+                +tds('private, family, assembly, family and assembly, family or assembly, public', '모두', '멤버 액세스 범위 제한')
+                +tds('final', '메서드, 프로퍼티, 이벤트', '파생 타입에서 재정의 불가')
+                +tds('initialize-only', '필드', '초기화 이후 변경 불가')
+                +tds('newslot, override', '모두', '시그니처가 같은 상속된 멤버와의 상호작용. new(숨김, default, 부모 타입으로 형변환하여 숨긴 메서드 호출 가능), override(재정의)')
+                +tds('virtual', '메서드, 프로퍼티, 이벤트', '파생 타입에서 다른 구현을 제공할 수 있다. 메서드의 어떤 구현을 호출할 지 결정하는 것은 런타임에 호출을 수행하는 인스턴스의 타입. 원하는 버전의 메서드를 호출하려면 해당 타입으로 변수를 캐스팅')
+
+            h3 .NET의 타입 변환
+            ul
+                li 파생 클래스에서 부모 클래스로의 변환은 연산자 없이 자동 지원
+                li 부모 클래스에서 파생 클래스로의 변환은 연산자를 이용해 자동 지원
+                li 클래스에서 구현하는 인터페이스로의 변환은 연산자 없이 자동 지원
+                li 인터페이스에서 구현 클래스로의 변환은 연산자를 이용해 자동 지원
+                li 사용자 정의 암시적/명시적 타입 변환
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp4/Program.cs', 'cs')
+
+            h3 제네릭의 공변성(Covariance) 및 반공변성(Contravariance)
+            ul
+                li Covariance : 지정된 것보다 더 많은 파생 타입을 사용 가능
+                p e.g. IEnumerable&lt;Derived&gt; 인스턴스를 IEnumerable&lt;Base&gt; 변수에 할당 가능
+                li Contravariance : 지정된 것보다 더 일반적인 타입을 사용 가능
+                p e.g. Action&lt;Base&gt; 인스턴스를 Action&lt;Derived&gt; 변수에 할당 가능
+                li Invariance : 지정된 타입만 사용 가능
+                p e.g. List&lt;Base&gt;는 List&lt;Derived&gt; 변수에 할당 불가능. and vice versa
+            table
+                +ths('타입', '공변 타입 매개 변수', '반공변 타입 매개 변수')
+                +tds('Action<T>', '', 'Y')
+                +tds('Comparison<T>', '', 'Y')
+                +tds('Converter<TInput,TOutput>', 'Y', 'Y')
+                +tds('Func<TResult>', 'Y', '')
+                +tds('Func<T,TResult>', 'Y', 'Y')
+                +tds('IComparable<T>', '', 'Y')
+                +tds('Predicate<T>', '', 'Y')
+                +tds('IComparer<T>', '', 'Y')
+                +tds('IEnumerable<T>', 'Y', '')
+                +tds('IEnumerator<T>', 'Y', '')
+                +tds('IEqualityComparer<T>', '', 'Y')
+                +tds('IGrouping<TKey,TElement>', 'Y', '')
+                +tds('IOrderedEnumerable<TElement>', 'Y', '')
+                +tds('IOrderedQueryable<T>', 'Y', '')
+                +tds('IQueryable<T>', 'Y', '')
+
+            h3 컬렉션
+            table
+                +tds('수행할 작업', '제네릭 컬렉션 옵션', '제네릭이 아닌 컬렉션 옵션', '스레드-안전 or 불변 컬렉션 옵션')
+                +tds('키-값 쌍 저장 & 키를 통한 조회', 'Dictionary<TKey,TValue>', 'Hashtable', 'ConcurrentDictionary<TKey,TValue>, ReadOnlyDictionary<TKey,TValue>, ImmutableDictionary<TKey,TValue>')
+                +tds('임의 인덱스를 이용한 조회', 'List<T>', 'Array, ArrayList', 'ImmutableList<T>, ImmutableArray')
+                +tds('FIFO', 'Queue<T>', 'Queue', 'ConcurrentQueue<T>, ImmutableQueue<T>')
+                +tds('LIFO', 'Stack<T>', 'Stack', 'ConcurrentStack<T>, ImmutableStack<T>')
+                +tds('삽입 순서에 따른 조회', 'LinkedList<T>', '권장 사항 없음', '권장 사항 없음')
+                +tds('컬렉션 변경 감시(INotifyPropertyChanged 및 INotifyCollectionChanged 구현)', 'ObservableCollection<T>', '권장 사항 없음', '권장 사항 없음')
+                +tds('정렬된 컬렉션', 'SortedList<TKey,TValue>', 'SortedList', 'ImmutableSortedDictionary<TKey,TValue>, ImmutableSortedSet<T>')
+                +tds('집합', 'HashSet<T>, SortedSet<T>', '권장 사항 없음', 'ImmutableHashSet<T>, ImmutableSortedSet<T>')
+
+            h3 예외
+            +asCode('cs').
+                // 명시적 예외 발생
+                throw e; // e는 System.Exception 및 파생 클래스의 인스턴스
+
+                // 예외 처리
+                try { } catch { } finally { }   // 임의 예외 처리
+                try { } catch (Exception) { }   // 특정 예외 처리
+                try { } catch { throw; }        // 호출 스택으로 예외 넘기기
+                try { } catch (Exception e) { } // 특정 예외 처리. 예외 인스턴스 참조
+
+                var flag = Random.Shared.Next() % 2 == 0;
+                try { } // when 필터를 사용하는 경우, 같은 타입을 여러 번 catch 가능
+                catch (Exception) when (flag) { }
+                catch (Exception) when (!flag) { }
+
+            h3 .NET의 숫자
+            div
+                h4.fake 정수
+                table
+                    +ths('타입', '크기(바이트)', '최소값', '최대값')
+                    +tds('System.Int16', '2', '-32,768', '32,767')
+                    +tds('System.Int32', '4', '-2,147,483,648', '2,147,483,647')
+                    +tds('System.Int64', '8', '-9,223,372,036,854,775,808', '9,223,372,036,854,775,807')
+                    +tds('System.SByte', '1', '-128', '127')
+                    +tds('System.IntPtr(32비트 프로세스)', '4', '-2,147,483,647', '2,147,483,647')
+                    +tds('System.IntPtr(64비트 프로세스)', '8', '-9,223,372,036,854,775,808', '9,223,372,036,854,775,807')
+                    +tds('System.Byte', '1', '0', '255')
+                    +tds('System.UInt16', '2', '0', '65,535')
+                    +tds('System.UInt32', '4', '0', '4,294,967,295')
+                    +tds('System.UInt64', '8', '0', '18,446,744,073,709,551,615')
+                    +tds('System.UIntPtr(32비트 프로세스)', '4', '0', '4,294,967,295')
+                    +tds('System.UIntPtr(64비트 프로세스)', '8', '0', '18,446,744,073,709,551,615')
+                    +tds('BigInteger', '무제한', '-∞', '∞')
+
+                h4.fake 부동소수
+                p 부동소수는 NaN 및 무한대에 관한 특별한 클래스 멤버를 제공한다
+                table
+                    +ths('타입', '크기(바이트)', '근사 범위', '참고')
+                    +tds('System.Half', '2', '±65504', 'Since .NET 5')
+                    +tds('System.Single', '4', '±3.4 x 1038', '')
+                    +tds('System.Double', '8', '±1.7 × 10308', '')
+                    +tds('System.Decimal', '16', '±7.9228 x 1028', '')
+
+                h4.fake 복소수
+                p System.Numerics.Complex
+
+                h4.fake SIMD(Single Instruction Multiple Data)
+                ul
+                    li Vector&lt;T&gt; : 고속 병렬 처리를 위한 T 타입 1차원 벡터
+                    li Vector2, Vector3, Vector4 : Single 값에 대한 2~4차원 벡터
+                    li Matrix3x2, Matrix4x4 : 각각 3x2, 4x4 행렬
+                    li Plane : 평면
+                    li Quaternion : 3차원 물리적 회전
+
+            h3 날짜, 시간 및 표준 시간대
+            ul
+                li DateTime : UTC 기준 시각. 0001-01-01 00:00:00 ~ 9999-12-31 23:59:59
+                p 시간은 틱이라고 하는 100나노초 단위로 측정. 시각은 1년 1월 1일 자정 이후로 경과한 틱 수
+                li DateTimeOffset : DateTime + UTC로부터의 offset
+                li TimeZoneInfo : 표준 시간대
+                +asCode('cs').
+                    Console.WriteLine(DateTime.Now);            // 2022-04-20 오후 9:06:11
+                    Console.WriteLine(DateTime.UtcNow);         // 2022-04-20 오후 12:06:11
+
+                    Console.WriteLine(DateTimeOffset.Now);      // 2022-04-20 오후 9:06:11 +09:00
+                    Console.WriteLine(DateTimeOffset.UtcNow);   // 2022-04-20 오후 12:06:11 +00:00
+                    Console.WriteLine(                          // 2022-04-20 오후 9:06:11 +09:00
+                        new DateTimeOffset(DateTime.Now, TimeZoneInfo.Local.BaseUtcOffset));
+                    Console.WriteLine(                          // 2022-04-20 오후 12:06:11 +09:00
+                        new DateTimeOffset(new DateTime(DateTime.UtcNow.Ticks), TimeZoneInfo.Local.BaseUtcOffset));
+
+                    Console.WriteLine(DateTime.Now.Ticks - DateTime.UtcNow.Ticks);              // 323999999997 = 9시간
+                    Console.WriteLine(DateTimeOffset.Now.Ticks - DateTimeOffset.UtcNow.Ticks);  // 323999999942 = 9시간
+                li DateOnly Since .NET 6 : 0001-01-01 ~ 9999-12-31
+                li TimeOnly Since .NET 6 : 00:00:00 ~ 23:59:59
+
+            h3 Attribute
+            ol
+                li 자바의 애너테이션처럼 요소를 장식한다
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp7/Program.cs', 'cs')
+                li 사용자 정의 특성은 System.Attribute를 상속하여 만든다
+                li 명명시 Attribute를 접미하고, 실제 사용할 땐 생략 가능하다
+                li 특성 적용 대상 제한 : System.AttributeUsage 생성자에 AttributeTargets 전달. 생략시 기본값은 AttributeTargets.All
+                li 적용 대상 명시 : assembly, module, type, method, property, field, event, param, return, typevar
+
+        h2 데이터 액세스
+        div
+            h3 LINQ; Language Itegrated Query
+            ol
+                li 데이터에 대한 선언적 코드
+                    +codeBtn('/Repositories/VisualStudio/ConsoleApp8/Program.cs', 'cs')
+                li MoreLinq 패키지에서 추가적인 편의성을 제공한다
+                li ↓ 일반 구문
+                +asCode('text', 'syntax').
+                    from        LINQ는 from으로 시작한다
+                                from의 대상은 IEnumerable&lt;T&gt;
+                                LINQ 결과도 IEnumerable&lt;T&gt;
+                    where + bool 판정식
+                    orderby + 정렬 기준 [(ascending) | descending]
+                    select + 결과
+                +asCode('cs', '예시').
+                    from mQuest in mQuests
+                    where mQuest.quest_group_id.Equals(mQuestGroup.quest_group_id)
+                    orderby mQuest.quest_name
+                    select mQuest
+                li: +asA('https://docs.microsoft.com/ko-kr/dotnet/standard/parallel-programming/introduction-to-plinq', 'PLINQ')
+                ul
+                    li AsParallel() : 가능한 경우 나머지 쿼리를 병렬로 실행
+                    li AsSequential() : 나머지 쿼리를 순차적으로 실행
+                    li AsOrdered() : 나머지 쿼리에 대해, 병렬로 실행하더라도 소스 시퀀스의 순서를 유지
+                    li AsUnordered() : 나머지 쿼리에 대해 소스 시퀀스 순서와 무관하게 실행
+                    li ForAll() : 순차 실행하는 foreach와 달리, 병렬로 결과 아이템 소비
+                li LINQ 내에서의 변수 선언 예 : let x = 10
+                li 중첩 쿼리 가능
+                +asCode('cs').
+                    from student in students
+                    from score in student.Scores
+                li Grouping 결과는 IGrouping&lt;T&gt; 타입
+                +asCode('cs').
+                    from p in profiles
+                    group p by p.Height &lt; 160 into lowGroup
+                    select new { Key = lowGroup.Key, Profiles = lowGroup };
+                li Inner Join
+                +asCode('cs').
+                    from a in A
+                    join b in B on a.X equals b.Y
+                li Outer Join
+                p inner join 결과를 임시 컬렉션으로 치환하고, 임시 컬렉션의 빈 항목을 기본 값으로 채운다
+                +asCode('cs').
+                    from profile in profiles
+                    join product in products on profile.Name equals product.Name into result
+                    from product in result.DefaultIfEmpty( new Product() { Title = "없음” } )
+                    select new { Name = profile.Name, Work = product.Title };
+                li Expression Tree : System.Linq.Expressions
+                +asCode('cs').
+                    var const1 = Expression.Constant(1);
+                    var param1 = Expression.Parameter(typeof(int), "x");
+                    var exp = Expression.Add(const1, param1);
+                    var lambda = Expression&lt;Func&lt;int, int&gt;&gt;.Lambda&lt;Func&lt;int, int&gt;&gt;(exp, new ParameterExpression[] { (ParameterExpression)param1 });
+                    var compiledFunc = lambda.Compile();
+                    Console.WriteLine(compiledFunc(3));
+
+            h3 추가 자료
+            ul
+                li: +asA('https://docs.microsoft.com/ko-kr/dotnet/standard/data/xml/', 'System.Xml')
+                li: +asA('https://docs.microsoft.com/ko-kr/dotnet/standard/data/sqlite/?tabs=netcore-cli', 'Microsoft.Data.Sqlite')
+                li: +asA('https://docs.microsoft.com/ko-kr/ef/core/', 'Entity Framework(ORM)')
+
+
+    h1 C#
+    div
+        h2 프로그램 구조
+        ul
+            li C# 프로그램은 하나 이상의 어셈블리 파일로 구성
+            li 어셈블리 파일은 0개 이상의 네임스페이스를 포함
+            li 네임스페이스는 클래스, 인터페이스 등의 타입이나 다른 네임스페이스를 포함
+            li 프로그램은 단 하나의 진입점(Main 메서드)을 가질 수 있다; 라이브러리와 서비스는 진입점이 필요없다
+        div
+            h3 Main 메서드
+            ul
+                +asCode('cs').
+                    class TestClass
+                    {
+                        static void Main(string[] args) { }
+                    }
+                li static이어야 한다
+                li public일 필요는 없다
+                li Main 메서드를 가진 클래스 또는 구조체가 static일 필요는 없다
+                li void 또는 int를 반환할 수 있다
+                li Since 7.1 Task 또는 Task&lt;int&gt;를 반환하는 async 메서드로 선언할 수 있다
+                li string[] 매개변수를 받지 않아도 된다
+                li 여러 Main 메서드를 선언한 경우, 컴파일 시 진입점을 명시적으로 지정해야 한다
+
+            h3 최상위 문 Since 9
+            ul
+                li Main 메서드를 선언하는 대신, 최상위 문으로 직접 작성할 수 있다
+                li 컴파일 시 다른 Main 메서드를 진입점으로 지정할 수 없다
+                li 최상위 문은 암시적으로 전역 네임스페이스다
+                li 최상위 문이 포함된 파일에서 네임스페이스, 타입 정의는 최상위 문이 뒤에 위치해야 한다
+                li 최상위 문은 args 배열 변수를 이용해 명령줄 인자에 접근할 수 있다
+                li await 키워드 사용 가능
+
+        h2 타입 시스템
+        div
+            h3 네임스페이스
+            ul
+                li 네임스페이스를 이용해 대규모 프로젝트에서 타입 및 메서드 이름의 범위를 제어 가능
+                li using 지시문을 이용해 네임스페이스 타이핑 생략 가능
+                li global 네임스페이스는 루트 네임스페이스
+                p e.g. global::System은 항상 .NET System 네임스페이스를 가리킨다
+
+            h3 클래스
+            ul
+                li class 키워드로 정의하고, new 키워드로 인스턴스 생성
+                li 익명 객체 : 생성 후 읽기만 가능
+                +asCode('cs').
+                    var o1 = new { X = 1, Y = 2 };
+                    var o2 = o1 with { Y = 3 };
+                    var o3 = new { o2.X, o2.Y, z = 4 };
+                li 정적 생성자 : 첫 번째 인스턴스가 만들어지거나 정적 멤버가 참조되기 전에 1회 호출
+                +asCode('cs').
+                    class ClassName
+                    {
+                        static ClassName() { }
+                    }
+                li 부분 클래스 : 프로젝트 내 여러 파일에 걸쳐 클래스 작성
+                +asCode('cs') partial class ClassName { }
+                li 상속
+                +asCode('cs') class SubClass : BaseClass { }
+                li sealed 키워드로 상속 방지 가능
+                li as 연산자를 이용한 명시적 형변환은 null을 허용하는 참조 자료형만 가능
+                li this 키워드 : 클래스의 현재 인스턴스 참조
+                li base 키워드 : 부모 클래스 메서드 또는 생성자 호출
+                +asCode('cs').
+                    public class Person
+                    {
+                        public Person(int pID) { }
+                        public virtual void Print() =&gt; Console.WriteLine("Default Print() in Person");
+                    }
+                    public class Employee : Person
+                    {
+                        public Employee(int pID, int eID) : base(pID) { }
+                        public override void Print()
+                        {
+                            Console.WriteLine("Before Print");
+                            base.Print();
+                            Console.WriteLine("After Print");
+                        }
+                    }
+
+            h3 튜플 System.ValueTuple Since 8.0
+            ul
+                li 익명 튜플 : 멤버의 기본 이름은 Item1, Item2, ...
+                +asCode('cs') var unnamed = ("one", "two");
+                li 명명 튜플 : 컴파일하면 멤버명은 Item*으로 변경된다
+                +asCode('cs') var named = (first: "one", second: "two");
+                li 튜플 프로젝션 이니셜라이저 : 변수명을 자동으로 요소 이름으로 사용
+                +asCode('cs') var accumulation = (count, sum);
+                li Since 7.3 ==, != 연산자 지원(short-circuit)
+                ul
+                    li Nullable인 튜플이나 멤버에 대해 자동으로 변환을 수행한다
+                    +asCode('cs').
+                        var left = (a: 5, b: 10);
+                        (int a, int b)? nullableTuple = left;
+                        Console.WriteLine(left == nullableTuple);
+                    li 튜플 멤버에 대한 암시적 변환을 수행한다
+                    +asCode('cs').
+                        (long a, int b) longFirst = (5, 10);
+                        (int a, long b) longSecond = (5, 10);
+                        Console.WriteLine(longFirst == longSecond);
+                li 메서드 튜플 반환
+                +asCode('cs').
+                    static (int, int) Divmod(int a, int b) { }
+                    var (div, mod) = Divmod(123, 12);
+                li 메서드 튜플 매개변수
+                +asCode('cs') public void Print((int, double, double) data) { }
+                li out 매개변수 튜플
+                +asCode('cs').
+                    var dict = new Dictionary&lt;int, (int, string)&gt;();
+                    dict.TryGetValue(2, out (int num, string place) pair);
+
+            h3 Record Since 9
+            ul
+                li class 키워드 대신 record 키워드로 선언하는 경우, 유사 값-타입이 된다
+                li Equals 메서드에서 값을 기반으로 비교를 수행한다
+                li 다른 record를 상속할 수 있다
+                li Positional record
+                p 레코드 정의 시 위치 매개 변수를 사용하면 init-only properties, 생성자, deconstructor 등을 자동으로 생성한다
+                +asCode('C#').
+                    var person1 = new Person("X", "Y");
+                    var (firstName, lastName) = person1;
+                    var person2 = person1 with { LastName = "Z" };
+
+                    public record Person(string FirstName, string LastName);
+                    public record Student(string FirstName, string LastName, int ID) : Person(FirstName, LastName);
+                li record struct Since 10
+                p 변경 가능한 record. record struct는 상속을 지원하지 않는다
+
+            h3 인터페이스
+            ul
+                li 구현 클래스는 인터페이스의 프로퍼티 및 인덱서에 접근자를 추가할 수 있다
+                p e.g. get 접근자만 있는 인터페이스 프로퍼티에 set 접근자 추가 가능
+                li Since 8.0 멤버 기본 구현 정의 가능
+                li Since 11 필드가 아닌 인터페이스 멤버는 static abstract 가능
+
+            h3 제네릭
+            ul
+                li Type Bound
+                +asCode('cs').
+                    class MyGenereic&lt;T, U&gt; where T : struct where U : class { }
+                    // where T : struct                                 값 타입
+                    // where T : class                                  참조 타입
+                    // where T : new()                                  기본 생성자 보유
+                    // where T : BaseClassName | InterfaceName | U      호환 여부 검사. U는 다른 타입 매개 변수
+                    // where T : A[, B[, C[...]]]
+                li 제네릭 별명
+                +asCode('cs') using Commands = System.Collections.Generic.Dictionary&lt;string, System.Windows.Input.ICommand&gt;;
+
+            h3 숫자 타입
+            table
+                +ths('C# 타입', '.NET 타입')
+                +tds('sbyte', 'System.SByte')
+                +tds('byte', 'System.Byte')
+                +tds('short', 'System.Int16')
+                +tds('ushort', 'System.UInt16')
+                +tds('int', 'System.Int32')
+                +tds('uint', 'System.UInt32')
+                +tds('long', 'System.Int64')
+                +tds('ulong', 'System.UInt64')
+                +tds('nint', 'System.IntPtr')
+                +tds('nuint', 'System.UIntPtr')
+                +tds('float', 'System.Single')
+                +tds('double', 'System.Double')
+                +tds('decimal', 'System.Decimal')
+            ul
+                li 정수 리터럴
+                ul
+                    li 16진수 표현 0xFFFF, 2진수 표현 0b1010, 구분 문자 '_' 사용 가능
+                    li 접미사가 없는 경우 int, uint, long, ulong 중에서 표현 가능한 첫 번째 것
+                    li 접미사가 대소문자 구별 없이 U인 경우 uint, ulong 중 표현 가능한 첫 번째 것
+                    li 접미사가 대소문자 구별 없이 L인 경우 long, ulong 중 표현 가능한 첫 번째 것
+                    li 접미사가 대소문자 구별 없이 UL, LU인 경우 ulong
+                li 실수 리터럴
+                ul
+                    li 접미사가 없는 경우 double
+                    li 접미사가 F, f인 경우 float
+                    li 접미사가 M, m인 경우 decimal
+
+            h3 문자 관련 타입
+            ul
+                li char(System.Char) : 유니코드 1글자
+                li string(System.String) : 유니코드 문자열. Indexer 구현 제공
+                li 리터럴
+                ul
+                    li @"" : \ 이스케이프를 하지 않는다. 여러 줄 작성 가능. "를 표현하고 싶으면 ""
+                    li $"" Since 6 : 간편한 포맷 문자열을 제공한다. {
+                        i 표현식
+                        |[,
+                        i alignment
+                        |][:
+                        i formatString
+                        |]}
+                    +asCode('cs').
+                        // 정렬
+                        Console.WriteLine($"|{"LEFT",-20}|");               // |LEFT                |
+                        Console.WriteLine($"|{"RIGHT",20}|");               // |               RIGHT|
+
+                        // 숫자 https://docs.microsoft.com/ko-kr/dotnet/standard/base-types/composite-formatting#format-string-component
+                        Console.WriteLine($"{Math.PI}");                    // 3.14159265358979
+                        Console.WriteLine($"{Math.PI:E}");                  // 3.141593E+000
+                        Console.WriteLine($"0x{12345:x}");                  // 0x3039
+                        Console.WriteLine($"{Math.PI * 1000:F3}");          // 3141.593
+                        Console.WriteLine($"{Math.PI * 1000:N3}");          // 3,141.593
+                        Console.WriteLine($"{Math.PI:0000.00%}");           // 0314.16%
+                        Console.WriteLine($"{Math.PI:#0000.000‰}");         // 3141.593‰
+
+                        // 시각 https://docs.microsoft.com/ko-kr/dotnet/standard/base-types/custom-date-and-time-format-strings
+                        var now = DateTime.Now;
+                        Console.WriteLine($"{now:yyyy-MM-dd HH:mm:ss}");    // 2019-12-16 06:15:56
+                        Console.WriteLine($"{now:yyyy-M-d H:m:s}");         // 2019-12-16 6:15:56
+                        Console.WriteLine($"{now:yy-MMM-ddd}");             // 19-Dec-Mon
+                        Console.WriteLine($"{now:g yy-MMMM-dddd}");         // A.D. 19-December-Monday
+                        Console.WriteLine($"{now:t hh:mm:ss.ffffff zzz}");  // A 06:15:56.627000 +00:00
+
+                        // enum
+                        var day = DAY.WED;
+                        Console.WriteLine($"'{day}', 'D : {day:D}', 'X : {day:X}'");
+                        // 'WED', 'D : 3', 'X : 00000003'
+
+                        var mode = MODE.M2 | MODE.M4;
+                        Console.WriteLine($"'{mode}', 'D : {mode:D}', 'X : {mode:X}'");
+                        // 'M2, M4', 'D : 10', 'X : 0000000A'
+
+                        enum DAY { SUN, MON, THE, WED, THU, FRI, SAT }
+                        [Flags]
+                        enum MODE { M1 = 0b0001, M2 = 0b0010, M3 = 0b0100, M4 = 0b1000 }
+                    li Since 8 : @$"", $@"" 모두 유효. 이전에는 $@""만 가능
+
+            h3 배열
+            ul
+                li 배열 초기화시 기본값으로 채워진다
+                li 다차원 배열 [,] : 배열 차원 고정. 메모리 상에서는 일차원 배열처럼 존재
+                li Jagged Array [][] : 배열의 차원이 가변적
+                +asCode('cs').
+                    int[] arr1 = new int[3];
+                    int[] arr2 = new int[] { 1, 2, 3 };
+                    int[] arr3 = { 1, 2, 3 };
+                    int[,] arr4 = new int[2, 2];
+                    int[,] arr5 = new int[,] { { 1, 2 }, { 3, 4 } };
+
+        h2 기능
+        div
+            h3 패턴 매칭
+            ul
+                li null 검사
+                +asCode('cs').
+                    int? n = 123;
+                    if (n is int number)
+                        Console.WriteLine(number);
+                    if (n is not null)
+                        Console.WriteLine(n);
+
+                li 타입 호환 검사
+                +asCode('cs').
+                    public static T Mean&lt;T&gt;(IEnumerable&lt;T&gt; items)
+                    {
+                        if (items is IList&lt;T&gt; list)
+                            // List 전용 로직
+                        // 그 외 로직
+                    }
+
+                    public static decimal CalculateToll(this Vehicle vehicle) =&gt; vehicle switch
+                    {
+                        Car =&gt; 2.00m,
+                        Truck =&gt; 7.50m,
+                        null =&gt; throw new ArgumentNullException(nameof(vehicle)),
+                        _ =&gt; throw new ArgumentException("Unknown type of a vehicle", nameof(vehicle)),
+                    };
+
+                li 불연속 값 비교
+                +asCode('cs').
+                    public static bool IsComplete(int n) =&gt; n switch
+                    {
+                        6 or 28 or 496 or 8128 or 33550336 =&gt; true,
+                        _ =&gt; false
+                    };
+
+                li 상수 관계 비교
+                +asCode('cs').
+                    public static bool IsWarm(float celsius) =&gt; celsius switch
+                    {
+                        &gt; 17 and &lt; 25 =&gt; true,
+                        _ =&gt; false
+                    };
+
+                li 위치 비교
+                +asCode('cs').
+                    static decimal GetGroupTicketPriceDiscount(int groupSize, DateTime visitDate)
+                        =&gt; (groupSize, visitDate.DayOfWeek) switch
+                        {
+                            (&lt;= 0, _) =&gt; throw new ArgumentException("Group size must be positive."),
+                            (_, DayOfWeek.Saturday or DayOfWeek.Sunday) =&gt; 0.0m,
+                            (&gt;= 5 and &lt; 10, _) =&gt; 12.0m,
+                            (&gt;= 10, _) =&gt; 15.0m,
+                            _ =&gt; 0.0m,
+                        };
+
+                    static string PrintIfAllCoordinatesArePositive(object point) =&gt; point switch
+                    {
+                        Point2D (&gt; 0, &gt; 0) p =&gt; p.ToString(),
+                        Point3D (&gt; 0, &gt; 0, &gt; 0) p =&gt; p.ToString(),
+                        _ =&gt; string.Empty,
+                    };
+
+                li 프로퍼티 비교
+                +asCode('cs').
+                    var msg = "Hello";
+                    if (msg is string { Length: 5 } five)
+                +asCode('cs').
+                    public record Point(int X, int Y);
+                    public record Segment(Point Start, Point End);
+
+                    static bool IsAnyEndOnXAxis(Segment segment) =&gt;
+                        segment is { Start: { Y: 0 } } or { End: { Y: 0 } };
+
+                    // Since 10
+                    static bool IsAnyEndOnXAxis(Segment segment) =&gt;
+                        segment is { Start.Y: 0 } or { End.Y: 0 };
+
+                li var 키워드로 중간 계산 결과 저장 가능
+                +asCode('cs').
+                    static Point Transform(Point point) =&gt; point switch
+                    {
+                        var (x, y) when x &lt; y =&gt; new Point(-x, y),
+                        var (x, y) when x &gt; y =&gt; new Point(x, -y),
+                        var (x, y) =&gt; new Point(x, y),
+                    };
+
+            h3 무시
+            ul
+                li _ 키워드로 변수 무시
+                li (_, a, _) = Something() : 반환 무시
+                li Something(a, out _) : 출력 무시
+
+            h3 분해
+            ul
+                li 메서드로 튜플을 반환하고, 이를 분해하여 변수에 할당 가능
+                +asCode('cs').
+                    var (name, address, city, zip) = QueryCityData(...);
+
+                    static (string, string, string, string) QueryCityData(...) { }
+                li 사용자 정의 타입에 분해자를 정의하면 해당 인스턴스 분해 가능
+                +asCode('cs').
+                    // 순서대로 out 매개 변수에 정의
+                    public void Deconstruct(out string fname, out string mname, out string lname) { }
+                li 확장 메서드를 작성하여 분해 기능 추가 가능
+                +asCode('cs').
+                    public static void Deconstruct(this Rectangle rect, out int x, out int y, out int width, out int height)
+                        =&gt; (x, y, width, height) = (rect.X, rect.Y, rect.Width, rect.Height);
+
+        h2 연산자 및 식
+        div
+            h3 ^ 연산자
+            p Since 8.0 : 끝부터 시작하는 인덱스
+
+            h3 ..
+            ul
+                li Since 8.0 : 범위 연산자. start..end는 구간 [start, end)을 의미
+                li a.. == a..^0
+                li ..b == 0..b
+                li .. == 0..^0
+            +asCode('cs').
+                var words = new string[] { "The", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog" };
+                Console.WriteLine($"The last word is {words[^1]}");
+                var lazyDog = words[^2..^0];
+                var allWords = words[..];
+                var phrase = 1..4;
+                var text = words[phrase];
+
+            h3 [] (인덱서 연산자)
+            p 하나 이상의 인수로 참조되는 프로퍼티. string, List&lt;T&gt; 등은 인덱서를 구현함
+            +asCode('cs').
+                public int this[int idx]
+                {
+                    get =&gt; idx;
+                    set =&gt; Console.WriteLine($"{idx} : 0x{value:X}");
+                }
+
+            h3 ?. 및 ?[]
+            ul
+                li 피연산자가 null이 아니면 액세스 연산 적용
+                li 피연산자가 null이면 null 반환
+                p null 조건부 연산자를 연쇄적으로 이용할 때, 중간에서 null이 반환된 경우, 나머지는 처리되지 않는다
+
+            h3 ?? 및 ??=
+            ul
+                li ?? : 왼쪽 피연산자가 null이면 우측 피연산자 반환
+                li ??= Since 8.0 : 왼쪽 피연산자가 null이면, 오른쪽 피연산자의 값을 대입
+
+            h3 await 연산자
+            p 피연산자가 나타내는 비동기 작업이 완료될 때까지 바깥쪽 비동기 메서드의 평가를 일시 중단
+
+            h3 default 식
+            ul
+                li default(Type) : 타입에 대한 기본값/인스턴스 반환
+                li Since 7.1 : default 리터럴로 기본값을 표현 가능
+
+            h3 nameof 식
+            p nameof(Identifier) : 식별자 문자열 반환
+
+            h3 stackalloc 식
+            p 배열을 스택에 할당한다. fixed 문으로 고정하지 않아도 된다. 메서드 반환 시 자동 삭제된다 -- 임의 해제 불가
+            +asCode('cs').
+                int* numbers = stackalloc int[100]; // 포인터는 unsafe 컨텍스트를 사용해야 한다
+                Span&lt;int&gt; numbers = stackalloc int[100]; // Since 7.2 : Span, ReadOnlySpan에 할당 가능
+                var idx = numbers.IndexOfAny(stackalloc[] { 1, 2, 3, 4 }); // Since 8.0 : 다른 식 내부에서 stackalloc 사용 가능
+
+        h2 키워드
+        div
+            h3 async
+            ul
+                li 메서드, 람다식, 익명 메서드(delegate 연산자)를 비동기로 지정
+                li void 리턴 : await할 수 없으며, 따라서 예외를 catch할 수 없다
+                li Task, Task&lt;TResult&gt; : await 가능
+                li Since 7.0 : 액세스 가능한 GetAwaiter() 메서드가 있는 모든 타입 리턴 가능
+                p System.Threading.Tasks.ValueTask&lt;TResult&gt;은 패키지 System.Threading.Tasks.Extensions가 제공하는 구현
+
+            h3 fixed
+            p unsafe 컨텍스트에서, GC가 변수를 재배치하지 않도록 하여 포인터가 유효함을 보장한다
+            +asCode('cs').
+                fixed (int* p = &amp;pt.x) { ... }
+
+            h3 in, out
+            ul
+                li in 매개변수 : 참조 전달. 메서드에서 수정 불가
+                li out 매개변수 : 참조 전달. 호출 전에 초기화되지 않아도 되지만, 반환 전에 할당돼야 한다
+                p 선언과 동시에 out 매개변수로 사용 가능
+                +asCode('cs') int.TryParse("12", out var result);
+
+            h3 private protected
+            p 동일 어셈블리 내의 클래스 및 파생 클래스에서 엑세스 가능
+
+            h3 readonly
+            ul
+                li readonly 필드 : 생성자에서 초기화한 후에는 쓰기 불가
+                li ref readonly 반환 : 반환된 참조에 대한 쓰기는 비허용
+                li readonly struct : 모든 필드가 readonly인 struct
+
+            h3 ref
+            ul
+                li ref 매개변수 : 참조 전달. 호출자 스코프의 변수를 그대로 사용하는 효과. 참조가 존재하기 위해 호출 전에 초기화 필요
+                +asCode('cs') void Method(ref int refArgument)
+                li ref 반환 : 참조 반환
+                li ref 지역 변수 : ref 반환값으로 초기화되는 지역 변수
+                p Since 7.3 : foreach 반복 변수도 ref 또는 ref readonly 지역 변수일 수 있다
+                li ref readonly 반환 : 반환된 참조에 대한 쓰기는 비허용
+                +asCode('cs').
+                    public ref decimal GetCurrentPrice() { }
+                    ref decimal estValue = ref GetCurrentPrice();
+                    ref decimal copyValue = ref estValue;
+                li ref struct : 스택에 할당되는 struct. 클래스의 멤버가 될 수 없다. 인터페이스를 구현할 수 없다
+
+            h3 unsafe
+            ul
+                li unsafe로 한정한 타입, 메서드, 블록에서는 포인터를 사용할 수 있다
+                li 컴파일 시 -unsafe 옵션을 지정해야 한다
+                p 비주얼 스튜디오에서는 "프로젝트 속성 - 빌드 - 안전하지 않은 코드 허용"
+
+            h3 var, dynamic
+            ul
+                li var : 암시적 변수 타입. 컴파일러가 타입을 결정한다
+                li dynamic : 파이썬처럼 타입 검사를 런타임에 하여 Duck-typing을 가능하게 한다
+
+            h3 yield
+            p 메서드, 연산자, get 접근자가 반복자임을 선언
+            +asCode('cs').
+                foreach (var n in Series(100))
+                    Console.WriteLine(n);
+
+                IEnumerable&lt;int&gt; Series(int limit)
+                {
+                    var num = 0;
+                    while (num &gt; limit)
+                        yield return ++num;
+                    yield break;
+                }
+
+        h2 메서드
+        ul
+            li 호출 시 매개변수 명시
+            +asCode('cs') Divide(a: 10, b: 3, q: out q, r: out r);
+            li 선택적 매개변수 선언
+            +asCode('cs') Method(int a = 0, int b = 0) {}
+            li 가변 길이 매개변수 params
+            +asCode('cs') public static int Sum(params int[] args) =&gt; args.Sum();
+            li 확장 메서드 : 기존 클래스에 static method 추가
+            +asCode('cs').
+                public static class ExtensionExample
+                {
+                    public static int Double(this int i) =&gt; i * 2;
+                }
+            li 메서드 안에 지역 함수 정의 가능
+            p static 지역 함수로 선언하면 외부 변수 참조 불가
+            li extern 메서드 : 메서드의 body가 없어도 컴파일
+            p 호출할 메서드가 있는 dll을 [DllImport] Attribute로 지정해주면 해당 메서드를 호출한다. http://www.pinvoke.net/
+            li Caller information
+            +asCode('cs').
+                using System.Runtime.CompilerServices;
+
+                Log("Hello");
+
+                static void Log(
+                    string text,
+                    [CallerMemberName] string memberName = "",
+                    [CallerFilePath] string filePath = "",
+                    [CallerLineNumber] int lineNumber = 0)
+                {
+                    Console.WriteLine($"{filePath}@{lineNumber}[{memberName}]: {text}");
+                }
+
+        h2 코딩 스타일
+        ul
+            li 인터페이스는 I로 시작
+            li 밑줄 문자를 연속으로 사용하지 않아야 함
+            li 식별자는 기본적으로 PascalCasing
+            li private 또는 internal 필드는 _camelCasing
+            li private static 또는 internal static 필드는 s_camelCasing
+            li ThreadStatic 필드는 t_camelCasing
+            li 메서드 매개 변수는 camelCasing
+
+        h2 App.config
+        ol
+            li appSettings
+            +codeBtn('/Repositories/VisualStudio/ConsoleApp9/App.config', 'xml') App.config »
+            +codeBtn('/Repositories/VisualStudio/ConsoleApp9/Program.cs', 'cs') Program.cs »
+
+        h2 디버그 모드
+        ol
+            li 전처리 상수 #if DEBUG ... #endif
+            li [Conditional("DEBUG")] 적용된 클래스, 메서드는 릴리스 빌드 시 포함되지 않는다
+            li System.Diagnostics.Debug.WriteLine() : 디버그 출력
+
+        h2 Reflection 리플렉션
+        ul
+            li AppDomain → Assembly ← Module ← Type
+            p AppDomain : EXE 프로세스 내에서 CLR에 의해 구현된 격리 공간. 최초 실행 시 기본적으로 1개 생성(AppDomain.CurrentDomain).
+            li static 멤버들은 AppDomain 안에서 유일하다. 프로세스의 여러 AppDomain에서 동일한 클래스를 로드했다면 static 멤버들은 각 도메인마다 하나씩 존재
+            +asCode('cs').
+                var appDomain = AppDomain.CreateDomain("MyDomain");
+                ObjectHandle handle = appDomain.CreateInstanceFrom(dllPath, "Namespace.ClassName");
+                ...
+                AppDomain.Unload(appDomain);
+            li Object.getType() or typeof 연산자
+            li Type :: GetConstructors(), GetEvents(), GetFields(), GetMethods(), ...
+            li 동적 생성 : System.Activator.CreateInstance(Type);
+            li 동적 타입 정의 : System.Reflection.Emit
+            ol
+                li System.AppDomain.DefineDynamicAssembly()로 AssemblyBuilder 객체 획득
+                li AssemblyBuilder.DefineDynamicModule()로 ModuleBuilder 획득
+                li ModuleBuilder.DefineType()으로 클래스 생성(TypeBuilder)
+                li TypeBuilder.DefineMethod()로 MethodBuilder 획득
+                li MethodBuilder.GetILGenerator()로 ILGenerator 객체 획득
+                li ILGenerator.Emit()으로 메서드 내용 추가
+                li TypeBuilder.CrateType()으로 인스턴스 생성 가능
+
+        h2 C#의 새로운 기능
+        div
+            h3 C# 8.0
+            ul
+                li 구조체 멤버에 readonly 가능
+                li 인터페이스 멤버의 기본 구현 제공 가능
+                li 패턴 매칭 강화
+                p switch 식, 속성 패턴, 튜플 패턴, 위치 패턴 등
+                li using 선언
+                +asCode('cs') using var file = new System.IO.StreamWriter("WriteLines2.txt");
+                li 정적 로컬 함수 선언 가능
+                +asCode('cs').
+                    void Something()
+                    {
+                        static int LocalSomething() { }
+                    }
+                li nullable 참조 타입 추가
+                p Nullable&lt;T&gt;는 null을 허용하는 래퍼 클래스. int?는 Nullable&lt;int&gt;와 동일하다
+                li 비동기 삭제
+                p System.IAsyncDisposable 인터페이스를 구현하는 인스턴스를 await using으로 사용
+
+            h3 C# 9.0
+            ul
+                li record 타입 추가
+                li 초기화 전용 set 접근자
+                +asCode('C#').
+                    public class Person
+                    {
+                        public string? FirstName { get; init; }
+                        public string? LastName { get; init; }
+                    }
+                li 최상위 문 사용 가능
+                li 공변 반환 : 메서드 상속 시 반환 타입을 더욱 좁히는 것이 허용된다
+
+            h3 C# 10
+            ul
+                li record class 추가
+                li 임의 using 선언에 global 한정자를 추가하여 모든 소스 파일에 적용 가능
+                li namespace XXX { } 대신 namespace XXX; 사용 가능
+
+
+    h1 .NET 정규표현식
+    ul
+        p Java와 동일한 부분은 생략
+        li \nn 또는 \nnn : 8진수 ASCII
+        li \w : \p{L} | \p{Mn} | \p{Nd} | \p{Pc}
+        li \Z : \z | (?=\n)
+        li (?&lt;name&gt;X) == (?'name'X)
+        ul
+            li Named group
+            li \k'name'역참조 가능. replace에서 ${name}참조 가능, GroupCollection의 인덱서로 참조 가능
+            li 그룹 오버로딩 가능 : (?&lt;1&gt;a)(?&lt;1&gt;\1b) // 스택처럼 정의가 쌓이며 '-name'으로 가장 최근 정의 삭제 가능
+        li.marker 균형 조정 그룹; Balancing group
+        ul
+            li (?&lt;name1-name2&gt;X) == (?'name1-name2'X)
+            p name1은 현재 그룹(Optional)이고, name2는 이전에 정의된 그룹. 균형 조정 그룹은 마지막(백트래킹) name2 정의를 삭제하고, name1에 name2와 name1 사이 간격을 저장한다
+            +asCode('cs').
+                var html = "&lt;html&gt;&lt;body&gt;Hello&lt;p&gt;World&lt;/p&gt;olleH&lt;/body&gt;&lt;/html&gt;Plain Text&lt;script&gt;console.log('hello world');&lt;/script&gt;Plain Text&lt;yes&gt;Text&lt;/no&gt;";
+                foreach (Match match in Regex.Matches(html, @"&lt;(?'tag'\w+)&gt;(.(?&lt;!&lt;/\k&lt;tag&gt;&gt;))*(?'-tag'&lt;/\k&lt;tag&gt;&gt;)"))
+                    Console.WriteLine($"HTML part : {match.Groups[0]}");
+                // HTML part : &lt;html&gt;&lt;body&gt;Hello&lt;p&gt;World&lt;/p&gt;olleH&lt;/body&gt;&lt;/html&gt;
+                // HTML part : &lt;script&gt;console.log('hello world');&lt;/script&gt;
+        li 옵션
+        ul
+            li (?imnsx-imnsx:X) // X 내에 옵션 적용/비적용. 이 자체는 캡처링 그룹이 아님
+            li (?imnsx-imnsx) // 이후 식에 옵션 적용/비적용
+            li System.Text.RegularExpressions.RegexOptions // Regex 생성자 또는 정적 메서드에 전체 옵션 지정
+            table.no-sort
+                tr
+                    td IgnoreCase
+                    td i
+                    td 대소문자 구별X
+                tr
+                    td Multiline
+                    td m
+                    td ^, $이 \n에서도 동작
+                tr
+                    td ExplicitCapture
+                    td n
+                    td 명명된 캡처링 그룹만 유효
+                tr
+                    td Singleline
+                    td s
+                    td .이 \n포함
+                tr
+                    td IgnorePatternWhitespace
+                    td x
+                    td 이스케이프되지 않은 공백을 패턴에서 제거하고 주석을 #으로 표시 가능
+                tr
+                    td Compiled
+                    td
+                    td 어셈블리로 컴파일
+                tr
+                    td RightToLeft
+                    td
+                    td 우→좌 검색
+                tr
+                    td ECMAScript
+                    td
+                    td
+                tr
+                    td CultureInvariant
+                    td
+                    td
+                tr
+                    td None
+                    td
+                    td 옵션 없음 명시
+        li (?&gt;X) : Non-backtracking
+        li.marker Replace 구문
+        ul
+            li $n, ${name} : 캡처링 그룹
+            li $& : 전체 매칭 문자열
+            li $` : 매칭 문자열 앞부분
+            li $' : 매칭 문자열 뒷부분
+            li $+ : 마지막 캡처링 그룹
+            li $_ : 전체 입력 문자열
+        li 인라인 주석 : (?#comment)
+    details.marker
+        summary 지원 Unicode class : \p{name} ↔ \P{name}
+        table.no-sort
+            tr
+                th Category
+                th Description
+            tr
+                td Lu
+                td Letter, Uppercase
+            tr
+                td Ll
+                td Letter, Lowercase
+            tr
+                td Lt
+                td Letter, Titlecase
+            tr
+                td Lm
+                td Letter, Modifier
+            tr
+                td Lo
+                td Letter, Other
+            tr
+                td L
+                td Lu + Ll + Lt + Lm + Lo
+            tr
+                td Mn
+                td Mark, Nonspacing
+            tr
+                td Mc
+                td Mark, Spacing Combining
+            tr
+                td Me
+                td Mark, Enclosing
+            tr
+                td M
+                td Mn + Mc + Me
+            tr
+                td Nd
+                td Number, Decimal Digit
+            tr
+                td Nl
+                td Number, Letter
+            tr
+                td No
+                td Number, Other
+            tr
+                td N
+                td Nd + Nl + No
+            tr
+                td Pc
+                td Punctuation, Connector
+            tr
+                td Pd
+                td Punctuation, Dash
+            tr
+                td Ps
+                td Punctuation, Start[Open]
+            tr
+                td Pe
+                td Punctuation, End[Close]
+            tr
+                td Pi
+                td Punctuation, Initial quote
+            tr
+                td Pf
+                td Punctuation, Final quote
+            tr
+                td Po
+                td Punctuation, Other
+            tr
+                td P
+                td Pc + Pd + Ps + Pe + Pi + Pf + Po
+            tr
+                td Sm
+                td Symbol, Math
+            tr
+                td Sc
+                td Symbol, Currency
+            tr
+                td Sk
+                td Symbol, Modifier
+            tr
+                td So
+                td Symbol, Other
+            tr
+                td S
+                td Sm + Sc + Sk + So
+            tr
+                td Zs
+                td Separator, Space
+            tr
+                td Zl
+                td Separator, Line
+            tr
+                td Zp
+                td Separator, Paragraph
+            tr
+                td Z
+                td Zs + Zl + Zp
+            tr
+                td Cc
+                td Other, Control
+            tr
+                td Cf
+                td Other, Format
+            tr
+                td Cs
+                td Other, Surrogate
+            tr
+                td Co
+                td Other, Private Use
+            tr
+                td Cn
+                td Other, Not Assigned
+            tr
+                td C
+                td Cc + Cf + Cs + Co + Cn
+        table.no-sort
+            tr
+                th Code point range
+                th Block name
+            tr
+                td 0000 - 007F
+                td IsBasicLatin
+            tr
+                td 0080 - 00FF
+                td IsLatin-1Supplement
+            tr
+                td 0100 - 017F
+                td IsLatinExtended-A
+            tr
+                td 0180 - 024F
+                td IsLatinExtended-B
+            tr
+                td 0250 - 02AF
+                td IsIPAExtensions
+            tr
+                td 02B0 - 02FF
+                td IsSpacingModifierLetters
+            tr
+                td 0300 - 036F
+                td IsCombiningDiacriticalMarks
+            tr
+                td 0370 - 03FF
+                td IsGreek or IsGreekandCoptic
+            tr
+                td 0400 - 04FF
+                td IsCyrillic
+            tr
+                td 0500 - 052F
+                td IsCyrillicSupplement
+            tr
+                td 0530 - 058F
+                td IsArmenian
+            tr
+                td 0590 - 05FF
+                td IsHebrew
+            tr
+                td 0600 - 06FF
+                td IsArabic
+            tr
+                td 0700 - 074F
+                td IsSyriac
+            tr
+                td 0780 - 07BF
+                td IsThaana
+            tr
+                td 0900 - 097F
+                td IsDevanagari
+            tr
+                td 0980 - 09FF
+                td IsBengali
+            tr
+                td 0A00 - 0A7F
+                td IsGurmukhi
+            tr
+                td 0A80 - 0AFF
+                td IsGujarati
+            tr
+                td 0B00 - 0B7F
+                td IsOriya
+            tr
+                td 0B80 - 0BFF
+                td IsTamil
+            tr
+                td 0C00 - 0C7F
+                td IsTelugu
+            tr
+                td 0C80 - 0CFF
+                td IsKannada
+            tr
+                td 0D00 - 0D7F
+                td IsMalayalam
+            tr
+                td 0D80 - 0DFF
+                td IsSinhala
+            tr
+                td 0E00 - 0E7F
+                td IsThai
+            tr
+                td 0E80 - 0EFF
+                td IsLao
+            tr
+                td 0F00 - 0FFF
+                td IsTibetan
+            tr
+                td 1000 - 109F
+                td IsMyanmar
+            tr
+                td 10A0 - 10FF
+                td IsGeorgian
+            tr
+                td 1100 - 11FF
+                td IsHangulJamo
+            tr
+                td 1200 - 137F
+                td IsEthiopic
+            tr
+                td 13A0 - 13FF
+                td IsCherokee
+            tr
+                td 1400 - 167F
+                td IsUnifiedCanadianAboriginalSyllabics
+            tr
+                td 1680 - 169F
+                td IsOgham
+            tr
+                td 16A0 - 16FF
+                td IsRunic
+            tr
+                td 1700 - 171F
+                td IsTagalog
+            tr
+                td 1720 - 173F
+                td IsHanunoo
+            tr
+                td 1740 - 175F
+                td IsBuhid
+            tr
+                td 1760 - 177F
+                td IsTagbanwa
+            tr
+                td 1780 - 17FF
+                td IsKhmer
+            tr
+                td 1800 - 18AF
+                td IsMongolian
+            tr
+                td 1900 - 194F
+                td IsLimbu
+            tr
+                td 1950 - 197F
+                td IsTaiLe
+            tr
+                td 19E0 - 19FF
+                td IsKhmerSymbols
+            tr
+                td 1D00 - 1D7F
+                td IsPhoneticExtensions
+            tr
+                td 1E00 - 1EFF
+                td IsLatinExtendedAdditional
+            tr
+                td 1F00 - 1FFF
+                td IsGreekExtended
+            tr
+                td 2000 - 206F
+                td IsGeneralPunctuation
+            tr
+                td 2070 - 209F
+                td IsSuperscriptsandSubscripts
+            tr
+                td 20A0 - 20CF
+                td IsCurrencySymbols
+            tr
+                td 20D0 - 20FF
+                td IsCombiningDiacriticalMarksforSymbols or IsCombiningMarksforSymbols
+            tr
+                td 2100 - 214F
+                td IsLetterlikeSymbols
+            tr
+                td 2150 - 218F
+                td IsNumberForms
+            tr
+                td 2190 - 21FF
+                td IsArrows
+            tr
+                td 2200 - 22FF
+                td IsMathematicalOperators
+            tr
+                td 2300 - 23FF
+                td IsMiscellaneousTechnical
+            tr
+                td 2400 - 243F
+                td IsControlPictures
+            tr
+                td 2440 - 245F
+                td IsOpticalCharacterRecognition
+            tr
+                td 2460 - 24FF
+                td IsEnclosedAlphanumerics
+            tr
+                td 2500 - 257F
+                td IsBoxDrawing
+            tr
+                td 2580 - 259F
+                td IsBlockElements
+            tr
+                td 25A0 - 25FF
+                td IsGeometricShapes
+            tr
+                td 2600 - 26FF
+                td IsMiscellaneousSymbols
+            tr
+                td 2700 - 27BF
+                td IsDingbats
+            tr
+                td 27C0 - 27EF
+                td IsMiscellaneousMathematicalSymbols-A
+            tr
+                td 27F0 - 27FF
+                td IsSupplementalArrows-A
+            tr
+                td 2800 - 28FF
+                td IsBraillePatterns
+            tr
+                td 2900 - 297F
+                td IsSupplementalArrows-B
+            tr
+                td 2980 - 29FF
+                td IsMiscellaneousMathematicalSymbols-B
+            tr
+                td 2A00 - 2AFF
+                td IsSupplementalMathematicalOperators
+            tr
+                td 2B00 - 2BFF
+                td IsMiscellaneousSymbolsandArrows
+            tr
+                td 2E80 - 2EFF
+                td IsCJKRadicalsSupplement
+            tr
+                td 2F00 - 2FDF
+                td IsKangxiRadicals
+            tr
+                td 2FF0 - 2FFF
+                td IsIdeographicDescriptionCharacters
+            tr
+                td 3000 - 303F
+                td IsCJKSymbolsandPunctuation
+            tr
+                td 3040 - 309F
+                td IsHiragana
+            tr
+                td 30A0 - 30FF
+                td IsKatakana
+            tr
+                td 3100 - 312F
+                td IsBopomofo
+            tr
+                td 3130 - 318F
+                td IsHangulCompatibilityJamo
+            tr
+                td 3190 - 319F
+                td IsKanbun
+            tr
+                td 31A0 - 31BF
+                td IsBopomofoExtended
+            tr
+                td 31F0 - 31FF
+                td IsKatakanaPhoneticExtensions
+            tr
+                td 3200 - 32FF
+                td IsEnclosedCJKLettersandMonths
+            tr
+                td 3300 - 33FF
+                td IsCJKCompatibility
+            tr
+                td 3400 - 4DBF
+                td IsCJKUnifiedIdeographsExtensionA
+            tr
+                td 4DC0 - 4DFF
+                td IsYijingHexagramSymbols
+            tr
+                td 4E00 - 9FFF
+                td IsCJKUnifiedIdeographs
+            tr
+                td A000 - A48F
+                td IsYiSyllables
+            tr
+                td A490 - A4CF
+                td IsYiRadicals
+            tr
+                td AC00 - D7AF
+                td IsHangulSyllables
+            tr
+                td D800 - DB7F
+                td IsHighSurrogates
+            tr
+                td DB80 - DBFF
+                td IsHighPrivateUseSurrogates
+            tr
+                td DC00 - DFFF
+                td IsLowSurrogates
+            tr
+                td E000 - F8FF
+                td IsPrivateUse or IsPrivateUseAreaIsPrivateUse or IsPrivateUseArea
+            tr
+                td F900 - FAFF
+                td IsCJKCompatibilityIdeographs
+            tr
+                td FB00 - FB4F
+                td IsAlphabeticPresentationForms
+            tr
+                td FB50 - FDFF
+                td IsArabicPresentationForms-A
+            tr
+                td FE00 - FE0F
+                td IsVariationSelectors
+            tr
+                td FE20 - FE2F
+                td IsCombiningHalfMarks
+            tr
+                td FE30 - FE4F
+                td IsCJKCompatibilityForms
+            tr
+                td FE50 - FE6F
+                td IsSmallFormVariants
+            tr
+                td FE70 - FEFF
+                td IsArabicPresentationForms-B
+            tr
+                td FF00 - FFEF
+                td IsHalfwidthandFullwidthForms
+            tr
+                td FFF0 - FFFF
+                td IsSpecials

@@ -1,0 +1,454 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: 'HTML',
+    description: 'HTML 정리',
+    useMath: true,
+})
+
+    h1 자료
+    ul
+        li: +asA('https://web.dev/learn/html/', 'web.dev > HTML 배우기')
+
+    h1 태그
+    ul
+        li HTML 문서는 요소들의 트리로 표현된다
+        li 태그는 요소의 타입을 나타내는 이름으로, 이름은 사용자가 임의로 지어도 된다
+        li Non-replaced elements
+        p #{'<p>, <h1>'}과 같은 요소들은 여는 태그와 닫는 태그 사이에 텍스트나 다른 요소들이 포함될 수 있다
+        li Replaced elements
+        p #{'<img>, <input>'}과 같은 요소들은 UI 위젯이나 이미지와 같은 객체로 대체된다. 대체된 객체들은 기본 스타일을 가지며, 브라우저에 따라 사용자가 부분적으로 스타일을 변경할 수 있다
+        li Void elements
+        p #{'<br>, <img>, <link>'}와 같이 태그 하나로 열고 닫는(self-closing) 요소들로, 텍스트나 다른 요소를 자식으로 가질 수 없다. 태그 끝에 '/'를 적어도 된다
+
+    h1 속성
+    ol
+        li 요소의 속성은 여는 태그 내부에 이름="값" 쌍으로 표현한다. 태그와 마찬가지로 이름은 사용자가 임의로 지어도 된다
+        li 모든 요소에서 유효한 속성, 일부 요소에서만 유효한 속성들이 존재한다
+        ul
+            li html 요소의 lang 속성 : 문서의 주 언어
+            li 기타 텍스트를 포함한 요소의 lang 속성 : 요소의 부 언어
+            li title 속성 : 요소에 대한 툴팁(커서를 올려두면 표시)
+            li disabled 속성 : 지정한 입력 요소를 수정할 수 없음
+            li id 속성 : 요소의 고유한 id
+            li class 속성 : 요소가 속한 그룹
+        li 단순히 해당 속성이 존재함을 표현하는 걸로 충분한 일부 속성들은 값을 가지지 않는다
+
+    h1 HTML 문서 구조
+    ul
+        li #{'<!DOCTYPE html>'}
+        p 모든 HTML 문서의 서두엔 위 문구가 있어야 한다. 이는 HTML 요소가 아니라 DTD(Document Type Definition)의 일종이다. #[+asA('https://developer.mozilla.org/ko/docs/Web/HTML/Quirks_Mode_and_Standards_Mode', 'DOCTYPE')]은 브라우저가 문서를 어떤 모드로 렌더링할 지를 결정하는 데 이용된다. DOCTYPE html은 표준 모드 렌더링을 지시한다
+        li #{'<html>'}
+        p #{'<html>'} 요소는 HTML 문서의 루트 요소로, #{'<head>, <body>'} 요소의 부모다
+        li #{'<head>'}
+        p #{'<head>'} 요소는 문서 또는 웹앱에 대한 모든 메타데이터를 기술한다
+    div
+        h2 head
+        ul
+            li Charactr set
+            p #{'<head>'} 요소의 첫 번째 요소로 문자 집합을 지정함으로써, 제목과 이하 문서들을 올바르게 표시할 수 있게 함이 좋다
+            +asCode('html') #{'<meta charset="utf-8">'}
+            li Title
+            p 브라우저 탭, 열린 윈도우, 방문 기록, 검색 결과 등에서 보여지는 제목
+            +asCode('html') #{'<title>My Homepage</title>'}
+            li Viewport
+            p 뷰 영역의 너비와 관계없이 컨텐츠를 보기 좋게 표현(반응형 웹)하기 위한 기본적인 설정을 기술한다. Viewport 설정은 사이트의 접근성 품질 검사 항목 중 하나로, 콘텐츠를 확대/축소 가능하고, 최대 크기 제한이 없을 때 검사를 통과한다
+            +asCode('html') #{'<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">'}
+            li Stylesheet link
+            p 스타일을 먼저 지시함으로써 렌더링한 요소를 다시 그리는 작업을 피할 수 있다. CSS의 다운로드 및 구문 해석이 완료되기 전까지 렌더링이 차단되므로, 첫 화면에서 미사용되는 스타일이 많을수록 렌더링까지의 지연 시간이 늘어날 수 있다
+            li Icon
+            +asCode('html').
+                #{'<link rel="icon" href="/imgs/favicon.png"/>'}
+                ↑ /favicon.ico 대신 사용할 즐겨찾기 아이콘 지정
+                #{'<link rel="apple-touch-icon" href="/imgs/iOS-icon.png"/>'}
+                ↑ 비표준. 사이트를 iOS 기기의 홈 화면에 추가한 경우의 아이콘
+            li Script
+            p 스크립트는 기본적으로 CSS와 마찬가지로 다운로드 및 해석되기 전까지 렌더링이 차단되고, 이에 더해 다른 리소스의 다운로드까지 중지된다. 이러한 지연을 방지하기 위한 속성이 존재한다
+            ul
+                li defer : HTML 렌더링을 차단하지 않는다. 스크립트는 렌더링이 완료된 후에야 실행된다
+                li async : 스크립트를 다운로드하는 동안은 HTML 렌더링을 차단하지 않는다. 다운로드 후 스크립트 실행 중에는 차단한다
+                li 위 속성들은 외부 스크립트를 사용하는 경우 적용 가능하며, 인라인 스크립트에는 적용되지 않는다
+            p 다른 요소의 속성에 스크립트를 작성할 수도 있다
+            +asCode('html') #{'<a href:"javascript: myFunction();">'}
+            li Base URL
+            p 모든 상대경로에 대한 기본 주소를 지시한다
+            +asCode('html') #{'<base href="https://example.com">'}
+            p 한 가지 문제는, #{'<a href="#ref">를 <a href="https://example.com#ref">'}로 변경해 버린다는 것
+        div
+            h3 기타 메타데이터
+            div
+                h4 검색엔진 관련
+                ul
+                    li 키워드 설정. 스팸으로 인해 더 이상 검사되지 않는다
+                    +asCode('html') #{'<meta name="keywords" content="Word1, Word2, Word3">'}
+                    li 페이지 설명
+                    +asCode('html') #{'<meta name="description" content="문서에 대한 짧은 요약">'}
+                h4 CSP; Content-Security-Policy
+                div
+                    p 참고 자료 : #[+asA('https://content-security-policy.com')]
+                    p CSP에는 버전이 존재하며, 오래된 브라우저는 최신 기능을 지원하지 않을 수 있다
+                    h5.fake Fetch directives
+                    ul
+                        li child-src : 웹 워커, 페이지에 포함된 프레임 컨텐츠의 출처를 제한한다
+                        p frame-src, worker-src로 각각 따로 정의 가능
+                        +asCode('html', 'e.g.') #{'<meta http-equiv="content-security-policy" content="child-src https://youtube.com https://m.youtube.com">'}
+                        li connect-src : XHR, WebSocket, EventSource를 통해 연결할 수 있는 출처를 제한한다
+                        li default-src : 명시적으로 설정하지 않은 fetch directive에 대한 기본값
+                        li font-src : 웹 폰트(@font-face) 출처 제한
+                        li frame-src : 프레임 컨텐츠 출처 제한
+                        li img-src : 이미지(favicon 포함) 출처 제한
+                        li manifest-src : 웹앱 매니페스트 파일 출처 제한
+                        li media-src : #{'<audio>, <video>, <track>'} 출처 제한
+                        li script-src : 스크립트 및 웹 어셈블리 출처 제한
+                        li style-src : CSS 출처 제한
+                        li worker-src : 웹 워커 출처 제한
+                    h5.fake Document directives
+                    ul
+                        li base-uri : #{'<base>'} 요소의 URL을 제한한다
+                        li sandbox : 페이지가 해당 #[+asA('https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox', 'sandbox 속성')]을 가진 iframe을 통해 로드된 것처럼 취급된다
+                    h5.fake Navigation directives
+                    ul
+                        li form-action : 폼을 제출할 수 있는 URL 제한
+                    h5.fake Values
+                    ul
+                        li none : 전부 비허용
+                        li self : 현재 origin 허용
+                        li strict-dynamic : hash(e.g. sha256-xxx) 또는 nonce(e.g. nonce-xxx) 값을 이용한 출처 허용 제한을 간략하게 해준다
+                        p CSP Level 3 기능이며 strict-dynamic를 사용한 경우, 이를 지원하는 브라우저는 출처 목록 중 아래 사항들을 무시한다
+                        ul
+                            li 'unsafe-inline'
+                            li 'self'
+                            li Host 리스트
+                            li Scheme 리스트
+                        +asCode('text', '사용 예시') script-src 'nonce-OneTimeUsedRandomString' 'strict-dynamic';default-src 'self';
+                        +asCode('text', '허용되는 스크립트').
+                            #{'<script src="/script-loader.js" nonce="OneTimeUsedRandomString"></script>'}
+                            #{'<script nonce="OneTimeUsedRandomString">'}
+                                doWhatever();
+                            #{'</script>'}
+                            
+                            // script-loader.js 안에서,
+                            let s = document.createElement('script');
+                            s.src = "https://cdn.example.com/some-script-you-need.min.js";
+                            document.body.appendChild(s);
+                        li unsafe-inline : 인라인 리소스(자바스크립트 &amp; CSS) 허용
+                        p 인라인 리소스를 비허용하는 것이 CSP를 사용함으로써 얻을 수 있는 가장 큰 보안 이점이라는 점은 유의
+                        li unsafe-eval : eval(), setImmediate(), window.execScript() 허용
+                        li Host : 특정 호스트 주소 지정. 스킴, 포트, 경로(prefix)는 선택사항
+                        p e.g. example.com, *.example.com, https://example.com/api
+                        li Scheme : e.g. https:, data:, blob: 등
+                    h5.fake HTTP 응답 헤더로도 설정 가능하다
+                    p 일부 directive들(frame-ancestors, report-uri, sandbox 등)은 헤더에서만 설정 가능하다
+                    +asCode('text', '페이스북 예').
+                        content-security-policy:
+                            default-src data: blob: 'self' https://*.fbsbx.com 'unsafe-inline' *.facebook.com 'unsafe-eval' *.fbcdn.net;
+                            script-src *.facebook.com *.fbcdn.net *.facebook.net *.google-analytics.com *.google.com 127.0.0.1:* 'unsafe-inline' 'unsafe-eval' blob: data: 'self' connect.facebook.net;style-src fonts.googleapis.com *.fbcdn.net data: *.facebook.com 'unsafe-inline';
+                            connect-src *.facebook.com facebook.com *.fbcdn.net *.facebook.net wss://*.facebook.com:* wss://*.whatsapp.com:* wss://*.fbcdn.net attachment.fbsbx.com ws://localhost:* blob: *.cdninstagram.com 'self' wss://gateway.facebook.com wss://edge-chat.facebook.com wss://snaptu-d.facebook.com wss://kaios-d.facebook.com/ v.whatsapp.net *.fbsbx.com *.fb.com;
+                            font-src data: *.gstatic.com *.facebook.com *.fbcdn.net *.fbsbx.com;
+                            img-src *.fbcdn.net *.facebook.com data: https://*.fbsbx.com *.tenor.co media.tenor.com facebook.com *.cdninstagram.com fbsbx.com fbcdn.net *.giphy.com connect.facebook.net *.carriersignal.info blob: android-webview-video-poster: googleads.g.doubleclick.net www.googleadservices.com *.whatsapp.net *.fb.com *.oculuscdn.com;
+                            media-src *.cdninstagram.com blob: *.fbcdn.net *.fbsbx.com www.facebook.com *.facebook.com https://*.giphy.com data:;
+                            frame-src *.doubleclick.net *.google.com *.facebook.com www.googleadservices.com *.fbsbx.com fbsbx.com data: www.instagram.com *.fbcdn.net https://paywithmybank.com;
+                            worker-src blob: *.facebook.com data:;
+                            block-all-mixed-content;
+                            upgrade-insecure-requests;
+
+        h2 body
+        ul
+            li heading : h1 ~ h6
+            li paragraph : p
+            li link : a
+            ol
+                li href 속성 : 이동할 위치나 주소
+                p # : 현재 페이지의 특정 위치(id)로 이동하기 위한 표기. '#here'은 현재 페이지의 HTML 요소 중 id가 'here'인 것을 가리킨다
+                li 링크 상태를 나타내는 속성 : link, visited, hover, active
+                li target 속성 : _blank(새탭이나 새창에서 열기), _self, _parent, _top, framename
+            li 이미지 : img
+            ol
+                li src 속성 : 이미지 리소스의 위치나 주소
+                li alt 속성 : 이미지를 불러오지 못할 때, 혹은 시각장애인을 위한 대체 문자열
+                li width, height 속성 : 이미지 크기
+            li line break : br
+            li 수평선 : hr
+            li 해석 없이 출력 : pre
+            li text
+            ol
+                li &lt;b>&lt;/b> : bold
+                li &lt;strong>&lt;/strong> : bold & important
+                li &lt;i>&lt;/i> : italic
+                li &lt;em>&lt;/em> : italic & important
+                li &lt;small>&lt;/small> : 작은 글자
+                li &lt;mark>&lt;/mark> : 형광펜으로 칠한 것처럼
+                li &lt;del>&lt;/del> : 취소선
+                li &lt;ins>&lt;/ins> : 삽입 문구에 밑줄
+                li &lt;sub>&lt;/sub>, &lt;sup>&lt;/sup> : 아랫첨자, 윗첨자
+            li 주석 : &lt;!-- 주석 -->
+            li table
+            ol
+                li table은 thead와 tbody로 이루어진다
+                li thead와 tbody는 tr들로 이루어진다
+                li tr은 th와 td들로 이루어진다
+                li colgroup을 이용해 열들을 논리적으로 분리할 수 있다
+            li list
+            ol
+                li unordered list : &lt;ul>&lt;/ul>
+                li ordered list : &lt;ol>&lt;/ol>
+                p type 속성 : "1"(default), "A", "a", "I"(로마숫자), "i"
+                li list item : &lt;li>&lt;/li>
+            li div : 가로 100%를 점유하는 block element 대표
+            li span : 가로 공간이 여유롭다면 병렬로 표시되는 inline element 대표
+
+    h1 Form
+    ol
+        li form은 HTML 페이지로부터 데이터를 전송하기 위한 정형화된 틀이다. form 내부는 input 태그들로 채워진다
+        li &lt;input type=""> : text, password, radio, checkbox, submit, reset...
+        li form 속성 : action="주소", target="_blank | _top | ...", method="get | post"
+        li &lt;fieldset> : 입력 요소 그루핑, &lt;legend> : 그룹 설명
+        li &lt;select name="">&lt;option value="">&lt;/option> ~ &lt;/select>
+        li &lt;textarea rows="" cols="">, &lt;button onclick="">
+        li &lt;input type=""> : color, date, email, month, number, range, time, ...
+        li 입력 요소 속성 : name, max, maxlength, min, pattern, readonly, required, disabled, size, ...
+            +asA('https://www.w3schools.com/html/html_form_attributes.asp')
+
+    h1 HTML5
+    ul
+        li 시맨틱; Semantic
+        p HTML5 이전의 웹페이지들은 table 태그를 주로 사용하여 디자인했다. 중첩된 table들로 이루어진 웹페이지는 검색 엔진을 비롯한 프로그램이 기계적으로 의미를 찾기 어려워 HTML5는 문서에 대한 의미를 태그가 포함하는 방향을 모색했다
+        li 시맨틱 태그
+        p header, nav, section, article, aside, footer, ...
+            +asA('https://www.w3schools.com/html/html5_semantic_elements.asp')
+        li 시맨틱 CSS
+        p HTML5로 접어들면서 HTML 태그들은 골격만을 정의하고, 디자인은 JavaScript와 CSS로 보다 확실히 분리되었다. 디자인의 특징은 의미 범주가 같은 것들을(class) 비슷하게 표현한다는 것이며, 따라서 CSS 선택자들은 문서의 의미 정보를 내포하고 있다고 할 수 있다
+            br
+            |Bootstrap, W3C.CSS과 같은 인기 있는 CSS Framework들을 사용하면 체계적으로 정의된 클래스들 덕분에 수월하게 문서의 의미 정보를 뽑아낼 수 있다
+        li 반응형 웹
+        ol
+            li 스마트폰 대중화 이전의 일반 사용자 컴퓨팅 환경은 가로 768px 이상의 직사각형 모니터가 대부분이었다
+            li 스마트폰이 대중화 되면서 다양한 사용자 웹서핑 환경에 맞춰 알맞게 페이지를 보여줄 필요가 생겼다
+            li viewport로 대표되는 screen 속성을 이용해 페이지를 다시 로드할 필요 없이 디자인이 변경되는 반응형 웹 기술이 발전하게 되었다
+        li 반응형 태그
+        ol
+            li picture : 스크린에 따라 다른 이미지 소스를 이용
+            +asCode('HTML').
+                출처 : https://www.w3schools.com/html/html_responsive.asp
+                &lt;picture>
+                    &lt;source srcset="img_smallflower.jpg" media="(max-width: 600px)">
+                    &lt;source srcset="img_flowers.jpg" media="(max-width: 1500px)">
+                    &lt;source srcset="flowers.jpg">
+                    &lt;img src="img_smallflower.jpg" alt="Flowers">
+                &lt;/picture>
+        li 멀티미디어
+        +asA('https://www.w3schools.com/tags/ref_av_dom.asp', 'Audio/Video')
+        +asA('https://www.w3schools.com/graphics/default.asp', 'Graphic')
+        +asA('https://www.w3schools.com/html/html_object.asp', 'Plug-in')
+
+    h1 Canvas
+    ul
+        li canvas를 지원하지 않는 브라우저를 위해 태그 안에 fallback content(대체 텍스트 또는 DOM)를 적어주면 좋다
+        li 스크립트에서 canvas의 지원을 확인하는 방법 : DOM이 HTMLCanvasElement 클래스인지 확인
+            +codeBtn('/Repositories/JavaScript/Browser/draw1.js', 'javascript')
+        li 캔버스의 기본 그리기 요소는 직사각형과 path(일련의 점들을 선분으로 연결) 두 가지
+        canvas#tutorial-canvas-1(width='100%', max-height='33%') 연습용 캔버스1
+    div
+        h2
+            |interface
+            +asA('https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement', 'HTMLCanvasElement')
+            |  : HTMLElement
+        ul
+            li width, height : 각각 캔버스의 너비, 높이. 기본값은 300, 150
+            li getContext(contextType[, contextAttributes])
+            p contextType : '2d'(CanvasRenderingContext2D), 'webgl'(WebGLRenderingContext), 'webgl2'(WebGL2RenderingContext), 'bitmaprenderer'(ImageBitmapRenderingContext)
+            li toDataURL([type][, encoderOptions])
+            p type : default 'image/png', encoderOptions : default 0.92, 이미지 퀄리티[0, 1]
+            li toBlob(callback[, mimeType][, qualityArgument])
+            p callback : Blob을 먹는 함수, mimeType : default 'image/png', qualityArgument : 이미지 퀄리티[0, 1]
+        h2
+            |interface
+            +asA('https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D', 'CanvasRenderingContext2D')
+        div
+            h3 사각형 그리기
+            ul
+                li clearRect(x, y, width, height)
+                p 지정 사각형을 rgba(0,0,0,0)로 초기화. 이후 path를 그릴 땐 beginPath()를 다시 호출해야 함에 유의
+                li fillRect(x, y, width, height)
+                p 지정 사각형을 현재 fillStyle로 채우기 == rect() + fill()
+                li strokeRect(x, y, width, height)
+                p 지정 사각형에 현재 strokeStyle로 외각선 그리기 == rect() + stroke()
+            h3 텍스트 그리기
+            ul
+                li fillText(text, x, y[, maxWidth])
+                p 텍스트를 그리고 글자 내부는 현재 fillStyle로 채운다
+                li strokeText(text, x, y,[, maxWidth])
+                p 텍스트를 그리고 글자 외각선은 현재 fillStyle로 채운다
+                li measureText(text)
+                p 텍스트를 그린 결과가 어떻게 될지 미리 알 수 있는
+                    +asA('https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics', 'TextMetrics')
+                    |  객체 반환
+            h3 path 생성
+            ul
+                p 아래 메서드들은 실제 그리기 작업을 수행하지는 않는다
+                li beginPath() : 그리기 시작 명시
+                li closePath() : path 조각이 하나 이상 추가되었고, 마지막 정점이 시작점과 다른 경우 두 점을 잇는 선분을 추가한다
+                li moveTo(x, y) : path 조각의 시작점을 설정
+                li lineTo(x, y) : 마지막 정점으로부터 (x, y)까지의 선분을 추가
+                li bazierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
+                p 마지막 정점으로부터 (x, y)까지를 잇는, 2개의 조절점을 이용하는
+                    +asA('https://ko.wikipedia.org/wiki/베지에_곡선', '베지에 곡선')
+                    |을 추가한다
+                li quadraticCurveTo(cpx, cpy, x, y)
+                p 마지막 정점으로부터 (x, y)까지를 잇는, 1개의 조절점을 이용하는
+                    +asA('https://ko.wikipedia.org/wiki/베지에_곡선', '베지에 곡선')
+                    |을 추가한다
+                li arc(x, y, radius, startAngle, endAngle[, anticlockwise])
+                p (x, y)를 기준점으로 하는 반지름 radius인 호를 추가한다. anticlockwise의 기본값은 false. anticlockwise를 true로 한다고 각도의 증감 방향이 바뀌진 않는다
+                li arcTo(x1, y1, x2, y2, radius)
+                ol
+                    li 조절점1(x1, y1), 조절점2(x2, y2), 선분1(마지막 정점-조절점1), 선분2(조절점1-조절점2)를 생각한다
+                    li 선분1, 선분2 모두와 거리가 radius만큼 떨어진 정점2를 생각한다. 그러면 정점2에서 반지름 radius인 원을 그렸을 때 선분1, 선분2와의 교점1, 교점2가 존재한다
+                    li lineTo(교점1)
+                    li 교점1부터 교점2까지의 호를 추가한다. arc(정점2, radius, ...)
+                li ellipse(x, y, radiusX, radiusY, rotation, startAngle, endAngle[, anticlockwise])
+                p rotation은 라디안 단위의 값으로, 해당 값만큼 타원을 회전시킨다
+                li rect(x, y, width, height)
+            h3 path 그리기
+            ul
+                li fill([fillRule])
+                    br
+                    |fill(path[, fillRule])
+                ul 현재 또는 지정된 path의 영역 내부를 칠한다
+                    li fillRule : '
+                        +asA('https://en.wikipedia.org/wiki/Nonzero-rule', 'nonzero')
+                        |'(default) | '
+                        +asA('https://en.wikipedia.org/wiki/Even-odd_rule', 'evenodd')
+                        |'
+                    li path :
+                        +asA('https://developer.mozilla.org/en-US/docs/Web/API/Path2D', 'Path2D')
+                        |  인스턴스
+                li stroke([path])
+                p 현재 또는 지정된 path의 외각선을 그린다(outline)
+                li drawFocusIfNeeded(element)
+                    br
+                    |drawFocusIfNeeded(path, element)
+                p element가 focus를 얻은 상태면 현재 또는 지정된 path 주변에 강조선을 그린다
+                li scrollPathIntoView([path])
+                p Experimental. Element.scrollIntoView()와 유사하게, 현재 또는 지정된 path가 스크린에 표시되도록 스크롤을 이동한다
+                li clip([fillRule])
+                    br
+                    |clip(path[, fillRule])
+                p fillRule은 fill()과 동일. 현재 또는 지정된 path를 관심영역으로 설정한다. 이후의 그리기는 관심영역 내부의 것만 렌더링된다
+                li isPointInPath(x, y[, fillRule])
+                    br
+                    |isPointInPath(path, x, y[, fillRule])
+                p fillRule은 fill()과 동일. 정점이 현재 또는 지정된 path의 내부에 있는지 판별한다
+                li isPointInStroke(x, y)
+                    br
+                    |isPointInStroke(path, x, y)
+                p 정점이 현재 또는 지정된 path의 외각선 위에 있는지 판별한다
+            h3 path 스타일
+            ul
+                li lineWidth : default 1.0
+                li lineCap : 종점 표시 종류. 'butt'(default), 'round', 'square'
+                li lineJoin : 교점 표시 종류. 'round', 'bevel', 'miter'(default)
+                p + miterLimit
+                li getLineDash() + setter
+                p 선분 요소와 공백(gap)의 길이로 이루어진 배열. 원소가 홀수개라면 자동으로 뒤에 똑같은 배열이 덧붙여져 짝수 크기가 된다
+                    br
+                    |+ lineDashOffset : 선분을 그리기 시작할 offset. default 0.0
+            h3 텍스트 스타일
+            ul
+                li font : default '10px sans-serif'
+                li textAlign : 'start'(default), 'end', 'left', 'right', 'center'
+                li textBaseline : 'top', 'hanging', 'middle', 'alphabetic'(default), 'ideographic', 'bottom'
+                li direction : 'inherit'(default), 'ltr'(left to right), 'rtl'
+            h3 fillStyle, strokeStyle
+            ol
+                p default '#000', 값으로 가능한 타입은 아래 3가지
+                li DOMString : CSS 색상으로 파싱될 수 있는 문자열
+                li CanvasGradient
+                ul
+                    li CanvasRenderingContext2D.createLinearGradient(x0, y0, x1, y1)
+                    p 선형 그래디언트의 시작점(x0, y0), 종점(x1, y1)
+                    li CanvasRenderingContext2D.createRadialGradient(x0, y0, r0, x1, y1, r1)
+                    p 원형 그래디언트의 시작 원(x0, y0, r0), 끝 원(x1, y1, r1)
+                li CanvasPattern
+                ul
+                    li CanvasRenderingContext2D.createPattern(image, repetition)
+                    ul
+                        li image : HTMLImageElement, SVGImageElement, HTMLVideoElement, HTMLCanvasElement, ImageBitmap, OffscreenCanvas
+                        li repetition : 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat'
+            h3 그림자 그리기
+            ul
+                li shadowBlur : default 0
+                li shadowColor : CSS 색상으로 파싱될 수 있는 문자열
+                li shadowOffsetX : default 0
+                li shadowOffsetY : default 0
+            h3 이미지 그리기
+            ul
+                li drawImage(image, dx, dy);
+                    +codeBtn('/Repositories/JavaScript/Browser/draw2.js', 'javascript')
+                li drawImage(image, dx, dy, dWidth, dHeight);
+                li drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+            canvas#tutorial-canvas-2(width='100%', max-height='33%') 연습용 캔버스2
+            h3 변환
+            div
+                h4 DOMMatrix
+                ul
+                    li 2D 및 3D 변환을 나타내는 4x4 행렬
+                    li 속성
+                    ul
+                        li readonly is2D : true면 2D 변환행렬, false면 3D
+                        li readonly isIdentity : 단위행렬인지 여부
+                        li m11, m12, ..., m43, m44 : 행렬 성분. double
+                        li a, b, c, d, e, f : 2D 변환에 사용되는 값. 차례로 2x2 변환행렬, dx, dy에 해당하며, m11, m12, m21, m22, m41, m42에 대응한다
+            ul
+                li setTransform(a, b, c, d, e, f)
+                    br
+                    |setTransform(matrix) + getTransform()
+                li transform(a, b, c, d, e, f)
+                p old = ctx.getTransform();
+                    br
+                    |식[m_{old} = \begin{bmatrix} old.a & old.c & old.e \\ old.b & old.d & old.f \\ 0 & 0 & 1 \end{bmatrix}]식
+                    br
+                    |식[m_{new} = m_{old} \begin{bmatrix} a & c & e \\ b & d & f \\ 0 & 0 & 1 \end{bmatrix}]식
+                li scale(x, y)
+                p 기본적으로 캔버스 내의 단위는 정확히 px과 같지만 이를 변경할 수 있다. 음수 스케일링은 요소를 뒤집는 효과가 있다
+                li rotate(angle) : (0, 0)을 기준으로 시계방향 회전. 단위는 라디안
+                li translate(x, y)
+                p 현재의 dx, dy에 각각 x, y만큼 추가한다
+
+            h3 전역 속성
+            ul
+                li globalAlpha
+                p 캔버스에 그려지기 전에 도형, 이미지 등에 적용되는 투명도. default 1.0
+                li: +asA('https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation', 'globalCompositeOperation')
+                p 캔버스의 기존 내용에 새로운 도형, 이미지를 추가할 때의 합성 방법. 기본값은 덮어쓰기('source-over').
+
+            h3 비트 조작
+            div
+                h4 ImageData
+                ul
+                    li 캔버스 비트 배열 정보를 갖는 인터페이스. CanvasRenderingContext2D 메서드 또는 생성자로 인스턴스를 얻을 수 있다
+                    li 생성자
+                    ul
+                        li ImageData(array, width[, height])
+                        p array는 RGBA값을 담은 Uint8ClampedArray. 길이가 정확하지 않으면 에러 발생
+                        li ImageData(width, height) : 검은 사각형
+                    li 속성
+                    ul
+                        li data : RGBA값을 가진 Uint8ClampedArray
+                        li width, height
+            ul
+                li getImageData(sx, sy, sw, sh)
+                p 지정 사각형 영역의 정보를 가진 ImageData 반환. 여기서 지정한 사각형은 변환 행렬의 영향을 받지 않으며, 캔버스 바깥을 포함하는 경우 RGBA(0, 0, 0, 0)로 채워진다
+                li putImageData(imageData, dx, dy[, dirtyX, dirtyY, dirtyWidth, dirtyHeight])
+                p 지정 위치에 imageData를 덮어쓴다. dirty* 매개변수로 그릴 imageData 영역을 지정할 수 있다
+                li createImageData(width, height)
+                    br
+                    |createImageData(imagedata)
+                p RGBA(0, 0, 0, 0)으로 채워진 새 ImageData 인스턴스를 반환한다. imagedata로 호출한 경우, imagedata의 width, height만 사용된다
+
+            h3 상태 저장/복구
+            ul
+                li canvas : 연관 HTMLCanvasElement 객체. null일 수 있음
+                li save()
+                p 다음 항목들을 저장한다 : 변환행렬, 관심영역, lineDash, strokeStyle, fillStyle, globalAlpha, lineWidth, lineCap, lineJoin, miterLimit, lineDashOffset, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, globalCompositeOperation, font, textAlign, textBaseline, direction, imageSmoothingEnabled
+                li restore() : save()로 저장한 사항 복구

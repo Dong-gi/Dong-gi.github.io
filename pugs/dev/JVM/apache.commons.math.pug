@@ -1,0 +1,101 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: 'Apache Commons Math 3.6.1',
+    description: 'Apache Commons Math 정리',
+})
+
+    h1 org.apache.commons.math3
+    p 참고 자료 : #[+asA('https://commons.apache.org/proper/commons-math/javadocs/api-3.6.1/index.html')]
+    div
+        h2 Field&lt;T>
+        +asCode('java').
+            T getZero() // 체의 덧셈 항등원
+            T getOne()  // 체의 곱셈 항등원
+            Class&lt;? extends FieldElement&lt;T>> getRuntimeClass()
+
+        h2 FieldElement&lt;T>
+        p add, subtract, negate(덧셈 역원), multiply, divide, reciprocal(곱셈 역원), getField
+
+    h1 ...analysis
+    p 미/적분, 보간 등
+
+    h1 ...complex
+    p 복소수
+
+    h1 ...distributionn
+    p 확률 분포
+
+    h1 ...fitting
+    p Curve fitting
+
+    h1 ...fraction
+    p 분수
+
+    h1 ...genetics
+    p 유전 알고리즘
+
+    h1 ...geometry
+    p 기하
+
+    h1 ...linear
+    p 선형대수
+
+    h1 ...ml
+    p 머신 러닝
+
+    h1 ...ode
+    p 상미분방정식
+
+    h1 ...optim
+    p 최적화 문제
+
+    h1 ...primes
+    div
+        h2 Primes
+        +asCode('java').
+            static boolean isPrime(int n)
+            static int nextPrime(int n)
+            static List&lt;Integer> primeFactors(int n) // 소인수분해
+
+    h1 ...random
+    p MersenneTwister, GaussianRandomGenerator, ISAACRandom 등
+
+    h1 ...stat
+    div
+        p 통계
+        h2 StatUils
+        +asCode('java').
+            static double sum(double[] values)
+            static double sumSq(double[] values)                // 제곱합
+            static double product(double[] values)
+            static double sumLog(double[] values)               // 자연로그합
+            static double mean(double[] values)
+            static double geometricMean(double[] values)        // 기하평균
+            static double variance(double[] values)             // 분산; / (n-1)
+            static double populationVariance(double[] values)   // 분산; / N
+            static double max(double[] values)                  // + min
+            static double percentile(double[] values, double p)
+            static double sumDifference(double[] sample1, double[] sample2)
+            static double meanDifference(double[] sample1, double[] sample2)
+            static double[] normalize(double[] sample)
+            static double[] mode(double[] sample)               // 최빈값
+
+    h1 ...util
+    div
+        h2 ArithmeticUtils
+        +asCode('java').
+            static int addAndCheck(int x, int y)
+                // 오버플로 감지시 예외 발생 + mulAndCheck, subAndCheck, pow
+            static int gcd(int p, int q) // + lcm
+
+        h2 Combinations
+        p 조합
+
+        h2 CombinatoricsUtils
+        +asCode('java').
+            static long binomialCoefficient(int n, int k) // 이항계수
+            static long factorial(int n)
+
+        h2 FastMatth
+        p Math, StrictMath 보다 빠른 유틸리티

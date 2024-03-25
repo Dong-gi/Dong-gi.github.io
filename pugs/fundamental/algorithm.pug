@@ -1,0 +1,800 @@
+include ../../source/skeleton.pug
+
++post({
+    title: '알고리즘',
+    description: '알고리즘 개론',
+    useMath: true,
+})
+
+    script#qrcode-js(src="/source/qrcode.min.js")
+    h1 알고리즘의 평가
+    ol
+        li 시간복잡도 : 입력의 크기에 따른 소요 시간 평가
+        li 공간복잡도 : 입력의 크기에 따른 필요 메모리 평가
+        li.marker 빅-오 표기법 : 점근적 상한
+        ul
+            li 양의 실수에서 정의되는 함수 식[f(n)]식의 점근적 상한 식[O(g(n))]식은 다음과 같이 정의된다
+            p 식[O(g(n)) = \{ f(n) \mid \exists{a, b}, \forall{n \ge a}, 0 \le f(n) \le bg(n) \}]식
+            li 이는 함수 식[f(n)]식이 궁극적으로 식[g(n)]식보다 빠르게 증가하지 않음을 의미한다; 식[\lim_{n \to \infty} {f(n) \over bg(n)} \le 1]식
+            p 예를 들어, 식[f(n) = 4n + 1]식의 점근적 상한으로 식[O(4n + 1)]식, 식[O(n^2 + 2n + 3)]식, 식[O(2^n + n)]식 등이 모두 가능하며, 이들 중 가장 의미가 있는 표기 ─ 가능한 상한 중 최소 표기 ─ 는 식[O(4n + 1)]식, 특히 상수계수를 제거하고 지배항만 남긴 식[O(n)]식이 된다
+        li 오메가 표기법 : 점근적 하한
+        ul
+            li 양의 실수에서 정의되는 함수 식[f(n)]식의 점근적 하한 식[\Omega(g(n))]식은 다음과 같이 정의된다
+            p 식[\Omega(g(n)) = \{ f(n) \mid \exists{a, b}, \forall{n \ge a}, 0 \le bg(n) \le f(n) \}]식
+            li 이는 함수 식[f(n)]식이 궁극적으로 식[g(n)]식보다 빠르게 증가함을 의미한다; 식[\lim_{n \to \infty} {f(n) \over bg(n)} \ge 1]식
+            p 예를 들어, 식[f(n) = 4n^3 + 2n + 1]식의 점근적 하한으로 식[\Omega(4n^3 + 2n + 1)]식, 식[\Omega(n^2 + 2n + 3)]식, 식[\Omega(2)]식 등이 모두 가능하며, 이들 중 가장 의미가 있는 표기 ─ 가능한 하한 중 최대 표기 ─ 는 식[\Omega(4n^3 + 2n + 1)]식, 특히 상수계수를 제거하고 지배항만 남긴 식[\Omega(n^3)]식이 된다
+        li.marker 세타 표기법
+        p 식[\Theta(g(n)) = O(g(n)) \cap \Omega(g(n))]식
+        p 예를 들어, 식[f(n) = 4n^3 + 2n + 1]식에 대하여, 식[g(n) = n^3]식이 점근적 상한과 하한 모두를 만족하므로, 식[f(n) \in \Theta(n^3)]식이다
+
+    h1 자료구조
+    div
+        h2 트리
+        ol
+            li Complete Binary Tree : 모든 leaf node의 레벨이 h 또는 h-1인 이진 트리(h는 트리의 height)
+            li 이진 트리의 탐색 : (왼쪽 노드 방문, 오른쪽 노드 방문, 현재 노드 처리)의 순열 == 3!
+            li 이진 검색 트리 : 노드의 좌우 서브 트리 사이에 분명한 대소관계가 존재
+            li AVL 트리 : 이진 검색 트리 임의 노드에서 좌우 서브 트리 높이 차이 &lt;= 1을 만족
+            li 힙 : 상하 노드 사이에 분명한 대소관계가 존재. 우선순위 큐 구현에 적합
+        div
+            h3 AVL 트리의 회전
+            ol
+                li 트리에 대한 삽입/삭제 연산에 의해 좌우 서브 트리 높이 차이가 2가 될 수 있다
+                li 인접한 3개 노드의 위치 변경(회전)을 통해 이를 해소할 수 있다
+                li 회전의 기준이 되는 세 노드 x, y, z는 다음과 같다
+                ul
+                    li z는 삽입/삭제된 위치로부터 root로 가는 경로상 처음으로 존재하는 불균형 노드
+                    li y는 z의 자식 중에서 가장 큰 높이를 갖는 노드
+                    li x는 y의 자식 중에서 가장 큰 높이를 갖는 노드
+                li x ← y ← z가 서로 같은 방향일 때는 한 번의 회전으로 균형을 되찾을 수 있다
+                li x ← y ← z가 서로 다른 방향일 때는 두 번의 회전으로 균형을 되찾을 수 있다
+            table.no-sort
+                tr
+                    th(colspan='12') LL Rotation : this, this.left, this.left.left가 서로 위치 변경
+                tr
+                    td(colspan='4')
+                        pre
+                            |      +-+
+                            |      |5|
+                            |     +-----+
+                            |   +-+     +--+
+                            |   |3|     |11|
+                            |  +--+    +---+
+                            |+-+     +-+
+                            ||1|     |9|
+                            |+-+    +---+
+                            |     +-+   +--+
+                            |     |7|   |10|
+                            |     +-+   +--+
+                    td(colspan='4')
+                        pre
+                            |      +-+
+                            |      |5|
+                            |     +----+
+                            |   +-+    +-+
+                            |   |3|    |9|
+                            |  +--+   +---+
+                            |+-+    +-+   +--+
+                            ||1|    |7|   |11|
+                            |+-+    +-+   +--+
+                            |           +--+
+                            |           |10|
+                            |           +--+
+                    td(colspan='4')
+                        +asCode('python').
+                            def rotate_ll():
+                                parent.change(this, this.left)
+                                left.parent, parent = this.parent, left
+                                left.right, left = this, left.right
+                tr
+                    th(colspan='12') RR Rotation : this, this.right, this.right.right가 서로 위치 변경
+                tr
+                    td(colspan='4')
+                        pre
+                            |      +-+
+                            |      |5|
+                            |     +---+
+                            |   +-+   +-+
+                            |   |3|   |7|
+                            |  +--+   +--+
+                            |+-+         +-+
+                            ||1|         |9|
+                            |+-+        +---+
+                            |         +-+   +--+
+                            |         |8|   |11|
+                            |         +-+   +--+
+                    td(colspan='4')
+                        pre
+                            |      +-+
+                            |      |5|
+                            |     +----+
+                            |   +-+    +-+
+                            |   |3|    |9|
+                            |  +--+   +---+
+                            |+-+    +-+   +--+
+                            ||1|    |7|   |11|
+                            |+-+    +-+   +--+
+                            |         +-+
+                            |         |8|
+                            |         +-+
+                    td(colspan='4')
+                        +asCode('python').
+                            def rotate_rr():
+                                parent.change(this, this.right)
+                                right.parent, parent = this.parent, right
+                                right.left, right = this, right.left
+                tr
+                    th(colspan='12') LR Rotation : this, this.left, this.left.right가 서로 위치 변경
+                tr
+                    td(colspan='3')
+                        pre
+                            |     +-+
+                            |     |9|
+                            |    +---+
+                            |  +-+   +--+
+                            |  |3|   |11|
+                            |  +-+   +--+
+                            |+-+ +-+
+                            ||1| |5|
+                            |+-+ +-+
+                            |      +-+
+                            |      |7|
+                            |      +-+
+                    td(colspan='3')
+                        pre
+                            |       +-+
+                            |       |9|
+                            |      +---+
+                            |    +-+   +--+
+                            |    |5|   |11|
+                            |    +-+   +--+
+                            |  +-+ +-+
+                            |  |3| |7|
+                            |  +-+ +-+
+                            |+-+
+                            ||1|
+                            |+-+
+                    td(colspan='3')
+                        pre
+                            |     +-+
+                            |     |5|
+                            |    +---+
+                            |  +-+   +-+
+                            |  |3|   |9|
+                            |  +-+   +--+
+                            |+-+   +-+  +--+
+                            ||1|   |7|  |11|
+                            |+-+   +-+  +--+
+                    td(colspan='3')
+                        +asCode('python').
+                            def rotate_lr():
+                                left.rotate_rr()
+                                rotate_ll()
+                tr
+                    th(colspan='12') RL Rotation : this, this.right, this.right.left가 서로 위치 변경
+                tr
+                    td(colspan='3')
+                        pre
+                            |   +-+
+                            |   |5|
+                            |  +-----+
+                            |+-+     +--+
+                            ||3|     |11|
+                            |+-+    +----+
+                            |     +-+    +--+
+                            |     |9|    |12|
+                            |    +--+    +--+
+                            |  +-+
+                            |  |7|
+                            |  +-+
+                    td(colspan='3')
+                        pre
+                            |   +-+
+                            |   |5|
+                            |  +----+
+                            |+-+    +-+
+                            ||3|    |9|
+                            |+-+   +---+
+                            |    +-+   +--+
+                            |    |7|   |11|
+                            |    +-+   ----+
+                            |              +--+
+                            |              |12|
+                            |              +--+
+                    td(colspan='3')
+                        pre
+                            |       +-+
+                            |       |9|
+                            |     +----+
+                            |   +-+    +--+
+                            |   |5|    |11|
+                            |  +---+   ----+
+                            |+-+   +-+     +--+
+                            ||3|   |7|     |12|
+                            |+-+   +-+     +--+
+                    td(colspan='3')
+                        +asCode('python').
+                            def rotate_rl():
+                                right.rotate_ll()
+                                rotate_rr()
+
+        h2 그래프
+        ul
+            li 정점과 간선의 집합
+            p G(graph) = V(vertex) + E(edge)
+            li 모든 간선의 가중치가 동일한 그래프, 또는 사이클이 없는 그래프(트리)의 탐색은 너비 우선 탐색, 깊이 우선 탐색 2개로 적절히 해결된다. 동일한 정점을 2번 조사할 필요도 없다
+        div
+            h3 양방향 탐색; Bidirectional search
+            p 시작점과 종점 각각을 기준으로 너비우선 탐색 동시 실행
+
+            h3 최단경로 찾기 : 다익스트라
+            ol
+                li 시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대. 간선의 가중치에 음수가 있는 경우 적용 불가
+                li 정의
+                ul
+                    li W(P) := 시작점으로부터 정점 P까지 도달하는 가중치의 현재 최소합
+                    li W(P1, P2) := 간선 P1→P2의 가중치
+                    li Working set := 최단경로 알고리즘의 가중치 업데이트 대상이 되는 정점 집합. 최초값은 시작점으로부터 간선 하나만 건너 도달할 수 있는 모든 정점
+
+                li Working set에 속한 정점 P중, W(P)가 가장 낮은 P에 대해 다음을 수행한다
+                ol
+                    li Working set에서 P 제거
+                    li P에서 간선 하나만 건너 도달할 수 있는 모든 정점 P'에 대해, W(P') = min(W(P'), W(P) + W(P, P'))를 수행하고, W(P')값이 변경된 경우 P'을 Working set에 추가한다
+                    li 만약 P'이 목표 지점이라면, 최단 경로를 찾았으므로 추가 작업을 중지한다
+
+            h3 최단경로 찾기 : A*
+            ul
+                li 도착점의 추정 가중치 0부터 시작하여, 도착점으로부터 먼 정점일수록 높아지는 추정 가중치를 갖고 시작한다
+                li 다익스트라 알고리즘을 사용하되, Working set에서 작업 대상이 되는 원소를 찾을 때, 추정 가중치를 합하여 구한다는 게 차이점
+
+            h3 최단경로 찾기 : 벨만-포드
+            ul
+                li 음수 가중치의 간선이 존재하는 경우, Working set은 정점이 아닌 간선을 대상으로 하고, 매 업데이트마다 모든 간선을 검사한다
+                li 다익스트라 알고리즘과 마찬가지로 시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대
+                li 그래프 임의의 정점 P에 대한 W(P)의 변동이 없을 때까지 아래를 반복한다
+                p 그래프 모든 간선 P→P'에 대해, W(P') = min(W(P'), W(P) + W(P, P'))
+                li |V|-1번의 업데이트로 모든 정점까지의 모든 최단경로가 구해지며, |V|번째의 업데이트로 갱신이 일어난 경우는 음수 가중치의 사이클이 존재하는 것이므로 최단 경로는 존재하지 않는다
+
+            h3 무방향 그래프의 최소신장 트리 : 크루스칼
+            ol
+                li 최초 |V|개의 집합을 생성하고, 그래프 각 정점이 하나씩 포함된다
+                li 집합이 하나만 남을 때까지 다음을 반복한다
+                li 최소 가중치 간선을 선택 → 두 정점이 서로 다른 집합에 포함된 경우 → 두 집합을 합치고 간선은 결과에 추가
+                p 간선의 두 정점이 같은 집합에 포함된 경우 간선은 버려진다
+
+            h3 DAG(사이클 없는 방향 그래프)에서의 최단경로 찾기
+            ol
+                li 시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대
+                li 시작점부터 종점까지에 대해
+                    +goto('위상 정렬')
+                    |  수행
+                li 정렬한 순서대로 정점을 방문하여 가중치 갱신
+
+        h2 해시 테이블
+        div
+            h3 좋은 해시 함수 요건
+            ul
+                li 치역은 정의역보다 작아야 한다
+                li 정의역 전체 입력에 대해, 결과는 치역 전체에서 골고루 발생해야 한다
+                li 계산은 매우 빠르게 수행되어야 한다
+                li 보안이 필요하다면, 추가로 암호학적으로 안전해야 한다
+                ul
+                    li 임의의 해시 값으로부터 원본 입력을 찾기 어려워야 한다
+                    li 동일한 해시 값을 산출하는 서로 다른 입력을 찾기 어려워야 한다
+                    li 입력과 결과 쌍을 가지고 해시 함수를 구하기 어려워야 한다
+            h3 Re-hashing; Map resizing
+            p 초기 버킷 크기의 일정 비율(e.g. 75%)을 채운 경우, 버킷 크기를 늘리고(e.g. 2배) 각 엔트리를 다시 저장
+
+    h1 정렬
+    p Stability : 정렬 키가 동일한 두 요소의 순서가 정렬 후에도 유지되는 경우
+    div
+        h2 Bubble Sort
+        +asCode('python').
+            is_go_next = True
+            while is_go_next:
+                is_go_next = False
+                for i in range(0, len(l)-1):
+                    if l[i] > l[i+1]:
+                        l[i], l[i+1] = l[i+1], l[i]
+                        is_go_next = True
+        h2 Selection Sort
+        +asCode('python').
+            for i in range(0, len(l)-1):
+                x = l.index(min(l[i:]))
+                l[i], l[x] = l[x], l[i]
+        h2 Insertion Sort
+        +asCode('python').
+            for i in range(1, len(l)):
+                x = l.pop(i)
+                for j in range(0, i):
+                    if l[j] > x:
+                        l.insert(j, x)
+                        break
+                else:
+                l.insert(i, x)
+        h2 Merge Sort
+        p 버블 소트 1단계 실행 → 부분적으로 정렬된 리스트들을 마지막 1개가 될 때까지 병합
+        h2 Heap Sort
+        p 힙에 모두 넣고 순서대로 빼내면 정렬된다
+        h2 Quick Sort
+        p 크기가 3 이상인 부분 리스트에 대하여, pivot을 하나 선택하여 [&lt;pivot], [=pivot], [&gt;pivot]으로 분할하는 것을 반복
+        +asCode('python', '제자리 정렬 퀵소트').
+            def biggest_small_index(list, min, right, pivot):
+                # list[right]부터 왼쪽으로 탐색하여, pivot보다 작은 최초 원소 인덱스를 반환한다
+                while min &lt;= right:
+                    if list[right] &lt; pivot:
+                        return right
+                    right-=1
+                return -1
+            def quick_sort(list, start=None, end=None, pivot=None):
+                # list[start]부터 list[end]까지 정렬
+                if start == None:
+                    if len(list) > 1:
+                        quick_sort(list, 0, len(list)-1, list[0])
+                    return
+
+                # 2개인 경우는 단순 스왑
+                if end - start == 1:
+                    if list[start] > list[end]:
+                        list[start], list[end] = list[end], list[start]
+                    return
+
+                # 3개 이상인 경우, 결과적으로 [&lt;pivot | >=pivot] 구간으로 나뉘며
+                # list[start:left] == [&lt;pivot]이 성립된다
+                left, right = start, biggest_small_index(list, start, end, pivot)
+                while left &lt;= right:
+                    if list[left] &lt; pivot:
+                        left+=1
+                    else:
+                        list[left], list[right] = list[right], list[left]
+                        left+=1
+                        right = biggest_small_index(list, left, right-1, pivot)
+                # [&lt;pivot] 구간 추가 정렬
+                if left - start > 1:
+                    quick_sort(list, start, left-1, list[start])
+                # [>=pivot] 구간 추가 정렬
+                while left &lt;= end and list[left] == pivot:
+                    left+=1
+                if end - left > 1:
+                    quick_sort(list, left, end, list[left])
+
+            import random
+            for _ in range(1, 1000):
+                l1 = []
+                for _ in range(1, 1000):
+                    l1.append(random.randint(0, 10))
+                l2 = [x for x in l1]
+                quick_sort(l1)
+                l2.sort()
+                assert l1 == l2
+        h2 선택
+        ul
+            li n개의 입력에서 i번째로 작은 원소를 찾는 알고리즘
+            li 퀵소트의 분할 알고리즘에서, pivot을 기준으로 분할을 수행하면 pivot이 전체 중 몇 번째로 작은 원소인지 알 수 있음을 이용
+            li 그러나 퀵소트 알고리즘 그대로 이용할 경우, 최악의 경우 수행시간이 O(n^2)가 된다
+        h2 Counting Sort
+        p n개 입력의 최대 원소 k에 대한 배열에 원소의 개수를 기록함으로써 정렬. 총 소요 시간은 O(n) + O(k)
+        +asCode('python').
+            size = max(l) + 1
+            count = [0] * size
+            result = [x for x in l]
+            for x in l:
+                count[x] += 1
+
+            resultIdx = 0
+            for num in range(size):
+                for _ in range(count[num]):
+                    result[resultIdx] = num
+                    resultIdx += 1
+        h2 Radix sort
+        p n개의 입력이 모두 k 자릿수 이하인 경우, 가장 낮은 자리부터 차례대로 stable 정렬. 총 소요 시간은 O(kn)
+        +asCode('python').
+            size = len(str(max(l)))
+            radixList = [[] for _ in range(10)]
+            for radix in range(size):
+                for x in l:
+                    radixList[(x // (10 ** radix)) % 10].append(x)
+                l = [n for subList in radixList for n in subList]
+                radixList = [[] for _ in range(10)]
+        +pos('위상 정렬')
+        h2 Topological sort
+        p 특정 원소쌍들에 대한 분명한 선후관계만 만족하면, 나머지 원소의 순서는 아무래도 상관없는 정렬을 방향 그래프를 이용해 구하는 방법
+        div
+            h3.fake 방법 1 : 정방향
+            ol
+                li 각 원소쌍의 선후관계를 방향 그래프의 간선으로 표현
+                li 그래프의 정점 개수가 0이 될때까지, 인입 간선이 없는 임의 정점을 제거
+                li 제거한 정점들을 순서대로 나열하면 정렬 완료
+            h3.fake 방법 2 : 역방향
+            ol
+                li 각 원소쌍의 선후관계를 방향 그래프의 간선으로 표현
+                li 그래프의 정점 개수가 0이 될때까지, 임의 정점을 선택하여 깊이 우선 탐색을 이용해 방문한 정점을 제거
+                li 제거한 정점들을 역순으로 나열하면 정렬 완료
+
+    h1 동기화
+    div
+        h2 Busy waiting
+        ul
+            li 다른 스레드를 대기하는 스레드가 여전히 실행 중인 경우
+            p -> 불필요한 CPU 점유 발생, 동기화 기법으로 해소
+            li 동기화 기법을 사용하는 것보다 그냥 대기하는 것이 짧다는 게 확실하다면 그냥 대기하면 된다
+        h2 Monitor
+        p 공유 자원에 대한 배타적인 접근을 지원하는 기법
+        ol
+            li 자원을 요구하는 스레드는 모니터에 진입 -> 입장 큐에 등록
+            li 입장 큐에서 하나의 스레드만 꺼내 실행
+            li 스레드 종료 or 자원 사용 완료한 경우 -> 다른 스레드 실행
+            li 일시 정지한 경우
+            p 현재 스레드를 대기 큐 또는 입장 큐에 재등록 -> 다른 스레드 실행
+        h2 Semaphore
+        p 공유 자원에 대한 배타적인 접근을 지원하는 기법
+        ol
+            li 동일 자원에 대해 최대 n개의 접근이 가능
+            li 스레드가 자원에 대해 x개의 접근을 요구(acquire)
+            p 획득할 때까지 대기 or 획득 실패하면 바로 false 반환
+            li 스레드가 획득한 권한을 반환(release)
+            li Monitor와 다르게, 권한 반환의 책임이 스레드에 있다
+
+    h1 DP; Dynamic Programming
+    p 동적계획법 := 점화식(상향식)/재귀(하향식) + 캐싱
+
+    h1 P-NP
+    ol
+        li 튜링 기계(TM) : 긴 테이프에 쓰여있는 여러 가지 기호들을 일정한 규칙에 따라 바꾸는 기계
+        p 무한한 저장공간은 무한한 길이의 테이프로 나타나는데 이 테이프는 하나의 기호를 인쇄할 수 있는 크기의 정사각형들로 쪼개져있다. 언제든지 기계속에는 하나의 기호가 들어가있고 이를 "읽힌 기호"라고 한다. 이 기계는 "읽힌 기호"를 바꿀 수 있는데 그 기계의 행동은 오직 읽힌 기호만이 결정한다. 테이프는 앞뒤로 움직일 수 있어서 모든 기호들은 적어도 한번씩은 기계에게 읽힐 것이다
+        li P : 결정론적 튜링 기계로 다항 시간 안에 풀 수 있는 결정 문제
+        p: strong 문제에 대한 해답을 다항 시간 안에 풀 수 있음
+        li NP : 비결정론적 튜링 기계로 다항 시간 안에 풀 수 있는 결정 문제. P⊆NP
+        p: strong 해답이 맞는지 틀린지에 대한 결정 문제를 다항 시간 안에 풀 수 있음
+        li NP-Hard : 다음을 만족하는 결정 문제 C. 모든 NP 문제가 다항 시간 안에 C로 변환될 수 있다. NP-난해 문제는 최소한 모든 NP문제만큼 어렵다
+        p Halting problem : 프로그램과 입력값이 주어졌을 때, 프로그램이 정지할 지 아니면 영원히 계산할 지 결정하는 문제
+        li NP-Complete : NP-Hard and C ∈ NP
+        p 어떤 NP-완전 문제가 P에 속한다면 P=NP를 증명하게 된다, 반대로 P에 속하지 않으면 P≠NP를 증명하게 된다
+        p SAT(SATisfiability problem) : 어떠한 변수들로 이루어진 논리식이 주어졌을 때, 그 논리식이 참이 되는 변수값이 존재하는지를 찾는 문제
+
+    h1 보안
+    div
+        h2 참고 자료
+        ul
+            li
+                +asA('https://cwe.mitre.org/', 'CWE : 공통 취약점 분류')
+                +asA('https://cwe.mitre.org/top25/index.html', '전년도 최상위 25개 취약점')
+            li: +asA('https://www.cve.org/', 'CVE : 보고된 취약점 상세 목록')
+            li: +asA('https://wiki.sei.cmu.edu/confluence/display/seccode/SEI+CERT+Coding+Standards', '코딩 표준 규칙/권고')
+            li: +asA('https://www.mois.go.kr/frt/bbs/type001/commonSelectBoardList.do?bbsId=BBSMSTR_000000000045', '행정안전부 > 디지털정보국 > 정보화 표준·지침 자료실')
+            p -> 소프트웨어 개발보안 가이드 및 기타 자료 배포
+
+        h2 디피-헬만 키 교환법
+        div
+            h3 키 교환 절차
+            p 두 키 K1, K2를 합성하는, 교환법칙이 성립하는(F(k1, k2) == F(k2, k1)) 함수 F가 있을 때, 두 대화 참여자 A, B의 키 생성 절차는 아래와 같다
+            ol
+                li A가 B에게 공개키 P를 전달
+                li A, B가 각각 비밀키 SA, SB를 준비
+                li A는 B에게 F(P, SA)를, B는 A에게 F(P, SB)를 전달
+                li A, B는 이제 각각 F(P, SB, SA), F(P, SA, SB)를 이용하여 대화를 암호화할 수 있다
+            p 중간에 공개된 키들을 모두 가로채더라도, P, F(P, SA), F(P, SB)만으로는 F(P, SA, SB)를 만들어낼 수 없다.
+
+            h3 RSA 키 교환 예
+            ol
+                li A가 B에게 (소수 P, 생성자 G) 전달
+                li A, B가 각각 비밀키 X, Y를 준비. (X, Y &lt; P-2)
+                li A는 B에게 G^X mod P를, B는 A에게 G^Y mod P를 전달
+                li A, B는 이제 각각 (G^Y mod P)^X mod P, (G^X mod P)^Y mod P == G^(XY) mod P를 공유한다
+
+            h3 EC(타원 곡선) 키 교환 예
+            +asCode('java').
+                import javax.crypto.KeyAgreement;
+                import com.nimbusds.jose.jwk.*;
+                import com.nimbusds.jose.jwk.gen.ECKeyGenerator;
+                import com.nimbusds.jose.util.Base64URL;
+
+                public class Main {
+                    public static void main(String[] args) throws Exception {
+                        var key1 = new ECKeyGenerator(Curve.P_256)
+                            .keyUse(KeyUse.SIGNATURE)
+                            .generate();
+                        var key2 = new ECKeyGenerator(Curve.P_256)
+                            .keyUse(KeyUse.SIGNATURE)
+                            .generate();
+
+                        System.out.println(key1);
+                        System.out.println(key2);
+                        // {"kty":"EC","d":"iHAe66OGErA1e2WeBPO4KyzaGZR-EV1iUuNBBI60CLw","use":"sig","crv":"P-256","x":"tKsyXHOsfAnG5vIjwKDeDHa_C73_VYPJ2H2pSro1vho","y":"c9Wnk_5N93xgwBpOV71T1p-1KuvCwtblp1EKqXxc8sc"}
+                        // {"kty":"EC","d":"ynSMPN-tX9Qg_ChNxgJIY5bZT3viH1FxH_k5wfeNODc","use":"sig","crv":"P-256","x":"aZqTE0f4S29w6_VivUQRjbYM08KKUTJGGkvThsde-Gw","y":"VKwtaWv1ScPh-SQbycCK520hOUg93vGMLNdYY7j53Nk"}
+
+                        var ka1 = KeyAgreement.getInstance("ECDH");
+                        ka1.init(key1.toPrivateKey());
+                        ka1.doPhase(key2.toPublicKey(), true);
+                        var ka2 = KeyAgreement.getInstance("ECDH");
+                        ka2.init(key2.toPrivateKey());
+                        ka2.doPhase(key1.toPublicKey(), true);
+
+                        System.out.println(Base64URL.encode(ka1.generateSecret()));
+                        System.out.println(Base64URL.encode(ka2.generateSecret()));
+                        // eAglRUPBHQe9OMZE_NaatXxhxEGT1eUQa-dosVM87ZU
+                        // eAglRUPBHQe9OMZE_NaatXxhxEGT1eUQa-dosVM87ZU
+                    }
+                }
+
+        h2 키 교환(Key Exchange)과 키 합의(Key Agreement)
+        ul
+            li 키 합의 : 안전하지 않은 채널을 이용하더라도 두 당사자(party)가 비밀 키를 공유할 수 있도록 보장하는 프로토콜
+            li 키 교환 : 키 합의에 전형적으로 이용되는 알고리즘
+            li 중간자 공격
+            p 물리적으로 격리된 두 당사자 Alice, Bob이 키 합의를 이용해 안전한 통신(Alice↔Bob)을 수행하고자 하지만, 최초 통신부터 중간자 Eve가 존재한다면 공개키를 자신의 것으로 바꿔쳐 Alice↔Eve↔Bob의 3자 연결로 바꿔 모든 평문을 획득할 수 있다.
+            p 때문에 HTTPS의 TLS handshake에는 공인된 인증 기관(CA)이 참여하게 된다
+            ol
+                li Client Hello : 브라우저가 지원하는 TLS 버전, Cipher Suite, 난수 등 전달
+                li Server Hello : 사용할 Cipher Suite, 난수 등 전달
+                li Certificate : 서버는 공개키(CA의 비밀키로 암호화된 SSL 인증서)를 전달
+                p 브라우저는 내장된 CA리스트를 이용해 서버의 SSL 인증서가 유효한지 검증한다
+                li CertificateRequest : 필요한 경우, 서버도 클라이언트의 인증서를 요구할 수 있다
+                li Server Hello Done : Server Hello 완료(Cipher 협상 완료)
+                li Client Key Exchange : 인증서가 유효하면 브라우저는 클라이언트 측 키 교환 정보 전달
+                p RSA 키교환 알고리즘이라면 서버의 공개키로 비밀키를 암호화하여 전달
+                li Change Cipher Spec(Client → Server) : 클라이언트 키 교환 완료. 이후에는 합의된 비밀키(대칭)를 이용해 암호화된 메시지를 전송
+                li Change Cipher Spec(Server → Client) : 서버 키 교환 완료
+                li Finished(Server → Client) : 암호화된 메시지를 하나 전송하면서 handshake 종료
+
+        h2 메시지 인증 코드; MAC(Message Authentication Code)
+        div
+            p 암호문과 키를 이용해 만든 MAC를 암호문과 같이 전달하면 수신측(키를 알고 있어야 함)은 암호문 또는 키의 변조를 감지해낼 수 있다. 흔히 사용되는 것은 암호문과 키를 해싱하여 MAC을 생성하는 HMAC
+            h3 TOTP(Time-based One-time Password)
+            ul
+                li 일정 시간 동안 유효한 OTP를 생성하여 인증하는 알고리즘; 즉, 시간이 검증 대상 메시지가 된다
+                li 비밀키 외에, 비밀번호 구분을 위한 추가 정보를
+                    +asA('https://github.com/google/google-authenticator/wiki/Key-Uri-Format', 'URI')
+                    |에 설정할 수 있다
+                +asCode('text', 'URI') otpauth://totp/${issuer}:${user}?secret=${privateKey}&amp;issuer=${issuer}&amp;algorithm=SHA1&amp;digits=6&amp;period=30
+                ul
+                    li issuer : 서비스 제공자. e.g. Microsoft, LlinkedIn, Amazon Web Service, gmail...
+                    li user : 사용자. e.g. hi.donggi@gmail.com, Donggi Kim, wiz - hi.donggi@gmail.com, ...
+                    li privateKey : Base32 인코딩 문자열. 패딩 불필요
+                    li algorithm : SHA1(default), SHA256, SHA512
+                    li digits : OTP 길이; 6(default)
+                    li period : OTP 유효 시간(초); 30(default)
+                li 구현 예시 :
+                    +codeBtn('/Repositories/STS/TOTP-example/src/main/java/link4/joy/TOTP.java', 'java')
+                    +codeBtn('/Repositories/STS/TOTP-example/src/test/java/link4/joy/TOTPTests.java', 'java')
+                #totp-qr
+                script.
+                    new QRCode(document.getElementById('totp-qr'), {
+                    	text: 'otpauth://totp/issuer:user?secret=ORSXG5BANNSXSIBRGIZTINJWG44DSMBB&issuer=issuer&algorithm=SHA1&digits=6&period=30',
+                    	width: 128,
+                    	height: 128
+                    })
+                li 참고 자료
+                ul
+                    li: +asA('https://rootprojects.org/authenticator/', 'Authenticator Test')
+                    li: +asA('https://datatracker.ietf.org/doc/html/rfc6238#appendix-A', 'rfc6238#appendix-A')
+                    li: +asA('https://github.com/jchambers/java-otp/blob/df28bfab5be1cd9ef8a6383c35c71644d7bdcf6b/src/main/java/com/eatthepath/otp/HmacOneTimePasswordGenerator.java')
+
+            h3 JWT(JSON Web Token)
+            div
+                p 참고 자료 : #[+asA('https://datatracker.ietf.org/doc/html/rfc7519')]
+                ul
+                    li JWT는 (JSON) 메시지를 URL Safe한 형태로 웹 상에서 전달하고, 메시지의 무결성을 검증할 수 있는 표현에 대한 명세다
+                    p JSON이 아닌 문자열도 잘 작동한다
+                    li JWT 문자열로 JWS(
+                        +asA('https://datatracker.ietf.org/doc/html/rfc7515')
+                        |) Compact Serialization 또는 JWE(
+                        +asA('https://datatracker.ietf.org/doc/html/rfc7516')
+                        |) Compact Serialization이 가능하다
+                    li 노출되면 안 되는 메시지를 전달해야 한다면, 1) TLS 상에서 통신하거나 2) 메시지를 암호화한 JWT를 사용하고 수신인에 대한 인증을 진행해야 한다
+
+                h4 Nimbus JOSE + JWT
+                ul
+                    li Java로 개발된 JOSE, JWT 라이브러리. Android도 지원한다
+                    li: +asA('https://bitbucket.org/connect2id/nimbus-jose-jwt/src/master/', 'README')
+                    li: +asA('https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt', 'MVN repository artifact')
+                    li: +asA('https://connect2id.com/products/nimbus-jose-jwt/examples', 'Example codes')
+                    li: +asA('https://github.com/felx/nimbus-jose-jwt/tree/master/src/test/java/com/nimbusds/jose', 'Test codes')
+
+                h4 JOSE; JSON Object Signing and Encryption
+                p 참고 자료 : #[+asA('https://www.iana.org/assignments/jose/jose.xhtml')]. JSON 암호화 및 서명 표준에 관한 공통 속성. 모든 문자열은 URL과 HTTP Header로 이용할 수 있도록 패딩 없이 base64url로 인코딩된다.
+
+                h4 패딩 없는 base64url 인코딩/디코딩
+                +asCode('javascript').
+                    function base64urlEncode(text) {
+                        return window.btoa(text).split('=')[0].replace(/\+/g, '-').replace(/\//g, '_')
+                    }
+
+                    function base64urlDecode(text) {
+                        text = text.replace(/-/g, '+').replace(/_/g, '/')
+                        switch (text.length % 4) {
+                            case 2:
+                                text = text + '=='
+                                break
+                            case 3:
+                                text = text + '='
+                                break
+                        }
+                        return window.atob(text)
+                    }
+                div
+                    h5.fake Input
+                    textarea#base64url-input-textarea
+                    button.w3-btn.w3-blue#base64url-encode-btn Encode
+                    button.w3-btn.w3-blue#base64url-decode-btn Decode
+
+                    h5.fake Output
+                    textarea#base64url-output-textarea
+                    script.
+                        let input = document.getElementById('base64url-input-textarea')
+                        let output = document.getElementById('base64url-output-textarea')
+                        document.getElementById('base64url-encode-btn').onclick = () => {
+                            output.value = window.btoa(input.value.trim()).split('=')[0].replace(/\+/g, '-').replace(/\//g, '_')
+                        }
+                        document.getElementById('base64url-decode-btn').onclick = () => {
+                            let text = input.value.trim().replace(/-/g, '+').replace(/_/g, '/')
+                            switch (text.length % 4) {
+                                case 2:
+                                    text = text + '=='
+                                    break
+                                case 3:
+                                    text = text + '='
+                                    break
+                            }
+                            output.value = window.atob(text)
+                        }
+
+                h4 JOSE Header
+                p 참고 자료 : #[+asA('https://www.iana.org/assignments/jose/jose.xhtml')]. 목록에 등록되지 않은 확장 헤더들도 사용할 수 있으며, 이에 대한 처리는 구현에 의존한다
+                table.no-sort
+                    +ths('Name', 'Description', 'Usage Location(s)')
+                    tr
+                        td alg
+                        td 암호화/해싱에 사용된 알고리즘
+                        td JWE, JWS
+                        td HS256, RS256, ...
+                            +asA('https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms')
+                    +tds('typ','토큰 종류','JWE, JWS')
+                    +tds('cty','Content Type; "application/" 접두 문자열은 생략하길 권장','JWE, JWS')
+                    +tds('crit','Critical; 반드시 처리되어야 할 확장 헤더 목록. 빈 배열([])은 허용되지 않는다','JWE, JWS')
+                    +tds('zip','압축 알고리즘','JWE')
+
+                h4 JSON Web Token Claims
+                p 아래 항목들은 IANA에 등록된 이름들로, 사용은 모두 선택적이다
+                ul
+                    li iss(Issuer) : 발행자 정보
+                    li sub(Subject) : 토큰 주제
+                    li aud(Audience) : 수신자 정보. 수신하는 측에서 검사하여 자신과 맞지 않는다면 토큰을 폐기해야 한다
+                    li exp(Expiration Time) : 토큰 만료 시각(NumericDate; Epoch로부 경과한 초)
+                    li nbf(Not Before) : 토큰 발효 시각(NumericDate)
+                    li iat(Issued At) : 토큰 발행 시각(NumericDate)
+                    li jti(JWT ID) : 토큰 ID
+
+                h4 JWS Compact Serialization
+                +asCode('text', 'Format').
+                    BASE64URL(UTF8(JWS Protected Header)) || '.' ||
+                    BASE64URL(JWS Payload) || '.' ||
+                    BASE64URL(JWS Signature)
+                p 공유 비밀키를 이용한 JWS 송수신
+                +asCode('java').
+                    import com.nimbusds.jose.*;
+                    import com.nimbusds.jose.crypto.*;
+
+                    public class Main {
+                        public static void main(String[] args) throws Exception {
+                            // 공유 비밀키
+                            var sharedSecret = "HhGy8MucxuuAKuAX3Har83ETRQiufe3j".getBytes();
+
+                            // 송신측
+                            var header = new JWSHeader(JWSAlgorithm.HS256);
+                            var jwsObject = new JWSObject(header, new Payload("{\"msg\":\"Hello, world!\"}"));
+                            var signer = new MACSigner(sharedSecret);
+
+                            jwsObject.sign(signer);
+                            var jwsString = jwsObject.serialize();
+                            System.out.println(jwsString);
+                            // eyJhbGciOiJIUzI1NiJ9.eyJtc2ciOiJIZWxsbywgd29ybGQhIn0.EGq1fREnO01NhbYgDv2x5xOPvIYLtI5sKW6hZjLXEiU
+
+                            // 수신측
+                            jwsObject = JWSObject.parse(jwsString);
+                            var verifier = new MACVerifier(sharedSecret);
+                            System.out.println(jwsObject.verify(verifier));
+                            // true
+                            System.out.println(jwsObject.getPayload());
+                            // {"msg":"Hello, world!"}
+                        }
+                    }
+
+                p Online JWS Tester :
+                    +asA('https://jwt.io/', 'jwt.io')
+                +w3img('/imgs/2022-02-12 163807.jpg')
+
+                h4 JWE Compact Serialization
+                +asCode('text', 'Format').
+                    BASE64URL(UTF8(JWE Protected Header)) || '.' ||
+                    BASE64URL(JWE Encrypted Key) || '.' ||
+                    BASE64URL(JWE Initialization Vector) || '.' ||
+                    BASE64URL(JWE Ciphertext) || '.' ||
+                    BASE64URL(JWE Authentication Tag)
+                p 공유 비밀키를 이용한 JWE 송수신
+                +asCode('java').
+                    import javax.crypto.KeyGenerator;
+                    import com.nimbusds.jose.*;
+                    import com.nimbusds.jose.crypto.*;
+
+                    public class Main {
+                        public static void main(String[] args) throws Exception {
+                            // 공유 비밀키
+                            var keyGen = KeyGenerator.getInstance("AES");
+                            keyGen.init(128);
+                            var key = keyGen.generateKey();
+
+                            // 송신측
+                            var header = new JWEHeader(JWEAlgorithm.DIR, EncryptionMethod.A128GCM);
+                            var jweObject = new JWEObject(header, new Payload("Hello world!"));
+                            jweObject.encrypt(new DirectEncrypter(key));
+
+                            var jweString = jweObject.serialize();
+                            System.out.println(jweString);
+                            // eyJlbmMiOiJBMTI4R0NNIiwiYWxnIjoiZGlyIn0..mwnWXn8d63VGJbNQ.PIl8-tb_gC-_7-qj.UT2AEUXk2Vqq98FWpc03wA
+
+                            // 수신측
+                            jweObject = JWEObject.parse(jweString);
+                            jweObject.decrypt(new DirectDecrypter(key));
+                            System.out.println(jweObject.getPayload());
+                            // Hello world!
+                        }
+                    }
+
+        +pos('전자 서명')
+        h2 전자 서명
+        ol
+            li A는 메시지(평문이든 다른 암호문이든 무관), 비밀키, 공개키를 준비
+            p 키 생성 알고리즘 G : 서명자의 (비밀키, 공개키)쌍을 생성한다
+            li A는 B에게 공개키를 전달
+            li A는 비밀키를 사용해 메시지를 암호화. 이것이 전자 서명
+            p 서명 생성 알고리즘 S : 메시지와 비밀키를 입력받으면 서명을 생성한다
+            li A는 메시지와 전자 서명을 B에게 전달
+            li B는 공개키를 이용해 암호문을 복호화하여 전자 서명과 일치하는지 확인
+            p 서명 검증 알고리즘 V : 메시지, 공개키, 서명을 입력받으면 승인/거부를 출력한다
+
+        h2 Remote timing attack
+        ul
+            li 결론 : 동일 크기의 보안 입력에 대한 결과는 항상 동일한 시간으로 처리
+            li: +asA('https://codahale.com/a-lesson-in-timing-attacks/')
+            li 예를 들어 요청 해시와 실제 해시를 아래와 같이 비교한다고 할 때,
+            +asCode('java').
+                boolean isEqual(byte[] a, byte[] b) {
+                    if (a.length != b.length)
+                        return false;
+
+                    for (var i = 0; i &lt; a.length; ++i)
+                        if (a[i] != b[i])
+                            return false;
+                    return true;
+                }
+            p 네트워크 연결 속도가 불안정한 상황에서도 최소 20마이크로초 단위로 서버의 응답 시간 차이를 식별할 수 있고, LAN 환경에서는 그 한계가 100ns까지 떨어진다고 한다
+
+        h2 CSRF : Cross Site Request Forgery
+        div
+            h3 개요
+            p 사이트 간 요청 위조 공격은 사용자의 의도와 무관하게 타깃 사이트로 요청을 보내는 형태의 공격이다
+            ol
+                li 피싱 사이트 A는 CSRF에 취약한 사이트 B로의 요청을 포함한다
+                li B에 이미 로그인한 유저가 A에 접속하면, 브라우저는 A에 포함된 B로의 요청들을 재생한다
+                li 유저의 의도와 무관한 요청이지만 유저의 쿠키가 포함되므로 B는 요청을 정상이라 간주하고 처리한다
+            h3 방어
+            ul
+                li Referer 헤더 검증
+                p 외부 사이트로부터의 공격은 방지할 수 있지만, 사이트 결함으로 인한 내부에서의 공격을 막을 순 없다
+                li 요청 토큰 검증
+                p 간단하게는 세션에 포함된 값 중 하나를 요청에 포함시켜 두 값이 일치하는 지를 확인. 복잡하게는 JWT, OAuth 등을 사용
+
+        h2 TOCTOU : Time-of-check to time-of-use
+        ul
+            li 검사 시점과 사용 시점의 상태가 달라짐에 따라 발생하는 취약점
+            li 멀티 스레딩 프로그래밍 언어에서 쉽게 발생할 수 있으며, 동기화를 이용해 해소해야 한다
+            li OS와의 소통에서도 문제가 발생할 수 있음에 유의해야 한다
+            p 예를 들어, 특정 파일이 존재함을 확인하고 파일 쓰기를 실행하려는 도중에 공격자가 중요한 시스템 파일로의 심볼릭 링크로 대체하는 경우, 심각한 정보 손실이 발생할 수 있다
+
+    h1 기타
+    div
+        h2 문자열 검색; Boyer-Moore
+        p 예. abcxdezcabacabac에서 abac 검색
+            br
+            |처음 검색 인덱스 0. 마지막 위치의 x는 패턴에 없는 문자이므로 다음 검색 인덱스는 1이 아닌 4

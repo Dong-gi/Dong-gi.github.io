@@ -1,0 +1,333 @@
+<!DOCTYPE html><html lang="ko-KR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="google-site-verification" content="aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM"><meta name="author" content="Donggi Kim &lt;hi.donggi@gmail.com&gt;"><meta name="description" content="알고리즘 개론"><title>알고리즘</title><link rel="icon" href="/imgs/favicon.png"><link rel="stylesheet" href="/source/default.css"><script>window.wizFuncQueue = [];</script></head><body><div class="w3-bar-block w3-sidebar w3-animate-left" id="sidebar"><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><details class="w3-small file-list" open="open"><summary>LICENSE</summary><ul><li>&copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> →<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE">MIT License</a></li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.w3schools.com/w3css">w3css</a> → No license</li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://highlightjs.org/">highlight.js</a> →<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause License</a></li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/mathjax/MathJax">MathJax</a> →<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache License 2.0</a></li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/davidshimjs/qrcodejs">qrcodejs</a> →<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE">MIT License</a></li></ul></details><hr></div><article id="main"><div class="w3-bar w3-blue w3-large" id="nav" style="position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle"><button class="w3-bar-item w3-button w3-hover-theme" onclick="toggleSidebar()">&#9776;</button><input class="w3-bar-item" id="query" type="text" placeholder="search" style="max-width:35%"><a class="w3-bar-item w3-button w3-hover-theme" href="/">Home</a></div><div class="w3-padding" id="contents"><script id="qrcode-js" src="/source/qrcode.min.js"></script><h1>알고리즘의 평가</h1><ol><li>시간복잡도 : 입력의 크기에 따른 소요 시간 평가</li><li>공간복잡도 : 입력의 크기에 따른 필요 메모리 평가</li><li class="marker">빅-오 표기법 : 점근적 상한</li><ul><li>양의 실수에서 정의되는 함수 식[f(n)]식의 점근적 상한 식[O(g(n))]식은 다음과 같이 정의된다</li><p>식[O(g(n)) = \{ f(n) \mid \exists{a, b}, \forall{n \ge a}, 0 \le f(n) \le bg(n) \}]식</p><li>이는 함수 식[f(n)]식이 궁극적으로 식[g(n)]식보다 빠르게 증가하지 않음을 의미한다; 식[\lim_{n \to \infty} {f(n) \over bg(n)} \le 1]식</li><p>예를 들어, 식[f(n) = 4n + 1]식의 점근적 상한으로 식[O(4n + 1)]식, 식[O(n^2 + 2n + 3)]식, 식[O(2^n + n)]식 등이 모두 가능하며, 이들 중 가장 의미가 있는 표기 ─ 가능한 상한 중 최소 표기 ─ 는 식[O(4n + 1)]식, 특히 상수계수를 제거하고 지배항만 남긴 식[O(n)]식이 된다</p></ul><li>오메가 표기법 : 점근적 하한</li><ul><li>양의 실수에서 정의되는 함수 식[f(n)]식의 점근적 하한 식[\Omega(g(n))]식은 다음과 같이 정의된다</li><p>식[\Omega(g(n)) = \{ f(n) \mid \exists{a, b}, \forall{n \ge a}, 0 \le bg(n) \le f(n) \}]식</p><li>이는 함수 식[f(n)]식이 궁극적으로 식[g(n)]식보다 빠르게 증가함을 의미한다; 식[\lim_{n \to \infty} {f(n) \over bg(n)} \ge 1]식</li><p>예를 들어, 식[f(n) = 4n^3 + 2n + 1]식의 점근적 하한으로 식[\Omega(4n^3 + 2n + 1)]식, 식[\Omega(n^2 + 2n + 3)]식, 식[\Omega(2)]식 등이 모두 가능하며, 이들 중 가장 의미가 있는 표기 ─ 가능한 하한 중 최대 표기 ─ 는 식[\Omega(4n^3 + 2n + 1)]식, 특히 상수계수를 제거하고 지배항만 남긴 식[\Omega(n^3)]식이 된다</p></ul><li class="marker">세타 표기법</li><p>식[\Theta(g(n)) = O(g(n)) \cap \Omega(g(n))]식</p><p>예를 들어, 식[f(n) = 4n^3 + 2n + 1]식에 대하여, 식[g(n) = n^3]식이 점근적 상한과 하한 모두를 만족하므로, 식[f(n) \in \Theta(n^3)]식이다</p></ol><h1>자료구조</h1><div><h2>트리</h2><ol><li>Complete Binary Tree : 모든 leaf node의 레벨이 h 또는 h-1인 이진 트리(h는 트리의 height)</li><li>이진 트리의 탐색 : (왼쪽 노드 방문, 오른쪽 노드 방문, 현재 노드 처리)의 순열 == 3!</li><li>이진 검색 트리 : 노드의 좌우 서브 트리 사이에 분명한 대소관계가 존재</li><li>AVL 트리 : 이진 검색 트리 임의 노드에서 좌우 서브 트리 높이 차이 &lt;= 1을 만족</li><li>힙 : 상하 노드 사이에 분명한 대소관계가 존재. 우선순위 큐 구현에 적합</li></ol><div><h3>AVL 트리의 회전</h3><ol><li>트리에 대한 삽입/삭제 연산에 의해 좌우 서브 트리 높이 차이가 2가 될 수 있다</li><li>인접한 3개 노드의 위치 변경(회전)을 통해 이를 해소할 수 있다</li><li>회전의 기준이 되는 세 노드 x, y, z는 다음과 같다</li><ul><li>z는 삽입/삭제된 위치로부터 root로 가는 경로상 처음으로 존재하는 불균형 노드</li><li>y는 z의 자식 중에서 가장 큰 높이를 갖는 노드</li><li>x는 y의 자식 중에서 가장 큰 높이를 갖는 노드</li></ul><li>x ← y ← z가 서로 같은 방향일 때는 한 번의 회전으로 균형을 되찾을 수 있다</li><li>x ← y ← z가 서로 다른 방향일 때는 두 번의 회전으로 균형을 되찾을 수 있다</li></ol><table class="no-sort"><tr><th colspan="12">LL Rotation : this, this.left, this.left.left가 서로 위치 변경</th></tr><tr><td colspan="4"><pre>     +-+
+     |5|
+    +-----+
+  +-+     +--+
+  |3|     |11|
+ +--+    +---+
++-+     +-+
+|1|     |9|
++-+    +---+
+    +-+   +--+
+    |7|   |10|
+    +-+   +--+</pre></td><td colspan="4"><pre>     +-+
+     |5|
+    +----+
+  +-+    +-+
+  |3|    |9|
+ +--+   +---+
++-+    +-+   +--+
+|1|    |7|   |11|
++-+    +-+   +--+
+          +--+
+          |10|
+          +--+</pre></td><td colspan="4"><p><strong>↓python</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="python">def rotate_ll():
+    parent.change(this, this.left)
+    left.parent, parent = this.parent, left
+    left.right, left = this, left.right</div></td></tr><tr><th colspan="12">RR Rotation : this, this.right, this.right.right가 서로 위치 변경</th></tr><tr><td colspan="4"><pre>     +-+
+     |5|
+    +---+
+  +-+   +-+
+  |3|   |7|
+ +--+   +--+
++-+         +-+
+|1|         |9|
++-+        +---+
+        +-+   +--+
+        |8|   |11|
+        +-+   +--+</pre></td><td colspan="4"><pre>     +-+
+     |5|
+    +----+
+  +-+    +-+
+  |3|    |9|
+ +--+   +---+
++-+    +-+   +--+
+|1|    |7|   |11|
++-+    +-+   +--+
+        +-+
+        |8|
+        +-+</pre></td><td colspan="4"><p><strong>↓python</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="python">def rotate_rr():
+    parent.change(this, this.right)
+    right.parent, parent = this.parent, right
+    right.left, right = this, right.left</div></td></tr><tr><th colspan="12">LR Rotation : this, this.left, this.left.right가 서로 위치 변경</th></tr><tr><td colspan="3"><pre>    +-+
+    |9|
+   +---+
+ +-+   +--+
+ |3|   |11|
+ +-+   +--+
++-+ +-+
+|1| |5|
++-+ +-+
+     +-+
+     |7|
+     +-+</pre></td><td colspan="3"><pre>      +-+
+      |9|
+     +---+
+   +-+   +--+
+   |5|   |11|
+   +-+   +--+
+ +-+ +-+
+ |3| |7|
+ +-+ +-+
++-+
+|1|
++-+</pre></td><td colspan="3"><pre>    +-+
+    |5|
+   +---+
+ +-+   +-+
+ |3|   |9|
+ +-+   +--+
++-+   +-+  +--+
+|1|   |7|  |11|
++-+   +-+  +--+</pre></td><td colspan="3"><p><strong>↓python</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="python">def rotate_lr():
+    left.rotate_rr()
+    rotate_ll()</div></td></tr><tr><th colspan="12">RL Rotation : this, this.right, this.right.left가 서로 위치 변경</th></tr><tr><td colspan="3"><pre>  +-+
+  |5|
+ +-----+
++-+     +--+
+|3|     |11|
++-+    +----+
+    +-+    +--+
+    |9|    |12|
+   +--+    +--+
+ +-+
+ |7|
+ +-+</pre></td><td colspan="3"><pre>  +-+
+  |5|
+ +----+
++-+    +-+
+|3|    |9|
++-+   +---+
+   +-+   +--+
+   |7|   |11|
+   +-+   ----+
+             +--+
+             |12|
+             +--+</pre></td><td colspan="3"><pre>      +-+
+      |9|
+    +----+
+  +-+    +--+
+  |5|    |11|
+ +---+   ----+
++-+   +-+     +--+
+|3|   |7|     |12|
++-+   +-+     +--+</pre></td><td colspan="3"><p><strong>↓python</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="python">def rotate_rl():
+    right.rotate_ll()
+    rotate_rr()
+</div></td></tr></table></div><h2>그래프</h2><ul><li>정점과 간선의 집합</li><p>G(graph) = V(vertex) + E(edge)</p><li>모든 간선의 가중치가 동일한 그래프, 또는 사이클이 없는 그래프(트리)의 탐색은 너비 우선 탐색, 깊이 우선 탐색 2개로 적절히 해결된다. 동일한 정점을 2번 조사할 필요도 없다</li></ul><div><h3>양방향 탐색; Bidirectional search</h3><p>시작점과 종점 각각을 기준으로 너비우선 탐색 동시 실행</p><h3>최단경로 찾기 : 다익스트라</h3><ol><li>시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대. 간선의 가중치에 음수가 있는 경우 적용 불가</li><li>정의</li><ul><li>W(P) := 시작점으로부터 정점 P까지 도달하는 가중치의 현재 최소합</li><li>W(P1, P2) := 간선 P1→P2의 가중치</li><li>Working set := 최단경로 알고리즘의 가중치 업데이트 대상이 되는 정점 집합. 최초값은 시작점으로부터 간선 하나만 건너 도달할 수 있는 모든 정점</li></ul><li>Working set에 속한 정점 P중, W(P)가 가장 낮은 P에 대해 다음을 수행한다</li><ol><li>Working set에서 P 제거</li><li>P에서 간선 하나만 건너 도달할 수 있는 모든 정점 P'에 대해, W(P') = min(W(P'), W(P) + W(P, P'))를 수행하고, W(P')값이 변경된 경우 P'을 Working set에 추가한다</li><li>만약 P'이 목표 지점이라면, 최단 경로를 찾았으므로 추가 작업을 중지한다</li></ol></ol><h3>최단경로 찾기 : A*</h3><ul><li>도착점의 추정 가중치 0부터 시작하여, 도착점으로부터 먼 정점일수록 높아지는 추정 가중치를 갖고 시작한다</li><li>다익스트라 알고리즘을 사용하되, Working set에서 작업 대상이 되는 원소를 찾을 때, 추정 가중치를 합하여 구한다는 게 차이점</li></ul><h3>최단경로 찾기 : 벨만-포드</h3><ul><li>음수 가중치의 간선이 존재하는 경우, Working set은 정점이 아닌 간선을 대상으로 하고, 매 업데이트마다 모든 간선을 검사한다</li><li>다익스트라 알고리즘과 마찬가지로 시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대</li><li>그래프 임의의 정점 P에 대한 W(P)의 변동이 없을 때까지 아래를 반복한다</li><p>그래프 모든 간선 P→P'에 대해, W(P') = min(W(P'), W(P) + W(P, P'))</p><li>|V|-1번의 업데이트로 모든 정점까지의 모든 최단경로가 구해지며, |V|번째의 업데이트로 갱신이 일어난 경우는 음수 가중치의 사이클이 존재하는 것이므로 최단 경로는 존재하지 않는다</li></ul><h3>무방향 그래프의 최소신장 트리 : 크루스칼</h3><ol><li>최초 |V|개의 집합을 생성하고, 그래프 각 정점이 하나씩 포함된다</li><li>집합이 하나만 남을 때까지 다음을 반복한다</li><li>최소 가중치 간선을 선택 → 두 정점이 서로 다른 집합에 포함된 경우 → 두 집합을 합치고 간선은 결과에 추가</li><p>간선의 두 정점이 같은 집합에 포함된 경우 간선은 버려진다</p></ol><h3>DAG(사이클 없는 방향 그래프)에서의 최단경로 찾기</h3><ol><li>시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대</li><li>시작점부터 종점까지에 대해<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black goto" href="#pos1278610298" target="_self">위상 정렬</a> 수행</li><li>정렬한 순서대로 정점을 방문하여 가중치 갱신</li></ol></div><h2>해시 테이블</h2><div><h3>좋은 해시 함수 요건</h3><ul><li>치역은 정의역보다 작아야 한다</li><li>정의역 전체 입력에 대해, 결과는 치역 전체에서 골고루 발생해야 한다</li><li>계산은 매우 빠르게 수행되어야 한다</li><li>보안이 필요하다면, 추가로 암호학적으로 안전해야 한다</li><ul><li>임의의 해시 값으로부터 원본 입력을 찾기 어려워야 한다</li><li>동일한 해시 값을 산출하는 서로 다른 입력을 찾기 어려워야 한다</li><li>입력과 결과 쌍을 가지고 해시 함수를 구하기 어려워야 한다</li></ul></ul><h3>Re-hashing; Map resizing</h3><p>초기 버킷 크기의 일정 비율(e.g. 75%)을 채운 경우, 버킷 크기를 늘리고(e.g. 2배) 각 엔트리를 다시 저장</p></div></div><h1>정렬</h1><p>Stability : 정렬 키가 동일한 두 요소의 순서가 정렬 후에도 유지되는 경우</p><div><h2>Bubble Sort</h2><p><strong>↓python</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="python">is_go_next = True
+while is_go_next:
+    is_go_next = False
+    for i in range(0, len(l)-1):
+        if l[i] > l[i+1]:
+            l[i], l[i+1] = l[i+1], l[i]
+            is_go_next = True</div><h2>Selection Sort</h2><p><strong>↓python</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="python">for i in range(0, len(l)-1):
+    x = l.index(min(l[i:]))
+    l[i], l[x] = l[x], l[i]</div><h2>Insertion Sort</h2><p><strong>↓python</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="python">for i in range(1, len(l)):
+    x = l.pop(i)
+    for j in range(0, i):
+        if l[j] > x:
+            l.insert(j, x)
+            break
+    else:
+    l.insert(i, x)</div><h2>Merge Sort</h2><p>버블 소트 1단계 실행 → 부분적으로 정렬된 리스트들을 마지막 1개가 될 때까지 병합</p><h2>Heap Sort</h2><p>힙에 모두 넣고 순서대로 빼내면 정렬된다</p><h2>Quick Sort</h2><p>크기가 3 이상인 부분 리스트에 대하여, pivot을 하나 선택하여 [&lt;pivot], [=pivot], [&gt;pivot]으로 분할하는 것을 반복</p><p><strong>↓제자리 정렬 퀵소트</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="python">def biggest_small_index(list, min, right, pivot):
+    # list[right]부터 왼쪽으로 탐색하여, pivot보다 작은 최초 원소 인덱스를 반환한다
+    while min &lt;= right:
+        if list[right] &lt; pivot:
+            return right
+        right-=1
+    return -1
+def quick_sort(list, start=None, end=None, pivot=None):
+    # list[start]부터 list[end]까지 정렬
+    if start == None:
+        if len(list) > 1:
+            quick_sort(list, 0, len(list)-1, list[0])
+        return
+
+    # 2개인 경우는 단순 스왑
+    if end - start == 1:
+        if list[start] > list[end]:
+            list[start], list[end] = list[end], list[start]
+        return
+
+    # 3개 이상인 경우, 결과적으로 [&lt;pivot | >=pivot] 구간으로 나뉘며
+    # list[start:left] == [&lt;pivot]이 성립된다
+    left, right = start, biggest_small_index(list, start, end, pivot)
+    while left &lt;= right:
+        if list[left] &lt; pivot:
+            left+=1
+        else:
+            list[left], list[right] = list[right], list[left]
+            left+=1
+            right = biggest_small_index(list, left, right-1, pivot)
+    # [&lt;pivot] 구간 추가 정렬
+    if left - start > 1:
+        quick_sort(list, start, left-1, list[start])
+    # [>=pivot] 구간 추가 정렬
+    while left &lt;= end and list[left] == pivot:
+        left+=1
+    if end - left > 1:
+        quick_sort(list, left, end, list[left])
+
+import random
+for _ in range(1, 1000):
+    l1 = []
+    for _ in range(1, 1000):
+        l1.append(random.randint(0, 10))
+    l2 = [x for x in l1]
+    quick_sort(l1)
+    l2.sort()
+    assert l1 == l2</div><h2>선택</h2><ul><li>n개의 입력에서 i번째로 작은 원소를 찾는 알고리즘</li><li>퀵소트의 분할 알고리즘에서, pivot을 기준으로 분할을 수행하면 pivot이 전체 중 몇 번째로 작은 원소인지 알 수 있음을 이용</li><li>그러나 퀵소트 알고리즘 그대로 이용할 경우, 최악의 경우 수행시간이 O(n^2)가 된다</li></ul><h2>Counting Sort</h2><p>n개 입력의 최대 원소 k에 대한 배열에 원소의 개수를 기록함으로써 정렬. 총 소요 시간은 O(n) + O(k)</p><p><strong>↓python</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="python">size = max(l) + 1
+count = [0] * size
+result = [x for x in l]
+for x in l:
+    count[x] += 1
+
+resultIdx = 0
+for num in range(size):
+    for _ in range(count[num]):
+        result[resultIdx] = num
+        resultIdx += 1</div><h2>Radix sort</h2><p>n개의 입력이 모두 k 자릿수 이하인 경우, 가장 낮은 자리부터 차례대로 stable 정렬. 총 소요 시간은 O(kn)</p><p><strong>↓python</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="python">size = len(str(max(l)))
+radixList = [[] for _ in range(10)]
+for radix in range(size):
+    for x in l:
+        radixList[(x // (10 ** radix)) % 10].append(x)
+    l = [n for subList in radixList for n in subList]
+    radixList = [[] for _ in range(10)]</div><span class="pos-span" id="pos1278610298"></span><h2>Topological sort</h2><p>특정 원소쌍들에 대한 분명한 선후관계만 만족하면, 나머지 원소의 순서는 아무래도 상관없는 정렬을 방향 그래프를 이용해 구하는 방법</p><div><h3 class="fake">방법 1 : 정방향</h3><ol><li>각 원소쌍의 선후관계를 방향 그래프의 간선으로 표현</li><li>그래프의 정점 개수가 0이 될때까지, 인입 간선이 없는 임의 정점을 제거</li><li>제거한 정점들을 순서대로 나열하면 정렬 완료</li></ol><h3 class="fake">방법 2 : 역방향</h3><ol><li>각 원소쌍의 선후관계를 방향 그래프의 간선으로 표현</li><li>그래프의 정점 개수가 0이 될때까지, 임의 정점을 선택하여 깊이 우선 탐색을 이용해 방문한 정점을 제거</li><li>제거한 정점들을 역순으로 나열하면 정렬 완료</li></ol></div></div><h1>동기화</h1><div><h2>Busy waiting</h2><ul><li>다른 스레드를 대기하는 스레드가 여전히 실행 중인 경우</li><p>-> 불필요한 CPU 점유 발생, 동기화 기법으로 해소</p><li>동기화 기법을 사용하는 것보다 그냥 대기하는 것이 짧다는 게 확실하다면 그냥 대기하면 된다</li></ul><h2>Monitor</h2><p>공유 자원에 대한 배타적인 접근을 지원하는 기법</p><ol><li>자원을 요구하는 스레드는 모니터에 진입 -> 입장 큐에 등록</li><li>입장 큐에서 하나의 스레드만 꺼내 실행</li><li>스레드 종료 or 자원 사용 완료한 경우 -> 다른 스레드 실행</li><li>일시 정지한 경우</li><p>현재 스레드를 대기 큐 또는 입장 큐에 재등록 -> 다른 스레드 실행</p></ol><h2>Semaphore</h2><p>공유 자원에 대한 배타적인 접근을 지원하는 기법</p><ol><li>동일 자원에 대해 최대 n개의 접근이 가능</li><li>스레드가 자원에 대해 x개의 접근을 요구(acquire)</li><p>획득할 때까지 대기 or 획득 실패하면 바로 false 반환</p><li>스레드가 획득한 권한을 반환(release)</li><li>Monitor와 다르게, 권한 반환의 책임이 스레드에 있다</li></ol></div><h1>DP; Dynamic Programming</h1><p>동적계획법 := 점화식(상향식)/재귀(하향식) + 캐싱</p><h1>P-NP</h1><ol><li>튜링 기계(TM) : 긴 테이프에 쓰여있는 여러 가지 기호들을 일정한 규칙에 따라 바꾸는 기계</li><p>무한한 저장공간은 무한한 길이의 테이프로 나타나는데 이 테이프는 하나의 기호를 인쇄할 수 있는 크기의 정사각형들로 쪼개져있다. 언제든지 기계속에는 하나의 기호가 들어가있고 이를 "읽힌 기호"라고 한다. 이 기계는 "읽힌 기호"를 바꿀 수 있는데 그 기계의 행동은 오직 읽힌 기호만이 결정한다. 테이프는 앞뒤로 움직일 수 있어서 모든 기호들은 적어도 한번씩은 기계에게 읽힐 것이다</p><li>P : 결정론적 튜링 기계로 다항 시간 안에 풀 수 있는 결정 문제</li><p><strong>문제에 대한 해답을 다항 시간 안에 풀 수 있음</strong></p><li>NP : 비결정론적 튜링 기계로 다항 시간 안에 풀 수 있는 결정 문제. P⊆NP</li><p><strong>해답이 맞는지 틀린지에 대한 결정 문제를 다항 시간 안에 풀 수 있음</strong></p><li>NP-Hard : 다음을 만족하는 결정 문제 C. 모든 NP 문제가 다항 시간 안에 C로 변환될 수 있다. NP-난해 문제는 최소한 모든 NP문제만큼 어렵다</li><p>Halting problem : 프로그램과 입력값이 주어졌을 때, 프로그램이 정지할 지 아니면 영원히 계산할 지 결정하는 문제</p><li>NP-Complete : NP-Hard and C ∈ NP</li><p>어떤 NP-완전 문제가 P에 속한다면 P=NP를 증명하게 된다, 반대로 P에 속하지 않으면 P≠NP를 증명하게 된다</p><p>SAT(SATisfiability problem) : 어떠한 변수들로 이루어진 논리식이 주어졌을 때, 그 논리식이 참이 되는 변수값이 존재하는지를 찾는 문제</p></ol><h1>보안</h1><div><h2>참고 자료</h2><ul><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://cwe.mitre.org/">CWE : 공통 취약점 분류</a><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://cwe.mitre.org/top25/index.html">전년도 최상위 25개 취약점</a></li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.cve.org/">CVE : 보고된 취약점 상세 목록</a></li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://wiki.sei.cmu.edu/confluence/display/seccode/SEI+CERT+Coding+Standards">코딩 표준 규칙/권고</a></li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.mois.go.kr/frt/bbs/type001/commonSelectBoardList.do?bbsId=BBSMSTR_000000000045">행정안전부 &gt; 디지털정보국 &gt; 정보화 표준·지침 자료실</a></li><p>-> 소프트웨어 개발보안 가이드 및 기타 자료 배포</p></ul><h2>디피-헬만 키 교환법</h2><div><h3>키 교환 절차</h3><p>두 키 K1, K2를 합성하는, 교환법칙이 성립하는(F(k1, k2) == F(k2, k1)) 함수 F가 있을 때, 두 대화 참여자 A, B의 키 생성 절차는 아래와 같다</p><ol><li>A가 B에게 공개키 P를 전달</li><li>A, B가 각각 비밀키 SA, SB를 준비</li><li>A는 B에게 F(P, SA)를, B는 A에게 F(P, SB)를 전달</li><li>A, B는 이제 각각 F(P, SB, SA), F(P, SA, SB)를 이용하여 대화를 암호화할 수 있다</li></ol><p>중간에 공개된 키들을 모두 가로채더라도, P, F(P, SA), F(P, SB)만으로는 F(P, SA, SB)를 만들어낼 수 없다.</p><h3>RSA 키 교환 예</h3><ol><li>A가 B에게 (소수 P, 생성자 G) 전달</li><li>A, B가 각각 비밀키 X, Y를 준비. (X, Y &lt; P-2)</li><li>A는 B에게 G^X mod P를, B는 A에게 G^Y mod P를 전달</li><li>A, B는 이제 각각 (G^Y mod P)^X mod P, (G^X mod P)^Y mod P == G^(XY) mod P를 공유한다</li></ol><h3>EC(타원 곡선) 키 교환 예</h3><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">import javax.crypto.KeyAgreement;
+import com.nimbusds.jose.jwk.*;
+import com.nimbusds.jose.jwk.gen.ECKeyGenerator;
+import com.nimbusds.jose.util.Base64URL;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        var key1 = new ECKeyGenerator(Curve.P_256)
+            .keyUse(KeyUse.SIGNATURE)
+            .generate();
+        var key2 = new ECKeyGenerator(Curve.P_256)
+            .keyUse(KeyUse.SIGNATURE)
+            .generate();
+
+        System.out.println(key1);
+        System.out.println(key2);
+        // {"kty":"EC","d":"iHAe66OGErA1e2WeBPO4KyzaGZR-EV1iUuNBBI60CLw","use":"sig","crv":"P-256","x":"tKsyXHOsfAnG5vIjwKDeDHa_C73_VYPJ2H2pSro1vho","y":"c9Wnk_5N93xgwBpOV71T1p-1KuvCwtblp1EKqXxc8sc"}
+        // {"kty":"EC","d":"ynSMPN-tX9Qg_ChNxgJIY5bZT3viH1FxH_k5wfeNODc","use":"sig","crv":"P-256","x":"aZqTE0f4S29w6_VivUQRjbYM08KKUTJGGkvThsde-Gw","y":"VKwtaWv1ScPh-SQbycCK520hOUg93vGMLNdYY7j53Nk"}
+
+        var ka1 = KeyAgreement.getInstance("ECDH");
+        ka1.init(key1.toPrivateKey());
+        ka1.doPhase(key2.toPublicKey(), true);
+        var ka2 = KeyAgreement.getInstance("ECDH");
+        ka2.init(key2.toPrivateKey());
+        ka2.doPhase(key1.toPublicKey(), true);
+
+        System.out.println(Base64URL.encode(ka1.generateSecret()));
+        System.out.println(Base64URL.encode(ka2.generateSecret()));
+        // eAglRUPBHQe9OMZE_NaatXxhxEGT1eUQa-dosVM87ZU
+        // eAglRUPBHQe9OMZE_NaatXxhxEGT1eUQa-dosVM87ZU
+    }
+}
+</div></div><h2>키 교환(Key Exchange)과 키 합의(Key Agreement)</h2><ul><li>키 합의 : 안전하지 않은 채널을 이용하더라도 두 당사자(party)가 비밀 키를 공유할 수 있도록 보장하는 프로토콜</li><li>키 교환 : 키 합의에 전형적으로 이용되는 알고리즘</li><li>중간자 공격</li><p>물리적으로 격리된 두 당사자 Alice, Bob이 키 합의를 이용해 안전한 통신(Alice↔Bob)을 수행하고자 하지만, 최초 통신부터 중간자 Eve가 존재한다면 공개키를 자신의 것으로 바꿔쳐 Alice↔Eve↔Bob의 3자 연결로 바꿔 모든 평문을 획득할 수 있다.</p><p>때문에 HTTPS의 TLS handshake에는 공인된 인증 기관(CA)이 참여하게 된다</p><ol><li>Client Hello : 브라우저가 지원하는 TLS 버전, Cipher Suite, 난수 등 전달</li><li>Server Hello : 사용할 Cipher Suite, 난수 등 전달</li><li>Certificate : 서버는 공개키(CA의 비밀키로 암호화된 SSL 인증서)를 전달</li><p>브라우저는 내장된 CA리스트를 이용해 서버의 SSL 인증서가 유효한지 검증한다</p><li>CertificateRequest : 필요한 경우, 서버도 클라이언트의 인증서를 요구할 수 있다</li><li>Server Hello Done : Server Hello 완료(Cipher 협상 완료)</li><li>Client Key Exchange : 인증서가 유효하면 브라우저는 클라이언트 측 키 교환 정보 전달</li><p>RSA 키교환 알고리즘이라면 서버의 공개키로 비밀키를 암호화하여 전달</p><li>Change Cipher Spec(Client → Server) : 클라이언트 키 교환 완료. 이후에는 합의된 비밀키(대칭)를 이용해 암호화된 메시지를 전송</li><li>Change Cipher Spec(Server → Client) : 서버 키 교환 완료</li><li>Finished(Server → Client) : 암호화된 메시지를 하나 전송하면서 handshake 종료</li></ol></ul><h2>메시지 인증 코드; MAC(Message Authentication Code)</h2><div><p>암호문과 키를 이용해 만든 MAC를 암호문과 같이 전달하면 수신측(키를 알고 있어야 함)은 암호문 또는 키의 변조를 감지해낼 수 있다. 흔히 사용되는 것은 암호문과 키를 해싱하여 MAC을 생성하는 HMAC</p><h3>TOTP(Time-based One-time Password)</h3><ul><li>일정 시간 동안 유효한 OTP를 생성하여 인증하는 알고리즘; 즉, 시간이 검증 대상 메시지가 된다</li><li>비밀키 외에, 비밀번호 구분을 위한 추가 정보를<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/google/google-authenticator/wiki/Key-Uri-Format">URI</a>에 설정할 수 있다</li><p><strong>↓URI</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">otpauth://totp/${issuer}:${user}?secret=${privateKey}&amp;issuer=${issuer}&amp;algorithm=SHA1&amp;digits=6&amp;period=30</div><ul><li>issuer : 서비스 제공자. e.g. Microsoft, LlinkedIn, Amazon Web Service, gmail...</li><li>user : 사용자. e.g. hi.donggi@gmail.com, Donggi Kim, wiz - hi.donggi@gmail.com, ...</li><li>privateKey : Base32 인코딩 문자열. 패딩 불필요</li><li>algorithm : SHA1(default), SHA256, SHA512</li><li>digits : OTP 길이; 6(default)</li><li>period : OTP 유효 시간(초); 30(default)</li></ul><li>구현 예시 :<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/STS/TOTP-example/src/main/java/link4/joy/TOTP.java" lan="java">TOTP.java</button><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/STS/TOTP-example/src/test/java/link4/joy/TOTPTests.java" lan="java">TOTPTests.java</button></li><div id="totp-qr"></div><script>new QRCode(document.getElementById('totp-qr'), {
+	text: 'otpauth://totp/issuer:user?secret=ORSXG5BANNSXSIBRGIZTINJWG44DSMBB&issuer=issuer&algorithm=SHA1&digits=6&period=30',
+	width: 128,
+	height: 128
+})</script><li>참고 자료</li><ul><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://rootprojects.org/authenticator/">Authenticator Test</a></li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://datatracker.ietf.org/doc/html/rfc6238#appendix-A">rfc6238#appendix-A</a></li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/jchambers/java-otp/blob/df28bfab5be1cd9ef8a6383c35c71644d7bdcf6b/src/main/java/com/eatthepath/otp/HmacOneTimePasswordGenerator.java">HmacOneTimePasswordGenerator</a></li></ul></ul><h3>JWT(JSON Web Token)</h3><div><p>참고 자료 : <a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://datatracker.ietf.org/doc/html/rfc7519">rfc7519</a></p><ul><li>JWT는 (JSON) 메시지를 URL Safe한 형태로 웹 상에서 전달하고, 메시지의 무결성을 검증할 수 있는 표현에 대한 명세다</li><p>JSON이 아닌 문자열도 잘 작동한다</p><li>JWT 문자열로 JWS(<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://datatracker.ietf.org/doc/html/rfc7515">rfc7515</a>) Compact Serialization 또는 JWE(<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://datatracker.ietf.org/doc/html/rfc7516">rfc7516</a>) Compact Serialization이 가능하다</li><li>노출되면 안 되는 메시지를 전달해야 한다면, 1) TLS 상에서 통신하거나 2) 메시지를 암호화한 JWT를 사용하고 수신인에 대한 인증을 진행해야 한다</li></ul><h4>Nimbus JOSE + JWT</h4><ul><li>Java로 개발된 JOSE, JWT 라이브러리. Android도 지원한다</li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://bitbucket.org/connect2id/nimbus-jose-jwt/src/master/">README</a></li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt">MVN repository artifact</a></li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://connect2id.com/products/nimbus-jose-jwt/examples">Example codes</a></li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/felx/nimbus-jose-jwt/tree/master/src/test/java/com/nimbusds/jose">Test codes</a></li></ul><h4>JOSE; JSON Object Signing and Encryption</h4><p>참고 자료 : <a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.iana.org/assignments/jose/jose.xhtml">jose</a>. JSON 암호화 및 서명 표준에 관한 공통 속성. 모든 문자열은 URL과 HTTP Header로 이용할 수 있도록 패딩 없이 base64url로 인코딩된다.</p><h4>패딩 없는 base64url 인코딩/디코딩</h4><p><strong>↓javascript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="javascript">function base64urlEncode(text) {
+    return window.btoa(text).split('=')[0].replace(/\+/g, '-').replace(/\//g, '_')
+}
+
+function base64urlDecode(text) {
+    text = text.replace(/-/g, '+').replace(/_/g, '/')
+    switch (text.length % 4) {
+        case 2:
+            text = text + '=='
+            break
+        case 3:
+            text = text + '='
+            break
+    }
+    return window.atob(text)
+}</div><div><h5 class="fake">Input</h5><textarea id="base64url-input-textarea"></textarea><button class="w3-btn w3-blue" id="base64url-encode-btn">Encode</button><button class="w3-btn w3-blue" id="base64url-decode-btn">Decode</button><h5 class="fake">Output</h5><textarea id="base64url-output-textarea"></textarea><script>let input = document.getElementById('base64url-input-textarea')
+let output = document.getElementById('base64url-output-textarea')
+document.getElementById('base64url-encode-btn').onclick = () => {
+    output.value = window.btoa(input.value.trim()).split('=')[0].replace(/\+/g, '-').replace(/\//g, '_')
+}
+document.getElementById('base64url-decode-btn').onclick = () => {
+    let text = input.value.trim().replace(/-/g, '+').replace(/_/g, '/')
+    switch (text.length % 4) {
+        case 2:
+            text = text + '=='
+            break
+        case 3:
+            text = text + '='
+            break
+    }
+    output.value = window.atob(text)
+}
+</script></div><h4>JOSE Header</h4><p>참고 자료 : <a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.iana.org/assignments/jose/jose.xhtml">jose</a>. 목록에 등록되지 않은 확장 헤더들도 사용할 수 있으며, 이에 대한 처리는 구현에 의존한다</p><table class="no-sort"><tr><th>Name</th><th>Description</th><th>Usage Location(s)</th></tr><tr><td>alg</td><td>암호화/해싱에 사용된 알고리즘</td><td>JWE, JWS</td><td>HS256, RS256, ...<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms">jose.xhtml#web-signature-encryption-algorithms</a></td></tr><tr><td>typ</td><td>토큰 종류</td><td>JWE, JWS</td></tr><tr><td>cty</td><td>Content Type; &quot;application/&quot; 접두 문자열은 생략하길 권장</td><td>JWE, JWS</td></tr><tr><td>crit</td><td>Critical; 반드시 처리되어야 할 확장 헤더 목록. 빈 배열([])은 허용되지 않는다</td><td>JWE, JWS</td></tr><tr><td>zip</td><td>압축 알고리즘</td><td>JWE</td></tr></table><h4>JSON Web Token Claims</h4><p>아래 항목들은 IANA에 등록된 이름들로, 사용은 모두 선택적이다</p><ul><li>iss(Issuer) : 발행자 정보</li><li>sub(Subject) : 토큰 주제</li><li>aud(Audience) : 수신자 정보. 수신하는 측에서 검사하여 자신과 맞지 않는다면 토큰을 폐기해야 한다</li><li>exp(Expiration Time) : 토큰 만료 시각(NumericDate; Epoch로부 경과한 초)</li><li>nbf(Not Before) : 토큰 발효 시각(NumericDate)</li><li>iat(Issued At) : 토큰 발행 시각(NumericDate)</li><li>jti(JWT ID) : 토큰 ID</li></ul><h4>JWS Compact Serialization</h4><p><strong>↓Format</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">BASE64URL(UTF8(JWS Protected Header)) || '.' ||
+BASE64URL(JWS Payload) || '.' ||
+BASE64URL(JWS Signature)</div><p>공유 비밀키를 이용한 JWS 송수신</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        // 공유 비밀키
+        var sharedSecret = "HhGy8MucxuuAKuAX3Har83ETRQiufe3j".getBytes();
+
+        // 송신측
+        var header = new JWSHeader(JWSAlgorithm.HS256);
+        var jwsObject = new JWSObject(header, new Payload("{\"msg\":\"Hello, world!\"}"));
+        var signer = new MACSigner(sharedSecret);
+
+        jwsObject.sign(signer);
+        var jwsString = jwsObject.serialize();
+        System.out.println(jwsString);
+        // eyJhbGciOiJIUzI1NiJ9.eyJtc2ciOiJIZWxsbywgd29ybGQhIn0.EGq1fREnO01NhbYgDv2x5xOPvIYLtI5sKW6hZjLXEiU
+
+        // 수신측
+        jwsObject = JWSObject.parse(jwsString);
+        var verifier = new MACVerifier(sharedSecret);
+        System.out.println(jwsObject.verify(verifier));
+        // true
+        System.out.println(jwsObject.getPayload());
+        // {"msg":"Hello, world!"}
+    }
+}
+</div><p>Online JWS Tester :<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://jwt.io/">jwt.io</a></p><div class="w3-center w3-margin-bottom"><img class="w3-round" src="/imgs/2022-02-12 163807.jpg" loading="lazy"></div><h4>JWE Compact Serialization</h4><p><strong>↓Format</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">BASE64URL(UTF8(JWE Protected Header)) || '.' ||
+BASE64URL(JWE Encrypted Key) || '.' ||
+BASE64URL(JWE Initialization Vector) || '.' ||
+BASE64URL(JWE Ciphertext) || '.' ||
+BASE64URL(JWE Authentication Tag)</div><p>공유 비밀키를 이용한 JWE 송수신</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">import javax.crypto.KeyGenerator;
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        // 공유 비밀키
+        var keyGen = KeyGenerator.getInstance("AES");
+        keyGen.init(128);
+        var key = keyGen.generateKey();
+
+        // 송신측
+        var header = new JWEHeader(JWEAlgorithm.DIR, EncryptionMethod.A128GCM);
+        var jweObject = new JWEObject(header, new Payload("Hello world!"));
+        jweObject.encrypt(new DirectEncrypter(key));
+
+        var jweString = jweObject.serialize();
+        System.out.println(jweString);
+        // eyJlbmMiOiJBMTI4R0NNIiwiYWxnIjoiZGlyIn0..mwnWXn8d63VGJbNQ.PIl8-tb_gC-_7-qj.UT2AEUXk2Vqq98FWpc03wA
+
+        // 수신측
+        jweObject = JWEObject.parse(jweString);
+        jweObject.decrypt(new DirectDecrypter(key));
+        System.out.println(jweObject.getPayload());
+        // Hello world!
+    }
+}
+</div></div></div><span class="pos-span" id="pos1566902653"></span><h2>전자 서명</h2><ol><li>A는 메시지(평문이든 다른 암호문이든 무관), 비밀키, 공개키를 준비</li><p>키 생성 알고리즘 G : 서명자의 (비밀키, 공개키)쌍을 생성한다</p><li>A는 B에게 공개키를 전달</li><li>A는 비밀키를 사용해 메시지를 암호화. 이것이 전자 서명</li><p>서명 생성 알고리즘 S : 메시지와 비밀키를 입력받으면 서명을 생성한다</p><li>A는 메시지와 전자 서명을 B에게 전달</li><li>B는 공개키를 이용해 암호문을 복호화하여 전자 서명과 일치하는지 확인</li><p>서명 검증 알고리즘 V : 메시지, 공개키, 서명을 입력받으면 승인/거부를 출력한다</p></ol><h2>Remote timing attack</h2><ul><li>결론 : 동일 크기의 보안 입력에 대한 결과는 항상 동일한 시간으로 처리</li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://codahale.com/a-lesson-in-timing-attacks/">a-lesson-in-timing-attacks</a></li><li>예를 들어 요청 해시와 실제 해시를 아래와 같이 비교한다고 할 때,</li><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">boolean isEqual(byte[] a, byte[] b) {
+    if (a.length != b.length)
+        return false;
+
+    for (var i = 0; i &lt; a.length; ++i)
+        if (a[i] != b[i])
+            return false;
+    return true;
+}</div><p>네트워크 연결 속도가 불안정한 상황에서도 최소 20마이크로초 단위로 서버의 응답 시간 차이를 식별할 수 있고, LAN 환경에서는 그 한계가 100ns까지 떨어진다고 한다</p></ul><h2>CSRF : Cross Site Request Forgery</h2><div><h3>개요</h3><p>사이트 간 요청 위조 공격은 사용자의 의도와 무관하게 타깃 사이트로 요청을 보내는 형태의 공격이다</p><ol><li>피싱 사이트 A는 CSRF에 취약한 사이트 B로의 요청을 포함한다</li><li>B에 이미 로그인한 유저가 A에 접속하면, 브라우저는 A에 포함된 B로의 요청들을 재생한다</li><li>유저의 의도와 무관한 요청이지만 유저의 쿠키가 포함되므로 B는 요청을 정상이라 간주하고 처리한다</li></ol><h3>방어</h3><ul><li>Referer 헤더 검증</li><p>외부 사이트로부터의 공격은 방지할 수 있지만, 사이트 결함으로 인한 내부에서의 공격을 막을 순 없다</p><li>요청 토큰 검증</li><p>간단하게는 세션에 포함된 값 중 하나를 요청에 포함시켜 두 값이 일치하는 지를 확인. 복잡하게는 JWT, OAuth 등을 사용</p></ul></div><h2>TOCTOU : Time-of-check to time-of-use</h2><ul><li>검사 시점과 사용 시점의 상태가 달라짐에 따라 발생하는 취약점</li><li>멀티 스레딩 프로그래밍 언어에서 쉽게 발생할 수 있으며, 동기화를 이용해 해소해야 한다</li><li>OS와의 소통에서도 문제가 발생할 수 있음에 유의해야 한다</li><p>예를 들어, 특정 파일이 존재함을 확인하고 파일 쓰기를 실행하려는 도중에 공격자가 중요한 시스템 파일로의 심볼릭 링크로 대체하는 경우, 심각한 정보 손실이 발생할 수 있다</p></ul></div><h1>기타</h1><div><h2>문자열 검색; Boyer-Moore</h2><p>예. abcxdezcabacabac에서 abac 검색<br>처음 검색 인덱스 0. 마지막 위치의 x는 패턴에 없는 문자이므로 다음 검색 인덱스는 1이 아닌 4</p></div></div></article><hr><script id="google-analytics" src="https://www.googletagmanager.com/gtag/js?id=UA-143098403-1" async></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-143098403-1');</script><script id="MathJax-script" src="/source/tex-chtml.js" async></script><script>MathJax={tex:{tags:'ams',inlineMath:[['식[', ']식']]}};</script><script id="highlight-js" src="/source/highlight.pack.js" defer></script><script id="default-js" src="/source/default.min.js" defer></script></body></html>

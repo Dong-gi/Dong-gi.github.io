@@ -1,0 +1,219 @@
+<!DOCTYPE html><html lang="ko-KR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="google-site-verification" content="aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM"><meta name="author" content="Donggi Kim &lt;hi.donggi@gmail.com&gt;"><meta name="description" content="Apache Commons Lang 정리"><title>Apache Commons Lang 3.9</title><link rel="icon" href="/imgs/favicon.png"><link rel="stylesheet" href="/source/default.css"><script>window.wizFuncQueue = [];</script></head><body><div class="w3-bar-block w3-sidebar w3-animate-left" id="sidebar"><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><details class="w3-small file-list" open="open"><summary>LICENSE</summary><ul><li>&copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> →<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE">MIT License</a></li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.w3schools.com/w3css">w3css</a> → No license</li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://highlightjs.org/">highlight.js</a> →<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause License</a></li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/mathjax/MathJax">MathJax</a> →<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache License 2.0</a></li><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/davidshimjs/qrcodejs">qrcodejs</a> →<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE">MIT License</a></li></ul></details><hr></div><article id="main"><div class="w3-bar w3-blue w3-large" id="nav" style="position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle"><button class="w3-bar-item w3-button w3-hover-theme" onclick="toggleSidebar()">&#9776;</button><input class="w3-bar-item" id="query" type="text" placeholder="search" style="max-width:35%"><a class="w3-bar-item w3-button w3-hover-theme" href="/">Home</a></div><div class="w3-padding" id="contents"><h1>org.apache.commons.lang3</h1><p>참고 자료 : <a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://commons.apache.org/proper/commons-lang/javadocs/api-release/index.html">index</a></p><div><h2>AnotationUtils</h2><p>스레드-안전. 애너테이션 (프록시) 인스턴스에 관한 유틸리티를 제공한다</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static boolean equals(Annotation a1, Annotation a2) // Annotation.equals(Object)의 문서대로 처리해준다
+static int hashCode(Annotation a)                   // Annotation.hashCode()의 문서대로 처리해준다
+static String toString(Annotation a)                // Annotation.toString()의 문서대로 처리해준다
+</div><h2>ArchUtils</h2><p>"os.arch" 시스템 프로퍼티에 관한 유틸리티를 제공한다</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static Processor getProcessor()</div><h2>ArrayUtils</h2><p>스레드-안전. null에 관대한 배열 유틸리티를 제공한다</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static &lt;T> boolean isArrayIndexValid(T[] array, int index)
+static String toString(Object array, String stringIfNull)     // + toStringArray
+static Map&lt;Object, Object> toMap(Object[] array)
+    // 각 원소는 Map.Entry거나 배열이여야 하며, 배열인 경우 원소가 2개 이상 있어야 한다(1번째는 키, 2번째는 값)
+static &lt;T> T[] toArray(T... items)
+static &lt;T> T[] clone(T[] array)                               // 얕은 복사 수행
+static &lt;T> T[] nullToEmpty(T[] array, Class&lt;T[]> type)
+    // 방어적 프로그래밍 기법 : array가 null이면 같은 타입의 빈 배열을 반환한다. null이 아니면 그대로 반환
+static &lt;T> T[] subarray(T[] array, int startIndexInclusive, int endIndexExclusive)
+static boolean isSameLength(Object[] array1, Object[] array2) // null은 카운트 제외
+static boolean isSameType(Object array1, Object array2)       // 배열이 같은 타입인지 반환한다. 다차원 배열 타입도 처리된다
+static void shuffle(Object[] array)
+static void reverse(Object[] array, int startIndexInclusive, int endIndexExclusive)
+static void swap(Object[] array, int offset1, int offset2, int len)
+    // array가 null이거나, 인덱스가 오버플로된 경우 작업을 하지 않는다. 음수 인덱스는 0으로 간주한다
+static void shift(Object[] array, int startIndexInclusive, int endIndexExclusive, int offset)
+static int indexOf(Object[] array, Object objectToFind, int startIndex) 
+    // null에 대하여 INDEX_NOT_FOUND(-1)를 반환한다
+    // + lastIndexOf, contains
+static &lt;T> T[] addAll(T[] array1, T... array2)
+    // + add, remove, removeElement, removeAll, removeElements, removeAllOccurences, insert
+static &lt;T> boolean isSorted(T[] array, Comparator&lt;T> comparator)
+</div><h2>BitField</h2><p>클래스 인스턴스 내부에 비트값들을 저장하지 않고, 외부 int, short, byte에 대한 마스킹 연산을 지원한다<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/apache-commons-lang-example/src/test/java/BitFieldTest.java" lan="java">BitFieldTest.java</button></p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">int getValue(int holder)            // 마스크 비트에 해당하는 비트들을 우측으로 시프트하여 값 반환
+int getRawValue(int holder)         // 마스크 비트에 해당하는 비트들의 위치 그대로 값 반환
+int set(int holder)                 // + clear
+int setValue(int holder, int value) // 마스크 비트에 value를 설정한 후의 값을 반환
+boolean isSet(int holder)           // 마스크 비트에 해당하는 비트들 중 하나라도 설정되었다면 true
+</div><h2>BooleanUtils</h2><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static String toStringTrueFalse(boolean bool)
+    // + toStringOnOff, toStringYesNo
+static boolean and(boolean... array)
+    // + or, xor
+</div><h2>ClassPathUtils</h2><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">ClassPathUtils.toFullyQualifiedName(StringUtils.class, "StringUtils.properties")
+    == "org.apache.commons.lang3.StringUtils.properties"
+
+ClassPathUtils.toFullyQualifiedPath(StringUtils.class, "StringUtils.properties")
+    == "org/apache/commons/lang3/StringUtils.properties"
+</div><h2>Functions</h2><p>예외를 허용하는 함수 유틸리티. 내부에서 발생한 예외는 RuntimeException으로 감싸여 전달된다</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static &lt;T extends Throwable> void run(FailableRunnable&lt;T> pRunnable)
+    // + call(Callable), accept(Consumer), apply(Function), test(Predicate)
+static void tryWithResources(FailableRunnable&lt;? extends Throwable> pAction, FailableRunnable&lt;? extends Throwable>... pResources)
+    // AutoCloseable하지 않은 객체들에 대해, pAction 실행 후 성공/실패 여부와 무관하게 pResources가 제공된 순서대로 실행됨을 보장한다
+static RuntimeException rethrow(Throwable pThrowable)
+    // 사용 예 : throw rethrow(e);
+</div><h2>ObjectUtils</h2><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static &lt;T> T defaultIfNull(T object, T defaultValue)
+static &lt;T> T firstNonNull(T... values)
+static boolean anyNotNull(Object... values) // + allNotNull
+static &lt;T extends Comparable&lt;? super T>> T min (T... values)
+    // + max, compare, median(중앙값), mode(최빈값)
+</div><h2>RandomUtils</h2><p>java.util.Random 인스턴스를 생성하는 귀찮음을 해소해줄 수 있다. 성능/정확성을 위해<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://commons.apache.org/proper/commons-rng/commons-rng-core/javadocs/api-1.2/overview-summary.html">Commons RNG</a>를 고려해봄이 좋다</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static boolean nextBoolean()
+static byte[] nextBytes(int count)
+static int nextInt(int startInclusive, int endExclusive) // + long, double, float
+</div><h2>RandomStringUtils</h2><p>스레드-안전. 간단한 랜덤 문자열 생성. 정교한 작업이 필요하다면<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://commons.apache.org/proper/commons-text/javadocs/api-release/">commons-text</a> RandomStringGenerator 이용</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static String random(int count)                                                  // 특정 길이 랜덤 문자열 반환
+static String randomAscii(int minLengthInclusive, int maxLengthExclusive)
+static String randomAlphabetic(int minLengthInclusive, int maxLengthExclusive)
+static String randomNumeric(int minLengthInclusive, int maxLengthExclusive)
+static String randomAlphanumeric(int minLengthInclusive, int maxLengthExclusive)
+static String randomGraph(int minLengthInclusive, int maxLengthExclusive)        // + randomPrint
+    // 공백 문자를 제외한, 눈에 보이는 문자들(POSIX [:graph:] )로만 구성
+static String random(int count, String chars)
+</div><h2>Range&lt;T></h2><p>스레드-안전. 비교 가능한 객체의 구간을 정의한다</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static &lt;T> Range&lt;T> is(T element, Comparator&lt;T> comparator)
+    // 구간의 최소/최댓값 모두 element로 설정한 구간을 반환한다
+static &lt;T> Range&lt;T> between(T fromInclusive, T toInclusive, Comparator&lt;T> comparator)
+
+T getMinimum()
+    // + getMaximum, getComparator
+boolean contains(T element)
+    // + isBefore, isAfter, isStartedBy, isEndedBy, containsRange, isOverlappedBy, isBeforeRange, isAfterRange
+int elementCompareTo(T element)
+    // isBefore면 -1, contains면 0, isAfter면 1
+Range&lt;T> intersectionWith(Range&lt;T> other)
+</div><h2>RegExUtils</h2><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static String removeAll(String text, String regex)
+    // + removeFirst, removePattern(removeAll + Pattern.DOTALL 옵션), replaceAll, replaceFirst, replacePattern(replaceAll + Pattern.DOTALL 옵션)
+</div><h2>SerializationUtils</h2><p>스레드-안전. 직렬화/역직렬화 유틸리티 제공</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static &lt;T extends Serializable> T clone(T object)  // 직렬화를 이용한 deep clone
+static &lt;T extends Serializable> T roundtrip(T msg) // 직렬화 후 역직렬화하여 반환
+static byte[] serialize(Serializable obj)
+static &lt;T> T deserialize(byte[] objectData)
+</div><h2>StringUtils</h2><p>스레드-안전. null 안전한 String 유틸리티 제공</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static String normalizeSpace(String str)
+static String repeat(String str, String separator, int repeat)
+static String rightPad(String str, int size)                                             // + leftPad
+static boolean isEmpty(CharSequence cs)
+    // + isNotEmpty, isAnyEmpty, isNoneEmpty, isAllEmpty, isBlank(isEmpty 포함), isNotBlank, isAnyBlank, isNoneBlank, isAllBlank
+static String trim(String str)                                                           // heading, trailing 제어 문자(ASCII &lt;= 32) 제거
+    // + trimToNull(결과가 isBlank면 null), trimToEmpty, strip(공백 문자; Character#isWhitespace 또는 사용자 지정 문자 제거), stripToNull, stripToEmpty, stripStart, stripEnd, stripAll, stripAccents
+static String truncate(String str, int maxWidth)
+static int compare(String str1, String str2, boolean nullIsLess)
+static boolean contains(CharSequence seq, CharSequence searchSeq)
+    // + containsAny, containsOnly(검색 대상 문자들로만 구성됐는지 여부), containsNone, startWithAny, endsWithAny
+static int indexOf(CharSequence seq, CharSequence searchSeq, int startPos)
+    // + lastIndexOf, indexOfAny, indexOfAnyBut(검색 대상 문자에 해당하지 않는 최초의 인덱스)
+static int ordinalIndexOf(CharSequence str, CharSequence searchStr, int ordinal)
+    // ordinal번째로 검색된 위치를 반환. + lastOrdinalIndexOf
+static String left(String str, int len)                                                  // + right, mid, center, abbreviate
+static String substringBefore(String str, String separator)
+    // + substringAfter, substringBeforeLast, substringAfterLast, substringBetween, substringsBetween
+static String[] splitByWholeSeparator(String str, String separator, int max)
+    // + splitPreserveAllTokens, splitByWholeSeparatorPreserveAllTokens, splitByCharacterType
+static &lt;T> String join(T... elements)                                                 // + joinWith
+static String deleteWhitespace(String str)
+    // + removeStart, removeEnd, remove, replaceOnce, replaceEach, replaceEachRepeatedly(문자열이 containsNone을 만족할 때까지 반복), replaceChars
+static String overlay(String str, String overlay, int start, int end)
+    // str의 부분 문자열[start, end)을 overlay로 교체한다. start > end인 경우 스왑된다
+static String rotate(String str, int shift)
+    // + reverse, reverseDelimited
+static String getCommonPrefix(String... strs)
+static String appendIfMissing(String str, CharSequence suffix, CharSequence... suffixes) // + prependIfMissing
+static String wrap(String str, String wrapWith)                                          // + wrapIfMissing, unwrap
+</div><h2>SystemUtils</h2><p>스레드-안전. java.lang.System에 관한 헬퍼 제공</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">public static final String JAVA_HOME
+public static final String JAVA_IO_TMPDIR
+public static final String OS_ARCH
+public static final String USER_DIR
+public static final boolean IS_OS_WINDOWS
+// ...
+</div><h2>Validate</h2><p>스레드-안전. 인자 평가에 관한 유틸리티를 제공한다</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static void isTrue(boolean expression, String format, Object... values)
+static &lt;T> T notNull(T object, String format, Object... values)
+static &lt;T> T[] notEmpty(T[] array, String format, Object... values)
+static &lt;T> T[] noNullElements(T[] array, String format, Object... values)
+static &lt;T> T[] validIndex(T[] array, int index, String format, Object... values)
+static void matchesPattern(CharSequence input, String pattern)
+static &lt;T> void inclusiveBetween(T start, T end, Comparable&lt;T> value)         // + exclusiveBetween
+static void isInstanceOf(Class&lt;?> type, Object obj)
+static void isAssignableFrom(Class&lt;?> superType, Class&lt;?> type)
+</div></div><h1>...concurrent</h1><div><h2>CircuitBreaker</h2><div><h3>CircuitBreaker&lt;T></h3><ol><li><a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://martinfowler.com/bliki/CircuitBreaker.html">CircuitBreaker</a>는 외부 리소스의 가용 여부를 알려주는 역할을 한다</li><p>리소스를 신뢰할 수 없는 상태로 변이되면 당분간 리소스에 대한 모든 요청을 즉시 거부하도록 고안된 개념이지만, 적절하게 알아서 구현하면 된다</p><li>회로에서 가져온 개념이므로 close가 가용, open이 불가를 의미한다</li></ol><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">boolean isOpen()
+void close() // + open
+boolean checkState()
+    // 가용 상태를 재확인하여 필요하다면 상태를 변경한다
+boolean incrementAndCheckState(T increment)
+    // checkState()에 인자가 필요한 경우 이용한다
+</div><h3>ThresholdCircuitBreaker</h3><p>스레드-안전. 1회용 CircuitBreaker를 제공한다. 물론 close()로 강제로 천이시킬 수 있다</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">public ThresholdCircuitBreaker(long threshold)
+long getThreshold()
+</div><h3>EventCountCircuitBreaker</h3><ol><li>카운트와 인터벌을 가지고 아래와 같은 서비스를 제공할 수 있다. 카운팅은 외부에서 직접해야함에 유의</li><ul><li>n개 이상의 실패가 발생하면 상태를 OPEN으로 천이</li><li>n분 동안 m개 이상의 실패가 발생하면 l분간 상태를 OPEN으로 천이</li><li>분당 요청이 n개 이하로 떨어지면 상태를 CLOSED로 천이</li></ul><li>public EventCountCircuitBreaker(int threshold, long checkInterval, TimeUnit checkUnit)</li><p>기준 이벤트 카운트/인터벌 모두 공유. 초당 최대 5개의 처리를 하는<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java" displayRange="[11,32]" lan="java">예시</button></p><li>public EventCountCircuitBreaker(int openingThreshold, long checkInterval, TimeUnit checkUnit, int closingThreshold)</li><p>기준 인터벌을 공유. 초당 5개 이상의 요청이 발생하면 OPEN, 초당 2개 이하로 떨어지면(부정확) CLOSE하는<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java" displayRange="[34,61]" lan="java">예시</button></p><li>public EventCountCircuitBreaker(int openingThreshold, long openingInterval, TimeUnit openingUnit, int closingThreshold, long closingInterval, TimeUnit closingUnit)</li><p>초당 5번 이상 실패하면 2초간 OPEN하는<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" title="/Repositories/Eclipse/apache-commons-lang-example/src/test/java/EventCountCircuitBreakerTest.java" displayRange="[63,90]" lan="java">예시</button></p></ol></div><h2>Initializer</h2><div><h3>ConcurrentInitializer&lt;T></h3><p>스레드-안전한 초기화 로직을 의미한다</p><h3>AtomicInitializer&lt;T></h3><p>『Effective Java』에서 소개하는<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black goto" href="effective_java.html#pos307017731" target="_blank">객체 필드 초기화 지연</a>과 유사한 형태의 로직으로, AtomicReference를 이용해 단 한 번만 객체가 초기화됨을 보장한다</p><h3>AtomicSafeInitializer&lt;T></h3><p>AtomicInitializer + initialize()가 단 한 번만 호출됨이 보장된다</p><h3>BackgroundInitializer&lt;T></h3><p>내부적으로 ExecutorService와 Future를 이용해 백그라운드 초기화 작업을 지원한다. start()로 초기화를 다른 스레드에서 시작시키고, get()을 통해 블로킹할 수 있다</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">boolean start()
+    // 단 한 번만 실행됨이 보장된다. 최초에만 true, 나머지는 false 반환
+boolean isStarted()
+    // == (future != null)
+Future&lt;T> getFuture()
+</div><h3>abstract class LazyInitializer&lt;T></h3><p>『Effective Java』에서 소개하는<a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black goto" href="effective_java.html#pos307017731" target="_blank">객체 필드 초기화 지연</a>로직을 이용해 늦은 초기화를 지원한다</p><h3>ConstantInitializer&lt;T></h3><p>항상 같은 값을 반환하는 ConcurrentInitializer 콘크리트 클래스</p><h3>CallableBackgroundInitializer&lt;T></h3><p>Callable을 이용한 BackgroundInitializer 콘크리트 클래스</p><h3>MultiBackgroundInitializer</h3><p>병렬로 초기화 작업을 진행한다</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">void addInitializer(String name, BackgroundInitializer&lt;?> init)</div></div><h2>TimedSemaphore</h2><p>시간 당 소비자 수를 제한하는 세마포어를 제공한다</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">final void setLimit(int limit)
+void acquire()
+    // 순번을 얻기까지 스레드를 블록한다
+boolean tryAcquire()
+    // 순번을 얻을 수 있다면 얻은 뒤 true를 반환하고, 아니면 false를 반환한다. true를 받았다면 즉시 다음으로 진행하면 된다
+</div></div><h1>...event</h1><div><h2>EventListenerSupport&lt;L></h2><p>이벤트 리스터들을 관리하고, 일괄 통지하는 기능을 제공한다</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static &lt;T> EventListenerSupport&lt;T> create(Class&lt;T> listenerInterface)
+L fire()
+    // 프록시 객체를 반환한다. 프록시 메서드는 등록된 모든 이벤트 리스너에 포워딩된다
+void addListener(L listener, boolean allowDuplicate)
+    // allowDuplicate는 지정되지 않은 경우 true
+void removeListener(L listener)
+L[] getListeners()
+</div><h2>EventUtils</h2><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static &lt;L> void addEventListener(Object eventSource, Class&lt;L> listenerType, L listener)
+    // eventSource의 "add" + listenerType.getSimpleName()에 해당하는 메서드로 listener 등록
+static &lt;L> void bindEventsToMethod(Object target, String methodName, Object eventSource, Class&lt;L> listenerType, String... eventTypes)
+    // addEventListener를 호출한다. 등록하는 listener는 target의 methodName 메서드를 호출하는 프록시
+    // eventTypes는 listenerType 인터페이스 중 어떤 메서드들에 대해 동작할 지를 의미하며, 비어 있는 경우 모든 메서드에 대해 동작한다
+</div></div><h1>...exception</h1><div><h2>ExceptionUtils</h2><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static Throwable getRootCause(Throwable throwable)
+static &lt;R> R rethrow(Throwable throwable)
+    // R은 장식. throwable을 즉시 throw한다. 아래와 같이 제네릭을 이용하여 CheckedException을 컴파일러로부터 숨긴다. 메서드 시그니처의 불필요한 throws 절과 예외 체인의 불필요한 "Caused by" 항목을 제거할 수 있다. 자바의 예외 처리 방법에 벗어나는 감이 있지만, 라이브러리 개발에는 유용하다
+    @SuppressWarnings("unchecked")
+    private static &lt;R, T extends Throwable> R typeErasure(final Throwable throwable) throws T {
+        throw (T) throwable;
+    }
+static &lt;R> R wrapAndThrow(Throwable throwable)
+    // throwable이 RuntimeException, Error의 인스턴스면 각각 해당 타입으로 throw하고, 나머지는 UndeclaredThrowableException로 throw한다. 결과적으로 Error를 제외하면 모두 RuntimeException으로 throw하는 셈
+</div></div><h1>...math</h1><div><h2>Fraction</h2><p>int 분자/분모를 이용한다. BigInteger 구현은 Commons Math BigFraction을 이용</p><h2>NumberUtils</h2><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static int toInt(String str, int defaultValue)
+    // null과 빈 문자열은 defaultValue를 반환. 지정되지 않은 경우 0
+    // + toLong, toFloat, toDouble, toByte, toShort
+static BigDecimal toScaledBigDecimal(String value)
+    // RoundingMode.HALF_EVEN으로 소수점 둘째 자리까지만 남긴다
+static Number createNumber(String str)
+    // 0x, -0x, #, -#로 시작하면 16진수로 간주
+    // 타입 정보를 명시하지 않은 경우, 정수는 Integer, Long(8자 이상), BigInteger(16자 이상)로 변환, 소수는 Float, Double, BigDecimal로 변환된다
+    // + createFloat, createDouble, createInteger, ...
+</div></div><h1>...mutable</h1><div><h2>Mutable&lt;T></h2><p>java.lang에서 제공하는 기본 타입의 래퍼들이 변경할 수 없는 것에 반해, 변경할 수 있는 T 타입 래퍼를 제공한다</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">T getValue() // + setValue
+
+class MutableBoolean
+class MutableInt
+class MutableObject&lt;T>
+</div></div><h1>...reflect</h1><p>사용할 일 생기면 정리 : TypeUtils, FieldUtils, ConstructorUtils, MethodUtils</p><h1>...time</h1><div><h2>DateParser</h2><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">Date parse(String source)
+String getPattern()
+</div><h2>DatePrinter</h2><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">String format(long millis)
+&lt;B extends Appendable> B format(long millis, B buf)
+</div><h2>FastDateFormat</h2><p>SimpleDateFormat의 고속, 스레드-안전한 버전</p><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static FastDateFormat getInstance(String pattern)
+static FastDateFormat getDateTimeInstance(int dateStyle, int timeStyle, TimeZone timeZone)
+    // 스타일 : FULL, LONG, MEDIUM, SHORT
+</div><h2>DateFormatUtils</h2><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">public static final FastDateFormat ISO_8601_EXTENDED_DATETIME_FORMAT           // yyyy-MM-dd'T'HH:mm:ss
+public static final FastDateFormat ISO_8601_EXTENDED_DATETIME_TIME_ZONE_FORMAT // yyyy-MM-dd'T'HH:mm:ssZZ
+public static final FastDateFormat ISO_8601_EXTENDED_DATE_FORMAT               // yyyy-MM-dd
+public static final FastDateFormat ISO_8601_EXTENDED_TIME_FORMAT               // HH:mm:ss
+public static final FastDateFormat ISO_8601_EXTENDED_TIME_TIME_ZONE_FORMAT     // HH:mm:ssZZ
+public static final FastDateFormat SMTP_DATETIME_FORMAT                        // EEE, dd MMM yyyy HH:mm:ss Z
+</div><h2>DateUtils</h2><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static boolean isSameDay(Calendar cal1, Calendar cal2)
+static boolean isSameInstant(Calendar cal1, Calendar cal2)
+static boolean truncatedEquals(Calendar cal1, Calendar cal2, int field)
+static boolean truncatedCompareTo(Calendar cal1, Calendar cal2, int field)
+static Date addYears(Date date, int amount)
+    // + addMonths, addWeeks, addDays, addHours, addMinutes, addSeconds, addMilliseconds
+static Date setYears(Date date, int amount)
+    // + setMonths, setDays, setHours, setMinutes, setSeconds, setMilliseconds
+static Calendar toCalendar(Date date, TimeZone tz)
+static Date round(Calendar date, int field)
+    // + truncate, ceiling
+</div><h2>StopWatch</h2><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">static StopWatch createStarted()
+void start()
+    // + stop, reset, split, unsplit, suspend, resume
+    // + isStarted, isSuspended, isStopped
+long getTime(TimeUnit timeUnit)
+long getNanoTime()
+long getSplitTime()              // + getSplitNanoTime
+long getStartTime()
+String toString()
+</div></div><h1>...tuple</h1><p><strong>↓java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">class Pair&lt;L, R>
+class ImmutablePair&lt;L, R>
+class MutablePair&lt;L, R>
+
+class Triple&lt;L, M, R>
+class ImmutableTriple&lt;L, M, R>
+class MutableTriple&lt;L, M, R></div></div></article><hr><script id="google-analytics" src="https://www.googletagmanager.com/gtag/js?id=UA-143098403-1" async></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-143098403-1');</script><script id="highlight-js" src="/source/highlight.pack.js" defer></script><script id="default-js" src="/source/default.min.js" defer></script></body></html>
