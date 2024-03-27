@@ -1,13 +1,13 @@
 /**
  * @param {String} text
  * @param {{
-*      noHead?: boolean,
-*      delimiter?: string,
-* }?} opt
-* - noHead : 기본값 false
-* - delimiter : RegExp에 이용할 구분자 문자열. 기본값으로는 ','와 '\\t' 중 첫 번째 줄에 더 많이 등장하는 것을 사용
-* 참고 문서 : https://datatracker.ietf.org/doc/html/rfc4180
-*/
+ *      noHead?: boolean,
+ *      delimiter?: string,
+ * }?} opt
+ * - noHead : 기본값 false
+ * - delimiter : RegExp에 이용할 구분자 문자열. 기본값으로는 ','와 '\\t' 중 첫 번째 줄에 더 많이 등장하는 것을 사용
+ * 참고 문서 : https://datatracker.ietf.org/doc/html/rfc4180
+ */
 function parseCSV(text, opt) {
     opt ??= {};
     opt.noHead ??= false;
