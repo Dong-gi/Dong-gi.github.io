@@ -28,7 +28,7 @@ include ./source/skeleton.pug
                     continue;
                 }
                 addedFileSet.add(post.file);
-                ul.appendChild(asNodes(`<li><a href="${post.file}">${post.title}</a></li>`));
+                ul.appendChild(asNodes(`<li><a href="/posts/${post.file}">${post.title}</a></li>`));
                 if (++renderedCount >= 10) { break; }
             }
         }, 100);
