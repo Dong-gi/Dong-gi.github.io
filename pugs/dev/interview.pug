@@ -17,10 +17,12 @@ include ../../source/skeleton.pug
                 +tds('ISBN', '978-89-6848-152-9 [93000]')
                 +tds('발행일', '2015년 02월 01일')
                 +tds('발행처', '한빛미디어')
-        h2 책의 오류
+    div
+        h2.no-marker 책의 오류
         ul
             li 80p 정수 타입 배열에는 final 키워드를 사용할 수 없다
             p -> 배열 원소의 타입과 무관하게 final 키워드 사용 가능하며, 해당 변수 초기화 이후 재할당은 불가하다
+
     .w3-row
         .w3-col.s2.w3-center
             +w3img(src='https://www.hanbit.co.kr/data/books/B9005920688_l.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
@@ -31,6 +33,7 @@ include ../../source/skeleton.pug
                 +tds('ISBN', '979-11-6224-199-8 [93000]')
                 +tds('발행일', '2019년 07월 04일')
                 +tds('발행처', '한빛미디어')
+
     .w3-row
         .w3-col.s2.w3-center
             +w3img(src='https://image.yes24.com/goods/44305533/800x0', '도서 이미지')&attributes({style: 'max-height:210px'})

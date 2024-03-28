@@ -1368,7 +1368,6 @@ include ../../source/skeleton.pug
                     p I/O 단위가 크다면 IOPS 제한량보다 낮은 수준에서 처리량 제한에 도달할 수 있다. 반대로 볼륨 처리량 제한을 너무 높게 잡으면, 도달할 수도 없는 성능을 위해 추가 비용을 지불하는 셈이 된다
                     li 적정 I/O 처리 대기열은 SSD의 경우 1000IOPS 당 1 이하
 
-            +pos('인스턴스 스토어')
             h4.fake 인스턴스 스토어
             ul
                 li 인스턴스 스토어는 EC2 인스턴스와 물리적으로 연결된 디스크에 위치하는 임시 스토리지
@@ -1655,7 +1654,6 @@ include ../../source/skeleton.pug
                     li Amazon EC2 metadata service로 전달되는 인증 정보
                 p 인스턴스 내부에서 aws cli를 직접 실행하는 경우엔 얘기가 다르다. profile을 추가로 지정해야 하고, 해당 profile로 assume role할 수 있는 권한이 있어야 한다
 
-            +pos('CloudTrail을 사용하여 이벤트 로깅')
             h3 CloudTrail을 사용하여 이벤트 로깅
             ul
                 li CloudTrail은 IAM, STS 호출을 이벤트로 캡처한다

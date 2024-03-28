@@ -532,8 +532,15 @@ window.addEventListener('load', async () => {
             parent = parent.parentElement;
         }
         while (!target.clientHeight) {
-            if (target.nextSibling && target.nextSibling.clientHeight) {
-                target = target.nextSibling;
+            let isFound = false
+            while (target.nextSibling) {
+                if (target.nextSibling.clientHeight) {
+                    target = target.nextSibling;
+                    isFound = true;
+                    break;
+                }
+            }
+            if (isFound) {
                 break;
             }
             target = target.parentElement;

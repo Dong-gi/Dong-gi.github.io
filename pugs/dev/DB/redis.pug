@@ -71,7 +71,6 @@ include ../../../source/skeleton.pug
     div
         h2 Generic
         div
-            +pos('COPY')
             h3 COPY since 6.2.0
             +asCode('text', 'syntax') COPY source destination [DB destination-db-index] [REPLACE]
             ul
@@ -80,12 +79,10 @@ include ../../../source/skeleton.pug
                 li DB : 내부 논리적 DB index
                 li REPLACE : 덮어쓰기
 
-            +pos('DEL')
             h3 DEL
             +asCode('text', 'syntax') DEL key [key ...]
             p 키를 삭제하고, 삭제된 개수 반환
 
-            +pos('DUMP')
             h3 DUMP
             +asCode('text', 'syntax') DUMP key
             ul
@@ -104,12 +101,10 @@ include ../../../source/skeleton.pug
                     127.0.0.1:6379> get key2
                     "Hello World!"
 
-            +pos('EXISTS')
             h3 EXISTS
             +asCode('text', 'syntax') EXISTS key [key ...]
             p 존재하는 키의 개수 반환. 중복된 키는 중복 카운트 됨에 유의
 
-            +pos('EXPIRE')
             h3 EXPIRE
             +asCode('text', 'syntax') EXPIRE key seconds [NX|XX|GT|LT]
             ul
@@ -122,12 +117,10 @@ include ../../../source/skeleton.pug
                 li LT : Less than; 기존 ttl보다 작은 경우에만 설정
                 li ttl이 없는 경우 GT, LT에서 무한으로 간주
 
-            +pos('PEXPIRE')
             h3 PEXPIRE
             +asCode('text', 'syntax') PEXPIRE key milliseconds [NX|XX|GT|LT]
             p 밀리초 단위 EXPIRE
 
-            +pos('EXPIREAT')
             h3 EXPIREAT
             +asCode('text', 'syntax') EXPIREAT key unix-timestamp-seconds [NX|XX|GT|LT]
             ul
@@ -140,12 +133,10 @@ include ../../../source/skeleton.pug
                 li LT : Less than; 기존 ttl보다 작은 경우에만 설정
                 li ttl이 없는 경우 GT, LT에서 무한으로 간주
 
-            +pos('PEXPIREAT')
             h3 PEXPIREAT
             +asCode('text', 'syntax') PEXPIREAT key unix-time-milliseconds [NX|XX|GT|LT]
             p 밀리초 단위 EXPIREAT
 
-            +pos('EXPIRETIME')
             h3 EXPIRETIME Since 7.0.0
             +asCode('text', 'syntax') EXPIRETIME key
             ul
@@ -153,19 +144,16 @@ include ../../../source/skeleton.pug
                 li -1 : ttl 설정 안 된 경우
                 li -2 : 키가 존재하지 않는 경우
 
-            +pos('PEXPIRETIME')
             h3 PEXPIRETIME Since 7.0.0
             +asCode('text', 'syntax') PEXPIRETIME key
             p 밀리초 단위 EXPIRETIME
 
-            +pos('KEYS')
             h3 KEYS
             +asCode('text', 'syntax') KEYS pattern
             ul
                 li <span class="hover-content" template-id="glob-style-pattern">GLOB style pattern</span>에 일치하는 키 배열 반환
                 li KEYS 명령은 사용중인 저장소가 클수록 큰 성능 저하를 발생하므로 각별히 주의
 
-            +pos('MIGRATE')
             h3 MIGRATE
             +asCode('text', 'syntax') MIGRATE host port key|"" destination-db timeout-ms [COPY] [REPLACE] [AUTH password] [AUTH2 username password] [KEYS key [key ...]]
             ul
@@ -176,14 +164,12 @@ include ../../../source/skeleton.pug
                 li KEYS : 여러 개를 이동할 때, 앞부분 key를 ""로 하고 사용
                 li AUTH, AUTH2 모두 목적지 서버 연결 정보로써, 필요한 것 하나만 사용
 
-            +pos('MOVE')
             h3 MOVE
             +asCode('text', 'syntax') MOVE key db-index
             ul
                 li 키를 다른 DB로 옮긴다. 이미 목적지에 key가 존재하면 옮기지 않는다 -- 이 성질을 이용하여 락을 구현할 수도 있다
                 li 옮겼으면 1, 그 외엔 0 반환
 
-            +pos('OBJECT')
             h3 OBJECT
             +asCode('text', 'syntax') OBJECT subcommand arg ... arg
             ul
@@ -193,19 +179,16 @@ include ../../../source/skeleton.pug
                 li OBJECT IDLETIME key : 참조하지 않은 시간(초) 반환
                 li OBJECT REFCOUNT key : 키가 참조하는 값의 개수 반환
 
-            +pos('PERSIST')
             h3 PERSIST
             +asCode('text', 'syntax') PERSIST key
             ul
                 li ttl 삭제
                 li 삭제했으면 1, 아니면 0 반환
 
-            +pos('RANDOMKEY')
             h3 RANDOMKEY
             +asCode('text', 'syntax') RANDOMKEY
             p 현재 DB에서 임의 키 반환. 없으면 nil
 
-            +pos('RENAME')
             h3 RENAME
             +asCode('text', 'syntax') RENAME key newkey
             ul
@@ -215,14 +198,12 @@ include ../../../source/skeleton.pug
                 li 클러스터 모드에서, key와 newkey는 같은 해시 슬롯에 존재해야
                 li 성공 시 "OK" 반환
 
-            +pos('RENAMENX')
             h3 RENAMENX
             +asCode('text', 'syntax') RENAMENX key newkey
             ul
                 li newkey가 존재하지 않는 경우만 RENAME
                 li 성공했으면 1, 아니면 0 반환
 
-            +pos('RESTORE')
             h3 RESTORE
             +asCode('text', 'syntax') RESTORE key ttl-milliseconds serialized-value [REPLACE] [ABSTTL] [IDLETIME seconds] [FREQ frequency]
             ul
@@ -231,7 +212,6 @@ include ../../../source/skeleton.pug
                 li ABSTTL : 설정한 경우, ttl을 Unix timestamp로 해석한다
                 li IDLETIME, FREQ : OBJECT 명령과 관계된 초기값 설정
 
-            +pos('SCAN')
             h3 SCAN
             +asCode('text', 'syntax') SCAN cursor [MATCH pattern] [COUNT count] [TYPE type]
             ul
@@ -260,7 +240,6 @@ include ../../../source/skeleton.pug
                 li 순회의 종료를 판단하는 기준 : 지정 cursor로부터 남은 키의 개수가 count보다 작은가?
                 li 일부 복합 타입들은 특정 크기를 초과하지 않는 한 해시 테이블이 아닌 하나의 값으로 저장되므로, count보다 많은 목록이 응답될 수도 있다
 
-            +pos('SORT')
             h3 SORT
             +asCode('text', 'syntax') SORT key [BY pattern] [LIMIT offset count] [GET pattern [GET pattern ...]] [ASC|DESC] [ALPHA] [STORE destination]
             ul
@@ -311,34 +290,28 @@ include ../../../source/skeleton.pug
                 li 해시 필드에 대하여, 아래와 같이 -> 표기를 이용해 BY, GET 옵션을 사용할 수 있다
                 +asCode('text', 'e.g.') SORT mylist BY weight_*->fieldname GET object_*->fieldname
 
-            +pos('SORT_RO')
             h3 SORT_RO Since 7.0.0
             +asCode('text', 'syntax') SORT_RO key [BY pattern] [LIMIT offset count] [GET pattern [GET pattern ...]] [ASC|DESC] [ALPHA]
             p 읽기 전용 SORT : SORT 명령은 STORE 옵션으로 인해 쓰기 명령으로 분류되고, 이로 인해 읽기 전용 복제본에서 마스터 인스턴스로 명령이 항상 리디렉션되었는데, 이를 방지할 목적으로 추가되었다.
 
-            +pos('TOUCH')
             h3 TOUCH
             +asCode('text', 'syntax') TOUCH key [key ...]
             ul
                 li 마지막 접근 시각을 현재로 설정
                 li 설정한 개수 반환
 
-            +pos('TTL')
             h3 TTL
             +asCode('text', 'syntax') TTL key
             p 남은 유효 시간(초) 반환. 삭제됐으면 -2, ttl 없으면 -1
 
-            +pos('PTTL')
             h3 PTTL
             +asCode('text', 'syntax') PTTL key
             p 밀리초 단위 TTL
 
-            +pos('TYPE')
             h3 TYPE
             +asCode('text', 'syntax') TYPE key
             p 데이터 타입 반환; string, list, set, zset, hash, stream, none
 
-            +pos('UNLINK')
             h3 UNLINK
             +asCode('text', 'syntax') UNLINK key [key ...]
             ul
@@ -347,7 +320,6 @@ include ../../../source/skeleton.pug
                     +goto('DEL')
                     |과 다르게 메모리 해제를 별도 스레드에서 진행(논-블로킹)하기 때문에, 지울 개수가 많을수록 UNLINK가 더 빠르다
 
-            +pos('WAIT')
             h3 WAIT
             +asCode('text', 'syntax') WAIT numreplicas timeout-milliseconds
             ul
@@ -357,7 +329,6 @@ include ../../../source/skeleton.pug
 
         h2 String
         div
-            +pos('APPEND')
             h3 APPEND
             +asCode('text', 'syntax') APPEND key value
             ul
@@ -366,7 +337,6 @@ include ../../../source/skeleton.pug
                 li 키가 없으면 set
                 li 연산 후의 문자열 길이 반환
 
-            +pos('DECR')
             h3 DECR
             +asCode('text', 'syntax') DECR key
             ul
@@ -374,7 +344,6 @@ include ../../../source/skeleton.pug
                 p 키가 없으면 0으로 간주
                 li 값이 signed 64bit 범위 밖이면 에러
 
-            +pos('DECRBY')
             h3 DECRBY
             +asCode('text', 'syntax') DECRBY key decrement
             ul
@@ -382,7 +351,6 @@ include ../../../source/skeleton.pug
                 p 키가 없으면 0으로 간주
                 li 값이 signed 64bit 범위 밖이면 에러
 
-            +pos('GET')
             h3 GET
             +asCode('text', 'syntax') GET key
             ul
@@ -390,14 +358,12 @@ include ../../../source/skeleton.pug
                 li key의 값이 문자열이면 해당 값 반환
                 li 그 외는 에러
 
-            +pos('GETDEL')
             h3 GETDEL
             +asCode('text', 'syntax') GETDEL key
             ul
                 li GET 실행 후 DEL(key가 존재하고, 값이 string일 경우) 실행
                 li GET 실행 결과 반환
 
-            +pos('GETEX')
             h3 GETEX
             +asCode('text', 'syntax') GETEX key [EX seconds|PX milliseconds|EXAT unix-time-seconds|PXAT unix-time-milliseconds|PERSIST]
             ul
@@ -406,21 +372,18 @@ include ../../../source/skeleton.pug
                 li EXAT, PXAT : ttl(절대 시각)
                 li PERSIST : ttl 제거
 
-            +pos('GETRANGE')
             h3 GETRANGE
             +asCode('text', 'syntax') GETRANGE key start end
             ul
                 li key에 대하여, 문자열의 부분 문자열 [start, end] 반환
                 li 음수 인덱스 가능. 문자열 길이를 초과하는 구간은 무시
 
-            +pos('GETSET')
             h3 GETSET; Deprecated since 6.2.0
             +asCode('text', 'syntax') GETSET key value
             ul
                 li SET 실행 후, 이전 값 반환
                 li Since 6.2.0 : SET 명령의 GET 옵션 사용
 
-            +pos('INCR')
             h3 INCR
             +asCode('text', 'syntax') INCR key
             ul
@@ -428,7 +391,6 @@ include ../../../source/skeleton.pug
                 p 키가 없으면 0으로 간주
                 li 값이 signed 64bit 범위 밖이면 에러
 
-            +pos('INCRBY')
             h3 INCRBY
             +asCode('text', 'syntax') INCRBY key increment
             ul
@@ -436,7 +398,6 @@ include ../../../source/skeleton.pug
                 p 키가 없으면 0으로 간주
                 li 값이 signed 64bit 범위 밖이면 에러
 
-            +pos('INCRBYFLOAT')
             h3 INCRBYFLOAT
             +asCode('text', 'syntax') INCRBYFLOAT key increment
             ul
@@ -444,7 +405,6 @@ include ../../../source/skeleton.pug
                 p 키가 없으면 0으로 간주
                 li 값이 double 범위 밖이면 에러
 
-            +pos('LCS')
             h3 LCS Since 6.0.0 or 7.0.0
             +asCode('text', 'syntax').
                 # Since 6.0.0
@@ -483,7 +443,6 @@ include ../../../source/skeleton.pug
                     // 2) 1) 1) : "humble-bundle"의 "le"
                     // 2) 1) 2) : "xbundle-humble"의 "le"
 
-            +pos('MGET')
             h3 MGET
             +asCode('text', 'syntax') MGET key [key ...]
             p 각 키에 대해 get 하여 배열로 반환
@@ -493,23 +452,19 @@ include ../../../source/skeleton.pug
                 2) "v2"
                 3) (nil)
 
-            +pos('MSET')
             h3 MSET
             +asCode('text', 'syntax') MSET key value [key value ...]
             p 원자적으로 주어진 키-값 쌍들을 모두 설정한다
 
-            +pos('MSETNX')
             h3 MSETNX
             +asCode('text', 'syntax') MSETNX key value [key value ...]
             p 모든 키가 신규인 경우 mset 실행하고 1 반환. 그 외엔 0 반환
 
-            +pos('PSETEX')
             h3 PSETEX
             +asCode('text', 'syntax') PSETEX key milliseconds value
             p 밀리초 단위
                 +goto('SETEX')
 
-            +pos('SET')
             h3 SET
             +asCode('text', 'syntax') SET key value [EX seconds|PX milliseconds|EXAT unix-time-seconds|PXAT unix-time-milliseconds|KEEPTTL] [NX|XX] [GET]
             ul
@@ -521,19 +476,16 @@ include ../../../source/skeleton.pug
                 li KEEPTTL : 이전 ttl 유지
                 li GET : 이전 값 반환(없으면 nil)
 
-            +pos('SETEX')
             h3 SETEX
             +asCode('text', 'syntax') SETEX key seconds value
             p "SET key value EX seconds"와 동일
 
-            +pos('SETNX')
             h3 SETNX
             +asCode('text', 'syntax') SETNX key value
             ul
                 li key가 존재하지 않을 경우에만 value 설정
                 li 설정했으면 1, 아니면 0 반환
 
-            +pos('SETRANGE')
             h3 SETRANGE
             +asCode('text', 'syntax') SETRANGE key offset value
             ul
@@ -552,7 +504,6 @@ include ../../../source/skeleton.pug
                 127.0.0.1:27017> get msg
                 "hello\x00\x00\x00hello"
 
-            +pos('STRLEN')
             h3 STRLEN
             +asCode('text', 'syntax') STRLEN key
             ul
@@ -562,7 +513,6 @@ include ../../../source/skeleton.pug
 
         h2 Bitmap
         div
-            +pos('BITCOUNT')
             h3 BITCOUNT
             +asCode('text', 'syntax') BITCOUNT key [start end [BYTE|BIT]]
             ul
@@ -570,7 +520,6 @@ include ../../../source/skeleton.pug
                 li start, end : 음수를 허용하는 두 인덱스로 표현되는 닫힌 구간 [start, end]으로 탐색 구간 지정 가능
                 li BYTE, BIT : 탐색 구간에 사용되는 start, end의 단위 지정
 
-            +pos('BITFIELD')
             h3 BITFIELD
             +asCode('text', 'syntax') BITFIELD key [GET encoding offset] [SET encoding offset value] [INCRBY encoding offset increment] [OVERFLOW WRAP|SAT|FAIL]
             ul
@@ -594,12 +543,10 @@ include ../../../source/skeleton.pug
                 8) (integer) 34
                 9) (integer) 56
 
-            +pos('BITFIELD_RO')
             h3 BITFIELD_RO Since 6.2.0
             +asCode('text', 'syntax') BITFIELD_RO key GET encoding offset
             p 읽기 전용 복제본에서 마스터로 명령이 리디렉션되는 것을 방지하기 위한 읽기 전용 BITFIELD
 
-            +pos('BITOP')
             h3 BITOP
             +asCode('text', 'syntax') BITOP operation destkey key [key ...]
             p 소스 키들의 값에 대한 AND, OR, XOR, NOT 결과를 destkey에 저장한다
@@ -613,7 +560,6 @@ include ../../../source/skeleton.pug
                 127.0.0.1:6379> get key3
                 "`ul`le-`ul`le"
 
-            +pos('BITPOS')
             h3 BITPOS
             +asCode('text', 'syntax') BITPOS key bit [start [end [BYTE|BIT]]]
             ul
@@ -637,39 +583,34 @@ include ../../../source/skeleton.pug
                 127.0.0.1:6379> bitpos key 1 1
                 (integer) 8
 
-            +pos('GETBIT')
             h3 GETBIT
             +asCode('text', 'syntax') GETBIT key offset
             p offset(0부터 시작)번째 비트 반환. 문자열을 넘어선 구간은 0으로 간주
 
-            +pos('SETBIT')
             h3 SETBIT
             +asCode('text', 'syntax') SETBIT key offset value
             p offset(0부터 시작)번째 비트를 value(0 | 1)로 변경. 이전 비트값 반환
 
         h2 List
         div
-            +pos('BLMOVE')
             h3 BLMOVE Since 6.2.0
             +asCode('text', 'syntax') BLMOVE source destination LEFT|RIGHT LEFT|RIGHT timeout-seconds
             ul
                 li
-                    +goto('LMOVE')
+                    +goto('LMOVE Since 6.2.0')
                     |의 블로킹 버전
                 li source 리스트가 비어있는 경우, 최대 timeout만큼 대기한다
                 p timeout == 0이면 무기한 대기 가능
 
-            +pos('BLMPOP')
             h3 BLMPOP Since 7.0.0
             +asCode('text', 'syntax') BLMPOP timeout-seconds numkeys key [key ...] LEFT|RIGHT [COUNT count]
             ul
                 li
-                    +goto('LMPOP')
+                    +goto('LMPOP Since 7.0.0')
                     |의 블로킹 버전
                 li 모든 리스트가 비어있는 경우, 최대 timeout만큼 대기한다
                 p timeout == 0이면 무기한 대기 가능
 
-            +pos('BLPOP')
             h3 BLPOP
             +asCode('text', 'syntax') BLPOP key [key ...] timeout-seconds
             ul
@@ -682,7 +623,6 @@ include ../../../source/skeleton.pug
                 li BLPOP 경합 시 처리 우선순위에 대해서는 공식 문서 참고 :
                     +asA('https://redis.io/commands/blpop/')
 
-            +pos('BRPOP')
             h3 BRPOP
             +asCode('text', 'syntax') BRPOP key [key ...] timeout-seconds
             ul
@@ -693,36 +633,31 @@ include ../../../source/skeleton.pug
                     +goto('BLPOP')
                     |과 동일
 
-            +pos('BRPOPLPUSH')
             h3 BRPOPLPUSH; Deprecated since 6.2.0
             +asCode('text', 'syntax') BRPOPLPUSH source destination timeout-seconds
             ul
                 li
-                    +goto('RPOPLPUSH')
+                    +goto('RPOPLPUSH; Deprecated since 6.2.0')
                     |의 블로킹 버전
                 li source 리스트가 비어있는 경우, 최대 timeout만큼 대기한다
                 p timeout == 0이면 무기한 대기 가능
                 li Since 6.2.0 :
-                    +goto('BLMOVE')
+                    +goto('BLMOVE Since 6.2.0')
 
-            +pos('LINDEX')
             h3 LINDEX
             +asCode('text', 'syntax') LINDEX key index
             p index(음수 가능) 번째 값 반환
 
-            +pos('LINSERT')
             h3 LINSERT
             +asCode('text', 'syntax') LINSERT key BEFORE|AFTER pivot element
             ul
                 li pivot 전|후에 element를 삽입
                 li 삽입 후 리스트 크기 반환. key가 존재하지 않는 경우 0. pivot을 찾지 못한 경우 -1
 
-            +pos('LLEN')
             h3 LLEN
             +asCode('text', 'syntax') LLEN key
             p 리스트 크기 반환. key가 존재하지 않는 경우 0
 
-            +pos('LMOVE')
             h3 LMOVE Since 6.2.0
             +asCode('text', 'syntax') LMOVE source destination LEFT|RIGHT LEFT|RIGHT
             p 원자적으로 source의 LEFT|RIGHT 원소를 반환한 다음 삭제하고, destination의 LEFT|RIGHT에 추가한다
@@ -734,17 +669,14 @@ include ../../../source/skeleton.pug
                 127.0.0.1:6379> lmove list1 list2 left right
                 "x3"
 
-            +pos('LMPOP')
             h3 LMPOP Since 7.0.0
             +asCode('text', 'syntax') LMPOP numkeys key [key ...] LEFT|RIGHT [COUNT count]
             p 비어있지 않은 최초 리스트의 왼쪽|오른쪽에서 최대 count개 원소를 반환하고 제거
 
-            +pos('LPOP')
             h3 LPOP
             +asCode('text', 'syntax') LPOP key [count]
             p 리스트 왼쪽 값 count(기본 1)개 삭제 후 반환
 
-            +pos('LPOS')
             h3 LPOS Since 6.0.6
             +asCode('text', 'syntax') LPOS key element [RANK rank] [COUNT num-matches] [MAXLEN len]
             ul
@@ -758,153 +690,126 @@ include ../../../source/skeleton.pug
                     li 하나도 못 찾은 경우, nil이 아니라 빈 배열 반환
                 li MAXLEN : 최대 len개의 원소만 비교
 
-            +pos('LPUSH')
             h3 LPUSH
             +asCode('text', 'syntax') LPUSH key element [element ...]
             p 왼쪽에 값 추가. 이후 리스트 크기 반환
 
-            +pos('LPUSHX')
             h3 LPUSHX
             +asCode('text', 'syntax') LPUSHX key element [element ...]
             p 리스트가 존재하면 왼쪽에 값 추가. 이후 리스트 크기 반환
 
-            +pos('LRANGE')
             h3 LRANGE
             +asCode('text', 'syntax') LRANGE key start stop
             p [start, stop] 구간의 값 반환(음수 인덱스 가능)
 
-            +pos('LREM')
             h3 LREM
             +asCode('text', 'syntax') LREM key count element
             ul
                 li element를 count개 삭제, count == 0이면 전부 삭제, count &lt; 0이면 오른쪽부터 삭제
                 li 삭제한 개수 반환
 
-            +pos('LSET')
             h3 LSET
             +asCode('text', 'syntax') LSET key index element
             p index(음수 가능) 번째 값을 element로 교체
 
-            +pos('LTRIM')
             h3 LTRIM
             +asCode('text', 'syntax') LTRIM key start stop
             p [start, stop] 구간(음수 인덱스 가능)만 남기고 나머지 삭제
 
-            +pos('RPOP')
             h3 RPOP
             +asCode('text', 'syntax') RPOP key [count]
             p 리스트 오른쪽 값 count개(기본 1) 삭제 후 반환
 
-            +pos('RPOPLPUSH')
             h3 RPOPLPUSH; Deprecated since 6.2.0
             +asCode('text', 'syntax') RPOPLPUSH source destination
             ul
                 li 원자적으로 rpop + lpush 실행
                 li Since 6.2.0 :
-                    +goto('LMOVE')
+                    +goto('LMOVE Since 6.2.0')
 
-            +pos('RPUSH')
             h3 RPUSH
             +asCode('text', 'syntax') RPUSH key element [element ...]
             p 오른쪽에 값 추가. 이후 리스트 크기 반환
 
-            +pos('RPUSHX')
             h3 RPUSHX
             +asCode('text', 'syntax') RPUSHX key element [element ...]
             p 리스트가 존재하면 오른쪽에 값 추가. 이후 리스트 크기 반환
 
         h2 Set
         div
-            +pos('SADD')
             h3 SADD
             +asCode('text', 'syntax') SADD key member [member ...]
             p 집합에 원소 추가. 실제 추가된 개수 반환
 
-            +pos('SCARD')
             h3 SCARD
             +asCode('text', 'syntax') SCARD key
             p 집합 크기 반환
 
-            +pos('SDIFF')
             h3 SDIFF
             +asCode('text', 'syntax') SDIFF key [key ...]
             p 차집합 반환; SDIFF s1 s2 s3 ... == s1 - s2 - s3 - ...
 
-            +pos('SDIFFSTORE')
             h3 SDIFFSTORE
             +asCode('text', 'syntax') SDIFFSTORE destination key [key ...]
             p
                 +goto('SDIFF')
                 |결과 destination에 저장(덮어쓰기)
 
-            +pos('SINTER')
             h3 SINTER
             +asCode('text', 'syntax') SINTER key [key ...]
             p 교집합 반환
 
-            +pos('SINTERCARD')
             h3 SINTERCARD Since 7.0.0
             +asCode('text', 'syntax') SINTERCARD numkeys key [key ...] [LIMIT limit]
             p
                 +goto('SINTER')
                 |의 크기 반환
 
-            +pos('SINTERSTORE')
             h3 SINTERSTORE
             +asCode('text', 'syntax') SINTERSTORE destination key [key ...]
             p
                 +goto('SINTER')
                 |결과 destination에 저장(덮어쓰기)
 
-            +pos('SISMEMBER')
             h3 SISMEMBER
             +asCode('text', 'syntax') SISMEMBER key member
             p 집합에 포함되면 1, 아니면 0
 
-            +pos('SMEMBERS')
             h3 SMEMBERS
             +asCode('text', 'syntax') SMEMBERS key
             p 전체 원소 반환
 
-            +pos('SMISMEMBER')
             h3 SMISMEMBER Since 6.2.0
             +asCode('text', 'syntax') SMISMEMBER key member [member ...]
             p 각 원소에 대하여
                 +goto('SISMEMBER')
                 |를 실행한 결과 배열 반환
 
-            +pos('SMOVE')
             h3 SMOVE
             +asCode('text', 'syntax') SMOVE source destination member
             p member가 source에 포함된다면 destination으로 이동하고 1 반환. 아니면 0
 
-            +pos('SPOP')
             h3 SPOP
             +asCode('text', 'syntax') SPOP key [count]
             p 무작위로 count(기본 1)개 삭제 후 반환
 
-            +pos('SRANDMEMBER')
             h3 SRANDMEMBER
             +asCode('text', 'syntax') SRANDMEMBER key [count]
             p 무작위로 count(기본 1)개 원소 반환. 음수를 지정한 경우, 중복이 허용된다
 
-            +pos('SREM')
             h3 SREM
             +asCode('text', 'syntax') SREM key member [member ...]
             p 집합에서 원소 삭제. 실제 제거된 개수 반환
 
-            +pos('SSCAN')
             h3 SSCAN
             +asCode('text', 'syntax') SSCAN key cursor [MATCH pattern] [COUNT count]
             p 집합에 대한
                 +goto('SCAN')
 
-            +pos('SUNION')
             h3 SUNION
             +asCode('text', 'syntax') SUNION key [key ...]
             p 합집합 반환
 
-            +pos('SUNIONSTORE')
             h3 SUNIONSTORE
             +asCode('text', 'syntax') SUNIONSTORE destination key [key ...]
             p
@@ -913,17 +818,15 @@ include ../../../source/skeleton.pug
 
         h2 Sorted Set
         div
-            +pos('BZMPOP')
             h3 BZMPOP Since 7.0.0
             +asCode('text', 'syntax') BZMPOP timeout-seconds numkeys key [key ...] MIN|MAX [COUNT count]
             ul
                 li
-                    +goto('ZMPOP')
+                    +goto('ZMPOP Since 7.0.0')
                     |의 블로킹 버전
                 li 모든 sorted set이 비어있는 경우, 최대 timeout만큼 대기
                 p timeout == 0이면 무기한 대기 가능
 
-            +pos('BZPOPMAX')
             h3 BZPOPMAX
             +asCode('text', 'syntax') BZPOPMAX key [key ...] timeout
             ul
@@ -936,7 +839,6 @@ include ../../../source/skeleton.pug
                 li 경합 시 처리 우선순위에 대해서는 BLPOP 문서 참고 :
                     +asA('https://redis.io/commands/blpop/')
 
-            +pos('BZPOPMIN')
             h3 BZPOPMIN
             +asCode('text', 'syntax') BZPOPMIN key [key ...] timeout
             ul
@@ -949,7 +851,6 @@ include ../../../source/skeleton.pug
                 li 경합 시 처리 우선순위에 대해서는 BLPOP 문서 참고 :
                     +asA('https://redis.io/commands/blpop/')
 
-            +pos('ZADD')
             h3 ZADD
             +asCode('text', 'syntax') ZADD key [NX|XX] [GT|LT] [CH] [INCR] score member [score member ...]
             ul
@@ -963,33 +864,28 @@ include ../../../source/skeleton.pug
                 li INCR : score를 덮어쓰지 않고, 값만큼 증가
                 p 갱신된 score를 반환한다. 없으면 nil
 
-            +pos('ZCARD')
             h3 ZCARD
             +asCode('text', 'syntax') ZCARD key
             p 집합 크기 반환
 
-            +pos('ZCOUNT')
             h3 ZCOUNT
             +asCode('text', 'syntax') ZCOUNT key min max
             p <span class="hover-content" template-id="zset-score-range">score 구간</span>에 포함되는 원소 개수 반환
 
-            +pos('ZDIFF')
             h3 ZDIFF Since 6.2.0
             +asCode('text', 'syntax') ZDIFF numkeys key [key ...] [WITHSCORES]
             ul
                 li 차집합 반환; ZDIFF 3 s1 s2 s3 == s1 - s2 - s3
                 li WITHSCORES : 반환 배열의 각 원소 뒤에 score가 포함된다
 
-            +pos('ZDIFFSTORE')
             h3 ZDIFFSTORE Since 6.2.0
             +asCode('text', 'syntax') ZDIFFSTORE destination numkeys key [key ...]
             ul
                 li
-                    +goto('ZDIFF')
+                    +goto('ZDIFF Since 6.2.0')
                     |결과를 destination에 저장한다(덮어쓰기)
                 li 결과 집합 크기를 반환한다
 
-            +pos('ZINCRBY')
             h3 ZINCRBY
             +asCode('text', 'syntax') ZINCRBY key increment member
             ul
@@ -997,7 +893,6 @@ include ../../../source/skeleton.pug
                 li 원소가 존재하지 않는 경우, increment를 score로 하여 원소 추가
                 li 키가 존재하지 않는 경우, 새 sorted set 생성
 
-            +pos('ZINTER')
             h3 ZINTER Since 6.2.0
             +asCode('text', 'syntax') ZINTER numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX] [WITHSCORES]
             ul
@@ -1006,54 +901,46 @@ include ../../../source/skeleton.pug
                 li AGGREGATE : score 집계 함수(기본 SUM)
                 li WITHSCORES : 반환 배열의 각 원소 뒤에 score가 포함된다
 
-            +pos('ZINTERCARD')
             h3 ZINTERCARD Since 7.0.0
             +asCode('text', 'syntax') ZINTERCARD numkeys key [key ...] [LIMIT limit]
             ul
                 li
-                    +goto('ZINTER')
+                    +goto('ZINTER Since 6.2.0')
                     |결과 집합 크기를 반환한다
                 li LIMIT : 결과 집합 크기가 limit(기본 0; 무제한)에 도달하면 더 계산하지 않음
 
-            +pos('ZINTERSTORE')
             h3 ZINTERSTORE
             +asCode('text', 'syntax') ZINTERSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
             ul
                 li
-                    +goto('ZINTER')
+                    +goto('ZINTER Since 6.2.0')
                     |결과를 destination에 저장한다(덮어쓰기)
                 li 결과 집합 크기를 반환한다
 
-            +pos('ZLEXCOUNT')
             h3 ZLEXCOUNT
             +asCode('text', 'syntax') ZLEXCOUNT key min max
             p <span class="hover-content" template-id="zset-lexicographical-range">사전적 구간</span> 안에 있는 원소 개수 반환
 
-            +pos('ZMPOP')
             h3 ZMPOP Since 7.0.0
             +asCode('text', 'syntax') ZMPOP numkeys key [key ...] MIN|MAX [COUNT count]
             ul
                 li 주어진 key 중 처음으로 비어있지 않은 sorted set으로부터 최대 count(기본 1)개의 원소를 제거하고, score와 함께 반환한다
                 li MIN|MAX : score 낮은|높은 순으로 제거
 
-            +pos('ZMSCORE')
             h3 ZMSCORE Since 6.2.0
             +asCode('text', 'syntax') ZMSCORE key member [member ...]
             p 각 원소에 대해
                 +goto('ZSCORE')
                 |실행한 결과 배열 반환
 
-            +pos('ZPOPMAX')
             h3 ZPOPMAX
             +asCode('text', 'syntax') ZPOPMAX key [count]
             p score가 큰 원소부터 제거하여 score와 함께 반환
 
-            +pos('ZPOPMIN')
             h3 ZPOPMIN
             +asCode('text', 'syntax') ZPOPMIN key [count]
             p score가 작은 원소부터 제거하여 score와 함께 반환
 
-            +pos('ZRANDMEMBER')
             h3 ZRANDMEMBER Since 6.2.0
             +asCode('text', 'syntax') ZRANDMEMBER key [count [WITHSCORES]]
             ul
@@ -1061,7 +948,6 @@ include ../../../source/skeleton.pug
                 li count가 음수인 경우, 중복이 허용된다
                 li WITHSCORES : score가 함께 반환된다
 
-            +pos('ZRANGE')
             h3 ZRANGE
             +asCode('text', 'syntax') ZRANGE key min max [BYSCORE|BYLEX] [REV] [LIMIT offset count] [WITHSCORES]
             ul
@@ -1088,90 +974,75 @@ include ../../../source/skeleton.pug
                 p <b>주의</b>. BYSCORE, BYLEX에서는 min, max의 위치가 변경돼야 한다...
                 li LIMIT : SQL의 LIMIT limit OFFSET offset과 유사한 옵션. count가 음수인 경우, offset 이후 모든 원소를 반환한다
 
-            +pos('ZRANGEBYLEX')
             h3 ZRANGEBYLEX; Deprecated Since 6.2.0
             +asCode('text', 'syntax') ZRANGEBYLEX key min max [LIMIT offset count]
             p Since 6.2.0 :
                 +goto('ZRANGE')
                 |with BYLEX
 
-            +pos('ZRANGEBYSCORE')
             h3 ZRANGEBYSCORE; Deprecated Since 6.2.0
             +asCode('text', 'syntax') ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT offset count]
             p Since 6.2.0 :
                 +goto('ZRANGE')
                 |with BYSCORE
 
-            +pos('ZRANGESTORE')
             h3 ZRANGESTORE Since 6.2.0
             +asCode('text', 'syntax') ZRANGESTORE dst src min max [ BYSCORE | BYLEX] [REV] [LIMIT offset count]
             p
                 +goto('ZRANGE')
                 |결과를 dst에 저장한다(덮어쓰기)
 
-            +pos('ZRANK')
             h3 ZRANK
             +asCode('text', 'syntax') ZRANK key member
             p 원소의 index(0부터 시작, 오름차순) 반환. 없으면 nil
 
-            +pos('ZREM')
             h3 ZREM
             +asCode('text', 'syntax') ZREM key member [member ...]
             p 원소 삭제. 삭제된 개수 반환
 
-            +pos('ZREMRANGEBYLEX')
             h3 ZREMRANGEBYLEX
             +asCode('text', 'syntax') ZREMRANGEBYLEX key min max
             p <span class="hover-content" template-id="zset-lexicographical-range">사전적 구간</span>의 원소 삭제. 삭제된 개수 반
 
-            +pos('ZREMRANGEBYRANK')
             h3 ZREMRANGEBYRANK
             +asCode('text', 'syntax') ZREMRANGEBYRANK key start stop
             p rank(==index, 음수 허용) 구간의 원소 삭제. 삭제된 개수 반환
 
-            +pos('ZREMRANGEBYSCORE')
             h3 ZREMRANGEBYSCORE
             +asCode('text', 'syntax') ZREMRANGEBYSCORE key min max
             p <span class="hover-content" template-id="zset-score-range">score 구간</span>의 원소 삭제. 삭제된 개수 반
 
-            +pos('ZREVRANGE')
             h3 ZREVRANGE; Deprecated Since 6.2.0
             +asCode('text', 'syntax') ZREVRANGE key start stop [WITHSCORES]
             p Since 6.2.0 :
                 +goto('ZRANGE')
                 |with REV
 
-            +pos('ZREVRANGEBYLEX')
             h3 ZREVRANGEBYLEX; Deprecated Since 6.2.0
             +asCode('text', 'syntax') ZREVRANGEBYLEX key max min [LIMIT offset count]
             p Since 6.2.0 :
                 +goto('ZRANGE')
                 |with BYLEX REV
 
-            +pos('ZREVRANGEBYSCORE')
             h3 ZREVRANGEBYSCORE; Deprecated Since 6.2.0
             +asCode('text', 'syntax') ZREVRANGEBYSCORE key max min [WITHSCORES] [LIMIT offset count]
             p Since 6.2.0 :
                 +goto('ZRANGE')
                 |with BYSCORE REV
 
-            +pos('ZREVRANK')
             h3 ZREVRANK
             +asCode('text', 'syntax') ZREVRANK key member
             p 원소의 index(0부터 시작, 내림차순) 반환. 없으면 nil
 
-            +pos('ZSCAN')
             h3 ZSCAN
             +asCode('text', 'syntax') ZSCAN key cursor [MATCH pattern] [COUNT count]
             p sorted set에 대한
                 +goto('SCAN')
 
-            +pos('ZSCORE')
             h3 ZSCORE
             +asCode('text', 'syntax') ZSCORE key member
             p 원소의 score 반환. 없으면 nil
 
-            +pos('ZUNION')
             h3 ZUNION Since 6.2.0
             +asCode('text', 'syntax') ZUNION numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM | MIN | MAX] [WITHSCORES]
             ul
@@ -1180,65 +1051,54 @@ include ../../../source/skeleton.pug
                 li AGGREGATE : score 집계 함수(기본 SUM)
                 li WITHSCORES : 반환 배열의 각 원소 뒤에 score가 포함된다
 
-            +pos('ZUNIONSTORE')
             h3 ZUNIONSTORE
             +asCode('text', 'syntax') ZUNIONSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
             ul
                 li
-                    +goto('ZUNION')
+                    +goto('ZUNION Since 6.2.0')
                     |결과를 destination에 저장한다(덮어쓰기)
                 li 결과 집합 크기를 반환한다
 
         h2 Hash
         div
-            +pos('HDEL')
             h3 HDEL
             +asCode('text', 'syntax') HDEL key field [field ...]
             p 지정한 field 제거. 제거된 개수 반환
 
-            +pos('HEXISTS')
             h3 HEXISTS
             +asCode('text', 'syntax') HEXISTS key field
             p field를 포함하면 1, 그 외엔 0 반환
 
-            +pos('HGET')
             h3 HGET
             +asCode('text', 'syntax') HGET key field
             p 지정한 field의 value 반환. 없으면 nil
 
-            +pos('HGETALL')
             h3 HGETALL
             +asCode('text', 'syntax') HGETALL key
             p 전체 field-value 목록 반환
 
-            +pos('HINCRBY')
             h3 HINCRBY
             +asCode('text', 'syntax') HINCRBY key field increment
             p value += increment, 값이 없으면 value = increment로 신규 설정. 변경된 value 반환
 
-            +pos('HINCRBYFLOAT')
             h3 HINCRBYFLOAT
             +asCode('text', 'syntax') HINCRBYFLOAT key field increment
             p value += increment, 값이 없으면 value = increment로 신규 설정. 변경된 value 반환
 
-            +pos('HKEYS')
             h3 HKEYS
             +asCode('text', 'syntax') HKEYS key
             p 전체 field 목록 반환
 
-            +pos('HLEN')
             h3 HLEN
             +asCode('text', 'syntax') HLEN key
             p 전체 field-value 쌍 개수 반환
 
-            +pos('HMGET')
             h3 HMGET
             +asCode('text', 'syntax') HMGET key field [field ...]
             p 지정 field들에 대해
                 +goto('HGET')
                 |실행한 결과 배열 반환
 
-            +pos('HRANDFIELD')
             h3 HRANDFIELD Since 6.2.0
             +asCode('text', 'syntax') HRANDFIELD key [count [WITHVALUES]]
             ul
@@ -1246,40 +1106,33 @@ include ../../../source/skeleton.pug
                 li count가 음수인 경우, 중복이 허용된다
                 li WITHVALUES : value를 함께 반환한다
 
-            +pos('HSCAN')
             h3 HSCAN
             +asCode('text', 'syntax') HSCAN key cursor [MATCH pattern] [COUNT count]
             p hash에 대한
                 +goto('SCAN')
 
-            +pos('HSET')
             h3 HSET
             +asCode('text', 'syntax') HSET key field value [field value ...]
             p key에 field-value 쌍 추가. 기존 value는 덮어씌어진다. 추가된 쌍의 개수 반환
 
-            +pos('HSETNX')
             h3 HSETNX
             +asCode('text', 'syntax') HSETNX key field value
             p field가 없는 경우에만 field-value 쌍 추가하고 1 반환. 그 외 0 반환
 
-            +pos('HSTRLEN')
             h3 HSTRLEN
             +asCode('text', 'syntax') HSTRLEN key field
             p value의 바이트 길이 반환
 
-            +pos('HVALS')
             h3 HVALS
             +asCode('text', 'syntax') HVALS key
             p 전체 value 목록 반환
 
         h2 Stream
         div
-            +pos('XACK')
             h3 XACK
             +asCode('text', 'syntax') XACK key group id [id ...]
             p 소비자 그룹에서 특정 entry들을 소비 완료했음을 지시
 
-            +pos('XADD')
             h3 XADD
             +asCode('text', 'syntax') XADD key [NOMKSTREAM] [MAXLEN | MINID [=|~] threshold [LIMIT count]] *|id field value [field value ...]
             ul
@@ -1290,12 +1143,10 @@ include ../../../source/skeleton.pug
                     +goto('XTRIM')
                     |참고
 
-            +pos('XAUTOCLAIM')
             h3 XAUTOCLAIM Since 6.2.0
             +asCode('text', 'syntax') XAUTOCLAIM key group consumer min-idle-time start [COUNT count] [JUSTID]
             p 개념적으로 XPENDING 후 XCLAIM을 호출한 것과 동일하다
 
-            +pos('XCLAIM')
             h3 XCLAIM
             +asCode('text', 'syntax') XCLAIM key group consumer min-idle-time id [id ...] [IDLE ms] [TIME unix-time-milliseconds] [RETRYCOUNT count] [FORCE] [JUSTID]
             ul
@@ -1306,14 +1157,12 @@ include ../../../source/skeleton.pug
                 li FORCE : 소비 완료 대기 중이지 않은 entry도 처리
                 li JUSTID : entry의 id만 반환. 배달 카운터를 증가하지 않는다
 
-            +pos('XDEL')
             h3 XDEL
             +asCode('text', 'syntax') XDEL key id [id ...]
             ul
                 li 지정 entry 삭제. 삭제된 개수 반환
                 li 현재까지는 entry 삭제가 즉시 메모리 반환을 의미하지 않는다 -> macro-node의 모든 entry가 삭제 상태가 될 때 정리
 
-            +pos('XGROUP')
             h3 XGROUP
             div
                 h4.fake CREATE
@@ -1343,7 +1192,6 @@ include ../../../source/skeleton.pug
                 +asCode('text', 'syntax') XGROUP SETID key groupname id|$ [ENTRIESREAD entries_read]
                 p 소비 기준 id 재설정
 
-            +pos('XINFO')
             h3 XINFO
             div
                 h4.fake CONSUMERS
@@ -1387,12 +1235,10 @@ include ../../../source/skeleton.pug
                     li last-entry : 마지막 entry의 id
                     li FULL : entries, groups 정보 포함. count 기본값은 10
 
-            +pos('XLEN')
             h3 XLEN
             +asCode('text', 'syntax') XLEN key
             p entry 개수 반환. key가 없어도 0
 
-            +pos('XPENDING')
             h3 XPENDING
             +asCode('text', 'syntax') XPENDING key group [[IDLE min-idle-time] start end count [consumer]]
             ul
@@ -1401,7 +1247,6 @@ include ../../../source/skeleton.pug
                 li 그 외의 경우
                 p [[소비 완료 대기 중인 entry id, 소비자 이름, 배달 완료 후 시간(ms), 배달 횟수] ...] 반환
 
-            +pos('XRANGE')
             h3 XRANGE
             +asCode('text', 'syntax') XRANGE key start end [COUNT count]
             ul
@@ -1410,7 +1255,6 @@ include ../../../source/skeleton.pug
                 li 전체를 가져오려면 start, end로 -, + 각각 이용
                 li COUNT : 최대 count 개만 반환
 
-            +pos('XREAD')
             h3 XREAD
             +asCode('text', 'syntax') XREAD [COUNT count] [BLOCK milliseconds] STREAMS key [key ...] id [id ...]
             ul
@@ -1418,7 +1262,6 @@ include ../../../source/skeleton.pug
                 li BLOCK : 모든 스트림이 비어있는 경우, 최대 milliseconds 만큼 대기
                 li BLOCK ... $ : 명령 이후 도착하는 것만 반환
 
-            +pos('XREADGROUP')
             h3 XREADGROUP
             +asCode('text', 'syntax') XREADGROUP GROUP group consumer [COUNT count] [BLOCK milliseconds] [NOACK] STREAMS key [key ...] id [id ...]
             ul
@@ -1429,14 +1272,12 @@ include ../../../source/skeleton.pug
                 li NOACK : XACK가 필요없다 -> 메시지 전달 즉시 소비 완료한 걸로 간주한다
                 li entry id로 '>'를 이용하면 알아서 다음 entry를 획득한다
 
-            +pos('XREVRANGE')
             h3 XREVRANGE
             +asCode('text', 'syntax') XREVRANGE key end start [COUNT count]
             p
                 +goto('XRANGE')
                 |의 역순
 
-            +pos('XTRIM')
             h3 XTRIM
             +asCode('text', 'syntax') XTRIM key MAXLEN|MINID [=|~] threshold [LIMIT count]
             ul
@@ -1449,17 +1290,14 @@ include ../../../source/skeleton.pug
 
         h2 Pub/Sub
         div
-            +pos('PSUBSCRIBE')
             h3 PSUBSCRIBE
             +asCode('text', 'syntax') PSUBSCRIBE pattern [ pattern ...]
             p <span class="hover-content" template-id="glob-style-pattern">GLOB style pattern</span>에 일치하는 채널들 구독
 
-            +pos('PUBLISH')
             h3 PUBLISH
             +asCode('text', 'syntax') PUBLISH channel message
             p 메시지 발행
 
-            +pos('PUBSUB')
             h3 PUBSUB
             div
                 h4.fake CHANNELS
@@ -1488,32 +1326,26 @@ include ../../../source/skeleton.pug
                 +asCode('text', 'syntax') PUBSUB SHARDNUMSUB [channel [channel ...]]
                 p 샤드 채널 구독자 수 반환
 
-            +pos('PUNSUBSCRIBE')
             h3 PUNSUBSCRIBE
             +asCode('text', 'syntax') PUNSUBSCRIBE [pattern [pattern ...]]
             p 구독 취소
 
-            +pos('SPUBLISH')
             h3 SPUBLISH Since 7.0.0
             +asCode('text', 'syntax') SPUBLISH channel message
             p 샤드 채널에 메시지 발행
 
-            +pos('SSUBSCRIBE')
             h3 SSUBSCRIBE Since 7.0.0
             +asCode('text', 'syntax') SSUBSCRIBE channel [channel ...]
             p 샤드 채널 구독
 
-            +pos('SUBSCRIBE')
             h3 SUBSCRIBE
             +asCode('text', 'syntax') SUBSCRIBE channel [channel ...]
             p 채널 구독
 
-            +pos('SUNSUBSCRIBE')
             h3 SUNSUBSCRIBE Since 7.0.0
             +asCode('text', 'syntax') SUNSUBSCRIBE [channel [channel ...]]
             p 샤드 채널 구독 취소
 
-            +pos('UNSUBSCRIBE')
             h3 UNSUBSCRIBE
             +asCode('text', 'syntax') UNSUBSCRIBE [channel [channel ...]]
             p 구독 취소

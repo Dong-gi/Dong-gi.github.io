@@ -266,7 +266,7 @@ include ../../source/skeleton.pug
             ol
                 li 시작점의 가중치는 0, 나머지 모든 정점의 초기 가중치는 무한대
                 li 시작점부터 종점까지에 대해
-                    +goto('위상 정렬')
+                    +goto('위상 정렬(Topological sort)')
                     |  수행
                 li 정렬한 순서대로 정점을 방문하여 가중치 갱신
 
@@ -396,8 +396,8 @@ include ../../source/skeleton.pug
                     radixList[(x // (10 ** radix)) % 10].append(x)
                 l = [n for subList in radixList for n in subList]
                 radixList = [[] for _ in range(10)]
-        +pos('위상 정렬')
-        h2 Topological sort
+
+        h2 위상 정렬(Topological sort)
         p 특정 원소쌍들에 대한 분명한 선후관계만 만족하면, 나머지 원소의 순서는 아무래도 상관없는 정렬을 방향 그래프를 이용해 구하는 방법
         div
             h3.fake 방법 1 : 정방향
@@ -741,7 +741,6 @@ include ../../source/skeleton.pug
                         }
                     }
 
-        +pos('전자 서명')
         h2 전자 서명
         ol
             li A는 메시지(평문이든 다른 암호문이든 무관), 비밀키, 공개키를 준비

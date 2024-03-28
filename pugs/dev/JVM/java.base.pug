@@ -129,7 +129,6 @@ include ../../../source/skeleton.pug
                 h4 DataInputStream
                 p DataInput 구현 제공
 
-                +pos('PushbackInputStream')
                 h4 PushbackInputStream
                 ul
                     li 이미 읽은 것을 취소하고 다시 읽을 수 있는 기능을 지원한다
@@ -147,7 +146,6 @@ include ../../../source/skeleton.pug
                 h4 DataOutputStream
                 p DataOutput 구현 제공
 
-                +pos('PrintStream')
                 h4 PrintStream
                 ul
                     li OutputStream, File에 기본 타입 및 각종 문자열을 쓰는 기능 제공
@@ -2148,7 +2146,6 @@ include ../../../source/skeleton.pug
                             // 키를 기준으로 엔트리를 비교하는 비교자 반환. 인자 있는 함수의 경우 해당 비교자를 이용
                             // + comparingByValue
 
-                +pos('SortedMap')
                 h4 SortedMap&lt;K, V>
                 p 키가 정렬된 Map. 다음 4가지 생성자를 구현할 것을 권장. (void), (Comparator), (Map), (SortedMap)
                 +asCode('java').
@@ -2949,7 +2946,6 @@ include ../../../source/skeleton.pug
                 static ScheduledExecutorService newSingleThreadScheduledExecutor()
                 static ScheduledExecutorService newScheduledThreadPool(int corePoolSize)
 
-        +pos('reactive-stream')
         h2 리액티브 스트림
         p 참고 자료 : #[+asA('https://github.com/reactive-streams/reactive-streams-jvm')]
         +asCode('java').

@@ -87,7 +87,7 @@ $ docker container rm [OPTIONS] CONTAINER [CONTAINER...]
 --force, -f     실행 중인 컨테이너라도 종료(SIGKILL) 후 제거
 --link, -l      기본 브리지 네트워크에 등록한 링크 제거
 --volumes, -v   익명 볼륨 제거
-</div><span class="pos-span" id="pos379769964"></span><h3>docker container run</h3><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
+</div><h3>docker container run</h3><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ docker           run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
 $ docker container run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]</div><div><h4>컨테이너 이름 명시적 할당</h4><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ export CONTAINER_NAME=echo1
 $ docker run --name $CONTAINER_NAME -p 5678 -d hashicorp/http-echo -text="Hello, I'm $CONTAINER_NAME"
 4b16ebb2ca48ecfce0c255b100497510e54790f6f54f970db5b203e1eb5cc4c9

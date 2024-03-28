@@ -37,10 +37,10 @@ include ../../../source/skeleton.pug
                 li x-expires : 지정 ms 동안 미사용 시 큐 자동 제거
                 li durable : 메시지에 delivery-mode=2 설정이 없어도 디스크에 저장
                 li x-message-ttl : 지정 ms 동안 소비되지 않은 메시지 만료; 
-                    +goto('DLX')
+                    +goto('DLX; Dead-Letter Exchange')
                     |  설정 시 DLX로 라우팅된다
                 li x-max-length : 지정된 개수의 메시지까지만 보관. 초과시 가장 오래된 메시지 만료; 
-                    +goto('DLX')
+                    +goto('DLX; Dead-Letter Exchange')
                     |  설정 시 DLX로 라우팅된다
             li Exchange : 메시지 브로커(여기서는 RabbitMQ)에 들어온 메시지를 적절한 큐에 전달한다
             h3 Exchange type
@@ -216,7 +216,6 @@ include ../../../source/skeleton.pug
             li 소지한 credit이 부족한 경우, 수신한 RPC를 폐기한다
             p credit으로 인한 가용/비가용 상태 변경은 Connection.Blocked, Connection.Unblocked 메서드로 알려준다
 
-        +pos('DLX')
         h3 DLX; Dead-Letter Exchange
         ul
             li 큐 정의 시 x-dead-letter-exchange를 설정하면, 거부된 메시지를 해당 exchange로 라우팅한다

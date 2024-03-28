@@ -48,7 +48,7 @@ include ../../../source/skeleton.pug
             p
                 +goto('SortedMap', 'java.base.html')
                 |  + 
-                +goto('OrderedMap')
+                +goto('OrderedMap<K, V>')
 
             h3 BoundedMap&lt;K, V>
             p 크기 제한이 있는 맵
@@ -68,7 +68,6 @@ include ../../../source/skeleton.pug
                 li 키를 통해 얻은 컬렉션의 변경 가능 여부는 구현에 따라 다를 수 있다
                 li ListValuedMap&lt;K, V> + SetValuedMap
 
-            +pos('OrderedMap')
             h3 OrderedMap&lt;K, V>
             p 키를 정렬하여 보존하고, 앞뒤로 순회 가능한 맵
 
