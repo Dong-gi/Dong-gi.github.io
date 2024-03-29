@@ -1,13 +1,30 @@
 const fs = require('node:fs')
 const path = require('node:path')
 const { promisify } = require('node:util')
+const child_process = require('node:child_process')
 const pug = require('pug')
 
 const stat = promisify(fs.stat)
 const writeFile = promisify(fs.writeFile)
 const readDir = promisify(fs.readdir)
+const readFile = promisify(fs.readFile)
 const renderFile = promisify(pug.renderFile)
+const exec = promisify(child_process.exec)
 
+const isProcessNewFileOnly = (process.argv[2] === 'new')
+
+/**
+ * @param {fs.Stats} stats 
+ */
+function isNewFile(stats) {
+    if (stats.birthtimeMs === stats.mtimeMs) {
+        return false
+    }
+    if (Date.now() - stats.mtimeMs > 600_000) {
+        return false
+    }
+    return true
+}
 
 async function renderPug(from, to) {
     await promisify(fs.mkdir)(path.dirname(to), { recursive: true })
@@ -38,13 +55,8 @@ async function renderPug(from, to) {
                 if (post != null) {
                     post.mtimeMs = Math.floor(stats.mtimeMs)
                 }
-                if (process.argv[2] === 'new') {
-                    if (stats.birthtimeMs === stats.mtimeMs) {
-                        continue
-                    }
-                    if (Date.now() - stats.mtimeMs > 600_000) {
-                        continue
-                    }
+                if (isProcessNewFileOnly && !isNewFile(stats)) {
+                    continue
                 }
                 promiseArr.push(renderPug(path, htmlPath))
             } else if (stats.isDirectory()) {
@@ -52,6 +64,24 @@ async function renderPug(from, to) {
             }
         }
     }
+
+    promiseArr.push(...(await readDir('./d2')).map(async file => {
+        if (!file.endsWith('.d2')) {
+            return
+        }
+
+        const d2Path = './d2/' + file
+        if (isProcessNewFileOnly && !isNewFile(await stat(d2Path))) {
+            return
+        }
+
+        const svgPath = d2Path.replace(/\.d2$/, '.svg')
+        await exec(`d2 "${d2Path}" "${svgPath}"`)
+
+        console.log(`Rendered d2 : ${d2Path}`)
+        const svg = await readFile(svgPath)
+        await writeFile(svgPath, svg.toString().replace(/\n/g, '').replace(/\{[^}]*font-family[^}]*\}/g, '{}').replace(/\s+/g, ' '))
+    }))
 
     promiseArr.push(
         writeFile('./files/posts-compressed.json', JSON.stringify(posts)),

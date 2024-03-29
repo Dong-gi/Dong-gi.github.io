@@ -504,17 +504,19 @@ window.addEventListener('load', async () => {
     }
     addOrderedTableFunctionality();
 
+    /** @type {Element[]} */
+    const gotoClickHistory = []
     for (const goto of document.querySelectorAll('.goto')) {
         goto.addEventListener('mousedown', function (e) {
-            localStorage.setItem(`${location.href}-lastPos`, window.scrollY);
+            gotoClickHistory.push(e.target);
             localStorage.setItem('gotoEvent', true);
             setTimeout(() => localStorage.removeItem('gotoEvent'), 1000);
         })
     }
 
     window.onpopstate = function () {
-        if (!localStorage.getItem('gotoEvent') && localStorage.getItem(`${location.href}-lastPos`)) {
-            window.scrollTo({ top: parseInt(localStorage.getItem(`${location.href}-lastPos`)) });
+        if (!localStorage.getItem('gotoEvent') && gotoClickHistory.length > 0) {
+            goto(gotoClickHistory.pop());
             return;
         }
 

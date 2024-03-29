@@ -117,26 +117,28 @@ mixin post(options)
                 hr
                 #post-list
                 hr
-                details(open='open').w3-small.file-list
+                details.w3-small.file-list
                     summary LICENSE
-                    ul
-                        li &copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a> →
-                            +asA('https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE', 'MIT License')
-                        li
-                            +asA('https://www.w3schools.com/w3css')
-                            |  → No license
-                        li
-                            +asA('https://highlightjs.org/', 'highlight.js')
-                            |  →
-                            +asA('https://github.com/highlightjs/highlight.js/blob/main/LICENSE', 'BSD-3-Clause License')
-                        li
-                            +asA('https://github.com/mathjax/MathJax')
-                            |  →
-                            +asA('https://github.com/mathjax/MathJax/blob/master/LICENSE', 'Apache License 2.0')
-                        li
-                            +asA('https://github.com/davidshimjs/qrcodejs')
-                            |  →
-                            +asA('https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE', 'MIT License')
+                    table
+                        +tds('Author', 'License')
+                        tr
+                            td &copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a>
+                            td: +asA('https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE', 'MIT')
+                        tr
+                            td: +asA('https://www.w3schools.com/w3css')
+                            td No license
+                        tr
+                            td: +asA('https://highlightjs.org/', 'highlight.js')
+                            td: +asA('https://github.com/highlightjs/highlight.js/blob/main/LICENSE', 'BSD-3-Clause')
+                        tr
+                            td: +asA('https://github.com/mathjax/MathJax')
+                            td: +asA('https://github.com/mathjax/MathJax/blob/master/LICENSE', 'Apache-2.0')
+                        tr
+                            td: +asA('https://github.com/davidshimjs/qrcodejs', 'QRCode.js')
+                            td: +asA('https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE', 'MIT')
+                        tr
+                            td: +asA('https://github.com/terrastruct/d2', 'D2')
+                            td: +asA('https://github.com/terrastruct/d2/blob/master/LICENSE.txt', 'MPL-2.0')
                 hr
             article#main
                 .w3-bar.w3-blue.w3-large#nav(style='position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle')

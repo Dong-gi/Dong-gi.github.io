@@ -1,0 +1,26 @@
+shape: sequence_diagram
+
+o: Resource owner
+c: Client
+rs: Resource server
+as: Authorization server
+
+토큰 발급: {
+    c -> as -> o    : 권한 요청
+    o -> as -> c    : 권한 승인
+    as."리디렉션을 이용한 경우, Authorization server의 응답이 url에 존재하므로\n앱 서버에서 먼저 처리한 다음 별도 url로 리디렉션하는 것이 좋다"
+    c."Client는 authorization code를 받는다"
+
+    c -> as         : 토큰 요청
+    c."authorization code + secret을 요청에 포함"
+    c."Client는 미리 Authorization server에 등록되거나,\n요청 내 정보로 검증되어 신뢰할 수 있음이 보장된다"
+    as -> c         : 토큰 발행
+    as."access token + refresh token\nrefresh token은 access token 만료 등의 사유로 신규 access token을 발급받기 위해 요청할 때 사용"
+}
+
+토큰 사용: {
+    c -> rs     : 자원 요청
+    rs -> as    : 토큰 검증 요청
+    as -> rs    : 토큰 검증
+    rs -> c     : 자원 전송
+}

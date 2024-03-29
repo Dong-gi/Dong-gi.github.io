@@ -10,4 +10,6 @@
 # EDIT ~/.bashrc
 # export PATH="$PATH:/home/amazon-corretto-17/bin"
 # cd ~
+
+# curl -fsSL https://d2lang.com/install.sh | sh -s --
 ```

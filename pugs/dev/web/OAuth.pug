@@ -1,0 +1,36 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: 'OAuth',
+    description: 'OAuth 정리',
+})
+
+    h1 개요
+    ul
+        li 공식 사이트 : #[+asA('https://oauth.net/')]
+        li OAuth(Open Authorization)는 권한 부여를 위한 업계 표준 프로토콜로, 클라이언트 개발자의 권한 부여 흐름을 단순하게 해준다
+        p 클라이언트(서드 파티일 수 있음)에 사용자를 대신하여 [특정 리소스]에 대한 [특정 권한]을 [특정 기간] 동안 이용할 수 있는 [토큰]을 발행하고, 클라이언트는 해당 토큰을 각 API 요청에 포함한다
+
+    h1 역할
+    ul
+        li Resource owner : 자원에 대한 권한을 부여할 수 있는 주체. 보통 사용자
+        li Client : Resource server에 자원을 요청하고, 이를 이용한 서비스를 제공하는 애플리케이션
+        li Resource server : 자원에 대한 서비스 API를 제공하는 서버
+        li Authorization server : 인증된 Client에 권한을 부여하는 서버
+        p 단일 Authorization server에 대해 여러 Resource server가 존재하더라도 검증 문제가 발생하지 않는다; SSO 용이
+
+    h1 비신뢰 클라이언트; implicit grant
+    ul
+        li 비신뢰 클라이언트로 보내진 모든 정보는 public 읽기가 가능하다고 간주해야 한다
+        li 따라서 authorization code를 저장할 수 없고, 단기적 또는 1회용 access code를 발급하여 사용하게 해야 한다
+    +w3img('/d2/1.svg')
+
+    h1 신뢰 클라이언트; authorization code grant
+    +w3img('/d2/2.svg')
+
+    h1 PKCE; Proof Key for Code Exchange
+    ul
+        li 클라이언트 동일성을 검증하기 위해 아래의 추가 작업을 수행한다
+        li 클라이언트는 미리 임의 값 V(Code Verifier)를 생성한다
+        li 권한 요청 시 $ = sha256(V)를 포함하고, Authorization server는 이를 보관한다
+        li 토큰 요청 시 V를 포함하고, Authorization server는 $ == sha256(V)를 검증한다

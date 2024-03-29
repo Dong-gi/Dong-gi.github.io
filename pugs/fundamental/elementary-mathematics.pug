@@ -316,7 +316,7 @@ include ../../source/skeleton.pug
                         |\iff & c^2 = a^2(\sin^2{C} + \cos^2{C}) + b^2 - 2ab\cos{C} \\
                         |\iff & c^2 = a^2 + b^2 - 2ab\cos{C} \\
                         |\end{align*}
-                p 위에서는 꼭짓점 B와 직선 AC를 지칭하여 증명했지만, 사실 임의의 꼭짓점과 그 대변에 대하여 똑같이 성립한다
+                p 위에서는 꼭짓점 B와 선분 AC를 이용하여 증명했지만, 임의의 꼭짓점과 그 대변에 대하여 똑같이 성립한다
                 p.w3-right-align ■
 
     h1 수 체계
@@ -388,7 +388,7 @@ include ../../source/skeleton.pug
                 li 사선점근선 : 위 두 경우에 해당하지 않는 점근선; y = ax + b
         h2 지수함수
         ul 
-            li 식[a \gt 0, a \ne 1, f(x) = a^x]식
+            li 식[a \gt 0, f(x) = a^x]식
             li 지수의 성질
             ul
                 li 식[a^{x_1} \cdot a^{x_2} = a^{x_1 + x_2}]식
@@ -417,10 +417,12 @@ include ../../source/skeleton.pug
             li 호도법(radian) : 원호의 반지름과 호의 길이가 일치하는 시점의 중심각의 크기를 1rad이라 한다
             ul
                 li 호도법의 단위는 생략 가능하며, 식[2\pi = 360^{\circ}]식
-                li 반지름이 r, 중심각이 θ인 원호의 길이 l = rθ, 부채꼴의 넓이 식[S = {\theta \over 2}r^2 = {1 \over 2}rl]식
+                li 반지름이 r, 중심각이 θ일 때,
                 ul
-                    li 원주가 식[2{\pi}r]식이고, 중심각의 크기와 원호의 길이가 비례한다는 사실로부터 도출할 수 있다
-                    li 원의 넓이가 식[{\pi}r^2]식이고, 중심각의 크기와 부채꼴의 넓이가 비례한다는 사실로부터 도출할 수 있다
+                    li 원호의 길이 l = rθ
+                    p 원주가 식[2{\pi}r]식이고, 중심각의 크기와 원호의 길이가 비례한다는 사실로부터 도출할 수 있다
+                    li 부채꼴의 넓이 식[S = {\theta \over 2}r^2 = {1 \over 2}rl]식
+                    p 원의 넓이가 식[{\pi}r^2]식이고, 중심각의 크기와 부채꼴의 넓이가 비례한다는 사실로부터 도출할 수 있다
             li 아래와 같은 직각삼각형을 생각하자
             +w3img('/imgs/20230305_141045.png')
             ul
@@ -443,7 +445,7 @@ include ../../source/skeleton.pug
             p 따름 공식 : 삼각함수 합성
             ul
                 li 식[a\sin\theta + b\cos\theta]식에 대하여,
-                p a 또는 b가 0이 아니면 식[\cos\alpha = {a \over \sqrt{a^2 + b^2}} \land \sin\alpha = {b \over \sqrt{a^2 + b^2}}]식를 만족하는 α가 존재하고,
+                p a 또는 b가 0이 아니면 식[\cos\alpha = {a \over \sqrt{a^2 + b^2}} \land \sin\alpha = {b \over \sqrt{a^2 + b^2}}]식를 만족하는 식[\alpha]식가 존재하고,
                 p 식[\sqrt{a^2 + b^2} \sin(\theta + \alpha) = \sqrt{a^2 + b^2} (\sin{\theta}\cos{\alpha} + \cos{\theta}\sin{\alpha}) = a\sin\theta + b\cos\theta]식
                 li 결과적으로, 동일한 진동수를 갖고 진폭만 달라짐을 알 수 있다
             p 따름 공식 : 곱을 합으로 변환
@@ -541,10 +543,14 @@ include ../../source/skeleton.pug
             h3 합성함수의 극한
             p 두 실수 함수 f: R → R, g: R → R에 대하여, \[\lim_{x \to a}f(x) = b, \lim_{x \to b}g(x) = g(b) \implies \lim_{x \to a}g(f(x)) = g(b) = g\left(\lim_{x \to a}f(x)\right)\]
             p <i>증명</i>.
-            ul
-                li 식[\lim_{x \to b}g(x) = g(b)]식이므로, 임의의 양수 α에 대하여, 적당한 양수 β가 존재하여 |x - b| &lt; β인 모든 x에 대하여 |g(x) - g(b)| &lt; α를 만족한다
-                li 식[\lim_{x \to a}f(x) = b]식이므로, 위 β에 대하여, 적당한 양수 γ가 존재하여 |x - a| &lt; γ인 모든 x에 대하여 |f(x) - f(a)| &lt; β를 만족한다
-                li 따라서 |x - a| &lt; γ인 모든 x에 대하여 |g(f(x)) - g(f(a))| &lt; α를 만족하므로 식[\lim_{x \to a}g(f(x)) = g(b)]식
+            ol
+                li 식[\lim_{x \to b}g(x) = g(b)]식이므로, 임의의 양수 식[\alpha]식에 대하여, 적당한 양수 β가 존재하여, |x - b| &lt; β인 모든 x에 대하여 |g(x) - g(b)| &lt; 식[\alpha]식를 만족한다
+                li 식[\lim_{x \to a}f(x) = b]식이므로, 위 β에 대하여, 적당한 양수 γ가 존재하여, |x - a| &lt; γ인 모든 x에 대하여 |f(x) - b| &lt; β를 만족한다
+                li 따라서 임의의 양수 식[\alpha]식에 대하여, 적당한 양수 Y가 존재하여,
+                ol
+                    li |x - a| &lt; γ인 모든 x에 대하여 |f(x) - b| &lt; β를 만족하고,
+                    li |f(x) - b| &lt; β인 모든 f(x)에 대하여 |g(f(x)) - g(b)| &lt; 식[\alpha]식를 만족하므로,
+                    li 극한의 정의에 의해 식[\lim_{x \to a}g(f(x)) = g(b)]식
             p.w3-right-align ■
 
         h2 함수의 발산
@@ -561,8 +567,9 @@ include ../../source/skeleton.pug
             li 함수가 구간 안의 모든 x에 대해 연속이면, 함수는 구간에 대하여 연속이다
 
         h2 중간값 정리
-        p 함수 f(x)가 폐구간 [a, b]에서 연속이고, f(a) != f(b)이면, f(a) &lt; v &lt; f(b)인 모든 v에 대하여 f(c) = v를 만족하는 c가 개구간 (a, b) 안에 적어도 하나 존재한다
-        li 함수가 어떤 구간 I에서 연속이고 역함수가 존재하면, 역함수는 구간(I)에서 연속이다
+        p 함수 f(x)가 폐구간 [a, b]에서 연속이고, f(a) != f(b)이면, min(f(a), f(b)) &lt; v &lt; max(f(a), f(b))인 모든 v에 대하여 f(c) = v를 만족하는 c가 개구간 (a, b) 안에 적어도 하나 존재한다
+        li 함수 f가 어떤 구간 I에서 연속이고 역함수가 존재하면(f: I → J), 역함수는 구간 J에서 연속이다
+        p 함수 f가 구간 I에서 역함수를 가지려면, 구간 I에서 일대임 함수인 동시에 증가함수거나 감소함수여야 한다
 
         h2 극한값 예
         ul

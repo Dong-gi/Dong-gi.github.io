@@ -11,7 +11,7 @@ include ../../source/skeleton.pug
     ol
         li 시간복잡도 : 입력의 크기에 따른 소요 시간 평가
         li 공간복잡도 : 입력의 크기에 따른 필요 메모리 평가
-        li.marker 빅-오 표기법 : 점근적 상한
+        li 빅-오 표기법 : 점근적 상한
         ul
             li 양의 실수에서 정의되는 함수 식[f(n)]식의 점근적 상한 식[O(g(n))]식은 다음과 같이 정의된다
             p 식[O(g(n)) = \{ f(n) \mid \exists{a, b}, \forall{n \ge a}, 0 \le f(n) \le bg(n) \}]식
@@ -23,7 +23,7 @@ include ../../source/skeleton.pug
             p 식[\Omega(g(n)) = \{ f(n) \mid \exists{a, b}, \forall{n \ge a}, 0 \le bg(n) \le f(n) \}]식
             li 이는 함수 식[f(n)]식이 궁극적으로 식[g(n)]식보다 빠르게 증가함을 의미한다; 식[\lim_{n \to \infty} {f(n) \over bg(n)} \ge 1]식
             p 예를 들어, 식[f(n) = 4n^3 + 2n + 1]식의 점근적 하한으로 식[\Omega(4n^3 + 2n + 1)]식, 식[\Omega(n^2 + 2n + 3)]식, 식[\Omega(2)]식 등이 모두 가능하며, 이들 중 가장 의미가 있는 표기 ─ 가능한 하한 중 최대 표기 ─ 는 식[\Omega(4n^3 + 2n + 1)]식, 특히 상수계수를 제거하고 지배항만 남긴 식[\Omega(n^3)]식이 된다
-        li.marker 세타 표기법
+        li 세타 표기법
         p 식[\Theta(g(n)) = O(g(n)) \cap \Omega(g(n))]식
         p 예를 들어, 식[f(n) = 4n^3 + 2n + 1]식에 대하여, 식[g(n) = n^3]식이 점근적 상한과 하한 모두를 만족하므로, 식[f(n) \in \Theta(n^3)]식이다
 

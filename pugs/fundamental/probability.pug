@@ -8,32 +8,31 @@ include ../../source/skeleton.pug
 
     h1 확률
     ul
-        li.marker 표본평균; Mean : 식[\overline{x}=\sum_{i=1}^n{x_i \over n}]식
+        li 표본평균 Mean : 식[\overline{x}=\sum_{i=1}^n{x_i \over n}]식
         li 중앙값; Median : 자료가 정렬되어 있을 때,
             |식[\tilde{x}=\left\{\begin{matrix}
             |x_{(n+1)/2} & \mbox{if n is odd} \\
             |{1 \over 2}(x_{n/2}+x_{n/2+1}) & \mbox{if n is even} \end{matrix}\right.]식
         li 절사평균; Trimmed mean 식[\overline{x}_{\operatorname{tr}(n)}]식 ::= 자료의 상/하위 n%를 버린 나머지에 대한 평균
         li 표본분산; Variance : 식[s^2=\sum_{i=1}^n{(x_i-\overline{x})^2 \over n-1}]식. 이때, 식[s]식는 표본표준편차(Standard deviation)
-        li.marker 순열; Permutation : n개의 서로 다른 대상 중 r개를 선택해 일렬로 세우는 경우의 수 식[{}_n P_{r}={n! \over (n-r)!}]식
+        li 순열; Permutation : n개의 서로 다른 대상 중 r개를 선택해 일렬로 세우는 경우의 수 식[{}_n P_{r}={n! \over (n-r)!}]식
         li 원순열; Circular permutaion : n개의 서로 다른 대상을 원형으로 세우는 경우의 수. 식[(n-1)!]식
         li 분할; Partition : 각 집합 원소 사이의 순서는 고려하지 않을 때, n개의 대상을 r개의 집합으로 구분하는 경우의 수는 식[\begin{pmatrix}n \\ n_1,\cdots,n_r\end{pmatrix}={n! \over n_1!\cdots n_r!}]식
         details
             summary 예제
-            ol
-                li Q. 10명을 4인실 하나, 3인실 둘에 할당하는 경우의 수는?
-                li 풀이. 식[{10! \over 4!3!3!}=4200]식
-        li.marker 조합; Combination : n개의 대상 중 r개를 순서를 고려하지 않고 선택하는 경우의 수. 식[\begin{pmatrix}n \\ r,n-r\end{pmatrix}=\begin{pmatrix}n \\ r\end{pmatrix}={n! \over r!(n-r)!}]식
-        li.marker 조건부 확률; Conditional probability : 사상 A가 발생한 상태에서 사상 B가 발생할 확률 식[P(B|A)={P(A \cap B) \over P(A)}]식
+            p Q. 10명을 4인실 하나, 3인실 둘에 할당하는 경우의 수는?
+            p A. 식[{10! \over 4!3!3!}=4200]식
+        li 조합; Combination : n개의 대상 중 r개를 순서를 고려하지 않고 선택하는 경우의 수. 식[\begin{pmatrix}n \\ r,n-r\end{pmatrix}=\begin{pmatrix}n \\ r\end{pmatrix}={n! \over r!(n-r)!}]식
+        li 조건부 확률; Conditional probability : 사상 A가 발생한 상태에서 사상 B가 발생할 확률 식[P(B|A)={P(A \cap B) \over P(A)}]식
         p 식[\begin{gather*}
             |    \implies P(A \cap B)=P(A)P(B|A)=P(B)P(A|B) \\
             |    \implies P(A_1\cap\cdots\cap A_n)=P(A_1)P(A_2|A_1)\cdots P(A_n|A_1\cap\cdots\cap A_{n-1})
             |\end{gather*}]식
-        li.marker 전확률 정리; Law of total probability
+        li 전확률 정리; Law of total probability
         p 사상 식[B_1, \cdots, B_k]식가 표본공간을 빈틈없이 분할할 때, 식[P(A)=\sum_{i=1}^n P(B_i \cap A)=\sum_{i=1}^n P(B_i)P(A|B_i)]식
-        li.marker 베이즈 정리; Bayes' theorem
+        li 베이즈 정리; Bayes' theorem
         p 사상 식[B_1, \cdots, B_k]식가 표본공간을 빈틈없이 분할할 때, 식[P(B_i|A)={P(B_i\cap A) \over P(A)}={P(B_i)P(A|B_i) \over \sum_{i=1}^n P(B_i)P(A|B_i)}]식
-        li.marker 독립; Independent
+        li 독립; Independent
         p 두 사상 A, B가 독립
             |\begin{gather*}
             |    \iff & P(B|A)=P(B) \\
@@ -181,7 +180,7 @@ include ../../source/skeleton.pug
                 |0 & \mbox{else} \end{matrix}\right.]식
             li 평균 식[\mu=\alpha\theta]식
             li 분산 식[\sigma^2=\alpha\theta^2]식
-            li.marker
+            li
                 |지수분포; Exponential distribution 식[f(x;\theta)=\left\{\begin{matrix}
                 |{e^{-x/\theta} \over \theta} & \mbox{if x > 0} \\
                 |0 & \mbox{else} \end{matrix}\right.]식
@@ -193,7 +192,7 @@ include ../../source/skeleton.pug
                 li 이를 연속확률변수에 적용하기 위해 미분하면 식[\lambda e^{-\lambda x}]식
                 li 따라서 지수분포는 연속확률변수에 대한 푸아송 분포임을 알 수 있다
                 li 푸아송 분포와 마찬가지로 특정 기간 동안 사건의 발생은 다른 기간과 독립적이다. 식[P(X\ge t)=P(X\ge t_0+t|X\ge t_0)]식
-            li.marker 카이제곱 분포; Chi-squared distribution
+            li 카이제곱 분포; Chi-squared distribution
             ol
                 li 식[\alpha=k/2, \theta=2]식인 감마분포와 동일하다. 식[f(x;k)=\left\{\begin{matrix}
                     |{x^{k/2-1}e^{-x/2} \over 2^{k/2}\Gamma(k/2)} & \mbox{if x > 0} \\
@@ -243,11 +242,11 @@ include ../../source/skeleton.pug
     div
         h2 t-분포
         ol
-            li.marker 중심극한정리; Central limit theorem
+            li 중심극한정리; Central limit theorem
             p 평균이 식[\mu]식, 분산이 식[\sigma^2]식인 모집단으로부터, 크기 n인 표본을 추출했을 때,
                 |n이 충분히 크다면 식[Z = {\overline{X}-\mu \over \sigma/\sqrt{n}}]식는 표준정규분포를 따른다
                 |이때 식[\overline{X}]식는 표본평균
-            li.marker Cochran's theorem
+            li Cochran's theorem
             p 식[N(\mu, \sigma^2)]식를 따르는 정규모집단으로부터 크기 n인 표본을 추출했을 때,
                 |n이 충분히 크다면 식[\chi^2={(n-1)S^2 \over \sigma^2}]식는 카이제곱분포 식[f(x; n-1)]식를 따른다
             li 식[T={Z \over \sqrt{V/(n-1)}}]식는 자유도 n-1인 t-분포를 따른다
