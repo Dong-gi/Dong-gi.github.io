@@ -504,34 +504,24 @@ window.addEventListener('load', async () => {
     }
     addOrderedTableFunctionality();
 
-    /** @type {Element[]} */
-    const gotoClickHistory = []
     for (const goto of document.querySelectorAll('.goto')) {
-        goto.addEventListener('mousedown', function (e) {
-            gotoClickHistory.push(e.target);
-            localStorage.setItem('gotoEvent', true);
-            setTimeout(() => localStorage.removeItem('gotoEvent'), 1000);
+        goto.addEventListener('click', function () {
+            if (goto.id.length === 0) {
+                goto.id = `goto-${Math.random()}-${Math.random()}`;
+            }
+            history.pushState({}, '', `#${goto.id}`);
         })
     }
 
     window.onpopstate = function () {
-        if (!localStorage.getItem('gotoEvent') && gotoClickHistory.length > 0) {
-            goto(gotoClickHistory.pop());
+        if (location.hash.length <= 1) {
+            console.log('No location.hash')
             return;
         }
-
-        const pos = /#(pos-?\d+)/.exec(location.hash);
-        if (!pos) {
+        let target = document.getElementById(location.hash.slice(1));
+        if (target == null) {
+            console.log('No target')
             return;
-        }
-
-        let target = document.getElementById(pos[1]);
-        let parent = target.parentElement;
-        while (parent.tagName !== 'BODY') {
-            if (parent.tagName === 'DETAILS') {
-                parent.open = true;
-            }
-            parent = parent.parentElement;
         }
         while (!target.clientHeight) {
             let isFound = false
@@ -580,6 +570,11 @@ window.addEventListener('load', async () => {
  */
 function goto(target) {
     highlight(target);
+    for (let node = target; node.tagName !== 'BODY'; node = node.parentNode) {
+        if (node.tagName === 'DETAILS') {
+            node.open = true;
+        }
+    }
     setTimeout(() => window.scrollTo({
         top: calcOffset(target).top - document.getElementById('nav').clientHeight
     }), 100);
@@ -667,9 +662,8 @@ function updatePostList() {
 }
 
 function updateMarkerList() {
-    for (let h of document.querySelectorAll('h1,h2,h3,h4,h5,h6')) {
+    for (const h of document.querySelectorAll('h1,h2,h3,h4,h5,h6')) {
         h.classList.add('marker');
-        h.before(asNodes(`<span class="pos-span" id="pos${stringHashCode(h.textContent)}"></span>`));
     }
 
     const details = asNodes(`<details open class="w3-small file-list"><summary>Content</summary><ul></ul></details>`);
@@ -678,13 +672,15 @@ function updateMarkerList() {
     const skipLevelCheckTagSet = new Set(['THEAD', 'TBODY', 'TR', 'SPAN']);
     const headingLevels = [0, 0, 0, 0, 0, 0, 0, 0];
     const headingTagSet = new Set(['H1', 'H2', 'H3', 'H4', 'H5', 'H6']);
-    let markerId = 0;
     for (const markerTarget of document.querySelectorAll('.marker:not(.no-marker)')) {
-        markerTarget.setAttribute('marker-id', `${markerId}`);
+        const posId = `pos${stringHashCode(markerTarget.textContent)}`
+        markerTarget.before(asNodes(`<span class="pos-span" id="${posId}"></span>`));
 
         const markerName = makeMarkerName(markerTarget);
         /** @type {HTMLLIElement} */
-        const markerLi = asNodes(`<li class="${markerTarget.classList.contains('fake') ? 'w3-hide' : ''}" title="${markerName}" marker-id="${markerId}">${markerName.substring(0, 50)}</li>`);
+        const markerLi = asNodes(`<li class="${markerTarget.classList.contains('fake') ? 'w3-hide' : ''}">
+    <a title="${markerName}" href="#${posId}"></a>
+</li>`);
 
         let level = 0;
         let parent = markerTarget.parentElement;
@@ -700,24 +696,11 @@ function updateMarkerList() {
         headingLevels[level] += 1;
         headingLevels.fill(0, level + 1);
         const prefix = `${headingLevels.filter(x => x > 0).join('.')}. `
-        markerLi.textContent = `${prefix}${markerLi.textContent}`
+        markerLi.querySelector('a').textContent = `${prefix}${markerName.substring(0, 50)}`
         if (headingTagSet.has(markerTarget.tagName)) {
             markerTarget.textContent = `${prefix}${markerTarget.textContent}`
         }
-
-        markerLi.onclick = function (e) {
-            const markerId = e.target.getAttribute('marker-id')
-            const target = document.querySelector(`.marker[marker-id="${markerId}"]`)
-            for (let node = target; node.tagName !== 'BODY'; node = node.parentNode) {
-                if (node.tagName === 'DETAILS') {
-                    node.open = true;
-                }
-            }
-            goto(target);
-        }
-
         ul.append(markerLi);
-        markerId += 1;
     }
 
     document.getElementById('marker-list').append(details);

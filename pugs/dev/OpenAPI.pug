@@ -141,7 +141,7 @@ include ../../source/skeleton.pug
             +asCode('yaml').
                 # 동일 파일 내 참조 예:
                 $ref: "#/components/schemas/coordinate"
-                # 외부 포컬 파일 내 참조 예:
+                # 외부 로컬 파일 내 참조 예:
                 $ref: './another_file.yaml#rowParam'
                 # 원격 파일 내 참조 예:
                 $ref: 'https://gigantic-server.com/schemas/Monster/schema.yaml'
@@ -215,4 +215,4 @@ include ../../source/skeleton.pug
             li 대신 OpenAPI는 코드 생성, 문서화, 유효성 검증 등 풍부한 자동화 도구를 제공한다
 
             li 정보는 다른 곳에 중복하여 기술하면 안 된다
-            p 언젠가 한 쪽만 수정한 상황이 발생할 수 있다
+            p 언젠가 한 쪽만 수정된 상황이 발생할 수 있다

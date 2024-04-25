@@ -11,7 +11,6 @@ include ../../source/skeleton.pug
 
     h1 참고문서
     ul
-        li: +asA('http://matrix.skku.ac.kr/knou-knowls/', '성균관대 선형대수학')
         li: +asA('https://github.com/mathjax/MathJax-demos-web', 'MathJax 공식')
         li: +asA('https://oeis.org/wiki/List_of_LaTeX_mathematical_symbols', 'LaTeX 키워드')
         li: +asA('https://tex.stackexchange.com/', 'LaTeX 스택')
@@ -101,11 +100,6 @@ include ../../source/skeleton.pug
             li 만약 식[A]식가 정사각행렬이고, 식[AB=BA=I]식를 만족하는 식[B]식가 존재한다면,
             p 식[A]식는 가역(invertible) 또는 정칙(nonsingular)이라 하고, 식[B]식는 식[A]식의 역행렬(inverse; 식[A^{-1}]식)
             li 위와 같은 행렬 식[B]식가 존재하지 않으면 식[A]식는 특이(singular)
-            li 식[A]식가 가역이면 식[A^{T}]식도 가역이고, 식[(A^{T})^{-1}=(A^{-1})^{T}]식이다
-            p 증명: 식[\begin{gather*}
-                |    A^{T}(A^{-1})^{T}=(A^{-1}A)^{T}=I^{T}=I \\
-                |    (A^{-1})^{T}A^{T}=(AA^{-1})^{T}=I^{T}=I
-                |\end{gather*}]식
         div
             h3 정사각행렬 식[A]식에 대해, 아래 명제들은 동등하다
             ol
@@ -192,6 +186,7 @@ include ../../source/skeleton.pug
                     |    2R_{3} + 5R_{1}
                     |\end{gather*}
                     |]식
+                    br
                     |식[
                     |\left[
                     |\begin{array}{ccc|ccc}
@@ -205,6 +200,7 @@ include ../../source/skeleton.pug
                     |    3R_{3} - 10R_{2}
                     |\end{gather*}
                     |]식
+                    br
                     |식[
                     |\left[
                     |\begin{array}{ccc|ccc}
@@ -219,6 +215,7 @@ include ../../source/skeleton.pug
                     |    R_{2} - 5R_{3}
                     |\end{gather*}
                     |]식
+                    br
                     |식[
                     |\left[
                     |\begin{array}{ccc|ccc}
@@ -830,7 +827,7 @@ include ../../source/skeleton.pug
             ol
                 li 행에 스칼라(k)배를 한 경우 : 해당 위치에 1/k 기록
                 li 한 행의 스칼라(k)배를 다른 행에 더한 경우 : 해당 위치에 -k 기록
-            li 행교환이 필요한 경우, 필요한 모든 행교환을 미리 식[A]식에 적용 식[QA]식하면, LU분해가 가능하다. 식[A=Q^{-1}LU]식
+            li 행교환이 필요한 경우, 필요한 모든 행교환을 미리 식[A]식에 적용(식[QA]식)하면, LU분해가 가능하다. 식[A=Q^{-1}LU]식
         details
             summary LU 분해 예
             p 식[A=\begin{bmatrix} 2 & 1 & 1 \\ 4 & -6 & 0 \\ -2 & 7 & 2\end{bmatrix}]식을 LU 분해하라
