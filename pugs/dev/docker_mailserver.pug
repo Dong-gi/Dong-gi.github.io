@@ -10,13 +10,25 @@ include ../../source/skeleton.pug
         li: +asA('https://docker-mailserver.github.io/docker-mailserver/edge/#getting-started')
         li: +asA('https://hub.docker.com/r/mailserver/docker-mailserver')
 
+    h1 메일 서버 개요
+    div
+        p 참고 문서 : #[+asA('https://docker-mailserver.github.io/docker-mailserver/edge/introduction')]
+        h2 구성 요소
+        ul
+            li MUA(Mail User Agent) : 이메일을 메일 서버로 보내는 클라이언트
+            p 메일 서버로부터 이메일을 가져와 최종 사용자에게 보여주는 역할을 수행하기도 한다
+
+            li MTA(Mail Transfer Agent) : 수신한 이메일의 최종 목적지가 자기 자신이라면 MDA에게 전달, 그렇지 않으면 다른 MTA에게 전달(중계)
+
+            li MDA(Mail Delivery Agent) : 전달 받은 이메일을 수신자 메일함에 보관
+
     h1 설치 절차
     ol
         li 설치 디렉터리에 다음 파일들 준비
         ul
-            li: +asA('https://github.com/docker-mailserver/docker-mailserver/blob/master/docker-compose.yml', 'docker-compose.yml')
-            li: +asA('https://github.com/docker-mailserver/docker-mailserver/blob/master/mailserver.env', 'mailserver.env')
-            li: +asA('https://github.com/docker-mailserver/docker-mailserver/blob/master/setup.sh', 'setup.sh')
+            li: +asA('https://github.com/docker-mailserver/docker-mailserver/blob/master/compose.yaml')
+            li: +asA('https://github.com/docker-mailserver/docker-mailserver/blob/master/mailserver.env')
+            li: +asA('https://github.com/docker-mailserver/docker-mailserver/blob/master/setup.sh')
             p 명령어 설명 :
                 +asA('https://docker-mailserver.github.io/docker-mailserver/edge/config/setup.sh/')
 
