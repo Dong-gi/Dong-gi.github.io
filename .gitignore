@@ -1,27 +1,3 @@
-!*.class
-!gradle-wrapper.jar
-
 *.log
 
-package-lock.json
-
-.gradle
-.idea
-.metadata
-.recommenders
-.settings
-.vs
-.vscode
-
-**/build/libs/
-**/build/reports/
-**/build/test-results/
-**/build/tmp/
-debug
-Logs
 node_modules
-packages
-RemoteSystemsTempFiles
-Servers
-target
-Temp

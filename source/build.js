@@ -80,7 +80,7 @@ async function renderPug(from, to) {
 
         console.log(`Rendered d2 : ${d2Path}`)
         const svg = await readFile(svgPath)
-        await writeFile(svgPath, svg.toString().replace(/\n/g, '').replace(/\{[^}]*font-family[^}]*\}/g, '{}').replace(/\s+/g, ' '))
+        await writeFile(svgPath, svg.toString().replace(/\r?\n/g, '').replace(/\{[^}]*font-family[^}]*\}/g, '{}').replace(/\s+/g, ' '))
     }))
 
     promiseArr.push(
