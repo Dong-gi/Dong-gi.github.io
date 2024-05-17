@@ -53,44 +53,6 @@ include ./source/skeleton.pug
         +tds('2017-11', '정보처리기사 취득')
 
 
-    h1 이벤트
-    div
-        h2 2024년 9월 - Let's Encrypt 인증서 체인 변경
-        ul
-            li 이전까지는 인증서가 널리 신뢰될 수 있도록 자체 루트 체인(ISRG Root X1)만 사용하지 않고, IdenTrust의 루트 인증서에 의해 교차 서명된 인증서를 발급함
-            li ISRG Root X1을 신뢰하는 안드로이드 기기가 93.9%까지 증가했고, 안드로이드 14부터 Google Play를 통해 OS 업데이트 필요 없이 루트 인증서를 업데이트할 수 있게됨에 따라 #[+asA('https://letsencrypt.org/2023/07/10/cross-sign-expiration.html', '2023년 7월')], 교차 서명을 종료함을 발표
-            li 2024년 2월 8일 : 기본적으로 교차 서명 제공 중단
-            li 2024년 5월 15일 : Cloudflare 발급 인증서도 교차 서명되지 않음 / 사용자 정의 인증서를 업로드해도 교차 서명된 체인 대신 ISRG Root X1 체인과 번들로 제공
-            li 2024년 9월 30일 : 교차 서명 인증서 만료
-            li 인증서로 인한 연결 오류 발생 시,
-            ul
-                li Android 7 이하 : 자체 인증서 저장소를 이용하는 FireFox 브라우저 이용
-                li #[+asA('https://help.iwinv.kr/manual/read.html?idx=867')]를 참고하여 CA 인증서 업데이트 또는 설치
-
-        h2 2024년 5월 - The 경기패스
-        div
-            p "K-패스"와 연계하여 추가 혜택을 지원
-            ul
-                li 경기도민이
-                li 전국 임의 대중교통을
-                li 월 15회 이상 사용한 경우
-            table.no-sort
-                +ths('계층', '환급율')
-                +tds('40세~', '20%')
-                +tds('19~39세', '30%')
-                +tds('저소득층', '53%')
-
-            p K-패스와의 차이점
-            ul
-                li K-패스 청년 연령 : 19 ~ 34세
-                li K-패스 횟수 제한 : 최대 월 60회까지 적립
-
-            p 참고 자료
-            ul
-                li: +asA('https://www.molit.go.kr/USR/NEWS/m_72/dtl.jsp?lcmspage=1&id=95088747', 'K-패스')
-                li: +asA('https://blog.naver.com/gyeonggi_gov/223331587354', 'The 경기패스')
-
-
     h1 바로가기
     div
         h2 생활 서비스

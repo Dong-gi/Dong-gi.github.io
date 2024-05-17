@@ -619,9 +619,10 @@ function updatePostList() {
     /** @type {HTMLDetailsElement} */
     const rootDetails = asNodes(`<details open class="w3-small file-list"><summary>Category</summary><ul></ul></details>`)
 
+    const lowHref = location.href.toLowerCase()
     for (const post of posts.list) {
         const categoryPartArr = post.category.split('/');
-        const isOpenDetails = location.href.search(post.file) >= 0;
+        const isOpenDetails = lowHref.search(post.file.toLowerCase()) >= 0;
         /** @type {HTMLDetailsElement} */
         let parentDetails = null;
 
@@ -652,7 +653,7 @@ function updatePostList() {
         const ul = detailsMap.get(category).querySelector('ul');
         const postArr = postMap.get(category);
         for (const post of postArr) {
-            const isHighlight = location.href.search(post.file) >= 0;
+            const isHighlight = lowHref.search(post.file.toLowerCase()) >= 0;
             ul.append(asNodes(`<li><a ${isHighlight ? 'class="w3-yellow"' : ''} href="/posts/${post.file}">${post.title}</a></li>`));
         }
     }
