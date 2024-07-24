@@ -40,7 +40,7 @@ async function renderPug(from, to) {
 
     const posts = require('../files/posts.json')
     const postMap = new Map()
-    posts.list.forEach(p => postMap.set('.' + p.file, p))
+    posts.list.forEach(p => postMap.set('./posts/' + p.file, p))
     posts.list = posts.list.sort((a, b) => a.file.localeCompare(b.file))
 
     const pugDirArr = ['./pugs']

@@ -100,14 +100,12 @@ mixin post(options)
         head
             meta(charset='UTF-8')
             meta(name='viewport', content='width=device-width, initial-scale=1')
+            title= options.title
+            link(rel="stylesheet", href="/source/default.css")
             meta(name='google-site-verification', content='aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM')
             meta(name='author', content='Donggi Kim <hi.donggi@gmail.com>')
             meta(name='description', content=options.description)
-
-            title= options.title
-
             link(rel="icon", href="/imgs/favicon.png")
-            link(rel="stylesheet", href="/source/default.css")
         body
             .w3-bar-block.w3-sidebar.w3-animate-left#sidebar
                 hr

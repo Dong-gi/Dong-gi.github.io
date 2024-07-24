@@ -33,244 +33,110 @@ include ./source/skeleton.pug
             }
         }, 100);
 
-
-    h1 이력
+    h1 타임라인?
     table
+        +ths('시간', '내용')
         tr
-            th(pre-sort=1, sort-order='▲') 시기
-            th 내용
+            td 2024
+            td Let's Encrypt의 인증서 체인에서, DST Root CA X3 루트 인증서를 제거하고 자체 루트 체인(ISRG Root X1)만 이용. #[+asA('https://letsencrypt.org/2023/07/10/cross-sign-expiration.html', '참고 링크 1')]
         tr
-            td 2020-08
-            td.hover-content(template-id='template-index-3') 슈퍼진 입사
-        +tds('2020-07', '산업기능요원 복무만료@세시소프트')
-        tr
-            td 2018-06
-            td.hover-content(template-id='template-index-2') 산업기능요원 복무 시작@세시소프트
-        +tds('2018-02-20', '공학사 취득, 4.27/4.5@한국기술교육대학교, 컴퓨터공학부')
-        tr
-            td 2018-02-06
-            td.hover-content(template-id='template-index-1') 직업능력개발훈련교사 자격증 취득
-        +tds('2017-11', '정보처리기사 취득')
+            td 2024-07-22
+            td Google Chrome에서 3자 쿠키를 제거하는 계획을 철회. 대신 사용자 선택 권한을 강화하는 쪽으로 선회. #[+asA('https://privacysandbox.com/intl/en_us/news/privacy-sandbox-update/', '참고 링크 1')]
 
+    h1 Oracle Cloud에 블로그 띄우는 절차
+    ol
+        li 블로그 클론
+        +asCode('shell').
+            $ sudo yum install git -y
+            $ git clone git@github.com:Dong-gi/Dong-gi.github.io.git
 
-    h1 바로가기
-    div
-        h2 생활 서비스
-        div
-            h3.fake 인터넷
-            ul
-                li #[+asA('https://msafer.or.kr/', 'Msafer')] : 가입현황조회 / 가입제한 / 개통알림
-                li 속도 테스트 : #[+asA('https://fast.com/', 'NETFLIX 제공')], #[+asA('https://speed.cloudflare.com/', 'Cloudflare 제공')]
+        li 블로그 빌드
+        +asCode('shell').
+            # https://github.com/nvm-sh/nvm
+            $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+            $ nvm install 20
 
-            h3.fake 주거
-            ul
-                li #[+asA('http://www.k-apt.go.kr/', '공동주택관리 정보시스템')]
-                li #[+asA('https://irts.molit.go.kr/', '부동산거래 전자계약시스템')]
-                ul
-                    li 무자격자 불법 중개 방지
-                    li 본인인증 서명으로 대리계약 차단
-                    li 대출 우대금리 및 전세보증 보증료 인하 적용
-                    li 거래*임대차신고, 확정일자 자동신청
+            # https://d2lang.com/
+            $ curl -fsSL https://d2lang.com/install.sh | sh -s --
 
-            h3.fake 증명
-            ul
-                li #[+asA('https://www.webminwon.com/', '웹민원센터')] : 대학증명발급
-                li #[+asA('https://pd.fss.or.kr/index.html', '개인정보노출자 사고예방시스템')] : 등록시, 일부 비대면 거래 제한
+            $ npm install
+            $ npm run build-all
 
-            h3.fake 기타
-            ul
-                li #[+asA('https://www.nhis.or.kr/static/html/wbma/c/wbmac0222.html', '재난적의료비 지원 사업')] : 중위소득 100% 이하 제한
-                li #[+asA('https://www.bokjiro.go.kr/', '복지포털 복지로')]
-                li #[+asA('https://www.ifixit.com/', 'IFIXIT')] : 사용자들이 직접 등록하는 수리 매뉴얼
-                li #[+asA('https://www.car365.go.kr/', '자동차365')] : 중고차 통합이력조회
-                li #[+asA('https://www.safetykorea.kr/release/certificationsearch', '안전관리 대상제품 조회')]
+        li 외부 배포
+        +asCode('shell').
+            $ sudo yum install nginx
+            $ sudo systemctl start nginx
 
-        h2 개발 자료
-        div
-            h3 API / SDK / Library
-            div
-                h4.fake API
-                ul
-                    li #[+asA('https://github.com/sahat/hackathon-starter')] : 빠른 Node 개발(특히 해커톤과 같은 경우)을 위한 각종 API 적용 예시 제공
+            # 권한 설정
+            $ sudo chcon -Rt httpd_sys_content_t /public/Dong-gi.github.io/
+            $ sudo firewall-cmd --permanent --add-service=http
+            $ sudo firewall-cmd --permanent --add-service=https
+            $ sudo firewall-cmd --permanent --add-port=80/tcp
+            $ sudo firewall-cmd --permanent --add-port=443/tcp
+            $ sudo firewall-cmd --reload
 
-                h4.fake AWS
-                ul
-                    li: +asA('https://sdk.amazonaws.com/java/api/latest/', 'AWS SDK for Java, version 2')
-                    li: +asA('https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/', 'AWS SDK for JavaScript, Version 3')
+            # snapd 설치를 위해 EPEL 패키지 사용 설정 필요
+            $ sudo cat /etc/yum.repos.d/oracle-epel-ol9.repo
+            [ol9_developer_EPEL]
+            name=Oracle Linux $releasever EPEL Packages for Development ($basearch)
+            baseurl=https://yum$ociregion.$ocidomain/repo/OracleLinux/OL9/developer/EPEL/$basearch/
+            gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
+            gpgcheck=1
+            enabled=1 <- 이 부분
 
-                h4.fake Client Application
-                ul
-                    li #[+asA('https://www.electronjs.org/', 'Electron')] : 웹 기술로 크로스 플랫폼 앱 개발
+            # https://snapcraft.io/docs/installing-snapd : certbot 설치에 이용
+            $ sudo yum install snapd -y
+            $ sudo systemctl enable --now snapd.socket
+            $ sudo ln -s /var/lib/snapd/snap /snap
+            # snapd 실행 준비를 위해 재로그인 또는 시스템 재시작 필요
 
-                h4.fake Game
-                ul
-                    li #[+asA('https://github.com/pond3r/ggpo/blob/master/doc/README.md', 'GGPO')] : 입력 예측 및 롤백을 이용하여, 일정 수준의 레이턴시 차이가 있는 플레이어 사이에서도 자연스러운 실시간 PvP 지원
+            # https://certbot.eff.org/instructions : 인증서 발급
+            $ sudo snap install --classic certbot
+            $ sudo ln -s /snap/bin/certbot /usr/bin/certbot
+            # 인증서 발급 전, 블로그 도메인 => 컴퓨팅 인스턴스 IP 주소 연결
+            $ sudo certbot --nginx
 
-                h4.fake Graph
-                ul
-                    li Chart
-                    ul
-                        li: +asA('https://echarts.apache.org/en/index.html', 'Apache ECharts')
-                        li: +asA('https://www.chartjs.org/', 'Chart.js')
-                    li Text to Diagram
-                    ul
-                        li: +asA('https://text-to-diagram.com/?example=trees', '툴 비교')
-                        li: +asA('https://d2lang.com/', 'D2')
-                        li: +asA('https://plantuml.com/ko/', 'PlantUML')
+        li nginx.conf 예
+        +asCode('nginx').
+            server {
+                listen 80;
+                server_name free.4joy.link;
+                include /etc/nginx/default.d/*.conf;
+                return 301 https://$server_name$request_uri;
+            }
 
-                h4.fake Language
-                ul
-                    li: +asA('https://docs.oracle.com/en/java/javase/21/docs/api/index.html', 'Java 21')
-                    li: +asA('https://nodejs.org/docs/latest/api/', 'Node Latest')
-                    li: +asA('https://docs.python.org/3/library/index.html', 'Python 3')
+            server {
+                listen       443 ssl http2;
+                listen       [::]:443 ssl http2;
+                server_name  free.4joy.link;
 
-                h4.fake Linux
-                ul
-                    li: +asA('https://tldp.org/', 'The Linux Documentation Project')
+                include /etc/nginx/default.d/*.conf;
 
-                h4.fake Protocol
-                ul
-                    li #[+asA('https://trpc.io/', 'tRPC')] : TypeScript 풀스택 애플리케이션을 위한 프로토콜
-                    p 백엔드 코드에서 정의한 라우터를 프론트에서 그대로 이용함으로써, 타입-안전한 프로토콜을 빠르고 간단하게 개발할 수 있게 도와준다
+                ssl_certificate /etc/letsencrypt/live/free.4joy.link/fullchain.pem; # managed by Certbot
+                ssl_certificate_key /etc/letsencrypt/live/free.4joy.link/privkey.pem; # managed by Certbot
+                include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+                ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 
-                h4.fake Search
-                ul
-                    li #[+asA('https://www.tabnine.com/code', 'tabnine')] : Java, JavaScript 코드 검색
-                    li #[+asA('https://www.phind.com/', 'Phind')] : 개발 전반 질문 답변 AI
+                location / {
+                    root /public/Dong-gi.github.io;
+                    add_header Cache-Control "no-cache";
+                }
 
-                h4.fake Spring Framework
-                ul
-                    li: +asA('https://docs.spring.io/spring-framework/docs/current/javadoc-api/', 'Spring Latest')
-                    li: +asA('https://start.spring.io/', 'Spring Initializr')
+                error_page 404 /;
+            }
 
-                h4.fake Web
-                ul
-                    li: +asA('https://html.spec.whatwg.org/multipage/', 'HTML Living Standard')
-                    li: +asA('https://developer.mozilla.org/en-US/docs/Web/API', 'Web 표준 API')
-                    li 프로그래밍 방식으로 브라우징 : #[+asA('https://www.npmjs.com/package/puppeteer')], #[+asA('https://www.npmjs.com/package/playwright')]
-                    li 브라우저 확장프로그램으로 특정 페이지에서 사용자 정의 스크립트 실행 : #[+asA('https://www.tampermonkey.net/', 'Tampermonkey')]
-                    li User Agent 해석
-                    ul
-                        li npm 패키지 : #[+asA('https://github.com/faisalman/ua-parser-js')]
-                        li npm 패키지 : #[+asA('https://www.npmjs.com/package/node-device-detector')]
-                        table.no-sort
-                            caption 기기 모델 예시
-                            +ths('ua-parser-js', 'node-device-detector')
-                            +tds('iPhone', 'iPhone 14 Plus')
-                            +tds('CPH2241', 'A54')
-                            +tds('iPad', 'iPad 6 9.7')
-                            +tds('SM-F731U', 'Galaxy Z Flip 5')
-                        li 온라인 서비스 : #[+asA('https://explore.whatismybrowser.com/useragents/parse/#parse-useragent')]
-
-            h3 Character
-            ul
-                li: +asA('https://html.spec.whatwg.org/multipage/named-characters.html', 'HTML named characters')
-                li: +asA('https://ko.wikipedia.org/wiki/%EC%9C%A0%EB%8B%88%EC%BD%94%EB%93%9C_1F000~1FFFF', '유니코드 1F000~1FFFF')
-                li: +asA('https://kr.piliapp.com/emoji/list/symbols/', '유니코드 이모티콘 해설')
-
-            h3 DB
-            ul
-                li #[+asA('https://db-engines.com/en/ranking', 'DB-ENGINES')] : DB 엔진 순위 집계
-
-            h3 그래프 / 이미지
-            ul
-                li #[+asA('https://asciiflow.com/', 'asciiflow')] : 아스키 문자로만 플로 차트 구성 -&gt; 텍스트로 복사
-                li #[+asA('https://www.circuitlab.com/', 'CIRCUIT LAB')] : 온라인으로 회로도 구성
-                li #[+asA('https://www.codeproject.com/Articles/1179876/Unicode-Art')] : 이미지를 유니코드 아트로 변환
-                li #[+asA('https://github.com/ShareX/ShareX')] : 스크린 캡처/녹화 및 공유
-                li #[+asA('https://www.geogebra.org/geometry', 'GeoGebra')] : 평면기하 그리기
-                li 이미지 (손실) 압축 : #[+asA('https://github.com/xanderfrangos/crushee')], #[+asA('https://tinypng.com/', 'tinify')], #[+asA('https://squoosh.app/', 'Squoosh')]
-                li #[+asA('https://picsum.photos/', 'Lorem Picsum')] : 임의 크기 샘플 이미지 삽입
-
-            h3 네트워크
-            ul
-                li #[+asA('https://checkip.amazonaws.com/', '본인 IP 주소 확인')]
-                li #[+asA('https://www.ssllabs.com/', 'SSL Labs')] : 서버 SSL 테스트 등
-                li #[+asA('https://www.abuseipdb.com/', 'AbuseIPDB')] : 악성 활동 IP 주소 조회/신고
-                li #[+asA('https://web.dev/', 'web.dev')] : 구글 주도 웹 표준화 지원
-                li #[+asA('https://www.submarinecablemap.com/', 'Submarine Cable Map')] : 해저 케이블 지도
-
-            h3 무료 리소스
-            ul
-                li #[+asA('https://www.data.go.kr/', '공공 데이터 포털')]
-                li #[+asA('https://gongu.copyright.or.kr/', '공유마당')] : 이미지, 폰트, 음악 등
-                li #[+asA('https://www.gamemadang.or.kr/', '게임마당')] : 2D/3D 그래픽
-                li #[+asA('https://assetstore.unity.com/', 'Unity Asset Store')]
-                li #[+asA('https://itch.io/game-assets/free', 'itch.io > free assets')]
-                li #[+asA('https://www.flaticon.com/', 'FLATICON')] : 아이콘, 스티커
-                li #[+asA('https://freesound.org/', 'freesound')]
-                li #[+asA('https://fonts.google.com/', 'Google Fonts')]
-                li #[+asA('https://developer.microsoft.com/ko-kr/windows/downloads/virtual-machines/')] : Windows 가상머신
-                li #[+asA('https://letsencrypt.org/ko/', "Let's Encrypt")] : 무료 TLS 인증서. 용례는 #[+goto('Certbot', 'posts/project/tip.html')] 참고
-                li #[+asA('https://neon.tech/pricing', 'NEON')] : 무료 서버리스 PostgreSQL
-                li #[+asA('https://www.pgedge.com/products/pgedge-cloud#plansandpricing', 'pgEdge')] : 무료 분산(multi-master) PostgreSQL 클러스터
-                li #[+asA('https://huggingface.co/', 'Hugging Face')] : AI 관련 리소스
-                li #[+asA('https://crackstation.net/crackstation-wordlist-password-cracking-dictionary.htm', "CrackStation's Password Cracking Dictionary")] : 취약한 비밀번호 모음
-
-            h3 보안
-            ul
-                li #[+asA('https://github.com/nccgroup/ScoutSuite')] : 클라우드 구성 감사 툴
-                li #[+asA('https://docs.bearer.com/quickstart/', 'bearer')] : STAT for JavaScript, TypeScript, Ruby, Java
-
-            h3 지도
-            ul
-                li #[+asA('https://www.openstreetmap.org/about', 'OpenStreetMap')] : #[+asA('https://www.openstreetmap.org/copyright', 'ODbL 라이선스')]로 공개된 지도 데이터
-                p OSM 재단은 지도 편집자 공동체가 주도하여 무료 지도 정보를 관리/제공
-                p 연관 라이브러리 : #[+asA('https://leafletjs.com/index.html', 'Leaflet')]
-                li #[+asA('https://overturemaps.org/download/', 'Overture Maps')] : #[+asA('https://docs.overturemaps.org/#license', 'CC BY 4.0 라이선스')]로 공개된 지도 데이터
-                p OSM와는 공동체 구성원이 다르다 -- 기업, 정부/지자체, 기타 재단/법인 등
-
-            h3 학술자료
-            ul
-                li Library Genesis : #[+asA('https://libgen.rs/')], #[+asA('http://libgen.is/')], #[+asA('http://libgen.st/')]
-                li: +asA('https://ocw.mit.edu/', 'MIT Open Courseware')
-                li: +asA('https://www.w3schools.com/', 'W3Schools')
-                li 국내 평생학습 서비스 : #[+asA('https://www.kmooc.kr/', 'K-MOOC')], #[+asA('http://www.kocw.net/', 'KOCW')], #[+asA('https://www.step.or.kr/', 'STEP')]
-
-        h2 기타
+    h1 기타 링크
+    ul
+        li #[+asA('https://msafer.or.kr/', 'Msafer')] : 이동 전화 가입현황조회 / 가입제한 / 개통알림
+        li 인터넷 속도 테스트 : #[+asA('https://fast.com/', 'NETFLIX 제공')], #[+asA('https://speed.cloudflare.com/', 'Cloudflare 제공')]
+        li #[+asA('https://pd.fss.or.kr/index.html', '개인정보노출자 사고예방시스템')] : 등록시, 일부 비대면 거래 제한
+        li #[+asA('http://www.k-apt.go.kr/', '공동주택관리 정보시스템')] : 관리비 조회
+        li #[+asA('https://irts.molit.go.kr/', '부동산거래 전자계약시스템')]
         ul
-            li #[+asA('https://www.ilovepdf.com/', 'iLovePDF')] : PDF 관련 온라인 툴
-
-    +hoverTemplate()#template-index-1
-        ul
-            li 통신서비스 3급
-            li 정보기술개발 3급
-            li 전자기기개발 3급
-            li 전자기기일반 3급
-
-    +hoverTemplate()#template-index-2
-        ol
-            li
-                +asA('https://namu.wiki/w/꿈왕국과 잠자는 100명의 왕자님')
-                |  서버 유지보수; Rest API(SpringBoot + Spring Web), Admin(SpringBoot + Spring Web + Thymeleaf)
-            li
-                +asA('https://namu.wiki/w/노을빛 세계에서 너와 노래를…')
-                |  서버 유지보수; Rest API(Servlet), Admin(Servlet)
-            li
-                +asA('https://play.google.com/store/apps/details?id=com.sesisoft.kamurai&hl=ko&gl=US', '카무라이 트라이브')
-                |  서버 유지보수; Rest API(Servlet), Admin(Servlet + FreeMarker)
-            li 게임 이벤트 데이터 작업을 위한 사내
-                +asA('/posts/project/wpf_data_tool.html', 'WPF 애플리케이션')
-                |  개발
-
-    +hoverTemplate()#template-index-3
-        h1.no-marker 서비스
-        ul
-            li: +asA('https://fb.gg/play/puzzle_wizard', 'Puzzle Wizard')
-            p 웹소켓 서버(SpringBoot + Netty + MySQL + Redis) 개발
-
-            li: +asA('https://fb.gg/play/super_pop', 'Super Pop')
-            p 웹소켓 서버(SpringBoot + Netty + MySQL + Redis) 개발
-        
-            li: +asA('https://fb.gg/play/omg_minigames', '123 Minigames')
-            p Rest API 서버(SpringBoot + Spring Reactive Web + PostgreSQL) 개발
-
-            li: +asA('https://fb.gg/play/the_puzzle', 'The Puzzle')
-            p Rest API 서버(SpringBoot + Spring Reactive Web + PostgreSQL + Redis) 개발
-
-        h1.no-marker 기타
-        ul
-            li #[+asA('https://developers.facebook.com/docs/games/instant-games/getting-started/bot-setup/', '페이스북 게임 봇')] 및 A2U 관련, 메시지 예약/전송 서버 개발
-            li 통합 Admin 개발
-            p 프론트/백엔드 분리 : Vue3 / Express
-            li Looker Studio를 이용한 KPI 리포트 작성
+            li 무자격자 불법 중개 방지
+            li 본인인증 서명으로 대리계약 차단
+            li 대출 우대금리 및 전세보증 보증료 인하 적용
+            li 거래*임대차신고, 확정일자 자동신청
+        li #[+asA('https://www.ifixit.com/', 'IFIXIT')] : 사용자들이 직접 등록하는 수리 매뉴얼
+        li #[+asA('https://www.car365.go.kr/', '자동차365')] : 중고차 통합이력조회
+        li #[+asA('https://www.safetykorea.kr/release/certificationsearch', '안전관리 대상제품 조회')]
