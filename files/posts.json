@@ -36,6 +36,11 @@
             "title": "SDKMAN; The Software Development Kit Manager"
         },
         {
+            "category": "개발 자료",
+            "file": "dev/secure-coding.html",
+            "title": "개발 보안"
+        },
+        {
             "category": "개발 자료/DB",
             "file": "dev/DB/concept.html",
             "title": "DB 기초 개념"
@@ -347,7 +352,7 @@
         },
         {
             "category": "개발 자료",
-            "file": "dev/docker_mailserver.html",
+            "file": "dev/docker-mailserver.html",
             "title": "Docker Mailserver 설치"
         },
         {
