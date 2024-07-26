@@ -65,7 +65,7 @@ include ./source/skeleton.pug
         li 외부 배포
         +asCode('shell').
             $ sudo yum install nginx
-            $ sudo systemctl start nginx
+            $ sudo systemctl enable --now nginx
 
             # 권한 설정
             $ sudo chcon -Rt httpd_sys_content_t /public/Dong-gi.github.io/
