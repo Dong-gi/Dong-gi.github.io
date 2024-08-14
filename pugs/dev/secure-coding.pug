@@ -5,6 +5,10 @@ include ../../source/skeleton.pug
     description: '개발하면서 신경 써야할 보안 취약점과 그 대응 방법',
 })
 
+    h1 참고 자료
+    ul
+        li: +asA('https://nodejs.org/en/learn/getting-started/security-best-practices', 'Node 보안 모범 사례')
+
     h1 CWE-208: Observable Timing Discrepancy
     ul
         li: +asA('https://cwe.mitre.org/data/definitions/208.html')
@@ -35,9 +39,26 @@ include ../../source/skeleton.pug
             li 시간초과 설정을 통해, #[+asA('https://en.wikipedia.org/wiki/Slowloris_(computer_security)')] 공격을 방지한다
             p 예. Node #[+asInlineCode('http.Server')]의 경우 : #[+asInlineCode('headersTimeout, requestTimeout, timeout, keepAliveTimeout')]
 
+    h1 CWE-1321: Improperly Controlled Modification of Object Prototype Attributes ('Prototype Pollution')
+    ul
+        li: +asA('https://cwe.mitre.org/data/definitions/1321.html')
+        li 프로토타입을 오염시켜 객체가 정상적으로 작동하지 못하도록 하는 경우
+        p 예. Node에서는 #[+asInlineCode('Object.assign()')]을 이용하여 프로토타입을 오염시킬 수 있다
+        +asCode('JavaScript').
+            const a = { a: 1, b: 2 };
+            const data = JSON.parse('{"__proto__": { "polluted": true}}');
+
+            const c = Object.assign({}, a, data);
+            console.log(c.polluted); // true
+
+            // Potential DoS
+            const data2 = JSON.parse('{"__proto__": null}');
+            const d = Object.assign(a, data2);
+            d.hasOwnProperty('b'); // Uncaught TypeError: d.hasOwnProperty is not a function
+
     h1 CWE-1357: Reliance on Insufficiently Trustworthy Component
     ul
         li: +asA('https://cwe.mitre.org/data/definitions/1357.html')
         li 3자 모듈을 이용할 때는 코드에 취약점이 없는지, 꾸준히 관리되고 있는지, 모든 파일이 예상한 것과 같은 지 확인해야 한다.
         p Git으로 배포된 버전의 파일은 실제 패키지 다운로드된 것과 다를 수 있음에 유의해야 한다.
-        p 모듈에 대한 권한 설정이 가능하다면, 
+        p 정적 코드 스캔 도구 등을 이용하여 검사하는 것을 개발 과정에서 자동으로 이루어지도록 빌드 스크립트를 작성하는 것도 한 방법.
