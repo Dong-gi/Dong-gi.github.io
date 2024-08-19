@@ -9,20 +9,29 @@ include ../../source/skeleton.pug
     ul
         li: +asA('https://nodejs.org/en/learn/getting-started/security-best-practices', 'Node 보안 모범 사례')
 
-    h1 카나리아 토큰
-    ul
-        li: +asA('https://canarytokens.org/nest/', 'Canarytokens')
-        li 실제 서비스에는 사용되지 않는 토큰을 뿌려두고, 토큰 액세스 알림을 받음으로써 잠재적인 공격자의 존재를 확인하는 방법이다
-        p 외부에 개방된 곳에 일부러 토큰을 뿌리는 건 별로 의미가 없고, 정상적인 상태라면 아무도 건드리지 말아야 할 곳에 먹음직스럽게 뿌리는 것이 좋다
-        li 사용 사례
+    h1 도움이 되는 도구
+    div
+        h2 카나리아 토큰
         ul
-            li 내 모바일 디바이스에 설치한 앱을 누군가 실행한 흔적이 있다
-            li 내 컴퓨터에 존재하는 Microsoft 엑셀 파일을 누군가 열어본 흔적이 있다
-            li 내 컴퓨터(Windows)의 폴더를 누군가 열어본 흔적이 있다
-            li 내 컴퓨터에서 누군가 바이너리 파일을 실행한 흔적이 있다
-            li 기밀 장소에 보관된 액세스 키를 누군가 사용한 흔적이 있다
-            li 일반적으로는 도달할 수 없는 URL에 누군가 접속한 흔적이 있다
-            li 누군가 내 사이트를 그대로 복제하여 사용하는 징후가 있다
+            li: +asA('https://canarytokens.org/nest/', 'Canarytokens')
+            li 실제 서비스에는 사용되지 않는 토큰을 뿌려두고, 토큰 액세스 알림을 받음으로써 잠재적인 공격자의 존재를 확인하는 방법이다
+            p 외부에 개방된 곳에 일부러 토큰을 뿌리는 건 별로 의미가 없고, 정상적인 상태라면 아무도 건드리지 말아야 할 곳에 먹음직스럽게 뿌리는 것이 좋다
+            li 사용 사례
+            ul
+                li 내 모바일 디바이스에 설치한 앱을 누군가 실행한 흔적이 있다
+                li 내 컴퓨터에 존재하는 Microsoft 엑셀 파일을 누군가 열어본 흔적이 있다
+                li 내 컴퓨터(Windows)의 폴더를 누군가 열어본 흔적이 있다
+                li 내 컴퓨터에서 누군가 바이너리 파일을 실행한 흔적이 있다
+                li 기밀 장소에 보관된 액세스 키를 누군가 사용한 흔적이 있다
+                li 일반적으로는 도달할 수 없는 URL에 누군가 접속한 흔적이 있다
+                li 누군가 내 사이트를 그대로 복제하여 사용하는 징후가 있다
+
+        h2 OpenSSF Scorecard
+        ul
+            li: +asA('https://securityscorecards.dev/', 'OpenSSF Scorecard 공식 사이트')
+            li 프로젝트 소스 코드를 분석하여 개발 ~ 배포 각 단계에서 보안 표준을 얼마나 지키는지를 분석해준다
+            +w3img('/imgs/Screenshot 2024-08-19 at 6.41.46 PM.png')
+            li GitHub Action에 통합하여 사용하거나, CLI를 통해 실행할 수 있다
 
     h1 CWE-208: Observable Timing Discrepancy
     ul
