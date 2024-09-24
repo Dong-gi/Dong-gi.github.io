@@ -1,0 +1,78 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: 'JavaScript > Base64',
+    description: 'JavaScript에서 Base64 인코딩을 다룰 때 유의사항',
+})
+
+    h1 참고 자료
+    ul
+        li: +asA('https://web.dev/articles/base64-encoding', 'web.dev 포스트')
+        li: +asA('https://developer.mozilla.org/en-US/docs/Glossary/Base64', 'mdn 설명서 > Base64')
+
+    h1 Base64 인코딩/디코딩 관련 전역 함수
+    p JavaScript 환경은 Base64와 관련한 사전 정의된 전역 함수를 제공한다
+    ul
+        li btoa() : Binary string을 ASCII 문자열(Base64)로 인코딩한다
+        p 이진 문자열이라고 표기하는 이유는, 각 문자가 1바이트 바이너리 데이터로 간주돼야 하기 때문
+        li atob() : ASCII 문자열(Base64)을 디코딩한다
+
+    h1 유니코드 문자열 인코딩
+    p btoa()는 각 글자가 1바이트여야만 동작한다
+    +asCode('JavaScript').
+        btoa('⛳')
+        // Uncaught InvalidCharacterError: Failed to execute 'btoa' on 'Window': The string to be encoded contains characters outside of the Latin1 range.
+
+    p 따라서 JavaScript의 UTF-16 유니코드 문자열을 btoa()에 전달하기 전에 모든 문자들을 1바이트 단위로 쪼개고, atob()의 결과물을 적절하게 유니코드로 합성할 필요가 있다. mdn에서는 이를 위한 가장 간단한 방법으로 TextEncoder와 TextDecoder 사용을 제시한다
+    +asCode('JavaScript').
+        const textEncoder = new TextEncoder()
+        const textDecoder = new TextDecoder()
+
+        function decodeBase64 (base64) {
+            const binTxt = atob(base64)
+            const codePointArr = Uint8Array.from(binTxt, (x) => x.codePointAt(0))
+            return textDecoder.decode(codePointArr)
+        }
+
+        function encodeBase64 (txt) {
+            const codePointArr = textEncoder.encode(txt)
+            const binTxt = Array.from(codePointArr, (x) => String.fromCodePoint(x)).join('')
+            return btoa(binTxt)
+        }
+
+        console.log(encodeBase64('안녕하세요~'))
+            // ㄴ 7JWI64WV7ZWY7IS47JqUfg==
+        console.log(decodeBase64(encodeBase64('안녕하세요~')))
+            // ㄴ 안녕하세요~
+
+    p 한편, 불완전한(lone) surrogate 문자열이 존재한다면 인코딩-디코딩을 거친 결과는 원본과 다를 수 있다
+    +asCode('JavaScript').
+        const originalTxt = 'hello⛳❤️🧀\uDE75'
+        const encodedTxt = encodeBase64(originalTxt)
+        console.log(encodedTxt)
+            // ㄴ aGVsbG/im7PinaTvuI/wn6eA77+9
+        const decodedTxt = decodeBase64(encodedTxt)
+        console.log(decodedTxt)
+            // ㄴ hello⛳❤️🧀�
+        for (let i = 0; i < decodedTxt.length; ++i) {
+            console.log(i, decodedTxt[i], '0x' + decodedTxt.charCodeAt(i).toString(16).toUpperCase())
+        }
+        // 0 'h' '0x68'
+        // 1 'e' '0x65'
+        // 2 'l' '0x6C'
+        // 3 'l' '0x6C'
+        // 4 'o' '0x6F'
+        // 5 '⛳' '0x26F3'      : 16비트 문자 하나로 표현 가능한 경우
+        // 6 '❤' '0x2764'
+        // 7 '️' '0xFE0F'        : 색 선택. https://en.wikipedia.org/wiki/Variation_Selectors_(Unicode_block)
+        // 8 '\uD83E' '0xD83E'  : 🧀의 상위 surrogate
+        // 9 '\uDDC0' '0xDDC0'  : 🧀의 하위 surrogate
+        // 10 '�' '0xFFFD'      : 불완전한 surrogate에 대한 대체 코드
+
+    h1 결론
+    ul
+        li 이진 데이터를 인코딩/디코딩하는 경우 : TextEncoder와 TextDecoder를 사용할 필요가 없음
+        li 문자열을 인코딩/디코딩하는 경우
+        ul
+            li 원본과 다르면 안 되는 경우 : 인코딩하기 전에 #[+asA('https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/isWellFormed', 'isWellFormed()')]와 같이 입력이 적절한지 검사할 필요가 있다
+            li 원본과 달라도 되는 경우 : 위 코드를 그대로 이용하거나, #[+asA('https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toWellFormed#browser_compatibility', 'toWellFormed()')]를 이용해 값이 변경될 거라고 인코딩 결과로 알려줄 수 있다
