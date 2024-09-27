@@ -5,6 +5,12 @@ include ../../../source/skeleton.pug
     description: 'Node 정리',
 })
 
+    h1 Version
+    div
+        h2 v20.6.0
+        p .env 파일 지원
+        +asCode('shell') node --env-file=config.env index.js
+
     h1 NPM
     div
         h2 버전 정의
