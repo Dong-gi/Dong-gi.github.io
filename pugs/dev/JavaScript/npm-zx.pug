@@ -1,0 +1,51 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: 'npm zx',
+    description: 'zx : Node에서 bash 스크립트를 편리하게 실행하는 걸 도와주는 라이브러리',
+})
+
+    h1 참고 자료
+    ul
+        li: +asA('https://google.github.io/zx/getting-started', '공식 문서 > Getting Started')
+        li: +asA('https://www.npmjs.com/package/zx', 'npm > zx')
+
+    h1 예시 코드
+    ul
+        li Node 환경에서 실행
+        +codeBtn('/Repositories/Node/zx-240930/code1.mjs', 'JavaScript')
+        +asCode('shell', '실행 결과').
+            $ node code1.mjs
+            ProcessOutput {
+              stdout: 'Mon Sep 30 08:13:57 AM GMT 2024\n',
+              stderr: '',
+              signal: null,
+              exitCode: 0,
+              duration: 10
+            }
+            ProcessOutput {
+              stdout: 'Current date is Mon Sep 30 08:13:57 AM GMT 2024\n',
+              stderr: '',
+              signal: null,
+              exitCode: 0,
+              duration: 4
+            }
+
+        li zx 환경에서 실행
+        +codeBtn('/Repositories/Node/zx-240930/code2.mjs', 'JavaScript')
+        +asCode('shell', '실행 결과').
+            $ npx zx code2.mjs
+            ProcessOutput {
+              stdout: 'Mon Sep 30 08:17:02 AM GMT 2024\n',
+              stderr: '',
+              signal: null,
+              exitCode: 0,
+              duration: 9
+            }
+            ProcessOutput {
+              stdout: 'Current date is Mon Sep 30 08:17:02 AM GMT 2024\n',
+              stderr: '',
+              signal: null,
+              exitCode: 0,
+              duration: 3
+            }
