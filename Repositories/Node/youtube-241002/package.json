@@ -1,0 +1,15 @@
+{
+  "name": "youtube-241002",
+  "version": "1.0.0",
+  "main": "index.mjs",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "youtubei.js": "^10.5.0"
+  }
+}

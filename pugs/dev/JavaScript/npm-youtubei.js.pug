@@ -1,0 +1,23 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: 'npm youtubei.js',
+    description: 'youtubei.js : YouTube 내부 API를 이용하도록 도와주는 라이브러리',
+})
+
+    h1 참고 자료
+    ul
+        li: +asA('https://ytjs.dev/', '공식 사이트')
+        li: +asA('https://github.com/LuanRT/YouTube.js/tree/main/examples', 'GitHub > 공식 예시 코드')
+        li: +asA('https://www.npmjs.com/package/youtubei.js', 'npm > youtubei.js')
+
+    h1 개요
+    ul
+        li InnerTube : YouTube 내부 API
+        li youtubei.js : InnerTube를 이용하는 자바스크립트 클라이언트
+        li Node, Deno, Browser에서 실행 가능
+        p 단, 브라우저에서 실행 시 CORS 회피를 위해 프록시 서버가 필요
+
+    h1 예시 코드
+    +codeBtn('/Repositories/Node/youtube-241002/index.mjs', 'JavaScript')
+    +codeBtn('/Repositories/Node/youtube-241002/log.txt', 'text') 실행 결과
