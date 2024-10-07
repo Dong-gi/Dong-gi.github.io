@@ -1,0 +1,25 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: 'Node Globals',
+    description: 'Node 전역 객체',
+})
+
+    h1 참고 자료
+    ul
+        li: +asA('https://nodejs.org/docs/latest/api/globals.html', '공식 문서 > Globals')
+
+    h1 setTimeout()
+    ul
+        li: +asA('https://nodejs.org/docs/latest/api/timers.html#settimeoutcallback-delay-args')
+        li: +asCode('JavaScript') setTimeout(callback[, delay[, ...args]])
+        li 브라우저의 경우 단순히 숫자를 반환하지만, Node는 #[+asA('https://nodejs.org/docs/latest/api/timers.html#class-timeout', 'Timeout')] 객체를 반환한다. 이 반환된 객체를 적절히 처리하지 않으면 메모리 누수가 발생할 수 있으므로 주의해야 한다. 이를 방지하는 간단한 방법은 반환된 Timeout 객체 대신 Number를 취급하는 것인데, 이 경우 값은 동일한 스레드 안에서만 유효함에 주의해야 한다.
+        +asCode('shell').
+            $ node
+            > let h = setTimeout(() => {}, 100000)
+            > Number(h)
+            62
+        ul
+            li: +asA('https://lucumr.pocoo.org/2024/6/5/node-timeout/', 'Timeout 객체로 인한 메모리 누수 참고 자료')
+            li Timeout > Number 변환 참고 자료 : #[+asA('https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#number_coercion', "Number()는 [Symbol.toPrimitive]('number')를 호출")], #[+asA('https://nodejs.org/docs/latest/api/timers.html#timeoutsymboltoprimitive', "timeout[Symbol.toPrimitive]() 정의 존재")]
+            li: +asA('https://nodejs.org/docs/latest/api/timers.html#timeoutsymboltoprimitive', "Timeout에서 변환된 원시 값은 동일 스레드에서만 유효")

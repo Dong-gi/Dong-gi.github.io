@@ -108,6 +108,12 @@ include ../../source/skeleton.pug
         p svg 파일을 텍스트 에디터로 열어 width, height 속성을 삭제하고, 대신 viewBox 등으로 출력 범위를 지정
         +asCode('xml') &lt;svg width="" height=""> → &lt;svg viewBox="0 0 100 100">
 
+    h1 TCP_NODELAY 옵션 활성화
+    ul
+        li: +asA('https://brooker.co.za/blog/2024/05/09/nagle.html', '참고 블로그')
+        li #[+asA('https://datatracker.ietf.org/doc/html/rfc896')]은 세션에서 이전에 보낸 패킷에 대한 ACK를 수신하기 전까지 새로운 TCP 세그먼트를 보내지 않고 지연시키는 것을 제안한다
+        li 이는 저지연이 필수적인 시스템에서 오히려 비효율적일 수 있으므로, TCP_NODELAY 소켓 옵션을 활성화하여 Nagle 알고리즘을 비활성화하는 것이 좋을 수 있다
+
     h1 Visual Studio
     ol
         li.marker 리소스 디렉터리 전체 출력 디렉터리에 복사
