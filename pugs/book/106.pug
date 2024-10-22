@@ -1,0 +1,20 @@
+include ../../source/skeleton.pug
+
++post({
+    title: '카인의 오만',
+    description: '개인적으로 마음에 든 『카인의 오만』 문구',
+})
+
+    h1 도서 정보
+    .w3-row
+        .w3-col.s2.w3-center
+            +w3img('https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791193149157.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
+        .w3-col.s10
+            table.no-sort
+                +tds('표제/저자사항', '카인의 오만 / 나카야마 시치리')
+                +tds('ISBN 정보', '979-11-93149-15-7 (03830)')
+                +tds('발행사항', '블루홀6(블루홀식스), 2024.04.08')
+
+    h1 독서 기록
+    ul
+        li 빈곤현으로 지정되면 빈곤 척결을 명목으로 정부에서 정책과 자금을 지원받을 수 있거든요. 그래서 누가 봐도 빈곤한 지역을 외부에서도 잘 보이도록 방치했습니다
