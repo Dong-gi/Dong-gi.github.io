@@ -2194,6 +2194,11 @@ include ../../source/skeleton.pug
 
     h1 S3
     div
+        h2 API 호출 빈도 제한사항
+        ul
+            li: +asA('https://docs.aws.amazon.com/AmazonS3/latest/userguide/optimizing-performance.html')
+            li S3 API는 버킷의 접두어를 기준으로 최소 처리 비율을 보장한다. 버킷에 대해 접두어 개수 제한은 없으므로, 서로 다른 접두어들을 이용함으로써 쉽게 최소 처리량을 확장할 수 있다
+
         h2 2024-05-13 변경사항
         p AWS 계정 또는 조직 외부에서 발생한 요청에 대해 HTTP 403 응답을 반환하는 요청에 대해서는 요청 및 대역폭 요금이 발생하지 않게 됨
 
