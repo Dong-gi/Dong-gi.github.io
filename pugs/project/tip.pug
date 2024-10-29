@@ -186,13 +186,13 @@ include ../../source/skeleton.pug
     h1 기레기 고소 방법
     +w3img('/imgs/20190629_155650.jpg')
 
-    h1 정규표현식 일본어 검색
-    ol
-        li 히라가나 : [\u3041-\u3096]
-        li 가타카나 : [\u30A1-\u30FA]
-        li 한자 : [\u4E00-\u9FEF\u3400-\u4DBF\uF900-\uFADF]
-        li 특문 : [\u3000-\u303F\uFF00-\uFF9F]
-        li 전체 : [\u3041-\u3096\u30A1-\u30FA\u4E00-\u9FEF\u3400-\u4DBF\uF900-\uFADF\u3000-\u303F\uFF00-\uFF9F]
+    h1 도메인 구입 전 확인할 것
+    ul
+        li: +asA('https://www.bryanbraun.com/2024/10/25/before-you-buy-a-domain-name-first-check-to-see-if-its-haunted/', '출처')
+        li 도메인이 이전에 불법적인 활동에 이용됐을 수 있음에 주의해야 한다
+        li: +asA('https://transparencyreport.google.com/copyright/domains/musicbox.fun', 'Google Transparency Report > 저작권 위반 삭제 요청')
+        li: +asA('https://lumendatabase.org/', 'DMCA 신고 검색')
+        li: +asA('https://web.archive.org/', '이전 스냅샷 검색')
 
     h1 메시지 큐 설계
     div
@@ -259,6 +259,14 @@ include ../../source/skeleton.pug
                 li 생산자는 타임아웃 발생 시 메시지를 다시 생산
                 li 메시지 소비가 실제로는 완료됐지만 브로커에게 전달되지 않은 경우, 같은 메시지가 다시 소비
             li 정확히 한 번 전달 : 많은 오버헤드가 추가로 필요
+
+    h1 정규표현식 일본어 검색
+    ol
+        li 히라가나 : [\u3041-\u3096]
+        li 가타카나 : [\u30A1-\u30FA]
+        li 한자 : [\u4E00-\u9FEF\u3400-\u4DBF\uF900-\uFADF]
+        li 특문 : [\u3000-\u303F\uFF00-\uFF9F]
+        li 전체 : [\u3041-\u3096\u30A1-\u30FA\u4E00-\u9FEF\u3400-\u4DBF\uF900-\uFADF\u3000-\u303F\uFF00-\uFF9F]
 
     h1 지리정보 색인
     div

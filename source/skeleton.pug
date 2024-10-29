@@ -28,7 +28,7 @@ mixin asCode(lan, title)
     - lan = lan || 'text'
     - title = title || lan
     p: strong
-        |↓
+        |#{'↓ '}
         = title
     .as-code.code-div.w3-leftbar.w3-border-green(lan=lan)
         if block
@@ -178,12 +178,10 @@ mixin w3button(color)
             if block
                 block
 
-mixin w3img(src, alt)
-    .w3-center.w3-margin-bottom
-        img.w3-round(src=src, title=alt, alt=alt, loading='lazy')&attributes(attributes)
-        - if (alt && alt.length > 0)
-            br
-            strong
-                |&lt;
-                = alt
-                |>
+mixin w3img(src, description)
+    figure.w3-center.w3-margin-bottom
+        img.w3-round(src=src, alt="Can't load image", loading='lazy')&attributes(attributes)
+        figcaption
+            |&lt;
+            = description || (src.split('/').pop())
+            |>

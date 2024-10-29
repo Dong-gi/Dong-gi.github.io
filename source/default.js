@@ -515,29 +515,21 @@ window.addEventListener('load', async () => {
 
     window.onpopstate = function () {
         if (location.hash.length <= 1) {
-            console.log('No location.hash')
-            return;
+            return console.log('onpopstate > No location.hash');
         }
-        let target = document.getElementById(location.hash.slice(1));
+        const target = document.getElementById(location.hash.slice(1));
         if (target == null) {
-            console.log('No target')
-            return;
+            return console.log('onpopstate > No target');
         }
-        while (!target.clientHeight) {
-            let isFound = false
-            while (target.nextSibling) {
-                if (target.nextSibling.clientHeight) {
-                    target = target.nextSibling;
-                    isFound = true;
-                    break;
-                }
+        let gotoTarget = target;
+        while (gotoTarget.clientHeight === 0) {
+            if (gotoTarget.nextSibling != null) {
+                gotoTarget = gotoTarget.nextSibling;
+                continue;
             }
-            if (isFound) {
-                break;
-            }
-            target = target.parentElement;
+            gotoTarget = gotoTarget.parentElement;
         }
-        goto(target);
+        goto(gotoTarget);
     }
 
     await fetch('/files/posts-compressed.json').then(res => {
@@ -674,10 +666,10 @@ function updateMarkerList() {
     const headingLevels = [0, 0, 0, 0, 0, 0, 0, 0];
     const headingTagSet = new Set(['H1', 'H2', 'H3', 'H4', 'H5', 'H6']);
     for (const markerTarget of document.querySelectorAll('.marker:not(.no-marker)')) {
-        const posId = `pos${stringHashCode(markerTarget.textContent)}`
+        const markerName = makeMarkerName(markerTarget);
+        const posId = `pos${stringHashCode(markerName)}`
         markerTarget.before(asNodes(`<span class="pos-span" id="${posId}"></span>`));
 
-        const markerName = makeMarkerName(markerTarget);
         /** @type {HTMLLIElement} */
         const markerLi = asNodes(`<li class="${markerTarget.classList.contains('fake') ? 'w3-hide' : ''}">
     <a title="${markerName}" href="#${posId}"></a>
@@ -712,7 +704,7 @@ function updateMarkerList() {
  */
 function makeMarkerName(marker) {
     switch (marker.tagName) {
-        case 'IMG': return `이미지 : ${marker.alt}`;
+        case 'IMG': return `이미지 : ${marker.parentElement.querySelector('figcaption')?.textContent ?? 'No description'}`;
         case 'TABLE': return `표 : ${marker.caption.textContent}`;
         case 'DETAILS': return marker.firstChild.textContent;
         default: return marker.textContent;

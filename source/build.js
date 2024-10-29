@@ -28,7 +28,10 @@ function isNewFile(stats) {
 
 async function renderPug(from, to) {
     await promisify(fs.mkdir)(path.dirname(to), { recursive: true })
-    const html = await renderFile(from)
+    const html = await renderFile(from).catch(e => {
+        console.error('renderPug() failed > arguments : ', ...arguments)
+        throw e
+    })
     await writeFile(to, html)
     console.log(`Rendered pug : ${from} => ${to}`)
 }

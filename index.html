@@ -14,9 +14,9 @@
         if (++renderedCount >= 10) { break; }
     }
 }, 100);
-</script><h1>타임라인?</h1><table><tr><th>시간</th><th>내용</th></tr><tr><td>2024</td><td>Let's Encrypt의 인증서 체인에서, DST Root CA X3 루트 인증서를 제거하고 자체 루트 체인(ISRG Root X1)만 이용. <a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://letsencrypt.org/2023/07/10/cross-sign-expiration.html">참고 1</a></td></tr><tr><td>2024-07-22</td><td>Google Chrome에서 3자 쿠키를 제거하는 계획을 철회. 대신 사용자 선택 권한을 강화하는 쪽으로 선회. <a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://privacysandbox.com/intl/en_us/news/privacy-sandbox-update/">참고 1</a></td></tr><tr><td>2024-07-29</td><td>위 발표에 대하여 W3C 블로그에 우려의 목소리가 게시. <a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.w3.org/blog/2024/third-party-cookies-have-got-to-go/">참고 1</a> <a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.w3.org/2001/tag/doc/web-without-3p-cookies/">참고 2</a></td></tr></table><h1>Oracle Cloud에 블로그 띄우는 절차</h1><ol><li>블로그 클론</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ sudo yum install git -y
+</script><h1>타임라인?</h1><table><tr><th>시간</th><th>내용</th></tr><tr><td>2024</td><td>Let's Encrypt의 인증서 체인에서, DST Root CA X3 루트 인증서를 제거하고 자체 루트 체인(ISRG Root X1)만 이용. <a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://letsencrypt.org/2023/07/10/cross-sign-expiration.html">참고 1</a></td></tr><tr><td>2024-07-22</td><td>Google Chrome에서 3자 쿠키를 제거하는 계획을 철회. 대신 사용자 선택 권한을 강화하는 쪽으로 선회. <a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://privacysandbox.com/intl/en_us/news/privacy-sandbox-update/">참고 1</a></td></tr><tr><td>2024-07-29</td><td>위 발표에 대하여 W3C 블로그에 우려의 목소리가 게시. <a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.w3.org/blog/2024/third-party-cookies-have-got-to-go/">참고 1</a> <a class="w3-btn w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.w3.org/2001/tag/doc/web-without-3p-cookies/">참고 2</a></td></tr></table><h1>Oracle Cloud에 블로그 띄우는 절차</h1><ol><li>블로그 클론</li><p><strong>↓ shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ sudo yum install git -y
 $ git clone git@github.com:Dong-gi/Dong-gi.github.io.git
-</div><li>블로그 빌드</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell"># https://github.com/nvm-sh/nvm
+</div><li>블로그 빌드</li><p><strong>↓ shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell"># https://github.com/nvm-sh/nvm
 $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 $ nvm install 20
 
@@ -25,7 +25,7 @@ $ curl -fsSL https://d2lang.com/install.sh | sh -s --
 
 $ npm install
 $ npm run build-all
-</div><li>외부 배포</li><p><strong>↓shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ sudo yum install nginx
+</div><li>외부 배포</li><p><strong>↓ shell</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="shell">$ sudo yum install nginx
 $ sudo systemctl enable --now nginx
 
 # 권한 설정
@@ -56,7 +56,7 @@ $ sudo snap install --classic certbot
 $ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 # 인증서 발급 전, 블로그 도메인 => 컴퓨팅 인스턴스 IP 주소 연결
 $ sudo certbot --nginx
-</div><li>nginx.conf 예</li><p><strong>↓nginx</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="nginx">server {
+</div><li>nginx.conf 예</li><p><strong>↓ nginx</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="nginx">server {
     listen 80;
     server_name free.4joy.link;
     include /etc/nginx/default.d/*.conf;
