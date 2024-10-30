@@ -29,16 +29,42 @@ include ../../../source/skeleton.pug
         h2 CSS가 표시하는 모든 것은 박스다
         p 각 박스는 하위 영역들(다시 박스)로 구성된다; 컨텐츠 박스 → 패딩 박스 → 테두리 박스 → 여백 박스
         ul
-            li 컨텐츠 박스 : 자식 요소들이 포함될 수 있고, 컨텐츠 박스의 크기가 자식 요소들의 크기에 의해 (동적으로) 결정되도록 할 수도 있다
-            li 패딩 박스 : 컨텐츠 박스를 감싸는 영역으로, 요소에 적용된 배경은 이 영역까지 표시된다. 또, 오버플로 속성으로 인한 스크롤바도 이 영역에 표시된다
-            li 테두리 박스 : 패딩 박스를 감싸는 영역으로, 박스의 경계를 표시한다. border 속성으로 제어한다.
-            li 여백 박스 : 박스 바깥의 공간으로, 여백의 크기는 박스의 크기에 영향을 미치지 않는다.
+            li 컨텐츠 박스
+            ul
+                li 자식 요소들을 포함할 수 있다
+                li 컨텐츠 박스의 크기가 자식 요소들의 크기에 의해 (동적으로) 결정되도록 할 수도 있다
+                li 한편, 컨텐츠가 너무 많으면 컨텐츠 박스 밖으로 넘칠 수 있고(overflow), CSS는 기본적으로 이를 숨기지 않는다(overflow: visible;)
+            li 패딩 박스
+            ul
+                li 컨텐츠 박스를 감싸는 영역으로, 컨텐츠 박스를 테두리로부터 밀어내는 작용을 하며, 음수로 설정할 수 없다
+                li 요소에 적용된 배경은 이 영역까지 표시된다
+                li 오버플로 속성으로 인한 스크롤바도 이 영역에 표시된다
+            li 테두리 박스
+            p 박스의 경계를 표시한다. border 속성으로 제어한다
+            li 여백 박스
+            ul
+                li 박스 바깥의 공간으로, 여백의 크기는 박스의 크기에 영향을 미치지 않는다
+                li 외부의 다른 요소들을 밀어내거나(양수 여백) 당기는(음수 여백) 작용을 한다
 
         h2 박스 모델 제어
         ul
             li 모든 웹 브라우저는 HTML 문서에 브라우저 기본 스타일시트를 적용한다 -- 때문에 브라우저마다 조금씩 다를 수 있다
-            li display 속성 : 요소를 block 또는 inline 요소를 취급하고, 자식 박스들을 어떻게 배치할 지 제어한다
-            li box-sizing 속성 : width, height를 컨텐츠 박스까지 적용할 지(기본값), 테두리 박스까지 적용할 지 제어한다
+            li #[+asA('https://developer.mozilla.org/en-US/docs/Web/CSS/display', 'display 속성')] : 요소를 block 또는 inline 박스로 취급하고, 자식 박스들을 어떻게 배치할 지 제어한다
+            ul
+                li display: block;
+                ul
+                    li 박스는 새로운 줄로 넘어간다
+                    li width, height 설정이 가능하다
+                li display: inline;
+                ul
+                    li 박스는 새로운 줄로 넘어가지 않는다
+                    li width, height 설정은 무시된다. 박스 크기는 항상 실제 컨텐츠에 맞춰진다
+                    li 위/아래 패딩, 여백, 테두리 설정으로 다른 인라인 박스들이 멀어지게 할 수 없다
+                li display: inline-block;
+                p 기본적으로 inline 박스로 동작하지만, block 박스처럼 width와 height를 이용해 실제 컨텐츠보다 박스 크기를 키울 수 있다
+                li display: inline-flex;
+                p 요소는 inline 박스로 동작하고, 내부적으로는 flex 컨테이너가 된다
+            li box-sizing 속성 : width, height를 컨텐츠 박스까지 적용할 지(기본값), 테두리 박스까지 적용(box-sizing: border-box;)할 지 제어한다
 
     h1 선택자
     div
@@ -125,6 +151,35 @@ include ../../../source/skeleton.pug
             li '+' : 바로 다음 형제 요소
             li '~' : 다음 모든 형제 요소
 
+        h2 Nesting
+        p 자식 요소의 스타일을 부모 요소의 스타일 정의 안에 중첩하여 정의할 수 있다. 여기서 &amp;를 이용해 부모 자신을 가리키는 선택자로 이용할 수 있다
+        ul
+            li &amp; 미사용
+            +asCode('css').
+                parent {
+                    /* parent style */
+                    child {
+                        /* child style */
+                    }
+                }
+            li &amp; 사용
+            +asCode('css').
+                parent {
+                    /* parent style */
+                    & child {
+                        /* child style */
+                    }
+                }
+            li 위 2가지 모두 브라우저에서 아래와 같이 해석된다
+            +asCode('css').
+                parent {
+                    /* parent style */
+                }
+                
+                parent child {
+                    /* child style */
+                }
+
     h1 The cascade
     p 요소에 대해 둘 이상의 스타일이 존재할 때, 브라우저는 아래 순서에 따라 적용할 스타일을 결정한다.
     div
@@ -165,18 +220,31 @@ include ../../../source/skeleton.pug
 
     h1 상속
     ul
-        li 일부 스타일 속성은 자식 요소로 상속된다
+        li 일부 스타일 속성은 기본적으로 모든 자식 요소로 상속된다
         p color, font, direction, line-height, text-align, visibility 등
+
         li inherit 키워드를 이용한 명시적 상속
         +asCode('css').
             strong { font-weight: 900; }
             .my-class { font-weight: 500; }
             .my-class strong { font-weight: inherit; } /* 500이 적용된다 */
+
         li initial 키워드를 이용한 상속 취소(기본값 사용)
+
         li unset 키워드
         ul
             li 속성이 상속 가능하면 inherit으로, 아니면 initial로 작동
             li "all: unset;"으로 간편하게 모든 속성 상속 취소 가능
+
+        li 모든 개별 속성을 설정하는 것은 번거로우므로, all 단축 속성을 이용해 전체 상속 설정을 변경할 수 있다
+        p 상속 값 중 하나만 설정 가능하다
+        +asCode('css').
+            parent {
+                /* ... */
+                child {
+                    all: unset;
+                }
+            }
 
     h1 Containment
     div
@@ -238,11 +306,14 @@ include ../../../source/skeleton.pug
     h1 단위
     div
         h2 절대 길이
+        p 화면에 표시하는 목적보다는 프린트하기에 좋은 단위
         ul
             li cm : 센티미터
             li mm : 밀리미터
             li in : 인치
+            li pt : 포인트 == 1/72in
             li px : 픽셀 == 1/96in
+
         h2 상대 길이
         ul
             li em : 상속된 폰트 크기
@@ -265,6 +336,7 @@ include ../../../source/skeleton.pug
             li cqb : 컨테이너 block axis(block 요소가 추가되는 방향) 길이의 1%
             li cqmin : min(cqi, cqb)
             li cqmax : max(cqi, cqb)
+
         h2 각도
         ul
             li deg : 60분법의 1도
