@@ -265,7 +265,7 @@ function calcOffset(element) {
         left: element.offsetLeft,
         top: element.offsetTop
     };
-    while (element.offsetParent) {
+    while (element.offsetParent != null) {
         result.left += (element.offsetParent.offsetLeft ?? 0);
         result.top += (element.offsetParent.offsetTop ?? 0);
         element = element.offsetParent;
@@ -277,12 +277,14 @@ function calcOffset(element) {
  * @param {HTMLElement} element
  */
 function highlight(element) {
-    if (!document.getElementById('highlight-css')) {
+    if (document.getElementById('highlight-css') == null) {
         const style = asNodes(`<style id="highlight-css">@keyframes highlight{from{background:#ff0;box-shadow:0 0 0.5em 0.5em #ff0;padding:0.25em}to{background:#fff;box-shadow:0 0 #fff;padding:0}}</style>`);
         document.getElementsByTagName('head')[0].append(style);
     }
-    element.style.animation = '';
-    setTimeout(() => { element.style.animation = 'highlight 2s 1' }, 139);
+    element.style.animation = 'highlight 2s 1';
+    setTimeout(() => {
+        element.style.animation = '';
+    }, 2000)
 }
 
 /**
@@ -292,7 +294,7 @@ function highlight(element) {
  * @param {number} [durationMs] default 2000
  */
 function showSnackbar(text, parent, durationMs) {
-    if (!document.getElementById('snackbar-css')) {
+    if (document.getElementById('snackbar-css') == null) {
         const style = asNodes(`<style id="snackbar-css">#snackbar{visibility:hidden;min-width:250px;margin-left:-125px;background-color:#333;color:#fff;text-align:center;border-radius:2px;padding:16px;position:fixed;z-index:1000000;left:50%;bottom:30px;font-size:17px}
 #snackbar.show{visibility:visible;-webkit-animation:sf-fadein 0.5s,sf-fadeout 0.5s 2.5s;animation:sf-fadein 0.5s,sf-fadeout 0.5s 2.5s}
 @-webkit-keyframes sf-fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}
@@ -549,11 +551,15 @@ window.addEventListener('load', async () => {
             return naturalCompareString(post1.title, post2.title);
         });
 
-        updateSidebar();
         updatePostList();
         updateMarkerList();
 
         window.onpopstate();
+
+        const currentPost = posts.list.find(x => location.pathname.endsWith(x.file));
+        if (currentPost != null) {
+            document.getElementById('contents').prepend(asNodes(`<p>Last update : ${new Date(currentPost.mtimeMs).toISOString()}</p>`));
+        }
     });
 })
 
@@ -561,45 +567,28 @@ window.addEventListener('load', async () => {
  * @param {HTMLElement} target 
  */
 function goto(target) {
+    console.log('goto > ', target)
     highlight(target);
     for (let node = target; node.tagName !== 'BODY'; node = node.parentNode) {
         if (node.tagName === 'DETAILS') {
             node.open = true;
         }
     }
-    setTimeout(() => window.scrollTo({
-        top: calcOffset(target).top - document.getElementById('nav').clientHeight
-    }), 100);
-}
-
-function isNarrow() {
-    return document.getElementById('nav').clientWidth <= 1234
-}
-
-function updateSidebar() {
-    if (isNarrow()) {
-        closeSidebar();
-    } else {
-        openSidebar();
-    }
-    document.getElementById('sidebar').style.width = '333px';
-}
-
-function openSidebar() {
-    document.getElementById('main').style.marginLeft = '333px';
-    document.getElementById('sidebar').style.display = 'block';
-}
-
-function closeSidebar() {
-    document.getElementById('main').style.marginLeft = '0';
-    document.getElementById('sidebar').style.display = 'none';
+    const y = calcOffset(target).top - document.getElementById('nav').clientHeight;
+    setTimeout(() => {
+        window.scrollTo({ top: y });
+        document.body.scrollTop = y;
+    }, 100);
 }
 
 function toggleSidebar() {
-    if (document.getElementById('sidebar').style.display === 'none') {
-        openSidebar();
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.computedStyleMap().get('display')?.value === 'none') {
+        sidebar.style.display = 'block';
+        document.documentElement.style.setProperty('--sidebar-width', '333px');
     } else {
-        closeSidebar();
+        sidebar.style.display = 'none';
+        document.documentElement.style.setProperty('--sidebar-width', '0px');
     }
 }
 
@@ -661,7 +650,7 @@ function updateMarkerList() {
 
     const details = asNodes(`<details open class="w3-small file-list"><summary>Content</summary><ul></ul></details>`);
     const ul = details.querySelector('ul');
-    const contentRoot = document.querySelector('div#contents');
+    const contentRoot = document.querySelector('#contents');
     const skipLevelCheckTagSet = new Set(['THEAD', 'TBODY', 'TR', 'SPAN']);
     const headingLevels = [0, 0, 0, 0, 0, 0, 0, 0];
     const headingTagSet = new Set(['H1', 'H2', 'H3', 'H4', 'H5', 'H6']);
@@ -788,7 +777,6 @@ function fillCodeDiv(div, lan, text, displayRange) {
 }
 
 function showModal(codeId) {
-    document.getElementById('main').style.display = 'none';
     let modal = document.getElementById(`code-modal-${codeId}`);
     if (modal) {
         modal.style.display = 'block';
@@ -837,10 +825,6 @@ function showModal(codeId) {
     for (const node of modal.querySelectorAll('.close')) {
         node.onclick = function () {
             modal.style.display = 'none';
-            document.getElementById('main').style.display = 'block';
-            if (!isNarrow()) {
-                openSidebar();
-            }
         }
     }
 

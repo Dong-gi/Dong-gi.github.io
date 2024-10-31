@@ -49,21 +49,7 @@ include ../../../source/skeleton.pug
         h2 박스 모델 제어
         ul
             li 모든 웹 브라우저는 HTML 문서에 브라우저 기본 스타일시트를 적용한다 -- 때문에 브라우저마다 조금씩 다를 수 있다
-            li #[+asA('https://developer.mozilla.org/en-US/docs/Web/CSS/display', 'display 속성')] : 요소를 block 또는 inline 박스로 취급하고, 자식 박스들을 어떻게 배치할 지 제어한다
-            ul
-                li display: block;
-                ul
-                    li 박스는 새로운 줄로 넘어간다
-                    li width, height 설정이 가능하다
-                li display: inline;
-                ul
-                    li 박스는 새로운 줄로 넘어가지 않는다
-                    li width, height 설정은 무시된다. 박스 크기는 항상 실제 컨텐츠에 맞춰진다
-                    li 위/아래 패딩, 여백, 테두리 설정으로 다른 인라인 박스들이 멀어지게 할 수 없다
-                li display: inline-block;
-                p 기본적으로 inline 박스로 동작하지만, block 박스처럼 width와 height를 이용해 실제 컨텐츠보다 박스 크기를 키울 수 있다
-                li display: inline-flex;
-                p 요소는 inline 박스로 동작하고, 내부적으로는 flex 컨테이너가 된다
+            li display 속성 : 요소를 block 또는 inline 박스로 취급하고, 자식 박스들을 어떻게 배치할 지 제어한다. #[+goto('display 속성의 이해')]
             li box-sizing 속성 : width, height를 컨텐츠 박스까지 적용할 지(기본값), 테두리 박스까지 적용(box-sizing: border-box;)할 지 제어한다
 
     h1 선택자
@@ -345,6 +331,7 @@ include ../../../source/skeleton.pug
 
     h1 Layout
     div
+        +pos('display 속성의 이해')
         h2 display 속성의 이해
         p 참고 자료 : #[+asA('https://developer.mozilla.org/en-US/docs/Web/CSS/display')]
         +asCode().
@@ -359,9 +346,15 @@ include ../../../source/skeleton.pug
             p Flow layout(기본 배치; inline/block)에서 요소를 어떻게 배치할 지 제어한다
             ul
                 li inline
-                p 너비에 여유가 있다면 inline 요소들은 한 줄에 같이 표시된다. margin, padding 모두 무시된다.
+                ul
+                    li 너비에 여유가 있다면 inline 요소들은 한 줄에 같이 표시된다
+                    li width, height 설정은 무시된다. 박스 크기는 기본적으로 실제 컨텐츠에 맞춰진다
+                    li 위/아래 패딩, 여백, 테두리 설정으로 다른 인라인 박스들이 멀어지게 할 수 없다
                 li block
-                p 각 block 요소는 한 줄을 온전히 차지한다; 박스 전후에 개행을 삽입한다
+                ul
+                    li block 요소는 한 줄을 온전히 차지한다
+                    li 박스 전후에 개행을 삽입한다
+                    li width, height 설정이 가능하다. 컨텐츠가 박스 크기에 맞춰진다
 
             h3 #{'<display-inside>'}
             p 자식 요소들을 내부에서 어떻게 배치할 지 제어한다

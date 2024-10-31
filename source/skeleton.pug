@@ -106,8 +106,21 @@ mixin post(options)
             meta(name='author', content='Donggi Kim <hi.donggi@gmail.com>')
             meta(name='description', content=options.description)
             link(rel="icon", href="/imgs/favicon.png")
+
+            script#google-analytics(src='https://www.googletagmanager.com/gtag/js?id=UA-143098403-1', async)
+            script.
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'UA-143098403-1');
+            if options.useMath
+                script#MathJax-script(src='/source/tex-chtml.js', async)
+                script MathJax={tex:{tags:'ams',inlineMath:[['식[', ']식']]}};
+            script#highlight-js(src="/source/highlight.pack.js", defer)
+            script#default-js(src='/source/default.min.js', defer)
+
         body
-            .w3-bar-block.w3-sidebar.w3-animate-left#sidebar
+            aside.w3-animate-left#sidebar
                 hr
                 #marker-list
                 hr
@@ -136,27 +149,15 @@ mixin post(options)
                             td: +asA('https://github.com/terrastruct/d2', 'D2')
                             td: +asA('https://github.com/terrastruct/d2/blob/master/LICENSE.txt', 'MPL-2.0')
                 hr
-            article#main
-                .w3-bar.w3-blue.w3-large#nav(style='position:-webkit-sticky;position:sticky;top:0px;vertical-align:middle')
+
+            main#main
+                nav.w3-bar.w3-blue#nav
                     button.w3-bar-item.w3-button.w3-hover-theme(onclick='toggleSidebar()') &#9776;
                     input.w3-bar-item#query(type='text',placeholder='search',style='max-width:35%')
                     a.w3-bar-item.w3-button.w3-hover-theme(href='/') Home
-                #contents.w3-padding
+                article#contents
                     if block
                         block
-            hr
-            script#google-analytics(src='https://www.googletagmanager.com/gtag/js?id=UA-143098403-1', async)
-            script.
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'UA-143098403-1');
-            if options.useMath
-                script#MathJax-script(src='/source/tex-chtml.js', async)
-                script MathJax={tex:{tags:'ams',inlineMath:[['식[', ']식']]}};
-            script#highlight-js(src="/source/highlight.pack.js", defer)
-            script#default-js(src='/source/default.min.js', defer)
-
 
 mixin tds(...cells)
     tr&attributes(attributes)

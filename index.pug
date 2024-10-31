@@ -23,12 +23,12 @@ include ./source/skeleton.pug
             const ul = document.getElementById('recently-changed-posts');
             const addedFileSet = new Set();
             let renderedCount = 0;
-            for (const post of posts.list.sort((a, b) => b.mtimeMs - a.mtimeMs)) {
+            for (const post of [...posts.list].sort((a, b) => (b.mtimeMs ?? 0) - (a.mtimeMs ?? 0))) {
                 if (addedFileSet.has(post.file)) {
                     continue;
                 }
                 addedFileSet.add(post.file);
-                ul.appendChild(asNodes(`<li><a href="/posts/${post.file}">${post.title}</a></li>`));
+                ul.appendChild(asNodes(`<li><a href="/posts/${post.file}">${post.title}@${new Date(post.mtimeMs).toISOString()}</a></li>`));
                 if (++renderedCount >= 10) { break; }
             }
         }, 100);
