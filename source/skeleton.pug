@@ -87,7 +87,7 @@ mixin pos(positionName)
     }
 mixin post(options)
     -
-        if (arguments.length == 1 && typeof arguments[0] === 'string')
+        if (arguments.length === 1 && typeof arguments[0] === 'string')
             options = { title: arguments[0] }
         else if (arguments.length > 1)
             options = {
@@ -100,7 +100,7 @@ mixin post(options)
         head
             meta(charset='UTF-8')
             meta(name='viewport', content='width=device-width, initial-scale=1')
-            title= options.title
+            title= options.title || 'No title'
             link(rel="stylesheet", href="/source/default.css")
             meta(name='google-site-verification', content='aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM')
             meta(name='author', content='Donggi Kim <hi.donggi@gmail.com>')
@@ -152,7 +152,7 @@ mixin post(options)
 
             main#main
                 nav.w3-bar.w3-blue#nav
-                    button.w3-bar-item.w3-button.w3-hover-theme(onclick='toggleSidebar()') &#9776;
+                    button.w3-bar-item.w3-button.w3-hover-theme#nav-toggle-btn &#9776;
                     input.w3-bar-item#query(type='text',placeholder='search',style='max-width:35%')
                     a.w3-bar-item.w3-button.w3-hover-theme(href='/') Home
                 article#contents

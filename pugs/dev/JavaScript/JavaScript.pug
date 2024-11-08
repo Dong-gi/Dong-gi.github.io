@@ -245,6 +245,8 @@ include ../../../source/skeleton.pug
         p Object, Array, String, Global, Math
             br
             |Global 객체를 직접 획득하는 건 불가능 : isNaN(), isFinite(), parseInt(), parseFloat(), encodeURI(), encodeURIComponent(), eval()
+        li Private 멤버
+        p #으로 시작되는 프로퍼티, 메서드는 객체 외부에서 접근할 수 없다
         li 객체 보호
         +asCode('javascript').
             Object.freeze()            // 객체 동결. 읽기만 가능

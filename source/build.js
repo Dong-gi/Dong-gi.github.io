@@ -55,7 +55,7 @@ async function renderPug(from, to) {
             if (stats.isFile()) {
                 const htmlPath = path.replace('/pugs/', '/posts/').replace('.pug', '.html')
                 const post = postMap.get(htmlPath)
-                if (post != null && stats.ctimeMs !== stats.mtimeMs) {
+                if (post != null && stats.birthtimeMs !== stats.mtimeMs) {
                     post.mtimeMs = Math.floor(stats.mtimeMs)
                 }
                 if (isProcessNewFileOnly && !isNewFile(stats)) {

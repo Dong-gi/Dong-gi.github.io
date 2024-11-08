@@ -270,13 +270,37 @@ include ../../../source/skeleton.pug
 
         h2 Container query
         p 컨테이너 쿼리는 어떤 요소에 대하여, 이를 포함하는 컨테이너의 크기를 기준으로 스타일을 지정할 수 있게 해준다.
-        p 이는 뷰포트와 같은 디바이스 속성에 기반하여 스타일을 지정하는 미디어 쿼리를 대체할 수 있는 기능.
-        +asCode('css').
-            @media (max-width: 30em) { /* style */ }
-            @container (width > 30em) { /* style */ }
         ul
             li 컨테이너 쿼리를 사용하려면 먼저 컨테이너 컨텍스트를 정의해야 한다
+            p 미디어 쿼리와는 사용하는 방법이 다르다. 미디어 쿼리는 뷰포트와 같은 전역 디바이스 속성에 기반하여 스타일을 지정하므로 CSS가 직접 이를 변경할 수 없으나, CSS는 자식 요소의 크기에 의하여 부모 요소의 크기가 동적으로 변경될 수 있기 때문에, containment를 사용하지 않으면 스타일 적용의 무한 루프가 발생할 수 있다.
             +asCode('css') .post { container-type: inline-size }
+            ul
+                li normal
+                p 크기를 이용한 컨테이너 쿼리를 사용할 수 없다. 대신 스타일을 이용한 컨테이너 쿼리는 사용할 수 있다.
+                li inline-size
+                p 인라인 방향에 대해 크기를 이용한 컨테이너 쿼리를 사용할 수 있다 -- 컨테이너 width는 자식 요소와 독립
+                +codeBtn({
+                    path: '/Repositories/Single/202411/07-1721.html',
+                    lan: 'nohighlight',
+                    title: 'inline-size 예'
+                })
+                +codeBtn({
+                    path: '/Repositories/Single/202411/07-1721.html',
+                    lan: 'html',
+                    title: '<- 코드'
+                })
+                li size
+                p 인라인 및 블록 방향 모두에 대해 크기를 이용한 컨테이너를 사용할 수 있다  -- 컨테이너 width/height 모두 자식 요소와 독립
+                +codeBtn({
+                    path: '/Repositories/Single/202411/08-1150.html',
+                    lan: 'nohighlight',
+                    title: 'size 예'
+                })
+                +codeBtn({
+                    path: '/Repositories/Single/202411/08-1150.html',
+                    lan: 'html',
+                    title: '<- 코드'
+                })
             li 컨테이너 이름을 지정하여 스타일 지정을 손쉽게 할 수 있다
             +asCode('css').
                 .post {

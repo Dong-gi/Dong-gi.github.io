@@ -131,7 +131,10 @@
             "title": "Base64"
         },
         {
-            "category": "개발 자료/JavaScript",
+            "category": [
+                "개발 자료/JavaScript",
+                "개발 자료/Web"
+            ],
             "file": "dev/JavaScript/Browser.html",
             "title": "브라우저 JavaScript"
         },

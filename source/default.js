@@ -413,6 +413,20 @@ function toggleClass(element, classes) {
 }
 
 window.addEventListener('load', async () => {
+    document.getElementById('nav-toggle-btn').addEventListener('click', function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar.computedStyleMap().get('display')?.value === 'none') {
+            sidebar.style.display = 'block';
+            document.documentElement.style.setProperty('--sidebar-width', '333px');
+        } else {
+            sidebar.style.display = 'none';
+            document.documentElement.style.setProperty('--sidebar-width', '0px');
+        }
+    })
+
     /** @type {MutationCallback} */
     const mutationCallback = function (mutations, observer) {
         for (let mutation of mutations) {
@@ -579,17 +593,6 @@ function goto(target) {
         window.scrollTo({ top: y });
         document.body.scrollTop = y;
     }, 100);
-}
-
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    if (sidebar.computedStyleMap().get('display')?.value === 'none') {
-        sidebar.style.display = 'block';
-        document.documentElement.style.setProperty('--sidebar-width', '333px');
-    } else {
-        sidebar.style.display = 'none';
-        document.documentElement.style.setProperty('--sidebar-width', '0px');
-    }
 }
 
 function updatePostList() {
