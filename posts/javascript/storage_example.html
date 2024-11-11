@@ -9,6 +9,7 @@
 	function setCookie(key, value, millis) {
         let expires = new Date();
         expires.setTime(new Date().getTime() + Number.parseInt(millis));
+		console.log(key + "=" + value + ";expires=" + expires.toUTCString() + ";path=/")
         document.cookie = key + "=" + value + ";expires=" + expires.toUTCString() + ";path=/";
 	}
 	function getCookie(key) {

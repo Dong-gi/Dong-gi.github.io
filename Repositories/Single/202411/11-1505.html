@@ -1,0 +1,106 @@
+<form id="form-241111-1505">
+    <input type="text" placeholder="name" />
+    <br>
+    <button>insert</button>
+    <button>delete</button>
+    <button>select all</button>
+</form>
+<pre id="pre-241111-1505"></pre>
+
+<script>
+    (async () => {
+        /** @type {IDBDatabase} */
+        const db = await new Promise((resolve, reject) => {
+            const req = indexedDB.open('db-241111-1505')
+            req.addEventListener('success', function (ev) {
+                resolve(ev.target.result)
+            })
+            req.addEventListener('upgradeneeded', function (ev) {
+                /** @type {IDBDatabase} */
+                const db = ev.target.result
+                resolve(db)
+
+                const store = db.createObjectStore('test', {
+                    keyPath: 'id',
+                    autoIncrement: true
+                })
+
+                store.createIndex('name', 'name', { unique: true })
+            })
+            req.addEventListener('blocked', reject)
+            req.addEventListener('error', reject)
+        })
+
+        const form = document.getElementById('form-241111-1505')
+        const pre = document.getElementById('pre-241111-1505')
+        const name = form.querySelector('input')
+        const [insert, deleteRecord, selectAll] = Array.from(form.querySelectorAll('button'))
+
+        insert.addEventListener('click', async function (ev) {
+            ev.preventDefault()
+
+            try {
+                const t = db.transaction('test', 'readwrite')
+                t.objectStore('test').add({ name: name.value, createdAt: new Date() })
+                await new Promise((resolve, reject) => {
+                    t.addEventListener('complete', resolve)
+                    t.addEventListener('abort', reject)
+                    t.addEventListener('error', reject)
+                })
+                selectAll.click()
+            } catch (e) {
+                console.error(e)
+                pre.textContent = JSON.stringify(e, undefined, 4)
+            }
+        })
+
+        deleteRecord.addEventListener('click', async function (ev) {
+            ev.preventDefault()
+
+            const row = await new Promise((resolve, reject) => {
+                const t = db.transaction('test', 'readonly')
+                const req = t.objectStore('test').openCursor()
+                req.addEventListener('success', function (ev2) {
+                    /** @type {IDBCursorWithValue} */
+                    const cursor = ev2.target.result
+                    if (cursor == null) {
+                        return resolve(null)
+                    }
+                    if (cursor.value.name === name.value) {
+                        return resolve(cursor.value)
+                    }
+                    cursor.continue()
+                })
+                req.addEventListener('error', reject)
+            })
+
+            if (row == null) {
+                pre.textContent = 'Not found'
+                return
+            }
+
+            await new Promise((resolve, reject) => {
+                const t = db.transaction('test', 'readwrite')
+                const req = t.objectStore('test').delete(row.id)
+                req.addEventListener('success', resolve)
+                req.addEventListener('error', reject)
+            })
+
+            selectAll.click()
+        })
+
+        selectAll.addEventListener('click', async function (ev) {
+            ev.preventDefault()
+
+            const rows = await new Promise((resolve, reject) => {
+                const t = db.transaction('test', 'readonly')
+                const req = t.objectStore('test').getAll()
+                req.addEventListener('success', function (ev) {
+                    resolve(ev.target.result)
+                })
+                req.addEventListener('error', reject)
+            })
+            pre.textContent = JSON.stringify(rows, undefined, 4)
+        })
+    })()
+</script>

@@ -2,17 +2,19 @@
 <pre id="pre-241108-1725-1"></pre>
 
 <script>
-    const worker = new Worker('/Repositories/Single/202411/08-1725-worker.js')
+    (async () => {
+        const worker = new Worker('/Repositories/Single/202411/08-1725-worker.js')
 
-    document.getElementById('btn-241108-1725-1').addEventListener('click', function (ev) {
-        worker.postMessage({
-            event: 'click',
-            targetId: ev.target.id,
-            timestamp: Date.now()
+        document.getElementById('btn-241108-1725-1').addEventListener('click', function (ev) {
+            worker.postMessage({
+                event: 'click',
+                targetId: ev.target.id,
+                timestamp: Date.now()
+            })
         })
-    })
 
-    worker.addEventListener('message', function (ev) {
-        document.getElementById('pre-241108-1725-1').textContent = JSON.stringify(ev.data, undefined, 4)
-    })
+        worker.addEventListener('message', function (ev) {
+            document.getElementById('pre-241108-1725-1').textContent = JSON.stringify(ev.data, undefined, 4)
+        })
+    })()
 </script>

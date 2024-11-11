@@ -320,10 +320,7 @@ include ../../../source/skeleton.pug
         li 캔버스의 기본 그리기 요소는 직사각형과 path(일련의 점들을 선분으로 연결) 두 가지
         canvas#tutorial-canvas-1(width='100%', max-height='33%') 연습용 캔버스1
     div
-        h2
-            |interface
-            +asA('https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement', 'HTMLCanvasElement')
-            |  : HTMLElement
+        h2 interface HTMLCanvasElement : HTMLElement
         ul
             li width, height : 각각 캔버스의 너비, 높이. 기본값은 300, 150
             li getContext(contextType[, contextAttributes])
@@ -332,9 +329,8 @@ include ../../../source/skeleton.pug
             p type : default 'image/png', encoderOptions : default 0.92, 이미지 퀄리티[0, 1]
             li toBlob(callback[, mimeType][, qualityArgument])
             p callback : Blob을 먹는 함수, mimeType : default 'image/png', qualityArgument : 이미지 퀄리티[0, 1]
-        h2
-            |interface
-            +asA('https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D', 'CanvasRenderingContext2D')
+        
+        h2 interface CanvasRenderingContext2D
         div
             h3 사각형 그리기
             ul

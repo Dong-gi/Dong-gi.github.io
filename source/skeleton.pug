@@ -114,7 +114,7 @@ mixin post(options)
                 gtag('js', new Date());
                 gtag('config', 'UA-143098403-1');
             if options.useMath
-                script#MathJax-script(src='/source/tex-chtml.js', async)
+                script#MathJax-script(src='/source/tex-chtml.js', defer)
                 script MathJax={tex:{tags:'ams',inlineMath:[['식[', ']식']]}};
             script#highlight-js(src="/source/highlight.pack.js", defer)
             script#default-js(src='/source/default.min.js', defer)

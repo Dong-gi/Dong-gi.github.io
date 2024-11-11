@@ -1,0 +1,49 @@
+<form id="form-241111-1344">
+    <input type="text" placeholder="쿠키 이름" />
+    <input type="text" placeholder="쿠키 값" />
+    <input type="number" placeholder="유효 기간(s)" />
+    <br>
+    <button>지정 쿠키 설정</button>
+    <button>지정 쿠키 제거</button>
+    <button>지정 쿠키 확인</button>
+    <button>전체 쿠키 확인</button>
+</form>
+<pre id="pre-241111-1344"></pre>
+
+<script>
+    (async () => {
+        const form = document.getElementById('form-241111-1344')
+        const pre = document.getElementById('pre-241111-1344')
+        const [cookieKey, cookieValue, cookieAge] = Array.from(form.querySelectorAll('input'))
+        const [setCookie, delCookie, getCookie, getAllCookies] = Array.from(form.querySelectorAll('button'))
+
+        setCookie.addEventListener('click', function (ev) {
+            ev.preventDefault()
+
+            const age = parseInt(cookieAge.value)
+            const newCookie = `${cookieKey.value}=${cookieValue.value};${Number.isNaN(age) ? '' : `expires=${new Date(Date.now() + age * 1000).toUTCString()};`}path=/`
+            pre.textContent = 'Set cookie : ' + newCookie
+            document.cookie = newCookie
+        })
+
+        getCookie.addEventListener('click', function (ev) {
+            ev.preventDefault()
+
+            const result = document.cookie.split(/; ?/g).find(x => x.startsWith(cookieKey.value + '='))
+            pre.textContent = 'Get cookie : ' + result
+        })
+
+        delCookie.addEventListener('click', function (ev) {
+            ev.preventDefault()
+
+            cookieAge.value = '-1'
+            setCookie.click()
+        })
+
+        getAllCookies.addEventListener('click', function (ev) {
+            ev.preventDefault()
+
+            pre.textContent = document.cookie
+        })
+    })()
+</script>

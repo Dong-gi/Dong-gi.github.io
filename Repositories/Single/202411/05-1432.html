@@ -1,24 +1,26 @@
 <script>
-    const abortController = new AbortController()
-    const btn1 = document.getElementById('btn-241105-1432-1')
-    const btn2 = document.getElementById('btn-241105-1432-2')
-    const p = document.getElementById('p-241105-1432')
+    (async () => {
+        const abortController = new AbortController()
+        const btn1 = document.getElementById('btn-241105-1432-1')
+        const btn2 = document.getElementById('btn-241105-1432-2')
+        const p = document.getElementById('p-241105-1432')
 
-    btn1.addEventListener('click', () => {
-        p.textContent = `${new Date()} Listener 1\r\n` + p.textContent
-    }, {
-        signal: abortController.signal
-    })
+        btn1.addEventListener('click', () => {
+            p.textContent = `${new Date()} Listener 1\r\n` + p.textContent
+        }, {
+            signal: abortController.signal
+        })
 
-    btn1.addEventListener('click', () => {
-        p.textContent = `${new Date()} Listener 2\r\n` + p.textContent
-    }, {
-        signal: abortController.signal
-    })
+        btn1.addEventListener('click', () => {
+            p.textContent = `${new Date()} Listener 2\r\n` + p.textContent
+        }, {
+            signal: abortController.signal
+        })
 
-    btn2.addEventListener('click', () => {
-        abortController.abort()
-    })
+        btn2.addEventListener('click', () => {
+            abortController.abort()
+        })
+    })()
 </script>
 <button id="btn-241105-1432-1">Click!</button>
 <button id="btn-241105-1432-2">Remove listeners</button>

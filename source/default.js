@@ -477,7 +477,7 @@ window.addEventListener('load', async () => {
                                 button.after(script);
                             }
                         });
-                        xhr.open('GET', `${path.startsWith('/') ? '' : './'}${path.replace(/ /gm, '%20')}?${Date.now()}`, true);
+                        xhr.open('GET', `${path.startsWith('/') ? '' : './'}${path.replace(/ /gm, '%20')}`, true);
                         xhr.send();
                     } else {
                         const div = document.getElementById(`code-div-${codeId}`);
@@ -572,9 +572,23 @@ window.addEventListener('load', async () => {
 
         const currentPost = posts.list.find(x => location.pathname.endsWith(x.file));
         if (currentPost != null) {
-            document.getElementById('contents').prepend(asNodes(`<p>Last update : ${new Date(currentPost.mtimeMs).toISOString()}</p>`));
+            if (Number.isInteger(currentPost.mtimeMs)) {
+                document.getElementById('contents').prepend(asNodes(`<p>Last update : ${new Date(currentPost.mtimeMs).toISOString()}</p>`));
+            }
         }
     });
+
+    if ("serviceWorker" in navigator) {
+        if (navigator.serviceWorker.controller) {
+            console.log('Offline service worker working...')
+        } else {
+            navigator.serviceWorker
+                .register("/offline-service-worker.js", {
+                    scope: '/'
+                })
+                .then(() => console.log("Offline service worker registered"));
+        }
+    }
 })
 
 /**
