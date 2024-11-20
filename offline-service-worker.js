@@ -15,10 +15,14 @@ self.addEventListener('fetch', ev => {
         return
     }
 
+    const url = new URL(ev.request.url)
+    if (url.hostname !== 'free.4joy.link' && url.hostname !== 'dong-gi.github.io') {
+        return
+    }
+
     ev.respondWith(
         (async () => {
             const cache = await caches.open('offline-data')
-            const url = new URL(ev.request.url)
 
             return await fetch(url).then(res => {
                 if (res.ok) {

@@ -2,10 +2,10 @@
     <input type="text" placeholder="키" />
     <input type="text" placeholder="값" />
     <br>
-    <button>설정</button>
-    <button>제거</button>
-    <button>확인</button>
-    <button>전체 확인</button>
+    <button type="button">설정</button>
+    <button type="button">제거</button>
+    <button type="button">확인</button>
+    <button type="button">전체 확인</button>
 </form>
 <pre id="pre-241111-1453"></pre>
 
@@ -17,28 +17,20 @@
         const [set, del, get, getAll] = Array.from(form.querySelectorAll('button'))
 
         set.addEventListener('click', function (ev) {
-            ev.preventDefault()
-
             localStorage.setItem(key.value, value.value)
             get.click()
         })
 
         get.addEventListener('click', function (ev) {
-            ev.preventDefault()
-
             pre.textContent = `${key.value} = ${localStorage.getItem(key.value)}`
         })
 
         del.addEventListener('click', function (ev) {
-            ev.preventDefault()
-
             localStorage.removeItem(key.value)
             get.click()
         })
 
         getAll.addEventListener('click', function (ev) {
-            ev.preventDefault()
-
             pre.textContent = JSON.stringify(localStorage)
         })
     })()

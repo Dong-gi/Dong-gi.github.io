@@ -1,9 +1,9 @@
 <form id="form-241111-1505">
     <input type="text" placeholder="name" />
     <br>
-    <button>insert</button>
-    <button>delete</button>
-    <button>select all</button>
+    <button type="button">insert</button>
+    <button type="button">delete</button>
+    <button type="button">select all</button>
 </form>
 <pre id="pre-241111-1505"></pre>
 
@@ -37,8 +37,6 @@
         const [insert, deleteRecord, selectAll] = Array.from(form.querySelectorAll('button'))
 
         insert.addEventListener('click', async function (ev) {
-            ev.preventDefault()
-
             try {
                 const t = db.transaction('test', 'readwrite')
                 t.objectStore('test').add({ name: name.value, createdAt: new Date() })
@@ -55,8 +53,6 @@
         })
 
         deleteRecord.addEventListener('click', async function (ev) {
-            ev.preventDefault()
-
             const row = await new Promise((resolve, reject) => {
                 const t = db.transaction('test', 'readonly')
                 const req = t.objectStore('test').openCursor()
@@ -90,8 +86,6 @@
         })
 
         selectAll.addEventListener('click', async function (ev) {
-            ev.preventDefault()
-
             const rows = await new Promise((resolve, reject) => {
                 const t = db.transaction('test', 'readonly')
                 const req = t.objectStore('test').getAll()

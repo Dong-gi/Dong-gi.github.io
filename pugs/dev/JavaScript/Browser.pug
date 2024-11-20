@@ -67,6 +67,13 @@ include ../../../source/skeleton.pug
         ul
             li 가장 오래된 방법으로, 저장된 키-값 쌍들은 해당 도메인 서버로 보내지는 요청에 헤더로 자동 포함된다
             li 일반적으로 정보 저장은 서버 응답 헤더(Set-Cookie)를 통해 발생하고, 클라이언트 코드는 이 헤더에 직접적으로 접근할 수 없다
+            li 설정된 쿠키를 JavaScript로 접근할 수 없도록, Set-Cookie 헤더를 이용할 때 HttpOnly 옵션을 설정하는 것이 권장된다
+            li Expires나 Max-Age를 지정하지 않은 쿠키들은 클라이언트 종료 시 삭제된다
+            li SameSite 속성으로 CSRF에 대한 보호를 일부 제공할 수 있다
+            ul
+                li SameSite=Lax : 기본값으로, 외부 사이트에서 요청이 발생하는 경우 쿠키가 포함되지 않음. 단, 외부 사이트에서 원본 사이트를 이동하면서 발생하는 요청에는 쿠키 포함
+                li SameSite=Strict : 동일 사이트 &amp; 동일 스킴 요청에만 쿠키 포함
+                li SameSite=None : 외부 사이트에서 요청이 발생해도 쿠키 포함. 쿠키 설정 시 Secure 옵션도 같이 설정해야 한다
             li 키/값으로 제어 문자를 제외한 US-ASCII 문자열을 이용할 수 있는데, 값으로는 #[+asA('https://developer.mozilla.org/en-US/docs/Glossary/Percent-encoding')]이 보통 이용된다 -- 표준 스펙에 정의하는 사항은 아님
         +codeBtn({
             path: '/Repositories/Single/202411/11-1344.html',
@@ -148,7 +155,8 @@ include ../../../source/skeleton.pug
                 li createIndex() 메서드로 레코드의 필드/컬럼을 정의한다
                 li add() 메서드로 신규 레코드 삽입 -- 이미 키가 존재하면 ConstraintError 이벤트 발생 
                 li put() 메서드로 upsert 수행
-                li count(), get(), getAll(), openCursor() 등으로 조회 쿼리 수행
+                li count(), get(), getAll(), openCursor() 등으로 키를 기반으로 한 조회 쿼리 수행
+                p IDBIndex를 이용해 인덱스를 기반으로 한 조회 쿼리 수행 가능
 
             li 명시적 트랜잭션을 수행하려면 아래와 같이 작업한다
             ol
