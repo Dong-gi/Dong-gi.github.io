@@ -265,16 +265,153 @@ include ../../../source/skeleton.pug
             p #{'<!-- 주석 -->'}
 
     h1 Form
-    ol
-        li form은 HTML 페이지로부터 데이터를 전송하기 위한 정형화된 틀이다. form 내부는 input 태그들로 채워진다
-        li &lt;input type=""> : text, password, radio, checkbox, submit, reset...
-        li form 속성 : action="주소", target="_blank | _top | ...", method="get | post"
-        li &lt;fieldset> : 입력 요소 그루핑, &lt;legend> : 그룹 설명
-        li &lt;select name="">&lt;option value="">&lt;/option> ~ &lt;/select>
-        li &lt;textarea rows="" cols="">, &lt;button onclick="">
-        li &lt;input type=""> : color, date, email, month, number, range, time, ...
-        li 입력 요소 속성 : name, max, maxlength, min, pattern, readonly, required, disabled, size, ...
-            +asA('https://www.w3schools.com/html/html_form_attributes.asp')
+    div
+        h2 #{'<form>'}
+        ul
+            li form은 HTML 페이지로부터 데이터를 전송하기 위한 정형화된 틀이다. form 내부는 input 태그들로 채워진다
+
+            li id 속성
+            p 특정 form에 대한 입력 요소가 해당 form 외부에 정의될 수도 있다. 이 경우 외부 요소의 form 속성에 연결할 form의 id를 설정한다
+
+            li action 속성
+            p form을 제출할 주소를 지정한다
+
+            li target 속성
+            p 응답을 어디서 표시할 것인지 지정한다
+            ul
+                li _self (기본값) : 현재 브라우징 컨텍스트에서 로드한다
+                li _blank : 이름 없는 새 브라우징 컨텍스트에서 로드한다
+                li _parent : 부모 브라우징 컨텍스트에서 로드한다 -- 없으면 _self로 작동
+                li _top : 최상위 부모 브라우징 컨텍스트에서 로드한다 -- 없으면 _self로 작동
+
+            li method 속성
+            p form을 제출할 방법을 지정한다
+            ul
+                li get : URL 쿼리 파라미터로 전달
+                li post : HTTP body로 전달
+                li dialog : #{'<dialog>'} 안에 form을 정의한 경우, dialog를 닫고 submit 이벤트를 발생한다
+
+            li form 안에 다른 form을 포함하지 말아야 한다
+
+        h2 #{'<fieldset>, <legend>'}
+        p 관련된 입력 요소들을 fieldset 태그를 이용해 그룹으로 나누면 스타일 지정하기도 편하고, 의미적인 가독성도 더 좋다. legend 태그를 fieldset의 첫 번째 자식으로 둠으로써, 해당 그룹이 무엇을 위해 존재하는지 명시할 수 있다.
+        p 예를 들어, legend 다음에 (라디오 버튼, label) 쌍들이 다음과 같이 나열되어 있을 때,
+        +asCode('HTML').
+            #{'<fieldset>'}
+            #{'    <legend>음료수 크기</legend>'}
+
+            #{'    <input type="radio" name="size" id="size_1" value="small" />'}
+            #{'    <label for="size_1">작음</label>'}
+
+            #{'    <input type="radio" name="size" id="size_2" value="medium" />'}
+            #{'    <label for="size_2">보통</label>'}
+
+            #{'    <input type="radio" name="size" id="size_3" value="large" />'}
+            #{'    <label for="size_3">큼</label>'}
+            #{'</fieldset>'}
+        p 스크린 리더는 각 입력 요소를 "음료수 크기 작음", "음료수 크기 보통", "음료수 크기 큼"으로 읽는다
+
+        h2 #{'<label>'}
+        ul
+            li label 태그는 특정 input 요소가 무엇에 대한 입력을 받기 위한 것인지를 표현한다. 물론 span과 같은 요소를 이용해서도 같은 작업을 할 수 있지만, label을 사용함으로써 아래의 이점을 얻을 수 있다
+            ul
+                li 각 label은 특정 input 요소와 1:1 관계를 가진다 (그렇게 작성해야 한다)
+                li 라디오 버튼을 포함한 일부 input 요소에 대한 확장을 제공한다 -- label을 클릭하면 input을 클릭한 것과 같은 효과를 가진다
+                li 스크린 리더와 같은 접근성 도구도 이해할 수 있다
+            li label 태그 안에 input 태그를 직접 둬 1:1 관계를 정의하는 것도 가능하지만, 둘을 병렬로 정의하고 label의 for 속성으로 input의 id를 설정하는 것이 권장된다
+
+        h2 #{'<input>'}
+        div
+            h3.no-marker name 속성
+            p 서버에 제출할 데이터의 이름을 지정한다
+
+            h3.no-marker value 속성
+            p 서버에 제출할 데이터의 값을 지정한다 -- 보통 사용자의 입력에 의해 변경된다
+
+            h3.no-marker autofocus 속성
+            p 문서 내에 하나만 설정해야 하는 속성으로, 페이지 로드 시 자동으로 포커스를 가져갈 요소를 지정한다
+
+            h3.no-marker disabled 속성
+            p 사용자가 해당 요소에 데이터를 입력할 수 없게 한다
+
+            h3.no-marker type 속성
+            p 어떤 종류의 데이터를 입력받는지 지정한다. 브라우저들은 전용 UI를 이용해 이를 표현하고, 가상 키보드의 경우 키보드의 레이아웃도 이에 맞춰 변경해기도 한다. type에 따라 추가 속성(min, max 등)들이 지원되기도 한다.
+            ul
+                li text : 한 줄짜리 텍스트. 줄바꿈 문자를 포함할 수 없다
+
+                li password : text와 유사하지만, 내용을 *과 같이 검열하여 표시한다
+
+                li search : text와 유사하지만, 다음과 같은 차이점이 보일 수 있다
+                ul
+                    li 입력한 전체 내용을 지울 수 있는 x 아이콘 표시
+                    li 가상 키보드 Enter 위치에 검색 아이콘 표시
+                    li 검색 이력 저장 -- 자동 완성 제공
+
+                li tel : 전화번호를 입력받을 때 사용
+                p 기본적으로 숫자 가상 키보드가 표시되는데, 전화번호 형식은 국가마다 다르기 때문에 임의 문자 입력을 허용한다
+
+                li number : 숫자를 입력받을 때 사용
+                ul
+                    li 기본적으로 숫자 가상 키보드가 표시된다
+                    li 숫자를 표현하지 않는 문자의 입력은 허용되지 않는다
+                    li 소수를 입력하려면 step="any" 또는 step="0.01" 같이 설정해야 한다
+
+                li range : 지정한 범위의 숫자 중 하나만 선택 가능한 슬라이더를 표시
+                p 현재 선택 중인 값이 무엇인지 보여주지 않는다는 점은 단점 중 하나
+
+                li checkbox : 동일 name 속성에 대하여 0개 이상의 값을 선택 가능할 때 사용
+
+                li radio : 동일 name 속성에 대하여 최대 1개의 값만 선택 가능할 때 사용
+
+                li submit : form에 채워진 내용물을 action에 제출하는 버튼
+                p #{'<input type="submit"> 대신 <button type="submit">을 이용하는 게 스타일 지정하기 좋다'}
+
+                li reset : form의 각 입력 요소들을 초기 상태로 변경하는 버튼
+                p #{'<input type="reset"> 대신 <button type="reset">을 이용하는 게 스타일 지정하기 좋다'}
+
+                li button : 기본 동작이 없는 버튼
+                p #{'<input type="button"> 대신 <button type="button">을 이용하는 게 스타일 지정하기 좋다'}
+
+                li file : 파일 업로드에 사용
+
+                li image : 클릭한 좌표를 제출하는 특수한 버튼을 표시한다
+                p: +codeBtn({
+                    path: '/Repositories/Single/202411/25-1134.html',
+                    lan: 'HTML',
+                    title: '예시 코드'
+                })
+                iframe(src='/Repositories/Single/202411/25-1134.html',width=500,height=360)
+
+                li 날짜 및 시간 입력
+                ul
+                    li datetime-local : 로컬 시간대로 날자와 시간을 입력
+                    li month : 년 + 월 입력
+                    li time : 날짜 없이 시간만 입력
+                    li week : 년 + 몇 번째 주인지 입력
+                    p 한 주는 반드시 월요일에 시작하여 일요일에 종료하고, 각 해의 첫 번째 주는 반드시 첫 번째 목요일을 포함해야 한다
+
+                li color, email, url, ...
+
+        h2 input 외 입력 컨트롤 태그
+        ul
+            li #{'<select> + <option>'}
+            p radio와 checkbox 기능을 모두 포함하며, 정의된 값을 (드롭-다운) 목록으로 보여준다
+        
+            li #{'<textarea>'}
+            p 여러 줄 텍스트를 입력받을 때 사용한다. 한 번에 표시할 기본 크기를 rows, cols 속성으로 지정할 수 있다
+
+            li #{'<datalist>'}
+            p input 요소에 대한 자동 완성 목록을 제공한다
+                +codeBtn({
+                    path: '/Repositories/Single/202411/25-1536.html',
+                    lan: 'nohighlight',
+                    title: '예시'
+                })
+                +codeBtn({
+                    path: '/Repositories/Single/202411/25-1536.html',
+                    lan: 'HTML',
+                    title: '<- 코드'
+                })
 
     h1 HTML5
     div
