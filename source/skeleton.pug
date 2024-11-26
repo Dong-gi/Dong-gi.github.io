@@ -22,7 +22,7 @@ mixin asA(href, text)
                 text = text.replace(/\..+$/, '')
             }
         }
-    a.w3-btn.w3-round-xlarge.w3-small.w3-border.w3-hover-black&attributes({ href })&attributes(attributes)= text
+    a.w3-padding.w3-round-xlarge.w3-small.w3-border.w3-hover-black&attributes({ href })&attributes(attributes)= text
 
 mixin asCode(lan, title)
     - lan = lan || 'text'
@@ -153,7 +153,8 @@ mixin post(options)
             main#main
                 nav.w3-bar.w3-blue#nav
                     button.w3-bar-item.w3-button.w3-hover-theme#nav-toggle-btn &#9776;
-                    input.w3-bar-item#query(type='search',placeholder='search',style='max-width:35%')
+                    form(role='search')
+                        input.w3-bar-item#query(type='search',placeholder='search',style='max-width:35%')
                     a.w3-bar-item.w3-button.w3-hover-theme(href='/') Home
                 article#contents
                     if block

@@ -509,7 +509,7 @@ window.addEventListener('load', async () => {
     /* 하이라이팅 지원 목록 */
     console.log(hljs.listLanguages())
 
-    document.getElementById('query').onkeyup = function (e) {
+    document.getElementById('query').onkeydown = function (e) {
         /* https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_values */
         if (e.code === 'Enter') {
             openLink(`https://github.com/search?q=repo:Dong-gi/Dong-gi.github.io+${encodeURIComponent(e.target.value)}&type=code`, '_blank');

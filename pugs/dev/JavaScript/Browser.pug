@@ -58,6 +58,11 @@ include ../../../source/skeleton.pug
             +codeBtn('/Repositories/Single/202411/05-1432.html', 'nohighlight') 예시
             +codeBtn('/Repositories/Single/202411/05-1432.html', 'HTML') 예시 코드
 
+    h1 폼 검증
+    ul
+        li checkValidity() : 지정한 요소의 값이 유효한지 검사하여 boolean을 반환한다
+        li reportValidity() : checkValidity와 마찬가지로 유효성을 검사하고 boolean을 반환한다. 유효하지 않은 필드에 대해 invalid 이벤트가 발생하여 기본적으로는 브라우저가 알림을 표시하게 된다
+        li setCustomValidity(message) : 인자가 빈 문자열이 아닌 경우, 지정한 메시지로 해당 필드가 무효하다고 지정한다. 브라우저는 알림을 표시할 때 해당 메시지가 이용된다
 
     h1 브라우저 저장소
     div

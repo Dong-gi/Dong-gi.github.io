@@ -321,20 +321,26 @@ include ../../../source/skeleton.pug
             li label 태그 안에 input 태그를 직접 둬 1:1 관계를 정의하는 것도 가능하지만, 둘을 병렬로 정의하고 label의 for 속성으로 input의 id를 설정하는 것이 권장된다
 
         h2 #{'<input>'}
-        div
-            h3.no-marker name 속성
+        ul
+            li name 속성
             p 서버에 제출할 데이터의 이름을 지정한다
 
-            h3.no-marker value 속성
+            li value 속성
             p 서버에 제출할 데이터의 값을 지정한다 -- 보통 사용자의 입력에 의해 변경된다
 
-            h3.no-marker autofocus 속성
+            li autofocus 속성
             p 문서 내에 하나만 설정해야 하는 속성으로, 페이지 로드 시 자동으로 포커스를 가져갈 요소를 지정한다
 
-            h3.no-marker disabled 속성
+            li disabled 속성
             p 사용자가 해당 요소에 데이터를 입력할 수 없게 한다
 
-            h3.no-marker type 속성
+            li required 속성
+            p form 제출 시 값이 설정되어 있지 않으면 브라우저에서 알림을 보여준다
+
+            li pattern 속성
+            p 입력 텍스트가 지정한 정규식을 만족하는지 검사하고, 만족하지 않는 경우 form 제출 시 알림을 보여준다
+
+            li type 속성
             p 어떤 종류의 데이터를 입력받는지 지정한다. 브라우저들은 전용 UI를 이용해 이를 표현하고, 가상 키보드의 경우 키보드의 레이아웃도 이에 맞춰 변경해기도 한다. type에 따라 추가 속성(min, max 등)들이 지원되기도 한다.
             ul
                 li text : 한 줄짜리 텍스트. 줄바꿈 문자를 포함할 수 없다
@@ -412,6 +418,53 @@ include ../../../source/skeleton.pug
                     lan: 'HTML',
                     title: '<- 코드'
                 })
+
+        h2 그 외 컨트롤 태그
+        ul
+            li #{'<meter>'}
+            ul
+                li 현재 값이 적정 범주에 존재하는지를 색상을 이용해 표시한다
+                li min, max, low, high 속성을 이용하여 3개 구간을 정의한다
+                ul
+                    li Lower part ::= [min, low]
+                    li Medium part ::= (low, high)
+                    li Higher part ::= [high, max]
+                li optimum을 이용하여 어느 구간이 선호되는지 결정한다
+                ul
+                    li optimum in lower part
+                    +asCode('HTML').
+                        #{'<meter min="0" max="100" low="33" high="66" optimum="0" value="30">30</meter>'}
+                        #{'<meter min="0" max="100" low="33" high="66" optimum="0" value="50">50</meter>'}
+                        #{'<meter min="0" max="100" low="33" high="66" optimum="0" value="70">70</meter>'}
+                    <meter min="0" max="100" low="33" high="66" optimum="0" value="30">30</meter>
+                    <meter min="0" max="100" low="33" high="66" optimum="0" value="50">50</meter>
+                    <meter min="0" max="100" low="33" high="66" optimum="0" value="70">70</meter>
+
+                    li optimum in medium part
+                    +asCode('HTML').
+                        #{'<meter min="0" max="100" low="33" high="66" optimum="50" value="30">30</meter>'}
+                        #{'<meter min="0" max="100" low="33" high="66" optimum="50" value="50">50</meter>'}
+                        #{'<meter min="0" max="100" low="33" high="66" optimum="50" value="70">70</meter>'}
+                    <meter min="0" max="100" low="33" high="66" optimum="50" value="30">30</meter>
+                    <meter min="0" max="100" low="33" high="66" optimum="50" value="50">50</meter>
+                    <meter min="0" max="100" low="33" high="66" optimum="50" value="70">70</meter>
+                    li optimum in higher part
+                    +asCode('HTML').
+                        #{'<meter min="0" max="100" low="33" high="66" optimum="100" value="30">30</meter>'}
+                        #{'<meter min="0" max="100" low="33" high="66" optimum="100" value="50">50</meter>'}
+                        #{'<meter min="0" max="100" low="33" high="66" optimum="100" value="70">70</meter>'}
+                    <meter min="0" max="100" low="33" high="66" optimum="100" value="30">30</meter>
+                    <meter min="0" max="100" low="33" high="66" optimum="100" value="50">50</meter>
+                    <meter min="0" max="100" low="33" high="66" optimum="100" value="70">70</meter>
+                li 태그 사이의 텍스트는 이 태그를 지원하지 않는 브라우저 및 스크린 리더와 같은 접근성 도구를 위해 사용된다
+
+            li #{'<progress>'}
+            ul
+                li 진행도를 간단히 시각적으로 표시한다
+                +asCode('HTML') #{'<progress max="100" value="75">75/100</progress>'}
+                <progress max="100" value="75">75/100</progress>
+
+                li 태그 사이의 텍스트는 이 태그를 지원하지 않는 브라우저 및 스크린 리더와 같은 접근성 도구를 위해 사용된다
 
     h1 HTML5
     div
@@ -656,3 +709,62 @@ include ../../../source/skeleton.pug
                 li save()
                 p 다음 항목들을 저장한다 : 변환행렬, 관심영역, lineDash, strokeStyle, fillStyle, globalAlpha, lineWidth, lineCap, lineJoin, miterLimit, lineDashOffset, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, globalCompositeOperation, font, textAlign, textBaseline, direction, imageSmoothingEnabled
                 li restore() : save()로 저장한 사항 복구
+
+    h1 접근성
+    div
+        h2 개요
+        ul
+            li 접근성은 누가, 어느 도구를 사용해 페이지를 방문하는지 무관하게 기능과 컨텐츠를 사용할 수 있음을 의미한다
+            ul
+                li 예. 키보드/마우스가 없는 환경일 수 있다
+                li 예. Alexa, Google Home 같은 음성 도우미로 접근할 수도 있다
+            li 일부 국가는 법률을 통해 일정 수준 이상의 접근성을 강제하고 있다
+            li Mozilla는 Firefox 개발자 도구에 접근성 검사 도구를 추가하여 접근성 확장에 도움을 주고 있다 #[+asA('https://blog.mozilla.org/press/2019/10/mozillas-accessibility-inspector-helps-developers-to-make-websites-and-content-accessible-for-all/', '참고 자료')]
+
+        h2 HTML
+        ul
+            li 기본적으로는 의미에 가장 적절한 HTML 요소를 사용(and vice-versa)하는 것이 가장 쉽고 권장되는 방법이다
+            li tabindex="0" 속성을 이용해 키보드(tab 포함)를 이용하여 접근할 수 있게 만들 수 있다
+            li role="button" 속성을 추가해 요소와 상호작용 가능함을 명시할 수 있다
+            li "Click here" 같은 일반적인 문구보다, 고유한 텍스트를 사용하는 것이 좋다
+            li alt 속성은 이미지가 전달하는 모든 정보를 포함하되, 주변 텍스트에 중복되는 정보는 포함하지 않아야 한다
+            p 유의미하지 않은 장식 이미지는 아래와 같이 처리할 수 있다
+            ul
+                li CSS를 이용해 표시
+                li alt="" 설정 -- 그렇지 않으면 스크린 리더가 src를 읽으려고 할 수 있다
+                li role="presentation" 설정
+            li 상호작용 가능한 요소들 사이에 충분한 공간 두기
+            li 동적으로 컨텐츠가 변경되는 요소의 경우, 스크린 리더에게 이를 알려줄 수 있다
+            ul
+                li aria-live="off" : 기본값. 컨텐츠가 변경돼도 다시 읽지 않음
+                li aria-live="polite" : 사용자가 유휴 상태일 때 업데이트를 알림
+                li aria-live="assertive" : 가능한 한 빠르게 사용자에게 업데이트를 알림
+
+        h2 CSS
+        ul
+            li HTML의 의미를 해칠 정도로 스타일을 변경하지 말기
+            li 링크 상태에 대한 피드백을 제공하기
+            li 테이블 행의 배경색을 번갈아 설정하여 쉽게 구별할 수 있게 하기
+            li 사용자가 스타일을 재정의할 수 있음에 유의하기
+            ul
+                li 예. 브라우저 확장 프로그램을 이용한 경우
+                li 예. 시각 장애를 위해 모든 웹사이트의 텍스트 크기를 크게 설정한 경우
+
+        h2 JavaScript
+        ul
+            li 가능하다면 unobtrusive JavaScript를 사용할 것 -- 기본 기능은 JavaScript 없이도 동작하고, JavaScript는 기본 기능을 보완
+            li 요소에 접근할 수 있는 다양한 기기를 고려할 것
+            p 예. 마우스 이벤트만 처리하는 것보단, 키보드 이벤트도 처리하는 것이 접근성이 더 좋다. 한편, 'click'이벤트는 마우스 클릭 외에도 발생한다.
+
+        h2 모바일 접근성
+        ul
+            li 과거 모바일 브라우저들은 데스크톱과 다른 웨 빅술을 사용하여, 프론트엔드 개발자들은 브라우저 감지를 통해 별도의 사이트를 제공해야 했다
+            li 현재는 주요 모바일 브라우저들은 웹 표준을 잘 지원하며, 데스크톱 브라우저와 동일한 버전이 매겨진다
+
+    h1 페이지 성능
+    div
+        h2 개요
+        ul
+            li 페이지 성능이 좋다면 사용자 경험이 증대되어 수익이 증대될 수 있다
+            li 페이지 성능이 좋다면 서비스 비용을 절감할 수 있다
+            li 효율적인 서비스를 통해 환경에 미치는 영향을 줄일 수 있다

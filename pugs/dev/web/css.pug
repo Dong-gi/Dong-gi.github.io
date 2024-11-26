@@ -699,3 +699,14 @@ include ../../../source/skeleton.pug
 
         h2 #{`url( <string> )`}
         p 외부 리소스를 참조한다
+
+    h1 At-rule
+    div
+        h2 @supports
+        p 특정 스타일이 지원되는지 확인 가능
+        +asCode('css').
+            @supports (appearance: none) {
+              input[type="search"] {
+                appearance: none;
+              }
+            }
