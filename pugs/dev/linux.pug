@@ -131,7 +131,7 @@ include ../../source/skeleton.pug
             li block device(b) : 하드디스크, DVD 등 블록/섹터 단위 IO 장치파일
 
         h2 디렉터리 구조
-        table
+        table.w3-table-all.w3-card.w3-small
             +ths('디렉터리', '내용')
             +tds('/bin', '시스템, 관리자, 일반 사용가 모두가 공유하는 명령어')
             +tds('/boot', '시동에 필요한 파일')
@@ -154,7 +154,7 @@ include ../../source/skeleton.pug
 
     h1 서비스 관리
         +pos('service')
-    table
+    table.w3-table-all.w3-card.w3-small
         tr
             th 구분
             th init
@@ -274,7 +274,7 @@ include ../../source/skeleton.pug
     h1 Bash
     div
         h2 Special character
-        table.no-sort
+        table.w3-table-all.w3-card.w3-small
             +tds('#', '주석 시작')
             +tds(';', '커맨드 구분자')
             +tds(';;', 'case 옵션 종결자')
@@ -529,7 +529,7 @@ include ../../source/skeleton.pug
                     $ export PATH="$PATH:/usr/java/jdk-13.0.2/bin
 
             h3 예약 변수
-            table.no-sort
+            table.w3-table-all.w3-card.w3-small
                 +ths('name', 'definition')
                 +tds('BASH', 'bash의 절대경로')
                 +tds('BASH_ENV', '로그인 셸에서, 파일로 설정된 경우, 셸 스크립트를 실행하기 전에 먼저 읽는다')
@@ -597,7 +597,7 @@ include ../../source/skeleton.pug
                 +tds('UID', '실제 현재 유저 ID')
 
             h3 특별 변수
-            table.no-sort
+            table.w3-table-all.w3-card.w3-small
                 +ths('character', 'definition')
                 +tds('$1~$9, ${10}~', 'n번째 실행 인자 반환')
                 +tds('$#', '실행 인자 개수 반환')
@@ -726,7 +726,7 @@ include ../../source/skeleton.pug
                 li EXPRESSION 연산은 고정폭 정수로 행해지며, overflow 검사는 하지 않는다
                 li 0으로 시작하는 상수는 8진수, 0x는 16진수로 간주된다
                 li 2#10 ~ 64#12abAB@_ 표기로 2~64진법 표현 가능. 36진법 이하에서 대소문자는 구별되지 않는다
-            table.no-sort
+            table.w3-table-all.w3-card.w3-small
                 caption Operators
                 +tds('VAR++, VAR--', '단항 연산(후위)')
                 +tds('++VAR, --VAR', '단항 연산(전위)')
@@ -802,7 +802,7 @@ include ../../source/skeleton.pug
             li alias는 자식 프로세스에 상속되지 않는다
 
         h2 POSIX 정규표현식
-        table.no-sort
+        table.w3-table-all.w3-card.w3-small
             +tds('^', 'line 시작')
             +tds('$', 'line 끝')
             +tds('\\b', 'word 경계')
@@ -828,7 +828,7 @@ include ../../source/skeleton.pug
                     if true; then echo hello; fi
                     if false; then echo hello; fi
                 li 조건식
-                table
+                table.w3-table-all.w3-card.w3-small
                     +ths('식', 'TRUE')
                     +tds('[ -a FILE ]', 'deprecated. FILE 존재')
                     +tds('[ -b FILE ]', 'FILE 존재 && block device')
@@ -995,7 +995,7 @@ include ../../source/skeleton.pug
         h2 Catching signal
         div
             h3 Signal
-            table.no-sort
+            table.w3-table-all.w3-card.w3-small
                 +tds('SIGHUP', '1', 'Hangup')
                 +tds('SIGINT', '2', 'Interrupt frmo keyboard; Ctrl+C')
                 +tds('SIGKILL', '9', 'Kill; 강제 종료')
@@ -1114,7 +1114,7 @@ include ../../source/skeleton.pug
                 li 백그라운드 프로세스는 별개 job 번호를 할당받는다
                 li 커맨드 또는 루프 뒤에 &amp;를 붙이면 백그라운드 job으로 실행한다
                 li Job 식별자
-                table
+                table.w3-table-all.w3-card.w3-small
                     +tds('Notation', 'Meaning')
                     +tds('%N', 'Job number [N]')
                     +tds('%S', 'Invocation (command-line) of job begins with string S')
@@ -1404,7 +1404,7 @@ include ../../source/skeleton.pug
             h3 sed; Stream EDitor
             div
                 p sed는 표준 입력 또는 파일로부터 편집을 수행(원본 수정은 없다)하고 표준 출력한다
-                table.no-sort
+                table.w3-table-all.w3-card.w3-small
                     caption Commands
                     +tds('a\\text', '각 줄 아래에 text를 쓴다')
                     +tds('c\\text', '각 줄을 text로 치환')
@@ -1421,7 +1421,7 @@ include ../../source/skeleton.pug
                     +tds('s/pattern/replacement/gi', '찾아 바꾸기; 대소문자 구별없이(i), 해당 줄의 모든 매칭(g)에 대해 변환 수행')
                     +tds('y/letters1/letters2/', 'tr과 유사. 글자 치환 수행')
                     +tds('3q', '3줄까지만 처리하고 종료')
-                table.no-sort
+                table.w3-table-all.w3-card.w3-small
                     caption Options
                     +tds('-e script', 'script 커맨드들도 실행한다')
                     +tds('-f script-file', 'script-file의 커맨드들도 실행한다')

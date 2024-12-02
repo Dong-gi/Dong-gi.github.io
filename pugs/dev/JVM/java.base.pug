@@ -1684,7 +1684,7 @@ include ../../../source/skeleton.pug
                 // + getIntegerInstance : 포맷에 HALF_EVEN을 이용하고, 파싱은 정수부만
 
         h2 SimpleDateFormat
-        table
+        table.w3-table-all.w3-card.w3-small
             tr
                 th 문자
                 th 표현요소
@@ -1807,7 +1807,7 @@ include ../../../source/skeleton.pug
             li '' 안의 포맷 문자열은 이스케이프된다
             li 동일 요소에 대한 반복적인 파싱은 마지막 파싱 결과만 유효하다
                 +codeBtn('/Repositories/Eclipse/JavaSE/src/text/MessageFormatTest.java', 'java')
-        table
+        table.w3-table-all.w3-card.w3-small
             tr
                 th FormatType
                 th FormatStyle
@@ -1937,7 +1937,7 @@ include ../../../source/skeleton.pug
     div
         h2 DateTimeFormatter
         p: +asA('https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/time/format/DateTimeFormatter.html#predefined', 'DateTimeFormatter.html#predefined')
-        table
+        table.w3-table-all.w3-card.w3-small
             tr
                 th Formatter
                 th Description
@@ -3041,7 +3041,7 @@ include ../../../source/skeleton.pug
             ol
                 li 기본적으로 스레드-안전하지만, addAll 따위의 bulk 연산은 특별히 표시되지 않는 한 그렇지 않다
                 li 요소를 획득할 때, 큐가 비어있는 경우 블로킹. 요소를 추가할 때, 큐에 빈 자리가 있을 때까지 블로킹
-            table
+            table.w3-table-all.w3-card.w3-small
                 tr
                     th
                     th 예외 발생
@@ -3101,7 +3101,7 @@ include ../../../source/skeleton.pug
 
             h3 BlockingDeque&lt;E>
             p 요소를 획득할 때, 덱이 비어있는 경우 블로킹. 요소를 추가할 때, 덱에 빈 자리가 있을 때까지 블로킹
-            table
+            table.w3-table-all.w3-card.w3-small
                 tr
                     th
                     th 예외 발생
@@ -3428,7 +3428,7 @@ include ../../../source/skeleton.pug
             static void storeStoreFence()   // 장벽 이전의 store 연산이 장벽 이후의 store 뒤로 재배치되지 않음
         div
             h3 VarHandle.AccessMode
-            table
+            table.w3-table-all.w3-card.w3-small
                 tr
                     th GET
                     td VarHandle.get
@@ -3681,7 +3681,7 @@ include ../../../source/skeleton.pug
                 p 0번 그룹은 항상 전체 표현을 가리킨다
                     +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/RegexExample.java', 'java', '[16,26]') 예를 들어
                     |  (A)(B(C))에 대하여,
-                table.no-sort
+                table.w3-table-all.w3-card.w3-small
                     tr
                         th Group ID
                         th Pattern

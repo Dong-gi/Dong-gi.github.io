@@ -196,7 +196,7 @@ include ../../../source/skeleton.pug
 
                 h4 출처 목록
                 p "-src"로 끝나는 directive들은 모두 출처 목록을 값으로 가질 수 있다. 목록에 항목이 2개 이상인 경우, 공백 문자로 구별한다
-                table
+                table.w3-table-all.w3-card.w3-small
                     +ths('Source Value', 'Example', 'Description')
                     +tds('*', 'img-src *', '모든 URL 허용. 단, 다음의 스킴들은 비허용 -- data:, blob:, filesystem:')
                     +tds("'none'", "object-src 'none'", "해당 리소스 전체 차단")
@@ -768,3 +768,14 @@ include ../../../source/skeleton.pug
             li 페이지 성능이 좋다면 사용자 경험이 증대되어 수익이 증대될 수 있다
             li 페이지 성능이 좋다면 서비스 비용을 절감할 수 있다
             li 효율적인 서비스를 통해 환경에 미치는 영향을 줄일 수 있다
+
+        h2 성능 지표
+        ul
+            li FCP(First Contentful Paint) : 페이지의 첫 번째 컨텐츠를 렌더링하는 데 걸린 시간
+            li TBT(Total Blocking Time) : 사용자 입력에 반응하지 못하는 총 시간
+            li LCP(Largest Contentful Paint) : 표시 영역에서 가장 큰 컨텐츠 요소가 렌더링되기까지의 시간
+
+        h2 측정 도구
+        ul
+            li 개별 웹 브라우저 개발자 도구에서 제공하는 기능 이용
+            li: +asA('https://pagespeed.web.dev/')

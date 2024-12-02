@@ -108,81 +108,6 @@ function naturalCompareString(str1, str2) {
     }
 }
 
-function addOrderedTableFunctionality() {
-    if (document.querySelector('style#ordered-table-css')) {
-        return;
-    }
-
-    document.getElementsByTagName('head')[0].append(asNodes(`<style id="ordered-table-css">
-td.sorting-table-head-black:after,th.sorting-table-head-black:after{content:attr(sort-order);color:black}
-td.sorting-table-head-white:after,th.sorting-table-head-white:after{content:attr(sort-order);color:white;}</style>`));
-
-    /** @type {MutationCallback} */
-    const innerAddOrderedTableFunctionality = function (mutations, observer) {
-        for (const mutation of mutations) {
-            if (mutation.type !== 'childList') {
-                return;
-            }
-
-            /** @type {NodeListOf<HTMLTableElement>} */
-            const tables = mutation.target.querySelectorAll('table');
-            for (const table of tables) {
-                table.classList.add('w3-table-all', 'w3-card', 'w3-small');
-                if (table.rows.length < 3) {
-                    table.classList.remove('ordered-table');
-                    continue;
-                }
-                if (table.classList.contains('ordered-table')) {
-                    continue;
-                }
-                table.classList.add('ordered-table');
-                if (table.classList.contains('no-sort')) {
-                    continue;
-                }
-
-                const headRow = table.rows[0];
-                headRow.classList.add('table-head-row');
-
-                const hasDataIdxSet = new Set(); /* 모든 행의 x번째 열이 비어있다면, 삭제하기 위한 인덱스 집합 */
-                for (const tr of Array.from(table.rows).slice(1)) {
-                    tr.querySelectorAll('td, th').forEach((node, idx, nodeList) => {
-                        if (hasDataIdxSet.has(idx)) {
-                            return;
-                        }
-                        const text = node.textContent.replace(/null/gmi, '').replace(/[\n\s]+/gm, '');
-                        if (text.length > 0) {
-                            hasDataIdxSet.add(idx);
-                        }
-                    })
-                }
-                for (const tr of table.rows) {
-                    tr.querySelectorAll('td, th').forEach((node, idx, nodeList) => {
-                        if (!hasDataIdxSet.has(idx)) {
-                            node.remove();
-                        }
-                    })
-                }
-
-                headRow.querySelectorAll('td, th').forEach((node, idx, nodeList) => {
-                    if (node.classList.contains('no-sort')) {
-                        return;
-                    }
-                    node.onclick = tableSorter(idx, node, table);
-                })
-
-                const preSort = Array.from(headRow.querySelectorAll('td[pre-sort], th[pre-sort]'));
-                preSort.sort((c1, c2) => parseFloat(c1.getAttribute('pre-sort')) - parseFloat(c2.getAttribute('pre-sort')));
-                for (const cell of preSort) {
-                    cell.click();
-                }
-            }
-        }
-    }
-
-    new MutationObserver(innerAddOrderedTableFunctionality).observe(document.body, { attributes: false, childList: true, subtree: true })
-    innerAddOrderedTableFunctionality([{ type: 'childList', target: document.body }])
-}
-
 /**
  * @param {number} colIdx 
  * @param {HTMLTableCellElement} th
@@ -412,115 +337,18 @@ function toggleClass(element, classes) {
     }
 }
 
-window.addEventListener('load', async () => {
-    document.getElementById('nav-toggle-btn').addEventListener('click', function (ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-
-        const sidebar = document.getElementById('sidebar');
-        if (sidebar.computedStyleMap().get('display')?.value === 'none') {
-            sidebar.style.display = 'block';
-            document.documentElement.style.setProperty('--sidebar-width', '333px');
-        } else {
-            sidebar.style.display = 'none';
-            document.documentElement.style.setProperty('--sidebar-width', '0px');
-        }
+async function yield() {
+    if (globalThis.scheduler?.yield != null) {
+        return await globalThis.scheduler.yield()
+    }
+    return await new Promise(_ => {
+        setTimeout(_, 0)
     })
+}
 
-    /** @type {MutationCallback} */
-    const mutationCallback = function (mutations, observer) {
-        for (let mutation of mutations) {
-            if (mutation.type !== 'childList') {
-                return;
-            }
-            for (const img of mutation.target.querySelectorAll('img')) {
-                if (img.onclick) { continue; }
-                img.onclick = function (e) { openLink(e.target.src, '_blank'); }
-            }
-            for (const codeButton of mutation.target.querySelectorAll('button.btn-code')) {
-                codeButton.classList.remove('btn-code');
-                codeButton.id = 'code-button-' + Math.random().toString().slice(2) + stringHashCode(codeButton.title);
-                codeButton.onclick = function (e) {
-                    const button = e.target;
-                    const path = button.title;
-                    const codeId = button.id.slice('code-button-'.length);
-                    const codeDivId = 'code-div-' + codeId;
-
-                    if (!document.getElementById(codeDivId)) {
-                        const xhr = new XMLHttpRequest();
-                        xhr.addEventListener('load', function () {
-                            if (this.status !== 200) {
-                                this.responseText = 'Ajax Failed';
-                            }
-
-                            const codeDiv = asNodes(`<div id="${codeDivId}" class="w3-leftbar w3-border-green code-div"></div>`);
-                            const lan = button.getAttribute('lan');
-                            posts.codes[codeId] = this.responseText;
-                            fillCodeDiv(codeDiv, lan, this.responseText, button.getAttribute('displayRange'));
-                            codeDiv.style.maxHeight = window.innerHeight / 3 + 'px';
-
-                            if (lan !== 'nohighlight') {
-                                const modalButton = asNodes('<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-blue">모달로 보기</button>');
-                                modalButton.onclick = () => showModal(codeId);
-                                button.after(modalButton);
-                                modalButton.after(codeDiv);
-                            } else {
-                                button.after(codeDiv);
-                            }
-
-                            if (lan === 'javascript') {
-                                const script = asNodes('<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-green">실행</button>');
-                                script.onclick = function () {
-                                    const code = Array.from(codeDiv.querySelectorAll('li')).map(li => li.textContent).join('\n');
-                                    eval(code);
-                                }
-                                button.after(script);
-                            }
-                        });
-                        xhr.open('GET', `${path.startsWith('/') ? '' : './'}${path.replace(/ /gm, '%20')}`, true);
-                        xhr.send();
-                    } else {
-                        const div = document.getElementById(`code-div-${codeId}`);
-                        toggleClass(div, ['w3-hide']);
-                        div.style.maxHeight = window.innerHeight / 3 + 'px';
-                    }
-                }
-            }
-            for (const hoverContent of mutation.target.querySelectorAll('.hover-content')) {
-                addHoverContent(hoverContent, document.getElementById(hoverContent.getAttribute('template-id')));
-            }
-            for (const codeDiv of mutation.target.querySelectorAll('div.as-code')) {
-                codeDiv.classList.remove('as-code');
-                const code = codeDiv.innerHTML.trim().replace(/&lt;/gm, '<').replace(/&gt;/gm, '>').replace(/&amp;/gm, '&');
-                codeDiv.innerHTML = '';
-                fillCodeDiv(codeDiv, codeDiv.getAttribute('lan') ?? 'text', code);
-                codeDiv.style.maxHeight = window.innerHeight / 3 + 'px';
-            }
-            for (const codeSpan of mutation.target.querySelectorAll('span.as-code')) {
-                codeSpan.classList.remove('as-code');
-                const code = codeSpan.innerHTML.trim().replace(/&lt;/gm, '<').replace(/&gt;/gm, '>').replace(/&amp;/gm, '&');
-                codeSpan.innerHTML = hljs.highlight(code, { language: codeSpan.getAttribute('lan') ?? 'text', ignoreIllegals: true })['value'];
-            }
-        }
-    }
-    new MutationObserver(mutationCallback).observe(document.body, { attributes: false, childList: true, subtree: true })
-    mutationCallback([{ type: 'childList', target: document.body }])
-
-    /* 하이라이팅 지원 목록 */
-    console.log(hljs.listLanguages())
-
-    document.getElementById('query').onkeydown = function (e) {
-        /* https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_values */
-        if (e.code === 'Enter') {
-            openLink(`https://github.com/search?q=repo:Dong-gi/Dong-gi.github.io+${encodeURIComponent(e.target.value)}&type=code`, '_blank');
-            e.stopPropagation();
-            return false;
-        }
-        return true;
-    }
-    addOrderedTableFunctionality();
-
-    for (const goto of document.querySelectorAll('.goto')) {
+async function initGoto() {
+    for (const goto of document.querySelectorAll('a.goto')) {
+        await yield();
         goto.addEventListener('click', function () {
             if (goto.id.length === 0) {
                 goto.id = `goto-${Math.random()}-${Math.random()}`;
@@ -547,10 +375,145 @@ window.addEventListener('load', async () => {
         }
         goto(gotoTarget);
     }
+}
 
-    await fetch('/files/posts-compressed.json').then(res => {
+function initNav() {
+    document.getElementById('nav-toggle-btn').addEventListener('click', function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar.computedStyleMap().get('display')?.value === 'none') {
+            sidebar.style.display = 'block';
+            document.documentElement.style.setProperty('--sidebar-width', '333px');
+        } else {
+            sidebar.style.display = 'none';
+            document.documentElement.style.setProperty('--sidebar-width', '0px');
+        }
+    });
+
+    document.getElementById('query').onkeydown = function (e) {
+        /* https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_values */
+        if (e.code === 'Enter') {
+            openLink(`https://github.com/search?q=repo:Dong-gi/Dong-gi.github.io+${encodeURIComponent(e.target.value)}&type=code`, '_blank');
+            e.stopPropagation();
+            return false;
+        }
+        return true;
+    }
+}
+
+async function initCodeBtn() {
+    for (const codeButton of document.body.querySelectorAll('button.btn-code')) {
+        await yield();
+        codeButton.classList.remove('btn-code');
+        codeButton.id = 'code-button-' + Math.random().toString().slice(2) + stringHashCode(codeButton.title);
+        codeButton.onclick = async function (e) {
+            const button = e.target;
+            const path = button.title;
+            const codeId = button.id.slice('code-button-'.length);
+            const codeDivId = 'code-div-' + codeId;
+
+            let codeDiv = document.getElementById(codeDivId)
+            if (codeDiv != null) {
+                toggleClass(codeDiv, ['w3-hide']);
+                codeDiv.style.maxHeight = window.innerHeight / 3 + 'px';
+                return;
+            }
+
+            const codeTxt = await fetch(`${path.startsWith('/') ? '' : './'}${path.replace(/ /gm, '%20')}`)
+                .then(res => res.text())
+                .catch(e => {
+                    console.log('Fetch failed...', e)
+                    return 'Fetch failed...'
+                });
+
+            codeDiv = asNodes(`<div id="${codeDivId}" class="w3-leftbar w3-border-green code-div"></div>`);
+            const lan = button.getAttribute('lan');
+            posts.codes[codeId] = codeTxt;
+            fillCodeDiv(codeDiv, lan, codeTxt, button.getAttribute('displayRange'));
+            codeDiv.style.maxHeight = window.innerHeight / 3 + 'px';
+
+            if (lan !== 'nohighlight') {
+                const modalButton = asNodes('<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-blue">모달로 보기</button>');
+                modalButton.onclick = () => showModal(codeId);
+                button.after(modalButton);
+                modalButton.after(codeDiv);
+            } else {
+                button.after(codeDiv);
+            }
+
+            if (lan === 'javascript') {
+                const script = asNodes('<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-green">실행</button>');
+                script.onclick = function () {
+                    const code = Array.from(codeDiv.querySelectorAll('li')).map(li => li.textContent).join('\n');
+                    eval(code);
+                }
+                button.after(script);
+            }
+        }
+    }
+}
+
+async function initHoverContent() {
+    for (const hoverContent of document.body.querySelectorAll('.hover-content')) {
+        await yield();
+        addHoverContent(hoverContent, document.getElementById(hoverContent.getAttribute('template-id')));
+    }
+}
+
+async function initInlineCode() {
+    for (const codeDiv of document.body.querySelectorAll('div.as-code')) {
+        await yield();
+        codeDiv.classList.remove('as-code');
+        const code = codeDiv.innerHTML.trim().replace(/&lt;/gm, '<').replace(/&gt;/gm, '>').replace(/&amp;/gm, '&');
+        codeDiv.innerHTML = '';
+        fillCodeDiv(codeDiv, codeDiv.getAttribute('lan') ?? 'text', code);
+        codeDiv.style.maxHeight = window.innerHeight / 3 + 'px';
+    }
+
+    for (const codeSpan of document.body.querySelectorAll('span.as-code')) {
+        await yield();
+        codeSpan.classList.remove('as-code');
+        const code = codeSpan.innerHTML.trim().replace(/&lt;/gm, '<').replace(/&gt;/gm, '>').replace(/&amp;/gm, '&');
+        codeSpan.innerHTML = hljs.highlight(code, { language: codeSpan.getAttribute('lan') ?? 'text', ignoreIllegals: true })['value'];
+    }
+}
+
+window.addEventListener('load', async () => {
+    initNav();
+    await yield();
+
+    await initInlineCode();
+    await yield();
+
+    await initGoto();
+    await yield();
+
+    await initCodeBtn();
+    await yield();
+
+    await initHoverContent();
+    await yield();
+
+    if (navigator.serviceWorker != null) {
+        if (navigator.serviceWorker.controller) {
+            console.log('Offline service worker working...')
+        } else {
+            navigator.serviceWorker
+                .register("/offline-service-worker.js", {
+                    scope: '/'
+                })
+                .then(() => console.log("Offline service worker registered"));
+        }
+    }
+
+    /* 하이라이팅 지원 목록 */
+    console.log(hljs.listLanguages())
+
+    fetch('/files/posts-compressed.json').then(res => {
         return res.json()
-    }).then(o => {
+    }).then(async o => {
         Object.assign(posts, o);
 
         posts.list = [
@@ -566,7 +529,10 @@ window.addEventListener('load', async () => {
         });
 
         updatePostList();
+        await yield();
+
         updateMarkerList();
+        await yield();
 
         window.onpopstate();
 
@@ -577,18 +543,6 @@ window.addEventListener('load', async () => {
             }
         }
     });
-
-    if ("serviceWorker" in navigator) {
-        if (navigator.serviceWorker.controller) {
-            console.log('Offline service worker working...')
-        } else {
-            navigator.serviceWorker
-                .register("/offline-service-worker.js", {
-                    scope: '/'
-                })
-                .then(() => console.log("Offline service worker registered"));
-        }
-    }
 })
 
 /**

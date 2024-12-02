@@ -101,7 +101,7 @@ include ../../../source/skeleton.pug
                     context.refresh();
 
             h3 Bean Overview
-            table.no-sort
+            table.w3-table-all.w3-card.w3-small
                 caption 빈을 정의하는 요소 
                     +asA('https://docs.spring.io/spring/docs/5.3.0-SNAPSHOT/javadoc-api/org/springframework/beans/factory/config/BeanDefinition.html')
                 +tds('Class')
@@ -184,7 +184,7 @@ include ../../../source/skeleton.pug
                     +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello1Test2.java', 'java', [8]) Context
 
                 li.marker 기타 의존성 주입
-                table
+                table.w3-table-all.w3-card.w3-small
                     +ths('종류', '예시 코드')
                     tr
                         td 익명 빈 생성
@@ -281,7 +281,7 @@ include ../../../source/skeleton.pug
                 h4 Autowire
                 ul
                     li IoC 컨테이너가 관리중인 빈들을 자동으로 주입하도록 구성할 수 있다. XML에서는 bean 태그의 autowire 속성으로 제어하며, 아래 4가지 모드가 가능하다
-                    table
+                    table.w3-table-all.w3-card.w3-small
                         +ths('mode', '설명')
                         +tds('no', '기본 설정. 모든 의존성은 명시되어야 한다.')
                         +tds('byName', '이름이 일치하는 빈을 주입한다')
@@ -301,7 +301,7 @@ include ../../../source/skeleton.pug
             h3 Bean Scope
             ul
                 li 빈의 유효 기간을 설정할 수 있다. 아래 6가지는 빈 설정 시 기본으로 이용할 수 있는 목록이다
-                table
+                table.w3-table-all.w3-card.w3-small
                     +ths('Scope', '설명')
                     +tds('singleton', '기본값. 컨테이너에서 하나의 인스턴스만 생성')
                     +tds('prototype', '빈 요청마다 새 인스턴스 생성. 컨테이너는 prototype 빈의 일부 lifecycle만 관리하며, 생성 이후 lifecycle은 클라이언트가 책임져야 한다')
@@ -324,7 +324,7 @@ include ../../../source/skeleton.pug
                 p
                     span.hover-content(template-id='template-jsr330') JSR-330
                     |에서는 Provider가 위와 비슷한 기능을 제공한다
-                table.no-sort
+                table.w3-table-all.w3-card.w3-small
                     tr
                         td 아무 설정 없는 예
                         td
@@ -403,7 +403,7 @@ include ../../../source/skeleton.pug
                         +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/bean/Hello26.java', 'java', [6]) Bean
                         +codeBtn('/Repositories/STS/app2/src/main/resource/Beans41.xml', 'xml') XML
                         +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/bean/Hello26Test.java', 'java', [8]) Context
-                table
+                table.w3-table-all.w3-card.w3-small
                     caption: +asA('https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/core.html#aware-list')
                     +ths('interface', '주입물')
                     +tds('ApplicationEventPublisherAware', 'ApplicationEventPublisher')
@@ -462,7 +462,7 @@ include ../../../source/skeleton.pug
                     +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno02Test2.java', 'java', [14]) Context
                 li @Autowired, @Inject, @Value, @Resource는 BeanPostProcessor 구현체가 처리하므로, 사용자 정의 BeanPostProcessor 또는 BeanFactoryPostProcessor 클래스 안에서 해당 애너테이션들을 적용할 수 없다. 대신 @Bean을 이용해야 한다
                 li Since JDK 9 : 스캔 대상 패키지가 module-info에서 exports 됐는지, non-public 메서드를 호출해야 되는 패키지가 opens(exports 말고) 됐는지 확인 필요
-            table
+            table.w3-table-all.w3-card.w3-small
                 +ths('Annotation', '대응 코드', '예시 코드')
                 tr
                     td @Component
@@ -816,7 +816,7 @@ include ../../../source/skeleton.pug
                     li 이벤트 정의 : ApplicationEvent
                     li 이벤트 리스너 : ApplicationListener 또는 @EventListener(Since 4.2)
                     li 내장 이벤트
-                    table
+                    table.w3-table-all.w3-card.w3-small
                         +ths('Event', '요약')
                         +tds('ContextRefreshedEvent', 'ApplicationContext 초기화 또는 갱신(refresh) 완료')
                         +tds('ContextStartedEvent', 'ConfigurableApplicationContext#start()')
@@ -839,7 +839,7 @@ include ../../../source/skeleton.pug
                     p 단, @Async 메서드는 수동으로 발행해야 한다
                     li @Order로 리스너 호출 순서를 제어할 수 있다
                     li @EventListener > condition에 사용 가능한 SpEL 이벤트 메타데이터
-                    table
+                    table.w3-table-all.w3-card.w3-small
                         +ths('code', 'description')
                         +tds('#root.event, event', 'ApplicationEvent 인스턴스')
                         +tds('#root.args, args', '메서드 파라미터 배열')
@@ -957,7 +957,7 @@ include ../../../source/skeleton.pug
                     person.setPropertyValue("name", "my name");
                     var realPerson = person.getWrappedInstance();
                 li 프로퍼티 경로는 구분자를 이용한 무제한 확장이 가능하다
-                table.no-sort
+                table.w3-table-all.w3-card.w3-small
                     +tds('prop', 'prop 이름의 필드를 가리킨다. 접근 메서드는 getProp() or isProp(), setProp()')
                     +tds('prop1.prop2', 'prop1 필드의 prop2 필드. 접근 메서드는 getProp1().getProp2() or getProp1().isProp2(), getProp1().setProp2()')
                     +tds('prop[2]', 'prop 이름의 배열, List, 기타 ordered collection')
@@ -970,7 +970,7 @@ include ../../../source/skeleton.pug
                     +codeBtn('/Repositories/STS/app2/src/main/java/io/github/donggi/anno/Anno30DataEditor.java', 'java', [5]) Editor
                     +codeBtn('/Repositories/STS/app2/src/test/java/io/github/donggi/anno/Anno30Test.java', 'java', [8]) Context
                 li 내장 PropertyEditor 구현체
-                table
+                table.w3-table-all.w3-card.w3-small
                     +ths('Class', '설명')
                     +tds('ByteArrayPropertyEditor', 'String → byte[]. BeanWrapperImpl 기본 등록')
                     +tds('ClassEditor', 'String(클래스 경로) ↔ Class. BeanWrapperImpl 기본 등록')
@@ -1197,7 +1197,7 @@ include ../../../source/skeleton.pug
                 p @Order(xml에서는 order 속성)를 적용하거나 Ordered 인터페이스 구현
 
                 li.marker 지원하는 advice
-                table
+                table.w3-table-all.w3-card.w3-small
                     +ths('종류','aop 태그','적용 시점')
                     +tds('Before','aop:before','메서드 실행 전')
                     +tds('After Returning','aop:after-returning','메서드 정상 종료 후')
@@ -1205,7 +1205,7 @@ include ../../../source/skeleton.pug
                     +tds('After','aop:after','after-returning + after-throwing')
                     +tds('Around','aop:around','before + after')
                 li.marker 지원하는 pointcut 지시자
-                table
+                table.w3-table-all.w3-card.w3-small
                     +ths('Designator', '설명')
                     +tds('bean', '특정 빈에 정의된 메서드 호출. id or name 지정. 와일드카드 * 사용 가능')
                     +tds('execution', '특정 메서드 호출')
@@ -1236,7 +1236,7 @@ include ../../../source/skeleton.pug
                             name-pattern            메서드 이름 지정
                             param-pattern           ()는 무인자, (..)는 임의 타입 및 길이 인자, (*)는 해당 자리의 임의 타입 인자
                 li.marker 각 advice별 예시 코드(XML)
-                table.no-sort
+                table.w3-table-all.w3-card.w3-small
                     tr
                         td Before
                         td
@@ -1274,7 +1274,7 @@ include ../../../source/skeleton.pug
                     @Configuration
                     @EnableAspectJAutoProxy
                 +asCode('xml', '@Aspect 켜기 - XML') &lt;aop:aspectj-autoproxy/>
-                table.no-sort
+                table.w3-table-all.w3-card.w3-small
                     tr
                         td Before
                         td
@@ -1306,7 +1306,7 @@ include ../../../source/skeleton.pug
                             +codeBtn('/Repositories/Eclipse/spring-aop/src/test/resources/beans/Beans6.xml', 'xml') Config
                             +codeBtn('/Repositories/Eclipse/spring-aop/src/test/java/io/github/donggi/advice/TimerAdviceTest2.java', 'java', [7]) Test
                 li.marker execution 외 Pointcut 예시 코드
-                table.no-sort
+                table.w3-table-all.w3-card.w3-small
                     tr
                         td args XML 설정 예
                         td

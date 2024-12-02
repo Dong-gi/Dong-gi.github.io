@@ -268,7 +268,7 @@ include ../../../source/skeleton.pug
             li @WebListener 표기 가능 리스너 : ServletContextListener, ServletContextAttributeListener, ServletRequestListener, ServletRequestAttributeListener, HttpSessionListener, HttpSessionAttributeListener, HttpSessionIdListener
             li ServletContext#addListener 등록 가능 리스너 : ServletContextAttributeListener, ServletRequestListener, ServletRequestAttributeListener, HttpSessionAttributeListener, HttpSessionIdListener, HttpSessionListene
             p ServletContext 인스턴스가 ServletContainerInitializer#onStartup()으로 설정됐다면 ServletContextListener도 등록 가능
-        table
+        table.w3-table-all.w3-card.w3-small
             caption 종류
             +ths('분류', '이벤트', '인터페이스', '메서드', '설명')
             +tds('웹앱', 'ServletContextEvent', 'ServletContextListener Since Servlet 2.3', 'contextInitialized', '웹앱 초기화')

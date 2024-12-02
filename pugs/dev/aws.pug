@@ -72,14 +72,14 @@ include ../../source/skeleton.pug
             div
                 p 아래는 일부 발췌이며, 최신 사항 전체는 #[+asA('https://docs.aws.amazon.com/ko_kr/apigateway/latest/developerguide/http-api-vs-rest.html')] 참고
                 h4.fake 공개 엔드포인트 유형
-                table
+                table.w3-table-all.w3-card.w3-small
                     +ths('엔드포인트 유형', 'REST API', 'HTTP API')
                     +tds('엣지 최적화', '✓', '')
                     +tds('리전', '✓', '✓')
                     +tds('프라이빗', '✓', '')
                 
                 h4.fake 보안
-                table
+                table.w3-table-all.w3-card.w3-small
                     +ths('보안 기능', 'REST API', 'HTTP API')
                     +tds('상호 TLS 인증', '✓', '✓')
                     +tds('클라이언트 인증서 발급', '✓', '')
@@ -88,7 +88,7 @@ include ../../source/skeleton.pug
             h3 제한사항
             p #[+asA('https://docs.aws.amazon.com/ko_kr/apigateway/latest/developerguide/limits.html', '링크')]. 아래는 일부 발췌
             p WebSocket 엔드포인트가 퍼블릭인 경우, 공격자가 새 연결 제한량의 상당량을 점유할 수 있는 문제가 있다
-            table
+            table.w3-table-all.w3-card.w3-small
                 +ths('API', '리소스 또는 작업', '기본 할당량', '높일 수 있음')
                 +tds('HTTP', '최대 통합 제한 시간', '30초', '아니요')
                 +tds('WebSocket', '리전별 계정당 초당 새 연결 수', '500', '예')
@@ -457,55 +457,55 @@ include ../../source/skeleton.pug
         h2 엔진별 RDS 기능
         div
             h3 블루/그린 배포
-            table
+            table.w3-table-all.w3-card.w3-small
                 +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
                 +tds('O', 'O', 'X', 'X', 'X')
             p 프로덕션 데이터베이스 환경을 별도의 스테이징 환경에 복사하고, 지속적으로 동기화 수행. 프로덕션 환경에 영향을 주지 않으면서 스테이징 환경에서 데이터베이스를 변경한 다음, 최소 중단 시간으로 스테이징 환경을 프로덕션으로 승격 가능
 
             h3 교차 리전 자동 백업
-            table
+            table.w3-table-all.w3-card.w3-small
                 +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
                 +tds('O', 'O', 'O', 'O', 'O')
             p 자동 백업으로 생성되는 스냅샷을 다른 리전에 복제하여 보관하도록 구성할 수 있다. 기존 인스턴스에 대해 설정하려면 RDS > Automated backups > 인스턴스 선택 > Actions > 교차 리전 복제 관리
 
             h3 리전 간 읽기 전용 복제본
-            table
+            table.w3-table-all.w3-card.w3-small
                 +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
                 +tds('O', 'O', '△', 'O', '△')
             p 소스 DB 인스턴스와 다른 리전에 읽기 전용 복제본을 생성할 수 있다
 
             h3 데이터베이스 활동 스트림
-            table
+            table.w3-table-all.w3-card.w3-small
                 +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
                 +tds('X', 'X', 'O', 'X', 'O')
             p DB 인스턴스 감사 활동에 대한 경보를 설정하고 모니터링할 수 있다
 
             h3 듀얼 스택 모드
-            table
+            table.w3-table-all.w3-card.w3-small
                 +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
                 +tds('O', 'O', 'O', 'O', 'O')
             p IPv6도 이용할 수 있다
 
             h3 S3로 스냅샷 내보내기
-            table
+            table.w3-table-all.w3-card.w3-small
                 +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
                 +tds('O', 'O', 'X', 'O', 'X')
             p S3로 내보낸 스냅샷은 Amazon Athena 또는 Amazon Redshift Spectrum을 이용해 직접 분석할 수도 있다
 
             h3 IAM 데이터베이스 인증
-            table
+            table.w3-table-all.w3-card.w3-small
                 +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
                 +tds('O', 'O', 'X', 'O', 'X')
             p 암호 대신 IAM 인증 토큰을 발급 받아 인증한다. 토큰 생성에 오버헤드가 발생하므로 초당 200개 이상의 새 인증이 필요한 경우엔 부적합할 수 있다
 
             h3 Kerberos 인증
-            table
+            table.w3-table-all.w3-card.w3-small
                 +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
                 +tds('X', 'O', 'O', 'O', 'O')
             p Kerberos 및 Microsoft Active Directory를 이용한 외부 인증 정보로 데이터베이스에 접속 가능
 
             h3 다중 AZ DB 클러스터
-            table
+            table.w3-table-all.w3-card.w3-small
                 +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
                 +tds('X', 'O', 'X', 'O', 'X')
             ul
@@ -516,25 +516,25 @@ include ../../source/skeleton.pug
                 p 일반적인 장애 조치 시간 : ~ 35초
 
             h3 성능 개선 도우미
-            table
+            table.w3-table-all.w3-card.w3-small
                 +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
                 +tds('O', 'O', 'O', 'O', 'O')
             p 데이터베이스 성능을 분석하는 데 도움이 되는 자료를 수집하여 시각화한다
 
             h3 RDS Custom
-            table
+            table.w3-table-all.w3-card.w3-small
                 +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
                 +tds('X', 'X', 'O', 'X', 'O')
             p 데이터베이스 환경 및 운영 체제에 액세스하여 커스터마이징 가능
 
             h3 RDS 프록시
-            table
+            table.w3-table-all.w3-card.w3-small
                 +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
                 +tds('O', 'O', 'O', 'O', 'O')
             p 원본 데이터베이스에 대한 연결 풀을 제공한다. 애플리케이션 안에서 연결을 관리하지 않는 경우, 인스턴스에서 지원하는 것보다 많은 연결을 동시에 열어두려는 경우에 적합
 
             h3 Secrets Manager 통합
-            table
+            table.w3-table-all.w3-card.w3-small
                 +ths('MariaDB', 'MySQL', 'Oracle', 'PostgreSQL', 'SQL Server')
                 +tds('O', 'O', 'O', 'O', 'O')
             p RDS 마스터 암호를 Secrets Manager에 저장하고, 정기적으로 교체할 수 있다
@@ -996,7 +996,7 @@ include ../../source/skeleton.pug
                 ul
                     li EBS 지원 AMI : 인스턴스는 EBS 스냅샷에서 생성된 별도 EBS 볼륨과 연결
                     li 인스턴스 스토어 지원 AMI : S3에 저장된 템플릿으로부터 생성된 볼륨과 연결
-                table
+                table.w3-table-all.w3-card.w3-small
                     +ths('특성', 'EBS 지원 AMI', '인스턴스 스토어 지원 AMI')
                     +tds('부팅 시간', '보통 1분 이하', '보통 5분 이하')
                     +tds('루트 디바이스 크기 제한', '64TiB', '10GiB')
@@ -1076,7 +1076,7 @@ include ../../source/skeleton.pug
         div
             h3 인스턴스 유형 이름 규칙
             p 인스턴스 유형 이름 ::= 인스턴스 패밀리 || 세대 || 추가 기능(들)
-            table.no-sort
+            table.w3-table-all.w3-card.w3-small
                 caption 추가 기능
                 +tds('a', 'AMD 프로세서')
                 +tds('g', 'AWS Graviton 프로세서')
@@ -1099,7 +1099,7 @@ include ../../source/skeleton.pug
                     li 시간 당 적립 CPU 크레딧 = 기준 CPU 사용률(%) * vCPU 수 * 60분
                     p 기준 CPU 사용률은 단일 vCPU 사용 기준이며, CloudWatch의 메트릭과 동일하다
                     li 최대 누적 크레딧 = 시간 당 적립 CPU 크레딧 * 24시간
-                table
+                table.w3-table-all.w3-card.w3-small
                     +ths('인스턴스 유형', '시간 당 적립 크레딧', 'vCPU', 'vCPU당 기준 사용률')
                     +tds('t4g.nano', '6', '2', '5%')
                     +tds('t4g.medium', '24', '2', '20%')
@@ -1759,7 +1759,7 @@ include ../../source/skeleton.pug
                         +asA('https://docs.aws.amazon.com/ko_kr/service-authorization/latest/reference/reference_policies_actions-resources-contextkeys.html#context_keys_table', '서비스별 조건 키')
                     li 각 조건 키의 평가 결과는 다음 중 하나 : true, false, not present, null(빈 문자열)
                     li 조건 연산자
-                    table.no-sort
+                    table.w3-table-all.w3-card.w3-small
                         +ths('연산자', '설명', '대응 Not 연산자')
                         +tds('문자열 조건 연산자', '정책 변수 사용 가능', '')
                         +tds('StringEquals', '대소문자 구별한 문자열 일치', 'StringNotEquals')
@@ -1809,7 +1809,7 @@ include ../../source/skeleton.pug
                                 }
                             }
                         li 모든 요청에 사용할 수 있는 정보
-                        table
+                        table.w3-table-all.w3-card.w3-small
                             +tds('aws:CurrentTime', '현재 시각')
                             +tds('aws:EpochTime', '현재 시각')
                             +tds('aws:TokenIssueTime', '임시 보안 자격 증명 발급 시각')
@@ -2352,7 +2352,7 @@ include ../../source/skeleton.pug
         p 서브넷 내에서, 특정 보안 그룹 집합을 갖는 NIC를 생성할 수 있다. 인스턴스 : NIC = 1 : N 관계이며, 결과적으로 인스턴스는 N개의 private IP 주소를 할당받는다
         li Network ACL; Network Access Control List
         p 서브넷(들)에 대한 선택적인 방화벽 계층
-        table
+        table.w3-table-all.w3-card.w3-small
             caption 보안 그룹과 네트워크 ACL 비교
             +ths('Security group', 'Network ACL')
             +tds('인스턴스 단위 동작', '서브넷 단위 동작')

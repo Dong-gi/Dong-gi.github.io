@@ -122,16 +122,16 @@ include ../../source/skeleton.pug
                 p 파라미터의 위치가 다양한 만큼 그 표현 방법도 다양하며, 따라서 직렬화/역직렬화에 필요한 포맷 정보를 <mark>style</mark> 속성에 설정할 수 있다
                 ul
                     li 원시 타입: 예. 정수 id = 1234
-                    table
+                    table.w3-table-all.w3-card.w3-small
                         +ths('style:', 'simple', 'form', 'label', 'matrix')
                         +tds('', '1234', 'id=1234', '.1234', ';id=1234')
                     li 배열 타입: 예. ids = [1, 2, 3]
-                    table
+                    table.w3-table-all.w3-card.w3-small
                         +ths('style:', 'simple', 'form', 'label', 'matrix')
                         +tds('explode=false', '1,2,3', 'ids=1,2,3', '.1.2.3', ';ids=1,2,3')
                         +tds('explode=true', '1,2,3', 'ids=1&ids=2&ids=3', '.1.2.3', ';ids=1;ids=2;ids=3')
                     li 객체 타입: 예. color = {R, G, B}
-                    table
+                    table.w3-table-all.w3-card.w3-small
                         +ths('style:', 'simple', 'form', 'label', 'matrix')
                         +tds('explode=false', 'R,1,G,2,B,3', 'color=R,1,G,2,B,3', '.R.1.G.2.B.3', ';color=R,1,G,2,B,3')
                         +tds('explode=true', 'R=1,G=2,B=3', 'R=1&G=2&B=3', '.R=1.G=2.B=3', ';R=1;G=2;B=3')

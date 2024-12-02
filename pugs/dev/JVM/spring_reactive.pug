@@ -84,7 +84,7 @@ include ../../../source/skeleton.pug
                         +codeBtn('/Repositories/STS/webflux/src/main/java/tutorial/webflux/action/CallBlockingAction.java', 'java')
                     li 지원하는 
                         +asA('https://projectreactor.io/docs/core/release/api/reactor/core/scheduler/Schedulers.html')
-                    table.no-sort
+                    table.w3-table-all.w3-card.w3-small
                         +ths('method', '실행 적합')
                         +tds('parallel()', '병렬 non-blocking Runnable')
                         +tds('single()', '저지연 Runnable 단일 실행. 반환 Scheduler는 재사용된다.')
@@ -119,7 +119,7 @@ include ../../../source/skeleton.pug
                 p WebHttpHandlerBuilder를 이용해 체인을 구성할 수 있는데, 직접 builder에 등록하거나, 컴포넌트를 자동 감지한 ApplicationContext를 지정해주면 된다
                 p WebHandler API는 웹앱 공통 기능들을 지원한다 : 유저 세션 with 속성, 요청 속성, 요청 Locale/Principal 결정, form data, multipart data 등
                 h4.fake WebHttpHandlerBuilder 자동 감지 빈
-                table
+                table.w3-table-all.w3-card.w3-small
                     +ths('Bean name', 'Bean type', 'Count', 'Description')
                     +tds('<any>', 'WebExceptionHandler', '0..N', '예외 처리')
                     +tds('<any>', 'WebFilter', '0..N', '전후 처리')

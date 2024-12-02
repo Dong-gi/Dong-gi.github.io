@@ -8,7 +8,7 @@ include ../../../source/skeleton.pug
     h1 MongoDB
     ol
         li NoSQL 데이터베이스의 한 종류. 데이터를 BSON(Binary JSON)으로 취급하며, SQL을 지원하지 않는다
-        table.no-sort
+        table.w3-table-all.w3-card.w3-small
             caption: +asA('https://docs.mongodb.com/manual/reference/sql-comparison/', 'SQL comparison')
             tr
                 th RDBMS
@@ -32,7 +32,7 @@ include ../../../source/skeleton.pug
     p 참고 자료 : #[+asA('http://bsonspec.org/spec.html')]
     ol
         li Basic Types
-        table.no-sort
+        table.w3-table-all.w3-card.w3-small
             tr
                 th type
                 th size(bytes)
@@ -55,7 +55,7 @@ include ../../../source/skeleton.pug
                 td decimal128
                 td 16(IEEE 754-2008)
         li Non-terminals
-        table.no-sort
+        table.w3-table-all.w3-card.w3-small
             tr
                 th
                 th
@@ -317,7 +317,7 @@ include ../../../source/skeleton.pug
             +asA('https://docs.mongodb.com/manual/reference/aggregation-variables/', 'Aggregation variables')
     div
         h2 help
-        table.no-sort
+        table.w3-table-all.w3-card.w3-small
             tr
                 td db.help()
                 td db 메서드 목록
@@ -389,7 +389,7 @@ include ../../../source/skeleton.pug
         div
             h3 find([object predicate][, object projection])
             +asCode('javascript') let coll = db.myCollection;
-            table.no-sort
+            table.w3-table-all.w3-card.w3-small
                 tr
                     td coll.find()
                     td select *
@@ -459,7 +459,7 @@ include ../../../source/skeleton.pug
 
             h3 Cursor methods
             p db.mycoll.find()는 이터레이터(Cursor)를 반환한다. 단, mongo 셸에서 var 변수에 할당하지 않은 경우 자동으로 결과를 출력하고 끝냄에 유의
-            table.no-sort
+            table.w3-table-all.w3-card.w3-small
                 tr
                     td cursor.forEach()
                     td
@@ -472,7 +472,7 @@ include ../../../source/skeleton.pug
 
         h2 db.mycoll.help()
         +asCode('javascript') let coll = db.myCollection;
-        table.no-sort
+        table.w3-table-all.w3-card.w3-small
             tr
                 td coll.insertOne() Since 3.2
                 td 1개 추가
@@ -567,7 +567,7 @@ include ../../../source/skeleton.pug
         +asCode('javascript') db.mycoll.distinct([string field][, object query][, object options])
 
     +hoverTemplate()#template-mongodb-bson-regex-option
-        table.no-sort
+        table.w3-table-all.w3-card.w3-small
             tr
                 td i
                 td 대소문자 구별X
