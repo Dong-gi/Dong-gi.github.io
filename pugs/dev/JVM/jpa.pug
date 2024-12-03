@@ -229,7 +229,7 @@ include ../../../source/skeleton.pug
                 @Id
                 @TableGenerator(
                     name = "gen_name",
-                    +table() = "jpa_id",                    // 테이블 이름
+                    table = "jpa_id",                    // 테이블 이름
                     pkColumnName = "id_name",            // 테이블 기본키
                     pkColumnValue = "jpa_user2_user_id", // 기준 행을 찾기 위한 기본키 값
                     valueColumnName = "next_id",         // id로 사용할 컬럼 이름

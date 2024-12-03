@@ -80,7 +80,7 @@ mixin pos(positionName)
     span(class='pos-span', id=`pos${positionName.hashCode()}`)
 
 mixin table()
-    table.w3-table-all.w3-card.w3-small
+    table.w3-table-all.w3-card.w3-small&attributes(attributes)
         block
 
 mixin tds(...cells)
@@ -95,11 +95,11 @@ mixin ths(...cells)
 
 mixin w3button(color)
     if color
-        button.w3-btn.w3-round-xxlarge.w3-small(class=color)&attributes(attributes)
+        button.w3-btn.w3-round-xxlarge.w3-small(class=color, type='button')&attributes(attributes)
             if block
                 block
     else
-        button.w3-btn.w3-round-xxlarge.w3-small.w3-teal&attributes(attributes)
+        button.w3-btn.w3-round-xxlarge.w3-small.w3-teal(type='button')&attributes(attributes)
             if block
                 block
 
@@ -184,7 +184,7 @@ mixin post(options)
 
             main#main
                 nav.w3-bar.w3-blue#nav
-                    button.w3-bar-item.w3-button.w3-hover-theme#nav-toggle-btn &#9776;
+                    button.w3-bar-item.w3-button.w3-hover-theme#nav-toggle-btn(type='button') &#9776;
                     form(role='search')
                         input.w3-bar-item#query(type='search',placeholder='search',style='max-width:35%')
                     a.w3-bar-item.w3-button.w3-hover-theme(href='/') Home

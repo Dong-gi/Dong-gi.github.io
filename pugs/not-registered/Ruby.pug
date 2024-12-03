@@ -566,8 +566,8 @@ include ../../source/skeleton.pug
                     sql = &lt;&lt;SQL  # 식별자는 적절히 변경 가능
                     select * from table1, table2
                     where
-                        +table()1.col1 = table2.col2 and
-                        +table()1.col2 > &#x23;{size}
+                        table1.col1 = table2.col2 and
+                        table1.col2 > &#x23;{size}
                     SQL
                 +asCode('ruby').
                     text = &lt;&lt;'TEXT'
