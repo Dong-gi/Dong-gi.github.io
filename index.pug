@@ -17,7 +17,13 @@ include ./source/skeleton.pug
     ul#recently-changed-posts
     script.
         const h = setInterval(() => {
-            if (posts == null || !Array.isArray(posts.list)) { return; }
+            try {
+                if (posts == null || !Array.isArray(posts.list)) {
+                    return;
+                }
+            } catch {
+                return;
+            }
             clearInterval(h);
 
             const ul = document.getElementById('recently-changed-posts');
@@ -34,7 +40,7 @@ include ./source/skeleton.pug
         }, 100);
 
     h1 타임라인?
-    table.w3-table-all.w3-card.w3-small
+    +table()
         +ths('시간', '내용')
         tr
             td 2024

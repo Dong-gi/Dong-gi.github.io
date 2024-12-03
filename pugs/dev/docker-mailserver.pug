@@ -86,7 +86,7 @@ include ../../source/skeleton.pug
             "b3DXduFMNIqaQ4Mgqn/...ZbKskd9ZUCAwEAAQ==" )  ; ----- DKIM key mail for mail.4joy.link
 
         li DNS 설정
-        table.w3-table-all.w3-card.w3-small
+        +table()
             +ths('레코드 이름', '유형', '값')
             +tds('4joy.link', 'MX', '1 mail.4joy.link')
             +tds('mail.4joy.link', 'A', 'xxx.xxx.xxx.xxx')

@@ -55,7 +55,7 @@ include ../../../source/skeleton.pug
     h1 선택자
     div
         h2 단순 선택자
-        table.w3-table-all.w3-card.w3-small
+        +table()
             +ths('분류', '예', '설명')
             tr
                 th 범용 선택자
@@ -177,7 +177,7 @@ include ../../../source/skeleton.pug
 
         h2 선택자의 특정성
         p 위치상 후순위 스타일이더라도, 선택자가 요소를 보다 자세하게 특정하는 경우 보다 높은 우선순위를 가질 수 있다
-        table.w3-table-all.w3-card.w3-small
+        +table()
             +ths('선택자', '점수', '비고')
             +tds('*', '0', '')
             +tds('타입', '1', '')

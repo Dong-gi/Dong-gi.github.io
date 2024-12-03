@@ -108,40 +108,6 @@ function naturalCompareString(str1, str2) {
     }
 }
 
-/**
- * @param {number} colIdx 
- * @param {HTMLTableCellElement} th
- * @param {HTMLTableElement} table 
- */
-function tableSorter(colIdx, th, table) {
-    const rgba = getRgba(th);
-    if (rgba[0] + rgba[1] + rgba[2] < 255 * rgba[3]) {
-        th.classList.add('sorting-table-head-white');
-    } else {
-        th.classList.add('sorting-table-head-black');
-    }
-    if (!th.getAttribute('sort-order')) {
-        th.setAttribute('sort-order', '●');
-    }
-
-    return function () {
-        const isAsc = (th.getAttribute('sort-order') !== '▲');
-        th.setAttribute('sort-order', isAsc ? '▲' : '▼');
-
-        const dataRows = Array.from(table.rows).slice(1);
-        dataRows.sort((r1, r2) => {
-            const result = naturalCompareString(
-                r1.querySelectorAll('td, th')[colIdx].textContent,
-                r2.querySelectorAll('td, th')[colIdx].textContent
-            );
-            return isAsc ? result : -result;
-        })
-        for (const tr of dataRows) {
-            table.append(tr);
-        }
-    }
-}
-
 const rgbaRegex = /(\d+)\D*(\d+)\D*(\d+)\D*(\d*\.?\d*)/;
 /**
  * @param {HTMLElement} element
@@ -406,7 +372,6 @@ function initNav() {
 async function initCodeBtn() {
     for (const codeButton of document.body.querySelectorAll('button.btn-code')) {
         await yield();
-        codeButton.classList.remove('btn-code');
         codeButton.id = 'code-button-' + Math.random().toString().slice(2) + stringHashCode(codeButton.title);
         codeButton.onclick = async function (e) {
             const button = e.target;
@@ -465,7 +430,6 @@ async function initHoverContent() {
 async function initInlineCode() {
     for (const codeDiv of document.body.querySelectorAll('div.as-code')) {
         await yield();
-        codeDiv.classList.remove('as-code');
         const code = codeDiv.innerHTML.trim().replace(/&lt;/gm, '<').replace(/&gt;/gm, '>').replace(/&amp;/gm, '&');
         codeDiv.innerHTML = '';
         fillCodeDiv(codeDiv, codeDiv.getAttribute('lan') ?? 'text', code);
@@ -474,7 +438,6 @@ async function initInlineCode() {
 
     for (const codeSpan of document.body.querySelectorAll('span.as-code')) {
         await yield();
-        codeSpan.classList.remove('as-code');
         const code = codeSpan.innerHTML.trim().replace(/&lt;/gm, '<').replace(/&gt;/gm, '>').replace(/&amp;/gm, '&');
         codeSpan.innerHTML = hljs.highlight(code, { language: codeSpan.getAttribute('lan') ?? 'text', ignoreIllegals: true })['value'];
     }
@@ -521,17 +484,17 @@ window.addEventListener('load', async () => {
             ...posts.list.filter(post => Array.isArray(post.category))
                 .flatMap(post => post.category.map(category => Object.assign({}, post, { category: category })))
         ].sort((post1, post2) => {
-            const r1 = naturalCompareString(post1.category, post2.category);
+            const r1 = post1.category.localeCompare(post2.category);
             if (r1 !== 0) {
                 return r1;
             }
-            return naturalCompareString(post1.title, post2.title);
+            return post1.title.localeCompare(post2.title);
         });
 
-        updatePostList();
+        await updatePostList();
         await yield();
 
-        updateMarkerList();
+        await updateMarkerList();
         await yield();
 
         window.onpopstate();
@@ -563,7 +526,7 @@ function goto(target) {
     }, 100);
 }
 
-function updatePostList() {
+async function updatePostList() {
     /** @type {Map<string, HTMLDetailsElement>} Post.category => <details> */
     const detailsMap = new Map();
     /** @type {Map<string, Post[]>} Post.category => Post[] */
@@ -573,6 +536,7 @@ function updatePostList() {
 
     const lowHref = location.href.toLowerCase()
     for (const post of posts.list) {
+        await yield();
         const categoryPartArr = post.category.split('/');
         const isOpenDetails = lowHref.search(post.file.toLowerCase()) >= 0;
         /** @type {HTMLDetailsElement} */
@@ -614,7 +578,7 @@ function updatePostList() {
     targetDiv.append(rootDetails);
 }
 
-function updateMarkerList() {
+async function updateMarkerList() {
     for (const h of document.querySelectorAll('h1,h2,h3,h4,h5,h6')) {
         h.classList.add('marker');
     }
@@ -626,6 +590,7 @@ function updateMarkerList() {
     const headingLevels = [0, 0, 0, 0, 0, 0, 0, 0];
     const headingTagSet = new Set(['H1', 'H2', 'H3', 'H4', 'H5', 'H6']);
     for (const markerTarget of document.querySelectorAll('.marker:not(.no-marker)')) {
+        await yield();
         const markerName = makeMarkerName(markerTarget);
         const posId = `pos${stringHashCode(markerName)}`
         markerTarget.before(asNodes(`<span class="pos-span" id="${posId}"></span>`));
@@ -749,7 +714,7 @@ function fillCodeDiv(div, lan, text, displayRange) {
 
 function showModal(codeId) {
     let modal = document.getElementById(`code-modal-${codeId}`);
-    if (modal) {
+    if (modal != null) {
         modal.style.display = 'block';
         return;
     }

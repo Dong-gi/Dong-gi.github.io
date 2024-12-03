@@ -26,7 +26,7 @@ include ../../../source/skeleton.pug
     h1 JPA 사용 정리
     div
         h2 예시 코드
-        table.w3-table-all.w3-card.w3-small
+        +table()
             +ths('설명', '링크')
             tr
                 td 전체 프로젝트
@@ -229,7 +229,7 @@ include ../../../source/skeleton.pug
                 @Id
                 @TableGenerator(
                     name = "gen_name",
-                    table.w3-table-all.w3-card.w3-small = "jpa_id",                    // 테이블 이름
+                    +table() = "jpa_id",                    // 테이블 이름
                     pkColumnName = "id_name",            // 테이블 기본키
                     pkColumnValue = "jpa_user2_user_id", // 기준 행을 찾기 위한 기본키 값
                     valueColumnName = "next_id",         // id로 사용할 컬럼 이름
@@ -288,7 +288,7 @@ include ../../../source/skeleton.pug
                 li @ManyToMany 매핑을 사용하려는 경우, JoinTable을 엔티티로 사용하는 게 낫지 않은 지 고려
             div
                 h4 Hibernate 컬렉션 자료형
-                table.w3-table-all.w3-card.w3-small
+                +table()
                     +ths('사용 타입', 'Hibernate가 실제로 인스턴스화하는 타입')
                     +tds('List', 'ArrayList')
                     +tds('Set', 'HashSet')
@@ -587,7 +587,7 @@ include ../../../source/skeleton.pug
                 h4 집계함수 없이 사용 == distinct
                 +asCode('sql') select x.id from X x group by x.id
                 h4 집계함수
-                table.w3-table-all.w3-card.w3-small
+                +table()
                     +ths('함수', '반환 타입')
                     +tds('count', 'Long')
                     +tds('max, min', '대상 타입')
@@ -630,7 +630,7 @@ include ../../../source/skeleton.pug
                 li nullif(expr1, expr2)
                 p 두 값이 같으면 null. 다르면 expr1
             h3 리터럴
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 +ths('타입', '표기')
                 tr
                     td 문자열
@@ -780,7 +780,7 @@ include ../../../source/skeleton.pug
             li 이 인터페이스를 상속하면 findAll, findById, save, delete, flush 등의 메서드를 자동으로 구성한다
             p JpaRepository -> PagingAndSortingRepository -> CrudRepository
             li 명명규칙에 맞는 새 메서드들을 자동으로 구현한다
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 caption 출처 : 
                     +asA('https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.query-methods.query-creation')
                 tr

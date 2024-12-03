@@ -10,7 +10,7 @@ include ../../source/skeleton.pug
         .w3-col.s2.w3-center
             +w3img('https://image.aladin.co.kr/product/3231/24/cover500/1185014349_2.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
         .w3-col.s10
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 +tds('표제/저자사항', '안녕, 긴 잠이여 / 하라 료')
                 +tds('ISBN 정보', '979-11-85014-34-0 (03830)')
                 +tds('발행사항', '(주)비채코리아북스, 발행일 : 2013.10.18')

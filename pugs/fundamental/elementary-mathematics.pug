@@ -11,7 +11,7 @@ include ../../source/skeleton.pug
         .w3-col.s2.w3-center
             +w3img('https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788993712223.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
         .w3-col.s10
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 +tds('표제/저자사항', '기초수학 / 고영상 ,김경수,김동석,김명재,박천건,조동현,함윤미')
                 +tds('ISBN 정보', '978-89-93712-22-3 (93410)')
                 +tds('발행사항', '휴먼싸이언스, 2010.02.28')
@@ -19,7 +19,7 @@ include ../../source/skeleton.pug
         .w3-col.s2.w3-center
             +w3img('https://image.yes24.com/goods/3031659/L', '도서 이미지')&attributes({style: 'max-height:210px'})
         .w3-col.s10
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 +tds('표제/저자사항', '우리가 잘못 배우고 있는 수학 / 김용무')
                 +tds('ISBN 정보', '978-89-8172-709-3 (93410)')
                 +tds('발행사항', '교우사, 2007.09.15')
@@ -27,7 +27,7 @@ include ../../source/skeleton.pug
         .w3-col.s2.w3-center
             +w3img('https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/3232951238/B.jpg?710000000', '도서 이미지')&attributes({style: 'max-height:210px'})
         .w3-col.s10
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 +tds('표제/저자사항', '(시험, 생활, 교양 상식으로 나눠서 배우는) 수학대백과사전 - 실생활에 꼭 필요한 수학에 접근하는 공식, 정리, 규칙 127가지 / 구라모토 다카후미')
                 +tds('ISBN 정보', '979-11-5768-691-9 (05410)')
                 +tds('발행사항', '(주식회사)동양북스, 2021.02.05')
@@ -38,7 +38,7 @@ include ../../source/skeleton.pug
         li 명제가 갖는 값을 진리값(truth value)이라 한다 -- T(true), F(false)
         li 변수를 갖지 않는 단순 명제를 P, Q와 같이 문자로 표현할 수 있다
         li 명제(들)로부터 새로운 명제를 도출할 수 있다
-        table.w3-table-all.w3-card.w3-small
+        +table()
             +ths('English', '한국어', 'Symbolic Notation')
             tr
                 td NOT(P)
@@ -65,7 +65,7 @@ include ../../source/skeleton.pug
                 td (명제의) 배타적 논리합
                 td 식[P \oplus Q]식
         li 논리 연산에 관한 법칙
-        table.w3-table-all.w3-card.w3-small
+        +table()
             +tds('교환법칙 of AND', 'A AND B = B AND A')
             +tds('결합법칙 of AND', 'A AND (B AND C) = (A AND B) AND C')
             +tds('분배법칙 of AND over OR', 'A AND (B OR C) = (A AND B) OR (A AND C)')

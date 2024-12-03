@@ -68,7 +68,7 @@ include ../../../source/skeleton.pug
         p DispatcherServlet이 요청을 처리하도록 전달하는 빈들을 Special Bean이라고 하며, 정의하지 않은 경우 
             +asA('https://github.com/spring-projects/spring-framework/blob/master/spring-webmvc/src/main/resources/org/springframework/web/servlet/DispatcherServlet.properties', '기본값')
             |이 사용된다
-        table.w3-table-all.w3-card.w3-small
+        +table()
             +ths('타입', '설명')
             +tds('HandlerMapping', '요청 URI -> 핸들러 매핑. @RequestMapping, @GetMapping, ...')
             +tds('HandlerAdapter', '핸들러의 구현에 상관없이 DispatcherServlet이 호출할 수 있도록 래퍼 제공')
@@ -269,7 +269,7 @@ include ../../../source/skeleton.pug
         div
             h3 URI Patterns
             +pos('URI Patterns')
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 tr
                     th Pattern
                     th Description
@@ -346,7 +346,7 @@ include ../../../source/skeleton.pug
             ol 아래 조건을 모두 만족하는 경우, java.util.Optional을 결합하여 사용할 수 있다
                 li required 속성이 있는 @RequestParam, @RequestHeader 등의 애너테이션이 적용됨
                 li required=false임
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 +ths('Argument', 'Description')
                 tr
                     td WebRequest, NativeWebRequest
@@ -446,7 +446,7 @@ include ../../../source/skeleton.pug
                         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller.java', 'java', [98,102,74,82]) 예1
                         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller2.java', 'java', [30,34,45,53]) 예2
             h3 Return Values
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 +ths('Return Type', 'Description')
                 tr
                     td @ResponseBody
@@ -625,7 +625,7 @@ include ../../../source/skeleton.pug
                 +codeBtn('/Repositories/Eclipse/spring-mvc/src/main/java/io/github/donggi/advice/UnhandledExceptionAdvice.java', 'java', [6], true)
         div
             h3.fake Method Arguments
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 caption 가능한 메서드 인자
                 +tds('Argument', 'Description')
                 +tds('Exception', '발생 예외. 임의 서브클래스 사용 가능')
@@ -653,7 +653,7 @@ include ../../../source/skeleton.pug
                     td 임의 요청 속성 접근 
                         +goto('@RequestAttribute')
             h3.fake Return Values
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 caption 가능한 반환값
                 +tds('Return', 'Description')
                 tr

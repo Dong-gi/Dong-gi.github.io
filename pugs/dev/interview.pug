@@ -11,7 +11,7 @@ include ../../source/skeleton.pug
         .w3-col.s2.w3-center
             +w3img('https://www.hanbit.co.kr/data/books/B7155705626_l.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
         .w3-col.s10
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 +tds('제목', '(JAVA) 프로그래밍 면접 이렇게 준비한다')
                 +tds('저자', '지은이: 노엘 마크엄 옮긴이: 정원천')
                 +tds('ISBN', '978-89-6848-152-9 [93000]')
@@ -27,7 +27,7 @@ include ../../source/skeleton.pug
         .w3-col.s2.w3-center
             +w3img('https://www.hanbit.co.kr/data/books/B9005920688_l.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
         .w3-col.s10
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 +tds('제목', '프로그래밍 면접 이렇게 준비한다')
                 +tds('저자', '존 몽건,노아 킨들러,에릭 기게리 지음 서환수 옮김')
                 +tds('ISBN', '979-11-6224-199-8 [93000]')
@@ -38,7 +38,7 @@ include ../../source/skeleton.pug
         .w3-col.s2.w3-center
             +w3img('https://image.yes24.com/goods/44305533/800x0', '도서 이미지')&attributes({style: 'max-height:210px'})
         .w3-col.s10
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 +tds('제목', '코딩 인터뷰 완전 분석')
                 +tds('저자', '게일 라크만 맥도웰 지음 이창현 옮김')
                 +tds('ISBN', '978-89-6626-308-0 [13560]')
@@ -126,7 +126,7 @@ include ../../source/skeleton.pug
     ul
         li 경력에 대해 얘기해보세요
         p 전에 했던 일에 대한 객관적 사실 + 무엇을 배웠는지, 어떤 문제가 있었는지
-        table.w3-table-all.w3-card.w3-small
+        +table()
             +ths('질문', '프로젝트 1', '프로젝트 n')
             +tds('도전적이었던 것', '?', '?')
             +tds('실수 또는 실패', '?', '?')

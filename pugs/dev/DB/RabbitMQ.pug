@@ -98,7 +98,7 @@ include ../../../source/skeleton.pug
                 li 아래 테이블에서 "app-specific"은 RabbitMQ 코어에서 기본으로 사용하지 않는, 생산자-소비자 사이의 약속임을 의미한다. 예를 들어, content-encoding이 무엇이든 AMQP는 이진 메시지를 그대로 전달하고, 각 소비자는 자기가 받아들이는 content-encoding과 일치하는 메시지만 ack하여 소비할 수 있다
                 li Queue 정의 시 durable=true로 설정하면, 해당 큐에서는 모든 메시지가 delivery-mode=2로 전달된 것처럼 디스크에 저장한다
                 p 디스크에 저장된 메시지는, 메시지에 대한 참조 카운트가 0이 되면 삭제된다
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 +ths('Property', 'Type', 'Description', 'Required?')
                 +tds('delivery-mode', '1 or 2', '2(persistent; 메시지를 디스크에 저장), 1(transient; 메시지 별도 저장 안 함)', 'Yes')
                 +tds('type', 'String', 'app-specific 메시지 타입. e.g. order.created', 'No')
@@ -114,7 +114,7 @@ include ../../../source/skeleton.pug
                 +tds('app-id', 'String', '앱 이름', 'No')
 
             h3 메시지 속성은 아니나, 메시지 배달 시 추가되는 속성
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 tr
                     th Property
                     th Type

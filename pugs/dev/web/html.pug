@@ -196,7 +196,7 @@ include ../../../source/skeleton.pug
 
                 h4 출처 목록
                 p "-src"로 끝나는 directive들은 모두 출처 목록을 값으로 가질 수 있다. 목록에 항목이 2개 이상인 경우, 공백 문자로 구별한다
-                table.w3-table-all.w3-card.w3-small
+                +table()
                     +ths('Source Value', 'Example', 'Description')
                     +tds('*', 'img-src *', '모든 URL 허용. 단, 다음의 스킴들은 비허용 -- data:, blob:, filesystem:')
                     +tds("'none'", "object-src 'none'", "해당 리소스 전체 차단")

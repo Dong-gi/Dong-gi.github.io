@@ -733,7 +733,7 @@ include ../../source/skeleton.pug
                     li 예. container 브랜치의 docker 디렉터리 지정
                     +asCode('shell') $ docker build https://github.com/docker/rootfs.git#container:docker
                     p Git 저장소를 가리키는 경우, 해당 저장소의 서브모듈까지 재귀적으로 가져온다
-                    table.w3-table-all.w3-card.w3-small
+                    +table()
                         tr
                             th Build Syntax Suffix
                             th Commit Used

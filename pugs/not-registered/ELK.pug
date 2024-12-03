@@ -87,7 +87,7 @@ include ../../source/skeleton.pug
                 p 또는 사전에 정의해놓을 수도 있다(static mapping)
                 li 신규 문서가 기존 매핑과 불일치하는 경우, 색인 거부된다
                 li 데이터 타입
-                table.w3-table-all.w3-card.w3-small
+                +table()
                     +ths('범주', '타입')
                     +tds('String', 'text, keyword')
                     +tds('Numeric', 'long, integer, short, byte, double, float, half_float, scaled_float')

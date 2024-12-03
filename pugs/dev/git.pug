@@ -89,7 +89,7 @@ include ../../source/skeleton.pug
             h3 Scheduled events
             div
                 h4 schedule
-                table.w3-table-all.w3-card.w3-small
+                +table()
                     +ths('GITHUB_SHA', 'GITHUB_REF')
                     +tds('기본 브랜치의 마지막 커밋', '기본 브랜치')
                 p
@@ -100,7 +100,7 @@ include ../../source/skeleton.pug
                         +asA('https://crontab.guru/')
                     li cron 신택스 예시 :
                         +asA('https://crontab.guru/examples.html')
-                table.w3-table-all.w3-card.w3-small
+                +table()
                     +ths('Reserved word', 'Description')
                     +tds('*', 'any value')
                     +tds(',', 'value list separator')
@@ -132,7 +132,7 @@ include ../../source/skeleton.pug
             div
                 h4 workflow_dispatch
                 p 특정 workflow 지정 실행. 사용자 정의 인자 전달 가능
-                table.w3-table-all.w3-card.w3-small
+                +table()
                     +ths('Webhook event payload', 'GITHUB_SHA', 'GITHUB_REF')
                     tr
                         td: +asA('https://docs.github.com/en/free-pro-team@latest/webhooks/event-payloads/#workflow_dispatch')

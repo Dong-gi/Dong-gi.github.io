@@ -79,6 +79,38 @@ mixin hoverTemplate()
 mixin pos(positionName)
     span(class='pos-span', id=`pos${positionName.hashCode()}`)
 
+mixin table()
+    table.w3-table-all.w3-card.w3-small
+        block
+
+mixin tds(...cells)
+    tr&attributes(attributes)
+        each content, idx in cells
+            td= content
+
+mixin ths(...cells)
+    tr&attributes(attributes)
+        each content, idx in cells
+            th= content
+
+mixin w3button(color)
+    if color
+        button.w3-btn.w3-round-xxlarge.w3-small(class=color)&attributes(attributes)
+            if block
+                block
+    else
+        button.w3-btn.w3-round-xxlarge.w3-small.w3-teal&attributes(attributes)
+            if block
+                block
+
+mixin w3img(src, description)
+    figure.w3-center.w3-margin-bottom
+        img.w3-round(src=src, alt="Can't load image", loading='lazy')&attributes(attributes)
+        figcaption
+            |&lt;
+            = description || (src.split('/').pop())
+            |>
+
 //-
     options = {
         title: string,
@@ -128,7 +160,7 @@ mixin post(options)
                 hr
                 details.w3-small.file-list
                     summary LICENSE
-                    table
+                    +table()
                         +tds('Author', 'License')
                         tr
                             td &copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a>
@@ -159,31 +191,3 @@ mixin post(options)
                 article#contents
                     if block
                         block
-
-mixin tds(...cells)
-    tr&attributes(attributes)
-        each content, idx in cells
-            td= content
-
-mixin ths(...cells)
-    tr&attributes(attributes)
-        each content, idx in cells
-            th= content
-
-mixin w3button(color)
-    if color
-        button.w3-btn.w3-round-xxlarge.w3-small(class=color)&attributes(attributes)
-            if block
-                block
-    else
-        button.w3-btn.w3-round-xxlarge.w3-small.w3-teal&attributes(attributes)
-            if block
-                block
-
-mixin w3img(src, description)
-    figure.w3-center.w3-margin-bottom
-        img.w3-round(src=src, alt="Can't load image", loading='lazy')&attributes(attributes)
-        figcaption
-            |&lt;
-            = description || (src.split('/').pop())
-            |>

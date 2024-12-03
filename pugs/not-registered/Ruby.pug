@@ -30,7 +30,7 @@ include ../../source/skeleton.pug
                 # ...
             li MacRuby : Objective-C 런타임에서 동작하며, Cocoa 프레임워크 이용 가능
         li 코딩 규약
-        table.w3-table-all.w3-card.w3-small
+        +table()
             +ths('분류', 'Ruby', 'Java')
             tr
                 td 클래스, 모듈
@@ -315,7 +315,7 @@ include ../../source/skeleton.pug
                     attr_write    :writeonly # setter만 생성
                 end
             li 내장 변수
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 +ths('이름', '설명')
                 +tds('$stdin', '표준 입력. default STDIN')
                 +tds('$stdout, $>', '표준 출력. default STDOUT')
@@ -373,7 +373,7 @@ include ../../source/skeleton.pug
                             MZP      ��  �       @
                             -----
             li 내장 상수
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 +ths('이름', '설명')
                 +tds('STDIN', '$stdin 기본값')
                 +tds('STDOUT', '$stdout 기본값')
@@ -566,8 +566,8 @@ include ../../source/skeleton.pug
                     sql = &lt;&lt;SQL  # 식별자는 적절히 변경 가능
                     select * from table1, table2
                     where
-                        table.w3-table-all.w3-card.w3-small1.col1 = table2.col2 and
-                        table.w3-table-all.w3-card.w3-small1.col2 > &#x23;{size}
+                        +table()1.col1 = table2.col2 and
+                        +table()1.col2 > &#x23;{size}
                     SQL
                 +asCode('ruby').
                     text = &lt;&lt;'TEXT'

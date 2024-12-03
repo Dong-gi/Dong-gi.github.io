@@ -858,7 +858,7 @@ include ../../source/skeleton.pug
             ul
                 li 기본적으로 main, test 소스셋이 추가된다
                 li 속성
-                table.w3-table-all.w3-card.w3-small
+                +table()
                     +ths('한정자', '타입', '이름', '설명')
                     +tds('readonly', 'String', 'name', '소스셋 이름')
                     +tds('readonly', 'SourceSetOutput', 'output', '출력 클래스 + 리소스 파일들')
@@ -894,7 +894,7 @@ include ../../source/skeleton.pug
                     targetCompatibility = JavaVersion.VERSION_1_8 // 출력 버전
                 }
             h3 Convention properties
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 +ths('한정자', '타입', '이름', '설명')
                 +tds('', 'String', 'reporting.baseDir', '빌드 결과 출력 디렉터리 이름, 기본값 reports')
                 +tds('readonly', 'File', 'reportsDir', '{buildDir}/{reporting.baseDir}')

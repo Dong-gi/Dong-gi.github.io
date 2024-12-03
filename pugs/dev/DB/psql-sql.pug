@@ -459,7 +459,7 @@ include ../../../source/skeleton.pug
                         -- 10~100의 합계
                         WITH RECURSIVE t(n) AS ( VALUES (10) UNION SELECT n+1 FROM t WHERE n &lt; 100 )
                         SELECT sum(n) FROM t;
-                    table.w3-table-all.w3-card.w3-small
+                    +table()
                         tr
                             th t
                             th working_table
@@ -501,7 +501,7 @@ include ../../../source/skeleton.pug
     h1 Data Types
     div
         h2 Numeric Types
-        table.w3-table-all.w3-card.w3-small
+        +table()
             tr
                 th Name
                 th Size
@@ -563,7 +563,7 @@ include ../../../source/skeleton.pug
             p serial 타입은 1부터 시작하여 자동으로 1씩 증가하는 정수에 대한 표현 편의를 제공한다. 9.6 버전에서는 sequence를 이용함으로써 구현한다
 
         h2 Character Types
-        table.w3-table-all.w3-card.w3-small
+        +table()
             tr
                 th Name
                 th Description
@@ -586,7 +586,7 @@ include ../../../source/skeleton.pug
                 li escape : 출력 가능 아스키 문자(32 ~ 126)는 있는 그대로, 백슬래시는 \\, 그 외는 \xxx로 표현한다. 예. 'abc klm *\251T'
 
         h2 Date/Time Types
-        table.w3-table-all.w3-card.w3-small
+        +table()
             tr
                 th Name
                 th Size
@@ -635,7 +635,7 @@ include ../../../source/skeleton.pug
             li interval field
             p YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, YEAR TO MONTH, DAY TO HOUR, DAY TO MINUTE, DAY TO SECOND, HOUR TO MINUTE, HOUR TO SECOND, MINUTE TO SECOND
             li.marker Special Date/Time Input String
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 tr
                     th String
                     th Valid Types
@@ -682,7 +682,7 @@ include ../../../source/skeleton.pug
         +asCode('sql') CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy'); -- 대소문자 구분한다
 
         h2 Geometric Types
-        table.w3-table-all.w3-card.w3-small
+        +table()
             tr
                 th Name
                 th Size
@@ -915,7 +915,7 @@ include ../../../source/skeleton.pug
                 li md5(string), sha256(bytea), sha512(bytea)
 
         h2 Bit String Operators
-        table.w3-table-all.w3-card.w3-small
+        +table()
             tr
                 th Operator
                 th Description
@@ -1092,7 +1092,7 @@ include ../../../source/skeleton.pug
         h2 Date/Time Functions and Operators
         div
             h3 Date/Time Operators
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 tr
                     th Operator
                     th Example
@@ -1183,7 +1183,7 @@ include ../../../source/skeleton.pug
                     td t
 
             h3 Date/Time Functions
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 tr
                     th Function
                     th Return Type
@@ -1368,7 +1368,7 @@ include ../../../source/skeleton.pug
         div
             +asA('http://postgresql.kr/docs/current/functions-json.html', 'functions-json.html')
             h3 json and jsonb Operators
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 tr
                     th Operator
                     th Right Operand Type
@@ -1483,7 +1483,7 @@ include ../../../source/skeleton.pug
                     li 직렬화 이상 == result not in possibleResults
             li.marker PostgreSQL 트랜잭션 격리 수준
             p 트랜잭션 격리 수준을 설정하려면 SET TRANSACTION 명령을 이용한다. PostgreSQL은 MVCC 모델을 이용하기 때문에, Read uncommitted는 Read committed처럼 작동한다
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 tr
                     th 격리 수준
                     th Dirty Read
@@ -1549,7 +1549,7 @@ include ../../../source/skeleton.pug
         ol
             li Table-level Locks
             p 아래 표는 테이블 수준 잠금의 종류와, 각 요청된 잠금 수준에 대해 이미 설정된 잠금으로 인해 요청이 처리되지 않는 경우를 보여준다. 테이블 잠금은 LOCK 명령어로 획득할 수 있다
-            table.w3-table-all.w3-card.w3-small.w3-centered
+            +table().w3-centered
                 tr
                     th(rowspan='2') Requested Lock Mode
                     th(colspan='8') Current Lock Mode

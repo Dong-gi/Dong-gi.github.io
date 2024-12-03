@@ -332,7 +332,7 @@ include ../../../source/skeleton.pug
     div
         h2 Format String
         li Byte Order, Size, and Alignment
-        table.w3-table-all.w3-card.w3-small
+        +table()
             tr
                 th Char
                 th Byte order
@@ -368,7 +368,7 @@ include ../../../source/skeleton.pug
             li Native size, alignment : C 컴파일러의 sizeof로 결정
             p 정렬을 위해 패딩 바이트(0)들이 첨가될 수 있다
         li Format Character
-        table.w3-table-all.w3-card.w3-small
+        +table()
             tr
                 th Char
                 th C type
@@ -582,7 +582,7 @@ include ../../../source/skeleton.pug
             ul
                 li replace(hour=self.hour, minute=self.minute, second=self.second, microsecond=self.microsecond, tzinfo=self.tzinfo, *, fold=0)
                 li time.isoformat(timespec='auto')
-                table.w3-table-all.w3-card.w3-small
+                +table()
                     tr
                         td Format
                         td Case
@@ -598,7 +598,7 @@ include ../../../source/skeleton.pug
                     tr
                         td HH:MM:SS+HH:MM[:SS[.ffffff]]
                         td microsecond == 0 and utcoffset() != None
-                table.w3-table-all.w3-card.w3-small
+                +table()
                     tr
                         td Format
                         td timespec
@@ -725,7 +725,7 @@ include ../../../source/skeleton.pug
                 li timezone 클래스는 tzinfo의 서브클래스
                 li 고정된 UTC offset을 표현하며, 변경 불가능하다
         h2 strftime(), strptime() 사양
-        table.w3-table-all.w3-card.w3-small
+        +table()
             tr
                 th Directive
                 th 의미
@@ -1022,7 +1022,7 @@ include ../../../source/skeleton.pug
 
 
     h1 collections.abc : 컨테이너 ABC
-    table.w3-table-all.w3-card.w3-small
+    +table()
         tr
             th ABC
             th 상속
@@ -1354,7 +1354,7 @@ include ../../../source/skeleton.pug
     ul
         li list와 유사하게 동작하지만, 원소의 타입은 하나로 제한된다
         li 배열 생성 시 타입을 지정한다
-    table.w3-table-all.w3-card.w3-small
+    +table()
         tr
             th Code
             th C type
@@ -1577,7 +1577,7 @@ include ../../../source/skeleton.pug
     h1 math, cmath
     div
         h2 math : 실함수
-        table.w3-table-all.w3-card.w3-small
+        +table()
             tr
                 th 함수
                 th 기능
@@ -1698,7 +1698,7 @@ include ../../../source/skeleton.pug
                 td
         h2 cmath : 복소함수
         p int, float, complex 및 __complex__() 소지 객체, __float__() 소지 객체들이 인자로 가능하다
-        table.w3-table-all.w3-card.w3-small
+        +table()
             tr
                 th 함수
                 th 기능
@@ -1937,7 +1937,7 @@ include ../../../source/skeleton.pug
         p attrgetter(attr), attrgetter(*attrs), itemgetter(item), itemgetter(*items), methodcaller(name, /, *args, **kwargs)
         li 복합 연산
         p iadd, iand, iconcat, ifllordiv, ilshift, imod, imul, imatmul, ior, ipow, irshift, isub, itruediv, ixor
-    table.w3-table-all.w3-card.w3-small
+    +table()
         tr
             th Operation
             th Syntax

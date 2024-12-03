@@ -48,7 +48,7 @@ include ../../source/skeleton.pug
                     li x는 y의 자식 중에서 가장 큰 높이를 갖는 노드
                 li x ← y ← z가 서로 같은 방향일 때는 한 번의 회전으로 균형을 되찾을 수 있다
                 li x ← y ← z가 서로 다른 방향일 때는 두 번의 회전으로 균형을 되찾을 수 있다
-            table.w3-table-all.w3-card.w3-small
+            +table()
                 tr
                     th(colspan='12') LL Rotation : this, this.left, this.left.left가 서로 위치 변경
                 tr
@@ -642,7 +642,7 @@ include ../../source/skeleton.pug
 
                 h4 JOSE Header
                 p 참고 자료 : #[+asA('https://www.iana.org/assignments/jose/jose.xhtml')]. 목록에 등록되지 않은 확장 헤더들도 사용할 수 있으며, 이에 대한 처리는 구현에 의존한다
-                table.w3-table-all.w3-card.w3-small
+                +table()
                     +ths('Name', 'Description', 'Usage Location(s)')
                     tr
                         td alg
