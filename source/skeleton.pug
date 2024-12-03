@@ -139,17 +139,17 @@ mixin post(options)
             meta(name='description', content=options.description)
             link(rel="icon", href="/imgs/favicon.png")
 
+            script#highlight-js(src="/source/highlight.pack.js", async)
+            script#default-js(src='/source/default.min.js', defer)
+            if options.useMath
+                script#MathJax-script(src='/source/tex-chtml.js', defer)
+                script MathJax={tex:{tags:'ams',inlineMath:[['식[', ']식']]}};
             script#google-analytics(src='https://www.googletagmanager.com/gtag/js?id=UA-143098403-1', async)
             script.
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
                 gtag('config', 'UA-143098403-1');
-            if options.useMath
-                script#MathJax-script(src='/source/tex-chtml.js', defer)
-                script MathJax={tex:{tags:'ams',inlineMath:[['식[', ']식']]}};
-            script#highlight-js(src="/source/highlight.pack.js", defer)
-            script#default-js(src='/source/default.min.js', defer)
 
         body
             aside.w3-animate-left#sidebar

@@ -287,6 +287,10 @@ div#contents .code-div{margin:8px 0}
         position: fixed;
         height: var(--nav-height);
         z-index: 2;
+
+        a {
+            font-weight: bold;
+        }
     }
 
     #contents {
