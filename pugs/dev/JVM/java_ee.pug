@@ -73,15 +73,15 @@ include ../../../source/skeleton.pug
             ol
                 li New Project » Web » Dynamic Web Project » Target runtime에 톰캣 설정
                 li 코드 작성
-                +w3img('/imgs/20200808_184623.png', '프로젝트 구조')
+                +w3img('/imgs/202008/20200808_184623.png', '프로젝트 구조')
                 +codeBtn('/Repositories/STS/app1/src/io/github/donggi/app1/controller/HelloController.java', 'java', [11], true)
                 +codeBtn('/Repositories/STS/app1/webapp/WEB-INF/web.xml', 'xml', null, true)
                 li web.xml
                 p web.xml은 배포 설명자로, 서블릿 및 서블릿 매핑, 필터 등을 정의한다
                     |  이클립스 프로젝트 생성 마법사로 web.xml을 생성하면 자동으로 welcome-file-list를 구성해주는데, welcome-file-list에 정의된 welcome-file을 순서대로 찾아 기본 페이지로 보여준다
                 li 실행
-                +w3img('/imgs/20200808_184839.png', 'Debug on Server')
-                +w3img('/imgs/20200808_185012.png', '브라우저 화면')
+                +w3img('/imgs/202008/20200808_184839.png', 'Debug on Server')
+                +w3img('/imgs/202008/20200808_185012.png', '브라우저 화면')
                 p 또는 Export » WAR file를 선택하여, 톰캣 webapps 디렉터리에 옮긴 후 배치되기를 기다린 뒤 브라우저에서 확인
                 li 이클립스 내부에서 실행하는 경우 웹 애플리케이션 배포 위치
                 p ${PROJECT_ROOT}\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps
@@ -112,11 +112,11 @@ include ../../../source/skeleton.pug
                 li New Project » Gradle Project 
                     +codeBtn('/Repositories/STS/mvc-xml1/build.gradle', 'gradle', null, true)
                 li 코드 작성
-                +w3img('/imgs/20200808_185701.png', '프로젝트 구조')
+                +w3img('/imgs/202008/20200808_185701.png', '프로젝트 구조')
                 +codeBtn('/Repositories/STS/mvc-xml1/src/main/java/io/github/donggi/mvc1/controller/HelloController.java', 'java', [11], true)
                 +codeBtn('/Repositories/STS/mvc-xml1/src/main/webapp/WEB-INF/web.xml', 'xml', null, true)
                 li 실행
-                +w3img('/imgs/20200808_185608.png', '브라우저 화면')
+                +w3img('/imgs/202008/20200808_185608.png', '브라우저 화면')
 
         h2 서블릿 생애 주기
         ol
@@ -223,7 +223,7 @@ include ../../../source/skeleton.pug
             ul
                 li &lt;%@ %> : 지시자; Directive : page, taglib, include 3종류가 있다
                 li &lt;% %> : Scriptlet : 일반 자바 코드를 작성하면 된다. _jspService 메서드 안의 코드로, 매개변수를 포함한 아래의 변수들을 참조할 수 있다
-                +w3img('/imgs/20190912_191500.png')
+                +w3img('/imgs/201909/20190912_191500.png')
                 li &lt;%! %> : 선언문; Declaration : 서블릿 클래스의 멤버 정의
                 li &lt;%= %> : Expression : out#print 또는 out#write에 들어갈 값을 반환하는 문장을 작성하면 된다
         div

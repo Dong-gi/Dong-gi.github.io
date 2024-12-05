@@ -89,9 +89,10 @@ include ../../source/skeleton.pug
         +table()
             +ths('레코드 이름', '유형', '값')
             +tds('4joy.link', 'MX', '1 mail.4joy.link')
-            +tds('mail.4joy.link', 'A', 'xxx.xxx.xxx.xxx')
+            +tds('4joy.link', 'TXT', '"v=spf1 ip4:167.234.218.7 ~all"')
+            +tds('mail.4joy.link', 'A', '167.234.218.7')
             tr
                 td mail._domainkey.4joy.link
                 td TXT
-                td v=DKIM1; h=sha256; k=rsa; "<br>"p=MIICIjANBgh...g9S8pPBMP6UvHja"<br>"CfmAAKOPddf...sZuXwaAqBWjo"<br>"b3DXduFMNI...9ZUCAwEAAQ=="')
+                td "v=DKIM1; h=sha256; k=rsa; "<br>"p=MIICIjANBgh...g9S8pPBMP6UvHja"<br>"CfmAAKOPddf...sZuXwaAqBWjo"<br>"b3DXduFMNI...9ZUCAwEAAQ=="
         p IP 소유자라면, PTR 레코드를 이용해 역방향 DNS 조회가 가능하도록 설정하는 것이 권장.

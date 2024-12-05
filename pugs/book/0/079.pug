@@ -1,0 +1,22 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: '편의점 인간',
+    description: '개인적으로 마음에 든 『편의점 인간』 문구',
+})
+
+    h1 도서 정보
+    .w3-row
+        .w3-col.s2.w3-center
+            +w3img('https://upload.wikimedia.org/wikipedia/ko/thumb/c/c6/%ED%8E%B8%EC%9D%98%EC%A0%90%EC%9D%B8%EA%B0%84.jpg/200px-%ED%8E%B8%EC%9D%98%EC%A0%90%EC%9D%B8%EA%B0%84.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
+        .w3-col.s10
+            +table()
+                +tds('표제/저자사항', '편의점 인간 / 무라타 사야카')
+                +tds('ISBN 정보', '978-89-522-3542-8 (05830)')
+                +tds('발행사항', '(주)살림출판사, 2016.11.10')
+
+    h1 독서 기록
+    ul
+        li 완벽한 매뉴얼이 있어서 '점원'이 될 수는 있어도, 매뉴얼 밖에서는 어떻게 하면 보통 인간이 될 수 있는지, 여전히 전혀 모르는 채였다
+
+        li 내가 점원을 그만두면 고쳐질까? 점원 일을 하고 있어야 고쳐질까? 시라하 씨를 집에서 쫓아내면 고쳐질까? 집에 계속 놔두어야 고쳐질까? 지시를 내려주면 나는 아무래도 좋아. 확실하게 가르쳐줘

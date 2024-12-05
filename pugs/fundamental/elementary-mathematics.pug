@@ -151,7 +151,7 @@ include ../../source/skeleton.pug
             p 주어진 직선에 대하여, 그 직선 위에 있지 않는 한 점을 지나는 평행선은 오직 하나만 존재한다
 
         h2 원주각
-        +w3img('/imgs/2023-03-05 165418.png')
+        +w3img('/imgs/202303/2023-03-05 165418.png')
         ul
             li 원호 식[\widehat{AB}]식에 대하여, ∠APB를 원주각, ∠AOB식을 중심각이라 한다
             li 동일한 원호에 대하여, 점 P의 위치에 관계없이 원주각은 일정하다
@@ -159,13 +159,13 @@ include ../../source/skeleton.pug
                 summary 증명
                 ul
                     li 점 O가 선분 AP, BP 사이에 존재할 때
-                    +w3img('/imgs/2023-03-05 173733.png')
+                    +w3img('/imgs/202303/2023-03-05 173733.png')
                     p 두 이등변 삼각형 APO, BPO로부터, ∠AOB = ∠AOQ + ∠BOQ = 2∠APO + 2∠BPO = 2∠APB를 얻을 수 있다
                     li 점 O가 선분 AP 또는 BP 위에 존재할 때
-                    +w3img('/imgs/2023-03-05 173917.png')
+                    +w3img('/imgs/202303/2023-03-05 173917.png')
                     p 이등변 삼각형 BPO로부터, ∠AOB = 2∠APB를 얻을 수 있다
                     li 점 O가 선분 AP, BP 바깥에 존재할 때
-                    +w3img('/imgs/2023-03-05 181331.png')
+                    +w3img('/imgs/202303/2023-03-05 181331.png')
                     p 두 이등변 삼각형 APO, BPO로부터, 다음 연립방정식을 세울 수 있다
                     ol
                         li ∠APB + ∠PAO = ∠AOB + ∠PBO
@@ -178,7 +178,7 @@ include ../../source/skeleton.pug
             li 원에 내접하는 사각형은 마주보는 두 내각의 합이 식[\pi]식다
             p 두 내각에 대응하는 두 중심각의 합이 식[2\pi]식이므로
             li 접선과 현이 이루는 각
-            +w3img('/imgs/2023-03-05 181241.png')
+            +w3img('/imgs/202303/2023-03-05 181241.png')
             p ∠APT = ∠AP'T = ∠ATQ
         
         h2 방멱
@@ -190,9 +190,9 @@ include ../../source/skeleton.pug
                 summary 증명
                 ul
                     li 점이 원 안에 있는 경우
-                    +w3img('/imgs/2023-03-05 204648.png')
+                    +w3img('/imgs/202303/2023-03-05 204648.png')
                     p 선분 PO의 연장선을 그려보자
-                    +w3img('/imgs/2023-03-05 205007.png')
+                    +w3img('/imgs/202303/2023-03-05 205007.png')
                     ul
                         li ∠APC = ∠BPD
                         li 원호 AD에 대하여 원호각 ∠ACD = ∠ABD
@@ -207,7 +207,7 @@ include ../../source/skeleton.pug
                     p 0 = 0이므로 자명하다
                     li 점이 원 밖에 있는 경우
                     p 점이 원 안에 있는 경우와 마찬가지로 선분 PO의 연장선을 그려본다
-                    +w3img('/imgs/2023-03-05 213630.png')
+                    +w3img('/imgs/202303/2023-03-05 213630.png')
                     p #[+goto('원주각')]의 성질로부터, 원에 내접하는 사각형 ABDC의 마주보는 두 내각의 합이 식[\pi]식라는 사실을 이용하면,
                     ul
                         li ∠PCA = ∠PBD
@@ -221,15 +221,15 @@ include ../../source/skeleton.pug
                 p.w3-right-align ■
 
             li 현에 대한 방멱
-            +w3img('/imgs/2023-03-05 214319.png')
+            +w3img('/imgs/202303/2023-03-05 214319.png')
             p \[\overline{PA} \cdot \overline{PB} = \overline{PC} \cdot \overline{PD}\]
 
             li 할선에 대한 방멱
-            +w3img('/imgs/2023-03-05 214724.png')
+            +w3img('/imgs/202303/2023-03-05 214724.png')
             p \[\overline{PA} \cdot \overline{PB} = \overline{PC} \cdot \overline{PD}\]
 
             li 접선에 대한 방멱
-            +w3img('/imgs/2023-03-05 214921.png')
+            +w3img('/imgs/202303/2023-03-05 214921.png')
             p \[\overline{PA}^2 = \overline{PC} \cdot \overline{PD}\]
 
         h2 유클리드 삼각형
@@ -250,13 +250,13 @@ include ../../source/skeleton.pug
                 ul
                     li 예각삼각형인 경우
                     p △ABC의 외접원을 그리고, 꼭짓점 A를 지나는 지름을 그려보자
-                    +w3img('/imgs/2023-03-05 215420.png')
+                    +w3img('/imgs/202303/2023-03-05 215420.png')
                     p #[+goto('원주각')]의 성질에 따라 ∠BAC = ∠BA'C임을 알고 있다. 또, ∠BCA'가 직각이므로, \[a = \overline{BC} = 2R\sin{∠BA'C} = 2R\sin{A}\]
                     p 나머지 꼭짓점에 대해서도 같은 결과를 얻을 수 있다
 
                     li 둔각삼각형인 경우
                     p 예각삼각형의 경우와 마찬가지로, 삼각형의 외접원을 그리고, 꼭짓점 A를 지나는 지름을 그려보자
-                    +w3img('/imgs/2023-03-05 220401.png')
+                    +w3img('/imgs/202303/2023-03-05 220401.png')
                     p 위 예갹삼각형인 경우의 증명으로부터 식[a = \overline{BC} = 2R\sin{∠BA'C}]식임을 알 수 있다
                     p 또, #[+goto('원주각')]의 성질에 따라 ∠BA'C = 식[\pi]식 - A이며, 식[\pi/2 \lt A \lt \pi]식에 대하여 식[\sin(A) = \sin(\pi - A)]식이므로, \[a = 2R\sin{∠BA'C} = 2R\sin{A}\]
 
@@ -276,7 +276,7 @@ include ../../source/skeleton.pug
                 p 꼭짓점 B에서 직선 AC로 내린 수선의 발을 H라 하자
                 ul
                     li H가 A 바깥에 있을 때
-                    +w3img('/imgs/2023-03-11 123301.png')
+                    +w3img('/imgs/202303/2023-03-11 123301.png')
                     p 피타고라스의 정리로부터 \begin{align*}
                         | & \overline{AB}^2 = \overline{BH}^2 + \overline{AH}^2 \\
                         |\iff & c^2 = a^2\sin^2{C} + (a\cos{C} - b)^2 \\
@@ -286,7 +286,7 @@ include ../../source/skeleton.pug
 
                     li H = A일 때
                     p 점 A에서 선분 BC로 내린 수선의 발을 H'라 하자
-                    +w3img('/imgs/2023-03-11 123715.png')
+                    +w3img('/imgs/202303/2023-03-11 123715.png')
                     p 피타고라스의 정리로부터 \begin{align*}
                         | & \overline{AB}^2 = \overline{AH'}^2 + \overline{BH'}^2 \\
                         |\iff & c^2 = b^2\sin^2{C} + (a - b\cos{C})^2 \\
@@ -295,7 +295,7 @@ include ../../source/skeleton.pug
                         |\end{align*}
 
                     li H가 선분 AC 위에 존재하고, 양쪽 끝점 어디와도 같지 않을 때
-                    +w3img('/imgs/2023-03-11 120643.png')
+                    +w3img('/imgs/202303/2023-03-11 120643.png')
                     p 피타고라스의 정리로부터 \begin{align*}
                         | & \overline{AB}^2 = \overline{BH}^2 + \overline{AH}^2 \\
                         |\iff & c^2 = a^2\sin^2{C} + (b - a\cos{C})^2 \\
@@ -304,11 +304,11 @@ include ../../source/skeleton.pug
                         |\end{align*}
 
                     li H = C일 때
-                    +w3img('/imgs/2023-03-11 124146.png')
+                    +w3img('/imgs/202303/2023-03-11 124146.png')
                     p 식[\cos(\pi/2) = 0]식이므로, 식[c^2 = a^2 + b^2 = a^2 + b^2 - 2ab\cos{C}]식
                     
                     li H가 C 바깥에 있을 때
-                    +w3img('/imgs/2023-03-11 124417.png')
+                    +w3img('/imgs/202303/2023-03-11 124417.png')
                     p 피타고라스의 정리로부터 \begin{align*}
                         | & \overline{AB}^2 = \overline{BH}^2 + \overline{AH}^2 \\
                         |\iff & c^2 = a^2\sin^2(\pi - C) + (b + a\cos(\pi - C))^2 \\
@@ -424,7 +424,7 @@ include ../../source/skeleton.pug
                     li 부채꼴의 넓이 식[S = {\theta \over 2}r^2 = {1 \over 2}rl]식
                     p 원의 넓이가 식[{\pi}r^2]식이고, 중심각의 크기와 부채꼴의 넓이가 비례한다는 사실로부터 도출할 수 있다
             li 아래와 같은 직각삼각형을 생각하자
-            +w3img('/imgs/20230305_141045.png')
+            +w3img('/imgs/202303/20230305_141045.png')
             ul
                 li sine 함수 : 식[\sin{\theta} = b / c]식
                 li cosine 함수 : 식[\cos{\theta} = a / c]식
@@ -460,7 +460,7 @@ include ../../source/skeleton.pug
                 li 식[2\cos{\alpha + \beta \over 2}\cos{\alpha - \beta \over 2} = \cos(\alpha) + \cos(\beta)]식
             details 
                 summary 증명
-                +w3img('/imgs/2023-03-11 132311.png')
+                +w3img('/imgs/202303/2023-03-11 132311.png')
                 p 단위원 위의 두 점 A, B에 대하여 선분 OA, OB가 x축과 이루는 각도를 각각 식[\alpha, \beta (\alpha \geq \beta)]식라 하자.
                 p 그러면 A, B의 좌표는 각각 식[(\cos{\alpha}, \sin{\alpha}), (\cos{\beta}, \sin{\beta})]식이고, 선분 AB의 길이는 아래 두 가지 방법으로 구할 수 있다.
                 ul
@@ -582,7 +582,7 @@ include ../../source/skeleton.pug
                 |\end{align*}
 
             li 식[\lim_{x \to 0}{\sin{x} \over x}]식
-            +w3img('/imgs/2023-03-11 220945.png')
+            +w3img('/imgs/202303/2023-03-11 220945.png')
             p 반지름이 1인 원과 그 접선 BT를 생각하자. 0 &lt; x &lt; 식[\pi / 2]식에 대하여, "삼각형 OAT의 넓이 &lt; 부채꼴 OAT의 넓이 &lt; 삼각형 OBT의 넓이"가 항상 성립한다 \begin{align*}
                 | & \sin{x} / 2 \lt x / 2 \lt \tan{x} / 2 \\
                 |\iff & 1 \lt {x \over \sin{x}} \lt {1 \over \cos{x}} \\

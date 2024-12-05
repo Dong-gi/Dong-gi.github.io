@@ -8,6 +8,6 @@
 	let c = canvas.getContext('2d');
 	c.clearRect(0, 0, canvas.width, canvas.height);
 	let image = new Image();
-	image.src = "/imgs/kanna.gif";
+	image.src = "/imgs/no-date/kanna.gif";
 	image.onload = () => c.drawImage(image, 0, 0);
 })();

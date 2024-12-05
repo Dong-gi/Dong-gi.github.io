@@ -1,0 +1,22 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: '도덕의 시간',
+    description: '개인적으로 마음에 든 『도덕의 시간』 문구',
+})
+
+    h1 도서 정보
+    .w3-row
+        .w3-col.s2.w3-center
+            +w3img('https://image.yes24.com/goods/86889981/L', '도서 이미지')&attributes({style: 'max-height:210px'})
+        .w3-col.s10
+            +table()
+                +tds('표제/저자사항', '도덕의 시간 / 오승호')
+                +tds('ISBN 정보', '979-11-89571-41-2 (05830)')
+                +tds('발행사항', '블루홀식스, 2021.02.10')
+
+    h1 독서 기록
+    ul 
+        li 근대 형법에서는 '입증'을 피고가 범행을 저지를 수 있었다는 증명이 아닌, 피고가 아니면 범행이 일어날 수 없다는 증명으로 해석한다
+
+        li 네가 바쁜 걸 보니 또 세상이 불해해졌나 보군

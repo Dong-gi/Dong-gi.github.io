@@ -1,0 +1,22 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: '검은 집',
+    description: '개인적으로 마음에 든 『검은 집』 문구',
+})
+
+    h1 도서 정보
+    .w3-row
+        .w3-col.s2.w3-center
+            +w3img('https://image.aladin.co.kr/product/22/43/cover500/8979196180_1.gif', '도서 이미지')&attributes({style: 'max-height:210px'})
+        .w3-col.s10
+            +table()
+                +tds('표제/저자사항', '검은 집 / 기시 유스케')
+                +tds('ISBN 정보', '978-89-7919-618-4 (03830)')
+                +tds('발행사항', '(도서출판)창해, 2004.08.15')
+
+    h1 독서 기록
+    ul
+        li 그러나 그것까지는 자신의 책임이 아니다. 자신은 경고를 보내는 것으로 의무를 다했으니까
+        p 하지만 막상 그런 사태가 발생한다면 과연 그렇게 생각할 수 있을까
+        li 앞으로 사람을 죽이려는 사람이, 일부러 자신에게 시선이 고정되는 짓을 할 리가 없지 않습니까?

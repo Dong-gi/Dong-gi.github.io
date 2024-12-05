@@ -1,0 +1,21 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: '일곱색의 독',
+    description: '개인적으로 마음에 든 『일곱색의 독』 문구',
+})
+
+    h1 도서 정보
+    .w3-row
+        .w3-col.s2.w3-center
+            +w3img('https://image.yes24.com/goods/101562921/L', '도서 이미지')&attributes({style: 'max-height:210px'})
+        .w3-col.s10
+            +table()
+                +tds('표제/저자사항', '일곱색의 독 / 나카야마 시치리')
+                +tds('ISBN 정보', '979-11-89571-51-1 (05830)')
+                +tds('발행사항', '블루홀식스, 2021.06.21')
+
+    h1 독서 기록
+    ul 
+        li 이번처럼 운전기사의 과도한 근무가 사회 문제시되면 국토교통성도 기준을 수정하라는 압박을 받을 겁니다
+        p 그럼 어쩔 수 없이 새 감사기관이 생기고 거기에 또 국토교통성 낙하산 인사가 가겠죠

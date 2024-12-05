@@ -62,10 +62,10 @@ include ../../../source/skeleton.pug
     h1 IDE에서 애너테이션 프로세싱 켜기
     ol
         li Eclipse : 프로젝트 설정 변경
-        +w3img('/imgs/20191128_134424.png')
-        +w3img('/imgs/20191128_134459.png')
+        +w3img('/imgs/201911/20191128_134424.png')
+        +w3img('/imgs/201911/20191128_134459.png')
         li Android Studio : 안드로이드 스튜디오(프로젝트 X) 설정 변경
-        +w3img('/imgs/20191128_133722.png')
+        +w3img('/imgs/201911/20191128_133722.png')
 
     h1 javac -processor 이용 예
     ol
@@ -102,8 +102,8 @@ include ../../../source/skeleton.pug
         li 위 "javac -processor 이용 예" 프로젝트 그대로 jar 빌드
         li META-INF/services/javax.annotation.processing.Processor 파일에 애너테이션 프로세서 클래스
             +codeBtn('/Repositories/Eclipse/annotation-processing1/src/main/resources/META-INF/services/javax.annotation.processing.Processor', 'text') 명시 »
-        +w3img('/imgs/20191128_164401.png')
-        +w3img('/imgs/20191128_164656.png')
+        +w3img('/imgs/201911/20191128_164401.png')
+        +w3img('/imgs/201911/20191128_164656.png')
         li jar 포함하여 컴파일
         +asCode('shell').
             D:\>javac -encoding UTF-8 -cp annotation-processing1-1.0.jar io/github/donggi/annotation/test/MyTargetTest.java
@@ -115,7 +115,7 @@ include ../../../source/skeleton.pug
         li 위 "javac -cp 이용 예" jar 그대로 이용
         li 위 "IDE에서 애너테이션 프로세싱 켜기"와 같이 애너테이션 프로세싱 허용하고 jar 등록
         li 소스 작성에 따라 자동적으로 호출되고, Error Log 뷰에 아래와 같이 표시된다
-        +w3img('/imgs/20191128_170023.png')
+        +w3img('/imgs/201911/20191128_170023.png')
 
     h1 Eclipse Gradle 프로젝트 예
     ol
@@ -138,7 +138,7 @@ include ../../../source/skeleton.pug
         +codeBtn('/Repositories/Eclipse/annotation-processing3/annotation-processing3-processor/build.gradle', 'text') processor build.gradle »
         +codeBtn('/Repositories/Eclipse/annotation-processing3/annotation-processing3-test/build.gradle', 'text') test build.gradle »
         li 프로세서 프로젝트는 위 "javac -cp 이용 예"와 마찬가지로 javax.annotation.processing.Processor를 포함한다
-        +w3img('/imgs/20191128_180107.png')
+        +w3img('/imgs/201911/20191128_180107.png')
         li Gradle 빌드
         +asCode('shell').
             D:\annotation-processing3>set GRADLE_OPTS=-Dfile.encoding=UTF-8

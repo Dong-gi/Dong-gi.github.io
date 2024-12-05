@@ -153,7 +153,7 @@ include ../../../source/skeleton.pug
                     li 이를 이용해 조회(find)하려는 엔티티가 이미 컨텍스트에 있다면 DB에 쿼리를 보내지 않고 즉시 컨텍스트의 객체를 반환한다
                     li @Id를 @GeneratedValue(strategy = GenerationType.IDENTITY)로 구성하는 경우, 커밋 전에 식별자를 얻기 위해 미리 insert 쿼리가 실행된다
                 li 영속 객체 생애 주기
-                +w3img('/imgs/20200731_215700.png', 'Entity Life Cycle')
+                +w3img('/imgs/202007/20200731_215700.png', 'Entity Life Cycle')
                 ul
                     li Managed : 변경이 존재하면 DB에 반영됨
                     li Detached : EntityManager가 닫혔거나, 롤백되어 분리된 상태. 변경이 DB에 반영되지 않음
