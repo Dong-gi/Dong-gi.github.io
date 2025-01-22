@@ -1093,7 +1093,7 @@ include ../../source/skeleton.pug
                 li 균형 잡힌 컴퓨팅, 메모리, 네트워킹 리소스 제공
                 li 인스턴스 패밀리 : M, T
                 li 일부 인스턴스 유형은 네트워킹 리소스를 항상 100% 활용할 수는 없음에 유의
-                p 기준 대역폭 초과 시 적립한 크레딧을 사용하여 한계 성능까지 잠시 확장 가능
+                p #[+asA('https://docs.aws.amazon.com/ec2/latest/instancetypes/ec2-instance-type-specifications.html', '기준 대역폭')] 초과 시 적립한 크레딧을 사용하여 한계 성능까지 잠시 확장 가능
                 li T 패밀리는 CPU 역시 제한
                 ul
                     li 시간 당 적립 CPU 크레딧 = 기준 CPU 사용률(%) * vCPU 수 * 60분
@@ -1109,20 +1109,20 @@ include ../../source/skeleton.pug
             ul
                 li 인스턴스 패밀리 : C
                 li 일부 인스턴스 유형은 네트워킹 리소스를 항상 100% 활용할 수는 없음에 유의
-                p 기준 대역폭 초과 시 적립한 크레딧을 사용하여 한계 성능까지 잠시 확장 가능
+                p #[+asA('https://docs.aws.amazon.com/ec2/latest/instancetypes/ec2-instance-type-specifications.html', '기준 대역폭')] 초과 시 적립한 크레딧을 사용하여 한계 성능까지 잠시 확장 가능
 
             h3 메모리 최적화
             ul
                 li 인스턴스 패밀리 : R, X, u-, z1d
                 li 일부 인스턴스 유형은 네트워킹 리소스를 항상 100% 활용할 수는 없음에 유의
-                p 기준 대역폭 초과 시 적립한 크레딧을 사용하여 한계 성능까지 잠시 확장 가능
+                p #[+asA('https://docs.aws.amazon.com/ec2/latest/instancetypes/ec2-instance-type-specifications.html', '기준 대역폭')] 초과 시 적립한 크레딧을 사용하여 한계 성능까지 잠시 확장 가능
 
             h3 스토리지 최적화
             ul
                 li 만 단위 스토리지 IOPS 제공
                 li 인스턴스 패밀리 : D, H, I
                 li 일부 인스턴스 유형은 네트워킹 리소스를 항상 100% 활용할 수는 없음에 유의
-                p 기준 대역폭 초과 시 적립한 크레딧을 사용하여 한계 성능까지 잠시 확장 가능
+                p #[+asA('https://docs.aws.amazon.com/ec2/latest/instancetypes/ec2-instance-type-specifications.html', '기준 대역폭')] 초과 시 적립한 크레딧을 사용하여 한계 성능까지 잠시 확장 가능
 
             h3 가속 컴퓨팅
             ul
@@ -1133,7 +1133,7 @@ include ../../source/skeleton.pug
                 li FPGA : F
                 p 병렬로 처리 가능한 CPU 집약 작업 가속
                 li 일부 인스턴스 유형은 네트워킹 리소스를 항상 100% 활용할 수는 없음에 유의
-                p 기준 대역폭 초과 시 적립한 크레딧을 사용하여 한계 성능까지 잠시 확장 가능
+                p #[+asA('https://docs.aws.amazon.com/ec2/latest/instancetypes/ec2-instance-type-specifications.html', '기준 대역폭')] 초과 시 적립한 크레딧을 사용하여 한계 성능까지 잠시 확장 가능
 
         h2 인스턴스 구입 옵션
         div

@@ -108,7 +108,31 @@ include ../../../source/skeleton.pug
                 li 예시2.
                     +codeBtn('/Repositories/Single/202410/29-1358.html', 'HTML')
                     +codeBtn('/Repositories/Single/202410/29-1358.html', 'nohighlight') Show
-            
+
+            h3 Speculative loading
+            ul
+                li #{'<link rel="preconnect">'}
+                p 추후 사용될 가능성이 높으므로, DNS 조회 ~ TCP 연결 ~ TLS 연결 미리 수행
+                +asCode('HTML') #{'<link rel="preconnect" href="https://example.com" />'}
+                +asCode('HTTP', 'HTTP 헤더로도 지시 가능') #{'Link: <https://example.com>; rel="preconnect"'}
+
+                li #{'<link rel="dns-prefetch">'}
+                p 추후 사용될 가능성이 있으므로, DNS 조회 미리 수행
+                +asCode('HTML') #{'<link rel="dns-prefetch" href="https://example.com" />'}
+
+                li #{'<link rel="preload">'}
+                p 이 페이지에서 반드시 사용되는 리소스 중, 높은 우선순위의 것을 미리 가져오기 후 캐싱
+                +asCode('HTML').
+                    #{'<link rel="preload" href="main.js" as="script" />'}
+                    #{'<link rel="preload" href="https://www.example.com/fonts/xxx.woff2" as="font" type="font/woff2" crossorigin />'}
+                +asCode('HTTP', 'HTTP 헤더로도 지시 가능') #{'Link: <https://www.example.com/fonts/xxx.woff2>; rel="preload"'}
+
+                li #{'<link rel="prefetch">'}
+                p preload보다는 낮은 우선순위로 리소스 가져오기 후 캐싱
+
+                li #{'<link rel="modulepreload">'}
+                p 이 페이지에서 반드시 사용되는 모듈 중, 높은 우선순위의 것을 미리 가져와 파싱 및 컴파일까지 수행
+
             h3 Base URL
             p 모든 상대경로에 대한 기본 주소를 지시한다
             +asCode('html') #{'<base href="https://example.com">'}

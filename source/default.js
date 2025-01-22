@@ -169,13 +169,16 @@ function calcOffset(element) {
  */
 function highlight(element) {
     if (document.getElementById('highlight-css') == null) {
-        const style = asNodes(`<style id="highlight-css">@keyframes highlight{from{background:#ff0;box-shadow:0 0 0.5em 0.5em #ff0;padding:0.25em}to{background:#fff;box-shadow:0 0 #fff;padding:0}}</style>`);
-        document.getElementsByTagName('head')[0].append(style);
+        const style = asNodes(`<style id="highlight-css">@keyframes highlight{from{background:#ff0;}to{background:#fff;}}</style>`);
+        document.querySelector('head').append(style);
     }
-    element.style.animation = 'highlight 2s 1';
+    if (element.style.animation?.length > 0) {
+        return
+    }
+    element.style.animation = 'highlight 3s 1';
     setTimeout(() => {
         element.style.animation = '';
-    }, 2000)
+    }, 3000)
 }
 
 /**
