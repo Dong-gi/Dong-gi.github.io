@@ -1,0 +1,21 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: '심리학과의 만남',
+    description: '개인적으로 마음에 든 『심리학과의 만남』 문구',
+})
+
+    h1 도서 정보
+    .w3-row
+        .w3-col.s2.w3-center
+            +w3img('https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9788958328650.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
+        .w3-col.s10
+            +table()
+                +tds('표제/저자사항', '심리학과의 만남 / Richard A. Griggs')
+                +tds('ISBN 정보', '978-89-5832-865-0 (93180)')
+                +tds('발행사항', '시그마프레스, 2012.03.02')
+
+    h1 독서 기록
+    ul
+        li 이러한 이론과 발견을 터득해감에 따라 사후 확신 편향에 빠지지 않도록 조심하기 바란다
+        p 일단 실험결과를 알고 나면, 그 결과가 뻔한 것처럼 보인다(Slovic & Fischhoff, 1977). 거의 모든 심리학적 발견은 그것을 알고 난 후에는 그냥 뻔한 상식처럼 보인다는 말이다
