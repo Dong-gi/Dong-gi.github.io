@@ -535,7 +535,7 @@ async function updatePostList() {
     /** @type {Map<string, Post[]>} Post.category => Post[] */
     const postMap = new Map();
     /** @type {HTMLDetailsElement} */
-    const rootDetails = asNodes(`<details open class="w3-small file-list"><summary>Category</summary><ul></ul></details>`)
+    const rootDetails = asNodes(`<details open class="w3-small"><summary>Category</summary><ul></ul></details>`)
 
     const lowHref = location.href.toLowerCase()
     for (const post of posts.list) {
@@ -552,12 +552,13 @@ async function updatePostList() {
                 parentDetails.open ||= isOpenDetails;
                 continue;
             }
-            const details = asNodes(`<details class="w3-small file-list" title="${subCategory}"><summary>${categoryPartArr[i]}</summary><ul></ul></details>`);
+            const li = asNodes(`<li><details class="w3-small" title="${subCategory}"><summary>${categoryPartArr[i]}</summary><ul></ul></details></li>`);
+            const details = li.firstChild;
             detailsMap.set(subCategory, details);
             if (parentDetails != null) {
-                parentDetails.querySelector('ul').append(details);
+                parentDetails.querySelector('ul').append(li);
             } else {
-                rootDetails.querySelector('ul').append(details);
+                rootDetails.querySelector('ul').append(li);
             }
             parentDetails = details;
             parentDetails.open ||= isOpenDetails;
@@ -582,26 +583,20 @@ async function updatePostList() {
 }
 
 async function updateMarkerList() {
-    for (const h of document.querySelectorAll('h1,h2,h3,h4,h5,h6')) {
-        h.classList.add('marker');
-    }
-
-    const details = asNodes(`<details open class="w3-small file-list"><summary>Content</summary><ul></ul></details>`);
+    const details = asNodes(`<details open class="w3-small"><summary>Content</summary><ul></ul></details>`);
     const ul = details.querySelector('ul');
     const contentRoot = document.querySelector('#contents');
     const skipLevelCheckTagSet = new Set(['THEAD', 'TBODY', 'TR', 'SPAN']);
     const headingLevels = [0, 0, 0, 0, 0, 0, 0, 0];
     const headingTagSet = new Set(['H1', 'H2', 'H3', 'H4', 'H5', 'H6']);
-    for (const markerTarget of document.querySelectorAll('.marker:not(.no-marker)')) {
+    for (const markerTarget of document.querySelectorAll('h1:not(.no-marker), h2:not(.no-marker), h3:not(.no-marker), h4:not(.no-marker), h5:not(.no-marker), h6:not(.no-marker), .marker:not(.no-marker)')) {
         await yield();
         const markerName = makeMarkerName(markerTarget);
         const posId = `pos${stringHashCode(markerName)}`
         markerTarget.before(asNodes(`<span class="pos-span" id="${posId}"></span>`));
 
         /** @type {HTMLLIElement} */
-        const markerLi = asNodes(`<li class="${markerTarget.classList.contains('fake') ? 'w3-hide' : ''}">
-    <a title="${markerName}" href="#${posId}"></a>
-</li>`);
+        const markerLi = asNodes(`<li><a title="${markerName}" href="#${posId}"></a></li>`);
 
         let level = 0;
         let parent = markerTarget.parentElement;
@@ -612,7 +607,9 @@ async function updateMarkerList() {
             }
             level += 1;
         }
-        markerLi.classList.add(`margin-left-${level}`);
+        if (level !== 0) {
+            markerLi.classList.add(`margin-left-${level}`)
+        }
 
         headingLevels[level] += 1;
         headingLevels.fill(0, level + 1);
@@ -620,6 +617,9 @@ async function updateMarkerList() {
         markerLi.querySelector('a').textContent = `${prefix}${markerName.substring(0, 50)}`
         if (headingTagSet.has(markerTarget.tagName)) {
             markerTarget.textContent = `${prefix}${markerTarget.textContent}`
+        }
+        if (markerTarget.classList.contains('fake')) {
+            continue
         }
         ul.append(markerLi);
     }

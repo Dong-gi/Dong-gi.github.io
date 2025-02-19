@@ -33,7 +33,7 @@ include ../../source/skeleton.pug
         p <b>정의.</b> 명제(proposition)에 대한 수학적 증명이란, 기본 공리(axiom)들과 이미 증명된 다른 명제들로부터 결론에 도달하는 일련의 논리적 연역(deduction)이다
         ul
             li 귀납(Induction) : 관찰된 사실들로부터 결론을 도출하는 과정
-            p e.g. 모든 백조는 하얗다
+            p 예. 모든 백조는 하얗다
             li 연역(Deduction) : 참인 전제들로부터 결론을 도출하는 과정
             p 참고. 수학적 귀납법은 연역논증이다
 
@@ -333,7 +333,7 @@ include ../../source/skeleton.pug
                 li 모순을 이용한 증명을 위해 C가 공집합이 아니라고 가정한다
                 li WOP에 의해, C에는 최소 원소 c가 존재해야 한다
                 li 모순에 도달한다
-                p e.g. P(c)가 참임을 보이기, c보다 작은 원소가 C에 존재함을 보이기
+                p 예. P(c)가 참임을 보이기, c보다 작은 원소가 C에 존재함을 보이기
                 li C는 공집합이다. 따라서 P(n)은 항상 참이다
 
             div
@@ -360,7 +360,7 @@ include ../../source/skeleton.pug
             +pos('2.4')
             h3 Well Ordered Sets
             p 어떤 실수 집합에 대하여, 공집합이 아닌 모든 부분집합이 최소 원소를 갖는 경우, 이 집합은 well ordered set이다
-            p 최소 원소를 갖는 집합이 항상 well ordered set은 아니다. e.g. 음이 아닌 유리수 집합은 최소 원소 0을 갖지만, 그 부분집합인 양의 유리수 집합은 최소 원소가 존재하지 않는다
+            p 최소 원소를 갖는 집합이 항상 well ordered set은 아니다. 예. 음이 아닌 유리수 집합은 최소 원소 0을 갖지만, 그 부분집합인 양의 유리수 집합은 최소 원소가 존재하지 않는다
 
             +pos('정리 2.4.1.')
             p <b>정리 2.4.1.</b> 음이 아닌 임의 정수 n에 대하여, 집합 식[S=\left\{m \in \mathbb{N}|m\ge -n\right\}]식는 well ordered set이다
@@ -600,7 +600,7 @@ include ../../source/skeleton.pug
                 h4.fake Propositions in Normal Form
                 +pos('정리 3.4.1.')
                 p <b>정리 3.4.1.</b> 모든 명제 식은 그와 동치인 full DNF, full CNF가 존재한다
-                p e.g. A AND (B OR C)
+                p 예. A AND (B OR C)
                 +table()
                     +ths('A', 'B', 'C', 'A AND (B OR C)')
                     +tds('T', 'T', 'T', 'T')
@@ -686,7 +686,7 @@ include ../../source/skeleton.pug
 
                 +pos('3.6.2')
                 h4.fake Mixing Quantifiers
-                p e.g. 식[\forall{n}\in\text{Evens }\exists{p}\in\text{Primes }\exists{q}\in\text{Primes.}\quad n=p+q.]식
+                p 예. 식[\forall{n}\in\text{Evens }\exists{p}\in\text{Primes }\exists{q}\in\text{Primes.}\quad n=p+q.]식
 
                 +pos('3.6.3')
                 h4.fake Order of Quantifiers
@@ -695,7 +695,7 @@ include ../../source/skeleton.pug
                 +pos('3.6.4')
                 h4.fake Variables Over One Domain
                 p 모든 변수의 정의역이 동일하다면 표기에서 생략할 수 있다
-                p e.g. 식[\forall{n}.\ n\in\text{Evens}\quad\text{IMPLIES}\quad(\exists{p}\exists{q}.\ p\in\text{Primes AND }q\in\text{Primes AND }n=p+q)]식
+                p 예. 식[\forall{n}.\ n\in\text{Evens}\quad\text{IMPLIES}\quad(\exists{p}\exists{q}.\ p\in\text{Primes AND }q\in\text{Primes AND }n=p+q)]식
 
                 +pos('3.6.5')
                 h4.fake Negating Quantifiers
@@ -906,7 +906,7 @@ include ../../source/skeleton.pug
                 li λ ::= empty sequence
                 li 집합에 관한 데카르트 곱(Cartesian product)은 원소들의 시퀀스로 이루어진 집합을 생성한다
                 ul
-                    li e.g. 식[\mathbb{N}\times \{a, b\} = \{(0,a), (0, b), (1, a), (1, b), ...\}]식
+                    li 예. 식[\mathbb{N}\times \{a, b\} = \{(0,a), (0, b), (1, a), (1, b), ...\}]식
                     li 식[\{a, b\}^3 = \{a, b\} \times \{a, b\} \times \{a, b\}]식
 
             +pos('4.3')

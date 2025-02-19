@@ -31,9 +31,9 @@ include ../../../source/skeleton.pug
             h3 .NET 실행 모델
             p 각 .NET 구현체는 다음을 포함한다
             ul
-                li 런타임(e.g. .NET 5 CLR)
-                li 클래스 라이브러리(e.g. .NET 5 기본 클래스 라이브러리)
-                li 필요에 따른 애플리케이션 라이브러리(e.g. WPF, Windows Forms)
+                li 런타임(예. .NET 5 CLR)
+                li 클래스 라이브러리(예. .NET 5 기본 클래스 라이브러리)
+                li 필요에 따른 애플리케이션 라이브러리(예. WPF, Windows Forms)
                 li 개발 도구
             div
                 h4.fake CLR(Common Language Runtime)
@@ -47,7 +47,7 @@ include ../../../source/skeleton.pug
                     li CLR이 중간 언어를 JIT 처리하여 CPU를 위한 기계어 코드를 생성하고 실행한다
                 h4.fake 비관리 리소스 작업
                 ul
-                    li e.g. FileStream은 관리 객체지만, 관리되지 않는 파일 핸들을 참조한다. 따라서 FileStream 사용을 마쳤다면 파일 핸들을 명시적으로 해제해야 한다
+                    li 예. FileStream은 관리 객체지만, 관리되지 않는 파일 핸들을 참조한다. 따라서 FileStream 사용을 마쳤다면 파일 핸들을 명시적으로 해제해야 한다
                     li 비관리 리소스를 참조하는 객체는 IDisposable 인터페이스를 구현한다. 이러한 객체를 using 문에서 사용하면 Dispose() 메서드를 자동으로 호출한다
                     +asCode('cs').
                         var iDisposable = new FileStream("./", FileMode.Open);
@@ -265,11 +265,11 @@ include ../../../source/skeleton.pug
             h3 제네릭의 공변성(Covariance) 및 반공변성(Contravariance)
             ul
                 li Covariance : 지정된 것보다 더 많은 파생 타입을 사용 가능
-                p e.g. IEnumerable&lt;Derived&gt; 인스턴스를 IEnumerable&lt;Base&gt; 변수에 할당 가능
+                p 예. IEnumerable&lt;Derived&gt; 인스턴스를 IEnumerable&lt;Base&gt; 변수에 할당 가능
                 li Contravariance : 지정된 것보다 더 일반적인 타입을 사용 가능
-                p e.g. Action&lt;Base&gt; 인스턴스를 Action&lt;Derived&gt; 변수에 할당 가능
+                p 예. Action&lt;Base&gt; 인스턴스를 Action&lt;Derived&gt; 변수에 할당 가능
                 li Invariance : 지정된 타입만 사용 가능
-                p e.g. List&lt;Base&gt;는 List&lt;Derived&gt; 변수에 할당 불가능. and vice versa
+                p 예. List&lt;Base&gt;는 List&lt;Derived&gt; 변수에 할당 불가능. and vice versa
             +table()
                 +ths('타입', '공변 타입 매개 변수', '반공변 타입 매개 변수')
                 +tds('Action<T>', '', 'Y')
@@ -490,7 +490,7 @@ include ../../../source/skeleton.pug
                 li 네임스페이스를 이용해 대규모 프로젝트에서 타입 및 메서드 이름의 범위를 제어 가능
                 li using 지시문을 이용해 네임스페이스 타이핑 생략 가능
                 li global 네임스페이스는 루트 네임스페이스
-                p e.g. global::System은 항상 .NET System 네임스페이스를 가리킨다
+                p 예. global::System은 항상 .NET System 네임스페이스를 가리킨다
 
             h3 클래스
             ul
@@ -582,7 +582,7 @@ include ../../../source/skeleton.pug
             h3 인터페이스
             ul
                 li 구현 클래스는 인터페이스의 프로퍼티 및 인덱서에 접근자를 추가할 수 있다
-                p e.g. get 접근자만 있는 인터페이스 프로퍼티에 set 접근자 추가 가능
+                p 예. get 접근자만 있는 인터페이스 프로퍼티에 set 접근자 추가 가능
                 li Since 8.0 멤버 기본 구현 정의 가능
                 li Since 11 필드가 아닌 인터페이스 멤버는 static abstract 가능
 

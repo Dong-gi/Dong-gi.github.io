@@ -283,7 +283,7 @@ include ../../source/skeleton.pug
                     li 동일한 해시 값을 산출하는 서로 다른 입력을 찾기 어려워야 한다
                     li 입력과 결과 쌍을 가지고 해시 함수를 구하기 어려워야 한다
             h3 Re-hashing; Map resizing
-            p 초기 버킷 크기의 일정 비율(e.g. 75%)을 채운 경우, 버킷 크기를 늘리고(e.g. 2배) 각 엔트리를 다시 저장
+            p 초기 버킷 크기의 일정 비율(예. 75%)을 채운 경우, 버킷 크기를 늘리고(예. 2배) 각 엔트리를 다시 저장
 
     h1 정렬
     p Stability : 정렬 키가 동일한 두 요소의 순서가 정렬 후에도 유지되는 경우
@@ -549,8 +549,8 @@ include ../../source/skeleton.pug
                     |에 설정할 수 있다
                 +asCode('text', 'URI') otpauth://totp/${issuer}:${user}?secret=${privateKey}&amp;issuer=${issuer}&amp;algorithm=SHA1&amp;digits=6&amp;period=30
                 ul
-                    li issuer : 서비스 제공자. e.g. Microsoft, LlinkedIn, Amazon Web Service, gmail...
-                    li user : 사용자. e.g. hi.donggi@gmail.com, Donggi Kim, wiz - hi.donggi@gmail.com, ...
+                    li issuer : 서비스 제공자. 예. Microsoft, LlinkedIn, Amazon Web Service, gmail...
+                    li user : 사용자. 예. hi.donggi@gmail.com, Donggi Kim, wiz - hi.donggi@gmail.com, ...
                     li privateKey : Base32 인코딩 문자열. 패딩 불필요
                     li algorithm : SHA1(default), SHA256, SHA512
                     li digits : OTP 길이; 6(default)

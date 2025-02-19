@@ -355,7 +355,7 @@ include ../../../source/skeleton.pug
             +asCode('java').
                 static &lt;T,​S extends T> Comparator&lt;Iterable&lt;S>> lexicographical​(Comparator&lt;T> comparator)
                     // Iterable을 사전순으로 정렬해준다
-                    // e.g. [] &lt; [1] &lt; [1, 1] &lt; [1, 2] &lt; [2]
+                    // 예. [] &lt; [1] &lt; [1, 1] &lt; [1, 2] &lt; [2]
                     // + isInOrder, isInStrictOrder
 
                 static &lt;T> Collector&lt;T,​?,​List&lt;T>> least​(int k, Comparator&lt;? super T> comparator)
@@ -625,7 +625,7 @@ include ../../../source/skeleton.pug
 
             final &lt;X> TypeToken&lt;T> where​(TypeParameter&lt;X> typeParam, TypeToken&lt;X> typeArg)
                 // 동적으로 제네릭 타입을 치환
-                // e.g.
+                // 예.
                 static &lt;K, V> TypeToken&lt;Map&lt;K, V>> mapOf(TypeToken&lt;K> keyType, TypeToken&lt;V> valueType) {
                   return new TypeToken&lt;Map&lt;K, V>>() {}
                       .where(new TypeParameter&lt;K>() {}, keyType)
@@ -634,18 +634,18 @@ include ../../../source/skeleton.pug
 
             final TypeToken&lt;?> resolveType​(Type type)
                 // 제네릭 실제 타입 획득
-                // e.g.
+                // 예.
                 new TypeToken&lt;List&lt;String>>() {}.resolveType(List.class.getMethod("get", int.class).getGenericReturnType())
                     == String.class
 
             final TypeToken.TypeSet getTypes()
                 // 현재 타입 + 선조 타입 + 구현 인터페이스
-                // e.g. List&lt;String> =>
+                // 예. List&lt;String> =>
                 // [java.util.List&lt;java.lang.String>, java.util.Collection&lt;java.lang.String>, java.lang.Iterable&lt;java.lang.String>]
 
             final TypeToken&lt;? super T> getSupertype​(Class&lt;? super T> superclass)
             final TypeToken&lt;? extends T> getSubtype​(Class&lt;?> subclass)
-                // e.g.
+                // 예.
                 var type1 = new TypeToken&lt;List&lt;String>>() {};
                 var type2 = type1.getSupertype(Iterable.class); == java.lang.Iterable&lt;java.lang.String>
                 var type3 = type2.getSubtype(List.class);       == java.util.List&lt;java.lang.String>
@@ -716,7 +716,7 @@ include ../../../source/skeleton.pug
             &lt;C> ListenableFuture&lt;C> call​(Callable&lt;C> combiner, Executor executor)
             ListenableFuture&lt;?> run​(Runnable combiner, Executor executor)
 
-            // e.g.
+            // 예.
             Futures.whenAllSucceed(loginDateFuture, recentCommandsFuture)
                 .call(
                     () ->

@@ -185,11 +185,11 @@ include ../../../source/skeleton.pug
                     ol
                         li Jackson의 비동기, 논블로킹 파서가 하나의 JSON 객체를 표현하는 TokenBuffer로 바이트 스트림을 모은다
                         li 각 TokenBuffer는 Jackson의 ObjectMapper로 넘겨져 고수준 객체로 변환된다
-                        li single-value publisher(e.g. Mono)의 디코딩의 경우, TokenBuffer가 하나만 필요하다
-                        li multi-value publisher(e.g. Flux)의 디코딩의 경우, 각 TokenBuffer가 객체를 구성할 수 있게 되면 ObjectMapper로 전달된다. 입력 컨텐츠로 JSON 배열, line-delimited JSON(application/stream+json)이 가능하다
+                        li single-value publisher(예. Mono)의 디코딩의 경우, TokenBuffer가 하나만 필요하다
+                        li multi-value publisher(예. Flux)의 디코딩의 경우, 각 TokenBuffer가 객체를 구성할 수 있게 되면 ObjectMapper로 전달된다. 입력 컨텐츠로 JSON 배열, line-delimited JSON(application/stream+json)이 가능하다
                     li Jackson2Encoder의 동작
                     ol
-                        li single-value publisher(e.g. Mono)는 바로 ObjectMapper에서 직렬화한다
+                        li single-value publisher(예. Mono)는 바로 ObjectMapper에서 직렬화한다
                         li multi-value publisher를 application/json로 직렬화하는 경우, Flux#collectToList()의 반환 컬렉션을 직렬화한다
                         li application/x-ndjson, application/stream+x-jackson-smile 같은 스트리밍 타입으로 multi-value publisher를 직렬화하는 경우, line-delimited JSON 포맷으로 각 값을 따로 write, flush한다
                         li SSE의 경우, 이벤트가 발생할 때마다 Jackson2Encoder를 1회 호출하고 flush하여 저지연을 보장한다

@@ -39,7 +39,7 @@ include ../../../source/skeleton.pug
         ol
             li Binary-safe string : 임의 이진 문자열(최대 512MB)
             li List : 기본적으로 삽입 순으로 유지되는 string 연결 리스트(최대 길이 2^32 - 1)
-            p 블로킹 vs 논-블로킹 = 처리(e.g. 삭제) 후 반환 vs 반환 후 처리
+            p 블로킹 vs 논-블로킹 = 처리(예. 삭제) 후 반환 vs 반환 후 처리
             li Set : 순서 없는 string 집합(최대 크기 2^32 - 1)
             li Sorted set : 각 string 원소는 score라 불리는 실수 가중치(정렬키)를 가짐
             p 같은 score 사이에서는 value를 기준으로 정렬된다
@@ -288,7 +288,7 @@ include ../../../source/skeleton.pug
                     9) "name2"
                     10) "0"
                 li 해시 필드에 대하여, 아래와 같이 -> 표기를 이용해 BY, GET 옵션을 사용할 수 있다
-                +asCode('text', 'e.g.') SORT mylist BY weight_*->fieldname GET object_*->fieldname
+                +asCode('text', '예.') SORT mylist BY weight_*->fieldname GET object_*->fieldname
 
             h3 SORT_RO Since 7.0.0
             +asCode('text', 'syntax') SORT_RO key [BY pattern] [LIMIT offset count] [GET pattern [GET pattern ...]] [ASC|DESC] [ALPHA]
@@ -526,7 +526,7 @@ include ../../../source/skeleton.pug
                 li 문자열을 비트열로 간주하여 GET, SET, INCRBY 연산들을 수행한다
                 p GET 서브 명령 실행 시, 문자열을 벗어난 구간의 비트열은 0으로 간주한다
                 li encoding : 부호 있는 64비트, 부호 없는 63비트까지 가능
-                p e.g. i5(부호 있는 5비트), u4(부호 없는 4비트)
+                p 예. i5(부호 있는 5비트), u4(부호 없는 4비트)
                 li offset : 0부터 시작하는 시작 위치. 정수만 이용하는 경우 bit단위, #를 붙이면 encoding 크기 단위
                 li OVERFLOW : WRAP(default, 오버/언더플로우 비트 무시), SAT(오버/언더플로우 시 최대/최소값으로), FAIL(실패, nil 반환)
                 p OVERFLOW 이후 등장하는 INCRBY 서브 명령에만 영향을 미침에 유의
@@ -1371,12 +1371,12 @@ include ../../../source/skeleton.pug
         ul
             li 기본적으로 min max는 닫힌 구간 [min, max]를 의미한다
             li 열린 구간 표현을 위해 '('를 이용할 수 있다
-            p e.g. (10 (20
+            p 예. (10 (20
             li -inf, +inf를 min, max로 이용할 수 있다
 
     +hoverTemplate()#zset-lexicographical-range
         ul
             li 구간 표현 시 min, max 앞에 [ 또는 (를 명시해야한다
-            p e.g. [hello (world
+            p 예. [hello (world
             li 특별히 -, +를 무한대 표현으로 이용할 수 있다
-            p e.g. - (world
+            p 예. - (world

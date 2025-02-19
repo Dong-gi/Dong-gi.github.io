@@ -419,7 +419,7 @@ include ../../../source/skeleton.pug
         div
             ul
                 li 각 래퍼 클래스의 TYPE 필드는 기본 타입 클래스 인스턴스를 가리킨다
-                p e.g. Boolean.TYPE == boolean.class
+                p 예. Boolean.TYPE == boolean.class
                 li 각 래퍼 클래스의 valueOf() 함수는 기본 타입에 대해 래핑을 수행하며, 일부는 캐싱을 이용해 빠르게 수행한다
                 li 숫자 래퍼 클래스들은 MIN_VALUE, MAX_VALUE, SIZE(비트 크기), BYTES(바이트 크기) 필드를 갖는다
                 li byte[] -> 다른 수 타입 변환을 원하는 경우, ByteBuffer 이용
@@ -970,7 +970,7 @@ include ../../../source/skeleton.pug
                 li Strongly reachable
                 ul
                     li Reference object 없이 객체에 직접 접근 가능한 스레드가 존재
-                    p e.g. 객체를 생성한 스레드, 객체를 매개변수로 받아 실행 중인 스레드 등
+                    p 예. 객체를 생성한 스레드, 객체를 매개변수로 받아 실행 중인 스레드 등
                 li Softly reachable
                 ul
                     li Not strongly reachable && Soft reference object가 객체를 참조 중
@@ -1074,7 +1074,7 @@ include ../../../source/skeleton.pug
             interface AnnotatedType extends AnnotatedElement {
                 default AnnotatedType getAnnotatedOwnerType();
                     // 이 타입을 멤버로 갖는, 애너테이트된 타입 반환.
-                    // e.g. 이 타입이 @XXX O&lt;T>.I&lt;S>라면, @XXX O&lt;T>를 반환
+                    // 예. 이 타입이 @XXX O&lt;T>.I&lt;S>라면, @XXX O&lt;T>를 반환
                     // null이 반환되는 경우 ↓
                     //     타입이 top-level이거나 local 클래스, 익명 클래스, 기본 자료형, void인 경우
                     //     타입이 AnnotatedArrayType, AnnotatedTypeVariable, AnnotatedWildcardType의 인스턴스인 경우
@@ -1624,7 +1624,7 @@ include ../../../source/skeleton.pug
                 static SecureRandom getInstance(String algorithm)
                     // https://docs.oracle.com/en/java/javase/12/docs/specs/security/standard-names.html#securerandom-number-generation-algorithms
                 static SecureRandom getInstance(String algorithm, SecureRandomParameters params)
-                    // e.g. SecureRandom.getInstance("DRBG", DrbgParameters.instantiation(128, RESEED_ONLY, null));
+                    // 예. SecureRandom.getInstance("DRBG", DrbgParameters.instantiation(128, RESEED_ONLY, null));
                 static SecureRandomParameters getInstanceStrong()
 
                 void reseed()
@@ -4103,7 +4103,7 @@ include ../../../source/skeleton.pug
         li 메시지 해시 검사
         +asCode('java').
             var mac = Mac.getInstance("HmacSHA256");
-            mac.init(key); // e.g. new SecretKeySpec(...)
+            mac.init(key); // 예. new SecretKeySpec(...)
             var hash = new String(mac.doFinal("message".getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
 
     h1 javax.net

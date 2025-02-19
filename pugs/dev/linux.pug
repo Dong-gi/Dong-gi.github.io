@@ -560,7 +560,7 @@ include ../../source/skeleton.pug
                         li 홈디렉터리는 /etc/skel의 파일을 /home/${USER_NAME}에 복사하여 만들어진다
                 +tds('HOSTFILE', '/etc/hosts와 동일한 포맷의 파일을 지정하면, 호스트 구성에 사용')
                 +tds('HOSTNAME', '현재 호스트')
-                +tds('HOSTTYPE', '머신 종류; e.g. x86_64')
+                +tds('HOSTTYPE', '머신 종류; 예. x86_64')
                 tr
                     td IFS
                     td: +goto('Word splitting')
@@ -578,7 +578,7 @@ include ../../source/skeleton.pug
                 +tds('OLDPWD', '이전 PWD')
                 +tds('OPTARG', 'getopts가 마지막으로 처리한 옵션 인자의 값')
                 +tds('OPTIND', 'getopts가 마지막으로 처리한 옵션 인자의 인덱스')
-                +tds('OSTYPE', 'e.g. linux-gnu')
+                +tds('OSTYPE', '예. linux-gnu')
                 +tds('PATH', ':으로 구별된 디렉터리들. 커맨드가 존재하는지 shell이 찾아본다')
                 +tds('PIPESTATUS', '가장 최근 포그라운드에서 종료된 프로세스들의 종료 코드 배열')
                 +tds('PPID', '현재 셸의 PPID')
@@ -936,7 +936,7 @@ include ../../source/skeleton.pug
                 for NAME; do COMMANDS; done         # 실행 인자 순회
                 for NAME in LIST; do COMMANDS; done # LIST 순회
 
-                # e.g.
+                # 예.
                 for n in 10 20 30; do echo $n; done
                 for n in {1..20}; do echo $n; done
                 for n in log-{100..20}.txt; do echo $n; done
@@ -1005,7 +1005,7 @@ include ../../source/skeleton.pug
             h3 Trap
             +asCode('bash').
                 trap COMMANDS SIGNALS
-                # e.g.
+                # 예.
                 trap "{ echo \"Good Bye!\"; exit 255; }" EXIT
                 exit 0
             ul

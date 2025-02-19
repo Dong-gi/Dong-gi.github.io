@@ -9,151 +9,151 @@ include ../../source/skeleton.pug
     ol
         li 가상화란 실재하는 무언가에 대해 동등한 추상화 수준을 제공하는, 실재와는 다른 것을 만드는 행위다
         li 가상 머신(VM; Virtual Machine) : 컴퓨터 시스템에 대한 가상화. 하이퍼바이저에 의해 관리된다
-        p 호스트 OS 상에서 하이퍼바이저가 실행되고, 게스트 OS는 하이퍼바이저를 통해 리소스를 할당받는다
+            p 호스트 OS 상에서 하이퍼바이저가 실행되고, 게스트 OS는 하이퍼바이저를 통해 리소스를 할당받는다
         li #[+asA('https://en.wikipedia.org/wiki/OS-level_virtualization', '운영체제 수준 가상화')] : 호스트 커널이 격리된 유저 공간을 지원하는 패러다임
-        ul
-            li 호스트 OS에서 직접 실행되므로, 가상 머신에 비해 성능 저하가 현저히 적다
-            li 격리된 유저 공간을 지칭하는 용어는 구현마다 다르다 : container(LXC, Solaris containers, Docker, Podman), zone(Solaris containers), jail, ...
-            li 구현에 따라 지원하는 기능의 수준도 다르다 : 파일 시스템 격리, CPU 제한, 메모리 제한, IO 제한 등
+            ul
+                li 호스트 OS에서 직접 실행되므로, 가상 머신에 비해 성능 저하가 현저히 적다
+                li 격리된 유저 공간을 지칭하는 용어는 구현마다 다르다 : container(LXC, Solaris containers, Docker, Podman), zone(Solaris containers), jail, ...
+                li 구현에 따라 지원하는 기능의 수준도 다르다 : 파일 시스템 격리, CPU 제한, 메모리 제한, IO 제한 등
         li #[+asA('https://opencontainers.org/', 'Open Container Initiative')] : 컨테이너에 관한 개방 표준을 제정하기 위한 리눅스 재단 하위 프로젝트
-        p 크게 두 가지 명세를 정의한다 : 런타임 명세 + 이미지 명세
+            p 크게 두 가지 명세를 정의한다 : 런타임 명세 + 이미지 명세
         li 이미지 : 컨테이너를 생성하는 데 필요한 모든 정보가 담긴 단일 이진 파일
-        ul
-            li 이미지는 읽기 전용이다
-            li 이미지는 계층들로 구별되어 있으며, 각 계층은 변경 사항만을 저장하므로 새 버전이 배포되더라도 전체 이미지 크기의 변화는 최소화된다
-            li 도커 컨테이너는 격리된 파일시스템을 할당받으며, 거기서 추가된 파일은 이미지에 전혀 영향을 미치지 않는다
+            ul
+                li 이미지는 읽기 전용이다
+                li 이미지는 계층들로 구별되어 있으며, 각 계층은 변경 사항만을 저장하므로 새 버전이 배포되더라도 전체 이미지 크기의 변화는 최소화된다
+                li 도커 컨테이너는 격리된 파일시스템을 할당받으며, 거기서 추가된 파일은 이미지에 전혀 영향을 미치지 않는다
 
     h1 Docker
     ol
         li 도커는 컨테이너를 보다 편리하게 사용하기 위해 개발된 프로젝트
         li 도커 엔진(Apache 2.0 license)은 REST API로 통신하는 서버-클라이언트로 구성된다
         li.marker Docker daemon
-        p 도커 서버는 오랫동안 실행되는 dockerd 데몬 프로세스로, Docker object들을 관리한다
+            p 도커 서버는 오랫동안 실행되는 dockerd 데몬 프로세스로, Docker object들을 관리한다
         li.marker Docker client
-        p CLI 클라이언트로 docker 커맨드가 사용된다. 도커 서버, 클라이언트는 서로 별개의 호스트에서 작동할 수 있다
+            p CLI 클라이언트로 docker 커맨드가 사용된다. 도커 서버, 클라이언트는 서로 별개의 호스트에서 작동할 수 있다
         li Docker registry
-        p 이미지 저장소
-            +asA('https://hub.docker.com/', 'Docker Hub')
-            |는 누구나 이용할 수 있는 퍼블릭 레지스트리로, 도커에서 기본적으로 검색하는 저장소다
-        p Private registry 생성
-        +asCode('shell') $ docker service create --name registry -p 5000:5000 registry
+            p 이미지 저장소
+                +asA('https://hub.docker.com/', 'Docker Hub')
+                |는 누구나 이용할 수 있는 퍼블릭 레지스트리로, 도커에서 기본적으로 검색하는 저장소다
+            p Private registry 생성
+            +asCode('shell') $ docker service create --name registry -p 5000:5000 registry
         li Docker object
-        ul
-            li IMAGE : 컨테이너를 작성하는 절차를 담은 읽기 전용 템플릿
-            li CONTAINER : 실행 가능한 IMAGE 인스턴스
-            li
-                +asA('https://docs.docker.com/engine/reference/builder/', 'Dockerfile')
-                |  : 이미지 빌드 절차
+            ul
+                li IMAGE : 컨테이너를 작성하는 절차를 담은 읽기 전용 템플릿
+                li CONTAINER : 실행 가능한 IMAGE 인스턴스
+                li
+                    +asA('https://docs.docker.com/engine/reference/builder/', 'Dockerfile')
+                    |  : 이미지 빌드 절차
 
     h1 Dockerfile
     ul
         li.marker Format
-        ul
-            li # 주석
-            li INSTRUCTION param...
-            p INSTRUCTION은 대소문자 구별이 없지만, 관례적으로 대문자만 사용한다
+            ul
+                li # 주석
+                li INSTRUCTION param...
+                    p INSTRUCTION은 대소문자 구별이 없지만, 관례적으로 대문자만 사용한다
         li.marker Directive
-        ul
-            li # directive=value 형태의 특별한 주석
-            p directive가 아닌 줄을 읽으면 더 이상 directive를 찾지 않으므로, Dockerfile의 최상단에 있어야 한다
-            li # syntax=[remote image reference]
-            p Buildkit을 이용하는 경우 유효
-            li # escape=`
-            p 기본값은 \
+            ul
+                li # directive=value 형태의 특별한 주석
+                    p directive가 아닌 줄을 읽으면 더 이상 directive를 찾지 않으므로, Dockerfile의 최상단에 있어야 한다
+                li # syntax=[remote image reference]
+                    p Buildkit을 이용하는 경우 유효
+                li # escape=`
+                    p 기본값은 \
         li.marker 환경 변수
-        ul
-            li 환경 변수 참조1 : $var_name 또는 ${var_name}
-            li 환경 변수 참조2 : ${var_name:-word}
-            p 환경 변수가 없다면 word가 사용된다. word는 임의의 문자열이며, 다른 환경변수를 포함할 수도 있다
-            li 환경 변수 참조3 : ${var_name:+word}
-            p 환경 변수가 있다면 word가 사용된다. 없으면 빈 문자열. word는 임의의 문자열이며, 다른 환경변수를 포함할 수도 있다
-            li 환경 변수 설정 : ENV key=value 또는 ENV key value
-            li 환경 변수 지원 명령어 : ADD, COPY, ENV, EXPOSE, FROM, LABEL, STOPSIGNAL, USER, VOLUME, WORKDIR, ONBUILD(Since 1.4)
+            ul
+                li 환경 변수 참조1 : $var_name 또는 ${var_name}
+                li 환경 변수 참조2 : ${var_name:-word}
+                    p 환경 변수가 없다면 word가 사용된다. word는 임의의 문자열이며, 다른 환경변수를 포함할 수도 있다
+                li 환경 변수 참조3 : ${var_name:+word}
+                    p 환경 변수가 있다면 word가 사용된다. 없으면 빈 문자열. word는 임의의 문자열이며, 다른 환경변수를 포함할 수도 있다
+                li 환경 변수 설정 : ENV key=value 또는 ENV key value
+                li 환경 변수 지원 명령어 : ADD, COPY, ENV, EXPOSE, FROM, LABEL, STOPSIGNAL, USER, VOLUME, WORKDIR, ONBUILD(Since 1.4)
         li.marker FROM
-        ul
-            li FROM &lt;image>[:&lt;tag>] [AS &lt;name>]
-            li FROM &lt;image>[@&lt;digest>] [AS &lt;name>]
-            li 한 Dockerfile 내에서 FROM을 여러 번 사용할 수 있다 : 여러 중간 이미지 + 최종 이미지
+            ul
+                li FROM &lt;image>[:&lt;tag>] [AS &lt;name>]
+                li FROM &lt;image>[@&lt;digest>] [AS &lt;name>]
+                li 한 Dockerfile 내에서 FROM을 여러 번 사용할 수 있다 : 여러 중간 이미지 + 최종 이미지
         li.marker RUN
-        ul
-            li RUN &lt;command>
-            p 셸(기본값 /bin/sh -c, SHELL 명령으로 변경 가능)로 실행. \로 여러 줄 작성 가능
-            li RUN ["executable", "param1", "param2"]
-            p JSON 배열로 파싱되어 실행에 이용된다. 반드시 "로 감싸야 하며, \ 이스케이핑에 주의해야 한다
-            li RUN apt-get update와 apt-get install은 항상 한 번에 실행할 것
-            +asCode().
-                RUN apt-get update && apt-get install -y \
-                    package-bar \
-                    package-foo=1.3.* \
-            li RUN rm -rf /var/lib/apt/lists/*, RUN apt-get clean 등으로 캐시를 지워주면 용량에 좋다
+            ul
+                li RUN &lt;command>
+                    p 셸(기본값 /bin/sh -c, SHELL 명령으로 변경 가능)로 실행. \로 여러 줄 작성 가능
+                li RUN ["executable", "param1", "param2"]
+                    p JSON 배열로 파싱되어 실행에 이용된다. 반드시 "로 감싸야 하며, \ 이스케이핑에 주의해야 한다
+                li RUN apt-get update와 apt-get install은 항상 한 번에 실행할 것
+                    +asCode().
+                        RUN apt-get update && apt-get install -y \
+                            package-bar \
+                            package-foo=1.3.* \
+                li RUN rm -rf /var/lib/apt/lists/*, RUN apt-get clean 등으로 캐시를 지워주면 용량에 좋다
         li.marker CMD
-        ul
-            li CMD ["executable", "param1", "param2"]
-            p JSON 배열로 파싱되어 실행에 이용된다
-            li CMD command param1 param2
-            p 셸로 실행
-            li CMD의 목적은 컨테이너 실행 시 기본값을 제공하는 것으로, Dockerfile내에서 여러 번 작성됐더라도 마지막 것만 사용된다. 항상 동일하게 실행된다면 ENTRYPOINT 사용을 고려
-            p docker run 인자로 명시하는 경우, CMD를 오버라이딩한다
+            ul
+                li CMD ["executable", "param1", "param2"]
+                    p JSON 배열로 파싱되어 실행에 이용된다
+                li CMD command param1 param2
+                    p 셸로 실행
+                li CMD의 목적은 컨테이너 실행 시 기본값을 제공하는 것으로, Dockerfile내에서 여러 번 작성됐더라도 마지막 것만 사용된다. 항상 동일하게 실행된다면 ENTRYPOINT 사용을 고려
+                    p docker run 인자로 명시하는 경우, CMD를 오버라이딩한다
         li.marker ENTRYPOINT
-        ul
-            li ENTRYPOINT ["executable", "param1", "param2"]
-            p JSON 배열로 파싱되어 실행에 이용된다. CMD는 ENTRYPOINT의 매개변수로 뒤에 덧붙여진다
-            li ENTRYPOINT command param1 param2
-            p 셸 실행. CMD directive와 docker run 매개변수를 모두 무시한다. 컨테이너의 실행은 docker exec을 통해 이루어져야 한다
+            ul
+                li ENTRYPOINT ["executable", "param1", "param2"]
+                    p JSON 배열로 파싱되어 실행에 이용된다. CMD는 ENTRYPOINT의 매개변수로 뒤에 덧붙여진다
+                li ENTRYPOINT command param1 param2
+                    p 셸 실행. CMD directive와 docker run 매개변수를 모두 무시한다. 컨테이너의 실행은 docker exec을 통해 이루어져야 한다
         li.marker LABEL
-        ul
-            li LABEL &lt;key>=&lt;value>
-            p 이미지 메타데이터 설정. 공백이 필요하다면 "로 감싸면 된다. LABEL 하나에 여러 값을 설정하는 것은 이미지 크기에 영향을 미치지 않는다(Since 1.10)
+            ul
+                li LABEL &lt;key>=&lt;value>
+                    p 이미지 메타데이터 설정. 공백이 필요하다면 "로 감싸면 된다. LABEL 하나에 여러 값을 설정하는 것은 이미지 크기에 영향을 미치지 않는다(Since 1.10)
         li.marker EXPOSE
-        ul
-            li EXPOSE &lt;port>[/&lt;protocol>]...
-            p 리스닝하는 포트들을 명시한다(여기서 개방해주는 것은 아님). 프로토콜 기본값은 TCP. 실제 포트를 개방하기 위해서는 docker run에서 -p 옵션으로 포워딩 설정
+            ul
+                li EXPOSE &lt;port>[/&lt;protocol>]...
+                    p 리스닝하는 포트들을 명시한다(여기서 개방해주는 것은 아님). 프로토콜 기본값은 TCP. 실제 포트를 개방하기 위해서는 docker run에서 -p 옵션으로 포워딩 설정
         li.marker ADD
-        ul
-            li ADD [--chown=&lt;user>:&lt;group>] &lt;src>... &lt;dest>
-            li ADD [--chown=&lt;user>:&lt;group>] ["&lt;src>",... "&lt;dest>"]
-            p 경로에 공백이 있는 경우 " 이용
-            li dest로 파일들을 복사한다. 파일명 이스케이핑, 와일드카드 사용은 Go 언어 규칙을 따른다. chown이 주어지지 않으면 UID, GID 모두 0으로 설정된다. 유저와 그룹을 직접 ID로 지정한 경우, /etc/passwd, /etc/group 파일을 조사하지 않는다
-            li src가 원격지 파일 URL인 경우, 복사된 파일의 권한은 600. 인증이 필요한 경우 wget, crul 등을 이용
-            li 컨텍스트 안의 파일들만 데몬으로 전송되므로, src는 "../something"처럼 컨텍스트 밖의 파일을 가리킬 수 없다
-            li src가 컨텍스트 내의 tar 압축 파일인 경우, 디렉터리로 압축 해제된다
-            li dest가 존재하지 않는 경우, 모든 필요한 디렉터리를 생성한다
+            ul
+                li ADD [--chown=&lt;user>:&lt;group>] &lt;src>... &lt;dest>
+                li ADD [--chown=&lt;user>:&lt;group>] ["&lt;src>",... "&lt;dest>"]
+                    p 경로에 공백이 있는 경우 " 이용
+                li dest로 파일들을 복사한다. 파일명 이스케이핑, 와일드카드 사용은 Go 언어 규칙을 따른다. chown이 주어지지 않으면 UID, GID 모두 0으로 설정된다. 유저와 그룹을 직접 ID로 지정한 경우, /etc/passwd, /etc/group 파일을 조사하지 않는다
+                li src가 원격지 파일 URL인 경우, 복사된 파일의 권한은 600. 인증이 필요한 경우 wget, crul 등을 이용
+                li 컨텍스트 안의 파일들만 데몬으로 전송되므로, src는 "../something"처럼 컨텍스트 밖의 파일을 가리킬 수 없다
+                li src가 컨텍스트 내의 tar 압축 파일인 경우, 디렉터리로 압축 해제된다
+                li dest가 존재하지 않는 경우, 모든 필요한 디렉터리를 생성한다
         li.marker COPY
-        ul
-            li COPY [--chown=&lt;user>:&lt;group>] &lt;src>... &lt;dest>
-            li COPY [--chown=&lt;user>:&lt;group>] ["&lt;src>",... "&lt;dest>"]
-            p 경로에 공백이 있는 경우 " 이용
-            li ADD보다 제한됨 : 컨테이너 내부 파일만 복사 가능. 로컬 tar 자동 압축 해제 X
-            p 중간 이미지로부터 복사 예 : COPY --from=build /bin/project /bin/project
+            ul
+                li COPY [--chown=&lt;user>:&lt;group>] &lt;src>... &lt;dest>
+                li COPY [--chown=&lt;user>:&lt;group>] ["&lt;src>",... "&lt;dest>"]
+                    p 경로에 공백이 있는 경우 " 이용
+                li ADD보다 제한됨 : 컨테이너 내부 파일만 복사 가능. 로컬 tar 자동 압축 해제 X
+                    p 중간 이미지로부터 복사 예 : COPY --from=build /bin/project /bin/project
         li.marker VOLUME
-        ul
-            li 예. VOLUME /var/log /var/db
-            p Mount point를 정의한다. 호스트나 다른 컨테이너에 마운트되어 공유될 수 있다. VOLUME 선언 이후 해당 볼륨 내 변경은 무시된다. Dockerfile 내부에서 마운트될 호스트 디렉터리를 지정할 수는 없다 → 컨테이너 생성 시 지정해야 한다
+            ul
+                li 예. VOLUME /var/log /var/db
+                    p Mount point를 정의한다. 호스트나 다른 컨테이너에 마운트되어 공유될 수 있다. VOLUME 선언 이후 해당 볼륨 내 변경은 무시된다. Dockerfile 내부에서 마운트될 호스트 디렉터리를 지정할 수는 없다 → 컨테이너 생성 시 지정해야 한다
         li.marker WORKDIR
-        ul
-            li 예. WORKDIR /path/to/workdir
-            p RUN, CMD, ENTRYPOINT, COPY, ADD의 작업 디렉터리를 설정한다
+            ul
+                li 예. WORKDIR /path/to/workdir
+                    p RUN, CMD, ENTRYPOINT, COPY, ADD의 작업 디렉터리를 설정한다
         li.marker ARG
-        ul
-            li ARG &lt;name>[=&lt;default value>]
-            p docker build --build-arg &lt;varname>=&lt;value>로 넘겨받는 변수를 선언한다. docker history로 넘긴 변수를 볼 수 있으므로, 비밀 정보를 이를 통해 넘기는 건 부적절하다
-            li ARG는 빌드 단계에서만 유효하며, 새로운 FROM 이후엔 새로 선언해야 한다
+            ul
+                li ARG &lt;name>[=&lt;default value>]
+                    p docker build --build-arg &lt;varname>=&lt;value>로 넘겨받는 변수를 선언한다. docker history로 넘긴 변수를 볼 수 있으므로, 비밀 정보를 이를 통해 넘기는 건 부적절하다
+                li ARG는 빌드 단계에서만 유효하며, 새로운 FROM 이후엔 새로 선언해야 한다
         li.marker ONBUILD
-        ul
-            li ONBUILD [INSTRUCTION]
-            p 이미지가 베이스로 이용되는 경우, 마치 FROM 이후에 바로 삽입된 것처럼 실행된다
+            ul
+                li ONBUILD [INSTRUCTION]
+                    p 이미지가 베이스로 이용되는 경우, 마치 FROM 이후에 바로 삽입된 것처럼 실행된다
         li.marker SHELL
-        ul
-            li SHELL ["executable", "param1", "param2"]
-            li RUN, CMD, ENTRYPOINT 기본 셸 변경
+            ul
+                li SHELL ["executable", "param1", "param2"]
+                li RUN, CMD, ENTRYPOINT 기본 셸 변경
         li Multi-stage
-        p FROM은 하나의 Dockerfile 안에서 여러 번 등장할 수 있고, 매 등장마다 이전 instruction에 의한 상태는 모두 정리된다
-        +asCode('Dockerfile').
-            FROM amazonlinux:2.0.20221004.0 as build-jar
-            # jar 빌드
+            p FROM은 하나의 Dockerfile 안에서 여러 번 등장할 수 있고, 매 등장마다 이전 instruction에 의한 상태는 모두 정리된다
+            +asCode('Dockerfile').
+                FROM amazonlinux:2.0.20221004.0 as build-jar
+                # jar 빌드
 
-            FROM amazoncorretto:17.0.5
-            COPY --from=build-jar /.../x.jar
+                FROM amazoncorretto:17.0.5
+                COPY --from=build-jar /.../x.jar
 
     h1
         |Commands 
@@ -188,7 +188,7 @@ include ../../source/skeleton.pug
                 # Options
                 --author, -a    저자
                 --change, -c    새 이미지에 적용할 Dockerfile instruction 추가
-                                e.g. docker commit --change "ENV DEBUG=true" c3f279d17e0a  svendowideit/testimage:version3
+                                예. docker commit --change "ENV DEBUG=true" c3f279d17e0a  svendowideit/testimage:version3
                 --message, -m   커밋 메시지
                 --pause, -p     커밋 도중 컨테이너 일시 정지. 기본값 true
 
@@ -202,10 +202,10 @@ include ../../source/skeleton.pug
                 $ docker container cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-
                 $ docker container cp [OPTIONS] SRC_PATH|- CONTAINER:DEST_PATH
 
-                # e.g. 로컬 파일을 컨테이너로 복사
+                # 예. 로컬 파일을 컨테이너로 복사
                 $ docker cp file.war web:/usr/local/tomcat/webapps/
 
-                # e.g. 로컬 디렉터리를 컨테이너로 복사
+                # 예. 로컬 디렉터리를 컨테이너로 복사
                 $ docker cp directory/ web:/root/
 
             h3 docker container create
@@ -230,13 +230,13 @@ include ../../source/skeleton.pug
                 $ docker           exec [OPTIONS] CONTAINER COMMAND [ARG...]
                 $ docker container exec [OPTIONS] CONTAINER COMMAND [ARG...]
 
-                # e.g. docker exec -it my-server /bin/bash
+                # 예. docker exec -it my-server /bin/bash
 
                 # Options
                 --detach, -d    백그라운드로 실행시킨다
                 --detach-keys   docker container attach 참고
                 --env, -e       환경 변수 설정
-                                e.g. -e VAR=1
+                                예. -e VAR=1
                 --workdir, -w   워킹 디렉터리 설정
 
             h3 docker container export
@@ -253,7 +253,7 @@ include ../../source/skeleton.pug
 
                 --format, -f    Go 템플릿으로 출력 조정
                 
-                # e.g. IP 주소 획득
+                # 예. IP 주소 획득
                 $ docker container inspect --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps --format '{{.ID}}' -a)
 
             h3 docker container kill
@@ -286,7 +286,7 @@ include ../../source/skeleton.pug
                 --all, -a       실행중이지 않은 컨테이너도 표시
                 --filter, -f    조건을 만족하는 컨테이너만 표시. https://docs.docker.com/engine/reference/commandline/ps/#filtering 참고
                 --format        Go 템플릿으로 출력 조정. https://docs.docker.com/engine/reference/commandline/ps/#formatting 참고
-                                e.g. --format "{{.ID}}: {{.Command}}"
+                                예. --format "{{.ID}}: {{.Command}}"
 
             h3 docker container port
             p 모든/특정 포트 매핑 정보 출력
@@ -377,44 +377,44 @@ include ../../source/skeleton.pug
                 h4 마운트
                 ul
                     li Bind mount(type=bind) : 호스트 파일시스템에 직접 읽기/쓰기를 수행한다
-                    +asCode('shell').
-                        $ export CONTAINER_NAME=linux
-                        $ mkdir "$CONTAINER_NAME"_data
-                        $ touch "$CONTAINER_NAME"_data/test.txt
-                        $ ls "$CONTAINER_NAME"_data
-                        test.txt
-                        $ docker run --name $CONTAINER_NAME --rm -it --mount type=bind,src="$(pwd)"/"$CONTAINER_NAME"_data,dst=/home/data -w /home/ amazonlinux:2.0.20221004.0
-                        bash-4.2# touch data/test2.txt
-                        bash-4.2# ls data
-                        test.txt  test2.txt
-                        bash-4.2# exit
-                        exit
+                        +asCode('shell').
+                            $ export CONTAINER_NAME=linux
+                            $ mkdir "$CONTAINER_NAME"_data
+                            $ touch "$CONTAINER_NAME"_data/test.txt
+                            $ ls "$CONTAINER_NAME"_data
+                            test.txt
+                            $ docker run --name $CONTAINER_NAME --rm -it --mount type=bind,src="$(pwd)"/"$CONTAINER_NAME"_data,dst=/home/data -w /home/ amazonlinux:2.0.20221004.0
+                            bash-4.2# touch data/test2.txt
+                            bash-4.2# ls data
+                            test.txt  test2.txt
+                            bash-4.2# exit
+                            exit
 
-                        $ ls "$CONTAINER_NAME"_data
-                        test.txt	test2.txt
-                        $ rm -rf "$CONTAINER_NAME"_data
+                            $ ls "$CONTAINER_NAME"_data
+                            test.txt	test2.txt
+                            $ rm -rf "$CONTAINER_NAME"_data
 
                     li Named volume(type=volume) : 영구 저장 데이터를 컨테이너로부터 분리한다. 볼륨은 도커를 이용해 관리되며, 여러 컨테이너들 및 호스트가 공유할 수 있다
-                    +asCode('shell').
-                        $ export CONTAINER_NAME=linux
-                        $ docker run --name $CONTAINER_NAME --rm -it --mount type=volume,src="$CONTAINER_NAME"_volume,dst=/home/data -w /home/ amazonlinux:2.0.20221004.0
-                        bash-4.2# touch data/test.txt
-                        bash-4.2# exit
-                        exit
+                        +asCode('shell').
+                            $ export CONTAINER_NAME=linux
+                            $ docker run --name $CONTAINER_NAME --rm -it --mount type=volume,src="$CONTAINER_NAME"_volume,dst=/home/data -w /home/ amazonlinux:2.0.20221004.0
+                            bash-4.2# touch data/test.txt
+                            bash-4.2# exit
+                            exit
 
-                        $ docker run --name $CONTAINER_NAME --rm -it --mount type=volume,src="$CONTAINER_NAME"_volume,dst=/home/data -w /home/ amazonlinux:2.0.20221004.0
-                        bash-4.2# ls data
-                        test.txt
-                        bash-4.2# exit
-                        exit
+                            $ docker run --name $CONTAINER_NAME --rm -it --mount type=volume,src="$CONTAINER_NAME"_volume,dst=/home/data -w /home/ amazonlinux:2.0.20221004.0
+                            bash-4.2# ls data
+                            test.txt
+                            bash-4.2# exit
+                            exit
 
-                        $ docker volume rm "$CONTAINER_NAME"_volume
-                        linux_volume
+                            $ docker volume rm "$CONTAINER_NAME"_volume
+                            linux_volume
 
                     li tmpfs(type=tmpfs) : (Linux) 휘발성 데이터를 위한 tmpfs를 컨테이너에 마운트한다
-                    +asCode('shell').
-                        $ export CONTAINER_NAME=linux
-                        $ docker run --name $CONTAINER_NAME --rm -it --mount type=tmpfs,dst=/home/tmpfs,tmpfs-size=1000000 -w /home/ amazonlinux:2.0.20221004.0
+                        +asCode('shell').
+                            $ export CONTAINER_NAME=linux
+                            $ docker run --name $CONTAINER_NAME --rm -it --mount type=tmpfs,dst=/home/tmpfs,tmpfs-size=1000000 -w /home/ amazonlinux:2.0.20221004.0
                 div
                     h5.fake src 또는 source 옵션
                     ul
@@ -444,47 +444,47 @@ include ../../source/skeleton.pug
                 h4 포트 공개
                 ul
                     li 아래는 호스트 0.0.0.0의 TCP 7777 포트를 컨테이너 5678 포트와 바인드하는 예시다
-                    +asCode('shell').
-                        $ export CONTAINER_NAME=echo1
-                        $ docker run --name $CONTAINER_NAME -p 0.0.0.0:7777:5678/tcp -d hashicorp/http-echo -text="Hello, I'm $CONTAINER_NAME"
-                        c2aa4488e6b1bcd2566ba1546855cb0c76ac1a2731e7f87ea1c00f967fbe76c5
-                        $ curl $(docker port $CONTAINER_NAME 5678)
-                        Hello, I'm echo1
-                        $ docker rm --force $CONTAINER_NAME
-                        echo1
+                        +asCode('shell').
+                            $ export CONTAINER_NAME=echo1
+                            $ docker run --name $CONTAINER_NAME -p 0.0.0.0:7777:5678/tcp -d hashicorp/http-echo -text="Hello, I'm $CONTAINER_NAME"
+                            c2aa4488e6b1bcd2566ba1546855cb0c76ac1a2731e7f87ea1c00f967fbe76c5
+                            $ curl $(docker port $CONTAINER_NAME 5678)
+                            Hello, I'm echo1
+                            $ docker rm --force $CONTAINER_NAME
+                            echo1
                     li TCP 뿐만 아니라, UDP, SCTP도 지정할 수 있다
                     li TCP 프로토콜 지정은 생략 가능하다 -&gt; 기본 tcp
                     li 호스트 0.0.0.0 주소는 생략 가능하다 -&gt; 기본 0.0.0.0
                     li 컨테이너 포트를 호스트에 바인드할 필요까지는 없는 경우, --publish, -p 옵션 대신 --expose 옵션을 사용하면 된다
-                    +asCode('shell').
-                        $ export NETWORK_NAME=test-net
-                        $ docker network create $NETWORK_NAME
-                        ca863d1405320dd0bc5d87642fa5117c167504fb8420224e30f397de6370356d
+                        +asCode('shell').
+                            $ export NETWORK_NAME=test-net
+                            $ docker network create $NETWORK_NAME
+                            ca863d1405320dd0bc5d87642fa5117c167504fb8420224e30f397de6370356d
 
-                        $ export CONTAINER_NAME=echo1
-                        $ docker run --name $CONTAINER_NAME --expose 5678 --network=$NETWORK_NAME -d hashicorp/http-echo -text="Hello, I'm $CONTAINER_NAME"
-                        88224c89becaf3b02eccee15627b29b5c6b0d8e76dfc28ef2c5b01c5081d20c5
-                        $ docker port $CONTAINER_NAME 5678
-                        Error: No public port '5678/tcp' published for echo1
+                            $ export CONTAINER_NAME=echo1
+                            $ docker run --name $CONTAINER_NAME --expose 5678 --network=$NETWORK_NAME -d hashicorp/http-echo -text="Hello, I'm $CONTAINER_NAME"
+                            88224c89becaf3b02eccee15627b29b5c6b0d8e76dfc28ef2c5b01c5081d20c5
+                            $ docker port $CONTAINER_NAME 5678
+                            Error: No public port '5678/tcp' published for echo1
 
-                        $ docker run --rm -it --network=$NETWORK_NAME -e ECHO_SERVER=$CONTAINER_NAME amazonlinux:2.0.20221004.0
-                        bash-4.2# curl $ECHO_SERVER:5678
-                        Hello, I'm echo1
-                        bash-4.2# exit
-                        exit
+                            $ docker run --rm -it --network=$NETWORK_NAME -e ECHO_SERVER=$CONTAINER_NAME amazonlinux:2.0.20221004.0
+                            bash-4.2# curl $ECHO_SERVER:5678
+                            Hello, I'm echo1
+                            bash-4.2# exit
+                            exit
 
-                        $ docker rm --force $CONTAINER_NAME
-                        echo1
-                        $ docker network rm $NETWORK_NAME
-                        test-net
+                            $ docker rm --force $CONTAINER_NAME
+                            echo1
+                            $ docker network rm $NETWORK_NAME
+                            test-net
 
                 h4 네트워크 설정; --network
                 ul
                     li none : 네트워킹 비허용
                     li bridge : 브리지를 통해 인/아웃 트래픽 모두 허용된다
-                    p 브리지(보통 이름은 docker0)가 호스트에 생성되고, veth 인터페이스가 한 쌍으로 호스트와 컨테이너에 생성된다. 동일한 브리지 네트워크에 연결된 컨테이너들은 서로의 IP를 이용해 통신할 수 있다
+                        p 브리지(보통 이름은 docker0)가 호스트에 생성되고, veth 인터페이스가 한 쌍으로 호스트와 컨테이너에 생성된다. 동일한 브리지 네트워크에 연결된 컨테이너들은 서로의 IP를 이용해 통신할 수 있다
                     li host : 컨테이너는 호스트의 네트워크 스택을 그대로 이용한다
-                    p 가상 브리지를 거치지 않으므로, 브리지 모드에 비해 성능이 비약적으로 좋다
+                        p 가상 브리지를 거치지 않으므로, 브리지 모드에 비해 성능이 비약적으로 좋다
                     li #{'container:<name|id>'} : 다른 컨테이너의 네트워크 스택을 그대로 이용한다
                     li NETWORK_NAME : 사용자 정의 네트워크에 연결한다
 
@@ -536,21 +536,21 @@ include ../../source/skeleton.pug
                 h4 환경 변수 설정
                 ul
                     li 명령줄에서 지정
-                    +asCode('shell').
-                        $ docker run --rm -e TXT="Hello World" amazonlinux:2.0.20221004.0 env | grep TXT
-                        TXT=Hello World
+                        +asCode('shell').
+                            $ docker run --rm -e TXT="Hello World" amazonlinux:2.0.20221004.0 env | grep TXT
+                            TXT=Hello World
 
                     li 파일로 지정
-                    +asCode('shell').
-                        $ cat test.env
-                        VAR1=VALUE1
-                        VAR2=VALUE2
+                        +asCode('shell').
+                            $ cat test.env
+                            VAR1=VALUE1
+                            VAR2=VALUE2
 
-                        $ docker run --rm --env-file ./test.env amazonlinux:2.0.20221004.0 env | grep VAR
-                        VAR1=VALUE1
-                        VAR2=VALUE2
+                            $ docker run --rm --env-file ./test.env amazonlinux:2.0.20221004.0 env | grep VAR
+                            VAR1=VALUE1
+                            VAR2=VALUE2
 
-                        $ rm test.env
+                            $ rm test.env
 
                 h4 메타데이터 설정
                 p 컨테이너 관리를 위한 메타데이터를 설정할 수 있다
@@ -598,7 +598,7 @@ include ../../source/skeleton.pug
                     li none : 로그 전달 없음
                     li local : 최소한의 오버헤드로 로컬 파일에 기록
                     li json-file : 기본값. JSON 포맷으로 로컬 파일에 기록
-                    p 하위 호환성을 위해 기본값으로 유지되지만, 이보다 local 사용이 권장된다
+                        p 하위 호환성을 위해 기본값으로 유지되지만, 이보다 local 사용이 권장된다
                     li syslog : 호스트의 syslog 데몬으로 전달
                     li journald : 호스트의 journald 데몬으로 전달
                     li gelf : GELF(Graylog Extended Log Format) 엔드포인트(Graylog, Logstash 등)으로 전달
@@ -613,8 +613,8 @@ include ../../source/skeleton.pug
                     ul
                         li blocking : 기본값. 로그가 드라이버에 전달되기까지 블록된다
                         li non-blocking : 로그는 드라이버가 소비하기까지, 컨테이너에 할당된 버퍼에 저장된다
-                        p 기본 버퍼 크기는 1m이며, 버퍼가 가득 찬 경우 가장 오래된 로그가 제거된다
-                        +asCode('shell') $ docker run ---log-opt mode=non-blocking --log-opt max-buffer-size=4m ...
+                            p 기본 버퍼 크기는 1m이며, 버퍼가 가득 찬 경우 가장 오래된 로그가 제거된다
+                            +asCode('shell') $ docker run ---log-opt mode=non-blocking --log-opt max-buffer-size=4m ...
 
                     h5 외부로 전달되는 로그 로컬에서 확인하기
                     p 기본적으로 외부로 전달되는 로그는 docker logs로 확인할 수 없었다. 그러나 Docker Engine 20.10부터는 듀얼 로깅이 자동으로 활성화된다
@@ -659,7 +659,7 @@ include ../../source/skeleton.pug
                     h5 awslogs
                     ul
                         li AWS 인증 정보를 Docker 데몬에 전달해야 한다
-                        p AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN 환경변수로 설정 가능하다. 또는 EC2에 설정한 프로파일을 자동으로 이용한다
+                            p AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN 환경변수로 설정 가능하다. 또는 EC2에 설정한 프로파일을 자동으로 이용한다
                         li --log-opt awslogs-region : AWS_REGION 환경변수로도 설정 가능
                         li --log-opt awslogs-group : 로그 그룹 지정
                         li --log-opt awslogs-stream : 지정하지 않으면 컨테이너 ID가 스트림 이름으로 사용된다
@@ -673,11 +673,11 @@ include ../../source/skeleton.pug
                 h4 기타 옵션
                 ul
                     li --cpus : CPU 제한. 기본값 0.000은 무제한을 의미
-                    p CPU가 1개 있을 때, --cpus=0.5는 지정 기간(--cpu-period, 기본 100ms) 동안 50%를 사용할 수 있음을 의미
+                        p CPU가 1개 있을 때, --cpus=0.5는 지정 기간(--cpu-period, 기본 100ms) 동안 50%를 사용할 수 있음을 의미
                     li --memory, -m : 메모리 제한. 최소 4m
                     li --memory-swap : swap 영역을 포함한 메모리 제한. 기본적으로 --memory의 2배
                     li --kernel-memory : 커널 메모리 제한
-                    p e.g. -m 500M --kernel-memory 50M : 컨테이너 메모리 제한 500M 안에 커널 메모리 제한 50M가 포함된다
+                        p 예. -m 500M --kernel-memory 50M : 컨테이너 메모리 제한 500M 안에 커널 메모리 제한 50M가 포함된다
                     li --privileged : 컨테이너에 모든 커널 작업 권한 부여
                     li --stop-timeout : 중지 대기 후 강제 중지
                     li --sysctl : 컨테이너 커널 파라미터 변경
@@ -727,56 +727,56 @@ include ../../source/skeleton.pug
             ol
                 li 향상된 기능을 제공하는 moby/buildkit을 이용하려면(Since 18.09) 실행 전에 환경 변수 DOCKER_BUILDKIT=1를 설정하면 된다
                 li 빌드 과정에서 "컨텍스트"란 지정된 PATH | URL에 존재하는 파일들을 의미한다. 빌드 과정에서 컨텍스트 임의의 파일을 참조할 수 있다
-                p .dockerignore 파일을 통해 컨텍스트에서 파일/디렉터리들을 제외할 수 있다
+                    p .dockerignore 파일을 통해 컨텍스트에서 파일/디렉터리들을 제외할 수 있다
                 li URL은 다음 중 하나가 될 수 있다 : Git 저장소, pre-packaged tarball, plain Dockerfile text file
-                ul
-                    li 예. container 브랜치의 docker 디렉터리 지정
-                    +asCode('shell') $ docker build https://github.com/docker/rootfs.git#container:docker
-                    p Git 저장소를 가리키는 경우, 해당 저장소의 서브모듈까지 재귀적으로 가져온다
-                    +table()
-                        tr
-                            th Build Syntax Suffix
-                            th Commit Used
-                            th Build Context Used
-                        tr
-                            td myrepo.git
-                            td refs/heads/master
-                            td /
-                        tr
-                            td myrepo.git#mytag
-                            td refs/tags/mytag
-                            td /
-                        tr
-                            td myrepo.git#mybranch
-                            td refs/heads/mybranch
-                            td /
-                        tr
-                            td myrepo.git#pull/42/head
-                            td refs/pull/42/head
-                            td /
-                        tr
-                            td myrepo.git#:myfolder
-                            td refs/heads/master
-                            td /myfolder
-                        tr
-                            td myrepo.git#master:myfolder
-                            td refs/heads/master
-                            td /myfolder
-                        tr
-                            td myrepo.git#mytag:myfolder
-                            td refs/tags/mytag
-                            td /myfolder
-                        tr
-                            td myrepo.git#mybranch:myfolder
-                            td refs/heads/mybranch
-                            td /myfolder
-                    li 예. tarball 지정
-                    +asCode('shell') $ docker build http://server/context.tar.gz
-                    p 표준 tar 포맷이어야 한다. 압축 기법은 xz, bzip2, gzip, identity 중 하나
-                    li 예. STDIN 입력
-                    +asCode('shell') $ docker build - &lt; Dockerfile
-                    li 예. 텍스트 입력
-                    +asCode('shell') $ curl example.com/remote/Dockerfile | docker build -f - .
+                    ul
+                        li 예. container 브랜치의 docker 디렉터리 지정
+                            +asCode('shell') $ docker build https://github.com/docker/rootfs.git#container:docker
+                            p Git 저장소를 가리키는 경우, 해당 저장소의 서브모듈까지 재귀적으로 가져온다
+                            +table()
+                                tr
+                                    th Build Syntax Suffix
+                                    th Commit Used
+                                    th Build Context Used
+                                tr
+                                    td myrepo.git
+                                    td refs/heads/master
+                                    td /
+                                tr
+                                    td myrepo.git#mytag
+                                    td refs/tags/mytag
+                                    td /
+                                tr
+                                    td myrepo.git#mybranch
+                                    td refs/heads/mybranch
+                                    td /
+                                tr
+                                    td myrepo.git#pull/42/head
+                                    td refs/pull/42/head
+                                    td /
+                                tr
+                                    td myrepo.git#:myfolder
+                                    td refs/heads/master
+                                    td /myfolder
+                                tr
+                                    td myrepo.git#master:myfolder
+                                    td refs/heads/master
+                                    td /myfolder
+                                tr
+                                    td myrepo.git#mytag:myfolder
+                                    td refs/tags/mytag
+                                    td /myfolder
+                                tr
+                                    td myrepo.git#mybranch:myfolder
+                                    td refs/heads/mybranch
+                                    td /myfolder
+                        li 예. tarball 지정
+                            +asCode('shell') $ docker build http://server/context.tar.gz
+                            p 표준 tar 포맷이어야 한다. 압축 기법은 xz, bzip2, gzip, identity 중 하나
+                        li 예. STDIN 입력
+                            +asCode('shell') $ docker build - &lt; Dockerfile
+                        li 예. 텍스트 입력
+                            +asCode('shell') $ curl example.com/remote/Dockerfile | docker build -f - .
 
             h3 docker image history
             p Show the history of an image
@@ -847,11 +847,11 @@ include ../../source/skeleton.pug
             +asCode('shell') $ docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
             ol
                 li 예
-                +asCode('shell') $ docker tag 0e5574283393 fedora/httpd:version1.0
+                    +asCode('shell') $ docker tag 0e5574283393 fedora/httpd:version1.0
                 li Docker Hub로 올리려는 경우, {Docker Hub Id}/{Repository Name}:{tag}
-                +asCode('shell') $ docker tag bulletinboard:1.0 gordon/bulletinboard:1.0
+                    +asCode('shell') $ docker tag bulletinboard:1.0 gordon/bulletinboard:1.0
                 li Private repository로 푸시하려면 해당 주소를 붙여줘야 한다
-                +asCode('shell') $ docker tag 0e5574283393 myregistryhost:5000/fedora/httpd:version1.0
+                    +asCode('shell') $ docker tag 0e5574283393 myregistryhost:5000/fedora/httpd:version1.0
 
         h2 docker network
         p Manage networks

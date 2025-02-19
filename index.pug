@@ -55,84 +55,84 @@ include ./source/skeleton.pug
     h1 Oracle Cloud에 블로그 띄우는 절차
     ol
         li 블로그 클론
-        +asCode('shell').
-            $ sudo yum install git -y
-            $ git clone git@github.com:Dong-gi/Dong-gi.github.io.git
+            +asCode('shell').
+                $ sudo yum install git -y
+                $ git clone git@github.com:Dong-gi/Dong-gi.github.io.git
 
         li 블로그 빌드
-        +asCode('shell').
-            # https://github.com/nvm-sh/nvm
-            $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-            $ nvm install 20
+            +asCode('shell').
+                # https://github.com/nvm-sh/nvm
+                $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+                $ nvm install 20
 
-            # https://d2lang.com/
-            $ curl -fsSL https://d2lang.com/install.sh | sh -s --
+                # https://d2lang.com/
+                $ curl -fsSL https://d2lang.com/install.sh | sh -s --
 
-            $ npm install
-            $ npm run build-all
+                $ npm install
+                $ npm run build-all
 
         li 외부 배포
-        +asCode('shell').
-            $ sudo yum install nginx
-            $ sudo systemctl enable --now nginx
+            +asCode('shell').
+                $ sudo yum install nginx
+                $ sudo systemctl enable --now nginx
 
-            # 권한 설정
-            $ sudo chcon -Rt httpd_sys_content_t /public/Dong-gi.github.io/
-            $ sudo firewall-cmd --permanent --add-service=http
-            $ sudo firewall-cmd --permanent --add-service=https
-            $ sudo firewall-cmd --permanent --add-port=80/tcp
-            $ sudo firewall-cmd --permanent --add-port=443/tcp
-            $ sudo firewall-cmd --reload
+                # 권한 설정
+                $ sudo chcon -Rt httpd_sys_content_t /public/Dong-gi.github.io/
+                $ sudo firewall-cmd --permanent --add-service=http
+                $ sudo firewall-cmd --permanent --add-service=https
+                $ sudo firewall-cmd --permanent --add-port=80/tcp
+                $ sudo firewall-cmd --permanent --add-port=443/tcp
+                $ sudo firewall-cmd --reload
 
-            # snapd 설치를 위해 EPEL 패키지 사용 설정 필요
-            $ sudo cat /etc/yum.repos.d/oracle-epel-ol9.repo
-            [ol9_developer_EPEL]
-            name=Oracle Linux $releasever EPEL Packages for Development ($basearch)
-            baseurl=https://yum$ociregion.$ocidomain/repo/OracleLinux/OL9/developer/EPEL/$basearch/
-            gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
-            gpgcheck=1
-            enabled=1 <- 이 부분
+                # snapd 설치를 위해 EPEL 패키지 사용 설정 필요
+                $ sudo cat /etc/yum.repos.d/oracle-epel-ol9.repo
+                [ol9_developer_EPEL]
+                name=Oracle Linux $releasever EPEL Packages for Development ($basearch)
+                baseurl=https://yum$ociregion.$ocidomain/repo/OracleLinux/OL9/developer/EPEL/$basearch/
+                gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
+                gpgcheck=1
+                enabled=1 <- 이 부분
 
-            # https://snapcraft.io/docs/installing-snapd : certbot 설치에 이용
-            $ sudo yum install snapd -y
-            $ sudo systemctl enable --now snapd.socket
-            $ sudo ln -s /var/lib/snapd/snap /snap
-            # snapd 실행 준비를 위해 재로그인 또는 시스템 재시작 필요
+                # https://snapcraft.io/docs/installing-snapd : certbot 설치에 이용
+                $ sudo yum install snapd -y
+                $ sudo systemctl enable --now snapd.socket
+                $ sudo ln -s /var/lib/snapd/snap /snap
+                # snapd 실행 준비를 위해 재로그인 또는 시스템 재시작 필요
 
-            # https://certbot.eff.org/instructions : 인증서 발급
-            $ sudo snap install --classic certbot
-            $ sudo ln -s /snap/bin/certbot /usr/bin/certbot
-            # 인증서 발급 전, 블로그 도메인 => 컴퓨팅 인스턴스 IP 주소 연결
-            $ sudo certbot --nginx
+                # https://certbot.eff.org/instructions : 인증서 발급
+                $ sudo snap install --classic certbot
+                $ sudo ln -s /snap/bin/certbot /usr/bin/certbot
+                # 인증서 발급 전, 블로그 도메인 => 컴퓨팅 인스턴스 IP 주소 연결
+                $ sudo certbot --nginx
 
         li nginx.conf 예
-        +asCode('nginx').
-            server {
-                listen 80;
-                server_name free.4joy.link;
-                include /etc/nginx/default.d/*.conf;
-                return 301 https://$server_name$request_uri;
-            }
-
-            server {
-                listen       443 ssl http2;
-                listen       [::]:443 ssl http2;
-                server_name  free.4joy.link;
-
-                include /etc/nginx/default.d/*.conf;
-
-                ssl_certificate /etc/letsencrypt/live/free.4joy.link/fullchain.pem; # managed by Certbot
-                ssl_certificate_key /etc/letsencrypt/live/free.4joy.link/privkey.pem; # managed by Certbot
-                include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-                ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
-
-                location / {
-                    root /public/Dong-gi.github.io;
-                    add_header Cache-Control "no-cache";
+            +asCode('nginx').
+                server {
+                    listen 80;
+                    server_name free.4joy.link;
+                    include /etc/nginx/default.d/*.conf;
+                    return 301 https://$server_name$request_uri;
                 }
 
-                error_page 404 /;
-            }
+                server {
+                    listen       443 ssl http2;
+                    listen       [::]:443 ssl http2;
+                    server_name  free.4joy.link;
+
+                    include /etc/nginx/default.d/*.conf;
+
+                    ssl_certificate /etc/letsencrypt/live/free.4joy.link/fullchain.pem; # managed by Certbot
+                    ssl_certificate_key /etc/letsencrypt/live/free.4joy.link/privkey.pem; # managed by Certbot
+                    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+                    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+                    location / {
+                        root /public/Dong-gi.github.io;
+                        add_header Cache-Control "no-cache";
+                    }
+
+                    error_page 404 /;
+                }
 
     h1 기타 링크
     ul
@@ -141,11 +141,11 @@ include ./source/skeleton.pug
         li #[+asA('https://pd.fss.or.kr/index.html', '개인정보노출자 사고예방시스템')] : 등록시, 일부 비대면 거래 제한
         li #[+asA('http://www.k-apt.go.kr/', '공동주택관리 정보시스템')] : 관리비 조회
         li #[+asA('https://irts.molit.go.kr/', '부동산거래 전자계약시스템')]
-        ul
-            li 무자격자 불법 중개 방지
-            li 본인인증 서명으로 대리계약 차단
-            li 대출 우대금리 및 전세보증 보증료 인하 적용
-            li 거래*임대차신고, 확정일자 자동신청
+            ul
+                li 무자격자 불법 중개 방지
+                li 본인인증 서명으로 대리계약 차단
+                li 대출 우대금리 및 전세보증 보증료 인하 적용
+                li 거래*임대차신고, 확정일자 자동신청
         li #[+asA('https://www.ifixit.com/', 'IFIXIT')] : 사용자들이 직접 등록하는 수리 매뉴얼
         li #[+asA('https://www.car365.go.kr/', '자동차365')] : 중고차 통합이력조회
         li #[+asA('https://www.safetykorea.kr/release/certificationsearch', '안전관리 대상제품 조회')]
