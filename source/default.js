@@ -635,7 +635,12 @@ function makeMarkerName(marker) {
         case 'IMG': return `이미지 : ${marker.parentElement.querySelector('figcaption')?.textContent ?? 'No description'}`;
         case 'TABLE': return `표 : ${marker.caption.textContent}`;
         case 'DETAILS': return marker.firstChild.textContent;
-        default: return marker.textContent;
+        default:
+            const textNode = Array.from(marker.childNodes).find(x => x instanceof Text && x.wholeText.trim().length !== 0);
+            if (textNode != null) {
+                return textNode.wholeText
+            }
+            return marker.textContent;
     }
 }
 

@@ -10,13 +10,13 @@ include ../../source/skeleton.pug
         li: +asA('https://www.openapis.org/', 'OpenAPI 홈페이지')
         li: +asA('https://github.com/OAI/OpenAPI-Specification', 'OpenAPI GitHub')
         li: +asA('https://oai.github.io/Documentation/', 'OpenAPI 설명서')
-        p OpenAPI 명세는 길면서도 정제된 표현만을 담고 있다. 설명서에서는 초심자를 위하여, 명세에 대한 해설과 모범 사례들을 보여준다
+            p OpenAPI 명세는 길면서도 정제된 표현만을 담고 있다. 설명서에서는 초심자를 위하여, 명세에 대한 해설과 모범 사례들을 보여준다
         li: +asA('https://swagger.io/', 'Swagger')
-        p Swagger는 OpenAPI, Async API 등의 명세를 준수하는 API 개발을 용이하게 하는 여러 툴을 제공한다
-        ul
-            li Codegen : API 명세로부터 서버 코드 골격과 클라이언트에서 호출에 이용할 라이브러리 생성
-            li Editor : GUI 편집기
-            li UI : API 문서화
+            p Swagger는 OpenAPI, Async API 등의 명세를 준수하는 API 개발을 용이하게 하는 여러 툴을 제공한다
+            ul
+                li Codegen : API 명세로부터 서버 코드 골격과 클라이언트에서 호출에 이용할 라이브러리 생성
+                li Editor : GUI 편집기
+                li UI : API 문서화
         li: +asA('https://tools.openapis.org/', 'OpenAPI 관련 툴')
 
 
@@ -45,14 +45,14 @@ include ../../source/skeleton.pug
                 p OpenAPI 문서의 루트 객체는 #[+asA('https://spec.openapis.org/oas/v3.1.0#openapi-object', 'OpenAPI Object')]이고, 최소 세 개의 필드를 반드시 포함해야 합니다: <mark>openapi</mark>, <mark>info</mark>. (<mark>paths</mark>, <mark>components</mark>, <mark>webhooks</mark> 중 하나)
                 ul
                     li <mark>openapi</mark> (string)
-                    p OAS 버전을 나타냅니다. 예. 3.1.0
+                        p OAS 버전을 나타냅니다. 예. 3.1.0
                     li <mark>info</mark> (#[+asA('https://spec.openapis.org/oas/v3.1.0#info-object', 'Info Object')])
-                    p API에 대한 일반적인 정보를 포함합니다. 아래의 두 개 필드만 필수입니다
-                    ul
-                        li <mark>title</mark> (string) : 문서 제목
-                        li <mark>version</mark> (string) : 문서 버전
+                        p API에 대한 일반적인 정보를 포함합니다. 아래의 두 개 필드만 필수입니다
+                        ul
+                            li <mark>title</mark> (string) : 문서 제목
+                            li <mark>version</mark> (string) : 문서 버전
                     li <mark>paths</mark> (#[+asA('https://spec.openapis.org/oas/v3.1.0#paths-object', 'Paths Object')])
-                    p 모든 API 엔드포인트 목록을 기술합니다
+                        p 모든 API 엔드포인트 목록을 기술합니다
 
             h3 API Endpoints: <mark>paths</mark>, <mark>response</mark>
             div
@@ -108,33 +108,33 @@ include ../../source/skeleton.pug
                     li query : URL 쿼리 문자열
                     li header : HTTP 사용자 정의 헤더. 대소문자 구별하지 않음에 유의
                     li path : URL 경로
-                    +asCode('yaml').
-                        paths:
-                            /users/{id}:
-                                get:
-                                    parameters:
-                                    - name: id
-                                      in: path
-                                      required: true
+                        +asCode('yaml').
+                            paths:
+                                /users/{id}:
+                                    get:
+                                        parameters:
+                                        - name: id
+                                          in: path
+                                          required: true
                     li cookie : 쿠키
 
                 h4.fake Parameter Serialization Control
                 p 파라미터의 위치가 다양한 만큼 그 표현 방법도 다양하며, 따라서 직렬화/역직렬화에 필요한 포맷 정보를 <mark>style</mark> 속성에 설정할 수 있다
                 ul
                     li 원시 타입: 예. 정수 id = 1234
-                    +table()
-                        +ths('style:', 'simple', 'form', 'label', 'matrix')
-                        +tds('', '1234', 'id=1234', '.1234', ';id=1234')
+                        +table()
+                            +ths('style:', 'simple', 'form', 'label', 'matrix')
+                            +tds('', '1234', 'id=1234', '.1234', ';id=1234')
                     li 배열 타입: 예. ids = [1, 2, 3]
-                    +table()
-                        +ths('style:', 'simple', 'form', 'label', 'matrix')
-                        +tds('explode=false', '1,2,3', 'ids=1,2,3', '.1.2.3', ';ids=1,2,3')
-                        +tds('explode=true', '1,2,3', 'ids=1&ids=2&ids=3', '.1.2.3', ';ids=1;ids=2;ids=3')
+                        +table()
+                            +ths('style:', 'simple', 'form', 'label', 'matrix')
+                            +tds('explode=false', '1,2,3', 'ids=1,2,3', '.1.2.3', ';ids=1,2,3')
+                            +tds('explode=true', '1,2,3', 'ids=1&ids=2&ids=3', '.1.2.3', ';ids=1;ids=2;ids=3')
                     li 객체 타입: 예. color = {R, G, B}
-                    +table()
-                        +ths('style:', 'simple', 'form', 'label', 'matrix')
-                        +tds('explode=false', 'R,1,G,2,B,3', 'color=R,1,G,2,B,3', '.R.1.G.2.B.3', ';color=R,1,G,2,B,3')
-                        +tds('explode=true', 'R=1,G=2,B=3', 'R=1&G=2&B=3', '.R=1.G=2.B=3', ';R=1;G=2;B=3')
+                        +table()
+                            +ths('style:', 'simple', 'form', 'label', 'matrix')
+                            +tds('explode=false', 'R,1,G,2,B,3', 'color=R,1,G,2,B,3', '.R.1.G.2.B.3', ';color=R,1,G,2,B,3')
+                            +tds('explode=true', 'R=1,G=2,B=3', 'R=1&G=2&B=3', '.R=1.G=2.B=3', ';R=1;G=2;B=3')
 
             h3 Reusing Descriptions: <mark>components</mark>, <mark>$ref</mark>
             p API 구성 요소의 재정의를 피하기 위해, 루트 객체의 <mark>components</mark> 필드에 각 요소들을 정의하고, <mark>$ref</mark> 속성으로 이를 지정하여 재사용할 수 있다
@@ -151,68 +151,68 @@ include ../../source/skeleton.pug
                 h4.fake YAML에서 긴 설명문을 표기하는 방법
                 ul
                     li Literal mode
-                    +asCode('yaml').
-                        description: |
+                        +asCode('yaml').
+                            description: |
+                                This is a string
+                                in multiple lines.
+
+                                And an extra one.
+                        +asCode('text', 'Output').
                             This is a string
                             in multiple lines.
 
                             And an extra one.
-                    +asCode('text', 'Output').
-                        This is a string
-                        in multiple lines.
-
-                        And an extra one.
 
                     li Folded mode
-                    +asCode('yaml').
-                        description: &gt;
-                            This is a string
-                            in multiple lines.
+                        +asCode('yaml').
+                            description: &gt;
+                                This is a string
+                                in multiple lines.
 
+                                And an extra one.
+                        +asCode('text', 'Output').
+                            This is a string in multiple lines.
                             And an extra one.
-                    +asCode('text', 'Output').
-                        This is a string in multiple lines.
-                        And an extra one.
                 
                 h4.fake CommonMark Syntax
                 ul
                     li Headings
-                    +asCode().
-                        # Level 1
-                        ## Level 2
-                        ### Level 3
+                        +asCode().
+                            # Level 1
+                            ## Level 2
+                            ### Level 3
                     
                     li Emphasis
-                    +asCode().
-                        *Emphasis*
-                        **Strong Emphasis**
-                        ***Both***
+                        +asCode().
+                            *Emphasis*
+                            **Strong Emphasis**
+                            ***Both***
                     
                     li Lists
-                    +asCode().
-                        - Item 1
-                        - Item 2
-                        - Item 2.1
+                        +asCode().
+                            - Item 1
+                            - Item 2
+                            - Item 2.1
                     
                     li Code
-                    +asCode().
-                        An inline `code span`
+                        +asCode().
+                            An inline `code span`
 
-                        ```
-                        A fenced code block
-                        ```
+                            ```
+                            A fenced code block
+                            ```
                     
                     li Links
-                    +asCode().
-                        [Link text](Link URL)
-                        ![Alt text](Image URL)
+                        +asCode().
+                            [Link text](Link URL)
+                            ![Alt text](Image URL)
 
         h2 Best Practices
         ul
             li OpenAPI는 모든 HTTP API를 기술할 수 없다
-            p 실제 구현과 문서의 오차를 줄이기 위해, 다소 편법으로 API를 정의할 수도 있을 것이다
+                p 실제 구현과 문서의 오차를 줄이기 위해, 다소 편법으로 API를 정의할 수도 있을 것이다
 
             li 대신 OpenAPI는 코드 생성, 문서화, 유효성 검증 등 풍부한 자동화 도구를 제공한다
 
             li 정보는 다른 곳에 중복하여 기술하면 안 된다
-            p 언젠가 한 쪽만 수정된 상황이 발생할 수 있다
+                p 언젠가 한 쪽만 수정된 상황이 발생할 수 있다

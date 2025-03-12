@@ -8,112 +8,112 @@ include ../../../source/skeleton.pug
     h1 프로시저
     ul
         li 프로시저 호출
-        ol
-            li CREATE PROCEDURE로 정의된 내장 프로시저를 호출한다
-            +asCode('sql') CALL sp_name([parameter[, ...]])
-            li 매개변수가 없다면 괄호를 생략할 수 있다
-            +asCode('sql') CALL sp_name[()]
-            li OUT, INOUT 매개변수를 출력으로 이용할 수 있다. 이는 프로시저 내부에서의 호출에서도 유효하다
-            p PREPARE와 EXECUTE를 이용한 prepared CALL 구문에서는 IN, OUT, INOUT 인자에 placeholder를 이용할 수 있다
-            +asCode('sql').
-                mysql> SET @increment = 10;
-                mysql> PREPARE s FROM 'CALL p(?, ?)';
-                mysql> EXECUTE s USING @version, @increment;
-                mysql> SELECT @version, @increment;
+            ol
+                li CREATE PROCEDURE로 정의된 내장 프로시저를 호출한다
+                    +asCode('sql') CALL sp_name([parameter[, ...]])
+                li 매개변수가 없다면 괄호를 생략할 수 있다
+                    +asCode('sql') CALL sp_name[()]
+                li OUT, INOUT 매개변수를 출력으로 이용할 수 있다. 이는 프로시저 내부에서의 호출에서도 유효하다
+                    p PREPARE와 EXECUTE를 이용한 prepared CALL 구문에서는 IN, OUT, INOUT 인자에 placeholder를 이용할 수 있다
+                    +asCode('sql').
+                        mysql> SET @increment = 10;
+                        mysql> PREPARE s FROM 'CALL p(?, ?)';
+                        mysql> EXECUTE s USING @version, @increment;
+                        mysql> SELECT @version, @increment;
         li.marker 프로시저 작성
-        ol
-            li 가정 1 : 유저 데이터를 4개 DB(user_1 ~ user_4), 총 32개의 테이블(_1 ~ _32)로 분산 저장
-            p 예. 유저의 소지 아이템과 관련된 i_user_item 테이블에 대하여, user_1에는 i_user_item_1, i_user_item_5, ..., i_user_item_29까지 존재
-            li 가정 2 : 각 테이블에 데이터 입력 시, 테이블 suffix는 user_id % 32 + 1로 결정된다
-            li 분산 저장된 DB와 테이블들을 한꺼번에 검색하는 프로시저
-                +codeBtn('/Repositories/Single/202202/mysql_select_all_table.sql', 'sql')
+            ol
+                li 가정 1 : 유저 데이터를 4개 DB(user_1 ~ user_4), 총 32개의 테이블(_1 ~ _32)로 분산 저장
+                    p 예. 유저의 소지 아이템과 관련된 i_user_item 테이블에 대하여, user_1에는 i_user_item_1, i_user_item_5, ..., i_user_item_29까지 존재
+                li 가정 2 : 각 테이블에 데이터 입력 시, 테이블 suffix는 user_id % 32 + 1로 결정된다
+                li 분산 저장된 DB와 테이블들을 한꺼번에 검색하는 프로시저
+                    +codeBtn('/Repositories/Single/202202/mysql_select_all_table.sql', 'sql')
 
     h1 이벤트
     ol
         li.marker 서버 실행 중 이벤트 사용 설정
-        +asCode('sql').
-            mysql> SET GLOBAL event_scheduler = on;
-            mysql> SET @@global.event_scheduler = on;
-            mysql> SET GLOBAL event_scheduler = 1;
-            mysql> SET @@global.event_scheduler = 1;
+            +asCode('sql').
+                mysql> SET GLOBAL event_scheduler = on;
+                mysql> SET @@global.event_scheduler = on;
+                mysql> SET GLOBAL event_scheduler = 1;
+                mysql> SET @@global.event_scheduler = 1;
         li 서버 재실행 후 이벤트 사용 설정
-        p 종료 후 my.cnf or my.ini 에 옵션(event_scheduler=On)을 추가하고 mysql 시작
+            p 종료 후 my.cnf or my.ini 에 옵션(event_scheduler=On)을 추가하고 mysql 시작
         li 이벤트 생성
-        +asCode('sql').
-            SET GLOBAL event_scheduler = ON;
-            delimiter $$
-            create event if not exists reset_quest_clear_count_daily_event
-                on schedule every 0 DAY_HOUR
-                do
-                    begin
-                        update user.i_user_quest_status set clear_count = 0;
-                    end
-            $$ delimiter;
+            +asCode('sql').
+                SET GLOBAL event_scheduler = ON;
+                delimiter $$
+                create event if not exists reset_quest_clear_count_daily_event
+                    on schedule every 0 DAY_HOUR
+                    do
+                        begin
+                            update user.i_user_quest_status set clear_count = 0;
+                        end
+                $$ delimiter;
         li 이벤트 확인
-        +asCode('sql').
-            SHOW PROCESSLIST;
-            SHOW EVENTS;
+            +asCode('sql').
+                SHOW PROCESSLIST;
+                SHOW EVENTS;
 
     h1 CSV 입출력
     ul
         li CSV로부터 입력
-        +asCode('sql') LOAD DATA LOCAL INFILE "/~.csv" replace into table table_name fields terminated by ',' enclosed by '\"' IGNORE 1 LINES;
+            +asCode('sql') LOAD DATA LOCAL INFILE "/~.csv" replace into table table_name fields terminated by ',' enclosed by '\"' IGNORE 1 LINES;
         li CSV로 출력
-        ul
-            li 기본 명령
-            +asCode('sql') SELECT select_clause FROM table_expression INTO OUTFILE "~.csv" FIELDS TERMINATED BY "," LINES TERMINATED BY "\n";
-            li 출력 가능 경로 확인 : SHOW VARIABLES LIKE 'secure_file%';
-            li 기본 출력은 멀티 라인 텍스트를 \로 연결하여 출력하고, null값을 \N로 출력한다. 아래 툴을 이용하면, 멀티 라인 문자열과 빈 문자열만 ""로 감싸고, null값은 비워서 표현하는 select_clause를 얻을 수 있다
-            textarea#mysql-csv-column-convert-in-textarea(style='width: 100%') column1, colmun2
-            textarea#mysql-csv-column-convert-out-textarea(style='width: 100%;min-height: 200px')
-            script.
-                let columnClause = `CASE
-                                        WHEN $1 is null THEN ""
-                                        WHEN CAST($1 AS CHAR) = "" THEN "\\"\\""
-                                        WHEN (INSTR(IFNULL(CAST($1 AS CHAR), ""), "\\n") = 0 AND INSTR(IFNULL(CAST($1 AS CHAR), ""), ",") = 0) THEN IFNULL($1, "")
-                                        ELSE CONCAT("\\"", $1, "\\"")
-                                    END AS $1`.replace(/\n/gm, "").replace(/\s{2,}/gm, ' ');
-                let textIn = document.getElementById('mysql-csv-column-convert-in-textarea');
-                let textOut = document.getElementById('mysql-csv-column-convert-out-textarea');
-                let handler = function (e) {
-                    let columnClauses = [];
-                    for(let column of textIn.value.match(/\w+/gm))
-                        columnClauses.push(column.replace(/(\w+)/, columnClause));
-                    textOut.value = columnClauses.join(',\n\n');
-                };
-                textIn.addEventListener('input', handler);
-                handler();
+            ul
+                li 기본 명령
+                    +asCode('sql') SELECT select_clause FROM table_expression INTO OUTFILE "~.csv" FIELDS TERMINATED BY "," LINES TERMINATED BY "\n";
+                li 출력 가능 경로 확인 : SHOW VARIABLES LIKE 'secure_file%';
+                li 기본 출력은 멀티 라인 텍스트를 \로 연결하여 출력하고, null값을 \N로 출력한다. 아래 툴을 이용하면, 멀티 라인 문자열과 빈 문자열만 ""로 감싸고, null값은 비워서 표현하는 select_clause를 얻을 수 있다
+                    textarea#mysql-csv-column-convert-in-textarea(style='width: 100%') column1, colmun2
+                    textarea#mysql-csv-column-convert-out-textarea(style='width: 100%;min-height: 200px')
+                    script.
+                        let columnClause = `CASE
+                                                WHEN $1 is null THEN ""
+                                                WHEN CAST($1 AS CHAR) = "" THEN "\\"\\""
+                                                WHEN (INSTR(IFNULL(CAST($1 AS CHAR), ""), "\\n") = 0 AND INSTR(IFNULL(CAST($1 AS CHAR), ""), ",") = 0) THEN IFNULL($1, "")
+                                                ELSE CONCAT("\\"", $1, "\\"")
+                                            END AS $1`.replace(/\n/gm, "").replace(/\s{2,}/gm, ' ');
+                        let textIn = document.getElementById('mysql-csv-column-convert-in-textarea');
+                        let textOut = document.getElementById('mysql-csv-column-convert-out-textarea');
+                        let handler = function (e) {
+                            let columnClauses = [];
+                            for(let column of textIn.value.match(/\w+/gm))
+                                columnClauses.push(column.replace(/(\w+)/, columnClause));
+                            textOut.value = columnClauses.join(',\n\n');
+                        };
+                        textIn.addEventListener('input', handler);
+                        handler();
 
     h1 자잘한 것들
     ul
         li.marker 테이블 컬럼 순서 변경
-        +asCode('sql').
-            ALTER TABLE table_name MODIFY COLUMN col_name1 TYPE AFTER col_name2;
-            ALTER TABLE table_name CHANGE COLUMN before_col_name after_col_name TYPE AFTER col_name;
+            +asCode('sql').
+                ALTER TABLE table_name MODIFY COLUMN col_name1 TYPE AFTER col_name2;
+                ALTER TABLE table_name CHANGE COLUMN before_col_name after_col_name TYPE AFTER col_name;
         li.marker 테이블 정의 확인
-        +asCode('sql').
-            DESC table_name;
-            SHOW [FULL] COLUMNS FROM table_name [WHERE...];
+            +asCode('sql').
+                DESC table_name;
+                SHOW [FULL] COLUMNS FROM table_name [WHERE...];
         li.marker 테이블 복사 생성
-        +asCode('sql') create table new_table_name like base_table_name;
+            +asCode('sql') create table new_table_name like base_table_name;
         li.marker 로그 확인
-        +asCode('sql') mysql> show variables where variable_name like '%log%';
-        +table()
-            tr
-                td general_log_file
-                td /var/lib/mysql/e5b7c25145a2.log
-            tr
-                td relay_log_basename
-                td /var/lib/mysql/e5b7c25145a2-relay-bin
-            tr
-                td relay_log_index
-                td /var/lib/mysql/e5b7c25145a2-relay-bin.index
-            tr
-                td slow_query_log_file
-                td /var/lib/mysql/e5b7c25145a2-slow.log
-        +asCode('sql') mysql> SET GLOBAL general_log = 1;
-        +asCode('shell') $ tail /var/lib/mysql/e5b7c25145a2.log -f
+            +asCode('sql') mysql> show variables where variable_name like '%log%';
+            +table()
+                tr
+                    td general_log_file
+                    td /var/lib/mysql/e5b7c25145a2.log
+                tr
+                    td relay_log_basename
+                    td /var/lib/mysql/e5b7c25145a2-relay-bin
+                tr
+                    td relay_log_index
+                    td /var/lib/mysql/e5b7c25145a2-relay-bin.index
+                tr
+                    td slow_query_log_file
+                    td /var/lib/mysql/e5b7c25145a2-slow.log
+            +asCode('sql') mysql> SET GLOBAL general_log = 1;
+            +asCode('shell') $ tail /var/lib/mysql/e5b7c25145a2.log -f
         li.marker 입출력 내역 파일로 기록
-        +asCode('sql') mysql> tee file_name.log;
+            +asCode('sql') mysql> tee file_name.log;
         li.marker my.cnf 찾기
-        +asCode('shell') $ mysqld --verbose --help | grep -A 1 'Default options'
+            +asCode('shell') $ mysqld --verbose --help | grep -A 1 'Default options'

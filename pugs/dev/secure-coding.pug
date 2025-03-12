@@ -15,22 +15,22 @@ include ../../source/skeleton.pug
         ul
             li: +asA('https://canarytokens.org/nest/', 'Canarytokens')
             li 실제 서비스에는 사용되지 않는 토큰을 뿌려두고, 토큰 액세스 알림을 받음으로써 잠재적인 공격자의 존재를 확인하는 방법이다
-            p 외부에 개방된 곳에 일부러 토큰을 뿌리는 건 별로 의미가 없고, 정상적인 상태라면 아무도 건드리지 말아야 할 곳에 먹음직스럽게 뿌리는 것이 좋다
+                p 외부에 개방된 곳에 일부러 토큰을 뿌리는 건 별로 의미가 없고, 정상적인 상태라면 아무도 건드리지 말아야 할 곳에 먹음직스럽게 뿌리는 것이 좋다
             li 사용 사례
-            ul
-                li 내 모바일 디바이스에 설치한 앱을 누군가 실행한 흔적이 있다
-                li 내 컴퓨터에 존재하는 Microsoft 엑셀 파일을 누군가 열어본 흔적이 있다
-                li 내 컴퓨터(Windows)의 폴더를 누군가 열어본 흔적이 있다
-                li 내 컴퓨터에서 누군가 바이너리 파일을 실행한 흔적이 있다
-                li 기밀 장소에 보관된 액세스 키를 누군가 사용한 흔적이 있다
-                li 일반적으로는 도달할 수 없는 URL에 누군가 접속한 흔적이 있다
-                li 누군가 내 사이트를 그대로 복제하여 사용하는 징후가 있다
+                ul
+                    li 내 모바일 디바이스에 설치한 앱을 누군가 실행한 흔적이 있다
+                    li 내 컴퓨터에 존재하는 Microsoft 엑셀 파일을 누군가 열어본 흔적이 있다
+                    li 내 컴퓨터(Windows)의 폴더를 누군가 열어본 흔적이 있다
+                    li 내 컴퓨터에서 누군가 바이너리 파일을 실행한 흔적이 있다
+                    li 기밀 장소에 보관된 액세스 키를 누군가 사용한 흔적이 있다
+                    li 일반적으로는 도달할 수 없는 URL에 누군가 접속한 흔적이 있다
+                    li 누군가 내 사이트를 그대로 복제하여 사용하는 징후가 있다
 
         h2 OpenSSF Scorecard
         ul
             li: +asA('https://securityscorecards.dev/', 'OpenSSF Scorecard 공식 사이트')
             li 프로젝트 소스 코드를 분석하여 개발 ~ 배포 각 단계에서 보안 표준을 얼마나 지키는지를 분석해준다
-            +w3img('/imgs/202408/Screenshot 2024-08-19 at 6.41.46 PM.png')
+                +w3img('/imgs/202408/Screenshot 2024-08-19 at 6.41.46 PM.png')
             li GitHub Action에 통합하여 사용하거나, CLI를 통해 실행할 수 있다
 
     h1 CWE-208: Observable Timing Discrepancy
@@ -38,19 +38,19 @@ include ../../source/skeleton.pug
         li: +asA('https://cwe.mitre.org/data/definitions/208.html')
         li: +asA('https://codahale.com/a-lesson-in-timing-attacks/')
         li 예를 들어 요청 해시와 실제 해시를 아래와 같이 비교한다고 할 때,
-        +asCode('java').
-            boolean isEqual(byte[] a, byte[] b) {
-                if (a.length != b.length)
-                    return false;
-
-                for (var i = 0; i < a.length; ++i)
-                    if (a[i] != b[i])
+            +asCode('java').
+                boolean isEqual(byte[] a, byte[] b) {
+                    if (a.length != b.length)
                         return false;
-                return true;
-            }
-        p 네트워크 연결 속도가 불안정한 상황에서도 최소 20마이크로초 단위로 서버의 응답 시간 차이를 식별할 수 있고, LAN 환경에서는 그 한계가 100ns까지 떨어진다고 한다
+
+                    for (var i = 0; i < a.length; ++i)
+                        if (a[i] != b[i])
+                            return false;
+                    return true;
+                }
+            p 네트워크 연결 속도가 불안정한 상황에서도 최소 20마이크로초 단위로 서버의 응답 시간 차이를 식별할 수 있고, LAN 환경에서는 그 한계가 100ns까지 떨어진다고 한다
         li 동일 크기의 보안 입력에 대한 결과는 항상 동일한 시간으로 처리해야 한다
-        p 예. Node crypto 모듈은 #[+asInlineCode('timingSafeEqual')] 함수를 제공한다
+            p 예. Node crypto 모듈은 #[+asInlineCode('timingSafeEqual')] 함수를 제공한다
 
     h1 CWE-400: Uncontrolled Resource Consumption
     ul
@@ -58,31 +58,31 @@ include ../../source/skeleton.pug
         li 용량이 제한된 리소스를 적절히 할당 및 해제하지 않아, 공격자가 정상적인 서비스를 위한 리소스가 부족(DoS)하도록 만들 수 있는 경우.
         li HTTP 서버 앞에 프록시를 두거나, 방화벽을 설정함으로써 완화할 수 있다
         li HTTP 서버 자체도 설정을 조정함으로써 이를 완화할 수 있다
-        ol
-            li 적절한 에러 핸들러를 설정하여, 에러로 인해 서버 자체가 종료되는 일이 없도록 한다
-            li 시간초과 설정을 통해, #[+asA('https://en.wikipedia.org/wiki/Slowloris_(computer_security)')] 공격을 방지한다
-            p 예. Node #[+asInlineCode('http.Server')]의 경우 : #[+asInlineCode('headersTimeout, requestTimeout, timeout, keepAliveTimeout')]
+            ol
+                li 적절한 에러 핸들러를 설정하여, 에러로 인해 서버 자체가 종료되는 일이 없도록 한다
+                li 시간초과 설정을 통해, #[+asA('https://en.wikipedia.org/wiki/Slowloris_(computer_security)')] 공격을 방지한다
+                    p 예. Node #[+asInlineCode('http.Server')]의 경우 : #[+asInlineCode('headersTimeout, requestTimeout, timeout, keepAliveTimeout')]
 
     h1 CWE-1321: Improperly Controlled Modification of Object Prototype Attributes ('Prototype Pollution')
     ul
         li: +asA('https://cwe.mitre.org/data/definitions/1321.html')
         li 프로토타입을 오염시켜 객체가 정상적으로 작동하지 못하도록 하는 경우
-        p 예. Node에서는 #[+asInlineCode('Object.assign()')]을 이용하여 프로토타입을 오염시킬 수 있다
-        +asCode('JavaScript').
-            const a = { a: 1, b: 2 };
-            const data = JSON.parse('{"__proto__": { "polluted": true}}');
+            p 예. Node에서는 #[+asInlineCode('Object.assign()')]을 이용하여 프로토타입을 오염시킬 수 있다
+            +asCode('JavaScript').
+                const a = { a: 1, b: 2 };
+                const data = JSON.parse('{"__proto__": { "polluted": true}}');
 
-            const c = Object.assign({}, a, data);
-            console.log(c.polluted); // true
+                const c = Object.assign({}, a, data);
+                console.log(c.polluted); // true
 
-            // Potential DoS
-            const data2 = JSON.parse('{"__proto__": null}');
-            const d = Object.assign(a, data2);
-            d.hasOwnProperty('b'); // Uncaught TypeError: d.hasOwnProperty is not a function
+                // Potential DoS
+                const data2 = JSON.parse('{"__proto__": null}');
+                const d = Object.assign(a, data2);
+                d.hasOwnProperty('b'); // Uncaught TypeError: d.hasOwnProperty is not a function
 
     h1 CWE-1357: Reliance on Insufficiently Trustworthy Component
     ul
         li: +asA('https://cwe.mitre.org/data/definitions/1357.html')
         li 3자 모듈을 이용할 때는 코드에 취약점이 없는지, 꾸준히 관리되고 있는지, 모든 파일이 예상한 것과 같은 지 확인해야 한다.
-        p Git으로 배포된 버전의 파일은 실제 패키지 다운로드된 것과 다를 수 있음에 유의해야 한다.
-        p 정적 코드 스캔 도구 등을 이용하여 검사하는 것을 개발 과정에서 자동으로 이루어지도록 빌드 스크립트를 작성하는 것도 한 방법.
+            p Git으로 배포된 버전의 파일은 실제 패키지 다운로드된 것과 다를 수 있음에 유의해야 한다.
+            p 정적 코드 스캔 도구 등을 이용하여 검사하는 것을 개발 과정에서 자동으로 이루어지도록 빌드 스크립트를 작성하는 것도 한 방법.

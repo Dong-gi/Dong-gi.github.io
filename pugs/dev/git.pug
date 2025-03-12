@@ -9,10 +9,10 @@ include ../../source/skeleton.pug
     ul
         li Git은 각 버전 사이의 변경 사항을 기록하지 않는다
         li.marker 커밋
-        ul
-            li 스테이지에 올라간 각 파일들은 해시값과 함께 blob 객체로 .git에 저장된다
-            li 루트 디렉터리부터 각 서브 디렉터리들은 자식 노드들에 대한 포인터를 가지며, 해시값과 함께 tree 객체로 .git에 저장된다
-            li 커밋 객체는 루트 디렉터리 tree 객체에 대한 포인터와 이전 커밋 객체(있다면)에 대한 포인터를 가지며, 해시값과 함께 .git에 저장된다
+            ul
+                li 스테이지에 올라간 각 파일들은 해시값과 함께 blob 객체로 .git에 저장된다
+                li 루트 디렉터리부터 각 서브 디렉터리들은 자식 노드들에 대한 포인터를 가지며, 해시값과 함께 tree 객체로 .git에 저장된다
+                li 커밋 객체는 루트 디렉터리 tree 객체에 대한 포인터와 이전 커밋 객체(있다면)에 대한 포인터를 가지며, 해시값과 함께 .git에 저장된다
         li.marker 브랜치는 커밋 객체를 가리키는 포인터
         li HEAD는 현재 작업중인 브랜치를 가리키는 포인터(checkout으로 변경)
         li origin/ : 서버 브랜치
@@ -25,27 +25,27 @@ include ../../source/skeleton.pug
     h1 Submodule
     ul
         li 관리하는 디렉터리 자체가 다른 git 저장소일 수 있다
-        +asCode('shell').
-            $ git submodule init
-            $ git submodule update
+            +asCode('shell').
+                $ git submodule init
+                $ git submodule update
 
     h1 Command
     ul
         li git checkout &lt;branch|commit_hash&gt;
-        p 작업 지점 변경
+            p 작업 지점 변경
         li git log [filepath]
-        p 전체[또는 특정 파일] 변경 기록 확인
+            p 전체[또는 특정 파일] 변경 기록 확인
         li git cherry-pick &lt;commit_hash&gt;
-        p 다른 브랜치의 특정 커밋의 변경분만 현재 작업 지점에 반영
+            p 다른 브랜치의 특정 커밋의 변경분만 현재 작업 지점에 반영
         li git merge --no-ff develop
-        p fast-forward가 가능하더라도 새 커밋으로 머지
+            p fast-forward가 가능하더라도 새 커밋으로 머지
 
     h1 Git Hook
     ul
         li 특정 이벤트 발생 시 실행될 스크립트들을 .git/hooks에 저장한다
-        p 해당 디렉터리에는 예제 스크립트들이 존재한다
+            p 해당 디렉터리에는 예제 스크립트들이 존재한다
         li pre-commit : 클라이언트에서 커밋 메시지를 작성하기 전에 호출된다. 0으로 종료하지 않으면 커밋 취소
-        p git commit --no-verify로 일시 생략 가능
+            p git commit --no-verify로 일시 생략 가능
         li prepare-commit-msg : 커밋 메시지를 생성한 뒤, 편집기를 실행하기 전에 실행
         li commit-msg : 커밋 메시지가 들어 있는 임시 파일의 경로를 인자로 받는다. 0으로 종료하지 않으면 커밋 취소
         li post-commit : 커밋 완료 후 실행
@@ -72,16 +72,16 @@ include ../../source/skeleton.pug
         h2 주요 개념
         ul
             li Push 등 특정 event 발생 시, 해당 이벤트를 trigger로 등록한 모든 workflow를 실행한다
-            ul
-                li 각 event는 commit SHA, Git ref를 갖는다
-                li 실행될 workflow는 해당 브랜치의 .github/workflows 디렉터리에 존재해야 한다
-                li Workflow 실행 시, GITHUB_SHA, GITHUB_REF 환경변수가 기본으로 설정된다
+                ul
+                    li 각 event는 commit SHA, Git ref를 갖는다
+                    li 실행될 workflow는 해당 브랜치의 .github/workflows 디렉터리에 존재해야 한다
+                    li Workflow 실행 시, GITHUB_SHA, GITHUB_REF 환경변수가 기본으로 설정된다
             li Workflow는 job(들)을 갖는다
-            ul
-                li 기본적으로 job들은 각 runner에서 병렬로 실행되지만, 순차적으로 실행하도록 조정할 수 있다
-                li 하나의 job에 정의된 step들은 동일한 runner에서 순서대로 실행된다
+                ul
+                    li 기본적으로 job들은 각 runner에서 병렬로 실행되지만, 순차적으로 실행하도록 조정할 수 있다
+                    li 하나의 job에 정의된 step들은 동일한 runner에서 순서대로 실행된다
             li Runner
-            p GitHub Actions runner가 설치된 서버. GitHub-hosted runner로 Ubuntu, Windows, MacOS 3종이 제공된다
+                p GitHub Actions runner가 설치된 서버. GitHub-hosted runner로 Ubuntu, Windows, MacOS 3종이 제공된다
 
         h2 이벤트 종류
 

@@ -8,308 +8,308 @@ include ../../../source/skeleton.pug
     h1 MongoDB
     ol
         li NoSQL 데이터베이스의 한 종류. 데이터를 BSON(Binary JSON)으로 취급하며, SQL을 지원하지 않는다
-        +table()
-            caption: +asA('https://docs.mongodb.com/manual/reference/sql-comparison/', 'SQL comparison')
-            tr
-                th RDBMS
-                th MongoDB
-            tr
-                td Table
-                td Collection
-            tr
-                td Tuple, Row
-                td Document
-            tr
-                td Join
-                td Embedding, Linking
+            +table()
+                caption: +asA('https://docs.mongodb.com/manual/reference/sql-comparison/', 'SQL comparison')
+                tr
+                    th RDBMS
+                    th MongoDB
+                tr
+                    td Table
+                    td Collection
+                tr
+                    td Tuple, Row
+                    td Document
+                tr
+                    td Join
+                    td Embedding, Linking
         li 설치 : 
             +asA('https://docs.mongodb.com/manual/installation/', 'https://docs.mongodb.com/manual/installation/')
-        +asCode('shell', '서버 직접 실행') $ mongod --fork -f /etc/mongod.conf
+            +asCode('shell', '서버 직접 실행') $ mongod --fork -f /etc/mongod.conf
         li 최대 쿼리 결과 크기는 BSON 문서가 허용하는 16MB
-        p 이를 초과하는 문서가 필요하다면 GridFS API를 이용. mongofiles 명령 또는 드라이버 참고
+            p 이를 초과하는 문서가 필요하다면 GridFS API를 이용. mongofiles 명령 또는 드라이버 참고
 
     h1 BSON Specification
     p 참고 자료 : #[+asA('http://bsonspec.org/spec.html')]
     ol
         li Basic Types
-        +table()
-            tr
-                th type
-                th size(bytes)
-            tr
-                td byte
-                td 1
-            tr
-                td int32
-                td 4(signed, 2의 보수)
-            tr
-                td int64
-                td 8(signed, 2의 보수)
-            tr
-                td uint64
-                td 8(unsigned)
-            tr
-                td double
-                td 8(IEEE 754-2008)
-            tr
-                td decimal128
-                td 16(IEEE 754-2008)
+            +table()
+                tr
+                    th type
+                    th size(bytes)
+                tr
+                    td byte
+                    td 1
+                tr
+                    td int32
+                    td 4(signed, 2의 보수)
+                tr
+                    td int64
+                    td 8(signed, 2의 보수)
+                tr
+                    td uint64
+                    td 8(unsigned)
+                tr
+                    td double
+                    td 8(IEEE 754-2008)
+                tr
+                    td decimal128
+                    td 16(IEEE 754-2008)
         li Non-terminals
-        +table()
-            tr
-                th
-                th
-                th
-                th
-                th mongo alias
-            tr
-                td document
-                td ::=
-                td int32 e_list "\x00"
-                td BSON 객체. int32는 문서의 바이트 크기
-                td
-            tr
-                td e_list
-                td ::=
-                td element e_list
-                td
-                td
-            tr
-                td
-                td |
-                td ""
-                td
-                td
-            tr
-                td element
-                td ::=
-                td "\x01" e_name double
-                td
-                td double
-            tr
-                td
-                td |
-                td "\x02" e_name string
-                td UTF-8 string
-                td string
-            tr
-                td
-                td |
-                td "\x03" e_name document
-                td Embedded document
-                td object
-            tr
-                td
-                td |
-                td "\x04" e_name document
-                td: span.hover-content(template-id='template-mongodb-bson-array') Array
-                td array
-            tr
-                td
-                td |
-                td "\x05" e_name binary
-                td Binary data
-                td binData
-            tr
-                td
-                td |
-                td "\x06" e_name
-                td Deprecated
-                td undefined
-            tr
-                td
-                td |
-                td "\x07" e_name (byte*12)
-                td 4바이트 시각 + 5바이트 랜덤 + 3바이트 카운터
-                td objectId
-            tr
-                td
-                td |
-                td "\x08" e_name "\x00"
-                td Boolean "false"
-                td bool
-            tr
-                td
-                td |
-                td "\x08" e_name "\x01"
-                td Boolean "true"
-                td bool
-            tr
-                td
-                td |
-                td "\x09" e_name int64
-                td UTC datetime(밀리초)
-                td date
-            tr
-                td
-                td |
-                td "\x0A" e_name
-                td Null
-                td null
-            tr
-                td
-                td |
-                td "\x0B" e_name cstring cstring
-                td 각각 정규표현식 패턴,
-                    span.hover-content(template-id='template-mongodb-bson-regex-option') 옵션(알파벳 순)
-                td regex
-            tr
-                td
-                td |
-                td "\x0C" e_name string (byte*12)
-                td Deprecated
-                td dbPointer
-            tr
-                td
-                td |
-                td "\x0D" e_name string
-                td JavaScript code
-                td javascript
-            tr
-                td
-                td |
-                td "\x0E" e_name string
-                td Deprecated
-                td symbol
-            tr
-                td
-                td |
-                td "\x0F" e_name code_w_s
-                td JavaScript code w/ scope
-                td javascriptWithScope
-            tr
-                td
-                td |
-                td "\x10" e_name int32
-                td 32-bit integer
-                td int
-            tr
-                td
-                td |
-                td "\x11" e_name uint64
-                td Timestamp
-                td timestamp
-            tr
-                td
-                td |
-                td "\x12" e_name int64
-                td
-                td long
-            tr
-                td
-                td |
-                td "\x13" e_name decimal128
-                td
-                td decimal
-            tr
-                td
-                td |
-                td "\xFF" e_name
-                td: span.hover-content(template-id='template-mongodb-min-key') Min key
-                td minKey
-            tr
-                td
-                td |
-                td "\x7F" e_name
-                td: span.hover-content(template-id='template-mongodb-max-key') Max key
-                td maxKey
-            tr
-                td e_name
-                td ::=
-                td cstring
-                td Key name
-                td
-            tr
-                td string
-                td ::=
-                td int32 (byte*) "\x00"
-                td UTF8 문자열. int32는 바이트 길이(\x00 포함)
-                td
-            tr
-                td cstring
-                td ::=
-                td (byte*) "\x00"
-                td Modified UTF8 문자열
-                td
-            tr
-                td binary
-                td ::=
-                td int32 subtype (byte*)
-                td int32는 (byte*) 바이트 길이
-                td
-            tr
-                td subtype
-                td ::=
-                td "\x00"
-                td Generic binary subtype
-                td
-            tr
-                td
-                td |
-                td "\x01"
-                td Function
-                td
-            tr
-                td
-                td |
-                td "\x02"
-                td Binary (Old)
-                td
-            tr
-                td
-                td |
-                td "\x03"
-                td UUID (Old)
-                td
-            tr
-                td
-                td |
-                td "\x04"
-                td UUID
-                td
-            tr
-                td
-                td |
-                td "\x05"
-                td MD5
-                td
-            tr
-                td
-                td |
-                td "\x06"
-                td Encrypted BSON value
-                td
-            tr
-                td
-                td |
-                td "\x80"
-                td User defined
-                td
-            tr
-                td code_w_s
-                td ::=
-                td int32 string document
-                td Code w/ scope
-                td
+            +table()
+                tr
+                    th
+                    th
+                    th
+                    th
+                    th mongo alias
+                tr
+                    td document
+                    td ::=
+                    td int32 e_list "\x00"
+                    td BSON 객체. int32는 문서의 바이트 크기
+                    td
+                tr
+                    td e_list
+                    td ::=
+                    td element e_list
+                    td
+                    td
+                tr
+                    td
+                    td |
+                    td ""
+                    td
+                    td
+                tr
+                    td element
+                    td ::=
+                    td "\x01" e_name double
+                    td
+                    td double
+                tr
+                    td
+                    td |
+                    td "\x02" e_name string
+                    td UTF-8 string
+                    td string
+                tr
+                    td
+                    td |
+                    td "\x03" e_name document
+                    td Embedded document
+                    td object
+                tr
+                    td
+                    td |
+                    td "\x04" e_name document
+                    td: span.hover-content(template-id='template-mongodb-bson-array') Array
+                    td array
+                tr
+                    td
+                    td |
+                    td "\x05" e_name binary
+                    td Binary data
+                    td binData
+                tr
+                    td
+                    td |
+                    td "\x06" e_name
+                    td Deprecated
+                    td undefined
+                tr
+                    td
+                    td |
+                    td "\x07" e_name (byte*12)
+                    td 4바이트 시각 + 5바이트 랜덤 + 3바이트 카운터
+                    td objectId
+                tr
+                    td
+                    td |
+                    td "\x08" e_name "\x00"
+                    td Boolean "false"
+                    td bool
+                tr
+                    td
+                    td |
+                    td "\x08" e_name "\x01"
+                    td Boolean "true"
+                    td bool
+                tr
+                    td
+                    td |
+                    td "\x09" e_name int64
+                    td UTC datetime(밀리초)
+                    td date
+                tr
+                    td
+                    td |
+                    td "\x0A" e_name
+                    td Null
+                    td null
+                tr
+                    td
+                    td |
+                    td "\x0B" e_name cstring cstring
+                    td 각각 정규표현식 패턴,
+                        span.hover-content(template-id='template-mongodb-bson-regex-option') 옵션(알파벳 순)
+                    td regex
+                tr
+                    td
+                    td |
+                    td "\x0C" e_name string (byte*12)
+                    td Deprecated
+                    td dbPointer
+                tr
+                    td
+                    td |
+                    td "\x0D" e_name string
+                    td JavaScript code
+                    td javascript
+                tr
+                    td
+                    td |
+                    td "\x0E" e_name string
+                    td Deprecated
+                    td symbol
+                tr
+                    td
+                    td |
+                    td "\x0F" e_name code_w_s
+                    td JavaScript code w/ scope
+                    td javascriptWithScope
+                tr
+                    td
+                    td |
+                    td "\x10" e_name int32
+                    td 32-bit integer
+                    td int
+                tr
+                    td
+                    td |
+                    td "\x11" e_name uint64
+                    td Timestamp
+                    td timestamp
+                tr
+                    td
+                    td |
+                    td "\x12" e_name int64
+                    td
+                    td long
+                tr
+                    td
+                    td |
+                    td "\x13" e_name decimal128
+                    td
+                    td decimal
+                tr
+                    td
+                    td |
+                    td "\xFF" e_name
+                    td: span.hover-content(template-id='template-mongodb-min-key') Min key
+                    td minKey
+                tr
+                    td
+                    td |
+                    td "\x7F" e_name
+                    td: span.hover-content(template-id='template-mongodb-max-key') Max key
+                    td maxKey
+                tr
+                    td e_name
+                    td ::=
+                    td cstring
+                    td Key name
+                    td
+                tr
+                    td string
+                    td ::=
+                    td int32 (byte*) "\x00"
+                    td UTF8 문자열. int32는 바이트 길이(\x00 포함)
+                    td
+                tr
+                    td cstring
+                    td ::=
+                    td (byte*) "\x00"
+                    td Modified UTF8 문자열
+                    td
+                tr
+                    td binary
+                    td ::=
+                    td int32 subtype (byte*)
+                    td int32는 (byte*) 바이트 길이
+                    td
+                tr
+                    td subtype
+                    td ::=
+                    td "\x00"
+                    td Generic binary subtype
+                    td
+                tr
+                    td
+                    td |
+                    td "\x01"
+                    td Function
+                    td
+                tr
+                    td
+                    td |
+                    td "\x02"
+                    td Binary (Old)
+                    td
+                tr
+                    td
+                    td |
+                    td "\x03"
+                    td UUID (Old)
+                    td
+                tr
+                    td
+                    td |
+                    td "\x04"
+                    td UUID
+                    td
+                tr
+                    td
+                    td |
+                    td "\x05"
+                    td MD5
+                    td
+                tr
+                    td
+                    td |
+                    td "\x06"
+                    td Encrypted BSON value
+                    td
+                tr
+                    td
+                    td |
+                    td "\x80"
+                    td User defined
+                    td
+                tr
+                    td code_w_s
+                    td ::=
+                    td int32 string document
+                    td Code w/ scope
+                    td
 
     h1 mongo Shell
     ul
         li mongo
-        +asCode('shell').
-            $ mongo --port 28015          # 기본 포트 27017
-            $ mongo "mongodb://host:port"
-            $ mongo --password "mongodb://username@host:port"
-            $ mongo --ssl --host replA/mongodb0.example.com.local:27017,mongodb1.example.com.local:27017,mongodb2.example.com.local:27017
+            +asCode('shell').
+                $ mongo --port 28015          # 기본 포트 27017
+                $ mongo "mongodb://host:port"
+                $ mongo --password "mongodb://username@host:port"
+                $ mongo --ssl --host replA/mongodb0.example.com.local:27017,mongodb1.example.com.local:27017,mongodb2.example.com.local:27017
 
-            $ mongo localhost:27017 file.js
-            # or
-            > load("file.js")
+                $ mongo localhost:27017 file.js
+                # or
+                > load("file.js")
         li find(), aggregate() 쿼리 결과는 기본 101개로 제한된다
-        ol
-            li find().batchSize(size)로 기본 배치 크기 변경 가능
-            p 그러하더라도 배치 당 16MB 제한은 벗어날 수 없다
-            li cursor.next() 호출로 자동으로 getMore 연산이 수행되어 나머지 결과도 가져온다
-            li cursor.objsLeftInBatch()로 배치에 남은 문서 수 확인 가능
+            ol
+                li find().batchSize(size)로 기본 배치 크기 변경 가능
+                    p 그러하더라도 배치 당 16MB 제한은 벗어날 수 없다
+                li cursor.next() 호출로 자동으로 getMore 연산이 수행되어 나머지 결과도 가져온다
+                li cursor.objsLeftInBatch()로 배치에 남은 문서 수 확인 가능
         li
             +asA('https://docs.mongodb.com/manual/reference/method/', '메서드')
             +asA('https://docs.mongodb.com/manual/reference/operator/query/', '연산자')
@@ -487,21 +487,21 @@ include ../../../source/skeleton.pug
                 td
                     ul
                         li 1개 변경
-                        +asCode('javascript').
-                            updateOne({_id: 10}, {$set: {calc: 5}}) // update set calc = 5
-                            {$inc: {calc: 5}} // set calc = calc + 5
-                            {$currentDate: {updDate: true}} // set updDate = now()
+                            +asCode('javascript').
+                                updateOne({_id: 10}, {$set: {calc: 5}}) // update set calc = 5
+                                {$inc: {calc: 5}} // set calc = calc + 5
+                                {$currentDate: {updDate: true}} // set updDate = now()
                         li 옵션에 upsert: true가 있으면 없을 시 삽입
                         li Since 4.2 갱신 연산에서 Aggregation pipeline 및 aggregation variable 사용 가능
-                        +asCode('javascript') {$set: {modified: "$$NOW"}}
-                        +asCode('javascript').
-                            {$set: {grade: {$switch: {
-                                branches: [
-                                    { case: { $gte: [ "$avgScore", 90 ] }, then: "A" },
-                                    { case: { $gte: [ "$avgScore", 80 ] }, then: "B" }
-                                ], default: "F"
-                            }
-                        +asCode('javascript') {$set: {myArr: {$concatArrays: ["$myArr", [8, 6]]}}}
+                            +asCode('javascript') {$set: {modified: "$$NOW"}}
+                            +asCode('javascript').
+                                {$set: {grade: {$switch: {
+                                    branches: [
+                                        { case: { $gte: [ "$avgScore", 90 ] }, then: "A" },
+                                        { case: { $gte: [ "$avgScore", 80 ] }, then: "B" }
+                                    ], default: "F"
+                                }
+                            +asCode('javascript') {$set: {myArr: {$concatArrays: ["$myArr", [8, 6]]}}}
             tr
                 td coll.updateMany(filter, update, options) Since 3.2
                 td 여러 개 변경
@@ -533,38 +533,38 @@ include ../../../source/skeleton.pug
     h1 Aggregation
     ul
         li aggregate
-        +asCode('javascript').
-            db.mycoll.aggregate([
-                {$match: {grade: 'A'}},
-                {$group: {total: {$sum: "$amount"}}}
-            ])
+            +asCode('javascript').
+                db.mycoll.aggregate([
+                    {$match: {grade: 'A'}},
+                    {$group: {total: {$sum: "$amount"}}}
+                ])
         li mapReduce
-        +asCode('javascript').
-            db.mycoll.mapReduce(mappingFunc, reduceFunc, {query: filterObj, out: "outName"})
+            +asCode('javascript').
+                db.mycoll.mapReduce(mappingFunc, reduceFunc, {query: filterObj, out: "outName"})
 
-            db.mycoll.mapReduce(
-                function() { emit(groupKey, value); },
-                function(key, values) { return aggrValue; }
-            )
+                db.mycoll.mapReduce(
+                    function() { emit(groupKey, value); },
+                    function(key, values) { return aggrValue; }
+                )
 
-            // 예 ↓
-            for(let i = 0; i &lt; 50; ++i) db.test.insertOne({num: i})
-            db.test.mapReduce(
-                function() { emit(this.num % 5, this.num); },
-                function(key, values) { return Array.join(values); },
-                { out: 'result' }
-            ).find()
-            // { "_id" : 0, "value" : "0,5,10,15,20,25,30,35,40,45" }
-            // { "_id" : 1, "value" : "1,6,11,16,21,26,31,36,41,46" }
-            // { "_id" : 2, "value" : "2,7,12,17,22,27,32,37,42,47" }
-            // { "_id" : 3, "value" : "3,8,13,18,23,28,33,38,43,48" }
-            // { "_id" : 4, "value" : "4,9,14,19,24,29,34,39,44,49" }
+                // 예 ↓
+                for(let i = 0; i &lt; 50; ++i) db.test.insertOne({num: i})
+                db.test.mapReduce(
+                    function() { emit(this.num % 5, this.num); },
+                    function(key, values) { return Array.join(values); },
+                    { out: 'result' }
+                ).find()
+                // { "_id" : 0, "value" : "0,5,10,15,20,25,30,35,40,45" }
+                // { "_id" : 1, "value" : "1,6,11,16,21,26,31,36,41,46" }
+                // { "_id" : 2, "value" : "2,7,12,17,22,27,32,37,42,47" }
+                // { "_id" : 3, "value" : "3,8,13,18,23,28,33,38,43,48" }
+                // { "_id" : 4, "value" : "4,9,14,19,24,29,34,39,44,49" }
         li estimatedDocumentCount
-        +asCode('javascript') db.mycoll.estimatedDocumentCount()
+            +asCode('javascript') db.mycoll.estimatedDocumentCount()
         li count
-        +asCode('javascript') db.mycoll.count()
+            +asCode('javascript') db.mycoll.count()
         li distinct
-        +asCode('javascript') db.mycoll.distinct([string field][, object query][, object options])
+            +asCode('javascript') db.mycoll.distinct([string field][, object query][, object options])
 
     +hoverTemplate()#template-mongodb-bson-regex-option
         +table()
