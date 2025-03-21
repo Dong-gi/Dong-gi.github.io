@@ -393,7 +393,7 @@ include ../../../source/skeleton.pug
                 li Access-Control-Allow-Origin 헤더의 소스가 맞지 않으면 브라우저에서 요청을 거부할 수 있다
                 li: strong 브라우저의 크로스 도메인을 회피하기 위해 서버에서 대신 요청을 수행해줄 수 있다
 
-            h3 CSP; Content-Security-Policy
+            h3 CSP(Content-Security-Policy) 헤더
             p 참고 자료 : #[+asA('https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy')]
             p HTTP 응답 헤더를 이용하여, 응답 문서에서는 지정한 도메인 외의 요청은 브라우저에서 모두 거부하도록 할 수 있다
             +asCode('txt', 'Syntax').
@@ -477,6 +477,22 @@ include ../../../source/skeleton.pug
                 p 신뢰할 수 있는 조직에 의해 서명되고 검증된 신원 확인 정보
                 li 암호(chipher)
                 p 보통 연결을 수립할 때는 느린 공개키 암호를 사용하고, 이후 메시지 전송에는 빠른 대칭키 암호를 사용
+
+            h3 Clear-Site-Data 응답 헤더
+            ul
+                li: +asA('https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Clear-Site-Data')
+                li HTTPS에서만 사용 가능한 기능으로, 로그아웃과 같은 행위 이후 이 헤더를 설정함으로써 자동 데이터 삭제를 지시할 수 있다
+                    p 로그아웃 페이지에 이를 직접 포함하는 경우, 삭제할 데이터가 많을수록 페이지 탐색이 그 만큼 지연(차단)되므로 로그아웃 페이지가 로드하는 다른 리소스에서 삭제를 지시하는 것이 권장된다
+                li 단순하게 와일드카드(*)를 값으로 사용하여 지원되는 모든 데이터를 삭제하도록 지시 가능
+            
+            h3 Referrer-Policy 응답 헤더
+            ul
+                li: +asA('https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Referrer-Policy')
+                li 3자 사이트에 대한 요청에 Referer 헤더를 아예 보내지 않거나, origin만 보내도록 제어할 수 있다
+                li 현재 널리 채택된 브라우저 기본값은 "strict-origin-when-cross-origin"으로, 3자 사이트 요청의 Referer 헤더 값으로는 origin만 포함한다
+                li HTML 메타데이터 태그를 이용하는 것으로도 설정 가능하다
+                    +asCode('HTML') #{'<meta name="referrer" content="same-origin">'}
+                li 특정 3자 사이트만 제어하고 싶다면 script, a, iframe 태그 안의 referrerpolicy 속성을 이용해 설정 가능하다
 
     h1 프록시
     ul

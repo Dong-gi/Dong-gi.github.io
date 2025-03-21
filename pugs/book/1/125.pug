@@ -1,0 +1,21 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: '호구의 심리학',
+    description: '개인적으로 마음에 든 『호구의 심리학』 문구',
+})
+
+    h1 도서 정보
+    .w3-row
+        .w3-col.s2.w3-center
+            +w3img('https://image.yes24.com/goods/124503065/L', '도서 이미지')&attributes({style: 'max-height:210px'})
+        .w3-col.s10
+            +table()
+                +tds('표제/저자사항', '호구의 심리학 / 테스 윌킨슨 라이언')
+                +tds('ISBN 정보', '978-89-5699-467-3 (03180)')
+                +tds('발행사항', '한문화 :한문화멀티미디어, 2024.01.19')
+
+    h1 독서 기록
+    ul 
+        li 호구의 딜레마는 피해망상과 신중함 사이 어딘가에서 일어난다
+        p '이걸 해, 말아?' 하는 고민은 자연스럽게 '이게 사기면 어떡하지?'라는 걱정으로 이어진다

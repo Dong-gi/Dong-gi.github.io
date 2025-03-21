@@ -303,6 +303,47 @@ include ../../../source/skeleton.pug
             h3 주석
             p #{'<!-- 주석 -->'}
 
+            h3 이미지
+            ul
+                li 이미지 렌더링으로 인해 레이아웃이 도중에 변경되면 CLS(Cumulative Layout Shift) 점수가 나빠지므로, 아래와 같은 설정이 권장된다
+                    ul
+                        li img 태그의 width, height에는 원본 크기를 설정
+                        li CSS로 #[+asInlineCode('img { max-width: 100%; height: auto; }', 'css')] 설정
+                            p height가 어떻게 결정되는가에 대해선 걱정하지 않아도 된다. #[+asA('https://caniuse.com/mdn-html_elements_img_aspect_ratio_computed_from_attributes', '2019년부터')] 브라우저들은 width와 height를 이용해 계산한 종횡비를 이용해 자리를 차지하게 해준다
+                li 모든 이미지에 loading="lazy"를 설정하는 것이 단순하고 매력적일 수 있으나, 좋은 LCP(Largest Contentful Paint) 점수를 위해 최초 뷰포트에 표시될 가능성이 있는 이미지들에는 설정하지 않는 것이 좋다 -- 특히 쇼핑몰과 같은 경우
+                li SVG
+                    ul
+                        li 벡터 이미지
+                        li 아이콘처럼 요소의 대부분이 선과 점으로 이루어진 이미지에 적합
+                        li 복잡한 이미지는 끝까지 그리는 데 시간이 오래 걸릴 수 있다
+                li GIF
+                    ul
+                        li 무손실 래스터 이미지 : 256색상 초과 시 색상은 일부 뭉개짐
+                        li 여러 프레임을 지원하므로 애니메이션 표현 가능
+                        li 현재로써는 모든 사용 사례에서 다른 포맷들보다 비효율적
+                li PNG
+                    ul
+                        li 무손실 래스터 이미지 : 256; 트루컬러에선 1600만 색상 이하
+                        li 완전 투명/불투명 2가지만 지원하는 GIF와 다르게 256단계의 알파 채널 지원
+                        li 반투명한 이미지가 필요한 경우가 아니라면 PNG는 대부분의 경우에서 부적합하며, 반투명 이미지도 WebP와 비교해볼 것
+                        li PNG와 호환되는 APNG는 GIF처럼 애니메이션을 지원한다 -- APNG를 지원하지 않는 다수의 디코더들도 첫 프레임을 PNG로 해석하는 것은 가능
+                li JPEG
+                    ul
+                        li 손실 래스터 이미지 : 픽셀이 아닌 블록 단위로 인코딩하고, 시각적으로 인지하기 어려운 차이를 뭉개 크기를 효율적으로 줄인다
+                        li 베이스라인 JPEG : 전송에 따라 이미지를 위에서 아래로 차례대로 렌더링
+                        li 프로그레시브 JPEG : 전체 크기 이미지가 서서히 렌더링. 베이스라인 JPEG보다 크기도 작은 반면, 디코딩 연산은 좀 더 많이 필요
+                        li JPEG 압축은 상당히 추상화되어, 많은 도구들은 0~100 사이의 정수 하나로 품질을 조절할 수 있게 해준다
+                li WebP
+                    ul
+                        li (무)손실 래스터 이미지 : Google에서 개발한 포맷으로, JPEG, PNG, GIF 모두를 대체 가능
+                        li 블록 예측 : 각 블록을 모두 데이터에 나열하는 대신, 블록 예측 알고리즘과 각 블록의 오차로 표현함으로써 압축 효율을 높인다
+                        li 적응형 블록 양자화 : 모든 블록을 동일한 수준으로 뭉개지 않고, 이미지를 시각적으로 유사한 세그먼트로 쪼개 독립적으로 압축하여 품질을 높인다
+                        li 공식 CLI 도구도 존재 : #[+asA('https://developers.google.com/speed/webp/docs/using')]
+                li AVIF
+                    ul
+                        li (무)손실 래스터 이미지 : 2020년부터 브라우저 지원이 시작된 포맷으로, WebP 대체 가능
+                        li 최신 포맷이기 때문에 AVIF 이미지가 가장 효율적이더라도, 다른 이미지 포맷 역시 같이 제공할 필요가 있다
+
     h1 Form
     div
         h2 #{'<form>'}
