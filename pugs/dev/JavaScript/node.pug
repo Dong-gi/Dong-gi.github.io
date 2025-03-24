@@ -7,9 +7,24 @@ include ../../../source/skeleton.pug
 
     h1 Version
     div
+        h2 v22.12.0, v20.19.0
+        ul
+            li require(esm) 기본 활성화 -- 아직 experimental 단계
+        
+        h2 v20.19.0
+        ul
+            li 모호한 모듈 파일을 CommonJS로 해석하는 데 실패한 경우, ES module로 다시 해석 시도
+
         h2 v20.6.0
-        p .env 파일 지원
-        +asCode('shell') node --env-file=config.env index.js
+        ul
+            li .env 파일 지원 내장
+                +asCode('shell') node --env-file=config.env index.js
+
+        h2 v20.0.0
+        ul
+            li 내장 테스트 러너 기능이 stable 단계로 변경
+                +asCode('shell') node --test
+
 
     h1 NPM
     div

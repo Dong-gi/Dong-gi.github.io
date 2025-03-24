@@ -3,9 +3,11 @@ const path = require('node:path')
 const { promisify } = require('node:util')
 const child_process = require('node:child_process')
 const pug = require('pug')
+const sharp = require('sharp')
 
 const stat = promisify(fs.stat)
 const writeFile = promisify(fs.writeFile)
+const mkdir = promisify(fs.mkdir)
 const readDir = promisify(fs.readdir)
 const readFile = promisify(fs.readFile)
 const renderFile = promisify(pug.renderFile)
@@ -37,11 +39,55 @@ async function renderPug(from, to) {
 }
 
 (async () => {
-    const promiseArr = [
-        renderPug('./index.pug', './index.html')
-    ]
+    // 이미지 변환
+    /**
+     * @type {{
+     *      [path: string]: {
+     *          width: number,
+     *          height: number,
+     *      }
+     * }}
+     */
+    const imgMap = {}
+    const imgDirArr = ['./imgs']
+    while (imgDirArr.length > 0) {
+        const dir = imgDirArr.pop()
+        for (const file of await readDir(dir)) {
+            const path = dir + '/' + file
+            const stats = await stat(path)
+            if (stats.isFile()) {
+                const animated = path.endsWith('gif')
+                const img = sharp(path, { animated })
+                const metadata = await img.metadata()
+                imgMap[path.slice(1)] = { width: metadata.width, height: metadata.height }
+                for (const width of [500, 1200, 2000]) {
+                    for (const ext of animated ? ['gif', 'webp'] : ['jpeg', 'webp', 'avif']) {
+                        const outPath = path.replace('/imgs/', '/imgs-generated/').replace(/\.\w+$/, `-${width}.${ext}`)
+                        if (fs.existsSync(outPath)) {
+                            continue
+                        }
+                        promiseArr.push(
+                            img.clone().resize({ width, withoutEnlargement: true })
+                            [ext]().toFile(outPath).then(() => {
+                                console.log(`Generated img : ${outPath}`)
+                            })
+                        )
+                    }
+                }
+            } else if (stats.isDirectory()) {
+                imgDirArr.push(path)
+                const outPath = path.replace('/imgs/', '/imgs-generated/')
+                if (fs.existsSync(outPath) !== true) {
+                    await mkdir(outPath)
+                }
+            }
+        }
+    }
+    const promiseArr = [writeFile('./source/imgs.pug', `-\n    imgMap = ${JSON.stringify(imgMap)}`)]
 
-    const posts = require('../files/posts.json')
+    // pug 변환
+    promiseArr.push(renderPug('./index.pug', './index.html'))
+    const posts = require('./posts.json')
     const postMap = new Map()
     posts.list.forEach(p => postMap.set('./posts/' + p.file, p))
     posts.list = posts.list.sort((a, b) => a.file.localeCompare(b.file))
@@ -68,19 +114,19 @@ async function renderPug(from, to) {
         }
     }
 
+    // D2 변환
     promiseArr.push(...(await readDir('./d2')).map(async file => {
         if (!file.endsWith('.d2')) {
             return
         }
 
         const d2Path = './d2/' + file
-        if (isProcessNewFileOnly && !isNewFile(await stat(d2Path))) {
+        const svgPath = d2Path.replace(/\.d2$/, '.svg')
+        if (isProcessNewFileOnly && fs.existsSync(svgPath)) {
             return
         }
 
-        const svgPath = d2Path.replace(/\.d2$/, '.svg')
         await exec(`d2 "${d2Path}" "${svgPath}"`)
-
         console.log(`Rendered d2 : ${d2Path}`)
         const svg = await readFile(svgPath)
         await writeFile(svgPath, svg.toString().replace(/\r?\n/g, '').replace(/\{[^}]*font-family[^}]*\}/g, '{}').replace(/\s+/g, ' '))

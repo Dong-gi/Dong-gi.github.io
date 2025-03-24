@@ -1,3 +1,5 @@
+include ./imgs.pug
+
 -
     String.prototype.hashCode = String.prototype.hashCode || function () {
         if (this.myHash) {
@@ -105,11 +107,34 @@ mixin w3button(color)
 
 mixin w3img(src, description)
     figure.w3-center.w3-margin-bottom
-        img.w3-round(src=src, alt="Can't load image", loading='lazy')&attributes(attributes)
+        -
+            metadata = imgMap[src]
+            description = description || (src.split('/').pop())
+            trimmedSrc = src.replace('/imgs/', '/imgs-generated/').replace(/\.\w+$/, '')
+        if metadata != null
+            picture
+                if src.endsWith('.gif')
+                    source(media='(max-width: 500px)', srcset=(trimmedSrc + '-500.webp'), type='image/webp')
+                    source(media='(max-width: 500px)', srcset=(trimmedSrc + '-500.gif'), type='image/gif')
+                    source(media='(max-width: 1200px)', srcset=(trimmedSrc + '-1200.webp'), type='image/webp')
+                    source(media='(max-width: 1200px)', srcset=(trimmedSrc + '-1200.gif'), type='image/gif')
+                    source(srcset=(trimmedSrc + '-2000.webp'), type='image/webp')
+                    img.w3-round(src=(trimmedSrc + '-2000.gif'), alt=description, loading='lazy', width=metadata.width, height=metadata.height)&attributes(attributes)
+                else
+                    source(media='(max-width: 500px)', srcset=(trimmedSrc + '-500.avif'), type='image/avif')
+                    source(media='(max-width: 500px)', srcset=(trimmedSrc + '-500.webp'), type='image/webp')
+                    source(media='(max-width: 500px)', srcset=(trimmedSrc + '-500.jpeg'), type='image/jpeg')
+                    source(media='(max-width: 1200px)', srcset=(trimmedSrc + '-1200.avif'), type='image/avif')
+                    source(media='(max-width: 1200px)', srcset=(trimmedSrc + '-1200.webp'), type='image/webp')
+                    source(media='(max-width: 1200px)', srcset=(trimmedSrc + '-1200.jpeg'), type='image/jpeg')
+                    source(srcset=(trimmedSrc + '-2000.avif'), type='image/avif')
+                    source(srcset=(trimmedSrc + '-2000.webp'), type='image/webp')
+                    img.w3-round(src=(trimmedSrc + '-2000.jpeg'), alt=description, loading='lazy', width=metadata.width, height=metadata.height)&attributes(attributes)
+        else
+            img.w3-round(src=src, alt=description, loading='lazy')&attributes(attributes)
         figcaption
-            |&lt;
-            = description || (src.split('/').pop())
-            |>
+            | #{'<' + description + '>'}
+            +asA(src, '[원본 보기]')&attributes({ target: '_blank' })
 
 //-
     options = {

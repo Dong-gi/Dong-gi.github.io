@@ -1,6 +1,6 @@
 services:
   mailserver:
-    image: ghcr.io/docker-mailserver/docker-mailserver:15.0.0
+    image: ghcr.io/docker-mailserver/docker-mailserver:15.0.1
     container_name: mailserver
     # Provide the FQDN of your mail server here (Your DNS MX record should point to this value)
     hostname: mail.4joy.link

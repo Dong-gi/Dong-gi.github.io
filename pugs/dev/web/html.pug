@@ -565,22 +565,51 @@ include ../../../source/skeleton.pug
             li 스마트폰이 대중화 되면서 다양한 사용자 웹서핑 환경에 맞춰 알맞게 페이지를 보여줄 필요가 생겼다
             li viewport로 대표되는 screen 속성을 이용해 페이지를 다시 로드할 필요 없이 디자인이 변경되는 반응형 웹 기술이 발전하게 되었다
 
-        h2 반응형 태그
-        ol
-            li picture : 스크린에 따라 다른 이미지 소스를 이용
-            +asCode('HTML').
-                출처 : https://www.w3schools.com/html/html_responsive.asp
-                &lt;picture>
-                    &lt;source srcset="img_smallflower.jpg" media="(max-width: 600px)">
-                    &lt;source srcset="img_flowers.jpg" media="(max-width: 1500px)">
-                    &lt;source srcset="flowers.jpg">
-                    &lt;img src="img_smallflower.jpg" alt="Flowers">
-                &lt;/picture>
+        h2 반응형 이미지
+        ul
+            li 브라우저의 이미지 에셋에 대한 요청은 상당히 빠른 순서로 시작된다
+                ul
+                    li 이미지를 요청하는 시점에 스타일 적용은 커녕 스타일에 대해 요청이 시작하기도 전일 수 있다
+                    li 여러 가능한 이미지 소스 중 어떠한 것을 선택할 때 브라우저가 알고 있는 정보는 다음과 같다 : 뷰포트 크기, 디스플레이 픽셀 밀도, 브라우저 환경설정 등
+                        p 이후, 컨테이너 쿼리를 이용한 크기 조건 설정도 가능해질 수 있다
 
-        h2 멀티미디어
-        +asA('https://www.w3schools.com/tags/ref_av_dom.asp', 'Audio/Video')
-        +asA('https://www.w3schools.com/graphics/default.asp', 'Graphic')
-        +asA('https://www.w3schools.com/html/html_object.asp', 'Plug-in')
+            li x를 이용한 설명적 구문
+                ul
+                    li window.devicePixelRatio : 디바이스의 물리적 픽셀 개수를 CSS의 픽셀 개수로 나눈 비율로, 값이 클수록 동일한 CSS 크기로 보다 선명한 표현이 가능하다
+                    li 아래 코드는 물리적 픽셀이 2배인 디스플레이에 특정 이미지가 더 적합함을 브라우저에 설명하는 코드의 예시다
+                        +asCode('HTML') #{'<img src="low-density.jpg" srcset="double-density.jpg 2x">'}
+                    li 위 코드는 특정 이미지가 특정 경우에 더 적합하다는 것을 의미할 뿐, window.devicePixelRatio가 2면 특정 이미지를 그리라는 명령이 아니다. 예를 들어, 사용자가 브라우저 대역폭 설정을 조정한 경우 저밀도 이미지가 항상 선택될 수 있다
+
+            li w를 이용한 설명적 구문
+                ul
+                    li 아래 코드는 이미지가 뷰포트의 80%를 차지할 것임을 브라우저에 설명하는 코드의 예시다
+                        +asCode('HTML') #{'<img sizes="80vw" srcset="small.jpg 600w, medium.jpg 1200w, large.jpg 2000w" src="fallback.jpg">'}
+                        p 예를 들어, 뷰포트가 1000px, window.devicePixelRatio가 1인 디바이스에서 브라우저는 업스케일링이 필요하지 않은 최소 이미지로 medium.jpg를 선택할 가능성이 크다.
+                    li 위 코드는 이미지를 뷰포트의 80%를 차지하도록 그리라는 지시가 아님에 유의해야 한다. x를 이용한 설명적 구문과 마찬가지로 브라우저에 이미지에 대한 설명을 제공할 뿐이다
+                    li sizes 속성에는 CSS의 calc() 함수와 미디어 쿼리 구문을 이용해 이미지의 최종 크기를 구체적으로 설명할 수 있다
+                        +asCode('HTML') #{'<img sizes="(max-width: 1200px) 100vw, calc(80vw - 2em)" ...>'}
+                        p 
+
+            li picture를 이용한 규정적 구문
+                ul
+                    li 지원하는 브라우저에서 한해, 조건을 만족하는 최초의 source 이미지를 그린다 -- 브라우저가 picture를 인식하지 못하면 마지막 자식 요소인 img가 폴백으로 사용된다
+                    li img의 width, height 속성을 이용해 종횡비를 알려줄 수 있듯, source에서도 동일하게 종횡비를 브라우저에 알려 렌더링에 도움을 줄 수 있다
+                        +asCode('HTML').
+                            #{'<picture>'}
+                            #{'   <source'}
+                            #{'      media="(min-width: 800px)"'}
+                            #{'      srcset="high-bp-1600.jpg 1600w, high-bp-1000.jpg 1000w"'}
+                            #{'      width="1600"'}
+                            #{'      height="800">'}
+                            #{'   <img src="fallback.jpg"'}
+                            #{'      srcset="lower-bp-1200.jpg 1200w, lower-bp-800.jpg 800w"'}
+                            #{'      sizes="calc(100vw - 2em)"'}
+                            #{'      width="1200"'}
+                            #{'      height="750"'}
+                            #{'      alt="…">'}
+                            #{'</picture>'}
+                        p source의 종횡비가 img와 같다면 img에만 설정하면 된다
+                    li source의 type 속성에 MIME 타입을 설정하여 브라우저가 지원하지 않는 타입을 스킵하도록 할 수 있다
 
     h1 Canvas
     ul
