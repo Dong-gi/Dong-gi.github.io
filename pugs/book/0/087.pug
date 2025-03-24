@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788901096049.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '은폐수사 / 곤노 빈')
-                +tds('ISBN 정보', '978-89-01-09604-9 (03830)')
-                +tds('발행사항', '웅진씽크빅, 2009.06.05')
+    +bookInfo({
+        imgSrc: 'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788901096049.jpg',
+        title: '은폐수사', author: '곤노 빈',
+        isbn: '978-89-01-09604-9 (03830)',
+        publisher: '웅진씽크빅', date: '2009.06.05',
+    })
 
     h1 독서 기록
     ul

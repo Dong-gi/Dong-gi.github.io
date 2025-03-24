@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/71742125/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '물 위를 걷고 벽을 기어오르는 법 / 데이비드 L. 후')
-                +tds('ISBN 정보', '978-89-6263-193-7 [03550]')
-                +tds('발행사항', '에코리브르, 발행일 : 2019년 03월 29일')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/71742125/L',
+        title: '물 위를 걷고 벽을 기어오르는 법', author: '데이비드 L. 후',
+        isbn: '978-89-6263-193-7 [03550]',
+        publisher: '에코리브르', date: '발행일 : 2019년 03월 29일',
+    })
 
     h1 주제 문구
     ul

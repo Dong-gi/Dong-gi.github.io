@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788901270234.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '표류하는 세계 / 스콧 갤러웨이')
-                +tds('ISBN 정보', '978-89-01-27057-9 (05320)')
-                +tds('발행사항', '(주)웅진씽크빅, 2023.03.28')
+    +bookInfo({
+        imgSrc: 'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788901270234.jpg',
+        title: '표류하는 세계', author: '스콧 갤러웨이',
+        isbn: '978-89-01-27057-9 (05320)',
+        publisher: '(주)웅진씽크빅', date: '2023.03.28',
+    })
 
     h1 독서 기록
     ul 

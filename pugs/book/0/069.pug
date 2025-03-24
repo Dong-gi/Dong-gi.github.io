@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791164796885.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '류 / 히가시야마 아키라')
-                +tds('ISBN 정보', '979-11-6479-709-7 (05830)')
-                +tds('발행사항', '(주)해피북스투유, 2022.07.11')
+    +bookInfo({
+        imgSrc: 'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791164796885.jpg',
+        title: '류', author: '히가시야마 아키라',
+        isbn: '979-11-6479-709-7 (05830)',
+        publisher: '(주)해피북스투유', date: '2022.07.11',
+    })
 
     h1 독서 기록
     ul 

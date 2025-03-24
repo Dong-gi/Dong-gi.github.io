@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/93992470/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '추리소설가의 살인사건 / 히가시노 게이고')
-                +tds('ISBN 정보', '979-11-6611-286-7 (05830)')
-                +tds('발행사항', '(주)소미미디어, 2020.12.31')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/93992470/L',
+        title: '추리소설가의 살인사건', author: '히가시노 게이고',
+        isbn: '979-11-6611-286-7 (05830)',
+        publisher: '(주)소미미디어', date: '2020.12.31',
+    })
 
     h1 독서 기록
     ul 

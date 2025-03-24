@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/momo/TopCate700/MidCate010/69998799.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '로스트 케어 / 하마나카 아키')
-                +tds('ISBN 정보', '978-89-7275-749-8')
-                +tds('발행사항', '현대문학, 발행일 : 2016.01.25')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/momo/TopCate700/MidCate010/69998799.jpg',
+        title: '로스트 케어', author: '하마나카 아키',
+        isbn: '978-89-7275-749-8',
+        publisher: '현대문학', date: '발행일 : 2016.01.25',
+    })
 
     h1 독서 기록
     ul

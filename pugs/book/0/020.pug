@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://www.ykbook.com/data/item//bookimg/2017/03/9788965401643.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '거의 모든 것의 기원 / 그레이엄 로턴')
-                +tds('ISBN 정보', '978-89-6540-164-3(03400)')
-                +tds('발행사항', '프리렉, 발행일 : 2019년 04월 17일')
+    +bookInfo({
+        imgSrc: 'https://www.ykbook.com/data/item//bookimg/2017/03/9788965401643.jpg',
+        title: '거의 모든 것의 기원', author: '그레이엄 로턴',
+        isbn: '978-89-6540-164-3(03400)',
+        publisher: '프리렉', date: '발행일 : 2019년 04월 17일',
+    })
 
     h1 독서 기록
     ul

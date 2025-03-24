@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/15018276/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '슈퍼 괴짜 경제학 / 스티븐 레빗, 스티븐 더브너')
-                +tds('ISBN 정보', '978-89-01-10304-4 (03320)')
-                +tds('발행사항', '웅진씽크빅, 2009.11.20')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/15018276/L',
+        title: '슈퍼 괴짜 경제학', author: '스티븐 레빗,  스티븐 더브너',
+        isbn: '978-89-01-10304-4 (03320)',
+        publisher: '웅진씽크빅', date: '2009.11.20',
+    })
 
     h1 독서 기록
     ul 

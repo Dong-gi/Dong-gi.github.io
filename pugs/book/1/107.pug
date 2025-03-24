@@ -7,14 +7,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/84300815/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '우리가 절대 알 수 없는 것들에 대해 / 마커스 드 사토이')
-                +tds('ISBN 정보', '979-11-967211-9-0 (03400)')
-                +tds('발행사항', '반니, 2019.12.02')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/84300815/L',
+        title: '우리가 절대 알 수 없는 것들에 대해', author: '마커스 드 사토이',
+        isbn: '979-11-967211-9-0 (03400)',
+        publisher: '반니', date: '2019.12.02',
+    })
 
     h1 독서 기록
     ul

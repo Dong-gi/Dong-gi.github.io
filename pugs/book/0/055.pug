@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/115409191/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '닥터 데스의 유산 / 나카야마 시치리')
-                +tds('ISBN 정보', '979-11-89571-92-4 (05830)')
-                +tds('발행사항', '블루홀식스, 2023.04.20')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/115409191/L',
+        title: '닥터 데스의 유산', author: '나카야마 시치리',
+        isbn: '979-11-89571-92-4 (05830)',
+        publisher: '블루홀식스', date: '2023.04.20',
+    })
 
     h1 독서 기록
     ul 

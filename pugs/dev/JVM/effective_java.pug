@@ -6,15 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('http://image.yes24.com/Goods/65551284/800x0', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '이펙티브 자바 / 조슈아 블로크')
-                +tds('ISBN 정보', '978-89-6626-116-1 [13000]')
-                +tds('ISBN-A', 'https://doi.org/10.978.896626/1161')
-                +tds('발행사항', '인사이트 , 발행일 : 20140828')
+    +bookInfo({
+        imgSrc: 'http://image.yes24.com/Goods/65551284/800x0',
+        title: '이펙티브 자바', author: '조슈아 블로크',
+        isbn: '978-89-6626-116-1 [13000]',
+        publisher: '인사이트', date: '발행일 : 20140828',
+    })
     h1 글귀
     ol
         li 비트 필드 대신 EnumSet을 이용하자

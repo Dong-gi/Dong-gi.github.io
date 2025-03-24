@@ -10,13 +10,11 @@ include ../../source/skeleton.pug
         |0.
         +asA('https://dong-gi.github.io/files/mcs.pdf', '도서')
         |정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQew5ZrEOtvLqafGH3aEaTctFKCSV4qjsRoZS4tT7Ci_lJXjSIV', '도서')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', 'Mathematics for Computer Science / Eric Lehman, F Thomson Leighton, Albert R Meyer')
-                +tds('ISBN 정보', '979-11-88621-12-5 [93000]')
+    +bookInfo({
+        imgSrc: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQew5ZrEOtvLqafGH3aEaTctFKCSV4qjsRoZS4tT7Ci_lJXjSIV',
+        title: 'Mathematics for Computer Science', author: 'Eric Lehman,  F Thomson Leighton,  Albert R Meyer',
+        isbn: '979-11-88621-12-5 [93000]',
+    })
                 tr
                     td Copyright
                     td 2017, Eric Lehman, F Tom Leighton,

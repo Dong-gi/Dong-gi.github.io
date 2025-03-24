@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788963895451.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '유혹하는 심리학 / 스콧 릴리언펠드')
-                +tds('ISBN 정보', '978-89-6389-545-1 (03180)')
-                +tds('발행사항', '타임북스, 2010.04.20')
+    +bookInfo({
+        imgSrc: 'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788963895451.jpg',
+        title: '유혹하는 심리학', author: '스콧 릴리언펠드',
+        isbn: '978-89-6389-545-1 (03180)',
+        publisher: '타임북스', date: '2010.04.20',
+    })
 
     h1 독서 기록
     ul

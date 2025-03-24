@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9788937460777.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '1984 / 조지 오웰')
-                +tds('ISBN 정보', '978-89-546-3059-7 (05840)')
-                +tds('발행사항', '(주)문학동네, 2012.10.23')
+    +bookInfo({
+        imgSrc: 'https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9788937460777.jpg',
+        title: '1984', author: '조지 오웰',
+        isbn: '978-89-546-3059-7 (05840)',
+        publisher: '(주)문학동네', date: '2012.10.23',
+    })
 
     h1 독서 기록
     ul

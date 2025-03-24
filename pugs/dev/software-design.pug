@@ -6,14 +6,12 @@ include ../../source/skeleton.pug
 })
 
     h1 참고 도서
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/59566585/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '데이터 중심 애플리케이션 설계 / 마틴 클레프만')
-                +tds('ISBN 정보', '979-11-5839-098-3 (93000)')
-                +tds('발행사항', '위키북스 , 발행일 : 2018.04.12')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/59566585/L',
+        title: '데이터 중심 애플리케이션 설계', author: '마틴 클레프만',
+        isbn: '979-11-5839-098-3 (93000)',
+        publisher: '위키북스', date: '발행일 : 2018.04.12',
+    })
     .w3-row
         .w3-col.s2.w3-center
             +w3img('https://image.yes24.com/goods/24557610/L', '도서 이미지')&attributes({style: 'max-height:210px'})

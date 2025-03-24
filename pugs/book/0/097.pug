@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/119808479/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '그녀가 마지막에 본 것은 / 마사키 도시카')
-                +tds('ISBN 정보', '979-11-982262-2-8 (03830)')
-                +tds('발행사항', '모로, 2023.06.30')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/119808479/L',
+        title: '그녀가 마지막에 본 것은', author: '마사키 도시카',
+        isbn: '979-11-982262-2-8 (03830)',
+        publisher: '모로', date: '2023.06.30',
+    })
 
     h1 독서 기록
     ul

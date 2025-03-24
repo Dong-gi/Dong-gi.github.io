@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/94500827/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '괴도 탐정 야마네코 / 가미나가 마나부')
-                +tds('ISBN 정보', '979-11-90908-41-2 (03830)')
-                +tds('발행사항', '위즈덤하우스, 발행일 : 2020.08.06')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/94500827/L',
+        title: '괴도 탐정 야마네코', author: '가미나가 마나부',
+        isbn: '979-11-90908-41-2 (03830)',
+        publisher: '위즈덤하우스', date: '발행일 : 2020.08.06',
+    })
 
     h1 독서 기록
     ul

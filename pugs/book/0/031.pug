@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/momo/TopCate74/MidCate05/7348091.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '내가 죽인 소녀 / 하라 료')
-                +tds('ISBN 정보', '978-89-92036-89-4 (03830)')
-                +tds('발행사항', '비채, 발행일 : 2009.06.29')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/momo/TopCate74/MidCate05/7348091.jpg',
+        title: '내가 죽인 소녀', author: '하라 료',
+        isbn: '978-89-92036-89-4 (03830)',
+        publisher: '비채', date: '발행일 : 2009.06.29',
+    })
 
     h1 독서 기록
     ul

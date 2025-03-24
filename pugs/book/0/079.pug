@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://upload.wikimedia.org/wikipedia/ko/thumb/c/c6/%ED%8E%B8%EC%9D%98%EC%A0%90%EC%9D%B8%EA%B0%84.jpg/200px-%ED%8E%B8%EC%9D%98%EC%A0%90%EC%9D%B8%EA%B0%84.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '편의점 인간 / 무라타 사야카')
-                +tds('ISBN 정보', '978-89-522-3542-8 (05830)')
-                +tds('발행사항', '(주)살림출판사, 2016.11.10')
+    +bookInfo({
+        imgSrc: 'https://upload.wikimedia.org/wikipedia/ko/thumb/c/c6/%ED%8E%B8%EC%9D%98%EC%A0%90%EC%9D%B8%EA%B0%84.jpg/200px-%ED%8E%B8%EC%9D%98%EC%A0%90%EC%9D%B8%EA%B0%84.jpg',
+        title: '편의점 인간', author: '무라타 사야카',
+        isbn: '978-89-522-3542-8 (05830)',
+        publisher: '(주)살림출판사', date: '2016.11.10',
+    })
 
     h1 독서 기록
     ul

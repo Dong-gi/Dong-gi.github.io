@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791193149157.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '카인의 오만 / 나카야마 시치리')
-                +tds('ISBN 정보', '979-11-93149-15-7 (03830)')
-                +tds('발행사항', '블루홀6(블루홀식스), 2024.04.08')
+    +bookInfo({
+        imgSrc: 'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791193149157.jpg',
+        title: '카인의 오만', author: '나카야마 시치리',
+        isbn: '979-11-93149-15-7 (03830)',
+        publisher: '블루홀6(블루홀식스)', date: '2024.04.08',
+    })
 
     h1 독서 기록
     ul

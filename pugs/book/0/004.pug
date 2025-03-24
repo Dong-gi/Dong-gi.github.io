@@ -6,15 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('http://image.yes24.com/Goods/19096904/800x0', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '쇼펜하우어, 돌이 별이 되는 철학 / 이동용')
-                +tds('ISBN 정보', '978-89-7297-724-7 [03100]')
-                +tds('ISBN-A', 'https://doi.org/10.978.897297/7247')
-                +tds('발행사항', '(도서출판)동녘 , 발행일 : 20141107')
+    +bookInfo({
+        imgSrc: 'http://image.yes24.com/Goods/19096904/800x0',
+        title: '쇼펜하우어,  돌이 별이 되는 철학', author: '이동용',
+        isbn: '978-89-7297-724-7 [03100]',
+        publisher: '(도서출판)동녘', date: '발행일 : 20141107',
+    })
     h1 글귀
     +asCode().
         나의 철학이 가르치는 바를 완전히 이해하여,

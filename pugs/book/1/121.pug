@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/101987654/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '영매탐정 조즈카 / 아이자와 사코')
-                +tds('ISBN 정보', '978-89-349-8961-5 (03830)')
-                +tds('발행사항', '비채 :김영사, 2021.05.26')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/101987654/L',
+        title: '영매탐정 조즈카', author: '아이자와 사코',
+        isbn: '978-89-349-8961-5 (03830)',
+        publisher: '비채 :김영사', date: '2021.05.26',
+    })
 
     h1 독서 기록
     ul

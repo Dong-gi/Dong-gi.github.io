@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://i.namu.wiki/i/MjUHZGSUbmDEUuEjeDMxZTgcJfuujwbeivCtn4sF6LeUk1EU2WDMFurk20PH2aaqR7nNX_zwOAlSH4CnwmejIQ.webp', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '용의자 X의 헌신 / 히가시노 게이고')
-                +tds('ISBN 정보', '979-11-978935-0-6 (05830)')
-                +tds('발행사항', '(도서출판)재인, 2022.06.16')
+    +bookInfo({
+        imgSrc: 'https://i.namu.wiki/i/MjUHZGSUbmDEUuEjeDMxZTgcJfuujwbeivCtn4sF6LeUk1EU2WDMFurk20PH2aaqR7nNX_zwOAlSH4CnwmejIQ.webp',
+        title: '용의자 X의 헌신', author: '히가시노 게이고',
+        isbn: '979-11-978935-0-6 (05830)',
+        publisher: '(도서출판)재인', date: '2022.06.16',
+    })
 
     h1 독서 기록
     ul

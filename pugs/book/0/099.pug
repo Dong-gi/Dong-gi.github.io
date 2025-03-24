@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788926794821.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '열세 번째 배심원 / 아시베 다쿠')
-                +tds('ISBN 정보', '978-89-267-9482-1 (03830)')
-                +tds('발행사항', 'D&C 미디어, 2014.01.27')
+    +bookInfo({
+        imgSrc: 'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788926794821.jpg',
+        title: '열세 번째 배심원', author: '아시베 다쿠',
+        isbn: '978-89-267-9482-1 (03830)',
+        publisher: 'D&C 미디어', date: '2014.01.27',
+    })
 
     h1 독서 기록
     ul

@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://contents.lotteon.com/itemimage/_v095447/LI/15/52/03/73/78/_1/LI1552037378_1_1.jpg/dims/resizef/720X720', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '비웃는 숙녀 / 나카야마 시치리')
-                +tds('ISBN 정보', '979-11-89571-18-4 (03830)')
-                +tds('발행사항', '블루홀6, 2020.03.30')
+    +bookInfo({
+        imgSrc: 'https://contents.lotteon.com/itemimage/_v095447/LI/15/52/03/73/78/_1/LI1552037378_1_1.jpg/dims/resizef/720X720',
+        title: '비웃는 숙녀', author: '나카야마 시치리',
+        isbn: '979-11-89571-18-4 (03830)',
+        publisher: '블루홀6', date: '2020.03.30',
+    })
 
     h1 독서 기록
     ul 

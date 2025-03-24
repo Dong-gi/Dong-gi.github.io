@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/11117120/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '의식의 수수께끼를 풀다 / 대니얼 데닛')
-                +tds('ISBN 정보', '978-89-93952-50-6 (03400)')
-                +tds('발행사항', '(도서출판)옥당, 2013.10.07')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/11117120/L',
+        title: '의식의 수수께끼를 풀다', author: '대니얼 데닛',
+        isbn: '978-89-93952-50-6 (03400)',
+        publisher: '(도서출판)옥당', date: '2013.10.07',
+    })
 
     h1 독서 기록
     ul

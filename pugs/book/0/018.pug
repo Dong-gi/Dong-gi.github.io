@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/67280162/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '쇠똥구리는 은하수를 따라 걷는다 / 레오 그라세')
-                +tds('ISBN 정보', '979-11-88907-37-3 [03470]')
-                +tds('발행사항', '클, 발행일 : 2018년 11월 23일')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/67280162/L',
+        title: '쇠똥구리는 은하수를 따라 걷는다', author: '레오 그라세',
+        isbn: '979-11-88907-37-3 [03470]',
+        publisher: '클', date: '발행일 : 2018년 11월 23일',
+    })
 
     h1 독서 기록
     ul

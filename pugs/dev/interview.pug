@@ -7,16 +7,9 @@ include ../../source/skeleton.pug
 })
 
     h1 참고 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://www.hanbit.co.kr/data/books/B7155705626_l.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('제목', '(JAVA) 프로그래밍 면접 이렇게 준비한다')
-                +tds('저자', '지은이: 노엘 마크엄 옮긴이: 정원천')
-                +tds('ISBN', '978-89-6848-152-9 [93000]')
-                +tds('발행일', '2015년 02월 01일')
-                +tds('발행처', '한빛미디어')
+    +bookInfo({
+        imgSrc: 'https://www.hanbit.co.kr/data/books/B7155705626_l.jpg',
+    })
     div
         h2.no-marker 책의 오류
         ul

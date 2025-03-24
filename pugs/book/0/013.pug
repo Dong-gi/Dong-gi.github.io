@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/2688310/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '위험한 생각들 / 존 브록만')
-                +tds('ISBN 정보', '978-89-01-06993-7 [03100]')
-                +tds('발행사항', '웅진씽크빅, 발행일 : 2007년 10월 08일')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/2688310/L',
+        title: '위험한 생각들', author: '존 브록만',
+        isbn: '978-89-01-06993-7 [03100]',
+        publisher: '웅진씽크빅', date: '발행일 : 2007년 10월 08일',
+    })
 
     h1 글귀
     ul

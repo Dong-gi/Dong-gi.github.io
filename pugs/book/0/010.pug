@@ -6,15 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/26879914/L', '도서 이미지')&attributes({style: 'max-h예.t:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '애자일 & 스크럼 프로젝트 관리 / 이재왕')
-                +tds('ISBN 정보', '979-11-87345-01-5 [93560]')
-                +tds('ISBN-A', 'https://doi.org/10.979.1187345/015')
-                +tds('발행사항', '(주 도서출판)길벗, 발행일 : 2016년 05월 06일')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/26879914/L',
+        title: '애자일 & 스크럼 프로젝트 관리', author: '이재왕',
+        isbn: '979-11-87345-01-5 [93560]',
+        publisher: '(주 도서출판)길벗', date: '발행일 : 2016년 05월 06일',
+    })
 
     h1 글귀
     div

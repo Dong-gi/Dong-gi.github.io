@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/momo/TopCate0001/kepub/L_82587.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '왜 똑똑한 사람들이 헛소리를 믿게 될까 / 스티븐 로')
-                +tds('ISBN 정보', '978-89-378-3355-7 (03100)')
-                +tds('발행사항', '미래엔, 2011.12.31')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/momo/TopCate0001/kepub/L_82587.jpg',
+        title: '왜 똑똑한 사람들이 헛소리를 믿게 될까', author: '스티븐 로',
+        isbn: '978-89-378-3355-7 (03100)',
+        publisher: '미래엔', date: '2011.12.31',
+    })
 
     h1 독서 기록
     ul

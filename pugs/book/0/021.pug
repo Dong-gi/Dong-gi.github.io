@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/5980507/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '배드 사이언스 / 벤 골드에이커')
-                +tds('ISBN 정보', '978-89-964600-3-9(03400)')
-                +tds('발행사항', '공존, 발행일 : 2011년 12월 05일')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/5980507/L',
+        title: '배드 사이언스', author: '벤 골드에이커',
+        isbn: '978-89-964600-3-9(03400)',
+        publisher: '공존', date: '발행일 : 2011년 12월 05일',
+    })
 
     h1 독서 기록
     ul

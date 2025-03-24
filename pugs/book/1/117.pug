@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788992355872.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '착각의 심리학 / 데이비드 맥레이니')
-                +tds('ISBN 정보', '978-89-92355-87-2 (03180)')
-                +tds('발행사항', '추수밭, 2012.08.06')
+    +bookInfo({
+        imgSrc: 'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788992355872.jpg',
+        title: '착각의 심리학', author: '데이비드 맥레이니',
+        isbn: '978-89-92355-87-2 (03180)',
+        publisher: '추수밭', date: '2012.08.06',
+    })
 
     h1 독서 기록
     ul

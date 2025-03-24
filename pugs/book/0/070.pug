@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/118500644/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '블랙 쇼맨과 환상의 여자 / 히가시노 게이고')
-                +tds('ISBN 정보', '978-89-255-2580-8 (05830)')
-                +tds('발행사항', '(주)알에이치코리아, 2023.05.08')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/118500644/L',
+        title: '블랙 쇼맨과 환상의 여자', author: '히가시노 게이고',
+        isbn: '978-89-255-2580-8 (05830)',
+        publisher: '(주)알에이치코리아', date: '2023.05.08',
+    })
 
     h1 독서 기록
     ul 

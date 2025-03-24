@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9791198183095.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', 'Tiger / 구시키 리우')
-                +tds('ISBN 정보', '979-11-981830-9-5 (03830)')
-                +tds('발행사항', '허밍북스, 2024.06.01')
+    +bookInfo({
+        imgSrc: 'https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9791198183095.jpg',
+        title: 'Tiger', author: '구시키 리우',
+        isbn: '979-11-981830-9-5 (03830)',
+        publisher: '허밍북스', date: '2024.06.01',
+    })
 
     h1 독서 기록
     ul

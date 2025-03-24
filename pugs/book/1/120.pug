@@ -6,14 +6,12 @@ include ../../../source/skeleton.pug
 })
 
     h1 도서 정보
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9788937460050.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '동물 농장 / 조지 오웰')
-                +tds('ISBN 정보', '978-89-98934-05-7 (13740)')
-                +tds('발행사항', '온스토리, 2013.04.30')
+    +bookInfo({
+        imgSrc: 'https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9788937460050.jpg',
+        title: '동물 농장', author: '조지 오웰',
+        isbn: '978-89-98934-05-7 (13740)',
+        publisher: '온스토리', date: '2013.04.30',
+    })
 
     h1 독서 기록
     ul
