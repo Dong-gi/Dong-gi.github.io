@@ -10,40 +10,32 @@ include ../../source/skeleton.pug
         imgSrc: 'https://image.yes24.com/goods/59566585/L',
         title: '데이터 중심 애플리케이션 설계', author: '마틴 클레프만',
         isbn: '979-11-5839-098-3 (93000)',
-        publisher: '위키북스', date: '발행일 : 2018.04.12',
+        publisher: '위키북스', date: '2018.04.12',
     })
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/24557610/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '클라우드 시스템을 관리하는 기술 / 토머스 리몬첼리,스트래치 체일럽,크리스티나 호건')
-                +tds('ISBN 정보', '978-89-6848-261-8 [93000]')
-                +tds('발행사항', '한빛미디어(주), 발행일 : 2015년 02월 25일')
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/15969224/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '인프라 디자인 패턴 / 스기하라 타케오 외 4')
-                +tds('ISBN 정보', '978-89-94774-88-6 (93000)')
-                +tds('발행사항', '비제이퍼블릭, 2015.02.12')
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/77283734/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '클린 아키텍처 / 로버트 C. 마틴')
-                +tds('ISBN 정보', '978-89-6626-247-2 (14000)')
-                +tds('발행사항', '인사이트, 2019.08.20')
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/96804929/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '마이크로서비스 도입 이렇게 한다 / 샘 뉴먼')
-                +tds('ISBN 정보', '979-11-89909-25-3 (93000)')
-                +tds('발행사항', '책만, 2021.01.20')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/24557610/L',
+        title: '클라우드 시스템을 관리하는 기술', author: '토머스 리몬첼리, 스트래치 체일럽, 크리스티나 호건',
+        isbn: '978-89-6848-261-8 [93000]',
+        publisher: '한빛미디어(주)', date: '2015년 02월 25일',
+    })
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/15969224/L',
+        title: '인프라 디자인 패턴', author: '스기하라 타케오 외 4',
+        isbn: '978-89-94774-88-6 (93000)',
+        publisher: '비제이퍼블릭', date: '2015.02.12',
+    })
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/77283734/L',
+        title: '클린 아키텍처', author: '로버트 C. 마틴',
+        isbn: '978-89-6626-247-2 (14000)',
+        publisher: '인사이트', date: '2019.08.20',
+    })
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/96804929/L',
+        title: '마이크로서비스 도입 이렇게 한다', author: '샘 뉴먼',
+        isbn: '979-11-89909-25-3 (93000)',
+        publisher: '책만', date: '2021.01.20',
+    })
 
 
     h1 개요

@@ -10,16 +10,15 @@ include ../../../source/skeleton.pug
         imgSrc: 'https://image.yes24.com/momo/TopCate132/MidCate10/13192388.jpg',
         title: '컴퓨터시스템구조론', author: 'William Stallings',
         isbn: '978-89-92887-15-1 [93560]',
-        publisher: '진샘미디어', date: '발행일 : 2010년 07월 30일',
+        publisher: '진샘미디어', date: '2010년 07월 30일',
     })
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.aladin.co.kr/product/9158/95/cover500/k482535605_1.jpg', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', "Computer Systems - A Programmer's Perspective 3판 / Randal E Bryant, David R O’Hallaron")
-                +tds('ISBN 정보', '979-11-85475-21-9 (93560)')
-                +tds('발행사항', '퍼스트 북, 2016.08.31')
+
+    +bookInfo({
+        imgSrc: 'https://image.aladin.co.kr/product/9158/95/cover500/k482535605_1.jpg',
+        title: 'Computer Systems - A Programmer\'s Perspective 3판', author: 'Randal E Bryant, David R O’Hallaron',
+        isbn: '979-11-85475-21-9 (93560)',
+        publisher: '퍼스트 북', date: '2016.08.31',
+    })
 
     h1 개요
     ul

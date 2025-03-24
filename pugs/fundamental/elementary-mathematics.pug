@@ -13,22 +13,18 @@ include ../../source/skeleton.pug
         isbn: '978-89-93712-22-3 (93410)',
         publisher: '휴먼싸이언스', date: '2010.02.28',
     })
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://image.yes24.com/goods/3031659/L', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '우리가 잘못 배우고 있는 수학 / 김용무')
-                +tds('ISBN 정보', '978-89-8172-709-3 (93410)')
-                +tds('발행사항', '교우사, 2007.09.15')
-    .w3-row
-        .w3-col.s2.w3-center
-            +w3img('https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/3232951238/B.jpg?710000000', '도서 이미지')&attributes({style: 'max-height:210px'})
-        .w3-col.s10
-            +table()
-                +tds('표제/저자사항', '(시험, 생활, 교양 상식으로 나눠서 배우는) 수학대백과사전 - 실생활에 꼭 필요한 수학에 접근하는 공식, 정리, 규칙 127가지 / 구라모토 다카후미')
-                +tds('ISBN 정보', '979-11-5768-691-9 (05410)')
-                +tds('발행사항', '(주식회사)동양북스, 2021.02.05')
+    +bookInfo({
+        imgSrc: 'https://image.yes24.com/goods/3031659/L',
+        title: '우리가 잘못 배우고 있는 수학', author: '김용무',
+        isbn: '978-89-8172-709-3 (93410)',
+        publisher: '교우사', date: '2007.09.15',
+    })
+    +bookInfo({
+        imgSrc: 'https://cdn.011st.com/11dims/resize/600x600/quality/75/11src/product/3232951238/B.jpg?710000000',
+        title: '(시험,  생활,  교양 상식으로 나눠서 배우는) 수학대백과사전 - 실생활에 꼭 필요한 수학에 접근하는 공식,  정리,  규칙 127가지', author: '구라모토 다카후미',
+        isbn: '979-11-5768-691-9 (05410)',
+        publisher: '(주식회사)동양북스', date: '2021.02.05',
+    })
 
     h1 명제
     ul
