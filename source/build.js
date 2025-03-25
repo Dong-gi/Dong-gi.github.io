@@ -4,6 +4,7 @@ const { promisify } = require('node:util')
 const child_process = require('node:child_process')
 const pug = require('pug')
 const sharp = require('sharp')
+const svgo = require('svgo')
 
 const stat = promisify(fs.stat)
 const writeFile = promisify(fs.writeFile)
@@ -99,41 +100,6 @@ async function renderPug(from, to) {
             const path = dir + '/' + file
             const stats = await stat(path)
             if (stats.isFile()) {
-                
-                    const txt = (await readFile(path)).toString()
-                    if (/w3-row/.test(txt)) {
-                        const lines = txt.split('\n')
-                        const idx1 = lines.findIndex(x => /w3-row/.test(x))
-                        lines[idx1] = lines[idx1].replace('.w3-row', '+bookInfo({')
-                        lines.splice(idx1 + 1, 1)
-                        lines[idx1 + 1] = lines[idx1 + 1].split('+', 1)[0].slice(0, -4) + `imgSrc: '${/\+w3img\('([^']+)'.*$/.exec(lines[idx1 + 1])[1]}',`
-                        lines.splice(idx1 + 2, 2)
-                        for (let idx2 = idx1 + 2; ; ++idx2) {
-                            if (/\+tds\(/.test(lines[idx2]) !== true) {
-                                lines.splice(idx2, 0, lines[idx1].replace(/\+.+/, '})'))
-                                await writeFile(path, lines.join('\n'))
-                                break
-                            }
-                            if (/표제\/저자사항/.test(lines[idx2])) {
-                                const parts = /'([^']+)'/.exec(lines[idx2].split(',').slice(1).join(', '))[1].split('/')
-                                const title = parts[0].trim()
-                                const author = parts.slice(1).map(x => x.trim()).join(', ')
-                                lines[idx2] = lines[idx2].split('+', 1)[0].slice(0, -8) + `title: '${title}', author: '${author}',`
-                            } else if (/ISBN 정보/.test(lines[idx2])) {
-                                const isbn = /'([^']+)'/.exec(lines[idx2].split(',', 2)[1])[1].trim()
-                                lines[idx2] = lines[idx2].split('+', 1)[0].slice(0, -8) + `isbn: '${isbn}',`
-                            } else if (/발행사항/.test(lines[idx2])) {
-                                const parts = /'([^']+)'/.exec(lines[idx2].split(',').slice(1).join(', '))[1].split(',')
-                                const publisher = parts[0].trim()
-                                const date = parts.slice(1).map(x => x.trim()).join(', ')
-                                lines[idx2] = lines[idx2].split('+', 1)[0].slice(0, -8) + `publisher: '${publisher}', date: '${date}',`
-                            } else {
-                                lines.splice(idx2, 1)
-                                idx2 -= 1
-                            }
-                        }
-                    }
-                
                 const htmlPath = path.replace('/pugs/', '/posts/').replace('.pug', '.html')
                 const post = postMap.get(htmlPath)
                 if (post != null && stats.birthtimeMs !== stats.mtimeMs) {
@@ -164,7 +130,7 @@ async function renderPug(from, to) {
         await exec(`d2 "${d2Path}" "${svgPath}"`)
         console.log(`Rendered d2 : ${d2Path}`)
         const svg = await readFile(svgPath)
-        await writeFile(svgPath, svg.toString().replace(/\r?\n/g, '').replace(/\{[^}]*font-family[^}]*\}/g, '{}').replace(/\s+/g, ' '))
+        await writeFile(svgPath, svgo.optimize(svg.toString().replace(/\r?\n/g, '').replace(/\{[^}]*font-family[^}]*\}/g, '{}').replace(/\s+/g, ' ')).data)
     }))
 
     promiseArr.push(

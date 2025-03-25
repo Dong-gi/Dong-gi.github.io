@@ -114,24 +114,16 @@ mixin w3img(src, description)
         if metadata != null
             picture
                 if src.endsWith('.gif')
-                    source(media='(max-width: 500px)', srcset=(trimmedSrc + '-500.webp'), type='image/webp')
-                    source(media='(max-width: 500px)', srcset=(trimmedSrc + '-500.gif'), type='image/gif')
-                    source(media='(max-width: 1200px)', srcset=(trimmedSrc + '-1200.webp'), type='image/webp')
-                    source(media='(max-width: 1200px)', srcset=(trimmedSrc + '-1200.gif'), type='image/gif')
-                    source(srcset=(trimmedSrc + '-2000.webp'), type='image/webp')
-                    img.w3-round(src=(trimmedSrc + '-2000.gif'), alt=description, loading='lazy', width=metadata.width, height=metadata.height)&attributes(attributes)
+                    source(srcset=(trimmedSrc + '-500.webp 500w, ' + trimmedSrc + '-1200.webp 1200w, ' + trimmedSrc + '-2000.webp 2000w'), type='image/webp')
+                    source(srcset=(trimmedSrc + '-500.gif 500w, ' + trimmedSrc + '-1200.gif 1200w, ' + trimmedSrc + '-2000.gif 2000w'), type='image/gif')
+                    img.w3-round(src=(trimmedSrc + '-2000.gif'), alt=description, loading='lazy', sizes='auto', width=metadata.width, height=metadata.height)&attributes(attributes)
                 else
-                    source(media='(max-width: 500px)', srcset=(trimmedSrc + '-500.avif'), type='image/avif')
-                    source(media='(max-width: 500px)', srcset=(trimmedSrc + '-500.webp'), type='image/webp')
-                    source(media='(max-width: 500px)', srcset=(trimmedSrc + '-500.jpeg'), type='image/jpeg')
-                    source(media='(max-width: 1200px)', srcset=(trimmedSrc + '-1200.avif'), type='image/avif')
-                    source(media='(max-width: 1200px)', srcset=(trimmedSrc + '-1200.webp'), type='image/webp')
-                    source(media='(max-width: 1200px)', srcset=(trimmedSrc + '-1200.jpeg'), type='image/jpeg')
-                    source(srcset=(trimmedSrc + '-2000.avif'), type='image/avif')
-                    source(srcset=(trimmedSrc + '-2000.webp'), type='image/webp')
-                    img.w3-round(src=(trimmedSrc + '-2000.jpeg'), alt=description, loading='lazy', width=metadata.width, height=metadata.height)&attributes(attributes)
+                    source(srcset=(trimmedSrc + '-500.avif 500w, ' + trimmedSrc + '-1200.avif 1200w, ' + trimmedSrc + '-2000.avif 2000w'), type='image/avif')
+                    source(srcset=(trimmedSrc + '-500.webp 500w, ' + trimmedSrc + '-1200.webp 1200w, ' + trimmedSrc + '-2000.webp 2000w'), type='image/webp')
+                    source(srcset=(trimmedSrc + '-500.jpeg 500w, ' + trimmedSrc + '-1200.jpeg 1200w, ' + trimmedSrc + '-2000.jpeg 2000w'), type='image/jpeg')
+                    img.w3-round(src=(trimmedSrc + '-2000.jpeg'), alt=description, loading='lazy', sizes='auto', width=metadata.width, height=metadata.height)&attributes(attributes)
         else
-            img.w3-round(src=src, alt=description, loading='lazy')&attributes(attributes)
+            img.w3-round(src=src, alt=description, loading='lazy', sizes='auto')&attributes(attributes)
         figcaption
             | #{'<' + description + '>'}
             +asA(src, '[원본 보기]')&attributes({ target: '_blank' })
@@ -156,7 +148,7 @@ mixin post(options)
     html(lang='ko-KR')
         head
             meta(charset='UTF-8')
-            meta(name='viewport', content='width=device-width, initial-scale=1')
+            meta(name='viewport', content='width=device-width, initial-scale=1, user-scalable=yes')
             title= options.title || 'No title'
             link(rel="stylesheet", href="/source/default.css")
             meta(name='google-site-verification', content='aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM')

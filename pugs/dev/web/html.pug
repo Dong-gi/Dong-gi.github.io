@@ -76,6 +76,10 @@ include ../../../source/skeleton.pug
             h3 Viewport
             p 뷰 영역의 너비와 관계없이 컨텐츠를 보기 좋게 표현(반응형 웹)하기 위한 기본적인 설정을 기술한다. Viewport 설정은 사이트의 접근성 품질 검사 항목 중 하나로, 콘텐츠를 확대/축소 가능하고, 최대 크기 제한이 없으면 검사를 통과한다
             +asCode('html') #{'<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">'}
+            p 모바일 브라우저는 980픽셀이 사람들이 디자인하는 너비라고 가정하여, 980픽셀의 너비를 적용한 다음 렌더링된 웹 페이지를 화면의 실제 너비로 축소한다. 반응형 디자인을 사용하면, 브라우저에게 그러한 크기 조정을 하지 말라고 알려야 한다
+            ul
+                li width=device-width : 웹사이트의 너비는 기기의 것과 동일하다
+                li initial-scale=1 : 처음부터 크기 조정을 할 필요가 없다
 
             h3 Description
             p 문서에 대한 짧은 설명으로, 검색 엔진의 검색 결과에 이용된다. 이전에는 키워드 설정도 따로 존재했지만, 스팸이 많아 더 이상 사용되지 않는다
@@ -311,6 +315,7 @@ include ../../../source/skeleton.pug
                         li CSS로 #[+asInlineCode('img { max-width: 100%; height: auto; }', 'css')] 설정
                             p height가 어떻게 결정되는가에 대해선 걱정하지 않아도 된다. #[+asA('https://caniuse.com/mdn-html_elements_img_aspect_ratio_computed_from_attributes', '2019년부터')] 브라우저들은 width와 height를 이용해 계산한 종횡비를 이용해 자리를 차지하게 해준다
                 li 모든 이미지에 loading="lazy"를 설정하는 것이 단순하고 매력적일 수 있으나, 좋은 LCP(Largest Contentful Paint) 점수를 위해 최초 뷰포트에 표시될 가능성이 있는 이미지들에는 설정하지 않는 것이 좋다 -- 특히 쇼핑몰과 같은 경우
+                    p 특별히 중요한 이미지에는 loading="eager", fetchpriority="high" 설정 가능
                 li SVG
                     ul
                         li 벡터 이미지
@@ -586,9 +591,9 @@ include ../../../source/skeleton.pug
                         +asCode('HTML') #{'<img sizes="80vw" srcset="small.jpg 600w, medium.jpg 1200w, large.jpg 2000w" src="fallback.jpg">'}
                         p 예를 들어, 뷰포트가 1000px, window.devicePixelRatio가 1인 디바이스에서 브라우저는 업스케일링이 필요하지 않은 최소 이미지로 medium.jpg를 선택할 가능성이 크다.
                     li 위 코드는 이미지를 뷰포트의 80%를 차지하도록 그리라는 지시가 아님에 유의해야 한다. x를 이용한 설명적 구문과 마찬가지로 브라우저에 이미지에 대한 설명을 제공할 뿐이다
-                    li sizes 속성에는 CSS의 calc() 함수와 미디어 쿼리 구문을 이용해 이미지의 최종 크기를 구체적으로 설명할 수 있다
+                    li sizes 속성에는 #[+asA('https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Values_and_Units/CSS_Value_Functions#math_functions', 'CSS 산술 함수')]와 미디어 쿼리 구문을 이용해 이미지의 최종 크기를 구체적으로 설명할 수 있다
                         +asCode('HTML') #{'<img sizes="(max-width: 1200px) 100vw, calc(80vw - 2em)" ...>'}
-                        p 
+                        p loading="lazy"로 설정한 img에 한해 sizes="auto" 설정이 가능하다 -- 자동 판단
 
             li picture를 이용한 규정적 구문
                 ul
