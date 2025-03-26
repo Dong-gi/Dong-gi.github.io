@@ -23,7 +23,7 @@ h1,.fake-h1{font-size:36px}h2,.fake-h2{font-size:30px}h3,.fake-h3{font-size:24px
 h1,h2,h3,h4,h5,h6,.fake-h1,.fake-h2,.fake-h3,.fake-h4,.fake-h5,.fake-h6{font-family:"Segoe UI",Arial,sans-serif;font-weight:400;margin:10px 0}.w3-wide{letter-spacing:4px}
 hr{border:0;border-top:1px solid #eee;margin:20px 0}
 img{max-width:100%;max-width:min(100%,100vw,100cqw);height:auto;vertical-align:middle}a{color:inherit}
-.w3-table,.w3-table-all{border-collapse:collapse;border-spacing:0;width:100%;display:table;table-layout:fixed;}.w3-table-all{border:1px solid #ccc}
+.w3-table,.w3-table-all{border-collapse:collapse;border-spacing:0;max-width:100%;max-width:min(100%,100vw,100cqw);}.w3-table-all{border:1px solid #ccc}
 .w3-bordered tr,.w3-table-all tr{border-bottom:1px solid #ddd}.w3-striped tbody tr:nth-child(even){background-color:#f1f1f1}
 .w3-table-all tr:nth-child(odd){background-color:#fff}.w3-table-all tr:nth-child(even){background-color:#f1f1f1}
 .w3-hoverable tbody tr:hover,.w3-ul.w3-hoverable li:hover{background-color:#ccc}.w3-centered tr th,.w3-centered tr td{text-align:center}
@@ -229,7 +229,7 @@ img{max-width:100%;max-width:min(100%,100vw,100cqw);height:auto;vertical-align:m
 /* End W3.CSS 4.15 */
 
 
-div,p,pre,ol,ul,li{word-wrap:break-word;word-break:break-all}
+div,p,pre,ol,ul,li{overflow-wrap:break-word;word-break:break-all}
 h1,h2,h3,h4,h5,h6{border-bottom:1px solid #ccc}
 .pos-span{padding:0;margin:0;width:0;height:0;overflow:hidden}
 caption{padding-top:8px;padding-bottom:8px}
@@ -260,6 +260,9 @@ div#contents .code-div{margin:8px 0}
 
 .hover-template li{margin:0}
 
+div.book-info { display: flex }
+div.book-info>div:first-child { min-width: 20ch }
+
 /* 기본 레이아웃 */
 :root {
     --sidebar-width: 333px;
@@ -286,9 +289,6 @@ div#contents .code-div{margin:8px 0}
         scroll-margin-top: var(--nav-height);
     }
 }
-
-div.book-info { display: flex }
-div.book-info>div:first-child { min-width: 20ch }
 
 @media screen and (min-width: 1234px) {
     #sidebar {
