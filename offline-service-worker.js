@@ -2,6 +2,7 @@ self.addEventListener('install', (ev) => {
     ev.waitUntil(
         caches.open('offline-data').then(function (cache) {
             return cache.addAll([
+                '/',
                 '/source/highlight.pack.js',
                 '/source/default.min.js',
                 '/files/posts-compressed.json',

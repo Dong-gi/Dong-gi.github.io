@@ -68,6 +68,17 @@ include ../../../source/skeleton.pug
     div
         p 클라이언트에 정보를 저장하는 API로, 도메인 별로 격리된다 -- 다른 도메인의 데이터를 JavaScript로 접근할 수 없다
 
+        h2 크기 제한
+        p 크기 제한은 브라우저별로 다를 수 있으며, 정확한 내용은 확인하기 어렵다. 따라서 아래 내용은 실제와 다를 수 있다. #[+asA('https://web.dev/articles/storage-for-the-web?authuser=2#how-much')]
+        ul
+            li 크롬은 origin 하나가 디스크의 총 60%까지 사용할 수 있도록 허용한다
+            li 시크릿 모드 크롬은 origin 하나가 디스크의 총 5%까지 사용할 수 있도록 허용한다
+            li 사용자가 사이트를 닫으면 데이터를 지우도록 설정한 경우, 크롬은 300MB까지 사용할 수 있도록 허용한다
+            li 파이어폭스는 #[+asA('https://pkg.go.dev/golang.org/x/net/publicsuffix?utm_source=godoc', 'eTLD+1')] 그룹 하나가 디스크의 총 50%까지 사용할 수 있도록 허용한다
+            li 사파리는 1GB까지 사용할 수 있도록 허용한다
+            li 사파리 PWA는 별도 저장 공간을 할당받으며, 모바일 브라우저와 데이터가 공유되지 않는다
+        p 한편 브라우저 표준으로 도입된 #[+asA('https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/estimate', 'navigator.storage.estimate()')] 함수를 이용해 저장소 제한량을 확인할 수 있게 되었다
+
         h2 쿠키
         ul
             li 가장 오래된 방법으로, 저장된 키-값 쌍들은 해당 도메인 서버로 보내지는 요청에 헤더로 자동 포함된다
@@ -213,7 +224,29 @@ include ../../../source/skeleton.pug
             li 지원하지 않는 브라우저가 많음 (2024-11-08 기준)
         
         h2 Service Worker
-        p 프록시 서버처럼 작동하여, 웹 앱이 오프라인 상태에서 작동할 수 있도록 리소스를 캐싱
+        ul
+            li: +asA('https://developer.chrome.com/docs/workbox', 'Workbox : Chrome팀의 서비스 워커 라이브러리')
+            li 클라이언트와 API 서버 사이의 프록시 서버처럼 작동한다. 요청을 가로챈 다음 적절한 방법으로 응답을 설정한다
+                ul
+                    li 실제 네트워크로 요청을 보내 신선한 응답을 받기
+                    li 이미 캐시한 응답을 그대로 재사용하기
+                    li 응답을 직접 만들어내 전달하기
+            li 서비스 워커가 위치한 폴더는 제어 범위를 결정한다
+                ul
+                    li example.com/my-pwa/sw.js에 있는 서비스 워커는 example.com/my-pwa/demos/와 같이 my-pwa 이하의 경로에 대해서만 동작한다
+                    li 브라우저는 범위 당 하나의 서비스 워커만 실행을 허용한다
+            li 서비스 워커의 업데이트는 자동으로 이루어진다
+                ul
+                    li 설치된 서비스 워커와 동일한 파일의 최신 서버 버전이 바이트 단위로 다르다면, 신규 버전이 설치되고 대기한다
+                    li 이후 현재 실행 중인 서비스 워커가 클라이언트를 제어하지 않게 되면, 다음 실행부터 신규 버전의 워커가 클라이언트를 제어한다
+                        ul
+                            li 이를 통해 서비스 워커가 2개 이상 실행되는 상황이 방지된다
+                            li 페이지 새로고침으로는 업데이트가 완료되지 않는다
+            li 서비스 워커의 시작과 종료도 자동으로 이루어진다
+                ul
+                    li 네트워크 요청 발생, 주기적 백그라운드 동기화, 푸시와 같은 이벤트가 발생하면 시작된다
+                    li 유휴 상태가 오래되거나, 너무 오랫동안 실행되면 종료된다 -- 이후 다시 시작된다
+
 
     h1 웹 소켓
     ol

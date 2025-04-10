@@ -688,6 +688,13 @@ include ../../../source/skeleton.pug
         h2 clamp(min, val, max) == max(min, min(val, max))
         p [min, max] 범위를 벗어나지 않으면 val 반환
 
+        h2 env()
+        ul
+            li 디자인과 관련된 환경변수를 획득한다
+            li #[+asInlineCode('env(safe-area-inset-top, 20px)', 'css')]와 같이, 변수가 정의되지 않은 경우를 대비한 기본값도 설정 가능하다
+            li 예를 들어, 노치와 같은 영역에 의해 HTML 문서가 가려지지 않도록 하려면 안전 영역에만 컨텐츠가 표시되도록 해야 한다
+                +asCode('css') padding: env(safe-area-inset-top, 50px) env(safe-area-inset-right, 50px) env(safe-area-inset-bottom, 50px) env(SAFE-AREA-INSET-LEFT, 50px);
+
         h2 #{`var( <custom-property-name>, <declaration-value>?)`}
         ol
             li 변수 선언
