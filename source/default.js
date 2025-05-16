@@ -448,19 +448,41 @@ async function initInlineCode() {
 
 window.addEventListener('load', async () => {
     initNav();
-    await yield();
 
-    await initInlineCode();
-    await yield();
+    await Promise.allSettled([
+        initInlineCode(),
+        initGoto(),
+        initCodeBtn(),
+        initHoverContent(),
+        fetch('/files/posts-compressed.json').then(res => {
+            return res.json()
+        }).then(async o => {
+            Object.assign(posts, o);
 
-    await initGoto();
-    await yield();
+            posts.list = [
+                ...posts.list.filter(post => !Array.isArray(post.category)),
+                ...posts.list.filter(post => Array.isArray(post.category))
+                    .flatMap(post => post.category.map(category => Object.assign({}, post, { category: category })))
+            ].sort((post1, post2) => {
+                const r1 = post1.category.localeCompare(post2.category);
+                if (r1 !== 0) {
+                    return r1;
+                }
+                return post1.title.localeCompare(post2.title);
+            });
 
-    await initCodeBtn();
-    await yield();
+            await Promise.all([updatePostList(), updateMarkerList()]);
 
-    await initHoverContent();
-    await yield();
+            const currentPost = posts.list.find(x => location.pathname.endsWith(x.file));
+            if (currentPost != null) {
+                if (Number.isInteger(currentPost.mtimeMs)) {
+                    document.getElementById('contents').prepend(asNodes(`<p>Last update : ${new Date(currentPost.mtimeMs).toISOString()}</p>`));
+                }
+            }
+        })
+    ]);
+
+    window.onpopstate();
 
     if (navigator.serviceWorker != null) {
         if (navigator.serviceWorker.controller) {
@@ -476,39 +498,6 @@ window.addEventListener('load', async () => {
 
     /* 하이라이팅 지원 목록 */
     console.log(hljs.listLanguages())
-
-    fetch('/files/posts-compressed.json').then(res => {
-        return res.json()
-    }).then(async o => {
-        Object.assign(posts, o);
-
-        posts.list = [
-            ...posts.list.filter(post => !Array.isArray(post.category)),
-            ...posts.list.filter(post => Array.isArray(post.category))
-                .flatMap(post => post.category.map(category => Object.assign({}, post, { category: category })))
-        ].sort((post1, post2) => {
-            const r1 = post1.category.localeCompare(post2.category);
-            if (r1 !== 0) {
-                return r1;
-            }
-            return post1.title.localeCompare(post2.title);
-        });
-
-        await updatePostList();
-        await yield();
-
-        await updateMarkerList();
-        await yield();
-
-        window.onpopstate();
-
-        const currentPost = posts.list.find(x => location.pathname.endsWith(x.file));
-        if (currentPost != null) {
-            if (Number.isInteger(currentPost.mtimeMs)) {
-                document.getElementById('contents').prepend(asNodes(`<p>Last update : ${new Date(currentPost.mtimeMs).toISOString()}</p>`));
-            }
-        }
-    });
 })
 
 /**
@@ -613,10 +602,10 @@ async function updateMarkerList() {
 
         headingLevels[level] += 1;
         headingLevels.fill(0, level + 1);
-        const prefix = `${headingLevels.filter(x => x > 0).join('.')}. `
+        const prefix = `${headingLevels.filter(x => x > 0).join('.')}.`
         markerLi.querySelector('a').textContent = `${prefix}${markerName.substring(0, 50)}`
         if (headingTagSet.has(markerTarget.tagName)) {
-            markerTarget.textContent = `${prefix}${markerTarget.textContent}`
+            markerTarget.dataset.beforeText = prefix;
         }
         if (markerTarget.classList.contains('fake')) {
             continue
