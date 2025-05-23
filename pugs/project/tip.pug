@@ -54,10 +54,135 @@ include ../../source/skeleton.pug
         li: +asA('http://unicorn-adblock.com/%ec%9c%a0%eb%8b%88%ec%bd%98-https-for-windows/', '유니콘 HTTPS')
         li: +asA('https://1.1.1.1/', '1.1.1.1 + WARP(VPN)')
 
+    h1 JSDoc
+    ul
+        li 마크다운 유사 구문
+            +asCode('JavaScript').
+                /**
+                 * # 섹션 제목
+                 *
+                 * - 글머리 기호1
+                 * * 글머리 기호2
+                 *
+                 * **강조**
+                 *
+                 * _이탤릭체_
+                 *
+                 * > 인용 문구
+                 *
+                 * [링크](https://example.com)
+                 *
+                 * ```
+                 * // 코드 블록
+                 * let x = 1
+                 * console.log(x)
+                 * ```
+                 */
+            +w3img('/imgs/202505/23-165129.png')
+
     h1 Nox ADB 연결
     ul
         li nox_adb.exe connect 127.0.0.1:5037
         li 5037 포트는 안드로이드 ADB 기본 포트
+
+    h1 PostgreSQL
+    +pos('PostgreSQL')
+    div
+        h2 upsert 수행 시 삽입/변경된 행의 개수 확인하기
+        ul
+            li insert ... on conflict 수행 시 전체 삽입/갱신된 행의 개수만 반환됨
+            li update 발생 시 기존 행은 삭제되므로 시스템 컬럼 xmax에 0이 아닌 값이 설정됨을 이용
+                +asCode('sql') insert ... on conflict ... returning *, (xmax = 0) as is_inserted;
+
+        h2 (DDL의) 잠금 획득 대기로 인해 다른 요청들이 장기 차단되는 것 방지하기
+        +asCode('sql') set statement_timeout = '500ms';
+
+        h2 테이블 제약 조건 추가 시 검증을 생략하여 테이블 잠금 짧게 하기
+        +pos('not valid')
+        ol
+            li not valid 옵션을 사용하여 테이블 제약조건 추가
+                +asCode('sql') ALTER TABLE distributors ADD CONSTRAINT distfk FOREIGN KEY (address) REFERENCES addresses (address) NOT VALID;
+            li 보다 낮은 잠금 수준으로 나중에 제약조건 검증
+                +asCode('sql') ALTER TABLE distributors VALIDATE CONSTRAINT distfk;
+
+        h2 기존 컬럼에 not null 설정을 빠르게 추가하기
+        div
+            h3.no-marker Postgres 11~
+            ol
+                li not null default -1과 같이 기본값을 포함하여 설정 추가
+                li 기존 행의 값 업데이트
+                li default 조건 제거
+
+            h3.no-marker Postgres 12~
+            ol
+                li check 제약 조건으로 not null 검사 추가
+                    p #[+goto('not valid')] 옵션을 이용해 검사를 나중으로 미룰 수도 있다
+                li not null 제약 조건 추가 -- check 제약 조건으로 이미 검증되었으므로 스캔 생략됨
+                li check 제약 조건 삭제
+
+        h2 인덱스 관련 작업에서 테이블 수준 잠금 피하기
+        ul
+            li 인덱스 생성 시 CONCURRENTLY를 항상 사용하는 것이 좋다
+                p 생성에 실패한 경우, 재시도하기 전에 잔여물을 삭제해야 한다
+            li 인덱스 삭제 시에도 CONCURRENTLY를 사용할 수 있다
+            li 현재 ALTER INDEX에는 CONCURRENTLY 옵션이 없으므로, 신규 생성 후 이전 걸 삭제하면 된다
+
+        h2 민감 정보는 제외하고, 특정 컬럼에 대한 권한만 부여하기
+        +asCode('sql') GRANT SELECT (id, username) ON users TO analyst;
+
+        h2 목록을 이용한 패턴 매칭
+        p 아래와 같은 쿼리를 이용하면 프로그램 코드에서 배열 또는 리스트 변수를 직접 SQL 매핑에 이용할 수 있어 편리하다
+        +asCode('sql') WHERE email ~ ANY(ARRAY['@gmail\.com$', '@yahoo\.com$'])
+
+        h2 CSV로 쓰기
+        +asCode('sql').
+            copy (
+                select * from test
+            )
+            to stdout
+            with (format csv, header true, null 'NULL');
+
+        h2 $$를 이용한 문자열 리터럴 표기
+        +asCode('sql').
+            select $$some
+            long
+            text$$;
+
+            select $tag$some
+            long
+            $$
+            text$tag$;
+
+        h2 서브쿼리 없이 첫 번째 또는 마지막 행 가져오기
+        p order by 절에 등장하는 표현식(들)을 순서대로 distinct on ()에 이용하면 된다
+        +asCode('sql').
+            select distinct on (class) *
+            from students
+            order by class, height desc;
+
+        h2 null도 값으로 취급하여 비교하기
+        +asCode('sql').
+            a is distinct from b
+
+            a is not distinct from b
+
+        h2 기존 앱이 실행 중인 상태에서 컬럼 제거하기
+        ol
+            li search_path 상 선순위에 같은 이름의 뷰 생성
+                +asCode('sql') CREATE VIEW app.users AS SELECT username, true AS active FROM public.users;
+            li 테이블에서 컬럼 삭제
+            li 앱 업데이트
+            li 대체 뷰 삭제
+
+    h1 SQL
+    div
+        h2 OVERLAPS : 날짜 구간 겹침 확인
+        ul
+            li (start1, end1) OVERLAPS (start2, end2)
+                p [start1, end1) 구간과 [start2, end2) 구간에 겹침이 존재하는지 여부를 반환한다
+            li 종료 시각 대신 interval을 이용할 수 있다
+                p (start1, length1) OVERLAPS (start2, length2)
+            li 구간의 시작 시각과 종료 시각이 같은 경우, 구간은 지정된 시각에 한정된다
 
     h1 SSL 인증서
     div
@@ -193,6 +318,23 @@ include ../../source/skeleton.pug
         li: +asA('https://transparencyreport.google.com/copyright/domains/musicbox.fun', 'Google Transparency Report > 저작권 위반 삭제 요청')
         li: +asA('https://lumendatabase.org/', 'DMCA 신고 검색')
         li: +asA('https://web.archive.org/', '이전 스냅샷 검색')
+
+    h1 모바일 브라우저 디버깅
+    ul
+        li #[+asA('https://github.com/liriliri/eruda')]
+            +asCode('html').
+                &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/3.3.0/eruda.min.js"&gt;&lt;/script&gt;
+                &lt;script&gt;
+                  eruda.init({useShadowDom: false});
+                  eruda.position({x:0,y:0});
+                  document.querySelector('.eruda-container').style.height = '80vh';
+                &lt;/script&gt;
+        li #[+asA('https://github.com/Tencent/vConsole')]
+            +asCode('html').
+                &lt;script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"&gt;&lt;/script&gt;
+                &lt;script&gt;
+                  var vConsole = new window.VConsole();
+                &lt;/script&gt;
 
     h1 정규표현식 일본어 검색
     ol

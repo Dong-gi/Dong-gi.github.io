@@ -1105,7 +1105,12 @@ include ../../source/skeleton.pug
         h2 프로세스 관련
         div
             h3 ps : Process Snapshot
-            +asCode('shell') $ ps -ef # -e(전체 프로세스), -f(full-format)
+            +asCode('shell').
+                $ ps -ef
+                    # -e : -A와 동일. 나 외의 사용자가 실행한 프로세스도 포함. 프로세스가 터미널을 가지든 갖지 않든 포함
+                    # -f : full-format. 부모 pid, 연관 커맨드 등 포함
+                $ ps aux
+                    # uid 대신 이름 표시, 리소스 사용률(%) 표시
 
             h3 top : 실행 중인 작업 보기
 

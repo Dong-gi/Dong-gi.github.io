@@ -69,6 +69,14 @@ include ../../../source/skeleton.pug
     h1 Commands
     p 참고 자료 : #[+asA('https://redis.io/commands')]. Redis 명령어들은 연관성에 따라 하나의 그룹에 속해있다
     div
+        h2 주의사항
+        ul
+            li MGET, MSET과 같은 다중 키 작업 명령은, 모든 키가 동일한 해시 슬롯에 있지 않으면 CROSSSLOT 오류 발생
+                ul
+                    li 키를 동일한 해시 슬롯에 배치하기 위해 태그 사용
+                        p 예를 들어 키 #[+asInlineCode('{profile}:123')]와 #[+asInlineCode('{profile}:124')]는 동일한 슬롯에 할당된다
+                    li 각 키를 개별 명령으로 보내되, 파이프라인을 이용
+
         h2 Generic
         div
             h3 COPY since 6.2.0

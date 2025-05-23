@@ -51,6 +51,7 @@ async function renderPug(from, to) {
      */
     const imgMap = {}
     const imgDirArr = ['./imgs']
+    const promiseArr = []
     while (imgDirArr.length > 0) {
         const dir = imgDirArr.pop()
         for (const file of await readDir(dir)) {
@@ -84,7 +85,7 @@ async function renderPug(from, to) {
             }
         }
     }
-    const promiseArr = [writeFile('./source/imgs.pug', `-\n    imgMap = ${JSON.stringify(imgMap)}`)]
+    promiseArr.push(writeFile('./source/imgs.pug', `-\n    imgMap = ${JSON.stringify(imgMap)}`))
 
     // pug 변환
     promiseArr.push(renderPug('./index.pug', './index.html'))

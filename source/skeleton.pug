@@ -70,8 +70,11 @@ mixin codeBtn(options)
         else
             = options.path.split('/').pop()
 
-mixin goto(positionName, relativeLocation)
-    +asA(`${relativeLocation || ''}#pos${positionName.hashCode()}`, `${positionName}`).goto&attributes({ target: relativeLocation ? '_blank' : '_self' })
+mixin goto(positionName, href)
+    +asA(
+        `${href || ''}#pos${positionName.hashCode()}`,
+        href ? (href + ' > ' + positionName) : positionName
+    ).goto&attributes({ target: href ? '_blank' : '_self' })
 
 mixin hoverTemplate()
     div.w3-container.w3-leftbar.w3-border-green.w3-white.hover-template&attributes(attributes)

@@ -540,6 +540,12 @@ include ../../source/skeleton.pug
             p RDS 마스터 암호를 Secrets Manager에 저장하고, 정기적으로 교체할 수 있다
 
         h2 RDS for PostgreSQL
+        div
+            h3 논리적 복제
+            ul
+                li 파라미터 그룹 설정 필요 -- 기본 파라미터 그룹으로는 불가능 #[+asA('https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.PostgreSQL.html')]
+                li 소스 데이터베이스가 삭제된 경우가 아니라면, 구독을 삭제하기 전에 alter subscription을 이용해 먼저 연결을 해제해야 한다 #[+asA('https://www.postgresql.org/docs/current/logical-replication-subscription.html#LOGICAL-REPLICATION-SUBSCRIPTION-SLOT')]
+                li 기본적으로 복제로 인해 트리거가 촉발되지 않지만, 트리거가 실행되도록 변경할 수도 있다
 
         h2 Aurora
 
@@ -2138,6 +2144,14 @@ include ../../source/skeleton.pug
                 +goto('CloudTrail을 사용하여 이벤트 로깅')
         li CloudWatch
             p AWS 리소스 및 애플리케이션 모니터링
+        li DMS
+            ul
+                li 동종 또는 이종 DBMS 간 마이그레이션 지원
+                li 소스 엔드포인트에 DDL 변경 감지를 활성화하면, 마스터 유저 외의 유저로 DDL 실행 불가능하다
+                    p 나중에 트리거를 제거하려면 아래 쿼리를 수동으로 실행해야 한다
+                    +asCode('sql') drop event trigger awsdms_intercept_ddl;
+                li 테이블에 기본키가 없으면 delete, update는 동기화되지 않는다 -- 무시된다
+                li 시퀀스 자체를 동기화하진 않으므로, 타깃 DB의 시퀀스 시작 번호를 적절히 재설정해야 한다
         li EC2 Image Builder
             p AMI 또는 컨테이너 이미지 자동 빌드
         li ECR
@@ -2173,8 +2187,6 @@ include ../../source/skeleton.pug
         li ELB; Elastic Load Balancing
             p EC2 인스턴스, 컨테이너, IP 주소, Lambda 함수 등으로의 부하 분산
             p 로드 밸런서는 모든 트래픽이 거치는 지점이기 때문에, 로드 밸런서 자체도 스케일러블 해야한다 -- 때문에 비전문가가 직접 구성하는 것보단, 클라우드 관리 서비스를 이용하는 것이 단일 장애 지점을 회피할 수 있을 것
-        li Database Migration Service
-            p 기존 데이터베이스를 AWS RDS로 마이그레이션
         li ElastiCache
             p Redis, Memcached
         li CloudFront
