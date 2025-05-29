@@ -52,6 +52,18 @@ include ../../source/skeleton.pug
         li 동일 크기의 보안 입력에 대한 결과는 항상 동일한 시간으로 처리해야 한다
             p 예. Node crypto 모듈은 #[+asInlineCode('timingSafeEqual')] 함수를 제공한다
 
+    h1 CWE-367: Time-of-check Time-of-use (TOCTOU) Race Condition
+    ul
+        li: +asA('https://cwe.mitre.org/data/definitions/367.html')
+        li 리소를 사용하기 전에 확인(검증)했던 상태와, 실제로 사용하는 시점의 상태가 달라질 수 있는 경우
+        li 예. Node.js CI 테스트 호스트 공격 사례 #[+asA('https://nodejs.org/en/blog/vulnerability/march-2025-ci-incident')]
+            ol
+                li 정상적인 pull request를 생성
+                li 관리자가 코드 확인 후 request-ci 라벨을 붙임
+                    p 문서 외 코드 변경이 포함된 PR은 관리자가 항상 request-ci 라벨을 붙이도록 되어 있음
+                li 오래된 타임스탬프의 커밋을 이용해 PR(/HEAD) 갱신
+                li Jenkins가 가져와 실행하는 코드엔 악성코드가 포함됨
+
     h1 CWE-400: Uncontrolled Resource Consumption
     ul
         li: +asA('https://cwe.mitre.org/data/definitions/400.html')

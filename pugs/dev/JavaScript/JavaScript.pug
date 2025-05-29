@@ -414,3 +414,31 @@ include ../../../source/skeleton.pug
 
             h3 export * as newName from 'module'
             p 모듈의 defaults를 다시 노출하기만 할 때 편의 제공
+
+        h2 WHATWG 2022
+        div
+            h3: +asA('https://developer.mozilla.org/en-US/docs/Web/API/Window/structuredClone', 'structuredClone(value[, options])')
+            p 객체 깊은 복사 지원
+
+        h2 ES2024
+        div
+            h3 Promise.withResolvers()
+            p Promise 객체의 상태 천이를 Promise 정의 바깥에서 하고 싶을 때
+            +asCode('JavaScript').
+                let resolver, rejector
+                const promise = new Promise((resolve, reject) => {
+                    resolver = resolve
+                    rejector = reject
+                })
+            p 위와 같은 코드를 아래와 같이 축약할 수 있다
+            +asCode('JavaScript') const { promise, resolve, reject } = Promise.withResolvers()
+
+        h2 ES2025
+        div
+            h3: +asA('https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import/with', 'import 속성 지정')
+            p 예를 들어, 클라이언트는 아래와 같이 JSON을 기대했지만
+            +asCode('JavaScript') import config from 'https://xxx/config.json'
+            p 서버가 JSON이 아닌 실행 가능한 JavaScript 코드를 응답하면 의도치 않게 해당 코드가 실행되는 문제가 있었다. 이제는 속성을 지정하여 이러한 경우 명시적으로 오류를 발생할 수 있다
+            +asCode('JavaScript').
+                import styles from "https://example.com/styles.css" with { type: "css" };
+                import data from "https://example.com/data.json" with { type: "json" };

@@ -366,18 +366,44 @@ include ../../../source/skeleton.pug
         li FileReader
         +asCode('javascript') readAsText(file, encoding), readAsDataURL(file), readAsBinaryString(file), readAsArrayBuffer(file)
 
-    h1 유용한 스크립트
+    h1 AbortController
     ul
-        li: +asA('https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js', 'CryptoJS')
-        p 연관 포스트로 이동 : 
-            +goto('CryptoJS', 'node.html')
+        li 비동기 작업을 중도 취소할 수 있다
+        li 예. 이벤트 리스너 제거
+            +asCode('JavaScript').
+                const abortController = new AbortController()
+                window.addEventListener('scroll', console.log, { signal: abortController.signal })
+                setTimeout(() => abortController.abort(), 5000)
+        li 예. fetch 취소
+            +asCode('JavaScript').
+                fetch(
+                    'https://mdn.github.io/dom-examples/abort-api/sintel.mp4',
+                    { 
+                        signal: AbortSignal.any([new AbortController().signal, AbortSignal.timeout(10)])
+                    }
+                ).then(console.log).catch(console.log)
+        li 예. 사용자 정의 구현
+            +asCode('JavaScript').
+                async function doSomething({ signal }) {
+                    return await new Promise((resolve, reject) => {
+                        if (signal?.aborted) {
+                            return reject(signal.reason)
+                        }
+                        signal?.addEventListener('abort', () => {
+                            reject(signal.reason)
+                        })
+                        // ...
+                    })
+                }
 
     h1 잡다한 코드
     ul
         li 특정 노드로 스크롤 이동
         +asCode('javascript') node.scrollIntoView()
+
         li 특정 위치로 스크롤 이동
         +asCode('javascript') window.scrollTo({ top: 123 })
+
         li 페이지 갱신없이 히스토리 변경
         +asCode('javascript').
             // 이동

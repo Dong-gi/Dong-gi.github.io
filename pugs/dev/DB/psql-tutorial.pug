@@ -288,5 +288,20 @@ include ../../../source/skeleton.pug
                     -- 수도를 빼고 도시 고도 500ft 초과의 도시 검색
                     SELECT name, altitude FROM ONLY cities WHERE altitude > 500;
 
+    h1 버전별 기능
+    div
+        h2 PostgreSQL 17
+        ul
+            li merge 명령에서 returning 절 사용 가능
+
+        h2 PostgreSQL 18
+        ul
+            li 비동기 I/O 지원
+            li uuidv7() 지원
+            li not null 제약 조건을 not valid 옵션으로 추가 가능
+            li returning 구문에 OLD/NEW 모두 사용 가능
+            li generated column은 기본적으로 읽기 시점에 계산 (물리적으로 저장되지 않음)
+                p stored 옵션으로 여전히 쓰기 시점에 계산 및 실제 디스크에 기록 가능
+
     h1 기타 쿼리 팁
     +goto('PostgreSQL', '/posts/project/tip.html')

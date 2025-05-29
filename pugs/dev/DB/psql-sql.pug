@@ -530,18 +530,6 @@ include ../../../source/skeleton.pug
                 td double precision, float8
                 td 8 bytes
                 td IEEE 754 배 정밀도 부동소수(최소 유효숫자 15자리)
-            tr
-                td smallserial, serial2
-                td 2 bytes
-                td 자동 증가 정수
-            tr
-                td serial, serial4
-                td 4 bytes
-                td 자동 증가 정수
-            tr
-                td bigserial, serial8
-                td 8 bytes
-                td 자동 증가 정수
         ul
             li decimal, numeric
                 ol
@@ -559,8 +547,9 @@ include ../../../source/skeleton.pug
                         p numeric 타입의 반올림은 0에서 멀어지는 방향으로 이루어진다
             li real, double precision
                 p 'NaN', 'Infinity', '-Infinity' 상수 지원
-            li serial
-                p serial 타입은 1부터 시작하여 자동으로 1씩 증가하는 정수에 대한 표현 편의를 제공한다. 9.6 버전에서는 sequence를 이용함으로써 구현한다
+            li serial -&gt; identity
+                p 1씩 증가하는 정수 타입에는 비표준 serial보다 SQL 표준 identity를 사용할 것이 권장된다
+                
 
         h2 Character Types
         +table()

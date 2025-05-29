@@ -127,7 +127,7 @@ mixin w3img(src, description)
                     img.w3-round(src=(trimmedSrc + '-2000.jpeg'), alt=description, loading='lazy', sizes='auto', width=metadata.width, height=metadata.height)&attributes(attributes)
         else
             img.w3-round(src=src, alt=description, loading='lazy')&attributes(attributes)
-        figcaption
+        figcaption.w3-padding
             | #{'<' + description + '>'}
             +asA(src, '[원본 보기]')&attributes({ target: '_blank' })
 
