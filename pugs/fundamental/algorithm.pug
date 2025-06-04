@@ -285,6 +285,113 @@ include ../../source/skeleton.pug
             h3 Re-hashing; Map resizing
             p 초기 버킷 크기의 일정 비율(예. 75%)을 채운 경우, 버킷 크기를 늘리고(예. 2배) 각 엔트리를 다시 저장
 
+        h2 HyperLogLog
+        div
+            ul
+                li HyperLogLog는 집합 원소 개수를 메모리 효율적으로 추정하는 자료구조로, 전형적으로 1.5KB 메모리로 식[10^9]식 이상의 집합 크기를 2% 표준 오차로 맞춘다고 한다. Redis 모듈에서는 최대 12KB를 이용해 0.81% 표준 오차를 구현한다
+                li 자료구조 특성상 (추가한) 원소의 제거는 지원되지 않는다
+                li 페이지 방문자수, 하루 동안 검색에 사용된 고유 쿼리 개수 집계 등에 사용 가능
+
+            h3 참고자료
+            ul
+                li: +asA('https://sunrise-min.tistory.com/entry/HyperLogLog')
+                    ul
+                        li: +asA('https://chengweihu.com/hyperloglog/')
+                li: +asA('https://en.wikipedia.org/wiki/Flajolet%E2%80%93Martin_algorithm')
+
+            h3 발전과정
+            ul
+                li 해시함수가 이상적으로 균등한 분포를 그려낸다면, leading 또는 trailing zero의 개수에 따른 확률은 다음과 같다
+                    ul
+                        li 1 : 식[1 / 2^1]식
+                        li 2 : 식[1 / 2^2]식
+                        li 3 : 식[1 / 2^3]식
+                li 이러한 관찰을 역으로 이용한다면, 충분한 숫자의 원소를 관찰하여 계산한 leading 또는 trailing zero의 최고 길이를 이용해 전체 원소의 개수를 아래와 같이 추정할 수 있을 것이다
+                    ul
+                        li 1 : 식[2^1]식
+                        li 2 : 식[2^2]식
+                        li 3 : 식[2^3]식
+                li outlier에 의한 오류 가능성 때문에 위 값을 그대로 이용할 수는 없다
+                    ul
+                        li 해시 함수를 여러 개 이용하여 평균을 내거나
+                        li 해시 값 하나를 여러 개로 쪼개어 버킷들의 평균을 내는 방법이 제시되었다
+                li HyperLogLog는 해시 값을 여러 개로 쪼갠 뒤, 각 버킷들에서 추정한 집합의 크기들에 대한 조화 평균을 이용함으로써 오류 발생을 최대한으로 줄인다
+
+        h2 Bloom filter
+        div
+            ul
+                li 블룸 필터는 원소들의 해시 값에 대한 논리합을 기반으로 값이 집합에 속하는지를 판단하는 메모리 효율적인 자료구조다
+                    ol
+                        li 0으로 초기화된 비트열 생성
+                        li 원소 추가 시 k개 해시 함수를 통해 얻은 k개 위치(예. bit_arr[hash_val % bit_arr.length])에 대해 비트 1 설정
+                        li 원소 검색 시 k개 해시 함수를 통해 얻은 k개 위치 중 하나라도 0이면 원소는 집합에 절대 없음. 모든 위치가 1이면 집합에 있을 가능성 높음
+                li 특성상 위양성(집합에 없는 걸 있다고 판단) 오류는 발생 가능하지만 위음성(집합에 있는 걸 없다고 판단) 오류는 발생 불가능하다
+                li 부정적인 답변을 빠르게 얻는 것이 유용한 경우에 적합하다
+                    ul
+                        li 미사용 식별자 예 : 이 닉네임은 이미 사용된 것인지?
+                        li 공격 탐지 예 : 이 IP 주소는 블랙리스트에 등록됐는지?
+                        li 부정 거래 탐지 예 : 고객이 이전에 이 위치에서 결제한 적이 있는지?
+                        li 광고 타게팅 예 : 고객이 이 광고를 이미 봤는지? 이 광고와 관련된 상품을 이미 구매했는지?
+                li 블룸 필터는 처음 생성할 때, 원하는 오류율과 예상하는 집합 크기를 이용해 고정된 크기의 비트열을 만들고 계속 이용한다
+                    ul
+                        li 따라서 예상한 집합 크기를 넘어서서 원소를 계속 추가하면 오류율도 따라서 계속 증가하게 된다
+                        li Redis 구현은 이러한 경우를 대비하여 최초 필터 생성 시 확장 계수를 지정할 수 있다. 지정한 크기에 도달하면 새로운 해시 함수들을 이용하는, 더 큰 크기의 하위 필터가 할당된다
+                            ul
+                                li 확장 전 원소 추가 : 단순히 k개 해시 함수로 얻은 위치를 1로 설정
+                                li 확장 후 원소 추가 : 먼저 각 계층별 멤버십 검사를 수행하여 모두 false로 판단되면, 마지막 계층에서 k+?개의 해시 함수로 얻은 위치를 1로 설정
+
+            h3 참고자료
+            ul
+                li: +asA('https://redis.io/docs/latest/develop/data-types/probabilistic/bloom-filter/')
+                li: +asA('https://en.wikipedia.org/wiki/Bloom_filter')
+
+        h2 Cuckoo filter
+        div
+            ul
+                li 
+
+            h3 Cuckoo hashing
+            ul
+                li 뻐꾸기가 다른 알을 밀어내듯이, 해시테이블에 키를 삽입할 때 이미 자리에 다른 키가 존재하면 다른 위치로 밀어낸다 -- 이 밀어내기는 재귀적으로 반복될 수 있다
+                    ul
+                        li 동일한 해시 함수로는 동일한 결과가 나오므로, 밀려날 위치 계산에는 다른 해시 함수가 사용된다
+                        li 일반적인 구현에서, 2개의 해시테이블에 서로 다른 해시 함수를 사용한다
+                li 두 개의 해시테이블 T1, T2 각각에 해시 함수 h1, h2가 이용될 때,
+                    ul
+                        li 키 x 조회
+                        +asCode('JavaScript').
+                            function lookup(x) {
+                                return T1[h1(x)] === x || T2[h2(x)] === x
+                            }
+
+                        li 키 x 삽입
+                        +asCode('JavaScript').
+                            function insert(x) {
+                                if (lookup(x)) {
+                                    return
+                                }
+                                for (let try = 1; try <= MAX_TRY; try += 1) {
+                                    if (T1[h1(x)] == null) {
+                                        T1[h1(x)] = x
+                                        return
+                                    }
+                                    [x, T1[h1(x)]] = [T1[h1(x)], x]
+                                    if (T2[h2(x)] == null) {
+                                        T2[h2(x)] = x
+                                        return
+                                    }
+                                    [x, T2[h2(x)]] = [T2[h2(x)], x]
+                                }
+                                rehash()
+                                insert(x)
+                            }
+
+            h3 참고자료
+            ul
+                li: +asA('https://redis.io/docs/latest/develop/data-types/probabilistic/cuckoo-filter/')
+                li: +asA('https://en.wikipedia.org/wiki/Cuckoo_filter')
+                li: +asA('https://en.wikipedia.org/wiki/Cuckoo_hashing')
+
     h1 정렬
     p Stability : 정렬 키가 동일한 두 요소의 순서가 정렬 후에도 유지되는 경우
     div

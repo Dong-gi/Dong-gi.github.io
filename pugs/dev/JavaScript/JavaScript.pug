@@ -414,11 +414,50 @@ include ../../../source/skeleton.pug
 
             h3 export * as newName from 'module'
             p 모듈의 defaults를 다시 노출하기만 할 때 편의 제공
+        
+        h2 ES2022
+        div
+            h3 모듈 최상위 레벨 await 가능
+            +asCode('JavaScript').
+                import ...
+
+                await loadSecrets()
+                await readyDB()
+
+            h3 Array.prototype.at()
+            p 음수 인덱스도 지원하는 원소 접근 메서드
+
+            h3 클래스 정의 관련
+            ul
+                li static 프로퍼티와 메서드 정의 가능
+                li constructor() 바깥의 클래스 body에서 프로퍼티 정의 가능
+                li 프로퍼티 또는 getter/setter 식별자를 #으로 시작하면 private
+            
+            h3 정규표현식 d 플래그 추가
+            p 패턴 전체 및 각 캡처링 그룹에 대한 시작/끝 위치를 indices 속성에 제공
+            +asCode('JavaScript').
+                /(aa)(bb)/d.exec('aaabbbccc').indices
+                /*
+                [
+                    [1, 5],
+                    [1, 3],
+                    [3, 5]
+                ]
+                */
 
         h2 WHATWG 2022
         div
             h3: +asA('https://developer.mozilla.org/en-US/docs/Web/API/Window/structuredClone', 'structuredClone(value[, options])')
             p 객체 깊은 복사 지원
+        
+        h2 ES2023
+        div
+            h3 원본 수정 없이 사본을 반환하는 배열 메서드
+            ul
+                li with(index, value) : 지정한 index 원소로 value를 갖는 사본 반환
+                li toSorted(compareFn?) : 정렬된 사본 반환
+                li toReversed() : 원소가 역순인 사본 반환
+                li toSpliced(...) : splice(...)를 수행한 사본 반환
 
         h2 ES2024
         div

@@ -24,6 +24,7 @@ mixin asA(href, text)
                 text = text.replace(/\..+$/, '')
             }
         }
+        text = decodeURIComponent(text)
     a.w3-padding.w3-round-xlarge.w3-small.w3-border.w3-hover-black&attributes({ href })&attributes(attributes)= text
 
 mixin asCode(lan, title)
