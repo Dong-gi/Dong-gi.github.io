@@ -75,6 +75,22 @@ include ../../source/skeleton.pug
             li Run as > Java Application 1회 실행하면 목록에 표시됨
             li: +asA('https://stackoverflow.com/questions/3224364/launch-configuration-shows-up-blank-when-trying-to-export-runnable-jar/3224505', '참고')
 
+    h1 Git
+    div
+        h2 SSH 관련
+        div
+            h3 /Users/xxx/.ssh/config
+            +asCode().
+                Host Donggi-GitHub
+                    HostName github.com
+                    User "Donggi Kim"
+                    IdentityFile /Users/xxx/.ssh/id_rsa
+                    IdentitiesOnly yes
+
+            h3 Windows 소스트리 &gt; PuTTY 최초 인증시 수동 확인
+            +asCode('shell') C:\Users\xxx\AppData\Local\SourceTree\app-3.4.10\tools\putty\plink.exe github.com
+            p login as : git
+
     h1 Heroku
     div
         h2 콘솔 출력 스트림 깨지는 현상 (2023-11-15 및 과거에도 몇 차례)

@@ -411,7 +411,7 @@ async function initCodeBtn() {
                 button.after(codeDiv);
             }
 
-            if (lan === 'javascript') {
+            if (/javascript/i.test(lan)) {
                 const script = asNodes('<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-green">실행</button>');
                 script.onclick = function () {
                     const code = Array.from(codeDiv.querySelectorAll('li')).map(li => li.textContent).join('\n');
@@ -651,6 +651,7 @@ function fillCodeDiv(div, lan, text, displayRange) {
         }
         displayRange.reverse()
 
+        let totalLineCount = 0;
         while (displayRange.length > 0) {
             /** @type {string[]} */
             let displayLineArr = [];
@@ -681,6 +682,7 @@ function fillCodeDiv(div, lan, text, displayRange) {
             }
 
             displayPartArr.push(displayLineArr);
+            totalLineCount += displayLineArr.length;
         }
 
         const ol = document.createElement('ol')
@@ -689,9 +691,12 @@ function fillCodeDiv(div, lan, text, displayRange) {
                 if (lan === 'text') {
                     const li = document.createElement('li');
                     li.innerText = line.replace(/  /gm, '\u00A0');
+                    if (totalLineCount === 1) {
+                        li.style.listStyleType = 'none';
+                    }
                     ol.append(li);
                 } else {
-                    ol.append(asNodes(`<li>${line.replace(/  /gm, '&nbsp;')}</li>`));
+                    ol.append(asNodes(`<li ${totalLineCount === 1 ? 'style="list-style-type:none;"' : ''}>${line.replace(/  /gm, '&nbsp;')}</li>`));
                 }
             }
             if (displayLineArr !== displayPartArr[displayPartArr.length - 1]) {

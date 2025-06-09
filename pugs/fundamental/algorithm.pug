@@ -282,13 +282,24 @@ include ../../source/skeleton.pug
                     li 임의의 해시 값으로부터 원본 입력을 찾기 어려워야 한다
                     li 동일한 해시 값을 산출하는 서로 다른 입력을 찾기 어려워야 한다
                     li 입력과 결과 쌍을 가지고 해시 함수를 구하기 어려워야 한다
+
             h3 Re-hashing; Map resizing
             p 초기 버킷 크기의 일정 비율(예. 75%)을 채운 경우, 버킷 크기를 늘리고(예. 2배) 각 엔트리를 다시 저장
+
+            h3 분산 해시
+            ul
+                li 여러 개 버킷이 해시 함수의 치역을 구간 별로 나눠서 담당한다. 버킷 자체의 크기를 줄이거나 늘리는 대신 버킷 총 개수를 늘리거나 줄인다
+                li 크기 조정이 발생할 때 모든 키를 재배치하는 것은 비용이 너무 크기 때문에, 키를 재배치하는 대신 키에 대한 처리를 "현재 담당 버킷" 뿐만 아니라 "인접 버킷"에서도 처리하도록 한다
+                    ul
+                        li 예를 들어 버킷이 새로 추가된 경우, 해당 구간을 담당하던 이전 버킷들은 키를 즉시 삭제하지 않고, 새로운 버킷의 준비가 완료될 때까지는 읽기 요청을 처리해준다
+                        li 예를 들어 버킷이 장애를 겪는 중이라면, 버킷이 교체되기까지는 인접 버킷이 요청을 대신 처리해준다
+                li 데이터가 균일하게 분포되지 않은 경우, 치역을 일정하게 나눠가지면 버킷 별 가동률이 균일하지 않을 수 있다
+                    p 이러한 경우, 버킷이 담당하는 구간을 잘게 쪼개면 개선될 수 있다. 예. 버킷 3개의 담당 구간을 [B1, B2, B3]처럼 1/3씩 나누는 대신 [B1R1, B2R1, B3R1, B1R2, B2R2, B3R2]와 같이 나누기
 
         h2 HyperLogLog
         div
             ul
-                li HyperLogLog는 집합 원소 개수를 메모리 효율적으로 추정하는 자료구조로, 전형적으로 1.5KB 메모리로 식[10^9]식 이상의 집합 크기를 2% 표준 오차로 맞춘다고 한다. Redis 모듈에서는 최대 12KB를 이용해 0.81% 표준 오차를 구현한다
+                li HyperLogLog는 집합 원소 개수를 메모리 효율적으로 추정하는 확률적 자료구조로, 전형적으로 1.5KB 메모리로 식[10^9]식 이상의 집합 크기를 2% 표준 오차로 맞춘다고 한다. Redis 모듈에서는 최대 12KB를 이용해 0.81% 표준 오차를 구현한다
                 li 자료구조 특성상 (추가한) 원소의 제거는 지원되지 않는다
                 li 페이지 방문자수, 하루 동안 검색에 사용된 고유 쿼리 개수 집계 등에 사용 가능
 
@@ -320,7 +331,7 @@ include ../../source/skeleton.pug
         h2 Bloom filter
         div
             ul
-                li 블룸 필터는 원소들의 해시 값에 대한 논리합을 기반으로 값이 집합에 속하는지를 판단하는 메모리 효율적인 자료구조다
+                li 블룸 필터는 원소들의 해시 값에 대한 논리합을 기반으로 값이 집합에 속하는지를 판단하는 메모리 효율적인 확률적 자료구조다
                     ol
                         li 0으로 초기화된 비트열 생성
                         li 원소 추가 시 k개 해시 함수를 통해 얻은 k개 위치(예. bit_arr[hash_val % bit_arr.length])에 대해 비트 1 설정
@@ -347,24 +358,30 @@ include ../../source/skeleton.pug
 
         h2 Cuckoo filter
         div
+            h3 쿠쿠 필터 특징
             ul
-                li 
+                li 쿠쿠 필터도 원소가 집합에 포함되는지를 판단하기 위한 확률적 자료구조의 일종이다
+                li 키에 대한 시그니처를 저장하므로
+                    ul
+                        li 해시에 대한 논리합만 보존하는 블룸 필터와 달리 원소의 삭제가 가능하다
+                        li 저장한 개수에 따라 메모리 필요량이 늘어나므로 블룸 필터보다 총 메모리 필요량은 더 작을 수도, 더 클 수도 있다
 
             h3 Cuckoo hashing
             ul
                 li 뻐꾸기가 다른 알을 밀어내듯이, 해시테이블에 키를 삽입할 때 이미 자리에 다른 키가 존재하면 다른 위치로 밀어낸다 -- 이 밀어내기는 재귀적으로 반복될 수 있다
                     ul
-                        li 동일한 해시 함수로는 동일한 결과가 나오므로, 밀려날 위치 계산에는 다른 해시 함수가 사용된다
+                        li 동일한 해시 함수로는 동일한 결과가 나오므로, 각 테이블에 서로 다른 해시 함수가 사용된다
                         li 일반적인 구현에서, 2개의 해시테이블에 서로 다른 해시 함수를 사용한다
+                        li 밀어내기를 무한히 할 수는 없으므로, 일정 횟수까지만 밀어내기를 시도하고 이후엔 크기를 키워 새로 해시하거나 삽입을 거절한다
                 li 두 개의 해시테이블 T1, T2 각각에 해시 함수 h1, h2가 이용될 때,
                     ul
-                        li 키 x 조회
+                        li 키 x 조회 예시 코드
                         +asCode('JavaScript').
                             function lookup(x) {
                                 return T1[h1(x)] === x || T2[h2(x)] === x
                             }
 
-                        li 키 x 삽입
+                        li 키 x 삽입 예시 코드
                         +asCode('JavaScript').
                             function insert(x) {
                                 if (lookup(x)) {
@@ -385,12 +402,79 @@ include ../../source/skeleton.pug
                                 rehash()
                                 insert(x)
                             }
+                li 쿠쿠 해싱은 테이블의 절반 미만을 저장하는 동안에는 원하는 상수 시간 내에 동작한다
+
+            h3 쿠쿠 필터 구현
+            ul
+                li 버킷 bucket : 키에 대한 시그니처들을 보존하는 배열 -- 중복을 허용할 지 말지는 특별히 강제되지 않음
+                li 쿠쿠 필터는 총 m개의 버킷을 가지며, 각 버킷은 최대 b개의 시그니처를 저장한다
+                li 키 x가 저장될 수 있는 2개의 버킷을 선택하는 해시
+                    ul
+                        li h1(x) = hash(x)
+                        li h2(x) = h1(x) ⊕ hash(fingerprint(x))
+                    p XOR 연산은 대칭성이 있으므로, 새로운 키로 인해 밀려나야 하는 위치도 시그니처만을 이용해 계산할 수 있다
+                    ul
+                        li h1(x) = h2(x) ⊕ hash(fingerprint(x))
+            
+            h3 RedisBloom 모듈에서 쿠쿠 필터 생성
+            +asCode('shell') CF.RESERVE {key} {capacity} [BUCKETSIZE bucketSize] [MAXITERATIONS maxIterations] [EXPANSION expansion]
+            ul
+                li 용어
+                    ul
+                        li p : 목표하는 위양성 오류 비율
+                        li f : 키에 대한 시그니처 비트 길이 -- RedisBloom 모듈 구현에서는 8
+                        li α : fill rate or load factor (0≤α≤1) -- 원소가 저장됨에 따라 α 값은 올라가지만, 100%를 달성할 순 없으며 어느 임계치(b에 따라 달라짐)에 가까워지는 순간부터 확장이 일어나거나, 더 이상 확장이 불가능하면 삽입이 거절된다
+                        li b : 버킷 크기 -- 최대로 저장할 수 있는 시그니처 개수
+                        li m : 버킷 개수 -- 다른 인자들로부터 자동 결정
+                        li n : 필터에 저장할 것으로 기대하는 총 원소 개수
+
+                li 기본적으로, 쿠쿠 필터의 총 용량(capacity)만 지정하면 된다
+                    ul
+                        li capacity = n*f/α
+                        li f=8 고정이고, n, α는 예상치를 이용
+
+                li 버킷 크기 b
+                    ul
+                        li 기본값은 2. 값이 클수록 α를 개선할 수 있지만 대신 p도 증가하게 된다
+                            p p = b / 128
+                        li b = 1인 경우. α = 55%, p = 0.78% 달성 가능
+                        li b = 3인 경우. α = 80%, p = 2.34% 달성 가능
+                        li b = 4인 경우. α = 95%, p = 3.12% 달성 가능
+
+                li 동일한 키를 여러 번 추가하면, 여러 번 저장됨에 유의
 
             h3 참고자료
             ul
                 li: +asA('https://redis.io/docs/latest/develop/data-types/probabilistic/cuckoo-filter/')
                 li: +asA('https://en.wikipedia.org/wiki/Cuckoo_filter')
                 li: +asA('https://en.wikipedia.org/wiki/Cuckoo_hashing')
+
+        h2 Count-Min Sketch
+        div
+            ul
+                li 블룸 필터와 유사한 기법을 이용하여, 원소의 확률적 빈도를 추정하는 자료구조
+                li CM Sketch는 depth개의 카운터 배열(행)을 가진다
+                    ul
+                        li 각 카운터 배열은 width개의 카운터(열)를 유지한다
+                        li 각 카운터 배열은 서로 다른 해시 함수를 이용해 원소의 위치를 결정한다
+                li 연산 종류
+                    ul
+                        li 원소 삽입 : 각 해시 함수가 가리키는 위치의 카운터를 +1
+                        li 원소 삭제 : 각 해시 함수가 가리키는 위치의 카운터를 -1
+                        li 빈도 추정 : 각 해시 함수가 가리키는 위치의 카운터 중 최솟값 반환
+                            p 식[{\hat {a}}_{i}=\min _{j}\mathrm {count} [j,h_{j}(i)]]식
+                li w = ⌈e/ε⌉ and d = ⌈ln 1/δ⌉일 때, 식[{\hat {a}}_{i}\leq a_{i}+\varepsilon N]식임을 식[1-\delta]식 확률로 보장한다
+                    ul
+                        li e : 자연상수
+                        li δ : 원하는 최소 오류 비율
+                        li ε = 1 - δ
+                li CM Sketch는 자료가 균등하게 분포하는 경우보다는 치우침이 클수록 정확하다
+
+            h3 참고자료
+            ul
+                li: +asA('https://d2.naver.com/helloworld/799782')
+                li: +asA('https://en.wikipedia.org/wiki/Count%E2%80%93min_sketch')
+
 
     h1 정렬
     p Stability : 정렬 키가 동일한 두 요소의 순서가 정렬 후에도 유지되는 경우

@@ -57,30 +57,38 @@ include ../../source/skeleton.pug
         li: +asA('https://1.1.1.1/', '1.1.1.1 + WARP(VPN)')
 
     h1 JSDoc
-    ul
-        li 마크다운 유사 구문
-            +asCode('JavaScript').
-                /**
-                 * # 섹션 제목
-                 *
-                 * - 글머리 기호1
-                 * * 글머리 기호2
-                 *
-                 * **강조**
-                 *
-                 * _이탤릭체_
-                 *
-                 * > 인용 문구
-                 *
-                 * [링크](https://example.com)
-                 *
-                 * ```
-                 * // 코드 블록
-                 * let x = 1
-                 * console.log(x)
-                 * ```
-                 */
-            +w3img('/imgs/202505/23-165129.png')
+    div
+        h2 마크다운 유사 구문
+        +asCode('JavaScript').
+            /**
+             * # 섹션 제목
+             *
+             * - 글머리 기호1
+             * * 글머리 기호2
+             *
+             * **강조**
+             *
+             * _이탤릭체_
+             *
+             * > 인용 문구
+             *
+             * [링크](https://example.com)
+             *
+             * ```
+             * // 코드 블록
+             * let x = 1
+             * console.log(x)
+             * ```
+             */
+        +w3img('/imgs/202505/23-165129.png')
+
+        h2 Pick&lt;Type, Keys&gt; 직접 정의하기
+        +asCode('JavaScript').
+            /**
+             * @typedef {{ [Key in keyof T as Key extends K ? Key : never] : T[Key] }} CustomPick&lt;T, K extends keyof T&gt;
+             * @template T
+             * @template K
+             */
 
     h1 Nox ADB 연결
     ul
@@ -200,6 +208,38 @@ include ../../source/skeleton.pug
                     create index concurrently idx_xxx_2024 on xxx_2024 (xxx);
                     alter index idx_xxx attach partition idx_xxx_2024;
                 p 모든 파티션 테이블에 대해 인덱스가 연결되면 전체 index는 자동으로 VALID 상태로 변경
+
+        h2 실행 중인 프로세스 확인, 종료
+        ul
+            li 프로세스 확인
+                +asCode('sql').
+                    select datname, pid, substr(query, 1, 120), age(clock_timestamp(), query_start) age
+                    from pg_stat_activity
+                    where state = 'active' and query not like '%pg_stat_activity%'
+                    order by age desc
+
+            li 쿼리 취소
+                +asCode('sql') select pg_cancel_backend(pid)
+
+            li 프로세스 종료
+                +asCode('sql') select pg_terminate_backend(pid)
+
+        h2 JDBC 연결 URL 설정
+        ul
+            li ssl=true : 보안 연결 사용
+            li sslmode=no-verify 또는 sslfactory=org.postgresql.ssl.NonValidatingFactory : 서버측 인증서의 유효성을 검증하지 않음
+            li sslrootcert=name.pem : 서버측 인증서의 유효성을 검증할 수 있는 키 파일 지정
+            li stringtype=unspecified : JSONB 쓰기에 오류가 발생하지 않도록 설정
+
+        h2 dead tuple 수 확인
+        +asCode('sql').
+            select relname, n_dead_tup, last_vacuum, last_autovacuum
+            from pg_stat_all_tables
+            where n_dead_tup > 0
+        p 단, vaccum full 수행 시 n_dead_tup이 즉시 갱신되지 않을 수 있음에 유의 -- analyze 실행하면 반영 (참조 : #[+asA('https://pskbigstar.tistory.com/entry/PostgreSQL-dead-tuple-%EB%AA%A8%EB%8B%88%ED%84%B0%EB%A7%81-%EC%8B%9C-%EC%A3%BC%EC%9D%98vacuum-full')])
+
+        h2 대략적인 행 개수 확인
+        +asCode('sql') select relname, reltuples from pg_class order by 1
 
     h1 SQL
     div

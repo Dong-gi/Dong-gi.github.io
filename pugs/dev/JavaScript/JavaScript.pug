@@ -109,14 +109,8 @@ include ../../../source/skeleton.pug
                 li Promise
                 li 생성자, iterable, 반복자, for..of 구문
                 li 신규 컬렉션 : Set, Map, WeakSet, WeakMap
-                li 해체 할당
+                li 배열 해체 할당
                 li ...
-
-        h2 ECMAScript 2016
-        ul
-            li 지수 연산자 **
-            li Array.prototype.includes
-
 
     h1 식별자
     ol
@@ -359,7 +353,12 @@ include ../../../source/skeleton.pug
 
     h1 버전별 신규 기능
     div
-        h2 ES6
+        h2 참고자료
+        ul
+            li: +asA('https://ecma-international.org/publications-and-standards/standards/ecma-262/')
+                p 공식 문서 최상단 "Introduction"에서 버전별 주요 변경 사항이 정리되어 있다
+
+        h2 ES2015, ES6
         div
             h3 Tagged template literal
             div
@@ -375,6 +374,67 @@ include ../../../source/skeleton.pug
                         lan: 'javascript',
                         title: '예시 코드'
                     })
+                p 언어 자체에 내장된 tag function도 있다
+                +asCode('JavaScript') String.raw`C:\Development\profile\about.html`
+
+        h2 ES2016
+        ul
+            li 지수 연산자 **
+            li Array.prototype.includes
+
+        h2 ES2017
+        ul
+            li async function 정의 지원
+            li Object.values, Object.entries, Object.getOwnPropertyDescriptors
+        div
+            h3 Shared Memory, Atomics
+            ul
+                li Atomics는 원자적 연산을 위한 함수들을, Shared Memory는 이를 위한 공유 메모리를 정의한다
+                li 원자적 연산은 Java의 volatile 변수처럼, CPU 코어 수준으로 병렬 실행을 동기화한다
+                li 공유 메모리 구현체는 SharedArrayBuffer인데, 브라우저에서는 기본적으로 비활성화되어 있으므로 사용하기 위해선 명시적인 설정이 필요하다
+            +codeBtn({ path: '/Repositories/Single/202506/09-1435.js', lan: 'JavaScript', title: '예시 코드' })
+
+        h2 ES2018
+        ul
+            li 정규표현식 기능 추가
+                p dotAll flag(/s), named capture groups, Unicode property escapes, look-behind assertions
+        div
+            h3 비동기 반복자
+            p 비동기 반복자는 Promise를 반환하는 반복자
+            +asCode('JavaScript').
+                const asyncIterator = (async function* () {
+                  yield 1;
+                  yield 2;
+                  yield 3;
+                })();
+                (async () => {
+                  for await (const value of asyncIterator) {
+                    console.log(value);
+                  }
+                })();
+
+            h3 객체 해체 할당
+            p Object rest and spread properties
+            +asCode('JavaScript').
+                const obj = {
+                x: [1, 2, 3],
+                y: { a: 4, b: 5, c: 6 },
+                z: [7, 8, 9]
+                }
+                const { x: [x1, ...xRest], y: { a: y1, ...yRest }, ...objRest } = obj
+                console.info(x1)        // 1
+                console.info(xRest)     // [2, 3]
+                console.info(y1)        // 4
+                console.info(yRest)     // {b: 5, c: 6}
+                console.info(objRest)   // {"z": [7, 8, 9]}
+
+        h2 ES2019
+        ul
+            li Array.prototype.flat, flatMap
+            li Object.fromEntries
+            li String.prototype.trimStart, trimEnd
+            li Array.prototype.sort는 이제 stable (정렬 키가 동일한 두 요소의 순서는 정렬 후에도 유지)
+            li JSON.stringify는 입력과 무관하게 well-formed UTF-8 문자열을 반환
 
         h2 ES2020
         div
@@ -389,7 +449,7 @@ include ../../../source/skeleton.pug
             h3 import()
             p import .. from ... 구문과 다르게, 런타임에 변수를 이용해 모듈을 로드한다
 
-            h3 String.matchAll()
+            h3 matchAll() for Strings
             p 전체 문자열에서 정규표현식 매칭을 수행한 결과를 반환한다 -- 기존엔 전문검색을 위해 루프를 실행해야 했다
 
             h3 Promise.allSettled()
@@ -415,7 +475,20 @@ include ../../../source/skeleton.pug
             h3 export * as newName from 'module'
             p 모듈의 defaults를 다시 노출하기만 할 때 편의 제공
         
+        h2 ES2021
+        ul
+            li replaceAll() for Strings
+            li Promise.any()
+            li AggregateError : 여러 에러를 한 번에 표현
+            li ??=, &amp;&amp;=, ||= 연산자 추가
+            li WeakRef : 약한 참조 지원
+            li FinalizationRegistry : 지정한 객체가 GC로 정리된 경우 호출. #[+asA('https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/FinalizationRegistry#notes_on_cleanup_callbacks', '단, 이에 의존하면 안 됨')]
+            li 1_000처럼 리터럴 자리 구분 가능
+
         h2 ES2022
+        ul
+            li 에러 원인을 cause 프로퍼티에 설정 가능
+            li Array.prototype.at() : 음수 인덱스도 지원하는 원소 접근 메서드
         div
             h3 모듈 최상위 레벨 await 가능
             +asCode('JavaScript').
@@ -424,16 +497,13 @@ include ../../../source/skeleton.pug
                 await loadSecrets()
                 await readyDB()
 
-            h3 Array.prototype.at()
-            p 음수 인덱스도 지원하는 원소 접근 메서드
-
             h3 클래스 정의 관련
             ul
                 li static 프로퍼티와 메서드 정의 가능
                 li constructor() 바깥의 클래스 body에서 프로퍼티 정의 가능
-                li 프로퍼티 또는 getter/setter 식별자를 #으로 시작하면 private
+                li 프로퍼티 또는 accessor 식별자를 #으로 시작하면 private
             
-            h3 정규표현식 d 플래그 추가
+            h3 정규표현식 /d 플래그 추가
             p 패턴 전체 및 각 캡처링 그룹에 대한 시작/끝 위치를 indices 속성에 제공
             +asCode('JavaScript').
                 /(aa)(bb)/d.exec('aaabbbccc').indices
@@ -451,6 +521,9 @@ include ../../../source/skeleton.pug
             p 객체 깊은 복사 지원
         
         h2 ES2023
+        ul
+            li 배열에 findLast(), findLastIndex() 추가
+            li 스크립트 첫 줄에 #!(Hashbang; Shebang) 지원
         div
             h3 원본 수정 없이 사본을 반환하는 배열 메서드
             ul
@@ -460,6 +533,10 @@ include ../../../source/skeleton.pug
                 li toSpliced(...) : splice(...)를 수행한 사본 반환
 
         h2 ES2024
+        ul
+            li 정규표현식 /v 플래그 추가
+            li Object.groupBy, Map.groupBy를 이용한 집계
+            li String.prototype.isWellFormed, toWellFormed 추가
         div
             h3 Promise.withResolvers()
             p Promise 객체의 상태 천이를 Promise 정의 바깥에서 하고 싶을 때
