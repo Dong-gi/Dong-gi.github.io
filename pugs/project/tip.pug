@@ -38,7 +38,7 @@ include ../../source/skeleton.pug
         li Ctrl + Shift + T : 클래스 검색
         li Ctrl + Shift + R : 리소스 검색
 
-    h1: +asA('https://ffmpegbyexample.com/', 'FFmpeg 길라잡아')
+    h1: +asA('https://ffmpegbyexample.com/', 'FFmpeg 길라잡이')
 
     h1 Firefox 미디어 자동재생 해제 &amp; 다운로드 설정
     ol
@@ -240,6 +240,25 @@ include ../../source/skeleton.pug
 
         h2 대략적인 행 개수 확인
         +asCode('sql') select relname, reltuples from pg_class order by 1
+
+        h2 UPDATE ... FROM VALUES
+        +asCode('sql').
+            wiz=# insert into t_player_item values (123, 1, 123), (123, 2, 123);
+
+            INSERT 0 2
+
+            wiz=# update t_player_item as t1 set amount = amount + diff
+                  from ( values ('123'::bigint, '1'::int, '1'::int), ('123', '2', '-1') ) as t2 (player_id, item_id, diff)
+                  where t1.player_id = t2.player_id and t1.item_id = t2.item_id
+                  returning *;
+
+             player_id | item_id | amount | player_id | item_id | diff 
+            -----------+---------+--------+-----------+---------+------
+                   123 |       1 |    124 |       123 |       1 |    1
+                   123 |       2 |    122 |       123 |       2 |   -1
+            (2 rows)
+
+            UPDATE 2
 
     h1 SQL
     div

@@ -253,6 +253,39 @@ include ../../source/skeleton.pug
             +asCode('sql') select distinct pg_terminate_backend(pid) from pg_stat_activity where client_addr = 'x.x.x.x';
             li: +asA('https://stackoverflow.com/a/32584211/7369515', '참고')
 
+    h1 로그 유실?
+    div
+        h2 파이프 제한으로 쓰기가 무시(그리고 유실)될 수 있다
+        ul
+            li 참고 자료 : #[+asA('https://nodejs.org/api/stream.html#writablewritechunk-encoding-callback')], #[+asA('https://sxlijin.github.io/2024-10-09-node-stdout-disappearing-bytes')]
+            li 스트림 쓰기는 OS와 스트림이 어디에 연결됐는가에 따라 동기적일수도, 비동기적일수도 있다
+                +table()
+                    +ths('', 'Windows', 'POSIX')
+                    +tds('File', 'sync', 'sync')
+                    +tds('TTY', 'async', 'sync')
+                    +tds('Pipe and Socket', 'sync', 'async')
+            li Node의 writable.write()는 'drain' 이벤트를 대기하는 동안에는 false를 반환하고 쓰기를 수행하지 않는다
+            li 이로 인해 스트림을 파일에 쓸 때와, 다른 프로세스로 파이프할 때 결과가 다를 수 있다
+                +asCode('shell').
+                    $ node -e "console.log('@'.repeat(128 * 1024)); process.exit(0);" | wc -c
+                       65536
+
+                    $ node -e "console.log('@'.repeat(128 * 1024)); process.exit(0);" > node-stdout-test.out && wc -c node-stdout-test.out
+                      131073 node-stdout-test.out
+
+        h2 logrotate 롤링 시점의 로그가 유실될 수 있다
+        ul
+            li 참고 자료 : #[+asA('https://linux.die.net/man/8/logrotate')], #[+asA('https://brunch.co.kr/@alden/27')]
+            li copytruncate 옵션은 편리하지만, copy 후 truncate 하는 사이에 기록된 로그는 유실될 수 있다 -- copy가 오래 걸릴수록 유실되는 크기도 커진다
+                p Note that there is a very small time slice between copying the file and truncating it, so some logging data might be lost
+            li 따라서 copytruncate 옵션이 적합하지 않은 경우, 프로세스에 시그널을 보내 새로운 파일(이름이 이전과 동일하든 그렇지 않든)에 로그를 기록하도록 지시하는 것이 좋다
+                +asCode('text', 'Nginx 예.').
+                    postrotate
+                        if [ -f /.../nginx.pid ]; then
+                            kill -USR1 $(cat /.../nginx.pid)
+                        fi
+                    endscript
+
     h1 서버 응답이 잘려서 올 때
     ol
         li Linux > docker-machine > container(서버) 환경에서, Linux 서버의 용량이 부족할 때 이하의 현상이 발생함을 확인
