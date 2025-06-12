@@ -56,7 +56,7 @@ include ../../source/skeleton.pug
         li: +asA('http://unicorn-adblock.com/%ec%9c%a0%eb%8b%88%ec%bd%98-https-for-windows/', '유니콘 HTTPS')
         li: +asA('https://1.1.1.1/', '1.1.1.1 + WARP(VPN)')
 
-    h1 JSDoc
+    h1 JSDoc or TypeScript
     div
         h2 마크다운 유사 구문
         +asCode('JavaScript').
@@ -89,6 +89,24 @@ include ../../source/skeleton.pug
              * @template T
              * @template K
              */
+
+        h2 URL path parameter에 대한 타입 자동완성
+        ul
+            li JSDoc 예.
+                +codeBtn({ path: '/Repositories/Single/202506/12-1137.js', lan: 'JavaScript' })
+                +w3img('/imgs/202506/Screenshot 2025-06-12 at 11.35.30 AM.png')
+            li TypeScript 예.
+                +codeBtn({ path: '/Repositories/Single/202506/12-1137.ts', lan: 'TypeScript' })
+                +w3img('/imgs/202506/Screenshot 2025-06-12 at 11.36.31 AM.png')
+
+        h2 배열 원소 타입 자동완성
+        ul
+            li JSDoc 예.
+                +codeBtn({ path: '/Repositories/Single/202506/12-1421.js', lan: 'JavaScript' })
+                +w3img('/imgs/202506/Screenshot 2025-06-12 at 2.21.17 PM.png')
+            li TypeScript 예.
+                +codeBtn({ path: '/Repositories/Single/202506/12-1422.ts', lan: 'TypeScript' })
+                +w3img('/imgs/202506/Screenshot 2025-06-12 at 2.26.25 PM.png')
 
     h1 Nox ADB 연결
     ul
