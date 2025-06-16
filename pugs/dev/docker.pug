@@ -125,6 +125,23 @@ include ../../source/skeleton.pug
                     p 경로에 공백이 있는 경우 " 이용
                 li ADD보다 제한됨 : 컨테이너 내부 파일만 복사 가능. 로컬 tar 자동 압축 해제 X
                     p 중간 이미지로부터 복사 예 : COPY --from=build /bin/project /bin/project
+                li 최종 런타임 이미지의 크기를 줄이기 위해 사용된다
+                    +asCode().
+                        # 빌드 단계에선 개발 도구를 포함한 기본 이미지 사용
+                        FROM node:lts AS build
+
+                        RUN npm run build
+
+                        # 런타임 단계에선 실행을 위한 최소한의 기본 이미지 사용
+                        FROM node:lts-slim AS runtime
+
+                        WORKDIR /app
+                        COPY --from=build /app/.output .
+
+                        ENV NODE_ENV=production
+                        EXPOSE 3000
+
+                        CMD ["node", "/app/.output/index.mjs"]
         li.marker VOLUME
             ul
                 li 예. VOLUME /var/log /var/db

@@ -362,8 +362,8 @@ function initNav() {
     });
 
     document.getElementById('query').onkeydown = function (e) {
-        /* https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_values */
-        if (e.code === 'Enter') {
+        /* https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values */
+        if (e.key === 'Enter') {
             openLink(`https://github.com/search?q=repo:Dong-gi/Dong-gi.github.io+${encodeURIComponent(e.target.value)}&type=code`, '_blank');
             e.stopPropagation();
             return false;

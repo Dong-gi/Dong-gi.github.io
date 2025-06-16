@@ -5,13 +5,48 @@ include ../../source/skeleton.pug
     description: '잡다한 팁',
 })
 
-    h1 Chrome 디버깅
-    ol
-        li 자료 : https://subicura.com/2018/02/14/javascript-debugging.html
-        li jQuery 등의 라이브러리 중단 생략 : Blackboxing에 패턴 추가
-        li 특정 도메인으로의 요청 시 중단 : XHR/fetch Breakpoints 추가
-        li DOM 변경 시 중단 : Elements 탭의 타깃 요소 - 우클릭 - Break on 설정
-        li 지역변수를 콘솔에서 사용 : 변수 - 우클릭 - Store as global variable
+    h1 AWS
+    div
+        h2 CloudWatch &gt; Logs Insights
+        div
+            h3 GLOB 패턴을 이용한 필드 추출
+            +asCode('sql').
+                fields @timestamp, @message
+                | parse @message "\"pid\":*," as pid
+                | parse @message "\"url\":\"*\"" as url
+                | display @timestamp, pid, url, @message
+                | sort @timestamp desc
+                | limit 10000
+
+            h3 JSON 프로퍼티 존재 여부 확인
+            +asCode('sql').
+                fields @timestamp, isPresent(detail.hpDiff) as isHp, isPresent(detail.mpDiff) as isMp
+                | filter event = "battle-action"
+                | stats sum(isHp) as hpChangedCount, sum(isMp) as mpChangedCount
+        
+            h3 정규식을 이용한 필드 추출
+            p 아래 쿼리에서, abs()는 문자열을 숫자로 변환하기 위해 사용됨
+            +asCode('sql').
+                fields @timestamp, @message
+                | filter @message like /SOME_TARGET_MESSAGE/
+                | parse @message /"targetProperty":(?<targetCount>\d+)/
+                | stats sum(abs(targetCount)) by bin(1h)
+
+        h2 S3
+        div
+            h3 공통 접두어 획득
+            +asCode('shell') $ aws s3api list-objects-v2 --bucket BUCKET_NAME --delimiter / --query 'CommonPrefixes[].Prefix'
+
+            h3 삭제된 객체 복구
+            ul
+                li 버전 관리 활성화 필요함에 유의
+                li 객체 삭제 마커를 삭제함으로써 객체를 복원한다
+            +asCode('shell').
+                # 삭제된 객체 목록 획득
+                $ aws s3api list-object-versions --bucket BUCKET_NAME --prefix tmp/ --query 'DeleteMarkers[?IsLatest==`true`]'
+                
+                # 삭제된 객체 복구
+                $ aws s3api list-object-versions --bucket BUCKET_NAME --prefix tmp/ --output json --query 'DeleteMarkers[?IsLatest==`true`].[Key, VersionId]' | jq -r '.[] | "--key '\''" + .[0] + "'\'' --version-id " + .[1]' | xargs -L1 aws s3api delete-object --bucket BUCKET_NAME
 
     h1 DNS
     ul
@@ -19,7 +54,7 @@ include ../../source/skeleton.pug
         li 8.8.8.8 : Google
 
     h1 Eclipse 단축키
-    ol
+    ul
         li Ctrl + Shift + L : 전체 단축키 목록
         li F3 : 정의로 이동
         li F4 : Type hierarchy
@@ -40,73 +75,10 @@ include ../../source/skeleton.pug
 
     h1: +asA('https://ffmpegbyexample.com/', 'FFmpeg 길라잡이')
 
-    h1 Firefox 미디어 자동재생 해제 &amp; 다운로드 설정
-    ol
-        li about:config 접속
-        li media.play-stand-alone 항목 false로 설정
-
     h1 Google Play Store 인앱 결제 상품 변경 사항을 바로 적용
     ol
         li 변경할 부분들을 모두 변경한 다음 상품을 '비활성' 상태로 저장
         li 상품을 다시 '활성' 상태로 저장하면 변경 사항이 즉시 반영된다
-
-    h1 HTTPS 차단 우회, VPN
-    ul
-        li: +asA('https://github.com/ValdikSS/GoodbyeDPI/releases', 'GoodbyeDPI')
-        li: +asA('http://unicorn-adblock.com/%ec%9c%a0%eb%8b%88%ec%bd%98-https-for-windows/', '유니콘 HTTPS')
-        li: +asA('https://1.1.1.1/', '1.1.1.1 + WARP(VPN)')
-
-    h1 JSDoc or TypeScript
-    div
-        h2 마크다운 유사 구문
-        +asCode('JavaScript').
-            /**
-             * # 섹션 제목
-             *
-             * - 글머리 기호1
-             * * 글머리 기호2
-             *
-             * **강조**
-             *
-             * _이탤릭체_
-             *
-             * > 인용 문구
-             *
-             * [링크](https://example.com)
-             *
-             * ```
-             * // 코드 블록
-             * let x = 1
-             * console.log(x)
-             * ```
-             */
-        +w3img('/imgs/202505/23-165129.png')
-
-        h2 Pick&lt;Type, Keys&gt; 직접 정의하기
-        +asCode('JavaScript').
-            /**
-             * @typedef {{ [Key in keyof T as Key extends K ? Key : never] : T[Key] }} CustomPick&lt;T, K extends keyof T&gt;
-             * @template T
-             * @template K
-             */
-
-        h2 URL path parameter에 대한 타입 자동완성
-        ul
-            li JSDoc 예.
-                +codeBtn({ path: '/Repositories/Single/202506/12-1137.js', lan: 'JavaScript' })
-                +w3img('/imgs/202506/Screenshot 2025-06-12 at 11.35.30 AM.png')
-            li TypeScript 예.
-                +codeBtn({ path: '/Repositories/Single/202506/12-1137.ts', lan: 'TypeScript' })
-                +w3img('/imgs/202506/Screenshot 2025-06-12 at 11.36.31 AM.png')
-
-        h2 배열 원소 타입 자동완성
-        ul
-            li JSDoc 예.
-                +codeBtn({ path: '/Repositories/Single/202506/12-1421.js', lan: 'JavaScript' })
-                +w3img('/imgs/202506/Screenshot 2025-06-12 at 2.21.17 PM.png')
-            li TypeScript 예.
-                +codeBtn({ path: '/Repositories/Single/202506/12-1422.ts', lan: 'TypeScript' })
-                +w3img('/imgs/202506/Screenshot 2025-06-12 at 2.26.25 PM.png')
 
     h1 Nox ADB 연결
     ul
@@ -277,6 +249,66 @@ include ../../source/skeleton.pug
             (2 rows)
 
             UPDATE 2
+        
+        h2 시각 차이 획득
+        +asCode('sql') select abs(extract (epoch from (insert_datetime - '2019-07-04 19:39:55'::timestamp)));
+
+        h2 시간대 변경
+        +asCode('sql').
+            with tmp as (
+                select '2024-11-03 08:30:00'::timestamp t
+                union all
+                select '2024-11-03 09:30:00'::timestamp t
+            )
+            select
+                t,
+                t at time zone 'Asia/Seoul',
+                t at time zone 'America/Los_Angeles',
+                (t at time zone 'UTC') at time zone 'Asia/Seoul',
+                (t at time zone 'UTC') at time zone 'America/Los_Angeles'
+            from tmp;
+
+                      t          |        timezone        |        timezone        |      timezone       |      timezone       
+            ---------------------+------------------------+------------------------+---------------------+---------------------
+             2024-11-03 08:30:00 | 2024-11-02 23:30:00+00 | 2024-11-03 16:30:00+00 | 2024-11-03 17:30:00 | 2024-11-03 01:30:00
+             2024-11-03 09:30:00 | 2024-11-03 00:30:00+00 | 2024-11-03 17:30:00+00 | 2024-11-03 18:30:00 | 2024-11-03 01:30:00
+            (2 rows)
+
+        h2 테이블 목록 획득
+        +asCode('sql') select * from information_schema.tables
+
+        h2 테이블 정보 획득
+        +asCode('sql') select * from information_schema.columns where table_name = '{tableName}'
+
+        h2 테이블 기본 키 획득
+        +asCode('sql').
+            SELECT pg_attribute.attname as column FROM pg_index, pg_class, pg_attribute, pg_namespace
+            WHERE
+                pg_class.oid = '{tableName}'::regclass AND
+                indrelid = pg_class.oid AND
+                nspname = 'public' AND
+                pg_class.relnamespace = pg_namespace.oid AND
+                pg_attribute.attrelid = pg_class.oid AND
+                pg_attribute.attnum = any(pg_index.indkey) AND
+                indisprimary;
+
+        h2 변수를 이용하는 쿼리에 대한 explain 실행
+        +asCode('sql').
+            prepare test(bigint, int, int) as
+                insert into t_player_item values ($1, $2, $3);
+
+            explain analyze execute test(3, 4, 5);
+
+            deallocate test;
+
+    h1 psql
+    ul
+        li \x : 컬럼이 너무 많아 보기 힘든 경우, 컬럼을 행마다 구분하여 표시
+        li \pset null '[NULL]' : null을 알기 쉬운 대체 문자열로 표시
+        li \copy (select * from some_table) to 'my_file.csv' CSV HEADER
+        li \o output.txt
+        li \i query.sql
+        li ~/.psqlrc : psql 세션 시작할 때마다 가장 먼저 실행
 
     h1 SQL
     div
@@ -287,6 +319,13 @@ include ../../source/skeleton.pug
             li 종료 시각 대신 interval을 이용할 수 있다
                 p (start1, length1) OVERLAPS (start2, length2)
             li 구간의 시작 시각과 종료 시각이 같은 경우, 구간은 지정된 시각에 한정된다
+
+        h2 null을 일반값으로 취급하여 비교
+        p x is (not) distinct from y
+
+    h1 Shell > 세션 동안 SSH 인증 정보 기억하기
+    p 참고자료 : #[+asA('https://gist.github.com/nepsilon/45fae11f8d173e3370c3')]
+    +asCode('shell') $ ssh-add .ssh/my_key
 
     h1 SSL 인증서
     div
@@ -329,13 +368,8 @@ include ../../source/skeleton.pug
             li 전용 키에 privkey.pem 설정
 
     h1 SVG 크기가 안 맞을 때
-    ol
-        li SVG; Scalable Vector Graphics
-        p XML로 서술되는 벡터 그래픽. 예
-            +asA('https://image.flaticon.com/icons/svg/53/53260.svg')
-        li html 노드로 설정한 크기에 맞게 출력되지 않는 경우
-        p svg 파일을 텍스트 에디터로 열어 width, height 속성을 삭제하고, 대신 viewBox 등으로 출력 범위를 지정
-        +asCode('xml') &lt;svg width="" height=""> → &lt;svg viewBox="0 0 100 100">
+    p html 노드로 설정한 크기에 맞게 출력되지 않는 경우, svg 파일을 텍스트 에디터로 열어 width, height 속성을 삭제하고, 대신 viewBox 등으로 출력 범위를 지정
+    +asCode('xml') &lt;svg width="" height=""> → &lt;svg viewBox="0 0 100 100">
 
     h1 TCP_NODELAY 옵션 활성화
     ul
@@ -391,7 +425,7 @@ include ../../source/skeleton.pug
         li.marker 부트매니저 설정
         ul
             li SSD에 설치한 윈도우가 BIOS 설정에서는 검색되지 않는 경우에 대해 해결됨 확인
-            li 자료 : https://m.blog.naver.com/pspsim/221141734669
+            li: +asA('https://m.blog.naver.com/pspsim/221141734669', '참고 자료')
             ol
                 li msconfig 실행
                 li 부팅 메뉴에서 기본값 설정, 불필요한 부팅 옵션 삭제 등 처리 후 저장
@@ -399,7 +433,7 @@ include ../../source/skeleton.pug
         li.marker SSD 인식 불량 해결
         ul
             li 파티션은 활성 상태인데 볼륨은 비활성 상태인 경우에 대해 해결됨 확인
-            li 자료 : https://kin.naver.com/qna/detail.nhn?d1id=1&dirId=1010305&docId=291566434&qb=7KeI66y4CSDtlZjrk5zrlJTsiqTtgawg7J247Iud7J20IOyViOuQmOuEpOyalA==&enc=utf8&section=kin&rank=2&search_sort=0&spq=0
+            li: +asA('https://kin.naver.com/qna/detail.nhn?d1id=1&dirId=1010305&docId=291566434&qb=7KeI66y4CSDtlZjrk5zrlJTsiqTtgawg7J247Iud7J20IOyViOuQmOuEpOyalA==', '참고 자료')
             +asCode('shell').
                 diskpart
                 list disk
@@ -412,8 +446,67 @@ include ../../source/skeleton.pug
                 format fs=ntfs quick # 빠른 포맷 진행
                 exit
 
-    h1 기레기 고소 방법
-    +w3img('/imgs/201906/20190629_155650.jpg')
+    h1 브라우저
+    div
+        h2 Chromium 콘솔
+        ul
+            li $0 ~ $4 : 최근 선택한 element(또는 JavaScript object) 참조
+            li $(selector), $$(selector) : 각각 parent.querySelector(), parent.querySelectorAll()의 축약
+            li copy(object) : 클립보드에 객체 문자열 표현 복사
+            li debug(function) ↔ undebug : 해당 함수가 호출되면 자동 중단
+            li inspect(element or function) : Elements 또는 Sources 탭에서 해당 요소 표시
+            li monitor(function) ↔ unmonitor : 해당 함수가 호출되면 인자 출력
+            li monitorEvents(object[, events]) ↔ unmonitorEvents : 이벤트가 발생하면 출력
+            li queryObjects(constructor) : 해당 생성자로 만들어진 객체 목록 출력
+            li table(data[, columns]) : 객체를 테이블로 출력
+
+        h2 Firefox 미디어 자동재생 해제 &amp; 다운로드 설정
+        ol
+            li about:config 접속
+            li media.play-stand-alone 항목 false로 설정
+
+        h2 https://maplestory.fandom.com/wiki/Music
+        p 메이플스토리 OST 다운로드
+        +codeBtn('/Repositories/JavaScript/Browser/maplestory.fandom.com.js', 'javascript')
+
+        h2 https://www.steamgifts.com/
+        p 게임 나눔 자동 참여
+        +codeBtn('/Repositories/JavaScript/Browser/steamgifts.com.js', 'javascript')
+
+        h2 PC 연결 없이 모바일 브라우저 디버깅
+        ul
+            li #[+asA('https://github.com/liriliri/eruda')]
+                +asCode('html').
+                    &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/3.3.0/eruda.min.js"&gt;&lt;/script&gt;
+                    &lt;script&gt;
+                      eruda.init({useShadowDom: false});
+                      eruda.position({x:0,y:0});
+                      document.querySelector('.eruda-container').style.height = '80vh';
+                    &lt;/script&gt;
+            li #[+asA('https://github.com/Tencent/vConsole')]
+                +asCode('html').
+                    &lt;script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"&gt;&lt;/script&gt;
+                    &lt;script&gt;
+                      var vConsole = new window.VConsole();
+                    &lt;/script&gt;
+
+        h2 넷플릭스 작품 정보 복사
+        +codeBtn({ path: '/Repositories/JavaScript/Browser/netflix.js', lan: 'javascript', title: '북마클릿' })
+
+        h2 이미지 인코딩/디코딩
+        ol
+            li 비트열 a, b에 대하여 (a ^ b) ^ b = a임을 이용
+            li 인코딩 ::= 기존 데이터의 각 바이트에 대하여, data[i] ^= mask[i]
+            li 디코딩 ::= 인코딩된 데이터 각 바이트에 대하여, data[i] ^= mask[i]
+            li 따라서 XOR에 이용하는 mask만 정확히 재현할 수 있다면 빠르게 in-place 인코딩/디코딩이 가능하다
+        ul
+            li: +codeBtn('/Repositories/Single/202202/imageEncoding.html', 'nohighlight') View live
+            li
+                +codeBtn('/Repositories/Single/202202/imageEncoding.html', 'javascript', '[45,66]') encode()
+                +codeBtn('/Repositories/Single/202202/imageEncoding.html', 'javascript', '[68,87]') decode()
+
+        h2 핫딜 목록 정리 (추천수 5이상만 남기기)
+        +codeBtn({ path: '/Repositories/JavaScript/Browser/hot-deal.js', lan: 'javascript', title: '북마클릿' })
 
     h1 도메인 구입 전 확인할 것
     ul
@@ -422,23 +515,6 @@ include ../../source/skeleton.pug
         li: +asA('https://transparencyreport.google.com/copyright/domains/musicbox.fun', 'Google Transparency Report > 저작권 위반 삭제 요청')
         li: +asA('https://lumendatabase.org/', 'DMCA 신고 검색')
         li: +asA('https://web.archive.org/', '이전 스냅샷 검색')
-
-    h1 모바일 브라우저 디버깅
-    ul
-        li #[+asA('https://github.com/liriliri/eruda')]
-            +asCode('html').
-                &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/3.3.0/eruda.min.js"&gt;&lt;/script&gt;
-                &lt;script&gt;
-                  eruda.init({useShadowDom: false});
-                  eruda.position({x:0,y:0});
-                  document.querySelector('.eruda-container').style.height = '80vh';
-                &lt;/script&gt;
-        li #[+asA('https://github.com/Tencent/vConsole')]
-            +asCode('html').
-                &lt;script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"&gt;&lt;/script&gt;
-                &lt;script&gt;
-                  var vConsole = new window.VConsole();
-                &lt;/script&gt;
 
     h1 암호화 알고리즘 선택
     ul
@@ -464,74 +540,159 @@ include ../../source/skeleton.pug
             li 특문 : [\u3000-\u303F\uFF00-\uFF9F]
             li 전체 : [\u3041-\u3096\u30A1-\u30FA\u4E00-\u9FEF\u3400-\u4DBF\uF900-\uFADF\u3000-\u303F\uFF00-\uFF9F]
 
-    h1 지리정보 색인
-    div
-        h2 균등 격자(even grid)
-        ul
-            li 지도의 위도/경도를 각각 균등하게 나눈다
-            li 단순하지만, 각 격자의 정보 밀도가 심하게 차이날 수 있다
-            p 예. 사막/대양을 주로 포함하는 격자 vs 도심을 포함하는 격자
+        h2: +asA('https://www.owasp.org/index.php/Password_special_characters', '특수문자 영어 이름')
+        +table()
+            +ths('Character','Name','Unicode')
+            +tds('','Space','U+0020')
+            +tds('!','Exclamation','U+0021')
+            +tds('"','Doublequote','U+0022')
+            +tds('#','Numbersign(hash)','U+0023')
+            +tds('$','Dollarsign','U+0024')
+            +tds('%','Percent','U+0025')
+            +tds('&','Ampersand','U+0026')
+            +tds("'",'Singlequote','U+0027')
+            +tds('(','Leftparenthesis','U+0028')
+            +tds(')','Rightparenthesis','U+0029')
+            +tds('*','Asterisk','U+002A')
+            +tds('+','Plus','U+002B')
+            +tds(',','Comma','U+002C')
+            +tds('-','Minus','U+002D')
+            +tds('.','Fullstop','U+002E')
+            +tds('/','Slash','U+002F')
+            +tds(':','Colon','U+003A')
+            +tds(';','Semicolon','U+003B')
+            +tds('<','Lessthan','U+003C')
+            +tds('=','Equalsign','U+003D')
+            +tds('>','Greaterthan','U+003E')
+            +tds('?','Questionmark','U+003F')
+            +tds('@','Atsign','U+0040')
+            +tds('[','Leftbracket','U+005B')
+            +tds('\\','Backslash','U+005C')
+            +tds(']','Rightbracket','U+005D')
+            +tds('^','Caret','U+005E')
+            +tds('_','Underscore','U+005F')
+            +tds('`','Graveaccent(backtick)','U+0060')
+            +tds('{','Leftbrace','U+007B')
+            +tds('|','Verticalbar','U+007C')
+            +tds('}','Rightbrace','U+007D')
+            +tds('~','Tilde','U+007E')
 
-        h2 지오해시(geohash)
-        ul
-            li 지도 전체에 대해 적용한 균등 격자를, 다시 각 격자에 재귀적으로 적용한다
-            li 격자를 재귀적으로 나누면서 고유한 주소를 할당한다
-            p 예를 들어, 위도/경도를 각각 2등분하는 경우
+        h2 한글 종성 구분
+        ol
+            li 한글은 0xAC00('가')부터 0xD7A3('힣')까지 총 11,172자가 정의
+            li 11,172 = 초성 19 * 중성 21 * 종성 28(종성 없는 경우 포함)
+                +asA('http://www.unicode.org/Public/UNIDATA/EastAsianWidth.txt')
+            li 코드 포인트 = (초성 인덱스 * 21 + 중성 인덱스) * 28 + 종성 인덱스 + '가'0xAC00
             ul
-                li 1단계 분할 : 주소 0 ~ 3 할당. 격자 크기 = 약 20,000km^2
-                li 2단계 분할 : 주소 00 ~ 33 할당. 격자 크기 = 약 10,000km^2
-                li 3단계 분할 : 주소 000 ~ 333 할당. 격자 크기 = 약 5,000km^2
-            li 두 격자 주소의 접두어가 충분히 일치하다면 두 격자는 인접하다
-            p 역은 성립하지 않는다
-
-        h2 쿼드트리(quadtree)
-        ul
-            li 격자를 재귀적으로 나누어 지오해시를 구성하는 경우, 사막/대양도 잘게 나뉘어 결과적으로 아무런 정보를 갖지 않는 격자의 수가 크게 늘어나게 된다
-            li 쿼드트리에서는 트리 각 노드의 정보가 임계값 이상으로 많은 경우에만 재귀적으로 쪼갠다
-
-        h2 구글 S2
-        ul
-            li 지구를 힐베르트 곡선이라는 공간 채움 곡선을 이용하여 1차원으로 색인한다
-            li 힐베르트 곡선 상에서 인접한 두 지점은 색인 이후에도 인접한 위치에 있음이 보장된다
-            li 특정 지점 반경 몇 km 이내, 스쿨 존과 같은 지오펜스 설정이 가능하다
+                li (코드 포인트 - '가'0xAC00) % 28 = 종성 인덱스
+                li (코드 포인트 - 종성 인덱스 - '가'0xAC00) / 28 % 21 = 중성 인덱스
+                li ((코드 포인트 - 종성 인덱스 - '가'0xAC00) / 28 - 중성 인덱스) / 21 = 초성 인덱스
+            li 조사 처리 예시 코드
+                +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/HangulUtility.java', 'java')
 
     h1 운전면허증 분실 시
     p 운전면허증 분실 신고가 따로 존재하지 않기 때문에, 재발급 신청으로 기존 면허증을 만료시켜야 한다
 
-    h1 특수문자 영문명
-    +asA('https://www.owasp.org/index.php/Password_special_characters', '참고자료')
-    +table()
-        +ths('Character','Name','Unicode')
-        +tds('','Space','U+0020')
-        +tds('!','Exclamation','U+0021')
-        +tds('"','Doublequote','U+0022')
-        +tds('#','Numbersign(hash)','U+0023')
-        +tds('$','Dollarsign','U+0024')
-        +tds('%','Percent','U+0025')
-        +tds('&','Ampersand','U+0026')
-        +tds("'",'Singlequote','U+0027')
-        +tds('(','Leftparenthesis','U+0028')
-        +tds(')','Rightparenthesis','U+0029')
-        +tds('*','Asterisk','U+002A')
-        +tds('+','Plus','U+002B')
-        +tds(',','Comma','U+002C')
-        +tds('-','Minus','U+002D')
-        +tds('.','Fullstop','U+002E')
-        +tds('/','Slash','U+002F')
-        +tds(':','Colon','U+003A')
-        +tds(';','Semicolon','U+003B')
-        +tds('<','Lessthan','U+003C')
-        +tds('=','Equalsign','U+003D')
-        +tds('>','Greaterthan','U+003E')
-        +tds('?','Questionmark','U+003F')
-        +tds('@','Atsign','U+0040')
-        +tds('[','Leftbracket','U+005B')
-        +tds('\\','Backslash','U+005C')
-        +tds(']','Rightbracket','U+005D')
-        +tds('^','Caret','U+005E')
-        +tds('_','Underscore','U+005F')
-        +tds('`','Graveaccent(backtick)','U+0060')
-        +tds('{','Leftbrace','U+007B')
-        +tds('|','Verticalbar','U+007C')
-        +tds('}','Rightbrace','U+007D')
-        +tds('~','Tilde','U+007E')
+    h1 코드 조각
+    div
+        h2 C# > Console Redirect
+        +codeBtn('/Repositories/VisualStudio/WpfApp8/Utility/ConsoleRedirectWriter.cs', 'cs')
+
+        h2 C# > Naive HTTP Server
+        +codeBtn('/Repositories/VisualStudio/WpfApp8/Utility/NaiveHttpServer.cs', 'cs')
+
+        h2 JavaScript > CSV 파서
+        +codeBtn('/Repositories/JavaScript/CSV/parseCSV.js', 'javascript')
+
+        h2 JSDoc > .d.ts 생성
+        p 참고자료 : #[+asA('https://www.typescriptlang.org/ko/docs/handbook/declaration-files/dts-from-js.html')]
+        +asCode('shell', 'CLI 실행 예시') npx typescript src/**/*.js --declaration --allowJs --emitDeclarationOnly --outDir dist/types
+
+        h2 JSDoc > 마크다운 유사 구문 
+        +asCode('JavaScript').
+            /**
+             * # 섹션 제목
+             *
+             * - 글머리 기호1
+             * * 글머리 기호2
+             *
+             * **강조**
+             *
+             * _이탤릭체_
+             *
+             * > 인용 문구
+             *
+             * [링크](https://example.com)
+             *
+             * ```
+             * // 코드 블록
+             * let x = 1
+             * console.log(x)
+             * ```
+             */
+        +w3img('/imgs/202505/23-165129.png')
+
+        h2 JSDoc, TypeScript > Pick&lt;Type, Keys&gt; 직접 정의하기
+        +asCode('JavaScript').
+            /**
+             * @typedef {{ [Key in keyof T as Key extends K ? Key : never] : T[Key] }} CustomPick&lt;T, K extends keyof T&gt;
+             * @template T
+             * @template K
+             */
+
+        h2 JSDoc, TypeScript > URL path parameter에 대한 타입 자동완성
+        ul
+            li JSDoc 예.
+                +codeBtn({ path: '/Repositories/Single/202506/12-1137.js', lan: 'JavaScript' })
+                +w3img('/imgs/202506/Screenshot 2025-06-12 at 11.35.30 AM.png')
+            li TypeScript 예.
+                +codeBtn({ path: '/Repositories/Single/202506/12-1137.ts', lan: 'TypeScript' })
+                +w3img('/imgs/202506/Screenshot 2025-06-12 at 11.36.31 AM.png')
+
+        h2 JSDoc > TypeScript 배열 원소 타입 자동완성
+        ul
+            li JSDoc 예.
+                +codeBtn({ path: '/Repositories/Single/202506/12-1421.js', lan: 'JavaScript' })
+                +w3img('/imgs/202506/Screenshot 2025-06-12 at 2.21.17 PM.png')
+            li TypeScript 예.
+                +codeBtn({ path: '/Repositories/Single/202506/12-1422.ts', lan: 'TypeScript' })
+                +w3img('/imgs/202506/Screenshot 2025-06-12 at 2.26.25 PM.png')
+
+        h2 날짜 계산
+        ul
+            li year, month, day로부터 요일 구하기
+                p
+                    +asA('https://cs.uwaterloo.ca/~alopez-o/math-faq/mathtext/node39.html', '출처')
+                    br
+                    |예. 2020년 2월 22일
+                ul
+                    li d = 22 # 22일
+                    li m = 12 # 1(3월), 2(4월), ..., 12(2월)
+                    li c = 20 # year // 100
+                    li y = 19 # (year % 100), 1-2월이면 -1
+                    li w = (d + floor(2.6 * m - 0.2) - 2 * c + y + (y // 4) + (c // 4)) % 7
+                        p Week day : 0(일요일), 1(월요일), ..., 6(토요일)
+
+        h2 비트 연산
+        ul
+            li 양의 정수 n이 2의 거듭제곱인지 빠르게 판별
+                +asCode('java') (n &amp; (n - 1)) == 0
+            li 양의 정수 n, x에 대하여, 빠른 x % 2^n 계산
+            ul
+                li shift 연산 이용
+                    +asCode('java') x &lt;&lt; (32 - n) &gt;&gt;&gt; (32 - n)
+                li and 연산 이용; (2^n - 1)는 사전에 계산되어 있어야 빠르다
+                    +asCode('java') x &amp; (2^n - 1)
+
+        h2 소수 찾기
+        ul
+            li 에라토스테네스의 체 : 
+                +codeBtn('/Repositories/Single/202202/FindPrime.java', 'java')
+            li Library 지원
+                +asCode('java').
+                    var i = BigInteger.valueOf(10000000000000L);
+                    for (var count = 0; count < 100; ++count) {
+                        // 합성수일 가능성은 2^(-100)을 넘지 않는다
+                        i = i.nextProbablePrime();
+                        System.out.println(i);
+                    }
