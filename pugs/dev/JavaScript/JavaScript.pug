@@ -9,6 +9,7 @@ include ../../../source/skeleton.pug
     ul
         li: +asA('https://developer.mozilla.org/en-US/docs/Learn/JavaScript', 'MDN > JavaScript 배우기')
         li: +asA('https://web.dev/learn/javascript', 'web.dev > JavaScript 배우기')
+        li: +asA('https://exploringjs.com/', 'Exploring JavaScript')
 
     h1 JavaScript 역사
     div
@@ -139,6 +140,7 @@ include ../../../source/skeleton.pug
             li 문자 리터럴 : \xFF, \uFFFF
             li 문자열 리터럴 : '', "", ``(문자열 템플릿)
                 +codeBtn('/Repositories/JavaScript/Basic/type.js', 'javascript', '[4,5,17,17]')
+            li slice()는 code unit 단위로 자르기를 수행하므로, code point 단위의 자르기를 원한다면 [...str].slice()를 이용
         li Number
         ol
             li IEEE-764 double-precision 부동소수
@@ -477,18 +479,19 @@ include ../../../source/skeleton.pug
         
         h2 ES2021
         ul
-            li replaceAll() for Strings
-            li Promise.any()
+            li String.prototype.replaceAll() : 정규표현식 모든 매칭에 대해 치환
+            li Promise.any() : 여러 Promise 중 하나라도 완료되면 반환
             li AggregateError : 여러 에러를 한 번에 표현
-            li ??=, &amp;&amp;=, ||= 연산자 추가
-            li WeakRef : 약한 참조 지원
-            li FinalizationRegistry : 지정한 객체가 GC로 정리된 경우 호출. #[+asA('https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/FinalizationRegistry#notes_on_cleanup_callbacks', '단, 이에 의존하면 안 됨')]
+            li ??=, &amp;&amp;=, ||= 논리 연산자 추가
+            li WeakRef : 약한 참조 생성 ~ GC 수집 후 커스텀 finalizer 실행
+                p FinalizationRegistry : 지정한 객체가 GC로 정리된 경우 호출. #[+asA('https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/FinalizationRegistry#notes_on_cleanup_callbacks', '단, 이에 의존하면 안 됨')]
             li 1_000처럼 리터럴 자리 구분 가능
 
         h2 ES2022
         ul
             li 에러 원인을 cause 프로퍼티에 설정 가능
-            li Array.prototype.at() : 음수 인덱스도 지원하는 원소 접근 메서드
+            li Array.prototype.at(), String.prototype.at() : 음수 인덱스도 지원하는 원소 접근 메서드
+            li Object.hasOwn(obj, propKey) : Object.prototype.hasOwnProperty()의 안전한 버전
         div
             h3 모듈 최상위 레벨 await 가능
             +asCode('JavaScript').
@@ -499,11 +502,11 @@ include ../../../source/skeleton.pug
 
             h3 클래스 정의 관련
             ul
-                li static 프로퍼티와 메서드 정의 가능
+                li static 프로퍼티, 메서드, 초기화 블록 정의 가능
                 li constructor() 바깥의 클래스 body에서 프로퍼티 정의 가능
                 li 프로퍼티 또는 accessor 식별자를 #으로 시작하면 private
             
-            h3 정규표현식 /d 플래그 추가
+            h3 정규표현식 d 플래그 추가
             p 패턴 전체 및 각 캡처링 그룹에 대한 시작/끝 위치를 indices 속성에 제공
             +asCode('JavaScript').
                 /(aa)(bb)/d.exec('aaabbbccc').indices
@@ -524,6 +527,7 @@ include ../../../source/skeleton.pug
         ul
             li 배열에 findLast(), findLastIndex() 추가
             li 스크립트 첫 줄에 #!(Hashbang; Shebang) 지원
+            li WeakMap 키로 non-registered symbol 사용 가능 -- Symbol.for()로 생성한 건 불가능
         div
             h3 원본 수정 없이 사본을 반환하는 배열 메서드
             ul
@@ -534,8 +538,7 @@ include ../../../source/skeleton.pug
 
         h2 ES2024
         ul
-            li 정규표현식 /v 플래그 추가
-            li Object.groupBy, Map.groupBy를 이용한 집계
+            li Object.groupBy(), Map.groupBy()를 이용한 집계 결과 생성
             li String.prototype.isWellFormed, toWellFormed 추가
         div
             h3 Promise.withResolvers()
@@ -549,6 +552,83 @@ include ../../../source/skeleton.pug
             p 위와 같은 코드를 아래와 같이 축약할 수 있다
             +asCode('JavaScript') const { promise, resolve, reject } = Promise.withResolvers()
 
+            h3 RegExp.prototype.unicodeSets
+            ul
+                li v 플래그를 이용해 생성한 정규표현식은 이 속성이 true로 설정된다
+                li v 플래그는 유니코드 관련 기능을 활성화하는 u 플래그의 업그레이드 버전인데, 구문 해석 방식이 다르기 때문에 두 플래그를 모두 설정하면 SyntaxError가 발생한다
+                li u 플래그에 비해 character class [...], [^...] 에 다음의 기능들이 추가된다
+                    ul
+                        li 추가적인 집합 연산 사용 가능
+                            ul
+                                li [operand1&amp;&amp;operand2] : 교집합
+                                li [operand1--operand2] : 차집합
+                                li 연산자를 한 번에 2개 이상 적용하는 것은 불가능하지만, nested 표기를 이용하면 쉽게 달성할 수 있다
+                                    p 한편, 단순 나열은 합집합 연산을 의미하므로 [AB--C]도 유효하지 않으며, [A[B--C]]와 같이 사용해야 한다
+                        li [\q{substring}]으로 유니코드 리터럴 지정 가능. 내부에선 | 연산자만 이용 가능
+                        li \p 이스케이프로 RGI_Emoji와 같은 더 다양한 유니코드 클래스 집합 지정 가능
+                li i 플래그에서 \P{property} 평가가 달라진다
+                    ul
+                        li #[+asInlineCode("/\P{Lowercase_Letter}/iu.test('a') === true", 'JavaScript')]
+                            p u 모드에서는 case-folding이 여집합 구성 후에 발생한다
+                            ol
+                                li Lowercase_Letter에 대한 여집합이 생성된다 : uppercase + caseless
+                                li i 플래그를 위해 집합의 소문자 버전이 생성된다 : lowercase + caseless
+                                li 입력 문자열은 패턴 매칭 전에 소문자 버전으로 변환된다
+                                li 'a'는 패턴을 만족하므로 true 반환
+                        li #[+asInlineCode("/\P{Lowercase_Letter}/iv.test('a') === false", 'JavaScript')]
+                            p v 모드에서는 case-folding이 여집합 구성 전에 발생한다
+                            ol
+                                li Lowercase_Letter에 대한 소문자 버전 집합이 생성된다 : lowercase
+                                li 대문자를 포함하지 않는 여집합이 생성된다 : caseless
+                                li 입력 문자열은 패턴 매칭 전에 소문자 버전으로 변환된다
+                                li 'a'는 패턴을 만족하지 않으므로 false 반환
+                li i 플래그에서 character class complement syntax [^...] 에 대한 해석이 달라진다
+                    ul
+                        li #[+asInlineCode("/[^\P{Lowercase_Letter}]/iu.test('A') === false", 'JavaScript')]
+                            p u 모드에서는 패턴을 반대로 평가한다
+                            ol
+                                li Lowercase_Letter에 대한 여집합이 생성된다 : uppercase + caseless
+                                li i 플래그를 위해 집합의 소문자 버전이 생성된다 : lowercase + caseless
+                                li 입력 문자열은 패턴 매칭 전에 소문자 버전으로 변환된다
+                                li 'a'는 패턴을 만족하므로 false -- [^...]는 패턴을 매치 결과를 뒤집는다
+                        li #[+asInlineCode("/[^\P{Lowercase_Letter}]/iv.test('A') === true", 'JavaScript')]
+                            p v 모드에서는 패턴을 반대로 평가하는 대신 여집합을 구성한다
+                            ol
+                                li Lowercase_Letter에 대한 소문자 버전 집합이 생성된다 : lowercase
+                                li 대문자를 포함하지 않는 여집합이 생성된다 : caseless
+                                li 대문자를 포함하지 않는 여집합이 생성된다 : lowercase -- \P와 [^...]는 서로 상쇄된다
+                                li 입력 문자열은 패턴 매칭 전에 소문자 버전으로 변환된다
+                                li 'a'는 패턴을 만족하므로 true
+                li v 모드가 grapheme cluster를 한 문자로 취급하지는 않는다. 여전히 코드 포인트의 모음으로 취급한다
+                    +asCode('JavaScript').
+                        /😵‍💫/.test('😵‍💫')     // true
+                        /😵‍💫/v.test('😵‍💫')    // true
+
+                        /[😄-😛]/.test("😑")    // SyntaxError: Invalid regular expression: /[😄-😛]/: Range out of order in character class
+                        /[😄-😛]/v.test("😑")   // true
+
+                        /[😵‍💫]/.test('😵‍💫'.charAt(3))                             // true
+                        /[😵‍💫]/v.test('😵‍💫'.charAt(3))                            // false
+                        /[😵‍💫]/v.test(String.fromCodePoint('😵‍💫'.codePointAt(3))) // true
+
+            h3 가변 길이 ArrayBuffer 지원
+            ul
+                li 처음부터 변경 가능하도록 생성
+                    +asCode('JavaScript').
+                        buf = new ArrayBuffer(4, { maxByteLength: 8 })
+                        console.log(buf.byteLength) // 4
+
+                        buf.resize(8)
+                        console.log(buf.byteLength) // 8
+                li 사용 도중 1회적으로 변경
+                    +asCode('JavaScript').
+                        buf = new ArrayBuffer(4)
+                        console.log(buf.byteLength)     // 4
+
+                        newBuf = buf.transfer(8)
+                        console.log(buf.detached)       // true
+                        console.log(newBuf.byteLength)  // 8
+
         h2 ES2025
         div
             h3: +asA('https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import/with', 'import 속성 지정')
@@ -558,3 +638,73 @@ include ../../../source/skeleton.pug
             +asCode('JavaScript').
                 import styles from "https://example.com/styles.css" with { type: "css" };
                 import data from "https://example.com/data.json" with { type: "json" };
+
+            h3: +asA('https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator#iterator_helper_methods')
+            p Iterator helper method는 기존 iterator를 이용하는 새로운 iterator helper object를 반환한다. 두 iterator의 진행도는 동기화되며, 독립적으로 진행되지 않는다
+            ul
+                li drop(limit) : 최초 limit개의 요소 순회 생략
+                li every(callbackFn) : 모든 요소가 조건을 만족하면 true
+                li filter(callbackFn) : 조건에 맞는 요소만 순회
+                li find(callbackFn) : 조건에 맞는 첫 번째 요소를 반환
+                li flatMap(callbackFn) : iterator 또는 iterable을 반환하여 차원 평탄화
+                li forEach(callbackFn) : 모든 요소 소비
+                li map(callbackFn) : 요소를 변환하여 순회
+                li reduce(callbackFn[, initialValue]) : 모든 요소를 소비하여 결과값 축약
+                li some(callbackFn) : 일부 요소가 조건을 만족하면 true
+                li take(limit) : 최초 limit개의 요소만 순회
+
+            h3 Iterator 유틸리티 추가
+            ul
+                li Iterator.prototype.toArray() : 하는 일은 Array.from(iterator), [...iterator]와 동일
+                li Iterator.from(object)
+                    ul
+                        li object가 iterable인 경우 : 해당 객체의 [Symbol.iterator]()를 순회에 이용하는 새로운 iterator 반환
+                        li object가 iterator인 경우 : 해당 객체 그대로 반환
+                        li 그 외의 경우 : 해당 객체(iterator로 간주)를 감싼 새 Iterator 객체 반환 -- 사용시 런타임 에러 발생 가능
+                li new Iterator() : Iterator를 상속하여 순회 알고리즘 직접 구현 가능. Generator를 이용하는 구현과 다르게, Iterator의 모든 헬퍼 메서드 이용 가능
+
+            h3 집합 연산 추가
+            ul
+                li difference(other) : 차집합 반환
+                li intersection(other) : 교집합 반환
+                li isDisjointFrom(other) : 교집합이 0인지 검사
+                li isSubsetOf(other) : 부분집합인지 검사
+                li isSupersetOf(other) : other를 모두 포함하는지 검사
+                li symmetricDifference(other) : 대칭차집합 반환
+                li union(other) : 합집합 반환
+
+            h3 정규식 업데이트
+            ul
+                li RegExp.escape()
+                    p RegExp 생성자에 그대로 사용할 수 있는 문자열 반환
+                    +asCode('JavaScript').
+                        txt = `abc!@#$%^&*(){}[]'";`
+                        new RegExp(RegExp.escape(txt)).test(txt)    // true
+
+                li Flag modifier
+                    p 정규식 특정 파트에 대해서만 추가로 플래그를 켜거나 끄는 게 가능
+                    ul
+                        li (?flags1:pattern) : flags1에 지정한 플래그들을 추가로 적용
+                        li (?flags1-flags2:pattern) : flags1에 지정한 플래그들을 추가로 적용 + flags2에 지정한 플래그들은 적용하지 않음
+
+                li 중복 명명된 캡처링 그룹 허용
+                    +asCode('JavaScript').
+                        txt = 'aabbbcccc'
+                        regex = /(?&lt;chars>a+)|(?&lt;chars>b+)/g
+                        console.log(regex.exec(txt), regex.exec(txt))
+                    +w3img('/imgs/202507/Screenshot 2025-07-23 at 6.19.03 PM.png')
+
+            h3 Promise.try()
+            p 가능한 모든 형태의 함수 호출을 Promise로 변환
+            +asCode('JavaScript').
+                Promise.try(func)
+                Promise.try(func, arg1)
+                Promise.try(func, arg1, arg2)
+                Promise.try(func, arg1, arg2, /* …, */ argN)
+
+            h3 Float16 지원
+            p 16비트 float 사용으로 오히려 연산 성능 저하를 경험할 수 있다. 16비트 연산에 최적화된 플랫폼에서 사용하는 것이 권장된다
+            ul
+                li Math.f16round()
+                li Float16Array
+                li DataView.prototype.getFloat16(), setFloat16()

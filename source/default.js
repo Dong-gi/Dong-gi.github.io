@@ -57,6 +57,31 @@ function asNodes(str) {
     }
 }
 
+/**
+ * @template T
+ * @param {Iterable<T>} iter
+ * @param {(element: T) =>} callback
+ */
+function observeIntersectionOnce(iter, callback) {
+    Array.from(iter).forEach(element => {
+        if ((element instanceof Element) === false) {
+            console.log("observeIntersectionOnce > ", element, ' ignored.')
+        }
+        let isCalled = false;
+        const o = new IntersectionObserver((entries, observer) => {
+            if (entries[0].isIntersecting !== true) {
+                return;
+            }
+            o.disconnect();
+            if (isCalled === false) {
+                isCalled = true;
+                callback(element);
+            }
+        });
+        o.observe(element);
+    });
+}
+
 const numPartRegex1 = /(((^|[\s$¥£₡₱€₩₭฿])[+-]?)?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/;
 const numPartRegex2 = /(([\s$¥£₡₱€₩₭฿][+-]?)?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/;
 const startWithNumberRegex1 = new RegExp(`^${numPartRegex1.source}`);
@@ -316,15 +341,14 @@ async function yield() {
 }
 
 async function initGoto() {
-    for (const goto of document.querySelectorAll('a.goto')) {
-        await yield();
+    observeIntersectionOnce(document.querySelectorAll('a.goto'), (goto) => {
         goto.addEventListener('click', function () {
             if (goto.id.length === 0) {
                 goto.id = `goto-${Math.random()}-${Math.random()}`;
             }
             history.pushState({}, '', `#${goto.id}`);
         })
-    }
+    });
 
     window.onpopstate = function () {
         if (location.hash.length <= 1) {
@@ -373,8 +397,7 @@ function initNav() {
 }
 
 async function initCodeBtn() {
-    for (const codeButton of document.body.querySelectorAll('button.btn-code')) {
-        await yield();
+    observeIntersectionOnce(document.body.querySelectorAll('button.btn-code'), codeButton => {
         codeButton.id = 'code-button-' + Math.random().toString().slice(2) + stringHashCode(codeButton.title);
         codeButton.onclick = async function (e) {
             const button = e.target;
@@ -420,30 +443,28 @@ async function initCodeBtn() {
                 button.after(script);
             }
         }
-    }
+    });
 }
 
 async function initHoverContent() {
-    for (const hoverContent of document.body.querySelectorAll('.hover-content')) {
-        await yield();
-        addHoverContent(hoverContent, document.getElementById(hoverContent.getAttribute('template-id')));
-    }
+    observeIntersectionOnce(document.body.querySelectorAll('.hover-content'), hoverContent => {
+        addHoverContent(hoverContent, document.getElementById(hoverContent.getAttribute('template-id')))
+    });
 }
 
 async function initInlineCode() {
-    for (const codeDiv of document.body.querySelectorAll('div.as-code')) {
-        await yield();
+    observeIntersectionOnce(document.body.querySelectorAll('div.as-code'), codeDiv => {
         const code = codeDiv.innerHTML.trim().replace(/&lt;/gm, '<').replace(/&gt;/gm, '>').replace(/&amp;/gm, '&');
         codeDiv.innerHTML = '';
-        fillCodeDiv(codeDiv, codeDiv.getAttribute('lan') ?? 'text', code);
+        const lan = codeDiv.getAttribute('lan') ?? 'text';
+        fillCodeDiv(codeDiv, lan, code);
         codeDiv.style.maxHeight = window.innerHeight / 3 + 'px';
-    }
+    });
 
-    for (const codeSpan of document.body.querySelectorAll('span.as-code')) {
-        await yield();
+    observeIntersectionOnce(document.body.querySelectorAll('span.as-code'), codeSpan => {
         const code = codeSpan.innerHTML.trim().replace(/&lt;/gm, '<').replace(/&gt;/gm, '>').replace(/&amp;/gm, '&');
         codeSpan.innerHTML = hljs.highlight(code, { language: codeSpan.getAttribute('lan') ?? 'text', ignoreIllegals: true })['value'];
-    }
+    });
 }
 
 window.addEventListener('load', async () => {
