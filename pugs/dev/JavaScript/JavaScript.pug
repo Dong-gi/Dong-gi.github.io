@@ -382,12 +382,21 @@ include ../../../source/skeleton.pug
         h2 ES2016
         ul
             li 지수 연산자 **
-            li Array.prototype.includes
+            li Array.prototype.includes() : 배열이 특정 원소를 포함하는지 여부 반환
 
         h2 ES2017
         ul
-            li async function 정의 지원
-            li Object.values, Object.entries, Object.getOwnPropertyDescriptors
+            li async function 정의, await 비동기 호출 지원
+            li Object.values() : 객체의 순회 가능한 모든 값을 배열로 반환
+            li Object.entries() : 객체의 순회 가능한 모든 [키, 값]쌍을 배열로 반환
+            li Object.getOwnPropertyDescriptors() : 객체의 모든 프로퍼티 반환
+                p 예. Object.assign()이 순회 가능한 프로퍼티만 복사하는 반면, 아래 코드는 모든 프로퍼티를 얕게 복사한다
+                +asCode('JavaScript').
+                    Object.create(
+                        Object.getPrototypeOf(obj),
+                        Object.getOwnPropertyDescriptors(obj),
+                    )
+            li String.prototype.padStart(), padEnd() 추가
         div
             h3 Shared Memory, Atomics
             ul
@@ -398,8 +407,7 @@ include ../../../source/skeleton.pug
 
         h2 ES2018
         ul
-            li 정규표현식 기능 추가
-                p dotAll flag(/s), named capture groups, Unicode property escapes, look-behind assertions
+            li Promise.prototype.finally() : Promise 상태가 무엇으로 천이되든 무관하게 실행되는 블록
         div
             h3 비동기 반복자
             p 비동기 반복자는 Promise를 반환하는 반복자
@@ -415,44 +423,78 @@ include ../../../source/skeleton.pug
                   }
                 })();
 
-            h3 객체 해체 할당
-            p Object rest and spread properties
+            h3 객체 해체 할당 + 나머지 속성
             +asCode('JavaScript').
                 const obj = {
-                x: [1, 2, 3],
-                y: { a: 4, b: 5, c: 6 },
-                z: [7, 8, 9]
+                    x: [1, 2, 3],
+                    y: { a: 4, b: 5, c: 6 },
+                    z: [7, 8, 9]
                 }
-                const { x: [x1, ...xRest], y: { a: y1, ...yRest }, ...objRest } = obj
+                const {
+                    x: [x1, ...xRest],
+                    y: { a: y1, ...yRest },
+                    ...objRest
+                } = obj
                 console.info(x1)        // 1
                 console.info(xRest)     // [2, 3]
                 console.info(y1)        // 4
                 console.info(yRest)     // {b: 5, c: 6}
                 console.info(objRest)   // {"z": [7, 8, 9]}
 
+            h3 정규표현식 기능 추가
+            ul
+                li RegExp.prototype.dotAll
+                    p s 플래그를 이용해 생성한 정규표현식은 이 속성이 true로 설정된다. 특수 문자 .이 line terminator에도 매칭된다 (U+000A, U+000D, U+2028, U+2029)
+                    +asCode('JavaScript').
+                        /.+/.exec('abc\ndef')[0]    // 'abc'
+                        /.+/s.exec('abc\ndef')[0]   // 'abc\ndef'
+                li Named capture groups
+                    +asCode('JavaScript').
+                        /^(?&lt;id&gt;[a-zA-Z0-9._%+-]+)@(?&lt;domain&gt;[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/.exec('test-id@example.com').groups
+                            // {id: 'test-id', domain: 'example.com'}
+                li RegExp.prototype.unicode
+                    ul
+                        li u 플래그를 이용해 생성한 정규표현식은 이 속성이 true로 설정된다
+                        li \u{1234}, \p{UnicodePropertyValue}를 이용해 유니코드 문자를 매칭할 수 있다
+                        li Surrogate pair를 한 문자로 취급한다
+                            +asCode('JavaScript').
+                                /[😄]/.test(String.fromCodePoint('😄'.codePointAt(0)))  // true
+                                /[😄]/.test(String.fromCodePoint('😄'.codePointAt(1)))  // true
+                                /[😄]/u.test(String.fromCodePoint('😄'.codePointAt(0))) // true
+                                /[😄]/u.test(String.fromCodePoint('😄'.codePointAt(1))) // false
+                li Look-behind assertions
+                    ul
+                        li (?&lt;=y)x : positive lookbehind
+                        li (?&lt;!y)x : negative lookbehind
+
         h2 ES2019
         ul
-            li Array.prototype.flat, flatMap
-            li Object.fromEntries
-            li String.prototype.trimStart, trimEnd
-            li Array.prototype.sort는 이제 stable (정렬 키가 동일한 두 요소의 순서는 정렬 후에도 유지)
-            li JSON.stringify는 입력과 무관하게 well-formed UTF-8 문자열을 반환
+            li Array.prototype.flat() : 배열 차원 평탄화
+            li Array.prototype.flatMap() : map()과 flat()을 순서대로 적용한 것과 같은 결과
+            li Object.fromEntries() : Iterable&lt;[key, value]&gt;로부터 객체 생성 -- Array, Map, 또는 사용자 정의 iterable
+            li String.prototype.trimStart(), trimEnd() 추가
+            li 배열 정렬 메서드 -- sort()는 이제 stable (정렬 키가 동일한 두 요소의 순서는 정렬 후에도 유지)
+            li JSON.stringify()는 입력과 무관하게 well-formed UTF-8 문자열을 반환
+            li 필요 없다면 catch 블록 파라미터 생략 가능
+            li Symbol.prototype.description getter 추가
+            li Function.prototype.toString() : 함수가 ECMAScript로 정의된 경우, 함수 본문 반환
 
         h2 ES2020
+        ul
+            li import() : import .. from ... 구문과 다르게, 런타임에 동적으로 모듈 로드
+            li import.meta : ES 모듈을 이용하는 경우, #[+asInlineCode('import.meta.url', 'javascript')]를 이용해 모듈 URL 획득 가능
+            li export * as newName from 'module' : 모듈의 defaults를 다시 노출하기만 할 때 편의 제공
+            li BigInt : #[+asInlineCode('Number.MAX_SAFE_INTEGER', 'javascript')]보다 큰 정수도 정확히 보존하는 정수 자료형
+            li String.prototype.matchAll() : g 플래그를 켠 정규표현식의 모든 매치 결과를 순회할 수 있는 iterator 반환 -- 기존엔 전문검색을 위해 루프를 실행해야 했다
+            li globalThis : 실행 환경(브라우저, Node, Deno, ...)과 무관하게 전역 컨텍스트를 통한 변수 접근 방법 제공
         div
             h3 Optional chaining (?.)
             ul
-                li ?. 연산자를 이용하여 객체의 속성을 접근하거나 함수를 호출할 수 있다
+                li ?. 연산자를 이용하여 객체의 속성을 접근하거나 메서드를 호출할 수 있다
                 li 이 연산자로 접근하려는 객체나 호출하려는 함수가 undefined나 null인 경우, 연산은 단락되고 undefined를 반환한다
             
             h3 Nullish coalescing operator (??)
             p 연산자 좌변이 null 또는 undefined인 경우, 연산자 우변을 반환한다
-
-            h3 import()
-            p import .. from ... 구문과 다르게, 런타임에 변수를 이용해 모듈을 로드한다
-
-            h3 matchAll() for Strings
-            p 전체 문자열에서 정규표현식 매칭을 수행한 결과를 반환한다 -- 기존엔 전문검색을 위해 루프를 실행해야 했다
 
             h3 Promise.allSettled()
             p Promise.all()은 일부가 실패한 경우 아래 2가지가 불가능했는데, allSettled()는 모두 가능하다
@@ -464,18 +506,6 @@ include ../../../source/skeleton.pug
             ul
                 li 성공한 Promise의 반환값 획득
                 li 2번째 이후로 실패한 Promise의 에러 획득
-
-            h3 BigInt
-            p #[+asInlineCode('Number.MAX_SAFE_INTEGER', 'javascript')]보다 큰 정수도 정확히 보존하는 정수 자료형
-
-            h3 globalThis
-            p 실행 환경(브라우저, Node, Deno, ...)과 무관하게 전역 컨텍스트를 통한 변수 접근 방법 제공
-
-            h3 import.meta
-            p ES 모듈을 이용하는 경우, #[+asInlineCode('import.meta.url', 'javascript')]를 이용해 모듈 URL 획득 가능
-
-            h3 export * as newName from 'module'
-            p 모듈의 defaults를 다시 노출하기만 할 때 편의 제공
         
         h2 ES2021
         ul

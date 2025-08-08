@@ -323,6 +323,32 @@ include ../../source/skeleton.pug
         h2 null을 일반값으로 취급하여 비교
         p x is (not) distinct from y
 
+        h2 그룹별 1개 행만 반환
+        +asCode('sql').
+            select distinct on (player_id)
+                player_id,
+                play_data
+            from t_player_play_history
+            order by player_id, play_end_time desc
+
+        h2 그룹별 n개 행만 반환
+        p LATERAL JOIN은 좌항의 테이블을 모두 구성한 뒤, 좌항 테이블 행을 직접 참조하여 우항의 테이블을 구성할 수 있게 해준다
+        +asCode('sql').
+            select
+                player_id,
+                t2.play_data
+            from (
+                select distinct player_id
+                from t_player_play_history
+            ) t1 join lateral (
+                select play_end_time, play_data
+                from t_player_play_history x
+                where x.player_id = t1.player_id
+                order by play_end_time desc
+                limit 3
+            ) t2 on true
+            order by player_id, play_end_time desc
+
     h1 Shell > 세션 동안 SSH 인증 정보 기억하기
     p 참고자료 : #[+asA('https://gist.github.com/nepsilon/45fae11f8d173e3370c3')]
     +asCode('shell') $ ssh-add .ssh/my_key
