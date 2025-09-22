@@ -635,28 +635,7 @@ include ../../source/skeleton.pug
         +asCode('shell', 'CLI 실행 예시') npx typescript src/**/*.js --declaration --allowJs --emitDeclarationOnly --outDir dist/types
 
         h2 JSDoc > 마크다운 유사 구문 
-        +asCode('JavaScript').
-            /**
-             * # 섹션 제목
-             *
-             * - 글머리 기호1
-             * * 글머리 기호2
-             *
-             * **강조**
-             *
-             * _이탤릭체_
-             *
-             * > 인용 문구
-             *
-             * [링크](https://example.com)
-             *
-             * ```
-             * // 코드 블록
-             * let x = 1
-             * console.log(x)
-             * ```
-             */
-        +w3img('/imgs/202505/23-165129.png')
+        +codeBtn({ path: '/Repositories/Single/202509/22-1353.js', lan: 'javascript' })
 
         h2 JSDoc, TypeScript > Pick&lt;Type, Keys&gt; 직접 정의하기
         +asCode('JavaScript').
