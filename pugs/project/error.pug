@@ -14,6 +14,16 @@ include ../../source/skeleton.pug
         h2 EC2 스팟 인스턴스 - 최소 비용 전략 사용 시, 인스턴스가 빈번히 교체되는 모습(2023-01-12)
         +w3img('/imgs/202301/20230112_145950.png')
 
+        h2 Elastic Beanstalk 롤링 업데이트 실패
+        p 50% 배포 단위(이하 A/B)로 롤링 업데이트를 하는 경우, 최악의 경우 모든 인스턴스가 서비스 불가능해질 수 있다
+        ol
+            li A 인스턴스 프로세스 종료
+            li A 인스턴스에 신규 번들 설치 완료
+            li A 인스턴스 프로세스 시작
+            li B 인스턴스 프로세스 종료
+            li 런타임 에러로 A 인스턴스 프로세스 중단 또는 서비스 health 체크 실패
+            li 현재 서비스 중인 인스턴스 개수 : 0
+
         h2 CPU 사용률이 100을 초과하는 현상(2022-01-21)
         p EC2 및 ElastiCache(Redis)에서 발생
         +w3img('/imgs/202202/photo_2022-02-10 16.08.44.jpeg', 'EC2 스크린샷')
@@ -90,6 +100,13 @@ include ../../source/skeleton.pug
             h3 Windows 소스트리 &gt; PuTTY 최초 인증시 수동 확인
             +asCode('shell') C:\Users\xxx\AppData\Local\SourceTree\app-3.4.10\tools\putty\plink.exe github.com
             p login as : git
+
+    h1 Google
+    div
+        h2 Apps Script Date 정밀도 차이
+        ul
+            li SpreadSheet에서 함수를 실행하는 경우 : 시간에 밀리초 존재
+            li Form 제출 트리거로 함수를 실행하는 경우 : 시간에 밀리초 없음
 
     h1 Heroku
     div
