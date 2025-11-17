@@ -113,192 +113,381 @@ include ../../../source/skeleton.pug
                 li 배열 해체 할당
                 li ...
 
-    h1 식별자
+    h1 변수와 식별자
     ol
-        li 식별자 : '_', '$' 허용
-            +codeBtn('/Repositories/JavaScript/Basic/type.js', 'javascript', '[1,1]')
-        li 변수 선언
-        ul
-            li let 식별자;
-            p 일반적인 지역변수와 동일. 선언된 순간부터 해당 코드 블록이 끝날때까지 유효. 중첩된 코드 블록에서 같은 식별자의 변수를 선언하여 밖의 변수를 가릴 수 있다
-                +codeBtn('/Repositories/JavaScript/Basic/type.js', 'javascript', '[2,2]')
-            li var 식별자;
-            p 선언 전에 참조하는 경우, 선언을 끌어올려 undefined를 할당해준다. 함수 스코프에서 동작하지만, 중첩된 코드 블록에서 재정의하여 가릴 수 없다
-        li 상수 선언 : const 식별자;
-            +codeBtn('/Repositories/JavaScript/Basic/type.js', 'javascript', '[4,4]')
+        li 식별자
+            ul
+                li '_', '$'를 식별자로 이용할 수 있다
+                    +asCode('JavaScript') const _ = 123
+                li 다른 프로그래밍 언어들과 마찬가지로 예약어를 변수 식별자로 사용할 수 없다 -- 하지만 객체 속성으로는 사용할 수 있다
+                    +asCode('JavaScript') const o = { if: 123, default: 456 }
 
-    h1 자료형
-    ul
-        li Object
-        ol
-            li 객체 리터럴 : {}
-            li delete 키워드로 프로퍼티 제거 가능
-            li JSON.stringify(), JSON.parse(), Object.keys()
-                +codeBtn('/Repositories/JavaScript/Basic/type.js', 'javascript', '[11,15]')
-        li String
-        ol
-            li 문자 리터럴 : \xFF, \uFFFF
-            li 문자열 리터럴 : '', "", ``(문자열 템플릿)
-                +codeBtn('/Repositories/JavaScript/Basic/type.js', 'javascript', '[4,5,17,17]')
-            li slice()는 code unit 단위로 자르기를 수행하므로, code point 단위의 자르기를 원한다면 [...str].slice()를 이용
-        li Number
-        ol
-            li IEEE-764 double-precision 부동소수
-            li 숫자 리터럴 : 999, 0o777, 0xFFF, 0.999, 0.999E-9
-            li 숫자 상수 : Infinity, -Infinity, NaN, Number.EPSILON, Number.MAX_VALUE, Number.MAX_SAFE_INTEGER
-            li Number(), parseInt(), parseFloat(), number.toString(radix)
-        li Boolean
-        p Boolean() : "", 0, NaN, null, undefined == false, 그 외 == true
-        li Undefined
-        li Null
-        li Symbol
-        p ES6부터 도입된 타입. 그 무엇과도 같지 않은 유일한 토큰을 나타낸다
-            +codeBtn('/Repositories/JavaScript/Basic/type.js', 'javascript', '[7,9]')
-        li 배열 : []
-        p 자바스크립트의 배열은 모두 동적 배열. 변수와 마찬가지로 타입을 가리지 않는다
-            +codeBtn('/Repositories/JavaScript/Basic/array.js', 'javascript')
-        li Map
-        +asCode('javascript').
-            new Map(iterable: Iterable&lt;readonly [K, V]>)
-            new Map(entries?: readonly (readonly [K, V])[])
-            set(key, value), get(key), has(key)
-            delete(key), clear()
-            size, keys(), values(), entries()
-        li WeakMap
-        p 키는 반드시 객체여야 하며, 키는 GC 대상이 된다. 따라서 객체가 살아있는 동안에 참조해야 하는 고유값들을 저장하기에 좋다
-        li Set
-        +asCode('javascript').
-            new Set(iterable?: Iterable&lt;any>)
-            new Set(values?: readonly T[])
-            add(value), has(value), ...
-        li WeakSet
-        p 값은 반드시 객체여야 하며, GC 대상이 된다
+        li var 변수
+            ul
+                li let, const가 도입되기 전까진 유일한 변수 선언 구문이었다. 현대 개발에선 const &gt; let 사용이 권장된다
+                li var 변수는 선언된 함수 스코프 내에서 유효하다
+                li 호이스팅 : 선언한 위치 전에도 변수를 참조할 수 있다(값은 undefined)
+
+        li let 변수
+            ul
+                li var 대신 일반적인 지역변수 키워드로 이용된다
+                li var 변수와 달리 선언 이전에 참조할 수 없고, 변수는 선언된 블록 스코프 내에서 유효하다
+
+        li const 변수
+            ul
+                li 선언과 동시에 값을 초기화하고, 이후 다른 값으로 덮어쓸 수 없다. 따라서 상수라고 한다
+                li let과 마찬가지로 선언된 블록 스코프 내에서 유효하다
+
+    h1 자료형(type)
+    div
+        h2 원시 타입
+        ul
+            li 원시 타입의 가장 큰 특징은 값의 불변성이다. 123, 'abc', true 등의 값 자체를 다른 것으로 변경할 수 없다.
+            li 변수로 원시 타입 내용을 전달할 때는 값 자체가 복사된다
+            li JavaScript는 원시 타입도 객체와 동등한 1급 시민이다
+                ul
+                    li Object 타입 변수로 모든 객체를 참조할 수 있지만 원시 타입 값을 직접 저장할 수 없는 Java와 달리, JavaScript 변수는 (구별 없이) 모든 타입을 직접 지원한다
+                    li Wrapper 클래스로 변환해 메서드를 호출하는 Java와 다르게, 원시 타입 변수로부터 직접 전용 메서드 호출 가능
+
+        div
+            h3 undefined
+            ul
+                li 변수에 값이 할당되지 않았음 또는 객체에 속성이 존재하지 않음을 의미한다
+                li Java의 경우 변수는 그 타입에 따라 정해진 기본값을 갖는다 -- 객체는 null, 정수는 0, ...
+                    p JavaScript 변수는 정의할 때 타입을 지정하지 않으므로, 원시 타입도 객체도 아닌, 아무것도 할당되지 않은 상태를 표현하기 위해 undefined를 도입했다
+
+            h3 null
+            p 객체가 에상되는 변수/속성에 의도적으로 값이 할당되지 않았음을 의미한다
+
+            h3 Boolean
+            ul
+                li 논리값 표현을 위한 타입으로, true/false 2가지가 있다
+                li Boolean()를 이용해 모든 변수를 boolean 값으로 변환할 수 있다
+
+            h3 Number
+            ul
+                li IEEE-754 부동소수(double) 표현을 위한 타입으로, bigint 도입 전에는 유일한 숫자 타입이었다
+                li 주요 JavaScript 엔진들은 최적화를 위해 작은 정수들을 내부적으로 별도 타입으로 취급한다
+                li 숫자 리터럴 표현 시 읽기 편하도록 중간에 '_'를 추가할 수 있다. 예. 1_234_00
+                li 숫자 리터럴로 과학적 표기법을 지원한다. 예. 1.5e11
+                li 정수 리터럴 표현에서는 다양한 진법을 지원한다
+                    ul
+                        li 0b101 : 2진법
+                        li 0o77 : 8진법
+                        li 0xff : 16진법
+
+            h3 Bigint
+            ul
+                li 정밀도 제한 없이 정수를 표현한다
+                li 하나의 산술 연산자로 Bigint와 Number 모두를 처리할 순 없다
+                    p 연산 결과로 Bigint, Number 중 어떤 게 반환돼야 하는지에 대한 설득력 있는 규칙이 없으므로, 개발자가 의도에 맞게 직접 형 변환을 해야한다
+
+            h3 String
+            ul
+                li JavaScript는 단일 문자를 위한 전용 타입 없이 모두 UTF-16 포맷 문자열로 취급한다
+                    ul
+                        li Code point : 각 유니코드 문자마다 주어진 ID (21비트)
+                        li Code unit : code point를 표현하기 위한 개별 UTF-16 값 (16비트)
+                            ul
+                                li 현재 유니코드는 2^16개 문자씩 구별된 총 17개 평면으로 구성
+                                li 다국어 기본 평면(0번) 문자에 대해 UTF-16은 하나의 code unit만 사용
+                                li 그 외 문자에 대해 UTF-16은 2개의 code unit을 사용 (high/low surrogate들이 각각 10비트씩 표현)
+                        li Grapheme cluster : 여러 code point가 모여 하나의 활자를 표현하는 경우가 있다
+                            +asCode('JavaScript') [...'😵‍💫'] // ['😵', '‍', '💫']
+                li 문자 리터럴 : 'a', '\x61', '\u0061'
+                li 문자열 리터럴 : 'abc', "abc", `abc`(문자열 템플릿)
+                li split(''), slice()는 code unit 단위로 동작,
+                    |<br>[...str]은 -- #[+asA('https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Symbol.iterator', 'Symbol.iterator')]를 이용하여 code point 단위로 동작
+                    +asCode('JavaScript').
+                        '😵‍💫'.split('')  // ['\uD83D', '\uDE35', '‍', '\uD83D', '\uDCAB']
+                        [...'😵‍💫']       // ['😵', '‍', '💫']
+
+            h3 Symbol
+            ul
+                li ES6부터 도입된 타입. 그 무엇과도 같지 않은 유일한 토큰을 나타낸다
+                    +asCode('JavaScript') Symbol('xxx') !== Symbol('xxx')
+                li 단, Symbol.for()를 이용해 전역적으로 재사용할 수도 있다
+                    +asCode('JavaScript') Symbol.for('xxx') === Symbol.for('xxx')
+
+        h2 객체 타입
+        ul
+            li 객체 타입은 값 자체를 변경할 수 있다. 자유롭게 속성을 추가/변경/삭제할 수 있다.
+            li 변수로 객체를 전달할 때는 참조가 복사된다
+        div
+            h3 Object
+            p 보통 객체 리터럴 표현 {} 을 이용해 생성한다
+        
+            h3 Array
+            ul
+                li 배열 리터럴 표현 [] 또는 Array 생성자를 이용해 생성한다
+                li Java와 다르게 원소 타입을 강제하지 않고, 배열 길이도 가변적이다
+
+            h3 Map
+            +asCode('JavaScript').
+                new Map(iterable: Iterable&lt;readonly [K, V]>)
+                new Map(entries?: readonly (readonly [K, V])[])
+                set(key, value), get(key), has(key)
+                delete(key), clear()
+                size, keys(), values(), entries()
+
+            h3 WeakMap
+            p 키는 반드시 객체여야 하며, 키는 GC 대상이 된다. 따라서 객체가 살아있는 동안에 참조해야 하는 고유값들을 저장하기에 좋다
+            
+            h3 Set
+            +asCode('JavaScript').
+                new Set(iterable?: Iterable&lt;any>)
+                new Set(values?: readonly T[])
+                add(value), has(value), ...
+            
+            h3 WeakSet
+            p 값은 반드시 객체여야 하며, GC 대상이 된다
 
     h1 연산자
     ol
-        li Boolean 연산자 : !, &&, ||
-        p &&, ||는 short circuit 연산
-        li 비트 연산자 : ~, &, |, ^, &lt;&lt;, >>, >>>
+        li Boolean 연산자 : !, &amp;&amp;, ||
+        p &amp;&amp;, ||는 short circuit 연산
+        li 비트 연산자 : ~, &amp;, |, ^, &lt;&lt;, >>, >>>
         li ,연산자 : 순서대로 평가하여 마지막 표현식의 결과가 할당됨
-            +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'javascript', '[9,10]')
-        li in 연산자 : 객체에 해당 프로퍼티가 존재하는지 여부 반환
-            +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'javascript', '[12,12]')
-        p 객체에 직접 정의된 프로퍼티는 hasOwnProperty() 메서드 이용
+            +asCode('JavaScript').
+                const n = (1, 2, 3, 4, 5)
+                console.log(n === 5)
+        li in 연산자 : 객체에 해당 프로퍼티가 존재하는지 여부 반환 -- 프로토타입 체인도 검사
+            +asCode('JavaScript').
+                console.log('alert' in globalThis) // true
+                console.log('a' in { __proto__: { __proto__: { a: 1 } } }) // true
+            p 프로토타입으로 상속하지 않고 객체에 직접 정의된 프로퍼티를 검사하는 방법
+                ul
+                    li Object.keys() : enumerable 설정된 string 속성 키 목록 반환
+                    li Object.getOwnPropertyNames() : enumerable 설정과 무관하게 string 속성 키 목록 반환
+                    li Object.getOwnPropertySymbols() : enumerable 설정과 무관하게 symbol 속성 키 목록 반환
+                    li Reflect.ownKeys() : enumerable 설정과 무관하게 string + symbol 속성 키 목록 반환
         li instanceof 연산자 : 객체 호환 여부 반환
         li 해체 할당; Destructuring Assignment
-        p
-            +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'javascript', '[15,22]') 배열 해체 할당 »
-            +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'javascript', '[26,29]') 배열 연속 해체 »
-            +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'javascript', '[33,36]') 다차원 배열 해체 »
-            +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'javascript', '[40,47]') 확산 연산자 »
-            +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'javascript', '[51,65]') 객체 해체 할당 »
-            +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'javascript', '[69,71]') 객체 메서드 해체 할당 »
+            p
+                +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'JavaScript', '[15,22]') 배열 해체 할당 »
+                +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'JavaScript', '[26,29]') 배열 연속 해체 »
+                +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'JavaScript', '[33,36]') 다차원 배열 해체 »
+                +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'JavaScript', '[40,47]') 확산 연산자 »
+                +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'JavaScript', '[51,65]') 객체 해체 할당 »
+                +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'JavaScript', '[69,71]') 객체 메서드 해체 할당 »
 
-    h1 Syntax
+    h1 제어 구문
     ol
         li if...[else if...][else...]
         li while, do...while
-        li for
-            +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'javascript', '[1,7]')
-        li switch : 조건으로 변수가 아닌 일반 표현식도 가능
+        li for(초기식; 조건식; 증감식)
+        li switch : 분기 조건으로 변수가 아닌 일반 표현식도 가능
         li for(let attr in obj) {} : 객체 프로퍼티 순회
-        li for(let name of iterable) {} : 배열, Iterable 객체 순회
+        li for(const name of iterable) {} : Iterable 객체 순회
         li with(obj) : 스코프 고정
-        li try ~ catch ~ finally
-        p 예외 처리. throw는 임의의 타입을 던질 수 있다. try 뒤에 catch 또는 finally가 하나라도 있어야 한다
+        li try ~ [catch] ~ [finally] : catch, finally 중 적어도 하나는 있어야 한다
+        li break with label : 임의 블록을 탈출할 수 있다
+            +asCode('JavaScript').
+                someLabel: {
+                    let a = Math.random()
+                    if (a < 0.5) {
+                        break someLabel
+                    }
+                    console.log(a)
+                }
 
-    h1 Function
-    ol
-        li 오버로딩 불가. 함수 호출 시 매개변수 길이 불일치해도 됨
-        li arguments 객체를 통해 매개변수에 접근.(람다는 불가능)
-        li 매개변수에 기본값 설정 가능
-        li 매개변수도 해체, 확산 연산자 사용 가능
-        li 명시하지 않은 경우, 함수의 기본 반환값은 undefined
-        li 함수가 호출하는 지점보다 나중에 정의되어 있는 경우, 함수 선언이 위로 끌어올려진다
-        li 함수의 컨텍스트(this) 지정
-        +asCode('javascript').
-            hello.apply({name: "Donggi"}, ["2018-08-08"]); // apply(호출자, 매개변수 배열)
-            hello.call({name: "Donggi"}, "2018-08-08");    // call(호출자, 매개변수)
-            // 확산 연산자 ...을 이용하면 call로 apply와 같은 효과를 낼 수 있다
-            let helloKim = hello.bind({name: "Kim"});      // 함수 호출자 영구 고정
-        li 함수 표현식 let f = function functionName() {}
-        li 익명 함수 let f = function () {}
-        li 화살표 표기법 let f = () => {}
-        li 클로저 Closure
-        p 함수 할당에 의해 접근할 수 있는 스코프가 늘어나는 것
-            +codeBtn('/Repositories/JavaScript/Basic/function.js', 'javascript', '[2,8]')
-        li 즉시 실행 함수 표현 IIFE; Immediately Invoked Function Expression
-            +codeBtn('/Repositories/JavaScript/Basic/function.js', 'javascript', '[12,17]')
+    h1 함수
+    ul
+        li ES6 전에는 function 키워드로 정의하는 함수만 존재했지만, ES6부터는 기능별로 전용 구문이 추가되었으므로 이를 이용함이 권장된다
+        li 명시하지 않은 경우, 함수 반환값은 undefined
+        li 매개변수에 기본값 설정 가능 + 해체, 확산 연산자 사용 가능
+            +asCode('JavaScript').
+                function avg(...numArr) {
+                    let sum = 0
+                    numArr.forEach(x => sum += x)
+                    return sum / numArr.length
+                }
+                console.log(avg(1, 2, 3, 4))
 
-    h1 Class
+                function xxxx({ a = 1, b = 2 } = {}) {
+                    console.log({a, b})
+                }
+                xxxx()
+        li 함수 컨텍스트(this) 지정
+            +asCode('JavaScript').
+                function hello(today) {
+                    console.log(`Hello ${this.name}! Today is ${today}`)
+                }
+                hello.apply({name: "Donggi"}, ["2018-08-08"])   // apply(호출자, 매개변수 배열)
+                hello.call({name: "Donggi"}, "2018-08-08")      // call(호출자, 매개변수1, ...)
+                hello.bind({name: "Donggi"})("2018-08-08")      // 함수 호출자 및 매개변수 고정
+        li 코드 동적 실행
+            +asCode('JavaScript').
+                const sum = new Function("a", "b", "return a + b")
+                console.log(sum(2, 6))
+
+    div
+        h2 일반 함수
+        +asCode('JavaScript').
+            // ES6 전
+            function add(x, y) {
+                return x + y
+            }
+            // ES6
+            const add = (x, y) => x + y
+
+        h2 메서드
+        +asCode('JavaScript').
+            // ES6 전
+            const o = {
+                name: 'Bob',
+                print: function() {
+                    console.log(`I'm ${this.name}`)
+                }
+            }
+            // ES6
+            const o = {
+                name: 'Bob',
+                print() {
+                    console.log(`I'm ${this.name}`)
+                }
+            }
+
+            o.print()
+
+        h2 생성자
+        +asCode('JavaScript').
+            // ES6 전
+            function Animal(name) {
+                this.name = name
+            }
+            // ES6
+            class Animal {
+                constructor(name) {
+                    this.name = name
+                }
+            }
+
+            const alice = new Animal('Alice')
+            console.log(alice instanceof Animal)    // true
+
+    h1 모듈
+    ul
+        li ES6에서 실행 환경 -- 브라우저, 서버 -- 에 관계없이 사용 가능한 내장 모듈 사양이 도입되었으므로, 이를 사용하는 것이 권장된다
+        li 보통 모듈은 소스 코드 파일에 작성되고
+            ul
+                li export를 통해 외부에서 이용할 모듈 내 구성 요소를 지정한다
+                li import를 통해 외부에서 가져올 모듈 내 구성 요소를 지정한다
+                li 한 모듈이 여러 모듈에서 참조되더라도, 해당 모듈은 한 번만 평가된다 -- 싱글톤이다
+        li 모듈 로드는 다음과 같이 2단계로 나뉘므로, 모듈 간 순환 의존성 있더라도 문제 없다
+            ol
+                li 모듈 간 의존성을 따라가면서 export ~ import 관계를 평가
+                li 로드된 모듈들의 body 실행
+            +codeBtn({path:'/Repositories/Node/module-251113/a.js', lan:'JavaScript'})
+            +codeBtn({path:'/Repositories/Node/module-251113/b.js', lan:'JavaScript'})
+            +asCode('shell').
+                $ node a.js
+                b.js body start
+                a() called
+                a.js body start
+                b() called
+
+                $ node b.js
+                a.js body start
+                b() called
+                b.js body start
+                a() called
+            p 단, 초기화되지 않은 요소를 참조하면 런타임 에러가 발생한다
+                +codeBtn({path:'/Repositories/Node/module-251113/a2.js', lan:'JavaScript'})
+                +codeBtn({path:'/Repositories/Node/module-251113/b2.js', lan:'JavaScript'})
+            +asCode('shell').
+                $ node a2.js
+                b2.js body start
+                a2() called
+                a2.js body start
+                b2() called#0
+                b2() called#1
+
+                $ node b2.js
+                a2.js body start
+                file://xxx/b2.js:8
+                    console.log(`b2() called#${count++}`);
+                                ^
+
+                ReferenceError: Cannot access 'count' before initialization
+                    at b2 (file://xxx/b2.js:8:17)
+                    at file://xxx/a2.js:4:1
+                    at ModuleJob.run (node:internal/modules/esm/module_job:271:25)
+                    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:547:26)
+                    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)
+        li import() 연산자를 통해 필요에 따라 동적으로 모듈을 가져올 수도 있다
+            p 연산자와 다르게 import()가 함수라면, 상대 경로를 이용하기 위해 호출자 모듈의 URL을 명시적으로 전달해야 한다
+
+    h1 클래스
     ol
         li 클래스는 본질적으로 함수다. 단순히 문법적 편의성이 더해졌을 뿐
         p
-            +codeBtn('/Repositories/JavaScript/Basic/class.js', 'javascript', '[1,15]') 클래스 정의 예 »
-            +codeBtn('/Repositories/JavaScript/Basic/class.js', 'javascript', '[18,19]') 상속 예 »
-            +codeBtn('/Repositories/JavaScript/Basic/class.js', 'javascript', '[22,39]') 믹스인 예 »
-        li 전역 객체
-        p Object, Array, String, Global, Math
-            br
-            |Global 객체를 직접 획득하는 건 불가능 : isNaN(), isFinite(), parseInt(), parseFloat(), encodeURI(), encodeURIComponent(), eval()
+            +codeBtn('/Repositories/JavaScript/Basic/class.js', 'JavaScript', '[1,15]') 클래스 정의 예 »
+            +codeBtn('/Repositories/JavaScript/Basic/class.js', 'JavaScript', '[18,19]') 상속 예 »
+            +codeBtn('/Repositories/JavaScript/Basic/class.js', 'JavaScript', '[22,39]') 믹스인 예 »
+
         li Private 멤버
-        p #으로 시작되는 프로퍼티, 메서드는 객체 외부에서 접근할 수 없다
+            ul
+                li #으로 시작되는 멤버는 클래스와 객체 내부에서 오로지 . 연산자를 이용해서만 접근 가능하다
+                li 생성자 말고는 모두 private 설정 가능
+                li 선언과 동시에 초기화하거나, 초기화하기 전에 미리 선언해야 한다
+
         li 객체 보호
-        +asCode('javascript').
-            Object.freeze()            // 객체 동결. 읽기만 가능
-            Object.seal()              // 객체 봉인. 기존 프로퍼티 값은 수정 가능
-            Object.preventExtensions() // 객체 확장 금지. 새 프로퍼티 추가만 금지
-        p: +codeBtn('/Repositories/JavaScript/Basic/class.js', 'javascript', '[42,70]') 접근자 프로퍼티 + 객체 보호 예 »
+        +asCode('JavaScript').
+            Object.preventExtensions() // 객체 확장 방지. 새 프로퍼티를 추가하거나 프로토타입을 변경할 수 없음
+            Object.seal()              // 객체 봉인. 확장 방지 + 모든 프로퍼티의 configurable 값을 false로 설정
+            Object.freeze()            // 객체 동결. 봉인 + 모든 프로퍼티의 writable 값을 false로 설정
+        p: +codeBtn('/Repositories/JavaScript/Basic/class.js', 'JavaScript', '[42,70]') 접근자 프로퍼티 + 객체 보호 예 »
+
+    h1 프록시
     div
-        h2 프록시
-        p
-            +asA('https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler#Methods', '참고자료')
-            +codeBtn('/Repositories/JavaScript/Basic/class.js', 'javascript', '[73,85]') 프록시 예 »
-        +table()
-            tr
-                th getPrototypeOf()
-                td A trap for Object.getPrototypeOf
-            tr
-                th setPrototypeOf()
-                td A trap for Object.setPrototypeOf
-            tr
-                th isExtensible()
-                td A trap for Object.isExtensible
-            tr
-                th preventExtensions()
-                td A trap for Object.preventExtensions
-            tr
-                th getOwnPropertyDescriptor()
-                td A trap for Object.getOwnPropertyDescriptor
-            tr
-                th defineProperty()
-                td A trap for Object.defineProperty
-            tr
-                th has()
-                td A trap for the in operator
-            tr
-                th get()
-                td A trap for getting property values
-            tr
-                th set()
-                td A trap for setting property values
-            tr
-                th deleteProperty()
-                td A trap for the delete operator
-            tr
-                th ownKeys()
-                td A trap for Object.getOwnPropertyNames and Object.getOwnPropertySymbols
-            tr
-                th apply()
-                td A trap for a function call
-            tr
-                th construct()
-                td A trap for the new operator
+        +asA('https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler#Methods', '참고자료')
+        +codeBtn('/Repositories/JavaScript/Basic/class.js', 'JavaScript', '[73,85]') 프록시 예 »
+    +table()
+        tr
+            th getPrototypeOf()
+            td A trap for Object.getPrototypeOf
+        tr
+            th setPrototypeOf()
+            td A trap for Object.setPrototypeOf
+        tr
+            th isExtensible()
+            td A trap for Object.isExtensible
+        tr
+            th preventExtensions()
+            td A trap for Object.preventExtensions
+        tr
+            th getOwnPropertyDescriptor()
+            td A trap for Object.getOwnPropertyDescriptor
+        tr
+            th defineProperty()
+            td A trap for Object.defineProperty
+        tr
+            th has()
+            td A trap for the in operator
+        tr
+            th get()
+            td A trap for getting property values
+        tr
+            th set()
+            td A trap for setting property values
+        tr
+            th deleteProperty()
+            td A trap for the delete operator
+        tr
+            th ownKeys()
+            td A trap for Object.getOwnPropertyNames and Object.getOwnPropertySymbols
+        tr
+            th apply()
+            td A trap for a function call
+        tr
+            th construct()
+            td A trap for the new operator
 
     h1 Iterator, Generator
     p 해체 할당과 마찬가지로 파이썬에서 가져온 아이디어들 중 하나
-        +codeBtn('/Repositories/JavaScript/Basic/iterator.js', 'javascript') 이터레이션 프로토콜 예 »
-        +codeBtn('/Repositories/JavaScript/Basic/generator.js', 'javascript') 제너레이터 예 »
+        +codeBtn('/Repositories/JavaScript/Basic/iterator.js', 'JavaScript') 이터레이션 프로토콜 예 »
+        +codeBtn('/Repositories/JavaScript/Basic/generator.js', 'JavaScript') 제너레이터 예 »
     ul
         li 파이썬과 마찬가지로 제어권을 주고받는 데 제너레이터를 사용한다
         li yield 키워드를 사용하는 모든 함수는 제너레이터 함수다
@@ -317,12 +506,12 @@ include ../../../source/skeleton.pug
         p 실행의 종료를 보장. 실행 상태(성공, 실패)에 따라 다른 콜백을 적절히 호출. 적절한 예외 처리도 지원 가능
             br
             |Promise의 생성은 resolve, reject 콜백을 매개변수로 받는 함수를 작성하기만 하면 된다
-            +codeBtn('/Repositories/JavaScript/Basic/promise.js', 'javascript') promise.js »
+            +codeBtn('/Repositories/JavaScript/Basic/promise.js', 'JavaScript') promise.js »
             br
             |Promise.all(), Promise.race(), ...
         li async, await
         p 함수 정의 앞에 async 키워드를 사용하면 함수 내에서 await를 사용할 수 있다. 이때, 함수는 Promise가 결정될 때까지 일시 중지
-            +codeBtn('/Repositories/JavaScript/Basic/async.js', 'javascript') async.js »
+            +codeBtn('/Repositories/JavaScript/Basic/async.js', 'JavaScript') async.js »
 
     h1 정규표현식
     ul
@@ -337,17 +526,17 @@ include ../../../source/skeleton.pug
         li replace()에서의 backreference
         ul
             li $& 일치 문자열
-            +asCode('javascript') '1 12 123 1234'.replace(/1/gm, '[$&]') // "[1] [1]2 [1]23 [1]234"
+            +asCode('JavaScript') '1 12 123 1234'.replace(/1/gm, '[$&]') // "[1] [1]2 [1]23 [1]234"
             li $` 앞부분
-            +asCode('javascript') '1 12 123 1234'.replace(/1/gm, '[$`]') // "[] [1 ]2 [1 12 ]23 [1 12 123 ]234"
+            +asCode('JavaScript') '1 12 123 1234'.replace(/1/gm, '[$`]') // "[] [1 ]2 [1 12 ]23 [1 12 123 ]234"
             li $' 뒷부분
-            +asCode('javascript') '1 12 123 1234'.replace(/1/gm, "[$']") // "[ 12 123 1234] [2 123 1234]2 [23 1234]23 [234]234"
+            +asCode('JavaScript') '1 12 123 1234'.replace(/1/gm, "[$']") // "[ 12 123 1234] [2 123 1234]2 [23 1234]23 [234]234"
         li 관련 메서드
         ul
             li RegExp#test() : 패턴이 검색되는지 여부
             li RegExp#exec() : 매칭되는 인덱스들을 배열로 반환
                 |매칭 시작 index, 검색 텍스트 input 프로퍼티를 가진다. [i] 접근으로 캡처 그룹을 가져올 수 있다
-            +asCode('javascript') /1/gm.exec('1 12 123') // ["1", index: 0, input: "1 12 123", groups: undefined]
+            +asCode('JavaScript') /1/gm.exec('1 12 123') // ["1", index: 0, input: "1 12 123", groups: undefined]
             li String#search(regexp) : 처음 매칭된 인덱스 반환
             li String#match(regexp) : 매칭되는 모든 부분문자열 반환
             li String#replace(regexp, replaceValue) : 매칭된 부분문자열을 replaceValue로 치환
@@ -367,13 +556,13 @@ include ../../../source/skeleton.pug
                 p Tag function을 이용하여 문자열 보간 작업을 사용자 정의할 수 있다
                     +codeBtn({
                         path: '/Repositories/JavaScript/snippet/240314-162705.js',
-                        lan: 'javascript',
+                        lan: 'JavaScript',
                         title: '예시 코드'
                     })
                 p 문자열이 아닌 걸 반환해도 된다
                     +codeBtn({
                         path: '/Repositories/JavaScript/snippet/240314-165131.js',
-                        lan: 'javascript',
+                        lan: 'JavaScript',
                         title: '예시 코드'
                     })
                 p 언어 자체에 내장된 tag function도 있다
@@ -482,9 +671,9 @@ include ../../../source/skeleton.pug
         h2 ES2020
         ul
             li import() : import .. from ... 구문과 다르게, 런타임에 동적으로 모듈 로드
-            li import.meta : ES 모듈을 이용하는 경우, #[+asInlineCode('import.meta.url', 'javascript')]를 이용해 모듈 URL 획득 가능
+            li import.meta : ES 모듈을 이용하는 경우, #[+asInlineCode('import.meta.url', 'JavaScript')]를 이용해 모듈 URL 획득 가능
             li export * as newName from 'module' : 모듈의 defaults를 다시 노출하기만 할 때 편의 제공
-            li BigInt : #[+asInlineCode('Number.MAX_SAFE_INTEGER', 'javascript')]보다 큰 정수도 정확히 보존하는 정수 자료형
+            li BigInt : #[+asInlineCode('Number.MAX_SAFE_INTEGER', 'JavaScript')]보다 큰 정수도 정확히 보존하는 정수 자료형
             li String.prototype.matchAll() : g 플래그를 켠 정규표현식의 모든 매치 결과를 순회할 수 있는 iterator 반환 -- 기존엔 전문검색을 위해 루프를 실행해야 했다
             li globalThis : 실행 환경(브라우저, Node, Deno, ...)과 무관하게 전역 컨텍스트를 통한 변수 접근 방법 제공
         div
@@ -500,7 +689,7 @@ include ../../../source/skeleton.pug
             p Promise.all()은 일부가 실패한 경우 아래 2가지가 불가능했는데, allSettled()는 모두 가능하다
                 +codeBtn({
                     path: '/Repositories/JavaScript/snippet/240314-190540.js',
-                    lan: 'javascript',
+                    lan: 'JavaScript',
                     title: '예시 코드'
                 })
             ul
@@ -666,8 +855,8 @@ include ../../../source/skeleton.pug
             +asCode('JavaScript') import config from 'https://xxx/config.json'
             p 서버가 JSON이 아닌 실행 가능한 JavaScript 코드를 응답하면 의도치 않게 해당 코드가 실행되는 문제가 있었다. 이제는 속성을 지정하여 이러한 경우 명시적으로 오류를 발생할 수 있다
             +asCode('JavaScript').
-                import styles from "https://example.com/styles.css" with { type: "css" };
-                import data from "https://example.com/data.json" with { type: "json" };
+                import styles from "https://example.com/styles.css" with { type: "css" }
+                import("https://example.com/data.json", { with { type: "json" } })
 
             h3: +asA('https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator#iterator_helper_methods')
             p Iterator helper method는 기존 iterator를 이용하는 새로운 iterator helper object를 반환한다. 두 iterator의 진행도는 동기화되며, 독립적으로 진행되지 않는다
