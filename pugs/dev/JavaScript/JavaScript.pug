@@ -425,14 +425,35 @@ include ../../../source/skeleton.pug
             +codeBtn('/Repositories/JavaScript/Basic/class.js', 'JavaScript', '[1,15]') 클래스 정의 예 »
             +codeBtn('/Repositories/JavaScript/Basic/class.js', 'JavaScript', '[18,19]') 상속 예 »
             +codeBtn('/Repositories/JavaScript/Basic/class.js', 'JavaScript', '[22,39]') 믹스인 예 »
+    div
+        h2 Private slot
+        ul
+            li #으로 시작되는 멤버는 이를 정의한 클래스 내부에서, 오로지 . 연산자를 이용해서만 접근 가능하다
+            li 생성자 말고는 모두 private 설정 가능
+            li 선언과 동시에 초기화하거나, 초기화하기 전에 미리 선언해야 한다
+            li 문자열로 평가되는 public slot 이름과 다르게, private slot 이름은 symbol과 같은 유일성을 갖는다 -- 이 성질을 이용해 타입 검사를 할 수도 있다
+                +asCode('JavaScript').
+                    class Class1 {
+                      #field1 = 'Defined in Class1'
+                      static print(x) {
+                        return console.log(x.#field1)
+                      }
+                    }
 
-        li Private 멤버
-            ul
-                li #으로 시작되는 멤버는 클래스와 객체 내부에서 오로지 . 연산자를 이용해서만 접근 가능하다
-                li 생성자 말고는 모두 private 설정 가능
-                li 선언과 동시에 초기화하거나, 초기화하기 전에 미리 선언해야 한다
+                    class Class2 extends Class1 {
+                      #field1 = 'Defined in Class2'
+                      static print(x) {
+                        return console.log(x.#field1)
+                      }
+                    }
 
-        li 객체 보호
+                    Class1.print(new Class1()) // Defined in Class1
+                    Class1.print(new Class2()) // Defined in Class1
+
+                    Class2.print(new Class1()) // TypeError: Cannot read private member #field1 from an object whose class did not declare it
+                    Class2.print(new Class2()) // Defined in Class2
+
+        h2 객체 보호
         +asCode('JavaScript').
             Object.preventExtensions() // 객체 확장 방지. 새 프로퍼티를 추가하거나 프로토타입을 변경할 수 없음
             Object.seal()              // 객체 봉인. 확장 방지 + 모든 프로퍼티의 configurable 값을 false로 설정
