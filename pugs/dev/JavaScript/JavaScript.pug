@@ -421,10 +421,7 @@ include ../../../source/skeleton.pug
     h1 클래스
     ol
         li 클래스는 본질적으로 함수다. 단순히 문법적 편의성이 더해졌을 뿐
-        p
-            +codeBtn('/Repositories/JavaScript/Basic/class.js', 'JavaScript', '[1,15]') 클래스 정의 예 »
-            +codeBtn('/Repositories/JavaScript/Basic/class.js', 'JavaScript', '[18,19]') 상속 예 »
-            +codeBtn('/Repositories/JavaScript/Basic/class.js', 'JavaScript', '[22,39]') 믹스인 예 »
+        li 한편, private slot의 도입으로 클래스는 함수 이상의 것이 되었다 -- 함수에서는 private slot 사용 불가능
     div
         h2 Private slot
         ul
@@ -459,6 +456,13 @@ include ../../../source/skeleton.pug
             Object.seal()              // 객체 봉인. 확장 방지 + 모든 프로퍼티의 configurable 값을 false로 설정
             Object.freeze()            // 객체 동결. 봉인 + 모든 프로퍼티의 writable 값을 false로 설정
         p: +codeBtn('/Repositories/JavaScript/Basic/class.js', 'JavaScript', '[42,70]') 접근자 프로퍼티 + 객체 보호 예 »
+
+        h3 Mixin class
+        p extends 키워드의 operand가 표현식이라는 점을 이용하여, 다음과 같은 방법으로 다중 상속과 유사한 기능을 구현할 수 있다
+        +asCode('JavaScript').
+            const CanDoX = (Sup) => class extends Sup { x() { console.log('x') } }
+            const CanDoY = (Sup) => class extends Sup { y() { console.log('y') } }
+            class C extends CanDoX(CanDoY(Object)) {}
 
     h1 프록시
     div
@@ -505,15 +509,57 @@ include ../../../source/skeleton.pug
             th construct()
             td A trap for the new operator
 
-    h1 Iterator, Generator
-    p 해체 할당과 마찬가지로 파이썬에서 가져온 아이디어들 중 하나
-        +codeBtn('/Repositories/JavaScript/Basic/iterator.js', 'JavaScript') 이터레이션 프로토콜 예 »
-        +codeBtn('/Repositories/JavaScript/Basic/generator.js', 'JavaScript') 제너레이터 예 »
+    h1 Sync Iteration
+    +asCode('TypeScript').
+        interface Iterable&lt;T&gt; {
+          [Symbol.iterator]() : Iterator&lt;T&gt;;
+        }
+
+        abstract class Iterator&lt;T&gt; {
+          abstract next() : IteratorResult&lt;T&gt;;
+        }
+
+        interface IteratorResult&lt;T&gt; {
+          value: T;
+          done: boolean;
+        }
     ul
-        li 파이썬과 마찬가지로 제어권을 주고받는 데 제너레이터를 사용한다
-        li yield 키워드를 사용하는 모든 함수는 제너레이터 함수다
-        li 제너레이터 함수를 호출하면 제너레이터 객체를 받는다
-        li 제너레이터의 실행을 재개하는 3가지 메서드 : next(), send(), throw()
+        li Iteration 프로토콜 : 데이터 소비자가 데이터 소스의 원소들을 하나씩 소비하는 절차
+        li Iterable : iteration 프로토콜을 구현한 객체
+            +asCode('JavaScript').
+                const [a, b] = new Set([1, 2])
+                for (const [k, v] of new Map([['k1', 'v1'], ['k2', 'v2']])) {
+                    console.log(k, v)
+                }
+                console.log(...new Set([1, 2]))
+        li Iterator : 순회에 이용되는 객체
+        li Generator : 함수가 생성하는 값을 순회하는 iterator. 호출자와 양방향 통신이 가능하다는 특징이 있다
+            +asCode('JavaScript').
+                function* numbers(from, to, diff) {
+                    for (let n = from; n <= to; n += diff) {
+                        try {
+                            if (Math.random() < 0.5) {
+                                yield n
+                            }
+                        } catch (e) {
+                            console.log(`Error?? ${e.message}`)
+                        }
+                    }
+                }
+                function* pickSomeNumbers() {
+                    const a = yield 'Enter number a : '
+                    const b = yield 'Enter number b : '
+                    yield* numbers(a, b, 1)
+                }
+                const g = pickSomeNumbers()
+                console.log(g.next())               // {value: 'Enter number a : ', done: false}
+                console.log(g.next(10))             // {value: 'Enter number b : ', done: false}
+                console.log(g.next(20))             // {value: 11, done: false}
+                g.throw(new Error('Test Error'))    // Error?? Test Error
+                console.log(g.next())               // {value: 13, done: false}
+                console.log(g.return(0))            // {value: 0, done: true}
+                console.log(g.return(1))            // {value: 1, done: true}
+                console.log(g.next())               // {value: undefined, done: true}
 
     h1 비동기 처리
     ol
