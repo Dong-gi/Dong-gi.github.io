@@ -262,14 +262,6 @@ include ../../../source/skeleton.pug
                     li Object.getOwnPropertySymbols() : enumerable 설정과 무관하게 symbol 속성 키 목록 반환
                     li Reflect.ownKeys() : enumerable 설정과 무관하게 string + symbol 속성 키 목록 반환
         li instanceof 연산자 : 객체 호환 여부 반환
-        li 해체 할당; Destructuring Assignment
-            p
-                +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'JavaScript', '[15,22]') 배열 해체 할당 »
-                +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'JavaScript', '[26,29]') 배열 연속 해체 »
-                +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'JavaScript', '[33,36]') 다차원 배열 해체 »
-                +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'JavaScript', '[40,47]') 확산 연산자 »
-                +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'JavaScript', '[51,65]') 객체 해체 할당 »
-                +codeBtn('/Repositories/JavaScript/Basic/syntax.js', 'JavaScript', '[69,71]') 객체 메서드 해체 할당 »
 
     h1 제어 구문
     ol
@@ -568,21 +560,53 @@ include ../../../source/skeleton.pug
         li DataView : ArrayBuffer 조작을 위한 저수준 래퍼. 바이트 단위로 조작 가능하다
 
     h1 비동기 처리
-    ol
-        li 전통적 방식 : 콜백
-        p setTimeout(), setInterval(), clearInterval()
-            br
-            |Error-first Callback : 콜백 첫번째 매개변수를 err로 사용하는 것
-            br
-            |Callback Hell : 연속적으로 콜백이 다른 콜백을 호출하여 관리하기 어려워지는 상황
-        li Promise
-        p 실행의 종료를 보장. 실행 상태(성공, 실패)에 따라 다른 콜백을 적절히 호출. 적절한 예외 처리도 지원 가능
-            br
-            |Promise의 생성은 resolve, reject 콜백을 매개변수로 받는 함수를 작성하기만 하면 된다
-            +codeBtn('/Repositories/JavaScript/Basic/promise.js', 'JavaScript') promise.js »
-            br
-            |Promise.all(), Promise.race(), ...
-        li async, await
+    div
+        h2 전통적 방식 : 콜백
+        +asCode('JavaScript').
+            const callback = (error, result) => {
+                // Error-first Callback : 콜백 첫번째 매개변수를 에러로 사용하는 것
+                if (error != null) { }
+            }
+            someFunction(args, callback)
+
+            func1(args1, (err1, result1) => {
+                func2(args2, (err2, result2) => {
+                    func3(args3, (err3, result3) => {
+                        // Callback Hell : 콜백이 다른 콜백을 호출하는 게 깊이 이어져 관리하기 어려워지는 상황
+                    })
+                })
+            })
+
+        h2 Promise
+        div
+            p 비동기 실행 결과를 효율적으로 전달하기 위한 자료형. 실행 상태(성공, 실패)에 따라 다른 콜백을 적절히 호출. 적절한 예외 처리도 지원
+            +asCode('JavaScript').
+                new Promise((resolve, reject) => {
+                    // ...
+                    if (success) {
+                        return resolve(result)
+                    }
+                    return reject(new Error('reason'))
+                })
+                // Promise 체인은 promise의 상태와 무관하게 언제든 추가 가능
+                .then(result => {})
+                .catch(error => {})
+                .finally(() => {})
+            h3 Promise의 상태
+            ul
+                li pending : 초기 상태
+                    p settled = not(pending) = fulfilled or rejected
+                li fulfilled : 연산 성공
+                li rejected : 연산 실패
+            h3 Iterable&lt;Promise&gt;를 다루는 유틸리티
+            +table()
+                +ths('반환된 Promise 객체의 > ', 'fulfill 조건', 'reject 조건')
+                +tds('Promise.all()', '모든 입력 promise가 fulfilled로 천이', '입력 promise 중 하나라도 rejected로 천이')
+                +tds('Promise.allSettled()', '모든 입력 promise가 fulfilled 또는 rejected로 천이', '-')
+                +tds('Promise.any()', '입력 promise 중 하나라도 fulfilled로 천이', '모든 입력 promise가 rejected로 천이')
+                +tds('Promise.race()', '입력 promise 중 하나라도 fulfilled로 천이', '입력 promise 중 하나라도 rejected로 천이')
+
+        h2 async, await
         p 함수 정의 앞에 async 키워드를 사용하면 함수 내에서 await를 사용할 수 있다. 이때, 함수는 Promise가 결정될 때까지 일시 중지
             +codeBtn('/Repositories/JavaScript/Basic/async.js', 'JavaScript') async.js »
 
@@ -687,21 +711,24 @@ include ../../../source/skeleton.pug
 
             h3 객체 해체 할당 + 나머지 속성
             +asCode('JavaScript').
-                const obj = {
-                    x: [1, 2, 3],
-                    y: { a: 4, b: 5, c: 6 },
-                    z: [7, 8, 9]
-                }
                 const {
                     x: [x1, ...xRest],
                     y: { a: y1, ...yRest },
                     ...objRest
-                } = obj
-                console.info(x1)        // 1
-                console.info(xRest)     // [2, 3]
-                console.info(y1)        // 4
-                console.info(yRest)     // {b: 5, c: 6}
-                console.info(objRest)   // {"z": [7, 8, 9]}
+                } = {
+                    x: [1, 2, 3],
+                    y: { a: 4, b: 5, c: 6 },
+                    z: [7, 8, 9]
+                }
+                console.log(x1)         // 1
+                console.log(xRest)      // [2, 3]
+                console.log(y1)         // 4
+                console.log(yRest)      // {b: 5, c: 6}
+                console.log(objRest)    // {"z": [7, 8, 9]}
+
+                let r, g, b, a
+                ({ r, g, b, a = 255 } = { r: 12, g: 34, b: 56 })
+                console.log(r, g, b, a) // 12, 34, 56, 255
 
             h3 정규표현식 기능 추가
             ul
@@ -916,7 +943,7 @@ include ../../../source/skeleton.pug
                             // length, byteLength는 즉시 0으로 변경
                         buf.resize(1)
                         console.log(arr.length, arr.byteLength, arr.byteOffset) // 0 0 0
-                            // byteOffset은 버퍼의 실제 크기가 래퍼가 참조하는 영역에서 완전히 벗어나는 경우 0으로 변경
+                            // V8 엔진에서, byteOffset은 버퍼의 실제 크기가 래퍼가 참조하는 영역에서 완전히 벗어나는 경우 0으로 변경
 
                         arr[1] = 123            // 무시됨
                         console.log(arr[1])     // undefined
