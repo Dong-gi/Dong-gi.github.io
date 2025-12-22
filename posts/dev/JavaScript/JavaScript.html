@@ -188,7 +188,156 @@ func1(args1, (err1, result1) => {
 // Promise 체인은 promise의 상태와 무관하게 언제든 추가 가능
 .then(result => {})
 .catch(error => {})
-.finally(() => {})</div><h3>Promise의 상태</h3><ul><li>pending : 초기 상태<p>settled = not(pending) = fulfilled or rejected</p></li><li>fulfilled : 연산 성공</li><li>rejected : 연산 실패</li></ul><h3>Iterable&lt;Promise&gt;를 다루는 유틸리티</h3><table class="w3-table-all w3-card w3-small"><tr><th>반환된 Promise 객체의 &gt; </th><th>fulfill 조건</th><th>reject 조건</th></tr><tr><td>Promise.all()</td><td>모든 입력 promise가 fulfilled로 천이</td><td>입력 promise 중 하나라도 rejected로 천이</td></tr><tr><td>Promise.allSettled()</td><td>모든 입력 promise가 fulfilled 또는 rejected로 천이</td><td>-</td></tr><tr><td>Promise.any()</td><td>입력 promise 중 하나라도 fulfilled로 천이</td><td>모든 입력 promise가 rejected로 천이</td></tr><tr><td>Promise.race()</td><td>입력 promise 중 하나라도 fulfilled로 천이</td><td>입력 promise 중 하나라도 rejected로 천이</td></tr></table></div><h2>async, await</h2><p>함수 정의 앞에 async 키워드를 사용하면 함수 내에서 await를 사용할 수 있다. 이때, 함수는 Promise가 결정될 때까지 일시 중지<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" type="button" title="/Repositories/JavaScript/Basic/async.js" lan="JavaScript">async.js »</button></p></div><h1>정규표현식</h1><ul><li>정규표현식(RegExp) 리터럴 /X/</li><p>/123/gm과 new RegExp('123', 'gm')는 의미적으로 동일하다</p><li>Flag : g(global), i(ignoreCase), m(multiline), s(.이 newline도 매칭 Since ES2018)</li><p>global 플래그를 이용하는 경우, RegExp.lastIndex로 검색 위치를 기록하며, 해당 위치부터 재탐색한다따라서 global RegExp에 동일 문자열을 반복적으로 test()하는 경우 true, false가 토글되는 현상을 경험할 수도 있다</p><p>↓ 자바와 동일한 부분은 생략했음</p><li>Greedy 수량사</li><p>?, *, +, {n}, {n, }, {n, m}</p><li>replace()에서의 backreference</li><ul><li>$& 일치 문자열</li><p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">'1 12 123 1234'.replace(/1/gm, '[$&]') // "[1] [1]2 [1]23 [1]234"</div><li>$` 앞부분</li><p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">'1 12 123 1234'.replace(/1/gm, '[$`]') // "[] [1 ]2 [1 12 ]23 [1 12 123 ]234"</div><li>$' 뒷부분</li><p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">'1 12 123 1234'.replace(/1/gm, "[$']") // "[ 12 123 1234] [2 123 1234]2 [23 1234]23 [234]234"</div></ul><li>관련 메서드</li><ul><li>RegExp#test() : 패턴이 검색되는지 여부</li><li>RegExp#exec() : 매칭되는 인덱스들을 배열로 반환매칭 시작 index, 검색 텍스트 input 프로퍼티를 가진다. [i] 접근으로 캡처 그룹을 가져올 수 있다</li><p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">/1/gm.exec('1 12 123') // ["1", index: 0, input: "1 12 123", groups: undefined]</div><li>String#search(regexp) : 처음 매칭된 인덱스 반환</li><li>String#match(regexp) : 매칭되는 모든 부분문자열 반환</li><li>String#replace(regexp, replaceValue) : 매칭된 부분문자열을 replaceValue로 치환</li><li>String#split(regexp, limit) : 매칭된 문자열을 분리</li></ul></ul><h1>버전별 신규 기능</h1><div><h2>참고자료</h2><ul><li><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://ecma-international.org/publications-and-standards/standards/ecma-262/">ecma-262</a></li></ul><h2>ES2015, ES6</h2><div><h3>Tagged template literal</h3><div><p>Tag function을 이용하여 문자열 보간 작업을 사용자 정의할 수 있다<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" type="button" title="/Repositories/JavaScript/snippet/240314-162705.js" lan="JavaScript">예시 코드</button></p><p>문자열이 아닌 걸 반환해도 된다<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" type="button" title="/Repositories/JavaScript/snippet/240314-165131.js" lan="JavaScript">예시 코드</button></p><p>언어 자체에 내장된 tag function도 있다</p><p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">String.raw`C:\Development\profile\about.html`</div></div></div><h2>ES2016</h2><ul><li>지수 연산자 **</li><li>Array.prototype.includes() : 배열이 특정 원소를 포함하는지 여부 반환</li></ul><h2>ES2017</h2><ul><li>async function 정의, await 비동기 호출 지원</li><li>Object.values() : 객체의 순회 가능한 모든 값을 배열로 반환</li><li>Object.entries() : 객체의 순회 가능한 모든 [키, 값]쌍을 배열로 반환</li><li>Object.getOwnPropertyDescriptors() : 객체의 모든 프로퍼티 반환<p>예. Object.assign()이 순회 가능한 프로퍼티만 복사하는 반면, 아래 코드는 모든 프로퍼티를 얕게 복사한다</p><p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">Object.create(
+.finally(() => {})</div><h3>Promise의 상태</h3><ul><li>pending : 초기 상태<p>settled = not(pending) = fulfilled or rejected</p></li><li>fulfilled : 연산 성공</li><li>rejected : 연산 실패</li></ul><h3>Iterable&lt;Promise&gt;를 다루는 유틸리티</h3><table class="w3-table-all w3-card w3-small"><tr><th>반환된 Promise 객체의 &gt; </th><th>fulfill 조건</th><th>reject 조건</th></tr><tr><td>Promise.all()</td><td>모든 입력 promise가 fulfilled로 천이</td><td>입력 promise 중 하나라도 rejected로 천이</td></tr><tr><td>Promise.allSettled()</td><td>모든 입력 promise가 fulfilled 또는 rejected로 천이</td><td>-</td></tr><tr><td>Promise.any()</td><td>입력 promise 중 하나라도 fulfilled로 천이</td><td>모든 입력 promise가 rejected로 천이</td></tr><tr><td>Promise.race()</td><td>입력 promise 중 하나라도 fulfilled로 천이</td><td>입력 promise 중 하나라도 rejected로 천이</td></tr></table></div><h2>async, await</h2><p>함수 정의 앞에 async 키워드를 사용하면 함수 내에서 await를 사용할 수 있다. 이때, 함수는 Promise가 결정될 때까지 일시 중지</p><p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">(async () => {
+    queueMicrotask(() => console.log('OTHER TASK1'))
+    setTimeout(() => console.log('OTHER TASK2'), 0)
+    console.log('before')
+    await Promise.resolve()
+    console.log('after')
+})()</div><p><strong>↓ result</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="plaintext">before
+OTHER TASK1
+after
+// function returned
+OTHER TASK2
+</div></div><h1>정규표현식</h1><ul><li>RegExp 생성자를 이용해 런타임에 생성하거나, 리터럴 표현 // 을 이용해 로드 타임에 생성할 수 있다</li><li>ES2024부터 유니코드 처리를 위해 v 플래그를 기본 사용하는 것이 권장된다</li></ul><div><h2>Regex Quantifier</h2><ul><li>x* : 패턴 x에 매칭되는 문자열이 0개 이상 반복되는 경우, 가능한 가장 긴 문자열에 매칭된다</li><li>x+ : 패턴 x에 매칭되는 문자열이 1개 이상 반복되는 경우, 가능한 가장 긴 문자열에 매칭된다</li><li>x? : 패턴 x에 매칭되는 문자열이 1개 이하 반복되는 경우, 가능한 가장 긴 문자열에 매칭된다</li><li>x{n} : 패턴 x에 매칭되는 문자열이 n개 반복되는 경우, 가능한 가장 긴 문자열에 매칭된다</li><li>x{n,} : 패턴 x에 매칭되는 문자열이 n개 이상 반복되는 경우, 가능한 가장 긴 문자열에 매칭된다</li><li>x{n,m} : 패턴 x에 매칭되는 문자열이 n개 이상 m개 이하 반복되는 경우, 가능한 가장 긴 문자열에 매칭된다</li><li>x*? : 패턴 x에 매칭되는 문자열이 0개 이상 반복되는 경우, 가능한 가장 짧은 문자열에 매칭된다</li><li>x+? : 패턴 x에 매칭되는 문자열이 1개 이상 반복되는 경우, 가능한 가장 짧은 문자열에 매칭된다</li><li>x?? : 패턴 x에 매칭되는 문자열이 1개 이하 반복되는 경우, 가능한 가장 짧은 문자열에 매칭된다</li><li>x{n}? : 패턴 x에 매칭되는 문자열이 n개 반복되는 경우, 가능한 가장 짧은 문자열에 매칭된다</li><li>x{n,}? : 패턴 x에 매칭되는 문자열이 n개 이상 반복되는 경우, 가능한 가장 짧은 문자열에 매칭된다</li><li>x{n,m}? : 패턴 x에 매칭되는 문자열이 n개 이상 m개 이하 반복되는 경우, 가능한 가장 짧은 문자열에 매칭된다</li></ul><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" type="button" title="/Repositories/Single/202512/16-1432.js" lan="JavaScript">quantifier example</button><h2>Regex Character Class</h2><ul><li>[abc], [a-z] : 문자 집합. 집합에 포함된 문자들에 매칭된다. -를 이용해 유니코드 range를 지정할 수 있다</li><li>[^abc], [^a-z] : 문자 여집합. 집합에 포함되지 않은 문자들에 매칭된다<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">'m 플래그가 활성화된 경우, 각 줄의 시작(line break 문자 바로 뒤)과도 매칭된다'.replaceAll(/[가-힣]/gv, '✅')
+    // 'm ✅✅✅✅ ✅✅✅✅ ✅✅, ✅ ✅✅ ✅✅(line break ✅✅ ✅✅ ✅)✅✅ ✅✅✅✅'
+'m 플래그가 활성화된 경우, 각 줄의 시작(line break 문자 바로 뒤)과도 매칭된다'.replaceAll(/[^가-힣]/gv, '✅')
+    // '✅✅플래그가✅활성화된✅경우✅✅각✅줄의✅시작✅✅✅✅✅✅✅✅✅✅✅✅문자✅바로✅뒤✅과도✅매칭된다'</div></li><li>. : 와일드카드. 줄 끝 문자를 제외한 모든 문자에 매칭된다<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">'\n \r \u2028 \u2029'.replaceAll(/./gv, '✅')
+    // '\n✅\r✅ ✅ '</div></li><li>\d : 숫자 집합. [0-9]와 동일하다</li><li>\D : 비-숫자 집합. [^0-9]와 동일하다</li><li>\w : 단어 문자 집합. [A-Za-z0-9_]와 동일하다</li><li>\W : 비-단어 문자 집합. [^A-Za-z0-9_]와 동일하다</li><li>\s : 공백 문자 집합. [\f\n\r\t\v\u0020\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]와 동일하다</li><li>\S : 비-공백 문자 집합<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">'Apple 1개를 食べた'.replaceAll(/\d/gv, '✅')   // 'Apple ✅개를 食べた'
+'Apple 1개를 食べた'.replaceAll(/\D/gv, '✅')   // '✅✅✅✅✅✅1✅✅✅✅✅✅'
+'Apple 1개를 食べた'.replaceAll(/\w/gv, '✅')   // '✅✅✅✅✅ ✅개를 食べた'
+'Apple 1개를 食べた'.replaceAll(/\W/gv, '✅')   // 'Apple✅1✅✅✅✅✅✅'
+'Apple 1개를 食べた'.replaceAll(/\s/gv, '✅')   // 'Apple✅1개를✅食べた'
+'Apple 1개를 食べた'.replaceAll(/\S/gv, '✅')   // '✅✅✅✅✅ ✅✅✅ ✅✅✅'</div></li><li>\xhh : 16진수 2개로 아스키코드 문자 1개 지정 가능</li><li>\uhhhh, \u{hhhhh} : 16진수 4~5개로 유니코드 문자 1개 지정 가능</li><li>\p{loneProperty}, \p{property=value} : 지정한 유니코드 속성을 만족하는 문자 집합</li><li>\P{loneProperty}, \P{property=value} : 지정한 유니코드 속성을 만족하지 않는 문자 집합<ul><li>loneProperty<ol><li><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://unicode.org/Public/UCD/latest/ucd/PropertyValueAliases.txt">General_Category</a> 속성에 대한 값 설정 가능</li><li><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://tc39.es/ecma262/multipage/text-processing.html#table-binary-unicode-properties">이진 문자 속성</a> 이름 설정 가능</li><li>v 플래그를 사용한 경우, <a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://tc39.es/ecma262/multipage/text-processing.html#table-binary-unicode-properties-of-strings">이진 문자열 속성</a> 이름 설정 가능</li></ol></li><li>property=value<ul><li>property는 반드시 <a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://tc39.es/ecma262/multipage/text-processing.html#table-nonbinary-unicode-properties">비-이진 문자 속성</a> 이름이어야 한다</li><li>value에는 <a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://unicode.org/Public/UCD/latest/ucd/PropertyValueAliases.txt">property에 대해 허용된 값</a> 중 하나 설정 가능</li></ul></li></ul><p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">'🍎Apple 1개를 食べた👨🏾‍⚕️'.replaceAll(/\p{Lowercase_Letter}/gv, '✅')   // '🍎A✅✅✅✅ 1개를 食べた👨🏾‍⚕️'
+'🍎Apple 1개를 食べた👨🏾‍⚕️'.replaceAll(/\P{Lowercase_Letter}/gv, '✅')   // '✅✅pple✅✅✅✅✅✅✅✅✅✅✅✅✅'
+'🍎Apple 1개를 食べた👨🏾‍⚕️'.replaceAll(/\p{Emoji}/gv, '✅')              // '✅Apple ✅개를 食べた✅✅‍✅️'
+'🍎Apple 1개를 食べた👨🏾‍⚕️'.replaceAll(/\P{Emoji}/gv, '✅')              // '🍎✅✅✅✅✅✅1✅✅✅✅✅✅👨🏾✅⚕✅'
+'🍎Apple 1개를 食べた👨🏾‍⚕️'.replaceAll(/\p{RGI_Emoji}/gv, '✅')          // '✅Apple 1개를 食べた✅'
+'🍎Apple 1개를 食べた👨🏾‍⚕️'.replaceAll(/\P{RGI_Emoji}/gv, '✅')
+    // Uncaught SyntaxError: Invalid regular expression: /\P{RGI_Emoji}/gv: Invalid property name
+    // ㄴ RGI_Emoji는 개별 문자가 아닌 문자열에 대한 속성으로, 이에 대한 not 연산은 몇 글자에 걸쳐 적용해야 하는지 불분명하므로 지원되지 않는다</div></li><li>v 플래그 사용 시, 추가적인 집합 연산 사용 가능 <a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black goto" href="#pos1599470301" target="_self">RegExp.prototype.unicodeSets</a></li><li>pattern1|pattern2 : 패턴에 대한 합집합</li></ul><h2>Regex Group + Backreference</h2><ul><li>(x) : capturing group. 패턴 x에 매칭되는 문자열을 별도로 기억하고, 이후 번호를 이용해 참조할 수 있게 한다</li><li>(?&lt;name&gt;x) : named capturing group. 번호에 더해, 이름을 이용해서도 참조할 수 있다</li><li>(?:x) : non-capturing group. 패턴 x에 매칭되는 문자열을 별도로 기억하지 않는다<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">const csv = `id,name,price
+1,name1,$123
+2,name2,$234.56`
+const regex = /^(\d+),(?&lt;name&gt;[^,]+),\$(\d+(?:\.\d*)?)$/gm
+
+for (const r of csv.matchAll(regex)) {
+    console.log(JSON.stringify(Object.assign({}, r), undefined, 4))
+}
+/*
+{
+    "0": "1,name1,$123",
+    "1": "1",
+    "2": "name1",
+    "3": "123",
+    "index": 14,
+    "input": "id,name,price\n1,name1,$123\n2,name2,$234.56",
+    "groups": {
+        "name": "name1"
+    }
+}
+{
+    "0": "2,name2,$234.56",
+    "1": "2",
+    "2": "name2",
+    "3": "234.56",
+    "index": 27,
+    "input": "id,name,price\n1,name1,$123\n2,name2,$234.56",
+    "groups": {
+        "name": "name2"
+    }
+}
+*/</div></li><li>(?flags:x), (?flags-flags:x) : Since ES2025. modifier. 패턴 x에 대해서만 임시로 플래그를 켜거나 끈다</li><li>\n : backreference. n번 그룹에 매칭된 것과 동일한 문자열에 대해 매칭</li><li>\k&lt;name&gt; : named backreference. 지정한 이름의 그룹에 매칭된 것과 동일한 문자열에 대해 매칭<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">const tag = `&lt;img class="w3-round" src='https://picsum.photos/200'/&gt;`
+const regex = /(\w+)=(?&lt;quote&gt;['"])(.*)\k&lt;quote&gt;/g
+
+for (const r of tag.matchAll(regex)) {
+    console.log(`attr=value : ${r[1]}=${r[3]}`)
+}
+// attr=value : class=w3-round
+// attr=value : src=https://picsum.photos/200
+</div></li></ul><h2>Regex Assertion</h2><ul><li>줄이나 단어의 경계를 포함하는지 여부를 검출한다</li><li>^ : 입력의 시작과 매칭된다. m 플래그가 활성화된 경우, 각 줄의 시작(line break 문자 바로 뒤)과도 매칭된다</li><li>$ : 입력의 끝과 매칭된다. m 플래그가 활성화된 경우, 각 줄의 끝(line break 문자 바로 앞)과도 매칭된다<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">'line1\nline2'.replaceAll(/^/g, '✅')   // '✅line1\nline2'
+'line1\nline2'.replaceAll(/^/gm, '✅')  // '✅line1\n✅line2'
+'line1\nline2'.replaceAll(/$/g, '✅')   // 'line1\nline2✅'
+'line1\nline2'.replaceAll(/$/gm, '✅')  // 'line1✅\nline2✅'</div></li><li>\b : 단어 경계에 매칭된다. 단어는 \w의 연속을 기준으로 하므로, \w의 연속이 끊어지는 부분들이 이에 해당한다</li><li>\B : 비-단어 경계에 매칭된다. 연속한 2개 문자가 모두 \w거나 \W인 경우 그 사이가 이에 해당한다<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">'hello world!'.replaceAll(/\b/g, '✅')  // '✅hello✅ ✅world✅!'
+'안녕 세상!'.replaceAll(/\b/gm, '✅')     // '안녕 세상!'
+'hello world!'.replaceAll(/\B/g, '✅')  // 'h✅e✅l✅l✅o w✅o✅r✅l✅d!✅'
+'안녕 세상!'.replaceAll(/\B/gm, '✅')     // '✅안✅녕✅ ✅세✅상✅!✅'</div></li><li>x(?=y) : positive lookahead. x 뒤에 y가 이어지는 경우의 x에 매칭된다</li><li>x(?!y) : negative lookahead. x 뒤에 y가 이어지지 않는 경우의 x에 매칭된다</li><li>(?&lt;=y)x : positive lookbehind. y 뒤에 x가 이어지는 경우의 x에 매칭된다</li><li>(?&lt;!y)x : negative lookbehind. y 뒤에 x가 이어지지 않는 경우의 x에 매칭된다<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" type="button" title="/Repositories/Single/202512/16-1450.js" lan="JavaScript">lookahead/behind example</button></li></ul><h2>Regex Flag</h2><table class="w3-table-all w3-card w3-small"><tr><th>flag</th><th>RegExp property</th><th>description</th></tr><tr><td>d</td><td>hasIndices</td><td>Since ES2022. 패턴 전체 및 각 캡처링 그룹에 대한 시작/끝 위치를 RegExpExecArray.indices 속성에 제공</td></tr><tr><td>g</td><td>global</td><td>패턴 매칭이 여러 번 수행될 수 있다 -- lastIndex 위치에서 시작하는 부분문자열에서 패턴이 검색되지 않더라도, 문자열이 끝나지 않는 이상 그 다음 위치들에서도 검사 진행</td></tr><tr><td>i</td><td>ignoreCase</td><td>대소문자를 구별하지 않고 패턴을 검색한다</td></tr><tr><td>m</td><td>multiline</td><td>줄바꿈 문자가 포함된 문자열을 여러 줄의 문자열로 취급한다 -- ^나 $를 이용해 개별 줄에 대한 패턴 지정 가능</td></tr><tr><td>s</td><td>dotAll</td><td>.이 모든 UTF-16 코드 유닛에 매칭된다. 유니코드 모드에서는 모든 유니코드 코드 포인트에 매칭된다</td></tr><tr><td>u</td><td>unicode</td><td>UTF-16 코드 유닛 단위가 아닌, 유니코드 코드 포인트 단위로 동작한다</td></tr><tr><td>v</td><td>unicodeSets</td><td>Since ES2024. u 플래그의 업그레이드</td></tr><tr><td>y</td><td>sticky</td><td>패턴 매칭은 lastIndex 위치에서 시작하는 부분문자열에 대해서만 수행</td></tr></table><div><h3>gy 플래그의 동작</h3><ul><li>exec()<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">const txt = 'a ab abc'
+
+let r = /a/g
+console.log(r.exec(txt))    // [ 'a', index: 0, input: 'a ab abc', groups: undefined ]
+console.log(r.exec(txt))    // [ 'a', index: 2, input: 'a ab abc', groups: undefined ]
+
+r = /a/y
+console.log(r.exec(txt))    // [ 'a', index: 0, input: 'a ab abc', groups: undefined ]
+console.log(r.exec(txt))    // null
+
+r = /a/gy
+console.log(r.exec(txt))    // [ 'a', index: 0, input: 'a ab abc', groups: undefined ]
+console.log(r.exec(txt))    // null
+</div></li><li>match()<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">console.log('a ab abc'.match(/a/g))     // [ 'a', 'a', 'a' ]
+console.log('a ab abc'.match(/a/gy))    // [ 'a' ]
+console.log('a ab abc'.match(/a/y))     // [ 'a', index: 0, input: 'a ab abc', groups: undefined ]
+</div></li><li>matchAll()<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">console.log([...'a ab abc'.matchAll(/a/g)])     // [
+                                                //   [ 'a', index: 0, input: 'a ab abc', groups: undefined ],
+                                                //   [ 'a', index: 2, input: 'a ab abc', groups: undefined ],
+                                                //   [ 'a', index: 5, input: 'a ab abc', groups: undefined ]
+                                                // ]
+console.log([...'a ab abc'.matchAll(/a/gy)])    // [ [ 'a', index: 0, input: 'a ab abc', groups: undefined ] ]
+console.log([...'a ab abc'.matchAll(/a/y)])     // TypeError: String.prototype.matchAll called with a non-global RegExp argument
+</div></li><li>search()<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">console.log('a ab abc'.search(/b/g))    // 3
+console.log('a ab abc'.search(/b/gy))   // -1
+console.log('a ab abc'.search(/b/y))    // -1
+</div></li><li>split() : g, y 플래그가 있든 없든 차이 없음</li><li>replace()<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">console.log('a ab abc'.replace(/b/g, 'B'))  // a aB aBc
+console.log('a ab abc'.replace(/b/gy, 'B')) // a ab abc
+console.log('a ab abc'.replace(/b/y, 'B'))  // a ab abc
+</div></li><li>replaceAll()<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">console.log('a ab abc'.replaceAll(/b/g, 'B'))   // a aB aBc
+console.log('a ab abc'.replaceAll(/b/gy, 'B'))  // a ab abc
+console.log('a ab abc'.replaceAll(/b/y, 'B'))   // TypeError: String.prototype.replaceAll called with a non-global RegExp argument
+</div></li></ul></div><h2>Regex 관련 메서드</h2><ul><li>RegExp#test() : 주어진 문자열에서 패턴이 검색되는지 여부를 반환</li><li>RegExp#exec() : 주어진 문자열에서 패턴을 검색하여, 가장 먼저 발견된 결과를 반환. 매칭된 게 없다면 null 반환<p><strong>↓ TypeScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="TypeScript">interface RegExpExecArray extends Array&lt;string&gt; {
+    input: string   // 입력 문자열 자체
+    0: string       // 패턴 매칭된 문자열. 항상 not null
+                    // 1, 2, ... 등의 인덱스는 패턴에 그룹이 있는 경우에만, 각 그룹에 매칭된 문자열이 설정된다
+    index: number   // 매칭된 문자열이 입력 문자열에서 시작하는 위치
+    groups?: {      // Since ES2018. 패턴에 명명된 캡처 그룹이 있는 경우, 각 그룹 이름에 대해 매칭된 문자열들이 설정
+        [key: string]: string
+    }
+    indices?: RegExpIndicesArray
+                    // Since ES2022. d 플래그가 있는 경우에만 설정
+                    // RegExpExecArray[i]가 입력 문자열에서 시작(include)/종료(exclude)하는 위치가 indices[i]에 설정된다
+}
+
+interface RegExpIndicesArray extends Array&lt;[number, number]&gt; {
+    groups?: {      // 패턴에 명명된 캡처 그룹이 있는 경우, 각 그룹 이름에 대해 시작(include)/종료(exclude) 위치 설정
+        [key: string]: [number, number]
+    }
+}</div></li><li>String#search() : 주어진 패턴에 처음 매칭되는 시작 위치(인덱스) 반환. 매칭된 게 없다면 -1 반환</li><li>String#match()<ul><li>g 플래그 있는 경우 : 매칭된 모든 부분문자열 반환</li><li>g 플래그 없는 경우 : RegExp#exec() 결과 반환</li><li>매칭되는 게 없는 경우 : null 반환</li></ul></li><li>String#matchAll() : 주어진 패턴으로 더 이상 매칭되는 게 없을 때까지 RegExp#exec()을 수행하는 iterator 반환</li><li>String#replace()<ul><li>g 플래그 있는 경우 : 매칭된 모든 부분문자열 치환</li><li>g 플래그 없는 경우 : 매칭된 첫 번째 부분문자열만 치환</li><li>패턴이 빈 문자열인 경우 : (치환 문자열 + 원본 문자열)이 반환된다</li><li>치환 문자열 대신 치환 함수를 지정한 경우 : 패턴 매칭 후 함수가 호출되고, 그 반환값으로 치환<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">/**
+ * @param {string} match 매칭된 문자열
+ * @param {string} pN n번째 캡처 그룹에 매칭된 문자열
+ * @param {number} offset 전체 문자열에서 매칭된 문자열이 시작되는 위치(인덱스)
+ * @param {string} string 전체 문자열
+ * @param {{ [key: string]: string }} groups 명명된 캡처 그룹에 매칭된 문자열
+ */
+function replacer(match, p1, p2, /* …, */ pN, offset, string, groups) {
+  return replacement;
+}</div></li></ul><p>치환 문자열은 특별한 패턴들을 포함할 수 있다</p><ul><li>$&amp; : 매칭된 문자열 자체</li><li>$` : 매칭된 문자열 앞부분</li><li>$' : 매칭된 문자열 뒷부분</li><li>$n : n번째 캡처 그룹에 매칭된 문자열</li><li>$&lt;name&gt; : 명명된 캡처 그룹에 매칭된 문자열</li><li>$$ : $ 문자 자체</li></ul><p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">'1 12 123'.replace(/1/gm, '[$&amp;]') // '[1] [1]2 [1]23'
+'1 12 123'.replace(/1/gm, '[$`]') // '[] [1 ]2 [1 12 ]23'
+'1 12 123'.replace(/1/gm, "[$']") // '[ 12 123] [2 123]2 [23]23'</div></li><li>String#replaceAll()<ul><li>매칭되는 모든 부분문자열에 대해 치환</li><li>패턴이 빈 문자열인 경우 : 모든 코드 포인트 경계에 치환 문자열이 삽입된다</li></ul></li><li>String#split() : 패턴에 매칭된 문자열들을 구분자로 하여 문자열 분리</li></ul></div><h1>JSON</h1><ul><li>JSON 기본 지원 타입이 아닌 경우의 처리 예<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">JSON.parse(
+    JSON.stringify(
+        { a: 123, b: 234n, c: null },
+        (key, value) => {
+            return typeof value === 'bigint' ? { $type: 'bigint', $value: value.toString() } : value
+        }
+    ),
+    (key, value) => {
+        switch (value?.$type) {
+            case 'bigint': return BigInt(value.$value)
+            default: return value
+        }
+    }
+)</div></li><li>JSON 포함 속성 지정 예<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">e = new Error('test')
+e.count = 123
+console.log(JSON.stringify(e))                      // {"count":123}
+console.log(JSON.stringify(e, ['name', 'stack']))   // {"name":"Error","stack":"Error: test\n    at &lt;anonymous&gt;:1:5"}
+</div></li></ul><h1>버전별 신규 기능</h1><div><h2>참고자료</h2><ul><li><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://ecma-international.org/publications-and-standards/standards/ecma-262/">ecma-262</a></li></ul><h2>ES2015, ES6</h2><div><h3>Tagged template literal</h3><div><p>Tag function을 이용하여 문자열 보간 작업을 사용자 정의할 수 있다<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" type="button" title="/Repositories/JavaScript/snippet/240314-162705.js" lan="JavaScript">예시 코드</button></p><p>문자열이 아닌 걸 반환해도 된다<button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" type="button" title="/Repositories/JavaScript/snippet/240314-165131.js" lan="JavaScript">예시 코드</button></p><p>언어 자체에 내장된 tag function도 있다</p><p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">String.raw`C:\Development\profile\about.html`</div></div></div><h2>ES2016</h2><ul><li>지수 연산자 **</li><li>Array.prototype.includes() : 배열이 특정 원소를 포함하는지 여부 반환</li></ul><h2>ES2017</h2><ul><li>async function 정의, await 비동기 호출 지원</li><li>Object.values() : 객체의 순회 가능한 모든 값을 배열로 반환</li><li>Object.entries() : 객체의 순회 가능한 모든 [키, 값]쌍을 배열로 반환</li><li>Object.getOwnPropertyDescriptors() : 객체의 모든 프로퍼티 반환<p>예. Object.assign()이 순회 가능한 프로퍼티만 복사하는 반면, 아래 코드는 모든 프로퍼티를 얕게 복사한다</p><p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">Object.create(
     Object.getPrototypeOf(obj),
     Object.getOwnPropertyDescriptors(obj),
 )</div></li><li>String.prototype.padStart(), padEnd() 추가</li></ul><div><h3>Shared Memory, Atomics</h3><ul><li>Atomics는 원자적 연산을 위한 함수들을, Shared Memory는 이를 위한 공유 메모리를 정의한다</li><li>원자적 연산은 Java의 volatile 변수처럼, CPU 코어 수준으로 병렬 실행을 동기화한다</li><li>공유 메모리 구현체는 SharedArrayBuffer인데, 브라우저에서는 기본적으로 비활성화되어 있으므로 사용하기 위해선 명시적인 설정이 필요하다</li></ul><button class="w3-btn w3-round-xxlarge w3-small w3-teal btn-code" type="button" title="/Repositories/Single/202506/09-1435.js" lan="JavaScript">예시 코드</button></div><h2>ES2018</h2><ul><li>Promise.prototype.finally() : Promise 상태가 무엇으로 천이되든 무관하게 실행되는 블록</li></ul><div><h3>비동기 반복자</h3><p>비동기 반복자는 Promise를 반환하는 반복자</p><p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">const asyncIterator = (async function* () {
@@ -240,7 +389,7 @@ await readyDB()
 const promise = new Promise((resolve, reject) => {
     resolver = resolve
     rejector = reject
-})</div><p>위와 같은 코드를 아래와 같이 축약할 수 있다</p><p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">const { promise, resolve, reject } = Promise.withResolvers()</div><h3>RegExp.prototype.unicodeSets</h3><ul><li>v 플래그를 이용해 생성한 정규표현식은 이 속성이 true로 설정된다</li><li>v 플래그는 유니코드 관련 기능을 활성화하는 u 플래그의 업그레이드 버전인데, 구문 해석 방식이 다르기 때문에 두 플래그를 모두 설정하면 SyntaxError가 발생한다</li><li>u 플래그에 비해 character class [...], [^...] 에 다음의 기능들이 추가된다<ul><li>추가적인 집합 연산 사용 가능<ul><li>[operand1&amp;&amp;operand2] : 교집합</li><li>[operand1--operand2] : 차집합</li><li>연산자를 한 번에 2개 이상 적용하는 것은 불가능하지만, nested 표기를 이용하면 쉽게 달성할 수 있다<p>한편, 단순 나열은 합집합 연산을 의미하므로 [AB--C]도 유효하지 않으며, [A[B--C]]와 같이 사용해야 한다</p></li></ul></li><li>[\q{substring}]으로 유니코드 리터럴 지정 가능. 내부에선 | 연산자만 이용 가능</li><li>\p 이스케이프로 RGI_Emoji와 같은 더 다양한 유니코드 클래스 집합 지정 가능</li></ul></li><li>i 플래그에서 \P{property} 평가가 달라진다<ul><li><span class="as-code code-span" lan="JavaScript">/P{Lowercase_Letter}/iu.test('a') === true</span><p>u 모드에서는 case-folding이 여집합 구성 후에 발생한다</p><ol><li>Lowercase_Letter에 대한 여집합이 생성된다 : uppercase + caseless</li><li>i 플래그를 위해 집합의 소문자 버전이 생성된다 : lowercase + caseless</li><li>입력 문자열은 패턴 매칭 전에 소문자 버전으로 변환된다</li><li>'a'는 패턴을 만족하므로 true 반환</li></ol></li><li><span class="as-code code-span" lan="JavaScript">/P{Lowercase_Letter}/iv.test('a') === false</span><p>v 모드에서는 case-folding이 여집합 구성 전에 발생한다</p><ol><li>Lowercase_Letter에 대한 소문자 버전 집합이 생성된다 : lowercase</li><li>대문자를 포함하지 않는 여집합이 생성된다 : caseless</li><li>입력 문자열은 패턴 매칭 전에 소문자 버전으로 변환된다</li><li>'a'는 패턴을 만족하지 않으므로 false 반환</li></ol></li></ul></li><li>i 플래그에서 character class complement syntax [^...] 에 대한 해석이 달라진다<ul><li><span class="as-code code-span" lan="JavaScript">/[^P{Lowercase_Letter}]/iu.test('A') === false</span><p>u 모드에서는 패턴을 반대로 평가한다</p><ol><li>Lowercase_Letter에 대한 여집합이 생성된다 : uppercase + caseless</li><li>i 플래그를 위해 집합의 소문자 버전이 생성된다 : lowercase + caseless</li><li>입력 문자열은 패턴 매칭 전에 소문자 버전으로 변환된다</li><li>'a'는 패턴을 만족하므로 false -- [^...]는 패턴을 매치 결과를 뒤집는다</li></ol></li><li><span class="as-code code-span" lan="JavaScript">/[^P{Lowercase_Letter}]/iv.test('A') === true</span><p>v 모드에서는 패턴을 반대로 평가하는 대신 여집합을 구성한다</p><ol><li>Lowercase_Letter에 대한 소문자 버전 집합이 생성된다 : lowercase</li><li>대문자를 포함하지 않는 여집합이 생성된다 : caseless</li><li>대문자를 포함하지 않는 여집합이 생성된다 : lowercase -- \P와 [^...]는 서로 상쇄된다</li><li>입력 문자열은 패턴 매칭 전에 소문자 버전으로 변환된다</li><li>'a'는 패턴을 만족하므로 true</li></ol></li></ul></li><li>v 모드가 grapheme cluster를 한 문자로 취급하지는 않는다. 여전히 코드 포인트의 모음으로 취급한다<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">/😵‍💫/.test('😵‍💫')     // true
+})</div><p>위와 같은 코드를 아래와 같이 축약할 수 있다</p><p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">const { promise, resolve, reject } = Promise.withResolvers()</div><h3>RegExp.prototype.unicodeSets</h3><ul><li>v 플래그를 이용해 생성한 정규표현식은 이 속성이 true로 설정된다</li><li>v 플래그는 유니코드 관련 기능을 활성화하는 u 플래그의 업그레이드 버전인데, 구문 해석 방식이 다르기 때문에 두 플래그를 모두 설정하면 SyntaxError가 발생한다</li><li>u 플래그에 비해 character class [...], [^...] 에 다음의 기능들이 추가된다<ul><li>추가적인 집합 연산 사용 가능<ul><li>[operand1&amp;&amp;operand2] : 교집합</li><li>[operand1--operand2] : 차집합</li><li>연산자를 한 번에 2개 이상 적용하는 것은 불가능하지만, nested 표기를 이용하면 쉽게 달성할 수 있다<p>한편, 단순 나열은 합집합 연산을 의미하므로 [AB--C]도 유효하지 않으며, [A[B--C]]와 같이 사용해야 한다</p></li></ul></li><li>[\q{substring}]으로 유니코드 리터럴 지정 가능. 내부에선 | 연산자만 이용 가능</li><li>\p 이스케이프로 RGI_Emoji와 같은 더 다양한 유니코드 클래스 집합 지정 가능</li></ul></li><li>i 플래그에서 \P{property} 평가가 달라진다<ul><li><span class="as-code code-span" lan="JavaScript">/\P{Lowercase_Letter}/iu.test('a') === true</span><p>u 모드에서는 case-folding이 여집합 구성 후에 발생한다</p><ol><li>Lowercase_Letter에 대한 여집합이 생성된다 : uppercase + caseless</li><li>i 플래그를 위해 집합의 소문자 버전이 생성된다 : lowercase + caseless</li><li>입력 문자열은 패턴 매칭 전에 소문자 버전으로 변환된다</li><li>'a'는 패턴을 만족하므로 true 반환</li></ol></li><li><span class="as-code code-span" lan="JavaScript">/\P{Lowercase_Letter}/iv.test('a') === false</span><p>v 모드에서는 case-folding이 여집합 구성 전에 발생한다</p><ol><li>Lowercase_Letter에 대한 소문자 버전 집합이 생성된다 : lowercase</li><li>대문자를 포함하지 않는 여집합이 생성된다 : caseless</li><li>입력 문자열은 패턴 매칭 전에 소문자 버전으로 변환된다</li><li>'a'는 패턴을 만족하지 않으므로 false 반환</li></ol></li></ul></li><li>i 플래그에서 character class complement syntax [^...] 에 대한 해석이 달라진다<ul><li><span class="as-code code-span" lan="JavaScript">/[^\P{Lowercase_Letter}]/iu.test('A') === false</span><p>u 모드에서는 패턴을 반대로 평가한다</p><ol><li>Lowercase_Letter에 대한 여집합이 생성된다 : uppercase + caseless</li><li>i 플래그를 위해 집합의 소문자 버전이 생성된다 : lowercase + caseless</li><li>입력 문자열은 패턴 매칭 전에 소문자 버전으로 변환된다</li><li>'a'는 패턴을 만족하므로 false -- [^...]는 패턴을 매치 결과를 뒤집는다</li></ol></li><li><span class="as-code code-span" lan="JavaScript">/[^\P{Lowercase_Letter}]/iv.test('A') === true</span><p>v 모드에서는 패턴을 반대로 평가하는 대신 여집합을 구성한다</p><ol><li>Lowercase_Letter에 대한 소문자 버전 집합이 생성된다 : lowercase</li><li>대문자를 포함하지 않는 여집합이 생성된다 : caseless</li><li>대문자를 포함하지 않는 여집합이 생성된다 : lowercase -- \P와 [^...]는 서로 상쇄된다</li><li>입력 문자열은 패턴 매칭 전에 소문자 버전으로 변환된다</li><li>'a'는 패턴을 만족하므로 true</li></ol></li></ul></li><li>v 모드가 grapheme cluster를 한 문자로 취급하지는 않는다. 여전히 코드 포인트의 모음으로 취급한다<p><strong>↓ JavaScript</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="JavaScript">/😵‍💫/.test('😵‍💫')     // true
 /😵‍💫/v.test('😵‍💫')    // true
 
 /[😄-😛]/.test("😑")    // SyntaxError: Invalid regular expression: /[😄-😛]/: Range out of order in character class

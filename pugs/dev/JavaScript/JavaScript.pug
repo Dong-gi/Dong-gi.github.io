@@ -608,36 +608,331 @@ include ../../../source/skeleton.pug
 
         h2 async, await
         p 함수 정의 앞에 async 키워드를 사용하면 함수 내에서 await를 사용할 수 있다. 이때, 함수는 Promise가 결정될 때까지 일시 중지
-            +codeBtn('/Repositories/JavaScript/Basic/async.js', 'JavaScript') async.js »
+        +asCode('JavaScript').
+            (async () => {
+                queueMicrotask(() => console.log('OTHER TASK1'))
+                setTimeout(() => console.log('OTHER TASK2'), 0)
+                console.log('before')
+                await Promise.resolve()
+                console.log('after')
+            })()
+        +asCode('plaintext', 'result').
+            before
+            OTHER TASK1
+            after
+            // function returned
+            OTHER TASK2
 
     h1 정규표현식
     ul
-        li 정규표현식(RegExp) 리터럴 /X/
-        p /123/gm과 new RegExp('123', 'gm')는 의미적으로 동일하다
-        li Flag : g(global), i(ignoreCase), m(multiline), s(.이 newline도 매칭 Since ES2018)
-        p global 플래그를 이용하는 경우, RegExp.lastIndex로 검색 위치를 기록하며, 해당 위치부터 재탐색한다
-            |따라서 global RegExp에 동일 문자열을 반복적으로 test()하는 경우 true, false가 토글되는 현상을 경험할 수도 있다
-        p ↓ 자바와 동일한 부분은 생략했음
-        li Greedy 수량사
-        p ?, *, +, {n}, {n, }, {n, m}
-        li replace()에서의 backreference
+        li RegExp 생성자를 이용해 런타임에 생성하거나, 리터럴 표현 // 을 이용해 로드 타임에 생성할 수 있다
+        li ES2024부터 유니코드 처리를 위해 v 플래그를 기본 사용하는 것이 권장된다
+    div
+        h2 Regex Quantifier
         ul
-            li $& 일치 문자열
-            +asCode('JavaScript') '1 12 123 1234'.replace(/1/gm, '[$&]') // "[1] [1]2 [1]23 [1]234"
-            li $` 앞부분
-            +asCode('JavaScript') '1 12 123 1234'.replace(/1/gm, '[$`]') // "[] [1 ]2 [1 12 ]23 [1 12 123 ]234"
-            li $' 뒷부분
-            +asCode('JavaScript') '1 12 123 1234'.replace(/1/gm, "[$']") // "[ 12 123 1234] [2 123 1234]2 [23 1234]23 [234]234"
-        li 관련 메서드
+            li x* : 패턴 x에 매칭되는 문자열이 0개 이상 반복되는 경우, 가능한 가장 긴 문자열에 매칭된다
+            li x+ : 패턴 x에 매칭되는 문자열이 1개 이상 반복되는 경우, 가능한 가장 긴 문자열에 매칭된다
+            li x? : 패턴 x에 매칭되는 문자열이 1개 이하 반복되는 경우, 가능한 가장 긴 문자열에 매칭된다
+            li x{n} : 패턴 x에 매칭되는 문자열이 n개 반복되는 경우, 가능한 가장 긴 문자열에 매칭된다
+            li x{n,} : 패턴 x에 매칭되는 문자열이 n개 이상 반복되는 경우, 가능한 가장 긴 문자열에 매칭된다
+            li x{n,m} : 패턴 x에 매칭되는 문자열이 n개 이상 m개 이하 반복되는 경우, 가능한 가장 긴 문자열에 매칭된다
+            li x*? : 패턴 x에 매칭되는 문자열이 0개 이상 반복되는 경우, 가능한 가장 짧은 문자열에 매칭된다
+            li x+? : 패턴 x에 매칭되는 문자열이 1개 이상 반복되는 경우, 가능한 가장 짧은 문자열에 매칭된다
+            li x?? : 패턴 x에 매칭되는 문자열이 1개 이하 반복되는 경우, 가능한 가장 짧은 문자열에 매칭된다
+            li x{n}? : 패턴 x에 매칭되는 문자열이 n개 반복되는 경우, 가능한 가장 짧은 문자열에 매칭된다
+            li x{n,}? : 패턴 x에 매칭되는 문자열이 n개 이상 반복되는 경우, 가능한 가장 짧은 문자열에 매칭된다
+            li x{n,m}? : 패턴 x에 매칭되는 문자열이 n개 이상 m개 이하 반복되는 경우, 가능한 가장 짧은 문자열에 매칭된다
+        +codeBtn({
+            title: 'quantifier example',
+            path: '/Repositories/Single/202512/16-1432.js',
+            lan: 'JavaScript'
+        })
+
+        h2 Regex Character Class
         ul
-            li RegExp#test() : 패턴이 검색되는지 여부
-            li RegExp#exec() : 매칭되는 인덱스들을 배열로 반환
-                |매칭 시작 index, 검색 텍스트 input 프로퍼티를 가진다. [i] 접근으로 캡처 그룹을 가져올 수 있다
-            +asCode('JavaScript') /1/gm.exec('1 12 123') // ["1", index: 0, input: "1 12 123", groups: undefined]
-            li String#search(regexp) : 처음 매칭된 인덱스 반환
-            li String#match(regexp) : 매칭되는 모든 부분문자열 반환
-            li String#replace(regexp, replaceValue) : 매칭된 부분문자열을 replaceValue로 치환
-            li String#split(regexp, limit) : 매칭된 문자열을 분리
+            li [abc], [a-z] : 문자 집합. 집합에 포함된 문자들에 매칭된다. -를 이용해 유니코드 range를 지정할 수 있다
+            li [^abc], [^a-z] : 문자 여집합. 집합에 포함되지 않은 문자들에 매칭된다
+                +asCode('JavaScript').
+                    'm 플래그가 활성화된 경우, 각 줄의 시작(line break 문자 바로 뒤)과도 매칭된다'.replaceAll(/[가-힣]/gv, '✅')
+                        // 'm ✅✅✅✅ ✅✅✅✅ ✅✅, ✅ ✅✅ ✅✅(line break ✅✅ ✅✅ ✅)✅✅ ✅✅✅✅'
+                    'm 플래그가 활성화된 경우, 각 줄의 시작(line break 문자 바로 뒤)과도 매칭된다'.replaceAll(/[^가-힣]/gv, '✅')
+                        // '✅✅플래그가✅활성화된✅경우✅✅각✅줄의✅시작✅✅✅✅✅✅✅✅✅✅✅✅문자✅바로✅뒤✅과도✅매칭된다'
+            li . : 와일드카드. 줄 끝 문자를 제외한 모든 문자에 매칭된다
+                +asCode('JavaScript').
+                    '\n \r \u2028 \u2029'.replaceAll(/./gv, '✅')
+                        // '\n✅\r✅ ✅ '
+            li \d : 숫자 집합. [0-9]와 동일하다
+            li \D : 비-숫자 집합. [^0-9]와 동일하다
+            li \w : 단어 문자 집합. [A-Za-z0-9_]와 동일하다
+            li \W : 비-단어 문자 집합. [^A-Za-z0-9_]와 동일하다
+            li \s : 공백 문자 집합. [\f\n\r\t\v\u0020\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]와 동일하다
+            li \S : 비-공백 문자 집합
+                +asCode('JavaScript').
+                    'Apple 1개를 食べた'.replaceAll(/\d/gv, '✅')   // 'Apple ✅개를 食べた'
+                    'Apple 1개를 食べた'.replaceAll(/\D/gv, '✅')   // '✅✅✅✅✅✅1✅✅✅✅✅✅'
+                    'Apple 1개를 食べた'.replaceAll(/\w/gv, '✅')   // '✅✅✅✅✅ ✅개를 食べた'
+                    'Apple 1개를 食べた'.replaceAll(/\W/gv, '✅')   // 'Apple✅1✅✅✅✅✅✅'
+                    'Apple 1개를 食べた'.replaceAll(/\s/gv, '✅')   // 'Apple✅1개를✅食べた'
+                    'Apple 1개를 食べた'.replaceAll(/\S/gv, '✅')   // '✅✅✅✅✅ ✅✅✅ ✅✅✅'
+            li \xhh : 16진수 2개로 아스키코드 문자 1개 지정 가능
+            li \uhhhh, \u{hhhhh} : 16진수 4~5개로 유니코드 문자 1개 지정 가능
+            li \p{loneProperty}, \p{property=value} : 지정한 유니코드 속성을 만족하는 문자 집합
+            li \P{loneProperty}, \P{property=value} : 지정한 유니코드 속성을 만족하지 않는 문자 집합
+                ul
+                    li loneProperty
+                        ol
+                            li #[+asA('https://unicode.org/Public/UCD/latest/ucd/PropertyValueAliases.txt', 'General_Category')] 속성에 대한 값 설정 가능
+                            li #[+asA('https://tc39.es/ecma262/multipage/text-processing.html#table-binary-unicode-properties', '이진 문자 속성')] 이름 설정 가능
+                            li v 플래그를 사용한 경우, #[+asA('https://tc39.es/ecma262/multipage/text-processing.html#table-binary-unicode-properties-of-strings', '이진 문자열 속성')] 이름 설정 가능
+                    li property=value
+                        ul
+                            li property는 반드시 #[+asA('https://tc39.es/ecma262/multipage/text-processing.html#table-nonbinary-unicode-properties', '비-이진 문자 속성')] 이름이어야 한다
+                            li value에는 #[+asA('https://unicode.org/Public/UCD/latest/ucd/PropertyValueAliases.txt', 'property에 대해 허용된 값')] 중 하나 설정 가능
+                +asCode('JavaScript').
+                    '🍎Apple 1개를 食べた👨🏾‍⚕️'.replaceAll(/\p{Lowercase_Letter}/gv, '✅')   // '🍎A✅✅✅✅ 1개를 食べた👨🏾‍⚕️'
+                    '🍎Apple 1개를 食べた👨🏾‍⚕️'.replaceAll(/\P{Lowercase_Letter}/gv, '✅')   // '✅✅pple✅✅✅✅✅✅✅✅✅✅✅✅✅'
+                    '🍎Apple 1개를 食べた👨🏾‍⚕️'.replaceAll(/\p{Emoji}/gv, '✅')              // '✅Apple ✅개를 食べた✅✅‍✅️'
+                    '🍎Apple 1개를 食べた👨🏾‍⚕️'.replaceAll(/\P{Emoji}/gv, '✅')              // '🍎✅✅✅✅✅✅1✅✅✅✅✅✅👨🏾✅⚕✅'
+                    '🍎Apple 1개를 食べた👨🏾‍⚕️'.replaceAll(/\p{RGI_Emoji}/gv, '✅')          // '✅Apple 1개를 食べた✅'
+                    '🍎Apple 1개를 食べた👨🏾‍⚕️'.replaceAll(/\P{RGI_Emoji}/gv, '✅')
+                        // Uncaught SyntaxError: Invalid regular expression: /\P{RGI_Emoji}/gv: Invalid property name
+                        // ㄴ RGI_Emoji는 개별 문자가 아닌 문자열에 대한 속성으로, 이에 대한 not 연산은 몇 글자에 걸쳐 적용해야 하는지 불분명하므로 지원되지 않는다
+            li v 플래그 사용 시, 추가적인 집합 연산 사용 가능 #[+goto('RegExp.prototype.unicodeSets')]
+            li pattern1|pattern2 : 패턴에 대한 합집합
+
+        h2 Regex Group + Backreference
+        ul
+            li (x) : capturing group. 패턴 x에 매칭되는 문자열을 별도로 기억하고, 이후 번호를 이용해 참조할 수 있게 한다
+            li (?&lt;name&gt;x) : named capturing group. 번호에 더해, 이름을 이용해서도 참조할 수 있다
+            li (?:x) : non-capturing group. 패턴 x에 매칭되는 문자열을 별도로 기억하지 않는다
+                +asCode('JavaScript').
+                    const csv = `id,name,price
+                    1,name1,$123
+                    2,name2,$234.56`
+                    const regex = /^(\d+),(?&lt;name&gt;[^,]+),\$(\d+(?:\.\d*)?)$/gm
+                    
+                    for (const r of csv.matchAll(regex)) {
+                        console.log(JSON.stringify(Object.assign({}, r), undefined, 4))
+                    }
+                    /*
+                    {
+                        "0": "1,name1,$123",
+                        "1": "1",
+                        "2": "name1",
+                        "3": "123",
+                        "index": 14,
+                        "input": "id,name,price\n1,name1,$123\n2,name2,$234.56",
+                        "groups": {
+                            "name": "name1"
+                        }
+                    }
+                    {
+                        "0": "2,name2,$234.56",
+                        "1": "2",
+                        "2": "name2",
+                        "3": "234.56",
+                        "index": 27,
+                        "input": "id,name,price\n1,name1,$123\n2,name2,$234.56",
+                        "groups": {
+                            "name": "name2"
+                        }
+                    }
+                    */
+            li (?flags:x), (?flags-flags:x) : Since ES2025. modifier. 패턴 x에 대해서만 임시로 플래그를 켜거나 끈다
+            li \n : backreference. n번 그룹에 매칭된 것과 동일한 문자열에 대해 매칭
+            li \k&lt;name&gt; : named backreference. 지정한 이름의 그룹에 매칭된 것과 동일한 문자열에 대해 매칭
+                +asCode('JavaScript').
+                    const tag = `&lt;img class="w3-round" src='https://picsum.photos/200'/&gt;`
+                    const regex = /(\w+)=(?&lt;quote&gt;['"])(.*)\k&lt;quote&gt;/g
+
+                    for (const r of tag.matchAll(regex)) {
+                        console.log(`attr=value : ${r[1]}=${r[3]}`)
+                    }
+                    // attr=value : class=w3-round
+                    // attr=value : src=https://picsum.photos/200
+
+        h2 Regex Assertion
+        ul
+            li 줄이나 단어의 경계를 포함하는지 여부를 검출한다
+            li ^ : 입력의 시작과 매칭된다. m 플래그가 활성화된 경우, 각 줄의 시작(line break 문자 바로 뒤)과도 매칭된다
+            li $ : 입력의 끝과 매칭된다. m 플래그가 활성화된 경우, 각 줄의 끝(line break 문자 바로 앞)과도 매칭된다
+                +asCode('JavaScript').
+                    'line1\nline2'.replaceAll(/^/g, '✅')   // '✅line1\nline2'
+                    'line1\nline2'.replaceAll(/^/gm, '✅')  // '✅line1\n✅line2'
+                    'line1\nline2'.replaceAll(/$/g, '✅')   // 'line1\nline2✅'
+                    'line1\nline2'.replaceAll(/$/gm, '✅')  // 'line1✅\nline2✅'
+            li \b : 단어 경계에 매칭된다. 단어는 \w의 연속을 기준으로 하므로, \w의 연속이 끊어지는 부분들이 이에 해당한다
+            li \B : 비-단어 경계에 매칭된다. 연속한 2개 문자가 모두 \w거나 \W인 경우 그 사이가 이에 해당한다
+                +asCode('JavaScript').
+                    'hello world!'.replaceAll(/\b/g, '✅')  // '✅hello✅ ✅world✅!'
+                    '안녕 세상!'.replaceAll(/\b/gm, '✅')     // '안녕 세상!'
+                    'hello world!'.replaceAll(/\B/g, '✅')  // 'h✅e✅l✅l✅o w✅o✅r✅l✅d!✅'
+                    '안녕 세상!'.replaceAll(/\B/gm, '✅')     // '✅안✅녕✅ ✅세✅상✅!✅'
+            li x(?=y) : positive lookahead. x 뒤에 y가 이어지는 경우의 x에 매칭된다
+            li x(?!y) : negative lookahead. x 뒤에 y가 이어지지 않는 경우의 x에 매칭된다
+            li (?&lt;=y)x : positive lookbehind. y 뒤에 x가 이어지는 경우의 x에 매칭된다
+            li (?&lt;!y)x : negative lookbehind. y 뒤에 x가 이어지지 않는 경우의 x에 매칭된다
+                +codeBtn({
+                    title: 'lookahead/behind example',
+                    path: '/Repositories/Single/202512/16-1450.js',
+                    lan: 'JavaScript'
+                })
+
+        h2 Regex Flag
+        +table()
+            +ths('flag', 'RegExp property', 'description')
+            +tds('d', 'hasIndices', 'Since ES2022. 패턴 전체 및 각 캡처링 그룹에 대한 시작/끝 위치를 RegExpExecArray.indices 속성에 제공')
+            +tds('g', 'global', '패턴 매칭이 여러 번 수행될 수 있다 -- lastIndex 위치에서 시작하는 부분문자열에서 패턴이 검색되지 않더라도, 문자열이 끝나지 않는 이상 그 다음 위치들에서도 검사 진행')
+            +tds('i', 'ignoreCase', '대소문자를 구별하지 않고 패턴을 검색한다')
+            +tds('m', 'multiline', '줄바꿈 문자가 포함된 문자열을 여러 줄의 문자열로 취급한다 -- ^나 $를 이용해 개별 줄에 대한 패턴 지정 가능')
+            +tds('s', 'dotAll', '.이 모든 UTF-16 코드 유닛에 매칭된다. 유니코드 모드에서는 모든 유니코드 코드 포인트에 매칭된다')
+            +tds('u', 'unicode', 'UTF-16 코드 유닛 단위가 아닌, 유니코드 코드 포인트 단위로 동작한다')
+            +tds('v', 'unicodeSets', 'Since ES2024. u 플래그의 업그레이드')
+            +tds('y', 'sticky', '패턴 매칭은 lastIndex 위치에서 시작하는 부분문자열에 대해서만 수행')
+        div
+            h3 gy 플래그의 동작
+            ul
+                li exec()
+                    +asCode('JavaScript').
+                        const txt = 'a ab abc'
+
+                        let r = /a/g
+                        console.log(r.exec(txt))    // [ 'a', index: 0, input: 'a ab abc', groups: undefined ]
+                        console.log(r.exec(txt))    // [ 'a', index: 2, input: 'a ab abc', groups: undefined ]
+
+                        r = /a/y
+                        console.log(r.exec(txt))    // [ 'a', index: 0, input: 'a ab abc', groups: undefined ]
+                        console.log(r.exec(txt))    // null
+
+                        r = /a/gy
+                        console.log(r.exec(txt))    // [ 'a', index: 0, input: 'a ab abc', groups: undefined ]
+                        console.log(r.exec(txt))    // null
+
+                li match()
+                    +asCode('JavaScript').
+                        console.log('a ab abc'.match(/a/g))     // [ 'a', 'a', 'a' ]
+                        console.log('a ab abc'.match(/a/gy))    // [ 'a' ]
+                        console.log('a ab abc'.match(/a/y))     // [ 'a', index: 0, input: 'a ab abc', groups: undefined ]
+
+                li matchAll()
+                    +asCode('JavaScript').
+                        console.log([...'a ab abc'.matchAll(/a/g)])     // [
+                                                                        //   [ 'a', index: 0, input: 'a ab abc', groups: undefined ],
+                                                                        //   [ 'a', index: 2, input: 'a ab abc', groups: undefined ],
+                                                                        //   [ 'a', index: 5, input: 'a ab abc', groups: undefined ]
+                                                                        // ]
+                        console.log([...'a ab abc'.matchAll(/a/gy)])    // [ [ 'a', index: 0, input: 'a ab abc', groups: undefined ] ]
+                        console.log([...'a ab abc'.matchAll(/a/y)])     // TypeError: String.prototype.matchAll called with a non-global RegExp argument
+
+                li search()
+                    +asCode('JavaScript').
+                        console.log('a ab abc'.search(/b/g))    // 3
+                        console.log('a ab abc'.search(/b/gy))   // -1
+                        console.log('a ab abc'.search(/b/y))    // -1
+
+                li split() : g, y 플래그가 있든 없든 차이 없음
+
+                li replace()
+                    +asCode('JavaScript').
+                        console.log('a ab abc'.replace(/b/g, 'B'))  // a aB aBc
+                        console.log('a ab abc'.replace(/b/gy, 'B')) // a ab abc
+                        console.log('a ab abc'.replace(/b/y, 'B'))  // a ab abc
+
+                li replaceAll()
+                    +asCode('JavaScript').
+                        console.log('a ab abc'.replaceAll(/b/g, 'B'))   // a aB aBc
+                        console.log('a ab abc'.replaceAll(/b/gy, 'B'))  // a ab abc
+                        console.log('a ab abc'.replaceAll(/b/y, 'B'))   // TypeError: String.prototype.replaceAll called with a non-global RegExp argument
+
+        h2 Regex 관련 메서드
+        ul
+            li RegExp#test() : 주어진 문자열에서 패턴이 검색되는지 여부를 반환
+            li RegExp#exec() : 주어진 문자열에서 패턴을 검색하여, 가장 먼저 발견된 결과를 반환. 매칭된 게 없다면 null 반환
+                +asCode('TypeScript').
+                    interface RegExpExecArray extends Array&lt;string&gt; {
+                        input: string   // 입력 문자열 자체
+                        0: string       // 패턴 매칭된 문자열. 항상 not null
+                                        // 1, 2, ... 등의 인덱스는 패턴에 그룹이 있는 경우에만, 각 그룹에 매칭된 문자열이 설정된다
+                        index: number   // 매칭된 문자열이 입력 문자열에서 시작하는 위치
+                        groups?: {      // Since ES2018. 패턴에 명명된 캡처 그룹이 있는 경우, 각 그룹 이름에 대해 매칭된 문자열들이 설정
+                            [key: string]: string
+                        }
+                        indices?: RegExpIndicesArray
+                                        // Since ES2022. d 플래그가 있는 경우에만 설정
+                                        // RegExpExecArray[i]가 입력 문자열에서 시작(include)/종료(exclude)하는 위치가 indices[i]에 설정된다
+                    }
+
+                    interface RegExpIndicesArray extends Array&lt;[number, number]&gt; {
+                        groups?: {      // 패턴에 명명된 캡처 그룹이 있는 경우, 각 그룹 이름에 대해 시작(include)/종료(exclude) 위치 설정
+                            [key: string]: [number, number]
+                        }
+                    }
+            li String#search() : 주어진 패턴에 처음 매칭되는 시작 위치(인덱스) 반환. 매칭된 게 없다면 -1 반환
+            li String#match()
+                ul
+                    li g 플래그 있는 경우 : 매칭된 모든 부분문자열 반환
+                    li g 플래그 없는 경우 : RegExp#exec() 결과 반환
+                    li 매칭되는 게 없는 경우 : null 반환
+            li String#matchAll() : 주어진 패턴으로 더 이상 매칭되는 게 없을 때까지 RegExp#exec()을 수행하는 iterator 반환
+            li String#replace()
+                ul
+                    li g 플래그 있는 경우 : 매칭된 모든 부분문자열 치환
+                    li g 플래그 없는 경우 : 매칭된 첫 번째 부분문자열만 치환
+                    li 패턴이 빈 문자열인 경우 : (치환 문자열 + 원본 문자열)이 반환된다
+                    li 치환 문자열 대신 치환 함수를 지정한 경우 : 패턴 매칭 후 함수가 호출되고, 그 반환값으로 치환
+                        +asCode('JavaScript').
+                            /**
+                             * @param {string} match 매칭된 문자열
+                             * @param {string} pN n번째 캡처 그룹에 매칭된 문자열
+                             * @param {number} offset 전체 문자열에서 매칭된 문자열이 시작되는 위치(인덱스)
+                             * @param {string} string 전체 문자열
+                             * @param {{ [key: string]: string }} groups 명명된 캡처 그룹에 매칭된 문자열
+                             */
+                            function replacer(match, p1, p2, /* …, */ pN, offset, string, groups) {
+                              return replacement;
+                            }
+                p 치환 문자열은 특별한 패턴들을 포함할 수 있다
+                ul
+                    li $&amp; : 매칭된 문자열 자체
+                    li $` : 매칭된 문자열 앞부분
+                    li $' : 매칭된 문자열 뒷부분
+                    li $n : n번째 캡처 그룹에 매칭된 문자열
+                    li $&lt;name&gt; : 명명된 캡처 그룹에 매칭된 문자열
+                    li $$ : $ 문자 자체
+                +asCode('JavaScript').
+                    '1 12 123'.replace(/1/gm, '[$&amp;]') // '[1] [1]2 [1]23'
+                    '1 12 123'.replace(/1/gm, '[$`]') // '[] [1 ]2 [1 12 ]23'
+                    '1 12 123'.replace(/1/gm, "[$']") // '[ 12 123] [2 123]2 [23]23'
+            li String#replaceAll()
+                ul
+                    li 매칭되는 모든 부분문자열에 대해 치환
+                    li 패턴이 빈 문자열인 경우 : 모든 코드 포인트 경계에 치환 문자열이 삽입된다
+            li String#split() : 패턴에 매칭된 문자열들을 구분자로 하여 문자열 분리
+
+    h1 JSON
+    ul
+        li JSON 기본 지원 타입이 아닌 경우의 처리 예
+            +asCode('JavaScript').
+                JSON.parse(
+                    JSON.stringify(
+                        { a: 123, b: 234n, c: null },
+                        (key, value) => {
+                            return typeof value === 'bigint' ? { $type: 'bigint', $value: value.toString() } : value
+                        }
+                    ),
+                    (key, value) => {
+                        switch (value?.$type) {
+                            case 'bigint': return BigInt(value.$value)
+                            default: return value
+                        }
+                    }
+                )
+        li JSON 포함 속성 지정 예
+            +asCode('JavaScript').
+                e = new Error('test')
+                e.count = 123
+                console.log(JSON.stringify(e))                      // {"count":123}
+                console.log(JSON.stringify(e, ['name', 'stack']))   // {"name":"Error","stack":"Error: test\n    at &lt;anonymous&gt;:1:5"}
 
     h1 버전별 신규 기능
     div
@@ -887,14 +1182,14 @@ include ../../../source/skeleton.pug
                         li \p 이스케이프로 RGI_Emoji와 같은 더 다양한 유니코드 클래스 집합 지정 가능
                 li i 플래그에서 \P{property} 평가가 달라진다
                     ul
-                        li #[+asInlineCode("/\P{Lowercase_Letter}/iu.test('a') === true", 'JavaScript')]
+                        li #[+asInlineCode("/\\P{Lowercase_Letter}/iu.test('a') === true", 'JavaScript')]
                             p u 모드에서는 case-folding이 여집합 구성 후에 발생한다
                             ol
                                 li Lowercase_Letter에 대한 여집합이 생성된다 : uppercase + caseless
                                 li i 플래그를 위해 집합의 소문자 버전이 생성된다 : lowercase + caseless
                                 li 입력 문자열은 패턴 매칭 전에 소문자 버전으로 변환된다
                                 li 'a'는 패턴을 만족하므로 true 반환
-                        li #[+asInlineCode("/\P{Lowercase_Letter}/iv.test('a') === false", 'JavaScript')]
+                        li #[+asInlineCode("/\\P{Lowercase_Letter}/iv.test('a') === false", 'JavaScript')]
                             p v 모드에서는 case-folding이 여집합 구성 전에 발생한다
                             ol
                                 li Lowercase_Letter에 대한 소문자 버전 집합이 생성된다 : lowercase
@@ -903,14 +1198,14 @@ include ../../../source/skeleton.pug
                                 li 'a'는 패턴을 만족하지 않으므로 false 반환
                 li i 플래그에서 character class complement syntax [^...] 에 대한 해석이 달라진다
                     ul
-                        li #[+asInlineCode("/[^\P{Lowercase_Letter}]/iu.test('A') === false", 'JavaScript')]
+                        li #[+asInlineCode("/[^\\P{Lowercase_Letter}]/iu.test('A') === false", 'JavaScript')]
                             p u 모드에서는 패턴을 반대로 평가한다
                             ol
                                 li Lowercase_Letter에 대한 여집합이 생성된다 : uppercase + caseless
                                 li i 플래그를 위해 집합의 소문자 버전이 생성된다 : lowercase + caseless
                                 li 입력 문자열은 패턴 매칭 전에 소문자 버전으로 변환된다
                                 li 'a'는 패턴을 만족하므로 false -- [^...]는 패턴을 매치 결과를 뒤집는다
-                        li #[+asInlineCode("/[^\P{Lowercase_Letter}]/iv.test('A') === true", 'JavaScript')]
+                        li #[+asInlineCode("/[^\\P{Lowercase_Letter}]/iv.test('A') === true", 'JavaScript')]
                             p v 모드에서는 패턴을 반대로 평가하는 대신 여집합을 구성한다
                             ol
                                 li Lowercase_Letter에 대한 소문자 버전 집합이 생성된다 : lowercase

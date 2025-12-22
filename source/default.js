@@ -414,6 +414,7 @@ async function initCodeBtn() {
 
             const codeTxt = await fetch(`${path.startsWith('/') ? '' : './'}${path.replace(/ /gm, '%20')}`)
                 .then(res => res.text())
+                .then(text => text.trimEnd())
                 .catch(e => {
                     console.log('Fetch failed...', e)
                     return 'Fetch failed...'
@@ -646,7 +647,7 @@ function makeMarkerName(marker) {
         case 'TABLE': return `표 : ${marker.caption.textContent}`;
         case 'DETAILS': return marker.firstChild.textContent;
         default:
-            const textNode = Array.from(marker.childNodes).find(x => x instanceof Text && x.wholeText.trim().length !== 0);
+            const textNode = Array.from(marker.childNodes).find(x => x instanceof Text && x.wholeText.length !== 0);
             if (textNode != null) {
                 return textNode.wholeText
             }
