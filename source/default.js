@@ -412,7 +412,7 @@ async function initCodeBtn() {
                 return;
             }
 
-            const codeTxt = await fetch(`${path.startsWith('/') ? '' : './'}${path.replace(/ /gm, '%20')}`)
+            const codeTxt = await fetch(path)
                 .then(res => res.text())
                 .then(text => text.trimEnd())
                 .catch(e => {

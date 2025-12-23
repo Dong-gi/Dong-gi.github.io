@@ -20,12 +20,12 @@
   },
   "homepage": "https://dong-gi.github.io",
   "dependencies": {
-    "pug": "^3.0.2",
-    "sharp": "^0.33.5",
-    "svgo": "^3.3.2"
+    "pug": "^3.0.3",
+    "sharp": "^0.34.5",
+    "svgo": "^4.0.0"
   },
   "devDependencies": {
     "http-server": "^14.1.1",
-    "terser": "^5.27.0"
+    "terser": "^5.44.1"
   }
 }
