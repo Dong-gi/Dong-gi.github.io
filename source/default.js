@@ -455,7 +455,7 @@ async function initHoverContent() {
 
 async function initInlineCode() {
     observeIntersectionOnce(document.body.querySelectorAll('div.as-code'), codeDiv => {
-        const code = codeDiv.innerHTML.trim().replace(/&lt;/gm, '<').replace(/&gt;/gm, '>').replace(/&amp;/gm, '&');
+        const code = codeDiv.innerHTML.trimEnd().replace(/&lt;/gm, '<').replace(/&gt;/gm, '>').replace(/&amp;/gm, '&');
         codeDiv.innerHTML = '';
         const lan = codeDiv.getAttribute('lan') ?? 'text';
         fillCodeDiv(codeDiv, lan, code);
@@ -463,7 +463,7 @@ async function initInlineCode() {
     });
 
     observeIntersectionOnce(document.body.querySelectorAll('span.as-code'), codeSpan => {
-        const code = codeSpan.innerHTML.trim().replace(/&lt;/gm, '<').replace(/&gt;/gm, '>').replace(/&amp;/gm, '&');
+        const code = codeSpan.innerHTML.trimEnd().replace(/&lt;/gm, '<').replace(/&gt;/gm, '>').replace(/&amp;/gm, '&');
         codeSpan.innerHTML = hljs.highlight(code, { language: codeSpan.getAttribute('lan') ?? 'text', ignoreIllegals: true })['value'];
     });
 }

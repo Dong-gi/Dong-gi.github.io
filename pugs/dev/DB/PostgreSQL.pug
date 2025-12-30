@@ -1,0 +1,279 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: 'PostgreSQL 설명서',
+    description: 'PostgreSQL 공식 문서 중 일부 발췌',
+})
+
+    h1: +asA('https://www.postgresql.org/docs/current/legalnotice.html', 'Legal Notice; 법적 고지')
+    p PostgreSQL Database Management System (also known as Postgres, formerly known as Postgres95)
+    p Portions Copyright © 1996-2025, PostgreSQL Global Development Group
+    p Portions Copyright © 1994, The Regents of the University of California
+    p Permission to use, copy, modify, and distribute this software and its documentation for any purpose, without fee, and without a written agreement is hereby granted, provided that the above copyright notice and this paragraph and the following two paragraphs appear in all copies.
+    p IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    p THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE PROVIDED HEREUNDER IS ON AN “AS-IS” BASIS, AND THE UNIVERSITY OF CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+    h1 시작하기 전에
+    ul
+        li 최신 공식 문서 : #[+asA('https://www.postgresql.org/docs/current/index.html')]
+        li 출시 노트 : #[+asA('https://www.postgresql.org/docs/release/')]
+        li PostgreSQL은 캘리포니아 대학교 버클리 컴퓨터과학부에서 개발한 POSTGRES 버전 4.2를 기반으로 개발되고, 오픈소스로 관리 중인 객체-관계형 데이터베이스 관리 시스템(ORDBMS)이다. 뛰어난 성능과 확장성으로 여러 분야에서 애용하고 있다
+
+    h1 SQL
+    div
+        h2 구문
+        div
+            h3 어휘 구조
+            ul
+                li 키워드 : 고정된 의미를 갖는 토큰
+                li 식별자 : 명령에 따라 테이블, 열, 객체 이름을 나타내는 토큰. 단순히 이름(name)이라고 부르기도 한다
+                    ul
+                        li 키워드로 예약된 토큰을 식별자로 사용하려면 ""로 감쌀 필요가 있다
+                        li 식별자 크기 제한은 기본 63바이트
+                        li ""로 감싼 식별자는 대소문자를 구별한다 -- 이 안에서 "를 나타내려면 ""를 사용
+                li 주석 : 입력에 포함된 주석은 공백처럼 취급된다
+                    ul
+                        li -- 한 줄 주석
+                        li /* 여러 줄 주석 */
+                li 상수
+                    ul
+                        li 문자열 : '임의 문자열' -- 이 안에서 '를 나타내려면 ''를 사용
+                        li C 스타일 이스케이프 문자열 : e'임의 문자열' 또는 E'임의 문자열' -- 이 안에서 \를 나타내려면 \\를 사용
+                            ul
+                                li \n : 줄바꿈
+                                li \t : 탭
+                        li 유니코드 이스케이프 문자열 : u&amp;'임의 문자열' 또는 U&amp;'임의 문자열'
+                            ul
+                                li 유니코드 지정 : \xxxx, \+xxxxxx
+                                li \ 외의 이스케이프 문자 지정 예 : U&amp;'d!0061t!+000061' UESCAPE '!'
+                        li $로 감싼 문자열 : $$임의 문자열$$ 또는 $tag_name$임의 문자열$tag_name$
+                        li 비트열 : b'0101' 또는 B'0101' 또는 x'xxxx' 또는 X'xxxx'
+                        li 숫자 : 소수점이나 지수가 없는 정수는 크기가 맞는 경우 integer 또는 bigint로 간주된다. 그 외 모든 숫자는 numeric 타입으로 간주된다
+                            ul
+                                li 소수점 허용 : 123.456
+                                li 지수 표기 허용 : 0.123e3
+                                li 정수에 한하여 2, 8, 16진수 표기 허용 : 0b101, 0o101, 0x101
+                                li 구분자 허용 : 123_456.123_456
+                        li 임의 유형 상수
+                            ul
+                                li type 'string'
+                                li 'string'::type
+                                li cast('string' as type)
+
+            h3 값 표현식
+            ul
+                li 열 참조 : table_name.column_name
+                li 위치 매개변수 : SQL 함수 또는 준비된 쿼리에서 $n으로 n번째 인자 참조
+                li 배열 원소 선택 : expression[i], expression[start:end]
+                li 필드 선택 : expression.field_name
+                li 연산자 호출 : expression operator expression 또는 operator expression
+                li 함수 호출 : function_name([expression [, expression ... ]])
+            div
+                h4 집계 표현식
+                div
+                    +asCode('text', 'syntax').
+                        aggregate_name (expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]
+                        aggregate_name (DISTINCT expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]
+                        aggregate_name ( * ) [ FILTER ( WHERE filter_clause ) ]
+                        aggregate_name ( [ expression [ , ... ] ] ) WITHIN GROUP ( order_by_clause ) [ FILTER ( WHERE filter_clause ) ]
+                    ul
+                        li 집계 함수는 여러 입력 행들을 (그룹 당) 하나의 행으로 줄인다
+                        li 별도 명시가 없는 한 집계 함수는 null을 집계에서 제외한다
+                        li 입력 행 순서가 결과에 중요한 경우를 위해 선택적으로 order by 절을 지원한다
+                        li 한편 최빈값, 중앙값을 찾는 것과 같은 ordered-set 집계는 order by 절이 필수다
+                            +asCode('sql').
+                                with guild_player (guild_id, coin) as ( values
+                                    (1, 10),
+                                    (1, 50),
+                                    (1, 20),
+                                    (2, 10),
+                                    (2, 40)
+                                )
+                                select
+                                    guild_id,
+                                    percentile_cont(0.5) within group (order by coin) as median_coin
+                                from guild_player
+                                group by 1;
+                            +asCode('text', 'result').
+                                 guild_id | median_coin 
+                                ----------+-------------
+                                        1 |          20
+                                        2 |          25
+                                (2 rows)
+                h4 윈도 함수 호출
+                div
+                    +asCode('text', 'syntax').
+                        function_name ([expression [, expression ... ]]) [ FILTER ( WHERE filter_clause ) ] OVER window_name
+                        function_name ([expression [, expression ... ]]) [ FILTER ( WHERE filter_clause ) ] OVER ( window_definition )
+                        function_name ( * ) [ FILTER ( WHERE filter_clause ) ] OVER window_name
+                        function_name ( * ) [ FILTER ( WHERE filter_clause ) ] OVER ( window_definition )
+
+                    +asCode('text', 'window_definition').
+                        [ existing_window_name ]
+                        [ PARTITION BY expression [, ...] ]
+                        [ ORDER BY expression [ ASC | DESC | USING operator ] [ NULLS { FIRST | LAST } ] [, ...] ]
+                        [ frame_clause ]
+
+                    +asCode('text', 'frame_clause').
+                        { RANGE | ROWS | GROUPS } frame_start [ frame_exclusion ]
+                        { RANGE | ROWS | GROUPS } BETWEEN frame_start AND frame_end [ frame_exclusion ]
+
+                    +asCode('text', 'frame_start 또는 frame_end').
+                        UNBOUNDED PRECEDING
+                        offset PRECEDING
+                        CURRENT ROW
+                        offset FOLLOWING
+                        UNBOUNDED FOLLOWING
+
+                    +asCode('text', 'frame_exclusion').
+                        EXCLUDE NO OTHERS   -- 기본 동작. 아무 행도 제외하지 않음
+                        EXCLUDE CURRENT ROW -- 현재 행만 제외
+                        EXCLUDE GROUP       -- 현재 행 + 피어 행 제외
+                        EXCLUDE TIES        -- 피어 행들 제외
+
+                    ul
+                        li 윈도 함수는 집계 함수와 달리 입력 행들을 하나의 출력 행으로 축소하지 않는다. 각 행은 결과행에 유지되고, 지정한 파티션과 프레임에 한정한 집계 결과를 추가로 포함한다
+                        li 윈도 함수는 다른 절들이 모두 처리된 후 실행되기 때문에 SELECT 또는 ORDER BY 절에서만 사용할 수 있다. 이로 인해 윈도 함수 안에 집계 함수를 포함하는 것이 가능하다 -- 그 반대는 불가능
+                        li OVER (window_name ...)은 정의를 복사하여 수정하는 것을 의미한다
+                        li PARTITION BY 절이 없는 경우, 모든 행을 포함하는 단일 파티션으로 처리된다
+                        li 프레임을 지정해 각 입력 행마다 얼마큼의 행들을 집계에 이용할 지 지정할 수 있다
+                            ul
+                                li 피어 행 : 정렬키가 동일한 행
+                                li ROWS 모드
+                                    ul
+                                        li 프레임 크기는 정확히 행 단위로 계산
+                                        li 피어 행을 자동으로 포함하는 일은 없다
+                                        li offset을 이용하는 경우 : 음이 아닌 정수로 행 개수를 지정
+                                li RANGE 모드
+                                    ul
+                                        li 프레임 크기는 정렬키 구간에 따라 가변적
+                                        li 구간 내 피어 행 자동 포함
+                                        li offset을 이용하는 경우 : ORDER BY 절이 지정한 단일 컬럼에 대하여, 음이 아닌 값으로 최대 차이를 지정
+                                li GROUPS 모드
+                                    ul
+                                        li 프레임 크기는 피어 그룹 단위로 계산
+                                        li 피어 행 자동 포함
+                                        li offset을 이용하는 경우 : 음이 아닌 정수로 피어 그룹 개수를 지정
+                                li 프레임 정의가 생략된 경우, RANGE UNBOUNDED PRECEDING이 이용된다
+                                li frame_end가 생략된 경우, CURRENT ROW로 설정된다
+                                li ORDER BY 절이 없는 경우, 파티션 내 모든 행들은 서로의 피어다
+                            +asCode('sql').
+                                create temp table nums (n) as
+                                select * from ( values
+                                    (1),
+                                    (5),
+                                    (10),
+                                    (1),
+                                    (5),
+                                    (10)
+                                );
+                            +asCode('text', 'order by 없음 + 프레임 정의 없음').
+                                # select n, sum(n) over () from nums;
+                                 n  | sum 
+                                ----+-----
+                                  1 |  32
+                                  5 |  32
+                                 10 |  32
+                                  1 |  32
+                                  5 |  32
+                                 10 |  32
+                                (6 rows)
+                            +asCode('text', 'order by 있음 + 프레임 정의 없음').
+                                # select n, sum(n) over (order by n) from nums;
+                                 n  | sum 
+                                ----+-----
+                                  1 |   2
+                                  1 |   2
+                                  5 |  12
+                                  5 |  12
+                                 10 |  32
+                                 10 |  32
+                                (6 rows)
+                            +asCode('text', 'ROWS 모드').
+                                # select n, sum(n) over (order by n rows 2 preceding) from nums;
+                                 n  | sum 
+                                ----+-----
+                                  1 |   1
+                                  1 |   2
+                                  5 |   7
+                                  5 |  11
+                                 10 |  20
+                                 10 |  25
+                                (6 rows)
+                            +asCode('text', 'RANGE 모드').
+                                # select n, sum(n) over (order by n range 4 preceding) from nums;
+                                 n  | sum 
+                                ----+-----
+                                  1 |   2
+                                  1 |   2
+                                  5 |  12
+                                  5 |  12
+                                 10 |  20
+                                 10 |  20
+                                (6 rows)
+                            +asCode('text', 'GROUPS 모드').
+                                # select n, sum(n) over (order by n groups 1 preceding) from nums;
+                                 n  | sum 
+                                ----+-----
+                                  1 |   2
+                                  1 |   2
+                                  5 |  12
+                                  5 |  12
+                                 10 |  30
+                                 10 |  30
+                                (6 rows)
+
+        h2 데이터 정의
+        div
+
+        h2 데이터 조작
+        div
+
+        h2 쿼리
+        div
+
+        h2 데이터 유형
+        div
+
+        h2 함수와 연산자
+        div
+
+        h2 형 변환
+        div
+
+        h2 인덱스
+        div
+
+        h2 전문 검색
+        div
+
+        h2 동시성 제어
+        div
+
+        h2 성능 팁
+        div
+
+        h2 병렬 쿼리
+        div
+
+
+    h1 서버 관리
+    div
+        h2 복제
+    
+    h1 서버 프로그래밍
+    div
+        h2 PL/pgSQL
+    
+    h1 참고자료
+    div
+        h2 SQL 명령
+    
+    h1 내부 구조
+    div
+        h2 시스템 카탈로그
+    
+    h1 부록
+    div
+        h2 Date/Time 지원
+

@@ -717,6 +717,38 @@ include ../../source/skeleton.pug
             li: +asA('https://www.mois.go.kr/frt/bbs/type001/commonSelectBoardList.do?bbsId=BBSMSTR_000000000045', '행정안전부 > 디지털정보국 > 정보화 표준·지침 자료실')
             p -> 소프트웨어 개발보안 가이드 및 기타 자료 배포
 
+        h2 블록 암호
+        ul
+            li 고정 크기 블록 단위로 데이터를 암호화하는 함수. 예를 들어 AES는 128비트 평문을 입력받아 128비트 암호문을 생성한다
+            li 암호문을 유일한 평문으로 복호화할 수 있어야 하므로 암호화 함수는 일대일이며, 역함수를 갖는다
+            li 이상적인 블록 암호
+                ul
+                    li 순차적인 입력에 대해 임의 순열을 생성해야 한다
+                    li 서로 다른 키의 순열은 서로 독립적이어야 한다
+            li 블록 암호 모드
+                ul
+                    li 패딩 : 평문이 블록 단위로 떨어지지 않는 경우, 바이트열을 추가로 붙인다
+                    li ECB(electronic codebook) : 긴 평문의 개별 블록을 독립적으로 암호화한다. 식[C_i = E\left(K, P_i\right)]식
+                        p 병렬로 고속 암호화가 가능하다는 장점이 있는 반면, 암호 블록이 같으면 평문 블록도 동일하다는 것을 쉽게 유추할 수 있는 약점이 있다
+                    li CBC(cipher block chaining) : 이전 블록의 암호문을 입력에 사용하여 공격자가 이용할 수 있는 정보를 줄인다. 식[C_i = E\left(K, P_i \oplus C_{i-1}\right)]식
+                        p 최초 평문 블록의 암호화에 이용하는 식[C_0]식를 초기 벡터 IV라고 한다
+                        ul
+                            li 무작위 IV : 랜덤한 블록을 초기 벡터로 이용한다. 결과적으로 k개 입력 블록에 대해 k+1개 출력 블록이 생성된다. 입력이 작은 경우 이는 불필요한 용량 확장으로 받아들여질 수 있다
+                            li nonce로 생성된 IV
+                                ul
+                                    li nonce는 단 한 번만 사용되는 메시지 번호
+                                    li 시스템 전역적으로 같은 키와 nonce를 재사용해선 안 된다
+                                    li 블록 1개 크기보다 적은 양의 부가 정보로 nonce 계산이 가능하다. 참여자는 nonce를 암호화하여 IV로 이용한다
+                    li OFB(output feedback) : 평문 자체를 암호화하는 대신, 랜덤한 키 스트림을 생성하여 평문과 XOR한다. 복호화 함수(동일 함수로 복호화)와 패딩(입력 길이 만큼만 전송)이 필요 없다는 장점이 있지만, IV를 재사용하는 경우 공격자가 평문의 차분을 알 수 있는 약점이 있다
+                        ol
+                            li 식[K_0 := IV]식
+                            li 식[K_i := E\left(K, K_{i-1}\right)]식
+                            li 식[C_i := P_i \oplus K_i]식
+                    li CTR(counter) : IV로 nonce를 이용하고, 키 스트림 생성에 카운터를 이용하므로 OFB와 달리 병렬로 암/복호화 가능하다
+                        ol
+                            li 식[K_i := E\left(K, nonce \| i\right)]식
+                            li 식[C_i := P_i \oplus K_i]식
+
         h2 키 교환(Key Exchange)과 키 합의(Key Agreement)
         ul
             li 키 합의 : 안전하지 않은 채널을 이용하더라도 두 당사자(party)가 비밀 키를 공유할 수 있도록 보장하는 프로토콜
