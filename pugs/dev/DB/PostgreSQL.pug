@@ -54,7 +54,7 @@ include ../../../source/skeleton.pug
                                 li 지수 표기 허용 : 0.123e3
                                 li 정수에 한하여 2, 8, 16진수 표기 허용 : 0b101, 0o101, 0x101
                                 li 구분자 허용 : 123_456.123_456
-                        li 임의 유형 상수
+                        li 임의 유형 상수 : 이는 형 변환이 아니라, 문자열로 표현된 리터럴에 대해 처음으로 타입을 할당하는 것
                             ul
                                 li type 'string'
                                 li 'string'::type
@@ -68,6 +68,9 @@ include ../../../source/skeleton.pug
                 li 필드 선택 : expression.field_name
                 li 연산자 호출 : expression operator expression 또는 operator expression
                 li 함수 호출 : function_name([expression [, expression ... ]])
+                li 형 변환 : cast(expression as type) 또는 expression::type
+                li 정렬 방식 지정 : expression COLLATE collation
+                li 스칼라 서브쿼리 : 괄호 안의 SELECT 쿼리로, 정확히 한 개 행, 한 개 열을 반환                
             div
                 h4 집계 표현식
                 div
@@ -222,6 +225,42 @@ include ../../../source/skeleton.pug
                                  10 |  30
                                  10 |  30
                                 (6 rows)
+                h4 배열 생성자
+                ul
+                    li array[1, 2, 3]
+                    li array[1, 2, 3]::bigint[]
+                    li array[array[array[1, 2, 3]]]::bigint[] -- 형 변환은 내부에 자동 전파
+                    li array[array[1, 2, 3], array[4, 5, 6]] -- 다차원 배열의 경우, 각 차원의 내부 배열들은 모두 동일한 크기를 가져야 한다
+                    li array(select n from generate_series(1, 3) as x(n)) -- 단일 열을 반환하는 서브쿼리로부터 배열 생성 가능
+
+                h4 행 생성자
+                ul
+                    li row value (composite value라고도 함)를 생성하는 표현식
+                    li row 키워드와 0개 이상의 표현식으로 구성된다 : row(1, true, 'text')
+                    li 목록에 표현식이 2개 이상 있으면 키워드는 생략 가능하다 : (1, true, 'text')
+                    li 행 생성자는 row_value.* 구문을 포함할 수 있다
+                        +asCode('sql') select (row_number() over (), t.*) from pg_stat_activity t;
+                    li 행 생성자는 다른 행 값을 포함할 수 있다
+                        +asCode('sql') select (t, row(t.*)) from pg_stat_activity t;
+                    li 기본적으로 생성된 값은 익명 레코드 형식이지만, 필요한 경우 명명된 타입으로 변환 가능
+                        +asCode('sql').
+                            create table my_table(f1 int, f2 text);
+
+                            create function get_f1(my_table) returns int as 'select $1.f1' language sql;
+
+                            select get_f1((1, 'text'));
+
+                            create type my_row_type as (f1 int, f2 text);
+
+                            create function get_f1(my_row_type) returns int as 'SELECT $1.f1' language sql;
+
+                            select get_f1((1, 'text')); -- ERROR:  function get_f1(record) is not unique
+                            select get_f1((1, 'text')::my_table);
+                            select get_f1((1, 'text')::my_row_type);
+
+                h4 표현식 평가 규칙
+                ul
+                    li 표현식이 
 
         h2 데이터 정의
         div
