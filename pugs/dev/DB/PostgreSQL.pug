@@ -16,6 +16,7 @@ include ../../../source/skeleton.pug
     h1 시작하기 전에
     ul
         li 최신 공식 문서 : #[+asA('https://www.postgresql.org/docs/current/index.html')]
+        li 별도 표기가 없다면, 이 문서는 PostgreSQL 18 문서 내용임
         li 출시 노트 : #[+asA('https://www.postgresql.org/docs/release/')]
         li PostgreSQL은 캘리포니아 대학교 버클리 컴퓨터과학부에서 개발한 POSTGRES 버전 4.2를 기반으로 개발되고, 오픈소스로 관리 중인 객체-관계형 데이터베이스 관리 시스템(ORDBMS)이다. 뛰어난 성능과 확장성으로 여러 분야에서 애용하고 있다
 
@@ -74,7 +75,7 @@ include ../../../source/skeleton.pug
             div
                 h4 집계 표현식
                 div
-                    +asCode('text', 'syntax').
+                    +asCode('sql', 'syntax').
                         aggregate_name (expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]
                         aggregate_name (DISTINCT expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]
                         aggregate_name ( * ) [ FILTER ( WHERE filter_clause ) ]
@@ -85,7 +86,7 @@ include ../../../source/skeleton.pug
                         li 입력 행 순서가 결과에 중요한 경우를 위해 선택적으로 order by 절을 지원한다
                         li 한편 최빈값, 중앙값을 찾는 것과 같은 ordered-set 집계는 order by 절이 필수다
                             +asCode('sql').
-                                with guild_player (guild_id, coin) as ( values
+                                # with guild_player (guild_id, coin) as ( values
                                     (1, 10),
                                     (1, 50),
                                     (1, 20),
@@ -97,7 +98,7 @@ include ../../../source/skeleton.pug
                                     percentile_cont(0.5) within group (order by coin) as median_coin
                                 from guild_player
                                 group by 1;
-                            +asCode('text', 'result').
+
                                  guild_id | median_coin 
                                 ----------+-------------
                                         1 |          20
@@ -105,30 +106,30 @@ include ../../../source/skeleton.pug
                                 (2 rows)
                 h4 윈도 함수 호출
                 div
-                    +asCode('text', 'syntax').
+                    +asCode('sql', 'syntax').
                         function_name ([expression [, expression ... ]]) [ FILTER ( WHERE filter_clause ) ] OVER window_name
                         function_name ([expression [, expression ... ]]) [ FILTER ( WHERE filter_clause ) ] OVER ( window_definition )
                         function_name ( * ) [ FILTER ( WHERE filter_clause ) ] OVER window_name
                         function_name ( * ) [ FILTER ( WHERE filter_clause ) ] OVER ( window_definition )
 
-                    +asCode('text', 'window_definition').
+                    +asCode('sql', 'window_definition').
                         [ existing_window_name ]
                         [ PARTITION BY expression [, ...] ]
                         [ ORDER BY expression [ ASC | DESC | USING operator ] [ NULLS { FIRST | LAST } ] [, ...] ]
                         [ frame_clause ]
 
-                    +asCode('text', 'frame_clause').
+                    +asCode('sql', 'frame_clause').
                         { RANGE | ROWS | GROUPS } frame_start [ frame_exclusion ]
                         { RANGE | ROWS | GROUPS } BETWEEN frame_start AND frame_end [ frame_exclusion ]
 
-                    +asCode('text', 'frame_start 또는 frame_end').
+                    +asCode('sql', 'frame_start 또는 frame_end').
                         UNBOUNDED PRECEDING
                         offset PRECEDING
                         CURRENT ROW
                         offset FOLLOWING
                         UNBOUNDED FOLLOWING
 
-                    +asCode('text', 'frame_exclusion').
+                    +asCode('sql', 'frame_exclusion').
                         EXCLUDE NO OTHERS   -- 기본 동작. 아무 행도 제외하지 않음
                         EXCLUDE CURRENT ROW -- 현재 행만 제외
                         EXCLUDE GROUP       -- 현재 행 + 피어 행 제외
@@ -170,7 +171,7 @@ include ../../../source/skeleton.pug
                                     (5),
                                     (10)
                                 );
-                            +asCode('text', 'order by 없음 + 프레임 정의 없음').
+                            +asCode('sql', 'order by 없음 + 프레임 정의 없음').
                                 # select n, sum(n) over () from nums;
                                  n  | sum 
                                 ----+-----
@@ -181,7 +182,7 @@ include ../../../source/skeleton.pug
                                   5 |  32
                                  10 |  32
                                 (6 rows)
-                            +asCode('text', 'order by 있음 + 프레임 정의 없음').
+                            +asCode('sql', 'order by 있음 + 프레임 정의 없음').
                                 # select n, sum(n) over (order by n) from nums;
                                  n  | sum 
                                 ----+-----
@@ -192,7 +193,7 @@ include ../../../source/skeleton.pug
                                  10 |  32
                                  10 |  32
                                 (6 rows)
-                            +asCode('text', 'ROWS 모드').
+                            +asCode('sql', 'ROWS 모드').
                                 # select n, sum(n) over (order by n rows 2 preceding) from nums;
                                  n  | sum 
                                 ----+-----
@@ -203,7 +204,7 @@ include ../../../source/skeleton.pug
                                  10 |  20
                                  10 |  25
                                 (6 rows)
-                            +asCode('text', 'RANGE 모드').
+                            +asCode('sql', 'RANGE 모드').
                                 # select n, sum(n) over (order by n range 4 preceding) from nums;
                                  n  | sum 
                                 ----+-----
@@ -214,7 +215,7 @@ include ../../../source/skeleton.pug
                                  10 |  20
                                  10 |  20
                                 (6 rows)
-                            +asCode('text', 'GROUPS 모드').
+                            +asCode('sql', 'GROUPS 모드').
                                 # select n, sum(n) over (order by n groups 1 preceding) from nums;
                                  n  | sum 
                                 ----+-----
@@ -260,16 +261,314 @@ include ../../../source/skeleton.pug
 
                 h4 표현식 평가 규칙
                 ul
-                    li 표현식이 
+                    li 표현식이 평가되는 순서는 정의되지 않았고, 쿼리 실행 계획에 따라 얼마든지 변경될 수 있다. 이는 가장 간단한 사례에서도 발생하는데, true or func()와 func() or true 양쪽 모두에서 func()는 실행되지 않을 수 있다
+                    li 예외적으로 case 구문은 표현식들을 순차적으로 평가함이 강제되지만, 그럼에도 불구하고 문제가 발생하는 경우들이 있다
+                        ul
+                            li 상수 평가에서 에러 발생하는 경우 : case when x > 0 then x else 1/0 end
+                            li 집계 함수에서 에러 발생하는 경우 : case when min(employees) > 0 then avg(expenses / employees) end
+
+            h3 함수 호출
+            ul
+                li 위치 표기법 : func(val1, val2)
+                li 이름 표기법 : func(arg1 => val1, arg2 => val2)
+                    p "=>" 대신 이전 버전의 ":="도 지원됨
+                li 혼합 표기법 : func(val1, val2, arg3 => val3)
 
         h2 데이터 정의
         div
+            h3 ID 열
+            ul
+                li 값이 암묵적인 시퀀스로부터 자동 생성되는 열
+                    +asCode('sql').
+                        # create temp table order_history (
+                            order_no    bigint generated always as identity primary key,
+                            created_at  timestamptz default current_timestamp
+                        );
+
+                        # insert into order_history values (default, default) returning *;
+
+                         order_no |          created_at           
+                        ----------+-------------------------------
+                                1 | 2026-01-02 13:53:42.781017+09
+                        (1 row)
+                li ID 열은 자동적으로 not null
+                li 테이블 상속에서 자식 테이블의 ID 열은 부모의 것을 상속하지 않는다
+                li 개별 파티션은 파티션된 테이블의 ID 열을 상속한다
+
+            h3 생성된 열
+            ul
+                li 다른 열들로부터 파생되는 열. 단, 이미 파생된 열을 정의에 사용할 수는 없다
+                +asCode('sql').
+                    # create temp table player (
+                        purchase_amount int not null,
+                        vip_level       int generated always as (case
+                                            when purchase_amount > 10000 then 3
+                                            when purchase_amount > 5000 then 2
+                                            when purchase_amount > 1000 then 1
+                                            else 0
+                                        end)
+                    );
+
+                    # insert into player values (5555, default) returning *;
+
+                     purchase_amount | vip_level 
+                    -----------------+-----------
+                                5555 |         2
+                    (1 row)
+
+                    INSERT 0 1
+                li 기본적으로는 열을 읽을 떄마다 새로 계산되지만 (virtual), 실제로 디스크에 저장하도록 할 수도 있다 (stored)
+                li 테이블 상속에서 부모 열이 생성된 열이면 자식 열도 동일한 유형이어야 하지만, 표현식은 다를 수 있다
+                li create table ... partition of로 생성하는 경우, 정의는 자동으로 복사된다
+                li alter table ... attach partition으로 붙이는 경우엔 표현식이 다를 수 있다
+                li 생성된 열은 별도 접근 권한을 가질 수 있다
+                li before 트리거가 실행된 후에 업데이트되고, before 트리거 안에서는 접근이 허용되지 않는다
+
+            h3 시스템 열
+            ul
+                li tableoid : 행이 속한 테이블의 oid. pg_class와 조인하여 파티션된 테이블이나 상속 계층 상의 테이블을 쉽게 식별 가능
+                li xmin : 이 행을 삽입한 트랜잭션 ID
+                li cmin : 삽입 트랜잭션 내 명령 ID
+                li xmax : 이 행에 대한 삭제 트랜잭션 ID. 0인 경우 행이 삭제되지 않음이 확실하지만, 삭제 트랜잭션이 커밋되지 않았거나 롤백된 경우에도 0이 아닌 값으로 남는다
+                li ctid : 현재 물리적 위치
+
+            h3 행 보안
+            ul
+                li BYPASSRLS 속성을 가진 슈퍼유저와 역할은 항상 행 보안을 우회한다
+                li 테이블 소유자도 기본적으로 행 보안을 우회하지만, 명령 실행 시 force row level security를 지정하면 행 보안을 적용받을 수 있다
+                li 기본키, 고유키 등의 무결성 검사는 항상 행 보안을 우회한다
+
+            h3 테이블 상속
+            ul
+                li 상속 관계는 나중에 추가할 수도 있다
+                li only 키워드를 지원하는 명령어들은 이를 이용하여 자식 테이블들은 제외하고 지정한 테이블에만 명령을 적용할 수 있다
+                li 기본키, 고유키 등의 제약사항은 자식 테이블들을 고려하지 않는다
+
+            h3 테이블 파티셔닝
+            ul
+                li 파티셔닝을 테이블을 물리적으로 쪼갠다
+                li 일반적으로 파티셔닝의 효과적이려면 테이블 크기가 서버의 물리적 메모리 용량을 초과해야 한다
+                li 일반 테이블을 나중에 파티션 테이블로 바꾸거나, 그 반대로 변환하는 것은 지원되지 않는다. 한편 파티션을 붙였다 떼는 건 자유롭게 가능하다
+                    p 파티션을 나중에 추가할 때, 이미 행이 많이 있다면 성능을 위해 다음 사항들을 미리 만들어두는 게 좋다
+                        ul
+                            li 파티션 조건과 일치하는 check 제약 조건
+                            li 파티션 테이블에 정의된 인덱스 정의와 일치하는 인덱스
+                li 파티션된 테이블에 기본 파티션이 있는 경우, 앞으로 연결될 파티션들을 제외하는 check 제약 조건을 생성하는 것이 성능상 좋다
+                li 범위를 이용해 파티션을 정의하는 경우, 상한은 배타적으로 적용된다
+                    +asCode('sql').
+                        create table xxx_2404 partition of xxx for values from ('2024-04-01') to ('2024-05-01');
+                        create table xxx_2405 partition of xxx for values from ('2024-05-01') to ('2024-06-01');
+                li 파티션 자체를 파티션 테이블로 정의해 추가로 쪼갤 수도 있다
+                li 파티션된 테이블에 대해 인덱스를 생성할 때 concurrently 한정자를 사용할 수 없다
+                    ol
+                        li create index on only 구문을 이용해 인덱스가 유효하지 않은 상태로 생성
+                        li 개별 파티션들에 대해 create index ... concurrently 실행
+                        li alter index ... attach partition을 이용해 인덱스 연결
+                        li 모든 파티션 인덱스가 연결되면 부모 인덱스는 자동으로 유효한 것으로 간주
+                    p 이 기법은 unique, primary key 제약 조건에도 사용할 수 있다: alter table only ... add unique
+                li 파티션 수가 많다고 항상 좋지도 않고, 파티션 수가 적다고 항상 나쁜 것도 아니다 -- 사용 사례에 맞는 설계를 해야 한다
 
         h2 데이터 조작
         div
+            h3 INSERT
+            ul
+                li 모든 열을 기본값으로 설정해 행을 삽입하는 경우 다음과 같은 쿼리를 이용할 수 있다
+                    +asCode('sql') insert into table_name default values;
+                li 쿼리 결과를 삽입에 이용할 수 있다
+                    +asCode('sql') insert into table_name (col1, col2) select ...
+
+            h3 조작한 행 데이터 반환
+            ul
+                li insert, update, delete, merge에 대해 선택적으로 returning 절을 이용해 수정 직후 select 가능
+                    p 트리거가 있는 경우, returning이 조회하는 데이터는 트리거가 수정 완료한 행
+                li merge의 경우 원본 행, 삽입/업데이트/삭제한 행 데이터 모두 획득 가능
+                li 어떤 경우든 old.col_name으로 이전 버전 데이터 획득 가능
 
         h2 쿼리
         div
+            h3 Table expression
+            div
+                h4 Joined table
+                ul
+                    li 구문
+                        +asCode('sql').
+                            T1 cross join T2
+                            T1         { [inner] | { left | right | full } [outer] } join T2 on boolean_expression
+                            T1         { [inner] | { left | right | full } [outer] } join T2 using ( join_column_list )
+                            T1 natural { [inner] | { left | right | full } [outer] } join T2
+                        ul
+                            li 괄호를 이용하여 조인 순서를 제어할 수 있다. 괄호가 없는 경우 왼쪽에서 오른쪽으로 중첩된다
+                            li using을 이용하는 경우, 출력은 중복되는 열을 제거한다 : 공통 열, 나머지 T1 열, 나머지 T2 열
+                            li natural은 using의 축약형으로, 두 테이블에서 공통적으로 나타나는 모든 열 이름으로 구성된 using과 동일하다
+                            li 조인 조건은 조인 대상을 필터링하기 위한 것으로 조인 전에 처리되고, where 절은 조인 후에 처리된다
+
+                    li cross join
+                        ul
+                            li T1과 T2의 모든 행 조합(데카르트 곱) 포함
+                            li from t1 cross join t2는 다음 표현들과 동일하다
+                                ul
+                                    li from t1 inner join t2 on true
+                                    li from t1, t2
+                        +asCode('sql').
+                            # create temp table a (a) as
+                              select * from ( values ('a1'), ('a2') );
+
+                            # create temp table b (b) as
+                              select * from ( values ('b1'), ('b2'), ('b3') );
+
+                            # create temp table c ( c text );
+
+                            # select * from a cross join b;
+                             a  | b  
+                            ----+----
+                             a1 | b1
+                             a1 | b2
+                             a1 | b3
+                             a2 | b1
+                             a2 | b2
+                             a2 | b3
+                            (6 rows)
+
+                            # select * from a, c;
+                             a | c 
+                            ---+---
+                            (0 rows)
+
+                    li (inner) join : 조인 조건을 만족하는 T1, T2의 행 조합
+                        +asCode('sql').
+                            # with
+                            # a (a) as ( values ('a1'), ('a2'), ('a4') ),
+                            # b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
+                            # select * from a join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
+                             a  | b  
+                            ----+----
+                             a1 | b1
+                             a1 | b1+
+                             a2 | b2
+                            (3 rows)
+
+                    li left (outer) join : 조건을 만족하지 않는 T1 행도 포함
+                        +asCode('sql').
+                            # \pset null '(null)'
+                            # with
+                            # a (a) as ( values ('a1'), ('a2'), ('a4') ),
+                            # b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
+                            # select * from a left join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
+                             a  |  b  
+                            ----+-----
+                             a1 | b1
+                             a1 | b1+
+                             a2 | b2
+                             a4 | (null)
+                            (4 rows)
+
+                    li right (outer) join : 조건을 만족하지 않는 T2 행도 포함
+                        +asCode('sql').
+                            # \pset null '(null)'
+                            # with
+                            # a (a) as ( values ('a1'), ('a2'), ('a4') ),
+                            # b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
+                            # select * from a right join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
+                               a    |  b  
+                            --------+-----
+                             a1     | b1
+                             a1     | b1+
+                             a2     | b2
+                             (null) | b3
+                            (4 rows)
+
+                    li full (outer) join : 조건을 만족하지 않는 T1, T2 행 각각 포함
+                        +asCode('sql').
+                            # \pset null '(null)'
+                            # with
+                            # a (a) as ( values ('a1'), ('a2'), ('a4') ),
+                            # b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
+                            # select * from a full join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
+                               a    |   b    
+                            --------+--------
+                             a1     | b1
+                             a1     | b1+
+                             a2     | b2
+                             (null) | b3
+                             a4     | (null)
+                            (5 rows)
+
+                h4 Table and column alias
+                p 별칭 정의 후엔 쿼리에서 원래 이름으로 참조할 수 없다
+
+                h4 Subquery
+                ul
+                    li 파생 테이블을 지정하는 서브쿼리는 괄호로 감싸야 한다
+                    li select 명령 대신 values 목록으로 서브쿼리를 구성할 수도 있다
+                        +asCode('sql').
+                            # select * from (values ('a', 1), ('a', 2)) as x(a, b);
+                             a | b 
+                            ---+---
+                             a | 1
+                             a | 2
+                            (2 rows)
+
+                h4 Table function
+                ul
+                    li 테이블 함수는 행 집합을 생성하는 함수
+                    li 구문
+                        +asCode('sql').
+                            function_call                       [with ordinality] [[as] table_alias [(column_alias, [, ...])]]
+                            rows from( function_call [, ... ] ) [with ordinality] [[as] table_alias [(column_alias, [, ...])]]
+                    li with ordinality : 마지막에 bigint 타입의 ordinality 열이 추가되어 행 번호를 표시한다
+                    li 특수 테이블 함수 unnest는 임의 개수의 배열 매개변수로 호출할 수 있는데, 개별 배열에 대해 unnest가 호출되고 rows from 구문으로 결합한 것처럼 동작한다
+                        +asCode('sql').
+                            # \pset null '(null)'
+                            # select * from unnest('{1, 2, 3}'::int[], '{a, b}'::text[]) with ordinality as x (a, b);
+                             a |   b    | ordinality 
+                            ---+--------+------------
+                             1 | a      |          1
+                             2 | b      |          2
+                             3 | (null) |          3
+                            (3 rows)
+
+                            # select * from rows from(
+                            #     unnest('{1, 2, 3}'::int[]),
+                            #     unnest('{a, b}'::text[])
+                            # ) with ordinality as x (a, b, c);
+                             a |   b    | c 
+                            ---+--------+---
+                             1 | a      | 1
+                             2 | b      | 2
+                             3 | (null) | 3
+                            (3 rows)
+                    li 테이블 및 열 별칭을 지정하지 않으면, 함수 이름이 이용된다
+                    li 호출 방식에 따라 다른 열 집합을 반환하는 경우, 출력 행 구조를 쿼리에 지정해야 한다
+                        +asCode('sql').
+                            create extension dblink;
+
+                            select *
+                            from dblink('dbname=wiz', 'select pid, usename, query from pg_stat_activity')
+                                as x(pid int, usename text, query text)
+                            where query != '';
+                        +asCode('sql').
+                            # \pset null '(null)'
+                            # select *
+                            # from rows from (
+                            #     json_to_recordset('[{"a":40,"b":"foo"},{"a":"100","b":"bar"}]') as (a int, b text),
+                            #     generate_series(1, 3)
+                            # ) as x(x, y, z)
+                            # order by 3;
+                               x    |   y    | z 
+                            --------+--------+---
+                                 40 | foo    | 1
+                                100 | bar    | 2
+                             (null) | (null) | 3
+                            (3 rows)
+
+                h4 lateral 서브쿼리
+                ul
+                    li 기본적으로 서브쿼리는 독립적으로 평가되므로 from 절의 다른 테이블을 참조할 수 없다
+                    li from 절의 서브쿼리 앞에 lateral 키워드를 붙이는 경우, from 절에서 해당 서브쿼리보다 앞에 있는 테이블의 열을 참조할 수 있다
+                    li 테이블 함수는 항상 그보다 앞에 있는 테이블의 열을 참조할 수 있으므로 lateral 키워드 명시는 선택 사항이다
+
+            h3 where 절
+            p from 절 처리가 완료된 후, 생성된 가상 테이블의 각 행이 검색 조건과 일치하는지 검사한다 -- 결과가 false거나 null이면 출력 테이블에서 삭제된다
 
         h2 데이터 유형
         div

@@ -2,10 +2,10 @@
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'UA-143098403-1');
-</script></head><body><aside class="w3-animate-left" id="sidebar"><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><details class="w3-small"><summary>LICENSE</summary><table class="w3-table-all w3-card w3-small"><tr><td>Author</td><td>License</td></tr><tr><td>&copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a></td><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE">MIT</a></td></tr><tr><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.w3schools.com/w3css">w3css</a></td><td>No license</td></tr><tr><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://highlightjs.org/">highlight.js</a></td><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause</a></td></tr><tr><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/mathjax/MathJax">MathJax</a></td><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache-2.0</a></td></tr><tr><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/davidshimjs/qrcodejs">QRCode.js</a></td><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE">MIT</a></td></tr><tr><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/terrastruct/d2">D2</a></td><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/terrastruct/d2/blob/master/LICENSE.txt">MPL-2.0</a></td></tr></table></details><hr></aside><main id="main"><nav class="w3-bar w3-blue" id="nav"><button class="w3-bar-item w3-button w3-hover-theme" id="nav-toggle-btn" type="button" aria-label="Toggle navigation menu" title="Toggle navigation menu">&#9776;</button><form role="search"><input class="w3-bar-item" id="query" type="search" placeholder="search" style="max-width:35%"></form><a class="w3-bar-item w3-button w3-hover-theme" href="/">Home</a></nav><article id="contents"><h1><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/legalnotice.html">Legal Notice; 법적 고지</a></h1><p>PostgreSQL Database Management System (also known as Postgres, formerly known as Postgres95)</p><p>Portions Copyright © 1996-2025, PostgreSQL Global Development Group</p><p>Portions Copyright © 1994, The Regents of the University of California</p><p>Permission to use, copy, modify, and distribute this software and its documentation for any purpose, without fee, and without a written agreement is hereby granted, provided that the above copyright notice and this paragraph and the following two paragraphs appear in all copies.</p><p>IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p><p>THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE PROVIDED HEREUNDER IS ON AN “AS-IS” BASIS, AND THE UNIVERSITY OF CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.</p><h1>시작하기 전에</h1><ul><li>최신 공식 문서 : <a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/index.html">index</a></li><li>출시 노트 : <a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/release/">release</a></li><li>PostgreSQL은 캘리포니아 대학교 버클리 컴퓨터과학부에서 개발한 POSTGRES 버전 4.2를 기반으로 개발되고, 오픈소스로 관리 중인 객체-관계형 데이터베이스 관리 시스템(ORDBMS)이다. 뛰어난 성능과 확장성으로 여러 분야에서 애용하고 있다</li></ul><h1>SQL</h1><div><h2>구문</h2><div><h3>어휘 구조</h3><ul><li>키워드 : 고정된 의미를 갖는 토큰</li><li>식별자 : 명령에 따라 테이블, 열, 객체 이름을 나타내는 토큰. 단순히 이름(name)이라고 부르기도 한다<ul><li>키워드로 예약된 토큰을 식별자로 사용하려면 ""로 감쌀 필요가 있다</li><li>식별자 크기 제한은 기본 63바이트</li><li>""로 감싼 식별자는 대소문자를 구별한다 -- 이 안에서 "를 나타내려면 ""를 사용</li></ul></li><li>주석 : 입력에 포함된 주석은 공백처럼 취급된다<ul><li>-- 한 줄 주석</li><li>/* 여러 줄 주석 */</li></ul></li><li>상수<ul><li>문자열 : '임의 문자열' -- 이 안에서 '를 나타내려면 ''를 사용</li><li>C 스타일 이스케이프 문자열 : e'임의 문자열' 또는 E'임의 문자열' -- 이 안에서 \를 나타내려면 \\를 사용<ul><li>\n : 줄바꿈</li><li>\t : 탭</li></ul></li><li>유니코드 이스케이프 문자열 : u&amp;'임의 문자열' 또는 U&amp;'임의 문자열'<ul><li>유니코드 지정 : \xxxx, \+xxxxxx</li><li>\ 외의 이스케이프 문자 지정 예 : U&amp;'d!0061t!+000061' UESCAPE '!'</li></ul></li><li>$로 감싼 문자열 : $$임의 문자열$$ 또는 $tag_name$임의 문자열$tag_name$</li><li>비트열 : b'0101' 또는 B'0101' 또는 x'xxxx' 또는 X'xxxx'</li><li>숫자 : 소수점이나 지수가 없는 정수는 크기가 맞는 경우 integer 또는 bigint로 간주된다. 그 외 모든 숫자는 numeric 타입으로 간주된다<ul><li>소수점 허용 : 123.456</li><li>지수 표기 허용 : 0.123e3</li><li>정수에 한하여 2, 8, 16진수 표기 허용 : 0b101, 0o101, 0x101</li><li>구분자 허용 : 123_456.123_456</li></ul></li><li>임의 유형 상수 : 이는 형 변환이 아니라, 문자열로 표현된 리터럴에 대해 처음으로 타입을 할당하는 것<ul><li>type 'string'</li><li>'string'::type</li><li>cast('string' as type)</li></ul></li></ul></li></ul><h3>값 표현식</h3><ul><li>열 참조 : table_name.column_name</li><li>위치 매개변수 : SQL 함수 또는 준비된 쿼리에서 $n으로 n번째 인자 참조</li><li>배열 원소 선택 : expression[i], expression[start:end]</li><li>필드 선택 : expression.field_name</li><li>연산자 호출 : expression operator expression 또는 operator expression</li><li>함수 호출 : function_name([expression [, expression ... ]])</li><li>형 변환 : cast(expression as type) 또는 expression::type</li><li>정렬 방식 지정 : expression COLLATE collation</li><li>스칼라 서브쿼리 : 괄호 안의 SELECT 쿼리로, 정확히 한 개 행, 한 개 열을 반환                </li></ul><div><h4>집계 표현식</h4><div><p><strong>↓ syntax</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">aggregate_name (expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]
+</script></head><body><aside class="w3-animate-left" id="sidebar"><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><details class="w3-small"><summary>LICENSE</summary><table class="w3-table-all w3-card w3-small"><tr><td>Author</td><td>License</td></tr><tr><td>&copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a></td><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE">MIT</a></td></tr><tr><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.w3schools.com/w3css">w3css</a></td><td>No license</td></tr><tr><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://highlightjs.org/">highlight.js</a></td><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause</a></td></tr><tr><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/mathjax/MathJax">MathJax</a></td><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache-2.0</a></td></tr><tr><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/davidshimjs/qrcodejs">QRCode.js</a></td><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE">MIT</a></td></tr><tr><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/terrastruct/d2">D2</a></td><td><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/terrastruct/d2/blob/master/LICENSE.txt">MPL-2.0</a></td></tr></table></details><hr></aside><main id="main"><nav class="w3-bar w3-blue" id="nav"><button class="w3-bar-item w3-button w3-hover-theme" id="nav-toggle-btn" type="button" aria-label="Toggle navigation menu" title="Toggle navigation menu">&#9776;</button><form role="search"><input class="w3-bar-item" id="query" type="search" placeholder="search" style="max-width:35%"></form><a class="w3-bar-item w3-button w3-hover-theme" href="/">Home</a></nav><article id="contents"><h1><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/legalnotice.html">Legal Notice; 법적 고지</a></h1><p>PostgreSQL Database Management System (also known as Postgres, formerly known as Postgres95)</p><p>Portions Copyright © 1996-2025, PostgreSQL Global Development Group</p><p>Portions Copyright © 1994, The Regents of the University of California</p><p>Permission to use, copy, modify, and distribute this software and its documentation for any purpose, without fee, and without a written agreement is hereby granted, provided that the above copyright notice and this paragraph and the following two paragraphs appear in all copies.</p><p>IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p><p>THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE PROVIDED HEREUNDER IS ON AN “AS-IS” BASIS, AND THE UNIVERSITY OF CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.</p><h1>시작하기 전에</h1><ul><li>최신 공식 문서 : <a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/index.html">index</a></li><li>별도 표기가 없다면, 이 문서는 PostgreSQL 18 문서 내용임</li><li>출시 노트 : <a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/release/">release</a></li><li>PostgreSQL은 캘리포니아 대학교 버클리 컴퓨터과학부에서 개발한 POSTGRES 버전 4.2를 기반으로 개발되고, 오픈소스로 관리 중인 객체-관계형 데이터베이스 관리 시스템(ORDBMS)이다. 뛰어난 성능과 확장성으로 여러 분야에서 애용하고 있다</li></ul><h1>SQL</h1><div><h2>구문</h2><div><h3>어휘 구조</h3><ul><li>키워드 : 고정된 의미를 갖는 토큰</li><li>식별자 : 명령에 따라 테이블, 열, 객체 이름을 나타내는 토큰. 단순히 이름(name)이라고 부르기도 한다<ul><li>키워드로 예약된 토큰을 식별자로 사용하려면 ""로 감쌀 필요가 있다</li><li>식별자 크기 제한은 기본 63바이트</li><li>""로 감싼 식별자는 대소문자를 구별한다 -- 이 안에서 "를 나타내려면 ""를 사용</li></ul></li><li>주석 : 입력에 포함된 주석은 공백처럼 취급된다<ul><li>-- 한 줄 주석</li><li>/* 여러 줄 주석 */</li></ul></li><li>상수<ul><li>문자열 : '임의 문자열' -- 이 안에서 '를 나타내려면 ''를 사용</li><li>C 스타일 이스케이프 문자열 : e'임의 문자열' 또는 E'임의 문자열' -- 이 안에서 \를 나타내려면 \\를 사용<ul><li>\n : 줄바꿈</li><li>\t : 탭</li></ul></li><li>유니코드 이스케이프 문자열 : u&amp;'임의 문자열' 또는 U&amp;'임의 문자열'<ul><li>유니코드 지정 : \xxxx, \+xxxxxx</li><li>\ 외의 이스케이프 문자 지정 예 : U&amp;'d!0061t!+000061' UESCAPE '!'</li></ul></li><li>$로 감싼 문자열 : $$임의 문자열$$ 또는 $tag_name$임의 문자열$tag_name$</li><li>비트열 : b'0101' 또는 B'0101' 또는 x'xxxx' 또는 X'xxxx'</li><li>숫자 : 소수점이나 지수가 없는 정수는 크기가 맞는 경우 integer 또는 bigint로 간주된다. 그 외 모든 숫자는 numeric 타입으로 간주된다<ul><li>소수점 허용 : 123.456</li><li>지수 표기 허용 : 0.123e3</li><li>정수에 한하여 2, 8, 16진수 표기 허용 : 0b101, 0o101, 0x101</li><li>구분자 허용 : 123_456.123_456</li></ul></li><li>임의 유형 상수 : 이는 형 변환이 아니라, 문자열로 표현된 리터럴에 대해 처음으로 타입을 할당하는 것<ul><li>type 'string'</li><li>'string'::type</li><li>cast('string' as type)</li></ul></li></ul></li></ul><h3>값 표현식</h3><ul><li>열 참조 : table_name.column_name</li><li>위치 매개변수 : SQL 함수 또는 준비된 쿼리에서 $n으로 n번째 인자 참조</li><li>배열 원소 선택 : expression[i], expression[start:end]</li><li>필드 선택 : expression.field_name</li><li>연산자 호출 : expression operator expression 또는 operator expression</li><li>함수 호출 : function_name([expression [, expression ... ]])</li><li>형 변환 : cast(expression as type) 또는 expression::type</li><li>정렬 방식 지정 : expression COLLATE collation</li><li>스칼라 서브쿼리 : 괄호 안의 SELECT 쿼리로, 정확히 한 개 행, 한 개 열을 반환                </li></ul><div><h4>집계 표현식</h4><div><p><strong>↓ syntax</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">aggregate_name (expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]
 aggregate_name (DISTINCT expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]
 aggregate_name ( * ) [ FILTER ( WHERE filter_clause ) ]
-aggregate_name ( [ expression [ , ... ] ] ) WITHIN GROUP ( order_by_clause ) [ FILTER ( WHERE filter_clause ) ]</div><ul><li>집계 함수는 여러 입력 행들을 (그룹 당) 하나의 행으로 줄인다</li><li>별도 명시가 없는 한 집계 함수는 null을 집계에서 제외한다</li><li>입력 행 순서가 결과에 중요한 경우를 위해 선택적으로 order by 절을 지원한다</li><li>한편 최빈값, 중앙값을 찾는 것과 같은 ordered-set 집계는 order by 절이 필수다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">with guild_player (guild_id, coin) as ( values
+aggregate_name ( [ expression [ , ... ] ] ) WITHIN GROUP ( order_by_clause ) [ FILTER ( WHERE filter_clause ) ]</div><ul><li>집계 함수는 여러 입력 행들을 (그룹 당) 하나의 행으로 줄인다</li><li>별도 명시가 없는 한 집계 함수는 null을 집계에서 제외한다</li><li>입력 행 순서가 결과에 중요한 경우를 위해 선택적으로 order by 절을 지원한다</li><li>한편 최빈값, 중앙값을 찾는 것과 같은 ordered-set 집계는 order by 절이 필수다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># with guild_player (guild_id, coin) as ( values
     (1, 10),
     (1, 50),
     (1, 20),
@@ -16,26 +16,28 @@ select
     guild_id,
     percentile_cont(0.5) within group (order by coin) as median_coin
 from guild_player
-group by 1;</div><p><strong>↓ result</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text"> guild_id | median_coin 
+group by 1;
+
+ guild_id | median_coin 
 ----------+-------------
         1 |          20
         2 |          25
-(2 rows)</div></li></ul></div><h4>윈도 함수 호출</h4><div><p><strong>↓ syntax</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">function_name ([expression [, expression ... ]]) [ FILTER ( WHERE filter_clause ) ] OVER window_name
+(2 rows)</div></li></ul></div><h4>윈도 함수 호출</h4><div><p><strong>↓ syntax</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">function_name ([expression [, expression ... ]]) [ FILTER ( WHERE filter_clause ) ] OVER window_name
 function_name ([expression [, expression ... ]]) [ FILTER ( WHERE filter_clause ) ] OVER ( window_definition )
 function_name ( * ) [ FILTER ( WHERE filter_clause ) ] OVER window_name
 function_name ( * ) [ FILTER ( WHERE filter_clause ) ] OVER ( window_definition )
-</div><p><strong>↓ window_definition</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">[ existing_window_name ]
+</div><p><strong>↓ window_definition</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">[ existing_window_name ]
 [ PARTITION BY expression [, ...] ]
 [ ORDER BY expression [ ASC | DESC | USING operator ] [ NULLS { FIRST | LAST } ] [, ...] ]
 [ frame_clause ]
-</div><p><strong>↓ frame_clause</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">{ RANGE | ROWS | GROUPS } frame_start [ frame_exclusion ]
+</div><p><strong>↓ frame_clause</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">{ RANGE | ROWS | GROUPS } frame_start [ frame_exclusion ]
 { RANGE | ROWS | GROUPS } BETWEEN frame_start AND frame_end [ frame_exclusion ]
-</div><p><strong>↓ frame_start 또는 frame_end</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">UNBOUNDED PRECEDING
+</div><p><strong>↓ frame_start 또는 frame_end</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">UNBOUNDED PRECEDING
 offset PRECEDING
 CURRENT ROW
 offset FOLLOWING
 UNBOUNDED FOLLOWING
-</div><p><strong>↓ frame_exclusion</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">EXCLUDE NO OTHERS   -- 기본 동작. 아무 행도 제외하지 않음
+</div><p><strong>↓ frame_exclusion</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">EXCLUDE NO OTHERS   -- 기본 동작. 아무 행도 제외하지 않음
 EXCLUDE CURRENT ROW -- 현재 행만 제외
 EXCLUDE GROUP       -- 현재 행 + 피어 행 제외
 EXCLUDE TIES        -- 피어 행들 제외
@@ -47,7 +49,7 @@ select * from ( values
     (1),
     (5),
     (10)
-);</div><p><strong>↓ order by 없음 + 프레임 정의 없음</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text"># select n, sum(n) over () from nums;
+);</div><p><strong>↓ order by 없음 + 프레임 정의 없음</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select n, sum(n) over () from nums;
  n  | sum 
 ----+-----
   1 |  32
@@ -56,7 +58,7 @@ select * from ( values
   1 |  32
   5 |  32
  10 |  32
-(6 rows)</div><p><strong>↓ order by 있음 + 프레임 정의 없음</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text"># select n, sum(n) over (order by n) from nums;
+(6 rows)</div><p><strong>↓ order by 있음 + 프레임 정의 없음</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select n, sum(n) over (order by n) from nums;
  n  | sum 
 ----+-----
   1 |   2
@@ -65,7 +67,7 @@ select * from ( values
   5 |  12
  10 |  32
  10 |  32
-(6 rows)</div><p><strong>↓ ROWS 모드</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text"># select n, sum(n) over (order by n rows 2 preceding) from nums;
+(6 rows)</div><p><strong>↓ ROWS 모드</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select n, sum(n) over (order by n rows 2 preceding) from nums;
  n  | sum 
 ----+-----
   1 |   1
@@ -74,7 +76,7 @@ select * from ( values
   5 |  11
  10 |  20
  10 |  25
-(6 rows)</div><p><strong>↓ RANGE 모드</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text"># select n, sum(n) over (order by n range 4 preceding) from nums;
+(6 rows)</div><p><strong>↓ RANGE 모드</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select n, sum(n) over (order by n range 4 preceding) from nums;
  n  | sum 
 ----+-----
   1 |   2
@@ -83,7 +85,7 @@ select * from ( values
   5 |  12
  10 |  20
  10 |  20
-(6 rows)</div><p><strong>↓ GROUPS 모드</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text"># select n, sum(n) over (order by n groups 1 preceding) from nums;
+(6 rows)</div><p><strong>↓ GROUPS 모드</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select n, sum(n) over (order by n groups 1 preceding) from nums;
  n  | sum 
 ----+-----
   1 |   2
@@ -105,4 +107,148 @@ create function get_f1(my_row_type) returns int as 'SELECT $1.f1' language sql;
 select get_f1((1, 'text')); -- ERROR:  function get_f1(record) is not unique
 select get_f1((1, 'text')::my_table);
 select get_f1((1, 'text')::my_row_type);
-</div></li></ul><h4>표현식 평가 규칙</h4><ul><li>표현식이 </li></ul></div></div><h2>데이터 정의</h2><div></div><h2>데이터 조작</h2><div></div><h2>쿼리</h2><div></div><h2>데이터 유형</h2><div></div><h2>함수와 연산자</h2><div></div><h2>형 변환</h2><div></div><h2>인덱스</h2><div></div><h2>전문 검색</h2><div></div><h2>동시성 제어</h2><div></div><h2>성능 팁</h2><div></div><h2>병렬 쿼리</h2><div></div></div><h1>서버 관리</h1><div><h2>복제</h2></div><h1>서버 프로그래밍</h1><div><h2>PL/pgSQL</h2></div><h1>참고자료</h1><div><h2>SQL 명령</h2></div><h1>내부 구조</h1><div><h2>시스템 카탈로그</h2></div><h1>부록</h1><div><h2>Date/Time 지원</h2></div></article></main></body></html>
+</div></li></ul><h4>표현식 평가 규칙</h4><ul><li>표현식이 평가되는 순서는 정의되지 않았고, 쿼리 실행 계획에 따라 얼마든지 변경될 수 있다. 이는 가장 간단한 사례에서도 발생하는데, true or func()와 func() or true 양쪽 모두에서 func()는 실행되지 않을 수 있다</li><li>예외적으로 case 구문은 표현식들을 순차적으로 평가함이 강제되지만, 그럼에도 불구하고 문제가 발생하는 경우들이 있다<ul><li>상수 평가에서 에러 발생하는 경우 : case when x > 0 then x else 1/0 end</li><li>집계 함수에서 에러 발생하는 경우 : case when min(employees) > 0 then avg(expenses / employees) end</li></ul></li></ul></div><h3>함수 호출</h3><ul><li>위치 표기법 : func(val1, val2)</li><li>이름 표기법 : func(arg1 => val1, arg2 => val2)<p>"=>" 대신 이전 버전의 ":="도 지원됨</p></li><li>혼합 표기법 : func(val1, val2, arg3 => val3)</li></ul></div><h2>데이터 정의</h2><div><h3>ID 열</h3><ul><li>값이 암묵적인 시퀀스로부터 자동 생성되는 열<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># create temp table order_history (
+    order_no    bigint generated always as identity primary key,
+    created_at  timestamptz default current_timestamp
+);
+
+# insert into order_history values (default, default) returning *;
+
+ order_no |          created_at           
+----------+-------------------------------
+        1 | 2026-01-02 13:53:42.781017+09
+(1 row)</div></li><li>ID 열은 자동적으로 not null</li><li>테이블 상속에서 자식 테이블의 ID 열은 부모의 것을 상속하지 않는다</li><li>개별 파티션은 파티션된 테이블의 ID 열을 상속한다</li></ul><h3>생성된 열</h3><ul><li>다른 열들로부터 파생되는 열. 단, 이미 파생된 열을 정의에 사용할 수는 없다</li><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># create temp table player (
+    purchase_amount int not null,
+    vip_level       int generated always as (case
+                        when purchase_amount > 10000 then 3
+                        when purchase_amount > 5000 then 2
+                        when purchase_amount > 1000 then 1
+                        else 0
+                    end)
+);
+
+# insert into player values (5555, default) returning *;
+
+ purchase_amount | vip_level 
+-----------------+-----------
+            5555 |         2
+(1 row)
+
+INSERT 0 1</div><li>기본적으로는 열을 읽을 떄마다 새로 계산되지만 (virtual), 실제로 디스크에 저장하도록 할 수도 있다 (stored)</li><li>테이블 상속에서 부모 열이 생성된 열이면 자식 열도 동일한 유형이어야 하지만, 표현식은 다를 수 있다</li><li>create table ... partition of로 생성하는 경우, 정의는 자동으로 복사된다</li><li>alter table ... attach partition으로 붙이는 경우엔 표현식이 다를 수 있다</li><li>생성된 열은 별도 접근 권한을 가질 수 있다</li><li>before 트리거가 실행된 후에 업데이트되고, before 트리거 안에서는 접근이 허용되지 않는다</li></ul><h3>시스템 열</h3><ul><li>tableoid : 행이 속한 테이블의 oid. pg_class와 조인하여 파티션된 테이블이나 상속 계층 상의 테이블을 쉽게 식별 가능</li><li>xmin : 이 행을 삽입한 트랜잭션 ID</li><li>cmin : 삽입 트랜잭션 내 명령 ID</li><li>xmax : 이 행에 대한 삭제 트랜잭션 ID. 0인 경우 행이 삭제되지 않음이 확실하지만, 삭제 트랜잭션이 커밋되지 않았거나 롤백된 경우에도 0이 아닌 값으로 남는다</li><li>ctid : 현재 물리적 위치</li></ul><h3>행 보안</h3><ul><li>BYPASSRLS 속성을 가진 슈퍼유저와 역할은 항상 행 보안을 우회한다</li><li>테이블 소유자도 기본적으로 행 보안을 우회하지만, 명령 실행 시 force row level security를 지정하면 행 보안을 적용받을 수 있다</li><li>기본키, 고유키 등의 무결성 검사는 항상 행 보안을 우회한다</li></ul><h3>테이블 상속</h3><ul><li>상속 관계는 나중에 추가할 수도 있다</li><li>only 키워드를 지원하는 명령어들은 이를 이용하여 자식 테이블들은 제외하고 지정한 테이블에만 명령을 적용할 수 있다</li><li>기본키, 고유키 등의 제약사항은 자식 테이블들을 고려하지 않는다</li></ul><h3>테이블 파티셔닝</h3><ul><li>파티셔닝을 테이블을 물리적으로 쪼갠다</li><li>일반적으로 파티셔닝의 효과적이려면 테이블 크기가 서버의 물리적 메모리 용량을 초과해야 한다</li><li>일반 테이블을 나중에 파티션 테이블로 바꾸거나, 그 반대로 변환하는 것은 지원되지 않는다. 한편 파티션을 붙였다 떼는 건 자유롭게 가능하다<p>파티션을 나중에 추가할 때, 이미 행이 많이 있다면 성능을 위해 다음 사항들을 미리 만들어두는 게 좋다<ul><li>파티션 조건과 일치하는 check 제약 조건</li><li>파티션 테이블에 정의된 인덱스 정의와 일치하는 인덱스</li></ul></p></li><li>파티션된 테이블에 기본 파티션이 있는 경우, 앞으로 연결될 파티션들을 제외하는 check 제약 조건을 생성하는 것이 성능상 좋다</li><li>범위를 이용해 파티션을 정의하는 경우, 상한은 배타적으로 적용된다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">create table xxx_2404 partition of xxx for values from ('2024-04-01') to ('2024-05-01');
+create table xxx_2405 partition of xxx for values from ('2024-05-01') to ('2024-06-01');</div></li><li>파티션 자체를 파티션 테이블로 정의해 추가로 쪼갤 수도 있다</li><li>파티션된 테이블에 대해 인덱스를 생성할 때 concurrently 한정자를 사용할 수 없다<ol><li>create index on only 구문을 이용해 인덱스가 유효하지 않은 상태로 생성</li><li>개별 파티션들에 대해 create index ... concurrently 실행</li><li>alter index ... attach partition을 이용해 인덱스 연결</li><li>모든 파티션 인덱스가 연결되면 부모 인덱스는 자동으로 유효한 것으로 간주</li></ol><p>이 기법은 unique, primary key 제약 조건에도 사용할 수 있다: alter table only ... add unique</p></li><li>파티션 수가 많다고 항상 좋지도 않고, 파티션 수가 적다고 항상 나쁜 것도 아니다 -- 사용 사례에 맞는 설계를 해야 한다</li></ul></div><h2>데이터 조작</h2><div><h3>INSERT</h3><ul><li>모든 열을 기본값으로 설정해 행을 삽입하는 경우 다음과 같은 쿼리를 이용할 수 있다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">insert into table_name default values;</div></li><li>쿼리 결과를 삽입에 이용할 수 있다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">insert into table_name (col1, col2) select ...</div></li></ul><h3>조작한 행 데이터 반환</h3><ul><li>insert, update, delete, merge에 대해 선택적으로 returning 절을 이용해 수정 직후 select 가능<p>트리거가 있는 경우, returning이 조회하는 데이터는 트리거가 수정 완료한 행</p></li><li>merge의 경우 원본 행, 삽입/업데이트/삭제한 행 데이터 모두 획득 가능</li><li>어떤 경우든 old.col_name으로 이전 버전 데이터 획득 가능</li></ul></div><h2>쿼리</h2><div><h3>Table expression</h3><div><h4>Joined table</h4><ul><li>구문<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">T1 cross join T2
+T1         { [inner] | { left | right | full } [outer] } join T2 on boolean_expression
+T1         { [inner] | { left | right | full } [outer] } join T2 using ( join_column_list )
+T1 natural { [inner] | { left | right | full } [outer] } join T2</div><ul><li>괄호를 이용하여 조인 순서를 제어할 수 있다. 괄호가 없는 경우 왼쪽에서 오른쪽으로 중첩된다</li><li>using을 이용하는 경우, 출력은 중복되는 열을 제거한다 : 공통 열, 나머지 T1 열, 나머지 T2 열</li><li>natural은 using의 축약형으로, 두 테이블에서 공통적으로 나타나는 모든 열 이름으로 구성된 using과 동일하다</li><li>조인 조건은 조인 대상을 필터링하기 위한 것으로 조인 전에 처리되고, where 절은 조인 후에 처리된다</li></ul></li><li>cross join<ul><li>T1과 T2의 모든 행 조합(데카르트 곱) 포함</li><li>from t1 cross join t2는 다음 표현들과 동일하다<ul><li>from t1 inner join t2 on true</li><li>from t1, t2</li></ul></li></ul><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># create temp table a (a) as
+  select * from ( values ('a1'), ('a2') );
+
+# create temp table b (b) as
+  select * from ( values ('b1'), ('b2'), ('b3') );
+
+# create temp table c ( c text );
+
+# select * from a cross join b;
+ a  | b  
+----+----
+ a1 | b1
+ a1 | b2
+ a1 | b3
+ a2 | b1
+ a2 | b2
+ a2 | b3
+(6 rows)
+
+# select * from a, c;
+ a | c 
+---+---
+(0 rows)
+</div></li><li>(inner) join : 조인 조건을 만족하는 T1, T2의 행 조합<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># with
+# a (a) as ( values ('a1'), ('a2'), ('a4') ),
+# b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
+# select * from a join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
+ a  | b  
+----+----
+ a1 | b1
+ a1 | b1+
+ a2 | b2
+(3 rows)
+</div></li><li>left (outer) join : 조건을 만족하지 않는 T1 행도 포함<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># \pset null '(null)'
+# with
+# a (a) as ( values ('a1'), ('a2'), ('a4') ),
+# b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
+# select * from a left join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
+ a  |  b  
+----+-----
+ a1 | b1
+ a1 | b1+
+ a2 | b2
+ a4 | (null)
+(4 rows)
+</div></li><li>right (outer) join : 조건을 만족하지 않는 T2 행도 포함<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># \pset null '(null)'
+# with
+# a (a) as ( values ('a1'), ('a2'), ('a4') ),
+# b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
+# select * from a right join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
+   a    |  b  
+--------+-----
+ a1     | b1
+ a1     | b1+
+ a2     | b2
+ (null) | b3
+(4 rows)
+</div></li><li>full (outer) join : 조건을 만족하지 않는 T1, T2 행 각각 포함<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># \pset null '(null)'
+# with
+# a (a) as ( values ('a1'), ('a2'), ('a4') ),
+# b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
+# select * from a full join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
+   a    |   b    
+--------+--------
+ a1     | b1
+ a1     | b1+
+ a2     | b2
+ (null) | b3
+ a4     | (null)
+(5 rows)
+</div></li></ul><h4>Table and column alias</h4><p>별칭 정의 후엔 쿼리에서 원래 이름으로 참조할 수 없다</p><h4>Subquery</h4><ul><li>파생 테이블을 지정하는 서브쿼리는 괄호로 감싸야 한다</li><li>select 명령 대신 values 목록으로 서브쿼리를 구성할 수도 있다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select * from (values ('a', 1), ('a', 2)) as x(a, b);
+ a | b 
+---+---
+ a | 1
+ a | 2
+(2 rows)
+</div></li></ul><h4>Table function</h4><ul><li>테이블 함수는 행 집합을 생성하는 함수</li><li>구문<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">function_call                       [with ordinality] [[as] table_alias [(column_alias, [, ...])]]
+rows from( function_call [, ... ] ) [with ordinality] [[as] table_alias [(column_alias, [, ...])]]</div></li><li>with ordinality : 마지막에 bigint 타입의 ordinality 열이 추가되어 행 번호를 표시한다</li><li>특수 테이블 함수 unnest는 임의 개수의 배열 매개변수로 호출할 수 있는데, 개별 배열에 대해 unnest가 호출되고 rows from 구문으로 결합한 것처럼 동작한다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># \pset null '(null)'
+# select * from unnest('{1, 2, 3}'::int[], '{a, b}'::text[]) with ordinality as x (a, b);
+ a |   b    | ordinality 
+---+--------+------------
+ 1 | a      |          1
+ 2 | b      |          2
+ 3 | (null) |          3
+(3 rows)
+
+# select * from rows from(
+#     unnest('{1, 2, 3}'::int[]),
+#     unnest('{a, b}'::text[])
+# ) with ordinality as x (a, b, c);
+ a |   b    | c 
+---+--------+---
+ 1 | a      | 1
+ 2 | b      | 2
+ 3 | (null) | 3
+(3 rows)</div></li><li>테이블 및 열 별칭을 지정하지 않으면, 함수 이름이 이용된다</li><li>호출 방식에 따라 다른 열 집합을 반환하는 경우, 출력 행 구조를 쿼리에 지정해야 한다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">create extension dblink;
+
+select *
+from dblink('dbname=wiz', 'select pid, usename, query from pg_stat_activity')
+    as x(pid int, usename text, query text)
+where query != '';</div><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># \pset null '(null)'
+# select *
+# from rows from (
+#     json_to_recordset('[{"a":40,"b":"foo"},{"a":"100","b":"bar"}]') as (a int, b text),
+#     generate_series(1, 3)
+# ) as x(x, y, z)
+# order by 3;
+   x    |   y    | z 
+--------+--------+---
+     40 | foo    | 1
+    100 | bar    | 2
+ (null) | (null) | 3
+(3 rows)
+</div></li></ul><h4>lateral 서브쿼리</h4><ul><li>기본적으로 서브쿼리는 독립적으로 평가되므로 from 절의 다른 테이블을 참조할 수 없다</li><li>from 절의 서브쿼리 앞에 lateral 키워드를 붙이는 경우, from 절에서 해당 서브쿼리보다 앞에 있는 테이블의 열을 참조할 수 있다</li><li>테이블 함수는 항상 그보다 앞에 있는 테이블의 열을 참조할 수 있으므로 lateral 키워드 명시는 선택 사항이다</li></ul></div><h3>where 절</h3><p>from 절 처리가 완료된 후, 생성된 가상 테이블의 각 행이 검색 조건과 일치하는지 검사한다 -- 결과가 false거나 null이면 출력 테이블에서 삭제된다</p></div><h2>데이터 유형</h2><div></div><h2>함수와 연산자</h2><div></div><h2>형 변환</h2><div></div><h2>인덱스</h2><div></div><h2>전문 검색</h2><div></div><h2>동시성 제어</h2><div></div><h2>성능 팁</h2><div></div><h2>병렬 쿼리</h2><div></div></div><h1>서버 관리</h1><div><h2>복제</h2></div><h1>서버 프로그래밍</h1><div><h2>PL/pgSQL</h2></div><h1>참고자료</h1><div><h2>SQL 명령</h2></div><h1>내부 구조</h1><div><h2>시스템 카탈로그</h2></div><h1>부록</h1><div><h2>Date/Time 지원</h2></div></article></main></body></html>
