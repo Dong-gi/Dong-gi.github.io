@@ -163,14 +163,7 @@ include ../../../source/skeleton.pug
                                 li ORDER BY 절이 없는 경우, 파티션 내 모든 행들은 서로의 피어다
                             +asCode('sql').
                                 create temp table nums (n) as
-                                select * from ( values
-                                    (1),
-                                    (5),
-                                    (10),
-                                    (1),
-                                    (5),
-                                    (10)
-                                );
+                                values (1), (5), (10), (1), (5), (10);
                             +asCode('sql', 'order by 없음 + 프레임 정의 없음').
                                 # select n, sum(n) over () from nums;
                                  n  | sum 
@@ -400,7 +393,7 @@ include ../../../source/skeleton.pug
                             li 괄호를 이용하여 조인 순서를 제어할 수 있다. 괄호가 없는 경우 왼쪽에서 오른쪽으로 중첩된다
                             li using을 이용하는 경우, 출력은 중복되는 열을 제거한다 : 공통 열, 나머지 T1 열, 나머지 T2 열
                             li natural은 using의 축약형으로, 두 테이블에서 공통적으로 나타나는 모든 열 이름으로 구성된 using과 동일하다
-                            li 조인 조건은 조인 대상을 필터링하기 위한 것으로 조인 전에 처리되고, where 절은 조인 후에 처리된다
+                            li 조인 조건은 조인 대상을 필터링하기 위한 것으로 조인 전에 처리된다
 
                     li cross join
                         ul
@@ -410,11 +403,9 @@ include ../../../source/skeleton.pug
                                     li from t1 inner join t2 on true
                                     li from t1, t2
                         +asCode('sql').
-                            # create temp table a (a) as
-                              select * from ( values ('a1'), ('a2') );
+                            # create temp table a (a) as values ('a1'), ('a2');
 
-                            # create temp table b (b) as
-                              select * from ( values ('b1'), ('b2'), ('b3') );
+                            # create temp table b (b) as values ('b1'), ('b2'), ('b3');
 
                             # create temp table c ( c text );
 
@@ -567,14 +558,657 @@ include ../../../source/skeleton.pug
                     li from 절의 서브쿼리 앞에 lateral 키워드를 붙이는 경우, from 절에서 해당 서브쿼리보다 앞에 있는 테이블의 열을 참조할 수 있다
                     li 테이블 함수는 항상 그보다 앞에 있는 테이블의 열을 참조할 수 있으므로 lateral 키워드 명시는 선택 사항이다
 
-            h3 where 절
-            p from 절 처리가 완료된 후, 생성된 가상 테이블의 각 행이 검색 조건과 일치하는지 검사한다 -- 결과가 false거나 null이면 출력 테이블에서 삭제된다
+                h4 where 절
+                p from 절 처리가 완료된 후, 생성된 가상 테이블의 각 행이 검색 조건과 일치하는지 검사한다 -- 결과가 false거나 null이면 출력 테이블에서 삭제된다
+
+                h4 group by, having 절
+                ul
+                    li where 필터를 통과한 뒤의 테이블을 group by 절을 이용해 그룹화할 수 있다
+                        p 한편 전체 테이블이 한 개 그룹이라면 group by 생략 가능
+                    li having 절을 이용해 그룹에 대한 필터링을 수행할 수 있다
+                    li grouping sets : group by를 여러 번 수행하고 이어붙인 것과 같다
+                        +asCode('sql').
+                            # \pset null '(null)'
+                            # with tmp (a, b) as ( values ('a', 'b') )
+                            # select a, b
+                            # from tmp
+                            # group by grouping sets (a, b);
+                               a    |   b    
+                            --------+--------
+                             a      | (null)
+                             (null) | b
+                            (2 rows)
+                    li cube : 가능한 모든 부분집합(멱집합; power set)에 대해 질의한 것과 같다
+                        +asCode('sql').
+                            -- cube(a, b) = grouping sets((), (a), (b), (a, b))
+                            # \pset null '(null)'
+                            # with tmp (a, b) as ( values ('a', 'b') )
+                            # select a, b
+                            # from tmp
+                            # group by cube (a, b);
+                               a    |   b    
+                            --------+--------
+                             (null) | (null)
+                             a      | b
+                             a      | (null)
+                             (null) | b
+                            (4 rows)
+                    li rollup : 공집합부터 요소들을 순서대로 추가한 집합들에 대해 질의한 것과 같다
+                        +asCode('sql').
+                            -- rollup(a, b) = grouping sets((), (a), (a, b))
+                            # \pset null '(null)'
+                            # with tmp (a, b) as ( values ('a', 'b') )
+                            # select a, b
+                            # from tmp
+                            # group by rollup (a, b);
+                               a    |   b    
+                            --------+--------
+                             (null) | (null)
+                             a      | b
+                             a      | (null)
+                            (3 rows)
+                    li cube, rollup의 요소로 리스트를 지정할 수 있다
+                        +asCode('sql').
+                            -- rollup(a, (b, c)) == grouping sets((), (a), (a, b, c))
+                            # \pset null '(null)'
+                            # with tmp (a, b, c) as ( values ('a', 'b', 'c') )
+                            # select a, b, c
+                            # from tmp
+                            # group by rollup (a, (b, c));
+                               a    |   b    |   c    
+                            --------+--------+--------
+                             (null) | (null) | (null)
+                             a      | b      | c
+                             a      | (null) | (null)
+                            (3 rows)
+                    li grouping sets의 요소로 cube, rollup을 사용할 수 있다
+                    li distinct를 이용해 그룹 집합에 대한 중복을 제거할 수 있다
+                        +asCode('sql').
+                            # \pset null '(null)'
+                            # with tmp (a, b, c) as ( values ('a', 'b', 'c') )
+                            # select a, b, c
+                            # from tmp
+                            # group by distinct grouping sets (cube(a, b), rollup(b, c))
+                            # order by 1, 2, 3;
+                               a    |   b    |   c    
+                            --------+--------+--------
+                             a      | b      | (null)
+                             a      | (null) | (null)
+                             (null) | b      | c
+                             (null) | b      | (null)
+                             (null) | (null) | (null)
+                            (5 rows)
+                    li 하나의 group by에 여러 그룹화 항목이 나열되는 경우, 최종 목록은 각 항목들에 대한 곱집합이다
+                        +asCode('sql').
+                            # \pset null '(null)'
+                            # with tmp (a, b, c, d) as ( values ('a', 'b', 'c', 'd') )
+                            # select a, b, c, d
+                            # from tmp
+                            # group by cube (a, b), cube (c, d)
+                            # order by 1, 2, 3, 4;
+                               a    |   b    |   c    |   d    
+                            --------+--------+--------+--------
+                             a      | b      | c      | d
+                             a      | b      | c      | (null)
+                             a      | b      | (null) | d
+                             a      | b      | (null) | (null)
+                             a      | (null) | c      | d
+                             a      | (null) | c      | (null)
+                             a      | (null) | (null) | d
+                             a      | (null) | (null) | (null)
+                             (null) | b      | c      | d
+                             (null) | b      | c      | (null)
+                             (null) | b      | (null) | d
+                             (null) | b      | (null) | (null)
+                             (null) | (null) | c      | d
+                             (null) | (null) | c      | (null)
+                             (null) | (null) | (null) | d
+                             (null) | (null) | (null) | (null)
+                            (16 rows)
+
+                h4 윈도 함수 처리
+                ul
+                    li 윈도 함수는 위 그룹화와 having 필터링이 모두 수행된 후 실행된다
+                    li 쿼리 결과는 윈도 함수에 정의된 순서에 따라 정렬되긴 하지만, 이에 의존하는 것은 권장되지 않는다. 정렬된 결과가 필요한 경우 최상위 order by 절을 명시하는 것이 권장된다
+
+            h3 Select list
+            ul
+                li 컬럼 이름 대신 *를 이용해 모든 컬럼을 순서대로 선택 가능
+                li 열 이름에 지정한 별칭은 후속 처리 -- order by 절 포함 -- 에 사용 가능
+                li select distinct를 이용해 중복 행 제거 가능. 이때 null도 하나의 고윳값으로 취급
+                li (비표준) select distinct on (expression [, ...])를 이용해 사용자 정의 기준으로 중복 행 제거 가능
+
+            h3 쿼리 결합
+            ul
+                li query1 union [all] query2 : 합집합
+                li query1 intersect [all] query2 : 교집합
+                li query1 except [all] query2 : 차집합
+                li all을 지정하지 않는 경우 distinct와 마찬가지로 중복된 행을 제거한다
+                li 괄호 없이 나열되는 경우, intersect가 union/except보다 먼저 평가된다
+
+            h3 order by
+            p null은 기본적으로 null이 아닌 값보다 큰 것처럼 정렬된다
+
+            h3 values list
+            ul
+                li 디스크에 쓰지 않고 사용할 수 있는 상수 테이블을 생성한다
+                li 기본적으로 column1, column2, ... 이름을 할당하지만, 이는 SQL 표준이 아니므로 호환을 위해 재정의하는 것이 좋다
+                li 구문적으로 #[+asInlineCode('values (expression [, ...]) [, ...]', 'sql')]는 #[+asInlineCode('select select_list from table_expression', 'sql')]과 동일하게 취급된다
+                    ul
+                        li select가 나타날 수 있는 모든 곳에 사용될 수 있다
+                        li 뒤에 order by, limit 등을 붙일 수 있다
+                    +asCode('sql').
+                        # values (1), (3), (2) order by 1 limit 2;
+                         column1 
+                        ---------
+                               1
+                               2
+                        (2 rows)
+
+                        # create table table_name (num) as values (1), (3), (2);
+                        SELECT 3
+
+                        # insert into table_name values (1), (2), (3);
+                        INSERT 0 3
+
+                        # select * from (values (1), (3), (2)) as x(num);
+                         num 
+                        -----
+                           1
+                           3
+                           2
+                        (3 rows)
+
+                        # with tmp(num) as (values (1), (2), (3))
+                        # (select * from tmp) union
+                        # (values (1), (4));
+                         num 
+                        -----
+                           1
+                           3
+                           4
+                           2
+                        (4 rows)
+
+            h3 with 쿼리 (CTE; Common Table Expression)
+            ul
+                li 하나의 쿼리 실행 중에만 존재하는 임시 테이블을 정의하는 방법을 제공한다
+                li select, insert, update, delete, merge 명령을 with 절의 보조문으로 사용할 수 있다
+                    +asCode('sql').
+                        with temp_name as (
+                            보조문
+                        )
+                        부모_쿼리
+                li recursive 한정자를 이용하면 쿼리가 직접 출력을 참조하는 반복 연산이 가능하다
+                    ol
+                        li non-recursive 부분을 계산한다. UNION을 위해 (not UNION ALL) 중복되는 행을 제거한다. 남은 행들을 결과에 포함시키고, 임시 작업 테이블로 설정한다
+                        li 작업 테이블이 빌 때까지 아래를 반복한다
+                            ol
+                                li recursive 부분을 계산하고, 작업 테이블 내용을 덮어쓴다. UNION을 위해 (not UNION ALL) 중복된 행(이전 결과와도 비교)들을 제거한다. 남은 행들을 결과에 포함시키고, 임시 중간 테이블로 설정한다
+                                li 작업 테이블의 내용을 중간 테이블 내용으로 대체한다. 중간 테이블은 비운다
+                    +asCode('sql').
+                        -- 10 ~ 100의 합계
+                        with recursive t(n) as (
+                            (values (10))
+                            union all
+                            (select n+1 from t where 100 > n)
+                        )
+                        select sum(n) from t;
+                    +table()
+                        tr
+                            th t
+                            th working_table
+                        tr
+                            td empty
+                            td empty
+                        tr
+                            td 10
+                            td 10
+                        tr
+                            td 10, 11
+                            td 11
+                        tr
+                            td 10, 11, 12
+                            td 12
+                        tr
+                            td ...
+                            td ...
+                        tr
+                            td 10, 11, 12, 13, ..., 100
+                            td 100
+                        tr
+                            td 10, 11, 12, 13, ..., 100
+                            td empty
+                li 일반적으로 with 쿼리는 이후 몇 번 참조되든지 한 번만 평가되는 대신, 메인 쿼리의 제약 조건이 최적화에 고려되지 않는다
+                    ul
+                        li 하지만 with 쿼리가 재귀적이지 않고, 부작용이 없고, 한 번만 참조된다면 메인 쿼리와 통합되어 동시에 최적화된다
+                        li not materialized를 지정하면 with 쿼리가 메인 쿼리에 통합되어 동시에 최적화되도록 할 수 있다
+                            +asCode('sql').
+                                with x as not materialized (
+                                    select * from big_table
+                                )
+                                select * from x as t1 join x as t2 on t1.id = t2.parent
+                                where t2.id = 123;
 
         h2 데이터 유형
         div
+            h3 숫자
+            +table()
+                +ths('name', 'storage size', 'description', 'range')
+                +tds('smallint', '2 바이트', '정수', '-32768 ~ +32767')
+                +tds('integer', '4 바이트', '정수', '-2147483648 ~ +2147483647')
+                +tds('bigint', '8 바이트', '정수', '-9223372036854775808 ~ +9223372036854775807')
+                +tds('decimal, numeric', '가변', '사용자 지정 정밀도. 유리수', '소수점 앞 최대 131072자리, 소수점 뒤 최대 16383자리')
+                +tds('real', '4 바이트', '부동 소수', '소수점 6자리 정밀도')
+                +tds('double precision', '8 바이트', '부동 소수', '소수점 15자리 정밀도')
+            ul
+                li numeric(precision, scale=0) : 최대 precision(1 ~ 1000)개 유효숫자, 최대 scale개 소수점 자릿수(-1000 ~ 1000)
+                    p SQL 표준은 scale 값으로 0 ~ precision만 허용함에 유의
+                li numeric : precision, scale 모두 지정하지 않으면 표에 기재된 최대 제약 조건을 갖는다
+                    p 제약 조건 없는 numeric은 무한대('Infinity', '-Infinity')를 저장할 수 있다
+                li 가까운 짝수로 반올림하는 real, double precision과 다르게 numeric은 0에서 멀어지는 방향으로 이루어진다
+
+            h3 이진 데이터
+            p SQL 표준의 BLOB과 유사한 타입을 bytea로 지원한다
+
+            h3 날짜/시간
+            ul
+                li time, timestamp, interval은 초 단위 소수점 정밀도(0~6) 지정 가능
+                li 유효한 타임스탬프 입력 : 날짜 + 시간 + [시간대] + [AD|BC]
+                    ul
+                        li timestamp 타입에 대해선 입력의 시간대 표시를 무시한다
+                        li timestamptz 타입에 대해선 시각을 UTC로 변환하여 저장한다
+                li 특수 날짜/시간 입력 문자열
+                    p 'now', 'today' 등을 사용한 저장된 쿼리는 해당 시각을 계속 재사용하기 때문에, SQL 함수를 이용하는 것이 권장된다. 예. 'tomorrow'::date 대신 CURRENT_DATE + 1
+                    +table()
+                        +ths('input string', 'valid types', 'description')
+                        +tds('epoch', 'date, timestamp', 'Unix time zero')
+                        +tds('infinity', 'date, timestamp, interval', '다른 모든 타임스탬프보다 나중')
+                        +tds('-infinity', 'date, timestamp, interval', '다른 모든 타임스탬프보다 이전')
+                        +tds('now', 'date, time, timestamp', '트랜잭션 시작 시각')
+                        +tds('today', 'date, timestamp', '오늘 자정')
+                        +tds('tomorrow', 'date, timestamp', '내일 자정')
+                        +tds('yesterday', 'date, timestamp', '어제 자정')
+                        +tds('allballs', 'time', '00:00:00.00 UTC')
+                li interval 입력 : '[@] quantity unit [quantity unit...] [ago]'
+                    ul
+                        li @ : 장식 옵션
+                        li quantity : 음수 허용
+                        li unit : microsecond, millisecond, second, minute, hour, day, week, month, year, decade, century, millennium
+                        li ago : 지정 시 모든 quantity 부호를 뒤집는다
+                        li 일부 간략한 표기 지원 : '일 시간:분:초', '년-월'
+
+            h3 열거형
+            +asCode('sql').
+                CREATE TYPE enum_name AS ENUM ('value1', 'value2')
+                ALTER TYPE enum_name ADD VALUE [ IF NOT EXISTS ] 'new value' [ { BEFORE | AFTER } 'neighbor value' ]
+                ALTER TYPE enum_name RENAME VALUE 'old value' TO 'new value'
+
+                # select * from pg_enum;
+                  oid  | enumtypid | enumsortorder | enumlabel 
+                -------+-----------+---------------+-----------
+                 16566 |     16564 |             1 | value1
+                 16568 |     16564 |             2 | value2
+                 16569 |     16564 |           1.5 | value3
+                (3 rows)
+
+            h3 텍스트 검색
+            ul
+                li tsvector : 정렬된 어휘소 목록. 정렬과 중복 제거는 자동으로 수행되지만, 정규화는 자동으로 수행되지 않는다
+                    +asCode('sql').
+                        # select 'SQL 표준의 BLOB과 유사한 타입을 bytea로 지원한다'::tsvector;
+                                                    tsvector                            
+                        ----------------------------------------------------------------
+                         'BLOB과' 'SQL' 'bytea로' '유사한' '지원한다' '타입을' '표준의'
+                        (1 row)
+
+                        # select to_tsvector('SQL 표준의 BLOB과 유사한 타입을 bytea로 지원한다');
+                                                         to_tsvector                                  
+                        ------------------------------------------------------------------------------
+                         'blob과':3 'bytea로':6 'sql':1 '유사한':4 '지원한다':7 '타입을':5 '표준의':2
+                        (1 row)
+                li tsquery : 어휘소 검색 정보
+                    ul
+                        li a &amp; b : a and b
+                        li a | b : a or b
+                        li !a : not a
+                        li a &lt;-&gt; b : a followed by b
+                        li a &lt;N&gt; b : a followed by b within N distance
+                        li 접두어 매칭 : 'xxx:*'::tsquery
+                        li 정규화 : to_tsquery('original query')
+                            +asCode('sql').
+                                # SELECT to_tsvector( 'postgraduate' ) @@ to_tsquery( 'postgres:*' );
+                                 ?column? 
+                                ----------
+                                 t
+                                (1 row)
+
+                                # SELECT to_tsvector( 'postgraduate' ), to_tsquery( 'postgres:*' );
+                                  to_tsvector  | to_tsquery 
+                                ---------------+------------
+                                 'postgradu':1 | 'postgr':*
+                                (1 row)
+
+            h3 JSON
+            ul
+                li json : 입력 텍스트 그대로 저장. JSON 연산 시 매번 파싱 필요
+                li jsonb : 바이너리로 저장. JSONB 연산 매우 빠름
+                    p 전용 인덱스 지원
+                    ul
+                        li create index ... using gin (jsonb_col) : 키-존재 연산자 ?, ?|, ?&amp;, 포함 연산자 @>, jsonpath 일치 연산자 @?, @@ 연산자 지원
+                        li using gin (jsonb_col jsonb_path_ops) : @>, @?, @@ 연산자만 지원하지만, 크기가 훨씬 작고 검색 성능도 더 좋다(지원하는 연산자에 한해)
+                        li using gin ((jsonb_col -> 'prop')) : 보다 좋은 성능을 위해 인덱스 범위를 좁힐 수 있다
+                li jsonb 첨자를 이용한 할당 시, 경로가 정의되지 않은 경우 첨자가 암시하는 유형의 빈 값인 것처럼 진행된다
+                    +asCode('sql').
+                        # create temp table test (x) as ( values (null::jsonb), ('{}'::jsonb) );
+                        SELECT 2
+                        
+                        # update test set x['a'][1]['b'] = '1' returning *;
+                                    x            
+                        -------------------------
+                         {"a": [null, {"b": 1}]}
+                         {"a": [null, {"b": 1}]}
+                        (2 rows)
+
+                        UPDATE 2
+
+            h3 배열
+            ul
+                li create table에서 지정한 배열의 길이, 차원 수는 현재 구현에서 무시된다
+                li 배열 입력 : '{ val1 delimiter val2 delimiter ... }'
+                    ul
+                        li delimiter : box 형식에는 ';', 그 외 형식에는 ',' 사용
+                        li 개별 값은 ""로 감쌀 수 있다
+                li 배열 첨자는 1부터 시작
+                    p 실제 배열 크기를 벗어나는 경우, 오류 대신 null 반환
+                li [lower-bound:upper-bound]의 범위 접근(slice)도 가능하다
+                    ul
+                        li 연속되는 첨자 중 하나라도 slice면, 모든 첨자를 slice로 취급한다
+                        li lower-bound, upper-bound는 생략 가능
+                li 첨자가 1부터 시작하지 않는 배열도 허용된다
+                    +asCode('sql').
+                        # create temp table test (x) as (values ('{}'::int[]), ('{1,2}'::int[]), ('[-3:-2]={1,2}'::int[]) );
+                        SELECT 3
+
+                        # update test set x[3:4] = '{3,4}'::int[] returning *, x[-3:4];
+                                          x                   |               x               
+                        --------------------------------------+-------------------------------
+                         [3:4]={3,4}                          | {3,4}
+                         {1,2,3,4}                            | {1,2,3,4}
+                         [-3:4]={1,2,NULL,NULL,NULL,NULL,3,4} | {1,2,NULL,NULL,NULL,NULL,3,4}
+                        (3 rows)
+
+                        UPDATE 3
+                li 배열 연결
+                    ul
+                        li N차원 배열에 N-1차원 요소를 연결하는 경우, N차원 배열의 lower bound는 유지된다
+                        li N차원 배열 2개를 연결하는 경우, 왼쪽 배열의 lower bound가 유지된다
+                    +asCode('sql').
+                        # select 1 || '[0:1]={2,3}'::int[] || 4;
+                            ?column?     
+                        -----------------
+                         [0:3]={1,2,3,4}
+                        (1 row)
+
+                        # select '[3:4]={3,4}'::int[] || '[0:1]={0,1}'::int[];
+                            ?column?     
+                        -----------------
+                         [3:6]={3,4,0,1}
+                        (1 row)
+                    p 미묘한 차이점
+                    +asCode('sql').
+                        # select array_cat('[2:3]={1,2}'::int[], null);
+                          array_cat  
+                        -------------
+                         [2:3]={1,2}
+                        (1 row)
+
+                        # select array_append('[2:3]={1,2}'::int[], null);
+                           array_append   
+                        ------------------
+                         [2:4]={1,2,NULL}
+                        (1 row)
+
+                        # select '[2:3]={1,2}'::int[] || null;
+                          ?column?   
+                        -------------
+                         [2:3]={1,2}
+                        (1 row)
+
+                        # select '[2:3]={1,2}'::int[] || null::int;
+                             ?column?     
+                        ------------------
+                         [2:4]={1,2,NULL}
+                        (1 row)
+
+            h3 복합 타입
+            ul
+                li 기존 타입들을 결합하여 새로운 타입을 만들 수 있다. not null 같은 제약조건을 포함할 수 없다
+                    +asCode('sql').
+                        # create type complex as ( r float, i float );
+                        CREATE TYPE
+
+                        # select (row(1, null)::complex).*;
+                         r |   i    
+                        ---+--------
+                         1 | (null)
+                        (1 row)
+                li 테이블을 만들면 기본적으로 동일 이름의 복합 타입이 만들어진다. not null 같은 제약조건은 무시된다
+                    +asCode('sql').
+                        # \pset null '(null)'
+                        # create table test ( a int primary key, b boolean not null );
+                        CREATE TABLE
+                        
+                        # select (row(null, null)::test).*;
+                           a    |   b    
+                        --------+--------
+                         (null) | (null)
+                        (1 row)
+
+                        # insert into test values (1, false);
+                        INSERT 0 1
+
+                        # select test from test;
+                         test  
+                        -------
+                         (1,f)
+                        (1 row)
+                li 복합 타입 참조는 테이블 참조와의 모호함을 피하기 위해 항상 ()를 사용하는 것이 좋다
+                    p 행 수정 시 set 뒤의 열 이름에서는 불필요하다(넣을 수도 없다)
+                li 비용이 비싼 함수는 쿼리 당 1번만 호출하도록 해야 한다
+                    +asCode('sql').
+                        # \pset null '(null)'
+                        # create table test ( a int primary key, b boolean not null );
+                        CREATE TABLE
+
+                        # insert into test values (1, false);
+                        INSERT 0 1
+
+                        # create or replace function func(t test) returns test as $$
+                        # begin
+                        #     raise notice using message = 'func called';
+                        #     t.a = t.a + 1;
+                        #     t.b = not(t.b);
+                        #     return t;
+                        # end;
+                        # $$ language plpgsql;
+                        CREATE FUNCTION
+
+                        # select (func(test)).* from test;
+                        -- 또는 select (func(test.*)).* from test;
+                        -- 또는 select (test.func).* from test;
+                        NOTICE:  func called
+                        NOTICE:  func called
+                         a | b 
+                        ---+---
+                         2 | t
+                        (1 row)
+
+                        # select (x).* from test, lateral func(test) as x;
+                        NOTICE:  func called
+                         a | b 
+                        ---+---
+                         2 | t
+                        (1 row)
+
+            h3 범위 타입
+            ul
+                li 모든 범위 타입은 대응하는 다중 범위 타입이 있다 : 연속하지 않는 범위 목록
+                li integer에 대한 범위 : int4range, int4multirange
+                li bigint에 대한 범위 : int8range, int8multirange
+                li numeric에 대한 범위 : numrange, nummultirange
+                li timestamp에 대한 범위 : tsrange, tsmultirange
+                li timestamptz에 대한 범위 : tstzrange, tstzmultirange
+                li date에 대한 범위 : daterange, datemultirange
+                li 상/하한을 명시하지 않으면 +/-무한대를 의미한다
+                li 아무것도 포함하지 않는 빈 범위 예. 'empty'::int4range
+            +asCode('sql').
+                # select '[1, 4)'::int4range @> 1, '[1, 4)'::int4range @> 4;
+                 ?column? | ?column? 
+                ----------+----------
+                 t        | f
+                (1 row)
+            +asCode('sql', '범위에 대한 제약 조건').
+                CREATE TABLE reservation (
+                    during tsrange,
+                    EXCLUDE USING GIST (during WITH &&)
+                );
+
+                CREATE EXTENSION btree_gist;
+                CREATE TABLE room_reservation (
+                    room text,
+                    during tsrange,
+                    EXCLUDE USING GIST (room WITH =, during WITH &&)
+                );
+
+            h3 도메인 타입
+            p 다른 기본 타입에 대한 부분 집합으로 정의하는 사용자 정의 형식
+            +asCode('sql') CREATE DOMAIN posint AS integer CHECK (VALUE > 0);
+
+            h3 의사 타입
+            p 열 타입으로 사용할 순 없지만 함수 인자 또는 반환 타입으로 사용 가능
+            ul
+                li any : 임의 유형
+                li anyarray : 임의 배열
+                li record : 임의 행
+                li trigger : 트리거 함수의 반환 타입
+                li void : 반환 없음
+                li unknown : 타입이 정해지지 않은 리터럴
+                li 등등
 
         h2 함수와 연산자
         div
+            h3 논리 연산자
+            +asCode('sql').
+                # with tmp1 (x) as ( values (true), (false), (null) ),
+                # tmp2 as ( select t1.x, t2.x y from tmp1 t1, tmp1 t2 )
+                # select x, y, x and y as "x and y", x or y as "x or y", not x as "not x"
+                # from tmp2 order by x desc nulls last, y desc nulls last;
+                   x    |   y    | x and y | x or y | not x  
+                --------+--------+---------+--------+--------
+                 t      | t      | t       | t      | f
+                 t      | f      | f       | t      | f
+                 t      | (null) | (null)  | t      | f
+                 f      | t      | f       | t      | t
+                 f      | f      | f       | f      | t
+                 f      | (null) | f       | (null) | t
+                 (null) | t      | (null)  | t      | (null)
+                 (null) | f      | f       | (null) | (null)
+                 (null) | (null) | (null)  | (null) | (null)
+                (9 rows)
+
+            h3 비교 함수 및 연산자
+            ul
+                li null을 비교 가능한 값으로 취급하지 않는 경우, 비교 연산자는 두 피연산자 중 하나라도 null이면 null을 반환
+                li &lt;&gt;는 같지 않음을 비교하는 SQL 표준 표기로, !=는 구문 분석 단계에서 &lt;&gt;로 변환된다
+                li 비교 술어
+                    ul
+                        li a between b and c : a &gt;= b and a &lt; c와 동일하다
+                        li a not between b and c
+                        li a between symmetric b and c : a가 b와 c 사이의 중간값인지? b와 c의 대소 관계는 결과와 무관하다
+                        li a not between symmetric b and c
+                        li a is distinct from b : a와 b가 같은지? null도 비교 가능한 값으로 처리
+                        li a is not distinct from b
+                        li a is [not] null
+                        li boolean is [not] true, is [not] false, is [not] unknown
+
+            h3 수학 함수 및 연산자
+            ul
+                li a / b, div(a, b) : 정수에 대한 나눗셈 결과는 0에 가깝게 소수점이 버려진다
+                li a % b, mod(a, b) : 정수 modulo 연산
+                li a ^ b, power(a, b) : a의 b 제곱
+                li |/a, sqrt(a) : 제곱근
+                li ||/a, cbrt(a) : 세제곱근
+                li @a, abs(a) : 절댓값
+                li a &amp; b : 비트 and
+                li a | b : 비트 or
+                li a # b : 비트 xor
+                li ~a : 비트 not
+                li a &lt;&lt; b : 비트 shift left
+                li a &gt;&gt; b : 비트 shift right
+                li ceil(a) : a 이상의 최소 정수
+                li gcd(a, b) : 최대공약수
+                li 등등
+
+            h3 문자열 함수 및 연산자
+            ul
+                li a || b : 문자열 연결
+                li concat(val1[, val2 ...]) : null을 제외한 모든 인자의 텍스트 표현 연결
+                li concat_ws(seperator, val1[, val2 ...]) : with seperator
+                li a ^@ b, starts_with(a, b) : a는 b로 시작하는지?
+                li a like pattern : 전체 a가 pattern과 일치하는지? 패턴에 %(임의 길이 문자열), _(임의 1개 문자) 사용 가능
+                    ul
+                        li a ~~ b, a like b
+                        li a !~~ b, a not like b
+                        li a ~~* b, a ilike b
+                        li a !~~* b, a not ilike b
+                li regexp_like(a, pattern[, flags]) : POSIX 패턴이 매칭되는지?
+                    ul
+                        li a ~ b, regexp_like(a, b)
+                        li a ~* b, regexp_like(a, b, 'i')
+                        li a !~ b, not(regexp_like(a, b))
+                        li a !~* b, not(regexp_like(a, b, 'i'))
+                li regexp_match, regexp_matches(a, pattern[, flags]) : 패턴 매칭 결과 반환
+                li trim([leading | trailing | both] [characters] from string) : 공백(또는 지정 characters) 제거
+                li string is [not] [NFC | NFD | NFKC | NFKD] normalized : UTF-8 유니코드 정규화 테스트
+                li substring(string [from start] [for count]) : [시작 위치]와 [문자 개수]로 부분 문자열 추출
+                li left(string, n), right(string, n) : n에 음수 사용 가능
+                li substring(string from pattern) : POSIX 정규표현식에 일치하는 첫 번째 문자열 반환
+                li 등등
+
+            h3 날짜/시간 함수 및 연산자
+            ul
+                li +, * 연산자는 교환 법칙이 성립한다
+                    ul
+                        li date + integer → date
+                        li date - date → integer
+                        li date + interval → timestamp
+                        li date + time → timestamp
+                        li interval + interval → interval
+                        li timestamp + interval → timestamp
+                        li timestamp - timestamp → interval
+                        li time + interval → time
+                        li time - time → interval
+                        li -interval → interval
+                        li interval * double precision → interval
+                li isfinite( date | timestamp | interval )
+                li make_date / interval / time / timestamp / timestamptz
+                li to_timestamp(double) : 초 단위 Unix 타임스탬프를 timestamptz로 변환
+                li 일광 절약 시간제가 적용되는 시간대에 대해 '1 day'::interval, '24 hour'::interval을 더하고 뺀 결과는 다를 수 있다
+                li extract(field from source)
+                    ul
+                        li day : day of the month (1~31)
+                        li dow : day of the week 일요일(0) ~ 토요일(6)
+                        li isodow : 월요일(1) ~ 일요일(7)
+                        li doy : day of the year (1~366)
+                        li epoch : 초 단위 Unix timestamp
+                        li timezone : 초 단위 offset
+                        li 등등
+                li date_trunc(field, source[, timezone]) : 지정한 정밀도 미만의 값 버림
+                li at time zone
+                    ul
+                        li timestamp at time zone x → timestamptz : 벽시계 값에 시간대 부여
+                        li timestamptz at time zone x → timestamp : 동일한 시각을 지정한 시간대에서 볼 때 읽히는 벽시계 값 반환
 
         h2 형 변환
         div
