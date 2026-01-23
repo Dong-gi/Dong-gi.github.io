@@ -911,6 +911,133 @@ include ../../../source/skeleton.pug
                         (2 rows)
 
                         UPDATE 2
+                li jsonpath (SQL/JSON path)
+                    ul
+                        li variable
+                            ul
+                                li $ : 쿼리 대상 객체
+                                li $varname : 함수 인자로 설정한 변수
+                                li @ : 경로 매칭 후 필터 표현식에서 참조하는 결과 객체
+                        li accessor
+                            ul
+                                li .key, ."$varname" : 특정 속성 접근
+                                li .* : 전체 멤버 접근
+                                li .** : 재귀적으로 전체 멤버 접근
+                                    +asCode('sql').
+                                        # select jsonb_path_query('{"a":{"b":{"c":1}}}', '$.*');
+                                         jsonb_path_query 
+                                        ------------------
+                                         {"b": {"c": 1}}
+                                        (1 row)
+
+                                        # select jsonb_path_query('{"a":{"b":{"c":1}}}', '$.**');
+                                            jsonb_path_query    
+                                        ------------------------
+                                         {"a": {"b": {"c": 1}}}
+                                         {"b": {"c": 1}}
+                                         {"c": 1}
+                                         1
+                                        (4 rows)
+
+                                        # select jsonb_path_query('[1,[2,[3]]]', '$.*');
+                                         jsonb_path_query 
+                                        ------------------
+                                        (0 rows)
+
+                                        # select jsonb_path_query('[1,[2,[3]]]', '$.**');
+                                         jsonb_path_query 
+                                        ------------------
+                                         [1, [2, [3]]]
+                                         1
+                                         [2, [3]]
+                                         2
+                                         [3]
+                                         3
+                                        (6 rows)
+                                li .**{level}, .**(start to end) : 지정 레벨(0부터 시작) 순회 결과만 반환
+                                li [subscript, ...] : 배열 요소 접근
+                                    +asCode('sql').
+                                        # select jsonb_path_query('[1,2,3,4,5]', '$[0, last, 2 to last-1]');
+                                         jsonb_path_query 
+                                        ------------------
+                                         1
+                                         5
+                                         3
+                                         4
+                                        (4 rows)
+                                li [*] : 배열 모든 요소 접근
+                        li operator and method
+                            p jsonpath 평가 결과에 대해 추가 연산을 수행할 수 있다
+                            ul
+                                li JavaScript 산술 연산 : +, -, *, /, %
+                                li value.type() : JSON 타입 반환
+                                li value.size() : 배열이 아니어도 1 반환됨에 유의
+                                    +asCode('sql').
+                                        # select jsonb_path_query('[]', '$.size()'), jsonb_path_query('[1,2,3]', '$.size()'), jsonb_path_query('{}', '$.size()');
+                                         jsonb_path_query | jsonb_path_query | jsonb_path_query 
+                                        ------------------+------------------+------------------
+                                         0                | 3                | 1
+                                        (1 row)
+                                li value.boolean() : boolean, string, numeric에 한해 boolean 변환
+                                    +asCode('sql').
+                                        # select jsonb_path_query('[0, 1, false, true, "FalsE", "TruE"]', '$[*].boolean()');
+                                         jsonb_path_query 
+                                        ------------------
+                                         false
+                                         true
+                                         false
+                                         true
+                                         false
+                                         true
+                                        (6 rows)
+                                li value.string() : boolean, number, string, datetime을 string으로 변환
+                                li value.double() : number, string을 number로 변환. 기타 bigint(), decimal(), integer(), numeric() 지원
+                                li number값 전용 함수 : ceiling(), floor(), abs()
+                                li string값 전용 함수 : date(), timestamp(), timestamp_tz() 등
+                                li object.keyvalue() : 키-값 쌍 해체
+                                    +asCode('sql').
+                                        # select jsonb_path_query('[{"a":1},{"a":1},{"b":{"c":2}}]', '$[*].keyvalue()');
+                                                     jsonb_path_query              
+                                        -------------------------------------------
+                                         {"id": 16, "key": "a", "value": 1}
+                                         {"id": 40, "key": "a", "value": 1}
+                                         {"id": 64, "key": "b", "value": {"c": 2}}
+                                        (3 rows)
+                        li filter ::= ? (condition)
+                            ul
+                                li SQL/JSON은 부울 대수로 3상태를 가진다 : true, false, unknown
+                                li 동등 비교 : ==, !=, &lt;&gt;
+                                li 대소 비교 : &lt;, &lt;=, &gt;, &gt;=
+                                li 부울 대수 연산 : &amp;&amp;, ||, !, is unknown
+                                    +asCode('sql').
+                                        # select jsonb_path_query('[-1,1,"a"]', '$[*] ? ((@ > 0) is unknown)');
+                                         jsonb_path_query 
+                                        ------------------
+                                         "a"
+                                        (1 row)
+                                li 패턴 매칭
+                                    ul
+                                        li 정규표현식 : string_value like_regex pattern_string [flag flag_string]
+                                        li 접두 문자열 검사 : string_value starts with prefix_string
+                                        li jsonpath 검사 : exists(path_expression)
+                        li 필터는 조건을 만족하는 항목들을 반환하며, 일반 표현식으로 연결될 수 있다
+                            +asCode('sql').
+                                # select jsonb_path_query('[
+                                #   { "ISBN": "ISBN1", "title": "title1", "authors": ["author1", "author2"], "publishAt": "2000-01-01T00:00:00Z"},
+                                #   { "ISBN": "ISBN2", "title": "title2", "authors": ["author3"], "publishAt": "2010-01-01T00:00:00Z"},
+                                #   { "ISBN": "ISBN3", "title": "title1", "authors": ["author2"], "publishAt": "2020-01-01T00:00:00Z"}
+                                # ]', '$[*] ? (@.publishAt.timestamp_tz() > "2009-12-31 18:00:00+09".timestamp_tz()) ? (exists(@.authors[*] ? (@ == "author3"))).ISBN');
+                                 jsonb_path_query 
+                                ------------------
+                                 "ISBN2"
+                                (1 row)
+                        li PostgreSQL은 필터에서만 predicate을 이용할 수 있는 SQL/JSON과 다르게, path 자체에서도 허용한다. 이 경우 path 매칭 결과는 단일 boolean 값이다
+                            +asCode('sql').
+                                # select jsonb_path_query('[1,2,3]', '$[*] > 2'), jsonb_path_query('[1,2,3]', '$[*] > 4'), jsonb_path_query('{}', '$[*] > 2');
+                                 jsonb_path_query | jsonb_path_query | jsonb_path_query 
+                                ------------------+------------------+------------------
+                                 true             | false            | null
+                                (1 row)
 
             h3 배열
             ul
@@ -940,6 +1067,7 @@ include ../../../source/skeleton.pug
 
                         UPDATE 3
                 li 배열 연결
+                    +pos('배열 연결')
                     ul
                         li N차원 배열에 N-1차원 요소를 연결하는 경우, N차원 배열의 lower bound는 유지된다
                         li N차원 배열 2개를 연결하는 경우, 왼쪽 배열의 lower bound가 유지된다
@@ -1209,12 +1337,420 @@ include ../../../source/skeleton.pug
                     ul
                         li timestamp at time zone x → timestamptz : 벽시계 값에 시간대 부여
                         li timestamptz at time zone x → timestamp : 동일한 시각을 지정한 시간대에서 볼 때 읽히는 벽시계 값 반환
+                li 현재 날짜/시간
+                    ul
+                        li 현재 트랜잭션 시작 시각 : current_date / time / time(precision) / timestamp /timestamp(precision)
+                        li current_timestamp = transaction_timestamp() = now()
+                        li statement_timestamp() : 명령 수신 시각
+                        li clock_timestamp() : 현재 시각
 
-        h2 형 변환
-        div
+            h3 enum 함수
+            ul
+                li enum_range(x) : 정의된 순서대로 값 배열 반환
+                li enum_range(x, y) : 정의된 순서대로, x ~ y 사이 값 배열 반환. x/y에 null을 설정하면 lower/upper bound 없는 걸로 간주
+
+            h3 기하 함수 및 연산자
+            p 평행 이동, 충돌 감지, 특성값 추출 등
+
+            h3 네트워크 주소 함수 및 연산자
+            p 서브넷 마스크 평가 등
+
+            h3 텍스트 검색 함수 및 연산자
+            ul
+                li tsvector @@ tsquery, tsquery @@ tsvector : 벡터가 쿼리에 매칭되는지?
+                li text @@ tsquery : to_tsvector(text)가 쿼리에 매칭되는지?
+                li ts_rank, ts_rank_cd(vector, query) : 벡터가 쿼리에 얼마나 매칭되는지?
+                li tsvector || tsvector : 벡터 결합
+                li tsquery &amp;&amp; tsquery : 쿼리 and
+                li tsquery || tsquery : 쿼리 or
+                li !!tsquery : 쿼리 not
+                li tsquery &lt;-&gt; tsquery, tsquery_phrase(query1, query2) : query1 바로 뒤에 query2가 이어지는 쿼리 반환
+                li tsquery_phrase(query1, query2, distance) : query1과 query2 거리가 distance인 쿼리 반환
+                li tsquery @&gt; tsquery : 후자의 모든 어휘소가 전자에 존재하는지?
+                li tsquery &lt;@ tsquery : 전자의 모든 어휘소가 후자에 존재하는지?
+                li array_to_tsvector(text[]) : 입력 문자열을 별도 처리 없이 그대로 어휘소로 사용
+                li to_tsquery([ config regconfig, ] query text) : 입력 문자열을 정규화하여 tsquery로 변환
+                li to_tsvector([ config regconfig, ] document text) : 입력 문자열을 정규화하고 위치 정보를 포함한 tsvector로 변환
+                li tsvector_to_array(tsvector) → text[] : 어휘소 배열 반환
+                li unnest(tsvector) → setof record( lexeme text, positions smallint[], weights text )
+
+            h3 JSON 함수 및 연산자
+            ul
+                li json/jsonb -> integer : 배열 요소 추출. 음수 인덱스 지원
+                li json/jsonb ->> integer : text로 추출
+                li json/jsonb -> text : 객체 필드 추출
+                li json/jsonb ->> text : text로 추출
+                li json/jsonb #> text[] : 지정 경로의 값 추출
+                li json/jsonb #>> text[] : text로 추출
+                li jsonb @> jsonb : 전자가 후자를 모두 포함하는지?
+                li jsonb &lt;@ jsonb : 후자가 전자를 모두 포함하는지?
+                    ul
+                        li 스칼라 : 값이 같은지?
+                        li 배열 : 모든 원소를 갖는지?
+                        li 객체 : 모든 키-값 쌍을 가지는지?
+                li jsonb ? text : 해당 텍스트를 객체의 키 또는 배열 요소로 갖는지?
+                li jsonb ?| text[] : 텍스트 배열 중 하나라도 객체의 키 또는 배열 요소로 존재하는지?
+                li jsonb ?&amp; text[] : 텍스트 배열의 모든 텍스트가 객체의 키 또는 배열 요소로 존재하는지?
+                li jsonb || jsonb : 객체의 경우 Object.assign(전자, 후자). 그 외의 경우 배열 접합으로 처리
+                li jsonb - text : 객체의 경우 해당하는 키-값 쌍 삭제. 배열의 경우 일치하는 요소 전부 삭제
+                li jsonb - text[] : 배열 각 텍스트에 대해 jsonb - text 수행한 것과 동일
+                li jsonb - integer : 배열의 지정 인덱스(음수 가능) 요소 삭제
+                li jsonb #- text[] : 지정 경로의 필드 또는 배열 요소 삭제
+                li json/jsonb 생성
+                    ul
+                        li to_json, to_jsonb(any) : 일부 타입에 대해선 에러가 발생하는 형변환과 달리, 타입이 정해진 모든 값에 대해 성공
+                        li json_array(any[, ...]) : JSON 배열 생성
+                        li json_array(query) : 단일 열을 반환하는 SELECT 쿼리 결과로부터 JSON 배열 생성
+                        li json_build_object, jsonb_build_object(key, value[, key, value ...]) : 키-값 쌍으로 객체 생성
+                        li json_object(key {value|:} value[, ...]) : 키-값 쌍으로 객체 생성
+                            +asCode('sql') select json_object(1 value 2,3:4)
+                        li json_object, jsonb_object(text[]) : 키-값 쌍으로 객체 생성
+                        li json_object, jsonb_object(keys text[], values text[]) : 키-값 쌍으로 객체 생성
+                li json/jsonb 처리
+                    ul
+                        li json[b]_typeof(json[b]) : JSON 값 유형 반환
+                        li jsonb_set(target jsonb, path text[], new_value jsonb[, create_if_missing boolean]) : jsonb 변경
+                        li json[b]_to_record(json[b]) as x(col type[, ...]) → record : 객체를 행으로 변환
+                        li json[b]_array_elements(json[b]) → setof json[b] : 배열을 행집합으로 확장
+                        li json[b]_array_elements_text(json[b]) → setof text : 배열을 text 행집합으로 확장
+                        li json[b]_array_length(json) : 배열 길이
+                        li json[b]_each(json) → setof record(key text, value json[b]) : 객체를 키-값 행집합으로 확장
+                        li json[b]_each_text(json) → setof record(key text, value text) : 객체를 키-값(text) 행집합으로 확장
+                        li 등등
+                li jsonpath 관련
+                    ul
+                        li jsonb_path_query(target jsonb, path jsonpath[, vars jsonb]) → setof jsonb : 경로 매칭 결과 행집합으로 반환
+                        li jsonb_path_query_array(target jsonb, path jsonpath[, vars jsonb]) → jsonb : 경로 매칭 결과 jsonb 배열로 반환
+                        li jsonb_path_query_first(target jsonb, path jsonpath[, vars jsonb]) → jsonb : 첫 번째 경로 매칭 결과 반환
+                        li json_query(json[b], jsonpath [passing value as varname [, ...]][ returning data_type ][생략]) : 경로 매칭 결과 jsonb 또는 지정 타입으로 반환
+                        li json_value(json[b], jsonpath [passing value as varname [, ...]][ returning data_type ][생략]) : 경로 매칭 결과가 단일 스칼라 값이라면 text 또는 지정 타입으로 반환
+                            +asCode('sql').
+                                # select jsonb_path_query('[1,2,3,4,5]', '$[*] ? ($min &lt;= @ &amp;&amp; @ &lt;= $max)', '{"min":2, "max":4}');
+                                 jsonb_path_query 
+                                ------------------
+                                 2
+                                 3
+                                 4
+                                (3 rows)
+
+                                # select jsonb_path_query_array('[1,2,3,4,5]', '$[*] ? ($min &lt;= @ &amp;&amp; @ &lt;= $max)', '{"min":2, "max":4}');
+                                 jsonb_path_query_array 
+                                ------------------------
+                                 [2, 3, 4]
+                                (1 row)
+
+                                # select jsonb_path_query_first('[1,2,3,4,5]', '$[*] ? ($min &lt;= @ &amp;&amp; @ &lt;= $max)', '{"min":2, "max":4}');
+                                 jsonb_path_query_first 
+                                ------------------------
+                                 2
+                                (1 row)
+
+                                # select json_query('[1,2,3,4,5]'::json, '$[*] ? ($min &lt;= @ &amp;&amp; @ &lt;= $max)' passing 2 as min, 4 as max with conditional wrapper);
+                                 json_query 
+                                ------------
+                                 [2, 3, 4]
+                                (1 row)
+
+                                # select json_value('[1,2,3,4,5]'::json, '$[2]');
+                                 json_value 
+                                ------------
+                                 3
+                                (1 row)
+                        li json_exists(json[b], jsonpath [passing value as varname [, ...]]) : 지정 경로에 해당하는 항목이 있는지?
+                            +asCode('sql').
+                                # select n, json_exists('[1,2,3]'::json, '$[*] ? (@ >= $x)' passing n as x) from generate_series(1, 5) as tmp (n);
+                                 n | json_exists 
+                                ---+-------------
+                                 1 | t
+                                 2 | t
+                                 3 | t
+                                 4 | f
+                                 5 | f
+                                (5 rows)
+                        li jsonb @? jsonpath : 지정 경로에 해당하는 항목이 있는지? SQL/JSON 표준 jsonpath 이용
+                        li jsonb @@ jsonpath : 지정 경로에 해당하는 항목이 있는지? PostgreSQL 전용 predicate jsonpath 이용
+                            +asCode('sql').
+                                # select '[1,2,3]'::jsonb @? '$[*] ? (@ > 0)', '[1,2,3]'::jsonb @? '$[*] ? (@ > 3)';
+                                 ?column? | ?column? 
+                                ----------+----------
+                                 t        | f
+                                (1 row)
+
+                                # select '[1,2,3]'::jsonb @@ '$[*] > 0', '[1,2,3]'::jsonb @@ '$[*] > 3';
+                                 ?column? | ?column? 
+                                ----------+----------
+                                 t        | f
+                                (1 row)
+                        li jsonb_path_exists(target jsonb, path jsonpath[, vars jsonb]) : 지정 경로에 해당하는 항목이 있는지? SQL/JSON 표준 jsonpath 이용
+                        li jsonb_path_match(target jsonb, path jsonpath[, vars jsonb]) : 지정 경로에 해당하는 항목이 있는지? PostgreSQL 전용 predicate jsonpath 이용
+
+            h3 시퀀스 함수
+            ul
+                li nextval(regclass) : 시퀀스를 진행시키고 값을 반환
+                li currval(regclass) : 현재 세션에서 nextval을 호출한 적이 있는 경우, 마지막으로 획득한 값 반환
+                li lastval() : 현재 세션에서 마지막으로 호출한 nextval 반환값 그대로 반환
+                li setval(regclass, bigint) : 시퀀스 현재 값 변경
+
+            h3 조건 표현문
+            ul
+                li case when condition then result [when ...] [else result] end
+                li coalesce(value[, ...]) : null이 아닌 첫 번째 매개변수 반환
+                li nullif(value1, value2) : value1 = value2면 null 반환. 아니면 value1 반환
+                li greatest(value[, ...]) : 가장 큰 값 반환
+                li least(value[, ...]) : 가장 작은 값 반환
+
+            h3 배열 함수 및 연산자
+            ul
+                li unnest(arr[, arr [...]]) : 배열을 행 집합으로 확장
+                li arr @> arr : 후자의 모든 원소가 전자에서도 등장하는지?
+                li arr &lt;@ arr
+                li arr &amp;&amp; arr : 두 배열 중 공통 원소가 하나라도 존재하는지?
+                li #[+goto('배열 연결')] : x || x, array_cat(x, x), array_append(arr, x), array_prepend(x, arr)
+                li array_fill(x, lengthArr[, lowerBoundArr]) : 주어진 상수로 채운 배열 생성
+                li cardinality(arr) : 전체 요소 개수 반환
+                li array_dims(arr) : 배열 차원에 대한 text 표기 반환
+                li array_ndims(arr) : 차원 수 반환
+                li array_length(arr, dim) : 지정 차원의 길이 반환. 지정 차원에 해당하는 원소가 없으면 null
+                li array_lower(arr, dim) : 지정 차원의 lower bound 반환
+                li array_upper(arr, dim)
+                li array_position(arr, x[, start]) : 1차원 배열에서, 지정 값이 발견되는 최초 subscript 반환(비교는 is not distinct from으로 수행)
+                li array_positions(arr, x) : 1차원 배열에서, 지정 값이 발견되는 모든 subscript 배열 반환(비교는 is not distinct from으로 수행)
+                li array_remove(arr, x) : 1차원 배열에서, 지정 값 모두 제거(비교는 is not distinct from으로 수행)
+                li array_replace(arr, x, y) : n차원 배열에서, 지정 값 모두 교체
+                li array_reverse(arr) : 첫 번째 차원을 뒤집은 배열 반환
+                li array_sample(arr, n) : 비복원 추출 수행
+                li array_shuffle(arr)
+                li array_to_string(arr, delimiter[, null_string])
+
+            h3 range/multirange 함수 및 연산자
+            ul
+                li range @> range, range @> x : 전자가 후자를 포함하는지?
+                li range &lt;@ range, x &lt;@ range
+                li range &amp;&amp; range : 겹치는 원소가 하나라도 존재하는지?
+                li range &lt;&lt; range : 전자가 엄격하게 후자의 왼쪽에 있는지?
+                li range >> range
+                li range &amp;&lt; range : 전자의 상한이 후자보다 크지 않으면 true
+                li range &amp;> range : 전자의 하한이 후자보다 작지 않으면 true
+                    +asCode('sql').
+                        # select '(1, 10]'::numrange &amp;> '[1, 10]'::numrange;
+                         ?column? 
+                        ----------
+                         t
+                        (1 row)
+
+                        # select '[1, 10]'::numrange &amp;> '(1, 10]'::numrange;
+                         ?column? 
+                        ----------
+                         f
+                        (1 row)
+                li range -|- range : 두 범위가 빈틈없이 이어지는지?
+                    +asCode('sql').
+                        # select '(3, 10]'::numrange -|- '[1, 3]'::numrange;
+                         ?column? 
+                        ----------
+                         t
+                        (1 row)
+
+                        # select '[3, 10]'::numrange -|- '[1, 3]'::numrange;
+                         ?column? 
+                        ----------
+                         f
+                li range + range : 범위 합치기. 두 범위 사이에 간격이 있으면 에러 발생
+                li range_merge(range, range) : 두 범위를 모두 포함하는 최소 범위 반환
+                li range * range : 공통 범위 추출
+                li range - range : 전자에서 공통 범위 제거
+                li isempty(range) : 빈 범위인지?
+                li lower(range) : 하한 반환
+                li lower_inc(range) : lower(range)가 범위에 포함되는지?
+                    +asCode('sql').
+                        # select lower('(1, 3)'::int4range), lower_inc('(1, 3)'::int4range);
+                         lower | lower_inc 
+                        -------+-----------
+                             2 | t
+                        (1 row)
+
+                        # select lower('(1, 3)'::numrange), lower_inc('(1, 3)'::numrange);
+                         lower | lower_inc 
+                        -------+-----------
+                             1 | f
+                        (1 row)
+                li lower_inf(range) : 하한이 무한대인지?
+                li unnest(multirange) : range 행집합으로 확산
+                li 등
+
+            h3 집계 함수
+            ul
+                li any_value(x) : non-null인 값 하나
+                li max(x) : 최댓값
+                li min(x) : 최솟값
+                li mode() within group (order by x) : 최빈값
+                li avg(x) : 모든 non-null값에 대한 산술 평균
+                li percentile_disc(percent or percent_agg) within group (order by x) : 지정 백분율의 자료 검색 -- 없으면 가장 가까운 자료
+                li percentile_cont(percent or percent_agg) within group (order by x) : 지정 백분율의 자료 검색 -- 없으면 보간
+                    +asCode('sql').
+                        # select percentile_disc('{0.3,0.6,0.9}'::float[]) within group (order by n)
+                        # from (values (1), (3), (10), (100)) as x(n);
+                         percentile_disc 
+                        -----------------
+                         {3,10,100}
+                        (1 row)
+
+                        # select percentile_cont('{0.3,0.6,0.9}'::float[]) within group (order by n)
+                        # from (values (1), (3), (10), (100)) as x(n);
+                         percentile_cont 
+                        -----------------
+                         {2.8,8.6,73}
+                        (1 row)
+                li rank(y) within group (order by x) : y가 x들 중에선 몇 등인지? 동점이 존재하는 경우, 피어 그룹의 첫 번째 행 번호와 같다
+                li dense_rank(y) within group (order by x) : y가 x들 중에선 몇 등인지? 피어 그룹 단위로 카운트
+                li percent_rank(y) within group (order by x) : (rank() - 1) / (전체 행 개수 - 1)
+                li cume_dist(y) within group (order by x) : (y이하 행 개수) / (전체 행 개수)
+                    +asCode('sql').
+                        # select
+                        #   n1,
+                        #   rank(n1) within group (order by n2),
+                        #   dense_rank(n1) within group (order by n2),
+                        #   percent_rank(n1) within group (order by n2),
+                        #   cume_dist(n1) within group (order by n2)
+                        # from
+                        #   (values (0), (10), (20), (30)) as x1(n1),
+                        #   (values (10), (20), (10)) as x2(n2)
+                        # group by n1;
+                         n1 | rank | dense_rank |    percent_rank    | cume_dist 
+                        ----+------+------------+--------------------+-----------
+                          0 |    1 |          1 |                  0 |      0.25
+                         10 |    1 |          1 |                  0 |      0.75
+                         20 |    3 |          2 | 0.6666666666666666 |         1
+                         30 |    4 |          3 |                  1 |         1
+                        (4 rows)
+                li corr(y, x) : 상관 계수
+                li stddev(x) : 표준 편차
+                li variance(x) : 분산
+
+                li count(*) : 행 개수
+                li count(x) : non-null인 행 개수
+
+                li bit_and, bit_or, bit_xor(x) : 모든 non-null 값에 대해 한 번씩 비트 연산 수행
+                li bool_and(x) : 모든 non-null 값이 true면 true
+                li bool_or(x) : non-null 값이 하나라도 true면 true
+
+                li string_agg(x, delimiter) : 문자열 하나로 축약
+
+                li array_agg(x [order by sort_columns]) : 모든 값을 담은 배열
+                li json[b]_agg(x [order by sort_columns]) : 모든 값을 담은 JSON[B] 배열
+                li json[b]_agg_strict(x [order by sort_columns]) : 모든 non-null 값을 담은 JSON[B] 배열
+                li json[b]_object_agg(key, value [order by sort_columns]) : 모든 행을 하나의 JSON[B] 객체로 축약 -- 키는 null 비허용(에러)
+                li json[b]_object_agg_strict(key, value [order by sort_columns]) : value가 non-null인 모든 행을 하나의 JSON[B] 객체로 축약 -- 키는 null 비허용(에러)
+                li json[b]_object_agg_unique[_strict] : 중복 키 발견 시 에러 발생
+
+                li grouping (group_by_expression) : 복잡한 grouping sets을 이용하는 경우, 어떤 그룹에 대한 집계인지 쉽게 식별 가능하도록 전용 컬럼 추가
+                    +asCode('sql').
+                        # select grouping(a, b, c), a, b, c
+                        # from (values ('a', 'b', 'c')) as x(a, b, c)
+                        # group by cube (a, b, c)
+                        # order by 1;
+                         grouping | a | b | c 
+                        ----------+---+---+---
+                                0 | a | b | c
+                                1 | a | b | 
+                                2 | a |   | c
+                                3 | a |   | 
+                                4 |   | b | c
+                                5 |   | b | 
+                                6 |   |   | c
+                                7 |   |   | 
+                        (8 rows)
+                li 등
+
+            h3 윈도 함수
+            ul
+                li row_number() : 행 번호
+                li rank() : 순위. 동점이 존재하는 경우, 피어 그룹의 첫 번째 행 번호
+                li dense_rank() : 피어 그룹 단위 순위
+                li percent_rank() : (rank - 1) / (전체 행 개수 - 1)
+                li cume_dist() : (동점 이하의 모든 행 개수) / (전체 행 개수)
+                li ntile(n) : 정렬된 파티션을 크기가 균일한 n개 버킷으로 나눌 때, 행이 할당된 버킷 번호
+                li lag(value[, offset[, default]]) : offset 전의 행 참조
+                li lead(value[, offset[, default]]) : offset 후의 행 참조
+                    +asCode('sql').
+                        # select n, lag(n, 1, 0) over win, lead(n, 1, 0) over win
+                        # from (values (1),(3),(2)) as t(n)
+                        # window win as (order by n);
+                         n | lag | lead 
+                        ---+-----+------
+                         1 |   0 |    2
+                         2 |   1 |    3
+                         3 |   2 |    0
+                        (3 rows)
+                li first_value(value) : 첫 번째 행 참조
+                li last_value(value) : 마지막 행 참조
+                li nth_value(value, n) : n번째 행 참조
+
+            h3 merge 지원 함수
+            ul
+                li merge_action() : merge 명령 returning 절에서 사용하면 'INSERT' | 'UPDATE' | 'DELETE' 설정
+
+            h3 서브쿼리 표현
+            ul
+                li exists(subquery) : 서브쿼리가 행을 하나라도 발견하는지?
+                li expression [not] in (subquery) : expression 평가값이 서브쿼리 결과에 포함 [안] 하는지?
+                li expression operator {any | some} (subquery) : 주어진 연산자가 true를 반환하는 행이 하나라도 있는지?
+                li expression operator all (subquery) : 주어진 연산자가 모든 행에 대해 true를 반환하는지?
+                li row_constructor operator (subquery) : 행이 일치하는지?
+
+            h3 행, 배열을 이용한 비교
+            ul
+                li expression [not] in (value[, ...]) : expression 평가값이 나열된 값 중에 존재 [안] 하는지?
+                li expression operator {any | some} (array) : 주어진 연산자가 true를 반환하는 배열 요소가 하나라도 있는지?
+                li expression operator all (array) : 주어진 연산자가 모든 배열 요소에 대해 true를 반환하는지?
+                li row_constructor operator row_constructor : 컬럼 순서대로 operator 평가(short-circuit)
+
+            h3 집합 반환 함수
+            ul
+                li generate_series(start, stop[, step]) → setof (integer | bigint | numeric | timestamp | timestamptz)
+                li with ordinality : 행 번호 부여
+                    +asCode('sql').
+                        # select * from generate_series(
+                        #   '2025-11-01 00:00:00 America/Los_Angeles',
+                        #   '2025-11-04 00:00:00 America/Los_Angeles',
+                        #   '1 day'::interval,
+                        #   'America/Los_Angeles'
+                        # ) with ordinality as tmp(t, n);
+                                   t            | n 
+                        ------------------------+---
+                         2025-11-01 16:00:00+09 | 1
+                         2025-11-02 16:00:00+09 | 2
+                         2025-11-03 17:00:00+09 | 3
+                         2025-11-04 17:00:00+09 | 4
+                        (4 rows)
+
+            h3 시스템 함수
+            ul
+                li current_query() : 현재 실행 중인 쿼리
+                li current_user : 현재 실행 유저
+                li pg_backend_pid() : 쿼리 실행 pid
+                li has_column_privilege([user, ]table, column, privilege)
+                li pg_typeof(x) : 타입 반환
+                li to_regclass(text), to_regtype(text) 등 : 테이블 등의 이름을 이용해 관련 OID 반환
+                li pg_cancel_backend(pid) : 쿼리 실행 취소
+                li pg_terminate_backend(pid) : 쿼리 실행 종료
+                li 등
 
         h2 인덱스
-        div
+        ul
+            li B-tree 인덱스를 정의하면서 고유성을 강제할 수 있다. 예를 들어
+                +asCode('sql') create unique index test_lower_col1_idx on test1 (lower(col1))
+                |는 col1 값이 대소문자 구별 없이 동일한 행이 2개 이상 존재하는 걸 효율적으로 방지할 수 있다
+
+            li 가능하다면 부분 인덱스 조건은 쿼리 where 조건에서 그대로 등장해야 한다. 그렇지 않으면 인덱스가 사용되지 않을 수 있다
+                ul
+                    li PostgreSQL에는 서로 다른 형태로 작성된 표현식이 수학적으로 동등한지 인식하는 기능은 없다
+                    li 조건식 매칭은 쿼리 실행 시간이 아니라 쿼리 계획 시간에 이루어지기 때문에, x > ? 같은 준비된 쿼리는 실제 매개변수가 2여도 x > 2 조건의 인덱스를 사용하지 않는다
+
+            li 부분 인덱스는 파티셔닝 대용으로 적합하지 않다 : 시스템이 부분 인덱스 간 관계를 따로 이해하고 있지 않으므로, 쿼리에 적용 가능한지 여부를 일일이 검사해야 한다
+
+            li 인덱스 정의에만 존재하는 컬럼을 SELECT하는 경우, 인덱스 정보만으로 결과를 구성하는 index-only scan이 발생할 수 있다.
+                p 단, 행이 실제로 유효하다는 것을 확인하기 때문에 행이 빈번히 수정되는 경우엔 표준 인덱스 스캔에 비해 성능 이점이 없다
 
         h2 전문 검색
         div

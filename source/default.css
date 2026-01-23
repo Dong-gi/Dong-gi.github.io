@@ -238,6 +238,7 @@ hr{border-top:3px solid rgba(0, 0, 0, .1)}
 br{content:'';display:block;margin:0.5rem 0}
 :not(print) li,summary{margin:0.5rem 0}
 print li,summary{margin:0}
+:target-current{background-color:antiquewhite}
 li:hover:not(:has(ul, ol, menu)){background-color:antiquewhite}
 li:not(:hover):has(ul, ol, menu){padding:1px}
 li:hover:has(ul, ol, menu){border:1px dashed coral}
@@ -256,6 +257,7 @@ div#contents details{margin-left:0.5em;padding-left:1.0em;border-left:6px solid 
 div#contents .code-div{margin:8px 0}
 .code-modal .w3-modal-content{position:fixed;top:0;margin:0;max-height:100%;max-width:100%;width:100%;height:100%;overflow:auto}
 .code-div ol{margin-left:0;padding-left:60px}
+.code-div ol:has(>li:only-child){padding-left:1ch}
 .code-div li{margin:0;white-space:nowrap;}
 .code-span{background-color:#ddd;word-wrap:normal;overflow:auto;padding:0.2ch 0.5ch;border-radius:0.6ch;}
 

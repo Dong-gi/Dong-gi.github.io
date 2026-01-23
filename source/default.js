@@ -594,7 +594,7 @@ async function updatePostList() {
 }
 
 async function updateMarkerList() {
-    const details = asNodes(`<details open class="w3-small"><summary>Content</summary><ul></ul></details>`);
+    const details = asNodes(`<details open class="w3-small"><summary>Content</summary><ul style="scroll-target-group:auto"></ul></details>`);
     const ul = details.querySelector('ul');
     const contentRoot = document.querySelector('#contents');
     const skipLevelCheckTagSet = new Set(['THEAD', 'TBODY', 'TR', 'SPAN']);
