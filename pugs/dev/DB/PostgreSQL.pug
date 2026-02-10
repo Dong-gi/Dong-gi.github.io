@@ -2112,15 +2112,223 @@ include ../../../source/skeleton.pug
 
         h2 성능 팁
         div
+            h3 explain 사용
+            ul
+                li 쿼리 실행 계획은 트리 구조로 표현된다. 말단 잎은 원시 행을 반환하는 스캔 노드다
+                li 비용은 쿼리 계획과 무관한 부분에 대해선 추정하지 않는다
+                    ul
+                        li 예. select는 쿼리 계획과 무관하게 최종적으로 동일한 행집합을 반환할 것이므로, 결과 크기에 따른 IO 비용에는 무관심
+                        li 예. insert/update/delete 등은 쿼리 계획과 무관하게 동일한 행들을 수정할 것이므로, 변경을 위한 IO 비용에는 무관심
+                li explain 기본 출력은 각 노드에 대해 텍스트를 한 줄씩 포함한다
+                    p 예: (cost=0.29..4143.45 rows=15906 width=475)
+                    ul
+                        li 0.29 : 예상 초기 비용. 출력 시작하기 전까지 소요된 시간. 예를 들어, 하위 노드의 출력을 정렬하는데 소요된 비용이 추가된다
+                        li 4143.45 : 예상 총 비용. 사용 가능한 모든 행이 검색된다는 가정 하에 산출. 실제로는 limit 사용 등으로 더 빨리 중단될 수 있다
+                        li rows : 이 노드가 출력할 것으로 예상되는 행 수
+                        li width : 이 노드가 출력할 것으로 예상되는 행의 평균 바이트 크기
+                li analyze는 무작위 표본을 이용하므로, analyze 실행마다 explain의 추정치가 변경될 수 있다
+                li 순차 스캔은 기본적으로 랜덤 스캔보다 
+                li limit 사용으로 계획이 달라지는 예시
+                    ul
+                        li limit 없는 경우
+                            p 두 인덱스 각각 조회한 뒤 조합하는 게 효율적이라고 판단
+                            +asCode('sql').
+                                EXPLAIN SELECT * FROM tenk1 WHERE unique1 &lt; 100 AND unique2 > 9000;
 
-        h2 병렬 쿼리
-        div
+                                                                     QUERY PLAN
+                                -------------------------------------------------------------------------------------
+                                 Bitmap Heap Scan on tenk1  (cost=25.07..60.11 rows=10 width=244)
+                                   Recheck Cond: ((unique1 &lt; 100) AND (unique2 > 9000))
+                                   ->  BitmapAnd  (cost=25.07..25.07 rows=10 width=0)
+                                         ->  Bitmap Index Scan on tenk1_unique1  (cost=0.00..5.04 rows=100 width=0)
+                                               Index Cond: (unique1 &lt; 100)
+                                         ->  Bitmap Index Scan on tenk1_unique2  (cost=0.00..19.78 rows=999 width=0)
+                                               Index Cond: (unique2 > 9000)
+                        li limit 있는 경우
+                            p BitmapAnd 연산(비용 25.07) 후 limit 처리하는 것보다는, 인덱스는 하나만 조회하고 나머지 조건은 필터로 이용하는 게 더 저렴하다고 평가 &lt;- 전체 10개 중 2개만 출력할 것이므로 최종 비용은 1/5(=14.28)
+                            +asCode('sql').
+                                EXPLAIN SELECT * FROM tenk1 WHERE unique1 &lt; 100 AND unique2 > 9000 LIMIT 2;
 
+                                                                     QUERY PLAN
+                                -------------------------------------------------------------------------------------
+                                 Limit  (cost=0.29..14.28 rows=2 width=244)
+                                   ->  Index Scan using tenk1_unique2 on tenk1  (cost=0.29..70.27 rows=10 width=244)
+                                         Index Cond: (unique2 > 9000)
+                                         Filter: (unique1 &lt; 100)
+                li materialize 예시
+                    p outer join 처리를 위해 tenk1 각 행에 대해 tenk2를 매번 읽는 대신, 한 번 읽은 tenk2 데이터를 메모리에 저장하고 이후 재사용
+                    +asCode('sql').
+                        EXPLAIN SELECT *
+                        FROM tenk1 t1, tenk2 t2
+                        WHERE t1.unique1 &lt; 10 AND t2.unique2 &lt; 10 AND t1.hundred &lt; t2.hundred;
+
+                                                                 QUERY PLAN
+                        ---------------------------------------------------------------------------------------------
+                         Nested Loop  (cost=4.65..49.36 rows=33 width=488)
+                           Join Filter: (t1.hundred &lt; t2.hundred)
+                           ->  Bitmap Heap Scan on tenk1 t1  (cost=4.36..39.38 rows=10 width=244)
+                                 Recheck Cond: (unique1 &lt; 10)
+                                 ->  Bitmap Index Scan on tenk1_unique1  (cost=0.00..4.36 rows=10 width=0)
+                                       Index Cond: (unique1 &lt; 10)
+                           ->  Materialize  (cost=0.29..8.51 rows=10 width=244)
+                                 ->  Index Scan using tenk2_unique2 on tenk2 t2  (cost=0.29..8.46 rows=10 width=244)
+                                       Index Cond: (unique2 &lt; 10)
+
+            h3 explain analyze
+            ul
+                li analyze 옵션을 이용하면 실제로 쿼리를 실행하여 예측치의 정확도를 평가할 수 있다 -- 따라서 실제로 적용되길 원하지 않는 쿼리는 트랜잭션으로 감싸 롤백해야 한다
+                li actual time과 cost는 단위가 다르므로 직접 비교하기에 적절하지 않고, 일반적으로는 추정된 행 수가 실제와 얼마나 근접한 지를 확인한다
+                li 노드가 여러번 실행되는 경우, loops에 실제 실행 횟수, actual time과 rows에는 평균값이 표시된다
+            +asCode('sql').
+                EXPLAIN ANALYZE SELECT *
+                FROM tenk1 t1, tenk2 t2
+                WHERE t1.unique1 &lt; 10 AND t1.unique2 = t2.unique2;
+
+                                                                           QUERY PLAN
+                ---------------------------------------------------------------------------------------------------------------------------------
+                 Nested Loop  (cost=4.65..118.50 rows=10 width=488) (actual time=0.017..0.051 rows=10.00 loops=1)
+                   Buffers: shared hit=36 read=6
+                   ->  Bitmap Heap Scan on tenk1 t1  (cost=4.36..39.38 rows=10 width=244) (actual time=0.009..0.017 rows=10.00 loops=1)
+                         Recheck Cond: (unique1 &lt; 10)
+                         Heap Blocks: exact=10
+                         Buffers: shared hit=3 read=5 written=4
+                         ->  Bitmap Index Scan on tenk1_unique1  (cost=0.00..4.36 rows=10 width=0) (actual time=0.004..0.004 rows=10.00 loops=1)
+                               Index Cond: (unique1 &lt; 10)
+                               Index Searches: 1
+                               Buffers: shared hit=2
+                   ->  Index Scan using tenk2_unique2 on tenk2 t2  (cost=0.29..7.90 rows=1 width=244) (actual time=0.003..0.003 rows=1.00 loops=10)
+                         Index Cond: (unique2 = t1.unique2)
+                         Index Searches: 10
+                         Buffers: shared hit=24 read=6
+                 Planning:
+                   Buffers: shared hit=15 dirtied=9
+                 Planning Time: 0.485 ms
+                 Execution Time: 0.073 ms
+
+            h3 쿼리 플래너가 이용하는 통계 정보
+            ul
+                li pg_class : 테이블과 인덱스의 총 항목 수(reltuples), 디스크 페이지 수(relpages) 등
+                li pg_stats : 컬럼 통계. 최빈값, 고윳값 비율(n_distinct), 물리적-논리적 배치 상관도(correlation) 등
+                li 쿼리 플래너는 일반적으로 각 컬럼은 독립이라고 가정한다. 다변량 통계를 수행하도록 할 수 있지만, 쿼리 계획이 실제와 크게 동떨어져 잘못된 계획이 실행되는 경우에만 생성함이 바람직하다
+                    ul
+                        li create statistics stat_name (dependencies) on col1, col2 from table_name : 컬럼 간 상관계수 계산
+                        li create statistics stat_name (ndistinct) on col1, col2 from table_name : 다변량 고윳값 개수 계산
+                        li create statistics stat_name (mcv) on col1, col2 from table_name : 다변량 최빈값 계산
 
     h1 서버 관리
     div
-        h2 복제
-    
+        h2 정기적인 데이터베이스 관리 작업
+        div
+            h3 청소
+            ul
+                li vacuum은 사용되지 않는 행 버전을 제거하고 해당 공간을 재사용 가능하다고 표시한다. 때문에 테이블이 차지하는 공간은 실행 전후 별 차이가 없다
+                li 반면 vacuum full은 적극적으로 용량을 압축하므로 테이블 크기가 최소화되지만, 시간이 오래 걸리고 테이블에 대해 다른 작업이 수행될 수 없다 (AccessExclusiveLock)
+                li pg_repack 확장을 이용하면 배타적 잠금을 최소화하면서 bloat을 제거할 수 있다
+
+            h3 재색인
+            ul
+                li B-트리 인덱스의 페이지가 완전히 빈 경우만 재사용을 위해 회수된다. 대부분의 키가 삭제된 경우 reindex 실행으로 공간 효율성을 높일 수 있다
+                li B-트리 인덱스는 새로 구축한 경우, 논리적으로 인접한 페이지가 물리적으로도 인접한 경우가 많으므로 접근 속도도 좀 더 빠르다
+
+        h2 누적 통계 시스템
+        ul
+            li pg_stat_activity :  서버 프로세스 당 한 줄
+            li pg_stat_subscription :  구독 당 한 줄
+            li pg_stat_subscription_stats :  구독 당 한 줄
+            li pg_stat_replication_slots :  복제 슬롯 당 한 줄
+            li pg_stat_progress_analyze :  analyze 실행하는 백엔드 당 한 줄
+            li pg_stat_progress_vacuum :  vacuum 실행하는 백엔드 당 한 줄
+            li pg_stat_progress_create_index :  인덱스 (재)생성하는 백엔드 당 한 줄
+            li pg_stat_database :  데이터베이스 당 한 줄
+            li pg_stat_all_tables :  테이블 당 한 줄
+            li pg_stat_all_indexes :  인덱스 당 한 줄
+
+        h2 WAL (Write-Ahead Logging)
+        ul
+            li 데이터 무결성을 보장하는 표준 방법. 데이터 변경은 해당 변경 사항을 담은 WAL 레코드가 영구 저장소에 플러시된 후에만 기록한다
+            li 드라이브가 실제 영구 저장소에 쓰지 않고 캐시에만 기록했음에도 OS에 쓰기 성공 시그널을 보내는 경우엔 데이터 손실 가능성이 존재한다
+            li 극미량의 데이터 손실이 허용되는 경우, 트랜잭션에서 비동기 커밋을 활성화(synchronous_commit 조정)하여 WAL 레코드를 디스크에 기록하기 전에 성공을 반환할 수 있다
+
+        h2 논리적 복제
+        ul
+            li 논리적 복제는 복제 식별자(보통 기본키)를 이용해 변경 사항을 전파한다
+            li pub/sub (게시/구독) 모델을 사용한다. 구독하는 테이블을 다시 게시할 수도 있다
+            li 논리적 복제의 전형적인 절차 : 게시자 테이블의 스냅샷을 구독자 데이터베이스로 복사 -&gt; 스냅샷 이후 변경 사항 지속적으로 적용
+        div
+            h3 게시
+            ul
+                li 하나의 게시는 하나의 데이터베이스 안에서 존재한다
+                li 게시는 테이블 (그룹)에서 발생한 변경 사항 집합이며, 트리거와 유사한 필터링으로 전파할 변경사항을 조정할 수 있다
+                    ul
+                        li 어떤 테이블들에 대해 추적할지?
+                        li 어떤 작업 -- insert, update, delete, truncate -- 들을 추적할지?
+                        li 어떤 행들을 추적할지? 단, truncate는 행 필터가 적용되지 않는다
+                        li 어떤 컬럼들을 전파할지?
+                li 삽입 연산만 전파한다면, 소스 테이블에 고유키가 없어도 된다
+                li 스키마 정의 변경은 전파되지 않는다
+
+            h3 구독
+            ul
+                li 하나의 구독은 다른 데이터베이스 내 하나 이상의 게시와 연결된다
+                li 각 구독은 하나의 복제 슬롯을 이용해 변경 사항을 수신한다. 단, 초기 테이블 동기화에는 추가(임시) 슬롯이 이용될 수 있다
+                li 구독 삭제 후 동일한 정의로 다시 만들어도 동기화 정보는 손실된다
+                li 테이블 이름과 열 이름이 일치해야 복제가 수행된다
+            div
+                h4: +asA('https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.MajorVersionUpgrade.html', 'AWS Aurora 인스턴스 복제 + 논리적 복제 예')
+                ol
+                    li 테이블 데이터를 처음부터 논리적 복제로 동기화하는 대신, 좀 더 빠른 인스턴스 복제 기능을 이용해 특정 스냅샷부터의 변경사항만 논리적 복제로 동기화
+                    li 아래의 모든 작업은 슈퍼유저(예. postgres)로 실행한다
+                    li 블루 환경 &gt; 데이터베이스에 복제 슬롯 생성
+                        +asCode('sql').
+                            create publication publication_name for all tables;
+                            select pg_create_logical_replication_slot('replication_slot_name', 'pgoutput');
+                    li 그린 환경 &gt; 생성 완료 후 복제 슬롯 상태 기록
+                        +asCode('sql').
+                            select aurora_volume_logical_start_lsn();
+                            aurora_volume_logical_start_lsn 
+                            ---------------------------------
+                            0/CEDFF50
+                            (1 row)
+                    li 그린 환경 &gt; 복제 슬롯 삭제
+                        +asCode('sql') select pg_drop_replication_slot('replication_slot_name');
+                    li 그린 환경 &gt;  원하는 작업(예. 메이저 버전 업그레이드: 약 15분) 적용
+                    li 그린 환경 &gt; 구독 생성
+                        +asCode('sql').
+                            create subscription subscription_name 
+                            connection 'postgres://postgres:xxx@dbms-url/db_name' publication publication_name 
+                            with (copy_data = false, create_slot = false, enabled = false, connect = true, slot_name = 'replication_slot_name');
+
+                            -- 복제 소스 확인
+                            select * from pg_replication_origin;
+                             roident |  roname   
+                            ---------+-----------
+                                   1 | pg_274489
+                            (1 row)
+
+                            -- 이미 복제한 만큼 구독 조정
+                            select pg_replication_origin_advance('pg_274489', '0/CEDFF50');
+
+                            -- 논리적 복제 시작
+                            alter subscription subscription_name enable;
+
+                            -- 복제 모니터링
+                            select
+                              slot_name,
+                              active,
+                              pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(), confirmed_flush_lsn)) diff_size
+                            from pg_replication_slots;
+
+                            select * from pg_stat_subscription;
+                    li 그린 환경 &gt; 최신 사항까지 모두 복제 완료된 경우, 시퀀스 조정
+                        +asCode('sql') alter sequence seq_name restart with 1234567;
+                    li 모든 DB 사용 서비스, 그린 환경 이용하도록 재시작
+                    li 그린 환경 &gt; 서비스 재시작 완료 후, 구독 제거
+                        +asCode('sql').
+                            alter subscription subscription_name disable;
+                            drop subscription subscription_name;
+                    li 그린 환경 &gt; 읽기 인스턴스 추가
+                    li 블루 환경 &gt; 사용량 0 확인 후, 최종 제거
+
     h1 서버 프로그래밍
     div
         h2 PL/pgSQL

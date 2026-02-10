@@ -856,6 +856,58 @@ include ../../source/skeleton.pug
                     li: +asA('https://datatracker.ietf.org/doc/html/rfc6238#appendix-A', 'rfc6238#appendix-A')
                     li: +asA('https://github.com/jchambers/java-otp/blob/df28bfab5be1cd9ef8a6383c35c71644d7bdcf6b/src/main/java/com/eatthepath/otp/HmacOneTimePasswordGenerator.java')
 
+            h3 SCRAM(Salted Challenge Response Authentication Mechanism)
+            p 비밀번호를 평문으로 전송하지 않으면서 비밀번호를 양자가 알고 있음을 인증하는 기법
+            ul
+                li 정의
+                    ul
+                        li salt := 최초 비밀번호 저장 시 이용한 무작위 문자열
+                        li i := 해시 반복 적용 횟수
+                        li H(str) := 해시 함수
+                        li HMAC(key, str) := H를 이용하는 MAC 함수. HMAC 반환값의 크기는 H의 반환값의 크기와 동일
+                        li Hi(str, salt, i) := str에 salt를 섞어 원본을 추측할 수 없게 문자열 생성
+                            +asCode().
+                                U1 := HMAC(str, salt + INT(1))
+                                U2 := HMAC(str, U1)
+                                ...
+                                Ui := HMAC(str, Ui-1)
+
+                                Hi := U1 XOR U2 XOR ... XOR Ui
+                        li SaltedPassword := Hi(Normalize(password), salt, i)
+                        li ClientKey := HMAC(SaltedPassword, "Client Key")
+                        li StoredKey := H(ClientKey)
+                        li ServerKey := HMAC(SaltedPassword, "Server Key")
+                li 최초 비밀번호 저장 시 서버는, 비밀번호 평문을 제외한 다음 정보들을 보관한다
+                    ul
+                        li username
+                        li salt
+                        li i
+                        li StoredKey
+                        li ServerKey
+                li client-first-message : 클라이언트가 서버에 인증 시작을 알린다. 다음의 정보를 포함한다
+                    ul
+                        li username
+                        li client-nonce
+                li server-first-message : username 사용자 인증을 위한 도전 과제를 응답한다
+                    ul
+                        li nonce := client-nonce + server-nonce
+                        li salt
+                        li i
+                li client-final-message : 본인이 맞다는 증거를 만든다
+                    ol
+                        li SaltedPassword 계산
+                        li ClientKey 계산
+                        li StoredKey 계산
+                        li AuthMessage 생성 : client-first-message + server-first-message + client-final-message-without-proof
+                        li ClientSignature 계산 : HMAC(StoredKey, AuthMessage)
+                        li ClientProof 계산 : ClientKey XOR ClientSignature
+                        li 서버에 client-final-message-without-proof + ClientProof 전송
+                li server-final-message : 클라이언트를 검증하고 응답한다
+                    ol
+                        li ClientSignature 계산 : HMAC(StoredKey, AuthMessage)
+                        li ClientKey 추출 : ClientSignature XOR ClientProof
+                        li ClientKey 검증 : StoredKey == H(ClientKey)?
+
             h3 JWT(JSON Web Token)
             div
                 p 참고 자료 : #[+asA('https://datatracker.ietf.org/doc/html/rfc7519')]
