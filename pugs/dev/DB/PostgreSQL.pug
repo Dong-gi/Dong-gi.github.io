@@ -2263,9 +2263,19 @@ include ../../../source/skeleton.pug
                         li 어떤 테이블들에 대해 추적할지?
                         li 어떤 작업 -- insert, update, delete, truncate -- 들을 추적할지?
                         li 어떤 행들을 추적할지? 단, truncate는 행 필터가 적용되지 않는다
+                            p update 작업에 대해,
+                            ul
+                                li 이전/신규 버전 행 모두가 필터를 만족하는 경우 : update로 전파
+                                li 이전/신규 버전 행 모두가 필터를 만족하지 않는 경우 : 무시
+                                li 이전/신규 버전 행 하나만 필터를 만족하는 경우 : insert 또는 delete로 전파
                         li 어떤 컬럼들을 전파할지?
                 li 삽입 연산만 전파한다면, 소스 테이블에 고유키가 없어도 된다
                 li 스키마 정의 변경은 전파되지 않는다
+                li 관련 설정
+                    ul
+                        li wal_level = logical
+                        li max_replication_slots : 최대 동시 활성 구독 수 + 테이블 초기 복제를 위한 여유 개수
+                        li max_wal_senders : max_replication_slots + 동시 연결된 물리적 복제본 수
 
             h3 구독
             ul
@@ -2273,64 +2283,289 @@ include ../../../source/skeleton.pug
                 li 각 구독은 하나의 복제 슬롯을 이용해 변경 사항을 수신한다. 단, 초기 테이블 동기화에는 추가(임시) 슬롯이 이용될 수 있다
                 li 구독 삭제 후 동일한 정의로 다시 만들어도 동기화 정보는 손실된다
                 li 테이블 이름과 열 이름이 일치해야 복제가 수행된다
-            div
-                h4: +asA('https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.MajorVersionUpgrade.html', 'AWS Aurora 인스턴스 복제 + 논리적 복제 예')
-                ol
-                    li 테이블 데이터를 처음부터 논리적 복제로 동기화하는 대신, 좀 더 빠른 인스턴스 복제 기능을 이용해 특정 스냅샷부터의 변경사항만 논리적 복제로 동기화
-                    li 아래의 모든 작업은 슈퍼유저(예. postgres)로 실행한다
-                    li 블루 환경 &gt; 데이터베이스에 복제 슬롯 생성
-                        +asCode('sql').
-                            create publication publication_name for all tables;
-                            select pg_create_logical_replication_slot('replication_slot_name', 'pgoutput');
-                    li 그린 환경 &gt; 생성 완료 후 복제 슬롯 상태 기록
-                        +asCode('sql').
-                            select aurora_volume_logical_start_lsn();
-                            aurora_volume_logical_start_lsn 
-                            ---------------------------------
-                            0/CEDFF50
-                            (1 row)
-                    li 그린 환경 &gt; 복제 슬롯 삭제
-                        +asCode('sql') select pg_drop_replication_slot('replication_slot_name');
-                    li 그린 환경 &gt;  원하는 작업(예. 메이저 버전 업그레이드: 약 15분) 적용
-                    li 그린 환경 &gt; 구독 생성
-                        +asCode('sql').
-                            create subscription subscription_name 
-                            connection 'postgres://postgres:xxx@dbms-url/db_name' publication publication_name 
-                            with (copy_data = false, create_slot = false, enabled = false, connect = true, slot_name = 'replication_slot_name');
+                li 구독사항에 대해 충돌이 발생하는 경우, 사용자가 수동으로 충돌을 해결해야만 복제가 재개되는 경우가 있다
+                    ul
+                        li 데이터를 변경하여 수신한 변경사항과 충돌하지 않도록 하거나
+                        li 충돌한 트랜잭션을 강제로 건너뛰게 할 수 있다
+                li 기본적으로 구독자에서는 트리거와 규칙이 실행되지 않지만, 초기 테이블 동기화는 copy 명령처럼 구현되어 삽입 트리거가 실행된다
+                li 관련 설정
+                    ul
+                        li max_active_replication_origins : 구독 개수 + 테이블 초기 복제를 위한 여유 개수
+                        li max_logical_replication_workers : 구독 개수 + 테이블 복제 작업자 수
+                        li max_worker_processes : 최소 max_logical_replication_workers + 1
+                        li max_sync_workers_per_subscription : 테이블 초기 복사의 병렬 처리량 제어
+                        li max_parallel_apply_workers_per_subscription : streaming = parallel을 이용한 구독의 병렬 처리량 제어
 
-                            -- 복제 소스 확인
-                            select * from pg_replication_origin;
-                             roident |  roname   
-                            ---------+-----------
-                                   1 | pg_274489
-                            (1 row)
+            h3: +asA('https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.MajorVersionUpgrade.html', 'AWS Aurora 인스턴스 복제 + 논리적 복제 예')
+            ol
+                li 테이블 데이터를 처음부터 논리적 복제로 동기화하는 대신, 좀 더 빠른 인스턴스 복제 기능을 이용해 특정 스냅샷부터의 변경사항만 논리적 복제로 동기화
+                li 아래의 모든 작업은 슈퍼유저(예. postgres)로 실행한다
+                li 블루 환경 &gt; 데이터베이스에 복제 슬롯 생성
+                    +asCode('sql').
+                        create publication publication_name for all tables;
+                        select pg_create_logical_replication_slot('replication_slot_name', 'pgoutput');
+                li 그린 환경 &gt; 생성 완료 후 복제 슬롯 상태 기록
+                    +asCode('sql').
+                        select aurora_volume_logical_start_lsn();
+                        aurora_volume_logical_start_lsn 
+                        ---------------------------------
+                        0/CEDFF50
+                        (1 row)
+                li 그린 환경 &gt; 복제 슬롯 삭제
+                    +asCode('sql') select pg_drop_replication_slot('replication_slot_name');
+                li 그린 환경 &gt;  원하는 작업(예. 메이저 버전 업그레이드: 약 15분) 적용
+                li 그린 환경 &gt; 구독 생성
+                    +asCode('sql').
+                        create subscription subscription_name 
+                        connection 'postgres://postgres:xxx@dbms-url/db_name' publication publication_name 
+                        with (copy_data = false, create_slot = false, enabled = false, connect = true, slot_name = 'replication_slot_name');
 
-                            -- 이미 복제한 만큼 구독 조정
-                            select pg_replication_origin_advance('pg_274489', '0/CEDFF50');
+                        -- 복제 소스 확인
+                        select * from pg_replication_origin;
+                         roident |  roname   
+                        ---------+-----------
+                               1 | pg_274489
+                        (1 row)
 
-                            -- 논리적 복제 시작
-                            alter subscription subscription_name enable;
+                        -- 이미 복제한 만큼 구독 조정
+                        select pg_replication_origin_advance('pg_274489', '0/CEDFF50');
 
-                            -- 복제 모니터링
-                            select
-                              slot_name,
-                              active,
-                              pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(), confirmed_flush_lsn)) diff_size
-                            from pg_replication_slots;
+                        -- 논리적 복제 시작
+                        alter subscription subscription_name enable;
 
-                            select * from pg_stat_subscription;
-                    li 그린 환경 &gt; 최신 사항까지 모두 복제 완료된 경우, 시퀀스 조정
-                        +asCode('sql') alter sequence seq_name restart with 1234567;
-                    li 모든 DB 사용 서비스, 그린 환경 이용하도록 재시작
-                    li 그린 환경 &gt; 서비스 재시작 완료 후, 구독 제거
-                        +asCode('sql').
-                            alter subscription subscription_name disable;
-                            drop subscription subscription_name;
-                    li 그린 환경 &gt; 읽기 인스턴스 추가
-                    li 블루 환경 &gt; 사용량 0 확인 후, 최종 제거
+                        -- 복제 모니터링
+                        select
+                          slot_name,
+                          active,
+                          pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(), confirmed_flush_lsn)) diff_size
+                        from pg_replication_slots;
+
+                        select * from pg_stat_subscription;
+                li 그린 환경 &gt; 최신 사항까지 모두 복제 완료된 경우, 시퀀스 조정
+                    +asCode('sql') alter sequence seq_name restart with 1234567;
+                li 모든 DB 사용 서비스, 그린 환경 이용하도록 재시작
+                li 그린 환경 &gt; 서비스 재시작 완료 후, 구독 제거
+                    +asCode('sql').
+                        alter subscription subscription_name disable;
+                        drop subscription subscription_name;
+                li 그린 환경 &gt; 읽기 인스턴스 추가
+                li 블루 환경 &gt; 사용량 0 확인 후, 최종 제거
 
     h1 서버 프로그래밍
     div
+        h2 SQL 확장하기
+        div
+            h3 사용자 정의 함수
+            ul
+                li: +goto('쿼리 언어 함수')
+                li: +goto('절차적 언어 함수')
+                li: +goto('내부 함수')
+                li: +goto('C 언어 함수')
+            
+            h3 사용자 정의 프로시저
+            p 프로시저는 함수와 유사하지만 아래와 같은 차이점이 있다. 차이점들을 제외하면 프로시저 정의는 함수 정의와 동일하다
+            ul
+                li 프로시저 호출은 값을 반환하지 않는다. 필요한 경우 출력 매개변수를 통해 전달할 수는 있다
+                li 프로시저는 call 명령을 이용해 독립적으로 호출된다
+                li 명시적인 트랜잭션 블록에서 실행되지 않았다면, 프로시저 실행 도중 커밋이나 롤백할 수 있다 -- 이후 자동으로 새 트랜잭션이 시작된다
+                    p 함수는 쿼리 또는 DML 명령의 일부로 호출되므로 그렇게 할 수 없다
+
+            h3 쿼리 언어 함수
+            ul
+                li SQL 함수는 임의의 SQL 문들을 실행하고, 마지막 쿼리 결과를 반환한다
+                    ul
+                        li void 반환 함수가 아니라면, 함수의 마지막 문은 행을 반환하는 것만 이용 가능하다
+                        li 비-집합을 반환하는 경우, 마지막 쿼리 결과의 첫 번째 행이 반환된다
+                        li 마지막 쿼리가 반환하는 행이 없는 경우, null이 반환된다
+                    +asCode('sql').
+                        # -- void 반환 함수는 null을 반환
+                        # create function func() returns void as $$
+                        select generate_series(2, 5);
+                        $$ language sql;
+
+                        # select func();
+                          func  
+                        --------
+                         (null)
+                        (1 row)
+
+                        # -- non-set 반환 함수는 마지막 쿼리 결과의 첫 번째 행을 반환
+                        # create function func() returns int as $$
+                        select 1;
+                        select generate_series(2, 5);
+                        $$ language sql;
+
+                        # select func();
+                         func 
+                        ------
+                            2
+                        (1 row)
+
+                        # -- 행집합 반환은 setof 표기를 이용해 지정 가능
+                        # create function func() returns setof record as $$
+                        select *, * from generate_series(2, 5);
+                        $$ language sql;
+
+                        # select * from func() as t(num1 int, num2 int);
+                         num1 | num2 
+                        ------+------
+                            2 |    2
+                            3 |    3
+                            4 |    4
+                            5 |    5
+                        (4 rows)
+
+                        # -- 행집합 반환은 table 표기를 이용해 지정 가능
+                        # create function func() returns table (f1 int, f2 int) as $$
+                        select *, * from generate_series(2, 5);
+                        $$ language sql;
+
+                        # select (func()).f1;
+                         f1 
+                        ----
+                          2
+                          3
+                          4
+                          5
+                        (4 rows)
+                        
+                        # select * from func();
+                         f1 | f2 
+                        ----+----
+                          2 |  2
+                          3 |  3
+                          4 |  4
+                          5 |  5
+                        (4 rows)
+
+                        # -- 마지막 쿼리 결과가 비어있다면 null이 반환된다
+                        # create or replace function func() returns int as $$
+                        select generate_series(2, 1);
+                        $$ language sql;
+
+                        # select func();
+                          func  
+                        --------
+                         (null)
+                        (1 row)
+
+                li 함수 인자는 이름이나 숫자 중 아무거나 이용해 참조 가능하다
+                    ul
+                        li 이름을 이용해 참조하려면 당연히 함수 정의 시 이름을 지정해야 한다
+                        li SQL 문에서 열 이름과 충동하는 경우 열 이름이 우선이므로, #[+asInlineCode('funcion_name.argument_name')]과 같이 지정해야 한다
+                    +asCode('sql').
+                        # create or replace function func(num1 int, int) returns text as $$
+                        select num1 || ',' || $1 || ',' || $2
+                        $$ language sql;
+
+                        # select func(1, 2);
+                         func  
+                        -------
+                         1,1,2
+                        (1 row)
+
+                li 반환 타입을 returns로 지정하는 대신, 매개변수를 out, inout으로 표시할 수 있다. 단, 행집합을 반환하는 경우엔 반환 타입을 명시해야 한다
+                    +asCode('sql').
+                        # create function func(inout int) as $$
+                        select $1 * 2
+                        $$ language sql;
+                        
+                        # select func(2);
+                         func 
+                        ------
+                            4
+                        (1 row)
+
+                        # create function func(int, out txt1 text, out text) as $$
+                        select $1, $1 * 2
+                        $$ language sql;
+                        
+                        # select * from func(2);
+                         txt1 | column2 
+                        ------+---------
+                         2    | 4
+                        (1 row)
+
+                        # create function func(inout int, out int) returns setof record as $$
+                        select x, $1 * x from generate_series(1, 3) x
+                        $$ language sql;
+
+                        # select * from func(2);
+                         column1 | column2 
+                        ---------+---------
+                               1 |       2
+                               2 |       4
+                               3 |       6
+                        (3 rows)
+
+                li 1개 이상의 동일 타입 인자를 받는 함수를 간편하게 정의할 수 있다
+                    +asCode('sql').
+                        # create function func(variadic int[]) returns table (min int, max int) as $$
+                        select min(num), max(num) from unnest($1) x(num)
+                        $$ language sql;
+                        
+                        # select * from func(1, 3, 2);
+                         min | max 
+                        -----+-----
+                           1 |   3
+                        (1 row)
+
+                        # select * from func(array[1, 3, 2]);
+                        ERROR:  function func(integer[]) does not exist
+                        LINE 1: select * from func(array[1, 3, 2]);
+                                              ^
+                        HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+                        
+                        # select * from func(variadic array[1, 3, 2]);
+                         min | max 
+                        -----+-----
+                           1 |   3
+                        (1 row)
+
+                li 매개변수 기본값을 설정할 수 있다
+                    +asCode('sql').
+                        # create function func(int, int=2, int default 3) returns text as $$
+                        select $1 || ',' || $2 || ',' || $3
+                        $$ language sql;
+
+                        # select func(1);
+                         func  
+                        -------
+                         1,2,3
+                        (1 row)
+
+                li 행집합을 반환하는 함수를 select list에 이용하는 것은, from 절에서 lateral 구문으로 함수를 호출하는 것과 거의 동일하다
+                    ul
+                        li 함수 호출이 빈 집합을 반환한 경우 결과에서 제외된다
+                        li 함수 호출이 둘 이상인 경우, 각 함수의 i번째 결과를 모은 행들이 생성된다
+                    +asCode('sql').
+                        # create function func(inout int) returns setof int as $$
+                        select generate_series(1, $1)
+                        $$ language sql;
+
+                        # select n, func(n) from generate_series(0, 2) n;
+                         n | func 
+                        ---+------
+                         1 |    1
+                         2 |    1
+                         2 |    2
+                        (3 rows)
+
+                        # select n, func(n), func(n+1) from generate_series(0, 2) n;
+                         n |  func  | func 
+                        ---+--------+------
+                         0 | (null) |    1
+                         1 |      1 |    1
+                         1 | (null) |    2
+                         2 |      1 |    1
+                         2 |      2 |    2
+                         2 | (null) |    3
+                        (6 rows)
+
+            h3 절차적 언어 함수
+            h3 내부 함수
+            h3 C 언어 함수
+
         h2 PL/pgSQL
     
     h1 참고자료
