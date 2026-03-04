@@ -2,18 +2,12 @@ include ./imgs.pug
 
 -
     String.prototype.hashCode = String.prototype.hashCode || function () {
-        if (this.myHash) {
-            return this.myHash
-        }
-        if(this.length === 0) {
-            return this.myHash = 0
-        }
         let hash = 0
         for (let i = 0; i < this.length; i++) {
             hash = (hash << 5) - hash + this.charCodeAt(i)
             hash |= 0 // 32 bit 제한을 위해
         }
-        return this.myHash = hash
+        return hash
     }
 
 mixin asA(href, text)

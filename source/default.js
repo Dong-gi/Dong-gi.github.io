@@ -9,18 +9,11 @@
 /** @type {{ list: Post[], codes: { [key: string] : string }} */
 const posts = {};
 
-const LAST_CALL_TIME = Symbol('LAST_CALL_TIME');
-const SETTIMEOUT_HANDLE = Symbol('SETTIMEOUT_HANDLE');
-const STRING_HASH_CODE = Symbol('STRING_HASH_CODE');
-
 /**
  * @param {string} str 
  * @returns {number}
  */
 function stringHashCode(str) {
-    if (str[STRING_HASH_CODE] != null) {
-        return str[STRING_HASH_CODE];
-    }
     let hash = 0;
     if (str.length === 0) {
         return hash;
@@ -29,7 +22,7 @@ function stringHashCode(str) {
         hash = ((hash << 5) - hash) + str.charCodeAt(i);
         hash |= 0; /* 32bit */
     }
-    return str[STRING_HASH_CODE] = hash;
+    return hash;
 }
 
 /**
@@ -80,88 +73,6 @@ function observeIntersectionOnce(iter, callback) {
         });
         o.observe(element);
     });
-}
-
-const numPartRegex1 = /(((^|[\s$¥£₡₱€₩₭฿])[+-]?)?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/;
-const numPartRegex2 = /(([\s$¥£₡₱€₩₭฿][+-]?)?(\d+(,\d+)*(\.\d+)?)|(\d?\.\d+)|(\d+))/;
-const startWithNumberRegex1 = new RegExp(`^${numPartRegex1.source}`);
-const startWithNumberRegex2 = new RegExp(`^${numPartRegex2.source}`);
-const textPartRegex1 = new RegExp(`^((?!${numPartRegex1.source})[\\d\\D])+`, 'm');
-const textPartRegex2 = new RegExp(`^((?!${numPartRegex2.source})[\\d\\D])+`, 'm');
-/**
- * 부호 붙은 숫자를 수로 간주하는 경우
- * 1. 부호로 문자열이 시작하는 경우
- * 2. 부호 앞에 공백이 존재하여 별개 파트로 간주 가능한 경우
- * 3. 부호 앞에 화폐 기호 [$¥£₡₱€₩₭฿]가 존재하는 경우
- */
-function naturalCompareString(str1, str2) {
-    if (str1 == str2) {
-        return 0;
-    }
-
-    const [ori1, ori2] = [str1, str2];
-    while (true) {
-        if (str1.length * str2.length === 0) {
-            return str1.length - str2.length;
-        }
-        const isStr1StartWithNumber = ((str1 === ori1) ? startWithNumberRegex1 : startWithNumberRegex2).test(str1);
-        const isStr2StartWithNumber = ((str2 === ori2) ? startWithNumberRegex1 : startWithNumberRegex2).test(str2);
-        if (isStr1StartWithNumber && isStr2StartWithNumber) {
-            const num1 = parseFloat(str1.match(((str1 === ori1) ? startWithNumberRegex1 : startWithNumberRegex2))[0].replace(/[^\-\d\.]/g, ''));
-            const num2 = parseFloat(str2.match(((str2 === ori2) ? startWithNumberRegex1 : startWithNumberRegex2))[0].replace(/[^\-\d\.]/g, ''));
-            if (Math.abs(num1 - num2) >= Number.EPSILON) {
-                return num1 - num2;
-            }
-            str1 = str1.replace(((str1 === ori1) ? startWithNumberRegex1 : startWithNumberRegex2), '');
-            str2 = str2.replace(((str2 === ori2) ? startWithNumberRegex1 : startWithNumberRegex2), '');
-            continue;
-        }
-        if (isStr1StartWithNumber) {
-            return -1;
-        }
-        if (isStr2StartWithNumber) {
-            return 1;
-        }
-        const text1 = str1.match(((str1 === ori1) ? textPartRegex1 : textPartRegex2))[0];
-        const text2 = str2.match(((str2 === ori2) ? textPartRegex1 : textPartRegex2))[0];
-        const result = text1.localeCompare(text2);
-        if (result !== 0) {
-            return result;
-        }
-        str1 = str1.replace(((str1 === ori1) ? textPartRegex1 : textPartRegex2), '');
-        str2 = str2.replace(((str2 === ori2) ? textPartRegex1 : textPartRegex2), '');
-    }
-}
-
-const rgbaRegex = /(\d+)\D*(\d+)\D*(\d+)\D*(\d*\.?\d*)/;
-/**
- * @param {HTMLElement} element
- * @returns {[number,number,number,number]}
- */
-function getRgba(element) {
-    const backgroundColor = window.getComputedStyle(element).getPropertyValue("background-color");
-    const rgba = rgbaRegex.exec(backgroundColor);
-    return [parseInt(rgba[1]), parseInt(rgba[2]), parseInt(rgba[3]), (backgroundColor.search('rgba') >= 0) ? parseFloat(rgba[3]) : 1];
-}
-
-/**
- * @param {function(...args): void} f 
- * @param {Number} timeMs
- * @returns {function(...args): void} Debounced function
- */
-function debounce(f, timeMs) {
-    const newFunction = function (...args) {
-        const beforeCallTime = newFunction[LAST_CALL_TIME];
-        newFunction[LAST_CALL_TIME] = Date.now();
-        if (newFunction[LAST_CALL_TIME] - beforeCallTime <= timeMs) {
-            clearTimeout(newFunction[SETTIMEOUT_HANDLE]);
-        }
-        newFunction[SETTIMEOUT_HANDLE] = setTimeout(() => f(...args), timeMs);
-    }
-    newFunction[LAST_CALL_TIME] = 0;
-    /** @type {number} */
-    newFunction[SETTIMEOUT_HANDLE] = null;
-    return newFunction;
 }
 
 function openLink(url, target) {
@@ -230,26 +141,24 @@ function showSnackbar(text, parent, durationMs) {
 /**
  * target 요소에 마우스가 들어가면, content를 표시
  * @param {HTMLElement} target 
- * @param {HTMLElement} content 
+ * @param {HTMLElement} content
  */
 function addHoverContent(target, content) {
-    const rgba = getRgba(target);
-    target.style.backgroundColor = `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3] > 0.9 ? rgba[3] : rgba[3] + 0.1})`;
-
     content.style.position = 'absolute';
     content.style.display = 'none';
+    content.style.overflow = 'auto';
 
     /** @param {MouseEvent} e */
     const onMouseenter = function (e) {
         if (content.style.display === 'block') {
             return;
         }
+        const targetOffset = calcOffset(target)
         content.style.display = 'block';
-        content.style.top = e.pageY + 'px';
-        content.style.left = e.pageX + 'px';
+        content.style.top = (targetOffset.top + target.offsetHeight) + 'px';
+        content.style.left = targetOffset.left + 'px';
         content.style.maxWidth = (window.innerWidth - e.clientX) + 'px';
         content.style.maxHeight = (window.innerHeight - e.clientY) + 'px';
-        content.style.overflow = 'auto';
     }
     /** @param {MouseEvent} e */
     const onMouseleave = function (e) {
@@ -269,8 +178,9 @@ function addHoverContent(target, content) {
         content.style.display = 'none';
     }
     target.addEventListener('mouseenter', onMouseenter);
-    target.addEventListener('mouseleave', debounce(onMouseleave, 300));
-    content.addEventListener('mouseleave', debounce(onMouseleave, 300));
+    content.addEventListener('mouseenter', onMouseenter);
+    target.addEventListener('mouseleave', onMouseleave);
+    content.addEventListener('mouseleave', onMouseleave);
 }
 
 /**
@@ -317,29 +227,6 @@ function printElement(element) {
     window.scrollTo(0, y);
 }
 
-/**
- * @param {HTMLElement} element 
- * @param {Iterable<string>} classes 
- */
-function toggleClass(element, classes) {
-    for (const clazz of classes) {
-        if (element.classList.contains(clazz)) {
-            element.classList.remove(clazz);
-        } else {
-            element.classList.add(clazz);
-        }
-    }
-}
-
-async function yield() {
-    if (globalThis.scheduler?.yield != null) {
-        return await globalThis.scheduler.yield()
-    }
-    return await new Promise(_ => {
-        setTimeout(_, 0)
-    })
-}
-
 async function initGoto() {
     observeIntersectionOnce(document.querySelectorAll('a.goto'), (goto) => {
         goto.addEventListener('click', function () {
@@ -359,7 +246,7 @@ async function initGoto() {
             return console.log('onpopstate > No target');
         }
         let gotoTarget = target;
-        while (gotoTarget.clientHeight === 0) {
+        while (gotoTarget.clientHeight === 0 || gotoTarget.tagName == null) {
             if (gotoTarget.nextSibling != null) {
                 gotoTarget = gotoTarget.nextSibling;
                 continue;
@@ -407,8 +294,11 @@ async function initCodeBtn() {
 
             let codeDiv = document.getElementById(codeDivId)
             if (codeDiv != null) {
-                toggleClass(codeDiv, ['w3-hide']);
-                codeDiv.style.maxHeight = window.innerHeight / 3 + 'px';
+                if (codeDiv.style.display !== 'none') {
+                    codeDiv.style.display = 'none'
+                } else {
+                    codeDiv.style.display = 'block'
+                }
                 return;
             }
 
@@ -424,7 +314,6 @@ async function initCodeBtn() {
             const lan = button.getAttribute('lan');
             posts.codes[codeId] = codeTxt;
             fillCodeDiv(codeDiv, lan, codeTxt, button.getAttribute('displayRange'));
-            codeDiv.style.maxHeight = window.innerHeight / 3 + 'px';
 
             if (lan !== 'nohighlight') {
                 const modalButton = asNodes('<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-blue">모달로 보기</button>');
@@ -459,7 +348,11 @@ async function initInlineCode() {
         codeDiv.innerHTML = '';
         const lan = codeDiv.getAttribute('lan') ?? 'text';
         fillCodeDiv(codeDiv, lan, code);
-        codeDiv.style.maxHeight = window.innerHeight / 3 + 'px';
+        if (/javascript/i.test(lan)) {
+            const execButton = asNodes('<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-green">실행</button>')
+            execButton.addEventListener('click', () => { eval(code) })
+            codeDiv.previousSibling.appendChild(execButton)
+        }
     });
 
     observeIntersectionOnce(document.body.querySelectorAll('span.as-code'), codeSpan => {
@@ -550,7 +443,6 @@ async function updatePostList() {
 
     const lowHref = location.href.toLowerCase()
     for (const post of posts.list) {
-        await yield();
         const categoryPartArr = post.category.split('/');
         const isOpenDetails = lowHref.search(post.file.toLowerCase()) >= 0;
         /** @type {HTMLDetailsElement} */
@@ -601,7 +493,6 @@ async function updateMarkerList() {
     const headingLevels = [0, 0, 0, 0, 0, 0, 0, 0];
     const headingTagSet = new Set(['H1', 'H2', 'H3', 'H4', 'H5', 'H6']);
     for (const markerTarget of document.querySelectorAll('h1:not(.no-marker), h2:not(.no-marker), h3:not(.no-marker), h4:not(.no-marker), h5:not(.no-marker), h6:not(.no-marker), .marker:not(.no-marker)')) {
-        await yield();
         const markerName = makeMarkerName(markerTarget);
         const posId = `pos${stringHashCode(markerName)}`
         markerTarget.before(asNodes(`<span class="pos-span" id="${posId}"></span>`));

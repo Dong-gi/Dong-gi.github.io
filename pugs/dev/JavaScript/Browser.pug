@@ -247,7 +247,6 @@ include ../../../source/skeleton.pug
                     li 네트워크 요청 발생, 주기적 백그라운드 동기화, 푸시와 같은 이벤트가 발생하면 시작된다
                     li 유휴 상태가 오래되거나, 너무 오랫동안 실행되면 종료된다 -- 이후 다시 시작된다
 
-
     h1 웹 소켓
     ol
         li 오래 지속되는 하나의 연결을 이용해 완전한 양방향 통신을 제공한다
@@ -293,57 +292,40 @@ include ../../../source/skeleton.pug
             }
         }
 
-    h1 AJAX; Asynchronous JavaScript and XML + JSONP
-    ol
-        li 핵심 기술은 XMLHttpRequest; XHR
-        li Ajax 이벤트
-        ul
-            li loadstart : 응답의 첫 번째 바이트를 수신
-            li progress : 응답 수신 중 계속 발생
-            li error : 요청에 에러가 있을 때
-            li abort : abort() 호출해 연결을 종료했을 때
-            li load : 응답을 완전히 받았을 때
-            li loadend : 통신 종료. error, abort, load보다 나중에 발생
+    h1 AJAX; Asynchronous JavaScript and XML
+    ul
+        li 필요한 시점에 동적으로 코드를 포함한 리소스를 로드하는 기술을 지칭한다. 현대 웹 개발에서는 fetch + 적절한 CORS 설정을 이용한다
         li JSONP : JSON with Padding
-        p Cross origin 제약이 적용되지 않는다. &lt;script src="~.js">&lt;/script>, &lt;script src="~.json">&lt;/script>도 JSONP 통신의 일종
-    +asCode('javascript').
-        // XMLHttpRequest 예
-        let request = new XMLHttpRequest();
-        // XMLHttpRequest.open(method, url, async, user, password)
-        request.open('GET', './index.html', false);
-        request.send();
-        console.log(request.responseText);
+            ol
+                li &lt;script&gt; 사용에 cross origin 제약이 적용되지 않는 걸 이용하여 임의의 동적 코드를 로드하는 기법
+                li 예를 들어, #[+asInlineCode('<script src="https://api-server/data?callback=my_callback">', 'HTML')]는 스크립트 #[+asInlineCode('my_callback({...})', 'JavaScript')]를 응답한다
+                li
+                    +codeBtn({ path: '/Repositories/Single/202603/04-0932.html', lan: 'nohighlight', title: '라이브 예시' })
+                    +codeBtn({ path: '/Repositories/Single/202603/04-0932.html', lan: 'HTML', title: 'HTML 코드' })
+                    +codeBtn({ path: '/Repositories/Single/202603/04-0932.js', lan: 'JavaScript', title: 'JavaScript 코드' })
 
-        // FormData를 보낼 수 있다
-        let data = new FormData();
-        data.append("key", "value");
-        let data = new FormData(document.forms[0]);
-        request.send(data);
-        // Blob, BufferSource, FormData, URLSearchParams, ReadableStream, USVString 전송 가능
-
-        // jQuery Ajax 구문
-        //     Ajax 간편 표기 : $.get(), $.post(), $.getJSON(), $.getScript(), $(selector).load()
-        $.ajax({ type: 'get', url: './index.html', success: (data) => console.log(data) });
-        $.ajax({
-            type: 'post',
-            dataType: 'json',
-            url: 'http://donggi.dothome.co.kr/add_comment.php',
-            data: { path: path, comment: comment },
-            success: (data) => {
-                if (data === "OK") {
-                    showSnackbar("등록 성공", $('body'));
-                    $(posts.contents[id]).find('input.form-control').val('');
-                    getComment(path);
-                } else {
-                    showSnackbar("60초당 1번씩 등록 가능", $('body'));
+        li XMLHttpRequest; XHR
+            ul
+                li 콜백 방식의 비동기 서버 호출을 지원한다
+                li 이벤트
+                    ul
+                        li loadstart : 응답의 첫 번째 바이트를 수신
+                        li progress : 응답 수신 중 계속 발생
+                        li error : 요청에 에러가 있을 때
+                        li abort : abort() 호출로 연결을 종료했을 때
+                        li load : 응답을 완전히 받았을 때
+                        li loadend : 통신 종료. error, abort, load보다 나중에 발생
+                        li timeout : 설정한 시간을 초과하여 연결 종료하는 경우
+        +asCode('JavaScript').
+            // XMLHttpRequest 예
+            const xhr = new XMLHttpRequest()
+            xhr.open('GET', '/index.html')
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(xhr.responseText)
                 }
-            },
-            error: (request, status, error) => {
-                showSnackbar("등록 실패.", $('body'));
             }
-        });
-        // jQuery Ajax 옵션
-        //     async, complete(xhr, status), data, error(xhr, status, error), jsonp, jsonpCallback, success(data, status, xhr), timeout, type, url
+            xhr.send()
 
     h1 파일 API
     ol
@@ -395,6 +377,15 @@ include ../../../source/skeleton.pug
                         // ...
                     })
                 }
+
+    h1 importmap
+    ul
+        li Baseline since March 2023
+        li 임포트 경로 변경을 비즈니스 로직과 분리할 수 있게 해준다
+        li
+            +asA('/Repositories/Single/202603/04-1211.html', '라이브 예시')
+            +codeBtn({ path: '/Repositories/Single/202603/04-1211.html', lan: 'HTML', title: 'HTML 코드' })
+            +codeBtn({ path: '/Repositories/Single/202603/04-1211.js', lan: 'JavaScript', title: 'JavaScript 코드' })
 
     h1 잡다한 코드
     ul

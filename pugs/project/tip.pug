@@ -29,7 +29,7 @@ include ../../source/skeleton.pug
             +asCode('sql').
                 fields @timestamp, @message
                 | filter @message like /SOME_TARGET_MESSAGE/
-                | parse @message /"targetProperty":(?<targetCount>\d+)/
+                | parse @message /"targetProperty":(?&lt;targetCount&gt;\d+)/
                 | stats sum(abs(targetCount)) by bin(1h)
 
         h2 S3
@@ -47,6 +47,24 @@ include ../../source/skeleton.pug
                 
                 # 삭제된 객체 복구
                 $ aws s3api list-object-versions --bucket BUCKET_NAME --prefix tmp/ --output json --query 'DeleteMarkers[?IsLatest==`true`].[Key, VersionId]' | jq -r '.[] | "--key '\''" + .[0] + "'\'' --version-id " + .[1]' | xargs -L1 aws s3api delete-object --bucket BUCKET_NAME
+
+    h1 Claude Code
+    ul
+        li: +asA('https://x.com/trq212/status/2024574133011673516', '출처')
+
+        li 프롬프트 캐싱은 접두사 일치 방식으로 작동합니다. 가능한 한 많은 요청이 동일한 접두사를 공유하도록, 정적 콘텐츠를 먼저 만들고 동적 콘텐츠는 나중에 만듭니다. 클로드 코드의 경우 다음과 같습니다.
+            ol
+                li 정적 시스템 프롬프트 및 도구(전역 캐시됨)
+                li CLAUDE.md (프로젝트 내에 캐시됨)
+                li 세션 컨텍스트 (세션 내에 캐시됨)
+                li 대화 메시지
+
+        li 세션 도중 모델을 변경하지 마세요
+            p 만약 Opus와 10만 토큰 대화를 나눈 후 쉽게 답할 수 있는 질문을 하는 경우, Haiku로 전환하는 것이 Opus가 답변하는 것보다 비용이 더 많이 들 수 있습니다. Haiku로 전환하면 프롬프트 캐시를 다시 구축해야 하기 때문입니다.
+            p 모델을 전환해야 하는 경우, 가장 좋은 방법은 서브에이전트를 이용하는 것입니다. Opus는 다른 모델이 수행해야 할 작업에 대한 "인수인계" 메시지를 준비합니다.
+
+        li 세션 도중 도구를 추가하거나 제거하지 마십시오
+            p 직관적으로 생각하면 모델에게 지금 당장 필요하다고 생각되는 도구만 제공해야 할 것 같습니다. 하지만 도구는 캐시 접두사의 일부이기 때문에 도구를 추가하거나 제거하면 전체 대화의 캐시가 무효화됩니다.
 
     h1 DNS
     ul
@@ -225,7 +243,7 @@ include ../../source/skeleton.pug
         +asCode('sql').
             select relname, n_dead_tup, last_vacuum, last_autovacuum
             from pg_stat_all_tables
-            where n_dead_tup > 0
+            where n_dead_tup &gt; 0
         p 단, vaccum full 수행 시 n_dead_tup이 즉시 갱신되지 않을 수 있음에 유의 -- analyze 실행하면 반영 (참조 : #[+asA('https://pskbigstar.tistory.com/entry/PostgreSQL-dead-tuple-%EB%AA%A8%EB%8B%88%ED%84%B0%EB%A7%81-%EC%8B%9C-%EC%A3%BC%EC%9D%98vacuum-full')])
 
         h2 대략적인 행 개수 확인
@@ -349,7 +367,7 @@ include ../../source/skeleton.pug
             ) t2 on true
             order by player_id, play_end_time desc
 
-    h1 Shell > 세션 동안 SSH 인증 정보 기억하기
+    h1 Shell &gt; 세션 동안 SSH 인증 정보 기억하기
     p 참고자료 : #[+asA('https://gist.github.com/nepsilon/45fae11f8d173e3370c3')]
     +asCode('shell') $ ssh-add .ssh/my_key
 
@@ -387,7 +405,7 @@ include ../../source/skeleton.pug
                     li Android 7 이하 : 자체 인증서 저장소를 이용하는 FireFox 브라우저 이용
                     li #[+asA('https://help.iwinv.kr/manual/read.html?idx=867')]를 참고하여 CA 인증서 업데이트 또는 설치
 
-        h2 오라클 클라우드 > 로드밸런서 > 인증서 추가
+        h2 오라클 클라우드 &gt; 로드밸런서 &gt; 인증서 추가
         ul
             li SSL 인증서로 cert.pem 설정
             li CA 인증서로 fullchain.pem 설정
@@ -395,7 +413,7 @@ include ../../source/skeleton.pug
 
     h1 SVG 크기가 안 맞을 때
     p html 노드로 설정한 크기에 맞게 출력되지 않는 경우, svg 파일을 텍스트 에디터로 열어 width, height 속성을 삭제하고, 대신 viewBox 등으로 출력 범위를 지정
-    +asCode('xml') &lt;svg width="" height=""> → &lt;svg viewBox="0 0 100 100">
+    +asCode('xml') &lt;svg width="" height=""&gt; → &lt;svg viewBox="0 0 100 100"&gt;
 
     h1 TCP_NODELAY 옵션 활성화
     ul
@@ -408,11 +426,11 @@ include ../../source/skeleton.pug
         li.marker 리소스 디렉터리 전체 출력 디렉터리에 복사
         p 예시(temp 디렉터리 하위 항목 모두 복사)처럼 프로젝트 파일 편집
         +asCode('xml').
-            &lt;ItemGroup>
-                &lt;Content Include="temp\**">
-                    &lt;CopyToOutputDirectory>PreserveNewest&lt;/CopyToOutputDirectory>
-                &lt;/Content>
-            &lt;/ItemGroup>
+            &lt;ItemGroup&gt;
+                &lt;Content Include="temp\**"&gt;
+                    &lt;CopyToOutputDirectory&gt;PreserveNewest&lt;/CopyToOutputDirectory&gt;
+                &lt;/Content&gt;
+            &lt;/ItemGroup&gt;
 
         li.marker 정의 탐색(F12) 실패 해결
         p NuGet 패키지 Microsoft.Net.Compilers 설치
@@ -425,7 +443,7 @@ include ../../source/skeleton.pug
         li.marker 파일 탐색 뷰에서 현재 문서 자동 추적 중지
         +w3img('/imgs/201903/20190330_214623.png')
         li.marker 특정 언어 포매터 설정
-        p Ctrl + Shift + P > Preferences: Configure Language Specific Settings > "editor.defaultFormatter": "redhat.java"
+        p Ctrl + Shift + P &gt; Preferences: Configure Language Specific Settings &gt; "editor.defaultFormatter": "redhat.java"
 
     h1 Windows
     ul
@@ -436,11 +454,11 @@ include ../../source/skeleton.pug
         +asCode('shell') ren *.html *.txt
 
         li.marker dir 결과 저장
-        +asCode('shell') dir /s /b *.png > png.txt
+        +asCode('shell') dir /s /b *.png &gt; png.txt
         ul
             li /s : 재귀
             li /b : "디렉터리/파일명"만 출력
-            li > : 저장
+            li &gt; : 저장
 
         li.marker 시작 프로그램 등록
         ol
@@ -555,7 +573,7 @@ include ../../source/skeleton.pug
         h2 서로 다른 하이픈들(&#x002D;, &#x2010;)을 똑같이 처리하려면?
         p #[+asA('https://en.wikipedia.org/wiki/Unicode_character_property', '유니코드 카테고리')] 값을 이용. #[+asA('https://pyatl.dev/2024/09/01/bitten-by-unicode/', '참고 자료')]
         +asCode('python').
-            def is_hyphen(char: str) -> bool:
+            def is_hyphen(char: str) -&gt; bool:
                 return unicodedata.category(char) == 'Pd'
 
         h2 정규표현식 일본어 검색
@@ -621,23 +639,23 @@ include ../../source/skeleton.pug
 
     h1 코드 조각
     div
-        h2 C# > Console Redirect
+        h2 C# &gt; Console Redirect
         +codeBtn('/Repositories/VisualStudio/WpfApp8/Utility/ConsoleRedirectWriter.cs', 'cs')
 
-        h2 C# > Naive HTTP Server
+        h2 C# &gt; Naive HTTP Server
         +codeBtn('/Repositories/VisualStudio/WpfApp8/Utility/NaiveHttpServer.cs', 'cs')
 
-        h2 JavaScript > CSV 파서
+        h2 JavaScript &gt; CSV 파서
         +codeBtn('/Repositories/JavaScript/CSV/parseCSV.js', 'javascript')
 
-        h2 JSDoc > .d.ts 생성
+        h2 JSDoc &gt; .d.ts 생성
         p 참고자료 : #[+asA('https://www.typescriptlang.org/ko/docs/handbook/declaration-files/dts-from-js.html')]
         +asCode('shell', 'CLI 실행 예시') npx typescript src/**/*.js --declaration --allowJs --emitDeclarationOnly --outDir dist/types
 
-        h2 JSDoc > 마크다운 유사 구문 
+        h2 JSDoc &gt; 마크다운 유사 구문 
         +codeBtn({ path: '/Repositories/Single/202509/22-1353.js', lan: 'javascript' })
 
-        h2 JSDoc, TypeScript > Pick&lt;Type, Keys&gt; 직접 정의하기
+        h2 JSDoc, TypeScript &gt; Pick&lt;Type, Keys&gt; 직접 정의하기
         +asCode('JavaScript').
             /**
              * @typedef {{ [Key in keyof T as Key extends K ? Key : never] : T[Key] }} CustomPick&lt;T, K extends keyof T&gt;
@@ -645,7 +663,7 @@ include ../../source/skeleton.pug
              * @template K
              */
 
-        h2 JSDoc, TypeScript > URL path parameter에 대한 타입 자동완성
+        h2 JSDoc, TypeScript &gt; URL path parameter에 대한 타입 자동완성
         ul
             li JSDoc 예.
                 +codeBtn({ path: '/Repositories/Single/202506/12-1137.js', lan: 'JavaScript' })
@@ -654,7 +672,7 @@ include ../../source/skeleton.pug
                 +codeBtn({ path: '/Repositories/Single/202506/12-1137.ts', lan: 'TypeScript' })
                 +w3img('/imgs/202506/Screenshot 2025-06-12 at 11.36.31 AM.png')
 
-        h2 JSDoc > TypeScript 배열 원소 타입 자동완성
+        h2 JSDoc &gt; TypeScript 배열 원소 타입 자동완성
         ul
             li JSDoc 예.
                 +codeBtn({ path: '/Repositories/Single/202506/12-1421.js', lan: 'JavaScript' })
@@ -696,7 +714,7 @@ include ../../source/skeleton.pug
             li Library 지원
                 +asCode('java').
                     var i = BigInteger.valueOf(10000000000000L);
-                    for (var count = 0; count < 100; ++count) {
+                    for (var count = 0; count &lt; 100; ++count) {
                         // 합성수일 가능성은 2^(-100)을 넘지 않는다
                         i = i.nextProbablePrime();
                         System.out.println(i);

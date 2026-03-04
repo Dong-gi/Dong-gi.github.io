@@ -133,13 +133,14 @@ async function renderPug(from, to) {
         const svg = await readFile(svgPath)
         let svgTxt = svgo.optimize(svg.toString().replace(/data-d2-version="[^"]+"/, '').replace(/\{[^}]*font-family[^}]*\}/g, '{}')).data
         const styleTxt = svgTxt.match(/<style>.+<\/style>/)[0]
-        for (const classMatch of svgTxt.matchAll(/class="([^ "]+)"/g)) {
+        for (const classMatch of svgTxt.matchAll(/class="([^ ]+?)"/g)) {
             if (styleTxt.includes(classMatch[1])) {
                 continue
             }
             svgTxt = svgTxt.replaceAll(classMatch[0], '')
         }
         svgTxt = svgTxt.replace(/\s+/g, ' ')
+        svgTxt = svgTxt.replace(/class="text /g, 'class="')
         await writeFile(svgPath, svgTxt)
     }))
 
